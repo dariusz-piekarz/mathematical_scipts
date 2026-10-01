@@ -192,7 +192,112 @@ pdflatex -interaction=nonstopmode -halt-on-error -file-line-error -output-direct
 
 Źródło i wynikowy PDF należą do tego samego commita przeglądu rozdziału 1.
 
+## Iteracja 2 — Pola wektorowe, przepływy i pochodna Liego
+
+Status: sprawdzono i poprawiono wszystkie 7 sekcji oraz 4 ilustracje.
+Data: 2026-10-01. Baza rozpoczęcia pracy: `e144985` (ukończony rozdział 1).
+Przed publikacją pobrano i zachowano zdalne commity `5043a70` i `dc53c6b`,
+rozwijające przykład 1.1.6. Poprawki rozdziału 2 nałożono na `dc53c6b`;
+konflikt binarnego PDF rozwiązano przez ponowną kompilację wspólnego źródła.
+
+1. **Konwencje i terminologia.** Ujednolicono „infinitezymalny” oraz
+   „zupełny/zupełność” w odniesieniu do pól. Określono konwencję rozmaitości
+   bez brzegu i znaczenie gładkości w półprzestrzeniach, potrzebne na końcu
+   rozdziału. Przedział krzywej całkowej jest otwarty.
+2. **Derywacje globalne.** W konstrukcji współczynników pola wybiera się
+   kulę we współrzędnych o zwartym domknięciu w dziedzinie mapy. Dzięki temu
+   funkcja odcinająca wynika bezpośrednio z konstrukcji w rozdziale 1.
+3. **Pola wzdłuż odwzorowania.** Zdefiniowano wiązkę cofniętą F*TN i jej
+   lokalne trywializacje. Wyjaśniono, dlaczego dla ogólnego F nie powstaje
+   automatycznie pole na N; odróżniono je od przenoszenia przez dyfeomorfizm.
+   Przy nietrywialności TS² dodano odsyłacz do późniejszego uzasadnienia.
+4. **Nawias Liego.** Dodano wyprowadzenie współczynników przez działanie
+   na współrzędne lokalne i wyjaśnienie sumowania powtarzających się indeksów.
+5. **Frobenius.** Uściślono definicję rozkładu, treść twierdzenia w mapach
+   i konieczność inwolutywności; sprawdzono kontrprzykład w R³. Dodano dowód
+   wystarczalności przez indukcję po rzędzie: prostowanie jednego pola,
+   macierzowe równanie Q′=−AQ usuwające zależność bazy od tego czasu
+   i zastosowanie indukcji na przekroju. Umieszczono go dopiero po twierdzeniu
+   o prostowaniu, na którym się opiera.
+6. **Gładka zależność rozwiązań.** Rozpisano oszacowanie różnic rozwiązań
+   równania wariacyjnego i ciągłość pierwszej pochodnej. Przy kolejnych
+   pochodnych wskazano równanie liniowe dla nieznanej pochodnej, kontrolę
+   reszty Taylora i krok indukcyjny; samo formalne różniczkowanie nie dowodzi
+   wcześniej istnienia tych pochodnych. Pochodne mieszane wynikają z równania.
+7. **Zmiana parametryzacji.** Podano całkę definiującą nowy czas dla Y=fX,
+   f>0, i argument zgodności maksymalnych orbit w obu kierunkach. Przykład
+   ∂x oraz (1+x²)∂x pokazuje, że zupełność nie jest zachowywana.
+8. **Prostowanie pola.** Skonstruowano przekrój poprzeczny w mapie, wybrano
+   produktową dziedzinę i wyprowadzono postać przepływu z prawa grupowego.
+9. **Niezmienniczość i komutowanie.** Uzupełniono dowód równoważności trzech
+   warunków, w tym zgodność maksymalnych przedziałów pola Y po działaniu
+   zupełnego przepływu X. Dodano osobny dowód wzoru
+   d/dt Φt*Y = Φt*[X,Y], z jawnym odsyłaczem w miejscu użycia.
+10. **Pierwsza całka obrotu.** Poziomice dodatnie są okręgami, zerowa jest
+    punktem stałym, ujemne są puste; pierwotne zdanie pomijało te wyjątki.
+11. **Komutator przepływów.** Przeniesiono rysunek i rachunek za definicję
+    przepływu oraz pochodnej Liego. Rozpisano wszystkie cztery rozwinięcia
+    Taylora do rzędu drugiego, aby uzasadnić znak nawiasu dla dowolnych pól.
+    Podpis nie nazywa już składnika t² pierwszym niezerowym przy zerowym nawiasie.
+12. **Rysunek przesuwania przekroju.** Końce obu odcinków poprzecznych mają
+    teraz identyczny zakres niezmiennika y−A sin(κx). Wcześniej były dobierane
+    przybliżeniowo i nie stanowiły dokładnego obrazu przez ten przepływ.
+    Podano rzeczywiste stałe rysunku i dokładny wzór przepływu.
+13. **Pola zależne od czasu.** Wymagana jest łączna gładkość w (t,p).
+    Podniesienie do ∂t+Xt uzasadnia gładką zależność od obu czasów i punktu.
+    Wskazano dziedziny praw ewolucji i dowód istnienia na całym [0,1]
+    przy wspólnym zwartym nośniku, także przy końcach przedziału czasu.
+14. **Generator izotopii.** Dodano dowód łącznej gładkości odwrotności ht⁻¹
+    przez odwzorowanie (t,p)↦(t,ht(p)). Doprecyzowano „osadzenie”
+    i zdefiniowano nośnik całej izotopii.
+15. **Ślad izotopii.** To podrozmaitość z brzegiem, nie bez brzegu.
+    Skonstruowano mapy zachowujące czas, które prostują ślad również
+    w chwilach 0 i 1; nie stosuje się bez wyjaśnienia twierdzenia bez brzegu.
+16. **Przedłużenie prędkości izotopii.** Uściślono lokalne nośniki i zbiór U,
+    na którym suma funkcji odcinających jest dodatnia. Końcowa funkcja
+    odcinająca musi mieć nośnik wewnątrz U, a nie jedynie w dużym otoczeniu O:
+    inaczej wcześniejszy wzór dzieliłby przez zero. Podano konstrukcję funkcji
+    odcinającej i wspólnego zwartego nośnika przez rzut na M.
+17. **Kołnierz brzegu.** Uzasadniono konstrukcję pola skierowanego do wnętrza
+    i lokalną odwracalność w półotoczeniach. Dodano argument ciągowy ze
+    zwartości, który zamienia lokalną injektywność w globalną dla wspólnego
+    małego czasu. Samo twierdzenie o funkcji odwrotnej tego nie zapewnia.
+18. **Doprecyzowania po kontroli.** Uzasadniono konieczność i lokalną
+    wystarczalność styczności do brzegu dla przepływu dwustronnego.
+    Odróżniono lokalne prawo grupowe od globalnej grupy przy polu zupełnym.
+    W zmianie parametryzacji dopisano argument zachowania maksymalności.
+    Podpis pola obrotowego ujawnia wspólną skalę strzałek (0,22), a wektor
+    t²[X,Y] na schemacie komutatora ma teraz dokładnie długość pionowej
+    różnicy między początkiem i końcem. Użyto terminu „przekrój poprzeczny”.
+
+### Kontrola iteracji 2
+
+- Przeczytano cały rozdział, sprawdzając definicje, rachunki, dowody
+  i kolejność zależności. Nowe dowody korzystają z wcześniej wykazanych
+  faktów; późniejsze użycia są oznaczone odsyłaczami.
+- Weryfikacja symboliczna w SymPy: znak komutatora dla pary nieliniowych
+  pól na płaszczyźnie, rozwiązania obrotu, x′=x², x′=1+x² oraz niezmiennik
+  i pochodna przepływu z rysunku przekrojów — poprawne.
+- Porównanie ze źródłem w `dc53c6b` po integracji zdalnych zmian:
+  rozdział 1 i rozdziały 3–18 pozostały niezmienione przez tę iterację.
+  Środowiska LaTeX są zbilansowane, wszystkie
+  odsyłacze rozdziału mają cele, brak powtórzonych etykiet.
+- Jako zewnętrzny punkt odniesienia dla lokalnej postaci twierdzenia
+  Frobeniusa wykorzystano twierdzenie 14.5 w
+  [J. M. Lee, Introduction to Smooth Manifolds, wersja robocza 3.0](https://www.math.colostate.edu/~renzo/teaching/DiffGeo2011/Introduction%20to%20Smooth%20Manifolds%20-%20J.%20Lee.pdf),
+  s. 359 (strona 371 pliku PDF). Numeracja dotyczy tej wersji,
+  nie drugiego wydania wymienionego w bibliografii skryptu.
+- Kontrola wizualna całego rozdziału: strony 36–51 PDF; wszystkie cztery
+  ilustracje obejrzano również w większej rozdzielczości (strony 42, 44,
+  47, 49). Opisy, kierunki strzałek i wzajemne położenia są czytelne.
+- Pełna kompilacja pdfLaTeX: 275 stron, bez błędów, niezdefiniowanych
+  odsyłaczy i przepełnionych wierszy. Pozostały wcześniejsze cztery
+  ostrzeżenia `Underfull` poza rozdziałem 2 oraz trzy automatyczne zmiany
+  położenia rysunków `h` na `ht` po integracji zmian przykładu 1.1.6.
+  Polecenie odtworzenia PDF podano wyżej.
+- `git diff --check` poprawny. Źródło i zaktualizowany PDF publikowane razem.
+
 ## Następna iteracja
 
-Rozdział 2: „Pola wektorowe, przepływy i pochodna Liego”.
-Pozostałe rozdziały nie zostały jeszcze objęte przeglądem.
+Rozdział 3: „Algebra tensorowa i zewnętrzna”.
+Rozdziały 3–18 nie zostały jeszcze objęte przeglądem.
