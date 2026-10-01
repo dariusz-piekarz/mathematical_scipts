@@ -682,3 +682,107 @@ pozostałe zmiany merytoryczne oraz redakcyjne Darka.
   PDF zaktualizowano wraz ze źródłem; `git diff --check` poprawny.
 
 Następna iteracja: rozdział 7 — „Homologia przestrzeni”.
+
+## Iteracja 7 — Homologia przestrzeni
+
+Status: sprawdzono i poprawiono wszystkie 8 sekcji oraz 3 ilustracje.
+Data zakończenia: 2026-10-01.
+
+Punkt odniesienia: `21a3ecb`. Przed rozpoczęciem wykonano pull;
+gałąź była aktualna. Przeczytano cały rozdział: osiem sekcji i trzy ilustracje.
+
+### Zmiany i uzasadnienia
+
+1. **Orientacja i składowe.** W dowodzie opisu H₀ symplicjalnego
+   podano argument z otwartymi i domkniętymi realizacjami składowych
+   grafu krawędzi. Samo stwierdzenie, że sympleksy są spójne, nie wyjaśniało
+   wystarczająco przejścia od drogi ciągłej do drogi po krawędziach.
+   Ujednolicono „składowe łukowe” z poprzednim rozdziałem.
+2. **Operator pryzmatyczny.** Rozpisano osobno znaki ścian bocznych
+   dla j<i i j>i oraz kasowanie ściany między dwiema sąsiednimi częściami.
+   Określono P₋₁=0. Poprawiono błędną odmianę „afininiczną posyłającą”.
+3. **Homologia zredukowana.** Zdefiniowano ją jednolicie przez kompleks
+   augmentowany, także dla przestrzeni pustej. Wzór Z^(c−1) ograniczono
+   do skończonej liczby składowych; dla dowolnej liczby podano bazę
+   różnic klas i sumę prostą. Uzasadniono zredukowany ciąg pary,
+   używany następnie do obliczenia homologii dysku względem brzegu.
+4. **Podział barycentryczny.** Ustalono kolejność barycentrów według
+   wymiarów ścian i podano sumę po permutacjach ze znakiem permutacji.
+   W łańcuchach singularnych zmiana parametryzacji nie jest formalnie
+   mnożeniem przez −1; wspólne ściany muszą mieć identyczną parametryzację.
+   Rozpisano kasowanie ścian wewnętrznych i znaki ścian zewnętrznych.
+5. **Homotopia podziału i małe łańcuchy.** Zastąpiono nieokreślony zapis
+   tₙ₋₁(∂uₙ) sumą obrazów przez włączenia ścian. Dodano wzór stożka
+   singularnego i sprawdzenie ciągłości w jego wierzchołku. Wyjaśniono
+   stopień zero. Oszacowanie zmniejszenia średnicy wyprowadzono ze wzoru
+   na barycentra dwóch zagnieżdżonych ścian.
+6. **Porównanie z modelem symplicjalnym.** Podkreślono, że mapa porównawcza
+   używa wybranych uporządkowanych generatorów i rozszerzenia liniowego,
+   a nie dowolnego odwracania parametryzacji. W dowodzie indukcyjnym
+   wykazano, że mapa par przenosi generator na generator przez
+   homeomorfizm ilorazów; sam fakt, że obie grupy są Z, nie wystarcza.
+7. **Iloraz pary komórkowej.** Dodano niezbędne założenie A≠∅ oraz
+   uzasadnienie ciągłości homotopii na ilorazie z parametrem czasu.
+   Użyto domkniętości projekcji i zwartości jej włókien. Rozszerzono
+   konstrukcję otoczenia na dołączenie jednej komórki, potrzebne w dowodzie
+   porównania. Wyjaśniono ciągłość radialnej retrakcji przy sklejanym A.
+   Poprawiono zdanie utożsamiające pełne kompleksy z modelami małych
+   łańcuchów: lemat zapewnia tu izomorfizm homologii.
+8. **Generator sympleksu i bukiet sfer.** Skonstruowano konkretne otwarte
+   pokrycia oraz retrakcje części i przecięć do użycia w Mayerze–Vietorisie.
+   Używanie bezpośrednio domkniętych części nie wynikało z wcześniejszej
+   wersji tego twierdzenia. W warstwie komórek obsłużono pusty szkielet.
+9. **Homologia komórkowa i stopień.** Oddzielono przypadek n=1 w dowodzie
+   ∂²=0, unikając niezdefiniowanych map w stopniach ujemnych. Uzasadniono
+   deg(z↦zʳ)=r przez konkretny singularny trójkąt realizujący dodawanie
+   klas pętli, odwrotność pętli i generator z Mayera–Vietorisa.
+   We wzorze brzegu komórkowego określono orientacje sfer dziedziny
+   i obrazu zgodnie z orientacjami komórek; to ustala znaki stopni.
+10. **Współczynniki.** Zdefiniowano łańcuchy z wartościami w R i wyjaśniono,
+    dlaczego konstrukcje pryzmatu, podziału, ciągów par i szkieletów działają
+    także nad pierścieniem. Wykorzystano rozszczepienie odpowiednich ciągów
+    w każdym stopniu, bez zakładania dokładności dowolnego tensorowania.
+    Uzasadnia to w szczególności podany w skrypcie rachunek RP² modulo 2.
+    Wyjaśnienie wydzielono do osobnej uwagi przed przykładem.
+11. **Lokalna homologia.** Rozróżniono otoczenie U w rozmaitości od kuli
+    Bᵐ będącej obrazem mapy. Retrakcję otwartej kuli bez środka skierowano
+    na sferę o promieniu 1/2: jednostkowa sfera nie należy do otwartej kuli.
+12. **Rysunki i język.** Na ilustracji singularnego sympleksu zaznaczono
+    trzy obrazy wierzchołków i trzy skierowane części brzegu; wypełnienie
+    ma teraz dokładnie ten sam brzeg co strzałki. W diagramie torusa
+    „wnętrze torusa” zastąpiono „jedna 2-komórka”. Poprawiono m.in.
+    „dowolna ciągłe”, „homologa punktu”, „fundament dysku”, „nie koniecznie”,
+    odmianę słowa „odwzorowanie” i odsyłacze nazywające sekcje rozdziałami.
+    Dalszą lekturę dodano do spisu treści.
+
+### Kontrola iteracji 7
+
+- Niezależnie obliczono brzegi uporządkowanych sympleksów afinicznych
+  w wymiarach 0–5, traktując różne parametryzacje jako różne generatory.
+  Sprawdzono ∂²=0, ∂S=S∂ i tożsamość operatora pryzmatycznego.
+  Nie upraszczano sympleksów przez zamianę orientacji ani nie usuwano
+  generatorów zdegenerowanych, co mogłoby ukryć błąd znaku.
+- W wymiarach 1–4 skonstruowano łańcuchy homotopii stożkowej
+  i sprawdzono dokładnie ∂T+T∂=S−id. Sprawdzono też ich obrazy
+  przez nieróżnowartościowe odwzorowania afiniczne.
+- Z porządków wierzchołków obu trójkątów torusa niezależnie otrzymano
+  macierz brzegu i jej postać Smitha: H₁=Z², H₂=Z, zgodnie z modelem CW.
+  Dla RP² sprawdzono torsję całkowitą oraz jądra i ilorazy mnożenia
+  przez 2 nad Z/m dla m=2,3,4,5,7. Kontrole te uzupełniają ogólne dowody.
+- Obejrzano wszystkie 14 stron rozdziału (119–132 PDF), a rysunki
+  na stronach 120, 121 i 130 także w większej rozdzielczości.
+  Po końcowych poprawkach sprawdzono ponownie zmieniony skład.
+- Porównanie z `21a3ecb` potwierdza, że pozostałe rozdziały są bez zmian.
+  Środowiska LaTeX są zbilansowane, etykiety unikalne, odsyłacze mają cele;
+  `git diff --check` nie wykazał problemów.
+- Punktem odniesienia był [Allen Hatcher, Algebraic Topology, rozdział 2](https://pi.math.cornell.edu/~hatcher/AT/AT.pdf):
+  podział barycentryczny, homologia ilorazu dobrej pary i model komórkowy.
+- Pełny dokument skompilowano lokalnie do 285 stron. Końcowy przebieg
+  nie zgłasza błędów, niezdefiniowanych odsyłaczy, potrzeby ponownej
+  kompilacji ani `Overfull`. Pozostały trzy wcześniejsze `Underfull`
+  poza rozdziałem 7 i trzy zmiany położenia ilustracji z `h` na `ht`.
+  Próba wbudowanego kompilatora edytora zwróciła status nieznany;
+  potwierdzona kompilacja i dostarczony PDF pochodzą z lokalnego MiKTeX.
+  PDF zaktualizowano wraz ze źródłem.
+
+Następna iteracja: rozdział 8 — „Wyższe grupy homotopii i związek z homologią”.
