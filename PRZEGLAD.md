@@ -297,7 +297,93 @@ konflikt binarnego PDF rozwiązano przez ponowną kompilację wspólnego źród�
   Polecenie odtworzenia PDF podano wyżej.
 - `git diff --check` poprawny. Źródło i zaktualizowany PDF publikowane razem.
 
+## Iteracja 3 — Algebra tensorowa i zewnętrzna
+
+Status: sprawdzono i poprawiono wszystkie 9 sekcji oraz sprawdzono 2 ilustracje.
+Data: 2026-10-01. Baza: `9bfa3af`.
+
+1. **Konstrukcja iloczynu tensorowego.** Poprawiono klasę x+R dla x∈F
+   (wcześniejsze [x]+R niepotrzebnie wprowadzało drugi symbol klasy).
+   Wskazano kombinacje liniowe klas generatorów i poprawiono gramatykę.
+   Zaznaczono, że pomocnicza przestrzeń wolna jest na ogół nieskończenie
+   wymiarowa mimo skończonych wymiarów V i W.
+2. **Terminologia baz.** Eij nazwano jednostkami macierzowymi i podano ich
+   elementy. „Macierz jednostkowa” oznacza zwykle macierz identycznościową,
+   więc poprzednia nazwa była myląca. „Tuple” zastąpiono układami lub ciągami.
+3. **Wiele czynników.** Dopisano uzasadnienie niezależności izomorfizmów
+   od sposobu zmiany nawiasowania dla więcej niż trzech przestrzeni.
+4. **Dualność i stopień zero.** Wyraźnie określono liniowość nad C bez
+   sprzężenia, puste iloczyny, funkcje bez argumentów oraz T⁰₀(V)=K.
+   Wyprowadzono zmianę bazy dualnej i macierzy operatora A⁻¹[S]A.
+5. **Iloczyn mieszany.** Ustalono kanoniczne przestawienie bloków, które
+   identyfikuje iloczyn tensorów typów (r,s), (r′,s′) z typem (r+r′,s+s′).
+   Przestawienie nie wprowadza znaku. Podano porządek par dla macierzy Kroneckera.
+6. **Kontrakcja.** Określono zakres indeksów, kolejność pozostałych czynników
+   i wzór sumowania współczynników. Wcześniejszy opis pomijał te konwencje.
+7. **Algebra tensorowa.** Zdefiniowano homomorfizm algebr z jedynką
+   i element jednorodny. Uzasadniono dobre określenie mnożenia przez własność
+   uniwersalną, przypadek skalarów i skończoność wyniku w sumie prostej.
+8. **Symetryzacja.** Dopisano działanie permutacji z prawej strony
+   symetryzatora i antysymetryzatora; jest ono używane w dowodzie zanikania
+   ideału. Wyjaśniono, że rozkład Sym+Alt=id zachodzi w stopniu 2,
+   i podano kontrprzykład dla stopnia 3.
+9. **Algebra symetryczna.** Uzasadniono jednorodność ideału J i stopniowanie
+   ilorazu. Doprecyzowano odwrotność izomorfizmu z obrazem symetryzatora,
+   stopień zero i przestrzeń V=0, do której nie stosuje się podanego wzoru
+   wymiaru dla n≥1. Ujednolicono termin „jednomian”.
+10. **Alternowanie i znaki.** Wyprowadzono równoważność zerowania przy
+    powtórzeniu argumentów ze zmianą znaku przy transpozycji (nad R lub C).
+    Wyjaśniono, że ideał zewnętrzny nie ma w stopniach 0 i 1 elementów
+    niezerowych. Poprawiono odmianę „odwzorowanie ilorazowe”.
+11. **Potęgi odwzorowania i dualność zewnętrzna.** Osobno ustalono Λ⁰A=id,
+    E₀=id oraz wyznacznik pustej macierzy. Zdefiniowano używaną przestrzeń
+    Altᵏ(V;K) i wskazano zerowanie przy k>dim V.
+12. **Normalizacje.** Poprawiono jₖ na j₂ przy iloczynie dwóch kowektorów.
+    Dopisano ogólną relację Eₖ=k!jₖ po odczytaniu tensorów jako funkcji.
+    Wyprowadzono czynnik (k+ℓ)!/(k!ℓ!) przed antysymetryzatorem dla form.
+13. **Zmiana współrzędnych pola tensorowego.** Zamiast samej wzmianki
+    dodano pełne prawo transformacji, wyprowadzone z reguły łańcucha
+    osobno dla wektorów i kowektorów. Przykład y=x² pokazuje czynnik 1/(4y)
+    dla dx⊗dx. Wyjaśniono, że wyznacznik różniczki między różnymi włóknami
+    wymaga wyborów, choć sama najwyższa potęga zewnętrzna jest kanoniczna.
+14. **Cofnięcie i pochodna Liego.** Dodano cofnięcie funkcji i regułę
+    F*(fT)=(f∘F)F*T, uzasadniono gładkość cofnięcia i pochodnej Liego.
+    Wyjaśniono, że wystarcza rozkład lokalny, bez założenia globalnej bazy.
+    Poprawiono gramatykę dowodu kontrakcji; „koneksja (połączenie)”
+    uzgadnia terminologię z dalszymi rozdziałami.
+15. **Cauchy–Binet i lektura.** Doprecyzowano zakresy indeksów i nawiasy
+    wokół podmacierzy AB. Wyjaśniono pustą sumę przy k>n i przypadek k=0.
+    Dodano krótką bibliografię na końcu rozdziału, analogicznie do sąsiednich.
+    W dowodzie własności wyznacznika poprawiono zgodę gramatyczną:
+    „jedna z kolumn”, zamiast „jeden z nich”.
+
+### Kontrola iteracji 3
+
+- Przeczytano cały rozdział: konstrukcje ilorazowe i własności uniwersalne,
+  bazy, operacje tensorowe, znaki, wyznacznik, wiązki i pochodną Liego.
+- SymPy: sprawdzono relację między wyznacznikiem i antysymetryzacją
+  w stopniach 1–4, współczynniki iloczynu form w stopniach (1,2), (2,1)
+  i (2,2), wszystkie minory stopnia 2 w przykładzie Cauchy’ego–Bineta
+  dla macierzy 3×4 i 4×3 oraz pole równoległoboku równe 5.
+- Sprawdzono zgodność kontrakcji ze zmianą współrzędnych tensora (2,1).
+  Niezależne różniczkowanie dokładnego cofnięcia przez przepływ ścinania
+  Φt(x,y)=(x+ty,y) zgadza się ze wzorem współrzędnym pochodnej Liego
+  we wszystkich ośmiu składowych zmiennego tensora (2,1).
+- Zakres zmian porównany z `9bfa3af`: źródła rozdziałów 1–2 i 4–18
+  są niezmienione. Środowiska LaTeX zbilansowane, brak powtórzonych etykiet
+  i odsyłaczy bez celu. `git diff --check` poprawny.
+- Zewnętrzny punkt odniesienia dla konstrukcji tensorowych i dualności:
+  [B. Conrad, Tensor algebras, tensor pairings, and duality](https://math.stanford.edu/~conrad/diffgeomPage/handouts/tensor.pdf).
+- Kontrola wizualna wszystkich 19 stron rozdziału (52–70 PDF).
+  Diagram własności uniwersalnej (s. 52) oraz równoległobok (s. 64)
+  obejrzano w większej rozdzielczości. Oba są poprawne i czytelne;
+  ich geometria nie wymagała zmian.
+- Pełny dokument kompiluje się do 277 stron. Brak błędów LaTeX,
+  niezdefiniowanych odsyłaczy i ostrzeżeń `Overfull`. Pozostają wcześniejsze
+  cztery ostrzeżenia `Underfull` w dalszych rozdziałach i trzy zmiany
+  położenia rysunków `h` na `ht`. PDF aktualizowany razem ze źródłem.
+
 ## Następna iteracja
 
-Rozdział 3: „Algebra tensorowa i zewnętrzna”.
-Rozdziały 3–18 nie zostały jeszcze objęte przeglądem.
+Rozdział 4: „Grassmanniany, algebra Clifforda i spinory”.
+Rozdziały 4–18 nie zostały jeszcze objęte przeglądem.
