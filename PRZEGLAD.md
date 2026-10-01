@@ -383,7 +383,111 @@ Data: 2026-10-01. Baza: `9bfa3af`.
   cztery ostrzeżenia `Underfull` w dalszych rozdziałach i trzy zmiany
   położenia rysunków `h` na `ht`. PDF aktualizowany razem ze źródłem.
 
+## Iteracja 4 — Grassmanniany, algebra Clifforda i spinory
+
+Punkt odniesienia: `02ea77d`. Przeczytano cały rozdział.
+
+### Zmiany i uzasadnienia
+
+1. **Atlas Grassmannianu.** Doprecyzowano zależność map od dopełnienia,
+   wybór baz przy wyznacznikach i topologię określoną przez atlas.
+   Uzupełniono model rzutów ortogonalnych: otwartość dziedzin map,
+   identyfikację z idempotentami samosprzężonymi i dowód zwartości.
+2. **Przestrzeń styczna i wiązki.** Dodano argument z lokalną ramką
+   dla niezależności identyfikacji od reprezentującej krzywej,
+   sprawdzenie różnowartościowości i gładkości izomorfizmu wiązek.
+   Poprawiono zapis izomorfizmu wiązki ilorazowej z dopełnieniem
+   ortogonalnym oraz odsyłacz do wcześniejszej definicji wiązki normalnej.
+3. **Modele jednorodne i Plücker.** Podano lokalne sekcje z procedury
+   Grama–Schmidta i lokalną strukturę iloczynową ilorazu grupowego.
+   W dowodzie zanurzenia Plückera ilorazy współrzędnych przedłużono
+   na otwarte podzbiory przestrzeni otaczającej, co rzeczywiście daje
+   lewą odwrotność różniczki. Uzasadniono gładkość modelu z normalnymi.
+4. **Algebra Clifforda.** Poprawiono porównanie z algebrą zewnętrzną:
+   teraz oba kwadraty dotyczą tego samego wektora. Zdefiniowano
+   automorfizm parzystości i rewersję, dowodząc, że przechodzą na iloraz.
+   Rewersja jest niezbędna w późniejszym dowodzie jądra nakrycia Spin.
+5. **Grupa Spin.** Uzupełniono przejście od lokalnych podniesień obrotów
+   do gładkiej struktury grupy i gładkości jej działań. W wymiarze 3
+   wyjaśniono, dlaczego każdy jednostkowy biwektor jest iloczynem
+   dwóch ortogonalnych wektorów jednostkowych.
+6. **Moduły i chiralność.** Doprecyzowano dwuliniowość działania,
+   niezerowość modułu nieredukowalnego oraz zależność operatora
+   chiralności od orientacji. Dodano projektory na jego podprzestrzenie
+   własne i dowód nieredukowalności ograniczeń modułów w wymiarze nieparzystym.
+   W uwadze o tych ograniczeniach sprecyzowano n≥3, zgodnie z zakresem
+   wcześniej zdefiniowanej grupy Spin. Zredagowano początek dowodu
+   kwadratu operatora chiralności, usuwając nierówne odstępy w składzie.
+7. **Sfera Blocha.** Dodano jawne współrzędne mapy i jej odwrotności
+   oraz rachunek ekwiwariantności z wykorzystaniem projektora rzędu 1.
+8. **Struktury spinowe.** Poprawiono indeks ilorazu definiującego
+   wiązkę stowarzyszoną (grupa Spin zamiast modułu), podano kierunek
+   zmian współrzędnych spinora i rozszerzono definicję na wiązki
+   euklidesowe. W konstrukcji na S² ustalono właściwą podgrupę
+   stabilizującą e₃ i jej działanie z prawej strony; poprzedni opis
+   odwoływał się do stabilizatora zmiennego punktu. Sprawdzono lokalną
+   trywialność i zgodność z nakryciem wiązki ramek.
+9. **Rachunki algebraiczne.** Uzasadniono alternowanie wzoru na kontrakcję
+   w dowodzie bazy algebry Clifforda. W indukcyjnej klasyfikacji algebr
+   zespolonych zdefiniowano mnożenie tensorów algebr i podano izomorfizm
+   macierzowy przez jednostki macierzowe, zamiast pomijać ten krok.
+10. **Podnoszenie i przeszkoda spinowa.** Dodano uzasadnienie podnoszenia
+    map z obszarów ściągalnych przez podnoszenie dróg i homotopii.
+    Wyjaśniono, dlaczego hipotetyczna struktura spinowa wiązki
+    tautologicznej nad S² wymuszałaby zamknięte podniesienie jej przejścia
+    na równiku. Poprawiono zdanie, które myliło podnoszenie pętli
+    z podnoszeniem samego odwzorowania nakrywającego.
+11. **Kryterium znaków.** Podano jawną relację sklejania wiązki głównej
+    i wzór na mapę do wiązki ramek. W implikacji odwrotnej podnosimy
+    dokładnie ustalone wcześniej ramki. Sprawdzono też niezależność
+    przeszkody od zmiany ramek, poza wcześniej opisaną zmianą znaków.
+    Wyjaśniono założenie dobrego pokrycia i wskazano, że utożsamienie
+    z klasą w H² korzysta z teorii kohomologii Čech, nieudowodnionej tutaj.
+12. **Terminologia i redakcja.** Poprawiono „kokykl” na „kocykl”,
+    „realna” na „rzeczywista”, „lift” na „podniesienie”, literówki
+    i niejasną „wiązkę podstawową” przy zapomnieniu struktury zespolonej.
+    Dopisano pozycję dalszej lektury do spisu treści.
+13. **Rysunki.** Mapa wykresowa jest teraz rzutem konkretnych płaszczyzn
+    liniowych przechodzących przez zero; punkty u i u+Au rzeczywiście
+    należą do odpowiednich płaszczyzn, a ich różnica jest pionowym Au.
+    W ilustracji iloczynu Clifforda oba wektory jednostkowe mają tę samą
+    długość, a rzut i kąt pochodzą z tych samych współrzędnych.
+    Na ilustracji nakrycia Spin łuki mają dokładnie 180° i 360°,
+    ze strzałkami wewnątrz ścieżek. Normalne n i −n na rysunku orientacji
+    mają teraz równe długości.
+    Po obejrzeniu PDF odsunięto opisy punktów od krawędzi płaszczyzn
+    i poszerzono ramkę na rysunku Blocha, aby mieściła warunek normy 1.
+
+### Kontrola iteracji 4
+
+- Przeczytano wszystkie siedem sekcji rozdziału, w tym dowody bazy
+  algebry Clifforda, nakrycia Spin i klasyfikacji modułów.
+- Rachunki dokładne w SymPy sprawdzają rzeczywisty i zespolony model
+  rzutów Grassmannianu (samosprzężoność, idempotentność, ślad i odwrotną
+  mapę wykresową) oraz relację Plückera dla dwupłaszczyzn w wymiarze 4.
+- Niezależna implementacja mnożenia uporządkowanych słów Clifforda
+  sprawdza znaki w wymiarach 2–6, kwadrat i antykomutację chiralności,
+  rewersję i działanie jawnego rotora na parze wektorów jednostkowych.
+  Sprawdzono też rekurencję macierzy Pauliego w wymiarach 2, 4 i 6,
+  normę mapy Blocha, wzór projektora i znak działania obrotu.
+- Zweryfikowano dokładne współrzędne poprawionej ilustracji wykresu.
+  Obejrzano wszystkie 17 stron rozdziału (71–87 PDF) oraz osobno
+  pięć ilustracji w większej rozdzielczości; po poprawkach etykiet
+  ponowiono kontrolę odpowiednich stron.
+- Zakres porównany z `02ea77d`: rozdziały 1–3 i 5–18 są niezmienione.
+  Środowiska LaTeX zbilansowane, etykiety niepowtórzone, wszystkie
+  odsyłacze rozdziału mają cel. `git diff --check` poprawny.
+- Punkty odniesienia: [B. Conrad, Clifford algebras and spin groups](https://math.stanford.edu/~conrad/210CPage/handouts/clifford.pdf)
+  oraz [K. Wernli, Lecture Notes on Spin Geometry, §2.3](https://arxiv.org/pdf/1911.09766).
+  Sprawdzono zgodność kryterium znaków z opisem przeszkody w₂;
+  własny dowód sklejania podano jawnie w tekście.
+- Pełny dokument ma 280 stron. Brak błędów LaTeX, niezdefiniowanych
+  odsyłaczy i ostrzeżeń `Overfull`. W rozdziale 4 brak `Underfull`;
+  pozostają trzy takie ostrzeżenia w dalszych rozdziałach oraz trzy
+  wcześniejsze zmiany położenia rysunków `h` na `ht`.
+  PDF jest aktualizowany razem ze źródłem.
+
 ## Następna iteracja
 
-Rozdział 4: „Grassmanniany, algebra Clifforda i spinory”.
-Rozdziały 4–18 nie zostały jeszcze objęte przeglądem.
+Rozdział 5: „Algebra homologiczna: moduły, kompleksy i (ko)homologie”.
+Rozdziały 5–18 nie zostały jeszcze objęte przeglądem.
