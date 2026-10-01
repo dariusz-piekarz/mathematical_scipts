@@ -487,7 +487,89 @@ Punkt odniesienia: `02ea77d`. Przeczytano cały rozdział.
   wcześniejsze zmiany położenia rysunków `h` na `ht`.
   PDF jest aktualizowany razem ze źródłem.
 
+## Iteracja 5 — Algebra homologiczna: moduły, kompleksy i (ko)homologie
+
+Punkt odniesienia: `831cbcc`. Przeczytano wszystkie dziesięć sekcji.
+
+### Zmiany i uzasadnienia
+
+1. **Moduły wolne.** Naprawiono dowód niewolności Z/mZ: poprzedni
+   zakładał, że [1] należy do hipotetycznej bazy. Teraz rozwijamy [1]
+   w dowolnej bazie i wykorzystujemy jednoznaczność współczynników.
+   Dodano niezbędne założenie m≥2.
+2. **Podstawowe konstrukcje.** Wyjaśniono rolę przemienności pierścienia
+   w strukturze modułu Hom i zdefiniowano sumę prostą z jej włączeniami
+   i rzutami. W dowodzie rozszczepienia zapisano retrakcję jako konkretne
+   złożenie, usuwając niejasny kierunek izomorfizmu.
+3. **Długi ciąg homologii.** Naprawiono końcowy argument: H₋₁(A)=0
+   wynika z A₋₁=0, a nie z C₋₁=0. Założenie twierdzenia pozostaje to samo.
+   „Niezależność od [c]” zastąpiono niezależnością od reprezentanta [c];
+   wynik oczywiście zależy od klasy.
+   W uwadze o naturalności określono wszystkie trzy odwzorowania
+   między krótkimi ciągami i wymagane równości przemienności.
+4. **Kohomologia i naturalność.** Uzupełniono zgodność homomorfizmu
+   łączącego z mnożeniem przez skalary i jego naturalność. W twierdzeniu
+   o dualności nad ciałem dodano rachunek naturalności ewaluacji.
+5. **Homotopie.** Wymagamy jawnie, aby hₙ były homomorfizmami modułów,
+   a f i g odwzorowaniami łańcuchowymi. Bez pierwszego warunku późniejszy
+   przykład kompleksu acyklicznego, lecz nieściągalnego nie działałby.
+   W dowodzie kasowania pary przedłużono homotopię na cały kompleks
+   i podano id−jp=∂h+h∂ oraz pj=id, uzasadniając zastosowanie twierdzenia.
+6. **Ilorazy i suma kompleksów.** Rozróżniono klasę c modulo podkompleks
+   od jej klasy homologii. Doprecyzowano, że używana filtracja jest
+   skończona i rosnąca. W dowodzie Mayera–Vietorisa uzasadniono
+   Hₙ(A⊕B)≅Hₙ(A)⊕Hₙ(B) przez cykle, brzegi i ich ilorazy.
+7. **Redukcja modulo m.** Dodano jawny wzór na ostatnią strzałkę:
+   ∂c=ma prowadzi do [a]. Wyjaśniono jednoznaczność a, warunek bycia
+   cyklem, m-torsję oraz naturalność. Wstęp do sekcji ograniczono
+   do kompleksów wolnych grup, zgodnie z założeniem twierdzenia.
+8. **Tensorowanie modułów.** Uzupełniono brakującą konstrukcję nad
+   pierścieniem: iloraz modułu wolnego przez relacje dwuliniowości,
+   własność uniwersalną, rozszerzenie skalarów i bazę modułu po tej
+   operacji. Uzasadniono zachowanie sum prostych i izomorfizmów.
+   To wyjaśnia operacje potrzebne w istniejącym dowodzie zmiany
+   współczynników; wcześniejszy rozdział dotyczył tensorowania nad ciałem.
+9. **Charakterystyka zero.** Zdefiniowano zapis Hₙ(C;Z), poprawność
+   różniczki po tensorowaniu, pełną mapę [c]⊗q↦[c⊗q] i reprezentowanie
+   dowolnego tensora przez wspólny mianownik. Zapisano oba kierunki
+   izomorfizmu rozszerzenia skalarów Z→Q→F i wyjaśniono kanoniczność
+   wyniku mimo wyboru dopełnień. Usunięto niepasujący zapis Hₙ(D;Q)
+   dla kompleksu D, który już jest racjonalny.
+10. **Terminologia i skład.** W całym rozdziale zastąpiono „kokykl”
+    przez „kocykl” oraz „lift” przez „podniesienie”, z poprawną odmianą.
+    Zamiast „n-ta homologia” piszemy „homologia stopnia n”. Poprawiono
+    zgodę gramatyczną kilku zdań i dodano dalszą lekturę do spisu treści.
+    W diagramie podnoszenia krótki podpis „wybór b” mieści się nad strzałką.
+
+### Kontrola iteracji 5
+
+- Cały rozdział przeczytano i sprawdzono matematycznie: definicje modułów,
+  dokładność, oba długie ciągi, dualność, kasowanie pary, filtracje,
+  Mayer–Vietoris, zmiana współczynników, Euler i lemat pięciu.
+- Dla kompleksów Z —k→ Z sprawdzono 64 pary k,m∈{2,…,9}:
+  wzór homomorfizmu łączącego, jego addytywność, obraz równy m-torsji
+  i rozmiary jąder/ilorazów. Obejmuje to złożone m, a nie tylko ciała.
+- Na kompleksie Z→Z³→Z² z macierzami ∂₂=(−6,3,0)ᵀ,
+  ∂₁=((1,2,3),(2,4,8)) sprawdzono dokładnie całkowite zmiany baz,
+  oddzielenie pary, zgodność rzutów z różniczkami i tożsamość homotopii.
+  Po przejściu do Q sprawdzono homologię, kohomologię dualną i Eulera.
+- Przykład Mayera–Vietorisa zweryfikowano nad F₂, F₃, F₅ i F₇:
+  obraz klasy u+v jest x−y i daje wymagane jądro następnej mapy.
+- Obejrzano wszystkie 17 stron rozdziału (88–104 PDF) i osobno diagram
+  odwzorowania łączącego na stronie 93. Geometria diagramu była poprawna;
+  zmieniono tylko podpis na polski. Pozostały układ jest czytelny.
+- Porównanie z `831cbcc` potwierdza, że rozdziały 1–4 i 6–18 nie zostały
+  zmienione. Środowiska LaTeX są zbilansowane, etykiety niepowtórzone,
+  odsyłacze mają cele. `git diff --check` poprawny.
+- Punkty odniesienia: [The Stacks Project, Complexes](https://stacks.math.columbia.edu/tag/010V)
+  oraz [Tensor products](https://stacks.math.columbia.edu/tag/00CV).
+  Sprawdzono wymaganie liniowości homotopii i zakres konstrukcji tensorowej.
+- Pełny dokument kompiluje się do 281 stron, bez błędów, niezdefiniowanych
+  odsyłaczy i `Overfull`. Brak ostrzeżeń `Underfull` w rozdziale 5;
+  pozostają trzy wcześniejsze w dalszych rozdziałach i trzy zmiany `h` na `ht`.
+  PDF aktualizowany wraz ze źródłem.
+
 ## Następna iteracja
 
-Rozdział 5: „Algebra homologiczna: moduły, kompleksy i (ko)homologie”.
-Rozdziały 5–18 nie zostały jeszcze objęte przeglądem.
+Rozdział 6: „Homotopia, nakrycia i komórkowe modele przestrzeni”.
+Rozdziały 6–18 nie zostały jeszcze objęte przeglądem.
