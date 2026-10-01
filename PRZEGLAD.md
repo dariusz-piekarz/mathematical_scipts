@@ -569,7 +569,116 @@ Punkt odniesienia: `831cbcc`. Przeczytano wszystkie dziesięć sekcji.
   pozostają trzy wcześniejsze w dalszych rozdziałach i trzy zmiany `h` na `ht`.
   PDF aktualizowany wraz ze źródłem.
 
-## Następna iteracja
+## Iteracja 6 — Homotopia, nakrycia i komórkowe modele przestrzeni
 
-Rozdział 6: „Homotopia, nakrycia i komórkowe modele przestrzeni”.
-Rozdziały 6–18 nie zostały jeszcze objęte przeglądem.
+Status: sprawdzono i poprawiono wszystkie 5 sekcji oraz 6 ilustracji.
+Data zakończenia: 2026-10-01.
+
+Przegląd rozpoczęto od `4f017f4`. W jego trakcie, na prośbę użytkownika,
+wykonano pull trzech commitów Darka, do `5b259e6`; ten commit jest
+końcowym punktem odniesienia iteracji. Niezacommitowane zmiany rozdziału 6
+zabezpieczono w stashu i przywrócono bez konfliktów. Przeczytano cały
+rozdział i źródła sześciu rysunków.
+
+**Drobna naprawa po pullu poza rozdziałem 6.** W przykładzie „Prosta
+z podwojonym początkiem” w rozdziale 1 przywrócono widoczne klamry zbiorów
+(`\{…\}` zamiast grupujących `{…}`) i zapis `{[x]: x∈I, x≠0}`.
+Pobrany zapis błędnie umieszczał klasę [x] w przedziale liczb rzeczywistych.
+Zachowano nowe nawiasy w definicji relacji równoważności i wszystkie
+pozostałe zmiany merytoryczne oraz redakcyjne Darka.
+
+### Zmiany i uzasadnienia
+
+1. **Homotopie i retrakty.** Dodano jawne wymagania ciągłości f,g,H
+   w definicjach. Zbiór wypukły uznano za ściągalny przy niezbędnym
+   założeniu niepustości. Wyjaśniono, że homotopia dróg jest relacją
+   równoważności. Poprawiono zdanie o parametrze czasu.
+2. **Punkt bazowy.** Wyjaśniono, dlaczego obraz brzegu kwadratu jest
+   homotopijny do stałej z ustalonym narożnikiem. W dowodzie niezmienniczości
+   π₁ rozróżniono drogę fu od drogi otrzymanej z homotopii fg≃id:
+   mają te same końce, ale nie muszą być równe; podano potrzebne złożenie
+   izomorfizmów zmiany punktu bazowego.
+3. **Podnoszenie.** Doprecyzowano homeomorfizmy na arkuszach i podano
+   dowód lematu o liczbie Lebesgue’a, używanego przy podziale odcinka
+   i kwadratu. W kryterium podnoszenia uzasadniono równość końców
+   przez odwrócenie drugiej części podniesionej pętli i jednoznaczność.
+4. **Warunek półlokalny.** Poprawiono tytuł definicji i określono ją
+   dla pętli opartych w rozważanym punkcie. Wyjaśniono zmianę punktu
+   bazowego w łukowo spójnym otoczeniu, potrzebną w konstrukcji nakrycia.
+5. **Nakrycie uniwersalne.** Sprawdzono aksjomat bazy topologii dla
+   przecięcia arkuszy nad różnymi U,U′ oraz ciągłość i otwartość mapy
+   na każdym arkuszu, zamiast tylko postulować homeomorfizm.
+6. **Klasyfikacja nakryć.** Udowodniono wolność działania, rozłączność
+   przesunięć arkusza i otwartość projekcji na orbity. Sama wolność
+   działania nie gwarantuje nakrycia. Wykazano, że iloraz realizuje
+   dokładnie zadaną podgrupę. Przy porównaniu z dowolnym nakryciem
+   uzasadniono surjektywność oraz równoważność włókien i orbit.
+   Opisano sprzężenie podgrupy przy zmianie punktu nad bazą i jego odwrotność.
+7. **Van Kampen.** Rozwinięto opis iloczynu wolnego i jego własności
+   uniwersalnej. Naprawiono punkt bazowy pętli porównującej drogi
+   pomocnicze: używamy λ′ⱼ*λ̄ⱼ, z początkiem w x₀. Dowód jądra
+   zapisano przez drogi do wszystkich wierzchołków siatki, elementy
+   przypisane krawędziom i relacje wokół prostokątów. Sprawdzono zgodność
+   na wspólnych krawędziach oraz odtworzenie początkowego słowa.
+8. **Sympleksy.** Rozróżniono ściany kowymiaru jeden od ogólnych ścian,
+   osobno określono pusty brzeg Δ⁰. Usunięto literówkę „afininicznej”.
+   W homeomorfizmie z dyskiem dodano jawne przedłużenie radialne
+   i kontrolę ciągłości w środku. Definicja triangulacji zaznacza
+   używany zakres skończony, więc nie sugeruje objęcia przestrzeni niezwartych.
+9. **Δ-kompleksy i CW.** Doprecyzowano warunek Hausdorffa i ciągłość map
+   charakterystycznych, zgodność kolejności wierzchołków ścian oraz
+   topologię ilorazową także dla nieskończonej sumy sympleksów.
+   Dla torusa podano oba porządki wierzchołków. W definicji CW poprawiono
+   równoważność definiującą topologię słabą, gramatykę i nazwę warunku
+   skończoności domknięć. Wyjaśniono argument o zwartej sumie sympleksów
+   i topologii ilorazowej skończonej realizacji.
+10. **Dołączanie komórek.** Sprawdzono osadzenie Y jako podzbioru
+    domkniętego i otwarte osadzenie wnętrza komórki. W dowodzie zmiany π₁
+    podano wzór homotopii pasa przy brzegu, uzasadniono ciągłość przy Y
+    przez otoczenia zawierające całe odcinki radialne i sprawdzono
+    otwartość obu zbiorów użytych w twierdzeniu van Kampena.
+11. **Płaszczyzna rzutowa.** Uzasadniono homeomorfizm [z]↦z² na
+    okręgu z utożsamionymi antypodami i wynikającą z niego relację a²=1.
+    Zamiast niewprowadzonego jeszcze stopnia mapy użyto liczby owinięć.
+    Niejasne porównanie z podgrupą indeksu 2 zastąpiono opisem roli brzegu komórki.
+12. **Rysunki i redakcja.** Dodano kierunek przekątnej torusa i usunięto
+    niezwiązane z matematyką zdanie o kratkowanym tle. Na rysunku szkieletów
+    strzałka wskazuje właściwą 1-komórkę. W rysunku D²/∂D² strzałka
+    ma oznaczenie mapy ilorazowej q: wcześniejsze φ było zdefiniowane
+    tylko na brzegu, a strzałka dotyczyła całego dysku. Doprecyzowano podpis.
+    Nakrycie okręgu przedstawiono jako linię śrubową (zamiast „spirali”).
+    Dalszą lekturę dodano do spisu treści.
+
+### Kontrola iteracji 6
+
+- Przeczytano cały rozdział, w tym definicje, dowody i przykłady.
+  Sprawdzono kolejność wprowadzania pojęć oraz zależności między dowodami.
+- Niezależnie sprawdzono rachunek słów przy zmianie dróg pomocniczych
+  i identyfikacji orbit w nakryciu. Dla siatek 1×1, 2×3 i 5×4 sprawdzono,
+  że przesuwanie drogi przez prostokąty przechodzi przez każdą komórkę
+  dokładnie raz i zachowuje końce drogi.
+- Symbolicznie sprawdzono warunki końcowe homotopii radialnej,
+  normę odwzorowania dysku na sferę i granicę w środku dysku.
+  Dla sympleksów wymiarów 1–4 sprawdzono przecięcia promieni z brzegiem
+  w zestawie kierunków o współrzędnych całkowitych. Zweryfikowano
+  orientacje ścian obu trójkątów torusa i zgodność liczby komórek.
+  Są to kontrole pomocnicze; ogólne uzasadnienia pozostają w tekście.
+- Obejrzano wszystkie 14 stron rozdziału (105–118 PDF), a sześć rysunków
+  dodatkowo w większej rozdzielczości (strony 106, 108, 113, 115 i 116).
+  Sprawdzono czytelność podpisów, kierunki strzałek i wskazania komórek.
+  Obejrzano także poprawiony zapis przykładu z rozdziału 1 na stronie 6.
+- Porównanie z `5b259e6` potwierdza brak zmian w rozdziałach 2–5 i 7–18.
+  Jedyny wyjątek poza rozdziałem 6 to opisana wyżej naprawa notacji
+  w pobranym przykładzie z rozdziału 1. Środowiska LaTeX są zbilansowane,
+  etykiety niepowtórzone, a odsyłacze mają cele.
+- Punkty odniesienia: [Allen Hatcher, Algebraic Topology](https://pi.math.cornell.edu/~hatcher/AT/AT.pdf),
+  rozdział 1 (van Kampen, podnoszenie, konstrukcja i klasyfikacja nakryć),
+  oraz [materiały UW o CW-kompleksach](https://www.mimuw.edu.pl/~sjack/ta/5_cw_grupy_homotopii_jhcw.pdf)
+  (definicje i terminologia).
+- Pełny dokument kompiluje się do 283 stron. Końcowy przebieg nie zgłasza
+  błędów, niezdefiniowanych odsyłaczy, potrzeby ponownej kompilacji ani
+  `Overfull`. Pozostają trzy wcześniejsze ostrzeżenia `Underfull`
+  w dalszych rozdziałach i trzy zmiany położenia ilustracji z `h` na `ht`.
+  PDF zaktualizowano wraz ze źródłem; `git diff --check` poprawny.
+
+Następna iteracja: rozdział 7 — „Homologia przestrzeni”.
