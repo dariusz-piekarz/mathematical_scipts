@@ -786,3 +786,117 @@ gałąź była aktualna. Przeczytano cały rozdział: osiem sekcji i trzy ilustr
   PDF zaktualizowano wraz ze źródłem.
 
 Następna iteracja: rozdział 8 — „Wyższe grupy homotopii i związek z homologią”.
+
+## Iteracja 8 — Wyższe grupy homotopii i związek z homologią
+
+Status: sprawdzono i poprawiono wszystkie 7 sekcji merytorycznych oraz 4 ilustracje.
+Data zakończenia: 2026-10-02.
+
+Punkt odniesienia: `3e871f0`. Pull przed rozpoczęciem nie pobrał nowych zmian.
+Przeczytano cały rozdział: siedem sekcji merytorycznych, zakończenie i cztery rysunki.
+
+### Zmiany i uzasadnienia
+
+1. **Definicje i punkty bazowe.** Zastąpiono nieokreślone „dobrze wskazane
+   topologicznie” wyborem punktu bazowego; w argumentach komórkowych jest
+   on wierzchołkiem. Ujednolicono „spójność łukową”. Wyjaśniono zależność
+   zmiany punktu bazowego od klasy drogi i zgodność z homotopią, która
+   porusza bazę; jest to potrzebne przy przybliżaniu słabej równoważności.
+2. **Eckmann–Hilton.** Rozpisano podstawienia elementu neutralnego.
+   Oddzielono równość map na czterech ćwiartkach od równości klas po
+   usunięciu stałych połówek. Te drugie wymagają zmiany parametryzacji.
+3. **Ciąg względny.** W dokładności przy πₙ(X) wykorzystano konkretną
+   ścianę homotopii zerującej i dwie drogi w kwadracie parametrów.
+   Rozpisano koniec ciągu jako ciąg zbiorów wskazanych i dowód naturalności.
+   W definicji spójności par zaznaczono wszystkie punkty bazowe w A.
+4. **Nieskończone CW.** Dodano dowód, że zwarty podzbiór leży w skończonym
+   podkompleksie. Wyjaśniono ilorazowość iloczynu z przedziałem i wynikające
+   z niej kryterium ciągłości homotopii na wszystkich komórkach.
+   Uzasadniono komórkową homologię par przez iloraz kompleksów i lemat pięciu,
+   a następnie przejście z homologii skończonych CW do dowolnych CW.
+   Rozdział 7 dowodził wcześniej twierdzenia jedynie w zakresie skończonym.
+5. **Przybliżenie komórkowe.** Wypełniono techniczną lukę: zwarte K,
+   wielościenne otoczenie P, interpolacja afiniczna, funkcja odcinająca
+   i kontrola błędu zapewniają punkt pominięty przez cały nowy obraz,
+   także poza obszarem przybliżania. Opisano kolejność usuwania komórek.
+   W równych wymiarach wybór punktu poza obrazami ścian i części niższego
+   rzędu daje skończone przeciwobrazy z lokalnymi znakami; ten wariant
+   uzasadnia późniejsze liczenie komórek w dowodzie Hurewicza.
+6. **Szkielety i homotopie nieskończone.** Przed względnym przybliżaniem
+   dysku przybliżono jego brzeg i użyto HEP. Wcześniej brzeg nie musiał być
+   komórkowy, więc nie można było zachować go i otrzymać obrazu w Xⁱ.
+   Dla kolejnych etapów podano przedziały czasu i sprawdzono ciągłość
+   w chwili granicznej na każdej komórce z całym przedziałem.
+7. **Nakrycia i H₁.** Podnoszenie homotopii wyprowadzono z kryterium dla
+   jednospójnego Sⁿ×I; wyjaśniono stałość bazy w dyskretnym włóknie.
+   W dowodzie Hurewicza w stopniu 1 dopisano niezmienniczość względem
+   homotopii pętli. Kasowanie dróg pomocniczych odbywa się w łańcuchach
+   modulo brzegi, nie w „klasach” pojedynczych niezamkniętych dróg.
+8. **Ściskanie i Whitehead.** Podano jawny wzór kołnierza unieruchamiającego
+   cały brzeg dysku podczas homotopii. Oddzielono pustą przestrzeń i stopień 1,
+   gdzie zamiast argumentu dla grup potrzebny jest rachunek dróg.
+   Opisano komórki cylindra odwzorowania i jawną odwrotność homotopijną.
+9. **Pierwsze komórki.** Uzasadniono abelowość π₂(W,A) przy jednospójnym A,
+   doprowadzanie dysków do bazy, lokalne znaki i rozcinanie wzdłuż drzewa.
+   Dla relacji od wyższych komórek wskazano, że drogi doprowadzające leżą
+   w W, które też jest jednospójne. Poprawiono Zⁿ⁺¹ na A∪Zⁿ⁺¹ tam,
+   gdzie A może mieć komórki wyższych wymiarów. Dodano surjektywność
+   przed opisem jądra oraz sens obrazu klas dołączających w grupie względnej.
+10. **Model Hurewicza.** Dodano osobny wniosek o zabijaniu wybranych klas
+    z dowodem z ciągu pary. W kolejnych etapach bazą jest cały aktualny
+    model, a nie punkt: lemat o pierwszych komórkach z bazą punktową
+    nie miałby wtedy wymaganych założeń. Sprawdzono stabilizację grup,
+    komórkowość map dołączających i przejście do nieskończonego modelu.
+11. **Względny Hurewicz i przykłady.** W porównaniu ciągów osobno obsłużono
+    π₂ i względny stopień 1. Ustalono zgodne orientacje dla map Hurewicza,
+    ograniczono względny homomorfizm do n≥2 i opisano addytywność.
+    W przykładzie dysku chodzi o reprezentanta generatora, nie każdej klasy.
+    Wyjaśniono oparte i nieoparte mapy sfer. W kompleksie Moore’a zaznaczono
+    także C₀. Dla nakrycia S¹∨S² podano bezpośredni model CW i uzasadnienie
+    jednospójności, bez nieuzasadnionego zwijania nieskończonej prostej.
+12. **Język i ilustracje.** Poprawiono odmianę słowa „odwzorowanie”,
+    „antipodalne” na „antypodalne”, niejasne użycie słowa „baza” i wymiar
+    sfery jako brzegu dysku. Rysunek względnego dysku pokazuje A jako pas
+    zawierający obraz brzegu, a wnętrze obrazu może wyjść poza A.
+    W nakryciu bukietu usunięto szczelinę między sferami i prostą.
+    Wycentrowano pionowy podpis kierunku sklejania i przeniesiono
+    oznaczenie utożsamienia w cylindrze ponad rysunek, poza tekst objaśnienia.
+    Zakończenie i dalszą lekturę dodano do spisu treści.
+
+### Kontrola iteracji 8
+
+- Przejrzano kolejność zależności: zwarte obrazy i iloczyn z przedziałem
+  poprzedzają HEP oraz przybliżenie komórkowe; Whitehead poprzedza budowę
+  modelu; lemat o pierwszych komórkach poprzedza zabijanie klas i Hurewicza.
+  Lokalny argument afiniczny nie korzysta z twierdzenia Sarda ani z
+  twierdzenia Hurewicza, które dopiero ma być udowodnione.
+- Sprawdzono wzory Eckmanna–Hiltona na 441 parach wymiernych parametrów,
+  także na liniach sklejania, zachowując współrzędne wewnątrz każdej ćwiartki.
+  Rachunek potwierdza równość map używaną przed przejściem do klas.
+- Dla retrakcji HEP sprawdzono na tej samej siatce, że obraz leży
+  na dole lub boku cylindra, współrzędne pozostają w dozwolonym zakresie,
+  a zadany podzbiór jest nieruchomy. Symbolicznie sprawdzono zgodność
+  czasów obu wzorów kołnierza i jego promienie końcowe.
+- Dla skończonych fragmentów nakrycia z 3,5,…,13 sferami niezależnie
+  obliczono macierze brzegów: H₀=Z, H₁=0, a H₂ ma po jednym generatorze
+  na sferę. Rzut sumujący współczynniki ma rangę 1. Sprawdzono też
+  ilorazy Smitha dla kompleksów Moore’a o m=2,3,5,7.
+  Te kontrole są pomocnicze; argumenty ogólne, w tym przejście do
+  nieskończonego nakrycia, pozostają w tekście.
+- Obejrzano wszystkie 15 stron rozdziału (133–147 PDF). Cztery rysunki
+  na stronach 134, 135, 141 i 147 sprawdzono także w większej rozdzielczości,
+  a po zmianie położenia podpisów ponownie obejrzano dwa zmienione rysunki.
+- Kontrola zakresu względem `3e871f0` potwierdziła brak zmian w pozostałych
+  rozdziałach. Środowiska LaTeX są zbilansowane, etykiety niepowtórzone,
+  odsyłacze mają cele. `git diff --check` poprawny.
+- Punkty odniesienia: [Hatcher, rozdział 4](https://pi.math.cornell.edu/~hatcher/AT/ATch4.pdf)
+  oraz [dodatek o CW](https://pi.math.cornell.edu/~hatcher/AT/ATapp.pdf)
+  (w szczególności skończone podkompleksy zawierające zwarte obrazy).
+- Pełny PDF ma 288 stron. Kompilację potwierdzono lokalnym MiKTeX;
+  wbudowany kompilator edytora ponownie zwrócił status nieznany.
+  Nie ma błędów ani `Overfull`. Pozostały dwa wcześniejsze `Underfull`
+  w późniejszych rozdziałach i trzy zmiany położenia ilustracji `h` na `ht`.
+  Poprzednie ostrzeżenie `Underfull` w rozdziale 8 zniknęło po redakcji.
+  PDF zaktualizowano razem ze źródłem.
+
+Następna iteracja: rozdział 9 — „Formy różniczkowe, orientacja i kohomologia de Rhama”.
