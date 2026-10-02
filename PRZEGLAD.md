@@ -900,3 +900,154 @@ Przeczytano cały rozdział: siedem sekcji merytorycznych, zakończenie i cztery
   PDF zaktualizowano razem ze źródłem.
 
 Następna iteracja: rozdział 9 — „Formy różniczkowe, orientacja i kohomologia de Rhama”.
+
+## Rozdział 9 — formy, orientacja i kohomologia de Rhama (2026-10-02)
+
+Punkt wyjścia: `f7df0ae`. W trakcie przeglądu pobrano także commit Darka
+`0d9857f` („Uzupelnienie dowodow i przykladow do przestrzeni stycznej.”).
+Przywrócenie lokalnych zmian po aktualizacji przebiegło bez konfliktów.
+Kontrola względem `0d9857f` potwierdza zachowanie jego zmian w całości;
+nasze poprawki tej iteracji dotyczą wyłącznie rozdziału 9.
+Przegląd i poniższe kontrole rozdziału 9 zakończono.
+Nowe uzupełnienia Darka z rozdziału 1 zachowano; ich osobny ponowny
+przegląd merytoryczny należy uwzględnić w końcowej kontroli zmian
+powstałych po wcześniejszych iteracjach.
+
+### Dowód de Rhama i całkowanie po sympleksach
+
+- Poprawiono definicję gładkiego sympleksu dla rozmaitości z brzegiem.
+  Przedłużamy jego składowe we współrzędnych do przestrzeni euklidesowej;
+  nie wymagamy przedłużenia o wartościach w samej półprzestrzeni.
+  Wcześniejsze sformułowanie wykluczało np. gładki odcinek t ↦ t
+  zaczynający się na brzegu półprostej.
+- Zastąpiono nieuzasadnione rozcinanie sympleksu na części z gładkim
+  brzegiem lokalnym dowodem Stokesa w narożach. Każda współrzędna
+  półprzestrzeni daje wkład jednej ściany; przecięcia ścian mają w nich
+  miarę zero. Wyjaśniono zgodność orientacji ścian ze znakami (−1)^j.
+- Usunięto sugestię, że można niezależnie wygładzać poszczególne
+  sympleksy ciągłe przy definiowaniu kołańcucha całkowania. Bez zgodności
+  na ścianach taki wybór nie definiuje odwzorowania kompleksów.
+- Przepisano dowód porównania trzech kompleksów: form, gładkich
+  kołańcuchów singularnych oraz wszystkich kołańcuchów singularnych.
+  Izomorfizm ograniczenia z ciągłych do gładkich kołańcuchów otrzymujemy
+  równocześnie z izomorfizmem całkowania, zamiast powoływać się na
+  niedowiedzione wygładzanie względne przy narożach.
+- Uzupełniono algebrę kompleksu podwójnego: znaki różniczki całkowitej,
+  usuwanie składników kocyklu w dokładnych kolumnach, kryterium
+  izomorfizmu przez stożek odwzorowania oraz rolę skończonych przekątnych.
+  Dokładność wierszy jest uzasadniona osobno dla form (podział jedności)
+  i kołańcuchów (wybór indeksu zawierającego mały sympleks).
+- Wyeliminowano odwołanie do silnie wypukłych kul geodezyjnych i
+  nieuzasadnionych „półkul” przy brzegu. Dwukrotne sklejanie wystarcza:
+  najpierw prostokąty w dowolnym otwartym podzbiorze przestrzeni lub
+  półprzestrzeni, następnie dziedziny map na rozmaitości. Ich przecięcia
+  nie muszą być ściągalne. Dowód nie używa pojęć z późniejszych rozdziałów.
+- Wyjaśniono dualizację nad R także w nieskończonym wymiarze oraz
+  wynikającą stąd możliwość zastąpienia całego cyklu gładkim cyklem.
+  Niezależność okresów wynika z istnienia gładkiego łańcucha między
+  takimi reprezentantami i ze Stokesa.
+
+### Pozostałe dowody, założenia i terminologia
+
+- W dowodzie jednoznaczności różniczki zewnętrznej najpierw wykazano
+  lokalność za pomocą pojedynczej funkcji odcinającej. Dopiero to pozwala
+  stosować warunki określające globalny operator do lokalnych współrzędnych.
+- Dodano konwencję zerowych form w ujemnych stopniach i przypadek k=0
+  operatora homotopii. Wyjaśniono gładkość homotopii przy narożach iloczynu.
+- Dla definicji pochodnej Liego przez dwustronny przepływ wymagamy
+  styczności pola do brzegu. Dla dowolnego pola wskazano definicję przez
+  wzór Cartana i jednoznaczne przedłużenie z wnętrza. Rozróżniono też
+  różniczkę form od euklidesowych identyfikacji z rotacją i dywergencją.
+- Doprecyzowano lokalną skończoność rodziny nośników w podziale jedności,
+  zawieranie domknięcia większej kuli wewnątrz mapy, wersję przy brzegu
+  i grupowanie funkcji według pierwotnego pokrycia. To ostatnie uzasadnia
+  nośniki dwóch funkcji używanych w dowodzie Mayera–Vietorisa.
+- Uzupełniono orientację w wymiarze 0: są dwa znaki, lecz tylko jedna
+  baza pusta, więc opis przez dwie klasy baz nie działa w tym wymiarze.
+  Całka jest sumą ze znakami, a orientację brzegu przedziału definiuje
+  wartość kontrakcji formy z wektorem skierowanym na zewnątrz.
+- W dowodzie równoważności opisów orientowalności wydzielono wymiar 0,
+  zmniejszono mapy do spójnych dziedzin i dopuszczono obie półprzestrzenie.
+  Pozwala to dobierać mapy dodatnie także na obu końcach przedziału.
+- W twierdzeniu o orientacji regularnego przeciwobrazu dodano konieczne
+  założenie regularności ograniczenia do brzegu, jeśli M ma brzeg.
+  Dowiedziono lokalnej postaci półprzestrzeni i równości brzegów.
+  Kontrprzykład F(x,s)=x²+s na s≥0 pokazuje, że sama regularność F
+  nie wystarcza. Ilorazowy wzór na formę orientującą poziomicę obejmuje
+  także wymiar 0 i wyjaśnia niezależność od podniesień i baz.
+- We wzorze Stokesa sprawdzono znaki normalnej zewnętrznej i indeksu
+  pominiętej współrzędnej. Zaznaczono, że odzyskanie podstawowego
+  twierdzenia rachunku całkowego jest identyfikacją przypadku szczególnego;
+  dowód Stokesa sam już używa tego faktu analizy.
+- Dla okręgu wykazano pełną okresowość funkcji pierwotnej, zamiast
+  jedynie równości wartości na końcach przedziału. Dla sfer rozpisano
+  surjekcję (a,b) ↦ b−a w stopniu 0; dla torusa oddzielono niezależność
+  dwóch klas stopnia 1 od niezerowości klasy stopnia 2.
+- W porównaniu trzech teorii dodano spójność drogową przy H₁ oraz k≥2
+  przy wyższym twierdzeniu Hurewicza, objaśniono warianty oznaczeń
+  homologii i przejście do lokalnie skończonych triangulacji przez
+  skończone podkompleksy. Doprecyzowano położenie wycinanego dysku w torusie.
+- Jawnie wskazano dodatkową zależność zastosowania Hurewicza:
+  twierdzenie o triangulacji gładkich rozmaitości daje strukturę CW.
+  Jest to wskazany z nazwy wynik zewnętrzny, z odsyłaczem do
+  [notatek Luriego](https://www.math.ias.edu/~lurie/937notes/937Lecture3.pdf),
+  a nie twierdzenie udowodnione w tym rozdziale. Dowód de Rhama po
+  poprawkach nie korzysta z triangulacji. Ewentualny osobny dowód
+  twierdzenia o triangulacji pozostaje propozycją rozbudowy do oceny
+  po zakończeniu całego przeglądu.
+- Poprawiono „kokcykl” na „kocykl”, nawiasy w definicji jądra operatora
+  brzegu, błędne położenie odsyłacza do przykładu dysku i określenie
+  „baza otoczenia” w obliczeniu orientacji odwzorowania antypodalnego.
+
+### Ilustracje i skład
+
+- Rysunek 9.1: nawiasy w wartości iloczynu zewnętrznego, łuk o właściwym
+  środku i precyzyjny podpis odróżniający wybraną formę od pola
+  euklidesowego. Dowolna 2-forma nie jest automatycznie polem powierzchni.
+- Rysunek 9.2: oba łuki orientacji leżą dokładnie na obwodzie dysku.
+- Rysunek 9.4: usunięto biały dysk i jego przerywany obwód, które
+  sugerowały usunięcie całego otworu. Pozostaje jeden zaznaczony punkt;
+  podpis wyjaśnia, że niebieski dysk jest fragmentem dziedziny.
+- Rysunki 9.3 i 9.5 są merytorycznie poprawne. Do przykładu z dwoma
+  trójkątami dopisano argument o składowych otoczenia po usunięciu
+  wspólnego wierzchołka. Zwiększono odstępy w tabeli porównawczej.
+
+### Kontrole w trakcie pracy
+
+- Kontrola zakresu względem `f7df0ae`: źródło zmieniono tylko w rozdziale 9.
+  Środowiska są zbilansowane, etykiety niepowtórzone, odsyłacze mają cele.
+- Symboliczny rachunek form wielomianowych w stopniach 0–3 potwierdził
+  d²=0, wzór Cartana porównany z niezależnym wzorem współrzędnych
+  pochodnej Liego oraz tożsamość radialnego operatora homotopii.
+- Wyznaczniki dla wszystkich 35 ścian standardowych sympleksów
+  wymiarów 1–7 potwierdziły znaki (−1)^j z normalną zewnętrzną najpierw.
+- Sprawdzono tożsamość hδ+δh=id dla rozszerzonego kompleksu Čecha
+  z pięcioma indeksami w stopniach 0–4, w tym indeksy powtórzone.
+  Rozpisano też znaki stożka porównania tabel w samym dowodzie.
+  Te kontrole są pomocnicze; uzasadnienia ogólne pozostają w tekście.
+- Obejrzano wszystkie 21 stron rozdziału (148–168 PDF po drugiej kompilacji,
+  przed przesunięciem numeracji przez nowy commit Darka)
+  oraz pięć stron z ilustracjami w większej rozdzielczości.
+- Sprawdzono materiał porównawczy o formach i kohomologii w
+  [notatkach Gualtieriego](https://www.math.toronto.edu/mgualt/courses/17-1300/docs/17-1300-notes-13.pdf)
+  oraz wskazane w rozdziale źródła MIT i Luriego. Nowy dowód sklejania
+  jest rozpisany bez przyjmowania istnienia dobrego pokrycia rozmaitości.
+
+### Weryfikacja końcowa
+
+- Po pobraniu zmian Darka ponownie sprawdzono zakres: względem `0d9857f`
+  źródło przed i po rozdziale 9 pozostaje identyczne. Powtórzono kontrole
+  odsyłaczy i rachunków. Niezależne macierze kompleksu podwójnego
+  potwierdziły zgodność podanych znaków stożka kolumn ze stożkiem
+  odwzorowania kompleksów całkowitych.
+- Ponownie obejrzano wszystkie strony rozdziału w aktualnej numeracji
+  157–177 oraz tabelę na stronie 175 w większej rozdzielczości.
+  Pięć rysunków znajduje się teraz na stronach 158, 163, 165, 170 i 174.
+- Końcowa kompilacja lokalnym MiKTeX dała 300 stron, bez błędów,
+  nieznanych odsyłaczy, żądań ponownej kompilacji i ostrzeżeń `Overfull`.
+  Pozostały dwa wcześniejsze `Underfull` w późniejszych rozdziałach
+  oraz trzy automatyczne zmiany położenia ilustracji `h` na `ht`.
+  Wbudowany kompilator edytora zwrócił status nieznany; potwierdzeniem
+  kompilacji jest wynik lokalnego MiKTeX. PDF zaktualizowano ze źródłem.
+
+Następna iteracja: rozdział 10 — „Tensor metryczny, długość i miara”.
