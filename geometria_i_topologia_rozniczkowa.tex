@@ -17987,7 +17987,7 @@ krzywej, odległość punktów, pole podrozmaitości i objętość.
 Na końcu połączymy te pojęcia z miarą Hausdorffa
 i twierdzeniem Gaussa o dywergencji.
 
-\section{Metryka jako iloczyn skalarny w każdej przestrzeni stycznej}
+\section{Metryka w przestrzeniach stycznych}
 \label{sec:metryka-definicja}
 
 \begin{definicja}[Metryka riemannowska]
@@ -18137,8 +18137,12 @@ reguła łańcuchowa daje
 Ponieważ $f$ i $f^{-1}$ przenoszą wszystkie drogi
 między odpowiednimi punktami, branie kresu dolnego
 ich długości daje $d_h(f(p),f(q))=d_g(p,q)$.
-Sprawdźmy jeszcze twierdzenie o koneksji, z którego
-wynikają dwie ostatnie własności. Dla pól na $M$ połóżmy
+Twierdzenia o zachowaniu geodezyjnych i krzywizny są
+zapowiedzią pojęć z dwóch następnych rozdziałów.
+Poniższy akapit można przeczytać po poznaniu koneksji
+Leviego-Civity i definicji krzywizny; pozostała część
+obecnego rozdziału nie korzysta z tych dwóch własności.
+Sprawdźmy je, używając wskazanych tam definicji. Dla pól na $M$ połóżmy
 \[
  \widetilde\nabla_XY
  :=f^{-1}_*\bigl(\nabla^h_{f_*X}(f_*Y)\bigr).
@@ -18229,7 +18233,7 @@ Ta sama konstrukcja działa w mapach przybrzegowych.
 \end{proof}
 
 Twierdzenie zapewnia \emph{istnienie}, nie wskazuje
-jednego wyróżnionego wyboru. Na przykład na $\R^n$
+jednego wyróżnionego wyboru. Na przykład na $\R^n$, $n\geq1$,
 metryki $\sum_i(\dd x^i)^2$ i
 $e^{2f(x)}\sum_i(\dd x^i)^2$ są różne dla
 niezerowej funkcji gładkiej $f$. Druga mnoży
@@ -18247,7 +18251,7 @@ To punkt odniesienia dla kolejnych modeli.
 
 \begin{przyklad}[Sfera]
 \label{prz:metryka-sfery}
-Sfera $S_R^2=\{x\in\R^3:|x|=R\}$ otrzymuje
+Dla $R>0$ sfera $S_R^2=\{x\in\R^3:|x|=R\}$ otrzymuje
 metrykę przez ograniczenie euklidesowego iloczynu
 skalarnego do $T_pS_R^2$. Parametryzacja
 \[
@@ -18411,7 +18415,7 @@ formalny opis ich krzywizny odłożymy do
 rozdziału o tensorze krzywizny.
 \end{przyklad}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
 \begin{tikzpicture}[>=Latex,scale=1]
   \begin{scope}[shift={(-4.25,0)}]
@@ -18419,7 +18423,7 @@ rozdziału o tensorze krzywizny.
     \draw[manifoldblue!70!black,thick] (-1.3,-1.03)--(1.3,-1.03)
       node[right] {$y=0$};
     \fill[manifoldred] (-1.04,-.68) circle (2pt);
-    \draw[manifoldred,very thick,->] (-1.04,-.68)--(-.70,-.68);
+    \draw[manifoldred,very thick,->] (-1.04,-.68)--(-.69,-.68);
     \fill[manifoldred] (-1.04,.36) circle (2pt);
     \draw[manifoldred,very thick,->] (-1.04,.36)--(.35,.36);
     \node[manifoldblue!75!black] at (0,-1.48)
@@ -18429,31 +18433,36 @@ rozdziału o tensorze krzywizny.
     \fill[manifoldblue!7] (0,0) circle (1.15);
     \draw[manifoldblue!70!black,very thick] (0,0) circle (1.15);
     \fill[manifoldred] (-.47,-.28) circle (2pt);
-    \draw[manifoldred,very thick,->] (-.47,-.28)--(-.03,-.28);
+    \pgfmathsetmacro{\vlen}{1.15*(1-(.47*.47+.28*.28)/(1.15*1.15))/2}
+    \draw[manifoldred,very thick,->] (-.47,-.28)--({-.47+\vlen},-.28);
     \fill[manifoldred] (.76,.35) circle (2pt);
-    \draw[manifoldred,very thick,->] (.76,.35)--(1.02,.35);
+    \pgfmathsetmacro{\vlen}{1.15*(1-(.76*.76+.35*.35)/(1.15*1.15))/2}
+    \draw[manifoldred,very thick,->] (.76,.35)--({.76+\vlen},.35);
     \node[manifoldblue!75!black] at (0,-1.48)
        {kula Poincarégo};
   \end{scope}
   \begin{scope}[shift={(4.25,-.05)}]
+    \pgfmathsetmacro{\htop}{3.4*(sqrt(1+1.22*1.22)-1)-1.03}
     \shade[top color=manifoldblue!18,bottom color=manifoldblue!47]
-       (0,-1.03)
-       .. controls (-.62,-.72) and (-1.01,.12) .. (-1.22,.94)
-       arc[start angle=180,end angle=0,x radius=1.22,y radius=.30]
-       .. controls (.99,.12) and (.62,-.72) .. cycle;
-    \draw[manifoldblue!75!black,thick] (0,-1.03)
-       .. controls (-.62,-.72) and (-1.01,.12) .. (-1.22,.94);
-    \draw[manifoldblue!75!black,thick] (0,-1.03)
-       .. controls (.62,-.72) and (.99,.12) .. (1.22,.94);
-    \draw[manifoldblue!75!black,thick] (0,.94)
-       ellipse (1.22 and .30);
-    \draw[manifoldgold!80!black,thick,->]
-       (.02,-.96)--(.43,-.73);
+      plot[domain=-1.22:1.22,samples=61]
+        (\x,{3.4*(sqrt(1+\x*\x)-1)-1.03})
+      arc[start angle=0,end angle=180,x radius=1.22,y radius=.30]
+      --cycle;
+    \draw[manifoldblue!75!black,thick]
+      plot[domain=-1.22:1.22,samples=61]
+        (\x,{3.4*(sqrt(1+\x*\x)-1)-1.03});
+    \draw[manifoldblue!75!black,thick] (0,\htop)
+      ellipse (1.22 and .30);
+    \foreach \rad in {.50,.88}{
+      \pgfmathsetmacro{\height}{3.4*(sqrt(1+\rad*\rad)-1)-1.03}
+      \draw[manifoldblue!50!black,thin] (0,\height)
+        ellipse ({\rad} and {.246*\rad});
+    }
     \node[manifoldblue!75!black] at (0,-1.43)
        {hiperboloida};
   \end{scope}
 \end{tikzpicture}
-\caption{Trzy zapisy tej samej geometrii hiperbolicznej. Czerwone strzałki ilustrują, że wektor o ustalonej długości hiperbolicznej ma różną długość na euklidesowym rysunku półprzestrzeni i kuli. Linia $y=0$ oraz okrąg brzegowy nie należą do rozmaitości. Rysunek hiperboloidy przedstawia fragment górnego płata.}
+\caption{Trzy zapisy tej samej geometrii hiperbolicznej. Czerwone strzałki przedstawiają wektory o długości hiperbolicznej $1$: taki wektor ma różną długość na euklidesowym rysunku półprzestrzeni i kuli. Linia $y=0$ oraz okrąg brzegowy nie należą do rozmaitości. Rysunek hiperboloidy przedstawia fragment górnego płata; jego profil jest gładki także w najniższym punkcie.}
 \label{fig:metryki-trzy-modele-hiperboliczne}
 \end{figure}
 
@@ -18462,7 +18471,7 @@ rozdziału o tensorze krzywizny.
 
 \begin{definicja}[Metryka lorentzowska]
 \label{def:metryka-lorentzowska}
-Metryka pseudo-riemannowska jest gładkim,
+Metryka pseudoriemannowska jest gładkim,
 symetrycznym, \emph{niezdegenerowanym} tensorem
 typu $(0,2)$; dopuszczamy ujemne wartości $g(v,v)$.
 W czterech wymiarach metryka o jednym kierunku
@@ -18508,10 +18517,12 @@ ma pole $4\pi r^2$. Nie jest to ogólnie odległość
 zmierzona wzdłuż promienia; z metryki na
 $t=\mathrm{const}$ odczytujemy element takiej
 odległości $\dd\ell=\dd r/\sqrt{1-2M/r}$.
-Współrzędna $t$ jest czasem statycznych
-obserwatorów w nieskończoności, po przeliczeniu
-jednostek, ale nie ich lokalnym czasem własnym
-przy skończonym $r$.
+Współrzędna $t$ jest unormowana tak, aby asymptotycznie, gdy
+$r\to\infty$, zgadzać się z czasem własnym obserwatorów
+statycznych po przeliczeniu jednostek. Dla obserwatora
+o stałych $r,\theta,\phi$ odczytujemy z metryki
+$\dd\tau=\sqrt{1-2M/r}\,\dd t$; przy skończonym $r$
+czas własny $\tau$ różni się więc od $t$.
 Przy $r>2M$ współczynnik $\dd t^2$ jest ujemny,
 a trzy przestrzenne są dodatnie, więc sygnatura
 wynosi $(-,+,+,+)$. Dla ustalonego $t$
@@ -18571,7 +18582,9 @@ $1$-formy. Ponieważ $\Delta>0$ dla $r>r_+$
 i $0<\theta<\pi$, cztery wyświetlone
 kwadraty mają odpowiednio znaki $-,+,+,+$
 (po liniowo niezależnej zamianie pary
-$\dd t,\dd\phi$). W szczególności nie jest
+$\dd t,\dd\phi$). Istotnie, macierz tej zamiany to
+$\left(\begin{smallmatrix}1&-a\sin^2\theta\\-a&r^2+a^2\end{smallmatrix}\right)$,
+a jej wyznacznik wynosi $r^2+a^2\cos^2\theta=\Sigma>0$. W szczególności nie jest
 to metryka riemannowska.
 
 Sprawdźmy związek ze Schwarzschildem:
@@ -18591,10 +18604,18 @@ oba wyrazy $g_{t\phi}\dd t\otimes\dd\phi$
 i $g_{\phi t}\dd\phi\otimes\dd t$ składają
 się na współczynnik podwojony.
 Ten wyraz wiąże czas z kierunkiem obrotu.
-Przekrój $t=\mathrm{const}$ ma dodatnio
-określoną metrykę w podanej dziedzinie,
-ale jego pomiary przestrzenne zależą
-od wybranego przekroju czasoprzestrzeni.
+Przekrój $t=\mathrm{const}$ ma dodatnio określoną
+metrykę w podanej dziedzinie. Współczynniki przy
+$\dd r^2$ i $\dd\theta^2$ są dodatnie, a współczynnik
+przy $\dd\phi^2$ wynosi
+\[
+ \frac{\sin^2\theta}{\Sigma}
+ \bigl((r^2+a^2)^2-a^2\Delta\sin^2\theta\bigr)>0,
+\]
+ponieważ wyrażenie w nawiasie równa się
+$(r^2+a^2)\Sigma+2Mr a^2\sin^2\theta$.
+Pomiary przestrzenne zależą jednak od wybranego
+przekroju czasoprzestrzeni.
 \end{przyklad}
 
 W obu przykładach zapisaliśmy konkretne tensory
@@ -18608,9 +18629,11 @@ wprowadziliśmy.
 
 \begin{definicja}[Długość i energia krzywej]
 \label{def:dlugosc-energia}
-Niech $\gamma:[a,b]\to(M,g)$ będzie odcinkami
-klasy $C^1$. Jej \emph{prędkość} to
-$|\dot\gamma(t)|_g$, \emph{długość} i
+Niech $a<b$, a $\gamma:[a,b]\to(M,g)$ będzie ciągła
+i odcinkami klasy $C^1$ (na skończonym podziale przedziału).
+Wektor prędkości to $\dot\gamma(t)$, a jego długość,
+nazywana także szybkością, wynosi $|\dot\gamma(t)|_g$.
+Jej \emph{długość} i
 \emph{energia} to odpowiednio
 \begin{equation}\label{eq:dlugosc-energia}
  L_g(\gamma)=\int_a^b|\dot\gamma(t)|_g\,\dd t,
@@ -18624,6 +18647,10 @@ Dla krzywych łączących $p$ z $q$ definiujemy
                  L_g(\gamma).
 \end{equation}
 Infimum bierzemy po krzywych odcinkami $C^1$.
+Jeśli nie ma takiej krzywej, przyjmujemy $\inf\varnothing=+\infty$.
+Zatem dla rozmaitości niespójnej wzór daje metrykę
+skończoną osobno na każdej składowej; między różnymi
+składowymi ma wartość $+\infty$.
 \end{definicja}
 
 Metryka $g$ mierzy wektor prędkości w każdym
@@ -18634,7 +18661,7 @@ możliwej długości. Infimum nie zakłada jeszcze,
 
 \begin{stwierdzenie}[Zmiana parametru i energia]
 \label{prop:energia-dlugosc}
-Jeśli $h:[c,d]\to[a,b]$ jest rosnącą dyfeomorfią
+Jeśli $h:[c,d]\to[a,b]$ jest rosnącym dyfeomorfizmem
 klasy $C^1$, to
 $L_g(\gamma\circ h)=L_g(\gamma)$.
 Ponadto
@@ -18643,9 +18670,12 @@ Ponadto
 \end{equation}
 z równością wtedy i tylko wtedy, gdy prędkość
 $|\dot\gamma|_g$ jest stała prawie wszędzie.
-Dla regularnej krzywej można ją przeparametryzować
-ze stałą prędkością; wśród takich parametryzacji
-na ustalonym $[a,b]$ energia jest najmniejsza.
+Dla regularnej krzywej klasy $C^1$, czyli takiej, że
+$\dot\gamma(t)\ne0$, istnieje przeparametryzowanie klasy
+$C^1$ ze stałą szybkością. Osiąga ono najmniejszą energię
+wśród wszystkich regularnych przeparametryzowań na
+ustalonym $[a,b]$. Dla krzywej odcinkami regularnej
+odpowiednie przeparametryzowanie jest odcinkami klasy $C^1$.
 \end{stwierdzenie}
 \begin{proof}
 Reguła łańcuchowa daje
@@ -18657,7 +18687,9 @@ $t=h(s)$ dają
  =\int_c^d|\dot\gamma(h(s))|_g h'(s)\,\dd s
  =\int_a^b|\dot\gamma(t)|_g\,\dd t.
 \]
-Dla energii w pierwszej całce występuje
+Dla malejącego dyfeomorfizmu ten sam rachunek używa
+$|h'|=-h'$ i odwróconych granic całkowania, więc długość
+także się nie zmienia. Dla energii w pierwszej całce występuje
 $(h')^2$, a więc podstawienie nie usuwa całego
 czynnika: energia na ogół się zmienia.
 Nierówność Cauchy'ego--Schwarza dla funkcji
@@ -18690,16 +18722,17 @@ metryki przestrzeni metrycznej $(M,d_g)$
 i wyznacza pierwotną topologię rozmaitości.
 \end{twierdzenie}
 \begin{proof}
-Rozmaitość jest lokalnie łukowo spójna.
-Spójna, lokalnie łukowo spójna przestrzeń
-jest łukowo spójna: składowe łukowe są
-otwarte, więc jedna z nich jest całym $M$.
-Zwartego obrazu drogi dotyka skończone
-podpokrycie map. Dzieląc drogę na krótkie
-odcinki, można połączyć kolejne punkty
-odcinkami prostymi wewnątrz map. Otrzymujemy
-drogę odcinkami gładką o skończonej długości,
-ponieważ $g$ jest ciągła na jej zwartym obrazie.
+W wymiarze $0$ spójna rozmaitość składa się z jednego
+punktu i teza jest natychmiastowa. Załóżmy $n\geq1$.
+Relacja „można połączyć krzywą odcinkami $C^1$” jest
+relacją równoważności. Każda jej klasa jest otwarta:
+w małej kuli współrzędnych, a przy brzegu w półkuli,
+można połączyć dwa punkty odcinkiem prostym w mapie.
+Dopełnienie klasy także jest otwarte, jako suma innych
+klas. Ze spójności wynika, że jest tylko jedna klasa.
+Na każdym ze skończenie wielu kawałków takiej krzywej
+prędkość i współczynniki metryki są ciągłe na zwartym
+przedziale, więc długość jest skończona.
 Zatem $d_g(p,q)<\infty$.
 
 Długości są nieujemne, stała krzywa ma
@@ -18712,7 +18745,14 @@ $d_g(p,p)=0$, symetrię i nierówność trójkąta.
 Zostało najważniejsze: $d_g(p,q)>0$ dla $p\ne q$.
 Wybierzmy mapę $x$ z $x(p)=0$ i domkniętą
 kulę współrzędnych $\overline B_{2r}$ leżącą
-w dziedzinie tej mapy. Na zwartym zbiorze
+w obrazie tej mapy. Jeśli $p\in\partial M$, wybieramy
+mapę przybrzegową z $x(p)=0$ i w całym poniższym
+rachunku zastępujemy $B_\rho$ przez
+$B_\rho\cap\{x^n\geq0\}$. Te półkule są wypukłe,
+więc odcinki używane w dowodzie pozostają w $M$.
+„Wyjście z kuli” oznacza wtedy przekroczenie jej
+sferycznej części brzegu wewnątrz półprzestrzeni.
+Na zwartym zbiorze
 $x^{-1}(\overline B_{2r})$ dodatnia określoność
 i ciągłość macierzy $G$ dają stałe $c,C>0$,
 takie że
@@ -18748,7 +18788,7 @@ są więc lokalnie równoważne.
 
 \begin{przyklad}[Niezupełność i brzeg modelu hiperbolicznego]
 Przedział $(0,1)$ z $g=\dd x^2$ ma zwykłą
-odległość $|p-q|$, ale ciąg $1/j$ jest
+odległość $|p-q|$, ale ciąg $1/j$, $j\geq2$, jest
 Cauchy'ego i nie zbiega w tym przedziale.
 Samo istnienie $g$ nie zapewnia zupełności.
 
@@ -18764,9 +18804,17 @@ więc jest to rzeczywista odległość tych punktów.
 Granica $y=0$ leży nieskończenie daleko.
 Podobnie w kuli Poincarégo
 $d_g(0,u)=\log\frac{1+|u|}{1-|u|}$,
-bo na każdej drodze $|u'|\geq|(|u|)'|$,
-a promień od $0$ osiąga otrzymane dolne
-oszacowanie całkowe.
+bo na każdej drodze $\gamma$ funkcja
+$\rho(t)=|\gamma(t)|$ jest absolutnie ciągła
+i $|\rho'|\leq|\dot\gamma|$ prawie wszędzie.
+Stąd
+\[
+ L_g(\gamma)\geq\int\frac{2|\rho'|}{1-\rho^2}\,\dd t
+ \geq\left|\int\frac{2\rho'}{1-\rho^2}\,\dd t\right|
+ =\int_0^{|u|}\frac{2\,\dd s}{1-s^2}
+ =\log\frac{1+|u|}{1-|u|}.
+\]
+Promień od $0$ do $u$ osiąga tę dolną granicę.
 \end{przyklad}
 
 \section{Objętość wyznaczona przez metrykę}
@@ -18789,19 +18837,25 @@ jest dodatnią gęstością
 \end{equation}
 Przez całkowanie tej gęstości w mapach
 otrzymujemy miarę borelowską $\mu_g$.
-Dla mierzalnej funkcji $f$ o zwartym nośniku
-zawartym w jednej mapie
+Dla funkcji borelowskiej $f\geq0$ lub funkcji całkowalnej,
+o nośniku zawartym w jednej mapie,
 \[
  \int_M f\,\dd\mu_g
   =\int_{x(U)} f(x^{-1}(u))
       \sqrt{\det G(u)}\,\dd u^1\cdots\dd u^n.
 \]
-Ogólną całkę definiujemy lokalnie z podziałem
-jedności, a następnie rozszerzamy na funkcje
-całkowalne. Na rozmaitości zorientowanej
+Ogólną całkę definiujemy z podziałem jedności:
+dla funkcji nieujemnej dopuszczamy wartość $+\infty$,
+a dla funkcji ze znakiem wymagamy $\int_M|f|\,\dd\mu_g<\infty$.
+Sam zwarty nośnik funkcji mierzalnej nie zapewnia całkowalności.
+W wymiarze $0$ przyjmujemy wyznacznik macierzy pustej równy $1$;
+$\mu_g$ jest wtedy miarą liczącą punkty. Na rozmaitości zorientowanej
 \emph{forma objętościowa} ma w dodatniej mapie postać
 $\mathrm{vol}_g=\sqrt{\det G}\,
  \dd x^1\wedge\cdots\wedge\dd x^n$.
+Dla $n=0$ forma objętościowa ma w punkcie wartość
+$\varepsilon_p\in\{1,-1\}$ zadaną jego orientacją;
+całkowanie z tą samą orientacją daje dodatnią masę $1$.
 \end{definicja}
 
 Kreski pionowe w \eqref{eq:element-objetosci}
@@ -18863,6 +18917,13 @@ a stąd
 $\operatorname{Pole}(S_R^2)
 =\int_0^{2\pi}\int_0^\pi
 R^2\sin\theta\,\dd\theta\,\dd\phi=4\pi R^2$.
+Parametry $0<\theta<\pi$, $0<\phi<2\pi$ pomijają
+bieguny i jeden południk. Zbiory te mają zerową miarę
+powierzchniową: w regularnych mapach są punktami lub
+wykresami jednowymiarowymi, zerowymi dla dwuwymiarowej
+miary Lebesgue'a z twierdzenia Fubiniego. Gładka gęstość
+nie zmienia tej zerowości. Nie całkujemy więc przez
+osobliwość mapy; dodajemy jedynie zbiór miary zero.
 W półprzestrzeni hiperbolicznej macierz
 metryki jest $y^{-2}I_n$, więc
 $\dd\mu_{\mathbb H}=y^{-n}\dd x^1\cdots
@@ -18919,8 +18980,8 @@ gdy $k=n-1$.
 
 Parametryzacja $F:U\subset\R^k\to S$
 wybiera wektory $F_1,\ldots,F_k$ styczne
-do powierzchni. Gram ich iloczynów
-skalarnych daje rzeczywisty rozmiar
+do powierzchni. Macierz Grama tych wektorów
+wyznacza rzeczywisty rozmiar
 obrazu małego prostokąta współrzędnych.
 
 \begin{figure}[!htbp]
@@ -18973,7 +19034,7 @@ o nośniku w tym fragmencie, to
    \sqrt{\det\bigl(g(F_a,F_b)\bigr)_{a,b=1}^k}
                       \,\dd u^1\cdots\dd u^k .
 \end{equation}
-Dla $M=\R^3$, $k=2$ czynnik pod pierwiastkiem
+Dla $M=\R^3$ z metryką euklidesową i $k=2$ czynnik pod pierwiastkiem
 jest $|F_u\times F_v|^2$.
 \end{twierdzenie}
 \begin{proof}
@@ -19018,7 +19079,7 @@ dla $k=n$ jest zwykłą całką objętościową.
 
 \begin{przyklad}[Wykres funkcji i paraboloida]
 \label{prz:calka-po-wykresie}
-Dla $F(x,y)=(x,y,f(x,y))$ w $\R^3$
+Dla $F(x,y)=(x,y,f(x,y))$ w euklidesowej $\R^3$
 wektory styczne to $(1,0,f_x)$ i $(0,1,f_y)$,
 a ich macierz Grama to
 \[
@@ -19100,7 +19161,8 @@ norma usuwa znak prędkości.
 \begin{przyklad}[Całka skierowana po powierzchni]
 \label{prz:calka-skierowana-powierzchnia}
 Niech $\Phi:D\subset\R^2\to S\subset\R^3$
-będzie regularną parametryzacją, a orientację
+będzie regularną parametryzacją pokrywającą rozważany
+fragment jednokrotnie, a orientację
 $S$ wybierzmy przez normalną
 $\nu=(\Phi_u\times\Phi_v)/|\Phi_u\times\Phi_v|$.
 Dla pola $X$ \emph{strumień} przez $S$ wynosi
@@ -19215,6 +19277,10 @@ $\sup\{d(x,y):x,y\in U\}$. Kładziemy
                   \mathcal H^s_{d,\delta}(A).
  \notag
 \end{align}
+Pokrycia mogą być skończone lub przeliczalne;
+puste składniki pomijamy, a puste pokrycie zbioru
+pustego ma koszt $0$. Przy braku dopuszczalnego
+pokrycia infimum wynosi $+\infty$.
 Dla $s=k$ całkowitego stosujemy normalizację
 $c_k=\omega_k/2^k$, gdzie $\omega_k$
 jest objętością euklidesowej kuli jednostkowej
@@ -19232,22 +19298,87 @@ granica w \eqref{eq:hausdorff-def} istnieje,
 choć może być nieskończona.
 Dla $s=0$ przyjmujemy $0^0=1$ dla
 niepustego zbioru w pokryciu;
-$\mathcal H^0$ liczy punkty.
-Na prostym odcinku $\mathcal H^1$ jest
-jego długością, a na gładkiej powierzchni
+$\mathcal H^0$ liczy punkty: zbiór $N$ różnych punktów
+wymaga co najmniej $N$ składników dla $\delta$ mniejszego
+niż ich minimalna wzajemna odległość, a pokrycie
+singletonami ma koszt $N$. Dla zbioru nieskończonego
+stosujemy dolne oszacowanie do dowolnie dużych
+skończonych podzbiorów i dostajemy $+\infty$.
+Na prostym odcinku z odległością euklidesową $\mathcal H^1$ jest
+jego długością, a na gładkiej powierzchni euklidesowej
 $\mathcal H^2$ jest polem.
+
+\begin{stwierdzenie}[Dlaczego otrzymujemy miarę borelowską]
+\label{prop:hausdorff-borel}
+Funkcja $\mathcal H^s_d$ jest miarą zewnętrzną.
+Jeśli $d(A,B):=\inf\{d(a,b):a\in A,b\in B\}>0$, to
+\[
+ \mathcal H^s_d(A\cup B)=\mathcal H^s_d(A)+\mathcal H^s_d(B).
+\]
+Wszystkie zbiory borelowskie są dla niej mierzalne,
+a na nich $\mathcal H^s_d$ jest przeliczalnie addytywna.
+\end{stwierdzenie}
+\begin{proof}
+Dla ustalonego $\delta$ monotoniczność i wartość zero
+na zbiorze pustym wynikają z definicji. Pokrywając
+każdy $A_i$ z kosztem co najwyżej
+$\mathcal H^s_{d,\delta}(A_i)+\eta2^{-i}$ i łącząc
+pokrycia, otrzymujemy przeliczalną podaddytywność.
+Jeśli suma po prawej jest nieskończona, nierówność
+jest automatyczna. W przeciwnym razie puszczamy
+$\eta\downarrow0$. Ponadto
+\[
+ \mathcal H^s_{d,\delta}\Bigl(\bigcup_i A_i\Bigr)
+ \leq\sum_i\mathcal H^s_{d,\delta}(A_i)
+ \leq\sum_i\mathcal H^s_d(A_i).
+\]
+Granica przy $\delta\downarrow0$ dowodzi
+podaddytywności $\mathcal H^s_d$. Dla
+$\delta<d(A,B)$ żaden składnik pokrycia nie spotyka
+obu zbiorów; rozdzielenie składników daje odwrotną
+nierówność dla ich sumy i następnie równość w granicy.
+
+Wykażmy mierzalność zbioru domkniętego $F$.
+Oznaczmy $\mu=\mathcal H^s_d$. Kryterium Carathéodory'ego
+wymaga dla każdego $T\subset X$ równości
+$\mu(T)=\mu(T\cap F)+\mu(T\setminus F)$.
+Jedna nierówność jest podaddytywnością. Możemy założyć
+$\mu(T)<\infty$, bo dla $\mu(T)=\infty$ ta nierówność
+wymusza nieskończoność prawej strony.
+Niech $T_i=\{x\in T:d(x,F)\geq1/i\}$.
+Addytywność dla zbiorów oddalonych daje
+$\mu(T)\geq\mu(T\cap F)+\mu(T_i)$.
+Żeby przejść do $T\setminus F$, rozważmy warstwy
+\[
+ E_j=\{x\in T:1/(j+1)\leq d(x,F)<1/j\}.
+\]
+Każda skończona rodzina warstw o indeksach tej samej
+parzystości składa się ze zbiorów oddalonych dodatnio:
+funkcja $d(\,\cdot\,,F)$ jest $1$-lipschitzowska.
+Suma ich miar nie przekracza $\mu(T)$.
+Zatem $\sum_j\mu(E_j)<\infty$ i jej ogony dążą do zera.
+Ponieważ $F$ jest domknięty,
+$T\setminus F\subset T_i\cup\bigcup_{j\geq i}E_j$,
+skąd $\mu(T\setminus F)\leq\mu(T_i)+\sum_{j\geq i}\mu(E_j)$.
+Puszczając $i\to\infty$, otrzymujemy żądane kryterium.
+Przypadki $F=\varnothing,X$ są natychmiastowe.
+Z twierdzenia Carathéodory'ego zbiory spełniające to
+kryterium tworzą $\sigma$-algebrę, na której miara
+zewnętrzna jest miarą. Zawiera ona zbiory domknięte,
+a więc wszystkie zbiory borelowskie.
+\end{proof}
 
 \begin{lemat}[Zmiana skali odległości]
 \label{lem:hausdorff-lipschitz}
 Jeśli $F:(X,d_X)\to(Y,d_Y)$ jest
-$L$-lipschitzowskie, to dla każdego $A\subset X$
+$L$-lipschitzowskie z $L>0$, to dla każdego $A\subset X$
 i $s\geq0$
 \[
  \mathcal H^s_{d_Y}(F(A))
  \leq L^s\,\mathcal H^s_{d_X}(A).
 \]
 Jeśli na $A$ i $F(A)$ odwzorowanie ma odwrotność
-$L'$-lipschitzowską, otrzymujemy również
+$L'$-lipschitzowską z $L'>0$, otrzymujemy również
 $(L')^{-s}\mathcal H^s_{d_X}(A)
 \leq\mathcal H^s_{d_Y}(F(A))$.
 \end{lemat}
@@ -19262,22 +19393,35 @@ są co najwyżej $L^s$ razy większe.
 Bierzemy infimum i następnie granicę
 $\delta\downarrow0$. Drugą nierówność
 otrzymujemy przez to samo rozumowanie
-zastosowane do $F^{-1}$.
+zastosowane do $F^{-1}$. Można przy tym pracować
+z pokryciami wewnątrz $A$: przecięcie każdego składnika
+pokrycia z $A$ nie zwiększa jego średnicy. Miara
+Hausdorffa podzbioru z odległością ograniczoną jest
+więc taka sama jak jego miara liczona w przestrzeni
+otaczającej. Założenie $L>0$ nie wyklucza map stałych,
+które są lipschitzowskie z dowolną dodatnią stałą.
 \end{proof}
 
 \begin{twierdzenie}[Zgodność z miarą riemannowską]
 \label{thm:hausdorff-rownosc}
-Na $(M^n,d_g)$ z normalizacją
+Dla spójnej rozmaitości riemannowskiej $M^n$, również
+z brzegiem, na $(M^n,d_g)$ z normalizacją
 \eqref{eq:hausdorff-def} mamy
 $\mathcal H^n_{d_g}=\mu_g$
 na zbiorach borelowskich.
 Jeśli $S^k\subset M$ jest gładką
-podrozmaitością zanurzoną (bez samoprzecięć),
+podrozmaitością osadzoną, z metryką $h=i^*g$,
 to $\mathcal H^k_{d_g|_S}=\mu_{i^*g}$
 na $S$. Tę samą miarę na $S$ daje
-odległość wewnętrzna $d_{i^*g}$.
+odległość wewnętrzna $d_{i^*g}$, liczona na każdej
+składowej $S$ osobno. Dla niespójnego $M$ pierwszą
+równość również rozumiemy składowa po składowej
+i sumujemy otrzymane miary. W wymiarze $0$ wszystkie
+te miary są miarami liczącymi punkty.
 \end{twierdzenie}
 \begin{proof}
+Przypadek wymiaru $0$ wynika z ustalonych konwencji.
+W pozostałej części dowodu wymiary są dodatnie.
 Zacznijmy od użytego faktu euklidesowego:
 przy normalizacji $c_k=\omega_k/2^k$
 miara $\mathcal H^k$ na $\R^k$ jest
@@ -19294,67 +19438,117 @@ kule leżące w nim; twierdzenie Vitalego
 o pokryciach wybiera rozłączne kule
 pokrywające go z dokładnością do zbioru
 miary zero. Ich suma objętości nie
-przekracza objętości zbioru, a resztę
-zerowej miary pokrywamy kulami o dowolnie
-małej sumie objętości. Regularność
-miary Lebesgue'a pozwala przejść
-do dowolnego zbioru borelowskiego.
+przekracza objętości zbioru. Tu potrzebne jest
+osobne uzasadnienie, że reszta zerowej miary Lebesgue'a
+ma też zerową miarę Hausdorffa. Dla ustalonych
+$\delta,\eta>0$ pokrywamy taki zbiór sześcianami
+o bokach $\ell_j<\delta/\sqrt{k}$ i
+$\sum_j\ell_j^k<\eta$; pozwala na to definicja miary
+zewnętrznej Lebesgue'a, z ewentualnym podziałem sześcianów.
+Ich koszt Hausdorffa nie przekracza
+$c_k k^{k/2}\eta$. Puszczając $\eta\downarrow0$,
+a następnie $\delta\downarrow0$, dostajemy zerowość
+bez zakładania dowodzonej równości miar.
+Kule z twierdzenia Vitalego wybieramy o średnicach
+mniejszych niż $\delta$. Ich koszt Hausdorffa jest
+dokładnie sumą objętości, ponieważ $c_k(2r)^k=\omega_k r^k$.
+Dodanie pokrycia reszty daje
+$\mathcal H^k_\delta(O)\leq\mathcal L^k(O)$ dla otwartego $O$.
+Granica po $\delta$ i zewnętrzna regularność miary
+Lebesgue'a dają $\mathcal H^k(A)\leq\mathcal L^k(A)$
+dla borelowskich $A$ o skończonej mierze.
+Dla nieskończonej miary równość wynika już
+z przeciwnej nierówności.
 Są to klasyczne dwa wyniki analizy miary,
 na których opiera się krok euklidesowy.
 
-Przejdźmy do $M$. W punkcie $p$ dobierzmy
-liniowo współrzędne $x$ tak, by $G(x(p))=I_n$.
-Przez ciągłość, w dostatecznie małej kuli
-współrzędnych macierz spełnia
+Przejdźmy do $M$. Ustalmy $0<\varepsilon<1$.
+W punkcie $p$ dobierzmy liniowo współrzędne $x$ tak,
+by $x(p)=0$ i $G(0)=I_n$. Przy brzegu można to zrobić,
+wybierając najpierw ortonormalną bazę przestrzeni stycznej
+do brzegu i dopełniając ją normalną do wnętrza;
+zmiana liniowa zachowuje model półprzestrzeni.
+Na dostatecznie małej domkniętej kuli współrzędnych
+$\overline B_{3r}$ (przy brzegu przeciętej z półprzestrzenią)
+ciągłość daje
 \[
  (1-\varepsilon)|v|^2\leq g_x(v,v)
-                  \leq(1+\varepsilon)|v|^2.
+                         \leq(1+\varepsilon)|v|^2.
 \]
-Na jeszcze mniejszej kuli odcinek prosty
-daje górne oszacowanie odległości
-$d_g(q,q')\leq\sqrt{1+\varepsilon}
-\,|x(q)-x(q')|$. Dolne otrzymujemy
-z dokładnością do $\sqrt{1-\varepsilon}$:
-dowolna krzywa pozostająca w większej kuli
-ma przynajmniej taką długość w porównaniu
-z przemieszczeniem euklidesowym; krzywa
-wychodząca z niej ponosi stały koszt
-przed pierwszym wyjściem, więc dla dostatecznie
-bliskich $q,q'$ nie może skrócić odległości.
-To ten sam argument co w dowodzie
-Twierdzenia~\ref{thm:odleglosc-jest-metryka}.
+Niech $q,q'$ leżą w mniejszej kuli $B_r$.
+Odcinek prosty daje oszacowanie górne. Krzywa pozostająca
+w $B_{3r}$ ma długość co najmniej
+$\sqrt{1-\varepsilon}|x(q)-x(q')|$.
+Krzywa wychodząca z $B_{3r}$ musi przed pierwszym wyjściem
+przebyć we współrzędnych co najmniej $2r$, podczas gdy
+$|x(q)-x(q')|\leq2r$. Dlatego dla \emph{wszystkich}
+krzywych, także opuszczających mapę, otrzymujemy
+\begin{equation}\label{eq:metryka-lokalnie-blisko-euklidesowej}
+ \sqrt{1-\varepsilon}|x(q)-x(q')|
+ \leq d_g(q,q')
+ \leq\sqrt{1+\varepsilon}|x(q)-x(q')|.
+\end{equation}
 
-Lemat~\ref{lem:hausdorff-lipschitz}
-porównuje na tej małej kuli
-$\mathcal H^n_{d_g}$ z euklidesową
-$\mathcal H^n=\mathcal L^n$
+Dla borelowskiego $A$ zawartego w tej mniejszej mapie
+Lemat~\ref{lem:hausdorff-lipschitz} porównuje
+$\mathcal H^n_{d_g}(A)$ z $\mathcal L^n(x(A))$
 z czynnikami $(1\pm\varepsilon)^{n/2}$.
-Jednocześnie wartości własne $G$
-leżą między $1-\varepsilon$ a
-$1+\varepsilon$, zatem
-$(1-\varepsilon)^{n/2}
-\leq\sqrt{\det G}
-\leq(1+\varepsilon)^{n/2}$.
-Każdy punkt ma takie kule dla
-dowolnie małego $\varepsilon$.
-Rozcinając zbiory na przeliczalne,
-rozłączne fragmenty w tych kulach
-i puszczając $\varepsilon\downarrow0$,
-otrzymujemy $\mathcal H^n_{d_g}=\mu_g$.
+Te same granice dotyczą $\sqrt{\det G}$, ponieważ
+wszystkie wartości własne $G$ leżą w
+$[1-\varepsilon,1+\varepsilon]$. Eliminując miarę
+Lebesgue'a między oboma porównaniami, dostajemy
+\[
+ \left(\frac{1-\varepsilon}{1+\varepsilon}\right)^{n/2}\mu_g(A)
+ \leq\mathcal H^n_{d_g}(A)
+ \leq\left(\frac{1+\varepsilon}{1-\varepsilon}\right)^{n/2}\mu_g(A).
+\]
+Dla ustalonego $\varepsilon$ wybieramy przeliczalne
+pokrycie takimi mapami (przeliczalna baza gwarantuje
+istnienie przeliczalnego podpokrycia). Dowolny zbiór
+borelowski rozcinamy na rozłączne części: najpierw część
+w pierwszej mapie, następnie w drugiej bez pierwszej itd.
+Przeliczalna addytywność obu miar daje te same nierówności
+globalnie. Dopiero teraz puszczamy $\varepsilon\downarrow0$.
+Otrzymujemy równość także dla miary nieskończonej,
+gdyż już dowolna dodatnia dolna stała wymusza
+nieskończoność drugiej miary.
 
-Na $S$ prowadzimy identyczny rachunek
-w $k$ lokalnych parametrach, z macierzą
-metryki $h=F^*g$. W lokalnej mapie
-podrozmaitości zarówno ograniczona
-odległość otoczenia $d_g|_S$, jak i
-odległość wewnętrzna $d_h$ mają
-na dostatecznie małej skali te same
-dwustronne oszacowania przez normę
-euklidesową parametrów; wynika to
-z gładkości $F$, iniektywności $\dd F$
-i z faktu, że lokalny fragment $S$
-jest wykresem. Stosujemy poprzedni
-argument w wymiarze $k$.
+Pozostaje istotna różnica między odległością otoczenia
+a odległością wewnętrzną na $S$. W mapie otoczenia
+unormowanej jak wyżej wybierzmy lokalną parametryzację
+$F:V\subset\R^k\to S$, a przy brzegu $S$ -- z półprzestrzeni,
+tak aby $F(0)=p$ i macierz $J=D(x\circ F)_0$ spełniała
+$J^{\mathsf T}J=I_k$. Istnienie takiego wyboru wynika
+z iniektywności różniczki i ortonormalizacji bazy $T_pS$.
+Zmniejszamy $V$ do wypukłej kuli lub półkuli i dla
+$0<\eta<1$ zapewniamy
+$\|D(x\circ F)_u-J\|\leq\eta$ na $V$.
+Całkując po odcinku od $u$ do $v$, otrzymujemy
+\[
+ |x(F(u))-x(F(v))-J(u-v)|\leq\eta|u-v|.
+\]
+W szczególności różnica obrazów ma normę co najmniej
+$(1-\eta)|u-v|$. Dobieramy $V$ tak małe, żeby jego
+obraz leżał w kuli $B_r$ z
+\eqref{eq:metryka-lokalnie-blisko-euklidesowej}.
+Każda droga na $S$ jest także drogą na $M$, a obraz
+odcinka parametrów jest drogą na $S$. Zatem
+\[
+ \sqrt{1-\varepsilon}(1-\eta)|u-v|
+ \leq d_g(F(u),F(v))
+ \leq d_h(F(u),F(v))
+ \leq\sqrt{1+\varepsilon}(1+\eta)|u-v|.
+\]
+Tak samo normy $|D F_u(w)|_g$ są ograniczone przez
+te dwie stałe razy $|w|$. Wyznacznik Grama daje więc
+dla gęstości $\mu_h$ granice będące $k$-tymi potęgami
+tych stałych. Stosujemy poprzednie porównanie miar,
+przeliczalne rozcinanie na mapy $S$ oraz
+$\varepsilon,\eta\downarrow0$. Obie odległości dają
+$\mu_h$, choć globalnie na ogół nie są równe.
+Osadzenie zapewnia, że mapy $S$ opisują jego własną
+topologię jako podzbioru $M$; nie liczymy wielokrotności
+różnych punktów dziedziny immersji.
 \end{proof}
 
 Rozróżnijmy dwa użycia twierdzenia:
@@ -19394,7 +19588,9 @@ Definicja jest niezależna od orientacji:
 jej odwrócenie zmienia znak obu form
 po obu stronach. Dlatego $\operatorname{div}_gX$
 jest zdefiniowana także na rozmaitości
-nieorientowalnej.
+nieorientowalnej: wybieramy orientacje lokalnie, a na
+przecięciach ich znaki różnią się o funkcję lokalnie stałą
+o wartościach $\pm1$, której różniczka jest zerowa.
 \end{definicja}
 
 W każdej przestrzeni stycznej $g_p$ jest
@@ -19405,6 +19601,8 @@ istnienie i jednoznaczność gradientu.
 W mapie, przy macierzy odwrotnej
 $(g^{ij})=G^{-1}$, otrzymujemy
 $(\nabla_gf)^i=\sum_jg^{ij}\partial_jf$.
+Współczynniki te są gładkie, bo $G^{-1}$ jest gładka
+(wzór z macierzą dopełnień i nieznikającym $\det G$).
 
 \begin{stwierdzenie}[Wzór lokalny i reguła iloczynu]
 \label{prop:div-lokalnie}
@@ -19448,6 +19646,17 @@ $\partial_i(wfX^i)=wX^i\partial_i f
   +f\partial_i(wX^i)$ i sumujemy.
 \end{proof}
 
+Jednostkowa normalna zewnętrzna istnieje niezależnie
+od orientowalności $M$. W mapie przybrzegowej z
+$s\geq0$ połóżmy
+$\nu=-\nabla_g s/|\nabla_g s|_g$ na $s=0$.
+Różniczka $\dd s$ jest niezerowa i znika na wektorach
+stycznych do brzegu, więc wzór daje jednostkowy wektor
+prostopadły, skierowany na zewnątrz. Inna funkcja
+definiująca brzeg ma tam różniczkę $a\,\dd s$, $a>0$;
+normalizacja usuwa ten czynnik. Lokalne wzory sklejają
+się więc w jedno gładkie pole $\nu$ na $\partial M$.
+
 \begin{twierdzenie}[Twierdzenie Gaussa o dywergencji]
 \label{thm:gauss-riemannowski}
 Niech $(M^n,g)$ będzie zwartą, zorientowaną
@@ -19464,8 +19673,9 @@ Wówczas
  =\int_{\partial M}g(X,\nu)\,\dd\mu_h.}
 \end{equation}
 Ta sama równość zachodzi dla $M$ niezwartych,
-jeśli $X$ ma zwarty nośnik. Można ją również
-sformułować bez założenia orientowalności.
+jeśli $X$ ma zwarty nośnik. Obowiązuje również
+bez założenia orientowalności, z całkami względem
+podanych dodatnich miar.
 \end{twierdzenie}
 \begin{proof}
 Najpierw przyjmijmy orientację. Wstawmy
@@ -19477,7 +19687,7 @@ Definicja dywergencji daje
  =\int_M\dd\omega
  =\int_{\partial M}i^*\omega.
 \]
-Ustalmy punkt brzegu i dodatnią ortonormalną
+Dla $n\geq2$ ustalmy punkt brzegu i dodatnią ortonormalną
 bazę $(e_1,\ldots,e_{n-1})$ jego przestrzeni
 stycznej. Z reguły orientowania brzegu
 w Definicji~\ref{def:orientacja-brzegu}
@@ -19499,6 +19709,11 @@ przestrzeni $T_p\partial M$. Zatem
 Forma objętościowa brzegu przyjmuje
 na $(e_1,\ldots,e_{n-1})$ wartość $1$,
 więc $i^*\omega=g(X,\nu)\mathrm{vol}_h$.
+Dla $n=1$ używamy konwencji orientacji punktu:
+$\mathrm{vol}_h(p)=\mathrm{vol}_g(\nu_p)=\varepsilon_p$.
+Ponieważ $X_p=g(X_p,\nu_p)\nu_p$, ta sama tożsamość
+$i^*\omega=g(X,\nu)\mathrm{vol}_h$ zachodzi bez wybierania
+„dodatniej bazy” przestrzeni zerowej.
 To dowodzi \eqref{eq:gauss-riemannowski}
 po uwzględnieniu, że dodatnie formy
 odpowiadają miarom $\mu_g$ i $\mu_h$.
@@ -19593,6 +19808,11 @@ riemannowskiej wraz z formułą pola rozwija
 \href{https://doi.org/10.1017/CBO9780511616822.005}
 {Isaac Chavel, \emph{Riemannian Geometry:
 A Modern Introduction}, część III}.
+Fakty o miarze Hausdorffa w przestrzeni euklidesowej,
+w tym nierówność izodiametryczną i pokrycia Vitalego,
+omawia dodatek A do
+\href{https://www.math.cmu.edu/~gautam/sj/teaching/2022-23/720-measure/pdfs/measure.pdf}
+{\emph{Lecture Notes on Measure Theory} Gautama Iyera}.
 
 \chapter{Koneksje i transport równoległy}
 \label{ch:koneksje}

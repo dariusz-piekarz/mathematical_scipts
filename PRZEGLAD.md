@@ -1051,3 +1051,158 @@ powstałych po wcześniejszych iteracjach.
   kompilacji jest wynik lokalnego MiKTeX. PDF zaktualizowano ze źródłem.
 
 Następna iteracja: rozdział 10 — „Tensor metryczny, długość i miara”.
+
+## Rozdział 10 — tensor metryczny, długość i miara (2026-10-02–03)
+
+Punkt wyjścia: `c4efcb0`. Aktualizacja repozytorium na początku iteracji
+potwierdziła brak nowych commitów. Przeczytano cały rozdział (osiem sekcji,
+dwie ilustracje); przegląd oraz poniższe kontrole zakończono.
+
+### Definicje, modele i odległość
+
+- Oddzielono zapowiedź zachowania geodezyjnych i krzywizny przez izometrie
+  od bieżącego wywodu: dowód tych dwóch własności korzysta z definicji
+  następnych rozdziałów, co teraz wskazano wprost. Długość, odległość
+  i miara są dalej rozwijane niezależnie od tych przyszłych pojęć.
+- Dopisano R>0 przy sferze. W przykładzie Schwarzschilda doprecyzowano
+  asymptotyczne unormowanie czasu i podano czas własny obserwatora
+  statycznego: dτ=√(1−2M/r) dt.
+- Dla Kerra obliczono wyznacznik Σ zmiany bazy różniczek t,φ;
+  uzasadnia to sygnaturę. Dodatnią określoność przekroju t=const
+  potwierdza jawny dodatni współczynnik przy dφ², po przekształceniu
+  nawiasu do (r²+a²)Σ+2Mr a² sin²θ. Poprawiono pisownię
+  „pseudoriemannowska”.
+- W definicji długości podano a<b, ciągłość krzywej i skończony podział
+  na kawałki klasy C¹. Rozróżniono wektor prędkości i jego długość.
+  Dla punktów w różnych składowych infimum pustej rodziny wynosi +∞;
+  zwykłą metrykę otrzymujemy na każdej składowej osobno.
+- Uściślono klasę regularności przeparametryzowania do stałej szybkości:
+  dla regularnej krzywej C¹ jest ono C¹, dla krzywej odcinkami regularnej
+  odpowiednio odcinkami C¹. Dodano niezmienniczość długości przy
+  odwróceniu kierunku parametru.
+- W dowodzie skończoności odległości użyto otwartych klas osiągalności
+  krzywymi odcinkami C¹. Dopisano przypadek wymiaru 0 i pełną wersję
+  argumentu lokalnego w półkulach przy brzegu.
+- Poprawiono przykład ciągu 1/j w (0,1): indeksowanie zaczyna się od j=2.
+- Rozpisano dolne oszacowanie długości drogi w kuli Poincarégo przez
+  całkę 2|ρ′|/(1−ρ²), z jawnym użyciem absolutnej ciągłości ρ=|γ|.
+  To obejmuje również przejścia przez środek, gdzie norma nie zawsze
+  ma klasyczną pochodną. Promień osiąga dolne oszacowanie.
+
+### Całkowanie i dywergencja
+
+- Zwarty nośnik funkcji mierzalnej nie wystarcza do całkowalności.
+  Definicję całki sformułowano dla funkcji nieujemnych (możliwa wartość
+  +∞) albo całkowalnych bezwzględnie. Dodano miarę liczącą i formę
+  objętościową ze znakiem w wymiarze 0.
+- Przy całkowaniu po sferze wyjaśniono pominięcie biegunów i południka:
+  mają zerową miarę powierzchniową w regularnych mapach, z twierdzenia
+  Fubiniego. Nie traktujemy osobliwych współrzędnych jako poprawnej mapy.
+- Przy wzorze z iloczynem wektorowym dopisano konieczne założenie
+  euklidesowej metryki na R³, a przy całce strumienia jednokrotne
+  pokrywanie fragmentu przez parametryzację.
+- Uzasadniono gładkość gradientu przez gładką macierz odwrotną oraz
+  niezależność lokalnej dywergencji od lokalnie stałych znaków orientacji.
+- Skonstruowano zewnętrzną normalną jednostkową jako −∇s/|∇s| przy
+  lokalnej funkcji brzegowej s≥0 i wyjaśniono zgodność na przecięciach.
+- W dowodzie Gaussa wydzielono n=1: w zerowymiarowej przestrzeni
+  stycznej brzegu nie zawsze istnieje „dodatnia baza”, więc użyto
+  znaków punktów i kontrakcji formy. Twierdzenie wyraźnie obejmuje
+  również przypadek nieorientowalny, już uzasadniony przez podział jedności.
+
+### Miara Hausdorffa
+
+- Doprecyzowano skończone i przeliczalne pokrycia, puste pokrycie,
+  pomijanie pustych składników oraz brak dopuszczalnego pokrycia.
+  Wykazano, że H⁰ rzeczywiście liczy punkty, także dla zbiorów nieskończonych.
+- Dodano dowód, że konstrukcja daje miarę zewnętrzną, addytywną na
+  zbiorach o dodatniej wzajemnej odległości. Kryterium Carathéodory’ego
+  dla zbiorów domkniętych sprawdzono przez warstwy odległości od zbioru;
+  z niego wynika mierzalność borelowska. Jest to potrzebne do późniejszego
+  przeliczalnego rozcinania zbiorów w dowodzie równości miar.
+- W lemacie Lipschitza użyto dodatnich stałych, unikając nieokreślonych
+  iloczynów 0·∞; mapy stałe nadal są objęte twierdzeniem. Wyjaśniono,
+  dlaczego pokrycia można ograniczać do samego podzbioru.
+- Poprawiono „podrozmaitość zanurzona (bez samoprzecięć)” na precyzyjne
+  założenie osadzenia. Sam brak samoprzecięć immersji nie zapewnia
+  topologii podprzestrzeni. Rozróżniono składowe dla odległości wewnętrznej.
+- W kroku euklidesowym osobno wykazano, że zbiór zerowej miary Lebesgue’a
+  ma zerową miarę Hausdorffa: pokrycie drobnymi sześcianami ma koszt
+  ograniczony stałą razy sumę ich objętości. Dzięki temu argument
+  Vitalego nie zakłada już niejawnie właśnie dowodzonej równości miar.
+- Zastąpiono „dostatecznie bliskie punkty” konkretnymi kulami B_r i B_3r.
+  Wyjście z większej kuli kosztuje co najmniej 2r√(1−ε), co wystarcza
+  do dolnego oszacowania dla każdej pary punktów w mniejszej kuli.
+  Argument obejmuje półkule i drogi opuszczające dziedzinę mapy.
+- Rozpisano współczynniki ((1−ε)/(1+ε))^(n/2) i odwrotne w porównaniu
+  miar, przeliczalny rozkład dla ustalonego ε i dopiero późniejsze
+  przejście ε→0, także dla zbiorów nieskończonej miary.
+- Na podrozmaitości wykorzystano DF bliskie izometrycznemu włożeniu J.
+  Całkowanie po odcinku parametrów daje dolną granicę odległości
+  otoczenia, a obraz odcinka daje górną granicę odległości wewnętrznej.
+  Razem z wyznacznikiem Grama dowodzi to równości obu miar z μ_h,
+  bez twierdzenia, że same odległości są globalnie równe.
+
+### Ilustracje
+
+- Rysunek trzech modeli: czerwone wektory mają teraz dokładnie długość
+  hiperboliczną 1, z uwzględnieniem skali narysowanej kuli. Profil
+  hiperboloidy pochodzi ze wzoru t=√(1+r²), zamiast krzywych z ostrym
+  czubkiem; dodano dwa przekroje i usunięto nieobjaśnioną złotą strzałkę.
+- Rysunek pozostaje przed sekcją o metrykach lorentzowskich. Skrócono
+  pierwszy nagłówek sekcji, który wcześniej łamał wyraz między wierszami.
+- Rysunek parametryzacji powierzchni jest poprawny: odróżnia obszar
+  parametrów, jego obraz, wektory styczne i normalną. Pozostawiono go.
+  Określenie „Gram ich iloczynów” zastąpiono „macierzą Grama tych wektorów”.
+
+### Weryfikacja rachunkowa i źródła
+
+- Kontrola zakresu względem `c4efcb0` potwierdziła brak zmian poza
+  rozdziałem 10. Etykiety są niepowtórzone, odsyłacze mają cele,
+  środowiska są zbilansowane, rozdział zawiera dwie ilustracje.
+- Symbolicznie sprawdzono cofnięcie i przeniesienie metryki przez
+  ścinanie (u,v) ↦ (u,v+u²), metrykę sfery w obu układach współrzędnych,
+  metrykę hiperboloidy, jej macierz odwrotną i wyznacznik.
+- Oba przekształcenia między modelami hiperbolicznymi sprawdzono przez
+  macierze Jacobiego; wzory odwrotne między kulą a półprzestrzenią przez
+  złożenie w obu kierunkach. Są to kontrole w wymiarze 2; ogólny argument
+  dla n znajduje się w tekście.
+- Dla metryki Kerra obliczono niezależnie blok t,φ, wyraz mieszany,
+  wyznacznik pełnej macierzy −Σ²sin²θ, dodatni współczynnik przestrzenny
+  i granicę a=0 dającą Schwarzschilda.
+- Sprawdzono całkę pola paraboloidy, całkę z² po sferze oraz przykład
+  regularnej krzywej o zmiennej szybkości i jej przeparametryzowanie
+  osiągające minimalną energię.
+- Jako kontrolę wzorów na gęstość, normalną i dywergencję obliczono
+  obie strony tożsamości Gaussa dla X=(xy,y²) w metryce hiperbolicznej
+  na prostokącie [1,2]×[1,3]. Całka objętościowa i suma strumieni
+  przez cztery krawędzie wynoszą log(3). Jest to pomocniczy rachunek
+  z narożami, nie zastępstwo dowodu ogólnego twierdzenia.
+- Wszystkie cztery strzałki na rysunku modeli mają normę hiperboliczną 1;
+  pochodna profilu hiperboloidy w najniższym punkcie jest zerowa.
+- Punkty odniesienia: wzory tensorów
+  [Schwarzschilda](https://sites.science.oregonstate.edu/physics/coursewikis/GGR/_export/xhtml/book/ggr/schwarz.html)
+  i [Kerra](https://sites.science.oregonstate.edu/coursewikis/GGR/book/content/kerr)
+  w kursie Teviana Draya oraz twierdzenie Carathéodory’ego i dodatek A
+  [notatek Gautama Iyera](https://www.math.cmu.edu/~gautam/sj/teaching/2022-23/720-measure/pdfs/measure.pdf).
+  Nierówność izodiametryczna i twierdzenie Vitalego pozostają jawnie
+  nazwanymi faktami z teorii miary; ich pełne dowody nie są deklarowane
+  jako zawartość tego rozdziału. Aneks z podstawami miary jest kandydatem
+  do listy możliwych rozszerzeń po przeglądzie całego skryptu.
+
+### Kontrola końcowa
+
+- Obejrzano wszystkie 18 stron rozdziału (178–195 PDF), a po korektach
+  nagłówka i położenia ilustracji ponownie sprawdzono układ stron.
+  Oba rysunki, na stronach 182 i 188, sprawdzono w większej rozdzielczości.
+- Końcowa kompilacja lokalnym MiKTeX dała 303 strony. Brak błędów,
+  niezdefiniowanych odsyłaczy, żądań ponownej kompilacji i `Overfull`.
+  Pozostały dwa wcześniejsze `Underfull` w późniejszych rozdziałach
+  oraz trzy automatyczne zmiany położenia ilustracji `h` na `ht`.
+- Wbudowany kompilator ponownie zwrócił status nieznany; poprawną
+  kompilację potwierdza lokalny MiKTeX. PDF zaktualizowano ze źródłem.
+- Kontrole zakresu, odsyłaczy i rachunków zakończyły się poprawnie;
+  `git diff --check` nie wykazał błędów. Przed wysłaniem ponownie
+  sprawdzono serwer: brak nowych commitów do włączenia.
+
+Następna iteracja: rozdział 11 — „Koneksje i transport równoległy”.
