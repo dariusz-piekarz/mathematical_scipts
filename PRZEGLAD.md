@@ -1206,3 +1206,138 @@ dwie ilustracje); przegląd oraz poniższe kontrole zakończono.
   sprawdzono serwer: brak nowych commitów do włączenia.
 
 Następna iteracja: rozdział 11 — „Koneksje i transport równoległy”.
+
+## Rozdział 11 — koneksje i transport równoległy (2026-10-03)
+
+### Zakres i stan początkowy
+
+- Pobrano stan zdalnego brancha `review/rozdzialy-matematyka`:
+  brak nowych commitów względem `3735830`. Wcześniejsze zmiany Darka
+  pozostają zachowane. Ta iteracja obejmuje wyłącznie rozdział 11,
+  ten dziennik oraz wynikowy PDF.
+- Przeczytano wszystkie sześć sekcji: aksjomaty i lokalne współczynniki,
+  konstrukcję Leviego-Civity, przykłady modelowe, transport i tensory,
+  Schwarzschilda i Kerra oraz wariację energii. Sprawdzono oba rysunki.
+
+### Definicje i dowody
+
+1. **Lokalność koneksji.** Dodano lemat i dowód z funkcją odcinającą.
+   Aksjomaty początkowo dotyczą pól globalnych; przed użyciem lokalnej
+   ramki trzeba uzasadnić ograniczanie koneksji do otwartych podzbiorów.
+   Dowód wyjaśnia również zależność pierwszego argumentu tylko od
+   wektora w punkcie. „Kierunek” zastąpiono „wektorem”, ponieważ
+   długość tego wektora również wpływa na wynik.
+2. **Transformacja symboli Christoffela.** Pokazano etap przed zmianą
+   bazy, z którego pochodzi druga pochodna zmiany współrzędnych.
+   Ułatwia to sprawdzenie kolejności indeksów i członu nietensorowego.
+3. **Konstrukcja Koszula.** Poprawiono sformułowanie „współczynniki są
+   kowektorem”: to całe `K(X,Y,·)` jest 1-formą. Dodano jawny wzór
+   z czynnikiem 1/2 i odwrotną macierzą metryki oraz argument zgodności
+   konstrukcji na przecięciach map. Pozostałe sprawdzenia wzoru Koszula
+   i rzutowania pochodnej na podrozmaitość są poprawne.
+4. **Izometrie a koneksje.** Rozwinięto użycie jednoznaczności:
+   zdefiniowano przeniesioną koneksję i wskazano rolę naturalności
+   nawiasu Liego oraz cofnięcia metryki. To uzasadnia porównywanie
+   koneksji w różnych modelach hiperbolicznych.
+5. **Pochodna wzdłuż dowolnej krzywej — istotna luka.** Wcześniejszy
+   argument przez przedłużenie pola nie obejmował nawet krzywej stałej
+   z polem `V(t)=t v`. Zastąpiono go pełnym sprawdzeniem transformacji
+   `A` i `V` za pomocą jakobianu. Nie trzeba zakładać immersyjności,
+   braku samoprzecięć ani niezerowej prędkości. Dodano wymaganie
+   gładkości pola jako przekroju wiązki cofniętej.
+6. **Zmiana parametru i sklejenia.** Udowodniono regułę łańcuchową
+   dla pochodnej kowariantnej. Uzasadnia ona niezależność transportu
+   od zachowującej orientację zmiany parametru. Dodano definicję
+   transportu dla krzywych kawałkami gładkich i niezależność od
+   zagęszczania podziału; obejmuje to sklejenia z narożnikiem.
+7. **Istnienie transportu na całym odcinku.** Dodano oszacowanie
+   normy rozwiązania przez nierówność Grönwalla oraz argument
+   przedłużania rozwiązania z granicy na końcu przedziału.
+   Regułę różniczkowania `g(V,W)` wyprowadzono we współrzędnych,
+   także dla pól niemających przedłużenia poza krzywą.
+8. **Założenia metryczne.** Zdanie o izometrii dla zamkniętej drogi
+   wymaga koneksji zgodnej z metryką; dodano ten warunek. W sekcji
+   o tensorach oddzielono ogólną koneksję afiniczną od szczególnego
+   warunku `nabla g=0`. W dywergencji jawnie wskazano koneksję
+   Leviego-Civity i ślad endomorfizmu `Y -> nabla_Y X`.
+9. **Pochodne tensorów.** Uzasadniono, dlaczego wzór dla 1-formy jest
+   liniowy nad funkcjami w argumencie wektorowym. Dodano definicję
+   dla typu `(r,s)` przez różniczkowanie ewaluacji, wyjaśnienie
+   tensorialności oraz istnienia i jednoznaczności rozszerzenia.
+   Wyjaśniono znaki przy górnych i dolnych indeksach.
+10. **Wariacja energii.** Doprecyzowano gładkość i założenie, że
+    krzywa leży we wnętrzu rozmaitości. Inaczej dowolne małe wariacje
+    współrzędnych mogą być niedopuszczalne. Dodano realizację pól
+    wariacyjnych o zwartym nośniku, dowód użytej wersji lematu
+    podstawowego rachunku wariacyjnego oraz przejście przez wiele map.
+    Udowodniono także kierunek odwrotny: równanie geodezyjnej implikuje
+    stacjonarność, bo wyrazy brzegowe na wewnętrznych punktach podziału
+    się znoszą. Dodano zachowanie kwadratu normy prędkości i wyjaśnienie,
+    dlaczego parametr geodezyjnej niestałej można zmieniać afinicznie.
+
+### Przykłady, terminologia i ilustracje
+
+- Doprecyzowano zakres współrzędnej kątowej w mapie biegunowej.
+  W przykładzie sferycznym wyjaśniono, że pełny równoleżnik wymaga
+  wielu map, lecz ramka ortonormalna skleja się i jest okresowa.
+  Ustalono orientację pomiaru kąta transportu.
+- Uzupełniono symetryczne symbole w modelu półprzestrzeni i informację
+  o zerowaniu pozostałych. Wyjaśniono euklidesowy sens dolnych indeksów
+  współrzędnych w modelu kuli i hiperboloidy: nie jest to obniżanie
+  indeksu metryką hiperboliczną.
+- Poprawiono pisownię „pseudoriemannowska”, użyto „ramka ortonormalna”
+  i wyjaśniono „kontrakcję”. Mylące „odjęcie zmiany bazy” zastąpiono
+  „uwzględnieniem zmiany bazy”, zgodnie ze znakiem we wzorze.
+- Pierwszy rysunek zachowano jako schemat; podpis wyraźnie określa,
+  że wygląd strzałek nie koduje metryki ani konkretnego kąta.
+- Drugi rysunek zbudowano na nowo jako rzut ortogonalny sfery.
+  Równoleżnik ma dokładnie `theta=pi/3`, a dwa wektory są przeciwne,
+  zgodnie z obliczonym obrotem `-pi`. Oba wychodzą z oznaczonego punktu
+  i mają tę samą skalę. Widoczność łuku wynika z iloczynu z kierunkiem
+  obserwacji, a nie z arbitralnego podziału elipsy na połowy.
+  Podpis wyjaśnia przesunięcie początku pętli na potrzeby rysunku.
+
+### Kontrole rachunkowe
+
+- Ponownie obliczono wszystkie symbole dla współrzędnych biegunowych,
+  sfery, półpłaszczyzny, dysku Poincarégo i dwuwymiarowej hiperboloidy.
+  Ogólne wzory wielowymiarowe sprawdzono bezpośrednio w tekście.
+- Sprawdzono transformację zerowej koneksji kartezjańskiej do
+  współrzędnych biegunowych i transformację pochodnej dowolnego pola
+  na krzywej o jednocześnie zmiennym promieniu i kącie.
+- Sprawdzono jednostkowe pola równoległe w modelach hiperbolicznych,
+  pochodne ramki sferycznej, macierz rozwiązania transportu, jej
+  ortogonalność oraz wartość `-I` po obiegu przy `theta=pi/3`.
+- Ponownie wyliczono pełny zestaw symboli Schwarzschilda i wszystkie
+  wypisane symbole Kerra, w tym znak członu mieszanego. Sprawdzono
+  przejście `a=0` do Schwarzschilda. Istniejące wzory są poprawne.
+- Sprawdzono zgodność równań Eulera–Lagrange'a z kowariantnym
+  przyspieszeniem dla przykładu z niediagonalną macierzą metryki.
+- Sprawdzono styczność wektora z rysunku sfery, jego rzut oraz
+  punkty przejścia między widoczną i zasłoniętą częścią równoleżnika.
+- Kontrole symboliczne wykonano w SymPy. Osobno sprawdzono zakres
+  zmian, zgodność środowisk LaTeX, unikatowość etykiet i odsyłacze.
+  Źródła porównawcze: rozdział 15
+  [notatek Eckharda Meinrenkena](https://www.math.toronto.edu/mein/teaching/LectureNotes/rieall.pdf)
+  i wykład 7
+  [notatek MIT 8.962](https://web.mit.edu/8.962/www/lecnotes/8_962TA-lec-all.pdf).
+
+### Kontrola końcowa
+
+- Obejrzano wszystkie 11 stron rozdziału (196–206 PDF), a oba rysunki
+  na stronach 196 i 203 także w większej rozdzielczości. Po pierwszym
+  oglądzie poprawiono kolizję podpisu ze sferycznym równoleżnikiem,
+  odstęp opisu drogi i skrócono tytuł sekcji 11.3, aby nie łamał słowa
+  „modelowych”. Ponownie sprawdzono wszystkie strony po korektach.
+- Końcowa kompilacja lokalnym MiKTeX dała 305 stron. Brak błędów,
+  niezdefiniowanych odsyłaczy, żądań kolejnej kompilacji i `Overfull`.
+  Pozostał jeden `Underfull` w późniejszym rozdziale oraz trzy
+  wcześniejsze automatyczne zmiany położenia ilustracji `h` na `ht`.
+- Wbudowany kompilator zwrócił status nieznany; poprawną kompilację
+  potwierdza lokalny MiKTeX. PDF zaktualizowano ze źródłem.
+- Kontrole rachunkowe i zakresu zmian przeszły ponownie po końcowych
+  poprawkach. `git diff --check` nie wykazał błędów. Ponowne pobranie
+  stanu serwera potwierdziło brak nowych commitów do włączenia.
+
+Następna iteracja: rozdział 12 — „Geodezyjne, odwzorowanie wykładnicze
+i zupełność”.
