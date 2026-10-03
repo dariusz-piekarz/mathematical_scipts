@@ -1341,3 +1341,166 @@ Następna iteracja: rozdział 11 — „Koneksje i transport równoległy”.
 
 Następna iteracja: rozdział 12 — „Geodezyjne, odwzorowanie wykładnicze
 i zupełność”.
+
+## Rozdział 12 — geodezyjne, odwzorowanie wykładnicze i zupełność (2026-10-03)
+
+### Zakres
+
+- Pobrano stan serwera: brak nowych zmian względem `4c29411`.
+  Przegląd obejmuje wszystkie sześć sekcji rozdziału i dziewięć
+  ilustracji. Zmiany poza rozdziałem ograniczają się do tego dziennika
+  oraz wygenerowanego PDF.
+
+### Założenia i dowody lokalne
+
+1. **Rozmaitości bez brzegu.** Dodano ogólne założenie i powtórzono
+   je przy twierdzeniu Hopfa–Rinowa. Bez niego stwierdzenia są fałszywe:
+   domknięty przedział jest zwarty, ale geodezyjnej dochodzącej do jego
+   końca nie można przedłużyć. Określono też domyślny riemannowski
+   charakter metryki i rozpatrywanie odległości w jednej składowej.
+2. **Pierwsza wariacja długości.** Uzasadniono różniczkowanie normy
+   przez jednostajną regularność na zwartym przedziale. Zamianę
+   pochodnych kowariantnych wyprowadzono we współrzędnych; nie wymaga
+   ona immersyjności odwzorowania wariacji. Doprecyzowano regularność
+   kawałków i stały podział przy wzorze z wyrazami narożnikowymi.
+3. **Dziedzina eksponenty.** Dodano otwartość `D_p`, jej gwiaździstość,
+   gładkość eksponenty na całej dziedzinie i zależność od punktu
+   bazowego. Podano ogólne prawo skalowania geodezyjnej, również
+   potrzebne przy różniczkowaniu eksponenty dla ujemnego parametru.
+   Opiera się to na otwartości dziedziny maksymalnego przepływu na `TM`.
+4. **Współrzędne normalne w sygnaturze nieokreślonej.** Wyjaśniono,
+   że macierz jednostkową zastępuje macierz sygnatury, a kula w
+   przestrzeni stycznej korzysta z pomocniczej normy euklidesowej.
+   Niezdegenerowana metryka nieokreślona sama nie definiuje normy.
+5. **Minimalność radialnej geodezyjnej.** Wybrano większą dziedzinę
+   dyfeomorfizmu, zawierającą domknięcie kuli użytej w dowodzie.
+   Uzupełniono krok w punkcie centralnym: funkcja promienia wzdłuż
+   drogi jest lipschitzowska i absolutnie ciągła, a jej pochodna jest
+   zerowa prawie wszędzie na zbiorze zer. Argument działa również dla
+   wielokrotnych powrotów do środka, nie tylko skończonego podziału.
+6. **Przypadek równości.** Wykazano niemalejący promień i stały
+   kierunek na jedynym końcowym przedziale, gdzie promień jest dodatni.
+   Wyjaśniono dopuszczalność postojów; nie każda droga minimalna jest
+   regularną reparametryzacją przez dyfeomorfizm. Osobno uwzględniono
+   identyczne końce i drogę stałą.
+7. **Małe kule.** Dodano równość małych kul metrycznych (otwartych
+   i domkniętych) z obrazami kul przez eksponentę. Argument pierwszego
+   wyjścia wyklucza krótsze drogi spoza otoczenia. Ten krok jest
+   później potrzebny do zwartości sfer w dowodzie Hopfa–Rinowa.
+
+### Modele i twierdzenie Hopfa–Rinowa
+
+8. **Sfera.** Dopisano `R>0` i uzasadniono dolne ograniczenie długości
+   drogi przechodzącej przez antypodę, przez pierwsze osiągnięcia
+   poziomów zbliżających się do `pi R`. Wskazano obsługę niegładkości
+   promienia przy przejściu przez punkt początkowy.
+9. **Półprzestrzeń hiperboliczna.** Dodano jawne rozwiązanie półokręgu
+   przez `tanh` i `cosh`, aby uzasadnić gładkie przejście przez punkt
+   maksymalnej wysokości, gdzie wcześniejsze dzielenie przez pochodną
+   wysokości nie działa. Oddzielono krzywe stałe i przypadek wymiaru 1.
+10. **Hiperboloida.** Rozwinięto argument rzutowania pochodnej dla
+    metryki lorentzowskiej otoczenia: wcześniejsze stwierdzenie
+    dotyczyło otoczenia euklidesowego. Podano wzór `nabla_X Y =
+    D_X Y - g(X,Y)x` i sprawdzono przyspieszenie. Wykazano pozostawanie
+    na górnym płacie, istnienie przez cały czas oraz nierówność
+    `-<p,q>_L >= 1`, z równością dokładnie dla `p=q`, potrzebną do
+    użycia `arcosh`. W modelu dysku uzasadniono położenie środka
+    okręgu poza dyskiem.
+11. **Wykluczenie narożnika.** Zastąpiono argument wymagający kontroli
+    promienia normalnego otoczenia przy zmieniającym się środku
+    bezpośrednią wariacją. Wektor wariacyjny jest różnicą stycznych,
+    a pierwsza pochodna długości wynosi minus kwadrat normy tej
+    różnicy. Daje to ścisłe skrócenie narożnika bez dodatkowego
+    twierdzenia o jednolitych otoczeniach normalnych.
+12. **Zupełność.** W lemacie o jednej pełnej eksponencie dodano
+    spójność i wskazano wcześniejsze uzasadnienie małych kul.
+    W implikacji „zupełność metryczna => geodezyjna” wyodrębniono
+    ciąg zbieżny do końca parametru, a następnie pełną granicę krzywej.
+    Osobno uwzględniono geodezyjne stałe. Dla zwartej rozmaitości
+    argument stosuje się składowa po składowej.
+13. **Przebita płaszczyzna.** Dopisano rodzinę dróg o długościach
+    `2+(pi-2)epsilon`, wykazującą, że infimum rzeczywiście wynosi 2.
+    Wyjaśniono także warunek równości wykluczający osiągnięcie infimum.
+
+### Czasoprzestrzenie i przekroje
+
+14. **Lokalna maksymalność czasu własnego.** Uzupełniono brakujący
+    krok: dlaczego przyszłościowa krzywa czasopodobna pozostająca
+    w dostatecznie małym otoczeniu normalnym nie opuszcza obrazu
+    przyszłego stożka. Dla `Q(exp_p v)=g_p(v,v)` lemat Gaussa daje
+    `dQ(W)=2g(R,W)`. Na niezerowym świetlnym brzegu pochodna wzdłuż
+    krzywej czasopodobnej jest ujemna, co wyklucza pierwsze wyjście.
+    Lokalna współrzędna czasu wyklucza powrót do wierzchołka.
+    Uzasadniono znak pochodnej radialnego czasu i całkowanie od jego
+    zerowej wartości początkowej. Pozostają jawne ograniczenia do
+    małego otoczenia i krzywych czasopodobnych; nie jest to twierdzenie
+    o globalnej maksymalności w dowolnej czasoprzestrzeni.
+15. **Schwarzschild.** Wyjaśniono redukcję do płaszczyzny równikowej
+    przez odbicie i jednoznaczność danych początkowych. Dopisano pełne
+    równanie radialnego przyspieszenia, z którego wynika warunek
+    zerowania pochodnej potencjału dla orbity kołowej. Sama pochodna
+    pierwszej całki nie uzasadnia tego w punkcie `dot r=0`.
+16. **Kerr.** Powtórzono zakres parametrów i dziedzinę zewnętrzną;
+    wskazano analogiczne ograniczenie pierwszej całki radialnej przy
+    punktach zwrotnych. Istniejące wzory pędów, energii i dwóch
+    kandydatów na prędkość kątową są poprawne.
+17. **Przekroje przestrzenne.** Sprecyzowano, że ciąg Cauchy'ego
+    zbliżający się do pominiętego horyzontu leży na ustalonym promieniu
+    równikowym. Sam warunek zbiegania współrzędnej radialnej nie
+    wystarcza przy dowolnie zmieniających się kątach. Poprawiono też
+    odsyłacz na „Wniosek” zamiast „Twierdzenie”.
+
+### Język i ilustracje
+
+- „Minimizer” zastąpiono polskimi określeniami krzywej lub geodezyjnej
+  minimalnej. Poprawiono „pseudoriemannowska”, rozróżnienie prędkości
+  i jej normy oraz zapis kwadratów pochodnych.
+- Na sferze zastąpiono arbitralne krzywe Béziera dokładnymi rzutami
+  dwóch półokręgów wielkich kół. Równik rzutuje się na odcinek,
+  zgodnie z położeniem biegunów w przyjętym kierunku obserwacji.
+- Niespójny szkic hiperboloidy i płaszczyzny zastąpiono dokładnym
+  przekrojem `z_2=0` z hiperbolą `(cosh u,sinh u,0)`, początkiem
+  przestrzeni otaczającej oraz oznaczonymi parametrami punktów.
+  Podpis precyzuje, że to przekrój, nie widok całej powierzchni.
+- Odsunięto końce kolorowych fragmentów geodezyjnych hiperbolicznych
+  od idealnego brzegu, który nie należy do rozmaitości.
+- W diagramie czasu własnego poprawiono nachylenie promieni świetlnych
+  na 45 stopni w skali użytych współrzędnych. Poprzedni stożek był
+  zbyt wąski i umieszczał narysowaną krzywą czasopodobną poza nim.
+  Sprawdzono również czasopodobność całej czerwonej krzywej Béziera.
+
+### Sprawdzenia rachunkowe
+
+- Kontrole symboliczne potwierdziły wzory eksponenty sfery i
+  hiperboloidy, normy prędkości, przyspieszenia, metryki w radialnych
+  współrzędnych riemannowskich i lorentzowskich, półokręgi hiperboliczne
+  w obu orientacjach oraz wzory odległości w dysku i półpłaszczyźnie.
+- Sprawdzono radialne równanie Schwarzschilda, promień i energię
+  orbity fotonowej, pędy Kerra, normalizację prędkości, granicę
+  `a=0`, oba pierwiastki równania orbit kołowych i ich normy.
+- Kontrola zakresu zmian, etykiet, odsyłaczy i dziewięciu rysunków
+  przeszła poprawnie. Testy symboliczne wykonano w SymPy.
+- Punkty odniesienia: [dowód Daniela Spiegla](https://math.uchicago.edu/~may/REU2016/REUPapers/Spiegel.pdf),
+  [notatki Eckharda Meinrenkena](https://www.math.toronto.edu/mein/teaching/LectureNotes/rieall.pdf)
+  oraz [postać metryki Kerra w kursie Teviana Draya](https://sites.science.oregonstate.edu/coursewikis/GGR/book/content/kerr).
+
+### Kontrola końcowa
+
+- Obejrzano wszystkie 15 stron rozdziału (207–221 PDF), w tym wszystkie
+  dziewięć ilustracji w większej rozdzielczości. Po oglądzie rozdzielono
+  nakładające się strzałki dwóch kierunków orbity Kerra, odsunięto
+  podpisy od krzywych na rysunkach orbity fotonowej i przebitej
+  płaszczyzny. Ilustracje hiperboliczne umieszczono przed nagłówkiem
+  sekcji o twierdzeniu Hopfa–Rinowa. Poprawione strony sprawdzono ponownie.
+- Końcowa kompilacja lokalnym MiKTeX: 307 stron, bez błędów,
+  niezdefiniowanych odsyłaczy, żądań ponownej kompilacji i `Overfull`.
+  Pozostał wcześniejszy `Underfull` w późniejszym rozdziale oraz trzy
+  wcześniejsze automatyczne zmiany ustawienia ilustracji `h` na `ht`.
+- Wbudowany kompilator ponownie zwrócił status nieznany; wynik
+  potwierdza kompilacja lokalna. PDF zaktualizowano ze źródłem.
+- Ponownie wykonano kontrole zakresu i rachunków; `git diff --check`
+  nie wykazał błędów. Ponowne pobranie stanu serwera potwierdziło
+  brak nowych commitów do włączenia.
+
+Następna iteracja: rozdział 13 — „Krzywizna: od transportu równoległego
+do tensorów”.
