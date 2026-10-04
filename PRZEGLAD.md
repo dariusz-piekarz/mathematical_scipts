@@ -1969,3 +1969,101 @@ i przeczytano wszystkie dziesięć sekcji oraz cztery ilustracje.
   Rozwinięcia dowodów i kontrole rachunkowe zapisano w repozytorium.
 
 Następna iteracja: rozdział 17 — „Teoria Morse'a: punkty krytyczne, uchwyty i przepływ”.
+
+## Iteracja 17 — Teoria Morse'a: punkty krytyczne, uchwyty i przepływ
+
+Punkt wyjścia: `f3222f9`; pobranie zmian na początku iteracji
+nie wykazało nowych commitów. Przegląd obejmuje cały rozdział 17.
+
+### Matematyka i uzupełnienia dowodów
+
+- W lemacie Morse'a wyjaśniono gładkość pierwiastka macierzy
+  przez lokalnie jednostajną zbieżność szeregów pochodnych.
+  Osobno uwzględniono indeksy 0 i n, bez odwracania pustych bloków.
+- Poprawiono sprzeczne założenie przy uchwycie: regularne są
+  końce a,b, natomiast c=f(p) jest wartością krytyczną.
+- Zastąpiono nieuzasadnioną globalną deformację za pomocą pola Y
+  jawnym uchwytem H={|v|≤r, |u|²≤ε+|v|²}. Podano jego parametryzację
+  i dokładne przecięcie z dolną podpoziomicą. Poprzednie twierdzenie,
+  że tylko punkty v=0 mogą nie dojść do dolnego poziomu, było błędne:
+  w obszarze μ=0 także inne punkty mogą asymptotycznie zbiegać do rdzenia.
+- Uzasadniono zaokrąglanie naroży z zachowaniem poprzeczności,
+  skończony i gładki czas trafienia oraz produktową postać dopełnienia.
+  Przy przejściu od uchwytu do komórki użyto homotopii mapy
+  przyczepienia i kołnierzy. Samo kurczenie czynnika poprzecznego
+  nie unieruchamia punktowo pierwotnej części przyczepianej.
+  Doprecyzowano wycięcie i przypadki skrajnych indeksów.
+- Aproksymację komórkową umieszczono w każdym kroku indukcji
+  budującej CW, zanim nowa komórka zostanie dołączona.
+- Rozszerzono dowód rozmaitości stabilnej na dowolną gładką metrykę,
+  zgodnie z zakresem późniejszych twierdzeń. Podano liniowy rozkład
+  spektralny, równania całkowe, normę z wagą wykładniczą, oszacowanie
+  kontrakcji, gładką zależność i globalne przedłużenie kołnierzem.
+  Dla metryki euklidesowej podano jawną parametryzację przez R^m.
+- Iloraz trajektorii zidentyfikowano z globalnym przekrojem regularnym,
+  uzasadniając jego strukturę rozmaitości i własność Hausdorffa.
+  Rozróżniono przecięcie rozmaitości immersowanych od założenia,
+  że ich obrazy są globalnie osadzone.
+- W dowodzie gęstości metryk Morse'a–Smale'a użyto stałych lokalnych
+  sfer oraz map pierwszego trafienia. Warunki z czasami ≤N są otwarte
+  i gęste; zwartość parametrów uzasadnia oba stwierdzenia.
+  Wyjaśniono przestrzeń Baire'a i zachowanie metryki blisko punktów
+  krytycznych. Poprzednie „zwarte fragmenty” zależały od zmienianej metryki.
+- Dodano osobny lemat o zwartości z przełamaniami: wybór podciągu
+  na skończenie wielu poziomach, ograniczenie czasu w regularnym paśmie,
+  wykluczenie skoku między różnymi punktami tej samej wartości
+  przez oszacowanie spadku ≥ długość razy dolne ograniczenie gradientu,
+  zachowanie końców i topologię przestrzeni trajektorii łamanych.
+- Sklejanie trajektorii rozpisano na mapy wykresów i jawne równania
+  θ=A(δρω), ω=B(δρθ); ich różniczka przy ρ=0 jest identycznością.
+  Dla ogólnej metryki dodano problem z mieszanymi warunkami końcowymi
+  oraz oszacowania map przejścia. Nie założono nieuprawnionej gładkiej
+  linearyzacji gradientu. Do brzegu przestrzeni jednowymiarowej wystarcza
+  kołnierz topologiczny, gładki we wnętrzu; nie twierdzimy, że ewaluacja
+  jest gładka na brzegu w dowolnie wybranym parametrze.
+- Ustalono orientację przekroju przez kolejność „X, przekrój”
+  oraz koorientację rozmaitości stabilnej. W dowodzie ∂²=0
+  oddzielono iloczyn znaków trajektorii od wspólnego znaku konwencji
+  zależnego wyłącznie od wymiarów, który nie wpływa na zerowanie sumy.
+- Porównanie z homologią komórkową przebudowano wokół filtracji
+  według indeksów. Jawnie wskazano odwołanie naprzód do geometrycznego
+  twierdzenia o przestawianiu w rozdziale 18 i brak zależności kołowej.
+  Zmiana funkcji zachowuje pole i trajektorie; podano metrykę realizującą
+  to samo pole jako ujemny gradient nowej funkcji.
+- Generatory względne reprezentują dyski niestabilne przedłużone
+  do wspólnego poziomu; współczynniki odczytują współrdzenie stabilne.
+  Wyjaśniono osiąganie poziomu, lokalny stopień i zgodność znaków.
+  Usunięto niepoprawny termin „kokorem”; użyto „współrdzeń”.
+
+### Ilustracje i kontrola
+
+- W lokalnych poziomicach tło zmieniono na neutralne, aby niebieski
+  oznaczał wyłącznie podpoziomicę.
+- Rysunek uchwytów zastąpiono widokiem z góry z dokładnymi szwami
+  na brzegach. Poprzednia perspektywa pokazywała końce mostka wewnątrz dysków.
+- Na sferze użyto rzeczywistych rzutów południków zamiast dowolnych krzywych.
+  Równik pokazano jako odcinek, zgodnie z tym samym rzutem prostopadłym.
+- Sprawdzono rachunek czterech punktów krytycznych przechylonej wysokości
+  torusa, nierówności Morse'a i dowód twierdzenia Reeba; zachowano wyniki.
+- Kontekst i zakres twierdzeń porównano z
+  [wykładami R. Cohena](https://math.stanford.edu/~ralph/morsecourse/biglectures.pdf),
+  [wykładami A. Rittera](https://people.maths.ox.ac.uk/ritter/morse-cambridge/full.pdf)
+  i [pracą J. Webera](https://arxiv.org/abs/math/0411465).
+  Dodano odsyłacz do tej ostatniej pracy w dalszej lekturze.
+- Kontrola zakresu względem `f3222f9`: poza rozdziałem 17 źródło
+  pozostało identyczne. Etykiety są unikalne, odsyłacze istnieją,
+  środowiska są sparowane; rozdział zawiera pięć ilustracji.
+- Obejrzano wszystkie 15 stron rozdziału (298–312 PDF) i każdą
+  z pięciu ilustracji w większej rozdzielczości. Rysunek torusa
+  oraz schemat trajektorii łamanej zachowano po kontroli.
+- Końcowy skład lokalnym MiKTeX: 322 strony, bez błędów,
+  brakujących odsyłaczy, żądań ponownej kompilacji, `Overfull`
+  i `Underfull`. Pozostały trzy wcześniejsze ostrzeżenia zmieniające
+  położenie ilustracji z `h` na `ht`. Wbudowany kompilator zwrócił
+  nieznany status, dlatego wynik zweryfikowano lokalnie.
+  Zaktualizowano PDF. `git diff --check` przechodzi.
+- Ponowne pobranie zmian przed zapisem nie wykazało nowych commitów.
+
+Następna iteracja: rozdział 18 — „Kobordyzmy i rachunek uchwytów”.
+Przy jego przeglądzie trzeba również sprawdzić zgodność twierdzenia
+o przestawianiu z używaną tutaj wersją zachowującą pole spadku.
