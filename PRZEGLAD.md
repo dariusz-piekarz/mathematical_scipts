@@ -1737,3 +1737,114 @@ przestrzeni trajektorii. Pobranie zmian potwierdziło aktualność gałęzi.
   do końcowej propozycji rozszerzeń; nie rozszerza bieżącej iteracji.
 
 Następna iteracja: rozdział 15 — „Zanurzenia i otoczenia podrozmaitości”.
+
+## Iteracja 15 — Zanurzenia i otoczenia podrozmaitości
+
+Punkt wyjścia: `bde2d8d`. Przeczytano cały rozdział, łącznie
+z dowodami obu twierdzeń Whitneya i czterema ilustracjami.
+Pobranie zmian przed rozpoczęciem iteracji nie wykazało nowych commitów.
+
+### Matematyka, terminologia i kompletność
+
+- Ustalono domyślny brak brzegu, z wyraźnymi wyjątkami dla kołnierzy
+  i wyczerpań. Ujednolicono „zanurzenie” w części o izotopiach.
+  W dowodzie słabego twierdzenia Whitneya wybór skończonych map
+  zachowuje pokrycie; nie polega na dowolnym zmniejszeniu ich dziedzin.
+- W lemacie o dysku Whitneya dopisano zwartość M. Jest potrzebna
+  w podanym dowodzie do skończoności par oraz oddzielenia otoczenia
+  ruchu od pozostałego obrazu immersji. Samo założenie immersji
+  nie wyklucza gromadzenia się innych płatów.
+- Rozpisano względne położenie ogólne dysku: perturbacje wartości
+  i różniczki funkcjami odcinającymi, kowymiar warstw macierzy
+  niepełnego rzędu, następnie eliminacja samoprzecięć i przecięć
+  z M. Sam ujemny oczekiwany wymiar samoprzecięć nie dowodzi immersji.
+- Doprecyzowano obramowanie dysku: przedłużamy rozkład na dwie
+  podwiązki; na drugim łuku przepisujemy dopełnienie kierunków
+  drugiego płata. Dowiedziono potrzebnej własności grupy podstawowej
+  grassmannianu przez jego zorientowane nakrycie i wiązania grup SO.
+  Wyjaśniono rolę przeciwnych znaków oraz różnicę między przedłużeniem
+  rozkładu a przedłużeniem dowolnej pełnej ramki na brzegu.
+- Dodano jawny model ruchu dwóch wykresów w dysku Whitneya,
+  sposób pogrubienia i powód niezależności użycia późniejszego
+  twierdzenia tubularnego. Uściślono zastosowanie tego twierdzenia
+  do powierzchni przedłużonej poza brzeg i naroża dysku.
+- Uzupełniono graniczny argument dla siecznych, skończoną rodzinę
+  perturbacji usuwających trójki, weryfikację rangi immersji W,
+  standardowe sklejenie M z przebitą sferą i skończoność składowych.
+  W zanurzeniu RP² zaznaczono normalizację współrzędnych jednorodnych.
+- Dowód tubularny działa teraz dla dowolnej ustalonej metryki g.
+  Poprzednio dowód zmieniał ją w przypadku niezwartym. Zastąpiono
+  zmianę metryki jednolitym oszacowaniem zmiany wartości funkcji
+  wyczerpującej na krótkich wektorach nad zwartym zbiorem.
+  Wyjaśniono też zgodność map wykładniczych po ograniczeniu do
+  otwartego otoczenia niedomkniętej podrozmaitości.
+- W homologii wskazano abelową grupę współczynników. Rozróżniono
+  otwarty dysk wiązki i domknięty dysk używany w danych chirurgii;
+  uzasadniono wspólny promień dla nieortonormalnego obramowania.
+- Zastąpiono niepełny globalny argument kołnierzowy dowodem
+  z jednoznaczności trajektorii: spotkanie dwóch trajektorii
+  wymuszałoby powrót jednej z wnętrza na brzeg. Podano konstrukcję
+  gładkiej zmiennej szerokości i różniczkę w każdym punkcie kołnierza.
+  Usunięto zbędne założenie pomocniczej zupełnej metryki.
+- W podwojeniu sprawdzono Hausdorffa i przeliczalną bazę.
+  Rodzinę kołnierzy przy zwartym brzegu przedłużono do izotopii
+  ustalonej na brzegu, co uzasadnia dyfeomorfizm podwojeń.
+  Wyjaśniono zmianę metryki przy przenoszeniu map tubularnych izotopią.
+- Dopisano ciągłość w definicji wyczerpania, względną zwartość
+  użytego pokrycia i wspólne otoczenie zerowania ogona szeregu.
+  Przy konstrukcji Morse'a ustalono porównywalne normy pochodnych
+  oraz przesunięto końcową funkcję do wartości nieujemnych: teraz
+  wszystkie podpoziomice są zwarte. Sama właściwość funkcji do R
+  nie zapewnia tego bez ograniczenia od dołu.
+- W dowodzie zupełności uwzględniono brzeg i rozmaitości niespójne.
+  W twierdzeniu o pasie dopisano cofanie przepływu do poziomicy a
+  i przypadek pustej poziomicy; poprawiono składnię założenia.
+
+### Ilustracje
+
+- Dysk Whitneya: zastąpiono niezależne krzywe Béziera dwiema
+  parabolami. Zaznaczone punkty są teraz dokładnie ich przecięciami,
+  a wypełnienie ma granicę na obu narysowanych łukach.
+- Otoczenie tubularne: użyto jednej analitycznej krzywej i jej
+  jednostkowych normalnych. Strzałki są rzeczywiście prostopadłe,
+  a brzegi pasa stanowią odsunięcia wzdłuż tych normalnych.
+- Kołnierz: wyróżniono trajektorię wskazanego punktu p i przeniesiono
+  jej podpis do właściwej strzałki.
+- Pas bez punktów krytycznych: poziomice wyprostowano we współrzędnych
+  produktowych przepływu i opisano te współrzędne w podpisie.
+  Etykieta pola nie zasłania już strzałek.
+
+### Kontrola końcowa
+
+- Zakres argumentu Whitneya porównano z
+  [wykładami T. Mrowki 21–22](https://ocw.mit.edu/courses/18-965-geometry-of-manifolds-fall-2004/d0598b3b5ced2d2d0a9884ee14abeae3_lecture21_22.pdf).
+  Dodatkowe rachunki rang, model ruchu, szczegóły zwartości i dowód
+  własności grassmannianu rozpisano bezpośrednio w tekście.
+- W ostatnim sprawdzeniu rozwinięto również argument o podnoszeniu
+  pętli i dysków w wiązaniach grup SO. Nie pozostawiono samego
+  powołania się na długi ciąg homotopii wiązania: wyjaśniono potrzebne
+  własności przez lokalne trywializacje oraz znikanie π₁ i π₂ sfer
+  wymiaru co najmniej trzy.
+- Skontrolowano wszystkie 15 stron rozdziału (266–280 PDF), a cztery
+  ilustracje także w większej rozdzielczości. Po kontroli przeniesiono
+  jeszcze podpis trajektorii poza linię ograniczającą pas kołnierza.
+- Zweryfikowano rachunki różniczek, warstwy macierzy rzędu r,
+  rozkład wiązki normalnej, indeksy promieni nad pierścieniami
+  wyczerpania oraz odwrotność mapy produktowej z przepływu.
+  Dla krzywej ilustracji normalna ma postać (-h',1)/sqrt(1+h'²),
+  więc jej iloczyn skalarny ze styczną (1,h') jest równy zeru.
+- Kontrola względem początku iteracji potwierdziła, że źródło
+  poza rozdziałem 15 nie zmieniło się. Etykiety są unikalne,
+  odsyłacze istnieją i środowiska są sparowane; `git diff --check`
+  nie wykazał błędów.
+- Końcowa kompilacja lokalnym MiKTeX daje 315 stron, bez błędów,
+  brakujących odsyłaczy, żądań powtórzenia kompilacji i `Overfull`.
+  Zaktualizowano PDF. Wbudowany kompilator
+  nie potwierdził statusu; wynik sprawdzono lokalnie. Pozostał
+  wcześniejszy `Underfull` w późniejszym rozdziale i trzy wcześniejsze
+  automatyczne zmiany położenia ilustracji `h` na `ht`.
+  Błąd kolizji nazwy pomocniczej funkcji TikZ z nazwą wbudowaną
+  usunięto, nadając funkcjom rysunku odrębne nazwy.
+- Końcowe pobranie zmian z repozytorium nie wykazało nowych commitów.
+
+Następna iteracja: rozdział 16 — „Przecięcia, dualność i klasy charakterystyczne”.
