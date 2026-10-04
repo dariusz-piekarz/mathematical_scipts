@@ -1504,3 +1504,153 @@ i zupełność”.
 
 Następna iteracja: rozdział 13 — „Krzywizna: od transportu równoległego
 do tensorów”.
+
+## Iteracja 13 — Krzywizna (2026-10-04)
+
+Przeczytano cały rozdział: tensor Riemanna i jego symetrie,
+krzywiznę Gaussa, Ricciego i skalarną, modele, Schwarzschilda
+i Kerra, płaskość, drugą wariację, pola Jacobiego, twierdzenia
+porównawcze oraz Gaussa–Bonneta z uogólnieniami.
+
+### Matematyka i dowody
+
+- Dopisano domyślne założenie braku brzegu. Rozwijanie walca na
+  płaszczyznę opisano lokalnie.
+- Zdefiniowano rzeczywistą małą pętlę we współrzędnych normalnych
+  i wyprowadzono znak oraz resztę wzoru na jej transport. Przy
+  interpretacji „na jednostkę pola” uwzględniono pole równoległoboku.
+- Naprawiono błędny zapis kwadratów we wzorze Gaussa. Dodano dowód
+  symetrii Ricciego potrzebnej przy polaryzacji i doprecyzowano
+  użycie symetrii par w dowodzie o stałej krzywiźnie.
+- Wyjaśniono jednostajność reszt rozwinięcia małej kuli i związek
+  współrzędnych normalnych z rzeczywistą kulą metryczną. Wyprowadzono
+  obwód małego okręgu bez niedozwolonego różniczkowania symbolu O.
+- Przy skalowaniu metryki rozróżniono niezmieniony tensor Ricciego
+  typu (0,2), jego wartości na nowych jednostkowych wektorach oraz
+  skalujące się krzywizny sekcyjną i skalarną.
+- Dopisano dziedzinę i sygnaturę ramki Schwarzschilda. Usunięto
+  niepopartą dalszą treścią obietnicę późniejszego rozkładu Weyla.
+- W dowodzie płaskości zapisano homotopię liniową i obsługę dróg
+  odcinkami gładkich. Wyprowadzono komutator pochodnych pól wzdłuż
+  dowolnej mapy, także bez założenia immersji.
+- Uzupełniono regularność krzywej minimalnej: lokalna równość
+  długości wymusza promienie, brak narożnika skleja je w geodezyjną.
+  Doprecyzowano niezerowość danych pola Jacobiego w przykładach.
+- Dodano lemat o czasie cięcia: mierzalność, jedyność promieni,
+  lokalną odwrotność, gładkość odległości i zerową miarę zbioru
+  cięcia. Dowód miary wykorzystuje wykres czasu cięcia i Fubiniego,
+  dzięki czemu nie wymaga jeszcze nieprzedstawionego twierdzenia
+  Sarda ani Rademachera. Porównanie hesjanu ma jawne założenie
+  zupełności i oddzielony przypadek zerowego wektora.
+- Naprawiono końcowy argument Bishopa–Gromowa: wykazano lokalną
+  absolutną ciągłość ilorazu, bo sama ciągłość i niedodatnia pochodna
+  prawie wszędzie nie dowodzą monotoniczności. Dodano n >= 2.
+- Pełne niezależne obliczenie symboliczne z metryki Kerra potwierdziło
+  wszystkie składowe Ricciego i pełną kontrakcję Kretschmanna;
+  na tej podstawie dodano kompletną tabelę krzywizny w ramce
+  pseudoortonormalnej. Tekst zawiera ramkę, odwrotną metrykę,
+  dwa pośrednie rachunki, wszystkie niezależne składowe, oba ślady
+  i zliczenie składników pełnej kontrakcji, w tym ujemnych wkładów
+  mieszanych. Wyjaśniono przedłużenie tożsamości wymiernych poza
+  obszar rzeczywistości użytej ramki.
+- Dla Kerra wyprowadzono metrykę we współrzędnych wpadających
+  i obliczono jej wyznacznik. To uzasadnia usuwalność osobliwości
+  współrzędnych na horyzoncie; sama skończoność jednego niezmiennika
+  nie wystarczałaby do takiego wniosku. Założenie M > 0 pozwala
+  wnioskować o osobliwości pierścieniowej z rozbieżności na równiku.
+- W lemacie indeksowym dopisano ciągłość pól odcinkami gładkich
+  i poprawiono brakujący znak pochodnej w całkowaniu przez części.
+  Opis wersji Raucha odpowiada teraz dokładnie użytemu założeniu,
+  bez nieprecyzyjnej obietnicy słabszego porównania.
+- W przykładzie sprzężenia na sferze podano n >= 2, R > 0
+  i niezerowe pole początkowe. W twierdzeniu Bonneta–Myersa
+  uzupełniono jawne n >= 2 i oddzielono identyczne końce drogi.
+- W Cartanie–Hadamardzie uzasadniono otwartość obrazów gałęzi
+  odwrotnych, potrzebną w definicji nakrycia.
+- Krzywiznę Gaussa abstrakcyjnej powierzchni zdefiniowano wewnętrznie;
+  utożsamienie jej z iloczynem krzywizn głównych dotyczy zanurzenia
+  w przestrzeni euklidesowej. Podano regularność łuków i zakres
+  kątów w wersji Gaussa–Bonneta z narożnikami.
+- Naprawiono argument o obrocie stycznej: ramka współrzędnych
+  nie jest na ogół ortonormalna, więc przejście nie jest samym
+  obrotem. Rozkład polarny macierzy i przedłużenie na dysk
+  uzasadniają niezmienność liczby obrotów.
+- Doprecyzowano gładką triangulację i niezdegenerowane kąty,
+  a w przykładzie trójkąta założono, że rzeczywiście ogranicza dysk.
+- W wersji stożkowej dodano brak brzegu i argument z nakryciem
+  orientacyjnym dla powierzchni nieorientowalnych.
+- Wyjaśniono niezmienniczość Pfaffianu przy dodatniej zmianie ramki
+  i jego sklejanie w formę globalną. Rozpisano kontrakcję z symbolami
+  antysymetrycznymi prowadzącą do współczynników 1, -4, 1 w 4D.
+- Pełne twierdzenie Cherna–Gaussa–Bonneta pozostaje jawnie wskazanym
+  wynikiem zewnętrznym, wymagającym teorii klas charakterystycznych.
+  Jego wersja brzegowa jest oznaczona jako schemat bez definicji
+  formy brzegowej i bez dowodu. Nie przedstawiamy testów wzoru jako
+  dowodu ogólnego twierdzenia. Ewentualne pełne rozwinięcie tej teorii
+  trafia do propozycji po zakończeniu całego przeglądu.
+- W brzegowym przykładzie zastąpiono kulę otwartą kulą domkniętą.
+
+### Terminologia i ilustracje
+
+- Poprawiono zdanie o znikaniu pochodnych metryki we współrzędnych
+  normalnych i użyto określenia „brak torsji”. Dla kąta od bieguna
+  użyto „kąt biegunowy (kolatytuda)”, zamiast mylącej szerokości.
+- Zastąpiono szkic siodła rzutem rzeczywistej powierzchni
+  z siatką i przekrojami x = 0, y = 0 przez zaznaczony punkt.
+  Złoty łuk na sferze jest rzeczywistym rzutem wielkiego okręgu.
+- Ilustrację pól Jacobiego oparto na dokładnych rzutach południków,
+  z poprawnym równikiem, wspólnymi biegunami i stycznym rzutem pola.
+  Podpis wyjaśnia umowną skalę strzałki.
+- Poprawiono podpis wykresu Raucha: jednakowa jest początkowa
+  pochodna pola, a samo pole początkowo znika. Odsunięto etykiety
+  krzywych od linii wykresu.
+- Rysunek brzegu Gaussa–Bonneta zastąpiono ćwierćdyskiem, na którym
+  T jest dokładnie styczny, JT wewnętrzny, a kąt narożnika jednoznaczny.
+  Czapkę pokazano w jawnym rzucie od bieguna, z prawidłowym kierunkiem
+  obiegu. Rozdzielono etykiety JT i kąta po kontroli PDF.
+- W trójkącie Poincarégo zastąpiono zaokrąglone parametry okręgów
+  dokładnymi zależnościami: boki są prostopadłe do brzegu dysku
+  i kończą się dokładnie we wspólnych wierzchołkach.
+
+### Weryfikacja
+
+- Do repozytorium dodano `weryfikacja/rozdzial13_krzywizna.py`,
+  aby rachunki dało się odtworzyć później. Uruchomienie:
+  `uv run --with sympy python weryfikacja/rozdzial13_krzywizna.py`.
+  Skrypt nie modyfikuje książki i nie zapisuje plików wynikowych.
+- Skrypt wyprowadza Christoffela i Riemanna z metryki Kerra,
+  sprawdza Ricciego, wszystkie 36 pozycji tabeli oraz pełną
+  kontrakcję. Oddzielnie sprawdza zmianę współrzędnych na horyzoncie
+  i wyznacznik metryki. Wszystkie kontrole przeszły poprawnie.
+- Tożsamość 4D Pfaffianu sprawdzono dodatkowo na pięciu ogólnych
+  algebraicznych tensorach krzywizny z dokładnymi całkowitoliczbowymi
+  składowymi mieszanymi, zbudowanych z iloczynów Kulkarni–Nomizu.
+  Jest to kontrola rachunku, nie zastępstwo dowodu.
+- Kontrola źródła potwierdziła, że zmiany dotyczą tylko rozdziału 13;
+  wcześniejsze i późniejsze rozdziały zachowano dokładnie. Sprawdzono
+  unikalność etykiet, istnienie odsyłaczy, parowanie środowisk i osiem
+  ilustracji. Pobranie stanu serwera nie wykazało nowych zmian.
+- Punkty odniesienia: [kurs Davida Tonga](https://davidtong.org/teaching/general-relativity/grhtml/S6)
+  oraz wskazane już w rozdziale źródła twierdzeń porównawczych
+  i Gaussa–Bonneta. Nową tabelę Kerra i wzór przedłużenia sprawdzono
+  bezpośrednio z metryki, niezależnie od tabel z literatury.
+
+### Kontrola końcowa
+
+- Obejrzano wszystkie 33 strony rozdziału (222–254 PDF), a osiem
+  ilustracji również w większej rozdzielczości. Po poprawkach ponownie
+  obejrzano rysunki siodła, wykres porównawczy i brzeg Gaussa–Bonneta.
+  Przy rysowaniu siodła poprawiono nawiasowanie kwadratów ujemnych
+  parametrów w TikZ i podniesiono kierunek obserwacji, by uniknąć
+  nakładania się fragmentów rzutu.
+- Końcowa kompilacja lokalnym MiKTeX: 310 stron, bez błędów,
+  niezdefiniowanych odsyłaczy, żądań ponownej kompilacji i `Overfull`.
+  Pozostał wcześniejszy `Underfull` w późniejszym rozdziale i trzy
+  wcześniejsze automatyczne zmiany ustawienia ilustracji `h` na `ht`.
+- Wbudowany kompilator zwrócił nieznany status; wynik potwierdza
+  ukończona kompilacja lokalna. Zaktualizowano PDF razem ze źródłem.
+- Końcowe kontrole zakresu i `git diff --check` przeszły poprawnie.
+  Repozytorium zawiera również skrypt do samodzielnego ponowienia
+  rachunków Kerra i Pfaffianu.
+
+Następna iteracja: rozdział 14 — „Twierdzenie Sarda i transwersalność”.
