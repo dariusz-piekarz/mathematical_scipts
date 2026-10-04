@@ -1654,3 +1654,86 @@ porównawcze oraz Gaussa–Bonneta z uogólnieniami.
   rachunków Kerra i Pfaffianu.
 
 Następna iteracja: rozdział 14 — „Twierdzenie Sarda i transwersalność”.
+
+## Iteracja 14 — Twierdzenie Sarda i transwersalność (2026-10-04)
+
+Przeczytano cały rozdział: dowód Sarda, transwersalny przeciwobraz,
+iloczyn włóknisty, brzeg, transwersalność parametryczną, przybliżanie
+względne, zera przekrojów, gęstość funkcji Morse'a i lokalny wymiar
+przestrzeni trajektorii. Pobranie zmian potwierdziło aktualność gałęzi.
+
+- Wyjaśniono domyślne założenia: brak brzegu, Hausdorff, drugi
+  aksjomat przeliczalności i znaczenie podrozmaitości z topologią
+  podprzestrzeni. Domkniętość podrozmaitości nadal jest osobnym
+  założeniem tam, gdzie jest potrzebna.
+- Doprecyzowano definicję zbioru miary zero w mapie i lokalny
+  argument Lipschitza na zwartej kostce. W dowodzie Sarda podano
+  otwarte dziedziny przekrojów h_t zamiast całych przestrzeni.
+  Sprawdzono indukcję, mierzalność obrazów, Fubiniego i oszacowanie
+  Taylora; zasadniczy czterostopniowy dowód jest poprawny.
+- Wyjaśniono zastosowanie Sarda osobno do wnętrza i brzegu oraz
+  siłę warunku regularności ograniczenia do brzegu.
+- Poprawiono lokalny zapis mapy plasterkowej i słowo
+  „odzwierciedlenie” na „odwzorowanie”. W twierdzeniach o przecięciu,
+  iloczynie włóknistym, brzegu i zerach przekrojów zaznaczono możliwy
+  pusty przeciwobraz. Dla skończoności przecięcia wystarcza zwartość
+  jednego zbioru i domkniętość drugiego; sama dyskretność nie wystarcza.
+- Rozpisano argument przy brzegu: gładkie przedłużenie przez r = 0,
+  odwracalny minor po zmiennych stycznych i funkcja odwrotna
+  zachowująca współrzędną brzegową. Omówiono przypadki m < c i m = c.
+- W transwersalności parametrycznej rozpatrzono również przestrzeń
+  parametrów wymiaru zero, do której podana wersja Sarda nie stosuje
+  się bezpośrednio. Wersję brzegową wyprowadzono z rzutów wnętrza W
+  i jego brzegu, obu będących rozmaitościami bez brzegu.
+- Dodano brakującą definicję używanej topologii C^r/C^infinity na
+  zwartej dziedzinie. Wyjaśniono różnicę między kontrolą każdego
+  skończonego rzędu a jednym wspólnym oszacowaniem wszystkich rzędów.
+- Uzasadniono jednostajną zbieżność skonstruowanej rodziny w każdym
+  C^r i homotopię w wypukłej kuli parametrów. W dowodzie względnym
+  otwartość zastosowano do zwartego podzbioru, bez traktowania jego
+  domknięcia jako gładkiej rozmaitości. Cała homotopia jest stała
+  na zachowywanym otoczeniu C.
+- Wyjaśniono kanoniczną pochodną pionową przekroju w zerze oraz
+  brak zer przekroju transwersalnego, gdy r > m. Rozpisano prawo
+  transformacji hesjanu i zgodność z hesjanem kowariantnym z rozdziału 13.
+- Dopisano zwarte nośniki funkcji odcinających w konstrukcji Morse'a;
+  w przykładzie na R² „małość” perturbacji dotyczy zbiorów zwartych.
+- W zapowiedzi Smale'a wyjaśniono niezależność indeksu od metryki,
+  potrzebę istnienia trajektorii na odpowiedniej półprostej czasu
+  i lokalne użycie gałęzi immersji. Prostowanie pola stosuje się
+  do pola na przecięciu. Oddzielono izolację od skończoności oraz
+  lokalny iloraz od globalnego ilorazu Hausdorffa.
+- Poprawiono wykres rodziny t² - a: wcześniej rysowano 0,62 t² - a.
+  Obecnie wszystkie trzy panele i zaznaczone zera odpowiadają
+  dokładnie parametrom -1/2, 0 i 1/2 oraz wzorowi w podpisie.
+
+### Kontrola końcowa
+
+- Obejrzano wszystkie 11 stron rozdziału (255–265 PDF), a wszystkie
+  cztery ilustracje również w większej rozdzielczości. Okręgi
+  poziomic, transwersalność prostych, parabole i kierunki przepływu
+  siodła są zgodne z tekstem. Poprawiona rodzina parabol ma zera
+  w zaznaczonych punktach t = ±sqrt(1/2).
+- Zweryfikowano zmianę hesjanu przez regułę łańcucha, rangi
+  różniczek w iloczynie włóknistym i transwersalności parametrycznej,
+  oraz wymiar przecięcia i lokalnego ilorazu trajektorii. Nie dodawano
+  testów odtwarzających sam tekst dowodów.
+- Kontrola źródła względem początku iteracji potwierdziła, że
+  zmiany dotyczą wyłącznie rozdziału 14. Etykiety są unikalne,
+  odsyłacze istnieją, środowiska są sparowane; `git diff --check`
+  nie wykazał błędów.
+- Końcowa kompilacja lokalnym MiKTeX: 312 stron, bez błędów,
+  brakujących odsyłaczy, żądań ponownej kompilacji i `Overfull`.
+  Pozostał wcześniejszy `Underfull` w późniejszym rozdziale oraz
+  trzy wcześniejsze automatyczne zmiany położenia ilustracji `h` na `ht`.
+  Wbudowany kompilator ponownie nie potwierdził statusu; wynik
+  potwierdza kompilacja lokalna. Zaktualizowano PDF.
+- Porównano zakres twierdzeń z [wykładem 3 A. Rittera](https://people.maths.ox.ac.uk/ritter/morse-cambridge/lecture03.pdf),
+  [wykładem 4](https://people.maths.ox.ac.uk/ritter/morse-cambridge/lecture04.pdf)
+  i [notatkami M. Mügera](https://www.math.ru.nl/~mueger/diff_notes.pdf).
+- Podczas końcowego pobrania wykryto commity `5915d4a` i `57de31e`,
+  dodające i aktualizujące `do_zrobienia.md`. Włączono je przez
+  fast-forward, zachowując plik bez zmian. Lista jest materiałem
+  do końcowej propozycji rozszerzeń; nie rozszerza bieżącej iteracji.
+
+Następna iteracja: rozdział 15 — „Zanurzenia i otoczenia podrozmaitości”.
