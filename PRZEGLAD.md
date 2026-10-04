@@ -1848,3 +1848,124 @@ Pobranie zmian przed rozpoczęciem iteracji nie wykazało nowych commitów.
 - Końcowe pobranie zmian z repozytorium nie wykazało nowych commitów.
 
 Następna iteracja: rozdział 16 — „Przecięcia, dualność i klasy charakterystyczne”.
+
+## Iteracja 16 — Przecięcia, dualność i klasy charakterystyczne
+
+Punkt wyjścia: `f3d1458`. Pobrano zmiany (repozytorium aktualne)
+i przeczytano wszystkie dziesięć sekcji oraz cztery ilustracje.
+
+### Zmiany i ich uzasadnienie (uzupełniane podczas przeglądu)
+
+- Iloczyn kubkowy zdefiniowano także nad Z i wskazano rosnący
+  porządek wierzchołków. Poprawiono dowód reguły Leibniza:
+  skracają się dwa dodatkowe wyrazy prawej strony, a nie wyrazy
+  lewego kobrzegu. Dopisano znak przy zmianie drugiego czynnika.
+- Zastąpiono nieuzasadnione utożsamienie końców pryzmatu z dwiema
+  przekątnymi konstrukcją homotopii łańcuchowej między mapą
+  Alexandera–Whitneya i jej zamianą czynników. Wypełnienia cykli
+  istnieją w ściągalnych kompleksach przypisanych sympleksom.
+- Dodano brakującą definicję iloczynu kapowego, jego wzór na brzeg
+  i zgodność ewaluacji z iloczynem kubkowym. Ustalono jedną
+  kolejność czynników dla dalszych rachunków znaków.
+- W dualności wyprowadzono jawnie znak (-1)^(k+1) przy brzegu
+  komórki dualnej. Usunięto arbitralną zmianę orientacji stopni,
+  która bez komentarza zmieniałaby znak deklarowanej mapy kapowej.
+  Podano ewentualny czynnik przeskalowania i argument homotopii
+  porównującej mapę komórek dualnych z iloczynem kapowym.
+- Przy brzegu rozróżniono klasę względną i lokalną homologię:
+  ta ostatnia w punkcie brzegu jest zerowa. System orientacji
+  określa się tam przez przestrzeń styczną lub kołnierz.
+  Uzupełniono jedyność klasy względnej, jej brzeg i przypadek n=0.
+- Wyjaśniono, dlaczego dualne komórki do sympleksów niebrzegowych
+  tworzą podkompleks obliczający homologię M: wnętrze cofa się
+  na niego przez normalizację wag barycentrycznych, a kołnierz
+  porównuje wnętrze z całą rozmaitością.
+- Uściślono abelowość grup współczynników. W klasyfikacji przez
+  równik dopisano normalizację całej homotopii, nie tylko pojedynczej
+  mapy, aby uzasadnić użycie opartych grup homotopii, i wymaganie
+  zachowania orientacji przez izomorfizmy. Podano jawnie obie
+  względne wersje dualności ze skręconymi współczynnikami.
+- Równość przecięcia i iloczynu kubkowego uzasadniono całkowitymi
+  względnymi klasami Thoma, wycięciem i lokalizacją na punktach
+  przecięcia. Rachunek form przy punkcie służy tylko kontroli
+  orientacji; nie zastępuje argumentu nad Z.
+- Uzupełniono przejście od znaków funkcji przejścia w definicji
+  w₁ do kohomologii singularnej przez monodromię pętli i H¹.
+  Dopisano gładkość ram i wygładzenie homotopii w sklejaniu wiązek.
+- W konstrukcji wᵢ dopisano brakujące uzasadnienie bazy
+  1,x,…,x^(r−1) na włóknie projektowym: hiperpłaszczyzny są dualne
+  do w₁ tautologicznej linii, a ich transwersalne przecięcia
+  wykrywają kolejne potęgi. Uwzględniono rząd zero i zgodność
+  nowego współczynnika w₁ z wcześniejszą definicją przez wyznaczniki.
+- Rozdzielono niezależną klasę Eulera modulo 2 od nazwy wᵣ.
+  Najpierw dowodzi się jej własności z klasy Thoma, potem
+  e₂(L)=w₁(L) dla linii, a dopiero przez rozszczepienie e₂(E)=wᵣ(E).
+  Dzięki temu argument dla sumy Whitneya nie zakłada swojego wniosku.
+- Dopisano uzasadnienie zgodności w₂ z przeszkodą spinową:
+  redukcję do 2-szkieletu, rozszczepienie części trywialnej,
+  płaszczyznową klasę Eulera i parzystość nawinięcia w SO(2).
+- W dowodzie Thoma zbudowano globalny kocykl w kompleksie
+  komórkowym pary, zamiast uznawać lokalne generatory za automatycznie
+  sklejone. Uściślono jedyność, niezwartą bazę, zapominanie względności
+  przed cofnięciem do zera i iloczyn względny dla sumy wiązek.
+- W twierdzeniu o zerach ustalono orientację „normalna, styczna”
+  i cofnięcie klasy pary (E,E bez przekroju zerowego).
+  Przy samoprzecięciu podano konieczne założenie orientacji otoczenia
+  oraz konkretną orientację normalnej „styczna, normalna”.
+  Macierz blokowa bezpośrednio potwierdza znak lokalnego stopnia.
+- W indeksie zera uzasadniono niezależność od mapy i wskazano
+  konwencje n=1 oraz n=0. Doprecyzowano użycie funkcji uwikłanej
+  z parametrem przy krótkim przepływie, wykluczając dodatkowe
+  punkty stałe zarówno blisko zer, jak i na zwartym dopełnieniu.
+- Zastąpiono skrótowy rachunek śladu Lefschetza obliczeniem klasy
+  przekątnej w dualnych bazach kohomologii. Wyprowadzono wszystkie
+  znaki, lokalną macierz grafu i przekątnej oraz przejście do śladu;
+  potrzebną formułę Künnetha nad Q uzasadniono na kompleksach.
+- Dla formy przecięcia podano termin „unimodularna”, konkretny
+  znak izomorfizmu z kratą dualną i niezależność od reprezentantów
+  modulo torsja. Symetrię wyprowadzono z iloczynu kubkowego,
+  bez założenia, że każda klasa ma reprezentanta podrozmaitościowego.
+- W chirurgii rozróżniono wymiar operowanej sfery i indeks uchwytu
+  jej śladu. Ustalono sklejenie wyznaczone przez obramowanie,
+  rolę kołnierzy i warunek zachowania orientacji. Dwa walce dają
+  torus przy odpowiednim sklejeniu; bez tego warunku możliwa jest
+  butelka Kleina. Uzupełniono rachunek charakterystyki Eulera.
+
+### Ilustracje i kontrola końcowa
+
+- W komórce dualnej użyto dokładnych barycentrów, a podpis
+  przeniesiono do wnętrza dysku, aby nie przecinał krawędzi triangulacji.
+- Na sferze zastąpiono dowolne pionowe strzałki rzutami rzeczywistych
+  południkowych trajektorii gradientu wysokości. Podano wzór pola.
+- Dodano niezależny, niewymagający bibliotek skrypt
+  `weryfikacja/rozdzial16_znaki.py`: 8540 par bazowych kołańcuchów
+  dla Leibniza, 247 przypadków wzoru kapowego oraz 128 macierzy
+  dla porównania klasy przekątnej z det(I−A) w wymiarach 1–4.
+  Wszystkie kontrole przechodzą. Zakres skryptu jest rachunkowy;
+  nie zastępuje dowodów dualności, triangulacji czy twierdzenia Thoma.
+- Obejrzano cały rozdział (17 stron, 281–297 PDF), a wszystkie
+  cztery ilustracje również w większej rozdzielczości. Rysunki
+  torusa i sklejania wiązki na równiku zachowano po kontroli.
+- Sprawdzono dodatkowo porządek orientacji w samoprzecięciu,
+  względny charakter przeszkody w₂ na 2-komórce oraz brak
+  cyklicznej zależności między klasą Thoma i konstrukcją wᵢ.
+- Końcowa kompilacja lokalnym MiKTeX: 319 stron, bez błędów,
+  brakujących odsyłaczy, żądań ponownej kompilacji, `Overfull`
+  i `Underfull`.
+  Wbudowany kompilator nie potwierdził statusu; wynik zweryfikowano
+  lokalnie. Pozostały trzy wcześniejsze zmiany położenia ilustracji
+  `h` na `ht`. Przeredagowanie początku dowodu Thoma usunęło
+  wcześniejszy `Underfull`; skład tego akapitu obejrzano.
+  Zaktualizowano PDF.
+- Kontrola zakresu względem `f3d1458` potwierdziła, że źródło
+  poza rozdziałem 16 jest identyczne. Wszystkie etykiety są unikalne,
+  odsyłacze istnieją, środowiska są sparowane i `git diff --check`
+  przechodzi. Końcowe pobranie nie wykazało nowych commitów.
+- Konwencję kapową i zakres twierdzeń porównano z
+  [A. Hatcherem, Algebraic Topology](https://pi.math.cornell.edu/~hatcher/AT/AT.pdf),
+  a zależności w konstrukcji klas z
+  [Vector Bundles and K-Theory](https://pi.math.cornell.edu/~hatcher/VBKT/VB.pdf)
+  oraz [wykładami R. Cohena](https://math.stanford.edu/~ralph/bookR4.pdf).
+  Rozwinięcia dowodów i kontrole rachunkowe zapisano w repozytorium.
+
+Następna iteracja: rozdział 17 — „Teoria Morse'a: punkty krytyczne, uchwyty i przepływ”.
