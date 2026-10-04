@@ -5,9 +5,7 @@
 - ujednolicić styl każdego końca rozdziału w postaci odsyłaczy do plików zewnętrznych 
 
 ## do dopisania 
-- dalsza część teorii Smile
-- tw Whiteheada i tricku Whitney'a 
+- dalsza część teorii Smile - tw o h-kobordyzmie, tw Whiteheada o torsji i tricku Whitney'a, sklejanie indeksów, usuwanie uchwytów, tw o s-kobordyzmie, tw o iloczynie (h- koboedyzm to iloczynl
 - chirurgie
-- dowód hipotezy poincarego dla n>5 (co wymaga przypadek n=4?) i n=2.
-- s kobordyzmy i powiązania 
+- dowód hipotezy poincarego dla n>5 (co wymaga przypadek n=4?) i n=2. 
 - sfery Milnore'a i dowód istnienia sfer egzotycznych + nie równoważność struktur na R4 i powiązane. 
