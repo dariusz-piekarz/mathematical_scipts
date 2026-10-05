@@ -10,9 +10,9 @@ jego dowodów; kontrola nowych fragmentów jest prowadzona rozdziałami.
 
 | Punkt | Co jest już w aktualnej książce | Dalsze działanie |
 |---|---|---|
-| 1 | Osobna sekcja o brzegu w rozdziale 1, definicja, niezależność od map, przykłady i odsyłacze | Sprawdzić nowe argumenty i ich powiązanie z przestrzenią styczną; nie dodawać drugiej definicji |
+| 1 | Osobna sekcja o brzegu w rozdziale 1, definicja, niezależność od map, przykłady i odsyłacze | Sprawdzono; uzupełniono dowód pełnego wymiaru przestrzeni stycznej przy brzegu i niezależności od przedłużeń |
 | 2 | Rozdział 5: grupy, grupy wolne, redukcja słów, iloczyn wolny i prezentacje | Sprawdzić konstrukcje i przejście do van Kampena |
-| 3 | Mapa książki, oznaczenia, indeks i uzupełnione lektury | Podzielić źródła na pliki na obecną prośbę użytkownika; pełne ujednolicenie redakcyjne pozostaje osobnym zagadnieniem |
+| 3 | Mapa książki, oznaczenia, indeks i uzupełnione lektury | Źródła podzielono i zweryfikowano w `9148128`; pełne ujednolicenie redakcyjne pozostaje osobnym zagadnieniem |
 | 4 | Nie dodano zestawów zadań | Pozostają poza aktualnym zakresem zgodnie z zasadami projektu |
 | 5 | Dodatek o wynikach zewnętrznych i samowystarczalności | Sprawdzić zgodność deklarowanych zależności z dowodami |
 | 6 | Rozdział 27 o Chernie–Weilu i wzorze Cherna–Gaussa–Bonneta | Sprawdzić nową argumentację, normalizacje i wersję brzegową |

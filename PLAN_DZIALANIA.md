@@ -11,8 +11,8 @@ Zastępuje to wcześniejszą zasadę jednego źródła w `AGENTS.md`.
 - [x] Potwierdzić obecność rozmaitości z brzegiem, grupy wolnej i iloczynu wolnego.
 - [x] Wydzielić preambułę, wstęp, 27 rozdziałów, dodatek i indeks.
 - [x] Potwierdzić identyczność rozwiniętego źródła i składu przed/po podziale (384 strony, także porównanie pikselowe).
-- [ ] Wysłać podział wraz z instrukcją wspólnej edycji i kompilacji.
-- [ ] Przejrzeć merytorycznie zmienione fragmenty rozdziału 1.
+- [x] Wysłać podział wraz z instrukcją wspólnej edycji i kompilacji (`9148128`).
+- [x] Przejrzeć merytorycznie zmienione fragmenty rozdziału 1; uzupełnić model przestrzeni stycznej przy brzegu.
 - [ ] Przejrzeć nowy rozdział 5 i odsyłacze do algebry.
 - [ ] Skontrolować pozostałe zmiany w dotychczasowych rozdziałach.
 - [ ] Przejrzeć nowe rozdziały 20–27 oraz dodatek, po jednym rozdziale w iteracji.

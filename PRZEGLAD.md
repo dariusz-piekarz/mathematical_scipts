@@ -2316,3 +2316,45 @@ wersja ma 384 strony. Nowy zakres nie jest objęty historycznym audytem
 Nowe rozdziały będą kontrolowane kolejno. Materiał o Freedmanie
 i egzotycznych R⁴ pozostaje poza tym skryptem; istniejącego rozdziału
 o sferach Milnora nie usuwano ani nie przenoszono bez potrzeby.
+
+## Rozdział 1 — kontrola nowej sekcji o brzegu i uzupełnień autora
+
+Zakres: zmiany autora od `66b220f`, po podziale źródeł w `9148128`.
+Przeczytano nową sekcję o brzegu, dopisany rachunek struktury liniowej
+na klasach krzywych oraz pozostałe różnice rozdziału 1.
+
+- Zachowano poprawne definicje, dowód niezależności brzegu od map,
+  przykłady dysku i okręgu oraz rozróżnienie naroży.
+- Utrwalono domyślną konwencję „bez brzegu, o ile nie zaznaczono inaczej”.
+  Wcześniejsze zdanie określało ją tylko do momentu wprowadzenia definicji
+  brzegu, co mogło sugerować stosowanie dalszych twierdzeń o zanurzeniach
+  i wartościach regularnych do dowolnych rozmaitości z brzegiem.
+- W stwierdzeniu o wymiarze brzegu zapisano n≥1, aby teza n−1 nie
+  obejmowała przyjętej osobno konwencji dla rozmaitości zerowymiarowych.
+- Po konstrukcji przestrzeni stycznej dopisano pełne uzasadnienie modelu
+  przy brzegu: zarodki, niezależność pochodnych od przedłużenia,
+  reprezentacja każdej derywacji przez n współczynników i odwracalność
+  przejść w punkcie brzegu. Wcześniejszą wzmiankę połączono z tym dowodem.
+- Uzasadniono identyfikację T_p(∂M) z podprzestrzenią vⁿ=0 oraz fakt,
+  że krzywe dwustronne reprezentują właśnie tę podprzestrzeń, nie całe
+  T_pM. Przykład minimum ostatniej współrzędnej wyjaśnia brak kierunku
+  poprzecznego w modelu krzywych. Podano też związek z derywacjami
+  funkcji globalnych przez funkcję odcinającą.
+- Dopisane przez autora wzory dodawania klas krzywych i mnożenia
+  przez skalar są poprawne; zachowano je wraz z reparametryzacją γ(at).
+
+- Kontrola struktury potwierdziła, że spośród źródeł TeX zmieniono
+  wyłącznie rozdział 1. Wszystkie 1160 etykiet jest unikalnych,
+  wszystkie 1053 odsyłacze mają cel, środowiska są sparowane,
+  zachowano 15 rysunków rozdziału.
+- Pełny `latexmk` przebudował dokument i indeks do 385 stron.
+  Brak błędów, niezdefiniowanych odsyłaczy, `Overfull` i żądania
+  kolejnego przebiegu. Pozostają wcześniejsze dwa `h`→`ht` i jedno
+  `Underfull` w rozdziale 23, niezwiązane z tą zmianą.
+- Obejrzano sekcję o brzegu (strony 13–15), zmieniony przez autora
+  kolorystycznie rzut stereograficzny (21), nowy dowód i jego sąsiedztwo
+  (34–36) oraz zaktualizowany indeks (384–385). Układ i odsyłacze są poprawne.
+  Zaktualizowano PDF w repozytorium.
+
+Kontrola nowych fragmentów rozdziału 1 zakończona. Następna iteracja:
+nowy rozdział 5 z podstawami algebry, w tym grupą wolną i iloczynem wolnym.
