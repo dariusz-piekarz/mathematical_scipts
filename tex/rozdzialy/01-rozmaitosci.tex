@@ -1,0 +1,3905 @@
+\chapter{Rozmaitości różniczkowe}
+\label{ch:rozmaitosci}
+\index{rozmaitosc@Rozmaitość}
+
+\noindent\textbf{Jak czytać skrypt.}
+Wystarczą podstawy algebry liniowej, rachunku różniczkowego
+wielu zmiennych i topologii. Każdy nowy obiekt najpierw
+opisujemy intuicyjnie, potem definiujemy i używamy na
+przykładach. W dowodach rozpisujemy kroki specyficzne dla
+rozmaitości; gdy potrzebne jest duże twierdzenie z analizy
+lub topologii (np.\ twierdzenie o funkcji odwrotnej albo
+niezmienniczość obszaru), wskazujemy je wprost.
+
+Niniejszy rozdział stanowi wprowadzenie do teorii rozmaitości gładkich — podstawowego
+obiektu geometrii i topologii różniczkowej. Zaczynamy od pojęcia rozmaitości topologicznej,
+następnie wprowadzamy strukturę różniczkową za pomocą atlasów, i budujemy krok po kroku
+aparat niezbędny do uprawiania analizy na rozmaitościach: przestrzeń styczną i kostyczną,
+wiązki wektorowe oraz różniczkowanie odwzorowań między rozmaitościami wraz z klasyfikacją
+ich lokalnego zachowania (immersje, submersje, zanurzenia) i teorią podrozmaitości, na
+której ten rozdział się kończy. Zbudowany tu aparat stanowi fundament, na którym w
+kolejnych rozdziałach nadbudujemy dalszą teorię geometrii i topologii różniczkowej.
+
+
+
+\section{Rozmaitości topologiczne}
+
+Rozmaitość topologiczna to przestrzeń topologiczna, która lokalnie ,,wygląda'' jak
+przestrzeń euklidesowa $\R^n$. Precyzujemy to poniżej.
+
+\begin{definicja}
+Przestrzeń topologiczna $M$ jest \emph{lokalnie euklidesowa wymiaru $n$}, jeżeli każdy
+punkt $p\in M$ posiada otoczenie otwarte $U$ homeomorficzne z otwartym podzbiorem $\R^n$.
+\end{definicja}
+
+\begin{definicja}
+\emph{Rozmaitością topologiczną} wymiaru $n$ nazywamy przestrzeń topologiczną $M$, która:
+\begin{enumerate}[label=(\roman*)]
+\item jest przestrzenią Hausdorffa,
+\item spełnia drugi aksjomat przeliczalności (posiada przeliczalną bazę topologii),
+\item jest lokalnie euklidesowa wymiaru $n$.
+\end{enumerate}
+\end{definicja}
+
+Przyjmujemy $n\geq0$. Do czasu wprowadzenia osobnej definicji
+rozmaitości z brzegiem wszystkie rozmaitości rozważamy bez brzegu.
+Przypomnijmy znaczenie dwóch warunków z definicji.
+\emph{Hausdorffa} znaczy, że dla dowolnych różnych punktów
+$p,q$ można znaleźć rozłączne otwarte otoczenia $U\ni p$
+i $V\ni q$. \emph{Przeliczalna baza topologii} to rodzina
+$B_1,B_2,\ldots$ zbiorów otwartych taka, że każdy zbiór
+otwarty jest sumą pewnych $B_i$. Lokalna euklidesowość
+dotyczy \emph{małego otoczenia każdego punktu}; nie twierdzi,
+że całą przestrzeń można opisać jedną mapą do $\R^n$.
+
+Warunki (i) i (ii) mogą wydawać się techniczne, jednak są istotne i nie wynikają
+automatycznie z lokalnej euklidesowości — poniżej pokazujemy stosowne kontrprzykłady.
+
+\begin{uwaga}[Niezmienniczość wymiaru]
+Wymiar $n$ w powyższej definicji jest wyznaczony jednoznacznie przez $M$: jeśli niepusty
+zbiór otwarty $U\subseteq\R^n$ jest homeomorficzny ze zbiorem otwartym $V\subseteq\R^m$, to
+$n=m$. Jest to \emph{niezmienniczość wymiaru}, będąca konsekwencją
+\emph{twierdzenia Brouwera o niezmienniczości obszaru}: ciągła injekcja
+z otwartego podzbioru $\R^d$ do $\R^d$ ma otwarty obraz.
+Samo twierdzenie Brouwera przyjmujemy bez dowodu; wymaga narzędzi
+topologii algebraicznej. Wyprowadźmy jednak potrzebny wniosek.
+Gdyby $n<m$ i $h:U\to V$ było homeomorfizmem, to złożenie
+$V\xrightarrow{h^{-1}}U\hookrightarrow\R^m$, gdzie ostatnie
+odwzorowanie dopisuje $m-n$ zer, byłoby ciągłą injekcją.
+Jej obraz musiałby być otwarty w $\R^m$, lecz leży w podprzestrzeni
+$\R^n\times\{0\}$ o pustym wnętrzu: sprzeczność.
+Przypadek $m<n$ wykluczamy, zamieniając role $U,V$.
+Wymiar jest więc jednoznaczny dla niepustej rozmaitości.
+Pusty zbiór dopuszczamy jako rozmaitość dowolnego ustalonego wymiaru.
+\end{uwaga}
+
+\begin{definicja}[Nasycenie zbioru]\label{def:nasycenie}
+\index{nasycenie zbioru@Nasycenie zbioru}
+Niech $\sim$ będzie relacją równoważności na zbiorze $X$,
+a $\pi\colon X\to X/{\sim}$ rzutowaniem na zbiór klas.
+\emph{Nasyceniem} zbioru $A\subseteq X$ względem tej relacji
+nazywamy
+\[
+ \operatorname{Sat}_{\sim}(A)
+ :=\pi^{-1}(\pi(A))
+ =\bigcup_{x\in A}[x].
+\]
+Zbiór $A$ jest \emph{nasycony}, jeśli
+$\operatorname{Sat}_{\sim}(A)=A$, czyli razem z każdym
+$x\in A$ zawiera całą jego klasę $[x]$.
+Równoważnie, $A=\pi^{-1}(B)$ dla pewnego
+$B\subseteq X/{\sim}$. Nasycenie jest najmniejszym
+zbiorem nasyconym zawierającym $A$.
+\end{definicja}
+
+Ta sama definicja działa dla dowolnej surjekcji
+$q\colon X\to Y$: nasycenie względem jej włókien to
+$q^{-1}(q(A))$. Dla przykładu w $\R/{\Z}$, gdzie
+$x\sim y$ oznacza $x-y\in\Z$, nasycenie
+$A=(0,\tfrac12)$ jest sumą
+$\bigcup_{k\in\Z}(k,k+\tfrac12)$.
+
+\begin{definicja}[Topologia ilorazowa]\label{def:topologia-ilorazowa}
+\index{topologia ilorazowa@Topologia ilorazowa}
+Niech $X$ będzie przestrzenią topologiczną, $\sim$ relacją równoważności
+na $X$, a $\pi\colon X\to X/{\sim}$ rzutowaniem
+$x\mapsto[x]$. \emph{Topologia ilorazowa} na zbiorze klas $X/{\sim}$
+jest zadana warunkiem
+\[
+ V\subseteq X/{\sim}\ \text{jest otwarty}
+ \quad\Longleftrightarrow\quad
+ \pi^{-1}(V)\subseteq X\ \text{jest otwarty}.
+\]
+Przeciwobraz dowolnego $V\subseteq X/{\sim}$ jest
+automatycznie nasycony w sensie
+Definicji~\ref{def:nasycenie}. Zatem otwarte zbiory
+ilorazu odpowiadają dokładnie otwartym
+i nasyconym podzbiorom $X$.
+Rzutowanie $\pi$ jest ciągłe i surjektywne.
+\end{definicja}
+
+Intuicyjnie sklejone punkty stają się jednym punktem ilorazu.
+Dlatego przy sprawdzaniu otwartości musimy uwzględnić
+\emph{wszystkie} punkty, które w ilorazie zostają utożsamione:
+temu służy nasycenie. Sam obraz zbioru otwartego
+$A\subseteq X$ nie musi być otwarty w ilorazie,
+ponieważ $\pi^{-1}(\pi(A))$ może zawierać dodatkowe
+punkty spoza $A$ i nie być zbiorem otwartym.
+Na przykład, jeśli w $\R$ skleimy tylko $0$ z $1$,
+to dla $A=(-\tfrac14,\tfrac14)$ nasycenie ma postać
+$A\cup\{1\}$, która nie jest otwarta; $\pi(A)$ też
+nie jest otwarty w ilorazie.
+
+W szczególności dla dowolnego $A\subseteq X$ otrzymujemy
+\[
+ \pi(A)\text{ jest otwarty w }X/{\sim}
+ \quad\Longleftrightarrow\quad
+ \operatorname{Sat}_{\sim}(A)\text{ jest otwarty w }X.
+\]
+To pozwala sprawdzać otwartość zbiorów po sklejeniu.
+Warunek z definicji rzeczywiście wyznacza topologię: przeciwobraz
+zachowuje sumy dowolnych rodzin oraz skończone przecięcia.
+Jest to najbogatsza topologia na $X/{\sim}$, dla której $\pi$ jest
+ciągłe. Ma też użyteczną własność: dla dowolnej przestrzeni
+topologicznej $Z$ odwzorowanie $g\colon X/{\sim}\to Z$ jest ciągłe
+wtedy i tylko wtedy, gdy $g\circ\pi\colon X\to Z$ jest ciągłe.
+Istotnie, dla każdego otwartego $W\subseteq Z$ zachodzi
+$(g\circ\pi)^{-1}(W)=\pi^{-1}(g^{-1}(W))$, więc zastosowanie definicji
+do $g^{-1}(W)$ daje obie implikacje. Będziemy z tej topologii
+korzystać przy sklejaniu przestrzeni oraz przy przestrzeniach
+rzutowych.
+
+\begin{przyklad}[Prosta z podwojonym początkiem]
+Pokażemy, że warunku Hausdorffa nie można pominąć w definicji rozmaitości topologicznej. Istnieją bowiem przestrzenie, które są lokalnie euklidesowe i spełniają drugi aksjomat przeliczalności, ale nie są przestrzeniami Hausdorffa.
+
+Rozważmy sumę rozłączną dwóch kopii prostej rzeczywistej $X=(\mathbb{R}\times\{0\})\sqcup(\mathbb{R}\times\{1\})$. Punkty pierwszej kopii będziemy oznaczać przez $(x,0)$, a drugiej przez $(x,1)$.
+
+Na $X$ wprowadzamy relację równoważności $\sim$, która utożsamia odpowiadające sobie punkty obu prostych z wyjątkiem zera. Definiujemy ją przez
+$(x,i)\sim(y,j)\Longleftrightarrow x=y\ \text{oraz}\ \bigl(i=j\ \text{lub}\ x\neq0\bigr)$.
+Innymi słowy, dla każdego $x\neq0$ zachodzi $(x,0)\sim(x,1)$, natomiast punkty $(0,0)$ oraz $(0,1)$ nie są równoważne.
+
+Przestrzeń ilorazową oznaczamy przez $M=X/\sim$, a przez $\pi\colon X\to M$ naturalną projekcję ilorazową. Dla $x\neq0$ klasa równoważności ma postać $[x]=\{(x,0),(x,1)\}$. Ponadto $[(0,0)]=\{(0,0)\}$ oraz $[(0,1)]=\{(0,1)\}$. Oznaczmy $0_a=[(0,0)]$ oraz $0_b=[(0,1)]$. Są to dwa różne punkty przestrzeni $M$.
+
+Można więc intuicyjnie myśleć o $M$ jako o zwykłej prostej rzeczywistej, w której punkt $0$ został zastąpiony przez dwa różne punkty $0_a$ i $0_b$. Poza zerem obie kopie prostej zostały całkowicie sklejone.
+
+Opiszmy dokładniej otoczenia punktów $0_a$ i $0_b$. Dla każdego otwartego przedziału $I\subseteq\mathbb{R}$ zawierającego $0$ definiujemy
+$U_a(I)=\{0_a\}\cup\{[x]:x\in I,\ x\neq0\}$ oraz
+$U_b(I)=\{0_b\}\cup\{[x]:x\in I,\ x\neq0\}$.
+Oba zbiory zawierają te same punkty odpowiadające niezerowym liczbom rzeczywistym z $I$, ale różnią się punktem nad zerem: $0_a\in U_a(I)$ i $0_b\notin U_a(I)$, natomiast $0_b\in U_b(I)$ i $0_a\notin U_b(I)$.
+
+Sprawdźmy, że zbiory te są otwarte w topologii ilorazowej. Z definicji zbiór $U\subseteq M$ jest otwarty wtedy i tylko wtedy, gdy $\pi^{-1}(U)$ jest otwarty w $X$. Dla $U_a(I)$ mamy
+$\pi^{-1}(U_a(I))=(I\times\{0\})\cup((I\setminus\{0\})\times\{1\})$.
+Pierwszy składnik jest otwarty w pierwszej kopii $\mathbb{R}$, a drugi w drugiej kopii, ponieważ $I\setminus\{0\}$ jest otwarty w $\mathbb{R}$. Zatem $\pi^{-1}(U_a(I))$ jest otwarty w sumie rozłącznej $X$, a więc $U_a(I)$ jest otwarty w $M$. Analogicznie
+$\pi^{-1}(U_b(I))=((I\setminus\{0\})\times\{0\})\cup(I\times\{1\})$,
+więc $U_b(I)$ również jest otwarty.
+
+Zauważmy teraz, że $U_a=M\setminus\{0_b\}$ oraz $U_b=M\setminus\{0_a\}$ są otwarte i każdy z tych zbiorów jest homeomorficzny z $\mathbb{R}$. Rzeczywiście, definiujemy $\varphi_a\colon U_a\to\mathbb{R}$ przez $\varphi_a(0_a)=0$ oraz $\varphi_a([x])=x$ dla $x\neq0$. Ciągła funkcja $(x,i)\mapsto x$ jest stała na klasach równoważności,
+więc z własności ilorazu indukuje ciągłą funkcję na $M$;
+jej ograniczeniem jest $\varphi_a$. Odwrotność $\varphi_a^{-1}$ ma postać
+$x\mapsto\pi(x,0)$ i również jest ciągła. Analogicznie, używając
+$x\mapsto\pi(x,1)$, otrzymujemy homeomorfizm
+$\varphi_b\colon U_b\to\mathbb{R}$.
+
+A zatem każdy punkt przestrzeni $M$ posiada otwarte otoczenie homeomorficzne z otwartym podzbiorem $\mathbb{R}$. Przestrzeń $M$ jest więc lokalnie euklidesowa wymiaru $1$.
+
+Ponadto drugi aksjomat przeliczalności jest spełniony. Możemy wziąć przeliczalną bazę przedziałów o końcach wymiernych na $\mathbb{R}$, a następnie przenieść ją przez homeomorfizmy $\varphi_a$ i $\varphi_b$ na $U_a$ i $U_b$. Suma dwóch przeliczalnych rodzin jest nadal przeliczalna, więc otrzymujemy przeliczalną bazę topologii na całym $M$.
+
+Pozostaje sprawdzić własność Hausdorffa. Rozważmy dwa różne punkty $0_a\neq0_b$. Niech $U$ będzie dowolnym otwartym otoczeniem $0_a$, a $V$ dowolnym otwartym otoczeniem $0_b$. Ponieważ $U$ jest otoczeniem $0_a$, istnieje $\varepsilon>0$ takie, że $U_a((-\varepsilon,\varepsilon))\subseteq U$. Podobnie istnieje $\delta>0$ takie, że $U_b((-\delta,\delta))\subseteq V$.
+
+Wybierzmy $x\neq0$ takie, że $|x|<\min\{\varepsilon,\delta\}$. Wtedy $[x]\in U_a((-\varepsilon,\varepsilon))$ oraz $[x]\in U_b((-\delta,\delta))$, a więc $[x]\in U\cap V$. Zatem $U\cap V\neq\varnothing$.
+
+Nie istnieją więc rozłączne otoczenia punktów $0_a$ i $0_b$. Przestrzeń $M$ nie jest Hausdorffa.
+
+Podsumowując, $M$ jest lokalnie euklidesowa wymiaru $1$ i spełnia drugi aksjomat przeliczalności, ale nie jest przestrzenią Hausdorffa. Pokazuje to, że warunek Hausdorffa w definicji rozmaitości topologicznej nie wynika z pozostałych założeń i musi być wymagany osobno.
+\end{przyklad}
+
+\begin{uwaga}
+Symetrycznie, istnieją przestrzenie Hausdorffa i lokalnie euklidesowe, które nie spełniają
+drugiego aksjomatu przeliczalności. Prostym przykładem jest suma
+rozłączna nieprzeliczalnie wielu kopii $\R$: każda kopia jest otwarta,
+co daje lokalną euklidesowość, a różne kopie rozdzielają punkty.
+Gdyby istniała przeliczalna baza, w każdej kopii można byłoby wybrać
+niepusty element bazy zawarty w tej kopii. Różne kopie wymagałyby
+różnych elementów, co jest niemożliwe.
+Klasycznym spójnym przykładem jest tzw.\ \emph{długa prosta}
+(ang.\ \emph{long line}), skonstruowana przy użyciu pierwszej nieprzeliczalnej liczby
+porządkowej. Nie przytaczamy tu tej konstrukcji; wspominamy o niej jedynie, aby podkreślić,
+że oba warunki (i) oraz (ii) są od siebie niezależne i żadnego z nich nie można pominąć.
+\end{uwaga}
+
+\begin{fakt}
+Każda rozmaitość topologiczna jest przestrzenią parazwartą i metryzowalną.
+\end{fakt}
+
+\begin{proof}
+Każdy punkt ma otoczenie, którego domknięcie jest zwarte: w mapie
+wybieramy kulę domkniętą zawartą w jej obrazie i przenosimy ją do $M$.
+Jej obraz jest zwarty, a więc domknięty w przestrzeni Hausdorffa $M$.
+Korzystamy teraz z trzech standardowych twierdzeń topologii ogólnej:
+lokalnie zwarta przestrzeń Hausdorffa jest regularna;
+regularna przestrzeń Hausdorffa z przeliczalną bazą jest metryzowalna
+(twierdzenie Urysohna); każda przestrzeń metryczna jest parazwarta.
+To daje obie tezy.
+\end{proof}
+Parazwartość oznacza, że każde pokrycie otwarte ma lokalnie skończone
+otwarte pokrycie wpisane. Na rozmaitości gładkiej pozwala ona,
+w połączeniu z lokalnymi funkcjami odcinającymi, konstruować gładkie
+rozkłady jedności. Sama lokalna funkcja odcinająca z
+Sekcji~\ref{sec:przestrzen-styczna} nie wymaga jeszcze tego globalnego narzędzia.
+
+\section{Atlasy i rozmaitości gładkie}\label{sec:atlas}
+
+Struktura rozmaitości topologicznej pozwala mówić o ciągłości, ale nie wystarcza, by mówić
+o różniczkowalności — pojęcie to nie jest niezmiennicze względem dowolnych homeomorfizmów.
+Aby zdefiniować rozmaitość \emph{gładką}, musimy wyposażyć $M$ w dodatkową strukturę: atlas
+map, których wzajemne przejścia są dyfeomorfizmami.
+
+\begin{definicja}
+Niech $M$ będzie rozmaitością topologiczną wymiaru $n$. \emph{Mapą} na $M$
+nazywamy parę $(U,\varphi)$, gdzie $U\subseteq M$ jest zbiorem otwartym, a
+$\varphi\colon U\to\varphi(U)\subseteq\R^n$ jest homeomorfizmem na otwarty podzbiór $\R^n$.
+\end{definicja}
+
+\noindent\textbf{Ustalenie terminologii.}
+W całym skrypcie \emph{mapa} oznacza angielskie \emph{chart},
+czyli lokalny układ współrzędnych $(U,\varphi)$.
+Angielskie \emph{map} tłumaczymy jako \emph{odwzorowanie}.
+Sama funkcja współrzędnych $\varphi$ jest więc odwzorowaniem
+wchodzącym w skład mapy.
+
+\begin{uwaga}
+Mapa jest lokalnym opisem rozmaitości: jej dziedziną jest otwarty zbiór $U\subset M$,
+a obrazem otwarty zbiór $\varphi(U)\subset\mathbb R^n$. Dzięki temu lokalne rachunki na $M$
+możemy wykonywać w zwykłych współrzędnych euklidesowych.
+\end{uwaga}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=1.04,line cap=round,line join=round]
+% Fragment M oraz wyróżniony otwarty zbiór U.
+\filldraw[fill=manifoldblue!10,draw=manifoldblue!75!black,very thick]
+ (-5.05,-.55) .. controls (-5.15,.55) and (-4.15,1.34) .. (-2.65,1.2)
+ .. controls (-1.43,1.14) and (-.67,.48) .. (-.67,-.35)
+ .. controls (-.7,-1.12) and (-2.18,-1.43) .. (-3.5,-1.18)
+ .. controls (-4.5,-1.1) and (-5.0,-.94) .. cycle;
+\filldraw[fill=manifoldred!12,draw=manifoldred,very thick]
+ (-4.08,-.28) .. controls (-4.1,.34) and (-3.4,.73) .. (-2.72,.64)
+ .. controls (-2.03,.63) and (-1.56,.29) .. (-1.56,-.25)
+ .. controls (-1.57,-.79) and (-2.23,-.96) .. (-2.97,-.85)
+ .. controls (-3.65,-.82) and (-4.07,-.69) .. cycle;
+\node[manifoldblue!75!black,font=\small\bfseries] at (-4.71,1.35) {$M$};
+\node[manifoldred!85!black,font=\small] at (-3.58,.17) {$U$};
+\fill[manifoldred] (-2.87,-.1) circle (2.5pt);
+\node[font=\small] at (-2.88,-.44) {$p$};
+% Obraz mapy w przestrzeni współrzędnych, bez siatki.
+\filldraw[fill=manifoldgreen!6,draw=manifoldgreen!70!black,thick]
+ (1.45,-1.19)--(4.99,-1.19)--(5.48,1.0)--(1.94,1.0)--cycle;
+\filldraw[fill=manifoldred!12,draw=manifoldred,very thick]
+ (2.1,-.31) .. controls (2.14,.23) and (2.78,.6) .. (3.45,.59)
+ .. controls (4.16,.58) and (4.57,.26) .. (4.5,-.27)
+ .. controls (4.43,-.75) and (3.76,-.86) .. (3.04,-.79)
+ .. controls (2.43,-.73) and (2.08,-.62) .. cycle;
+\node[manifoldgreen!65!black,font=\small\bfseries] at (5.2,1.32) {$\R^n$};
+\node[manifoldred!85!black,font=\small] at (3.5,.29) {$\varphi(U)$};
+\fill[manifoldred] (3.2,-.07) circle (2.5pt);
+\node[font=\small] at (3.23,-.44) {$\varphi(p)$};
+\draw[->,very thick,manifoldred] (-.39,.02)--(1.12,.02)
+ node[midway,above,font=\small] {$\varphi$};
+\end{tikzpicture}
+\caption{Mapa $(U,\varphi)$ przenosi otwarty fragment $U\subset M$ na obszar
+$\varphi(U)\subset\R^n$; punktowi $p$ przyporządkowuje współrzędne $\varphi(p)$.}
+\label{fig:mapa-rozmaitosc}
+\end{figure}
+
+
+\begin{definicja}
+Dwie mapy $(U,\varphi)$ i $(V,\psi)$ na $M$ są \emph{zgodne} ($C^\infty$-zgodne), jeżeli
+albo $U\cap V=\emptyset$, albo odwzorowania przejścia
+\[
+\psi\circ\varphi^{-1}\colon\varphi(U\cap V)\to\psi(U\cap V), \qquad
+\varphi\circ\psi^{-1}\colon\psi(U\cap V)\to\varphi(U\cap V)
+\]
+są klasy $C^\infty$ (są to wtedy automatycznie odwzorowania wzajemnie odwrotne między
+otwartymi podzbiorami $\R^n$, a więc dyfeomorfizmy).
+\end{definicja}
+
+
+
+Na Rysunku~\ref{fig:atlas-przejscie-dwie-mapy} pokazano
+dwie zgodne mapy i współrzędne punktu
+leżącego w ich części wspólnej. Odwzorowanie przejścia
+działa \emph{między obrazami tej części wspólnej}, a nie
+między całymi $\varphi_\alpha(U_\alpha)$ i
+$\varphi_\beta(U_\beta)$, jeśli dziedziny map się różnią.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Latex,line cap=round,line join=round,
+                     font=\small]
+  % Fragment rozmaitości i dwa nakładające się obszary map.
+  \filldraw[fill=manifoldblue!5,draw=manifoldblue!75!black,thick]
+   (-3.35,1.25) .. controls (-3.32,2.76) and (-2.20,3.55)
+   .. (-.25,3.38) .. controls (1.72,3.57) and (3.36,2.88)
+   .. (3.40,1.59) .. controls (3.48,.77) and (1.68,.63)
+   .. (.18,.85) .. controls (-1.90,.53) and (-3.39,.67)
+   .. cycle;
+  \fill[manifoldblue!22,opacity=.85]
+       (-.88,2.12) ellipse (1.71 and .94);
+  \fill[manifoldgold!26,opacity=.86]
+       (.88,2.12) ellipse (1.71 and .94);
+  \draw[manifoldblue!78!black,thick]
+       (-.88,2.12) ellipse (1.71 and .94);
+  \draw[manifoldgold!82!black,thick]
+       (.88,2.12) ellipse (1.71 and .94);
+  \node[manifoldblue!75!black,font=\bfseries] at (-3.05,3.13) {$M$};
+  \node[manifoldblue!80!black] at (-1.71,2.32) {$U_\alpha$};
+  \node[manifoldgold!70!black] at (1.72,2.32) {$U_\beta$};
+  \node[font=\scriptsize] at (0,2.44) {$U_\alpha\cap U_\beta$};
+  \fill[manifoldred] (0,1.95) circle (2.1pt);
+  \node[below,manifoldred!85!black] at (0,1.88) {$p$};
+  % Obrazy w dwóch osobnych przestrzeniach współrzędnych.
+  \filldraw[fill=manifoldblue!5,draw=manifoldblue!55!black,thick]
+       (-4.82,-1.57)--(-1.79,-1.57)--(-1.42,-.03)
+       --(-4.45,-.03)--cycle;
+  \fill[manifoldblue!15] (-3.08,-.77) ellipse (1.05 and .52);
+  \draw[manifoldblue!78!black,thick]
+       (-3.08,-.77) ellipse (1.05 and .52);
+  \draw[manifoldred!70!black,densely dashed]
+       (-2.80,-.83) ellipse (.40 and .28);
+  \fill[manifoldred] (-2.80,-.83) circle (1.9pt);
+  \node[manifoldred!85!black] at (-2.80,-1.32)
+       {$\varphi_\alpha(p)$};
+  \node[manifoldblue!70!black] at (-4.54,.13) {$\R^n$};
+
+  \filldraw[fill=manifoldgold!5,draw=manifoldgold!68!black,thick]
+       (1.42,-1.57)--(4.45,-1.57)--(4.82,-.03)
+       --(1.79,-.03)--cycle;
+  \fill[manifoldgold!17] (3.08,-.77) ellipse (1.05 and .52);
+  \draw[manifoldgold!82!black,thick]
+       (3.08,-.77) ellipse (1.05 and .52);
+  \draw[manifoldred!70!black,densely dashed]
+       (2.80,-.83) ellipse (.40 and .28);
+  \fill[manifoldred] (2.80,-.83) circle (1.9pt);
+  \node[manifoldred!85!black] at (2.80,-1.32)
+       {$\varphi_\beta(p)$};
+  \node[manifoldgold!72!black] at (4.50,.13) {$\R^n$};
+
+  \draw[->,manifoldblue!80!black,very thick]
+       (-1.91,1.05)--(-3.37,.16)
+       node[midway,left] {$\varphi_\alpha$};
+  \draw[->,manifoldgold!78!black,very thick]
+       (1.91,1.05)--(3.37,.16)
+       node[midway,right] {$\varphi_\beta$};
+  \node[manifoldblue!80!black] at (-3.08,-1.90)
+       {$\varphi_\alpha(U_\alpha)$};
+  \node[manifoldgold!78!black] at (3.08,-1.90)
+       {$\varphi_\beta(U_\beta)$};
+  \draw[->,manifoldgreen!75!black,very thick]
+       (-2.11,-2.41)--(2.11,-2.41)
+       node[midway,below] {$\varphi_\beta\circ\varphi_\alpha^{-1}$};
+\end{tikzpicture}
+\caption{Dwie nakładające się mapy. Przerywane obszary
+oznaczają obrazy części wspólnej. Punkt $p$ ma
+dwa zapisy współrzędnych, a przejście
+$\varphi_\beta\circ\varphi_\alpha^{-1}$ prowadzi
+z $\varphi_\alpha(U_\alpha\cap U_\beta)$ do
+$\varphi_\beta(U_\alpha\cap U_\beta)$. W atlasie
+pozostałe mapy pokrywają ewentualną resztę $M$.}
+\label{fig:atlas-przejscie-dwie-mapy}
+\end{figure}
+
+\begin{definicja}
+\emph{Atlasem} (gładkim, $C^\infty$) na rozmaitości topologicznej $M$ nazywamy rodzinę map
+$\mathcal{A}=\{(U_\alpha,\varphi_\alpha)\}_{\alpha\in I}$ taką, że:
+\begin{enumerate}[label=(\roman*)]
+\item $\bigcup_{\alpha\in I}U_\alpha=M$,
+\item mapy $(U_\alpha,\varphi_\alpha)$ oraz $(U_\beta,\varphi_\beta)$ są zgodne dla
+wszystkich $\alpha,\beta\in I$.
+\end{enumerate}
+\end{definicja}
+
+
+
+Chcemy teraz porównywać różne atlasy na tej samej przestrzeni topologicznej $M$ — dwa
+atlasy powinny wyznaczać tę samą strukturę gładką dokładnie wtedy, gdy razem tworzą
+(większy) atlas.
+
+\begin{definicja}
+Dwa atlasy $\mathcal{A}_1$, $\mathcal{A}_2$ na $M$ są \emph{równoważne}, $\mathcal A_1\sim
+\mathcal A_2$, jeżeli ich suma $\mathcal{A}_1\cup\mathcal{A}_2$ jest atlasem, tzn.\ każda
+mapa z $\mathcal{A}_1$ jest zgodna z każdą mapą z $\mathcal{A}_2$.
+\end{definicja}
+
+Poniższy lemat techniczny jest kluczowym narzędziem rachunkowym tego paragrafu; wykorzystamy
+go dwukrotnie: do dowodu, że $\sim$ jest relacją równoważności, oraz do dowodu istnienia i
+jednoznaczności atlasu maksymalnego.
+
+\begin{lemat}\label{lem:zgodnosc-przechodnia}
+Niech $(U,\varphi)$, $(W,\eta)$, $(V,\psi)$ będą mapami na $M$ takimi, że $(U,\varphi)$
+jest zgodna z $(W,\eta)$, a $(W,\eta)$ jest zgodna z $(V,\psi)$. Wówczas dla dowolnego
+punktu $p\in U\cap V\cap W$, odwzorowania $\psi\circ\varphi^{-1}$ i $\varphi\circ\psi^{-1}$
+są klasy $C^\infty$ w (odpowiednich) otoczeniach punktów $\varphi(p)$ i $\psi(p)$.
+\end{lemat}
+
+\begin{proof}
+Na otoczeniu $\varphi(U\cap V\cap W)$ punktu $\varphi(p)$ mamy równość
+$\psi\circ\varphi^{-1}=(\psi\circ\eta^{-1})\circ(\eta\circ\varphi^{-1})$; odwzorowanie
+$\eta\circ\varphi^{-1}$ jest gładkie na $\varphi(U\cap W)$ (zgodność $(U,\varphi)$ z
+$(W,\eta)$), a $\psi\circ\eta^{-1}$ jest gładkie na $\eta(W\cap V)$ (zgodność $(W,\eta)$ z
+$(V,\psi)$); złożenie odwzorowań gładkich jest gładkie, więc $\psi\circ\varphi^{-1}$ jest
+gładkie w otoczeniu $\varphi(p)$. Analogicznie, na otoczeniu $\psi(p)$:
+$\varphi\circ\psi^{-1}=(\varphi\circ\eta^{-1})\circ(\eta\circ\psi^{-1})$ jest złożeniem
+odwzorowań gładkich ($\varphi\circ\eta^{-1}$ i $\eta\circ\psi^{-1}$ gładkie, z tych samych
+dwóch założeń zgodności), a więc gładkie.
+\end{proof}
+
+\begin{stwierdzenie}
+Równoważność atlasów jest relacją równoważności na zbiorze wszystkich atlasów na $M$.
+\end{stwierdzenie}
+
+\begin{proof}
+Zwrotność i symetria są oczywiste z definicji. Sprawdzimy przechodniość. Niech
+$\mathcal{A}_1\sim\mathcal{A}_2$ i $\mathcal{A}_2\sim\mathcal{A}_3$; pokażemy, że
+$\mathcal{A}_1\sim\mathcal{A}_3$, czyli że dowolna mapa $(U,\varphi)\in\mathcal{A}_1$ jest
+zgodna z dowolną mapą $(V,\psi)\in\mathcal{A}_3$. Jeśli $U\cap V=\emptyset$, zgodność jest
+trywialna. W przeciwnym razie ustalmy $p\in U\cap V$. Ponieważ $\mathcal{A}_2$ jest atlasem
+pokrywającym $M$, istnieje mapa $(W,\eta)\in\mathcal{A}_2$ z $p\in W$. Z założenia
+$\mathcal{A}_1\sim\mathcal{A}_2$, mapa $(U,\varphi)$ jest zgodna z $(W,\eta)$; z założenia
+$\mathcal{A}_2\sim\mathcal{A}_3$, mapa $(W,\eta)$ jest zgodna z $(V,\psi)$. Na mocy
+Lematu~\ref{lem:zgodnosc-przechodnia} (zastosowanego w punkcie $p\in U\cap V\cap W$),
+odwzorowania $\psi\circ\varphi^{-1}$ i $\varphi\circ\psi^{-1}$ są gładkie w otoczeniach
+odpowiednio $\varphi(p)$ i $\psi(p)$. Ponieważ punkt $p\in U\cap V$ był dowolny, oba te
+odwzorowania są gładkie na całych swoich dziedzinach $\varphi(U\cap V)$, $\psi(U\cap V)$
+(gładkość jest własnością lokalną). Zatem $(U,\varphi)$ i $(V,\psi)$ są zgodne, co dowodzi
+$\mathcal{A}_1\sim\mathcal{A}_3$.
+\end{proof}
+
+W praktyce nie chcemy jednak utożsamiać struktury gładkiej z pojedynczym atlasem — dwa
+równoważne atlasy powinny wyznaczać \emph{tę samą} strukturę. Wygodnie jest wybrać
+kanonicznego reprezentanta każdej klasy równoważności: atlas maksymalny.
+
+\begin{definicja}
+Atlas $\mathcal{A}$ na $M$ jest \emph{maksymalny}, jeśli nie jest właściwym podzbiorem
+żadnego innego atlasu na $M$, tzn.\ jeśli mapa $(U,\varphi)$ jest zgodna z każdą mapą
+należącą do $\mathcal{A}$, to $(U,\varphi)\in\mathcal{A}$.
+\end{definicja}
+
+\begin{twierdzenie}\label{tw:atlas-maksymalny}
+Każdy atlas $\mathcal{A}$ na $M$ jest zawarty w dokładnie jednym atlasie maksymalnym
+$\mathcal{A}^+$, zadanym wzorem
+\[
+\mathcal{A}^+=\{(U,\varphi)\text{ -- mapa na }M : (U,\varphi)\text{ jest zgodna z każdą
+mapą z }\mathcal{A}\}.
+\]
+Ponadto dwa atlasy $\mathcal{A}_1$, $\mathcal{A}_2$ są równoważne wtedy i tylko wtedy, gdy
+$\mathcal{A}_1^+=\mathcal{A}_2^+$.
+\end{twierdzenie}
+
+\begin{proof}
+\emph{Krok 1: $\mathcal{A}^+$ jest atlasem.} Ponieważ $\mathcal{A}\subseteq\mathcal{A}^+$
+(każda mapa z $\mathcal{A}$ jest zgodna z każdą mapą z $\mathcal{A}$, gdyż $\mathcal{A}$
+jest atlasem), zbiory dziedzin map z $\mathcal{A}^+$ pokrywają $M$. Pozostaje sprawdzić, że
+dowolne dwie mapy $(U,\varphi),(V,\psi)\in\mathcal{A}^+$ są ze sobą zgodne. Ustalmy
+$p\in U\cap V$ (dla $U\cap V=\emptyset$ zgodność jest trywialna); ponieważ $\mathcal{A}$
+pokrywa $M$, istnieje $(W,\eta)\in\mathcal{A}$ z $p\in W$. Mapa $(U,\varphi)$ jest zgodna z
+$(W,\eta)$ (bo $(U,\varphi)\in\mathcal{A}^+$ jest zgodna z każdą mapą z $\mathcal A$), a
+$(W,\eta)$ jest zgodna z $(V,\psi)$ (analogicznie, bo $(V,\psi)\in\mathcal A^+$). Na mocy
+Lematu~\ref{lem:zgodnosc-przechodnia}, odwzorowania $\psi\circ\varphi^{-1}$,
+$\varphi\circ\psi^{-1}$ są gładkie w otoczeniach $\varphi(p)$, $\psi(p)$; wobec dowolności
+$p\in U\cap V$, są gładkie na całych dziedzinach $\varphi(U\cap V)$, $\psi(U\cap V)$. Zatem
+$\mathcal{A}^+$ jest atlasem.
+
+\emph{Krok 2: $\mathcal{A}^+$ jest maksymalny.} Niech mapa $(U,\varphi)$ będzie zgodna z
+każdą mapą należącą do $\mathcal{A}^+$. Ponieważ $\mathcal{A}\subseteq\mathcal{A}^+$, mapa
+$(U,\varphi)$ jest w szczególności zgodna z każdą mapą z $\mathcal{A}$, a więc z definicji
+$\mathcal{A}^+$ mamy $(U,\varphi)\in\mathcal{A}^+$.
+
+\emph{Krok 3: jednoznaczność.} Niech $\mathcal B\supseteq\mathcal A$ będzie atlasem
+maksymalnym. Ponieważ $\mathcal B$ jest atlasem i $\mathcal A\subseteq\mathcal B$, każda
+mapa z $\mathcal B$ jest zgodna z każdą mapą z $\mathcal A$ (obie należą do atlasu
+$\mathcal B$) — więc $\mathcal B\subseteq\mathcal A^+$ z definicji $\mathcal A^+$.
+
+Odwrotnie, niech $(U,\varphi)\in\mathcal A^+$; pokażemy $(U,\varphi)\in\mathcal B$, co —
+wobec dowolności $(U,\varphi)\in\mathcal A^+$ — da $\mathcal A^+\subseteq\mathcal B$, a
+wraz z poprzednią inkluzją: $\mathcal B=\mathcal A^+$. Z maksymalności $\mathcal B$
+wystarczy pokazać, że $(U,\varphi)$ jest zgodna z każdą mapą $(V,\psi)\in\mathcal B$.
+Ustalmy taką mapę i punkt $p\in U\cap V$ (dla $U\cap V=\emptyset$ zgodność jest trywialna).
+Ponieważ $\mathcal A$ pokrywa $M$, istnieje $(W,\eta)\in\mathcal A$ z $p\in W$. Mapa
+$(U,\varphi)$ jest zgodna z $(W,\eta)$ (bo $(U,\varphi)\in\mathcal A^+$), a $(W,\eta)\in
+\mathcal A\subseteq\mathcal B$ jest zgodna z $(V,\psi)\in\mathcal B$ (bo obie należą do
+atlasu $\mathcal B$). Na mocy Lematu~\ref{lem:zgodnosc-przechodnia}, $(U,\varphi)$ i
+$(V,\psi)$ są zgodne w otoczeniu $p$; wobec dowolności $p\in U\cap V$ — zgodne na całych
+dziedzinach. Zatem $(U,\varphi)$ jest zgodna z każdą mapą z $\mathcal B$, więc — z
+maksymalności $\mathcal B$ — $(U,\varphi)\in\mathcal B$.
+
+\emph{Krok 4: $\mathcal A_1\sim\mathcal A_2\iff\mathcal A_1^+=\mathcal A_2^+$.}
+($\Leftarrow$) Jeśli $\mathcal A_1^+=\mathcal A_2^+=:\mathcal B$, to $\mathcal A_1\subseteq
+\mathcal B$ i $\mathcal A_2\subseteq\mathcal B$, a skoro $\mathcal B$ jest atlasem, każda
+mapa z $\mathcal A_1$ jest zgodna z każdą mapą z $\mathcal B$, w szczególności z każdą mapą
+z $\mathcal A_2$ — czyli $\mathcal A_1\sim\mathcal A_2$.
+
+($\Rightarrow$) Załóżmy $\mathcal A_1\sim\mathcal A_2$. Pokażemy $\mathcal A_1^+\subseteq
+\mathcal A_2^+$ (inkluzja odwrotna analogicznie, skąd równość). Niech $(U,\varphi)\in
+\mathcal A_1^+$. Ustalmy dowolną mapę $(V,\psi)\in\mathcal A_2$ i (dla $U\cap V\neq
+\emptyset$, inaczej trywialnie) punkt $p\in U\cap V$. Ponieważ $\mathcal A_1$ pokrywa $M$,
+istnieje $(W,\eta)\in\mathcal A_1$ z $p\in W$. Mapa $(U,\varphi)$ jest zgodna z $(W,\eta)\in
+\mathcal A_1$ (bo $(U,\varphi)\in\mathcal A_1^+$), a $(W,\eta)\in\mathcal A_1$ jest zgodna z
+$(V,\psi)\in\mathcal A_2$ (bo $\mathcal A_1\sim\mathcal A_2$). Na mocy
+Lematu~\ref{lem:zgodnosc-przechodnia}, $(U,\varphi)$ i $(V,\psi)$ są zgodne w otoczeniu
+$p$; wobec dowolności $p\in U\cap V$ — na całych dziedzinach. Zatem $(U,\varphi)$ jest
+zgodna z $(V,\psi)$; wobec dowolności $(V,\psi)\in\mathcal A_2$, mamy $(U,\varphi)\in
+\mathcal A_2^+$.
+\end{proof}
+
+Powyższe twierdzenie pozwala oddzielić topologię przestrzeni od
+wyboru współrzędnych, w których będziemy różniczkować.
+
+\begin{definicja}[Struktura różniczkowa]\label{def:struktura-rozniczkowa}
+\index{struktura rozniczkowa@Struktura różniczkowa}
+\emph{Strukturą różniczkową} klasy $C^\infty$ na rozmaitości
+topologicznej $M$ nazywamy klasę równoważności atlasów gładkich
+na $M$. Równoważnie, na mocy Twierdzenia~\ref{tw:atlas-maksymalny},
+jest nią jedyny atlas maksymalny $\mathcal A=\mathcal A_0^+$
+zawierający dowolny atlas $\mathcal A_0$ z tej klasy. Mapy
+należące do $\mathcal A$ nazywamy \emph{dopuszczalnymi}.
+\end{definicja}
+
+\begin{definicja}[Rozmaitość gładka]\label{def:rozmaitosc-gladka}
+\index{rozmaitosc gladka@Rozmaitość gładka}
+\emph{Rozmaitością gładką} (klasy $C^\infty$) wymiaru $n$
+nazywamy parę $(M,\mathcal A)$, gdzie $M$ jest rozmaitością
+topologiczną wymiaru $n$, a $\mathcal A$ jest strukturą
+różniczkową zapisaną jako atlas maksymalny.
+\end{definicja}
+
+W praktyce wystarczy podać mały atlas $\mathcal A_0$:
+wyznacza on jednoznacznie strukturę $\mathcal A_0^+$.
+Topologia określa, które mapy współrzędnych są homeomorfizmami;
+struktura różniczkowa określa dodatkowo, które przejścia
+między nimi są gładkie.
+
+\begin{przyklad}[Różne struktury na tej samej przestrzeni]
+Na topologicznej prostej $\R$ atlas $\mathcal A_{\mathrm{std}}$
+z mapą $\id\colon\R\to\R$ i atlas $\mathcal A_h$ z mapą
+$h\colon\R\to\R$, $h(x)=x^3$, są osobno atlasami gładkimi.
+Nie są równoważne: w jednym kierunku
+przejście jest dane przez $h^{-1}(u)=\sqrt[3]{u}$,
+które nie jest różniczkowalne w zerze.
+Definiują zatem różne struktury na \emph{ustalonym} zbiorze
+topologicznym $\R$, choć otrzymane rozmaitości są
+dyfeomorficzne (w sensie definicji~\ref{def dyfeo}): dyfeomorfizm
+$h\colon(\R,\mathcal A_h^+)\to(\R,\mathcal A_{\mathrm{std}}^+)$
+ma w odpowiednich mapach współrzędnych postać identyczności.
+\end{przyklad}
+
+\begin{uwaga}[Intuicja: mapa, atlas i rozmaitość]
+Najprostszym sposobem zrozumienia pojęć \emph{mapy}, \emph{atlasu} i
+\emph{rozmaitości} jest analogia z powierzchnią Ziemi.
+
+Powierzchnia Ziemi jest obiektem zakrzywionym i nie możemy przedstawić jej
+w całości na jednej płaskiej kartce bez zniekształceń. Możemy jednak wybrać
+niewielki fragment powierzchni, na przykład okolice Krakowa, i przedstawić go
+na płaskiej mapie. Matematycznie dokładnie taką rolę pełni \emph{mapa}
+rozmaitości.
+
+Jeżeli $M$ jest rozmaitością, to mapa jest parą $(U,\varphi)$, gdzie
+$U\subset M$ jest otwartym fragmentem rozmaitości, a
+\[
+    \varphi\colon U\longrightarrow \varphi(U)\subset\mathbb{R}^n
+\]
+jest homeomorfizmem. Oznacza to, że punkty znajdujące się w $U$ możemy opisać
+za pomocą zwykłych współrzędnych
+\[
+    (x^1,\ldots,x^n)\in\mathbb{R}^n.
+\]
+Można więc myśleć o $\varphi$ jako o sposobie ``rozłożenia'' niewielkiego
+fragmentu rozmaitości na płaskiej przestrzeni $\mathbb{R}^n$.
+
+Jedna mapa zazwyczaj nie wystarcza do opisania całej przestrzeni. Podobnie
+jedna mapa geograficzna przedstawiająca okolice Krakowa nie opisuje całej
+powierzchni Ziemi. Potrzebujemy wielu map
+\[
+    (U_\alpha,\varphi_\alpha),
+\]
+których dziedziny pokrywają całą przestrzeń:
+\[
+    M=\bigcup_{\alpha}U_\alpha.
+\]
+Taki zbiór map nazywamy \emph{atlasem}.
+
+Jeżeli dwa obszary $U_\alpha$ i $U_\beta$ nachodzą na siebie, to ten sam punkt
+rozmaitości może mieć dwa różne opisy współrzędnościowe. Przejście pomiędzy
+nimi opisuje odwzorowanie
+\[
+    \varphi_\beta\circ\varphi_\alpha^{-1},
+\]
+zwane odwzorowaniem przejścia. Można je porównać do przeliczania współrzędnych
+tego samego miejsca pomiędzy dwiema zachodzącymi na siebie mapami
+geograficznymi.
+
+\emph{Rozmaitość} jest zatem przestrzenią, która globalnie może być
+skomplikowana lub zakrzywiona, ale w dostatecznie małym otoczeniu każdego
+punktu wygląda jak zwykła przestrzeń euklidesowa $\mathbb{R}^n$.
+
+W skrócie:
+\[
+\boxed{
+\begin{array}{ccl}
+\text{mapa}      &\longleftrightarrow& \text{lokalny układ współrzędnych},\\[2mm]
+\text{atlas}     &\longleftrightarrow& \text{zbiór map opisujących całą przestrzeń},\\[2mm]
+\text{rozmaitość}&\longleftrightarrow& \text{przestrzeń lokalnie wyglądająca jak }\mathbb{R}^n.
+\end{array}}
+\]
+
+Przykładowo sfera $S^2$ nie jest płaską częścią $\mathbb{R}^2$, ale każdy jej
+dostatecznie mały fragment można opisać za pomocą dwóch współrzędnych.
+Dlatego $S^2$ jest dwuwymiarową rozmaitością.
+\end{uwaga}
+
+Od tej pory, mówiąc o rozmaitości $M$, będziemy mieli na myśli rozmaitość gładką — parę
+$(M,\mathcal{A})$ — pomijając $\mathcal{A}$ w oznaczeniach, gdy nie prowadzi to do
+nieporozumień.
+
+\section{Rozmaitości z brzegiem}
+\label{sec:rozmaitosci-z-brzegiem-1}
+\index{brzeg rozmaitosci@Brzeg rozmaitości}
+
+Wnętrze dysku wygląda lokalnie jak otwarty zbiór w $\R^n$,
+ale punkt na jego brzegu ma tylko jedną stronę. Modelem takiego
+otoczenia jest półprzestrzeń
+\[
+ \mathbb H^n=\{(x^1,\ldots,x^n)\in\R^n:x^n\geq0\},
+ \qquad n\geq1.
+\]
+Otwartość podzbioru $\mathbb H^n$ rozumiemy w topologii względnej.
+
+\begin{definicja}[Rozmaitość gładka z brzegiem]
+\index{rozmaitosc gladka z brzegiem@Rozmaitość gładka z brzegiem}
+\label{def:rozmaitosc-z-brzegiem-1}
+\emph{Rozmaitość gładka z brzegiem} wymiaru $n\geq1$ to przestrzeń
+Hausdorffa spełniająca drugi aksjomat przeliczalności, wyposażona
+w atlas homeomorfizmów
+$\varphi_\alpha:U_\alpha\to V_\alpha$ na zbiory
+$V_\alpha$ otwarte w $\mathbb H^n$. Na częściach wspólnych
+odwzorowania przejścia i ich odwrotności mają być gładkie:
+w otoczeniu każdego punktu rozumie się przez to istnienie
+gładkiego przedłużenia na otwarty zbiór w $\R^n$.
+Maksymalny atlas zgodny z tym atlasem wyznacza strukturę gładką,
+tak jak w Twierdzeniu~\ref{tw:atlas-maksymalny}.
+\emph{Brzegiem rozmaitości} nazywamy zbiór
+\[
+ \partial M=\{p\in M:\varphi_\alpha(p)^n=0
+             \text{ w pewnej mapie }(U_\alpha,\varphi_\alpha)\}.
+\]
+Pozostałe punkty tworzą wnętrze $M^\circ=M\setminus\partial M$.
+Dla wymiaru $0$ przyjmujemy $\partial M=\varnothing$.
+\end{definicja}
+
+Warunek „w pewnej mapie” jest poprawny dzięki następującemu
+faktowi; jednocześnie pokazuje, że brzeg nie zależy od wyboru
+współrzędnych.
+
+\begin{stwierdzenie}[Niezależność brzegu od mapy]
+\label{prop:brzeg-niezalezny-1}
+Jeśli $p$ ma ostatnią współrzędną równą $0$ w jednej
+mapie półprzestrzennej, to ma ją równą $0$ w każdej
+mapie półprzestrzennej, której dziedzina zawiera $p$.
+Zbiór $\partial M$ jest zamknięty w $M$ i z map ograniczonych
+do $\partial M$ otrzymuje strukturę gładkiej
+rozmaitości wymiaru $n-1$ bez brzegu.
+\end{stwierdzenie}
+\begin{proof}
+Przypuśćmy, że $\varphi(p)$ leży na płaszczyźnie
+$x^n=0$, a $\psi(p)$ jest punktem wnętrza $\mathbb H^n$.
+Ograniczmy mapy do wspólnego dostatecznie małego otoczenia
+$p$. Wtedy $\psi$ odwzorowuje je na zbiór otwarty w $\R^n$,
+a $\varphi\circ\psi^{-1}$ jest ciągłą injekcją tego zbioru
+do $\R^n$. Twierdzenie Brouwera o niezmienniczości obszaru
+orzeka, że obraz takiej injekcji jest otwarty w $\R^n$.
+Obraz leży jednak w $\mathbb H^n$ i zawiera punkt
+$\varphi(p)$ na jego płaszczyźnie brzegowej, więc nie może
+być otwarty w $\R^n$. Sprzeczność dowodzi pierwszej tezy.
+Dokładne sformułowanie użytego wyniku zewnętrznego podaje
+\href{https://pi.math.cornell.edu/~hatcher/AT/AT.pdf}
+{A. Hatcher, \emph{Algebraic Topology}, twierdzenie 2B.3}.
+
+W każdej mapie punkty z $x^n>0$ tworzą zbiór otwarty.
+Zatem $M^\circ$ jest otwarty, a $\partial M$ zamknięty.
+Ograniczenie mapy $\varphi$ do
+$U\cap\partial M$ przyjmuje wartości w otwartym
+podzbiorze $\R^{n-1}\times\{0\}$. Przejścia między
+tymi ograniczeniami są gładkie, bo są ograniczeniami
+gładkich przedłużeń przejść na $\R^n$; to samo dotyczy
+odwrotności. Są to więc mapy gładkiej rozmaitości
+wymiaru $n-1$. Każda z nich ma obraz otwarty w całej
+$\R^{n-1}$, czyli $\partial M$ nie ma własnego brzegu.
+\end{proof}
+
+W punkcie brzegu definiujemy $T_pM$ przez
+wektory współrzędnych w półprzestrzennej mapie,
+równoważnie przez derywacje gładkich zarodków
+funkcji w $p$. Ten model ma $n$ niezależnych
+kierunków. Różniczki przedłużeń
+odwzorowań przejścia są tam odwracalne: na punktach
+wnętrza złożenia z przejściami odwrotnymi są identycznością,
+a ich różniczki zachowują tę równość przez ciągłość aż do brzegu.
+Dlatego $T_pM\cong\R^n$, natomiast
+$T_p\partial M\cong\{v\in\R^n:v^n=0\}$ ma wymiar $n-1$.
+Wektor o ujemnej ostatniej współrzędnej należy do $T_pM$,
+choć nie jest prędkością krzywej biegnącej od $p$ do wnętrza
+przy dodatnim czasie. Przykładowo $T_0[0,1]\cong\R$,
+podczas gdy $T_0\partial[0,1]=0$.
+Model przez krzywe określone na otwartym przedziale,
+omówiony w Sekcji~\ref{sec:przestrzen-styczna},
+dotyczy punktów wnętrza: w punkcie brzegu
+dwustronna krzywa w $M$ nie reprezentuje
+kierunku poprzecznego do brzegu.
+
+\begin{przyklad}[Kula, okrąg i brzeg otaczającej przestrzeni]
+\label{prz:brzeg-kula-okrag-1}
+Domknięta kula $D^n=\{x\in\R^n:|x|\leq1\}$ ma brzeg
+rozmaitościowy $S^{n-1}$. Rzeczywiście, przy $|p|=1$
+funkcja $\rho(x)=1-|x|^2$ ma niezerową różniczkę
+$\dd\rho_p(v)=-2\langle p,v\rangle$. Twierdzenie o funkcji
+odwrotnej pozwala użyć $\rho$ jako ostatniej lokalnej
+współrzędnej, zatem $D^n$ odpowiada warunkowi $\rho\geq0$.
+Z kolei okrąg $S^1\subset\R^2$ jako rozmaitość ma
+$\partial S^1=\varnothing$, lecz jego brzeg jako
+\emph{podzbioru $\R^2$} jest całym $S^1$: okrąg ma
+puste wnętrze w $\R^2$ i jest domknięty.
+Te dwa znaczenia słowa „brzeg” trzeba odróżniać.
+\end{przyklad}
+
+Produkt dwóch rozmaitości z brzegiem może mieć
+\emph{naroża}. W kwadracie $[0,1]^2$ przy wierzchołku
+naturalny model pochodzący z osadzenia to
+$[0,\infty)^2$, z dwiema ścianami brzegowymi.
+W rachunku uchwytów spotkamy taki model na
+$\partial D^k\times\partial D^{n-k}$; naroże można
+zaokrąglić w małym otoczeniu, zachowując części
+odległe od niego. To operacja na gładkiej geometrii
+brzegu, a nie zmiana tego, które punkty są brzegowe
+topologicznie. Kołnierze i takie zaokrąglanie pojawią się
+w Sekcji~\ref{sec:kolnierz-15} i przy uchwytach w
+Sekcji~\ref{sec:uchwyt-morse-17}.
+
+\section{Rozmaitości zespolone}
+
+Analogicznie do konstrukcji z poprzedniego paragrafu, możemy modelować rozmaitość lokalnie
+nie na $\R^n$, lecz na $\C^n$, żądając przy tym, by odwzorowania przejścia między mapami
+były holomorficzne, a nie tylko gładkie.
+
+\begin{definicja}
+\emph{Rozmaitością zespoloną} wymiaru (zespolonego) $n$ nazywamy przestrzeń Hausdorffa $M$
+spełniającą drugi aksjomat przeliczalności, wyposażoną w atlas $\{(U_\alpha,\varphi_\alpha)\}$
+map $\varphi_\alpha\colon U_\alpha\to\varphi_\alpha(U_\alpha)\subseteq\C^n$ (homeomorfizmów
+na zbiory otwarte w $\C^n\cong\R^{2n}$), takich że odwzorowania przejścia
+\[
+\varphi_\beta\circ\varphi_\alpha^{-1}\colon\varphi_\alpha(U_\alpha\cap U_\beta)\to
+\varphi_\beta(U_\alpha\cap U_\beta)
+\]
+są \emph{holomorficzne} (jako odwzorowania między otwartymi podzbiorami $\C^n$), wraz z
+maksymalnym takim atlasem (konstrukcja atlasu maksymalnego przebiega dosłownie tak samo,
+jak w Sekcji~\ref{sec:atlas}, z ,,gładki'' zastąpionym przez ,,holomorficzny'' — złożenie odwzorowań
+holomorficznych jest holomorficzne, więc Lemat~\ref{lem:zgodnosc-przechodnia} i
+Twierdzenie~\ref{tw:atlas-maksymalny} przenoszą się bez zmian).
+\end{definicja}
+
+\begin{uwaga}
+Utożsamiając $\C^n\cong\R^{2n}$ (przez część rzeczywistą i urojoną każdej współrzędnej)
+oraz przypominając, że każde odwzorowanie holomorficzne jest w szczególności odwzorowaniem
+gładkim (klasy $C^\infty$) w sensie rzeczywistym (ze wzoru całkowego
+Cauchy'ego na małym polidysku wynika lokalne rozwinięcie w szereg potęgowy,
+który można różniczkować wyraz po wyrazie), widzimy, że \emph{każda rozmaitość zespolona
+wymiaru $n$ jest w naturalny sposób rzeczywistą rozmaitością gładką wymiaru $2n$}. Implikacja
+odwrotna jest fałszywa: nie każda parzystowymiarowa rozmaitość gładka dopuszcza strukturę
+zespoloną (a nawet jeśli dopuszcza, struktura taka zwykle nie jest jednoznaczna).
+\end{uwaga}
+
+\begin{przyklad}[Zespolona przestrzeń rzutowa]
+Zespolonym odpowiednikiem $\mathbb{RP}^n$ z
+Przykładu~\ref{prz:RPn} jest przestrzeń ilorazowa
+\[
+\mathbb{CP}^n
+:=
+(\C^{n+1}\setminus\{0\})/\!\sim,
+\]
+gdzie
+\[
+z\sim w
+\iff
+\exists\,\lambda\in\C\setminus\{0\}
+\quad\text{takie, że}\quad
+z=\lambda w.
+\]
+Przestrzeń $\mathbb{CP}^n$ wyposażamy w topologię ilorazową.
+Punkty zapisujemy w postaci
+\[
+[z^0:z^1:\dots:z^n],
+\]
+przy czym
+\[
+[z^0:\dots:z^n]
+=
+[\lambda z^0:\dots:\lambda z^n]
+\qquad
+\text{dla każdego }\lambda\in\C\setminus\{0\}.
+\]
+
+Dla $i=0,\dots,n$ definiujemy
+\[
+U_i
+=
+\{[z^0:\dots:z^n]\in\mathbb{CP}^n:z^i\neq0\}.
+\]
+Zbiory $U_i$ są otwarte i pokrywają całą przestrzeń $\mathbb{CP}^n$.
+Na każdym z nich definiujemy mapę
+\[
+\varphi_i:U_i\longrightarrow\C^n
+\]
+wzorem
+\[
+\varphi_i([z^0:\dots:z^n])
+=
+\left(
+\frac{z^0}{z^i},
+\dots,
+\frac{z^{i-1}}{z^i},
+\frac{z^{i+1}}{z^i},
+\dots,
+\frac{z^n}{z^i}
+\right).
+\]
+Jej odwrotność jest dana jawnie przez
+\[
+\varphi_i^{-1}
+(w^0,\dots,w^{i-1},w^{i+1},\dots,w^n)
+=
+[w^0:\dots:w^{i-1}:1:w^{i+1}:\dots:w^n].
+\]
+Sprawdźmy także ciągłość, której nie daje sama bijektywność.
+Niech $\pi\colon\C^{n+1}\setminus\{0\}\to\mathbb{CP}^n$ będzie
+rzutowaniem ilorazowym. Przeciwobraz $\pi^{-1}(U_i)=\{z:z^i\ne0\}$
+jest otwarty, zatem $U_i$ jest otwarty. Ograniczenie
+$\pi\colon\pi^{-1}(U_i)\to U_i$ także jest odwzorowaniem ilorazowym:
+otwarty w $\pi^{-1}(U_i)$ przeciwobraz podzbioru $U_i$ jest otwarty
+w całej dziedzinie $\pi$, więc sam podzbiór jest otwarty w ilorazie.
+Składowe $\varphi_i\circ\pi$ są ciągłymi ilorazami współrzędnych;
+z własności topologii ilorazowej wynika ciągłość $\varphi_i$.
+Podany wzór na $\varphi_i^{-1}$ jest złożeniem ciągłego wstawienia
+współrzędnej $1$ z $\pi$. Każda $\varphi_i$ jest więc homeomorfizmem
+pomiędzy $U_i$ a $\C^n$.
+
+Na przecięciu $U_i\cap U_j$ ten sam punkt przestrzeni
+$\mathbb{CP}^n$ posiada dwa różne opisy współrzędnościowe.
+Przejście pomiędzy nimi jest opisane przez odwzorowanie
+\[
+\varphi_j\circ\varphi_i^{-1}.
+\]
+Jego składowe są ilorazami wielomianów zespolonych, przy czym
+mianowniki nie znikają na dziedzinie odwzorowania. Odwzorowania
+przejścia są zatem holomorficzne. Aksjomat Hausdorffa i istnienie
+przeliczalnej bazy topologii sprawdzimy w dowodzie
+twierdzenia~\ref{thm:rzutowe-zwarte-1}. Łącznie daje to strukturę
+rozmaitości zespolonej wymiaru $n$ na $\mathbb{CP}^n$, a więc również
+rzeczywistej rozmaitości gładkiej wymiaru $2n$.
+
+Rozważmy teraz szczególny przypadek $n=1$. Otrzymujemy
+\emph{sferę Riemanna}
+\[
+\mathbb{CP}^1.
+\]
+Mamy wówczas dwa zbiory
+\[
+U_0=\{[z^0:z^1]:z^0\neq0\},
+\qquad
+U_1=\{[z^0:z^1]:z^1\neq0\},
+\]
+oraz mapy
+\[
+\varphi_0:U_0\longrightarrow\C,
+\qquad
+\varphi_0([z^0:z^1])=\frac{z^1}{z^0},
+\]
+i
+\[
+\varphi_1:U_1\longrightarrow\C,
+\qquad
+\varphi_1([z^0:z^1])=\frac{z^0}{z^1}.
+\]
+Każda z tych map identyfikuje odpowiedni fragment
+$\mathbb{CP}^1$ z kopią płaszczyzny zespolonej $\C$.
+
+Na przecięciu
+\[
+U_0\cap U_1
+=
+\{[z^0:z^1]:z^0\neq0,\ z^1\neq0\}
+\]
+ten sam punkt ma w pierwszej mapie współrzędną
+\[
+w
+=
+\varphi_0([z^0:z^1])
+=
+\frac{z^1}{z^0},
+\]
+natomiast w drugiej mapie współrzędną
+\[
+v
+=
+\varphi_1([z^0:z^1])
+=
+\frac{z^0}{z^1}.
+\]
+Stąd
+\[
+v=\frac1w.
+\]
+Odwzorowanie przejścia ma więc postać
+\[
+\varphi_1\circ\varphi_0^{-1}(w)
+=
+\frac1w,
+\qquad
+w\in\C\setminus\{0\}.
+\]
+
+Możemy zatem patrzeć na $\mathbb{CP}^1$ jako na przestrzeń otrzymaną
+z dwóch rozłącznych kopii płaszczyzny zespolonej,
+\[
+\C_0\sqcup\C_1,
+\]
+przez utożsamienie punktów należących do ich niezerowych części zgodnie
+z regułą
+\[
+w\in\C_0\setminus\{0\}
+\quad\sim\quad
+\frac1w\in\C_1\setminus\{0\}.
+\]
+W tym właśnie sensie mówi się, że dwie kopie $\C$ są
+\emph{sklejone za pomocą odwzorowania przejścia}
+\[
+w\longmapsto\frac1w.
+\]
+Nie sklejamy więc całych płaszczyzn punkt po punkcie, lecz utożsamiamy
+jedynie te punkty obu kopii $\C$, które odpowiadają temu samemu punktowi
+przestrzeni $\mathbb{CP}^1$ na części wspólnej $U_0\cap U_1$.
+
+Punkt $0\in\C_0$ odpowiada punktowi
+\[
+[1:0]\in\mathbb{CP}^1,
+\]
+natomiast punkt $0\in\C_1$ odpowiada punktowi
+\[
+[0:1]\in\mathbb{CP}^1.
+\]
+W szczególności, patrząc wyłącznie przez mapę $\varphi_0$, punkt
+$[0:1]$ można interpretować jako dodatkowy punkt w nieskończoności.
+Dlatego często zapisuje się
+\[
+\mathbb{CP}^1
+\cong
+\C\cup\{\infty\}.
+\]
+
+Przestrzeń $\mathbb{CP}^1$ jest dyfeomorficzna ze sferą $S^2$.
+Trzeba jednak uważać na wybór zespolonych współrzędnych
+stereograficznych. Zwykłe rzeczywiste rzuty stereograficzne z
+Przykładu~\ref{prz:sfera}, po utożsamieniu $\R^2=\C$, prowadzą do
+odwzorowania przejścia
+\[
+w\longmapsto\frac{w}{|w|^2}
+=
+\frac1{\overline{w}},
+\]
+które nie jest holomorficzne.
+
+Aby otrzymać strukturę zespoloną zgodną ze strukturą na
+$\mathbb{CP}^1$, wybieramy na $S^2$ współrzędne
+\[
+\zeta_N(x)
+=
+\frac{x^1+ix^2}{1-x^3},
+\qquad
+\zeta_S(x)
+=
+\frac{x^1-ix^2}{1+x^3}.
+\]
+Wtedy na części wspólnej zachodzi
+\[
+\zeta_S\circ\zeta_N^{-1}(w)
+=
+\frac1w.
+\]
+
+Jawny dyfeomorfizm
+\[
+H:\mathbb{CP}^1\longrightarrow S^2
+\]
+jest dany wzorem
+\[
+H([z^0:z^1])
+=
+\frac{
+\big(
+2\operatorname{Re}(\overline{z^0}z^1),
+2\operatorname{Im}(\overline{z^0}z^1),
+|z^1|^2-|z^0|^2
+\big)
+}{
+|z^0|^2+|z^1|^2
+}.
+\]
+Skalowanie obu współrzędnych przez $\lambda\neq0$ mnoży licznik
+i mianownik przez $|\lambda|^2$, dlatego wzór jest dobrze określony
+na klasach równoważności.
+
+Ponadto
+\[
+4|z^0|^2|z^1|^2
++
+\big(|z^1|^2-|z^0|^2\big)^2
+=
+\big(|z^0|^2+|z^1|^2\big)^2,
+\]
+co pokazuje, że obraz odwzorowania $H$ leży na sferze $S^2$.
+
+W wybranych współrzędnych mamy
+\[
+\zeta_N\circ H=\varphi_0,
+\qquad
+\zeta_S\circ H=\varphi_1.
+\]
+Pierwsza z tych równości daje bijekcję
+\[
+U_0\longrightarrow S^2\setminus\{N\},
+\]
+natomiast pozostały punkt
+\[
+[0:1]
+\]
+przechodzi na biegun północny $N$.
+W lokalnych współrzędnych odwzorowanie $H$ oraz jego odwrotność są
+tożsamościami, co pokazuje, że
+\[
+\mathbb{CP}^1\cong S^2
+\]
+jako rozmaitości gładkie.
+\end{przyklad}
+
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=1]
+% Sfera: jasna plama i podział równika na część widoczną oraz ukrytą.
+\shade[inner color=white,outer color=manifoldblue!43] (0,0) circle (1.7);
+\draw[manifoldblue!75!black,very thick] (0,0) circle (1.7);
+\draw[manifoldblue!52,densely dashed,thin]
+  (1.7,0) arc[start angle=0,end angle=180,x radius=1.7,y radius=.42];
+\draw[manifoldblue!65!black,thin]
+  (-1.7,0) arc[start angle=180,end angle=360,x radius=1.7,y radius=.42];
+\draw[manifoldblue!40,densely dashed,thin] (0,1.7)
+  .. controls (-.52,1.12) and (-.52,-1.12) .. (0,-1.7);
+\draw[manifoldblue!65!black,thin] (0,1.7)
+  .. controls (.52,1.12) and (.52,-1.12) .. (0,-1.7);
+% bieguny
+\fill[manifoldgold!85!black] (0,1.7) circle (2.4pt) node[above,font=\small]{$N$};
+\fill[manifoldgold!85!black] (0,-1.7) circle (2.4pt) node[below,font=\small]{$S$};
+\node[manifoldblue!70!black,font=\small] at (0,-2.35) {$\mathbb{CP}^1\cong S^2$};
+% --- strzałki do płaszczyzn C ---
+\draw[->,very thick,manifoldred] (1.85,0.6) -- (3.2,1.1);
+\draw[->,very thick,manifoldred] (1.85,-0.6) -- (3.2,-1.1);
+% --- dwie kopie C (zaokrąglone) ---
+% górna
+\shade[inner color=manifoldgreen!20, outer color=manifoldgreen!5, rounded corners=8pt]
+  (3.5,0.5) rectangle (7.0,1.8);
+\draw[manifoldgreen!60!black,thick,rounded corners=8pt]
+  (3.5,0.5) rectangle (7.0,1.8);
+\begin{scope}
+  \clip[rounded corners=8pt] (3.5,0.5) rectangle (7.0,1.8);
+  \draw[step=0.4,manifoldgreen!22,thin] (3.5,0.5) grid (7.0,1.8);
+\end{scope}
+\node[font=\small] at (5.25,1.15) {$\C$ (mapa $\zeta_N$)};
+% dolna
+\shade[inner color=manifoldgreen!20, outer color=manifoldgreen!5, rounded corners=8pt]
+  (3.5,-1.8) rectangle (7.0,-0.5);
+\draw[manifoldgreen!60!black,thick,rounded corners=8pt]
+  (3.5,-1.8) rectangle (7.0,-0.5);
+\begin{scope}
+  \clip[rounded corners=8pt] (3.5,-1.8) rectangle (7.0,-0.5);
+  \draw[step=0.4,manifoldgreen!22,thin] (3.5,-1.8) grid (7.0,-0.5);
+\end{scope}
+\node[font=\small] at (5.25,-1.15) {$\C$ (mapa $\zeta_S$)};
+% przejście w↦1/w
+\draw[<->,thick,manifoldred] (7.15,1.15) -- (7.15,-1.15);
+\node[manifoldred,font=\small,right] at (7.2,0) {$w\mapsto 1/w$};
+\node[font=\small] at (5.25,-2.25) {dwie kopie $\C$ sklejone przejściem $w\mapsto 1/w$};
+\end{tikzpicture}
+\caption{Schematyczna interpretacja $\mathbb{CP}^1$ jako sfery Riemanna:
+dwie mapy zespolone pokrywają sferę; w mapie południowej odwrócono
+znak drugiej współrzędnej rzeczywistej. Przejście $1/w$ jest określone dla $w\ne0$.}
+\label{fig:cp1}
+\end{figure}
+
+\section{Odwzorowania gładkie między rozmaitościami}
+
+\begin{definicja}
+Niech $M$, $N$ będą rozmaitościami gładkimi wymiarów odpowiednio $m$, $n$. Odwzorowanie
+$F\colon M\to N$ jest \emph{gładkie} (klasy $C^\infty$) w punkcie $p\in M$, jeżeli dla
+pewnej (równoważnie: każdej) mapy dopuszczalnej $(U,\varphi)$ wokół $p$ i mapy
+dopuszczalnej $(V,\psi)$ wokół $F(p)$ z $F(U)\subseteq V$, odwzorowanie
+\[
+\psi\circ F\circ\varphi^{-1}\colon\varphi(U)\to\psi(V)
+\]
+jest gładkie (klasy $C^\infty$) w pewnym otwartym otoczeniu
+$\varphi(p)$. Odwzorowanie $F$ jest gładkie, jeśli jest gładkie w każdym punkcie $p\in M$.
+Zbiór wszystkich gładkich funkcji $M\to\R$ oznaczamy $C^\infty(M)$.
+\end{definicja}
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=.9,line cap=round,line join=round]
+% Dwie pofalowane powierzchnie z siatką lokalnych współrzędnych.
+\def\Mshape{(-4.75,.2) .. controls (-4.65,1.55) and (-3.65,2.0) .. (-2.7,1.56)
+ .. controls (-1.65,1.12) and (-.7,1.75) .. (-.88,.36)
+ .. controls (-1.03,-.78) and (-2.15,-.36) .. (-2.8,-.83)
+ .. controls (-3.63,-1.25) and (-4.78,-.85) .. cycle}
+\def\Nshape{(1.05,.12) .. controls (1.4,1.35) and (2.5,1.95) .. (3.45,1.58)
+ .. controls (4.35,1.23) and (5.1,1.35) .. (5.02,.2)
+ .. controls (4.98,-.93) and (4.1,-.87) .. (3.2,-.65)
+ .. controls (2.35,-.45) and (1.42,-1.05) .. cycle}
+\fill[manifoldblue!12] \Mshape;
+\begin{scope}
+\clip \Mshape;
+\fill[manifoldblue!24,opacity=.65] (-2.65,.35) ellipse (1.02 and .55);
+\end{scope}
+\draw[manifoldblue!75!black,very thick] \Mshape;
+\draw[manifoldblue!70!black,densely dashed] (-3.67,.18) .. controls (-3.45,.88) and (-2.28,.93) .. (-1.78,.18);
+\fill[manifoldgreen!11] \Nshape;
+\begin{scope}
+\clip \Nshape;
+\fill[manifoldgreen!25,opacity=.65] (3.03,.34) ellipse (1.03 and .53);
+\end{scope}
+\draw[manifoldgreen!65!black,very thick] \Nshape;
+\draw[manifoldgreen!65!black,densely dashed] (1.96,.14) .. controls (2.2,.91) and (3.54,.9) .. (4.08,.12);
+\node[font=\large\bfseries,manifoldblue!75!black] at (-4.22,1.38) {$M$};
+\node[font=\large\bfseries,manifoldgreen!65!black] at (4.45,1.27) {$N$};
+\node[font=\small,manifoldblue!75!black] at (-3.49,.7) {$U$};
+\node[font=\small,manifoldgreen!65!black] at (3.8,.7) {$V$};
+\fill[manifoldred] (-2.67,.34) circle (2.8pt) node[below,font=\small] {$p$};
+\fill[manifoldred] (3.02,.33) circle (2.8pt) node[below,font=\small] {$F(p)$};
+\draw[->,very thick,manifoldred] (-.72,.78) .. controls (-.04,1.75) and (.58,1.7) .. (1.13,.79)
+  node[midway,above,font=\large\bfseries] {$F$};
+% Dwie euklidesowe mapy z zaznaczonymi odpowiadającymi sobie punktami.
+\fill[manifoldblue!5,rounded corners=5pt] (-4.28,-3.72) rectangle (-1.12,-2.4);
+\draw[manifoldblue!65!black,thick,rounded corners=5pt] (-4.28,-3.72) rectangle (-1.12,-2.4);
+\fill[manifoldgreen!5,rounded corners=5pt] (1.18,-3.72) rectangle (4.34,-2.4);
+\draw[manifoldgreen!65!black,thick,rounded corners=5pt] (1.18,-3.72) rectangle (4.34,-2.4);
+\draw[->,thick,manifoldblue!75!black] (-2.68,-.87)--(-2.68,-2.34)
+  node[midway,left,font=\small] {$\varphi$};
+\draw[->,thick,manifoldgreen!70!black] (3.03,-.84)--(3.03,-2.34)
+  node[midway,right,font=\small] {$\psi$};
+\fill[manifoldred] (-2.68,-3.03) circle (2.5pt) node[below,font=\scriptsize] {$u=\varphi(p)$};
+\fill[manifoldred] (3.03,-3.03) circle (2.5pt) node[below,font=\scriptsize] {$f(u)=\psi(F(p))$};
+\draw[->,very thick,manifoldred] (-1.0,-3.02)--(1.03,-3.02);
+\node[font=\small\bfseries,manifoldred!85!black] at (0,-2.71) {$f$};
+\node[font=\small] at (-2.7,-4.15) {$\varphi(U)\subset\R^m$};
+\node[font=\small] at (2.76,-4.15) {$\psi(V)\subset\R^n$};
+\end{tikzpicture}
+\caption{Odwzorowanie $F\colon M\to N$ oraz jego lokalny zapis współrzędnościowy. Po wybraniu map $(U,\varphi)$ i $(V,\psi)$ gładkość $F$ bada się poprzez zwykłe odwzorowanie $\psi\circ F\circ\varphi^{-1}$ między otwartymi podzbiorami przestrzeni euklidesowych.}
+\label{fig:odwzorowanie-gładkie}
+\end{figure}
+
+\begin{uwaga}
+Definicja gładkości nie zależy od wyboru map. Niech $(U,\varphi)$ oraz
+$(V,\psi)$ będą mapami wokół odpowiednio $p$ i $F(p)$, dla których
+odwzorowanie
+\[
+\psi\circ F\circ\varphi^{-1}
+\]
+jest gładkie. Jeśli $(U',\varphi')$, $(V',\psi')$ są innymi mapami
+dopuszczalnymi wokół $p$ i $F(p)$, to chcemy porównać oba opisy
+współrzędnościowe funkcji $F$.
+
+Najpierw zauważmy, że na odpowiednio małym otoczeniu punktu $p$ mamy
+\[
+F
+=
+\psi^{-1}\circ
+(\psi\circ F\circ\varphi^{-1})
+\circ\varphi.
+\]
+Ponieważ $\varphi$ i $\psi^{-1}$ są homeomorfizmami, a odwzorowanie
+$\psi\circ F\circ\varphi^{-1}$ jest gładkie, a więc w szczególności
+ciągłe, otrzymujemy, że $F$ jest ciągłe w pewnym otoczeniu punktu $p$.
+
+Ponieważ
+\[
+p\in U\cap U'
+\qquad\text{oraz}\qquad
+F(p)\in V\cap V',
+\]
+a $V\cap V'$ jest zbiorem otwartym, wybierzmy otwarte otoczenie
+$O$ punktu $p$, na którym $F$ jest ciągłe. Wówczas
+\[
+(F|_O)^{-1}(V\cap V')=O\cap F^{-1}(V\cap V')
+\]
+jest otwartym otoczeniem $p$ w $M$. Możemy więc zmniejszyć dziedzinę
+do otwartego otoczenia
+\[
+W\subseteq O\cap U\cap U'\cap F^{-1}(V\cap V').
+\]
+Na $W$ jednocześnie obowiązują oba układy współrzędnych, a obraz
+$F(W)$ jest zawarty w $V\cap V'$. Wszystkie poniższe złożenia są zatem
+dobrze określone.
+
+Na odpowiadającej zbiorowi $W$ dziedzinie mamy
+\[
+\psi'\circ F\circ(\varphi')^{-1}
+=
+(\psi'\circ\psi^{-1})
+\circ
+(\psi\circ F\circ\varphi^{-1})
+\circ
+(\varphi\circ(\varphi')^{-1}).
+\]
+Odwzorowania
+\[
+\varphi\circ(\varphi')^{-1}
+\qquad\text{oraz}\qquad
+\psi'\circ\psi^{-1}
+\]
+są odwzorowaniami przejścia, a więc są gładkie z definicji zgodności
+map. Co więcej, są one dyfeomorfizmami pomiędzy odpowiednimi otwartymi
+podzbiorami przestrzeni euklidesowych. Zatem złożenie z nimi nie zmienia
+gładkości. W konsekwencji
+\[
+\psi'\circ F\circ(\varphi')^{-1}
+\]
+jest gładkie wtedy i tylko wtedy, gdy gładkie jest
+\[
+\psi\circ F\circ\varphi^{-1}.
+\]
+Definicja gładkości odwzorowania $F$ nie zależy więc od wyboru map
+w dziedzinie i przeciwdziedzinie.
+\end{uwaga}
+
+\begin{definicja}\label{def dyfeo}
+Odwzorowanie gładkie $F\colon M\to N$ jest \emph{dyfeomorfizmem}, jeśli jest bijekcją, a
+$F^{-1}\colon N\to M$ jest również gładkie. Rozmaitości $M$, $N$ nazywamy
+\emph{dyfeomorficznymi}, jeśli istnieje między nimi dyfeomorfizm.
+\end{definicja}
+
+\begin{stwierdzenie}
+Złożenie odwzorowań gładkich jest gładkie: jeśli $F\colon M\to N$ i $G\colon N\to P$ są
+gładkie, to $G\circ F\colon M\to P$ jest gładkie.
+\end{stwierdzenie}
+
+\begin{proof}
+Ustalmy $p\in M$ i mapy dopuszczalne $(U,\varphi)$ wokół $p$, $(V,\psi)$ wokół $F(p)$,
+$(W,\eta)$ wokół $G(F(p))$, z $F(U)\subseteq V$, $G(V)\subseteq W$ (istnienie takich map —
+po ewentualnym zmniejszeniu $V$, a następnie $U$ — wynika z ciągłości $F$ i $G$, którą zapewnia gładkość).
+Wówczas na $\varphi(U)$
+\[
+\eta\circ(G\circ F)\circ\varphi^{-1}=(\eta\circ G\circ\psi^{-1})\circ(\psi\circ F\circ
+\varphi^{-1}),
+\]
+czyli złożenie dwóch odwzorowań gładkich (między otwartymi podzbiorami przestrzeni
+euklidesowych) — a takie złożenie jest gładkie na mocy zwykłego twierdzenia analizy wielu
+zmiennych o różniczkowaniu złożenia.
+\end{proof}
+\section{Przykłady rozmaitości}
+
+\begin{stwierdzenie}\label{stw:otwarty-podzbior}
+Jeśli $M$ jest rozmaitością gładką wymiaru $n$ i $\Omega\subseteq M$ jest zbiorem otwartym,
+to $\Omega$ z topologią i strukturą gładką odziedziczoną po $M$ (mapy $(U\cap\Omega,
+\varphi|_{U\cap\Omega})$ dla map dopuszczalnych $(U,\varphi)$ na $M$) jest rozmaitością
+gładką wymiaru $n$.
+\end{stwierdzenie}
+
+\begin{proof}
+Warunki Hausdorffa i drugiej przeliczalności dziedziczą się automatycznie na
+podprzestrzenie. Rodzina $\{(U\cap\Omega,\varphi|_{U\cap\Omega})\}$, gdzie $(U,\varphi)$
+przebiega atlas maksymalny na $M$, pokrywa $\Omega$ (bo mapy pokrywają $M\supseteq\Omega$)
+i składa się z homeomorfizmów na zbiory otwarte $\varphi(U\cap\Omega)\subseteq\varphi(U)
+\subseteq\R^n$ (obraz zbioru otwartego $U\cap\Omega$ przez homeomorfizm $\varphi$ jest
+otwarty w $\varphi(U)$, a więc i w $\R^n$). Zgodność map $(U\cap\Omega,\varphi|_{U\cap
+\Omega})$ i $(U'\cap\Omega,\varphi'|_{U'\cap\Omega})$ wynika natychmiast ze zgodności
+$(U,\varphi)$ i $(U',\varphi')$, gdyż odwzorowania przejścia dla map obciętych są
+obcięciami odwzorowań przejścia dla map oryginalnych do (otwartego) podzbioru dziedziny.
+\end{proof}
+
+\begin{przyklad}
+Zbiór $\mathrm{GL}(n,\R)$ macierzy odwracalnych $n\times n$ o wyrazach rzeczywistych jest
+otwartym podzbiorem przestrzeni $M_n(\R)\cong\R^{n^2}$ wszystkich macierzy $n\times n$ (bo
+$\det\colon M_n(\R)\to\R$ jest funkcją ciągłą, a $\mathrm{GL}(n,\R)=\det^{-1}(\R\setminus
+\{0\})$ jest przeciwobrazem zbioru otwartego). Na mocy Stwierdzenia~\ref{stw:otwarty-podzbior},
+$\mathrm{GL}(n,\R)$ jest rozmaitością gładką wymiaru $n^2$.
+\end{przyklad}
+
+\begin{stwierdzenie}[Rozmaitość produktowa]
+Jeśli $M$, $N$ są rozmaitościami gładkimi wymiarów odpowiednio $m$, $n$, to $M\times N$
+(z topologią produktową) jest rozmaitością gładką wymiaru $m+n$, z atlasem złożonym z map
+$(U\times V,\varphi\times\psi)$, gdzie $(U,\varphi)$ jest mapą na $M$, a $(V,\psi)$ mapą na
+$N$, i $(\varphi\times\psi)(p,q):=(\varphi(p),\psi(q))\in\R^m\times\R^n\cong\R^{m+n}$.
+\end{stwierdzenie}
+
+\begin{proof}
+Hausdorffowość i druga przeliczalność produktu dwóch przestrzeni o tych własnościach są
+standardowymi faktami z topologii ogólnej. Mapy $\varphi\times\psi$ są homeomorfizmami na
+zbiory otwarte jako produkty homeomorfizmów na zbiory otwarte, a ich dziedziny pokrywają
+$M\times N$. Jeśli $(U_1\times V_1,\varphi_1\times\psi_1)$ i $(U_2\times V_2,\varphi_2
+\times\psi_2)$ są dwiema takimi mapami, ich odwzorowanie przejścia to
+\[
+(\varphi_2\times\psi_2)\circ(\varphi_1\times\psi_1)^{-1}=(\varphi_2\circ\varphi_1^{-1})
+\times(\psi_2\circ\psi_1^{-1}),
+\]
+które jest gładkie jako produkt dwóch odwzorowań gładkich. Zatem otrzymana rodzina map
+jest atlasem.
+\end{proof}
+
+\begin{przyklad}[Sfera $S^n$ przez rzuty stereograficzne]\label{prz:sfera}
+Niech $S^n=\{x\in\R^{n+1}:\|x\|=1\}$ z topologią podprzestrzeni $\R^{n+1}$. Oznaczmy przez
+$N=(0,\dots,0,1)$ i $S=(0,\dots,0,-1)$ bieguny północny i południowy. Definiujemy rzut
+stereograficzny z bieguna północnego,
+\[
+\varphi_N\colon S^n\setminus\{N\}\to\R^n, \qquad
+\varphi_N(x^1,\dots,x^{n+1})=\frac{1}{1-x^{n+1}}(x^1,\dots,x^n),
+\]
+tzn.\ $\varphi_N(x)$ to punkt przecięcia prostej przechodzącej przez $N$ i $x$ z
+hiperpłaszczyzną $\{x^{n+1}=0\}\cong\R^n$. Odwzorowanie odwrotne wyraża się wzorem
+\[
+\varphi_N^{-1}(u)=\frac1{\|u\|^2+1}\big(2u,\ \|u\|^2-1\big)\in\R^n\times\R,
+\]
+co sprawdzamy bezpośrednim rachunkiem: punkt $y=\varphi_N^{-1}(u)$ leży na prostej
+$t\mapsto(tu,1-t)$ (parametryzacja prostej przez $N=(0,1)$ w kierunku $(u,0)-N=(u,-1)$) i
+spełnia $\|y\|=1$; rozwiązując $t^2\|u\|^2+(1-t)^2=1$, tzn.\ $t\big(t(\|u\|^2+1)-2\big)=0$,
+względem $t\neq0$, otrzymujemy $t=2/(\|u\|^2+1)$, skąd powyższy wzór. Analogicznie
+definiujemy $\varphi_S\colon S^n\setminus\{S\}\to\R^n$, rzut z bieguna południowego, wzorem
+$\varphi_S(x)=\frac1{1+x^{n+1}}(x^1,\dots,x^n)$.
+
+Zbiory $S^n\setminus\{N\}$ i $S^n\setminus\{S\}$ pokrywają $S^n$, więc pozostaje sprawdzić
+gładkość odwzorowania przejścia na $\varphi_N(S^n\setminus\{N,S\})=\R^n\setminus\{0\}$.
+Podstawiając $\varphi_N^{-1}(u)$ do wzoru na $\varphi_S$, i licząc osobno mianownik
+\[
+1+\frac{\|u\|^2-1}{\|u\|^2+1}=\frac{2\|u\|^2}{\|u\|^2+1},
+\]
+otrzymujemy
+\[
+(\varphi_S\circ\varphi_N^{-1})(u)=\frac{2u/(\|u\|^2+1)}{2\|u\|^2/(\|u\|^2+1)}=
+\frac{u}{\|u\|^2},
+\]
+czyli inwersja względem sfery jednostkowej. Odwzorowanie $u\mapsto u/\|u\|^2$ jest gładkie
+na $\R^n\setminus\{0\}$, a jest ono swoją własną odwrotnością (dla $w=u/\|u\|^2$ mamy
+$\|w\|^2=1/\|u\|^2$, więc $w/\|w\|^2=(u/\|u\|^2)\cdot\|u\|^2=u$), więc obie mapy są
+zgodne. Zatem $\{(S^n\setminus\{N\},\varphi_N),(S^n\setminus\{S\},\varphi_S)\}$ jest
+atlasem na $S^n$, nadającym jej strukturę rozmaitości gładkiej wymiaru $n$.
+\end{przyklad}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=1.65,line cap=round,line join=round]
+\shade[inner color=white,outer color=manifoldblue!43] (0,0) circle (1);
+\draw[manifoldblue!75!black,thick] (0,0) circle (1);
+\draw[->,black!55] (0,-1.2)--(0,1.38) node[above,font=\small] {$x^{n+1}$};
+\draw[->,manifoldgreen!65!black,thick] (-1.3,0)--(3.55,0);
+\node[below,font=\small,manifoldgreen!55!black] at (2.15,-.23)
+ {$\{x^{n+1}=0\}\cong\R^n$};
+\coordinate (N) at (0,1);
+\coordinate (X) at (.6,.8);
+\coordinate (P) at (3,0);
+\draw[manifoldred,very thick] (N)--(X);
+\draw[manifoldred,thick,densely dashed] (X)--(P);
+\foreach \name in {N,X,P}{\fill[manifoldred] (\name) circle (1.6pt);}
+\node[above left,font=\small] at (N) {$N$};
+\node[above right,font=\small,manifoldred] at (X) {$x$};
+\node[above right,font=\small,manifoldred] at (P) {$\varphi_N(x)$};
+\node[below left,font=\small] at (0,0) {$0$};
+\node[manifoldblue!75!black,font=\small] at (-.73,.82) {$S^n$};
+\end{tikzpicture}
+\caption{Rzut stereograficzny na płaszczyznę równikową, zgodny ze wzorem
+w tekście. Pokazano przekrój płaszczyzną zawierającą oś biegunową
+i punkt $x$. Punkty $N,x,\varphi_N(x)$ leżą na jednej prostej;
+punkt przecięcia z $\{x^{n+1}=0\}$ ma współrzędne
+$\varphi_N(x)=(x^1,\ldots,x^n)/(1-x^{n+1})$.}
+\label{fig:stereo}
+\end{figure}
+
+
+\begin{przyklad}[Rzeczywista przestrzeń rzutowa]\label{prz:RPn}
+Niech
+\[
+\mathbb{RP}^n
+=
+(\R^{n+1}\setminus\{0\})/\!\sim,
+\]
+gdzie
+\[
+x\sim y
+\iff
+\exists\,\lambda\in\R\setminus\{0\}
+\quad\text{takie, że}\quad
+x=\lambda y.
+\]
+Przestrzeń $\mathbb{RP}^n$ wyposażamy w topologię ilorazową względem
+rzutowania
+\[
+\pi:\R^{n+1}\setminus\{0\}\longrightarrow\mathbb{RP}^n,
+\qquad
+\pi(x)=[x].
+\]
+Punkty przestrzeni rzutowej zapisujemy w postaci
+\[
+[x^0:\dots:x^n].
+\]
+
+Dla $i=0,\dots,n$ definiujemy
+\[
+U_i
+=
+\{[x^0:\dots:x^n]\in\mathbb{RP}^n:x^i\neq0\}.
+\]
+Najpierw należy sprawdzić, że definicja ta nie zależy od wyboru
+reprezentanta klasy $[x]$. Jeżeli $x\sim y$, to istnieje
+$\lambda\neq0$ takie, że $y=\lambda x$, a więc
+\[
+y^i=\lambda x^i.
+\]
+Ponieważ $\lambda\neq0$, mamy
+\[
+x^i\neq0
+\iff
+y^i\neq0.
+\]
+Warunek $x^i\neq0$ zależy zatem wyłącznie od klasy $[x]$, więc zbiór
+$U_i$ jest dobrze określony.
+
+Zauważmy następnie, że
+\[
+\pi^{-1}(U_i)
+=
+\{x\in\R^{n+1}\setminus\{0\}:x^i\neq0\}.
+\]
+Jest to zbiór otwarty w $\R^{n+1}\setminus\{0\}$, ponieważ jest
+przeciwobrazem otwartego zbioru
+$\R\setminus\{0\}$ przez ciągłą funkcję współrzędnościową
+\[
+x\longmapsto x^i.
+\]
+Z definicji topologii ilorazowej zbiór $A\subseteq\mathbb{RP}^n$
+jest otwarty wtedy i tylko wtedy, gdy $\pi^{-1}(A)$ jest otwarty
+w $\R^{n+1}\setminus\{0\}$. Stąd każdy $U_i$ jest otwarty.
+
+Ponieważ każdy niezerowy wektor
+$x=(x^0,\dots,x^n)$ ma przynajmniej jedną niezerową współrzędną,
+zbiory $U_i$ pokrywają całą przestrzeń:
+\[
+\mathbb{RP}^n
+=
+\bigcup_{i=0}^n U_i.
+\]
+
+Na $U_i$ definiujemy odwzorowanie
+\[
+\varphi_i:U_i\longrightarrow\R^n
+\]
+wzorem
+\[
+\varphi_i([x^0:\dots:x^n])
+=
+\left(
+\frac{x^0}{x^i},
+\dots,
+\frac{x^{i-1}}{x^i},
+\frac{x^{i+1}}{x^i},
+\dots,
+\frac{x^n}{x^i}
+\right),
+\]
+czyli po znormalizowaniu reprezentanta tak, aby jego $i$-ta
+współrzędna była równa $1$, pomijamy tę współrzędną.
+
+Także tutaj należy sprawdzić niezależność od wyboru reprezentanta.
+Jeżeli $y=\lambda x$ dla pewnego $\lambda\neq0$, to dla każdego
+$j\neq i$ mamy
+\[
+\frac{y^j}{y^i}
+=
+\frac{\lambda x^j}{\lambda x^i}
+=
+\frac{x^j}{x^i}.
+\]
+Wartość $\varphi_i([x])$ zależy więc wyłącznie od klasy $[x]$.
+
+Odwzorowanie odwrotne jest dane jawnie przez wstawienie $1$
+na $i$-te miejsce:
+\[
+\varphi_i^{-1}
+(u^0,\dots,u^{i-1},u^{i+1},\dots,u^n)
+=
+[u^0:\dots:u^{i-1}:1:u^{i+1}:\dots:u^n].
+\]
+W szczególności $\varphi_i$ jest bijekcją.
+
+Odwrotność $\varphi_i^{-1}$ jest ciągła, ponieważ jest złożeniem
+ciągłego odwzorowania
+\[
+(u^0,\dots,u^{i-1},u^{i+1},\dots,u^n)
+\longmapsto
+(u^0,\dots,u^{i-1},1,u^{i+1},\dots,u^n)
+\]
+z ciągłym rzutowaniem ilorazowym $\pi$.
+
+Aby wykazać ciągłość $\varphi_i$, zauważmy, że na zbiorze
+\[
+\pi^{-1}(U_i)=\{x^i\neq0\}
+\]
+mamy
+\[
+\varphi_i\circ\pi(x)
+=
+\left(
+\frac{x^0}{x^i},
+\dots,
+\frac{x^{i-1}}{x^i},
+\frac{x^{i+1}}{x^i},
+\dots,
+\frac{x^n}{x^i}
+\right),
+\]
+a więc $\varphi_i\circ\pi$ jest ciągłe. Ponieważ obcięcie
+\[
+\pi|_{\pi^{-1}(U_i)}:
+\pi^{-1}(U_i)\longrightarrow U_i
+\]
+jest odwzorowaniem ilorazowym, wynika stąd ciągłość $\varphi_i$.
+Otrzymujemy zatem homeomorfizm
+\[
+\varphi_i:U_i\longrightarrow\R^n.
+\]
+
+Pozostaje sprawdzić zgodność map. Dla $i\neq j$ na przecięciu
+$U_i\cap U_j$ odwzorowanie przejścia
+\[
+\varphi_j\circ\varphi_i^{-1}
+\]
+jest określone tam, gdzie współrzędna odpowiadająca ilorazowi
+$x^j/x^i$ jest niezerowa. Każda jego składowa jest albo odwrotnością
+tej współrzędnej, albo ilorazem jednej ze współrzędnych przez nią.
+Są to zatem funkcje wymierne o nieznikającym na dziedzinie
+mianowniku, a więc funkcje gładkie.
+
+W konsekwencji
+\[
+\{(U_i,\varphi_i)\}_{i=0}^n
+\]
+jest atlasem gładkim. Po sprawdzeniu aksjomatów topologicznych
+w twierdzeniu poniżej otrzymujemy, że $\mathbb{RP}^n$ jest
+rozmaitością gładką wymiaru $n$.
+\end{przyklad}
+
+
+\begin{przyklad}[Dwie mapy $\mathbb{RP}^2$ krok po kroku]\label{prz:RP2-przejscie-1}
+Na $U_0$ każda klasa ma jednoznacznego reprezentanta
+\[
+[1:u:v],
+\]
+natomiast na $U_1$ ma reprezentanta
+\[
+[a:1:b].
+\]
+Ich część wspólna $U_0\cap U_1$, zapisana we współrzędnych mapy
+$\varphi_0$, odpowiada warunkowi $u\neq0$. Aby przejść od współrzędnych
+zadanych przez $\varphi_0$ do współrzędnych zadanych przez $\varphi_1$,
+dzielimy trzy współrzędne jednorodne przez $u$:
+\[
+[1:u:v]
+=
+[1/u:1:v/u].
+\]
+Stąd odwzorowanie zmiany współrzędnych ma postać
+\[
+\varphi_1\circ\varphi_0^{-1}(u,v)
+=
+\left(\frac1u,\frac vu\right).
+\]
+Oznacza to, że jeżeli punkt $p\in U_0\cap U_1$ ma w pierwszej mapie
+współrzędne
+\[
+\varphi_0(p)=(u,v),
+\]
+to w drugiej mapie jego współrzędne wynoszą
+\[
+\varphi_1(p)=(a,b)
+=
+\left(\frac1u,\frac vu\right).
+\]
+
+Dziedziną odwzorowania przejścia jest
+\[
+\{(u,v)\in\R^2:u\neq0\},
+\]
+a jego macierz Jacobiego wynosi
+\[
+D(\varphi_1\circ\varphi_0^{-1})(u,v)
+=
+\begin{pmatrix}
+-u^{-2} & 0\\[1mm]
+-vu^{-2} & u^{-1}
+\end{pmatrix}.
+\]
+Ponieważ
+\[
+\det D(\varphi_1\circ\varphi_0^{-1})(u,v)
+=
+-u^{-3}\neq0,
+\]
+a odwrotne przejście ma postać
+\[
+(a,b)\longmapsto
+\left(\frac1a,\frac ba\right),
+\]
+odwzorowanie przejścia jest dyfeomorfizmem.
+
+Zmianę współrzędnych wektora stycznego w tych mapach obliczymy
+w przykładzie~\ref{prz:RP2-styczna-1}, po zdefiniowaniu przestrzeni stycznej.
+\end{przyklad}
+
+
+\begin{uwaga}[Geometryczna interpretacja $\mathbb{RP}^1$ i $\mathbb{RP}^2$]
+Przestrzeń $\mathbb{RP}^n$ można interpretować jako zbiór prostych
+przechodzących przez początek układu współrzędnych w $\R^{n+1}$.
+Rzeczywiście, punkt
+\[
+[x^0:\dots:x^n]\in\mathbb{RP}^n
+\]
+odpowiada prostej
+\[
+\ell_x=\{\lambda x:\lambda\in\R\}.
+\]
+Zmiana reprezentanta $x$ na $\mu x$, gdzie $\mu\neq0$, nie zmienia tej
+prostej. Współrzędne jednorodne opisują więc nie konkretny punkt
+$\R^{n+1}$, lecz kierunek prostej przechodzącej przez $0$.
+
+Każda taka prosta przecina sferę jednostkową $S^n$ w dokładnie dwóch
+punktach antypodalnych $x$ i $-x$. Stąd
+\[
+\mathbb{RP}^n\cong S^n/\{x\sim-x\}.
+\]
+Jest to także identyfikacja topologii. Oznaczmy pierwotne rzutowanie
+przez $\pi$ i jego ograniczenie do sfery przez $q$.
+Normalizacja $\nu(x)=x/\|x\|$ jest ciągła i $\pi=q\circ\nu$.
+Jeśli $q^{-1}(A)$ jest otwarty w sferze, to
+$\pi^{-1}(A)=\nu^{-1}(q^{-1}(A))$ jest otwarty, zatem $A$ jest
+otwarty w pierwotnej topologii ilorazowej. Odwrotna implikacja
+wynika z ciągłości $q$. Stąd $q$ jest odwzorowaniem ilorazowym,
+co uzasadnia powyższy homeomorfizm.
+
+Dla $n=1$ otrzymujemy
+\[
+\mathbb{RP}^1\cong S^1/\{z\sim-z\}.
+\]
+Po utożsamieniu $S^1$ z okręgiem jednostkowym w $\C$ rozważmy
+odwzorowanie
+\[
+F:S^1\to S^1,\qquad F(z)=z^2.
+\]
+Ponieważ
+\[
+F(z)=F(-z),
+\]
+odwzorowanie to jest stałe na parach antypodalnych i wyznacza
+odwzorowanie
+\[
+\widetilde F:\mathbb{RP}^1\to S^1,
+\qquad
+\widetilde F([z])=z^2.
+\]
+Jest ono bijekcją, ponieważ
+\[
+z^2=w^2
+\iff
+z=\pm w,
+\]
+a każdy punkt okręgu posiada dwa przeciwne pierwiastki kwadratowe.
+Ciągłość $\widetilde F$ wynika z ciągłości $F=\widetilde F\circ q$
+i własności ilorazu. Ponieważ $\mathbb{RP}^1=q(S^1)$ jest zwarta,
+a $S^1$ jest przestrzenią Hausdorffa, $\widetilde F$ jest homeomorfizmem.
+
+Jest to również dyfeomorfizm. Jeśli
+\[
+z=e^{i\theta},
+\]
+to w $\mathbb{RP}^1$ kąty $\theta$ i $\theta+\pi$ opisują ten sam punkt,
+natomiast
+\[
+\widetilde F([e^{i\theta}])=e^{2i\theta}.
+\]
+Sprawdźmy zgodność współrzędnych kątowych z podanym wcześniej atlasem.
+Dla $[\cos\theta:\sin\theta]$, na małym przedziale z $\cos\theta\ne0$,
+współrzędną afiniczną jest $\tan\theta$, o pochodnej $1/\cos^2\theta$.
+Gdy $\sin\theta\ne0$, druga mapa daje $\cot\theta$, o pochodnej
+$-1/\sin^2\theta$. Pochodne nie znikają, więc przejścia i ich lokalne
+odwrotności są gładkie. Kąt jest zatem zgodną lokalną współrzędną.
+W lokalnych współrzędnych kątowych odwzorowanie ma więc postać
+\[
+\theta\longmapsto 2\theta,
+\]
+a jego lokalna odwrotność
+\[
+\alpha\longmapsto \frac{\alpha}{2}.
+\]
+Oba odwzorowania są gładkie, zatem
+\[
+\mathbb{RP}^1\cong S^1
+\]
+jako rozmaitości gładkie.
+
+Dla $n=2$ otrzymujemy
+\[
+\mathbb{RP}^2\cong S^2/\{x\sim-x\}.
+\]
+Możemy ograniczyć się do domkniętej półsfery północnej. Każda para
+antypodalna spoza równika ma dokładnie jeden punkt w jej wnętrzu; na równiku
+oba punkty pary należą do półsfery. Ponieważ domknięta półsfera jest
+homeomorficzna z dyskiem $D^2$, otrzymujemy model
+\[
+\mathbb{RP}^2
+\cong
+D^2/\{x\sim-x\text{ dla }x\in\partial D^2\}.
+\]
+Oznacza to, że punkty wewnętrzne dysku pozostają różne, natomiast każdy
+punkt brzegu utożsamiamy z punktem antypodalnym. Rzutowanie półsfery
+na $\mathbb{RP}^2$ jest ciągłą surjekcją i ma dokładnie te włókna.
+Wyznacza zatem ciągłą bijekcję z opisanego ilorazu dysku.
+Jej dziedzina jest zwarta, a $\mathbb{RP}^2$ jest przestrzenią Hausdorffa
+na mocy twierdzenia~\ref{thm:rzutowe-zwarte-1}; jest więc homeomorfizmem.
+
+Model ten daje również intuicję, dlaczego $\mathbb{RP}^2$ nie jest
+orientowalna. Wyobraźmy sobie małą strzałkę lub niewielką figurę
+asymetryczną przesuwaną po dysku. Gdy dochodzimy do brzegu, przechodzimy
+przez niego dzięki utożsamieniu z punktem leżącym po przeciwnej stronie
+okręgu. Po takim przejściu kierunek wzdłuż brzegu pozostaje zgodny,
+natomiast kierunek wskazujący do wnętrza dysku zostaje odwrócony.
+
+Lokalnie można to zapisać schematycznie jako
+\[
+(s,t)\longmapsto (s,-t),
+\]
+gdzie $s$ oznacza kierunek wzdłuż brzegu, a $t$ kierunek poprzeczny.
+Jedna z dwóch lokalnych współrzędnych zmienia więc zwrot. Po przejściu
+wzdłuż odpowiedniej zamkniętej drogi wracamy do punktu początkowego
+z odwróconą lokalną orientacją. Nie można zatem wybrać orientacji
+w sposób zgodny na całej przestrzeni.
+
+Jest to geometryczna intuicja nieorientowalności $\mathbb{RP}^2$;
+formalny dowód podamy po wprowadzeniu pojęcia orientacji rozmaitości.
+\end{uwaga}
+
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=1]
+
+  %-------------------- RP^1 --------------------
+  \begin{scope}
+    % Okrąg
+    \draw[thick,manifoldblue] (0,0) circle (1.45);
+
+    % Kilka par antypodalnych na okręgu
+    \foreach \ang in {0,45,90,135}{
+        \draw[dashed,gray!55]
+            (\ang:1.45) -- ({\ang+180}:1.45);
+
+        \fill[manifoldgold]
+            (\ang:1.45) circle (2.2pt);
+        \fill[manifoldgold]
+            ({\ang+180}:1.45) circle (2.2pt);
+    }
+
+    % Wyróżniona para x i -x
+    \fill[manifoldred] (20:1.45) circle (2.8pt);
+    \fill[manifoldred] (200:1.45) circle (2.8pt);
+
+    \node[manifoldred, above right] at (20:1.45) {$x$};
+    \node[manifoldred, below left] at (200:1.45) {$-x$};
+
+    % Strzałka pokazująca utożsamienie wyróżnionej pary
+    \draw[<->,thick,manifoldred]
+      (20:1.36) to[bend left=18] (200:1.36);
+
+    % Opisy
+    \node[manifoldblue] at (0,1.85) {$S^1$};
+
+    \node[align=center,manifoldred] at (0,-1.95)
+      {$x\sim -x$ dla każdego $x\in S^1$};
+
+    \node at (0,-2.35)
+      {$\displaystyle \mathbb{RP}^1\cong S^1/\{x\sim -x\}$};
+
+    \node at (0,-2.75)
+      {$\displaystyle \cong\, S^1$};
+  \end{scope}
+
+  %-------------------- RP^2 --------------------
+  \begin{scope}[xshift=6.2cm]
+    % Dysk
+    \fill[manifoldblue!8] (0,0) circle (1.45);
+    \draw[thick,manifoldblue] (0,0) circle (1.45);
+
+    % Kilka przykładowych par punktów antypodalnych na brzegu
+    \foreach \ang in {0,45,90,135}{
+        \fill[manifoldgold]
+            (\ang:1.45) circle (2.2pt);
+        \fill[manifoldgold]
+            ({\ang+180}:1.45) circle (2.2pt);
+    }
+
+    % Wyróżniona para x i -x
+    \fill[manifoldred] (0:1.45) circle (2.8pt);
+    \fill[manifoldred] (180:1.45) circle (2.8pt);
+
+    \node[manifoldred, right] at (0:1.45) {$x$};
+    \node[manifoldred, left]  at (180:1.45) {$-x$};
+
+    % Strzałka pokazująca utożsamienie
+    \draw[<->,thick,manifoldred]
+        (1.36,0) to[bend left=20] (-1.36,0);
+    \node[align=center,font=\scriptsize,manifoldblue] at (0,0.55)
+        {wnętrze bez\\utożsamień};
+
+    % Opisy
+    \node[manifoldblue] at (0,1.85) {$D^2$};
+
+    \node[align=center,manifoldred] at (0,-1.95)
+        {$x\sim -x$ dla każdego $x\in\partial D^2$};
+
+    \node at (0,-2.35)
+        {$\displaystyle \mathbb{RP}^2
+        \cong D^2/\{x\sim -x,\;x\in\partial D^2\}$};
+  \end{scope}
+
+\end{tikzpicture}
+\caption{Dwa użyteczne modele przestrzeni rzutowych.
+Po lewej, $\mathbb{RP}^1$ otrzymujemy z okręgu $S^1$ przez utożsamienie
+par antypodalnych punktów. Po prawej, $\mathbb{RP}^2$ otrzymujemy z dysku
+$D^2$ przez utożsamienie antypodalnych punktów jego brzegu. Różnica polega
+na tym, że w pierwszym przypadku utożsamiamy punkty na całym okręgu,
+natomiast w drugim utożsamienie zachodzi tylko na brzegu dysku.}
+\label{fig:projective-models}
+\end{figure}
+
+
+\begin{twierdzenie}[Przestrzenie rzutowe jako zwarte rozmaitości]\label{thm:rzutowe-zwarte-1}
+Przestrzeń $\mathbb{RP}^n$ jest zwartą rozmaitością gładką wymiaru $n$, a
+$\mathbb{CP}^n$ jest zwartą rozmaitością zespoloną wymiaru $n$ (a więc zwartą
+rozmaitością rzeczywistą wymiaru $2n$).
+\end{twierdzenie}
+
+\begin{proof}
+Zaczniemy od zwartości. Niech
+\[
+\pi_{\R}:\R^{n+1}\setminus\{0\}\longrightarrow\mathbb{RP}^n,
+\qquad
+\pi_{\R}(x)=[x],
+\]
+będzie rzutowaniem ilorazowym. Ograniczając je do sfery jednostkowej,
+otrzymujemy ciągłe odwzorowanie
+\[
+q_{\R}:S^n\longrightarrow\mathbb{RP}^n,
+\qquad
+q_{\R}(x)=[x].
+\]
+Jest ono surjektywne. Istotnie, jeśli
+\[
+[x]\in\mathbb{RP}^n,
+\]
+to $x\neq0$ i możemy znormalizować reprezentanta:
+\[
+\widehat{x}:=\frac{x}{\|x\|}\in S^n.
+\]
+Ponieważ $\widehat{x}$ jest niezerową wielokrotnością $x$, mamy
+\[
+[\widehat{x}]=[x].
+\]
+Każdy punkt $\mathbb{RP}^n$ należy więc do obrazu $q_{\R}$.
+
+Sfera $S^n$ jest zwarta, a ciągły obraz przestrzeni zwartej jest zwarty.
+Ponieważ
+\[
+q_{\R}(S^n)=\mathbb{RP}^n,
+\]
+otrzymujemy, że $\mathbb{RP}^n$ jest zwarta.
+
+Dokładnie ten sam argument działa w przypadku zespolonym. Niech
+\[
+\pi_{\C}:\C^{n+1}\setminus\{0\}\longrightarrow\mathbb{CP}^n,
+\qquad
+\pi_{\C}(z)=[z].
+\]
+Po utożsamieniu $\C^{n+1}\cong\R^{2n+2}$ sfera jednostkowa ma postać
+\[
+S^{2n+1}
+=
+\{z\in\C^{n+1}:\|z\|=1\}.
+\]
+Ograniczenie
+\[
+q_{\C}:S^{2n+1}\longrightarrow\mathbb{CP}^n,
+\qquad
+q_{\C}(z)=[z],
+\]
+jest ciągłe i surjektywne, ponieważ dla każdego $[z]\in\mathbb{CP}^n$
+wektor
+\[
+\widehat{z}:=\frac{z}{\|z\|}
+\]
+należy do $S^{2n+1}$ i reprezentuje tę samą klasę:
+\[
+[\widehat{z}]=[z].
+\]
+Ponieważ $S^{2n+1}$ jest zwarta, jej ciągły obraz
+\[
+q_{\C}(S^{2n+1})=\mathbb{CP}^n
+\]
+jest zwarty. Zatem również $\mathbb{CP}^n$ jest zwarta.
+
+Sprawdźmy teraz aksjomat Hausdorffa bez powoływania się na ogólne
+twierdzenie o ilorazach. Dla jednostkowych reprezentantów $x,y\in S^n$
+dwóch klas rzeczywistych połóżmy
+\[
+d_{\R}([x],[y])
+=
+\min\{\|x-y\|,\|x+y\|\}.
+\]
+Dla jednostkowych reprezentantów $z,w\in S^{2n+1}$ połóżmy
+\[
+d_{\C}([z],[w])
+=
+\min_{|\lambda|=1}\|z-\lambda w\|.
+\]
+Oba wzory nie zależą od wyboru jednostkowych reprezentantów:
+w przypadku rzeczywistym zmiana $x$ na $-x$ jedynie zamienia miejscami
+dwie liczby występujące w minimum, natomiast w przypadku zespolonym
+zmiana reprezentanta przez czynnik o module $1$ jedynie zmienia
+parametryzację zbioru, po którym bierzemy minimum. Minima istnieją
+dzięki zwartości grup $\{\pm1\}$ i $S^1$.
+
+Nierówność trójkąta sprawdzimy jednocześnie dla obu przypadków,
+pisząc $G=\{\pm1\}$ lub $G=S^1$. Dla jednostkowych $x,y,z$
+wybierzmy $\lambda,\mu\in G$ realizujące minima dla par $(x,y)$ i $(y,z)$.
+Ponieważ mnożenie przez $\lambda$ zachowuje normę,
+\begin{align*}
+d([x],[z])&\leq\|x-\lambda\mu z\|\\
+&\leq\|x-\lambda y\|+\|\lambda y-\lambda\mu z\|\\
+&=d([x],[y])+d([y],[z]).
+\end{align*}
+Symetria wynika z zastąpienia $\lambda$ przez $\lambda^{-1}$.
+Ponadto osiągane minimum jest równe zeru wtedy i tylko wtedy,
+gdy reprezentanty należą do tej samej orbity, czyli reprezentują
+ten sam punkt przestrzeni rzutowej. Otrzymujemy więc metryki na zbiorach klas.
+
+Pozostaje sprawdzić, że topologie wyznaczone przez te metryki są
+topologiami ilorazowymi. Rzutowania
+\[
+q_{\R}:S^n\to(\mathbb{RP}^n,d_{\R}),
+\qquad
+q_{\C}:S^{2n+1}\to(\mathbb{CP}^n,d_{\C})
+\]
+są ciągłe, ponieważ odległość klas nie przekracza odległości ich
+wybranych reprezentantów. Aby przejść od sfer do pierwotnych ilorazów,
+używamy ciągłej normalizacji $\nu(v)=v/\|v\|$.
+Rzutowania $\pi_{\R}$ i $\pi_{\C}$ do przestrzeni klas z metryką są ciągłe,
+bo mają postać $q_{\R}\circ\nu$ i $q_{\C}\circ\nu$.
+Z definicji topologii ilorazowej wynika więc ciągłość identyczności
+z pierwotnego ilorazu do przestrzeni metrycznej.
+Z drugiej strony mamy już wykazaną zwartość
+$\mathbb{RP}^n$ i $\mathbb{CP}^n$ w ich topologiach ilorazowych.
+Identyczność z przestrzeni rzutowej wyposażonej w topologię ilorazową
+do tego samego zbioru klas wyposażonego w powyższą metrykę jest więc
+ciągłą bijekcją ze zwartej przestrzeni do przestrzeni Hausdorffa.
+Jest zatem homeomorfizmem. W szczególności pierwotna topologia
+ilorazowa jest Hausdorffa.
+
+Każda z przestrzeni rzutowych ma skończony atlas
+\[
+U_0,\ldots,U_n,
+\]
+którego obrazy są równe odpowiednio $\R^n$ lub $\C^n$. Wybierzmy
+w $\R^n$ oraz $\C^n\cong\R^{2n}$ przeliczalną bazę, na przykład
+złożoną z kul o wymiernych środkach i wymiernych promieniach.
+Przeciwobrazy tych baz przez skończenie wiele map atlasu tworzą
+przeliczalną bazę przestrzeni rzutowej.
+
+Odwzorowania przejścia są ilorazami współrzędnych przez współrzędną
+niezerową, a więc są gładkie w przypadku rzeczywistym i holomorficzne
+w przypadku zespolonym. Otrzymujemy zatem strukturę rozmaitości
+gładkiej wymiaru $n$ na $\mathbb{RP}^n$ oraz strukturę rozmaitości
+zespolonej wymiaru $n$ na $\mathbb{CP}^n$. Ponieważ
+\[
+\C^n\cong\R^{2n},
+\]
+$\mathbb{CP}^n$ ma jako rozmaitość rzeczywista wymiar $2n$.
+\end{proof}
+
+
+\begin{uwaga}
+Zwartość można zobaczyć bardzo bezpośrednio: każde $\mathbb{RP}^n$ jest ilorazem
+sfery $S^n$ przez relację $x\sim-x$, a $\mathbb{CP}^n$ jest ilorazem sfery
+jednostkowej $S^{2n+1}\subset\C^{n+1}$ przez działanie grupy $S^1$,
+\[
+z\sim e^{i\theta}z.
+\]
+W przypadku zespolonym otrzymujemy w ten sposób słynną fibrację Hopfa
+\[
+S^1\longrightarrow S^{2n+1}\longrightarrow\mathbb{CP}^n.
+\]
+Pełny opis tej konstrukcji wykracza poza zakres tego rozdziału, ale pokazuje,
+że przestrzenie rzutowe są naturalnie związane zarówno z ilorazami, jak i z teorią
+wiązek.
+\end{uwaga}
+
+\begin{przyklad}[Torus $T^n$]\label{prz:torus}
+Niech $T^n=\R^n/\Z^n$ z topologią ilorazową względem rzutowania kanonicznego $\pi\colon\R^n
+\to T^n$, $\pi(x)=x+\Z^n$. Pokażemy najpierw, że $\pi$ jest odwzorowaniem otwartym: dla
+zbioru otwartego $\Omega\subseteq\R^n$, $\pi^{-1}(\pi(\Omega))=\bigcup_{k\in\Z^n}(\Omega+k)$
+jest sumą zbiorów otwartych, a więc otwarty; z definicji topologii ilorazowej oznacza to,
+że $\pi(\Omega)$ jest otwarty w $T^n$.
+
+Sprawdźmy pozostałe warunki topologiczne. Jeśli $[x]\ne[y]$, to
+$\delta=\inf_{k\in\Z^n}\|x-y-k\|>0$: w dowolnym ograniczonym
+zbiorze jest tylko skończenie wiele punktów kraty, a $x-y\notin\Z^n$.
+Otwarte otoczenia $\pi(B(x,\delta/3))$ i $\pi(B(y,\delta/3))$
+są rozłączne. W przeciwnym razie istniałyby $u,v$ w tych kulach
+z $u-v=k\in\Z^n$, skąd $\|x-y-k\|<2\delta/3$, sprzeczność.
+Torus jest więc Hausdorffa. Obrazy przeliczalnej bazy kul w $\R^n$
+stanowią bazę ilorazu: dla otwartego $O\subset T^n$ i $[x]\in O$
+wybieramy kulę bazową $B$ z $x\in B\subset\pi^{-1}(O)$;
+wtedy $[x]\in\pi(B)\subset O$. To daje drugi aksjomat przeliczalności.
+
+Niech $B(x,1/2)\subseteq\R^n$ będzie kulą otwartą o promieniu $1/2$. Dla $k\in\Z^n\setminus
+\{0\}$, zbiory $B(x,1/2)$ i $B(x+k,1/2)$ są rozłączne: gdyby $y$ należał do obu, to
+$\|y-x\|<1/2$ i $\|y-x-k\|<1/2$, skąd z nierówności trójkąta $\|k\|\leq\|y-x\|+\|y-x-k\|<1$;
+ale $\|k\|\geq1$ dla $k\in\Z^n\setminus\{0\}$ — sprzeczność. Zatem $\pi|_{B(x,1/2)}$ jest
+różnowartościowe, a więc — jako odwzorowanie ciągłe, otwarte i różnowartościowe na obraz —
+homeomorfizmem $B(x,1/2)\to\pi(B(x,1/2))$. Kładziemy $\varphi_x:=(\pi|_{B(x,1/2)})^{-1}$;
+zbiory $\pi(B(x,1/2))$ dla $x\in\R^n$ pokrywają $T^n$.
+
+Odwzorowania przejścia między takimi mapami są (lokalnie) postaci $y\mapsto y+k$ dla
+pewnego ustalonego $k\in\Z^n$ (bo dwa punkty z tym samym obrazem przy $\pi$ różnią się
+dokładnie o wektor z $\Z^n$, a $k$ jest lokalnie stałe z ciągłości) — a translacja jest
+odwzorowaniem gładkim z gładką odwrotną. Zatem otrzymana rodzina map jest atlasem, i $T^n$
+jest rozmaitością gładką wymiaru $n$.
+\end{przyklad}
+\section{Przestrzeń styczna}\label{sec:przestrzen-styczna}
+
+W porównaniu trzech poniższych modeli zakładamy,
+że $M$ nie ma brzegu. Dla punktów brzegu
+przestrzeń styczną definiujemy przez derywacje
+lub współrzędne przedłużane poza półprzestrzeń,
+jak w Sekcji~\ref{sec:rozmaitosci-z-brzegiem-1};
+model dwustronnych krzywych nie działa tam dosłownie.
+
+Chcemy nadać sens pojęciu ,,wektora stycznego'' do rozmaitości $M$ w punkcie $p$ —
+uogólnieniu intuicji wektora stycznego do powierzchni w $\R^3$, niezależnemu od
+zanurzenia $M$ w jakąkolwiek przestrzeń otaczającą. Istnieje kilka naturalnych, a priori
+różnych, sposobów sformalizowania tej intuicji; w tej sekcji podajemy trzy z nich i
+dowodzimy, że są one kanonicznie równoważne.
+
+\subsection*{Trzy definicje przestrzeni stycznej}
+
+Niech $M$ będzie rozmaitością gładką wymiaru $n$, $p\in M$.
+
+\textbf{Definicja A (poprzez krzywe).} Niech $\Gamma_p$ oznacza zbiór gładkich krzywych
+$\gamma\colon(-\varepsilon,\varepsilon)\to M$ (dla pewnego $\varepsilon>0$, zależnego od
+$\gamma$) z $\gamma(0)=p$. Mówimy, że $\gamma_1,\gamma_2\in\Gamma_p$ są \emph{styczne w
+$p$}, $\gamma_1\sim\gamma_2$, jeśli dla pewnej (równoważnie: każdej) mapy dopuszczalnej
+$(U,\varphi)$ wokół $p$,
+\[
+(\varphi\circ\gamma_1)'(0)=(\varphi\circ\gamma_2)'(0)\quad\text{w }\R^n.
+\]
+
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=1.02,line cap=round,line join=round]
+% Dwie różne krzywe, których pochodne w p po przejściu do współrzędnych są równe.
+\filldraw[fill=manifoldblue!9,draw=manifoldblue!75!black,very thick]
+ (-5.04,-.52) .. controls (-5.0,.46) and (-4.05,1.21) .. (-2.67,1.24)
+ .. controls (-1.44,1.28) and (-.63,.5) .. (-.62,-.27)
+ .. controls (-.6,-1.1) and (-2.13,-1.42) .. (-3.47,-1.18)
+ .. controls (-4.39,-1.02) and (-5.07,-.96) .. cycle;
+\filldraw[fill=manifoldgreen!12,draw=manifoldgreen!65!black,thick]
+ (-4.38,-.36) .. controls (-4.4,.4) and (-3.61,.94) .. (-2.62,.86)
+ .. controls (-1.65,.79) and (-1.1,.21) .. (-1.21,-.44)
+ .. controls (-1.34,-1.01) and (-2.37,-1.02) .. (-3.13,-.89)
+ .. controls (-3.91,-.83) and (-4.34,-.8) .. cycle;
+\node[font=\small\bfseries,manifoldblue!75!black] at (-4.68,1.37) {$M$};
+\node[font=\small,manifoldgreen!65!black] at (-3.45,.55) {$U$};
+\draw[manifoldred,very thick]
+ (-4.08,-.68) .. controls (-3.7,-.42) and (-3.18,-.13) .. (-2.8,-.03)
+ .. controls (-2.42,.07) and (-1.98,.26) .. (-1.72,.29);
+\draw[manifoldgold!85!black,very thick]
+ (-4.06,-.02) .. controls (-3.65,-.46) and (-3.18,-.13) .. (-2.8,-.03)
+ .. controls (-2.42,.07) and (-1.86,-.15) .. (-1.52,-.55);
+\node[font=\small,manifoldred] at (-4.31,-.83) {$\gamma_1$};
+\node[font=\small,manifoldgold!80!black] at (-4.35,.12) {$\gamma_2$};
+\fill[black!75] (-2.8,-.03) circle (2.6pt)
+ node[below,font=\small,xshift=-2pt] {$p$};
+\draw[->,very thick,manifoldblue!75!black] (-.33,-.08)--(1.19,-.08)
+ node[midway,above,font=\small] {$\varphi$};
+% Rysunkowy fragment R^n oraz obraz U.
+\filldraw[fill=manifoldblue!3,draw=manifoldblue!65!black,thick]
+ (1.42,-1.17)--(4.94,-1.17)--(5.43,1.08)--(1.91,1.08)--cycle;
+\filldraw[fill=manifoldgreen!10,draw=manifoldgreen!65!black,thick]
+ (1.87,-.41) .. controls (1.93,.27) and (2.64,.77) .. (3.51,.72)
+ .. controls (4.35,.66) and (4.8,.14) .. (4.66,-.5)
+ .. controls (4.52,-.9) and (3.68,-1.02) .. (2.95,-.85)
+ .. controls (2.32,-.78) and (1.88,-.73) .. cycle;
+\draw[manifoldred,very thick]
+ (2.11,-.62) .. controls (2.39,-.4) and (2.69,-.14) .. (3.03,-.05)
+ .. controls (3.37,.04) and (3.91,.21) .. (4.17,.27);
+\draw[manifoldgold!85!black,very thick]
+ (2.25,.03) .. controls (2.48,-.29) and (2.69,-.14) .. (3.03,-.05)
+ .. controls (3.37,.04) and (3.91,-.23) .. (4.21,-.5);
+\fill[black!75] (3.03,-.05) circle (2.6pt)
+ node[below,font=\small,xshift=-1pt] {$\varphi(p)$};
+\draw[->,very thick,manifoldblue!85!black] (3.03,-.05)--(3.85,.17);
+\node[font=\small,manifoldblue!85!black] at (4.05,.34) {$v$};
+\node[font=\small,manifoldgreen!65!black] at (4.23,.82) {$\varphi(U)$};
+\node[font=\small\bfseries,manifoldblue!75!black] at (5.23,1.35) {$\R^n$};
+\node[font=\small] at (.17,-1.73)
+ {$v=(\varphi\circ\gamma_1)'(0)=(\varphi\circ\gamma_2)'(0)$};
+\end{tikzpicture}
+\caption{Dwie krzywe w $M$ przechodzą przez $p$ i mają ten sam kierunek
+styczny. W mapie $\varphi$ ich obrazy mają wspólną pochodną $v$ w $t=0$.}
+\label{fig:krzywe-styczne-w-mapie}
+\end{figure}
+
+\begin{fakt}
+Powyższy warunek nie zależy od wyboru mapy $(U,\varphi)$.
+\end{fakt}
+\begin{proof}
+Jeśli $(V,\psi)$ jest inną mapą wokół $p$, to na wspólnej dziedzinie $\psi\circ\gamma_i=
+(\psi\circ\varphi^{-1})\circ(\varphi\circ\gamma_i)$ blisko $t=0$, więc z reguły łańcucha
+\[
+(\psi\circ\gamma_i)'(0)=D(\psi\circ\varphi^{-1})(\varphi(p))\cdot(\varphi\circ\gamma_i)'(0),
+\qquad i=1,2.
+\]
+Ponieważ $D(\psi\circ\varphi^{-1})(\varphi(p))$ jest tym samym przekształceniem liniowym
+dla $i=1$ i $i=2$, równość $(\varphi\circ\gamma_1)'(0)=(\varphi\circ\gamma_2)'(0)$
+implikuje $(\psi\circ\gamma_1)'(0)=(\psi\circ\gamma_2)'(0)$, i na odwrót (bo
+$D(\psi\circ\varphi^{-1})(\varphi(p))$ jest odwracalne, jako różniczka dyfeomorfizmu).
+\end{proof}
+
+Relacja $\sim$ jest relacją równoważności na $\Gamma_p$ (natychmiast z definicji, poprzez
+odpowiednie własności równości w $\R^n$). Definiujemy $T_p^AM:=\Gamma_p/\!\sim$.
+
+Aby wyposażyć $T_p^AM$ w strukturę przestrzeni wektorowej, ustalmy mapę
+$(U,\varphi)$ wokół $p$ i zdefiniujmy
+\[
+\Theta_\varphi:T_p^AM\longrightarrow\R^n,
+\qquad
+\Theta_\varphi([\gamma]):=(\varphi\circ\gamma)'(0).
+\]
+Odwzorowanie to jest dobrze określone i bijektywne. Różnowartościowość
+wynika bezpośrednio z definicji relacji równoważności, natomiast
+surjektywność z faktu, że dla dowolnego $v\in\R^n$ krzywa
+\[
+\gamma(t)=\varphi^{-1}(\varphi(p)+tv),
+\]
+określona dla dostatecznie małych $|t|$, spełnia
+\[
+\gamma(0)=p,
+\qquad
+(\varphi\circ\gamma)'(0)=v.
+\]
+
+Za pomocą bijekcji $\Theta_\varphi$ przenosimy strukturę przestrzeni
+wektorowej z $\R^n$ na $T_p^AM$, definiując
+\[
+[\gamma]+[\eta]
+:=
+\Theta_\varphi^{-1}
+\bigl(\Theta_\varphi([\gamma])+\Theta_\varphi([\eta])\bigr)
+\]
+oraz
+\[
+a[\gamma]
+:=
+\Theta_\varphi^{-1}
+\bigl(a\,\Theta_\varphi([\gamma])\bigr),
+\qquad a\in\R.
+\]
+W szczególności mnożenie przez skalar można reprezentować przez
+reparametryzację krzywej:
+\[
+a[\gamma]=[t\mapsto\gamma(at)],
+\]
+ponieważ
+\[
+(\varphi\circ\gamma(at))'_{\,t=0}
+=
+a(\varphi\circ\gamma)'(0).
+\]
+W ten sposób $\Theta_\varphi$ jest, z definicji, izomorfizmem liniowym
+$T_p^AM\cong\R^n$.
+
+\begin{fakt}
+Struktura liniowa na $T_p^AM$ nie zależy od wyboru mapy $\varphi$.
+\end{fakt}
+\begin{proof}
+Niech $(V,\psi)$ będzie inną mapą wokół $p$, $L:=D(\psi\circ\varphi^{-1})(\varphi(p))
+\colon\R^n\to\R^n$. Z rachunku w poprzednim Fakcie, dla dowolnej krzywej $\gamma\in\Gamma_p$,
+$\Theta_\psi([\gamma])=L(\Theta_\varphi([\gamma]))$, czyli $\Theta_\psi=L\circ\Theta_\varphi$.
+Ponieważ $L$ jest izomorfizmem \emph{liniowym} (jako różniczka dyfeomorfizmu w punkcie),
+struktury liniowe przeniesione na $T_p^AM$ przez $\Theta_\varphi$ i przez $\Theta_\psi=
+L\circ\Theta_\varphi$ pokrywają się: liniowość $L$ gwarantuje, że dla dowolnych $[\gamma_1],
+[\gamma_2]\in T_p^AM$, $a,b\in\R$, kombinacja $a[\gamma_1]+b[\gamma_2]$ wyznaczona przez
+$\Theta_\varphi$ pokrywa się z kombinacją wyznaczoną przez $\Theta_\psi$. To kluczowa
+obserwacja: liniowość różniczki odwzorowania przejścia gwarantuje, że mimo iż
+$\Theta_\varphi\neq\Theta_\psi$, wyznaczona przez nie struktura wektorowa na $T_p^AM$ jest
+jedna i ta sama.
+\end{proof}
+
+\textbf{Definicja B (klasyczna, poprzez pary mapa-wektor).} Rozważmy zbiór trójek
+$(U,\varphi,v)$, gdzie $(U,\varphi)$ jest mapą dopuszczalną wokół $p$, a $v\in\R^n$.
+Mówimy, że $(U,\varphi,v)\sim(V,\psi,w)$, jeśli $w=D(\psi\circ\varphi^{-1})(\varphi(p))\,v$.
+
+\begin{fakt}
+Powyższa relacja jest relacją równoważności.
+\end{fakt}
+\begin{proof}
+Zwrotność: dla $\psi=\varphi$, $D(\id)=\id$, więc $v=v$. Symetria: jeśli $w=D(\psi\varphi^{-1})
+(\varphi(p))v$, to stosując regułę łańcucha do $\varphi\circ\psi^{-1}=(\psi\circ
+\varphi^{-1})^{-1}$ w punkcie $\psi(p)$, $D(\varphi\psi^{-1})(\psi(p))=\big[D(\psi\varphi^{-1})
+(\varphi(p))\big]^{-1}$, skąd $v=D(\varphi\psi^{-1})(\psi(p))w$. Przechodniość: jeśli
+$w=D(\psi\varphi^{-1})(\varphi(p))v$ i $u=D(\eta\psi^{-1})(\psi(p))w$, to z reguły łańcucha
+zastosowanej do $\eta\circ\varphi^{-1}=(\eta\circ\psi^{-1})\circ(\psi\circ\varphi^{-1})$ w
+punkcie $\varphi(p)$,
+\[
+D(\eta\varphi^{-1})(\varphi(p))=D(\eta\psi^{-1})(\psi(p))\cdot D(\psi\varphi^{-1})(\varphi(p)),
+\]
+a więc $D(\eta\varphi^{-1})(\varphi(p))v=D(\eta\psi^{-1})(\psi(p))w=u$, czyli
+$(U,\varphi,v)\sim(W,\eta,u)$.
+\end{proof}
+
+Definiujemy $T_p^BM$ jako zbiór klas równoważności $[U,\varphi,v]$, ze strukturą liniową
+$a[U,\varphi,v]+b[U,\varphi,v']:=[U,\varphi,av+bv']$ (dobrze określoną — niezależność od
+wyboru reprezentanta $\varphi$ sprawdza się rachunkiem analogicznym do powyższego, korzystając
+z liniowości $D(\psi\varphi^{-1})(\varphi(p))$). Odwzorowanie $T_p^AM\to T_p^BM$,
+$[\gamma]\mapsto[U,\varphi,(\varphi\circ\gamma)'(0)]$ (dla ustalonej mapy $(U,\varphi)$) —
+de facto $\Theta_\varphi$ ,,opakowane'' w formalizm klas — jest dobrze określoną bijekcją
+liniową. Utożsamiamy więc $T_p^AM\cong T_p^BM=:T_p^{\mathrm{geom}}M$.
+
+\textbf{Definicja C (algebraiczna, poprzez derywacje).} Niech $C^\infty(M)$ oznacza
+przestrzeń funkcji gładkich $M\to\R$. \emph{Derywacją w punkcie $p$} nazywamy funkcjonał
+liniowy $v\colon C^\infty(M)\to\R$ spełniający regułę Leibniza:
+\[
+v(fg)=f(p)\,v(g)+g(p)\,v(f), \qquad f,g\in C^\infty(M).
+\]
+Zbiór wszystkich derywacji w $p$ oznaczamy $T_p^CM$ — jest to podprzestrzeń liniowa
+przestrzeni funkcjonałów liniowych na $C^\infty(M)$ (suma i wielokrotność derywacji
+spełnia regułę Leibniza — sprawdzenie bezpośrednie).
+
+W dalszej części skonstruujemy kanoniczny izomorfizm
+$T_p^{\mathrm{geom}}M\to T_p^CM$. Utożsamimy w ten sposób
+wszystkie trzy definicje i otrzymamy bazę przestrzeni
+stycznej złożoną z pochodnych cząstkowych.
+
+\subsection*{Lemat Hadamarda}
+
+Poniższy lemat analityczny jest podstawowym narzędziem technicznym tej sekcji.
+
+\begin{lemat}[Lemat Hadamarda]\label{lem:hadamard}
+Niech $\Omega\subseteq\R^n$ będzie zbiorem otwartym, gwiaździstym względem $0$ (tzn.\
+$tx\in\Omega$ dla wszystkich $x\in\Omega$, $t\in[0,1]$), i niech $f\in C^\infty(\Omega)$.
+Wówczas istnieją funkcje $g_1,\dots,g_n\in C^\infty(\Omega)$ takie, że
+\[
+f(x)=f(0)+\sum_{i=1}^nx^ig_i(x), \qquad x\in\Omega,
+\]
+oraz $g_i(0)=\dfrac{\partial f}{\partial x^i}(0)$ dla każdego $i$.
+\end{lemat}
+
+\begin{proof}
+Dla ustalonego $x\in\Omega$, funkcja $t\mapsto f(tx)$ jest dobrze określona i gładka na
+$[0,1]$ (bo $\Omega$ jest gwiaździsty względem $0$), więc z twierdzenia podstawowego
+rachunku różniczkowego,
+\[
+f(x)-f(0)=\int_0^1\frac{d}{dt}f(tx)\,dt=\int_0^1\sum_{i=1}^n\frac{\partial f}{\partial x^i}
+(tx)\,x^i\,dt=\sum_{i=1}^nx^i\underbrace{\int_0^1\frac{\partial f}{\partial x^i}(tx)\,dt}
+_{=:g_i(x)}.
+\]
+Funkcje $g_i(x):=\int_0^1\frac{\partial f}{\partial x^i}(tx)\,dt$ są gładkie na $\Omega$
+(różniczkowanie pod znakiem całki, dopuszczalne, gdyż funkcja podcałkowa zależy gładko od
+$(t,x)$), oraz $g_i(0)=\int_0^1\frac{\partial f}{\partial x^i}(0)\,dt=\frac{\partial f}
+{\partial x^i}(0)$, co kończy dowód.
+\end{proof}
+
+\subsection*{Od krzywych do derywacji}
+
+Zdefiniujmy odwzorowanie $\Phi\colon T_p^AM\to T_p^CM$ wzorem
+\[
+\Phi([\gamma])(f):=(f\circ\gamma)'(0), \qquad f\in C^\infty(M).
+\]
+
+\begin{fakt}
+$\Phi$ jest dobrze określone (niezależne od wyboru reprezentanta $\gamma$), a
+$\Phi([\gamma])$ jest derywacją w $p$ dla każdego $[\gamma]\in T_p^AM$.
+\end{fakt}
+\begin{proof}
+Niezależność od reprezentanta: jeśli $\gamma_1\sim\gamma_2$, to pisząc $f\circ\gamma_i=
+(f\circ\varphi^{-1})\circ(\varphi\circ\gamma_i)$ dla mapy $(U,\varphi)$ wokół $p$,
+\[
+(f\circ\gamma_i)'(0)=D(f\circ\varphi^{-1})(\varphi(p))\cdot(\varphi\circ\gamma_i)'(0),
+\]
+a prawa strona zależy od $\gamma_i$ jedynie poprzez $(\varphi\circ\gamma_i)'(0)$, które z
+założenia $\gamma_1\sim\gamma_2$ jest tym samym wektorem dla $i=1,2$. Liniowość
+$\Phi([\gamma])$ względem $f$ wynika z liniowości pochodnej $(\cdot)'(0)$ oraz liniowości
+$D(f\circ\varphi^{-1})$ względem $f$. Reguła Leibniza: $\big((fg)\circ\gamma\big)'(0)=
+\big((f\circ\gamma)(g\circ\gamma)\big)'(0)=(f\circ\gamma)'(0)\,g(p)+f(p)\,(g\circ\gamma)'(0)
+=\Phi([\gamma])(f)\,g(p)+f(p)\,\Phi([\gamma])(g)$, na mocy zwykłej reguły Leibniza dla
+pochodnej iloczynu funkcji jednej zmiennej $t\mapsto f(\gamma(t))g(\gamma(t))$.
+\end{proof}
+
+$\Phi$ jest odwzorowaniem liniowym $T_p^AM\to T_p^CM$ (liniowość struktury na $T_p^AM$
+przeniesionej przez $\Theta_\varphi$ oraz bezpośredni rachunek). Pokażemy, że $\Phi$ jest
+izomorfizmem; kluczowym krokiem — i odpowiedzią na pytanie, dlaczego pochodne cząstkowe
+$\partial/\partial x^i|_p$ stanowią bazę $T_pM$ — będzie zastosowanie Lematu Hadamarda.
+
+Będziemy używać gładkiej \emph{funkcji odcinającej}
+$\mu\colon\R^n\to[0,1]$ (ang.\ \emph{bump function}),
+równej $1$ na $\overline{B(0,1)}$ i $0$ poza $B(0,2)$.
+Zbudujmy ją jawnie. Niech $h(t)=e^{-1/t}$ dla $t>0$,
+a $h(t)=0$ dla $t\leq0$. Wszystkie pochodne $h$ po
+prawej stronie zera są sumami wyrazów postaci
+$t^{-m}e^{-1/t}$, które dążą do zera przy $t\downarrow0$;
+po lewej stronie wszystkie pochodne wynoszą zero.
+Funkcja $h$ jest więc gładka także w zerze. Kładziemy
+\[
+ \theta(t):=\frac{h(t)}{h(t)+h(1-t)},\qquad
+ \mu(x):=\theta\!\left(\frac{4-\|x\|^2}{3}\right).
+\]
+Mianownik $\theta$ nigdzie nie znika: dla $t\leq0$
+dodatni jest $h(1-t)$, dla $t\geq1$ dodatni jest $h(t)$,
+a pomiędzy nimi dodatnie są oba. Mamy $\theta(t)=0$
+dla $t\leq0$ i $\theta(t)=1$ dla $t\geq1$.
+Jeśli $\|x\|\leq1$, argument $\theta$ jest co najmniej $1$;
+jeśli $\|x\|\geq2$, jest nie większy od zera.
+Cała konstrukcja jest gładka, bo $\|x\|^2$ jest
+wielomianem współrzędnych.
+
+\begin{lemat}[Lokalność derywacji]\label{lem:lokalnosc}
+Niech $v\in T_p^CM$ będzie derywacją w $p$. Jeśli $h\in C^\infty(M)$ znika na pewnym
+otoczeniu punktu $p$, to $v(h)=0$. W szczególności, jeśli $f,g\in C^\infty(M)$ pokrywają
+się na pewnym otoczeniu $p$, to $v(f)=v(g)$; wartość $v(f)$ zależy więc jedynie od
+zachowania $f$ w dowolnie małym otoczeniu $p$.
+\end{lemat}
+\begin{proof}
+Z reguły Leibniza zastosowanej do $f=g=\mathbf1$ (funkcji stałej równej $1$),
+$v(\mathbf1)=v(\mathbf1\cdot\mathbf1)=2v(\mathbf1)$, skąd $v(\mathbf1)=0$; z liniowości,
+$v(c)=0$ dla każdej funkcji stałej $c$.
+
+Niech $h\equiv0$ na otoczeniu otwartym $W\ni p$. Wybierzmy mapę $(U,\varphi)$ wokół $p$ z
+$U\subseteq W$, $\varphi(p)=0$, oraz (po przeskalowaniu)
+$\overline{B(0,2)}\subseteq\varphi(U)$.
+Zdefiniujmy $\tilde\mu\colon M\to\R$: $\tilde\mu(q):=\mu(\varphi(q))$ dla $q\in U$, oraz
+$\tilde\mu(q):=0$ dla $q\notin U$. Nośnik jest zawarty w zwartym
+zbiorze $K=\varphi^{-1}(\overline{B(0,2)})\subset U$.
+Ponieważ $M$ jest Hausdorffa, $K$ jest domknięty w $M$.
+Na otwartym pokryciu $U, M\setminus K$ obie gładkie definicje
+pokrywają się, więc $\tilde\mu\in C^\infty(M)$, równa $1$ na otoczeniu $p$ i znikająca poza
+$U\subseteq W$. Wówczas $\tilde\mu\cdot h\equiv0$ na całym $M$, więc $v(\tilde\mu h)=0$.
+Z reguły Leibniza, $0=v(\tilde\mu h)=\tilde\mu(p)v(h)+h(p)v(\tilde\mu)=v(h)$ (bo
+$\tilde\mu(p)=1$, $h(p)=0$). Zatem $v(h)=0$. Ostatnia część lematu wynika z zastosowania
+powyższego do $h:=f-g$.
+\end{proof}
+
+\begin{twierdzenie}\label{tw:baza-styczna}
+Niech $(U,\varphi)$ będzie mapą dopuszczalną wokół $p$, $\varphi=(x^1,\dots,x^n)$,
+$\varphi(p)=0$. Wówczas:
+\begin{enumerate}[label=(\alph*)]
+\item Odwzorowanie $\Phi\colon T_p^AM\to T_p^CM$ jest izomorfizmem liniowym.
+\item Elementy $\frac{\partial}{\partial x^1}\big|_p,\dots,\frac{\partial}{\partial x^n}
+\big|_p\in T_p^CM$, zdefiniowane przez $\frac{\partial}{\partial x^i}\big|_p(f):=
+\frac{\partial(f\circ\varphi^{-1})}{\partial x^i}(\varphi(p))$, stanowią bazę $T_p^CM$.
+W szczególności $\dim T_pM=n$.
+\end{enumerate}
+\end{twierdzenie}
+
+\begin{proof}
+\emph{(a), injektywność.} Załóżmy $\Phi([\gamma])=0$, tzn.\ $(f\circ\gamma)'(0)=0$ dla
+wszystkich $f\in C^\infty(M)$. Wybierzmy funkcję odcinającą
+$\tilde\mu$ o zwartym nośniku zawartym w $U$, równą $1$ blisko $p$,
+jak w dowodzie Lematu~\ref{lem:lokalnosc}.
+Dla $i=1,\dots,n$ niech $\tilde x^i:=\tilde\mu\,x^i
+=\tilde\mu\,\varphi^i$ na $U$ (rozszerzone przez $0$ poza $U$) —
+funkcja gładka na $M$, pokrywająca się z $\varphi^i$ na otoczeniu $p$. Z założenia,
+$0=\Phi([\gamma])(\tilde x^i)=(\tilde x^i\circ\gamma)'(0)$; blisko $t=0$, $\gamma(t)\in U$
+i tam $\tilde x^i\circ\gamma=\varphi^i\circ\gamma$, więc $(\varphi^i\circ\gamma)'(0)=0$ dla
+każdego $i$, czyli $(\varphi\circ\gamma)'(0)=0\in\R^n$. Oznacza to $\gamma\sim
+\gamma_{\text{stała}}$ (gdzie $\gamma_{\text{stała}}(t)\equiv p$), czyli $[\gamma]=0$ w
+$T_p^AM$. Zatem $\ker\Phi=\{0\}$.
+
+\emph{(a), surjektywność — Lemat Hadamarda.} Niech $v\in T_p^CM$. Bez straty ogólności
+$\varphi(U)$ jest kulą (gwiaździstą względem $0$). Niech $\tilde f:=f\circ\varphi^{-1}\in
+C^\infty(\varphi(U))$; z Lematu~\ref{lem:hadamard} istnieją $g_1,\dots,g_n$ z
+\[
+\tilde f(x)=\tilde f(0)+\sum_ix^ig_i(x), \qquad g_i(0)=\frac{\partial\tilde f}{\partial x^i}
+(0)=\frac{\partial}{\partial x^i}\Big|_p(f).
+\]
+Podstawiając $x=\varphi(q)$: $f(q)=f(p)+\sum_i\varphi^i(q)\,g_i(\varphi(q))$ dla $q$
+blisko $p$. Niech $\widetilde{\varphi^i}$, $\tilde g_i$ oznaczają (jak wyżej) rozszerzenia
+$\varphi^i$ oraz $g_i\circ\varphi$ do funkcji gładkich na $M$, pokrywające się z
+oryginałami na otoczeniu $p$. Funkcja $F:=f(p)\cdot\mathbf1+\sum_i\widetilde{\varphi^i}\,
+\tilde g_i$ pokrywa się z $f$ na otoczeniu $p$, więc $v(f)=v(F)$ (Lemat~\ref{lem:lokalnosc}).
+Z liniowości $v$, reguły Leibniza (korzystając z $\widetilde{\varphi^i}(p)=0$,
+$v(\mathbf1)=0$):
+\[
+v(f)=v(F)=\sum_i\Big(\widetilde{\varphi^i}(p)\,v(\tilde g_i)+\tilde g_i(p)\,v
+(\widetilde{\varphi^i})\Big)=\sum_ig_i(0)\,v(\widetilde{\varphi^i})=\sum_{i=1}^n
+v(\widetilde{\varphi^i})\cdot\frac{\partial}{\partial x^i}\Big|_p(f).
+\]
+Kładąc $c_i:=v(\widetilde{\varphi^i})\in\R$, mamy $v=\sum_ic_i\,\frac{\partial}{\partial
+x^i}\big|_p$ jako funkcjonały. Niech $\gamma(t):=\varphi^{-1}(t\cdot(c_1,\dots,c_n))$; wtedy
+$\Phi([\gamma])(f)=(f\circ\gamma)'(0)=D(f\circ\varphi^{-1})(0)\cdot(c_1,\dots,c_n)=
+\sum_ic_i\frac{\partial}{\partial x^i}\big|_p(f)=v(f)$ dla każdego $f$, czyli
+$\Phi([\gamma])=v$. To dowodzi surjektywności, a wraz z liniowością i injektywnością —
+części (a).
+
+\emph{(b).} Powyższy rachunek pokazał, że każdy $v\in T_p^CM$ jest kombinacją liniową
+$\sum_ic_i\frac{\partial}{\partial x^i}\big|_p$ — więc baza ta rozpina $T_p^CM$. Niezależność
+liniowa: załóżmy $\sum_ic_i\frac{\partial}{\partial x^i}\big|_p=0$. Stosując obie strony
+do $\widetilde{\varphi^j}$ i korzystając z $\frac{\partial}{\partial x^i}\big|_p
+(\widetilde{\varphi^j})=\frac{\partial x^j}{\partial x^i}(0)=\delta_i^j$, otrzymujemy
+$0=\sum_ic_i\delta_i^j=c_j$ dla każdego $j$. Zatem $\{\partial/\partial x^i|_p\}$ jest
+bazą $T_p^CM$; w szczególności $\dim T_p^CM=n$.
+\end{proof}
+
+\begin{wniosek}
+Definicje A, B i C przestrzeni stycznej są kanonicznie izomorficzne. Piszemy odtąd po
+prostu $T_pM$ i mówimy o \emph{przestrzeni stycznej do $M$ w punkcie $p$} — jest to
+$n$-wymiarowa przestrzeń wektorowa. W mapie $(U,\varphi)$, gdzie $\varphi=(x^1,\dots,x^n)$,
+jej \emph{bazą współrzędnościową} są wektory
+\[
+\left.\frac{\partial}{\partial x^1}\right|_p,\ \dots,\
+\left.\frac{\partial}{\partial x^n}\right|_p.
+\]
+\end{wniosek}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=1.35,line cap=round,line join=round]
+% S(u,v)=(u,v,.12u^2+.08v^2), rzut (x,y,z)->(x+.45y,.65y+z).
+% Brzeg wypełnienia, siatka i krzywa używają tej samej parametryzacji.
+\filldraw[fill=manifoldgreen!12,draw=manifoldgreen!65!black,thick]
+ (-2.6525,-.9425)--(1.3475,-.9425)--(2.6525,.9425)--(-1.3475,.9425)--cycle;
+\path[fill=manifoldblue!18,opacity=.65]
+ (-2.65250,-0.29430)
+  --(-2.48583,-0.37097)
+  --(-2.31917,-0.44097)
+  --(-2.15250,-0.50430)
+  --(-1.98583,-0.56097)
+  --(-1.81917,-0.61097)
+  --(-1.65250,-0.65430)
+  --(-1.48583,-0.69097)
+  --(-1.31917,-0.72097)
+  --(-1.15250,-0.74430)
+  --(-0.98583,-0.76097)
+  --(-0.81917,-0.77097)
+  --(-0.65250,-0.77430)
+  --(-0.48583,-0.77097)
+  --(-0.31917,-0.76097)
+  --(-0.15250,-0.74430)
+  --(0.01417,-0.72097)
+  --(0.18083,-0.69097)
+  --(0.34750,-0.65430)
+  --(0.51417,-0.61097)
+  --(0.68083,-0.56097)
+  --(0.84750,-0.50430)
+  --(1.01417,-0.44097)
+  --(1.18083,-0.37097)
+  --(1.34750,-0.29430)
+  --(1.40187,-0.24262)
+  --(1.45625,-0.18861)
+  --(1.51063,-0.13226)
+  --(1.56500,-0.07358)
+  --(1.61938,-0.01256)
+  --(1.67375,0.05080)
+  --(1.72812,0.11649)
+  --(1.78250,0.18452)
+  --(1.83688,0.25489)
+  --(1.89125,0.32759)
+  --(1.94562,0.40263)
+  --(2.00000,0.48000)
+  --(2.05437,0.55971)
+  --(2.10875,0.64176)
+  --(2.16312,0.72614)
+  --(2.21750,0.81286)
+  --(2.27188,0.90191)
+  --(2.32625,0.99330)
+  --(2.38063,1.08703)
+  --(2.43500,1.18309)
+  --(2.48937,1.28149)
+  --(2.54375,1.38222)
+  --(2.59813,1.48529)
+  --(2.65250,1.59070)
+  --(2.48583,1.51403)
+  --(2.31917,1.44403)
+  --(2.15250,1.38070)
+  --(1.98583,1.32403)
+  --(1.81917,1.27403)
+  --(1.65250,1.23070)
+  --(1.48583,1.19403)
+  --(1.31917,1.16403)
+  --(1.15250,1.14070)
+  --(0.98583,1.12403)
+  --(0.81917,1.11403)
+  --(0.65250,1.11070)
+  --(0.48583,1.11403)
+  --(0.31917,1.12403)
+  --(0.15250,1.14070)
+  --(-0.01417,1.16403)
+  --(-0.18083,1.19403)
+  --(-0.34750,1.23070)
+  --(-0.51417,1.27403)
+  --(-0.68083,1.32403)
+  --(-0.84750,1.38070)
+  --(-1.01417,1.44403)
+  --(-1.18083,1.51403)
+  --(-1.34750,1.59070)
+  --(-1.40187,1.48529)
+  --(-1.45625,1.38222)
+  --(-1.51063,1.28149)
+  --(-1.56500,1.18309)
+  --(-1.61938,1.08703)
+  --(-1.67375,0.99330)
+  --(-1.72812,0.90191)
+  --(-1.78250,0.81286)
+  --(-1.83688,0.72614)
+  --(-1.89125,0.64176)
+  --(-1.94562,0.55971)
+  --(-2.00000,0.48000)
+  --(-2.05437,0.40263)
+  --(-2.10875,0.32759)
+  --(-2.16312,0.25489)
+  --(-2.21750,0.18452)
+  --(-2.27188,0.11649)
+  --(-2.32625,0.05080)
+  --(-2.38063,-0.01256)
+  --(-2.43500,-0.07358)
+  --(-2.48937,-0.13226)
+  --(-2.54375,-0.18861)
+  --(-2.59813,-0.24262) --cycle;
+\foreach \vv in {-1.45,-.9,-.3,.3,.9,1.45}{
+ \draw[manifoldblue!48,thin] plot[domain=-2:2,samples=35]
+  ({\x+.45*\vv},{.65*\vv+.12*\x*\x+.08*\vv*\vv});}
+\foreach \uu in {-2,-1.5,-1,-.5,0,.5,1,1.5,2}{
+ \draw[manifoldblue!48,thin] plot[domain=-1.45:1.45,samples=30]
+  ({\uu+.45*\x},{.65*\x+.12*\uu*\uu+.08*\x*\x});}
+\foreach \vv in {-1.45,1.45}{
+ \draw[manifoldblue!75!black,thick] plot[domain=-2:2,samples=35]
+  ({\x+.45*\vv},{.65*\vv+.12*\x*\x+.08*\vv*\vv});}
+\foreach \uu in {-2,2}{
+ \draw[manifoldblue!75!black,thick] plot[domain=-1.45:1.45,samples=30]
+  ({\uu+.45*\x},{.65*\x+.12*\uu*\uu+.08*\x*\x});}
+\draw[manifoldred,very thick] plot[domain=-1.75:1.75,samples=40]
+ ({\x},{.12*\x*\x});
+\fill[manifoldred] (0,0) circle (2.5pt) node[below left,font=\small] {$p$};
+\draw[->,very thick,manifoldred] (0,0)--(1.35,0);
+\node[font=\small,manifoldred] at (-1.77,.57) {$\gamma$};
+\node[font=\small\bfseries,manifoldblue!75!black] at (2.92,1.65) {$M$};
+\node[font=\small,manifoldgreen!55!black] at (-2.0,-1.30) {$p+T_pM$};
+\draw[->,manifoldgreen!60!black,thin] (-1.9,-1.10)--(-1.5,-.75);
+\node[font=\small,manifoldred] at (1.7,-1.30) {$v=\gamma'(0)$};
+\draw[->,manifoldred,thin] (1.45,-1.08)--(1.08,-.10);
+\end{tikzpicture}
+\caption{Przestrzeń styczna: zielony równoległobok przedstawia afiniczną
+płaszczyznę $p+T_pM$ przy osadzonej powierzchni $M$. Czerwona krzywa
+$\gamma$ leży na $M$, a wektor $v=\gamma'(0)$ leży w płaszczyźnie stycznej.
+Siatka powierzchni odchyla się od tej płaszczyzny poza punktem $p$.}
+\label{fig:tangent}
+\end{figure}
+
+
+\subsection*{Zmiana współrzędnych wektora stycznego}
+
+\begin{fakt}
+Niech $(U,\varphi)$ i $(V,\psi)$ będą mapami wokół $p\in M$, a
+$[\gamma]\in T_pM$, gdzie
+\[
+\gamma:(-\varepsilon,\varepsilon)\to M,
+\qquad
+\gamma(0)=p.
+\]
+Współrzędne wektora $[\gamma]$ w mapie $\varphi$ są dane przez
+\[
+[\gamma]_{\varphi}:=(\varphi\circ\gamma)'(0)\in\R^n,
+\]
+a w mapie $\psi$ przez
+\[
+[\gamma]_{\psi}:=(\psi\circ\gamma)'(0).
+\]
+Wtedy
+\[
+\boxed{
+[\gamma]_{\psi}
+=
+D(\psi\circ\varphi^{-1})(\varphi(p))\,[\gamma]_{\varphi}.
+}
+\]
+\end{fakt}
+
+\begin{proof}
+Ponieważ
+\[
+\psi\circ\gamma
+=
+(\psi\circ\varphi^{-1})\circ(\varphi\circ\gamma),
+\]
+z reguły łańcuchowej otrzymujemy
+\[
+(\psi\circ\gamma)'(0)
+=
+D(\psi\circ\varphi^{-1})(\varphi(p))
+\,(\varphi\circ\gamma)'(0),
+\]
+czyli dokładnie
+\[
+[\gamma]_{\psi}
+=
+D(\psi\circ\varphi^{-1})(\varphi(p))\,[\gamma]_{\varphi}.
+\]
+\end{proof}
+
+
+\begin{przyklad}[Zmiana współrzędnych wektora stycznego na $\mathbb{RP}^2$]
+\label{prz:RP2-styczna-1}
+Wróćmy do map z przykładu~\ref{prz:RP2-przejscie-1}:
+punkt $[1:u:v]$, gdzie $u\ne0$, ma w drugiej mapie współrzędne
+$(a,b)=(1/u,v/u)$. Zastosujemy do tego przejścia właśnie udowodnioną
+regułę zmiany współrzędnych wektora stycznego.
+
+Odwzorowanie $\varphi_1\circ\varphi_0^{-1}$ opisuje zmianę
+\emph{współrzędnych punktów} rozmaitości. Jego różniczka opisuje natomiast
+odpowiadającą jej zmianę \emph{współrzędnych wektorów stycznych}.
+
+Niech $p\in U_0\cap U_1$ oraz
+\[
+\varphi_0(p)=(u,v).
+\]
+Mapy $\varphi_0$ i $\varphi_1$ wyznaczają dwie bazy przestrzeni stycznej
+$T_p\mathbb{RP}^2$:
+\[
+\left\{
+\left.\frac{\partial}{\partial u}\right|_p,
+\left.\frac{\partial}{\partial v}\right|_p
+\right\},
+\qquad
+\left\{
+\left.\frac{\partial}{\partial a}\right|_p,
+\left.\frac{\partial}{\partial b}\right|_p
+\right\}.
+\]
+Jeżeli wektor $X\in T_p\mathbb{RP}^2$ ma w bazie indukowanej przez
+$\varphi_0$ współrzędne
+\[
+X
+=
+\dot u\left.\frac{\partial}{\partial u}\right|_p
++
+\dot v\left.\frac{\partial}{\partial v}\right|_p,
+\]
+to jego współrzędne w bazie indukowanej przez $\varphi_1$ otrzymujemy,
+stosując różniczkę odwzorowania przejścia:
+\[
+\begin{pmatrix}
+\dot a\\[1mm]
+\dot b
+\end{pmatrix}
+=
+D(\varphi_1\circ\varphi_0^{-1})(u,v)
+\begin{pmatrix}
+\dot u\\[1mm]
+\dot v
+\end{pmatrix}.
+\]
+A zatem
+\[
+\dot a=-\frac{\dot u}{u^2},
+\qquad
+\dot b
+=
+-\frac{v\dot u}{u^2}
++
+\frac{\dot v}{u}.
+\]
+Ten sam wektor styczny możemy więc zapisać jako
+\[
+X
+=
+\dot u\left.\frac{\partial}{\partial u}\right|_p
++
+\dot v\left.\frac{\partial}{\partial v}\right|_p
+=
+\dot a\left.\frac{\partial}{\partial a}\right|_p
++
+\dot b\left.\frac{\partial}{\partial b}\right|_p.
+\]
+
+Innymi słowy, odwzorowanie przejścia
+$\varphi_1\circ\varphi_0^{-1}$ zmienia współrzędne punktu na rozmaitości,
+natomiast jego różniczka
+\[
+d(\varphi_1\circ\varphi_0^{-1})_{\varphi_0(p)}
+\]
+zmienia reprezentację współrzędnościową tego samego wektora
+$X\in T_p\mathbb{RP}^2$ względem baz przestrzeni stycznej indukowanych
+przez obie mapy.
+\end{przyklad}
+
+\section{Przestrzeń kostyczna}\label{sec:przestrzen-kostyczna}
+
+\begin{definicja}
+\emph{Przestrzenią kostyczną} do $M$ w punkcie $p$ nazywamy przestrzeń dualną
+$T_p^*M:=(T_pM)^*$, tzn.\ przestrzeń funkcjonałów liniowych $T_pM\to\R$. Jej elementy
+nazywamy \emph{kowektorami} w $p$.
+\end{definicja}
+
+Dla $f\in C^\infty(M)$ definiujemy \emph{różniczkę} $f$ w punkcie $p$, $df_p\in T_p^*M$,
+wzorem
+\[
+df_p(v):=v(f), \qquad v\in T_pM
+\]
+(korzystając z utożsamienia $T_pM=T_p^CM$ — wektor styczny $v$ jest derywacją, a $v(f)\in
+\R$ jest dobrze określoną liczbą). Odwzorowanie $df_p$ jest liniowe względem $v$ (z
+definicji przestrzeni wektorowej derywacji), a więc istotnie $df_p\in T_p^*M$.
+
+Niech $(U,\varphi)$, gdzie $\varphi=(x^1,\dots,x^n)$, będzie mapą wokół $p$. Rozpatrzmy różniczki funkcji
+współrzędnościowych, $dx^i_p\in T_p^*M$ (traktując lokalnie zdefiniowaną funkcję
+$x^i=\varphi^i$ jako element $C^\infty$ w otoczeniu $p$; z Lematu~\ref{lem:lokalnosc} o
+lokalności derywacji, wartość $v(x^i)$ obliczamy na dowolnej funkcji
+gładkiej na $M$, która zgadza się z $x^i$ blisko $p$; funkcję taką
+otrzymujemy przez odcięcie wewnątrz $U$ i przedłużenie przez zero).
+
+\begin{fakt}\label{fakt:dual-baza}
+$dx^i_p\Big(\dfrac{\partial}{\partial x^j}\Big|_p\Big)=\delta^i_j$.
+\end{fakt}
+\begin{proof}
+Z definicji, $dx^i_p\big(\partial/\partial x^j|_p\big)=\frac{\partial}{\partial x^j}
+\Big|_p(x^i)=\frac{\partial(x^i\circ\varphi^{-1})}{\partial x^j}(\varphi(p))$. Ale
+$x^i\circ\varphi^{-1}\colon\varphi(U)\to\R$ to rzutowanie na $i$-tą współrzędną,
+$y\mapsto y^i$, którego pochodna cząstkowa po $j$-tej zmiennej wynosi $\delta^i_j$ w
+każdym punkcie.
+\end{proof}
+
+Przypomnijmy ogólny fakt z algebry liniowej.
+
+\begin{fakt}[Baza dualna]\label{fakt:baza-dualna}
+Jeśli $e_1,\dots,e_n$ jest bazą przestrzeni wektorowej $V$ (wymiaru $n$), a $e^1,\dots,
+e^n\in V^*$ są funkcjonałami spełniającymi $e^i(e_j)=\delta^i_j$, to $e^1,\dots,e^n$ jest
+bazą $V^*$ (,,bazą dualną'' do $e_1,\dots,e_n$).
+\end{fakt}
+\begin{proof}
+Rozpinanie: dla dowolnego $\omega\in V^*$, kładziemy $c_i:=\omega(e_i)$ i sprawdzamy, że
+$\omega=\sum_ic_ie^i$ — obie strony, jako funkcjonały liniowe, pokrywają się na bazie
+$e_1,\dots,e_n$: $\big(\sum_ic_ie^i\big)(e_j)=\sum_ic_i\delta^i_j=c_j=\omega(e_j)$;
+funkcjonały liniowe pokrywające się na bazie są równe. Niezależność liniowa: jeśli
+$\sum_ic_ie^i=0$, to podstawiając $e_j$ dla każdego $j$: $0=\sum_ic_i\delta^i_j=c_j$.
+Zatem układ $e^1,\dots,e^n$ rozpina $V^*$ i jest liniowo niezależny, czyli jest bazą (w
+szczególności $\dim V^*=\dim V=n$).
+\end{proof}
+
+Łącząc Fakt~\ref{fakt:dual-baza} z Faktem~\ref{fakt:baza-dualna} (dla $V=T_pM$, $e_i=
+\partial/\partial x^i|_p$, $e^i=dx^i_p$), otrzymujemy odpowiedź na pytanie postawione we
+wstępie: \emph{kowektory $dx^1_p,\dots,dx^n_p$ stanowią bazę $T_p^*M$ dokładnie dlatego, że
+są bazą dualną do bazy $\{\partial/\partial x^i|_p\}$ przestrzeni stycznej} — żaden
+dodatkowy argument nie jest potrzebny, wystarczy ogólny fakt algebry liniowej o istnieniu
+i jednoznaczności bazy dualnej.
+
+\begin{stwierdzenie}
+Dla $f\in C^\infty(M)$,
+\[
+df_p=\sum_{i=1}^n\frac{\partial f}{\partial x^i}\Big|_p\,dx^i_p.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Obie strony są elementami $T_p^*M$; wystarczy sprawdzić, że działają tak samo na każdym
+wektorze bazy $\partial/\partial x^j|_p$. Lewa strona: $df_p(\partial/\partial x^j|_p)=
+\frac{\partial}{\partial x^j}\big|_p(f)$ z definicji $df_p$. Prawa strona, na mocy
+Faktu~\ref{fakt:dual-baza}: $\sum_i\frac{\partial f}{\partial x^i}\big|_p\,dx^i_p
+(\partial/\partial x^j|_p)=\sum_i\frac{\partial f}{\partial x^i}\Big|_p\delta^i_j=
+\frac{\partial f}{\partial x^j}\Big|_p$. Obie strony są równe.
+\end{proof}
+\section{Wiązki wektorowe}\label{sec:wiazki-wektorowe}
+
+\begin{definicja}
+\emph{Wiązką wektorową} rzędu $k$ nad rozmaitością gładką $M$ (wymiaru $n$) nazywamy
+rozmaitość gładką $E$ (wymiaru $n+k$) wraz z odwzorowaniem gładkim $\pi\colon E\to M$
+(\emph{rzutowaniem}) takim, że:
+\begin{enumerate}[label=(\roman*)]
+\item dla każdego $p\in M$, włókno $E_p:=\pi^{-1}(p)$ jest wyposażone w strukturę
+$k$-wymiarowej rzeczywistej przestrzeni wektorowej;
+\item (lokalna trywializacja) każdy punkt $p\in M$ posiada otoczenie otwarte $U$ oraz
+dyfeomorfizm $\Psi\colon\pi^{-1}(U)\to U\times\R^k$ z $\mathrm{pr}_1\circ\Psi=\pi$ na
+$\pi^{-1}(U)$, taki że dla każdego $q\in U$, obcięcie $\Psi|_{E_q}\colon E_q\to\{q\}\times
+\R^k\cong\R^k$ jest izomorfizmem liniowym.
+\end{enumerate}
+\end{definicja}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=1.05,line cap=round]
+\fill[manifoldblue!12] (-3.1,1.0)
+ .. controls (-2.1,.92) and (-1.1,1.15) .. (0,1.04)
+ .. controls (1.1,.94) and (2.1,1.18) .. (3.1,1.08)
+ --(3.1,-.39)
+ .. controls (2.1,-.30) and (1.1,-.52) .. (0,-.43)
+ .. controls (-1.1,-.35) and (-2.1,-.55) .. (-3.1,-.47) --cycle;
+\draw[manifoldblue!75!black,very thick]
+ plot[domain=-3.1:3.1,samples=35] ({\x},{1.04+.10*sin(50*\x)});
+\draw[manifoldblue!75!black,thick]
+ plot[domain=-3.1:3.1,samples=35] ({\x},{-.43+.10*sin(50*\x)});
+\foreach \xx in {-2.65,-1.95,-1.3,-.65,.65,1.3,1.95,2.65}
+ \draw[manifoldblue!52,thin] (\xx,{-.43+.10*sin(50*\xx)})
+ --(\xx,{1.04+.10*sin(50*\xx)});
+\draw[manifoldgreen!65!black,very thick] (0,-.43)--(0,1.04);
+\draw[manifoldgreen!65!black,very thick]
+ plot[domain=-3.15:3.15,samples=40] ({\x},{-2.04+.10*sin(50*\x)});
+\fill[manifoldred] (0,.42) circle (2.6pt) node[right,font=\small] {$e\in E_p$};
+\fill[manifoldred] (0,-2.04) circle (2.6pt) node[below,font=\small] {$p=\pi(e)$};
+\draw[->,thick,manifoldred] (0,-.52)--(0,-1.9)
+ node[midway,right,font=\small] {$\pi$};
+\node[manifoldblue!75!black,font=\large\bfseries] at (-2.9,1.4) {$E$};
+\node[manifoldgreen!60!black,font=\large\bfseries] at (3.45,-2.03) {$M$};
+\end{tikzpicture}
+\caption{Lokalny obraz wiązki $\pi\colon E\to M$. Wyróżniono wektor $e$ i jego rzut $\pi(e)=p$. Włókna narysowano jako fragmenty prostych; ogólnie mają wymiar $k$.}
+\label{fig:diagram-wiazki}
+\end{figure}
+
+
+
+
+
+
+
+\begin{definicja}[Trywializacja wiązki]
+\index{trywializacja wiazki@Trywializacja wiązki}
+Niech $\pi\colon E\to M$ będzie wiązką wektorową rzędu $k$. \emph{Trywializacją}
+nad otwartym zbiorem $U\subseteq M$ nazywamy dyfeomorfizm
+\[
+\Phi\colon\pi^{-1}(U)\longrightarrow U\times\mathbb R^k
+\]
+spełniający $\operatorname{pr}_1\circ\Phi=\pi$, taki że dla każdego $p\in U$
+obcięcie $\Phi|_{E_p}$ jest izomorfizmem liniowym włókna $E_p$ na
+$\{p\}\times\mathbb R^k\cong\mathbb R^k$.
+\end{definicja}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=.95,line cap=round]
+\fill[manifoldblue!13] (-4.4,1.16)
+ .. controls (-3.55,1.22) and (-2.2,.93) .. (-1.35,.98)
+ --(-1.35,-.46)
+ .. controls (-2.2,-.51) and (-3.55,-.23) .. (-4.4,-.28) --cycle;
+\draw[manifoldblue!75!black,thick]
+ plot[domain=-4.4:-1.35,samples=25] ({\x},{1.08+.11*sin(52*\x)});
+\draw[manifoldblue!75!black,thick]
+ plot[domain=-4.4:-1.35,samples=25] ({\x},{-.36+.11*sin(52*\x)});
+\foreach \xx in {-3.9,-3.35,-2.8,-2.25,-1.7}
+ \draw[manifoldblue!50,thin] (\xx,{-.36+.11*sin(52*\xx)})
+ --(\xx,{1.08+.11*sin(52*\xx)});
+\fill[manifoldgreen!13] (1.35,-.36) rectangle (4.4,1.08);
+\draw[manifoldgreen!65!black,thick] (1.35,-.36) rectangle (4.4,1.08);
+\foreach \xx in {1.85,2.4,2.95,3.5,4.05}
+ \draw[manifoldgreen!55,thin] (\xx,-.36)--(\xx,1.08);
+\fill[manifoldred] (-2.8,.6) circle (2.4pt)
+ node[below,font=\small] {$e\in E_p$};
+\fill[manifoldred] (2.95,.6) circle (2.4pt)
+ node[below,font=\small] {$\Phi(e)=(p,a)$};
+\draw[->,very thick,manifoldred] (-1.14,.39)--(1.12,.39)
+ node[midway,above,font=\small] {$\Phi$};
+\draw[manifoldblue!75!black,thick]
+ plot[domain=-4.4:-1.35,samples=25] ({\x},{-1.6+.07*sin(52*\x)});
+\draw[manifoldgreen!65!black,thick] (1.35,-1.6)--(4.4,-1.6);
+\fill[manifoldred] (-2.8,-1.6) circle (2.2pt) node[below,font=\small] {$p$};
+\fill[manifoldred] (2.95,-1.6) circle (2.2pt) node[below,font=\small] {$p$};
+\draw[->,manifoldblue!70!black,thick] (-2.8,-.47)--(-2.8,-1.4)
+ node[midway,left,font=\small] {$\pi$};
+\draw[->,manifoldgreen!65!black,thick] (2.95,-.47)--(2.95,-1.4)
+ node[midway,right,font=\small] {$\operatorname{pr}_1$};
+\draw[->,manifoldgold!75!black,thick] (-1.12,-1.6)--(1.12,-1.6)
+ node[midway,above,font=\small] {$\mathrm{id}_U$};
+\node[manifoldblue!75!black,font=\small\bfseries] at (-2.85,1.5) {$E|_U$};
+\node[manifoldgreen!65!black,font=\small\bfseries] at (2.9,1.5) {$U\times\R^k$};
+\end{tikzpicture}
+\caption{Trywializacja $\Phi\colon E|_U\to U\times\R^k$ jest liniowa na włóknach i zachowuje punkt bazy: $\operatorname{pr}_1\circ\Phi=\pi$. Linie przedstawiają włókna schematycznie.}
+\label{fig:trywializacja}
+\end{figure}
+
+\begin{definicja}[Sekcja wiązki wektorowej]
+\index{sekcja wiazki wektorowej@Sekcja wiązki wektorowej}
+Niech $\pi\colon E\to M$ będzie wiązką wektorową. \emph{Sekcją}
+(inaczej: \emph{przekrojem}) wiązki $E$ nazywamy
+gładkie odwzorowanie $s\colon M\to E$ spełniające
+\[
+\pi\circ s=\id_M.
+\]
+Zatem dla każdego $p\in M$ mamy $s(p)\in E_p$. Sekcja wybiera dokładnie jeden wektor
+z każdego włókna i robi to w sposób gładki.
+\end{definicja}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=1.06,line cap=round]
+\fill[manifoldblue!11] (-3.05,1.07)
+ .. controls (-1.8,.99) and (-.8,1.22) .. (0,1.13)
+ .. controls (1.6,1.05) and (2.2,1.27) .. (3.05,1.19)
+ --(3.05,-.32)
+ .. controls (2.2,-.26) and (1.6,-.46) .. (0,-.38)
+ .. controls (-.8,-.29) and (-1.8,-.52) .. (-3.05,-.44) --cycle;
+\draw[manifoldblue!75!black,thick]
+ plot[domain=-3.05:3.05,samples=34] ({\x},{1.13+.11*sin(48*\x)});
+\draw[manifoldblue!75!black,thick]
+ plot[domain=-3.05:3.05,samples=34] ({\x},{-.38+.11*sin(48*\x)});
+\foreach \xx in {-2.65,-1.95,-1.3,-.65,0,.65,1.3,1.95,2.65}
+ \draw[manifoldblue!50,thin] (\xx,{-.38+.11*sin(48*\xx)})
+ --(\xx,{1.13+.11*sin(48*\xx)});
+\draw[manifoldgreen!65!black,very thick]
+ plot[domain=-3.12:3.12,samples=38] ({\x},{-1.85+.09*sin(48*\x)});
+\draw[manifoldred,very thick]
+ plot[domain=-3.05:3.05,samples=40] ({\x},{.34+.13*sin(48*\x)});
+\fill[manifoldred] (0,.34) circle (2.6pt) node[above left,font=\small] {$s(p)$};
+\fill[manifoldred] (0,-1.85) circle (2.6pt) node[below,font=\small] {$p$};
+\draw[->,manifoldred,thick] (0,-.5)--(0,-1.7)
+ node[midway,right,font=\small] {$\pi$};
+\node[font=\small\bfseries,manifoldred!85!black] at (3.7,.72) {$s(U)$};
+\node[font=\small\bfseries,manifoldgreen!65!black] at (3.43,-2.22) {$U\subset M$};
+\node[font=\small,manifoldblue!75!black] at (-3.5,1.35) {$E|_U$};
+\end{tikzpicture}
+\caption{Sekcja $s$ wybiera dokładnie jeden wektor $s(p)$ w każdym włóknie nad $p$. Czerwona krzywa przedstawia jej obraz nad pokazanym fragmentem $U$.}
+\label{fig:sekcja}
+\end{figure}
+
+\begin{przyklad}[Sekcja zerowa]
+Każda wiązka wektorowa posiada naturalną \emph{sekcję zerową}
+\[
+s_0\colon M\to E,\qquad s_0(p)=0_p,
+\]
+gdzie $0_p$ jest wektorem zerowym we włóknie $E_p$.
+Gładkość wynika z lokalnego zapisu $p\mapsto(p,0)$.
+\end{przyklad}
+
+
+\begin{przyklad}[Wiązka trywialna]
+Najprostszym przykładem jest $E=M\times\R^k$ z $\pi=\mathrm{pr}_1$ i $\Psi=\id$ — wiązka ta
+nosi nazwę \emph{trywialnej}.
+\end{przyklad}
+
+Izomorfizmem wiązek nad $M$ nazywamy dyfeomorfizm przestrzeni
+całkowitych zachowujący punkt bazy i liniowy na każdym włóknie.
+Nie każda wiązka wektorowa jest (globalnie) izomorficzna z wiązką trywialną — mimo że
+lokalnie, z definicji, każda wiązka ,,wygląda jak'' trywialna. Poniższy klasyczny przykład
+ilustruje to zjawisko w najprostszym możliwym przypadku.
+
+\begin{przyklad}[Wstęga Möbiusa jako nietrywialna wiązka rzędu 1]\label{prz:mobius}
+Niech $M=S^1=\R/2\pi\Z$. Wstęgę Möbiusa można zdefiniować jako przestrzeń
+ilorazową
+\[
+E:=\big([0,2\pi]\times\R\big)\big/\!\sim,
+\qquad
+(0,t)\sim(2\pi,-t),
+\]
+z rzutowaniem
+\[
+\pi\colon E\longrightarrow S^1,\qquad
+\pi([\theta,t])=[\theta].
+\]
+Włókno nad punktem $[\theta]\in S^1$ jest kopią $\R$:
+\[
+E_{[\theta]}=\pi^{-1}([\theta])\cong\R.
+\]
+W szczególności $E$ ma wymiar $2$, natomiast baza $S^1$ ma wymiar $1$.
+
+\medskip
+\emph{Dlaczego jest to wiązka wektorowa?}
+Jeżeli $I\subset S^1$ jest otwartym łukiem, który nie zawiera punktu
+odpowiadającego jednocześnie $\theta=0$ i $\theta=2\pi$, można wybrać jednoznacznego
+reprezentanta kąta $\theta$ w przedziale odpowiadającym $I$. Wtedy
+\[
+\Psi_I\colon \pi^{-1}(I)\longrightarrow I\times\R,
+\qquad
+[\theta,t]\longmapsto([\theta],t)
+\]
+jest lokalną trywializacją i na każdym włóknie jest izomorfizmem liniowym.
+Także punkt sklejenia ma trywializację. Na łuku
+$I_0=\{[a]:-\varepsilon<a<\varepsilon\}$, gdzie $0<\varepsilon<\pi$,
+jej odwrotność jest dana przez
+\[
+ ([a],v)\longmapsto
+ \begin{cases}
+ [a,v],&a\geq0,\\
+ [a+2\pi,-v],&a<0.
+ \end{cases}
+\]
+W punkcie $a=0$ zgodność zapewnia identyfikacja końców.
+Jest to homeomorfizm z $I_0\times\R$ na $\pi^{-1}(I_0)$:
+w topologii ilorazowej otoczenie sklejonego punktu obejmuje
+oba przyległe półpasy. Przejścia z poprzednią trywializacją
+są $(p,v)\mapsto(p,v)$ po jednej stronie łuku i
+$(p,v)\mapsto(p,-v)$ po drugiej, więc są gładkie.
+Te mapy określają strukturę gładką na $E$. Punkty o różnych
+podstawach rozdzielamy otoczeniami w $S^1$, a punkty tego samego
+włókna w jednej trywializacji; zatem $E$ jest Hausdorffa.
+Dwie trywializacje nad łukami dają przeliczalną bazę $E$.
+Po obejściu całej bazy współrzędna włókna zmienia znak:
+\[
+t\longmapsto -t.
+\]
+Jest to istotna informacja globalna: lokalnie wiązka jest nierozróżnialna od
+$S^1\times\R$, ale globalnie nie można wybrać w niej spójnie jednego kierunku
+w każdym włóknie.
+
+W języku funkcji przejścia można to zapisać jeszcze prościej. Dla wiązki rzędu $1$
+funkcje przejścia przyjmują wartości w
+$\mathrm{GL}(1,\R)=\R^\times$. W przypadku wstęgi Möbiusa pojawia się
+przejście
+\[
+g=-1,
+\]
+podczas gdy dla wiązki trywialnej można wybrać $g=+1$. Znak $-1$ jest właśnie
+algebraicznym zapisem ``odwrócenia'' włókna przy jednym pełnym okrążeniu bazy.
+\end{przyklad}
+
+\begin{figure}[h]
+\centering
+\begin{minipage}{0.43\textwidth}
+\centering
+\begin{tikzpicture}[>=Stealth,scale=0.82]
+  \fill[manifoldblue!8] (0,-1.25) rectangle (6.3,1.25);
+  \draw[thick,manifoldblue] (0,-1.25) rectangle (6.3,1.25);
+  \foreach \x in {0.9,1.8,2.7,3.6,4.5,5.4}
+    \draw[manifoldblue!35] (\x,-1.25)--(\x,1.25);
+  \draw[very thick,->,manifoldred] (-0.05,1.05) -- (-0.05,-1.05);
+  \draw[very thick,->,manifoldred] (6.35,-1.05) -- (6.35,1.05);
+  \node[above] at (0,1.28) {$0$};
+  \node[above] at (6.3,1.28) {$2\pi$};
+  \node[manifoldred] at (3.15,-1.65) {$t\mapsto-t$};
+\end{tikzpicture}
+
+\smallskip
+\small (a) Prostokąt przed sklejeniem
+\end{minipage}
+\hfill
+\begin{minipage}{0.53\textwidth}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=\linewidth,
+  height=5.4cm,
+  view={55}{25},
+  axis lines=none,
+  ticks=none,
+  z buffer=sort,
+  clip=false
+]
+\addplot3[
+  surf,
+  shader=faceted,
+  faceted color=manifoldgreen!55!black,
+  draw=manifoldgreen!70!black,
+  domain=0:360,
+  y domain=-0.55:0.55,
+  samples=34,
+  samples y=8
+]
+({(1+y*cos(x/2))*cos(x)},
+ {(1+y*cos(x/2))*sin(x)},
+ {y*sin(x/2)});
+\end{axis}
+\end{tikzpicture}
+
+\smallskip
+\small (b) Model geometryczny w $\R^3$
+\end{minipage}
+\caption{Wstęga Möbiusa: (a) konstrukcja przez sklejenie boków prostokąta z
+odwróceniem współrzędnej włókna, (b) odpowiadająca jej klasyczna powierzchnia
+zanurzona w $\R^3$. Parametryzacja w części (b) ma postać
+$x=(1+t\cos(\theta/2))\cos\theta$,
+$y=(1+t\cos(\theta/2))\sin\theta$,
+$z=t\sin(\theta/2)$. Rysunek pokazuje tylko pas $|t|\leq0.55$;
+w całej wiązce wektorowej $t$ przebiega $\R$.}
+\label{fig:mobius}
+\end{figure}
+
+\begin{stwierdzenie}[Nietrywialność wstęgi Möbiusa]
+Wiązka $E$ z Przykładu~\ref{prz:mobius} nie jest izomorficzna jako wiązka wektorowa
+z wiązką trywialną $S^1\times\R$.
+\end{stwierdzenie}
+
+\begin{proof}
+Niech $q\colon[0,2\pi]\times\R\to E$ oznacza rzutowanie ilorazowe. Każdej ciągłej
+funkcji $f\colon[0,2\pi]\to\R$ spełniającej
+\[
+f(2\pi)=-f(0)
+\]
+odpowiada ciągły przekrój
+\[
+s_f\colon S^1\to E,\qquad s_f([\theta])=q(\theta,f(\theta)).
+\]
+Warunek brzegowy jest dokładnie warunkiem dobrze określoności w punkcie sklejenia.
+Odwrotnie, każdy ciągły przekrój ma tę postać: nad przedziałem
+$[0,2\pi]$ wybieramy współrzędną włóknową $t$, a ciągłość w
+trywializacji przy sklejeniu daje ciągłość $f$ i podany warunek końcowy.
+Przekrój jest gładki dokładnie wtedy, gdy $f$ jest gładka na
+przedziale (z jednostronnymi pochodnymi na końcach) i
+$f^{(j)}(2\pi)=-f^{(j)}(0)$ dla każdego $j\geq0$.
+Sam warunek na wartości zapewnia ciągłość, lecz nie gładkość.
+
+Załóżmy, że $s_f$ jest nigdzie zerowa. Wtedy $f$ nie przyjmuje wartości $0$.
+Ponieważ $[0,2\pi]$ jest spójny, a $f$ jest ciągła, z twierdzenia o wartości
+pośredniej wynika, że $f$ ma stały znak. W szczególności $f(0)$ i $f(2\pi)$
+mają ten sam znak. Jest to niemożliwe, gdyż
+$f(2\pi)=-f(0)$ i $f(0)\neq0$.
+
+Zatem $E$ nie posiada nigdzie niezerowej sekcji. Natomiast wiązka trywialna
+$S^1\times\R$ posiada taką sekcję, mianowicie
+\[
+s(\theta)=(\theta,1).
+\]
+Gdyby istniał izomorfizm wiązek
+$\Psi\colon S^1\times\R\to E$, sekcja $\Psi\circ s$ byłaby nigdzie niezerową
+sekcją $E$, co daje sprzeczność. Zatem
+\[
+E\not\cong S^1\times\R.
+\]
+\end{proof}
+
+\begin{uwaga}[Interpretacja topologiczna]
+Wstęga Möbiusa jest przykładem wiązki wektorowej, która jest lokalnie trywialna,
+ale nie jest globalnie trywialna. To rozróżnienie jest fundamentalne:
+\[
+\boxed{\text{lokalnie trywialna}\ \not\Rightarrow\ \text{globalnie trywialna}.}
+\]
+Przestrzeń całkowita $E$, z włóknem $\R$, jest dwuwymiarową
+rozmaitością \emph{bez brzegu}; bywa nazywana otwartą wstęgą Möbiusa.
+Jej środkowy przekrój $\theta\mapsto[\theta,0]$ jest przekrojem zerowym.
+Dopiero ograniczenie $|t|\leq c$ dla $c>0$ daje zwartą wstęgę
+Möbiusa z brzegiem, widoczną na rysunku. Jej włókna są odcinkami,
+więc ten ograniczony pas nie jest wiązką wektorową.
+Odcinki $t=c$ i $t=-c$ sklejają się w jedną składową brzegu.
+\end{uwaga}
+
+\begin{przyklad}[Wiązka tautologiczna nad $\mathbb{RP}^1$]
+Przykład wstęgi Möbiusa ma bardzo naturalny związek z przestrzenią rzutową.
+Niech
+\[
+\gamma^1:=\{([x],v)\in\mathbb{RP}^1\times\R^2:\ v\in\operatorname{span}(x)\},
+\]
+gdzie $x\in\R^2\setminus\{0\}$ jest dowolnym reprezentantem klasy $[x]$.
+Włókno nad $[x]$ jest zatem prostą
+\[
+\gamma^1_{[x]}=\operatorname{span}(x)\subset\R^2.
+\]
+Jest to \emph{wiązka tautologiczna} (kanoniczna wiązka liniowa) nad $\mathbb{RP}^1$.
+
+Ponieważ $\mathbb{RP}^1$ jest dyfeomorficzna z okręgiem $S^1$, a przejście
+z kierunku $x$ do tego samego kierunku po jednym pełnym okrążeniu wymusza zmianę
+reprezentanta z $x$ na $-x$, wiązka $\gamma^1$ jest izomorficzna z wstęgą Möbiusa.
+Jest to więc drugi, geometryczny sposób zobaczenia tej samej nietrywialnej wiązki:
+w każdym punkcie przestrzeni rzutowej wybieramy \emph{linię} w $\R^2$, a nie
+wyróżniony wektor tej linii.
+Jawny izomorfizm nad dyfeomorfizmem baz
+$[\theta]\mapsto[\cos(\theta/2):\sin(\theta/2)]$ ma postać
+\[
+ [\theta,t]\longmapsto
+ \bigl([\cos(\theta/2):\sin(\theta/2)],
+       t(\cos(\theta/2),\sin(\theta/2))\bigr).
+\]
+Przy zwiększeniu $\theta$ o $2\pi$ wektor jednostkowy zmienia znak,
+który kompensuje identyfikacja $t\mapsto-t$. Wzór jest więc dobrze
+określony. W każdym łuku wybieramy gładko ten wektor jednostkowy;
+wtedy odwrotność odczytuje współczynnik $t$, co dowodzi gładkości
+obu kierunków i liniowości na włóknach.
+\end{przyklad}
+
+\subsection*{Wiązka styczna}
+
+Pokażemy, że zbiór $TM:=\bigsqcup_{p\in M}T_pM$ można w naturalny sposób wyposażyć w
+strukturę rozmaitości gładkiej wymiaru $2n$, tak by rzutowanie $\pi\colon TM\to M$,
+$\pi(v)=p$ dla $v\in T_pM$, było wiązką wektorową rzędu $n$.
+
+Niech $\{(U_\alpha,\varphi_\alpha)\}$ będzie atlasem na $M$, $\varphi_\alpha=(x^1_\alpha,
+\dots,x^n_\alpha)$. Definiujemy $\tilde U_\alpha:=\pi^{-1}(U_\alpha)\subseteq TM$ oraz
+\[
+\tilde\varphi_\alpha\colon\tilde U_\alpha\to\varphi_\alpha(U_\alpha)\times\R^n\subseteq
+\R^{2n}, \qquad \tilde\varphi_\alpha\Big(\sum_{i=1}^nv^i\,\frac{\partial}{\partial
+x^i_\alpha}\Big|_p\Big):=(\varphi_\alpha(p),\,v^1,\dots,v^n).
+\]
+Każde $\tilde\varphi_\alpha$ jest bijekcją na $\varphi_\alpha(U_\alpha)\times\R^n$ (dla
+ustalonego $p$, współrzędne $v^i$ względem bazy $\{\partial/\partial x^i_\alpha|_p\}$
+wyznaczają bijekcję liniową $T_pM\to\R^n$).
+
+Obliczmy odwzorowanie przejścia $\tilde\varphi_\beta\circ\tilde\varphi_\alpha^{-1}$. Ze
+wzoru na zmianę bazy pochodnych cząstkowych (reguła łańcucha zastosowana do funkcji
+przejścia $\varphi_\beta\circ\varphi_\alpha^{-1}$):
+\[
+\frac{\partial}{\partial x^i_\alpha}\bigg|_p=\sum_{j=1}^n\frac{\partial x^j_\beta}
+{\partial x^i_\alpha}(\varphi_\alpha(p))\;\frac{\partial}{\partial x^j_\beta}\bigg|_p
+\]
+(równość ta jest bezpośrednią konsekwencją definicji $\partial/\partial x^i_\alpha|_p$ jako
+funkcjonału $f\mapsto\partial(f\circ\varphi_\alpha^{-1})/\partial x^i(\varphi_\alpha(p))$
+oraz reguły łańcucha dla $f\circ\varphi_\alpha^{-1}=(f\circ\varphi_\beta^{-1})\circ
+(\varphi_\beta\circ\varphi_\alpha^{-1})$). Zatem wektor $v=\sum_iv^i\,\partial/\partial
+x^i_\alpha|_p$ ma we współrzędnych $\beta$ postać $w^j=\sum_i\frac{\partial x^j_\beta}
+{\partial x^i_\alpha}(\varphi_\alpha(p))\,v^i$, czyli $w=D(\varphi_\beta\circ
+\varphi_\alpha^{-1})(\varphi_\alpha(p))\cdot v$. Stąd
+\[
+\big(\tilde\varphi_\beta\circ\tilde\varphi_\alpha^{-1}\big)(x,v)=\Big(
+(\varphi_\beta\circ\varphi_\alpha^{-1})(x),\ D(\varphi_\beta\circ\varphi_\alpha^{-1})(x)
+\cdot v\Big).
+\]
+Najpierw określamy topologię na $TM$: zbiór $A\subset TM$
+jest otwarty wtedy i tylko wtedy, gdy każdy
+$\tilde\varphi_\alpha(A\cap\tilde U_\alpha)$ jest otwarty.
+Zmiany współrzędnych powyżej są homeomorfizmami, a ich dziedziny
+$\varphi_\alpha(U_\alpha\cap U_\beta)\times\R^n$ są otwarte.
+Wynika stąd, że $\tilde U_\alpha$ są otwarte, a
+$\tilde\varphi_\alpha$ są homeomorfizmami: obraz dowolnego otwartego
+zbioru z jednej mapy jest otwarty także w każdej nakładającej się mapie.
+Rzutowanie $\pi$ jest ciągłe, bo lokalnie ma postać $(x,v)\mapsto x$.
+Powyższa zmiana współrzędnych jest gładka: pierwsza składowa jest gładka jako odwzorowanie przejścia
+atlasu na $M$; druga jest liniowa w $v$ ze współczynnikami będącymi pochodnymi cząstkowymi
+$\varphi_\beta\circ\varphi_\alpha^{-1}$, a więc gładkimi funkcjami $x$. Zatem $\{(\tilde
+U_\alpha,\tilde\varphi_\alpha)\}$ jest atlasem na $TM$. Punkty o różnych
+podstawach rozdzielają przeciwobrazy rozłącznych otoczeń w $M$;
+dwa różne wektory w jednym włóknie rozdzielają kule w jednej mapie
+$\tilde\varphi_\alpha$. Stąd $TM$ jest Hausdorffa. Z przeliczalności
+bazy $M$ wybieramy przeliczalną rodzinę dziedzin map pokrywającą $M$.
+Obrazy tych map w $TM$ mają przeliczalne bazy euklidesowe, których
+przeciwobrazy tworzą przeliczalną bazę $TM$.
+
+Tak skonstruowana rozmaitość $TM$, wraz z rzutowaniem $\pi$ i lokalnymi trywializacjami
+$\Psi_\alpha=(\varphi_\alpha^{-1}\times\id)\circ\tilde\varphi_\alpha$, jest wiązką
+wektorową rzędu $n$ nad $M$ — \emph{wiązką styczną}.
+
+Analogicznie definiuje się \emph{wiązkę kostyczną} $T^*M:=\bigsqcup_{p\in M}T_p^*M$, z
+mapami $\tilde\varphi_\alpha^*\big(\sum_i\xi_i\,dx^i_\alpha|_p\big):=(\varphi_\alpha(p),
+\xi_1,\dots,\xi_n)$. Odwzorowanie przejścia oblicza się analogicznie — współczynniki
+$\xi_i$ transformują się \emph{kowariantnie}: jeśli $\omega=\sum_i\xi_i^\alpha
+dx^i_\alpha|_p=\sum_j\xi_j^\beta dx^j_\beta|_p$, to z reguły łańcucha $dx^i_\alpha|_p=
+\sum_j\frac{\partial x^i_\alpha}{\partial x^j_\beta}(\varphi_\beta(p))\,dx^j_\beta|_p$,
+skąd $\xi_j^\beta=\sum_i\xi_i^\alpha\frac{\partial x^i_\alpha}{\partial x^j_\beta}
+(\varphi_\beta(p))$ — co ponownie daje gładkie odwzorowania przejścia. Dowód, że $T^*M$
+jest wiązką wektorową rzędu $n$ nad $M$, dopełnia to samo sprawdzenie:
+punkty o różnych podstawach rozdzielają przeciwobrazy otoczeń bazy,
+punkty jednego włókna rozdzielają kule współrzędnych dualnych; bazy
+euklidesowe w przeliczalnym pokryciu map dają drugi aksjomat przeliczalności.
+
+\begin{definicja}
+\emph{Polem wektorowym} na $M$ nazywamy gładką sekcję wiązki stycznej, tzn.\ gładkie
+odwzorowanie $X\colon M\to TM$ z $\pi\circ X=\id_M$ (a więc $X(p)\in T_pM$ dla każdego
+$p$). \emph{Polem kowektorowym} na $M$ nazywamy gładką sekcję wiązki kostycznej $T^*M$.
+\end{definicja}
+\section{Funkcje przejścia i operacje na wiązkach}
+
+Lokalna trywialność pozwala opisywać wiązkę macierzami. Ta postać jest
+szczególnie użyteczna przy konstruowaniu wiązek normalnych podrozmaitości.
+Niech $\Psi_i:E|_{U_i}\to U_i\times\R^r$ będą trywializacjami i zapiszmy
+\[
+\Psi_j\Psi_i^{-1}(p,v)=(p,g_{ji}(p)v),\qquad
+g_{ji}:U_i\cap U_j\longrightarrow\mathrm{GL}(r,\R).
+\]
+Macierze $g_{ji}$ są gładkie; na przecięciach spełniają
+\[
+g_{ii}=I,\qquad g_{ij}=g_{ji}^{-1},\qquad
+g_{ki}=g_{kj}g_{ji}\quad\text{na }U_i\cap U_j\cap U_k.
+\tag{1.1}
+\]
+Ostatnia równość porównuje bezpośrednie przejście z $i$ do $k$
+z przejściem przez $j$; nazywamy ją warunkiem kocyklu.
+
+\begin{twierdzenie}[Sklejanie wiązki z funkcji przejścia]
+Niech $\{U_i\}$ będzie otwartym pokryciem rozmaitości $M$, a gładkie funkcje
+$g_{ji}:U_i\cap U_j\to\mathrm{GL}(r,\R)$ spełniają (1.1). Wtedy istnieje
+wiązka wektorowa rzędu $r$ o tych funkcjach przejścia.
+\end{twierdzenie}
+\begin{proof}
+W sumie rozłącznej $\bigsqcup_i(U_i\times\R^r)$ utożsamiamy
+$(p,v)_i$ z $(p,g_{ji}(p)v)_j$ dla $p\in U_i\cap U_j$. To rzeczywiście
+relacja równoważności: pierwsza i druga tożsamość w (1.1) dają zwrotność
+i symetrię, trzecia daje przechodniość. Niech $E$ będzie zbiorem klas i
+$\pi([p,v]_i)=p$. Dla każdego $i$ odwzorowanie
+\[
+\Psi_i:\pi^{-1}(U_i)\longrightarrow U_i\times\R^r,\qquad
+\Psi_i([p,v]_j)=(p,g_{ij}(p)v)
+\]
+jest dobrze określone: jeżeli $(p,v)_j\sim(p,w)_k$, to $w=g_{kj}v$,
+a $g_{ik}w=g_{ik}g_{kj}v=g_{ij}v$. Odwrotność wysyła $(p,v)$ na
+$[p,v]_i$. Nadajemy $E$ topologię, deklarując $A\subset E$ otwartym,
+gdy każde $\Psi_i(A\cap\pi^{-1}(U_i))$ jest otwarte w $U_i\times\R^r$.
+Zmiany trywializacji są homeomorfizmami między otwartymi podzbiorami,
+więc każda $\pi^{-1}(U_i)$ jest otwarta, a $\Psi_i$ jest homeomorfizmem.
+Łącząc $\Psi_i$ z mapami bazy $U_i$, otrzymujemy mapy do $\R^{\dim M+r}$.
+Na przecięciach zmiana współrzędnych to dokładnie
+$(p,v)\mapsto(p,g_{ji}(p)v)$, więc jest gładka i ma gładką odwrotność.
+Włókna dostają działania liniowe przeniesione z $\R^r$; są niezależne
+od wyboru trywializacji, bo $g_{ji}(p)$ jest liniowa. Otrzymujemy żądaną wiązkę.
+Uzasadnijmy jeszcze dwie własności topologiczne. Punkty o różnych obrazach
+w $M$ rozdzielamy przeciwobrazami rozłącznych otwartych otoczeń bazy;
+punkty jednego włókna rozdzielamy we wspólnej trywializacji, wybierając
+rozłączne otwarte kule wokół ich współrzędnych włóknowych. Stąd $E$ jest
+Hausdorffa. Z drugiej przeliczalności $M$ wynika istnienie przeliczalnego
+podpokrycia spośród $U_i$: dla każdego elementu przeliczalnej bazy,
+który mieści się w jakimś $U_i$, wybieramy jeden taki $U_i$.
+Te wybrane zbiory pokrywają $M$. Każde $U_i\times\R^r$
+z podpokrycia ma
+przeliczalną bazę, której obrazy przez $\Psi_i^{-1}$ razem dają
+przeliczalną bazę $E$.
+\end{proof}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=1.02,line cap=round]
+\node[font=\small] at (0,1.75) {ten sam $e\in E_p$, gdzie $p\in U_i\cap U_j$};
+\fill[manifoldblue!12] (-3,0) ellipse (1.27 and .83);
+\draw[manifoldblue!70!black,thick] (-3,0) ellipse (1.27 and .83);
+\draw[->,manifoldblue!45!black,thin] (-4.08,0)--(-1.96,0);
+\draw[->,manifoldblue!45!black,thin] (-3,-.62)--(-3,.63);
+\draw[->,manifoldred,very thick] (-3,0)--(-2.35,.47)
+ node[right,font=\small] {$v_i$};
+\fill[manifoldgreen!12] (3,0) ellipse (1.27 and .83);
+\draw[manifoldgreen!65!black,thick] (3,0) ellipse (1.27 and .83);
+\draw[->,manifoldgreen!45!black,thin] (1.92,0)--(4.04,0);
+\draw[->,manifoldgreen!45!black,thin] (3,-.62)--(3,.63);
+\draw[->,manifoldred,very thick] (3,0)--(3.79,.29)
+ node[right,font=\small] {$v_j$};
+\draw[->,very thick,manifoldgold!75!black] (-1.45,0)--(1.45,0)
+ node[midway,above,font=\small] {$g_{ji}(p)$};
+\node[font=\small,manifoldblue!75!black] at (-3,-1.2)
+ {$\Psi_i(E_p)=\{p\}\times\R^r$};
+\node[font=\small,manifoldgreen!65!black] at (3,-1.2)
+ {$\Psi_j(E_p)=\{p\}\times\R^r$};
+\node[font=\small\bfseries,manifoldred!85!black] at (0,-1.85)
+ {$v_j=g_{ji}(p)v_i$};
+\end{tikzpicture}
+\caption{Dwie trywializacje tego samego włókna $E_p$. Wektor $e$ ma współrzędne $v_i$ i $v_j$, związane macierzą przejścia $g_{ji}(p)$.}
+\end{figure}
+
+\begin{uwaga}[Grupa strukturalna]
+Wybór baz włókien daje funkcje o wartościach w $\mathrm{GL}(r,\R)$; jest to
+naturalna grupa strukturalna wiązki rzędu $r$. Jeżeli można dobrać
+trywializacje tak, aby wszystkie macierze przejścia należały do podgrupy
+$G\subseteq\mathrm{GL}(r,\R)$, mówimy o redukcji grupy strukturalnej do $G$.
+Na przykład lokalne bazy ortonormalne wiązki z iloczynem skalarnym mają
+macierze przejścia w $\mathrm{O}(r)$. Dla wiązki liniowej przejście $-1$
+po okrążeniu okręgu wyraża skręcenie wstęgi Möbiusa.
+\end{uwaga}
+
+\begin{przyklad}[Sekcje w zapisie lokalnym]
+Sekcja $s$ zapisuje się w trywializacji nad $U_i$ jako $s_i:U_i\to\R^r$. Na
+przecięciu $s_j(p)=g_{ji}(p)s_i(p)$. Odwrotnie, rodzina gładkich funkcji
+$s_i$ spełniająca te równości wyznacza jedną sekcję $s(p)=[p,s_i(p)]_i$;
+niezależność od indeksu to dokładnie warunek zgodności. Dla wstęgi
+Möbiusa można wybrać współrzędną na przedziale $[0,2\pi]$ i otrzymać
+warunek $s(2\pi)=-s(0)$. Ciągła funkcja rzeczywista spełniająca ten
+warunek musi mieć zero: jeśli wartość w początku jest niezerowa,
+na końcu ma przeciwny znak, więc stosujemy twierdzenie o wartości
+pośredniej; jeśli jest zerowa, teza jest natychmiastowa.
+\end{przyklad}
+
+\begin{definicja}[Suma i wiązka dualna]
+\index{suma i wiazka dualna@Suma i wiązka dualna}
+Dla wiązek $E,F$ nad tą samą bazą definiujemy włókna
+$(E\oplus F)_p=E_p\oplus F_p$ oraz
+$(E^*)_p=\mathrm{Hom}(E_p,\R)$. Przy macierzach przejścia $g_{ji}$
+i $h_{ji}$ odpowiednie macierze to
+\[
+g_{ji}\oplus h_{ji},\qquad(g_{ji}^{-1})^{\mathsf T}.
+\]
+Ostatni wzór wymusza zachowanie wartości funkcjonału:
+jeżeli $v_j=g_{ji}v_i$ oraz $\xi_i(v_i)=\xi_j(v_j)$, to
+$\xi_j=(g_{ji}^{-1})^{\mathsf T}\xi_i$. Obie rodziny spełniają
+warunek kocyklu, więc twierdzenie o sklejaniu tworzy z nich wiązki.
+\end{definicja}
+
+
+
+\section{Różniczka, immersje, submersje i zanurzenia}
+
+\begin{definicja}
+Niech $F\colon M\to N$ będzie odwzorowaniem gładkim, $p\in M$. \emph{Różniczką} $F$ w
+punkcie $p$ nazywamy odwzorowanie liniowe $dF_p\colon T_pM\to T_{F(p)}N$ zdefiniowane (w
+języku derywacji) wzorem
+\[
+(dF_p\,v)(g):=v(g\circ F), \qquad v\in T_pM,\ g\in C^\infty(N).
+\]
+\end{definicja}
+
+\begin{fakt}
+$dF_pv$ jest istotnie derywacją w $F(p)$, a $dF_p$ jest odwzorowaniem liniowym.
+\end{fakt}
+\begin{proof}
+Liniowość względem $g$: oczywista z liniowości $v$ i liniowości $g\mapsto g\circ F$.
+Reguła Leibniza: $(dF_pv)(gh)=v((gh)\circ F)=v((g\circ F)(h\circ F))=(g\circ F)(p)\,
+v(h\circ F)+(h\circ F)(p)\,v(g\circ F)=g(F(p))(dF_pv)(h)+h(F(p))(dF_pv)(g)$, na mocy reguły
+Leibniza dla $v$ zastosowanej do $g\circ F,h\circ F\in C^\infty(M)$. Zatem $dF_pv\in
+T_{F(p)}N$. Liniowość $dF_p$ względem $v$ jest natychmiastowa z liniowości $v\mapsto
+v(g\circ F)$ w $v$, dla każdego ustalonego $g$.
+\end{proof}
+
+\begin{twierdzenie}[Reguła łańcucha]
+Jeśli $F\colon M\to N$ i $G\colon N\to P$ są gładkie, $p\in M$, to
+\[
+d(G\circ F)_p=dG_{F(p)}\circ dF_p\colon T_pM\to T_{G(F(p))}P.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla $v\in T_pM$ i $h\in C^\infty(P)$, z definicji różniczki:
+\[
+\big(d(G\circ F)_p\,v\big)(h)=v\big(h\circ(G\circ F)\big)=v\big((h\circ G)\circ F\big)=
+(dF_pv)(h\circ G)=\big(dG_{F(p)}(dF_pv)\big)(h),
+\]
+gdzie w trzeciej równości zastosowaliśmy definicję $dF_p$ do $h\circ G\in C^\infty(N)$, a
+w czwartej — definicję $dG_{F(p)}$ do $dF_pv\in T_{F(p)}N$. Zatem $d(G\circ F)_pv=
+dG_{F(p)}(dF_pv)$ dla każdego $v$ — co dowodzi tezy.
+\end{proof}
+
+\begin{uwaga}[Skąd bierze się macierz Jacobiego?]
+W mapach $(U,\varphi)$ o współrzędnych $(x^1,\ldots,x^m)$ wokół $p$ i
+$(V,\psi)$ o współrzędnych $(y^1,\ldots,y^n)$ wokół $F(p)$ niech
+$\widehat F=\psi\circ F\circ\varphi^{-1}$.
+Aby znaleźć współczynniki $dF_p(\partial/\partial x^i|_p)$
+w bazie $\partial/\partial y^a|_{F(p)}$, przykładamy ten
+wektor do funkcji współrzędnej $y^a$ (lokalnie; w razie
+potrzeby przedłużamy ją funkcją odcinającą). Z definicji
+różniczki otrzymujemy
+\[
+ \bigl(dF_p(\partial/\partial x^i|_p)\bigr)(y^a)
+ =\left.\frac{\partial \widehat F^{\,a}}{\partial x^i}
+ \right|_{\varphi(p)}.
+\]
+Współczynniki te tworzą macierz Jacobiego
+$D\widehat F(\varphi(p))$. \emph{Rzędem} $F$ w punkcie $p$
+nazywamy rząd $dF_p$, równy rzędowi tej macierzy.
+\end{uwaga}
+
+\begin{definicja}
+Niech $F\colon M\to N$ będzie gładkie, $\dim M=m$, $\dim N=n$. Mówimy, że $F$ jest w
+punkcie $p$ \emph{immersją}, jeśli $dF_p$ jest injektywne, oraz \emph{submersją}, jeśli
+$dF_p$ jest surjektywne. $F$ jest immersją (submersją), jeśli jest nią w każdym punkcie
+$p\in M$. \emph{Zanurzeniem} (ang.\ \emph{embedding}) nazywamy immersję $F\colon M\to N$,
+która dodatkowo jest homeomorfizmem na obraz $F(M)$ (z topologią podprzestrzeni $N$).
+\end{definicja}
+
+Poniższy przykład pokazuje, że sama różnowartościowa immersja nie musi być zanurzeniem —
+warunek ,,homeomorfizm na obraz'' jest istotnie mocniejszy.
+
+\begin{przyklad}[Krzywa ósemkowa]\label{prz:osemka}
+Niech $\beta\colon(-\pi,\pi)\to\R^2$, $\beta(t):=(\sin2t,\ \sin t)$.
+
+\emph{$\beta$ jest immersją.} $\beta'(t)=(2\cos2t,\cos t)$. Gdyby $\beta'(t_0)=0$, to
+$\cos t_0=0$ (więc $t_0=\pm\pi/2$) oraz $\cos2t_0=0$; ale $\cos(\pm\pi)=-1\neq0$ —
+sprzeczność. Zatem $\beta'(t)\neq0$ dla wszystkich $t$, czyli $d\beta_t$ jest injektywne w
+każdym punkcie.
+
+\emph{$\beta$ jest różnowartościowa.} Przypuśćmy $\beta(t_1)=\beta(t_2)$, tzn.\ $\sin t_1=
+\sin t_2=:s$ oraz $\sin2t_1=\sin2t_2$. Jeśli $s=0$: na $(-\pi,\pi)$ równość $\sin t=0$
+zachodzi jedynie dla $t=0$, więc $t_1=t_2=0$. Jeśli $s\neq0$: korzystając z $\sin2t_i=
+2\sin t_i\cos t_i=2s\cos t_i$, równość $\sin2t_1=\sin2t_2$ daje (dzieląc przez $2s\neq0$)
+$\cos t_1=\cos t_2$. Zatem $\sin t_1=\sin t_2$ i $\cos t_1=\cos t_2$ jednocześnie — co
+oznacza $t_1-t_2\in2\pi\Z$; ponieważ $t_1,t_2\in(-\pi,\pi)$, jedyna możliwość to $t_1=t_2$.
+W obu przypadkach $\beta$ jest różnowartościowa.
+
+\emph{$\beta$ nie jest zanurzeniem.} $\lim_{t\to\pi^-}\beta(t)=(\sin2\pi,\sin\pi)=(0,0)$
+oraz $\lim_{t\to-\pi^+}\beta(t)=(0,0)$ — oba końce krzywej zbiegają do tego samego punktu
+$(0,0)=\beta(0)$. Odwzorowanie odwrotne $\beta^{-1}$ nie jest więc ciągłe w $(0,0)$: dla
+ciągu $t_k\to\pi^-$, $\beta(t_k)\to(0,0)=\beta(0)$, ale $\beta^{-1}(\beta(t_k))=t_k\to\pi
+\neq0=\beta^{-1}(0,0)$. Zatem $\beta$ jest różnowartościową immersją, która nie jest
+homeomorfizmem na obraz — nie jest zanurzeniem.
+\end{przyklad}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=1.4]
+\draw[->] (-1.4,0) -- (1.4,0) node[right]{$x$};
+\draw[->] (0,-1.3) -- (0,1.3) node[above]{$y$};
+\draw[thick,blue,domain=-179:179,samples=150,smooth]
+plot ({sin(2*\x)},{sin(\x)});
+\fill (0,0) circle (1pt) node[below right]{$0$};
+\end{tikzpicture}
+\caption{Krzywa ósemkowa $\beta(t)=(\sin2t,\sin t)$: różnowartościowa immersja, która nie
+jest zanurzeniem — oba końce ($t\to\pm\pi$) zbiegają do początku układu współrzędnych.}
+\label{fig:osemka}
+\end{figure}
+
+\begin{uwaga}
+Podobny, choć bardziej subtelny, przykład daje \emph{nawinięcie niewymierne} torusa
+$T^2=\R^2/\Z^2$: krzywa $\gamma(t)=(t,\alpha t)+\Z^2$
+dla $\alpha\in\R\setminus\Q$ jest injektywną immersją.
+Rzeczywiście $\gamma(t)=\gamma(s)$ wymaga $t-s\in\Z$ i
+$\alpha(t-s)\in\Z$, więc $t=s$; lokalna pochodna to $(1,\alpha)\ne0$.
+Pokażmy wprost brak ciągłości odwrotności. Dzieląc $[0,1)$ na
+$N$ równych przedziałów i rozpatrując części ułamkowe
+$0,\alpha,\ldots,N\alpha$, z zasady szufladkowej otrzymujemy
+$1\leq q_N\leq N$ oraz $p_N\in\Z$ takie, że
+$|q_N\alpha-p_N|<1/N$. Możemy wybrać podciąg z $q_N\to\infty$:
+dla skończenie wielu dodatnich $q$ odległości $q\alpha$ od $\Z$
+mają dodatnie minimum. Wtedy $\gamma(q_N)\to\gamma(0)$,
+ale $q_N$ nie dąży do zera, więc odwrotność nie jest ciągła.
+Obraz jest również gęsty. Istotnie, dla dowolnie małego $\varepsilon>0$
+istnieje niezerowe $\delta=q\alpha-p$ z $|\delta|<\varepsilon$.
+Wielokrotności $\delta$ modulo $1$ tworzą zbiór
+$\varepsilon$-gęsty w okręgu (kolejne punkty są oddalone o
+$|\delta|$, a ostatnia luka jest nie większa).
+Są to części ułamkowe całkowitych wielokrotności $\alpha$.
+Zatem dla dowolnego $(a,b)+\Z^2$ można dobrać $k\in\Z$,
+aby $\gamma(a+k)=(a,\alpha a+\alpha k)+\Z^2$ było dowolnie
+blisko tego punktu.
+\end{uwaga}
+
+\subsection*{Twierdzenie o rzędzie stałym}
+
+\begin{lemat}[Półciągłość rzędu z dołu]\label{lem:polciaglosc}
+Niech $F\colon M\to N$ będzie gładkie. Zbiór $\{p\in M:\mathrm{rz}(dF_p)\geq r\}$ jest
+otwarty w $M$, dla każdego $r$.
+\end{lemat}
+\begin{proof}
+Warunek $\mathrm{rz}(dF_p)\geq r$ oznacza, w mapach lokalnych, że macierz Jacobiego $DF$ w
+$\varphi(p)$ ma pewien minor stopnia $r$ różny od zera. Wyznacznik danego minora jest
+funkcją ciągłą (wielomianem od wyrazów macierzy Jacobiego, gładkich funkcji punktu), więc
+zbiór punktów, w których ten minor jest niezerowy, jest otwarty. Zbiór $\{\mathrm{rz}
+(dF_p)\geq r\}$ jest sumą (po wszystkich wyborach minora stopnia $r$) takich zbiorów
+otwartych, a więc otwarty.
+\end{proof}
+
+\begin{wniosek}\label{wn:stalyrzad}
+Jeśli $F\colon M\to N$ jest immersją (submersją) w punkcie $p$, to $F$ jest immersją
+(submersją) na pewnym otoczeniu $p$, o \emph{stałym} rzędzie na tym otoczeniu.
+\end{wniosek}
+\begin{proof}
+Niech $m=\dim M$, $n=\dim N$. Jeśli $F$ jest immersją w $p$, $\mathrm{rz}(dF_p)=m$; ale
+rząd $dF_q\colon\R^m\to\R^n$ jest zawsze $\leq m$, więc z Lematu~\ref{lem:polciaglosc}
+($r=m$), $\{\mathrm{rz}(dF_q)\geq m\}=\{\mathrm{rz}(dF_q)=m\}$ jest otoczeniem otwartym
+$p$, na którym $F$ ma stały rząd $m$. Przypadek submersji jest analogiczny z $r=n$.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie o rzędzie stałym]\label{tw:rzad-staly}
+Niech $F\colon M\to N$ będzie odwzorowaniem gładkim o stałym rzędzie $k$ na otoczeniu
+punktu $p\in M$ ($\dim M=m$, $\dim N=n$). Wówczas istnieją mapy $(U,\varphi)$ wokół $p$
+($\varphi(p)=0$) i $(V,\psi)$ wokół $F(p)$ ($\psi(F(p))=0$, $F(U)\subseteq V$), w których
+\[
+(\psi\circ F\circ\varphi^{-1})(u^1,\dots,u^m)=(u^1,\dots,u^k,0,\dots,0).
+\]
+\end{twierdzenie}
+
+\begin{proof}
+Pracujemy w mapach startowych, utożsamiając otoczenia $p$, $F(p)$ z otwartymi podzbiorami
+$\R^m$, $\R^n$ (z $p=0$, $F(p)=0$), $F$ z gładkim odwzorowaniem $\hat F$ o stałym rzędzie
+$k$ na całej (małej) dziedzinie.
+Jeśli $k=0$, wszystkie pochodne $D\hat F$ znikają na małej
+kuli wypukłej. Całkując wzdłuż odcinków od $0$, dostajemy
+$\hat F(u)=\hat F(0)=0$, czyli żądaną postać. Dalej zakładamy $k>0$.
+
+\emph{Krok 1: dyfeomorfizm lokalny przez przenumerowanie współrzędnych.} Ponieważ
+$\mathrm{rz}(D\hat F(0))=k$, pewien minor stopnia $k$ macierzy $D\hat F(0)$ jest niezerowy;
+przenumerowując współrzędne w $\R^m$, $\R^n$, możemy założyć, że jest to minor złożony z
+pierwszych $k$ wierszy i kolumn — tzn., pisząc $\hat F=(\hat F^1,\dots,\hat F^n)$, że
+$A:=\big(\partial\hat F^i/\partial u^j(0)\big)_{1\leq i,j\leq k}$ jest odwracalna.
+
+Definiujemy $\Phi(u):=\big(\hat F^1(u),\dots,\hat F^k(u),u^{k+1},\dots,u^m\big)$. Macierz
+$D\Phi(0)=\begin{pmatrix}A&B\\0&I_{m-k}\end{pmatrix}$ (blok $0$ w lewym dolnym rogu, bo
+współrzędne $u^{k+1},\dots,u^m$ funkcji $\Phi$ nie zależą od $u^1,\dots,u^k$) ma
+$\det D\Phi(0)=\det A\neq0$. Na mocy twierdzenia o odwzorowaniu odwrotnym (klasyczny fakt
+analizy wielu zmiennych, przyjmowany tu bez dowodu), $\Phi$ jest dyfeomorfizmem pewnego
+otoczenia $0$ na swój obraz.
+
+\emph{Krok 2: przepisanie $\hat F$ przez $\Phi^{-1}$.} Niech $G:=\hat F\circ\Phi^{-1}$. Z
+definicji $\Phi$, dla $w=\Phi(u)$: $G^i(w)=w^i$ dla $i=1,\dots,k$. Oznaczmy $h^i(w):=
+G^i(w)$ dla $i=k+1,\dots,n$.
+
+\emph{Krok 3: $h^i$ zależą tylko od $w^1,\dots,w^k$.} $G$ ma, jako złożenie $\hat F$ z
+dyfeomorfizmem $\Phi^{-1}$, ten sam stały rząd $k$. Macierz $DG(w)=\begin{pmatrix}I_k&0\\
+{*}&(\partial h^i/\partial w^j)_{i,j>k}\end{pmatrix}$. Gdyby $\partial h^{i_0}/\partial
+w^{j_0}(w_0)\neq0$ dla pewnych $i_0,j_0>k$, minor $DG(w_0)$ złożony z wierszy $\{1,\dots,
+k,i_0\}$ i kolumn $\{1,\dots,k,j_0\}$ miałby wyznacznik $\partial h^{i_0}/\partial
+w^{j_0}(w_0)\neq0$ (macierz blokowo-trójkątna z blokiem $I_k$) — więc $\mathrm{rz}
+(DG(w_0))\geq k+1$, sprzeczność ze stałością rzędu. Zatem $\partial h^i/\partial w^j\equiv0$
+dla $i,j>k$. Zmniejszamy dziedzinę do produktu kul
+$A\times B\subset\R^k\times\R^{m-k}$ o środku $0$.
+Dla $(a,b)\in A\times B$ mamy
+\[
+ h^i(a,b)-h^i(a,0)
+ =\int_0^1\sum_{j=k+1}^m b^j
+       \frac{\partial h^i}{\partial w^j}(a,tb)\,dt=0.
+\]
+Zatem $h^i$ zależy tylko od $a=(w^1,\ldots,w^k)$;
+dalej przez $h^i(a)$ rozumiemy $h^i(a,0)$.
+
+\emph{Krok 4: druga zamiana współrzędnych, w $N$.} Definiujemy
+\[
+\Psi(y^1,\dots,y^n):=\big(y^1,\dots,y^k,\,y^{k+1}-h^{k+1}(y^1,\dots,y^k),\,\dots,\,
+y^n-h^n(y^1,\dots,y^k)\big).
+\]
+Odwzorowanie $\Psi$ ma jawną odwrotną $\Psi^{-1}(z)=(z^1,\dots,z^k,z^{k+1}+h^{k+1}(z^1,
+\dots,z^k),\dots,z^n+h^n(z^1,\dots,z^k))$ (co sprawdza się bezpośrednim podstawieniem), a
+więc jest dyfeomorfizmem swojej dziedziny na obraz.
+
+Dla $w$ blisko $0$:
+\[
+(\Psi\circ G)(w)=\Psi\big(w^1,\dots,w^k,h^{k+1}(w^{\leq k}),\dots,h^n(w^{\leq k})\big)=
+(w^1,\dots,w^k,0,\dots,0),
+\]
+bo $h^i(w^{\leq k})-h^i(w^{\leq k})=0$. Podstawiając $\psi:=\Psi$, $\varphi:=\Phi$ (złożone
+z przenumerowaniem z Kroku 1), otrzymujemy $\psi\circ F\circ\varphi^{-1}=\Psi\circ G=
+(u^1,\dots,u^k,0,\dots,0)$, co kończy dowód.
+\end{proof}
+
+\begin{wniosek}[Postać lokalna immersji]\label{wn:immersja-lokalnie}
+Jeśli $F\colon M\to N$ jest immersją w $p$ ($m\leq n$), to istnieją mapy wokół $p$, $F(p)$,
+w których $F(u^1,\dots,u^m)=(u^1,\dots,u^m,0,\dots,0)$.
+\end{wniosek}
+\begin{proof}
+Na mocy Wniosku~\ref{wn:stalyrzad}, $F$ ma stały rząd $m$ na otoczeniu $p$; stosujemy
+Twierdzenie~\ref{tw:rzad-staly} z $k=m$.
+\end{proof}
+
+\begin{wniosek}[Postać lokalna submersji]\label{wn:submersja-lokalnie}
+Jeśli $F\colon M\to N$ jest submersją w $p$ ($m\geq n$), to istnieją mapy wokół $p$, $F(p)$,
+w których $F(u^1,\dots,u^m)=(u^1,\dots,u^n)$.
+\end{wniosek}
+\begin{proof}
+Na mocy Wniosku~\ref{wn:stalyrzad}, $F$ ma stały rząd $n$ na otoczeniu $p$; stosujemy
+Twierdzenie~\ref{tw:rzad-staly} z $k=n$ (teza redukuje się do $(u^1,\dots,u^n,0,\dots,0)\in
+\R^n$, czyli po prostu $(u^1,\dots,u^n)$).
+\end{proof}
+
+\begin{przyklad}
+Rzutowanie kanoniczne $\mathrm{pr}_1\colon M\times N\to M$ jest submersją: w mapach
+produktowych, $\mathrm{pr}_1$ przyjmuje postać rzutowania liniowego $\R^m\times\R^n\to
+\R^m$, którego różniczka (ono samo) jest surjektywna. Podobnie, rzutowanie wiązki
+stycznej $\pi\colon TM\to M$ jest submersją — w mapach $\tilde\varphi_\alpha$ z Sekcji~\ref{sec:wiazki-wektorowe},
+$\pi$ przyjmuje postać $(x,v)\mapsto x$.
+\end{przyklad}
+\section{Podrozmaitości}
+
+\begin{definicja}
+Niech $M$ będzie rozmaitością gładką wymiaru $n$, $S\subseteq M$ podzbiorem, $k\leq n$.
+Mapa $(U,\varphi)$ na $M$ jest \emph{mapą plasterkową} (dostosowaną do $S$) rzędu $k$,
+jeżeli
+\[
+\varphi(U\cap S)=\varphi(U)\cap(\R^k\times\{0\})\subseteq\R^k\times\R^{n-k}\cong\R^n.
+\]
+Mówimy, że $S$ jest \emph{podrozmaitością zanurzoną} wymiaru $k$ w $M$, jeśli każdy punkt
+$p\in S$ posiada mapę plasterkową rzędu $k$ wokół $p$.
+\end{definicja}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=1]
+\draw[thick] (0,0) rectangle (5,3.5);
+\node at (2.5,3.8) {$\varphi(U)\subseteq\R^k\times\R^{n-k}$};
+\draw[thick,blue] (0,1.75) -- (5,1.75);
+\node[blue] at (6.05,1.75) {$\R^k\times\{0\}$};
+\draw[->,thick] (2.5,-0.3) -- (2.5,-1.6) node[midway,right]{$\varphi^{-1}$};
+\node at (2.5,-2.1) {$U\cap S=\varphi^{-1}\big(\varphi(U)\cap(\R^k\times\{0\})\big)$};
+\end{tikzpicture}
+\caption{Mapa plasterkowa: w mapie $\varphi$, przecięcie $U\cap S$ odpowiada dokładnie
+przecięciu $\varphi(U)$ z podprzestrzenią $\R^k\times\{0\}$.}
+\label{fig:plasterek}
+\end{figure}
+
+\begin{stwierdzenie}\label{stw:podrozm-struktura}
+Jeśli $S\subseteq M$ jest podrozmaitością zanurzoną wymiaru $k$, to $S$ (z topologią
+podprzestrzeni) jest rozmaitością topologiczną wymiaru $k$, posiadającą strukturę gładką,
+względem której inkluzja $\iota\colon S\hookrightarrow M$ jest immersją; co więcej, $\iota$
+jest zanurzeniem.
+\end{stwierdzenie}
+\begin{proof}
+Wyposażamy $S$ w topologię podprzestrzeni. Ponieważ podprzestrzeń
+przestrzeni Hausdorffa jest Hausdorffa, $S$ spełnia pierwszy warunek.
+Jeśli $\mathcal B$ jest przeliczalną bazą $M$, to
+$\{B\cap S:B\in\mathcal B\}$ jest przeliczalną bazą $S$:
+dla otwartego $O\cap S$ i $p\in O\cap S$ znajdziemy
+$B\in\mathcal B$ z $p\in B\subset O$, a wtedy
+$p\in B\cap S\subset O\cap S$.
+
+Ustalmy $p\in S$ i mapę plasterkową $(U,\varphi)$ przy $p$.
+Ponieważ $U$ jest otwarte w $M$, zbiór $U_S=U\cap S$ jest otwarty
+w $S$. Oznaczmy $W=\varphi(U)$, otwarty w $\R^n$.
+Odwzorowanie $\varphi_S=\operatorname{pr}_1\circ\varphi|_{U_S}$
+ma obraz $W_S=\{u\in\R^k:(u,0)\in W\}$, otwarty w $\R^k$ jako
+przeciwobraz $W$ przez ciągłe zanurzenie $u\mapsto(u,0)$.
+Odwrotność $u\mapsto\varphi^{-1}(u,0)$ jest ciągła; zatem
+$\varphi_S:U_S\to W_S$ jest homeomorfizmem. To dowodzi lokalnej
+euklidesowości $S$.
+
+Niech teraz $(V,\psi)$ będzie drugą mapą plasterkową. Na
+$\varphi_S(U\cap V\cap S)$ przejście ma wzór
+\[
+\psi_S\circ\varphi_S^{-1}(u)
+=\operatorname{pr}_1\bigl((\psi\circ\varphi^{-1})(u,0)\bigr).
+\]
+Zanurzenie $u\mapsto(u,0)$, przejście $\psi\circ\varphi^{-1}$
+i rzutowanie $\operatorname{pr}_1$ są gładkie, więc złożenie jest
+gładkie. Zamieniając $\varphi$ i $\psi$, otrzymujemy gładką
+odwrotność. Mapy $\varphi_S$ tworzą więc atlas gładki na $S$.
+
+W mapach $\varphi_S$ i $\varphi$ inkluzja $\iota:S\to M$ ma postać
+$u\mapsto(u,0)$, a jej różniczka wysyła $v$ na $(v,0)$ i jest
+injektywna. Inkluzja jest więc immersją. Jako odwzorowanie
+$S\to\iota(S)$ z \emph{topologią podprzestrzeni}, $\iota$ jest
+homeomorfizmem już z wyboru topologii na $S$ (tożsamość na
+zbiorze punktów). Zatem jest zanurzeniem.
+\end{proof}
+
+\begin{przyklad}[Wiązka normalna jako iloraz]
+Niech $S\subset M$ będzie podrozmaitością zanurzoną. Poprzez różniczkę
+inkluzji utożsamiamy $T_pS$ z podprzestrzenią $T_pM$. Wiązka $TS$ jest
+podwiązką $TM|_S$. Włókna wiązki normalnej to ilorazy
+\[
+\nu_pS=T_pM/T_pS,\qquad \nu S=TM|_S/TS.
+\]
+Jej rząd wynosi $\dim M-\dim S$. W mapie plasterkowej
+o współrzędnych $(x,y)$ klasa wektora stycznego
+ma jednoznaczny reprezentant w kierunkach $\partial/\partial y^a$.
+Sprawdźmy zmiany współrzędnych. Przejście między dwiema mapami
+plasterkowymi ma postać $(x,y)\mapsto(a(x,y),b(x,y))$, przy czym
+$b(x,0)=0$. Różniczkując tę tożsamość po $x$, dostajemy
+$D_xb(x,0)=0$, więc różniczka przejścia na $S$ ma postać blokową
+\[
+ \begin{pmatrix} A&B\\0&C\end{pmatrix}.
+\]
+Cała macierz jest odwracalna, zatem kwadratowy blok $C$ jest
+odwracalny. Klasa wektora o składowej poprzecznej $v$ zmienia
+współrzędne na $Cv$, niezależnie od składowej stycznej.
+Macierze $C$ są gładkie i spełniają warunek kocyklu, bo różniczki
+przejść się składają. Twierdzenie o sklejaniu daje więc wiązkę
+o zadanych włóknach ilorazowych. Konstrukcja jest kanoniczna bez metryki; po wybraniu
+metryki można identyfikować klasy z wektorami prostopadłymi do $T_pS$.
+\end{przyklad}
+
+Poniższe twierdzenie i jego następstwa pokazują, w jaki sposób podrozmaitości powstają ,,w
+praktyce'' — jako obrazy zanurzeń oraz jako przeciwobrazy wartości regularnych.
+
+\begin{twierdzenie}[Twierdzenie o obrazie]\label{tw:obraz}
+Jeśli $F\colon S\to M$ jest zanurzeniem ($\dim S=k\leq n=\dim M$), to $F(S)$ jest
+podrozmaitością zanurzoną wymiaru $k$ w $M$, a $F\colon S\to F(S)$ (z topologią
+podprzestrzeni) jest dyfeomorfizmem.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $q=F(p_0)\in F(S)$. Ponieważ $F$ jest immersją w $p_0$, na mocy
+Wniosku~\ref{wn:immersja-lokalnie} istnieją mapy $(U,\varphi)$ wokół $p_0$ w $S$ i
+$(V,\psi)$ wokół $q$ w $M$, w których $F$ przyjmuje postać $u\mapsto(u,0)$.
+Uzasadnijmy potrzebne dopasowanie dziedzin: wybieramy małe otwarte
+kule $A\subset\R^k$, $B\subset\R^{n-k}$ o środku $0$, tak aby
+$A\subset\varphi(U)$ i $A\times B\subset\psi(V)$.
+Zastępujemy $U$ przez $\varphi^{-1}(A)$, a $V$ przez
+$\psi^{-1}(A\times B)$. Wtedy rzeczywiście
+$\psi(F(U))=A\times\{0\}=\psi(V)\cap(\R^k\times\{0\})$.
+Zatem $(V,\psi)$ jest ,,prawie'' mapą
+plasterkową dla $F(S)$, z tą różnicą, że warunek dotyczy $F(U)$, a nie od razu $F(S)\cap V$.
+
+W tym miejscu wykorzystujemy założenie, że $F$ jest \emph{zanurzeniem}, nie tylko
+różnowartościową immersją (por.\ Przykład~\ref{prz:osemka}): ponieważ $F\colon S\to F(S)$
+jest homeomorfizmem na obraz, zbiór $F(U)$ jest otwarty w $F(S)$, tzn.\ $F(U)=F(S)\cap W$
+dla pewnego otwartego $W\subseteq M$. Zastępując $V$ przez $V':=V\cap W$, otrzymujemy
+$F(S)\cap V'=F(U)\cap V'$, a
+\begin{align*}
+\psi(F(S)\cap V')
+ &=\psi(F(U)\cap V')\\
+ &=\psi(F(U))\cap\psi(V')\\
+ &=\big(\psi(V)\cap(\R^k\times\{0\})\big)\cap\psi(V')\\
+ &=\psi(V')\cap(\R^k\times\{0\}).
+\end{align*}
+Zatem $(V',\psi|_{V'})$ jest mapą plasterkową rzędu $k$ dla $F(S)$ wokół $q$. Ponieważ
+$q\in F(S)$ był dowolny, $F(S)$ jest podrozmaitością zanurzoną wymiaru $k$.
+
+Wreszcie, $F\colon S\to F(S)$ jest bijekcją gładką (w mapach plasterkowych powyżej, $F$
+przyjmuje postać identyczności), której odwrotność $F^{-1}\colon F(S)\to S$ jest gładka z
+tego samego powodu. Zatem $F\colon S\to F(S)$ jest dyfeomorfizmem.
+\end{proof}
+
+\begin{definicja}
+Niech $F\colon M\to N$ będzie gładkie, $q\in N$. Punkt $q$ jest \emph{wartością regularną}
+$F$, jeśli dla każdego $p\in F^{-1}(q)$, $F$ jest submersją w $p$ (jeśli $F^{-1}(q)=
+\emptyset$, $q$ jest — pusto — wartością regularną).
+\end{definicja}
+
+\begin{twierdzenie}[Twierdzenie o przeciwobrazie wartości regularnej]\label{tw:przeciwobraz}
+Niech $F\colon M\to N$ będzie gładkie, $\dim M=m$, $\dim N=n$, i niech $q\in N$ będzie
+wartością regularną $F$ z $F^{-1}(q)\neq\emptyset$. Wówczas $F^{-1}(q)$ jest
+podrozmaitością zanurzoną wymiaru $m-n$ w $M$, a dla każdego $p\in F^{-1}(q)$,
+\[
+T_p\big(F^{-1}(q)\big)=\ker(dF_p)\subseteq T_pM.
+\]
+\end{twierdzenie}
+\begin{proof}
+Niech $p\in F^{-1}(q)$. Ponieważ $F$ jest submersją w $p$, na mocy
+Wniosku~\ref{wn:submersja-lokalnie} istnieją mapy $(U,\varphi)$ wokół $p$ ($\varphi(p)=0$)
+i $(V,\psi)$ wokół $q$ ($\psi(q)=0$), w których $F$ przyjmuje postać $\psi\circ F\circ
+\varphi^{-1}(u^1,\dots,u^m)=(u^1,\dots,u^n)$. W tych mapach,
+\[
+\varphi(U\cap F^{-1}(q))=\{u\in\varphi(U):(u^1,\dots,u^n)=0\}=\varphi(U)\cap(\{0\}\times
+\R^{m-n}).
+\]
+Po przenumerowaniu współrzędnych w $\R^m$ (zamiana miejscami pierwszych $n$ z pozostałymi
+$m-n$), $(U,\varphi)$ staje się mapą plasterkową rzędu $m-n$ dla $F^{-1}(q)$ wokół $p$.
+Ponieważ $p\in F^{-1}(q)$ był dowolny, $F^{-1}(q)$ jest podrozmaitością zanurzoną wymiaru
+$m-n$.
+
+W drugiej części niech $\iota\colon F^{-1}(q)\hookrightarrow M$
+będzie inkluzją. Jest ona immersją na mocy
+Stwierdzenia~\ref{stw:podrozm-struktura}. Ponieważ $F\circ\iota$ jest
+odwzorowaniem stale równym $q$, jego różniczka znika: $dF_p\circ d\iota_p=0$ (reguła
+łańcucha). Zatem $d\iota_p(T_pF^{-1}(q))\subseteq\ker(dF_p)$; utożsamiając (poprzez
+injektywną immersję $d\iota_p$) $T_pF^{-1}(q)$ z jego obrazem w $T_pM$, mamy $T_pF^{-1}(q)
+\subseteq\ker(dF_p)$. Z rachunku wymiarów: $\dim T_pF^{-1}(q)=m-n$ (z pierwszej części
+dowodu), a $\dim\ker(dF_p)=m-\mathrm{rz}(dF_p)=m-n$ (bo $dF_p$ jest surjektywne na $T_qN$
+wymiaru $n$, z definicji submersji). Zatem obie podprzestrzenie $T_pM$ mają ten sam,
+skończony wymiar $m-n$, a jedna zawiera się w drugiej — więc są równe.
+\end{proof}
+
+\begin{wniosek}[Twierdzenie o poziomicy]
+Jeśli $\dim M=n$, $f\colon M\to\R$ jest gładka, $c\in\R$ jest wartością regularną $f$ (tzn.\
+$df_p\neq0$ dla każdego $p\in f^{-1}(c)$) i $f^{-1}(c)\neq\emptyset$, to $f^{-1}(c)$ jest
+podrozmaitością zanurzoną wymiaru $n-1$ w $M$ (,,hiperpowierzchnią''), z $T_pf^{-1}(c)=
+\ker(df_p)$.
+\end{wniosek}
+\begin{proof}
+Szczególny przypadek Twierdzenia~\ref{tw:przeciwobraz} z $N=\R$: submersywność $f$ w
+$p\in f^{-1}(c)$ to dokładnie warunek $df_p\neq0$.
+\end{proof}
+
+\begin{przyklad}
+Niech $f\colon\R^{n+1}\to\R$, $f(x)=\|x\|^2$. Wtedy $df_x(v)=2\langle x,v\rangle$, niezerowe
+dla $x\neq0$. Ponieważ $S^n=f^{-1}(1)$ i $0\notin f^{-1}(1)$, $1$ jest wartością regularną
+— na mocy Wniosku powyżej, $S^n$ jest podrozmaitością zanurzoną wymiaru $n$ w $\R^{n+1}$
+(zgodnie z tym, co wiedzieliśmy już z Przykładu~\ref{prz:sfera}; twierdzenie o poziomicy
+daje jednak krótszy dowód gładkości struktury na $S^n$, choć nie podaje jawnych map).
+\end{przyklad}
+
+\begin{przyklad}[Grupa ortogonalna]
+Niech $F\colon M_n(\R)\to\mathrm{Sym}(n)$, $F(A):=A^TA$, gdzie $\mathrm{Sym}(n)\cong
+\R^{n(n+1)/2}$ oznacza przestrzeń macierzy symetrycznych. Różniczka: dla $H\in M_n(\R)$,
+\[
+dF_A(H)=\frac{d}{dt}\Big|_{t=0}(A+tH)^T(A+tH)=A^TH+H^TA.
+\]
+Dla $A\in\mathrm{O}(n):=F^{-1}(I)=\{A:A^TA=I\}$, $dF_A$ jest surjektywne na
+$\mathrm{Sym}(n)$: dla symetrycznej $S$, kładąc $H:=\tfrac12AS$,
+\[
+dF_A(H)=A^T\big(\tfrac12AS\big)+\big(\tfrac12AS\big)^TA=\tfrac12(A^TA)S+\tfrac12S^TA^TA=
+\tfrac12S+\tfrac12S=S
+\]
+(korzystając z $A^TA=I$, $S^T=S$). Zatem $I$ jest wartością regularną $F$, więc
+$\mathrm{O}(n)=F^{-1}(I)$ jest podrozmaitością zanurzoną $M_n(\R)\cong\R^{n^2}$ wymiaru
+$n^2-n(n+1)/2=n(n-1)/2$. Co więcej, $T_I\mathrm{O}(n)=\ker(dF_I)=\{H:H+H^T=0\}=:
+\mathfrak{so}(n)$ — przestrzeń macierzy antysymetrycznych, wymiaru $n(n-1)/2$ (zgodnie z
+powyższym rachunkiem wymiaru).
+\end{przyklad}
+
+\begin{uwaga}
+Powyższy przykład jest pierwszym spotkaniem z fundamentalnym zjawiskiem: $\mathrm{O}(n)$
+jest nie tylko rozmaitością, ale i grupą (względem mnożenia macierzy), w której mnożenie i
+branie odwrotności są gładkie — tzw.\ \emph{grupą Liego} — a $T_I\mathrm{O}(n)=
+\mathfrak{so}(n)$ jest jej \emph{algebrą Liego}.
+\end{uwaga}
+
+\begin{przyklad}[Torus jako regularna poziomica]
+Niech $R>r>0$, $\rho=\sqrt{x^2+y^2}$ oraz
+$\Omega=\{(x,y,z)\in\R^3:\rho>0\}$. Na tym otwartym zbiorze
+$f(x,y,z)=(\rho-R)^2+z^2$ jest gładka. Poziom $f=r^2$
+leży w $\Omega$, gdyż $|\rho-R|\leq r<R$ daje $\rho\geq R-r>0$.
+Różniczka w punkcie $\Omega$ ma postać
+\[
+df=2(\rho-R)\left(\frac{x}{\rho}\,dx+
+\frac{y}{\rho}\,dy\right)+2z\,dz.
+\]
+Jeżeli $df=0$, to $z=0$ oraz $\rho=R$: ponieważ $(x,y)\ne(0,0)$,
+nie mogą jednocześnie znikać współczynniki przy $dx,dy$, chyba że
+$\rho-R=0$. Lecz wtedy $f=0$, a więc taki punkt nie leży na
+poziomie $r^2>0$. Zatem $r^2$ jest wartością regularną i torus
+obrotowy $f^{-1}(r^2)$ jest gładką powierzchnią. Ponadto
+$T_pT^2=\ker df_p$: wektor $(a,b,c)$ jest styczny wtedy i tylko
+wtedy, gdy $(\rho-R)(xa+yb)/\rho+zc=0$.
+\end{przyklad}
+\clearpage

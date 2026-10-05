@@ -1,5 +1,10 @@
 # Audyt końcowy przeglądu
 
+**Dokument historyczny:** dotyczy wersji 18-rozdziałowej `a36c920`.
+Późniejsza rozbudowa autora do 27 rozdziałów i obecny podział źródeł
+nie są objęte poniższym audytem. Aktualny przebieg kontroli opisują
+`PLAN_DZIALANIA.md` i `PRZEGLAD.md`.
+
 Data: 2026-10-05. Gałąź: `review/rozdzialy-matematyka`.
 Sprawdzana wersja źródła i PDF: `a36c920`.
 Przed audytem pobrano zmiany; repozytorium było aktualne i czyste.

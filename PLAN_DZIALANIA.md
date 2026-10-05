@@ -1,5 +1,29 @@
 # Plan rozbudowy skryptu „Geometria i topologia różniczkowa”
 
+## Kontynuacja po zmianach autora i podział źródeł
+
+5 października 2026 pobrano `19fa283` i porównano go z `66b220f`.
+Na aktualną prośbę użytkownika dokument zostaje podzielony na pliki
+rozdziałów, przy zachowaniu jednego pliku głównego i jednego PDF.
+Zastępuje to wcześniejszą zasadę jednego źródła w `AGENTS.md`.
+
+- [x] Pobrać zmiany i porównać je z wcześniejszymi propozycjami.
+- [x] Potwierdzić obecność rozmaitości z brzegiem, grupy wolnej i iloczynu wolnego.
+- [x] Wydzielić preambułę, wstęp, 27 rozdziałów, dodatek i indeks.
+- [x] Potwierdzić identyczność rozwiniętego źródła i składu przed/po podziale (384 strony, także porównanie pikselowe).
+- [ ] Wysłać podział wraz z instrukcją wspólnej edycji i kompilacji.
+- [ ] Przejrzeć merytorycznie zmienione fragmenty rozdziału 1.
+- [ ] Przejrzeć nowy rozdział 5 i odsyłacze do algebry.
+- [ ] Skontrolować pozostałe zmiany w dotychczasowych rozdziałach.
+- [ ] Przejrzeć nowe rozdziały 20–27 oraz dodatek, po jednym rozdziale w iteracji.
+
+Nie dublować tematów już dodanych. Dalsza teoria Freedmana i egzotyczne
+R⁴ pozostają przeznaczone do osobnego skryptu. Istniejący rozdział
+o sferach Milnora zachowujemy. Nowe propozycje należy odróżniać od
+koniecznych napraw dowodów. Bieżące uzasadnienia zmian: `PRZEGLAD.md`.
+
+## Zakończony plan autora — zapis historyczny
+
 Stan końcowy: 5 października 2026. Wszystkie zadania objęte tym planem
 zostały wykonane i wypchnięte na `review/rozdzialy-matematyka` w dwóch
 etapach: `4233e60` i `b2635d0`. Tekstem źródłowym pozostaje

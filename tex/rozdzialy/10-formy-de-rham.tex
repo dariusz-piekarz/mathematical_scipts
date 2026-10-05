@@ -1,0 +1,2104 @@
+\chapter{Formy różniczkowe, orientacja i kohomologia de Rhama}
+\label{ch:formy-de-rham}
+\index{forma rozniczkowa@Forma różniczkowa}
+
+W Rozdziale~\ref{ch:algebra-tensorowa} zbudowaliśmy algebrę
+zewnętrzną jednej przestrzeni wektorowej. Teraz wykonamy tę
+konstrukcję w każdym punkcie rozmaitości i pozwolimy, by jej
+współczynniki zmieniały się gładko. Otrzymamy formy różniczkowe.
+Różniczkowanie form, ich całkowanie i twierdzenie Stokesa
+połączą rachunek różniczkowy z homologią przestrzeni z
+Rozdziału~\ref{ch:homologia-przestrzeni}. Na końcu porównamy
+obie teorie kohomologii. Nadal nie potrzebujemy metryki,
+koneksji ani krzywizny; tym pojęciom poświęcimy późniejszy blok.
+
+\section{Czym jest forma różniczkowa?}
+\label{sec:formy-definicje}
+
+\begin{definicja}[Formy i ich wartości]
+\index{formy i ich wartosci@Formy i ich wartości}
+\label{def:forma-rozniczkowa}
+Niech $M$ będzie gładką rozmaitością wymiaru $n$.
+\emph{Formą różniczkową stopnia $k$} na $M$ nazywamy
+gładkie pole naprzemiennych form $k$-liniowych:
+\[
+ \omega_p\in\Lambda^k T_p^*M,
+ \qquad \omega\in\Omega^k(M)
+ :=\Gamma(\Lambda^k T^*M).
+\]
+Przy $k=0$ jest to funkcja gładka,
+$\Omega^0(M)=C^\infty(M)$; dla $k>n$ otrzymujemy
+$\Omega^k(M)=0$. Przyjmujemy też $\Omega^k(M)=0$ dla $k<0$.
+Na rozmaitości z brzegiem gładkość
+oznacza lokalne przedłużenie współczynników do
+otwartego otoczenia w $\R^n$.
+\end{definicja}
+
+Forma $1$-stopnia mierzy wektor styczny i zwraca liczbę.
+Forma $2$-stopnia mierzy \emph{zorientowane pole} zadane
+parą wektorów; zamiana wektorów zmienia znak.
+Jeśli $(U,x)$ jest mapą $x=(x^1,\ldots,x^n)$, to
+\begin{equation}\label{eq:forma-lokalna}
+ \omega|_U=\sum_{i_1<\cdots<i_k}
+ a_{i_1\ldots i_k}\,\dd x^{i_1}\wedge\cdots\wedge\dd x^{i_k},
+ \qquad a_I\in C^\infty(U).
+\end{equation}
+Tutaj $\dd x^i|_p(v)=v(x^i)$ jest kowektorem z
+Rozdziału~\ref{ch:rozmaitosci}. Jedyność współczynników
+wynika z bazy algebry zewnętrznej
+(Twierdzenie~\ref{thm:wedge-baza}). Zmiana mapy zmienia
+współczynniki, lecz nie samą formę.
+
+\begin{przyklad}[Dwie formy na płaszczyźnie]
+Na $\R^2$ forma $\alpha=x\,\dd y-y\,\dd x$
+przypisuje wektorowi $(u,v)$ liczbę $xv-yu$.
+Forma $\omega=\dd x\wedge\dd y$ spełnia
+\[
+ \omega((u_1,v_1),(u_2,v_2))
+ =u_1v_2-v_1u_2.
+\]
+Jest to wyznacznik: wartość bezwzględna daje pole
+równoległoboku, znak zaś jego orientację.
+\end{przyklad}
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,line cap=round,line join=round]
+ \fill[manifoldblue!12] (0,0)--(3.2,.45)--(4.25,2.65)--(1.05,2.2)--cycle;
+ \draw[manifoldblue!70!black,thick]
+  (0,0)--(3.2,.45)--(4.25,2.65)--(1.05,2.2)--cycle;
+ \draw[->,manifoldred,very thick] (0,0)--(3.2,.45)
+  node[pos=.78,below=5pt] {$u$};
+ \draw[->,manifoldgreen!70!black,very thick] (0,0)--(1.05,2.2)
+  node[pos=.8,left=5pt] {$v$};
+ \draw[->,manifoldgold!90!black,thick]
+  (8:1.45) arc[start angle=8,end angle=61,radius=1.45];
+ \node[font=\small,align=left,anchor=west,text width=5.3cm]
+  at (5.05,1.42)
+  {$(\dd x\wedge\dd y)(u,v)=\det(u,v)>0$.
+   Po zamianie $u$ i $v$ ten sam obszar
+   dostaje przeciwny znak.};
+\end{tikzpicture}
+\caption{Forma $\dd x\wedge\dd y$ daje pole ze znakiem
+w standardowych współrzędnych płaszczyzny. Ogólna $2$-forma
+przypisuje liczbę parze wektorów bez wyboru metryki;
+nie musi być euklidesowym polem ich równoległoboku.}
+\label{fig:forma-zorientowane-pole}
+\end{figure}
+
+\section{Iloczyn zewnętrzny, cofnięcie i różniczka}
+\label{sec:formy-dzialania}
+
+\begin{stwierdzenie}[Działania punkt po punkcie]
+\label{prop:formy-wedge-pullback}
+Dla $\alpha\in\Omega^k(M)$ i $\beta\in\Omega^\ell(M)$
+iloczyn $\alpha\wedge\beta\in\Omega^{k+\ell}(M)$
+otrzymujemy, biorąc iloczyn zewnętrzny w każdym
+$T_p^*M$. Zachodzi $\alpha\wedge\beta
+=(-1)^{k\ell}\beta\wedge\alpha$.
+Jeżeli $F:M\to N$ jest gładkie, to \emph{cofnięcie}
+$F^*:\Omega^k(N)\to\Omega^k(M)$ ma wzór
+\begin{equation}\label{eq:pullback-formy}
+ (F^*\omega)_p(v_1,\ldots,v_k)
+ =\omega_{F(p)}(\dd F_pv_1,\ldots,\dd F_pv_k).
+\end{equation}
+Spełnia $(G\circ F)^*=F^*G^*$ i
+$F^*(\alpha\wedge\beta)=F^*\alpha\wedge F^*\beta$.
+\end{stwierdzenie}
+\begin{proof}
+Gładkość iloczynu w mapie wynika z faktu, że jego
+współczynniki są sumami iloczynów gładkich $a_I,b_J$;
+przemienność z odpowiednim znakiem jest własnością
+algebry zewnętrznej z Rozdziału~\ref{ch:algebra-tensorowa}.
+Wzór~\eqref{eq:pullback-formy} jest wieloliniowy i
+naprzemienny, a w mapach używa pochodnych współrzędnych
+$F$, więc wyznacza formę gładką. Reguła łańcucha
+$\dd(G\circ F)_p=\dd G_{F(p)}\circ\dd F_p$
+daje własność złożenia. Iloczyn zewnętrzny definiuje
+się sumą wartości na przestawionych argumentach; podstawienie
+do niej tych samych $\dd F_pv_i$ dowodzi ostatniej równości.
+\end{proof}
+
+W szczególności $F^*(\dd y^j)=\dd(y^j\circ F)$.
+Jeżeli $F:\R^2\to\R^2$, $F(u,v)=(u^2,v+u)$,
+to $F^*(\dd x\wedge\dd y)
+=\dd(u^2)\wedge\dd(v+u)=2u\,\dd u\wedge\dd v$.
+Współczynnik $2u$ jest wyznacznikiem macierzy Jacobiego
+i rejestruje także odwrócenie orientacji przy $u<0$.
+
+\begin{twierdzenie}[Różniczka zewnętrzna]
+\label{thm:formy-d}
+Istnieje dokładnie jedna rodzina $\R$-liniowych
+operatorów $\dd:\Omega^k(M)\to\Omega^{k+1}(M)$
+o następujących własnościach:
+\begin{enumerate}[leftmargin=*]
+\item dla funkcji $f$ forma $\dd f$ jest jej różniczką;
+\item $\dd(\alpha\wedge\beta)=\dd\alpha\wedge\beta
+ +(-1)^k\alpha\wedge\dd\beta$, gdy $\deg\alpha=k$;
+\item $\dd^2=0$.
+\end{enumerate}
+W mapie jej wzór jest szczególnie prosty:
+\begin{equation}\label{eq:zewnetrzna-lokalnie}
+ \dd\!\left(\sum_I a_I\,\dd x^I\right)
+  =\sum_I\sum_j\frac{\partial a_I}{\partial x^j}
+     \dd x^j\wedge\dd x^I,
+ \qquad \dd x^I=\dd x^{i_1}\wedge\cdots\wedge\dd x^{i_k}.
+\end{equation}
+Dla każdego gładkiego $F:M\to N$ zachodzi
+$F^*\dd\omega=\dd(F^*\omega)$.
+\end{twierdzenie}
+\begin{proof}
+Najpierw sprawdźmy lokalność dowolnego operatora spełniającego
+podane warunki. Jeśli $\omega$ znika w otoczeniu $p$, wybierzmy
+gładką funkcję $\chi$, równą $1$ blisko $p$, z nośnikiem
+w tym otoczeniu. Taką pojedynczą funkcję buduje się w mapie
+z $e^{-1/t}$, jak w dowodzie Twierdzenia
+\ref{thm:podzial-jednosci-formy}; nie wymaga to różniczki form.
+Ponieważ $\chi\omega=0$, reguła Leibniza daje w $p$
+$0=\dd(\chi\omega)_p=(\dd\omega)_p$.
+Operator zależy więc tylko od formy w otoczeniu punktu.
+Lokalne funkcje i formy możemy pomnożyć przez taką funkcję
+odcinającą i przedłużyć przez zero; wynik różniczkowania
+blisko $p$ nie zależy od przedłużenia.
+
+Każda forma lokalnie jest sumą wyrazów $a_I\dd x^I$.
+Możemy już stosować warunki do lokalnych współrzędnych.
+Ponieważ $\dd(\dd x^i)=\dd^2x^i=0$,
+reguła Leibniza \emph{wymusza} wzór
+\eqref{eq:zewnetrzna-lokalnie}; mamy więc jednoznaczność.
+Zdefiniujmy operator tym wzorem. Po powtórnym użyciu
+otrzymujemy współczynniki
+$(\partial_{x^j}\partial_{x^h}a_I)
+\dd x^j\wedge\dd x^h\wedge\dd x^I$.
+Wyrazy z $(j,h)$ i $(h,j)$ znoszą się, gdyż pochodne
+mieszane są równe, a iloczyn zewnętrzny zmienia znak.
+Stąd $\dd^2=0$.
+
+Dla dwóch wyrazów $a\dd x^I$ i $b\dd x^J$
+zwykła reguła iloczynu $\dd(ab)=a\dd b+b\dd a$
+oraz przestawienie $\dd b$ przez $k$ czynników
+$\dd x^I$ dają dokładnie znak $(-1)^k$.
+Liniowość rozszerza to na sumy.
+Sprawdźmy zgodność na przecięciu map. Cofnięcie przez
+zmianę współrzędnych zachowuje $\dd f$ dzięki regule
+łańcucha i zachowuje $\wedge$ z poprzedniego
+stwierdzenia. Zatem dwa lokalne wzory, obliczone po obu
+stronach zmiany współrzędnych, są równe na generatorach
+$f,\dd x^i$, a przez regułę Leibniza na wszystkich formach.
+Wzory sklejają się w globalny operator. Ten sam argument
+dla dowolnego $F$ daje $F^*\dd=\dd F^*$.
+\end{proof}
+
+\begin{przyklad}[Rachunek na $\R^3$]
+Jeżeli $\alpha=P\,\dd x+Q\,\dd y+R\,\dd z$, to
+\[
+ \dd\alpha=(Q_x-P_y)\,\dd x\wedge\dd y
+ +(R_x-P_z)\,\dd x\wedge\dd z
+ +(R_y-Q_z)\,\dd y\wedge\dd z.
+\]
+Dla $\beta=P\,\dd y\wedge\dd z
++Q\,\dd z\wedge\dd x+R\,\dd x\wedge\dd y$
+otrzymujemy $\dd\beta=(P_x+Q_y+R_z)
+\dd x\wedge\dd y\wedge\dd z$.
+Są to wyrażenia występujące w klasycznych wzorach na rotację
+i dywergencję. Utożsamianie tu pól wektorowych z formami
+korzysta ze standardowej struktury euklidesowej $\R^3$;
+sama różniczka zewnętrzna na $M$ nie wymaga metryki.
+\end{przyklad}
+
+\begin{definicja}[Kontrakcja i pochodna Liego]
+\index{kontrakcja i pochodna liego@Kontrakcja i pochodna Liego}
+\label{def:formy-kontrakcja-lie}
+Dla pola wektorowego $X$ operator
+$\iota_X:\Omega^k(M)\to\Omega^{k-1}(M)$ określamy przez
+\[
+ (\iota_X\omega)_p(v_1,\ldots,v_{k-1})
+ =\omega_p(X_p,v_1,\ldots,v_{k-1}),
+ \qquad \iota_Xf=0.
+\]
+Jeśli $M$ ma brzeg, w definicji przez dwustronny przepływ
+zakładamy, że $X$ jest styczne do $\partial M$.
+Jeśli $\Phi_t$ jest lokalnym przepływem $X$ z
+Rozdziału~\ref{ch:pola}, kładziemy
+$\Lie_X\omega=\left.\frac{\dd}{\dd t}\right|_{t=0}\Phi_t^*\omega$.
+\end{definicja}
+
+\begin{twierdzenie}[Wzór Cartana]
+\label{thm:cartan-formy}
+Dla każdej formy $\omega$ mamy
+\begin{equation}\label{eq:cartan-formula}
+ \boxed{\ \Lie_X\omega=\dd(\iota_X\omega)
+       +\iota_X(\dd\omega)\ }.
+\end{equation}
+Ponadto $\Lie_X\dd=\dd\Lie_X$ oraz
+$\iota_X(\alpha\wedge\beta)=
+(\iota_X\alpha)\wedge\beta
++(-1)^{\deg\alpha}\alpha\wedge\iota_X\beta$.
+\end{twierdzenie}
+Dla pola niestycznego do brzegu prawa strona wzoru Cartana
+nadal określa gładką formę. Możemy nią zdefiniować
+$\Lie_X\omega$ na brzegu: jest to przedłużenie pochodnej
+Liego z wnętrza, niezależne od przedłużeń w mapach.
+Nie zakładamy wówczas istnienia dwustronnego przepływu w $M$.
+\begin{proof}
+Ostatnia równość wynika wprost z definicji iloczynu
+zewnętrznego: po wstawieniu $X$ w pierwsze miejsce
+może on wejść do pierwszej grupy argumentów lub,
+po przejściu przez $\deg\alpha$ argumentów, do drugiej.
+Ponieważ $\Phi_t^*$ zachowuje iloczyn zewnętrzny,
+$\Lie_X$ jest derywacją stopnia $0$ algebry form.
+Prawa strona~\eqref{eq:cartan-formula} również nią jest:
+rozwijamy oba składniki na $\alpha\wedge\beta$
+regułami dla $\dd$ i $\iota_X$; wyrazy mieszane mają
+przeciwne znaki i znoszą się.
+
+Wystarczy zatem porównać obie strony na lokalnych
+generatorach $f,\dd x^i$. Dla funkcji lewa strona to
+$Xf$, a prawa to $\iota_X\dd f=\dd f(X)=Xf$.
+Dla $\dd x^i$ lewa strona wynosi
+$\dd(\Lie_Xx^i)=\dd(Xx^i)$, gdyż cofnięcie
+komutuje z $\dd$; prawa wynosi
+$\dd(\iota_X\dd x^i)+\iota_X\dd^2x^i
+=\dd(Xx^i)$. Wzór obowiązuje więc dla
+każdej sumy wyrazów $f\,\dd x^I$ i globalnie.
+Wreszcie, z $\dd^2=0$ dostajemy
+$\dd\Lie_X=\dd\iota_X\dd
+=\Lie_X\dd$.
+\end{proof}
+
+\begin{przyklad}[Pochodna Liego formy]
+Na $\R^2$ weźmy $X=\partial_x$ i $\omega=x\,\dd y$.
+Przepływ przesuwa punkty poziomo, więc
+$\Phi_t^*\omega=(x+t)\dd y$ oraz
+$\Lie_X\omega=\dd y$. Ze wzoru Cartana:
+$\iota_X\omega=0$, $\dd\omega=\dd x\wedge\dd y$
+i $\iota_X\dd\omega=\dd y$. Oba obliczenia są zgodne.
+\end{przyklad}
+\section{Lokalne istnienie funkcji pierwotnej}
+\label{sec:formy-poincare}
+
+Równość $\dd^2=0$ mówi, że każda forma postaci
+$\dd\eta$ jest \emph{zamknięta}. Odwrotność nie zachodzi
+globalnie: przeszkodę może stanowić topologia. Lokalnie
+przeszkoda znika, co wyjaśnia następujący rachunek.
+Dla zamkniętej $1$-formy $\omega$ szukamy \emph{funkcji
+pierwotnej} $f$ spełniającej $\omega=\dd f$.
+Dla formy stopnia $k>1$ jej odpowiednikiem jest
+\emph{forma pierwotna} $\eta$ stopnia $k-1$ z
+$\omega=\dd\eta$. Lemat Poincarégo obejmuje
+oba przypadki.
+
+\begin{lemat}[Homotopia form]
+\label{lem:homotopia-form}
+Niech $H:[0,1]\times M\to N$ będzie gładką homotopią
+odwzorowań $H_0,H_1$. Przy końcach przedziału, a także
+przy narożach iloczynu, gdy $M$ ma brzeg, gładkość
+rozumiemy jako gładkie przedłużanie składowych w mapach. Istnieje operator liniowy
+$K:\Omega^k(N)\to\Omega^{k-1}(M)$ taki, że
+\begin{equation}\label{eq:homotopia-form}
+ H_1^*\omega-H_0^*\omega
+ =\dd(K\omega)+K(\dd\omega).
+\end{equation}
+\end{lemat}
+\begin{proof}
+Dla $k=0$ przyjmujemy $K\omega=0$; poniższy rachunek
+obejmuje ten przypadek z $a=0$. Każdą formę na
+$[0,1]\times M$ zapisujemy jednoznacznie
+w postaci $H^*\omega=\dd t\wedge a(t)+b(t)$,
+gdzie $a(t)$ jest rodziną form stopnia $k-1$ na $M$,
+a $b(t)$ rodziną form stopnia $k$. Położenie
+$K\omega:=\int_0^1 a(t)\,\dd t$ oznacza całkowanie
+\emph{współczynników} formy po parametrze; można je
+wykonać w każdej mapie, a zgodność na przecięciach
+wynika z liniowości zmiany współrzędnych.
+Obliczenie różniczki daje
+\[
+ \dd(H^*\omega)
+ =\dd t\wedge(\partial_tb-\dd_Ma)+\dd_Mb.
+\]
+Ponieważ $H^*\dd\omega=\dd H^*\omega$, współczynniki
+przy $\dd t$ mówią, że
+$a_{\dd\omega}(t)=\partial_tb(t)-\dd_Ma(t)$.
+Po scałkowaniu od $0$ do $1$ otrzymujemy
+$K\dd\omega=b(1)-b(0)-\dd_MK\omega$.
+Ale $b(i)=H_i^*\omega$ dla $i=0,1$,
+więc jest to dokładnie~\eqref{eq:homotopia-form}.
+\end{proof}
+
+\begin{twierdzenie}[Lemat Poincarégo]
+\label{thm:lemat-poincare-formy}
+Niech $U\subset\R^n$ będzie otwarty i gwiaździsty
+względem $0$. Jeżeli $k\geq1$ i
+$\omega\in\Omega^k(U)$ spełnia $\dd\omega=0$,
+to istnieje $\eta\in\Omega^{k-1}(U)$ z
+$\omega=\dd\eta$. Każda zamknięta forma stopnia
+$0$ jest stała na $U$.
+\end{twierdzenie}
+\begin{proof}
+W Lemacie~\ref{lem:homotopia-form} bierzemy
+$H(t,x)=tx$. Dla $k\geq1$ odwzorowanie $H_0$
+jest stałe, więc $H_0^*\omega=0$; dla zamkniętej
+$\omega$ drugi składnik po prawej stronie
+\eqref{eq:homotopia-form} także znika.
+Dostajemy $\omega=\dd(K\omega)$.
+Jeśli chcemy \emph{obliczyć} formę pierwotną
+(dla $k=1$: funkcję pierwotną), to
+\begin{equation}\label{eq:poincare-pierwotna}
+ (K\omega)_x(v_1,\ldots,v_{k-1})
+ =\int_0^1 t^{k-1}
+   \omega_{tx}(x,v_1,\ldots,v_{k-1})\,\dd t.
+\end{equation}
+Istotnie, $\dd H(\partial_t)=x$, podczas gdy
+$\dd H(v_i)=tv_i$, skąd $k-1$ czynników $t$.
+Gwiaździstość zapewnia, że cały odcinek $tx$ leży w $U$.
+Dla $k=0$ warunek $\dd f=0$ mówi, że wszystkie
+pochodne kierunkowe znikają. Zatem pochodna
+$t\mapsto f(tx)$ jest zerowa i $f(x)=f(0)$.
+\end{proof}
+
+\begin{przyklad}[Obliczenie funkcji pierwotnej]
+Na $\R^2$ forma $\omega=2xy\,\dd x+x^2\,\dd y$
+jest zamknięta, bo
+$\dd\omega=(2x-2x)\dd x\wedge\dd y=0$.
+Wzór~\eqref{eq:poincare-pierwotna} dla $k=1$ daje
+\[
+ (K\omega)(x,y)=\int_0^1
+ \omega_{(tx,ty)}(x,y)\,\dd t
+ =\int_0^1 3t^2x^2y\,\dd t=x^2y.
+\]
+Zatem $f(x,y)=x^2y$ jest funkcją pierwotną
+$1$-formy $\omega$, ponieważ $\omega=\dd f$.
+Obliczenie pokazuje mechanizm lematu.
+\end{przyklad}
+
+\begin{wniosek}[Niezmienniczość przez homotopię]
+\label{cor:de-rham-homotopia}
+Odwzorowania gładko homotopijne indukują tę samą
+operację cofnięcia na kohomologii de Rhama
+z Definicji~\ref{def:de-rham-cohomology}.
+\end{wniosek}
+\begin{proof}
+Jeśli $\dd\omega=0$, wzór~\eqref{eq:homotopia-form}
+mówi, że $H_1^*\omega-H_0^*\omega=\dd(K\omega)$.
+Różnica jest więc dokładna i obie klasy są równe.
+\end{proof}
+
+\section{Podział jedności}
+\label{sec:formy-podzial-jednosci}
+
+Przy całkowaniu trzeba scalać dane z wielu map.
+Służy do tego wynik, który wyjaśnia także wcześniejsze
+użycia funkcji odcinających w skrypcie.
+
+\begin{twierdzenie}[Gładki podział jedności]
+\label{thm:podzial-jednosci-formy}
+Niech $(U_\alpha)$ będzie otwartym pokryciem rozmaitości
+$M$ Hausdorffa i o przeliczalnej bazie. Istnieją
+nieujemne funkcje gładkie $(\rho_j)$ o lokalnie skończonej
+rodzinie nośników (każdy punkt ma otoczenie spotykające
+tylko skończenie wiele nośników) oraz indeksy $\alpha(j)$ takie, że
+\[
+ \supp\rho_j\subset U_{\alpha(j)},
+ \qquad \sum_j\rho_j(p)=1\quad(p\in M).
+\]
+Każdą $\rho_j$ można wybrać o nośniku zwartym
+w jednej dziedzinie mapy zawartej w $U_{\alpha(j)}$.
+\end{twierdzenie}
+\begin{proof}
+Najpierw budujemy jedną funkcję odcinającą.
+Jeśli w mapie kula domknięta $\overline B_r$
+leży w większej kuli $B_R$, przy czym $0<r<R$
+i $\overline B_R$ zawiera się w obrazie mapy,
+wybierzmy gładką funkcję $\chi$ zależną tylko
+od $\|x\|^2$, równą $1$ na $\overline B_r$,
+dodatnią między $r$ i $R$, a zerową poza $B_R$.
+Można ją złożyć z funkcji $h(t)=e^{-1/t}$ dla
+$t>0$ i $h(t)=0$ dla $t\leq0$; jej gładkość w
+$t=0$ wynika z zanikania wszystkich pochodnych
+$t^{-a}e^{-1/t}$. Przedłużenie $\chi$ przez $0$
+na resztę $M$ jest gładkie, bo nośnik ma zwartą
+domkniętą otoczkę wewnątrz mapy. Przy brzegu bierzemy
+przecięcia tych kul z półprzestrzenią i ograniczamy do nich
+te same funkcje. Wszystkie wnętrza i domknięcia poniżej
+rozumiemy w topologii $M$, także przy brzegu.
+
+Z lokalnej zwartości i przeliczalności bazy
+konstruujemy wyczerpanie zwartymi zbiorami
+$K_1\subset\operatorname{int}K_2\subset\cdots$,
+$\bigcup_jK_j=M$ (weźmy kolejno skończone
+sumy domkniętych, stosunkowo zwartych kul
+obejmujące pierwsze elementy przeliczalnego
+pokrycia i powiększmy je przy każdym kroku).
+Ustalmy $K_j=\varnothing$ dla $j\leq0$.
+Zwarty pas $K_j\setminus\operatorname{int}K_{j-1}$
+można pokryć skończenie wieloma małymi kulami
+w mapach o domknięciach zawartych jednocześnie
+w którymś $U_\alpha$ i w
+$\operatorname{int}K_{j+1}\setminus K_{j-2}$.
+Wybieramy funkcje odcinające dodatnie na
+mniejszych kulach pokrywających pas.
+Rodzina tych kul dla wszystkich $j$ jest
+lokalnie skończona: otoczenie punktu wewnątrz
+pewnego $K_N$ nie spotyka kul pochodzących
+z pasów o dostatecznie dużym indeksie.
+
+Niech $\chi_j$ oznaczają wszystkie otrzymane
+funkcje. Suma $S=\sum_j\chi_j$ jest lokalnie
+skończona, gładka i wszędzie dodatnia, bo
+każdy punkt należy do któregoś pasa. Kładziemy
+$\rho_j=\chi_j/S$. Wtedy nośniki pozostają
+w wybranych kulach i
+$\sum_j\rho_j=S/S=1$.
+Gdy potrzebujemy funkcji indeksowanych samymi zbiorami
+pokrycia, sumujemy $\rho_j$ o tym samym $\alpha(j)$.
+Nośnik takiej sumy nadal leży w $U_\alpha$:
+lokalnie skończona suma zamkniętych nośników jest
+zbiorem domkniętym zawartym w $U_\alpha$.
+\end{proof}
+\section{Orientowalność i orientacje indukowane}
+\label{sec:formy-orientacja}
+
+\begin{definicja}[Orientacja]
+\index{orientacja@Orientacja}
+\label{def:orientacja-formy}
+Dwie uporządkowane bazy $m$-wymiarowej przestrzeni
+rzeczywistej $V$, dla $m\geq1$, mają tę samą orientację, jeśli
+macierz przejścia ma dodatni wyznacznik.
+Powstają dwie klasy baz. Na rozmaitości $M^m$
+\emph{orientacja} to gładki wybór takiej klasy w
+każdym $T_pM$. Równoważnie jest to klasa
+nigdzie niezerowych form $m$-stopnia: formy
+$\mu,\nu$ wyznaczają tę samą orientację, jeśli
+$\nu=f\mu$ dla gładkiej funkcji $f>0$.
+Rozmaitość dopuszczająca taki wybór jest
+\emph{orientowalna}; wraz z wyborem orientacji
+jest \emph{zorientowana}.
+\end{definicja}
+
+W wymiarze $0$ stosujemy opis przez formy najwyższego
+stopnia: $\Lambda^0 V^*=\R$, a orientacja jest wyborem
+jednej z dwóch półprostych, czyli znaku $+1$ lub $-1$.
+Każdemu punktowi rozmaitości dyskretnej przypisujemy taki
+znak. Opis przez dwie klasy baz dotyczy tylko $m\geq1$,
+gdyż przestrzeń zerowa ma tylko jedną bazę pustą.
+
+Dla $m\geq1$ forma $\mu_p$ określa bazę dodatnią $(v_1,\ldots,v_m)$
+przez nierówność $\mu_p(v_1,\ldots,v_m)>0$.
+To definicja \emph{znaku}, a nie długości ani pola:
+zamiana $\mu$ na $2\mu$ nie zmienia orientacji.
+Na każdej spójnej orientowalnej rozmaitości istnieją
+dwa wybory globalne, wzajemnie przeciwne.
+
+\begin{twierdzenie}[Trzy opisy orientowalności]
+\label{thm:orientacja-atlas-forma}
+Dla rozmaitości gładkiej $M^m$ równoważne są
+poniższe warunki. W mapach przy brzegu dopuszczamy
+obie półprzestrzenie $x^m\geq0$ i $x^m\leq0$;
+jest to ta sama struktura gładka, a pozwala stosować
+odbicie współrzędnej także w wymiarze $1$.
+\begin{enumerate}[leftmargin=*]
+\item orientowalność $M$;
+\item istnienie atlasu, w którym wszystkie wyznaczniki
+      odwzorowań przejścia są dodatnie;
+\item istnienie globalnej nigdzie niezerowej formy
+      $\mu\in\Omega^m(M)$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Dla $m=0$ wszystkie trzy warunki są spełnione:
+rozmaitość jest dyskretna, dowolny wybór znaków jest
+gładki, a funkcja $1$ jest nigdzie niezerową $0$-formą.
+Atlas zerowymiarowy sam nie zapisuje wyboru znaków.
+Załóżmy więc $m\geq1$.
+Forma $\mu$ wybiera dodatnie bazy w każdym punkcie,
+więc (3) daje (1). Jeśli wybór (1) jest ustalony,
+zmniejszamy dziedziny map do spójnych otoczeń.
+Każdą mapę można w razie potrzeby złożyć z odbiciem
+jednej współrzędnej, aby jej standardowa baza była
+dodatnia. W nowym atlasie dwie bazy lokalne opisują
+tę samą orientację, zatem ich wyznacznik przejścia
+jest dodatni: (1) daje (2).
+
+Załóżmy (2). W każdej mapie z tego atlasu lokalna
+forma $\mu_j=\dd x_j^1\wedge\cdots\wedge\dd x_j^m$
+jest dodatnia. Wybierzmy podział jedności $(\rho_j)$
+z Twierdzenia~\ref{thm:podzial-jednosci-formy},
+o nośnikach w dziedzinach tych map, i przedłużmy
+$\rho_j\mu_j$ przez zero. Suma
+$\mu=\sum_j\rho_j\mu_j$ jest lokalnie skończona.
+W dowolnym punkcie co najmniej jedno $\rho_j$ jest
+dodatnie; wszystkie występujące $\mu_j$ są dodatnimi
+wielokrotnościami jednej z nich, bo przejścia
+mają dodatni wyznacznik. Suma nie może się
+wyzerować. Tak dostajemy (3).
+\end{proof}
+
+\begin{stwierdzenie}[Dwa podstawowe sposoby przenoszenia orientacji]
+\label{prop:orientacja-iloczyn-pullback}
+Jeżeli $F:M\to N$ jest dyfeomorfizmem i $N$ ma
+orientację $[\nu]$, to $F^*\nu$ orientuje $M$;
+$F$ zachowuje orientację wtedy, gdy zgadza się ona
+z uprzednio wybraną orientacją $M$. Jeśli $M^m,N^n$
+są zorientowane, orientację $M\times N$ wyznacza
+$\pr_M^*\mu\wedge\pr_N^*\nu$.
+Po zamianie kolejności czynników znak zmienia się
+o $(-1)^{mn}$.
+\end{stwierdzenie}
+\begin{proof}
+Różniczka dyfeomorfizmu jest izomorfizmem, więc
+cofnięcie nigdzie niezerowej formy najwyższego stopnia
+pozostaje nigdzie niezerowe. Na iloczynie wartości
+$\mu\wedge\nu$ na bazie najpierw $TM$, potem $TN$
+są dodatnie. Przestawienie $m$ wektorów z pierwszego
+czynnika z $n$ wektorami drugiego wymaga $mn$
+zamian; każda zmienia znak formy.
+\end{proof}
+
+Orientacja brzegu i orientacja regularnego zbioru
+poziomicowego są dwiema wersjami tej samej zasady:
+\emph{najpierw kierunki normalne, potem styczne}.
+
+\begin{definicja}[Orientacja brzegu: normalna na zewnątrz]
+\index{orientacja brzegu normalna na zewnatrz@Orientacja brzegu: normalna na zewnątrz}
+\label{def:orientacja-brzegu}
+Niech $M^m$ będzie zorientowaną rozmaitością z brzegiem.
+Dla $m\geq2$ baza $(v_1,\ldots,v_{m-1})$ przestrzeni $T_p\partial M$
+jest dodatnia wtedy i tylko wtedy, gdy
+$(n,v_1,\ldots,v_{m-1})$ jest dodatnią bazą $T_pM$
+dla dowolnego wektora $n$ skierowanego na zewnątrz.
+Wymóg nie zależy od konkretnego $n$: dwa takie wektory
+mają dodatnio proporcjonalne składowe poprzeczne,
+a dodanie wektora stycznego nie zmienia wyznacznika.
+Równoważnie, dla formy $\mu$ reprezentującej orientację,
+brzeg orientuje $\iota_n\mu$ ograniczona do $T\partial M$.
+Ten opis działa również dla $m=1$: znak w punkcie brzegu
+jest znakiem liczby $\mu_p(n)$.
+\end{definicja}
+
+\begin{stwierdzenie}[Brzeg jest orientowalny]
+\label{prop:brzeg-orientowalny}
+Powyższa reguła nadaje $\partial M$ gładką orientację.
+Dla standardowej orientacji $[a,b]$ końcowy punkt $b$
+ma znak $+1$, a początkowy $a$ ma znak $-1$.
+Dla dysku $D^2$ ze standardową orientacją płaszczyzny
+brzeg biegnie przeciwnie do ruchu wskazówek zegara.
+\end{stwierdzenie}
+\begin{proof}
+W mapie półprzestrzeni $\{x^m\geq0\}$ kierunek
+na zewnątrz to $-\partial_{x^m}$; reguła daje
+stały wybór znaku baz współrzędnych stycznych.
+Zmiany map zachowują orientację $M$ i wysyłają
+kierunek na zewnątrz na kierunek na zewnątrz,
+więc uzyskane wybory na przecięciach są zgodne.
+W wymiarze $1$ przy $b$ wektor zewnętrzny
+$+\partial_t$ jest dodatni, a przy $a$ wektor
+$-\partial_t$ ujemny. W dysku przy $(1,0)$
+wektor zewnętrzny jest $(1,0)$; aby para była
+dodatnia, wektor styczny musi wskazywać $(0,1)$.
+Ciągłość przenosi ten kierunek na cały okrąg.
+\end{proof}
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,line cap=round,line join=round]
+ \fill[manifoldblue!9] (0,0) circle (1.65);
+ \draw[manifoldblue!75!black,line width=1.2pt] (0,0) circle (1.65);
+ \draw[->,manifoldred,very thick] (1.65,0)--(2.73,0)
+  node[right,font=\small] {$n$};
+ \draw[->,manifoldgreen!70!black,very thick] (1.65,0)--(1.65,1.15)
+  node[above,font=\small] {$v$ styczny};
+ \draw[->,manifoldgold!85!black,thick]
+  (210:1.65) arc[start angle=210,end angle=255,radius=1.65];
+ \draw[->,manifoldgold!85!black,thick]
+  (120:1.65) arc[start angle=120,end angle=165,radius=1.65];
+ \fill[manifoldred] (1.65,0) circle(2.5pt)
+  node[below=5pt] {$p$};
+ \node[font=\small,align=left,anchor=west,text width=4.6cm]
+  at (4.75,.55)
+  {Para $(n,v)$ ma dodatni wyznacznik.
+   Dodatni kierunek na $\partial D^2$
+   biegnie przeciwnie do wskazówek zegara.};
+\end{tikzpicture}
+\caption{Orientację brzegu wyznacza reguła
+„normalna na zewnątrz jako pierwszy wektor”.}
+\label{fig:orientacja-brzegu-dysk}
+\end{figure}
+
+\begin{twierdzenie}[Orientacja regularnego przeciwobrazu]
+\label{thm:orientacja-poziomicy}
+Niech $F:M^m\to N^q$ będzie gładkie,
+$M,N$ zorientowane, $N$ bez brzegu, a $y\in N$ wartością
+regularną. Jeśli $M$ ma brzeg, zakładamy ponadto, że $y$
+jest wartością regularną $F|_{\partial M}$.
+Wtedy $S=F^{-1}(y)$ jest orientowalną podrozmaitością
+wymiaru $m-q$ (o ile nie jest pusta). Orientację
+można określić dla wszystkich wymiarów następująco.
+Dla dodatnich form objętości $\mu_p$ na $T_pM$
+i $\nu_y$ na $T_yN$, dowolnej bazy $(e_1,\ldots,e_q)$
+oraz podniesień $\dd F_pw_i=e_i$ kładziemy
+\[
+ \eta_p(v_1,\ldots,v_{m-q})
+ =\frac{\mu_p(w_1,\ldots,w_q,v_1,\ldots,v_{m-q})}
+        {\nu_y(e_1,\ldots,e_q)}.
+\]
+Puste listy argumentów oznaczają wartości form stopnia $0$.
+Forma $\eta$ określa orientację $S$. Gdy $q\geq1$
+i $m-q\geq1$, jest to reguła: $(v_1,\ldots,v_{m-q})$
+w $T_pS=\ker\dd F_p$ jest dodatnia, jeśli dla
+wektorów $w_1,\ldots,w_q\in T_pM$, których obrazy
+$(\dd F_pw_1,\ldots,\dd F_pw_q)$ tworzą dodatnią
+bazę $T_yN$, ciąg
+$(w_1,\ldots,w_q,v_1,\ldots,v_{m-q})$
+jest dodatni w $T_pM$. Gdy $m=q$, punktowi $p\in S$
+przypisujemy znak izomorfizmu $\dd F_p$ między
+zorientowanymi przestrzeniami. Przy brzegu
+$\partial S=S\cap\partial M$.
+\end{twierdzenie}
+\begin{proof}
+Regularność znaczy, że $\dd F_p$ jest surjekcją,
+więc takie $w_i$ istnieją. Przy $\partial M$ dodatkowa
+surjekcja na przestrzeni stycznej do brzegu pozwala wybrać
+$q$ współrzędnych stycznych, w których pochodne $F$ są
+niezależne. Twierdzenie o funkcji odwrotnej zastosowane
+do $F$ wraz z pozostałymi współrzędnymi, w tym współrzędną
+normalną $s\geq0$, daje lokalną postać poziomicy
+$\R^{m-q-1}\times[0,\infty)$. Stąd podana formuła brzegu.
+Bez założenia o $F|_{\partial M}$ wniosek mógłby zawieść:
+dla $F(x,s)=x^2+s$ na $s\geq0$ wartość $0$ jest regularna
+dla $F$, lecz przeciwobraz jest pojedynczym punktem,
+a nie oczekiwaną jednowymiarową podrozmaitością z brzegiem. Zastąpienie $w_i$
+innymi podniesieniami zmienia je o elementy
+$\ker\dd F_p$; macierz zmiany bazy ma wówczas
+blok trójkątny z jednostką na przekątnej w części
+normalnej, zatem nie zmienia znaku. Zmiana
+dodatniej bazy w $T_yN$ ma dodatni wyznacznik
+i także zachowuje znak. Reguła jest więc
+jednoznaczna. W ilorazowym wzorze na $\eta_p$ zmiana
+dowolnej bazy $(e_i)$ mnoży licznik i mianownik przez
+ten sam niezerowy wyznacznik; zmiana dodatnich form
+$\mu_p,\nu_y$ mnoży wynik przez liczbę dodatnią.
+W lokalnej postaci submersji z
+Wniosku~\ref{wn:submersja-lokalnie} wybory normalnych
+i stycznych są gładkie; znaki są zgodne na przecięciach.
+To dowodzi orientowalności $S$ i wzoru.
+\end{proof}
+
+Ta konstrukcja działa też dla zorientowanej
+\emph{wiązki normalnej} podrozmaitości $S\subset M$:
+jej baza dodatnia, a następnie baza $TS$ mają razem
+dawać bazę dodatnią $TM$. Wybór orientacji normalnej
+nazywamy \emph{koorientacją}. Bez takiego wyboru sama
+orientacja $M$ nie zawsze orientuje $S$.
+
+\begin{przyklad}[Okrąg jako poziomica]
+W $\R^2$ i $\R$ wybierzmy orientacje standardowe
+i weźmy $F(x,y)=x^2+y^2$. Na $S^1=F^{-1}(1)$
+różniczka ma wartość dodatnią na wektorze
+skierowanym promieniowo na zewnątrz.
+Twierdzenie~\ref{thm:orientacja-poziomicy} daje więc
+orientację przeciwną do ruchu wskazówek zegara,
+taką samą jak orientacja brzegu $D^2$.
+\end{przyklad}
+
+\begin{przyklad}[Co zawodzi na wstędze i przestrzeni rzutowej]
+Wstęga Möbiusa z Przykładu~\ref{prz:mobius}
+po jednym okrążeniu odwraca
+kierunek poprzeczny, zachowując kierunek
+wzdłuż okręgu. Orientacja płaszczyzny stycznej
+musiałaby więc zmienić znak i nie może być globalna.
+Jej brzeg jest jednak okręgiem, a zatem orientowalnym.
+
+Dla $n\geq1$ przestrzeń $\mathbb{RP}^n$ jest
+orientowalna dokładnie wtedy, gdy $n$ jest nieparzyste.
+Istotnie, nakrycie $S^n\to\mathbb{RP}^n$ identyfikuje
+$x$ z $-x$. Antypodalne $A(x)=-x$ zmienia orientację
+$S^n$ o znak $(-1)^{n+1}$: dodatnią bazę przestrzeni otaczającej
+otrzymujemy z $(x,v_1,\ldots,v_n)$ w $\R^{n+1}$,
+a $A$ mnoży wszystkie $n+1$ wektorów przez $-1$.
+Orientacja na ilorazie istnieje wtedy i tylko wtedy,
+gdy to utożsamienie zachowuje orientację sfery:
+jeśli zachowuje, orientacja schodzi przez lokalne
+dyfeomorfizmy; jeśli odwraca, jej podniesienie z
+ilorazu byłoby zarazem zachowane i odwrócone, co
+jest niemożliwe na spójnej sferze.
+\end{przyklad}
+\section{Całkowanie form na rozmaitości}
+\label{sec:formy-calkowanie}
+
+Na zorientowanej rozmaitości $M^m$ całkujemy formy
+stopnia $m$: mają dokładnie tyle argumentów, ile
+niezależnych kierunków ma $M$. Bez orientacji można
+całkować \emph{gęstości}, ale wymagają osobnej definicji;
+całka z formy najwyższego stopnia potrzebuje znaku.
+
+\begin{definicja}[Całka z formy o zwartym nośniku]
+\index{calka z formy o zwartym nosniku@Całka z formy o zwartym nośniku}
+\label{def:calka-z-formy}
+Niech $M^m$ będzie zorientowana i
+$\omega\in\Omega_c^m(M)$, gdzie dolny indeks $c$
+oznacza zwarty nośnik. W mapie $(U,x)$ zgodnej z
+orientacją, jeśli $\supp\omega\subset U$ i
+$\omega=f\,\dd x^1\wedge\cdots\wedge\dd x^m$,
+definiujemy
+\begin{equation}\label{eq:calka-lokalna}
+ \int_M\omega:=\int_{x(U)} f(x^{-1}(u))\,\dd u^1\cdots\dd u^m.
+\end{equation}
+Dla dowolnego zwartego nośnika bierzemy podział
+jedności $(\rho_j)$ z Twierdzenia
+\ref{thm:podzial-jednosci-formy}, w mapach zgodnych
+z orientacją, i kładziemy
+\begin{equation}\label{eq:calka-globalna}
+ \int_M\omega:=\sum_j\int_M\rho_j\omega.
+\end{equation}
+Tylko skończenie wiele składników może być niezerowych:
+lokalnie skończona rodzina nośników spotyka zwarty
+$\supp\omega$ tylko dla skończenie wielu indeksów.
+W wymiarze $0$ definicję zastępuje suma
+$\int_M f=\sum_{p\in M}\varepsilon_p f(p)$,
+gdzie $\varepsilon_p\in\{1,-1\}$ jest orientacją punktu.
+Zwarty nośnik w przestrzeni dyskretnej jest skończony.
+\end{definicja}
+
+\begin{twierdzenie}[Niezależność od map i podziału]
+\label{thm:calka-dobrze-okreslona}
+Definicja~\ref{def:calka-z-formy} nie zależy od
+wybranego dodatniego atlasu ani podziału jedności.
+Jeżeli $F:M\to N$ jest dyfeomorfizmem zachowującym
+orientację, to dla $\omega\in\Omega_c^m(N)$ zachodzi
+$\int_M F^*\omega=\int_N\omega$; gdy $F$ odwraca
+orientację i $M,N$ są spójne, po prawej pojawia się
+znak minus.
+\end{twierdzenie}
+\begin{proof}
+W wymiarze $0$ teza wynika z sumy ze znakami i z tego,
+że dyfeomorfizm jest bijekcją punktów. Dla $m\geq1$
+najpierw niech nośnik leży w dwóch dodatnich mapach
+$x$ i $y$. Z równości
+\[
+ \dd y^1\wedge\cdots\wedge\dd y^m
+ =\det D(y\circ x^{-1})\,
+   \dd x^1\wedge\cdots\wedge\dd x^m
+\]
+wynika, że współczynniki opisujące tę samą formę
+w obu mapach różnią się o wyznacznik Jacobiego.
+Jest on dodatni. Twierdzenie o zmianie zmiennych
+w całce na otwartych podzbiorach $\R^m$ pokazuje,
+że oba wzory~\eqref{eq:calka-lokalna} dają tę samą
+liczbę. Dla mapy odwracającej orientację wyznacznik
+jest ujemny, a zwykły wzór na zmianę zmiennych
+zawiera jego wartość bezwzględną; stąd minus.
+
+Jeśli $(\rho_j)$ i $(\sigma_k)$ są dwoma podziałami,
+to na nośniku $\omega$ możemy wstawić
+$1=\sum_k\sigma_k$ do każdej całki $\rho_j\omega$.
+Otrzymujemy sumę $\sum_{j,k}\int_M\rho_j\sigma_k\omega$.
+Każdy składnik ma nośnik w przecięciu dwóch map.
+Rozcinamy go w razie potrzeby na mniejsze mapy,
+stosujemy poprzedni rachunek i zamieniamy kolejność
+obu skończonych sum. Wynik jest taki sam, gdy
+zaczniemy od $(\sigma_k)$. Wzór dla $F$ sprawdzamy
+na składnikach lokalnych przez $y\circ F\circ x^{-1}$
+i sumujemy.
+\end{proof}
+
+Na zwartej rozmaitości każda gładka forma ma zwarty
+nośnik. Dla zorientowanej krzywej parametryzowanej
+$\gamma:[a,b]\to M$ całka z $1$-formy jest
+$\int_\gamma\alpha:=\int_a^b\gamma^*\alpha$;
+przeparametryzowanie zachowujące kierunek nie zmienia
+jej wartości. Dla parametryzowanej powierzchni
+analogicznie cofamy formę $2$-stopnia.
+
+\begin{przyklad}[Całka po okręgu]
+Dla $\gamma(t)=(\cos t,\sin t)$, $0\leq t\leq2\pi$,
+zorientowanej przeciwnie do ruchu wskazówek zegara,
+forma $\alpha=x\,\dd y-y\,\dd x$ daje
+$\gamma^*\alpha=(\cos^2t+\sin^2t)\dd t=\dd t$.
+Stąd $\int_{S^1}\alpha=2\pi$.
+Nie jest to długość łuku wyprowadzona z metryki:
+całkujemy $1$-formę wybraną w otaczającej płaszczyźnie.
+\end{przyklad}
+
+\section{Twierdzenie Stokesa}
+\label{sec:formy-stokes}
+
+Intuicja jest jedna: gdy zsumujemy brzegi
+małych, zgodnie zorientowanych fragmentów,
+ich wewnętrzne krawędzie wystąpią po dwa razy
+z przeciwnymi znakami. Pozostanie brzeg całości.
+Rachunek na formach pozwala zapisać tę zasadę
+bez ograniczania się do konkretnych wymiarów.
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,line cap=round,line join=round]
+ \fill[manifoldblue!10] (0,0) rectangle (3,2.35);
+ \fill[manifoldgreen!12] (3,0) rectangle (6,2.35);
+ \draw[manifoldblue!70!black,thick] (0,0) rectangle (3,2.35);
+ \draw[manifoldgreen!70!black,thick] (3,0) rectangle (6,2.35);
+ \draw[->,manifoldred,very thick] (2.92,.6)--(2.92,1.68);
+ \draw[->,manifoldgold!85!black,very thick] (3.08,1.68)--(3.08,.6);
+ \draw[->,manifoldblue!70!black,thick] (.65,0)--(1.75,0);
+ \draw[->,manifoldgreen!70!black,thick] (4.25,0)--(5.35,0);
+ \node[manifoldblue!80!black] at (1.5,1.25) {$P_1$};
+ \node[manifoldgreen!70!black] at (4.5,1.25) {$P_2$};
+ \node[font=\small,align=left,anchor=west,text width=5.0cm]
+  at (6.55,1.2)
+  {Wspólna krawędź jest brzegiem $P_1$
+   i $P_2$ z przeciwnymi kierunkami.
+   W sumie znika; zostaje tylko brzeg zewnętrzny.};
+\end{tikzpicture}
+\caption{Znak orientacji usuwa wewnętrzną krawędź
+przy składaniu dwóch fragmentów.}
+\label{fig:stokes-anulowanie}
+\end{figure}
+
+\begin{twierdzenie}[Stokes dla form]
+\label{thm:stokes-formy}
+Niech $M^m$ będzie zorientowaną gładką rozmaitością
+z brzegiem, $m\geq1$, a $\omega\in\Omega_c^{m-1}(M)$.
+Brzeg ma orientację z Definicji
+\ref{def:orientacja-brzegu}, a
+$i:\partial M\hookrightarrow M$ jest \emph{inkluzją}.
+Wtedy
+\begin{equation}\label{eq:stokes-formy}
+ \boxed{\displaystyle \int_M\dd\omega
+        =\int_{\partial M}i^*\omega.}
+\end{equation}
+Gdy $\partial M=\varnothing$, prawa strona wynosi $0$.
+\end{twierdzenie}
+
+Zapis $i^*\omega$ oznacza \emph{cofnięcie formy}
+przez inkluzję $i$, a nie nową pochodną czy
+ograniczenie samego współczynnika. Z definicji
+cofnięcia~\eqref{eq:pullback-formy}, dla
+$p\in\partial M$ i $v_j\in T_p\partial M$,
+\begin{equation}\label{eq:inkluzja-formy}
+ (i^*\omega)_p(v_1,\ldots,v_{m-1})
+ =\omega_p(\dd i_pv_1,\ldots,\dd i_pv_{m-1}).
+\end{equation}
+Różniczka $\dd i_p$ po prostu traktuje wektor
+styczny do brzegu jako wektor styczny do $M$.
+W mapie przybrzegowej $x^m\geq0$ mamy
+$i(x^1,\ldots,x^{m-1})=(x^1,\ldots,x^{m-1},0)$,
+więc $i^*(\dd x^j)=\dd x^j$ dla $j<m$, natomiast
+$i^*(\dd x^m)=0$. Współczynniki formy podstawiamy
+przy $x^m=0$; składniki zawierające $\dd x^m$
+znikają. Znak orientacji brzegu rozpatrujemy
+\emph{osobno}: nie jest częścią operacji $i^*$.
+
+\begin{proof}
+\emph{Przypadek mapy wewnętrznej.}
+Załóżmy najpierw, że nośnik $\omega$ jest zwarty
+i zawarty w dziedzinie mapy, która nie spotyka
+$\partial M$. We współrzędnych jej obraz jest
+otwartym podzbiorem $\R^m$. Ponieważ nośnik
+leży wewnątrz obrazu, przedłużenie współczynników
+przez zero na całą $\R^m$ jest gładkie i ma
+zwarty nośnik. Dla standardowej orientacji piszemy
+\[
+ \omega=\sum_{i=1}^m f_i\,
+ \dd x^1\wedge\cdots\wedge\widehat{\dd x^i}
+      \wedge\cdots\wedge\dd x^m.
+\]
+Symbol daszka oznacza opuszczenie jednego czynnika.
+Ze wzoru na różniczkę zewnętrzną wyraz
+$\partial_j f_i\,\dd x^j$ mnożymy przez wszystkie
+$\dd x^r$ z $r\ne i$. Jeśli $j\ne i$, występuje
+dwukrotnie $\dd x^j$ i wyraz znika. Jeśli $j=i$,
+przestawiamy $\dd x^i$ przez $i-1$ czynników,
+co daje znak $(-1)^{i-1}$. Zatem
+\[
+ \dd\omega=\sum_{i=1}^m(-1)^{i-1}
+ (\partial_i f_i)\,\dd x^1\wedge\cdots\wedge\dd x^m.
+\]
+Ustalmy wszystkie współrzędne poza $x^i$.
+Funkcja $x^i\mapsto f_i(x)$ znika przy
+$x^i\to\pm\infty$. Podstawowe twierdzenie
+rachunku całkowego daje
+\[
+ \int_{-\infty}^{\infty}\partial_i f_i(x)\,\dd x^i
+ =\lim_{b\to\infty}f_i(x^1,\ldots,b,\ldots,x^m)
+  -\lim_{a\to-\infty}f_i(x^1,\ldots,a,\ldots,x^m)=0.
+\]
+Zamieniamy kolejność całkowania dzięki zwartemu
+nośnikowi i sumujemy po $i$. Wychodzi
+$\int_M\dd\omega=0$. Także
+$i^*\omega=0$, ponieważ nośnik $\omega$ nie
+spotyka brzegu, więc równość Stokesa zachodzi.
+
+\emph{Przypadek mapy przybrzegowej.}
+Teraz niech nośnik leży w mapie na otwarty
+podzbiór półprzestrzeni
+$\mathbb H^m=\{(x',s):x'\in\R^{m-1},\ s\geq0\}$,
+gdzie $s=x^m$. Na razie używamy standardowej
+orientacji $\dd x^1\wedge\cdots\wedge\dd x^m$.
+Przedłużamy $f_i$ przez zero w obrębie
+$\mathbb H^m$ poza obraz mapy; zwarty nośnik
+sprawia, że to przedłużenie jest gładkie.
+Nie przedłużamy funkcji przez $s=0$ na $s<0$:
+wartość na brzegu może przecież być niezerowa.
+Wzór na $\dd\omega$ jest taki sam jak wyżej.
+Jeśli $i<m$, to po ustaleniu $s$ oraz pozostałych
+współrzędnych stycznych całka z $\partial_i f_i$
+po całej prostej $x^i$ wynosi zero.
+Pozostaje wyraz $i=m$. Dla każdego $x'$ funkcja
+$s\mapsto f_m(x',s)$ znika dla dostatecznie
+dużego $s$. Stąd
+\[
+ \int_0^\infty\partial_s f_m(x',s)\,\dd s
+ =\lim_{s\to\infty}f_m(x',s)-f_m(x',0)
+ =-f_m(x',0).
+\]
+Po uwzględnieniu znaku $(-1)^{m-1}$ we wzorze
+na $\dd\omega$ otrzymujemy
+\[
+ \int_{\mathbb H^m}\dd\omega
+ =(-1)^{m-1}\int_{\R^{m-1}}
+  \left(\int_0^\infty\partial_s f_m(x',s)\,\dd s\right)
+          \dd x'
+ =(-1)^m\int_{\R^{m-1}} f_m(x',0)\,\dd x'.
+\]
+Dlaczego jest to całka po \emph{zorientowanym}
+brzegu? Na $s=0$ normalna na zewnątrz to
+$n=-\partial_s$. Dla standardowej formy
+objętościowej $\mu=\dd x^1\wedge\cdots\wedge\dd x^m$
+liczymy bez skrótu
+\[
+ \mu(-\partial_s,\partial_1,\ldots,\partial_{m-1})
+ =-(-1)^{m-1}=(-1)^m.
+\]
+Zasada „normalna na zewnątrz jako pierwsza”
+z Definicji~\ref{def:orientacja-brzegu} mówi więc,
+że orientacja brzegu względem standardowego
+$\dd x^1\wedge\cdots\wedge\dd x^{m-1}$
+ma znak $(-1)^m$. Jednocześnie wzór
+\eqref{eq:inkluzja-formy} daje
+\[
+ i^*\omega=f_m(x',0)\,
+ \dd x^1\wedge\cdots\wedge\dd x^{m-1},
+\]
+bo tylko wyraz z opuszczonym $\dd x^m$
+nie zawiera różniczki normalnej. Całka tej
+formy z orientacją brzegu jest zatem równa
+obliczonej całce z $\dd\omega$.
+Dla $m=1$ rozumiemy $x'$ jako pusty układ
+współrzędnych: brzeg w tym modelu składa się
+z punktu $s=0$ o znaku $-1$, a wzór nadal działa.
+Gdy wybrana mapa odwraca orientację $M$,
+całka po mapie i indukowana orientacja jej brzegu
+zmieniają znaki jednocześnie, więc równość
+pozostaje prawdziwa.
+
+\emph{Przejście do całej rozmaitości.}
+Wybierzmy podział jedności $(\rho_j)$
+podporządkowany mapom wewnętrznym i przybrzegowym,
+tak że każdy $\rho_j$ ma zwarty nośnik w swojej
+mapie (Twierdzenie~\ref{thm:podzial-jednosci-formy}).
+Ponieważ rodzina jest lokalnie skończona, a
+$\supp\omega$ zwarty, tylko skończenie wiele
+iloczynów $\rho_j\omega$ jest niezerowych.
+Każdy ma nośnik zwarty w odpowiedniej mapie,
+więc należy do jednego z dwóch powyższych
+przypadków. Mamy $\sum_j\rho_j\omega=\omega$;
+stosując liniowość $\dd$ do tej \emph{skończonej}
+sumy, dostajemy $\sum_j\dd(\rho_j\omega)=\dd\omega$.
+Z drugiej strony cofnięcie przez inkluzję jest
+liniowe, a $i^*(\rho_j\omega)
+=(\rho_j|_{\partial M})\,i^*\omega$.
+Sumując lokalne równości Stokesa, otrzymujemy
+\[
+ \int_M\dd\omega
+ =\sum_j\int_M\dd(\rho_j\omega)
+ =\sum_j\int_{\partial M}i^*(\rho_j\omega)
+ =\int_{\partial M}i^*\omega,
+\]
+ponieważ $\sum_j\rho_j|_{\partial M}=1$.
+\end{proof}
+
+\begin{przyklad}[Cofnięcie $1$-formy na brzeg dysku]
+Niech $M=D^2$, $\omega=P(x,y)\,\dd x+Q(x,y)\,\dd y$
+i niech $\gamma(t)=(\cos t,\sin t)$ parametryzuje
+dodatnio zorientowany brzeg. Ponieważ
+$\dd x(\gamma'(t))=-\sin t$ oraz
+$\dd y(\gamma'(t))=\cos t$, dostajemy
+\[
+ \gamma^*(i^*\omega)
+ =(i\circ\gamma)^*\omega
+ =\bigl[-P(\cos t,\sin t)\sin t
+       +Q(\cos t,\sin t)\cos t\bigr]\,\dd t.
+\]
+Tak obliczamy prawą stronę twierdzenia Stokesa
+jako zwykłą całkę po $t\in[0,2\pi]$.
+\end{przyklad}
+
+\begin{wniosek}[Podstawowe twierdzenie rachunku całkowego]
+\label{cor:stokes-ftc}
+Jeśli $f$ jest gładka na $[a,b]$, to
+\[
+ \int_a^b f'(t)\,\dd t=f(b)-f(a).
+\]
+\end{wniosek}
+\begin{proof}
+Na zorientowanym przedziale $[a,b]$ forma $\dd f$
+ma postać $f'(t)\dd t$. Jego brzeg ma orientację
+$\partial[a,b]=\{b\}-\{a\}$, co sprawdziliśmy
+w Stwierdzeniu~\ref{prop:brzeg-orientowalny}.
+Całka $0$-formy $f$ po tym zorientowanym
+zbiorze punktów jest z definicji $f(b)-f(a)$.
+Wzór~\eqref{eq:stokes-formy} daje tezę.
+\end{proof}
+To identyfikacja jednowymiarowego przypadku Stokesa.
+Podstawowego twierdzenia rachunku całkowego użyliśmy
+już w jego dowodzie lokalnym, więc powyższy rachunek
+nie stanowi niezależnego dowodu tego faktu analizy.
+
+\begin{wniosek}[Twierdzenie Greena]
+\label{cor:stokes-green}
+Niech $D\subset\R^2$ będzie zwartym obszarem
+o gładkim brzegu, z orientacją $\dd x\wedge\dd y$,
+a $P,Q$ niech będą gładkie w otoczeniu $D$. Wtedy
+\[
+ \oint_{\partial D}P\,\dd x+Q\,\dd y
+ =\iint_D\left(\frac{\partial Q}{\partial x}
+             -\frac{\partial P}{\partial y}\right)
+       \dd x\,\dd y.
+\]
+Orientacja $\partial D$ jest dodatnia, czyli
+podczas obiegania każdej składowej brzegu
+wnętrze $D$ pozostaje po lewej stronie.
+\end{wniosek}
+\begin{proof}
+Dla $\alpha=P\,\dd x+Q\,\dd y$ reguła
+Leibniza i $\dd x\wedge\dd x
+=\dd y\wedge\dd y=0$ dają
+\[
+ \dd\alpha
+ =P_y\,\dd y\wedge\dd x
+  +Q_x\,\dd x\wedge\dd y
+ =(Q_x-P_y)\,\dd x\wedge\dd y.
+\]
+Lewa strona wzoru Greena jest całką z
+$i^*\alpha$ po brzegu; cofnięcie ogranicza
+$\alpha$ do kierunków stycznych do krzywej,
+jak w powyższym przykładzie z dyskiem. Podstawiamy $\alpha$ do
+Twierdzenia~\ref{thm:stokes-formy}.
+Znak orientacji sprawdzamy w punkcie
+$(1,0)$ brzegu dodatnio zorientowanego dysku:
+normalna zewnętrzna wskazuje w prawo, więc
+dodatni wektor styczny wskazuje w górę.
+Ta sama reguła działa na każdej składowej
+brzegu, także na brzegu otworu.
+\end{proof}
+
+\begin{wniosek}[Klasyczne twierdzenie Stokesa o rotacji]
+\label{cor:stokes-curl}
+Niech $S\subset\R^3$ będzie zwartą gładką
+zorientowaną powierzchnią z brzegiem,
+$n$ jej dodatnią normalną jednostkową,
+a $\mathbf F=(P,Q,R)$ gładkim polem w otoczeniu $S$.
+Dla dodatniego kierunku $\partial S$ mamy
+\[
+ \oint_{\partial S}\mathbf F\cdot\dd\mathbf r
+ =\iint_S(\nabla\times\mathbf F)\cdot n\,\dd A.
+\]
+\end{wniosek}
+\begin{proof}
+Bierzemy $1$-formę
+$\alpha=P\,\dd x+Q\,\dd y+R\,\dd z$.
+Bezpośredni rachunek pochodnych daje
+\[
+ \begin{aligned}
+ \dd\alpha={}&(R_y-Q_z)\,\dd y\wedge\dd z\\
+ &+(P_z-R_x)\,\dd z\wedge\dd x
+ +(Q_x-P_y)\,\dd x\wedge\dd y.
+ \end{aligned}
+\]
+Wektor współczynników przy trzech formach
+bazowych to dokładnie
+$\nabla\times\mathbf F
+=(R_y-Q_z,P_z-R_x,Q_x-P_y)$.
+Dla dodatniej parametryzacji
+$r(u,v)$ fragmentu $S$ podstawmy
+$a=r_u$, $b=r_v$. Z definicji iloczynu
+zewnętrznego
+\[
+ (\dd\alpha)(a,b)
+ =(\nabla\times\mathbf F)\cdot(a\times b)
+ =(\nabla\times\mathbf F)\cdot n\,
+    \lVert a\times b\rVert.
+\]
+Po scałkowaniu po $(u,v)$ otrzymujemy prawą
+stronę tezy. Na krzywej brzegowej
+$\alpha(\gamma')=\mathbf F(\gamma)\cdot\gamma'$,
+więc całka z $i^*\alpha$ jest lewą stroną.
+Twierdzenie~\ref{thm:stokes-formy} utożsamia
+te dwie całki. Kierunek brzegu jest
+indukowany przez orientację $S$; na płaskim
+dysku z normalną w górę jest przeciwny
+do ruchu wskazówek zegara.
+\end{proof}
+
+\begin{wniosek}[Twierdzenie Gaussa--Ostrogradskiego]
+\label{cor:stokes-gauss}
+Niech $D\subset\R^3$ będzie zwartym obszarem
+o gładkim brzegu, a $\mathbf F=(P,Q,R)$
+gładkim polem w otoczeniu $D$.
+Jeśli $n$ oznacza normalną jednostkową
+na zewnątrz, to
+\[
+ \iint_{\partial D}\mathbf F\cdot n\,\dd A
+ =\iiint_D\operatorname{div}\mathbf F\,
+                  \dd x\,\dd y\,\dd z.
+\]
+\end{wniosek}
+\begin{proof}
+Strumieniowi $\mathbf F$ odpowiada $2$-forma
+\[
+ \beta=P\,\dd y\wedge\dd z
+      +Q\,\dd z\wedge\dd x
+      +R\,\dd x\wedge\dd y.
+\]
+Różniczkując trzy składniki, dostajemy
+\[
+ \dd\beta=(P_x+Q_y+R_z)\,
+           \dd x\wedge\dd y\wedge\dd z
+          =(\operatorname{div}\mathbf F)\,
+           \dd x\wedge\dd y\wedge\dd z.
+\]
+Dla dodatnio zorientowanej pary stycznych
+wektorów $a,b\in T_p\partial D$ mamy
+\[
+ (i^*\beta)_p(a,b)
+ =\mathbf F(p)\cdot(a\times b).
+\]
+Z reguły orientowania brzegu wynika, że
+$a\times b$ wskazuje na zewnątrz; dla
+ortonormalnej pary jest równy $n$.
+Ogólnie jego długość dostarcza czynnika
+elementu pola $\dd A$. Całka z $i^*\beta$
+jest więc strumieniem przez brzeg, a całka
+z $\dd\beta$ całką z dywergencji po $D$.
+Równość daje Twierdzenie~\ref{thm:stokes-formy}.
+\end{proof}
+
+\begin{wniosek}[Zerowanie całki form zamkniętych i dokładnych]
+\label{cor:stokes-top-form}
+Jeśli $M^m$ jest zwartą zorientowaną rozmaitością
+z brzegiem, a $\eta\in\Omega^{m-1}(M)$ jest
+zamknięta, to $\int_{\partial M}i^*\eta=0$.
+Jeżeli $M$ jest zwartą zorientowaną rozmaitością
+bez brzegu i $\omega=\dd\eta\in\Omega^m(M)$,
+to $\int_M\omega=0$. W szczególności forma
+najwyższego stopnia o całce niezerowej nie jest
+dokładna.
+\end{wniosek}
+\begin{proof}
+W pierwszej sytuacji
+$\int_{\partial M}i^*\eta=\int_M\dd\eta=0$.
+W drugiej
+$\int_M\omega=\int_{\partial M}i^*\eta=0$,
+bo brzeg jest pusty. Oba kroki są
+bezpośrednimi zastosowaniami~\eqref{eq:stokes-formy}.
+\end{proof}
+\section{Kohomologia de Rhama i ciąg Mayera--Vietorisa}
+\label{sec:de-rham-mv}
+
+\begin{definicja}[Kohomologia de Rhama]
+\index{kohomologia de rhama@Kohomologia de Rhama}
+\label{def:de-rham-cohomology}
+\emph{Kompleks de Rhama} to ciąg
+\[
+ 0\longrightarrow\Omega^0(M)\xrightarrow{\dd}
+ \Omega^1(M)\xrightarrow{\dd}\cdots
+ \xrightarrow{\dd}\Omega^m(M)\longrightarrow0.
+\]
+Jest kompleksem kołańcuchowym, bo $\dd^2=0$.
+Formę z $\ker\dd$ nazywamy \emph{zamkniętą},
+a formę z $\operatorname{im}\dd$ \emph{dokładną}. Definiujemy
+\[
+ H^k_{\mathrm{dR}}(M)
+ :=\ker(\dd:\Omega^k\to\Omega^{k+1})/
+   \operatorname{im}(\dd:\Omega^{k-1}\to\Omega^k).
+\]
+W stopniu $0$ jest to przestrzeń funkcji lokalnie stałych.
+Z uwagi na brak form ujemnego stopnia zerowa funkcja
+jest jedyną dokładną $0$-formą.
+\end{definicja}
+
+Iloczyn zewnętrzny przechodzi na klasy: jeśli
+$\dd\alpha=\dd\beta=0$ i $\alpha$ zastąpimy przez
+$\alpha+\dd\eta$, to różnica iloczynów wynosi
+$(\dd\eta)\wedge\beta=\dd(\eta\wedge\beta)$.
+Otrzymujemy \emph{pierścień kohomologii de Rhama}
+$H^*_{\mathrm{dR}}(M)$ z przemiennością
+$[\alpha][\beta]=(-1)^{k\ell}[\beta][\alpha]$.
+Cofnięcie $F^*$ daje homomorfizm pierścieni
+$H^*_{\mathrm{dR}}(N)\to H^*_{\mathrm{dR}}(M)$;
+Wniosek~\ref{cor:de-rham-homotopia} pokazuje, że
+gładkie homotopie dają tę samą operację.
+
+\begin{twierdzenie}[Mayer--Vietoris dla form]
+\label{thm:mv-de-rham}
+Jeśli $M=U\cup V$ dla zbiorów otwartych, to
+w każdym stopniu krótki ciąg
+\begin{equation}\label{eq:mv-formy-kompleks}
+\begin{gathered}
+0\to\Omega^k(M)\xrightarrow{\ r\ }
+\Omega^k(U)\oplus\Omega^k(V)
+\xrightarrow{\ s\ }\Omega^k(U\cap V)\to0,\\
+r(\omega)=(\omega|_U,\omega|_V),\qquad
+s(\alpha,\beta)=\beta|_{U\cap V}-\alpha|_{U\cap V}.
+\end{gathered}
+\end{equation}
+jest dokładny i zgodny z $\dd$. W konsekwencji
+istnieje długi ciąg dokładny
+\[
+ \cdots\to H^{k-1}_{\mathrm{dR}}(U\cap V)
+ \xrightarrow{\delta}H^k_{\mathrm{dR}}(M)
+ \to H^k_{\mathrm{dR}}(U)\oplus H^k_{\mathrm{dR}}(V)
+ \to H^k_{\mathrm{dR}}(U\cap V)
+ \xrightarrow{\delta}H^{k+1}_{\mathrm{dR}}(M)\to\cdots.
+\]
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $r(\omega)=0$, forma znika na $U$ i $V$,
+więc znika na $M$: $r$ jest iniektywne.
+Para $(\alpha,\beta)$ należy do $\ker s$ dokładnie
+wtedy, gdy jej składniki zgadzają się na przecięciu;
+wówczas sklejają się w jedną gładką formę na $M$.
+To dowodzi $\operatorname{im}r=\ker s$.
+
+Aby dowieść surjektywności $s$, weźmy
+$\gamma\in\Omega^k(U\cap V)$ i podział jedności
+$\rho_U+\rho_V=1$ podporządkowany $(U,V)$.
+Na $U$ kładziemy $\alpha=-\rho_V\gamma$ na
+$U\cap V$ i przedłużamy przez $0$ na $U\setminus V$;
+na $V$ kładziemy $\beta=\rho_U\gamma$
+i podobnie przedłużamy przez $0$.
+Przedłużenia są gładkie: nośnik $\rho_V$ nie
+dochodzi lokalnie do punktów poza $V$, a nośnik
+$\rho_U$ do punktów poza $U$. Na przecięciu
+$s(\alpha,\beta)=(\rho_U+\rho_V)\gamma=\gamma$.
+Ponieważ obcięcie komutuje z $\dd$, otrzymujemy
+krótki ciąg dokładny \emph{kompleksów}.
+Twierdzenie~\ref{thm:les-kohomologia} z
+Rozdziału~\ref{ch:algebra-homologiczna} tworzy
+z niego długi ciąg. Konkretnie, dla zamkniętej
+$\gamma$ wybieramy powyższe $(\alpha,\beta)$;
+formy $\dd\alpha$ i $\dd\beta$ zgadzają się
+na przecięciu, bo $\dd\gamma=0$. Sklejona
+forma $\eta$ na $M$ jest zamknięta i
+$\delta[\gamma]=[\eta]$. Zmiana podniesienia
+lub reprezentanta $[\gamma]$ zmienia $\eta$
+o formę dokładną, dokładnie jak w dowodzie
+długiego ciągu kohomologii.
+\end{proof}
+
+\begin{przyklad}[Okrąg i forma kąta]
+\label{prz:de-rham-s1}
+Na $\R^2\setminus\{0\}$ forma
+\[
+ \vartheta=\frac{-y\,\dd x+x\,\dd y}{x^2+y^2}
+\]
+jest zamknięta: po zastosowaniu wzoru na $\dd$
+otrzymujemy $\dd\vartheta=0$. Na okręgu
+$\gamma(t)=(\cos t,\sin t)$ mamy
+$\gamma^*\vartheta=\dd t$ i
+$\int_{S^1}\vartheta=2\pi$. Gdyby $\vartheta$
+była dokładna, Stokes na zamkniętej krzywej
+dałby $0$, sprzeczność. Lokalnie możemy
+pisać $\vartheta=\dd\theta$, ale funkcja kąta
+po pełnym obrocie zmienia się o $2\pi$ i nie
+jest globalną funkcją rzeczywistą.
+
+W istocie $H^1_{\mathrm{dR}}(S^1)\cong\R$,
+z izomorfizmem $[\alpha]\mapsto\int_{S^1}\alpha$.
+Dowód surjektywności daje $c\vartheta$.
+Jeśli całka z $\alpha$ znika, zapiszmy
+$\gamma^*\alpha=g(t)\dd t$ dla funkcji
+$2\pi$-okresowej $g$ i połóżmy
+$h(t)=\int_0^t g(s)\,\dd s$. Wtedy
+$h(t+2\pi)-h(t)=\int_t^{t+2\pi}g(s)\,\dd s
+=\int_0^{2\pi}g(s)\,\dd s=0$ dla każdego $t$.
+Funkcja $h$ jest zatem gładka i okresowa, więc schodzi
+do gładkiej funkcji na $S^1$, której różniczka jest $\alpha$.
+To dowodzi iniektywności. Ponadto
+$H^0_{\mathrm{dR}}(S^1)=\R$ i wyższe grupy znikają.
+\end{przyklad}
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,line cap=round,line join=round]
+ \fill[manifoldblue!9] (0,0) circle(2.0);
+ \draw[manifoldblue!65!black,thick] (0,0) circle(2.0);
+ \draw[manifoldgold!85!black,line width=1.4pt] (0,0) circle(1.35);
+ \foreach \ang in {5,50,95,140,185,230,275,320}{
+  \draw[->,manifoldred,thick]
+   (\ang:1.35) arc[start angle=\ang,end angle={\ang+24},radius=1.35];
+ }
+ \fill[white] (0,0) circle(2.4pt);
+ \draw[manifoldred,thick] (-.09,-.09)--(.09,.09)
+  (-.09,.09)--(.09,-.09);
+ \node[font=\small,align=left,anchor=west,text width=5.7cm]
+  at (2.65,.5)
+  {$\dd\vartheta=0$ poza środkiem,
+   ale $\int_{S^1}\vartheta=2\pi$.
+   Funkcja kąta jest pierwotną tylko lokalnie:
+   po obejściu dziury zmienia się o $2\pi$.};
+\end{tikzpicture}
+\caption{Zamknięta $1$-forma na płaszczyźnie bez początku
+może nie mieć globalnej funkcji pierwotnej.
+Krzyżykiem zaznaczono jedyny usunięty punkt; niebieski
+dysk przedstawia fragment dziedziny.}
+\label{fig:de-rham-kat}
+\end{figure}
+
+\begin{przyklad}[Sfery i torus]
+\label{prz:de-rham-sfery-torus}
+Dwie dziedziny map na $S^n$ otrzymane przez usunięcie
+przeciwnych biegunów są ściągalne, a ich przecięcie
+zwija się na $S^{n-1}$. Długi ciąg z
+Twierdzenia~\ref{thm:mv-de-rham}, zaczynając od
+obliczenia dla $S^1$, daje indukcyjnie
+\[
+ H^k_{\mathrm{dR}}(S^n)=
+ \begin{cases}\R,&k=0,n,\\0,&\text{w pozostałych stopniach,}\end{cases}
+ \qquad n\geq1.
+\]
+Dla $n\geq2$ dokładność w stopniu $0$ mówi,
+że $H^0(S^n)=\R$ i $H^1(S^n)=0$:
+przecięcie jest spójne, a mapa
+$H^0(U)\oplus H^0(V)=\R^2\to H^0(U\cap V)=\R$
+ma postać $(a,b)\mapsto b-a$, więc jest surjektywna;
+w stopniach $k\geq2$ odwzorowanie łączące
+przenosi $H^{k-1}(S^{n-1})$ na $H^k(S^n)$.
+Jedyny niezerowy stopień dodatni to $k=n$.
+
+Na $T^2=S^1\times S^1$ niech
+$\alpha=\pr_1^*\vartheta$ i
+$\beta=\pr_2^*\vartheta$.
+Ich całki po dwóch podstawowych okręgach
+wynoszą odpowiednio $(2\pi,0)$ i $(0,2\pi)$;
+$\int_{T^2}\alpha\wedge\beta=(2\pi)^2$.
+Klasy $[\alpha],[\beta]$ są liniowo niezależne w stopniu $1$,
+a $[\alpha\wedge\beta]$ jest niezerowa w stopniu $2$.
+W obu przypadkach wynika to ze Stokesa: forma dokładna
+ma zerową całkę po każdym z tych cykli.
+Twierdzenie de Rhama poniżej i kompleks komórkowy
+torusa z Przykładu~\ref{prz:homologia-cw-torus}
+pokazują, że dają całe
+$H^1_{\mathrm{dR}}(T^2)\cong\R^2$ oraz
+$H^2_{\mathrm{dR}}(T^2)\cong\R$.
+\end{przyklad}
+
+\section{Dlaczego formy obliczają kohomologię przestrzeni?}
+\label{sec:twierdzenie-de-rhama}
+
+Forma zamknięta może nie mieć pierwotnej właśnie wtedy,
+gdy wykrywa globalny „otwór”. Aby porównać ten język
+z homologią singularną z Rozdziału~\ref{ch:homologia-przestrzeni},
+całkujemy formę po zorientowanych sympleksach.
+Używamy tu współczynników rzeczywistych: całka przyjmuje
+wartości w $\R$, a torsja całkowitoliczbowa znika po
+przejściu do tych współczynników.
+
+\begin{definicja}[Kohomologia singularna z wartościami w $\R$]
+\label{def:singular-cohom-r}
+Jeżeli $C_k(M;\R)$ jest przestrzenią skończonych
+$\R$-liniowych kombinacji ciągłych sympleksów
+$\sigma:\Delta^k\to M$, to
+$C^k(M;\R)=\operatorname{Hom}_{\R}(C_k(M;\R),\R)$.
+Kobrzeg $\delta:C^k\to C^{k+1}$ określa wzór
+$(\delta c)(\sigma)=c(\partial\sigma)$.
+Z $\partial^2=0$ wynika $\delta^2=0$; iloraz
+$\ker\delta/\operatorname{im}\delta$ oznaczamy przez
+$H^k_{\mathrm{sing}}(M;\R)$.
+\end{definicja}
+
+Sympleks $\sigma:\Delta^k\to M$ nazywamy \emph{gładkim},
+gdy w mapach jego składowe mają gładkie przedłużenia
+do otoczeń punktów $\Delta^k$ w jego otoczce afinicznej.
+Przy brzegu $M$ przedłużamy składowe do $\R^m$;
+nie wymagamy, aby przedłużenie poza sympleks przyjmowało
+wartości w półprzestrzeni modelującej $M$.
+Na przykład $t\mapsto t$ z $[0,1]$ do $[0,\infty)$
+jest w tym sensie gładkie. Dla takiego $\sigma$ definiujemy
+$I(\omega)(\sigma)=\int_{\Delta^k}\sigma^*\omega$.
+Znak orientacji $\Delta^k$ jest określony przez
+kolejność jego wierzchołków. Na sympleksie
+$\Delta^{k+1}$ twierdzenie Stokesa daje
+\begin{equation}\label{eq:integracja-lancuchowa}
+ \begin{aligned}
+ (\delta I\omega)(\sigma)
+ &= I\omega(\partial\sigma)
+  =\sum_{j=0}^{k+1}(-1)^j
+      \int_{[v_0,\ldots,\widehat v_j,\ldots,v_{k+1}]}
+          \sigma^*\omega \\
+ &=\int_{\Delta^{k+1}}\dd(\sigma^*\omega)
+  =\int_{\Delta^{k+1}}\sigma^*(\dd\omega)
+  =I(\dd\omega)(\sigma).
+ \end{aligned}
+\end{equation}
+Uzasadnijmy użycie Stokesa na sympleksie, który ma naroża.
+W otoczeniu punktu należącego do $r$ ścian jego dziedzinę
+opisują współrzędne
+$[0,\infty)^r\times\R^{k+1-r}$: równania przecinających
+się ścian są niezależne. Rozkładamy formę podziałem
+jedności i stosujemy lokalny dowód Stokesa do każdego
+składnika o zwartym nośniku. Dla składnika z pominiętym
+$\dd x^i$ całkowanie po $x^i$ daje zero, gdy $x^i\in\R$,
+a gdy $x^i\geq0$, daje ujemną wartość współczynnika
+na $x^i=0$. Są to dokładnie wkłady ścian z orientacją
+„normalna na zewnątrz najpierw”. Przecięcia dwóch ścian
+mają miarę zero w każdej ścianie i nie tworzą dodatkowych
+całek. Dla orientacji sympleksu zadanej kolejnością
+wierzchołków orientacja ściany naprzeciw $v_j$ jest
+$(-1)^j$ razy orientacja pozostałych wierzchołków:
+przesunięcie pominiętego wierzchołka na pierwsze miejsce
+wymaga $j$ zamian, a przypadek $j=0$ daje orientację
+brzegową dodatnią. Otrzymujemy więc dokładnie znaki
+w \eqref{eq:integracja-lancuchowa}, bez zastępowania
+naroży brzegiem gładkim.
+Równanie mówi, że „całka po brzegu” i „różniczka
+formy” opisują ten sam rachunek.
+
+\begin{twierdzenie}[de Rham]
+\label{thm:de-rham}
+Dla każdej gładkiej rozmaitości $M$ (również z brzegiem)
+całkowanie po gładkich sympleksach indukuje naturalny
+izomorfizm przestrzeni wektorowych
+\begin{equation}\label{eq:de-rham-iso}
+ H^k_{\mathrm{dR}}(M)\xrightarrow{\ \cong\ }
+ H^k_{\mathrm{sing}}(M;\R),
+ \qquad [\omega]\longmapsto
+ \bigl[\sigma\longmapsto\textstyle\int_\sigma\omega\bigr].
+\end{equation}
+Zapis po prawej najpierw określa kołańcuch na
+\emph{gładkich} sympleksach. Przenosimy jego klasę do
+zwykłej kohomologii singularnej przez odwrotność
+kanonicznego izomorfizmu ograniczenia kołańcuchów,
+którego istnienie udowodnimy poniżej. Nie wybieramy
+niezależnie wygładzenia każdego ciągłego sympleksu:
+takie wybory nie musiałyby być zgodne z jego ścianami.
+\end{twierdzenie}
+\begin{proof}
+Dowód rozdzielimy na rachunek lokalny i precyzyjną
+zasadę sklejania kompleksów. Równocześnie uzasadnimy,
+dlaczego wystarczają gładkie sympleksy. Nie będziemy
+potrzebować ani triangulacji $M$, ani metryki.
+
+\emph{1. Trzy kompleksy i prostokąty wypukłe.}
+Niech $C_*^\infty(U;\R)$ oznacza podkompleks
+generowany przez gładkie sympleksy, a
+$C_\infty^*(U;\R)=\operatorname{Hom}_{\R}
+(C_*^\infty(U;\R),\R)$ jego kompleks dualny.
+Ograniczenie kołańcuchów i całkowanie dają naturalne
+odwzorowania kompleksów
+\[
+ C^*(U;\R)\xrightarrow{\ r\ }C_\infty^*(U;\R)
+ \xleftarrow{\ I\ }\Omega^*(U).
+\]
+Pierwsze komutuje z kobrzegiem, ponieważ ściany
+gładkiego sympleksu są gładkie; drugie dzięki
+\eqref{eq:integracja-lancuchowa}.
+
+Gdy $U$ jest niepustym wypukłym zbiorem otwartym
+w $\R^m$ lub względnie otwartym w
+$\mathbb H^m=\{x^m\geq0\}$, wybierzmy $a\in U$.
+Homotopia $H(t,x)=(1-t)a+tx$ pozostaje w $U$.
+Lemat~\ref{lem:homotopia-form} oblicza kohomologię
+form, a operator pryzmatowy z Twierdzenia
+\ref{thm:homotopia-singularna} oblicza obie kohomologie
+singularne. Pryzmat i jego triangulacja są określone
+afinicznie w dziedzinie, więc zachowują gładkość
+sympleksów w przyjętym sensie. Każdy z trzech
+kompleksów ma zatem kohomologię $\R$ w stopniu $0$
+i zero w stopniach dodatnich. W stopniu $0$ oba
+odwzorowania są identycznością na funkcjach stałych.
+W szczególności $r$ i $I$ indukują izomorfizmy.
+
+\emph{2. Algebraiczna zasada sklejania.}
+Dla otwartego pokrycia $(U_i)$ rozważmy trzy tabele
+\[
+ \begin{aligned}
+ A^{p,q}&=\prod_{i_0<\cdots<i_p}\Omega^q(U_{i_0\cdots i_p}),\\
+ B^{p,q}&=\prod_{i_0<\cdots<i_p}C_\infty^q(U_{i_0\cdots i_p};\R),\\
+ E^{p,q}&=\prod_{i_0<\cdots<i_p}C^q(U_{i_0\cdots i_p};\R),
+ \qquad U_{i_0\cdots i_p}=U_{i_0}\cap\cdots\cap U_{i_p}.
+ \end{aligned}
+\]
+Puste przecięcia wnoszą zera. W poziomie działa
+naprzemienna suma ograniczeń $\delta_{\mathcal U}$,
+np. $(\delta_{\mathcal U}a)_{ij}=a_j|_{U_{ij}}-a_i|_{U_{ij}}$.
+W pionie działa odpowiednio $\dd$ lub kobrzeg singularny
+$d_v$. Kompleks całkowity ma w stopniu $n$ sumę
+składników $p+q=n$ i różniczkę
+$D=\delta_{\mathcal U}+(-1)^p d_v$ na kolumnie $p$.
+Ograniczenia komutują z $d_v$, więc $D^2=0$.
+
+Użyjemy dwóch elementarnych własności takich tabel.
+Jeśli wszystkie kolumny są dokładne, kompleks całkowity
+jest dokładny. Istotnie, dla kocyklu $z$ jego składnik
+w kolumnie o najmniejszym indeksie $p$ jest pionowo
+zamknięty. Z dokładności wybieramy jego pionową pierwotną,
+uwzględniając znak $(-1)^p$, i odejmujemy jej $D$.
+Usuwamy tę kolumnę, ewentualnie zmieniając następną.
+Powtarzamy to, aż usuniemy wszystkie składniki.
+Procedura kończy się: w danym stopniu całkowitym jest
+skończenie wiele par $(p,q)$. W najniższym pionowym
+stopniu dokładność oznacza zerowe jądro, jeśli brak
+już stopnia na pierwotną. Ten sam argument, z zamianą
+ról indeksów, działa dla dokładnych wierszy.
+
+Wynika stąd również zasada porównania: odwzorowanie
+tabel, które indukuje izomorfizm kohomologii w każdej
+kolumnie, indukuje izomorfizm kohomologii całkowitej.
+Aby to sprawdzić, tworzymy stożek odwzorowania $f$.
+Dla kompleksów $P,Q$ ma on składniki
+$Q^n\oplus P^{n+1}$ i różniczkę
+$(b,a)\mapsto(d_Qb+f(a),-d_Pa)$.
+Z krótkiego ciągu dokładnego
+$0\to Q\to\operatorname{Cone}(f)\to P[1]\to0$
+i jego ciągu kohomologii wynika, że stożek jest dokładny
+wtedy i tylko wtedy, gdy $f$ indukuje izomorfizmy
+kohomologii. Dla odwzorowania tabel $f:P\to Q$ bierzemy
+w pozycji $(p,q)$ przestrzeń $Q^{p,q}\oplus P^{p,q+1}$,
+z różniczką pionową
+$(b,a)\mapsto(d_vb+(-1)^p f(a),-d_va)$
+i poziomą $(b,a)\mapsto(\delta_{\mathcal U}b,-\delta_{\mathcal U}a)$.
+Te różniczki komutują, a po zastosowaniu znaku $(-1)^p$
+w totalizacji otrzymujemy dokładnie stożek odwzorowania
+kompleksów całkowitych. Kolumna $p$ jest stożkiem
+$(-1)^p f$, więc jest dokładna na mocy założenia.
+Stosujemy teraz poprzedni argument usuwania kolumn.
+Dopuszczony dodatkowy stopień pionowy $-1$ nie przeszkadza:
+przekątne nadal mają skończoną długość. Analogicznie,
+jeśli do dokładnych wierszy dopiszemy w kolumnie $-1$
+kompleks globalny $P$, to jego odwzorowanie do kompleksu
+całkowitego $Q$ jest izomorfizmem kohomologii.
+Rozszerzona tabela w stopniu całkowitym $n$ ma składniki
+$Q^n\oplus P^{n+1}$. W kolumnie $-1$ pionowa różniczka
+ma znak minus, a pozioma jest augmentacją $f$;
+różniczka całkowita to zatem
+$(b,a)\mapsto(D_Qb+f(a),-d_Pa)$.
+Jest to dokładnie stożek tego odwzorowania, a jego
+dokładne wiersze pozwalają zastosować ten sam argument.
+
+\emph{3. Dlaczego wiersze obliczają kompleksy globalne.}
+W przypadku $A$ dopisujemy $\Omega^q(M)$ na początku
+wiersza. Wybierzmy gładki podział jedności
+$\sum_j\rho_j=1$ podporządkowany pokryciu. Dla rodziny
+naprzemiennej określamy
+\[
+ (ha)_{i_0\cdots i_{p-1}}
+   =\sum_j\rho_j a_{j i_0\cdots i_{p-1}}.
+\]
+Składniki przedłużamy przez zero; lokalna skończoność
+nośników zapewnia gładkość sumy. Dla $p=0$ otrzymujemy
+globalną formę $\sum_j\rho_j a_j$.
+Rozwinięcie sumy daje
+$h\delta_{\mathcal U}+\delta_{\mathcal U}h=\id$:
+wyrazy z pominiętym $i_r$ znoszą się parami, a pozostałe
+dają $(\sum_j\rho_j)a$. Na formach globalnych złożenie
+ograniczenia i $h$ także jest identycznością.
+Rozszerzone wiersze są więc dokładne.
+
+Dla $B$ oraz $E$ dopisujemy na początku kołańcuchy
+na \emph{małych} sympleksach, czyli na sympleksach
+o obrazie zawartym w jednym z $U_i$. Dla konkretnego
+sympleksu $\sigma$ zbiór
+$J_\sigma=\{i:\sigma(\Delta^q)\subset U_i\}$ jest
+niepusty. Poziomy ciąg jego wartości to rozszerzony
+kompleks kołańcuchów pełnego sympleksu o wierzchołkach
+$J_\sigma$. Wybranie $i(\sigma)\in J_\sigma$ i wstawienie
+go na początek indeksów daje homotopię $h$ spełniającą
+tę samą tożsamość. Wiersz jest iloczynem takich ciągów
+po wszystkich małych sympleksach; pozostaje dokładny,
+ponieważ pierwotne wybieramy współrzędna po współrzędnej.
+
+Lemat~\ref{lem:male-lancuchy} mówi, że włączenie małych
+łańcuchów indukuje izomorfizm homologii. Jego dowód
+działa też dla gładkich łańcuchów: podziały i homotopie
+podziału są złożeniami z odwzorowaniami afinicznymi.
+Nad $\R$ ograniczenie dualnych kołańcuchów indukuje
+zatem izomorfizm kohomologii. Uzasadnienie algebraiczne
+nie wymaga skończonego wymiaru: wybieramy dopełnienia
+brzegów w cyklach i cykli w łańcuchach; kompleks jest
+sumą części o zerowej różniczce (homologii) i par,
+na których różniczka jest izomorfizmem. Dualizacja
+zachowuje ten rozkład i dokładność części z parami.
+W konsekwencji tabele $A,B,E$ obliczają odpowiednio
+$H^*_{\mathrm{dR}}(M)$, $H^*(C_\infty^*(M;\R))$
+i $H^*_{\mathrm{sing}}(M;\R)$.
+Wszystkie ograniczenia i augmentacje komutują z $I$ i $r$.
+
+\emph{4. Dwa zastosowania sklejania.}
+Najpierw niech $W$ będzie otwartym podzbiorem $\R^m$
+lub względnie otwartym podzbiorem $\mathbb H^m$.
+Pokrywamy go prostokątami otwartymi, odpowiednio
+przeciętymi z $\mathbb H^m$, i zawartymi w $W$.
+Możemy wybrać pokrycie lokalnie skończone: w konstrukcji
+wyczerpania zwartymi zbiorami z dowodu Twierdzenia
+\ref{thm:podzial-jednosci-formy} zastępujemy małe kule
+małymi prostokątami. Każde niepuste skończone przecięcie
+jest wypukłe. Krok 1 pokazuje, że $I:A\to B$ oraz
+$r:E\to B$ indukują izomorfizmy w każdej kolumnie.
+Iloczyny przestrzeni wektorowych zachowują tu jądra,
+obrazy i dokładność, więc także iloczyn lokalnych
+izomorfizmów jest izomorfizmem. Kroki 2 i 3 dowodzą
+obu porównań dla \emph{każdego} takiego $W$, nie tylko
+dla zbioru wypukłego.
+
+Teraz pokryjmy dowolną rozmaitość $M$ lokalnie skończoną
+rodziną dziedzin map. Każde ich skończone przecięcie
+jest otwartym podzbiorem jednej z tych dziedzin,
+a więc jest dyfeomorficzne z pewnym $W$ rozpatrzonym
+w poprzednim akapicie. Nie musi być ściągalne ani spójne.
+Porównania $I$ i $r$ są na nim już udowodnione.
+Ponowne zastosowanie kroków 2 i 3 daje izomorfizmy
+\[
+ H^*_{\mathrm{sing}}(M;\R)
+ \xrightarrow{\ H(r)\ }H^*(C_\infty^*(M;\R))
+ \xleftarrow{\ H(I)\ }H^*_{\mathrm{dR}}(M).
+\]
+Szukany izomorfizm to $H(r)^{-1}H(I)$.
+Oba odwzorowania komutują z przenoszeniem sympleksów
+i cofnięciem form przez gładkie odwzorowania, więc
+izomorfizm jest naturalny. Cały argument obejmuje
+rozmaitości z brzegiem dzięki modelom w $\mathbb H^m$.
+
+Warto też wyjaśnić interpretację przez cykle. Nad ciałem
+dualność kompleksów opisana w kroku 3 identyfikuje
+kohomologię z dualną przestrzenią homologii.
+Z izomorfizmu $H(r)$ wynika zatem, że włączenie
+$C_*^\infty(M;\R)\to C_*(M;\R)$ indukuje izomorfizm
+homologii: odwzorowanie liniowe, którego dualne jest
+izomorfizmem, samo jest izomorfizmem (niezerowe jądro
+lub niezerowy iloraz wykryłby funkcjonał liniowy).
+Każda klasa cyklu ma więc gładkiego reprezentanta,
+a dwaj tacy reprezentanci tej samej klasy różnią się
+brzegiem gładkiego łańcucha. Dla formy zamkniętej ich
+całki są równe przez \eqref{eq:integracja-lancuchowa}.
+To uzasadnia niezależność okresów od reprezentantów
+bez dokonywania niezgodnych wyborów na ścianach.
+\end{proof}
+
+\begin{przyklad}[Co widzą okresy, a czego nie widzą]
+Jeżeli $\omega$ jest zamkniętą $k$-formą, jej
+\emph{okres} na cyklu $z$ to $\int_z\omega$.
+Jest niezależny od wyboru reprezentanta klasy
+homologii: jeżeli $z$ zmienimy o $\partial c$,
+różnica całek to $\int_c\dd\omega=0$.
+Zmiana $\omega$ o formę dokładną także nie zmienia
+okresu, bo $\int_z\dd\eta=\int_{\partial z}\eta=0$.
+Na okręgu forma $\vartheta/(2\pi)$ z
+Przykładu~\ref{prz:de-rham-s1} ma okres $1$ na
+podstawowym cyklu. W $\mathbb{RP}^2$ grupa
+$H_1(-;\Z)\cong\Z/2$ ma torsję, lecz
+$H^1_{\mathrm{dR}}(\mathbb{RP}^2)=0$:
+homomorfizm z $\Z/2$ do $\R$ musi wysłać
+generator na liczbę $a$ z $2a=0$, zatem $a=0$.
+Twierdzenie de Rhama wykrywa kohomologię
+rzeczywistą; nie zastępuje informacji o torsji.
+\end{przyklad}
+
+\section{Porównanie homologii, kohomologii de Rhama i homotopii}
+\label{sec:porownanie-trzech-teorii}
+
+Pierwsza różnica dotyczy \emph{przestrzeni, na których
+można zbudować daną teorię}. Homologię symplicjalną
+definiujemy dla kompleksu symplicjalnego $K$:
+sklejamy wierzchołki, odcinki, trójkąty i sympleksy
+wyższych wymiarów wzdłuż ich ścian. Taki kompleks
+\emph{nie musi być rozmaitością}. Na przykład dwa
+wypełnione trójkąty stykające się tylko w jednym
+wierzchołku tworzą kompleks, ale otoczenie
+wspólnego wierzchołka nie przypomina dysku
+ani półdysku: po usunięciu tego wierzchołka ma dwie
+składowe, podczas gdy dysk oraz półdysk po usunięciu
+punktu środkowego, odpowiednio punktu na prostym brzegu,
+pozostają spójne. Mimo to łańcuchy, operator brzegu
+$\partial$ i grupy $H_k^{\mathrm{simp}}(K;\Z)$
+są określone.
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[line cap=round,line join=round]
+ \fill[manifoldblue!14] (-3.1,-.95)--(-3.1,.95)--(0,0)--cycle;
+ \fill[manifoldgold!19] (0,0)--(3.1,.95)--(3.1,-.95)--cycle;
+ \draw[manifoldblue!75!black,thick]
+  (-3.1,-.95)--(-3.1,.95)--(0,0)--cycle;
+ \draw[manifoldgold!80!black,thick]
+  (0,0)--(3.1,.95)--(3.1,-.95)--cycle;
+ \fill[manifoldred] (0,0) circle (2.5pt);
+ \node[below=5pt,font=\small] at (0,0) {$p$};
+ \node[font=\small,manifoldblue!80!black] at (-2.05,0) {$\Delta^2$};
+ \node[font=\small,manifoldgold!80!black] at (2.05,0) {$\Delta^2$};
+\end{tikzpicture}
+\caption{Dwa trójkąty ze wspólnym wierzchołkiem $p$.
+To kompleks symplicjalny, ale w $p$ nie jest
+powierzchnią gładką, nawet z brzegiem.}
+\label{fig:kompleks-nie-rozmaitosc}
+\end{figure}
+
+Homologia singularna idzie jeszcze dalej: jej
+sympleksy są \emph{ciągłymi odwzorowaniami}
+$\Delta^k\to X$, dlatego definiuje się ją
+dla dowolnej przestrzeni topologicznej $X$,
+również bez wybranej triangulacji. Kohomologia
+de Rhama wymaga natomiast \emph{gładkiej
+rozmaitości} $M$: żeby pisać formy i ich
+różniczkę $\dd$, potrzebujemy przestrzeni
+stycznych i gładkich odwzorowań. Dla kompleksu
+z Rysunku~\ref{fig:kompleks-nie-rozmaitosc}
+zwykła kohomologia de Rhama w sensie
+Definicji~\ref{def:de-rham-cohomology}
+nie jest zdefiniowana. Grupy homotopii
+można z kolei definiować dla przestrzeni
+topologicznych z wybranym punktem bazowym.
+
+Do czego służą te niezmienniki, jeśli słowo
+„dziura” nie daje jeszcze ścisłej odpowiedzi?
+Pozwalają rozstrzygać, czy cykl jest brzegiem,
+czy zamknięta forma jest różniczką innej formy,
+czy pętlę albo odwzorowanie sfery można
+ściągnąć do punktu. Pomagają też odróżnić
+przestrzenie oraz badać odwzorowania między nimi.
+Istotny jest zarówno obiekt, od którego
+zaczynamy, jak i relacja uznająca dwa takie
+obiekty za równoważne:
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.05cm}
+                >{\raggedright\arraybackslash}p{4.4cm}
+                >{\raggedright\arraybackslash}p{6.75cm}}
+\hline
+\textbf{Typ}&\textbf{Na czym konstruowana}&
+\textbf{Co wykrywa i o czym mówi}\\
+\hline
+$H_k^{\mathrm{simp}}(K;\Z)$,
+homologia symplicjalna&
+Zorientowane sympleksy kompleksu $K$,
+całkowite łańcuchy, operator brzegu
+$\partial$; cykle modulo brzegi.&
+Rozpoznaje składowe ($H_0$), klasy cykli,
+które nie są brzegami, ich liczbę niezależnych
+generatorów i torsję. Na zamkniętej spójnej
+rozmaitości jej najwyższa homologia z $\Z$
+pomaga rozpoznać orientowalność.\\
+\hline
+$H_k^{\mathrm{sing}}(X;\Z)$,
+homologia singularna&
+Wszystkie ciągłe odwzorowania
+$\Delta^k\to X$ jako generatory łańcuchów;
+ten sam operator $\partial$ i iloraz
+cykli przez brzegi.&
+Daje homologiczne informacje bez wybierania
+triangulacji, dla dowolnej przestrzeni
+topologicznej. Ciągłe $f:X\to Y$ wyznacza
+$f_*:H_k(X)\to H_k(Y)$; można nim badać,
+jak odwzorowanie przenosi klasy cykli.\\
+\hline
+$H^k_{\mathrm{dR}}(M)$,
+kohomologia de Rhama&
+Gładkie formy różniczkowe na rozmaitości $M$,
+różniczka $\dd$; formy zamknięte modulo dokładne.&
+Mówi, czy zamknięta forma ma \emph{globalnie}
+formę pierwotną. Całki po cyklach mierzą jej
+okresy; iloczyn zewnętrzny form pozwala badać
+iloczyny klas. Zwykła wersja ma wartości
+rzeczywiste, więc nie wykrywa torsji.\\
+\hline
+$\pi_1(X,p)$,
+grupa podstawowa&
+Pętle o początku i końcu w $p$;
+utożsamiamy pętle homotopijne, a działaniem
+jest ich składanie.&
+Mówi, których pętli nie można ściągnąć do
+punktu. Zawiera informację o nakryciach
+i może być nieprzemienna; przez to odróżnia
+przestrzenie o tym samym $H_1$.\\
+\hline
+$\pi_k(X,p)$, $k\geq2$,
+wyższe grupy homotopii&
+Odwzorowania sfer $S^k\to X$ z punktem
+bazowym, modulo homotopia zachowująca
+ten punkt.&
+Mówią, czy odwzorowanie sfery można
+ściągnąć do punktu (równoważnie: przedłużyć
+na dysk $D^{k+1}$). Mogą być niezerowe,
+nawet gdy $H_k(X;\Z)=0$.\\
+\hline
+\end{tabular}
+\end{center}
+
+Na przykład $H_1$ pozwala wykazać, że
+nie istnieje retrakcja dysku $D^2$ na jego
+brzeg $S^1$: gdyby $r:D^2\to S^1$
+i inkluzja $i:S^1\to D^2$ spełniały
+$r\circ i=\id$, to na homologii byłoby
+$r_*\circ i_*=\id$ na $H_1(S^1;\Z)\cong\Z$.
+Jest to niemożliwe, bo $H_1(D^2;\Z)=0$.
+Kohomologia de Rhama rozstrzyga, czy da się
+zbudować globalny potencjał dla zamkniętej
+formy, a $\pi_1$ pomaga opisać nakrycia.
+„Dziury” są więc tylko jednym z obrazowych
+skrótów dla tych konkretnych pytań.
+
+Różni się też koszt rachunku. Bez triangulacji
+kompleks łańcuchów singularnych ma ogromnie
+wiele generatorów. Skończona triangulacja
+sprowadza homologię symplicjalną do macierzy
+operatorów brzegu, lecz znalezienie odpowiedniej
+triangulacji i obliczenie jąder oraz obrazów
+bywa trudne. Formy pozwalają czasem wykorzystać
+współrzędne i symetrie rozmaitości, choć
+ustalenie, czy forma ma \emph{globalną}
+formę pierwotną, także wymaga pracy.
+Nie ma jednej metody zawsze najłatwiejszej.
+
+\subsection*{Od sympleksów do całek}
+
+W tej części $H_k^{\mathrm{simp}}$ oznacza tę samą homologię,
+którą wcześniej zapisywaliśmy $H_k^\Delta$, a
+$H_k^{\mathrm{sing}}$ to wcześniejsze $H_k$ przestrzeni.
+Indeksy służą tylko odróżnieniu konstrukcji w porównaniu.
+Dla triangulacji $K$ Twierdzenie
+\ref{thm:symplicjalna-singularna} utożsamia
+$H_k^{\mathrm{simp}}(K;\Z)$ z
+$H_k^{\mathrm{sing}}(M;\Z)$: wynik nie zależy
+od wyboru triangulacji, chociaż liczba i kształt
+sympleksów od niej zależą. Dla nieskończonej, lokalnie
+skończonej triangulacji stosujemy ten sam wynik do skończonych
+podkompleksów: skończony łańcuch symplicjalny ma skończony
+nośnik, a obraz każdego łańcucha singularnego jest zwarty,
+więc spotyka tylko skończenie wiele sympleksów.
+To dotyczy także łańcuchów wypełniających; izomorfizmy
+na skończonych podkompleksach dają więc zarówno
+surjektywność, jak i iniektywność porównania globalnego.
+Cyklem jest łańcuch
+$z$ z $\partial z=0$. Jeżeli $z=\partial c$,
+to reprezentuje zero w homologii.
+W najprostszym przykładzie trzy krawędzie
+obwodu trójkąta tworzą $1$-cykl. Jeśli
+pozostawimy sam obwód, nie ma $2$-sympleksu,
+którego ten cykl byłby brzegiem, i
+$H_1\cong\Z$. Jeśli dodamy wypełniony trójkąt,
+ten sam cykl staje się jego brzegiem:
+\[
+ \partial[v_0v_1v_2]
+ =[v_1v_2]-[v_0v_2]+[v_0v_1].
+\]
+Wtedy $H_1=0$. To dosłowny sens
+„wykrycia dziury” przez homologię.
+Na okręgu
+jedno pełne obejście daje generator $H_1(S^1;\Z)
+\cong\Z$; na $S^2$ cała zorientowana powierzchnia
+daje generator $H_2(S^2;\Z)\cong\Z$.
+
+Klasa zamkniętej formy przypisuje liczby
+klasom cykli: całkujemy formę po cyklu.
+Wybieramy przy tym gładkiego reprezentanta całej klasy
+cyklu, co uzasadniono w dowodzie Twierdzenia~\ref{thm:de-rham}.
+Taką liniową regułę przypisującą wektorom
+liczby nazywamy \emph{funkcjonałem liniowym}.
+Właśnie w tym sensie kohomologia de Rhama
+wiąże się z homologią. Jeśli
+$\dd\omega=0$ i $\partial z=0$, definiujemy
+\begin{equation}\label{eq:parowanie-de-rham-homologia}
+ \langle[\omega],[z]\rangle:=\int_z\omega.
+\end{equation}
+Zmiana $\omega$ o $\dd\eta$ zmienia całkę o
+$\int_{\partial z}\eta=0$; zmiana $z$ o
+$\partial c$ zmienia ją o
+$\int_c\dd\omega=0$. Jest więc dobrze określona
+na klasach po obu stronach. To dokładnie
+rachunek Stokesa~\eqref{eq:integracja-lancuchowa}.
+
+Czy \emph{każdą} funkcję liniową przypisującą
+klasom homologii liczby rzeczywiste można
+otrzymać przez całkowanie zamkniętej formy?
+Twierdzenie de Rhama daje odpowiedź twierdzącą.
+Aby zobaczyć, skąd bierze się ta odpowiedź,
+pokażmy najpierw krok algebraiczny.
+Dla kompleksu
+łańcuchowego przestrzeni wektorowych nad $\R$
+kołańcuch $c:C_k\to\R$ jest kocyklem
+($\delta c=0$) dokładnie wtedy, gdy znika
+na $B_k=\partial C_{k+1}$. Jego ograniczenie
+do $Z_k=\ker(\partial:C_k\to C_{k-1})$ zależy
+więc tylko od klasy w $H_k=Z_k/B_k$.
+Jeżeli ten funkcjonał na $H_k$ jest zerowy,
+to $c$ znika na całym $Z_k$. Definiujemy
+na $B_{k-1}=\partial C_k$ funkcjonał
+$b(\partial a):=c(a)$. Jest dobrze określony:
+z $\partial a=\partial a'$ wynika
+$a-a'\in Z_k$, a zatem $c(a)=c(a')$.
+Rozszerzamy $b$ liniowo na $C_{k-1}$.
+Wtedy $(\delta b)(a)=b(\partial a)=c(a)$,
+czyli $c$ był kobrzegiem. Odwrotnie, każdy
+funkcjonał $\lambda:H_k\to\R$ definiuje
+funkcjonał na $Z_k$, który można liniowo
+przedłużyć na $C_k$; ponieważ znika na
+$B_k$, przedłużenie jest kocyklem.
+Dowiedliśmy zatem
+\[
+ H^k_{\mathrm{sing}}(M;\R)
+ \cong \operatorname{Hom}_{\R}
+       (H_k^{\mathrm{sing}}(M;\R),\R).
+\]
+Symbol $\operatorname{Hom}_{\R}(V,\R)$ oznacza
+przestrzeń \emph{wszystkich} funkcjonałów liniowych
+$V\to\R$: każdy przypisuje wektorowi z $V$
+liczbę rzeczywistą i zachowuje dodawanie
+oraz mnożenie przez skalar.
+Łącząc to z Twierdzeniem~\ref{thm:de-rham}
+i porównaniem symplicjalnym, otrzymujemy
+dla triangulowanej rozmaitości
+\begin{equation}\label{eq:porownanie-simp-de-rham}
+ H^k_{\mathrm{dR}}(M)
+ \cong \operatorname{Hom}_{\R}
+       (H_k^{\mathrm{simp}}(K;\R),\R),
+\end{equation}
+przy czym izomorfizm jest dany przez całkę
+z~\eqref{eq:parowanie-de-rham-homologia}.
+Jeśli grupy homologii są skończenie generowane,
+wymiar $H^k_{\mathrm{dR}}$ to $k$-ta liczba
+Betti'ego, czyli liczba swobodnych generatorów
+$H_k(M;\Z)$. Forma nie zobaczy torsji: gdy
+$nz=\partial c$ dla $n\ne0$, to dla zamkniętej
+$\omega$ mamy
+$n\int_z\omega=\int_c\dd\omega=0$,
+więc $\int_z\omega=0$.
+
+Wybór współczynników wyjaśnia tu ważną różnicę.
+Według Twierdzenia~\ref{thm:homologia-char-zero}
+przejście z $\Z$ do $\Q$, $\R$ lub $\C$
+zachowuje liczby Betti'ego, lecz usuwa torsję;
+Przykład~\ref{prz:zmiana-wspolczynnikow-rp2-torus}
+pokazuje to dla $\mathbb{RP}^2$ i torusa.
+Zwykły kompleks form de Rhama jest rzeczywisty
+i oblicza $H^k_{\mathrm{sing}}(M;\R)$.
+Jeśli dopuścimy formy zespolone,
+$\Omega^\bullet(M;\C)
+=\Omega^\bullet(M;\R)\otimes_{\R}\C$,
+otrzymamy analogicznie
+$H^k_{\mathrm{dR}}(M;\C)
+\cong H^k_{\mathrm{dR}}(M;\R)\otimes_{\R}\C$.
+Współczynniki $\Q$ stosujemy bezpośrednio
+w łańcuchach i kołańcuchach singularnych;
+nie wymagają one osobnej teorii gładkich
+form o wymiernych współczynnikach.
+
+\subsection*{Od sfer do cykli}
+
+W tym porównaniu zakładamy, że $M$ jest spójna drogowo;
+w przeciwnym razie pracujemy na składowej zawierającej $p$.
+Element $\pi_k(M,p)$ jest klasą odwzorowania
+$(S^k,*)\to(M,p)$. Po przeniesieniu generatora
+$H_k(S^k;\Z)$ otrzymujemy klasę w $H_k(M;\Z)$:
+to odwzorowanie Hurewicza $h_k$
+z Rozdziału~\ref{ch:wyzsza-homotopia}.
+W stopniu $1$ dokładna odpowiedź z
+Twierdzenia~\ref{thm:hurewicz-h1} brzmi
+\[
+ H_1(M;\Z)\cong\pi_1(M,p)_{\mathrm{ab}}.
+\]
+Komutatory pętli znikają po przejściu
+do homologii, ponieważ dodawanie cykli
+jest przemienne; $\pi_1$ może być nieprzemienna.
+W wyższych stopniach $h_k$ nie musi być
+izomorfizmem. Dla $k\geq2$, gdy $M$ jest
+$(k-1)$-spójna, Twierdzenie
+\ref{thm:hurewicz-wyzszy} utożsamia
+pierwszą możliwą niezerową grupę
+$\pi_k(M)$ z $H_k(M;\Z)$.
+Aby zastosować tu wersję twierdzenia dla kompleksów CW,
+używamy dodatkowego twierdzenia o triangulacji gładkich
+rozmaitości: każda taka rozmaitość dopuszcza lokalnie
+skończoną triangulację, a przy brzegu można wybrać
+$\partial M$ jako podkompleks. Sympleksy tej triangulacji
+są komórkami CW. Istnienie triangulacji jest osobnym
+wynikiem topologii różniczkowej, nie konsekwencją de Rhama;
+jego dowód wykracza poza to porównanie. Źródło wskazano
+w dalszej lekturze. W rozważanych przykładach okręgu,
+sfer, torusa i przestrzeni rzutowej strukturę CW znamy
+już jawnie z wcześniejszych rozdziałów.
+Teza dotyczy właśnie pierwszego
+niezerowego stopnia przy podanej spójności;
+nie utożsamia wszystkich późniejszych grup.
+
+\begin{przyklad}[Ta sama informacja w stopniu pierwszym]
+Na $S^1$ zachodzi
+$\pi_1(S^1)\cong H_1(S^1;\Z)\cong\Z$,
+a $H^1_{\mathrm{dR}}(S^1)\cong\R$.
+Klasa formy $\vartheta/(2\pi)$ z
+Przykładu~\ref{prz:de-rham-s1} daje wartość
+$1$ na dodatnim generatorze homologii.
+Liczba całkowita zlicza okrążenia, a całka
+z formy przypisuje im liczby rzeczywiste
+w sposób liniowy.
+\end{przyklad}
+
+\begin{przyklad}[Ta sama pierwsza homologia,
+różne grupy podstawowe]
+Torus $T^2$ ma $\pi_1(T^2)\cong\Z^2$.
+Jeśli usuniemy otwarty dysk o domknięciu zawartym
+we wnętrzu jego dwuwymiarowej komórki,
+otrzymamy zwartą powierzchnię z brzegiem
+$P=T^2\setminus\operatorname{int}D^2$.
+W modelu komórkowym z Przykładu
+\ref{prz:pi1-torus-rp2} część
+dwuwymiarowa po usunięciu dysku ściąga się
+na część jednowymiarową $S^1\vee S^1$.
+Dlatego $\pi_1(P)\cong F_2$, wolna
+nieprzemienna grupa na dwóch generatorach,
+podczas gdy $H_1(P;\Z)\cong\Z^2$.
+Zarówno $P$, jak i $T^2$ mają więc
+$H^1_{\mathrm{dR}}\cong\R^2$:
+w stopniu pierwszym formy i homologia
+nie wykrywają nieprzemienności $\pi_1(P)$.
+Pełne grupy homologii tych przestrzeni
+różnią się jednak w stopniu $2$:
+$H_2(P;\Z)=0$, a $H_2(T^2;\Z)=\Z$.
+\end{przyklad}
+
+\begin{przyklad}[Informacja sferyczna bez klasy homologii]
+Dla $\mathbb{RP}^2$ wcześniejsze obliczenia dają
+\[
+ \pi_1(\mathbb{RP}^2)=\Z/2,\qquad
+ \pi_2(\mathbb{RP}^2)=\Z,\qquad
+ H_1(\mathbb{RP}^2;\Z)=\Z/2,\qquad
+ H_2(\mathbb{RP}^2;\Z)=0.
+\]
+Porównaj Przykłady~\ref{prz:rp2-pi2}
+i~\ref{prz:homologia-rp2}. Nakrycie
+$S^2\to\mathbb{RP}^2$ pozostawia nietrywialną
+klasę w $\pi_2$, ale jej obraz przez $h_2$
+jest zerowy. Dodatkowo
+$H^k_{\mathrm{dR}}(\mathbb{RP}^2)=0$
+dla każdego $k>0$: całki form nie wykryją
+ani torsji w $H_1$, ani tej klasy sferycznej.
+Jest to wyraźny przykład, dlaczego trzech teorii
+nie wolno po prostu utożsamiać.
+\end{przyklad}
+
+\section*{Dalsza lektura}
+\addcontentsline{toc}{section}{Dalsza lektura}
+\href{https://ocw.mit.edu/courses/18-965-geometry-of-manifolds-fall-2004/pages/lecture-notes/}
+{Notatki kursu \emph{Geometry of Manifolds} (MIT OpenCourseWare)},
+wykłady o formach, twierdzeniu Stokesa i twierdzeniu de Rhama.
+Zob. także \href{https://www.math.toronto.edu/mgualt/courses/17-1300/docs/17-1300-notes-13.pdf}
+{notatki o formach różniczkowych i twierdzeniu Stokesa}
+Uniwersytetu w Toronto.
+Porównanie z homologią i homotopią rozwija
+\href{https://pi.math.cornell.edu/~hatcher/AT/AT.pdf}
+{Allen Hatcher, \emph{Algebraic Topology}},
+rozdziały 2--4. Twierdzenie o triangulacji rozmaitości
+gładkich omawia Jacob Lurie w notatkach
+\href{https://www.math.ias.edu/~lurie/937notes/937Lecture3.pdf}
+{\emph{Whitehead Triangulations}, wykład 3} i kolejnych
+wykładach tego kursu.

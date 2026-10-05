@@ -1,5 +1,34 @@
 # Propozycje po przeglądzie skryptu
 
+## Aktualizacja po pobraniu zmian autora — 5 października 2026
+
+Poniższa pierwotna lista opisuje wersję 18-rozdziałową. W `19fa283`
+książka ma już 27 rozdziałów i dodatek. Porównano zmiany od `66b220f`;
+nie należy ponownie dopisywać tematów, które autor już wprowadził.
+Obecność tekstu i deklaracja wykonania w planie nie zastępują przeglądu
+jego dowodów; kontrola nowych fragmentów jest prowadzona rozdziałami.
+
+| Punkt | Co jest już w aktualnej książce | Dalsze działanie |
+|---|---|---|
+| 1 | Osobna sekcja o brzegu w rozdziale 1, definicja, niezależność od map, przykłady i odsyłacze | Sprawdzić nowe argumenty i ich powiązanie z przestrzenią styczną; nie dodawać drugiej definicji |
+| 2 | Rozdział 5: grupy, grupy wolne, redukcja słów, iloczyn wolny i prezentacje | Sprawdzić konstrukcje i przejście do van Kampena |
+| 3 | Mapa książki, oznaczenia, indeks i uzupełnione lektury | Podzielić źródła na pliki na obecną prośbę użytkownika; pełne ujednolicenie redakcyjne pozostaje osobnym zagadnieniem |
+| 4 | Nie dodano zestawów zadań | Pozostają poza aktualnym zakresem zgodnie z zasadami projektu |
+| 5 | Dodatek o wynikach zewnętrznych i samowystarczalności | Sprawdzić zgodność deklarowanych zależności z dowodami |
+| 6 | Rozdział 27 o Chernie–Weilu i wzorze Cherna–Gaussa–Bonneta | Sprawdzić nową argumentację, normalizacje i wersję brzegową |
+| 7 | Rozdział 20 o h-kobordyzmie | Sprawdzić hipotezy ruchów uchwytów i zakres dowodów |
+| 8 | Rozdział 21 o torsji Whiteheada i s-kobordyzmie | Sprawdzić konwencje algebraiczne i zależności geometryczne |
+| 9 | Rozdziały 22–24: chirurgia geometryczna, przeszkoda i ciąg dokładny | Przejrzeć nowe twierdzenia, przykłady i rysunki |
+| 10 | Rozdział 25: wymiar 2 i wysokie wymiary | Sprawdzić założenia i odróżnienie homeomorfizmu od dyfeomorfizmu; wymiar 4 pozostaje poza tym skryptem |
+| 11 | Rozdział 26 o sferach Milnora | Zachować i sprawdzić już dodany materiał; nie przenosić go automatycznie do planowanego osobnego skryptu |
+| 12 | Nie dodano egzotycznych R⁴ ani teorii Freedmana | Dalsze metody czterowymiarowe autor planuje w osobnym skrypcie |
+
+Nowe pomysły o Hodge'u, holonomii i geometrii podrozmaitości z
+`PLAN_DZIALANIA.md` pozostają propozycjami. Pierwszeństwo mają kontrola
+już dopisanej treści i usunięcie rzeczywistych luk.
+
+## Pierwotne propozycje (stan przed rozbudową)
+
 Stan: po przeglądzie 18 rozdziałów i ponownej kontroli uzupełnień autora
 w rozdziale 1; źródło `a36c920`, PDF 325 stron. Poniższe punkty są
 **propozycjami do wyboru**, a nie rozpoczętymi pracami. Numery można podać

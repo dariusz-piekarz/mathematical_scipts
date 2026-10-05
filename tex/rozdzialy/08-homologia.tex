@@ -1,0 +1,1670 @@
+\chapter{Homologia przestrzeni}
+\label{ch:homologia-przestrzeni}
+
+W Rozdziale~\ref{ch:algebra-homologiczna} homologia była
+niezmiennikiem \emph{kompleksu łańcuchowego}.
+Teraz przypiszemy taki kompleks przestrzeni. Najpierw
+użyjemy sympleksów z Rozdziału~\ref{ch:topologia-algebraiczna-podstawy};
+potem zastąpimy je wszystkimi ciągłymi obrazami sympleksów,
+aby móc badać przestrzenie bez wybranej triangulacji. Na końcu
+zobaczymy, dlaczego do obliczeń zwykle wystarczy
+kilka komórek CW.
+
+Intuicja jest jedna: cykl to suma zorientowanych kawałków
+bez brzegu, a brzeg to cykl, który ogranicza kawałek
+o wymiar wyższy. Iloraz
+\[
+ H_n(X;\Z)=
+ \frac{\{\text{$n$-cykle w $X$}\}}
+ {\{\text{brzegi $(n+1)$-łańcuchów w $X$}\}}
+\]
+odróżnia na przykład pętlę będącą brzegiem na tarczy od pętli
+obiegającej dziurę. Pracujemy nad $\Z$; zmianę
+współczynników omawia
+Twierdzenie~\ref{thm:homologia-char-zero},
+a konkretny rachunek znajduje się poniżej.
+
+\section{Łańcuchy symplicjalne: orientacja i brzeg}
+\label{sec:homologia-symplicjalna}
+
+\begin{definicja}[Kompleks łańcuchów symplicjalnych]
+\index{kompleks lancuchow symplicjalnych@Kompleks łańcuchów symplicjalnych}
+\label{def:homologia-symplicjalna}
+Niech $K$ będzie skończonym kompleksem symplicjalnym
+z Definicji~\ref{def:kompleks-symplicjalny}.
+Ustalmy porządek jego wierzchołków. Grupa
+$C_n^\Delta(K)$ jest wolną grupą abelową z bazą
+wszystkich $n$-sympleksów zapisanych w porządku
+$[v_0,\ldots,v_n]$. Jeśli wierzchołki wypiszemy
+w innej kolejności, przyjmujemy zasadę
+\[
+ [v_{\pi(0)},\ldots,v_{\pi(n)}]
+ =\operatorname{sgn}(\pi)[v_0,\ldots,v_n].
+\]
+Zatem odwrócenie orientacji zmienia znak, a dwa
+różne sympleksy nadal dają niezależne generatory.
+Dla $n\geq1$ określamy
+\begin{equation}\label{eq:brzeg-symplicjalny}
+ \partial_n[v_0,\ldots,v_n]
+ =\sum_{i=0}^n(-1)^i
+ [v_0,\ldots,\widehat v_i,\ldots,v_n],
+ \qquad \partial_0=0.
+\end{equation}
+Rozszerzamy $\partial$ liniowo na sumy
+o całkowitych współczynnikach. Dla $n<0$ przyjmujemy $C_n^\Delta(K)=0$.
+\end{definicja}
+
+Znak ściany nie jest ozdobą: kierunek odziedziczony
+przez brzeg wypełnionego trójkąta musi być spójny.
+Dla $e=[v_0,v_1]$ i $t=[v_0,v_1,v_2]$ dostajemy
+\[
+ \partial e=[v_1]-[v_0],\qquad
+ \partial t=[v_1,v_2]-[v_0,v_2]+[v_0,v_1].
+\]
+Drugą równość można zapisać
+$\partial t=[v_0,v_1]+[v_1,v_2]+[v_2,v_0]$.
+Jest to obieg brzegu trójkąta.
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,line cap=round,line join=round]
+ \coordinate (a) at (0,0); \coordinate (b) at (3.3,0);
+ \coordinate (c) at (1.35,2.55);
+ \fill[manifoldblue!13] (a)--(b)--(c)--cycle;
+ \draw[manifoldblue!65!black,line width=1.6pt]
+  (a)--(b)--(c)--cycle;
+ \draw[->,manifoldred,line width=1.5pt]
+  (.7,-.13)--(2.5,-.13);
+ \draw[->,manifoldred,line width=1.5pt]
+  (3.1,.38)--(1.8,2.07);
+ \draw[->,manifoldred,line width=1.5pt]
+  (1.04,2.1)--(.13,.39);
+ \foreach \p in {a,b,c}{\fill[manifoldgold!85!black] (\p) circle(2.8pt);}
+ \node[below left] at (a) {$v_0$};
+ \node[below right] at (b) {$v_1$};
+ \node[above] at (c) {$v_2$};
+ \node[manifoldblue!75!black] at (1.4,.84) {$t$};
+ \node[align=left,anchor=west,text width=5.5cm] at (4.1,1.38)
+  {$\partial t=e_{01}+e_{12}+e_{20}$\\[3pt]
+   zewnętrzna pętla jest brzegiem, gdy wnętrze $t$
+   należy do przestrzeni};
+\end{tikzpicture}
+\caption{Zorientowany brzeg trójkąta. Usunięcie jego
+wnętrza pozostawia cykl, który w samym okręgu
+nie jest już brzegiem żadnego $2$-łańcucha.}
+\label{fig:homologia-trojkat}
+\end{figure}
+
+\begin{twierdzenie}[Brzeg brzegu znika]
+\label{thm:brzeg-brzegu}
+Odwzorowania~\eqref{eq:brzeg-symplicjalny}
+spełniają $\partial_{n-1}\partial_n=0$.
+Wobec tego
+\[
+ H_n^\Delta(K):=
+ \ker(\partial_n:C_n^\Delta(K)\to C_{n-1}^\Delta(K))
+ \big/
+ \operatorname{im}(\partial_{n+1})
+\]
+jest dobrze określoną grupą. Licznik składa
+się z \emph{cykli}, mianownik z \emph{brzegów}.
+\end{twierdzenie}
+\begin{proof}
+Dla $n=1$ wynika to z $\partial_0=0$.
+Niech $n\geq2$ i weźmy generator
+$[v_0,\ldots,v_n]$. Każda jego ściana
+o wymiarze $n-2$ powstaje po usunięciu
+pewnych dwóch wierzchołków $v_i,v_j$,
+$i<j$, dokładnie na dwa sposoby.
+Usunięcie najpierw $v_i$, a następnie
+$v_j$ (ma on już pozycję $j-1$) daje
+współczynnik $(-1)^i(-1)^{j-1}$.
+W przeciwnej kolejności współczynnik
+wynosi $(-1)^j(-1)^i$.
+Ich suma to
+$(-1)^{i+j-1}+(-1)^{i+j}=0$.
+Dotyczy to każdej ściany z osobna,
+więc $\partial^2$ znika na bazie,
+a przez liniowość na całej grupie.
+Stąd $\operatorname{im}\partial_{n+1}
+\subseteq\ker\partial_n$, co pozwala
+utworzyć podany iloraz.
+\end{proof}
+
+\begin{przyklad}[Odcinek, okrąg, tarcza]
+\label{prz:homologia-odcinek-okrag}
+Odcinek ma dwa wierzchołki $v_0,v_1$
+i jedną krawędź $e$. Odwzorowanie
+$\partial_1:\Z e\to\Z v_0\oplus\Z v_1$
+przypisuje $me\mapsto m(v_1-v_0)$.
+Ma zerowe jądro, więc $H_1^\Delta=0$,
+a w ilorazie $H_0^\Delta$ obie klasy
+wierzchołków są równe. Otrzymujemy $\Z$.
+
+Teraz weźmy obwód trójkąta, bez wnętrza,
+i ustawmy kierunki $e_{01},e_{12},e_{20}$.
+Każdy $1$-łańcuch
+$ae_{01}+be_{12}+ce_{20}$ jest cyklem
+dokładnie wtedy, gdy $a=b=c$
+(współczynnik przy każdym wierzchołku
+w jej brzegu musi być zerem).
+Nie ma tu $2$-sympleksów, a więc
+$H_1^\Delta\cong\Z$ z generatorem
+$e_{01}+e_{12}+e_{20}$.
+Jeśli wstawimy wnętrze $t$, ten sam
+cykl staje się $\partial t$ i
+$H_1^\Delta$ znika. Rysunek~\ref{fig:homologia-trojkat}
+pokazuje dokładnie tę zmianę.
+\end{przyklad}
+
+W $\Delta$-kompleksie z
+Definicji~\ref{def:delta-kompleks} postępujemy
+podobnie: każdy \emph{sympleks charakterystyczny}
+jest osobnym generatorem, nawet jeżeli jego
+różne ściany mają ten sam obraz. Brzeg
+jest sumą obrazów ścian z ich znakami;
+po identyfikacji mogą się one wzajemnie
+skasować. Tak właśnie sklejony odcinek
+z jednym wierzchołkiem ma $\partial e=v-v=0$.
+
+\begin{stwierdzenie}[Składowe i $H_0$]
+\label{prop:h0-symplicjalne}
+Jeżeli $K$ ma $c$ składowych łukowych,
+to $H_0^\Delta(K)\cong\Z^c$.
+\end{stwierdzenie}
+\begin{proof}
+Ponieważ $\partial_0=0$, grupa $H_0$
+to wolna grupa na wierzchołkach
+modulo relacje
+$v_j-v_i=\partial[v_i,v_j]$
+dla krawędzi. Idąc po drodze krawędziowej,
+utożsamiamy klasy wszystkich wierzchołków
+jej składowej. Dwa wierzchołki tej samej
+składowej $|K|$ można połączyć taką drogą:
+wszystkie wierzchołki jednego sympleksu należą do tej samej
+składowej grafu krawędzi. Sympleksy przypisane jednej takiej
+składowej tworzą podkompleks. Jego realizacja i jej dopełnienie
+są domknięte jako skończone sumy domkniętych sympleksów,
+więc są też otwarte. Droga nie może przejść między tymi zbiorami.
+Każdy punkt sympleksu można natomiast połączyć odcinkiem z wierzchołkiem.
+Składowe grafu odpowiadają zatem dokładnie składowym łukowym $|K|$. Wreszcie żadna
+relacja nie łączy różnych składowych,
+bo obie końcówki każdej krawędzi leżą
+w jednej. W każdej składowej pozostaje
+więc jeden wolny generator.
+\end{proof}
+
+\section{Łańcuchy singularne i niezmienniczość homotopijna}
+\label{sec:homologia-singularna}
+
+Triangulacja bywa trudna do znalezienia. W konstrukcji
+singularnej sam wybór \emph{ciągłego} odwzorowania
+standardowego sympleksu do przestrzeni tworzy
+generator; nie żądamy różnowartościowości ani
+ładnego kształtu jego obrazu.
+
+\begin{definicja}[Homologia singularna]
+\index{homologia singularna@Homologia singularna}
+\label{def:homologia-singularna}
+\emph{Singularny $n$-sympleks} w $X$ to dowolne
+ciągłe odwzorowanie $\sigma:\Delta^n\to X$.
+Niech $C_n(X)$ będzie wolną grupą abelową
+na wszystkich takich odwzorowaniach; dla $n<0$ przyjmujemy $C_n(X)=0$.
+W szczególności
+dwa różne odwzorowania o tym samym obrazie są
+różnymi generatorami. Niech
+$\iota_i:\Delta^{n-1}\to\Delta^n$
+będzie afinicznym włączeniem ściany
+naprzeciw $i$-tego wierzchołka. Kładziemy
+\begin{equation}\label{eq:singular-boundary}
+ \partial\sigma=\sum_{i=0}^n(-1)^i
+ \sigma\circ\iota_i\quad(n\geq1),
+ \qquad \partial:C_0(X)\to0,
+ \qquad H_n(X):=H_n(C_\bullet(X),\partial).
+\end{equation}
+\end{definicja}
+
+Obliczenie $\partial^2=0$ jest słowo w słowo
+rachunkiem dwóch usuwanych wierzchołków
+z dowodu Twierdzenia~\ref{thm:brzeg-brzegu}.
+Teraz pojawia się nawet singularny sympleks
+stały: nie odrzucamy go na poziomie
+łańcuchów, gdyż później jego wkład może
+być brzegiem.
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,line cap=round,line join=round]
+ \coordinate (a) at (0,0); \coordinate (b) at (2.45,0);
+ \coordinate (c) at (.9,1.9);
+ \fill[manifoldblue!12] (a)--(b)--(c)--cycle;
+ \draw[manifoldblue!70!black,thick] (a)--(b)--(c)--cycle;
+ \node[below left] at (a) {$v_0$};
+ \node[below right] at (b) {$v_1$};
+ \node[above] at (c) {$v_2$};
+ \node at (1.05,.55) {$\Delta^2$};
+ \draw[->,manifoldred,very thick] (2.95,.95)--(4.28,.95)
+  node[midway,above] {$\sigma$};
+ \fill[manifoldgreen!12]
+  (4.95,.12) .. controls (5.7,-.65) and (6.6,.24) ..
+  (7.75,-.08) .. controls (8.8,.3) and (8.3,1.4) ..
+  (7.5,1.55) .. controls (6.5,2.2) and (5.2,1.66) ..
+  (4.95,.12);
+ \draw[manifoldgreen!70!black,thick]
+  (4.95,.12) .. controls (5.7,-.65) and (6.6,.24) ..
+  (7.75,-.08) .. controls (8.8,.3) and (8.3,1.4) ..
+  (7.5,1.55) .. controls (6.5,2.2) and (5.2,1.66) ..
+  (4.95,.12);
+ \fill[manifoldblue!25,opacity=.7]
+  (5.6,.45) .. controls (6.3,.1) and (7.3,.2) .. (7.9,.65)
+  .. controls (8.05,1.1) and (7.3,1.6) .. (6.8,1.5)
+  .. controls (6.1,1.7) and (5.8,1.05) .. (5.6,.45);
+ \draw[manifoldred,thick,->]
+  (5.6,.45) .. controls (6.3,.1) and (7.3,.2) .. (7.9,.65);
+ \draw[manifoldred,thick,->]
+  (7.9,.65) .. controls (8.05,1.1) and (7.3,1.6) .. (6.8,1.5);
+ \draw[manifoldred,thick,->]
+  (6.8,1.5) .. controls (6.1,1.7) and (5.8,1.05) .. (5.6,.45);
+ \foreach \x/\y in {5.6/.45,7.9/.65,6.8/1.5}
+  {\fill[manifoldred] (\x,\y) circle(1.8pt);}
+ \node[font=\scriptsize,below left] at (5.6,.45) {$\sigma(v_0)$};
+ \node[font=\scriptsize,right] at (7.9,.65) {$\sigma(v_1)$};
+ \node[font=\scriptsize,above] at (6.8,1.5) {$\sigma(v_2)$};
+ \node[manifoldgreen!70!black] at (8.05,1.87) {$X$};
+ \node[manifoldblue!70!black] at (6.7,.8) {$\sigma(\Delta^2)$};
+\end{tikzpicture}
+\caption{Singularny sympleks jest odwzorowaniem do $X$, niekoniecznie
+płaskim trójkątem. Jego brzeg liczymy
+z ograniczeń odwzorowania $\sigma$ do trzech ścian.}
+\label{fig:singular-simplex}
+\end{figure}
+
+\begin{stwierdzenie}[Ciągłe odwzorowania działają na homologii]
+\label{prop:funktor-singularny}
+Jeśli $f:X\to Y$ jest ciągłe, to
+$f_\#:C_n(X)\to C_n(Y)$,
+$f_\#(\sigma)=f\circ\sigma$,
+jest odwzorowaniem łańcuchowym. Wyznacza homomorfizm
+$f_*:H_n(X)\to H_n(Y)$, przy czym
+$(g\circ f)_*=g_*\circ f_*$ oraz
+$(\id_X)_*=\id_{H_n(X)}$.
+\end{stwierdzenie}
+\begin{proof}
+Na pojedynczym generatorze
+\[
+ \partial(f\circ\sigma)
+ =\sum_i(-1)^i f\circ\sigma\circ\iota_i
+ =f_\#(\partial\sigma).
+\]
+Równość na sumach wynika z liniowości.
+Zatem obraz cyklu jest cyklem, a obraz
+brzegu brzegiem, więc $f_*$ jest
+dobrze określony na ilorazie.
+Równości dotyczące składania sprawdzamy
+już na $\sigma$:
+$g_\#f_\#(\sigma)=g\circ f\circ\sigma$.
+\end{proof}
+
+\begin{przyklad}[Punkt]
+\label{prz:homologia-punktu}
+Dla $X=\{*\}$ w każdym stopniu jest
+dokładnie jeden singularny sympleks
+stały $c_n$, więc $C_n(X)\cong\Z$.
+Jego brzeg to
+$\partial c_n=(\sum_{i=0}^n(-1)^i)c_{n-1}$:
+dla $n$ nieparzystego współczynnik
+jest $0$, dla dodatniego parzystego $1$.
+Kompleks ma więc postać
+\[
+ \cdots\xrightarrow{\;0\;}\Z
+ \xrightarrow{\;1\;}\Z
+ \xrightarrow{\;0\;}\Z
+ \xrightarrow{\;1\;}\Z
+ \xrightarrow{\;0\;}\Z\longrightarrow0,
+\]
+gdzie prawy skraj to $C_0$; precyzyjnie
+$\partial_1=0$, $\partial_2=1$.
+Stąd $H_0(*)=\Z$ i $H_n(*)=0$ dla $n>0$.
+\end{przyklad}
+
+\begin{stwierdzenie}[Składowe łukowe]
+\label{prop:h0-singularne}
+Grupa $H_0(X)$ jest wolna na składowych
+łukowych $X$. W szczególności
+dla przestrzeni niepustej łukowo spójnej
+$H_0(X)\cong\Z$.
+\end{stwierdzenie}
+\begin{proof}
+Każdy punkt $x$ jest singularnym
+$0$-sympleksem, więc $C_0(X)$
+jest wolną grupą na punktach.
+Dla drogi $\gamma:[0,1]=\Delta^1\to X$
+mamy $\partial\gamma=[\gamma(1)]-
+[\gamma(0)]$. Punkty w jednej składowej
+łukowej mają zatem tę samą klasę.
+Z drugiej strony każdy składnik
+brzegu dowolnego $1$-łańcucha
+jest różnicą punktów połączonych drogą:
+nie może utożsamić dwóch różnych
+składowych. Sumowanie współczynników
+punktów osobno w każdej składowej
+daje odwrotny homomorfizm do
+wolnej grupy na składowych.
+\end{proof}
+
+\begin{twierdzenie}[Niezmienniczość homotopijna]
+\label{thm:homotopia-singularna}
+Jeśli $f,g:X\to Y$ są homotopijne, to
+$f_*=g_*:H_n(X)\to H_n(Y)$ w każdym stopniu.
+Jeśli $X$ i $Y$ są homotopijnie równoważne,
+ich grupy homologii są izomorficzne.
+\end{twierdzenie}
+\begin{proof}
+Niech $F:X\times[0,1]\to Y$ będzie
+homotopią, $F(x,0)=f(x)$,
+$F(x,1)=g(x)$.
+Graniastosłup $\Delta^n\times[0,1]$
+dzielimy na $n+1$ zorientowanych
+$(n+1)$-sympleksów. Dla $i=0,\ldots,n$
+ich uporządkowane wierzchołki to
+\[
+ (e_0,0),\ldots,(e_i,0),
+ (e_i,1),\ldots,(e_n,1).
+\]
+Niech $T_i:\Delta^{n+1}\to
+\Delta^n\times[0,1]$ będzie odwzorowaniem
+afinicznym posyłającym kolejne wierzchołki
+właśnie na tę listę. Określmy
+\[
+ P_n(\sigma)=\sum_{i=0}^n(-1)^i\,
+ F\circ(\sigma\times\id_{[0,1]})\circ T_i
+ \in C_{n+1}(Y).
+\]
+Rozpiszmy brzeg sumy. Wewnętrzne
+$n$-ściany, na których spotykają się
+sąsiednie części graniastosłupa,
+pojawiają się z przeciwnymi znakami.
+Ściany boczne nad każdą ścianą
+$\Delta^n$ tworzą dokładnie
+$-P_{n-1}(\partial\sigma)$:
+jeśli $j<i$, usuwamy dolny wierzchołek $(e_j,0)$
+z $T_i$, z łącznym znakiem $(-1)^{i+j}$.
+Na pryzmacie ściany naprzeciw $e_j$ punkt podziału ma indeks $i-1$,
+więc znak w $-P_{n-1}\partial$ wynosi
+$-(-1)^j(-1)^{i-1}=(-1)^{i+j}$.
+Jeśli $j>i$, usuwamy górny wierzchołek $(e_j,1)$,
+na pozycji $j+1$; oba rachunki dają $(-1)^{i+j+1}$.
+Wewnętrzna ściana między $T_{i-1}$ i $T_i$ powstaje
+przez usunięcie odpowiednio $(e_{i-1},1)$ i $(e_i,0)$,
+ze znakami $-1$ i $+1$.
+Pozostałe dwie ściany to górna
+$g\circ\sigma$ ze znakiem $+1$
+oraz dolna $f\circ\sigma$ ze
+znakiem $-1$. Zatem
+\begin{equation}\label{eq:prism-identity}
+ \partial P_n+P_{n-1}\partial
+ =g_\#-f_\#.
+\end{equation}
+Przyjmujemy $P_{-1}=0$. Dla $n=0$ jest to znana równość
+,,koniec drogi minus początek'';
+powyższe parowanie ścian dowodzi
+jej w każdym wymiarze. W świetle
+Twierdzenia~\ref{thm:homotopia-homologia}
+oba odwzorowania indukują to samo na homologii.
+Jeśli $u:X\to Y$, $v:Y\to X$
+są odwrotne z dokładnością do homotopii,
+to $(vu)_*=\id$ i $(uv)_*=\id$,
+więc $u_*$ i $v_*$ są odwrotne.
+\end{proof}
+
+W szczególności przestrzeń ściągalna
+ma homologię punktu. Jeśli
+$A\subseteq X$ jest retraktem
+deformacyjnym, to $H_n(A)\cong H_n(X)$.
+
+\section{Pary przestrzeni i homologia zredukowana}
+\label{sec:homologia-wzgledna}
+
+\begin{definicja}[Grupy względne i zredukowane]
+\index{grupy wzgledne i zredukowane@Grupy względne i zredukowane}
+\label{def:homologia-wzgledna}
+Dla $A\subseteq X$ włączenie daje
+podkompleks $C_\bullet(A)\subseteq C_\bullet(X)$.
+Kładziemy
+\[
+ C_n(X,A)=C_n(X)/C_n(A),\qquad
+ H_n(X,A)=H_n(C_\bullet(X,A)).
+\]
+\emph{Augmentacja} $\varepsilon:C_0(X)\to\Z$ sumuje
+współczynniki punktów. Dołączamy stopień $C_{-1}=\Z$,
+z różniczką $\partial_0=\varepsilon$; niższe grupy są zerowe.
+Ponieważ $\varepsilon\partial_1=0$, otrzymujemy kompleks,
+którego homologie oznaczamy $\widetilde H_n(X)$.
+Dla niepustego $X$ mamy
+$\widetilde H_0(X)=\ker(\varepsilon:H_0(X)\to\Z)$,
+$\widetilde H_n(X)=H_n(X)$ dla $n>0$ i
+$\widetilde H_n(X)=0$ dla $n<0$.
+Dla $X=\varnothing$ wszystkie grupy łańcuchów w stopniach
+nieujemnych są zerowe, więc $\widetilde H_{-1}(\varnothing)=\Z$
+i pozostałe grupy zredukowane są zerowe.
+\end{definicja}
+
+Względny cykl może mieć brzeg w $A$:
+to, co w $X$ jest otwartą powierzchnią,
+po ,,pominięciu $A$'' staje się cyklem.
+Na przykład zorientowany dysk reprezentuje klasę względną
+względem swojego okręgu brzegowego.
+Jeżeli $X$ ma skończoną liczbę $c>0$ składowych łukowych,
+to $\widetilde H_0(X)\cong\Z^{c-1}$.
+Ogólnie, po wyborze jednej składowej $P_0$, bazę jądra
+augmentacji tworzą różnice $[P]-[P_0]$ dla $P\ne P_0$:
+jest to suma prosta kopii $\Z$, także dla nieskończenie wielu składowych.
+
+\begin{twierdzenie}[Długi ciąg pary]
+\label{thm:les-pary}
+Każda para $(X,A)$ daje naturalny
+długi ciąg dokładny
+\begin{equation}\label{eq:les-pary}
+ \cdots\to H_n(A)\xrightarrow{i_*}H_n(X)
+ \xrightarrow{j_*}H_n(X,A)
+ \xrightarrow{\delta}H_{n-1}(A)
+ \to H_{n-1}(X)\to\cdots.
+\end{equation}
+Jeśli $\partial c\in C_{n-1}(A)$,
+to $\delta[c]=[\partial c]$.
+\end{twierdzenie}
+\begin{proof}
+W każdej grupie łańcuchów mamy
+krótki ciąg dokładny
+$0\to C_n(A)\to C_n(X)\to C_n(X,A)\to0$.
+Jest zgodny z brzegami, więc
+Stwierdzenie~\ref{prop:ses-iloraz}
+daje długi ciąg i wzór na $\delta$.
+Naturalność pochodzi z przemienności
+odwzorowań łańcuchów dla odwzorowań
+par $(X,A)\to(Y,B)$.
+\end{proof}
+
+Jeśli $A\ne\varnothing$, możemy w tym ciągu zastąpić homologie
+$A$ i $X$ zredukowanymi, pozostawiając zwykłą homologię względną.
+Istotnie, w stopniu $-1$ włączenie kompleksów augmentowanych
+jest identycznością $\Z\to\Z$, więc ich iloraz ma tam zero
+i jest właśnie kompleksem $C_\bullet(X,A)$.
+
+Homotopia par (w każdym czasie obraz $A$
+leży w $B$) daje te same odwzorowania na $H_n(X,A)$:
+pryzmat z dowodu Twierdzenia~\ref{thm:homotopia-singularna}
+przenosi $C_\bullet(A)$ do $C_{\bullet+1}(B)$,
+więc wzór~\eqref{eq:prism-identity}
+schodzi na kompleksy ilorazowe.
+
+\section{Podział barycentryczny, wycinanie i sklejanie}
+\label{sec:wycinanie-homologia}
+
+Homologia singularna ma nieskończenie wiele generatorów nawet
+dla prostych przestrzeni. Podział dużego sympleksu na małe
+części pozwala jednak sprowadzić rachunek do lokalnych
+fragmentów. Z tego mechanizmu wynika wycinanie.
+
+\begin{lemat}[Małe łańcuchy]
+\label{lem:male-lancuchy}
+Niech $\mathcal U=\{U_\alpha\}$ będzie otwartym
+pokryciem $X$. Podkompleks
+$C_n^{\mathcal U}(X)\subseteq C_n(X)$
+generowany przez sympleksy, których obrazy
+leżą w jednym $U_\alpha$, ma te same
+grupy homologii co $C_\bullet(X)$.
+Włączenie indukuje izomorfizmy w każdym stopniu.
+\end{lemat}
+\begin{proof}
+Podamy konstrukcję potrzebną w obu kierunkach.
+Podzielmy liniowo $\Delta^n$ na sympleksy
+barycentryczne: wierzchołkami małego sympleksu
+są barycentra łańcucha niepustych ścian
+$F_0\subsetneq F_1\subsetneq\cdots\subsetneq F_n$,
+zapisane w tej właśnie kolejności. Każdy taki łańcuch odpowiada
+permutacji $\pi$ wierzchołków: $F_j=[e_{\pi(0)},\ldots,e_{\pi(j)}]$.
+Niech $a_\pi:\Delta^n\to\Delta^n$ będzie afinicznym odwzorowaniem
+na uporządkowany mały sympleks. Określamy
+\[
+ S_n(\sigma)=\sum_{\pi\in S_{n+1}}\operatorname{sgn}(\pi)
+                 \,\sigma\circ a_\pi.
+\]
+Znak pochodzi z orientacji: dla permutacji identycznościowej
+macierz kolejnych barycentrów ma dodatni wyznacznik w otoczce afinicznej,
+a permutacja wierzchołków zmienia go o $\operatorname{sgn}(\pi)$.
+Kolejność barycentrów jest ważna: w kompleksie singularnym
+odwrócenie parametryzacji nie jest z definicji ujemnym generatorem.
+Ściany wewnętrzne dwóch części
+występują z przeciwnymi znakami,
+a ich ściany na zewnątrz dają
+podział odpowiedniej ściany $\sigma$.
+Dokładniej, wewnętrzną ścianę uzyskujemy, pomijając barycentrum $F_j$
+dla $j<n$. Dwie odpowiadające jej permutacje zamieniają miejscami
+pozycje $j,j+1$, więc mają przeciwne znaki, a pozostałe
+uporządkowane barycentra są identyczne. Dla $j=n$ otrzymujemy
+sympleks podziału ściany naprzeciw $e_{\pi(n)}$.
+Jeśli $\rho$ jest permutacją pozostałych wierzchołków w ich
+odziedziczonej kolejności, to
+$(-1)^n\operatorname{sgn}(\pi)=(-1)^{\pi(n)}\operatorname{sgn}(\rho)$.
+To właśnie znak tej ściany w $S\partial$; stąd $\partial S=S\partial$.
+
+Wyjaśnijmy też, dlaczego $S$ nie zmienia
+klasy homologii. Na standardowym sympleksie
+oznaczmy jego identycznościowe odwzorowanie
+przez $u_n$ i indukcyjnie zbudujmy
+łańcuchy $t_n$ tak, aby dla $n\geq1$
+\[
+ \partial t_n+\sum_{i=0}^n(-1)^i(\iota_i)_\#t_{n-1}
+       =S(u_n)-u_n. \tag{*}
+\]
+W stopniu $0$ obie strony są zerowe,
+więc $t_0=0$. Jeśli mamy już konstrukcję
+na wszystkich ścianach, to oznaczmy ich sumę
+$b_n=\sum_i(-1)^i(\iota_i)_\#t_{n-1}$.
+Łańcuch $z=S(u_n)-u_n-b_n$
+jest cyklem: stosując $\partial$,
+używamy $\partial S=S\partial$,
+równości (*) na ścianach
+i $\partial^2=0$.
+W wypukłym $\Delta^n$ taki cykl jest
+brzegiem: z barycentrum $b$ łączymy
+każdy jego singularny sympleks prostym
+stożkiem. Dla $\tau:\Delta^k\to\Delta^n$ stożek $b*\tau$
+ma wzór
+\[
+ (b*\tau)(s_0,\ldots,s_{k+1})
+ =s_0b+(1-s_0)\tau\left(\frac{s_1}{1-s_0},\ldots,
+                         \frac{s_{k+1}}{1-s_0}\right)
+ \quad(s_0<1),
+\]
+z wartością $b$ dla $s_0=1$. Jest ciągły także w tym wierzchołku,
+bo obraz $\tau$ jest ograniczony. Brzeg tego stożka to
+$\tau-b*(\partial\tau)$ (dla $0$-sympleksu
+dodatkowo odejmujemy punkt $b$);
+po zsumowaniu nad cyklem składniki
+stożkowe się kasują. Daje to $t_n$.
+Przenosząc $t_n$ przez dowolne
+$\sigma:\Delta^n\to X$, otrzymujemy
+operator $T_n(\sigma)=\sigma_\#t_n$ o nośniku zawartym
+w $\sigma(\Delta^n)$, który spełnia
+\[
+ \partial T+T\partial=S-\id.
+\]
+Zatem $S^r-\id=\partial T^{(r)}+
+T^{(r)}\partial$, gdzie
+$T^{(r)}=T+ST+\cdots+S^{r-1}T$.
+
+Średnice części po kolejnych podziałach
+barycentrycznych dążą do zera: dla
+$n$-sympleksu każdy nowy wierzchołek
+jest średnią wierzchołków pewnej ściany,
+a nowa krawędź łączy barycentra zagnieżdżonych ścian.
+Jeśli mają one $p<q\leq n+1$ wierzchołków, to
+$b_G=(p/q)b_F+((q-p)/q)b_{G\setminus F}$.
+Zatem $\|b_G-b_F\|\leq(q-p)\operatorname{diam}(\Delta)/q
+\leq n\operatorname{diam}(\Delta)/(n+1)$.
+Średnica wypukłego sympleksu jest największą odległością jego
+wierzchołków, więc dla $n\geq1$ otrzymujemy geometryczny spadek
+średnic (także na ścianach). Dla $n=0$ sympleks jest już punktem. Dla danego $\sigma$
+przeciwobrazy $U_\alpha$ tworzą
+otwarte pokrycie zwartego $\Delta^n$;
+jego liczba Lebesgue'a jest dodatnia.
+Po dostatecznie wielu podziałach
+każda część trafia przez $\sigma$
+do jednego $U_\alpha$.
+Każdy łańcuch jest skończoną sumą,
+więc można wybrać wspólne $r$
+dla wszystkich jego sympleksów.
+
+Jeśli $z$ jest cyklem, $S^rz$
+jest mały i różni się od $z$
+o $\partial T^{(r)}z$; to dowodzi
+surjektywności na homologii.
+Jeśli mały cykl $z$ jest brzegiem
+$c$ w pełnym kompleksie, podzielmy
+$c$ tak wiele razy, by $S^rc$
+był mały. Łańcuch $T^{(r)}z$
+też jest mały, ponieważ każda
+jego część leży w obrazie
+jednego pierwotnego, małego sympleksu.
+Równości $\partial c=z$ i
+$\partial T^{(r)}z=S^rz-z$ dają
+\[
+ \partial\bigl(S^rc-T^{(r)}z\bigr)=z.
+\]
+Zatem $z$ jest brzegiem już
+w podkompleksie małych łańcuchów:
+otrzymujemy iniektywność.
+\end{proof}
+
+Stożkowanie wypełnia każdy cykl dodatniego stopnia w wypukłym
+sympleksie, a w stopniu zero tylko cykl o sumie współczynników zero.
+W konstrukcji $T$ stopień zero załatwiamy przez $t_0=0$,
+bo $S_0=\id$. Lokalność $T$ jest istotna dla dowodu iniektywności.
+
+\begin{twierdzenie}[Wycinanie]
+\label{thm:wycinanie}
+Jeżeli $Z\subseteq A\subseteq X$ oraz
+$\overline Z\subseteq\operatorname{int}_X A$,
+to włączenie par
+\[
+ (X\setminus Z,A\setminus Z)\longrightarrow(X,A)
+\]
+indukuje izomorfizm na wszystkich
+grupach homologii względnej.
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy $U=X\setminus\overline Z$
+oraz $V=\operatorname{int}_X A$.
+To otwarte pokrycie $X$;
+po ograniczeniu do $X\setminus Z$
+otrzymujemy pokrycie
+$\{U,V\setminus Z\}$.
+Lemat~\ref{lem:male-lancuchy} działa
+także po wzięciu ilorazu przez
+łańcuchy w $A$: izomorfizmy
+dla $A$ i $X$, zestawione
+z długimi ciągami par, dają
+izomorfizm dla odpowiadających
+kompleksów względnych
+(Lemat~\ref{lem:pieciu}).
+
+Policzmy teraz te małe kompleksy.
+Ponieważ $V\subseteq A$,
+\[
+ C_\bullet^{\{U,V\}}(X)
+   =C_\bullet(U)+C_\bullet(V),\qquad
+ C_\bullet^{\{U,V\}}(A)
+   =C_\bullet(U\cap A)+C_\bullet(V).
+\]
+Ich iloraz jest kanonicznie
+$C_\bullet(U)/C_\bullet(U\cap A)$:
+sympleks należący jednocześnie do
+$U$ i $V$ należy do $U\cap A$,
+więc jądro tej identyfikacji jest
+dokładnie wskazanym podkompleksem.
+Analogiczny iloraz dla
+$(X\setminus Z,A\setminus Z)$
+i jego pokrycia jest \emph{tym samym}
+kompleksem
+$C_\bullet(U)/C_\bullet(U\cap A)$.
+Włączenie par staje się na tych
+modelach identycznością, co
+kończy dowód.
+\end{proof}
+
+Wycinanie mówi, że usunięcie części
+leżącej głęboko we wnętrzu $A$
+nie zmienia tego, co para $(X,A)$
+mierzy \emph{poza} $A$. Warunek
+o domknięciu ma znaczenie:
+zapewnia otwarte pokrycia użyte
+w dowodzie.
+
+\begin{twierdzenie}[Ciąg Mayera--Vietorisa]
+\label{thm:mv-przestrzenie}
+Jeśli $X=U\cup V$, gdzie $U,V$
+są otwarte w $X$, to istnieje
+długi ciąg dokładny
+\begin{equation}\label{eq:mv-przestrzenie}
+ \cdots\to H_n(U\cap V)
+ \xrightarrow{(i_*,-j_*)}
+ H_n(U)\oplus H_n(V)
+ \xrightarrow{k_*+\ell_*}H_n(X)
+ \xrightarrow{\delta}H_{n-1}(U\cap V)\to\cdots.
+\end{equation}
+Tak samo działają grupy zredukowane.
+\end{twierdzenie}
+\begin{proof}
+Wewnątrz $C_\bullet(X)$ rozważmy
+$B_\bullet=C_\bullet(U)+C_\bullet(V)$.
+Mamy krótki ciąg kompleksów
+\[
+ 0\to C_\bullet(U\cap V)
+ \xrightarrow{c\mapsto(c,-c)}
+ C_\bullet(U)\oplus C_\bullet(V)
+ \xrightarrow{(a,b)\mapsto a+b}
+ B_\bullet\to0.
+\]
+Iniektywność pierwszego odwzorowania jest jasna;
+jądro drugiej składa się z par
+$(c,-c)$, w których każdy singularny
+sympleks występujący w $c$ należy
+zarazem do $U$ i do $V$.
+Surjektywność wynika z definicji sumy.
+Ponadto $B_\bullet=C_\bullet^{\{U,V\}}(X)$,
+więc Lemat~\ref{lem:male-lancuchy}
+identyfikuje $H_*(B)$ z $H_*(X)$.
+Zastosowanie Twierdzenia~\ref{thm:les-homologia}
+daje~\eqref{eq:mv-przestrzenie}.
+W wersji zredukowanej dołączamy
+do każdego kompleksu stopień $-1$
+równy $\Z$ i różniczkę
+$\varepsilon:C_0\to\Z$.
+Na stopniu $-1$ ten sam krótki
+ciąg ma postać
+$0\to\Z\xrightarrow{c\mapsto(c,-c)}
+\Z\oplus\Z\xrightarrow{(a,b)\mapsto a+b}
+\Z\to0$, nadal dokładną.
+W stopniach nieujemnych
+obowiązuje poprzedni rachunek.
+Homologie tych powiększonych
+kompleksów są właśnie
+homologiami zredukowanymi;
+dotyczy to również pustego
+przecięcia, dla którego
+$\widetilde H_{-1}(\varnothing)=\Z$.
+\end{proof}
+
+Jeśli $c=a+b\in B_n$ jest cyklem,
+gdzie $a\in C_n(U)$ i $b\in C_n(V)$,
+to $\partial a=-\partial b$ jest
+łańcuchem w $U\cap V$, a
+$\delta[c]=[\partial a]$ z wyborem
+znaku zgodnym z pierwszym odwzorowaniem.
+To praktyczna recepta na odwzorowanie łączące.
+
+\begin{przyklad}[Okrąg z dwóch łuków]
+\label{prz:mv-okrag}
+Pokryjmy $S^1$ dwoma otwartymi,
+ściągalnymi łukami $U,V$, których
+przecięcie składa się z dwóch
+łuków. Mamy
+$\widetilde H_0(U)=
+\widetilde H_0(V)=0$,
+a $\widetilde H_0(U\cap V)\cong\Z$
+generuje różnica klas punktów
+z dwóch składowych.
+Zredukowany ciąg
+Mayera--Vietorisa daje
+\[
+ 0=\widetilde H_1(U)\oplus
+ \widetilde H_1(V)\to
+ \widetilde H_1(S^1)
+ \xrightarrow[\cong]{\delta}
+ \widetilde H_0(U\cap V)\to0.
+\]
+Zatem $H_1(S^1)\cong\Z$.
+Geometria odwzorowania $\delta$ jest prosta:
+rozcinając cykl okręgu na łuki
+leżące w $U$ i $V$, otrzymujemy
+dwa końce w różnych składowych
+ich przecięcia.
+\end{przyklad}
+
+\begin{twierdzenie}[Homologia sfer]
+\label{thm:homologia-sfer}
+Dla $n\geq0$:
+\[
+ \widetilde H_k(S^n;\Z)=
+ \begin{cases}\Z,&k=n,\\0,&k\ne n.\end{cases}
+\]
+Ponadto dla $n\geq1$
+\[
+ H_k(D^n,S^{n-1};\Z)=
+ \begin{cases}\Z,&k=n,\\0,&k\ne n.\end{cases}
+\]
+\end{twierdzenie}
+\begin{proof}
+$S^0$ ma dwie składowe punktowe:
+$H_0(S^0)=\Z^2$ oraz
+$\widetilde H_0(S^0)=\Z$.
+Wyższa homologia znika, bo jest
+to suma dwóch kopii homologii
+punktu z Przykładu~\ref{prz:homologia-punktu}.
+
+Dla $n\geq1$ weźmy lekko
+powiększone otwarte półkule
+$U,V\subset S^n$. Każda jest
+ściągalna, a $U\cap V$
+deformacyjnie zwija się na
+sferę równikową $S^{n-1}$.
+Zredukowany ciąg
+Mayera--Vietorisa, wraz z
+zerowaniem homologii $U,V$,
+daje dla każdego $k$ izomorfizm
+\[
+ \widetilde H_k(S^n)
+ \xrightarrow{\ \cong\ }
+ \widetilde H_{k-1}(S^{n-1}).
+\]
+W stopniu $k=1$ używa się
+właśnie zredukowanego $H_0$;
+gdy $n=1$, obie składowe
+przecięcia są niezbędne.
+Indukcja od $S^0$ daje pierwszy wzór.
+
+Dysk $D^n$ jest ściągalny. W ciągu
+zredukowanym pary $(D^n,S^{n-1})$
+grupy dysku są zerowe, a odwzorowanie
+łączące daje
+$H_k(D^n,S^{n-1})\cong
+\widetilde H_{k-1}(S^{n-1})$
+dla $k\geq1$. Dla $k=0$
+odwzorowanie $H_0(S^{n-1})\to H_0(D^n)$
+jest surjekcją, więc grupa
+względna również znika.
+To daje drugi wzór.
+\end{proof}
+
+\begin{uwaga}[Klasa fundamentalna i orientacja]
+Generator $H_n(D^n,S^{n-1})\cong\Z$
+nazywamy \emph{klasą orientacji dysku}.
+Wybór jednego z jego dwóch znaków
+określa orientację; w długim ciągu
+pary $\delta$ posyła ją na
+generator $\widetilde H_{n-1}(S^{n-1})$.
+Różniczkowe ujęcie orientacji
+i całkowania pozostawiamy
+osobnemu rozdziałowi.
+\end{uwaga}
+
+\section{Od triangulacji do homologii przestrzeni}
+\label{sec:porownanie-symplicjalne}
+
+Dla kompleksu symplicjalnego zachowujemy ustalony porządek
+wierzchołków, a dla $\Delta$-kompleksu porządki jego map charakterystycznych.
+Każdy bazowy sympleks $\sigma:\Delta^n\to|K|$ jest wtedy
+jednocześnie singularnym sympleksem. Daje to odwzorowanie łańcuchowe
+\[
+ I:C_\bullet^\Delta(K)\longrightarrow C_\bullet(|K|),
+ \qquad [\sigma]\longmapsto \sigma,
+\]
+bo oba operatory $\partial$ sumują te same
+ściany z tymi samymi znakami.
+Mapę $I$ rozszerzamy liniowo: na przykład $I(-[\sigma])=-\sigma$.
+Nie zastępujemy prawej strony osobnym generatorem otrzymanym
+przez odwrócenie parametryzacji. Nie jest to
+izomorfizm grup łańcuchów: po prawej są
+wszystkie odwzorowania ciągłe, po lewej tylko
+wybrane sympleksy. Niezwykłe jest to,
+że po przejściu do homologii różnica znika.
+
+Potrzebny będzie prosty sposób traktowania
+komórki z całym brzegiem zwiniętym do punktu.
+
+\begin{lemat}[Iloraz pary komórkowej]
+\label{lem:iloraz-cw-homologia}
+Niech $A\ne\varnothing$ będzie podkompleksem skończonego
+kompleksu CW $X$. Jeśli istnieje otwarte
+otoczenie $N$ zbioru $A$, które silnie
+deformacyjnie retrahuje się na $A$, to
+odwzorowanie ilorazowe indukuje izomorfizm
+\[
+ H_k(X,A)\xrightarrow{\ \cong\ }
+ H_k(X/A,\{*\})=\widetilde H_k(X/A)
+ \quad(k\geq0).
+\]
+Takie otoczenie istnieje, gdy
+$A=X^{n-1}\ne\varnothing$ i $X=X^n$ jest skończonym
+szkieletem CW dla $n\geq1$, a także gdy do skończonego $A$
+dołączamy pojedynczą komórkę dodatniego wymiaru.
+\end{lemat}
+\begin{proof}
+Włączenie $A\hookrightarrow N$ jest
+równoważnością homotopijną. Porównując
+długie ciągi par $(X,A)$ i $(X,N)$
+za pomocą Lematu~\ref{lem:pieciu},
+dostajemy $H_k(X,A)\cong H_k(X,N)$.
+Po zwinięciu $A$ do punktu homotopia schodzi na $N/A$.
+Uzasadnijmy jej ciągłość również względem czasu.
+Skończony kompleks CW jest zwarty, bo jest obrazem skończonej
+sumy zwartych dysków; domknięty $A$ też jest zwarty.
+Projekcja $q:N\to N/A$ jest domknięta: dla domkniętego $F\subseteq N$
+zbiór $q^{-1}q(F)$ jest równy $F$ lub $F\cup A$.
+Ma zwarte włókna, więc $q\times\id_I$ jest również domknięta.
+Istotnie, jeśli domknięty zbiór omija włókno nad $(y,t)$,
+skończone pokrycie tego włókna prostokątami otwartymi daje
+otoczenia $O\supseteq q^{-1}(y)$ i $J\ni t$ z $O\times J$
+rozłącznym z tym zbiorem; domkniętość $q$ daje otoczenie
+$W\ni y$ takie, że $q^{-1}(W)\subseteq O$.
+Stąd $(q\times\id_I)$ jest odwzorowaniem ilorazowym,
+co pozwala przenieść homotopię. Zatem $N/A$ silnie zwija się do $\{*\}$,
+więc tak samo
+$H_k(X/A,\{*\})\cong H_k(X/A,N/A)$.
+
+Porównajmy środkowe grupy.
+Zbiór $A$ jest domknięty
+(dla skończonego CW wynika to
+z topologii słabej), zatem
+$\{X\setminus A,N\}$ jest
+otwartym pokryciem $X$.
+W ilorazie mamy pokrycie
+$\{(X/A)\setminus\{*\},N/A\}$.
+Lemat o małych łańcuchach,
+zastosowany również do $N$,
+pozwala obliczać homologie
+tych dwóch par odpowiednio za pomocą kompleksów
+\[
+ \frac{C_\bullet(X\setminus A)}
+      {C_\bullet(N\setminus A)}
+ \quad\text{oraz}\quad
+ \frac{C_\bullet((X/A)\setminus\{*\})}
+      {C_\bullet((N/A)\setminus\{*\})}.
+\]
+Poza $A$ odwzorowanie ilorazowe jest
+homeomorfizmem, więc te dwa
+kompleksy są izomorficzne.
+Składając trzy izomorfizmy,
+otrzymujemy tezę.
+
+Dla $A=X^{n-1}\subset X^n$
+weźmy $N$ złożony z $A$ oraz,
+w każdej dołączonej $n$-komórce,
+obrazu pierścienia
+$\{x\in D^n:\|x\|>1/2\}$.
+Jest otwarty w topologii
+nadanej przez odwzorowania dołączające.
+W każdym pierścieniu promieniowo
+przesuwamy $r$ od wartości
+$r>1/2$ do $1$, pozostawiając
+brzeg i cały $A$ nieruchome.
+Na częściach dyskowych używamy wzoru
+$ru\mapsto((1-t)r+t)u$. Ciągłość przy $A$ sprawdzamy jak
+w dowodzie Twierdzenia~\ref{thm:pi1-dolaczenie-komorki}:
+w każdym otoczeniu zachowujemy tylko te punkty pasa, których
+cały odcinek radialny do brzegu mieści się w tym otoczeniu.
+Te mniejsze zbiory są otwarte i pozostają w pierwotnym otoczeniu
+przez cały czas homotopii. Daje to silną retrakcję $N\to A$.
+Ten sam argument działa przy dołączeniu pojedynczej komórki.
+\end{proof}
+
+\begin{lemat}[Generator pojedynczego sympleksu]
+\label{lem:orientacja-simpleksu}
+Identycznościowe odwzorowanie singularne
+$u_n:\Delta^n\to\Delta^n$ określa
+generator
+$H_n(\Delta^n,\partial\Delta^n)\cong\Z$
+dla $n\geq1$.
+\end{lemat}
+\begin{proof}
+Jest cyklem względnym, bo jego
+brzeg leży w $\partial\Delta^n$.
+Brzeg sympleksu jest sferą
+(Stwierdzenie~\ref{prop:brzeg-sympleksu}),
+a jej homologię policzyliśmy
+w Twierdzeniu~\ref{thm:homologia-sfer}.
+Wynika stąd, że odwzorowanie łączące
+\[
+ \delta:H_n(\Delta^n,\partial\Delta^n)
+ \longrightarrow
+ \widetilde H_{n-1}(\partial\Delta^n)
+ \]
+jest izomorfizmem i posyła
+$[u_n]$ na klasę cyklu
+$\partial u_n$.
+Pokażemy indukcyjnie, że ten
+cykl jest generatorem.
+Dla $n=1$ jest to różnica
+końców, generator
+$\widetilde H_0(S^0)$.
+W wyższym wymiarze rozdzielmy
+$\partial\Delta^n$ na jedną
+ścianę $F\cong\Delta^{n-1}$
+i sumę $B$ pozostałych ścian.
+$F$ i $B$ są ściągalne:
+$B$ jest stożkiem z przeciwległego
+wierzchołka nad $\partial F$;
+ich przecięciem jest $\partial F$.
+W ciągu Mayera--Vietorisa
+odwzorowanie łączące
+$\widetilde H_{n-1}(\partial\Delta^n)
+\to\widetilde H_{n-2}(\partial F)$
+jest izomorfizmem. Aby zastosować wersję dla zbiorów otwartych, przedstawmy
+oba dyski $F,B$ jako stożki nad ich wspólnym brzegiem $\partial F$.
+Niech $r\in[0,1]$ oznacza w każdym z nich parametr radialny,
+z $r=1$ na $\partial F$. Zbiory
+$U=F\cup\{x\in B:r(x)>1/2\}$ oraz
+$V=B\cup\{x\in F:r(x)>1/2\}$ są otwarte w $F\cup B$:
+na każdej z dwóch części ich przeciwobrazy są otwarte.
+Przesuwając dodatkowe pasy do $r=1$, retrahujemy je na $F,B$,
+a ich przecięcie na $\partial F$.
+Cykl $\partial u_n$ jest sumą
+$\pm u_F$ na $F$ i pozostałych
+ścian na $B$; jego obrazem przez
+odwzorowanie łączące jest
+$\pm[\partial u_F]$.
+To generator na mocy
+założenia indukcyjnego.
+Zatem $\partial u_n$, a więc
+również $u_n$ względnie,
+jest generatorem.
+\end{proof}
+
+\begin{twierdzenie}[Porównanie homologii]
+\label{thm:symplicjalna-singularna}
+Dla skończonego kompleksu symplicjalnego
+$K$ naturalne odwzorowanie indukuje
+\[
+ I_*:H_n^\Delta(K)\xrightarrow{\ \cong\ }
+ H_n(|K|;\Z)
+ \qquad(n\geq0).
+\]
+To samo zachodzi dla skończonego
+$\Delta$-kompleksu, jeśli generatory
+po lewej to jego sympleksy
+charakterystyczne z ich ścianami.
+\end{twierdzenie}
+\begin{proof}
+Uporządkujmy sympleksy tak, aby
+każdy pojawiał się po wszystkich
+swoich ścianach. Budujemy kompleks
+po jednym sympleksie:
+$L\subset K=L\cup_\varphi\Delta^n$.
+Załóżmy indukcyjnie, że porównanie
+jest izomorfizmem dla $L$.
+Iloraz kompleksów symplicjalnych
+$C^\Delta(K)/C^\Delta(L)$
+ma jeden generator w stopniu $n$
+i zero w pozostałych stopniach,
+więc jego homologia jest $\Z$
+tylko w stopniu $n$.
+
+Jeśli $n\geq1$, po zwinięciu $L$
+do punktu przestrzeń $|K|/|L|$
+jest $\Delta^n/\partial\Delta^n
+\cong S^n$; analogiczny opis
+działa dla $\Delta$-kompleksu,
+nawet gdy jego ściany były
+między sobą utożsamione.
+Lemat~\ref{lem:iloraz-cw-homologia}
+i Twierdzenie~\ref{thm:homologia-sfer}
+dają $H_q(|K|,|L|)=\Z$ dla
+$q=n$ i zero w innych stopniach.
+Odwzorowanie względne przenosi jedyny
+generator na klasę charakterystycznego sympleksu.
+Mapa par $(\Delta^n,\partial\Delta^n)\to(|K|,|L|)$
+indukuje homeomorfizm ich ilorazów: jest ciągłą bijekcją
+ze zwartej przestrzeni do przestrzeni Hausdorffa.
+Naturalność map do ilorazów w Lemacie~\ref{lem:iloraz-cw-homologia}
+pokazuje, że także na homologii względnej jest izomorfizmem.
+Na mocy Lematu~\ref{lem:orientacja-simpleksu} przenosi więc
+generator na generator, a nie na jego dowolną wielokrotność.
+Dla $n=0$ nowy wierzchołek jest
+osobną składową i odpowiednie
+odwzorowanie względne jest izomorfizmem
+$\Z\to\Z$ w stopniu $0$.
+
+Mamy teraz przemienny diagram
+długich ciągów par dla kompleksów
+symplicjalnych i singularnych.
+Na wyrazach dotyczących $L$
+odwzorowania pionowe są izomorfizmami
+z założenia indukcyjnego,
+a na względnych właśnie
+to pokazaliśmy. Lemat~\ref{lem:pieciu}
+zastosowany do kolejnych pięciu
+wyrazów daje izomorfizm dla $K$.
+Zaczynamy od kompleksu pustego,
+dla którego wszystkie zwykłe
+grupy homologii są zerowe.
+\end{proof}
+
+W praktyce wolno zatem obliczać
+homologię przestrzeni z jednej
+wygodnej triangulacji: otrzymany
+wynik nie zależy od wyboru
+triangulacji. Podziały sympleksów
+zmieniają grupy łańcuchów,
+ale nie grupy homologii.
+
+\section{Homologia komórkowa}
+\label{sec:homologia-komorkowa}
+
+W triangulacji torusa potrzeba
+trójkątów i ich ścian. Struktura
+CW z Sekcji~\ref{sec:cw-kompleksy}
+może opisywać go jednym punktem,
+dwoma pętlami i jedną
+$2$-komórką. Homologia komórkowa
+zachowuje tę oszczędność.
+
+\begin{twierdzenie}[Względna homologia warstwy komórek]
+\label{thm:warstwa-komorek}
+Niech $X$ będzie skończonym
+kompleksem CW, $X^n$ jego
+$n$-szkieletem i $X^{-1}=\varnothing$.
+Dla $n\geq1$:
+\[
+ H_k(X^n,X^{n-1})
+ \cong
+ \begin{cases}
+ \displaystyle\bigoplus_{\alpha\in I_n}\Z[e_\alpha^n],
+ &k=n,\\[3pt]0,&k\ne n,
+ \end{cases}
+\]
+gdzie $I_n$ oznacza zbiór $n$-komórek.
+Dla $n=0$ mamy
+$H_0(X^0)=\bigoplus_{\alpha\in I_0}\Z[e_\alpha^0]$
+i $H_k(X^0)=0$ dla $k\ne0$.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $X^{n-1}=\varnothing$ i $n\geq1$, to również $X^n=\varnothing$:
+nie można dołączyć dysku o niepustym brzegu do pustej przestrzeni.
+Teza jest wtedy oczywista. W pozostałych przypadkach
+w ilorazie $X^n/X^{n-1}$
+brzeg każdej dołączonej kopii
+$D^n$ staje się jednym punktem,
+a wnętrza komórek pozostają
+rozłączne. Z definicji topologii
+CW otrzymujemy bukiet
+$\bigvee_{\alpha\in I_n}
+(D^n/\partial D^n)\cong
+\bigvee_{\alpha\in I_n}S^n$.
+Lemat~\ref{lem:iloraz-cw-homologia}
+zamienia homologię względną
+na zredukowaną homologię bukietu.
+Dla skończonego bukietu
+zredukowana homologia jest sumą
+zredukowanych homologii składników:
+dołączamy kolejne sfery. Dla bukietu $Y\vee S^n$
+bierzemy $U=Y\cup B$ i $V=S^n\cup N$, gdzie $B$ jest małą
+otwartą kulą wokół punktu wspólnego w nowej sferze, a $N$
+jest sumą takich kul w dotychczasowych sferach.
+Te zbiory są otwarte w topologii ilorazowej bukietu,
+retrahują się na $Y,S^n$, a $U\cap V=N\vee B$ jest ściągalne.
+Ciąg Mayera--Vietorisa daje izomorfizm indukowany włączeniami
+składników, a więc właśnie ich sumę prostą.
+Twierdzenie~\ref{thm:homologia-sfer}
+daje wskazane grupy.
+Znaki generatorów zależą
+od wyboru orientacji komórek.
+Dla $n=0$ mamy skończony
+zbiór punktów; rachunek wynika
+z homologii punktu.
+\end{proof}
+
+\begin{definicja}[Kompleks komórkowy]
+\index{kompleks komorkowy@Kompleks komórkowy}
+\label{def:kompleks-komorkowy}
+Kładziemy
+$C_n^{\mathrm{CW}}(X)=H_n(X^n,X^{n-1})$.
+Dla $n\geq1$ jego operator brzegu
+jest złożeniem
+\begin{equation}\label{eq:cellular-boundary}
+ H_n(X^n,X^{n-1})
+ \xrightarrow{\ \delta_n\ }
+ H_{n-1}(X^{n-1})
+ \xrightarrow{\ j_{n-1}\ }
+ H_{n-1}(X^{n-1},X^{n-2}),
+\end{equation}
+gdzie $\delta_n$ pochodzi z
+długiego ciągu pary, a
+$j_{n-1}$ z ilorazu łańcuchów.
+Przyjmujemy $\partial_0^{\mathrm{CW}}=0$.
+\end{definicja}
+
+\begin{twierdzenie}[Komórki obliczają homologię]
+\label{thm:komorkowa-singularna}
+Operator~\eqref{eq:cellular-boundary}
+spełnia $(\partial^{\mathrm{CW}})^2=0$.
+Dla skończonego CW istnieją
+izomorfizmy
+\[
+ H_n(C_\bullet^{\mathrm{CW}}(X),
+       \partial^{\mathrm{CW}})
+ \cong H_n(X;\Z)
+ \qquad\text{dla każdego }n\geq0.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla $n=1$ równość brzegu brzegu wynika z $\partial_0^{\mathrm{CW}}=0$.
+Dla $n\geq2$ z dokładności długiego ciągu
+pary $(X^{n-1},X^{n-2})$
+wynika $\delta_{n-1}j_{n-1}=0$.
+Stąd
+\[
+ \partial^{\mathrm{CW}}_{n-1}
+ \partial^{\mathrm{CW}}_n
+ =j_{n-2}\delta_{n-1}j_{n-1}\delta_n=0.
+\]
+
+Rozpiszmy porównanie homologii.
+Indukcja po szkieletach,
+z użyciem długiego ciągu pary
+i Twierdzenia~\ref{thm:warstwa-komorek},
+daje $H_k(X^m)=0$ dla $k>m$.
+Włączenie $X^{m-1}\hookrightarrow X^m$
+indukuje ponadto izomorfizm na
+$H_k$ dla $k<m-1$: dwa sąsiednie
+wyrazy względne o stopniach
+$k+1$ i $k$ są wtedy zerowe.
+W szczególności komórki wymiaru
+$\geq n+2$ nie zmieniają $H_n$.
+
+Dla $n\geq1$ w ciągu pary
+$(X^n,X^{n-1})$ mamy odcinek
+\[
+ 0=H_n(X^{n-1})\longrightarrow
+ H_n(X^n)\xrightarrow{\ j_n\ }
+ C_n^{\mathrm{CW}}
+ \xrightarrow{\ \delta_n\ }
+ H_{n-1}(X^{n-1}).
+\]
+Odwzorowanie $j_{n-1}:H_{n-1}(X^{n-1})
+\to C_{n-1}^{\mathrm{CW}}$
+jest iniektywne: jego jądro
+jest obrazem
+$H_{n-1}(X^{n-2})=0$.
+Dla $n=1$ używamy
+$X^{-1}=\varnothing$, co daje
+ten sam wniosek.
+Zatem $\ker\partial_n^{\mathrm{CW}}
+=\ker\delta_n=\operatorname{im}j_n$
+i $j_n$ identyfikuje cykle
+komórkowe z $H_n(X^n)$.
+
+W następnym długim ciągu,
+dla $(X^{n+1},X^n)$,
+\[
+ C_{n+1}^{\mathrm{CW}}
+ \xrightarrow{\ \delta_{n+1}\ }
+ H_n(X^n)\longrightarrow
+ H_n(X^{n+1})\longrightarrow
+ H_n(X^{n+1},X^n)=0.
+\]
+Jądro przejścia do $H_n(X^{n+1})$
+jest więc $\operatorname{im}\delta_{n+1}$.
+Po włożeniu w $C_n^{\mathrm{CW}}$
+przez $j_n$ jest to dokładnie
+$\operatorname{im}\partial_{n+1}^{\mathrm{CW}}$.
+Otrzymujemy
+$H_n^{\mathrm{CW}}(X)\cong
+H_n(X^{n+1})\cong H_n(X)$.
+Dla $n=0$ ten sam argument działa
+z $H_0(X^0)=C_0^{\mathrm{CW}}$:
+$H_0(X^1)$ jest ilorazem przez
+obrazy brzegów $1$-komórek,
+a wyższe komórki już nie
+zmieniają $H_0$.
+\end{proof}
+
+\section{Odwzorowania dołączające i konkretne obliczenia}
+\label{sec:obliczenia-homologii}
+
+\begin{definicja}[Stopień odwzorowania sfer]
+\index{stopien odwzorowania sfer@Stopień odwzorowania sfer}
+\label{def:stopien-sfer}
+Dla $m\geq1$ każde ciągłe odwzorowanie
+$h:S^m\to S^m$ indukuje
+endomorfizm $H_m(S^m)\cong\Z$.
+Istnieje więc dokładnie jedna
+liczba całkowita $\deg h$ taka,
+że $h_*([S^m])=(\deg h)[S^m]$.
+Nazywamy ją \emph{stopniem} $h$.
+\end{definicja}
+
+Z definicji i funktorialności
+$\deg(\id)=1$ oraz
+$\deg(h\circ g)=\deg h\deg g$.
+Homotopijne odwzorowania mają ten sam
+stopień. Na $S^1=\{z\in\C:|z|=1\}$
+odwzorowanie $z\mapsto z^r$ ma stopień $r\in\Z$.
+Uzasadnijmy przejście od liczby obiegów do homologii.
+Pętla $\gamma(t)=e^{2\pi it}$ reprezentuje generator $H_1(S^1)$:
+po podziale na łuki jej obraz przez izomorfizm Mayera--Vietorisa
+z Przykładu~\ref{prz:mv-okrag} jest różnicą punktów dwóch składowych przecięcia.
+Dla dowolnych dwóch pętli $\alpha,\beta$ opartych w tym samym punkcie
+mamy $[\alpha*\beta]=[\alpha]+[\beta]$ w $H_1$.
+Istotnie, złożenie $\alpha*\beta$ z afinicznym odwzorowaniem
+$\Delta^2\to[0,1]$ o wartościach $0,1/2,1$ w kolejnych wierzchołkach
+jest singularnym $2$-sympleksem o brzegu
+$\beta-(\alpha*\beta)+\alpha$.
+Ponadto homotopia pętli względem końców daje homologiczne cykle
+przez wzór pryzmatyczny; pętla stała jest brzegiem stałego $2$-sympleksu.
+Stąd $[\bar\alpha]=-[\alpha]$, bo $\alpha*\bar\alpha$ jest
+homotopijna do stałej. Pętla $t\mapsto e^{2\pi irt}$ jest,
+z dokładnością do zmiany parametryzacji, złożeniem $r$ obiegów dla $r>0$,
+$|r|$ obiegów przeciwnych dla $r<0$
+i jest stała dla $r=0$. Jej klasa to zatem $r[\gamma]$.
+
+\begin{twierdzenie}[Współczynniki brzegu komórkowego]
+\label{thm:formula-komorkowa}
+Niech $\varphi_\alpha:S^{n-1}\to X^{n-1}$
+będzie odwzorowaniem dołączającym
+zorientowanej $n$-komórki
+$e_\alpha^n$, gdzie $n\geq2$.
+Dla każdej zorientowanej
+$(n-1)$-komórki $e_\beta^{n-1}$
+zwińmy w $X^{n-1}$ do punktu
+dopełnienie jej otwartego wnętrza.
+Otrzymamy odwzorowanie
+\[
+ q_\beta:X^{n-1}\longrightarrow
+ X^{n-1}/(X^{n-1}\setminus e_\beta^{n-1})
+ \cong S^{n-1}.
+\]
+Sferę docelową orientujemy zgodnie z komórką $e_\beta^{n-1}$,
+a dziedzinę $\varphi_\alpha$ jako brzeg zorientowanej komórki $e_\alpha^n$.
+Wówczas
+\begin{equation}\label{eq:formula-komorkowa}
+ \partial_n^{\mathrm{CW}}(e_\alpha^n)
+ =\sum_{\beta}
+ \deg(q_\beta\circ\varphi_\alpha)
+ e_\beta^{n-1}.
+\end{equation}
+W stopniu $1$ brzeg zorientowanej
+komórki od początku $v_-$ do końca
+$v_+$ wynosi $\partial_1e=v_+-v_-$.
+\end{twierdzenie}
+\begin{proof}
+Generator $e_\alpha^n$ jest
+obrazem klasy orientacji
+$(D^n,S^{n-1})$ w parze
+$(X^n,X^{n-1})$. Pierwsza
+strzałka~\eqref{eq:cellular-boundary}
+zwraca klasę obrazu
+zorientowanego brzegu $S^{n-1}$
+przez $\varphi_\alpha$:
+tak działa odwzorowanie łączące,
+bo na łańcuchach bierze
+dosłowny brzeg podniesionego
+cyklu względnego.
+Druga strzałka przenosi tę
+klasę do
+$H_{n-1}(X^{n-1},X^{n-2})$.
+Według
+Twierdzenia~\ref{thm:warstwa-komorek}
+jest to suma kopii $\Z$,
+po jednej dla każdego $\beta$.
+Rzutowanie na składnik $\beta$
+jest, poprzez iloraz z
+Lematu~\ref{lem:iloraz-cw-homologia},
+tym samym co $q_{\beta*}$.
+Zatem współczynnik przy
+$e_\beta^{n-1}$ to liczba,
+przez którą
+$(q_\beta\circ\varphi_\alpha)_*$
+mnoży generator homologii
+$S^{n-1}$: z definicji
+jest to jego stopień.
+Dla $n=1$ używamy
+bezpośrednio
+$\partial[0,1]=[1]-[0]$;
+oba końce mogą w $X^0$
+oznaczać ten sam wierzchołek.
+\end{proof}
+
+Warto przeczytać wzór geometrycznie:
+liczymy, ile razy, z jakimi znakami,
+brzeg wyższej komórki przechodzi
+przez daną komórkę niższą. Komórka
+z niezerowym współczynnikiem brzegu
+może zabić klasę homologii.
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,line cap=round,line join=round]
+ \node[draw=manifoldblue!65!black,fill=manifoldblue!9,
+  rounded corners=4pt,minimum width=2.15cm,
+  minimum height=.8cm] (c2) at (1.2,0) {$C_2=\Z$};
+ \node[draw=manifoldgreen!65!black,fill=manifoldgreen!9,
+  rounded corners=4pt,minimum width=2.35cm,
+  minimum height=.8cm] (c1) at (4.5,0) {$C_1=\Z^2$};
+ \node[draw=manifoldgold!75!black,fill=manifoldgold!10,
+  rounded corners=4pt,minimum width=2.15cm,
+  minimum height=.8cm] (c0) at (7.8,0) {$C_0=\Z$};
+ \draw[->,thick,manifoldred] (c2)--(c1)
+  node[midway,above=5pt] {$\partial_2=0$};
+ \draw[->,thick,manifoldred] (c1)--(c0)
+  node[midway,above=5pt] {$\partial_1=0$};
+ \node[align=center,font=\small,manifoldblue!75!black]
+  at (1.2,-.9) {jedna\\$2$-komórka};
+ \node[align=center,font=\small,manifoldgreen!75!black]
+  at (4.5,-.9) {dwie\\pętle};
+ \node[font=\small,manifoldgold!75!black]
+  at (7.8,-.9) {punkt};
+\end{tikzpicture}
+\caption{Kompleks komórkowy torusa. Ma trzy
+niezerowe grupy łańcuchów, a oba odwzorowania
+brzegu znikają: pętle kończą się w tym
+samym punkcie, a słowo dołączające
+komórkę $2$-wymiarową jest komutatorem.}
+\label{fig:kompleks-torusa}
+\end{figure}
+
+\begin{przyklad}[Sfera z dwóch komórek]
+\label{prz:homologia-cw-sfera}
+W modelu z
+Przykładu~\ref{prz:cw-s2}
+jest jedna komórka $e^0=v$
+i jedna $e^2$, bez $1$-komórek.
+Kompleks komórkowy to
+\[
+ 0\longrightarrow\Z e^2
+ \xrightarrow{\;0\;}0
+ \xrightarrow{\;0\;}\Z v
+ \longrightarrow0.
+\]
+Stąd $H_2(S^2)=\Z$, $H_1(S^2)=0$,
+$H_0(S^2)=\Z$. Ogólniej
+$S^n=D^n/\partial D^n$ ma
+jedną komórkę w stopniu $0$
+i jedną w stopniu $n$
+($n\geq2$). Dla $S^1$
+jedna $1$-komórka jest pętlą,
+więc $\partial_1=0$.
+W ten sposób odzyskujemy
+Twierdzenie~\ref{thm:homologia-sfer}.
+\end{przyklad}
+
+\begin{przyklad}[Torus]
+\label{prz:homologia-cw-torus}
+Model CW z
+Przykładu~\ref{prz:pi1-torus-rp2}
+ma komórki $v$,
+$a,b$ oraz $e^2$.
+Krawędzie są pętlami, więc
+$\partial_1a=\partial_1b=0$.
+Brzeg $e^2$ jest dołączony
+według słowa $aba^{-1}b^{-1}$.
+Współczynnik przy $a$
+to $1-1=0$, a przy $b$
+to $1-1=0$; jest to
+szczególny przypadek
+Wzoru~\eqref{eq:formula-komorkowa}.
+Zatem $\partial_2=0$ i
+\[
+ H_0(T^2)=\Z,\qquad
+ H_1(T^2)=\Z^2,\qquad
+ H_2(T^2)=\Z,\qquad
+ H_k(T^2)=0\quad(k>2).
+\]
+Rysunek~\ref{fig:kompleks-torusa}
+pokazuje cały rachunek.
+Grupa $\Z^2$ rozpoznaje
+dwa niezależne kierunki pętli.
+\end{przyklad}
+
+\begin{przyklad}[Płaszczyzna rzutowa i torsja]
+\label{prz:homologia-rp2}
+Przestrzeń $\mathbb{RP}^2$
+ma po jednej komórce
+$e^0,e^1,e^2$.
+Jedyna $1$-komórka jest pętlą,
+więc $\partial_1=0$.
+Odwzorowanie dołączające $e^2$
+okrąża $\mathbb{RP}^1\cong S^1$
+dwa razy, co było widoczne
+w Przykładzie~\ref{prz:pi1-torus-rp2}.
+Ma stopień $2$ po ustaleniu
+orientacji, zatem
+\[
+ 0\longrightarrow\Z
+ \xrightarrow{\;\times2\;}\Z
+ \xrightarrow{\;0\;}\Z
+ \longrightarrow0.
+\]
+Jądro mnożenia przez $2$
+jest zerowe, a iloraz
+$\Z/2\Z$ ma element
+niezerowy, który po
+dwukrotnym dodaniu znika.
+Otrzymujemy
+\[
+ H_0(\mathbb{RP}^2)=\Z,\quad
+ H_1(\mathbb{RP}^2)=\Z/2\Z,\quad
+ H_2(\mathbb{RP}^2)=0.
+\]
+To konkretny przykład \emph{torsji}
+zdefiniowanej w
+Sekcji~\ref{sec:wspolczynniki-euler}.
+\end{przyklad}
+
+\begin{uwaga}[Homologia ze współczynnikami]
+\label{rem:homologia-wspolczynniki-przestrzeni}
+Uzasadnijmy zmianę współczynników także w dodatniej charakterystyce.
+Dla przemiennego pierścienia $R$ z jedynką definiujemy $C_n(X;R)$
+jako wolny $R$-moduł na singularnych sympleksach, z tym samym wzorem brzegu.
+Równoważnie jest to $C_n(X;\Z)\otimes_{\Z}R$.
+Homotopie pryzmatyczne i podział barycentryczny mają całkowite współczynniki,
+więc wszystkie ich tożsamości pozostają prawdziwe nad $R$.
+Ciągi łańcuchów par oraz małych łańcuchów Mayera--Vietorisa są
+rozszczepione w każdym stopniu na wybranych bazach, więc są dokładne także nad $R$.
+Rachunek punktu, sfer i kolejnych szkieletów przebiega wtedy tak samo:
+$C_n^{\mathrm{CW}}(X;R)$ ma po jednej kopii $R$ na komórkę.
+Naturalność odwzorowań łączących względem $\Z\to R$ pokazuje,
+że całkowity współczynnik brzegu $d$ staje się $d\cdot1_R$.
+To uzasadnia obliczenia komórkowe nad $R$; nie zakładamy,
+że tensorowanie dowolnego ciągu dokładnego zachowuje dokładność.
+\end{uwaga}
+
+\begin{przyklad}[Te same przestrzenie nad różnymi ciałami]
+\label{prz:zmiana-wspolczynnikow-rp2-torus}
+Wstawmy teraz do powyższych kompleksów komórkowych
+w miejsce $\Z$ dowolne
+$\mathbb F\in\{\Q,\R,\C\}$.
+Dla płaszczyzny rzutowej dostajemy
+\[
+ 0\longrightarrow\mathbb F
+ \xrightarrow{\;\times2\;}\mathbb F
+ \xrightarrow{\;0\;}\mathbb F
+ \longrightarrow0.
+\]
+Ponieważ $2$ ma w $\mathbb F$ odwrotność
+$1/2$, środkowe odwzorowanie jest
+izomorfizmem. Zatem
+\[
+ H_0(\mathbb{RP}^2;\mathbb F)=\mathbb F,
+ \qquad H_k(\mathbb{RP}^2;\mathbb F)=0\quad(k>0).
+\]
+Klasa $\Z/2$ zniknęła. Dla torusa oba
+operatory brzegu nadal są zerowe, więc
+\[
+ H_0(T^2;\mathbb F)=\mathbb F,\qquad
+ H_1(T^2;\mathbb F)=\mathbb F^2,\qquad
+ H_2(T^2;\mathbb F)=\mathbb F.
+\]
+Wymiary tych przestrzeni, odpowiednio
+$1,2,1$, to liczby Betti'ego torusa.
+Tak działa ogólny
+Wzór~\eqref{eq:homologia-char-zero}.
+Dla porównania nad $\Z/2$ strzałka
+$\times2$ w kompleksie $\mathbb{RP}^2$
+staje się zerowa. Wtedy oprócz $H_0$
+otrzymujemy również
+$H_1(\mathbb{RP}^2;\Z/2)\cong\Z/2$
+oraz $H_2(\mathbb{RP}^2;\Z/2)\cong\Z/2$.
+\end{przyklad}
+
+\begin{przyklad}[Bukiet okręgów i charakterystyka Eulera]
+\label{prz:homologia-bukiet}
+Bukiet $r$ okręgów ma jeden
+wierzchołek i $r$ pętli,
+bez komórek wyższych:
+$C_1^{\mathrm{CW}}=\Z^r$,
+$C_0^{\mathrm{CW}}=\Z$ i
+$\partial_1=0$.
+Stąd $H_1=\Z^r$, $H_0=\Z$,
+a wyższe homologie znikają.
+Dla skończonego CW z
+$c_n$ komórkami w wymiarze $n$
+równanie Eulera z
+Twierdzenia~\ref{thm:euler-homologia}
+przyjmuje postać
+\[
+ \sum_n(-1)^n c_n
+ =\sum_n(-1)^n
+   \operatorname{rank}_{\Z} H_n(X;\Z).
+\]
+W szczególności dla torusa
+$1-2+1=0$, a dla
+$\mathbb{RP}^2$ mamy
+$1-1+1=1$; torsja
+$\Z/2\Z$ ma rangę zero.
+\end{przyklad}
+
+\section{Lokalna homologia i dalsza droga}
+\label{sec:lokalna-homologia}
+
+\begin{stwierdzenie}[Lokalna homologia rozmaitości]
+\label{prop:lokalna-homologia}
+Jeśli $M$ jest topologiczną
+rozmaitością wymiaru $m$
+bez brzegu i $p\in M$, to
+\[
+ H_k(M,M\setminus\{p\};\Z)
+ \cong
+ \begin{cases}\Z,&k=m,\\0,&k\ne m.\end{cases}
+\]
+Wybór generatora grupy w stopniu $m$
+jest \emph{lokalną orientacją}
+w punkcie $p$.
+\end{stwierdzenie}
+\begin{proof}
+Wybierzmy otwarte otoczenie $U\subseteq M$ i mapę
+$\psi:U\to B^m$ na otwartą kulę jednostkową,
+z $\psi(p)=0$. Zbiór
+$Z=M\setminus U$
+jest domknięty i leży
+we wnętrzu $M\setminus\{p\}$,
+więc wycinanie
+(Twierdzenie~\ref{thm:wycinanie})
+daje
+\[
+ H_k(M,M\setminus\{p\})
+ \cong H_k(U,U\setminus\{p\})
+\cong H_k(B^m,B^m\setminus\{0\}).
+\]
+Dla $m\geq1$ kula jest
+ściągalna, a kula pozbawiona
+środka silnie deformacyjnie retrahuje się na sferę
+o promieniu $1/2$, homeomorficzną z $S^{m-1}$:
+używamy $ru\mapsto((1-t)r+t/2)u$, co pozostaje w $0<r<1$.
+Długi ciąg pary i
+Twierdzenie~\ref{thm:homologia-sfer}
+dają wynik. Dla $m=0$
+punkt jest otwartą składową
+mapy lokalnej, a grupa
+$H_0(\{p\},\varnothing)=\Z$.
+\end{proof}
+
+Istnienie lokalnego generatora
+nie oznacza jeszcze, że można
+wybrać generatory \emph{spójnie}
+na całej rozmaitości. To będzie
+treść pojęcia orientowalności.
+Na obecnym etapie mamy
+już narzędzia do dalszej nauki:
+kompleksy łańcuchowe i długie ciągi,
+homotopijną niezmienniczość,
+wycinanie, Mayera--Vietorisa
+oraz model komórkowy, w którym
+odwzorowania dołączające kontrolują
+operator brzegu. Pozwalają one
+później opisać, jak dołączenie
+uchwytu zmienia homologię,
+bez wprowadzania tutaj
+teorii Morse'a i chirurgii.
+
+\section*{Dalsza lektura}
+\addcontentsline{toc}{section}{Dalsza lektura}
+Pełne rozwinięcie homologii symplicjalnej,
+singularnej i komórkowej, wraz ze
+szczegółami technicznymi dotyczącymi
+podziału barycentrycznego, znajduje się
+w Allen Hatcher,
+\emph{Algebraic Topology}, rozdział 2,
+\url{https://pi.math.cornell.edu/~hatcher/AT/AT.pdf}.
+\clearpage

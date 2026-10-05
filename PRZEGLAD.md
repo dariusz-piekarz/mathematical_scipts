@@ -2269,3 +2269,50 @@ spójności całości oraz lista propozycji rozbudowy do wyboru przez autora.
 
 Przegląd istniejących 18 rozdziałów i wymagane przygotowanie listy
 dalszych uzupełnień są zakończone. Kolejne rozszerzenia zależą od wyboru autora.
+
+## Kontynuacja po rozbudowie autora — podział źródeł (2026-10-05)
+
+Na nową prośbę użytkownika pobrano zmiany do `19fa283` i porównano je
+z `66b220f`. Autor rozbudował książkę do 27 rozdziałów i dodatku;
+wersja ma 384 strony. Nowy zakres nie jest objęty historycznym audytem
+18 rozdziałów. Dalsza kontrola jest rozpisana w `PLAN_DZIALANIA.md`.
+
+- Potwierdzono obecność sekcji o rozmaitościach z brzegiem w rozdziale 1
+  oraz konstrukcji grup wolnych i iloczynu wolnego w rozdziale 5.
+  Nie dodawano powtórnych definicji. Zaktualizowano status wszystkich
+  wcześniejszych propozycji wobec już dopisanej treści.
+- Zgodnie z obecną prośbą użytkownika wydzielono 27 plików rozdziałów,
+  preambułę, wstęp, dodatek i indeks — łącznie 31 plików wejściowych
+  w `tex/`. Główny plik nadal składa tę samą książkę.
+- Użyto `\input`, zachowując kolejność, wszystkie etykiety i istniejące
+  polecenia przełamania strony. Pełny tekst po rozwinięciu importów
+  jest identyczny z monolitycznym źródłem `19fa283` (po normalizacji
+  zakończeń linii). Nie zmieniono w tym kroku treści matematycznej.
+- Zmieniono nieaktualną zasadę jednego pliku w `AGENTS.md`; nadrzędna
+  jest najnowsza prośba użytkownika o podział. Dodano w README opis
+  struktury, kompilacji, zachowania etykiet i współpracy przez Git.
+- Uruchomiono pełny `latexmk` z lokalnym MiKTeX przed podziałem i po nim.
+  Zadziałał Perl już obecny w PortableGit — bez instalowania programów.
+  `makeindex` przyjął 152 wpisy, bez odrzuceń i ostrzeżeń indeksu.
+- Porównano wszystkie 384 strony: identyczny tekst, rozmiary,
+  linki i obrazy renderowane w 72 dpi. Identyczne są spis treści,
+  zakładki, dane indeksu i sam indeks. Wszystkie 31 importów istnieje,
+  jest użyte dokładnie raz; nie pozostały osierocone pliki TeX.
+- Potwierdzono unikalność 1159 etykiet i cele 1051 odsyłaczy w źródle;
+  porównano 1553 linki PDF. Końcowy log nie zgłasza błędów,
+  brakujących odsyłaczy ani potrzeby ponownego przebiegu. Zachowuje
+  dwa wcześniejsze ostrzeżenia o zmianie `h` na `ht` i jedno `Underfull`;
+  nie ma `Overfull`. Te komunikaty nie wynikają z podziału.
+- Osobno porównano PDF pobrany od autora ze świeżym składem.
+  Strony treści 1–382 są identyczne, lecz na stronach 383–384 stary
+  indeks odsyłał o trzy strony za wcześnie (np. rozmaitość z brzegiem
+  do s. 11 zamiast 14, grupa wolna do s. 98 zamiast 101).
+  Pełny `latexmk` ponownie uruchomił `makeindex` po ustaleniu paginacji.
+  Obejrzano obie poprawione strony indeksu i zaktualizowano PDF
+  w repozytorium. To naprawa nieaktualnego indeksu, niezależna od podziału.
+- Dokument `AUDYT_KONCOWY.md` oznaczono jako historyczny, aby nie
+  przypisywać starego przeglądu nowo dopisanym rozdziałom.
+
+Nowe rozdziały będą kontrolowane kolejno. Materiał o Freedmanie
+i egzotycznych R⁴ pozostaje poza tym skryptem; istniejącego rozdziału
+o sferach Milnora nie usuwano ani nie przenoszono bez potrzeby.

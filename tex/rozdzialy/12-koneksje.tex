@@ -1,0 +1,1077 @@
+\chapter{Koneksje i transport równoległy}
+\label{ch:koneksje}
+\index{koneksja}
+
+Wektor styczny w punkcie $p$ należy do $T_pM$, a wektor
+w punkcie $q$ do innej przestrzeni $T_qM$. Samo odejmowanie
+tych wektorów nie ma więc znaczenia. Koneksja mówi,
+jak różniczkować pole wektorowe, gdy przemieszczamy się
+po rozmaitości. W metryce riemannowskiej szczególna
+koneksja pozwala przenosić wektory bez zmiany ich
+iloczynów skalarnych. Będziemy używać definicji
+pochodnej pola z Rozdziału~\ref{ch:algebra-tensorowa}
+oraz metryk z Rozdziału~\ref{ch:metryka-riemannowska}.
+
+\section{Dlaczego zwykła pochodna współrzędnych nie wystarcza?}
+\label{sec:koneksja-motywacja}
+
+Na płaszczyźnie euklidesowej wektor można przesuwać
+równolegle, bo wszystkie przestrzenie styczne mają
+kanoniczny opis przez $\R^2$. Nawet tu pochodne
+\emph{współczynników} zależą od bazy: wektor stale
+wskazujący na wschód ma stałe współczynniki w bazie
+kartezjańskiej, lecz zmienne w obracającej się bazie
+biegunowej. Na sferze potrzebny jest ponadto przepis,
+jak porównać wektory styczne w jej różnych punktach.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.95,>=Latex]
+  \fill[manifoldblue!8] (0,0) ellipse (3.25 and 1.27);
+  \draw[manifoldblue!65,thick] (0,0) ellipse (3.25 and 1.27);
+  \draw[manifoldblue,very thick,->] (-2.5,-.32) .. controls (-1.3,.83) and (.36,.64) .. (2.30,.31);
+  \path (-2.5,-.32) .. controls (-1.3,.83) and (.36,.64) .. (2.30,.31)
+       coordinate[pos=.22] (pa) coordinate[pos=.85] (qa);
+  \fill[manifoldblue] (pa) circle (2.2pt) node[below=6pt] {$p$};
+  \fill[manifoldblue] (qa) circle (2.2pt) node[below=6pt] {$q$};
+  \draw[manifoldred,ultra thick,->] (pa) -- ++(.35,.73) node[above] {$v\in T_pM$};
+  \draw[manifoldred,ultra thick,->] (qa) -- ++(.54,.62) node[above] {$P_\gamma v\in T_qM$};
+  \node[manifoldblue] at (0,-.62) {$\gamma$};
+  \node[align=center,text width=7.9cm,below] at (0,-1.36)
+    {Koneksja określa transport wzdłuż $\gamma$; wynik może zależeć od drogi.};
+\end{tikzpicture}
+\caption{Schemat transportu wzdłuż drogi. Strzałki reprezentują wektory w różnych przestrzeniach stycznych; ich położenie na kartce nie wyznacza metryki ani wielkości obrotu.}
+\label{fig:koneksja-transport-idea}
+\end{figure}
+
+\begin{definicja}[Koneksja afiniczna]
+\index{koneksja afiniczna@Koneksja afiniczna}
+\label{def:koneksja-afiniczna}
+Koneksją afiniczną na $TM$ nazywamy przyporządkowanie
+$(X,Y)\mapsto\nabla_XY$ pól wektorowych, liniowe
+nad $\R$ w obu argumentach, takie że dla $f\in C^\infty(M)$
+\begin{equation}\label{eq:koneksja-aksjomaty}
+ \nabla_{fX}Y=f\nabla_XY,
+ \qquad \nabla_X(fY)=X(f)Y+f\nabla_XY.
+\end{equation}
+Pierwszy wzór pozwoli wykazać, że $\nabla_XY$ w $p$ zależy
+tylko od wektora $X_p$. Drugi jest regułą iloczynu:
+zmienia się zarówno wielkość współczynnika $f$,
+jak i samo pole $Y$.
+\end{definicja}
+
+\begin{lemat}[Lokalność koneksji]
+\label{lem:koneksja-lokalnosc}
+Wartość $(\nabla_XY)_p$ zależy tylko od ograniczeń $X,Y$
+do dowolnego otoczenia $p$. Można więc stosować koneksję
+do pól określonych jedynie na otwartym podzbiorze $M$.
+W pierwszym argumencie wystarcza sama wartość $X_p$.
+\end{lemat}
+\begin{proof}
+Jeśli pole $Z$ znika na otoczeniu $U$ punktu $p$, wybieramy
+gładką funkcję $\chi$ o nośniku zawartym w $U$, równą $1$
+w pobliżu $p$. Takie funkcje daje konstrukcja z
+Sekcji~\ref{sec:formy-podzial-jednosci}. Ponieważ $\chi Z=0$,
+aksjomaty koneksji dają
+\[
+ 0=\nabla_{\chi Z}Y=\chi\nabla_ZY,\qquad
+ 0=\nabla_X(\chi Z)=X(\chi)Z+\chi\nabla_XZ.
+\]
+Po obliczeniu w $p$ otrzymujemy $(\nabla_ZY)_p=0$
+i $(\nabla_XZ)_p=0$. Odejmowanie pól dowodzi lokalności.
+Pole określone na $U$ mnożymy przez taką funkcję $\chi$
+i przedłużamy zerem poza $U$; wynik obliczenia w $p$
+nie zależy od przedłużenia. Te lokalne definicje sklejają się.
+W lokalnej ramce $X=X^i\partial_i$ pierwsza reguła daje
+$(\nabla_XY)_p=X^i(p)(\nabla_{\partial_i}Y)_p$,
+co dowodzi ostatniego zdania. Drugi argument wymaga
+także pierwszych pochodnych współczynników pola $Y$.
+\end{proof}
+
+\begin{stwierdzenie}[Współczynniki lokalne]
+\label{prop:koneksja-lokalna}
+W mapie $(x^1,\ldots,x^n)$ koneksję wyznaczają
+funkcje $\Gamma^k_{ij}$, zwane symbolami Christoffela,
+określone przez
+\begin{equation}\label{eq:def-christoffel}
+ \nabla_{\partial_i}\partial_j
+   =\sum_k\Gamma^k_{ij}\partial_k.
+\end{equation}
+Dla $X=X^i\partial_i$ i $Y=Y^j\partial_j$ mamy
+\begin{equation}\label{eq:koneksja-wspolrzedne}
+ (\nabla_XY)^k=X^i\bigl(\partial_iY^k+
+                         \Gamma^k_{ij}Y^j\bigr).
+\end{equation}
+W powtarzających się indeksach stosujemy sumowanie.
+\end{stwierdzenie}
+\begin{proof}
+Z pierwszego aksjomatu
+$\nabla_XY=X^i\nabla_{\partial_i}(Y^j\partial_j)$.
+Z drugiego
+$\nabla_{\partial_i}(Y^j\partial_j)
+=(\partial_iY^j)\partial_j
+ +Y^j\Gamma^k_{ij}\partial_k$.
+Zbierając współczynniki przy $\partial_k$,
+otrzymujemy podany wzór. I odwrotnie:
+gładkie funkcje $\Gamma^k_{ij}$ w mapie definiują
+tam koneksję przez ten wzór.
+\end{proof}
+
+\begin{uwaga}[Symbole nie są tensorem]
+\label{uw:symbole-nie-tensor}
+Przy zamianie współrzędnych $x=x(y)$ stosujemy
+$\partial_{y^a}=(\partial x^i/\partial y^a)\partial_{x^i}$
+oraz regułę iloczynu. Jeśli $B^i_a=\partial x^i/\partial y^a$,
+to przed zmianą bazy w wyniku mamy
+\[
+ \nabla_{\partial_{y^a}}\partial_{y^b}
+ =\bigl(B^i_a\partial_{x^i}B^k_b
+       +B^i_aB^j_b\Gamma^k_{ij}\bigr)\partial_{x^k}.
+\]
+Pierwszy składnik to $\partial^2x^k/\partial y^a\partial y^b$.
+Po zapisaniu $\partial_{x^k}=(\partial y^c/\partial x^k)
+\partial_{y^c}$ otrzymujemy
+\begin{equation}\label{eq:transformacja-christoffel}
+ \widetilde\Gamma^c_{ab}
+ =\frac{\partial y^c}{\partial x^k}
+  \left(
+   \frac{\partial x^i}{\partial y^a}
+   \frac{\partial x^j}{\partial y^b}\Gamma^k_{ij}
+   +\frac{\partial^2x^k}{\partial y^a\partial y^b}
+  \right).
+\end{equation}
+Druga pochodna jest dodatkowym składnikiem;
+same $\Gamma^k_{ij}$ nie tworzą tensora.
+To pozwala mieć zerowe symbole w kartezjańskim
+opisie płaszczyzny i niezerowe w biegunowym,
+choć geometrycznie jest to ta sama płaszczyzna.
+\end{uwaga}
+
+\begin{definicja}[Torsja i zgodność z metryką]
+\index{torsja i zgodnosc z metryka@Torsja i zgodność z metryką}
+\label{def:torsja-koneksja}
+Torsją koneksji jest pole tensorowe
+\[
+ T(X,Y)=\nabla_XY-\nabla_YX-[X,Y].
+\]
+Koneksja jest \emph{bez torsji}, gdy $T=0$.
+Jeżeli $g$ jest metryką, koneksja jest z nią
+\emph{zgodna}, gdy dla dowolnych pól
+\begin{equation}\label{eq:zgodnosc-metryczna}
+ X\bigl(g(Y,Z)\bigr)
+ =g(\nabla_XY,Z)+g(Y,\nabla_XZ).
+\end{equation}
+\end{definicja}
+
+\begin{stwierdzenie}[Co zależy tylko od wartości w punkcie?]
+\label{prop:torsja-tensor-roznica}
+Torsja jest tensorem typu $(1,2)$. Jeżeli
+$\nabla$ i $\widehat\nabla$ są koneksjami,
+to $A(X,Y)=\widehat\nabla_XY-\nabla_XY$
+również jest tensorem typu $(1,2)$.
+\end{stwierdzenie}
+\begin{proof}
+W pierwszym argumencie dla torsji używamy
+$[fX,Y]=f[X,Y]-Y(f)X$. Po rozwinięciu
+\[
+ T(fX,Y)=f\nabla_XY-Y(f)X-f\nabla_YX
+          -f[X,Y]+Y(f)X=fT(X,Y).
+\]
+Analogicznie $[X,fY]=f[X,Y]+X(f)Y$,
+więc wyrazy $X(f)Y$ w $T(X,fY)$ się skracają.
+Ponieważ $\nabla$ i $\widehat\nabla$ mają tę
+samą regułę iloczynu, również w ich różnicy
+kasują się składniki $X(f)Y$.
+To wyjaśnia, czemu przestrzeń wszystkich koneksji
+jest afiniczna: do jednej koneksji można dodać
+dowolny tensor takiego typu. W mapie
+$T^k_{ij}=\Gamma^k_{ij}-\Gamma^k_{ji}$,
+bo $[\partial_i,\partial_j]=0$.
+\end{proof}
+
+\section{Koneksja Leviego-Civity i wzór Koszula}
+\label{sec:levi-civita-koszul}
+
+Metryka dostarcza iloczynu skalarnego w każdym
+punkcie. Wybieramy koneksję, która zachowuje ten
+iloczyn podczas przemieszczania się, i żądamy
+zerowej torsji. Te dwa warunki usuwają dowolność.
+
+\begin{twierdzenie}[Istnienie i jednoznaczność koneksji Leviego-Civity]
+\label{thm:levi-civita}
+Każda metryka riemannowska $g$ na $M$ wyznacza
+dokładnie jedną koneksję $\nabla$ zgodną z $g$
+i bez torsji. Ta sama teza zachodzi dla metryki
+pseudoriemannowskiej, w szczególności
+Schwarzschilda i Kerra.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: wyprowadzenie wzoru i jednoznaczność.}
+Załóżmy, że taka koneksja istnieje. Zapiszmy
+\eqref{eq:zgodnosc-metryczna} kolejno dla
+$(X,Y,Z)$, $(Y,Z,X)$ oraz $(Z,X,Y)$:
+\begin{align*}
+ Xg(Y,Z)&=g(\nabla_XY,Z)+g(Y,\nabla_XZ),\\
+ Yg(Z,X)&=g(\nabla_YZ,X)+g(Z,\nabla_YX),\\
+ Zg(X,Y)&=g(\nabla_ZX,Y)+g(X,\nabla_ZY).
+\end{align*}
+Dodajemy dwa pierwsze równania i odejmujemy
+trzecie. Brak torsji daje
+$\nabla_YX=\nabla_XY-[X,Y]$,
+$\nabla_ZX=\nabla_XZ-[X,Z]$ oraz
+$\nabla_ZY=\nabla_YZ-[Y,Z]$.
+Po podstawieniu pary z $\nabla_XZ$ i pary
+z $\nabla_YZ$ się skracają. Zostaje
+\begin{align}\label{eq:koszul}
+2g(\nabla_XY,Z)={}&Xg(Y,Z)+Yg(Z,X)-Zg(X,Y)\notag\\
+ &+g([X,Y],Z)-g([X,Z],Y)-g([Y,Z],X).
+\end{align}
+Jest to \emph{wzór Koszula}. Jego prawa strona
+zależy wyłącznie od $g,X,Y,Z$. Niezdegenerowanie
+$g_p$ sprawia, że wartości $g_p(W,Z_p)$ dla
+wszystkich $Z_p$ wyznaczają jedyny wektor $W$.
+Stąd co najwyżej jedna taka koneksja.
+
+\emph{Krok 2: konstrukcja.} Oznaczmy prawą stronę
+\eqref{eq:koszul} przez $K(X,Y,Z)$ i zdefiniujmy
+$\nabla_XY$ przez $2g(\nabla_XY,Z)=K(X,Y,Z)$.
+Najpierw trzeba sprawdzić, że prawa strona
+jest $C^\infty$-liniowa względem $Z$.
+Po zastąpieniu $Z$ przez $fZ$ składniki z
+$X(f)g(Y,Z)$ pochodzące od
+$Xg(Y,fZ)$ i $-g([X,fZ],Y)$ mają przeciwne znaki;
+tak samo znoszą się $Y(f)g(X,Z)$ z
+$Yg(fZ,X)$ i $-g([Y,fZ],X)$.
+Reszta jest pomnożona przez $f$.
+Zatem $K(X,Y,\cdot)$ jest gładką $1$-formą,
+której współczynniki w mapie to $K(X,Y,\partial_i)$.
+Jawnie
+\[
+ (\nabla_XY)^j=\tfrac12g^{ji}K(X,Y,\partial_i).
+\]
+Macierz $G^{-1}$ jest gładka, więc otrzymujemy gładkie pole.
+Definicje w różnych mapach są zgodne, ponieważ wszystkie
+spełniają tę samą równość z $g$, a niezdegenerowanie
+metryki zapewnia punktową jednoznaczność.
+
+Sprawdźmy aksjomaty koneksji. W $K(fX,Y,Z)$
+dodatkowe $Y(f)g(X,Z)$ z $Yg(Z,fX)$
+znosi $-Y(f)g(X,Z)$ z $g([fX,Y],Z)$.
+Dodatkowe $-Z(f)g(X,Y)$ z $-Zg(fX,Y)$
+znosi $+Z(f)g(X,Y)$ z $-g([fX,Z],Y)$.
+Wobec tego $K(fX,Y,Z)=fK(X,Y,Z)$.
+W $K(X,fY,Z)$ dwukrotnie pojawia się
+$X(f)g(Y,Z)$: z $Xg(fY,Z)$ oraz
+$g([X,fY],Z)$. Wyrazy $Z(f)g(X,Y)$
+z $-Zg(X,fY)$ i $-g([fY,Z],X)$
+znoszą się. Dostajemy
+\[
+ K(X,fY,Z)=fK(X,Y,Z)+2X(f)g(Y,Z).
+\]
+Po podzieleniu przez $2$ i użyciu
+niezdegenerowania $g$ są to dokładnie
+aksjomaty \eqref{eq:koneksja-aksjomaty}.
+
+\emph{Krok 3: sprawdzenie warunków.}
+Różnica $K(X,Y,Z)-K(Y,X,Z)$ jest równa
+$2g([X,Y],Z)$: pochodne metryki
+się kasują, a antysymetria nawiasu daje
+wyraz podwojony. Stąd
+$\nabla_XY-\nabla_YX=[X,Y]$.
+Dodając $K(X,Y,Z)$ i $K(X,Z,Y)$,
+otrzymujemy $2Xg(Y,Z)$: pozostałe pochodne
+i wyrazy z nawiasami redukują się parami.
+To jest \eqref{eq:zgodnosc-metryczna}.
+Użyliśmy jedynie niezdegenerowania macierzy $G$,
+nie jej dodatniej określoności; dowód dotyczy
+również metryk lorentzowskich.
+\end{proof}
+
+W szczególności istnienie metryki riemannowskiej
+z Twierdzenia~\ref{thm:istnienie-metryki}
+zapewnia istnienie \emph{jakiejś} koneksji
+afinicznej na każdej rozmaitości z naszych założeń.
+Koneksji jest zwykle wiele, ale dla ustalonego $g$
+warunki z twierdzenia wybierają jedną.
+
+\begin{stwierdzenie}[Podrozmaitość w przestrzeni euklidesowej]
+\label{prop:koneksja-projekcja}
+Jeżeli $M\subset\R^N$ ma metrykę indukowaną,
+to jej koneksja Leviego-Civity jest równa
+\[
+ \nabla_XY=\operatorname{pr}_{TM}(D_XY),
+\]
+gdzie $D_XY$ oznacza zwykłą pochodną pola $Y$
+traktowanego jako odwzorowanie do $\R^N$.
+\end{stwierdzenie}
+\begin{proof}
+Rzut ortogonalny jest liniowy w punkcie,
+a pochodna euklidesowa spełnia regułę iloczynu,
+więc wzór określa koneksję. Pochodna iloczynu
+skalarnego w $\R^N$ daje
+$X\langle Y,Z\rangle
+=\langle D_XY,Z\rangle+\langle Y,D_XZ\rangle$.
+Składowe normalne obu pochodnych są prostopadłe
+do $Y$ lub $Z$ i znikają z tej równości;
+koneksja jest zgodna z metryką indukowaną.
+Ponadto w lokalnej parametryzacji mieszane
+pochodne drugiego rzędu komutują, więc
+$D_XY-D_YX=[X,Y]$; po rzucie otrzymujemy
+zerową torsję. Stosujemy Twierdzenie~\ref{thm:levi-civita}.
+\end{proof}
+
+\section{Symbole Christoffela w geometriach modelowych}
+\label{sec:christoffel-przyklady}
+
+W mapie pola bazowe komutują, więc wzór Koszula
+z $X=\partial_i$, $Y=\partial_j$, $Z=\partial_\ell$
+przyjmuje postać
+\[
+ 2g_{k\ell}\Gamma^k_{ij}
+ =\partial_i g_{j\ell}+\partial_j g_{i\ell}
+    -\partial_\ell g_{ij}.
+\]
+Mnożymy przez $g^{m\ell}$, gdzie
+$(g^{m\ell})=G^{-1}$. Ponieważ
+$g^{m\ell}g_{k\ell}=\delta^m_k$, otrzymujemy
+\begin{equation}\label{eq:christoffel-metryka}
+ \boxed{\displaystyle
+ \Gamma^m_{ij}=\frac12 g^{m\ell}
+  (\partial_i g_{j\ell}+\partial_j g_{i\ell}
+                         -\partial_\ell g_{ij}).}
+\end{equation}
+Algorytm jest prosty: zapisać $G$, odwrócić ją,
+obliczyć pochodne współczynników, podstawić.
+Duże metryki nie wymagają zapamiętania wielkiej
+listy symboli; zwykle liczymy tylko te, które
+potrzebne są w danym równaniu.
+
+\begin{przyklad}[Płaszczyzna euklidesowa w dwóch mapach]
+\label{prz:christoffel-biegunowe}
+W kartezjańskiej mapie $g=\dd x^2+\dd y^2$,
+wszystkie $g_{ij}$ są stałe, zatem $\Gamma^k_{ij}=0$.
+W biegunowej mapie $x=r\cos\phi$, $y=r\sin\phi$
+(dla $r>0$ i $\phi$ w otwartym przedziale długości co najwyżej
+$2\pi$) ta sama metryka jest
+$g=\dd r^2+r^2\dd\phi^2$.
+Macierze $G=\operatorname{diag}(1,r^2)$
+i $G^{-1}=\operatorname{diag}(1,r^{-2})$ oraz
+$\partial_r g_{\phi\phi}=2r$ dają
+\begin{equation}\label{eq:gamma-biegunowe}
+ \Gamma^r_{\phi\phi}=-r,
+ \qquad \Gamma^\phi_{r\phi}
+ =\Gamma^\phi_{\phi r}=\frac1r,
+\end{equation}
+a wszystkie pozostałe symbole są zerowe.
+Na przykład
+$\nabla_{\partial_\phi}\partial_\phi=-r\partial_r$:
+wektor $\partial_\phi$ w miarę obrotu układu
+zmienia kierunek nawet wtedy, gdy płaszczyzna
+pozostaje płaska. Wzór $\nabla_XY$ uwzględnia
+ten obrót bazy.
+\end{przyklad}
+
+\begin{przyklad}[Sfera o promieniu $R$]
+\label{prz:christoffel-sfera}
+Z \eqref{eq:metryka-sfery} odczytujemy
+$G=\operatorname{diag}(R^2,R^2\sin^2\theta)$.
+Jedyna niezerowa pochodna współczynników to
+$\partial_\theta g_{\phi\phi}
+=2R^2\sin\theta\cos\theta$. Stąd
+\begin{equation}\label{eq:gamma-sfera}
+ \Gamma^\theta_{\phi\phi}
+   =-\sin\theta\cos\theta,
+ \qquad
+ \Gamma^\phi_{\theta\phi}
+ =\Gamma^\phi_{\phi\theta}=\cot\theta.
+\end{equation}
+Brak $R$ w tych symbolach jest zgodny z tym,
+że stałe przemnożenie metryki nie zmienia
+jej koneksji. Bieguny wymagają innej mapy;
+$\cot\theta$ nie opisuje tam osobliwości sfery.
+\end{przyklad}
+
+\begin{przyklad}[Górna półprzestrzeń hiperboliczna]
+\label{prz:christoffel-hiperboliczna}
+Dla dwuwymiarowego modelu
+$g=y^{-2}(\dd x^2+\dd y^2)$, $y>0$,
+macierze $G=y^{-2}I$, $G^{-1}=y^2I$.
+Ponieważ $\partial_y(y^{-2})=-2y^{-3}$,
+\eqref{eq:christoffel-metryka} daje
+\begin{equation}\label{eq:gamma-hiperboliczna}
+ \Gamma^y_{xx}=\frac1y,\quad
+ \Gamma^y_{yy}=-\frac1y,\quad
+ \Gamma^x_{xy}=\Gamma^x_{yx}=-\frac1y.
+\end{equation}
+W wyższych wymiarach, dla $g=y^{-2}
+(\sum_a\dd x_a^2+\dd y^2)$, podobnie
+$\Gamma^y_{x_ax_b}=\delta_{ab}/y$,
+$\Gamma^{x_a}_{x_by}=\Gamma^{x_a}_{yx_b}=-\delta^a_b/y$
+oraz $\Gamma^y_{yy}=-1/y$; pozostałe symbole są zerowe.
+Na przykład pole w kierunku $x$ przenoszone
+pionowo musi mieć odpowiednio zmienne
+współrzędne: $\nabla_{\partial_y}(y\partial_x)=0$.
+Rzeczywiście $\partial_y(y)=1$ oraz
+$\Gamma^x_{yx}y=-1$; jego długość w metryce
+hiperbolicznej stale wynosi $1$.
+\end{przyklad}
+
+\begin{przyklad}[Kula Poincarégo: jawne symbole]
+\label{prz:christoffel-dysk}
+Metryka~\eqref{eq:hip-kula} ma postać
+$g=\lambda(u)^2\sum_i(\dd u^i)^2$,
+$\lambda=2/(1-|u|^2)>0$. Indeksy $u_i=u^i$ w tym
+przykładzie odnoszą się do współrzędnych euklidesowych;
+nie oznaczają obniżenia indeksu metryką hiperboliczną.
+Po wstawieniu
+$g_{ij}=\lambda^2\delta_{ij}$ i
+$g^{ij}=\lambda^{-2}\delta^{ij}$ do
+\eqref{eq:christoffel-metryka} otrzymujemy
+dla dowolnej metryki takiej postaci
+\begin{equation}\label{eq:gamma-konforemne}
+ \Gamma^k_{ij}=\delta^k_i\partial_j\log\lambda
+ +\delta^k_j\partial_i\log\lambda
+ -\delta_{ij}\partial_k\log\lambda.
+\end{equation}
+Rzeczywiście $\partial_i g_{j\ell}
+=2\lambda(\partial_i\lambda)\delta_{j\ell}$;
+kontrakcja z $\lambda^{-2}\delta^{k\ell}/2$
+daje trzy pokazane wyrazy. Ponieważ
+$\partial_k\log\lambda=2u_k/(1-|u|^2)$,
+otrzymujemy \emph{jawnie}
+\begin{equation}\label{eq:gamma-dysk}
+ \boxed{\displaystyle
+ \Gamma^k_{ij}=\frac{2}{1-|u|^2}
+   \bigl(\delta^k_i u_j+\delta^k_j u_i
+                          -\delta_{ij}u_k\bigr).}
+\end{equation}
+Na przykład w dysku o współrzędnych $(u,v)$,
+przy $D=1-u^2-v^2$, niezależne składowe to
+\[
+ \begin{array}{lll}
+ \Gamma^u_{uu}=2u/D,&\Gamma^u_{uv}=2v/D,&
+ \Gamma^u_{vv}=-2u/D,\\
+ \Gamma^v_{uu}=-2v/D,&\Gamma^v_{uv}=2u/D,&
+ \Gamma^v_{vv}=2v/D.
+ \end{array}
+\]
+Wszystkie symbole znikają \emph{w środku} dysku,
+ale to nie czyni metryki płaską: pochodne symboli
+w~\eqref{eq:riemann-wspolrzedne} z
+Rozdziału~\ref{ch:krzywizna} mogą być niezerowe.
+Jako kontrolę wzoru weźmy średnicę $u=r$, $v=0$.
+Pole $V=\frac{1-r^2}{2}\partial_v$ wzdłuż niej
+ma długość $1$ i jest równoległe, gdyż
+\[
+ \nabla_{\partial_r}V
+ =\left(-r+\Gamma^v_{uv}\frac{1-r^2}{2}\right)
+             \partial_v
+ =\left(-r+\frac{2r}{1-r^2}\frac{1-r^2}{2}\right)
+             \partial_v=0.
+\]
+\end{przyklad}
+
+\begin{przyklad}[Hiperboloida: symbole w mapie przestrzennej]
+\label{prz:christoffel-hiperboloida}
+Użyjmy współrzędnych $z$ z
+\eqref{eq:hiperboloida-wspolrzedne-metryka},
+oznaczając $t^2=1+|z|^2$. Także tutaj $z_i=z^i$
+oznacza współrzędne w euklidesowej przestrzeni parametrów. Mamy
+$g_{ij}=\delta_{ij}-z_i z_j/t^2$
+oraz $g^{ij}=\delta^{ij}+z_i z_j$ z
+\eqref{eq:hiperboloida-macierz-odwrotna}.
+Po zróżniczkowaniu
+\[
+ \partial_i g_{j\ell}
+ =-\frac{\delta_{ij}z_\ell+\delta_{i\ell}z_j}{t^2}
+   +\frac{2z_i z_j z_\ell}{t^4},
+\]
+więc trzy pochodne ze wzoru
+\eqref{eq:christoffel-metryka} łączą się w
+\[
+ \partial_i g_{j\ell}+\partial_j g_{i\ell}
+                -\partial_\ell g_{ij}
+ =-\frac{2z_\ell}{t^2}
+            \left(\delta_{ij}-\frac{z_i z_j}{t^2}\right)
+ =-\frac{2z_\ell}{t^2}g_{ij}.
+\]
+Ponieważ $g^{k\ell}z_\ell=t^2 z^k$, otrzymujemy
+\begin{equation}\label{eq:gamma-hiperboloida}
+ \boxed{\displaystyle\Gamma^k_{ij}=-z^k g_{ij}
+  =-z^k\left(\delta_{ij}-\frac{z_i z_j}{1+|z|^2}\right).}
+\end{equation}
+Na przykład dla $z(\tau)=(\sinh\tau,0,\ldots,0)$
+mamy $g_{11}=1/\cosh^2\tau$ oraz
+$\Gamma^1_{11}=-\sinh\tau/\cosh^2\tau$.
+Równanie geodezyjnej w pierwszej współrzędnej
+przyjmuje zatem postać
+$\ddot z^1+\Gamma^1_{11}(\dot z^1)^2
+=\sinh\tau-\sinh\tau=0$,
+zgodnie ze wzorem~\eqref{eq:exp-hiperboloida}
+w rozdziale o geodezyjnych.
+\end{przyklad}
+
+Izometrie między modelami z
+Przykładu~\ref{prz:trzy-modele-hiperboliczne}
+przenoszą te koneksje: wynika to z jednoznaczności
+koneksji Leviego-Civity przy zachowaniu zgodności
+z metryką i braku torsji. Dokładniej, dla izometrii
+$F:(M,g)\to(N,h)$ definiujemy na $M$
+\[
+ \widehat\nabla_XY=(F^{-1})_*
+       \bigl(\nabla^h_{F_*X}(F_*Y)\bigr).
+\]
+Reguła łańcuchowa daje aksjomaty koneksji. Równości
+$F_*[X,Y]=[F_*X,F_*Y]$ i $F^*h=g$ zapewniają zerową
+torsję oraz zgodność z $g$. Jednoznaczność daje
+$\widehat\nabla=\nabla^g$, czyli
+$F_*(\nabla^g_XY)=\nabla^h_{F_*X}(F_*Y)$.
+Symboli Christoffela
+\emph{nie porównujemy bezpośrednio} między różnymi
+mapami: transformują się wraz z pochodnymi zmiany
+współrzędnych, podczas gdy sama koneksja jest
+tym samym obiektem geometrycznym.
+
+\begin{stwierdzenie}[Dywergencja zapisana przez koneksję]
+\label{prop:dywergencja-koneksja}
+Dla koneksji Leviego-Civity i pola $X$ na rozmaitości
+riemannowskiej tensor $\nabla X$ przyporządkowuje wektorowi
+$Y_p$ wektor $(\nabla_YX)_p$. Jego ślad jest dywergencją:
+\begin{equation}\label{eq:dywergencja-koneksja}
+ \operatorname{div}_gX=\nabla_iX^i
+ =\partial_iX^i+\Gamma^i_{ij}X^j
+ =\frac1{\sqrt{\det G}}\partial_i
+       (\sqrt{\det G}\,X^i).
+\end{equation}
+Jest to ten sam operator, który wystąpił
+w Twierdzeniu Gaussa w Rozdziale~\ref{ch:metryka-riemannowska}.
+\end{stwierdzenie}
+\begin{proof}
+Podstawiamy \eqref{eq:christoffel-metryka}
+i korzystamy z symetrii macierzy. Przy sumowaniu
+po $i$ składniki
+$g^{i\ell}\partial_i g_{j\ell}$
+i $-g^{i\ell}\partial_\ell g_{ij}$ są przeciwne
+po zamianie nazw indeksów $i,\ell$.
+Pozostaje
+\[
+ \Gamma^i_{ij}=\tfrac12g^{i\ell}\partial_jg_{i\ell}
+ =\partial_j\log\sqrt{\det G}.
+\]
+Ostatnia równość jest wzorem na pochodną
+wyznacznika: $\partial_j\det G
+=(\det G)\operatorname{tr}(G^{-1}\partial_jG)$.
+Reguła iloczynu daje ostatnie wyrażenie
+w \eqref{eq:dywergencja-koneksja}, zgodne
+z wcześniejszym \eqref{eq:dywergencja-lokalna}.
+\end{proof}
+
+\section{Pochodna kowariantna i transport wzdłuż krzywej}
+\label{sec:transport-rownolegly}
+
+Pochodna $\nabla_XY$ odpowiada na pytanie:
+jak szybko zmienia się $Y$, gdy ruszamy z punktu
+w kierunku $X$, \emph{z uwzględnieniem zmiany lokalnej bazy}?
+Wzór~\eqref{eq:koneksja-wspolrzedne} dodaje do
+pochodnej współrzędnych dokładnie poprawkę
+$\Gamma^k_{ij}X^iY^j$.
+
+\begin{definicja}[Pochodna wzdłuż krzywej]
+\index{pochodna wzdluz krzywej@Pochodna wzdłuż krzywej}
+\label{def:pochodna-wzdluz-krzywej}
+Niech $\gamma:I\to M$ będzie gładką krzywą.
+Gładkie pole wzdłuż niej to gładkie odwzorowanie
+$V:I\to TM$ z $V(t)\in T_{\gamma(t)}M$,
+czyli gładki przekrój wiązki $\gamma^*TM$.
+Jego pochodną kowariantną oznaczamy
+$D V/\dd t$ lub $\nabla_{\dot\gamma}V$.
+W mapie, przy $\gamma(t)=(x^i(t))$ oraz
+$V(t)=V^k(t)\partial_k|_{\gamma(t)}$, jest to
+\begin{equation}\label{eq:pochodna-kowariantna-krzywa}
+ \frac{D V}{\dd t}
+ =\left(\frac{\dd V^k}{\dd t}
+   +\Gamma^k_{ij}(\gamma(t))\dot x^i V^j\right)
+    \partial_k\big|_{\gamma(t)}.
+\end{equation}
+Pole jest \emph{równoległe} wzdłuż $\gamma$,
+gdy $DV/\dd t=0$. Rozwiązanie z wartością
+$V(a)=v$ oznaczymy przez $V(t)=P_{\gamma,a\to t}v$.
+\end{definicja}
+
+Uzasadnijmy niezależność od mapy bez zakładania, że $V$
+ma przedłużenie do pola na $M$. Niech $J(t)$ będzie macierzą
+$\partial y/\partial x$ w $\gamma(t)$ i niech
+$A^k{}_j=\Gamma^k_{ij}(\gamma(t))\dot x^i$.
+Współczynniki pola w nowych współrzędnych to
+$\widetilde V=JV$. Wzór~\eqref{eq:transformacja-christoffel}
+i pochodna $J^{-1}$ dają
+\[
+ \widetilde A=JAJ^{-1}-\dot J J^{-1},\qquad
+ \frac{\dd\widetilde V}{\dd t}+\widetilde A\widetilde V
+   =J\left(\frac{\dd V}{\dd t}+AV\right).
+\]
+Jest to dokładnie prawo transformacji wektora, więc definicja
+jest poprawna również przy samoprzecięciach i punktach
+z $\dot\gamma=0$. Potrzeba tego argumentu: dla krzywej
+stałej $\gamma(t)=p$ pole $V(t)=t v$, $v\ne0$, nie jest
+nawet lokalnie ograniczeniem jednego pola na $M$.
+
+Jeżeli $V=Y\circ\gamma$ pochodzi od pola z otoczenia,
+reguła łańcuchowa daje $DV/\dd t=\nabla_{\dot\gamma}Y$.
+Dla dowolnego pola wzdłuż krzywej mamy też
+$D(fV)/\dd t=f'V+f\,DV/\dd t$. Przy zmianie parametru
+$t=h(s)$ bezpośrednie podstawienie do wzoru daje
+\begin{equation}\label{eq:transport-reparametryzacja}
+ \frac{D(V\circ h)}{\dd s}
+   =h'(s)\frac{DV}{\dd t}\bigg|_{t=h(s)}.
+\end{equation}
+W szczególności zachowująca orientację gładka zmiana
+parametru nie zmienia transportu między końcami.
+
+\begin{twierdzenie}[Istnienie i własności transportu]
+\label{thm:transport-rownolegly}
+Dla gładkiej krzywej $\gamma:[a,b]\to M$
+i $v\in T_{\gamma(a)}M$ istnieje dokładnie
+jedno równoległe pole $V$ wzdłuż $\gamma$
+spełniające $V(a)=v$. Transport
+$P_{\gamma,a\to b}:T_{\gamma(a)}M\to T_{\gamma(b)}M$
+jest liniowym izomorfizmem. Na kolejnych
+odcinkach drogi transporty składają się;
+po odwróceniu drogi otrzymujemy odwrotność.
+Jeżeli koneksja jest zgodna z metryką $g$, to
+\begin{equation}\label{eq:transport-izometria}
+ g_{\gamma(t)}(P_{a\to t}v,P_{a\to t}w)
+   =g_{\gamma(a)}(v,w).
+\end{equation}
+Dotyczy to również metryk lorentzowskich,
+gdzie zachowywana forma nie jest dodatnio określona.
+\end{twierdzenie}
+\begin{proof}
+W jednej mapie warunek $DV/\dd t=0$
+jest liniowym układem zwyczajnych równań
+różniczkowych
+\begin{equation}\label{eq:ode-transport}
+ \dot V^k(t)=-A^k{}_j(t)V^j(t),\qquad
+ A^k{}_j(t)=\Gamma^k_{ij}(\gamma(t))\dot x^i(t).
+\end{equation}
+Współczynniki są ciągłe. Twierdzenie o liniowym
+układzie ODE daje jednoznaczne rozwiązanie na
+każdym zwartym odcinku, na którym krzywa
+pozostaje w mapie: rozwiązanie nie może uciec
+do nieskończoności w skończonym czasie przy
+ciągłej, ograniczonej macierzy $A(t)$. Istotnie, równanie
+całkowe i nierówność Grönwalla dają, dla $t\ge t_0$,
+\[
+ |V(t)|\le |V(t_0)|
+       \exp\!\left(\int_{t_0}^t\|A(u)\|\,\dd u\right).
+\]
+Ograniczoność $A$ i $V$ ogranicza też $\dot V=-AV$,
+więc na skończonym końcu przedziału istnieje granica $V$;
+lokalne twierdzenie o istnieniu przedłuża rozwiązanie.
+Ten sam argument działa wstecz w czasie.
+Zwartość $[a,b]$ pozwala podzielić go na
+skończenie wiele odcinków, z których każdy
+mieści się w jednej mapie. Rozwiązania sklejamy
+zgodnie z ich jednoznacznością na przecięciach.
+
+Liniowość układu w $V$ daje liniowość transportu.
+Rozwiązując równanie od $b$ ku $a$, dostajemy
+odwrotność; jednoznaczność daje też prawo
+składania po przecięciu drogi. Wreszcie
+zgodność metryczna w lokalnej bazie ma postać
+$\partial_i g_{jk}=\Gamma^\ell_{ij}g_{\ell k}
++\Gamma^\ell_{ik}g_{j\ell}$. Różniczkując
+$g_{jk}(\gamma(t))V^j(t)W^k(t)$, dostajemy więc,
+także bez przedłużania $V,W$ poza krzywą,
+\[
+ \frac{\dd}{\dd t}g(V,W)
+ =g(DV/\dd t,W)+g(V,DW/\dd t).
+\]
+Gdy $V,W$ są równoległe, prawa strona jest
+zerem, więc iloczyn pozostaje stały.
+\end{proof}
+
+Dla ciągłej krzywej kawałkami gładkiej, z podziałem na
+skończenie wiele gładkich odcinków, definiujemy transport
+jako złożenie transportów na tych odcinkach. Jednoznaczność
+zapewnia niezależność od zagęszczenia podziału. W ten sposób
+prawo składania obejmuje również sklejenia z narożnikiem.
+
+Transport zależy zwykle od \emph{drogi}, a nie
+tylko od jej końców. Jeśli koneksja jest zgodna z metryką
+i krzywa jest zamknięta, jej transport jest izometrią
+$T_pM\to T_pM$;
+poniższy przykład pokaże niezerowy obrót
+wektora po pełnym okrążeniu.
+
+\begin{przyklad}[Obrót po równoleżniku sfery]
+\label{prz:transport-sfera}
+Na sferze $S_R^2$, $R>0$, użyjmy lokalnie współrzędnych
+$(\theta,\phi)$ i ramki ortonormalnej
+\[
+ e_\theta=R^{-1}\partial_\theta,
+ \qquad e_\phi=(R\sin\theta)^{-1}\partial_\phi.
+\]
+Idźmy po równoleżniku $\theta=\theta_0$,
+$\phi$ od $0$ do $2\pi$, z $0<\theta_0<\pi$.
+Cały równoleżnik nie mieści się w jednej mapie kątowej,
+ale pola $e_\theta,e_\phi$ sklejają się do gładkiej ramki
+na sferze bez biegunów i są $2\pi$-okresowe w $\phi$.
+Możemy zatem rozwiązać równanie na całym przedziale.
+Wstawiając \eqref{eq:gamma-sfera} do reguły
+iloczynu, otrzymujemy
+\[
+ \nabla_{\partial_\phi}e_\theta
+   =\cos\theta_0\,e_\phi,
+ \qquad
+ \nabla_{\partial_\phi}e_\phi
+   =-\cos\theta_0\,e_\theta.
+\]
+Jeśli $V=A(\phi)e_\theta+B(\phi)e_\phi$,
+to równanie $DV/\dd\phi=0$ ma postać
+\[
+ A'=B\cos\theta_0,
+ \qquad B'=-A\cos\theta_0,
+ \quad\Longrightarrow\quad
+ A+iB=(A(0)+iB(0))e^{-i\phi\cos\theta_0}.
+\]
+Po powrocie do punktu początkowego ramka
+jest znowu ta sama, a wektor obrócił się
+o kąt $-2\pi\cos\theta_0$ modulo $2\pi$, mierzony od
+$e_\theta$ ku $e_\phi$.
+Na równiku kąt jest zerowy. Dla
+$\theta_0=\pi/3$ wynosi $-\pi$: wektor
+wraca przeciwnie skierowany. Obliczenie
+pokazuje różnicę między przenoszeniem
+\emph{równoległym na sferze} a utrzymywaniem
+strzałki nieruchomej na kartce.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Latex,scale=1.15]
+  % Rzut ortogonalny (X,Y,Z) -> (X, cos(20) Z - sin(20) Y).
+  % R=1.75, theta=60 stopni; widoczność: Y cos(20)+Z sin(20)>=0.
+  \pgfmathsetmacro{\latradius}{1.75*sin(60)}
+  \pgfmathsetmacro{\latcenter}{1.75*cos(60)*cos(20)}
+  \pgfmathsetmacro{\latheight}{\latradius*sin(20)}
+  \pgfmathsetmacro{\limbangle}{asin(cot(60)*tan(20))}
+  \pgfmathsetmacro{\pointheight}{\latcenter-\latheight}
+  \shade[inner color=white,outer color=manifoldblue!28] (0,0) circle (1.75);
+  \draw[manifoldblue!75!black,thick] (0,0) circle (1.75);
+  \draw[manifoldred!65,densely dashed,thick]
+    plot[domain=180+\limbangle:360-\limbangle,samples=70,variable=\u]
+       ({\latradius*cos(\u)},{\latcenter-\latheight*sin(\u)});
+  \draw[manifoldred,very thick]
+    plot[domain=-\limbangle:180+\limbangle,samples=70,variable=\u]
+       ({\latradius*cos(\u)},{\latcenter-\latheight*sin(\u)});
+  \draw[manifoldred,very thick,-{Latex[length=2.5mm]}]
+    plot[domain=30:52,samples=15,variable=\u]
+       ({\latradius*cos(\u)},{\latcenter-\latheight*sin(\u)});
+  \coordinate (p) at (0,\pointheight);
+  \draw[manifoldgreen!80!black,ultra thick,->]
+    (p) -- ++(0,{-1.5*sin(80)}) node[below] {$v=e_\theta$};
+  \draw[manifoldgold!85!black,ultra thick,->]
+    (p) -- ++(0,{1.5*sin(80)}) node[above] {$P_\gamma v=-v$};
+  \fill[manifoldred] (p) circle (2.2pt) node[below left] {$p$};
+  \node[manifoldblue!80!black] at (2.02,-1.15) {$S_R^2$};
+  \node[manifoldred!80!black,align=left,anchor=west] at (2.0,.60)
+    {$\gamma:\ \theta=\pi/3$\\jeden pełny obieg};
+\end{tikzpicture}
+\caption{Transport po równoleżniku $\theta=\pi/3$ obraca wektor
+o $-\pi$. Dla czytelności początek pętli wybrano w punkcie
+$p$ o $\phi=\pi/2$ (zakres parametru przesuwa się wtedy
+o $\pi/2$). Strzałki są rzutami przeciwnych wektorów
+w tej samej płaszczyźnie $T_pS_R^2$, narysowanymi w tej samej skali.
+Przerywana część równoleżnika leży z tyłu sfery.}
+\label{fig:transport-sfera}
+\end{figure}
+
+\subsection*{Pochodna kowariantna innych pól tensorowych}
+\label{subsec:pochodna-kowariantna-tensory}
+Pochodna funkcji to $\nabla_X f=X(f)$. Dla
+$1$-formy $\alpha$ definiujemy $\nabla_X\alpha$
+przez wymóg różniczkowania parowania:
+\begin{equation}\label{eq:pochodna-kowariantna-forma}
+ (\nabla_X\alpha)(Y)
+  =X\bigl(\alpha(Y)\bigr)-\alpha(\nabla_XY).
+\end{equation}
+Prawa strona jest $C^\infty(M)$-liniowa w $Y$: po
+zastąpieniu $Y$ przez $fY$ dwa składniki $X(f)\alpha(Y)$
+znoszą się. Określa więc $1$-formę. W argumencie $X$
+jest liniowa nad funkcjami, a w $\alpha$ spełnia regułę
+Leibniza. We współrzędnych
+$(\nabla_i\alpha)_j=\partial_i\alpha_j
+-\Gamma^k_{ij}\alpha_k$. Na tensorach
+definiujemy $\nabla_X$ przez regułę Leibniza
+względem iloczynu tensorowego i zgodność
+z kontrakcją (ściąganiem indeksów). Ściślej, dla tensora
+$S$ typu $(r,s)$, $1$-form $\alpha_1,\ldots,\alpha_r$
+i pól $Y_1,\ldots,Y_s$ wymagamy
+\begin{align*}
+ (\nabla_XS)(\alpha_1,\ldots,\alpha_r,Y_1,\ldots,Y_s)
+ ={}&X\bigl(S(\alpha_1,\ldots,\alpha_r,Y_1,\ldots,Y_s)\bigr)\\
+ &-\sum_{a=1}^r S(\alpha_1,\ldots,\nabla_X\alpha_a,\ldots,
+                         \alpha_r,Y_1,\ldots,Y_s)\\
+ &-\sum_{b=1}^s S(\alpha_1,\ldots,\alpha_r,
+                         Y_1,\ldots,\nabla_XY_b,\ldots,Y_s).
+\end{align*}
+Reguły Leibniza sprawiają, że pochodne mnożników
+w każdym argumencie się znoszą. Wynik jest więc tensorem
+typu $(r,s)$, określonym bez wyboru bazy. Rozwinięcie
+w lokalnych iloczynach tensorowych wektorów bazowych
+i form dualnych dowodzi istnienia i jednoznaczności
+rozszerzenia: każdy górny indeks wnosi składnik z $+\Gamma$,
+a każdy dolny z $-\Gamma$. Na przykład
+\[
+ (\nabla_i S)_{jk}
+ =\partial_iS_{jk}
+  -\Gamma^\ell_{ij}S_{\ell k}
+  -\Gamma^\ell_{ik}S_{j\ell}.
+\]
+Dla koneksji zgodnej z metryką dodatkowo $\nabla_i g_{jk}=0$;
+jest to właśnie warunek~\eqref{eq:zgodnosc-metryczna}.
+Dowolna koneksja afiniczna nie musi go spełniać.
+W przypadku koneksji bez torsji pochodna Liego
+z Rozdziału~\ref{ch:pola} i pochodna
+kowariantna mają związek
+\begin{equation}\label{eq:lie-koneksja}
+ \Lie_XY=[X,Y]=\nabla_XY-\nabla_YX.
+\end{equation}
+Pochodna Liego porównuje pola przez przepływ
+$X$, a pochodna kowariantna wykorzystuje
+wybraną koneksję. Równość jest konsekwencją
+zerowej torsji, nie definicją którejś z pochodnych.
+
+\section{Przykłady w metrykach Schwarzschilda i Kerra}
+\label{sec:koneksja-schwarzschild-kerr}
+
+W obu czasoprzestrzeniach z Rozdziału~\ref{ch:metryka-riemannowska}
+macierz metryki jest nieosobliwa w podanej tam
+dziedzinie. Wzór Koszula daje zatem jednoznaczną
+koneksję także tutaj. Transport zachowuje
+\emph{lorentzowski iloczyn} wektorów;
+nie interpretujemy $g(v,v)$ jako kwadratu
+euklidesowej długości dla wszystkich wektorów.
+
+\begin{przyklad}[Wybrane symbole Schwarzschilda]
+\label{prz:koneksja-schwarzschild}
+Niech $f(r)=1-2M/r$, zatem $f'(r)=2M/r^2$.
+Dla metryki~\eqref{eq:schwarzschild}
+macierz jest diagonalna:
+\[
+ (g_{\mu\nu})
+ =\operatorname{diag}(-f,f^{-1},r^2,r^2\sin^2\theta),
+ \qquad g^{rr}=f,\quad g^{tt}=-f^{-1}.
+\]
+Liczymy kilka przydatnych składników
+za pomocą \eqref{eq:christoffel-metryka}:
+\begin{align}\label{eq:gamma-schwarzschild}
+ \Gamma^t_{tr}=\Gamma^t_{rt}
+   &=\frac{f'}{2f}=\frac{M}{r^2f},
+ &\Gamma^r_{tt}&=\frac{ff'}2=\frac{Mf}{r^2},\notag\\
+ \Gamma^r_{rr}&=-\frac{f'}{2f},
+ &\Gamma^r_{\theta\theta}&=-rf,
+ &\Gamma^r_{\phi\phi}&=-rf\sin^2\theta,\\
+ \Gamma^\theta_{r\theta}=\Gamma^\theta_{\theta r}
+   &=\frac1r,
+ &\Gamma^\phi_{r\phi}=\Gamma^\phi_{\phi r}&=\frac1r.
+ \notag
+\end{align}
+Na przykład
+$\Gamma^r_{tt}=-\tfrac12g^{rr}\partial_rg_{tt}
+=-\tfrac12f(-f')=ff'/2$, a
+$\Gamma^r_{\theta\theta}
+=-\tfrac12 f\partial_r(r^2)=-rf$.
+Pozostałe symbole kątowe są identyczne jak
+w \eqref{eq:gamma-sfera}; pełny spis nie jest
+potrzebny do użycia metody.
+
+Dla drogi radialnej
+$\gamma(s)=(t_0,r(s),\theta_0,\phi_0)$
+wektor $V(s)=V^\theta(s)\partial_\theta$
+jest równoległy wtedy i tylko wtedy, gdy
+\[
+ \frac{\dd V^\theta}{\dd s}
+ +\frac{\dot r}{r}V^\theta=0,
+ \qquad\Longleftrightarrow\qquad
+ r(s)V^\theta(s)=\text{stała}.
+\]
+To łatwy test wzoru: $g_{\theta\theta}=r^2$,
+więc $g(V,V)=r^2(V^\theta)^2$ jest zachowane.
+Chodzi o transport w pełnej czasoprzestrzeni
+wzdłuż tej wybranej drogi, nie o wyznaczenie
+trajektorii fizycznej.
+\end{przyklad}
+
+\begin{przyklad}[Wybrane symbole Kerra]
+\label{prz:koneksja-kerr}
+Stosujemy $\Sigma=r^2+a^2\cos^2\theta$,
+$\Delta=r^2-2Mr+a^2$ oraz współrzędne
+Boyera--Lindquista z \eqref{eq:kerr}.
+W bloku $(r,\theta)$ metryka i jej odwrotność
+są diagonalne:
+\[
+ g_{rr}=\frac{\Sigma}{\Delta},\quad
+ g_{\theta\theta}=\Sigma,\quad
+ g^{rr}=\frac{\Delta}{\Sigma},\quad
+ g^{\theta\theta}=\frac1\Sigma.
+\]
+Ponieważ $\partial_r\Sigma=2r$ oraz
+$\partial_r\Delta=2(r-M)$, otrzymujemy
+\begin{align}\label{eq:gamma-kerr-proste}
+ \Gamma^r_{rr}
+   &=\tfrac12g^{rr}\partial_rg_{rr}
+     =\frac r\Sigma-\frac{r-M}{\Delta},
+ & \Gamma^r_{\theta\theta}
+   &=-\tfrac12g^{rr}\partial_rg_{\theta\theta}
+     =-\frac{r\Delta}{\Sigma},\notag\\
+ \Gamma^\theta_{r\theta}
+  =\Gamma^\theta_{\theta r}&=\frac r\Sigma,
+ &\Gamma^r_{r\theta}
+  =\Gamma^r_{\theta r}
+  &=-\frac{a^2\sin\theta\cos\theta}{\Sigma}.
+\end{align}
+Ostatni wzór pochodzi z
+$\frac12 g^{rr}\partial_\theta g_{rr}
+=\frac{\partial_\theta\Sigma}{2\Sigma}$.
+Pokazuje, że współczynnik radialny może
+zmieniać się także przy zmianie kąta $\theta$.
+
+Parametr obrotu $a$ wprowadza sprzężenie
+między czasem a kierunkiem $\phi$.
+Z \eqref{eq:kerr} mamy
+$g_{t\phi}=-2Mar\sin^2\theta/\Sigma$.
+Metryka nie zależy od $t,\phi$ i nie ma
+wyrazów $\dd r\,\dd t$ ani $\dd r\,\dd\phi$,
+zatem \eqref{eq:christoffel-metryka} daje
+\begin{align}\label{eq:gamma-kerr-mieszany}
+ \Gamma^r_{t\phi}=\Gamma^r_{\phi t}
+ &=-\frac12\frac\Delta\Sigma\partial_rg_{t\phi}
+  =-\frac{Ma\Delta\sin^2\theta
+                (r^2-a^2\cos^2\theta)}{\Sigma^3},\notag\\
+ \partial_rg_{t\phi}
+ &=\frac{2Ma\sin^2\theta
+                (r^2-a^2\cos^2\theta)}{\Sigma^2}.
+\end{align}
+Przy $a=0$ składnik mieszany znika,
+$\Sigma=r^2$, $\Delta=r^2f$;
+\eqref{eq:gamma-kerr-proste} redukuje się
+do radialnych i kątowych wzorów Schwarzschilda.
+To sprawdzian rachunku oraz zależności obu metryk.
+\end{przyklad}
+
+Nie należy odczytywać pojedynczego symbolu
+Christoffela jako niezależnej od współrzędnych
+„siły”. Wzór~\eqref{eq:transformacja-christoffel}
+zmienia jego wartość po zmianie mapy.
+Geometryczny sens mają całe równania
+transportu i pochodne kowariantne.
+
+\section{Dlaczego koneksja pojawia się w równaniu ruchu?}
+\label{sec:energia-koneksja}
+
+Funkcjonał energii z \eqref{eq:dlugosc-energia}
+pozwala rozpoznać krzywe stacjonarne.
+W tej sekcji zakładamy $a<b$ i gładkość $\gamma$.
+Rozpatrujemy rozmaitość bez brzegu albo krzywą zawartą
+w jej wnętrzu, aby dopuszczalne były dowolne małe wariacje.
+Dla ustalonych końców i lokalnego zapisu
+$\gamma(t)=(x^i(t))$ mamy
+\begin{equation}\label{eq:energia-lokalna-koneksja}
+ E(\gamma)=\frac12\int_a^b
+       g_{ij}(x(t))\dot x^i(t)\dot x^j(t)\,\dd t.
+\end{equation}
+Niech $x(t,s)$ będzie wariacją z końcami
+niezależnymi od $s$ i
+$\eta^k(t)=\partial_sx^k(t,s)|_{s=0}$.
+Różniczkując pod całką i uwzględniając
+symetrię $g_{ij}$, otrzymujemy
+\[
+ \left.\frac{\dd E}{\dd s}\right|_{s=0}
+ =\int_a^b\left(
+  \tfrac12\partial_k g_{ij}\,\eta^k\dot x^i\dot x^j
+  +g_{kj}\dot\eta^k\dot x^j\right)\dd t.
+\]
+Całkując drugi składnik przez części,
+wyraz brzegowy $[g_{kj}\eta^k\dot x^j]_a^b$
+jest zerowy. Dostajemy
+\[
+ \delta E=\int_a^b\eta^k
+ \left(\tfrac12\partial_k g_{ij}\dot x^i\dot x^j
+      -\frac{\dd}{\dd t}(g_{kj}\dot x^j)\right)\dd t.
+\]
+Jeśli $\delta E=0$ dla wszystkich $\eta$
+o zwartym nośniku we wnętrzu przedziału,
+lemat podstawowy rachunku wariacyjnego
+daje dla każdego $k$
+\[
+ g_{kj}\ddot x^j
+ +\partial_i g_{kj}\dot x^i\dot x^j
+ -\tfrac12\partial_k g_{ij}\dot x^i\dot x^j=0.
+\]
+Wyjaśnijmy dwa użyte tu kroki. Każde gładkie $\eta$ o
+zwartym nośniku wewnątrz odcinka zawartego w mapie
+realizuje wariacja $x(t,s)=x(t,0)+s\eta(t)$ dla małego
+$|s|$, sklejona z niezmienioną krzywą poza tym odcinkiem.
+Zwartość nośnika zapewnia, że pozostajemy w dziedzinie mapy.
+Jeśli zaś ciągły współczynnik przy pewnym $\eta^k$ w całce
+byłby dodatni (lub ujemny) w jednym punkcie, miałby ten sam
+znak w małym otoczeniu. Nieujemna, niezerowa funkcja gładka
+o nośniku w tym otoczeniu dawałaby niezerową całkę.
+To dowód potrzebnej wersji lematu podstawowego.
+
+Iloczyn $\dot x^i\dot x^j$ jest symetryczny;
+zastępujemy więc $\partial_i g_{kj}$ przez
+$\tfrac12(\partial_i g_{kj}+\partial_jg_{ki})$.
+Po pomnożeniu przez $g^{\ell k}$ wzór
+\eqref{eq:christoffel-metryka} daje
+\begin{equation}\label{eq:rownanie-geodezyjnej-zapowiedz}
+ \ddot x^\ell+\Gamma^\ell_{ij}\dot x^i\dot x^j=0,
+ \qquad\text{czyli}\qquad
+ \frac{D\dot\gamma}{\dd t}=0.
+\end{equation}
+Rachunek jest lokalny: wystarczy stosować takie wariacje
+w kolejnych mapach pokrywających krzywą. Odwrotnie,
+jeśli $D\dot\gamma/\dd t=0$, to dla dowolnej gładkiej
+wariacji o ustalonych końcach całkowanie przez części
+na odcinkach zawartych w mapach daje $\delta E=0$.
+Wyrazy brzegowe w punktach podziału znoszą się, ponieważ
+każdy jest wartością tego samego iloczynu
+$g(\partial_s\gamma,\dot\gamma)$ z przeciwnymi znakami.
+Stacjonarność jest więc równoważna temu równaniu.
+
+Krzywa stacjonarna energii przenosi więc
+swój wektor prędkości równolegle. Takie krzywe
+nazywamy \emph{geodezyjnymi} z parametrem
+afinicznym. Zgodność z metryką daje
+$\frac{\dd}{\dd t}g(\dot\gamma,\dot\gamma)
+=2g(D\dot\gamma/\dd t,\dot\gamma)=0$;
+w przypadku riemannowskim prędkość ma zatem stałą normę.
+Określenie parametru jest istotne: dla $\widetilde\gamma(s)
+=\gamma(h(s))$ reguła~\eqref{eq:transport-reparametryzacja} daje
+\[
+ \frac{D\dot{\widetilde\gamma}}{\dd s}
+ =h''(s)\dot\gamma(h(s))
+       +(h'(s))^2\frac{D\dot\gamma}{\dd t}\bigg|_{t=h(s)}.
+\]
+Dla niestałej geodezyjnej $\dot\gamma$ nigdzie nie znika
+(jest transportem niezerowego wektora), więc gładka
+zmiana parametru zachowuje równanie dokładnie wtedy,
+gdy $h(s)=cs+d$ z $c\ne0$.
+Dalsze własności geodezyjnych i odwzorowanie
+wykładnicze omówimy w następnym rozdziale,
+a krzywiznę w dalszej części skryptu. Dla metryki lorentzowskiej
+to samo równanie ma sens jako równanie
+stacjonarności odpowiedniego działania;
+nie twierdzimy, że definiuje odległość
+riemannowską na czasoprzestrzeni.
+
+\par\smallskip
+{\footnotesize\noindent\emph{Dalsza lektura:}
+\href{https://www.math.toronto.edu/mein/teaching/LectureNotes/rieall.pdf}
+{Toronto} (koneksja i transport),
+\href{https://web.mit.edu/8.962/www/lecnotes/8_962TA-lec-all.pdf}
+{MIT} (symbole Schwarzschilda),
+\href{https://sites.science.oregonstate.edu/coursewikis/GGR/book/content/kerr}
+{Oregon} (metryka Kerra).\par}
