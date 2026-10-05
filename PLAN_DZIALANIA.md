@@ -1,8 +1,9 @@
 # Plan rozbudowy skryptu „Geometria i topologia różniczkowa”
 
-Stan roboczy: 5 października 2026. Tekstem źródłowym pozostaje
-`geometria_i_topologia_rozniczkowa.tex`. Istniejące niezapisane w Git zmiany
-w tym pliku należą do bieżącej pracy i zostają zachowane.
+Stan końcowy: 5 października 2026. Wszystkie zadania objęte tym planem
+zostały wykonane i wypchnięte na `review/rozdzialy-matematyka` w dwóch
+etapach: `4233e60` i `b2635d0`. Tekstem źródłowym pozostaje
+`geometria_i_topologia_rozniczkowa.tex`; sprawdzony PDF ma 384 strony.
 
 ## Kolejność i kontrola postępu
 
@@ -46,27 +47,27 @@ w tym pliku należą do bieżącej pracy i zostają zachowane.
 
 ## Przyjęte granice dowodów
 
-Dowody elementarne będą rozpisane krok po kroku. Długie twierdzenia, które
+Dopisane dowody elementarne rozpisano krok po kroku. Długie twierdzenia, które
 stanowią odrębne teorie (klasyfikacja powierzchni, geometryczne lematy Walla,
 twierdzenie o $h$-kobordyzmie, twierdzenie Hirzebrucha),
-otrzymają dokładne założenia, źródła i wyraźne oznaczenie jako wyniki
+otrzymały dokładne założenia, źródła i wyraźne oznaczenie jako wyniki
 zewnętrzne, jeśli ich pełnego dowodu tu nie ma. Punkt 4 (zadania) i punkt 12
 (egzotyczne $\mathbb R^4$) oraz dowód dla wymiaru 4 pozostają poza zakresem.
 Sfery Milnora należą do tego skryptu: skonstruowane rozmaitości mają wymiar 7.
 
 ## Rozdział algebry abstrakcyjnej — decyzja
 
-Osobny rozdział jest uzasadniony. Obecne sekcje o grupach i modułach
-zostaną przeniesione przed algebrę homologiczną z zachowaniem etykiet.
+Osobny rozdział był uzasadniony. Sekcje o grupach i modułach
+przeniesiono przed algebrę homologiczną z zachowaniem etykiet.
 Rozdział o tensorach przestrzeni liniowych pozostaje w swoim miejscu,
-ponieważ jest potrzebny wcześniej w geometrii; nowy iloczyn tensorowy
-modułów uogólni tamtą konstrukcję. „Domknięcie iloczynu tensorowego”
+ponieważ jest potrzebny wcześniej w geometrii; iloczyn tensorowy
+modułów uogólnia tamtą konstrukcję. „Domknięcie iloczynu tensorowego”
 nie jest standardową nazwą w tym kontekście: chodzi o podmoduł
 generowany przez relacje zbiliniowości i zbalansowania. Domknięcie
 normalne dotyczy relacji grupowych. Dokładność ciągów i kompleksy
-pozostaną w rozdziale homologicznej.
+pozostały w rozdziale algebry homologicznej.
 
-## Dalsze tematy geometrii różniczkowej do osobnej decyzji
+## Propozycje poza ukończonym planem
 
 1. Twierdzenie Hodge'a i wzory Bochnera–Weitzenböcka: łączą formy,
    krzywiznę Ricciego i ograniczenia topologiczne; wymagają jawnego
@@ -88,8 +89,8 @@ pozostaną w rozdziale homologicznej.
   zmienną wiązkę docelową w normalnych niezmiennikach, stopień z lokalnym
   systemem orientacji i przestrzeń styczną na brzegu. Rozbudowano indeks.
 - 2026-10-05: polecenie `latexmk` uruchomiono; MiKTeX zgłosił brak Perla.
-  Pierwszy pełny skład `pdflatex` przeszedł. Trwa ponowny skład po poprawkach,
-  wykonanie `makeindex`, przegląd stron rysunkowych i kontrola ostrzeżeń.
+  Pierwszy pełny skład `pdflatex` przeszedł; następnie wykonano `makeindex`,
+  kolejne przebiegi składu, przegląd stron rysunkowych i kontrolę ostrzeżeń.
 - 2026-10-05: obejrzano w PDF torusy na stronach 307 i 321 oraz nowe schematy
   Walla, ciągu chirurgii, Poincarégo i Milnora na stronach 361, 365, 368
   i 370. Poprawiono odstępy podpisów w schemacie ciągu. Indeks ma 146
@@ -112,6 +113,10 @@ pozostaną w rozdziale homologicznej.
   homologiczny zaczyna się teraz od ciągów dokładnych jako rozdział 6.
   Usunięto powtórzony opis tensoru z późniejszej części homologicznej;
   audyt matematyczny potwierdził konstrukcję i przykłady. Ostateczny
-  PDF ma 384 strony. `makeindex` przyjął 152 hasła; ostatni log nie
+  PDF ma 384 strony. `makeindex` przyjął 152 wpisy; ostatni log nie
   zgłasza błędów, brakujących odsyłaczy ani potrzeby kolejnego przebiegu.
   Obejrzano strony 103–107 z grafem słów i nowymi sekcjami algebry.
+- 2026-10-05: drugi etap zatwierdzono jako `b2635d0` i wypchnięto
+  na `origin/review/rozdzialy-matematyka`. Wszystkie pozycje kontrolne
+  tego planu są zakończone; trzy pomysły geometryczne powyżej nie należą
+  do jego zakresu.
