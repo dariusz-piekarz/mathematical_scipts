@@ -37,12 +37,12 @@ w tym pliku należą do bieżącej pracy i zostają zachowane.
 - [x] Uruchomić polecenie `latexmk` z `AGENTS.md` i, przy braku Perla
   w MiKTeX, złożyć dokument przez `pdflatex` oraz `makeindex`;
   skontrolować błędy, odsyłacze i strony z rysunkami.
-- [ ] Przejrzeć różnice, zatwierdzić etap pierwszy i wypchnąć go na gałąź
+- [x] Przejrzeć różnice, zatwierdzić etap pierwszy i wypchnąć go na gałąź
   `review/rozdzialy-matematyka`.
-- [ ] Po pierwszym commicie i pushu wydzielić rozdział algebry abstrakcyjnej
+- [x] Po pierwszym commicie i pushu wydzielić rozdział algebry abstrakcyjnej
   przed algebrą homologiczną: grupy i prezentacje, pierścienie i ideały,
   moduły, iloczyn tensorowy modułów, własność uniwersalna i przykłady.
-- [ ] Złożyć i skontrolować nowy rozdział, zatwierdzić drugi etap i wypchnąć.
+- [x] Złożyć i skontrolować nowy rozdział, zatwierdzić drugi etap i wypchnąć.
 
 ## Przyjęte granice dowodów
 
@@ -104,3 +104,14 @@ pozostaną w rozdziale homologicznej.
   w logu nie ma brakujących odsyłaczy ani błędów składu. Obejrzano
   nowy graf słów na stronie 103 i wcześniej poprawione torusy oraz
   schematy dalszych rozdziałów.
+- 2026-10-05: etap pierwszy zatwierdzony jako `4233e60` i wypchnięty
+  na `origin/review/rozdzialy-matematyka`. Rozpoczęto wydzielanie
+  podstaw algebry do osobnego rozdziału.
+- 2026-10-05: w etapie drugim powstał rozdział 5 z grupami, pierścieniami,
+  modułami, iloczynem tensorowym i modułami projektywnymi. Dawny rozdział
+  homologiczny zaczyna się teraz od ciągów dokładnych jako rozdział 6.
+  Usunięto powtórzony opis tensoru z późniejszej części homologicznej;
+  audyt matematyczny potwierdził konstrukcję i przykłady. Ostateczny
+  PDF ma 384 strony. `makeindex` przyjął 152 hasła; ostatni log nie
+  zgłasza błędów, brakujących odsyłaczy ani potrzeby kolejnego przebiegu.
+  Obejrzano strony 103–107 z grafem słów i nowymi sekcjami algebry.

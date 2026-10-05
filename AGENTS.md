@@ -4,7 +4,7 @@
 
 - Jedynym źródłem do edycji jest `geometria_i_topologia_rozniczkowa.tex`.
 - `geometria_i_topologia_rozniczkowa.pdf` jest ostatnim sprawdzonym składem, a nie osobnym źródłem treści.
-- Skrypt ma obecnie 22 rozdziały. Kontynuuj w tym samym dokumencie i korzystaj z etykiet oraz odsyłaczy. Nie twórz osobnych plików rozdziałów i nie dodawaj zadań.
+- Skrypt ma obecnie 27 numerowanych rozdziałów i dodatek. Kontynuuj w tym samym dokumencie i korzystaj z etykiet oraz odsyłaczy. Nie twórz osobnych plików rozdziałów i nie dodawaj zadań.
 
 ## Cel i sposób pisania
 
@@ -29,6 +29,7 @@
 
 ## Stan prac
 
-- Rozdział 21: chirurgia geometryczna i odwzorowania normalne.
-- Rozdział 22: formy kwadratowe, grupy `L`, przeszkoda chirurgiczna.
-- Naturalny dalszy temat: ciąg dokładny chirurgii, zbiór struktur oraz zastosowania. Zakres kolejnych zmian wynika z najnowszej prośby użytkownika.
+- Rozdział 5 zbiera grupy, pierścienie, moduły i iloczyn tensorowy modułów; rozdział 6 rozpoczyna algebrę homologiczną.
+- Rozdziały 22–24 obejmują chirurgię geometryczną, przeszkodę Walla i ciąg dokładny chirurgii.
+- Rozdziały 25–27 obejmują twierdzenie Poincarégo poza wymiarem 4, sfery Milnora oraz teorię Cherna–Weila i wzór Cherna–Gaussa–Bonneta.
+- Aktualne zadania i stan weryfikacji są w `PLAN_DZIALANIA.md`.
