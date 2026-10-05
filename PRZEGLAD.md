@@ -2237,3 +2237,35 @@ od pierwszego przeglądu (`e144985`), w tym uzupełnienia autora
 
 Ponowny przegląd rozdziału 1 zakończony. Pozostaje końcowy audyt
 spójności całości oraz lista propozycji rozbudowy do wyboru przez autora.
+
+## Audyt końcowy i propozycje rozbudowy (2026-10-05)
+
+- Pobrano zmiany PortableGit z dysku E; gałąź była aktualna.
+- Porównano aktualną treść każdego z 18 rozdziałów z commitem
+  kończącym jego przegląd. Wszystkie porównania są zgodne, w tym
+  ponownie sprawdzony rozdział 1 po uzupełnieniach autora.
+- Zestawiono 140 numerowanych sekcji, 87 numerowanych rysunków
+  i końcowy zakres stron każdego rozdziału. Dodatkowe nienumerowane
+  diagramy pozostają opisane we wcześniejszych kontrolach wizualnych.
+- Sprawdzono znaczenie wszystkich międzyrozdziałowych odsyłaczy naprzód,
+  szczególnie zależność dowodu homologii Morse'a od przestawiania
+  wartości krytycznych w rozdziale 18. Nie wykryto nowej sprzeczności
+  ani zależności kołowej w tych odwołaniach.
+- Potwierdzono unikalność 964 etykiet, cele 860 odsyłaczy w źródle,
+  sparowanie środowisk oraz cele 1028 wewnętrznych linków PDF.
+  Plik PDF w repozytorium jest identyczny z ostatnim zweryfikowanym
+  składem (325 stron); treści źródła i PDF w tej iteracji nie zmieniano.
+- Dodano [AUDYT_KONCOWY.md](AUDYT_KONCOWY.md): tabelę pokrycia,
+  weryfikację zależności, wyniki kontroli i jawne granice zakresu.
+- Dodano [PROPOZYCJE_UZUPELNIEN.md](PROPOZYCJE_UZUPELNIEN.md):
+  12 ponumerowanych propozycji, informację, co już jest w książce,
+  zakres nowych prac i sugerowaną kolejność. Uwzględniono życzenia
+  z `do_zrobienia.md`, zachowując sam plik bez zmian.
+- Rozdzielono dalszą redakcję i podstawy od pełnych h-/s-kobordyzmów,
+  chirurgii, sfer egzotycznych i metod czterowymiarowych. Dla Poincarégo
+  wskazano różnicę między kategorią topologiczną i gładką; status
+  gładkiego problemu w wymiarze 4 sprawdzono w materiale Clay.
+  Proponowanego nowego materiału nie dopisywano do skryptu.
+
+Przegląd istniejących 18 rozdziałów i wymagane przygotowanie listy
+dalszych uzupełnień są zakończone. Kolejne rozszerzenia zależą od wyboru autora.
