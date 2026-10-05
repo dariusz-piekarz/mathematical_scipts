@@ -2067,3 +2067,105 @@ nie wykazało nowych commitów. Przegląd obejmuje cały rozdział 17.
 Następna iteracja: rozdział 18 — „Kobordyzmy i rachunek uchwytów”.
 Przy jego przeglądzie trzeba również sprawdzić zgodność twierdzenia
 o przestawianiu z używaną tutaj wersją zachowującą pole spadku.
+
+## Iteracja 18 — Kobordyzmy i rachunek uchwytów
+
+Punkt wyjścia: `af689aa`; pobranie zmian na początku iteracji
+nie wykazało nowych commitów. Przegląd obejmuje cały rozdział 18.
+
+### Poprawki i ich uzasadnienie
+
+- Ustalono wymiar m≥1 oraz konwencję kobordyzmu zorientowanego
+  ∂W=(−N₋)∐N₊. Usunięto sugestię, że całkowity kompleks uchwytów
+  wymaga orientowalnego W: wystarczają orientacje rdzeni
+  i koorientacje sfer pasa.
+- Poprawiono dobór regularnych pasów w rozkładzie uchwytowym,
+  uwzględniając brak punktów krytycznych, pusty brzeg wejściowy
+  i składowe rozpoczynające się uchwytem indeksu 0.
+- Dla dysku zastąpiono F=|x|² przez F=(1+|x|²)/2.
+  Poprzedni wzór naruszał F⁻¹(0)=∅. Wskazano także współrzędną
+  kołnierza, w której nowa funkcja ma wymaganą postać 1−t.
+- Przy śladzie chirurgii odróżniono wnętrze części przyczepianej
+  od jej brzegu, który przed wygładzeniem leży na narożu.
+- W przykładzie S²→T² dodano konieczny warunek przedłużenia orientacji.
+  Drugie sklejenie pierścieni daje butelkę Kleina, więc samo usunięcie
+  dwóch dysków i wartość χ=0 nie wystarczają do stwierdzenia, że to torus.
+- Dla bloku uchwytów jednego indeksu uzasadniono sprowadzenie ich sfer
+  do wspólnego poziomu i rozłączność małych pogrubień przez brak
+  trajektorii między równymi indeksami. Jawnie zapisano różniczkę
+  filtracji względnej i lokalną konwencję znaku TA→νB.
+- Rozwinięto algebraiczne skracanie przy współczynniku ±1:
+  zerowanie wiersza i kolumny oraz użycie ∂²=0 wydzielają ściągalny
+  podkompleks. To nadal nie dowodzi jednego przecięcia geometrycznego.
+- Zdefiniowano używane pole gradientopodobne spadku i wyjaśniono,
+  jak realizować je jako gradient metryki. Definicja obejmuje
+  dowolną metrykę, a nie tylko szczególny model euklidesowy.
+- Przebudowano dowód przestawiania: zwarte, rozłączne ślady stabilny
+  i niestabilny w poziomicy pozwalają skonstruować gładką funkcję ρ
+  stałą wzdłuż trajektorii, równą 1 przy p i 0 przy q.
+  Udowodniono gładkość także tam, gdzie trajektorie nie trafiają
+  w tę poziomicę. Dwie rosnące reparametryzacje hₚ,h_q dają
+  F̃=ρhₚ(F)+(1−ρ)h_q(F), z XF̃<0 i translacjami przy punktach krytycznych.
+  Całe pole pozostaje niezmienione. Jest to dokładnie wersja
+  wymagana w dowodzie homologii Morse'a w rozdziale 17.
+- W przesunięciu uchwytu użyto równoległej kopii sfery q,
+  wyznaczonej przez obramowanie, i wstęgi omijającej pozostałe dane.
+  Wskazano dysk Dᵏ×{v₀} w nowym brzegu: izotopia przebiega tam,
+  a nie po rdzeniu we wnętrzu kobordyzmu. Dalsze przyklejenia
+  także trzeba przenieść przez otrzymany dyfeomorfizm.
+  Ustalony pozostaje brzeg wejściowy N₋; nie obiecuje się
+  punktowego unieruchomienia całej wcześniej dołączonej części.
+- W znoszeniu pary uzupełniono dostosowaną wersję lematu Morse'a
+  zachowującą odpowiedni dysk stabilny/niestabilny. Pole można
+  zmienić lokalnie przez wypukłe sklejenie pól spadku; nie zakładamy
+  gładkiej linearyzacji dowolnego pierwotnego gradientu.
+- Dopasowanie przekrojów rozpisano na gładką izotopię przez skalowanie
+  i rozkład blokowy z dopełnieniem Schura. Wyjaśniono warunek
+  odwracalności bloku poprzecznego, wybór znaków i kontrolę nośnika.
+  Izotopię realizuje pole styczne do poziomic, dodane do pola
+  znormalizowanego; funkcja nadal ściśle maleje.
+- Argument braku powrotów zastosowano po zmianie pola, z dwoma
+  otoczeniami V⊂U. Modyfikacja usuwająca zera ma nośnik w V,
+  a model obowiązuje w U. Dopisano, dlaczego wyjście z U uniemożliwia
+  powrót do V i dlaczego wszystkie trajektorie docierają do brzegów.
+  Przy budowie funkcji końcowej uzasadniono gładkość czasu trafienia.
+- W warunkowym użyciu triku Whitneya doprecyzowano jednoczesny wybór
+  rozłącznych dysków dla sparowanych przecięć. Warunek obramowania
+  oznacza przedłużenie obramowania zadanego na brzegu, a nie samą
+  trywialność wiązki normalnej dysku. Wskazano zakres wymiarów,
+  gdy trzeba faktycznie wykonać ruch.
+- Przy torsji Whiteheada odróżniono kompleks nad Z od kompleksu
+  nakrycia uniwersalnego nad Z[π₁]. Usunięto zapowiedź nieistniejącego
+  jeszcze dalszego rozdziału chirurgii; pozostaje propozycją rozbudowy.
+
+### Ilustracje i weryfikacja
+
+- Poprawiono podpis każdej podstawy 1-uchwytu: pojedyncza podstawa
+  to {−1}×D² albo {1}×D², a nie całe S⁰×D². Rdzeń dochodzi teraz
+  do obu podstaw, a strzałka sfery pasa trafia w jej rzeczywisty brzeg.
+- Wykresy znoszenia są dokładnie funkcjami t³/3−t oraz t³/3+t/2;
+  punkty krytyczne zaznaczono w (±1,∓2/3), zgodnie ze wzorem modelu.
+- Na ilustracji przesunięcia dodano przerywaną równoległą kopię
+  sfery q i doprowadzono wstęgę do tej kopii. Podpis odróżnia
+  ją od pozostającej na miejscu sfery przyczepienia drugiego uchwytu.
+- Kontekst dowodu znoszenia i zakres wyników porównano z
+  [wykładem J. Morgana](https://www.math.columbia.edu/~jmorgan/Lecture_IIIA_hcobordism_Contd.pdf)
+  oraz [książką A. Ranickiego](https://webhomes.maths.ed.ac.uk/~v1ranick/books/surgery.pdf).
+- Obejrzano cały rozdział (12 stron, 313–324 PDF) oraz wszystkie
+  pięć ilustracji w większej rozdzielczości. Rysunki chirurgii
+  i przecięcia na torusie zachowano po kontroli; poprawiony schemat
+  przesunięcia obejrzano ponownie. Sprawdzono także odsyłacze do lektur.
+- Końcowy skład lokalnym MiKTeX: 324 strony, bez błędów,
+  brakujących odsyłaczy, żądań ponownej kompilacji, `Overfull`
+  i `Underfull`. Pozostały trzy wcześniejsze ostrzeżenia dotyczące
+  zamiany położenia ilustracji `h` na `ht`. Wbudowany kompilator
+  nie potwierdził statusu; wynik zweryfikowano lokalnie.
+  Zaktualizowano PDF.
+- Kontrola zakresu względem `af689aa` potwierdziła identyczność
+  źródła poza rozdziałem 18, unikalność etykiet, poprawność odsyłaczy
+  i sparowanie środowisk. `git diff --check` przechodzi.
+  Ponowne pobranie przed zapisem nie wykazało nowych commitów.
+
+Następna iteracja: ponowna kontrola rozdziału 1 po zmianach autora
+pobranych podczas przeglądu późniejszych rozdziałów. Dopiero po niej
+pozostaje końcowy audyt całości i lista propozycji rozbudowy do wyboru.
