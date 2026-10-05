@@ -2169,3 +2169,71 @@ nie wykazało nowych commitów. Przegląd obejmuje cały rozdział 18.
 Następna iteracja: ponowna kontrola rozdziału 1 po zmianach autora
 pobranych podczas przeglądu późniejszych rozdziałów. Dopiero po niej
 pozostaje końcowy audyt całości i lista propozycji rozbudowy do wyboru.
+
+## Ponowny przegląd rozdziału 1 po zmianach autora
+
+Punkt wyjścia: `7222128`. Ponownie sprawdzono fragmenty zmienione
+od pierwszego przeglądu (`e144985`), w tym uzupełnienia autora
+`0d9857f` i poprawkę relacji równoważności `5b259e6`.
+
+### Matematyka, kolejność i język
+
+- W przykładzie prostej z podwojonym początkiem dopisano dowód
+  ciągłości map i ich odwrotności. Sama bijekcja nie wystarcza
+  do stwierdzenia, że mapa jest homeomorfizmem.
+- Analogicznie uzupełniono konstrukcję map CPⁿ: otwartość dziedzin,
+  ilorazowość ograniczenia rzutowania, ciągłość ilorazów współrzędnych
+  i odwrotności wstawiającej współrzędną 1. Dodano odsyłacz do
+  późniejszego dowodu aksjomatu Hausdorffa i przeliczalności bazy,
+  potrzebnych do uznania CPⁿ za rozmaitość.
+- W dowodzie niezależności gładkości w punkcie od map ograniczono
+  przeciwobraz do otoczenia, na którym wykazano ciągłość. Lokalna
+  ciągłość nie uprawnia do uznania pełnego przeciwobrazu za otwarty.
+  Przy złożeniu map doprecyzowano kolejność zmniejszania dziedzin.
+- Obliczenia macierzy Jacobiego przejścia na RP² zachowano.
+  Poprawny rachunek współrzędnych wektora stycznego przeniesiono
+  za definicję przestrzeni stycznej i ogólną regułę zmiany współrzędnych.
+  Dodano odsyłacze w obu kierunkach i przypomnienie map.
+- Identyfikację RPⁿ z ilorazem sfery uzupełniono o zgodność topologii:
+  ciągła normalizacja reprezentantów pozwala wykazać ilorazowość
+  rzutowania ze sfery, bez zakładania z góry aksjomatu Hausdorffa.
+- W RP¹→S¹, [z]↦z², uzasadniono ciągłość mapy indukowanej,
+  zwartość dziedziny i zgodność współrzędnych kątowych z atlasem
+  afinicznym (pochodne tangensa i cotangensa nie znikają).
+- W modelu RP² jako dysku poprawiono zdanie o parach antypodalnych:
+  dokładnie jeden punkt w otwartej półsferze mają pary spoza równika.
+  Uzasadniono homeomorfizm ilorazu dysku, odwołując się do późniejszego,
+  niezależnego dowodu własności Hausdorffa.
+- Dla metryk na przestrzeniach rzutowych rozpisano nierówność trójkąta
+  z dwiema fazami/znakami i symetrię. Uzupełniono brakujące przejście
+  od ciągłości rzutowania ze sfery do ciągłości identyczności między
+  pierwotnym ilorazem a przestrzenią metryczną: używa ono normalizacji
+  i definicji topologii ilorazowej. Dopiero wtedy stosuje się argument
+  zwartej dziedziny i przeciwdziedziny Hausdorffa.
+- Poprawiono literówki w przykładzie x↦x³ i usunięto przypadkowy
+  znacznik Markdown (trzy grawisy) ze źródła LaTeX.
+
+### Ilustracje i weryfikacja
+
+- Obejrzano wszystkie 42 strony rozdziału (4–45 PDF), a wszystkie
+  15 ilustracji także w większej rozdzielczości. Na schemacie RP²
+  usunięto pomocnicze średnice, które mogły sugerować sklejanie wnętrza
+  dysku, i dodano wyraźny napis, że wnętrze nie podlega utożsamieniom.
+  Strzałki w obu modelach doprowadzono bliżej wskazywanych par punktów.
+- Symbolicznie sprawdzono wzory CP¹→S² w obu mapach, macierz Jacobiego
+  przejścia RP² i jej wyznacznik; potwierdzono również zgodność rysunku
+  rzutu stereograficznego ze wzorem i współliniowość zaznaczonych punktów.
+- Kontrola zakresu względem `7222128` potwierdziła niezmienność źródła
+  poza rozdziałem 1, unikalność etykiet, poprawność odsyłaczy,
+  sparowanie środowisk i zachowanie wszystkich 15 ilustracji.
+- Końcowy skład lokalnym MiKTeX ma 325 stron. Brak błędów,
+  brakujących odsyłaczy, żądań ponownej kompilacji oraz ostrzeżeń
+  `Overfull` i `Underfull`; pozostają dwa ostrzeżenia o automatycznej
+  zmianie położenia ilustracji z `h` na `ht`. Wbudowany kompilator
+  nie potwierdził statusu, więc wynik zweryfikowano lokalnie.
+  Poprawioną ilustrację obejrzano ponownie i zaktualizowano PDF.
+- Pobranie zmian przed zapisem nie wykazało nowych commitów.
+  `git diff --check` przechodzi.
+
+Ponowny przegląd rozdziału 1 zakończony. Pozostaje końcowy audyt
+spójności całości oraz lista propozycji rozbudowy do wyboru przez autora.
