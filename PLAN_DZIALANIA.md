@@ -3,7 +3,9 @@
 Stan: 6 października 2026. Gałąź: `review/rozdzialy-matematyka`.
 Książka ma 27 rozdziałów i dwa dodatki. Zmiany autora do `19fa283`
 porównano z `66b220f`. Pobrano także cztery nowe commity autora
-`59fd235`–`46fd90c`; ich dodatkowy zakres kontroli wskazano poniżej.
+`59fd235`–`46fd90c` oraz `5c9dcd0`–`308ba4e`; ich dodatkowy zakres
+kontroli wskazano poniżej. Najnowsze dodatki dotyczą rozdziału 23
+i dodatku A; zmiana terminologiczna w rozdziale 1 została sprawdzona.
 Uzasadnienia i wyniki kontroli:
 [PRZEGLAD.md](PRZEGLAD.md).
 Obsługa projektu: [README.md](README.md).
@@ -257,7 +259,7 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | Zakres | Stan | Następna kontrola |
 |---|---|---|
 | Podział źródeł i importy | Zakończono, `9148128` | Kontrola regresji przy dalszych zmianach |
-| 1. Rozmaitości | Nowe dodatki sprawdzone, `aa6c59a` | Brzeg i pełna przestrzeń styczna mają uzupełniony dowód |
+| 1. Rozmaitości | Dodatki sprawdzone w `aa6c59a`; ponowna kontrola `5c9dcd0` zakończona | Brzeg i pełna przestrzeń styczna mają uzupełniony dowód; sześć zamian na „kiełek” i nowe hasło indeksu zachowują treść matematyczną |
 | 5. Algebra abstrakcyjna | Audyt zakończony 6 października; PDF 387 stron | Uzupełnione dowody, sprawdzony graf słów, indeks i odsyłacze |
 | 2. Pola wektorowe | Audyt dodatków zakończony 6 października; PDF 387 stron | Sprawdzone powiązanie z brzegiem, przykład przepływu jednostronnego, bibliografia i rysunki |
 | 3. Algebra tensorowa | Audyt dodatków zakończony 6 października; treść bez poprawek | Poprawny odsyłacz do rozdziału 5, indeks, źródła i ilustracje |
@@ -271,16 +273,17 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | 12. Koneksje i transport | Audyt dodatków zakończony 6 października; bez poprawek treści | Cztery wpisy indeksu, definicje i dwa rysunki sprawdzone; PDF 397 stron |
 | 13. Geodezyjne i zupełność | Audyt dodatków zakończony 6 października; PDF 397 stron | Definicje i dziewięć ilustracji sprawdzone; usunięty powtórzony wpis indeksu |
 | 14. Krzywizna | Audyt dodatków zakończony 6 października; PDF 397 stron | Indeks i trzy zmiany cieniowania sprawdzone; rozwinięto powiązania dowodu Cherna–Gaussa–Bonneta z rozdziałami 17 i 27 |
-| 15–19 | Dawna treść przeszła audyt; różnice po rozbudowie zinwentaryzowano | Przejrzeć różnice rozdziałami, zaczynając od rozdziału 15; uwzględnić nowe commity do `46fd90c` |
+| 15. Sard i transwersalność | Audyt dodatków zakończony 6 października; bez poprawek treści | Pięć wpisów indeksu, cztery ilustracje i warunki transwersalności przy brzegu sprawdzone; PDF 401 stron |
+| 16–19 | Dawna treść przeszła audyt; różnice po rozbudowie zinwentaryzowano | Przejrzeć różnice rozdziałami, zaczynając od rozdziału 16; uwzględnić nowe commity do `46fd90c` |
 | 20. h-kobordyzm | Oczekuje | Hipotezy wymiarowe, dyski Whitneya, realizacja ruchów uchwytów |
 | 21. Torsja i s-kobordyzm | Oczekuje | Bazy, strona działania pierścienia, konwencje torsji |
 | 22. Chirurgia geometryczna | Oczekuje | Obramowania, zmiany homotopii i homologii, rysunki |
-| 23. Przeszkoda chirurgiczna | Rozwinięto redukcję poniżej środka i rachunek lematu 5.7 Walla 6 października; pełny audyt czeka | Dowieść obramowanego osadzania 5.2, przygotowania 1.4, bazowości i dualności 2.4/2.6 oraz formacji §6 Walla |
+| 23. Przeszkoda chirurgiczna | Autor rozwinął redukcję poniżej środka i rachunek lematu 5.7 Walla do `308ba4e`; pełny audyt czeka | Sprawdzić nowe dowody i dokładność założeń; osobno ocenić brakujące argumenty obramowanego osadzania 5.2, przygotowania 1.4, bazowości i dualności 2.4/2.6 oraz formacji §6 Walla |
 | 24. Ciąg chirurgii | Oczekuje | Normalne niezmienniki, zbiór struktur, sens dokładności |
 | 25. Poincaré | Oczekuje | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm |
 | 26. Sfery Milnora | Oczekuje | Sklejenie wiązek, klasy charakterystyczne, egzotyczność |
 | 27. Chern–Weil | Oczekuje | Normalizacje i transgresja; uzasadnić model względnej kohomologii de Rhama przy identyfikacji klasy Eulera, granicę całek wokół zer i wersję brzegową |
-| Dodatek A o wynikach zewnętrznych | Oczekuje | Zgodność katalogu zależności z rzeczywistymi dowodami |
+| Dodatek A o wynikach zewnętrznych | Oczekuje, w tym zmiany do `308ba4e` | Zgodność katalogu zależności z rzeczywistymi dowodami, zwłaszcza nowymi redukcjami Walla |
 | Dodatek B: homologia singularna i Euler | Dodany w `59fd235`; audyt oczekuje | Wzory Eulera, skończoność, przykłady i zależności od rozdziałów 8 i 17 |
 | Ponowne różnice w 2–7 | Sprawdzone przy scaleniu `46fd90c`; PDF 397 stron | Wyłącznie format bibliografii; zachowane słowa i źródła, obejrzane zakończenia oraz poprawki rozdziału 7 |
 | Końcowa kontrola całości | Oczekuje | Mapa książki, oznaczenia, terminologia, bibliografia, indeks i PDF |

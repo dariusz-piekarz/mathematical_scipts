@@ -3197,3 +3197,46 @@ złożony, brak błędów, niezdefiniowanych odsyłaczy i `Overfull`.
 Pozostał wcześniejszy `Underfull` w kroku 1 dowodu na stronie 373.
 Obejrzano strony 374–377 z nowym rachunkiem i następną sekcją;
 wzory, odsyłacze i diagram są czytelne.
+
+## Integracja zmian autora do `308ba4e` i audyt rozdziału 15 (2026-10-06)
+
+Pobrano metodą fast-forward commity `5c9dcd0` i `308ba4e` na czyste
+`7fa73f9`. Przeczytano nową regułę terminologiczną w `AGENTS.md`.
+Różnica rozdziału 1 obejmuje dokładnie sześć zamian „zarodek” na
+„kiełek” oraz hasło indeksu; nie zmienia wzorów, hipotez ani dowodu
+konstrukcji przestrzeni stycznej. Sprawdzono zgodność z rozdziałem 2
+i brak pozostawionych wystąpień dawnego terminu w źródłach.
+Rozbudowy Walla w rozdziale 23 i aktualizacji dodatku A nie uznano
+automatycznie za sprawdzone: ich nowe wersje wpisano do jedynej kolejki
+audytu. Zachowano plan autora dotyczący dalszych rozdziałów.
+
+Porównanie rozdziału 15 z wcześniej audytowanym `66b220f` potwierdziło,
+że treść matematyczna, słowa bibliografii i źródła czterech ilustracji
+są identyczne. Zmiany to pięć wpisów indeksu oraz wspólne formatowanie
+zakończenia. Przeczytano definicje wskazywane przez hasła: punkt i wartość
+krytyczna, miara zero, transwersalność i hesjan w punkcie krytycznym.
+Rozróżnienie punktu od wartości, warunek rzędu różniczki i zmiana
+współrzędnych hesjanu są poprawne.
+
+Osobno sprawdzono powiązanie z nowymi podstawami brzegu w rozdziale 1:
+twierdzenie o przeciwobrazie wymaga transwersalności zarówno na pełnym
+`T_pM`, jak i po ograniczeniu do brzegu. Dowód wybiera odwracalny minor
+w zmiennych stycznych do brzegu, zachowując współrzędną półprzestrzeni;
+otrzymuje właściwy brzeg przeciwobrazu. Przykład `f(x,y)=y` na półpłaszczyźnie
+wyjaśnia potrzebę drugiego warunku. W wersji parametrycznej wyklucza się
+sumę dwóch zbiorów miary zero. Nie znaleziono tu brakującego założenia
+ani powodu do dublowania definicji. Treść rozdziału pozostawiono bez zmian.
+
+Ponowny pełny skład po aktualizacji autora zakończył się kodem 0:
+401 stron, 154 wpisy indeksu. Ostateczny przebieg nie ma błędów,
+niezdefiniowanych odsyłaczy ani `Overfull`; pozostają dwa wcześniejsze
+ostrzeżenia `h`→`ht` i `Underfull` w rozdziale 23. Sprawdzono 32 importy,
+1190 unikalnych etykiet, 1123 rozwiązywalne odsyłacze oraz lokalne linki
+w czterech głównych plikach Markdown. Wszystkie 1496 linków wewnętrznych
+PDF mają poprawne cele; brak `??`.
+
+Obejrzano strony 267–270, 272, 274, 276–277 i indeks 400–401:
+cztery ilustracje i oznaczenia pozostają czytelne. Odtworzony skład
+ma identyczny tekst i zakładki na wszystkich 401 stronach co PDF autora,
+a cały rozdział 15 i indeks są również identyczne pikselowo.
+Nie nadpisywano identycznej treści PDF. Następna iteracja: rozdział 16.
