@@ -2974,3 +2974,30 @@ złożenie terminów i etykiet ilustracji jest czytelne. PDF nie zawiera `??`,
 a wszystkie 1484 linki wewnętrzne mają istniejące cele.
 Zaktualizowano główny PDF i porównano sumy SHA-256 ze składem.
 Następna iteracja: dodatki rozdziału 10.
+
+## Rozdział 10 — indeks, ilustracje i zgodność przy brzegu (2026-10-06)
+
+Po pobraniu zmian potwierdzono aktualność i czystość `1481067`.
+Porównano cały rozdział z `66b220f`: treść matematyczna i bibliograficzna
+jest identyczna po pominięciu siedmiu poleceń indeksu i zmiany formatu
+„Dalszej lektury”. Kod wszystkich pięciu ilustracji jest niezmieniony.
+
+Sprawdzono wpisy indeksu przy formach, kontrakcji i pochodnej Liego,
+orientacji, orientacji brzegu, całkowaniu oraz kohomologii de Rhama.
+Przeczytano definicje i związane uzasadnienia. Konwencje są zgodne
+z uzupełnionym rozdziałem 1: gładkość przy brzegu przez lokalne
+przedłużenie, pełna przestrzeń styczna i reguła normalnej na zewnątrz.
+Uwzględniono także orientację punktów oraz warunek styczności pola do
+brzegu przy definicji pochodnej Liego przez dwustronny przepływ.
+Wzór Cartana dla pozostałych pól jest osobno opisany przez przedłużenie.
+
+Obejrzano strony 169–171, 173–177, 180, 182, 186, 189 i indeks 396–397.
+Rysunki poprawnie pokazują znak formy dwuliniowej, kierunek brzegu dysku,
+kasowanie wspólnej krawędzi, okres na przebitej płaszczyźnie i kompleks,
+który nie jest rozmaitością. Etykiety są czytelne, a indeks wskazuje
+właściwe strony. Zachowano poprawną treść bez dopisywania duplikatów.
+
+Kontrola struktury: 32 importy, 1187 unikalnych etykiet, 1112 poprawnych
+odsyłaczy, sparowane środowiska i działające lokalne linki Markdown.
+Aktualny sprawdzony PDF ma 397 stron; źródła i PDF tej iteracji pozostają
+niezmienione. Zmieniono jedynie plan i dziennik. Następny rozdział: 11.
