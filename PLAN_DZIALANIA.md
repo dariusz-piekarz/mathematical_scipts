@@ -1,146 +1,100 @@
-# Plan rozbudowy skryptu „Geometria i topologia różniczkowa”
+# Aktualny plan i pokrycie przeglądem
 
-## Kontynuacja po zmianach autora i podział źródeł
+Stan: 6 października 2026. Gałąź: `review/rozdzialy-matematyka`.
+Książka ma 27 rozdziałów i dodatek. Zmiany autora do `19fa283` porównano
+z `66b220f`; pobranie aktualizacji przed obecną iteracją nie przyniosło
+nowych zmian. Uzasadnienia i wyniki kontroli: [PRZEGLAD.md](PRZEGLAD.md).
+Obsługa projektu: [README.md](README.md).
 
-5 października 2026 pobrano `19fa283` i porównano go z `66b220f`.
-Na aktualną prośbę użytkownika dokument zostaje podzielony na pliki
-rozdziałów, przy zachowaniu jednego pliku głównego i jednego PDF.
-Zastępuje to wcześniejszą zasadę jednego źródła w `AGENTS.md`.
+**To jedyna aktualna lista zadań.** Dawne „zakończono” w dzienniku dotyczy
+wskazanej tam wersji. Dodanie treści przez autora nie oznacza zakończenia
+jej niezależnego przeglądu. Jedna iteracja matematyczna obejmuje jeden rozdział.
 
-- [x] Pobrać zmiany i porównać je z wcześniejszymi propozycjami.
-- [x] Potwierdzić obecność rozmaitości z brzegiem, grupy wolnej i iloczynu wolnego.
-- [x] Wydzielić preambułę, wstęp, 27 rozdziałów, dodatek i indeks.
-- [x] Potwierdzić identyczność rozwiniętego źródła i składu przed/po podziale (384 strony, także porównanie pikselowe).
-- [x] Wysłać podział wraz z instrukcją wspólnej edycji i kompilacji (`9148128`).
-- [x] Przejrzeć merytorycznie zmienione fragmenty rozdziału 1; uzupełnić model przestrzeni stycznej przy brzegu.
-- [ ] Przejrzeć nowy rozdział 5 i odsyłacze do algebry.
-- [ ] Skontrolować pozostałe zmiany w dotychczasowych rozdziałach.
-- [ ] Przejrzeć nowe rozdziały 20–27 oraz dodatek, po jednym rozdziale w iteracji.
+## Uzgodniony zakres
 
-Nie dublować tematów już dodanych. Dalsza teoria Freedmana i egzotyczne
-R⁴ pozostają przeznaczone do osobnego skryptu. Istniejący rozdział
-o sferach Milnora zachowujemy. Nowe propozycje należy odróżniać od
-koniecznych napraw dowodów. Bieżące uzasadnienia zmian: `PRZEGLAD.md`.
+- Sprawdzić niezweryfikowane dodatki: matematykę, luki w dowodach,
+  polską terminologię, rysunki i powiązania między rozdziałami.
+- Uzupełniać potrzebne przejścia i rozwijać materiał tam, gdzie ma to
+  uzasadnienie, zwłaszcza w końcowych rozdziałach. Nie dublować już
+  wprowadzonych definicji brzegu, grupy wolnej ani iloczynu wolnego.
+- Źródła są podzielone na rozdziały; zachować wspólne etykiety i jeden PDF.
+  Podział `9148128` sprawdzono przez identyczność rozwiniętego źródła
+  oraz tekstu, linków i obrazu wszystkich 384 stron przed/po podziale.
+- Prowadzić log uzasadnień, kompilować całość i indeks, obejrzeć zmienione
+  strony, następnie commitować i pushować każdą zakończoną iterację.
+- Nie dodawać zadań. Teoria Freedmana, egzotyczne R⁴ i dalsze metody
+  czterowymiarowe pozostają przeznaczone do osobnego skryptu.
+  Istniejący rozdział o siedmiowymiarowych sferach Milnora pozostaje tutaj.
 
-## Zakończony plan autora — zapis historyczny
+## Kolejka audytu
 
-Stan końcowy: 5 października 2026. Wszystkie zadania objęte tym planem
-zostały wykonane i wypchnięte na `review/rozdzialy-matematyka` w dwóch
-etapach: `4233e60` i `b2635d0`. Tekstem źródłowym pozostaje
-`geometria_i_topologia_rozniczkowa.tex`; sprawdzony PDF ma 384 strony.
+| Zakres | Stan | Następna kontrola |
+|---|---|---|
+| Podział źródeł i importy | Zakończono, `9148128` | Kontrola regresji przy dalszych zmianach |
+| 1. Rozmaitości | Nowe dodatki sprawdzone, `aa6c59a` | Brzeg i pełna przestrzeń styczna mają uzupełniony dowód |
+| 5. Algebra abstrakcyjna | Audyt zakończony 6 października; PDF 387 stron | Uzupełnione dowody, sprawdzony graf słów, indeks i odsyłacze |
+| 2–4 oraz 6–19 | Dawna treść przeszła audyt; różnice po rozbudowie zinwentaryzowano | Przejrzeć różnice rozdziałami, zaczynając od rozdziału 2 |
+| 20. h-kobordyzm | Oczekuje | Hipotezy wymiarowe, dyski Whitneya, realizacja ruchów uchwytów |
+| 21. Torsja i s-kobordyzm | Oczekuje | Bazy, strona działania pierścienia, konwencje torsji |
+| 22. Chirurgia geometryczna | Oczekuje | Obramowania, zmiany homotopii i homologii, rysunki |
+| 23. Przeszkoda chirurgiczna | Oczekuje | Formy i dekoracje grup L, zakres twierdzenia Walla |
+| 24. Ciąg chirurgii | Oczekuje | Normalne niezmienniki, zbiór struktur, sens dokładności |
+| 25. Poincaré | Oczekuje | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm |
+| 26. Sfery Milnora | Oczekuje | Sklejenie wiązek, klasy charakterystyczne, egzotyczność |
+| 27. Chern–Weil | Oczekuje | Normalizacje, transgresja, klasa Eulera i wersja brzegowa |
+| Dodatek o wynikach zewnętrznych | Oczekuje | Zgodność katalogu zależności z rzeczywistymi dowodami |
+| Końcowa kontrola całości | Oczekuje | Mapa książki, oznaczenia, terminologia, bibliografia, indeks i PDF |
 
-## Kolejność i kontrola postępu
+Poprzedni audyt obejmował 18 rozdziałów w `a36c920` (325 stron).
+Jego tabela pokrycia i commity są zachowane w dzienniku. Po wydzieleniu
+algebry abstrakcyjnej dawne rozdziały 5–18 odpowiadają obecnym 6–19,
+przy czym część podstaw o modułach przeniesiono do nowego rozdziału 5.
+Porównanie źródeł `66b220f` i `19fa283` wykazuje zmiany we wszystkich
+tych rozdziałach. W wielu są to wyłącznie wpisy indeksu, ale statusu
+„sprawdzono” nie nadano im automatycznie na podstawie liczby zmienionych linii.
 
-- [x] Przeczytać `AGENTS.md`, `PROPOZYCJE_UZUPELNIEN.md` i sprawdzić stan repozytorium.
-- [x] Rozwinąć argument przy twierdzeniu Walla: dokładne hipotezy, część
-  algebraiczną i geometryczną, wskazanie głębokich lematów oraz źródeł.
-- [x] Zakończyć chirurgię: zbiór struktur, normalne niezmienniki, ciąg dokładny
-  chirurgii, interpretacja dokładności i przykłady zastosowań.
-- [x] Dodać rysunki do chirurgii i sprawdzić wcześniejsze torusy względem
-  jasnej niebieskiej stylistyki sfery z rozdziału 1.
-- [x] Dodać dowód twierdzenia Poincarégo dla powierzchni, oparty na
-  klasyfikacji zwartych powierzchni z jawnym wskazaniem użytego twierdzenia.
-- [x] Dodać argument dla gładkich sfer homotopijnych wymiaru co najmniej 5,
-  odróżniając homeomorfizm od dyfeomorfizmu. Wymiar 4 pozostaje poza tą sesją.
-- [x] Opracować sfery Milnora: wiązki nad $S^4$, homologia, argument
-  homeomorfizmu i niezmiennik wykrywający egzotyczną strukturę; wskazać
-  użyte głębokie wyniki.
-- [x] Zrealizować punkt 1 propozycji: rozmaitości z brzegiem i spójne
-  konwencje w rozdziale 1.
-- [x] Zrealizować punkt 2: wstęp do teorii grup przed van Kampenem.
-- [x] Zrealizować punkt 3: nawigacja, spis oznaczeń, mapa zależności,
-  jednolitsze odsyłacze i bibliografia.
-- [x] Zrealizować punkt 5: katalog użytych wyników zewnętrznych i zakres
-  samowystarczalności; wybrane krótkie dowody, bez pozorowania dowodu
-  triangulacji.
-- [x] Zrealizować punkt 6: teoria Cherna–Weila, transgresja oraz zakres
-  dowodu twierdzenia Cherna–Gaussa–Bonneta, z wersją brzegową.
-- [x] Rozpisać słowa w grupie wolnej, redukcję, działanie na słowach,
-  własność uniwersalną i dodać rysunek grafu słów.
-- [x] Ponownie skontrolować rozdziały 22–26 i dodatek pod kątem
-  matematycznym, językowym i bibliograficznym; nanieść poprawki.
-- [x] Uruchomić polecenie `latexmk` z `AGENTS.md` i, przy braku Perla
-  w MiKTeX, złożyć dokument przez `pdflatex` oraz `makeindex`;
-  skontrolować błędy, odsyłacze i strony z rysunkami.
-- [x] Przejrzeć różnice, zatwierdzić etap pierwszy i wypchnąć go na gałąź
-  `review/rozdzialy-matematyka`.
-- [x] Po pierwszym commicie i pushu wydzielić rozdział algebry abstrakcyjnej
-  przed algebrą homologiczną: grupy i prezentacje, pierścienie i ideały,
-  moduły, iloczyn tensorowy modułów, własność uniwersalna i przykłady.
-- [x] Złożyć i skontrolować nowy rozdział, zatwierdzić drugi etap i wypchnąć.
+## Stan wcześniejszych propozycji 1–12
 
-## Przyjęte granice dowodów
+Zachowujemy numery, aby wcześniejsze ustalenia nadal były czytelne.
+Ta tabela zastępuje `PROPOZYCJE_UZUPELNIEN.md` i listę `do_zrobienia.md`.
 
-Dopisane dowody elementarne rozpisano krok po kroku. Długie twierdzenia, które
-stanowią odrębne teorie (klasyfikacja powierzchni, geometryczne lematy Walla,
-twierdzenie o $h$-kobordyzmie, twierdzenie Hirzebrucha),
-otrzymały dokładne założenia, źródła i wyraźne oznaczenie jako wyniki
-zewnętrzne, jeśli ich pełnego dowodu tu nie ma. Punkt 4 (zadania) i punkt 12
-(egzotyczne $\mathbb R^4$) oraz dowód dla wymiaru 4 pozostają poza zakresem.
-Sfery Milnora należą do tego skryptu: skonstruowane rozmaitości mają wymiar 7.
+| Nr | Temat | Realizacja i pozostały zakres |
+|---|---|---|
+| 1 | Rozmaitości z brzegiem | Autor dodał definicję, niezależność od map i przykłady w rozdziale 1; nasz audyt uzupełnił przestrzeń styczną. Powiązania z orientacją, transwersalnością, kołnierzem i narożami do kontroli w dalszych rozdziałach. |
+| 2 | Grupy i prezentacje | Są w rozdziale 5: ilorazy, domknięcie normalne, grupa wolna, iloczyn wolny i prezentacja torusa. Bieżąca iteracja naprawia postać normalną; zastosowanie van Kampena będzie sprawdzone w rozdziale 7. |
+| 3 | Redakcja i nawigacja | Jest mapa książki, spis oznaczeń, indeks i rozdzielone źródła. Pozostaje ujednolicenie stylu rozdziału 1 i zakończeń rozdziałów oraz precyzji lektur: autor, tytuł, sekcja i link. Zachować rozbudowane przykłady. |
+| 4 | Zadania z rozwiązaniami | Nie realizować w obecnym zakresie. Dawna propozycja rachunków, kontrprzykładów i wspólnych przykładów (sfera, torus, przestrzenie rzutowe, Möbius) pozostaje odłożona. |
+| 5 | Wyniki zewnętrzne i samowystarczalność | Jest dodatek. Sprawdzić hipotezy i odsyłacze, w tym Brouwera, funkcję odwrotną, triangulację i przeszkodę spinową. Pełna triangulacja oraz porównanie kohomologii Čech i singularnej są osobnymi możliwymi rozszerzeniami, nie krótkimi poprawkami. |
+| 6 | Chern–Weil i Chern–Gauss–Bonnet | Jest rozdział 27. Sprawdzić wielomiany niezmiennicze, niezależność od koneksji, identyfikację formy Eulera z klasą topologiczną i jawne określenie formy brzegowej. |
+| 7 | h-kobordyzm Smale'a | Jest rozdział 20. Sprawdzić wymiar W≥6, spójność, obramowania dysków Whitneya, skrajne indeksy i redukcję uchwytów do iloczynu z ustalonym dolnym końcem. |
+| 8 | Torsja Whiteheada i s-kobordyzm | Jest rozdział 21. Sprawdzić Z[π₁], bazowane kompleksy nakrycia, prostą równoważność i przeszkodę do iloczynu. Nie utożsamiać torsji Whiteheada z trikiem Whitneya. |
+| 9 | Chirurgia i jej przeszkody | Są rozdziały 22–24, szerzej niż pierwotnie proponowano. Audyt obejmie wpływ operacji na π₁, homologię i formę przecięcia, obramowania, zabijanie klas, Walla i ciąg dokładny. |
+| 10 | Poincaré | Jest rozdział 25. Dla n=2 sprawdzić użycie klasyfikacji powierzchni; dla n>5 usunięcie dysków, h-kobordyzm i sklejenie; n=5 wymaga osobnego argumentu. Nie zamieniać homeomorfizmu w dyfeomorfizm. Wymiar 4 poza tym skryptem. |
+| 11 | Sfery Milnora | Jest rozdział 26: wiązki S³ nad S⁴, rachunki i niezmiennik egzotyczności. Sprawdzić użycie klas Pontriagina i sygnatury. Dalsze grupy sfer homotopijnych pozostają możliwym rozszerzeniem. |
+| 12 | Egzotyczne R⁴ | Osobny skrypt autora: topologia końców, uchwyty Cassona, Freedman i Donaldson. Nie wynika to z samego niepowodzenia triku Whitneya ani z konstrukcji sfer Milnora. |
 
-## Rozdział algebry abstrakcyjnej — decyzja
+## Pomysły pozostawione do wyboru po audycie
 
-Osobny rozdział był uzasadniony. Sekcje o grupach i modułach
-przeniesiono przed algebrę homologiczną z zachowaniem etykiet.
-Rozdział o tensorach przestrzeni liniowych pozostaje w swoim miejscu,
-ponieważ jest potrzebny wcześniej w geometrii; iloczyn tensorowy
-modułów uogólnia tamtą konstrukcję. „Domknięcie iloczynu tensorowego”
-nie jest standardową nazwą w tym kontekście: chodzi o podmoduł
-generowany przez relacje zbiliniowości i zbalansowania. Domknięcie
-normalne dotyczy relacji grupowych. Dokładność ciągów i kompleksy
-pozostały w rozdziale algebry homologicznej.
+1. **Hodge i Bochner–Weitzenböck:** połączyć formy i krzywiznę Ricciego
+   z ograniczeniami topologicznymi, z jawnymi założeniami analizy eliptycznej.
+2. **Holonomia i rozkład de Rhama:** rozwinąć transport równoległy
+   i kryteria lokalnego oraz globalnego rozkładu metryki na produkt.
+3. **Geometria podrozmaitości:** równania Gaussa–Codazziego, krzywizna średnia
+   i pierwsze przykłady powierzchni minimalnych, na bazie drugiej formy podstawowej.
+4. **Dłuższe zależności i rozszerzenia:** triangulacja, porównanie Čech–singularna
+   oraz grupy sfer homotopijnych — zakres do ustalenia po sprawdzeniu dodatku
+   i rozdziału Milnora. Nie oznaczać ich jako już wykonanych.
 
-## Propozycje poza ukończonym planem
+Po audycie zaktualizować tę krótką listę na podstawie faktycznych braków
+i przedstawić ją użytkownikowi. Pierwszeństwo mają naprawy obecnego materiału.
 
-1. Twierdzenie Hodge'a i wzory Bochnera–Weitzenböcka: łączą formy,
-   krzywiznę Ricciego i ograniczenia topologiczne; wymagają jawnego
-   wskazania analitycznego twierdzenia o operatorach eliptycznych.
-2. Holonomia koneksji i rozkład de Rhama: rozwijają transport równoległy
-   i wyjaśniają, kiedy metryka rozkłada się lokalnie na produkt.
-3. Geometria podrozmaitości: równania Gaussa–Codazziego, krzywizna średnia
-   i pierwsze przykłady powierzchni minimalnych; korzysta z już
-   wprowadzonej drugiej formy podstawowej.
+## Źródła zachowane z wcześniejszych propozycji
 
-## Dziennik
-
-- 2026-10-05: sprawdzono stan plików i gałęzi; w TeX-u są 22 rozdziały oraz
-  obszerne, niezatwierdzone zmiany rozdziałów 19–22. Przeczytano propozycje;
-  rozpoczęto kontrolę merytoryczną i redakcyjną.
-- 2026-10-05: dopisano rozwinięcie Walla, ciąg chirurgii, Poincarégo dla
-  wymiarów 2 i co najmniej 5, sfery Milnora, teorię Cherna–Weila i
-  Cherna–Gaussa–Bonneta oraz dodatek źródłowy. Po audycie skorygowano
-  zmienną wiązkę docelową w normalnych niezmiennikach, stopień z lokalnym
-  systemem orientacji i przestrzeń styczną na brzegu. Rozbudowano indeks.
-- 2026-10-05: polecenie `latexmk` uruchomiono; MiKTeX zgłosił brak Perla.
-  Pierwszy pełny skład `pdflatex` przeszedł; następnie wykonano `makeindex`,
-  kolejne przebiegi składu, przegląd stron rysunkowych i kontrolę ostrzeżeń.
-- 2026-10-05: obejrzano w PDF torusy na stronach 307 i 321 oraz nowe schematy
-  Walla, ciągu chirurgii, Poincarégo i Milnora na stronach 361, 365, 368
-  i 370. Poprawiono odstępy podpisów w schemacie ciągu. Indeks ma 146
-  odsyłaczy i jest widoczny na końcowych stronach PDF; uzupełniono
-  odsyłacze bibliograficzne przy rozdziałach 2 i 3.
-- 2026-10-05: na prośbę użytkownika dopisano pełną konstrukcję grupy
-  wolnej przez słowa i algorytm redukcji oraz rysunek grafu. Ponowiono
-  audyt rozdziałów 22–26; poprawiono precyzję dowodów Walla i Milnora,
-  kilka sformułowań i wskazania źródeł. Zaplanowano drugi etap algebry.
-- 2026-10-05: po ostatnich poprawkach `latexmk` nadal nie może wystartować
-  bez Perla. Dwa przebiegi `pdflatex` i `makeindex` dały 381 stron;
-  w logu nie ma brakujących odsyłaczy ani błędów składu. Obejrzano
-  nowy graf słów na stronie 103 i wcześniej poprawione torusy oraz
-  schematy dalszych rozdziałów.
-- 2026-10-05: etap pierwszy zatwierdzony jako `4233e60` i wypchnięty
-  na `origin/review/rozdzialy-matematyka`. Rozpoczęto wydzielanie
-  podstaw algebry do osobnego rozdziału.
-- 2026-10-05: w etapie drugim powstał rozdział 5 z grupami, pierścieniami,
-  modułami, iloczynem tensorowym i modułami projektywnymi. Dawny rozdział
-  homologiczny zaczyna się teraz od ciągów dokładnych jako rozdział 6.
-  Usunięto powtórzony opis tensoru z późniejszej części homologicznej;
-  audyt matematyczny potwierdził konstrukcję i przykłady. Ostateczny
-  PDF ma 384 strony. `makeindex` przyjął 152 wpisy; ostatni log nie
-  zgłasza błędów, brakujących odsyłaczy ani potrzeby kolejnego przebiegu.
-  Obejrzano strony 103–107 z grafem słów i nowymi sekcjami algebry.
-- 2026-10-05: drugi etap zatwierdzono jako `b2635d0` i wypchnięto
-  na `origin/review/rozdzialy-matematyka`. Wszystkie pozycje kontrolne
-  tego planu są zakończone; trzy pomysły geometryczne powyżej nie należą
-  do jego zakresu.
+- [Morgan: znoszenie uchwytów i h-kobordyzm](https://www.math.columbia.edu/~jmorgan/Lecture_IIIA_hcobordism_Contd.pdf).
+- [Ranicki: chirurgia algebraiczna i geometryczna](https://webhomes.maths.ed.ac.uk/~v1ranick/books/surgery.pdf).
+- [Milnor: omówienie Poincarégo dla Clay](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf).
+- [Milnor: oryginalna konstrukcja egzotycznej sfery](https://sites.math.rutgers.edu/~feehan/teaching/math866/milnor7sphere.pdf).
+- [Gompf: egzotyczne R⁴](https://arxiv.org/abs/1705.06644).
+- [Clay: program topologii niskich wymiarów](https://www.claymath.org/events/recent-advances-in-low-dimensional-topology/)
+  — źródło wcześniejszego sprawdzenia statusu gładkiego problemu Poincarégo
+  w wymiarze 4; nie planować dopisywania jego dowodu.

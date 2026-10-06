@@ -72,9 +72,14 @@ PDF traktuj jako pliki współdzielone. PDF jest wynikiem kompilacji:
 w razie konfliktu najpierw połącz źródła, następnie wygeneruj go ponownie.
 Poprawki zapisuj z uzasadnieniem w [PRZEGLAD.md](PRZEGLAD.md).
 
-- [Plan i historia rozbudowy](PLAN_DZIALANIA.md).
-- [Propozycje uzupełnień](PROPOZYCJE_UZUPELNIEN.md) — stan realizacji
-  sprawdzaj razem z planem; część propozycji została już wdrożona.
-- [Audyt wersji 18-rozdziałowej](AUDYT_KONCOWY.md) — dokument historyczny,
-  sprzed dalszej rozbudowy książki.
-- [Zasady projektu](AGENTS.md).
+Dokumentacja ma cztery pliki, każdy o osobnej roli:
+
+- [README.md](README.md) — struktura źródeł, kompilacja i współpraca.
+- [AGENTS.md](AGENTS.md) — zasady pisania i kontroli.
+- [PRZEGLAD.md](PRZEGLAD.md) — chronologiczny log zmian z uzasadnieniami
+  i wynikami weryfikacji, także historyczny audyt wersji 18-rozdziałowej.
+- [PLAN_DZIALANIA.md](PLAN_DZIALANIA.md) — jedyna aktualna lista zadań,
+  pokrycie przeglądem i pozostałe propozycje rozbudowy.
+
+Nie kopiuj statusów zadań do kolejnych plików. Wpis w dzienniku opisuje
+konkretną wersję; obecność rozdziału w książce nie oznacza zakończonego audytu.

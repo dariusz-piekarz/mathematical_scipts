@@ -28,9 +28,12 @@
 - Nie zasłaniaj etykiet siatką ani powierzchnią; sprawdzaj szczególnie rysunki TikZ i PGFPlots po złożeniu PDF.
 - Po zmianach kompiluj `latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=build/sklad geometria_i_topologia_rozniczkowa.tex`. Sprawdź błędy, brakujące odsyłacze, indeks oraz strony z nowymi rysunkami. Instrukcja w `README.md` obejmuje również Perla z PortableGit i kompilację bez `latexmk`.
 
-## Stan prac
+## Dokumentowanie pracy
 
-- Rozdział 5 zbiera grupy, pierścienie, moduły i iloczyn tensorowy modułów; rozdział 6 rozpoczyna algebrę homologiczną.
-- Rozdziały 22–24 obejmują chirurgię geometryczną, przeszkodę Walla i ciąg dokładny chirurgii.
-- Rozdziały 25–27 obejmują twierdzenie Poincarégo poza wymiarem 4, sfery Milnora oraz teorię Cherna–Weila i wzór Cherna–Gaussa–Bonneta.
-- Aktualne zadania i stan weryfikacji są w `PLAN_DZIALANIA.md`.
+- Jedna iteracja matematyczna obejmuje jeden rozdział. Zmiany i ich uzasadnienia
+  dopisuj do `PRZEGLAD.md`; aktualny zakres, pokrycie i kolejkę aktualizuj wyłącznie
+  w `PLAN_DZIALANIA.md`. Nie twórz równoległych list tych samych zadań.
+- Po sprawdzeniu składu aktualizuj wspólny PDF i zatwierdzaj zmiany na gałęzi
+  przeglądu. Przed pracą pobierz zmiany współautora.
+- Deklarację autora o ukończeniu rozbudowy odróżniaj od przeprowadzonego audytu.
+  Szczegóły budowania i organizacji źródeł są w `README.md`.

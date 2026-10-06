@@ -3,8 +3,11 @@
 Gałąź: `review/rozdzialy-matematyka`. Jedna iteracja obejmuje jeden rozdział.
 Źródło: `geometria_i_topologia_rozniczkowa.tex`; wynik: plik PDF o tej samej nazwie.
 Rejestr zawiera także uzasadnienia, aby można było niezależnie sprawdzić poprawki.
-Nowe tematy wykraczające poza naprawę obecnego materiału będą proponowane
-po przeglądzie całości, do decyzji autora.
+Aktualny zakres, kolejka i propozycje są wyłącznie w [planie](PLAN_DZIALANIA.md).
+Poniższe wpisy są chronologiczne: numery rozdziałów, strony i statusy dotyczą
+wersji wskazanej w danym wpisie. Audyt 18 rozdziałów nie obejmuje późniejszych
+dodatków autora. Od 5 października źródła są w `tex/rozdzialy/`;
+plik główny tylko ustala ich kolejność.
 
 ## Iteracja 1 — Rozmaitości różniczkowe
 
@@ -2255,9 +2258,9 @@ spójności całości oraz lista propozycji rozbudowy do wyboru przez autora.
   sparowanie środowisk oraz cele 1028 wewnętrznych linków PDF.
   Plik PDF w repozytorium jest identyczny z ostatnim zweryfikowanym
   składem (325 stron); treści źródła i PDF w tej iteracji nie zmieniano.
-- Dodano [AUDYT_KONCOWY.md](AUDYT_KONCOWY.md): tabelę pokrycia,
+- Dodano `AUDYT_KONCOWY.md` (obecnie scalony z tym dziennikiem): tabelę pokrycia,
   weryfikację zależności, wyniki kontroli i jawne granice zakresu.
-- Dodano [PROPOZYCJE_UZUPELNIEN.md](PROPOZYCJE_UZUPELNIEN.md):
+- Dodano `PROPOZYCJE_UZUPELNIEN.md` (aktualny stan w [planie](PLAN_DZIALANIA.md)):
   12 ponumerowanych propozycji, informację, co już jest w książce,
   zakres nowych prac i sugerowaną kolejność. Uwzględniono życzenia
   z `do_zrobienia.md`, zachowując sam plik bez zmian.
@@ -2358,3 +2361,216 @@ na klasach krzywych oraz pozostałe różnice rozdziału 1.
 
 Kontrola nowych fragmentów rozdziału 1 zakończona. Następna iteracja:
 nowy rozdział 5 z podstawami algebry, w tym grupą wolną i iloczynem wolnym.
+
+## Scalenie dokumentacji projektu (2026-10-05)
+
+Na prośbę użytkownika pozostawiono cztery pliki Markdown w katalogu głównym:
+README (obsługa projektu), AGENTS (zasady), PRZEGLAD (historia i dowody kontroli)
+oraz PLAN_DZIALANIA (jedyna aktualna kolejka i lista pomysłów).
+
+- Z `AUDYT_KONCOWY.md` przeniesiono poniżej unikalną tabelę pokrycia,
+  kontrolę zależności i dane techniczne starej wersji. Nie przenoszono
+  powtórzonego opisu ukończenia prac jako statusu obecnej książki.
+- Z `PROPOZYCJE_UZUPELNIEN.md` zachowano w planie numerację 1–12,
+  stan wdrożenia, niewykonane elementy, granice zakresu i źródła.
+- Z `do_zrobienia.md` włączono życzenia dotyczące redakcji rozdziału 1,
+  zakończeń rozdziałów, brzegu, grup, h-/s-kobordyzmów, chirurgii,
+  Poincarégo i struktur egzotycznych. Pokrywały się z propozycjami;
+  nie utworzono kolejnych kopii tych samych zadań.
+- Usunięto te trzy scalone pliki; ich pełne historyczne brzmienie zachowuje Git
+  (m.in. `aa6c59a`). Poprawiono linki w README i dzienniku.
+- Zachowano rozróżnienie torsji Whiteheada i triku Whitneya oraz Smale'a
+  i Milnora; literówki w dawnej liście autora nie są nową terminologią.
+
+### Historyczna rozbudowa autora — nie jest bieżącym audytem
+
+Autor w `4233e60` i `b2635d0`, zamkniętych planem `19fa283`, dodał
+brzeg, grupy i tensor modułów, nawigację oraz indeks, h-/s-kobordyzmy,
+chirurgię (geometrię, przeszkodę Walla, ciąg dokładny), Poincarégo,
+sfery Milnora, Cherna–Weila i katalog wyników zewnętrznych.
+Algebrę abstrakcyjną wydzielił jako rozdział 5, przesuwając dawny rozdział 5
+i kolejne o jeden. Jego plan deklarował zakończony przegląd własnych dodatków,
+kontrolę torusów i schematów Walla, chirurgii, Poincarégo oraz Milnora,
+skład 384 stron i 152 wpisy indeksu. Wspominał też przejściowe składy
+381 stron i brak Perla w MiKTeX. To historia tamtej sesji, nie aktualna
+instrukcja kompilacji; działający Perl z PortableGit opisuje README.
+
+W planie autora głębokie wyniki (klasyfikacja powierzchni, geometryczne
+lematy Walla, h-kobordyzm, twierdzenie Hirzebrucha) pozostawiono jawnie
+zewnętrzne tam, gdzie nie ma pełnego dowodu. Zadań i teorii czterowymiarowej
+nie włączono do zakresu. Trzy dodatkowe pomysły geometryczne zachowano
+w aktualnym planie. Nasz przegląd nowych dowodów ma własne statusy.
+
+### Archiwalne dane audytu 18 rozdziałów
+
+Poniższe wyniki odnoszą się **wyłącznie do `a36c920`, PDF 325 stron**,
+sprawdzonego 5 października 2026 przed rozbudową do 27 rozdziałów.
+Numery rozdziałów i stron są historyczne.
+
+### Pokrycie rozdziałów
+
+Poniższa tabela została sprawdzona na aktualnym źródle, spisie treści PDF
+i historii Git. Tekst każdego rozdziału jest identyczny z jego treścią
+w podanym commicie kończącym odpowiedni przegląd. Późniejsze iteracje
+nie nadpisały tych poprawek. Kolumna rysunków liczy numerowane środowiska
+`figure`; dodatkowe nienumerowane diagramy również były objęte przeglądem
+(np. diagram własności uniwersalnej w rozdziale 3).
+
+| Rozdział | Sekcje | Rysunki | Strony PDF | Commit przeglądu |
+|---|---:|---:|---|---|
+| 1. Rozmaitości różniczkowe | 11 | 15 | 4–45 | `a36c920` |
+| 2. Pola wektorowe, przepływy i pochodna Liego | 7 | 4 | 46–61 | `9bfa3af` |
+| 3. Algebra tensorowa i zewnętrzna | 9 | 1 | 62–80 | `02ea77d` |
+| 4. Grassmanniany, algebra Clifforda i spinory | 7 | 5 | 81–97 | `831cbcc` |
+| 5. Algebra homologiczna: moduły, kompleksy i (ko)homologie | 10 | 1 | 98–114 | `4f017f4` |
+| 6. Homotopia, nakrycia i komórkowe modele przestrzeni | 5 | 6 | 115–128 | `21a3ecb` |
+| 7. Homologia przestrzeni | 8 | 3 | 129–142 | `3e871f0` |
+| 8. Wyższe grupy homotopii i związek z homologią | 7 | 4 | 143–157 | `f7df0ae` |
+| 9. Formy różniczkowe, orientacja i kohomologia de Rhama | 10 | 5 | 158–178 | `c4efcb0` |
+| 10. Tensor metryczny, długość i miara | 8 | 2 | 179–196 | `3735830` |
+| 11. Koneksje i transport równoległy | 6 | 2 | 197–207 | `4c29411` |
+| 12. Geodezyjne, odwzorowanie wykładnicze i zupełność | 6 | 9 | 208–222 | `940a346` |
+| 13. Krzywizna: od transportu równoległego do tensorów | 9 | 8 | 223–255 | `f03c9d3` |
+| 14. Twierdzenie Sarda i transwersalność | 6 | 4 | 256–266 | `bde2d8d` |
+| 15. Zanurzenia i otoczenia podrozmaitości | 7 | 4 | 267–281 | `f3d1458` |
+| 16. Przecięcia, dualność i klasy charakterystyczne | 10 | 4 | 282–298 | `f3222f9` |
+| 17. Teoria Morse'a: punkty krytyczne, uchwyty i przepływ | 7 | 5 | 299–313 | `af689aa` |
+| 18. Kobordyzmy i rachunek uchwytów | 7 | 5 | 314–325 | `7222128` |
+
+Razem: **18 rozdziałów, 140 numerowanych sekcji, 87 numerowanych rysunków,
+325 stron PDF**. Strony w tabeli odnoszą się do końcowego PDF;
+wcześniejsze numery stron w dzienniku opisują stan z dnia danej iteracji.
+
+### Spójność między rozdziałami
+
+- Odsyłacz 2→16 dotyczy przykładu nietrywialności TS² i jest jawnie
+  opisany jako użycie klasycznego twierdzenia, nie podstawa konstrukcji
+  pól wektorowych w rozdziale 2.
+- Odsyłacz 3→5 porównuje już wykonaną faktoryzację przez iloraz
+  z ogólnym twierdzeniem o izomorfizmie; konstrukcja tensorów ma własny dowód.
+- Własności izometrii 10→11,13 są wyraźnie oddzielone jako zapowiedź
+  koneksji i krzywizny. Pozostała część rozdziału 10 nie zależy od tej zapowiedzi.
+- Odsyłacze 11→12,13 porównują przykłady z późniejszym wzorem geodezyjnej
+  i objaśniają, dlaczego zerowanie symboli Christoffela w punkcie
+  nie oznacza płaskości. Wzory koneksji wyprowadzono niezależnie.
+- Odsyłacz 12→13 zapowiada drugą wariację i pola Jacobiego po dowodzie
+  lokalnej minimalności; nie jest używany w tym dowodzie.
+- Zależność 17→18 jest istotna dla identyfikacji homologii Morse'a:
+  potrzebne przestawianie wartości krytycznych zachowuje wybrane pole.
+  Dowód w 18 używa przepływu i braku połączenia, nie homologii Morse'a.
+  Konstrukcja rozkładu i przestawiania uchwytów nie używa wyniku,
+  który ma dzięki niej zostać udowodniony.
+- Uzupełnienia rozdziału 1 zachowują przyjęte znaczenia mapy,
+  struktury różniczkowej i wektora stycznego. Przykład na RP² znajduje
+  się obecnie po zdefiniowaniu przestrzeni stycznej. Odwołania w dowodach
+  modeli rzutowych prowadzą do niezależnego argumentu metrycznego.
+
+Weryfikacja ta dotyczy sensu odwołań naprzód, a nie tylko istnienia
+ich numerów. Szczegółowe konwencje znaków i rachunki są udokumentowane
+przy rozdziałach 3–4, 9, 13 i 16–18 w dzienniku.
+
+### Kontrola techniczna końcowego pliku
+
+- 964 etykiety: brak duplikatów. Wszystkie 860 wystąpień odsyłaczy
+  `ref`, `eqref`, `pageref` i `autoref` mają istniejący cel.
+- Środowiska LaTeX są prawidłowo sparowane w każdym rozdziale.
+  W źródle nie ma znaczników TODO/FIXME/TBD ani przypadkowych ogrodzeń Markdown.
+- W tekście końcowego PDF nie ma nierozwiązanych odsyłaczy `??`.
+  Wszystkie 1028 wewnętrznych linków PDF prowadzi do istniejących stron.
+  Sprawdzono także obecność podpisów wszystkich numerowanych rysunków.
+- PDF w repozytorium jest identyczny z wynikiem ostatniej kompilacji
+  w `build/`. Jej log potwierdza 325 stron, bez błędów, brakujących
+  odsyłaczy, żądań ponownego przebiegu oraz `Overfull` i `Underfull`.
+  Pozostają dwa ostrzeżenia o automatycznej zmianie położenia rysunku
+  z `h` na `ht`. Wbudowany kompilator nie podał potwierdzonego statusu;
+  zweryfikowany skład wykonano lokalnym MiKTeX.
+- SHA-256 końcowego PDF:
+  `12f296ea00243dd915b5ae388288038103f7e60b06c06dbdc1d56f707bbec378`.
+- Sprawdzono `git diff --check`. Do obsługi repozytorium używano
+  `E:\Programs\Windows\PortableGit\cmd\git.exe`.
+
+Kontrole strukturalne nie zastępują czytania dowodów. Dowody i ilustracje
+sprawdzano w poszczególnych iteracjach; końcowa kontrola porównuje ich
+zapisane wyniki z aktualnym źródłem i weryfikuje powiązania między nimi.
+
+
+W tej dawnej wersji pełne h-/s-kobordyzmy, torsja Whiteheada, dalsza
+chirurgia i struktury egzotyczne były dopiero propozycjami. Skrypt jawnie
+korzystał z twierdzeń Brouwera, o funkcji odwrotnej, triangulacji i pełnego
+Cherna–Gaussa–Bonneta. Późniejsza rozbudowa zmienia zakres tekstu, dlatego
+nie wolno przenosić tych dawnych deklaracji na obecny stan bez kontroli.
+
+## Rozdział 5 — podstawy algebry po rozbudowie autora (2026-10-05–06)
+
+Zakres: cały nowy rozdział 5 w wersji `aa6c59a`, cztery sekcje i rysunek
+grafu słów. Moduły pochodzą częściowo z uprzednio sprawdzonego rozdziału 5;
+przeniesienie nie zastępuje kontroli nowych grup, pierścieni i tensorów.
+
+- Uzupełniono brakującą definicję podgrupy i warstwy oraz kryterium równości
+  warstw. Sprawdzono aksjomaty ilorazu i krótkie konsekwencje definicji
+  homomorfizmu, aby pierwsze użycia nie zakładały niepodanych pojęć.
+- W grupie wolnej dopisano, dlaczego stos reprezentuje tę samą klasę słowa;
+  dotychczas argument uzasadniał jednoznaczność, pomijając ten krok istnienia.
+- W iloczynie wolnym jawnie oznaczono rozłączną sumę alfabetów i odwracalne
+  relacje, także dla dwóch kopii tej samej grupy. Odrębność czynników jest
+  istotna: identycznie nazwane elementy nie stają się automatycznie równe.
+- Naprawiono lukę logiczną: odwracalność dopisywania x nie dowodzi sama
+  zgodności z relacją xy. Nowy dowód sprawdza T_y(T_x(u))=T_xy(u), także
+  przypadek skasowania końca stosu. Stąd wynik jest stały na klasie,
+  postać normalna jednoznaczna, a czynniki osadzają się w iloczynie wolnym.
+  Rozpisano też własność uniwersalną używaną w twierdzeniu van Kampena.
+- Dodano przykład dwóch grup rzędu dwa: ich iloczyn wolny jest nieskończony
+  (różne słowa (ab)^k), podczas gdy iloczyn prosty ma cztery elementy.
+- Zastąpiono błędne „zbiliniowa/zbiliniowość” przez „dwuliniowa/dwuliniowość”.
+  Doprecyzowano relację modułu spinorów nad nieprzemienną algebrą Clifforda
+  do przyjętej w tej części konwencji pierścienia przemiennego.
+- Rozpisano izomorfizm tensoru sumy prostej z sumą tensorów i jego odwrotność,
+  w tym skończoność nośnika. Uzupełniono rachunek 3R⊕4R=R dla R=Z/6,
+  wyjaśniający przykład modułu projektywnego, który nie jest wolny.
+- Dla pierścienia nieprzemiennego podano poprawny obiekt wyjściowy:
+  wolną grupę abelową na parach oraz relacje addytywności i zbalansowania.
+  Sam wybór prawego i lewego modułu nie nadaje tensorowi struktury modułu
+  nad tym pierścieniem; zaznaczono tę granicę i odzyskanie wcześniejszej
+  konstrukcji w przypadku przemiennym.
+- Pozostałe dowody (ilorazy pierścieni i modułów, torsja, własność uniwersalna
+  tensoru, (R/I)⊗M, rozszerzenie skalarów i projektywność) sprawdzono,
+  zachowując poprawne rachunki. Rysunek przedstawia poprawny fragment grafu
+  Cayleya, a nie pełną kulę; podpis już to zaznacza, więc nie zmieniano geometrii.
+
+Dodano dalszą lekturę z dokładnym miejscem: Hatcher, *Algebraic Topology*,
+sekcja 1.2, s. 41–42 ([źródło](https://pi.math.cornell.edu/~hatcher/AT/AT.pdf)),
+oraz *The Stacks Project*, sekcja 10.12
+([tensor nad pierścieniem przemiennym](https://stacks.math.columbia.edu/tag/00CV)).
+Pierwsze źródło potwierdza używaną postać normalną i własność uniwersalną;
+drugie konstrukcję tensoru. Dowody w skrypcie pozostają rozpisane samodzielnie.
+
+Zinwentaryzowano ponadto różnice `66b220f`→`19fa283` we wcześniej
+sprawdzonych rozdziałach. Występują w rozdziałach 2–4 oraz 6–19;
+przeniesienie modułów dominuje w rozdziale 6, a w części pozostałych
+zmiany ograniczają się do wpisów indeksu. Sama inwentaryzacja nie została
+oznaczona jako audyt matematyczny tych rozdziałów.
+
+Kontrole zakończone 6 października 2026:
+
+- Wśród źródeł TeX zmieniono wyłącznie rozdział 5; zachowano cztery
+  numerowane sekcje i jeden rysunek, dodano nienumerowaną dalszą lekturę.
+  Wszystkie 31 importów istnieje i występuje dokładnie raz; nie ma
+  osieroconych źródeł. Środowiska wszystkich części są sparowane.
+- Wszystkie 1161 etykiet jest unikalnych; 1053 odsyłacze mają istniejące
+  cele. Sprawdzono także wszystkie lokalne linki czterech plików Markdown.
+- Pełny `latexmk` wraz z indeksem dał 387 stron i potwierdził aktualność
+  wyników. `makeindex` przyjął 152 wpisy bez odrzuceń i ostrzeżeń.
+  Nie ma błędów, niezdefiniowanych odsyłaczy, `Overfull` ani żądania
+  kolejnego przebiegu. Pozostają wcześniejsze dwa komunikaty `h`→`ht`
+  i jedno `Underfull` w rozdziale 23.
+- W PDF nie ma `??`; wszystkie 1428 linków wewnętrznych mają cel
+  na istniejącej stronie. Kontrola uwzględnia zarówno zwykłe, jak
+  i nazwane cele PDF, używane przez hyperref.
+- Obejrzano strony 102–110, w tym graf słów, dowód postaci normalnej,
+  tensor i dalszą lekturę, oraz obie strony indeksu 386–387.
+  Podpisy, wzory i łamanie tekstu są czytelne.
+- Zaktualizowano PDF w katalogu głównym; porównano go bajtowo
+  z wynikiem kompilacji. `git diff --check` przechodzi.
+
+Kolejna iteracja dotyczy różnic rozdziału 2. Nowe rozdziały 20–27
+i dodatek nadal oczekują na nasz audyt; pełny cel pozostaje otwarty.
