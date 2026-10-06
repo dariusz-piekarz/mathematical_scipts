@@ -16,6 +16,7 @@ tex/
   rozdzialy/...                       pozostałe rozdziały, po jednym na plik
   rozdzialy/27-chern-weil.tex          rozdział 27
   dodatki/a-zaleznosci-zewnetrzne.tex  dodatek o wynikach zewnętrznych
+  dodatki/b-homologia-singularna-euler.tex  dodatek o homologii singularnej i cesze Eulera
   indeks.tex                         indeks pojęć
 build/                               ignorowane wyniki pomocnicze
 ```

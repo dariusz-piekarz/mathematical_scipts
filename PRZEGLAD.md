@@ -2735,3 +2735,36 @@ zakończenie) oraz indeks na stronach 386–387. Układ jest czytelny.
 W PDF nie ma `??`, a wszystkie 1432 linki wewnętrzne mają istniejące cele.
 Zaktualizowano główny PDF i potwierdzono zgodność bajtową ze składem.
 `git diff --check` przechodzi. Następna iteracja: dodatki rozdziału 7.
+
+## Rozbudowa z 6 października 2026
+
+Na nową prośbę autora plan z `PLAN_DZIALANIA.md` obejmuje w tym samym PDF
+przyszłe rozdziały o grupach Liego, teorii Hodge'a--Bochnera oraz wymiarze 4.
+Wcześniejszy zapis o osobnym skrypcie dla Freedmana jest historyczny.
+
+- W rozdziałach 2--11 zastąpiono osobne sekcje „Dalsza lektura”
+  krótkimi notkami według wzorca rozdziału 18. Zachowano adresy źródeł.
+- W rozdziałach 22 i 23 dodano rysunki ruchu Whitneya i pary hiperbolicznej.
+  Rozpisano warunki lokalnego ruchu, wpływ przesunięcia uchwytu na formę
+  oraz przejście od lagranżjanu do bazy hiperbolicznej nad $\mathbb Z$.
+  W rozdziale 19 doprecyzowano, że łuki dysku Whitneya omijają inne
+  punkty przecięcia.
+- W rozdziale 25 dodano lemat o ściągalności dopełnienia dysku w sferze
+  homotopijnej wymiaru 5 i schemat redukcji wielokąta powierzchni.
+  Źródło klasyfikacji zmieniono na pełniejszy tekst Putmana, obejmujący
+  także powierzchnie nieorientowalne.
+- W rozdziale 26 wyprowadzono wzór na $p_1$ wiązek Milnora z dwóch wiązek
+  bazowych i rozwinięto wielomian stopnia osiem we wzorze sygnatury.
+  Pełna klasyfikacja powierzchni, geometryczny krok Walla, klasyfikacja
+  Bardena i twierdzenie Hirzebrucha pozostają jawnie wskazanymi wynikami
+  zewnętrznymi.
+- Dodatek B zbiera rachunki homologii singularnej i cechy Eulera.
+  Dodatku o twierdzeniach Brouwera nie dodano: niezmienniczość obszaru
+  nadal jest w skrypcie wynikiem wejściowym, a autor postawił warunek
+  posiadania wcześniej wszystkich narzędzi.
+- Pełne `latexmk` z Perlem z Git złożyło 391 stron wraz z indeksem
+  po połączeniu pięciu nowszych commitów gałęzi zdalnej.
+  Końcowy log nie ma niezdefiniowanych odsyłaczy, błędów ani `Overfull`;
+  pozostał jeden `Underfull` w rozdziale 23. Obejrzano strony 360 i 364
+  z rysunkami, stronę 387 z początkiem dodatku oraz strony 390--391
+  indeksu. Zaktualizowano PDF w katalogu głównym.
