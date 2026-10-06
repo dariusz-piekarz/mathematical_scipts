@@ -3033,3 +3033,27 @@ ostrzeżenia `h`→`ht` i `Underfull` w rozdziale 23. Kontrola obejmuje
 32 importy, 1187 unikalnych etykiet, 1112 odsyłaczy oraz 1484 działające
 linki PDF; brak `??`. Główny PDF zaktualizowano i porównano ze składem.
 Następna iteracja: rozdział 12.
+
+## Rozdział 12 — indeks koneksji i transportu (2026-10-06)
+
+Pobranie zmian potwierdziło aktualność czystego `4793c2e`. Całe źródło
+porównano z `66b220f`: poza czterema wpisami indeksu treść matematyczna,
+bibliografia i oba rysunki są niezmienione. Wpisy wskazują wprowadzenie
+do koneksji, jej definicję afiniczną, torsję i zgodność metryczną oraz
+pochodną pola wzdłuż krzywej.
+
+Przeczytano indeksowane definicje i powiązane argumenty: lokalność koneksji,
+tensorowość torsji, transformację pochodnej wzdłuż krzywej i istnienie
+transportu. W szczególności definicja nie zakłada przedłużalności każdego
+pola wzdłuż krzywej do pola na rozmaitości; obejmuje postoje i samoprzecięcia.
+Istnienie na całym zwartym odcinku jest uzasadnione oszacowaniem liniowego
+równania, nie samym lokalnym twierdzeniem ODE.
+
+Obejrzano strony 208–209, 213, 215, 218 i indeks 396–397. Schemat transportu
+nie sugeruje metryki na podstawie samego rysunku. Przykład sfery przy
+θ=π/3 pokazuje przeciwne wektory po pełnym obiegu, zgodnie z obrotem −π;
+oznaczenia i strzałki są czytelne. Wszystkie wpisy indeksu mają właściwe strony.
+Kontrola struktury: 32 importy, 1187 etykiet bez powtórzeń, 1112 poprawnych
+odsyłaczy, sparowane środowiska i działające lokalne linki dokumentacji.
+Źródła i aktualny PDF 397 stron pozostawiono bez zmian; zapisano wynik
+w planie i dzienniku. Następna iteracja: rozdział 13.
