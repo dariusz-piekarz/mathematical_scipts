@@ -3001,3 +3001,35 @@ Kontrola struktury: 32 importy, 1187 unikalnych etykiet, 1112 poprawnych
 odsyłaczy, sparowane środowiska i działające lokalne linki Markdown.
 Aktualny sprawdzony PDF ma 397 stron; źródła i PDF tej iteracji pozostają
 niezmienione. Zmieniono jedynie plan i dziennik. Następny rozdział: 11.
+
+## Rozdział 11 — metryka i miara, usunięcie powtórzenia indeksu (2026-10-06)
+
+Zakres: dodatki autora do `46fd90c`, na bazie czystego `d39617b`.
+Porównanie z `66b220f` potwierdziło niezmieniony tekst matematyczny,
+bibliografię i obie ilustracje. Autor dodał dziewięć poleceń indeksu
+oraz zmienił format zakończenia. Wpis „Metryka riemannowska” występował
+dwukrotnie na tej samej stronie: przy tytule i przy definicji.
+Usunięto pierwsze polecenie, pozostawiając odsyłacz przy definicji.
+
+Sprawdzono położenie wszystkich pozostałych wpisów i przeczytano
+definicje z uzasadnieniami: dodatniość cofniętej metryki wymaga immersji,
+przeniesienie wymaga dyfeomorfizmu, długość riemannowska nie dotyczy
+ogólnej metryki lorentzowskiej, a odległość między składowymi może być
+nieskończona. Opis gęstości nie wymaga orientacji; miara Hausdorffa ma
+jawną normalizację i konwencję dla stopnia zero. Definicja dywergencji
+poprawnie skleja się także na rozmaitości nieorientowalnej.
+
+Obejrzano strony 190–191, 194–196, 198–200, 202, 205 i 207. Ilustracje
+trzech modeli hiperbolicznych i parametryzowanej powierzchni są czytelne
+oraz zgodne z opisem długości wektorów i wyznacznika Grama.
+Ponowny skład potwierdził identyczność tekstu wszystkich 397 stron
+i zakładek, a także obrazu wszystkich stron rozdziału 11 i indeksu.
+Usunięcie podwójnego polecenia nie zmienia drukowanego indeksu, ponieważ
+program indeksujący już scalał oba wystąpienia na tej samej stronie.
+
+`latexmk` zakończył się kodem 0: 154 wpisy indeksu przyjęte bez odrzuceń,
+brak błędów, niezdefiniowanych referencji i `Overfull`. Pozostają dwa
+ostrzeżenia `h`→`ht` i `Underfull` w rozdziale 23. Kontrola obejmuje
+32 importy, 1187 unikalnych etykiet, 1112 odsyłaczy oraz 1484 działające
+linki PDF; brak `??`. Główny PDF zaktualizowano i porównano ze składem.
+Następna iteracja: rozdział 12.
