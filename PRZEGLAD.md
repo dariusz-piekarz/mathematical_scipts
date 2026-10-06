@@ -2776,3 +2776,133 @@ w tym w pełnym rozmiarze strony z twierdzeniem i dowodem van Kampena.
 Rysunki, tekst dowodu i odsyłacz w przykładzie torusa są czytelne.
 Zaktualizowano główny PDF, sprawdzając zgodność ze składem.
 Następna iteracja: dodatki rozdziału 8.
+
+## Rozbudowa z 6 października 2026
+
+Na nową prośbę autora plan z `PLAN_DZIALANIA.md` obejmuje w tym samym PDF
+przyszłe rozdziały o grupach Liego, teorii Hodge'a--Bochnera oraz wymiarze 4.
+Wcześniejszy zapis o osobnym skrypcie dla Freedmana jest historyczny.
+
+- W rozdziałach 2--11 zastąpiono osobne sekcje „Dalsza lektura”
+  krótkimi notkami według wzorca rozdziału 18. Zachowano adresy źródeł.
+- W rozdziałach 22 i 23 dodano rysunki ruchu Whitneya i pary hiperbolicznej.
+  Rozpisano warunki lokalnego ruchu, wpływ przesunięcia uchwytu na formę
+  oraz przejście od lagranżjanu do bazy hiperbolicznej nad $\mathbb Z$.
+  W rozdziale 19 doprecyzowano, że łuki dysku Whitneya omijają inne
+  punkty przecięcia.
+- W rozdziale 25 dodano lemat o ściągalności dopełnienia dysku w sferze
+  homotopijnej wymiaru 5 i schemat redukcji wielokąta powierzchni.
+  Źródło klasyfikacji zmieniono na pełniejszy tekst Putmana, obejmujący
+  także powierzchnie nieorientowalne.
+- W rozdziale 26 wyprowadzono wzór na $p_1$ wiązek Milnora z dwóch wiązek
+  bazowych i rozwinięto wielomian stopnia osiem we wzorze sygnatury.
+  Pełna klasyfikacja powierzchni, geometryczny krok Walla, klasyfikacja
+  Bardena i twierdzenie Hirzebrucha pozostają jawnie wskazanymi wynikami
+  zewnętrznymi.
+- Dodatek B zbiera rachunki homologii singularnej i cechy Eulera.
+  Dodatku o twierdzeniach Brouwera nie dodano: niezmienniczość obszaru
+  nadal jest w skrypcie wynikiem wejściowym, a autor postawił warunek
+  posiadania wcześniej wszystkich narzędzi.
+- Pełne `latexmk` z Perlem z Git złożyło 391 stron wraz z indeksem
+  po połączeniu pięciu nowszych commitów gałęzi zdalnej.
+  Końcowy log nie ma niezdefiniowanych odsyłaczy, błędów ani `Overfull`;
+  pozostał jeden `Underfull` w rozdziale 23. Obejrzano strony 360 i 364
+  z rysunkami, stronę 387 z początkiem dodatku oraz strony 390--391
+  indeksu. Zaktualizowano PDF w katalogu głównym.
+
+## Korekta po uwagach autora z 6 października 2026
+
+Poprzednie uznanie całej klasyfikacji powierzchni za wynik zewnętrzny
+było zbyt zachowawcze. Krótki dowód Putmana obejmuje tylko przypadek
+orientowalny, ale argument przez drzewo rozpinające, graf dualny i cięcie
+krzywych daje również przypadek nieorientowalny w niewielkiej objętości.
+W rozdziale 25 zastąpiono odsyłacz dowodem: pokazano kryterium
+`χ=2`, istnienie krzywej nierozdzielającej, indukcję po charakterystyce
+oraz lokalną relację `T²#RP² ≅ #³RP²`, sprawdzoną czterema jawnymi
+przekształceniami słowa brzegowego. Jedynym jawnym twierdzeniem
+wejściowym o powierzchniach pozostała triangulowalność topologiczna;
+skorygowano jej opis w dodatku A i aktualny stan w planie.
+
+W rozdziale 22 dodano przestrzenny przykład chirurgii: od dwóch dysków
+na `∂B³`, przez wybór zawęźlonego rdzenia uchwytu, do torusa będącego
+brzegiem otoczenia węzła trójlistnego. Rysunek pokazuje etapy, a tekst
+oddziela typ abstrakcyjnej powierzchni od jej osadzenia. Dopisano także
+powód, dla którego rogata sfera Alexandra wymaga nieskończonej
+konstrukcji dzikiego osadzenia i nie jest wynikiem skończonej gładkiej
+chirurgii.
+
+W rozdziale 23 wyszczególniono cztery brakujące składniki pełnego
+dowodu twierdzenia Walla: chirurgie poniżej środka z normalnym
+obramowaniem, geometryczną realizację lagranżjanu nad `Z[π]`,
+niezmienniczość wraz z torsją oraz formacje wymiaru nieparzystego.
+Nie oznaczono lokalnego rachunku form jako dowodu ogólnego twierdzenia.
+Pełny skład `latexmk` utworzył PDF liczący 393 strony. Końcowy log nie ma
+niezdefiniowanych odsyłaczy, błędów ani `Overfull`; pozostał jeden
+`Underfull` w rozdziale 23. Obejrzano rysunek na stronie 355 oraz dowód
+na stronach 375--376. Indeks powstał bez odrzuconych wpisów.
+
+## Rozwinięcie dowodu Walla — 6 października 2026
+
+Na prośbę autora rozbudowano rozdział 23, zachowując jego etykiety.
+Nowe stwierdzenie wyprowadza współczynniki przecięć z etykietami
+nakrycia uniwersalnego, relację hermitowską i wzory dla
+samoprzecięć. Przykład `1−t` pokazuje, dlaczego zerowa zwykła
+liczba przecięć nie wystarcza do znalezienia dysku Whitneya.
+
+Dotychczasowy lemat o lagranżjanie nad `Z` zastąpiono rachunkiem
+nad `Z[π]`: podano jawne poprawki dualnych wektorów, które zerują
+ich parowania i wartości `μ`, oraz warunek prostoty potrzebny dla
+`L^s`. Osobno udowodniono, że suma formy z formą przeciwną jest
+hiperboliczna. Lemat o pojedynczej chirurgii poniżej środka
+rozpisuje ogólne położenie, stabilną normalną ramę i usunięcie
+stabilizacji w zakresie `2r<n`. Dwa ciągi dokładne śladu pokazują,
+dlaczego chirurgia na prymitywnym wektorze hiperbolicznym usuwa
+parę bez wytworzenia niższego jądra.
+
+W przypadku nieparzystym dodano dwa lagranżjany formacji,
+elementarny ciąg dokładny, jego związek z dwoma sąsiednimi
+jądrami i przykład z cokernelowym `Z/2`. Poprawiono wcześniejsze
+nieścisłe zdanie utożsamiające same jądra z formacją.
+Źródłami audytu były Wall, *Surgery on Compact Manifolds*,
+§§1, 5--6, oraz Ranicki, *An Introduction to Algebraic Surgery*,
+§9. Jawne wejścia pozostają w twierdzeniach 1.2, 5.2,
+1.4, lemacie 5.7 i w realizacji relacji formacji z §6 Walla.
+Dodatek A i plan uaktualniono do tego zakresu.
+
+Po korekcie lewoliniowości odwzorowania przecięcia oraz zapisaniu
+hipotez lematu 5.7 pełny skład `latexmk` dał PDF liczący 396 stron.
+Log nie wykazuje błędów, niezdefiniowanych odsyłaczy ani `Overfull`;
+indeks został utworzony. Obejrzano strony 370--372 z nowym dowodem.
+
+## Scalenie równoległej rozbudowy autora (2026-10-06)
+
+Podczas wysyłania iteracji rozdziału 7 (`b9e863a`) wykryto cztery nowe
+commity: `59fd235`, `9d5e5ff`, `dab4c59` i `46fd90c`. Pobrano je
+i scalono, zachowując oba ciągi historii. Konflikty dotyczyły planu,
+dopisanych wpisów dziennika oraz binarnego PDF. Zachowano oba wpisy
+dziennika, uaktualniono status van Kampena i odbudowano PDF z połączonych
+źródeł; nie wybrano jednostronnie żadnego z gotowych PDF.
+
+Nowe treści autora w rozdziałach 19, 22, 23, 25, 26 oraz dodatkach
+pozostają w kolejce niezależnego audytu. Dodano do niej nowy dodatek B.
+Plany dalszej rozbudowy zachowano jako plany autora; znaczniki wykonania
+oznaczają obecność materiału, nie pozytywny wynik naszego audytu.
+Bieżące iteracje nadal obejmują po jednym rozdziale matematycznym.
+
+Porównanie całych źródeł rozdziałów 2–7 z `b9e863a` potwierdziło,
+że nowa rozbudowa zmienia w nich tylko format bibliografii. Zachowano
+wszystkie jej słowa, tytuły, zakresy lektur i adresy oraz cały wcześniejszy
+tekst matematyczny. Obejrzano nowe zakończenia na stronach 65, 84, 101,
+110, 125 i 139, a także dowód van Kampena i przykład torusa (132–133, 138).
+Nie wykryto utraty poprawek ani problemów czytelności.
+
+Kontrola integracji: 32 importy, 1187 unikalnych etykiet, 1112 poprawnych
+odsyłaczy w źródle, sparowane środowiska i poprawne lokalne linki Markdown.
+Względem `46fd90c` jedyną zmienioną treścią TeX jest rozdział 7;
+cała pozostała treść autora została zachowana. `latexmk` potwierdza
+aktualny skład i kod zakończenia 0: 397 stron, 155 wpisów indeksu,
+bez błędów, niezdefiniowanych referencji, `Overfull` ani zaległego przebiegu.
+Pozostają dwa ostrzeżenia `h`→`ht` i `Underfull` w rozdziale 23.
+Wszystkie 1484 linki wewnętrzne PDF mają cele; brak `??`.
+Obejrzano też spis treści i indeks (strony 1–4, 396–397).
+Główny PDF zastąpiono sprawdzonym składem i porównano sumy SHA-256.

@@ -4,7 +4,7 @@
 
 - Plikiem głównym jest `geometria_i_topologia_rozniczkowa.tex`; ustala kolejność części przez `\input`. Treść edytuj w odpowiednim pliku `tex/rozdzialy/`, a ustawienia wspólne w `tex/preambula.tex`.
 - `geometria_i_topologia_rozniczkowa.pdf` jest ostatnim sprawdzonym składem, a nie osobnym źródłem treści.
-- Skrypt ma obecnie 27 numerowanych rozdziałów i dodatek. Pozostaje jednym dokumentem PDF, ale zgodnie z nowszą prośbą użytkownika z 5 października 2026 źródła rozdziałów są w osobnych plikach. Korzystaj z istniejących etykiet i odsyłaczy; nie zmieniaj ich przy przenoszeniu treści. Nie dodawaj zadań.
+- Skrypt ma obecnie 27 numerowanych rozdziałów i dwa dodatki. Pozostaje jednym dokumentem PDF, ale zgodnie z nowszą prośbą użytkownika z 5 października 2026 źródła rozdziałów są w osobnych plikach. Korzystaj z istniejących etykiet i odsyłaczy; nie zmieniaj ich przy przenoszeniu treści. Nie dodawaj zadań.
 - `tex/wstep.tex` zawiera spis treści i mapę książki, `tex/dodatki/` dodatki, a `tex/indeks.tex` polecenia składu indeksu. Nie kompiluj rozdziałów osobno; kompiluj plik główny z katalogu głównego repozytorium.
 
 ## Cel i sposób pisania
@@ -30,10 +30,12 @@
 
 ## Dokumentowanie pracy
 
-- Jedna iteracja matematyczna obejmuje jeden rozdział. Zmiany i ich uzasadnienia
+- Zwykła iteracja matematyczna obejmuje jeden rozdział, chyba że autor
+  wyznaczy szerszy etap. Zmiany i ich uzasadnienia
   dopisuj do `PRZEGLAD.md`; aktualny zakres, pokrycie i kolejkę aktualizuj wyłącznie
   w `PLAN_DZIALANIA.md`. Nie twórz równoległych list tych samych zadań.
-- Po sprawdzeniu składu aktualizuj wspólny PDF i zatwierdzaj zmiany na gałęzi
-  przeglądu. Przed pracą pobierz zmiany współautora.
+- Po sprawdzeniu składu aktualizuj wspólny PDF, zatwierdzaj ukończony etap
+  na gałęzi przeglądu i wypychaj go na GitHuba. Przed pracą pobierz zmiany
+  współautora.
 - Deklarację autora o ukończeniu rozbudowy odróżniaj od przeprowadzonego audytu.
   Szczegóły budowania i organizacji źródeł są w `README.md`.
