@@ -2618,3 +2618,38 @@ nowy przykład, odsyłacz i bibliografię, oraz indeks na stronach 386–387.
 Układ jest czytelny. Wszystkie 1429 linków wewnętrznych PDF mają poprawne
 cele; nie ma `??`. Zaktualizowano główny PDF, sprawdzono zgodność bajtową
 ze składem i `git diff --check`. Następna iteracja: różnice rozdziału 3.
+
+## Rozdział 3 — kontrola dodatków po rozbudowie (2026-10-06)
+
+Zakres: wszystkie różnice `66b220f`→`19fa283` w algebrze tensorowej.
+Pobranie zmian przed przeglądem potwierdziło aktualną, czystą gałąź `2035433`.
+
+- Porównano całe źródło z wcześniejszą sprawdzoną wersją. Po pominięciu
+  nowych poleceń indeksu, bibliografii i zmiany nazwy rozdziału w jednym
+  odsyłaczu tekst jest identyczny. Nie ma pominiętych nowych dowodów.
+- Odsyłacz do twierdzenia o izomorfizmie prawidłowo wskazuje obecny
+  rozdział 5, twierdzenie 5.3.5. Przeczytano konstrukcję tensoru oraz uwagę
+  o faktoryzacji: dowód używa własnego argumentu R⊆ker L, więc późniejsze
+  twierdzenie jest porównaniem, a nie ukrytą przesłanką. Nadal jawnie
+  rozróżnione są F/R i F/ker L. Nie znaleziono luki wymagającej dopisania.
+- Sprawdzono 11 wpisów indeksu: tensor, własność uniwersalną, kontrakcję,
+  algebry tensorową, symetryczną i zewnętrzną, symetryzator/antysymetryzator,
+  wyznacznik, pole tensorowe, cofnięcie i pochodną Liego. Umieszczono je
+  przy odpowiednich definicjach, a numery stron wynikają ze świeżego składu.
+- Zweryfikowano [notatki Conrada](https://math.stanford.edu/~conrad/diffgeomPage/handouts/tensor.pdf):
+  tytuł, 13 stron i zakres odpowiadają bibliografii. Zachowano odsyłacz
+  do Lee, rozdziały 12 i 14, potwierdzone w
+  [spisie treści autora](https://sites.math.washington.edu/~lee/Books/ISM/front-matter.pdf).
+- Kod rysunku pola równoległoboku i nienumerowanego diagramu własności
+  uniwersalnej jest identyczny z poprzednim audytem. Obejrzano je ponownie
+  na stronach 66 i 78, a także poprawiony przez autora odsyłacz na 67
+  i bibliografię na 84. Oznaczenia, strzałki i rachunek pola 3·2−1·1=5
+  są zgodne z tekstem; ilustracje pozostawiono.
+- Kontrola struktury potwierdziła 31 importów, 1161 unikalnych etykiet,
+  1054 poprawne odsyłacze i sparowanie środowisk. `latexmk` potwierdził
+  aktualność pełnego składu z indeksem (387 stron). Główny PDF jest
+  bajtowo identyczny ze sprawdzonym wynikiem kompilacji; nie wymagał
+  zmiany. Lokalne linki czterech plików Markdown są poprawne.
+
+Nie zmieniano źródeł TeX ani PDF; ta iteracja zapisuje pozytywny wynik
+audytu w dzienniku i planie. Następny jest rozdział 4.
