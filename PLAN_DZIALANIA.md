@@ -220,7 +220,8 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | 11. Metryka, długość i miara | Audyt dodatków zakończony 6 października; PDF 397 stron | Sprawdzone definicje i dwie ilustracje; usunięty powtórzony wpis indeksu |
 | 12. Koneksje i transport | Audyt dodatków zakończony 6 października; bez poprawek treści | Cztery wpisy indeksu, definicje i dwa rysunki sprawdzone; PDF 397 stron |
 | 13. Geodezyjne i zupełność | Audyt dodatków zakończony 6 października; PDF 397 stron | Definicje i dziewięć ilustracji sprawdzone; usunięty powtórzony wpis indeksu |
-| 14–19 | Dawna treść przeszła audyt; różnice po rozbudowie zinwentaryzowano | Przejrzeć różnice rozdziałami, zaczynając od rozdziału 14; uwzględnić nowe commity do `46fd90c` |
+| 14. Krzywizna | Audyt dodatków zakończony 6 października; PDF 397 stron | Indeks i trzy zmiany cieniowania sprawdzone; rozwinięto powiązania dowodu Cherna–Gaussa–Bonneta z rozdziałami 17 i 27 |
+| 15–19 | Dawna treść przeszła audyt; różnice po rozbudowie zinwentaryzowano | Przejrzeć różnice rozdziałami, zaczynając od rozdziału 15; uwzględnić nowe commity do `46fd90c` |
 | 20. h-kobordyzm | Oczekuje | Hipotezy wymiarowe, dyski Whitneya, realizacja ruchów uchwytów |
 | 21. Torsja i s-kobordyzm | Oczekuje | Bazy, strona działania pierścienia, konwencje torsji |
 | 22. Chirurgia geometryczna | Oczekuje | Obramowania, zmiany homotopii i homologii, rysunki |
@@ -228,7 +229,7 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | 24. Ciąg chirurgii | Oczekuje | Normalne niezmienniki, zbiór struktur, sens dokładności |
 | 25. Poincaré | Oczekuje | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm |
 | 26. Sfery Milnora | Oczekuje | Sklejenie wiązek, klasy charakterystyczne, egzotyczność |
-| 27. Chern–Weil | Oczekuje | Normalizacje, transgresja, klasa Eulera i wersja brzegowa |
+| 27. Chern–Weil | Oczekuje | Normalizacje i transgresja; uzasadnić model względnej kohomologii de Rhama przy identyfikacji klasy Eulera, granicę całek wokół zer i wersję brzegową |
 | Dodatek A o wynikach zewnętrznych | Oczekuje | Zgodność katalogu zależności z rzeczywistymi dowodami |
 | Dodatek B: homologia singularna i Euler | Dodany w `59fd235`; audyt oczekuje | Wzory Eulera, skończoność, przykłady i zależności od rozdziałów 8 i 17 |
 | Ponowne różnice w 2–7 | Sprawdzone przy scaleniu `46fd90c`; PDF 397 stron | Wyłącznie format bibliografii; zachowane słowa i źródła, obejrzane zakończenia oraz poprawki rozdziału 7 |

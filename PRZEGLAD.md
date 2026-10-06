@@ -3088,3 +3088,41 @@ i indeksu także jest identyczny. Kontrola 32 importów, 1187 etykiet,
 1112 odsyłaczy i 1484 linków PDF przeszła; brak `??`.
 Główny PDF zaktualizowano i sprawdzono zgodność ze składem.
 Następna iteracja: rozdział 14.
+
+## Rozdział 14 — krzywizna i odsyłacze do Cherna–Weila (2026-10-06)
+
+Pobrano aktualizacje; czyste `fce6df0` było aktualne. Porównanie całego
+źródła z `66b220f` potwierdziło dokładny zakres zmian autora: dziewięć
+poleceń indeksu, jaśniejsze cieniowanie trzech sfer oraz dwa akapity
+odsyłające do nowego rozdziału 27. Pozostała matematyka jest niezmieniona.
+
+Sprawdzono indeksowane definicje, zwłaszcza konwencję krzywizny,
+niezdegenerowane płaszczyzny w sygnaturze lorentzowskiej, znaki drugiej
+formy podstawowej i skrętu narożnika oraz punkty sprzężone wzdłuż
+wybranej geodezyjnej. Zmiany barw nie zmieniły współrzędnych, strzałek
+ani opisów. Obejrzano wszystkie osiem ilustracji; nowe cieniowanie
+na stronach 238, 260 i 263 zachowuje widoczność geometrii i oznaczeń.
+
+Przeczytano wskazane wyniki rozdziału 27 oraz konstrukcję klasy Thoma
+w rozdziale 17. Zamiast ogólnej zapowiedzi „pełnego dowodu” rozpisano
+zależności: zamkniętość i niezależność od koneksji nie identyfikują jeszcze
+klasy Eulera; potrzebne są klasa Thoma, identyfikacja oraz normalizacja
+formy kątowej. Dodano trzy precyzyjne odsyłacze. Wyjaśniono rolę Stokesa
+i sumy indeksów zer pola. To opis mechanizmu zgodnego z oryginalnym
+[dowodem Cherna (1944)](https://webhomes.maths.ed.ac.uk/~v1ranick/papers/chern7.pdf).
+
+Ta kontrola powiązania nie zastępuje pełnego audytu rozdziału 27.
+W jego jedynym wpisie kolejki zapisano do rozwinięcia model względnej
+kohomologii de Rhama i granicę całek wokół zer pola. Dostępny opis
+[Cibotaru–Moroianu, Odd Pfaffian forms](https://arxiv.org/abs/1807.00239)
+zachowano jako źródło do dalszej kontroli transgresji; timeout adresu PDF
+autora nie jest podstawą do usuwania tego źródła.
+
+Kontrola: 32 importy, 1187 unikalnych etykiet, 1115 poprawnych odsyłaczy.
+`latexmk` zakończył się kodem 0: 397 stron, 153 wpisy indeksu, bez błędów,
+niezdefiniowanych referencji, `Overfull` ani zaległego przebiegu. Pozostają
+dwa wcześniejsze ostrzeżenia `h`→`ht` i `Underfull` w rozdziale 23.
+Obejrzano strony 234, 236–238, 248–250, 252, 254, 259–260, 263, 265–266
+i indeks 396–397. Nowe odsyłacze na stronie 265 są czytelne i poprawne.
+Wszystkie 1487 linków wewnętrznych PDF mają cele; brak `??`.
+Zaktualizowano główny PDF i porównano go ze składem. Następny rozdział: 15.
