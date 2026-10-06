@@ -2686,3 +2686,52 @@ aktualizacji pozostała czysta i aktualna (`01cf513`).
 
 Następna iteracja: rozdział 6, w szczególności kompletność po przeniesieniu
 podstaw modułów i tensoru do osobnego rozdziału 5.
+
+## Rozdział 6 — kompletność po wydzieleniu algebry (2026-10-06)
+
+Zakres: różnice autora `66b220f`→`19fa283` w dawnym rozdziale 5,
+obecnie 6. Przed pracą pobrano zmiany; gałąź `d326e06` była aktualna i czysta.
+
+- Sprawdzono przeniesienie sekcji o modułach: wszystkie sześć jej etykiet
+  (sekcja, definicje modułu, torsji i homomorfizmów, przykład podstawowy
+  oraz twierdzenie o izomorfizmie) zachowano dokładnie raz w rozdziale 5.
+  Nie utracono definicji potrzebnych w dowodach homologicznych.
+- Porównano całe pozostałe źródło: dziewięć sekcji zachowuje uprzednio
+  sprawdzone dowody i przykłady. Różnice poza wstępem dotyczą wpisów
+  indeksu i zastąpienia uwagi o tensorze odsyłaczem do rozdziału 5.
+- Przy przeniesieniu usunięto z rozdziału 6 jawną konwencję dotyczącą R.
+  Przywrócono na początku założenie pierścienia przemiennego z jedynką
+  1≠0 oraz R-liniowość odwzorowań, z odsyłaczem do modułów. To potrzebne
+  m.in. dla traktowania Hom_R(M,N) jako R-modułu w kompleksie dualnym;
+  uwaga o pierścieniach nieprzemiennych na końcu poprzedniego rozdziału
+  nie powinna niejawnie zmieniać założeń obecnego.
+- Sprawdzono, że usunięty lokalny opis tensoru ma pełny odpowiednik
+  w rozdziale 5: konstrukcję, własność uniwersalną, rozszerzenie skalarów,
+  tensorowanie odwzorowań oraz zachowanie sum prostych i izomorfizmów.
+  Ostatnie dwie własności, uzupełnione podczas audytu rozdziału 5,
+  uzasadniają rozkłady w dowodzie zmiany współczynników na Q, R i C.
+- Dopisano połączenie dwóch opisów zmiany współczynników:
+  C_n⊗Z/m ≅ C_n/mC_n przez c⊗[a]↦ac+mC_n. Odsyłacz prowadzi
+  do wcześniej udowodnionego wzoru na tensor ilorazu przez ideał.
+  Sprawdzono komutowanie z różniczkami, więc jest to izomorfizm kompleksów.
+  Wyjaśniono, że charakterystyka zero jest założeniem późniejszego
+  prostszego wzoru na homologię, nie warunkiem istnienia tensoru.
+- Przeczytano w powiązaniu dowód redukcji modulo m, przykład nowej klasy
+  stopnia 1, konstrukcję kompleksu dualnego i argument zmiany współczynników
+  w charakterystyce zero. Ich założenia oraz odsyłacze do przeniesionych
+  podstaw są zgodne; nie zmieniano poprawnych rachunków.
+
+Kontrola zakończona: zmieniono wyłącznie źródło rozdziału 6, zachowując
+dziewięć sekcji i niezmieniony kod rysunku. Wszystkie 31 importów,
+1161 unikalnych etykiet i 1057 odsyłaczy są poprawne; środowiska są
+sparowane. Pełny `latexmk` potwierdził aktualny skład 387 stron z indeksem,
+bez błędów, brakujących referencji ani żądania kolejnego przebiegu.
+Pozostają te same dwa ostrzeżenia `h`→`ht` i `Underfull` w rozdziale 23;
+nie ma `Overfull`.
+
+Obejrzano strony 111, 114, 116, 122–123 i 125 (wstęp, diagram długiego
+ciągu, kompleks dualny, redukcję i tensorowanie współczynników oraz
+zakończenie) oraz indeks na stronach 386–387. Układ jest czytelny.
+W PDF nie ma `??`, a wszystkie 1432 linki wewnętrzne mają istniejące cele.
+Zaktualizowano główny PDF i potwierdzono zgodność bajtową ze składem.
+`git diff --check` przechodzi. Następna iteracja: dodatki rozdziału 7.
