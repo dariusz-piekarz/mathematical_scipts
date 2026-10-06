@@ -37,7 +37,8 @@ jej niezależnego przeglądu. Jedna iteracja matematyczna obejmuje jeden rozdzia
 | 3. Algebra tensorowa | Audyt dodatków zakończony 6 października; treść bez poprawek | Poprawny odsyłacz do rozdziału 5, indeks, źródła i ilustracje |
 | 4. Grassmanniany, Clifford i spinory | Audyt dodatków zakończony 6 października; treść bez poprawek | Sprawdzone dwa zmienione rysunki sfer, pozostałe ilustracje i indeks |
 | 6. Algebra homologiczna | Audyt dodatków zakończony 6 października; PDF 387 stron | Zachowana kompletność po przeniesieniu, przywrócone założenie o R i związek redukcji modulo m z tensorem |
-| 7–19 | Dawna treść przeszła audyt; różnice po rozbudowie zinwentaryzowano | Przejrzeć różnice rozdziałami, zaczynając od rozdziału 7 |
+| 7. Homotopia, nakrycia i CW | Audyt dodatków zakończony 6 października; PDF 387 stron | Precyzyjne odsyłacze do grup, końcowa faktoryzacja i przykład torusa |
+| 8–19 | Dawna treść przeszła audyt; różnice po rozbudowie zinwentaryzowano | Przejrzeć różnice rozdziałami, zaczynając od rozdziału 8 |
 | 20. h-kobordyzm | Oczekuje | Hipotezy wymiarowe, dyski Whitneya, realizacja ruchów uchwytów |
 | 21. Torsja i s-kobordyzm | Oczekuje | Bazy, strona działania pierścienia, konwencje torsji |
 | 22. Chirurgia geometryczna | Oczekuje | Obramowania, zmiany homotopii i homologii, rysunki |
@@ -65,7 +66,7 @@ Ta tabela zastępuje `PROPOZYCJE_UZUPELNIEN.md` i listę `do_zrobienia.md`.
 | Nr | Temat | Realizacja i pozostały zakres |
 |---|---|---|
 | 1 | Rozmaitości z brzegiem | Autor dodał definicję, niezależność od map i przykłady w rozdziale 1; nasz audyt uzupełnił przestrzeń styczną. Powiązania z orientacją, transwersalnością, kołnierzem i narożami do kontroli w dalszych rozdziałach. |
-| 2 | Grupy i prezentacje | Są w rozdziale 5: ilorazy, domknięcie normalne, grupa wolna, iloczyn wolny i prezentacja torusa. Postać normalną sprawdzono i uzupełniono w `23483ad`; zastosowanie van Kampena będzie sprawdzone w rozdziale 7. |
+| 2 | Grupy i prezentacje | Są w rozdziale 5: ilorazy, domknięcie normalne, grupa wolna, iloczyn wolny i prezentacja torusa. Postać normalną uzupełniono w `23483ad`; zastosowanie van Kampena sprawdzono w rozdziale 7. |
 | 3 | Redakcja i nawigacja | Jest mapa książki, spis oznaczeń, indeks i rozdzielone źródła. Pozostaje ujednolicenie stylu rozdziału 1 i zakończeń rozdziałów oraz precyzji lektur: autor, tytuł, sekcja i link. Zachować rozbudowane przykłady. |
 | 4 | Zadania z rozwiązaniami | Nie realizować w obecnym zakresie. Dawna propozycja rachunków, kontrprzykładów i wspólnych przykładów (sfera, torus, przestrzenie rzutowe, Möbius) pozostaje odłożona. |
 | 5 | Wyniki zewnętrzne i samowystarczalność | Jest dodatek. Sprawdzić hipotezy i odsyłacze, w tym Brouwera, funkcję odwrotną, triangulację i przeszkodę spinową. Pełna triangulacja oraz porównanie kohomologii Čech i singularnej są osobnymi możliwymi rozszerzeniami, nie krótkimi poprawkami. |

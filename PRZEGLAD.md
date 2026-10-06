@@ -2735,3 +2735,44 @@ zakończenie) oraz indeks na stronach 386–387. Układ jest czytelny.
 W PDF nie ma `??`, a wszystkie 1432 linki wewnętrzne mają istniejące cele.
 Zaktualizowano główny PDF i potwierdzono zgodność bajtową ze składem.
 `git diff --check` przechodzi. Następna iteracja: dodatki rozdziału 7.
+
+## Rozdział 7 — połączenie van Kampena z podstawami grup (2026-10-06)
+
+Zakres: wszystkie różnice autora `66b220f`→`19fa283` w dawnym
+rozdziale 6, obecnie 7. Pobranie zmian potwierdziło czystą i aktualną
+gałąź `83b0896`. Poza dziesięcioma wpisami indeksu jedyna zmiana autora
+zastępuje opis iloczynu wolnego odsyłaczem do nowego rozdziału 5.
+
+- Przeczytano cały dowód van Kampena, wybór dróg do punktu bazowego,
+  argument siatki dla jądra oraz zastosowania do bukietu okręgów,
+  sfer i dołączania komórek. Własność uniwersalna jest potrzebna już
+  przy utworzeniu homomorfizmu z iloczynu wolnego; sama definicja
+  nie była precyzyjnym wskazaniem przeprowadzonego dowodu tej własności.
+- Dodano odsyłacz do `prop:free-product-normal-5` oraz jawne użycie
+  własności uniwersalnej w pierwszym zdaniu dowodu. Zdefiniowano symbole
+  i_U oraz i_V jako inkluzje przecięcia do składników pokrycia.
+  Nie zakłada się iniektywności indukowanych homomorfizmów grup.
+- Rozpisano końcowe przejście: relatory leżą w jądrze, więc ich domknięcie
+  normalne N także; argument siatki daje inkluzję przeciwną. Odwzorowanie
+  gN↦Φ(g) jest dobrze określone, surjektywne i ma trywialne jądro.
+  Stąd wynika izomorfizm z tezy bez niejawnego użycia nieudowodnionego
+  wcześniej grupowego twierdzenia o izomorfizmie.
+- W przykładzie torusa dodano odsyłacz do rachunku prezentacji w rozdziale 5.
+  Rozdzielono role obu miejsc: wcześniejszy przykład oblicza grupę z relacji,
+  a obecne dołączenie komórki wyjaśnia topologiczne pochodzenie tej relacji.
+- Dziesięć wpisów indeksu umieszczono przy właściwych pojęciach. Porównanie
+  potwierdziło, że reszta treści autora, w tym kod sześciu rysunków,
+  zachowuje wersję wcześniejszego audytu. Poprawki tej iteracji dotyczą
+  wyłącznie rozdziału 7.
+
+Kontrola zakończona: 31 importów, 1161 unikalnych etykiet i 1059 odsyłaczy
+bez brakujących celów; środowiska i lokalne linki dokumentacji są poprawne.
+Pełny `latexmk` złożył 387 stron i indeks (152 wpisy), bez błędów,
+niezdefiniowanych referencji, `Overfull` ani żądania kolejnego przebiegu.
+Pozostają dwa wcześniejsze ostrzeżenia `h`→`ht` i `Underfull` w rozdziale 23.
+W PDF nie ma `??`; wszystkie 1434 linki wewnętrzne mają istniejące cele.
+Obejrzano strony 126, 127, 129, 132–134, 136–139 oraz indeks 386–387,
+w tym w pełnym rozmiarze strony z twierdzeniem i dowodem van Kampena.
+Rysunki, tekst dowodu i odsyłacz w przykładzie torusa są czytelne.
+Zaktualizowano główny PDF, sprawdzając zgodność ze składem.
+Następna iteracja: dodatki rozdziału 8.
