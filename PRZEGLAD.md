@@ -2653,3 +2653,36 @@ Pobranie zmian przed przeglądem potwierdziło aktualną, czystą gałąź `2035
 
 Nie zmieniano źródeł TeX ani PDF; ta iteracja zapisuje pozytywny wynik
 audytu w dzienniku i planie. Następny jest rozdział 4.
+
+## Rozdział 4 — kontrola dodatków po rozbudowie (2026-10-06)
+
+Zakres: wszystkie różnice autora `66b220f`→`19fa283` w rozdziale
+o grassmannianach, algebrze Clifforda i spinorach. Gałąź po pobraniu
+aktualizacji pozostała czysta i aktualna (`01cf513`).
+
+- Pełne porównanie źródeł wykazało tylko siedem poleceń indeksu oraz
+  zmianę wypełnienia i obrysu dwóch sfer. Po usunięciu tych dokładnie
+  wskazanych różnic tekst jest identyczny z wcześniej sprawdzoną wersją.
+  Nie ma nowych twierdzeń ani zmienionych dowodów do naprawy.
+- Sprawdzono rysunek 4.2 na stronie 88: wybór orientacji płaszczyzny
+  odpowiada wyborowi jednostkowej normalnej, a punkty n i −n pozostają
+  antypodyczne. Jasnoniebieskie cieniowanie nie zmienia geometrii ani
+  nie zasłania punktów, równika czy etykiet.
+- Sprawdzono rysunek 4.5 na stronie 98 z opisującym go rachunkiem:
+  faza spinora znika po przejściu do prostej zespolonej, a odwzorowanie
+  b prowadzi do sfery. Zaznaczony punkt jest czytelny na powierzchni,
+  podpis i kolejność strzałek odpowiadają konstrukcji. Rysunek zachowano.
+- Obejrzano również pozostałe trzy ilustracje na stronach 86, 92 i 95.
+  Ich źródła nie uległy zmianie; diagram wykresu, rozkład iloczynu
+  Clifforda i dwukrotne nakrycie Spin(2)→SO(2) zachowują poprawne oznaczenia.
+- Siedem wpisów indeksu prowadzi do stron 85, 87, 88, 90, 93, 95 i 98.
+  Dwa wystąpienia hasła „Grupa Spin” wskazują początek rozdziału oraz
+  właściwą definicję; indeks scala je w jedno hasło z dwiema stronami.
+- Potwierdzono strukturę importów, unikalność 1161 etykiet i cele 1054
+  odsyłaczy. `latexmk` potwierdził aktualność składu z indeksem, 387 stron.
+  Główny PDF jest bajtowo identyczny ze sprawdzonym wynikiem kompilacji.
+  Nie zmieniono źródeł matematycznych ani PDF; zapisano wynik w planie
+  i dzienniku. `git diff --check` przechodzi.
+
+Następna iteracja: rozdział 6, w szczególności kompletność po przeniesieniu
+podstaw modułów i tensoru do osobnego rozdziału 5.
