@@ -2777,7 +2777,8 @@ orientowalny, ale argument przez drzewo rozpinające, graf dualny i cięcie
 krzywych daje również przypadek nieorientowalny w niewielkiej objętości.
 W rozdziale 25 zastąpiono odsyłacz dowodem: pokazano kryterium
 `χ=2`, istnienie krzywej nierozdzielającej, indukcję po charakterystyce
-oraz lokalną relację `T²#RP² ≅ #³RP²`. Jedynym jawnym twierdzeniem
+oraz lokalną relację `T²#RP² ≅ #³RP²`, sprawdzoną czterema jawnymi
+przekształceniami słowa brzegowego. Jedynym jawnym twierdzeniem
 wejściowym o powierzchniach pozostała triangulowalność topologiczna;
 skorygowano jej opis w dodatku A i aktualny stan w planie.
 
