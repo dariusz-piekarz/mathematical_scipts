@@ -3240,3 +3240,47 @@ cztery ilustracje i oznaczenia pozostają czytelne. Odtworzony skład
 ma identyczny tekst i zakładki na wszystkich 401 stronach co PDF autora,
 a cały rozdział 15 i indeks są również identyczne pikselowo.
 Nie nadpisywano identycznej treści PDF. Następna iteracja: rozdział 16.
+
+## Rozdział 16 — zanurzenia, otoczenia i kołnierze (2026-10-06)
+
+Przed iteracją pobrano stan gałęzi; `445828a` było aktualne. Porównanie
+ze sprawdzonym `66b220f`, wykonane przed poniższymi poprawkami, wykazało
+sześć nowych poleceń indeksu oraz zmianę formatowania bibliografii.
+Pozostała treść i cztery ilustracje były identyczne.
+
+Sprawdzono definicje odwzorowania właściwego, wiązki normalnej,
+obramowania, kołnierza i funkcji wyczerpującej. Hasło „Osadzenie” jest
+zgodne z konwencją wyjaśnioną w rozdziale 2: oznacza tu zanurzenie
+w sensie *embedding*, czyli immersję będącą homeomorfizmem na obraz.
+Nie utożsamiono go z samą immersją ani nie wprowadzono nowej definicji.
+Sprawdzono ilorazowy model wiązki normalnej, gładkość rzutu przy użyciu
+macierzy Grama oraz ograniczenie promienia dla nieortonormalnego
+obramowania na zwartej podrozmaitości.
+
+Przeczytano dowód kołnierza wraz z podwojeniem i porównaniem kołnierzy.
+Jest zgodny z konstrukcją stycznej przy brzegu: pole ma dodatnią składową
+do wnętrza, lokalne przedłużenia dają jednostronne trajektorie, a ich
+jednoznaczność zapewnia globalną injektywność. Zależna od punktu
+szerokość jest potrzebna dla niezwartych brzegów; stała szerokość wynika
+ze zwartości. Wybór szerokości przez podział jedności jest uzasadniony
+w tekście. Nie dopisywano drugiego dowodu tego samego twierdzenia.
+
+Poprawiono siedem użyć słowa „mapa” dla ogólnych odwzorowań, w tym
+odwzorowań tubularnych i wykładniczych. Zachowano „mapy” oznaczające
+układy współrzędnych. „Włączenie włókna” zastąpiono „inkluzją włókna”.
+Przy argumentacji o grupach homotopii sfery usunięto nieprecyzyjne
+zdanie „ma obraz homotopijny do punktu”: aproksymacja komórkowa daje
+homotopię odwzorowania do odwzorowania stałego. To nie jest twierdzenie
+o ściągalności jego obrazu jako przestrzeni. Wzory i założenia pozostały
+bez zmian; nie dodano etykiet ani odsyłaczy.
+
+Pełny skład `latexmk` zakończył się kodem 0: 401 stron i 154 wpisy indeksu.
+Ostateczny log nie zawiera błędów, niezdefiniowanych odsyłaczy ani
+`Overfull`. Pozostają dwa wcześniejsze ostrzeżenia `h`→`ht` i jeden
+`Underfull` w rozdziale 23. Kontrola struktury: 32 importy, 1190 unikalnych
+etykiet, 1123 odsyłacze ze znanymi celami; w PDF 1496 poprawnych linków
+wewnętrznych i brak `??`. Obejrzano wszystkie strony rozdziału 278–292
+oraz indeks 400–401. Cztery ilustracje (dysk Whitneya, otoczenie tubularne,
+kołnierz i pas przepływu) są zgodne z opisami i czytelne; nowe zdania
+składają się prawidłowo. Zaktualizowano główny PDF.
+Następna iteracja: rozdział 17.
