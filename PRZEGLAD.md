@@ -3057,3 +3057,34 @@ Kontrola struktury: 32 importy, 1187 etykiet bez powtórzeń, 1112 poprawnych
 odsyłaczy, sparowane środowiska i działające lokalne linki dokumentacji.
 Źródła i aktualny PDF 397 stron pozostawiono bez zmian; zapisano wynik
 w planie i dzienniku. Następna iteracja: rozdział 13.
+
+## Rozdział 13 — geodezyjne, zupełność i indeks (2026-10-06)
+
+Na czystym `5bbd500` porównano cały rozdział z `66b220f`. Jedyne dodatki
+to cztery polecenia indeksu; treść, bibliografia i dziewięć ilustracji
+są niezmienione. Usunięto podwójny wpis „Geodezyjna” przy tytule:
+pozostaje wpis przy definicji na tej samej stronie.
+
+Przeczytano indeksowane definicje geodezyjnej, odwzorowania wykładniczego
+i dwóch rodzajów zupełności oraz ich powiązania z konwencjami książki.
+Parametr geodezyjnej jest afiniczny; dziedzina exp jest jawnie określona,
+a jej otwartość i gwiaździstość uzasadnione. Współrzędne normalne wynikają
+z różniczki exp równej identyczności i twierdzenia o funkcji odwrotnej.
+Założenie braku brzegu obowiązuje jawnie w całym rozdziale; przykłady
+lorentzowskie nie są objęte wnioskami Hopfa–Rinowa.
+
+Obejrzano strony 219, 221–224, 226–227, 229, 231–233 i indeks 396–397.
+Wszystkie dziewięć ilustracji jest zgodnych z opisem: lokalne exp,
+odcinek euklidesowy, antypody na sferze, modele hiperboliczne, niezupełna
+przebita płaszczyzna oraz schematy Schwarzschilda i Kerra. Podpisy ostatnich
+rysunków odróżniają rzuty współrzędnych od osadzenia czasoprzestrzeni
+i minimalność riemannowską od maksymalności czasu własnego.
+
+Pełny skład zakończył się kodem 0: 397 stron, 153 przyjęte wpisy indeksu,
+bez błędów, niezdefiniowanych referencji i `Overfull`. Pozostają dwa
+ostrzeżenia `h`→`ht` i `Underfull` w rozdziale 23. Tekst wszystkich stron
+i zakładki są identyczne z poprzednim PDF; obraz stron rozdziału 13
+i indeksu także jest identyczny. Kontrola 32 importów, 1187 etykiet,
+1112 odsyłaczy i 1484 linków PDF przeszła; brak `??`.
+Główny PDF zaktualizowano i sprawdzono zgodność ze składem.
+Następna iteracja: rozdział 14.

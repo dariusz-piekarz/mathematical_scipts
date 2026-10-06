@@ -219,7 +219,8 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | 10. Formy i de Rham | Audyt dodatków zakończony 6 października; bez poprawek treści | Siedem wpisów indeksu, pięć ilustracji i zgodność konwencji przy brzegu; PDF 397 stron |
 | 11. Metryka, długość i miara | Audyt dodatków zakończony 6 października; PDF 397 stron | Sprawdzone definicje i dwie ilustracje; usunięty powtórzony wpis indeksu |
 | 12. Koneksje i transport | Audyt dodatków zakończony 6 października; bez poprawek treści | Cztery wpisy indeksu, definicje i dwa rysunki sprawdzone; PDF 397 stron |
-| 13–19 | Dawna treść przeszła audyt; różnice po rozbudowie zinwentaryzowano | Przejrzeć różnice rozdziałami, zaczynając od rozdziału 13; uwzględnić nowe commity do `46fd90c` |
+| 13. Geodezyjne i zupełność | Audyt dodatków zakończony 6 października; PDF 397 stron | Definicje i dziewięć ilustracji sprawdzone; usunięty powtórzony wpis indeksu |
+| 14–19 | Dawna treść przeszła audyt; różnice po rozbudowie zinwentaryzowano | Przejrzeć różnice rozdziałami, zaczynając od rozdziału 14; uwzględnić nowe commity do `46fd90c` |
 | 20. h-kobordyzm | Oczekuje | Hipotezy wymiarowe, dyski Whitneya, realizacja ruchów uchwytów |
 | 21. Torsja i s-kobordyzm | Oczekuje | Bazy, strona działania pierścienia, konwencje torsji |
 | 22. Chirurgia geometryczna | Oczekuje | Obramowania, zmiany homotopii i homologii, rysunki |
