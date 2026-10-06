@@ -214,7 +214,8 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | 4. Grassmanniany, Clifford i spinory | Audyt dodatków zakończony 6 października; treść bez poprawek | Sprawdzone dwa zmienione rysunki sfer, pozostałe ilustracje i indeks |
 | 6. Algebra homologiczna | Audyt dodatków zakończony 6 października; PDF 387 stron | Zachowana kompletność po przeniesieniu, przywrócone założenie o R i związek redukcji modulo m z tensorem |
 | 7. Homotopia, nakrycia i CW | Audyt dodatków zakończony 6 października; PDF 387 stron | Precyzyjne odsyłacze do grup, końcowa faktoryzacja i przykład torusa |
-| 8–19 | Dawna treść przeszła audyt; różnice po rozbudowie zinwentaryzowano | Przejrzeć różnice rozdziałami, zaczynając od rozdziału 8 |
+| 8. Homologia przestrzeni | Audyt dodatków zakończony 6 października; treść bez poprawek | Sprawdzone pięć wpisów indeksu, definicje, bibliografia i trzy ilustracje; PDF 397 stron |
+| 9–19 | Dawna treść przeszła audyt; różnice po rozbudowie zinwentaryzowano | Przejrzeć różnice rozdziałami, zaczynając od rozdziału 9; uwzględnić nowe commity do `46fd90c` |
 | 20. h-kobordyzm | Oczekuje | Hipotezy wymiarowe, dyski Whitneya, realizacja ruchów uchwytów |
 | 21. Torsja i s-kobordyzm | Oczekuje | Bazy, strona działania pierścienia, konwencje torsji |
 | 22. Chirurgia geometryczna | Oczekuje | Obramowania, zmiany homotopii i homologii, rysunki |

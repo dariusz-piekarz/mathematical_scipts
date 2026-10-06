@@ -2906,3 +2906,35 @@ Pozostają dwa ostrzeżenia `h`→`ht` i `Underfull` w rozdziale 23.
 Wszystkie 1484 linki wewnętrzne PDF mają cele; brak `??`.
 Obejrzano też spis treści i indeks (strony 1–4, 396–397).
 Główny PDF zastąpiono sprawdzonym składem i porównano sumy SHA-256.
+
+## Rozdział 8 — indeks i zachowanie treści homologicznej (2026-10-06)
+
+Zakres: wszystkie dodatki autora do `46fd90c` w dawnym rozdziale 7,
+obecnie 8. Iterację rozpoczęto na czystym `046a813`, po pobraniu
+i scaleniu najnowszych czterech commitów autora.
+
+- Porównano całe źródło z uprzednio sprawdzonym `66b220f`. Po usunięciu
+  dokładnie pięciu nowych poleceń indeksu tekst matematyczny jest identyczny.
+  Ostatnia zmiana w `59fd235` dotyczy wyłącznie formatu „Dalszej lektury”.
+- Zweryfikowano miejsca wpisów: kompleks łańcuchów symplicjalnych,
+  homologia singularna, grupy względne i zredukowane, kompleks komórkowy
+  oraz stopień odwzorowania sfer. Wszystkie prowadzą do właściwych definicji.
+  Przeczytano te definicje z sąsiednimi uzasadnieniami, w tym augmentację
+  dla zbioru pustego, zakres skończonych CW, przypadek stopnia zero
+  w porównaniu homologii i orientacje we wzorze na brzeg komórkowy.
+- Kod wszystkich trzech ilustracji jest niezmieniony. Obejrzano ich skład:
+  zorientowany trójkąt (141), singularny sympleks (142) i kompleks torusa
+  (151). Kierunki brzegów, oznaczenia obrazu sympleksu i zerowe operatory
+  brzegu torusa zgadzają się z tekstem; etykiety są czytelne.
+- Bibliografia nadal wskazuje rozdział 2 książki Hatchera. Nowy dodatek B
+  stanowi osobny zakres audytu; jego obecność nie zmienia ani nie zastępuje
+  definicji rozdziału 8. Nie dodawano ich drugi raz.
+
+Kontrola: 32 importy, 1187 unikalnych etykiet, 1112 rozwiązanych odsyłaczy,
+sparowane środowiska i działające lokalne linki dokumentacji. Skład z tej
+samej wersji źródeł jest aktualny: 397 stron, 155 wpisów indeksu i 1484
+poprawne linki wewnętrzne, bez `??`. Obejrzano strony 140–143, 150–151,
+153 oraz indeks 396–397; odsyłacze indeksu wskazują strony definicji.
+Zmiany tej iteracji obejmują tylko plan i dziennik; nie ma potrzeby zmieniać
+poprawnej treści TeX ani ponownie generować identycznego PDF.
+Następna iteracja: dodatki rozdziału 9.
