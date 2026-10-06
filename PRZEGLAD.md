@@ -3162,3 +3162,38 @@ Indeks zawiera „Kiełek funkcji” na stronie 35. Obejrzano stronę 35,
 strony 372--374 z nowym dowodem i obie strony indeksu 398--399;
 tekst i odsyłacze są czytelne. Pozostaje wcześniejszy `Underfull`
 w rozdziale 23.
+
+## Lemat 5.7 Walla: ciąg, przecięcia i lagranżjan (2026-10-06)
+
+W rozdziale 23 rozwinięto krok niezmienniczości przeszkody przy
+normalnym kobordyzmie. Dla pary $(N,M)$ zapisano hipotezy lematu 5.7,
+w tym możliwie niespójny brzeg, współczynniki w
+$\mathbb Z[\pi_1(Y)]$ i rzeczywistą bazę jądra względnego.
+Rozpisano bazowany ciąg
+$0\to K_{k+1}(N,M)\to K_k(M)\to K_k(N)\to0$,
+konwencję lewego modułu dualnego oraz konkretną mapę dualną
+wyrażoną formą przecięcia. Łuki przecięcia dwóch względnych
+reprezentantów wyjaśniają znikanie formy na obrazie brzegu;
+łuki podwójnych punktów jednego reprezentanta wyjaśniają
+znikanie udoskonalenia kwadratowego. Z tego otrzymano prosty
+lagranżjan i klasę zerową formy brzegowej.
+
+Niezależny audyt wskazał, że abstrakcyjna dualność nie dowodzi
+jeszcze wzoru na mapę dualną. Tekst wymienia więc zgodność
+dualności względnej z formą przecięcia jako osobne wejście
+geometryczne z dowodu lematu 5.7 Walla. Dla niespójnego brzegu
+odwołuje się do nakrycia indukowanego z celu, jak w uwadze 5.2.1.
+Pozostawiono jawne użycie twierdzeń 1.3 i 1.4 oraz lematów 2.4,
+2.6 i 5.5 Walla; zwłaszcza realizacja obramowanych immersji i
+przygotowanie kobordyzmu nie wynikają z samego ciągu dokładnego.
+Osobnego rozwinięcia nadal wymaga kryterium $\mu=0$ dla
+obramowanego osadzenia środkowej sfery w twierdzeniu 5.2.
+
+Źródło porównania: [C. T. C. Wall, *Surgery on Compact Manifolds*,
+§§1–2, 5](https://webhomes.maths.ed.ac.uk/~v1ranick/books/scm.pdf).
+
+Pełny skład `latexmk` zakończył się kodem 0: 401 stron, indeks
+złożony, brak błędów, niezdefiniowanych odsyłaczy i `Overfull`.
+Pozostał wcześniejszy `Underfull` w kroku 1 dowodu na stronie 373.
+Obejrzano strony 374–377 z nowym rachunkiem i następną sekcją;
+wzory, odsyłacze i diagram są czytelne.

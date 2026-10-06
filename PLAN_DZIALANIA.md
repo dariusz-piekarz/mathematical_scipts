@@ -91,9 +91,14 @@ Na dalszą prośbę autora rozdział 23 rozwinięto o rachunek przecięć
 nad `Z[π]`, dowód przejścia od prostego lagranżjanu do bazy
 hiperbolicznej, zgodne obramowanie pojedynczej chirurgii poniżej
 środka, dokładne ciągi po chirurgii i model formacji nieparzystej.
-Kolejna iteracja rozpisuje skończoną indukcję chirurgii poniżej
-środka dla zamkniętego przypadku parzystego, używając modelu CW
-z rozdziału 18 i kontroli odwróconych uchwytów.
+Rozpisano skończoną indukcję chirurgii poniżej środka dla zamkniętego
+przypadku parzystego, używając modelu CW z rozdziału 18 i kontroli
+odwróconych uchwytów. Następnie rozwinięto lemat~5.7 Walla: bazowany
+ciąg jąder, identyfikację dualną, znoszenie przecięć i samoprzecięć
+na brzegu kobordyzmu oraz wynikający z nich prosty lagranżjan.
+Nadal osobnego dowodu wymagają realizacja obramowanych immersji,
+prosta dualność i bazowość oraz przygotowanie kobordyzmu; dokładne
+wejścia Walla wymienia dodatek A.
 Pełnego twierdzenia nadal nie oznaczamy jako dowiedzionego:
 pozostałe wejścia geometryczne wymienia dodatek A.
 Punkt 4 odłożono: skrypt używa
@@ -270,7 +275,7 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | 20. h-kobordyzm | Oczekuje | Hipotezy wymiarowe, dyski Whitneya, realizacja ruchów uchwytów |
 | 21. Torsja i s-kobordyzm | Oczekuje | Bazy, strona działania pierścienia, konwencje torsji |
 | 22. Chirurgia geometryczna | Oczekuje | Obramowania, zmiany homotopii i homologii, rysunki |
-| 23. Przeszkoda chirurgiczna | Rozwinięto dowód Walla i redukcję poniżej środka 6 października; pełny audyt czeka | Sprawdzić pozostałe kroki geometryczne 5.2, 1.4, 5.7 oraz formacje §6 Walla |
+| 23. Przeszkoda chirurgiczna | Rozwinięto redukcję poniżej środka i rachunek lematu 5.7 Walla 6 października; pełny audyt czeka | Dowieść obramowanego osadzania 5.2, przygotowania 1.4, bazowości i dualności 2.4/2.6 oraz formacji §6 Walla |
 | 24. Ciąg chirurgii | Oczekuje | Normalne niezmienniki, zbiór struktur, sens dokładności |
 | 25. Poincaré | Oczekuje | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm |
 | 26. Sfery Milnora | Oczekuje | Sklejenie wiązek, klasy charakterystyczne, egzotyczność |
