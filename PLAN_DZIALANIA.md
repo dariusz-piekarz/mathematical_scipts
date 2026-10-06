@@ -77,6 +77,12 @@ przy jawnym wejściu w postaci twierdzenia o triangulacji powierzchni.
 W punkcie 2 nadal zewnętrzne pozostają geometryczne lematy Walla,
 klasyfikacja Bardena oraz twierdzenie Hirzebrucha. Rozdział 22
 zawiera przestrzenny przykład chirurgii dającej zawęźlony torus.
+Na dalszą prośbę autora rozdział 23 rozwinięto o rachunek przecięć
+nad `Z[π]`, dowód przejścia od prostego lagranżjanu do bazy
+hiperbolicznej, zgodne obramowanie pojedynczej chirurgii poniżej
+środka, dokładne ciągi po chirurgii i model formacji nieparzystej.
+Pełnego twierdzenia nadal nie oznaczamy jako dowiedzionego:
+pozostałe wejścia geometryczne wymienia dodatek A.
 Punkt 4 odłożono: skrypt używa
 niezmienniczości obszaru jako wyniku wejściowego, więc warunek
 samowystarczalności wskazany przez autora nie zachodzi.
@@ -206,7 +212,7 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | 20. h-kobordyzm | Oczekuje | Hipotezy wymiarowe, dyski Whitneya, realizacja ruchów uchwytów |
 | 21. Torsja i s-kobordyzm | Oczekuje | Bazy, strona działania pierścienia, konwencje torsji |
 | 22. Chirurgia geometryczna | Oczekuje | Obramowania, zmiany homotopii i homologii, rysunki |
-| 23. Przeszkoda chirurgiczna | Oczekuje | Formy i dekoracje grup L, zakres twierdzenia Walla |
+| 23. Przeszkoda chirurgiczna | Rozwinięto dowód Walla 6 października; pełny audyt czeka | Sprawdzić geometryczne twierdzenia 1.2, 5.2, 1.4, 5.7 oraz formacje §6 Walla |
 | 24. Ciąg chirurgii | Oczekuje | Normalne niezmienniki, zbiór struktur, sens dokładności |
 | 25. Poincaré | Oczekuje | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm |
 | 26. Sfery Milnora | Oczekuje | Sklejenie wiązek, klasy charakterystyczne, egzotyczność |

@@ -2799,3 +2799,36 @@ Pełny skład `latexmk` utworzył PDF liczący 393 strony. Końcowy log nie ma
 niezdefiniowanych odsyłaczy, błędów ani `Overfull`; pozostał jeden
 `Underfull` w rozdziale 23. Obejrzano rysunek na stronie 355 oraz dowód
 na stronach 375--376. Indeks powstał bez odrzuconych wpisów.
+
+## Rozwinięcie dowodu Walla — 6 października 2026
+
+Na prośbę autora rozbudowano rozdział 23, zachowując jego etykiety.
+Nowe stwierdzenie wyprowadza współczynniki przecięć z etykietami
+nakrycia uniwersalnego, relację hermitowską i wzory dla
+samoprzecięć. Przykład `1−t` pokazuje, dlaczego zerowa zwykła
+liczba przecięć nie wystarcza do znalezienia dysku Whitneya.
+
+Dotychczasowy lemat o lagranżjanie nad `Z` zastąpiono rachunkiem
+nad `Z[π]`: podano jawne poprawki dualnych wektorów, które zerują
+ich parowania i wartości `μ`, oraz warunek prostoty potrzebny dla
+`L^s`. Osobno udowodniono, że suma formy z formą przeciwną jest
+hiperboliczna. Lemat o pojedynczej chirurgii poniżej środka
+rozpisuje ogólne położenie, stabilną normalną ramę i usunięcie
+stabilizacji w zakresie `2r<n`. Dwa ciągi dokładne śladu pokazują,
+dlaczego chirurgia na prymitywnym wektorze hiperbolicznym usuwa
+parę bez wytworzenia niższego jądra.
+
+W przypadku nieparzystym dodano dwa lagranżjany formacji,
+elementarny ciąg dokładny, jego związek z dwoma sąsiednimi
+jądrami i przykład z cokernelowym `Z/2`. Poprawiono wcześniejsze
+nieścisłe zdanie utożsamiające same jądra z formacją.
+Źródłami audytu były Wall, *Surgery on Compact Manifolds*,
+§§1, 5--6, oraz Ranicki, *An Introduction to Algebraic Surgery*,
+§9. Jawne wejścia pozostają w twierdzeniach 1.2, 5.2,
+1.4, lemacie 5.7 i w realizacji relacji formacji z §6 Walla.
+Dodatek A i plan uaktualniono do tego zakresu.
+
+Po korekcie lewoliniowości odwzorowania przecięcia oraz zapisaniu
+hipotez lematu 5.7 pełny skład `latexmk` dał PDF liczący 396 stron.
+Log nie wykazuje błędów, niezdefiniowanych odsyłaczy ani `Overfull`;
+indeks został utworzony. Obejrzano strony 370--372 z nowym dowodem.
