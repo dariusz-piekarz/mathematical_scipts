@@ -2574,3 +2574,47 @@ Kontrole zakończone 6 października 2026:
 
 Kolejna iteracja dotyczy różnic rozdziału 2. Nowe rozdziały 20–27
 i dodatek nadal oczekują na nasz audyt; pełny cel pozostaje otwarty.
+
+## Rozdział 2 — kontrola dodatków po rozbudowie (2026-10-06)
+
+Zakres: wszystkie różnice autora `66b220f`→`19fa283` w rozdziale 2
+oraz ich powiązanie z nowym modelem brzegu w rozdziale 1.
+Przed pracą pobrano aktualizacje; gałąź była aktualna i czysta (`23483ad`).
+
+- Autor zastąpił powtórzoną konwencję półprzestrzeni odsyłaczem, dodał
+  dwa wpisy indeksu i rozwinął bibliografię. Pozostałe dowody oraz cztery
+  ilustracje zachowują treść wcześniejszego audytu.
+- Sprawdzono zgodność nowego odsyłacza z uwagą o dwustronnym przepływie,
+  dowodem rozszerzania izotopii przy końcach czasu i konstrukcją kołnierza.
+  Styczność do brzegu gwarantuje lokalny przepływ zachowujący rozmaitość;
+  skierowanie do wnętrza daje czas jednostronny. Założenie bez brzegu
+  w głównych twierdzeniach pozostaje jawne.
+- Odsyłacz do przestrzeni stycznej prowadzi teraz bezpośrednio do
+  `prop:styczna-brzeg-1`, gdzie znajduje się pełny dowód, zamiast
+  do wstępnej wzmianki w sekcji o definicji brzegu.
+- Dodano przykład X=∂r na [0,∞): pole jest gładkie, lecz krzywa z zera
+  musiałaby być r(t)=t i dla t<0 opuszcza półprostą. Wyjaśnia to różnicę
+  między pełnym T₀M a T₀∂M i zapobiega myleniu lokalnej dwustronności
+  z globalną zupełnością. Nie zmieniono poprawnego argumentu ODE.
+- Zweryfikowano nowe źródła bibliograficzne: stronę wydawcy i
+  [spis treści Lee udostępniony przez autora](https://sites.math.washington.edu/~lee/Books/ISM/front-matter.pdf)
+  oraz [tekst Milnora](https://people.dm.unipi.it/benedett/MILNOR-TDVPOINT.pdf).
+  Rozdziały 8–9 Lee wskazano jako źródło pól, przepływów, zachowania przy
+  brzegu i pól zależnych od czasu, a 12 jako rozszerzenie do tensorów.
+  Przy Milnorze dopisano strony 20–24 (izotopia i przemieszczanie punktów)
+  oraz 32–41 (pola i liczba Eulera). Nie przypisano tym ogólnym odsyłaczom
+  dokładnej wersji naszego twierdzenia o rozszerzaniu izotopii.
+
+Kontrola: zmieniono wyłącznie źródło rozdziału 2; jego cztery środowiska
+rysunków są identyczne z wersją przed tą iteracją. Wszystkie 31 importów,
+1161 unikalnych etykiet i 1054 odsyłacze są poprawne; środowiska sparowane,
+a lokalne linki dokumentacji istnieją. Pełny `latexmk` zakończył skład
+387 stron bez błędów, brakujących referencji ani żądania ponownego przebiegu.
+Pozostały dwa wcześniejsze ostrzeżenia `h`→`ht` i `Underfull` w rozdziale 23;
+nie ma nowych ostrzeżeń ani `Overfull`.
+
+Obejrzano strony 50, 55, 58–59, 61, 63 i 65, obejmujące wszystkie rysunki,
+nowy przykład, odsyłacz i bibliografię, oraz indeks na stronach 386–387.
+Układ jest czytelny. Wszystkie 1429 linków wewnętrznych PDF mają poprawne
+cele; nie ma `??`. Zaktualizowano główny PDF, sprawdzono zgodność bajtową
+ze składem i `git diff --check`. Następna iteracja: różnice rozdziału 3.
