@@ -2938,3 +2938,39 @@ poprawne linki wewnętrzne, bez `??`. Obejrzano strony 140–143, 150–151,
 Zmiany tej iteracji obejmują tylko plan i dziennik; nie ma potrzeby zmieniać
 poprawnej treści TeX ani ponownie generować identycznego PDF.
 Następna iteracja: dodatki rozdziału 9.
+
+## Rozdział 9 — wpisy indeksu i terminologia odwzorowań (2026-10-06)
+
+Zakres: wszystkie dodatki autora do `46fd90c` w dawnym rozdziale 8,
+obecnie 9. Przed pracą pobrano zmiany: `9a783e7` był aktualny i czysty.
+
+- Porównanie całego źródła z `66b220f` przed naszą edycją potwierdziło
+  identyczność tekstu matematycznego po pominięciu pięciu nowych poleceń
+  indeksu; późniejsza zmiana dotyczy wyłącznie formatu bibliografii.
+- Sprawdzono miejsca indeksowania grup homotopii, grup względnych,
+  spójności homotopijnej, słabej równoważności i odwzorowania Hurewicza.
+  Przeczytano definicje z otoczeniem: rozróżnienie grup i zbiorów
+  z wyróżnionym elementem w niskich stopniach, warunek wszystkich punktów
+  bazowych, zakres CW i zgodność orientacji w wersji względnej Hurewicza.
+- Poprawiono 19 wcześniejszych użyć słowa „mapa” oznaczającego ogólne
+  odwzorowanie: m.in. odwzorowania par, charakterystyczne, ilorazowe,
+  dołączające i ściskające równik. Dostosowano rodzaj i odmianę przymiotników.
+  Zgodnie z konwencją projektu „mapa” pozostaje nazwą lokalnego układu
+  współrzędnych; w tych miejscach nie chodziło o takie mapy.
+  Zachowano etykietę `def:mapa-hurewicza`, aby nie naruszyć odsyłaczy.
+- Cztery ilustracje zachowują swój kod. Sprawdzono dwa kierunki sklejania,
+  warunek obrazu brzegu dysku w A, cylinder odwzorowania oraz nakrycie
+  bukietu S¹∨S². W ostatnim przykładzie każda podniesiona sfera daje osobny
+  generator, a odwzorowanie Hurewicza sumuje współczynniki; rysunek i tekst
+  przedstawiają tę samą konstrukcję. Nie wymagały zmiany.
+
+Kontrola: zmieniono wyłącznie źródło rozdziału 9. Wszystkie 32 importy,
+1187 unikalnych etykiet i 1112 odsyłaczy są poprawne; środowiska sparowane.
+Pełny `latexmk` zakończył się kodem 0: 397 stron, indeks ze 155 wpisami,
+bez błędów, niezdefiniowanych referencji, `Overfull` ani zaległego przebiegu.
+Pozostają dwa wcześniejsze ostrzeżenia `h`→`ht` i `Underfull` w rozdziale 23.
+Obejrzano wszystkie strony rozdziału 154–168 i indeks 396–397;
+złożenie terminów i etykiet ilustracji jest czytelne. PDF nie zawiera `??`,
+a wszystkie 1484 linki wewnętrzne mają istniejące cele.
+Zaktualizowano główny PDF i porównano sumy SHA-256 ze składem.
+Następna iteracja: dodatki rozdziału 10.
