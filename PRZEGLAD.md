@@ -3284,3 +3284,58 @@ oraz indeks 400–401. Cztery ilustracje (dysk Whitneya, otoczenie tubularne,
 kołnierz i pas przepływu) są zgodne z opisami i czytelne; nowe zdania
 składają się prawidłowo. Zaktualizowano główny PDF.
 Następna iteracja: rozdział 17.
+
+## Rozdział 17 — dualność, terminologia i rozkład kohomologii wiązki (2026-10-06)
+
+Pobrano stan gałęzi; czyste `55d5c06` było aktualne. Porównanie całego
+rozdziału z audytowanym `66b220f`, po uwzględnieniu dokładnie dwóch
+zmian parametrów cieniowania, wykazało osiem nowych haseł indeksu
+i wspólne formatowanie bibliografii. Pozostała treść była identyczna.
+Sprawdzono definicje wskazywane przez hasła: iloczyny kubkowy i kapowy,
+liczbę przecięcia, system lokalny, klasę charakterystyczną, indeks zera
+i chirurgię. Hasło dualności prowadzi do rozdziału zawierającego jej dowód.
+Konwencja brzegu iloczynu kapowego zgadza się z [Hatcherem,
+*Algebraic Topology*, §3.3, s. 239–240](https://pi.math.cornell.edu/~hatcher/AT/AT.pdf).
+Sprawdzono zgodność kolejności czynników z orientacją przecięcia,
+definicję systemu orientacji przy brzegu przez styczną lub kołnierz
+oraz rozróżnienie indeksu chirurgii i indeksu uchwytu w jej śladzie.
+
+Ujednolicono nazwę „kochain” (również w tytule sekcji) zgodnie z
+`AGENTS.md`. Słowo „mapa” pozostawiono dla układu współrzędnych;
+w kontekstach odwzorowań łańcuchowych, dualności, funkcji sklejających
+i stopnia użyto „odwzorowania”. Etykiety i wzory tych definicji zachowano.
+
+Przy konstrukcji klas Stiefela–Whitneya ujawniono zbyt skrótowy krok:
+sam fakt, że `1,x,…,x^(r−1)` daje bazę we włóknie, nie wyjaśnia jeszcze
+izomorfizmu kohomologii całej wiązki. Poprzednie zdanie o poszczególnych
+„mapach” mogło też sugerować, że każdy składnik oddzielnie jest
+izomorfizmem. Wprowadzono jawny rzut `π:P(E)→M` i łączne odwzorowanie
+`Φ` z sumy grup kohomologii bazy z przesuniętymi stopniami.
+Rozpisano rachunek względny nad komórką, przesunięcie o jej wymiar,
+zgodność z homomorfizmami łączącymi oraz użycie lematu o pięciu
+odwzorowaniach. Dla niezwartych baz wyjaśniono produkty po komórkach,
+skończoność liczby potęg `x` i zakończenie indukcji po `dim M` krokach.
+Jest to rozwinięcie potrzebnego przypadku, bez nowej, powielonej
+definicji klas charakterystycznych.
+
+Porównano konstrukcję z [Hatcherem, *Vector Bundles and K-Theory*,
+§3.1, s. 78–79](https://pi.math.cornell.edu/~hatcher/VBKT/VB.pdf)
+oraz [twierdzeniem 4D.1 w *Algebraic Topology*, s. 432–433](https://pi.math.cornell.edu/~hatcher/AT/AT.pdf).
+Wskazanie tego twierdzenia dodano również w tekście dowodu.
+
+Kontrola końcowa: `latexmk` zakończył się kodem 0, PDF ma 402 strony,
+a indeks 154 wpisy. Usunięto nowe przekroczenie marginesu w zdaniu
+o parach szkieletów. Ostateczny log nie ma błędów, niezdefiniowanych
+odsyłaczy ani `Overfull`; pozostają dwa wcześniejsze ostrzeżenia
+`h`→`ht` i `Underfull` w rozdziale 23. Sprawdzono 32 importy,
+1190 unikalnych etykiet, 1123 rozwiązywalne odsyłacze, 1496 poprawnych
+linków wewnętrznych PDF oraz brak `??`. Nowy tytuł sekcji z „kochainami”
+jest również w spisie treści i zakładkach.
+
+Obejrzano cały rozdział na stronach 293–310 i indeks 401–402.
+Rozwinięty argument na stronie 303 mieści się w kolumnie, a nowe
+cieniowanie sfer na stronach 301 i 308 zachowuje czytelność równika,
+biegunów, trajektorii oraz oznaczeń indeksów. Pozostałe dwa rysunki
+przedstawiają poprawnie komórkę dualną i dodatnie przecięcie na torusie.
+Ich geometrii nie zmieniano. Zaktualizowano wspólny PDF.
+Następna iteracja: rozdział 18.
