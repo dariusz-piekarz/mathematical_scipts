@@ -72,9 +72,12 @@ istnienie rozdziału od jego niezależnego przeglądu.
   twierdzeń zewnętrznych.
 
 Stan po tej iteracji: punkty 0--3 wykonano w źródłach rozdziałów
-i w dodatku B. W punkcie 2 nadal jawnie zewnętrzne pozostają pełna
-klasyfikacja powierzchni, geometryczny krok Walla, klasyfikacja Bardena
-oraz twierdzenie Hirzebrucha. Punkt 4 odłożono: skrypt używa
+i w dodatku B. Klasyfikację powierzchni dowiedziono teraz w rozdziale 25
+przy jawnym wejściu w postaci twierdzenia o triangulacji powierzchni.
+W punkcie 2 nadal zewnętrzne pozostają geometryczne lematy Walla,
+klasyfikacja Bardena oraz twierdzenie Hirzebrucha. Rozdział 22
+zawiera przestrzenny przykład chirurgii dającej zawęźlony torus.
+Punkt 4 odłożono: skrypt używa
 niezmienniczości obszaru jako wyniku wejściowego, więc warunek
 samowystarczalności wskazany przez autora nie zachodzi.
 Punkty 5--7 mają poniżej plan rozdziałów, ale nowe rozdziały

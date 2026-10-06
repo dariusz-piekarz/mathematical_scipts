@@ -2768,3 +2768,33 @@ Wcześniejszy zapis o osobnym skrypcie dla Freedmana jest historyczny.
   pozostał jeden `Underfull` w rozdziale 23. Obejrzano strony 360 i 364
   z rysunkami, stronę 387 z początkiem dodatku oraz strony 390--391
   indeksu. Zaktualizowano PDF w katalogu głównym.
+
+## Korekta po uwagach autora z 6 października 2026
+
+Poprzednie uznanie całej klasyfikacji powierzchni za wynik zewnętrzny
+było zbyt zachowawcze. Krótki dowód Putmana obejmuje tylko przypadek
+orientowalny, ale argument przez drzewo rozpinające, graf dualny i cięcie
+krzywych daje również przypadek nieorientowalny w niewielkiej objętości.
+W rozdziale 25 zastąpiono odsyłacz dowodem: pokazano kryterium
+`χ=2`, istnienie krzywej nierozdzielającej, indukcję po charakterystyce
+oraz lokalną relację `T²#RP² ≅ #³RP²`. Jedynym jawnym twierdzeniem
+wejściowym o powierzchniach pozostała triangulowalność topologiczna;
+skorygowano jej opis w dodatku A i aktualny stan w planie.
+
+W rozdziale 22 dodano przestrzenny przykład chirurgii: od dwóch dysków
+na `∂B³`, przez wybór zawęźlonego rdzenia uchwytu, do torusa będącego
+brzegiem otoczenia węzła trójlistnego. Rysunek pokazuje etapy, a tekst
+oddziela typ abstrakcyjnej powierzchni od jej osadzenia. Dopisano także
+powód, dla którego rogata sfera Alexandra wymaga nieskończonej
+konstrukcji dzikiego osadzenia i nie jest wynikiem skończonej gładkiej
+chirurgii.
+
+W rozdziale 23 wyszczególniono cztery brakujące składniki pełnego
+dowodu twierdzenia Walla: chirurgie poniżej środka z normalnym
+obramowaniem, geometryczną realizację lagranżjanu nad `Z[π]`,
+niezmienniczość wraz z torsją oraz formacje wymiaru nieparzystego.
+Nie oznaczono lokalnego rachunku form jako dowodu ogólnego twierdzenia.
+Pełny skład `latexmk` utworzył PDF liczący 393 strony. Końcowy log nie ma
+niezdefiniowanych odsyłaczy, błędów ani `Overfull`; pozostał jeden
+`Underfull` w rozdziale 23. Obejrzano rysunek na stronie 355 oraz dowód
+na stronach 375--376. Indeks powstał bez odrzuconych wpisów.
