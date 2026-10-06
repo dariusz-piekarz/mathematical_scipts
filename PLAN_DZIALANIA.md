@@ -75,9 +75,14 @@ statusów weryfikacji.
   teorii Freedmana i z dowodem istnienia nieskończenie wielu parami
   nierównoważnych struktur gładkich na $\mathbb R^4$, z jawnym bilansem
   twierdzeń zewnętrznych.
+- [ ] **8. Potok Ricciego.** Przygotować osobny rozdział o ewolucji metryki,
+  przykładach i pierwszych równaniach ewolucyjnych według ścieżki poniżej.
+- [x] **9. Terminologia kiełków.** Ujednolicić tłumaczenie *germ* funkcji
+  jako „kiełek funkcji” w rozdziale 1 i zasadach redakcyjnych `AGENTS.md`.
 
-Stan po tej iteracji: punkty 0--3 wykonano w źródłach rozdziałów
-i w dodatku B. Klasyfikację powierzchni dowiedziono teraz w rozdziale 25
+Stan po tej iteracji: punkty 0--3 i 9 wykonano w źródłach rozdziałów,
+w dodatku B oraz w zasadach terminologicznych. Klasyfikację powierzchni
+dowiedziono teraz w rozdziale 25
 przy jawnym wejściu w postaci twierdzenia o triangulacji powierzchni.
 W punkcie 2 nadal zewnętrzne pozostają geometryczne lematy Walla,
 klasyfikacja Bardena oraz twierdzenie Hirzebrucha. Rozdział 22
@@ -86,12 +91,15 @@ Na dalszą prośbę autora rozdział 23 rozwinięto o rachunek przecięć
 nad `Z[π]`, dowód przejścia od prostego lagranżjanu do bazy
 hiperbolicznej, zgodne obramowanie pojedynczej chirurgii poniżej
 środka, dokładne ciągi po chirurgii i model formacji nieparzystej.
+Kolejna iteracja rozpisuje skończoną indukcję chirurgii poniżej
+środka dla zamkniętego przypadku parzystego, używając modelu CW
+z rozdziału 18 i kontroli odwróconych uchwytów.
 Pełnego twierdzenia nadal nie oznaczamy jako dowiedzionego:
 pozostałe wejścia geometryczne wymienia dodatek A.
 Punkt 4 odłożono: skrypt używa
 niezmienniczości obszaru jako wyniku wejściowego, więc warunek
 samowystarczalności wskazany przez autora nie zachodzi.
-Punkty 5--7 mają poniżej plan rozdziałów, ale nowe rozdziały
+Punkty 5--8 mają poniżej plan rozdziałów, ale nowe rozdziały
 nie zostały jeszcze napisane.
 
 ### Ścieżka: grupy Liego
@@ -139,6 +147,43 @@ Pełny dowód analitycznej teorii eliptycznej wymagałby kolejnego bloku
 o przestrzeniach Sobolewa i operatorach Fredholma; dopóki go nie ma,
 twierdzenie analityczne pozostaje jawnie nazwanym wejściem, a nie
 „dowiedzioną” częścią twierdzenia Hodge'a.
+
+### Ścieżka: potok Ricciego
+
+Zależności: metryka (rozdział 11), koneksja Levi-Civity (rozdział 12),
+krzywizna i tensor Ricciego (rozdział 14) oraz podstawowe rachunki na
+formach z rozdziału 10. W pierwszej wersji rozpatrywać gładkie, zwarte
+rozmaitości bez brzegu. Zaplanować **osobny plik w `tex/rozdzialy/`**;
+docelowy porządek `\input` w pliku głównym:
+`14-krzywizna`, nowy rozdział Hodge–Bochner, nowy rozdział o potoku
+Ricciego, obecny `15-sard-transwersalnosc`. Nazwy plików i numery
+ustalić przy włączeniu, po sprawdzeniu odsyłaczy liczbowych; na etapie
+planowania nie zmieniać istniejącej numeracji.
+
+Zdefiniować rodzinę metryk $g(t)$ przez $\partial_tg=-2\mathrm{Ric}(g)$
+i wyjaśnić geometryczny sens znaku. Rozpisać obliczenia dla metryki
+okrągłej sfery, gdzie promień maleje, i dla płaskiego torusa, który jest
+stacjonarny. Wyprowadzić zmianę elementu objętości oraz krzywizny
+skalarnej, jawnie uzgadniając dwie konwencje laplasjanu: rozdział 14
+używa $\Delta=\operatorname{div}\nabla$, a plan Hodge–Bochner przyjmuje
+$\Delta_H=d\delta+\delta d$ na funkcjach. Przy drugiej konwencji
+$\partial_t\mathrm{Scal}=-\Delta_H\mathrm{Scal}+2|\mathrm{Ric}|^2$.
+W wymiarze dwa skorzystać z udowodnionego już
+w rozdziale 14 wzoru $\mathrm{Ric}=Kg$ i wyprowadzić wynikającą stąd
+postać równania; zależność całkowitego pola od cechy Eulera wyprowadzić dopiero
+po odwołaniu do twierdzenia Gaussa–Bonneta z rozdziału 27. Dla gotowego
+rozwiązania podać i uzasadnić prostą wersję zasady maksimum dla krzywizny
+skalarnej, z dokładnymi założeniami.
+
+Istnienie i jednoznaczność rozwiązania dla krótkiego czasu wymagają
+teorii równań parabolicznych. Pokazać rachunek wiodącego symbolu po
+poprawce DeTurcka oraz odzyskanie potoku Ricciego przez dyfeomorfizmy;
+analityczne twierdzenie o istnieniu dla układu parabolicznego podać jako
+jawny wynik wejściowy, dopóki jego dowód nie zostanie dopisany.
+Zbieżność potoku, analiza osobliwości i twierdzenia Perelmana są odrębnym
+dużym etapem i nie należą do dowodów tego rozdziału. Źródła podstawowe:
+[Hamilton, *Three-manifolds with positive Ricci curvature* (1982)](https://projecteuclid.org/journals/journal-of-differential-geometry/volume-17/issue-2/Three-manifolds-with-positive-Ricci-curvature/10.4310/jdg/1214436922.full),
+[DeTurck, *Deforming metrics in the direction of their Ricci tensors* (1983)](https://projecteuclid.org/journals/journal-of-differential-geometry/volume-18/issue-1/Deforming-metrics-in-the-direction-of-their-Ricci-tensors/10.4310/jdg/1214509286.full).
 
 ### Ścieżka: Freedman, Donaldson i egzotyczne $\mathbb R^4$
 
@@ -225,7 +270,7 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | 20. h-kobordyzm | Oczekuje | Hipotezy wymiarowe, dyski Whitneya, realizacja ruchów uchwytów |
 | 21. Torsja i s-kobordyzm | Oczekuje | Bazy, strona działania pierścienia, konwencje torsji |
 | 22. Chirurgia geometryczna | Oczekuje | Obramowania, zmiany homotopii i homologii, rysunki |
-| 23. Przeszkoda chirurgiczna | Rozwinięto dowód Walla 6 października; pełny audyt czeka | Sprawdzić geometryczne twierdzenia 1.2, 5.2, 1.4, 5.7 oraz formacje §6 Walla |
+| 23. Przeszkoda chirurgiczna | Rozwinięto dowód Walla i redukcję poniżej środka 6 października; pełny audyt czeka | Sprawdzić pozostałe kroki geometryczne 5.2, 1.4, 5.7 oraz formacje §6 Walla |
 | 24. Ciąg chirurgii | Oczekuje | Normalne niezmienniki, zbiór struktur, sens dokładności |
 | 25. Poincaré | Oczekuje | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm |
 | 26. Sfery Milnora | Oczekuje | Sklejenie wiązek, klasy charakterystyczne, egzotyczność |

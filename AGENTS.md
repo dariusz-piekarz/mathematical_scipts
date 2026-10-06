@@ -20,6 +20,7 @@
 - Stosuj „inkluzja” dla odwzorowania włączającego, „funkcja pierwotna” zamiast samego „pierwotna”.
 - W homologiach operator brzegu to `\partial`; `d` jest dla różniczki w kohomologiach i formach.
 - „Kochainy” pozostają tłumaczeniem `cochains`; nie zamieniaj ich na „kołańcuchy”.
+- Angielskie `germ` funkcji lub odwzorowania tłumacz jako „kiełek”.
 - Rozróżniaj zanurzenie i osadzenie zgodnie z ich definicjami w skrypcie.
 
 ## Rysunki i kontrola

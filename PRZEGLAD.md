@@ -2335,7 +2335,7 @@ na klasach krzywych oraz pozostałe różnice rozdziału 1.
 - W stwierdzeniu o wymiarze brzegu zapisano n≥1, aby teza n−1 nie
   obejmowała przyjętej osobno konwencji dla rozmaitości zerowymiarowych.
 - Po konstrukcji przestrzeni stycznej dopisano pełne uzasadnienie modelu
-  przy brzegu: zarodki, niezależność pochodnych od przedłużenia,
+  przy brzegu: kiełki, niezależność pochodnych od przedłużenia,
   reprezentacja każdej derywacji przez n współczynników i odwracalność
   przejść w punkcie brzegu. Wcześniejszą wzmiankę połączono z tym dowodem.
 - Uzasadniono identyfikację T_p(∂M) z podprzestrzenią vⁿ=0 oraz fakt,
@@ -3126,3 +3126,39 @@ Obejrzano strony 234, 236–238, 248–250, 252, 254, 259–260, 263, 265–266
 i indeks 396–397. Nowe odsyłacze na stronie 265 są czytelne i poprawne.
 Wszystkie 1487 linków wewnętrznych PDF mają cele; brak `??`.
 Zaktualizowano główny PDF i porównano go ze składem. Następny rozdział: 15.
+
+## Potok Ricciego, kiełki i dalszy dowód Walla (2026-10-06)
+
+Przed edycją pobrano dziewięć commitów współautora do `7fa73f9`.
+Do jedynej aktualnej listy w `PLAN_DZIALANIA.md` dodano osobny etap
+potoku Ricciego: zależności od krzywizny i analizy, przyszłe miejsce
+w jednym PDF, rachunki na sferze i torusie oraz jawne analityczne
+wejście do istnienia rozwiązania. Plan rozróżnia konwencję laplasjanu
+geometrycznego z rozdziału 14 i laplasjanu Hodge'a.
+
+W rozdziale 1 wszystkie sześć użyć terminu „zarodek” dla *germ*
+funkcji zmieniono na „kiełek”, zgodnie z rozdziałem 2. Dodano wpis
+indeksu i regułę terminologiczną w `AGENTS.md`; etykiety pozostały
+bez zmian. Poprawiono też dawny opis tej konstrukcji w dzienniku.
+
+W rozdziale 23 dodano dowód skończonej redukcji poniżej środka dla
+odwzorowania normalnego zamkniętej rozmaitości parzystowymiarowej, czyli
+odpowiedniego
+przypadku twierdzenia 1.2 Walla. Wykorzystano skończony model CW
+z Twierdzenia~`thm:cw-morse-17`, podwójny walec odwzorowań, podniesienie
+klasy charakterystycznej komórki w homotopii względnej i dokładną
+kontrolę indeksów odwróconych uchwytów. Osobno opisano uchwyt
+indeksu jeden, w tym przedłużenie danych normalnych. Niezależny
+audyt potwierdził zakres spójności i wskazał brak ram przy wstępnym
+łączeniu składowych; brak uzupełniono przed składem.
+
+Podstawą porównania był [Wall, *Surgery on Compact Manifolds*,
+§1](https://webhomes.maths.ed.ac.uk/~v1ranick/books/scm.pdf).
+Pozostałe zależności geometryczne są wyliczone w dodatku A.
+
+Pełny skład `latexmk` zakończył się kodem 0: PDF ma 399 stron,
+bez błędów, niezdefiniowanych odsyłaczy i `Overfull`.
+Indeks zawiera „Kiełek funkcji” na stronie 35. Obejrzano stronę 35,
+strony 372--374 z nowym dowodem i obie strony indeksu 398--399;
+tekst i odsyłacze są czytelne. Pozostaje wcześniejszy `Underfull`
+w rozdziale 23.
