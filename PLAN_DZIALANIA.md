@@ -98,6 +98,12 @@ przypadku parzystego, używając modelu CW z rozdziału 18 i kontroli
 odwróconych uchwytów. Następnie rozwinięto lemat~5.7 Walla: bazowany
 ciąg jąder, identyfikację dualną, znoszenie przecięć i samoprzecięć
 na brzegu kobordyzmu oraz wynikający z nich prosty lagranżjan.
+Kryterium z §5.2 rozpisano od warunku $\mu=0$ po obramowany dysk
+Whitneya, z jawnym użyciem konstrukcji produktowego otoczenia
+z twierdzenia~6.6 i lematów~6.7, 6.13 Milnora. Ten lemat
+geometryczny pozostaje wejściem zewnętrznym; zakres kryterium
+ograniczono do spójnej rozmaitości i właściwego pierścienia
+$\mathbb Z[\pi_1(M)]$.
 Nadal osobnego dowodu wymagają realizacja obramowanych immersji,
 prosta dualność i bazowość oraz przygotowanie kobordyzmu; dokładne
 wejścia Walla wymienia dodatek A.
@@ -280,7 +286,7 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | 20. h-kobordyzm | Oczekuje | Hipotezy wymiarowe, dyski Whitneya, realizacja ruchów uchwytów |
 | 21. Torsja i s-kobordyzm | Oczekuje | Bazy, strona działania pierścienia, konwencje torsji |
 | 22. Chirurgia geometryczna | Oczekuje | Obramowania, zmiany homotopii i homologii, rysunki |
-| 23. Przeszkoda chirurgiczna | Autor rozwinął redukcję poniżej środka i rachunek lematu 5.7 Walla do `308ba4e`; pełny audyt czeka | Sprawdzić nowe dowody i dokładność założeń; osobno ocenić brakujące argumenty obramowanego osadzania 5.2, przygotowania 1.4, bazowości i dualności 2.4/2.6 oraz formacji §6 Walla |
+| 23. Przeszkoda chirurgiczna | Rozwinięto redukcję poniżej środka, rachunek lematu 5.7 i kryterium osadzania 5.2 Walla; pełny audyt rozdziału czeka | Sprawdzić pozostałe wejście Milnora 6.6/6.7/6.13, przygotowanie 1.4, bazowość i dualność 2.4/2.6 oraz formacje §6 Walla |
 | 24. Ciąg chirurgii | Oczekuje | Normalne niezmienniki, zbiór struktur, sens dokładności |
 | 25. Poincaré | Oczekuje | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm |
 | 26. Sfery Milnora | Oczekuje | Sklejenie wiązek, klasy charakterystyczne, egzotyczność |

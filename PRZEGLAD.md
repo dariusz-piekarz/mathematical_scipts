@@ -3339,3 +3339,39 @@ biegunów, trajektorii oraz oznaczeń indeksów. Pozostałe dwa rysunki
 przedstawiają poprawnie komórkę dualną i dodatnie przecięcie na torusie.
 Ich geometrii nie zmieniano. Zaktualizowano wspólny PDF.
 Następna iteracja: rozdział 18.
+
+## Kryterium osadzania Walla 5.2 (2026-10-07)
+
+Przed kontynuacją pobrano i dołączono trzy commity współautora
+`445828a`–`ef084df`, bez naruszania roboczych zmian rozdziału 1.
+W rozdziale 23 rozwinięto przejście od zaniku $\mu(x)$ do
+obramowanego osadzenia środkowej sfery. Rozkład grupy
+$Q_{(-1)^k}(\mathbb Z[\pi])$ na orbity $g\leftrightarrow g^{-1}$
+wyjaśnia, dlaczego samoprzecięcia można sparować z równymi
+etykietami i przeciwnymi znakami. Łuki na dwóch płatach tworzą
+zerową w $\pi_1(M)$ pętlę Whitneya. Dla $k\geq3$ transwersalność
+i nierówności wymiarowe pozwalają wybrać dysk z wnętrzem
+rozłącznym z rdzeniem immersji. Rozpisano zgodność ram na brzegu,
+zanik przeszkody w $\pi_1(V_{2k-2,k-1})$ oraz lokalny ruch.
+
+Pełny model produktowego otoczenia dysku i realizacja ruchu
+korzystają jawnie z [Milnora, *Lectures on the h-Cobordism
+Theorem*, twierdzenie 6.6 i lematy 6.7,
+6.13](https://webhomes.maths.ed.ac.uk/~v1ranick/surgery/hcobord.pdf).
+Adaptację od dwóch osadzonych podrozmaitości do dwóch płatów
+jednej immersji przypisano [Wallowi, §5.2](https://webhomes.maths.ed.ac.uk/~v1ranick/books/scm.pdf).
+Twierdzenie ograniczono do spójnej $M^{2k}$, $k\geq3$, i do
+rzeczywistej obramowanej klasy regularnej homotopii. Wyraźnie
+odróżniono ten przypadek od rachunku form na nakryciu indukowanym
+z innej rozmaitości: uwaga 5.2.1 Walla nie przenosi nań
+kryterium osadzenia. Dla wymiaru cztery kryterium nie jest
+wystarczające.
+
+Odizolowany pełny skład z aktualnej gałęzi i nowymi plikami
+rozdziału 23 oraz dodatku A zakończył się kodem 0. PDF ma
+403 strony, indeks zawiera hasło „Trik Whitneya — samoprzecięcia”
+na stronie 367; finalny log nie ma błędów, niezdefiniowanych
+odsyłaczy ani `Overfull`. Pozostał wcześniejszy `Underfull`
+w kroku 1 dowodu rozdziału 23. Obejrzano strony 366–370,
+w tym trzy strony nowego kryterium i sąsiedni rysunek; wzory,
+odsyłacze i podpisy są czytelne.
