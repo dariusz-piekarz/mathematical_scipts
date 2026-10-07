@@ -3459,3 +3459,34 @@ z `README.md`. Ostatni przebieg zakończył się kodem 0:
 niezdefiniowanych odsyłaczy i `Overfull`. Pozostał dawny
 `Underfull` w rozdziale 23. Wynikowy indeks po ostatnim
 przebiegu ma ten sam skrót SHA-256 co indeks użyty w PDF.
+
+## Uzupełnienie: grupy Liego (2026-10-07)
+
+Dodano osobny rozdział 29 po podstawach o rozmaitościach,
+przepływach, grupach i nakryciach, zachowując numery oraz
+etykiety wcześniejszych rozdziałów. Przykłady
+$\mathrm{GL}(n)$, $\mathrm O(n)$, $\mathrm{SO}(n)$,
+$T^k$ i $\mathrm{SU}(2)$ mają sprawdzenie gładkości działań.
+Dowiedziono identyfikacji algebry Liego z polami
+lewostronnie niezmienniczymi, zupełności tych pól,
+jednoznaczności podgrup jednoparametrowych,
+własności eksponenty i wzoru dla różniczki
+działania adjungowanego.
+
+Nakrycie $\mathrm{SU}(2)\to\mathrm{SO}(3)$ otrzymano
+przez sprzężenie kwaternionowe. Wyprowadzono wzór
+obrotu, surjektywność, jądro $\{\pm1\}$ i lokalne
+równomierne pokrycie, a identyfikację z wcześniejszą
+konstrukcją $\operatorname{Spin}(3)$ pokazano przez
+element objętości algebry Clifforda. Nie korzystano
+z pełnego twierdzenia Liego o całkowaniu dowolnej
+algebry ani z ogólnej formuły BCH.
+
+Pełny skład `pdflatex` i `makeindex` zakończył się kodem 0:
+418 stron, 175 wpisów indeksu, brak błędów, niezdefiniowanych
+odsyłaczy oraz `Overfull`. Indeks po ostatnim przebiegu
+jest identyczny z użytym w PDF. Obejrzano strony 403--409;
+nie ma kolizji wzorów ani końcowej lektury z nagłówkiem
+lub stopką. Pozostał wcześniejszy `Underfull` rozdziału 23
+oraz niewielki `Underfull` akapitu definicji podgrupy
+jednoparametrowej.

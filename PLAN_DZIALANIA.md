@@ -1,7 +1,7 @@
 # Aktualny plan i pokrycie przeglądem
 
 Stan: 7 października 2026. Gałąź: `review/rozdzialy-matematyka`.
-Książka ma 28 rozdziałów i dwa dodatki. Zmiany autora do `19fa283`
+Książka ma 29 rozdziałów i dwa dodatki. Zmiany autora do `19fa283`
 porównano z `66b220f`. Pobrano także cztery nowe commity autora
 `59fd235`–`46fd90c` oraz `5c9dcd0`–`308ba4e`; ich dodatkowy zakres
 kontroli wskazano poniżej. Najnowsze dodatki dotyczą rozdziału 23
@@ -71,7 +71,7 @@ statusów weryfikacji.
   narzędzi brak, odłożyć oba dowody zamiast podawać ukryte założenia.
 - [x] **5. Hodge–Bochner.** Przygotować i dodać osobny rozdział według
   ścieżki poniżej.
-- [ ] **6. Grupy Liego.** Przygotować i dodać osobny rozdział według
+- [x] **6. Grupy Liego.** Przygotować i dodać osobny rozdział według
   ścieżki poniżej.
 - [ ] **7. Wymiar cztery.** Przygotować osobne rozdziały z podstawami
   teorii Freedmana i z dowodem istnienia nieskończenie wielu parami
@@ -121,17 +121,22 @@ Punkt 5 wykonano w osobnym rozdziale 28. Jedynym wejściem
 zewnętrznym w dowodzie rozkładu Hodge'a jest dokładnie nazwane
 twierdzenie analityczne o laplasjanie eliptycznym; wzór Weitzenböcka,
 wniosek Bochnera i rozkład sygnatury wyprowadzono w tekście.
-Punkty 6--8 mają poniżej plan, ale rozdziały nie zostały jeszcze
+Punkt 6 wykonano w osobnym rozdziale 29: przykłady grup,
+algebra Liego, eksponenta, działanie adjungowane i nakrycie
+$\mathrm{SU}(2)\to\mathrm{SO}(3)$ mają własne dowody.
+Punkty 7--8 mają poniżej plan, ale rozdziały nie zostały jeszcze
 włączone do dokumentu.
 
 ### Ścieżka: grupy Liego
 
 Zależności: rozmaitości i różniczka (rozdział 1), przepływy i nawias Liego
-(rozdział 2), grupy (rozdział 5), nakrycia (rozdział 7). Powinien powstać
-**jeden osobny plik w `tex/rozdzialy/`**, włączony przez `\input` po tych
-podstawach i przed zastosowaniami w geometrii wiązek i Cherna–Weila.
-Do istniejących przykładów $\mathrm O(n)$ i $\mathrm{SO}(n)$ dodać
-$\mathrm{GL}(n)$, $\mathrm{SU}(2)$ oraz torus jako grupę Liego.
+(rozdział 2), grupy (rozdział 5), nakrycia (rozdział 7).
+Osobny plik w `tex/rozdzialy/` włączono przez `\input` jako
+rozdział 29, zachowując numery dotychczasowych rozdziałów.
+Merytorycznie można go czytać po tych podstawach i przed
+zastosowaniami w geometrii wiązek oraz Cherna–Weila.
+Do istniejących przykładów $\mathrm O(n)$ i $\mathrm{SO}(n)$
+dodano $\mathrm{GL}(n)$, $\mathrm{SU}(2)$ oraz torus.
 
 Kolejność dowodów: gładkość mnożenia i odwrotności w przykładach;
 utożsamienie algebry Liego z lewostronnie niezmienniczymi polami i
@@ -301,6 +306,7 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | 26. Sfery Milnora | Oczekuje | Sklejenie wiązek, klasy charakterystyczne, egzotyczność |
 | 27. Chern–Weil | Oczekuje | Normalizacje i transgresja; uzasadnić model względnej kohomologii de Rhama przy identyfikacji klasy Eulera, granicę całek wokół zer i wersję brzegową |
 | 28. Hodge–Bochner | Dodany 7 października, bez pełnego audytu całości rozdziału | Jawne wejście analityczne; własne dowody wzoru Weitzenböcka, znikania Bochnera i rozkładu sygnatury; sprawdzić zgodność z przyszłą teorią czterowymiarową |
+| 29. Grupy Liego | Dodany 7 października, bez pełnego audytu całości rozdziału | Przykłady, nawias, eksponenta, działanie adjungowane i jawne nakrycie $\mathrm{SU}(2)\to\mathrm{SO}(3)$; później sprawdzić zastosowania w Chernie–Weilu i wymiarze cztery |
 | Dodatek A o wynikach zewnętrznych | Oczekuje, w tym zmiany do `308ba4e` | Zgodność katalogu zależności z rzeczywistymi dowodami, zwłaszcza nowymi redukcjami Walla |
 | Dodatek B: homologia singularna i Euler | Dodany w `59fd235`; audyt oczekuje | Wzory Eulera, skończoność, przykłady i zależności od rozdziałów 8 i 17 |
 | Ponowne różnice w 2–7 | Sprawdzone przy scaleniu `46fd90c`; PDF 397 stron | Wyłącznie format bibliografii; zachowane słowa i źródła, obejrzane zakończenia oraz poprawki rozdziału 7 |
