@@ -1,7 +1,7 @@
 # Aktualny plan i pokrycie przeglądem
 
 Stan: 7 października 2026. Gałąź: `review/rozdzialy-matematyka`.
-Książka ma 29 rozdziałów i dwa dodatki. Zmiany autora do `19fa283`
+Książka ma 30 rozdziałów i dwa dodatki. Zmiany autora do `19fa283`
 porównano z `66b220f`. Pobrano także cztery nowe commity autora
 `59fd235`–`46fd90c` oraz `5c9dcd0`–`308ba4e`; ich dodatkowy zakres
 kontroli wskazano poniżej. Najnowsze dodatki dotyczą rozdziału 23
@@ -51,13 +51,13 @@ statusów weryfikacji.
 - [x] **1. Rysunki chirurgii.** Dodać rysunki, które wyjaśniają operację
   chirurgiczną, obramowanie, przecięcia i ruch uchwytów; sprawdzić ich
   geometrię, oznaczenia i widoczność w złożonym PDF.
-- [x] **2. Pogłębienie części chirurgicznej i jej zastosowań.** Rozwinąć
-  w istniejących plikach rozdziałów 19–26 trik Whitneya, ruchy uchwytów,
-  twierdzenie Walla, klasyfikację powierzchni, przypadek wymiaru 5 oraz
-  rachunek sygnatury i sfer Milnora. Najpierw ustalić, co już jest
-  dowiedzione, a następnie dopisać brakujące lematy i rachunki. Przy
-  każdym głębokim wyniku oddzielić własny dowód od jasno nazwanego
-  twierdzenia wejściowego; celem jest zmniejszenie liczby takich wejść.
+- [ ] **2. Dokończenie części chirurgicznej i jej zastosowań.** Rozwinięto
+  trik Whitneya, ruchy uchwytów, kryteria Walla, klasyfikację powierzchni,
+  przypadek wymiaru 5 oraz rachunek sygnatury i sfer Milnora, lecz
+  pozostały wskazane niżej wejścia geometryczne Walla i Milnora,
+  klasyfikacja Bardena oraz twierdzenie Hirzebrucha. Dopisywać ich
+  dostępne dowody i rachunki krok po kroku; każdy głęboki wynik,
+  którego dowodu jeszcze nie ma, pozostawić jasno nazwanym wejściem.
 - [x] **3. Dodatek: homologia singularna i cecha Eulera.** Rozwinąć
   przykłady i związki z charakterystyką Eulera, odsyłając do istniejących
   definicji w rozdziale 8 i dualności z rozdziału 17. Nowy tekst umieścić
@@ -77,7 +77,7 @@ statusów weryfikacji.
   teorii Freedmana i z dowodem istnienia nieskończenie wielu parami
   nierównoważnych struktur gładkich na $\mathbb R^4$, z jawnym bilansem
   twierdzeń zewnętrznych.
-- [ ] **8. Potok Ricciego.** Przygotować osobny rozdział o ewolucji metryki,
+- [x] **8. Potok Ricciego.** Przygotować osobny rozdział o ewolucji metryki,
   przykładach i pierwszych równaniach ewolucyjnych według ścieżki poniżej.
 - [x] **9. Terminologia kiełków.** Ujednolicić tłumaczenie *germ* funkcji
   jako „kiełek funkcji” w rozdziale 1 i zasadach redakcyjnych `AGENTS.md`.
@@ -87,11 +87,11 @@ statusów weryfikacji.
   $\Z^\times=\{-1,1\}\neq\Z_*$. Sprawdzić wszystkie istniejące
   wystąpienia i utrwalić regułę w `AGENTS.md`.
 
-Stan po tej iteracji: punkty 0--3 oraz 9--10 wykonano w źródłach rozdziałów,
+Stan wcześniejszych uzupełnień: punkty 0, 1, 3 oraz 9--10 wykonano w źródłach rozdziałów,
 w dodatku B oraz w zasadach terminologicznych. Klasyfikację powierzchni
-dowiedziono teraz w rozdziale 25
+dowiedziono w rozdziale 25
 przy jawnym wejściu w postaci twierdzenia o triangulacji powierzchni.
-W punkcie 2 nadal zewnętrzne pozostają geometryczne lematy Walla,
+Punkt 2 pozostaje otwarty: zewnętrzne pozostają geometryczne lematy Walla,
 klasyfikacja Bardena oraz twierdzenie Hirzebrucha. Rozdział 22
 zawiera przestrzenny przykład chirurgii dającej zawęźlony torus.
 Na dalszą prośbę autora rozdział 23 rozwinięto o rachunek przecięć
@@ -124,8 +124,10 @@ wniosek Bochnera i rozkład sygnatury wyprowadzono w tekście.
 Punkt 6 wykonano w osobnym rozdziale 29: przykłady grup,
 algebra Liego, eksponenta, działanie adjungowane i nakrycie
 $\mathrm{SU}(2)\to\mathrm{SO}(3)$ mają własne dowody.
-Punkty 7--8 mają poniżej plan, ale rozdziały nie zostały jeszcze
-włączone do dokumentu.
+Punkt 8 wykonano w osobnym rozdziale 30: od przykładów
+sfery i torusa tekst prowadzi przez równania ewolucyjne
+do poprawki DeTurcka, z nazwanym wejściem parabolicznym.
+Punkt 7 pozostaje w przygotowaniu.
 
 ### Ścieżka: grupy Liego
 
@@ -180,12 +182,10 @@ twierdzenie analityczne pozostaje jawnie nazwanym wejściem, a nie
 Zależności: metryka (rozdział 11), koneksja Levi-Civity (rozdział 12),
 krzywizna i tensor Ricciego (rozdział 14) oraz podstawowe rachunki na
 formach z rozdziału 10. W pierwszej wersji rozpatrywać gładkie, zwarte
-rozmaitości bez brzegu. Zaplanować **osobny plik w `tex/rozdzialy/`**;
-docelowy porządek `\input` w pliku głównym:
-`14-krzywizna`, nowy rozdział Hodge–Bochner, nowy rozdział o potoku
-Ricciego, obecny `15-sard-transwersalnosc`. Nazwy plików i numery
-ustalić przy włączeniu, po sprawdzeniu odsyłaczy liczbowych; na etapie
-planowania nie zmieniać istniejącej numeracji.
+rozmaitości bez brzegu. Osobny plik w `tex/rozdzialy/`
+włączono jako rozdział 30, zachowując numery i odsyłacze
+dotychczasowych rozdziałów. Merytorycznie można go czytać
+po rozdziałach o krzywiźnie i teorii Hodge'a.
 
 Zdefiniować rodzinę metryk $g(t)$ przez $\partial_tg=-2\mathrm{Ric}(g)$
 i wyjaśnić geometryczny sens znaku. Rozpisać obliczenia dla metryki
@@ -198,7 +198,7 @@ $\partial_t\mathrm{Scal}=-\Delta_H\mathrm{Scal}+2|\mathrm{Ric}|^2$.
 W wymiarze dwa skorzystać z udowodnionego już
 w rozdziale 14 wzoru $\mathrm{Ric}=Kg$ i wyprowadzić wynikającą stąd
 postać równania; zależność całkowitego pola od cechy Eulera wyprowadzić dopiero
-po odwołaniu do twierdzenia Gaussa–Bonneta z rozdziału 27. Dla gotowego
+po odwołaniu do twierdzenia Gaussa–Bonneta z rozdziału 14. Dla gotowego
 rozwiązania podać i uzasadnić prostą wersję zasady maksimum dla krzywizny
 skalarnej, z dokładnymi założeniami.
 
@@ -307,6 +307,7 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | 27. Chern–Weil | Oczekuje | Normalizacje i transgresja; uzasadnić model względnej kohomologii de Rhama przy identyfikacji klasy Eulera, granicę całek wokół zer i wersję brzegową |
 | 28. Hodge–Bochner | Dodany 7 października, bez pełnego audytu całości rozdziału | Jawne wejście analityczne; własne dowody wzoru Weitzenböcka, znikania Bochnera i rozkładu sygnatury; sprawdzić zgodność z przyszłą teorią czterowymiarową |
 | 29. Grupy Liego | Dodany 7 października, bez pełnego audytu całości rozdziału | Przykłady, nawias, eksponenta, działanie adjungowane i jawne nakrycie $\mathrm{SU}(2)\to\mathrm{SO}(3)$; później sprawdzić zastosowania w Chernie–Weilu i wymiarze cztery |
+| 30. Potok Ricciego | Dodany 7 października, bez pełnego audytu całości rozdziału | Ewolucja skalara i pola powierzchni, zasada maksimum, poprawka DeTurcka; istnienie i jednoznaczność PDE pozostają jawnym wejściem analitycznym |
 | Dodatek A o wynikach zewnętrznych | Oczekuje, w tym zmiany do `308ba4e` | Zgodność katalogu zależności z rzeczywistymi dowodami, zwłaszcza nowymi redukcjami Walla |
 | Dodatek B: homologia singularna i Euler | Dodany w `59fd235`; audyt oczekuje | Wzory Eulera, skończoność, przykłady i zależności od rozdziałów 8 i 17 |
 | Ponowne różnice w 2–7 | Sprawdzone przy scaleniu `46fd90c`; PDF 397 stron | Wyłącznie format bibliografii; zachowane słowa i źródła, obejrzane zakończenia oraz poprawki rozdziału 7 |

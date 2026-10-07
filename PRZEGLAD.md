@@ -3490,3 +3490,38 @@ nie ma kolizji wzorów ani końcowej lektury z nagłówkiem
 lub stopką. Pozostał wcześniejszy `Underfull` rozdziału 23
 oraz niewielki `Underfull` akapitu definicji podgrupy
 jednoparametrowej.
+
+## Uzupełnienie: potok Ricciego (2026-10-07)
+
+Dodano osobny rozdział 30 dla gładkich zwartych
+rozmaitości bez brzegu. Równanie
+$\partial_tg=-2\operatorname{Ric}(g)$ powiązano ze
+zmianą długości i obliczono rozwiązania dla metryk
+Einsteina, w szczególności kurczącej się sfery
+i stacjonarnego płaskiego torusa. Rozpisano zmianę
+miary, ściągniętą drugą tożsamość Bianchiego,
+wariację skalara oraz
+$\partial_t\operatorname{Scal}
+=\Delta_g\operatorname{Scal}+2|\operatorname{Ric}|^2$.
+Uzgodniono znak laplasjanu z rozdziałem Hodge'a.
+
+W wymiarze dwa wyprowadzono równanie dla krzywizny
+Gaussa i, korzystając z wcześniejszego twierdzenia
+Gaussa--Bonneta, liniową zmianę całkowitego pola.
+Prosta zasada maksimum dotyczy już istniejącego
+gładkiego rozwiązania. Dla krótkiego czasu pokazano
+rachunek głównego symbolu po poprawce DeTurcka
+oraz konstrukcję dyfeomorfizmów cofających metrykę.
+Lokalne istnienie i jednoznaczność układu parabolicznego,
+także równania ciepła odwzorowań przy zmiennej
+metryce dziedziny, pozostają nazwanym wejściem
+zewnętrznym opisanym także w dodatku A.
+
+Pełny skład `pdflatex` i `makeindex` dał 424 strony oraz
+176 przyjętych wpisów indeksu. Po ponownym przebiegu
+nie ma błędów, niezdefiniowanych odsyłaczy ani `Overfull`;
+indeks użyty w PDF jest identyczny z ostatnim wynikiem
+`makeindex`. Obejrzano strony 410, 412, 414 i 415,
+w tym poprawkę DeTurcka oraz końcową „Dalszą lekturę”.
+Pozostały wcześniejsze dwa ostrzeżenia `Underfull`
+z rozdziałów 23 i 29.
