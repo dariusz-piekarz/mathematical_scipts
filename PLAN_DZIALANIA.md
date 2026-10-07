@@ -1,7 +1,7 @@
 # Aktualny plan i pokrycie przeglądem
 
-Stan: 6 października 2026. Gałąź: `review/rozdzialy-matematyka`.
-Książka ma 27 rozdziałów i dwa dodatki. Zmiany autora do `19fa283`
+Stan: 7 października 2026. Gałąź: `review/rozdzialy-matematyka`.
+Książka ma 28 rozdziałów i dwa dodatki. Zmiany autora do `19fa283`
 porównano z `66b220f`. Pobrano także cztery nowe commity autora
 `59fd235`–`46fd90c` oraz `5c9dcd0`–`308ba4e`; ich dodatkowy zakres
 kontroli wskazano poniżej. Najnowsze dodatki dotyczą rozdziału 23
@@ -69,7 +69,7 @@ statusów weryfikacji.
   sfer; dla drugiego sprawdzić homologię lokalną, dualność i każdy krok
   przejścia od lokalnej homotopii do otwartości obrazu. Jeśli tych
   narzędzi brak, odłożyć oba dowody zamiast podawać ukryte założenia.
-- [ ] **5. Hodge–Bochner.** Przygotować i dodać osobny rozdział według
+- [x] **5. Hodge–Bochner.** Przygotować i dodać osobny rozdział według
   ścieżki poniżej.
 - [ ] **6. Grupy Liego.** Przygotować i dodać osobny rozdział według
   ścieżki poniżej.
@@ -117,8 +117,12 @@ pozostałe wejścia geometryczne wymienia dodatek A.
 Punkt 4 odłożono: skrypt używa
 niezmienniczości obszaru jako wyniku wejściowego, więc warunek
 samowystarczalności wskazany przez autora nie zachodzi.
-Punkty 5--8 mają poniżej plan rozdziałów, ale nowe rozdziały
-nie zostały jeszcze napisane.
+Punkt 5 wykonano w osobnym rozdziale 28. Jedynym wejściem
+zewnętrznym w dowodzie rozkładu Hodge'a jest dokładnie nazwane
+twierdzenie analityczne o laplasjanie eliptycznym; wzór Weitzenböcka,
+wniosek Bochnera i rozkład sygnatury wyprowadzono w tekście.
+Punkty 6--8 mają poniżej plan, ale rozdziały nie zostały jeszcze
+włączone do dokumentu.
 
 ### Ścieżka: grupy Liego
 
@@ -270,7 +274,7 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | Zakres | Stan | Następna kontrola |
 |---|---|---|
 | Podział źródeł i importy | Zakończono, `9148128` | Kontrola regresji przy dalszych zmianach |
-| 1. Rozmaitości | Dodatki sprawdzone; 7 października dołączono i skontrolowano robocze rozwinięcie identyfikacji przestrzeni stycznych | Poprawiono zdanie o brzegu $S^1$, wykazano bijektywność i niezależność $\Phi_\varphi$ od mapy; zachowano dotychczasową etykietę definicji brzegu i termin „kiełek” |
+| 1. Rozmaitości | Dodatki sprawdzone; 7 października dołączono i skontrolowano robocze rozwinięcie identyfikacji przestrzeni stycznych; autor dopisał liniowość $\Phi$ i dwa rysunki funkcji odcinającej | Nowe zmiany autora uwzględniono w składzie; nie stanowią pełnego ponownego audytu rozdziału |
 | 5. Algebra abstrakcyjna | Audyt zakończony 6 października; PDF 387 stron | Uzupełnione dowody, sprawdzony graf słów, indeks i odsyłacze |
 | 2. Pola wektorowe | Audyt dodatków zakończony 6 października; PDF 387 stron | Sprawdzone powiązanie z brzegiem, przykład przepływu jednostronnego, bibliografia i rysunki |
 | 3. Algebra tensorowa | Audyt dodatków zakończony 6 października; treść bez poprawek | Poprawny odsyłacz do rozdziału 5, indeks, źródła i ilustracje |
@@ -296,6 +300,7 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | 25. Poincaré | Oczekuje | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm |
 | 26. Sfery Milnora | Oczekuje | Sklejenie wiązek, klasy charakterystyczne, egzotyczność |
 | 27. Chern–Weil | Oczekuje | Normalizacje i transgresja; uzasadnić model względnej kohomologii de Rhama przy identyfikacji klasy Eulera, granicę całek wokół zer i wersję brzegową |
+| 28. Hodge–Bochner | Dodany 7 października, bez pełnego audytu całości rozdziału | Jawne wejście analityczne; własne dowody wzoru Weitzenböcka, znikania Bochnera i rozkładu sygnatury; sprawdzić zgodność z przyszłą teorią czterowymiarową |
 | Dodatek A o wynikach zewnętrznych | Oczekuje, w tym zmiany do `308ba4e` | Zgodność katalogu zależności z rzeczywistymi dowodami, zwłaszcza nowymi redukcjami Walla |
 | Dodatek B: homologia singularna i Euler | Dodany w `59fd235`; audyt oczekuje | Wzory Eulera, skończoność, przykłady i zależności od rozdziałów 8 i 17 |
 | Ponowne różnice w 2–7 | Sprawdzone przy scaleniu `46fd90c`; PDF 397 stron | Wyłącznie format bibliografii; zachowane słowa i źródła, obejrzane zakończenia oraz poprawki rozdziału 7 |

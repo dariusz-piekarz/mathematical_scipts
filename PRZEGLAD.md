@@ -3420,3 +3420,42 @@ indeks złożony, brak błędów, niezdefiniowanych odsyłaczy
 i `Overfull` w finalnym logu. Obejrzano strony 15, 21 i 40:
 definicje $\C_*$ i $\R_*$, wzory przestrzeni rzutowych
 oraz funkcję przejścia wstęgi Möbiusa są czytelne.
+
+## Uzupełnienie: teoria Hodge'a i intuicja operatorów (2026-10-07)
+
+Dodano osobny rozdział 28 bez zmiany etykiet ani numerów
+dotychczasowych rozdziałów. Gwiazdę Hodge'a objaśniono jako
+przejście do prostopadłych kierunków z orientacją i skalą
+wybraną przez metrykę. Kodyferencjał powiązano z ujemną
+dywergencją, a laplasjan Hodge'a z jednoczesnym pomiarem
+zamknięcia i współzamknięcia form. Harmoniczny przedstawiciel
+klasy ma najmniejszą normę $L^2$; rachunek tej minimalności
+umieszczono przy izomorfizmie z kohomologią de Rhama.
+
+Własnymi dowodami objęto wzory dla gwiazdy, sprzężenie
+$\delta$ z $\dd$, eliptyczność symbolu, konsekwencje rozkładu,
+wzór Weitzenböcka dla $1$-form, zintegrowaną tożsamość
+Bochnera i wnioski dla sfery oraz torusa. Istnienie gładkiego
+rozwiązania równania $\Delta_Hu=f$ prostopadłego do jądra
+zależy od analitycznej teorii eliptycznej; jego dokładne
+założenia, status i źródło podano w rozdziale i dodatku A.
+Połączono rozkład $2$-form w wymiarze cztery z rzeczywistym
+rozszerzeniem całkowitej formy przecięcia; nie utożsamiono
+jej milcząco z parowaniem form de Rhama.
+
+Autor równolegle rozwinął liniowość odwzorowania $\Phi$ w
+rozdziale 1 i dodał dwa rysunki przy konstrukcji funkcji
+odcinającej. Zachowano te zmiany; nie oznaczają one pełnego
+ponownego audytu tego rozdziału.
+Po obejrzeniu stron 33--34 przesunięto etykiety punktu
+$\varphi(p)$ i poziomu $\mu=1$, które zachodziły na
+rysunek. Obejrzano także strony 398--402; zakończenie
+rozdziału i lektura mieszczą się na ostatniej stronie.
+
+MiKTeX w tym środowisku nie znalazł Perla dla `latexmk`,
+więc wykonano pełną sekwencję `pdflatex` i `makeindex`
+z `README.md`. Ostatni przebieg zakończył się kodem 0:
+410 stron, 160 przyjętych wpisów indeksu, bez błędów,
+niezdefiniowanych odsyłaczy i `Overfull`. Pozostał dawny
+`Underfull` w rozdziale 23. Wynikowy indeks po ostatnim
+przebiegu ma ten sam skrót SHA-256 co indeks użyty w PDF.
