@@ -21,6 +21,10 @@
 - W homologiach operator brzegu to `\partial`; `d` jest dla różniczki w kohomologiach i formach.
 - „Kochainy” pozostają tłumaczeniem `cochains`; nie zamieniaj ich na „kołańcuchy”.
 - Angielskie `germ` funkcji lub odwzorowania tłumacz jako „kiełek”.
+- Dla $A\in\{\Z,\Q,\R,\H,\C\}$ zapis $A_*$ oznacza $A\setminus\{0\}$.
+  Gdy chodzi o zbiór liczb niezerowych, pisz $A_*$ zamiast $A^\times$;
+  $A^\times$ zachowaj dla grupy elementów odwracalnych, na przykład
+  $\Z^\times=\{-1,1\}\neq\Z_*$.
 - Rozróżniaj zanurzenie i osadzenie zgodnie z ich definicjami w skrypcie.
 
 ## Rysunki i kontrola

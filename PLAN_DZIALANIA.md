@@ -81,8 +81,13 @@ statusów weryfikacji.
   przykładach i pierwszych równaniach ewolucyjnych według ścieżki poniżej.
 - [x] **9. Terminologia kiełków.** Ujednolicić tłumaczenie *germ* funkcji
   jako „kiełek funkcji” w rozdziale 1 i zasadach redakcyjnych `AGENTS.md`.
+- [x] **10. Notacja liczb niezerowych.** Dla $A\in\{\Z,\Q,\R,\H,\C\}$
+  pisać $A_*=A\setminus\{0\}$ zamiast $A^\times$, gdy chodzi o usunięcie
+  zera. Rozróżniać to od grupy jednostek, szczególnie
+  $\Z^\times=\{-1,1\}\neq\Z_*$. Sprawdzić wszystkie istniejące
+  wystąpienia i utrwalić regułę w `AGENTS.md`.
 
-Stan po tej iteracji: punkty 0--3 i 9 wykonano w źródłach rozdziałów,
+Stan po tej iteracji: punkty 0--3 oraz 9--10 wykonano w źródłach rozdziałów,
 w dodatku B oraz w zasadach terminologicznych. Klasyfikację powierzchni
 dowiedziono teraz w rozdziale 25
 przy jawnym wejściu w postaci twierdzenia o triangulacji powierzchni.

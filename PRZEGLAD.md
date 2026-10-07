@@ -3399,3 +3399,24 @@ z rozróżnieniem dwóch znaczeń brzegu oraz strony 31–32
 z dowodem identyfikacji przestrzeni stycznych; tekst i wzory
 są czytelne. Główny PDF skopiowano ze sprawdzonego składu
 i potwierdzono identyczny skrót SHA-256.
+
+## Notacja zbiorów skalarnych bez zera (2026-10-07)
+
+Na prośbę autora przyjęto $A_*:=A\setminus\{0\}$ dla
+$A\in\{\Z,\Q,\R,\H,\C\}$, gdy mowa o wszystkich elementach
+niezerowych. W `AGENTS.md` zapisano rozróżnienie od grupy
+jednostek: $\Z^\times=\{-1,1\}$, podczas gdy $\Z_*$ zawiera
+wszystkie niezerowe liczby całkowite. Audyt źródeł wykazał
+jedno użycie $\R^\times$ w sensie $\R\setminus\{0\}$,
+trzy jawne zapisy niezerowych skalarów zespolonych i dwa
+niezerowych skalarów rzeczywistych. W rozdziale 1 zastąpiono
+je przez $\C_*$ i $\R_*$ po zdefiniowaniu tych oznaczeń
+przy pierwszym użyciu. Zapisów $\R^n\setminus\{0\}$
+i $\C^{n+1}\setminus\{0\}$ nie zmieniano: dotyczą
+przestrzeni wektorowych, a nie samych zbiorów skalarów.
+
+Pełny skład `latexmk` zakończył się kodem 0: 404 strony,
+indeks złożony, brak błędów, niezdefiniowanych odsyłaczy
+i `Overfull` w finalnym logu. Obejrzano strony 15, 21 i 40:
+definicje $\C_*$ i $\R_*$, wzory przestrzeni rzutowych
+oraz funkcję przejścia wstęgi Möbiusa są czytelne.
