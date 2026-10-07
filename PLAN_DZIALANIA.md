@@ -1,7 +1,7 @@
 # Aktualny plan i pokrycie przeglądem
 
 Stan: 7 października 2026. Gałąź: `review/rozdzialy-matematyka`.
-Książka ma 30 rozdziałów i dwa dodatki. Zmiany autora do `19fa283`
+Książka ma 33 rozdziały i dwa dodatki. Zmiany autora do `19fa283`
 porównano z `66b220f`. Pobrano także cztery nowe commity autora
 `59fd235`–`46fd90c` oraz `5c9dcd0`–`308ba4e`; ich dodatkowy zakres
 kontroli wskazano poniżej. Najnowsze dodatki dotyczą rozdziału 23
@@ -127,7 +127,13 @@ $\mathrm{SU}(2)\to\mathrm{SO}(3)$ mają własne dowody.
 Punkt 8 wykonano w osobnym rozdziale 30: od przykładów
 sfery i torusa tekst prowadzi przez równania ewolucyjne
 do poprawki DeTurcka, z nazwanym wejściem parabolicznym.
-Punkt 7 pozostaje w przygotowaniu.
+Punkt 7 pozostaje w przygotowaniu. Dodano pierwsze trzy
+zaplanowane rozdziały: 31 o formach przecięcia i uchwytach,
+32 o uchwytach Cassona i osadzaniu dysków oraz 33 o
+topologicznej klasyfikacji Freedmana. Szkic o egzotycznych
+$\R^4$ istnieje w pliku `35-egzotyczne-r4.tex`, ale zgodnie
+z ustaloną kolejnością nie należy jeszcze do głównego PDF:
+rozdział 34 o przeszkodach Donaldsona nie został rozpoczęty.
 
 ### Ścieżka: grupy Liego
 
@@ -218,20 +224,20 @@ Ta część powinna następować po teorii uchwytów i chirurgii, nadal w
 jednym głównym PDF. Każdy z pięciu punktów poniżej oznacza **osobny
 rozdział i osobny plik w `tex/rozdzialy/`**. Sugerowana kolejność:
 
-1. **Algebra i uchwyty w wymiarze cztery.** Przypomnieć formę przecięcia
+1. **Algebra i uchwyty w wymiarze cztery — dodane w rozdziale 31.** Przypomnieć formę przecięcia
    z rozdziału 17, obliczyć przykłady form unimodularnych (w tym $E_8$),
    zdefiniować parzystość i sygnaturę, wprowadzić obramowane diagramy
    uchwytowe oraz pokazać na rysunkach, dlaczego gładki trik Whitneya
    zawodzi przy usuwaniu przecięć powierzchni w wymiarze 4. Oddzielić
    kategorię topologiczną, PL i gładką.
-2. **Uchwyty Cassona i twierdzenie o osadzaniu dysku.** Zbudować
+2. **Uchwyty Cassona i twierdzenie o osadzaniu dysku — dodane w rozdziale 32.** Zbudować
    pierwsze piętra, znakowane drzewa i intuicję rekurencyjnego usuwania
    przecięć. Sformułować dokładne hipotezy używanej wersji twierdzenia
    Freedmana i zakres grup podstawowych; przeprowadzić wszystkie
    dostępne redukcje geometryczne. Izomorfizmu uchwytu Cassona ze
    standardowym otwartym uchwytem 2 w kategorii topologicznej nie
    ogłaszać udowodnionym bez pełnego argumentu.
-3. **Topologiczne zastosowania Freedmana.** Wyprowadzić konsekwencje
+3. **Topologiczne zastosowania Freedmana — dodane w rozdziale 33.** Wyprowadzić konsekwencje
    twierdzenia o osadzaniu dysku: odpowiednią klasyfikację zwartych,
    jednospójnych topologicznych rozmaitości 4-wymiarowych przez formę
    przecięcia wraz z niezbędnymi warunkami i niezmiennikiem
@@ -244,7 +250,7 @@ rozdział i osobny plik w `tex/rozdzialy/`**. Sugerowana kolejność:
    strukturę dowodu twierdzenia o diagonalizacji formy określonej;
    analizę przestrzeni moduli, zwartość i usuwanie osobliwości można
    nazwać dowiedzionymi dopiero po ich rzeczywistym rozwinięciu.
-5. **Struktury gładkie na $\mathbb R^4$.** Zbudować drogę od uchwytów
+5. **Struktury gładkie na $\mathbb R^4$ — szkic napisany, czeka na rozdział 34.** Zbudować drogę od uchwytów
    Cassona i przeszkody gładkiej do otwartych rozmaitości
    homeomorficznych z $\mathbb R^4$, ale nie dyfeomorficznych z
    modelem standardowym. Jako główny cel wybrać rodzinę Gompfa:
@@ -303,11 +309,15 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | 23. Przeszkoda chirurgiczna | Rozwinięto redukcję poniżej środka, rachunek lematu 5.7 i kryterium osadzania 5.2 Walla; pełny audyt rozdziału czeka | Sprawdzić pozostałe wejście Milnora 6.6/6.7/6.13, przygotowanie 1.4, bazowość i dualność 2.4/2.6 oraz formacje §6 Walla |
 | 24. Ciąg chirurgii | Oczekuje | Normalne niezmienniki, zbiór struktur, sens dokładności |
 | 25. Poincaré | Oczekuje | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm |
-| 26. Sfery Milnora | Oczekuje | Sklejenie wiązek, klasy charakterystyczne, egzotyczność |
+| 26. Sfery Milnora | Skorygowano hipotezy i kierunek izomorfizmu 7 października; pełny audyt czeka | Sklejenie wiązek, klasy charakterystyczne, egzotyczność |
 | 27. Chern–Weil | Oczekuje | Normalizacje i transgresja; uzasadnić model względnej kohomologii de Rhama przy identyfikacji klasy Eulera, granicę całek wokół zer i wersję brzegową |
-| 28. Hodge–Bochner | Dodany 7 października, bez pełnego audytu całości rozdziału | Jawne wejście analityczne; własne dowody wzoru Weitzenböcka, znikania Bochnera i rozkładu sygnatury; sprawdzić zgodność z przyszłą teorią czterowymiarową |
-| 29. Grupy Liego | Dodany 7 października, bez pełnego audytu całości rozdziału | Przykłady, nawias, eksponenta, działanie adjungowane i jawne nakrycie $\mathrm{SU}(2)\to\mathrm{SO}(3)$; później sprawdzić zastosowania w Chernie–Weilu i wymiarze cztery |
-| 30. Potok Ricciego | Dodany 7 października, bez pełnego audytu całości rozdziału | Ewolucja skalara i pola powierzchni, zasada maksimum, poprawka DeTurcka; istnienie i jednoznaczność PDE pozostają jawnym wejściem analitycznym |
+| 28. Hodge–Bochner | Sprawdzono kluczowe wzory 7 października; pełny audyt całości czeka | Jawne wejście analityczne; własne dowody wzoru Weitzenböcka, znikania Bochnera i rozkładu sygnatury; sprawdzić zgodność z przyszłą teorią czterowymiarową |
+| 29. Grupy Liego | Sprawdzono nakrycie kwaternionowe 7 października; pełny audyt całości czeka | Przykłady, nawias, eksponenta, działanie adjungowane i jawne nakrycie $\mathrm{SU}(2)\to\mathrm{SO}(3)$; później sprawdzić zastosowania w Chernie–Weilu i wymiarze cztery |
+| 30. Potok Ricciego | Sprawdzono równania ewolucyjne i poprawkę DeTurcka 7 października; pełny audyt całości czeka | Ewolucja skalara i pola powierzchni, zasada maksimum, poprawka DeTurcka; istnienie i jednoznaczność PDE pozostają jawnym wejściem analitycznym |
+| 31. Formy przecięcia i uchwyty w wymiarze cztery | Przegląd matematyczny i skład zakończone 7 października; PDF 439 stron | Sprawdzono rachunek $E_8$, formę splotu i dwa rysunki; klasyfikacja jest w osobnym rozdziale 33 |
+| 32. Uchwyty Cassona | Przegląd matematyczny i skład zakończone 7 października; PDF 439 stron | Sprawdzono skończone piętra i ich rysunek; hipotezy osadzania dysku i standardowość topologiczna uchwytu są jawnymi wynikami zewnętrznymi |
+| 33. Klasyfikacja Freedmana | Przegląd matematyczny i skład zakończone 7 października; PDF 439 stron | Sprawdzono formy przecięcia, niezmiennik Kirby'ego--Siebenmanna i topologiczną hipotezę Poincarégo w wymiarze cztery |
+| Szkic 35. Egzotyczne $\R^4$ | Sprawdzony merytorycznie, nie jest w głównym PDF | Zachować kolejność planu: włączenie po nieistniejącym jeszcze rozdziale 34 o Donaldsonie |
 | Dodatek A o wynikach zewnętrznych | Oczekuje, w tym zmiany do `308ba4e` | Zgodność katalogu zależności z rzeczywistymi dowodami, zwłaszcza nowymi redukcjami Walla |
 | Dodatek B: homologia singularna i Euler | Dodany w `59fd235`; audyt oczekuje | Wzory Eulera, skończoność, przykłady i zależności od rozdziałów 8 i 17 |
 | Ponowne różnice w 2–7 | Sprawdzone przy scaleniu `46fd90c`; PDF 397 stron | Wyłącznie format bibliografii; zachowane słowa i źródła, obejrzane zakończenia oraz poprawki rozdziału 7 |

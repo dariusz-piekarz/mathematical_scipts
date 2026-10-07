@@ -3525,3 +3525,109 @@ indeks użyty w PDF jest identyczny z ostatnim wynikiem
 w tym poprawkę DeTurcka oraz końcową „Dalszą lekturę”.
 Pozostały wcześniejsze dwa ostrzeżenia `Underfull`
 z rozdziałów 23 i 29.
+
+## Uzupełnienie: formy przecięcia i uchwyty w wymiarze cztery (2026-10-07)
+
+Dodano osobny rozdział 31, pierwszy z pięciu zaplanowanych
+rozdziałów czterowymiarowych. Wprowadzono kategorię TOP,
+PL i DIFF oraz całkowite formy symetryczne. Rozpisano
+parzystość, zmianę bazy, przykłady $H$ i $I_{1,1}$,
+a dla $E_8$ pełny rachunek wyznacznika i dodatniej
+określoności przez dopełnienie Schura. Graf $E_8$
+wyjaśnia macierz formy, a diagram obramowanych uchwytów
+wiąże przekątną z obramowaniem i wyrazy pozadiagonalne
+z liczbami sprzężenia. Udowodniono homologiczny wniosek
+o brzegu przy unimodularnej macierzy.
+
+Drugi rysunek pokazuje, dlaczego wnętrze dysku Whitneya
+może przecinać powierzchnię w wymiarze cztery. Rachunek
+wymiarów opisano tylko jako ograniczenie ogólnej pozycji;
+nie podano go jako dowodu niemożliwości usunięcia przecięć.
+Po sprawdzeniu skorygowano opis powierzchni Seiferta:
+domknięcie rdzenia uchwytu ma ogólnie dodatni rodzaj,
+więc nie jest automatycznie sferą. Twierdzenie Freedmana
+i niezmiennik Kirby'ego--Siebenmanna pozostawiono dla
+osobnego późniejszego rozdziału, zgodnie z planem.
+
+## Domknięcie rozpoczętych szkiców i przegląd (2026-10-07)
+
+Po pobraniu zmian z `origin` sprawdzono rozpoczęte pliki
+rozdziałów 31, 32, 33 i 35. Do głównego dokumentu dołączono
+rozdział 32 o uchwytach Cassona i rozdział 33 o topologicznej
+klasyfikacji Freedmana. Twierdzenie o osadzaniu dysku i
+standardowość topologiczna uchwytu Cassona w rozdziale 32
+porównano z Freedmanem--Quinnem, twierdzenia 5.2 i 5.2.1,
+oraz Freedmanem, twierdzenie 1.1. Sformułowanie klasyfikacji,
+warunek dla niezmiennika Kirby'ego--Siebenmanna i wnioski
+w rozdziale 33 porównano z Freedmanem--Quinnem, §10.1--10.2.
+W obu rozdziałach zaznaczono, które twierdzenia są zewnętrzne;
+ich katalog uzupełniono w dodatku A.
+
+Szkic `35-egzotyczne-r4.tex` porównano z lematami 1.1 i 1.2
+oraz twierdzeniem 1.3 Gompfa. Poprawiono zapis
+`\overline{\C P^2}` i jawnie umieszczono dwie kule we wspólnej
+rozmaitości przed połączeniem ich łukiem. Zgodnie z decyzją
+autora zachowano kolejność planu: ten plik pozostaje poza
+głównym PDF, ponieważ rozdział 34 o Donaldsonie nie istnieje.
+Nie nazywamy więc jego przeglądu kontrolą gotowego składu.
+
+W już istniejących rozdziałach usunięto podwójne stwierdzenie
+i etykietę `prop:styczna-brzeg-1` oraz naprawiono niedomknięty
+nawias we wzorze w rozdziale 1. W rozdziale 26 skorygowano
+kierunek izomorfizmu łączącego w ciągu Mayera--Vietorisa
+i przywołano rzeczywiste hipotezy $H^3(M)=H^4(M)=0$ zamiast
+silniejszego, niezałożonego warunku sfery homotopijnej.
+W rozdziale 31 zmieniono „sfery” na „powierzchnie” i
+ograniczono geometryczny opis przecięć do kategorii DIFF.
+Kontrola kluczowych wzorów w rozdziałach 28--30 nie wykazała
+błędu znaków w twierdzeniu Weitzenböcka, nakryciu
+$\mathrm{SU}(2)\to\mathrm{SO}(3)$ ani poprawce DeTurcka.
+W rozdziale 30 doprecyzowano warunek orientowalności przy
+odsyłaczu do laplasjanu Hodge'a i źródła analitycznego.
+
+### Granica sześciu stron dla dowodów wyników wejściowych
+
+Jedynym argumentem redakcyjnym za pozostawieniem poniższych
+wyników jako jawnych wejść jest objętość pełnego rozwinięcia
+ich założeń i dowodów w stylu tego skryptu: **ponad sześć
+stron na każde zagadnienie**. Liczba stron w źródle nie jest
+formalnym dolnym ograniczeniem długości każdego możliwego dowodu.
+
+- Dla geometrycznych wejść Walla sam jego rozdział 5 zajmuje
+  strony 44--56 (13 stron), rozdział 6 strony 57--73
+  (17 stron), a przygotowanie z rozdziałów 1 i 2 dalsze
+  9 i 11 stron. Obramowany trik Whitneya potrzebny w tym
+  miejscu zajmuje u Milnora §6, strony 67--84 (18 stron).
+  Źródła: [Wall, *Surgery on Compact Manifolds*](https://www.maths.ed.ac.uk/~v1ranick/books/scm.pdf),
+  [Milnor, *Lectures on the h-Cobordism Theorem*, §6](https://www.degruyterbrill.com/document/doi/10.1515/9781400878055-007/html?lang=en).
+- Dla sfer Milnora oryginalny dowód konstrukcji i
+  rozróżnienia zajmuje drukowane strony 399--405 (7 stron),
+  a pełne usunięcie przywołanego tam twierdzenia
+  Hirzebrucha wymagałoby jeszcze jego dowodu. Źródło:
+  [Milnor, *On Manifolds Homeomorphic to the 7-Sphere*](https://sites.math.rutgers.edu/~feehan/teaching/math866/milnor7sphere.pdf).
+- Dla pozostającej w punkcie 2 klasyfikacji
+  pięciowymiarowej oryginalna
+  [praca Bardena, *Simply Connected Five-Manifolds*](https://www.sas.rochester.edu/mth/sites/doug-ravenel/otherpapers/barden.pdf)
+  obejmuje strony 365--385 (21 stron).
+- Dla osadzania dysków i klasyfikacji Freedmana same
+  konstrukcje prowadzące do twierdzeń zajmują u
+  [Freedmana--Quinna](https://archive.mpim-bonn.mpg.de/4789/2/FreedmanQuinn-TopologyOf4Manifolds-Reformatted2013.pdf)
+  strony 23--88 (66 stron), a oryginalny
+  [artykuł Freedmana](https://projecteuclid.org/journals/journal-of-differential-geometry/volume-17/issue-3/The-topology-of-four-dimensional-manifolds/10.4310/jdg/1214437136.full)
+  strony 357--453 (97 stron).
+- Dla egzotycznych $\R^4$ źródłowa
+  [praca Gompfa](https://doi.org/10.4310/jdg/1214439566)
+  zajmuje strony 283--300 (18 stron) i zawiera kroki,
+  które w szkicu 35 są nazwanymi wejściami.
+
+Końcowy skład pliku głównego przez `latexmk` zakończył się
+poprawnie: PDF ma 439 stron, a `makeindex` przyjął 181 wpisów
+bez odrzuceń i ostrzeżeń. W dzienniku nie ma błędów,
+niezdefiniowanych odsyłaczy ani `Overfull`; pozostały dwa
+wcześniejsze ostrzeżenia `Underfull` z rozdziałów 23 i 29.
+Obejrzano strony 421, 423, 425, 430 i 439, obejmujące nowe
+rysunki, twierdzenie klasyfikacyjne i indeks. Na stronie 423
+skrócono nagłówek rysunku dysku Whitneya, aby nie nachodził
+na ramkę ani opis po prawej. Szkic rozdziału 35 sprawdzono
+tylko w źródle: zgodnie z zachowaną kolejnością planu nie
+wchodzi do tego składu.
