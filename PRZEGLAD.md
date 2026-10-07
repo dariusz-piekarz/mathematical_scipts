@@ -3726,3 +3726,36 @@ odrzuceń. Nie ma błędów, niezdefiniowanych odsyłaczy ani
 `Overfull`; pozostały dwa wcześniejsze ostrzeżenia `Underfull`.
 Obejrzano strony 370--371 z poprawionymi definicjami; wzory
 i podział stron są czytelne.
+
+## Audyt rozdziałów 22 i 24 (2026-10-08)
+
+W rozdziale 22 sprawdzono kolejno definicję chirurgii,
+ślad i uchwyt dualny, oba ciągi homologii względnej,
+znak zmiany charakterystyki Eulera, trzy przypadki
+rachunku $\pi_1$, dane normalne i warunek ich
+przedłużenia, lokalny ruch Whitneya oraz rozszczepienie
+formy środkowej. Założenie spójności potrzebne przy
+$\pi_1$ obowiązuje w całej sekcji. Rachunki i odsyłacze
+do rozdziału 23 są zgodne; nie wymagają zmiany treści.
+Obejrzano rysunki i sąsiedni tekst na stronach
+361--363, 365--366 i 368--369 aktualnego składu.
+
+W rozdziale 24 porównano definicję normalnych
+niezmienników, zbioru struktur i dokładności z
+[Wallem, §10, szczególnie lematem 10.6,
+stwierdzeniem 10.7 i twierdzeniami 10.5, 10.8](https://www.maths.ed.ac.uk/~v1ranick/books/scm.pdf).
+Doprecyzowano, że $[X,G/O]$ ma strukturę grupy,
+ale $\theta_n$ na ogół nie jest homomorfizmem;
+strzałka $\theta_{n+1}$ po zawieszeniu jest nim.
+Wyjaśniono też, dlaczego prosta równoważność
+kobordyzmu nad $X\times I$ daje prostą równoważność
+obu inkluzji końców, potrzebną do użycia twierdzenia
+o $s$-kobordyzmie. Same wyniki realizacyjne i
+bijekcja z $[X,G/O]$ pozostają jawnie zewnętrzne.
+
+Końcowy skład `latexmk` zakończył się poprawnie: 442 strony,
+bez błędów, niezdefiniowanych odsyłaczy i `Overfull`.
+Indeks zachowuje 181 przyjętych wpisów; pozostały dwa
+wcześniejsze ostrzeżenia `Underfull` z innych rozdziałów.
+Obejrzano nowe akapity, ciąg i schemat na stronach 387--388;
+tekst i etykiety są czytelne.
