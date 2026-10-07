@@ -306,7 +306,7 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | 20. h-kobordyzm | Oczekuje | Hipotezy wymiarowe, dyski Whitneya, realizacja ruchów uchwytów |
 | 21. Torsja i s-kobordyzm | Oczekuje | Bazy, strona działania pierścienia, konwencje torsji |
 | 22. Chirurgia geometryczna | Oczekuje | Obramowania, zmiany homotopii i homologii, rysunki |
-| 23. Przeszkoda chirurgiczna | Sprawdzono wybrane wejścia Milnora 6.6/6.7/6.13 i Walla 1.4, 2.4/2.6, 5.5 i §6; PDF 442 strony | Dopisano hipotezy i rachunek formacji; pełny audyt pozostałej treści rozdziału czeka, a geometryczne lematy źródłowe pozostają jawne |
+| 23. Przeszkoda chirurgiczna | Pełny audyt treści zakończony 7 października; sprawdzono definicje, rachunki znaków i baz, tok dowodu oraz źródła Walla i Milnora | Uściślono dual lewego modułu i wzór dla udoskonalenia kwadratowego; geometryczne lematy Walla i Milnora oraz klasyfikacja grup $L$ pozostają jawnie zewnętrzne |
 | 24. Ciąg chirurgii | Oczekuje | Normalne niezmienniki, zbiór struktur, sens dokładności |
 | 25. Poincaré | Oczekuje | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm |
 | 26. Sfery Milnora | Przegląd konstrukcji, klas charakterystycznych i egzotyczności zakończony 7 października; PDF 442 strony | Rozpisano homologię i niezmiennik; wzór Hirzebrucha pozostaje jawnym wejściem zewnętrznym |

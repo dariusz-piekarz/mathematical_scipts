@@ -3694,3 +3694,35 @@ są czytelne. Przyrost trzech stron jest mniejszy od
 wcześniejszej estymaty 15--25 stron, ponieważ większość
 rachunków potrzebnych do wybranego zakresu już znajdowała
 się w tych rozdziałach.
+
+## Pełny audyt rozdziału 23 (2026-10-07)
+
+Przeczytano cały rozdział 23, w tym definicje form, przykłady
+$E_8$ i Arfa, przygotowanie mapy poniżej środka, usuwanie par
+hiperbolicznych, lemat o lagranżjanie i rachunek formacji.
+Porównano użyte twierdzenia 1.2, 1.4, 5.2, 5.3, 5.7 oraz §6 z
+[oryginałem Walla](https://www.maths.ed.ac.uk/~v1ranick/books/scm.pdf).
+Sprawdzono znaki formy hermitowskiej i zmian bazy, wyznacznik
+oraz minory przykładu $E_8$, a także odsyłacze do rozdziału 22
+i katalogu wyników zewnętrznych.
+
+W definicji formy hermitowskiej dopisano addytywność i jawne
+działanie pierścienia na module dualnym lewego modułu. Wzór
+$\mu(ax)$ zapisano przez reprezentanta klasy $\mu(x)$ i
+wyjaśniono jego niezależność od wyboru reprezentanta. W dodatku A
+warunek dla triku Whitneya określono jako ściągalność konkretnego
+okręgu w dopełnieniu; nie wymaga on prostej spójności całej
+rozmaitości. Skorygowano też opis tego, co rozdział rzeczywiście
+wyprowadza, a co pozostaje lematem źródłowym.
+
+Audyt nie zmienia zakresu deklarowanego dowodu: produktowe
+otoczenie dysku Whitneya, bazowość i prosta dualność jąder,
+przygotowanie kobordyzmu, realizacja formacji oraz obliczenie
+grup $L$ pozostają wskazanymi wejściami zewnętrznymi.
+
+Końcowy skład pliku głównego przez `latexmk` zakończył się
+poprawnie: PDF ma 442 strony, indeks przyjął 181 wpisów bez
+odrzuceń. Nie ma błędów, niezdefiniowanych odsyłaczy ani
+`Overfull`; pozostały dwa wcześniejsze ostrzeżenia `Underfull`.
+Obejrzano strony 370--371 z poprawionymi definicjami; wzory
+i podział stron są czytelne.
