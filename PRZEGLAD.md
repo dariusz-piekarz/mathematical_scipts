@@ -3375,3 +3375,27 @@ odsyłaczy ani `Overfull`. Pozostał wcześniejszy `Underfull`
 w kroku 1 dowodu rozdziału 23. Obejrzano strony 366–370,
 w tym trzy strony nowego kryterium i sąsiedni rysunek; wzory,
 odsyłacze i podpisy są czytelne.
+
+## Dołączenie roboczych zmian rozdziału 1 (2026-10-07)
+
+Na prośbę autora dołączono niezapisane rozwinięcie porównania
+przestrzeni stycznych $T_p^AM$ i $T_p^BM$. Wykazano, że
+$j_\varphi(v)=[U,\varphi,v]$ jest liniową bijekcją: każda klasa
+ma reprezentanta w ustalonej mapie, a równość klas w tej mapie
+oznacza równość współrzędnych. Z wcześniejszej bijekcji
+$\Theta_\varphi$ wynika teraz $\Phi_\varphi=j_\varphi\Theta_\varphi$;
+reguła łańcucha dowodzi niezależności od wyboru mapy.
+
+Poprawiono także zdanie o okręgu: brzeg $S^1$ jako rozmaitości
+jest pusty, choć brzeg topologiczny $S^1$ jako podzbioru
+$\R^2$ jest całym okręgiem. Usunięto zbędną drugą etykietę
+definicji rozmaitości z brzegiem i końcową spację. Niezależny
+audyt nie znalazł błędu w nowych wzorach.
+
+Pełny skład `latexmk` zakończył się kodem 0: 404 strony,
+155 przyjętych wpisów indeksu i brak błędów, niezdefiniowanych
+odsyłaczy oraz `Overfull` w finalnym logu. Obejrzano stronę 14
+z rozróżnieniem dwóch znaczeń brzegu oraz strony 31–32
+z dowodem identyfikacji przestrzeni stycznych; tekst i wzory
+są czytelne. Główny PDF skopiowano ze sprawdzonego składu
+i potwierdzono identyczny skrót SHA-256.

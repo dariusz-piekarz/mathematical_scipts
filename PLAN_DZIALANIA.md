@@ -265,7 +265,7 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | Zakres | Stan | Następna kontrola |
 |---|---|---|
 | Podział źródeł i importy | Zakończono, `9148128` | Kontrola regresji przy dalszych zmianach |
-| 1. Rozmaitości | Dodatki sprawdzone w `aa6c59a`; ponowna kontrola `5c9dcd0` zakończona | Brzeg i pełna przestrzeń styczna mają uzupełniony dowód; sześć zamian na „kiełek” i nowe hasło indeksu zachowują treść matematyczną |
+| 1. Rozmaitości | Dodatki sprawdzone; 7 października dołączono i skontrolowano robocze rozwinięcie identyfikacji przestrzeni stycznych | Poprawiono zdanie o brzegu $S^1$, wykazano bijektywność i niezależność $\Phi_\varphi$ od mapy; zachowano dotychczasową etykietę definicji brzegu i termin „kiełek” |
 | 5. Algebra abstrakcyjna | Audyt zakończony 6 października; PDF 387 stron | Uzupełnione dowody, sprawdzony graf słów, indeks i odsyłacze |
 | 2. Pola wektorowe | Audyt dodatków zakończony 6 października; PDF 387 stron | Sprawdzone powiązanie z brzegiem, przykład przepływu jednostronnego, bibliografia i rysunki |
 | 3. Algebra tensorowa | Audyt dodatków zakończony 6 października; treść bez poprawek | Poprawny odsyłacz do rozdziału 5, indeks, źródła i ilustracje |
