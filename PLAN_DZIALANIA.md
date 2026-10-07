@@ -306,19 +306,19 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | 20. h-kobordyzm | Oczekuje | Hipotezy wymiarowe, dyski Whitneya, realizacja ruchów uchwytów |
 | 21. Torsja i s-kobordyzm | Oczekuje | Bazy, strona działania pierścienia, konwencje torsji |
 | 22. Chirurgia geometryczna | Oczekuje | Obramowania, zmiany homotopii i homologii, rysunki |
-| 23. Przeszkoda chirurgiczna | Rozwinięto redukcję poniżej środka, rachunek lematu 5.7 i kryterium osadzania 5.2 Walla; pełny audyt rozdziału czeka | Sprawdzić pozostałe wejście Milnora 6.6/6.7/6.13, przygotowanie 1.4, bazowość i dualność 2.4/2.6 oraz formacje §6 Walla |
+| 23. Przeszkoda chirurgiczna | Sprawdzono wybrane wejścia Milnora 6.6/6.7/6.13 i Walla 1.4, 2.4/2.6, 5.5 i §6; PDF 442 strony | Dopisano hipotezy i rachunek formacji; pełny audyt pozostałej treści rozdziału czeka, a geometryczne lematy źródłowe pozostają jawne |
 | 24. Ciąg chirurgii | Oczekuje | Normalne niezmienniki, zbiór struktur, sens dokładności |
 | 25. Poincaré | Oczekuje | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm |
-| 26. Sfery Milnora | Skorygowano hipotezy i kierunek izomorfizmu 7 października; pełny audyt czeka | Sklejenie wiązek, klasy charakterystyczne, egzotyczność |
+| 26. Sfery Milnora | Przegląd konstrukcji, klas charakterystycznych i egzotyczności zakończony 7 października; PDF 442 strony | Rozpisano homologię i niezmiennik; wzór Hirzebrucha pozostaje jawnym wejściem zewnętrznym |
 | 27. Chern–Weil | Oczekuje | Normalizacje i transgresja; uzasadnić model względnej kohomologii de Rhama przy identyfikacji klasy Eulera, granicę całek wokół zer i wersję brzegową |
 | 28. Hodge–Bochner | Sprawdzono kluczowe wzory 7 października; pełny audyt całości czeka | Jawne wejście analityczne; własne dowody wzoru Weitzenböcka, znikania Bochnera i rozkładu sygnatury; sprawdzić zgodność z przyszłą teorią czterowymiarową |
 | 29. Grupy Liego | Sprawdzono nakrycie kwaternionowe 7 października; pełny audyt całości czeka | Przykłady, nawias, eksponenta, działanie adjungowane i jawne nakrycie $\mathrm{SU}(2)\to\mathrm{SO}(3)$; później sprawdzić zastosowania w Chernie–Weilu i wymiarze cztery |
 | 30. Potok Ricciego | Sprawdzono równania ewolucyjne i poprawkę DeTurcka 7 października; pełny audyt całości czeka | Ewolucja skalara i pola powierzchni, zasada maksimum, poprawka DeTurcka; istnienie i jednoznaczność PDE pozostają jawnym wejściem analitycznym |
-| 31. Formy przecięcia i uchwyty w wymiarze cztery | Przegląd matematyczny i skład zakończone 7 października; PDF 439 stron | Sprawdzono rachunek $E_8$, formę splotu i dwa rysunki; klasyfikacja jest w osobnym rozdziale 33 |
-| 32. Uchwyty Cassona | Przegląd matematyczny i skład zakończone 7 października; PDF 439 stron | Sprawdzono skończone piętra i ich rysunek; hipotezy osadzania dysku i standardowość topologiczna uchwytu są jawnymi wynikami zewnętrznymi |
-| 33. Klasyfikacja Freedmana | Przegląd matematyczny i skład zakończone 7 października; PDF 439 stron | Sprawdzono formy przecięcia, niezmiennik Kirby'ego--Siebenmanna i topologiczną hipotezę Poincarégo w wymiarze cztery |
+| 31. Formy przecięcia i uchwyty w wymiarze cztery | Przegląd matematyczny zakończony 7 października; obecny PDF 442 strony | Sprawdzono rachunek $E_8$, formę splotu i dwa rysunki; klasyfikacja jest w osobnym rozdziale 33 |
+| 32. Uchwyty Cassona | Przegląd i uzupełnienie skutków osadzania dysków zakończone 7 października; PDF 442 strony | Geometrycznie dualne sfery w konkluzji mają poprawione źródło Powella--Ray--Teichnera; pełne osadzanie i standardowość uchwytu pozostają zewnętrzne |
+| 33. Klasyfikacja Freedmana | Przegląd i objaśnienie drogi od dysków do klasyfikacji zakończone 7 października; PDF 442 strony | Osadzanie sfer, chirurgia i $s$-kobordyzm są wskazane jako dalsze wyniki zewnętrzne; klasyfikacja i niezmiennik Kirby'ego--Siebenmanna pozostają zewnętrzne |
 | Szkic 35. Egzotyczne $\R^4$ | Sprawdzony merytorycznie, nie jest w głównym PDF | Zachować kolejność planu: włączenie po nieistniejącym jeszcze rozdziale 34 o Donaldsonie |
-| Dodatek A o wynikach zewnętrznych | Oczekuje, w tym zmiany do `308ba4e` | Zgodność katalogu zależności z rzeczywistymi dowodami, zwłaszcza nowymi redukcjami Walla |
+| Dodatek A o wynikach zewnętrznych | Uzupełniono źródło sfer dualnych 7 października; pełny audyt dodatku nadal czeka | Zgodność katalogu zależności z rzeczywistymi dowodami, zwłaszcza nowymi redukcjami Walla i zmianami do `308ba4e` |
 | Dodatek B: homologia singularna i Euler | Dodany w `59fd235`; audyt oczekuje | Wzory Eulera, skończoność, przykłady i zależności od rozdziałów 8 i 17 |
 | Ponowne różnice w 2–7 | Sprawdzone przy scaleniu `46fd90c`; PDF 397 stron | Wyłącznie format bibliografii; zachowane słowa i źródła, obejrzane zakończenia oraz poprawki rozdziału 7 |
 | Końcowa kontrola całości | Oczekuje | Mapa książki, oznaczenia, terminologia, bibliografia, indeks i PDF |

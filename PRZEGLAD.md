@@ -3614,7 +3614,11 @@ formalnym dolnym ograniczeniem długości każdego możliwego dowodu.
   [Freedmana--Quinna](https://archive.mpim-bonn.mpg.de/4789/2/FreedmanQuinn-TopologyOf4Manifolds-Reformatted2013.pdf)
   strony 23--88 (66 stron), a oryginalny
   [artykuł Freedmana](https://projecteuclid.org/journals/journal-of-differential-geometry/volume-17/issue-3/The-topology-of-four-dimensional-manifolds/10.4310/jdg/1214437136.full)
-  strony 357--453 (97 stron).
+  strony 357--453 (97 stron). Uzupełnienie konstrukcji
+  geometrycznie dualnych sfer w dowodzie twierdzenia
+  o dyskach zajmuje osobną
+  [pracę Powella--Ray--Teichnera](https://arxiv.org/abs/2006.05209)
+  (25 stron w wydaniu czasopismowym).
 - Dla egzotycznych $\R^4$ źródłowa
   [praca Gompfa](https://doi.org/10.4310/jdg/1214439566)
   zajmuje strony 283--300 (18 stron) i zawiera kroki,
@@ -3631,3 +3635,62 @@ skrócono nagłówek rysunku dysku Whitneya, aby nie nachodził
 na ramkę ani opis po prawej. Szkic rozdziału 35 sprawdzono
 tylko w źródle: zgodnie z zachowaną kolejnością planu nie
 wchodzi do tego składu.
+
+## Wybrane dowody Walla, Milnora i konsekwencje osadzania dysków (2026-10-07)
+
+Na prośbę autora rozwinięto najważniejsze fragmenty już
+rozpoczętych rozdziałów 23, 26 oraz 32--33. W rozdziale 23
+oddzielono warunek wymiarowy od ściągalności okręgu
+Whitneya. Porównano zastosowanie twierdzenia 6.6 i lematów
+6.7, 6.13 Milnora z jego oryginalnym sformułowaniem dla
+dwóch osadzonych podrozmaitości. Dla niezmienniczości
+przeszkody Walla wypisano hipotezy zaniku potrzebne do
+lematów 2.4 i 2.6, fragment ciągu po odejmowaniu uchwytów
+z twierdzenia 1.4 oraz macierz obliczającą dwa jądra
+formacji z §6. Przykład formacji brzegowej pokazuje, dlaczego
+zerowa klasa przeszkody może współistnieć z niezerowym
+bieżącym jądrem. Źródła:
+[Wall, *Surgery on Compact Manifolds*](https://www.maths.ed.ac.uk/~v1ranick/books/scm.pdf),
+[Milnor, *Lectures on the h-Cobordism Theorem*, §6](https://webhomes.maths.ed.ac.uk/~v1ranick/surgery/hcobord.pdf).
+Konstrukcja produktowego otoczenia dysku, prosta dualność
+jąder i geometryczna realizacja ruchów formacji pozostają
+jawnie wskazanymi wynikami zewnętrznymi.
+
+W rozdziale 26 rozpisano przeszkodową interpretację klasy
+Eulera, dokładny odcinek ciągu Mayera--Vietorisa i rachunek
+$H_3(M_{h,j})\cong\Z/|h+j|\Z$ dla $h+j\ne0$.
+Doprecyzowano rozszczepienie wiązki stycznej przestrzeni
+dysków, addytywność $q$ i sygnatury po sklejeniu wypełnień
+oraz zmianę znaku niezmiennika przy zmianie orientacji.
+Wynik $\lambda(M_k)\equiv k^2-1\pmod7$ porównano z
+[Milnorem, §3](https://sites.math.rutgers.edu/~feehan/teaching/math866/milnor7sphere.pdf).
+Wzór Hirzebrucha dla zamkniętych ośmiowymiarowych
+rozmaitości pozostaje zewnętrznym wejściem.
+
+W rozdziale 32 rozróżniono algebraiczną i geometryczną
+dualność sfer. Stwierdzenie o grupie podstawowej dopełnienia
+dysków ma rozpisany argument przez meridiany, z jawnym
+użyciem topologicznej transwersalności. Sprawdzono, że
+w dawnym dowodzie Freedmana--Quinna konstrukcja
+geometrycznie dualnych sfer była niekompletna;
+[Powell--Ray--Teichner, Twierdzenie A](https://arxiv.org/abs/2006.05209)
+uzupełnia ten krok. Oryginalna numeracja twierdzenia to
+5.1A, a używana w skrypcie reformatowana numeracja to 5.2.
+Rozdział 33 podaje szczególną postać twierdzenia o osadzaniu
+sfer, jego skutek dla grupy podstawowej po chirurgii oraz
+łańcuch dalszych zewnętrznych kroków: chirurgię topologiczną,
+$s$-kobordyzm, realizację form i rachunek
+Kirby'ego--Siebenmanna. Ten łańcuch objaśnia zastosowanie
+twierdzenia o dyskach; nie jest przedstawiany jako dowód
+całej klasyfikacji Freedmana.
+
+Po zmianach `latexmk` złożył plik główny bez błędów do
+442 stron. Nie ma niezdefiniowanych odsyłaczy ani `Overfull`;
+indeks przyjął 181 wpisów bez odrzuceń. Pozostały dwa
+wcześniejsze ostrzeżenia `Underfull` z rozdziałów 23 i 29.
+Obejrzano strony 373, 382--384, 396--397, 428--429, 432--433
+oraz 442 (indeks); nowe akapity, wzory, linki i odsyłacze
+są czytelne. Przyrost trzech stron jest mniejszy od
+wcześniejszej estymaty 15--25 stron, ponieważ większość
+rachunków potrzebnych do wybranego zakresu już znajdowała
+się w tych rozdziałach.
