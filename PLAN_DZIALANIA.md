@@ -311,7 +311,7 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | 16. Zanurzenia i otoczenia | Audyt dodatków zakończony 6 października; PDF 401 stron | Sześć haseł indeksu, cztery ilustracje i kołnierze sprawdzone; poprawiono terminologię odwzorowań oraz zdanie o homotopii do odwzorowania stałego |
 | 17. Przecięcia, dualność i klasy | Audyt dodatków zakończony 6 października | Sprawdzone indeks, konwencje znaków i cztery ilustracje; ujednolicono terminologię i rozwinięto argument Leraya–Hirscha dla wiązki rzutowej |
 | 18. Teoria Morse'a | Audyt dodatków zakończony 8 października | Sprawdzone definicje i pięć ilustracji; jawne współrzędne krytyczne torusa, dokładne prowadnice podpisów i poprawiona terminologia |
-| 19. Kobordyzmy i uchwyty | Dawna treść przeszła audyt; dodatki oczekują kontroli | Sprawdzić trzy hasła indeksu, przebudowaną ilustrację sfera–torus oraz dopisany warunek omijania przecięć przez łuki Whitneya |
+| 19. Kobordyzmy i uchwyty | Audyt dodatków zakończony 8 października; PDF 443 strony | Sprawdzone trzy hasła i pięć ilustracji; przywrócony warunek orientacji w podpisie, jawny opis sklejenia pierścieni i rozwinięty lokalny ruch Whitneya przy zachowanych założeniach o dyskach |
 | 20. h-kobordyzm | Oczekuje | Hipotezy wymiarowe, dyski Whitneya, realizacja ruchów uchwytów |
 | 21. Torsja i s-kobordyzm | Oczekuje | Bazy, strona działania pierścienia, konwencje torsji |
 | 22. Chirurgia geometryczna | Pełny audyt zakończony 8 października; treść bez poprawek | Sprawdzone obramowania, ślad i uchwyt dualny, homologia, $\pi_1$, forma jądra i rysunki |

@@ -3837,3 +3837,62 @@ Nowe obliczenia i rysunek torusa są czytelne na stronie 320.
 Przed zatwierdzeniem ponownie pobrano zdalną gałąź: nie doszły dalsze
 commity współautora. Zaktualizowano główny PDF z tego sprawdzonego
 składu. Następna iteracja obejmuje dodatki do rozdziału 19.
+
+## Rozdział 19 — orientacja sklejenia i lokalny ruch Whitneya (2026-10-08)
+
+Rozpoczęto od czystego, wypchniętego `471720b`. Pobranie zdalnej gałęzi
+nie wykazało nowych commitów. Porównanie z audytowanym `66b220f`
+potwierdziło trzy nowe hasła indeksu i przebudowę jednej z pięciu
+ilustracji. Po pominięciu tych elementów i formatowania bibliografii
+jedynym nowym fragmentem matematycznym był warunek, że wnętrza łuków
+Whitneya omijają pozostałe punkty przecięcia. Sprawdzono zakres
+definicji kobordyzmu, rdzenia i współrdzenia oraz pola gradientopodobnego,
+zgodność indeksów, konwencję ujemnego gradientu i treść trzech haseł.
+
+W przebudowanym podpisie ilustracji sfera–torus pominięto warunek
+orientacji, zachowany w przykładzie. Przywrócono go i doprecyzowano,
+że zmienia się brzeg wyjściowy, a wejściowa sfera pozostaje brzegiem
+kobordyzmu. Dwa pierścienie przy drugim typie sklejenia dają butelkę
+Kleina. Rozwinięto rozpoznanie torusa bez powoływania się na późniejszą
+klasyfikację powierzchni: sklejenie opisuje dyfeomorfizm okręgu
+zachowujący orientację, którego izotopię do identyczności otrzymujemy
+przez interpolację podniesienia do prostej. Podano jawny dyfeomorfizm
+ilorazu na `S¹×S¹`; stałość parametru izotopii przy końcach zapewnia
+gładkość na szwie.
+
+Usunięto dwie elipsy obrysu torusa, które nie pochodziły z projekcji
+powierzchni parametrycznej. Zastosowano jawne granice osi, jednakową
+skalę przestrzenną i jasnoniebieską powierzchnię jak w rozdziale 18.
+Po obejrzeniu składu odsunięto podpisy obu rozmaitości pod rysunek,
+aby podpis torusa nie stykał się z jego dolnym konturem.
+
+Warunek autora o wnętrzach łuków Whitneya jest potrzebny: ruch ma
+usunąć wybraną parę, pozostawiając pozostałe przecięcia bez zmian.
+Rozwinięto dotychczasowy opis „przesunięcia paska” do modelu
+`U×D^(r−1)×D^(s−1)`, gdzie `r=k`, `s=m−k−1`.
+Jawna izotopia z funkcją odcinającą zachowuje współrzędne normalne,
+więc przecięcia przesuwanej sfery z nieruchomą drugą sferą występują
+wyłącznie przy obu współrzędnych normalnych równych zeru. Redukuje to
+kontrolę do ruchu dwóch łuków w płaszczyźnie. Wyjaśniono odwracalność,
+nośnik, przeniesienie normalnego pogrubienia i wybór rozłącznych
+otoczeń. Nadal jawnie zakładamy istnienie osadzonych, czystych,
+prawidłowo obramowanych dysków; nie wyprowadzamy go z samej sumy
+znaków równej `±1` ani z trywialności wiązki normalnej dysku.
+Porównano model z [Milnorem, §6, lemat 6.7 i następujący po nim ruch](https://webhomes.maths.ed.ac.uk/~v1ranick/surgery/hcobord.pdf)
+i dodano to źródło do dalszej lektury.
+
+Poprawiono dziewięć użyć „mapy” na „odwzorowanie” w opisie różniczki,
+dyfeomorfizmów przedziału, przyczepienia i przejścia przepływem.
+Zachowano trzy użycia dotyczące rzeczywistych map Morse'a i modelowych.
+
+Pełna kompilacja zakończyła się poprawnie: 443 strony, bez błędów,
+niezdefiniowanych odsyłaczy i `Overfull`. Pozostały dwa wcześniejsze
+ostrzeżenia `Underfull` z rozdziałów 23 i 29 oraz dwa rozszerzenia `h`
+do `ht`. Indeks nadal ma 181 przyjętych wpisów bez odrzuceń i ostrzeżeń.
+Sprawdzono 38 importów, 1327 unikalnych etykiet, 1285 odsyłaczy źródła
+i 1716 poprawnych odsyłaczy wewnętrznych PDF; w tekście nie ma `??`.
+Obejrzano cały rozdział na stronach 332–343, wszystkie pięć ilustracji
+i trzy strony indeksu 441–443. Szczegółowo sprawdzono nowe sklejenie
+i ilustrację na stronie 335 oraz rozwinięty ruch na stronach 342–343.
+Ponowne pobranie gałęzi przed publikacją nie wykazało zmian współautora.
+Główny PDF zastąpiono sprawdzonym składem. Następny etap: rozdział 20.
