@@ -26,6 +26,7 @@
   $A^\times$ zachowaj dla grupy elementów odwracalnych, na przykład
   $\Z^\times=\{-1,1\}\neq\Z_*$.
 - Angielskie `embedding` tłumacz jako „zanurzenie” zgodnie z definicją w rozdziale 1. Sam warunek injektywności różniczki nazywaj „immersją”; rozróżniaj oba pojęcia.
+- Angielskie `fibration` tłumacz jako „rozwłóknienie”; `fiber bundle` to „wiązka”, a `fiber` to „włókno”.
 
 ## Rysunki i kontrola
 

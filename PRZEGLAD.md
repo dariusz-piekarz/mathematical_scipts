@@ -4060,3 +4060,15 @@ postaci $m\otimes n$. Etykiety twierdzeń i odsyłacze zachowano.
 Pełny skład ma 499 stron, bez błędów, brakujących odsyłaczy
 i ostrzeżeń `Overfull`; indeks przyjął 282 wpisy bez ostrzeżeń.
 Obejrzano stronę 123 z poprawionymi nazwami twierdzeń.
+
+## Termin „rozwłóknienie” (2026-10-08)
+
+W rozdziale o geometryzacji cztery użycia „włóknienia”
+dotyczyły struktury Seiferta, czyli *fibration*.
+Zmieniono je na „rozwłóknienie” i dopisano zasadę do
+`AGENTS.md`. „Wiązka” (*fiber bundle*) i „włókno”
+(*fiber*) pozostają odrębnymi terminami; etykiety
+sekcji i twierdzenia zachowano.
+Pełny skład ma 499 stron, bez błędów, brakujących odsyłaczy
+i `Overfull`; indeks przyjął 282 wpisy bez ostrzeżeń.
+Obejrzano stronę 454 z nowym nagłówkiem i tabelą geometrii.
