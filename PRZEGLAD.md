@@ -4017,3 +4017,15 @@ do etykiet nieistniejących. Ekstrakcja tekstu PDF nie wykazała
 471--473 i 476 z wymiarem cztery, 486 i 491--494
 z dodatkiem C oraz stronę 497 indeksu. Tabela wymiarów
 i nowe odsyłacze są czytelne; nie dodano rysunków.
+
+Osobno przeliczono wszystkie rodziny dodatku C: otwarte
+$GL$, jądro wyznacznika $SL$, macierze antysymetryczne
+dla $O$ i $SO$, antyhermitowskie dla $U$ i $SU$,
+bloki symplektyczne nad $\R$ i $\C$ oraz macierze
+kwaternionowo antyhermitowskie dla zwartej $Sp(n)$.
+Wymiary ilorazów $PGL$, $PSL$, $PU$ i $PSp$
+wynikają z wymiarów ich podgrup centralnych;
+homomorfizm mnożnika daje dodatkowy parametr $GSp$,
+a iloraz przez skalary usuwa go w $PGSp$.
+Porównano każdy wynik z tabelą na stronie 493 i
+sprawdzono przykłady w małym wymiarze.

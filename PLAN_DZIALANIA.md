@@ -364,7 +364,7 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | 38. Egzotyczne $\R^4$ (plik 35) | Włączono po Donaldsonie; pełny niezależny audyt oczekuje | Skontrolować trzy wejścia Gompfa, indukcję i różnicę między typami zorientowanymi a niezorientowanymi |
 | Dodatek A o wynikach zewnętrznych | Uzupełniono źródła i zakresy twierdzeń do `f895347`; pełny audyt dodatku nadal czeka | Zgodność katalogu zależności z rzeczywistymi dowodami, zwłaszcza Walla, rozdziałów 28–33 i szkicu 35 |
 | Dodatek B: homologia singularna i Euler | Dodany w `59fd235`; audyt oczekuje | Wzory Eulera, skończoność, przykłady i zależności od rozdziałów 8 i 17 |
-| Dodatek C: grupy macierzowe | Dodany przez autora; sprawdzono notację i połączenia z przykładami grup Liego, pełny audyt oczekuje | Zweryfikować każdą formułę wymiaru i szeroką tabelę w PDF |
+| Dodatek C: grupy macierzowe | Definicje, algebry i wymiary sprawdzone 8 października; tabela czytelna w PDF | Przy dalszej rozbudowie zachować rozróżnienie wymiaru rzeczywistego i zespolonego oraz $Sp(n)$ od $Sp(2n,\mathbb K)$ |
 | Ponowne różnice w 2–7 | Sprawdzone przy scaleniu `46fd90c`; PDF 397 stron | Wyłącznie format bibliografii; zachowane słowa i źródła, obejrzane zakończenia oraz poprawki rozdziału 7 |
 | Końcowa kontrola całości | Oczekuje | Mapa książki, oznaczenia, terminologia, bibliografia, indeks i PDF |
 
