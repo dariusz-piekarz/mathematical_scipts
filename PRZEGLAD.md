@@ -3759,3 +3759,81 @@ Indeks zachowuje 181 przyjętych wpisów; pozostały dwa
 wcześniejsze ostrzeżenia `Underfull` z innych rozdziałów.
 Obejrzano nowe akapity, ciąg i schemat na stronach 387--388;
 tekst i etykiety są czytelne.
+
+## Rozdział 18 — punkty krytyczne torusa i terminologia (2026-10-06–08)
+
+Przed pracą pobrano stan gałęzi; czyste `ef084df` było aktualne.
+Porównanie z `66b220f` potwierdziło cztery nowe wpisy indeksu,
+przebudowę ilustracji torusa i zmianę cieniowania sfery. Pozostała
+treść matematyczna oraz słowa i adresy bibliografii były identyczne.
+Sprawdzono definicje rozmaitości stabilnej i niestabilnej, pary
+Morse'a–Smale'a i kompleksu trajektorii: konwencja dotyczy przepływu
+ujemnego gradientu, a skończoność sumy w różniczce odsyła do lematu
+o zwartości przestrzeni trajektorii przy różnicy indeksów jeden.
+
+Punkty krytyczne w rysunku autora miały poprawne współrzędne, ale
+prowadnice podpisów były umieszczone przez przybliżone przeliczniki
+`0.79` i `0.67`. Zastąpiono je współrzędnymi `axis cs` z tej samej osi
+PGFPlots, na której rysowana jest powierzchnia i znaczniki. Usunięto
+dwie ręcznie dopasowane elipsy obrysu: nie wynikały z projekcji torusa
+i mogły przedstawiać inny kontur niż właściwa powierzchnia. Zachowano
+jasnoniebieską stylistykę. Podpis wyjaśnia teraz, że znaczniki pokazują
+rzuty wszystkich czterech punktów, także zasłoniętych powierzchnią.
+Kontrola składu ujawniła przesunięcie prowadnic przy przenoszeniu
+współrzędnych poza skalowane otoczenie osi. Wszystkie prowadnice i ich
+etykiety umieszczono więc wewnątrz tej samej osi, usunięto zewnętrzne
+skalowanie przez osiem i jawnie ustalono granice osi. Zachowano jednakową
+skalę przestrzenną, aby nie zniekształcić torusa.
+
+W przykładzie dopisano rozwiązanie równań krytycznych. Dla
+`s=cos φ=±1`, `t=sgn(sin θ)=±1`, `L=√(1+ε²)` i `h=r/L` otrzymujemy
+`sin θ=t/L`, `cos θ=εst/L` oraz `(x,y,z)=(sR+tεh,0,th)`.
+Stąd bezpośrednio wynika `f=εsR+trL`. Dodany odsyłacz do ilustracji
+wiąże obliczenie z jej znacznikami. Niezależne obliczenie dla
+`R=2`, `r=0.69`, `ε=0.16` potwierdziło przynależność do torusa,
+zerowanie obu pochodnych, nieosobliwość hesjanów i kolejno indeksy
+`0,1,1,2`. Wartości krytyczne to w przybliżeniu
+`−1.018776187`, `−0.378776187`, `0.378776187`, `1.018776187`.
+Nie zmieniano poprawnej kolejności podpoziomic: dysk, pierścień,
+torus bez dysku, torus.
+
+Ujednolicono „odwzorowanie” w opisach przyczepiania komórek, przejść,
+ewaluacji i konstrukcji kompleksu CW. Zachowano „mapę” w sensie
+układu współrzędnych Morse'a oraz przy strukturze na przestrzeni
+trajektorii. „Mapy wykresów” doprecyzowano jako parametryzacje wykresów.
+
+### Ponowne pobranie zmian współautora — 8 października
+
+Na prośbę użytkownika ponownie sprawdzono GitHuba. Pobrano dziesięć
+commitów `f0f8b8a`–`f895347`. Rozdział 18 nie był w nich zmieniany.
+Lokalny tekst i wpis dziennika zabezpieczono w osobnym stashu, następnie
+przesunięto gałąź metodą fast-forward i przywrócono pracę. Konflikt
+w `PRZEGLAD.md` dotyczył dopisania różnych wpisów na końcu pliku:
+zachowano pełny dziennik z `f895347` i dopisano lokalny wpis. Nie usuwano
+ani nie zastępowano wpisów współautora. Źródło rozdziału 18 połączono
+bez konfliktu.
+
+Sprawdzono zmiany zasad redakcyjnych, listę importów oraz nowe statusy
+audytów współautora. Aktualny skład ma 33 rozdziały i dwa dodatki.
+Szkic `35-egzotyczne-r4.tex` celowo nie jest importowany: zgodnie z planem
+czeka na rozdział o Donaldsonie. Uzupełniono tę informację i strukturę
+źródeł w `README.md`; odświeżono zakres i kolejkę w `PLAN_DZIALANIA.md`.
+Zachowano raporty audytów współautora rozdziałów 22–24, 26 i 31–33,
+wyraźnie odróżniając je od własnej kontroli przy scaleniu.
+
+### Kontrola końcowa rozdziału 18
+
+Pełny skład `latexmk` zakończył się poprawnie: 443 strony, bez błędów,
+niezdefiniowanych odsyłaczy i `Overfull`. Pozostały dwa wcześniejsze
+ostrzeżenia `Underfull` w rozdziałach 23 i 29 oraz dwa automatyczne
+rozszerzenia ustawienia pływającego rysunku `h` do `ht`. Indeks przyjął
+181 wpisów bez odrzuceń i ostrzeżeń. Kontrola źródeł potwierdziła
+38 importów, 1327 unikalnych etykiet i 1285 rozwiązywalnych odsyłaczy;
+PDF nie zawiera `??`, a wszystkie 1716 odsyłaczy wewnętrznych prowadzą
+do istniejących stron. Obejrzano skład rozdziału na stronach 316–331,
+w tym wszystkie pięć ilustracji, i trzy strony indeksu 441–443.
+Nowe obliczenia i rysunek torusa są czytelne na stronie 320.
+
+Przed zatwierdzeniem ponownie pobrano zdalną gałąź: nie doszły dalsze
+commity współautora. Zaktualizowano główny PDF z tego sprawdzonego
+składu. Następna iteracja obejmuje dodatki do rozdziału 19.

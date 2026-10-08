@@ -14,7 +14,14 @@ tex/
   rozdzialy/01-rozmaitosci.tex         rozdział 1
   rozdzialy/02-pola-wektorowe.tex      rozdział 2
   rozdzialy/...                       pozostałe rozdziały, po jednym na plik
-  rozdzialy/27-chern-weil.tex          rozdział 27
+  rozdzialy/27-chern-weil.tex          Chern–Weil
+  rozdzialy/28-hodge-bochner.tex       Hodge–Bochner
+  rozdzialy/29-grupy-liego.tex         grupy Liego
+  rozdzialy/30-potok-ricciego.tex      potok Ricciego
+  rozdzialy/31-freedman-formy-przeciecia.tex  formy w wymiarze cztery
+  rozdzialy/32-uchwyty-cassona.tex     uchwyty Cassona
+  rozdzialy/33-freedman-klasyfikacja.tex  klasyfikacja Freedmana
+  rozdzialy/35-egzotyczne-r4.tex      szkic poza głównym składem
   dodatki/a-zaleznosci-zewnetrzne.tex  dodatek o wynikach zewnętrznych
   dodatki/b-homologia-singularna-euler.tex  dodatek o homologii singularnej i cesze Eulera
   indeks.tex                         indeks pojęć
@@ -28,6 +35,11 @@ Używamy `\input`, aby podział nie wprowadzał dodatkowych przełamań stron.
 Etykiet nie trzeba zmieniać przy przenoszeniu treści; ich nazwy muszą być
 unikalne w całej książce. Nowy rozdział wymaga dodania pliku i odpowiedniego
 `\input` w pliku głównym. Rysunki TikZ pozostają przy omawiającym je tekście.
+
+Obecny PDF obejmuje 33 rozdziały i dwa dodatki. Plik
+`35-egzotyczne-r4.tex` jest zachowanym szkicem: celowo nie ma go na liście
+importów. Czeka na przygotowanie poprzedzającego rozdziału o Donaldsonie.
+Nie włączaj go automatycznie przy zbieraniu wszystkich plików `.tex`.
 
 ## Kompilacja
 

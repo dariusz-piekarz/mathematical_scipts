@@ -1,11 +1,14 @@
 # Aktualny plan i pokrycie przeglądem
 
-Stan: 7 października 2026. Gałąź: `review/rozdzialy-matematyka`.
+Stan: 8 października 2026. Gałąź: `review/rozdzialy-matematyka`.
 Książka ma 33 rozdziały i dwa dodatki. Zmiany autora do `19fa283`
 porównano z `66b220f`. Pobrano także cztery nowe commity autora
 `59fd235`–`46fd90c` oraz `5c9dcd0`–`308ba4e`; ich dodatkowy zakres
-kontroli wskazano poniżej. Najnowsze dodatki dotyczą rozdziału 23
-i dodatku A; zmiana terminologiczna w rozdziale 1 została sprawdzona.
+kontroli wskazano poniżej. Dnia 8 października pobrano kolejnych dziesięć
+commitów `f0f8b8a`–`f895347`: rozwinięcie rozdziału 1, zmiany chirurgii
+i sfer Milnora oraz rozdziały 28–33 i szkic 35. Rozdział 18 nie był
+przez nie zmieniany. Zachowano zarówno lokalne poprawki, jak i wszystkie
+wpisy dziennika współautora.
 Uzasadnienia i wyniki kontroli:
 [PRZEGLAD.md](PRZEGLAD.md).
 Obsługa projektu: [README.md](README.md).
@@ -44,6 +47,11 @@ autora. Oznaczenia `[x]` dotyczą dodania materiału, nie jego niezależnego
 audytu. Bieżąca praca obejmuje najpierw audyt istniejących treści; dalsze
 ścieżki rozbudowy pozostają planem. Tabela audytu niżej jest jedyną listą
 statusów weryfikacji.
+
+Wpisy o audytach rozdziałów 22–24, 26 i 31–33 oraz szkicu 35 pochodzą
+z dziennika współautora w powyższych commitach. Nie należy przedstawiać
+ich jako ponownego pełnego audytu wykonanego przy samym scaleniu.
+Kontrola końcowa obejmie również zgodność tych rozdziałów z resztą książki.
 
 - [x] **0. Dalsza lektura.** Ujednolicić postać sekcji
   `\section*{Dalsza lektura}` we wszystkich rozdziałach według wzorca
@@ -302,7 +310,8 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | 15. Sard i transwersalność | Audyt dodatków zakończony 6 października; bez poprawek treści | Pięć wpisów indeksu, cztery ilustracje i warunki transwersalności przy brzegu sprawdzone; PDF 401 stron |
 | 16. Zanurzenia i otoczenia | Audyt dodatków zakończony 6 października; PDF 401 stron | Sześć haseł indeksu, cztery ilustracje i kołnierze sprawdzone; poprawiono terminologię odwzorowań oraz zdanie o homotopii do odwzorowania stałego |
 | 17. Przecięcia, dualność i klasy | Audyt dodatków zakończony 6 października | Sprawdzone indeks, konwencje znaków i cztery ilustracje; ujednolicono terminologię i rozwinięto argument Leraya–Hirscha dla wiązki rzutowej |
-| 18–19 | Dawna treść przeszła audyt; różnice po rozbudowie zinwentaryzowano | Przejrzeć różnice rozdziałami, zaczynając od rozdziału 18; uwzględnić nowe commity do `46fd90c` |
+| 18. Teoria Morse'a | Audyt dodatków zakończony 8 października | Sprawdzone definicje i pięć ilustracji; jawne współrzędne krytyczne torusa, dokładne prowadnice podpisów i poprawiona terminologia |
+| 19. Kobordyzmy i uchwyty | Dawna treść przeszła audyt; dodatki oczekują kontroli | Sprawdzić trzy hasła indeksu, przebudowaną ilustrację sfera–torus oraz dopisany warunek omijania przecięć przez łuki Whitneya |
 | 20. h-kobordyzm | Oczekuje | Hipotezy wymiarowe, dyski Whitneya, realizacja ruchów uchwytów |
 | 21. Torsja i s-kobordyzm | Oczekuje | Bazy, strona działania pierścienia, konwencje torsji |
 | 22. Chirurgia geometryczna | Pełny audyt zakończony 8 października; treść bez poprawek | Sprawdzone obramowania, ślad i uchwyt dualny, homologia, $\pi_1$, forma jądra i rysunki |
@@ -318,7 +327,7 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | 32. Uchwyty Cassona | Przegląd i uzupełnienie skutków osadzania dysków zakończone 7 października; PDF 442 strony | Geometrycznie dualne sfery w konkluzji mają poprawione źródło Powella--Ray--Teichnera; pełne osadzanie i standardowość uchwytu pozostają zewnętrzne |
 | 33. Klasyfikacja Freedmana | Przegląd i objaśnienie drogi od dysków do klasyfikacji zakończone 7 października; PDF 442 strony | Osadzanie sfer, chirurgia i $s$-kobordyzm są wskazane jako dalsze wyniki zewnętrzne; klasyfikacja i niezmiennik Kirby'ego--Siebenmanna pozostają zewnętrzne |
 | Szkic 35. Egzotyczne $\R^4$ | Sprawdzony merytorycznie, nie jest w głównym PDF | Zachować kolejność planu: włączenie po nieistniejącym jeszcze rozdziale 34 o Donaldsonie |
-| Dodatek A o wynikach zewnętrznych | Uzupełniono źródło sfer dualnych 7 października; pełny audyt dodatku nadal czeka | Zgodność katalogu zależności z rzeczywistymi dowodami, zwłaszcza nowymi redukcjami Walla i zmianami do `308ba4e` |
+| Dodatek A o wynikach zewnętrznych | Uzupełniono źródła i zakresy twierdzeń do `f895347`; pełny audyt dodatku nadal czeka | Zgodność katalogu zależności z rzeczywistymi dowodami, zwłaszcza Walla, rozdziałów 28–33 i szkicu 35 |
 | Dodatek B: homologia singularna i Euler | Dodany w `59fd235`; audyt oczekuje | Wzory Eulera, skończoność, przykłady i zależności od rozdziałów 8 i 17 |
 | Ponowne różnice w 2–7 | Sprawdzone przy scaleniu `46fd90c`; PDF 397 stron | Wyłącznie format bibliografii; zachowane słowa i źródła, obejrzane zakończenia oraz poprawki rozdziału 7 |
 | Końcowa kontrola całości | Oczekuje | Mapa książki, oznaczenia, terminologia, bibliografia, indeks i PDF |
