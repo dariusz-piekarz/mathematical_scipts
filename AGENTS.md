@@ -4,7 +4,7 @@
 
 - Plikiem głównym jest `geometria_i_topologia_rozniczkowa.tex`; ustala kolejność części przez `\input`. Treść edytuj w odpowiednim pliku `tex/rozdzialy/`, a ustawienia wspólne w `tex/preambula.tex`.
 - `geometria_i_topologia_rozniczkowa.pdf` jest ostatnim sprawdzonym składem, a nie osobnym źródłem treści.
-- Skrypt ma obecnie 36 numerowanych rozdziałów i dwa dodatki. Pozostaje jednym dokumentem PDF, ale zgodnie z nowszą prośbą użytkownika z 5 października 2026 źródła rozdziałów są w osobnych plikach. Korzystaj z istniejących etykiet i odsyłaczy; nie zmieniaj ich przy przenoszeniu treści. Nie dodawaj zadań.
+- Skrypt ma obecnie 38 numerowanych rozdziałów w pięciu częściach i trzy dodatki. Pozostaje jednym dokumentem PDF, ale zgodnie z prośbą użytkownika z 5 października 2026 źródła rozdziałów są w osobnych plikach. Korzystaj z istniejących etykiet i odsyłaczy; nie zmieniaj ich przy przenoszeniu treści. Nie dodawaj zadań.
 - `tex/wstep.tex` zawiera spis treści i mapę książki, `tex/dodatki/` dodatki, a `tex/indeks.tex` polecenia składu indeksu. Nie kompiluj rozdziałów osobno; kompiluj plik główny z katalogu głównego repozytorium.
 
 ## Cel i sposób pisania
@@ -25,7 +25,7 @@
   Gdy chodzi o zbiór liczb niezerowych, pisz $A_*$ zamiast $A^\times$;
   $A^\times$ zachowaj dla grupy elementów odwracalnych, na przykład
   $\Z^\times=\{-1,1\}\neq\Z_*$.
-- Rozróżniaj zanurzenie i osadzenie zgodnie z ich definicjami w skrypcie.
+- Angielskie `embedding` tłumacz jako „zanurzenie” zgodnie z definicją w rozdziale 1. Sam warunek injektywności różniczki nazywaj „immersją”; rozróżniaj oba pojęcia.
 
 ## Rysunki i kontrola
 
