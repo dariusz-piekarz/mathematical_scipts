@@ -1,7 +1,7 @@
 # Aktualny plan i pokrycie przeglądem
 
 Stan: 8 października 2026. Gałąź: `review/rozdzialy-matematyka`.
-Książka ma 33 rozdziały i dwa dodatki. Zmiany autora do `19fa283`
+Książka ma 36 rozdziałów i dwa dodatki. Zmiany autora do `19fa283`
 porównano z `66b220f`. Pobrano także cztery nowe commity autora
 `59fd235`–`46fd90c` oraz `5c9dcd0`–`308ba4e`; ich dodatkowy zakres
 kontroli wskazano poniżej. Dnia 8 października pobrano kolejnych dziesięć
@@ -17,6 +17,15 @@ Obsługa projektu: [README.md](README.md).
 wskazanej tam wersji. Dodanie treści przez autora nie oznacza zakończenia
 jej niezależnego przeglądu. W bieżącym audycie zachowujemy uzgodnioną
 zasadę: jedna iteracja matematyczna obejmuje jeden rozdział.
+
+Na prośbę autora z 8 października 2026 etap rozbudowy obejmuje trzy
+powiązane, osobne rozdziały: geometrię Kleina po grupach Liego,
+twierdzenie Poincarégo w wymiarze trzy po potoku Ricciego oraz
+twierdzenie geometryzacyjne Thurstona z ośmioma modelami. Są to
+rozdziały objaśniające; twierdzenia Perelmana i geometryzacja
+pozostają jawnie wskazanymi wynikami zewnętrznymi. Audyty istniejących
+rozdziałów 20, 21 i 25 prowadzi Filip; wcześniejsze lokalne poprawki
+tych rozdziałów odłożono poza bieżący skład.
 
 ## Uzgodniony zakres
 
@@ -132,16 +141,15 @@ wniosek Bochnera i rozkład sygnatury wyprowadzono w tekście.
 Punkt 6 wykonano w osobnym rozdziale 29: przykłady grup,
 algebra Liego, eksponenta, działanie adjungowane i nakrycie
 $\mathrm{SU}(2)\to\mathrm{SO}(3)$ mają własne dowody.
-Punkt 8 wykonano w osobnym rozdziale 30: od przykładów
+Punkt 8 wykonano w pliku `30-potok-ricciego.tex` (obecnie rozdział 31): od przykładów
 sfery i torusa tekst prowadzi przez równania ewolucyjne
 do poprawki DeTurcka, z nazwanym wejściem parabolicznym.
 Punkt 7 pozostaje w przygotowaniu. Dodano pierwsze trzy
-zaplanowane rozdziały: 31 o formach przecięcia i uchwytach,
-32 o uchwytach Cassona i osadzaniu dysków oraz 33 o
-topologicznej klasyfikacji Freedmana. Szkic o egzotycznych
+zaplanowane rozdziały w plikach o prefiksach 31 (formy przecięcia),
+32 (uchwyty Cassona) i 33 (klasyfikacja Freedmana). Szkic o egzotycznych
 $\R^4$ istnieje w pliku `35-egzotyczne-r4.tex`, ale zgodnie
 z ustaloną kolejnością nie należy jeszcze do głównego PDF:
-rozdział 34 o przeszkodach Donaldsona nie został rozpoczęty.
+rozdział o przeszkodach Donaldsona nie został rozpoczęty.
 
 ### Ścieżka: grupy Liego
 
@@ -197,8 +205,9 @@ Zależności: metryka (rozdział 11), koneksja Levi-Civity (rozdział 12),
 krzywizna i tensor Ricciego (rozdział 14) oraz podstawowe rachunki na
 formach z rozdziału 10. W pierwszej wersji rozpatrywać gładkie, zwarte
 rozmaitości bez brzegu. Osobny plik w `tex/rozdzialy/`
-włączono jako rozdział 30, zachowując numery i odsyłacze
-dotychczasowych rozdziałów. Merytorycznie można go czytać
+włączono pierwotnie jako rozdział 30; po dodaniu geometrii Kleina
+jest rozdziałem 31, z zachowaniem odsyłaczy.
+Merytorycznie można go czytać
 po rozdziałach o krzywiźnie i teorii Hodge'a.
 
 Zdefiniować rodzinę metryk $g(t)$ przez $\partial_tg=-2\mathrm{Ric}(g)$
@@ -222,7 +231,9 @@ poprawce DeTurcka oraz odzyskanie potoku Ricciego przez dyfeomorfizmy;
 analityczne twierdzenie o istnieniu dla układu parabolicznego podać jako
 jawny wynik wejściowy, dopóki jego dowód nie zostanie dopisany.
 Zbieżność potoku, analiza osobliwości i twierdzenia Perelmana są odrębnym
-dużym etapem i nie należą do dowodów tego rozdziału. Źródła podstawowe:
+dużym etapem i nie należą do dowodów tego rozdziału. Nowy rozdział
+o Poincarém w wymiarze trzy objaśnia ich rolę przy jawnym przyjęciu
+głębokich twierdzeń jako wyników zewnętrznych. Źródła podstawowe:
 [Hamilton, *Three-manifolds with positive Ricci curvature* (1982)](https://projecteuclid.org/journals/journal-of-differential-geometry/volume-17/issue-2/Three-manifolds-with-positive-Ricci-curvature/10.4310/jdg/1214436922.full),
 [DeTurck, *Deforming metrics in the direction of their Ricci tensors* (1983)](https://projecteuclid.org/journals/journal-of-differential-geometry/volume-18/issue-1/Deforming-metrics-in-the-direction-of-their-Ricci-tensors/10.4310/jdg/1214509286.full).
 
@@ -258,7 +269,7 @@ rozdział i osobny plik w `tex/rozdzialy/`**. Sugerowana kolejność:
    strukturę dowodu twierdzenia o diagonalizacji formy określonej;
    analizę przestrzeni moduli, zwartość i usuwanie osobliwości można
    nazwać dowiedzionymi dopiero po ich rzeczywistym rozwinięciu.
-5. **Struktury gładkie na $\mathbb R^4$ — szkic napisany, czeka na rozdział 34.** Zbudować drogę od uchwytów
+5. **Struktury gładkie na $\mathbb R^4$ — szkic napisany, czeka na rozdział o Donaldsonie.** Zbudować drogę od uchwytów
    Cassona i przeszkody gładkiej do otwartych rozmaitości
    homeomorficznych z $\mathbb R^4$, ale nie dyfeomorficznych z
    modelem standardowym. Jako główny cel wybrać rodzinę Gompfa:
@@ -322,11 +333,14 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | 27. Chern–Weil | Oczekuje | Normalizacje i transgresja; uzasadnić model względnej kohomologii de Rhama przy identyfikacji klasy Eulera, granicę całek wokół zer i wersję brzegową |
 | 28. Hodge–Bochner | Sprawdzono kluczowe wzory 7 października; pełny audyt całości czeka | Jawne wejście analityczne; własne dowody wzoru Weitzenböcka, znikania Bochnera i rozkładu sygnatury; sprawdzić zgodność z przyszłą teorią czterowymiarową |
 | 29. Grupy Liego | Sprawdzono nakrycie kwaternionowe 7 października; pełny audyt całości czeka | Przykłady, nawias, eksponenta, działanie adjungowane i jawne nakrycie $\mathrm{SU}(2)\to\mathrm{SO}(3)$; później sprawdzić zastosowania w Chernie–Weilu i wymiarze cztery |
-| 30. Potok Ricciego | Sprawdzono równania ewolucyjne i poprawkę DeTurcka 7 października; pełny audyt całości czeka | Ewolucja skalara i pola powierzchni, zasada maksimum, poprawka DeTurcka; istnienie i jednoznaczność PDE pozostają jawnym wejściem analitycznym |
-| 31. Formy przecięcia i uchwyty w wymiarze cztery | Przegląd matematyczny zakończony 7 października; obecny PDF 442 strony | Sprawdzono rachunek $E_8$, formę splotu i dwa rysunki; klasyfikacja jest w osobnym rozdziale 33 |
-| 32. Uchwyty Cassona | Przegląd i uzupełnienie skutków osadzania dysków zakończone 7 października; PDF 442 strony | Geometrycznie dualne sfery w konkluzji mają poprawione źródło Powella--Ray--Teichnera; pełne osadzanie i standardowość uchwytu pozostają zewnętrzne |
-| 33. Klasyfikacja Freedmana | Przegląd i objaśnienie drogi od dysków do klasyfikacji zakończone 7 października; PDF 442 strony | Osadzanie sfer, chirurgia i $s$-kobordyzm są wskazane jako dalsze wyniki zewnętrzne; klasyfikacja i niezmiennik Kirby'ego--Siebenmanna pozostają zewnętrzne |
-| Szkic 35. Egzotyczne $\R^4$ | Sprawdzony merytorycznie, nie jest w głównym PDF | Zachować kolejność planu: włączenie po nieistniejącym jeszcze rozdziale 34 o Donaldsonie |
+| 30. Geometria Kleina (plik 29a) | Dodano 8 października; niezależny audyt oczekuje | Przestrzenie $G/H$ i modele afiniczny, projektowy, euklidesowy, sferyczny, torusa i dysku Poincarégo |
+| 31. Potok Ricciego (plik 30) | Sprawdzono równania ewolucyjne i poprawkę DeTurcka 7 października; pełny audyt całości czeka | Ewolucja skalara i pola powierzchni, zasada maksimum, poprawka DeTurcka; istnienie i jednoznaczność PDE pozostają jawnym wejściem analitycznym |
+| 32. Poincaré w wymiarze trzy (plik 30a) | Dodano 8 października; niezależny audyt oczekuje | Dla głębokich twierdzeń Perelmana i Hamiltona zachować jawne hipotezy i źródła; sprawdzić topologiczny wniosek z wygaśnięcia oraz użycie twierdzenia Moise'a |
+| 33. Geometrie Thurstona (plik 30b) | Dodano 8 października; niezależny audyt oczekuje | Osiem geometrii, rozkład pierwszy i JSJ, twierdzenie geometryzacyjne jako jawny wynik zewnętrzny |
+| 34. Formy przecięcia i uchwyty w wymiarze cztery (plik 31) | Przegląd matematyczny zakończony 7 października w poprzedniej numeracji; PDF 442 strony | Sprawdzono rachunek $E_8$, formę splotu i dwa rysunki; klasyfikacja jest w osobnym rozdziale o etykiecie `ch:freedman-klasyfikacja` |
+| 35. Uchwyty Cassona (plik 32) | Przegląd i uzupełnienie skutków osadzania dysków zakończone 7 października w poprzedniej numeracji; PDF 442 strony | Geometrycznie dualne sfery w konkluzji mają poprawione źródło Powella--Ray--Teichnera; pełne osadzanie i standardowość uchwytu pozostają zewnętrzne |
+| 36. Klasyfikacja Freedmana (plik 33) | Przegląd i objaśnienie drogi od dysków do klasyfikacji zakończone 7 października w poprzedniej numeracji; PDF 442 strony | Osadzanie sfer, chirurgia i $s$-kobordyzm są wskazane jako dalsze wyniki zewnętrzne; klasyfikacja i niezmiennik Kirby'ego--Siebenmanna pozostają zewnętrzne |
+| Szkic egzotycznych $\R^4$ (plik 35) | Sprawdzony merytorycznie, nie jest w głównym PDF | Zachować kolejność merytoryczną: włączenie po przyszłym rozdziale o Donaldsonie; prefiks pliku jest historyczny |
 | Dodatek A o wynikach zewnętrznych | Uzupełniono źródła i zakresy twierdzeń do `f895347`; pełny audyt dodatku nadal czeka | Zgodność katalogu zależności z rzeczywistymi dowodami, zwłaszcza Walla, rozdziałów 28–33 i szkicu 35 |
 | Dodatek B: homologia singularna i Euler | Dodany w `59fd235`; audyt oczekuje | Wzory Eulera, skończoność, przykłady i zależności od rozdziałów 8 i 17 |
 | Ponowne różnice w 2–7 | Sprawdzone przy scaleniu `46fd90c`; PDF 397 stron | Wyłącznie format bibliografii; zachowane słowa i źródła, obejrzane zakończenia oraz poprawki rozdziału 7 |
@@ -356,7 +370,7 @@ Ta tabela zastępuje `PROPOZYCJE_UZUPELNIEN.md` i listę `do_zrobienia.md`.
 | 7 | h-kobordyzm Smale'a | Jest rozdział 20. Sprawdzić wymiar W≥6, spójność, obramowania dysków Whitneya, skrajne indeksy i redukcję uchwytów do iloczynu z ustalonym dolnym końcem. |
 | 8 | Torsja Whiteheada i s-kobordyzm | Jest rozdział 21. Sprawdzić Z[π₁], bazowane kompleksy nakrycia, prostą równoważność i przeszkodę do iloczynu. Nie utożsamiać torsji Whiteheada z trikiem Whitneya. |
 | 9 | Chirurgia i jej przeszkody | Są rozdziały 22–24, szerzej niż pierwotnie proponowano. Audyt obejmie wpływ operacji na π₁, homologię i formę przecięcia, obramowania, zabijanie klas, Walla i ciąg dokładny. |
-| 10 | Poincaré | Jest rozdział 25. Dla n=2 sprawdzić użycie klasyfikacji powierzchni; dla n>5 usunięcie dysków, h-kobordyzm i sklejenie; n=5 wymaga osobnego argumentu. Nie zamieniać homeomorfizmu w dyfeomorfizm. Wymiar 4 zaplanowano osobno w tym PDF. |
+| 10 | Poincaré | Rozdział 25 obejmuje n=2 oraz n≥5; nowy rozdział 32 omawia n=3 przez potok Ricciego z jawnymi wejściami Perelmana i twierdzeniem Moise'a. Dla n=2 sprawdzić użycie klasyfikacji powierzchni; dla n>5 usunięcie dysków, h-kobordyzm i sklejenie; n=5 wymaga osobnego argumentu. Nie zamieniać homeomorfizmu w dyfeomorfizm bez wskazania dodatkowego wyniku. Wymiar 4 zaplanowano osobno w tym PDF. |
 | 11 | Sfery Milnora | Jest rozdział 26: wiązki S³ nad S⁴, rachunki i niezmiennik egzotyczności. Sprawdzić użycie klas Pontriagina i sygnatury. Dalsze grupy sfer homotopijnych pozostają możliwym rozszerzeniem. |
 | 12 | Egzotyczne R⁴ | Zaplanowane w tym PDF: topologia końców, uchwyty Cassona, Freedman i Donaldson. Nie wynika to z samego niepowodzenia triku Whitneya ani z konstrukcji sfer Milnora. |
 

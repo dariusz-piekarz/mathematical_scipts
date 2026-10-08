@@ -17,7 +17,10 @@ tex/
   rozdzialy/27-chern-weil.tex          Chern–Weil
   rozdzialy/28-hodge-bochner.tex       Hodge–Bochner
   rozdzialy/29-grupy-liego.tex         grupy Liego
+  rozdzialy/29a-geometria-kleina.tex   geometria Kleina i przestrzenie jednorodne
   rozdzialy/30-potok-ricciego.tex      potok Ricciego
+  rozdzialy/30a-poincare-trzy.tex       Poincaré w wymiarze trzy
+  rozdzialy/30b-geometrizacja-thurstona.tex  geometrie Thurstona
   rozdzialy/31-freedman-formy-przeciecia.tex  formy w wymiarze cztery
   rozdzialy/32-uchwyty-cassona.tex     uchwyty Cassona
   rozdzialy/33-freedman-klasyfikacja.tex  klasyfikacja Freedmana
@@ -36,10 +39,12 @@ Etykiet nie trzeba zmieniać przy przenoszeniu treści; ich nazwy muszą być
 unikalne w całej książce. Nowy rozdział wymaga dodania pliku i odpowiedniego
 `\input` w pliku głównym. Rysunki TikZ pozostają przy omawiającym je tekście.
 
-Obecny PDF obejmuje 33 rozdziały i dwa dodatki. Plik
+Po złożeniu nowych rozdziałów PDF obejmuje 36 rozdziałów i dwa dodatki. Plik
 `35-egzotyczne-r4.tex` jest zachowanym szkicem: celowo nie ma go na liście
 importów. Czeka na przygotowanie poprzedzającego rozdziału o Donaldsonie.
 Nie włączaj go automatycznie przy zbieraniu wszystkich plików `.tex`.
+Prefiksy nazw istniejących plików są historyczne; numer rozdziału
+w składzie wyznacza wyłącznie kolejność `\input` w pliku głównym.
 
 ## Kompilacja
 
@@ -51,11 +56,11 @@ oraz opcjonalnie `latexmk` i Perl. Pełny skład wraz z indeksem:
 latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=build/sklad geometria_i_topologia_rozniczkowa.tex
 ```
 
-Na komputerze z PortableGit z dysku E Perl jest już dostępny.
+Na bieżącym komputerze Perl jest dostępny w instalacji Git.
 Jeśli MiKTeX nie znajduje Perla, przed powyższym poleceniem ustaw w tej sesji:
 
 ```powershell
-$env:PATH = 'E:\Programs\Windows\PortableGit\usr\bin;' + $env:PATH
+$env:PATH = 'C:\Program Files\Git\usr\bin;' + $env:PATH
 ```
 
 Bez `latexmk` można wykonać kolejno:

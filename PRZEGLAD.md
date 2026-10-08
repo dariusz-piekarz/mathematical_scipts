@@ -3896,3 +3896,56 @@ i trzy strony indeksu 441–443. Szczegółowo sprawdzono nowe sklejenie
 i ilustrację na stronie 335 oraz rozwinięty ruch na stronach 342–343.
 Ponowne pobranie gałęzi przed publikacją nie wykazało zmian współautora.
 Główny PDF zastąpiono sprawdzonym składem. Następny etap: rozdział 20.
+
+## Rozbudowa: geometria Kleina, wymiar trzy i geometryzacja (2026-10-08)
+
+Na prośbę autora dodano trzy osobne rozdziały w jednym skrypcie:
+29a-geometria-kleina.tex po grupach Liego,
+30a-poincare-trzy.tex i 30b-geometrizacja-thurstona.tex
+po potoku Ricciego. Kolejność prowadzi od działania grup
+do przestrzeni jednorodnych, a następnie od ewolucji metryki
+do jej zastosowań w topologii wymiaru trzy. Istniejące etykiety
+pozostały zachowane; nowe pliki mają własne etykiety.
+
+Rozdział o geometrii Kleina wyprowadza identyfikację orbity
+z $G/G_p$ przy jawnie wskazanym zewnętrznym twierdzeniu
+o ilorazie przez domkniętą podgrupę. Przykłady obejmują
+przestrzenie euklidesowe i afiniczne, $\mathbb{RP}^n$,
+sfery, torusy i dysk Poincarégo. Rozróżniono skuteczne
+i nieskuteczne działanie na torusie oraz geometrię projektową
+od metryki sferycznej.
+
+Rozdział o Poincarém w wymiarze trzy łączy istniejący potok
+Ricciego z analizą szyjek, chirurgią, wygaśnięciem i odtworzeniem
+topologii. Twierdzenia Perelmana oraz techniczna kontrola
+chirurgii są jawnie oznaczone jako wyniki zewnętrzne,
+zgodnie z opracowaniem Morgana--Tiana. Dowód końcowego
+wniosku z tych wyników rozpisano, a postać topologiczną
+otrzymano przy jawnym użyciu wygładzania Moise'a;
+nie przedstawia się go jako samodzielnego pełnego dowodu
+twierdzeń Perelmana.
+
+Rozdział o geometryzacji podaje osiem modeli Thurstona,
+ich metryki, przykładowe ilorazy i rozróżniki topologiczne.
+Twierdzenie po rozkładzie pierwszym i cięciu JSJ
+jest jawnym wynikiem zewnętrznym, zgodnym ze źródłami
+Thurstona, Scotta oraz Morgana--Tiana. Związek z potokiem
+Ricciego jest opisem idei, bez przypisywania skryptowi
+dowodu geometryzacji.
+
+Zaktualizowano kolejność importów, mapę skryptu,
+katalog wyników zewnętrznych, dokumentację struktury
+i aktualną tabelę zakresu. Prefiksy nazw starych plików
+odtąd są historyczne, a numerację w PDF wyznacza
+kolejność importów. Etap oznacza dodanie treści;
+nie jest niezależnym audytem matematycznym nowych rozdziałów.
+Wcześniejsze lokalne zmiany audytowe rozdziałów 20, 21 i 25
+odłożono przed pobraniem zmian współautora.
+
+Pełny skład z pliku głównego dał 466 stron. Log nie zawiera błędów,
+niezdefiniowanych odsyłaczy ani ostrzeżeń `Overfull`; pozostają dwa
+wcześniejsze ostrzeżenia `Underfull` w rozdziałach 23 i 29. Indeks
+przyjął 210 wpisów bez odrzuceń i ostrzeżeń. Obejrzano strony
+415, 420, 428, 434, 437 i 440 z nową treścią; nie ma nowych rysunków.
+`latexmk` zgłosił jedynie komunikat środowiska MiKTeX o niesprawdzonych
+aktualizacjach, po czym potwierdził aktualność wynikowego PDF.
