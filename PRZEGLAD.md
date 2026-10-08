@@ -4030,13 +4030,13 @@ a iloraz przez skalary usuwa go w $PGSp$.
 Porównano każdy wynik z tabelą na stronie 493 i
 sprawdzono przykłady w małym wymiarze.
 
-## Kolejność rangi i tensoru modułów (2026-10-08)
+## Kolejność rangi i iloczynu tensorowego modułów (2026-10-08)
 
 Autor wskazał błąd kolejności w rozdziale 5: definicja
 \(\operatorname{rank}_R M=\dim_K(M\otimes_R K)\) poprzedzała
 konstrukcję \(M\otimes_R K\) dla modułów. Pozostawiono dowód wymiaru
 przestrzeni ilorazowej przy ilorazie, a definicję rangi,
-addytywność i przykład z torsją przeniesiono za definicję tensoru
+addytywność i przykład z torsją przeniesiono za definicję iloczynu tensorowego
 modułów oraz rozszerzenie skalarów. Zachowano wcześniejsze etykiety.
 
 Dowód addytywności korzystał z zapisu ułamkowego bez uzasadnienia.
@@ -4049,3 +4049,14 @@ niezdefiniowanych odsyłaczy, błędów i ostrzeżeń `Overfull`.
 Indeks przyjął 282 wpisy bez odrzuceń i ostrzeżeń; dwa
 `Underfull` pochodzą z innych rozdziałów. Obejrzano strony
 124--126 z rozszerzeniem skalarów, lokalizacją i addytywnością rangi.
+
+## Terminologia iloczynu tensorowego modułów (2026-10-08)
+
+W rozdziale 5 tam, gdzie mowa o konstrukcji $M\otimes_R N$,
+użyto pełnej nazwy „iloczyn tensorowy”: dotyczy to własności
+uniwersalnej, odwzorowań tensorowych, homomorfizmu z iloczynu
+oraz opisu lokalizacji. „Tensor prosty” pozostaje nazwą elementu
+postaci $m\otimes n$. Etykiety twierdzeń i odsyłacze zachowano.
+Pełny skład ma 499 stron, bez błędów, brakujących odsyłaczy
+i ostrzeżeń `Overfull`; indeks przyjął 282 wpisy bez ostrzeżeń.
+Obejrzano stronę 123 z poprawionymi nazwami twierdzeń.
