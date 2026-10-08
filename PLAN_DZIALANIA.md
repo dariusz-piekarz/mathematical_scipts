@@ -325,7 +325,7 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 |---|---|---|
 | Podział źródeł i importy | Zakończono, `9148128` | Kontrola regresji przy dalszych zmianach |
 | 1. Rozmaitości | Dodatki sprawdzone; 7 października dołączono i skontrolowano robocze rozwinięcie identyfikacji przestrzeni stycznych; autor dopisał liniowość $\Phi$ i dwa rysunki funkcji odcinającej | Nowe zmiany autora uwzględniono w składzie; nie stanowią pełnego ponownego audytu rozdziału |
-| 5. Algebra abstrakcyjna | Nowe iloczyny grup, iloraz i ranga modułu sprawdzone 8 października; pełny wcześniejszy audyt pochodzi z 6 października | Przywrócono definicję podmodułu i twierdzenie o izomorfizmie; uściślono dokładność lokalizacji |
+| 5. Algebra abstrakcyjna | Nowe iloczyny grup, iloraz i ranga modułu sprawdzone 8 października; pełny wcześniejszy audyt pochodzi z 6 października | Przywrócono definicję podmodułu i twierdzenie o izomorfizmie; rangę przeniesiono za tensor modułów i udowodniono identyfikację tensoru z lokalizacją |
 | 2. Pola wektorowe | Audyt dodatków zakończony 6 października; PDF 387 stron | Sprawdzone powiązanie z brzegiem, przykład przepływu jednostronnego, bibliografia i rysunki |
 | 3. Algebra tensorowa | Audyt dodatków zakończony 6 października; treść bez poprawek | Poprawny odsyłacz do rozdziału 5, indeks, źródła i ilustracje |
 | 4. Grassmanniany, Clifford i spinory | Wcześniejszy audyt z 6 października; 8 października dodano grupę Pin | Sprawdzono nakrycie $\operatorname{Pin}(n)\to O(n)$ i stronę 100 PDF |

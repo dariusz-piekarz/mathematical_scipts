@@ -4029,3 +4029,23 @@ homomorfizm mnożnika daje dodatkowy parametr $GSp$,
 a iloraz przez skalary usuwa go w $PGSp$.
 Porównano każdy wynik z tabelą na stronie 493 i
 sprawdzono przykłady w małym wymiarze.
+
+## Kolejność rangi i tensoru modułów (2026-10-08)
+
+Autor wskazał błąd kolejności w rozdziale 5: definicja
+\(\operatorname{rank}_R M=\dim_K(M\otimes_R K)\) poprzedzała
+konstrukcję \(M\otimes_R K\) dla modułów. Pozostawiono dowód wymiaru
+przestrzeni ilorazowej przy ilorazie, a definicję rangi,
+addytywność i przykład z torsją przeniesiono za definicję tensoru
+modułów oraz rozszerzenie skalarów. Zachowano wcześniejsze etykiety.
+
+Dowód addytywności korzystał z zapisu ułamkowego bez uzasadnienia.
+Dodano izomorfizm \(M\otimes_R\operatorname{Frac}(R)\cong
+(R\setminus\{0\})^{-1}M\) wraz z konstrukcją obu odwzorowań.
+Zmieniono też objaśnienie rangi, by nie sugerowało rozkładu
+każdego modułu nad dziedziną na część wolną i torsyjną.
+Pełny skład `latexmk` zakończył się poprawnie: 499 stron, bez
+niezdefiniowanych odsyłaczy, błędów i ostrzeżeń `Overfull`.
+Indeks przyjął 282 wpisy bez odrzuceń i ostrzeżeń; dwa
+`Underfull` pochodzą z innych rozdziałów. Obejrzano strony
+124--126 z rozszerzeniem skalarów, lokalizacją i addytywnością rangi.
