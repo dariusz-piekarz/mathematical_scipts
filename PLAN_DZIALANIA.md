@@ -1,7 +1,9 @@
 # Aktualny plan i pokrycie przeglądem
 
 Stan: 8 października 2026. Gałąź: `review/rozdzialy-matematyka`.
-Książka ma 36 rozdziałów i dwa dodatki. Zmiany autora do `19fa283`
+Książka ma obecnie 38 rozdziałów w pięciu częściach i trzy dodatki.
+Prefiksy nazw plików są historyczne; numerację w PDF ustala kolejność
+importów. Zmiany autora do `19fa283`
 porównano z `66b220f`. Pobrano także cztery nowe commity autora
 `59fd235`–`46fd90c` oraz `5c9dcd0`–`308ba4e`; ich dodatkowy zakres
 kontroli wskazano poniżej. Dnia 8 października pobrano kolejnych dziesięć
@@ -12,6 +14,20 @@ wpisy dziennika współautora.
 Uzasadnienia i wyniki kontroli:
 [PRZEGLAD.md](PRZEGLAD.md).
 Obsługa projektu: [README.md](README.md).
+
+W iteracji z 8 października ujednolicono „zanurzenie” dla
+*embedding* i pozostawiono „immersję” dla samej injektywności
+różniczki; uzupełniono rozdział 5, dodano grupę Pin i podstawy drzew,
+powiązano dodatek C z przykładami grup oraz ułożono rozdziały
+w pięciu częściach. Rozdziały o Donaldsonie i egzotycznych $\R^4$
+są teraz po klasyfikacji Freedmana. Aktualne nierozstrzygnięte
+kontrole są w tabeli audytu; głębokie twierdzenia Walla,
+Bardena, Hirzebrucha, Donaldsona i Gompfa pozostają jawnie
+cytowanymi wynikami zewnętrznymi. Dowodów twierdzeń Borsuka--Ulama,
+Brouwera i o niezmienniczości obszaru nie dodano do dodatku A,
+ponieważ obecny skrypt nie rozwija pełnego rachunku kohomologii
+modulo $2$ przestrzeni projektowych ani wszystkich potrzebnych
+kroków homologii lokalnej.
 
 **To jedyna aktualna lista zadań.** Dawne „zakończono” w dzienniku dotyczy
 wskazanej tam wersji. Dodanie treści przez autora nie oznacza zakończenia
@@ -68,13 +84,14 @@ Kontrola końcowa obejmie również zgodność tych rozdziałów z resztą ksią
 - [x] **1. Rysunki chirurgii.** Dodać rysunki, które wyjaśniają operację
   chirurgiczną, obramowanie, przecięcia i ruch uchwytów; sprawdzić ich
   geometrię, oznaczenia i widoczność w złożonym PDF.
-- [ ] **2. Dokończenie części chirurgicznej i jej zastosowań.** Rozwinięto
+- [x] **2. Dokończenie części chirurgicznej i jej zastosowań.** Rozwinięto
   trik Whitneya, ruchy uchwytów, kryteria Walla, klasyfikację powierzchni,
   przypadek wymiaru 5 oraz rachunek sygnatury i sfer Milnora, lecz
   pozostały wskazane niżej wejścia geometryczne Walla i Milnora,
-  klasyfikacja Bardena oraz twierdzenie Hirzebrucha. Dopisywać ich
-  dostępne dowody i rachunki krok po kroku; każdy głęboki wynik,
-  którego dowodu jeszcze nie ma, pozostawić jasno nazwanym wejściem.
+  klasyfikacja Bardena oraz twierdzenie Hirzebrucha. Dostępne
+  dowody i rachunki rozpisano; długie głębokie wyniki pozostają
+  jasno nazwanymi wejściami zewnętrznymi. Niezależne audyty
+  rozdziałów 20, 21 i 25 są osobnymi pozycjami w tabeli niżej.
 - [x] **3. Dodatek: homologia singularna i cecha Eulera.** Rozwinąć
   przykłady i związki z charakterystyką Eulera, odsyłając do istniejących
   definicji w rozdziale 8 i dualności z rozdziału 17. Nowy tekst umieścić
@@ -90,10 +107,11 @@ Kontrola końcowa obejmie również zgodność tych rozdziałów z resztą ksią
   ścieżki poniżej.
 - [x] **6. Grupy Liego.** Przygotować i dodać osobny rozdział według
   ścieżki poniżej.
-- [ ] **7. Wymiar cztery.** Przygotować osobne rozdziały z podstawami
-  teorii Freedmana i z dowodem istnienia nieskończenie wielu parami
-  nierównoważnych struktur gładkich na $\mathbb R^4$, z jawnym bilansem
-  twierdzeń zewnętrznych.
+- [x] **7. Wymiar cztery.** Pięć osobnych rozdziałów obejmuje podstawy
+  teorii Freedmana, przeszkodę Donaldsona oraz dowód istnienia
+  nieskończenie wielu parami nierównoważnych struktur gładkich na
+  $\mathbb R^4$ z jawnym bilansem twierdzeń zewnętrznych.
+  Dodanie treści nie zastępuje niezależnego audytu.
 - [x] **8. Potok Ricciego.** Przygotować osobny rozdział o ewolucji metryki,
   przykładach i pierwszych równaniach ewolucyjnych według ścieżki poniżej.
 - [x] **9. Terminologia kiełków.** Ujednolicić tłumaczenie *germ* funkcji
@@ -108,8 +126,11 @@ Stan wcześniejszych uzupełnień: punkty 0, 1, 3 oraz 9--10 wykonano w źródł
 w dodatku B oraz w zasadach terminologicznych. Klasyfikację powierzchni
 dowiedziono w rozdziale 25
 przy jawnym wejściu w postaci twierdzenia o triangulacji powierzchni.
-Punkt 2 pozostaje otwarty: zewnętrzne pozostają geometryczne lematy Walla,
-klasyfikacja Bardena oraz twierdzenie Hirzebrucha. Rozdział 22
+Punkt 2 jest treściowo zamknięty przy jawnym przyjęciu wyników
+zewnętrznych. Są nimi geometryczne lematy Walla,
+klasyfikacja Bardena i twierdzenie Hirzebrucha, których pełne dowody
+przekraczają przyjętą granicę długości. Ich dokładne wyniki i źródła
+są już podane; nie należy nazywać ich dowiedzionymi. Rozdział 22
 zawiera przestrzenny przykład chirurgii dającej zawęźlony torus.
 Na dalszą prośbę autora rozdział 23 rozwinięto o rachunek przecięć
 nad `Z[π]`, dowód przejścia od prostego lagranżjanu do bazy
@@ -144,12 +165,11 @@ $\mathrm{SU}(2)\to\mathrm{SO}(3)$ mają własne dowody.
 Punkt 8 wykonano w pliku `30-potok-ricciego.tex` (obecnie rozdział 31): od przykładów
 sfery i torusa tekst prowadzi przez równania ewolucyjne
 do poprawki DeTurcka, z nazwanym wejściem parabolicznym.
-Punkt 7 pozostaje w przygotowaniu. Dodano pierwsze trzy
-zaplanowane rozdziały w plikach o prefiksach 31 (formy przecięcia),
-32 (uchwyty Cassona) i 33 (klasyfikacja Freedmana). Szkic o egzotycznych
-$\R^4$ istnieje w pliku `35-egzotyczne-r4.tex`, ale zgodnie
-z ustaloną kolejnością nie należy jeszcze do głównego PDF:
-rozdział o przeszkodach Donaldsona nie został rozpoczęty.
+Punkt 7 ma pięć rozdziałów: formy przecięcia, uchwyty Cassona,
+klasyfikację Freedmana, przeszkodę Donaldsona i egzotyczne $\R^4$.
+Ostatnie dwa włączono do wspólnego składu po przygotowaniu
+rozdziału o Donaldsonie; pełny niezależny audyt tych dwóch
+rozdziałów nadal czeka.
 
 ### Ścieżka: grupy Liego
 
@@ -269,7 +289,7 @@ rozdział i osobny plik w `tex/rozdzialy/`**. Sugerowana kolejność:
    strukturę dowodu twierdzenia o diagonalizacji formy określonej;
    analizę przestrzeni moduli, zwartość i usuwanie osobliwości można
    nazwać dowiedzionymi dopiero po ich rzeczywistym rozwinięciu.
-5. **Struktury gładkie na $\mathbb R^4$ — szkic napisany, czeka na rozdział o Donaldsonie.** Zbudować drogę od uchwytów
+5. **Struktury gładkie na $\mathbb R^4$ — włączone po rozdziale o Donaldsonie.** Zbudować drogę od uchwytów
    Cassona i przeszkody gładkiej do otwartych rozmaitości
    homeomorficznych z $\mathbb R^4$, ale nie dyfeomorficznych z
    modelem standardowym. Jako główny cel wybrać rodzinę Gompfa:
@@ -305,12 +325,12 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 |---|---|---|
 | Podział źródeł i importy | Zakończono, `9148128` | Kontrola regresji przy dalszych zmianach |
 | 1. Rozmaitości | Dodatki sprawdzone; 7 października dołączono i skontrolowano robocze rozwinięcie identyfikacji przestrzeni stycznych; autor dopisał liniowość $\Phi$ i dwa rysunki funkcji odcinającej | Nowe zmiany autora uwzględniono w składzie; nie stanowią pełnego ponownego audytu rozdziału |
-| 5. Algebra abstrakcyjna | Audyt zakończony 6 października; PDF 387 stron | Uzupełnione dowody, sprawdzony graf słów, indeks i odsyłacze |
+| 5. Algebra abstrakcyjna | Nowe iloczyny grup, iloraz i ranga modułu sprawdzone 8 października; pełny wcześniejszy audyt pochodzi z 6 października | Przywrócono definicję podmodułu i twierdzenie o izomorfizmie; uściślono dokładność lokalizacji |
 | 2. Pola wektorowe | Audyt dodatków zakończony 6 października; PDF 387 stron | Sprawdzone powiązanie z brzegiem, przykład przepływu jednostronnego, bibliografia i rysunki |
 | 3. Algebra tensorowa | Audyt dodatków zakończony 6 października; treść bez poprawek | Poprawny odsyłacz do rozdziału 5, indeks, źródła i ilustracje |
-| 4. Grassmanniany, Clifford i spinory | Audyt dodatków zakończony 6 października; treść bez poprawek | Sprawdzone dwa zmienione rysunki sfer, pozostałe ilustracje i indeks |
+| 4. Grassmanniany, Clifford i spinory | Wcześniejszy audyt z 6 października; 8 października dodano grupę Pin | Sprawdzono nakrycie $\operatorname{Pin}(n)\to O(n)$ i stronę 100 PDF |
 | 6. Algebra homologiczna | Audyt dodatków zakończony 6 października; PDF 387 stron | Zachowana kompletność po przeniesieniu, przywrócone założenie o R i związek redukcji modulo m z tensorem |
-| 7. Homotopia, nakrycia i CW | Audyt dodatków zakończony 6 października; PDF 387 stron | Precyzyjne odsyłacze do grup, końcowa faktoryzacja i przykład torusa |
+| 7. Homotopia, nakrycia i CW | Wcześniejszy audyt z 6 października; 8 października dodano minimalną teorię grafów | Drzewo, las, korzeń, liść i rachunek krawędzi sprawdzone na stronie 151 PDF |
 | 8. Homologia przestrzeni | Audyt dodatków zakończony 6 października; treść bez poprawek | Sprawdzone pięć wpisów indeksu, definicje, bibliografia i trzy ilustracje; PDF 397 stron |
 | 9. Wyższe grupy homotopii | Audyt dodatków zakończony 6 października; PDF 397 stron | Sprawdzone indeks, definicje i cztery rysunki; poprawiono 19 użyć słowa „mapa” na „odwzorowanie” |
 | 10. Formy i de Rham | Audyt dodatków zakończony 6 października; bez poprawek treści | Siedem wpisów indeksu, pięć ilustracji i zgodność konwencji przy brzegu; PDF 397 stron |
@@ -318,31 +338,33 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | 12. Koneksje i transport | Audyt dodatków zakończony 6 października; bez poprawek treści | Cztery wpisy indeksu, definicje i dwa rysunki sprawdzone; PDF 397 stron |
 | 13. Geodezyjne i zupełność | Audyt dodatków zakończony 6 października; PDF 397 stron | Definicje i dziewięć ilustracji sprawdzone; usunięty powtórzony wpis indeksu |
 | 14. Krzywizna | Audyt dodatków zakończony 6 października; PDF 397 stron | Indeks i trzy zmiany cieniowania sprawdzone; rozwinięto powiązania dowodu Cherna–Gaussa–Bonneta z rozdziałami 17 i 27 |
-| 15. Sard i transwersalność | Audyt dodatków zakończony 6 października; bez poprawek treści | Pięć wpisów indeksu, cztery ilustracje i warunki transwersalności przy brzegu sprawdzone; PDF 401 stron |
-| 16. Zanurzenia i otoczenia | Audyt dodatków zakończony 6 października; PDF 401 stron | Sześć haseł indeksu, cztery ilustracje i kołnierze sprawdzone; poprawiono terminologię odwzorowań oraz zdanie o homotopii do odwzorowania stałego |
-| 17. Przecięcia, dualność i klasy | Audyt dodatków zakończony 6 października | Sprawdzone indeks, konwencje znaków i cztery ilustracje; ujednolicono terminologię i rozwinięto argument Leraya–Hirscha dla wiązki rzutowej |
-| 18. Teoria Morse'a | Audyt dodatków zakończony 8 października | Sprawdzone definicje i pięć ilustracji; jawne współrzędne krytyczne torusa, dokładne prowadnice podpisów i poprawiona terminologia |
-| 19. Kobordyzmy i uchwyty | Audyt dodatków zakończony 8 października; PDF 443 strony | Sprawdzone trzy hasła i pięć ilustracji; przywrócony warunek orientacji w podpisie, jawny opis sklejenia pierścieni i rozwinięty lokalny ruch Whitneya przy zachowanych założeniach o dyskach |
-| 20. h-kobordyzm | Oczekuje | Hipotezy wymiarowe, dyski Whitneya, realizacja ruchów uchwytów |
-| 21. Torsja i s-kobordyzm | Oczekuje | Bazy, strona działania pierścienia, konwencje torsji |
-| 22. Chirurgia geometryczna | Pełny audyt zakończony 8 października; treść bez poprawek | Sprawdzone obramowania, ślad i uchwyt dualny, homologia, $\pi_1$, forma jądra i rysunki |
-| 23. Przeszkoda chirurgiczna | Pełny audyt treści zakończony 7 października; sprawdzono definicje, rachunki znaków i baz, tok dowodu oraz źródła Walla i Milnora | Uściślono dual lewego modułu i wzór dla udoskonalenia kwadratowego; geometryczne lematy Walla i Milnora oraz klasyfikacja grup $L$ pozostają jawnie zewnętrzne |
-| 24. Ciąg chirurgii | Pełny audyt zakończony 8 października | Uściślono naturę obu strzałek przeszkody i przejście do $s$-kobordyzmu; bijekcja z $[X,G/O]$ i działanie grupy $L$ pozostają jawnymi wynikami Walla |
-| 25. Poincaré | Oczekuje | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm |
-| 26. Sfery Milnora | Przegląd konstrukcji, klas charakterystycznych i egzotyczności zakończony 7 października; PDF 442 strony | Rozpisano homologię i niezmiennik; wzór Hirzebrucha pozostaje jawnym wejściem zewnętrznym |
-| 27. Chern–Weil | Oczekuje | Normalizacje i transgresja; uzasadnić model względnej kohomologii de Rhama przy identyfikacji klasy Eulera, granicę całek wokół zer i wersję brzegową |
-| 28. Hodge–Bochner | Sprawdzono kluczowe wzory 7 października; pełny audyt całości czeka | Jawne wejście analityczne; własne dowody wzoru Weitzenböcka, znikania Bochnera i rozkładu sygnatury; sprawdzić zgodność z przyszłą teorią czterowymiarową |
-| 29. Grupy Liego | Sprawdzono nakrycie kwaternionowe 7 października; pełny audyt całości czeka | Przykłady, nawias, eksponenta, działanie adjungowane i jawne nakrycie $\mathrm{SU}(2)\to\mathrm{SO}(3)$; później sprawdzić zastosowania w Chernie–Weilu i wymiarze cztery |
-| 30. Geometria Kleina (plik 29a) | Dodano 8 października; niezależny audyt oczekuje | Przestrzenie $G/H$ i modele afiniczny, projektowy, euklidesowy, sferyczny, torusa i dysku Poincarégo |
+| 15. Grupy Liego | Sprawdzono nakrycie kwaternionowe 7 października; pełny audyt całości czeka | Przykłady, nawias, eksponenta, działanie adjungowane i jawne nakrycie $\mathrm{SU}(2)\to\mathrm{SO}(3)$; później sprawdzić zastosowania w Chernie–Weilu i wymiarze cztery |
+| 16. Geometria Kleina (plik 29a) | Dodano 8 października; niezależny audyt oczekuje | Przestrzenie $G/H$ i modele afiniczny, projektowy, euklidesowy, sferyczny, torusa i dysku Poincarégo |
+| 17. Chern–Weil | Oczekuje | Normalizacje i transgresja; uzasadnić model względnej kohomologii de Rhama przy identyfikacji klasy Eulera, granicę całek wokół zer i wersję brzegową |
+| 18. Hodge–Bochner | Sprawdzono kluczowe wzory 7 października; pełny audyt całości czeka | Jawne wejście analityczne; własne dowody wzoru Weitzenböcka, znikania Bochnera i rozkładu sygnatury; sprawdzić zgodność z przyszłą teorią czterowymiarową |
+| 19. Sard i transwersalność | Audyt dodatków zakończony 6 października; bez poprawek treści | Pięć wpisów indeksu, cztery ilustracje i warunki transwersalności przy brzegu sprawdzone; PDF 401 stron |
+| 20. Zanurzenia i otoczenia | Audyt dodatków zakończony 6 października; PDF 401 stron | Sześć haseł indeksu, cztery ilustracje i kołnierze sprawdzone; poprawiono terminologię odwzorowań oraz zdanie o homotopii do odwzorowania stałego |
+| 21. Przecięcia, dualność i klasy | Audyt dodatków zakończony 6 października | Sprawdzone indeks, konwencje znaków i cztery ilustracje; ujednolicono terminologię i rozwinięto argument Leraya–Hirscha dla wiązki rzutowej |
+| 22. Teoria Morse'a | Audyt dodatków zakończony 8 października | Sprawdzone definicje i pięć ilustracji; jawne współrzędne krytyczne torusa, dokładne prowadnice podpisów i poprawiona terminologia |
+| 23. Kobordyzmy i uchwyty | Audyt dodatków zakończony 8 października; PDF 443 strony | Sprawdzone trzy hasła i pięć ilustracji; przywrócony warunek orientacji w podpisie, jawny opis sklejenia pierścieni i rozwinięty lokalny ruch Whitneya przy zachowanych założeniach o dyskach |
+| 24. h-kobordyzm | Oczekuje | Hipotezy wymiarowe, dyski Whitneya, realizacja ruchów uchwytów |
+| 25. Torsja i s-kobordyzm | Oczekuje | Bazy, strona działania pierścienia, konwencje torsji |
+| 26. Chirurgia geometryczna | Pełny audyt zakończony 8 października; treść bez poprawek | Sprawdzone obramowania, ślad i uchwyt dualny, homologia, $\pi_1$, forma jądra i rysunki |
+| 27. Przeszkoda chirurgiczna | Pełny audyt treści zakończony 7 października; sprawdzono definicje, rachunki znaków i baz, tok dowodu oraz źródła Walla i Milnora | Uściślono dual lewego modułu i wzór dla udoskonalenia kwadratowego; geometryczne lematy Walla i Milnora oraz klasyfikacja grup $L$ pozostają jawnie zewnętrzne |
+| 28. Ciąg chirurgii | Pełny audyt zakończony 8 października | Uściślono naturę obu strzałek przeszkody i przejście do $s$-kobordyzmu; bijekcja z $[X,G/O]$ i działanie grupy $L$ pozostają jawnymi wynikami Walla |
+| 29. Poincaré | Oczekuje | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm |
+| 30. Sfery Milnora | Przegląd konstrukcji, klas charakterystycznych i egzotyczności zakończony 7 października; PDF 442 strony | Rozpisano homologię i niezmiennik; wzór Hirzebrucha pozostaje jawnym wejściem zewnętrznym |
 | 31. Potok Ricciego (plik 30) | Sprawdzono równania ewolucyjne i poprawkę DeTurcka 7 października; pełny audyt całości czeka | Ewolucja skalara i pola powierzchni, zasada maksimum, poprawka DeTurcka; istnienie i jednoznaczność PDE pozostają jawnym wejściem analitycznym |
 | 32. Poincaré w wymiarze trzy (plik 30a) | Dodano 8 października; niezależny audyt oczekuje | Dla głębokich twierdzeń Perelmana i Hamiltona zachować jawne hipotezy i źródła; sprawdzić topologiczny wniosek z wygaśnięcia oraz użycie twierdzenia Moise'a |
 | 33. Geometrie Thurstona (plik 30b) | Dodano 8 października; niezależny audyt oczekuje | Osiem geometrii, rozkład pierwszy i JSJ, twierdzenie geometryzacyjne jako jawny wynik zewnętrzny |
 | 34. Formy przecięcia i uchwyty w wymiarze cztery (plik 31) | Przegląd matematyczny zakończony 7 października w poprzedniej numeracji; PDF 442 strony | Sprawdzono rachunek $E_8$, formę splotu i dwa rysunki; klasyfikacja jest w osobnym rozdziale o etykiecie `ch:freedman-klasyfikacja` |
 | 35. Uchwyty Cassona (plik 32) | Przegląd i uzupełnienie skutków osadzania dysków zakończone 7 października w poprzedniej numeracji; PDF 442 strony | Geometrycznie dualne sfery w konkluzji mają poprawione źródło Powella--Ray--Teichnera; pełne osadzanie i standardowość uchwytu pozostają zewnętrzne |
 | 36. Klasyfikacja Freedmana (plik 33) | Przegląd i objaśnienie drogi od dysków do klasyfikacji zakończone 7 października w poprzedniej numeracji; PDF 442 strony | Osadzanie sfer, chirurgia i $s$-kobordyzm są wskazane jako dalsze wyniki zewnętrzne; klasyfikacja i niezmiennik Kirby'ego--Siebenmanna pozostają zewnętrzne |
-| Szkic egzotycznych $\R^4$ (plik 35) | Sprawdzony merytorycznie, nie jest w głównym PDF | Zachować kolejność merytoryczną: włączenie po przyszłym rozdziale o Donaldsonie; prefiks pliku jest historyczny |
+| 37. Donaldson (plik 34) | Dodano jako osobny rozdział; pełny niezależny audyt oczekuje | Sprawdzić konwencję $c_2$ i energii ASD, dokładny zakres diagonalizacji i źródła analityczne; twierdzenie Donaldsona jest jawnie zewnętrzne |
+| 38. Egzotyczne $\R^4$ (plik 35) | Włączono po Donaldsonie; pełny niezależny audyt oczekuje | Skontrolować trzy wejścia Gompfa, indukcję i różnicę między typami zorientowanymi a niezorientowanymi |
 | Dodatek A o wynikach zewnętrznych | Uzupełniono źródła i zakresy twierdzeń do `f895347`; pełny audyt dodatku nadal czeka | Zgodność katalogu zależności z rzeczywistymi dowodami, zwłaszcza Walla, rozdziałów 28–33 i szkicu 35 |
 | Dodatek B: homologia singularna i Euler | Dodany w `59fd235`; audyt oczekuje | Wzory Eulera, skończoność, przykłady i zależności od rozdziałów 8 i 17 |
+| Dodatek C: grupy macierzowe | Dodany przez autora; sprawdzono notację i połączenia z przykładami grup Liego, pełny audyt oczekuje | Zweryfikować każdą formułę wymiaru i szeroką tabelę w PDF |
 | Ponowne różnice w 2–7 | Sprawdzone przy scaleniu `46fd90c`; PDF 397 stron | Wyłącznie format bibliografii; zachowane słowa i źródła, obejrzane zakończenia oraz poprawki rozdziału 7 |
 | Końcowa kontrola całości | Oczekuje | Mapa książki, oznaczenia, terminologia, bibliografia, indeks i PDF |
 

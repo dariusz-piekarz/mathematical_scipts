@@ -3949,3 +3949,71 @@ przyjął 210 wpisów bez odrzuceń i ostrzeżeń. Obejrzano strony
 415, 420, 428, 434, 437 i 440 z nową treścią; nie ma nowych rysunków.
 `latexmk` zgłosił jedynie komunikat środowiska MiKTeX o niesprawdzonych
 aktualizacjach, po czym potwierdził aktualność wynikowego PDF.
+## Uporządkowanie skryptu i domknięcie wymiaru cztery (2026-10-08)
+
+Przed zmianami pobrano `origin/review/rozdzialy-matematyka`;
+gałąź lokalna i zdalna były zgodne. Zachowano robocze dodatki autora:
+iloczyny prosty i półprosty oraz iloraz modułów w rozdziale 5,
+a także dodatek C o grupach macierzowych. Kontrola porównawcza
+wykazała, że przy rozbudowie ilorazu zniknęły definicja podmodułu
+i pierwsze twierdzenie o izomorfizmie, używane przez rozdziały 3 i 6.
+Przywrócono je bez zmiany etykiet. W dowodzie addytywności rangi
+uzasadniono dokładność lokalizacji przez rachunek ułamków,
+a powtórzone objaśnienie trywialnego iloczynu półprostego usunięto.
+
+Zgodnie z decyzją autora angielskie `embedding` w źródłach skryptu
+nazywa się „zanurzeniem”, a odwzorowanie z samą injektywną
+różniczką „immersją”. Zachowano starą etykietę
+`prop:osadzenie-Wall-52-22`, aby nie zerwać odsyłaczy.
+W miejscu dotyczącym czysto topologicznego sklejenia komórki
+opisano wprost homeomorfizm na domknięty obraz.
+Definicję grupy Pin umieszczono przy odbiciach w algebrze
+Clifforda i wyprowadzono jej dwukrotne nakrycie grupy
+ortogonalnej z wcześniej udowodnionego nakrycia Spin.
+Sekcja o grafach przed kompleksami CW definiuje drogę,
+cykl, drzewo, las, korzeń i liść oraz dowodzi dwóch
+elementarnych własności używanych przy drzewach chirurgii
+i uchwytów Cassona.
+
+Dodatek C powiązano odsyłaczami z przykładami w rozdziale
+o grupach Liego. Tam zachowano obliczenia gładkości
+i przykłady, usuwając powtórzone definicje zbiorowe.
+Zmieniono zapis zbioru niezerowych skalarów na
+$\mathbb K_*$. Sprawdzono źródłowy rachunek ilorazu
+modułów i rangę wyłącznie nad dziedziną całkowitości.
+
+Rozdziały uporządkowano w pięciu częściach bez zmiany
+istniejących etykiet. Grupy Liego, geometria Kleina,
+Chern--Weil i Hodge tworzą blok geometrii globalnej;
+chirurgia pozostaje jednym blokiem, a potok Ricciego
+prowadzi bezpośrednio do wyników w wymiarze trzy.
+Po rozdziałach Freedmana dodano osobny rozdział o
+Donaldsonie: równanie ASD i tożsamość energii są
+wyprowadzone, natomiast diagonalizacja i analityczne
+wejścia przestrzeni moduli są jawnie zewnętrzne.
+Istniejący rozdział Gompfa o egzotycznych $\R^4$
+włączono po nim do wspólnego PDF; jego trzy głębokie
+wejścia są wymienione w dodatku A. Klasyfikacja
+Bardena i wzór Hirzebrucha pozostają precyzyjnie
+cytowanymi wynikami zewnętrznymi: pełne dowody
+przekraczają uzgodnioną granicę długości.
+
+Nie dodano dowodów Borsuka--Ulama, Brouwera i
+niezmienniczości obszaru. Rozwinięta w skrypcie
+homologia nie zawiera jeszcze potrzebnego rachunku
+modulo $2$ dla przestrzeni projektowych, a pełne
+przejście lokalne w niezmienniczości obszaru nie jest
+przygotowane. Zgodnie z warunkiem autora nie dopisano
+tych twierdzeń do dodatku A.
+
+Pełna kompilacja przez `latexmk` i `makeindex` dała 498 stron.
+Nie ma błędów, niezdefiniowanych odsyłaczy ani ostrzeżeń
+`Overfull`; pozostały dwa wcześniejsze ostrzeżenia `Underfull`
+w rozdziałach o grupach Liego i przeszkodzie chirurgicznej.
+Indeks przyjął 282 wpisy bez odrzuceń i ostrzeżeń.
+Sprawdzono 1437 unikalnych etykiet i brak odsyłaczy
+do etykiet nieistniejących. Ekstrakcja tekstu PDF nie wykazała
+`??`. Obejrzano strony 100 i 151 z nowymi definicjami,
+471--473 i 476 z wymiarem cztery, 486 i 491--494
+z dodatkiem C oraz stronę 497 indeksu. Tabela wymiarów
+i nowe odsyłacze są czytelne; nie dodano rysunków.

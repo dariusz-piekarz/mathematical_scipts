@@ -39,10 +39,9 @@ Etykiet nie trzeba zmieniać przy przenoszeniu treści; ich nazwy muszą być
 unikalne w całej książce. Nowy rozdział wymaga dodania pliku i odpowiedniego
 `\input` w pliku głównym. Rysunki TikZ pozostają przy omawiającym je tekście.
 
-Po złożeniu nowych rozdziałów PDF obejmuje 36 rozdziałów i dwa dodatki. Plik
-`35-egzotyczne-r4.tex` jest zachowanym szkicem: celowo nie ma go na liście
-importów. Czeka na przygotowanie poprzedzającego rozdziału o Donaldsonie.
-Nie włączaj go automatycznie przy zbieraniu wszystkich plików `.tex`.
+Po złożeniu nowych rozdziałów PDF obejmuje 38 rozdziałów w pięciu częściach
+i trzy dodatki. Rozdział o Donaldsonie poprzedza rozdział o egzotycznych
+strukturach na $\R^4$; oba są na liście importów.
 Prefiksy nazw istniejących plików są historyczne; numer rozdziału
 w składzie wyznacza wyłącznie kolejność `\input` w pliku głównym.
 
