@@ -45,6 +45,110 @@ Jest to wersja \emph{nienormalizowana}: nie dodajemy składnika,
 który utrzymywałby całkowitą objętość na stałym poziomie.
 \end{definicja}
 
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth, font=\small]
+
+% Podpisy etapów
+\node[align=center] at (2.20,6.55)
+  {\textbf{Metryka początkowa}\\[2pt]$(\mathbb R^3,g(t_0))$};
+
+\node[align=center] at (7.35,6.55)
+  {\textbf{Etap pośredni}\\[2pt]$(\mathbb R^3,g(t_1))$};
+
+\node[align=center] at (12.50,6.55)
+  {\textbf{Geometria bardziej jednorodna}\\[2pt]$(\mathbb R^3,g(t_2))$};
+
+% Trzy schematyczne powierzchnie siatkowe
+% A: wielkość wybrzuszenia
+% B: głębokość zwężeń
+\foreach \X/\A/\B in {
+  0/0.72/0.36,
+  5.15/0.34/0.16,
+  10.30/0.00/0.00
+}{
+  \begin{axis}[
+    at={(\X cm,1.12cm)},
+    anchor=south west,
+    width=4.40cm,
+    height=4.85cm,
+    scale only axis,
+    hide axis,
+    view={50}{18},
+    xmin=-2.05,xmax=2.05,
+    ymin=-2.05,ymax=2.05,
+    zmin=-1.8,zmax=1.8,
+    z buffer=sort,
+    samples=34,
+    samples y=17,
+    domain=0:360,
+    y domain=-1.7:1.7,
+    colormap={mojniebieski}{
+      rgb255=(213,239,253)
+      rgb255=(154,205,239)
+    }
+  ]
+
+  \addplot3[
+    surf,
+    shader=faceted,
+    faceted color=blue!50!black,
+    line width=0.16pt,
+    opacity=0.78
+  ]
+  (
+    {
+      (1+\A*exp(-3*y*y)
+      -\B*(exp(-6*(y-1.03)^2)
+      +exp(-6*(y+1.03)^2)))*cos(x)
+    },
+    {
+      (1+\A*exp(-3*y*y)
+      -\B*(exp(-6*(y-1.03)^2)
+      +exp(-6*(y+1.03)^2)))*sin(x)
+    },
+    {y}
+  );
+
+  \end{axis}
+}
+
+% Strzałki ewolucji
+\draw[->,very thick]
+  (4.52,3.47)--(5.02,3.47);
+
+\draw[->,very thick]
+  (9.67,3.47)--(10.17,3.47);
+
+% Oś czasu i równanie potoku
+\draw[->,thick]
+  (0.25,-0.10)--(14.75,-0.10);
+
+\node[fill=white,inner sep=2pt]
+  at (7.50,-0.10)
+  {
+    $\displaystyle
+    \partial_t g
+    =-2\operatorname{Ric}(g),
+    \qquad t_0<t_1<t_2
+    $
+  };
+
+\end{tikzpicture}
+
+\caption{Schemat ideowy zmiany geometrii na
+$\mathbb R^3$ w potoku Ricciego
+$\partial_t g=-2\operatorname{Ric}(g)$.
+Niebieskie powierzchnie siatkowe symbolizują
+zmniejszanie się wybranej lokalnej deformacji;
+nie są reprezentacją całej trójwymiarowej metryki.
+Rysunek nie zakłada, że dowolny potok Ricciego
+zbiega do metryki euklidesowej.}
+\label{fig:ricci-r3-schemat}
+\end{figure}
+
+
 Dla wektora $v\in T_pM$, trzymanego nieruchomo przy zmianie
 czasu, równanie daje
 \[
