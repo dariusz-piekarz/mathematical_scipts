@@ -4176,3 +4176,115 @@ Obejrzano cały rozdział 5 (strony 109–123), jego rysunek, zmienioną
 konstrukcję tensora na stronie 74, terminologię na stronach 387–388 i 403,
 rozdział Thurstona na stronach 448–453 oraz indeks 493–496.
 Formuły, podpisy i nowe podsekcje są czytelne. Zaktualizowano wspólny PDF.
+
+## Audyt h-kobordyzmu — rozdział 24, plik 20 (2026-10-09)
+
+Baza: `dbfe600`. Przed rozpoczęciem pobrano stan zdalny; nie było nowych
+commitów współautora. Przeczytano cały plik `20-h-kobordyzm.tex` i sprawdzono
+używane w nim twierdzenia o przestawianiu, przesuwaniu oraz znoszeniu
+uchwytów z poprzedniego rozdziału. Ta iteracja zmienia treść jednego
+rozdziału; numer 24 w PDF wynika z nowej kolejności książki.
+
+### Naprawy i uzupełnienia
+
+- W wymianie uchwytu indeksu 1 na 3 poprawiono konstrukcję okręgu
+  przecinającego wybraną sferę pasa raz. Ominięcie pozostałych sfer
+  pasa nie wynika z pozycji ogólnej, bo mają kowymiar 1. Uzasadnia je
+  spójność dolnego brzegu z usuniętymi stopami uchwytów i jawny wybór
+  drogi poza pozostałymi rurkami.
+- Usunięto nieuprawnione przejście od zanurzonego cylindra homotopii
+  do izotopii okręgów. W poziomicy po 2-uchwytach nullhomotopię
+  poprawiamy względnie do zanurzonego dysku. Jego koncentryczne okręgi
+  tworzą izotopię, ponieważ każdy przekrój jest zanurzeniem.
+  Wymiar poziomicy co najmniej 5 zapewnia zarówno brak samoprzecięć,
+  jak i brak utraty rzędu różniczki.
+- Nową parę 2–3 tworzymy przy małym okręgu wewnątrz tego dysku.
+  Standardowe obramowanie z modelu narodzin jest transportowane
+  przez izotopię; nie zakładamy swobody nadania urodzonemu uchwytowi
+  dowolnie skręconego obramowania.
+- Przed zniesieniem pary 1–2 wyjaśniono przestawienie nowego
+  2-uchwytu poniżej starych: jego sfera przyczepienia pochodzi
+  z regularnego przepływu i omija ich sfery pasa, więc nie ma
+  zabronionych trajektorii. Przy odwróceniu kobordyzmu dopisano,
+  że nowy indeks m−3≥3 nie odtwarza wcześniej usuniętych 1-uchwytów.
+- W lemacie o dopełnieniu jawnie zapisano zakres wszystkich indeksów.
+  Dla k=2 porównano oba dopełnienia przez retrakcje deformacyjne
+  na wspólną część brzegu. Dla k=m−3 opisano odwrócenie górnego
+  fragmentu, który zawiera wyłącznie uchwyty indeksu m−2.
+  Warunek ten uzasadnia zastosowanie tego samego rachunku od N₊.
+- Obramowany trik Whitneya pozostaje wynikiem zewnętrznym.
+  Wskazano dokładne założenia używanej wersji Milnora, w tym
+  injektywność grup fundamentalnych dopełnienia przy wymiarze
+  przesuwanej podrozmaitości 2. Sprawdzono je dla całych rodzin
+  sfer; w skrajnym przypadku zamieniono ich role, a następnie użyto
+  odwrotnej izotopii. Nie twierdzimy, że trywialność wiązki nad
+  dyskiem automatycznie przedłuża zadane obramowanie brzegowe.
+  Nieaktualny adres Lücka–Macko zastąpiono źródłem Milnora.
+- W opisie ruchu Whitneya doprecyzowano, że nieruchome są końce
+  przedłużonych łuków poza usuwanymi przecięciami, a nie same
+  punkty przecięcia. Dysk zachowuje standardowe naroża w tych
+  punktach. Istniejący schemat jest zgodny z tak opisanym ruchem.
+- Przy geometrycznej realizacji operacji kolumnowych uzasadniono
+  istnienie obramowanej wstęgi: dopełnienie sfer przyczepienia
+  kowymiaru co najmniej 2 jest spójne drogowo, a ramki można uzgodnić
+  wzdłuż łuku. Wstęga nie musi omijać sfer pasa; ich przecięcia
+  mają zmienić się zgodnie z operacją na kolumnach.
+- We wniosku o sferze homotopijnej rozwinięto wycięcie i ciąg
+  dokładny pary (Σ,W). Przy orientacjach dysków indukowanych z Σ
+  odwzorowanie Z→Z² ma postać a↦(a,a); jego injektywność daje
+  H_n(W)=0, a kokernel daje H_{n−1}(W)=Z. Dopiero obrazy dwóch
+  klas brzegowych w tym kokernelu są przeciwnymi generatorami.
+  Podano bezpośredni odsyłacz do homologicznego kryterium Whiteheada.
+- Cztery użycia słowa „mapa” dla odwzorowania zastąpiono poprawną
+  terminologią (ostatnie usunięto przy przepisaniu rachunku homologii).
+  Pozostałe lematy, redukcję całkowitą macierzy, indukcję usuwania
+  uchwytów i rozróżnienie homeomorfizmu od dyfeomorfizmu sprawdzono.
+
+Źródła porównawcze:
+[Milnor, *Lectures on the h-Cobordism Theorem*, twierdzenie 6.6,
+lematy 6.7 i 6.13 oraz §8](https://webhomes.maths.ed.ac.uk/~v1ranick/surgery/hcobord.pdf),
+[Morgan, Lecture III, §4](https://www.math.columbia.edu/~jmorgan/Lecture_III_H-cobordism_Theorem.pdf).
+Powyższe uzupełnienia nie zastępują pełnego dowodu zewnętrznego
+lematu obramowanego Whitneya; rozdział jawnie odróżnia go od
+przeprowadzonych tutaj redukcji.
+
+### Zmiany autora podczas audytu
+
+Kontrola stanu zdalnego przed publikacją wykryła nowe zmiany do `2777149`:
+commity `224d680`, `f2b1960`, `2777149` i merge `6e8adaf`.
+Odłożono lokalny rozdział i dziennik, wykonano aktualizację fast-forward,
+a następnie przywrócono własną pracę bez konfliktów. Autor nie zmienił
+rozdziału o h-kobordyzmie. Zachowano jego nowe opisy wiązek i przykład
+tautologiczny w pliku 01, rysunek Ricciego, operatory Re/Im i odsyłacze.
+Poprawiono jedynie literówkę „Iloczn” w nowym tytule stwierdzenia
+w pliku 05; nienumerowane podsekcje i pozostałe zmiany autora zachowano.
+
+Wynik scalenia zastąpił rejestr brakujących pojęć starą tabelą audytu
+i dawnymi propozycjami, dublując wcześniejszą część `PLAN_DZIALANIA.md`.
+Przywrócono rejestr i zwięzły plan z `dbfe600`, dopisując nowy zakres
+kontroli wiązek i Ricciego. Nie usunięto żadnej nowej propozycji
+merytorycznej autora; zastąpiony blok był wcześniejszą wersją list.
+
+### Kontrola ukończonego etapu po scaleniu
+
+Pełna kompilacja `latexmk` wraz z indeksem zakończyła się poprawnie:
+**503 strony**, bez błędów, brakujących lub powtórzonych odsyłaczy
+i ostrzeżeń `Overfull`. Pozostały trzy ostrzeżenia `Underfull`: jedno
+w nowym tekście o wiązce tautologicznej i dwa wcześniejsze w innych
+rozdziałach, a także dwa automatyczne rozszerzenia położenia rysunku
+z `h` do `ht`. Indeks przyjął 294 wpisy bez odrzuceń i ostrzeżeń.
+
+Kontrola źródeł: wszystkie 44 importy, 1446 unikalnych etykiet i 1397
+wystąpień odsyłaczy. Wcześniejsze etykiety i trzy ilustracje rozdziału
+24 zachowano. Własna różnica w LaTeX względem `2777149` obejmuje
+wyłącznie plik 20 i pojedynczą literówkę w pliku 05; zmiany autora
+w pozostałych plikach nie zostały nadpisane. PDF nie zawiera `??`,
+a wszystkie 1995 odsyłaczy wewnętrznych prowadzą na istniejące strony.
+
+Obejrzano cały rozdział 24 (strony 381–389), wszystkie trzy schematy
+i indeks 500–503. Kontrola układu po scaleniu objęła dodatkowo strony
+45–47 i 52 z wiązkami autora, stronę 127 z poprawionym tytułem
+stwierdzenia oraz stronę 440 z nowym rysunkiem Ricciego. Rysunki
+i wzory mieszczą się w składzie, oznaczenia są czytelne.
+Kontrola tych stron autora nie zastępuje pełnego audytu ich matematyki;
+pozostały zakres zapisano w planie. Wspólny PDF zaktualizowano.
