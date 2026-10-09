@@ -4072,3 +4072,24 @@ sekcji i twierdzenia zachowano.
 Pełny skład ma 499 stron, bez błędów, brakujących odsyłaczy
 i `Overfull`; indeks przyjął 282 wpisy bez ostrzeżeń.
 Obejrzano stronę 454 z nowym nagłówkiem i tabelą geometrii.
+
+## Część rzeczywista i urojona jako operatory (2026-10-08)
+
+W preambule przedefiniowano `\Re` i `\Im` przez odpowiednio
+`\operatorname{Re}` i `\operatorname{Im}`. Jawne zapisy tych
+operatorów w rozdziałach 1, 4, 20 i o grupach Liego
+zastąpiono wspólnymi makrami. Małoliterowe
+`\operatorname{im}` oznacza obraz odwzorowania i pozostało
+bez zmian.
+
+Równolegle autor rozbudował w rozdziale 1 opis wiązek wektorowych,
+konstrukcję wstęgi Möbiusa i dowód jej nietrywialności oraz poprawił
+znaki w modelu $\mathbb{CP}^1\cong S^2$. Zachowano te zmiany.
+Przy konstrukcji wiązki dopisano sprawdzenie warunków Hausdorffa
+i drugiej przeliczalności, a w dowodzie nietrywialności odróżniono
+przekroje ciągłe od wcześniej zdefiniowanych gładkich.
+Zachowano także równoległe poprawki słownictwa tensorowego
+w rozdziałach 5, 6, 8 i 21; w miejscach, gdzie dosłowna zamiana
+zacierała sens funktora, doprecyzowano argumenty iloczynu.
+Nowa treść autora została włączona i sprawdzona pod kątem tych
+połączeń, co nie stanowi pełnego audytu całego rozdziału 1.

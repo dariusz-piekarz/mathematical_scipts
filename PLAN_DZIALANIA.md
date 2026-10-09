@@ -324,7 +324,7 @@ złożyć i obejrzeć cały PDF zgodnie z `AGENTS.md`.
 | Zakres | Stan | Następna kontrola |
 |---|---|---|
 | Podział źródeł i importy | Zakończono, `9148128` | Kontrola regresji przy dalszych zmianach |
-| 1. Rozmaitości | Dodatki sprawdzone; 7 października dołączono i skontrolowano robocze rozwinięcie identyfikacji przestrzeni stycznych; autor dopisał liniowość $\Phi$ i dwa rysunki funkcji odcinającej | Nowe zmiany autora uwzględniono w składzie; nie stanowią pełnego ponownego audytu rozdziału |
+| 1. Rozmaitości | Dodatki sprawdzone; 7 października dołączono i skontrolowano robocze rozwinięcie identyfikacji przestrzeni stycznych; 8 października autor rozwinął wiązkę Möbiusa i poprawił model $\mathbb{CP}^1\cong S^2$ | Nowe zmiany autora uwzględniono w składzie, uzupełniono warunki topologiczne i ciągłość przekroju; nie stanowią pełnego ponownego audytu rozdziału |
 | 5. Algebra abstrakcyjna | Nowe iloczyny grup, iloraz i ranga modułu sprawdzone 8 października; pełny wcześniejszy audyt pochodzi z 6 października | Przywrócono definicję podmodułu i twierdzenie o izomorfizmie; rangę przeniesiono za tensor modułów i udowodniono identyfikację tensoru z lokalizacją |
 | 2. Pola wektorowe | Audyt dodatków zakończony 6 października; PDF 387 stron | Sprawdzone powiązanie z brzegiem, przykład przepływu jednostronnego, bibliografia i rysunki |
 | 3. Algebra tensorowa | Audyt dodatków zakończony 6 października; treść bez poprawek | Poprawny odsyłacz do rozdziału 5, indeks, źródła i ilustracje |
