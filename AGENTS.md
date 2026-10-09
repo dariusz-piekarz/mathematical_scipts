@@ -27,6 +27,8 @@
   $\Z^\times=\{-1,1\}\neq\Z_*$.
 - Angielskie `embedding` tłumacz jako „zanurzenie” zgodnie z definicją w rozdziale 1. Sam warunek injektywności różniczki nazywaj „immersją”; rozróżniaj oba pojęcia.
 - Angielskie `fibration` tłumacz jako „rozwłóknienie”; `fiber bundle` to „wiązka”, a `fiber` to „włókno”.
+- `Projective module` to „moduł rzutowy”. Formalny generator indeksowany parą zapisuj `[(m,n)]`, odróżniając go od samej pary i od klasy w ilorazie.
+- Pisz „rozmaitość trójwymiarowa” lub „rozmaitość wymiaru trzy”, zamiast „trójrozmaitość”.
 
 ## Rysunki i kontrola
 

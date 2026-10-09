@@ -4072,3 +4072,107 @@ sekcji i twierdzenia zachowano.
 Pełny skład ma 499 stron, bez błędów, brakujących odsyłaczy
 i `Overfull`; indeks przyjął 282 wpisy bez ostrzeżeń.
 Obejrzano stronę 454 z nowym nagłówkiem i tabelą geometrii.
+
+## Ponowny audyt rozdziału 5 i prośba autora o terminologię (2026-10-09)
+
+Przed pracą pobrano bez konfliktów 12 commitów `b912682`–`386ecb6`
+od wspólnego stanu `34e683b`. Autor dodał m.in. geometrię Kleina,
+Poincarégo w wymiarze trzy, geometrie Thurstona, Donaldsona oraz
+włączył egzotyczne R⁴ i dodatek C. Książka ma teraz 38 rozdziałów
+w pięciu częściach i trzy dodatki; prefiks pliku przestał odpowiadać
+numerowi w PDF. Deklaracje audytów współautora zachowano jako takie;
+ich pobranie nie oznacza niezależnej weryfikacji tych rozdziałów.
+
+Zakres tej iteracji matematycznej: cała aktualna treść rozdziału 5,
+z ponownym sprawdzeniem nowych iloczynów grup, ilorazów modułów,
+lokalizacji i rangi. Na wyraźną prośbę ze zrzutu dodatkowo wykonano
+ograniczone zmiany notacji i terminologii w plikach 03, 21, 23 i 30b.
+Nie przypisujemy im statusu pełnego audytu przy tej okazji.
+
+### Zmiany i uzasadnienia
+
+- **Układ §5.1.** Wprowadzono pięć równorzędnych podsekcji: grupy i ilorazy,
+  grupy wolne i iloczyn wolny, prezentacje, iloczyn prosty i iloczyn
+  półprosty. Rozproszone nagłówki przykładów i jednolinijkowe bloki
+  wzorów zastąpiono spójnymi akapitami oraz środowiskami przykładów,
+  stwierdzeń i uwag. Zachowano twierdzenia, przykłady, wcześniejsze
+  etykiety, indeksowane hasła i rysunek słów; skrócenie składu nie
+  wynika z usunięcia omawianych konstrukcji.
+- **Uzasadnienia iloczynów grup.** Dopisano rachunek łączności iloczynu
+  półprostego, wyjaśniono automorfizm i rozszczepiony ciąg dokładny,
+  podano jawny rozkład elementu w rozszczepionym rozszerzeniu.
+  Izomorfizm C_m × C_n ≅ C_mn dla względnie pierwszych m,n uzasadniono
+  rzędem elementu ([1],[1]); objaśniono cykliczność i rząd.
+  Dla grupy diedralnej policzono symetrie, a postać Ax+v izometrii
+  euklidesowej wyprowadzono przez polaryzację i bazę ortonormalną.
+- **Dziedzina całkowitości i ciało.** Dodano definicje dzielnika zera,
+  dziedziny i ciała, własność skracania oraz przykłady Z, Q, K[t]
+  i kontrprzykład Z/6Z. To usuwa używanie tych założeń bez wyjaśnienia
+  przy randze modułu.
+- **Ciało ułamków.** Dodano konstrukcję klas par (a,s), dowód
+  przechodniości relacji i niezależności działań od przedstawicieli,
+  odwrotności oraz injekcji R → Frac(R). Wyjaśniono Q i K(t), w tym
+  formalny charakter ułamków wielomianowych. W rozdziale 5.5 kolejność
+  jest teraz następująca: ciało ułamków, lokalizacja, izomorfizm z
+  tensorem, ranga i jej addytywność.
+- **Lokalizacja i skalary.** Zachowano konstrukcję autora, uzupełniając
+  rozróżnienie skalaru a/u ∈ K i wektora m/s ∈ S⁻¹M. Podano działanie
+  skalaru także na M ⊗_R K, sprawdzono łączność i wyjaśniono pozostałe
+  prawa. Przykład Z/2Z tłumaczy, dlaczego relacja lokalizacji musi mieć
+  dodatkowy czynnik t; nie wolno skracać niezerowego skalaru w dowolnym
+  module. Przykłady lokalizacji Z i Z ⊕ Z/2Z objaśniają znikanie torsji.
+  Ponownie sprawdzono oba odwzorowania izomorfizmu i dokładność ciągu
+  użytego w dowodzie addytywności rangi. Źródło porównawcze konstrukcji:
+  [Stacks Project, Localization, §10.9](https://stacks.math.columbia.edu/tag/00CM).
+- **Założenie skończonego generowania.** W końcowej uwadze o rozkładzie
+  modułu nad pierścieniem głównym dodano brakujące ograniczenie do
+  modułów skończenie generowanych. Bez niego torsjowolny moduł nie musi
+  być wolny (np. Q jako moduł nad Z). Nie dopisywano tu pełnego
+  twierdzenia strukturalnego; potrzebę objaśnienia nazwy pierścienia
+  głównego odnotowano w rejestrze pojęć do decyzji.
+- **Notacja par.** Formalne generatory mają teraz postać [(m,n)]
+  w rozdziale 5 oraz [(v,w)] w rozdziale 3. Wyraźnie rozróżniono
+  generator modułu wolnego od jego klasy modulo relacje; dotyczy to
+  także tensora nad pierścieniem nieprzemiennym.
+- **Terminologia.** „Moduł projektywny” zastąpiono „modułem rzutowym”
+  w rozdziale 5 i pliku 21; poprawiono też „projektowym” w pliku 23.
+  Zachowano etykietę `uwaga:moduly-projektywne`, aby nie zerwać odsyłaczy.
+  Siedem wystąpień „trójrozmaitości” w pliku 30b zastąpiono odmienionymi
+  formami „rozmaitości trójwymiarowej”. Reguły zapisano w `AGENTS.md`.
+
+### Rejestr pojęć i dokumentacja
+
+Sprawdzono, że definicje geometrii Kleina, geometrii modelowej i rozmaitości
+geometrycznej już znajdują się w plikach 29a i 30b, wraz z przykładami.
+Nie dodano drugich wersji. Do `PLAN_DZIALANIA.md` wpisano pierwszą partię
+potwierdzonych braków objaśnień: monoid, pierścień główny, indeks podgrupy
+i własność wirtualna, nilpotentność i rozwiązalność, uśrednianie po
+stabilizatorze, ostrzyk oraz wypełnienie Dehna. To lista do decyzji autora,
+nie deklaracja ukończenia audytu słownika całej książki.
+
+Uproszczono `PLAN_DZIALANIA.md`: usunięto powtarzające się historyczne
+plany napisania już istniejących rozdziałów, zachowano tabelę pokrycia,
+warunkowe i odłożone propozycje oraz granice dowodów. Do każdego
+numerowanego rozdziału przypisano właściwy plik. Historia szczegółowych
+planów jest w Git i wcześniejszych wpisach niniejszego dziennika.
+W `README.md` poprawiono nieaktualne oznaczenie pliku 35 jako szkicu poza
+składem, dodano plik Donaldsona i dodatek C oraz właściwą ścieżkę Perla
+z PortableGit na dysku E. Nadal są tylko cztery pliki dokumentacji.
+
+### Kontrola ukończonego etapu
+
+Pełna kompilacja `latexmk` i indeks zakończyły się poprawnie: **496 stron**,
+bez błędów, brakujących lub powtórzonych odsyłaczy i ostrzeżeń `Overfull`.
+Pozostały dwa wcześniejsze `Underfull` w innych rozdziałach i dwa
+automatyczne rozszerzenia położenia rysunku z `h` do `ht`.
+Indeks przyjął 285 wpisów, bez odrzuceń i ostrzeżeń.
+
+Sprawdzono 44 importy, kompletność wszystkich 45 plików źródłowych,
+1441 unikalnych etykiet i 1393 wystąpienia odsyłaczy. Wszystkie wcześniejsze
+etykiety i źródła rysunków zachowano; poza rozdziałem 5 różnice w LaTeX
+ograniczają się dokładnie do wskazanych zamian notacji i terminologii.
+W PDF nie ma `??`; 1990 odsyłaczy wewnętrznych prowadzi na istniejące strony.
+Obejrzano cały rozdział 5 (strony 109–123), jego rysunek, zmienioną
+konstrukcję tensora na stronie 74, terminologię na stronach 387–388 i 403,
+rozdział Thurstona na stronach 448–453 oraz indeks 493–496.
+Formuły, podpisy i nowe podsekcje są czytelne. Zaktualizowano wspólny PDF.

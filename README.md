@@ -24,9 +24,11 @@ tex/
   rozdzialy/31-freedman-formy-przeciecia.tex  formy w wymiarze cztery
   rozdzialy/32-uchwyty-cassona.tex     uchwyty Cassona
   rozdzialy/33-freedman-klasyfikacja.tex  klasyfikacja Freedmana
-  rozdzialy/35-egzotyczne-r4.tex      szkic poza głównym składem
+  rozdzialy/34-donaldson.tex          przeszkoda Donaldsona
+  rozdzialy/35-egzotyczne-r4.tex       egzotyczne R⁴, włączone do składu
   dodatki/a-zaleznosci-zewnetrzne.tex  dodatek o wynikach zewnętrznych
   dodatki/b-homologia-singularna-euler.tex  dodatek o homologii singularnej i cesze Eulera
+  dodatki/c-algebry_grupy_macierzowe.tex  grupy macierzowe i ich wymiary
   indeks.tex                         indeks pojęć
 build/                               ignorowane wyniki pomocnicze
 ```
@@ -59,7 +61,7 @@ Na bieżącym komputerze Perl jest dostępny w instalacji Git.
 Jeśli MiKTeX nie znajduje Perla, przed powyższym poleceniem ustaw w tej sesji:
 
 ```powershell
-$env:PATH = 'C:\Program Files\Git\usr\bin;' + $env:PATH
+$env:PATH = 'E:\Programs\Windows\PortableGit\usr\bin;' + $env:PATH
 ```
 
 Bez `latexmk` można wykonać kolejno:
