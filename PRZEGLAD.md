@@ -4288,3 +4288,117 @@ stwierdzenia oraz stronę 440 z nowym rysunkiem Ricciego. Rysunki
 i wzory mieszczą się w składzie, oznaczenia są czytelne.
 Kontrola tych stron autora nie zastępuje pełnego audytu ich matematyki;
 pozostały zakres zapisano w planie. Wspólny PDF zaktualizowano.
+
+## 11 października 2026 — rozdział 25: torsja i s-kobordyzm
+
+Zakres: pełna lektura pliku `tex/rozdzialy/21-torsja-s-kobordyzm.tex`,
+obecnego rozdziału 25 PDF, względem `1ee001a`. Ponowne pobranie zmian
+11 października nie wykazało nowych commitów autora. Zgodnie z nową
+prośbą dalsza kolejność to rozdziały od 25 wzwyż; stan i rozróżnienie
+pełnego audytu od kontroli późniejszych różnic zapisano w planie.
+
+### Poprawki i ich uzasadnienia
+
+- Założono jawnie spójność W. Spójne brzegi same nie wykluczają
+  dodatkowej zamkniętej składowej kobordyzmu.
+- Poprawiono bazę kompleksu: po jednym podniesieniu rdzenia na uchwyt
+  jest bazą nad Z[π], natomiast wszystkie translacje tych podniesień
+  dają bazę nad Z. Wskazano prawą translację B·g = g⁻¹B i transport
+  orientacji normalnej, także w nieorientowalnym W.
+- Zapisano jawnie zmianę macierzy A′ = V⁻¹AU przy zmianach baz e′ = eU,
+  f′ = fV. Wiersze mnożymy przez współczynniki z lewej, kolumny z prawej;
+  opis prowadzenia pasów uwzględnia wymaganą klasę drogi i kowymiar.
+- Zachowano i sprawdzono dowód normalności grupy elementarnej oraz
+  abelowości K₁. Rozwinięto rachunek odwrotności jednostki 1−t−t⁻¹
+  w Z[C₅]; argument z modułem wyznacznika odróżnia jej klasę od zera.
+  Redukcję całkowitą nazwano zgodnie z użyciem algorytmu Euklidesa.
+- Niezależność torsji od kontrakcji ma teraz jawny dowód na wolnych
+  modułach Cᵢ. Dla dwóch kontrakcji użyto F = ∂s+t∂ = I+N,
+  projekcji P = ∂s oraz PN=N, NP=0. Iloczyn czterech elementarnych
+  macierzy blokowych daje diag(F,I). Nie trzeba zakładać, że moduły
+  brzegów są wolne, ani niejasno stabilizować ich dopełnień rzutowych.
+  Równość rang nieparzystej i parzystej sumy wyjaśnia augmentacja.
+- Doprecyzowano wolną ścianę w elementarnym zwinięciu i dodano przykład
+  trójkąta. Stożek odwzorowania łańcuchowego otrzymał jawny wzór,
+  wyjaśnienie acykliczności i przykład identyczności; wskazano wcześniejszą
+  wersję kochainową. Charakterystyka prostej homotopii przez torsję
+  pozostaje jawnym twierdzeniem zewnętrznym.
+- Niezależność od rozkładu oparto na dokładnym porównaniu kompleksów
+  Morse'a i triangulacji zgodnych ze strukturą gładką (Milnor, lemat 9.1
+  i twierdzenie 9.3). Usunięto nieprecyzyjne odwołanie do teorii Cerfa
+  bez podania konkretnego twierdzenia. Rachunki lokalnych ruchów
+  zachowano i odróżniono od globalnego twierdzenia porównawczego.
+- Usunięto kolistość w użyciu lematu Whitneya: obowiązuje już dla
+  rozkładu o indeksach od k do m−2, przed uzyskaniem postaci normalnej.
+  Rozpisano izomorfizmy π₁ poziomicy i dopełnień. W kowymiarze dwa
+  stosujemy wspólny obszar E i retrakcje na niego, a na górnym krańcu
+  dualny rozkład od N₊. Nie utożsamiamy abstrakcyjnych izomorfizmów
+  grup z homomorfizmami indukowanymi przez potrzebne inkluzje.
+- Sprawdzono hipotezy obramowanego lematu Whitneya dla całych rodzin
+  sfer, z zamianą ich ról w skrajnym indeksie. Wynik Milnora o
+  obramowaniu, przytoczony dokładnie w rozdziale 24, nadal jest
+  wejściem zewnętrznym. Równe etykiety dają ściągalność pętli;
+  sama trywialność wiązki nad dyskiem nie daje ruchu Whitneya.
+- W redukcji indeksów rozwinięto wybór dysku, izotopię koncentrycznych
+  okręgów i transport standardowego obramowania narodzonej pary 2,3.
+  Przy wymianie wyższych indeksów używa się równoległego dysku
+  D^{j+1}×{v} w nowym brzegu, a nie rdzenia we wnętrzu kobordyzmu.
+  Wyjaśniono przestawienie nowego uchwytu przed starymi i zachowanie
+  dolnego ograniczenia indeksów podczas redukcji od góry.
+- Rozwinięto realizację dowolnej torsji. Początkowe 2-uchwyty mają
+  standardowe przyklejenia i obramowania. Bazowe sfery o trywialnej
+  wiązce normalnej reprezentują generatory względnej homologii.
+  Ocena w₂ jest addytywna i nie zmienia się pod działaniem π₁, więc
+  znika na sferach realizujących kolumny macierzy. Funkcje sklejające
+  i stabilizacja π₁(SO(q)) uzasadniają, że w₂=0 wystarcza dla normalnej
+  wiązki rangi co najmniej trzy nad S². Dopiero wtedy wybieramy
+  obramowania i przyczepiamy 3-uchwyty.
+- Dla obu brzegów realizacji wyjaśniono przejście przez nakrycia
+  uniwersalne i kryterium homologiczne Whiteheada. Dualna macierz
+  jest sprzężoną transpozycją A z inwolucją g↦w(g)g⁻¹, więc ma
+  odwrotność (A⁻¹)*. Lemat dualności wskazano jako wynik Milnora,
+  z uwzględnieniem charakteru orientacji.
+- W addytywności torsji rozpisano blok pozadiagonalny kontrakcji,
+  zamieniono d na ∂ i uwzględniono klasę [−1] wynikającą z permutacji
+  baz według stopni. Znika ona dopiero w odpowiednim ilorazie.
+  Doprecyzowano, że klasyfikacja jest względem oznaczonego brzegu
+  wejściowego. Sprawdzono argument sklejenia dowodzący jednoznaczności.
+- Poprawiono oba schematy: pierwszy pokazuje ściągalność pętli przy
+  równych etykietach i odsyła do pełnych założeń; „różnicę etykiet”
+  zastępuje iloczyn w grupie. W drugim znikanie [A] jest jawnym
+  warunkiem, a nie wnioskiem z samej odwracalności. Usunięto niedziałający
+  odsyłacz bibliograficzny i dodano hasła indeksu K₁, grupa Whiteheada
+  i torsja Whiteheada. Wszystkie dawne etykiety pozostają zachowane.
+
+Źródła porównawcze:
+[Milnor, *Whitehead Torsion*, §§1, 3–4, 7, 9–11](https://webhomes.maths.ed.ac.uk/~v1ranick/papers/milnorwh.pdf),
+[Kreck–Lück, *The Novikov Conjecture*, twierdzenie 6.15(1)](https://webhomes.maths.ed.ac.uk/~v1ranick/papers/owsem.pdf),
+[Khan, *The s/h-Cobordism Theorem*](https://qkhan.pages.iu.edu/research/SLIDES/Lecture02_KHAN.pdf)
+oraz obramowany lemat z
+[Milnor, *Lectures on the h-Cobordism Theorem*, §6](https://webhomes.maths.ed.ac.uk/~v1ranick/surgery/hcobord.pdf).
+
+### Kontrola ukończonego etapu
+
+Pełna kompilacja `latexmk` wraz z indeksem zakończyła się poprawnie:
+**505 stron**, bez błędów, brakujących lub powtórzonych odsyłaczy
+i ostrzeżeń `Overfull`. Pozostały cztery `Underfull`: trzy wcześniejsze
+w plikach 01, 29 i 23 oraz jedno łagodne w akapicie o niezależności
+torsji w bieżącym rozdziale, obejrzanym na stronie 395. Nie ma kolizji
+tekstu ani wyjścia poza kolumnę. Pozostają także dwa wcześniejsze
+automatyczne rozszerzenia położenia rysunku z `h` do `ht`.
+Indeks przyjął 297 wpisów bez odrzuceń i ostrzeżeń.
+
+Sprawdzono wszystkie 44 importy, 1446 unikalnych etykiet i 1404
+wystąpienia odsyłaczy. Własna różnica LaTeX względem `1ee001a`
+obejmuje wyłącznie plik rozdziału 25. Zachowano wszystkie jego
+wcześniejsze etykiety i oba rysunki, z opisanymi wyżej poprawkami.
+PDF nie zawiera `??`; wszystkie 2005 odsyłaczy wewnętrznych
+prowadzą na istniejące strony.
+
+Obejrzano skład całego rozdziału, strony 390–401, oraz indeks 502–505.
+Oba schematy na stronach 391 i 399 sprawdzono także w powiększeniu;
+etykiety są czytelne i zgodne z tekstem. Po doprecyzowaniu źródła
+twierdzenia o prostej homotopii powtórzono pełny skład, kontrolę
+odsyłaczy oraz ogląd zmienionych stron 394–395. Wspólny PDF
+zaktualizowano. Kontrola zdalnej gałęzi przed publikacją ponownie
+nie wykazała nowych commitów autora.

@@ -1,6 +1,6 @@
 # Aktualny plan i pokrycie przeglądem
 
-Stan: 9 października 2026. Gałąź: `review/rozdzialy-matematyka`.
+Stan: 11 października 2026. Gałąź: `review/rozdzialy-matematyka`.
 Przed bieżącą pracą pobrano bez konfliktów 12 commitów autora
 `b912682`–`386ecb6`, od wcześniejszego wspólnego stanu `34e683b`.
 Książka ma **38 rozdziałów, pięć części i trzy dodatki**. Numery w nazwach
@@ -26,9 +26,15 @@ propozycji jest w Git oraz w dzienniku.
    generatorów tensoru i terminologia w pozostałych wskazanych miejscach.
    Ten etap obejmuje też rejestr pojęć użytych bez dostatecznego objaśnienia.
 2. Audyt h-kobordyzmu (obecny rozdział 24, plik `20-h-kobordyzm.tex`)
-   zakończono 9 października. Dalej torsja i s-kobordyzm (rozdział 25,
-   plik 21), następnie Poincaré (rozdział 29, plik 25).
-   Kolejne iteracje obejmują po jednym rozdziale.
+   zakończono 9 października. Zgodnie z prośbą z 11 października
+   kontynuujemy od rozdziału 25 w górę, w kolejności PDF.
+   Torsję i s-kobordyzm (rozdział 25, plik 21) zakończono
+   11 października wraz z kontrolą składu. Następny jest rozdział 26.
+   Dalej rozdziały 26–38: dla wcześniej sprawdzonych porównanie
+   aktualnej treści z wersją audytowaną i kontrola zależności;
+   dla niezweryfikowanych pełny audyt. Nie oznaczamy dawnych
+   przeglądów jako nowo przeprowadzonych. Każda iteracja obejmuje
+   jeden rozdział.
 3. Sprawdzić również niezweryfikowane nowe rozdziały o geometrii globalnej,
    potoku Ricciego, wymiarze 3 i wymiarze 4 oraz dodatki według tabeli.
    Zapowiedziany materiał o wiązkach został pobrany w `2777149`:
@@ -78,7 +84,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 22. Teoria Morse'a | `18-morse.tex` | Audyt dodatków zakończony 8 października | Sprawdzone definicje i pięć ilustracji; jawne współrzędne krytyczne torusa, dokładne prowadnice podpisów i poprawiona terminologia |
 | 23. Kobordyzmy i uchwyty | `19-kobordyzmy-uchwyty.tex` | Audyt dodatków zakończony 8 października; PDF 443 strony | Sprawdzone trzy hasła i pięć ilustracji; przywrócony warunek orientacji w podpisie, jawny opis sklejenia pierścieni i rozwinięty lokalny ruch Whitneya przy zachowanych założeniach o dyskach |
 | 24. h-kobordyzm | `20-h-kobordyzm.tex` | Audyt i uzupełnienia zakończone 9 października; skład po scaleniu do `2777149`: 503 strony | Rozpisano wymianę 1→3, dopełnienia w kowymiarze 2, wstęgi i homologię wyciętej sfery. Dokładne założenia obramowanego lematu Whitneya podano jako jawny wynik zewnętrzny. Trzy rysunki, odsyłacze i indeks sprawdzone. |
-| 25. Torsja i s-kobordyzm | `21-torsja-s-kobordyzm.tex` | Oczekuje; nazwa modułu rzutowego poprawiona 9 października | Bazy, strona działania pierścienia i konwencje torsji; sama poprawka nazwy nie zamyka audytu. |
+| 25. Torsja i s-kobordyzm | `21-torsja-s-kobordyzm.tex` | Pełny audyt i uzupełnienia zakończone 11 października; PDF 505 stron | Poprawiono bazy i konwencje macierzowe, dowód niezależności kontrakcji, zakres lematu Whitneya, obramowania i dualność w realizacji torsji. Strony 390–401, oba schematy, odsyłacze i indeks sprawdzone; głębokie wejścia zewnętrzne wskazano dokładnie. |
 | 26. Chirurgia geometryczna | `22-chirurgia-geometryczna.tex` | Pełny audyt zakończony 8 października; treść bez poprawek | Sprawdzone obramowania, ślad i uchwyt dualny, homologia, $\pi_1$, forma jądra i rysunki |
 | 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Pełny audyt treści zakończony 7 października; sprawdzono definicje, rachunki znaków i baz, tok dowodu oraz źródła Walla i Milnora | Uściślono dual lewego modułu i wzór dla udoskonalenia kwadratowego; geometryczne lematy Walla i Milnora oraz klasyfikacja grup $L$ pozostają jawnie zewnętrzne Termin „rzutowy” ujednolicono 9 października. |
 | 28. Ciąg chirurgii | `24-ciag-chirurgii.tex` | Pełny audyt zakończony 8 października | Uściślono naturę obu strzałek przeszkody i przejście do $s$-kobordyzmu; bijekcja z $[X,G/O]$ i działanie grupy $L$ pozostają jawnymi wynikami Walla |
@@ -105,6 +111,12 @@ fragmentów geometrii Kleina i Thurstona, z wyszukaniem wyjaśnień w całym
 źródle. To **nie jest jeszcze kompletny audyt słownika wszystkich 38
 rozdziałów**. Rejestr uzupełniamy podczas kolejnych przeglądów.
 Poniższych opcjonalnych rozszerzeń nie dopisano automatycznie.
+W przeglądzie rozdziału 25 z 11 października uzupełniono potrzebne
+na miejscu objaśnienia wolnej ściany i zwinięcia CW, homologicznego
+stożka odwzorowania oraz charakteru orientacji. Twierdzenia o prostej
+homotopii i porównaniu triangulacji z rozkładem Morse'a mają dokładne
+źródła i pozostają jawnie zewnętrzne; nie dopisujemy ich ponownie
+jako brakujących definicji.
 
 | Pojęcie i miejsce | Czego brakuje | Możliwe uzupełnienie |
 |---|---|---|
