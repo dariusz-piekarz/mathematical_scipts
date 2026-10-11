@@ -1,6 +1,6 @@
 # Aktualny plan i pokrycie przeglądem
 
-Stan: 11 października 2026. Gałąź: `review/rozdzialy-matematyka`.
+Stan: 12 października 2026. Gałąź: `review/rozdzialy-matematyka`.
 Przed bieżącą pracą pobrano bez konfliktów 12 commitów autora
 `b912682`–`386ecb6`, od wcześniejszego wspólnego stanu `34e683b`.
 Książka ma **38 rozdziałów, pięć części i trzy dodatki**. Numery w nazwach
@@ -39,6 +39,8 @@ propozycji jest w Git oraz w dzienniku.
    stabilizator zwarty, działania właściwe, podgrupy dyskretne,
    gładkie ilorazy, zupełność, maksymalność i przykłady. Podstawy
    rozbudowano w rozdziale 16, a zastosowanie w rozdziale 33;
+   12 października uzupełniono oba miejsca o orbifoldy i ujednolicono
+   nienumerowane podsekcje 33.1;
    pełny audyt pozostałych części tych rozdziałów pozostaje osobny.
    Sprawdzić również niezweryfikowane nowe rozdziały o geometrii globalnej,
    potoku Ricciego, wymiarze 3 i wymiarze 4 oraz dodatki według tabeli.
@@ -80,7 +82,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 13. Geodezyjne i zupełność | `13-geodezyjne.tex` | Audyt dodatków zakończony 6 października; PDF 397 stron | Definicje i dziewięć ilustracji sprawdzone; usunięty powtórzony wpis indeksu |
 | 14. Krzywizna | `14-krzywizna.tex` | Audyt dodatków zakończony 6 października; PDF 397 stron | Indeks i trzy zmiany cieniowania sprawdzone; rozwinięto powiązania dowodu Cherna–Gaussa–Bonneta z rozdziałami 17 i 27 |
 | 15. Grupy Liego | `29-grupy-liego.tex` | Sprawdzono nakrycie kwaternionowe 7 października; pełny audyt całości czeka | Przykłady, nawias, eksponenta, działanie adjungowane i jawne nakrycie $\mathrm{SU}(2)\to\mathrm{SO}(3)$; później sprawdzić zastosowania w Chernie–Weilu i wymiarze cztery |
-| 16. Geometria Kleina (plik 29a) | `29a-geometria-kleina.tex` | Rozbudowano i sprawdzono nową sekcję o zwartych stabilizatorach i ilorazach 11 października; audyt reszty oczekuje | Dowody uśredniania, właściwości działania na $G/H$, zupełności i twierdzenia o ilorazie przez swobodną grupę dyskretną; pozostałe modele Kleina wymagają osobnego przeglądu. |
+| 16. Geometria Kleina (plik 29a) | `29a-geometria-kleina.tex` | Sekcję o ilorazach rozbudowano 11–12 października; audyt reszty oczekuje | Dowody uśredniania, właściwości działania na $G/H$, zupełności, ilorazu przez grupę dyskretną oraz lokalnego modelu orbifoldu; pozostałe modele Kleina wymagają osobnego przeglądu. |
 | 17. Chern–Weil | `27-chern-weil.tex` | Oczekuje | Normalizacje i transgresja; uzasadnić model względnej kohomologii de Rhama przy identyfikacji klasy Eulera, granicę całek wokół zer i wersję brzegową |
 | 18. Hodge–Bochner | `28-hodge-bochner.tex` | Sprawdzono kluczowe wzory 7 października; pełny audyt całości czeka | Jawne wejście analityczne; własne dowody wzoru Weitzenböcka, znikania Bochnera i rozkładu sygnatury; sprawdzić zgodność z przyszłą teorią czterowymiarową |
 | 19. Sard i transwersalność | `15-sard-transwersalnosc.tex` | Audyt dodatków zakończony 6 października; bez poprawek treści | Pięć wpisów indeksu, cztery ilustracje i warunki transwersalności przy brzegu sprawdzone; PDF 401 stron |
@@ -97,7 +99,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 30. Sfery Milnora | `26-sfery-milnora.tex` | Przegląd konstrukcji, klas charakterystycznych i egzotyczności zakończony 7 października; PDF 442 strony | Rozpisano homologię i niezmiennik; wzór Hirzebrucha pozostaje jawnym wejściem zewnętrznym |
 | 31. Potok Ricciego (plik 30) | `30-potok-ricciego.tex` | Sprawdzono równania ewolucyjne i poprawkę DeTurcka 7 października; pełny audyt całości i nowego rysunku z `2777149` czeka | Ewolucja skalara i pola powierzchni, zasada maksimum, DeTurck; zgodność schematu deformacji z zakresem równań i podpisem. Istnienie i jednoznaczność PDE pozostają jawnym wejściem analitycznym. |
 | 32. Poincaré w wymiarze trzy (plik 30a) | `30a-poincare-trzy.tex` | Dodano 8 października; niezależny audyt oczekuje | Dla głębokich twierdzeń Perelmana i Hamiltona zachować jawne hipotezy i źródła; sprawdzić topologiczny wniosek z wygaśnięcia oraz użycie twierdzenia Moise'a |
-| 33. Geometrie Thurstona (plik 30b) | `30b-geometrizacja-thurstona.tex` | Rozbudowano i sprawdzono sekcję 33.1 w 11 października; audyt reszty oczekuje | Rozdzielono warunki modelu, objaśniono zwartość, ilorazy, lokalną jednorodność i maksymalność oraz dodano przykłady. Pełny audyt ośmiu modeli, rozkładu pierwszego, JSJ i założeń geometryzacji nadal oczekuje. |
+| 33. Geometrie Thurstona (plik 30b) | `30b-geometrizacja-thurstona.tex` | Rozbudowano sekcję 33.1 i orbifoldy bazy Seiferta 11–12 października; audyt reszty oczekuje | Warunki modelu, ilorazy, lokalna jednorodność i maksymalność; nienumerowane podsekcje 33.1, charakterystyka orbifoldowa, dobre i złe bazy oraz lokalny model Seiferta. Pełny audyt ośmiu modeli, rozkładu pierwszego, JSJ i założeń geometryzacji nadal oczekuje. |
 | 34. Formy przecięcia i uchwyty w wymiarze cztery (plik 31) | `31-freedman-formy-przeciecia.tex` | Przegląd matematyczny zakończony 7 października w poprzedniej numeracji; PDF 442 strony | Sprawdzono rachunek $E_8$, formę splotu i dwa rysunki; klasyfikacja jest w osobnym rozdziale o etykiecie `ch:freedman-klasyfikacja` |
 | 35. Uchwyty Cassona (plik 32) | `32-uchwyty-cassona.tex` | Przegląd i uzupełnienie skutków osadzania dysków zakończone 7 października w poprzedniej numeracji; PDF 442 strony | Geometrycznie dualne sfery w konkluzji mają poprawione źródło Powella--Ray--Teichnera; pełne osadzanie i standardowość uchwytu pozostają zewnętrzne |
 | 36. Klasyfikacja Freedmana (plik 33) | `33-freedman-klasyfikacja.tex` | Przegląd i objaśnienie drogi od dysków do klasyfikacji zakończone 7 października w poprzedniej numeracji; PDF 442 strony | Osadzanie sfer, chirurgia i $s$-kobordyzm są wskazane jako dalsze wyniki zewnętrzne; klasyfikacja i niezmiennik Kirby'ego--Siebenmanna pozostają zewnętrzne |

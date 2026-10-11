@@ -4460,3 +4460,50 @@ są czytelne i nie kolidują z marginesami. Po stwierdzeniu, że dawna
 ścieżka do Perla z README nie istnieje na bieżącym komputerze,
 poprawiono ją na działającą ścieżkę instalacji Git. Wspólny PDF
 zaktualizowano po tej kontroli.
+
+## 12 października 2026 — orbifoldy i nagłówki sekcji 33.1
+
+Autor zaakceptował uzupełnienie orbifoldów w rozdziałach 16 i 33
+oraz polecił zamienić numerowane `\subsection` w sekcji 33.1 na
+`\subsection*`. Przed zmianami pobrano aktualny stan gałęzi;
+nie było nowych commitów. Trzy nagłówki w 33.1 nie miały etykiet,
+więc zachowano istniejące odsyłacze i numerację twierdzeń.
+
+W rozdziale 16 wprowadzono efektywny orbifold gładki przez
+zgodne lokalne mapy $B/H$ z grupą skończoną $H$. Rozróżniono
+strukturę orbifoldu od przestrzeni podkładowej i wyjaśniono,
+że każda rozmaitość jest orbifoldem z trywialnymi grupami
+lokalnymi, ale orbifold z punktem stożkowym nie jest rozmaitością
+jako orbifold. Przykłady obejmują iloraz dysku przez obroty,
+krawędź zwierciadlaną i $\R^3/\{\pm I\}$. Dowód lokalnego modelu
+ilorazu przez skutecznie działającą podgrupę dyskretną używa
+właściwości działania, skończoności stabilizatora i współrzędnych
+wykładniczych. Dla definicji wskazano rozdział 13 notatek Thurstona.
+
+W rozdziale 33 opisano orientowalny orbifold powierzchniowy
+z punktami stożkowymi, wyprowadzono wzór na orbifoldową
+charakterystykę Eulera przez ważenie komórek oraz obliczono
+przykłady o wszystkich trzech znakach. Iloraz torusa przez
+inwolucję daje poduszkę $S^2(2,2,2,2)$. Zdefiniowano dobre
+orbifoldy i zaznaczono złe przypadki $S^2(p)$ oraz
+$S^2(p,q)$ przy $p\ne q$ na podstawie twierdzeń 2.3–2.5
+Scotta. Przy lokalnym modelu Seiferta sprawdzono rachunkiem,
+że działanie cykliczne jest swobodne na przestrzeni całkowitej,
+choć ma punkt stały na dysku bazy. Rozróżniono klasyfikację
+geometrii rozmaitości całkowitej od metryki zadanej bazy.
+
+### Kontrola składu
+
+Pełny `latexmk` wraz z indeksem zakończył się poprawnie:
+**512 stron**, bez błędów, brakujących lub powtórzonych odsyłaczy
+i bez ostrzeżeń `Overfull`. Cztery komunikaty `Underfull`
+dotyczą wcześniejszych akapitów w plikach 01, 29, 21 i 23;
+pozostały też dwa wcześniejsze komunikaty o zmianie położenia
+rysunku z `h` na `ht`. Indeks przyjął 309 wpisów, bez odrzuceń
+i ostrzeżeń; nowe hasła orbifoldowe prowadzą na strony 299,
+465 i 466.
+
+Sprawdzono tekst nowych fragmentów na stronach 299–300 i 465–467
+oraz wygląd stron 299, 465 i 466 w powiększeniu. W spisie treści
+i zakładkach PDF nie ma już numerowanych podsekcji 33.1, natomiast
+Definicja 33.1.1 zachowała numer. Zaktualizowano wspólny PDF.
