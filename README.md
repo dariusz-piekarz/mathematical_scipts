@@ -61,7 +61,7 @@ Na bieżącym komputerze Perl jest dostępny w instalacji Git.
 Jeśli MiKTeX nie znajduje Perla, przed powyższym poleceniem ustaw w tej sesji:
 
 ```powershell
-$env:PATH = 'E:\Programs\Windows\PortableGit\usr\bin;' + $env:PATH
+$env:PATH = 'C:\Program Files\Git\usr\bin;' + $env:PATH
 ```
 
 Bez `latexmk` można wykonać kolejno:

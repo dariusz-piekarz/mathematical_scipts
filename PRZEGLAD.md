@@ -4402,3 +4402,61 @@ twierdzenia o prostej homotopii powtórzono pełny skład, kontrolę
 odsyłaczy oraz ogląd zmienionych stron 394–395. Wspólny PDF
 zaktualizowano. Kontrola zdalnej gałęzi przed publikacją ponownie
 nie wykazała nowych commitów autora.
+
+## 11 października 2026 — warunki geometrii modelowej i ilorazy
+
+Autor wskazał Definicję 33.1.1 i poprosił o rozwinięcie zwartości,
+maksymalności, stabilizatora, dyskretności oraz teorii rozmaitości
+ilorazowych. Przed rozpoczęciem pobrano stan zdalny; gałąź przeglądu
+była czysta i zgodna z `origin/review/rozdzialy-matematyka` na
+`15dc513`. Zmiany umieszczono w rozdziałach 16 i 33, bez powtarzania
+definicji działania i przestrzeni $G/H$ już obecnych w rozdziale 16.
+
+W rozdziale o geometrii Kleina dodano znormalizowaną miarę Haara
+jako jawny wynik zewnętrzny i pełny rachunek uśredniania iloczynu
+skalarnego po zwartym stabilizatorze. Wprowadzono właściwe działanie
+i udowodniono równoważność jego właściwości ze zwartością
+stabilizatora dla działania przechodniego na $G/H$. Dowód z lokalnymi
+przekrojami pokazuje dokładnie, gdzie użyta jest zwartość $H$.
+Dla metryki jednorodnej rozpisano jednolity czas istnienia geodezyjnych
+i zastosowano wcześniejsze twierdzenie Hopfa–Rinowa. Dla swobodnej
+dyskretnej podgrupy wyprowadzono gładką strukturę ilorazu, nakrycie,
+metrykę ilorazową, zupełność i identyfikację grupy podstawowej.
+Przykłady odróżniają działanie właściwe od samej zwartości
+stabilizatorów przy nieprzechodnim działaniu oraz dyskretność od
+swobody.
+
+W rozdziale 33 rozdzielono trzy warunki modelu: zwarty stabilizator,
+istnienie przynajmniej jednego zwartego ilorazu oraz maksymalność
+grupy przekształceń. Wyjaśniono, że konkretna rozmaitość geometryczna
+może być niezwarta, ale jej metryka jest zupełna i lokalnie
+jednorodna. Dodano przykłady torusa, cylindra $S^1\times\R^2$,
+$S^2\times S^1$, $\mathbb{RP}^3$ oraz ilorazu z osobliwym punktem.
+Dowód maksymalności grupy euklidesowej sprowadza każdą metrykę
+niezmienniczą względem translacji i $\mathrm O(3)$ do stałej
+wielokrotności metryki euklidesowej. Odróżniono pojedynczy iloraz
+geometryczny od geometryzacji po cięciu, doprecyzowano lewy iloraz
+$\Gamma\backslash X$ i wskazano źródła głębokich twierdzeń
+Singera, Myersa–Steenroda i Thurstona w wersji Scotta.
+
+Ten etap sprawdza nowe wyjaśnienia i ich połączenie z istniejącymi
+odsyłaczami. Pełny niezależny audyt tabeli ośmiu modeli, JSJ
+i sformułowania geometryzacji pozostaje zadaniem wymienionym
+wyłącznie w `PLAN_DZIALANIA.md`.
+
+### Kontrola składu
+
+Pełny `latexmk` z indeksem zakończył się poprawnie: **509 stron**.
+W logu nie ma błędów, brakujących lub powtórzonych odsyłaczy ani
+ostrzeżeń `Overfull`. Cztery komunikaty `Underfull` pochodzą z
+wcześniejszych akapitów w plikach 01, 29, 21 i 23; nie dotyczą
+nowych sekcji. Indeks przyjął 302 wpisy, nie odrzucił żadnego
+i nie zgłosił ostrzeżeń. Nowe hasła prowadzą na strony 296, 298,
+460 i 461.
+
+Sprawdzono tekst PDF na stronach 292–301 i 459–465 oraz wygląd
+stron 299, 461 i 463 w powiększeniu; nagłówki, wzory i odsyłacze
+są czytelne i nie kolidują z marginesami. Po stwierdzeniu, że dawna
+ścieżka do Perla z README nie istnieje na bieżącym komputerze,
+poprawiono ją na działającą ścieżkę instalacji Git. Wspólny PDF
+zaktualizowano po tej kontroli.

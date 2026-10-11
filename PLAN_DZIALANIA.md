@@ -22,9 +22,9 @@ propozycji jest w Git oraz w dzienniku.
 
 ## Bieżący zakres i kolejność
 
-1. Prośba ze zrzutu z 9 października: rozdział 5 oraz jednolita notacja
-   generatorów tensoru i terminologia w pozostałych wskazanych miejscach.
-   Ten etap obejmuje też rejestr pojęć użytych bez dostatecznego objaśnienia.
+1. Prośbę z 9 października o rozdział 5, notację generatorów tensoru,
+   wskazaną terminologię i pierwszy rejestr nieobjaśnionych pojęć
+   zrealizowano w `dbfe600` i powiązanych poprawkach.
 2. Audyt h-kobordyzmu (obecny rozdział 24, plik `20-h-kobordyzm.tex`)
    zakończono 9 października. Zgodnie z prośbą z 11 października
    kontynuujemy od rozdziału 25 w górę, w kolejności PDF.
@@ -35,7 +35,12 @@ propozycji jest w Git oraz w dzienniku.
    dla niezweryfikowanych pełny audyt. Nie oznaczamy dawnych
    przeglądów jako nowo przeprowadzonych. Każda iteracja obejmuje
    jeden rozdział.
-3. Sprawdzić również niezweryfikowane nowe rozdziały o geometrii globalnej,
+3. Prośba z 11 października o wyjaśnienie Definicji 33.1.1 obejmuje
+   stabilizator zwarty, działania właściwe, podgrupy dyskretne,
+   gładkie ilorazy, zupełność, maksymalność i przykłady. Podstawy
+   rozbudowano w rozdziale 16, a zastosowanie w rozdziale 33;
+   pełny audyt pozostałych części tych rozdziałów pozostaje osobny.
+   Sprawdzić również niezweryfikowane nowe rozdziały o geometrii globalnej,
    potoku Ricciego, wymiarze 3 i wymiarze 4 oraz dodatki według tabeli.
    Zapowiedziany materiał o wiązkach został pobrany w `2777149`:
    wymaga osobnego ponownego audytu rozdziału 1, obejmującego definicje,
@@ -75,7 +80,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 13. Geodezyjne i zupełność | `13-geodezyjne.tex` | Audyt dodatków zakończony 6 października; PDF 397 stron | Definicje i dziewięć ilustracji sprawdzone; usunięty powtórzony wpis indeksu |
 | 14. Krzywizna | `14-krzywizna.tex` | Audyt dodatków zakończony 6 października; PDF 397 stron | Indeks i trzy zmiany cieniowania sprawdzone; rozwinięto powiązania dowodu Cherna–Gaussa–Bonneta z rozdziałami 17 i 27 |
 | 15. Grupy Liego | `29-grupy-liego.tex` | Sprawdzono nakrycie kwaternionowe 7 października; pełny audyt całości czeka | Przykłady, nawias, eksponenta, działanie adjungowane i jawne nakrycie $\mathrm{SU}(2)\to\mathrm{SO}(3)$; później sprawdzić zastosowania w Chernie–Weilu i wymiarze cztery |
-| 16. Geometria Kleina (plik 29a) | `29a-geometria-kleina.tex` | Dodano 8 października; niezależny audyt oczekuje | Przestrzenie $G/H$ i modele afiniczny, projektowy, euklidesowy, sferyczny, torusa i dysku Poincarégo |
+| 16. Geometria Kleina (plik 29a) | `29a-geometria-kleina.tex` | Rozbudowano i sprawdzono nową sekcję o zwartych stabilizatorach i ilorazach 11 października; audyt reszty oczekuje | Dowody uśredniania, właściwości działania na $G/H$, zupełności i twierdzenia o ilorazie przez swobodną grupę dyskretną; pozostałe modele Kleina wymagają osobnego przeglądu. |
 | 17. Chern–Weil | `27-chern-weil.tex` | Oczekuje | Normalizacje i transgresja; uzasadnić model względnej kohomologii de Rhama przy identyfikacji klasy Eulera, granicę całek wokół zer i wersję brzegową |
 | 18. Hodge–Bochner | `28-hodge-bochner.tex` | Sprawdzono kluczowe wzory 7 października; pełny audyt całości czeka | Jawne wejście analityczne; własne dowody wzoru Weitzenböcka, znikania Bochnera i rozkładu sygnatury; sprawdzić zgodność z przyszłą teorią czterowymiarową |
 | 19. Sard i transwersalność | `15-sard-transwersalnosc.tex` | Audyt dodatków zakończony 6 października; bez poprawek treści | Pięć wpisów indeksu, cztery ilustracje i warunki transwersalności przy brzegu sprawdzone; PDF 401 stron |
@@ -92,7 +97,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 30. Sfery Milnora | `26-sfery-milnora.tex` | Przegląd konstrukcji, klas charakterystycznych i egzotyczności zakończony 7 października; PDF 442 strony | Rozpisano homologię i niezmiennik; wzór Hirzebrucha pozostaje jawnym wejściem zewnętrznym |
 | 31. Potok Ricciego (plik 30) | `30-potok-ricciego.tex` | Sprawdzono równania ewolucyjne i poprawkę DeTurcka 7 października; pełny audyt całości i nowego rysunku z `2777149` czeka | Ewolucja skalara i pola powierzchni, zasada maksimum, DeTurck; zgodność schematu deformacji z zakresem równań i podpisem. Istnienie i jednoznaczność PDE pozostają jawnym wejściem analitycznym. |
 | 32. Poincaré w wymiarze trzy (plik 30a) | `30a-poincare-trzy.tex` | Dodano 8 października; niezależny audyt oczekuje | Dla głębokich twierdzeń Perelmana i Hamiltona zachować jawne hipotezy i źródła; sprawdzić topologiczny wniosek z wygaśnięcia oraz użycie twierdzenia Moise'a |
-| 33. Geometrie Thurstona (plik 30b) | `30b-geometrizacja-thurstona.tex` | Dodano 8 października; 9 października kontrola obecności definicji i terminologii | Definicje modelu i rozmaitości geometrycznej istnieją. Pełny audyt ośmiu modeli, rozkładu pierwszego, JSJ i założeń geometryzacji nadal oczekuje. |
+| 33. Geometrie Thurstona (plik 30b) | `30b-geometrizacja-thurstona.tex` | Rozbudowano i sprawdzono sekcję 33.1 w 11 października; audyt reszty oczekuje | Rozdzielono warunki modelu, objaśniono zwartość, ilorazy, lokalną jednorodność i maksymalność oraz dodano przykłady. Pełny audyt ośmiu modeli, rozkładu pierwszego, JSJ i założeń geometryzacji nadal oczekuje. |
 | 34. Formy przecięcia i uchwyty w wymiarze cztery (plik 31) | `31-freedman-formy-przeciecia.tex` | Przegląd matematyczny zakończony 7 października w poprzedniej numeracji; PDF 442 strony | Sprawdzono rachunek $E_8$, formę splotu i dwa rysunki; klasyfikacja jest w osobnym rozdziale o etykiecie `ch:freedman-klasyfikacja` |
 | 35. Uchwyty Cassona (plik 32) | `32-uchwyty-cassona.tex` | Przegląd i uzupełnienie skutków osadzania dysków zakończone 7 października w poprzedniej numeracji; PDF 442 strony | Geometrycznie dualne sfery w konkluzji mają poprawione źródło Powella--Ray--Teichnera; pełne osadzanie i standardowość uchwytu pozostają zewnętrzne |
 | 36. Klasyfikacja Freedmana (plik 33) | `33-freedman-klasyfikacja.tex` | Przegląd i objaśnienie drogi od dysków do klasyfikacji zakończone 7 października w poprzedniej numeracji; PDF 442 strony | Osadzanie sfer, chirurgia i $s$-kobordyzm są wskazane jako dalsze wyniki zewnętrzne; klasyfikacja i niezmiennik Kirby'ego--Siebenmanna pozostają zewnętrzne |
@@ -124,7 +129,6 @@ jako brakujących definicji.
 | Pierścień główny — plik 05, uwaga po `prop:ranga-ilorazu` | Brak definicji i twierdzenia o strukturze. Założenie skończonego generowania poprawiono w bieżącym audycie. | Zdefiniować jako dziedzinę, w której każdy ideał jest główny; podać Z i K[t]. Pełne twierdzenie strukturalne wymaga osobnego dowodu lub jawnego źródła. |
 | Indeks podgrupy i „wirtualnie” — plik 30b, przykłady geometrii euklidesowej, hiperbolicznej i Sol | Zdefiniowano warstwy, lecz nie ich liczbę jako indeks ani własność posiadaną przez podgrupę skończonego indeksu. | Definicja indeksu i własności wirtualnej, przykład grupy zawierającej Zⁿ ze skończonym indeksem. |
 | Grupa nilpotentna i rozwiązalna — plik 30b, modele Nil i Sol | Nazwy są użyte do porównania grup, bez szeregów centralnego i pochodnego. | Krótki blok algebraiczny z komutatorami; obliczyć te szeregi dla podanych grup zamiast tylko dopisywać nazwy. |
-| Uśrednianie po zwartym stabilizatorze — plik 30b, `def:thurston-model` | Podano ideę uzyskania niezmienniczej metryki; nie zdefiniowano miary Haara ani nie wskazano twierdzenia o jej istnieniu. | Podać znormalizowaną miarę Haara jako jawny wynik zewnętrzny i wzór całkowy; sprawdzić dodatnią określoność i niezależność przeniesienia. |
 | Ostrzyk hiperboliczny — plik 30b, przykład H³ | Jest informacja o torusowym przekroju, bez modelu metryki końca. | Model ilorazu horokuli i krótki rachunek skończonej objętości; odróżnić torusowy przekrój od całego końca. |
 | Wypełnienie Dehna — plik 30b, przykład H³ | Jest odwołanie do twierdzenia, ale bez definicji operacji i nachylenia na torusie. | Opisać doklejenie pełnego torusa i meridian; powiązać z istniejącą chirurgią, a hiperboliczne twierdzenie pozostawić z dokładnym źródłem. |
 
@@ -133,9 +137,11 @@ postać normalną i własności uniwersalne w rozdziale 5. Dziedzinę całkowito
 ciało ułamków i działanie skalarów na lokalizacji uzupełniono 9 października.
 Geometria Kleina ma definicję `def:klein-geometria` w pliku 29a oraz przykłady.
 Geometria modelowa ma `def:thurston-model` w pliku 30b; zaraz potem zdefiniowano
-rozmaitość geometryczną (w przyjętej tam wersji zamkniętej), a dalej podano
-osiem modeli i ilorazy. Potrzebny jest audyt ich założeń i wyjaśnień, nie
-druga konkurencyjna definicja.
+rozmaitość geometryczną, także w wersji niezamkniętej; w pliku 29a
+podano miarę Haara jako wynik zewnętrzny oraz dowód uśredniania
+i konstrukcji gładkiego ilorazu. Dalej podano osiem modeli i ilorazy.
+Potrzebny jest audyt ich pozostałych założeń i wyjaśnień, bez drugiej
+konkurencyjnej definicji.
 
 ## Dalsze rozszerzenia i granice dowodów
 
