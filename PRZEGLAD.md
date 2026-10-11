@@ -4507,3 +4507,31 @@ Sprawdzono tekst nowych fragmentów na stronach 299–300 i 465–467
 oraz wygląd stron 299, 465 i 466 w powiększeniu. W spisie treści
 i zakładkach PDF nie ma już numerowanych podsekcji 33.1, natomiast
 Definicja 33.1.1 zachowała numer. Zaktualizowano wspólny PDF.
+
+## 12 października 2026 — zgodność map orbifoldowych
+
+Na uwagę autora rozpisano skrótowy warunek z Definicji 16.3.7.
+Zanurzenie jednej mapy w drugiej określają teraz jawnie injektywny
+homomorfizm grup lokalnych i gładkie zanurzenie modeli, spełniające
+równanie ekwiwariantności oraz równanie zgodności z rzutami na
+przestrzeń podkładową. Zgodność atlasu sformułowano punktowo przez
+wspólną mniejszą mapę na każdym przecięciu. Doprecyzowano, że
+grupą lokalną punktu w mapie jest stabilizator jego podniesienia,
+a grupa całej mapy jest grupą lokalną jej środka.
+
+Na przykładzie $D/C_m$ pokazano oba rodzaje zanurzeń: mapę z grupą
+trywialną przy zwykłym punkcie oraz mapę z grupą $C_m$ przy środku.
+W dowodzie stwierdzenia o ilorazie $\Gamma\backslash X$ wskazano
+konkretną wspólną mapę na przecięciu dwóch modeli, inkluzję i
+sprzężenie stabilizatorów oraz oba wymagane warunki. Źródłem
+definicji pozostaje rozdział 13 notatek Thurstona wskazany w tekście.
+
+### Kontrola składu
+
+Pełny `latexmk` z indeksem zakończył się poprawnie: **513 stron**.
+W logu nie ma błędów, brakujących lub powtórzonych odsyłaczy ani
+ostrzeżeń `Overfull`. Cztery komunikaty `Underfull` i dwa o zmianie
+położenia rysunku z `h` na `ht` dotyczą wcześniejszych miejsc.
+Indeks przyjął 309 wpisów, bez odrzuceń i ostrzeżeń. Sprawdzono tekst
+oraz wygląd stron 299–300: definicja, wzory, przykład i dowód są
+czytelne, bez kolizji z marginesami. Zaktualizowano wspólny PDF.
