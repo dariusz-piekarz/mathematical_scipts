@@ -51,6 +51,12 @@ propozycji jest w Git oraz w dzienniku.
 4. Przed każdą iteracją i publikacją pobierać zmiany. Prowadzić log,
    kompilować cały dokument i indeks, kontrolować odsyłacze oraz zmienione
    strony, aktualizować wspólny PDF, commitować i pushować ukończony etap.
+5. W etapie z 12 października ujednolicono bloki „Dalsza lektura” we
+   wszystkich 38 rozdziałach i sprawdzono odsyłacze do zewnętrznych źródeł:
+   tam, gdzie potwierdzono dokładnie tę samą pracę w otwartym PDF, wskazano
+   bezpośredni plik, zwłaszcza arXiv. Rozdział 38 uzupełniono o etapy
+   konstrukcji Gompfa; pełne twierdzenia Quinna, Cassona, Freedmana i Gompfa
+   pozostają jawnymi wejściami zewnętrznymi.
 
 Nie dodajemy zadań. Rozmaitości z brzegiem, grupy wolne, iloczyny wolne,
 geometria Kleina i geometrie Thurstona już są w źródłach; nie tworzymy ich
@@ -105,12 +111,12 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 35. Uchwyty Cassona (plik 32) | `32-uchwyty-cassona.tex` | Przegląd skutków osadzania 7 października; kontrola terminologii 12 października | Immersje z punktami podwójnymi oddzielono od topologicznych zanurzeń; pełne osadzanie i standardowość uchwytu pozostają zewnętrzne |
 | 36. Klasyfikacja Freedmana (plik 33) | `33-freedman-klasyfikacja.tex` | Przegląd 7 października; kontrola przejścia do sfer i przykładu $2E_8$ 12 października | Rozpisano warunek $\lambda=2\mu+e=0$ dla homotopii regularnej; klasyfikacja, chirurgia i niezmiennik Kirby'ego--Siebenmanna pozostają zewnętrzne |
 | 37. Donaldson (plik 34) | `34-donaldson.tex` | Niezależny przegląd konwencji, przykładów i zastosowań 12 października | Sprawdzono znak $c_2$ oraz energii ASD, zakres diagonalizacji i przykład $2E_8$; analiza moduli i twierdzenie Donaldsona pozostają zewnętrzne |
-| 38. Egzotyczne $\R^4$ (plik 35) | `35-egzotyczne-r4.tex` | Niezależny przegląd wejść i indukcji Gompfa 12 października | Rozróżniono orientacje i małe/duże typy; dodano przykłady i schemat. Trzy wejścia Gompfa oraz wynik De Michelisa–Freedmana pozostają zewnętrzne |
+| 38. Egzotyczne $\R^4$ (plik 35) | `35-egzotyczne-r4.tex` | Niezależny przegląd wejść i indukcji Gompfa 12 października; uzupełniono przebieg lematów 1.1 i 1.2 | Dowiedziono kierunku od dysków plastra do zanurzenia śladu, obliczono kratę $-E_8$ w rozmaitości otaczającej i rozpisano etapy wygładzania, wież Cassona oraz zastąpienia dysków. Pełne twierdzenia Quinna, Cassona, Freedmana i Gompfa oraz wynik De Michelisa–Freedmana pozostają zewnętrzne. |
 | Podział źródeł i importy | — | Zakończono, `9148128` | Kontrola regresji przy dalszych zmianach |
 | Dodatek A o wynikach zewnętrznych | — | Uzupełniany przez autora do 386ecb6; pełny niezależny audyt oczekuje | Zgodność katalogu z rzeczywistymi dowodami, zwłaszcza Walla, geometrii globalnej oraz wymiarów 3 i 4. |
 | Dodatek B: homologia singularna i Euler | — | Dodany w `59fd235`; audyt oczekuje | Skończoność, przykłady i wzory Eulera; odsyłacze do homologii oraz przecięć i dualności (obecnie rozdziały 8 i 21). |
 | Dodatek C: grupy macierzowe | — | Definicje, algebry i wymiary sprawdzone 8 października; tabela czytelna w PDF | Przy dalszej rozbudowie zachować rozróżnienie wymiaru rzeczywistego i zespolonego oraz $Sp(n)$ od $Sp(2n,\mathbb K)$ |
-| Końcowa kontrola całości | — | Oczekuje | Mapa książki, oznaczenia, terminologia, bibliografia, indeks i PDF |
+| Końcowa kontrola całości | — | Częściowo: ujednolicono „Dalszą lekturę” i sprawdzono odsyłacze do źródeł | Mapa książki, oznaczenia, terminologia i pełny przegląd treści nadal wymagają osobnej kontroli; skład, indeks i PDF sprawdzane przy każdym etapie. |
 
 ## Rejestr pojęć do decyzji autora
 

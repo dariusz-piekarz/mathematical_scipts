@@ -4682,3 +4682,17 @@ współrzędnych i pozostawiono odesłanie do
 `eq:transformacja-derywacji` oraz wzór na przejście potrzebny
 do konstrukcji wiązki. Niezależnego, niezakończonego akapitu motywacyjnego
 w rozdziale 1 nie włączono do tego etapu ani do składanego PDF.
+
+### Kontrola składu
+
+Pełny skład `latexmk` z indeksem wykonano w odrębnym drzewie roboczym,
+zawierającym tylko zmiany niniejszego etapu. Wynikowy PDF ma 519 stron;
+rozdział 38 zajmuje strony 493–498, czyli nadal sześć stron. Ponowne
+uruchomienie `latexmk` potwierdziło, że wszystkie cele są aktualne.
+W końcowym logu nie ma błędów, brakujących odsyłaczy, powtórzonych
+etykiet ani przepełnień wierszy. Indeks przyjął 312 wpisów, bez
+odrzuceń i ostrzeżeń. Pozostały cztery komunikaty `Underfull \hbox`
+oraz trzy automatyczne zmiany położenia rysunków z `h` na `ht`.
+Obejrzano strony 54 i 63 rozdziału 1 oraz 496 i 498 rozdziału 38:
+odsyłacz do transformacji, oba bloki lektury i schemat indukcji są
+czytelne. Wspólny PDF zaktualizowano ze sprawdzonego składu.
