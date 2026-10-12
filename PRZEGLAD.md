@@ -9,6 +9,23 @@ wersji wskazanej w danym wpisie. Audyt 18 rozdziałów nie obejmuje późniejszy
 dodatków autora. Od 5 października źródła są w `tex/rozdzialy/`;
 plik główny tylko ustala ich kolejność.
 
+## Iteracja 16 — Egzotyczne struktury gładkie na R⁴
+
+Status: rozdział 35 doprecyzowano i ujednolicono z resztą konstrukcji Gompfa.
+Data: 2026-10-12. Źródło: `tex/rozdzialy/35-egzotyczne-r4.tex`.
+
+1. **Suma przy końcu i indukcja.** Uściślono, że w konstrukcji wystarczy
+   jeden konkretny model sumy przy końcu, w którym obie wybrane rozłączne
+   zwarte części pozostają rozdzielone, a orientacja jest zachowana.
+   To odpowiada rzeczywistemu potrzebnemu kroki indukcji, bez rozbudowanego
+   dowodu niezależności od wyboru łuku i promieni.
+2. **Spójność argumentu.** Wzmocniono komentarz przy przejściu od zewnętrznej
+   konstrukcji do indukcji Gompfa, aby czytelnik widział, gdzie wchodzą
+   twierdzenia o zanurzeniach i gdzie kończy się sama algebraiczna przeszkoda.
+3. **Kontrola odwołań.** Wersja tekstu nadal odwołuje się do tych samych
+   wyników zewnętrznych i etykiet, a dodatkowy komentarz nie wprowadza nowych
+   symboli ani konfliktów z wcześniejszą notacją.
+
 ## Iteracja 1 — Rozmaitości różniczkowe
 
 Status: sprawdzono i poprawiono wszystkie 11 sekcji oraz 15 ilustracji.
@@ -4628,3 +4645,40 @@ komunikaty `Underfull \hbox` i trzy zmiany położenia rysunków z `h`
 na `ht`. Obejrzano strony 36, 40 i 54: poprawiony rysunek mapy,
 dwuwierszowa równość oraz odsyłacz przy wiązce stycznej są czytelne.
 Wspólny PDF zaktualizowano ze sprawdzonego składu.
+
+## 12 października 2026 — lektura, źródła i lematy Gompfa
+
+We wszystkich 38 rozdziałach jest teraz zwarty blok „Dalsza lektura”
+o jednakowym nagłówku i składzie. Brakujące bloki dodano w plikach 01,
+25, 30b, 32 i 35; w plikach 29a, 30a i 34 zastąpiono odmienne nagłówki.
+Dobór lektur odpowiada tematowi konkretnego rozdziału, bez nowych zadań.
+
+W pliku 35 dowiedziono kierunku od gładkich lub lokalnie płaskich dysków
+plastra do odpowiedniego zanurzenia śladu. Wyjaśniono rachunek
+$x^\perp\cong-E_8\oplus\langle-1\rangle$ w rozmaitości otaczającej
+z pracy Gompfa z 1983 roku, wyraźnie odróżniając go od formy zwartego
+bloku $X$. Lemat 1.1 z pracy z 1985 roku rozpisano na topologiczny ślad,
+przeniesienie atlasu, wygładzenie dopełnienia i ogolenie. Przy lemacie 1.2
+wyjaśniono konstrukcję otaczającej rozmaitości o formie hiperbolicznej,
+rolę pięciu i sześciu pięter uchwytów Cassona, kontrolę obramowań oraz
+zastąpienie topologicznych dysków rdzeniami gładkich uchwytów. Osobno
+wskazano twierdzenia Quinna, Cassona, Freedmana i właściwe lematy Gompfa
+jako wejścia zewnętrzne; ten opis nie jest pełnym dowodem tych lematów.
+Uściślono też, że własna indukcja dowodzi części o skończonych indeksach,
+a oryginalne twierdzenie 1.3 obejmuje jeszcze $R_\infty$.
+
+W odsyłaczach zastąpiono strony arXiv `abs` przez adresy `pdf` tej samej
+pracy oraz inne strony lądowania bezpośrednimi PDF-ami, gdy potwierdzono
+tożsamość publikacji. Dotyczy to m.in. prac Perelmana, Scotta, Thurstona,
+Freedmana, Quinna i Powella–Raya–Teichnera. Oryginalne artykuły Gompfa
+z 1983 i 1985 roku oraz De Michelisa–Freedmana z 1992 roku nie mają
+potwierdzonej wersji arXiv; adresy Project Euclid z końcówką `.pdf`
+zwracały w kontroli HTML lub blokadę, więc przy nich pozostawiono DOI.
+Strony będące indeksami wielu wykładów i strony interaktywne pozostawiono
+bez arbitralnego zastępowania inną pracą.
+
+W podsekcji „Wiązka styczna” usunięto powtórzony skrót o zmianie
+współrzędnych i pozostawiono odesłanie do
+`eq:transformacja-derywacji` oraz wzór na przejście potrzebny
+do konstrukcji wiązki. Niezależnego, niezakończonego akapitu motywacyjnego
+w rozdziale 1 nie włączono do tego etapu ani do składanego PDF.
