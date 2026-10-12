@@ -33,8 +33,9 @@ propozycji jest w Git oraz w dzienniku.
    Dalej rozdziały 26–38: dla wcześniej sprawdzonych porównanie
    aktualnej treści z wersją audytowaną i kontrola zależności;
    dla niezweryfikowanych pełny audyt. Nie oznaczamy dawnych
-   przeglądów jako nowo przeprowadzonych. Każda iteracja obejmuje
-   jeden rozdział.
+   przeglądów jako nowo przeprowadzonych. Zwykła iteracja obejmuje
+   jeden rozdział; na prośbę autora z 12 października wykonano
+   wspólny przegląd krótkich rozdziałów 34–38 o wymiarze cztery.
 3. Prośba z 11 października o wyjaśnienie Definicji 33.1.1 obejmuje
    stabilizator zwarty, działania właściwe, podgrupy dyskretne,
    gładkie ilorazy, zupełność, maksymalność i przykłady. Podstawy
@@ -43,7 +44,7 @@ propozycji jest w Git oraz w dzienniku.
    nienumerowane podsekcje 33.1;
    pełny audyt pozostałych części tych rozdziałów pozostaje osobny.
    Sprawdzić również niezweryfikowane nowe rozdziały o geometrii globalnej,
-   potoku Ricciego, wymiarze 3 i wymiarze 4 oraz dodatki według tabeli.
+   potoku Ricciego, wymiarze 3 oraz dodatki według tabeli.
    Zapowiedziany materiał o wiązkach został pobrany w `2777149`:
    wymaga osobnego ponownego audytu rozdziału 1, obejmującego definicje,
    izomorfizm wiązek, wstęgę Möbiusa i rozbudowany przykład tautologiczny.
@@ -100,11 +101,11 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 31. Potok Ricciego (plik 30) | `30-potok-ricciego.tex` | Sprawdzono równania ewolucyjne i poprawkę DeTurcka 7 października; pełny audyt całości i nowego rysunku z `2777149` czeka | Ewolucja skalara i pola powierzchni, zasada maksimum, DeTurck; zgodność schematu deformacji z zakresem równań i podpisem. Istnienie i jednoznaczność PDE pozostają jawnym wejściem analitycznym. |
 | 32. Poincaré w wymiarze trzy (plik 30a) | `30a-poincare-trzy.tex` | Dodano 8 października; niezależny audyt oczekuje | Dla głębokich twierdzeń Perelmana i Hamiltona zachować jawne hipotezy i źródła; sprawdzić topologiczny wniosek z wygaśnięcia oraz użycie twierdzenia Moise'a |
 | 33. Geometrie Thurstona (plik 30b) | `30b-geometrizacja-thurstona.tex` | Rozbudowano sekcję 33.1 i orbifoldy bazy Seiferta 11–12 października; audyt reszty oczekuje | Warunki modelu, ilorazy, lokalna jednorodność i maksymalność; nienumerowane podsekcje 33.1, charakterystyka orbifoldowa, dobre i złe bazy oraz lokalny model Seiferta. Pełny audyt ośmiu modeli, rozkładu pierwszego, JSJ i założeń geometryzacji nadal oczekuje. |
-| 34. Formy przecięcia i uchwyty w wymiarze cztery (plik 31) | `31-freedman-formy-przeciecia.tex` | Przegląd matematyczny zakończony 7 października w poprzedniej numeracji; PDF 442 strony | Sprawdzono rachunek $E_8$, formę splotu i dwa rysunki; klasyfikacja jest w osobnym rozdziale o etykiecie `ch:freedman-klasyfikacja` |
-| 35. Uchwyty Cassona (plik 32) | `32-uchwyty-cassona.tex` | Przegląd i uzupełnienie skutków osadzania dysków zakończone 7 października w poprzedniej numeracji; PDF 442 strony | Geometrycznie dualne sfery w konkluzji mają poprawione źródło Powella--Ray--Teichnera; pełne osadzanie i standardowość uchwytu pozostają zewnętrzne |
-| 36. Klasyfikacja Freedmana (plik 33) | `33-freedman-klasyfikacja.tex` | Przegląd i objaśnienie drogi od dysków do klasyfikacji zakończone 7 października w poprzedniej numeracji; PDF 442 strony | Osadzanie sfer, chirurgia i $s$-kobordyzm są wskazane jako dalsze wyniki zewnętrzne; klasyfikacja i niezmiennik Kirby'ego--Siebenmanna pozostają zewnętrzne |
-| 37. Donaldson (plik 34) | `34-donaldson.tex` | Dodano jako osobny rozdział; pełny niezależny audyt oczekuje | Sprawdzić konwencję $c_2$ i energii ASD, dokładny zakres diagonalizacji i źródła analityczne; twierdzenie Donaldsona jest jawnie zewnętrzne |
-| 38. Egzotyczne $\R^4$ (plik 35) | `35-egzotyczne-r4.tex` | Włączono po Donaldsonie; pełny niezależny audyt oczekuje | Skontrolować trzy wejścia Gompfa, indukcję i różnicę między typami zorientowanymi a niezorientowanymi |
+| 34. Formy przecięcia i uchwyty w wymiarze cztery (plik 31) | `31-freedman-formy-przeciecia.tex` | Przegląd matematyczny 7 października; kontrola rysunku Whitneya 12 października | Rachunek $E_8$ i forma splotu sprawdzone wcześniej; poprawiono położenie punktu $q$ i płata na rysunku |
+| 35. Uchwyty Cassona (plik 32) | `32-uchwyty-cassona.tex` | Przegląd skutków osadzania 7 października; kontrola terminologii 12 października | Immersje z punktami podwójnymi oddzielono od topologicznych zanurzeń; pełne osadzanie i standardowość uchwytu pozostają zewnętrzne |
+| 36. Klasyfikacja Freedmana (plik 33) | `33-freedman-klasyfikacja.tex` | Przegląd 7 października; kontrola przejścia do sfer i przykładu $2E_8$ 12 października | Rozpisano warunek $\lambda=2\mu+e=0$ dla homotopii regularnej; klasyfikacja, chirurgia i niezmiennik Kirby'ego--Siebenmanna pozostają zewnętrzne |
+| 37. Donaldson (plik 34) | `34-donaldson.tex` | Niezależny przegląd konwencji, przykładów i zastosowań 12 października | Sprawdzono znak $c_2$ oraz energii ASD, zakres diagonalizacji i przykład $2E_8$; analiza moduli i twierdzenie Donaldsona pozostają zewnętrzne |
+| 38. Egzotyczne $\R^4$ (plik 35) | `35-egzotyczne-r4.tex` | Niezależny przegląd wejść i indukcji Gompfa 12 października | Rozróżniono orientacje i małe/duże typy; dodano przykłady i schemat. Trzy wejścia Gompfa oraz wynik De Michelisa–Freedmana pozostają zewnętrzne |
 | Podział źródeł i importy | — | Zakończono, `9148128` | Kontrola regresji przy dalszych zmianach |
 | Dodatek A o wynikach zewnętrznych | — | Uzupełniany przez autora do 386ecb6; pełny niezależny audyt oczekuje | Zgodność katalogu z rzeczywistymi dowodami, zwłaszcza Walla, geometrii globalnej oraz wymiarów 3 i 4. |
 | Dodatek B: homologia singularna i Euler | — | Dodany w `59fd235`; audyt oczekuje | Skończoność, przykłady i wzory Eulera; odsyłacze do homologii oraz przecięć i dualności (obecnie rozdziały 8 i 21). |
@@ -162,10 +163,6 @@ konkurencyjnej definicji.
   zastosowania nie jest dowodem tych twierdzeń. W chirurgii sprawdzić
   również realizację obramowanych immersji, prostą dualność i bazowość
   oraz przygotowanie kobordyzmu.
-- W egzotycznych R⁴ sprawdzić trzy wejścia Gompfa i przejście od klas
-  zorientowanych do niezorientowanych. Wynik DeMichelisa–Freedmana
-  o kontinuum klas był dalszą możliwą ścieżką; nie utożsamiać go z już
-  dodanym argumentem o nieskończonej rodzinie.
 
 Źródła i szczegółowe deklaracje wykonania zachowuje [PRZEGLAD.md](PRZEGLAD.md)
 oraz bibliografia odpowiednich rozdziałów. Po zakończeniu przeglądu przedstawić

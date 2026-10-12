@@ -4535,3 +4535,65 @@ położenia rysunku z `h` na `ht` dotyczą wcześniejszych miejsc.
 Indeks przyjął 309 wpisów, bez odrzuceń i ostrzeżeń. Sprawdzono tekst
 oraz wygląd stron 299–300: definicja, wzory, przykład i dowód są
 czytelne, bez kolizji z marginesami. Zaktualizowano wspólny PDF.
+
+## 12 października 2026 — przegląd krótkich rozdziałów o wymiarze cztery
+
+Na prośbę autora przeprowadzono wspólny etap dotyczący rozdziałów 34–38:
+sprawdzono luki w przejściach dowodowych, przykłady i rysunki. Przed
+pracą `git pull --ff-only` potwierdził zgodność czystej gałęzi
+`review/rozdzialy-matematyka` ze stanem zdalnym. Etap obejmuje pięć
+rozdziałów o wymiarze cztery, każdy krótszy niż 10 stron w poprzednim
+składzie. Głębokie twierdzenia Freedmana, Donaldsona, Gompfa,
+Rokhlina i De Michelisa–Freedmana pozostają jawnie cytowanymi wejściami.
+
+W rozdziale 34 skorygowano rysunek Whitneya: czerwony płat przechodzi
+przez punkt $q$ leżący we wnętrzu dysku $D$, a etykiety są oddzielone.
+W rozdziałach 35–36 odróżniono immersje dysków i sfer z punktami
+podwójnymi od topologicznych zanurzeń, zgodnie z terminologią
+rozdziału 1. Dla obramowanych immersyjnych sfer w sformułowaniu
+twierdzenia o zanurzaniu rozpisano równość
+$\lambda(A_i,A_i)=2\mu(A_i)+e(A_i)=0$ przy $\pi_1=1$,
+$\mu(A_i)=e(A_i)=0$; wyjaśnia ona użycie wersji z homotopią
+regularną u Powella–Raya–Teichnera. Dodano odsyłacz z przykładu
+$E_8\oplus E_8$ do późniejszego wniosku Donaldsona.
+
+W rozdziale 37 sprawdzono znak drugiej klasy Cherna dla wiązki
+$\mathrm{SU}(2)$ przez rozwinięcie wyznacznika i wynikającą z niego
+tożsamość energii ASD. Dodano jawny niepłaski przykład na
+euklidesowej $\R^4$, zaznaczając jego nieskończoną energię.
+Wniosek o formie $E_8\oplus E_8$ pokazuje krok po kroku, że
+$\operatorname{ks}=0$ nie wystarcza do wygładzenia zamkniętej
+rozmaitości: parzystość formy przeczy diagonalizacji Donaldsona.
+Krótko porównano ten przykład z twierdzeniem Rokhlina, którego
+dowód nie jest tu przypisywany rachunkowi energii.
+
+W rozdziale 38 rozpisano przykład śladu zerowo obramowanego splotu
+trywialnego, zgodność obramowania dysku plastra z obramowaniem
+Seiferta oraz przykład węzła $J$, który jest topologicznie, lecz nie
+gładko plastrowalny. Schemat TikZ pokazuje oba zanurzenia użyte w
+kroku indukcji Gompfa i położenie zwartego świadka $K_n$.
+Na koniec podano precyzyjnie, jako wynik zewnętrzny
+De Michelisa–Freedmana, istnienie kontinuum małych egzotycznych
+$\R^4$; konstrukcja Gompfa daje duże przykłady, ponieważ każdy
+$R_n$ z $n\geq1$ zawiera blok $X$ niezanurzalny w standardowej $\R^4$.
+W dodatku A dopisano oba nowe wejścia zewnętrzne, aby katalog zależności
+zgadzał się z rozdziałami.
+
+### Kontrola składu
+
+Po zmianach złożono cały dokument poleceniem `latexmk -pdf
+-interaction=nonstopmode -halt-on-error -file-line-error
+-outdir=build/sklad geometria_i_topologia_rozniczkowa.tex` w odrębnym
+drzewie roboczym z tym samym stanem Git i plikami tego etapu. Oddzielny
+skład był konieczny, ponieważ podczas pierwszego składu w głównym
+drzewie pojawiła się równoległa, niezakończona zmiana rozdziału 1;
+nie włączono jej do niniejszego etapu ani do sprawdzonego PDF.
+`latexmk` zakończył pracę poprawnie. PDF ma 515 stron, rozdziały
+34–38 zajmują odpowiednio 5, 6, 3, 3 i 6 stron, a dodatek A zaczyna
+się na stronie 495. W logu nie ma błędów, brakujących odsyłaczy,
+powtórzonych etykiet ani przepełnień wierszy. Indeks przyjął
+312 wpisów, bez odrzuceń i ostrzeżeń. Pozostały cztery ostrzeżenia
+`Underfull \hbox` i dwie automatyczne zmiany położenia rysunków
+z `h` na `ht` w innych częściach książki. Obejrzano strony 476,
+486–488 i 494: schemat Whitneya, przykłady Donaldsona oraz
+schemat indukcji Gompfa są czytelne. Zaktualizowano wspólny PDF.
