@@ -4597,3 +4597,34 @@ powtórzonych etykiet ani przepełnień wierszy. Indeks przyjął
 z `h` na `ht` w innych częściach książki. Obejrzano strony 476,
 486–488 i 494: schemat Whitneya, przykłady Donaldsona oraz
 schemat indukcji Gompfa są czytelne. Zaktualizowano wspólny PDF.
+
+## 12 października 2026 — odsyłacz w konstrukcji wiązki stycznej
+
+Na prośbę autora w podsekcji „Wiązka styczna” rozdziału 1 usunięto
+powtórzony, skrótowy rachunek zmiany bazy derywacji i współrzędnych
+wektora. Wcześniejszy wywód z etykietą
+`eq:transformacja-derywacji` zawiera już definicje, regułę łańcuchową
+i wzór na macierz Jacobiego. W konstrukcji $TM$ wystarczy więc
+odsyłacz do tej reguły oraz wynikowy wzór na odwzorowanie przejścia,
+potrzebny do sprawdzenia topologii i gładkości wiązki.
+
+Do etapu włączono wcześniejsze niezapisane zmiany rozdziału 1,
+ponieważ nowy odsyłacz zależy od dodanej w nich etykiety.
+Sprawdzono kierunek macierzy Jacobiego i jednoznaczność obu nowych
+etykiet. Długą równość macierzową w tym wywodzie podzielono na
+dwa wiersze po stwierdzeniu przepełnienia o 25,36~pt podczas
+pierwszej próby składu. Nie przeprowadzono przy tym pełnego
+audytu pozostałych nowych części o wiązkach; ich zakres pozostaje
+w `PLAN_DZIALANIA.md`.
+
+### Kontrola składu
+
+Pełny `latexmk` z indeksem w odrębnym drzewie roboczym zakończył się
+poprawnie: PDF ma 517 stron. Izolacja chroniła wynik przed równoległym
+zapisem PDF przez TeXworks w głównym katalogu. W końcowym logu nie ma
+błędów, brakujących odsyłaczy, powtórzonych etykiet ani przepełnień.
+Indeks przyjął 312 wpisów, bez odrzuceń i ostrzeżeń. Pozostały cztery
+komunikaty `Underfull \hbox` i trzy zmiany położenia rysunków z `h`
+na `ht`. Obejrzano strony 36, 40 i 54: poprawiony rysunek mapy,
+dwuwierszowa równość oraz odsyłacz przy wiązce stycznej są czytelne.
+Wspólny PDF zaktualizowano ze sprawdzonego składu.
