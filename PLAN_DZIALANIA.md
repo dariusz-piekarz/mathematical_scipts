@@ -1,10 +1,12 @@
 # Aktualny plan i pokrycie przeglądem
 
-Stan: 12 października 2026. Gałąź: `review/rozdzialy-matematyka`.
+Stan: 13 października 2026. Gałąź: `review/rozdzialy-matematyka`.
 Przed bieżącą pracą pobrano bez konfliktów 12 commitów autora
 `b912682`–`386ecb6`, od wcześniejszego wspólnego stanu `34e683b`.
 Książka ma **38 rozdziałów, pięć części i trzy dodatki**. Numery w nazwach
 plików są historyczne; numer w PDF ustala kolejność importów.
+Skład roboczy podzielono na trzy tomy: rozdziały 1–10, 11–22 oraz
+23–38 z dodatkami. Plik zbiorczy pozostaje dostępny do okazjonalnego składu.
 
 Podczas audytu rozdziału 24 pobrano także zmiany do `2777149`
 (commity `224d680`, `f2b1960`, `2777149` i merge `6e8adaf`).
@@ -57,6 +59,11 @@ propozycji jest w Git oraz w dzienniku.
    bezpośredni plik, zwłaszcza arXiv. Rozdział 38 uzupełniono o etapy
    konstrukcji Gompfa; pełne twierdzenia Quinna, Cassona, Freedmana i Gompfa
    pozostają jawnymi wejściami zewnętrznymi.
+6. Podział na trzy tomy wprowadzono 13 października. Przy kolejnych
+   poprawkach składać zmieniony tom; przed publikacją uruchamiać
+   `buduj_tomy.ps1` i sprawdzać odsyłacze między PDF-ami. Pełny
+   dokument zbiorczy zachowano, lecz nie trzeba go składać przy każdej
+   iteracji.
 
 Nie dodajemy zadań. Rozmaitości z brzegiem, grupy wolne, iloczyny wolne,
 geometria Kleina i geometrie Thurstona już są w źródłach; nie tworzymy ich

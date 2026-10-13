@@ -1,13 +1,28 @@
 # Przegląd matematyczny skryptu
 
 Gałąź: `review/rozdzialy-matematyka`. Jedna iteracja obejmuje jeden rozdział.
-Źródło: `geometria_i_topologia_rozniczkowa.tex`; wynik: plik PDF o tej samej nazwie.
+Źródło zbiorcze: `geometria_i_topologia_rozniczkowa.tex`; podstawowy skład: trzy tomy `geometria_tom1.tex`, `geometria_tom2.tex` i `geometria_tom3.tex`.
 Rejestr zawiera także uzasadnienia, aby można było niezależnie sprawdzić poprawki.
 Aktualny zakres, kolejka i propozycje są wyłącznie w [planie](PLAN_DZIALANIA.md).
 Poniższe wpisy są chronologiczne: numery rozdziałów, strony i statusy dotyczą
 wersji wskazanej w danym wpisie. Audyt 18 rozdziałów nie obejmuje późniejszych
 dodatków autora. Od 5 października źródła są w `tex/rozdzialy/`;
-plik główny tylko ustala ich kolejność.
+pliki główne tylko ustalają ich kolejność.
+
+## Podział na trzy tomy (2026-10-13)
+
+Zachowano wspólne źródła rozdziałów i nie zmieniono ich numeracji ani etykiet.
+Tom I obejmuje rozdziały 1–10, tom II rozdziały 11–22, a tom III rozdziały
+23–38 oraz dodatki. Każdy tom ma własny spis treści i indeks. Pakiet
+`xr-hyper` oraz pliki pomocnicze pozostałych tomów zapewniają odsyłacze
+między trzema plikami PDF. Skrypt `buduj_tomy.ps1` wykonuje kolejne przebiegi,
+aż ustalą się etykiety zewnętrzne. Plik zbiorczy pozostaje dostępnym
+wariantem składu. W dodatku B przywrócono etykietę rozdziału do nagłówka
+rozdziału, aby istniejące odsyłacze nadal wskazywały właściwe miejsce.
+Sprawdzony skład ma odpowiednio 208, 172 i 146 stron. Ostatnie logi nie
+zgłaszają nierozwiązanych odsyłaczy; indeksy przyjęły 112, 89 i 111 haseł
+bez odrzuceń. Na stronach tytułowych sprawdzono po dwa odsyłacze do innych
+plików PDF oraz wygląd mapy tomów.
 
 ## Uzupełnienie rozdziału 1 — kowektory (2026-10-12)
 
