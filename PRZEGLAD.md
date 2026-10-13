@@ -9,6 +9,21 @@ wersji wskazanej w danym wpisie. Audyt 18 rozdziałów nie obejmuje późniejszy
 dodatków autora. Od 5 października źródła są w `tex/rozdzialy/`;
 plik główny tylko ustala ich kolejność.
 
+## Uzupełnienie rozdziału 1 — kowektory (2026-10-12)
+
+W nienumerowanej podsekcji przestrzeni kostycznej wyprowadzono zmianę
+bazy dualnej bezpośrednio z reguły transformacji derywacji
+`eq:transformacja-derywacji`: różniczki współrzędnych zmieniają
+się przez macierz Jacobiego, a współczynniki tego samego kowektora
+przez jej odwrotną transpozycję. Rachunek sprawdza ewaluację na bazie
+stycznej; przykład liniowej zmiany map w $\R^2$ kontroluje znaki.
+W konstrukcji $T^*M$ zastąpiono skrót „analogicznie” jawnym wzorem
+odwzorowania przejścia i argumentem jego gładkości. Uzupełnienie nie
+stanowi ponownego audytu całej rozbudowanej sekcji o wiązkach.
+Pełny skład z 13 października: 522 strony; ostatni log bez błędów
+i nierozwiązanych odsyłaczy, indeks 312 haseł bez odrzuceń.
+Sprawdzono wygląd stron 46 i 56 z nowymi wzorami oraz konstrukcją $T^*M$.
+
 ## Iteracja 16 — Egzotyczne struktury gładkie na R⁴
 
 Status: rozdział 35 doprecyzowano i ujednolicono z resztą konstrukcji Gompfa.

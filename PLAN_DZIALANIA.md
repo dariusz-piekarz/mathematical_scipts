@@ -74,7 +74,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 
 | Numer i temat | Plik w `tex/rozdzialy/` | Stan przeglądu | Kontrola / pozostały zakres |
 |---|---|---|---|
-| 1. Rozmaitości | `01-rozmaitosci.tex` | Wcześniejsze dodatki sprawdzone; 12 października usunięto powtórzony rachunek zmiany współrzędnych w podsekcji o wiązce stycznej; pełny audyt nowych wiązek oczekuje | Definicja wiązki i jej izomorfizmu, cała przestrzeń wstęgi Möbiusa, nietrywialność i rozbudowany przykład wiązki tautologicznej; także zgodność diagramów oraz nowych odsyłaczy. Wspólny skład nie zastępuje tej kontroli. |
+| 1. Rozmaitości | `01-rozmaitosci.tex` | Wcześniejsze dodatki sprawdzone; 12 października usunięto powtórzony rachunek zmiany współrzędnych w podsekcji o wiązce stycznej, wyprowadzono transformację kowektorów i użyto jej dla wiązki kostycznej; pełny audyt nowych wiązek oczekuje | Definicja wiązki i jej izomorfizmu, cała przestrzeń wstęgi Möbiusa, nietrywialność i rozbudowany przykład wiązki tautologicznej; także zgodność diagramów oraz nowych odsyłaczy. Wspólny skład nie zastępuje tej kontroli. |
 | 2. Pola wektorowe | `02-pola-wektorowe.tex` | Audyt dodatków zakończony 6 października; PDF 387 stron | Sprawdzone powiązanie z brzegiem, przykład przepływu jednostronnego, bibliografia i rysunki |
 | 3. Algebra tensorowa | `03-algebra-tensorowa.tex` | Audyt z 6 października; notacja poprawiona 9 października | Formalne generatory par zapisano jako [(v,w)]; zakres tej poprawki nie obejmuje ponownego audytu całego rozdziału. |
 | 4. Grassmanniany, Clifford i spinory | `04-grassmanniany-clifford-spinory.tex` | Wcześniejszy audyt z 6 października; 8 października dodano grupę Pin | Sprawdzono nakrycie $\operatorname{Pin}(n)\to O(n)$ i stronę 100 PDF |

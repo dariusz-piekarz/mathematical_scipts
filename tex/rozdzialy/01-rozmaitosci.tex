@@ -3171,16 +3171,10 @@ Zauważmy teraz, że w otoczeniu punktu $u$
 możemy wstawić identyczność
 $\psi^{-1}\circ\psi$ i zapisać
 \[
-\begin{aligned}
 f\circ\varphi^{-1}
-&=
-f\circ\psi^{-1}\circ\psi\circ\varphi^{-1}\\
-&=
-(f\circ\psi^{-1})
-\circ(\psi\circ\varphi^{-1})\\
-&=
-(f\circ\psi^{-1})\circ F.
-\end{aligned}
+=f\circ\psi^{-1}\circ\psi\circ\varphi^{-1}
+=(f\circ\psi^{-1})\circ(\psi\circ\varphi^{-1})
+=(f\circ\psi^{-1})\circ F.
 \]
 
 Stosując regułę łańcuchową, otrzymujemy
@@ -3749,8 +3743,55 @@ Faktu~\ref{fakt:dual-baza}: $\sum_i\frac{\partial f}{\partial x^i}\big|_p\,dx^i_
 (\partial/\partial x^j|_p)=\sum_i\frac{\partial f}{\partial x^i}\Big|_p\delta^i_j=
 \frac{\partial f}{\partial x^j}\Big|_p$. Obie strony są równe.
 \end{proof}
-\section{Wiązki wektorowe}\label{sec:wiazki-wektorowe}
+\subsection*{Transformacja kowektorów przy zmianie mapy}
 
+Niech $(U,\varphi)$ i $(V,\psi)$ będą mapami wokół
+$p\in U\cap V$, gdzie $\varphi=(x^1,\ldots,x^n)$ oraz
+$\psi=(y^1,\ldots,y^n)$. Bazy $\{dx^i_p\}$ i $\{dy^j_p\}$
+przestrzeni $T_p^*M$ są dualne do odpowiednich baz $T_pM$.
+Reguła~\eqref{eq:transformacja-derywacji} mówi, jak zmienia się
+baza wektorów stycznych. Aby znaleźć zmianę bazy dualnej,
+obliczamy wartość $dy^j_p$ na każdym wektorze bazy $x$:
+\[
+dy^j_p\left(\left.\frac{\partial}{\partial x^i}\right|_p\right)
+=\sum_{k=1}^n\frac{\partial y^k}{\partial x^i}(p)
+dy^j_p\left(\left.\frac{\partial}{\partial y^k}\right|_p\right)
+=\frac{\partial y^j}{\partial x^i}(p).
+\]
+Ponieważ $\{dx^i_p\}$ jest bazą dualną do bazy $x$, dostajemy
+\begin{equation}\label{eq:transformacja-kowektorow}
+\boxed{\quad
+dy^j_p=\sum_{i=1}^n\frac{\partial y^j}{\partial x^i}(p)\,dx^i_p,
+\qquad
+dx^i_p=\sum_{j=1}^n\frac{\partial x^i}{\partial y^j}(p)\,dy^j_p.
+\quad}
+\end{equation}
+Druga równość wynika z pierwszej po zamianie ról map;
+macierze Jacobiego obu zmian są wzajemnie odwrotne.
+
+Jeśli ten sam kowektor zapisujemy jako
+$\omega=\sum_i\xi_i\,dx^i_p=\sum_j\eta_j\,dy^j_p$,
+to po podstawieniu drugiej równości z~\eqref{eq:transformacja-kowektorow}
+i zebraniu wyrazów przy $dy^j_p$ otrzymujemy
+\begin{equation}\label{eq:transformacja-wspolrzednych-kowektora}
+\boxed{\quad
+\eta_j=\sum_{i=1}^n\frac{\partial x^i}{\partial y^j}(p)\,\xi_i,
+\qquad
+\eta=J_{\psi\varphi}(p)^{-\mathsf T}\xi \quad \text{tzn. } \eta=D(\psi\circ\varphi^{-1})^{-\mathsf T}\xi .
+\quad}
+\end{equation}
+Macierz działająca na współczynniki kowektora jest zatem
+odwrotną transpozycją macierzy działającej na współczynniki
+wektora stycznego. Dzięki temu wartość $\omega(v)$ nie zależy
+od użytej mapy.
+
+Na przykład w $\R^2$ weźmy $y^1=x^1+x^2$, $y^2=x^2$.
+Wówczas $x^1=y^1-y^2$, więc
+$dx^1=dy^1-dy^2$; kowektor o współczynnikach $(1,0)$
+w mapie $x$ ma współczynniki $(1,-1)$ w mapie $y$.
+
+\section{Wiązki wektorowe}\label{sec:wiazki-wektorowe}
+Motywacją do wprowadzenia pojęcia wiązki wektorowej jest chęć badania przestrzeni wektorowych zależnych od punktu rozmaitości. Klasycznym przykładem jest rozmaitość $M$, dla której każdemu punktowi $p \in M$ przypisana jest przestrzeń styczna $T_pM$. Ponieważ przestrzenie te zmieniają się wraz z punktem, wygodnie jest traktować je jako jeden geometryczny obiekt. Wiązka wektorowa formalizuje tę ideę: nad każdym punktem przestrzeni bazowej umieszczone jest włókno będące przestrzenią wektorową, a lokalnie cała konstrukcja wygląda jak iloczyn kartezjański $U \times \mathbb{R}^n$. Globalnie jednak może mieć nietrywialną strukturę topologiczną, co pozwala opisywać zjawiska niedostrzegalne z lokalnego punktu widzenia.
 \begin{definicja}[Wiązka wektorowa]
 \index{wiazka wektorowa@Wiązka wektorowa}
 \label{def:wiazka-wektorowa}
@@ -5134,19 +5175,46 @@ którą geometrycznie opisuje wstęga Möbiusa.
 
 \subsection*{Wiązka styczna}
 
-Pokażemy, że zbiór $TM:=\bigsqcup_{p\in M}T_pM$ można w naturalny sposób wyposażyć w
-strukturę rozmaitości gładkiej wymiaru $2n$, tak by rzutowanie $\pi\colon TM\to M$,
-$\pi(v)=p$ dla $v\in T_pM$, było wiązką wektorową rzędu $n$.
-
-Niech $\{(U_\alpha,\varphi_\alpha)\}$ będzie atlasem na $M$, $\varphi_\alpha=(x^1_\alpha,
-\dots,x^n_\alpha)$. Definiujemy $\tilde U_\alpha:=\pi^{-1}(U_\alpha)\subseteq TM$ oraz
+Pokażemy, że zbiór
 \[
-\tilde\varphi_\alpha\colon\tilde U_\alpha\to\varphi_\alpha(U_\alpha)\times\R^n\subseteq
-\R^{2n}, \qquad \tilde\varphi_\alpha\Big(\sum_{i=1}^nv^i\,\frac{\partial}{\partial
-x^i_\alpha}\Big|_p\Big):=(\varphi_\alpha(p),\,v^1,\dots,v^n).
+TM:=\bigsqcup_{p\in M}T_pM
 \]
-Każde $\tilde\varphi_\alpha$ jest bijekcją na $\varphi_\alpha(U_\alpha)\times\R^n$ (dla
-ustalonego $p$, współrzędne $v^i$ względem bazy $\{\partial/\partial x^i_\alpha|_p\}$
+można w naturalny sposób wyposażyć w strukturę rozmaitości gładkiej
+wymiaru $2n$, tak by rzutowanie
+\[
+\pi\colon TM\to M,
+\qquad
+\pi(v)=p \quad\text{dla }v\in T_pM,
+\]
+było wiązką wektorową rzędu $n$.
+Punkt $p=\pi(v)$ nazywamy \emph{podstawą}, natomiast
+$T_pM=\pi^{-1}(p)$ jest włóknem wiązki stycznej nad $p$.
+
+Niech $\{(U_\alpha,\varphi_\alpha)\}$ będzie atlasem na $M$,
+$\varphi_\alpha=(x^1_\alpha,\dots,x^n_\alpha)$.
+Definiujemy
+\[
+\tilde U_\alpha:=\pi^{-1}(U_\alpha)\subseteq TM
+\]
+oraz
+\[
+\tilde\varphi_\alpha\colon
+\tilde U_\alpha\to
+\varphi_\alpha(U_\alpha)\times\R^n\subseteq\R^{2n},
+\]
+\[
+\tilde\varphi_\alpha\Big(
+\sum_{i=1}^n v^i
+\left.\frac{\partial}{\partial x^i_\alpha}\right|_p
+\Big)
+:=
+(\varphi_\alpha(p),v^1,\dots,v^n).
+\]
+
+Każde $\tilde\varphi_\alpha$ jest bijekcją na
+$\varphi_\alpha(U_\alpha)\times\R^n$
+(dla ustalonego $p$, współrzędne $v^i$ względem bazy
+$\{\partial/\partial x^i_\alpha|_p\}$
 wyznaczają bijekcję liniową $T_pM\to\R^n$).
 
 Z reguły transformacji~\eqref{eq:transformacja-derywacji} wynika,
@@ -5180,15 +5248,29 @@ Tak skonstruowana rozmaitość $TM$, wraz z rzutowaniem $\pi$ i lokalnymi trywia
 $\Psi_\alpha=(\varphi_\alpha^{-1}\times\id)\circ\tilde\varphi_\alpha$, jest wiązką
 wektorową rzędu $n$ nad $M$ — \emph{wiązką styczną}.
 
-Analogicznie definiuje się \emph{wiązkę kostyczną} $T^*M:=\bigsqcup_{p\in M}T_p^*M$, z
-mapami $\tilde\varphi_\alpha^*\big(\sum_i\xi_i\,dx^i_\alpha|_p\big):=(\varphi_\alpha(p),
-\xi_1,\dots,\xi_n)$. Odwzorowanie przejścia oblicza się analogicznie — współczynniki
-$\xi_i$ transformują się \emph{kowariantnie}: jeśli $\omega=\sum_i\xi_i^\alpha
-dx^i_\alpha|_p=\sum_j\xi_j^\beta dx^j_\beta|_p$, to z reguły łańcucha $dx^i_\alpha|_p=
-\sum_j\frac{\partial x^i_\alpha}{\partial x^j_\beta}(\varphi_\beta(p))\,dx^j_\beta|_p$,
-skąd $\xi_j^\beta=\sum_i\xi_i^\alpha\frac{\partial x^i_\alpha}{\partial x^j_\beta}
-(\varphi_\beta(p))$ — co ponownie daje gładkie odwzorowania przejścia. Dowód, że $T^*M$
-jest wiązką wektorową rzędu $n$ nad $M$, dopełnia to samo sprawdzenie:
+Definiujemy teraz \emph{wiązkę kostyczną}
+$T^*M:=\bigsqcup_{p\in M}T_p^*M$ oraz rzutowanie
+$\pi^*\colon T^*M\to M$, $\pi^*(\omega)=p$ dla $\omega\in T_p^*M$.
+Nad $U_\alpha$ określamy mapę
+\[
+\tilde\varphi_\alpha^*\Big(\sum_i\xi_i\,dx^i_\alpha|_p\Big)
+:=(\varphi_\alpha(p),\xi_1,\ldots,\xi_n).
+\]
+Jest ona bijekcją na $\varphi_\alpha(U_\alpha)\times\R^n$,
+ponieważ $\{dx^i_\alpha|_p\}$ jest bazą każdego włókna.
+Dla $x\in\varphi_\alpha(U_\alpha\cap U_\beta)$
+reguła~\eqref{eq:transformacja-wspolrzednych-kowektora} daje
+\[
+\big(\tilde\varphi_\beta^*\circ(\tilde\varphi_\alpha^*)^{-1}\big)(x,\xi)
+=\Big(\varphi_\beta\circ\varphi_\alpha^{-1}(x),
+D(\varphi_\beta\circ\varphi_\alpha^{-1})(x)^{-\mathsf T}\xi\Big).
+\]
+Pochodna odwzorowania przejścia jest gładka i odwracalna,
+więc również jej odwrotna transpozycja zależy gładko od $x$.
+Wzory te pozwalają określić topologię i atlas na $T^*M$
+tak samo jak dla $TM$; są też liniowe na każdym włóknie.
+Dowód, że $T^*M$ jest wiązką wektorową rzędu $n$ nad $M$,
+dopełnia to samo sprawdzenie:
 punkty o różnych podstawach rozdzielają przeciwobrazy otoczeń bazy,
 punkty jednego włókna rozdzielają kule współrzędnych dualnych; bazy
 euklidesowe w przeliczalnym pokryciu map dają drugi aksjomat przeliczalności.
