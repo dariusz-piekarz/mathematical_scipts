@@ -94,7 +94,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 11. Metryka, długość i miara | `11-metryka-dlugosc-miara.tex` | Audyt dodatków zakończony 6 października; PDF 397 stron | Sprawdzone definicje i dwie ilustracje; usunięty powtórzony wpis indeksu |
 | 12. Koneksje i transport | `12-koneksje.tex` | Audyt dodatków zakończony 6 października; bez poprawek treści | Cztery wpisy indeksu, definicje i dwa rysunki sprawdzone; PDF 397 stron |
 | 13. Geodezyjne i zupełność | `13-geodezyjne.tex` | Audyt dodatków zakończony 6 października; PDF 397 stron | Definicje i dziewięć ilustracji sprawdzone; usunięty powtórzony wpis indeksu |
-| 14. Krzywizna | `14-krzywizna.tex` | Audyt dodatków zakończony 6 października; PDF 397 stron | Indeks i trzy zmiany cieniowania sprawdzone; rozwinięto powiązania dowodu Cherna–Gaussa–Bonneta z rozdziałami 17 i 27 |
+| 14. Krzywizna | `14-krzywizna.tex` | Audyt dodatków zakończony 6 października; 13 października dodano holonomię i rozkład de Rhama | Grupa holonomii, zasada pól równoległych, pełny dowód lokalnego iloczynu, przykłady i dwa rysunki; globalny krok de Rhama oraz Ambrose–Singer są jawnymi wynikami zewnętrznymi |
 | 15. Grupy Liego | `29-grupy-liego.tex` | Sprawdzono nakrycie kwaternionowe 7 października; pełny audyt całości czeka | Przykłady, nawias, eksponenta, działanie adjungowane i jawne nakrycie $\mathrm{SU}(2)\to\mathrm{SO}(3)$; później sprawdzić zastosowania w Chernie–Weilu i wymiarze cztery |
 | 16. Geometria Kleina (plik 29a) | `29a-geometria-kleina.tex` | Sekcję o ilorazach rozbudowano 11–12 października; audyt reszty oczekuje | Dowody uśredniania, właściwości działania na $G/H$, zupełności, ilorazu przez grupę dyskretną i lokalnego modelu orbifoldu; zgodność map orbifoldowych rozpisano przez homomorfizm grup, podniesienie i wspólne uszczegółowienie. Pozostałe modele Kleina wymagają osobnego przeglądu. |
 | 17. Chern–Weil | `27-chern-weil.tex` | Oczekuje | Normalizacje i transgresja; uzasadnić model względnej kohomologii de Rhama przy identyfikacji klasy Eulera, granicę całek wokół zer i wersję brzegową |
@@ -161,8 +161,7 @@ konkurencyjnej definicji.
 
 ## Dalsze rozszerzenia i granice dowodów
 
-- Holonomia i rozkład de Rhama oraz równania Gaussa–Codazziego pozostają
-  propozycjami do decyzji po bieżącym audycie. Hodge–Bochner jest już
+- Równania Gaussa–Codazziego pozostają propozycją do decyzji po bieżącym audycie. Hodge–Bochner jest już
   osobnym rozdziałem; nie figuruje ponownie jako temat do napisania.
 - Pełne triangulacje, porównanie kohomologii Čecha i singularnej oraz
   dalsze grupy sfer homotopijnych są większymi możliwymi rozszerzeniami,

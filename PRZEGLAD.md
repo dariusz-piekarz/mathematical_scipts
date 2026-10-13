@@ -4726,3 +4726,42 @@ oraz trzy automatyczne zmiany położenia rysunków z `h` na `ht`.
 Obejrzano strony 54 i 63 rozdziału 1 oraz 496 i 498 rozdziału 38:
 odsyłacz do transformacji, oba bloki lektury i schemat indukcji są
 czytelne. Wspólny PDF zaktualizowano ze sprawdzonego składu.
+
+## 13 października 2026 — holonomia i rozkład de Rhama w rozdziale 14
+
+W `14-krzywizna.tex` po lokalnej charakteryzacji płaskości dodano dwie sekcje.
+Pierwsza definiuje pełną i ograniczoną grupę holonomii, dowodzi własności
+grupowych, sprzężenia przy zmianie punktu bazowego oraz równoważności
+`R=0` z trywialnością holonomii ograniczonej. Przykłady płaskiego torusa,
+płaskiej butelki Kleina i okrągłej sfery odróżniają krzywiznę lokalną
+od wpływu topologii na transport. Nowy rysunek dwóch dróg pokazuje
+operator `P_β^{-1}P_α`; istniejący rysunek małej pętli służy dalej
+do powiązania holonomii z krzywizną.
+
+Druga sekcja dowodzi zasady odpowiedniości między polami równoległymi
+a niezmiennikami pełnej holonomii. Z niezmienniczej podprzestrzeni
+wyprowadza gładkie rozkłady równoległe i, przez lokalne twierdzenie
+Frobeniusa oraz zgodność koneksji z metryką, pełny rachunek lokalnej
+metryki iloczynowej. Uzasadniono całkowitą geodezyjność i zupełność
+liści. Globalne sklejenie liści oraz jednoznaczność rozkładu podano
+jako jawne wejście zewnętrzne de Rhama z założeniami zupełności
+i jednospójności oraz źródłami de Rhama i Wu. Ambrose–Singer także
+jest oznaczony jako wynik zewnętrzny; nie przypisano dowodowi
+lokalnemu siły dowodu twierdzenia globalnego. Przykłady `S²×R`,
+torusa, butelki i otwartego dysku sprawdzają zakres hipotez.
+Drugi nowy rysunek przedstawia lokalną siatkę liści. Odesłanie
+do Hodge'a–Bochnera wyjaśnia związek z pierwszą liczbą Bettiego
+bez ponownego wprowadzania kohomologii de Rhama z tomu I.
+
+### Kontrola składu
+
+Tom II złożono z pliku głównego `geometria_tom2.tex` przy użyciu `latexmk`;
+gotowy PDF ma 177 stron. Obejrzano rysunki 14.3 i 14.4 na stronach
+drukowanych 60 i 63, poprawiono położenie etykiet i złożono tom ponownie.
+Następnie `buduj_tomy.ps1` ustabilizował odsyłacze i zaktualizował
+wszystkie trzy PDF-y: tomy mają odpowiednio 208, 177 i 146 stron.
+W końcowych logach brak błędów, nierozwiązanych odsyłaczy i przepełnień
+wierszy. Indeksy przyjęły odpowiednio 112, 93 i 111 wpisów, bez
+odrzuceń ani ostrzeżeń. W każdym PDF są odsyłacze do obu pozostałych
+plików tomów, a nowe odnośniki do prac Ambrose'a--Singera, de Rhama
+i Wu znajdują się w tomie II.
