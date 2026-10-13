@@ -4765,3 +4765,39 @@ wierszy. Indeksy przyjęły odpowiednio 112, 93 i 111 wpisów, bez
 odrzuceń ani ostrzeżeń. W każdym PDF są odsyłacze do obu pozostałych
 plików tomów, a nowe odnośniki do prac Ambrose'a--Singera, de Rhama
 i Wu znajdują się w tomie II.
+
+## 13 października 2026 — miejsce cięcia i promień injektywności w rozdziale 13
+
+Po twierdzeniu Hopfa--Rinowa w `13-geodezyjne.tex` dodano sekcję
+o czasie cięcia geodezyjnej, zbiorze cięcia punktu oraz punktowym
+i globalnym promieniu injektywności. Udowodniono, że czasy minimalności
+tworzą początkowe przedziały, a ich skończone krańce nadal są osiągane.
+Pełny dowód równości promienia injektywności z infimum czasów cięcia
+i z odległością do zbioru cięcia używa argumentu o narożniku z pierwszej
+wariacji oraz twierdzenia z rozdziału 14 o braku punktu sprzężonego
+we wnętrzu geodezyjnej minimalnej; tam druga wariacja jest rozpisana.
+Osobny dowód alternatywy w miejscu cięcia rozróżnia drugi minimalny
+promień i osobliwość różniczki odwzorowania wykładniczego.
+
+Na sferze promień injektywności wynosi `πR`, a zbiorem cięcia
+jest antypoda, do której prowadzą różne półokręgi. Dla płaskiego
+torusa `R²/(aZ×bZ)` z metryką ilorazową dowiedziono wzoru na odległość
+przez podniesienie dróg, wyznaczono prostokątną komórkę najbliższych
+reprezentantów i otrzymano promień `min(a,b)/2`. Jej brzeg daje dwa
+okręgi zbioru cięcia; na zwykłym boku są dwie drogi minimalne,
+w obrazie narożników cztery, a punktów sprzężonych nie ma.
+Dwa nowe rysunki pokazują zapadanie brzegu dysku stycznego sfery
+do antypody i sklejenie boków komórki płaskiego torusa.
+
+### Kontrola składu
+
+Tom II złożono przez `latexmk` z pliku głównego; ma 180 stron.
+Obejrzano strony 44 i 45 z nowymi rysunkami 13.7 i 13.8;
+punkty, promienie i etykiety są czytelne oraz odpowiadają
+tekstowi. Następnie `buduj_tomy.ps1` złożył trzy tomy,
+ustabilizował odsyłacze i skopiował PDF-y. Tomy mają
+odpowiednio 208, 180 i 146 stron. W końcowych logach
+nie ma błędów, nierozwiązanych odsyłaczy ani przepełnień
+wierszy. Indeksy przyjęły 112, 96 i 111 wpisów,
+bez odrzuceń i ostrzeżeń. Każdy PDF zawiera odsyłacze
+do dwóch pozostałych tomów.
