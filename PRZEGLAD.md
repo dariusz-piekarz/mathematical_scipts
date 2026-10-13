@@ -4872,3 +4872,23 @@ a indeksy przyjęły 112, 96 i 111 wpisów bez odrzuceń
 i ostrzeżeń. W końcowych logach nie ma błędów,
 nierozwiązanych odsyłaczy ani przepełnień wierszy;
 każdy PDF zawiera odsyłacze do dwóch pozostałych tomów.
+
+## 13 października 2026 — porządek w planie dalszej pracy
+
+W `PLAN_DZIALANIA.md` usunięto historyczny opis scalania i ukończonych
+próśb z bieżącej kolejki. Poprawiono nieaktualne wskazanie rozdziału 26
+jako następnego do audytu, oczekujący rzekomo audyt wiązek w rozdziale 1
+oraz instrukcję aktualizowania zbiorczego PDF przy każdej iteracji.
+Kolejka wskazuje teraz rozdział 29 jako najbliższy niezweryfikowany.
+
+Na życzenie autora dopisano osobny zakres przyszłej rozbudowy
+twierdzenia Walla, sfer Milnora i twierdzeń wymiaru cztery.
+Wskazano brakujące kroki względem obecnych dowodów i granicę
+między własnym wyprowadzeniem a nazwanym wynikiem zewnętrznym.
+Propozycję równań Gaussa–Codazziego usunięto z planu:
+autor poprosił o jej objaśnienie wyłącznie w rozmowie.
+Poprawiono też dwa drobne nieaktualne lub urwane zdania.
+Zmiana dotyczy wyłącznie plików Markdown; źródeł TeX i PDF nie zmieniono.
+Kontrolny `buduj_tomy.ps1` zakończył się powodzeniem; logi tomów
+nie zawierają błędów, nierozwiązanych odsyłaczy ani przepełnień,
+a indeksy przyjęły 112, 96 i 111 wpisów bez odrzuceń i ostrzeżeń.

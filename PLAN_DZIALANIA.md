@@ -1,74 +1,80 @@
 # Aktualny plan i pokrycie przeglądem
 
 Stan: 13 października 2026. Gałąź: `review/rozdzialy-matematyka`.
-Przed bieżącą pracą pobrano bez konfliktów 12 commitów autora
-`b912682`–`386ecb6`, od wcześniejszego wspólnego stanu `34e683b`.
 Książka ma **38 rozdziałów, pięć części i trzy dodatki**. Numery w nazwach
 plików są historyczne; numer w PDF ustala kolejność importów.
 Skład roboczy podzielono na trzy tomy: rozdziały 1–10, 11–22 oraz
 23–38 z dodatkami. Plik zbiorczy pozostaje dostępny do okazjonalnego składu.
 
-Podczas audytu rozdziału 24 pobrano także zmiany do `2777149`
-(commity `224d680`, `f2b1960`, `2777149` i merge `6e8adaf`).
-Obejmują rozwinięcie wiązek w pliku 01, rysunek Ricciego w pliku 30,
-notację Re/Im, terminologię iloczynów tensorowych oraz odsyłacze.
-Włączenie ich do wspólnego składu nie zamyka niezależnego audytu nowych treści.
-Scalenie przywróciło również starą drugą tabelę pokrycia w miejscu rejestru
-pojęć; usunięto tę duplikację i odzyskano rejestr z `dbfe600`.
-
 To jedyna bieżąca lista zadań i propozycji. Uzasadnienia zmian oraz wyniki
 sprawdzania konkretnych wersji są w [PRZEGLAD.md](PRZEGLAD.md), a budowanie
-i organizacja plików w [README.md](README.md). Dawnych planów wykonania
-rozdziałów nie powtarzamy obok tabeli ich obecnego stanu. Historia wcześniejszych
-propozycji jest w Git oraz w dzienniku.
+i organizacja plików w [README.md](README.md).
 
 ## Bieżący zakres i kolejność
 
-1. Prośbę z 9 października o rozdział 5, notację generatorów tensoru,
-   wskazaną terminologię i pierwszy rejestr nieobjaśnionych pojęć
-   zrealizowano w `dbfe600` i powiązanych poprawkach.
-2. Audyt h-kobordyzmu (obecny rozdział 24, plik `20-h-kobordyzm.tex`)
-   zakończono 9 października. Zgodnie z prośbą z 11 października
-   kontynuujemy od rozdziału 25 w górę, w kolejności PDF.
-   Torsję i s-kobordyzm (rozdział 25, plik 21) zakończono
-   11 października wraz z kontrolą składu. Następny jest rozdział 26.
-   Dalej rozdziały 26–38: dla wcześniej sprawdzonych porównanie
-   aktualnej treści z wersją audytowaną i kontrola zależności;
-   dla niezweryfikowanych pełny audyt. Nie oznaczamy dawnych
-   przeglądów jako nowo przeprowadzonych. Zwykła iteracja obejmuje
-   jeden rozdział; na prośbę autora z 12 października wykonano
-   wspólny przegląd krótkich rozdziałów 34–38 o wymiarze cztery.
-3. Prośba z 11 października o wyjaśnienie Definicji 33.1.1 obejmuje
-   stabilizator zwarty, działania właściwe, podgrupy dyskretne,
-   gładkie ilorazy, zupełność, maksymalność i przykłady. Podstawy
-   rozbudowano w rozdziale 16, a zastosowanie w rozdziale 33;
-   12 października uzupełniono oba miejsca o orbifoldy i ujednolicono
-   nienumerowane podsekcje 33.1;
-   pełny audyt pozostałych części tych rozdziałów pozostaje osobny.
-   Sprawdzić również niezweryfikowane nowe rozdziały o geometrii globalnej,
-   potoku Ricciego, wymiarze 3 oraz dodatki według tabeli.
-   Zapowiedziany materiał o wiązkach został pobrany w `2777149`:
-   wymaga osobnego ponownego audytu rozdziału 1, obejmującego definicje,
-   izomorfizm wiązek, wstęgę Möbiusa i rozbudowany przykład tautologiczny.
-4. Przed każdą iteracją i publikacją pobierać zmiany. Prowadzić log,
-   kompilować cały dokument i indeks, kontrolować odsyłacze oraz zmienione
-   strony, aktualizować wspólny PDF, commitować i pushować ukończony etap.
-5. W etapie z 12 października ujednolicono bloki „Dalsza lektura” we
-   wszystkich 38 rozdziałach i sprawdzono odsyłacze do zewnętrznych źródeł:
-   tam, gdzie potwierdzono dokładnie tę samą pracę w otwartym PDF, wskazano
-   bezpośredni plik, zwłaszcza arXiv. Rozdział 38 uzupełniono o etapy
-   konstrukcji Gompfa; pełne twierdzenia Quinna, Cassona, Freedmana i Gompfa
-   pozostają jawnymi wejściami zewnętrznymi.
-6. Podział na trzy tomy wprowadzono 13 października. Przy kolejnych
-   poprawkach składać zmieniony tom; przed publikacją uruchamiać
-   `buduj_tomy.ps1` i sprawdzać odsyłacze między PDF-ami. Pełny
-   dokument zbiorczy zachowano, lecz nie trzeba go składać przy każdej
-   iteracji.
+1. Rozbudować dowody i przykłady dotyczące twierdzenia Walla
+   (rozdziały 27–28), sfer Milnora (rozdział 30) oraz twierdzeń
+   czterowymiarowych (rozdziały 34–38). Zakres etapów jest poniżej;
+   zwykła iteracja obejmuje jeden rozdział. Wcześniejszy audyt
+   każdego z tych rozdziałów pozostaje ważny w swoim wskazanym zakresie,
+   ale nie oznacza wykonania nowej rozbudowy.
+2. Dokończyć audyt według numeracji PDF: najbliższy niezweryfikowany
+   rozdział to 29. Rozdziały 26–28 i 30 mają wcześniejsze przeglądy;
+   rozdziały 31–33 wymagają pełnych audytów lub kontroli nowych rysunków
+   i zależności. Dalej sprawdzić zaległe części rozdziałów 15–18
+   oraz dodatki A i B według tabeli. Rozdział 1 z nowymi wiązkami
+   został sprawdzony 13 października.
+3. Przed każdą iteracją pobierać zmiany współautora. Zmieniać źródło
+   w odpowiednim pliku rozdziału, zapisywać uzasadnienia w
+   `PRZEGLAD.md`, składać odpowiedni tom i sprawdzać zmienione strony.
+   Przed wypchnięciem uruchamiać `buduj_tomy.ps1`, kontrolować indeksy
+   i odsyłacze między tomami, aktualizować PDF-y tomów, zatwierdzać
+   i wypychać ukończony etap. Skład zbiorczy jest okazjonalny.
 
 Nie dodajemy zadań. Rozmaitości z brzegiem, grupy wolne, iloczyny wolne,
 geometria Kleina i geometrie Thurstona już są w źródłach; nie tworzymy ich
-duplikatów. Freedman, Donaldson i egzotyczne R⁴ pozostają w tym samym PDF,
-w osobnych rozdziałach, zgodnie z nowszym ustaleniem z 6 października.
+duplikatów. Freedman, Donaldson i egzotyczne R⁴ pozostają w tomie III,
+w osobnych rozdziałach.
+
+## Zlecone rozbudowy dowodów
+
+Każdy punkt realizować etapami w odpowiednich rozdziałach, z teorią,
+szczegółowymi dowodami dostępnych kroków, przykładami i rysunkami.
+Przed rozbudową porównać istniejący tekst z oryginalnymi źródłami;
+głębokiego wyniku użytego z zewnątrz nie nazywać własnym pełnym dowodem.
+
+1. **Twierdzenie Walla o przeszkodzie chirurgicznej — rozdziały 27–28.**
+   Rozwinąć obecny dowód dostateczności dla grupy trywialnej i wymiaru
+   parzystego w kierunku pełnych hipotez twierdzenia: chirurgii poniżej
+   środka, realizacji obramowanych immersji i usuwania przecięć,
+   przygotowania kobordyzmu, bazowanych jąder nad pierścieniem grupowym
+   oraz kontroli torsji Whiteheada. Osobno rozłożyć przypadek
+   nieparzysty na formacje i relacje stabilne; sprawdzić wersję
+   relatywną oraz różnicę między dekoracjami s i h. Przy każdym
+   kroku wskazać, co jest dowiedzione w tekście, a co pozostaje
+   lematem Walla lub Milnora z dokładnymi założeniami i źródłem.
+2. **Sfery Milnora — rozdział 30.**
+   Rozwinąć konstrukcję przez sklejenie wiązek nad sferą
+   czterowymiarową: rachunek klas Eulera i Pontriagina,
+   homologię oraz uzasadnienie typu homotopijnego przestrzeni
+   całkowitej. Następnie rozwinąć rachunek niezmiennika gładkiego:
+   względne podniesienie pierwszej klasy Pontriagina,
+   niezależność od wypełnienia, sygnaturę i przykłady
+   rozróżniające struktury gładkie, także po odwróceniu orientacji.
+   Oddzielić własne obliczenia od użycia twierdzenia Hirzebrucha
+   i wysokowymiarowego twierdzenia Poincarégo.
+3. **Twierdzenia wymiaru cztery — rozdziały 34–38.**
+   Rozbudować kolejno rachunek form przecięcia i obramowań
+   (w tym E₈ i 2E₈), geometryczne przygotowanie do twierdzenia
+   o zanurzaniu dysku i roli uchwytów Cassona, konsekwencje
+   klasyfikacji Freedmana, przeszkodę Donaldsona dla form
+   określonych oraz konstrukcje egzotycznych R⁴. Dla każdego
+   twierdzenia podać kategorię topologiczną lub gładką,
+   warunki dotyczące grupy podstawowej i brzegu, zależności
+   logiczne, obliczalny przykład i zakres dowodu. Analizę
+   przestrzeni moduli, twierdzenie o zanurzaniu dysku oraz
+   klasyfikację pozostawiać nazwanymi wejściami, dopóki
+   ich wymagane lematy nie zostaną rzeczywiście wyprowadzone.
 
 ## Pokrycie audytem
 
@@ -107,7 +113,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 24. h-kobordyzm | `20-h-kobordyzm.tex` | Audyt i uzupełnienia zakończone 9 października; skład po scaleniu do `2777149`: 503 strony | Rozpisano wymianę 1→3, dopełnienia w kowymiarze 2, wstęgi i homologię wyciętej sfery. Dokładne założenia obramowanego lematu Whitneya podano jako jawny wynik zewnętrzny. Trzy rysunki, odsyłacze i indeks sprawdzone. |
 | 25. Torsja i s-kobordyzm | `21-torsja-s-kobordyzm.tex` | Pełny audyt i uzupełnienia zakończone 11 października; PDF 505 stron | Poprawiono bazy i konwencje macierzowe, dowód niezależności kontrakcji, zakres lematu Whitneya, obramowania i dualność w realizacji torsji. Strony 390–401, oba schematy, odsyłacze i indeks sprawdzone; głębokie wejścia zewnętrzne wskazano dokładnie. |
 | 26. Chirurgia geometryczna | `22-chirurgia-geometryczna.tex` | Pełny audyt zakończony 8 października; treść bez poprawek | Sprawdzone obramowania, ślad i uchwyt dualny, homologia, $\pi_1$, forma jądra i rysunki |
-| 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Pełny audyt treści zakończony 7 października; sprawdzono definicje, rachunki znaków i baz, tok dowodu oraz źródła Walla i Milnora | Uściślono dual lewego modułu i wzór dla udoskonalenia kwadratowego; geometryczne lematy Walla i Milnora oraz klasyfikacja grup $L$ pozostają jawnie zewnętrzne Termin „rzutowy” ujednolicono 9 października. |
+| 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Pełny audyt treści zakończony 7 października; sprawdzono definicje, rachunki znaków i baz, tok dowodu oraz źródła Walla i Milnora | Uściślono dual lewego modułu i wzór dla udoskonalenia kwadratowego; geometryczne lematy Walla i Milnora oraz klasyfikacja grup $L$ pozostają jawnie zewnętrzne. Termin „rzutowy” ujednolicono 9 października. |
 | 28. Ciąg chirurgii | `24-ciag-chirurgii.tex` | Pełny audyt zakończony 8 października | Uściślono naturę obu strzałek przeszkody i przejście do $s$-kobordyzmu; bijekcja z $[X,G/O]$ i działanie grupy $L$ pozostają jawnymi wynikami Walla |
 | 29. Poincaré | `25-poincare.tex` | Oczekuje | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm |
 | 30. Sfery Milnora | `26-sfery-milnora.tex` | Przegląd konstrukcji, klas charakterystycznych i egzotyczności zakończony 7 października; PDF 442 strony | Rozpisano homologię i niezmiennik; wzór Hirzebrucha pozostaje jawnym wejściem zewnętrznym |
@@ -142,7 +148,7 @@ jako brakujących definicji.
 | Pojęcie i miejsce | Czego brakuje | Możliwe uzupełnienie |
 |---|---|---|
 | Monoid — plik 05, między `def:free-groups-5` a `prop:free-reduction-5` | Nazwa występuje raz, bez definicji; przykład słów jest już podany. | Jedno zdanie: łączne działanie z jedynką, bez wymogu odwrotności; odnieść do konkatenacji. |
-| Pierścień główny — plik 05, uwaga po `prop:ranga-ilorazu` | Brak definicji i twierdzenia o strukturze. Założenie skończonego generowania poprawiono w bieżącym audycie. | Zdefiniować jako dziedzinę, w której każdy ideał jest główny; podać Z i K[t]. Pełne twierdzenie strukturalne wymaga osobnego dowodu lub jawnego źródła. |
+| Pierścień główny — plik 05, uwaga po `prop:ranga-ilorazu` | Brak definicji i twierdzenia o strukturze. Założenie skończonego generowania poprawiono we wcześniejszym audycie. | Zdefiniować jako dziedzinę, w której każdy ideał jest główny; podać Z i K[t]. Pełne twierdzenie strukturalne wymaga osobnego dowodu lub jawnego źródła. |
 | Indeks podgrupy i „wirtualnie” — plik 30b, przykłady geometrii euklidesowej, hiperbolicznej i Sol | Zdefiniowano warstwy, lecz nie ich liczbę jako indeks ani własność posiadaną przez podgrupę skończonego indeksu. | Definicja indeksu i własności wirtualnej, przykład grupy zawierającej Zⁿ ze skończonym indeksem. |
 | Grupa nilpotentna i rozwiązalna — plik 30b, modele Nil i Sol | Nazwy są użyte do porównania grup, bez szeregów centralnego i pochodnego. | Krótki blok algebraiczny z komutatorami; obliczyć te szeregi dla podanych grup zamiast tylko dopisywać nazwy. |
 | Ostrzyk hiperboliczny — plik 30b, przykład H³ | Jest informacja o torusowym przekroju, bez modelu metryki końca. | Model ilorazu horokuli i krótki rachunek skończonej objętości; odróżnić torusowy przekrój od całego końca. |
@@ -161,8 +167,6 @@ konkurencyjnej definicji.
 
 ## Dalsze rozszerzenia i granice dowodów
 
-- Równania Gaussa–Codazziego pozostają propozycją do decyzji po bieżącym audycie. Hodge–Bochner jest już
-  osobnym rozdziałem; nie figuruje ponownie jako temat do napisania.
 - Pełne triangulacje, porównanie kohomologii Čecha i singularnej oraz
   dalsze grupy sfer homotopijnych są większymi możliwymi rozszerzeniami,
   nie krótkimi naprawami obecnych dowodów.
@@ -177,5 +181,5 @@ konkurencyjnej definicji.
   oraz przygotowanie kobordyzmu.
 
 Źródła i szczegółowe deklaracje wykonania zachowuje [PRZEGLAD.md](PRZEGLAD.md)
-oraz bibliografia odpowiednich rozdziałów. Po zakończeniu przeglądu przedstawić
-użytkownikowi pozostałe propozycje na podstawie rzeczywistych braków.
+oraz bibliografia odpowiednich rozdziałów. Pozostałe propozycje
+oceniać na podstawie rzeczywistych braków stwierdzonych w audycie.
