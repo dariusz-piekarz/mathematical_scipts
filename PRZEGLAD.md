@@ -4847,3 +4847,28 @@ mają 209, 180 i 146 stron, a indeksy przyjęły 112, 96 i 111 wpisów
 bez odrzuceń i ostrzeżeń. Końcowe logi nie zawierają błędów,
 nierozwiązanych odsyłaczy ani przepełnień wierszy. Każdy PDF
 zawiera odsyłacze do dwóch pozostałych tomów.
+
+## 13 października 2026 — powiązanie miejsc cięcia z polami Jacobiego
+
+Na końcu Sekcji 14.9 dopisano odsyłacz do Sekcji 13.6.
+Wyjaśniono, że przed czasem cięcia odcinek geodezyjnej
+da się przedłużyć do odcinka minimalnego, więc nie może
+tam leżeć punkt sprzężony i różniczka odwzorowania
+wykładniczego jest odwracalna. W miejscu cięcia może
+wystąpić sprzężenie wzdłuż danego promienia lub kilka
+geodezyjnych minimalnych, także jednocześnie. Wskazano
+związek kresu dolnego czasów cięcia z promieniem
+injektywności i porównano antypodę sfery z płaskim torusem.
+
+### Kontrola składu
+
+Tom II złożono z pliku głównego `geometria_tom2.tex`:
+180 stron, bez błędów i nierozwiązanych odsyłaczy.
+Obejrzano stronę PDF 74 z akapitem oraz rysunkiem
+walca; tekst, odsyłacze i etykiety są czytelne.
+`buduj_tomy.ps1` złożył trzy tomy i ustabilizował
+odsyłacze między nimi. PDF-y mają 209, 180 i 146 stron,
+a indeksy przyjęły 112, 96 i 111 wpisów bez odrzuceń
+i ostrzeżeń. W końcowych logach nie ma błędów,
+nierozwiązanych odsyłaczy ani przepełnień wierszy;
+każdy PDF zawiera odsyłacze do dwóch pozostałych tomów.
