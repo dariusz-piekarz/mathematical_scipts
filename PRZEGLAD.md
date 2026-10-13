@@ -4801,3 +4801,49 @@ nie ma błędów, nierozwiązanych odsyłaczy ani przepełnień
 wierszy. Indeksy przyjęły 112, 96 i 111 wpisów,
 bez odrzuceń i ostrzeżeń. Każdy PDF zawiera odsyłacze
 do dwóch pozostałych tomów.
+
+## 13 października 2026 — audyt nowych wiązek w rozdziale 1
+
+Po wypchnięciu etapu rozdziału 13 sprawdzono, czy rozdział 1 ma
+niezintegrowane zmiany lokalne lub na pobranych gałęziach: nie ma.
+W aktualnej gałęzi są jednak wcześniejsze dodatki do wiązek
+wektorowych i kostycznych, których pełny audyt figurował
+w `PLAN_DZIALANIA.md` jako oczekujący. Sprawdzono definicje
+wiązki i izomorfizmu, przestrzeń całkowitą wstęgi Möbiusa,
+jej funkcje przejścia i nietrywialność, wiązkę tautologiczną
+nad `RP¹`, jawny izomorfizm między nimi, konstrukcje
+wiązek stycznej i kostycznej, diagramy oraz odsyłacze.
+
+Rachunek transformacji kowektorów i wzór na przejście atlasu
+`T*M` są poprawne. Usunięto zbędny drugi zapis różniczki
+bez argumentu punktowego. W motywacji ogólnej wiązki
+poprawiono lokalny model na `U×R^k` dla rzędu `k`,
+a powtórzoną definicję trywializacji zastąpiono odsyłaczem.
+W dowodzie nietrywialności wstęgi niezerową sekcję
+wiązki trywialnej oznaczono `s_1`, żeby nie mylić jej
+z wcześniej zdefiniowaną sekcją zerową `s_0`.
+Dopuszczono też długość `2π` otwartego przedziału
+reprezentantów łuku `S¹\{[0]}`; taki łuk był używany
+w późniejszej trywializacji. Poprawiono dwie literówki.
+
+Dopisano dowód zgodności lokalnych map wstęgi Möbiusa
+z topologią ilorazową, jej własności Hausdorffa oraz
+drugiego aksjomatu przeliczalności. Przy wiązce
+tautologicznej pokazano, że przestrzeń całkowita
+jest gładką podrozmaitością produktu, a lokalne
+trywializacje są gładkie. Doprecyzowano, że izomorfizm
+obu wiązek utożsamia ich różne bazy przez dyfeomorfizm `F`.
+Obliczenia przejść znakowych, ich związek z obrotem
+o pół kąta oraz dowód nietrywialności pozostały poprawne.
+
+### Kontrola składu
+
+Tom I złożono z pliku głównego `geometria_tom1.tex`; ma 209 stron.
+Obejrzano strony PDF 42–46 oraz 52 z transformacją kowektorów,
+diagramami wiązek, wstęgą Möbiusa, początkiem opisu wiązki
+tautologicznej i wiązką kostyczną; podpisy oraz etykiety są czytelne.
+Następnie `buduj_tomy.ps1` złożył wszystkie tomy i indeksy. Tomy
+mają 209, 180 i 146 stron, a indeksy przyjęły 112, 96 i 111 wpisów
+bez odrzuceń i ostrzeżeń. Końcowe logi nie zawierają błędów,
+nierozwiązanych odsyłaczy ani przepełnień wierszy. Każdy PDF
+zawiera odsyłacze do dwóch pozostałych tomów.
