@@ -4892,3 +4892,52 @@ Zmiana dotyczy wyłącznie plików Markdown; źródeł TeX i PDF nie zmieniono.
 Kontrolny `buduj_tomy.ps1` zakończył się powodzeniem; logi tomów
 nie zawierają błędów, nierozwiązanych odsyłaczy ani przepełnień,
 a indeksy przyjęły 112, 96 i 111 wpisów bez odrzuceń i ostrzeżeń.
+
+## 13 października 2026 — pierwszy etap rozbudowy twierdzenia Walla w rozdziale 27
+
+Porównano opis dekoracji przeszkody z §17D książki Walla
+*Surgery on Compact Manifolds* oraz rachunek formacji z §9
+*An Introduction to Algebraic Surgery* Ranickiego. W
+`23-przeszkoda-chirurgiczna.tex` rozpisano sprzężoną zmianę bazy
+w dwóch parach hiperbolicznych nad pierścieniem grupowym:
+`e'_1=e_1+a e_2` wymusza `f'_2=f_2-\bar a f_1`.
+Sprawdzono parowania, udoskonalenie kwadratowe i zerową
+torsję Whiteheada obu elementarnych zmian bazy. W ten sposób
+geometryczny opis przesunięcia uchwytu uzyskał jawny rachunek
+nad `Z[π]`, którego wcześniej brakowało.
+
+Wyjaśniono warunki prostej dualności i prostego lagranżjanu
+w dekoracji `s`, zestawiając je ze zwykłą odwracalnością w
+dekoracji `h`. Jednostka `u=1-t-t^{-1}` w `Z[C_5]`, której
+niezerową klasę Whiteheada udowodniono już w rozdziale 25,
+daje konkretną formę o odwracalnej dualności z torsją `2[u]≠0`.
+Po zmianie bazy przez `u^{-1}` forma jest hiperboliczna w
+opisie `h`; wybrana baza nie spełnia warunku prostej dualności
+wersji `s`. Jest to przykład algebraiczny, bez twierdzenia o
+realizacji przez zadaną mapę normalną. Doprecyzowano też
+hipotezę relatywną na brzegu w obu dekoracjach.
+
+To etap rozbudowy rozdziału 27, a nie dowód pełnego twierdzenia
+Walla dla dowolnej grupy podstawowej. Geometryczna realizacja
+obramowanych immersji, przygotowanie kobordyzmu i stabilna
+relacja formacji nadal używają wskazanych w tekście lematów
+Walla i Milnora.
+
+### Kontrola składu
+
+Tom III złożono z `geometria_tom3.tex` przez `latexmk`; nowe
+akapity są na stronach PDF 51–53 (numery drukowane 50–52).
+Sprawdzono wizualnie te strony: wzory, podpisy i odsyłacze są
+czytelne. Następnie `buduj_tomy.ps1` złożył trzy tomy,
+ustabilizował odsyłacze i skopiował PDF-y. Mają odpowiednio
+209, 180 i 147 stron. Końcowe logi nie zawierają błędów,
+brakujących odsyłaczy ani przepełnień wierszy. Indeksy
+przyjęły 112, 96 i 111 wpisów bez odrzuceń i ostrzeżeń;
+każdy PDF zawiera odsyłacze do obu pozostałych tomów.
+W trakcie pracy pojawiły się niezależne lokalne zmiany źródła
+rozdziału 1 i PDF tomu I. Pierwszy pełny skład użył ich
+aktualnej wersji. PDF-y do tego etapu złożono ponownie
+w osobnym katalogu z wersji rozdziału 1 zapisanej w gałęzi
+i nowego źródła rozdziału 27. Powtórzony pełny skład również
+przeszedł kontrole logów, indeksów i łączy. Niezależne
+lokalne zmiany rozdziału 1 nie należą do tego etapu.
