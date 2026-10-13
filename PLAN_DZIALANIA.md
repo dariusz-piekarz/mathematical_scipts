@@ -1,6 +1,6 @@
 # Aktualny plan i pokrycie przeglądem
 
-Stan: 13 października 2026. Gałąź: `review/rozdzialy-matematyka`.
+Stan: 14 października 2026. Gałąź: `review/rozdzialy-matematyka`.
 Książka ma **38 rozdziałów, pięć części i trzy dodatki**. Numery w nazwach
 plików są historyczne; numer w PDF ustala kolejność importów.
 Skład roboczy podzielono na trzy tomy: rozdziały 1–10, 11–22 oraz
@@ -23,7 +23,7 @@ i organizacja plików w [README.md](README.md).
    rozdziały 31–33 wymagają pełnych audytów lub kontroli nowych rysunków
    i zależności. Dalej sprawdzić zaległe części rozdziałów 15–18
    oraz dodatki A i B według tabeli. Rozdział 1 z nowymi wiązkami
-   został sprawdzony 13 października.
+   sprawdzono 13 października; §1.10 ponownie skontrolowano 14 października.
 3. Przed każdą iteracją pobierać zmiany współautora. Zmieniać źródło
    w odpowiednim pliku rozdziału, zapisywać uzasadnienia w
    `PRZEGLAD.md`, składać odpowiedni tom i sprawdzać zmienione strony.
@@ -87,7 +87,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 
 | Numer i temat | Plik w `tex/rozdzialy/` | Stan przeglądu | Kontrola / pozostały zakres |
 |---|---|---|---|
-| 1. Rozmaitości | `01-rozmaitosci.tex` | 13 października zakończono audyt dodatków o wiązkach wektorowych i kostycznych po wcześniejszym wyprowadzeniu transformacji kowektorów | Sprawdzono definicję i izomorfizm wiązek, przestrzeń całkowitą i nietrywialność wstęgi Möbiusa, wiązkę tautologiczną, atlasy `TM` i `T*M`, diagramy oraz odsyłacze. Doprecyzowano topologię ilorazu, atlas wiązki tautologicznej, długość łuku i model lokalny; tom I 209 stron. |
+| 1. Rozmaitości | `01-rozmaitosci.tex` | 13 października zakończono audyt dodatków o wiązkach wektorowych i kostycznych; 14 października ponownie sprawdzono §1.10 | Skontrolowano sklejanie wiązek, funkcje przejścia, sekcje, sumę i wiązkę dualną oraz przykład Möbiusa. Wcześniej sprawdzono definicję i izomorfizm wiązek, przestrzeń całkowitą, wiązkę tautologiczną, atlasy `TM` i `T*M`, diagramy oraz odsyłacze. |
 | 2. Pola wektorowe | `02-pola-wektorowe.tex` | Audyt dodatków zakończony 6 października; PDF 387 stron | Sprawdzone powiązanie z brzegiem, przykład przepływu jednostronnego, bibliografia i rysunki |
 | 3. Algebra tensorowa | `03-algebra-tensorowa.tex` | Audyt z 6 października; notacja poprawiona 9 października | Formalne generatory par zapisano jako [(v,w)]; zakres tej poprawki nie obejmuje ponownego audytu całego rozdziału. |
 | 4. Grassmanniany, Clifford i spinory | `04-grassmanniany-clifford-spinory.tex` | Wcześniejszy audyt z 6 października; 8 października dodano grupę Pin | Sprawdzono nakrycie $\operatorname{Pin}(n)\to O(n)$ i stronę 100 PDF |

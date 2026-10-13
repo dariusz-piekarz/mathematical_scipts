@@ -4941,3 +4941,40 @@ w osobnym katalogu z wersji rozdziału 1 zapisanej w gałęzi
 i nowego źródła rozdziału 27. Powtórzony pełny skład również
 przeszedł kontrole logów, indeksów i łączy. Niezależne
 lokalne zmiany rozdziału 1 nie należą do tego etapu.
+
+## 14 października 2026 — przegląd §1.10 rozdziału 1
+
+Sprawdzono rozbudowany opis funkcji przejścia i szczegółowy dowód
+sklejania wiązki. Relacja na sumie rozłącznej jest równoważnością
+dzięki warunkowi kocyklu; lokalne trywializacje są dobrze określone,
+zgodne na przecięciach i wyznaczają topologię oraz gładki atlas.
+Dowód obejmuje ciągłość rzutowania, oddzielanie punktów i drugi
+aksjomat przeliczalności, więc uzasadnia wszystkie warunki z definicji
+rozmaitości. Sprawdzono także wzory zgodności lokalnych zapisów sekcji,
+macierze przejścia dla sumy i wiązki dualnej oraz argument o zerze
+każdej ciągłej sekcji wstęgi Möbiusa.
+Konwencję funkcji przejścia i konstrukcję z kocyklu porównano
+z [notatkami T. S. Mrowki, 18.965, §7](https://math.mit.edu/~mrowka/math965lectnote.pdf#page=12).
+
+Zastąpiono ręczny, niezgodny z numeracją sekcyjną znacznik `(1.1)`
+etykietowanym równaniem i odsyłaczami. Doprecyzowano, że macierze
+grupy strukturalnej pochodzą z gładkich ram lokalnych, a przykład
+ortogonalny wymaga gładkiego iloczynu skalarnego we włóknach.
+W warunku gładkości sekcji Möbiusa dodano gładkość funkcji na całym
+domkniętym przedziale, obok zgodności jej pochodnych na końcach.
+W dowodzie sklejania wniosek o strukturze rozmaitości przeniesiono
+za weryfikację aksjomatów topologicznych. Etykiety wektorów na
+rysunku przesunięto od obrysów włókien.
+
+### Kontrola składu
+
+Tom I złożono osobno przez `latexmk`, po czym `buduj_tomy.ps1`
+złożył wszystkie trzy tomy, ustabilizował odsyłacze między nimi
+i skopiował PDF-y. Mają odpowiednio 211, 180 i 147 stron.
+Obejrzano strony PDF 52–57 tomu I: wzory, rysunek 1.15,
+etykiety wektorów i przykład wstęgi Möbiusa są czytelne.
+Końcowe logi nie zawierają błędów, brakujących odsyłaczy ani
+przepełnień wierszy. Indeksy przyjęły 112, 96 i 111 wpisów
+bez odrzuceń i ostrzeżeń; w każdym PDF są łącza do dwóch
+pozostałych tomów. W każdym logu pozostaje ostrzeżenie pdfTeX
+o zdublowanym celu `page.1` przy składzie części wstępnej.
