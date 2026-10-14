@@ -12,10 +12,13 @@ i organizacja plików w [README.md](README.md).
 
 ## Bieżący zakres i kolejność
 
-1. Rozbudować dowody i przykłady dotyczące twierdzenia Walla
-   (rozdziały 27–28), sfer Milnora (rozdział 30) oraz twierdzeń
-   czterowymiarowych (rozdziały 34–38). Zakres etapów jest poniżej;
-   zwykła iteracja obejmuje jeden rozdział. Wcześniejszy audyt
+1. Doprowadzić wykład wymiarów co najmniej pięć do pełnych dowodów
+   twierdzenia Walla o przeszkodzie chirurgicznej (rozdziały 27–28)
+   i klasyfikacji Bardena (rozdział 29). Rozbudowy sfer Milnora
+   (rozdział 30) i twierdzeń czterowymiarowych (rozdziały 34–38)
+   kontynuować według zakresu poniżej; wymiary cztery pozostają
+   wykładem informacyjnym. Zwykła iteracja obejmuje jeden rozdział,
+   chyba że etap wymaga wspólnego dowodu. Wcześniejszy audyt
    każdego z tych rozdziałów pozostaje ważny w swoim wskazanym zakresie,
    ale nie oznacza wykonania nowej rozbudowy.
 2. Dokończyć audyt według numeracji PDF: najbliższy niezweryfikowany
@@ -44,8 +47,10 @@ Przed rozbudową porównać istniejący tekst z oryginalnymi źródłami;
 głębokiego wyniku użytego z zewnątrz nie nazywać własnym pełnym dowodem.
 
 1. **Twierdzenie Walla o przeszkodzie chirurgicznej — rozdziały 27–28.**
-   Rozwinąć obecny dowód dostateczności dla grupy trywialnej i wymiaru
-   parzystego w kierunku pełnych hipotez twierdzenia: chirurgii poniżej
+   Celem jest pełny dowód twierdzenia o przeszkodzie, nie tylko opis
+   mechanizmu i zastosowań. Rozwinąć obecny dowód dostateczności dla
+   grupy trywialnej i wymiaru parzystego w kierunku pełnych hipotez:
+   chirurgii poniżej
    środka, realizacji obramowanych immersji i usuwania przecięć,
    przygotowania kobordyzmu, bazowanych jąder nad pierścieniem grupowym
    oraz kontroli torsji Whiteheada. Osobno rozłożyć przypadek
@@ -53,7 +58,18 @@ głębokiego wyniku użytego z zewnątrz nie nazywać własnym pełnym dowodem.
    relatywną oraz różnicę między dekoracjami s i h. Przy każdym
    kroku wskazać, co jest dowiedzione w tekście, a co pozostaje
    lematem Walla lub Milnora z dokładnymi założeniami i źródłem.
-2. **Sfery Milnora — rozdział 30.**
+   Ostatnie oznaczenie „pełny dowód” jest dopuszczalne dopiero po
+   wyprowadzeniu tych lematów i sprawdzeniu wszystkich przypadków.
+2. **Klasyfikacja Bardena — rozdział 29.** Wyprowadzić twierdzenie 2.2
+   Bardena o realizacji zadanego izomorfizmu $H_2$ zachowującego formę
+   wiązania i $w_2$. Rozpisać kolejno: ograniczenia algebraiczne
+   niezmienników i istnienie kobordyzmu; uproszczenie jego $\pi_1$
+   i $H_2$; lematy 4.1–4.4 o sferach osadzonych, zmianie $H_2$
+   i usunięciu $H_3$; indukcję realizującą zadany izomorfizm;
+   przejście do $h$-kobordyzmu wymiaru sześć. Dodać przykłady
+   porównujące przypadki spin i niespin oraz precyzyjnie oddzielić
+   ewentualne wykorzystane zewnętrzne twierdzenia o osadzaniu.
+3. **Sfery Milnora — rozdział 30.**
    Rozwinąć konstrukcję przez sklejenie wiązek nad sferą
    czterowymiarową: rachunek klas Eulera i Pontriagina,
    homologię oraz uzasadnienie typu homotopijnego przestrzeni
@@ -63,7 +79,9 @@ głębokiego wyniku użytego z zewnątrz nie nazywać własnym pełnym dowodem.
    rozróżniające struktury gładkie, także po odwróceniu orientacji.
    Oddzielić własne obliczenia od użycia twierdzenia Hirzebrucha
    i wysokowymiarowego twierdzenia Poincarégo.
-3. **Twierdzenia wymiaru cztery — rozdziały 34–38.**
+4. **Twierdzenia wymiaru cztery — rozdziały 34–38.**
+   Po ukończeniu głównych dowodów dla wymiarów co najmniej pięć
+   utrzymać wykład informacyjny z dokładnymi hipotezami i źródłami.
    Rozbudować kolejno rachunek form przecięcia i obramowań
    (w tym E₈ i 2E₈), geometryczne przygotowanie do twierdzenia
    o zanurzaniu dysku i roli uchwytów Cassona, konsekwencje
@@ -115,7 +133,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 26. Chirurgia geometryczna | `22-chirurgia-geometryczna.tex` | Pełny audyt zakończony 8 października; treść bez poprawek | Sprawdzone obramowania, ślad i uchwyt dualny, homologia, $\pi_1$, forma jądra i rysunki |
 | 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Pełny audyt treści zakończony 7 października; 13 października rozpoczęto nową rozbudowę o rachunek baz nad $\Z[\pi]$ i różnicę dekoracji $s/h$ | Sprawdzono seskwiliniowy rachunek przesunięcia uchwytu i przykład $C_5$ z niezerową torsją dualności. Geometryczne lematy Walla i Milnora, pełna relacja formacji oraz klasyfikacja grup $L$ pozostają jawnie zewnętrzne i wymagają dalszej rozbudowy. |
 | 28. Ciąg chirurgii | `24-ciag-chirurgii.tex` | Pełny audyt zakończony 8 października | Uściślono naturę obu strzałek przeszkody i przejście do $s$-kobordyzmu; bijekcja z $[X,G/O]$ i działanie grupy $L$ pozostają jawnymi wynikami Walla |
-| 29. Poincaré | `25-poincare.tex` | Oczekuje | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm |
+| 29. Poincaré | `25-poincare.tex` | Pełny audyt oczekuje; 14 października rozpoczęto dowód Bardena od lematu 4.2 i kontroli izomorfizmu $H_2$ | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm; dowody lematów 3.1 i 4.1, 4.3–4.4 oraz indukcji Bardena nadal do opracowania |
 | 30. Sfery Milnora | `26-sfery-milnora.tex` | Przegląd konstrukcji, klas charakterystycznych i egzotyczności zakończony 7 października; PDF 442 strony | Rozpisano homologię i niezmiennik; wzór Hirzebrucha pozostaje jawnym wejściem zewnętrznym |
 | 31. Potok Ricciego (plik 30) | `30-potok-ricciego.tex` | Sprawdzono równania ewolucyjne i poprawkę DeTurcka 7 października; pełny audyt całości i nowego rysunku z `2777149` czeka | Ewolucja skalara i pola powierzchni, zasada maksimum, DeTurck; zgodność schematu deformacji z zakresem równań i podpisem. Istnienie i jednoznaczność PDE pozostają jawnym wejściem analitycznym. |
 | 32. Poincaré w wymiarze trzy (plik 30a) | `30a-poincare-trzy.tex` | Dodano 8 października; niezależny audyt oczekuje | Dla głębokich twierdzeń Perelmana i Hamiltona zachować jawne hipotezy i źródła; sprawdzić topologiczny wniosek z wygaśnięcia oraz użycie twierdzenia Moise'a |

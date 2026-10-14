@@ -4978,3 +4978,33 @@ przepełnień wierszy. Indeksy przyjęły 112, 96 i 111 wpisów
 bez odrzuceń i ostrzeżeń; w każdym PDF są łącza do dwóch
 pozostałych tomów. W każdym logu pozostaje ostrzeżenie pdfTeX
 o zdublowanym celu `page.1` przy składzie części wstępnej.
+## 14 października 2026 — rozpoczęcie pełnych dowodów Walla i Bardena
+
+Autor wyznaczył szerszy etap dla wymiarów co najmniej pięć: celem jest
+pełne wyprowadzenie twierdzenia o przeszkodzie chirurgicznej Walla i
+klasyfikacji Bardena. Wymiary cztery mają pozostać wykładem informacyjnym.
+Zakres i kolejkę zapisano wyłącznie w `PLAN_DZIALANIA.md`.
+
+Pierwsza iteracja w rozdziale 29 dotyczy twierdzenia 2.2 Bardena.
+Porównano tekst z [oryginalną pracą Bardena](https://www.sas.rochester.edu/mth/sites/doug-ravenel/otherpapers/barden.pdf),
+zwłaszcza §§3–5. Dodano pełny dowód algebraicznego lematu 4.2:
+epimorfizm skończenie generowanych grup abelowych rozdziela jeden
+cykliczny czynnik po znalezieniu prymitywnego elementu jądra.
+Wypisano dokładny ciąg pary $(V,\partial V)$ i warunek, który musi
+spełniać końcowy kobordyzm, aby zrealizować *zadany* izomorfizm
+$H_2(P)\to H_2(Q)$. Przykład z $\Z^2\to\Z/2$ ilustruje zmianę bazy.
+
+Lematy geometryczne 3.1, 4.1, 4.3 i 4.4 oraz indukcja z §5 nadal są
+zewnętrznymi częściami dowodu; tej iteracji nie oznaczono jako
+ukończonego twierdzenia Bardena. Dotychczasowy dowód Walla również
+pozostaje niepełny dla dowolnej grupy podstawowej i wymiaru nieparzystego.
+
+### Kontrola składu
+
+Po korekcie kierunku relacji $x-\varphi(x)\in\ker i$ uruchomiono
+`buduj_tomy.ps1`. Wszystkie trzy tomy złożyły się, odsyłacze między
+tomami ustabilizowały się, a indeksy przyjęły odpowiednio 112, 96
+i 111 haseł bez odrzuceń. Sprawdzono tekst wynikowy i wygląd strony 71
+tomu III z nowym lematem. Logi nie wskazują brakujących odsyłaczy ani
+błędów składu; w tomie I pozostają wcześniejsze ostrzeżenia o zmianie
+położenia trzech obiektów pływających. Zaktualizowano PDF-y tomów.
