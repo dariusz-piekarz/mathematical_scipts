@@ -14,6 +14,12 @@ i organizacja plików w [README.md](README.md).
 
 1. Doprowadzić wykład wymiarów co najmniej pięć do pełnego dowodu
    twierdzenia Walla o przeszkodzie chirurgicznej (rozdziały 27–28).
+   Rozpisano wersję $s$ w przypadkach parzystym $n\geq6$ i
+   nieparzystym $n\geq5$, wraz z bazami nad $\Z[\pi]$,
+   formacjami i ciągiem chirurgii. Głębokie lematy geometryczne
+   Walla nadal są jawnymi wejściami zewnętrznymi; przed oznaczeniem
+   dowodu jako samodzielnie pełnego trzeba je wyprowadzić i przeprowadzić
+   końcowy audyt nowego tekstu.
    W rozdziale 29 rozpisano oba twierdzenia Bardena (2.2 i 2.3)
    wraz z ich modelami oraz jawnie wskazanymi wynikami wejściowymi;
    kontrola składu trzech tomów jest zakończona, pełny audyt całego
@@ -50,19 +56,18 @@ Przed rozbudową porównać istniejący tekst z oryginalnymi źródłami;
 głębokiego wyniku użytego z zewnątrz nie nazywać własnym pełnym dowodem.
 
 1. **Twierdzenie Walla o przeszkodzie chirurgicznej — rozdziały 27–28.**
-   Celem jest pełny dowód twierdzenia o przeszkodzie, nie tylko opis
-   mechanizmu i zastosowań. Rozwinąć obecny dowód dostateczności dla
-   grupy trywialnej i wymiaru parzystego w kierunku pełnych hipotez:
-   chirurgii poniżej
-   środka, realizacji obramowanych immersji i usuwania przecięć,
-   przygotowania kobordyzmu, bazowanych jąder nad pierścieniem grupowym
-   oraz kontroli torsji Whiteheada. Osobno rozłożyć przypadek
-   nieparzysty na formacje i relacje stabilne; sprawdzić wersję
-   relatywną oraz różnicę między dekoracjami s i h. Przy każdym
-   kroku wskazać, co jest dowiedzione w tekście, a co pozostaje
-   lematem Walla lub Milnora z dokładnymi założeniami i źródłem.
-   Ostatnie oznaczenie „pełny dowód” jest dopuszczalne dopiero po
-   wyprowadzeniu tych lematów i sprawdzeniu wszystkich przypadków.
+   Rozpisano zakres twierdzeń 5.6 i 6.4 Walla dla wszystkich grup
+   podstawowych i wymiarów $n\geq5$: wersję parzystą nad
+   $\Z[\pi]$, preferowane bazy i prostą torsję, wersję nieparzystą
+   przez $SU/RU$ i ruchy $T1$--$T4$, a także przypadek $n=5$.
+   W rozdziale 28 wskazano oddzielnie realizację przez twierdzenia
+   5.8 i 6.5 oraz zakres gładkiego $s$-kobordyzmu. Rachunki
+   i przejścia algebraiczne są rozpisane, natomiast chirurgie poniżej
+   środka, reprezentację sfer, przygotowanie kobordyzmu oraz część
+   relacji $SU/RU$ przyjęto jako jawne lematy Walla z hipotezami
+   i źródłem. Przed oznaczeniem całości jako samodzielnie pełnego
+   dowodu pozostaje wyprowadzenie tych lematów i końcowy audyt;
+   porównanie dekoracji $s/h$ pozostaje osobnym wynikiem zewnętrznym.
 2. **Klasyfikacja Bardena — rozdział 29.** Rozpisano twierdzenie 2.2
    o realizacji zadanego izomorfizmu $H_2$ oraz twierdzenie 2.3
    o kanonicznych modelach i pełności $(H_2,\iota)$. Dowody obejmują
@@ -134,8 +139,8 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 24. h-kobordyzm | `20-h-kobordyzm.tex` | Audyt i uzupełnienia zakończone 9 października; skład po scaleniu do `2777149`: 503 strony | Rozpisano wymianę 1→3, dopełnienia w kowymiarze 2, wstęgi i homologię wyciętej sfery. Dokładne założenia obramowanego lematu Whitneya podano jako jawny wynik zewnętrzny. Trzy rysunki, odsyłacze i indeks sprawdzone. |
 | 25. Torsja i s-kobordyzm | `21-torsja-s-kobordyzm.tex` | Pełny audyt i uzupełnienia zakończone 11 października; PDF 505 stron | Poprawiono bazy i konwencje macierzowe, dowód niezależności kontrakcji, zakres lematu Whitneya, obramowania i dualność w realizacji torsji. Strony 390–401, oba schematy, odsyłacze i indeks sprawdzone; głębokie wejścia zewnętrzne wskazano dokładnie. |
 | 26. Chirurgia geometryczna | `22-chirurgia-geometryczna.tex` | Pełny audyt zakończony 8 października; treść bez poprawek | Sprawdzone obramowania, ślad i uchwyt dualny, homologia, $\pi_1$, forma jądra i rysunki |
-| 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Pełny audyt treści zakończony 7 października; 13 października rozpoczęto nową rozbudowę o rachunek baz nad $\Z[\pi]$ i różnicę dekoracji $s/h$ | Sprawdzono seskwiliniowy rachunek przesunięcia uchwytu i przykład $C_5$ z niezerową torsją dualności. Geometryczne lematy Walla i Milnora, pełna relacja formacji oraz klasyfikacja grup $L$ pozostają jawnie zewnętrzne i wymagają dalszej rozbudowy. |
-| 28. Ciąg chirurgii | `24-ciag-chirurgii.tex` | Pełny audyt zakończony 8 października | Uściślono naturę obu strzałek przeszkody i przejście do $s$-kobordyzmu; bijekcja z $[X,G/O]$ i działanie grupy $L$ pozostają jawnymi wynikami Walla |
+| 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Pełny audyt starszej treści zakończony 7 października; 14 października rozpisano oba przypadki $n\geq5$ i sprawdzono nowy skład | Dodano rachunek baz i torsji nad $\Z[\pi]$, $SU/RU$, ruchy $T1$--$T4$ i osobny wymiar pięć. Geometryczne lematy Walla i relacja formacji pozostają jawnie zewnętrzne; samodzielny dowód i pełny audyt całego rozdziału pozostają otwarte. |
+| 28. Ciąg chirurgii | `24-ciag-chirurgii.tex` | Pełny audyt starszej treści zakończony 8 października; próg $n\geq5$ sprawdzony 14 października | Uściślono naturę obu strzałek przeszkody, realizację przez twierdzenia 5.8 i 6.5 oraz przejście do $s$-kobordyzmu; bijekcja z $[X,G/O]$ i działanie grupy $L$ pozostają jawnymi wynikami Walla |
 | 29. Poincaré | `25-poincare.tex` | Pełny audyt rozdziału oczekuje; 14 października rozpisano twierdzenia 2.2 i 2.3 Bardena | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm; lematy 3.1 i 4.1–4.4, indukcja, modele $M_k,X_j$, formy wiązania i przykłady spin/niespin; skład trzech tomów i odsyłacze sprawdzone |
 | 30. Sfery Milnora | `26-sfery-milnora.tex` | Przegląd konstrukcji, klas charakterystycznych i egzotyczności zakończony 7 października; PDF 442 strony | Rozpisano homologię i niezmiennik; wzór Hirzebrucha pozostaje jawnym wejściem zewnętrznym |
 | 31. Potok Ricciego (plik 30) | `30-potok-ricciego.tex` | Sprawdzono równania ewolucyjne i poprawkę DeTurcka 7 października; pełny audyt całości i nowego rysunku z `2777149` czeka | Ewolucja skalara i pola powierzchni, zasada maksimum, DeTurck; zgodność schematu deformacji z zakresem równań i podpisem. Istnienie i jednoznaczność PDE pozostają jawnym wejściem analitycznym. |

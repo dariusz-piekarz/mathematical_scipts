@@ -5070,3 +5070,51 @@ bez odrzuceń. PDF-y trzech tomów zaktualizowano. Obejrzano strony
 z dowodami i modelami Bardena; oznaczenia, wzory oraz łamanie stron
 są czytelne. Odsyłacze między tomami zostały ustabilizowane
 w drugim przebiegu.
+
+## 14 października 2026 — rozszerzenie twierdzenia Walla na $n\geq5$
+
+Porównano rozdziały 27–28 z
+[oryginałem Walla](https://www.maths.ed.ac.uk/~v1ranick/books/scm.pdf),
+zwłaszcza twierdzeniami 5.6, 6.4, 5.8, 6.5 oraz 10.4, 10.5 i 10.8.
+Twierdzenie o przeszkodzie dla parzystych $n=2k\geq6$ rozpisano
+nad $\Lambda=\Z[\pi]$: preferowana baza jądra, prosta dualność,
+stabilizacja formy, dwa ciągi dokładne jednej chirurgii, zanik
+torsji Whiteheada przy usunięciu pary oraz lagranżjan na brzegu
+przygotowanego kobordyzmu. Wersję nieparzystą $n=2k+1\geq5$
+opisano przez $SU/RU$: zdefiniowano podgrupy $TU,UU$, macierz
+dwóch lagranżjanów, ruchy $T1$--$T4$, ich realizację geometryczną,
+kryterium zerowej klasy i naturalność. Osobno wyjaśniono, czemu
+wymiar pięć mieści się w twierdzeniu 6.4, choć twierdzenie
+realizacyjne 6.5 zaczyna się od wymiaru siedem.
+
+W rozdziale 28 próg zmieniono na $n\geq5$: przy $n=5$ działanie
+$L_6^s$ używa parzystego twierdzenia 5.8 Walla, a gładki
+$s$-kobordyzm dotyczy wtedy śladu wymiaru sześć. Rozdzielono
+geometryczne twierdzenia realizacyjne od kryterium zaniku
+przeszkody. Wersję z dekoracją $h$ pozostawiono osobnym wynikiem
+zewnętrznym, ponieważ uwagi §17D Walla o porównaniu dekoracji
+nie są pełnym dowodem tej wersji.
+
+Dowód przedstawiony w tekście jest szczegółowym wyprowadzeniem
+z jasno wskazanych twierdzeń geometrycznych Walla: 1.2, 1.4,
+2.3–2.6, 5.1–5.2, 5.5, 5.7 i 6.1–6.3. Nie wyprowadzono ich
+wszystkich od podstaw; dlatego nie oznaczono rozdziału jako
+samodzielnie pełnego dowodu. Algebraiczne utożsamienie opisu
+przez formacje z $SU/RU$ wskazano osobno za Ranickim.
+
+Niezależny audyt nowego tekstu względem §§5–6 i 10 Walla
+potwierdził hipotezy twierdzeń 5.6 i 6.4, zakres $n=5$,
+macierze ruchów $T3$–$T4$ oraz rachunek baz i torsji.
+Poprawiono dwa znalezione skróty: prosta zmiana bazy
+rozkłada się po stabilizacji na macierze elementarne,
+jednostki $\pm g$ i permutacje, a źródłem bijekcji
+$\mathcal N_{\mathrm{DIFF}}(X)\cong[X,G/O]$ są łącznie
+stwierdzenia 10.1–10.2 i lemat 10.6 Walla.
+
+Po tych korektach `buduj_tomy.ps1` złożył wszystkie trzy tomy
+w dwóch przebiegach. Logi nie wykazały błędów, przepełnionych
+wierszy ani brakujących odsyłaczy. Indeksy przyjęły 112, 96
+i 111 wpisów, bez odrzuceń. PDF-y tomów zaktualizowano;
+obejrzano wybrane strony 55–69 i 71–73 tomu III, w tym macierze,
+ruchy $T1$–$T4$, uwagę o wymiarze pięć oraz rysunek ciągu
+chirurgii. Łamanie wzorów i oznaczenia są czytelne.
