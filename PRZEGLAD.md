@@ -5008,3 +5008,65 @@ i 111 haseł bez odrzuceń. Sprawdzono tekst wynikowy i wygląd strony 71
 tomu III z nowym lematem. Logi nie wskazują brakujących odsyłaczy ani
 błędów składu; w tomie I pozostają wcześniejsze ostrzeżenia o zmianie
 położenia trzech obiektów pływających. Zaktualizowano PDF-y tomów.
+
+## 14 października 2026 — pełne twierdzenia 2.2 i 2.3 Bardena
+
+Po uwadze autora, że potrzebne jest całe twierdzenie Bardena, rozbudowano
+rozdział 29 o oba główne wyniki z [oryginalnej pracy](https://www.sas.rochester.edu/mth/sites/doug-ravenel/otherpapers/barden.pdf).
+Twierdzenie 2.2 realizuje **zadany** izomorfizm $H_2$ zachowujący formę
+wiązania i $w_2$; twierdzenie 2.3 podaje kanoniczną listę
+$X_j\#M_{k_1}\#\cdots\#M_{k_s}$ i pełność pary $(H_2,\iota)$.
+
+Dowód 2.2 rozpisuje: warunek kobordyzmu z formy wiązania i liczby
+$w_2w_3$; chirurgię upraszczającą $\pi_1$ i $H_2$; lematy 4.1–4.4
+o reprezentowaniu klas $H_3$, rozdzieleniu generatora, kontrolowanym
+powiększaniu $H_2$ i usunięciu względnego $H_3$; następnie indukcję
+zachowującą podgrupę różnic $a-\varphi(a)$ i przejście przez
+sześciowymiarowy $h$-kobordyzm. W lemacie 4.3 relację meridianu
+wyprowadzono z obciętego łańcucha względnego; w lemacie 4.4 użyto
+standardowego plumbing dwóch $3$-sfer zamiast zakładać wcześniej
+wniosek Poincarégo w wymiarze pięć.
+
+Dowód 2.3 buduje modele przez sklejenie wiązek dysków nad $S^2$,
+podaje macierze działań na brzegach i oblicza $H_2$ oraz $w_2$.
+Formy wiązania wyznaczono osobno z lematu F Walla–Bardena i
+klasyfikacji form z lematu E, nie z samego ciągu Mayera–Vietorisa.
+Normalizacja algebraiczna uwzględnia samotny składnik $\Z/2$,
+niealternujące pary, mieszany przypadek rzędów $q,2q$, wartości $w_2$
+na części wolnej i jednoznaczność czynników niezmienniczych.
+Przykłady $M_2/X_1$ i $M_\infty/X_\infty$ pokazują rolę $w_2$.
+
+Jawne wyniki wejściowe obejmują obliczenia grup kobordyzmu Thoma
+i Nowikowa, normalną postać Walla, twierdzenia Whiteheada i Haefligera
+o reprezentowaniu klas przez sfery, obramowany trik Whitneya Milnora,
+realizację automorfizmów brzegów przez Walla z 1964 roku oraz twierdzenie
+Smale'a o $h$-kobordyzmie. Ich założeń nie ukryto pod nazwą własnego
+dowodu. Niezależny przegląd kroków 2.2–2.3 wykrył i pozwolił poprawić
+dwa błędy zmiany bazy: jednoczesne wartości $w_2$ na torsji i części
+wolnej oraz utratę ortogonalności przy samotnym generatorze $\Z/2$.
+Ponowna kontrola modeli doprecyzowała istnienie sklejenia $X_{-1}$:
+identyczność i sprzężenie zespolone na składnikach brzegu składa się
+przez lemat 2 Walla. W dowodzie 2.3 rozszczepienie mieszanej pary
+rzędów $q,2q$ zapisano przed użyciem bazy z samotnym generatorem $\Z/2$.
+
+Osobno sprawdzono zmiany autora w rozdziale 1. Rozwinięty rachunek
+macierzy Jacobiego poprawnie odczytuje współczynniki różniczki przez
+działanie na funkcje współrzędnych. W przykładzie niewymiernej prostej
+na torusie rachunek różniczki dowodzi immersji, argument z zasadą
+szufladkową wytwarza ciąg $q_N\to\infty$ z $\gamma(q_N)\to\gamma(0)$,
+a wielokrotności małego przesunięcia dowodzą gęstości obrazu.
+Poprawiono przy tym dwa redundantne zwroty „zanurzenie włożone” oraz
+„injektywną immersję $d\iota_p$” na „injektywną różniczkę $d\iota_p$”.
+Definicje immersji, submersji i zanurzenia zachowują dotychczasowe
+znaczenie. W nowym tekście Bardena ujednolicono „osadzone” sfery
+i okręgi z projektowym terminem „zanurzone”, bez dodatkowego
+odsyłacza do rozdziału 1.
+
+Po poprawkach uruchomiono `buduj_tomy.ps1`: trzy tomy złożyły się
+w dwóch przebiegach, bez błędów, przepełnionych wierszy i brakujących
+odsyłaczy. Indeksy przyjęły odpowiednio 112, 96 i 111 wpisów,
+bez odrzuceń. PDF-y trzech tomów zaktualizowano. Obejrzano strony
+57–61 tomu I z nowym przykładem torusa i strony 72–79 tomu III
+z dowodami i modelami Bardena; oznaczenia, wzory oraz łamanie stron
+są czytelne. Odsyłacze między tomami zostały ustabilizowane
+w drugim przebiegu.

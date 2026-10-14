@@ -12,9 +12,12 @@ i organizacja plików w [README.md](README.md).
 
 ## Bieżący zakres i kolejność
 
-1. Doprowadzić wykład wymiarów co najmniej pięć do pełnych dowodów
-   twierdzenia Walla o przeszkodzie chirurgicznej (rozdziały 27–28)
-   i klasyfikacji Bardena (rozdział 29). Rozbudowy sfer Milnora
+1. Doprowadzić wykład wymiarów co najmniej pięć do pełnego dowodu
+   twierdzenia Walla o przeszkodzie chirurgicznej (rozdziały 27–28).
+   W rozdziale 29 rozpisano oba twierdzenia Bardena (2.2 i 2.3)
+   wraz z ich modelami oraz jawnie wskazanymi wynikami wejściowymi;
+   kontrola składu trzech tomów jest zakończona, pełny audyt całego
+   rozdziału pozostaje w kolejce. Rozbudowy sfer Milnora
    (rozdział 30) i twierdzeń czterowymiarowych (rozdziały 34–38)
    kontynuować według zakresu poniżej; wymiary cztery pozostają
    wykładem informacyjnym. Zwykła iteracja obejmuje jeden rozdział,
@@ -60,15 +63,15 @@ głębokiego wyniku użytego z zewnątrz nie nazywać własnym pełnym dowodem.
    lematem Walla lub Milnora z dokładnymi założeniami i źródłem.
    Ostatnie oznaczenie „pełny dowód” jest dopuszczalne dopiero po
    wyprowadzeniu tych lematów i sprawdzeniu wszystkich przypadków.
-2. **Klasyfikacja Bardena — rozdział 29.** Wyprowadzić twierdzenie 2.2
-   Bardena o realizacji zadanego izomorfizmu $H_2$ zachowującego formę
-   wiązania i $w_2$. Rozpisać kolejno: ograniczenia algebraiczne
-   niezmienników i istnienie kobordyzmu; uproszczenie jego $\pi_1$
-   i $H_2$; lematy 4.1–4.4 o sferach osadzonych, zmianie $H_2$
-   i usunięciu $H_3$; indukcję realizującą zadany izomorfizm;
-   przejście do $h$-kobordyzmu wymiaru sześć. Dodać przykłady
-   porównujące przypadki spin i niespin oraz precyzyjnie oddzielić
-   ewentualne wykorzystane zewnętrzne twierdzenia o osadzaniu.
+2. **Klasyfikacja Bardena — rozdział 29.** Rozpisano twierdzenie 2.2
+   o realizacji zadanego izomorfizmu $H_2$ oraz twierdzenie 2.3
+   o kanonicznych modelach i pełności $(H_2,\iota)$. Dowody obejmują
+   ograniczenia algebraiczne, kobordyzm, chirurgię na $\pi_1$ i $H_2$,
+   lematy 4.1–4.4, indukcję, sześciowymiarowy $h$-kobordyzm,
+   konstrukcje modeli oraz porównanie spin/niespin. Jawne wejścia
+   zewnętrzne to wyniki Thoma, Nowikowa, Walla, Whiteheada,
+   Haefligera, Milnora i Smale'a. Skład i odsyłacze między tomami
+   sprawdzono; pełny audyt całego rozdziału pozostaje otwarty.
 3. **Sfery Milnora — rozdział 30.**
    Rozwinąć konstrukcję przez sklejenie wiązek nad sferą
    czterowymiarową: rachunek klas Eulera i Pontriagina,
@@ -105,7 +108,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 
 | Numer i temat | Plik w `tex/rozdzialy/` | Stan przeglądu | Kontrola / pozostały zakres |
 |---|---|---|---|
-| 1. Rozmaitości | `01-rozmaitosci.tex` | 13 października zakończono audyt dodatków o wiązkach wektorowych i kostycznych; 14 października ponownie sprawdzono §1.10 | Skontrolowano sklejanie wiązek, funkcje przejścia, sekcje, sumę i wiązkę dualną oraz przykład Möbiusa. Wcześniej sprawdzono definicję i izomorfizm wiązek, przestrzeń całkowitą, wiązkę tautologiczną, atlasy `TM` i `T*M`, diagramy oraz odsyłacze. |
+| 1. Rozmaitości | `01-rozmaitosci.tex` | 13 października zakończono audyt dodatków o wiązkach wektorowych i kostycznych; 14 października ponownie sprawdzono §1.10 oraz nowe objaśnienie Jacobiego i nawinięcia niewymiernego | Skontrolowano sklejanie wiązek, funkcje przejścia, sekcje, sumę i wiązkę dualną, przykład Möbiusa, rachunek różniczki i przykład injektywnej immersji o gęstym obrazie. Wcześniej sprawdzono definicję i izomorfizm wiązek, przestrzeń całkowitą, wiązkę tautologiczną, atlasy `TM` i `T*M`, diagramy oraz odsyłacze. |
 | 2. Pola wektorowe | `02-pola-wektorowe.tex` | Audyt dodatków zakończony 6 października; PDF 387 stron | Sprawdzone powiązanie z brzegiem, przykład przepływu jednostronnego, bibliografia i rysunki |
 | 3. Algebra tensorowa | `03-algebra-tensorowa.tex` | Audyt z 6 października; notacja poprawiona 9 października | Formalne generatory par zapisano jako [(v,w)]; zakres tej poprawki nie obejmuje ponownego audytu całego rozdziału. |
 | 4. Grassmanniany, Clifford i spinory | `04-grassmanniany-clifford-spinory.tex` | Wcześniejszy audyt z 6 października; 8 października dodano grupę Pin | Sprawdzono nakrycie $\operatorname{Pin}(n)\to O(n)$ i stronę 100 PDF |
@@ -133,7 +136,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 26. Chirurgia geometryczna | `22-chirurgia-geometryczna.tex` | Pełny audyt zakończony 8 października; treść bez poprawek | Sprawdzone obramowania, ślad i uchwyt dualny, homologia, $\pi_1$, forma jądra i rysunki |
 | 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Pełny audyt treści zakończony 7 października; 13 października rozpoczęto nową rozbudowę o rachunek baz nad $\Z[\pi]$ i różnicę dekoracji $s/h$ | Sprawdzono seskwiliniowy rachunek przesunięcia uchwytu i przykład $C_5$ z niezerową torsją dualności. Geometryczne lematy Walla i Milnora, pełna relacja formacji oraz klasyfikacja grup $L$ pozostają jawnie zewnętrzne i wymagają dalszej rozbudowy. |
 | 28. Ciąg chirurgii | `24-ciag-chirurgii.tex` | Pełny audyt zakończony 8 października | Uściślono naturę obu strzałek przeszkody i przejście do $s$-kobordyzmu; bijekcja z $[X,G/O]$ i działanie grupy $L$ pozostają jawnymi wynikami Walla |
-| 29. Poincaré | `25-poincare.tex` | Pełny audyt oczekuje; 14 października rozpoczęto dowód Bardena od lematu 4.2 i kontroli izomorfizmu $H_2$ | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm; dowody lematów 3.1 i 4.1, 4.3–4.4 oraz indukcji Bardena nadal do opracowania |
+| 29. Poincaré | `25-poincare.tex` | Pełny audyt rozdziału oczekuje; 14 października rozpisano twierdzenia 2.2 i 2.3 Bardena | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm; lematy 3.1 i 4.1–4.4, indukcja, modele $M_k,X_j$, formy wiązania i przykłady spin/niespin; skład trzech tomów i odsyłacze sprawdzone |
 | 30. Sfery Milnora | `26-sfery-milnora.tex` | Przegląd konstrukcji, klas charakterystycznych i egzotyczności zakończony 7 października; PDF 442 strony | Rozpisano homologię i niezmiennik; wzór Hirzebrucha pozostaje jawnym wejściem zewnętrznym |
 | 31. Potok Ricciego (plik 30) | `30-potok-ricciego.tex` | Sprawdzono równania ewolucyjne i poprawkę DeTurcka 7 października; pełny audyt całości i nowego rysunku z `2777149` czeka | Ewolucja skalara i pola powierzchni, zasada maksimum, DeTurck; zgodność schematu deformacji z zakresem równań i podpisem. Istnienie i jednoznaczność PDE pozostają jawnym wejściem analitycznym. |
 | 32. Poincaré w wymiarze trzy (plik 30a) | `30a-poincare-trzy.tex` | Dodano 8 października; niezależny audyt oczekuje | Dla głębokich twierdzeń Perelmana i Hamiltona zachować jawne hipotezy i źródła; sprawdzić topologiczny wniosek z wygaśnięcia oraz użycie twierdzenia Moise'a |
