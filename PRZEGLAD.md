@@ -24,6 +24,14 @@ obliczona przez lokalne przedłużenie, od niego nie zależy.
 Pełny skład trzech tomów zakończył się powodzeniem; logi nie zawierają
 nierozwiązanych odsyłaczy, a wszystkie trzy indeksy mają `0 rejected`.
 Tekst nowego przykładu i uwagi sprawdzono w PDF tomu I.
+Uwagę i przykład sfery doprecyzowano na prośbę autora: w przykładzie
+sprawdzamy styczność pola bez różniczkowania funkcji; $x,y,z$ są
+ograniczeniami współrzędnych $\R^3$, a $X_p=(-y,x,0)$ jest
+gładkim, stycznym wektorem dla każdego $p\in S^2$. Wskazano również
+lokalny zapis w mapie górnej półsfery.
+Po tym doprecyzowaniu tom I złożono dwukrotnie w `build/tomy`;
+log nie zgłasza nierozwiązanych odsyłaczy. PDF-u w katalogu głównym
+nie nadpisywano, ponieważ miał równoległe zmiany użytkownika.
 
 ## Różniczka i zapis rozdziału 1 (2026-10-15)
 
