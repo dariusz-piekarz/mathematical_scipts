@@ -5155,3 +5155,44 @@ i 111 wpisów, bez odrzuceń. PDF-y tomów zaktualizowano;
 obejrzano wybrane strony 55–69 i 71–73 tomu III, w tym macierze,
 ruchy $T1$–$T4$, uwagę o wymiarze pięć oraz rysunek ciągu
 chirurgii. Łamanie wzorów i oznaczenia są czytelne.
+
+## 15 października 2026 — derywacje globalne i punktowe w rozdziale 2
+
+Przeredagowano początek §2.1, aby zachować kolejność konstrukcji:
+pole $X$ daje operator $D_X(f)(p)=X_p(f)$ o wartościach funkcyjnych,
+a ewaluacja dowolnej derywacji globalnej $D$ w punkcie $p$ daje
+derywację punktową $v_p(f)=D(f)(p)$, czyli wektor styczny.
+Rozdzielono funkcje $X^i$ od liczb $X^i(p)$ i dodano przykład
+$D=x^2\,\dd/\dd x$. Uporządkowano też dowód identyfikacji
+derywacji globalnych z polami, rozpoczynając od kierunku $X\mapsto D_X$.
+Po pytaniu autora dopisano przy definicji pola, że $X_p:=X(p)$ jest
+wektorem stycznym w $p$, a $X_p(f)$ jego działaniem na funkcję.
+W przykładzie okręgu rozwinięto następnie rachunek zmiany bazy:
+reguła łańcuchowa dla $F\circ\varphi^{-1}$ daje
+$(\dd\varphi^{-1})_t(\partial_t|_t)
+=-r\sin t\,\partial_u|_p+r\cos t\,\partial_v|_p=X_p$.
+Wyjaśniono, że zapis parą współczynników ukrywa bazę otaczającej
+$\R^2$, a samo $\partial_u|_p$ na ogół nie jest styczne do okręgu.
+Po tej zmianie uruchomiono `buduj_tomy.ps1`: trzy tomy i indeksy
+złożyły się poprawnie w dwóch przebiegach, a PDF-y tomów
+zaktualizowano. Sprawdzono tekst przykładu na stronach 60--61
+tomu I; krótki akapit o $\partial_u|_p$ pozostaje w całości
+na jednej stronie. Log nie wykazał nowych ostrzeżeń w rozdziale 2.
+Uzasadnieniem jest wcześniejsza niejasność typów wyników i kolejności
+użycia oznaczeń $D_X$, $D$ oraz $v_p$.
+
+Tom I złożono przez `latexmk` po dodaniu Perla z PortableGit do `PATH`.
+Skład zakończył się bez błędów; tekst nowej sekcji sprawdzono w PDF.
+W logu pozostały wcześniejsze ostrzeżenia o pudełkach w rozdziale 1,
+bez nowych ostrzeżeń dotyczących rozdziału 2.
+Po dopisaniu objaśnienia $X_p$ uruchomiono pełny `buduj_tomy.ps1`:
+wszystkie trzy tomy przeszły dwa przebiegi, indeksy sprawdzono,
+a PDF-y tomów skopiowano do katalogu głównego. W logach nie ma
+błędów ani nierozwiązanych odsyłaczy. Nadal występuje wcześniejsze
+ostrzeżenie `Overfull \hbox` przy długim wzorze w rozdziale 1,
+wiersze 5617--5618; nie dotyczy ono zmiany w rozdziale 2.
+Na prośbę autora złożono też dokument zbiorczy przez `latexmk`:
+547 stron, indeks 319 wpisów przyjętych i 0 odrzuconych.
+Nie było błędów ani brakujących odsyłaczy; PDF zbiorczy skopiowano
+z `build/sklad` do katalogu głównego. Pozostały ostrzeżenia
+o łamaniu wierszy, w tym wymieniony `Overfull \hbox` z rozdziału 1.
