@@ -9,6 +9,19 @@ wersji wskazanej w danym wpisie. Audyt 18 rozdziałów nie obejmuje późniejszy
 dodatków autora. Od 5 października źródła są w `tex/rozdzialy/`;
 pliki główne tylko ustalają ich kolejność.
 
+## Różniczka i zapis rozdziału 1 (2026-10-15)
+
+Do definicji różniczki odwzorowania dodano równoważny opis przez
+prędkości krzywych: $dF_p(\gamma'(0))=(F\circ\gamma)'(0)$.
+W przykładzie grupy ortogonalnej wskazano krzywą $A+tH$ w przestrzeni
+macierzy, która daje użyty rachunek. Treść wcześniejszych dowodów
+i przykładów zachowano. W całym rozdziale 1 zamieniono 278 krótkich
+bloków matematycznych na zapis w tekście, bez zmiany ich treści.
+Uzasadniono niezależność różniczki od krzywej reprezentującej wektor
+styczny przez porównanie działania otrzymanych derywacji na funkcjach.
+W 53 wystąpieniach matematyki w tekście zamieniono `\qquad` na `\ `.
+Na prośbę autora nie wykonywano składu PDF w tej iteracji.
+
 ## Podział na trzy tomy (2026-10-13)
 
 Zachowano wspólne źródła rozdziałów i nie zmieniono ich numeracji ani etykiet.
