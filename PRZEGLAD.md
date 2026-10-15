@@ -9,6 +9,22 @@ wersji wskazanej w danym wpisie. Audyt 18 rozdziałów nie obejmuje późniejszy
 dodatków autora. Od 5 października źródła są w `tex/rozdzialy/`;
 pliki główne tylko ustalają ich kolejność.
 
+## Przykład pola stycznego do okręgów w rozdziale 2 (2026-10-15)
+
+Do przykładu $X=-v\partial_u+u\partial_v$ dodano rachunek na okręgu
+$S_r^1$ w lokalnej mapie kątowej. Pokazano, że $X^1=1$ oraz
+$(f|_{S_r^1})\circ\varphi^{-1}=r^2$ dla $f(u,v)=u^2+v^2$,
+stąd $X(f|_{S_r^1})=0$. Rachunek $X(u|_{S_r^1})=-r\sin t$
+pokazuje, że zerowanie pochodnej tej funkcji nie oznacza znikania pola.
+Przy przykładzie pola na sferze dodano rozróżnienie między rachunkiem
+w mapie rozmaitości a wykorzystaniem współrzędnych otaczającej
+$\R^N$ dla podrozmaitości. Wskazano, jak sprawdza się styczność
+bez mapy oraz dlaczego pochodna funkcji na podrozmaitości,
+obliczona przez lokalne przedłużenie, od niego nie zależy.
+Pełny skład trzech tomów zakończył się powodzeniem; logi nie zawierają
+nierozwiązanych odsyłaczy, a wszystkie trzy indeksy mają `0 rejected`.
+Tekst nowego przykładu i uwagi sprawdzono w PDF tomu I.
+
 ## Różniczka i zapis rozdziału 1 (2026-10-15)
 
 Do definicji różniczki odwzorowania dodano równoważny opis przez
