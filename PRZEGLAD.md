@@ -5211,3 +5211,12 @@ Następnie `buduj_tomy.ps1` złożył wszystkie trzy tomy w dwóch przebiegach,
 sprawdził indeksy i zaktualizował PDF-y. W logu tomu I nie ma błędów
 ani nowych ostrzeżeń dotyczących rozdziału 2; pozostały wcześniejsze
 ostrzeżenia o łamaniu wierszy w rozdziale 1.
+
+Po uwadze autora dopisano w przykładzie 2.1.3 zastosowanie
+$(\dd\varphi)_p$ do równości
+$X_p=(\dd\varphi^{-1})_t(\partial_t|_t)$.
+Ponieważ różniczki mapy i jej odwrotności składają się do identyczności,
+otrzymujemy $(\dd\varphi)_p(X_p)=\partial_t|_t$, a więc współczynnik
+pola w mapie kątowej wynosi $X^1(t)=1$.
+Ponowny `buduj_tomy.ps1` złożył trzy tomy, sprawdził indeksy i zaktualizował
+PDF-y. W tomie I wzór mieści się w przykładzie bez nowych ostrzeżeń składu.
