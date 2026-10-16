@@ -5233,3 +5233,15 @@ zmiany współrzędnej $y=2x$.
 Pełny `buduj_tomy.ps1` zakończył się poprawnie w dwóch przebiegach,
 sprawdził indeksy i zaktualizował PDF-y tomów. Uwaga jest czytelna w tomie I;
 nie pojawiły się nowe ostrzeżenia składu w rozdziale 2.
+## 16 października 2026 — skrócenie intuicji pochodnej w kierunku pola
+
+W rozdziale 2 zastąpiono cztery powtarzające się podpunkty między opisem
+pola a sekcją o nawiasie Liego jednym akapitem. Przykład wiatru i temperatury
+łączy teraz znaczenie $X(f)(p)$ z pochodną $f$ wzdłuż krzywej o wektorze
+początkowym $X_p$. Zachowano wcześniejsze definicje i etykiety. Tom I
+złożono przez `latexmk`; tekst i przejście do nawiasu Liego sprawdzono
+w PDF. Pełny `buduj_tomy.ps1` zakończył się po dwóch przebiegach:
+odsyłacze między tomami ustabilizowały się, indeksy miały zero odrzuconych
+wpisów, a PDF-y tomów zaktualizowano. W tomie I nie ma ostrzeżeń o
+brakujących odsyłaczach ani nowych ostrzeżeń w rozdziale 2; pozostały
+wcześniejsze ostrzeżenia o łamaniu w rozdziale 1.
