@@ -5220,3 +5220,16 @@ otrzymujemy $(\dd\varphi)_p(X_p)=\partial_t|_t$, a więc współczynnik
 pola w mapie kątowej wynosi $X^1(t)=1$.
 Ponowny `buduj_tomy.ps1` złożył trzy tomy, sprawdził indeksy i zaktualizował
 PDF-y. W tomie I wzór mieści się w przykładzie bez nowych ostrzeżeń składu.
+
+## 16 października 2026 — zmiana mapy dla całego pola
+
+Po prośbie autora dodano przy lokalnym zapisie pola w rozdziale 2 uwagę
+o transformacji współczynników $X_\psi^j(p)=\sum_i
+(\partial y^j/\partial x^i)(p)X_\varphi^i(p)$ na przecięciu map.
+Wynika ona z reguły transformacji bazy wektorów stycznych z rozdziału 1.
+Podano także równoważny wzór dla reprezentantów całego pola w obrazach
+map, $\widehat X_\psi(G(u))=DG(u)\widehat X_\varphi(u)$, oraz przykład
+zmiany współrzędnej $y=2x$.
+Pełny `buduj_tomy.ps1` zakończył się poprawnie w dwóch przebiegach,
+sprawdził indeksy i zaktualizował PDF-y tomów. Uwaga jest czytelna w tomie I;
+nie pojawiły się nowe ostrzeżenia składu w rozdziale 2.
