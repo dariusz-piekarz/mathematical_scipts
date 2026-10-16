@@ -5196,3 +5196,18 @@ Na prośbę autora złożono też dokument zbiorczy przez `latexmk`:
 Nie było błędów ani brakujących odsyłaczy; PDF zbiorczy skopiowano
 z `build/sklad` do katalogu głównego. Pozostały ostrzeżenia
 o łamaniu wierszy, w tym wymieniony `Overfull \hbox` z rozdziału 1.
+
+## 16 października 2026 — reguła łańcucha w przykładzie okręgu
+
+W przykładzie 2.1.3 zastąpiono określenie „reguła łańcuchowa” przez
+„reguła łańcucha”. Rachunek pokazuje teraz jawnie, że obraz
+$\partial_t|_t$ przez różniczkę $\varphi^{-1}$ działa na ograniczenie
+$F|_{S_r^1}$ jako pochodna $(F\circ\varphi^{-1})'(t)$. Dopiero z tej
+równości działań na funkcje wynika zapis wektora w bazie otaczającej
+$\R^2$. Dopisano, że funkcje gładkie na okręgu mają lokalne przedłużenia,
+więc porównanie działań wystarcza do równości wektorów stycznych.
+Tom I złożono przez `latexmk` i sprawdzono tekst przykładu w PDF.
+Następnie `buduj_tomy.ps1` złożył wszystkie trzy tomy w dwóch przebiegach,
+sprawdził indeksy i zaktualizował PDF-y. W logu tomu I nie ma błędów
+ani nowych ostrzeżeń dotyczących rozdziału 2; pozostały wcześniejsze
+ostrzeżenia o łamaniu wierszy w rozdziale 1.
