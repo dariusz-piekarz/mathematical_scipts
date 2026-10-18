@@ -1,6 +1,6 @@
 # Aktualny plan i pokrycie przeglądem
 
-Stan: 14 października 2026. Gałąź: `review/rozdzialy-matematyka`.
+Stan: 18 października 2026. Gałąź: `review/rozdzialy-matematyka`.
 Książka ma **38 rozdziałów, pięć części i trzy dodatki**. Numery w nazwach
 plików są historyczne; numer w PDF ustala kolejność importów.
 Skład roboczy podzielono na trzy tomy: rozdziały 1–10, 11–22 oraz
@@ -114,7 +114,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | Numer i temat | Plik w `tex/rozdzialy/` | Stan przeglądu | Kontrola / pozostały zakres |
 |---|---|---|---|
 | 1. Rozmaitości | `01-rozmaitosci.tex` | 13 października zakończono audyt dodatków o wiązkach wektorowych i kostycznych; 14 października ponownie sprawdzono §1.10 oraz nowe objaśnienie Jacobiego i nawinięcia niewymiernego | Skontrolowano sklejanie wiązek, funkcje przejścia, sekcje, sumę i wiązkę dualną, przykład Möbiusa, rachunek różniczki i przykład injektywnej immersji o gęstym obrazie. Wcześniej sprawdzono definicję i izomorfizm wiązek, przestrzeń całkowitą, wiązkę tautologiczną, atlasy `TM` i `T*M`, diagramy oraz odsyłacze. |
-| 2. Pola wektorowe | `02-pola-wektorowe.tex` | Audyt dodatków zakończony 6 października; PDF 387 stron | Sprawdzone powiązanie z brzegiem, przykład przepływu jednostronnego, bibliografia i rysunki |
+| 2. Pola wektorowe | `02-pola-wektorowe.tex` | Audyt dodatków zakończony 6 października; §2.1 ponownie przejrzano 18 października | Sprawdzono konstrukcje $X\mapsto D_X$ i $D\mapsto X$, dowód gładkości, rozróżnienie przestrzeni stycznych w przykładzie okręgu i pole wzdłuż odwzorowania. Wcześniej sprawdzono powiązanie z brzegiem, przykład przepływu jednostronnego, bibliografię i rysunki. Pozostałe sekcje rozdziału nie były przedmiotem bieżącej iteracji. |
 | 3. Algebra tensorowa | `03-algebra-tensorowa.tex` | Audyt z 6 października; notacja poprawiona 9 października | Formalne generatory par zapisano jako [(v,w)]; zakres tej poprawki nie obejmuje ponownego audytu całego rozdziału. |
 | 4. Grassmanniany, Clifford i spinory | `04-grassmanniany-clifford-spinory.tex` | Wcześniejszy audyt z 6 października; 8 października dodano grupę Pin | Sprawdzono nakrycie $\operatorname{Pin}(n)\to O(n)$ i stronę 100 PDF |
 | 5. Algebra abstrakcyjna | `05-algebra-abstrakcyjna.tex` | Audyt i poprawki w `dbfe600`; porównano późniejsze różnice do `2777149` | Zachowano wprowadzone przez autora nienumerowane podsekcje i nazewnictwo iloczynu tensorowego; poprawiono „Iloczn”. Dowody dziedziny, ciała ułamków i lokalizacji zachowane. Opcjonalne definicje są w rejestrze poniżej. |

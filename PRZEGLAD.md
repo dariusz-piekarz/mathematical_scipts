@@ -5245,3 +5245,38 @@ odsyłacze między tomami ustabilizowały się, indeksy miały zero odrzuconych
 wpisów, a PDF-y tomów zaktualizowano. W tomie I nie ma ostrzeżeń o
 brakujących odsyłaczach ani nowych ostrzeżeń w rozdziale 2; pozostały
 wcześniejsze ostrzeżenia o łamaniu w rozdziale 1.
+
+## 18 października 2026 — ponowny przegląd całej sekcji o polach i derywacjach
+
+Na prośbę autora ponownie przejrzano całe §2.1 rozdziału 2.
+Ułożono podstawowy ciąg pojęć: gładka sekcja $TM$, współczynniki
+w mapie i ich transformacja, derywacja globalna, ewaluacja w punkcie
+oraz twierdzenie o wzajemnej odpowiedniości pól i derywacji.
+Intuicję pochodnej w kierunku pola skrócono i umieszczono przed
+definicją derywacji globalnej. Wyjaśniono, że $D_X(f)$ jest funkcją,
+natomiast $X_p(f)$ liczbą, oraz że $D$ jest liniowa nad $\R$,
+ale zwykle nie nad $C^\infty(M)$ jako operator na funkcjach.
+
+Rozpisano dowód gładkości pola otrzymanego z derywacji $D$:
+lokalne współrzędne przedłużono przez funkcję odcinającą,
+wyznaczono współczynniki $D(\widetilde x^i)$, sprawdzono ich
+gładkość i oba złożenia wzajemnie odwrotnych konstrukcji.
+W przykładzie okręgu jawnie wprowadzono inkluzję do $\R^2$,
+aby równość w $T_pS_r^1$ odróżnić od zapisu obrazu wektora
+w $T_p\R^2$. Radialne przedłużenie funkcji z okręgu uzasadnia
+porównywanie działań wektorów na wszystkich funkcjach gładkich.
+W uwadze o polu wzdłuż odwzorowania podano lokalny wzór na
+współczynniki i przykłady $F(t)=t^2$ oraz $F(t)=t^3$:
+zgodność na włóknach jest warunkiem koniecznym, lecz sama nie
+gwarantuje gładkiego pola na przeciwdziedzinie.
+
+Podczas kontroli PDF zauważono, że stary blok `minipage` przy rachunku
+na okręgu składał tekst poza prawym marginesem; usunięto go i ponownie
+obejrzano strony 61–63 tomu I. Rachunki oraz etykiety są czytelne.
+`buduj_tomy.ps1` złożył trzy tomy w dwóch przebiegach i zaktualizował
+ich PDF-y. Logi nie wykazały błędów ani nierozwiązanych odsyłaczy;
+w tomie I nie ma nowych ostrzeżeń dla rozdziału 2. Indeksy przyjęły
+odpowiednio 112, 96 i 111 wpisów, wszystkie bez odrzuceń.
+Sprawdzono również obecność docelowych nazw pozostałych tomów
+w odsyłaczach PDF. Pliku zbiorczego nie składano; jego istniejąca
+lokalna modyfikacja została zachowana poza zakresem tej iteracji.
