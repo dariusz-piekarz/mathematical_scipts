@@ -5319,3 +5319,24 @@ odsyłaczy ani nowych ostrzeżeń przy §1.11. Indeksy tomów przyjęły
 docelowych pozostałych tomów dla odsyłaczy między tomami.
 Zaktualizowano PDF-y tomów; lokalnie zmienionego PDF-u zbiorczego
 nie włączono do tej iteracji.
+
+## 18 października 2026 — dlaczego w dowodzie wystarcza funkcja $t$
+
+Na pytanie autora doprecyzowano dowód Twierdzenia~1.11.3.
+Każdy $w\in T_{f(p)}\R$ ma postać $a\partial_t|_{f(p)}$,
+więc dla dowolnej gładkiej $g$ zachodzi
+$w(g)=a g'(f(p))$, podczas gdy $w(t)=a$.
+Stąd wartość na standardowej współrzędnej $t$ wyznacza działanie
+na wszystkich funkcjach $g$. Dopiero po tym wyjaśnieniu użyto
+$(df_pv)(t)=v(f)$ i zapisano wynik dla dowolnego $g$.
+To usuwa możliwe wrażenie, że definicję różniczki ograniczono
+do jednej funkcji testowej.
+
+`buduj_tomy.ps1` złożył trzy tomy w dwóch przebiegach i sprawdził
+indeksy bez odrzuconych wpisów. Stronę 48 tomu I obejrzano po składzie:
+dopisany krok jest czytelny i nie wprowadza przepełnienia.
+Logi nie mają nierozwiązanych odsyłaczy; wcześniejsze ostrzeżenie
+o szerokim wzorze w innej części rozdziału 1 pozostało bez zmian.
+Zastaną lokalną modyfikację PDF-u tomu I zabezpieczono przed składem;
+sprawdzoną wersję dołączono do commitu, a lokalną wersję zachowano
+w katalogu roboczym. PDF zbiorczy pozostał poza zakresem zmiany.
