@@ -5297,3 +5297,25 @@ Na stronie 55 tomu I skontrolowano nowe przejście od akapitu do definicji
 i rysunku mapy plasterkowej. Logi nie mają brakujących odsyłaczy ani
 nowych ostrzeżeń dotyczących §1.12; pozostało wcześniejsze ostrzeżenie
 o szerokim wzorze w rozdziale 1, wiersze 5616–5619, poza zmienioną sekcją.
+
+## 18 października 2026 — skąd bierze się wzór na różniczkę funkcji
+
+Na prośbę autora zachowano istniejące stwierdzenie i jego dowód
+w §1.8 „Przestrzeń kostyczna”. W §1.11, zaraz po definicji różniczki
+odwzorowania $F\colon M\to N$, dodano twierdzenie wyjaśniające,
+dlaczego dla $f\colon M\to\R$ otrzymujemy znany wzór
+$df_p=\sum_i(\partial f/\partial x^i)(p)\,dx^i_p$.
+Dowód najpierw utożsamia $T_{f(p)}\R$ z $\R$ przez działanie
+wektora na standardową współrzędną $t$, potem oblicza wartość
+$df_p(v)=v(f)$ na wektorze zapisanym we współrzędnych i korzysta
+z dualności $dx^i_p$ do $\partial_{x^i}|_p$. Dodano przykład
+$f(u,v)=u^2+uv$, w którym wzór daje konkretną wartość na wektorze.
+
+Pełny `buduj_tomy.ps1` zakończył się poprawnie po dwóch przebiegach.
+Sprawdzono stronę 48 tomu I z nowym twierdzeniem, dowodem i przykładem;
+wzory mieszczą się w marginesach. Logi nie mają nierozwiązanych
+odsyłaczy ani nowych ostrzeżeń przy §1.11. Indeksy tomów przyjęły
+112, 96 i 111 wpisów, bez odrzuceń. W PDF-ach znajdują się nazwy
+docelowych pozostałych tomów dla odsyłaczy między tomami.
+Zaktualizowano PDF-y tomów; lokalnie zmienionego PDF-u zbiorczego
+nie włączono do tej iteracji.
