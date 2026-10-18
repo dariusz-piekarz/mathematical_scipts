@@ -5280,3 +5280,20 @@ odpowiednio 112, 96 i 111 wpisów, wszystkie bez odrzuceń.
 Sprawdzono również obecność docelowych nazw pozostałych tomów
 w odsyłaczach PDF. Pliku zbiorczego nie składano; jego istniejąca
 lokalna modyfikacja została zachowana poza zakresem tej iteracji.
+
+## 18 października 2026 — intuicja podrozmaitości przy definicji
+
+W §1.12 przeniesiono treść końcowego akapitu „Intuicja: rozmaitość
+a podrozmaitość” bezpośrednio pod nagłówek sekcji i skrócono ją.
+Wyjaśnienie rozróżnia wewnętrzny opis rozmaitości od oglądania
+$S\subseteq M$ w przestrzeni otaczającej; przykład okręgu łączy
+tę intuicję z wymiarami $1$ i $2$, a ostatnie zdanie prowadzi wprost
+do warunku mapy plasterkowej. Usunięto osobny nagłówek i powtórzenia
+na końcu sekcji. Definicja oraz twierdzenia pozostały bez zmian.
+
+Pełny `buduj_tomy.ps1` zakończył się po dwóch przebiegach, zaktualizował
+PDF-y trzech tomów i sprawdził indeksy bez odrzuconych wpisów.
+Na stronie 55 tomu I skontrolowano nowe przejście od akapitu do definicji
+i rysunku mapy plasterkowej. Logi nie mają brakujących odsyłaczy ani
+nowych ostrzeżeń dotyczących §1.12; pozostało wcześniejsze ostrzeżenie
+o szerokim wzorze w rozdziale 1, wiersze 5616–5619, poza zmienioną sekcją.
