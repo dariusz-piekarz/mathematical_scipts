@@ -1,6 +1,6 @@
 # Aktualny plan i pokrycie przeglądem
 
-Stan: 18 października 2026. Gałąź: `review/rozdzialy-matematyka`.
+Stan: 19 października 2026. Gałąź: `review/rozdzialy-matematyka`.
 Książka ma **38 rozdziałów, pięć części i trzy dodatki**. Numery w nazwach
 plików są historyczne; numer w PDF ustala kolejność importów.
 Skład roboczy podzielono na trzy tomy: rozdziały 1–10, 11–22 oraz
@@ -17,12 +17,14 @@ i organizacja plików w [README.md](README.md).
    Rozpisano wersję $s$ w przypadkach parzystym $n\geq6$ i
    nieparzystym $n\geq5$, wraz z bazami nad $\Z[\pi]$,
    formacjami i ciągiem chirurgii. Głębokie lematy geometryczne
-   Walla nadal są jawnymi wejściami zewnętrznymi; przed oznaczeniem
+   Walla nadal są jawnymi wejściami zewnętrznymi; wersję $h$ i ciąg
+   Rothenberga wskazano osobno jako wyniki zewnętrzne. Przed oznaczeniem
    dowodu jako samodzielnie pełnego trzeba je wyprowadzić i przeprowadzić
    końcowy audyt nowego tekstu.
    W rozdziale 29 rozpisano oba twierdzenia Bardena (2.2 i 2.3)
    wraz z ich modelami oraz jawnie wskazanymi wynikami wejściowymi;
-   kontrola składu trzech tomów jest zakończona, pełny audyt całego
+   kontrola twierdzeń 2.2 i 2.3 ze źródłem oraz składu trzech tomów
+   jest zakończona, pełny audyt całego
    rozdziału pozostaje w kolejce. Rozbudowy sfer Milnora
    (rozdział 30) i twierdzeń czterowymiarowych (rozdziały 34–38)
    kontynuować według zakresu poniżej; wymiary cztery pozostają
@@ -78,15 +80,14 @@ głębokiego wyniku użytego z zewnątrz nie nazywać własnym pełnym dowodem.
    Haefligera, Milnora i Smale'a. Skład i odsyłacze między tomami
    sprawdzono; pełny audyt całego rozdziału pozostaje otwarty.
 3. **Sfery Milnora — rozdział 30.**
-   Rozwinąć konstrukcję przez sklejenie wiązek nad sferą
-   czterowymiarową: rachunek klas Eulera i Pontriagina,
-   homologię oraz uzasadnienie typu homotopijnego przestrzeni
-   całkowitej. Następnie rozwinąć rachunek niezmiennika gładkiego:
-   względne podniesienie pierwszej klasy Pontriagina,
-   niezależność od wypełnienia, sygnaturę i przykłady
-   rozróżniające struktury gładkie, także po odwróceniu orientacji.
-   Oddzielić własne obliczenia od użycia twierdzenia Hirzebrucha
-   i wysokowymiarowego twierdzenia Poincarégo.
+   Rozpisano konstrukcję wiązek, klasy charakterystyczne,
+   homologię i typ homotopijny ich sfer jednostkowych.
+   Niezmiennik Milnora uzupełniono o spinowy niezmiennik
+   Eellsa--Kuipera i przykłady rozróżniające struktury gładkie
+   także bez wyboru orientacji. Twierdzenie Hirzebrucha,
+   całkowitość indeksu Diraca i wysokowymiarowe twierdzenie
+   Poincarégo pozostają jawnymi wejściami zewnętrznymi;
+   niezależny audyt całego rozdziału pozostaje w kolejce.
 4. **Twierdzenia wymiaru cztery — rozdziały 34–38.**
    Po ukończeniu głównych dowodów dla wymiarów co najmniej pięć
    utrzymać wykład informacyjny z dokładnymi hipotezami i źródłami.
@@ -113,7 +114,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 
 | Numer i temat | Plik w `tex/rozdzialy/` | Stan przeglądu | Kontrola / pozostały zakres |
 |---|---|---|---|
-| 1. Rozmaitości | `01-rozmaitosci.tex` | 13 października zakończono audyt dodatków o wiązkach wektorowych i kostycznych; 14 października ponownie sprawdzono §1.10 oraz nowe objaśnienie Jacobiego i nawinięcia niewymiernego; 18 października wpleciono intuicję w §1.12 i wyjaśniono wzór na różniczkę w §1.11 | Skontrolowano sklejanie wiązek, funkcje przejścia, sekcje, sumę i wiązkę dualną, przykład Möbiusa, rachunek różniczki i przykład injektywnej immersji o gęstym obrazie. Wcześniej sprawdzono definicję i izomorfizm wiązek, przestrzeń całkowitą, wiązkę tautologiczną, atlasy `TM` i `T*M`, diagramy oraz odsyłacze. Zmiana w §1.12 ma charakter redakcyjny; w §1.11 zachowano wcześniejsze stwierdzenie w §1.8, dodano powiązanie z ogólną różniczką odwzorowania i wyjaśniono, dlaczego wartość na standardowej współrzędnej $t$ wyznacza derywację w $T_{f(p)}\R$. |
+| 1. Rozmaitości | `01-rozmaitosci.tex` | 13 października zakończono audyt dodatków o wiązkach wektorowych i kostycznych; 14 października ponownie sprawdzono §1.10; 18–19 października sprawdzono intuicję podrozmaitości i różniczkę w §1.11 | Skontrolowano sklejanie wiązek, funkcje przejścia, sekcje, sumę i wiązkę dualną, przykład Möbiusa, rachunek różniczki, przykład injektywnej immersji o gęstym obrazie, atlasy `TM` i `T*M`, diagramy oraz odsyłacze. W §1.11 połączono wcześniejszy wzór z §1.8 z różniczką odwzorowania, wyprowadzono macierz Jacobiego z działania na lokalne współrzędne i objaśniono utożsamienie $T_{f(p)}\R\cong\R$ przez funkcję $t$. Lokalność derywacji uzasadnia użycie współrzędnych na otoczeniu. |
 | 2. Pola wektorowe | `02-pola-wektorowe.tex` | Audyt dodatków zakończony 6 października; §2.1 ponownie przejrzano 18 października | Sprawdzono konstrukcje $X\mapsto D_X$ i $D\mapsto X$, dowód gładkości, rozróżnienie przestrzeni stycznych w przykładzie okręgu i pole wzdłuż odwzorowania. Wcześniej sprawdzono powiązanie z brzegiem, przykład przepływu jednostronnego, bibliografię i rysunki. Pozostałe sekcje rozdziału nie były przedmiotem bieżącej iteracji. |
 | 3. Algebra tensorowa | `03-algebra-tensorowa.tex` | Audyt z 6 października; notacja poprawiona 9 października | Formalne generatory par zapisano jako [(v,w)]; zakres tej poprawki nie obejmuje ponownego audytu całego rozdziału. |
 | 4. Grassmanniany, Clifford i spinory | `04-grassmanniany-clifford-spinory.tex` | Wcześniejszy audyt z 6 października; 8 października dodano grupę Pin | Sprawdzono nakrycie $\operatorname{Pin}(n)\to O(n)$ i stronę 100 PDF |
@@ -139,10 +140,10 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 24. h-kobordyzm | `20-h-kobordyzm.tex` | Audyt i uzupełnienia zakończone 9 października; skład po scaleniu do `2777149`: 503 strony | Rozpisano wymianę 1→3, dopełnienia w kowymiarze 2, wstęgi i homologię wyciętej sfery. Dokładne założenia obramowanego lematu Whitneya podano jako jawny wynik zewnętrzny. Trzy rysunki, odsyłacze i indeks sprawdzone. |
 | 25. Torsja i s-kobordyzm | `21-torsja-s-kobordyzm.tex` | Pełny audyt i uzupełnienia zakończone 11 października; PDF 505 stron | Poprawiono bazy i konwencje macierzowe, dowód niezależności kontrakcji, zakres lematu Whitneya, obramowania i dualność w realizacji torsji. Strony 390–401, oba schematy, odsyłacze i indeks sprawdzone; głębokie wejścia zewnętrzne wskazano dokładnie. |
 | 26. Chirurgia geometryczna | `22-chirurgia-geometryczna.tex` | Pełny audyt zakończony 8 października; treść bez poprawek | Sprawdzone obramowania, ślad i uchwyt dualny, homologia, $\pi_1$, forma jądra i rysunki |
-| 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Pełny audyt starszej treści zakończony 7 października; 14 października rozpisano oba przypadki $n\geq5$ i sprawdzono nowy skład | Dodano rachunek baz i torsji nad $\Z[\pi]$, $SU/RU$, ruchy $T1$--$T4$ i osobny wymiar pięć. Geometryczne lematy Walla i relacja formacji pozostają jawnie zewnętrzne; samodzielny dowód i pełny audyt całego rozdziału pozostają otwarte. |
+| 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Pełny audyt starszej treści zakończony 7 października; 14 października rozpisano oba przypadki $n\geq5$; 19 października uzupełniono lokalną stabilizację i dekorację $h$ | Dodano rachunek baz i torsji nad $\Z[\pi]$, $SU/RU$, ruchy $T1$--$T4$, osobny wymiar pięć, rachunek płaszczyzny hiperbolicznej dla lokalnej chirurgii oraz porównanie $L^s/L^h$ ciągiem Rothenberga. Geometryczne lematy Walla, twierdzenie dla dekoracji $h$ i relacja formacji pozostają jawnie zewnętrzne; samodzielny dowód i pełny audyt całego rozdziału pozostają otwarte. |
 | 28. Ciąg chirurgii | `24-ciag-chirurgii.tex` | Pełny audyt starszej treści zakończony 8 października; próg $n\geq5$ sprawdzony 14 października | Uściślono naturę obu strzałek przeszkody, realizację przez twierdzenia 5.8 i 6.5 oraz przejście do $s$-kobordyzmu; bijekcja z $[X,G/O]$ i działanie grupy $L$ pozostają jawnymi wynikami Walla |
-| 29. Poincaré | `25-poincare.tex` | Pełny audyt rozdziału oczekuje; 14 października rozpisano twierdzenia 2.2 i 2.3 Bardena | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm; lematy 3.1 i 4.1–4.4, indukcja, modele $M_k,X_j$, formy wiązania i przykłady spin/niespin; skład trzech tomów i odsyłacze sprawdzone |
-| 30. Sfery Milnora | `26-sfery-milnora.tex` | Przegląd konstrukcji, klas charakterystycznych i egzotyczności zakończony 7 października; PDF 442 strony | Rozpisano homologię i niezmiennik; wzór Hirzebrucha pozostaje jawnym wejściem zewnętrznym |
+| 29. Poincaré | `25-poincare.tex` | Pełny audyt rozdziału oczekuje; twierdzenia 2.2 i 2.3 Bardena rozpisano 14 października i porównano z oryginałem 19 października | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm; lematy 3.1 i 4.1–4.4, indukcja, modele $M_k,X_j$, formy wiązania i przykłady spin/niespin; skład trzech tomów i odsyłacze sprawdzone |
+| 30. Sfery Milnora | `26-sfery-milnora.tex` | Przegląd konstrukcji, klas charakterystycznych i egzotyczności zakończony 7 października; 19 października uzupełniono niezmiennik Eellsa--Kuipera | Rozpisano homologię, niezmiennik Milnora i spinowe wzmocnienie $\mu$; wzór Hirzebrucha i indeks Diraca pozostają jawnymi wejściami zewnętrznymi. Niezależny audyt całości oczekuje. |
 | 31. Potok Ricciego (plik 30) | `30-potok-ricciego.tex` | Sprawdzono równania ewolucyjne i poprawkę DeTurcka 7 października; pełny audyt całości i nowego rysunku z `2777149` czeka | Ewolucja skalara i pola powierzchni, zasada maksimum, DeTurck; zgodność schematu deformacji z zakresem równań i podpisem. Istnienie i jednoznaczność PDE pozostają jawnym wejściem analitycznym. |
 | 32. Poincaré w wymiarze trzy (plik 30a) | `30a-poincare-trzy.tex` | Dodano 8 października; niezależny audyt oczekuje | Dla głębokich twierdzeń Perelmana i Hamiltona zachować jawne hipotezy i źródła; sprawdzić topologiczny wniosek z wygaśnięcia oraz użycie twierdzenia Moise'a |
 | 33. Geometrie Thurstona (plik 30b) | `30b-geometrizacja-thurstona.tex` | Rozbudowano sekcję 33.1 i orbifoldy bazy Seiferta 11–12 października; audyt reszty oczekuje | Warunki modelu, ilorazy, lokalna jednorodność i maksymalność; nienumerowane podsekcje 33.1, charakterystyka orbifoldowa, dobre i złe bazy oraz lokalny model Seiferta. Pełny audyt ośmiu modeli, rozkładu pierwszego, JSJ i założeń geometryzacji nadal oczekuje. |

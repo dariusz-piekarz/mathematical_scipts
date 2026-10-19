@@ -5340,3 +5340,56 @@ o szerokim wzorze w innej części rozdziału 1 pozostało bez zmian.
 Zastaną lokalną modyfikację PDF-u tomu I zabezpieczono przed składem;
 sprawdzoną wersję dołączono do commitu, a lokalną wersję zachowano
 w katalogu roboczym. PDF zbiorczy pozostał poza zakresem zmiany.
+
+## 19 października 2026 — różniczka, Wall, Barden i Milnor
+
+W rozdziale 1 sprawdzono nowe twierdzenie o współrzędnościowym wzorze
+na $dF_p$ oraz wynikający z niego wzór na $df_p$. Działanie różniczki
+na współrzędne daje kolumny macierzy Jacobiego, a działanie wektora
+z $T_{f(p)}\R$ na standardową współrzędną $t$ uzasadnia jego
+utożsamienie z liczbą. Dopisano wyjaśnienie użycia lokalnych funkcji
+współrzędnych: przedłużamy je funkcją odcinającą, a lokalność derywacji
+zapewnia niezależność wyniku. Sprawdzono zgodność z wcześniejszym
+wzorem w §1.8 i terminologią immersji, submersji oraz zanurzenia.
+W dowodzie twierdzenia o stałym rzędzie przeniesiono zbyt szeroki
+wzór do osobnej linii.
+
+W rozdziale 27 dopisano wersję $h$ przeszkody chirurgicznej i fragment
+ciągu Rothenberga porównującego $L^s$ i $L^h$, z osobnymi źródłami
+dla geometrycznego kryterium zanikania i dla ciągu. Rozpisano rachunek
+lokalnej chirurgii na klasie zerowej: suma spójna z $S^k\times S^k$
+dodaje preferowaną płaszczyznę hiperboliczną. Geometryczne
+sprowadzenie do modelu lokalnego nadal jest dokładnie wskazanym
+lematem 5.5 Walla. Porównanie tekstu z §5 i §17D Walla potwierdziło
+zakres tych odwołań; nie ogłaszamy przez to całego dowodu Walla
+samodzielnym.
+
+Twierdzenia 2.2 i 2.3 Bardena w rozdziale 29 porównano z oryginałem,
+zwłaszcza zakres klasyfikacji, dane $H_2$ i $w_2$, lematy 3.1 i
+4.1–4.4 oraz modele kanoniczne. Nie znaleziono poprawki wymagającej
+zmiany źródła. Jest to kontrola tych twierdzeń, a nie pełny audyt
+pozostałej części rozdziału.
+
+W rozdziale 30 skorygowano opis argumentu Milnora dla $p_1$:
+lemat 3 oryginału korzysta z addytywności i wiązki Hopfa, a nie
+z rachunku przez $\operatorname{Spin}(4)$. Sygnaturę wypełnienia
+określono na racjonalnym obrazie homologicznym. Dodano spinowy
+niezmiennik Eellsa--Kuipera
+$\mu(M)=[(q(B)-4\operatorname{sign}(B))/896]\in\Q/\Z$,
+wyprowadzono niezależność od wypełnienia z wzorów Hirzebrucha
+i całkowitości indeksu Diraca oraz obliczono
+$\mu(M_k)=(k^2-1)/224$. Wartości dla $k=3,5,7$ rozróżniają
+trzy sfery także bez wybranej orientacji. Wskazano dokładnie
+głębokie twierdzenia użyte z zewnątrz.
+
+Po ostatniej korekcie oznaczenia $\phi$ uruchomiono pełny
+`buduj_tomy.ps1`. Dwa przebiegi dały tomy o 212, 181 i 163
+stronach. Indeksy przyjęły odpowiednio 112, 96 i 111 haseł,
+bez odrzuceń; logi nie wykazały błędów, przepełnień ani
+niewyjaśnionych odsyłaczy. Obejrzano strony 49–51 i 56 tomu I
+oraz 55–56, 63, 86 i 91–92 tomu III; ostatnią stronę z lematem
+o stabilizacji obejrzano ponownie po końcowym składzie.
+W plikach PDF potwierdzono docelowe nazwy pozostałych tomów
+dla łączy między tomami. Zastaną lokalną wersję PDF-u tomu I
+zachowano w `build/preexisting-2026-10-19/`; lokalnie zmieniony
+PDF zbiorczy pozostał poza tym commitem.
