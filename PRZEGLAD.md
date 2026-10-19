@@ -5454,3 +5454,31 @@ bez odrzuceń i ostrzeżeń. W logach nie ma błędów składu,
 przepełnień ani nierozwiązanych odsyłaczy. Sprawdzono łącza
 między tomami oraz strony PDF 63–64 tomu III, w tym ostateczny
 skład nowego lematu i jego zastosowania.
+
+## 19 października 2026 — rozłączne sfery w nieparzystym przypadku Walla
+
+Porównano początek §6 na s.~58
+[oryginału Walla](https://www.maths.ed.ac.uk/~v1ranick/books/scm.pdf)
+z krokiem przygotowującym dowód twierdzenia 6.4 w rozdziale 27.
+Dopisano lemat wyprowadzający reprezentację skończonej rodziny
+generatorów $\pi_{k+1}(f)$ przez parami rozłączne obramowane
+zanurzenia $S^k\times D^{k+1}\hookrightarrow\operatorname{int}M$.
+Twierdzenie 1.1 Walla dostarcza właściwej klasy regularnej
+homotopii z danych normalnych. Jednoczesne położenie ogólne
+usuwa przecięcia rdzeni, bo $2k-(2k+1)=-1$. Uzasadniono
+także zakres stabilizacji $O(k+1)\to O$: izomorfizm na
+$\pi_{k-1}$ wystarcza do trywialności wiązki normalnej,
+a surjekcja na $\pi_k$ pozwala dopasować ramę do danych
+stabilnych. Dopisano wybór dróg bazowych, zwężenie otoczeń
+i homotopię $f$ do odwzorowania stałego na ich sumie.
+Twierdzenie 1.1 i identyfikacja jądra z homotopią względną
+pozostają jawnymi wejściami zewnętrznymi. Sprawdzono nowy
+lemat i jego użycie w dowodzie; pełny audyt rozdziału 27
+pozostaje otwarty.
+
+Po dopisaniu lematu `buduj_tomy.ps1` złożył dwa przebiegi tomów
+(212, 181 i 164 strony). Indeksy przyjęły 112, 96 i 111 haseł
+bez odrzuceń i ostrzeżeń. W logach nie ma błędów składu,
+przepełnień ani nierozwiązanych odsyłaczy; łącza między tomami
+są obecne. Obejrzano ostateczne strony PDF 69–70 tomu III
+z nowym lematem i jego zastosowaniem.

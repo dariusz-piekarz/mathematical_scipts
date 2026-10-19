@@ -17,6 +17,7 @@ i organizacja plików w [README.md](README.md).
    Rozpisano wersję $s$ w przypadkach parzystym $n\geq6$ i
    nieparzystym $n\geq5$, wraz z bazami nad $\Z[\pi]$,
    formacjami i ciągiem chirurgii. Krok geometryczny lematu 5.5
+   oraz rozłączność obramowanych sfer w przypadku nieparzystym
    wyprowadzono z twierdzenia 1.1 Walla; pozostałe głębokie lematy
    geometryczne nadal są jawnymi wejściami zewnętrznymi. Wersję $h$ i ciąg
    Rothenberga wskazano osobno jako wyniki zewnętrzne. Przed oznaczeniem
@@ -68,7 +69,8 @@ głębokiego wyniku użytego z zewnątrz nie nazywać własnym pełnym dowodem.
    W rozdziale 28 wskazano oddzielnie realizację przez twierdzenia
    5.8 i 6.5 oraz zakres gładkiego $s$-kobordyzmu. Rachunki
    i przejścia algebraiczne są rozpisane. Krok izotopii obramowanej
-   sfery z lematu 5.5 wyprowadzono z twierdzenia 1.1 Walla;
+   sfery z lematu 5.5 oraz rozłączne reprezentowanie generatorów
+   w przypadku nieparzystym wyprowadzono z twierdzenia 1.1 Walla;
    chirurgie poniżej środka, reprezentację sfer w środku wymiaru,
    przygotowanie kobordyzmu oraz część
    relacji $SU/RU$ przyjęto jako jawne lematy Walla z hipotezami
@@ -146,7 +148,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 24. h-kobordyzm | `20-h-kobordyzm.tex` | Audyt i uzupełnienia zakończone 9 października; skład po scaleniu do `2777149`: 503 strony | Rozpisano wymianę 1→3, dopełnienia w kowymiarze 2, wstęgi i homologię wyciętej sfery. Dokładne założenia obramowanego lematu Whitneya podano jako jawny wynik zewnętrzny. Trzy rysunki, odsyłacze i indeks sprawdzone. |
 | 25. Torsja i s-kobordyzm | `21-torsja-s-kobordyzm.tex` | Pełny audyt i uzupełnienia zakończone 11 października; PDF 505 stron | Poprawiono bazy i konwencje macierzowe, dowód niezależności kontrakcji, zakres lematu Whitneya, obramowania i dualność w realizacji torsji. Strony 390–401, oba schematy, odsyłacze i indeks sprawdzone; głębokie wejścia zewnętrzne wskazano dokładnie. |
 | 26. Chirurgia geometryczna | `22-chirurgia-geometryczna.tex` | Pełny audyt zakończony 8 października; treść bez poprawek | Sprawdzone obramowania, ślad i uchwyt dualny, homologia, $\pi_1$, forma jądra i rysunki |
-| 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Pełny audyt starszej treści zakończony 7 października; 14 października rozpisano oba przypadki $n\geq5$; 19 października wyprowadzono krok geometryczny lematu 5.5 i uzupełniono dekorację $h$ | Dodano rachunek baz i torsji nad $\Z[\pi]$, $SU/RU$, ruchy $T1$--$T4$, osobny wymiar pięć, dowód stabilizacji hiperbolicznej dla chirurgii na klasie zerowej oraz porównanie $L^s/L^h$ ciągiem Rothenberga. Twierdzenie 1.1 i pozostałe głębokie lematy Walla, twierdzenie dla dekoracji $h$ i relacja formacji pozostają jawnie zewnętrzne; samodzielny dowód i pełny audyt całego rozdziału pozostają otwarte. |
+| 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Pełny audyt starszej treści zakończony 7 października; 14 października rozpisano oba przypadki $n\geq5$; 19 października wyprowadzono krok geometryczny lematu 5.5 i rozłączne reprezentowanie generatorów w wymiarze nieparzystym | Dodano rachunek baz i torsji nad $\Z[\pi]$, $SU/RU$, ruchy $T1$--$T4$, osobny wymiar pięć, dowód stabilizacji hiperbolicznej dla chirurgii na klasie zerowej, rozłączne sfery z ramami i drogami bazowymi oraz porównanie $L^s/L^h$ ciągiem Rothenberga. Twierdzenie 1.1 i pozostałe głębokie lematy Walla, twierdzenie dla dekoracji $h$ i relacja formacji pozostają jawnie zewnętrzne; samodzielny dowód i pełny audyt całego rozdziału pozostają otwarte. |
 | 28. Ciąg chirurgii | `24-ciag-chirurgii.tex` | Pełny audyt starszej treści zakończony 8 października; próg $n\geq5$ sprawdzony 14 października | Uściślono naturę obu strzałek przeszkody, realizację przez twierdzenia 5.8 i 6.5 oraz przejście do $s$-kobordyzmu; bijekcja z $[X,G/O]$ i działanie grupy $L$ pozostają jawnymi wynikami Walla |
 | 29. Poincaré | `25-poincare.tex` | Pełny audyt rozdziału oczekuje; twierdzenia 2.2 i 2.3 Bardena rozpisano 14 października i porównano z oryginałem 19 października | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm; lematy 3.1 i 4.1–4.4, indukcja, modele $M_k,X_j$, formy wiązania i przykłady spin/niespin; skład trzech tomów i odsyłacze sprawdzone |
 | 30. Sfery Milnora | `26-sfery-milnora.tex` | Pełny audyt rozdziału zakończony 19 października po uzupełnieniu niezmiennika Eellsa--Kuipera | Sprawdzono sklejanie, klasy $e,p_1$, ciąg Mayera--Vietorisa, kryterium Whiteheada, obie sygnatury, $\lambda$, $\mu$ i przykłady, rysunek oraz odsyłacze. Poprawiono terminologię i uzasadniono rozkład formy przecięcia po sklejeniu. Wzór Hirzebrucha i indeks Diraca pozostają jawnymi wejściami zewnętrznymi. |
