@@ -25,15 +25,17 @@ i organizacja plików w [README.md](README.md).
    wraz z ich modelami oraz jawnie wskazanymi wynikami wejściowymi;
    kontrola twierdzeń 2.2 i 2.3 ze źródłem oraz składu trzech tomów
    jest zakończona, pełny audyt całego
-   rozdziału pozostaje w kolejce. Rozbudowy sfer Milnora
-   (rozdział 30) i twierdzeń czterowymiarowych (rozdziały 34–38)
-   kontynuować według zakresu poniżej; wymiary cztery pozostają
+   rozdziału pozostaje w kolejce. Audyt sfer Milnora
+   (rozdział 30) zakończono 19 października. Twierdzenia
+   czterowymiarowe (rozdziały 34–38) kontynuować według
+   zakresu poniżej; wymiary cztery pozostają
    wykładem informacyjnym. Zwykła iteracja obejmuje jeden rozdział,
    chyba że etap wymaga wspólnego dowodu. Wcześniejszy audyt
    każdego z tych rozdziałów pozostaje ważny w swoim wskazanym zakresie,
    ale nie oznacza wykonania nowej rozbudowy.
 2. Dokończyć audyt według numeracji PDF: najbliższy niezweryfikowany
-   rozdział to 29. Rozdziały 26–28 i 30 mają wcześniejsze przeglądy;
+   rozdział to 29. Rozdziały 26–28 mają wcześniejsze przeglądy,
+   a rozdział 30 pełny audyt z 19 października;
    rozdziały 31–33 wymagają pełnych audytów lub kontroli nowych rysunków
    i zależności. Dalej sprawdzić zaległe części rozdziałów 15–18
    oraz dodatki A i B według tabeli. Rozdział 1 z nowymi wiązkami
@@ -79,15 +81,16 @@ głębokiego wyniku użytego z zewnątrz nie nazywać własnym pełnym dowodem.
    zewnętrzne to wyniki Thoma, Nowikowa, Walla, Whiteheada,
    Haefligera, Milnora i Smale'a. Skład i odsyłacze między tomami
    sprawdzono; pełny audyt całego rozdziału pozostaje otwarty.
-3. **Sfery Milnora — rozdział 30.**
+3. **Sfery Milnora — rozdział 30: etap ukończony.**
    Rozpisano konstrukcję wiązek, klasy charakterystyczne,
    homologię i typ homotopijny ich sfer jednostkowych.
    Niezmiennik Milnora uzupełniono o spinowy niezmiennik
    Eellsa--Kuipera i przykłady rozróżniające struktury gładkie
    także bez wyboru orientacji. Twierdzenie Hirzebrucha,
    całkowitość indeksu Diraca i wysokowymiarowe twierdzenie
-   Poincarégo pozostają jawnymi wejściami zewnętrznymi;
-   niezależny audyt całego rozdziału pozostaje w kolejce.
+   Poincarégo pozostają jawnymi wejściami zewnętrznymi.
+   Audyt całego rozdziału, w tym rysunku i zależności
+   między twierdzeniami, zakończono 19 października.
 4. **Twierdzenia wymiaru cztery — rozdziały 34–38.**
    Po ukończeniu głównych dowodów dla wymiarów co najmniej pięć
    utrzymać wykład informacyjny z dokładnymi hipotezami i źródłami.
@@ -143,7 +146,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Pełny audyt starszej treści zakończony 7 października; 14 października rozpisano oba przypadki $n\geq5$; 19 października uzupełniono lokalną stabilizację i dekorację $h$ | Dodano rachunek baz i torsji nad $\Z[\pi]$, $SU/RU$, ruchy $T1$--$T4$, osobny wymiar pięć, rachunek płaszczyzny hiperbolicznej dla lokalnej chirurgii oraz porównanie $L^s/L^h$ ciągiem Rothenberga. Geometryczne lematy Walla, twierdzenie dla dekoracji $h$ i relacja formacji pozostają jawnie zewnętrzne; samodzielny dowód i pełny audyt całego rozdziału pozostają otwarte. |
 | 28. Ciąg chirurgii | `24-ciag-chirurgii.tex` | Pełny audyt starszej treści zakończony 8 października; próg $n\geq5$ sprawdzony 14 października | Uściślono naturę obu strzałek przeszkody, realizację przez twierdzenia 5.8 i 6.5 oraz przejście do $s$-kobordyzmu; bijekcja z $[X,G/O]$ i działanie grupy $L$ pozostają jawnymi wynikami Walla |
 | 29. Poincaré | `25-poincare.tex` | Pełny audyt rozdziału oczekuje; twierdzenia 2.2 i 2.3 Bardena rozpisano 14 października i porównano z oryginałem 19 października | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm; lematy 3.1 i 4.1–4.4, indukcja, modele $M_k,X_j$, formy wiązania i przykłady spin/niespin; skład trzech tomów i odsyłacze sprawdzone |
-| 30. Sfery Milnora | `26-sfery-milnora.tex` | Przegląd konstrukcji, klas charakterystycznych i egzotyczności zakończony 7 października; 19 października uzupełniono niezmiennik Eellsa--Kuipera | Rozpisano homologię, niezmiennik Milnora i spinowe wzmocnienie $\mu$; wzór Hirzebrucha i indeks Diraca pozostają jawnymi wejściami zewnętrznymi. Niezależny audyt całości oczekuje. |
+| 30. Sfery Milnora | `26-sfery-milnora.tex` | Pełny audyt rozdziału zakończony 19 października po uzupełnieniu niezmiennika Eellsa--Kuipera | Sprawdzono sklejanie, klasy $e,p_1$, ciąg Mayera--Vietorisa, kryterium Whiteheada, obie sygnatury, $\lambda$, $\mu$ i przykłady, rysunek oraz odsyłacze. Poprawiono terminologię i uzasadniono rozkład formy przecięcia po sklejeniu. Wzór Hirzebrucha i indeks Diraca pozostają jawnymi wejściami zewnętrznymi. |
 | 31. Potok Ricciego (plik 30) | `30-potok-ricciego.tex` | Sprawdzono równania ewolucyjne i poprawkę DeTurcka 7 października; pełny audyt całości i nowego rysunku z `2777149` czeka | Ewolucja skalara i pola powierzchni, zasada maksimum, DeTurck; zgodność schematu deformacji z zakresem równań i podpisem. Istnienie i jednoznaczność PDE pozostają jawnym wejściem analitycznym. |
 | 32. Poincaré w wymiarze trzy (plik 30a) | `30a-poincare-trzy.tex` | Dodano 8 października; niezależny audyt oczekuje | Dla głębokich twierdzeń Perelmana i Hamiltona zachować jawne hipotezy i źródła; sprawdzić topologiczny wniosek z wygaśnięcia oraz użycie twierdzenia Moise'a |
 | 33. Geometrie Thurstona (plik 30b) | `30b-geometrizacja-thurstona.tex` | Rozbudowano sekcję 33.1 i orbifoldy bazy Seiferta 11–12 października; audyt reszty oczekuje | Warunki modelu, ilorazy, lokalna jednorodność i maksymalność; nienumerowane podsekcje 33.1, charakterystyka orbifoldowa, dobre i złe bazy oraz lokalny model Seiferta. Pełny audyt ośmiu modeli, rozkładu pierwszego, JSJ i założeń geometryzacji nadal oczekuje. |

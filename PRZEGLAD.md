@@ -5393,3 +5393,36 @@ W plikach PDF potwierdzono docelowe nazwy pozostałych tomów
 dla łączy między tomami. Zastaną lokalną wersję PDF-u tomu I
 zachowano w `build/preexisting-2026-10-19/`; lokalnie zmieniony
 PDF zbiorczy pozostał poza tym commitem.
+
+## 19 października 2026 — pełny audyt rozdziału o sferach Milnora
+
+Przeczytano cały rozdział 30, porównując hipotezy i wzory z pracami
+Milnora oraz Eellsa--Kuipera sprawdzonymi w poprzednim etapie.
+Skontrolowano klasy sklejania $E_{h,j}$, stopień odwzorowania
+$u\mapsto u^{h+j}$, obliczenia $e$ i $p_1$, macierz ciągu
+Mayera--Vietorisa, prostą spójność i zastosowanie kryterium
+Whiteheada. Rachunki $q(B_k)=4k^2$ i
+$\operatorname{sign}(B_k)=1$ dają podane wartości $\lambda$ i $\mu$;
+sprawdzono także zmianę znaku obu niezmienników przy odwróceniu
+orientacji oraz tabelę dla $k=1,3,5,7$. Nie stwierdzono błędu
+w tych wzorach.
+
+Uzupełniono dwa przejścia w dowodach. Przy odwzorowaniu
+$M_{h,j}\to S^7$ wskazano wybór orientacji i hipotezę typu CW
+potrzebną w kryterium Whiteheada. W dowodzie niezależności
+$\lambda$ dualność na brzegu daje
+$H_4(M;\Q)=H_3(M;\Q)=0$; dopisano wynikające stąd
+rozszczepienie środkowej homologii sklejonego wypełnienia
+i ortogonalność form przecięcia. Dzięki temu krok addytywności
+sygnatury ma jawne uzasadnienie. Zgodnie z terminologią książki
+zastąpiono dwa użycia „mapa” przez „odwzorowanie” i dwa użycia
+„fibracja” przez „rozwłóknienie”. Twierdzenie o sygnaturze,
+całkowitość indeksu Diraca i wysokowymiarowe twierdzenie
+Poincarégo pozostają dokładnie oznaczonymi wynikami zewnętrznymi.
+
+Po poprawkach uruchomiono `buduj_tomy.ps1`: dwa przebiegi złożyły tomy
+o 212, 181 i 163 stronach, a indeksy przyjęły odpowiednio 112, 96 i
+111 haseł bez odrzuceń. W logach nie ma błędów składu, przepełnień ani
+nierozwiązanych odsyłaczy. Obejrzano strony 88, 90 i 91 tomu III,
+w tym rysunek 30.1 i dopisane kroki dowodów; skład i etykiety są czytelne.
+Sprawdzono także odsyłacze między plikami PDF tomów.
