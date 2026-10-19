@@ -5482,3 +5482,32 @@ bez odrzuceń i ostrzeżeń. W logach nie ma błędów składu,
 przepełnień ani nierozwiązanych odsyłaczy; łącza między tomami
 są obecne. Obejrzano ostateczne strony PDF 69–70 tomu III
 z nowym lematem i jego zastosowaniem.
+
+## 19 października 2026 — lokalny rachunek ruchu T1 Walla
+
+Porównano ruch (T1) w §6, s.~61–62
+[oryginału Walla](https://www.maths.ed.ac.uk/~v1ranick/books/scm.pdf)
+z opisem niezależności od generatorów w rozdziale 27. Dopisano
+lemat wyprowadzający efekt dołączenia generatora zerowego.
+W rozkładzie $S^{2k+1}=\partial(D^{k+1}\times D^{k+1})$
+sfera włóknowa i sfera bazowa brzegu nowej rurki ograniczają dyski
+po przeciwnych stronach, więc tworzą dwa komplementarne proste
+lagranżjany. Dla $k\geq2$ znikanie homologii sfery
+$S^{2k}$ w stopniach $k$ i $k+1$ rozdziela stary oraz nowy
+diagram przez ciąg Mayera--Vietorisa. Stąd reprezentant nowej
+pary lagranżjanów można wybrać jako $\alpha\oplus\sigma$.
+Uściślono wybór dysku usuwanego z lokalnego modelu, orientację
+pary oraz dysk ograniczający rdzeń. Ten etap sprawdza nowy
+lemat i jego zastosowanie; pełny audyt rozdziału 27
+pozostaje otwarty. Konstrukcja ruchu T4 i rachunek śladów
+regularnych homotopii pozostają wskazanymi w tekście wynikami
+zewnętrznymi.
+
+Po końcowej korekcie `buduj_tomy.ps1` wykonał dwa przebiegi i złożył
+tomy o 212, 181 i 165 stronach. Indeksy przyjęły odpowiednio
+112, 96 i 111 haseł bez odrzuceń ani ostrzeżeń. W logach nie ma
+błędów, przepełnień ani nierozwiązanych odsyłaczy; pozostały cztery
+komunikaty o niedopełnionych wierszach poza nowym fragmentem oraz
+dwa ostrzeżenia o położeniu rysunków w tomie I. Sprawdzono nazwy
+plików w odsyłaczach między tomami i obejrzano strony PDF 70–71
+tomu III (drukowane 69–70), zawierające lemat i cały jego dowód.
