@@ -5426,3 +5426,31 @@ o 212, 181 i 163 stronach, a indeksy przyjęły odpowiednio 112, 96 i
 nierozwiązanych odsyłaczy. Obejrzano strony 88, 90 i 91 tomu III,
 w tym rysunek 30.1 i dopisane kroki dowodów; skład i etykiety są czytelne.
 Sprawdzono także odsyłacze między plikami PDF tomów.
+
+## 19 października 2026 — geometryczny krok lematu 5.5 Walla
+
+Porównano §5, lemat 5.5 oraz §1, twierdzenie 1.1 z
+[oryginałem Walla](https://www.maths.ed.ac.uk/~v1ranick/books/scm.pdf).
+Rozdział 27 zawierał rachunek lokalnej chirurgii w dysku, lecz
+sprowadzenie do tego modelu dowolnej chirurgii na klasie zerowej
+pozostawało cytowanym krokiem geometrycznym. Dopisano osobny lemat:
+dopuszczalne obramowane zanurzenie reprezentujące zero w
+$\pi_k(\phi)$ ma tę samą klasę regularnej homotopii co model
+standardowy na mocy twierdzenia 1.1 Walla. Parametryczne położenie
+ogólne zamienia ją w izotopię, ponieważ wymiar potencjalnych
+samoprzecięć śladu wynosi $2(k-1)+1-2k=-1$; stabilizacja
+$\pi_{k-1}(O(k+1))\to\pi_{k-1}(O)$ kontroluje rzeczywiste
+obramowanie. W połączeniu z istniejącym rachunkiem sumy spójnej
+otrzymano lemat 5.5 w zakresie używanym w tekście.
+
+Zależność od twierdzenia 1.1, a przez nie od klasyfikacji immersji,
+pozostała jawna. Ten etap obejmuje przegląd matematyczny nowego lematu,
+jego bezpośredniego zastosowania i zgodności z oryginałem Walla;
+nie stanowi pełnego audytu całego rozdziału 27.
+
+Po zmianach `buduj_tomy.ps1` złożył dwa przebiegi trzech tomów
+(212, 181 i 163 strony). Indeksy przyjęły 112, 96 i 111 haseł,
+bez odrzuceń i ostrzeżeń. W logach nie ma błędów składu,
+przepełnień ani nierozwiązanych odsyłaczy. Sprawdzono łącza
+między tomami oraz strony PDF 63–64 tomu III, w tym ostateczny
+skład nowego lematu i jego zastosowania.
