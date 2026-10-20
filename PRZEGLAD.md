@@ -13,6 +13,28 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 1 — wektory normalne do podrozmaitości (2026-10-20)
+
+Po twierdzeniu o poziomicy dodano ogólny wzór dla podrozmaitości
+$S\subseteq\R^m$ opisanej lokalnie przez niezależne równania
+$f_1=\cdots=f_{m-k}=0$:
+$T_pS=\bigcap_j\ker df_{j,p}
+=(\operatorname{span}\{\nabla f_j(p)\})^\perp$.
+Wyprowadzono go z twierdzenia o przeciwobrazie wartości regularnej
+i tożsamości $df_{j,p}(v)=\langle\nabla f_j(p),v\rangle$.
+Mapy plasterkowe dostarczają takich równań dla każdej podrozmaitości
+euklidesowej. Wynik umieszczono po twierdzeniu o poziomicy,
+przed istniejącym przykładem sfery. Przegląd obejmuje dopisany wynik,
+nie cały rozdział.
+
+Po zmianie buduj_tomy.ps1 wykonał dwa przebiegi i złożył tomy
+o 214, 182 i 168 stronach. Indeksy przyjęły 113, 96 i 119 wpisów
+bez odrzuceń; logi nie zawierają błędów, przepełnień ani brakujących
+odsyłaczy. Potwierdzono docelowe nazwy plików w łączach między
+każdą parą tomów. Obejrzano strony 61–62 PDF tomu I
+(drukowane 60–61): stwierdzenie i jego dowód są czytelne,
+a dotychczasowy przykład sfery następuje bezpośrednio po dowodzie.
+
 ## Rozdział 1 — przestrzeń styczna do podrozmaitości (2026-10-20)
 
 W §1.12, bezpośrednio po konstrukcji struktury gładkiej podrozmaitości,
