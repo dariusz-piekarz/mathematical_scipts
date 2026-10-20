@@ -19,7 +19,8 @@ i organizacja plików w [README.md](README.md).
    formacjami i ciągiem chirurgii. Krok geometryczny lematu 5.5
    oraz rozłączność obramowanych sfer w przypadku nieparzystym
    wyprowadzono z twierdzenia 1.1 Walla. Lokalny rachunek ruchu $T1$
-   wyprowadzono z rozkładu dysku i ciągu Mayera--Vietorisa; pozostałe głębokie lematy
+   wyprowadzono z rozkładu dysku i ciągu Mayera--Vietorisa, a dla ruchów
+   $T2$--$T4$ rozpisano zmianę bazy hiperbolicznej; pozostałe głębokie lematy
    geometryczne nadal są jawnymi wejściami zewnętrznymi. Wersję $h$ i ciąg
    Rothenberga wskazano osobno jako wyniki zewnętrzne. Przed oznaczeniem
    dowodu jako samodzielnie pełnego trzeba je wyprowadzić i przeprowadzić
@@ -72,7 +73,8 @@ głębokiego wyniku użytego z zewnątrz nie nazywać własnym pełnym dowodem.
    i przejścia algebraiczne są rozpisane. Krok izotopii obramowanej
    sfery z lematu 5.5 oraz rozłączne reprezentowanie generatorów
    w przypadku nieparzystym wyprowadzono z twierdzenia 1.1 Walla,
-   a dla ruchu $T1$ rozpisano lokalny rachunek dwóch lagranżjanów;
+   dla ruchu $T1$ rozpisano lokalny rachunek dwóch lagranżjanów,
+   a dla $T2$--$T4$ rachunek bazy dualnej;
    chirurgie poniżej środka, reprezentację sfer w środku wymiaru,
    przygotowanie kobordyzmu oraz część
    relacji $SU/RU$ przyjęto jako jawne lematy Walla z hipotezami

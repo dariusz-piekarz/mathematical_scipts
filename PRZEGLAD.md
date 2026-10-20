@@ -9,6 +9,21 @@ wersji wskazanej w danym wpisie. Audyt 18 rozdziałów nie obejmuje późniejszy
 dodatków autora. Od 5 października źródła są w `tex/rozdzialy/`;
 pliki główne tylko ustalają ich kolejność.
 
+## Ruchy T2--T4 Walla w rozdziale 27 (2026-10-20)
+
+Po lokalnym rachunku ruchu T1 dopisano dowód algebraicznego efektu
+ruchów T2--T4. Z definicji $H(B)$ wyprowadzono działanie na bazie
+dualnej, w tym poprawkę $f_2\mapsto f_2-f_1$ dla sumy generatorów
+oraz czynnik $(\bar u)^{-1}$ dla zmiany drogi i orientacji. Sprawdzono
+parowania hiperboliczne i prostotę trzech typów macierzy. Rachunek
+porównano z §6 Walla; geometryczna realizacja dyfeomorfizmu
+pogrubionego układu rurek w ruchu T4 pozostaje jawnym wynikiem
+zewnętrznym wskazanym tam przez Walla jako [W8, s.~272].
+Pełny skład trzech tomów zakończył się powodzeniem. Logi nie wykazały
+brakujących odsyłaczy ani przepełnionych wierszy; indeksy przyjęły
+odpowiednio 112, 96 i 111 haseł bez odrzuceń. Strony 70--71 tomu III
+z nowym lematem sprawdzono wizualnie.
+
 ## Rozdział 2, linie 93–153 — krzywa reprezentująca wektor (2026-10-20)
 
 Sprawdzono wyprowadzenie $X_p(f)$ przez krzywą w mapie z definicją
