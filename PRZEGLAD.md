@@ -13,6 +13,37 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 1 — przestrzeń styczna do podrozmaitości (2026-10-20)
+
+W §1.12, bezpośrednio po konstrukcji struktury gładkiej podrozmaitości,
+dodano stwierdzenie identyfikujące $T_pS$ z obrazem różniczki inkluzji
+w $T_pM$. W mapie plasterkowej obraz ten jest rozpięty przez pochodne
+w kierunkach współrzędnych podrozmaitości i jest wspólnym jądrem
+różniczek współrzędnych poprzecznych. Dowód wyprowadza oba opisy
+z lokalnej postaci inkluzji $u\mapsto(u,0)$ i pokazuje, że każdy
+wektor z obrazu jest prędkością krzywej w $S$. Uściślono także
+przypadki skrajnych wymiarów $k=0$ i $k=n$. Wynik uzasadnia
+identyfikację używaną zaraz potem przy wiązce normalnej.
+
+Przykład $S^1\subset\R^2$ w punkcie $(1,0)$ oblicza
+$T_pS^1=\{(0,b):b\in\R\}$ dwoma krokami: różniczkowanie równania
+okręgu ogranicza możliwe prędkości, a krzywe
+$(\cos bt,\sin bt)$ realizują każdą z nich. Lokalna postać
+submersji uzasadnia status okręgu jako podrozmaitości.
+Rysunek rozróżnia przestrzeń wektorów stycznych od jej przesuniętej
+prostej afinicznej w punkcie $p$. Ujednolicono termin „podrozmaitość
+zanurzona” w następnym przykładzie i dodano hasło do indeksu.
+Przegląd dotyczy nowego fragmentu, nie całego rozdziału 1.
+
+Po zmianach buduj_tomy.ps1 wykonał trzy przebiegi i złożył tomy
+o 214, 182 i 168 stronach. Indeksy przyjęły odpowiednio 113, 96
+i 119 wpisów bez odrzuceń, w tym nowe hasło o przestrzeni stycznej.
+Logi nie zawierają błędów, przepełnień ani nierozwiązanych odsyłaczy.
+W PDF-ach sprawdzono nazwy plików w łączach między każdą parą tomów.
+Obejrzano stronę 59 PDF tomu I (drukowaną 58): wynik, przykład
+i rysunek są na jednej stronie, a etykiety i punkt styczności
+pozostają czytelne.
+
 ## Rozdział 2 — rysunek pola na sferze (2026-10-20)
 
 Do przykładu $X_p=(-y,x,0)$ dodano rysunek sfery w jasnoniebieskim
