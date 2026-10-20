@@ -13,6 +13,20 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 2 — inkluzja okręgu (2026-10-20)
+
+W przykładzie działania pola na funkcję na $S_r^1$ dopisano jawny
+wzór $\iota(u,v)=(u,v)$. Wyjaśniono, że inkluzja jest ograniczeniem
+identyczności płaszczyzny do okręgu, lecz ma przeciwdziedzinę
+$\R^2$, więc nie jest identycznością $S_r^1\to S_r^1$.
+To doprecyzowanie ustala sens dalszej różniczki
+$(\dd\iota)_p:T_pS_r^1\to T_p\R^2$ bez zmiany rachunku pola.
+Pełny skład trzech tomów zakończył się PDF-ami o 212, 182 i 168
+stronach. Logi nie zawierają brakujących odsyłaczy ani przepełnionych
+wierszy; indeksy przyjęły 112, 96 i 119 wpisów bez odrzuceń.
+Nowe zdania odczytano w PDF tomu I, a łącza z niego do tomów II i III
+pozostały aktywne.
+
 ## Audyt rozdziałów 15–18 (2026-10-20)
 
 Przeczytano całe cztery rozdziały tomu II i sprawdzono ich zależności.
