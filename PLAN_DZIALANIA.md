@@ -1,6 +1,6 @@
 # Aktualny plan i pokrycie przeglądem
 
-Stan: 19 października 2026. Gałąź: `review/rozdzialy-matematyka`.
+Stan: 20 października 2026. Gałąź: `review/rozdzialy-matematyka`.
 Książka ma **38 rozdziałów, pięć części i trzy dodatki**. Numery w nazwach
 plików są historyczne; numer w PDF ustala kolejność importów.
 Skład roboczy podzielono na trzy tomy: rozdziały 1–10, 11–22 oraz
@@ -20,7 +20,8 @@ i organizacja plików w [README.md](README.md).
    oraz rozłączność obramowanych sfer w przypadku nieparzystym
    wyprowadzono z twierdzenia 1.1 Walla. Lokalny rachunek ruchu $T1$
    wyprowadzono z rozkładu dysku i ciągu Mayera--Vietorisa, a dla ruchów
-   $T2$--$T4$ rozpisano zmianę bazy hiperbolicznej; pozostałe głębokie lematy
+   $T2$--$T4$ rozpisano zmianę bazy hiperbolicznej. Wyprowadzono też lokalny
+   efekt pojedynczej chirurgii na środkowej sferze; pozostałe głębokie lematy
    geometryczne nadal są jawnymi wejściami zewnętrznymi. Wersję $h$ i ciąg
    Rothenberga wskazano osobno jako wyniki zewnętrzne. Przed oznaczeniem
    dowodu jako samodzielnie pełnego trzeba je wyprowadzić i przeprowadzić
@@ -74,7 +75,8 @@ głębokiego wyniku użytego z zewnątrz nie nazywać własnym pełnym dowodem.
    sfery z lematu 5.5 oraz rozłączne reprezentowanie generatorów
    w przypadku nieparzystym wyprowadzono z twierdzenia 1.1 Walla,
    dla ruchu $T1$ rozpisano lokalny rachunek dwóch lagranżjanów,
-   a dla $T2$--$T4$ rachunek bazy dualnej;
+   dla $T2$--$T4$ rachunek bazy dualnej oraz zmianę lagranżjanu
+   po pojedynczej chirurgii;
    chirurgie poniżej środka, reprezentację sfer w środku wymiaru,
    przygotowanie kobordyzmu oraz część
    relacji $SU/RU$ przyjęto jako jawne lematy Walla z hipotezami

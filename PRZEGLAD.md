@@ -9,6 +9,24 @@ wersji wskazanej w danym wpisie. Audyt 18 rozdziałów nie obejmuje późniejszy
 dodatków autora. Od 5 października źródła są w `tex/rozdzialy/`;
 pliki główne tylko ustalają ich kolejność.
 
+## Chirurgia na jednej sferze w dowodzie Walla (2026-10-20)
+
+Rozpisano lokalny efekt pojedynczej chirurgii w nieparzystym wymiarze:
+$S^k\times D^{k+1}$ zostaje zastąpione przez $D^{k+1}\times S^k$,
+podczas gdy dopełnienie $M_0$ i jego strzałka brzegowa pozostają te same.
+W starym module hiperbolicznym lagranżjan rurki zmienia pierwszy
+generator z $e_1$ na $f_1$, a lagranżjan dopełnienia pozostaje $L_1$.
+Jawna identyfikacja nowych współrzędnych przez $\sigma_1^{-1}$ daje
+$\alpha'=\sigma_1\alpha$ przy przyjętej konwencji składania. Ustalono
+też rolę znaku dla nieparzystego $k$. Rachunek porównano z dowodem
+lematu 6.1 Walla; przygotowanie całego kobordyzmu i kryterium zera
+pozostają wskazanymi w tekście wynikami zewnętrznymi.
+Pełny skład trzech tomów i indeksów zakończył się powodzeniem.
+Logi nie zgłaszają brakujących odsyłaczy ani przepełnionych wierszy;
+indeksy przyjęły odpowiednio 112, 96 i 111 haseł bez odrzuceń.
+Strony 71--72 tomu III, obejmujące nowy lemat i dalszy argument,
+sprawdzono wizualnie.
+
 ## Ruchy T2--T4 Walla w rozdziale 27 (2026-10-20)
 
 Po lokalnym rachunku ruchu T1 dopisano dowód algebraicznego efektu
