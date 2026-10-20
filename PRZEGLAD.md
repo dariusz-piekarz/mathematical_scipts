@@ -13,6 +13,26 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 2 — współrzędne pola na sferze (2026-10-20)
+
+W przykładzie pola $X_p=(-y,x,0)$ rozpisano przejście do współrzędnych
+na górnej półsferze. Różniczka mapy $\varphi(x,y,z)=(x,y)$ odczytuje
+z $X_p$ współczynniki $(-v,u)$, co daje $X=-v\partial_u+u\partial_v$.
+Odwrotna mapa, złożona z inkluzją sfery do $\R^3$, parametryzuje
+półsferę; jej różniczka przelicza te współczynniki z powrotem
+na wektor w przestrzeni otaczającej. Obliczono pochodne funkcji
+$z(u,v)=\sqrt{1-u^2-v^2}$ i pokazano, że składowa pionowa
+znika dla pary $(-v,u)$. Wyjaśniono użycie reguły łańcucha
+i znaczenie wektorów bazy współrzędnościowej. Zmiana odpowiada
+na pytanie o rolę odwrotności mapy i obejmuje tylko ten przykład.
+
+Po zmianie `buduj_tomy.ps1` złożył dwa przebiegi oraz trzy tomy
+o 214, 182 i 168 stronach. Indeksy przyjęły odpowiednio 113, 96
+i 119 wpisów bez odrzuceń. Logi nie zawierają błędów, przepełnień
+ani brakujących odsyłaczy; sprawdzono też łącza między tomami.
+Obejrzano strony 67–68 PDF tomu I (drukowane 66–67): rachunek
+i rysunek są czytelne, a etykiety nie są zasłonięte.
+
 ## Rozdział 1 — wektory normalne do podrozmaitości (2026-10-20)
 
 Po twierdzeniu o poziomicy dodano ogólny wzór dla podrozmaitości
