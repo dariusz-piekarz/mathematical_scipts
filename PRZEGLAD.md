@@ -13,6 +13,22 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 2 — rysunek pola na sferze (2026-10-20)
+
+Do przykładu $X_p=(-y,x,0)$ dodano rysunek sfery w jasnoniebieskim
+stylu rozdziału 1. Strzałki są rzutami wektorów w punktach widocznej
+części równika i górnego równoleżnika; dla wyróżnionego
+$p=(0,-1,0)$ wskazują $X_p=(1,0,0)$. Złote znaczniki pokazują
+oba zera pola; przerywany znacznik bieguna południowego oznacza,
+że leży po niewidocznej stronie sfery. Rzut, położenia znaczników
+i znaki wektorów sprawdzono ze wzorem pola. Po składzie tomu I
+obejrzano strony PDF 66–67: ilustracja poprzedza następną uwagę,
+a etykiety $N,S,p,X_p$ nie są zasłonięte.
+Pełny skład dał tomy o 213, 182 i 168 stronach. Logi nie zgłaszają
+brakujących odsyłaczy ani przepełnionych wierszy; indeksy przyjęły
+112, 96 i 119 wpisów bez odrzuceń. W gotowych PDF-ach potwierdzono
+łącza między każdą parą tomów.
+
 ## Rozdział 2 — inkluzja okręgu (2026-10-20)
 
 W przykładzie działania pola na funkcję na $S_r^1$ dopisano jawny
