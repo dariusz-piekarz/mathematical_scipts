@@ -9,6 +9,20 @@ wersji wskazanej w danym wpisie. Audyt 18 rozdziałów nie obejmuje późniejszy
 dodatków autora. Od 5 października źródła są w `tex/rozdzialy/`;
 pliki główne tylko ustalają ich kolejność.
 
+## Rozdział 2, linie 93–153 — krzywa reprezentująca wektor (2026-10-20)
+
+Sprawdzono wyprowadzenie $X_p(f)$ przez krzywą w mapie z definicją
+klas krzywych z rozdziału 1. Otwartość obrazu mapy zapewnia istnienie
+krzywej dla małych dodatnich i ujemnych czasów; reguła łańcucha
+daje lokalny wzór na derywację. Doprecyzowano, że ten sam rachunek
+działa dla każdego reprezentanta o klasie $X_p$, oraz wskazano
+wcześniejszy dowód niezależności tej klasy od mapy.
+Pełny skład trzech tomów i indeksów zakończył się powodzeniem.
+Odsyłacze między tomami ustabilizowały się; logi nie zgłaszają
+niewyjaśnionych odsyłaczy, a indeksy mają odpowiednio 112, 96 i 111
+przyjętych haseł oraz po `0 rejected`. Stronę 62 tomu I z nowym
+wyprowadzeniem sprawdzono wizualnie.
+
 ## Przykład pola stycznego do okręgów w rozdziale 2 (2026-10-15)
 
 Do przykładu $X=-v\partial_u+u\partial_v$ dodano rachunek na okręgu
