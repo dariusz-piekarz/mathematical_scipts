@@ -13,6 +13,60 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Audyt rozdziałów 15–18 (2026-10-20)
+
+Przeczytano całe cztery rozdziały tomu II i sprawdzono ich zależności.
+W rozdziale 15 porównano nawias, pola niezmiennicze, eksponentę,
+działanie adjungowane i nakrycie
+$\mathrm{SU}(2)\to\mathrm{SO}(3)$ z [notatkami Conrada i
+Landesmana](https://math.stanford.edu/~conrad/210CPage/handouts/lie_groups_notes.pdf).
+Nie znaleziono błędu w rachunkach. Doprecyzowano identyfikację torusa
+obrotowego z $(\R/2\pi\Z)^2$ i oszacowanie pochodnych szeregu
+macierzowego; wcześniej oszacowanie obejmowało tylko same wyrazy.
+
+W rozdziale 16 sprawdzono uśrednianie, działanie $G$ na $G/H$,
+zupełność, ilorazy przez grupy dyskretne, lokalny model orbifoldu
+oraz modele euklidesowy, afiniczny, rzutowy i hiperboliczny względem
+[Lee](https://julianchaidez.net/materials/reu/lee_smooth_manifolds.pdf),
+[Thurstona](https://library.slmath.org/nonmsri/gt3m/PDF/13.pdf) i
+[Scotta](https://sschleimer.warwick.ac.uk/Teach/2021_3MFDS/References/1983the_geometries_of_three-manifolds.pdf).
+Wstęp ograniczono do rzeczywiście wyprowadzonego działania
+$\mathrm{PSL}(2,\R)$ przez izometrie: rozdział nie dowodzi, że jest to
+pełna grupa izometrii.
+
+W rozdziale 17 sprawdzono transgresję, normalizację Pfaffianu,
+klasę Eulera i brzegowy wzór Cherna--Gaussa--Bonneta. Zastąpiono
+zbyt skrótowe odwołanie do rozszczepienia rachunkiem
+$p_1(E)=-c_2(E\otimes_\R\C)$ i jawnie oznaczono zgodność formy
+Cherna z całkowitą klasą topologiczną jako wejście zewnętrzne.
+Sprawdzono znak według [Hatchera](https://pi.math.cornell.edu/~hatcher/VBKT/VB.pdf)
+i wzory krzywizny według
+[Biquarda](https://webusers.imj-prg.fr/~olivier.biquard/m2dg2022.pdf).
+Rozpisano kompleks względnych form de Rhama, jego różniczkę,
+porównanie z formami znikającymi na brzegu i znak parowania z
+włóknem; punktem odniesienia jest
+[Bott--Tu, §7](https://doi.org/10.1007/978-1-4757-3951-0).
+Granicę całek wokół zer uzasadniono w zorientowanej ramie przez
+oszacowanie $O(\varepsilon)$ składników poziomych. W wersji brzegowej
+doprecyzowano transwersalność pól, zachowanie dodatniej składowej
+normalnej oraz znaki końców kobordyzmu zer.
+
+W rozdziale 18 sprawdzono znaki kodiferencjału, laplasjanu
+Hodge'a, wzoru Weitzenböcka i tożsamości Bochnera w konwencji
+rozdziału 14. Zakres twierdzenia o sprzężeniu obejmuje jawnie
+stopnie krańcowe. Doprecyzowano, że
+[notatki MIT, wykład 15](https://ocw.mit.edu/courses/18-966-geometry-of-manifolds-spring-2007/d6848bb391c032ef27993e984fef4558_lect15.pdf)
+omawiają rozkład Hodge'a i parametryks, a przyjęte twierdzenie
+eliptyczne pozostaje wejściem analitycznym. Zdefiniowano sygnaturę
+formy przecięcia i dodano kontrolny przykład $S^2\times S^2$
+z $b_2^+=b_2^-=1$.
+Pełny skład zakończył się PDF-ami o 212, 182 i 168 stronach.
+Logi nie zgłaszają brakujących odsyłaczy ani przepełnionych
+wierszy, a indeksy przyjęły odpowiednio 112, 96 i 119 wpisów
+bez odrzuceń. W gotowych PDF-ach potwierdzono łącza między
+każdą parą tomów; tekst nowych akapitów sprawdzono w tomie II.
+W tych czterech rozdziałach nie zmieniano rysunków.
+
 ## Audyt rozdziałów 31–33 (2026-10-20)
 
 Przeczytano w całości rozdziały o potoku Ricciego, trójwymiarowym

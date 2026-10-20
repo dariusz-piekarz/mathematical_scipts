@@ -25,8 +25,8 @@ i organizacja plików w [README.md](README.md).
    (rozdziały 34–38) kontynuować według zakresu poniżej;
    wymiary cztery pozostają wykładem informacyjnym.
 2. Audyt rozdziałów 31–33, nowego rysunku i zależności zakończono
-   20 października. Dalej sprawdzić zaległe części rozdziałów
-   15–18 oraz dodatki A i B według tabeli.
+   20 października. Pełny audyt rozdziałów 15–18 zakończono tego samego
+   dnia; następne w kolejce są dodatki A i B według tabeli.
    Zwykła iteracja obejmuje jeden rozdział, chyba że etap wymaga
    wspólnego dowodu. Wcześniejszy audyt innych rozdziałów pozostaje
    ważny w swoim wskazanym zakresie, ale nie oznacza wykonania
@@ -133,10 +133,10 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 12. Koneksje i transport | `12-koneksje.tex` | Audyt dodatków zakończony 6 października; bez poprawek treści | Cztery wpisy indeksu, definicje i dwa rysunki sprawdzone; PDF 397 stron |
 | 13. Geodezyjne i zupełność | `13-geodezyjne.tex` | Audyt dodatków zakończony 6 października; 13 października dodano miejsce cięcia i promień injektywności | Definicje, dowód związku z czasem cięcia, alternatywa dla miejsca cięcia, pełne rachunki sfery i płaskiego torusa oraz dwa nowe rysunki sprawdzone w tomie II (180 stron) |
 | 14. Krzywizna | `14-krzywizna.tex` | Audyt dodatków zakończony 6 października; 13 października dodano holonomię i rozkład de Rhama oraz powiązano §14.9 z miejscem cięcia w §13.6 | Grupa holonomii, zasada pól równoległych, pełny dowód lokalnego iloczynu, przykłady i dwa rysunki; globalny krok de Rhama oraz Ambrose–Singer są jawnymi wynikami zewnętrznymi. Powiązanie sprzężenia, alternatywy w miejscu cięcia i promienia injektywności sprawdzone. |
-| 15. Grupy Liego | `29-grupy-liego.tex` | Sprawdzono nakrycie kwaternionowe 7 października; pełny audyt całości czeka | Przykłady, nawias, eksponenta, działanie adjungowane i jawne nakrycie $\mathrm{SU}(2)\to\mathrm{SO}(3)$; później sprawdzić zastosowania w Chernie–Weilu i wymiarze cztery |
-| 16. Geometria Kleina (plik 29a) | `29a-geometria-kleina.tex` | Sekcję o ilorazach rozbudowano 11–12 października; audyt reszty oczekuje | Dowody uśredniania, właściwości działania na $G/H$, zupełności, ilorazu przez grupę dyskretną i lokalnego modelu orbifoldu; zgodność map orbifoldowych rozpisano przez homomorfizm grup, podniesienie i wspólne uszczegółowienie. Pozostałe modele Kleina wymagają osobnego przeglądu. |
-| 17. Chern–Weil | `27-chern-weil.tex` | Oczekuje | Normalizacje i transgresja; uzasadnić model względnej kohomologii de Rhama przy identyfikacji klasy Eulera, granicę całek wokół zer i wersję brzegową |
-| 18. Hodge–Bochner | `28-hodge-bochner.tex` | Sprawdzono kluczowe wzory 7 października; pełny audyt całości czeka | Jawne wejście analityczne; własne dowody wzoru Weitzenböcka, znikania Bochnera i rozkładu sygnatury; sprawdzić zgodność z przyszłą teorią czterowymiarową |
+| 15. Grupy Liego | `29-grupy-liego.tex` | Pełny audyt zakończony 20 października | Sprawdzono przykłady, nawias, eksponentę, działanie adjungowane i nakrycie $\mathrm{SU}(2)\to\mathrm{SO}(3)$; doprecyzowano torus i oszacowanie pochodnych szeregu. |
+| 16. Geometria Kleina (plik 29a) | `29a-geometria-kleina.tex` | Pełny audyt zakończony 20 października | Sprawdzono uśrednianie, właściwość działania na $G/H$, zupełność, ilorazy dyskretne, orbifoldy i modele Kleina; zawężono deklarację o izometriach hiperbolicznych do dowiedzionego działania $\mathrm{PSL}(2,\R)$. |
+| 17. Chern–Weil | `27-chern-weil.tex` | Pełny audyt zakończony 20 października | Sprawdzono normalizacje i transgresję; rozpisano model względny klasy Eulera, granicę wokół zer i wersję brzegową. Zgodność zespolonej formy Cherna z całkowitą klasą pozostaje jawnym wejściem zewnętrznym. |
+| 18. Hodge–Bochner | `28-hodge-bochner.tex` | Pełny audyt zakończony 20 października | Sprawdzono wejście analityczne, znaki Weitzenböcka i Bochnera oraz rozkład sygnatury; dopisano zakres stopni i przykład $S^2\times S^2$. |
 | 19. Sard i transwersalność | `15-sard-transwersalnosc.tex` | Audyt dodatków zakończony 6 października; bez poprawek treści | Pięć wpisów indeksu, cztery ilustracje i warunki transwersalności przy brzegu sprawdzone; PDF 401 stron |
 | 20. Zanurzenia i otoczenia | `16-zanurzenia-otoczenia.tex` | Audyt dodatków zakończony 6 października; PDF 401 stron | Sześć haseł indeksu, cztery ilustracje i kołnierze sprawdzone; poprawiono terminologię odwzorowań oraz zdanie o homotopii do odwzorowania stałego |
 | 21. Przecięcia, dualność i klasy | `17-przeciecia-dualnosc-klasy.tex` | Audyt dodatków zakończony 6 października | Sprawdzone indeks, konwencje znaków i cztery ilustracje; ujednolicono terminologię i rozwinięto argument Leraya–Hirscha dla wiązki rzutowej |
