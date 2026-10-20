@@ -13,6 +13,39 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Audyt rozdziałów 31–33 (2026-10-20)
+
+Przeczytano w całości rozdziały o potoku Ricciego, trójwymiarowym
+twierdzeniu Poincarégo i geometryzacji Thurstona. Rachunek skalowania,
+ewolucji objętości i skalara, zasady maksimum oraz symbolu poprawki
+DeTurcka w rozdziale 31 jest zgodny z przyjętą konwencją krzywizny.
+Istnienie i jednoznaczność rozwiązań układów parabolicznych pozostają
+jawnym wejściem analitycznym Hamiltona i DeTurcka. Sprawdzono założenia
+braku lokalnego zapadania z twierdzeniem 4.1 Perelmana, wersję
+wygasania z twierdzeniem 18.1 Morgana–Tiana oraz przejście od
+wygaśnięcia do sumy spójnej sferycznych form przestrzennych i
+$S^2\times S^1$. Własne lematy o cięciu sfery, grupie podstawowej
+i $\pi_3$ zachowują potrzebne hipotezy. Twierdzenia Perelmana
+o chirurgii, otoczeniach kanonicznych i wygasaniu są nadal
+wyraźnie oznaczone jako zewnętrzne.
+
+W rozdziale 32 ujednolicono termin „rozmaitość trójwymiarowa”
+i poprawiono tytuł źródła cytującego twierdzenie Moise'a;
+tę samą poprawkę wprowadzono do dodatku A. W rozdziale 33
+zdefiniowano dysk ściskający i wskazano twierdzenie o pętli
+Papakyriakopoulosa jako zewnętrzną podstawę jego równoważności
+z nieinjektywnością $\pi_1(T^2)\to\pi_1(M)$. Opis rozdziału 31
+poprawiono tak, aby nie przypisywał mu samodzielnego dowodu
+istnienia potoku. Tabelę sześciu geometrii Seiferta porównano
+z tablicą 4.1 Scotta, a sformułowanie rozkładu JSJ z wersją
+geometryzacji dla orientowalnych, nierozkładalnych rozmaitości.
+Uzupełniono indeks o centralne pojęcia trzech rozdziałów.
+Pełny skład dał PDF-y o 212, 181 i 168 stronach. Logi nie
+zawierają brakujących odsyłaczy ani przepełnionych wierszy;
+indeksy przyjęły odpowiednio 112, 96 i 119 wpisów bez odrzuceń.
+W tomie III potwierdzono łącza do PDF-ów tomów I i II oraz
+obejrzano strony PDF 100 (rysunek 31.1), 113 i 121--122.
+
 ## Końcowy audyt Walla i ciągu chirurgii (2026-10-20)
 
 Cały dopisany wykład w rozdziałach 27–28 porównano z oryginalnym
