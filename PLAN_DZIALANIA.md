@@ -12,42 +12,26 @@ i organizacja plików w [README.md](README.md).
 
 ## Bieżący zakres i kolejność
 
-1. Dokończyć audyt wykładu twierdzenia Walla o przeszkodzie chirurgicznej
-   w wymiarach co najmniej pięć (rozdziały 27–28), z jawnym użyciem
-   głębokich wyników Walla jako wejść zewnętrznych.
-   Rozpisano wersję $s$ w przypadkach parzystym $n\geq6$ i
-   nieparzystym $n\geq5$, wraz z bazami nad $\Z[\pi]$,
-   formacjami i ciągiem chirurgii. Krok geometryczny lematu 5.5
-   oraz rozłączność obramowanych sfer w przypadku nieparzystym
-   wyprowadzono z twierdzenia 1.1 Walla. Lokalny rachunek ruchu $T1$
-   wyprowadzono z rozkładu dysku i ciągu Mayera--Vietorisa, a dla ruchów
-   $T2$--$T4$ rozpisano zmianę bazy hiperbolicznej. Wyprowadzono też lokalny
-   efekt pojedynczej chirurgii na środkowej sferze; pozostałe głębokie lematy
-   geometryczne nadal są jawnymi wejściami zewnętrznymi. Wersję $h$ i ciąg
-   Rothenberga wskazano osobno jako wyniki zewnętrzne. Po decyzji autora
-   z 20 października nie planujemy samodzielnego wyprowadzania tych
-   głębokich lematów; pozostaje końcowy audyt nowego tekstu.
-   W rozdziale 29 rozpisano oba twierdzenia Bardena (2.2 i 2.3)
-   wraz z ich modelami oraz jawnie wskazanymi wynikami wejściowymi;
-   kontrola twierdzeń 2.2 i 2.3 ze źródłem oraz pełny audyt całego
-   rozdziału są zakończone 20 października. Klasyfikację sfer Milnora
-   i wszystkich gładkich sfer homotopijnych wymiaru siedem dopisano
-   do rozdziału 30; audyt wcześniejszej treści zakończono
-   19 października. Twierdzenia
-   czterowymiarowe (rozdziały 34–38) kontynuować według
-   zakresu poniżej; wymiary cztery pozostają
-   wykładem informacyjnym. Zwykła iteracja obejmuje jeden rozdział,
-   chyba że etap wymaga wspólnego dowodu. Wcześniejszy audyt
-   każdego z tych rozdziałów pozostaje ważny w swoim wskazanym zakresie,
-   ale nie oznacza wykonania nowej rozbudowy.
-2. Dokończyć audyt według numeracji PDF: rozdział 29 ma pełny audyt
-   z 20 października. Rozdziały 26–28 mają wcześniejsze przeglądy,
-   a rozdział 30 audyt wcześniejszej treści z 19 października;
-   następny w kolejce jest rozdział 31. Rozdziały 31–33 wymagają
-   pełnych audytów lub kontroli nowych rysunków
-   i zależności. Dalej sprawdzić zaległe części rozdziałów 15–18
-   oraz dodatki A i B według tabeli. Rozdział 1 z nowymi wiązkami
-   sprawdzono 13 października; §1.10 ponownie skontrolowano 14 października.
+1. Końcowy audyt dopisanego wykładu Walla w rozdziałach 27–28
+   zakończono 20 października. Sprawdzono przypadek parzysty,
+   nieparzysty i ciąg chirurgii względem §§1–2, 5–6 i 10 Walla;
+   poprawiono stronę formy w jednym wzorze dualności oraz
+   doprecyzowano terminologię i hipotezy. Głębokie lematy
+   geometryczne, wersja $h$ i ciąg Rothenberga pozostają
+   jawnie wskazanymi wynikami
+   zewnętrznymi zgodnie z decyzją autora. Klasyfikację Bardena
+   w rozdziale 29 oraz sfer Milnora w rozdziale 30 domknięto
+   w przyjętym zakresie. Twierdzenia czterowymiarowe
+   (rozdziały 34–38) kontynuować według zakresu poniżej;
+   wymiary cztery pozostają wykładem informacyjnym.
+2. Dokończyć audyt według numeracji PDF: następny w kolejce jest
+   rozdział 31. Rozdziały 31–33 wymagają pełnych audytów lub
+   kontroli nowych rysunków i zależności. Dalej sprawdzić zaległe
+   części rozdziałów 15–18 oraz dodatki A i B według tabeli.
+   Zwykła iteracja obejmuje jeden rozdział, chyba że etap wymaga
+   wspólnego dowodu. Wcześniejszy audyt innych rozdziałów pozostaje
+   ważny w swoim wskazanym zakresie, ale nie oznacza wykonania
+   nowej rozbudowy.
 3. Przed każdą iteracją pobierać zmiany współautora. Zmieniać źródło
    w odpowiednim pliku rozdziału, zapisywać uzasadnienia w
    `PRZEGLAD.md`, składać odpowiedni tom i sprawdzać zmienione strony.
@@ -84,7 +68,7 @@ głębokiego wyniku użytego z zewnątrz nie nazywać własnym pełnym dowodem.
    przygotowanie kobordyzmu oraz część
    relacji $SU/RU$ przyjęto jako jawne lematy Walla z hipotezami
    i źródłem. Autor zaakceptował je jako wejścia zewnętrzne;
-   pozostaje końcowy audyt nowego tekstu;
+   końcowy audyt nowego tekstu przeprowadzono 20 października;
    porównanie dekoracji $s/h$ pozostaje osobnym wynikiem zewnętrznym.
 2. **Klasyfikacja Bardena — rozdział 29.** Rozpisano twierdzenie 2.2
    o realizacji zadanego izomorfizmu $H_2$ oraz twierdzenie 2.3
@@ -162,8 +146,8 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 24. h-kobordyzm | `20-h-kobordyzm.tex` | Audyt i uzupełnienia zakończone 9 października; skład po scaleniu do `2777149`: 503 strony | Rozpisano wymianę 1→3, dopełnienia w kowymiarze 2, wstęgi i homologię wyciętej sfery. Dokładne założenia obramowanego lematu Whitneya podano jako jawny wynik zewnętrzny. Trzy rysunki, odsyłacze i indeks sprawdzone. |
 | 25. Torsja i s-kobordyzm | `21-torsja-s-kobordyzm.tex` | Pełny audyt i uzupełnienia zakończone 11 października; PDF 505 stron | Poprawiono bazy i konwencje macierzowe, dowód niezależności kontrakcji, zakres lematu Whitneya, obramowania i dualność w realizacji torsji. Strony 390–401, oba schematy, odsyłacze i indeks sprawdzone; głębokie wejścia zewnętrzne wskazano dokładnie. |
 | 26. Chirurgia geometryczna | `22-chirurgia-geometryczna.tex` | Pełny audyt zakończony 8 października; treść bez poprawek | Sprawdzone obramowania, ślad i uchwyt dualny, homologia, $\pi_1$, forma jądra i rysunki |
-| 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Pełny audyt starszej treści zakończony 7 października; 14 października rozpisano oba przypadki $n\geq5$; 19–20 października wyprowadzono krok geometryczny lematu 5.5, rozłączne reprezentowanie generatorów, ruchy $T1$--$T4$ i lokalny efekt pojedynczej chirurgii | Dodano rachunek baz i torsji nad $\Z[\pi]$, $SU/RU$, osobny wymiar pięć, stabilizację hiperboliczną, rozłączne sfery z ramami i drogami bazowymi oraz porównanie $L^s/L^h$ ciągiem Rothenberga. Głębokie lematy Walla, twierdzenie dla dekoracji $h$ i relacja formacji pozostają zaakceptowanymi, jawnie zewnętrznymi wynikami; pełny audyt nowego tekstu pozostaje otwarty. |
-| 28. Ciąg chirurgii | `24-ciag-chirurgii.tex` | Pełny audyt starszej treści zakończony 8 października; próg $n\geq5$ sprawdzony 14 października | Uściślono naturę obu strzałek przeszkody, realizację przez twierdzenia 5.8 i 6.5 oraz przejście do $s$-kobordyzmu; bijekcja z $[X,G/O]$ i działanie grupy $L$ pozostają jawnymi wynikami Walla |
+| 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Pełny audyt także nowego tekstu zakończony 20 października względem §§1–2, 5–6 Walla | Sprawdzono parzyste i nieparzyste kryterium, bazy i torsję nad $\Z[\pi]$, $SU/RU$, ruchy $T1$--$T4$, wymiar pięć i chirurgię środkową. Poprawiono stronę $\lambda$ w dualności, terminologię immersji i hipotezy lematu 5.7. Głębokie lematy Walla, wersja $h$ i relacja formacji pozostają jawnymi wynikami zewnętrznymi. |
+| 28. Ciąg chirurgii | `24-ciag-chirurgii.tex` | Pełny audyt zakończony 20 października względem §10 oraz twierdzeń 5.8 i 6.5 Walla | Sprawdzono dokładność, działanie $L_{n+1}^s$, zakres $n\geq5$, lewą strzałkę i przejście do $s$-kobordyzmu; doprecyzowano racjonalne jądro w rachunku sygnatury. Bijekcja z $[X,G/O]$ i działanie grupy $L$ pozostają jawnymi wynikami Walla. |
 | 29. Poincaré | `25-poincare.tex` | Pełny audyt rozdziału zakończony 20 października; twierdzenia 2.2 i 2.3 Bardena porównano z oryginałem | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm; lematy 3.1 i 4.1–4.4, indukcja, modele $M_k,X_j$, formy wiązania i przykłady spin/niespin. Doprecyzowano źródło triangulacji, mieszaną parę torsyjną, hipotezy lematu 4.4 i orientację przy wniosku pięciowymiarowym. Głębokie wejścia pozostają zewnętrzne. |
 | 30. Sfery Milnora | `26-sfery-milnora.tex` | Audyt wcześniejszej treści zakończony 19 października; klasyfikację dopisano 20 października | Sprawdzono sklejanie, klasy $e,p_1$, ciąg Mayera--Vietorisa, kryterium Whiteheada, obie sygnatury, $\lambda$, $\mu$, przykłady i rysunek. Nowy rachunek klasyfikuje 16 typów wiązkowych oraz 28 klas $\Theta_7$ (15 bez orientacji) przez sumy $M_3$. Zupełność $\mu$, $\Theta_7\cong\Z/28$, wzór Hirzebrucha i indeks Diraca pozostają jawnymi wejściami zewnętrznymi. |
 | 31. Potok Ricciego (plik 30) | `30-potok-ricciego.tex` | Sprawdzono równania ewolucyjne i poprawkę DeTurcka 7 października; pełny audyt całości i nowego rysunku z `2777149` czeka | Ewolucja skalara i pola powierzchni, zasada maksimum, DeTurck; zgodność schematu deformacji z zakresem równań i podpisem. Istnienie i jednoznaczność PDE pozostają jawnym wejściem analitycznym. |

@@ -10,8 +10,39 @@ dodatków autora. Od 5 października źródła są w `tex/rozdzialy/`;
 pliki główne tylko ustalają ich kolejność.
 
 Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
-wejściami zewnętrznymi; bieżący plan wymaga audytu wyprowadzonego
-tekstu, bez samodzielnego dowodzenia tych lematów.
+wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
+bez samodzielnego dowodzenia tych lematów.
+
+## Końcowy audyt Walla i ciągu chirurgii (2026-10-20)
+
+Cały dopisany wykład w rozdziałach 27–28 porównano z oryginalnym
+*Surgery on Compact Manifolds*, §§1–2, 5–6 i 10. Sprawdzono
+hipotezy oraz progi wymiarowe przypadków parzystego i nieparzystego,
+proste bazy i dualność nad $\Z[\pi]$, ruchy $T1$--$T4$,
+lokalny efekt chirurgii środkowej, pięciowymiarową granicę
+twierdzenia 6.4, realizację przez twierdzenia 5.8 i 6.5 oraz
+dokładność ciągu zbiorów struktur.
+
+W parzystym rachunku dualności poprawiono wzór
+$[p]\mapsto(a\mapsto\lambda(p,\partial a))$ na
+$[p]\mapsto(a\mapsto\lambda(\partial a,p))$.
+Pierwszy nie był liniowy przy przyjętej konwencji lewych modułów;
+drugi zgadza się z wcześniejszym wyprowadzeniem względnym.
+Zamieniono także błędne określenie „samoprzecięcia zanurzonej
+sfery” na „samoprzecięcia obramowanej immersji sfery”,
+doprecyzowano pełne hipotezy lematu 5.7 i racjonalne jądro
+użyte do rachunku sygnatury. W podsumowaniu przykładów
+oddzielono algebraiczną formę od jej ewentualnej realizacji
+jako jądra mapy normalnej. Nie stwierdzono dalszych błędów
+podważających kryterium Walla ani ciąg chirurgii. Przyjęte
+przez autora głębokie lematy Walla, wersja $h$ i ciąg
+Rothenberga pozostają jawnie zewnętrznymi wynikami.
+Pełny skład trzech tomów i indeksów zakończył się powodzeniem;
+odsyłacze między tomami ustabilizowały się, a w PDF tomu III
+potwierdzono łącza do tomów I i II. Logi nie zgłaszają brakujących
+odsyłaczy ani przepełnionych wierszy. Indeksy przyjęły odpowiednio
+112, 96 i 111 haseł bez odrzuceń. Zmienione strony 47, 64--65,
+72 i 77 tomu III sprawdzono wizualnie.
 
 ## Klasyfikacja sfer siedmiowymiarowych (2026-10-20)
 
