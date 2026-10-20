@@ -9,6 +9,52 @@ wersji wskazanej w danym wpisie. Audyt 18 rozdziałów nie obejmuje późniejszy
 dodatków autora. Od 5 października źródła są w `tex/rozdzialy/`;
 pliki główne tylko ustalają ich kolejność.
 
+Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
+wejściami zewnętrznymi; bieżący plan wymaga audytu wyprowadzonego
+tekstu, bez samodzielnego dowodzenia tych lematów.
+
+## Klasyfikacja sfer siedmiowymiarowych (2026-10-20)
+
+Do rozdziału 30 dopisano dwa twierdzenia przy jawnych wejściach
+zewnętrznych: zupełności niezmiennika $\mu$ Eellsa--Kuipera dla
+zorientowanych gładkich sfer homotopijnych wymiaru siedem oraz
+$\Theta_7=bP_8\cong\Z/28$ Kervaire'a--Milnora. Z obliczonego wcześniej
+$\mu(M_k)=(k^2-1)/224$ wyprowadzono kryterium
+$M_k\cong M_l$ z zachowaniem orientacji dokładnie wtedy, gdy
+$k^2\equiv l^2\pmod{224}$. Rachunek liczby trójkątnej modulo $4$ i $7$
+daje dokładnie 16 zorientowanych klas wiązkowych. Addytywność $\mu$
+pokazuje, że sumy spójne $r$ kopii $M_3$ mają wartości $r/28$;
+zewnętrzna liczba klas daje pełną listę 28 klas zorientowanych.
+Inwolucja zmiany orientacji ma dwie klasy stałe i 13 par,
+czyli 15 klas bez orientacji. Oryginalne twierdzenia o zupełności
+i rzędzie grupy pozostają wyraźnie nazwanymi wynikami zewnętrznymi,
+a nie częścią własnego dowodu rozdziału.
+Pełny skład trzech tomów i indeksów zakończył się powodzeniem.
+Logi nie zgłaszają brakujących odsyłaczy ani przepełnionych wierszy;
+indeksy przyjęły odpowiednio 112, 96 i 111 haseł bez odrzuceń.
+Nową klasyfikację na stronach 95--96 tomu III sprawdzono wizualnie.
+
+## Pełny audyt rozdziału 29 i klasyfikacji Bardena (2026-10-20)
+
+Sprawdzono cały rozdział: klasyfikację powierzchni, argumenty
+pięcio- i wyższowymiarowe oraz oba twierdzenia Bardena 2.2 i 2.3
+z lematami 3.1 i 4.1--4.4, indukcją oraz modelami $M_k,X_j$.
+Główną sekcję porównano z oryginalnym artykułem Bardena;
+rachunek macierzy modeli i zakres użytego twierdzenia Walla
+o dyfeomorfizmach czterowymiarowych sprawdzono osobno.
+W opisie normalnej bazy formy wiązania uzupełniono pominiętą
+mieszaną parę rzędów $q,2q$, doprecyzowano hipotezy lematu 4.4
+i zakres czterowymiarowego wejścia. Przy wniosku dla $S^5$ jawnie
+wybrano orientację, a triangulację powierzchni topologicznych
+uzasadniono przez wygładzalność Hatcherowską i wynik Cairnsa.
+Nie znaleziono błędu podważającego klasyfikację; wyniki głębokie
+Thoma, Nowikowa, Walla, Haefligera, Milnora, Whiteheada i Smale'a
+pozostają cytowanymi wejściami zewnętrznymi.
+Pełny skład trzech tomów i indeksów zakończył się powodzeniem.
+Logi nie zgłaszają brakujących odsyłaczy ani przepełnionych wierszy;
+indeksy przyjęły odpowiednio 112, 96 i 111 haseł bez odrzuceń.
+Poprawiony opis formy wiązania na stronie 82 tomu III sprawdzono wizualnie.
+
 ## Chirurgia na jednej sferze w dowodzie Walla (2026-10-20)
 
 Rozpisano lokalny efekt pojedynczej chirurgii w nieparzystym wymiarze:
