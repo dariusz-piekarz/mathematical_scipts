@@ -13,6 +13,26 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 2, §2.1 — pole wzdłuż odwzorowania (2026-10-21)
+
+Na prośbę autora rozpisano ostatnią uwagę sekcji. Pole $Y$ na celu
+musiałoby spełniać $Y_{F(p)}=dF_p(X_p)$ dla każdego $p$. Przy
+$F(t)=t^2$ i $X=\partial_t$ punkty $t$ i $-t$ dla $t>0$ wymuszają
+w tym samym $T_{t^2}\R$ przeciwne wartości $2t$ i $-2t$;
+wartości pola na obrazie nie da się więc nawet określić jednoznacznie.
+Przy $F(t)=t^3$ każdy punkt ma jeden przeciwobraz, lecz wymuszony
+współczynnik $3|y|^{2/3}$ nie ma pochodnej w zerze, co wykazano
+ilorazem różnicowym. Dodano przykład $X=t\partial_t$ dla $F(t)=t^2$,
+aby sprecyzować, że przeszkoda zależy od pary $(F,X)$.
+
+`buduj_tomy.ps1` zakończył dwa przebiegi: tomy mają 215, 182 i 168 stron.
+Indeksy przyjęły 113, 96 i 119 haseł, bez odrzuceń i ostrzeżeń.
+W logach nie ma błędów, przepełnionych wierszy ani nierozwiązanych
+odsyłaczy. Sprawdzono, że łącza między tomami wskazują właściwe
+nazwy PDF-ów. Obejrzano strony PDF 68–69 tomu I (drukowane 67–68):
+nowe wzory i tekst są czytelne, a istniejący rysunek sfery na pierwszej
+z tych stron zachowuje widoczne etykiety.
+
 ## Rozdział 2, §2.1 — przegląd sekcji o polach wektorowych (2026-10-21)
 
 Przejrzano całą sekcję „Pola wektorowe i derywacje globalne”, od definicji
