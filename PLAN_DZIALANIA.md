@@ -12,10 +12,10 @@ i organizacja plików w [README.md](README.md).
 
 ## Bieżący zakres i kolejność
 
-Redakcję dwóch przykładów pól wektorowych w rozdziale 2
-zakończono 21 października. Było to wyjaśnienie rachunku w mapie,
-bez zmiany pokrycia rozdziału pełnym audytem. Kolejka poniżej
-pozostaje aktualna.
+Przegląd całej sekcji §2.1 o polach wektorowych zakończono
+21 października: ujednolicono kolejność pojęć i przykładów oraz
+sprawdzono rachunek w mapie, na okręgu i na sferze. Nie stanowi to
+audytu całego rozdziału 2. Kolejka poniżej pozostaje aktualna.
 
 1. Końcowy audyt dopisanego wykładu Walla w rozdziałach 27–28
    zakończono 20 października. Sprawdzono przypadek parzysty,

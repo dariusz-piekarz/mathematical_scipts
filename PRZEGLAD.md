@@ -13,6 +13,48 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 2, §2.1 — przegląd sekcji o polach wektorowych (2026-10-21)
+
+Przejrzano całą sekcję „Pola wektorowe i derywacje globalne”, od definicji
+pola do uwagi o polu wzdłuż odwzorowania. Sprawdzono typy obiektów i
+uzasadnienia: derywacja w punkcie daje liczbę, derywacja globalna funkcję,
+a pole $X$ jest gładką sekcją. W dowodzie ich odpowiedniości wskazano
+otoczenie o zwartym domknięciu, co uzasadnia wybór funkcji odcinającej.
+Przykład derywacji na $\R$ przeniesiono za twierdzenie, a uwagę o module
+pól i lokalnych bazach umieszczono bezpośrednio po nim.
+
+Przed schematem pól w przestrzeni otaczającej podano osobno wzór
+$\widehat X_\varphi(u)=(d\varphi)_{\varphi^{-1}(u)}X_{\varphi^{-1}(u)}$
+na przeniesienie pola przez mapę i wyprowadzono z reguły łańcucha
+transformację współczynników przy zmianie mapy. Następnie połączono
+trzy kroki rachunku: styczność $W_p$, pole $X_p$ wyznaczone przez
+różniczkę inkluzji oraz współczynniki w mapie odczytywane z równania
+$W_{F(u)}=(dF)_u\widehat X_\varphi(u)$ dla
+$F=\iota\circ\varphi^{-1}$. To równanie wyjaśnia wystąpienie
+różniczki odwrotności mapy.
+
+Przykłady okręgu i sfery stoją teraz obok siebie. Na okręgu
+odróżniono odwrotność mapy $\gamma\colon I\to S_r^1$ od
+parametryzacji $F=\iota\circ\gamma$ w $\R^2$, a przed funkcją stałą na okręgu
+obliczono działanie pola na zmienną funkcję współrzędnościową.
+Na sferze wyróżniony punkt rysunku leży w użytej mapie górnej
+półsfery; strzałka w $\R^3$ ma oznaczenie $W_p$, zgodne z typem
+wektora. Na końcu przykładów wyjaśniono dwa sposoby różniczkowania
+funkcji, w tym istnienie lokalnego przedłużenia do $\R^N$ i
+niezależność wyniku od tego przedłużenia. Ostatnia uwaga łączy
+przeniesienie pola przez mapę z ogólnym pojęciem pola wzdłuż
+odwzorowania. Przegląd obejmuje §2.1, nie cały rozdział 2.
+
+Po zmianach `buduj_tomy.ps1` zakończył dwa przebiegi i złożył tomy
+o 215, 182 i 168 stronach. Indeksy przyjęły odpowiednio 113, 96
+i 119 haseł, bez odrzuceń i ostrzeżeń. W logach nie ma błędów,
+przepełnionych wierszy ani nierozwiązanych odsyłaczy; cztery
+komunikaty o niedopełnionych wierszach i dwa o zmianie specyfikatora
+rysunku dotyczą innych miejsc. Potwierdzono nazwy docelowych PDF-ów
+w łączach między wszystkimi tomami. Obejrzano strony PDF 63–69
+tomu I (drukowane 62–68): cała sekcja jest czytelna, a punkt
+na sferze i etykieta $W_p$ nie kolidują z siatką ani powierzchnią.
+
 ## Rozdział 2 — schemat pól na okręgu i sferze (2026-10-21)
 
 Na prośbę autora przełożono oba przykłady na kolejność odpowiadającą
