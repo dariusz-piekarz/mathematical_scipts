@@ -1,6 +1,6 @@
 # Aktualny plan i pokrycie przeglądem
 
-Stan: 20 października 2026. Gałąź: `review/rozdzialy-matematyka`.
+Stan: 21 października 2026. Gałąź: `review/rozdzialy-matematyka`.
 Książka ma **38 rozdziałów, pięć części i trzy dodatki**. Numery w nazwach
 plików są historyczne; numer w PDF ustala kolejność importów.
 Skład roboczy podzielono na trzy tomy: rozdziały 1–10, 11–22 oraz
@@ -11,6 +11,11 @@ sprawdzania konkretnych wersji są w [PRZEGLAD.md](PRZEGLAD.md), a budowanie
 i organizacja plików w [README.md](README.md).
 
 ## Bieżący zakres i kolejność
+
+Redakcję dwóch przykładów pól wektorowych w rozdziale 2
+zakończono 21 października. Było to wyjaśnienie rachunku w mapie,
+bez zmiany pokrycia rozdziału pełnym audytem. Kolejka poniżej
+pozostaje aktualna.
 
 1. Końcowy audyt dopisanego wykładu Walla w rozdziałach 27–28
    zakończono 20 października. Sprawdzono przypadek parzysty,

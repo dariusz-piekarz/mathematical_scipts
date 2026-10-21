@@ -13,6 +13,32 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 2 — schemat pól na okręgu i sferze (2026-10-21)
+
+Na prośbę autora przełożono oba przykłady na kolejność odpowiadającą
+rzeczywistemu rachunkowi: pole $W$ w przestrzeni otaczającej,
+sprawdzenie styczności, jednoznaczne pole $X$ na podrozmaitości
+przez różniczkę inkluzji, wybór mapy i odczyt współczynników.
+Dopisano schemat przestrzeni stycznych i równanie
+$(d(\iota\circ\varphi^{-1}))_u\widehat X_\varphi(u)=W_p$.
+Wyjaśnia on rolę różniczki odwrotności mapy oraz związek ze
+wcześniejszym wzorem na zmianę mapy. W przykładzie okręgu
+pochodna parametryzacji daje współczynnik $X^1=1$;
+na sferze rozwiązanie dwóch pierwszych składowych równania
+daje $(-v,u)$, a trzecia jest z nimi zgodna dzięki styczności.
+Rozdzielono zapis $W_p\in T_p\R^N$ od $X_p\in T_pM$,
+zachowując dotychczasowe działanie pola na funkcję i rysunek.
+Jest to redakcja wskazanych przykładów, nie pełny audyt rozdziału 2.
+
+`buduj_tomy.ps1` ustabilizował odsyłacze po dwóch przebiegach
+i złożył tomy o 215, 182 i 168 stronach. Indeksy przyjęły
+odpowiednio 113, 96 i 119 haseł, bez odrzuceń i ostrzeżeń.
+W logach nie ma błędów, przepełnień ani nierozwiązanych odsyłaczy;
+cztery komunikaty o niedopełnionych wierszach dotyczą innych miejsc.
+Sprawdzono nazwy PDF-ów w łączach między wszystkimi tomami
+oraz obejrzano strony PDF 66–68 tomu I (drukowane 65–67),
+zawierające schemat, oba przykłady i rysunek sfery.
+
 ## Rozdział 2 — współrzędne pola na sferze (2026-10-20)
 
 W przykładzie pola $X_p=(-y,x,0)$ rozpisano przejście do współrzędnych
