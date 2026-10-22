@@ -1,6 +1,6 @@
 # Aktualny plan i pokrycie przeglądem
 
-Stan: 21 października 2026. Gałąź: `review/rozdzialy-matematyka`.
+Stan: 22 października 2026. Gałąź: `review/rozdzialy-matematyka`.
 Książka ma **38 rozdziałów, pięć części i trzy dodatki**. Numery w nazwach
 plików są historyczne; numer w PDF ustala kolejność importów.
 Skład roboczy podzielono na trzy tomy: rozdziały 1–10, 11–22 oraz
@@ -16,8 +16,10 @@ Przegląd całej sekcji §2.1 o polach wektorowych zakończono
 21 października: ujednolicono kolejność pojęć i przykładów oraz
 sprawdzono rachunek w mapie, na okręgu i na sferze. W ostatniej
 uwadze sekcji doprecyzowano tego dnia przeszkody dla przeniesienia
-pola przez $t\mapsto t^2$ i $t\mapsto t^3$. Nie stanowi to
-audytu całego rozdziału 2. Kolejka poniżej pozostaje aktualna.
+pola przez $t\mapsto t^2$ i $t\mapsto t^3$. Dnia 22 października
+uzupełniono w §2.2 interpretację nawiasu Liego i rozkładów stycznych
+oraz sprawdzono zależność twierdzenia Frobeniusa od dowodu w rozdziale 14.
+Nie stanowi to audytu całego rozdziału 2. Kolejka poniżej pozostaje aktualna.
 
 1. Końcowy audyt dopisanego wykładu Walla w rozdziałach 27–28
    zakończono 20 października. Sprawdzono przypadek parzysty,
@@ -127,7 +129,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | Numer i temat | Plik w `tex/rozdzialy/` | Stan przeglądu | Kontrola / pozostały zakres |
 |---|---|---|---|
 | 1. Rozmaitości | `01-rozmaitosci.tex` | 13 października zakończono audyt dodatków o wiązkach wektorowych i kostycznych; 14 października ponownie sprawdzono §1.10; 18–19 października sprawdzono intuicję podrozmaitości i różniczkę w §1.11; 20 października uzupełniono §1.12 o przestrzeń styczną podrozmaitości, przykład i rysunek oraz o wzór z wektorami normalnymi | Skontrolowano sklejanie wiązek, funkcje przejścia, sekcje, sumę i wiązkę dualną, przykład Möbiusa, rachunek różniczki, przykład injektywnej immersji o gęstym obrazie, atlasy `TM` i `T*M`, diagramy oraz odsyłacze. W §1.11 połączono wcześniejszy wzór z §1.8 z różniczką odwzorowania, wyprowadzono macierz Jacobiego z działania na lokalne współrzędne i objaśniono utożsamienie $T_{f(p)}\R\cong\R$ przez funkcję $t$. Lokalność derywacji uzasadnia użycie współrzędnych na otoczeniu. Nowy wynik opisuje przestrzeń styczną podrozmaitości jako obraz różniczki inkluzji, z dowodem przez współrzędne wycinające i krzywe; towarzyszą mu przykład okręgu i rysunek. Wzór ogólny opisuje styczność przez jądra różniczek i prostopadłość do gradientów lokalnych równań. Ta iteracja nie stanowi ponownego audytu całego rozdziału. |
-| 2. Pola wektorowe | `02-pola-wektorowe.tex` | Audyt dodatków zakończony 6 października; §2.1 ponownie przejrzano 18 października; 20 października doprecyzowano inkluzję okręgu, dodano rysunek pola na sferze i rozpisano współrzędne tego pola; 21 października przejrzano §2.1 i rozbudowano uwagę o polu wzdłuż odwzorowania | Sprawdzono konstrukcje $X\mapsto D_X$ i $D\mapsto X$, dowód gładkości, rozróżnienie przestrzeni stycznych w przykładzie okręgu i pole wzdłuż odwzorowania. Dopisano $\iota(u,v)=(u,v)$ oraz różnicę między inkluzją a identycznością okręgu. Rysunek pola $(-y,x,0)$ pokazuje kierunki strzałek, punkt $p$ i oba biegunowe zera. W przykładzie objaśniono odczyt współczynników przez różniczkę mapy oraz ich odtworzenie przez różniczkę parametryzacji odwrotnej do mapy; sprawdzono odpowiednie strony PDF tomu I. Dla $F(t)=t^2$ i $X=\partial_t$ wykazano sprzeczne wartości pola nad $t^2$; dla $F(t)=t^3$ brak gładkości wymuszonego współczynnika w zerze. Wcześniej sprawdzono powiązanie z brzegiem, przykład przepływu jednostronnego, bibliografię i rysunki. Pozostałe sekcje rozdziału nie były przedmiotem bieżącej iteracji. |
+| 2. Pola wektorowe | `02-pola-wektorowe.tex` | Audyt dodatków zakończono 6 października; §2.1 ponownie przejrzano 18–21 października; 22 października uzupełniono §2.2 o interpretację nawiasu i przykłady rozkładów stycznych | W §2.1 sprawdzono pola jako derywacje, przykłady na okręgu i sferze oraz pole wzdłuż odwzorowania. W §2.2 doprecyzowano, co wykrywa nawias Liego, różnicę między przemiennością pól a inwolutywnością rozkładu oraz związek Frobeniusa z lokalnym rozkładem metryki w rozdziale 14. Nie przeprowadzono ponownego audytu całego rozdziału. |
 | 3. Algebra tensorowa | `03-algebra-tensorowa.tex` | Audyt z 6 października; notacja poprawiona 9 października | Formalne generatory par zapisano jako [(v,w)]; zakres tej poprawki nie obejmuje ponownego audytu całego rozdziału. |
 | 4. Grassmanniany, Clifford i spinory | `04-grassmanniany-clifford-spinory.tex` | Wcześniejszy audyt z 6 października; 8 października dodano grupę Pin | Sprawdzono nakrycie $\operatorname{Pin}(n)\to O(n)$ i stronę 100 PDF |
 | 5. Algebra abstrakcyjna | `05-algebra-abstrakcyjna.tex` | Audyt i poprawki w `dbfe600`; porównano późniejsze różnice do `2777149` | Zachowano wprowadzone przez autora nienumerowane podsekcje i nazewnictwo iloczynu tensorowego; poprawiono „Iloczn”. Dowody dziedziny, ciała ułamków i lokalizacji zachowane. Opcjonalne definicje są w rejestrze poniżej. |

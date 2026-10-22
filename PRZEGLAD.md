@@ -13,6 +13,38 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 2, §2.2 — nawias Liego i rozkłady styczne (2026-10-22)
+
+Sprawdzono zależności dalszego tekstu: lokalne twierdzenie Frobeniusa
+z etykietą `prop:frobenius-lokalny` jest użyte w dowodzie
+lokalnego rozkładu metryki w rozdziale 14. Daje tam liście dwóch
+rozkładów równoległych oraz lokalne współrzędne produktu. Z tego
+powodu zachowano twierdzenie i jego pełny dowód po prostowaniu pola.
+
+Po wzorze współrzędnych na nawias Liego dopisano interpretację
+krótkich ruchów: składnik rzędu $t^2$ ich różnicy w dwóch
+kolejnościach jest wyznaczony przez $[X,Y]$. Odesłano do późniejszego
+rachunku przepływów i doprecyzowano podpis rysunku: znikanie nawiasu
+w jednym punkcie usuwa tylko składnik rzędu $t^2$.
+W uwadze o Frobeniusie zdefiniowano podrozmaitość
+całkową przez równość przestrzeni stycznych, podano sprawdzanie
+inwolutywności na lokalnej bazie i przykład
+$\mathcal D=\ker\dd(z-xy)$ z powierzchniami $z-xy=c$.
+W przykładzie przeciwnym doprecyzowano, dlaczego $\partial_z$
+nie należy do rozkładu. Rachunek $[X,xY]=Y$ pokazuje, że
+inwolutywność wymaga pozostawania nawiasu w rozkładzie, a nie
+zerowania nawiasów wszystkich jego pól. Dodano odsyłacz do
+zastosowania w rozdziale 14. Zakres iteracji obejmuje tę część
+rozdziału 2, bez ponownego audytu całego rozdziału.
+
+`buduj_tomy.ps1` zakończył trzy przebiegi: tomy mają 215, 182 i 168 stron,
+a indeksy przyjęły 113, 96 i 119 haseł bez odrzuceń. Logi nie wykazują
+błędów, przepełnionych wierszy ani nierozwiązanych odsyłaczy.
+Obejrzano strony PDF 70–71 tomu I z nowym tekstem oraz stronę 81
+z rysunkiem komutatora przepływów. Łącze przy Twierdzeniu 14.8.2
+prowadzi z tomu I do `geometria_tom2.pdf`, a odsyłacz do
+Stwierdzenia 2.5.4 z dowodu w tomie II do `geometria_tom1.pdf`.
+
 ## Rozdział 2, §2.1 — pole wzdłuż odwzorowania (2026-10-21)
 
 Na prośbę autora rozpisano ostatnią uwagę sekcji. Pole $Y$ na celu
