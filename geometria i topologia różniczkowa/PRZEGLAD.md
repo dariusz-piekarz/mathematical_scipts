@@ -13,6 +13,17 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Przeniesienie projektu do podkatalogu (2026-10-22)
+
+Przeniesiono źródła, PDF-y, skrypt budowania i dokumentację do katalogu
+`geometria i topologia różniczkowa/`. Zachowano ich wzajemne położenie, więc
+ścieżki `\input`, odsyłacze między tomami i polecenia budowania działają po
+uruchomieniu z nowego katalogu. Instrukcje w `README.md` i `AGENTS.md`
+wskazują teraz właściwy katalog roboczy.
+Pełny `buduj_tomy.ps1` zakończył się powodzeniem: trzy tomy złożono,
+odsyłacze ustabilizowały się po dwóch przebiegach, a kontrola indeksów
+i niezdefiniowanych odsyłaczy nie zgłosiła błędów.
+
 ## Rozdział 2, §2.3 — dowód istnienia i gładkiej zależności krzywych całkowych (2026-10-22)
 
 W dowodzie Twierdzenia 2.3.2 wskazano mapę $(U,\varphi)$ o współrzędnych

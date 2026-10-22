@@ -5,7 +5,7 @@
 - Trzy pliki główne `geometria_tom1.tex`, `geometria_tom2.tex` i `geometria_tom3.tex` składają kolejno rozdziały 1–10, 11–22 oraz 23–38 z dodatkami. Dotychczasowy `geometria_i_topologia_rozniczkowa.tex` pozostaje opcjonalnym składem zbiorczym. Treść edytuj w odpowiednim pliku `tex/rozdzialy/`, a ustawienia wspólne w `tex/preambula.tex`.
 - PDF-y tomów są ostatnim sprawdzonym składem, a nie osobnym źródłem treści. Pełny `geometria_i_topologia_rozniczkowa.pdf` aktualizuj po okazjonalnym składzie zbiorczym.
 - Skrypt ma obecnie 38 numerowanych rozdziałów w pięciu częściach i trzy dodatki. Zgodnie z prośbą użytkownika z 5 października 2026 źródła rozdziałów są w osobnych plikach. Korzystaj z istniejących etykiet i odsyłaczy między tomami; nie zmieniaj ich przy przenoszeniu treści. Nie dodawaj zadań.
-- `tex/wstep.tex` zawiera spis treści i mapę książki dla składu zbiorczego, a `tex/tomy/wstep-tomowy.tex` strony tytułowe i spisy tomów. `tex/dodatki/` zawiera dodatki, a `tex/indeks.tex` polecenia składu indeksu. Nie kompiluj rozdziałów osobno; kompiluj plik główny odpowiedniego tomu z katalogu głównego repozytorium.
+- `tex/wstep.tex` zawiera spis treści i mapę książki dla składu zbiorczego, a `tex/tomy/wstep-tomowy.tex` strony tytułowe i spisy tomów. `tex/dodatki/` zawiera dodatki, a `tex/indeks.tex` polecenia składu indeksu. Nie kompiluj rozdziałów osobno; kompiluj plik główny odpowiedniego tomu z katalogu `geometria i topologia różniczkowa` w repozytorium.
 
 ## Cel i sposób pisania
 
