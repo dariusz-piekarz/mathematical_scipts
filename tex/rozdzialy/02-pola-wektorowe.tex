@@ -799,7 +799,8 @@ Jest \emph{maksymalna}, gdy nie daje się przedłużyć jako rozwiązanie
 na większy przedział.
 \end{definicja}
 
-Współrzędnie, dla $\gamma(t)=(x^1(t),\ldots,x^n(t))$,
+W mapie, gdy $x^i(t)=x^i(\gamma(t))$ i
+$X=\sum_i X^i\partial_{x^i}$,
 warunek~\eqref{eq:krzywa-calkowa} staje się układem równań
 różniczkowych zwyczajnych (ODE)
 \[
@@ -819,12 +820,26 @@ gdzie są określone.
 \end{twierdzenie}
 \begin{proof}
 \emph{Krok 1: konstrukcja w mapie.}
-Wybierzmy mapę wokół $p$ i oznaczmy przez $u_0$ współrzędne punktu
-$p$. Równanie~\eqref{eq:krzywa-calkowa} przyjmuje postać
-$u'(t)=F(u(t))$, gdzie $F$ jest gładkim odwzorowaniem
-otwartego zbioru w $\R^n$ do $\R^n$.
+Wybierzmy mapę $(U,\varphi)$ wokół $p$ o współrzędnych
+$(u^1,\ldots,u^n)$ i połóżmy $D=\varphi(U)$, $u_0=\varphi(p)$.
+Dla krzywej $\gamma$ pozostającej w $U$ oznaczmy
+$u(t)=\varphi(\gamma(t))$. Pole przeniesione przez mapę
+ze wzoru~\eqref{eq:pole-przeniesione-mapa}, po utożsamieniu
+$T_vD$ z $\R^n$, jest gładkim odwzorowaniem $F\colon D\to\R^n$:
+\[
+ F(v)=(\dd\varphi)_{\varphi^{-1}(v)}X_{\varphi^{-1}(v)}
+     =\bigl(X_\varphi^1(\varphi^{-1}(v)),\ldots,
+             X_\varphi^n(\varphi^{-1}(v))\bigr).
+\]
+Reguła łańcucha przenosi równanie~\eqref{eq:krzywa-calkowa} na
+\[
+ u'(t)=(\dd\varphi)_{\gamma(t)}\gamma'(t)
+      =(\dd\varphi)_{\gamma(t)}X_{\gamma(t)}=F(u(t)).
+\]
+Odwrotnie, jeśli $u'=F(u)$, to $\gamma=\varphi^{-1}\circ u$
+spełnia $\gamma'=(\dd\varphi^{-1})_uF(u)=X_\gamma$.
 Wybierzmy $r>0$ tak, aby domknięta kula
-$\overline B_{2r}(u_0)$ leżała w dziedzinie mapy.
+$\overline B_{2r}(u_0)$ leżała w $D$.
 Na tej kuli istnieją stałe $A,L\geq 0$ spełniające
 $\|F(u)\|\leq A$ oraz $\|\D F(u)\|\leq L$.
 Twierdzenie o wartości średniej daje
@@ -837,16 +852,27 @@ zupełną przestrzeń krzywych ciągłych
 $z\colon[-h,h]\to\overline B_{2r}(u_0)$ z normą supremum.
 Operator Picarda
 \[
- (\mathcal T_a z)(t)=a+\int_0^t F(z(\tau))\,\dd\tau
+ (\mathcal T_a z)(t)=a+\int_0^t F(z(\tau))\,\dd\tau,
+ \qquad t\in[-h,h],
 \]
-odwzorowuje ją w siebie, ponieważ
-$\|\mathcal T_a z(t)-u_0\|<r+hA<2r$.
-Ponadto
+jest dobrze określony także dla $t<0$: wtedy całkujemy po
+$[t,0]\subset[-h,h]$ z przeciwnym znakiem. Ponieważ $|t|\leq h$,
+odwzorowuje tę przestrzeń w siebie:
+\[
+ \|\mathcal T_a z(t)-u_0\|
+ \leq\|a-u_0\|+|t|A<r+hA<2r.
+\]
+Podobnie z oszacowania Lipschitza dla $F$ otrzymujemy
 $\|\mathcal T_a z-\mathcal T_a w\|_\infty
  \leq hL\|z-w\|_\infty$.
 Z twierdzenia Banacha o punkcie stałym otrzymujemy jedną
 krzywą $z_a$ spełniającą równanie całkowe, a po zróżniczkowaniu
-$z_a'(t)=F(z_a(t))$. Jest ona gładka w czasie, bo $F$ jest gładkie.
+$z_a'(t)=F(z_a(t))$ dla $t\in(-h,h)$. Jest ona tam gładka
+w czasie, bo $F$ jest gładkie. Lokalna jednoznaczność dotyczy
+także dowolnego innego rozwiązania przez $a$: po zmniejszeniu
+przedziału $[-\delta,\delta]\subset[-h,h]$ jego obraz leży w
+$\overline B_{2r}(u_0)$, więc na tym przedziale oba rozwiązania
+są punktami stałymi tego samego operatora kontrakcyjnego.
 
 \emph{Krok 2: zależność od punktu początkowego.}
 Z równań całkowych dla $z_a$ i $z_b$ oraz z oszacowania
@@ -869,7 +895,8 @@ Istnieje więc jedyne $J_a$; spełnia ono równanie
 wariacyjne $J_a'=\D F(z_a)J_a$, $J_a(0)=I$.
 
 Sprawdźmy, że jest to rzeczywiście pochodna względem $a$.
-Niech $v$ będzie małe, $\delta=z_{a+v}-z_a$.
+Niech $v$ będzie na tyle małe, by $a+v\in B_r(u_0)$,
+i połóżmy $\delta=z_{a+v}-z_a$.
 Ponieważ $\D^2F$ jest ograniczona na $\overline B_{2r}(u_0)$,
 rozwinięcie Taylora na odcinku między $z_a(\tau)$
 a $z_{a+v}(\tau)$ daje, z pewną stałą $C$ niezależną
@@ -887,8 +914,9 @@ i $J_av$. Dla $R=z_{a+v}-z_a-J_av$ dostajemy
  \leq hL\|R\|_\infty+
        \frac{hC}{(1-hL)^2}\|v\|^2.
 \]
-Zatem $\|R\|_\infty=O(\|v\|^2)$ i
-$\D_a z_a(t)=J_a(t)$. Dla ciągłości tej pochodnej zauważmy,
+Zatem $\|R\|_\infty=O(\|v\|^2)$, co daje pochodną
+$\D_a z_a=J_a$ jako odwzorowania do przestrzeni krzywych
+ciągłych na $[-h,h]$. Dla jej ciągłości zauważmy,
 że $\|J_a\|_\infty\leq(1-hL)^{-1}$ oraz
 \[
  \|J_a-J_b\|_\infty
@@ -897,8 +925,8 @@ $\D_a z_a(t)=J_a(t)$. Dla ciągłości tej pochodnej zauważmy,
 \]
 Prawa strona dąży do zera dla $b\to a$, dzięki ciągłości
 $a\mapsto z_a$ i jednostajnej ciągłości $\D F$ na zwartej kuli.
-Dalsze pochodne otrzymujemy w ten sam sposób, ale trzeba
-odróżnić ich konstrukcję od formalnego różniczkowania.
+Dalsze pochodne otrzymujemy w ten sam sposób, rozdzielając
+konstrukcję kandydata od sprawdzenia, że jest pochodną.
 Na przykład kandydat na drugą pochodną
 $H_a(t)[v,w]$ spełnia
 \[
@@ -906,25 +934,60 @@ $H_a(t)[v,w]$ spełnia
  \D F(z_a)H_a[v,w]
  +\D^2F(z_a)[J_av,J_aw]\bigr)(\tau)\,\dd\tau.
 \]
-Najpierw rozwiązujemy to liniowe równanie całkowe dla $H_a$.
-Następnie odejmujemy równania dla $J_{a+v}$ i $J_a$ oraz
+Najpierw rozwiązujemy to liniowe równanie całkowe dla $H_a$
+w przestrzeni ciągłych krzywych na $[-h,h]$ o wartościach
+w przestrzeni odwzorowań dwuliniowych.
+Część zawierająca $H_a$ ma stałą kontrakcji $hL$.
+Następnie odejmujemy równania dla $J_{a+v}$, $J_a$ oraz
 kandydata $H_a[v,\cdot]$. Wzór Taylora dla $\D F$ i
 już dowiedziona różniczkowalność $z_a$ dają dla reszty
-oszacowanie $\|R\|_\infty\leq hL\|R\|_\infty+o(\|v\|)$,
-a więc $H_a=\D_aJ_a$.
-Ogólnie, po $k$ różniczkowaniach złożenia $F(z_a)$
-jedynym wyrazem zawierającym nieznaną $k$-tą pochodną $Z_k$
-jest $\D F(z_a)Z_k$. Wszystkie pozostałe wyrazy są sumami
-iloczynów pochodnych $F$ i już skonstruowanych pochodnych
-$Z_j$ z $j<k$. Wyznaczają więc znane ciągłe wymuszenie.
-Równanie dla $Z_k$ ma ponownie stałą kontrakcji $hL<1$;
-porównanie równań dla $Z_{k-1}(a+v)$ i $Z_{k-1}(a)$
-z wzorem Taylora daje tę samą resztę $o(\|v\|)$.
-Indukcyjnie dowodzi to istnienia wszystkich pochodnych,
-a porównanie równań przy $a,b$ --- ich ciągłości.
-Równanie $z_a'=F(z_a)$ zapewnia również ciągłość
-pochodnych mieszanych po $t$ i $a$. Otrzymujemy
-gładkość $(t,a)\mapsto z_a(t)$.
+oszacowanie $\|R\|_\infty\leq hL\|R\|_\infty+o(\|v\|)$.
+Stąd $\|R\|_\infty=o(\|v\|)$ i $H_a=\D_aJ_a$.
+Ciągłość $a\mapsto H_a$ wynika z tego samego oszacowania
+kontrakcyjnego: $z_a$ i $J_a$ zależą ciągle od $a$,
+więc współczynnik $\D F(z_a)$ i wymuszenie
+$\D^2F(z_a)[J_a,J_a]$ są ciągłe w normie supremum.
+
+Ogólnie, dla $k\ge3$, połóżmy $Z_0=z_a$ i załóżmy,
+że pochodne $Z_j=\D_a^j z_a$ dla $1\le j<k$
+już istnieją i są ciągłe w $a$ jako krzywe na $[-h,h]$.
+W $k$-krotnym różniczkowaniu złożenia $F(z_a)$ jedyny wyraz
+zawierający nieznane $Z_k$ to $\D F(z_a)Z_k$.
+Pozostałe wyrazy tworzą znane ciągłe wymuszenie $G_k$,
+złożone z pochodnych $\D^mF(z_a)$ i $Z_j$ dla $j<k$.
+Kandydata $Z_k$ określa więc równanie
+\[
+ Z_k(a,t)=\int_0^t\bigl(\D F(z_a(\tau))Z_k(a,\tau)
+                         +G_k(a,\tau)\bigr)\,\dd\tau
+ \qquad(k\ge3).
+\]
+Na ciągłych krzywych o wartościach w przestrzeni odwzorowań
+$k$-liniowych jego prawa strona jest kontrakcją ze stałą $hL$.
+Porównujemy teraz równania dla $Z_{k-1}(a+v)$, $Z_{k-1}(a)$
+i kandydata $Z_k(a)[v,\cdot]$.
+$G_{k-1}$ zawiera tylko $Z_j$ dla $j\le k-2$; ich pochodne
+są już znane, więc $G_{k-1}$ ma jednostajne w czasie
+rozwinięcie pierwszego rzędu względem $v$.
+Ponadto $\D F(z_{a+v})-\D F(z_a)=O(\|v\|)$, a z ciągłości
+$Z_{k-1}$ wynika $Z_{k-1}(a+v)-Z_{k-1}(a)=o(1)$.
+Iloczyn tych dwóch różnic jest $o(\|v\|)$; pozostałe
+reszty mają ten sam rząd dzięki jednostajnej ciągłości
+pochodnych $F$ na zwartej kuli. Stąd dla różnicy $R$
+$\|R\|_\infty\leq hL\|R\|_\infty+o(\|v\|)$.
+To dowodzi $Z_k=\D_aZ_{k-1}$. Odwzorowania
+$a\mapsto\D F(z_a)$ i $a\mapsto G_k(a,\cdot)$ są ciągłe
+w normie supremum; równanie kontrakcyjne lokalnie ogranicza
+$\|Z_k(a)\|_\infty$. Porównanie jego wersji dla $a$ i $b$
+daje zatem ciągłość $Z_k$. Indukcja dowodzi gładkości
+$a\mapsto z_a$.
+
+Aby sprawdzić pochodne mieszane, zdefiniujmy gładkie odwzorowania
+$V_0(v)=v$ i $V_{m+1}(v)=\D V_m(v)F(v)$ na $D$.
+Z równania $z_a'=F(z_a)$ i reguły łańcucha wynika indukcyjnie
+$\partial_t^m z_a(t)=V_m(z_a(t))$. Prawa strona zależy
+gładko od $a$ jako krzywa ciągła, a wszystkie jej pochodne
+po $a$ są ciągłe wspólnie w $(t,a)$. Otrzymujemy gładkość
+$(t,a)\mapsto z_a(t)$ na $(-h,h)\times B_r(u_0)$.
 
 \emph{Krok 3: przedział maksymalny.}
 Dwie krzywe całkowe wychodzące z $p$ są równe w pobliżu zera
@@ -939,10 +1002,14 @@ ich przedziałów. Suma ta jest otwartym przedziałem $I_p$
 zawierającym zero; sklejenie daje rozwiązanie, którego żadne
 dalsze przedłużenie nie istnieje. Jednoznaczność w mapach
 zapewnia, że konstrukcja nie zależy od wyboru współrzędnych.
-Gładkość przy innych chwilach niż zero uzyskujemy, zaczynając
-lokalny argument od dowolnego punktu tej krzywej; szczegóły
-otwartości wspólnej dziedziny podajemy w dowodzie
-Twierdzenia~\ref{thm:przeplyw}.
+Dotąd wykazaliśmy gładką zależność na wspólnym krótkim przedziale
+wokół zera. Dla dowolnego $t_0\in I_{p_0}$ zwarty odcinek krzywej
+od czasu $0$ do $t_0$ dzielimy na skończenie wiele fragmentów,
+na których działają lokalne konstrukcje z kroków 1--2.
+Ich gładkie złożenie daje wspólną dziedzinę i gładką zależność
+w otoczeniu $(t_0,p_0)$. Szczegóły tego sklejania,
+w tym otwartość dziedziny wszystkich par $(t,p)$,
+podajemy w dowodzie Twierdzenia~\ref{thm:przeplyw}.
 \end{proof}
 
 Jeśli $X_p=0$, to jedyną krzywą wychodzącą z $p$ jest krzywa stała.
@@ -1054,10 +1121,11 @@ grupą dyfeomorfizmów.
 \end{twierdzenie}
 \begin{proof}
 \emph{Otwartość i gładkość.}
-Krok 1 poprzedniego dowodu daje dla każdego $q\in M$
+Kroki 1--2 poprzedniego dowodu dają dla każdego $q\in M$
 otoczenie $W_q$ i liczbę $\varepsilon_q>0$, wspólną
 dla punktów początkowych z $W_q$, na której lokalne
-rozwiązanie istnieje i jest gładkie względem $(u,x)$.
+rozwiązanie istnieje i jest gładkie względem czasu
+i punktu początkowego.
 Ustalmy $(t_0,p_0)\in\mathcal D_X$; rozważmy najpierw
 $t_0>0$. Krzywa $\gamma_{p_0}$ jest określona
 na pewnym otwartym przedziale obejmującym $[0,t_0]$.

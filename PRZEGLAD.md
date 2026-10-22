@@ -13,6 +13,37 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 2, §2.3 — dowód istnienia i gładkiej zależności krzywych całkowych (2026-10-22)
+
+W dowodzie Twierdzenia 2.3.2 wskazano mapę $(U,\varphi)$ o współrzędnych
+$(u^1,\ldots,u^n)$, przeniesiono pole przez różniczkę $\dd\varphi$
+i rozpisano regułę łańcucha prowadzącą od $\gamma'=X_\gamma$
+do $u'=F(u)$, a także przejście odwrotne. Kula kontrolna leży
+w obrazie mapy $\varphi(U)$. Operator Picarda działa na krzywych
+zdefiniowanych na $[-h,h]$; dla $t<0$ całka ma przeciwną orientację,
+a jej argument pozostaje w dziedzinie krzywej. Oszacowania z $|t|\leq h$
+obejmują oba kierunki czasu bez ograniczania dowodu do $[0,h]$.
+
+Uściślono lokalną jednoznaczność również dla rozwiązań zadanych
+na mniejszym przedziale, warunek $a+v\in B_r(u_0)$ przy różniczkowaniu
+po danych i normę supremum w oszacowaniu pochodnej. Dopisano
+równanie kontrakcyjne dla kandydatów na pochodne wyższych rzędów,
+sprawdzenie ich przez resztę Taylora i uzasadnienie ciągłości
+pochodnych mieszanych. Wskazano, jak złożenie lokalnych rozwiązań
+wzdłuż zwartego fragmentu krzywej daje zależność przy dowolnym czasie;
+pełne szczegóły pozostają w następnym twierdzeniu o przepływie.
+Poprawiono tam odsyłacz z samego kroku 1 na kroki 1–2.
+Zakres tej iteracji nie obejmuje ponownego audytu całego rozdziału.
+
+`buduj_tomy.ps1` zakończył dwa przebiegi: tomy mają 216, 182 i 168 stron.
+Indeksy przyjęły 113, 96 i 119 haseł, bez odrzuceń. W logach nie ma
+brakujących odsyłaczy, przepełnionych wierszy ani brakujących znaków.
+Obejrzano strony PDF 71–74 tomu I z dowodem i sąsiednim rysunkiem;
+łącza do wzorów (2.1.2) i (2.3.1) wskazują właściwe strony.
+Zastany przed pracą, lokalnie zmieniony PDF tomu I (213 stron)
+zachowano w `build/tomy/preexisting-geometria_tom1.pdf` przed
+zastąpieniem go aktualnym składem ze źródeł.
+
 ## Rozdział 2, §2.2 — nawias Liego i rozkłady styczne (2026-10-22)
 
 Sprawdzono zależności dalszego tekstu: lokalne twierdzenie Frobeniusa
