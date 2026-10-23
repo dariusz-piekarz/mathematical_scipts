@@ -13,6 +13,25 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 2, §2.3 — równanie krzywej całkowej w jednej mapie (2026-10-23)
+
+W dowodzie Twierdzenia 2.3.2 doprecyzowano, że mapa
+$\varphi\colon U\to D=\varphi(U)\subset\R^n$ przenosi wektor pola
+do $T_vD$, a ponieważ $D$ jest otwarty w $\R^n$, zapis tego wektora
+w standardowej bazie daje funkcję $F\colon D\to\R^n$ potrzebną
+do równania $u'=F(u)$. Jest to konstrukcja w jednej mapie;
+odwołanie do wcześniejszej uwagi, omawiającej także zmianę dwóch map,
+usunięto z dowodu. Zaznaczono również powrót do krzywej na $M$
+przez $\varphi^{-1}$.
+We wzorze poprzedzającym twierdzenie poprawiono dziedziny:
+współczynniki $X_\varphi^i$ są funkcjami na $U$, natomiast
+$X_\varphi^i\circ\varphi^{-1}$ są funkcjami punktu $x\in D$.
+Pełny `buduj_tomy.ps1` zakończył się powodzeniem: tomy mają 216, 182
+i 168 stron, indeksy przyjęły odpowiednio 113, 96 i 119 haseł bez
+odrzuceń, a logi nie zawierają brakujących odsyłaczy ani przepełnionych
+wierszy. Obejrzano strony 70–71 tomu I z nowym zapisem równania
+i początkiem dowodu.
+
 ## Przeniesienie projektu do podkatalogu (2026-10-22)
 
 Przeniesiono źródła, PDF-y, skrypt budowania i dokumentację do katalogu
