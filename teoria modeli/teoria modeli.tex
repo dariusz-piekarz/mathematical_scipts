@@ -1,0 +1,1240 @@
+\documentclass[11pt,a4paper]{article}
+% Kompilacja: pdfLaTeX (MiKTeX / TeX Live)
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{tgtermes} % Krój zbliżony do Liberation Serif / Times
+\usepackage[polish]{babel}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[margin=27mm]{geometry}
+\usepackage{microtype}
+\emergencystretch=2em
+\usepackage{enumitem}
+\usepackage[unicode,colorlinks=true,linkcolor=blue]{hyperref}
+\numberwithin{equation}{section}
+\newcommand{\N}{\mathbb N}
+\newcommand{\R}{\mathbb R}
+\newcommand{\PA}{\mathrm{PA}}
+\newcommand{\Q}{\mathrm Q}
+\newcommand{\Prov}{\operatorname{Prov}}
+\newcommand{\Prf}{\operatorname{Prf}}
+\newcommand{\Bew}{\operatorname{Bew}}
+\newcommand{\dotminus}{\mathbin{\dot-}}
+\theoremstyle{plain}
+\newtheorem{twierdzenie}{Twierdzenie}[section]
+\newtheorem{lemat}[twierdzenie]{Lemat}
+\newtheorem{wniosek}[twierdzenie]{Wniosek}
+\newtheorem{stwierdzenie}[twierdzenie]{Stwierdzenie}
+\theoremstyle{definition}
+\newtheorem{definicja}[twierdzenie]{Definicja}
+\newtheorem{przyklad}[twierdzenie]{Przykład}
+\theoremstyle{remark}
+\newtheorem{uwaga}[twierdzenie]{Uwaga}
+\renewcommand{\proofname}{Dowód}
+\title{Teoria Modeli}
+\author{}
+\date{22 października 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+Niniejszy dokument przedstawia szczegółowe dowody obu twierdzeń Gödla o niezupełności.
+Zaczynamy od precyzyjnych definicji systemu formalnego, arytmetyki Peana, rekurencyjności
+oraz reprezentowalności. Następnie budujemy narzędzia techniczne (numerację Gödla,
+lemat o reprezentacji, lemat o punkcie stałym / diagonalizacji) i na ich podstawie dowodzimy
+pierwszego oraz drugiego twierdzenia o niezupełności. Reprezentowalność uzasadniamy
+przez kodowanie skończonych obliczeń, a warunki wyprowadzalności --- przez wewnętrzne
+weryfikowanie dowodów. Rozróżniamy wersję Gödla z 1931 r., wzmocnienie Rossera oraz
+późniejsze ujęcie Hilberta--Bernaysa--Löba. Końcowe sekcje zawierają oba kierunki
+twierdzenia Löwenheima--Skolema, z dowodem zwartości, oraz omówienie konsekwencji
+całego skryptu: niestandardowych modeli, paradoksu Skolema, granic metod algorytmicznych
+i różnicy między prawdą, dowodem oraz zaufaniem do aksjomatów.
+\end{abstract}
+\tableofcontents
+\clearpage
+
+% Strony 3--6 oryginalnego skanu -- transkrypcja sprawdzona na obrazach.
+\section{Wstęp i założenia}\label{sec:wstep}
+Celem pracy jest wykazanie, że każdy dostatecznie silny, efektywnie aksjomatyzowalny i niesprzeczny system formalny arytmetyki jest \emph{niezupełny}: istnieje zdanie arytmetyczne, którego system ten ani nie dowodzi, ani nie obala. Ponadto pokażemy, że taki system nie może dowieść własnej niesprzeczności.
+
+W pierwszym twierdzeniu pracujemy z teorią $T$ spełniającą warunki:
+\begin{enumerate}[label=(\roman*)]
+\item językiem jest język arytmetyki pierwszego rzędu, a rachunkiem logicznym --- ustalony klasyczny rachunek dowodowy;
+\item aksjomaty pozalogiczne można \emph{efektywnie wyliczać}: ich zbiór jest rekurencyjnie przeliczalny;
+\item $T$ zawiera arytmetykę Robinsona $Q$;
+\item $T$ jest niesprzeczna. Dla obustronnej niezależności konkretnego zdania Gödla zakładamy mocniejszą $\omega$-niesprzeczność; dla zdania Rossera wystarcza zwykła niesprzeczność.
+\end{enumerate}
+Rozstrzygalność zbioru aksjomatów jest warunkiem wystarczającym, lecz nie koniecznym. W dowodzie drugiego twierdzenia i warunków wyprowadzalności przyjmujemy mocniejszą bazę $T\supseteq\mathrm{PA}$ i ściśle określony, standardowy predykat dowodliwości. Nie przenosimy na $Q$ argumentów wymagających indukcji.
+
+Rozróżniamy metateorię, w której opisujemy skończone dowody, od zdań dowodzonych \emph{wewnątrz} $T$. Zwłaszcza rodzina twierdzeń $T\vdash\theta(\overline n)$ dla wszystkich standardowych $n$ nie oznacza automatycznie $T\vdash\forall x\,\theta(x)$.
+
+\section{Podstawy: od alfabetu do teorii}\label{sec:podstawy}
+Ta sekcja jest napisana „od zera”. Zakładamy jedynie znajomość intuicyjnego pojęcia liczby naturalnej $(0,1,2,\ldots)$ i zbioru. Wszystkie pozostałe pojęcia budujemy krok po kroku.
+
+\subsection*{Alfabet i słowa}\label{sec:alfabet-slowa}
+\begin{definicja}[Alfabet]\label{res:2:1}
+\emph{Alfabetem} nazywamy dowolny niepusty zbiór $\Sigma$, którego elementy nazywamy \emph{symbolami} (lub \emph{znakami}). Alfabet może być skończony (np. $\{a,b\}$) albo nieskończony (np. nieskończony zapas zmiennych).
+\end{definicja}
+
+\begin{definicja}[Słowo / napis]\label{res:2:2}
+\emph{Słowem} (albo \emph{napisem, ciągiem}) nad alfabetem $\Sigma$ nazywamy skończony ciąg symboli $s_1s_2\ldots s_k$, gdzie każdy $s_i\in\Sigma$. Liczbę $k$ nazywamy \emph{długością} słowa. Dopuszczamy \emph{słowo puste} (długości $0$). Zbiór wszystkich słów nad $\Sigma$ oznaczamy $\Sigma^*$.
+\end{definicja}
+
+\begin{przyklad}\label{res:2:3}
+Nad alfabetem $\Sigma=\{0,S,(,)\}$ przykładowymi słowami są: „$0$”, „$S(0)$”, „$S(S(0))$”, ale też bezsensowne „$))S0($”. Sama definicja słowa \emph{nie} rozróżnia napisów „sensownych” od „bezsensownych” --- to zrobi dopiero gramatyka termów i formuł.
+\end{przyklad}
+
+\begin{uwaga}[Po co ta ścisłość?]\label{res:2:4}
+Twierdzenia Gödla mówią o \emph{napisach} (formułach i dowodach) oraz o tym, jak można nimi manipulować mechanicznie. Dlatego musimy odróżnić: \emph{symbol} (znak), \emph{słowo} (ciąg znaków), \emph{znaczenie} (co dany napis „mówi”). Cała „magia” Gödla polega na zakodowaniu napisów jako liczb i mówieniu o napisach \emph{wewnątrz} arytmetyki.
+\end{uwaga}
+
+\subsection*{Czym jest język pierwszego rzędu}\label{sec:jezyk-pierwszego-rzedu}
+Intuicyjnie: \emph{język pierwszego rzędu} to ustalony zestaw symboli plus reguły, jak z nich budować sensowne wyrażenia. Symbole dzielą się na dwie grupy: \emph{logiczne} (wspólne dla wszystkich takich języków) oraz \emph{pozalogiczne} (specyficzne dla danej dziedziny, np. arytmetyki).
+
+\begin{definicja}[Symbole logiczne]\label{res:2:5}
+\emph{Symbolami logicznymi} nazywamy ustalony, wspólny zestaw:
+\begin{itemize}
+\item nieskończony zapas zmiennych $v_0,v_1,v_2,\ldots$;
+\item spójniki zdaniowe: $\neg$ („nie”), $\land$ („i”), $\lor$ („lub”), $\to$ („jeśli\ldots{} to”), $\leftrightarrow$ („wtedy i tylko wtedy”);
+\item kwantyfikatory: $\forall$ („dla każdego”), $\exists$ („istnieje”);
+\item symbol równości $=$;
+\item symbole pomocnicze: nawiasy $(,)$ i przecinek.
+\end{itemize}
+\end{definicja}
+
+\begin{definicja}[Sygnatura / symbole pozalogiczne]\label{res:2:6}
+\emph{Sygnaturą} (albo \emph{słownikiem pozalogicznym}) nazywamy zbiór $\tau$ złożony z:
+\begin{itemize}
+\item \emph{symboli stałych} (oznaczają wyróżnione elementy, np. $0$);
+\item \emph{symboli funkcyjnych}, każdy z przypisaną \emph{arnością} (liczbą argumentów), np. $S$ arności $1$, $+$ arności $2$;
+\item \emph{symboli relacyjnych}, każdy z arnością, np. $<$ arności $2$.
+\end{itemize}
+\emph{Językiem pierwszego rzędu} $\mathcal L$ o sygnaturze $\tau$ nazywamy zestaw wszystkich symboli logicznych (Def.~\ref{res:2:5}) wraz z $\tau$, razem z gramatyką termów i formuł opisaną niżej.
+\end{definicja}
+
+\begin{uwaga}[Dlaczego „pierwszego rzędu”?]\label{res:2:7}
+Nazwa „pierwszego rzędu” oznacza, że kwantyfikatory $\forall,\exists$ przebiegają wyłącznie po \emph{elementach} dziedziny (np. po liczbach), a nie po \emph{zbiorach} elementów czy relacjach. Zdanie „dla każdej liczby $x$” jest pierwszego rzędu; „dla każdego zbioru liczb $X$” byłoby drugiego rzędu. Twierdzenia dowodzimy tutaj w klasycznej logice pierwszego rzędu. Ogólniej zasadnicza jest efektywność rachunku dowodowego, a nie sama nazwa „pierwszy rząd”. Pełna semantyka logiki drugiego rzędu nie ma efektywnego, poprawnego i zupełnego rachunku dowodowego, więc nie stanowi obejścia twierdzeń.
+\end{uwaga}
+
+\begin{definicja}[Term]\label{res:2:8}
+\emph{Termy} języka $\mathcal L$ definiujemy indukcyjnie (są to napisy oznaczające „obiekty”, np. konkretne liczby):
+\begin{enumerate}[label=(\roman*)]
+\item każda zmienna $v_i$ jest termem;
+\item każdy symbol stałej (np. $0$) jest termem;
+\item jeśli $f$ jest symbolem funkcyjnym arności $n$, a $t_1,\ldots,t_n$ są termami, to $f(t_1,\ldots,t_n)$ jest termem;
+\item nic innego nie jest termem.
+\end{enumerate}
+\emph{Term domknięty} to term bez zmiennych (np. $S(S(0))$).
+\end{definicja}
+
+\begin{definicja}[Formuła atomowa]\label{res:2:9}
+\emph{Formułą atomową} nazywamy napis postaci $t_1=t_2$ (równość dwóch termów) albo $R(t_1,\ldots,t_n)$, gdzie $R$ jest symbolem relacyjnym arności $n$, a $t_1,\ldots,t_n$ termami. To najprostsze formuły; jeśli zawierają zmienne wolne, ich wartość logiczna zależy także od wartościowania.
+\end{definicja}
+
+\begin{definicja}[Formuła]\label{res:2:10}
+\emph{Formuły} definiujemy indukcyjnie:
+\begin{enumerate}[label=(\roman*)]
+\item każda formuła atomowa jest formułą;
+\item jeśli $\varphi$ jest formułą, to $\neg\varphi$ jest formułą;
+\item jeśli $\varphi,\psi$ są formułami, to $(\varphi\land\psi)$, $(\varphi\lor\psi)$, $(\varphi\to\psi)$, $(\varphi\leftrightarrow\psi)$ są formułami;
+\item jeśli $\varphi$ jest formułą, a $x$ zmienną, to $\forall x\,\varphi$ oraz $\exists x\,\varphi$ są formułami;
+\item nic innego nie jest formułą.
+\end{enumerate}
+\end{definicja}
+
+\begin{definicja}[Zmienna wolna i związana]\label{res:2:11}
+Wystąpienie zmiennej $x$ jest \emph{związane}, jeśli leży w zasięgu kwantyfikatora $\forall x$ lub $\exists x$; w przeciwnym razie jest \emph{wolne}. Formułę bez zmiennych wolnych nazywamy \emph{zdaniem} (por. Def.~\ref{res:3:3}). Zdania można oceniać w danej strukturze bez podawania wartościowania. Formuły otwarte również można oceniać, lecz względem przypisania wartości zmiennym wolnym.
+\end{definicja}
+
+\begin{przyklad}\label{res:2:12}
+W formule $\exists y\,(x=y+y)$ zmienna $y$ jest związana, a $x$ wolna. To formuła (o jednej zmiennej wolnej $x$) „mówiąca”, że $x$ jest parzyste. Dopiero podstawiając konkretną liczbę za $x$, otrzymamy zdanie prawdziwe (np. dla $4$) lub fałszywe (np. dla $3$).
+\end{przyklad}
+
+\subsection*{Znaczenie: struktury i prawda}\label{sec:struktury-prawda}
+Dotąd mówiliśmy o czystej \emph{składni} (napisach). Żeby napis coś „znaczył”, potrzebujemy \emph{struktury} --- świata, w którym symbole są zinterpretowane.
+
+\begin{definicja}[Struktura]\label{res:2:13}
+\emph{Strukturą} $\mathcal M$ dla sygnatury $\tau$ nazywamy parę złożoną z:
+\begin{itemize}
+\item niepustego zbioru $M$ zwanego \emph{dziedziną} (uniwersum);
+\item interpretacji każdego symbolu z $\tau$: każdej stałej $c$ przypisujemy element $c^{\mathcal M}\in M$; każdemu symbolowi funkcyjnemu $f$ arności $n$ --- funkcję $f^{\mathcal M}:M^n\to M$; każdemu symbolowi relacyjnemu $R$ arności $n$ --- relację $R^{\mathcal M}\subseteq M^n$.
+\end{itemize}
+\end{definicja}
+
+\begin{przyklad}[Model standardowy]\label{res:2:14}
+\emph{Modelem standardowym} arytmetyki nazywamy strukturę $\mathcal N=(\mathbb N;0,S,+,\cdot,<)$, w której dziedziną jest zbiór liczb naturalnych $\mathbb N=\{0,1,2,\ldots\}$, a symbole interpretujemy „naturalnie”: $0^{\mathcal N}=0$, $S^{\mathcal N}(n)=n+1$, $+,\cdot$ to zwykłe działania, a $<$ to zwykły porządek. To jest „świat, o którym naprawdę chcemy mówić”.
+\end{przyklad}
+
+\begin{definicja}[Spełnianie, prawda --- nieformalnie]\label{res:2:15}
+Mając strukturę $\mathcal M$ i wartościowanie $s$ (przypisanie elementów $M$ zmiennym), definiujemy przez indukcję po budowie formuły, kiedy $\mathcal M,s$ \emph{spełnia} formułę $\varphi$ (piszemy $\mathcal M,s\models\varphi$): formuły atomowe sprawdzamy wprost w interpretacji; $\neg,\land,\lor,\to,\leftrightarrow$ zgodnie z tabelami prawdziwościowymi; $\forall x\,\varphi$ jest spełnione, gdy $\varphi$ zachodzi dla \emph{każdego} podstawienia elementu $M$ za $x$, przy niezmienionych wartościach pozostałych zmiennych; $\exists x\,\varphi$ --- gdy dla \emph{pewnego}. Dla zdania wynik nie zależy od $s$; piszemy wtedy $\mathcal M\models\varphi$.
+\end{definicja}
+
+\begin{uwaga}[Prawda a dowodliwość]\label{res:2:16}
+Rozróżnienie między \emph{prawdą} w strukturze ($\models$, pojęcie semantyczne) a \emph{dowodliwością} w teorii ($\vdash$, pojęcie składniowe, Def.~\ref{res:3:4}) jest sercem całej opowieści. Zdanie Gödla będzie \emph{prawdziwe} w modelu standardowym, lecz \emph{niedowodliwe} w teorii.
+\end{uwaga}
+
+\subsection*{Teoria, aksjomaty, dowód --- intuicja}\label{sec:teoria-dowod-intuicja}
+\begin{definicja}[Teoria --- nieformalnie]\label{res:2:17}
+\emph{Teorią} nazywamy zbiór zdań (aksjomatów) w ustalonym języku wraz z mechanicznymi \emph{regułami wnioskowania} pozwalającymi wyprowadzać nowe zdania (\emph{twierdzenia}) z już przyjętych. Formalizację podaje Def.~\ref{res:3:4}. Intuicyjnie: aksjomaty to „reguły gry”, a dowód to skończona rozgrywka prowadząca od aksjomatów do tezy wyłącznie dozwolonymi ruchami.
+\end{definicja}
+
+\begin{uwaga}[„Efektywnie aksjomatyzowalna”]\label{res:2:18}
+Wystarczy procedura wypisująca wszystkie aksjomaty, nawet jeśli nie umie potwierdzić, że dane zdanie nigdy na liście się nie pojawi. Silniejszy warunek, \emph{rozstrzygalność}, daje odpowiedź „tak” lub „nie” dla każdego wejścia (Def.~\ref{res:5:5}). Zbiór wszystkich zdań prawdziwych w $\mathcal N$ nie jest nawet rekurencyjnie przeliczalny; uzasadnimy to we Wniosku~\ref{res:9:5}.
+\end{uwaga}
+
+\section{Język i system formalny}\label{sec:system-formalny}
+Formalizujemy teraz pojęcia z poprzedniej sekcji dla konkretnego przypadku arytmetyki.
+
+\begin{definicja}[Język arytmetyki]\label{res:3:1}
+\emph{Językiem arytmetyki} $\mathcal L_A$ nazywamy język pierwszego rzędu z równością (Def.~\ref{res:2:6}), o sygnaturze $\{0,S,+,\cdot,<\}$, gdzie $0$ jest symbolem stałej, $S$ jednoargumentowym symbolem funkcyjnym (następnik), $+$ oraz $\cdot$ dwuargumentowymi symbolami funkcyjnymi, a $<$ dwuargumentowym symbolem relacyjnym. Termy i formuły budujemy zgodnie z Def.~\ref{res:2:8} i~\ref{res:2:10}.
+\end{definicja}
+
+\begin{definicja}[Numerały]\label{res:3:2}
+Dla $n\in\mathbb N$ definiujemy \emph{numerał} $\overline n$ indukcyjnie: $\overline0:=0$ oraz $\overline{n+1}:=S(\overline n)$. Numerał $\overline n$ jest termem domkniętym reprezentującym w języku liczbę $n$.
+\end{definicja}
+
+\begin{definicja}[Zdanie]\label{res:3:3}
+\emph{Zdaniem} nazywamy formułę bez zmiennych wolnych. Formułę o jednej zmiennej wolnej $x$ oznaczamy $\varphi(x)$; przez $\varphi(\overline n)$ rozumiemy wynik podstawienia numerału $\overline n$ za $x$.
+\end{definicja}
+
+\begin{definicja}[System formalny]\label{res:3:4}
+\emph{Systemem formalnym} (teorią) $T$ nazywamy trójkę złożoną z:
+\begin{enumerate}[label=(\alph*)]
+\item języka $\mathcal L_A$;
+\item rekurencyjnie przeliczalnego zbioru aksjomatów pozalogicznych $\operatorname{Ax}(T)$, będących zdaniami $\mathcal L_A$;
+\item ustalonego klasycznego rachunku pierwszego rzędu z równością: efektywnych schematów aksjomatów logicznych oraz reguł modus ponens i generalizacji.
+\end{enumerate}
+\emph{Dowodem} zdania $\varphi$ w $T$ nazywamy skończony ciąg formuł $\psi_1,\ldots,\psi_k$ taki, że $\psi_k=\varphi$ i każde $\psi_i$ jest aksjomatem logicznym, aksjomatem $T$ albo wynika z wcześniejszych formuł przez regułę wnioskowania. Piszemy $T\vdash\varphi$, gdy istnieje dowód $\varphi$ w $T$. Instancje schematów i zastosowania reguł sprawdzamy składniowo, łącznie z warunkami dotyczącymi zmiennych i podstawień bez przechwytywania. Generalizacja ma postać $\psi/\forall x\,\psi$; ponieważ aksjomaty pozalogiczne są zdaniami, nie generalizujemy zmiennej wolnej w nieusuniętym założeniu. Przy kodowaniu dołączymy do dowodu świadectwa pochodzenia aksjomatów z wyliczenia. Nie zmienia to zbioru zdań dowodliwych.
+\end{definicja}
+
+\begin{definicja}[Niesprzeczność i zupełność]\label{res:3:5}
+Teoria $T$ jest \emph{niesprzeczna}, jeśli nie istnieje zdanie $\varphi$ takie, że $T\vdash\varphi$ oraz $T\vdash\neg\varphi$. Teoria $T$ jest \emph{zupełna}, jeśli dla każdego zdania $\varphi$ zachodzi $T\vdash\varphi$ lub $T\vdash\neg\varphi$. Teorię, która nie jest zupełna, nazywamy \emph{niezupełną}.
+\end{definicja}
+
+\begin{lemat}[Poprawność rachunku i przenoszenie założenia]\label{res:3:6}
+Niech $S$ będzie dowolnym zbiorem zdań, a $\alpha,\beta$ zdaniami ustalonego języka pierwszego rzędu. Wówczas:
+\begin{enumerate}[label=(\alph*)]
+\item jeśli $S\vdash\alpha$ i $\mathcal M\models S$, to $\mathcal M\models\alpha$;
+\item $S\cup\{\alpha\}\vdash\beta$ wtedy i tylko wtedy, gdy $S\vdash\alpha\to\beta$;
+\item $S\cup\{\alpha\}$ jest sprzeczny wtedy i tylko wtedy, gdy $S\vdash\neg\alpha$.
+\end{enumerate}
+Punkt (b) to \emph{twierdzenie o dedukcji}. Nie zakładamy efektywności zbioru $S$; wystarcza, że każdy dowód jest skończony.
+\end{lemat}
+
+\begin{proof}
+\emph{(a) Poprawność.} Ustalamy model aksjomatów $S$ i przechodzimy po wierszach dowodu. Aksjomaty logiczne są prawdziwe przy każdym wartościowaniu, a aksjomaty $S$ są prawdziwe z wyboru modelu. Modus ponens zachowuje prawdziwość: z $\gamma$ i $\gamma\to\eta$ wynika $\eta$. Przy generalizacji istotne jest, że dotychczasowy wniosek zachodzi przy \emph{każdym} wartościowaniu. Można więc zmieniać wartość generalizowanej zmiennej, otrzymując $\forall x\,\gamma$. Indukcja po długości dowodu daje tezę.
+
+\emph{(b) Dedukcja.} Z dowodu korzystającego z dodatkowego założenia $\alpha$ budujemy dowód, w którym każdy wiersz $\gamma$ zastępujemy wnioskiem $\alpha\to\gamma$. Dla aksjomatu lub założenia z $S$ używamy tautologii $\gamma\to(\alpha\to\gamma)$; dla samego $\alpha$ używamy $\alpha\to\alpha$. Krok modus ponens obsługuje tautologia
+\[
+(\alpha\to(\gamma\to\eta))\to((\alpha\to\gamma)\to(\alpha\to\eta)).
+\]
+Jeśli wiersz powstał przez generalizację $\gamma/\forall x\,\gamma$, generalizujemy wcześniej uzyskane $\alpha\to\gamma$ i stosujemy $\forall x(\alpha\to\gamma)\to(\alpha\to\forall x\,\gamma)$. Warunek tej reguły jest spełniony: $x$ nie występuje wolno w zdaniu $\alpha$. Otrzymujemy $S\vdash\alpha\to\beta$. Kierunek odwrotny jest jednym zastosowaniem modus ponens z założeniem $\alpha$.
+
+\emph{(c) Sprzeczne rozszerzenie.} Jeśli z $S\cup\{\alpha\}$ otrzymujemy $\gamma$ i $\neg\gamma$, punkt (b) daje w $S$ obie implikacje $\alpha\to\gamma$ i $\alpha\to\neg\gamma$. Logika klasyczna daje z nich $\neg\alpha$. Odwrotnie, dowód $\neg\alpha$ z $S$ przeczy dodatkowemu aksjomatowi $\alpha$. W szczególności teoria mająca model nie może być sprzeczna, na mocy (a).
+\end{proof}
+
+% Strony 7--9 oryginału, rozdział 4.
+\section{Arytmetyka Peana i Robinsona}\label{sec:arytmetyka-peana-robinsona}
+Zanim podamy aksjomaty, wyjaśnijmy, po co one są. Chcemy zapisać w języku $\mathcal L_A$ (Def.~\ref{res:3:1}) na tyle dużo prawd o liczbach naturalnych, by teoria potrafiła „liczyć” --- a jednocześnie zrobić to skończoną, mechanicznie sprawdzalną listą reguł. Arytmetyka Robinsona $Q$ to taki możliwie minimalny zestaw: opisuje tylko podstawowe własności zera, następnika, dodawania, mnożenia i porządku.
+
+\begin{definicja}[Arytmetyka Robinsona $Q$]\label{res:4:1}
+\emph{Arytmetyką Robinsona} $Q$ nazywamy teorię o następujących ośmiu aksjomatach. Nazwy (Q1)--(Q8) są stałe, niezależne od numeracji wzorów:
+\begin{align*}
+\forall x\ S(x)\ne0, &\tag{Q1}\\
+\forall x\,\forall y\,(S(x)=S(y)\to x=y), &\tag{Q2}\\
+\forall x\,(x\ne0\to\exists y\ x=S(y)), &\tag{Q3}\\
+\forall x\ x+0=x, &\tag{Q4}\\
+\forall x\,\forall y\ x+S(y)=S(x+y), &\tag{Q5}\\
+\forall x\ x\cdot0=0, &\tag{Q6}\\
+\forall x\,\forall y\ x\cdot S(y)=x\cdot y+x, &\tag{Q7}\\
+\forall x\,\forall y\ (x<y\leftrightarrow\exists z\,(z+S(x)=y)). &\tag{Q8}
+\end{align*}
+Przyjmujemy $x\le y$ jako skrót $x<y\lor x=y$. Kolejność składników w (Q8) ma znaczenie: $Q$ nie dowodzi przemienności dodawania. Ta definicja zapewnia, że odcinek poniżej standardowego numerału jest dokładnie skończonym zbiorem mniejszych numerałów.
+\end{definicja}
+
+\begin{uwaga}[Znaczenie każdego aksjomatu --- po ludzku]\label{res:4:2}
+Czytajmy $S(x)$ jako „$x+1$”, a $0$ jako zero. Wtedy:
+\begin{itemize}
+\item \textup{(Q1)} $S(x)\ne0$: \emph{zero nie jest niczyim następnikiem} --- żadna liczba $+1$ nie daje $0$. To odróżnia $\mathbb N$ od np. liczb modulo, gdzie „zawinięcie” pozwoliłoby wrócić do zera.
+\item \textup{(Q2)} $S(x)=S(y)\to x=y$: \emph{następnik jest różnowartościowy} --- jeśli $x+1=y+1$, to $x=y$. Gwarantuje, że kolejne liczby się nie „sklejają”.
+\item \textup{(Q3)} $x\ne0\to\exists y\ x=S(y)$: \emph{każda niezerowa liczba ma poprzednik} --- nie ma „dziur” ani dziwnych elementów bez $-1$.
+\item \textup{(Q4)} $x+0=x$: dodanie zera nic nie zmienia (baza rekurencji dodawania).
+\item \textup{(Q5)} $x+S(y)=S(x+y)$: \emph{definiuje dodawanie przez rekurencję} --- dodać $y+1$ to dodać $y$ i potem $+1$. Aksjomaty (Q4)--(Q5) wspólnie mówią, jak liczyć $x+y$ krok po kroku.
+\item \textup{(Q6)} $x\cdot0=0$: mnożenie przez zero daje zero (baza).
+\item \textup{(Q7)} $x\cdot S(y)=x\cdot y+x$: \emph{definiuje mnożenie przez rekurencję} --- pomnożyć przez $y+1$ to pomnożyć przez $y$ i dodać $x$.
+\item \textup{(Q8)} $x<y\leftrightarrow\exists z\,(z+S(x)=y)$: w modelu standardowym mówi, że do $x+1$ można dodać nieujemną liczbę i otrzymać $y$. Nie zakłada ogólnych praw porządku, których $Q$ mogłaby nie dowodzić.
+\end{itemize}
+\end{uwaga}
+
+\begin{przyklad}[$Q$ liczy konkretne przykłady]\label{res:4:3}
+Z aksjomatów (Q4)--(Q5) $Q$ dowodzi np. $\overline2+\overline1=\overline3$: istotnie $\overline2+S(0)=S(\overline2+0)=S(\overline2)=\overline3$. Ogólnie $Q$ poprawnie dowodzi każdej prawdziwej równości i nierówności między \emph{konkretnymi} numerałami. To wystarczy do reprezentowalności (Tw.~\ref{res:7:6}).
+\end{przyklad}
+
+\begin{lemat}[Skończone odcinki i rachunek na numerałach]\label{res:4:4}
+Dla każdego ustalonego standardowego $n$ teoria $Q$ dowodzi
+\begin{align}
+\forall x\,(x<\overline n\leftrightarrow(x=\overline0\lor\cdots\lor x=\overline{n-1})),\label{eq:4:1}\\
+\forall x\,(x<\overline n\lor x=\overline n\lor\overline n<x).\label{eq:4:2}
+\end{align}
+Dla $n=0$ alternatywa po prawej w~\eqref{eq:4:1} oznacza fałsz. Ponadto $Q$ rozstrzyga równości i nierówności między termami domkniętymi.
+\end{lemat}
+
+\begin{proof}
+Z (Q4)--(Q7) obliczamy każdy term domknięty, rozwijając dodawanie i mnożenie skończenie wiele razy. Różność dwóch różnych numerałów wynika z (Q1)--(Q2).
+
+Z (Q3) i prawa wyłączonego środka otrzymujemy $x=0\lor\exists u\ x=S(u)$. W drugiej gałęzi stosujemy ten sam podział do $u$: albo $u=0$ i $x=\overline1$, albo $u=S(v)$ i $x=S^2(v)$. Powtarzamy to dokładnie $n+1$ razy, otrzymując w $Q$
+\[
+x=\overline0\lor x=\overline1\lor\cdots\lor x=\overline n\lor\exists u\ x=S^{n+1}(u).
+\]
+Zapis $S^k(u)$ oznacza $k$ kolejnych zastosowań następnika. Jeśli $x=S^{n+1}(u)$, to $z+S(x)=S^{n+2}(z+u)\ne\overline n$ na mocy (Q1)--(Q2) i (Q5): domniemana równość po $n$ skróceniach następnika dawałaby $S^2(z+u)=0$. Zatem $x\not<\overline n$. Dla $x=\overline j$ z $j\le n$ zachodzi $z+S(\overline j)=S^{j+1}(z)$. Przy $j<n$ świadkiem równości z $\overline n$ jest $z=\overline{n-j-1}$. Przy $j=n$ taka równość po $n$ skróceniach dawałaby $S(z)=0$, więc jest niemożliwa. To dowodzi obu kierunków~\eqref{eq:4:1}. W ostatnim członie alternatywy $u+S(\overline n)=S^{n+1}(u)=x$, więc $\overline n<x$; pozostałe gałęzie dają~\eqref{eq:4:2}. Jest to indukcja w metateorii budująca osobny skończony dowód dla każdego $n$, a nie zastosowanie nieistniejącego w $Q$ schematu indukcji.
+\end{proof}
+
+\begin{uwaga}[Jak połączyć skończenie wiele sprawdzeń]\label{res:4:5}
+Niech $n$ będzie ustaloną liczbą standardową, a $\theta(x)$ dowolną formułą. Jeśli $Q$ dowodzi wszystkich $\theta(\overline0),\ldots,\theta(\overline{n-1})$, to dowodzi też $\forall x<\overline n\,\theta(x)$. Ten ostatni zapis jest skrótem $\forall x(x<\overline n\to\theta(x))$. Istotnie, z $x=\overline j$ oraz $\theta(\overline j)$ otrzymujemy $\theta(x)$ przez podstawienie równych termów. Łączymy skończenie wiele takich implikacji przez alternatywę i stosujemy~\eqref{eq:4:1}. Następnie generalizujemy $x$. Dla $n=0$ teza wynika z $\forall x\,\neg(x<0)$. Tak powstaje \emph{jeden skończony dowód dla ustalonej granicy} $n$, a nie dowód $\forall x\,\theta(x)$. Tego kroku użyjemy między innymi w dowodzie Rossera.
+\end{uwaga}
+
+\begin{definicja}[Formuły ograniczone i $\Sigma_1$]\label{res:4:6}
+Formuła $\Delta_0$ powstaje z formuł atomowych przez spójniki oraz kwantyfikatory $\exists x<t$, $\forall x<t$, gdzie $t$ nie zawiera $x$. Są to skróty $\exists x(x<t\land\cdots)$ i $\forall x(x<t\to\cdots)$. Kwantyfikatory z $x\le t$ również są ograniczone: oznaczają odpowiednio $(\exists x<t\,\varphi(x))\lor\varphi(t)$ oraz $(\forall x<t\,\varphi(x))\land\varphi(t)$, po podstawieniu bez przechwytywania zmiennych. Nie potrzeba tu żadnych ogólnych praw porządku. Formuła $\Sigma_1$ ma postać $\exists u_1\cdots\exists u_r\,\delta$, gdzie $\delta$ jest $\Delta_0$; dopuszczamy $r=0$.
+\end{definicja}
+
+\begin{lemat}[$\Sigma_1$-zupełność $Q$]\label{res:4:7}
+$Q$ dowodzi każdego prawdziwego zdania $\Sigma_1$ oraz negacji każdego fałszywego zdania $\Delta_0$.
+\end{lemat}
+\begin{proof}
+Po podstawieniu numerałów termy obliczamy według Lematu~\ref{res:4:4}. Każdy kwantyfikator ograniczony przez numerał zastępujemy skończoną alternatywą lub koniunkcją za pomocą~\eqref{eq:4:1}. Indukcja po budowie formuły daje dla każdej zamkniętej $\Delta_0$ dowód jej prawdziwej strony: samej formuły albo jej negacji. Jeżeli $\exists\overline u\,\delta(\overline u)$ jest prawdziwa, wybieramy rzeczywistych świadków $\overline m$, dowodzimy $\delta(\overline m)$ w $Q$ i wprowadzamy kwantyfikatory egzystencjalne. Nie otrzymujemy stąd rozstrzygania fałszywych zdań $\Sigma_1$.
+\end{proof}
+
+\begin{uwaga}[Czego $Q$ nie potrafi]\label{res:4:8}
+$Q$ jest celowo słaba: \emph{nie} dowodzi ogólnych praw z kwantyfikatorem, np. przemienności $\forall x\,\forall y\ x+y=y+x$ ani $\forall x\ 0+x=x$. Powód: brakuje jej \emph{indukcji}. Mimo to jej słabość jest zaletą --- im słabsza teoria, dla której udowodnimy niezupełność, tym mocniejszy wynik (bo obejmie automatycznie wszystkie silniejsze).
+\end{uwaga}
+
+\begin{definicja}[Arytmetyka Peana PA]\label{res:4:9}
+\emph{Arytmetyką Peana} $\mathrm{PA}$ nazywamy teorię powstałą z $Q$ (aksjomaty (Q1)--(Q7), z (Q8) jako definicją $<$) przez dodanie \emph{schematu indukcji}: dla każdej formuły $\varphi(x,\overline y)$ języka $\mathcal L_A$ przyjmujemy aksjomat
+\[
+\forall\overline y\,\bigl[(\varphi(0,\overline y)\land\forall x\,(\varphi(x,\overline y)\to\varphi(S(x),\overline y)))\to\forall x\,\varphi(x,\overline y)\bigr].
+\]
+\end{definicja}
+
+\begin{uwaga}[Co mówi schemat indukcji]\label{res:4:10}
+To formalna wersja „zasady domina”: jeśli własność $\varphi$ zachodzi dla $0$ (\emph{baza}) i z jej zachodzenia dla $x$ wynika zachodzenie dla $x+1$ (\emph{krok}), to zachodzi dla \emph{wszystkich} liczb. Słowo „schemat” oznacza, że jest to \emph{nieskończenie wiele} aksjomatów --- po jednym dla każdej formuły $\varphi$. Mimo nieskończoności zbiór ten jest \emph{rozstrzygalny} (można mechanicznie sprawdzić, czy dane zdanie ma kształt aksjomatu indukcji), więc PA pozostaje efektywnie aksjomatyzowalna --- co jest niezbędne dla twierdzeń Gödla.
+\end{uwaga}
+
+\begin{uwaga}\label{res:4:11}
+$Q$ jest bardzo słaba (np. nie dowodzi przemienności dodawania), lecz wystarcza do reprezentowania wszystkich funkcji obliczalnych w sensie obliczeń na ustalonych numerałach (Tw.~\ref{res:7:6}). Pierwsze twierdzenie, w wersji Rossera, obejmuje każde niesprzeczne efektywnie aksjomatyzowalne rozszerzenie $Q$. Drugie twierdzenie dowodzimy tutaj dla rozszerzeń PA; sama reprezentowalność nie zastępuje warunków wyprowadzalności.
+\end{uwaga}
+
+% Rozdziały 5--6, strony 9--13.
+\section{Funkcje i zbiory rekurencyjne}\label{sec:funkcje-rekurencyjne}
+\begin{definicja}[Funkcje pierwotnie rekurencyjne]\label{res:5:1}
+Klasa \emph{funkcji pierwotnie rekurencyjnych} to najmniejsza klasa funkcji $f:\mathbb N^k\to\mathbb N$ zawierająca:
+\begin{enumerate}[label=(\roman*)]
+\item funkcję zerową $Z(x)=0$;
+\item następnik $S(x)=x+1$;
+\item rzutowania $P_i^k(x_1,\ldots,x_k)=x_i$;
+\end{enumerate}
+i zamknięta ze względu na:
+\begin{enumerate}[label=(\alph*)]
+\item \emph{złożenie}: jeśli $g:\mathbb N^m\to\mathbb N$ oraz $h_1,\ldots,h_m:\mathbb N^k\to\mathbb N$ są p.r., to $f(\vec x)=g(h_1(\vec x),\ldots,h_m(\vec x))$ jest p.r.;
+\item \emph{rekursję prostą}: jeśli $g,h$ są p.r., to funkcja $f$ określona przez
+\[
+f(\vec x,0)=g(\vec x),\qquad f(\vec x,S(y))=h(\vec x,y,f(\vec x,y))
+\]
+jest p.r.
+\end{enumerate}
+\end{definicja}
+
+\begin{definicja}[Funkcja charakterystyczna zbioru]\label{res:5:2}
+\emph{Funkcją charakterystyczną} zbioru (relacji) $R\subseteq\mathbb N^k$ nazywamy funkcję $\chi_R:\mathbb N^k\to\mathbb N$ zdefiniowaną wzorem
+\[
+\chi_R(\vec x)=\begin{cases}1,&\vec x\in R\quad(\text{„warunek zachodzi”}),\\0,&\vec x\notin R\quad(\text{„warunek nie zachodzi”}).\end{cases}
+\]
+Innymi słowy $\chi_R$ zamienia \emph{pytanie} „czy $\vec x$ należy do $R$?” na \emph{liczbę} ($1$ = tak, $0$ = nie). Dzięki temu „rozstrzyganie”, czy coś zachodzi, staje się po prostu obliczaniem wartości funkcji --- a o funkcjach umiemy już mówić, że są (lub nie są) rekurencyjne.
+\end{definicja}
+
+\begin{uwaga}[Po co funkcja charakterystyczna?]\label{res:5:3}
+Cała teoria obliczalności mówi wprost tylko o funkcjach $\mathbb N^k\to\mathbb N$. Zbiory i relacje (np. „$x$ jest liczbą pierwszą”, „$p$ jest dowodem formuły $f$”) to obiekty innego rodzaju --- to warunki prawda/fałsz. Funkcja charakterystyczna jest mostem: pozwala przełożyć „rozstrzygalność zbioru” na „obliczalność funkcji”. Mówimy, że zbiór jest \emph{rozstrzygalny z definicji} wtedy i tylko wtedy, gdy istnieje mechaniczna procedura licząca jego $\chi_R$.
+\end{uwaga}
+
+\begin{przyklad}[Funkcje charakterystyczne konkretnych zbiorów]\label{res:5:4}
+\begin{itemize}
+\item Zbiór liczb parzystych: $\chi_{\mathrm{parz}}(x)=1$ dla $x\in\{0,2,4,\ldots\}$, w przeciwnym razie $0$. Jest pierwotnie rekurencyjna, bo $\chi_{\mathrm{parz}}(x)=1-(x\bmod 2)$, a reszta z dzielenia jest p.r. (Lemat~\ref{res:5:8}).
+\item Relacja równości $E=\{(x,y):x=y\}$: $\chi_E(x,y)=1-\operatorname{sgn}((x\dotminus y)+(y\dotminus x))$; wynik jest $1$ dokładnie wtedy, gdy obie obcięte różnice są zerowe, czyli gdy $x=y$.
+\item Relacja $\le$: $\chi_{\le}(x,y)=1-\operatorname{sgn}(x\dotminus y)$, bo $x\dotminus y=0$ dokładnie wtedy, gdy $x\le y$.
+\item Zbiór liczb pierwszych: $\chi_{\mathrm{pr}}(x)=1$, gdy $x>1$ i żadna liczba $2\le d<x$ nie dzieli $x$; warunek wyrażalny ograniczonym kwantyfikatorem $\forall d<x$, więc też p.r.
+\end{itemize}
+Widać wspólny wzorzec: „tak/nie” kodujemy jako $1/0$, a logiczne spójniki odwzorowujemy na operacje arytmetyczne ($\land$ odpowiada mnożeniu, $\neg$ odpowiada $1-(\cdot)$).
+\end{przyklad}
+
+\begin{definicja}[Funkcje częściowo rekurencyjne i rekurencyjne]\label{res:5:5}
+Funkcja częściowa $f:\mathbb N^k\rightharpoonup\mathbb N$ może nie mieć wartości dla niektórych argumentów. Piszemy $f(\vec n)\downarrow=m$, gdy wartość istnieje i wynosi $m$, oraz $f(\vec n)\uparrow$, gdy nie istnieje.
+
+Klasa funkcji \emph{częściowo rekurencyjnych} powstaje z funkcji bazowych z Definicji~\ref{res:5:1} przez złożenie, rekursję prostą i \emph{minimalizację}:
+\[
+(\mu g)(\vec x)\downarrow=y\quad\Longleftrightarrow\quad
+g(\vec x,y)\downarrow=0\ \text{oraz}\ (\forall z<y)\ g(\vec x,z)\downarrow\ne0.
+\]
+Przy złożeniu i rekursji wynik istnieje tylko wtedy, gdy istnieją wszystkie wartości potrzebne do jego obliczenia. Funkcję częściowo rekurencyjną określoną dla wszystkich argumentów nazywamy \emph{rekurencyjną} (\emph{totalną obliczalną}).
+
+Zbiór $R\subseteq\mathbb N^k$ jest \emph{rekurencyjny} (\emph{rozstrzygalny}), gdy $\chi_R$ jest funkcją totalną rekurencyjną. Jest \emph{rekurencyjnie przeliczalny} (\emph{efektywnie wyliczalny}), gdy stanowi dziedzinę funkcji częściowo rekurencyjnej.
+\end{definicja}
+
+\begin{uwaga}[Czym $\mu g$ różni się od $\min\{\cdots\}$]\label{res:5:6}
+Jeśli $\mu y\,[g(\vec x,y)=0]$ jest określone, jego wartość równa się $\min\{y\in\mathbb N:g(\vec x,y)=0\}$ --- to faktycznie najmniejszy argument zerujący $g$. Dla częściowego $g$ samo istnienie tego minimum nie gwarantuje jednak określoności $\mu g$. Znaczenie ma również sposób wyznaczania wyniku:
+\begin{itemize}
+\item Zwykłe $\min\{\cdots\}$ to statyczny zapis teoriomnogościowy: „weź najmniejszy element tego zbioru”. Milczy o tym, jak ów element znaleźć, i ma sens także wtedy, gdy zbioru nie da się efektywnie przeszukać.
+\item Operator $\mu$ to przepis obliczeniowy (procedura): $y\gets0$; dopóki $g(\vec x,y)\ne0$, wykonuj $y\gets y+1$; zwróć $y$. Sprawdzamy kolejno $y=0,1,2,\ldots$ i zatrzymujemy się na pierwszym trafieniu. Dlatego $\mu$ zachowuje obliczalność.
+\end{itemize}
+\emph{Totalność a ograniczoność przeszukiwania.} Gdy $g$ jest totalna, pętla kończy się na danym wejściu dokładnie wtedy, gdy istnieje zero. Gdy $g$ jest częściowa, może utknąć już przy obliczaniu wcześniejszej wartości $g(\vec x,z)$, nawet jeśli późniejsze $g(\vec x,y)$ wynosi zero. Na przykład przy $g(\vec x,0)\uparrow$ i $g(\vec x,1)=0$ zbiór zer ma minimum $1$, ale procedura $\mu g$ utknie już na argumencie $0$.
+
+Jeśli test jest totalny i zero istnieje na każdym wejściu, otrzymana funkcja jest totalna obliczalna. Samo zakończenie każdego obliczenia nie gwarantuje pierwotnej rekurencyjności. Jeśli test i z góry znane ograniczenie przeszukiwania są p.r., ograniczona minimalizacja również jest p.r. (Lemat~\ref{res:5:8}). Nieograniczona minimalizacja pozwala wyjść poza klasę p.r., także wtedy, gdy wynikowa funkcja jest totalna. Brak zakończenia nie jest jedyną różnicą między tymi klasami.
+
+\emph{Umowa notacyjna:} gdy piszemy $\mu y\,[W(y)]$ dla warunku $W$, rozumiemy przez to $\mu y\,[\chi_{\neg W}(y)=0]$, tj. najmniejsze $y$ spełniające $W$ (funkcja charakterystyczna, Def.~\ref{res:5:2}, tłumaczy „warunek” na „zerowanie funkcji”).
+\end{uwaga}
+
+\begin{przyklad}[Operator $\mu$ w działaniu]\label{res:5:7}
+Funkcja „część całkowita pierwiastka” $\lfloor\sqrt x\rfloor$ to $\mu y\,[(y+1)^2>x]$, czyli najmniejsze $y$, dla którego $(y+1)^2$ przekracza $x$. Dla $x=10$ dostajemy $y=3$ (bo $4^2=16>10$, a $3^2=9\le10$). Ten przykład pokazuje typową rolę $\mu$: „szukaj najmniejszego świadka spełniającego warunek”. Tutaj można ograniczyć przeszukiwanie przez $y\le x$, bo $(x+1)^2>x$. Test i ograniczenie są p.r., więc funkcja jest p.r. Nie wystarczyłoby samo stwierdzenie, że dla każdego wejścia przeszukiwanie kiedyś się kończy.
+\end{przyklad}
+
+\begin{lemat}[Zamkniętość p.r.]\label{res:5:8}
+Klasa funkcji pierwotnie rekurencyjnych zawiera dodawanie, mnożenie, potęgowanie, funkcję poprzednika, obciętą różnicę $\dotminus$, oraz jest zamknięta ze względu na definicje przez przypadki z warunkami p.r., ograniczone kwantyfikatory oraz ograniczoną minimalizację relacji p.r.
+\end{lemat}
+\begin{proof}
+Dodawanie definiują $x+0=x$, $x+S(y)=S(x+y)$; mnożenie --- $x\cdot0=0$, $x\cdot S(y)=x\cdot y+x$; potęgowanie --- $x^0=1$, $x^{S(y)}=x^y\cdot x$. Są to kolejne zastosowania rekursji prostej. Poprzednik spełnia $\operatorname{pd}(0)=0$, $\operatorname{pd}(S(y))=y$, a obcięta różnica $x\dotminus0=x$, $x\dotminus S(y)=\operatorname{pd}(x\dotminus y)$.
+
+Niech $r(\vec x,y)\in\{0,1\}$ będzie p.r. funkcją charakterystyczną relacji $R$. Ograniczone sumy i iloczyny są p.r. przez rekursję po liczbie składników. Stąd
+\[
+\chi_{\forall y<n\,R(\vec x,y)}=\prod_{y<n}r(\vec x,y),\qquad
+\chi_{\exists y<n\,R(\vec x,y)}=1-\prod_{y<n}(1-r(\vec x,y)).
+\]
+Iloczyn pusty wynosi $1$. Definicję przez dwa przypadki zapisujemy jako $\chi_R f+(1-\chi_R)g$. Najmniejsze $y\le n$ spełniające $R$, z wartością zastępczą $n+1$ przy braku świadka, jest równe
+\[
+\sum_{j=0}^{n}\prod_{i=0}^{j}(1-r(\vec x,i)).
+\]
+Jeśli pierwszym trafieniem jest $y$, dokładnie pierwszych $y$ iloczynów wynosi $1$; jeśli trafienia nie ma, wszystkie $n+1$ iloczynów wynoszą $1$. To daje ograniczoną minimalizację bez użycia nieograniczonego $\mu$.
+
+Dla $d>0$ relacja $d\mid x$ ma postać $\exists q\le x\,(dq=x)$, a iloraz i resztę znajdujemy przez ograniczone przeszukiwanie; dla $d=0$ ustalamy wartość zastępczą $0$. Własność bycia liczbą pierwszą jest zatem p.r. Również $i$-ta liczba pierwsza jest p.r.: zaczynamy od $p_1=2$, a $p_{i+1}$ szukamy między $p_i+1$ a $p_i!+1$. Pierwszy dzielnik pierwszy $p_i!+1$ jest większy od $p_i$, więc ograniczenie wystarcza. Silnia sama jest p.r. jako ograniczony iloczyn.
+\end{proof}
+
+\section{Numeracja Gödla}\label{sec:numeracja-godla}
+\begin{definicja}[Kod Gödla]\label{res:6:1}
+Ustalamy różnowartościowe, pierwotnie rekurencyjne kodowanie symboli: symbole inne niż zmienne otrzymują kolejne kody $1,\ldots,b-1$, a zmienna $v_i$ kod $b+i$. Dzięki temu rozpoznawanie rodzaju symbolu i odzyskiwanie indeksu zmiennej jest p.r. Ciągowi symboli $s_1\ldots s_k$ przypisujemy liczbę
+\[
+\ulcorner s_1\ldots s_k\urcorner=\prod_{i=1}^k p_i^{\operatorname{kod}(s_i)+1},
+\]
+gdzie $p_i$ jest $i$-tą liczbą pierwszą. Kod pustego napisu wynosi $1$, a $0$ nie jest kodem napisu. Poprawny kod ma dodatnie wykładniki dokładnie przy początkowym odcinku liczb pierwszych, bez luk. Dowolny ciąg liczb kodujemy przez
+\[
+\langle a_1,\ldots,a_k\rangle=\prod_{i=1}^k p_i^{a_i+1}.
+\]
+Przesunięcie o $1$ pozwala kodować także zera. Te konstrukcje iterujemy dla ciągów wierszy dowodu i konfiguracji obliczenia. Operacje na niepoprawnych kodach mają ustalone wartości zastępcze, np. $0$, dzięki czemu są funkcjami totalnymi.
+\end{definicja}
+
+\begin{definicja}[Skończone obliczenie rejestrowe]\label{res:6:2}
+Program używa skończenie wielu rejestrów $r_0,\ldots,r_{d-1}$ z liczbami naturalnymi oraz numerowanych instrukcji. Dopuszczamy:
+\begin{itemize}
+\item $\operatorname{Inc}(i,j)$: zwiększ $r_i$ o $1$ i przejdź do instrukcji $j$;
+\item $\operatorname{Dec}(i,j,k)$: jeśli $r_i=0$, przejdź do $j$; w przeciwnym razie zmniejsz $r_i$ o $1$ i przejdź do $k$;
+\item $\operatorname{Halt}$: zakończ, zwracając zawartość $r_0$.
+\end{itemize}
+Konfiguracja to numer instrukcji i zawartości wszystkich rejestrów. Po zatrzymaniu umownie konfiguracja pozostaje niezmieniona. Na wejściu $\vec x$ rejestry wejściowe zawierają $\vec x$, pozostałe $0$. Ślad obliczenia to skończony ciąg konfiguracji, w którym każda następna wynika z poprzedniej zgodnie z programem.
+\end{definicja}
+
+\begin{lemat}[Programy i funkcje częściowo rekurencyjne]\label{res:6:3}
+Funkcje obliczane przez powyższe programy są dokładnie funkcjami częściowo rekurencyjnymi. Weryfikacja podanego skończonego śladu jest p.r.
+\end{lemat}
+\begin{proof}
+\emph{Od definicji rekurencyjnej do programu.} Wyzerowanie rejestru wykonujemy przez pętlę zmniejszania. Zawartość rejestru kopiujemy, przenosząc ją do dwóch rejestrów pomocniczych i odtwarzając oryginał z jednego z nich. Daje to funkcje bazowe. Złożenie wykonujemy przez kolejne wywołania programów dla argumentów, z rozłącznymi rejestrami roboczymi, a następnie programu funkcji zewnętrznej. Przy rekursji prostej najpierw obliczamy $g(\vec x)$, potem wykonujemy pętlę z licznikiem $i=0,\ldots,y-1$, zastępując bieżący wynik $z$ przez $h(\vec x,i,z)$. W minimalizacji wywołujemy kolejno program $g(\vec x,0),g(\vec x,1),\ldots$ i kończymy na pierwszym zerze. Jeśli wywołanie nie kończy się, nie przechodzimy do następnego argumentu. To dokładnie konwencja z Definicji~\ref{res:5:5}.
+
+\emph{Od programu do funkcji rekurencyjnej.} Jednokrokowe przejście konfiguracji jest p.r.: wybiera jedną ze skończenie wielu instrukcji i używa następnika, poprzednika oraz testu zera. Konfigurację po $t$ krokach definiujemy rekursją prostą po $t$. Minimalizacja wybiera pierwszy moment zatrzymania, a odczyt $r_0$ zwraca wynik. Gdy zatrzymania nie ma, funkcja pozostaje nieokreślona. Weryfikacja gotowego śladu wymaga jedynie ograniczonej liczby testów początku, kolejnych przejść i końca; operacje odczytu kodu uzasadniamy w Lemacie~\ref{res:6:5}. Nie szukamy tutaj czasu zatrzymania.
+\end{proof}
+
+\begin{uwaga}[Wyliczanie a półrozstrzyganie]\label{res:6:4}
+Jeżeli $A$ jest dziedziną programu, symulujemy etapami program na wszystkich wejściach: w etapie $s$ wykonujemy $s$ kroków na wejściach $0,\ldots,s$ i wypisujemy te, na których nastąpiło zatrzymanie. Każdy element $A$ pojawi się po skończonym czasie. Odwrotnie, program na wejściu $n$ może czekać, aż wyliczenie wypisze $n$. Zatrzyma się dokładnie dla $n\in A$. Dla krotek używamy kodowania ciągów. To uzasadnia równoważność dwóch opisów zbioru rekurencyjnie przeliczalnego, także gdy zbiór jest pusty.
+\end{uwaga}
+
+\begin{lemat}[Rekurencyjność składni]\label{res:6:5}
+Następujące zbiory i funkcje są pierwotnie rekurencyjne:
+\begin{enumerate}[label=(\alph*)]
+\item zbiór liczb Gödla poprawnych termów;
+\item zbiór liczb Gödla poprawnych formuł;
+\item funkcja $\operatorname{sub}(f,x,n)$ zwracająca liczbę Gödla formuły powstałej z formuły o kodzie $f$ przez podstawienie numerału $\overline n$ za zmienną o kodzie $x$;
+\item dla efektywnie aksjomatyzowalnej teorii $T$ relacja $\operatorname{Prov}_T(p,f)$: „$p$ koduje poprawny dowód formuły o kodzie $f$ wraz ze świadectwami pochodzenia użytych aksjomatów”.
+\end{enumerate}
+\end{lemat}
+\begin{proof}
+\emph{Odczyt i sklejanie.} Dla $n>0$ wykładnik $p_i$ w $n$ jest najmniejszym $k\le n$, dla którego $p_i^{k+1}\nmid n$. Długość odczytujemy, szukając pierwszego brakującego czynnika pierwszego, a poprawność kodu sprawdzamy przez odtworzenie całego iloczynu. Dla $n=0$ stosujemy wartość zastępczą. Wszystkie te operacje są p.r. na mocy Lematu~\ref{res:5:8}. Konkatenacja kodów $m,n$ to odpowiednie przesunięcie indeksów liczb pierwszych w rozkładzie $n$, możliwe przez ograniczone iloczyny. Podciąg, dołączenie elementu i odczyt wiersza dowodu mają ten sam charakter.
+
+\emph{Rozpoznawanie gramatyki.} Dla napisu długości $\ell$ tworzymy tablicę wszystkich jego podnapisów. Przechodzimy kolejno po długościach $1,\ldots,\ell$. Dla danego podnapisu sprawdzamy skończenie wiele podziałów na bezpośrednie składniki z Definicji~\ref{res:2:8} lub~\ref{res:2:10}, korzystając wyłącznie z wcześniej obliczonych wpisów tablicy. Jest co najwyżej $\ell^2$ podnapisów, a liczba podziałów jest ograniczona funkcją p.r. od $\ell$. Kod tablicy aktualizujemy rekursją prostą. To ważne uzupełnienie: sama rekurencyjna definicja „podformuły są formułami” nie dowodzi jeszcze pierwotnej rekurencyjności testu poprawności.
+
+\emph{Podstawienie.} Korzystając z drzewa rozbioru, przechodzimy po pozycjach napisu i zaznaczamy zasięgi kwantyfikatorów wiążących daną zmienną. Wolne wystąpienia zastępujemy napisem $S^n(0)$, inne pozostawiamy. Numerał jest domknięty, więc nie grozi przechwycenie jego zmiennych. Długość wyniku jest ograniczona przez $\ell(3n+1)$ przy zapisie $S(\cdot)$ z nawiasami; każda czynność i sklejenie kodów są p.r. Tak samo otrzymujemy funkcje $\operatorname{neg}(f)$ i $\operatorname{imp}(f,g)$.
+
+\emph{Dowody z certyfikatami.} Wyliczenie aksjomatów zastępujemy programem, który na wejściu $a$ czeka, aż pojawi się aksjomat o kodzie $a$, i wtedy zwraca $1$ (Uwaga~\ref{res:6:4}). Jest to program częściowo rekurencyjny, więc może mieć postać rejestrową z Definicji~\ref{res:6:2}. Wiersz dowodu zawiera kod formuły, rodzaj uzasadnienia i odpowiednie dane: instancję schematu logicznego, numery wcześniejszych przesłanek albo skończony ślad akceptacji aksjomatu pozalogicznego przez ten program. Nie rozstrzygamy, czy program kiedyś się zatrzyma: sprawdzamy już podany ślad. To jest nasze „świadectwo pochodzenia z wyliczenia”. Ślady, modus ponens, generalizacja i warunki dotyczące zmiennych wymagają wyłącznie ograniczonych testów. Liczba wierszy i długości dołączonych danych są ograniczone przez cały kod $p$. Zatem $\operatorname{Prov}_T(p,f)$ jest p.r.
+
+Każdy zwykły dowód można uzupełnić o certyfikaty: występuje w nim tylko skończenie wiele aksjomatów, a każdy zostaje kiedyś wypisany. Usunięcie certyfikatów daje zwykły dowód. Mamy więc dokładnie
+\[
+T\vdash\varphi\quad\Longleftrightarrow\quad\exists p\in\mathbb N\ \operatorname{Prov}_T(p,\ulcorner\varphi\urcorner).
+\]
+Bez certyfikatów rozstrzygalne, lecz nie p.r. sprawdzanie aksjomatów dawałoby jedynie rekurencyjność relacji dowodu. Ograniczone kwantyfikatory nie zmieniają funkcji rekurencyjnej w funkcję p.r.
+\end{proof}
+
+\begin{przyklad}[Sprawdzenie dowodu a poszukiwanie dowodu]\label{res:6:6}
+Sprawdzenie $\operatorname{Prov}_T(p,f)$ jest jak sprawdzanie gotowego rozwiązania: mając na papierze cały dowód (kod $p$), mechanicznie weryfikujemy linijka po linijce, że każdy krok jest dozwolony --- to skończona, ograniczona robota, stąd rekurencyjność. Natomiast pytanie $\exists p\,\operatorname{Prov}_T(p,f)$ każe znaleźć dowód wśród nieskończenie wielu kandydatów $p$. Nieograniczony kwantyfikator egzystencjalny nie zachowuje w ogólności rozstrzygalności: gdy dowód istnieje, przeszukiwanie kiedyś go znajdzie (stąd rekurencyjna przeliczalność), ale gdy nie istnieje --- szukanie może trwać w nieskończoność. To rozróżnienie „ograniczone a nieograniczone przeszukiwanie” jest sednem różnicy między zbiorem rekurencyjnym a rekurencyjnie przeliczalnym.
+\end{przyklad}
+
+\begin{definicja}[Predykat dowodliwości]\label{res:6:7}
+Dla teorii $T$ definiujemy $\operatorname{Bew}_T(x):=\exists p\,\operatorname{Prf}_T(p,x)$, gdzie $\operatorname{Prf}_T$ jest formułą arytmetyczną reprezentującą relację $\operatorname{Prov}_T$; jej standardowy wybór skonstruujemy po dowodzie reprezentowalności (Lemat~\ref{res:7:7}). Odróżniamy zatem relację na rzeczywistych liczbach $\operatorname{Prov}_T$ od formuły $\operatorname{Prf}_T$, którą można umieścić pod znakiem $T\vdash$. Obie wersje zgadzają się w $\mathcal N$. Zbiór kodów zdań dowodliwych jest rekurencyjnie przeliczalny, jako rzut relacji rekurencyjnej; nierozstrzygalność w rozpatrywanych niesprzecznych rozszerzeniach $Q$ uzasadnimy osobno we Wniosku~\ref{res:9:6}.
+\end{definicja}
+
+% Rozdział 7, strony 14--17.
+\section{Reprezentowalność}\label{sec:reprezentowalnosc}
+
+\begin{definicja}[Reprezentowalność relacji]\label{res:7:1}
+Relacja $R\subseteq\N^k$ jest \emph{reprezentowalna} w teorii $T$, jeśli istnieje formuła $\rho(\vec x)$ taka, że dla każdej krotki $\vec n\in\N^k$ zachodzi
+\[
+R(\vec n)\Longrightarrow T\vdash\rho(\overline{\vec n}),\qquad
+\neg R(\vec n)\Longrightarrow T\vdash\neg\rho(\overline{\vec n}).
+\]
+\end{definicja}
+
+\begin{definicja}[Reprezentowalność funkcji]\label{res:7:2}
+Funkcja częściowa $f:\N^k\rightharpoonup\N$ jest \emph{reprezentowalna} w $T$, jeśli istnieje formuła $\varphi_f(\vec x,y)$ taka, że dla każdego standardowego wejścia $\vec n$, dla którego $f(\vec n)\downarrow=m$, zachodzi
+\[
+T\vdash\forall y\,\bigl(\varphi_f(\overline{\vec n},y)
+\leftrightarrow y=\overline m\bigr).
+\]
+Na wejściach spoza dziedziny $f$ nie wymagamy dowodu nieistnienia wyniku. Dla funkcji totalnej warunek dotyczy każdego standardowego wejścia.
+\end{definicja}
+
+\begin{uwaga}[Obliczenie konkretne a totalność]\label{res:7:3}
+Definicja~\ref{res:7:2} wymaga osobnego dowodu dla każdej ustalonej krotki numerałów; nie wynika z niej $T\vdash\forall\vec x\,\exists!y\,\varphi_f(\vec x,y)$. Pierwszy warunek wystarcza do diagonalizacji, natomiast drugi jest istotnie silniejszy i nie zachodzi dla dowolnej funkcji totalnej obliczalnej w PA.
+\end{uwaga}
+
+\begin{lemat}[Kodowanie ciągów funkcją $\beta$]\label{res:7:4}
+Funkcja $\beta(a,b,i)=a\bmod(1+(i+1)b)$ jest pierwotnie rekurencyjna. Dla każdego skończonego ciągu $c_0,\ldots,c_s$ istnieją $a,b\in\N$ takie, że $\beta(a,b,i)=c_i$ dla $i\le s$. Jej graf w modelu standardowym opisuje formuła $\Delta_0$
+\[
+B(a,b,i,r):=r<1+(i+1)b\ \land\
+\exists q\le a\,[a=q(1+(i+1)b)+r].
+\]
+Ponadto parę $(a,b)$ kodującą dany ciąg można wyznaczyć funkcją pierwotnie rekurencyjną jego kodu.
+\end{lemat}
+\begin{proof}
+Pierwotna rekurencyjność $\beta$ wynika z Lematu~\ref{res:5:8}. Wybierzmy $b=(s+1)!(1+\max_{i\le s}c_i)$ i oznaczmy $m_i=1+(i+1)b$. Mamy $c_i<m_i$. Moduły $m_0,\ldots,m_s$ są parami względnie pierwsze: gdyby liczba pierwsza $p$ dzieliła $m_i$ i $m_j$ dla $i<j$, to dzieliłaby $(j-i)b$. Nie dzieli $b$, ponieważ $m_i\equiv1\pmod p$ dla każdego dzielnika $p$ liczby $b$. Musiałaby zatem dzielić $j-i\le s$, a więc również $b$, co daje sprzeczność.
+
+Z chińskiego twierdzenia o resztach istnieje $a$ spełniające $a\equiv c_i\pmod{m_i}$ dla każdego $i\le s$. Możemy wybrać $0\le a<M$, gdzie $M=\prod_{i\le s}m_i$; wtedy $\beta(a,b,i)=c_i$. Przypomnijmy, że konstrukcja reszt jest efektywna: dla $M_i=M/m_i$ wyznaczamy współczynniki Bézouta $u_iM_i+v_im_i=1$ i bierzemy resztę liczby $\sum_i c_i u_iM_i$ modulo $M$.
+
+Wybór kodu jest nawet p.r. Obliczenie $b$ i $M$ wymaga tylko ograniczonych iloczynów i maksimum, a najmniejsze $a<M$ spełniające wszystkie kongruencje znajdujemy przez ograniczone przeszukiwanie. Formuła $B$ jest $\Delta_0$, bo dzielnik jest dodatni, a iloraz $q$ nie przekracza $a$.
+\end{proof}
+
+\begin{lemat}[Arytmetyczny opis skończonego obliczenia]\label{res:7:5}
+Dla ustalonego programu rejestrowego $e$ z Definicji~\ref{res:6:2} istnieje formuła $\Delta_0$ $C_e(\vec x,y,t,\vec a,\vec b)$ taka, że
+\[
+e(\vec n)\downarrow=m\quad\Longleftrightarrow\quad
+\mathcal N\models\exists t\,\exists\vec a\,\exists\vec b\,
+C_e(\overline{\vec n},\overline m,t,\vec a,\vec b).
+\]
+Ponadto PA dowodzi jednoznaczności wyniku: dwa ślady o tym samym wejściu, spełniające $C_e$, mają ten sam wynik.
+\end{lemat}
+\begin{proof}
+Konfiguracja programu składa się ze stanu i zawartości $d$ rejestrów, czyli $d+1$ liczb. Każdą składową śladu kodujemy osobną parą $(a_h,b_h)$ z Lematu~\ref{res:7:4}, gdzie $0\le h\le d$. Przyjmijmy skróty
+$B_i(u):=\bigwedge_{h=0}^d B(a_h,b_h,i,u_h)$ i
+$A:=1+\sum_{h=0}^d a_h$; zapis $\exists u<A$ oznacza ograniczenie wszystkich współrzędnych krotki $u$ przez $A$.
+Niech $I_e(\vec x,u)$ oznacza poprawną konfigurację początkową, $H_e(u)$ --- stan zatrzymania, a $S_e(u,v)$ --- wykonanie jednej instrukcji. Są to formuły bez kwantyfikatorów, wyrażające odpowiednio wartości rejestrów, skończoną alternatywę po instrukcjach oraz właściwy przypadek zwiększenia bądź zmniejszenia rejestru; $u_1$ jest zawartością rejestru wynikowego $r_0$.
+
+Definiujemy
+\begin{align*}
+C_e(\vec x,y,t,\vec a,\vec b):={}&
+\exists u<A\,[B_0(u)\land I_e(\vec x,u)]\\
+&\land\forall i<t\ \exists u<A\ \exists v<A\,
+[B_i(u)\land B_{S(i)}(v)\land\neg H_e(u)\land S_e(u,v)]\\
+&\land\exists u<A\,[B_t(u)\land H_e(u)\land u_1=y].
+\end{align*}
+Jest to formuła $\Delta_0$. Dla rzeczywistego śladu wszystkie odczyty $\beta(a_h,b_h,i)$ są nie większe od $a_h<A$, więc kodowanie z poprzedniego lematu dostarcza świadków. Odwrotnie, w $\N$ jednoznaczność reszty sprawia, że formuła opisuje kolejne konfiguracje tego samego obliczenia. Warunek $\neg H_e(u)$ dla $i<t$ oznacza, że ślad kończy się przy pierwszym zatrzymaniu.
+
+Uzasadnijmy ostatnie stwierdzenie \emph{wewnątrz PA}. Arytmetyka ta dowodzi istnienia i jednoznaczności reszty przy dzieleniu przez dowolną dodatnią liczbę: istnienie otrzymujemy przez indukcję po dzielnej, a jednoznaczność z własności porządku i mnożenia. Stąd PA dowodzi, że każdy kod $(a_h,b_h)$ wyznacza dokładnie jedną wartość składowej w dowolnej chwili. Dla dwóch śladów o tym samym wejściu indukcja po wspólnym odcinku ich czasów wykazuje równość kolejnych konfiguracji: baza wynika z $I_e$, a krok z deterministyczności $S_e$. Gdyby jeden ślad kończył się wcześniej, drugi wymagałby w tej samej chwili $\neg H_e$, sprzecznie z $H_e$ w pierwszym. Czasy zatrzymania, a więc i wyniki, są równe. Argument wykorzystuje indukcję w PA; nie przenosimy go bez zmian do $Q$.
+\end{proof}
+
+\begin{twierdzenie}[Reprezentowalność funkcji rekurencyjnych]\label{res:7:6}
+Każda funkcja częściowo rekurencyjna jest reprezentowalna w $Q$ w sensie Definicji~\ref{res:7:2}; dotyczy to w szczególności funkcji totalnych rekurencyjnych. Każda relacja rekurencyjna jest reprezentowalna w $Q$ w sensie Definicji~\ref{res:7:1}. Formuły te reprezentują odpowiednie funkcje i relacje także w każdym rozszerzeniu $T\supseteq Q$.
+\end{twierdzenie}
+\begin{proof}
+Na mocy Lematu~\ref{res:6:3} wybieramy program $e$ obliczający $f$. Nie możemy powtórzyć rozumowania z Lematu~\ref{res:7:5}, ponieważ $Q$ nie ma indukcji i nie dowodzi ogólnej jednoznaczności dzielenia z resztą. Wzmocnimy więc formułę kodującą ślad o warunki potrzebne do prześledzenia \emph{każdego konkretnego} obliczenia.
+
+Niech
+\begin{align*}
+D(t)&:=\forall u\le t\ \forall j<u\,(j<t),\\
+U(\vec a,\vec b,t)&:=\forall i\le t\ \bigwedge_{h=0}^d\forall v\,\forall w\,
+\bigl((B(a_h,b_h,i,v)\land B(a_h,b_h,i,w))\to v=w\bigr).
+\end{align*}
+Pierwszy warunek pozwala przechodzić do wcześniejszych indeksów śladu bez używania w $Q$ ogólnej przechodniości porządku; drugi gwarantuje jednoznaczność odczytów również dla niestandardowych parametrów. Kładziemy
+\[
+\varphi_f(\vec x,y):=\exists t\,\exists\vec a\,\exists\vec b\,
+\bigl(C_e(\vec x,y,t,\vec a,\vec b)\land D(t)\land U(\vec a,\vec b,t)\bigr).
+\]
+Nie zakładamy, że formuła $\varphi_f$ jest $\Sigma_1$; wymaganie to nie występuje w Definicji~\ref{res:7:2}.
+
+Ustalmy $\vec n$ takie, że $f(\vec n)\downarrow=m$, i niech $s$ będzie rzeczywistą liczbą kroków do zatrzymania. Wybieramy standardowe kody tego śladu. Zamknięte instancje $C_e$ i $D(\overline s)$ są prawdziwymi zdaniami $\Delta_0$, zatem $Q$ je dowodzi na mocy Lematu~\ref{res:4:7}. Dla wybranych numerałów $\overline{\vec a},\overline{\vec b},\overline s$ teoria $Q$ dowodzi również $U$: z Lematu~\ref{res:4:4} ograniczamy $i$ do skończonej liczby numerałów, a dla każdego z nich warunek $B$ ogranicza odczyty $v,w$ do skończonych zakresów. Pozostają konkretne równości i nierówności arytmetyczne. Otrzymujemy
+$Q\vdash\varphi_f(\overline{\vec n},\overline m)$.
+
+Musimy jeszcze wykazać, że \emph{dowolny} wynik wskazany przez formułę $\varphi_f(\overline{\vec n},y)$ jest równy $\overline m$; świadkowie jej kwantyfikatorów nie muszą odpowiadać liczbom standardowym. Pracujemy w $Q$ pod założeniem, że $C_e\land D\land U$ zachodzi dla pewnych $t,\vec a,\vec b$. Lemat~\ref{res:4:4} pozwala rozpatrzyć przypadki $t<\overline s$, $t=\overline s$ i $\overline s<t$.
+
+Jeżeli $t<\overline s$, to $t$ jest jednym z numerałów $\overline0,\ldots,\overline{s-1}$. Dla każdej takiej możliwości wypisujemy \emph{skończenie wiele} kroków obliczenia. Początek śladu jest ustalony, a pojedyncza instrukcja jest deterministyczna na konkretnej konfiguracji. Warunek $U$ utożsamia odczyty tego samego miejsca kodu w kolejnych warunkach. W chwili $t$ dostajemy zatem konfigurację prawdziwego obliczenia, która nie jest jeszcze zatrzymana; przeczy to końcowemu warunkowi $H_e$.
+
+Gdy $t=\overline s$, analogiczne skończone rozwinięcie obejmuje całą rzeczywistą historię i wyznacza wynik $y=\overline m$. Jeśli natomiast $\overline s<t$, warunek $D(t)$ zapewnia $\overline j<t$ dla każdego ustalonego $j<s$, a samo założenie daje $\overline s<t$. Możemy więc wykorzystać przejścia dla chwil $0,\ldots,s$ oraz jednoznaczność odczytów z $U$. Pierwsze $s$ przejść prowadzi do rzeczywistej konfiguracji zatrzymanej w chwili $s$, lecz warunek przejścia dla $i=\overline s$ wymaga tam $\neg H_e$: sprzeczność. Przy $s=0$ ten sam argument stosuje się bez kroków pośrednich.
+
+Wykazaliśmy w ten sposób w $Q$, bez stosowania indukcji do zmiennego czasu obliczenia, że
+$\varphi_f(\overline{\vec n},y)\to y=\overline m$.
+Łącząc to z udowodnionym istnieniem i podstawianiem równości, otrzymujemy
+$Q\vdash\forall y\,(\varphi_f(\overline{\vec n},y)\leftrightarrow y=\overline m)$.
+
+Dla relacji rekurencyjnej $R$ bierzemy jej totalną funkcję charakterystyczną i definiujemy $\rho_R(\vec x):=\varphi_{\chi_R}(\vec x,\overline1)$. Gdy $R(\vec n)$ zachodzi, otrzymujemy dowód $\rho_R(\overline{\vec n})$; gdy nie zachodzi, reprezentowalność wartości $0$ daje jej negację, ponieważ $Q\vdash\overline0\ne\overline1$. Dowody z $Q$ pozostają dowodami w każdym rozszerzeniu tej teorii.
+\end{proof}
+
+\begin{lemat}[Standardowy arytmetyczny predykat dowodu]\label{res:7:7}
+Dla efektywnie aksjomatyzowalnej teorii $T$ można wybrać kodowanie pełnych dowodów tak, aby formuła $\operatorname{Prf}_T(p,x)$ była klasy $\Delta_0$ i poprawnie rozstrzygała relację dowodu w modelu standardowym. Dla każdej pary numerałów $\overline p,\overline x$ teoria $Q$ dowodzi odpowiedniej instancji $\operatorname{Prf}_T$ albo jej negacji. Wówczas $\operatorname{Bew}_T(x):=\exists p\,\operatorname{Prf}_T(p,x)$ jest formułą $\Sigma_1$.
+\end{lemat}
+\begin{proof}
+Z Lematu~\ref{res:6:5} mamy pierwotnie rekurencyjny weryfikator $V_T(d,x)$ pełnego dowodu $d$, zawierającego certyfikaty pochodzenia aksjomatów. Ustalamy program obliczający $V_T$ i dołączamy do $d,x$ kod całego śladu jego obliczenia, kończącego się wynikiem $1$.
+
+Dane $(d,t,\vec a,\vec b)$ pakujemy iterowanym parowaniem
+$\langle u,v\rangle=(u+v)^2+u$. Jest ono p.r. i różnowartościowe: przy ustalonej sumie $u+v=s$ przyjmuje wartości w przedziale $[s^2,s^2+s]$, rozłącznym z przedziałami dla innych sum. Każda składowa jest nie większa od pełnego kodu $p$. Niech $\operatorname{Pack}(p;d,t,\vec a,\vec b)$ opisuje tę równość. Definiujemy
+\[
+\operatorname{Prf}_T(p,x):=\exists d,t,\vec a,\vec b\le p\,
+\bigl(\operatorname{Pack}(p;d,t,\vec a,\vec b)\land
+C_{V_T}(d,x,1,t,\vec a,\vec b)\bigr).
+\]
+Ponieważ wszystkie kwantyfikatory są ograniczone, formuła jest $\Delta_0$. Każdy rzeczywisty dowód można uzupełnić o skończony ślad poprawnej pracy weryfikatora; odwrotnie, taki ślad świadczy o zaakceptowaniu dowodu. Definicja odpowiada więc relacji $\operatorname{Prov}_T$ przy konwencji pełnego kodu z dołączonym świadectwem. Dla konkretnych numerałów jej prawdziwość albo fałszywość jest dowodliwa w $Q$ na mocy Lematu~\ref{res:4:7}. Egzystencjalne domknięcie po $p$ jest $\Sigma_1$.
+\end{proof}
+
+% Rozdziały 8--10, strony 17--19.
+\section{Lemat o punkcie stałym (diagonalizacja)}\label{sec:diagonalizacja}
+\begin{lemat}[Lemat diagonalny / o punkcie stałym]\label{res:8:1}
+Niech $\psi(x)$ będzie formułą, której jedyną dopuszczalną zmienną wolną jest $x$. Istnieje zdanie $G$ takie, że $Q\vdash G\leftrightarrow\psi(\ulcorner G\urcorner)$. Ta sama równoważność jest dowodliwa w każdej $T\supseteq Q$, niezależnie od efektywności jej aksjomatów. Zdanie $G$ „mówi o sobie”, że ma własność $\psi$; nie jest to dosłowna równość napisów, lecz dowodliwa równoważność.
+\end{lemat}
+\begin{proof}
+Ustalamy wyróżnioną zmienną $x$ i definiujemy funkcję diagonalizacji
+\[
+d(n):=\ulcorner\theta(\overline n)\urcorner,
+\]
+gdy $n$ koduje formułę $\theta(x)$ bez innych zmiennych wolnych; na pozostałych wejściach kładziemy $d(n)=0$. Jest to funkcja p.r. na mocy Lematu~\ref{res:6:5}(c): podstawiamy numerał $\overline n$ w formule o kodzie $n$. Twierdzenie~\ref{res:7:6} daje formułę $\varphi_d(x,y)$ z
+\[
+Q\vdash\forall y\,(\varphi_d(\overline n,y)\leftrightarrow y=\overline{d(n)})
+\]
+dla każdego standardowego $n$.
+
+Przed podstawieniami przemianowujemy zmienne związane, aby nowa zmienna $y$ nie została przechwycona. Definiujemy $\delta(x):=\exists y\,(\varphi_d(x,y)\land\psi(y))$, $m:=\ulcorner\delta(x)\urcorner$ i $G:=\delta(\overline m)$. $G$ jest zdaniem, ponieważ wszystkie wolne wystąpienia $x$ zastąpiliśmy domkniętym numerałem. Z definicji $d(m)=\ulcorner\delta(\overline m)\urcorner=\ulcorner G\urcorner$, więc reprezentowalność daje
+\[
+Q\vdash\forall y\,(\varphi_d(\overline m,y)\leftrightarrow y=\ulcorner G\urcorner).
+\]
+Podstawiając do definicji $G$, uzyskujemy $Q\vdash G\leftrightarrow\exists y\,(y=\ulcorner G\urcorner\land\psi(y))\leftrightarrow\psi(\ulcorner G\urcorner)$. To jest szukana równoważność. Nie użyto żadnej hipotezy o aksjomatach $T$.
+\end{proof}
+
+\section{Pierwsze twierdzenie o niezupełności}\label{sec:pierwsze-twierdzenie}
+\begin{definicja}[$\omega$-niesprzeczność]\label{res:9:1}
+Teoria $T$ jest \emph{$\omega$-niesprzeczna}, jeśli nie istnieje formuła $\varphi(x)$ taka, że $T\vdash\exists x\,\varphi(x)$ oraz jednocześnie $T\vdash\neg\varphi(\overline n)$ dla każdego $n\in\mathbb N$. Każda teoria $\omega$-niesprzeczna jest niesprzeczna. Istotnie, w teorii sprzecznej można udowodnić zarówno $\exists x\,(x=x)$, jak i każde $\neg(\overline n=\overline n)$.
+\end{definicja}
+
+\begin{twierdzenie}[Pierwsze twierdzenie Gödla, wersja Gödla]\label{res:9:2}
+Niech $T\supseteq Q$ będzie efektywnie aksjomatyzowalna, ze standardowym predykatem z Lematu~\ref{res:7:7}. Zbudujmy $G$ jako punkt stały formuły $\neg\operatorname{Bew}_T(x)$, czyli
+\begin{equation}\label{eq:9:1}
+Q\vdash G\leftrightarrow\neg\operatorname{Bew}_T(\ulcorner G\urcorner).
+\end{equation}
+Wówczas:
+\begin{enumerate}[label=(\alph*)]
+\item jeśli $T$ jest niesprzeczna, to $T\nvdash G$;
+\item jeśli $T$ jest $\omega$-niesprzeczna, to $T\nvdash\neg G$.
+\end{enumerate}
+W szczególności, jeśli $T$ jest $\omega$-niesprzeczna, to $G$ jest zdaniem nierozstrzygalnym w $T$, więc $T$ jest niezupełna.
+\end{twierdzenie}
+\begin{proof}
+Istnienie $G$ gwarantuje Lemat~\ref{res:8:1} zastosowany do $\psi(x):=\neg\operatorname{Bew}_T(x)$. Intuicyjnie $G$ głosi: „nie jestem dowodliwe w $T$”.
+
+\emph{(a) $T\nvdash G$.} Przypuśćmy przeciwnie, że $T\vdash G$, i wybierzmy pełny kod $p$ tego dowodu. Relacja $\operatorname{Prov}_T(p,\ulcorner G\urcorner)$ zachodzi w $\mathbb N$, więc Lemat~\ref{res:7:7} daje $Q\vdash\operatorname{Prf}_T(\overline p,\ulcorner G\urcorner)$, skąd $T\vdash\operatorname{Bew}_T(\ulcorner G\urcorner)$. Z~\eqref{eq:9:1} i $T\vdash G$ wynika natomiast $T\vdash\neg\operatorname{Bew}_T(\ulcorner G\urcorner)$. Teoria dowodziłaby zdania i jego negacji, wbrew niesprzeczności. Zatem $T\nvdash G$.
+
+\emph{(b) $T\nvdash\neg G$.} Teraz zakładamy $\omega$-niesprzeczność, a więc także niesprzeczność. Punkt (a) mówi, że żadne standardowe $n$ nie jest kodem dowodu $G$. Lemat~\ref{res:7:7} daje zatem osobno dla każdego $n$
+\begin{equation}\label{eq:9:2}
+T\vdash\neg\operatorname{Prf}_T(\overline n,\ulcorner G\urcorner).
+\end{equation}
+Gdyby $T\vdash\neg G$, z~\eqref{eq:9:1}, przez klasyczną eliminację podwójnej negacji, otrzymalibyśmy
+\begin{equation}\label{eq:9:3}
+T\vdash\exists p\,\operatorname{Prf}_T(p,\ulcorner G\urcorner).
+\end{equation}
+Zdanie~\eqref{eq:9:3} wraz z całą rodziną~\eqref{eq:9:2} jest dokładnie sytuacją zabronioną przez Definicję~\ref{res:9:1}, dla formuły $\varphi(p)=\operatorname{Prf}_T(p,\ulcorner G\urcorner)$. Zatem $T\nvdash\neg G$.
+
+Nie zastąpiliśmy rodziny~\eqref{eq:9:2} jednym wewnętrznym twierdzeniem z kwantyfikatorem uniwersalnym. Właśnie dlatego ten argument potrzebuje $\omega$-niesprzeczności, a nie tylko zwykłej niesprzeczności.
+\end{proof}
+
+\begin{uwaga}[Prawdziwość zdania Gödla]\label{res:9:3}
+Jeśli $T$ jest niesprzeczna, to $G$ jest prawdziwe w $\mathbb N$: z punktu (a) nie istnieje rzeczywisty dowód $G$, więc $\mathcal N\models\neg\operatorname{Bew}_T(\ulcorner G\urcorner)$. Równoważność~\eqref{eq:9:1} jest dowodliwa już w $Q$, a $\mathcal N\models Q$, toteż zachodzi także w $\mathbb N$. Nie zakładamy tutaj prawdziwości wszystkich aksjomatów $T$. Do punktu (b) wystarczyłaby nawet $\Sigma_1$-poprawność $T$ (dowodzenie tylko prawdziwych zdań $\Sigma_1$), ponieważ~\eqref{eq:9:3} jest fałszywym zdaniem tej klasy. Sama niesprzeczność nie uprawnia jednak do punktu (b) dla tego samego $G$.
+\end{uwaga}
+
+\begin{twierdzenie}[Wersja Rossera --- zwykła niesprzeczność]\label{res:9:4}
+Każda niesprzeczna, efektywnie aksjomatyzowalna teoria $T\supseteq Q$ jest niezupełna: istnieje zdanie $R$ takie, że $T\nvdash R$ i $T\nvdash\neg R$.
+\end{twierdzenie}
+\begin{proof}
+\emph{Poprawna formuła Rossera.} Funkcja $\operatorname{neg}(f)$ zwracająca kod negacji jest p.r.; dla niepoprawnych kodów ma wartość zastępczą $0$. Nie jest ona symbolem języka arytmetyki, dlatego wybieramy formułę $N(f,z)$ reprezentującą ją w $Q$ (Tw.~\ref{res:7:6}) i definiujemy
+\[
+\operatorname{Bew}_T^{R}(f):=\exists z\,\exists p\,
+\bigl(N(f,z)\land\operatorname{Prf}_T(p,f)\land\forall q<p\,\neg\operatorname{Prf}_T(q,z)\bigr).
+\]
+Lemat diagonalny daje zdanie $R$ z $Q\vdash R\leftrightarrow\neg\operatorname{Bew}_T^R(\ulcorner R\urcorner)$. Niech $r=\ulcorner R\urcorner$, $r^-=\ulcorner\neg R\urcorner$. Ponieważ $Q\vdash\forall z\,(N(\overline r,z)\leftrightarrow z=\overline{r^-})$, w $Q$ otrzymujemy konkretną równoważność
+\begin{equation}\label{eq:9:4}
+R\leftrightarrow\neg\exists p\,
+\bigl(\operatorname{Prf}_T(p,\overline r)\land
+\forall q<p\,\neg\operatorname{Prf}_T(q,\overline{r^-})\bigr).
+\end{equation}
+\emph{Pierwszy przypadek:} załóżmy $T\vdash R$. Niech $a$ będzie pełnym kodem dowodu $R$. Z niesprzeczności wynika $T\nvdash\neg R$, więc żadne $q<a$ nie jest kodem dowodu $\neg R$. Lemat~\ref{res:7:7} i skończony odcinek z Lematu~\ref{res:4:4} dają
+\[
+Q\vdash\operatorname{Prf}_T(\overline a,\overline r),\qquad
+Q\vdash\forall q<\overline a\,\neg\operatorname{Prf}_T(q,\overline{r^-}).
+\]
+Wprowadzając świadka $p=\overline a$, dostajemy w $T$ zaprzeczenie prawej strony~\eqref{eq:9:4}, czyli $T\vdash\neg R$: sprzeczność. Zatem $T\nvdash R$.
+
+\emph{Drugi przypadek:} załóżmy $T\vdash\neg R$. Niech $b$ będzie pełnym kodem tego dowodu. Wiemy już, że dowodu $R$ nie ma; potrzebujemy jednak tylko skończenie wielu przypadków $p\le b$. Mamy
+\[
+Q\vdash\operatorname{Prf}_T(\overline b,\overline{r^-}),\qquad
+Q\vdash\forall p\le\overline b\,\neg\operatorname{Prf}_T(p,\overline r).
+\]
+Pracujemy teraz w $Q$ z dowolnym $p$. Z~\eqref{eq:4:2} wynika $p\le\overline b\lor\overline b<p$. W pierwszej gałęzi odpada $\operatorname{Prf}_T(p,\overline r)$. W drugiej $q=\overline b$ obala $\forall q<p\,\neg\operatorname{Prf}_T(q,\overline{r^-})$. Wobec tego $Q$ dowodzi negacji koniunkcji pod kwantyfikatorem w~\eqref{eq:9:4} dla każdego $p$, a więc dowodzi $R$. To przeczy $T\vdash\neg R$ i niesprzeczności $T$.
+
+Nie przenieśliśmy nieskończonej rodziny twierdzeń o numerałach pod jeden kwantyfikator. Jeden konkretny dowód $\neg R$ wyznaczył skończoną granicę $b$ i obsłużył wszystkich pozostałych kandydatów naraz.
+\end{proof}
+
+\begin{wniosek}[Prawdziwa arytmetyka nie jest rekurencyjnie przeliczalna]\label{res:9:5}
+Zbiór $\operatorname{Th}(\mathcal N)$ wszystkich zdań prawdziwych w $\mathcal N$ nie jest rekurencyjnie przeliczalny.
+\end{wniosek}
+\begin{proof}
+Gdyby był rekurencyjnie przeliczalny, można by wziąć go za efektywny zbiór aksjomatów teorii zawierającej $Q$. Teoria ta byłaby niesprzeczna, ponieważ $\mathcal N$ byłoby jej modelem, i zupełna, ponieważ każde zdanie lub jego negacja jest prawdziwe w $\mathcal N$. Przeczy to Twierdzeniu~\ref{res:9:4}.
+\end{proof}
+
+\begin{wniosek}[Nierozstrzygalność dowodliwości]\label{res:9:6}
+Jeśli $T\supseteq Q$ jest niesprzeczna i efektywnie aksjomatyzowalna, to zbiór kodów zdań dowodliwych w $T$ nie jest rekurencyjny.
+\end{wniosek}
+\begin{proof}
+Niech przeciwnie rozstrzygalna relacja $D(n)$ oznacza „$n$ jest kodem zdania dowodliwego w $T$”. Wybieramy jej dwustronną reprezentację $\rho_D(x)$ w $Q$ i punkt stały $Q\vdash A\leftrightarrow\neg\rho_D(\ulcorner A\urcorner)$. Jeśli $T\vdash A$, reprezentacja daje $T\vdash\rho_D(\ulcorner A\urcorner)$, wbrew równoważności i niesprzeczności. Jeśli $T\nvdash A$, reprezentacja daje $Q\vdash\neg\rho_D(\ulcorner A\urcorner)$, a stąd $T\vdash A$: znów sprzeczność.
+\end{proof}
+
+\section{Twierdzenie o niedefiniowalności prawdy (Tarski)}\label{sec:tarski}
+\begin{twierdzenie}[Tarski: wersja semantyczna i syntaktyczna]\label{res:10:1}
+Nie istnieje formuła arytmetyczna $\operatorname{Tr}(x)$ definiująca prawdę wszystkich zdań arytmetycznych w $\mathcal N$, czyli spełniająca dla każdego zdania $\varphi$
+\[
+\mathcal N\models\operatorname{Tr}(\ulcorner\varphi\urcorner)\quad\Longleftrightarrow\quad\mathcal N\models\varphi.
+\]
+Ponadto żadna niesprzeczna teoria $T\supseteq Q$ nie dowodzi wszystkich równoważności $\varphi\leftrightarrow\operatorname{Tr}(\ulcorner\varphi\urcorner)$ dla jednej takiej formuły $\operatorname{Tr}$. Efektywność $T$ nie jest potrzebna.
+\end{twierdzenie}
+\begin{proof}
+Lemat~\ref{res:8:1} zastosowany do $\psi(x)=\neg\operatorname{Tr}(x)$ daje zdanie $L$ z $Q\vdash L\leftrightarrow\neg\operatorname{Tr}(\ulcorner L\urcorner)$. Ponieważ $\mathcal N\models Q$, równoważność jest prawdziwa w $\mathcal N$. Gdyby $\operatorname{Tr}$ definiowała prawdę, dla tego samego $L$ mielibyśmy także $\mathcal N\models L\leftrightarrow\operatorname{Tr}(\ulcorner L\urcorner)$. Daje to $\mathcal N\models L\leftrightarrow\neg L$, co jest niemożliwe.
+
+W wersji syntaktycznej obie równoważności byłyby twierdzeniami $T$. W klasycznej logice z $L\leftrightarrow\neg L$ otrzymujemy $\neg L$ (zakładając $L$, otrzymujemy sprzeczność), a potem $L$ z drugiej implikacji. Teoria byłaby sprzeczna.
+\end{proof}
+
+\begin{uwaga}\label{res:10:2}
+Porównanie z Tw.~\ref{res:9:2}: dowodliwość $\operatorname{Bew}_T$ jest definiowalna (rekurencyjnie przeliczalna), lecz prawda nie jest. Zdanie Gödla wykorzystuje różnicę między „dowodliwe” a „prawdziwe”.
+\end{uwaga}
+
+% Rozdziały 11--13, strony 20--24.
+\section{Warunki Hilberta--Bernaysa--Löba}\label{sec:warunki-hbl}
+Do dowodu drugiego twierdzenia o niezupełności potrzebujemy własności predykatu dowodliwości, które sama reprezentowalność relacji dowodu nie zapewnia. W tym rozdziale $T$ jest efektywnie aksjomatyzowalnym rozszerzeniem PA, a $\operatorname{Bew}_T$ oznacza predykat z Lematu~\ref{res:7:7}. Piszemy $\Box\varphi$ zamiast $\operatorname{Bew}_T(\ulcorner\varphi\urcorner)$; w szczególności $\Box\Box\varphi$ oznacza $\operatorname{Bew}_T(\ulcorner\operatorname{Bew}_T(\ulcorner\varphi\urcorner)\urcorner)$.
+
+\begin{definicja}[Warunki wyprowadzalności]\label{res:11:1}
+Predykat $\Box$ spełnia \emph{warunki Hilberta--Bernaysa--Löba}, jeśli dla wszystkich zdań $\varphi,\psi$ zachodzą
+\begin{align}
+T\vdash\varphi&\quad\Longrightarrow\quad T\vdash\Box\varphi,\label{eq:11:1}\\
+T&\vdash\Box(\varphi\to\psi)\to(\Box\varphi\to\Box\psi),\label{eq:11:2}\\
+T&\vdash\Box\varphi\to\Box\Box\varphi.\label{eq:11:3}
+\end{align}
+Warunki te oznaczamy odpowiednio (D1)--(D3).
+\end{definicja}
+
+\begin{uwaga}\label{res:11:2}
+(D1) jest regułą \emph{metateoretyczną}: z rzeczywistego dowodu $\varphi$ w $T$ tworzymy dowód $\Box\varphi$. Natomiast (D2) i (D3) są zdaniami \emph{dowodliwymi wewnątrz} $T$, także gdy kwantyfikowane kody dowodów mają niestandardowe wartości w modelach $T$. Dlatego (D3) nie wynika z samego (D1).
+\end{uwaga}
+
+\begin{lemat}[Operacje p.r. wewnątrz PA]\label{res:11:3}
+Każda funkcja pierwotnie rekurencyjna $f:\N^k\to\N$ ma opis $F_f(\vec x,y)$ klasy $\Sigma_1$ taki, że
+$\PA\vdash\forall\vec x\,\exists!y\,F_f(\vec x,y)$.
+PA dowodzi ponadto równań definiujących funkcję $f$. Można więc stosować jej symbol jako skrót w rozszerzeniu definicyjnym PA; wszystkie takie skróty dają się wyeliminować na rzecz formuł języka arytmetyki.
+\end{lemat}
+\begin{proof}
+W Lemacie~\ref{res:7:4} dowiedliśmy w metateorii, że każdy skończony ciąg ma kod $\beta$. Teraz potrzebujemy \emph{jednego dowodu w PA}, działającego także dla długości będącej zmienną. Najpierw, bez odwoływania się do niniejszego lematu, wykazujemy
+\begin{equation}\label{eq:11:4}
+\PA\vdash\forall a\,\forall b\,\forall n\,\forall c\,\exists a'\,\exists b'\,
+\bigl[(\forall i<n\ \beta(a',b',i)=\beta(a,b,i))
+\land\beta(a',b',n)=c\bigr].
+\end{equation}
+Tutaj $\beta$ jest skrótem definiowalnym przez formułę $B$ z Lematu~\ref{res:7:4}. Jest on dozwolony już na tym etapie, gdyż PA dowodzi istnienia i jednoznaczności reszty z dzielenia przez dodatni moduł, co ustalono niezależnie w dowodzie Lematu~\ref{res:7:5}.
+
+\emph{Jednoczesne kodowanie zmiennej liczby reszt.} W PA potrafimy, przez indukcję po $n$, wskazać dodatnią wspólną wielokrotność $1,\ldots,n+1$ większą od zadanej liczby. Wybieramy więc $b'>a+c$ podzielne przez $1,\ldots,n+1$ i kładziemy $m_i=1+(i+1)b'$ dla $i\le n$. Rozumowanie z Lematu~\ref{res:7:4}, po zapisaniu w PA, dowodzi parami względnej pierwszości tych modułów. Określamy żądane reszty przez $\rho_i=\beta(a,b,i)$ dla $i<n$ oraz $\rho_n=c$; mamy $\rho_i<m_i$.
+
+Aby zastosować chińskie twierdzenie o resztach \emph{wewnątrz PA}, nie wystarczy powołać się na jego prawdziwość w $\N$. PA dowodzi algorytmu Euklidesa i tożsamości Bézouta: przez indukcję uzasadnia dzielenie z resztą, a następnie formalizuje kolejne dzielenia; współczynniki całkowite koduje parami liczb naturalnych. Jeżeli $\gcd(u,v)=1$, otrzymujemy współczynniki $r,s$ spełniające $ru+sv=1$. Prowadzimy w PA indukcję po liczbie $k\le n+1$ uwzględnionych kongruencji. Jej niezmiennik stwierdza istnienie liczby $a_k$ spełniającej $a_k\equiv\rho_i\pmod{m_i}$ dla $i<k$ oraz wspólnego modułu $M_k=\prod_{i<k}m_i$. Przy dopisywaniu warunku $a\equiv\rho_k\pmod{m_k}$ korzystamy z $\gcd(M_k,m_k)=1$ i z tożsamości Bézouta, po czym zastępujemy uzyskaną liczbę jej resztą modulo $M_km_k$. Jest to indukcja po liczbie warunków, nie po \emph{już istniejącym} kodzie wynikowego ciągu. Dla $k=n+1$ otrzymujemy $a'$ spełniające wszystkie kongruencje, a tym samym~\eqref{eq:11:4}.
+
+\emph{Kodowanie obliczeń zmiennej długości.} Z~\eqref{eq:11:4} i indukcji w PA wynika, że można kolejno dopisywać wartości do zakodowanego ciągu, sklejać dwa ciągi i wybierać zakodowaną rodzinę świadków. Na przykład dla ustalonej formuły $\theta(i,y)$ PA dowodzi
+\[
+\forall n\,\Bigl[(\forall i<n\ \exists y\,\theta(i,y))
+\to\exists a\,\exists b\ \forall i<n\,\theta(i,\beta(a,b,i))\Bigr].
+\]
+Dowód jest indukcją po $n$: w kroku wybieramy świadka dla indeksu $n$ i używamy~\eqref{eq:11:4}. Tak otrzymujemy wewnątrz PA skończone, ale dowolnie długie ślady obliczeń, bez nieuprawnionego przejścia od osobnych dowodów dla numerałów do zdania ogólnego.
+
+\emph{Indukcja po konstrukcji funkcji.} Dla funkcji bazowych PA dowodzi totalności i równań bezpośrednio. Przy składaniu wykorzystujemy opisy $F_g,F_{h_i}$ i dowiedzione w PA istnienie ich wartości; jednoznaczność funkcji składowych daje jednoznaczność wyniku. W kroku rekursji prostej
+$f(\vec x,0)=g(\vec x)$,
+$f(\vec x,S(n))=h(\vec x,n,f(\vec x,n))$
+stosujemy indukcję PA po $n$. Hipoteza indukcyjna dostarcza zakodowany ciąg kolejnych wyników do chwili $n$; totalność $h$ pozwala wyznaczyć wynik następny, a~\eqref{eq:11:4} dołączyć go do kodu. Deterministyczność równań rekurencji daje jednoznaczność. Formułę $F_f$ wybieramy jako egzystencjalny, a zatem $\Sigma_1$, opis odpowiedniego skończonego śladu. Tę samą indukcję stosujemy do dowodów równań definiujących $f$.
+
+Potrzebna poniżej jest jeszcze własność jednolita: dla ustalonego algorytmu realizującego funkcję p.r. możemy wybrać pierwotnie rekurencyjną procedurę tworzącą \emph{kod jego śladu obliczenia}. Dla funkcji bazowych ślady są jawne; dla składania są sklejane, a dla rekursji prostej budowane przez rekursję po jej argumencie. PA dowodzi poprawności tych konstrukcji tą samą indukcją. Nie otrzymujemy takiego dowodu totalności dla dowolnej funkcji obliczalnej z nieograniczoną minimalizacją.
+\end{proof}
+
+\begin{lemat}[Formalizacja łączenia dowodów]\label{res:11:4}
+Dla ustalonych zdań $\varphi,\psi$ istnieje funkcja p.r. $m$ taka, że
+\begin{equation}\label{eq:11:5}
+\PA\vdash\forall p\,\forall q\,\bigl(
+\operatorname{Prf}_T(p,\ulcorner\varphi\to\psi\urcorner)
+\land\operatorname{Prf}_T(q,\ulcorner\varphi\urcorner)
+\to\operatorname{Prf}_T(m(p,q),\ulcorner\psi\urcorner)\bigr).
+\end{equation}
+\end{lemat}
+\begin{proof}
+Dekodujemy pełne dowody $p,q$ z Lematu~\ref{res:7:7}. Za wierszami pierwszego umieszczamy wiersze drugiego, przesuwając ich odwołania do wcześniejszych wierszy o długość pierwszego dowodu. Dopisujemy $\psi$ z uzasadnieniem przez modus ponens, wskazując końcowe wiersze obu dowodów. Certyfikaty użytych aksjomatów przenosimy bez zmian, a do uzyskanej listy dołączamy ślad akceptacji przez ustalony weryfikator $V_T$. Wszystkie operacje na kodach oraz obliczenie śladu weryfikatora są p.r. na mocy Lematów~\ref{res:6:5} i~\ref{res:11:3}. Funkcję $m$ dopełniamy dowolną wartością na niepoprawnych wejściach.
+
+Aby uzyskać~\eqref{eq:11:5}, musimy sprawdzić tę konstrukcję w PA, nie tylko dla rzeczywistych dowodów. Indukcja po liczbie kopiowanych wierszy zachowuje niezmiennik: skopiowany prefiks spełnia reguły weryfikatora, a każde odwołanie do przesłanki zostało przesunięte zgodnie z pozycją w nowym dowodzie. Wiersze aksjomatów zachowują certyfikaty, a dla wierszy otrzymanych przez reguły wnioskowania poprawność wynika z ich syntaktycznych testów. Nowy ostatni wiersz przechodzi test modus ponens na mocy przesłanek~\eqref{eq:11:5}. PA potwierdza także, że dołączony ślad weryfikatora kończy się akceptacją, wykorzystując formalizację procedury p.r. z Lematu~\ref{res:11:3}. To dowodzi~\eqref{eq:11:5} dla dowolnych $p,q$ spełniających jej poprzednik.
+
+Nie wymagamy, aby PA rozstrzygała wszystkie aksjomaty $T$: w wyjściowych kodach znajdują się już ich świadectwa pochodzenia z efektywnego wyliczenia.
+\end{proof}
+
+\begin{lemat}[Sformalizowana $\Sigma_1$-zupełność]\label{res:11:5}
+Niech $\sigma(\vec x)$ będzie ustaloną formułą $\Sigma_1$, a $\operatorname{inst}_\sigma(\vec n)=\ulcorner\sigma(\overline{\vec n})\urcorner$ funkcją podstawiania numerałów. Wtedy
+\begin{equation}\label{eq:11:6}
+\PA\vdash\forall\vec x\,\bigl(\sigma(\vec x)
+\to\operatorname{Bew}_T(\operatorname{inst}_\sigma(\vec x))\bigr).
+\end{equation}
+Dla zdania $\sigma$ krotka $\vec x$ jest pusta, a $\operatorname{inst}_\sigma$ jest stałą równą $\ulcorner\sigma\urcorner$.
+\end{lemat}
+\begin{proof}
+\emph{Jednolite dowody dla formuł ograniczonych.} Ustalmy formułę $\Delta_0$ $\delta(\vec x)$. Skonstruujemy funkcje p.r. $b_\delta^+,b_\delta^-$ wytwarzające kody dowodów prawdziwej instancji $\delta(\overline{\vec n})$ lub negacji fałszywej instancji. Co istotne, w PA udowodnimy \emph{jednolity} warunek ich poprawności, mianowicie
+\begin{align}
+\PA&\vdash\forall\vec x\,\bigl(\delta(\vec x)\to
+\operatorname{Prf}_T(b_\delta^+(\vec x),\operatorname{inst}_\delta(\vec x))\bigr),\label{eq:11:7}\\
+\PA&\vdash\forall\vec x\,\bigl(\neg\delta(\vec x)\to
+\operatorname{Prf}_T(b_\delta^-(\vec x),\operatorname{inst}_{\neg\delta}(\vec x))\bigr).\label{eq:11:8}
+\end{align}
+Same dowody dla wszystkich ustalonych numerałów, bez twierdzeń~\eqref{eq:11:7}--\eqref{eq:11:8}, nie wystarczyłyby do wprowadzenia zmiennych świadków.
+
+Konstrukcję prowadzimy przez indukcję w metateorii po budowie ustalonej formuły $\delta$; w każdym kroku uzyskujemy zarówno procedurę p.r., jak i dowód w PA jej poprawności dla wszystkich wartości parametrów.
+\begin{enumerate}[label=(\alph*)]
+\item \emph{Termy i atomy.} Rekurencyjnie obliczamy wartości termów przy podstawieniu numerałów i produkujemy ich formalne obliczenia z aksjomatów (Q4)--(Q7). Gdy dwie wartości są równe, łączymy dowody ich obliczenia; gdy są różne, stosujemy (Q1)--(Q2) do numerałów. Relację $<$ obsługujemy za pomocą (Q8) i skończonych odcinków z Lematu~\ref{res:4:4}. Operacje tworzenia kodów i dowodów są p.r.; PA dowodzi ich poprawności, korzystając z równań obliczeń i indukcji po liczbie zastosowań następnika.
+\item \emph{Spójniki.} Z dowodów dla podformuł konstruujemy odpowiedni dowód dla $\neg,\land,\lor,\to$, korzystając z ustalonych tautologii i reguły modus ponens. Wybór właściwej gałęzi zależy od obliczonej wartości logicznej. Poprawność konstrukcji w PA wynika z poprawności funkcji dla podformuł oraz z formalizacji łączenia dowodów (Lemat~\ref{res:11:4}).
+\item \emph{Kwantyfikatory ograniczone.} Dla formuły $\exists u<t(\vec x)\,\eta(\vec x,u)$ obliczamy $k=t(\overline{\vec n})$ i sprawdzamy kolejno $u=0,\ldots,k-1$. Jeśli formuła jest prawdziwa, wskazujemy świadka i dołączamy wprowadzenie kwantyfikatora; jeśli jest fałszywa, łączymy dowody negacji wszystkich instancji. Dla $\forall u<t\,\eta$ postępujemy dualnie. Przejście od skończonej koniunkcji lub alternatywy do formuły ograniczonej opieramy na dowodzie skończonego odcinka z Lematu~\ref{res:4:4}. Przy $k=0$ otrzymujemy dowód odpowiedniej pustej koniunkcji bądź zaprzeczenia pustej alternatywy.
+\end{enumerate}
+
+W ostatnim przypadku nie wolno ograniczyć się do instrukcji „połącz $k$ dowodów”. W PA stosujemy indukcję \emph{po zmiennej} $k$. Niezmiennik stwierdza, że skonstruowany kod zawiera poprawne uzasadnienia dotychczas sprawdzonych instancji, a jego końcowy wiersz odpowiada ich koniunkcji lub alternatywie, stosownie do rozpatrywanego przypadku. Indukcja używa jednolitego twierdzenia o poprawności procedury dla podformuły $\eta$, Lematu~\ref{res:11:4} oraz dowodliwej w PA poprawności operacji na kodach z Lematu~\ref{res:11:3}. Ponieważ głębokość składniowa $\delta$ jest ustalona, cała procedura pozostaje p.r. Dla funkcji $b_\delta^\pm$ wytwarzamy również końcowy certyfikat uruchomienia weryfikatora, aby kod spełniał dokładnie definicję $\operatorname{Prf}_T$ z Lematu~\ref{res:7:7}. Występujące w tych dowodach aksjomaty $Q$ zastępujemy ustalonymi $T$-dowodami ich instancji wraz z certyfikatami; istnienie takich skończonych dowodów wynika z $T\supseteq\PA\supseteq Q$. Tak otrzymujemy~\eqref{eq:11:7}--\eqref{eq:11:8} jako twierdzenia PA, a nie tylko rodzinę twierdzeń o poszczególnych numerałach.
+
+\emph{Przejście do formuł $\Sigma_1$.} Zapiszmy $\sigma(\vec x)=\exists\vec u\,\delta(\vec x,\vec u)$, gdzie $\delta$ jest $\Delta_0$. Procedura p.r. bierze kod dowodu $\delta(\overline{\vec n},\overline{\vec k})$ otrzymany z $b_\delta^+$, a następnie dopisuje wprowadzenia kwantyfikatorów egzystencjalnych, otrzymując dowód $\sigma(\overline{\vec n})$. Na mocy Lematu~\ref{res:11:3} PA dowodzi poprawności tej operacji, zatem dla odpowiedniej funkcji p.r. $c$ mamy
+$\PA\vdash\forall\vec x\,\forall\vec u\,\bigl(\delta(\vec x,\vec u)\to\operatorname{Prf}_T(c(\vec x,\vec u),\operatorname{inst}_\sigma(\vec x))\bigr)$.
+Wprowadzając kwantyfikator po kodzie dowodu, a następnie po świadkach $\vec u$, otrzymujemy~\eqref{eq:11:6}.
+\end{proof}
+
+\begin{lemat}[Warunki wyprowadzalności dla standardowego predykatu]\label{res:11:6}
+Dla każdej efektywnie aksjomatyzowalnej teorii $T\supseteq\PA$ predykat $\operatorname{Bew}_T$ z Lematu~\ref{res:7:7} spełnia warunki (D1)--(D3).
+\end{lemat}
+\begin{proof}
+\emph{(D1).} Jeżeli $T\vdash\varphi$, to istnieje konkretny pełny kod $p$ dowodu $\varphi$. Z Lematu~\ref{res:7:7} mamy $Q\vdash\operatorname{Prf}_T(\overline p,\ulcorner\varphi\urcorner)$; wprowadzenie kwantyfikatora egzystencjalnego daje $T\vdash\Box\varphi$.
+
+\emph{(D2).} Stosujemy~\eqref{eq:11:5} i wprowadzamy w PA kwantyfikatory egzystencjalne po kodach $p,q$. Otrzymujemy
+$\PA\vdash\Box(\varphi\to\psi)\land\Box\varphi\to\Box\psi$, a więc także implikację (D2) w $T$.
+
+\emph{(D3).} Formuła $\sigma:=\operatorname{Bew}_T(\ulcorner\varphi\urcorner)$ jest zdaniem $\Sigma_1$. Z Lematu~\ref{res:11:5} wynika
+$\PA\vdash\operatorname{Bew}_T(\ulcorner\varphi\urcorner)\to
+\operatorname{Bew}_T(\ulcorner\operatorname{Bew}_T(\ulcorner\varphi\urcorner)\urcorner)$,
+czyli (D3).
+\end{proof}
+
+\begin{uwaga}[Dlaczego wybór predykatu ma znaczenie]\label{res:11:7}
+Dwie formuły mogą definiować tę samą relację na liczbach standardowych, choć PA nie dowodzi ich równoważności. Warunki (D2)--(D3) odnoszą się do konkretnej reprezentacji predykatu dowodliwości oraz dowodliwej wewnątrz PA poprawności operacji na kodach. Nie wolno przypisywać ich dowolnemu predykatowi reprezentującemu zbiór twierdzeń ani automatycznie przenosić na predykat Rossera.
+\end{uwaga}
+
+\section{Drugie twierdzenie o niezupełności}\label{sec:drugie-twierdzenie}
+\begin{definicja}[Formalna niesprzeczność]\label{res:12:1}
+Ustalmy $\bot:=(0=S(0))$, którego negacja jest dowodliwa w $Q$. \emph{Zdaniem niesprzeczności} teorii $T$, dla przyjętego standardowego predykatu dowodu, nazywamy $\operatorname{Con}_T:=\neg\operatorname{Bew}_T(\ulcorner\bot\urcorner)$, czyli $\neg\Box\bot$. W $\mathbb N$ jest ono prawdziwe dokładnie wtedy, gdy $T$ jest niesprzeczna: sprzeczność daje dowód $\bot$ przez zasadę eksplozji, a dowód $\bot$ wraz z $T\vdash\neg\bot$ daje sprzeczność. Jest to zdanie $\Pi_1$, czyli negacja zdania $\Sigma_1$.
+\end{definicja}
+
+\begin{twierdzenie}[Drugie twierdzenie Gödla]\label{res:12:2}
+Niech $T\supseteq\mathrm{PA}$ będzie niesprzeczna i efektywnie aksjomatyzowalna. Dla standardowego predykatu dowodliwości, spełniającego (D1)--(D3) na mocy Lematu~\ref{res:11:6}, zachodzi $T\nvdash\operatorname{Con}_T$. Innymi słowy: teoria spełniająca te założenia nie dowodzi własnej niesprzeczności w przyjętej standardowej formalizacji.
+\end{twierdzenie}
+\begin{proof}
+Wybieramy to samo $G$ co w Twierdzeniu~\ref{res:9:2}; z~\eqref{eq:9:1} mamy $T\vdash G\leftrightarrow\neg\Box G$.
+
+\emph{Krok 1: od dowodu $G$ do dowodu sprzeczności.} Z kierunku $G\to\neg\Box G$, przez (D1), a następnie (D2), uzyskujemy
+\begin{equation}\label{eq:12:1}
+T\vdash\Box G\to\Box\neg\Box G.
+\end{equation}
+Z (D3) mamy równocześnie
+\begin{equation}\label{eq:12:2}
+T\vdash\Box G\to\Box\Box G.
+\end{equation}
+Tautologia $\neg\Box G\to(\Box G\to\bot)$ jest twierdzeniem $T$. Rozpiszmy dokładnie jej użycie, aby nie ukryć zagnieżdżeń $\Box$:
+\begin{align*}
+T&\vdash\Box(\neg\Box G\to(\Box G\to\bot)) &&\text{(D1)},\\
+T&\vdash\Box\neg\Box G\to\Box(\Box G\to\bot) &&\text{(D2)},\\
+T&\vdash\Box(\Box G\to\bot)\to(\Box\Box G\to\Box\bot) &&\text{(D2)}.
+\end{align*}
+Składając dwie ostatnie implikacje, otrzymujemy $T\vdash\Box\neg\Box G\to(\Box\Box G\to\Box\bot)$. Po połączeniu z~\eqref{eq:12:1} i~\eqref{eq:12:2}:
+\begin{equation}\label{eq:12:3}
+T\vdash\Box G\to\Box\bot.
+\end{equation}
+Nie użyliśmy zasady $\Box\theta\to\theta$; właśnie jej niedopuszczalność jest istotna dla całego argumentu.
+
+\emph{Krok 2: niesprzeczność implikuje zdanie Gödla wewnątrz teorii.} Kontrapozycja~\eqref{eq:12:3} daje $T\vdash\neg\Box\bot\to\neg\Box G$. Ponieważ $\neg\Box\bot$ to $\operatorname{Con}_T$, a $\neg\Box G\to G$ wynika z punktu stałego, otrzymujemy
+\begin{equation}\label{eq:12:4}
+T\vdash\operatorname{Con}_T\to G.
+\end{equation}
+\emph{Krok 3: przejście do metateorii.} Gdyby $T\vdash\operatorname{Con}_T$, przez modus ponens w~\eqref{eq:12:4} otrzymalibyśmy $T\vdash G$. Tymczasem niesprzeczność $T$ daje $T\nvdash G$ na mocy punktu (a) Twierdzenia~\ref{res:9:2}. Sprzeczność kończy dowód. Nie potrzeba tu $\omega$-niesprzeczności.
+\end{proof}
+
+\begin{wniosek}[Nieformalny sens]\label{res:12:3}
+Jeśli PA jest niesprzeczna, to $\mathrm{PA}\nvdash\operatorname{Con}_{\mathrm{PA}}$. Dowód niesprzeczności w tej formalizacji wymaga więc środków niewyprowadzalnych w samej PA. Klasycznym przykładem jest dowód Gentzena wykorzystujący odpowiednią zasadę indukcji pozaskończonej związaną z $\varepsilon_0$; tego dodatkowego twierdzenia nie dowodzimy tutaj.
+\end{wniosek}
+
+\section{Twierdzenie Löba}\label{sec:loeb}
+\begin{twierdzenie}[Löb]\label{res:13:1}
+Niech $T\supseteq Q$, a ustalony predykat $\operatorname{Bew}_T$ spełnia (D1)--(D3). Dla dowolnego zdania $\varphi$:
+\[
+T\vdash\Box\varphi\to\varphi\quad\Longrightarrow\quad T\vdash\varphi.
+\]
+Do tego abstrakcyjnego wniosku nie potrzeba niesprzeczności. Założenia poprzedniej części, w szczególności standardowy predykat dla $T\supseteq\mathrm{PA}$, zapewniają wymagane warunki.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $\varphi$ i załóżmy $T\vdash\Box\varphi\to\varphi$. Na mocy Lematu~\ref{res:8:1} weźmy punkt stały $L$ formuły $\psi(x):=(\operatorname{Bew}_T(x)\to\varphi)$, tj.
+\begin{equation}\label{eq:13:1}
+T\vdash L\leftrightarrow(\Box L\to\varphi).
+\end{equation}
+$x$ jest zmienną liczbową, dlatego w formule wejściowej występuje $\operatorname{Bew}_T(x)$, nie niepoprawny zapis $\Box x$.
+
+\emph{1. Od $\Box L$ do $\Box\varphi$.} Korzystamy najpierw z jednego kierunku punktu stałego:
+\begin{align*}
+T&\vdash L\to(\Box L\to\varphi) &&\text{(z~\eqref{eq:13:1})},\\
+T&\vdash\Box(L\to(\Box L\to\varphi)) &&\text{(D1)},\\
+T&\vdash\Box L\to\Box(\Box L\to\varphi) &&\text{(D2)}.
+\end{align*}
+Osobna instancja (D2), dla zdań $\Box L$ i $\varphi$, daje $T\vdash\Box(\Box L\to\varphi)\to(\Box\Box L\to\Box\varphi)$. Jeśli teraz wewnątrz $T$ założymy $\Box L$, poprzedni ciąg daje $\Box(\Box L\to\varphi)$, a (D3) daje $\Box\Box L$. Dwa zastosowania modus ponens dają $\Box\varphi$. Usuwając pomocnicze założenie przez twierdzenie o dedukcji, otrzymujemy $T\vdash\Box L\to\Box\varphi$.
+
+\emph{2. Od tej implikacji do $L$.} Z hipotezy twierdzenia $T\vdash\Box\varphi\to\varphi$ wynika teraz $T\vdash\Box L\to\varphi$. Odwrotny kierunek punktu stałego to $T\vdash(\Box L\to\varphi)\to L$. Jego przesłanka jest już twierdzeniem $T$, więc modus ponens daje $T\vdash L$. Nie założyliśmy ani $L$, ani $\Box L$: pomocnicze założenie z poprzedniego kroku zostało usunięte.
+
+\emph{3. Zakończenie.} Dopiero do uzyskanego rzeczywistego dowodu $L$ stosujemy (D1), otrzymując $T\vdash\Box L$. Łącząc to z udowodnionym w kroku 2 $T\vdash\Box L\to\varphi$, dostajemy $T\vdash\varphi$.
+\end{proof}
+
+\begin{uwaga}\label{res:13:2}
+Drugie twierdzenie Gödla jest szczególnym przypadkiem twierdzenia Löba dla $\varphi:=\bot$ ($0=S(0)$), gdy $T$ jest niesprzeczna: gdyby $T\vdash\operatorname{Con}_T$, czyli $T\vdash\neg\Box\bot$, to w szczególności $T\vdash\Box\bot\to\bot$, skąd twierdzenie Löba daje $T\vdash\bot$ --- sprzeczność. Zatem $T\nvdash\operatorname{Con}_T$.
+\end{uwaga}
+
+% Rozdział 14, strony 25--29.
+\section{Twierdzenie Löwenheima--Skolema}\label{sec:loewenheim-skolem}
+Dotychczas pytaliśmy głównie: \emph{co można udowodnić z ustalonych aksjomatów?} Teraz pytamy: \emph{jak różne światy mogą spełniać te same aksjomaty?} Twierdzenie Löwenheima--Skolema mówi, że opis pierwszego rzędu ma ograniczoną zdolność narzucania liczby elementów nieskończonego modelu. Nie jest kolejną wersją twierdzenia o niezupełności: dotyczy przede wszystkim \emph{modeli}, a nie istnienia algorytmu wypisującego dowody.
+
+W tej i następnej sekcji dopuszczamy dowolny zbiór zdań pierwszego rzędu, niekoniecznie efektywnie aksjomatyzowalny i niekoniecznie w języku arytmetyki. Używamy zwykłej teorii mnogości z aksjomatem wyboru jako metateorii. Jest to dodatkowe tło dla wyników o mocach modeli, a nie nowe założenie wcześniejszych twierdzeń arytmetycznych.
+
+\subsection*{Moc zbioru i podmodel elementarny: potrzebne pojęcia}\label{sec:14:1}
+\begin{definicja}[Równoliczność, przeliczalność i moc]\label{res:14:1}
+Dwa zbiory są \emph{równoliczne}, jeśli istnieje między nimi bijekcja: przyporządkowanie łączące każdy element jednego zbioru z dokładnie jednym elementem drugiego, bez pominięć. \emph{Moc} $|X|$ opisuje wielkość zbioru z dokładnością do takiego przyporządkowania.
+
+Zbiór jest \emph{przeliczalnie nieskończony}, gdy jest równoliczny z $\mathbb N$; tę moc oznaczamy $\aleph_0$. Jest \emph{co najwyżej przeliczalny}, gdy jest skończony albo przeliczalnie nieskończony. Zbiór nieprzeliczalny nie daje się wypisać w jednym ciągu indeksowanym liczbami naturalnymi. Symbole $\kappa,\lambda$ będą oznaczać moce nieskończone.
+
+Przez $|\mathcal L|$ rozumiemy liczbę symboli pozalogicznych języka. Liczba jego formuł jest nie większa niż $\max(|\mathcal L|,\aleph_0)$: każda formuła jest skończonym napisem. W szczególności język arytmetyki ma tylko przeliczalnie wiele formuł.
+\end{definicja}
+
+\begin{definicja}[Podstruktura i podmodel elementarny]\label{res:14:2}
+Niech $\mathcal A,\mathcal M$ będą strukturami tego samego języka. $\mathcal A$ jest \emph{podstrukturą} $\mathcal M$, jeśli:
+\begin{itemize}
+\item jej niepusta dziedzina $A$ jest podzbiorem dziedziny $M$;
+\item zawiera interpretacje wszystkich stałych i jest zamknięta ze względu na wszystkie funkcje struktury $\mathcal M$;
+\item funkcje i relacje w $\mathcal A$ są ograniczeniami tych z $\mathcal M$.
+\end{itemize}
+Jest \emph{podmodelem elementarnym}, co zapisujemy $\mathcal A\preccurlyeq\mathcal M$, jeśli ponadto dla każdej formuły $\varphi(x_1,\ldots,x_n)$ i każdej krotki $\vec a$ elementów $A$ zachodzi
+\[
+\mathcal A\models\varphi(\vec a)\quad\Longleftrightarrow\quad\mathcal M\models\varphi(\vec a).
+\]
+W tym zapisie zmiennym przypisujemy elementy $\vec a$; nie zakładamy, że każdy z nich ma nazwę w wyjściowym języku. $\mathcal M$ nazywamy wtedy \emph{rozszerzeniem elementarnym} $\mathcal A$.
+\end{definicja}
+
+\begin{uwaga}[Mniej elementów, te same odpowiedzi]\label{res:14:3}
+Elementarność jest znacznie silniejsza niż zachowanie samych działań. Kwantyfikatory w $\mathcal A$ przebiegają po mniejszej dziedzinie, a mimo to odpowiedzi na wszystkie pytania pierwszego rzędu z parametrami z $A$ pozostają takie same. W szczególności oba modele spełniają te same zdania bez parametrów. Sama zgodność zdań bez parametrów nie wystarcza jednak do elementarności danego włączenia podstruktur.
+\end{uwaga}
+
+\begin{lemat}[Kryterium świadków, Tarski--Vaught]\label{res:14:4}
+Podstruktura $\mathcal A$ struktury $\mathcal M$ jest elementarna wtedy i tylko wtedy, gdy dla każdej formuły $\theta(y,\vec x)$ i każdej krotki $\vec a$ z $A$ zachodzi: jeśli $\mathcal M\models\exists y\,\theta(y,\vec a)$, to istnieje $b\in A$ takie, że $\mathcal M\models\theta(b,\vec a)$. Innymi słowy: każde żądanie istnienia, dotyczące parametrów już zachowanych w $A$, ma w $A$ przynajmniej jednego świadka.
+\end{lemat}
+\begin{proof}
+Konieczność wynika z elementarności: zdanie egzystencjalne jest prawdziwe także w $\mathcal A$, więc ma tam świadka, którego własność przenosimy z powrotem do $\mathcal M$.
+
+Dla dostateczności przeprowadzamy indukcję po budowie formuły. Najpierw indukcja po budowie termu pokazuje, że term o argumentach z $A$ ma w obu strukturach tę samą wartość: dotyczy to zmiennych i stałych, a krok funkcyjny wynika z definicji podstruktury. Formuły atomowe mają więc tę samą wartość, ponieważ relacje w $\mathcal A$ są ograniczeniami relacji z $\mathcal M$. Spójniki zachowują zgodność wartości logicznych. Jeśli $\mathcal M\models\exists y\,\theta(y,\vec a)$, kryterium daje $b\in A$ z $\mathcal M\models\theta(b,\vec a)$, a założenie indukcyjne daje $\mathcal A\models\theta(b,\vec a)$. Odwrotnie, świadka istniejącego w $\mathcal A$ przenosimy do $\mathcal M$ tym samym założeniem indukcyjnym. Kwantyfikator uniwersalny obsługuje równoważność $\forall y\,\theta\leftrightarrow\neg\exists y\,\neg\theta$.
+\end{proof}
+
+\subsection*{W dół: duży model ma mały podmodel elementarny}\label{sec:14:2}
+\begin{twierdzenie}[Löwenheim--Skolem w dół]\label{res:14:5}
+Niech $\mathcal M$ będzie nieskończoną strukturą języka $\mathcal L$, niech $A\subseteq M$ i niech $\kappa$ będzie mocą nieskończoną taką, że $\max(|\mathcal L|,\aleph_0,|A|)\le\kappa\le|M|$. Istnieje $\mathcal N\preccurlyeq\mathcal M$ taka, że $A\subseteq N$ oraz $|N|=\kappa$. W szczególności w co najwyżej przeliczalnym języku każdy nieskończony model ma przeliczalnie nieskończony podmodel elementarny. Można w nim dodatkowo zachować dowolny z góry wskazany co najwyżej przeliczalny zbiór elementów.
+\end{twierdzenie}
+\begin{proof}
+Wybieramy $X_0\subseteq M$ mocy $\kappa$, zawierający $A$ i interpretacje wszystkich stałych. Następnie budujemy $X_0\subseteq X_1\subseteq X_2\subseteq\cdots$. Mając $X_n$, rozpatrujemy wszystkie formuły $\exists y\,\theta(y,\vec a)$ z parametrami z $X_n$, prawdziwe w $\mathcal M$. Dla każdej wybieramy jednego świadka w $M$ i dołączamy go do $X_{n+1}$. Nie musimy dołączać wszystkich możliwych świadków.
+
+Przy nieskończonej mocy $\kappa$ zbiór skończonych krotek ze zbioru mocy $\kappa$ również ma moc $\kappa$. Dokładniej, $\kappa^r=\kappa$ dla każdej dodatniej skończonej arności $r$, a przeliczalna suma takich zbiorów nadal ma moc $\kappa$. Formuł jest co najwyżej $\kappa$, zatem par „formuła, krotka parametrów” jest co najwyżej $\kappa\cdot\kappa=\kappa$. Na każdym etapie dodajemy najwyżej tyle samo świadków. Indukcyjnie $|X_n|=\kappa$: nierówność w dół wynika z $X_0\subseteq X_n$, a w górę z $\kappa+\kappa=\kappa$. Dla sumy otrzymujemy $N:=\bigcup_{n\in\mathbb N}X_n$ oraz $\kappa\le|N|\le\aleph_0\cdot\kappa=\kappa$.
+
+Używamy tu standardowej arytmetyki mocy nieskończonych z aksjomatem wyboru. Zbiór $N$ jest zamknięty ze względu na funkcje: jeśli $\vec a\in N$, to cała skończona krotka należy do pewnego $X_n$. Istotnie, dla każdego jej elementu wybieramy etap, na którym już występuje, i bierzemy największy ze skończenie wielu numerów etapów. Świadek formuły $\exists y\,(y=f(\vec a))$ należy do $X_{n+1}$. Stałe już należą do $X_0$, więc ograniczenia interpretacji dają podstrukturę $\mathcal N$. Dokładnie ten sam argument dla dowolnej $\theta$ daje kryterium z Lematu~\ref{res:14:4}. Zatem $\mathcal N\preccurlyeq\mathcal M$.
+\end{proof}
+
+\begin{uwaga}[Czy to algorytm zmniejszający model?]\label{res:14:6}
+Nie. W dowodzie wybieraliśmy świadków dla formuł \emph{prawdziwych} w danym modelu. Nie zakładaliśmy procedury rozstrzygającej tę prawdziwość ani efektywnego dostępu do wszystkich jego elementów. Jest to konstrukcja teoriomnogościowa, nie obietnica programu, który z dowolnego opisu nieskończonego modelu wyprodukuje jego małą kopię. Ponadto podmodel elementarny nie musi być kopią izomorficzną całego modelu.
+\end{uwaga}
+
+\subsection*{Zwartość: od wszystkich skończonych fragmentów do modelu}\label{sec:14:3}
+Do kierunku „w górę” potrzebujemy jeszcze jednego narzędzia. Podajemy jego dowód, aby nie ukrywać za słowem „zwartość” dodatkowego założenia o istnieniu modeli.
+
+\begin{lemat}[Istnienie modelu i zwartość pierwszego rzędu]\label{res:14:7}
+Każdy niesprzeczny zbiór zdań pierwszego rzędu ma model. W konsekwencji, jeżeli każdy skończony podzbiór zbioru zdań $\Gamma$ ma model, to cały $\Gamma$ ma model. Nie wymagamy rozstrzygalności ani efektywnego wyliczania $\Gamma$.
+\end{lemat}
+\begin{proof}
+\emph{1. Dodanie nazw dla świadków.} Zaczynamy od niesprzecznego $T$ i dodajemy do języka pomocniczą stałą, aby istniał przynajmniej jeden term domknięty. Samo poszerzenie języka o nowe stałe nie tworzy sprzeczności. Gdyby pojawił się dowód sprzeczności, z niego uzyskalibyśmy dowód zdania $\exists x(x\ne x)$, w którym nie ma żadnej nowej nazwy. W skończonym dowodzie występuje tylko skończenie wiele nowych stałych. Zastępujemy je świeżymi zmiennymi nieużywanymi w tym dowodzie, z zachowaniem warunków podstawiania. Wiersze nadal są poprawne, a wniosek się nie zmienił; byłby to już dowód sprzeczności w starym języku.
+
+Dla każdej formuły $\theta(x)$ obecnego języka, bez innych zmiennych wolnych, wprowadzamy osobną nową stałą $c_\theta$ oraz zdanie $(\exists x\,\theta(x))\to\theta(c_\theta)$. Takie zdania nazywamy \emph{aksjomatami świadków}. W kolejnym etapie robimy to samo dla formuł rozszerzonego języka, i powtarzamy procedurę dla etapów $0,1,2,\ldots$.
+
+Wyjaśnijmy zachowanie niesprzeczności. Jeśli dodanie jednego takiego aksjomatu $\alpha=(\exists x\,\theta(x))\to\theta(c_\theta)$ do niesprzecznego $S$ prowadziłoby do sprzeczności, to Lemat~\ref{res:3:6}(c) dawałby $S\vdash\neg\alpha$. Rozwijając negację implikacji, otrzymujemy $S\vdash\neg((\exists x\,\theta(x))\to\theta(c_\theta))\leftrightarrow((\exists x\,\theta(x))\land\neg\theta(c_\theta))$. Zatem $S$ dowodzi obu członów koniunkcji. Ponieważ $c_\theta$ nie występuje w $S$ ani w $\theta(x)$, w dowodzie $\neg\theta(c_\theta)$ zastępujemy tę stałą świeżą zmienną $z$. Daje to $S\vdash\neg\theta(z)$, a generalizacja i zmiana nazwy zmiennej związanej dają $S\vdash\forall x\,\neg\theta(x)$. To przeczy już otrzymanemu $S\vdash\exists x\,\theta(x)$.
+
+W jednym etapie stałe są różne, a formuły $\theta$ pochodzą z języka poprzedniego etapu. Dodając skończenie wiele aksjomatów po kolei, za każdym razem mamy więc stałą niewystępującą ani w poprzednich aksjomatach tego etapu, ani w dotychczasowej teorii. Skoro każde skończone rozszerzenie jest niesprzeczne, cały etap jest niesprzeczny: ewentualny dowód sprzeczności użyłby tylko skończenie wielu nowych aksjomatów. Tak samo suma wszystkich etapów $S_H$ jest niesprzeczna, bo skończony dowód mieściłby się w jednym, dostatecznie późnym etapie. Każda formuła końcowego języka pojawia się na pewnym etapie, bo jest skończonym napisem; ma więc potrzebny aksjomat świadka.
+
+\emph{2. Wybór jednej strony każdego zdania.} Rozszerzamy $S_H$ do maksymalnego niesprzecznego zbioru zdań $\Delta$ w tym samym języku. Uzasadnia to lemat Zorna: suma łańcucha niesprzecznych rozszerzeń jest niesprzeczna, ponieważ każdy dowód używa skończenie wielu założeń, obecnych razem w jednym ogniwie łańcucha. Maksymalność oznacza, że $\Delta$ jest domknięty na konsekwencje dowodowe i dla każdego zdania zawiera dokładnie jedną z formuł $\alpha,\neg\alpha$. Rozdzielmy uzasadnienie tych dwóch własności:
+\begin{itemize}
+\item Jeśli $\Delta\vdash\alpha$, dołączenie $\alpha$ nie może dać sprzeczności. Każde użycie nowego aksjomatu można zastąpić jego dotychczasowym dowodem z $\Delta$. Maksymalność wymusza zatem $\alpha\in\Delta$.
+\item Jeśli $\alpha\notin\Delta$, to $\Delta\cup\{\alpha\}$ jest sprzeczny, bo inaczej byłby większym niesprzecznym rozszerzeniem. Lemat~\ref{res:3:6}(c) daje $\Delta\vdash\neg\alpha$, a poprzedni punkt daje $\neg\alpha\in\Delta$. Obie strony nie mogą należeć jednocześnie, z niesprzeczności.
+\end{itemize}
+W szczególności $\neg\alpha\in\Delta$ wtedy i tylko wtedy, gdy $\alpha\notin\Delta$. Ponadto $\alpha\land\beta\in\Delta$ wtedy i tylko wtedy, gdy $\alpha,\beta\in\Delta$: w jedną stronę rozdzielamy koniunkcję, a w drugą ją wprowadzamy i korzystamy z domknięcia na dowody. Są to dokładnie własności potrzebne za chwilę dla spójników w lemacie o prawdzie; pozostałe spójniki wyrażamy za pomocą negacji i koniunkcji. Ten wybór nie jest na ogół efektywny.
+
+\emph{3. Model zbudowany z nazw.} Za elementy modelu bierzemy termy domknięte, utożsamiając $t$ z $u$ dokładnie wtedy, gdy $\Delta\vdash t=u$. Klasę termu oznaczamy $[t]$. Stałą interpretujemy jako jej klasę, a pozostałe symbole przez $f([t_1],\ldots,[t_k]):=[f(t_1,\ldots,t_k)]$ oraz $R([t_1],\ldots,[t_k])\Longleftrightarrow R(t_1,\ldots,t_k)\in\Delta$.
+
+Aksjomaty równości zapewniają niezależność od wyboru reprezentantów. Dokładniej, zwrotność, symetria i przechodniość równości czynią $t\sim u\Longleftrightarrow\Delta\vdash t=u$ relacją równoważności. Jeśli $\Delta\vdash t_i=u_i$ dla wszystkich argumentów, aksjomaty równości dają $\Delta\vdash f(\vec t)=f(\vec u)$ oraz $\Delta\vdash R(\vec t)\leftrightarrow R(\vec u)$. Pierwsza równość identyfikuje odpowiednie klasy wyników, a druga, wraz z domknięciem $\Delta$ na dowody, zachowuje przynależność formuły relacyjnej do $\Delta$. Interpretacje nie zależą więc od wybranych termów. Dziedzina jest niepusta dzięki dodanej na początku stałej.
+
+Indukcja po budowie formuły daje \emph{lemat o prawdzie}:
+\[
+\mathcal M_\Delta\models\varphi([t_1],\ldots,[t_k])\quad\Longleftrightarrow\quad\varphi(t_1,\ldots,t_k)\in\Delta.
+\]
+Najpierw indukcja po termach pokazuje, że wartością termu $s(\vec x)$ przy argumentach $[\vec t]$ jest $[s(\vec t)]$. Dla równości atomowej korzystamy więc z definicji klas, a dla innych atomów z interpretacji relacji. Dla negacji i koniunkcji stosujemy własności przynależności do $\Delta$ udowodnione w punkcie 2. Jeżeli $\exists x\,\theta(x,\vec t)\in\Delta$, aksjomat świadka daje $\theta(c,\vec t)\in\Delta$ dla odpowiedniej stałej $c$. Ten aksjomat rzeczywiście jest w $S_H$: po podstawieniu domkniętych termów $\vec t$ formuła $\theta(x,\vec t)$ ma tylko zmienną wolną $x$ i należy do pewnego etapu języka. Jej świadek został dodany w następnym etapie. Założenie indukcyjne daje $\mathcal M_\Delta\models\theta([c],[\vec t])$, więc $[c]$ jest wymaganym elementem modelu. Odwrotnie, świadek będący klasą termu daje, przez założenie indukcyjne i wprowadzenie kwantyfikatora, zdanie egzystencjalne w $\Delta$. Kwantyfikator uniwersalny sprowadzamy do negacji i egzystencjalnego. Stąd $\mathcal M_\Delta\models T$ po pominięciu dodatkowych nazw.
+
+\emph{4. Wniosek o zwartości.} Jeśli każdy skończony fragment $\Gamma$ ma model, $\Gamma$ jest niesprzeczny: dowód sprzeczności korzystałby ze skończonego fragmentu, a poprawność rachunku z Lematu~\ref{res:3:6}(a) wyklucza sprzeczność w jego modelu. Stosujemy teraz konstrukcję z punktów 1--3.
+\end{proof}
+
+\begin{wniosek}[Zupełność logiki nie oznacza zupełności każdej teorii]\label{res:14:8}
+Dla dowolnego zbioru zdań $T$ i zdania $\varphi$ zachodzi
+\[
+T\vdash\varphi\quad\Longleftrightarrow\quad\text{każdy model $T$ spełnia $\varphi$}.
+\]
+Prawą stronę zapisujemy $T\models\varphi$.
+\end{wniosek}
+\begin{proof}
+Kierunek w prawo jest poprawnością rachunku dowodowego. Jeśli $T\nvdash\varphi$, to $T\cup\{\neg\varphi\}$ jest niesprzeczny: inaczej twierdzenie o dedukcji i klasyczna eliminacja podwójnej negacji dałyby $T\vdash\varphi$. Lemat~\ref{res:14:7} daje więc model $T$, w którym $\varphi$ jest fałszywe.
+\end{proof}
+
+\subsection*{W górę: nieskończony model ma dowolnie duże rozszerzenia}\label{sec:14:4}
+\begin{twierdzenie}[Löwenheim--Skolem w górę]\label{res:14:9}
+Niech $\mathcal M$ będzie nieskończoną strukturą języka $\mathcal L$. Dla każdej mocy nieskończonej $\lambda\ge\max(|M|,|\mathcal L|,\aleph_0)$ istnieje rozszerzenie elementarne $\mathcal N$ struktury $\mathcal M$ o mocy dokładnie $\lambda$.
+\end{twierdzenie}
+\begin{proof}
+Dodajemy stałą $c_a$ dla każdego $a\in M$. \emph{Diagram elementarny} $\mathcal M$ to zbiór wszystkich zdań $\varphi(c_{a_1},\ldots,c_{a_n})$ prawdziwych w $\mathcal M$, gdy $c_a$ nazywa $a$. Uwzględniamy wszystkie formuły, także z kwantyfikatorami i negacjami, nie tylko formuły atomowe.
+
+Dodajemy ponadto stałe $d_i$ dla $i$ ze zbioru $I$ mocy $\lambda$ oraz zdania $d_i\ne d_j$ dla wszystkich różnych $i,j$. Każdy skończony fragment tego rozszerzonego zbioru zdań ma model: w $\mathcal M$ zachowujemy znaczenia $c_a$, a skończenie wiele występujących $d_i$ interpretujemy jako różne elementy nieskończonego $M$. Zwartość daje model $\mathcal B$ całego zbioru.
+
+Przyporządkowanie $a\mapsto c_a^{\mathcal B}$ jest różnowartościowe, ponieważ diagram zawiera $c_a\ne c_b$ dla $a\ne b$. Oznaczmy je przez $j$. Diagram zawiera również wszystkie zdania $f(c_{a_1},\ldots,c_{a_k})=c_{f^{\mathcal M}(\vec a)}$ oraz równości z $c_{a}$ dla stałych wyjściowego języka. Zatem $j$ zachowuje funkcje i stałe, a jego obraz jest podstrukturą reduktu $\mathcal B$ do języka $\mathcal L$, czyli struktury otrzymanej przez pominięcie dodatkowych symboli, bez zmiany dziedziny. Zachowuje prawdziwość każdej formuły: jeśli formuła z parametrami jest w $\mathcal M$ fałszywa, diagram zawiera jej negację. Otrzymujemy więc elementarną kopię $\mathcal M$ wewnątrz $\mathcal B$. Elementy $d_i^{\mathcal B}$ są parami różne, zatem $|B|\ge\lambda$.
+
+Pomijamy teraz dodatkowe symbole języka, zachowując dziedzinę $B$. Stosujemy Twierdzenie~\ref{res:14:5} do zbioru złożonego z kopii $M$ oraz wszystkich $d_i^{\mathcal B}$. Ten zbiór ma moc $\lambda$. Dostajemy podmodel $\mathcal C\preccurlyeq\mathcal B$ o mocy dokładnie $\lambda$, zawierający $j[M]$. Trzeba jeszcze sprawdzić elementarność tej kopii w $\mathcal C$, nie tylko w $\mathcal B$. Dla dowolnej formuły i parametrów z $M$ mamy
+\[
+\mathcal M\models\varphi(\vec a)\quad\Longleftrightarrow\quad
+\mathcal B\models\varphi(j(\vec a))\quad\Longleftrightarrow\quad
+\mathcal C\models\varphi(j(\vec a)).
+\]
+Pierwszą równoważność daje diagram, drugą elementarność $\mathcal C\preccurlyeq\mathcal B$. Zatem $j$ jest także elementarnym zanurzeniem $\mathcal M$ w $\mathcal C$.
+
+Na końcu zamieniamy kopię na dosłowne włączenie. Wybieramy zbiór $D$ rozłączny z $M$, równoliczny z $C\setminus j[M]$, oraz bijekcję $h:M\cup D\to C$ taką, że $h(a)=j(a)$ dla $a\in M$. Przenosimy strukturę $\mathcal C$ na $M\cup D$ przez $h$:
+\[
+f^{\mathcal N}(\vec u)=h^{-1}(f^{\mathcal C}(h(\vec u))),\qquad
+R^{\mathcal N}(\vec u)\Longleftrightarrow R^{\mathcal C}(h(\vec u)).
+\]
+Stałe przenosimy tak samo, za pomocą $h^{-1}$. Na elementach $M$ interpretacje zgadzają się z $\mathcal M$, bo $j$ zachowuje wszystkie symbole. Powyższa równoważność dla formuł daje $\mathcal M\preccurlyeq\mathcal N$, a bijekcja $h$ daje $|N|=\lambda$.
+\end{proof}
+
+\begin{wniosek}[Modele wszystkich mocy nieskończonych]\label{res:14:10}
+Jeżeli teoria w co najwyżej przeliczalnym języku pierwszego rzędu ma choć jeden nieskończony model, to ma model każdej mocy nieskończonej.
+\end{wniosek}
+\begin{proof}
+Najpierw wybieramy model przeliczalnie nieskończony za pomocą twierdzenia „w dół”. Następnie stosujemy twierdzenie „w górę” dla dowolnej $\lambda\ge\aleph_0$. Elementarność zachowuje wszystkie aksjomaty teorii.
+\end{proof}
+
+\begin{uwaga}[Czego wymaga ten wniosek]\label{res:14:11}
+Słowo \emph{nieskończony} jest niezbędne. Istnienie modelu pięcioelementowego nie wymusza istnienia żadnego modelu nieskończonego: zdanie „istnieje dokładnie pięć elementów” można zapisać w pierwszym rzędzie. Ograniczenie na wielkość języka też ma znaczenie: nieprzeliczalnie wiele stałych, z aksjomatami stwierdzającymi, że są parami różne, wyklucza model przeliczalny.
+\end{uwaga}
+
+% Rozdziały 15--19, oryginalne strony 29--36.
+\section{Konsekwencje dla modeli: niestandardowe liczby i paradoks Skolema}\label{sec:modele-konsekwencje}
+\subsection*{Te same zdania nie muszą opisywać jednego świata}\label{sec:15:1}
+Izomorfizm dwóch struktur to bijekcja ich dziedzin zachowująca stałe, działania i relacje. Struktury izomorficzne różnią się tylko nazwami elementów. Modele o różnych mocach nie mogą być izomorficzne, bo nie istnieje nawet bijekcja ich dziedzin.
+
+Wniosek~\ref{res:14:10} ma więc bardzo konkretny sens: jeżeli aksjomaty pierwszego rzędu w przeliczalnym języku dopuszczają jakiś nieskończony świat, to nie opisują jednoznacznie jego wielkości. Te same aksjomaty dopuszczają światy przeliczalne i nieprzeliczalne.
+
+Dotyczy to także teorii \emph{zupełnej}, która rozstrzyga każde zdanie swojego języka. Zupełność odpowiada na pytanie „czy ustalono odpowiedź na każde pytanie pierwszego rzędu?”, a jedyność modelu z dokładnością do izomorfizmu --- „czy ustalono całą strukturę?”. To różne wymagania. Zupełna teoria może mieć nieizomorficzne modele zgadzające się co do wszystkich zdań, które ta teoria potrafi wypowiedzieć.
+
+Nie chodzi tylko o brak wystarczająco sprytnego \emph{skończonego} zestawu aksjomatów. Nawet dodanie wszystkich zdań pierwszego rzędu prawdziwych w danej nieskończonej strukturze nie usunie ograniczenia dotyczącego mocy modeli. Twierdzenie nie wymaga bowiem efektywności ani skończoności zbioru aksjomatów.
+
+\subsection*{Niestandardowa arytmetyka: liczba większa od każdego numerału}\label{sec:15:2}
+Weźmy $\operatorname{Th}(\mathbb N)$, czyli \emph{wszystkie} zdania arytmetyczne prawdziwe w standardowych liczbach naturalnych. To najsilniejszy możliwy opis $\mathbb N$ za pomocą prawdziwych zdań tego języka. Mimo to nie wyznacza on $\mathbb N$ jednoznacznie, nawet wśród modeli przeliczalnych. Ten ostatni fakt wymaga zwartości, nie wynika z samego istnienia modeli różnych mocy.
+
+\begin{stwierdzenie}[Przeliczalny niestandardowy model prawdziwej arytmetyki]\label{res:15:1}
+Istnieje przeliczalny model $\mathcal M\models\operatorname{Th}(\mathbb N)$ zawierający element $c^{\mathcal M}$ większy od interpretacji każdego standardowego numerału $\overline n$. Model ten nie jest izomorficzny ze standardową strukturą $\mathbb N$.
+\end{stwierdzenie}
+\begin{proof}
+Dodajemy nową stałą $c$ i rozpatrujemy zbiór zdań
+\[
+\Gamma=\operatorname{Th}(\mathbb N)\cup\{\overline n<c:n\in\mathbb N\}.
+\]
+Każdy skończony fragment ma model: bierzemy zwykłe $\mathbb N$, a $c$ interpretujemy jako liczbę większą od wszystkich skończenie wielu numerałów występujących w dodatkowych nierównościach. Z Lematu~\ref{res:14:7} istnieje model całego $\Gamma$. Twierdzenie~\ref{res:14:5}, zastosowane do języka z $c$, daje jego przeliczalny podmodel elementarny, zachowujący także element nazwany $c$.
+
+Po pominięciu symbolu $c$ nadal mamy strukturę arytmetyczną oraz wyróżniony element jej dziedziny. Każdy izomorfizm arytmetyczny zachowuje $0$ i $S$, więc przenosi interpretację $\overline n$ na zwykłą liczbę $n$. Obraz $c^{\mathcal M}$ musiałby być liczbą naturalną większą od każdego $n\in\mathbb N$, a takiej liczby w standardowym $\mathbb N$ nie ma.
+\end{proof}
+
+\textbf{Jak to sobie wyobrażać?} Model zawiera elementy $0,S(0),S(S(0)),\ldots$, ale jego dziedzina nie kończy się na tej zewnętrznie opisanej liście. Element $c^{\mathcal M}$ nie jest żadnym ze standardowych numerałów. Nie znaleźliśmy nowej zwykłej liczby naturalnej „za wszystkimi innymi”; skonstruowaliśmy \emph{inną strukturę}, w której symbole arytmetyczne mają interpretacje spełniające te same zdania pierwszego rzędu.
+
+\textbf{Dlaczego indukcja tego nie zabrania?} W PA indukcja jest schematem dla własności wyrażalnych formułą, także z parametrami. Nie mówi o każdym zewnętrznie wybranym podzbiorze dziedziny modelu. Zbiór elementów będących interpretacjami standardowych numerałów zawiera $0$ i jest zamknięty ze względu na następnik, ale w niestandardowym modelu nie jest definiowalny formułą arytmetyczną, nawet z parametrami. Gdyby był, odpowiednia instancja indukcji wymusiłaby, że jest całą dziedziną, wbrew istnieniu $c^{\mathcal M}$. Dlatego schemat indukcji i istnienie niestandardowych elementów nie przeczą sobie.
+
+\subsection*{Paradoks Skolema: przeliczalny model wierzący w nieprzeliczalność}\label{sec:15:3}
+Załóżmy, że istnieje model teorii mnogości ZFC. ZFC jest sformułowana w przeliczalnym języku pierwszego rzędu, którego jedynym symbolem pozalogicznym jest relacja przynależności $\in$. Jej modele są nieskończone, więc Twierdzenie~\ref{res:14:5} daje model przeliczalny. Jest to wniosek \emph{warunkowy}: nie dowodzi istnienia modelu ZFC ani niesprzeczności ZFC bez żadnych założeń.
+
+ZFC dowodzi jednak, że zbiór liczb rzeczywistych jest nieprzeliczalny. Czy dostaliśmy sprzeczność: „w przeliczalnym świecie jest nieprzeliczalny zbiór”? Nie, bo porównujemy dwa różne znaczenia słów „istnieje funkcja”.
+
+Niech $M$ będzie przeliczalną dziedziną takiego modelu, a $r\in M$ obiektem, który model uważa za zbiór liczb rzeczywistych. Zewnętrznie możemy rozpatrzyć zbiór
+\[
+E_r=\{a\in M:a\mathrel{\in^{\mathcal M}}r\}.
+\]
+Jest on co najwyżej przeliczalny, ponieważ jest podzbiorem $M$. Zapis $\in^{\mathcal M}$ oznacza \emph{relację interpretowaną w modelu}; nie zakładamy, że jest ona zwykłą przynależnością między naszymi zbiorami.
+
+Wewnętrzne zdanie „liczby rzeczywiste są nieprzeliczalne” mówi natomiast, że \emph{nie ma w modelu obiektu}, który model uznaje za bijekcję między swoim zbiorem liczb naturalnych a $r$. Zewnętrzne wyliczenie $E_r$ nie musi być reprezentowane przez obiekt modelu. Co więcej, jego dziedziną jest nasze standardowe $\mathbb N$, podczas gdy wewnętrzna funkcja miałaby dziedzinę będącą zbiorem liczb naturalnych w sensie modelu. Samo zewnętrzne wyliczenie nie dostarcza więc zakazanej funkcji \emph{wewnątrz modelu}.
+
+\begin{quote}
+Model zawiera wystarczająco dużo obiektów, aby spełniać swoje aksjomaty, ale nie musi zawierać wszystkich funkcji i podzbiorów, które my potrafimy rozpatrzyć, patrząc na jego dziedzinę z zewnątrz.
+\end{quote}
+
+Dotyczy to również aksjomatu zbioru potęgowego: jego kwantyfikatory przebiegają po obiektach modelu, nie po wszystkich zewnętrznych podzbiorach odpowiedniego zbioru $E_r$. To wyjaśnienie nazywa się rozwiązaniem \emph{paradoksu Skolema}. Nie obala ono twierdzenia Cantora i nie pokazuje, że nasz rzeczywisty zbiór $\mathbb R$ jest przeliczalny.
+
+\subsection*{A gdyby użyć logiki drugiego rzędu?}\label{sec:15:4}
+Pełna semantyka drugiego rzędu pozwala kwantyfikować po \emph{wszystkich} podzbiorach dziedziny. Drugorzędowy aksjomat indukcji obejmuje wtedy także zewnętrzny zbiór
+\[
+A=\{(S^{\mathcal M})^n(0^{\mathcal M}):n\in\mathbb N\}.
+\]
+Zbiór ten zawiera $0^{\mathcal M}$ i jest zamknięty na $S^{\mathcal M}$, więc pełna indukcja drugiego rzędu daje $A=M$. Odwzorowanie $n\mapsto(S^{\mathcal M})^n(0^{\mathcal M})$ jest zatem surjekcją. Jest też różnowartościowe: równość wyrazów o indeksach $n<m$ po $n$ skróceniach następnika dawałaby $0^{\mathcal M}=(S^{\mathcal M})^{m-n}(0^{\mathcal M})$, wbrew temu, że zero nie jest następnikiem. Równania rekurencyjne dla $+$ i $\cdot$ pokazują, przez zewnętrzną indukcję po drugim argumencie, że ta bijekcja zachowuje działania. Definicja $<$ zapewnia zachowanie porządku. Otrzymujemy więc izomorfizm ze standardową strukturą $\mathbb N$, a nie tylko bijekcję dziedzin.
+
+To nie jest kontrprzykład do twierdzenia Löwenheima--Skolema: zmieniliśmy logikę i znaczenie kwantyfikatorów. Zyskujemy silniejszy opis semantyczny, ale tracimy możliwość efektywnego, poprawnego i zupełnego rachunku dowodowego dla pełnej semantyki. W szczególności gdyby taki rachunek obejmował wszystkie konsekwencje pełnych aksjomatów drugorzędowej arytmetyki, wyliczałby wszystkie prawdy pierwszego rzędu o $\mathbb N$, wbrew Wnioskowi~\ref{res:9:5}. Przy semantyce Henkina, w której zmienne drugiego rzędu przebiegają tylko po wybranej rodzinie podzbiorów, ten argument o jednoznaczności już nie działa: rodzina może nie zawierać zewnętrznego zbioru numerałów.
+
+\section{Co niezupełność oznacza dla codziennej matematyki}\label{sec:codzienna-matematyka}
+\subsection*{„Nie da się udowodnić” nie znaczy „jest fałszywe”}\label{sec:16:1}
+Dla konkretnego zdania $\varphi$ trzeba rozdzielić trzy komunikaty:
+\begin{enumerate}[label=(\arabic*)]
+\item $T\vdash\varphi$: istnieje dowód z ustalonych aksjomatów;
+\item $T\nvdash\varphi$: takiego dowodu nie ma;
+\item $\mathbb N\models\varphi$: zdanie jest prawdziwe o standardowych liczbach naturalnych.
+\end{enumerate}
+Drugi komunikat nie jest ani dowodem $\neg\varphi$, ani stwierdzeniem fałszywości $\varphi$ w $\mathbb N$. Jeżeli ani $\varphi$, ani $\neg\varphi$ nie ma dowodu w $T$, mówimy o niezależności od $T$, nie o braku wartości logicznej. W ustalonej strukturze i klasycznej semantyce zdanie nadal jest prawdziwe albo fałszywe.
+
+Zdanie Gödla $G$ dobrze pokazuje różnicę: przy niesprzeczności $T$ jest prawdziwe w $\mathbb N$, lecz niedowodliwe w $T$ (Uwaga~\ref{res:9:3}). Ten wniosek uzyskujemy w metateorii, korzystając z założenia niesprzeczności. Nie otrzymaliśmy tym samym dowodu $G$ w $T$. Do niedowodliwości $\neg G$ wcześniejszy argument potrzebował silniejszej hipotezy; zdanie Rossera daje obustronną niezależność już przy zwykłej niesprzeczności. Nie wolno tych dwóch wersji zamieniać bez sprawdzenia założeń.
+
+\subsection*{Dlaczego dodanie nowego aksjomatu nie kończy sprawy}\label{sec:16:2}
+Załóżmy, że $T$ jest niesprzeczną, efektywnie aksjomatyzowalną teorią zawierającą $Q$, i weźmy jej niezależne zdanie Rossera $R$. Obie teorie $T+R$ oraz $T+\neg R$ są niesprzeczne. Gdyby pierwsza była sprzeczna, twierdzenie o dedukcji dawałoby $T\vdash\neg R$; gdyby druga była sprzeczna, dawałoby $T\vdash R$. Oba wnioski przeczą niezależności.
+
+Można więc rozstrzygnąć ten jeden problem, dodając wybraną stronę jako aksjomat. Każde z tych rozszerzeń jest jednak nadal efektywnie aksjomatyzowalne i zawiera $Q$, zatem ma nowe zdanie niezależne. Nie chodzi o to, że to samo $R$ na zawsze pozostaje niedostępne: zmiana teorii zmienia również zdanie skonstruowane dla jej predykatu dowodliwości.
+
+Także nieskończone dokładanie aksjomatów według jednej efektywnej procedury nie daje zupełnej teorii, jeśli wynikowa teoria pozostaje niesprzeczna i zawiera $Q$. Do całego efektywnie wyliczonego zbioru aksjomatów znów stosuje się twierdzenie Rossera. Można natomiast wziąć po prostu wszystkie prawdy $\operatorname{Th}(\mathbb N)$: otrzymamy teorię niesprzeczną i zupełną, ale nie efektywnie aksjomatyzowalną. Właśnie ten warunek wtedy tracimy.
+
+Niesprzeczność obu rozszerzeń nie oznacza, że oba opisują prawdziwie standardowe $\mathbb N$: jedno zawiera $R$, a drugie jego negację. Co najwyżej jedno może mieć wszystkie aksjomaty prawdziwe w $\mathbb N$. Niesprzeczność jest słabszym wymaganiem niż prawdziwość wszystkich aksjomatów w zamierzonej strukturze.
+
+\subsection*{Jak niezależność widać w modelach}\label{sec:16:3}
+Lemat~\ref{res:14:7} daje model $T+R$ i model $T+\neg R$. Zatem te same wyjściowe aksjomaty $T$ dopuszczają światy różniące się odpowiedzią na pytanie $R$. Nie są to dwa sprzeczne opisy jednego ustalonego świata, lecz dwa modele aksjomatów, które nie rozstrzygnęły tej kwestii.
+
+Tu widać, dlaczego zupełność logiki i niezupełność teorii nie przeczą sobie:
+\begin{itemize}
+\item \emph{zupełność logiki} mówi: jeśli zdanie zachodzi we wszystkich modelach $T$, istnieje jego dowód z $T$;
+\item \emph{niezupełność teorii} mówi: dla pewnego zdania modele $T$ nie dają jednej wspólnej odpowiedzi --- istnieją modele obu stron.
+\end{itemize}
+W szczególności prawdziwość w jednym zamierzonym modelu $\mathcal M$ nie jest tym samym co prawdziwość we wszystkich modelach $T$.
+
+\subsection*{Dlaczego nie istnieje uniwersalny przycisk „rozstrzygnij”}\label{sec:16:4}
+Wniosek~\ref{res:9:6} wyklucza algorytm, który dla każdego zdania zawsze kończy pracę i poprawnie odpowiada, czy zdanie ma dowód w ustalonej niesprzecznej, efektywnie aksjomatyzowalnej $T\supseteq Q$. Jest to wynik o problemie decyzyjnym dowodliwości, nie samo inne sformułowanie niezupełności. W ogólności niezupełność teorii nie oznacza jeszcze nierozstrzygalności jej zbioru twierdzeń.
+
+Można za to wypisywać kandydatów na dowody i sprawdzać ich poprawność. Jeśli poszukiwany dowód istnieje, takie przeszukiwanie kiedyś go znajdzie. Jeśli nie istnieje, samo przeszukiwanie może nigdy się nie zatrzymać. Równoległe poszukiwanie dowodu $\varphi$ i dowodu $\neg\varphi$ również nie pomaga, gdy zdanie jest niezależne: obie próby mogą trwać bez końca.
+
+Nie oznacza to, że konkretne problemy są zwykle beznadziejne. Oznacza brak jednej zawsze kończącej się i zawsze poprawnej metody dla wszystkich wejść. Metody dla określonej klasy zadań, heurystyki oraz przeszukiwanie do ustalonej granicy pozostają możliwe. Brak rozwiązania przez długi czas sam w sobie nie dowodzi niezależności.
+
+\section{Własna niesprzeczność i granice zaufania: Gödel II oraz Löb}\label{sec:granice-zaufania}
+\subsection*{System nie wystawia sam sobie dostatecznego certyfikatu}\label{sec:17:1}
+Drugie twierdzenie dotyczy precyzyjnego zdania $\operatorname{Con}_T$: „nie istnieje kod dowodu sprzeczności w $T$”, przy ustalonym standardowym kodowaniu. Gdy $T\supseteq\mathrm{PA}$ jest niesprzeczna i jej aksjomaty można efektywnie wyliczać, zdanie to nie ma dowodu w $T$. W tym skrypcie nie udowodniliśmy analogicznej tezy dla każdej słabszej teorii ani dla dowolnego zdania potocznie nazwanego „niesprzecznością”.
+
+Jeżeli ufamy tylko regułom i aksjomatom $T$, to nie uzyskamy z nich własnego standardowego zapewnienia, że żadna kombinacja tych reguł i aksjomatów nigdy nie doprowadzi do sprzeczności.
+
+Nie wynika stąd, że dowód niesprzeczności jest niemożliwy gdziekolwiek. Silniejsza teoria $U$ może dowodzić $\operatorname{Con}_T$. Wtedy uzasadnienie opiera się na założeniach $U$, a nie wyłącznie na $T$. Jeśli do $U$ stosuje się to samo drugie twierdzenie, analogiczne ograniczenie pojawia się dla jej własnego $\operatorname{Con}_U$. Takie względne dowody nadal mają wartość: pokazują dokładnie, jakie założenia wystarczają do uzasadnienia danej teorii.
+
+\subsection*{Każdy sprawdzony przypadek to nie to samo co wszystkie naraz}\label{sec:17:2}
+Jeśli $T$ jest niesprzeczna, każdy konkretny standardowy numer $n$ nie jest kodem dowodu sprzeczności. Lemat~\ref{res:7:7} daje osobno dla każdego $n$:
+\[
+T\vdash\neg\operatorname{Prf}_T(\overline n,\ulcorner\bot\urcorner).
+\]
+Można też połączyć dowody dla dowolnie długiego, ale ustalonego skończonego odcinka. Nie daje to automatycznie jednego dowodu zdania $\forall p\,\neg\operatorname{Prf}_T(p,\ulcorner\bot\urcorner)$. To ostatnie zdanie jest właśnie $\operatorname{Con}_T$. Przy założeniach drugiego twierdzenia zachodzi $T\nvdash\operatorname{Con}_T$: wszystkie konkretne sprawdzenia nie składają się na jeden dostępny w $T$ dowód ogólnej niesprzeczności.
+
+Różnica przypomina rozdział między sprawdzeniem dowolnej podanej liczby przypadków a posiadaniem jednego argumentu obejmującego wszystkie przypadki. W arytmetyce wolno stosować indukcję, ale trzeba jeszcze mieć dowód właściwego kroku indukcyjnego; nie dostaje się go za darmo z samej rodziny poprawnych sprawdzeń.
+
+\begin{przyklad}[Niesprzeczna teoria może błędnie twierdzić, że istnieje dowód sprzeczności]\label{res:17:1}
+Załóżmy, że PA jest niesprzeczna. Wtedy teoria $U=\mathrm{PA}+\neg\operatorname{Con}_{\mathrm{PA}}$ jest również niesprzeczna. Gdyby bowiem była sprzeczna, twierdzenie o dedukcji dawałoby $\mathrm{PA}\vdash\neg\neg\operatorname{Con}_{\mathrm{PA}}$, a klasyczna logika $\mathrm{PA}\vdash\operatorname{Con}_{\mathrm{PA}}$, wbrew Twierdzeniu~\ref{res:12:2}.
+
+Jednocześnie dodany aksjomat $\neg\operatorname{Con}_{\mathrm{PA}}$ jest przy naszym założeniu fałszywy w standardowym $\mathbb N$. Głosi istnienie kodu dowodu sprzeczności w PA, choć rzeczywistego skończonego dowodu nie ma. Każdy model $U$ musi więc mieć niestandardowego świadka tego zdania: żaden standardowy numerał nie może nim być, bo $Q$ poprawnie obala każdego takiego konkretnego kandydata.
+
+Nie otrzymaliśmy rzeczywistego dowodu sprzeczności w PA. Otrzymaliśmy model, który uznaje pewien niestandardowy element za kod takiego dowodu. To przykład różnicy między niesprzecznością a $\Sigma_1$-poprawnością, nie obalenie drugiego twierdzenia.
+\end{przyklad}
+
+\subsection*{Co naprawdę mówi twierdzenie Löba}\label{sec:17:3}
+Zdanie $\Box\varphi\to\varphi$ brzmi: „jeśli $T$ dowodzi $\varphi$, to $\varphi$ jest prawdziwe”, gdzie po prawej nie ma słowa „prawdziwe”, lecz samo zdanie $\varphi$. Twierdzenie Löba mówi, że jeśli wewnątrz $T$ da się udowodnić taką implikację dla konkretnego $\varphi$, to $T$ już dowodzi $\varphi$. Wymagane są tu warunki wyprowadzalności (D1)--(D3).
+
+Nie można więc uzyskać nowego zdania przez łatwą sztuczkę: „nie potrafię go dowieść, ale udowodnię, że mój system na pewno nie dowodzi go błędnie”. W tej formalnej postaci udowodnienie takiej gwarancji jest już wystarczająco silne, aby otrzymać samo zdanie. Dla $\varphi=\bot$ gwarancja staje się niesprzecznością, dlatego twierdzenie Löba zawiera drugie twierdzenie jako szczególny przypadek.
+
+Nie znaczy to, że $T$ nie dowodzi żadnej implikacji $\Box\varphi\to\varphi$. Jeśli $T\vdash\varphi$, taka implikacja wynika od razu z logiki. Ograniczenie dotyczy zdań, których $T$ jeszcze nie dowodzi, i wewnętrznego uzasadniania refleksji. Zewnętrzne zaufanie do prawdziwości aksjomatów nie jest tym samym co dowód odpowiedniej zasady w samym systemie.
+
+\subsection*{Dlaczego (D1)--(D3) nie obiecują prawdziwości twierdzeń}\label{sec:17:4}
+Warunki Hilberta--Bernaysa--Löba opisują operacje na dowodach: można potwierdzić istnienie konkretnego dowodu, połączyć dowody przez modus ponens oraz potwierdzić dowodliwość stwierdzenia o dowodliwości. Są to gwarancje składniowe. Żaden z tych warunków nie jest ogólną zasadą $\Box\varphi\to\varphi$.
+
+Podobnie program sprawdzający formalny dowód może poprawnie ustalić, że wniosek wynika z zadanych aksjomatów, bez rozstrzygania, czy wszystkie te aksjomaty są prawdziwe w zamierzonym świecie. Sprawdzanie poprawności kroków, poszukiwanie dowodu i uzasadnianie prawdziwości aksjomatów to trzy odrębne zadania.
+
+\section{Kodowanie, diagonalizacja i prawda: sens twierdzenia Tarskiego}\label{sec:sens-tarski}
+\subsection*{Po co zamieniać napisy i obliczenia na liczby}\label{sec:18:1}
+Numeracja Gödla nie nadaje liczbom tajemniczych znaczeń. Jest sposobem zapisu danych, podobnie jak kodowanie tekstu w komputerze: skończony napis lub skończone obliczenie otrzymuje jednoznaczny numer. Reprezentowalność mówi następnie, że poprawność konkretnych operacji na takich danych można wyrazić i sprawdzić w arytmetyce.
+
+Dzięki temu arytmetyka potrafi mówić nie tylko o dodawaniu liczb, ale także o tym, że dana liczba koduje formułę, podstawienie albo dowód. To jest techniczny powód, dla którego teoria liczb może opisywać własną działalność dowodową. Lemat diagonalny pozwala z takiego opisu zbudować zdanie dowodliwie równoważne stwierdzeniu o jego własnym kodzie. Nie trzeba dodawać do języka magicznego wyrażenia „to właśnie zdanie”.
+
+Ostrożność nadal jest potrzebna: reprezentowalność obliczeń na każdym konkretnym wejściu nie jest automatycznie dowodem, że program kończy się na wszystkich wejściach. Dla funkcji p.r. uzasadniliśmy odpowiednią totalność w PA w Lemacie~\ref{res:11:3}; nie zrobiliśmy tego dla każdej totalnej funkcji obliczalnej. Arytmetyzacja nie zmienia nieograniczonego szukania w ograniczone sprawdzanie gotowego świadectwa.
+
+\subsection*{Dlaczego zdanie Gödla nie jest zwykłym paradoksem kłamcy}\label{sec:18:2}
+Zdanie „to zdanie jest fałszywe” próbuje użyć własnego predykatu prawdy bez ograniczenia jego zakresu. Zdanie Gödla mówi zamiast tego o niedowodliwości w konkretnej teorii. Te pojęcia nie są zamienne: prawdziwe zdanie może nie mieć dowodu z wybranego zbioru aksjomatów. Właśnie ta różnica pozwala uzyskać niezupełność, a nie sprzeczność.
+
+Twierdzenie Tarskiego pokazuje z kolei, co poszłoby źle, gdyby arytmetyka miała jedną formułę $\operatorname{Tr}(x)$ poprawnie rozpoznającą prawdę wszystkich własnych zdań. Diagonalizacja zastosowana do $\neg\operatorname{Tr}(x)$ dawałaby już prawdziwy konflikt typu kłamcy. Wniosek brzmi: taka formuła nie istnieje, a nie: arytmetyka zawiera sprzeczność.
+
+\subsection*{Prawda istniejąca z zewnątrz a prawda zdefiniowana wewnątrz}\label{sec:18:3}
+Twierdzenie Tarskiego nie zabrania mówić o prawdzie w $\mathbb N$ w bogatszym języku metateorii, na przykład teorii mnogości. Tam możemy opisać strukturę $\mathbb N$, wartościowania i rekurencyjną definicję spełniania. Nie zabrania też rozpatrywania samego zbioru $\operatorname{Th}(\mathbb N)$ z zewnątrz. Zabrania zdefiniowania pełnego zbioru prawd arytmetycznych za pomocą jednej formuły tego samego języka arytmetyki.
+
+Można również definiować prawdę dla odpowiednio ograniczonych klas formuł. Zakaz dotyczy jednego predykatu obejmującego wszystkie zdania własnego języka, a nie każdego lokalnego testu prawdziwości. W wersji syntaktycznej żadna niesprzeczna $T\supseteq Q$ nie może udowodnić wszystkich równoważności $\varphi\leftrightarrow\operatorname{Tr}(\ulcorner\varphi\urcorner)$ przy jednym arytmetycznym $\operatorname{Tr}$.
+
+\subsection*{Trzy różne bariery: definiowanie, wyliczanie, rozstrzyganie}\label{sec:18:4}
+Warto oddzielić wyniki, które na pierwszy rzut oka brzmią podobnie:
+\begin{itemize}
+\item \emph{Definiowalność:} czy jedna formuła opisuje dany zbiór? Dowodliwość $\operatorname{Bew}_T$ jest definiowalna w arytmetyce; pełna prawda arytmetyczna nie jest, na mocy twierdzenia Tarskiego.
+\item \emph{Efektywne wyliczanie:} czy program może wypisać wszystkie elementy zbioru, nie wypisując innych? Twierdzenia efektywnej teorii można wyliczać, ale wszystkich prawd $\operatorname{Th}(\mathbb N)$ nie można, na mocy Wniosku~\ref{res:9:5}.
+\item \emph{Rozstrzyganie:} czy program zawsze kończy pracę z poprawną odpowiedzią „należy” lub „nie należy”? Dla zbioru twierdzeń rozpatrywanych niesprzecznych rozszerzeń $Q$ jest to niemożliwe, mimo możliwości ich wyliczania.
+\end{itemize}
+Brak efektywnego wyliczania nie oznacza sam przez się braku definicji: formuły mogą opisywać zbiory niebędące rekurencyjnie przeliczalnymi. Z kolei przeliczalność nie oznacza efektywnej wyliczalności. $\operatorname{Th}(\mathbb N)$ jest podzbiorem przeliczalnego zbioru zdań, więc jest co najwyżej przeliczalny, ale żadna maszyna nie wypisze dokładnie wszystkich jego elementów. To kolejny powód, dla którego teoriomnogościowego wyboru z dowodu Löwenheima--Skolema nie należy mylić z algorytmem.
+
+\section{Czego te twierdzenia nie mówią}\label{sec:czego-nie-mowia}
+\subsection*{Nie każda teoria musi być niezupełna}\label{sec:19:1}
+Istotny jest cały zestaw założeń: efektywność, niesprzeczność oraz odpowiednia siła arytmetyczna. Usunięcie choć jednego z nich może zmienić sytuację. Zbiór $\operatorname{Th}(\mathbb N)$ jest niesprzeczny i zupełny, ale nie jest rekurencyjnie przeliczalny. Teoria sprzeczna w logice klasycznej dowodzi każdego zdania, jest więc zupełna w technicznym sensie --- tyle że nie odróżnia żadnych odpowiedzi.
+
+Inny prosty przykład stanowią wszystkie zdania prawdziwe w ustalonej skończonej strukturze o skończonym języku. Można algorytmicznie obliczać ich wartość: kwantyfikatory sprawdzamy po skończenie wielu elementach, a formuły według ich budowy. Ta teoria jest niesprzeczna, zupełna i rozstrzygalna. Nie zawiera jednak $Q$, której aksjomaty wymuszają nieskończenie wiele różnych numerałów. Nie ma więc konfliktu z twierdzeniem Rossera.
+
+\subsection*{Nie wynika stąd, że dowody lub komputery są bezużyteczne}\label{sec:19:2}
+Twierdzenia nie unieważniają żadnego poprawnego dowodu. Pokazują ograniczenia zakresu jednej ustalonej metody formalnej, nie bezwartościowość tego, co metoda rzeczywiście potrafi wykazać. Nie dowodzą, że każde interesujące pytanie jest niezależne, ani że każda próba automatyzacji musi zawieść.
+
+Skończony dowód można sprawdzić, a wiele klas problemów można rozstrzygać algorytmicznie. Weryfikator formalny nie musi rozstrzygać wszystkich zdań, aby być użyteczny: jego zadaniem jest kontrola przedłożonego świadectwa w konkretnym rachunku. Twierdzenia nie obiecują też krótkich dowodów ani szybkiego przeszukiwania. Rozstrzygalność, istnienie dowodu i praktyczny koszt obliczeń to różne kwestie.
+
+Nie wynika z nich również, że człowiek jest z konieczności nieomylny albo silniejszy od każdego możliwego algorytmu. Argument o prawdziwości zdania Gödla korzysta z założenia niesprzeczności konkretnego systemu; nie daje człowiekowi automatycznej wiedzy o niesprzeczności wszystkich systemów. Wnioski o świadomości, fizyce czy dowolnym potocznym „systemie przekonań” wymagałyby dodatkowych, osobno uzasadnionych założeń.
+
+\end{document}
