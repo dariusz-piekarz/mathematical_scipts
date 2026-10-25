@@ -21,8 +21,9 @@ i organizacja plików w [README.md](README.md).
    cechy Eulera, uchwytów i modeli powierzchni; doprecyzowano
    homeomorfizm, skończony typ CW kobordyzmu i związek z dualnością
    Poincarégo. Pełny skład oraz strony obu dodatków sprawdzono.
-2. Następny szeroki etap to rozdziały 34–38 według zakresu poniżej,
-   a po nim końcowa kontrola mapy książki, oznaczeń i terminologii.
+2. Rozdział 34 sprawdzono 25 października. Następny etap to rozdział 35;
+   późniejsze rozdziały 36–38 pozostają poza bieżącą iteracją, a po ich
+   ukończeniu nastąpi końcowa kontrola mapy książki, oznaczeń i terminologii.
    Wymiary cztery pozostają wykładem informacyjnym z dokładnymi
    hipotezami i źródłami. Zwykła iteracja obejmuje jeden rozdział,
    chyba że etap wymaga wspólnego dowodu.
@@ -147,7 +148,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 31. Potok Ricciego (plik 30) | `30-potok-ricciego.tex` | Pełny audyt zakończony 20 października; rysunek 31.1 sprawdzony na stronie PDF 100 | Rachunki skalowania, ewolucji, zasady maksimum i DeTurcka spójne; istnienie i jednoznaczność PDE pozostają jawnym wejściem analitycznym. |
 | 32. Poincaré w wymiarze trzy (plik 30a) | `30a-poincare-trzy.tex` | Pełny audyt zakończony 20 października | Hipotezy niezapadania i wygasania, chirurgia, odtworzenie topologii oraz Moise sprawdzone względem źródeł; poprawiono tytuł cytowanej pracy i terminologię. Głębokie wyniki Perelmana pozostają zewnętrzne. |
 | 33. Geometrie Thurstona (plik 30b) | `30b-geometrizacja-thurstona.tex` | Pełny audyt zakończony 20 października | Osiem modeli, tabela Seiferta, orbifoldy, rozkład pierwszy i JSJ sprawdzone; dopisano definicję dysku ściskającego i źródło twierdzenia o pętli oraz skorygowano opis dowodu w rozdziale 31. Geometryzacja pozostaje wynikiem zewnętrznym. |
-| 34. Formy przecięcia i uchwyty w wymiarze cztery (plik 31) | `31-freedman-formy-przeciecia.tex` | Przegląd matematyczny 7 października; kontrola rysunku Whitneya 12 października | Rachunek $E_8$ i forma splotu sprawdzone wcześniej; poprawiono położenie punktu $q$ i płata na rysunku |
+| 34. Formy przecięcia i uchwyty w wymiarze cztery (plik 31) | `31-freedman-formy-przeciecia.tex` | Pełny audyt rozdziału zakończony 25 października | Sprawdzono definicję i unimodularność formy, parzystość, sygnaturę, pełny rachunek $E_8$, macierz splotu, homologię brzegu i ograniczenie triku Whitneya. Dopisano jawny rachunek $2E_8$, rozróżnienie od macierzy skalarnej $2\cdot E_8$, wpływ orientacji komponentów na macierz oraz granicę między korpusem uchwytowym a zamkniętą rozmaitością. Głębokie domknięcie topologiczne pozostaje wynikiem zewnętrznym Freedmana. |
 | 35. Uchwyty Cassona (plik 32) | `32-uchwyty-cassona.tex` | Przegląd skutków osadzania 7 października; kontrola terminologii 12 października | Immersje z punktami podwójnymi oddzielono od topologicznych zanurzeń; pełne osadzanie i standardowość uchwytu pozostają zewnętrzne |
 | 36. Klasyfikacja Freedmana (plik 33) | `33-freedman-klasyfikacja.tex` | Przegląd 7 października; kontrola przejścia do sfer i przykładu $2E_8$ 12 października | Rozpisano warunek $\lambda=2\mu+e=0$ dla homotopii regularnej; klasyfikacja, chirurgia i niezmiennik Kirby'ego--Siebenmanna pozostają zewnętrzne |
 | 37. Donaldson (plik 34) | `34-donaldson.tex` | Niezależny przegląd konwencji, przykładów i zastosowań 12 października | Sprawdzono znak $c_2$ oraz energii ASD, zakres diagonalizacji i przykład $2E_8$; analiza moduli i twierdzenie Donaldsona pozostają zewnętrzne |

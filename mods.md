@@ -1,5 +1,54 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-10-25 — pełny audyt rozdziału 34
+
+### Problem
+
+Rozdział o formach przecięcia zawierał poprawny pełny rachunek $E_8$,
+macierz obramowanego splotu i wyjaśnienie przeszkody dla triku Whitneya,
+ale zaplanowany przypadek $2E_8$ był jedynie wymieniony. Nie było jawnego
+rachunku jego rzędu, wyznacznika i sygnatury ani wyraźnego rozróżnienia
+sumy ortogonalnej $E_8\oplus E_8$ od skalarnej macierzy $2\cdot E_8$.
+Opis macierzy splotu nie objaśniał także, dlaczego pomocniczy wybór
+orientacji komponentów nie zmienia klasy izometrii formy.
+
+### Rozwiązanie i wpływ
+
+- W `tex/rozdzialy/31-freedman-formy-przeciecia.tex` dodano przykład
+  $2E_8=E_8\oplus E_8$. Z blokowej postaci wyprowadzono wyznacznik $1$,
+  sygnaturę $16$, parzystość, unimodularność i dodatnią określoność.
+- Parzystość odróżnia $2E_8$ od dodatnio określonej formy diagonalnej
+  $I_{16}$, mimo zgodności rzędu i sygnatury.
+- Dwie rozłączne kopie splotu realizują blokową macierz $2E_8$, ale tekst
+  wyraźnie nie utożsamia tego gładkiego korpusu z brzegiem z zamkniętą
+  rozmaitością. Topologiczne istnienie nadal jest jawnym wejściem
+  Freedmana, a przeszkoda gładka pozostaje w rozdziale o Donaldsonie.
+- Dopisano wpływ odwrócenia orientacji komponentu splotu. Zmiana znaków
+  odpowiedniego wiersza i kolumny jest kongruencją przez diagonalną
+  macierz z jednym wpisem $-1$, więc nie zmienia klasy izometrii.
+- `PLAN_DZIALANIA.md` oznacza wyłącznie rozdział 34 jako ukończony i
+  pozostawia rozdział 35 jako następny etap. `PRZEGLAD.md` zapisuje zakres
+  audytu i wyniki kontroli; rozdziałów 35--38 w tej iteracji nie audytowano.
+- Zaktualizowano trzy PDF-y tomów, ponieważ pełny skrypt stabilizuje
+  odsyłacze między nimi. Tom III wydłużył się ze 171 do 172 stron.
+
+Kompromisem jest pozostawienie głębokiego topologicznego wypełnienia
+brzegu i klasyfikacji Freedmana jako wyników zewnętrznych. Jest to zgodne
+z rzeczywistym zakresem rozdziału 34 i nie sugeruje dowodu, którego tekst
+nie zawiera.
+
+### Weryfikacja
+
+Niezależna kontrola wyłącznie rozdziału 34 potwierdziła rachunki $E_8$,
+$2E_8$, macierzy splotu, homologii brzegu i wymiarów w argumencie Whitneya.
+Pełny `buduj_tomy.ps1` zakończył dwa przebiegi: tomy mają 216, 182 i 172
+strony, a indeksy przyjęły 113, 96 i 119 haseł bez odrzuceń i ostrzeżeń.
+Logi nie zawierają błędów, niezdefiniowanych odsyłaczy, `Overfull` ani
+brakujących znaków. Obejrzano wszystkie strony rozdziału 34 w finalnym
+PDF-ie tomu III; nowy przykład, akapit o orientacjach, wzory i rysunki są
+czytelne. Kontrola XML potwierdziła poprawne cele odsyłaczy, w tym do
+wyników używanych później, bez audytowania treści późniejszych rozdziałów.
+
 ## 2026-10-25 — audyt dodatków A i B
 
 ### Problem

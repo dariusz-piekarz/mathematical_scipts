@@ -164,3 +164,65 @@ latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=bu
 Projekt nie pobiera danych wejściowych z sieci. MiKTeX musi mieć
 zainstalowane pakiety użyte w `tex/preambula.tex`; w sprawdzonym
 środowisku wszystkie były już dostępne.
+
+## Audyt rozdziału 34 — polecenia wykonane 25 października 2026
+
+Pracę wykonano w katalogu:
+
+```powershell
+Set-Location -LiteralPath '.\geometria i topologia różniczkowa'
+```
+
+Przed zmianami pobrano stan gałęzi bez tworzenia merge commita:
+
+```powershell
+git pull --ff-only
+```
+
+Pierwsza próba `buduj_tomy.ps1` ujawniła, że profil MiKTeX 25.12 nie miał
+dokończonej inicjalizacji. Wykonano więc następujące polecenia konfiguracji
+istniejącej instalacji użytkownika (nie instalowano nowych pakietów):
+
+```powershell
+initexmf --update-fndb
+initexmf --mkmaps
+initexmf --mklangs
+initexmf --report
+```
+
+Raport po inicjalizacji wskazał MiKTeX 25.12 i datę konfiguracji
+2 października 2026. `latexmk` wymagał Perla dostępnego w instalacji Git,
+dlatego w sesji użytej do końcowego składu rozszerzono `PATH` i uruchomiono
+pełny skrypt:
+
+```powershell
+$env:PATH = 'C:\Program Files\Git\usr\bin;' + $env:PATH
+powershell -NoProfile -ExecutionPolicy Bypass -File .\buduj_tomy.ps1
+```
+
+Skrypt zakończył dwa przebiegi, sprawdził indeksy i skopiował PDF-y. Tomy
+mają 216, 182 i 172 strony. `makeindex` przyjął odpowiednio 113, 96 i 119
+haseł, odrzucił zero i nie zgłosił ostrzeżeń.
+
+Logi sprawdzono poleceniem:
+
+```powershell
+rg -n -i 'undefined|multiply defined|overfull|underfull|missing character|fatal error|emergency stop|LaTeX Warning|Package .* Warning|pdfTeX warning' .\build\tomy -g '*.log'
+```
+
+Nie znaleziono błędów, niezdefiniowanych odsyłaczy, `Overfull` ani
+brakujących znaków. Pozostały znane komunikaty `Underfull`, powtórzony cel
+`page.1` w każdym tomie oraz dwa ostrzeżenia tomu I o zmianie położenia
+rysunku z `h` na `ht`; żaden nie dotyczy rozdziału 34.
+
+Cały rozdział 34 wyodrębniono i wyrenderowano z finalnego tomu III:
+
+```powershell
+pdftotext -f 125 -l 131 -layout .\geometria_tom3.pdf .\build\audit-ch34-20261025\chapter34.txt
+pdftoppm -f 125 -l 131 -png -r 110 .\geometria_tom3.pdf .\build\audit-ch34-20261025\page
+pdftohtml -f 125 -l 130 -xml -hidden -nodrm .\geometria_tom3.pdf .\build\audit-ch34-20261025\chapter34.xml
+```
+
+Obejrzano fizyczne strony PDF 125--130 (drukowane 124--129). Strona 131
+posłużyła tylko do potwierdzenia granicy z rozdziałem 35; jego treści nie
+audytowano. XML potwierdził poprawne cele nowych i sąsiednich odsyłaczy.

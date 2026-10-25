@@ -13,6 +13,46 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 34 — formy przecięcia i uchwyty w wymiarze cztery (2026-10-25)
+
+Przeprowadzono pełny audyt rozdziału 34, bez rozszerzania zakresu na
+rozdziały 35–38. Sprawdzono definicję formy przecięcia w kategoriach
+TOP i DIFF, argument o braku torsji w $H_2$ w przypadku jednospójnym,
+niezmienniczość parzystości i sygnatury, przykłady $H$ i $I_{1,1}$
+oraz rachunek macierzy $E_8$. Rekurencja dla wyznaczników $A_m$,
+minor $(A_7^{-1})_{33}=15/8$, dopełnienie Schura $1/8$ i wniosek
+$\det E_8=1$, $\sigma(E_8)=8$ są poprawne.
+
+Dopisano osobny rachunek $2E_8=E_8\oplus E_8$: forma jest parzysta,
+unimodularna, dodatnio określona, ma rząd i sygnaturę $16$ oraz nie jest
+izometryczna z $I_{16}$. Wyraźnie odróżniono sumę ortogonalną od
+skalarnej macierzy $2\cdot E_8$. Dwie rozłączne kopie splotu dają
+blokową macierz $2E_8$, lecz sam gładki korpus z uchwytów nie dowodzi
+istnienia zamkniętej rozmaitości o tej formie; topologiczne domknięcie
+pozostaje wejściem Freedmana, a przeszkoda gładka jest omawiana dopiero
+w rozdziale o twierdzeniu Donaldsona.
+
+W części uchwytowej sprawdzono względny kompleks uchwytowy, opis
+samoprzecięcia przez obramowanie, przecięć mieszanych przez liczby
+sprzężenia oraz ciąg dokładny pary użyty do wykazania, że unimodularna
+macierz daje brzeg będący całkowitą sferą homologiczną. Dopisano wpływ
+odwrócenia orientacji komponentu: odpowiedni wiersz i kolumna zmieniają
+znak, co jest zmianą bazy i nie zmienia izometrii formy. Rachunek
+$2+2-4=0$ poprawnie wyjaśnia przeszkodę dla gładkiego triku Whitneya,
+ale nie jest przedstawiany jako dowód twierdzenia o zanurzaniu dysku.
+
+Pełny `buduj_tomy.ps1` zakończył dwa przebiegi powodzeniem. Tomy mają
+216, 182 i 172 strony; indeksy przyjęły odpowiednio 113, 96 i 119 haseł,
+bez odrzuceń i ostrzeżeń. Logi nie zawierają niezdefiniowanych odsyłaczy,
+przepełnionych wierszy, brakujących znaków ani błędów składu. Pozostały
+znane komunikaty o powtórzonym celu `page.1`, wcześniejsze `Underfull`
+poza rozdziałem 34 oraz dwa ostrzeżenia tomu I o zmianie specyfikatora
+rysunku z `h` na `ht`. Obejrzano fizyczne strony PDF 125--130 tomu III,
+czyli cały rozdział 34 na stronach drukowanych 124--129. Nowy przykład
+$2E_8$, akapit o orientacjach, oba rysunki i odsyłacze są czytelne;
+kontrola XML potwierdziła cele 34.4.2, 36.2.1 i 37.3.3 oraz odsyłacze
+międzytomowe do tomu II.
+
 ## Dodatki A i B — niezależny audyt (2026-10-25)
 
 W dodatku A porównano katalog zależności zewnętrznych z faktycznymi
