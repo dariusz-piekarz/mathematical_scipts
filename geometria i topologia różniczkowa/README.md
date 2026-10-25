@@ -118,7 +118,7 @@ PDF traktuj jako pliki współdzielone. PDF jest wynikiem kompilacji:
 w razie konfliktu najpierw połącz źródła, następnie wygeneruj go ponownie.
 Poprawki zapisuj z uzasadnieniem w [PRZEGLAD.md](PRZEGLAD.md).
 
-Dokumentacja ma cztery pliki, każdy o osobnej roli:
+Dokumentacja właściwa temu skryptowi ma cztery pliki, każdy o osobnej roli:
 
 - [README.md](README.md) — struktura źródeł, kompilacja i współpraca.
 - [AGENTS.md](AGENTS.md) — zasady pisania i kontroli.
@@ -126,6 +126,10 @@ Dokumentacja ma cztery pliki, każdy o osobnej roli:
   i wynikami weryfikacji, także historyczny audyt wersji 18-rozdziałowej.
 - [PLAN_DZIALANIA.md](PLAN_DZIALANIA.md) — jedyna aktualna lista zadań,
   pokrycie przeglądem i pozostałe propozycje rozbudowy.
+
+W katalogu głównym repozytorium są ponadto [manual.md](../manual.md)
+z odtwarzalnymi poleceniami środowiska, budowania i kontroli oraz
+[mods.md](../mods.md) z uzasadnieniami zmian wykonywanych w projektach.
 
 Nie kopiuj statusów zadań do kolejnych plików. Wpis w dzienniku opisuje
 konkretną wersję; obecność rozdziału w książce nie oznacza zakończonego audytu.

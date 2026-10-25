@@ -13,6 +13,62 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Dodatki A i B — niezależny audyt (2026-10-25)
+
+W dodatku A porównano katalog zależności zewnętrznych z faktycznymi
+deklaracjami i dowodami w 38 rozdziałach oraz z podanymi źródłami.
+Usunięto krytyczną niezgodność wymiarową: twierdzenie Walla o
+przeszkodzie chirurgicznej obejmuje $n\geq5$, z przypadkiem parzystym
+$2k\geq6$ i nieparzystym $2k+1\geq5$; oddzielne nieparzyste
+twierdzenie realizacyjne 6.5 zaczyna się w wymiarze siedem.
+Dopisano hipotezy wersji względnej, dekorację $h$, ciąg Rothenberga,
+normalne niezmienniki, działanie grupy $L$ i ciąg chirurgii, w tym
+realizację przez twierdzenia 5.8 i 6.5 Walla.
+
+Katalog uzupełniono o brakujące, jawnie zewnętrzne składniki:
+miarę Hausdorffa w przestrzeni euklidesowej, dokładne warunki triku
+Whitneya, charakterystykę prostej równoważności przez torsję
+Whiteheada i porównanie torsji Morse'a z komórkową, twierdzenie
+Ambrose'a--Singera, globalny rozkład de Rhama, miarę Haara oraz
+topologiczną normalizację teorii Cherna--Weila. Rozdzielono
+triangulację powierzchni od klasyfikacji Bardena i wskazano jej
+pozostałe wejścia Walla, Whiteheada, Haefligera i teorii kobordyzmu.
+Poprawiono błędny DOI pracy Whiteheada, doprecyzowano konstrukcję
+dobrego rozdrobnienia, współczynniki grup $L$ w ciągu chirurgii,
+jednoznaczność globalnego rozkładu de Rhama oraz odsyłacz do kryterium
+stabilnego wygładzania Freedmana--Quinna.
+W części o sferach Milnora dopisano całkowitość indeksu Diraca,
+zupełność niezmiennika Eellsa--Kuipera i
+$\Theta_7=bP_8\cong\Z/28$ Kervaire'a--Milnora. Doprecyzowano także
+hipotezę wygasania potoku Ricciego, orientację w topologicznej
+dualności Poincarégo, pełne założenia twierdzenia o zanurzaniu dysków,
+stabilny charakter przeszkody Kirby'ego--Siebenmanna i rolę twierdzeń
+Quinna w konstrukcji egzotycznych $\R^4$.
+
+W dodatku B sprawdzono lokalną homologię także dla wymiaru zero,
+oba wzory na cechę Eulera, znak charakterystyki względnej, wkład
+uchwytu $(-1)^k$, addytywność przy sklejaniu oraz komórkowe rachunki
+powierzchni orientowalnych i nieorientowalnych. Rachunki były poprawne.
+W dowodzie homologicznej niezmienniczości wymiaru nazwano użyty
+homeomorfizm. W rachunku uchwytowym dopisano względny model CW,
+który uzasadnia istnienie skończonego modelu dla $W$, a po wzorze
+nad dowolnym ciałem dodano odsyłacz do dualności Poincarégo i wniosek
+$\chi(M)=0$ dla zamkniętej zorientowanej rozmaitości nieparzystego
+wymiaru.
+
+Pełny `buduj_tomy.ps1` zakończył dwa przebiegi powodzeniem. Tomy mają
+216, 182 i 171 stron; indeksy przyjęły odpowiednio 113, 96 i 119
+haseł, bez odrzuceń i ostrzeżeń. Logi nie zawierają niezdefiniowanych
+odsyłaczy, przepełnionych wierszy ani brakujących znaków. Pozostały
+znane ostrzeżenia o powtórzonym celu `page.1`, wcześniejsze
+nieprzepełnione `Underfull` oraz dwa ostrzeżenia tomu I o zmianie
+specyfikatora rysunku z `h` na `ht`, niezwiązane z dodatkami.
+Obejrzano wszystkie
+strony dodatków A i B: fizyczne strony PDF 150–159, odpowiadające
+stronom drukowanym 149–158. Sprawdzono także, że odsyłacze z tych stron
+prowadzą do `geometria_tom1.pdf` i `geometria_tom2.pdf`; tekst i XML
+wyodrębniono ponownie z finalnego PDF-u po ostatniej zmianie źródeł.
+
 ## Rozdział 2, §2.3 — równanie krzywej całkowej w jednej mapie (2026-10-23)
 
 W dowodzie Twierdzenia 2.3.2 doprecyzowano, że mapa

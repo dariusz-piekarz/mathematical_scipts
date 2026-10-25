@@ -1,6 +1,6 @@
 # Aktualny plan i pokrycie przeglądem
 
-Stan: 22 października 2026. Gałąź: `review/rozdzialy-matematyka`.
+Stan: 25 października 2026. Gałąź: `review/rozdzialy-matematyka`.
 Książka ma **38 rozdziałów, pięć części i trzy dodatki**. Numery w nazwach
 plików są historyczne; numer w PDF ustala kolejność importów.
 Skład roboczy podzielono na trzy tomy: rozdziały 1–10, 11–22 oraz
@@ -12,37 +12,20 @@ i organizacja plików w [README.md](README.md).
 
 ## Bieżący zakres i kolejność
 
-Przegląd całej sekcji §2.1 o polach wektorowych zakończono
-21 października: ujednolicono kolejność pojęć i przykładów oraz
-sprawdzono rachunek w mapie, na okręgu i na sferze. W ostatniej
-uwadze sekcji doprecyzowano tego dnia przeszkody dla przeniesienia
-pola przez $t\mapsto t^2$ i $t\mapsto t^3$. Dnia 22 października
-uzupełniono w §2.2 interpretację nawiasu Liego i rozkładów stycznych
-oraz sprawdzono zależność twierdzenia Frobeniusa od dowodu w rozdziale 14.
-Tego samego dnia doprecyzowano dowód Twierdzenia 2.3.2:
-przeniesienie pola do współrzędnych, dziedzinę operatora Picarda,
-lokalną jednoznaczność i gładką zależność od danych.
-Nie stanowi to audytu całego rozdziału 2. Kolejka poniżej pozostaje aktualna.
-
-1. Końcowy audyt dopisanego wykładu Walla w rozdziałach 27–28
-   zakończono 20 października. Sprawdzono przypadek parzysty,
-   nieparzysty i ciąg chirurgii względem §§1–2, 5–6 i 10 Walla;
-   poprawiono stronę formy w jednym wzorze dualności oraz
-   doprecyzowano terminologię i hipotezy. Głębokie lematy
-   geometryczne, wersja $h$ i ciąg Rothenberga pozostają
-   jawnie wskazanymi wynikami
-   zewnętrznymi zgodnie z decyzją autora. Klasyfikację Bardena
-   w rozdziale 29 oraz sfer Milnora w rozdziale 30 domknięto
-   w przyjętym zakresie. Twierdzenia czterowymiarowe
-   (rozdziały 34–38) kontynuować według zakresu poniżej;
-   wymiary cztery pozostają wykładem informacyjnym.
-2. Audyt rozdziałów 31–33, nowego rysunku i zależności zakończono
-   20 października. Pełny audyt rozdziałów 15–18 zakończono tego samego
-   dnia; następne w kolejce są dodatki A i B według tabeli.
-   Zwykła iteracja obejmuje jeden rozdział, chyba że etap wymaga
-   wspólnego dowodu. Wcześniejszy audyt innych rozdziałów pozostaje
-   ważny w swoim wskazanym zakresie, ale nie oznacza wykonania
-   nowej rozbudowy.
+1. Niezależny audyt dodatków A i B zakończono 25 października.
+   W dodatku A skorygowano zakres twierdzenia Walla do $n\geq5$
+   i uzupełniono katalog o rzeczywiście używane wyniki zewnętrzne,
+   w tym wersję $h$, ciąg Rothenberga, ciąg chirurgii, torsję
+   Whiteheada, geometrię globalną, Bardena i klasyfikację sfer
+   wymiaru siedem. W dodatku B sprawdzono rachunki homologii lokalnej,
+   cechy Eulera, uchwytów i modeli powierzchni; doprecyzowano
+   homeomorfizm, skończony typ CW kobordyzmu i związek z dualnością
+   Poincarégo. Pełny skład oraz strony obu dodatków sprawdzono.
+2. Następny szeroki etap to rozdziały 34–38 według zakresu poniżej,
+   a po nim końcowa kontrola mapy książki, oznaczeń i terminologii.
+   Wymiary cztery pozostają wykładem informacyjnym z dokładnymi
+   hipotezami i źródłami. Zwykła iteracja obejmuje jeden rozdział,
+   chyba że etap wymaga wspólnego dowodu.
 3. Przed każdą iteracją pobierać zmiany współautora. Zmieniać źródło
    w odpowiednim pliku rozdziału, zapisywać uzasadnienia w
    `PRZEGLAD.md`, składać odpowiedni tom i sprawdzać zmienione strony.
@@ -170,8 +153,8 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 37. Donaldson (plik 34) | `34-donaldson.tex` | Niezależny przegląd konwencji, przykładów i zastosowań 12 października | Sprawdzono znak $c_2$ oraz energii ASD, zakres diagonalizacji i przykład $2E_8$; analiza moduli i twierdzenie Donaldsona pozostają zewnętrzne |
 | 38. Egzotyczne $\R^4$ (plik 35) | `35-egzotyczne-r4.tex` | Niezależny przegląd wejść i indukcji Gompfa 12 października; uzupełniono przebieg lematów 1.1 i 1.2 | Dowiedziono kierunku od dysków plastra do zanurzenia śladu, obliczono kratę $-E_8$ w rozmaitości otaczającej i rozpisano etapy wygładzania, wież Cassona oraz zastąpienia dysków. Pełne twierdzenia Quinna, Cassona, Freedmana i Gompfa oraz wynik De Michelisa–Freedmana pozostają zewnętrzne. |
 | Podział źródeł i importy | — | Zakończono, `9148128` | Kontrola regresji przy dalszych zmianach |
-| Dodatek A o wynikach zewnętrznych | — | Uzupełniany przez autora do 386ecb6; 20 października poprawiono cytowanie twierdzenia Moise'a; pełny niezależny audyt oczekuje | Zgodność katalogu z rzeczywistymi dowodami, zwłaszcza Walla, geometrii globalnej oraz wymiarów 3 i 4. |
-| Dodatek B: homologia singularna i Euler | — | Dodany w `59fd235`; audyt oczekuje | Skończoność, przykłady i wzory Eulera; odsyłacze do homologii oraz przecięć i dualności (obecnie rozdziały 8 i 21). |
+| Dodatek A o wynikach zewnętrznych | — | Pełny niezależny audyt zakończono 25 października | Skorygowano zakres Walla do $n\geq5$ i rozdzielono kryterium od twierdzeń realizacyjnych. Uzupełniono wersję $h$, Rothenberga, ciąg chirurgii, Whiteheada, miarę Hausdorffa i Haara, Ambrose'a--Singera, globalny de Rham, normalizację Cherna--Weila, wejścia Bardena, Eellsa--Kuipera, Kervaire'a--Milnora i Quinna. Doprecyzowano hipotezy w wymiarach 3 i 4; źródła oraz strony 149–154 sprawdzono. |
+| Dodatek B: homologia singularna i Euler | — | Pełny niezależny audyt zakończono 25 października | Rachunki są poprawne. Nazwano użyty homeomorfizm, uzasadniono skończony model CW kobordyzmu z rozkładu uchwytowego i dodano konsekwencję dualności Poincarégo $\chi(M)=0$ w nieparzystym wymiarze. Odsyłacze do rozdziałów 8, 21 i 23 oraz strony 155–158 sprawdzono. |
 | Dodatek C: grupy macierzowe | — | Definicje, algebry i wymiary sprawdzone 8 października; tabela czytelna w PDF | Przy dalszej rozbudowie zachować rozróżnienie wymiaru rzeczywistego i zespolonego oraz $Sp(n)$ od $Sp(2n,\mathbb K)$ |
 | Końcowa kontrola całości | — | Częściowo: ujednolicono „Dalszą lekturę” i sprawdzono odsyłacze do źródeł | Mapa książki, oznaczenia, terminologia i pełny przegląd treści nadal wymagają osobnej kontroli; skład, indeks i PDF sprawdzane przy każdym etapie. |
 
