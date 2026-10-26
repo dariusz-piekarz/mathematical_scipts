@@ -1,6 +1,6 @@
 # Aktualny plan i pokrycie przeglądem
 
-Stan: 25 października 2026. Gałąź: `review/rozdzialy-matematyka`.
+Stan: 26 października 2026. Gałąź: `review/rozdzialy-matematyka`.
 Książka ma **38 rozdziałów, pięć części i trzy dodatki**. Numery w nazwach
 plików są historyczne; numer w PDF ustala kolejność importów.
 Skład roboczy podzielono na trzy tomy: rozdziały 1–10, 11–22 oraz
@@ -21,8 +21,8 @@ i organizacja plików w [README.md](README.md).
    cechy Eulera, uchwytów i modeli powierzchni; doprecyzowano
    homeomorfizm, skończony typ CW kobordyzmu i związek z dualnością
    Poincarégo. Pełny skład oraz strony obu dodatków sprawdzono.
-2. Rozdział 34 sprawdzono 25 października. Następny etap to rozdział 35;
-   późniejsze rozdziały 36–38 pozostają poza bieżącą iteracją, a po ich
+2. Rozdział 35 sprawdzono 26 października. Następny etap to rozdział 36;
+   późniejsze rozdziały 37–38 pozostają poza bieżącą iteracją, a po ich
    ukończeniu nastąpi końcowa kontrola mapy książki, oznaczeń i terminologii.
    Wymiary cztery pozostają wykładem informacyjnym z dokładnymi
    hipotezami i źródłami. Zwykła iteracja obejmuje jeden rozdział,
@@ -149,7 +149,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 32. Poincaré w wymiarze trzy (plik 30a) | `30a-poincare-trzy.tex` | Pełny audyt zakończony 20 października | Hipotezy niezapadania i wygasania, chirurgia, odtworzenie topologii oraz Moise sprawdzone względem źródeł; poprawiono tytuł cytowanej pracy i terminologię. Głębokie wyniki Perelmana pozostają zewnętrzne. |
 | 33. Geometrie Thurstona (plik 30b) | `30b-geometrizacja-thurstona.tex` | Pełny audyt zakończony 20 października | Osiem modeli, tabela Seiferta, orbifoldy, rozkład pierwszy i JSJ sprawdzone; dopisano definicję dysku ściskającego i źródło twierdzenia o pętli oraz skorygowano opis dowodu w rozdziale 31. Geometryzacja pozostaje wynikiem zewnętrznym. |
 | 34. Formy przecięcia i uchwyty w wymiarze cztery (plik 31) | `31-freedman-formy-przeciecia.tex` | Pełny audyt rozdziału zakończony 25 października | Sprawdzono definicję i unimodularność formy, parzystość, sygnaturę, pełny rachunek $E_8$, macierz splotu, homologię brzegu i ograniczenie triku Whitneya. Dopisano jawny rachunek $2E_8$, rozróżnienie od macierzy skalarnej $2\cdot E_8$, wpływ orientacji komponentów na macierz oraz granicę między korpusem uchwytowym a zamkniętą rozmaitością. Głębokie domknięcie topologiczne pozostaje wynikiem zewnętrznym Freedmana. |
-| 35. Uchwyty Cassona (plik 32) | `32-uchwyty-cassona.tex` | Przegląd skutków osadzania 7 października; kontrola terminologii 12 października | Immersje z punktami podwójnymi oddzielono od topologicznych zanurzeń; pełne osadzanie i standardowość uchwytu pozostają zewnętrzne |
+| 35. Uchwyty Cassona (plik 32) | `32-uchwyty-cassona.tex` | Pełny audyt rozdziału zakończony 26 października | Sprawdzono model uchwytu z załamaniami, rachunek $\pi_1$ pięter, rozróżnienie $\mu$ i $\widetilde\mu$, hipotezy oraz konkluzje twierdzeń Freedmana--Quinna i Powell--Raya--Teichnera, geometryczną dualność i $\pi_1$-pomijalność. Poprawiono numerację wyników i opis zakresu grup. Powierzchnie z dyskami zamykającymi, uogólnione wieże, twierdzenie o zanurzaniu oraz standardowość uchwytu Cassona pozostają jawnymi wynikami zewnętrznymi. |
 | 36. Klasyfikacja Freedmana (plik 33) | `33-freedman-klasyfikacja.tex` | Przegląd 7 października; kontrola przejścia do sfer i przykładu $2E_8$ 12 października | Rozpisano warunek $\lambda=2\mu+e=0$ dla homotopii regularnej; klasyfikacja, chirurgia i niezmiennik Kirby'ego--Siebenmanna pozostają zewnętrzne |
 | 37. Donaldson (plik 34) | `34-donaldson.tex` | Niezależny przegląd konwencji, przykładów i zastosowań 12 października | Sprawdzono znak $c_2$ oraz energii ASD, zakres diagonalizacji i przykład $2E_8$; analiza moduli i twierdzenie Donaldsona pozostają zewnętrzne |
 | 38. Egzotyczne $\R^4$ (plik 35) | `35-egzotyczne-r4.tex` | Niezależny przegląd wejść i indukcji Gompfa 12 października; uzupełniono przebieg lematów 1.1 i 1.2 | Dowiedziono kierunku od dysków plastra do zanurzenia śladu, obliczono kratę $-E_8$ w rozmaitości otaczającej i rozpisano etapy wygładzania, wież Cassona oraz zastąpienia dysków. Pełne twierdzenia Quinna, Cassona, Freedmana i Gompfa oraz wynik De Michelisa–Freedmana pozostają zewnętrzne. |

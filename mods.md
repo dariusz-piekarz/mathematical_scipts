@@ -1,5 +1,76 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-10-26 — pełny audyt rozdziału 35
+
+### Problem
+
+Rozdział poprawnie przedstawiał ideę wież Cassona, lecz kilka miejsc
+zacierało granicę między rachunkiem skończonych pięter a głębokim
+twierdzeniem o zanurzaniu dysku. Dowód typu homotopijnego uchwytu
+z załamaniami sugerował istnienie relacji od rdzenia uchwytu 2, chociaż
+w diagramie absolutnej rozmaitości widoczne są tylko uchwyty 1. Tekst nie
+rozróżniał niezredukowanej liczby samoprzecięcia $\mu$ od
+$\widetilde\mu$, więc nie wyjaśniał różnicy między homotopią regularną
+a dowolną. W cytacie Freedmana--Quinna brakowało drukowanej numeracji
+wyników, a konkluzja o geometrycznie dualnych sferach nie zapisywała
+jawnie zachowania ich klas homotopii. Sformułowanie o grupach wzrostu
+podwykładniczego mogło też sugerować błędną relację zawierania z klasą
+grup wielostopniowo skończonych lub cyklicznych.
+
+### Rozwiązanie i wpływ
+
+- W `tex/rozdzialy/32-uchwyty-cassona.tex` zapisano bezpośredni rachunek
+  Kirby'ego: uchwyt z $k$ załamaniami, po zapomnieniu obszaru
+  przyczepienia, jest brzegową sumą spójną $k$ kopii $S^1\times D^3$.
+  Krzywa bez kropki oznacza okrąg przyczepienia, a nie dodatkowy uchwyt 2,
+  więc nie daje relacji między wolnymi generatorami.
+- Zdefiniowano osobno $\mu$ w ilorazie przez $g-g^{-1}$ oraz
+  $\widetilde\mu$ po dodatkowym podzieleniu przez $\mathbb Z\cdot1$.
+  Wyjaśniono, dlaczego pierwsza wielkość odpowiada homotopii regularnej,
+  a druga zwykłej klasie homotopii.
+- Zaznaczono, że klasyczny uchwyt Cassona sam wystarcza w konstrukcji
+  jednospójnej. Dla nietrywialnej grupy podstawowej argument
+  Freedmana--Quinna używa również powierzchni z dyskami zamykającymi,
+  uogólnionych wież i kontroli pętli punktów podwójnych.
+- Definicję grupy poly-(finite or cyclic) doprecyzowano do ilorazów
+  skończonych albo nieskończenie cyklicznych. Grupy podwykładniczego
+  wzrostu opisano jako inny znany zakres wyniku, bez twierdzenia, że są
+  szerszą klasą zawierającą wszystkie poprzednie grupy.
+- W twierdzeniu o zanurzaniu zapisano, że geometrycznie dualne sfery
+  $B'_j$ są homotopijne do zadanych $B_j$. Dodano dokładne numery
+  Freedmana--Quinna w wydaniu przeformatowanym i drukowanym oraz wskazano
+  wersję Powell--Raya--Teichnera używającą $\widetilde\mu$ i dobrych grup.
+- Uzasadnienie $\pi_1$-pomijalności dopełnienia powiązano z Uwagą 1.2
+  Powell--Raya--Teichnera. We wniosku z homotopią regularną wyjaśniono,
+  że warunek $\mu(A_i)=0$ dotyczy liczby niezredukowanej.
+- `PRZEGLAD.md` rejestruje zakres audytu i wyniki kontroli, a
+  `PLAN_DZIALANIA.md` oznacza rozdział 35 jako ukończony i ustawia
+  rozdział 36 jako następny etap. Zaktualizowano wszystkie trzy PDF-y,
+  ponieważ pełny skrypt stabilizuje odsyłacze między tomami.
+
+Kompromisem jest pozostawienie konstrukcji powierzchni z dyskami
+zamykającymi, uogólnionych wież, argumentu zbieżności i standardowości
+topologicznej uchwytu Cassona jako nazwanych wyników zewnętrznych. Tekst
+nie sugeruje dzięki temu pełnego dowodu tam, gdzie podaje tylko jego
+geometryczne przygotowanie i precyzyjną konkluzję.
+
+### Weryfikacja
+
+Treść porównano z pracą Freedmana z 1982 roku, przeformatowanym wydaniem
+Freedmana--Quinna, publikacją Powell--Raya--Teichnera z 2025 roku oraz
+korektą Krushkala--Quinna dotyczącą grup podwykładniczego wzrostu.
+Sprawdzono rachunek $\pi_1$ pięter, role $\mu$ i $\widetilde\mu$, numery
+i hipotezy twierdzeń, klasy homotopii sfer dualnych oraz dowód kontroli
+grupy podstawowej dopełnienia.
+
+Pełny `buduj_tomy.ps1` zakończył dwa przebiegi: tomy mają 216, 182 i 173
+strony, a indeksy przyjęły 113, 96 i 119 haseł bez odrzuceń i ostrzeżeń.
+Logi nie zawierają błędów, niezdefiniowanych odsyłaczy, `Overfull` ani
+brakujących znaków. Obejrzano wszystkie siedem stron rozdziału 35
+w finalnym PDF-ie tomu III; tekst, wzory, rysunek i odsyłacze są czytelne.
+Znane ostrzeżenia `Underfull`, zduplikowany cel `page.1` i dwa komunikaty
+tomu I o zmianie specyfikatora rysunku nie dotyczą zmienionego rozdziału.
+
 ## 2026-10-25 — pełny audyt rozdziału 34
 
 ### Problem

@@ -13,6 +13,50 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 35 — uchwyty Cassona i zanurzanie dysków (2026-10-26)
+
+Przeprowadzono pełny audyt matematyczny i redakcyjny rozdziału 35.
+Definicje uchwytu z załamaniami, wieży i uchwytu Cassona porównano
+z pracą Freedmana z 1982 roku. W rachunku pierwszego piętra wyjaśniono,
+że po zapomnieniu obszaru przyczepienia uchwyt z $k$ załamaniami jest
+dyfeomorficzny z brzegową sumą spójną $k$ kopii $S^1\times D^3$.
+Nieozdobiona krzywa diagramu jest wyróżnionym okręgiem przyczepienia,
+a nie dodatkowym uchwytem 2, więc nie narzuca relacji generatorom.
+Sprawdzono następnie indukcyjne zabijanie generatorów między piętrami
+i wniosek $\pi_1(CH)=0$; tekst nadal nie utożsamia tej własności ze
+standardowością otwartego uchwytu 2.
+
+Rozdzielono niezredukowaną liczbę samoprzecięcia $\mu$, zachowywaną przez
+homotopię regularną, od zredukowanej $\widetilde\mu$, zależnej od klasy
+homotopii. Doprecyzowano dzięki temu różnicę między twierdzeniem
+Freedmana--Quinna i współczesną wersją Powell--Raya--Teichnera oraz rolę
+warunku $\mu(A_i)=0$ we wniosku z homotopią regularną. Poprawiono numery
+wyników: w przeformatowanym wydaniu Freedmana--Quinna są to Twierdzenie
+5.2 i Wniosek 5.2.1, a w druku z 1990 roku odpowiednio 5.1A i 5.1B.
+W konkluzji zapisano jawnie, że geometrycznie dualne sfery $B'_j$ można
+wybrać w klasach homotopii $B_j$. Dowód $\pi_1$-pomijalności dopełnienia
+dysków sprawdzono przez meridiany i przekłute sfery dualne.
+
+Wyjaśniono też granicę konstrukcji: klasyczny uchwyt Cassona sam wystarcza
+w przypadku jednospójnym, natomiast dla nietrywialnej grupy podstawowej
+twierdzenie używa powierzchni z dyskami zamykającymi, uogólnionych wież
+i kontroli pętli punktów podwójnych. Grupy o wzroście podwykładniczym
+przedstawiono jako inny ważny znany zakres wyniku, a nie jako nadklasę
+grup wielostopniowo skończonych lub cyklicznych. Konstrukcja powierzchni
+zamykających, zbieżność wież i standardowość topologiczna uchwytu Cassona
+pozostają jawnie nazwanymi wynikami zewnętrznymi.
+
+Pełny `buduj_tomy.ps1` zakończył dwa przebiegi powodzeniem. Tomy mają
+216, 182 i 173 strony; indeksy przyjęły odpowiednio 113, 96 i 119 haseł,
+bez odrzuceń i ostrzeżeń. Logi nie zawierają błędów, niezdefiniowanych
+odsyłaczy, przepełnionych wierszy ani brakujących znaków. Pozostały znane
+komunikaty o powtórzonym celu `page.1`, wcześniejsze `Underfull` poza
+rozdziałem 35 oraz dwa ostrzeżenia tomu I o zmianie specyfikatora rysunku
+z `h` na `ht`. Obejrzano fizyczne strony PDF 131--137 tomu III, czyli cały
+rozdział 35 na stronach drukowanych 130--136. Tekst, wzory, rysunek drzewa,
+odnośniki i podział stron są czytelne; rozdział 36 zaczyna się na fizycznej
+stronie 138.
+
 ## Rozdział 34 — formy przecięcia i uchwyty w wymiarze cztery (2026-10-25)
 
 Przeprowadzono pełny audyt rozdziału 34, bez rozszerzania zakresu na

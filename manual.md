@@ -165,6 +165,60 @@ Projekt nie pobiera danych wejściowych z sieci. MiKTeX musi mieć
 zainstalowane pakiety użyte w `tex/preambula.tex`; w sprawdzonym
 środowisku wszystkie były już dostępne.
 
+## Audyt rozdziału 35 — polecenia wykonane 26 października 2026
+
+Pracę rozpoczęto w katalogu głównym repozytorium i pobrano stan gałęzi
+bez tworzenia merge commita:
+
+```powershell
+Set-Location -LiteralPath 'C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts'
+git pull --ff-only
+```
+
+Polecenie zakończyło się komunikatem `Already up to date.`. Następnie
+przejście do projektu i pełny skład wszystkich tomów wykonano poleceniami:
+
+```powershell
+Set-Location -LiteralPath '.\geometria i topologia różniczkowa'
+powershell -NoProfile -ExecutionPolicy Bypass -File .\buduj_tomy.ps1
+```
+
+Skrypt zakończył dwa przebiegi, ustabilizował odsyłacze, sprawdził indeksy
+i skopiował PDF-y z `build/tomy` do katalogu projektu. Sumy SHA-256 każdej
+pary plików źródłowego i skopiowanego były identyczne. Tomy mają 216, 182
+i 173 strony. `makeindex` przyjął 113, 96 i 119 haseł, odrzucił zero
+i nie zgłosił ostrzeżeń.
+
+Logi skontrolowano poleceniem:
+
+```powershell
+rg -n -i 'undefined|multiply defined|overfull|underfull|missing character|fatal error|emergency stop|LaTeX Warning|Package .* Warning|pdfTeX warning' .\build\tomy -g '*.log'
+```
+
+Nie znaleziono błędów, niezdefiniowanych odsyłaczy, `Overfull` ani
+brakujących znaków. Pozostały znane ostrzeżenia `Underfull` poza
+rozdziałem 35, powtórzony cel `page.1` w każdym tomie oraz dwa ostrzeżenia
+tomu I o zmianie specyfikatora rysunku z `h` na `ht`.
+
+Liczby stron sprawdzono przez `pdfinfo`. Cały rozdział 35 wyodrębniono
+z finalnego tomu III, wyrenderowano i odczytano poleceniami:
+
+```powershell
+New-Item -ItemType Directory -Force .\build\audit-ch35-20261026
+pdfinfo .\geometria_tom1.pdf
+pdfinfo .\geometria_tom2.pdf
+pdfinfo .\geometria_tom3.pdf
+pdftotext -f 131 -l 137 -layout .\geometria_tom3.pdf .\build\audit-ch35-20261026\chapter35.txt
+pdftoppm -f 131 -l 137 -png -r 110 .\geometria_tom3.pdf .\build\audit-ch35-20261026\page
+pdftohtml -f 131 -l 137 -xml -hidden -nodrm .\geometria_tom3.pdf .\build\audit-ch35-20261026\chapter35.xml
+git diff --check
+```
+
+Obejrzano fizyczne strony PDF 131--137, czyli strony drukowane 130--136.
+Strona 138 rozpoczyna rozdział 36. Nie pobierano danych projektu ani nowych
+zależności; źródła matematyczne sprawdzano w publikacjach podlinkowanych
+w rozdziale.
+
 ## Audyt rozdziału 34 — polecenia wykonane 25 października 2026
 
 Pracę wykonano w katalogu:
