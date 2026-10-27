@@ -1,5 +1,211 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-10-27 — podział tomu III na III i IV
+
+### Problem
+
+Dotychczasowy tom III łączył chirurgię w wysokich wymiarach
+z potokiem Ricciego, wymiarem cztery i dodatkami. Utrudniało to
+rozwijanie chirurgii oraz przykładów czterowymiarowych jako
+samodzielnych ciągów dydaktycznych.
+
+### Rozwiązanie i wpływ
+
+Po rozdziale 30, na naturalnej granicy części książki,
+`geometria_tom3.tex` kończy się własnym indeksem. Nowy
+`geometria_tom4.tex` obejmuje rozdziały 31--38, dodatki A--C
+i własny indeks. Numery rozdziałów, kolejność części i etykiety
+pozostają takie jak w dokumencie zbiorczym. Tomy I--IV importują
+pliki `.aux` trzech pozostałych tomów, a odsyłacze wskazują PDF-y
+o właściwych nazwach. Zmieniono mapę na stronach tytułowych,
+`buduj_tomy.ps1`, `README.md` i projektowe `AGENTS.md`.
+`PLAN_DZIALANIA.md` ma osobne priorytety uzupełnień dla III i IV;
+`PRZEGLAD.md` rejestruje decyzję i kontrolę.
+
+Kompromis: cztery osobne PDF-y i indeksy wymagają pełnego składu
+czterech tomów do ustabilizowania odsyłaczy. Tom III zaczyna się
+w środku części III książki, podobnie jak przed podziałem;
+nowy tom IV rozpoczyna całą część IV. Nie przenoszono ani nie
+przepisywano treści rozdziałów z powodu samego podziału.
+
+### Weryfikacja
+
+Skontrolowano statycznie po trzy importy `.aux` w każdym tomie,
+liczbę rozdziałów 10/12/8/8, liczniki `chapter` i `part`, składnię
+PowerShell skryptu oraz `git diff --check`.
+`buduj_tomy.ps1` zakończył dwa przebiegi: tomy I--IV mają
+216, 182, 97 i 80 stron; indeksy przyjęły 113, 96, 26 i 93
+hasła bez odrzuceń. Logi nie wykazują błędów ani brakujących
+odsyłaczy, cztery kopie PDF są identyczne z plikami w `build/tomy`,
+a strony tytułowe zawierają łącza do pozostałych trzech tomów.
+Wybrane strony i indeksy III/IV obejrzano; szczegóły poleceń są
+w `manual.md`, a zakres kontroli w `PRZEGLAD.md`.
+
+## 2026-10-27 — audyt i ujednolicenie skryptu teorii modeli
+
+### Problem
+
+Samodzielny skrypt miał inny krój pisma, marginesy, odstępy,
+kolory odsyłaczy i żywą paginę niż tomy geometrii. Komentarz do
+aksjomatu Q8 mógł sugerować przemienność dodawania w słabej
+arytmetyce $Q$. W lemacie o skończonych odcinkach zapis
+$\overline{n-1}$ nie miał sensu dla $n=0$, mimo późniejszej umowy
+o pustej alternatywie.
+
+### Rozwiązanie i wpływ
+
+W `teoria modeli/teoria modeli.tex` przyjęto Latin Modern, margines
+2,5 cm, odstęp 4 pt między akapitami bez wcięcia, ciemnoniebieskie
+odsyłacze, żywą paginę i odstępy list zgodne z geometrią.
+Komentarz do Q8 zachowuje dokładną kolejność $z+S(x)=y$.
+Lemat zapisuje skończoną alternatywę jako
+$\bigvee_{j<n}(x=\overline j)$, więc przypadek $n=0$ jest
+określony jako alternatywa pusta. Tytuł, numeracja, etykiety i
+struktura `article` pozostały; zapisano nowy PDF.
+
+Kompromis: zmiana składu zwiększyła objętość z 34 do 36 stron.
+Skrypt zachowuje własną, małą preambułę, zamiast zależeć od
+preambuły wielotomowej geometrii. D1--D3, twierdzenia o zupełności
+oraz formalizacja arytmetyki są wykładane w dotychczasowym zakresie.
+
+### Weryfikacja
+
+Przejrzano dowody Gödla I i II, Rossera, Tarskiego, Löba,
+zwartości oraz Löwenheima--Skolema i porównano ich hipotezy
+ze źródłami akademickimi. Nie znaleziono luki wymagającej
+przebudowy tych dowodów. Dwa przebiegi `pdflatex` zakończyły się
+bez błędów i ostrzeżeń; PDF A4 ma 36 stron. Obejrzano strony 1,
+8 i 20, a `git diff --check` przeszedł.
+
+## 2026-10-27 — audyt i ujednolicenie skryptu Banacha--Tarskiego
+
+### Problem
+
+Skrypt miał inny krój nagłówków, marginesy, odstępy akapitów,
+kolor odsyłaczy i styl środowiska „Uwaga” niż tomy geometrii.
+Makro równorozkładu zapisywało $\sim_G$, choć później tekst używał
+$\equiv$ bez indeksu. Schemat końcowy sugerował bezpośrednie
+odwzorowanie sfery na kulę pozbawioną środka zamiast przedłużenia
+rozkładu na promienie.
+
+### Rozwiązanie i wpływ
+
+W `banach_tarski/banach_tarski_przepisany.tex` ustawiono Latin Modern,
+margines 2,5 cm, brak wcięć i odstęp 4 pt, ciemnoniebieskie łącza,
+żywą paginę oraz style twierdzeń zgodne z geometrią. Poprawiono makro
+na $\equiv_G$, schemat kroku stożkowego i mylący zwrot o
+„nieskończonym algorytmie”. Dodano elementarny przykład
+równorozkładu, doprecyzowano opis kawałka z wielu poziomów,
+usunięto nieużywane makra oraz podlinkowano pracę Banacha--Tarskiego
+i katalog książki Wagona. Numeracja twierdzeń i etykiety zostały
+zachowane; w repozytorium zapisano nowy PDF.
+
+Kompromis: nowy skład ma 19 zamiast 18 stron, a projekt nadal jest
+samodzielnym artykułem, bez przejęcia całej preambuły wielotomowej
+książki. Aksjomat wyboru pozostaje jawnie wskazanym wejściem dowodu.
+
+### Weryfikacja
+
+Przejrzano cały dowód od paradoksalnego rozkładu $F_2$ po podwojenie
+kuli i porównano źródła. Dodatkowy rachunek komputerowy potwierdził
+tabelę modulo 3, rozkłady macierzy rzędu jeden oraz niezerowość
+iloczynów dla 13\,120 słów zredukowanych długości co najwyżej osiem;
+nie zastępuje on ogólnego dowodu w tekście. PDF ma 19 stron,
+log składu nie wykazuje ostrzeżeń ani przepełnionych wierszy;
+obejrzano strony 1, 2, 11, 18 i 19. `git diff --check` przeszedł.
+
+## 2026-10-27 — pełny audyt rozdziału 38
+
+### Problem
+
+W ostatnim rozdziale numerowanym przejście od lokalnie płaskich dysków
+do otoczeń $D^2\times D^2$ korzystało z głębokiego twierdzenia bez
+wskazania źródła. Rozpoznanie kraty $-E_8$ pomijało konstrukcję bazy
+i mogło sugerować nieprzywołaną klasyfikację kratek określonych.
+Przy sklejeniu w lemacie 1.2 Gompfa nie były jawne orientacje dwóch
+końców kołnierza.
+
+### Rozwiązanie i wpływ
+
+W `tex/rozdzialy/35-egzotyczne-r4.tex` wskazano twierdzenia 9.6--9.7
+Freedmana--Quinna o topologicznym otoczeniu normalnym, także
+względnie przy brzegu, oraz trywializację nad dyskiem. Podano
+osiem konkretnych wektorów
+generujących $-E_8$, ich iloczyny oraz argument z wyznacznika
+i indeksu. Uzupełniono konwencję orientacji i produktowe pierścienie
+w lemacie Gompfa. Dzięki temu każdy z trzech kroków ma jawne
+uzasadnienie lub precyzyjnie nazwane wejście zewnętrzne.
+
+Kompromis: twierdzenie o otoczeniu normalnym, konstrukcja uchwytów
+Cassona, przeszkody Gompfa i klasyfikacja rodzin egzotycznych
+$\R^4$ przez De Michelisa--Freedmana pozostają wynikami zewnętrznymi.
+Nie zmieniono konstrukcji ani zakresu wniosku rozdziału.
+
+### Weryfikacja
+
+Sprawdzono hipotezy twierdzeń w źródłach Freedmana--Quinna,
+Freedmana, Gompfa i De Michelisa--Freedmana, rachunek formy
+przecięcia, orientacje brzegów oraz odsyłacze do rozdziału 36.
+Końcowy skład tomu IV przeszedł bez błędów i niezdefiniowanych
+odsyłaczy; w PDF odczytano nowe sformułowanie twierdzeń 9.6--9.7,
+bazę $-E_8$ i obejrzano rysunek indukcji na stronie fizycznej 56.
+Szczegółowy zakres kontroli zapisano w `PRZEGLAD.md`.
+
+## 2026-10-27 — pełny audyt rozdziałów 36 i 37
+
+### Problem
+
+Rozdział 36 przypisywał pełną klasyfikację topologiczną bez dostatecznego
+rozróżnienia pierwotnego twierdzenia Freedmana dla rozmaitości gładkich
+poza punktem i wersji Freedmana--Quinna w kategorii TOP. Warunek na
+niezmiennik Kirby'ego--Siebenmanna, zakres twierdzenia o zanurzaniu sfer
+oraz wpływ chirurgii na grupę podstawową wymagały jawniejszych przejść.
+W rozdziale 37 zmiana trywializacji była zapisana globalnie, choć wiązka
+może być nietrywialna; znikanie formy reprezentującej $c_1$ nie dowodziło
+znikania całkowitej klasy. Krótki opis metody Donaldsona pomijał różnicę
+konwencji samodualnej i antysamodualnej oraz dostępny rachunek algebraiczny.
+
+### Rozwiązanie i wpływ
+
+- W `tex/rozdzialy/33-freedman-klasyfikacja.tex` wskazano osobno zakres
+  twierdzenia Freedmana z 1982 roku i pełnej klasyfikacji TOP z §10.1
+  Freedmana--Quinna. Dodano spinową relację
+  $\operatorname{ks}\equiv\sigma/8\pmod2$ i wyjaśniono, że jej
+  konieczność nie zastępuje twierdzenia o istnieniu.
+- Doprecyzowano hipotezy oraz wniosek o homotopii regularnej w twierdzeniu
+  o zanurzaniu sfer. Rachunek van Kampena dla chirurgii na obramowanej
+  sferze z dualną sferą pokazuje zachowanie $\pi_1$. W opisie
+  topologicznego $s$-kobordyzmu dodano warunek dobrej grupy, a w dowodzie
+  wniosku Poincarégo jawnie wybrano orientację.
+- W `tex/rozdzialy/34-donaldson.tex` zapisano zmianę trywializacji nad
+  $U\subset X$, wskazano trywialną wiązkę w przykładzie połączenia
+  płaskiego i uzasadniono całkowite $c_1(E)=0$ przez $\det E$.
+- Wyjaśniono zmianę orientacji między samodualną konwencją oryginału
+  Donaldsona a używaną tu konwencją ASD. Dla punktów redukowalnych
+  rozpisano równanie $1=-c_1(L)^2[X]$ i algebraiczne przejście od
+  $n(Q_X)=b_2(X)$ do bazy diagonalnej. Tytuł wniosku o $E_8$
+  zawężono do jednospójności; niedostępny adres szkicu Donaldsona
+  zastąpiono DOI.
+- `PLAN_DZIALANIA.md` odnotowuje zakończenie rozdziałów 36--38
+  i dalsze priorytety; `PRZEGLAD.md` opisuje zakres audytów.
+  Podział tomów zapisano jako osobny etap powyżej.
+
+Kompromis: klasyfikacja Freedmana, topologiczne zanurzanie sfer,
+$s$-kobordyzm oraz analityczna konstrukcja i orientowalność przestrzeni
+moduli Donaldsona są nadal jawnie oznaczonymi wynikami zewnętrznymi.
+Dopisany rachunek algebraiczny nie jest przedstawiany jako pełny dowód
+diagonalizacji.
+
+### Weryfikacja
+
+Sformułowania porównano z pracą Freedmana z 1982 roku, książką
+Freedmana--Quinna, twierdzeniem Powella--Raya--Teichnera oraz pracą
+i szkicem Donaldsona z 1983 roku. Skontrolowano znaki $c_2$ i energii,
+przykłady $H$, $[1]$, $E_8$, $2E_8$, hipotezy i odsyłacze; szczegóły
+są w `PRZEGLAD.md`. Końcowy tom IV złożono bez błędów i brakujących
+odsyłaczy; obejrzano wybrane strony fizyczne 44--50 rozdziałów 36
+i 37 oraz ich powiązanie z następnym rozdziałem.
+
 ## 2026-10-26 — pełny audyt rozdziału 35
 
 ### Problem

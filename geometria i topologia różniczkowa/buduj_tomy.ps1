@@ -8,7 +8,7 @@ if (-not (Get-Command perl -ErrorAction SilentlyContinue) -and
 }
 
 $buildDir = 'build/tomy'
-$volumes = @('geometria_tom1', 'geometria_tom2', 'geometria_tom3')
+$volumes = @('geometria_tom1', 'geometria_tom2', 'geometria_tom3', 'geometria_tom4')
 New-Item -ItemType Directory -Path $buildDir -Force | Out-Null
 
 function Get-AuxHashes {
@@ -63,4 +63,4 @@ foreach ($volume in $volumes) {
         -Destination "$volume.pdf" -Force
 }
 
-Write-Host 'Three volumes built, indexes checked, PDFs copied.'
+Write-Host 'Four volumes built, indexes checked, PDFs copied.'

@@ -1,7 +1,8 @@
 # Przegląd matematyczny skryptu
 
-Gałąź: `review/rozdzialy-matematyka`. Jedna iteracja obejmuje jeden rozdział.
-Źródło zbiorcze: `geometria_i_topologia_rozniczkowa.tex`; podstawowy skład: trzy tomy `geometria_tom1.tex`, `geometria_tom2.tex` i `geometria_tom3.tex`.
+Gałąź: `review/rozdzialy-matematyka`. Zwykła iteracja obejmuje jeden rozdział;
+autor może wyznaczyć szerszy etap.
+Źródło zbiorcze: `geometria_i_topologia_rozniczkowa.tex`; podstawowy skład: cztery tomy `geometria_tom1.tex`--`geometria_tom4.tex`.
 Rejestr zawiera także uzasadnienia, aby można było niezależnie sprawdzić poprawki.
 Aktualny zakres, kolejka i propozycje są wyłącznie w [planie](PLAN_DZIALANIA.md).
 Poniższe wpisy są chronologiczne: numery rozdziałów, strony i statusy dotyczą
@@ -12,6 +13,131 @@ pliki główne tylko ustalają ich kolejność.
 Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
+
+## Podział tomu III na III i IV (2026-10-27)
+
+Na prośbę autora rozdzielono dawny tom III po rozdziale 30,
+czyli przed częścią o potoku Ricciego. Nowy tom III zawiera
+rozdziały 23--30 o kobordyzmach, chirurgii i sferach Milnora;
+tom IV obejmuje rozdziały 31--38 o wymiarach trzy i cztery,
+dodatki A--C i indeks. Granica zachowuje obie części o niskich
+wymiarach razem i daje miejsce na rozwinięcie chirurgii w III
+oraz przykładów czterowymiarowych w IV. Dokument zbiorczy
+i źródła rozdziałów zachowują dotychczasową kolejność.
+
+Sprawdzono mapę importów: tomy mają odpowiednio 10, 12, 8 i 8
+rozdziałów. Liczniki nowego tomu IV zaczynają od rozdziału 31
+i części IV; oba nowe tomy mają własny indeks. Każdy plik
+główny importuje `.aux` trzech pozostałych tomów przez `xr-hyper`,
+aby etykiety i łącza działały między wszystkimi czterema PDF-ami.
+Plan dalszych uzupełnień dla obu tomów jest wyłącznie w
+`PLAN_DZIALANIA.md`.
+
+Pełny `buduj_tomy.ps1` zakończył się po dwóch przebiegach. PDF-y I--IV
+mają odpowiednio 216, 182, 97 i 80 stron, a indeksy przyjęły
+113, 96, 26 i 93 hasła bez odrzuceń i ostrzeżeń. Sumy SHA-256
+czterech PDF-ów w katalogu projektu są identyczne z wynikami
+w `build/tomy`. Logi nie zawierają błędów, niezdefiniowanych
+odsyłaczy, przepełnionych wierszy ani brakujących znaków.
+Pozostały znane komunikaty `Underfull`, powtórzony cel `page.1`
+we wszystkich tomach i dwa ostrzeżenia o specyfikatorze rysunku
+w tomie I. XML stron tytułowych potwierdził w każdym tomie
+łącza do trzech pozostałych plików PDF; w tekście tomu IV
+sprawdzono także odsyłacze do tomu II. Obejrzano strony
+tytułowe III i IV, indeksy III i IV oraz wybrane strony
+rozdziałów 36--38, w tym rysunek indukcji Gompfa.
+
+## Rozdział 38 — pełny audyt (2026-10-27)
+
+Rozdział 38 jest ostatnim rozdziałem numerowanym. Sprawdzono przejścia
+od dysków plastra do zanurzeń śladów splotów, obie przeszkody Gompfa,
+lematy 1.1 i 1.2 oraz indukcję dającą nieskończenie wiele struktur
+gładkich na topologicznym $\R^4$. Porównano hipotezy i kolejność kroków
+z [oryginalną pracą Gompfa](https://doi.org/10.4310/jdg/1214439566),
+z [Freedmanem](https://www.maths.gla.ac.uk/~mpowell/1982_The%20topology%20of%20four-dimensional%20manifolds.pdf),
+z [Freedmanem--Quinnem, §9.5](https://archive.mpim-bonn.mpg.de/4789/2/FreedmanQuinn-TopologyOf4Manifolds-Reformatted2013.pdf)
+oraz z [De Michelisem--Freedmanem](https://doi.org/10.4310/jdg/1214447810).
+
+W lemacie o dyskach plastra wskazano jawnie, że topologiczne
+otoczenie normalne lokalnie płaskiego dysku, także względnie przy
+brzegu, zapewniają twierdzenia 9.6--9.7 Freedmana--Quinna;
+trywializacja nad $D^2$ daje otoczenie
+$D^2\times D^2$. W obliczeniu przeszkody podano bazę
+$f_i=e_i-e_{i+1}$ dla $1\leq i\leq7$ oraz
+$f_8=e_0+e_6+e_7+e_8$. Po odwróceniu kolejności pierwszych
+siedmiu wektorów macierz Grama jest $-E_8$,
+a wyznacznik $1$ i unimodularność dopełnienia pokazują, że baza
+generuje całe $x^\perp$. Zastępuje to niejawne odwołanie do
+klasyfikacji określonych kratek. W sklejeniu z lematu 1.2
+doprecyzowano odwrócenie orientacji sfer brzegowych i wynikające
+z niego produktowe pierścienie między odpowiadającymi splotami.
+
+Istnienie i właściwości uchwytów Cassona, twierdzenia Freedmana,
+lematy Gompfa i wynik De Michelisa--Freedmana pozostają jawnie
+zewnętrznymi wejściami. Kontrola tekstu obejmuje ich zastosowanie,
+nie nowy dowód tych wyników.
+W końcowym tomie IV rozdział zajmuje drukowane strony 50--56;
+na fizycznej stronie 56 skontrolowano rysunek indukcji,
+a ekstrakcja tekstu potwierdziła nowe sformułowanie źródła
+Freedmana--Quinna i bazę $-E_8$.
+
+## Rozdziały 36–37 — pełny audyt (2026-10-27)
+
+Na prośbę autora wspólnie sprawdzono rozdziały 36 i 37. Wcześniejszy
+przegląd pięciu krótkich rozdziałów z 12 października nie zastępował
+pełnej kontroli obu obecnych wersji. Przed zmianami `git fetch origin`
+i `git pull --ff-only origin review/rozdzialy-matematyka` potwierdziły,
+że czysta gałąź była aktualna.
+
+W rozdziale 36 porównano twierdzenie klasyfikacyjne i jego hipotezy
+z [Freedmanem, twierdzenie 1.5](https://www.maths.gla.ac.uk/~mpowell/1982_The%20topology%20of%20four-dimensional%20manifolds.pdf)
+oraz [Freedmanem--Quinnem, §10.1--10.2](https://archive.mpim-bonn.mpg.de/4789/2/FreedmanQuinn-TopologyOf4Manifolds-Reformatted2013.pdf).
+Oryginalne twierdzenie dotyczy rozmaitości gładkich poza jednym punktem;
+pełna wersja dla zamkniętych jednospójnych rozmaitości TOP pochodzi
+z Freedmana--Quinna. Dopisano spinową relację
+$\operatorname{ks}(X)\equiv\sigma(X)/8\pmod2$ jako konieczność warunku
+dla formy parzystej, odróżniając ją od zewnętrznego istnienia.
+Sprawdzono wnioski dla form $H$, $[1]$, $E_8$ i $E_8\oplus E_8$ oraz
+topologiczny wniosek Poincarégo; w jego dowodzie jawnie wybrano
+orientację sfery homologicznej.
+
+Zakres twierdzenia o zanurzaniu sfer porównano z
+[Powellem--Rayem--Teichnerem, twierdzenie B i uwaga 2.2](https://link.springer.com/article/10.1007/s00029-025-01069-y).
+Zapisano dokładniej, że obramowane sfery można doprowadzić przez
+homotopię regularną do parami rozłącznych lokalnie płaskich zanurzeń
+z geometrycznie dualnymi sferami. Warunek
+$\lambda(A_i,A_i)=2\mu(A_i)+e(A_i)=0$ i obramowanie dualnych sfer
+zapewniają hipotezy użytej wersji. Dopisany rachunek van Kampena
+pokazuje, że chirurgia na sferze z geometryczną dualną sferą zachowuje
+$\pi_1$. Dla użytego w opisie klasyfikacji topologicznego
+$s$-kobordyzmu w wymiarze pięć dopisano założenie dobrej grupy
+podstawowej i [Twierdzenie 7.2 Freedmana--Quinna](https://archive.mpim-bonn.mpg.de/4789/2/FreedmanQuinn-TopologyOf4Manifolds-Reformatted2013.pdf).
+Samo zanurzanie, klasyfikacja i twierdzenie o $s$-kobordyzmie pozostają
+jawnymi wynikami zewnętrznymi.
+
+W rozdziale 37 sprawdzono lokalny model połączenia, równanie ASD,
+rozwinięcie wyznacznika dające znak $c_2$, tożsamość energii oraz
+zastosowania do $E_8$ i $E_8\oplus E_8$. Zmianę trywializacji zapisano
+na otwartym $U\subset X$, a przykład połączenia płaskiego umieszczono
+na wiązce trywialnej. Dla wiązki o grupie $\mathrm{SU}(2)$
+uzasadniono całkowite $c_1(E)=0$ przez trywialność $\det E$,
+nie tylko znikanie formy Cherna--Weila.
+Porównanie z [oryginalną pracą Donaldsona](https://doi.org/10.4310/jdg/1214437665)
+i jego [szkicem metody z 1983 roku](https://doi.org/10.1090/S0273-0979-1983-15090-5)
+wyjaśnia przejście od źródłowej konwencji samodualnej
+$c_2(E)[X]=-1$ na dodatnio określonej rozmaitości do konwencji ASD
+$c_2(E)[X]=1$ po odwróceniu orientacji. Dopisano rachunek klas
+redukcji $E\cong L\oplus L^{-1}$ o kwadracie $-1$ i elementarny
+krok algebraiczny: pary takich klas są ortogonalne, a przy
+zewnętrznym wyniku $n(Q_X)=b_2(X)$ tworzą bazę. Konstrukcja,
+zwartość i orientowalność przestrzeni moduli, równość $n(Q_X)=b_2(X)$
+oraz diagonalizacja Donaldsona pozostają wejściami zewnętrznymi.
+Zawężono też tytuł wniosku o $E_8$ do przypadku jednospójnego,
+zgodnie z cytowaną wersją twierdzenia. Niedostępny adres PDF-u
+szkicu Donaldsona zastąpiono DOI.
+W końcowym tomie IV rozdziały 36 i 37 zajmują odpowiednio
+drukowane strony 43--45 i 46--49; obejrzano ich wybrane strony
+oraz sprawdzono odsyłacze, log i przejście do rozdziału 38.
 
 ## Rozdział 35 — uchwyty Cassona i zanurzanie dysków (2026-10-26)
 

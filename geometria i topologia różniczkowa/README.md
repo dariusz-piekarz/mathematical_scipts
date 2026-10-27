@@ -1,7 +1,8 @@
 # Geometria i topologia różniczkowa
 
 Polski skrypt z geometrii i topologii różniczkowej. Codzienny skład obejmuje
-trzy tomy: `geometria_tom1.pdf`, `geometria_tom2.pdf` i `geometria_tom3.pdf`.
+cztery tomy: `geometria_tom1.pdf`, `geometria_tom2.pdf`,
+`geometria_tom3.pdf` i `geometria_tom4.pdf`.
 Dotychczasowy dokument zbiorczy `geometria_i_topologia_rozniczkowa.tex`
 pozostaje dostępny do okazjonalnego składu całej książki.
 
@@ -11,8 +12,9 @@ pozostaje dostępny do okazjonalnego składu całej książki.
 geometria_i_topologia_rozniczkowa.tex   kolejność części i początek/koniec dokumentu
 geometria_tom1.tex                    tom I: rozdziały 1–10
 geometria_tom2.tex                    tom II: rozdziały 11–22
-geometria_tom3.tex                    tom III: rozdziały 23–38 i dodatki
-buduj_tomy.ps1                        pełny skład trzech tomów i indeksów
+geometria_tom3.tex                    tom III: rozdziały 23–30
+geometria_tom4.tex                    tom IV: rozdziały 31–38 i dodatki
+buduj_tomy.ps1                        pełny skład czterech tomów i indeksów
 tex/
   preambula.tex                      pakiety, makra, kolory, liczniki i nagłówki
   wstep.tex                          spis treści, mapa książki i oznaczenia
@@ -39,23 +41,25 @@ tex/
 build/                               ignorowane wyniki pomocnicze
 ```
 
-Edytuj treść w pliku właściwego rozdziału. Wszystkie części należą do
-jednego dokumentu i dzielą makra, liczniki oraz etykiety. Numer rozdziału
-wynika z kolejności w pliku głównym; prefiks nazwy pliku pomaga go odnaleźć.
+Edytuj treść w pliku właściwego rozdziału. Cztery tomy korzystają z jednej
+preambuły, a dokument zbiorczy łączy je w tej samej kolejności. Numer
+rozdziału wynika z kolejności importów i ustawienia licznika w pliku
+głównym tomu; prefiks nazwy pliku pomaga go odnaleźć.
 Używamy `\input`, aby podział nie wprowadzał dodatkowych przełamań stron.
 Etykiet nie trzeba zmieniać przy przenoszeniu treści; ich nazwy muszą być
 unikalne w całej książce. Nowy rozdział wymaga dodania pliku i odpowiedniego
-`\input` w pliku głównym. Rysunki TikZ pozostają przy omawiającym je tekście.
+`\input` w pliku głównym tomu oraz dokumencie zbiorczym. Rysunki TikZ
+pozostają przy omawiającym je tekście.
 
 Dokument zbiorczy obejmuje 38 rozdziałów w pięciu częściach
 i trzy dodatki. Rozdział o Donaldsonie poprzedza rozdział o egzotycznych
 strukturach na $\R^4$; oba są na liście importów.
-Trzy tomy zachowują numery rozdziałów i etykiety dokumentu zbiorczego.
+Cztery tomy zachowują numery rozdziałów i etykiety dokumentu zbiorczego.
 Tomy czytają pliki `.aux` pozostałych tomów przez `xr-hyper`; odsyłacze
 między tomami prowadzą do PDF-ów położonych w tym samym katalogu.
-Każdy tom ma własny spis treści i indeks. Dodatki znajdują się w tomie III.
+Każdy tom ma własny spis treści i indeks. Dodatki znajdują się w tomie IV.
 Prefiksy nazw istniejących plików są historyczne; numer rozdziału
-w składzie wyznacza wyłącznie kolejność `\input` w pliku głównym.
+w składzie wyznacza kolejność `\input` wraz z ustawieniem licznika.
 
 ## Kompilacja
 
@@ -71,11 +75,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\buduj_tomy.ps1
 ```
 
 Skrypt składa tomy w `build/tomy`, powtarza przebiegi do ustabilizowania
-odsyłaczy, sprawdza logi i indeksy, a następnie kopiuje trzy PDF-y do
+odsyłaczy, sprawdza logi i indeksy, a następnie kopiuje cztery PDF-y do
 katalogu głównego. Po zmianie jednego rozdziału można doraźnie złożyć
 tylko jego tom poleceniem `latexmk -pdf -interaction=nonstopmode
 -halt-on-error -file-line-error -outdir=build/tomy geometria_tomN.tex`.
-Przed publikacją trzech tomów uruchom jednak cały skrypt, aby odsyłacze
+Przed publikacją czterech tomów uruchom jednak cały skrypt, aby odsyłacze
 w pozostałych PDF-ach otrzymały aktualne numery i strony.
 
 Okazjonalny pełny skład dokumentu zbiorczego:
