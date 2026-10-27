@@ -441,6 +441,63 @@ z początku sekcji geometrii. Potem przejdź do katalogu projektu,
 uruchom `buduj_tomy.ps1` z bloku powyżej i sprawdź logi oraz
 indeksy. Instalacji i pobierania nie wykonywano w tej iteracji.
 
+## Śledzony przykład przez rozdziały 26–28 — 27 października 2026
+
+Pracę prowadzono na gałęzi `review/rozdzialy-matematyka`.
+W katalogu głównym repozytorium wykonano:
+
+```powershell
+git status --short --branch
+git pull --ff-only
+```
+
+Drzewo było czyste, a gałąź aktualna. Nie pobierano danych ani
+nie instalowano zależności. Wymagane narzędzia pozostają jak
+w sekcji geometrii: MiKTeX 25.12, `latexmk` 4.88, `makeindex`
+z MiKTeX 25.12, Perl z Git for Windows oraz `pdfinfo`,
+`pdftohtml`, `pdftoppm` z pakietu Poppler w MiKTeX.
+Katalog roboczy składu to
+`C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts\geometria i topologia różniczkowa`;
+ustawiono go parametrem `workdir` wykonania.
+
+### Polecenia wykonane
+
+Po zmianach w `tex/rozdzialy/22-chirurgia-geometryczna.tex`,
+`23-przeszkoda-chirurgiczna.tex` i `24-ciag-chirurgii.tex`
+uruchomiono pełny skład:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\buduj_tomy.ps1
+```
+
+Po niezależnym przeglądzie doprecyzowano wybór danych normalnych
+i ponowiono skład tym samym poleceniem. Dokładne polecenia kontroli
+liczby stron, indeksów, logów, łączy i sum SHA-256 znajdują się
+w sekcji „Uzupełnienie rozdziału 28 tomu III” powyżej; po ostatnim
+składzie wykonano ten sam blok kontroli. Ostatni skład zakończył się
+po dwóch przebiegach: tomy I–IV mają 216, 182, 99 i 80 stron.
+Indeksy przyjęły odpowiednio 113, 96, 28 i 93 wpisy, odrzuciły zero.
+Kontrola logów, trzech łączy do innych tomów na każdej stronie
+tytułowej i sum SHA-256 kopii PDF zakończyła się bez błędów.
+Wizualnie sprawdzono strony 43 i 51 tomu III. Po dostrzeżeniu
+urwanego początku przykładu w rozdziale 28 dodano przed nim
+`\clearpage` i wykonano opisany wyżej pełny skład oraz blok kontroli
+ponownie. Strony PDF 77–79 wyrenderowano poleceniem:
+
+```powershell
+pdftoppm -f 77 -l 79 -scale-to 1400 -png geometria_tom3.pdf "$env:TEMP\geometry-example-final"
+```
+
+Na stronie PDF 79 przykład 28.5.2 zaczyna się od góry; tekst,
+wzory i dalsze wyniki są czytelne, bez ucięć i kolizji.
+
+### Instrukcja przygotowana do samodzielnego wykonania
+
+Na innym stanowisku wykonaj instrukcję instalacji z początku
+sekcji geometrii, przejdź do wskazanego katalogu i uruchom
+`buduj_tomy.ps1` oraz blok kontroli z poprzedniej sekcji.
+Instalacji i pobierania nie wykonywano w tym etapie.
+
 ## Skrypt Banacha--Tarskiego — polecenia wykonane 27 października 2026
 
 Katalog roboczy: `C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts\banach_tarski`.

@@ -1,5 +1,52 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-10-27 — wspólny przykład chirurgii w rozdziałach 26–28
+
+### Problem
+
+Rozdział 26 pokazywał przejście od sfery do produktu, rozdział 27
+liczył hiperboliczne jądro, a rozdział 28 podawał ciąg chirurgii.
+Brakowało jednego przypadku, w którym czytelnik widzi te same dane
+normalne, uchwyt, przeszkodę i strukturę w kolejnych miejscach.
+Dotychczasowe zdanie o $\mu=0$ mogło też sugerować, że sama
+trywialność wiązek normalnych wyznacza kwadratową część przeszkody.
+
+### Rozwiązanie i wpływ
+
+W `22-chirurgia-geometryczna.tex` zapisano standardowy ślad
+$S^6\to S^3\times S^3$ z uchwytem indeksu trzy i dualnym uchwytem
+indeksu cztery. Wybrano dane normalne lokalnej stabilizacji zgodne
+z produktowymi obramowaniami obu sfer czynnikowych.
+W `23-przeszkoda-chirurgiczna.tex` połączono istniejący przykład
+hiperbolicznego jądra z tym śladem i doprecyzowano, dlaczego
+$\mu(A)=\mu(B)=0$ dla wybranego obramowania. Rachunku macierzy
+nie powielono. W `24-ciag-chirurgii.tex` policzono Arfa, zerową
+klasę w $L_6^s(\Z)$ i normalny niezmiennik $a=0$; zaznaczono,
+że mapa z niezerowym jądrem nie jest jeszcze elementem zbioru
+struktur, a nad $a$ leży tylko struktura standardowej sfery.
+
+Kompromis: przykład reprezentuje punkt bazowy ciągu i nie służy
+klasyfikacji wszystkich struktur nad $S^6$. Podstawy geometrii
+uchwytów, standardowej pary kwadratowej i dokładności pozostają
+jawnie cytowanymi wynikami Walla.
+Po pierwszym składzie nagłówek nowego przykładu w rozdziale 28
+zostawał u dołu strony. Dodano `\clearpage` przed przykładem;
+kosztem niewielkiej wolnej przestrzeni na poprzedniej stronie
+cały przykład zaczyna się teraz od góry następnej strony.
+
+### Weryfikacja
+
+Sprawdzono zgodność wymiarów uchwytów, położenie sfery dualnej,
+wybór danych normalnych i wzór $q(\bar x[A]+\bar y[B])=\bar x\bar y$
+z [§§1, 5 i 10 Walla](https://webhomes.maths.ed.ac.uk/~v1ranick/books/scm.pdf)
+oraz z wcześniejszymi przykładami w rozdziałach 26–27.
+Pełny skład czterech tomów zakończył się po dwóch przebiegach:
+216, 182, 99 i 80 stron. Indeksy przyjęły 113, 96, 28 i 93 wpisy
+bez odrzuconych. Kontrola logów, łączy do pozostałych tomów
+i sum SHA-256 kopii PDF przeszła. Strony 43 i 51 tomu III sprawdzono
+po korekcie danych normalnych, a strony 77–79 po ostatnim składzie,
+bez uwag.
+
 ## 2026-10-27 — uzupełnienie ciągu chirurgii w tomie III
 
 ### Problem

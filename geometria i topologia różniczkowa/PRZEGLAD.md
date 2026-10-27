@@ -14,6 +14,48 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdziały 26–28 — jeden śledzony przykład chirurgii (2026-10-27)
+
+Przeprowadzono istniejący przykład $S^6\to S^3\times S^3$
+przez trzy rozdziały, bez powtarzania rachunku form z rozdziału 27.
+W rozdziale 26 zapisano ślad $W^7$ standardowo obramowanej
+chirurgii na $S^2\subset S^6$: od dołu ma uchwyt indeksu trzy,
+od góry dualny uchwyt indeksu cztery na
+$B=\{0\}\times S^3\subset S^3\times S^3$.
+Górna mapa normalna $(f,b)$ stopnia jeden korzysta z wybranego
+standardowego przedłużenia danych normalnych. Rozdział 27
+odsyła do tego śladu w istniejącym przykładzie pary hiperbolicznej.
+Ponieważ kwadratowa część przeszkody zależy od zgodności obramowań
+z danymi normalnymi, doprecyzowano także uzasadnienie
+$\mu(A)=\mu(B)=0$ w przykładzie i dowodzie lematu lokalnej
+stabilizacji. W rozdziale 28 jądro $K_3(f)\cong\Z^2$ ma
+$q(\bar x[A]+\bar y[B])=\bar x\bar y$, zatem Arf i klasa
+w $L_6^s(\Z)$ są zerowe. Normalny ślad od identyczności daje
+ponadto $a=[f,b]=0\in[S^6,G/O]$. W ciągu chirurgii nad $a$
+leży standardowa struktura; $L_7^s(\Z)=0$ czyni to włókno
+jednoelementowym. Sama mapa $f$ nie jest strukturą, ponieważ
+ma niezerowe $H_3$ w jądrze.
+
+Źródłowe wejścia geometryczne i algebraiczne porównano z
+[§§1, 5 i 10 Walla](https://webhomes.maths.ed.ac.uk/~v1ranick/books/scm.pdf),
+w szczególności z twierdzeniem 5.2, lematem 5.5,
+twierdzeniem 5.6 i twierdzeniem 10.8. Jawne rozróżnienie
+wyboru $b$ jest konieczne: sam ślad bez wybranych danych
+nie wyznacza wartości $\mu$ w nazwanej bazie.
+
+Po ostatniej korekcie pełny `buduj_tomy.ps1` zakończył się poprawnie
+po dwóch przebiegach. PDF-y tomów I–IV mają odpowiednio
+216, 182, 99 i 80 stron; indeksy przyjęły 113, 96, 28 i 93
+wpisy, bez odrzuconych. Logi nie zgłosiły niezdefiniowanych odsyłaczy,
+przepełnionych wierszy ani brakujących znaków. Każda strona tytułowa
+ma trzy łącza do pozostałych tomów, a kopie PDF w katalogu projektu
+są identyczne z wynikami składu według SHA-256. Strony 43 i 51
+tomu III sprawdzono po korekcie danych normalnych, a strony 77–79
+po ostatnim składzie: akapity oraz wzory są czytelne.
+Przykład 28.5.2 zaczyna się na stronie PDF 79;
+po pierwszym składzie jego nagłówek zostawał u dołu poprzedniej strony,
+więc w źródle dodano podział strony przed przykładem i ponowiono skład.
+
 ## Rozdział 28 — konstrukcyjne objaśnienie ciągu chirurgii (2026-10-27)
 
 Po potwierdzeniu przez autora kolejności prac dla tomu III uzupełniono
