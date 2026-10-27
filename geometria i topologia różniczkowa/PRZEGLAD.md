@@ -14,6 +14,67 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 28 — konstrukcyjne objaśnienie ciągu chirurgii (2026-10-27)
+
+Po potwierdzeniu przez autora kolejności prac dla tomu III uzupełniono
+`tex/rozdzialy/24-ciag-chirurgii.tex`. Diagram podniesienia do $BO$
+objaśnia klasę $[X,G/O]$ względem wiązki normalnej $X$.
+W czterech krokach rozpisano dane wejściowe i wynik każdej strzałki
+ciągu: normalne dane cylindra, działanie $L_{n+1}^s$, przejście
+ze struktury do klasy normalnej i przeszkodę $L_n^s$.
+Osobny diagram pokazuje ślad $W^{n+1}\to X\times I$ z dolnym i górnym
+brzegiem. Doprecyzowano, że przy porównaniu dwóch struktur
+skleja się odwrócony ślad działania z danym normalnym kobordyzmem;
+ich przeszkody $-\alpha$ i $\alpha$ znoszą się przed zastosowaniem
+twierdzenia o $s$-kobordyzmie. Stabilizator bazy pozostaje
+wnioskiem z twierdzenia Walla, a nie z samego rysunku.
+Usunięto dawny abstrakcyjny schemat czterech obiektów,
+powielający teraz listę strzałek; podczas składu wypadał na
+osobnej, niemal pustej stronie. Wersja względna zaczyna się
+na nowej stronie po geometrycznym diagramie.
+
+Wersja z ustalonym brzegiem ma jawne hipotezy: zwarta spójna
+gładka $X^n$ z $n\geq5$, ustalona struktura i identyfikacja brzegu,
+proste równoważności par, produktowe dane na kołnierzu,
+względny stopień jeden ze współczynnikami lokalnymi i
+$\pi=\pi_1(X)$ z charakterem orientacji. Dane normalne opisuje
+$[X/\partial X,G/O]$, a dane cylindra
+$[\Sigma(X/\partial X),G/O]$. Nie dodano sztucznego założenia
+o izomorfizmie $\pi_1(\partial X)\to\pi_1(X)$; dla wielu składowych
+brzegu chodzi o ich osobne inkluzje. Przykład $D^n$ pokazuje
+różnicę między klasami względnymi i bez warunku brzegowego.
+Po niezależnym przeglądzie doprecyzowano, że odwzorowania do $G/O$
+wysyłają cały brzeg w punkt bazowy, a homotopie są ustalone na brzegu.
+Gładką wersję powiązano z
+[§10 Walla](https://webhomes.maths.ed.ac.uk/~v1ranick/books/scm.pdf):
+10.2 i 10.6 dają normalne niezmienniki, 10.3 kryterium realizacji,
+10.4--10.5 działanie i orbity, 10.7 lewą strzałkę, a gładki
+odpowiednik 10.8 dokładność. Wydrukowany wzór 10.8 używa $G/PL$;
+wariant $G/O$ wymaga gładkiej identyfikacji z 10.6.
+
+Stwierdzenie $\mathcal S^s_{\mathrm{DIFF}}(S^7)\cong\Theta_7$
+uzasadniono przez orientację indukowaną przez równoważność,
+jej prostotę dla grupy podstawowej $1$ oraz jednoznaczność
+klasy homotopii mapy stopnia $+1$ do $S^7$.
+Liczbę $28$ podaje wcześniejsze Twierdzenie~30.4.2, oparte na
+Kervairze--Milnorze i Eellsie--Kuiperze; rozdział 28
+nie oblicza obrazu $\theta_8$ i nie przypisuje tej liczby
+samemu ciągowi. Zmienione miejsca porównano niezależnie
+ze źródłem Walla i rozdziałem 30; nie ponawiano audytu
+pozostałych części rozdziału 28.
+
+Po tej korekcie `buduj_tomy.ps1` zakończył się po dwóch przebiegach.
+PDF-y I--IV mają odpowiednio 216, 182, 99 i 80 stron;
+indeksy przyjęły 113, 96, 28 i 93 hasła bez odrzuceń.
+Logi nie zawierają niezdefiniowanych odsyłaczy, przepełnionych
+wierszy ani brakujących znaków. Kontrola stron tytułowych
+potwierdziła w każdym tomie łącza do trzech pozostałych PDF-ów;
+sumy SHA-256 plików w katalogu projektu i `build/tomy` są zgodne.
+Obejrzano strony PDF 75--79 tomu III: diagramy na stronach 75 i 77,
+ciąg względny na stronie 78 oraz układ końca rozdziału na 79.
+Po poprawie zdania o brzegu paginacja pozostała taka sama;
+etykiety, strzałki i wzór mieszczą się w polu strony.
+
 ## Podział tomu III na III i IV (2026-10-27)
 
 Na prośbę autora rozdzielono dawny tom III po rozdziale 30,

@@ -1,5 +1,54 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-10-27 — uzupełnienie ciągu chirurgii w tomie III
+
+### Problem
+
+Rozdział 28 podawał poprawny ciąg chirurgii i wyjaśnienie dokładności,
+ale pozostawiał czytelnikowi przejście od normalnej mapy do każdej
+strzałki. Wersja z ustalonym brzegiem i dokładne połączenie ze
+strukturami gładkimi $S^7$ były tylko zaplanowane.
+
+### Rozwiązanie i wpływ
+
+W `tex/rozdzialy/24-ciag-chirurgii.tex` dodano diagram podniesienia
+normalnej fibracji do $BO$, konstrukcyjne opisy czterech strzałek,
+diagram śladu nad $X\times I$ i doprecyzowanie sklejania śladów
+o przeciwnych przeszkodach. Nowa sekcja podaje ciąg względny dla
+zwartego gładkiego $X^n$, $n\geq5$, z ustalonym brzegiem, a przykład
+$D^n$ pokazuje rolę ilorazu $X/\partial X$. Związek
+$\mathcal S^s_{\mathrm{DIFF}}(S^7)\cong\Theta_7$ uzasadniono
+bez sugerowania, że liczba $28$ wynika z obliczenia tego ciągu.
+Po niezależnym przeglądzie doprecyzowano, że mapy względne wysyłają
+brzeg w punkt bazowy i są rozpatrywane z homotopiami ustalonymi
+na brzegu; sama stałość mapy na brzegu byłaby za słabym warunkiem.
+Stary abstrakcyjny rysunek powielał nowy opis i po rozbudowie
+przenosił się na osobną niemal pustą stronę, więc go usunięto;
+sekcja względna zaczyna się teraz od nowej strony.
+`PLAN_DZIALANIA.md` zapisuje potwierdzoną przez autora kolejność
+dalszych prac tomu III, a `PRZEGLAD.md` rozdziela własne wyjaśnienia
+od wyników Walla i klasyfikacji sfer.
+
+Kompromis: rozdział jest dłuższy, a realizacja działania,
+identyfikacja danych normalnych i dokładność pozostają
+jawnie cytowanymi twierdzeniami zewnętrznymi. Nie zmieniono
+rachunków rozdziału 27 ani klasyfikacji rozdziału 30.
+
+### Weryfikacja
+
+Zmieniony fragment porównano z §10 Walla i z rozdziałem 30.
+Sprawdzono hipotezy wymiarowe, charakter orientacji, warunek
+brzegowy, rozróżnienie grupy i zbioru struktur oraz to,
+że prawa strzałka $\theta_n$ nie musi być homomorfizmem.
+Po ostatniej korekcie `buduj_tomy.ps1` zbudował cztery tomy w dwóch
+przebiegach (216, 182, 99 i 80 stron). Indeksy przyjęły odpowiednio
+113, 96, 28 i 93 hasła bez odrzuceń. Sprawdzenie logów nie wykazało
+niezdefiniowanych odsyłaczy, przepełnionych wierszy ani brakujących
+znaków. Wszystkie strony tytułowe mają po trzy łącza do pozostałych
+PDF-ów, a sumy SHA-256 kopii w katalogu projektu i `build/tomy`
+są zgodne. Obejrzano strony PDF 75--79 tomu III; diagramy i ciąg
+względny są czytelne, bez ucięć i kolizji etykiet.
+
 ## 2026-10-27 — podział tomu III na III i IV
 
 ### Problem

@@ -104,7 +104,11 @@ głębokiego wyniku użytego z zewnątrz nie nazywać własnym pełnym dowodem.
 
 ## Plan uzupełnień po podziale na tomy III i IV
 
-Kolejność poniżej jest priorytetem nowych prac. Każdą zmianę prowadzić
+Plan dla tomu III potwierdzono z autorem 27 października 2026.
+Kolejność: najpierw konstrukcyjne uzupełnienie rozdziału 28,
+następnie jeden przykład prowadzony przez rozdziały 26–28,
+na koniec zbiorcza mapa hipotez.
+Kolejność poniżej zapisuje etapy i priorytet pozostałych prac. Każdą zmianę prowadzić
 w odpowiadającym jej rozdziale, z definicją, intuicją, obliczalnym
 przykładem i dokładnym źródłem dla wyników głębokich. Po każdym
 etapie sprawdzić skład czterech tomów, indeksy, odsyłacze i strony
@@ -112,7 +116,7 @@ ze zmienionymi rysunkami.
 
 ### Tom III — kobordyzmy i chirurgia, rozdziały 23–30
 
-1. **Rozdział 28 (`24-ciag-chirurgii.tex`) — ciąg chirurgii.**
+1. **Rozdział 28 (`24-ciag-chirurgii.tex`) — ciąg chirurgii; etap zakończony 27 października.**
    Rozpisać konstrukcyjne znaczenie kolejnych strzałek od danych
    normalnych i $[X,G/O]$ przez przeszkodę $\theta$ oraz działanie
    $L_{n+1}$ na zbiorze struktur. Diagram kobordyzmu nad $X\times I$
@@ -194,7 +198,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 25. Torsja i s-kobordyzm | `21-torsja-s-kobordyzm.tex` | Pełny audyt i uzupełnienia zakończone 11 października; PDF 505 stron | Poprawiono bazy i konwencje macierzowe, dowód niezależności kontrakcji, zakres lematu Whitneya, obramowania i dualność w realizacji torsji. Strony 390–401, oba schematy, odsyłacze i indeks sprawdzone; głębokie wejścia zewnętrzne wskazano dokładnie. |
 | 26. Chirurgia geometryczna | `22-chirurgia-geometryczna.tex` | Pełny audyt zakończony 8 października; treść bez poprawek | Sprawdzone obramowania, ślad i uchwyt dualny, homologia, $\pi_1$, forma jądra i rysunki |
 | 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Pełny audyt także nowego tekstu zakończony 20 października względem §§1–2, 5–6 Walla | Sprawdzono parzyste i nieparzyste kryterium, bazy i torsję nad $\Z[\pi]$, $SU/RU$, ruchy $T1$--$T4$, wymiar pięć i chirurgię środkową. Poprawiono stronę $\lambda$ w dualności, terminologię immersji i hipotezy lematu 5.7. Głębokie lematy Walla, wersja $h$ i relacja formacji pozostają jawnymi wynikami zewnętrznymi. |
-| 28. Ciąg chirurgii | `24-ciag-chirurgii.tex` | Pełny audyt zakończony 20 października względem §10 oraz twierdzeń 5.8 i 6.5 Walla | Sprawdzono dokładność, działanie $L_{n+1}^s$, zakres $n\geq5$, lewą strzałkę i przejście do $s$-kobordyzmu; doprecyzowano racjonalne jądro w rachunku sygnatury. Bijekcja z $[X,G/O]$ i działanie grupy $L$ pozostają jawnymi wynikami Walla. |
+| 28. Ciąg chirurgii | `24-ciag-chirurgii.tex` | Pełny audyt wcześniejszej treści zakończony 20 października względem §10 oraz twierdzeń 5.8 i 6.5 Walla; nowe uzupełnienie sprawdzono osobno 27 października | Sprawdzono dokładność, działanie $L_{n+1}^s$, zakres $n\geq5$, lewą strzałkę i przejście do $s$-kobordyzmu; doprecyzowano racjonalne jądro w rachunku sygnatury. W nowym fragmencie sprawdzono opisy strzałek, ślad nad cylindrem, warunek brzegowy i przykład $S^7$; nie ponawiano audytu reszty rozdziału. Bijekcja z $[X,G/O]$ i działanie grupy $L$ pozostają jawnymi wynikami Walla. |
 | 29. Poincaré | `25-poincare.tex` | Pełny audyt rozdziału zakończony 20 października; twierdzenia 2.2 i 2.3 Bardena porównano z oryginałem | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm; lematy 3.1 i 4.1–4.4, indukcja, modele $M_k,X_j$, formy wiązania i przykłady spin/niespin. Doprecyzowano źródło triangulacji, mieszaną parę torsyjną, hipotezy lematu 4.4 i orientację przy wniosku pięciowymiarowym. Głębokie wejścia pozostają zewnętrzne. |
 | 30. Sfery Milnora | `26-sfery-milnora.tex` | Audyt wcześniejszej treści zakończony 19 października; klasyfikację dopisano 20 października | Sprawdzono sklejanie, klasy $e,p_1$, ciąg Mayera--Vietorisa, kryterium Whiteheada, obie sygnatury, $\lambda$, $\mu$, przykłady i rysunek. Nowy rachunek klasyfikuje 16 typów wiązkowych oraz 28 klas $\Theta_7$ (15 bez orientacji) przez sumy $M_3$. Zupełność $\mu$, $\Theta_7\cong\Z/28$, wzór Hirzebrucha i indeks Diraca pozostają jawnymi wejściami zewnętrznymi. |
 | 31. Potok Ricciego (plik 30) | `30-potok-ricciego.tex` | Pełny audyt zakończony 20 października; rysunek 31.1 sprawdzony na stronie PDF 100 | Rachunki skalowania, ewolucji, zasady maksimum i DeTurcka spójne; istnienie i jednoznaczność PDE pozostają jawnym wejściem analitycznym. |

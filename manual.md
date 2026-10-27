@@ -370,6 +370,77 @@ w tym etapie. Do powtórzenia na nowym stanowisku zastosuj tamte
 instrukcje, przejdź do katalogu geometrii i uruchom wskazane
 wyżej polecenie `buduj_tomy.ps1`.
 
+## Uzupełnienie rozdziału 28 tomu III — 27 października 2026
+
+Pracę prowadzono na gałęzi `review/rozdzialy-matematyka`.
+W katalogu głównym repozytorium wykonano `git status --short --branch`
+i `git pull --ff-only`; gałąź była aktualna i czysta.
+Nie pobierano danych ani nowych zależności. Obowiązuje środowisko
+opisane na początku sekcji geometrii: MiKTeX 25.12, `latexmk` 4.88,
+`makeindex` z MiKTeX 25.12 i Perl z Git for Windows.
+Katalog roboczy składu to
+`C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts\geometria i topologia różniczkowa`.
+Polecenie wejścia do niego podano w pierwszej sekcji tego pliku;
+w tej iteracji katalog ustawiono parametrem `workdir` wykonania.
+
+### Polecenia wykonane
+
+Po edycji `tex/rozdzialy/24-ciag-chirurgii.tex` uruchomiono
+doraźny skład tomu III:
+
+```powershell
+$perlGit = 'C:\Program Files\Git\usr\bin'
+if (-not (Get-Command perl -ErrorAction SilentlyContinue) -and
+    (Test-Path -LiteralPath (Join-Path $perlGit 'perl.exe'))) {
+  $env:PATH = "$perlGit;$env:PATH"
+}
+latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=build/tomy geometria_tom3.tex
+```
+
+Pierwszy przebieg wykrył błędną składnię etykiety w nowym diagramie
+`tikzcd` i zatrzymał `pdflatex` na tej linii. Po poprawie źródła
+`latexmk` ponowił skład, zakończył się kodem 0 i zbudował tom III.
+Indeks przyjął 28 haseł bez odrzuceń. Doraźny PDF miał 99 stron;
+ostateczny wynik zapisuje pełny skład poniżej.
+
+Pełny skład wszystkich tomów uruchomiono w tym samym katalogu:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\buduj_tomy.ps1
+```
+
+Po doprecyzowaniu warunku na brzegu ponowiono pełny skład tym samym
+poleceniem. Ostatni przebieg zakończył się kodem 0 po dwóch rundach.
+PDF-y tomów I--IV mają odpowiednio 216, 182, 99 i 80 stron.
+Indeksy przyjęły 113, 96, 28 i 93 hasła bez odrzuceń.
+W katalogu geometrii wykonano również następującą kontrolę:
+
+```powershell
+1..4 | ForEach-Object {
+  $v = "geometria_tom$_"
+  $pages = (pdfinfo "$v.pdf" | Select-String '^Pages:').Line.Trim()
+  $index = (Select-String -Path "build/tomy/$v.ilg" -Pattern 'entries accepted, 0 rejected').Line.Trim()
+  $bad = @(Select-String -Path "build/tomy/$v.log" -Pattern 'LaTeX Warning: Reference .* undefined|There were undefined references|Label\(s\) may have changed|Overfull \\hbox|Missing character')
+  $links = @(pdftohtml -q -xml -f 1 -l 1 -stdout "$v.pdf" | Select-String 'href="geometria_tom[1-4]\.pdf"' -AllMatches | ForEach-Object { $_.Matches.Value } | Sort-Object -Unique)
+  $same = (Get-FileHash "$v.pdf" -Algorithm SHA256).Hash -eq (Get-FileHash "build/tomy/$v.pdf" -Algorithm SHA256).Hash
+  if ($bad.Count -ne 0 -or $links.Count -ne 3 -or -not $same) { throw "Kontrola $v nie powiodła się" }
+  "$v`: $pages; indeks OK; 3 łącza; SHA-256 zgodna"
+}
+```
+
+Kontrola zakończyła się kodem 0 dla każdego tomu: brak wskazanych
+ostrzeżeń w logach, na stronach tytułowych po trzy łącza do pozostałych
+PDF-ów, a wyniki składu zgadzają się z kopiami w katalogu projektu.
+Strony PDF 75--79 tomu III obejrzano po składzie; nowe diagramy,
+ciąg względny i etykiety są czytelne oraz mieszczą się na stronach.
+
+### Instrukcja przygotowana do samodzielnego wykonania
+
+Na nowym stanowisku najpierw użyj instrukcji instalacji narzędzi
+z początku sekcji geometrii. Potem przejdź do katalogu projektu,
+uruchom `buduj_tomy.ps1` z bloku powyżej i sprawdź logi oraz
+indeksy. Instalacji i pobierania nie wykonywano w tej iteracji.
+
 ## Skrypt Banacha--Tarskiego — polecenia wykonane 27 października 2026
 
 Katalog roboczy: `C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts\banach_tarski`.
