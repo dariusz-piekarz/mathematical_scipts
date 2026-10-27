@@ -14,6 +14,43 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 28 — mapa hipotez chirurgii (2026-10-28)
+
+Po ukończeniu konstrukcyjnego opisu ciągu i przykładu przez rozdziały
+26–28 brakowało jednego miejsca, w którym można sprawdzić zakres
+każdego użycia twierdzenia chirurgicznego. W rozdziale 28 dodano
+mapę: kategoria DIFF/TOP, wymiar $n$ celu i $n+1$ śladu, dowolna
+grupa $\pi_1(X)$ z charakterem orientacji, ustalony brzeg oraz
+dekoracje $s/h$. Dla $n=5$ wyraźnie oddzielono kryterium w $L_5^s$
+od działania $L_6^s$, które realizuje parzyste twierdzenie 5.8 Walla.
+Końcowy gładki $s$-kobordyzm ma wtedy wymiar sześć. Nie użyto w tym
+przypadku nieparzystego twierdzenia realizacyjnego 6.5, zaczynającego
+się od wymiaru siedem.
+
+Wariant z ustalonym brzegiem wymaga konkretnej identyfikacji
+dyfeomorficznej i produktowego kołnierza; jej prostota wynika
+z dyfeomorfizmu. Nie nakłada się warunku izomorfizmu grup
+podstawowych składowych brzegu z $\pi_1(X)$. Mapa rozróżnia
+twierdzenie Smale'a dla jednospójnego $h$-kobordyzmu od ogólnego
+$s$-kobordyzmu z zerową torsją oraz grupy $L^s$ od $L^h$.
+Odpowiednik TOP z $G/\mathrm{TOP}$ jest wskazany jako osobne
+wejście zewnętrzne. Nie wyprowadzono z tabeli nowego twierdzenia.
+
+Zakresy porównano z
+[Wallem, twierdzenia 5.6, 5.8, 6.4, 6.5 i §10](https://webhomes.maths.ed.ac.uk/~v1ranick/books/scm.pdf),
+[Ranickim, §18](https://webhomes.maths.ed.ac.uk/~v1ranick/homology/topman.pdf)
+oraz [Crowleyem–Macko, §2.2](https://webhomes.maths.ed.ac.uk/~v1ranick/papers/crowmac.pdf).
+Sprawdzono też zgodność odsyłaczy z rozdziałami 24, 25, 27 i 36.
+Po końcowej korekcie pełny `buduj_tomy.ps1` zakończył dwa przebiegi.
+PDF-y I–IV mają 216, 182, 100 i 80 stron, a indeksy przyjęły
+113, 96, 29 i 93 wpisy bez odrzuceń. Kontrola logów nie wykazała
+niezdefiniowanych odsyłaczy, `Overfull` ani brakujących znaków;
+strony tytułowe mają po trzy łącza do pozostałych tomów, a kopie
+PDF zgadzają się według SHA-256. W finalnym PDF-ie tomu III
+obejrzano fizyczne strony 78–80: przejście z wersji względnej,
+tabelę hipotez i przykład 28.6.2. Tekst i odsyłacz do tomu IV
+są czytelne; tabela nie wychodzi poza pole strony.
+
 ## Rozdziały 26–28 — jeden śledzony przykład chirurgii (2026-10-27)
 
 Przeprowadzono istniejący przykład $S^6\to S^3\times S^3$

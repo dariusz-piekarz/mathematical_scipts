@@ -171,6 +171,84 @@ Projekt nie pobiera danych wejściowych z sieci. MiKTeX musi mieć
 zainstalowane pakiety użyte w `tex/preambula.tex`; w sprawdzonym
 środowisku wszystkie były już dostępne.
 
+## Mapa hipotez chirurgii — 28 października 2026
+
+Pracę wykonano na gałęzi `review/rozdzialy-matematyka`.
+Sprawdzone wersje i wymagane narzędzia opisuje powyższa sekcja środowiska:
+Windows PowerShell 5.1, MiKTeX 25.12, `latexmk` 4.88,
+`makeindex` z MiKTeX 25.12, Perl 5.42.3 z Git for Windows,
+Poppler (`pdfinfo`, `pdftotext`, `pdftoppm`, `pdftohtml`) oraz Git.
+Skrypt sam ustawia `PATH` dla Perla, jeśli jest potrzebny;
+innych zmiennych środowiskowych projekt nie wymaga. Nie
+instalowano zależności ani nie pobierano danych wejściowych.
+
+### Polecenia faktycznie wykonane
+
+W katalogu głównym repozytorium wykonano:
+
+```powershell
+git status --short --branch
+git pull --ff-only
+```
+
+Drzewo było czyste przed pracą, a `git pull` zwrócił
+`Already up to date.`. Katalog składu:
+`C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts\geometria i topologia różniczkowa`.
+Podawano go przez parametr katalogu roboczego wykonania.
+Po zmianie źródła uruchomiono skrypt pełnego składu:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\buduj_tomy.ps1
+```
+
+Po niezależnej kontroli hipotez poprawiono dwie niejednoznaczności
+dotyczące końcowego $s$-kobordyzmu i warunku brzegowego, po czym
+uruchomiono ten sam skrypt ponownie. Do kontroli wyników służy
+poniższy blok, wykonywany z katalogu geometrii:
+
+```powershell
+1..4 | ForEach-Object {
+  $volName = "geometria_tom$_"
+  $pages = (pdfinfo "$volName.pdf" | Select-String '^Pages:').Line.Trim()
+  $index = (Select-String -Path "build/tomy/$volName.ilg" -Pattern 'entries accepted, 0 rejected').Line.Trim()
+  $bad = @(Select-String -Path "build/tomy/$volName.log" -Pattern 'LaTeX Warning: Reference .* undefined|There were undefined references|Label\(s\) may have changed|Overfull \\hbox|Missing character')
+  $links = @(pdftohtml -q -xml -f 1 -l 1 -stdout "$volName.pdf" | Select-String 'href="geometria_tom[1-4]\.pdf"' -AllMatches | ForEach-Object { $_.Matches.Value } | Sort-Object -Unique)
+  $same = (Get-FileHash "$volName.pdf" -Algorithm SHA256).Hash -eq (Get-FileHash "build/tomy/$volName.pdf" -Algorithm SHA256).Hash
+  if (-not $index -or $bad.Count -ne 0 -or $links.Count -ne 3 -or -not $same) { throw "Kontrola $volName nie powiodła się" }
+  '{0}: {1}; {2}; 3 łącza; SHA-256 zgodna' -f $volName, $pages, $index
+}
+```
+
+Blok wykonano po końcowym składzie i zwrócił kod 0. Tomy I–IV mają
+216, 182, 100 i 80 stron. Indeksy przyjęły 113, 96, 29 i 93 wpisy,
+bez odrzuconych. Nie znaleziono niezdefiniowanych odsyłaczy,
+`Overfull` ani brakujących znaków; każda strona tytułowa ma trzy
+łącza do pozostałych tomów, a kopie PDF są zgodne według SHA-256.
+Indeks tomu III powiększył się o hasło dotyczące hipotez.
+
+Wykonano także kontrolę tekstu i wizualną stron fizycznych 78–80
+tomu III:
+
+```powershell
+pdftotext -f 79 -l 79 -layout geometria_tom3.pdf - | Select-String -Pattern 'Gładkie twierdzenie|W naszym ciągu|twierdzeń 5.6|Crowley' -Context 0,2
+pdftohtml -q -xml -f 79 -l 79 -stdout geometria_tom3.pdf | Select-String -Pattern 'href="geometria_tom4.pdf' -AllMatches | ForEach-Object { $_.Matches.Value } | Sort-Object -Unique
+pdftoppm -f 78 -l 80 -scale-to 1400 -png geometria_tom3.pdf "$env:TEMP\geometry-map-final"
+```
+
+Na stronie 79 tabela, przypadek $n=5$ i źródła są czytelne.
+Odsyłacz do rozdziału 36 kieruje do tomu IV. Poprzednia i następna
+strona są poprawnie złożone; przykład śladu ma obecnie numer 28.6.2
+i zaczyna się na stronie fizycznej 80. W katalogu głównym repozytorium
+`git diff --check` zakończył się kodem 0 bez błędów białych znaków.
+
+### Instrukcja przygotowana do samodzielnego wykonania
+
+Na innym stanowisku zastosuj instrukcję instalacji narzędzi z początku
+tego pliku, przejdź do wskazanego katalogu geometrii i wykonaj skrypt
+`buduj_tomy.ps1` oraz blok kontroli powyżej. Ręcznego ustawienia
+`PATH` nie potrzeba przy użyciu skryptu. Dodatkowych danych do
+pobrania nie ma.
+
 ## Audyt rozdziału 35 — polecenia wykonane 26 października 2026
 
 Pracę rozpoczęto w katalogu głównym repozytorium i pobrano stan gałęzi

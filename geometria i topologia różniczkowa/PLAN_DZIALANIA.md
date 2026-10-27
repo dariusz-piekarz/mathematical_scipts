@@ -1,6 +1,6 @@
 # Aktualny plan i pokrycie przeglądem
 
-Stan: 27 października 2026. Gałąź: `review/rozdzialy-matematyka`.
+Stan: 28 października 2026. Gałąź: `review/rozdzialy-matematyka`.
 Książka ma **38 rozdziałów, pięć części i trzy dodatki**. Numery w nazwach
 plików są historyczne; numer w PDF ustala kolejność importów.
 Skład roboczy podzielono na cztery tomy: rozdziały 1–10, 11–22,
@@ -26,8 +26,8 @@ i organizacja plików w [README.md](README.md).
    Tego samego dnia zakończono pełny audyt rozdziału 38, ostatniego
    numerowanego rozdziału. Po podziale tomu III na III i IV
    sprawdzono mapę, numerację, odsyłacze i indeksy w czterech PDF-ach.
-   Następną iteracją treści jest rozdział 28, zgodnie z pierwszym
-   priorytetem planu poniżej.
+   Trzy zaplanowane uzupełnienia tomu III zakończono 28 października.
+   Kolejnym etapem jest pierwszy punkt planu tomu IV poniżej.
    Wymiary cztery pozostają wykładem informacyjnym z dokładnymi
    hipotezami i źródłami. Zwykła iteracja obejmuje jeden rozdział,
    chyba że etap wymaga wspólnego dowodu.
@@ -131,11 +131,13 @@ ze zmienionymi rysunkami.
    ślad uchwytu, jądro hiperboliczne, zerową klasę w $L_6^s(\Z)$
    i punkt bazowy ciągu chirurgii. Wskazano wybrane dane normalne
    i odesłano do istniejących rachunków rozdziału 27.
-3. **Mapa hipotez.** Zestawić w jednym miejscu kategorie DIFF/TOP,
-   granice wymiarowe, założenia o $\pi_1$ i brzegu oraz różnicę
-   wersji $s$ i $h$, w szczególności dla rozmaitości wymiaru pięć
-   i śladu wymiaru sześć. To synteza istniejących wyników, nie nowy
-   dowód twierdzeń Walla.
+3. **Mapa hipotez — etap zakończony 28 października.** W rozdziale 28
+   zestawiono DIFF/TOP, granice wymiarowe, założenia o $\pi_1$
+   i ustalonym brzegu oraz różnicę dekoracji $s/h$. Osobno
+   wyjaśniono rozmaitość wymiaru pięć i ślad wymiaru sześć,
+   rozróżniając kryterium od twierdzeń realizacyjnych Walla.
+   Mapa syntetyzuje istniejące wyniki; wariant TOP pozostaje
+   jawnym wejściem zewnętrznym.
 
 ### Tom IV — wymiary trzy i cztery, rozdziały 31–38 i dodatki
 
@@ -199,7 +201,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 25. Torsja i s-kobordyzm | `21-torsja-s-kobordyzm.tex` | Pełny audyt i uzupełnienia zakończone 11 października; PDF 505 stron | Poprawiono bazy i konwencje macierzowe, dowód niezależności kontrakcji, zakres lematu Whitneya, obramowania i dualność w realizacji torsji. Strony 390–401, oba schematy, odsyłacze i indeks sprawdzone; głębokie wejścia zewnętrzne wskazano dokładnie. |
 | 26. Chirurgia geometryczna | `22-chirurgia-geometryczna.tex` | Pełny audyt zakończony 8 października; 27 października dodano i osobno sprawdzono przykład śladu $S^6\to S^3\times S^3$ | Wcześniej sprawdzono obramowania, ślad i uchwyt dualny, homologię, $\pi_1$, formę jądra i rysunki. Nowy przykład wskazuje indeksy uchwytów oraz standardowe dane normalne; nie ponawiano audytu reszty rozdziału. |
 | 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Pełny audyt także nowego tekstu zakończony 20 października względem §§1–2, 5–6 Walla; zmianę z 27 października sprawdzono osobno | Sprawdzono parzyste i nieparzyste kryterium, bazy i torsję nad $\Z[\pi]$, $SU/RU$, ruchy $T1$--$T4$, wymiar pięć i chirurgię środkową. Poprawiono stronę $\lambda$ w dualności, terminologię immersji i hipotezy lematu 5.7. Doprecyzowano zależność $\mu=0$ od wybranych danych normalnych w przykładzie lokalnej stabilizacji; nie ponawiano audytu reszty rozdziału. Głębokie lematy Walla, wersja $h$ i relacja formacji pozostają jawnymi wynikami zewnętrznymi. |
-| 28. Ciąg chirurgii | `24-ciag-chirurgii.tex` | Pełny audyt wcześniejszej treści zakończony 20 października względem §10 oraz twierdzeń 5.8 i 6.5 Walla; uzupełnienia z 27 października sprawdzono osobno | Sprawdzono dokładność, działanie $L_{n+1}^s$, zakres $n\geq5$, lewą strzałkę i przejście do $s$-kobordyzmu; doprecyzowano racjonalne jądro w rachunku sygnatury. Nowe fragmenty objaśniają strzałki, ślad nad cylindrem, warunek brzegowy, przykład $S^7$ i przejście śladu $S^6\to S^3\times S^3$ przez Arfa oraz punkt bazowy $[S^6,G/O]$; nie ponawiano audytu reszty rozdziału. Bijekcja z $[X,G/O]$ i działanie grupy $L$ pozostają jawnymi wynikami Walla. |
+| 28. Ciąg chirurgii | `24-ciag-chirurgii.tex` | Pełny audyt wcześniejszej treści zakończony 20 października względem §10 oraz twierdzeń 5.8 i 6.5 Walla; uzupełnienia z 27–28 października sprawdzono osobno | Sprawdzono dokładność, działanie $L_{n+1}^s$, zakres $n\geq5$, lewą strzałkę i przejście do $s$-kobordyzmu; doprecyzowano racjonalne jądro w rachunku sygnatury. Nowe fragmenty objaśniają strzałki, ślad nad cylindrem, warunek brzegowy, przykład $S^7$, przejście śladu $S^6\to S^3\times S^3$ przez Arfa i punkt bazowy $[S^6,G/O]$. Mapa hipotez rozdziela DIFF/TOP, $n=5$ od śladu wymiaru sześć, dowolność $\pi_1$, ustalony brzeg i dekoracje $s/h$; nie ponawiano audytu reszty rozdziału. Bijekcja z $[X,G/O]$ i działanie grupy $L$ pozostają wynikami Walla, a wariant TOP jest osobnym wynikiem zewnętrznym. |
 | 29. Poincaré | `25-poincare.tex` | Pełny audyt rozdziału zakończony 20 października; twierdzenia 2.2 i 2.3 Bardena porównano z oryginałem | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm; lematy 3.1 i 4.1–4.4, indukcja, modele $M_k,X_j$, formy wiązania i przykłady spin/niespin. Doprecyzowano źródło triangulacji, mieszaną parę torsyjną, hipotezy lematu 4.4 i orientację przy wniosku pięciowymiarowym. Głębokie wejścia pozostają zewnętrzne. |
 | 30. Sfery Milnora | `26-sfery-milnora.tex` | Audyt wcześniejszej treści zakończony 19 października; klasyfikację dopisano 20 października | Sprawdzono sklejanie, klasy $e,p_1$, ciąg Mayera--Vietorisa, kryterium Whiteheada, obie sygnatury, $\lambda$, $\mu$, przykłady i rysunek. Nowy rachunek klasyfikuje 16 typów wiązkowych oraz 28 klas $\Theta_7$ (15 bez orientacji) przez sumy $M_3$. Zupełność $\mu$, $\Theta_7\cong\Z/28$, wzór Hirzebrucha i indeks Diraca pozostają jawnymi wejściami zewnętrznymi. |
 | 31. Potok Ricciego (plik 30) | `30-potok-ricciego.tex` | Pełny audyt zakończony 20 października; rysunek 31.1 sprawdzony na stronie PDF 100 | Rachunki skalowania, ewolucji, zasady maksimum i DeTurcka spójne; istnienie i jednoznaczność PDE pozostają jawnym wejściem analitycznym. |

@@ -1,5 +1,56 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-10-28 — mapa hipotez chirurgii w tomie III
+
+### Problem
+
+Po rozpisaniu ciągu chirurgii i śledzonego przykładu czytelnik musiał
+zbierać z kilku rozdziałów hipotezy kategorii, wymiaru, grupy
+podstawowej, brzegu i dekoracji. Szczególnie łatwo było utożsamić
+pięciowymiarowe kryterium Walla z twierdzeniem realizacyjnym dla
+nieparzystej grupy $L$ albo zastosować $s$-kobordyzm do śladu,
+który jeszcze nie jest prostym $h$-kobordyzmem.
+
+### Rozwiązanie i wpływ
+
+W `tex/rozdzialy/24-ciag-chirurgii.tex` dodano jedną sekcję z tabelą
+hipotez. Zestawia ona DIFF z osobnym odpowiednikiem TOP,
+$n$-wymiarowy cel ze śladem wymiaru $n+1$, dowolną grupę
+$\pi_1(X)$ i charakter orientacji, warunek ustalonego brzegu oraz
+dekoracje $s/h$. Osobny akapit objaśnia $n=5$: kryterium leży
+w $L_5^s$, działanie realizuje parzysta grupa $L_6^s$ i twierdzenie
+5.8 Walla, a końcowy $s$-kobordyzm jest sześciowymiarowy.
+Zaznaczono, że twierdzenie Smale'a o $h$-kobordyzmie wymaga
+jednospójności, podczas gdy ogólne twierdzenie o $s$-kobordyzmie
+kontroluje torsję. Wersja TOP i związek dekoracji pozostają
+jawnymi wynikami zewnętrznymi.
+
+`PLAN_DZIALANIA.md` oznacza ostatni etap tomu III jako ukończony
+i wskazuje pierwszy punkt tomu IV. `PRZEGLAD.md` rejestruje dokładny
+zakres porównania ze źródłami. `manual.md` podaje polecenia budowania
+i kontroli wykonane w tym etapie.
+
+Kompromis: rozdział 28 jest dłuższy o syntetyczną tabelę, lecz nie
+powiela dowodów Walla ani nie deklaruje dowodu odpowiednika TOP.
+
+### Weryfikacja
+
+Zakres twierdzeń porównano z
+[Wallem, §§5–6 i 10](https://webhomes.maths.ed.ac.uk/~v1ranick/books/scm.pdf),
+[Ranickim, §18](https://webhomes.maths.ed.ac.uk/~v1ranick/homology/topman.pdf)
+oraz [Crowleyem–Macko, §2.2](https://webhomes.maths.ed.ac.uk/~v1ranick/papers/crowmac.pdf).
+Sprawdzono zwłaszcza, że ustalony brzeg dopuszcza $n=5$ i nie
+wymaga izomorfizmu $\pi_1$ jego składowych z $\pi_1(X)$.
+Po końcowej korekcie pełny skład czterech tomów zakończył się
+po dwóch przebiegach. PDF-y I–IV mają 216, 182, 100 i 80 stron;
+indeksy przyjęły 113, 96, 29 i 93 wpisy bez odrzuceń.
+W logach nie ma niezdefiniowanych odsyłaczy, `Overfull` ani
+brakujących znaków. Sprawdzono łącza na stronach tytułowych,
+odsyłacz z mapy do tomu IV i zgodność kopii PDF według SHA-256.
+Obejrzano fizyczne strony 78–80 tomu III: tabela mieści się
+w polu strony, a przykład 28.6.2 zaczyna się od góry strony 80.
+`git diff --check` nie wykazał błędów białych znaków.
+
 ## 2026-10-27 — wspólny przykład chirurgii w rozdziałach 26–28
 
 ### Problem
