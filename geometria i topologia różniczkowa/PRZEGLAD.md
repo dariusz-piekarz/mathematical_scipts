@@ -14,6 +14,49 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 38 — małe i duże egzotyczne $\R^4$ (2026-10-28)
+
+Końcowa sekcja rozdziału zawierała twierdzenie De Michelisa--Freedmana
+o kontinuum małych egzotycznych $\R^4$, lecz bez mechanizmu rodziny.
+Dopisano opis gładkiego $5$-wymiarowego $h$-kobordyzmu, obszaru typu
+*ribbon* otwartego w standardowej $\R^4$, wspólnego zwartego rdzenia
+$K$ i zagnieżdżonych obszarów $U_s\subset U_t$ dla parametrów ze
+zbioru Cantora. Promień jest topologiczny; jego poziomy nie są przez
+to gładkimi sferami w otaczającej przestrzeni. Rozróżnienie par
+$(U_t,K)$ korzysta z zewnętrznej analizy końców okresowych i
+niezgodności niezmienników cechowania $|\Phi(B)|\ne|\Phi(Q)|$.
+Warunek dotyczy dyfeomorfizmu, którego ograniczenie do $K$ jest
+izotopijne do identyczności. Jeden nieoznaczony typ dyfeomorfizmu
+może wystąpić dla najwyżej przeliczalnie wielu parametrów, ponieważ
+tyle jest klas izotopii zanurzeń zwartego gładkiego $K$ w ustalonym
+typie. Stąd wybiera się kontinuum typów; nie twierdzimy, że każda
+para parametrów daje różne typy. Podstawą jest
+[oryginalna praca De Michelisa--Freedmana, §3–4](https://doi.org/10.4310/jdg/1214447810).
+
+Nowy diagram zestawia tę drogę z wcześniej rozpisaną
+[indukcją Gompfa, lematy 1.1–1.2](https://doi.org/10.4310/jdg/1214439566).
+W dużej rodzinie stały zwarty $X$ nie zanurza się gładko w
+standardowej $\R^4$, a $K_n=X\sqcup M_{L_n}$ odróżnia kolejne etapy
+zorientowanych zanurzeń. W małej rodzinie całe $U_t$ jest otwartym
+podzbiorem standardowej $\R^4$, więc żaden jego zwarty podzbiór nie
+może służyć jako analogiczny zakaz zanurzenia. Diagram zachowuje
+hipotezę ogolenia $R_{n-1}$ i ograniczenie orientacyjne po stronie
+Gompfa. Nie zastępuje dowodów De Michelisa--Freedmana ani Gompfa;
+szczegółowe wyniki o uchwytach Cassona i analizie cechowania pozostają
+wejściami zewnętrznymi.
+
+Podgląd tomu IV złożono poprawnie; po przeniesieniu diagramu
+obejrzano fizyczne strony 59–60, a po pełnym składzie ponownie
+obejrzano obie strony końcowego PDF z poprawioną etykietą węzła.
+Diagram i podpis mieszczą się w łamie. Pełny `buduj_tomy.ps1`
+zakończył się kodem 0 po dwóch przebiegach. Tomy I–IV mają
+216, 182, 102 i 83 strony; indeksy przyjęły 113, 96, 30 i 94
+wpisy bez odrzuceń. W logach nie znaleziono nieustalonych
+odsyłaczy, przepełnionych wierszy ani brakujących znaków.
+Każdy tom ma trzy łącza do pozostałych na stronie tytułowej,
+a kopia PDF w `build/tomy` ma tę samą sumę SHA-256.
+`git diff --check` nie wykazał błędów białych znaków.
+
 ## Rozdział 37 — instanton BPST i wejścia do twierdzenia Donaldsona (2026-10-28)
 
 Dotychczasowy lokalny przykład połączenia antysamodualnego miał

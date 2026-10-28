@@ -1,5 +1,56 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-10-28 — mechanizm małych i dużych egzotycznych $\R^4$
+
+### Problem
+
+Rozdział 38 szczegółowo przedstawiał indukcję dużych struktur Gompfa,
+ale twierdzenie o kontinuum małych struktur De Michelisa--Freedmana
+było podane tylko jako wynik zewnętrzny. Bez wyjaśnienia wspólnego
+rdzenia i rodziny radialnej czytelnik mógł odnieść błędne wrażenie,
+że obie konstrukcje rozróżnia ten sam zakaz zanurzenia zwartego bloku.
+
+### Rozwiązanie i wpływ
+
+W `tex/rozdzialy/35-egzotyczne-r4.tex` dopisano opis obszaru typu
+*ribbon* otwartego w standardowej $\R^4$, wspólnej zwartej gładkiej
+podrozmaitości $K$ i zagnieżdżonych obszarów dla parametrów ze
+zbioru Cantora. Tekst odróżnia topologiczną funkcję promienia od
+gładkiej sfery poziomu. Wyjaśnia, że argument z niezmiennikiem
+cechowania $|\Phi(B)|\ne|\Phi(Q)|$ dotyczy dyfeomorfizmu zgodnego
+na $K$ do izotopii; analiza końców okresowych i przeliczalność
+klas zanurzeń $K$ prowadzą do kontinuum nieoznaczonych typów.
+Nie przypisuje każdemu parametrowi osobnego typu.
+
+Nowy diagram TikZ porównuje tę drogę z indukcją Gompfa.
+Duże $R_n$ zawierają zwarty $X$, którego nie można zanurzyć
+z zachowaniem orientacji w standardowej $\R^4$; świadek
+$K_n=X\sqcup M_{L_n}$ odróżnia kolejne etapy. Małe obszary
+już zanurzają się w standardowej $\R^4$, więc ich rdzeń $K$
+pełni inną rolę. W podpisie zachowano hipotezę ogolenia
+$R_{n-1}$ i ograniczenie orientacyjne po stronie Gompfa.
+Źródłami są [De Michelis--Freedman, §3–4](https://doi.org/10.4310/jdg/1214447810)
+oraz [Gompf, lematy 1.1–1.2](https://doi.org/10.4310/jdg/1214439566).
+
+Kompromis: diagram przedstawia zależności, a nie geometryczny
+model dzikiego końca. Głęboka analiza uchwytów Cassona i końców
+okresowych pozostaje cytowanym wynikiem zewnętrznym.
+Nie zmieniono konfiguracji LaTeX ani nie dodano zależności.
+
+### Weryfikacja
+
+Porównano hipotezy i dwa etapy rozróżnienia typów z oryginalnymi
+pracami. Doraźny skład tomu IV zakończył się kodem 0. Po
+przeniesieniu diagramu obejrzano fizyczne strony 59–60;
+po ostatnim doprecyzowaniu etykiety obejrzano je ponownie
+w końcowym PDF. Diagram, podpis i tekst mieszczą się w łamie.
+Pełny `buduj_tomy.ps1` przeszedł po dwóch przebiegach.
+Tomy I–IV mają 216, 182, 102 i 83 strony, a indeksy przyjęły
+113, 96, 30 i 94 wpisy bez odrzuceń. Kontrola logów nie wykazała
+nieustalonych odsyłaczy, przepełnionych wierszy ani brakujących
+znaków. Każdy PDF ma trzy łącza do pozostałych tomów i kopię
+o zgodnej sumie SHA-256. `git diff --check` przeszedł.
+
 ## 2026-10-28 — skończona energia instantonu i wejścia do twierdzenia Donaldsona
 
 ### Problem

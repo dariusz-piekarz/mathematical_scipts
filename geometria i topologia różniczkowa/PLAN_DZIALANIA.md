@@ -31,8 +31,8 @@ i organizacja plików w [README.md](README.md).
    dwóch kolejnych uchwytów oraz przeplatania dwóch
    uchwytów sfery w rozdziale 26; aktualny zakres tych zmian
    jest opisany w tabeli pokrycia poniżej.
-   Pierwsze dwa punkty planu tomu IV opracowano 28 października.
-   Kolejnym etapem jest rozdział 38 o egzotycznych $\R^4$.
+   Pierwsze trzy punkty planu tomu IV opracowano 28 października.
+   Kolejnym etapem jest most między wymiarami trzy i cztery.
    Wymiary cztery pozostają wykładem informacyjnym z dokładnymi
    hipotezami i źródłami. Zwykła iteracja obejmuje jeden rozdział,
    chyba że etap wymaga wspólnego dowodu.
@@ -164,10 +164,15 @@ ze zmienionymi rysunkami.
    od rachunku sygnatury do liczby klas o kwadracie $-1$.
    Analiza przestrzeni moduli i diagonalizacja Donaldsona pozostają
    wynikami zewnętrznymi. Skład i zmienione strony sprawdzono.
-3. **Rozdział 38 — egzotyczne $\R^4$.** Rozwinąć intuicję mechanizmu
-   małych egzotycznych $\R^4$ i porównanie z rozpisaną indukcją
-   dużych struktur Gompfa. Zachować kryteria zanurzania i orientacje;
-   wynik De Michelisa--Freedmana pozostaje cytowany.
+3. **Rozdział 38 — egzotyczne $\R^4$; etap treści zakończony
+   28 października.** Wyjaśniono topologiczną rodzinę radialną
+   małych struktur De Michelisa--Freedmana: wspólny zwarty rdzeń,
+   rozróżnienie par przez analizę końców okresowych i przejście
+   od przeliczalnej krotności każdego typu do kontinuum typów.
+   Diagram porównuje te wejścia z indukcją dużych struktur Gompfa
+   przez zwarty blok $X$ i świadków $K_n$. Zachowano warunki
+   zanurzeń i orientacje; głęboki wynik De Michelisa--Freedmana
+   jest cytowany. Skład i zmienione strony sprawdzono.
 4. **Most między wymiarami trzy i cztery.** Krótko odróżnić
    chirurgię w potoku Ricciego z rozdziałów 31–33 od operacji na
    dyskach w wymiarze cztery. Nie powielać omówienia geometrii
@@ -221,7 +226,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 35. Uchwyty Cassona (plik 32) | `32-uchwyty-cassona.tex` | Pełny audyt rozdziału zakończony 26 października | Sprawdzono model uchwytu z załamaniami, rachunek $\pi_1$ pięter, rozróżnienie $\mu$ i $\widetilde\mu$, hipotezy oraz konkluzje twierdzeń Freedmana--Quinna i Powell--Raya--Teichnera, geometryczną dualność i $\pi_1$-pomijalność. Poprawiono numerację wyników i opis zakresu grup. Powierzchnie z dyskami zamykającymi, uogólnione wieże, twierdzenie o zanurzaniu oraz standardowość uchwytu Cassona pozostają jawnymi wynikami zewnętrznymi. |
 | 36. Klasyfikacja Freedmana (plik 33) | `33-freedman-klasyfikacja.tex` | Pełny audyt zakończony 27 października; 28 października dodano osobno schemat zależności i tabelę przykładów | W audycie sprawdzono klasyfikację TOP, wzór $\operatorname{ks}\equiv\sigma/8$, zakres twierdzenia o zanurzaniu sfer, rachunek $\pi_1$ chirurgii, wniosek Poincarégo i przykłady $H$, $[1]$, $E_8$, $2E_8$. Nowy schemat porządkuje drogę od dysków i wież Cassona do klasyfikacji w przypadku $\pi_1=1$, a tabela zestawia parzystość, sygnaturę, $\operatorname{ks}$ i istnienie wygładzenia, w tym oba typy o formie $[1]$; nie ponowiono audytu całego rozdziału. Rozróżnienie oryginalnego twierdzenia Freedmana od pełnej wersji Freedmana--Quinna zachowano; klasyfikacja, zanurzanie i topologiczny $s$-kobordyzm pozostają zewnętrzne. |
 | 37. Donaldson (plik 34) | `34-donaldson.tex` | Pełny audyt wcześniejszej treści zakończony 27 października; uzupełnienie i jego skład sprawdzono 28 października | W audycie sprawdzono lokalność trywializacji, ASD, całkowity $c_1$, znaki $c_2$ i energii, orientację w źródłowym dowodzie oraz wnioski $E_8$ i $2E_8$. Nowy przykład BPST oblicza krzywiznę, energię $8\pi^2$, $c_2=1$ i gładkie przedłużenie na $S^4$. Mapa wejść podaje operator deformacji, indeks $5$, regularność, punkty redukowalne, koncentrację krzywizny, zwartość Uhlenbeck i kołnierz Taubesa--Donaldsona. W rachunku sygnatury poprawiono wniosek na $n(Q_X)\geq b_2(X)$, a przeciwną nierówność wyprowadzono algebraicznie. Konstrukcja i analiza przestrzeni moduli oraz twierdzenie Donaldsona pozostają zewnętrzne; nie ponawiano audytu całego rozdziału. |
-| 38. Egzotyczne $\R^4$ (plik 35) | `35-egzotyczne-r4.tex` | Pełny audyt zakończony 27 października | Sprawdzono obie przeszkody Gompfa, lematy 1.1–1.2, rachunek dopełnienia charakterystycznego wektora i indukcję ze zwartymi świadkami. Dodano źródło dla topologicznego otoczenia normalnego dysków, jawną bazę kraty $-E_8$ i orientacje w sklejeniu pierścieni. Twierdzenia o uchwytach Cassona, wyniki Freedmana, Gompfa oraz De Michelisa–Freedmana pozostają zewnętrzne. |
+| 38. Egzotyczne $\R^4$ (plik 35) | `35-egzotyczne-r4.tex` | Pełny audyt wcześniejszej treści zakończony 27 października; uzupełnienie i jego skład sprawdzono 28 października | W audycie sprawdzono obie przeszkody Gompfa, lematy 1.1–1.2, rachunek dopełnienia charakterystycznego wektora i indukcję ze zwartymi świadkami. Nowy opis małej rodziny rozdziela topologiczny promień, wspólny zwarty rdzeń $K$, zewnętrzną analizę końców okresowych i przeliczalność klas izotopii osadzeń $K$. Diagram zestawia tę drogę z dużą rodziną Gompfa oraz zachowuje warunki orientacji i ogolenia. Twierdzenia o uchwytach Cassona, wyniki Freedmana, Gompfa oraz De Michelisa–Freedmana pozostają zewnętrzne; nie ponawiano audytu całego rozdziału. |
 | Podział źródeł i importy | — | Zakończono, `9148128` | Kontrola regresji przy dalszych zmianach |
 | Dodatek A o wynikach zewnętrznych | — | Pełny niezależny audyt zakończono 25 października | Skorygowano zakres Walla do $n\geq5$ i rozdzielono kryterium od twierdzeń realizacyjnych. Uzupełniono wersję $h$, Rothenberga, ciąg chirurgii, Whiteheada, miarę Hausdorffa i Haara, Ambrose'a--Singera, globalny de Rham, normalizację Cherna--Weila, wejścia Bardena, Eellsa--Kuipera, Kervaire'a--Milnora i Quinna. Doprecyzowano hipotezy w wymiarach 3 i 4; źródła oraz strony 149–154 sprawdzono. |
 | Dodatek B: homologia singularna i Euler | — | Pełny niezależny audyt zakończono 25 października | Rachunki są poprawne. Nazwano użyty homeomorfizm, uzasadniono skończony model CW kobordyzmu z rozkładu uchwytowego i dodano konsekwencję dualności Poincarégo $\chi(M)=0$ w nieparzystym wymiarze. Odsyłacze do rozdziałów 8, 21 i 23 oraz strony 155–158 sprawdzono. |
