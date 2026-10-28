@@ -12,6 +12,69 @@ oraz dodatki). Starsze wpisy poniżej dokumentują rzeczywiście
 wykonane wówczas polecenia dla dawnego podziału na trzy tomy;
 ich numery stron i nazwy PDF-ów są historyczne.
 
+### Trzy rachunki chirurgii — polecenia wykonane 28 października 2026
+
+Zmiany dotyczą rozdziałów 26–27 i dodatku A na gałęzi
+`review/rozdzialy-matematyka`. Katalog projektu:
+`C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts\geometria i topologia różniczkowa`.
+Nie pobierano danych ani nie instalowano zależności. Użyto Windows
+PowerShell 5.1.19041.6456, MiKTeX 25.12, `latexmk` 4.88, Perla 5.42.3
+z Git for Windows i Popplera 24.04.0. `makeindex` pochodzi z MiKTeX.
+Projekt nie wymaga własnych zmiennych środowiskowych; skrypt budujący
+sam dodaje katalog Perla do `PATH`.
+
+**Polecenia wykonane.** W katalogu głównym repozytorium pobrano stan
+zdalnej gałęzi i porównano historię. Zdalna gałąź nie miała wtedy nowych
+commitów względem lokalnej, która była o jeden commit do przodu:
+
+```powershell
+git fetch origin
+git rev-list --left-right --count HEAD...origin/review/rozdzialy-matematyka
+```
+
+W katalogu projektu złożono wszystkie cztery tomy wraz z indeksami:
+
+```powershell
+Set-Location -LiteralPath 'C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts\geometria i topologia różniczkowa'
+powershell -NoProfile -ExecutionPolicy Bypass -File .\buduj_tomy.ps1
+```
+
+Skrypt zakończył się kodem 0 po trzech przebiegach. Następnie w tym
+samym katalogu wykonano kontrolę PDF-ów, indeksów, logów, łączy i kopii:
+
+```powershell
+1..4 | ForEach-Object {
+  $v = "geometria_tom$_"
+  $pages = (pdfinfo "$v.pdf" | Select-String '^Pages:').Line.Trim()
+  $index = (Select-String -Path "build/tomy/$v.ilg" -Pattern 'entries accepted, 0 rejected').Line.Trim()
+  $bad = @(Select-String -Path "build/tomy/$v.log" -Pattern 'LaTeX Warning: Reference .* undefined|There were undefined references|Label\(s\) may have changed|Overfull \\hbox|Missing character')
+  $links = @(pdftohtml -q -xml -f 1 -l 1 -stdout "$v.pdf" | Select-String 'href="geometria_tom[1-4]\.pdf"' -AllMatches | ForEach-Object { $_.Matches.Value } | Sort-Object -Unique)
+  $same = (Get-FileHash "$v.pdf" -Algorithm SHA256).Hash -eq (Get-FileHash "build/tomy/$v.pdf" -Algorithm SHA256).Hash
+  if ($bad.Count -ne 0 -or $links.Count -ne 3 -or -not $same) { throw "Kontrola $v nie powiodła się: bad=$($bad.Count), links=$($links.Count), same=$same" }
+  "$($v): $pages; $index; 3 łącza; SHA-256 zgodna"
+}
+```
+
+Tomy I–IV mają 216, 182, 104 i 83 strony; indeksy przyjęły odpowiednio
+113, 96, 33 i 94 wpisy bez odrzuceń. Nie znaleziono wskazanych ostrzeżeń
+w logach. Każdy tom ma trzy łącza do pozostałych, a kopie PDF w
+`build/tomy` są zgodne bitowo. Poleceniem `pdftoppm` wyrenderowano
+fizyczne strony 42–43 i 57–59 tomu III oraz 63–64 tomu IV;
+obejrzano strony z nowym tekstem i dodatkiem A. W katalogu repozytorium
+wykonano `git diff --check` bez błędów.
+
+**Instrukcja przygotowana do samodzielnego wykonania.** Na innym
+stanowisku przygotuj wymienione wersje MiKTeX, Perla i Popplera,
+przejdź do katalogu projektu poleceniem `Set-Location` powyżej,
+uruchom pełny `buduj_tomy.ps1` i powtórz blok kontroli. Do obejrzenia
+zmienionych stron służą na przykład:
+
+```powershell
+pdftoppm -f 42 -l 43 -scale-to 1500 -png geometria_tom3.pdf "$env:TEMP\geom-stage1-early"
+pdftoppm -f 57 -l 59 -scale-to 1500 -png geometria_tom3.pdf "$env:TEMP\geom-stage1-late"
+pdftoppm -f 63 -l 64 -scale-to 1500 -png geometria_tom4.pdf "$env:TEMP\geom-stage1-appendix"
+```
+
 ### Most między wymiarami trzy i cztery — polecenia wykonane 28 października 2026
 
 Praca dotyczy `tex/rozdzialy/31-freedman-formy-przeciecia.tex` na gałęzi

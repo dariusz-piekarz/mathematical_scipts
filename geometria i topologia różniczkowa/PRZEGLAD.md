@@ -14,6 +14,69 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdziały 26–27 — trzy rachunki chirurgiczne (2026-10-28)
+
+Rozdział 27 obliczał grupy $L_n(\Z)$, lecz nie pokazywał jeszcze,
+jak zmienia je jedna nietrywialna pętla. W rozdziale 26 omówiono
+znaczenie obramowania bez konkretnego porównania obu możliwości
+dla okręgu w $S^4$. Istniejący przykład $C_5$ rozróżniał dekoracje
+$s/h$, ale nie liczył grup Tate'a w ciągu Rothenberga.
+
+W rozdziale 27 dodano rozszczepienie
+$L_n^s(\Z[G\times\Z])\cong L_n^s(\Z[G])\oplus L_{n-1}^h(\Z[G])$
+z zachowaniem dekoracji $h$ i charakteru orientacji. Dla
+$G=1$ otrzymano w kolejnych resztach modulo cztery grupy
+$\Z,\Z,\Z/2,\Z/2$ oraz przykłady w wymiarach 7 i 9.
+Tekst oddziela grupę przeszkód od przeszkody konkretnej mapy
+normalnej i od jej realizacji. Źródła to
+[Shaneson, twierdzenie 5.1](https://webhomes.maths.ed.ac.uk/~v1ranick/papers/shan.pdf)
+z jego geometrycznymi hipotezami,
+[Ranicki, §6](https://webhomes.maths.ed.ac.uk/~v1ranick/papers/splitkl.pdf)
+dla ogólnego rozszczepienia i różnicy map algebraicznych
+oraz geometrycznych, a także [Wall, twierdzenie 13A.8](https://webhomes.maths.ed.ac.uk/~v1ranick/books/scm.pdf)
+dla tabeli. Wcześniejsza praca Ranickiego z 1973 r. ma
+sprostowanie dotyczące wersji grup $W_n$; nie traktowano jej
+samej jako uzasadnienia ogólnej formuły.
+
+W rozdziale 26 obliczono obie klasy obramowań standardowego
+$S^1\subset S^4$ przez $\pi_1(SO(3))=\Z/2$ i sklejenie dwóch
+$D^2\times S^2$. Wynikami są $S^2\times S^2$ oraz nietrywialna
+wiązka $S^2$ nad $S^2$ z formami odpowiednio
+$H=\left(\begin{smallmatrix}0&1\\1&0\end{smallmatrix}\right)$
+i $\left(\begin{smallmatrix}0&1\\1&1\end{smallmatrix}\right)$.
+Homologię wyniku i bazę $H_2$ uzasadnia fragment ciągu
+Mayera--Vietorisa; samoprzecięcie przekroju daje stopień
+funkcji przejścia normalnej płaszczyzny. Identyfikacja
+nietrywialnej wiązki z $\mathbb{CP}^2\#\overline{\mathbb{CP}^2}$ korzysta
+z [dowodu propozycji 4.3 Larsona](https://arxiv.org/abs/1502.06834)
+i [przykładu 1.11 oraz uwagi 1.13 Wendla](https://www.mathematik.hu-berlin.de/~wendl/pub/rationalRuled.pdf).
+To obliczenie czterowymiarowej chirurgii nie korzysta z
+wysokowymiarowego kryterium Walla.
+
+Dla $C_5$ użyto [przykładu 6.6 Milnora](https://webhomes.maths.ed.ac.uk/~v1ranick/papers/milnorwh.pdf):
+$\operatorname{Wh}(C_5)=\Z$ z generatorem $[1-t-t^{-1}]$.
+Inwolucja zachowuje ten generator, więc grupy Tate'a są
+$\Z/2$ w stopniach parzystych i zerowe w nieparzystych.
+Po wstawieniu do ciągu Rothenberga mapa $j_n:L_n^s\to L_n^h$
+jest injekcją dla parzystego $n$ i surjekcją dla nieparzystego.
+Dokładność wymusza nieizomorficzność co najmniej jednej z dwóch
+sąsiednich map, lecz sam rachunek nie wskazuje której ani nie
+wyznacza przeszkody konkretnego odwzorowania normalnego.
+
+Niezależna kontrola nowych rachunków potwierdziła tabelę Walla,
+indeksy ciągu Rothenberga, obie formy przecięcia i diagonalizację.
+Po kontroli doprecyzowano hipotezy Shanesona, opis generatora
+w ciągu Mayera--Vietorisa i miejsce przykładu w dowodzie Larsona.
+Nie ponawiano audytu pozostałej treści obu rozdziałów.
+Pełny `buduj_tomy.ps1` zakończył się kodem 0 po trzech przebiegach.
+Tomy I–IV mają 216, 182, 104 i 83 strony; indeksy przyjęły
+113, 96, 33 i 94 wpisy bez odrzuceń. W logach nie ma
+niezdefiniowanych odsyłaczy, przepełnionych wierszy ani brakujących
+znaków. Każdy tom ma trzy łącza do pozostałych, a kopie PDF mają
+zgodne sumy SHA-256. Obejrzano fizyczne strony 42–43 i 57–59
+tomu III oraz 63–64 tomu IV z dodatkiem A. `git diff --check`
+nie wykazał błędów.
+
 ## Rozdział 34 — most między wymiarami trzy i cztery (2026-10-28)
 
 Na początku części o wymiarze cztery brakowało krótkiego przejścia

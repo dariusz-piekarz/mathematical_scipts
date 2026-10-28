@@ -34,6 +34,9 @@ i organizacja plików w [README.md](README.md).
    Pierwsze trzy punkty planu tomu IV opracowano 28 października.
    Most między wymiarami trzy i cztery dopisano 28 października
    na początku rozdziału 34; cztery punkty planu tomu IV zakończono.
+   Nowy plan uzupełnień podano poniżej. Punkt 1, obejmujący
+   dalsze przykłady chirurgii w tomie III, zakończono
+   28 października w rozdziałach 26–27 i sprawdzono w czterech tomach.
    Wymiary cztery pozostają wykładem informacyjnym z dokładnymi
    hipotezami i źródłami. Zwykła iteracja obejmuje jeden rozdział,
    chyba że etap wymaga wspólnego dowodu.
@@ -44,7 +47,7 @@ i organizacja plików w [README.md](README.md).
    i odsyłacze między tomami, aktualizować PDF-y tomów, zatwierdzać
    i wypychać ukończony etap. Skład zbiorczy jest okazjonalny.
 
-Nie dodajemy zadań. Rozmaitości z brzegiem, grupy wolne, iloczyny wolne,
+Nie dopisujemy zadań ćwiczeniowych. Rozmaitości z brzegiem, grupy wolne, iloczyny wolne,
 geometria Kleina i geometrie Thurstona już są w źródłach; nie tworzymy ich
 duplikatów. Freedman, Donaldson i egzotyczne R⁴ należą do tomu IV,
 w osobnych rozdziałach.
@@ -182,6 +185,78 @@ ze zmienionymi rysunkami.
    i hipotezy topologicznego twierdzenia o zanurzaniu dysków.
    Nie powielono geometrii Thurstona ani dowodu Perelmana.
 
+## Nowy plan uzupełnień — kolejność uzgodniona 28 października 2026
+
+Punktem wyjścia przy szacowaniu były tom III (102 strony) i tom IV
+(83 strony), w tym 31 stron części o wymiarze cztery. Po etapie 1
+tom III ma 104 strony. Poniższe przyrosty stron i czasy
+są orientacyjnym nakładem redakcji, kontroli źródeł i składu;
+nie oznaczają pełnych dowodów głębokich twierdzeń. Łącznie sześć
+etapów odpowiada około 55–110 nowym stronom i 6–12 tygodniom
+pracy. Każdy etap kończyć przeglądem hipotez, składem czterech tomów,
+kontrolą stron, indeksów, odsyłaczy i źródeł.
+
+1. **Tom III — trzy nowe rachunki chirurgiczne; etap zakończony
+   i złożony 28 października; wcześniejszy szacunek: 7–12 stron
+   i 1–2 tygodnie.**
+   Najpierw w rozdziale 27 obliczono $L_n^s(\Z[\Z])$
+   dla orientowalnego przypadku
+   $\pi_1=\Z$ z rozszczepienia Shanesona, zachowując dekorację
+   $h$ w drugim składniku ogólnego wzoru. Następnie w rozdziale 26
+   porównano dwa obramowania chirurgii $S^1\subset S^4$ i ich
+   formy przecięcia, bez stosowania wysokowymiarowego twierdzenia
+   Walla. Na końcu w rozdziale 27 policzono grupy Tate'a dla
+   istniejącego przykładu $C_5$ i wstawiono je do ciągu
+   Rothenberga. Wskazano konsekwencje dokładności, nie
+   przypisując nierówności konkretnemu $j_n$ z samego rachunku
+   grup Tate'a. Obliczenie grupy $L$ oddzielono od przeszkody
+   konkretnej mapy normalnej i od jej realizacji. Sprawdzono
+   pełny skład, indeksy, łącza i nowe strony 42–43 oraz 57–59
+   tomu III; nowe wpisy dodatku A są na stronach 63–64 tomu IV.
+   Następny etap dotyczy mechanizmów klasyfikacji TOP Freedmana.
+2. **Freedman — wybrane mechanizmy klasyfikacji TOP;
+   15–30 stron, 2–4 tygodnie.** Rozwinąć przykłady obramowanych
+   uchwytów, dysków Whitneya, wież Cassona i przejścia do
+   klasyfikacji w przypadku jednospójnym. Twierdzenie o zanurzaniu
+   dysków i potrzebne topologiczne twierdzenia o chirurgii oraz
+   $s$-kobordyzmie pozostają nazwanymi wynikami zewnętrznymi.
+3. **Donaldson — własności moduli jako wynik zewnętrzny;
+   8–15 stron, 1–2 tygodnie.** Doprecyzować pakiet o regularności,
+   punktach redukowalnych, kompaktifikacji, końcu i orientacjach;
+   z tych danych rozwinąć rachunek kobordyzmu i sygnatury prowadzący
+   do algebraicznego wniosku. Rozdział 37 już podaje pakiet wejść
+   i końcowy rachunek; nowy tekst ma go uczytelnić, nie powtórzyć.
+4. **Atiyah--Singer — trzy zastosowania; 8–15 stron, 2–4 dni.**
+   Wprowadzić symbol operatora eliptycznego, indeks Fredholma i
+   dokładny zakres twierdzenia jako wejścia zewnętrznego. Połączyć
+   wymiar oczekiwany moduli ASD z sygnaturą i całkowitością indeksu
+   Diraca używanymi przy sferach Milnora. Pełny dowód twierdzenia
+   indeksowego wymaga osobnego wykładu.
+5. **Zwykły potok Ricciego przed osobliwościami;
+   12–25 stron, 4–10 dni.** Rozwinąć potok znormalizowany,
+   przykłady metryk jednorodnych i produktowych, równania ewolucji
+   tensorów krzywizny oraz kryterium przedłużenia. Głębokie
+   oszacowania paraboliczne oznaczać jako osobne wejścia.
+6. **Lokalna chirurgia potoku Ricciego; 5–12 stron, 2–5 dni.**
+   Uzupełnić model szyjki i czapy o skalę metryczną, przykład
+   i rachunek zmiany topologii. Globalne istnienie potoku z
+   chirurgią, niezapadanie i klasyfikacja otoczeń kanonicznych
+   pozostają wynikami Perelmana; nie planujemy ich pełnego dowodu.
+
+**Po zakończeniu etapów 1–6: audyt idei dowodów i dokładnych źródeł.**
+Sprawdzić w miejscach występowania wyniki Perelmana (rozdziały 32–33),
+Freedmana (34–36), Donaldsona (37), Bardena i klasyfikację powierzchni
+(29), konstrukcje sfer Milnora oraz struktury na $S^7$ (28 i 30),
+a także konstrukcje Gompfa i egzotyczne struktury na $\R^4$ (38).
+Przy każdym wyniku wskazać pracę, twierdzenie lub sekcję źródłową
+i dopisać ideę mechanizmu tylko wtedy, gdy obecny rozdział jej
+nie objaśnia. Wstępny przegląd wskazuje istniejące już obszerne
+objaśnienia Perelmana, Bardena, klasyfikacji powierzchni,
+konstrukcji Milnora i Gompfa. Potencjalne luki dotyczą
+idei obliczenia $\Theta_7\cong\Z/28$, wybranych etapów
+Freedmana i kompaktifikacji moduli Donaldsona. Nie deklarować
+pełnej klasyfikacji gładkich struktur na $\R^4$.
+
 ## Pokrycie audytem
 
 Wpisy o sprawdzeniu pochodzą z dziennika wskazanych iteracji. Deklaracje
@@ -218,8 +293,8 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 23. Kobordyzmy i uchwyty | `19-kobordyzmy-uchwyty.tex` | Audyt dodatków zakończony 8 października; PDF 443 strony | Sprawdzone trzy hasła i pięć ilustracji; przywrócony warunek orientacji w podpisie, jawny opis sklejenia pierścieni i rozwinięty lokalny ruch Whitneya przy zachowanych założeniach o dyskach |
 | 24. h-kobordyzm | `20-h-kobordyzm.tex` | Audyt i uzupełnienia zakończone 9 października; skład po scaleniu do `2777149`: 503 strony | Rozpisano wymianę 1→3, dopełnienia w kowymiarze 2, wstęgi i homologię wyciętej sfery. Dokładne założenia obramowanego lematu Whitneya podano jako jawny wynik zewnętrzny. Trzy rysunki, odsyłacze i indeks sprawdzone. |
 | 25. Torsja i s-kobordyzm | `21-torsja-s-kobordyzm.tex` | Pełny audyt i uzupełnienia zakończone 11 października; PDF 505 stron | Poprawiono bazy i konwencje macierzowe, dowód niezależności kontrakcji, zakres lematu Whitneya, obramowania i dualność w realizacji torsji. Strony 390–401, oba schematy, odsyłacze i indeks sprawdzone; głębokie wejścia zewnętrzne wskazano dokładnie. |
-| 26. Chirurgia geometryczna | `22-chirurgia-geometryczna.tex` | Pełny audyt zakończony 8 października; 27 października osobno sprawdzono przykład śladu $S^6\to S^3\times S^3$; 28 października dodano dwa wizualne przykłady uchwytów | Wcześniej sprawdzono obramowania, ślad i uchwyt dualny, homologię, $\pi_1$, formę jądra i rysunki. Przykład śladu wskazuje indeksy uchwytów i standardowe dane normalne. Pierwszy nowy rysunek pokazuje $S^2\sqcup S^2\to S^2\to T^2$, wybór dysków, $b_0$, $\chi$ i orientowalność, z odsyłaczem do wcześniejszej wersji jednej sfery. Drugi pokazuje cięcie, pełny skręt i sklejenie pierwotnych par końców dwóch uchwytów sfery; wynik nadal ma rodzaj dwa. Nie ponawiano audytu reszty rozdziału. |
-| 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Pełny audyt także nowego tekstu zakończony 20 października względem §§1–2, 5–6 Walla; zmianę z 27 października sprawdzono osobno | Sprawdzono parzyste i nieparzyste kryterium, bazy i torsję nad $\Z[\pi]$, $SU/RU$, ruchy $T1$--$T4$, wymiar pięć i chirurgię środkową. Poprawiono stronę $\lambda$ w dualności, terminologię immersji i hipotezy lematu 5.7. Doprecyzowano zależność $\mu=0$ od wybranych danych normalnych w przykładzie lokalnej stabilizacji; nie ponawiano audytu reszty rozdziału. Głębokie lematy Walla, wersja $h$ i relacja formacji pozostają jawnymi wynikami zewnętrznymi. |
+| 26. Chirurgia geometryczna | `22-chirurgia-geometryczna.tex` | Pełny audyt zakończony 8 października; 27 października osobno sprawdzono przykład śladu $S^6\to S^3\times S^3$; 28 października dodano dwa wizualne przykłady uchwytów oraz osobno sprawdzono dwa obramowania $S^1\subset S^4$ i strony 42–43 tomu III | Wcześniej sprawdzono obramowania, ślad i uchwyt dualny, homologię, $\pi_1$, formę jądra i rysunki. Przykład śladu wskazuje indeksy uchwytów i standardowe dane normalne. Pierwszy nowy rysunek pokazuje $S^2\sqcup S^2\to S^2\to T^2$, wybór dysków, $b_0$, $\chi$ i orientowalność, z odsyłaczem do wcześniejszej wersji jednej sfery. Drugi pokazuje cięcie, pełny skręt i sklejenie pierwotnych par końców dwóch uchwytów sfery; wynik nadal ma rodzaj dwa. Nowy przykład obramowań wyprowadza dwie wiązki $S^2$ nad $S^2$ oraz formy $H$ i nieparzystą; sprawdzono ciąg Mayera--Vietorisa i źródła Larsona oraz Wendla. Nie ponawiano audytu reszty rozdziału. |
+| 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Pełny audyt także nowego tekstu zakończony 20 października względem §§1–2, 5–6 Walla; zmianę z 27 października oraz nowe rachunki z 28 października i strony 57–59 tomu III sprawdzono osobno | Sprawdzono parzyste i nieparzyste kryterium, bazy i torsję nad $\Z[\pi]$, $SU/RU$, ruchy $T1$--$T4$, wymiar pięć i chirurgię środkową. Poprawiono stronę $\lambda$ w dualności, terminologię immersji i hipotezy lematu 5.7. Doprecyzowano zależność $\mu=0$ od wybranych danych normalnych w przykładzie lokalnej stabilizacji; nie ponawiano audytu reszty rozdziału. Nowe rachunki dają tabelę $L_n^s(\Z[\Z])$ i grupy Tate'a dla $C_5$, z dokładnymi hipotezami Shanesona i wnioskami z ciągu Rothenberga; sprawdzono je względem Walla, Ranickiego i Milnora. Głębokie lematy Walla, wersja $h$ i relacja formacji pozostają jawnymi wynikami zewnętrznymi. |
 | 28. Ciąg chirurgii | `24-ciag-chirurgii.tex` | Pełny audyt wcześniejszej treści zakończony 20 października względem §10 oraz twierdzeń 5.8 i 6.5 Walla; uzupełnienia z 27–28 października sprawdzono osobno | Sprawdzono dokładność, działanie $L_{n+1}^s$, zakres $n\geq5$, lewą strzałkę i przejście do $s$-kobordyzmu; doprecyzowano racjonalne jądro w rachunku sygnatury. Nowe fragmenty objaśniają strzałki, ślad nad cylindrem, warunek brzegowy, przykład $S^7$, przejście śladu $S^6\to S^3\times S^3$ przez Arfa i punkt bazowy $[S^6,G/O]$. Mapa hipotez rozdziela DIFF/TOP, $n=5$ od śladu wymiaru sześć, dowolność $\pi_1$, ustalony brzeg i dekoracje $s/h$; nie ponawiano audytu reszty rozdziału. Bijekcja z $[X,G/O]$ i działanie grupy $L$ pozostają wynikami Walla, a wariant TOP jest osobnym wynikiem zewnętrznym. |
 | 29. Poincaré | `25-poincare.tex` | Pełny audyt rozdziału zakończony 20 października; twierdzenia 2.2 i 2.3 Bardena porównano z oryginałem | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm; lematy 3.1 i 4.1–4.4, indukcja, modele $M_k,X_j$, formy wiązania i przykłady spin/niespin. Doprecyzowano źródło triangulacji, mieszaną parę torsyjną, hipotezy lematu 4.4 i orientację przy wniosku pięciowymiarowym. Głębokie wejścia pozostają zewnętrzne. |
 | 30. Sfery Milnora | `26-sfery-milnora.tex` | Audyt wcześniejszej treści zakończony 19 października; klasyfikację dopisano 20 października | Sprawdzono sklejanie, klasy $e,p_1$, ciąg Mayera--Vietorisa, kryterium Whiteheada, obie sygnatury, $\lambda$, $\mu$, przykłady i rysunek. Nowy rachunek klasyfikuje 16 typów wiązkowych oraz 28 klas $\Theta_7$ (15 bez orientacji) przez sumy $M_3$. Zupełność $\mu$, $\Theta_7\cong\Z/28$, wzór Hirzebrucha i indeks Diraca pozostają jawnymi wejściami zewnętrznymi. |
@@ -232,7 +307,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 37. Donaldson (plik 34) | `34-donaldson.tex` | Pełny audyt wcześniejszej treści zakończony 27 października; uzupełnienie i jego skład sprawdzono 28 października | W audycie sprawdzono lokalność trywializacji, ASD, całkowity $c_1$, znaki $c_2$ i energii, orientację w źródłowym dowodzie oraz wnioski $E_8$ i $2E_8$. Nowy przykład BPST oblicza krzywiznę, energię $8\pi^2$, $c_2=1$ i gładkie przedłużenie na $S^4$. Mapa wejść podaje operator deformacji, indeks $5$, regularność, punkty redukowalne, koncentrację krzywizny, zwartość Uhlenbeck i kołnierz Taubesa--Donaldsona. W rachunku sygnatury poprawiono wniosek na $n(Q_X)\geq b_2(X)$, a przeciwną nierówność wyprowadzono algebraicznie. Konstrukcja i analiza przestrzeni moduli oraz twierdzenie Donaldsona pozostają zewnętrzne; nie ponawiano audytu całego rozdziału. |
 | 38. Egzotyczne $\R^4$ (plik 35) | `35-egzotyczne-r4.tex` | Pełny audyt wcześniejszej treści zakończony 27 października; uzupełnienie i jego skład sprawdzono 28 października | W audycie sprawdzono obie przeszkody Gompfa, lematy 1.1–1.2, rachunek dopełnienia charakterystycznego wektora i indukcję ze zwartymi świadkami. Nowy opis małej rodziny rozdziela topologiczny promień, wspólny zwarty rdzeń $K$, zewnętrzną analizę końców okresowych i przeliczalność klas izotopii osadzeń $K$. Diagram zestawia tę drogę z dużą rodziną Gompfa oraz zachowuje warunki orientacji i ogolenia. Twierdzenia o uchwytach Cassona, wyniki Freedmana, Gompfa oraz De Michelisa–Freedmana pozostają zewnętrzne; nie ponawiano audytu całego rozdziału. |
 | Podział źródeł i importy | — | Zakończono, `9148128` | Kontrola regresji przy dalszych zmianach |
-| Dodatek A o wynikach zewnętrznych | — | Pełny niezależny audyt zakończono 25 października | Skorygowano zakres Walla do $n\geq5$ i rozdzielono kryterium od twierdzeń realizacyjnych. Uzupełniono wersję $h$, Rothenberga, ciąg chirurgii, Whiteheada, miarę Hausdorffa i Haara, Ambrose'a--Singera, globalny de Rham, normalizację Cherna--Weila, wejścia Bardena, Eellsa--Kuipera, Kervaire'a--Milnora i Quinna. Doprecyzowano hipotezy w wymiarach 3 i 4; źródła oraz strony 149–154 sprawdzono. |
+| Dodatek A o wynikach zewnętrznych | — | Pełny niezależny audyt zakończono 25 października; nowe wejścia i strony 63–64 tomu IV sprawdzono osobno 28 października | Skorygowano zakres Walla do $n\geq5$ i rozdzielono kryterium od twierdzeń realizacyjnych. Uzupełniono wersję $h$, Rothenberga, ciąg chirurgii, Whiteheada, miarę Hausdorffa i Haara, Ambrose'a--Singera, globalny de Rham, normalizację Cherna--Weila, wejścia Bardena, Eellsa--Kuipera, Kervaire'a--Milnora i Quinna. Doprecyzowano hipotezy w wymiarach 3 i 4; źródła oraz ówczesne strony 149–154 sprawdzono przed podziałem tomów. Nowe wpisy odróżniają czterowymiarową chirurgię okręgu od twierdzenia Walla oraz dokumentują rozszczepienie Shanesona--Ranickiego i wynik Milnora dla $C_5$; nie ponawiano audytu całego dodatku. |
 | Dodatek B: homologia singularna i Euler | — | Pełny niezależny audyt zakończono 25 października | Rachunki są poprawne. Nazwano użyty homeomorfizm, uzasadniono skończony model CW kobordyzmu z rozkładu uchwytowego i dodano konsekwencję dualności Poincarégo $\chi(M)=0$ w nieparzystym wymiarze. Odsyłacze do rozdziałów 8, 21 i 23 oraz strony 155–158 sprawdzono. |
 | Dodatek C: grupy macierzowe | — | Definicje, algebry i wymiary sprawdzone 8 października; tabela czytelna w PDF | Przy dalszej rozbudowie zachować rozróżnienie wymiaru rzeczywistego i zespolonego oraz $Sp(n)$ od $Sp(2n,\mathbb K)$ |
 | Końcowa kontrola całości | — | Częściowo: ujednolicono „Dalszą lekturę” i sprawdzono odsyłacze do źródeł | Mapa książki, oznaczenia, terminologia i pełny przegląd treści nadal wymagają osobnej kontroli; skład, indeks i PDF sprawdzane przy każdym etapie. |

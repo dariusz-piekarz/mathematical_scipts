@@ -1,5 +1,66 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-10-28 — trzy rachunki chirurgii w tomie III
+
+### Problem
+
+Obliczenie $L_n(\Z)$ w rozdziale 27 nie pokazywało wpływu jednej
+nietrywialnej pętli. Rozdział 26 stwierdzał zależność chirurgii od
+obramowania, lecz nie porównywał obu możliwości dla okręgu
+w $S^4$. Istniejący przykład $C_5$ w rozdziale 27 wskazywał
+niezerową torsję Whiteheada bez rachunku grup Tate'a w ciągu
+Rothenberga. To trzy uzupełnienia z punktu 1 nowego planu.
+
+### Rozwiązanie i wpływ
+
+- W `tex/rozdzialy/23-przeszkoda-chirurgiczna.tex` obliczono
+  $L_n^s(\Z[t,t^{-1}],1)$ przez rozszczepienie Shanesona--Ranickiego.
+  Ogólna formuła zachowuje dekorację $h$ w drugim składniku.
+  Zapisano tabelę czterookresową, przypadki $n=7,9$ i granicę
+  między grupą przeszkód, przeszkodą mapy i jej realizacją.
+  Wersję geometryczną Shanesona opisano z hipotezami, a ogólną
+  formułę oparto na późniejszej pracy Ranickiego z 1986 r.;
+  wcześniejsze twierdzenie z 1973 r. ma sprostowanie.
+- W tym samym rozdziale z $\operatorname{Wh}(C_5)\cong\Z$
+  i trywialnego działania inwolucji wyliczono grupy Tate'a:
+  $\Z/2$ w stopniach parzystych i zero w nieparzystych.
+  Podstawienie do ciągu Rothenberga daje injekcję $j_n$
+  dla parzystego $n$, surjekcję dla nieparzystego i krótki
+  ciąg łączący $\operatorname{coker}j_n$ z $\ker j_{n-1}$.
+  Nie przypisuje się tych grup konkretnej mapie normalnej.
+- W `tex/rozdzialy/22-chirurgia-geometryczna.tex` porównano dwa
+  obramowania standardowego $S^1\subset S^4$. Rozkład brzegu
+  $D^2\times D^3$, sklejenie i ciąg Mayera--Vietorisa prowadzą
+  do wiązek $S^2$ nad $S^2$ o formach hiperbolicznej i
+  nieparzystej. Zewnętrznym wejściem pozostaje identyfikacja
+  nietrywialnej wiązki z $\mathbb{CP}^2\#\overline{\mathbb{CP}^2}$.
+  Nie użyto wysokowymiarowego kryterium Walla w wymiarze cztery.
+- W dodatku A zapisano nowe zależności od Larsona, Wendla,
+  Milnora, Shanesona i Ranickiego. `PLAN_DZIALANIA.md` zawiera
+  kolejkę, a `PRZEGLAD.md` szczegółowy zakres audytu i źródła.
+
+Kompromis polega na przyjęciu rozszczepienia grup $L$, pełnego
+obliczenia $\operatorname{Wh}(C_5)$ i identyfikacji wiązki jako
+wyników zewnętrznych. Podane rachunki sprawdzają ich konsekwencje;
+nie zastępują dowodów tych twierdzeń ani nie klasyfikują wszystkich
+map normalnych lub wszystkich grup $L^s/h(\Z[C_5])$.
+
+### Weryfikacja
+
+Niezależny przegląd potwierdził tabelę grup $L$ z twierdzeniem
+13A.8 Walla, generator $\operatorname{Wh}(C_5)$ z przykładem 6.6
+Milnora, indeksy ciągu Rothenberga i oba rachunki form przecięcia.
+Po przeglądzie doprecyzowano hipotezy Shanesona, homologię wyniku
+chirurgii i miejsce przypadku okręgu w dowodzie Larsona.
+Pełny `buduj_tomy.ps1` zakończył się kodem 0 po trzech przebiegach.
+Tomy I–IV mają 216, 182, 104 i 83 strony, a indeksy przyjęły
+113, 96, 33 i 94 wpisy bez odrzuceń. Logi nie wykazały
+nieustalonych odsyłaczy, przepełnionych wierszy ani brakujących
+znaków. Każdy PDF ma trzy łącza do pozostałych tomów, a kopie
+w `build/tomy` mają zgodne sumy SHA-256. Obejrzano fizyczne strony
+42–43 i 57–59 tomu III oraz 63–64 tomu IV. `git diff --check`
+przeszedł bez błędów.
+
 ## 2026-10-28 — most między chirurgią Ricciego a wymiarem cztery
 
 ### Problem
