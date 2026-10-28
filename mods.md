@@ -1,5 +1,51 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-10-28 — most między chirurgią Ricciego a wymiarem cztery
+
+### Problem
+
+Po rozdziałach 31–33 o rozmaitościach wymiaru trzy rozdział 34
+przechodził bezpośrednio do form przecięcia. Czytelnik mógł
+utożsamić chirurgię potoku Ricciego z operacjami wykonywanymi
+za pomocą uchwytów i dysków w wymiarze cztery.
+
+### Rozwiązanie i wpływ
+
+Na początku `tex/rozdzialy/31-freedman-formy-przeciecia.tex` dodano
+krótki most. Zestawia on cięcie kontrolowanej szyjki
+$S^2\times D^1\to D^3\times S^0$ z wymianą
+$S^1\times D^2\to D^2\times S^1$, którą na trójwymiarowym
+brzegu powoduje przyczepienie czterowymiarowego uchwytu $2$.
+Drugą operację identyfikuje jako wypełnienie Dehna określone
+obramowaniem. Następnie wskazuje na przecięcia dysków Whitneya
+z powierzchniami w wymiarze cztery i odsyła do hipotez
+topologicznego twierdzenia o zanurzaniu dysków.
+Po przeglądzie doprecyzowano, że przyczepienie zmienia brzeg
+$D^4$, a podpis drugiej strzałki oznacza operację na tym brzegu;
+nie opisuje całego brzegu samego uchwytu.
+
+To porównanie ułatwia przejście między częściami książki i
+oddziela formalną wymianę brzegu od głębokiego twierdzenia
+Freedmana--Quinna. Kompromis: jest to krótka mapa pojęć,
+bez dowodzenia twierdzeń Perelmana ani o zanurzaniu dysków.
+Nie zmieniono konfiguracji składu ani zależności projektu.
+Zaktualizowano `PLAN_DZIALANIA.md` i `PRZEGLAD.md`, aby zamknąć
+czwarty punkt planu tomu IV i zapisać matematyczny zakres zmiany.
+
+### Weryfikacja
+
+Podgląd tomu IV złożył się poprawnie do 83 stron. Obejrzano
+fizyczną stronę 31: formuła, tekst i odsyłacze są czytelne.
+Po doprecyzowaniu opisu brzegu ponownie wykonano pełny
+`buduj_tomy.ps1`. Oba uruchomienia zakończyły się kodem 0
+po dwóch przebiegach. Ponownie obejrzano fizyczną stronę 31.
+Tomy I–IV mają
+216, 182, 102 i 83 strony; indeksy przyjęły 113, 96, 30 i 94
+wpisy bez odrzuceń. Kontrola logów nie wykazała nieustalonych
+odsyłaczy, przepełnionych wierszy ani brakujących znaków.
+Każdy tom ma trzy łącza do pozostałych tomów, a kopie PDF mają
+zgodne sumy SHA-256. `git diff --check` przeszedł.
+
 ## 2026-10-28 — mechanizm małych i dużych egzotycznych $\R^4$
 
 ### Problem

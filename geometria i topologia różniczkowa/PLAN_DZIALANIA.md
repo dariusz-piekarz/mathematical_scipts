@@ -32,7 +32,8 @@ i organizacja plików w [README.md](README.md).
    uchwytów sfery w rozdziale 26; aktualny zakres tych zmian
    jest opisany w tabeli pokrycia poniżej.
    Pierwsze trzy punkty planu tomu IV opracowano 28 października.
-   Kolejnym etapem jest most między wymiarami trzy i cztery.
+   Most między wymiarami trzy i cztery dopisano 28 października
+   na początku rozdziału 34; cztery punkty planu tomu IV zakończono.
    Wymiary cztery pozostają wykładem informacyjnym z dokładnymi
    hipotezami i źródłami. Zwykła iteracja obejmuje jeden rozdział,
    chyba że etap wymaga wspólnego dowodu.
@@ -173,10 +174,13 @@ ze zmienionymi rysunkami.
    przez zwarty blok $X$ i świadków $K_n$. Zachowano warunki
    zanurzeń i orientacje; głęboki wynik De Michelisa--Freedmana
    jest cytowany. Skład i zmienione strony sprawdzono.
-4. **Most między wymiarami trzy i cztery.** Krótko odróżnić
-   chirurgię w potoku Ricciego z rozdziałów 31–33 od operacji na
-   dyskach w wymiarze cztery. Nie powielać omówienia geometrii
-   Thurstona ani nie deklarować dowodu Perelmana.
+4. **Most między wymiarami trzy i cztery; etap zakończony
+   28 października.** Na początku rozdziału 34 porównano cięcie
+   kontrolowanej szyjki $S^2\times D^1$ w potoku Ricciego z
+   wypełnieniem Dehna na brzegu po przyczepieniu czterowymiarowego
+   uchwytu $2$. Osobno wskazano przeszkodę przecięć dysków Whitneya
+   i hipotezy topologicznego twierdzenia o zanurzaniu dysków.
+   Nie powielono geometrii Thurstona ani dowodu Perelmana.
 
 ## Pokrycie audytem
 

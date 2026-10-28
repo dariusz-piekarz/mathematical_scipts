@@ -12,6 +12,69 @@ oraz dodatki). Starsze wpisy poniżej dokumentują rzeczywiście
 wykonane wówczas polecenia dla dawnego podziału na trzy tomy;
 ich numery stron i nazwy PDF-ów są historyczne.
 
+### Most między wymiarami trzy i cztery — polecenia wykonane 28 października 2026
+
+Praca dotyczy `tex/rozdzialy/31-freedman-formy-przeciecia.tex` na gałęzi
+`review/rozdzialy-matematyka`. Katalog roboczy składu:
+`C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts\geometria i topologia różniczkowa`.
+Nie pobierano danych ani nie instalowano nowych zależności.
+Środowisko jak w poprzednim wpisie: Windows PowerShell 5.1,
+MiKTeX 25.12, `latexmk` 4.88, `makeindex` z MiKTeX 25.12,
+Perl 5.42.3 z Git for Windows i Poppler 24.04.0.
+Projekt nie wymaga własnych zmiennych środowiskowych; przy
+bezpośrednim wywołaniu `latexmk` dodano katalog Perla do `PATH`.
+
+**Polecenia wykonane.** W katalogu głównym repozytorium wykonano
+`git pull --ff-only`; gałąź była aktualna. Następnie z katalogu
+projektu wykonano podgląd i pełny skład:
+
+```powershell
+$env:PATH = 'C:\Program Files\Git\usr\bin;' + $env:PATH
+latexmk -silent -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=build/tomy geometria_tom4.tex *> build/tomy/bridge-preview.txt
+pdftoppm -f 30 -l 31 -scale-to 1700 -png build/tomy/geometria_tom4.pdf "$env:TEMP\bridge-preview"
+powershell -NoProfile -ExecutionPolicy Bypass -File .\buduj_tomy.ps1 *> build/tomy/bridge-full-build.txt
+pdftoppm -f 31 -l 31 -scale-to 1700 -png geometria_tom4.pdf "$env:TEMP\bridge-final"
+```
+
+Po doprecyzowaniu opisu brzegu wykonano ponownie pełny skład
+i wyrenderowano końcową wersję strony:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\buduj_tomy.ps1 *> build/tomy/bridge-full-build-final.txt
+pdftoppm -f 31 -l 31 -scale-to 1700 -png geometria_tom4.pdf "$env:TEMP\bridge-final-corrected"
+```
+
+Podgląd oraz oba pełne składy zakończyły się kodem 0.
+Obejrzano fizyczną stronę 31 podglądu i końcowego tomu IV.
+Po drugim składzie w katalogu projektu powtórzono blok kontroli:
+
+```powershell
+1..4 | ForEach-Object {
+  $v = "geometria_tom$_"
+  $pages = (pdfinfo "$v.pdf" | Select-String '^Pages:').Line.Trim()
+  $index = (Select-String -Path "build/tomy/$v.ilg" -Pattern 'entries accepted, 0 rejected').Line.Trim()
+  $bad = @(Select-String -Path "build/tomy/$v.log" -Pattern 'LaTeX Warning: Reference .* undefined|There were undefined references|Label\(s\) may have changed|Overfull \\hbox|Missing character')
+  $links = @(pdftohtml -q -xml -f 1 -l 1 -stdout "$v.pdf" | Select-String 'href="geometria_tom[1-4]\.pdf"' -AllMatches | ForEach-Object { $_.Matches.Value } | Sort-Object -Unique)
+  $same = (Get-FileHash "$v.pdf" -Algorithm SHA256).Hash -eq (Get-FileHash "build/tomy/$v.pdf" -Algorithm SHA256).Hash
+  if ($bad.Count -ne 0 -or $links.Count -ne 3 -or -not $same) { throw "Kontrola $v nie powiodła się: bad=$($bad.Count), links=$($links.Count), same=$same" }
+  "$($v): $pages; $index; 3 łącza; SHA-256 zgodna"
+}
+git diff --check
+```
+
+Kontrola zakończyła się kodem 0. Tomy I–IV mają 216, 182,
+102 i 83 strony; indeksy przyjęły 113, 96, 30 i 94 wpisy
+bez odrzuceń. W logach nie było niezdefiniowanych odsyłaczy,
+przepełnionych wierszy ani brakujących znaków. Każdy tom ma
+trzy łącza do pozostałych, a kopie PDF w `build/tomy` mają
+zgodne sumy SHA-256.
+
+**Instrukcja przygotowana do samodzielnego wykonania.** Na
+innym stanowisku zainstaluj wersje narzędzi wymienione wyżej,
+przejdź do wskazanego katalogu projektu, uruchom
+`buduj_tomy.ps1` i powtórz blok kontroli. Nowy fragment
+znajduje się na fizycznej stronie 31 tomu IV.
+
 ### Małe i duże egzotyczne $\R^4$ — polecenia wykonane 28 października 2026
 
 Praca dotyczy `tex/rozdzialy/35-egzotyczne-r4.tex` na gałęzi

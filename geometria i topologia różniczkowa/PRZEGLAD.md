@@ -14,6 +14,44 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 34 — most między wymiarami trzy i cztery (2026-10-28)
+
+Na początku części o wymiarze cztery brakowało krótkiego przejścia
+od chirurgii potoku Ricciego do uchwytów i dysków. Dodano porównanie
+dwóch operacji na rozmaitości trójwymiarowej:
+$S^2\times D^1\to D^3\times S^0$ dla cięcia szyjki i
+$S^1\times D^2\to D^2\times S^1$ na brzegu po przyczepieniu
+czterowymiarowego uchwytu $2$. Drugą wymianę objaśniono jako
+wypełnienie Dehna
+zależne od obramowania węzła. Tekst odsyła do istniejącego
+rachunku formy przecięcia z obramowań i liczb sprzężenia.
+
+Most wskazuje też rzeczywistą trudność wymiaru cztery:
+dysk Whitneya i powierzchnia mogą przecinać się w punktach,
+ponieważ $2+2-4=0$. Samo przyczepienie uchwytu nie daje
+zanurzonych dysków; topologiczne twierdzenie o zanurzaniu dysków
+ma osobne hipotezy o przecięciach i grupie podstawowej.
+Odsyłacze prowadzą do sekcji o chirurgii potoku Ricciego,
+obramowanych uchwytach i twierdzeniu Freedmana--Quinna.
+Rozdziały o Perelmanie i klasyfikacji TOP zachowują status
+cytowanych głębokich wyników. Porównanie zweryfikowano z
+[pracą Perelmana o chirurgii](https://arxiv.org/abs/math/0303109)
+oraz [Freedmanem--Quinnem](https://archive.mpim-bonn.mpg.de/id/eprint/4789/).
+
+Podgląd tomu IV złożono poprawnie; ma 83 strony. Obejrzano
+fizyczną stronę 31 z nową formułą i odsyłaczami: mieści się
+w łamie i jest czytelna.
+Po doprecyzowaniu opisu brzegu ponownie wykonano pełny
+`buduj_tomy.ps1`; oba uruchomienia zakończyły się kodem 0 po
+dwóch przebiegach. Ponownie obejrzano fizyczną stronę 31.
+Tomy I–IV
+mają 216, 182, 102 i 83 strony, a indeksy przyjęły 113, 96,
+30 i 94 wpisy bez odrzuceń. W logach nie znaleziono nieustalonych
+odsyłaczy, przepełnionych wierszy ani brakujących znaków.
+Każdy tom ma trzy łącza do pozostałych na stronie tytułowej,
+a kopia PDF w `build/tomy` ma tę samą sumę SHA-256.
+`git diff --check` nie wykazał błędów białych znaków.
+
 ## Rozdział 38 — małe i duże egzotyczne $\R^4$ (2026-10-28)
 
 Końcowa sekcja rozdziału zawierała twierdzenie De Michelisa--Freedmana
