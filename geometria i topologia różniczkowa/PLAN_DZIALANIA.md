@@ -31,7 +31,8 @@ i organizacja plików w [README.md](README.md).
    dwóch kolejnych uchwytów oraz przeplatania dwóch
    uchwytów sfery w rozdziale 26; aktualny zakres tych zmian
    jest opisany w tabeli pokrycia poniżej.
-   Kolejnym etapem jest pierwszy punkt planu tomu IV poniżej.
+   Pierwszy punkt planu tomu IV zakończono 28 października.
+   Kolejnym etapem jest rozdział 37 o Donaldsonie.
    Wymiary cztery pozostają wykładem informacyjnym z dokładnymi
    hipotezami i źródłami. Zwykła iteracja obejmuje jeden rozdział,
    chyba że etap wymaga wspólnego dowodu.
@@ -145,14 +146,15 @@ ze zmienionymi rysunkami.
 
 ### Tom IV — wymiary trzy i cztery, rozdziały 31–38 i dodatki
 
-1. **Rozdziały 34–36 — droga do klasyfikacji TOP.** Dodać diagram
-   obramowanego splotu i tabelę przykładów $H$, $[1]$, $E_8$,
-   $2E_8$: parzystość, sygnatura, niezmiennik Kirby'ego--Siebenmanna
-   i istnienie TOP/DIFF. Wyjaśnić w jednym schemacie zależności:
-   dysk immersyjny, wieża Cassona, lokalnie płaski dysk, sfera
-   dualna, chirurgia i $\pi_1$, klasyfikacja. Nie powtarzać
-   ukończonych rachunków $E_8$ ani drzewa Cassona. Twierdzenia
-   Freedmana--Quinna i o sferach dualnych nadal cytować.
+1. **Rozdziały 34–36 — droga do klasyfikacji TOP; etap zakończony 28 października.**
+   W rozdziale 34 dodano diagram obramowanego splotu Hopfa i niewęzła,
+   a w rozdziale 36 tabelę form $H$, $[1]$, $E_8$ i $2E_8$ z parzystością,
+   sygnaturą, niezmiennikiem Kirby'ego--Siebenmanna oraz istnieniem
+   struktur TOP i DIFF. Schemat zależności łączy dyski immersyjne,
+   wieże Cassona, lokalnie płaskie dyski i sfery dualne z chirurgią,
+   kontrolą $\pi_1$ i klasyfikacją. Istniejących rachunków $E_8$
+   ani drzewa Cassona nie powielono; twierdzenia Freedmana--Quinna
+   i o sferach dualnych pozostają jawnymi wynikami zewnętrznymi.
 2. **Rozdział 37 — Donaldson.** Po sprawdzeniu źródła dodać przykład
    instantonu o skończonej energii na $S^4$ z $c_2=1$ oraz krótką
    mapę analitycznych wejść: cechowanie, wymiar i zwartość przestrzeni
@@ -211,9 +213,9 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 31. Potok Ricciego (plik 30) | `30-potok-ricciego.tex` | Pełny audyt zakończony 20 października; rysunek 31.1 sprawdzony na stronie PDF 100 | Rachunki skalowania, ewolucji, zasady maksimum i DeTurcka spójne; istnienie i jednoznaczność PDE pozostają jawnym wejściem analitycznym. |
 | 32. Poincaré w wymiarze trzy (plik 30a) | `30a-poincare-trzy.tex` | Pełny audyt zakończony 20 października | Hipotezy niezapadania i wygasania, chirurgia, odtworzenie topologii oraz Moise sprawdzone względem źródeł; poprawiono tytuł cytowanej pracy i terminologię. Głębokie wyniki Perelmana pozostają zewnętrzne. |
 | 33. Geometrie Thurstona (plik 30b) | `30b-geometrizacja-thurstona.tex` | Pełny audyt zakończony 20 października | Osiem modeli, tabela Seiferta, orbifoldy, rozkład pierwszy i JSJ sprawdzone; dopisano definicję dysku ściskającego i źródło twierdzenia o pętli oraz skorygowano opis dowodu w rozdziale 31. Geometryzacja pozostaje wynikiem zewnętrznym. |
-| 34. Formy przecięcia i uchwyty w wymiarze cztery (plik 31) | `31-freedman-formy-przeciecia.tex` | Pełny audyt rozdziału zakończony 25 października | Sprawdzono definicję i unimodularność formy, parzystość, sygnaturę, pełny rachunek $E_8$, macierz splotu, homologię brzegu i ograniczenie triku Whitneya. Dopisano jawny rachunek $2E_8$, rozróżnienie od macierzy skalarnej $2\cdot E_8$, wpływ orientacji komponentów na macierz oraz granicę między korpusem uchwytowym a zamkniętą rozmaitością. Głębokie domknięcie topologiczne pozostaje wynikiem zewnętrznym Freedmana. |
+| 34. Formy przecięcia i uchwyty w wymiarze cztery (plik 31) | `31-freedman-formy-przeciecia.tex` | Pełny audyt rozdziału zakończony 25 października; 28 października dodano osobno diagram obramowanych splotów | W audycie sprawdzono definicję i unimodularność formy, parzystość, sygnaturę, pełny rachunek $E_8$, macierz splotu, homologię brzegu i ograniczenie triku Whitneya. Dopisano jawny rachunek $2E_8$, rozróżnienie od macierzy skalarnej $2\cdot E_8$, wpływ orientacji komponentów na macierz oraz granicę między korpusem uchwytowym a zamkniętą rozmaitością. Nowy rysunek odczytuje macierze $H$ i $[1]$ z obramowanego splotu Hopfa i niewęzła; nie ponowiono audytu całego rozdziału. Głębokie domknięcie topologiczne pozostaje wynikiem zewnętrznym Freedmana. |
 | 35. Uchwyty Cassona (plik 32) | `32-uchwyty-cassona.tex` | Pełny audyt rozdziału zakończony 26 października | Sprawdzono model uchwytu z załamaniami, rachunek $\pi_1$ pięter, rozróżnienie $\mu$ i $\widetilde\mu$, hipotezy oraz konkluzje twierdzeń Freedmana--Quinna i Powell--Raya--Teichnera, geometryczną dualność i $\pi_1$-pomijalność. Poprawiono numerację wyników i opis zakresu grup. Powierzchnie z dyskami zamykającymi, uogólnione wieże, twierdzenie o zanurzaniu oraz standardowość uchwytu Cassona pozostają jawnymi wynikami zewnętrznymi. |
-| 36. Klasyfikacja Freedmana (plik 33) | `33-freedman-klasyfikacja.tex` | Pełny audyt zakończony 27 października | Sprawdzono klasyfikację TOP, wzór $\operatorname{ks}\equiv\sigma/8$, zakres twierdzenia o zanurzaniu sfer, rachunek $\pi_1$ chirurgii, wniosek Poincarégo i przykłady $H$, $[1]$, $E_8$, $2E_8$. Rozdzielono oryginalne twierdzenie Freedmana o rozmaitościach gładkich poza punktem od pełnej wersji Freedmana--Quinna; klasyfikacja, zanurzanie i topologiczny $s$-kobordyzm pozostają zewnętrzne. |
+| 36. Klasyfikacja Freedmana (plik 33) | `33-freedman-klasyfikacja.tex` | Pełny audyt zakończony 27 października; 28 października dodano osobno schemat zależności i tabelę przykładów | W audycie sprawdzono klasyfikację TOP, wzór $\operatorname{ks}\equiv\sigma/8$, zakres twierdzenia o zanurzaniu sfer, rachunek $\pi_1$ chirurgii, wniosek Poincarégo i przykłady $H$, $[1]$, $E_8$, $2E_8$. Nowy schemat porządkuje drogę od dysków i wież Cassona do klasyfikacji w przypadku $\pi_1=1$, a tabela zestawia parzystość, sygnaturę, $\operatorname{ks}$ i istnienie wygładzenia, w tym oba typy o formie $[1]$; nie ponowiono audytu całego rozdziału. Rozróżnienie oryginalnego twierdzenia Freedmana od pełnej wersji Freedmana--Quinna zachowano; klasyfikacja, zanurzanie i topologiczny $s$-kobordyzm pozostają zewnętrzne. |
 | 37. Donaldson (plik 34) | `34-donaldson.tex` | Pełny audyt zakończony 27 października | Sprawdzono lokalność trywializacji, ASD, całkowity $c_1$, znaki $c_2$ i energii, orientację w źródłowym dowodzie oraz wnioski $E_8$ i $2E_8$. Wyodrębniono algebraiczny krok diagonalizacji; konstrukcja i analiza przestrzeni moduli oraz twierdzenie Donaldsona pozostają zewnętrzne. |
 | 38. Egzotyczne $\R^4$ (plik 35) | `35-egzotyczne-r4.tex` | Pełny audyt zakończony 27 października | Sprawdzono obie przeszkody Gompfa, lematy 1.1–1.2, rachunek dopełnienia charakterystycznego wektora i indukcję ze zwartymi świadkami. Dodano źródło dla topologicznego otoczenia normalnego dysków, jawną bazę kraty $-E_8$ i orientacje w sklejeniu pierścieni. Twierdzenia o uchwytach Cassona, wyniki Freedmana, Gompfa oraz De Michelisa–Freedmana pozostają zewnętrzne. |
 | Podział źródeł i importy | — | Zakończono, `9148128` | Kontrola regresji przy dalszych zmianach |

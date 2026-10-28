@@ -1,5 +1,69 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-10-28 — droga do klasyfikacji TOP w tomie IV
+
+### Problem
+
+Rozdział 34 wyprowadzał macierz obramowanego splotu bez rysunku,
+na którym można jednocześnie odczytać wpis diagonalny i liczbę
+sprzężenia. Rozdział 36 omawiał przykłady $H$, $[1]$, $E_8$ i
+$2E_8$ oraz łańcuch wyników prowadzących do klasyfikacji, lecz
+porównanie typów TOP/DIFF i roli dysków oraz sfer wymagało
+zestawiania kilku akapitów.
+
+### Rozwiązanie i wpływ
+
+W `tex/rozdzialy/31-freedman-formy-przeciecia.tex` dodano
+oryginalny diagram TikZ splotu Hopfa z obramowaniami $(0,0)$
+oraz niewęzła z obramowaniem $+1$. Strzałki orientacji i dwa
+przejścia nad/pod dają dwa dodatnie skrzyżowania, więc
+$\operatorname{lk}=1$ i macierz $H$; pojedyncza liczba obramowania
+daje macierz $[1]$. Rysunek odsyła do istniejącego grafu $E_8$
+bez powielania jego rachunku.
+
+W `tex/rozdzialy/33-freedman-klasyfikacja.tex` dodano schemat
+danych immersyjnych, wież Cassona, lokalnie płaskich dysków
+i sfer, chirurgii TOP, kontroli $\pi_1$, topologicznego
+$s$-kobordyzmu i klasyfikacji przez $(Q,\operatorname{ks})$.
+Tekst i podpis rozdzielają dualność algebraiczną jako hipotezę
+od dualności geometrycznej jako wniosku. Wymagania dotyczące
+zaniku przeszkód i pozostałych hipotez są jawne; schemat nie
+zastępuje twierdzeń Freedmana--Quinna ani
+Powella--Raya--Teichnera. Realizacja form i rachunek
+$\operatorname{ks}$ są wskazane jako dalsze, osobne wejścia.
+
+Tabela w tym samym rozdziale rozdziela dwa typy TOP dla $[1]$
+według $\operatorname{ks}=0,1$ oraz zestawia parzystość,
+sygnaturę, $\operatorname{ks}$ i istnienie wygładzenia dla
+wszystkich czterech form. W szczególności $2E_8$ ma
+$\operatorname{ks}=0$, lecz nie jest wygładzalna przez
+twierdzenie Donaldsona. „DIFF: tak” oznacza istnienie
+struktury gładkiej, bez tezy o jej jednoznaczności.
+Zakres klasyfikacji i wzór dla form parzystych porównano z
+[Freedmanem--Quinnem, §10.1 i §10.2.2](https://archive.mpim-bonn.mpg.de/4789/2/FreedmanQuinn-TopologyOf4Manifolds-Reformatted2013.pdf).
+
+Kompromis: rozdział 36 zawiera teraz syntetyczną tabelę po
+opisanych już przykładach, a schemat pokazuje zależność wyników,
+nie dowód klasyfikacji. Nie zmieniono kodu rozdziału 35,
+istniejącego drzewa Cassona, rachunku $E_8$ ani konfiguracji
+pakietów LaTeX.
+
+### Weryfikacja
+
+Sprawdzono znaki obu skrzyżowań splotu Hopfa, wartości pięciu
+wierszy tabeli względem klasyfikacji Freedmana--Quinna i rolę
+sfer dualnych w schemacie. Doraźny skład tomu IV przez
+`latexmk` zakończył się kodem 0 i dał 81 stron. Obejrzano
+fizyczne strony 35, 46 i 47: rysunki i tabela mieszczą się
+w łamie, etykiety i podpisy są czytelne. Po powiększeniu tabeli
+sprawdzono ponownie stronę 47 końcowego PDF. Pełny skład
+`buduj_tomy.ps1` przeszedł po dwóch przebiegach: tomy I--IV
+mają 216, 182, 102 i 81 stron, a indeksy przyjęły 113, 96,
+30 i 93 wpisy bez odrzuceń. Kontrola logów, trzech łączy do
+pozostałych tomów w każdym PDF oraz zgodności SHA-256 kopii
+PDF zakończyła się kodem 0. `git diff --check` nie wykazał
+błędów białych znaków.
+
 ## 2026-10-28 — przeplecenie dwóch uchwytów sfery
 
 ### Problem

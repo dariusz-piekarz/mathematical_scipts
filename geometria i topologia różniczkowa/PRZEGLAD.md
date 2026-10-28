@@ -14,6 +14,59 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdziały 34 i 36 — sploty obramowane i droga do klasyfikacji TOP (2026-10-28)
+
+W rozdziale 34 dodano rzut dwóch prostych diagramów uchwytów $2$.
+Splot Hopfa ma oba obramowania równe zero, a przy zaznaczonych
+orientacjach dwa dodatnie skrzyżowania dają
+$\operatorname{lk}(K_1,K_2)=1$; jego macierz sprzężeń jest więc
+$H=\left(\begin{smallmatrix}0&1\\1&0\end{smallmatrix}\right)$.
+Niewęzeł z obramowaniem $+1$ daje formę $[1]$. Białe przerwy
+w rysunku oznaczają przejścia pod spodem. Wcześniejszy graf $E_8$
+pozostaje grafem macierzy, więc nie powielano go rzutem
+ośmioskładnikowego splotu.
+
+W rozdziale 36 zebrano drogę od immersyjnych dysków i sfer
+algebraicznie dualnych, przez wieże Cassona i ich uogólnienia,
+do lokalnie płaskich dysków i sfer mających geometrycznie dualne sfery.
+Dalsze pola schematu pokazują chirurgię TOP z kontrolą $\pi_1$,
+topologiczny $s$-kobordyzm w wymiarze pięć i klasyfikację przez
+formę przecięcia oraz niezmiennik Kirby'ego--Siebenmanna.
+Sfery algebraicznie dualne są założeniem twierdzenia o zanurzaniu,
+a geometrycznie dualne należą do jego konkluzji. Strzałki są
+mapą zależności, nie dowodem ani bezwarunkowym algorytmem:
+przejście przez uogólnione wieże, twierdzenie o zanurzaniu dysków,
+twierdzenie o sferach dualnych, chirurgia i $s$-kobordyzm
+pozostają wynikami zewnętrznymi przy odpowiednich hipotezach.
+Ich zakres i źródła podano w tekście, w szczególności u
+[Freedmana i Quinna, *Topology of 4-Manifolds*](https://archive.mpim-bonn.mpg.de/4789/2/FreedmanQuinn-TopologyOf4Manifolds-Reformatted2013.pdf);
+konkluzję o geometrycznie dualnych sferach uzasadnia
+[Powell--Ray--Teichner, *The 4-dimensional disc embedding theorem and dual spheres*](https://arxiv.org/pdf/2006.05209).
+Realizacja form i rachunek niezmiennika Kirby'ego--Siebenmanna
+są dodatkowymi wejściami do klasyfikacji.
+
+Tabela w rozdziale 36 zestawia $H$, dwa dopuszczalne typy
+o formie $[1]$, $E_8$ i $2E_8$: parzystość, sygnaturę,
+niezmiennik Kirby'ego--Siebenmanna oraz istnienie typu TOP
+i struktury DIFF. Dla $2E_8$ wpis $\operatorname{ks}=0$
+nie oznacza wygładzalności; wyklucza ją twierdzenie Donaldsona.
+Kolumna DIFF mówi wyłącznie o istnieniu wygładzenia, nie o jego
+jednoznaczności. Tabela syntetyzuje wcześniejsze rachunki i
+twierdzenia, bez ich powtarzania. Diagramy wykonano w dotychczasowej
+niebieskiej stylistyce TikZ; ograniczono je do zależności potrzebnych
+czytelnikowi, zamiast ilustrować całą konstrukcję Freedmana.
+
+Doraźny skład tomu IV zakończył się poprawnie: PDF ma 81 stron.
+Obejrzano fizyczne strony 35, 46 i 47 z nowymi elementami;
+rysunki i tabela mieszczą się w łamie i są czytelne. Po
+powiększeniu tabeli ponownie obejrzano stronę 47 końcowego PDF.
+Pełny `buduj_tomy.ps1` zakończył się kodem 0 po dwóch przebiegach.
+Tomy I--IV mają 216, 182, 102 i 81 stron; indeksy przyjęły
+113, 96, 30 i 93 wpisy bez odrzuceń. W logach nie znaleziono
+nieustalonych odsyłaczy, przepełnionych wierszy ani brakujących
+znaków. Każdy tom ma trzy łącza do pozostałych na stronie
+tytułowej, a kopia PDF w `build/tomy` ma tę samą sumę SHA-256.
+
 ## Rozdział 26 — wizualne przykłady uchwytów (2026-10-28)
 
 Na prośbę autora uzupełniono sekwencję przykładów chirurgii powierzchni.

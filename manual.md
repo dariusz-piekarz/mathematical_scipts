@@ -12,6 +12,87 @@ oraz dodatki). Starsze wpisy poniżej dokumentują rzeczywiście
 wykonane wówczas polecenia dla dawnego podziału na trzy tomy;
 ich numery stron i nazwy PDF-ów są historyczne.
 
+### Droga do klasyfikacji TOP w tomie IV — polecenia wykonane 28 października 2026
+
+Pracę wykonano na gałęzi `review/rozdzialy-matematyka`.
+W katalogu głównym repozytorium uruchomiono `git pull --ff-only`;
+gałąź była aktualna. Nie pobierano danych projektu ani nie
+instalowano nowych pakietów. Użyto istniejącego środowiska:
+Windows PowerShell 5.1, MiKTeX 25.12, `latexmk` 4.88,
+`makeindex` z MiKTeX 25.12, Perl 5.42.3 z Git for Windows
+i Poppler 24.04.0
+(`pdfinfo`, `pdftoppm`, `pdftohtml`). Katalog roboczy poleceń
+składu to
+`C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts\geometria i topologia różniczkowa`.
+Nie są wymagane projektowe zmienne środowiskowe; bezpośrednie
+wywołanie `latexmk` wymaga Perla w `PATH`.
+
+Po zmianie rozdziałów 34 i 36 wykonano doraźny skład tomu IV:
+
+```powershell
+$env:PATH = 'C:\Program Files\Git\usr\bin;' + $env:PATH
+latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=build/tomy geometria_tom4.tex
+```
+
+Po doprecyzowaniu podpisu schematu, strzałki orientacji oraz
+etykiet sfer powtórzono skład przez `latexmk -silent` z tymi
+samymi opcjami i katalogiem wynikowym. Oba składy zakończyły
+się kodem 0; drugi PDF miał 81 stron. Wyrenderowano strony
+do oględzin:
+
+```powershell
+pdftoppm -f 34 -l 35 -scale-to 1600 -png build/tomy/geometria_tom4.pdf "$env:TEMP\freedman-hopf"
+pdftoppm -f 45 -l 47 -scale-to 1600 -png build/tomy/geometria_tom4.pdf "$env:TEMP\freedman-route"
+```
+
+Na fizycznej stronie 35 jest diagram obramowanego splotu,
+na 46 schemat zależności, a na 47 tabela przykładów.
+Po tych oględzinach powiększono jeszcze tabelę; końcowe
+sprawdzenie jej układu wykonano po pełnym składzie.
+
+W katalogu projektu uruchomiono pełny skrypt z zapisem wyjścia:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\buduj_tomy.ps1 *> build/tomy/full-build-run.txt
+```
+
+Skrypt zakończył się kodem 0 po dwóch przebiegach. Tomy I--IV
+mają 216, 182, 102 i 81 stron. W tym samym katalogu wykonano
+następujący blok kontroli indeksów, logów, łączy i kopii PDF:
+
+```powershell
+1..4 | ForEach-Object {
+  $v = "geometria_tom$_"
+  $pages = (pdfinfo "$v.pdf" | Select-String '^Pages:').Line.Trim()
+  $index = (Select-String -Path "build/tomy/$v.ilg" -Pattern 'entries accepted, 0 rejected').Line.Trim()
+  $bad = @(Select-String -Path "build/tomy/$v.log" -Pattern 'LaTeX Warning: Reference .* undefined|There were undefined references|Label\(s\) may have changed|Overfull \\hbox|Missing character')
+  $links = @(pdftohtml -q -xml -f 1 -l 1 -stdout "$v.pdf" | Select-String 'href="geometria_tom[1-4]\.pdf"' -AllMatches | ForEach-Object { $_.Matches.Value } | Sort-Object -Unique)
+  $same = (Get-FileHash "$v.pdf" -Algorithm SHA256).Hash -eq (Get-FileHash "build/tomy/$v.pdf" -Algorithm SHA256).Hash
+  if ($bad.Count -ne 0 -or $links.Count -ne 3 -or -not $same) { throw "Kontrola $v nie powiodła się: bad=$($bad.Count), links=$($links.Count), same=$same" }
+  "$($v): $pages; $index; 3 łącza; SHA-256 zgodna"
+}
+```
+
+Kontrola zakończyła się kodem 0. Indeksy przyjęły kolejno
+113, 96, 30 i 93 wpisy bez odrzuceń; logi nie zawierają
+wskazanych ostrzeżeń. Każdy tom ma trzy łącza do pozostałych
+i kopię o zgodnej sumie SHA-256. Końcową tabelę ponownie
+wyrenderowano i obejrzano poleceniem:
+
+```powershell
+pdftoppm -f 47 -l 47 -scale-to 1600 -png geometria_tom4.pdf "$env:TEMP\freedman-table-final"
+```
+
+Tabela, podpis i sąsiedni tekst są czytelne bez kolizji.
+`git diff --check` zakończył się kodem 0 bez błędów białych znaków.
+
+### Instrukcja przygotowana do samodzielnego wykonania
+
+Na nowym stanowisku użyj instrukcji instalacji z dalszej części
+tego pliku, przejdź do wskazanego katalogu projektu, uruchom
+`buduj_tomy.ps1` i powtórz blok kontroli. Instalacji i pobierania
+danych nie wykonywano w tej iteracji.
+
 ### Przykłady wizualne w rozdziale 26 — polecenia wykonane 28 października 2026
 
 Pracę prowadzono na gałęzi `review/rozdzialy-matematyka`.
