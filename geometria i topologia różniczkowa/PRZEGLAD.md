@@ -14,6 +14,70 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 26 — wizualne przykłady uchwytów (2026-10-28)
+
+Na prośbę autora uzupełniono sekwencję przykładów chirurgii powierzchni.
+Rysunek jednej sfery przechodzącej w torus był już w rozdziale 23,
+a lokalna wymiana dwóch dysków na pierścień na początku rozdziału 26.
+Nowy przykład i oryginalny schemat w rozdziale 26 pokazują brakującą
+sekwencję brzegów: $S^2\sqcup S^2\to S^2\to T^2$.
+Pierwszy uchwyt łączy dwie składowe, drugi tworzy otwór na
+już połączonej powierzchni. Złote pola wskazują dyski wycinane
+w każdym kroku; podpisy pod trzema bryłami podają topologię ich
+brzegów, $b_0$ i $\chi$. Tekst rozdziela trójwymiarowy
+uchwyt $D^1\times D^2$ śladu od pierścienia $D^1\times S^1$
+wklejanego do brzegu. Sklejenie zachowujące orientowalność
+jest warunkiem wyniku $T^2$; druga możliwość daje butelkę Kleina.
+Każdy krok obniża $\chi$ o dwa, zatem wartości wynoszą $4,2,0$.
+
+Nazwę modyfikacji sferycznej, dwa typy sklejenia i przypadek
+łączenia składowych porównano z
+[A. H. Wallace'em, *Modifications and Cobounding Manifolds*,
+§§1 i 3](https://doi.org/10.4153/CJM-1960-045-7).
+Wallace zapisuje typ tej operacji jako $(0,1)$, podając wymiar
+nowej sfery; rozdział używa wcześniej zdefiniowanej konwencji
+$(p,q)=(0,2)$, gdzie $q$ jest wymiarem dysku normalnego.
+Ilustracja jest nowym schematem, bez kopiowania rysunku źródłowego.
+W pierwszym podglądzie wcześniejszy rysunek lokalnej wymiany
+dysków wypłynął między części nowego przykładu. Zmieniono jego
+specyfikator na `[H]`, używając obecnego już w preambule pakietu
+`float`. W ponownie złożonym tomie III na fizycznych stronach
+37–39 lokalny model stoi przed pełnym nowym przykładem,
+a powiększony Rysunek 26.2 mieści się w łamie. Złote dyski,
+obie rurki, strzałki, podpisy i prześwit ostatniej bryły
+są czytelne; nie ma kolizji ani ucięć.
+
+Na dalszą prośbę autora dodano osobny przykład sfery z dwoma
+rozłącznymi uchwytami, których pobocznice przecinamy wzdłuż
+meridianów, przeplatamy i sklejamy z zachowaniem pierwotnych
+par końców. Odpowiedź autora określiła właśnie te pary, więc
+rysunek pokazuje czysty warkocz $\sigma_1^2$ z dwoma
+skrzyżowaniami rzutu i naprzemienną głębokością rur.
+Trzy stany ilustracji pokazują sferę z uchwytami, cztery
+otwarte obrzeża oraz ponownie sklejoną powierzchnię.
+Pozostała po cięciu sfera z czterema otworami ma $\chi=-2$,
+a dwie wklejane pobocznice mają $\chi=0$; wynik jest nadal
+orientowalną powierzchnią rodzaju dwa. Zaznaczony przebieg
+rdzeni nie dowodzi sam przez się zmiany klasy izotopii
+nieoznaczonej powierzchni. Przykład niezawęźlonego ciała
+uchwytowego z przeplecionymi rdzeniami porównano z
+[Benedettim, Frigeriem i Ghiloniem, *The topology of Helmholtz
+domains*, przykładem 6.16](https://people.dm.unipi.it/benedett/Expositiones_online.pdf).
+Ilustrację wykonano od podstaw w TikZ, z cieniowaną sferą,
+walcowymi rurkami i białymi maskami pod przejściami.
+Po pierwszym podglądzie przypięto ją do przykładu przez `[H]`,
+bo swobodny rysunek wypadł dopiero za dwiema późniejszymi
+uwagami. W końcowym PDF tomu III przykład jest na fizycznej
+stronie 39, a rysunek 26.4 zaczyna stronę 40 bezpośrednio
+po nim; obie strony obejrzano. Cztery obrzeża, dwa przejścia
+nad/pod, etykiety i podpis są czytelne, bez ucięć lub kolizji.
+Pełny skład czterech tomów zakończył się kodem 0 po dwóch
+przebiegach. PDF-y mają 216, 182, 102 i 80 stron, a indeksy
+przyjęły 113, 96, 30 i 93 wpisy bez odrzuceń. W logach brak
+nieustalonych odsyłaczy, przepełnionych wierszy i brakujących
+znaków; każdy tom ma trzy łącza do pozostałych i zgodną sumę
+SHA-256 z kopią w `build/tomy`.
+
 ## Rozdział 28 — mapa hipotez chirurgii (2026-10-28)
 
 Po ukończeniu konstrukcyjnego opisu ciągu i przykładu przez rozdziały

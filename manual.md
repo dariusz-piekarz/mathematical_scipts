@@ -12,6 +12,78 @@ oraz dodatki). Starsze wpisy poniżej dokumentują rzeczywiście
 wykonane wówczas polecenia dla dawnego podziału na trzy tomy;
 ich numery stron i nazwy PDF-ów są historyczne.
 
+### Przykłady wizualne w rozdziale 26 — polecenia wykonane 28 października 2026
+
+Pracę prowadzono na gałęzi `review/rozdzialy-matematyka`.
+W katalogu głównym repozytorium wykonano `git pull --ff-only`;
+gałąź była aktualna. Nie pobierano danych ani nie instalowano
+nowych zależności. Użyto MiKTeX 25.12, `latexmk` 4.88,
+`makeindex` z MiKTeX 25.12, Perla z Git for Windows oraz
+Poppler 24.04.0. Katalog roboczy
+poleceń składu to
+`C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts\geometria i topologia różniczkowa`.
+Nie są wymagane projektowe zmienne środowiskowe; przy wywołaniu
+samego `latexmk` Perl musi być dostępny w `PATH`.
+
+Po zmianie `tex/rozdzialy/22-chirurgia-geometryczna.tex`
+uruchomiono doraźny skład tomu III. Pierwsze wywołanie
+`latexmk` bez Perla w `PATH` zakończyło się błędem silnika
+skryptowego. Powtórzono je po dodaniu Perla z Git for Windows:
+
+```powershell
+$env:PATH = 'C:\Program Files\Git\usr\bin;' + $env:PATH
+latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=build/tomy geometria_tom3.tex
+```
+
+To wywołanie zakończyło się kodem 0; doraźny PDF miał 102 strony,
+a indeks przyjął 30 wpisów bez odrzuceń. Po obejrzeniu nowego
+rysunku przypięto go do przykładu specyfikatorem `[H]`.
+Następnie uruchomiono pełny skład czterech tomów poleceniem:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\buduj_tomy.ps1
+```
+
+Pełny skład zakończył się kodem 0 po dwóch przebiegach.
+Tomy I–IV mają 216, 182, 102 i 80 stron; ich indeksy
+przyjęły odpowiednio 113, 96, 30 i 93 wpisy, bez odrzuceń.
+W tym samym katalogu wykonano następujący blok kontroli:
+
+```powershell
+1..4 | ForEach-Object {
+  $v = "geometria_tom$_"
+  $pages = (pdfinfo "$v.pdf" | Select-String '^Pages:').Line.Trim()
+  $index = (Select-String -Path "build/tomy/$v.ilg" -Pattern 'entries accepted, 0 rejected').Line.Trim()
+  $bad = @(Select-String -Path "build/tomy/$v.log" -Pattern 'LaTeX Warning: Reference .* undefined|There were undefined references|Label\(s\) may have changed|Overfull \\hbox|Missing character')
+  $links = @(pdftohtml -q -xml -f 1 -l 1 -stdout "$v.pdf" | Select-String 'href="geometria_tom[1-4]\.pdf"' -AllMatches | ForEach-Object { $_.Matches.Value } | Sort-Object -Unique)
+  $same = (Get-FileHash "$v.pdf" -Algorithm SHA256).Hash -eq (Get-FileHash "build/tomy/$v.pdf" -Algorithm SHA256).Hash
+  if ($bad.Count -ne 0 -or $links.Count -ne 3 -or -not $same) { throw "Kontrola $v nie powiodła się: bad=$($bad.Count), links=$($links.Count), same=$same" }
+  "$v`: $pages; $index; 3 łącza; SHA-256 zgodna"
+}
+```
+
+Kontrola zakończyła się kodem 0 dla wszystkich tomów:
+nie znaleziono wskazanych ostrzeżeń w logach; każdy PDF
+ma trzy łącza do pozostałych tomów na stronie tytułowej,
+a kopie mają zgodne sumy SHA-256. Fizyczne strony 39–40
+tomu III wyrenderowano i obejrzano poleceniem:
+
+```powershell
+pdftoppm -f 39 -l 40 -scale-to 1600 -png .\geometria_tom3.pdf "$env:TEMP\geometry-braid-verified"
+```
+
+Na stronie 39 kończy się tekst nowego przykładu, a stronę 40
+otwiera rysunek 26.4. Rurki, obrzeża, strzałki, etykiety,
+prześwity i podpis są czytelne, bez kolizji lub ucięć.
+
+### Instrukcja przygotowana do samodzielnego wykonania
+
+Na nowym stanowisku wykonaj instrukcje instalacji z dalszej
+części tego pliku, przejdź do katalogu projektu i uruchom
+`buduj_tomy.ps1` z powyższego bloku. Skrypt sam znajdzie
+Perla z Git for Windows, jeśli jest w standardowym katalogu.
+Instalacji i pobierania danych nie wykonywano w tej iteracji.
+
 ### Katalog roboczy
 
 W PowerShell przejdź do katalogu projektu:

@@ -1,5 +1,103 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-10-28 — przeplecenie dwóch uchwytów sfery
+
+### Problem
+
+Autor poprosił o przestrzenny przykład, w którym dwa rozłączne
+uchwyty na sferze zostają przecięte, przeplecione i ponownie
+sklejone. Doprecyzował, że każda rurka ma wrócić do swoich
+pierwotnych końców. Bez tego warunku rysunek mógłby przedstawiać
+inną operację na parowaniu czterech obrzeży.
+
+### Rozwiązanie i wpływ
+
+W rozdziale 26 dodano przykład i trójstanowy rysunek TikZ:
+sfera z dwoma uchwytami, cztery otwarte obrzeża po dwóch
+cięciach oraz dwa przeplecione uchwyty po sklejeniu.
+Rurki tworzą czysty warkocz $\sigma_1^2$ z dwoma
+skrzyżowaniami rzutu, zaznaczonymi białymi maskami
+i kolejnością głębokości. Pary $A_-/A_+$ oraz $B_-/B_+$
+pozostają te same. Tekst liczy $\chi=-2$ na sferze z
+czterema otworami; dwie wklejane pobocznice mają $\chi=0$,
+więc wynik nadal jest powierzchnią rodzaju dwa.
+
+Rysunek ma charakter przestrzennego schematu opartego na
+cieniowaniu i szerokich, warstwowych kreskach TikZ. Oznacza
+położenie wyróżnionych uchwytów, ale nie ustala klasy
+izotopii nieoznaczonej powierzchni. To ograniczenie
+sprawdzono wobec przykładu niezawęźlonego ciała uchwytowego
+z przeplecionymi rdzeniami w pracy
+[Benedettiego, Frigeria i Ghilioniego, *The topology of Helmholtz
+domains*, przykład 6.16](https://people.dm.unipi.it/benedett/Expositiones_online.pdf).
+Nie dodano nowych pakietów ani zewnętrznych plików graficznych.
+Po podglądzie ustawiono dla nowego rysunku `[H]`, aby stał
+bezpośrednio po przykładzie, przed dwiema dalszymi uwagami.
+Kosztem jest mniejsza swoboda łamania: tekst przykładu
+kończy się na jednej stronie, a rysunek otwiera następną.
+
+### Weryfikacja
+
+Sprawdzono rachunek charakterystyki Eulera oraz zachowanie
+par końców w modelu dwóch skrzyżowań. Pełny skład czterech
+tomów zakończył się kodem 0; PDF-y mają 216, 182, 102 i 80
+stron. Indeksy przyjęły 113, 96, 30 i 93 wpisy bez odrzuceń.
+Kontrola logów, trzech łączy między tomami na każdej stronie
+tytułowej i sum SHA-256 kopii PDF przeszła bez błędów.
+Obejrzano fizyczne strony 39–40 tomu III: tekst przykładu
+stoi przed rysunkiem 26.4, a rysunek mieści się w łamie;
+etykiety, obrzeża i przejścia nad/pod są czytelne.
+
+## 2026-10-28 — dwa wizualne kroki chirurgii powierzchni
+
+### Problem
+
+Obecne rysunki pokazywały lokalną wymianę dwóch dysków na pierścień
+oraz przejście od jednej sfery do torusa. Brakowało obrazu dwóch
+sfer połączonych kolejno dwiema rurkami. Sam skrót
+$S^2\sqcup S^2\to T^2$ mógł sugerować, że pierwszy uchwyt
+od razu tworzy rodzaj jeden.
+
+### Rozwiązanie i wpływ
+
+W rozdziale 26 (`tex/rozdzialy/22-chirurgia-geometryczna.tex`)
+dodano przykład i schemat $S^2\sqcup S^2\to S^2\to T^2$.
+Pierwszy $1$-uchwyt trójwymiarowego śladu łączy składowe,
+drugi dołącza rurkę do dwóch miejsc już połączonej powierzchni.
+Na brzegu każdy krok jest chirurgią typu $(0,2)$: wycina
+$S^0\times D^2$ i wkleja $D^1\times S^1$.
+Schemat pokazuje miejsca wycinania złotymi polami,
+a podpisy pod bryłami podają liczby składowych i charakterystyki
+Eulera: $(2,4)\to(1,2)\to(1,0)$.
+Drugi krok jest także samodzielnym wariantem jednej sfery;
+tekst odsyła do istniejącego rysunku tego wariantu.
+Dodano warunek sklejenia zachowującego orientowalność,
+ponieważ inne sklejenie daje butelkę Kleina.
+
+Kompromis: zamiast powielać istniejący rysunek $S^2\to T^2$,
+nowy schemat przedstawia uproszczone bryły z dwiema rurkami.
+Ich podpisy dotyczą brzegów po wygładzeniu naroży.
+Po podglądzie zwiększono skalę schematu, aby wyraźnie pokazać
+dyski i prześwit między rurkami. Wcześniejszy rysunek lokalnej
+wymiany dysków na pierścień przypięto do miejsca w tekście
+specyfikatorem `[H]` z używanego już pakietu `float`: w pierwszym
+składzie wpływał między części nowego przykładu i rozcinał zdanie
+na granicy stron. Kosztem mniejszej swobody łamania rysunek
+pozostaje przed przykładem, do którego wprowadza.
+Źródłem pojęcia i kontroli orientowalności jest
+[A. H. Wallace, *Modifications and Cobounding Manifolds*,
+§§1 i 3](https://doi.org/10.4153/CJM-1960-045-7);
+rysunek opracowano samodzielnie. Rozdział zachowuje własną
+konwencję typu $(0,2)$ i jawnie odróżnia ją od Wallace'owskiego
+oznaczenia $(0,1)$.
+
+### Weryfikacja
+
+Przeliczono $\chi(M')=\chi(M)-2$ z sumy po dwóch dyskach
+i pierścieniu oraz porównano liczbę składowych i orientowalność
+z opisem Wallace'a. Wyniki składu i oględzin strony zapisano
+w `PRZEGLAD.md` oraz polecenia w `manual.md`.
+
 ## 2026-10-28 — mapa hipotez chirurgii w tomie III
 
 ### Problem
