@@ -12,6 +12,74 @@ oraz dodatki). Starsze wpisy poniżej dokumentują rzeczywiście
 wykonane wówczas polecenia dla dawnego podziału na trzy tomy;
 ich numery stron i nazwy PDF-ów są historyczne.
 
+### Instanton BPST i analiza Donaldsona — polecenia wykonane 28 października 2026
+
+Pracę nad `tex/rozdzialy/34-donaldson.tex` wykonano na gałęzi
+`review/rozdzialy-matematyka`. Katalog roboczy poleceń składu:
+`C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts\geometria i topologia różniczkowa`.
+Nie pobierano danych ani nie instalowano nowych zależności.
+Używane środowisko jest takie jak w zakończonym wpisie poniżej:
+Windows PowerShell 5.1, MiKTeX 25.12, `latexmk` 4.88,
+`makeindex` z MiKTeX 25.12, Perl 5.42.3 z Git for Windows
+i Poppler 24.04.0. Projekt nie wymaga własnych zmiennych
+środowiskowych; przy bezpośrednim wywołaniu `latexmk` Perl
+musi być w `PATH`.
+
+**Polecenia wykonane.** W katalogu głównym
+repozytorium wykonano `git pull --ff-only`; gałąź była aktualna.
+Po zmianie rozdziału wykonano doraźny skład tomu IV
+z katalogu projektu:
+
+```powershell
+$env:PATH = 'C:\Program Files\Git\usr\bin;' + $env:PATH
+latexmk -silent -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=build/tomy geometria_tom4.tex *> build/tomy/donaldson-preview.txt
+```
+
+Doraźny skład zakończył się kodem 0. Do oględzin
+wyrenderowano fizyczne strony 49--52:
+
+```powershell
+pdftoppm -f 49 -l 52 -scale-to 1700 -png build/tomy/geometria_tom4.pdf "$env:TEMP\donaldson-preview"
+```
+
+Na stronach 50--52 przykład BPST i tabela wejść analitycznych
+mieszczą się w łamie i są czytelne. Następnie wykonano pełny
+skład czterech tomów z katalogu projektu:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\buduj_tomy.ps1 *> build/tomy/donaldson-full-build.txt
+```
+
+Skrypt zakończył się kodem 0 po dwóch przebiegach. Tomy I--IV
+mają odpowiednio 216, 182, 102 i 82 strony. W tym samym
+katalogu wykonano blok kontroli indeksów, ostrzeżeń logu,
+łączy między tomami i zgodności kopii PDF:
+
+```powershell
+1..4 | ForEach-Object {
+  $v = "geometria_tom$_"
+  $pages = (pdfinfo "$v.pdf" | Select-String '^Pages:').Line.Trim()
+  $index = (Select-String -Path "build/tomy/$v.ilg" -Pattern 'entries accepted, 0 rejected').Line.Trim()
+  $bad = @(Select-String -Path "build/tomy/$v.log" -Pattern 'LaTeX Warning: Reference .* undefined|There were undefined references|Label\(s\) may have changed|Overfull \\hbox|Missing character')
+  $links = @(pdftohtml -q -xml -f 1 -l 1 -stdout "$v.pdf" | Select-String 'href="geometria_tom[1-4]\.pdf"' -AllMatches | ForEach-Object { $_.Matches.Value } | Sort-Object -Unique)
+  $same = (Get-FileHash "$v.pdf" -Algorithm SHA256).Hash -eq (Get-FileHash "build/tomy/$v.pdf" -Algorithm SHA256).Hash
+  if ($bad.Count -ne 0 -or $links.Count -ne 3 -or -not $same) { throw "Kontrola $v nie powiodła się: bad=$($bad.Count), links=$($links.Count), same=$same" }
+  "$($v): $pages; $index; 3 łącza; SHA-256 zgodna"
+}
+```
+
+Kontrola zakończyła się kodem 0. Indeksy przyjęły kolejno
+113, 96, 30 i 94 wpisy bez odrzuceń. W logach nie znaleziono
+niezdefiniowanych odwołań, przepełnionych wierszy ani brakujących
+znaków. Każda strona tytułowa ma trzy łącza do pozostałych
+tomów, a kopia każdego PDF ma zgodną sumę SHA-256.
+`git diff --check` zakończył się kodem 0.
+
+**Instrukcja przygotowana do samodzielnego wykonania.**
+Na nowym stanowisku przygotuj środowisko według dalszych wpisów
+tego pliku, przejdź do wskazanego katalogu projektu, uruchom
+`buduj_tomy.ps1` i powtórz powyższy blok kontroli.
+
 ### Droga do klasyfikacji TOP w tomie IV — polecenia wykonane 28 października 2026
 
 Pracę wykonano na gałęzi `review/rozdzialy-matematyka`.

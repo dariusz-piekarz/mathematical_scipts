@@ -14,6 +14,59 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 37 — instanton BPST i wejścia do twierdzenia Donaldsona (2026-10-28)
+
+Dotychczasowy lokalny przykład połączenia antysamodualnego miał
+nieskończoną energię na $\R^4$. Dodano więc przykład instantonu BPST
+na $S^4$ w orientacji i normalizacji rozdziału. Na karcie
+$S^4\setminus\{\infty\}\cong\R^4$ jego forma to
+$A_\lambda=\operatorname{Im}(\bar q\,\mathrm{d}q)/(|q|^2+\lambda^2)$.
+Obliczenie krzywizny rozkłada ją na trzy antysamodualne $2$-formy,
+a całka radialna daje $\int_{S^4}|F|^2=8\pi^2$. Druga trywializacja,
+po zmianie cechowania i odwróceniu współrzędnych, ma formę gładką
+przy punkcie $\infty$. To pokazuje, że lokalny wzór określa połączenie
+na wiązce nad całą sferą; wcześniej ustalona tożsamość energii daje
+$c_2(E)[S^4]=1$. Wariant rozwiązania pochodzi od
+[Belavina, Polyakova, Schwartza i Tyupkina (1975)](https://strings.itp.ac.ru/Papers/belavin1975.pdf).
+
+Przed twierdzeniem o diagonalizacji dodano operator deformacji
+$D_A=d_A^*\oplus d_A^+$ w przekroju cechowania i wzór na jego indeks.
+Dla jednospójnej rozmaitości o ujemnie określonej formie przecięcia
+i $c_2=1$ wymiar oczekiwany wynosi $5$; gładkość części
+nieredukowalnej wymaga osobnej regularności i perturbacji. Tabela
+wyodrębnia punkty redukowalne z linkiem $\mathbb{C}P^2$,
+koncentrację energii, kompaktifikację Uhlenbeck oraz kołnierz
+$X\times(0,\varepsilon)$ pochodzący z konstrukcji Taubesa i analizy
+Donaldsona. Samo twierdzenie Uhlenbeck o oszacowaniach $L^p$ daje
+słabą zwartość dla $p>2$; ograniczenie krytycznej energii $L^2$
+dopuszcza bąble. Indeks i regularność porównano z
+[Atiyahem, Hitchinem i Singerem](https://doi.org/10.1098/rspa.1978.0143)
+oraz [Donaldsonem](https://doi.org/10.1090/S0273-0979-1983-15090-5),
+zwartość i przedłużanie z pracami
+[Uhlenbeck o oszacowaniach $L^p$](https://doi.org/10.1007/BF01947069)
+i [usuwaniu osobliwości](https://doi.org/10.1007/BF01947068),
+a opis końca z [Taubesem](https://doi.org/10.4310/jdg/1214436701)
+i Donaldsonem. Te wejścia analityczne oraz diagonalizacja pozostają
+wynikami zewnętrznymi.
+
+Poprawiono także dawny skrót w rachunku sygnatury: dopuszczalne
+orientacje linków punktów redukowalnych dają najpierw
+$n(Q_X)\geq b_2(X)$. Odwrotna nierówność wynika z algebraicznej
+ortogonalności różnych par klas o kwadracie $-1$; razem dają
+równość potrzebną do diagonalizacji. Jest to korekta zakresu
+wcześniejszego wniosku, bez nowego dowodu analitycznej części
+twierdzenia.
+
+Podgląd tomu IV złożono poprawnie i obejrzano fizyczne strony 50–52:
+przykład BPST i tabela mieszczą się w łamie oraz są czytelne.
+Pełny `buduj_tomy.ps1` zakończył się kodem 0 po dwóch przebiegach.
+Tomy I–IV mają 216, 182, 102 i 82 strony; indeksy przyjęły
+113, 96, 30 i 94 wpisy bez odrzuceń. Kontrola logów nie wykazała
+nieustalonych odsyłaczy, przepełnionych wierszy ani brakujących
+znaków. Na stronie tytułowej każdego tomu są trzy łącza do
+pozostałych tomów, a PDF w katalogu głównym i kopia w `build/tomy`
+mają zgodną sumę SHA-256. `git diff --check` nie zgłosił uwag.
+
 ## Rozdziały 34 i 36 — sploty obramowane i droga do klasyfikacji TOP (2026-10-28)
 
 W rozdziale 34 dodano rzut dwóch prostych diagramów uchwytów $2$.

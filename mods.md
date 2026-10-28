@@ -1,5 +1,73 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-10-28 — skończona energia instantonu i wejścia do twierdzenia Donaldsona
+
+### Problem
+
+Rozdział 37 podawał lokalne rozwiązanie równania antysamodualności
+o nieskończonej energii, ale brakowało obliczalnego przykładu
+instantonu na zwartej czterowymiarowej rozmaitości z niezerową
+liczbą Cherna. Opis dowodu diagonalizacji wymieniał narzędzia
+analityczne bez pokazania ich osobnych ról. Ponadto tekst
+przypisywał samemu rachunkowi sygnatury równość liczby punktów
+redukowalnych z $b_2(X)$, chociaż bez uwzględnienia orientacji
+składowych brzegu daje on jedynie nierówność.
+
+### Rozwiązanie i wpływ
+
+W `tex/rozdzialy/34-donaldson.tex` dodano przykład BPST dla
+$A_\lambda=\operatorname{Im}(\bar q\,\mathrm dq)/(|q|^2+\lambda^2)$
+w orientacji zgodnej z wcześniejszą konwencją rozdziału.
+Jawny rachunek krzywizny pokazuje $F_A^+=0$,
+$|F_A|^2=48\lambda^4/(r^2+\lambda^2)^4$ i energię $8\pi^2$.
+Druga lokalna trywializacja po zmianie cechowania przez
+odwrotność mapy $q/|q|$
+pokazuje gładkie przedłużenie na $S^4$; to pozwala wywnioskować
+$c_2(E)[S^4]=1$ z istniejącej tożsamości energii. Zapis
+odsyła do [oryginalnej pracy BPST](https://strings.itp.ac.ru/Papers/belavin1975.pdf).
+
+W części o diagonalizacji dopisano operator
+$d_A^*\oplus d_A^+$, jego indeks
+$8k-3(1-b_1+b_2^+)$ i wynikający stąd oczekiwany wymiar $5$
+dla przypadku jednospójnego, ujemnie określonego i $k=1$.
+Tabela oddziela rolę cechowania i transwersalności,
+punktów redukowalnych z linkiem $\mathbb CP^2$,
+koncentracji krzywizny oraz kołnierza małych instantonów.
+Odsyłacze prowadzą do prac Atiyaha--Hitchina--Singera,
+Donaldsona, Uhlenbeck i Taubesa. Tekst precyzuje, że słaba
+zwartość Uhlenbeck przy ograniczeniu $L^p$, $p>2$,
+nie wyklucza koncentracji przy krytycznym ograniczeniu energii
+$L^2$, a opis kołnierza korzysta również z konstrukcji Taubesa
+i analizy Donaldsona.
+
+Poprawiono przejście do algebraicznego zakończenia dowodu:
+rachunek sygnatury daje $n(Q_X)\geq b_2(X)$, natomiast
+ortogonalność różnych klas o kwadracie $-1$ daje
+$n(Q_X)\leq b_2(X)$. Dopiero obie nierówności dają równość
+i pełną rangę układu. Wniosek o diagonalizacji pozostaje
+bez zmian.
+
+Kompromis: przykład zawiera dłuższy rachunek i drugą kartę,
+a tabela syntetyzuje głębokie wyniki, których dowody nadal
+pozostają zewnętrzne. Nie dodano pakietów LaTeX ani nie
+zmieniono konfiguracji składu.
+
+### Weryfikacja
+
+Porównano formułę BPST, znak antysamodualności i indeks z pracami
+źródłowymi; sprawdzono bezpośrednio normę krzywizny, całkę radialną
+i zgodność lokalnych form po zmianie cechowania. Doraźny skład
+tomu IV zakończył się kodem 0. Obejrzano fizyczne strony 50--52:
+przykład BPST i tabela mieszczą się w łamie, a wzory i podpisy
+są czytelne. Pełny skład `buduj_tomy.ps1` przeszedł po dwóch
+przebiegach. Tomy I--IV mają 216, 182, 102 i 82 strony;
+indeksy przyjęły odpowiednio 113, 96, 30 i 94 wpisy bez
+odrzuceń. Kontrola logów nie wykazała niezdefiniowanych
+odwołań, przepełnionych wierszy ani brakujących znaków.
+Każdy PDF ma na stronie tytułowej trzy łącza do pozostałych
+tomów i kopię o zgodnej sumie SHA-256. `git diff --check`
+zakończył się kodem 0.
+
 ## 2026-10-28 — droga do klasyfikacji TOP w tomie IV
 
 ### Problem
