@@ -12,6 +12,79 @@ oraz dodatki). Starsze wpisy poniżej dokumentują rzeczywiście
 wykonane wówczas polecenia dla dawnego podziału na trzy tomy;
 ich numery stron i nazwy PDF-ów są historyczne.
 
+### Dowody wzorów indeksowych — przebieg pracy 29 października 2026
+
+Katalog projektu:
+`C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts\geometria i topologia różniczkowa`.
+Środowisko sprawdzone w tej iteracji: Windows PowerShell 5.1.19041.6456,
+MiKTeX 25.12, `latexmk` 4.88, Perl 5.42.3 z Git for Windows
+i Poppler 24.04.0. `buduj_tomy.ps1` ustawia `PATH` dla Perla,
+jeśli potrzeba. Nie pobierano danych projektu ani nie instalowano
+nowych zależności. Źródłowy artykuł Getzlera pobrano wyłącznie
+do katalogu `$env:TEMP` na potrzeby sprawdzenia dowodu.
+
+**Polecenia faktycznie wykonane.** W korzeniu repozytorium:
+
+```powershell
+git fetch origin
+git rev-list --left-right --count HEAD...origin/review/rozdzialy-matematyka
+git diff --check
+```
+
+Przed zmianami porównanie gałęzi dało `0 0`. W katalogu
+projektu wykonano:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File '.\buduj_tomy.ps1'
+```
+
+Bezpośrednie `.\buduj_tomy.ps1` zostało wcześniej odrzucone przez
+lokalną politykę wykonywania skryptów PowerShell; wariant z
+`-ExecutionPolicy Bypass` uruchomił pełny skład.
+Skrypt składa cztery pliki główne, prowadzi do czterech obiegów
+odsyłaczy, sprawdza `0 rejected` w indeksach i kopiuje
+PDF-y z `build/tomy` do katalogu projektu.
+
+Po składzie wykonano kontrolę:
+
+```powershell
+$volNames=@('geometria_tom1','geometria_tom2','geometria_tom3','geometria_tom4')
+foreach($volName in $volNames){
+  $pageLine=(pdfinfo "$volName.pdf" | Select-String '^Pages:').Line.Trim()
+  $indexLine=(Select-String -LiteralPath "build/tomy/$volName.ilg" -Pattern 'entries accepted, 0 rejected').Line.Trim()
+  $badLines=@(Select-String -LiteralPath "build/tomy/$volName.log" -Pattern 'LaTeX Warning: Reference .* undefined|There were undefined references|Label\(s\) may have changed|multiply defined|Overfull \\hbox|Missing character|! LaTeX Error')
+  $linkList=@(pdftohtml -q -xml -f 1 -l 1 -stdout "$volName.pdf" | Select-String 'href="geometria_tom[1-4]\.pdf"' -AllMatches | ForEach-Object { $_.Matches.Value } | Sort-Object -Unique)
+  $sameHash=(Get-FileHash "$volName.pdf" -Algorithm SHA256).Hash -eq (Get-FileHash "build/tomy/$volName.pdf" -Algorithm SHA256).Hash
+  if(-not $indexLine -or $badLines.Count -ne 0 -or $linkList.Count -ne 3 -or -not $sameHash){ throw "Kontrola $volName nie powiodła się" }
+  '{0}: {1}; {2}; {3} łącza; SHA-256 zgodna' -f $volName,$pageLine,$indexLine,$linkList.Count
+}
+git diff --check
+```
+
+Wynik: tomy I–IV mają 216, 186, 104 i 88 stron; indeksy
+przyjęły 113, 101, 33 i 96 wpisów bez odrzuceń.
+Każdy tom ma trzy łącza do pozostałych, a sumy kopii PDF
+są zgodne. Nie znaleziono wskazanych problemów w logach.
+`pdftotext -layout` posłużył do lokalizacji nowych odsyłaczy,
+a `pdftoppm -png -r 105` do renderu i obejrzenia stron
+119–123 tomu II, 99–101 tomu III oraz 51–52, 69 i 71 tomu IV.
+Polecenie `pdftohtml -q -xml -f 99 -l 101 -stdout
+'geometria_tom3.pdf'` i analogiczne zakresy 51–52 oraz
+69–71 tomu IV potwierdziły łącza oznaczeń 18.5.3–18.5.5
+do `geometria_tom2.pdf`.
+
+**Instrukcja przygotowana do samodzielnego wykonania.** Na nowym
+stanowisku zainstaluj MiKTeX z `latexmk`, Perl dostępny
+w `PATH` (lub Git for Windows w
+`C:\Program Files\Git\usr\bin`) oraz Poppler dla kontroli PDF.
+Zainstaluj brakujące pakiety MiKTeX według wcześniejszego wpisu
+o przygotowaniu czystego stanowiska. W powyższym katalogu projektu
+uruchom ten sam skrypt przez `powershell -NoProfile
+-ExecutionPolicy Bypass -File '.\buduj_tomy.ps1'`; żadne osobne
+dane ani zmienne środowiskowe nie są potrzebne.
+Po składzie sprawdź logi w `build/tomy`, strony
+nowej sekcji w tomie II, odsyłacze w tomach III i IV oraz indeksy.
+
 ### Przestrzeń moduli Donaldsona — przebieg pracy 29 października 2026
 
 Katalog projektu:

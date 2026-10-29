@@ -14,6 +14,69 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 18 — dowód potrzebnych wzorów indeksowych (2026-10-29)
+
+Po prośbie autora o dowód, a nie sam katalog zastosowań, rozszerzono
+rozdział Hodge'a o trzy wersje używane dalej w skrypcie. Własny
+argument zaczyna się od sparowania dodatnich wartości własnych
+$D^*D$ i $DD^*$ (tożsamość McKeana--Singera). Następnie w normalnych
+współrzędnych i radialnych ramach wyprowadzono graniczny oscylator
+z kwadratu Diraca przez skalowanie Getzlera. Podano jądro Mehlera,
+tożsamość Duhamela, oszacowanie $O(\varepsilon)$ dla reszty oraz
+wybór składnika najwyższego stopnia przez superślad. Daje to lokalną
+gęstość $\widehat A\,\operatorname{ch}$.
+
+Zewnętrznym wejściem analitycznym jest rachunek spektralny operatorów
+eliptycznych i gaussowskie oszacowanie jąder dla jednostajnie
+eliptycznych operatorów z liniowym wzrostem współczynników pierwszego
+rzędu i kwadratowym zerowego. Nie przyjęto gotowej lokalnej formuły
+indeksowej. Warunki i źródło technicznego oszacowania wskazuje
+[Getzler, *A Short Proof of the Local Atiyah--Singer Index Theorem*,
+s. 113–116](https://www.maths.ed.ac.uk/~v1ranick/papers/getzler.pdf);
+historyczny argument cieplny pochodzi z
+[Atiyah–Bott–Patodi](https://doi.org/10.1007/BF01425417).
+Ogólne twierdzenie o indeksie wszystkich operatorów eliptycznych
+nie jest objęte tym etapem.
+
+Operator sygnatury opisano lokalnie jako Diraca skręconego przez
+pełny moduł spinorowy; jego indeks równy jest sygnaturze przez
+rozkład harmoniczny. Rachunek
+$[\widehat A\operatorname{ch}(S^*)]_{4k}=L_{4k}$
+dał $L_4=p_1/3$ i $L_8=(7p_2-p_1^2)/45$ także dla rozmaitości
+niespinowych, bo iloczyn lokalnych modułów spinorowych skleja się
+globalnie. Dla spinowej $8$-rozmaitości rozwinięcie $\widehat A$
+dało $(7p_1^2-4p_2)/5760=\operatorname{ind}D^+\in\Z$
+i $p_1^2-4\sigma=896\widehat A$.
+
+Dla kompleksu ASD sprawdzono potrzebny czynnik $\sqrt2$ w symbolu
+$d_A^*\oplus d_A^+$ i znak chiralii ujemnej. Obliczenie
+$\operatorname{ch}(S^+)=2+(p_1(TX)+2e(TX))/4$ oraz
+$p_1(\operatorname{ad}P)=-4c_2(P)$ prowadzi do
+$\operatorname{ind}_{\R}D_A
+=8k-3(1-b_1+b_2^+)$ w konwencji $F_A^+=0$.
+Na niespinowej $X$ użyto lokalnych spinorów, których potrzebne
+iloczyny są globalne. Zgodność symbolu z operatorem deformacji
+porównano z [Atiyah–Hitchin–Singer](https://doi.org/10.1098/rspa.1978.0143),
+uwzględniając orientację skryptu. Sam indeks nie stwierdza
+regularności moduli.
+
+Rozdział o sferach Milnora, rozdział Donaldsona i dodatek A wskazują
+teraz te dowody zamiast oznaczać trzy wzory jako zewnętrzne.
+Pozostałe wyniki zewnętrzne w tych rozdziałach zachowują swój status.
+
+Pełny `buduj_tomy.ps1` zakończył się po dwóch obiegach. Tomy I–IV
+mają 216, 186, 104 i 88 stron; indeksy przyjęły odpowiednio
+113, 101, 33 i 96 wpisów, bez odrzuceń. Kontrola logów nie znalazła
+błędów, nierozwiązanych ani powielonych etykiet, przepełnionych
+wierszy ani brakujących znaków. Na stronie tytułowej każdego PDF-a
+są trzy łącza do pozostałych tomów; kopie w katalogu projektu mają
+sumy SHA-256 zgodne z `build/tomy`. Obejrzano fizyczne strony
+119–123 tomu II z całym dowodem, 99–101 tomu III z użyciem wzorów
+oraz 51–52, 69 i 71 tomu IV z odsyłaczami i wpisami dodatku A.
+Kontrola XML potwierdziła także bezpośrednie łącza oznaczeń
+18.5.3–18.5.5 z tomów III i IV do pliku tomu II.
+`git diff --check` przeszedł.
+
 ## Rozdział 37 — od moduli do sygnatury brzegu (2026-10-29)
 
 Poprzednia wersja podawała tabelę wejść analitycznych i wymiar

@@ -1,5 +1,48 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-10-29 — dowody potrzebnych wzorów indeksowych
+
+### Problem
+
+Rozdziały o sferach Milnora i Donaldsonie korzystały z wzoru
+na sygnaturę w wymiarze osiem, całkowitości indeksu spinowego Diraca
+oraz indeksu operatora deformacji ASD jako zewnętrznych wyników.
+Użytkownik poprosił o dowód tych trzech wersji potrzebnych w skrypcie.
+
+### Rozwiązanie i wpływ
+
+W `tex/rozdzialy/28-hodge-bochner.tex` dodano wspólny argument
+indeksowy: symbol i indeks Fredholma, tożsamość McKeana--Singera,
+lokalne skalowanie Getzlera, model oscylatora, wzór Mehlera,
+oszacowanie reszty przez Duhamela oraz rachunek superśladu.
+Z niego wyprowadzono $L_4$, $L_8$, $\widehat A_8$ i indeks
+$d_A^*\oplus d_A^+$ w konwencji $F_A^+=0$.
+W `26-sfery-milnora.tex`, `34-donaldson.tex` i dodatku A
+zastąpiono oznaczenie tych konkretnych wzorów jako wejść zewnętrznych
+odsyłaczami do dowodów. Plan i przegląd projektu rejestrują zakres.
+
+Kompromis: dowód przyjmuje standardowy rachunek spektralny operatorów
+eliptycznych oraz gaussowskie oszacowanie jądra cieplnego.
+Dokładnie podano zakres oszacowania i pierwotne źródło Getzlera;
+nie deklaruje się dowodu ogólnego twierdzenia Atiyaha--Singera
+dla dowolnego symbolu. Indeks ASD nadal daje wyłącznie wymiar
+oczekiwany, a regularność moduli pozostaje osobnym wejściem.
+
+### Weryfikacja
+
+Wzory znaków i współczynników sprawdzono niezależnym rachunkiem
+charakterystycznym, w tym
+$p_1(\operatorname{ad}P)=-4c_2(P)$,
+$\chi+\sigma=2(1-b_1+b_2^+)$ oraz
+$p_1^2-4\sigma=896\widehat A$.
+Pełny `buduj_tomy.ps1` zakończył się po dwóch obiegach:
+PDF-y tomów I–IV mają 216, 186, 104 i 88 stron. Indeksy przyjęły
+113, 101, 33 i 96 wpisów bez odrzuceń. Logi nie zawierają błędów,
+brakujących lub powielonych etykiet, przepełnień ani brakujących
+znaków. Sprawdzono po trzy łącza na stronach tytułowych,
+sumy SHA-256 kopii PDF i nowe strony tomów II–IV.
+`git diff --check` przeszedł.
+
 ## 2026-10-29 — własności przestrzeni moduli Donaldsona w tomie IV
 
 ### Problem

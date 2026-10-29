@@ -237,12 +237,18 @@ kontrolą stron, indeksów, odsyłaczy i źródeł.
    cytowanymi wejściami Donaldsona, Uhlenbeck i Taubesa. Sprawdzono
    cztery tomy, indeksy i łącza; nowe strony 52–56 i wpis dodatku A
    na stronach 71–72 tomu IV są czytelne.
-4. **Atiyah--Singer — trzy zastosowania; 8–15 stron, 2–4 dni.**
-   Wprowadzić symbol operatora eliptycznego, indeks Fredholma i
-   dokładny zakres twierdzenia jako wejścia zewnętrznego. Połączyć
-   wymiar oczekiwany moduli ASD z sygnaturą i całkowitością indeksu
-   Diraca używanymi przy sferach Milnora. Pełny dowód twierdzenia
-   indeksowego wymaga osobnego wykładu.
+4. **Atiyah--Singer — dowód trzech potrzebnych wersji;
+   etap zakończony 29 października.** W rozdziale 18 podano dowód
+   przez tożsamość McKeana--Singera, lokalne skalowanie Getzlera,
+   wzór Mehlera i kontrolę reszty przez Duhamela. Wyprowadzono
+   wzory na sygnaturę w wymiarach cztery i osiem, całkowitość
+   indeksu Diraca w wymiarze osiem oraz indeks operatora deformacji
+   ASD w konwencji rozdziału 37. Zewnętrznym wejściem pozostają
+   standardowe oszacowania jądra cieplnego i rachunek eliptyczny;
+   ogólnego twierdzenia dla dowolnego operatora nie dowodzono.
+   Rozdziały 30 i 37 oraz dodatek A wskazują własne dowody wzorów.
+   Po dwóch obiegach złożono cztery tomy: 216, 186, 104 i 88 stron;
+   indeksy, odsyłacze między tomami i zmienione strony sprawdzono.
 5. **Zwykły potok Ricciego przed osobliwościami;
    12–25 stron, 4–10 dni.** Rozwinąć potok znormalizowany,
    przykłady metryk jednorodnych i produktowych, równania ewolucji
@@ -296,7 +302,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 15. Grupy Liego | `29-grupy-liego.tex` | Pełny audyt zakończony 20 października | Sprawdzono przykłady, nawias, eksponentę, działanie adjungowane i nakrycie $\mathrm{SU}(2)\to\mathrm{SO}(3)$; doprecyzowano torus i oszacowanie pochodnych szeregu. |
 | 16. Geometria Kleina (plik 29a) | `29a-geometria-kleina.tex` | Pełny audyt zakończony 20 października | Sprawdzono uśrednianie, właściwość działania na $G/H$, zupełność, ilorazy dyskretne, orbifoldy i modele Kleina; zawężono deklarację o izometriach hiperbolicznych do dowiedzionego działania $\mathrm{PSL}(2,\R)$. |
 | 17. Chern–Weil | `27-chern-weil.tex` | Pełny audyt zakończony 20 października | Sprawdzono normalizacje i transgresję; rozpisano model względny klasy Eulera, granicę wokół zer i wersję brzegową. Zgodność zespolonej formy Cherna z całkowitą klasą pozostaje jawnym wejściem zewnętrznym. |
-| 18. Hodge–Bochner | `28-hodge-bochner.tex` | Pełny audyt zakończony 20 października | Sprawdzono wejście analityczne, znaki Weitzenböcka i Bochnera oraz rozkład sygnatury; dopisano zakres stopni i przykład $S^2\times S^2$. |
+| 18. Hodge–Bochner | `28-hodge-bochner.tex` | Pełny audyt wcześniejszej treści zakończony 20 października; osobne uzupełnienie indeksowe 29 października | Wcześniej sprawdzono wejście analityczne, znaki Weitzenböcka i Bochnera oraz rozkład sygnatury. Nowa sekcja dowodzi trzech potrzebnych wzorów indeksowych przez jądro cieplne, z jawnym zewnętrznym oszacowaniem analitycznym. |
 | 19. Sard i transwersalność | `15-sard-transwersalnosc.tex` | Audyt dodatków zakończony 6 października; bez poprawek treści | Pięć wpisów indeksu, cztery ilustracje i warunki transwersalności przy brzegu sprawdzone; PDF 401 stron |
 | 20. Zanurzenia i otoczenia | `16-zanurzenia-otoczenia.tex` | Audyt dodatków zakończony 6 października; PDF 401 stron | Sześć haseł indeksu, cztery ilustracje i kołnierze sprawdzone; poprawiono terminologię odwzorowań oraz zdanie o homotopii do odwzorowania stałego |
 | 21. Przecięcia, dualność i klasy | `17-przeciecia-dualnosc-klasy.tex` | Audyt dodatków zakończony 6 października | Sprawdzone indeks, konwencje znaków i cztery ilustracje; ujednolicono terminologię i rozwinięto argument Leraya–Hirscha dla wiązki rzutowej |
@@ -308,7 +314,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Pełny audyt także nowego tekstu zakończony 20 października względem §§1–2, 5–6 Walla; zmianę z 27 października oraz nowe rachunki z 28 października i strony 57–59 tomu III sprawdzono osobno | Sprawdzono parzyste i nieparzyste kryterium, bazy i torsję nad $\Z[\pi]$, $SU/RU$, ruchy $T1$--$T4$, wymiar pięć i chirurgię środkową. Poprawiono stronę $\lambda$ w dualności, terminologię immersji i hipotezy lematu 5.7. Doprecyzowano zależność $\mu=0$ od wybranych danych normalnych w przykładzie lokalnej stabilizacji; nie ponawiano audytu reszty rozdziału. Nowe rachunki dają tabelę $L_n^s(\Z[\Z])$ i grupy Tate'a dla $C_5$, z dokładnymi hipotezami Shanesona i wnioskami z ciągu Rothenberga; sprawdzono je względem Walla, Ranickiego i Milnora. Głębokie lematy Walla, wersja $h$ i relacja formacji pozostają jawnymi wynikami zewnętrznymi. |
 | 28. Ciąg chirurgii | `24-ciag-chirurgii.tex` | Pełny audyt wcześniejszej treści zakończony 20 października względem §10 oraz twierdzeń 5.8 i 6.5 Walla; uzupełnienia z 27–28 października sprawdzono osobno | Sprawdzono dokładność, działanie $L_{n+1}^s$, zakres $n\geq5$, lewą strzałkę i przejście do $s$-kobordyzmu; doprecyzowano racjonalne jądro w rachunku sygnatury. Nowe fragmenty objaśniają strzałki, ślad nad cylindrem, warunek brzegowy, przykład $S^7$, przejście śladu $S^6\to S^3\times S^3$ przez Arfa i punkt bazowy $[S^6,G/O]$. Mapa hipotez rozdziela DIFF/TOP, $n=5$ od śladu wymiaru sześć, dowolność $\pi_1$, ustalony brzeg i dekoracje $s/h$; nie ponawiano audytu reszty rozdziału. Bijekcja z $[X,G/O]$ i działanie grupy $L$ pozostają wynikami Walla, a wariant TOP jest osobnym wynikiem zewnętrznym. |
 | 29. Poincaré | `25-poincare.tex` | Pełny audyt rozdziału zakończony 20 października; twierdzenia 2.2 i 2.3 Bardena porównano z oryginałem | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm; lematy 3.1 i 4.1–4.4, indukcja, modele $M_k,X_j$, formy wiązania i przykłady spin/niespin. Doprecyzowano źródło triangulacji, mieszaną parę torsyjną, hipotezy lematu 4.4 i orientację przy wniosku pięciowymiarowym. Głębokie wejścia pozostają zewnętrzne. |
-| 30. Sfery Milnora | `26-sfery-milnora.tex` | Audyt wcześniejszej treści zakończony 19 października; klasyfikację dopisano 20 października | Sprawdzono sklejanie, klasy $e,p_1$, ciąg Mayera--Vietorisa, kryterium Whiteheada, obie sygnatury, $\lambda$, $\mu$, przykłady i rysunek. Nowy rachunek klasyfikuje 16 typów wiązkowych oraz 28 klas $\Theta_7$ (15 bez orientacji) przez sumy $M_3$. Zupełność $\mu$, $\Theta_7\cong\Z/28$, wzór Hirzebrucha i indeks Diraca pozostają jawnymi wejściami zewnętrznymi. |
+| 30. Sfery Milnora | `26-sfery-milnora.tex` | Audyt wcześniejszej treści zakończony 19 października; klasyfikację dopisano 20 października; odsyłacze indeksowe 29 października | Sprawdzono sklejanie, klasy $e,p_1$, ciąg Mayera--Vietorisa, kryterium Whiteheada, obie sygnatury, $\lambda$, $\mu$, przykłady i rysunek. Rachunek klasyfikuje 16 typów wiązkowych oraz 28 klas $\Theta_7$ (15 bez orientacji) przez sumy $M_3$. Wzór Hirzebrucha i całkowitość indeksu Diraca są teraz dowiedzione w rozdziale 18; zupełność $\mu$ i $\Theta_7\cong\Z/28$ pozostają wynikami zewnętrznymi. |
 | 31. Potok Ricciego (plik 30) | `30-potok-ricciego.tex` | Pełny audyt zakończony 20 października; rysunek 31.1 sprawdzony na stronie PDF 100 | Rachunki skalowania, ewolucji, zasady maksimum i DeTurcka spójne; istnienie i jednoznaczność PDE pozostają jawnym wejściem analitycznym. |
 | 32. Poincaré w wymiarze trzy (plik 30a) | `30a-poincare-trzy.tex` | Pełny audyt zakończony 20 października | Hipotezy niezapadania i wygasania, chirurgia, odtworzenie topologii oraz Moise sprawdzone względem źródeł; poprawiono tytuł cytowanej pracy i terminologię. Głębokie wyniki Perelmana pozostają zewnętrzne. |
 | 33. Geometrie Thurstona (plik 30b) | `30b-geometrizacja-thurstona.tex` | Pełny audyt zakończony 20 października | Osiem modeli, tabela Seiferta, orbifoldy, rozkład pierwszy i JSJ sprawdzone; dopisano definicję dysku ściskającego i źródło twierdzenia o pętli oraz skorygowano opis dowodu w rozdziale 31. Geometryzacja pozostaje wynikiem zewnętrznym. |
