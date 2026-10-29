@@ -1,5 +1,56 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-10-29 — własności przestrzeni moduli Donaldsona w tomie IV
+
+### Problem
+
+Rozdział 37 podawał wymiar oczekiwany przestrzeni moduli i listę
+głębokich wyników analitycznych, po czym szybko przechodził od punktów
+redukowalnych do nierówności dla formy przecięcia. Nie wyjaśniał
+oddzielnie roli regularności, jednego bąbla, orientacji i rachunku
+sygnatury brzegu. Zdanie o możliwych różnych orientacjach linków
+mogło sugerować nieustalone znaki w źródłowym dowodzie Donaldsona.
+
+### Rozwiązanie i wpływ
+
+W `tex/rozdzialy/34-donaldson.tex` rozpisano kompleks deformacji,
+znaczenie jego trzech grup kohomologii oraz warunek regularności.
+Sformułowano jako wynik zewnętrzny zgodny pakiet dla ładunku
+$k=1$: regularną część nieredukowalną, modele stożkowe punktów
+redukowalnych, kołnierz od koncentracji krzywizny i orientowalny
+zwarty kobordyzm po obcięciu. Własne rachunki dają liczbę klas
+o kwadracie $-1$, płaskość granicy po jednym bąblu, link
+$S^5/U(1)=\mathbb{C}P^2$ oraz zerowanie sygnatury brzegu przez
+ciąg dokładny pary i dualność Poincarégo–Lefschetza. Dwa rachunki
+kraty pokazują ostrość nierówności i jej niezależność od bazy;
+parzysta forma określona daje bezpośredni test sprzeczności.
+Dodatek A precyzuje zależności od Donaldsona, Uhlenbeck i Taubesa.
+`PLAN_DZIALANIA.md` oraz `PRZEGLAD.md` dokumentują zakres etapu.
+
+Kompromis: nie dowodzimy transwersalności, analizy Sobolewa,
+kompaktifikacji, konstrukcji kołnierza ani orientowalności moduli.
+Znak każdego linku oznaczono formalnie przez $\varepsilon_j=\pm1$;
+do nierówności wystarczy ich oszacowanie, bez odtwarzania
+kanonicznego rachunku orientacji z pracy Donaldsona z 1987 r.
+Przy perturbacji nie stosujemy dosłownie nieperturbowanej
+tożsamości energii.
+
+### Weryfikacja
+
+Niezależny przegląd matematyczny i kontrola ze źródłami
+potwierdziły kompleks, licznik redukcji, przypadek jednego bąbla,
+lemat sygnatury i przykłady. Na ich podstawie sprostowano
+warunek $H_A^2=0$, status lokalnego modelu przy redukcji,
+zakres stron źródła z 1984 r. i ograniczenie rachunku energii
+do nieperturbowanego równania. Pełny `buduj_tomy.ps1` zakończył
+się po trzech obiegach. Tomy mają 216, 182, 104 i 88 stron;
+indeksy przyjęły 113, 96, 33 i 96 wpisów bez odrzuceń.
+Logi nie wykazały brakujących lub powielonych etykiet,
+przepełnień ani brakujących znaków. Każdy PDF ma trzy łącza
+do innych tomów i sumę SHA-256 zgodną z kopią w `build/tomy`.
+Obejrzano fizyczne strony 52–56 i 71–72 tomu IV.
+`git diff --check` przeszedł.
+
 ## 2026-10-29 — konstrukcje Freedmana w tomie IV
 
 ### Problem

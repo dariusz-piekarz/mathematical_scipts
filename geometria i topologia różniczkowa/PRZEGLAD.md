@@ -14,6 +14,67 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 37 — od moduli do sygnatury brzegu (2026-10-29)
+
+Poprzednia wersja podawała tabelę wejść analitycznych i wymiar
+oczekiwany $5$, ale przejście od tej tabeli do nierówności
+$n(Q_X)\geq b_2(X)$ było zbyt krótkie. W rozdziale 37 dodano
+kompleks deformacji $d_A,d_A^+$ i role $H_A^0,H_A^1,H_A^2$.
+Indeks sam nie zapewnia regularności; potrzebna jest zgodna
+perturbacja równania. Jej istnienie oraz gładkość,
+orientowalność, modele redukowalne, zwartość Uhlenbecka
+i kołnierz Taubesa--Donaldsona zostały zebrane jako jawny
+pakiet zewnętrzny. Punktem odniesienia są
+[Donaldson, *Self-dual connections and the topology of smooth
+4-manifolds*, §§2–4](https://doi.org/10.1090/S0273-0979-1983-15090-5)
+oraz [*Smooth 4-manifolds with definite intersection form*,
+§§IV–VII, s. 204–208](https://math.berkeley.edu/~kirby/papers/Gordon%20and%20Kirby%20%28editors%29%20-%20Four-manifold%20theory%20%28Durham%29%20-%20MR0780574.pdf).
+
+Własny rachunek rozwija równość
+$c_2(L\oplus L^{-1})=-c_1(L)^2$, finitość klas
+$a$ o kwadracie $-1$ oraz jednoznaczność redukcji przy
+$H^1(X;\R)=0$. Przyjęty model lokalny ma rzeczywisty
+wymiar $6$ i iloraz sfery $S^5/U(1)=\C P^2$.
+Przy $k=1$ jedyny możliwy bąbel wyczerpuje ładunek;
+reszta ASD o $k=0$ jest płaska, a przy $\pi_1(X)=1$
+jedyna modulo cechowanie. Samo istnienie kołnierza jest
+wynikiem analitycznym, więc rachunek energii nie został
+użyty jako jego dowód.
+
+Po przyjęciu orientowalnego obciętego moduli $W$ dowód
+topologiczny pokazuje, że
+$\ker(H_2(\partial W;\Q)\to H_2(W;\Q))$ jest
+lagranżowska. Wynika to z ciągu dokładnego pary i dualności
+Poincarégo--Lefschetza, a stąd $\sigma(\partial W)=0$.
+Zapisanie znaków brzegowych jako $\varepsilon_j=\pm1$ daje
+$b_2(X)=\sum_j\varepsilon_j\leq n(Q_X)$.
+To oznaczenie nie twierdzi, że znaki są różne; obliczenie
+kanonicznych orientacji znajduje się w
+[pracy Donaldsona z 1987 r., §4(a)](https://doi.org/10.4310/jdg/1214441485).
+Przykłady $-I_r$, formy rangi dwa w nieortogonalnej bazie
+i form parzystych sprawdzają licznik. Dodatek A odróżnia
+te obliczenia od wejść zewnętrznych.
+
+Niezależna kontrola matematyczna potwierdziła kompleks,
+licznik redukcji, przypadek jednego bąbla, lemat
+o sygnaturze i końcową algebrę kraty. Kontrola względem
+źródeł wykryła i pozwoliła poprawić cztery nieścisłości:
+zanik $H_A^2$ nazwano warunkiem regularności wystarczającym
+przy punktach nieredukowalnych, model $\C^3/U(1)$ przy redukcji
+pozostawiono jako wejście zewnętrzne bez wnioskowania zaniku
+przeszkód, zakres cytowanych stron z 1984 r. zmieniono na
+204–208, a wyprowadzenie liniaryzacji i ograniczenie rachunku
+energii do równania niezaburzonego zapisano wprost.
+
+Pełny `buduj_tomy.ps1` zakończył się po trzech obiegach.
+Tomy I–IV mają 216, 182, 104 i 88 stron. Indeksy przyjęły
+113, 96, 33 i 96 wpisów bez odrzuceń; logi nie mają brakujących
+ani powielonych etykiet, przepełnionych wierszy czy brakujących
+znaków. Na pierwszej stronie każdego tomu są trzy łącza do
+pozostałych PDF-ów, a kopie mają zgodne sumy SHA-256.
+Obejrzano fizyczne strony 52–56 z nowym argumentem i 71–72
+z wpisem w dodatku A. `git diff --check` przeszedł.
+
 ## Rozdział 36 — dwie konstrukcje Freedmana (2026-10-29)
 
 Rozdział 34 obliczał formę $E_8$ dla gładkiego plumbowania z brzegiem

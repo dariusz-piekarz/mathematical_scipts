@@ -12,6 +12,85 @@ oraz dodatki). Starsze wpisy poniżej dokumentują rzeczywiście
 wykonane wówczas polecenia dla dawnego podziału na trzy tomy;
 ich numery stron i nazwy PDF-ów są historyczne.
 
+### Przestrzeń moduli Donaldsona — przebieg pracy 29 października 2026
+
+Katalog projektu:
+`C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts\geometria i topologia różniczkowa`.
+Środowisko: Windows PowerShell 5.1.19041.6456, MiKTeX 25.12,
+`latexmk` 4.88, Perl 5.42.3 z Git for Windows, Poppler 24.04.0.
+Nie pobierano danych, nie instalowano zależności i nie ustawiano
+nowych zmiennych środowiskowych. `buduj_tomy.ps1` dodaje katalog
+`C:\Program Files\Git\usr\bin` do `PATH`, gdy `perl` nie jest dostępny.
+Źródła tomu IV to `geometria_tom4.tex`, `tex/rozdzialy/34-donaldson.tex`
+i `tex/dodatki/a-zaleznosci-zewnetrzne.tex`; skrypt zapisuje pliki
+pomocnicze w `build/tomy`, a sprawdzone PDF-y w katalogu projektu.
+
+**Polecenia wykonane.** W korzeniu repozytorium wykonano:
+
+```powershell
+git fetch origin
+git rev-list --left-right --count HEAD...origin/review/rozdzialy-matematyka
+```
+
+Wynik porównania wyniósł `1 0`: lokalny commit `68053da`
+dotyczący innego projektu był już przed bieżącą zmianą.
+W katalogu projektu uruchomiono pełny skład w tle poleceniem:
+
+```powershell
+$donaldsonBuild = Start-Process -FilePath 'powershell.exe' `
+  -ArgumentList @('-NoProfile','-ExecutionPolicy','Bypass','-File','.\buduj_tomy.ps1') `
+  -WorkingDirectory (Get-Location).Path `
+  -RedirectStandardOutput 'build\tomy\donaldson-stage3.stdout.txt' `
+  -RedirectStandardError 'build\tomy\donaldson-stage3.stderr.txt' `
+  -WindowStyle Hidden -PassThru
+$donaldsonBuild.Id
+```
+
+Proces otrzymał identyfikator `10212`. Po trzech obiegach skrypt
+zakończył się komunikatem
+`Four volumes built, indexes checked, PDFs copied.`
+W katalogu projektu wykonano kontrolę:
+
+```powershell
+1..4 | ForEach-Object {
+  $v = "geometria_tom$_"
+  $pages = (pdfinfo "$v.pdf" | Select-String '^Pages:').Line.Trim()
+  $index = (Select-String -Path "build/tomy/$v.ilg" -Pattern 'entries accepted, 0 rejected').Line.Trim()
+  $bad = @(Select-String -Path "build/tomy/$v.log" -Pattern 'LaTeX Warning: Reference .* undefined|There were undefined references|Label\(s\) may have changed|multiply defined|Overfull \\hbox|Missing character')
+  $links = @(pdftohtml -q -xml -f 1 -l 1 -stdout "$v.pdf" | Select-String 'href="geometria_tom[1-4]\.pdf"' -AllMatches | ForEach-Object { $_.Matches.Value } | Sort-Object -Unique)
+  $same = (Get-FileHash "$v.pdf" -Algorithm SHA256).Hash -eq (Get-FileHash "build/tomy/$v.pdf" -Algorithm SHA256).Hash
+  if ($bad.Count -ne 0 -or $links.Count -ne 3 -or -not $same -or -not $index) { throw "Kontrola $v nie powiodła się: bad=$($bad.Count), links=$($links.Count), same=$same, index=$index" }
+  "$($v): $pages; $index; 3 łącza; SHA-256 zgodna"
+}
+```
+
+Kontrola zakończyła się kodem `0`. Tomy I–IV mają 216, 182,
+104 i 88 stron. Indeksy przyjęły 113, 96, 33 i 96 wpisów,
+bez odrzuceń. Nie było brakujących lub powielonych etykiet,
+przepełnionych wierszy ani brakujących znaków. Każdy PDF ma
+trzy łącza do pozostałych tomów i zgodną z kopią sumę SHA-256.
+Wykonano poniższe polecenia dla tomu IV i obejrzano tekst,
+wzory, przypisy oraz układ fizycznych stron 52–56 i 71–72:
+
+```powershell
+pdftotext -enc UTF-8 -layout build/tomy/geometria_tom4.pdf build/tomy/donaldson-stage3-final.txt
+pdftoppm -f 52 -l 56 -scale-to 1500 -png build/tomy/geometria_tom4.pdf build/tomy/donaldson-stage3-final-page
+pdftoppm -f 71 -l 72 -scale-to 1500 -png build/tomy/geometria_tom4.pdf build/tomy/donaldson-stage3-appendix
+git diff --check
+```
+
+`git diff --check` przeszedł bez błędów.
+
+**Instrukcja przygotowana do samodzielnego wykonania.** Po dalszych
+zmianach źródła uruchom z katalogu projektu:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\buduj_tomy.ps1 *> build/tomy/donaldson-stage3-rerun.txt
+```
+
+Po komunikacie o zbudowaniu czterech tomów powtórz kontrolę PDF-ów,
+indeksów i łączy podaną w następnym wpisie o Freedmanie.
+
 ### Przykłady Freedmana — przebieg pracy 29 października 2026
 
 Katalog roboczy składu:
