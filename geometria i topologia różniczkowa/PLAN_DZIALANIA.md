@@ -249,6 +249,9 @@ kontrolą stron, indeksów, odsyłaczy i źródeł.
    Rozdziały 30 i 37 oraz dodatek A wskazują własne dowody wzorów.
    Po dwóch obiegach złożono cztery tomy: 216, 186, 104 i 88 stron;
    indeksy, odsyłacze między tomami i zmienione strony sprawdzono.
+   Na życzenie autora trzy śródtytuły sekcji 18.5 zmieniono na
+   nienumerowane podsekcje; odsyłacze w rozdziałach 30 i 37 wskazują
+   teraz bezpośrednio odpowiednie twierdzenia.
 5. **Zwykły potok Ricciego przed osobliwościami;
    12–25 stron, 4–10 dni.** Rozwinąć potok znormalizowany,
    przykłady metryk jednorodnych i produktowych, równania ewolucji

@@ -1,5 +1,71 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-10-29 — nienumerowane podsekcje dowodu indeksowego
+
+### Problem
+
+Trzy śródtytuły w nowej sekcji 18.5 były numerowane, choć autor
+chciał podsekcji bez numerów. Po zmianie na `\subsection*`
+etykiety umieszczone tuż pod tytułami nie oznaczałyby już tych
+podsekcji; istniejące odsyłacze mogłyby wskazywać niewłaściwy numer.
+
+### Rozwiązanie i wpływ
+
+W `28-hodge-bochner.tex` trzy podsekcje otrzymały gwiazdkę, a
+ich nieużyteczne etykiety usunięto. Dwa odsyłacze w rozdziałach o
+sferach Milnora i Donaldsonie prowadzą teraz bezpośrednio do
+twierdzeń o indeksie Diraca i deformacji ASD. Nagłówki pozostają
+widoczne w tekście, ale nie mają numerów ani wpisów w spisie treści.
+Treść dowodów i numeracja twierdzeń nie zostały zmienione.
+
+### Weryfikacja
+
+Pełny skład dał 216, 186, 104 i 88 stron; indeksy przyjęły
+113, 101, 33 i 96 wpisów bez odrzuceń. Logi są wolne
+od błędów, brakujących i powielonych etykiet,
+`Overfull` oraz brakujących znaków. Każdy tom ma trzy
+łącza do pozostałych, a kopie PDF mają zgodne sumy SHA-256.
+Obejrzano zmienione strony 119, 121 i 122 tomu II,
+101 tomu III i 52 tomu IV. XML potwierdził łącza
+oznaczeń 18.5.4 i 18.5.5 do tomu II.
+
+## 2026-10-29 — ponowny przegląd języka skryptu Banacha--Tarskiego
+
+### Problem
+
+W skrypcie pozostały nieidiomatyczne wyrażenia, między innymi
+„własność uniwersalności”, „księgowość rozkładu” i „swobodne orbity”.
+Wniosek o dowolnej kuli brzmiał tak, jakby kula była dzielona
+bezpośrednio na dwie kule. Znaleziono też literówkę i kilka zdań
+nieprecyzyjnych matematycznie.
+
+### Rozwiązanie i wpływ
+
+Poprawiono termin na „własność uniwersalna”, opisy etykietowanych
+kopii, działań grupy, stabilizatorów i planu dowodu oraz wniosek
+o podziale na skończenie wiele części. W dowodzie własności
+uniwersalnej zdefiniowano wartość `V(w)` na dowolnym słowie,
+aby nie stosować `\varphi` poza jej dziedziną. Wyjaśniono,
+że paradoksalny jest zbiór `F_2`, i opisano konstrukcję
+`A_2=W(\bar a)\cup P` bez sugerowania, że potęgi
+`a` należą do `W(\bar a)`. Wzory i teza główna
+pozostały te same; zmiany usuwają mylące sformułowania.
+
+Zachowano utrwalone terminy „równoważne przez rozkład” i „zbiór
+paradoksalny”, zgodne z [opracowaniem Joanny Jaszuńskiej w
+„Delcie”](https://www.deltami.edu.pl/media/articles/2017/04/delta-2017-04-o-kul-rozmnazaniu.pdf).
+„Własność uniwersalna” odpowiada [materiałom algebry Uniwersytetu
+Śląskiego](https://www.math.us.edu.pl/zatl/szymiczek/referaty/AlgebraSD.pdf).
+Przyjęte w innych polskich tekstach określenie „wpis macierzy”
+pozostawiono, aby nie rozbudowywać zmian czysto stylistycznych.
+
+### Weryfikacja
+
+`latexmk -pdf` złożył 19-stronicowy PDF A4. Log nie zawiera
+ostrzeżeń ani błędów; obejrzano strony 3 i 17 z poprawionym
+sformułowaniem twierdzenia oraz wniosku. `git diff --check`
+przeszedł.
+
 ## 2026-10-29 — dowody potrzebnych wzorów indeksowych
 
 ### Problem

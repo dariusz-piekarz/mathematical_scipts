@@ -12,6 +12,58 @@ oraz dodatki). Starsze wpisy poniżej dokumentują rzeczywiście
 wykonane wówczas polecenia dla dawnego podziału na trzy tomy;
 ich numery stron i nazwy PDF-ów są historyczne.
 
+### Nienumerowane podsekcje indeksowe — przebieg 29 października 2026
+
+Katalog roboczy:
+`C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts\geometria i topologia różniczkowa`.
+Użyto tego samego środowiska MiKTeX 25.12, `latexmk` 4.88,
+Perl 5.42.3 z Git for Windows i Poppler 24.04.0, które
+opisano poniżej. Nie pobierano danych ani nie instalowano
+nowych zależności.
+
+**Polecenia faktycznie wykonane.** W korzeniu repozytorium
+wykonano `git fetch origin`. W katalogu projektu:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File '.\buduj_tomy.ps1'
+```
+
+Po składzie wykonano pełną pętlę kontroli czterech PDF-ów
+zapisaną w następnej sekcji, poprzedzoną
+`$ErrorActionPreference='Stop'`. Pierwsza próba omyłkowo
+użyła pojedynczego `\hbox` w wyrażeniu regularnym i nie
+stanowiła poprawnej kontroli logów. W pętli zapisanej niżej
+uproszczono wzorzec do `Overfull` i dodano
+`-ErrorAction Stop`; kontrolę powtórzono. Poprawne
+wykonanie dało: 216, 186, 104 i 88 stron;
+indeksy przyjęły 113, 101, 33 i 96 wpisów bez odrzuceń.
+W logach nie ma błędów, niezdefiniowanych ani powielonych
+etykiet, przepełnionych wierszy ani brakujących znaków.
+Każdy PDF ma trzy łącza do pozostałych tomów, a kopie
+w katalogu projektu mają sumy SHA-256 zgodne z `build/tomy`.
+
+Wykonano ponadto kontrolę odsyłaczy między tomami:
+
+```powershell
+pdftohtml -q -xml -f 101 -l 101 -stdout geometria_tom3.pdf | Select-String -Pattern '18.5.4|geometria_tom2.pdf'
+pdftohtml -q -xml -f 52 -l 52 -stdout geometria_tom4.pdf | Select-String -Pattern '18.5.5|geometria_tom2.pdf'
+git diff --check
+```
+
+XML potwierdził łącza do twierdzeń 18.5.4 i 18.5.5 w tomie II.
+`pdftotext` potwierdził trzy nienumerowane śródtytuły.
+Wyrenderowano przez `pdftoppm -singlefile -scale-to 1400
+-png` i obejrzano fizyczne strony 119, 121 i 122 tomu II,
+101 tomu III oraz 52 tomu IV.
+
+**Instrukcja przygotowana do samodzielnego wykonania.**
+Na nowym stanowisku przygotuj MiKTeX, Perl i Poppler
+według następnej sekcji; tej instalacji teraz nie wykonywano.
+Z katalogu projektu uruchom skrypt `buduj_tomy.ps1`
+przez `powershell -NoProfile -ExecutionPolicy Bypass -File
+'.\buduj_tomy.ps1'`, następnie wykonaj pętlę kontroli
+oraz dwa polecenia `pdftohtml` z tego wpisu.
+
 ### Dowody wzorów indeksowych — przebieg pracy 29 października 2026
 
 Katalog projektu:
@@ -52,7 +104,7 @@ $volNames=@('geometria_tom1','geometria_tom2','geometria_tom3','geometria_tom4')
 foreach($volName in $volNames){
   $pageLine=(pdfinfo "$volName.pdf" | Select-String '^Pages:').Line.Trim()
   $indexLine=(Select-String -LiteralPath "build/tomy/$volName.ilg" -Pattern 'entries accepted, 0 rejected').Line.Trim()
-  $badLines=@(Select-String -LiteralPath "build/tomy/$volName.log" -Pattern 'LaTeX Warning: Reference .* undefined|There were undefined references|Label\(s\) may have changed|multiply defined|Overfull \\hbox|Missing character|! LaTeX Error')
+  $badLines=@(Select-String -LiteralPath "build/tomy/$volName.log" -Pattern 'LaTeX Warning: Reference .* undefined|There were undefined references|Label\(s\) may have changed|multiply defined|Overfull|Missing character|! LaTeX Error' -ErrorAction Stop)
   $linkList=@(pdftohtml -q -xml -f 1 -l 1 -stdout "$volName.pdf" | Select-String 'href="geometria_tom[1-4]\.pdf"' -AllMatches | ForEach-Object { $_.Matches.Value } | Sort-Object -Unique)
   $sameHash=(Get-FileHash "$volName.pdf" -Algorithm SHA256).Hash -eq (Get-FileHash "build/tomy/$volName.pdf" -Algorithm SHA256).Hash
   if(-not $indexLine -or $badLines.Count -ne 0 -or $linkList.Count -ne 3 -or -not $sameHash){ throw "Kontrola $volName nie powiodła się" }
@@ -1309,6 +1361,41 @@ z początku tego pliku. Do skryptu są potrzebne pakiety LaTeX:
 nie były wykonywane, ponieważ były już dostępne. Po przejściu do
 katalogu `banach_tarski` ustaw `PATH` i uruchom końcową komendę
 `latexmk` z bloku powyżej.
+
+## Skrypt Banacha--Tarskiego — korekta językowa 29 października 2026
+
+Katalog roboczy:
+`C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts\banach_tarski`.
+Użyto istniejącego środowiska MiKTeX 25.12, `latexmk` 4.88,
+Perla z Git for Windows i Popplera. Nie pobierano danych ani
+nie instalowano zależności. Źródłem jest
+`banach_tarski_przepisany.tex`; wynik zapisano jako
+`banach_tarski_przepisany.pdf`.
+
+**Polecenia faktycznie wykonane w katalogu skryptu:**
+
+```powershell
+$env:PATH = 'C:\Program Files\Git\usr\bin;' + $env:PATH
+latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error banach_tarski_przepisany.tex
+rg -n 'Overfull|Underfull|LaTeX Warning|Package .* Warning|Undefined control|Emergency stop|Output written' banach_tarski_przepisany.log
+pdfinfo banach_tarski_przepisany.pdf | Select-String -Pattern 'Pages:|Page size:|File size:|PDF version:'
+pdftotext -f 1 -l 3 -layout banach_tarski_przepisany.pdf -
+$out = Join-Path $env:TEMP 'bt-lang-page-3'
+pdftoppm -f 3 -l 3 -singlefile -scale-to 1400 -png banach_tarski_przepisany.pdf $out
+$out = Join-Path $env:TEMP 'bt-lang-page-17'
+pdftoppm -f 17 -l 17 -singlefile -scale-to 1400 -png banach_tarski_przepisany.pdf $out
+```
+
+W korzeniu repozytorium wykonano `git fetch origin` i
+`git diff --check`. Skład dał 19 stron A4 i plik o wielkości
+473525 bajtów. W logu znaleziono wyłącznie `Output written`,
+bez błędów i ostrzeżeń. Obejrzano strony 3 i 17.
+
+**Instrukcja przygotowana do samodzielnego wykonania.** Na nowym
+stanowisku przygotuj MiKTeX, Git z Perlem i Poppler według
+wcześniejszego wpisu z 27 października. Przejdź do katalogu
+`banach_tarski`, ustaw `PATH` i uruchom powyższe
+polecenia. Tej instalacji w bieżącej iteracji nie wykonywano.
 
 ## Skrypt „Teoria modeli” — polecenia wykonane 27 października 2026
 

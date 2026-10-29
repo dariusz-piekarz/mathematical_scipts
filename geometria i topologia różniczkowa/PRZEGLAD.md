@@ -14,6 +14,27 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 18 — nienumerowane podsekcje (2026-10-29)
+
+Zgodnie z życzeniem autora trzy podsekcje nowego dowodu indeksowego
+otrzymały nagłówki `\subsection*`. Ich etykiety usunięto,
+ponieważ gwiazdka nie tworzy numeru, do którego można uczciwie
+odsyłać. Dwa odwołania z rozdziałów 30 i 37 prowadzą teraz do
+Twierdzenia o indeksie Diraca w wymiarze osiem i Twierdzenia o
+indeksie deformacji ASD. Dowody, wzory i numeracja twierdzeń
+pozostały takie same. Nagłówki nie wchodzą do spisu treści.
+
+Pełny `buduj_tomy.ps1` złożył cztery tomy w dwóch obiegach.
+Mają 216, 186, 104 i 88 stron; indeksy przyjęły 113, 101,
+33 i 96 wpisów bez odrzuceń. Logi nie wykazują błędów,
+brakujących ani powielonych etykiet, przepełnionych wierszy
+czy brakujących znaków. Każdy tom ma trzy łącza do
+pozostałych; sumy SHA-256 kopii PDF są zgodne z
+`build/tomy`. Obejrzano fizyczne strony 119, 121 i 122
+tomu II, 101 tomu III oraz 52 tomu IV. Kontrola XML
+potwierdziła łącza oznaczeń 18.5.4 i 18.5.5 z tomów
+III i IV do tomu II. `git diff --check` przeszedł.
+
 ## Rozdział 18 — dowód potrzebnych wzorów indeksowych (2026-10-29)
 
 Po prośbie autora o dowód, a nie sam katalog zastosowań, rozszerzono
