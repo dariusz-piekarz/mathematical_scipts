@@ -1,6 +1,6 @@
 # Aktualny plan i pokrycie przeglądem
 
-Stan: 28 października 2026. Gałąź: `review/rozdzialy-matematyka`.
+Stan: 29 października 2026. Gałąź: `review/rozdzialy-matematyka`.
 Książka ma **38 rozdziałów, pięć części i trzy dodatki**. Numery w nazwach
 plików są historyczne; numer w PDF ustala kolejność importów.
 Skład roboczy podzielono na cztery tomy: rozdziały 1–10, 11–22,
@@ -189,11 +189,11 @@ ze zmienionymi rysunkami.
 
 Punktem wyjścia przy szacowaniu były tom III (102 strony) i tom IV
 (83 strony), w tym 31 stron części o wymiarze cztery. Po etapie 1
-tom III ma 104 strony. Poniższe przyrosty stron i czasy
-są orientacyjnym nakładem redakcji, kontroli źródeł i składu;
-nie oznaczają pełnych dowodów głębokich twierdzeń. Łącznie sześć
-etapów odpowiada około 55–110 nowym stronom i 6–12 tygodniom
-pracy. Każdy etap kończyć przeglądem hipotez, składem czterech tomów,
+tom III ma 104 strony. Wstępne szacunki przyrostu stron i czasu
+były orientacyjne; przegląd istniejącego materiału może znacznie
+zmniejszyć potrzebną liczbę nowych stron. Nie są one wymogiem
+objętości ani zapowiedzią pełnych dowodów głębokich twierdzeń.
+Każdy etap kończyć przeglądem hipotez, składem czterech tomów,
 kontrolą stron, indeksów, odsyłaczy i źródeł.
 
 1. **Tom III — trzy nowe rachunki chirurgiczne; etap zakończony
@@ -213,13 +213,18 @@ kontrolą stron, indeksów, odsyłaczy i źródeł.
    konkretnej mapy normalnej i od jej realizacji. Sprawdzono
    pełny skład, indeksy, łącza i nowe strony 42–43 oraz 57–59
    tomu III; nowe wpisy dodatku A są na stronach 63–64 tomu IV.
-   Następny etap dotyczy mechanizmów klasyfikacji TOP Freedmana.
-2. **Freedman — wybrane mechanizmy klasyfikacji TOP;
-   15–30 stron, 2–4 tygodnie.** Rozwinąć przykłady obramowanych
-   uchwytów, dysków Whitneya, wież Cassona i przejścia do
-   klasyfikacji w przypadku jednospójnym. Twierdzenie o zanurzaniu
-   dysków i potrzebne topologiczne twierdzenia o chirurgii oraz
-   $s$-kobordyzmie pozostają nazwanymi wynikami zewnętrznymi.
+2. **Freedman — konstrukcje $E_8$ i drugiego typu o formie $[1]$;
+   etap zakończony 29 października.** Rozdziały 34–35 już opisują
+   obramowane uchwyty, dyski Whitneya i wieże Cassona. W rozdziale 36
+   prześledzono plumbowanie $E_8$, topologiczne wypełnienie jego brzegu,
+   rachunki $\pi_1$, $H_2$, formy i $\operatorname{ks}$ oraz użycie
+   twierdzenia o rozkładzie sumy spójnej do otrzymania drugiego typu
+   o formie $[1]$. Objaśniono też mechanizm jednoznaczności.
+   Istnienie kontraktowalnego wypełnienia, rozkład sumy spójnej
+   i topologiczna hipoteza Poincarégo pozostają jawnymi wynikami
+   zewnętrznymi Freedmana i Freedmana--Quinna. Sprawdzono cztery
+   tomy, indeksy i łącza; nowe przykłady są na stronach 45–48,
+   a wpis dodatku A na stronie 68 tomu IV.
 3. **Donaldson — własności moduli jako wynik zewnętrzny;
    8–15 stron, 1–2 tygodnie.** Doprecyzować pakiet o regularności,
    punktach redukowalnych, kompaktifikacji, końcu i orientacjach;
@@ -303,11 +308,11 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 33. Geometrie Thurstona (plik 30b) | `30b-geometrizacja-thurstona.tex` | Pełny audyt zakończony 20 października | Osiem modeli, tabela Seiferta, orbifoldy, rozkład pierwszy i JSJ sprawdzone; dopisano definicję dysku ściskającego i źródło twierdzenia o pętli oraz skorygowano opis dowodu w rozdziale 31. Geometryzacja pozostaje wynikiem zewnętrznym. |
 | 34. Formy przecięcia i uchwyty w wymiarze cztery (plik 31) | `31-freedman-formy-przeciecia.tex` | Pełny audyt rozdziału zakończony 25 października; 28 października dodano osobno diagram obramowanych splotów | W audycie sprawdzono definicję i unimodularność formy, parzystość, sygnaturę, pełny rachunek $E_8$, macierz splotu, homologię brzegu i ograniczenie triku Whitneya. Dopisano jawny rachunek $2E_8$, rozróżnienie od macierzy skalarnej $2\cdot E_8$, wpływ orientacji komponentów na macierz oraz granicę między korpusem uchwytowym a zamkniętą rozmaitością. Nowy rysunek odczytuje macierze $H$ i $[1]$ z obramowanego splotu Hopfa i niewęzła; nie ponowiono audytu całego rozdziału. Głębokie domknięcie topologiczne pozostaje wynikiem zewnętrznym Freedmana. |
 | 35. Uchwyty Cassona (plik 32) | `32-uchwyty-cassona.tex` | Pełny audyt rozdziału zakończony 26 października | Sprawdzono model uchwytu z załamaniami, rachunek $\pi_1$ pięter, rozróżnienie $\mu$ i $\widetilde\mu$, hipotezy oraz konkluzje twierdzeń Freedmana--Quinna i Powell--Raya--Teichnera, geometryczną dualność i $\pi_1$-pomijalność. Poprawiono numerację wyników i opis zakresu grup. Powierzchnie z dyskami zamykającymi, uogólnione wieże, twierdzenie o zanurzaniu oraz standardowość uchwytu Cassona pozostają jawnymi wynikami zewnętrznymi. |
-| 36. Klasyfikacja Freedmana (plik 33) | `33-freedman-klasyfikacja.tex` | Pełny audyt zakończony 27 października; 28 października dodano osobno schemat zależności i tabelę przykładów | W audycie sprawdzono klasyfikację TOP, wzór $\operatorname{ks}\equiv\sigma/8$, zakres twierdzenia o zanurzaniu sfer, rachunek $\pi_1$ chirurgii, wniosek Poincarégo i przykłady $H$, $[1]$, $E_8$, $2E_8$. Nowy schemat porządkuje drogę od dysków i wież Cassona do klasyfikacji w przypadku $\pi_1=1$, a tabela zestawia parzystość, sygnaturę, $\operatorname{ks}$ i istnienie wygładzenia, w tym oba typy o formie $[1]$; nie ponowiono audytu całego rozdziału. Rozróżnienie oryginalnego twierdzenia Freedmana od pełnej wersji Freedmana--Quinna zachowano; klasyfikacja, zanurzanie i topologiczny $s$-kobordyzm pozostają zewnętrzne. |
+| 36. Klasyfikacja Freedmana (plik 33) | `33-freedman-klasyfikacja.tex` | Pełny audyt zakończony 27 października; uzupełnienia z 28 i 29 października sprawdzono osobno | W audycie sprawdzono klasyfikację TOP, wzór $\operatorname{ks}\equiv\sigma/8$, zakres twierdzenia o zanurzaniu sfer, rachunek $\pi_1$ chirurgii, wniosek Poincarégo i przykłady $H$, $[1]$, $E_8$, $2E_8$. Nowy schemat porządkuje drogę od dysków i wież Cassona do klasyfikacji w przypadku $\pi_1=1$, a tabela zestawia parzystość, sygnaturę, $\operatorname{ks}$ i istnienie wygładzenia, w tym oba typy o formie $[1]$; nie ponowiono audytu całego rozdziału. 29 października rozpisano sklejanie plumbowania $E_8$ z kontraktowalnym wypełnieniem i konstrukcję drugiego typu $[1]$ przez twierdzenie o rozkładzie sumy spójnej. Poprawiono opis sfer zerowych plumbowania i objaśniono mechanizm jednoznaczności. Rozróżnienie oryginalnego twierdzenia Freedmana od pełnej wersji Freedmana--Quinna zachowano; wypełnienie, rozkład, klasyfikacja, zanurzanie i topologiczny $s$-kobordyzm pozostają zewnętrzne. |
 | 37. Donaldson (plik 34) | `34-donaldson.tex` | Pełny audyt wcześniejszej treści zakończony 27 października; uzupełnienie i jego skład sprawdzono 28 października | W audycie sprawdzono lokalność trywializacji, ASD, całkowity $c_1$, znaki $c_2$ i energii, orientację w źródłowym dowodzie oraz wnioski $E_8$ i $2E_8$. Nowy przykład BPST oblicza krzywiznę, energię $8\pi^2$, $c_2=1$ i gładkie przedłużenie na $S^4$. Mapa wejść podaje operator deformacji, indeks $5$, regularność, punkty redukowalne, koncentrację krzywizny, zwartość Uhlenbeck i kołnierz Taubesa--Donaldsona. W rachunku sygnatury poprawiono wniosek na $n(Q_X)\geq b_2(X)$, a przeciwną nierówność wyprowadzono algebraicznie. Konstrukcja i analiza przestrzeni moduli oraz twierdzenie Donaldsona pozostają zewnętrzne; nie ponawiano audytu całego rozdziału. |
 | 38. Egzotyczne $\R^4$ (plik 35) | `35-egzotyczne-r4.tex` | Pełny audyt wcześniejszej treści zakończony 27 października; uzupełnienie i jego skład sprawdzono 28 października | W audycie sprawdzono obie przeszkody Gompfa, lematy 1.1–1.2, rachunek dopełnienia charakterystycznego wektora i indukcję ze zwartymi świadkami. Nowy opis małej rodziny rozdziela topologiczny promień, wspólny zwarty rdzeń $K$, zewnętrzną analizę końców okresowych i przeliczalność klas izotopii osadzeń $K$. Diagram zestawia tę drogę z dużą rodziną Gompfa oraz zachowuje warunki orientacji i ogolenia. Twierdzenia o uchwytach Cassona, wyniki Freedmana, Gompfa oraz De Michelisa–Freedmana pozostają zewnętrzne; nie ponawiano audytu całego rozdziału. |
 | Podział źródeł i importy | — | Zakończono, `9148128` | Kontrola regresji przy dalszych zmianach |
-| Dodatek A o wynikach zewnętrznych | — | Pełny niezależny audyt zakończono 25 października; nowe wejścia i strony 63–64 tomu IV sprawdzono osobno 28 października | Skorygowano zakres Walla do $n\geq5$ i rozdzielono kryterium od twierdzeń realizacyjnych. Uzupełniono wersję $h$, Rothenberga, ciąg chirurgii, Whiteheada, miarę Hausdorffa i Haara, Ambrose'a--Singera, globalny de Rham, normalizację Cherna--Weila, wejścia Bardena, Eellsa--Kuipera, Kervaire'a--Milnora i Quinna. Doprecyzowano hipotezy w wymiarach 3 i 4; źródła oraz ówczesne strony 149–154 sprawdzono przed podziałem tomów. Nowe wpisy odróżniają czterowymiarową chirurgię okręgu od twierdzenia Walla oraz dokumentują rozszczepienie Shanesona--Ranickiego i wynik Milnora dla $C_5$; nie ponawiano audytu całego dodatku. |
+| Dodatek A o wynikach zewnętrznych | — | Pełny niezależny audyt zakończono 25 października; nowe wejścia i strony 63–64 tomu IV sprawdzono osobno 28 października; źródła Freedmana dodano 29 października | Skorygowano zakres Walla do $n\geq5$ i rozdzielono kryterium od twierdzeń realizacyjnych. Uzupełniono wersję $h$, Rothenberga, ciąg chirurgii, Whiteheada, miarę Hausdorffa i Haara, Ambrose'a--Singera, globalny de Rham, normalizację Cherna--Weila, wejścia Bardena, Eellsa--Kuipera, Kervaire'a--Milnora i Quinna. Doprecyzowano hipotezy w wymiarach 3 i 4; źródła oraz ówczesne strony 149–154 sprawdzono przed podziałem tomów. Nowe wpisy odróżniają czterowymiarową chirurgię okręgu od twierdzenia Walla oraz dokumentują rozszczepienie Shanesona--Ranickiego i wynik Milnora dla $C_5$. Dopisano kontraktowalne wypełnienie, rozkład sumy spójnej i hipotezę Poincarégo jako osobne wyniki zewnętrzne dla przykładów Freedmana; nie ponawiano audytu całego dodatku. |
 | Dodatek B: homologia singularna i Euler | — | Pełny niezależny audyt zakończono 25 października | Rachunki są poprawne. Nazwano użyty homeomorfizm, uzasadniono skończony model CW kobordyzmu z rozkładu uchwytowego i dodano konsekwencję dualności Poincarégo $\chi(M)=0$ w nieparzystym wymiarze. Odsyłacze do rozdziałów 8, 21 i 23 oraz strony 155–158 sprawdzono. |
 | Dodatek C: grupy macierzowe | — | Definicje, algebry i wymiary sprawdzone 8 października; tabela czytelna w PDF | Przy dalszej rozbudowie zachować rozróżnienie wymiaru rzeczywistego i zespolonego oraz $Sp(n)$ od $Sp(2n,\mathbb K)$ |
 | Końcowa kontrola całości | — | Częściowo: ujednolicono „Dalszą lekturę” i sprawdzono odsyłacze do źródeł | Mapa książki, oznaczenia, terminologia i pełny przegląd treści nadal wymagają osobnej kontroli; skład, indeks i PDF sprawdzane przy każdym etapie. |

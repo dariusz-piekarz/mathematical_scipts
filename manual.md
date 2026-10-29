@@ -12,6 +12,116 @@ oraz dodatki). Starsze wpisy poniżej dokumentują rzeczywiście
 wykonane wówczas polecenia dla dawnego podziału na trzy tomy;
 ich numery stron i nazwy PDF-ów są historyczne.
 
+### Przykłady Freedmana — przebieg pracy 29 października 2026
+
+Katalog roboczy składu:
+`C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts\geometria i topologia różniczkowa`.
+Środowisko jak w poprzednim etapie: Windows PowerShell 5.1.19041.6456,
+MiKTeX 25.12 (`makeindex` z MiKTeX), `latexmk` 4.88, Perl 5.42.3
+z Git for Windows i Poppler 24.04.0. Nie instalowano nowych zależności,
+nie pobierano danych i nie ustawiano nowych zmiennych środowiskowych.
+`buduj_tomy.ps1` sam dodaje Perla do `PATH`, gdy jest to potrzebne.
+
+**Polecenia wykonane.** W katalogu głównym repozytorium wykonano
+`git fetch origin` oraz:
+
+```powershell
+git rev-list --left-right --count HEAD...origin/review/rozdzialy-matematyka
+```
+
+Wynik porównania wyniósł `0 0`. W katalogu projektu podjęto pełny skład:
+
+```powershell
+Set-Location -LiteralPath 'C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts\geometria i topologia różniczkowa'
+powershell -NoProfile -ExecutionPolicy Bypass -File .\buduj_tomy.ps1 *> build/tomy/freedman-stage2-build.txt
+```
+
+Pierwszy przebieg zakończył się błędem LaTeX w opcjonalnym tytule
+przykładu zawierającym `$[1]$`; tytuł poprawiono w źródle.
+Wykonano ponowienie:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\buduj_tomy.ps1 *> build/tomy/freedman-stage2-build-final.txt
+```
+
+Ten przebieg przerwano; pozostawił ucięty plik pomocniczy `aux`.
+Próba uruchomiona w tle z zapisami
+`build/tomy/freedman-stage2-background.stdout.txt` i
+`build/tomy/freedman-stage2-background.stderr.txt` zakończyła się
+błędem odczytu pliku `aux`. Następnie metodą
+`[System.IO.File]::WriteAllText` opróżniono dokładnie sześć
+wygenerowanych plików: `geometria_tom2.{aux,toc,out}` i
+`geometria_tom4.{aux,toc,out}` w `build/tomy`.
+Wykonano dokładnie:
+
+```powershell
+$paths = @('build/tomy/geometria_tom2.aux',
+  'build/tomy/geometria_tom2.toc',
+  'build/tomy/geometria_tom2.out',
+  'build/tomy/geometria_tom4.aux',
+  'build/tomy/geometria_tom4.toc',
+  'build/tomy/geometria_tom4.out')
+foreach ($path in $paths) {
+  $full = [System.IO.Path]::GetFullPath($path)
+  [System.IO.File]::WriteAllText($full, '')
+}
+```
+
+Kolejny pełny skład uruchomiono w tle poleceniem:
+
+```powershell
+$freedmanBuild = Start-Process -FilePath 'powershell.exe' `
+  -ArgumentList @('-NoProfile','-ExecutionPolicy','Bypass','-File','.\buduj_tomy.ps1') `
+  -WorkingDirectory (Get-Location).Path `
+  -RedirectStandardOutput 'build\tomy\freedman-stage2-repaired.stdout.txt' `
+  -RedirectStandardError 'build\tomy\freedman-stage2-repaired.stderr.txt' `
+  -WindowStyle Hidden -PassThru
+$freedmanBuild.Id
+```
+
+Proces miał identyfikator `9084`. Zakończył się komunikatem
+`Four volumes built, indexes checked, PDFs copied.` po dwóch obiegach.
+
+**Kontrola wykonana po składzie.** W katalogu projektu sprawdzono
+wszystkie cztery tomy następującym poleceniem:
+
+```powershell
+1..4 | ForEach-Object {
+  $v = "geometria_tom$_"
+  $pages = (pdfinfo "$v.pdf" | Select-String '^Pages:').Line.Trim()
+  $index = (Select-String -Path "build/tomy/$v.ilg" -Pattern 'entries accepted, 0 rejected').Line.Trim()
+  $bad = @(Select-String -Path "build/tomy/$v.log" -Pattern 'LaTeX Warning: Reference .* undefined|There were undefined references|Label\(s\) may have changed|Overfull \\hbox|Missing character')
+  $links = @(pdftohtml -q -xml -f 1 -l 1 -stdout "$v.pdf" | Select-String 'href="geometria_tom[1-4]\.pdf"' -AllMatches | ForEach-Object { $_.Matches.Value } | Sort-Object -Unique)
+  $same = (Get-FileHash "$v.pdf" -Algorithm SHA256).Hash -eq (Get-FileHash "build/tomy/$v.pdf" -Algorithm SHA256).Hash
+  if ($bad.Count -ne 0 -or $links.Count -ne 3 -or -not $same) { throw "Kontrola $v nie powiodła się: bad=$($bad.Count), links=$($links.Count), same=$same" }
+  "$($v): $pages; $index; 3 łącza; SHA-256 zgodna"
+}
+```
+
+Kontrola zakończyła się kodem 0. Tomy I–IV mają odpowiednio
+216, 182, 104 i 85 stron; indeksy przyjęły 113, 96, 33 i 96 haseł,
+wszystkie bez odrzuceń. Nie było niezdefiniowanych odsyłaczy,
+przepełnionych wierszy ani brakujących znaków. Każdy tom ma trzy
+łącza do pozostałych i sumę SHA-256 zgodną z kopią w `build/tomy`.
+Wyrenderowano i obejrzano fizyczne strony 45–48 oraz 68 tomu IV:
+teksty, wzory, odsyłacze, tabela i podpisy są czytelne.
+Wykonano też `git diff --check` bez błędów.
+
+**Instrukcja przygotowana do samodzielnego wykonania.** Po zakończeniu
+zmian w źródle uruchom z powyższego katalogu:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\buduj_tomy.ps1 *> build/tomy/freedman-stage2-rerun.txt
+```
+
+Po udanym składzie powtórz powyższy blok kontroli. Do oglądania
+stron użyj `pdftoppm` jak w wykonanych poleceniach:
+
+```powershell
+pdftoppm -f 45 -l 48 -scale-to 1700 -png geometria_tom4.pdf build/tomy/freedman-stage2-page
+pdftoppm -f 68 -l 68 -scale-to 1700 -png geometria_tom4.pdf build/tomy/freedman-stage2-appendix
+```
+
 ### Trzy rachunki chirurgii — polecenia wykonane 28 października 2026
 
 Zmiany dotyczą rozdziałów 26–27 i dodatku A na gałęzi

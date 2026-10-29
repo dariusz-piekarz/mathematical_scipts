@@ -14,6 +14,60 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 36 — dwie konstrukcje Freedmana (2026-10-29)
+
+Rozdział 34 obliczał formę $E_8$ dla gładkiego plumbowania z brzegiem
+będącym sferą homologiczną. Rozdział 36 podawał istnienie zamkniętej
+rozmaitości o tej formie i drugiego typu o formie $[1]$, lecz nie
+prowadził czytelnika przez konstrukcję. Rozdziały 34–35 zawierały już
+obramowane uchwyty, dyski Whitneya i wieże Cassona, więc rozbudowano
+sam przykład Freedmana bez powtarzania tych definicji.
+
+Nowy przykład w rozdziale 36 zaczyna od ośmiu wiązek dyskowych nad
+$S^2$ o liczbie Eulera $+2$, splumbowanych według grafu $E_8$.
+Odsyła do wcześniejszego rachunku macierzy i wyznacznika. Ponieważ
+$\det E_8=1$, brzeg jest całkowitą sferą homologiczną. Istnienie
+kontraktowalnego topologicznego wypełnienia brzegu przyjęto jawnie
+z [twierdzenia $1.4'$ Freedmana](https://www.maths.gla.ac.uk/~mpowell/1982_The%20topology%20of%20four-dimensional%20manifolds.pdf)
+i [wniosku 9.7.2 Freedmana–Quinna](https://archive.mpim-bonn.mpg.de/4789/2/FreedmanQuinn-TopologyOf4Manifolds-Reformatted2013.pdf).
+Następnie rachunki van Kampena i Mayera–Vietorisa dają $\pi_1=1$,
+$H_2\cong\Z^8$ i formę $E_8$ dla zamkniętej rozmaitości.
+Formuła spinowa $\operatorname{ks}\equiv\sigma/8\pmod2$
+daje $\operatorname{ks}=1$.
+
+Drugi przykład zaczyna od $X_{E_8}\#\overline{\C P^2}$.
+Izometria $E_8\oplus[-1]\cong8[1]\oplus[-1]$ sama nie buduje
+sumy spójnej. Konkretny rozkład z
+[twierdzenia 10.4(1) i §10.5.1 Freedmana–Quinna](https://archive.mpim-bonn.mpg.de/4789/2/FreedmanQuinn-TopologyOf4Manifolds-Reformatted2013.pdf)
+wydziela $7\C P^2\#\overline{\C P^2}$ i pozostawia jednospójną
+rozmaitość o formie $[1]$ oraz $\operatorname{ks}=1$.
+Krótki akapit o jednoznaczności wskazuje zewnętrzny rozkład sumy
+spójnej, topologiczną hipotezę Poincarégo i rolę równości
+$\operatorname{ks}$; nie przedstawia ich jako dowiedzionych w skrypcie.
+Dodatek A dokumentuje te wejścia. W numeracji pierwodruku książki
+Freedmana–Quinna wniosek 9.7.2, twierdzenie 10.4 i §10.5.1 wersji
+z 2013 r. odpowiadają wnioskowi 9.3C, twierdzeniu 10.3
+i dowodowi twierdzenia 10.1 w §10.4.
+
+Niezależny przegląd potwierdził znaki plumbowania, rachunki
+$\pi_1$, $H_2$, formy i $\operatorname{ks}$ oraz warunek użycia
+twierdzenia o rozkładzie dla dopełnienia $[1]$.
+Na jego podstawie skorygowano opis reprezentantów formy:
+we wnętrzu plumbowania przecinają się sfery zerowe wiązek,
+a nie rdzenie odrębnych uchwytów $2$. Doprecyzowano też
+zastosowanie twierdzeń van Kampena i Hurewicza.
+Nie ponawiano audytu reszty rozdziałów 34–36.
+
+Po poprawieniu tytułu przykładu i odbudowaniu przerwanych plików
+pomocniczych skrypt `buduj_tomy.ps1` złożył cztery tomy i indeksy
+w dwóch obiegach. Tomy mają 216, 182, 104 i 85 stron, a indeksy
+przyjęły 113, 96, 33 i 96 haseł bez odrzuceń. Końcowe logi nie
+mają brakujących odsyłaczy, przepełnionych wierszy ani brakujących
+znaków. Na pierwszej stronie każdego tomu sprawdzono trzy łącza
+do pozostałych PDF-ów oraz zgodność kopii SHA-256. Obejrzano
+fizyczne strony 45–48 i 68 tomu IV; nowy tekst, wzory, tabela
+i odsyłacze są czytelne.
+
 ## Rozdziały 26–27 — trzy rachunki chirurgiczne (2026-10-28)
 
 Rozdział 27 obliczał grupy $L_n(\Z)$, lecz nie pokazywał jeszcze,

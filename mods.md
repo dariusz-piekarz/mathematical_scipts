@@ -1,5 +1,68 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-10-29 — konstrukcje Freedmana w tomie IV
+
+### Problem
+
+Rozdział 34 obliczał $E_8$ dla gładkiego plumbowania z brzegiem,
+ale rozdział 36 przechodził od tej macierzy wprost do twierdzenia
+o zamkniętych rozmaitościach. Podawał również dwa typy o formie
+$[1]$ bez pokazania mechanizmu konstrukcji drugiego typu.
+Obramowane uchwyty, dyski Whitneya i wieże Cassona były już
+opisane w rozdziałach 34–35.
+
+### Rozwiązanie i wpływ
+
+W `tex/rozdzialy/33-freedman-klasyfikacja.tex` dodano dwa
+przykłady z dowodu Freedmana. Pierwszy skleja plumbowanie
+$E_8$ z kontraktowalnym topologicznym wypełnieniem brzegu,
+a następnie wylicza $\pi_1$, $H_2$, formę i
+$\operatorname{ks}=1$. Drugi używa izometrii
+$E_8\oplus[-1]\cong8[1]\oplus[-1]$ i zewnętrznego
+twierdzenia Freedmana–Quinna o rozkładzie sumy spójnej,
+aby otrzymać typ o formie $[1]$ i $\operatorname{ks}=1$.
+Dodano też wyjaśnienie, dlaczego rozkład, hipoteza Poincarégo
+i porównanie $\operatorname{ks}$ prowadzą do jednoznaczności.
+Istniejąca tabela przykładów odsyła do nowych rachunków.
+Dodatek A wskazuje osobne wyniki zewnętrzne. W
+`PLAN_DZIALANIA.md` poprawiono zakres etapu na konstrukcje
+Freedmana, a `PRZEGLAD.md` zapisuje źródła i granicę audytu.
+
+Kompromis: istnienie kontraktowalnego wypełnienia,
+topologiczny rozkład sumy spójnej i czterowymiarowa hipoteza
+Poincarégo pozostają jawnymi wejściami zewnętrznymi.
+Rachunki nie stanowią ich dowodu. Nowy tekst wykorzystuje
+istniejący graf $E_8$ i omija powtórzenie opisów uchwytów
+oraz wież Cassona.
+
+### Weryfikacja
+
+Niezależna kontrola z oryginalnymi źródłami potwierdziła
+znaki macierzy, rachunki van Kampena i Mayera–Vietorisa,
+wartość $\operatorname{ks}$ oraz szczególny przypadek
+twierdzenia o rozkładzie. Poprawiono odsyłacz do pierwodruku
+Freedmana–Quinna: odpowiednikiem §10.5.1 wersji z 2013 r.
+jest dowód twierdzenia 10.1 w §10.4 wydania z 1990 r.
+Po osobnym przeglądzie zastąpiono nieścisły opis przecinania
+się rdzeni odrębnych uchwytów poprawnym opisem sfer zerowych
+plumbowanych wiązek. Twierdzenie van Kampena zapisano jako
+iloraz iloczynu wolnego, bez zakładania injektywności odwzorowań
+grup brzegu. Sprecyzowano rolę twierdzenia Hurewicza.
+Pierwszy pełny skład zatrzymał się na zamykającym nawiasie
+w opcjonalnym tytule przykładu; tytuł poprawiono przed
+ponownym składem.
+Przerwany kolejny przebieg pozostawił ucięte pliki pomocnicze
+tomów II i IV. Opróżniono sześć wygenerowanych plików
+`aux`, `toc` i `out`, a pełny skład uruchomiono ponownie.
+Skrypt `buduj_tomy.ps1` zakończył się po dwóch obiegach.
+Kontrola czterech PDF-ów dała 216, 182, 104 i 85 stron,
+113, 96, 33 i 96 przyjętych wpisów indeksu bez odrzuceń,
+po trzy łącza między tomami i zgodne sumy SHA-256 kopii.
+W logach nie ma brakujących odsyłaczy, przepełnionych
+wierszy ani brakujących znaków. Obejrzano strony 45–48
+i 68 tomu IV z nowym tekstem i dodatkiem A; skład jest
+czytelny. `git diff --check` przeszedł.
+
 ## 2026-10-28 — trzy rachunki chirurgii w tomie III
 
 ### Problem
