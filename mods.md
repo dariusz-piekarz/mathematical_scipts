@@ -1,5 +1,183 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-11-04 — powtarzalna instalacja TokenEconomizer
+
+### Problem
+
+Użytkownik chciał dodać projekt Microsoft TokenEconomizer do tego
+środowiska. Samo skopiowanie kodu do repozytorium LaTeX nie
+uruchomiłoby wtyczki Codex i utrudniłoby aktualizację upstream.
+Na tym Windows alias `python.exe` ze sklepu Microsoft bywa
+wcześniej w `PATH` niż katalog użytkownika.
+
+### Rozwiązanie i wpływ
+
+Dodano `instaluj_tokeneconomizer.ps1`. Skrypt instaluje przez
+`uv` Python 3.14.8, przypina źródło TokenEconomizer do
+commita `d3e193b8734ec76230da1e08d7929ba9d14640d8` w
+`%LOCALAPPDATA%\TokenEconomizer`, rejestruje marketplace i
+włącza wtyczkę 0.1.0 w Codex CLI. Powtórne uruchomienie
+sprawdza zdalne repozytorium, czystość checkoutu i commit.
+Wariant `-StartCodex` uruchamia CLI z `python.exe` z `uv`
+na początku `PATH` bieżącego procesu. Nie zmienia Machine PATH
+ani nie przyznaje zaufania hakom bez udziału użytkownika.
+To kompromis: wtyczka jest zainstalowana i możliwa do
+odtworzenia, ale działanie haków wymaga nowej sesji i
+świadomego zatwierdzenia; bieżącej sesji IDE nie zweryfikowano.
+Źródłem procedury jest
+[README wtyczki](https://github.com/microsoft/TokenEconomizer/blob/main/plugin/README.md#codex)
+oraz [dokumentacja haków Codex](https://learn.chatgpt.com/docs/hooks).
+
+### Weryfikacja
+
+Instalator zakończył się kodem 0 przy ponownym uruchomieniu;
+`codex plugin list` wskazuje `installed, enabled` i wersję
+0.1.0, a Python zgłasza 3.14.8. Nie przypisujemy wtyczce
+oszczędności tokenów przed uruchomieniem i sprawdzeniem haków.
+
+## 2026-11-04 — włączenie materiału autora do tomu II
+
+### Problem
+
+`do_dodania.tex` zawierał definicję izomorfizmów muzycznych
+i 15 przykładów z metryki, koneksji, geodezyjnych oraz
+krzywizny. Wstawienie całego pliku na końcu tomu złamałoby
+kolejność definicji i odsyłaczy; używa on też różnych
+konwencji jednostek dla Poincarégo i FLRW.
+
+### Rozwiązanie i wpływ
+
+W rozdziałach 11–14 umieszczono wszystkie fragmenty w
+istniejącym toku wywodu. W 11 zdefiniowano `flat/sharp`,
+podano płaską metrykę Minkowskiego i FLRW; w 12 obliczono
+symbole Christoffela FLRW; w 13 geodezyjne Minkowskiego,
+FLRW i pola Jacobiego; w 14 krzywiznę, równania Friedmanna,
+rozwiązania pyłu i promieniowania, czas konforemny,
+niezupełność, czas zespolony i model Milne'a.
+Zachowano etykiety z materiału autora. Jawnie zapisano
+`c=1` w FLRW, odróżniono zmienną `a(t)` od parametru Kerra,
+wyłączono wektor zerowy z klasyfikacji krzywych zerowych
+i dopasowano zapis niezmiennika Kretschmanna do konwencji
+`\mathcal R` rozdziału. Przykłady Minkowskiego stoją przed
+Schwarzschildem i Kerrem, a równania Friedmanna po nich.
+W opisie wykresu czynnika skali `1` znajduje się dokładnie
+na wysokości `a(t_*)=1`; podpis diagramu konforemnego
+odsunięto od osi. Plik autora pozostaje niekompilowanym
+materiałem wejściowym, co zachowuje jego zapis bez tworzenia
+drugiej części wykładu w PDF.
+
+Kompromis: model FLRW jest przestrzennie płaski, więc
+jego wzoru na Kretschmanna nie stosuje się do Milne'a.
+Podstawienie czasu urojonego jest przedstawieniem formalnym,
+nie dowodem regularności przy `t=0`; pyłowy FLRW ma
+rozbieżną krzywiznę i niezupełne geodezyjne.
+
+### Weryfikacja
+
+Niezależnie sprawdzono znaki rachunków Christoffela,
+Riemanna, Ricciego i Friedmanna oraz komplet 15 etykiet
+przykładów. Pełny skład tomów I–IV dał 219, 193, 104 i
+98 stron bez błędów w logach. Obejrzano strony 10, 43,
+67 i 69 tomu II; sprawdzono indeks, odsyłacze oraz
+łącza między PDF-ami. `git diff --check` przeszedł.
+
+## 2026-11-04 — zwykły potok Ricciego przed osobliwością
+
+### Problem
+
+Punkt 5 planu wymagał połączenia podstawowego równania
+z normalizacją objętości, przykładami metryk produktowych
+i jednorodnych, ewolucją tensorów krzywizny oraz
+kryterium przedłużenia. Bez tego przejście do chirurgii
+zbyt szybko przeskakiwało przez skalowanie i osobliwości.
+
+### Rozwiązanie i wpływ
+
+Rozszerzono `30-potok-ricciego.tex` o zmianę czasu
+potoku znormalizowanego, iloczyny metryk Einsteina,
+metryki Bergera na `SU(2)`, równania ewolucji pełnego
+tensora i Ricciego oraz dowód kryterium przedłużenia
+przy ograniczonej krzywiźnie. Preambuła używa teraz
+`mathrsfs` dla zapisu operatora krzywizny `\mathscr K`.
+W dowodzie ewolucji Ricciego jawnie pokazano kontrakcję
+wyrazów kwadratowych i pochodną metryki odwrotnej.
+Głębokie oszacowania pochodnych Hamiltona--Shiego oraz
+krótki czas istnienia PDE są nazwanymi wejściami
+zewnętrznymi. Rozdział nie przedstawia ich jako
+samodzielnie dowiedzionych.
+
+### Weryfikacja
+
+Wzory metryki Bergera, równanie operatora krzywizny
+i właściwe numery twierdzeń Hamiltona sprawdzono ze
+źródłami pierwotnymi. Pełny skład wszystkich czterech
+tomów zakończył się kodem 0; tom III ma 104 strony,
+indeks 33 przyjęte wpisy bez odrzuceń, a log jest czysty.
+
+## 2026-11-04 — skala szyjki i czapy w lokalnej chirurgii
+
+### Problem
+
+Punkt 6 planu opisywał topologiczne cięcie sfery,
+ale bez jawnej skali metrycznej szyjki i modelu czapy
+nie było widać, które dane geometryczne są potrzebne
+do wznowienia potoku.
+
+### Rozwiązanie i wpływ
+
+W `30a-poincare-trzy.tex` unormowano walec do skalarnej
+krzywizny jeden. Szyjka ma skalę długości `h` i
+kontrolę normy `C^k`; silna szyjka kontroluje też
+wsteczny odcinek czasu rzędu `h^2`. Podano jawny
+gładki model radialnej czapy z dokładnym walcowym
+końcem i nieujemnymi krzywiznami sekcyjnymi.
+Zapisano relacje skal `\rho=\delta r` i `h<\delta\rho`
+z oryginalnej konstrukcji Perelmana. Przykład
+`S^2\times S^1` oblicza skalarną krzywiznę,
+pole, objętość oraz zmianę `\pi_1` i homologii
+po cięciu do `S^3`. Jest to model pojedynczego
+cięcia; nie zastępuje zewnętrznych oszacowań
+globalnego potoku z chirurgią.
+
+### Weryfikacja
+
+Sprawdzono gładkość czapy w środku, walcowy koniec,
+znaki obu krzywizn i skalowanie objętości. Skale
+porównano z [Perelmanem, §§2, 4.3–4.5](https://arxiv.org/html/math/0303109).
+Tom IV i pełny skład zakończyły się kodem 0; tom IV
+ma 98 stron i 102 wpisy indeksu bez odrzuceń.
+
+## 2026-11-04 — zakres cytowania sfer wymiaru siedem i nagłówki Donaldsona
+
+### Problem
+
+Rozdział 26 i dodatek A przypisywały sekcjom 4 i 7–8
+części I Kervaire'a--Milnora pełny dowód rzędu
+`bP_8=28`, choć autorzy podali liczbę w tabelach,
+a szczegółowy rachunek odesłali do części II.
+W rozdziale Donaldsona cztery nagłówki podsekcji
+pakietu moduli były numerowane, mimo że pełnią rolę
+śródtytułów wewnątrz jednego argumentu.
+
+### Rozwiązanie i wpływ
+
+W rozdziale 26 i dodatku A opisano dokładnie zakres
+źródła: liczba `28` nadal jest jawnym wynikiem
+zewnętrznym, a zupełność `\mu` pochodzi osobno
+od Eellsa--Kuipera. Teza i rachunek 16 przykładów
+wiązkowych pozostają bez zmian. W `34-donaldson.tex`
+cztery śródtytuły mają postać `\subsection*`;
+nie tworzą numerów w spisie treści. Nie zmieniono
+pakietu wejść analitycznych ani dowodu.
+
+### Weryfikacja
+
+Porównano wskazane strony Kervaire'a--Milnora
+i §6 Eellsa--Kuipera ze źródłami oraz wybrane
+hipotezy Perelmana, Freedmana--Quinna, Bardena,
+Donaldsona i Gompfa. Pełny skład, indeksy,
+odsyłacze i `git diff --check` przeszły.
+
 ## 2026-11-04 — audyt zmian autora w rozdziale 2
 
 ### Problem

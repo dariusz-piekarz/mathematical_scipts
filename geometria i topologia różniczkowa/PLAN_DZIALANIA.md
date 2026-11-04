@@ -252,30 +252,36 @@ kontrolą stron, indeksów, odsyłaczy i źródeł.
    Na życzenie autora trzy śródtytuły sekcji 18.5 zmieniono na
    nienumerowane podsekcje; odsyłacze w rozdziałach 30 i 37 wskazują
    teraz bezpośrednio odpowiednie twierdzenia.
-5. **Zwykły potok Ricciego przed osobliwościami;
-   12–25 stron, 4–10 dni.** Rozwinąć potok znormalizowany,
-   przykłady metryk jednorodnych i produktowych, równania ewolucji
-   tensorów krzywizny oraz kryterium przedłużenia. Głębokie
-   oszacowania paraboliczne oznaczać jako osobne wejścia.
-6. **Lokalna chirurgia potoku Ricciego; 5–12 stron, 2–5 dni.**
-   Uzupełnić model szyjki i czapy o skalę metryczną, przykład
-   i rachunek zmiany topologii. Globalne istnienie potoku z
-   chirurgią, niezapadanie i klasyfikacja otoczeń kanonicznych
-   pozostają wynikami Perelmana; nie planujemy ich pełnego dowodu.
+5. **Zwykły potok Ricciego przed osobliwościami; etap zakończony
+   4 listopada 2026.** W rozdziale 31 rozwinięto normalizację
+   objętości i zmianę zegara, iloczyny i metryki Bergera,
+   ewolucję pełnej krzywizny i tensora Ricciego oraz kryterium
+   przedłużenia. Oszacowania Hamiltona--Shiego i istnienie PDE
+   pozostają oznaczonymi wejściami analitycznymi. Sprawdzono
+   rachunki, wybrane źródła pierwotne i skład czterech tomów.
+6. **Lokalna chirurgia potoku Ricciego; etap zakończony
+   4 listopada 2026.** W rozdziale 32 podano unormowany walec
+   o skalarze jeden, skalę silnej szyjki, jawny gładki model
+   czapy z nieujemną krzywizną, relacje skal Perelmana oraz
+   przykład cięcia $S^2\times S^1$ do $S^3$ z rachunkiem
+   krzywizny, pola, objętości i homologii. Globalne istnienie
+   potoku z chirurgią, niezapadanie i otoczenia kanoniczne
+   pozostają zewnętrznymi wynikami Perelmana.
 
-**Po zakończeniu etapów 1–6: audyt idei dowodów i dokładnych źródeł.**
-Sprawdzić w miejscach występowania wyniki Perelmana (rozdziały 32–33),
-Freedmana (34–36), Donaldsona (37), Bardena i klasyfikację powierzchni
-(29), konstrukcje sfer Milnora oraz struktury na $S^7$ (28 i 30),
-a także konstrukcje Gompfa i egzotyczne struktury na $\R^4$ (38).
-Przy każdym wyniku wskazać pracę, twierdzenie lub sekcję źródłową
-i dopisać ideę mechanizmu tylko wtedy, gdy obecny rozdział jej
-nie objaśnia. Wstępny przegląd wskazuje istniejące już obszerne
-objaśnienia Perelmana, Bardena, klasyfikacji powierzchni,
-konstrukcji Milnora i Gompfa. Potencjalne luki dotyczą
-idei obliczenia $\Theta_7\cong\Z/28$, wybranych etapów
-Freedmana i kompaktifikacji moduli Donaldsona. Nie deklarować
-pełnej klasyfikacji gładkich struktur na $\R^4$.
+**Po etapach 1–6: audyt idei dowodów i dokładnych źródeł;
+etap wskazanych wejść zakończony 4 listopada 2026.**
+Porównano wybrane krytyczne hipotezy i cytowania Perelmana,
+Freedmana--Quinna, Powell--Raya--Teichnera, Donaldsona,
+Bardena, klasyfikacji powierzchni, Kervaire'a--Milnora,
+Eellsa--Kuipera i Gompfa ze źródłami pierwotnymi.
+Jedyną znalezioną nieścisłość przypisania poprawiono w
+rozdziale 30 i dodatku A: część I pracy Kervaire'a--Milnora
+podaje rząd $\Theta_7$, lecz odsyła szczegóły rachunku
+$bP_8$ dalej. Skrypt nadal traktuje liczbę $28$ jako
+zewnętrzne wejście. Wcześniejsze rozdziały objaśniają
+mechanizmy używane w tych zastosowaniach; audyt wybranych
+wejść nie jest ponowną pełną recenzją każdego rozdziału ani
+klasyfikacją wszystkich gładkich struktur na $\R^4$.
 
 ## Pokrycie audytem
 
@@ -298,10 +304,10 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 8. Homologia przestrzeni | `08-homologia.tex` | Audyt dodatków zakończony 6 października; treść bez poprawek | Sprawdzone pięć wpisów indeksu, definicje, bibliografia i trzy ilustracje; PDF 397 stron |
 | 9. Wyższe grupy homotopii | `09-wyzsze-grupy-homotopii.tex` | Audyt dodatków zakończony 6 października; PDF 397 stron | Sprawdzone indeks, definicje i cztery rysunki; poprawiono 19 użyć słowa „mapa” na „odwzorowanie” |
 | 10. Formy i de Rham | `10-formy-de-rham.tex` | Audyt dodatków zakończony 6 października; bez poprawek treści | Siedem wpisów indeksu, pięć ilustracji i zgodność konwencji przy brzegu; PDF 397 stron |
-| 11. Metryka, długość i miara | `11-metryka-dlugosc-miara.tex` | Audyt dodatków zakończony 6 października; PDF 397 stron | Sprawdzone definicje i dwie ilustracje; usunięty powtórzony wpis indeksu |
-| 12. Koneksje i transport | `12-koneksje.tex` | Audyt dodatków zakończony 6 października; bez poprawek treści | Cztery wpisy indeksu, definicje i dwa rysunki sprawdzone; PDF 397 stron |
-| 13. Geodezyjne i zupełność | `13-geodezyjne.tex` | Audyt dodatków zakończony 6 października; 13 października dodano miejsce cięcia i promień injektywności | Definicje, dowód związku z czasem cięcia, alternatywa dla miejsca cięcia, pełne rachunki sfery i płaskiego torusa oraz dwa nowe rysunki sprawdzone w tomie II (180 stron) |
-| 14. Krzywizna | `14-krzywizna.tex` | Audyt dodatków zakończony 6 października; 13 października dodano holonomię i rozkład de Rhama oraz powiązano §14.9 z miejscem cięcia w §13.6 | Grupa holonomii, zasada pól równoległych, pełny dowód lokalnego iloczynu, przykłady i dwa rysunki; globalny krok de Rhama oraz Ambrose–Singer są jawnymi wynikami zewnętrznymi. Powiązanie sprzężenia, alternatywy w miejscu cięcia i promienia injektywności sprawdzone. |
+| 11. Metryka, długość i miara | `11-metryka-dlugosc-miara.tex` | Audyt dodatków zakończony 6 października; 4 listopada zintegrowano materiał autora | Dawne definicje i ilustracje sprawdzone osobno. Nowe izomorfizmy muzyczne, przykład historyczny Poincarégo i metrykę FLRW zweryfikowano rachunkowo; rysunek na fizycznej stronie 10 tomu II obejrzano. |
+| 12. Koneksje i transport | `12-koneksje.tex` | Audyt dodatków zakończony 6 października; 4 listopada zintegrowano materiał autora | Dawne cztery wpisy indeksu, definicje i dwa rysunki sprawdzone osobno. Nowe symbole Christoffela FLRW wynikają ze wzoru metrycznego; etykiety sprawdzono w pełnym składzie. |
+| 13. Geodezyjne i zupełność | `13-geodezyjne.tex` | Audyt dodatków zakończony 6 października; 13 października dodano miejsce cięcia i promień injektywności; 4 listopada zintegrowano materiał autora | Dawne rachunki sfery i torusa zachowano. Nowe geodezyjne Minkowskiego oraz geodezyjne i pola Jacobiego FLRW sprawdzono ze znakami konwencji; rysunek na fizycznej stronie 43 tomu II obejrzano. |
+| 14. Krzywizna | `14-krzywizna.tex` | Audyt dodatków zakończony 6 października; 13 października dodano holonomię i rozkład de Rhama; 4 listopada zintegrowano materiał autora | Dawny audyt holonomii i rozkładu de Rhama zachowuje zakres. Nowe rachunki Minkowskiego, FLRW, Friedmanna, krzywizny i niezupełności sprawdzono; rysunki na fizycznych stronach 67 i 69 tomu II obejrzano. Globalny de Rham i Ambrose–Singer pozostają wynikami zewnętrznymi. |
 | 15. Grupy Liego | `29-grupy-liego.tex` | Pełny audyt zakończony 20 października | Sprawdzono przykłady, nawias, eksponentę, działanie adjungowane i nakrycie $\mathrm{SU}(2)\to\mathrm{SO}(3)$; doprecyzowano torus i oszacowanie pochodnych szeregu. |
 | 16. Geometria Kleina (plik 29a) | `29a-geometria-kleina.tex` | Pełny audyt zakończony 20 października | Sprawdzono uśrednianie, właściwość działania na $G/H$, zupełność, ilorazy dyskretne, orbifoldy i modele Kleina; zawężono deklarację o izometriach hiperbolicznych do dowiedzionego działania $\mathrm{PSL}(2,\R)$. |
 | 17. Chern–Weil | `27-chern-weil.tex` | Pełny audyt zakończony 20 października | Sprawdzono normalizacje i transgresję; rozpisano model względny klasy Eulera, granicę wokół zer i wersję brzegową. Zgodność zespolonej formy Cherna z całkowitą klasą pozostaje jawnym wejściem zewnętrznym. |
@@ -317,9 +323,9 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Pełny audyt także nowego tekstu zakończony 20 października względem §§1–2, 5–6 Walla; zmianę z 27 października oraz nowe rachunki z 28 października i strony 57–59 tomu III sprawdzono osobno | Sprawdzono parzyste i nieparzyste kryterium, bazy i torsję nad $\Z[\pi]$, $SU/RU$, ruchy $T1$--$T4$, wymiar pięć i chirurgię środkową. Poprawiono stronę $\lambda$ w dualności, terminologię immersji i hipotezy lematu 5.7. Doprecyzowano zależność $\mu=0$ od wybranych danych normalnych w przykładzie lokalnej stabilizacji; nie ponawiano audytu reszty rozdziału. Nowe rachunki dają tabelę $L_n^s(\Z[\Z])$ i grupy Tate'a dla $C_5$, z dokładnymi hipotezami Shanesona i wnioskami z ciągu Rothenberga; sprawdzono je względem Walla, Ranickiego i Milnora. Głębokie lematy Walla, wersja $h$ i relacja formacji pozostają jawnymi wynikami zewnętrznymi. |
 | 28. Ciąg chirurgii | `24-ciag-chirurgii.tex` | Pełny audyt wcześniejszej treści zakończony 20 października względem §10 oraz twierdzeń 5.8 i 6.5 Walla; uzupełnienia z 27–28 października sprawdzono osobno | Sprawdzono dokładność, działanie $L_{n+1}^s$, zakres $n\geq5$, lewą strzałkę i przejście do $s$-kobordyzmu; doprecyzowano racjonalne jądro w rachunku sygnatury. Nowe fragmenty objaśniają strzałki, ślad nad cylindrem, warunek brzegowy, przykład $S^7$, przejście śladu $S^6\to S^3\times S^3$ przez Arfa i punkt bazowy $[S^6,G/O]$. Mapa hipotez rozdziela DIFF/TOP, $n=5$ od śladu wymiaru sześć, dowolność $\pi_1$, ustalony brzeg i dekoracje $s/h$; nie ponawiano audytu reszty rozdziału. Bijekcja z $[X,G/O]$ i działanie grupy $L$ pozostają wynikami Walla, a wariant TOP jest osobnym wynikiem zewnętrznym. |
 | 29. Poincaré | `25-poincare.tex` | Pełny audyt rozdziału zakończony 20 października; twierdzenia 2.2 i 2.3 Bardena porównano z oryginałem | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm; lematy 3.1 i 4.1–4.4, indukcja, modele $M_k,X_j$, formy wiązania i przykłady spin/niespin. Doprecyzowano źródło triangulacji, mieszaną parę torsyjną, hipotezy lematu 4.4 i orientację przy wniosku pięciowymiarowym. Głębokie wejścia pozostają zewnętrzne. |
-| 30. Sfery Milnora | `26-sfery-milnora.tex` | Audyt wcześniejszej treści zakończony 19 października; klasyfikację dopisano 20 października; odsyłacze indeksowe 29 października | Sprawdzono sklejanie, klasy $e,p_1$, ciąg Mayera--Vietorisa, kryterium Whiteheada, obie sygnatury, $\lambda$, $\mu$, przykłady i rysunek. Rachunek klasyfikuje 16 typów wiązkowych oraz 28 klas $\Theta_7$ (15 bez orientacji) przez sumy $M_3$. Wzór Hirzebrucha i całkowitość indeksu Diraca są teraz dowiedzione w rozdziale 18; zupełność $\mu$ i $\Theta_7\cong\Z/28$ pozostają wynikami zewnętrznymi. |
-| 31. Potok Ricciego (plik 30) | `30-potok-ricciego.tex` | Pełny audyt zakończony 20 października; rysunek 31.1 sprawdzony na stronie PDF 100 | Rachunki skalowania, ewolucji, zasady maksimum i DeTurcka spójne; istnienie i jednoznaczność PDE pozostają jawnym wejściem analitycznym. |
-| 32. Poincaré w wymiarze trzy (plik 30a) | `30a-poincare-trzy.tex` | Pełny audyt zakończony 20 października | Hipotezy niezapadania i wygasania, chirurgia, odtworzenie topologii oraz Moise sprawdzone względem źródeł; poprawiono tytuł cytowanej pracy i terminologię. Głębokie wyniki Perelmana pozostają zewnętrzne. |
+| 30. Sfery Milnora | `26-sfery-milnora.tex` | Audyt wcześniejszej treści zakończony 19 października; klasyfikację dopisano 20 października; odsyłacze indeksowe 29 października; cytowanie liczby 28 poprawione 4 listopada | Sprawdzono sklejanie, klasy $e,p_1$, ciąg Mayera--Vietorisa, kryterium Whiteheada, obie sygnatury, $\lambda$, $\mu$, przykłady i rysunek. Rachunek klasyfikuje 16 typów wiązkowych oraz 28 klas $\Theta_7$ (15 bez orientacji) przez sumy $M_3$. Wzór Hirzebrucha i całkowitość indeksu Diraca są teraz dowiedzione w rozdziale 18; zupełność $\mu$ i $\Theta_7\cong\Z/28$ pozostają wynikami zewnętrznymi; część I Kervaire'a--Milnora podaje rząd w tabeli, lecz nie pełny rachunek. |
+| 31. Potok Ricciego (plik 30) | `30-potok-ricciego.tex` | Pełny audyt wcześniejszej treści 20 października; punkt 5 planu i wybrane źródła sprawdzone 4 listopada | Oprócz dawnych rachunków skalowania, ewolucji, maksimum i DeTurcka sprawdzono normalizację, iloczyny, metrykę Bergera, tensor Ricciego i kryterium przedłużenia. Istnienie PDE i oszacowania paraboliczne pozostają jawnymi wejściami analitycznymi. |
+| 32. Poincaré w wymiarze trzy (plik 30a) | `30a-poincare-trzy.tex` | Pełny audyt wcześniejszej treści 20 października; punkt 6 planu i źródło Perelmana sprawdzone 4 listopada | Nowy walec, czapa, skale chirurgii i przykład $S^2\times S^1$ sprawdzone; globalne niezapadanie, wygasanie, chirurgia i otoczenia kanoniczne pozostają wynikami zewnętrznymi Perelmana. |
 | 33. Geometrie Thurstona (plik 30b) | `30b-geometrizacja-thurstona.tex` | Pełny audyt zakończony 20 października | Osiem modeli, tabela Seiferta, orbifoldy, rozkład pierwszy i JSJ sprawdzone; dopisano definicję dysku ściskającego i źródło twierdzenia o pętli oraz skorygowano opis dowodu w rozdziale 31. Geometryzacja pozostaje wynikiem zewnętrznym. |
 | 34. Formy przecięcia i uchwyty w wymiarze cztery (plik 31) | `31-freedman-formy-przeciecia.tex` | Pełny audyt rozdziału zakończony 25 października; 28 października dodano osobno diagram obramowanych splotów | W audycie sprawdzono definicję i unimodularność formy, parzystość, sygnaturę, pełny rachunek $E_8$, macierz splotu, homologię brzegu i ograniczenie triku Whitneya. Dopisano jawny rachunek $2E_8$, rozróżnienie od macierzy skalarnej $2\cdot E_8$, wpływ orientacji komponentów na macierz oraz granicę między korpusem uchwytowym a zamkniętą rozmaitością. Nowy rysunek odczytuje macierze $H$ i $[1]$ z obramowanego splotu Hopfa i niewęzła; nie ponowiono audytu całego rozdziału. Głębokie domknięcie topologiczne pozostaje wynikiem zewnętrznym Freedmana. |
 | 35. Uchwyty Cassona (plik 32) | `32-uchwyty-cassona.tex` | Pełny audyt rozdziału zakończony 26 października | Sprawdzono model uchwytu z załamaniami, rachunek $\pi_1$ pięter, rozróżnienie $\mu$ i $\widetilde\mu$, hipotezy oraz konkluzje twierdzeń Freedmana--Quinna i Powell--Raya--Teichnera, geometryczną dualność i $\pi_1$-pomijalność. Poprawiono numerację wyników i opis zakresu grup. Powierzchnie z dyskami zamykającymi, uogólnione wieże, twierdzenie o zanurzaniu oraz standardowość uchwytu Cassona pozostają jawnymi wynikami zewnętrznymi. |
@@ -327,7 +333,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 37. Donaldson (plik 34) | `34-donaldson.tex` | Pełny audyt wcześniejszej treści zakończony 27 października; osobne uzupełnienia z 28 i 29 października | W audycie sprawdzono lokalność trywializacji, ASD, całkowity $c_1$, znaki $c_2$ i energii, orientację w źródłowym dowodzie oraz wnioski $E_8$ i $2E_8$. Przykład BPST oblicza krzywiznę, energię $8\pi^2$, $c_2=1$ i przedłużenie na $S^4$. Uzupełnienie z 29 października rozpisuje kompleks deformacji, liczbę redukcji, model linku $\C P^2$, granicę z jednym bąblem i dowód $\sigma(\partial W)=0$. Pakiet perturbacji, zwartości, kołnierza i orientacji oraz twierdzenie Donaldsona pozostają zewnętrzne; nie ponawiano audytu całego rozdziału. |
 | 38. Egzotyczne $\R^4$ (plik 35) | `35-egzotyczne-r4.tex` | Pełny audyt wcześniejszej treści zakończony 27 października; uzupełnienie i jego skład sprawdzono 28 października | W audycie sprawdzono obie przeszkody Gompfa, lematy 1.1–1.2, rachunek dopełnienia charakterystycznego wektora i indukcję ze zwartymi świadkami. Nowy opis małej rodziny rozdziela topologiczny promień, wspólny zwarty rdzeń $K$, zewnętrzną analizę końców okresowych i przeliczalność klas izotopii osadzeń $K$. Diagram zestawia tę drogę z dużą rodziną Gompfa oraz zachowuje warunki orientacji i ogolenia. Twierdzenia o uchwytach Cassona, wyniki Freedmana, Gompfa oraz De Michelisa–Freedmana pozostają zewnętrzne; nie ponawiano audytu całego rozdziału. |
 | Podział źródeł i importy | — | Zakończono, `9148128` | Kontrola regresji przy dalszych zmianach |
-| Dodatek A o wynikach zewnętrznych | — | Pełny niezależny audyt zakończono 25 października; nowe wejścia z 28 i 29 października sprawdzano osobno | Skorygowano zakres Walla do $n\geq5$ i rozdzielono kryterium od twierdzeń realizacyjnych. Uzupełniono wersję $h$, Rothenberga, ciąg chirurgii, Whiteheada, miarę Hausdorffa i Haara, Ambrose'a--Singera, globalny de Rham, normalizację Cherna--Weila, wejścia Bardena, Eellsa--Kuipera, Kervaire'a--Milnora i Quinna. Doprecyzowano hipotezy w wymiarach 3 i 4. Nowe wpisy dokumentują chirurgię okręgu, rozszczepienie Shanesona--Ranickiego, wynik Milnora dla $C_5$, kontraktowalne wypełnienie i rozkład sumy spójnej Freedmana--Quinna. Wpis Donaldsona oddziela regularność, model redukcji, kompaktifikację, kołnierz i orientację od rachunków wykonanych w rozdziale; nie ponawiano audytu całego dodatku. |
+| Dodatek A o wynikach zewnętrznych | — | Pełny niezależny audyt zakończono 25 października; nowe wejścia z 28 i 29 października sprawdzano osobno; 4 listopada skorygowano zakres cytowania Kervaire'a--Milnora | Skorygowano zakres Walla do $n\geq5$ i rozdzielono kryterium od twierdzeń realizacyjnych. Uzupełniono wersję $h$, Rothenberga, ciąg chirurgii, Whiteheada, miarę Hausdorffa i Haara, Ambrose'a--Singera, globalny de Rham, normalizację Cherna--Weila, wejścia Bardena, Eellsa--Kuipera, Kervaire'a--Milnora i Quinna. Doprecyzowano hipotezy w wymiarach 3 i 4. Nowe wpisy dokumentują chirurgię okręgu, rozszczepienie Shanesona--Ranickiego, wynik Milnora dla $C_5$, kontraktowalne wypełnienie i rozkład sumy spójnej Freedmana--Quinna. Wpis Donaldsona oddziela regularność, model redukcji, kompaktifikację, kołnierz i orientację od rachunków wykonanych w rozdziale; nie ponawiano audytu całego dodatku. |
 | Dodatek B: homologia singularna i Euler | — | Pełny niezależny audyt zakończono 25 października | Rachunki są poprawne. Nazwano użyty homeomorfizm, uzasadniono skończony model CW kobordyzmu z rozkładu uchwytowego i dodano konsekwencję dualności Poincarégo $\chi(M)=0$ w nieparzystym wymiarze. Odsyłacze do rozdziałów 8, 21 i 23 oraz strony 155–158 sprawdzono. |
 | Dodatek C: grupy macierzowe | — | Definicje, algebry i wymiary sprawdzone 8 października; tabela czytelna w PDF | Przy dalszej rozbudowie zachować rozróżnienie wymiaru rzeczywistego i zespolonego oraz $Sp(n)$ od $Sp(2n,\mathbb K)$ |
 | Końcowa kontrola całości | — | Częściowo: ujednolicono „Dalszą lekturę” i sprawdzono odsyłacze do źródeł | Mapa książki, oznaczenia, terminologia i pełny przegląd treści nadal wymagają osobnej kontroli; skład, indeks i PDF sprawdzane przy każdym etapie. |

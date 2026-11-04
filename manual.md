@@ -12,6 +12,88 @@ oraz dodatki). Starsze wpisy poniżej dokumentują rzeczywiście
 wykonane wówczas polecenia dla dawnego podziału na trzy tomy;
 ich numery stron i nazwy PDF-ów są historyczne.
 
+### Tom II, potok Ricciego i TokenEconomizer — 4 listopada 2026
+
+Katalog repozytorium: `C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts`.
+Źródła książki: `geometria i topologia różniczkowa\tex\rozdzialy`.
+Materiał od autora: `geometria i topologia różniczkowa\do_dodania.tex`;
+jest zachowany jako plik wejściowy i nie jest wczytywany przez `\input`.
+Nowe fragmenty wstawiono do rozdziałów 11–14, 30, 30a i poprawiono
+cytowanie w 26 oraz dodatku A. Nie pobierano danych matematycznych.
+
+Wykorzystane narzędzia: Windows PowerShell 5.1, MiKTeX 25.12,
+`latexmk` 4.88, Perl 5.42.3 z `C:\Program Files\Git\usr\bin`, Poppler
+24.04.0, Git for Windows, `uv` 0.13.1 i Codex CLI
+0.162.0-alpha.17.2. Skrypt `buduj_tomy.ps1` dodaje Perl do `PATH`
+przed uruchomieniem `latexmk`; bez tego bezpośrednie
+`latexmk -v` w tej sesji zgłasza brak silnika skryptów `perl`.
+Pakiet LaTeX `mathrsfs` jest dostępny w obecnym MiKTeX i jest
+używany przez rozdział 30. Nie instalowano go osobno.
+
+**Polecenia faktycznie wykonane.** W katalogu repozytorium:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File '.\instaluj_tokeneconomizer.ps1'
+git diff --check
+```
+
+Instalator uruchomiono ponownie z powodzeniem: wynik wskazuje
+Python 3.14.8, upstream TokenEconomizer na commicie
+`d3e193b8734ec76230da1e08d7929ba9d14640d8` oraz wtyczkę
+`tokeneconomizer@tokeneconomizer` 0.1.0 jako `installed, enabled`.
+Źródła wtyczki są poza repozytorium, w
+`%LOCALAPPDATA%\TokenEconomizer\source-d3e193b8734e`;
+`uv` tworzy `python.exe` w `%USERPROFILE%\.local\bin`.
+Instalator umieszcza ten katalog na początku `PATH` bieżącego
+procesu oraz, jeśli potrzeba, dodaje go do ścieżki użytkownika.
+Na tym Windows alias Python ze sklepu Microsoft może nadal
+poprzedzać ścieżkę użytkownika w nowym zwykłym procesie;
+wariant `-StartCodex` uruchamia CLI z poprawnym `PATH`.
+Nie potwierdzono jeszcze uruchomienia haków w bieżącej sesji IDE.
+
+W katalogu `geometria i topologia różniczkowa` wykonano:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File '.\buduj_tomy.ps1'
+pdfinfo '.\geometria_tom2.pdf'
+pdftotext -layout -enc UTF-8 '.\geometria_tom2.pdf' "$env:TEMP\mathematical_scipts_tom2_review.txt"
+pdftohtml -q -xml -f 1 -l 2 -stdout '.\geometria_tom2.pdf'
+```
+
+Pełny skład zakończył się kodem 0 po dwóch przebiegach.
+Tomy I–IV mają 219, 193, 104 i 98 stron; indeksy przyjęły
+113, 102, 33 i 102 wpisy, każdy z `0 rejected`.
+Nie ma błędów LaTeX, brakujących ani powielonych etykiet,
+`Overfull` lub brakujących znaków. Każdy PDF ma trzy łącza
+do pozostałych tomów i sumę SHA-256 zgodną z kopią
+`build/tomy`. Przez `pdftoppm -singlefile -scale-to 1400
+-png` wyrenderowano i obejrzano fizyczne strony 10, 43,
+67 i 69 tomu II oraz 78 tomu I. Po poprawie podpisu
+rysunku konforemnego sprawdzono ponownie stronę 67.
+Zbiorczy PDF nie jest objęty tym składem czterech tomów.
+
+**Instrukcja przygotowana do samodzielnego wykonania.**
+Na innym stanowisku zainstaluj Git, MiKTeX z `latexmk`, Perl,
+Poppler, `uv` i Codex CLI; dla odtworzenia tej instalacji użyj
+wersji wskazanych wyżej. W katalogu repozytorium uruchom
+`powershell -NoProfile -ExecutionPolicy Bypass -File
+'.\instaluj_tokeneconomizer.ps1'`. Skrypt przypina commit
+upstream i instaluje Python 3.14.8 przez `uv`.
+Następnie z tego katalogu uruchom
+`powershell -NoProfile -ExecutionPolicy Bypass -File
+'.\instaluj_tokeneconomizer.ps1' -StartCodex`.
+W nowej sesji CLI przejrzyj i zaufaj dokładnym hakom wtyczki,
+zakończ sesję, uruchom kolejną i wpisz
+`$tokeneconomizer:status`. Zaufanie do haków jest operacją
+użytkownika w Codex; instalator go nie ustawia. Działania w
+sesji IDE trzeba zweryfikować osobno.
+
+W katalogu projektu wykonaj pełny skład poleceniem
+`powershell -NoProfile -ExecutionPolicy Bypass -File
+'.\buduj_tomy.ps1'`, a następnie sprawdź logi w `build/tomy`,
+`0 rejected` w plikach `.ilg`, PDF-y i łącza między nimi.
+MiKTeX potrzebuje Perla; skrypt korzysta z wersji z Git for Windows.
+
 ### Audyt zmian autora w rozdziale 2 — 4 listopada 2026
 
 Katalog repozytorium: `C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts`.

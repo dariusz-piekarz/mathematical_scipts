@@ -1,4 +1,4 @@
-\chapter{Potok Ricciego: metryka, krzywizna i pierwsze równania ewolucyjne}
+\chapter{Potok Ricciego przed osobliwościami}
 \label{ch:potok-ricciego}
 \index{potok Ricciego}
 
@@ -7,10 +7,13 @@ opisuje część jej krzywizny. Można więc zapytać, co się stanie,
 gdy metrykę będziemy zmieniać z prędkością wyznaczoną przez
 ten tensor. Na sferze oczekujemy kurczenia, ponieważ jej Ricci
 jest dodatni; płaski torus powinien pozostać nieruchomy.
-Oba przewidywania sprawdzimy rachunkiem. Następnie wyprowadzimy
-równania dla miary i krzywizny skalarnej oraz wyjaśnimy, gdzie
-w dowodzie istnienia rozwiązania potrzebna jest analiza równań
-parabolicznych.
+Oba przewidywania sprawdzimy rachunkiem. Wyprowadzimy równania
+dla miary i krzywizny, porównamy potok zwykły ze znormalizowanym
+i obliczymy przykłady metryk iloczynowych oraz jednorodnych.
+Na końcu ustalimy, co musi się stać z krzywizną, jeżeli gładkiego
+rozwiązania nie można przedłużyć przez skończoną chwilę.
+Wskażemy dokładnie miejsca, w których potrzebna jest analiza
+równań parabolicznych.
 
 W całym rozdziale $M^n$ jest gładką, zwartą rozmaitością bez
 brzegu, $n\geq2$, a metryki są riemannowskie. Orientacja nie jest
@@ -686,9 +689,934 @@ rachunek symbolu sam w sobie nie dowodzi istnienia
 ani jednoznaczności PDE.
 \end{proof}
 
-Analiza osobliwości, zbieżności i twierdzenia Perelmana
-wymagają odrębnych narzędzi i nie wynikają z powyższego
-twierdzenia o krótkim czasie.
+\section{Normalizacja objętości i zmiana zegara}
+\label{sec:ricci-normalized}
+\index{potok Ricciego!znormalizowany}
+
+Potok okrągłej sfery z Przykładu~\ref{prz:ricci-sphere}
+zmniejsza jej rozmiar, choć sfera w każdej chwili pozostaje
+okrągła. Aby oddzielić zmianę \emph{kształtu} od zmiany
+całkowitej objętości, pomnożymy metrykę przez czynnik zależny
+od czasu, jednakowy w każdym punkcie. Takie mnożenie wymaga
+równoczesnej zmiany parametru czasu.
+
+Niech $V(g)=\int_M\dd\mu_g$ i niech
+\begin{equation}\label{eq:ricci-average-scalar}
+ r(g)=\frac{1}{V(g)}\int_M\operatorname{Scal}_g\,\dd\mu_g
+\end{equation}
+oznacza średnią krzywiznę skalarną. Liczba $r(g)$ zależy
+od metryki, lecz nie od punktu $M$. Dla $a>0$ ze
+Stwierdzenia~\ref{prop:ricci-scaling} wynika
+\begin{equation}\label{eq:ricci-average-scaling}
+ V(ag)=a^{n/2}V(g),\qquad r(ag)=a^{-1}r(g).
+\end{equation}
+Rzeczywiście, licznik w~\eqref{eq:ricci-average-scalar}
+otrzymuje czynnik $a^{n/2-1}$, a mianownik $a^{n/2}$.
+
+\begin{definicja}[Potok Ricciego znormalizowany objętościowo]
+\label{def:ricci-normalized}
+Gładką rodzinę metryk $\widetilde g(s)$ nazywamy
+\emph{potokiem Ricciego znormalizowanym objętościowo},
+jeżeli
+\begin{equation}\label{eq:ricci-normalized}
+ \partial_s\widetilde g
+ =-2\operatorname{Ric}(\widetilde g)
+   +\frac{2}{n}r(\widetilde g)\widetilde g.
+\end{equation}
+Wyraz z $r$ jest wielokrotnością metryki stałą na $M$
+w ustalonej chwili; służy zachowaniu całkowitej objętości.
+\end{definicja}
+
+\begin{stwierdzenie}[Zachowanie objętości]
+\label{prop:ricci-normalized-volume}
+Każde rozwiązanie~\eqref{eq:ricci-normalized} spełnia
+$V(\widetilde g(s))=V(\widetilde g(0))$. Punktowo zachodzi
+\begin{equation}\label{eq:ricci-normalized-volume}
+ \partial_s\dd\mu_{\widetilde g}
+ =\bigl(-\operatorname{Scal}_{\widetilde g}
+          +r(\widetilde g)\bigr)\dd\mu_{\widetilde g}.
+\end{equation}
+\end{stwierdzenie}
+\begin{proof}
+Dla dowolnej zmiany $h=\partial_sg$ wzór wyprowadzony
+w dowodzie Stwierdzenia~\ref{prop:ricci-volume} ma postać
+$\partial_s\dd\mu_g=\frac12\operatorname{tr}_g(h)\dd\mu_g$.
+Ślad prawej strony~\eqref{eq:ricci-normalized} wynosi
+$-2\operatorname{Scal}+2r$, ponieważ
+$\operatorname{tr}_g g=n$. To daje wzór punktowy. Po
+scałkowaniu po $M$ otrzymujemy
+\[
+ \frac{\dd V}{\dd s}
+ =-\int_M\operatorname{Scal}\,\dd\mu_g+r(g)V(g)=0
+\]
+z definicji średniej.
+\end{proof}
+
+Zachowanie całki nie oznacza zachowania gęstości objętości
+w każdym punkcie: w~\eqref{eq:ricci-normalized-volume}
+przyrost zależy od różnicy między lokalnym skalarem i jego
+średnią. Normalizacja może więc przenosić objętość między
+różnymi obszarami.
+
+\begin{twierdzenie}[Związek obu potoków]
+\label{thm:ricci-normalization-clock}
+Niech $g(t)$ rozwiązuje~\eqref{eq:ricci-flow} na przedziale
+$[0,T)$, a $V_0=V(g(0))$. Połóżmy
+\begin{equation}\label{eq:ricci-normalization-clock}
+ c(t)=\left(\frac{V_0}{V(g(t))}\right)^{2/n},
+ \qquad s(t)=\int_0^t c(u)\,\dd u,
+ \qquad \widetilde g(s(t))=c(t)g(t).
+\end{equation}
+Wtedy $s(t)$ jest ściśle rosnące, $\widetilde g$ spełnia
+\eqref{eq:ricci-normalized} i ma objętość $V_0$.
+Odwrotnie, każdy potok znormalizowany powstaje lokalnie
+w czasie z potoku zwykłego przez taką zmianę skali i czasu.
+\end{twierdzenie}
+\begin{proof}
+Wzór~\eqref{eq:ricci-volume} po scałkowaniu daje
+$V'(t)=-r(g(t))V(t)$. Logarytmiczne różniczkowanie
+pierwszej formuły~\eqref{eq:ricci-normalization-clock}
+prowadzi do
+\begin{equation}\label{eq:ricci-normalization-derivative}
+ \frac{c'}c=\frac{2}{n}r(g(t)).
+\end{equation}
+Z~\eqref{eq:ricci-average-scaling} mamy
+$r(\widetilde g)=c^{-1}r(g)$. Ricci jako tensor typu
+$(0,2)$ nie zmienia się przy mnożeniu metryki przez
+stały na $M$ czynnik $c(t)$. Zatem, używając
+$\dd s/\dd t=c(t)>0$, liczymy
+\[
+ \begin{split}
+ \frac{\partial\widetilde g}{\partial s}
+ &=\frac1c\frac{\dd}{\dd t}(cg)
+   =\frac{c'}{c^2}\widetilde g
+      -2\operatorname{Ric}(\widetilde g)\\
+ &=-2\operatorname{Ric}(\widetilde g)
+    +\frac{2}{n}r(\widetilde g)\widetilde g.
+ \end{split}
+\]
+Objętość $cg$ wynosi $c^{n/2}V(g)=V_0$.
+
+Dla odwrotnej konstrukcji wybieramy rozwiązanie
+$a'(s)/a(s)=-2r(\widetilde g(s))/n$ z $a(0)=1$,
+a następnie definiujemy $t(s)=\int_0^s a(u)\,\dd u$
+oraz $g(t(s))=a(s)\widetilde g(s)$. Ponieważ
+$\operatorname{Ric}(a\widetilde g)
+=\operatorname{Ric}(\widetilde g)$, zróżniczkowanie
+ostatniej równości i użycie $t'=a$ usuwa składnik
+normalizujący. Otrzymujemy $\partial_tg=-2\operatorname{Ric}(g)$.
+\end{proof}
+
+\begin{stwierdzenie}[Ewolucja skalara po normalizacji]
+\label{prop:ricci-normalized-scalar}
+W potoku~\eqref{eq:ricci-normalized} zachodzi
+\begin{equation}\label{eq:ricci-normalized-scalar}
+ (\partial_s-\Delta_{\widetilde g})
+       \operatorname{Scal}_{\widetilde g}
+ =2|\operatorname{Ric}_{\widetilde g}|^2
+   -\frac{2}{n}r(\widetilde g)
+                   \operatorname{Scal}_{\widetilde g}.
+\end{equation}
+\end{stwierdzenie}
+\begin{proof}
+Podstawiamy $h=-2\operatorname{Ric}+(2r/n)g$
+do wzoru wariacyjnego~\eqref{eq:ricci-scalar-variation}.
+Część $-2\operatorname{Ric}$ daje
+$\Delta\operatorname{Scal}+2|\operatorname{Ric}|^2$,
+jak w dowodzie Twierdzenia~\ref{thm:ricci-scalar-evolution}.
+Ponieważ $r$ jest stałe w przestrzeni, pochodne kowariantne
+$(2r/n)g$ znikają. Pozostaje składnik
+$-\langle(2r/n)g,\operatorname{Ric}\rangle
+=-(2r/n)\operatorname{Scal}$.
+\end{proof}
+
+\begin{przyklad}[Metryki Einsteina i powierzchnie]
+\label{prz:ricci-normalized-einstein}
+Jeśli $\operatorname{Ric}(g_0)=\lambda g_0$, to
+$\operatorname{Scal}_{g_0}=n\lambda$ jest stała, więc
+$r(g_0)=n\lambda$. Prawa strona
+\eqref{eq:ricci-normalized} zeruje się: metryka $g_0$
+jest rozwiązaniem stacjonarnym, niezależnie od znaku
+$\lambda$. Okrągła sfera zatem nie kurczy się po
+normalizacji, choć w zwykłym potoku kurczy się
+według~\eqref{eq:ricci-sphere}.
+
+Na zamkniętej powierzchni $\operatorname{Ric}=Kg$,
+$\operatorname{Scal}=2K$ i z Gaussa--Bonneta
+$\int_M K\,\dd\mu=2\pi\chi(M)$. Ponieważ
+$A=\operatorname{Area}(M)$ jest stałe w potoku
+znormalizowanym,
+\[
+ \overline K=\frac{2\pi\chi(M)}{A},\qquad
+ \partial_sg=-2(K-\overline K)g.
+\]
+Jeżeli $K$ w jednym miejscu przewyższa średnią, metryka
+tam chwilowo maleje; jeśli jest mniejsze, rośnie.
+To jest lokalna interpretacja~\eqref{eq:ricci-normalized-volume}.
+Zbieżność potoku powierzchni wymaga dalszych oszacowań.
+\end{przyklad}
+
+\section{Iloczyny i lewostronnie niezmiennicza metryka na $S^3$}
+\label{sec:ricci-products-homogeneous}
+\index{potok Ricciego!metryka iloczynowa}
+\index{potok Ricciego!metryka jednorodna}
+
+Obliczenia dla sfery i torusa obejmowały tylko metryki
+Einsteina. Iloczyn dwóch czynników może zmieniać ich skale
+w różnym tempie; lewostronnie niezmiennicza metryka na
+grupie $SU(2)\cong S^3$ pozwoli dodatkowo śledzić zmianę
+\emph{kształtu} nawet przy stałym typie topologicznym.
+
+\begin{stwierdzenie}[Potok iloczynu metryk Einsteina]
+\label{prop:ricci-product}
+Niech $(M_i,h_i)$ będą zwarte, bez brzegu,
+$\dim M_i=n_i\geq1$ i
+$\operatorname{Ric}(h_i)=\lambda_i h_i$ dla $i=1,2$.
+Dla metryki iloczynowej
+$g(t)=a(t)h_1\oplus b(t)h_2$ o $a(0)=a_0>0$,
+$b(0)=b_0>0$ potok zwykły ma postać
+\begin{equation}\label{eq:ricci-product}
+ a(t)=a_0-2\lambda_1t,\qquad
+ b(t)=b_0-2\lambda_2t
+\end{equation}
+tak długo, jak oba współczynniki są dodatnie.
+Krzywizna skalarna jest stała na $M_1\times M_2$ i wynosi
+\begin{equation}\label{eq:ricci-product-scalar}
+ \operatorname{Scal}(g(t))
+ =\frac{n_1\lambda_1}{a(t)}
+  +\frac{n_2\lambda_2}{b(t)}.
+\end{equation}
+\end{stwierdzenie}
+\begin{proof}
+Pola z różnych czynników komutują, a metryka iloczynowa
+czyni je prostopadłymi. Wzór Koszula pokazuje, że
+koneksja Leviego-Civity zachowuje podział styczny
+$TM=TM_1\oplus TM_2$: na polach z jednego czynnika
+jest koneksją tego czynnika, a pochodne mieszane są zerowe.
+W tym rachunku stałe przestrzennie czynniki $a(t),b(t)$
+nie zmieniają koneksji. Tensor Ricciego jest więc
+\[
+ \operatorname{Ric}(g(t))
+   =\lambda_1h_1\oplus\lambda_2h_2.
+\]
+Porównując składowe równania $\partial_tg=-2\operatorname{Ric}$,
+dostajemy $a'=-2\lambda_1$ i $b'=-2\lambda_2$.
+Kontrakcja Ricciego macierzą odwrotną
+$a^{-1}h_1^{-1}\oplus b^{-1}h_2^{-1}$ daje wzór
+na skalar. Jednoznaczność z Twierdzenia~\ref{thm:ricci-short-time}
+pokazuje, że otrzymana rodzina jest rozwiązaniem potoku
+o wskazanej wartości początkowej.
+\end{proof}
+
+\begin{przyklad}[Dwie okrągłe sfery]
+\label{prz:ricci-two-spheres}
+Niech $p,q\geq2$, a $h_p,h_q$ będą metrykami jednostkowych
+sfer $S^p,S^q$. Dla
+$g_0=\alpha_0h_p\oplus\beta_0h_q$
+zapis~\eqref{eq:ricci-product} przyjmuje postać
+\begin{equation}\label{eq:ricci-two-spheres}
+ \alpha(t)=\alpha_0-2(p-1)t,\qquad
+ \beta(t)=\beta_0-2(q-1)t.
+\end{equation}
+Promienie czynników to odpowiednio $\sqrt\alpha$ i
+$\sqrt\beta$. Pierwszy zanika przy
+$T_p=\alpha_0/[2(p-1)]$, drugi przy
+$T_q=\beta_0/[2(q-1)]$; rozwiązanie istnieje w tej
+postaci do $\min(T_p,T_q)$. Jeżeli $T_p<T_q$, pierwszy
+czynnik traci skalę, gdy drugi ma jeszcze dodatni promień.
+Metryka początkowa iloczynu jest Einsteina dokładnie wtedy,
+gdy
+\begin{equation}\label{eq:ricci-product-einstein}
+ \frac{p-1}{\alpha_0}=\frac{q-1}{\beta_0}.
+\end{equation}
+Wówczas obie skale zanikają jednocześnie, a potok
+znormalizowany jest stacjonarny.
+\end{przyklad}
+
+\begin{stwierdzenie}[Równania iloczynu po normalizacji]
+\label{prop:ricci-product-normalized}
+Przy założeniach Stwierdzenia~\ref{prop:ricci-product},
+jeżeli $\widetilde g(s)=a(s)h_1\oplus b(s)h_2$
+rozwiązuje potok znormalizowany, to
+\begin{equation}\label{eq:ricci-product-normalized}
+ \begin{aligned}
+ a'&=-2\lambda_1+\frac{2r}{n}a,\\
+ b'&=-2\lambda_2+\frac{2r}{n}b,\\
+ r&=\frac{n_1\lambda_1}{a}
+    +\frac{n_2\lambda_2}{b},\qquad n=n_1+n_2.
+ \end{aligned}
+\end{equation}
+Współczynnik objętości $a^{n_1/2}b^{n_2/2}$ jest stały.
+Metryka iloczynowa jest punktem stacjonarnym wtedy
+i tylko wtedy, gdy $\lambda_1/a=\lambda_2/b$.
+\end{stwierdzenie}
+\begin{proof}
+Ricci iloczynu ma postać obliczoną wyżej, a jego
+skalar jest przestrzennie stały. Wstawienie obu do
+\eqref{eq:ricci-normalized} i porównanie składowych
+daje układ~\eqref{eq:ricci-product-normalized}.
+Ponadto
+\[
+ \frac{\dd}{\dd s}\log
+     \bigl(a^{n_1/2}b^{n_2/2}\bigr)
+ =\frac{n_1a'}{2a}+\frac{n_2b'}{2b}
+ =-r+\frac{n_1+n_2}{n}r=0.
+\]
+Oba prawe boki układu są zerem dokładnie wtedy,
+gdy $\lambda_1/a=\lambda_2/b=r/n$.
+\end{proof}
+
+\begin{przyklad}[Sfera razy okrąg: osobliwość przy stałej objętości]
+\label{prz:ricci-sphere-circle-normalized}
+Na $S^2\times S^1$ weźmy
+$\widetilde g(s)=\alpha(s)h_{S^2}\oplus\beta(s)\dd\theta^2$,
+gdzie $h_{S^2}$ ma krzywiznę jeden, a $\theta$ jest
+kątem na okręgu. Wtedy $n=3$, $\lambda_1=1$,
+$\lambda_2=0$ oraz $r=2/\alpha$. Układ
+\eqref{eq:ricci-product-normalized} upraszcza się do
+\[
+ \alpha'=-\frac23,\qquad
+ \frac{\beta'}{\beta}=\frac{4}{3\alpha}.
+\]
+Po rozwiązaniu z dodatnimi danymi $\alpha_0,\beta_0$
+otrzymujemy
+\begin{equation}\label{eq:ricci-sphere-circle-normalized}
+ \alpha(s)=\alpha_0-\frac23s,\qquad
+ \beta(s)=\beta_0
+     \left(\frac{\alpha_0}{\alpha(s)}\right)^2,
+ \quad 0\leq s<\frac{3\alpha_0}{2}.
+\end{equation}
+Rzeczywiście,
+$\frac{\dd}{\dd s}\log\beta
+=-2\alpha'/\alpha=4/(3\alpha)$.
+Objętość jest proporcjonalna do
+$\alpha\sqrt\beta=\alpha_0\sqrt{\beta_0}$,
+lecz krzywizna płaszczyzny stycznej do sfery wynosi
+$1/\alpha(s)$ i rośnie bez ograniczenia. Zachowanie
+objętości nie wyklucza więc skończonej osobliwości.
+Zwarty model należy odróżnić od niezwartych walców
+używanych dalej w Przykładzie~\ref{prz:poincare3-walec}.
+\end{przyklad}
+
+\subsection*{Metryka Bergera na $SU(2)$}
+\label{subsec:ricci-berger}
+\index{metryka Bergera}
+
+Niech $X_1,X_2,X_3$ będzie bazą lewostronnie
+niezmienniczych pól na $SU(2)$, znormalizowaną przez
+\[
+ [X_1,X_2]=2X_3,\qquad
+ [X_2,X_3]=2X_1,\qquad
+ [X_3,X_1]=2X_2.
+\]
+Jeśli $\omega_1,\omega_2,\omega_3$ jest bazą dualnych
+form, to dla $A,C>0$ metryka
+\begin{equation}\label{eq:ricci-berger-metric}
+ g=A(\omega_1^2+\omega_2^2)+C\omega_3^2
+\end{equation}
+jest jednorodna: lewe przesunięcia grupy zachowują ją.
+Przy $A=C$ jest okrągła; przy $A\ne C$ długości
+w kierunku $X_3$ i w dwóch pozostałych kierunkach
+są różne. Otrzymujemy przykład, w którym sama
+jednorodność nie oznacza metryki Einsteina.
+
+\begin{stwierdzenie}[Równania Bergera]
+\label{prop:ricci-berger}
+Dla potoku zwykłego startującego z~\eqref{eq:ricci-berger-metric}
+metryka ma tę samą postać, a współczynniki spełniają
+\begin{equation}\label{eq:ricci-berger-ode}
+ A'=-8+4\frac CA,\qquad
+ C'=-4\frac{C^2}{A^2}.
+\end{equation}
+Iloraz $\rho=C/A$ spełnia
+\begin{equation}\label{eq:ricci-berger-ratio}
+ \rho'=\frac{8}{A}\rho(1-\rho).
+\end{equation}
+W szczególności $\rho$ rośnie, gdy $0<\rho<1$,
+a maleje, gdy $\rho>1$, dopóki metryka jest dodatnio
+określona.
+\end{stwierdzenie}
+\begin{proof}
+W ustalonej chwili niech
+$e_1=X_1/\sqrt A$, $e_2=X_2/\sqrt A$,
+$e_3=X_3/\sqrt C$. Jest to rama ortonormalna.
+Oznaczmy $u=2/\sqrt C$ i $v=2\sqrt C/A$. Wtedy
+\[
+ [e_1,e_2]=v e_3,\qquad
+ [e_2,e_3]=u e_1,\qquad
+ [e_3,e_1]=u e_2.
+\]
+Wzór Koszula dla pól lewostronnie niezmienniczych,
+których iloczyny skalarne są stałe, redukuje się do
+\[
+ 2\langle\nabla_{e_i}e_j,e_k\rangle
+ =\langle[e_i,e_j],e_k\rangle
+  -\langle[e_j,e_k],e_i\rangle
+  +\langle[e_k,e_i],e_j\rangle.
+\]
+Podstawiając trzy nawiasy, otrzymujemy między innymi
+\[
+ \nabla_{e_1}e_2=\frac v2e_3,\quad
+ \nabla_{e_2}e_3=\frac v2e_1,\quad
+ \nabla_{e_3}e_2=\left(-u+\frac v2\right)e_1,
+\]
+\[
+ \nabla_{e_1}e_3=-\frac v2e_2,\qquad
+ \nabla_{e_3}e_1=\left(u-\frac v2\right)e_2,
+ \qquad \nabla_{e_i}e_i=0.
+\]
+Na przykład definicja~\eqref{eq:riemann-def} daje
+\[
+ \begin{split}
+ K(e_1,e_2)
+ &=\langle R(e_1,e_2)e_2,e_1\rangle\\
+ &=0-\frac{v^2}{4}
+     -v\left(-u+\frac v2\right)
+  =uv-\frac{3v^2}{4}
+  =\frac4A-\frac{3C}{A^2}.
+ \end{split}
+\]
+Ten sam rachunek dla pozostałych płaszczyzn daje
+\[
+ K(e_1,e_3)=K(e_2,e_3)=\frac{v^2}{4}=\frac C{A^2}.
+\]
+Pozadiagonalne składowe Ricciego znikają. Sumując
+krzywizny płaszczyzn zawierających dany kierunek,
+dostajemy
+\[
+ \operatorname{Ric}(e_1,e_1)
+ =\operatorname{Ric}(e_2,e_2)
+ =\frac4A-\frac{2C}{A^2},\qquad
+ \operatorname{Ric}(e_3,e_3)=\frac{2C}{A^2}.
+\]
+W bazie $X_i$ oznacza to
+$\operatorname{Ric}(X_1,X_1)=4-2C/A$
+oraz $\operatorname{Ric}(X_3,X_3)=2C^2/A^2$.
+Równanie $\partial_tg=-2\operatorname{Ric}$ daje
+\eqref{eq:ricci-berger-ode}. Wreszcie
+\[
+ \rho'=\frac{C'A-CA'}{A^2}
+ =\frac{-4\rho^2-\rho(-8+4\rho)}{A}
+ =\frac8A\rho(1-\rho).
+\]
+Dla $A=C$ oba równania dają $A'=C'=-4$,
+zgodnie z~\eqref{eq:ricci-sphere} przy $n=3$.
+Jednoznaczność z Twierdzenia~\ref{thm:ricci-short-time}
+identyfikuje otrzymane rozwiązanie ODE z potokiem
+o zadanej metryce początkowej.
+\end{proof}
+
+Wynik jest zgodny z ogólnymi wzorami na krzywiznę
+lewostronnie niezmienniczych metryk
+\href{https://doi.org/10.1016/S0001-8708(76)80002-3}
+{Milnora, \emph{Curvatures of left invariant metrics
+on Lie groups} (1976)}. Normalizacja objętości
+dodaje do obu równań~\eqref{eq:ricci-berger-ode}
+ten sam względny składnik $(2r/3)A$ i $(2r/3)C$.
+W pochodnej ilorazu te wyrazy się znoszą. Dlatego
+monotoniczny kierunek zmiany $\rho$ jest taki sam
+w obu wersjach potoku, po uwzględnieniu zmiany czasu.
+
+\section{Ewolucja pełnej krzywizny i tensora Ricciego}
+\label{sec:ricci-tensor-evolution}
+\index{potok Ricciego!ewolucja tensora krzywizny}
+
+Skalar z~\eqref{eq:ricci-scalar-evolution} jest śladem
+Ricciego, więc nie opisuje całego tensora krzywizny.
+Do oceny, czy rozwiązanie pozostaje gładkie, potrzebne
+są równania dla wszystkich jego składowych. Zapis
+wymaga szczególnej uwagi na kolejność argumentów:
+\emph{nasz} tensor z Definicji~\ref{def:tensor-krzywizny}
+to $\mathcal R(X,Y,Z,W)=g(R(X,Y)Z,W)$.
+
+W stałej lokalnej bazie współrzędnej oznaczmy
+\begin{equation}\label{eq:ricci-P-convention}
+ P_{ijkl}:=\mathcal R(\partial_i,\partial_j,
+                          \partial_l,\partial_k)
+          =g(R(\partial_i,\partial_j)\partial_l,\partial_k).
+\end{equation}
+Zatem $P_{ijij}=K(\partial_i,\partial_j)$, jeżeli
+te dwa wektory są ortonormalne, oraz
+$\operatorname{Ric}_{jl}=g^{ik}P_{ijkl}$.
+W szczególności dla krzywizny sekcyjnej równej
+stałej $K$ mamy
+\begin{equation}\label{eq:ricci-P-constant-curvature}
+ P_{ijkl}=K(g_{ik}g_{jl}-g_{il}g_{jk}).
+\end{equation}
+Odwrócenie ostatnich dwóch argumentów względem
+$\mathcal R$ jest niezbędne przy porównywaniu poniższych
+wzorów z literaturą.
+
+Laplasjan na tensorach będzie miał znak cieplny:
+\[
+ \Delta_gT=\operatorname{tr}_g\nabla^2T
+          =g^{pq}\nabla_p\nabla_qT
+          =-\nabla^*\nabla T.
+\]
+Ostatni symbol to laplasjan szorstki z
+Rozdziału~\ref{ch:hodge-bochner}; w zapisie
+$\nabla_p\nabla_qT$ uwzględniamy również koneksję
+na indeksie $q$. Na funkcjach definicja zgadza
+się z początkiem niniejszego rozdziału.
+
+Zdefiniujmy pomocniczy tensor kwadratowy
+\begin{equation}\label{eq:ricci-B-definition}
+ B_{ijkl}=g^{pr}g^{qs}P_{piqj}P_{rksl}.
+\end{equation}
+Indeksy $p,q,r,s$ są sumowane. Każdy składnik $B$
+jest iloczynem dwóch składowych krzywizny po
+kontrakcjach metryką odwrotną.
+
+\begin{twierdzenie}[Równanie pełnego tensora krzywizny]
+\label{thm:ricci-riemann-evolution}
+W zwykłym potoku Ricciego, w stałej bazie
+współrzędnej, tensor~\eqref{eq:ricci-P-convention}
+spełnia
+\begin{equation}\label{eq:ricci-riemann-evolution}
+ \begin{aligned}
+ (\partial_t-\Delta_g)P_{ijkl}
+ ={}&2(B_{ijkl}-B_{ijlk}-B_{iljk}+B_{ikjl})\\
+ &-g^{pq}\bigl(
+       P_{pjkl}\operatorname{Ric}_{qi}
+      +P_{ipkl}\operatorname{Ric}_{qj}\\
+ &\hspace{49pt}
+      +P_{ijpl}\operatorname{Ric}_{qk}
+      +P_{ijkp}\operatorname{Ric}_{ql}\bigr).
+ \end{aligned}
+\end{equation}
+Przy tych samych typach indeksów w potoku
+znormalizowanym prawa strona otrzymuje dodatkowo
+$+(2r/n)P_{ijkl}$.
+\end{twierdzenie}
+\begin{proof}
+Podajemy rachunek różniczkowy, w tym tożsamość
+Bianchiego potrzebną do przestawienia pochodnych.
+Dla $h=\partial_tg=-2\operatorname{Ric}$ wzór
+\eqref{eq:ricci-connection-variation} daje
+\[
+ \partial_t\Gamma^m_{jl}
+ =-g^{mp}\bigl(\nabla_j\operatorname{Ric}_{lp}
+               +\nabla_l\operatorname{Ric}_{jp}
+               -\nabla_p\operatorname{Ric}_{jl}\bigr).
+\]
+Ponieważ $P_{ijkl}=g_{km}R^m{}_{l i j}$,
+różniczkowanie obu czynników daje
+\[
+ \partial_tP_{ijkl}
+ =g_{km}\bigl(\nabla_i\partial_t\Gamma^m_{jl}
+             -\nabla_j\partial_t\Gamma^m_{il}\bigr)
+   -2\operatorname{Ric}_{km}R^m{}_{l i j}.
+\]
+Wstawiamy poprzedni wzór i stosujemy symetrie $P$.
+Jeśli dla zwięzłości położymy
+\[
+ D_{ijkl}
+  =\nabla_i\nabla_k\operatorname{Ric}_{jl}
+   -\nabla_i\nabla_l\operatorname{Ric}_{jk}
+   -\nabla_j\nabla_k\operatorname{Ric}_{il}
+   +\nabla_j\nabla_l\operatorname{Ric}_{ik},
+\]
+to otrzymujemy
+\begin{equation}\label{eq:ricci-P-variation-intermediate}
+ \partial_tP_{ijkl}
+ =D_{ijkl}
+  -g^{pq}\bigl(P_{ijkp}\operatorname{Ric}_{ql}
+             +P_{ijpl}\operatorname{Ric}_{qk}\bigr).
+\end{equation}
+Nie przestawiliśmy tu jeszcze dwóch pochodnych
+Ricciego; ich komutator zawiera krzywiznę.
+
+Druga tożsamość Bianchiego, użyta już w dowodzie
+Lematu~\ref{lem:ricci-contracted-bianchi}, daje po
+jednej kontrakcji
+\[
+ g^{pq}\nabla_pP_{qjkl}
+  =\nabla_k\operatorname{Ric}_{jl}
+   -\nabla_l\operatorname{Ric}_{jk}.
+\]
+Przy zamianie kolejności pochodnych na tensorze
+typu $(0,4)$ komutator działa na każdy z czterech
+indeksów. Na przykład
+\[
+ \begin{split}
+ [\nabla_p,\nabla_i]P_{qjkl}
+ ={}&-R^a{}_{qpi}P_{ajkl}
+     -R^a{}_{jpi}P_{qakl}\\
+    &-R^a{}_{kpi}P_{qjal}
+     -R^a{}_{lpi}P_{qjka}.
+ \end{split}
+\]
+Kontraktujemy tę równość przez $g^{pq}$,
+podstawiamy~\eqref{eq:ricci-B-definition}
+i korzystamy z pierwszej tożsamości Bianchiego.
+Po wykonaniu tego samego rachunku z zamienionymi
+$i,j$ otrzymujemy dokładnie
+\begin{equation}\label{eq:ricci-P-laplacian-intermediate}
+ \begin{aligned}
+ \Delta_gP_{ijkl}
+ &+2(B_{ijkl}-B_{ijlk}-B_{iljk}+B_{ikjl})\\
+ &=D_{ijkl}
+   +g^{pq}\bigl(P_{pjkl}\operatorname{Ric}_{qi}
+              +P_{ipkl}\operatorname{Ric}_{qj}\bigr).
+ \end{aligned}
+\end{equation}
+Odejmowanie~\eqref{eq:ricci-P-laplacian-intermediate}
+od~\eqref{eq:ricci-P-variation-intermediate}
+usuwa wszystkie drugie pochodne Ricciego i daje
+\eqref{eq:ricci-riemann-evolution}. Rozpisanie
+tożsamości komutatorowej w tej konwencji można
+porównać także z
+\href{https://archive.intlpress.com/site/pub/files/_fulltext/journals/ajm/2006/0010/0002/AJM-2006-0010-0002-a002.pdf}
+{Cao--Zhu, \emph{A Complete Proof of the Poincaré and
+Geometrization Conjectures} (2006), Proposition 1.3.1};
+oryginalny wzór podał
+\href{https://doi.org/10.4310/jdg/1214436922}
+{Hamilton (1982), twierdzenie 7.1}.
+
+Dla potoku znormalizowanego dodatkowa zmiana
+$h=(2r/n)g$ jest w każdej chwili stałą zmianą
+skali w przestrzeni. Nie zmienia ona koneksji ani
+Ricciego typu $(0,2)$, lecz tensor $P$ typu $(0,4)$
+skaluje się tak jak $g$. Stąd dodatkowy wyraz
+$(2r/n)P$ w podanym równaniu.
+\end{proof}
+
+\begin{stwierdzenie}[Równanie tensora Ricciego]
+\label{prop:ricci-tensor-evolution}
+Jako tensor typu $(0,2)$ Ricci spełnia
+\begin{equation}\label{eq:ricci-tensor-evolution}
+ (\partial_t-\Delta_g)\operatorname{Ric}_{ij}
+ =2P_{p i q j}\operatorname{Ric}^{pq}
+  -2\operatorname{Ric}_i{}^p\operatorname{Ric}_{pj}.
+\end{equation}
+W potoku znormalizowanym wzór ma tę samą postać,
+z $t$ zastąpionym przez $s$ i z metryką
+$\widetilde g$ we wszystkich kontrakcjach.
+\end{stwierdzenie}
+\begin{proof}
+Kontraktujemy~\eqref{eq:ricci-riemann-evolution}
+zgodnie z $\operatorname{Ric}_{ij}=g^{pq}P_{p i q j}$.
+Pochodna $g^{pq}$ z~\eqref{eq:ricci-inverse-variation}
+dla $h=-2\operatorname{Ric}$ wnosi
+$2\operatorname{Ric}^{pq}P_{p i q j}$.
+W składniku z $B$ stosujemy symetrie i pierwszą
+tożsamość Bianchiego; po kontrakcji pary
+pozostaje $2Q_{ij}$, gdzie
+$Q_{ij}=P_{p i q j}\operatorname{Ric}^{pq}$.
+Cztery wyrazy liniowe z $P$ i Ricciego dają kolejno
+$-Q_{ij}$, $-\operatorname{Ric}_i{}^p\operatorname{Ric}_{pj}$,
+$-Q_{ij}$ i $-\operatorname{Ric}_i{}^p\operatorname{Ric}_{pj}$.
+Dodając $2Q_{ij}$ z pochodnej metryki odwrotnej,
+otrzymujemy~\eqref{eq:ricci-tensor-evolution}.
+Szczegółowy rachunek kontrakcji podają
+\href{https://archive.intlpress.com/site/pub/files/_fulltext/journals/ajm/2006/0010/0002/AJM-2006-0010-0002-a002.pdf}
+{Cao--Zhu (2006), Corollary 1.3.2}.
+Przy normalizacji dodany składnik $(2r/n)g$
+nie ma przestrzennych pochodnych i nie zmienia
+Ricciego typu $(0,2)$; otrzymujemy tę samą
+formułę tensorową.
+\end{proof}
+
+Możemy skontrolować znaki bez odwołania do
+zewnętrznego przykładu. Na okrągłej sferze
+$\operatorname{Ric}_{ij}=\lambda(t)g_{ij}(t)$,
+ale jako tensor typu $(0,2)$ w stałej bazie
+jest równy $(n-1)h_{ij}$, gdzie $g(t)=a(t)h$.
+Jego pochodna wynosi więc zero. Wzór
+\eqref{eq:ricci-tensor-evolution} daje to samo:
+$P_{p i q j}\operatorname{Ric}^{pq}
+=\operatorname{Ric}_i{}^p\operatorname{Ric}_{pj}$.
+Natomiast przy śledzeniu
+$\operatorname{Ric}^i{}_j=g^{ip}\operatorname{Ric}_{pj}$
+pojawia się także pochodna metryki odwrotnej.
+
+Kontrakcja~\eqref{eq:ricci-tensor-evolution}
+i ponowne użycie
+$\partial_tg^{ij}=2\operatorname{Ric}^{ij}$
+odtwarza
+\[
+ (\partial_t-\Delta_g)\operatorname{Scal}
+ =2|\operatorname{Ric}|^2.
+\]
+Istotnie, skurczenie prawej strony równania
+dla Ricciego wynosi zero, a cały składnik
+$2|\operatorname{Ric}|^2$ pochodzi z pochodnej
+$g^{ij}$. W ten sposób równanie tensorowe
+zgadza się z bezpośrednim dowodem
+Twierdzenia~\ref{thm:ricci-scalar-evolution}.
+
+\subsection*{Operator krzywizny w ruchomej ramie}
+\label{subsec:ricci-curvature-operator}
+
+Przy obliczaniu norm wygodniej utrzymywać ramę
+ortonormalną mimo zmiany metryki. W każdym punkcie
+wybieramy $e_i(t)$ tak, aby
+\[
+ \partial_t e_i=\operatorname{Ric}^{\sharp}(e_i).
+\]
+Wtedy
+$\partial_tg(e_i,e_j)
+=-2\operatorname{Ric}(e_i,e_j)
+ +\operatorname{Ric}(e_i,e_j)
+ +\operatorname{Ric}(e_i,e_j)=0$.
+Rama pozostaje więc ortonormalna.
+
+Niech $\mathscr K$ będzie endomorfizmem
+$\Lambda^2TM$ określonym przez
+\[
+ \langle\mathscr K(e_i\wedge e_j),
+                 e_k\wedge e_l\rangle=P_{ijkl}.
+\]
+Na sferze o krzywiźnie $K$ mamy $\mathscr K=K I$.
+Po identyfikacji $\Lambda^2T_pM$ z
+$\mathfrak{so}(T_pM)$ oznaczmy przez
+$\operatorname{ad}(U\wedge V)=[U,V]$ odwzorowanie
+$\Lambda^2\mathfrak{so}\to\mathfrak{so}$ i połóżmy
+\[
+ \mathscr K^\#
+  =\operatorname{ad}\circ(\mathscr K\wedge\mathscr K)
+                       \circ\operatorname{ad}^{*}.
+\]
+Jest to kwadratowe wyrażenie w składowych
+$\mathscr K$. W ruchomej ramie cztery pochodne
+bazy znoszą cztery wyrazy liniowe
+$\operatorname{Ric}*P$ w~\eqref{eq:ricci-riemann-evolution}.
+Pozostaje zwarta postać równania Hamiltona:
+\begin{equation}\label{eq:ricci-curvature-operator-evolution}
+ (\partial_t-\Delta_g)\mathscr K
+     =2(\mathscr K^2+\mathscr K^\#).
+\end{equation}
+Normalizacja dodaje tu
+$-(2r/n)\mathscr K$, gdyż krzywizna sekcyjna
+i operator $\mathscr K$ skalują się odwrotnie
+do metryki. Ta postać i normalizacja
+$\mathscr K=I$ dla jednostkowej sfery są podane
+również w
+\href{https://annals.math.princeton.edu/wp-content/uploads/annals-v167-n3-p10.pdf}
+{Böhm--Wilking, \emph{Manifolds with positive curvature
+operators are space forms} (2008), s.~1080}.
+
+Dla kontroli współczynnika w~\eqref{eq:ricci-curvature-operator-evolution}
+na sferze $\mathscr K=KI$ i
+$I^\#=(n-2)I$. Równanie daje
+$K'=2(n-1)K^2$, dokładnie tak jak
+$K=1/[a_0^2-2(n-1)t]$
+z~\eqref{eq:ricci-sphere}.
+
+\begin{stwierdzenie}[Nierówność dla normy krzywizny]
+\label{prop:ricci-curvature-inequality}
+Istnieje stała $C_n>0$ zależna tylko od wymiaru,
+taka że w zwykłym potoku
+\begin{equation}\label{eq:ricci-curvature-norm-inequality}
+ (\partial_t-\Delta_g)|\operatorname{Rm}|^2
+ \leq -2|\nabla\operatorname{Rm}|^2
+       +C_n|\operatorname{Rm}|^3.
+\end{equation}
+Norma dotyczy tensora $P$ typu $(0,4)$ w metryce
+$g(t)$; zamiana $P$ na $\mathcal R$ nie zmienia normy.
+\end{stwierdzenie}
+\begin{proof}
+W ruchomej ramie metryka na $\Lambda^2TM$ ma
+stałe współczynniki. Reguła iloczynu dla laplasjanu
+i~\eqref{eq:ricci-curvature-operator-evolution} dają
+\[
+ (\partial_t-\Delta_g)|\mathscr K|^2
+ =-2|\nabla\mathscr K|^2
+   +4\langle\mathscr K,
+            \mathscr K^2+\mathscr K^\#\rangle.
+\]
+W skończenie wymiarowej przestrzeni tensorów
+algebraicznych działanie kwadratowe spełnia
+$|\mathscr K^2+\mathscr K^\#|
+\leq c_n|\mathscr K|^2$ dla pewnej stałej $c_n$.
+W ramie ortonormalnej każda para antysymetrycznych
+indeksów pojawia się w pełnym tensorze dwa razy,
+więc $|\operatorname{Rm}|^2=4|\mathscr K|^2$
+i tak samo dla norm pochodnych. Po zmianie stałej
+otrzymujemy~\eqref{eq:ricci-curvature-norm-inequality}.
+\end{proof}
+
+Równanie~\eqref{eq:ricci-curvature-norm-inequality}
+daje oszacowanie krzywizny na krótkim odcinku czasu
+przez zasadę maksimum. Nie kontroluje jednak
+automatycznie wszystkich pochodnych krzywizny;
+te są osobnym wejściem analitycznym w kryterium
+przedłużenia poniżej.
+
+\section{Kryterium przedłużenia przed chwilą osobliwą}
+\label{sec:ricci-continuation}
+\index{potok Ricciego!kryterium przedłużenia}
+
+Skończony koniec przedziału istnienia nie jest jeszcze
+opisem kształtu osobliwości. Możemy jednak wykazać,
+że pełny tensor krzywizny musi wtedy rosnąć bez
+ograniczenia. Zwartość $M$ jest tu istotna:
+zapewnia globalne maksimum krzywizny oraz
+pozwala stosować oszacowania paraboliczne bez
+warunków w nieskończoności.
+
+Nazywamy rozwiązanie $g(t)$ na $[0,T)$
+\emph{maksymalnym}, jeżeli nie istnieje gładkie
+rozwiązanie tego samego równania z tą samą
+wartością początkową na $[0,T+\varepsilon)$
+dla żadnego $\varepsilon>0$. Z twierdzenia o
+krótkim czasie i jednoznaczności
+(Twierdzenie~\ref{thm:ricci-short-time})
+wynika istnienie takiego maksymalnego przedziału;
+można sklejać zgodne lokalne rozwiązania.
+
+\begin{twierdzenie}[Kryterium przedłużenia Hamiltona]
+\label{thm:ricci-continuation}
+Niech $M$ będzie zwartą rozmaitością bez brzegu,
+a $g(t)$ maksymalnym gładkim rozwiązaniem
+zwykłego potoku Ricciego na $[0,T)$.
+Jeśli $T<\infty$, to
+\begin{equation}\label{eq:ricci-continuation}
+ \lim_{t\uparrow T}\max_{x\in M}
+       |\operatorname{Rm}_{g(t)}(x)|_{g(t)}
+ =+\infty.
+\end{equation}
+Równoważnie: jednostajne ograniczenie pełnej
+krzywizny na $M\times[0,T)$ pozwala przedłużyć
+potok przez chwilę $T$.
+\end{twierdzenie}
+\begin{proof}[Dowód przy jawnym wejściu analitycznym]
+Oznaczmy
+$K(t)=\max_M|\operatorname{Rm}_{g(t)}|$.
+Najpierw załóżmy, że
+$K(t)\leq K_0$ dla wszystkich $t<T$.
+W każdym punkcie $|\operatorname{Ric}|
+\leq c_n|\operatorname{Rm}|$ dla stałej zależnej
+tylko od wymiaru, ponieważ Ricci jest kontrakcją
+pełnego tensora. Z równania $\partial_tg=-2\operatorname{Ric}$
+i nierówności Grönwalla dla kwadratu długości
+każdego stałego wektora wynika
+\begin{equation}\label{eq:ricci-metric-equivalence}
+ e^{-2c_nK_0t}g_0
+ \leq g(t)\leq e^{2c_nK_0t}g_0.
+\end{equation}
+Stąd metryka nie może utracić dodatniej określoności
+przed skończonym czasem $T$.
+
+Teraz używamy osobnego \emph{wejścia analitycznego}:
+globalne oszacowania pochodnych krzywizny
+Hamiltona--Shiego. W zakresie potrzebnym tutaj mówią,
+że jeśli na zwartej $M$ rozwiązanie ma
+$|\operatorname{Rm}|\leq K_0$ na $[0,T)$, to dla
+każdego całkowitego $m\geq0$ i $\delta\in(0,T)$
+istnieje skończona stała $C_{m,\delta}$ taka, że
+\begin{equation}\label{eq:ricci-shi-input}
+ \sup_{M\times[\delta,T)}
+   |\nabla^m\operatorname{Rm}|_{g(t)}
+   \leq C_{m,\delta}.
+\end{equation}
+Stałe zależą od wymiaru, $m$, $K_0$ i wybranego
+odstępu $\delta$ od chwili początkowej; w obecnej
+formie można też dopuścić zależność od $T$
+i $g_0$. Dowód~\eqref{eq:ricci-shi-input}
+wymaga oszacowań parabolicznych i nie wynika
+z samej nierówności
+\eqref{eq:ricci-curvature-norm-inequality}.
+Źródła to
+\href{https://projecteuclid.org/journals/journal-of-differential-geometry/volume-17/issue-2/Three-manifolds-with-positive-Ricci-curvature/10.4310/jdg/1214436922.pdf}
+{Hamilton, \emph{Three-manifolds with positive Ricci
+curvature} (1982), lemat 14.4 i twierdzenie 14.1}
+oraz
+\href{https://doi.org/10.4310/jdg/1214443292}
+{Shi, \emph{Deforming the metric on complete
+Riemannian manifolds} (1989)}.
+
+Wyjaśnijmy, dlaczego takie oszacowania wystarczają.
+Wzór~\eqref{eq:ricci-connection-variation} daje
+po wstawieniu $h=-2\operatorname{Ric}$
+\[
+ \partial_t\Gamma^k_{ij}
+ =-g^{k\ell}\bigl(
+      \nabla_i\operatorname{Ric}_{j\ell}
+     +\nabla_j\operatorname{Ric}_{i\ell}
+     -\nabla_\ell\operatorname{Ric}_{ij}\bigr).
+\]
+Różnica koneksji $\nabla^{g(t)}-\nabla^{g_0}$
+jest tensorem. Na $[\delta,T)$ jej pochodna
+czasowa jest ograniczona przez
+\eqref{eq:ricci-shi-input} z $m=1$,
+a~\eqref{eq:ricci-metric-equivalence} pozwala
+porównać normy. Całkowanie po czasie ogranicza
+tę różnicę. Różniczkując ten sam wzór kolejno
+w ustalonych mapach i używając oszacowań z
+wyższymi $m$, dostajemy indukcyjnie ograniczenia
+wszystkich pochodnych metryki względem $g_0$.
+Równanie $\partial_tg=-2\operatorname{Ric}$
+ogranicza także ich pochodne czasowe. Dlatego
+$g(t)$ ma gładką granicę $g_T$ przy
+$t\uparrow T$; z~\eqref{eq:ricci-metric-equivalence}
+granica jest dodatnio określona.
+
+Uruchamiamy Twierdzenie~\ref{thm:ricci-short-time}
+z metryki początkowej $g_T$. Sklejenie z
+dotychczasowym rozwiązaniem w chwili $T$
+daje gładki potok na dłuższym przedziale.
+Zaprzecza to maksymalności. To dowodzi, że
+$K(t)$ nie może być jednostajnie ograniczone.
+
+Pozostaje wzmocnić nieograniczoność do
+granicy w~\eqref{eq:ricci-continuation}.
+Nierówność~\eqref{eq:ricci-curvature-norm-inequality}
+i zasada maksimum, zastosowana do
+$\max_M|\operatorname{Rm}|^2$, dają dla
+pewnej stałej $C_n>0$ nierówność porównawczą
+\begin{equation}\label{eq:ricci-curvature-ode-bound}
+ K(t)\leq
+ \frac{K(t_0)}
+      {1-C_nK(t_0)(t-t_0)}
+\end{equation}
+od $t_0$ do chwili, w której mianownik
+pozostaje dodatni. Gdyby istniały chwile
+$t_j\uparrow T$ z $K(t_j)\leq L<\infty$,
+to dla dużego $j$ mielibyśmy
+$C_nL(T-t_j)<1/2$. Wzór
+\eqref{eq:ricci-curvature-ode-bound}
+dawałby $K(t)\leq2L$ dla $t\in[t_j,T)$.
+Na wcześniejszym zwartym odcinku czasu
+krzywizna również jest ograniczona. Otrzymalibyśmy
+jednostajne ograniczenie na $[0,T)$,
+już wykluczone. Stąd granica wynosi $+\infty$.
+\end{proof}
+
+\begin{wniosek}[Minimalne tempo wzrostu krzywizny]
+\label{cor:ricci-minimal-blowup}
+Przy założeniach Twierdzenia~\ref{thm:ricci-continuation}
+istnieje stała $C_n>0$ taka, że dla każdego $t<T$
+\begin{equation}\label{eq:ricci-minimal-blowup}
+ \max_M|\operatorname{Rm}|(t)
+ \geq \frac{1}{C_n(T-t)}.
+\end{equation}
+\end{wniosek}
+\begin{proof}
+Gdyby dla pewnego $t$ zachodziło
+$C_nK(t)(T-t)<1$, to mianownik
+w~\eqref{eq:ricci-curvature-ode-bound}
+pozostawałby dodatni aż do $T$.
+Oszacowanie ograniczałoby $K$ na $[t,T)$,
+a gładkość potoku ogranicza ją również na
+$[0,t]$. To przeczyłoby
+Twierdzeniu~\ref{thm:ricci-continuation}.
+\end{proof}
+
+Wzór jest zgodny ze skalowaniem: jeśli $g(t)$
+spełnia zwykły potok, to dla stałej $c>0$
+rodzina $\widehat g(s)=c\,g(s/c)$ też go spełnia,
+a $|\operatorname{Rm}|_{\widehat g}
+=c^{-1}|\operatorname{Rm}|_g$.
+Na okrągłej sferze, jak i na zwykłym iloczynie
+$S^2\times S^1$, krzywizna jest rzędu
+$(T-t)^{-1}$. Dolne tempo wzrostu
+nie określa jednak geometrii obszaru
+o dużej krzywiźnie; ta analiza należy do
+następnego rozdziału.
+
+Analiza konkretnych modeli osobliwości, zbieżności
+i twierdzenia Perelmana wymagają dalszych narzędzi.
 
 \par\smallskip
 {\footnotesize\noindent\emph{Dalsza lektura:}

@@ -14,6 +14,102 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Tom II — materiał z `do_dodania.tex` (2026-11-04)
+
+Włączono definicję i przykład izomorfizmów muzycznych oraz wszystkie
+15 przykładów autora do istniejących rozdziałów 11–14.
+Metryka Minkowskiego, urojona współrzędna Poincarégo i metryka
+FLRW są w rozdziale 11; symbole Christoffela FLRW w 12;
+geodezyjne Minkowskiego i FLRW oraz odchylenie Jacobiego w 13;
+rachunki krzywizny, równania Friedmanna, modele pyłu i promieniowania,
+czas konforemny, niezupełność, czas zespolony i porównanie z
+modelem Milne'a w 14. Przykład geodezyjnych Poincarégo stoi
+przed sekcją Schwarzschilda i Kerra, a obie krzywizny przed
+odpowiednią sekcją w rozdziale 14. Materiał wejściowy pozostaje
+osobnym, niewłączanym przez `\input` plikiem.
+
+Sprawdzono znaki według konwencji $R(X,Y)Z$ skryptu, symbole
+Christoffela, pierwsze całki geodezyjnych, tensor Ricciego,
+Einsteina i niezmiennik Kretschmanna. Doprecyzowano jednostki
+$c=1$ w FLRW, odróżniono zmienny czynnik $a(t)$ od parametru
+Kerra, wyłączono wektor zerowy z klasyfikacji krzywych
+zerowych i ujednolicono tensor z opuszczonymi indeksami jako
+$\mathcal R$. Obie etykiety umieszczone przy środowisku `align`
+sprawdzono w pliku `.aux`; nie giną mimo `\notag` w pierwszym
+wierszu. Źródłowy opis Poincarégo porównano z
+[oryginalną pracą, §9](https://fr.wikisource.org/wiki/Sur_la_dynamique_de_l%E2%80%99%C3%A9lectron).
+
+Pełny skład dał 219, 193, 104 i 98 stron; wszystkie indeksy
+mają `0 rejected`, logi są wolne od błędów, brakujących i
+powielonych etykiet, `Overfull` oraz brakujących znaków.
+Każdy tom ma łącza do pozostałych trzech, a sumy PDF zgadzają
+się z `build/tomy`. Obejrzano rysunki na fizycznych stronach
+10, 43, 67 i 69 tomu II. Po korekcie położenia napisu
+ponownie obejrzano diagram konforemny na stronie 67.
+
+## Potok Ricciego i lokalna chirurgia — punkty 5–6 (2026-11-04)
+
+W rozdziale 31 rozpisano normalizację objętości oraz zmianę
+czasu, potok iloczynów metryk Einsteina, przykład $S^2\times S^1$
+i metrykę Bergera na $SU(2)$. Wyprowadzono równanie pełnej
+krzywizny i kontrakcję do Ricciego oraz kryterium przedłużenia
+przy ograniczonej krzywiźnie. Dla operatora krzywizny dodano
+`mathrsfs` do preambuły; oszacowania Hamiltona--Shiego i
+istnienie równania parabolicznego pozostały jawnymi wejściami.
+Rachunek Bergera porównano z [Milnorem, §4](https://doi.org/10.1016/S0001-8708(76)80002-3),
+operator krzywizny z [Böhmem--Wilkingiem](https://annals.math.princeton.edu/wp-content/uploads/annals-v167-n3-p10.pdf),
+a zakres oszacowań i kryterium przedłużenia z
+[Hamiltonem](https://projecteuclid.org/journals/journal-of-differential-geometry/volume-17/issue-2/Three-manifolds-with-positive-Ricci-curvature/10.4310/jdg/1214436922.pdf)
+i [Shim](https://doi.org/10.4310/jdg/1214443292).
+
+W rozdziale 32 zapisano okrągły walec ze skalarem jeden,
+normę $C^k$ szyjki o skali $h$, silną szyjkę ze wstecznym
+przedziałem czasu i jawny gładki model czapy. Dla modelu czapy
+sprawdzono gładkość w środku, walcowy koniec, nieujemność
+obu krzywizn sekcyjnych oraz skalę objętości $h^3$.
+Podano relacje $\rho=\delta r$, $h<\delta\rho$ i przykład
+cięcia $S^2\times S^1$ do $S^3$ z rachunkiem pola, objętości,
+$\pi_1$ i homologii. [Perelman, §§2, 4.3–4.5](https://arxiv.org/html/math/0303109)
+potwierdza skale i model chirurgii. Wklejenie czapy w ogólną
+szyjkę, niezapadanie i dalszy potok pozostają wynikami zewnętrznymi;
+jawny model pojedynczej metryki ich nie dowodzi.
+
+Po obu etapach pełny skład czterech tomów zakończył się poprawnie.
+Tom IV ma 98 stron, a nowy materiał chirurgii jest czytelny.
+
+## Audyt wskazanych źródeł (2026-11-04)
+
+Porównano wybrane kluczowe hipotezy z
+[Perelmanem 2002](https://arxiv.org/html/math/0211159),
+[Perelmanem 2003](https://arxiv.org/html/math/0303109),
+[Morganem--Tianem](https://www.claymath.org/library/monographs/cmim03.pdf),
+[Freedmanem--Quinnem](https://archive.mpim-bonn.mpg.de/4789/2/FreedmanQuinn-TopologyOf4Manifolds-Reformatted2013.pdf),
+[Powellem--Rayem--Teichnerem](https://arxiv.org/html/2006.05209),
+[Freedmanem](https://www.maths.gla.ac.uk/~mpowell/1982_The%20topology%20of%20four-dimensional%20manifolds.pdf)
+i [Donaldsonem](https://doi.org/10.1090/S0273-0979-1983-15090-5).
+Sprawdzono także założenia
+[Bardena, tw. 2.2–2.3](https://www.sas.rochester.edu/mth/sites/doug-ravenel/otherpapers/barden.pdf),
+[Hatchera, tw. A i faktu 2 w §4](https://pi.math.cornell.edu/~hatcher/Papers/TorusTrick.pdf)
+o triangulacji powierzchni oraz
+[Gompfa, lematów 1.1–1.2 i tw. 1.3](https://doi.org/10.4310/jdg/1214439566)
+użytych w skrypcie.
+W sprawdzonych twierdzeniach nie znaleziono błędu w hipotezach.
+
+Jedną nieścisłość cytowania znaleziono przy
+$\Theta_7=bP_8\cong\Z/28$ w rozdziale 30 i dodatku A.
+[Kervaire--Milnor, część I](https://www.sas.rochester.edu/mth/sites/doug-ravenel/otherpapers/kervaire-milnor.pdf)
+podaje rząd 28 w tabelach i opisuje mechanizm, ale odsyła
+szczegółowy rachunek $bP_8$ do zapowiedzianej części II.
+Poprawiono przypisanie zakresu dowodu. Zupełność $\mu$
+pozostaje osobnym wejściem z
+[Eellsa--Kuipera, §6](https://webhomes.maths.ed.ac.uk/~v1ranick/papers/eelskuip.pdf).
+Audyt wybranych wejść nie jest ponowną recenzją każdego
+akapitu rozdziałów.
+
+W rozdziale Donaldsona cztery śródtytuły pakietu moduli
+zostały nienumerowanymi `\subsection*`; odsyłacze do
+twierdzeń pozostają sprawdzane w pełnym składzie.
+
 ## Rozdział 2 — audyt bieżących zmian autora (2026-11-04)
 
 Sprawdzono różnicę rozdziału 2 względem `HEAD`, w szczególności

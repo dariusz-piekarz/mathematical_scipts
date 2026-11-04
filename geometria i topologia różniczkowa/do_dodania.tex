@@ -1,0 +1,842 @@
+% Wstawki do roznych sekcji skryptu "Geometria i topologia rozniczkowa".
+% Korzystaja z istniejacych srodowisk przyklad, makr \dd, \R
+% i pakietow tikz oraz pgfplots (obecnych w preambule skryptu).
+% Konwencja: R(X,Y)Z=nabla_X nabla_Y Z - nabla_Y nabla_X Z - nabla_[X,Y]Z.
+
+% ================================================================
+% CODEX / INSTRUKCJA INTEGRACJI Z GLOWNYM SKRYPTEM
+% ================================================================
+% Ten plik zawiera 15 przykladow i definicje izomorfizmow muzycznych
+% do wstawienia w ISTNIEJACE sekcje skryptu "Geometria i topologia rozniczkowa".
+% NIE wstawiaj calego pliku poleceniem \\input na koncu skryptu:
+% porzadek definicji i odsylaczy ma pozostac logiczny.
+%
+% 0) def:izomorfizmy-muzyczne + prz:izomorfizmy-muzyczne:
+%    rozdzial "Tensor metryczny, dlugosc i miara", sekcja
+%    \label{sec:metryka-definicja}; po wzorze \label{eq:metryka-macierz}
+%    i akapicie wyjasniajacym zapis g_ij dx^i dx^j, PRZED
+%    \begin{stwierdzenie}[Zmiana wspolrzednych].
+%    W skrypcie z 5 pazdziernika 2026 nie ma definicji
+%    \flat ani \sharp: zachowaj definicje i przyklad.
+% 1) prz:poincare-czas-urojony -- rozdzial o metryce:
+%    znajdz \\label{def:metryka-lorentzowska}; wstaw po akapicie
+%    zaczynajacym sie "Tu slowo metryka oznacza tensor", a przed
+%    "W ponizszych dwoch przykladach uzywamy jednostek geometrycznych".
+% 2) prz:flrw-metryka -- ten sam rozdzial: po akapicie
+%    "W obu przykladach zapisalismy konkretne tensory...", a przed
+%    \\section{Dlugosc, energia i odleglosc} (naglowek z polskimi znakami).
+% 3) prz:flrw-christoffel -- sekcja koneksji Leviego-Civity:
+%    bezposrednio po wzorze \\label{eq:christoffel-metryka} i jego objasnieniu.
+% 4) prz:poincare-geodezyjne: sekcja geodezyjnych, PO
+%    wyprowadzeniu rownania geodezyjnej \label{eq:geodezyjna-ode};
+%    na przyklad przed sekcja o Schwarzschildzie i Kerrze.
+%    prz:flrw-geodezyjne i prz:flrw-jacobi -- rozdzial geodezyjnych:
+%    po \\section{Schwarzschild i Kerr: geodezyjne czasoprzestrzeni}
+%    (lub pod koniec tej sekcji), w podanej kolejnosci.
+% 5) prz:poincare-krzywizna: po definicji Riemanna, Ricciego,
+%    krzywizny skalarnej i wspolrzednych tensora Riemanna,
+%    \label{eq:riemann-wspolrzedne}; przed prz:flrw-krzywizna.
+%    prz:flrw-krzywizna -- rozdzial o krzywiznie, po
+%    \\label{eq:riemann-wspolrzedne} i definicji Ricciego i skalara,
+%    przed \\section{Schwarzschild i Kerr: proznia nie oznacza plaskosci}.
+% 6) prz:flrw-friedmann, prz:flrw-rozwiazanie-ode,
+%    prz:flrw-konforemny, prz:flrw-osobliwosc,
+%    prz:flrw-czas-zespolony, prz:flrw-milne -- pod koniec
+%    rozdzialu o krzywiznie, po omowieniu Schwarzschilda i Kerra.
+%    Zachowaj DOKLADNIE ta kolejnosc, bo uzyto wspolnych etykiet.
+%
+% WAZNE: nie duplikuj etykiet eq:*, prz:* ani fig:*;
+% nie tworz nowych srodowisk i nie dopisuj pakietow, jesli sa.
+% Preambula glownego skryptu zawiera tikz, pgfplots, hyperref,
+% kolory manifoldblue, manifoldred, manifoldgold i makra \\dd, \\R.
+% W tej bibliotece c=1 w FLRW; c pozostaje jawne u Poincarego.
+% W miejscach wstawienia usun tylko komentarze CODEX, nie wzory.
+% Nie dodawaj nowego rozdzialu z matematyka Poincarego;
+% rozdziel przyklady miedzy METRYKE, GEODEZYJNE i KRZYWIZNE.
+% Nie wstawiaj notacji flat/sharp ponownie do rozdzialu tensorow,
+% jezeli jest juz w wersji roboczej; sprawdz faktyczny plik.
+% Obliczenia przy t=0 dotycza MINKOWSKIEGO, nie FLRW!
+% ================================================================
+
+% ===== CODEX: DEFINICJA + PRZYKLAD; ZARAZ PO eq:metryka-macierz =====
+% ===== Rozdzial "Tensor metryczny, dlugosc i miara" =====
+% Nie jest to deklaracja makr w preambule: \flat i \sharp
+% sa standardowymi symbolami matematycznymi w LaTeX.
+
+\begin{definicja}[Izomorfizmy muzyczne: \texorpdfstring{$\flat$}{flat} i
+\texorpdfstring{$\sharp$}{sharp}]
+\label{def:izomorfizmy-muzyczne}
+Niech $g$ będzie metryką riemannowską na $M$.
+Jej niezdegenerowanie pozwala w każdym punkcie utożsamić
+wektory styczne z kowektorami, definiując
+\begin{equation}\label{eq:muzyczne-flat-sharp}
+ \flat_g\colon TM\longrightarrow T^*M,\qquad
+ v\longmapsto v^\flat:=g(v,\cdot),\qquad
+ \sharp_g:=\flat_g^{-1}\colon T^*M\longrightarrow TM,
+ \quad \alpha\longmapsto\alpha^\sharp.
+\end{equation}
+Wektor $\alpha^\sharp$ jest więc jednoznacznie określony
+warunkiem $g(\alpha^\sharp,w)=\alpha(w)$ dla każdego $w$.
+Nazwy \emph{obniżanie} i \emph{podnoszenie indeksu}
+odnoszą się do współrzędnych tych odwzorowań.
+Jeżeli $g=g_{ij}\dd x^i\dd x^j$ oraz
+$(g^{ij})=(g_{ij})^{-1}$, to dla
+$X=X^i\partial_i$ i $\alpha=\alpha_i\dd x^i$ mamy
+\begin{equation}\label{eq:muzyczne-wspolrzedne}
+ X^\flat=g_{ij}X^j\dd x^i,\qquad
+ \alpha^\sharp=g^{ij}\alpha_j\partial_i,
+ \qquad (X^\flat)^\sharp=X,\quad
+ (\alpha^\sharp)^\flat=\alpha.
+\end{equation}
+Tak samo podnosimy i obniżamy wybrane indeksy tensorów.
+Dla tensora $S=S_{ij}\dd x^i\otimes\dd x^j$ otrzymujemy
+$(S^{\sharp_1})^i{}_j=g^{ik}S_{kj}$ i
+$(S^{\sharp_1\sharp_2})^{ij}=g^{ik}g^{j\ell}S_{k\ell}$;
+należy wskazać, który indeks podnosimy.
+W szczególności $(g^{\sharp_1})^i{}_j=\delta^i_j$.
+Definicja pozostaje poprawna dla każdej niezdegenerowanej
+metryki pseudoriemannowskiej, także lorentzowskiej;
+dodatnia określoność nie jest tu potrzebna.
+\end{definicja}
+
+\begin{przyklad}[obniżanie i podnoszenie indeksów]
+\label{prz:izomorfizmy-muzyczne}
+Na $\R^2$ rozważmy $g=\dd x^2+4\dd y^2$.
+Dla $X=\partial_x+3\partial_y$ oraz
+$\alpha=2\dd x+8\dd y$ zachodzi
+$X^\flat=\dd x+12\dd y$ i
+$\alpha^\sharp=2\partial_x+2\partial_y$.
+Istotnie, macierz metryki to $G=\mathrm{diag}(1,4)$,
+a jej odwrotność wynosi $G^{-1}=\mathrm{diag}(1,1/4)$.
+Widać, że $X^\flat$ nie jest jedynie zmianą sposobu
+zapisania tych samych współczynników: zależy od metryki.
+
+Dla metryki Minkowskiego
+$g_M=-c^2\dd t^2+\dd x^2+\dd y^2+\dd z^2$ mamy natomiast
+$(\partial_t)^\flat=-c^2\dd t$ oraz
+$(\dd t)^\sharp=-c^{-2}\partial_t$.
+Znak minus wynika z sygnatury lorentzowskiej.
+W szczególności, jeżeli $U=\partial_t$ i $c=1$,
+to $U^\flat=-\dd t$; tego zapisu użyjemy
+później w tensorze energii i pędu płynu doskonałego.
+\end{przyklad}
+
+% ===== CODEX: PRZYKLAD HISTORYCZNY; PO def:metryka-lorentzowska =====
+
+\begin{przyklad}[urojona współrzędna czasowa Poincarégo]
+\label{prz:poincare-czas-urojony}
+W pracy \emph{Sur la dynamique de l'électron}, przedłożonej
+w 1905 roku i opublikowanej w 1906 roku, Henri Poincaré
+interpretował transformacje Lorentza jako obroty
+w czterowymiarowej przestrzeni z urojoną współrzędną
+czasową. Nie jest to jeszcze ogólna teoria względności:
+rozważana geometria jest płaska.
+
+Na $M=\R^4$, we współrzędnych $(t,x,y,z)$, rozważmy
+metrykę Minkowskiego
+\begin{equation}\label{eq:poincare-minkowski}
+ g_M=-c^2\dd t^2+\dd x^2+\dd y^2+\dd z^2.
+\end{equation}
+Ma ona sygnaturę $(-,+,+,+)$. W dalszych przykładach
+\ref{prz:poincare-geodezyjne} i~\ref{prz:poincare-krzywizna}
+obliczymy jej koneksję, geodezyjne i pełny tensor
+krzywizny, a następnie sprawdzimy regularność
+hiperpowierzchni $t=0$.
+
+Wprowadźmy $\zeta=\mathrm{i}ct$, gdzie $\mathrm{i}^2=-1$.
+Wtedy $\dd\zeta=\mathrm{i}c\,\dd t$ i formalnie
+\begin{equation}\label{eq:poincare-complex-metric}
+ g_M=\dd x^2+\dd y^2+\dd z^2+\dd\zeta^2.
+\end{equation}
+Nie jest to dodatnio określona metryka na rzeczywistej
+czasoprzestrzeni: $\zeta\in\mathrm{i}\R$, nie zaś
+$\R$. Ściślej, na $\C^4$ rozważmy \emph{zespoloną
+symetryczną formę dwuliniową} (nie hermitowską)
+$h=\sum_{j=1}^4\dd z_j^2$ i odwzorowanie
+$F\colon\R^4\to\C^4$ dane przez
+$F(t,x,y,z)=(x,y,z,\mathrm{i}ct)$.
+Wówczas $F^*h=g_M$. Jest to więc algebraiczne
+przedstawienie tej samej rzeczywistej metryki
+lorentzowskiej za pomocą formy zespolonej.
+
+Dla prędkości $|v|<c$ połóżmy $\beta=v/c$ oraz
+$\gamma=(1-\beta^2)^{-1/2}$. Transformacja Lorentza
+w kierunku osi $x$ jest dana wzorami
+$x'=\gamma(x-vt)$,
+$t'=\gamma(t-vx/c^2)$, $y'=y$, $z'=z$.
+W zmiennych $(x,\zeta)$ przyjmuje postać
+\begin{equation}\label{eq:poincare-complex-boost}
+ \begin{pmatrix}x'\\\zeta'\end{pmatrix}
+ =\gamma\begin{pmatrix}
+  1&\mathrm{i}\beta\\-\mathrm{i}\beta&1
+ \end{pmatrix}
+ \begin{pmatrix}x\\\zeta\end{pmatrix}.
+\end{equation}
+Macierz $A$ tego przekształcenia spełnia
+$A^TA=I$ oraz $\det A=1$, czyli $A\in SO(2,\C)$.
+Jeśli $\beta=\tanh\varphi$, to
+$\gamma=\cosh\varphi$ i $\gamma\beta=\sinh\varphi$:
+uzyskujemy obrotową macierz o \emph{zespolonym}
+kącie $-\mathrm{i}\varphi$. W rzeczywistych
+współrzędnych jest to obrót hiperboliczny, zachowujący
+$x^2+y^2+z^2-c^2t^2$ oraz stożek świetlny,
+a nie zwykły obrót euklidesowy.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,x=1.04cm,y=1.04cm]
+ \draw[->] (-2.65,0)--(2.70,0) node[right] {$x$};
+ \draw[->] (0,-.25)--(0,3.22) node[above] {$ct$};
+ % Stożek świetlny w przekroju przestrzenno-czasowym
+ \draw[gray!70,densely dashed] (-2.5,2.5)--(0,0)--(2.5,2.5);
+ \node[gray!75!black,above left] at (-1.45,1.45) {$ct=-x$};
+ \node[gray!75!black,above right] at (1.35,1.35) {$ct=x$};
+ % Hiperbola o stałym interwale
+ \draw[manifoldblue,very thick,domain=-2.4:2.4,samples=75]
+   plot (\x,{sqrt(1+\x*\x)});
+ \node[manifoldblue,fill=white,inner sep=1.5pt] at (-1.8,2.9)
+   {$c^2t^2-x^2=1$};
+ % Osie układu primowanego dla beta=0.4
+ \draw[manifoldgold!85!black,thick,->] (0,0)--(.93,2.33)
+   node[above right] {$ct'$};
+ \draw[manifoldred!85!black,thick,->] (0,0)--(2.36,.94)
+   node[right] {$x'$};
+ \fill (0,0) circle (1.4pt);
+\end{tikzpicture}
+\caption{Przekrój czasoprzestrzeni Minkowskiego $(x,ct)$.
+Transformacja Lorentza zachowuje proste zerowe
+$ct=\pm x$ i hiperbole stałego interwału. Osie
+$(x',ct')$ układu poruszającego się ($\beta=0{,}4$)
+nie powstają przez obrót euklidesowy.}
+\label{fig:poincare-boost}
+\end{figure}
+
+Podstawienie $\zeta=\mathrm{i}ct$ nie jest zatem
+rzeczywistą zmianą współrzędnych ani procedurą
+usuwania osobliwości. Prawo bezwładności Sylvestera
+wyklucza zamianę sygnatury lorentzowskiej na
+riemannowską przez rzeczywistą zmianę bazy.
+\end{przyklad}
+
+
+% ===== CODEX: PRZYKLAD RACHUNKOWY; ROZDZIAL GEODEZYJNYCH =====
+% Wstaw po zdefiniowaniu symboli Christoffela i rownania
+% geodezyjnej eq:geodezyjna-ode, a przed przykladami FLRW.
+
+\begin{przyklad}[geodezyjne i symbole Christoffela u Poincarégo]
+\label{prz:poincare-geodezyjne}
+Wróćmy do metryki Minkowskiego~\eqref{eq:poincare-minkowski}.
+Przyjmijmy $x^0=t$ oraz $(x^1,x^2,x^3)=(x,y,z)$.
+Macierz metryki i macierz odwrotna są stałe:
+\[
+ (g_{\mu\nu})=\operatorname{diag}(-c^2,1,1,1),\qquad
+ (g^{\mu\nu})=\operatorname{diag}(-c^{-2},1,1,1).
+\]
+Dla dowolnych $\mu,\nu,\rho$ mamy
+$\partial_\rho g_{\mu\nu}=0$, a więc wzór
+na koneksję Leviego-Civity daje
+\begin{equation}\label{eq:poincare-christoffel}
+ \Gamma^\lambda_{\mu\nu}
+ =\frac12g^{\lambda\rho}
+ (\partial_\mu g_{\rho\nu}+\partial_\nu g_{\rho\mu}
+ -\partial_\rho g_{\mu\nu})=0.
+\end{equation}
+Równanie geodezyjnej przyjmuje zatem postać
+$(x^\mu)''=0$. Jest to układ czterech niezależnych
+liniowych równań różniczkowych zwyczajnych drugiego
+rzędu, którego wszystkie rozwiązania mają postać
+\begin{equation}\label{eq:poincare-geodezyjne}
+ \gamma(s)=(t_0+u^0s,\,x_0+u^1s,\,
+ y_0+u^2s,\,z_0+u^3s),\qquad s\in\R.
+\end{equation}
+Wektor styczny $u=\gamma'$ jest stały i
+$g_M(u,u)=-c^2(u^0)^2+(u^1)^2+(u^2)^2+(u^3)^2$.
+Krzywe są odpowiednio czasowe, zerowe lub przestrzenne,
+gdy to wyrażenie jest ujemne, zerowe lub dodatnie.
+Dla $u^0\neq0$ geodezyjna przecina hiperpowierzchnię
+$t=0$ przy $s_0=-t_0/u^0$ i przedłuża się na obie
+strony tego punktu bez zmiany wzoru.
+Każda geodezyjna ma dziedzinę całe $\R$,
+więc $(\R^4,g_M)$ jest geodezyjnie zupełna.
+
+Podstawienie Poincarégo $\zeta=\mathrm{i}ct$ przenosi
+te proste na $F\circ\gamma$, gdzie
+$\zeta(s)=\mathrm{i}c(t_0+u^0s)$ i $\zeta''(s)=0$.
+Ograniczenie $\zeta\in\mathrm{i}\R$ jest istotne:
+nie pojawia się dodatkowy rzeczywisty kierunek czasowy.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,x=1.05cm,y=.87cm]
+ \draw[->] (-2.7,0)--(2.8,0) node[right] {$x$};
+ \draw[->] (0,-2.45)--(0,2.55) node[above] {$ct$};
+ \draw[gray!60,densely dashed] (-2.4,-2.4)--(2.4,2.4);
+ \draw[gray!60,densely dashed] (-2.4,2.4)--(2.4,-2.4);
+ \draw[manifoldblue,very thick,->] (-.9,-2.2)--(.9,2.2);
+ \draw[manifoldgold!90!black,very thick,->] (1.4,-2.12)--(.4,2.25);
+ \fill[manifoldblue] (0,0) circle (2.2pt);
+ \fill[manifoldgold!90!black] (.913,0) circle (2.2pt);
+ \node[manifoldblue,above left] at (1.5,1.75) {$\gamma_1$};
+ \node[manifoldgold!80!black,above right] at (.3,2.15) {$\gamma_2$};
+ \node[below right] at (1.3,0) {$t=0$};
+ \node[gray!80!black] at (-1.95,2.5) {światło};
+\end{tikzpicture}
+\caption{Dwie geodezyjne czasowe przechodzące przez
+hiperpowierzchnię $t=0$ w czasoprzestrzeni Minkowskiego.
+Nie występuje tu brzeg rozmaitości ani osobliwość
+metryki; linie przerywane przedstawiają kierunki świetlne.}
+\label{fig:poincare-geodezyjne-zero}
+\end{figure}
+\end{przyklad}
+
+% ===== CODEX: PRZYKLAD RACHUNKOWY; ROZDZIAL KRZYWIZNY =====
+% Wstaw po definicjach tensora Riemanna, Ricciego i skalara,
+% po eq:riemann-wspolrzedne, przed prz:flrw-krzywizna.
+
+\begin{przyklad}[krzywizna Poincarégo i regularność przy $t=0$]
+\label{prz:poincare-krzywizna}
+Dla metryki~\eqref{eq:poincare-minkowski} obliczyliśmy
+w~\eqref{eq:poincare-christoffel}, że
+$\Gamma^\lambda_{\mu\nu}=0$ w całej dziedzinie.
+W szczególności wszystkie pochodne tych symboli
+również znikają. Ze wzoru na tensor Riemanna,
+zgodnie z przyjętą konwencją znaku, otrzymujemy
+\begin{equation}\label{eq:poincare-riemann-zero}
+ R^\lambda{}_{\rho\mu\nu}
+ =\partial_\mu\Gamma^\lambda_{\nu\rho}
+ -\partial_\nu\Gamma^\lambda_{\mu\rho}
+ +\Gamma^\lambda_{\mu\sigma}\Gamma^\sigma_{\nu\rho}
+ -\Gamma^\lambda_{\nu\sigma}\Gamma^\sigma_{\mu\rho}
+ =0.
+\end{equation}
+Przez kontrakcję indeksów dostajemy
+$\mathrm{Ric}_{\rho\nu}=R^\mu{}_{\rho\mu\nu}=0$,
+a następnie $\mathrm{Scal}=g^{\rho\nu}\mathrm{Ric}_{\rho\nu}=0$.
+Także tensor Einsteina
+$E=\mathrm{Ric}-\frac12\mathrm{Scal}\,g_M$ oraz
+niezmiennik Kretschmanna
+$\mathcal K=R_{\alpha\beta\gamma\delta}
+ R^{\alpha\beta\gamma\delta}$ znikają identycznie.
+Są to równości tensorowe, niezależne od współrzędnych.
+
+Co dzieje się dokładnie przy $t=0$?
+Macierz metryki nadal wynosi
+$\operatorname{diag}(-c^2,1,1,1)$, a jej wyznacznik
+$\det(g_{\mu\nu})=-c^2\ne0$.
+Hiperpowierzchnia $\Sigma_0=\{t=0\}$ jest gładka;
+metryka indukowana na $\Sigma_0$ ma postać
+$g_M|_{T\Sigma_0}=\dd x^2+\dd y^2+\dd z^2$.
+Jej jednostkowy, przyszłościowo skierowany normalny
+$U=c^{-1}\partial_t$ spełnia $g_M(U,U)=-1$.
+Stosując definicję~\ref{def:izomorfizmy-muzyczne},
+mamy $U^\flat=-c\,\dd t$.
+Ponieważ $\nabla_XU=0$ dla każdego pola $X$
+stycznego do $\Sigma_0$, druga forma fundamentalna
+$\mathrm{II}(X,Y)=g_M(\nabla_XU,Y)$ także znika.
+W połączeniu z geodezyjną zupełnością z
+Przykładu~\ref{prz:poincare-geodezyjne} otrzymujemy,
+że $t=0$ jest regularnym przekrojem płaskiej
+czasoprzestrzeni, a nie osobliwością.
+
+Podstawienie $\zeta=\mathrm{i}ct$ nie zmienia tych
+wniosków: na rzeczywistym obrazie
+$F(M)=\R^3\times\mathrm{i}\R$ mamy
+$F^*h=g_M$ i identycznie zerowe niezmienniki.
+Jest to zasadniczo inny przypadek niż pyłowa metryka
+FLRW z~\eqref{eq:flrw-dust-curvature}, dla której
+$\mathcal K=80/(27t^4)$ rozbiega się przy $t\to0^+$.
+Różnica wynika z geometrii, nie z użycia liczby
+urojonej w symbolu współrzędnej czasowej.
+\end{przyklad}
+
+% ===== CODEX: PO ISTNIEJACYCH PRZYKLADACH SCHWARZSCHILDA I KERRA =====
+% ===== DO SEKCJI O METRYKACH LORENTZOWSKICH =====
+
+\begin{przyklad}[metryka FLRW i geometria rozszerzającego się Wszechświata]
+\label{prz:flrw-metryka}
+Rozważmy czasoprzestrzeń $M=I\times\R^3$, gdzie $I\subset(0,\infty)$
+jest przedziałem, z metryką lorentzowską
+\begin{equation}\label{eq:flrw-metryka}
+ g=-\dd t^2+a(t)^2(\dd x^2+\dd y^2+\dd z^2),
+ \qquad a\in C^\infty(I),\quad a(t)>0.
+\end{equation}
+Jest to przestrzennie płaski model Friedmanna--Lemaître'a--Robertsona--Walkera
+(FLRW). Funkcja $a$ nazywa się \emph{czynnikiem skali}, a
+$H=\dot a/a$ parametrem Hubble'a; kropka oznacza pochodną po $t$.
+Współrzędne $(x,y,z)$ są \emph{współporuszające się}.
+Na przekroju $\{t\}\times\R^3$ metryka indukowana wynosi
+$h_t=a(t)^2(\dd x^2+\dd y^2+\dd z^2)$, a więc jego
+krzywizna wewnętrzna jest zerowa. Odległość przestrzenna dwóch
+punktów o stałych współrzędnych $\mathbf x,\mathbf y$ wynosi
+$D(t)=a(t)|\mathbf x-\mathbf y|$; stąd $\dot D=HD$.
+Płaskość każdego przekroju przestrzennego nie oznacza jednak
+płaskości czterowymiarowej czasoprzestrzeni.
+
+Dla $x^0=t$ i indeksów przestrzennych $i,j\in\{1,2,3\}$
+mamy $g_{00}=-1$, $g_{0i}=0$, $g_{ij}=a^2\delta_{ij}$
+oraz $g^{00}=-1$, $g^{ij}=a^{-2}\delta^{ij}$.
+W szczególności $\det(g_{\mu\nu})=-a^6$; warunek $a>0$
+zapewnia niezdegenerowanie metryki na $M$.
+\end{przyklad}
+
+% ===== DO SEKCJI O KONEKSJI I SYMBOLACH CHRISTOFFELA =====
+
+\begin{przyklad}[symbole Christoffela metryki FLRW]
+\label{prz:flrw-christoffel}
+Dla metryki~\eqref{eq:flrw-metryka} jedyne niezerowe
+pochodne jej współczynników to
+$\partial_0 g_{ij}=2a\dot a\,\delta_{ij}$.
+Ze wzoru na symbole Christoffela dostajemy
+\begin{equation}\label{eq:flrw-christoffel}
+ \Gamma^0_{ij}=a\dot a\,\delta_{ij},\qquad
+ \Gamma^i_{0j}=\Gamma^i_{j0}=H\delta^i_j,
+\end{equation}
+przy czym wszystkie niewypisane symbole znikają.
+Istotnie,
+$\Gamma^0_{ij}=\tfrac12g^{00}(-\partial_0g_{ij})
+=a\dot a\,\delta_{ij}$ oraz
+$\Gamma^i_{0j}=\tfrac12g^{ik}\partial_0g_{kj}
+=(\dot a/a)\delta^i_j$.
+Równoważnie, dla $\partial_0=\partial_t$,
+\[
+ \nabla_{\partial_0}\partial_0=0,\qquad
+ \nabla_{\partial_0}\partial_i
+ =\nabla_{\partial_i}\partial_0=H\partial_i,\qquad
+ \nabla_{\partial_i}\partial_j=a\dot a\,\delta_{ij}\partial_0.
+\]
+\end{przyklad}
+
+% ===== DO SEKCJI O GEODEZYJNYCH =====
+
+\begin{przyklad}[geodezyjne czasowe i świetlne w modelu FLRW]
+\label{prz:flrw-geodezyjne}
+Niech $\gamma(s)=(t(s),\mathbf x(s))$ będzie afinicznie
+sparametryzowaną geodezyjną metryki~\eqref{eq:flrw-metryka};
+apostrof oznacza pochodną po $s$.
+Podstawiając~\eqref{eq:flrw-christoffel} do równania geodezyjnej
+otrzymujemy układ równań różniczkowych zwyczajnych
+\begin{equation}\label{eq:flrw-ode-geodezyjnych}
+ t''+a\dot a\sum_{i=1}^3(x^{i\prime})^2=0,\qquad
+ x^{i\prime\prime}+2H(t)t'x^{i\prime}=0
+ \quad(i=1,2,3).
+\end{equation}
+Drugie równanie ma całkę pierwszą
+\begin{equation}\label{eq:flrw-momenty}
+ \frac{\dd}{\dd s}\bigl(a(t)^2x^{i\prime}\bigr)=0,
+ \qquad a(t)^2x^{i\prime}=P^i,
+\end{equation}
+gdzie $P^i$ są stałymi. Zatem problem geodezyjny
+redukuje się do jednego równania dla $t$ i kwadratur dla $x^i$.
+Dla geodezyjnej przyszłościowo skierowanej, spełniającej
+$g(\gamma',\gamma')=-\varepsilon$,
+gdzie $\varepsilon=1$ w przypadku czasowym (parametr $s$ jest
+czasem własnym) i $\varepsilon=0$ w przypadku zerowym,
+\begin{equation}\label{eq:flrw-pierwsza-calka}
+ t'=\sqrt{\varepsilon+\frac{|P|^2}{a(t)^2}},\qquad
+ \frac{\dd x^i}{\dd t}
+ =\frac{P^i}{a(t)^2\sqrt{\varepsilon+|P|^2/a(t)^2}},
+ \qquad |P|^2=\sum_i(P^i)^2.
+\end{equation}
+Dla $P=0$ i $\varepsilon=1$ otrzymujemy
+$\gamma(t)=(t,\mathbf x_0)$: obserwatorzy o stałych
+współrzędnych przestrzennych poruszają się po geodezyjnych
+czasowych, a $t$ jest ich czasem własnym.
+
+Dla geodezyjnej świetlnej $P\ne0$ wzór upraszcza się do
+$\dd\mathbf x/\dd t=\mathbf n/a(t)$,
+gdzie $\mathbf n=P/|P|$ jest jednostkowym kierunkiem.
+Przy $a(t)=(t/t_*)^{2/3}$ całkowanie daje
+\begin{equation}\label{eq:flrw-swiatlo}
+ \mathbf x(t)=\mathbf x(t_e)+
+ 3t_*^{2/3}(t^{1/3}-t_e^{1/3})\mathbf n.
+\end{equation}
+Równanie to opisuje tor promienia w przestrzennych
+współrzędnych współporuszających się, nie jego parametryzację afiniczną.
+\end{przyklad}
+
+\begin{przyklad}[odchylenie geodezyjnych i rozszerzanie się przestrzeni]
+\label{prz:flrw-jacobi}
+Dla obserwatorów współporuszających się pole prędkości wynosi
+$U=\partial_t$. Dwie bliskie geodezyjne rozdziela pole Jacobiego
+$J=\sum_i v^i\partial_i$ o stałych współczynnikach $v^i$.
+Z~\eqref{eq:flrw-christoffel} mamy
+$\nabla_UJ=HJ$ i
+$\nabla_U\nabla_UJ=(\dot H+H^2)J=(\ddot a/a)J$.
+Jednocześnie bezpośredni rachunek krzywizny daje
+$R(J,U)U=-(\ddot a/a)J$, zatem
+$\nabla_U\nabla_UJ+R(J,U)U=0$, zgodnie z równaniem Jacobiego.
+Długość pola wynosi $|J|_g=a(t)|v|$ i spełnia
+\[
+ \frac{\dd^2}{\dd t^2}|J|_g
+ =\frac{\ddot a}{a}|J|_g.
+\]
+Dla $\ddot a<0$ odległość nadal może rosnąć, ale tempo jej
+wzrostu maleje. Równanie to wyraża wpływ krzywizny
+czasoprzestrzeni na względny ruch swobodnych obserwatorów.
+\end{przyklad}
+
+% ===== DO SEKCJI O TENSORZE RIEMANNA, RICCIEGO I SKALARZE =====
+
+\begin{przyklad}[tensor Riemanna i jego ślady dla metryki FLRW]
+\label{prz:flrw-krzywizna}
+Stosujemy konwencję znaku z~\eqref{eq:riemann-def}.
+Ze wzorów~\eqref{eq:flrw-christoffel}
+i~\eqref{eq:riemann-wspolrzedne} wynikają działania
+operatora krzywizny:
+\begin{align*}
+ R(\partial_0,\partial_i)\partial_0
+   &=\frac{\ddot a}{a}\partial_i, &
+ R(\partial_0,\partial_i)\partial_j
+   &=a\ddot a\,\delta_{ij}\partial_0,\\
+ R(\partial_i,\partial_j)\partial_k
+   &=\dot a^2(\delta_{jk}\partial_i-\delta_{ik}\partial_j).
+\end{align*}
+Na przykład,
+$R^0{}_{i0j}=\partial_0\Gamma^0_{ji}
+-\Gamma^0_{jk}\Gamma^k_{0i}
+=\partial_t(a\dot a)\delta_{ij}-\dot a^2\delta_{ij}
+=a\ddot a\,\delta_{ij}$.
+Biorąc ślad $\mathrm{Ric}_{\mu\nu}=R^\alpha{}_{\mu\alpha\nu}$,
+dostajemy
+\begin{equation}\label{eq:flrw-ricci}
+ \mathrm{Ric}_{00}=-3\frac{\ddot a}{a},\qquad
+ \mathrm{Ric}_{0i}=0,\qquad
+ \mathrm{Ric}_{ij}=(a\ddot a+2\dot a^2)\delta_{ij}.
+\end{equation}
+Ponieważ $g^{00}=-1$ i $g^{ij}=a^{-2}\delta^{ij}$,
+krzywizna skalarna oraz tensor Einsteina
+$E=\mathrm{Ric}-\tfrac12\mathrm{Scal}\,g$ przyjmują postać
+\begin{align}\label{eq:flrw-scalar-einstein}
+ \mathrm{Scal}
+  &=6\left(\frac{\ddot a}{a}+H^2\right),\notag\\
+ E_{00}&=3H^2,\qquad E_{0i}=0,\qquad
+ E_{ij}=-a^2\left(2\frac{\ddot a}{a}+H^2\right)\delta_{ij}.
+\end{align}
+
+Aby odróżnić osobliwość rzeczywistą od współrzędnościowej,
+wygodnie obliczyć także skalar Kretschmanna
+$\mathcal K=\mathcal R_{\alpha\beta\gamma\delta}
+\mathcal R^{\alpha\beta\gamma\delta}$.
+W ramie ortonormalnej $e_0=\partial_t$, $e_i=a^{-1}\partial_i$
+niezależne współczynniki krzywizny wyznaczają liczby
+$\ddot a/a$ (kierunki czasoprzestrzenne) i $H^2$
+(kierunki czysto przestrzenne), skąd
+\begin{equation}\label{eq:flrw-kretschmann}
+ \mathcal K=12\left[\left(\frac{\ddot a}{a}\right)^2+H^4\right].
+\end{equation}
+W szczególności przekroje $t=\mathrm{const}$ są płaskie,
+choć zwykle $\mathcal K\ne0$.
+\end{przyklad}
+
+% ===== DO SEKCJI O ZASTOSOWANIACH KRZYWIZNY / ROWNANIACH EINSTEINA =====
+
+\begin{przyklad}[równania Einsteina i wyprowadzenie równań Friedmanna]
+\label{prz:flrw-friedmann}
+Przyjmujemy $c=1$, oznaczamy stałą Newtona przez $G_{\!N}$
+i rozważamy równania Einsteina z członem kosmologicznym
+\begin{equation}\label{eq:flrw-einstein}
+ \mathrm{Ric}_{\mu\nu}-\frac12\mathrm{Scal}\,g_{\mu\nu}
+ +\Lambda g_{\mu\nu}=8\pi G_{\!N}T_{\mu\nu}.
+\end{equation}
+Zakładamy, że materia jest płynem doskonałym
+o gęstości energii $\rho(t)$, ciśnieniu $p(t)$
+i czteroprędkości $U=\partial_t$:
+$T=(\rho+p)U^\flat\otimes U^\flat+pg$.
+W rozważanych współrzędnych $T_{00}=\rho$,
+$T_{0i}=0$, $T_{ij}=pa^2\delta_{ij}$.
+Składowa $(0,0)$ równania~\eqref{eq:flrw-einstein}
+oraz składowe przestrzenne, po użyciu
+\eqref{eq:flrw-scalar-einstein}, dają odpowiednio
+\begin{equation}\label{eq:flrw-friedmann}
+ H^2=\frac{8\pi G_{\!N}}3\rho+\frac{\Lambda}{3},
+ \qquad
+ \frac{\ddot a}{a}=-\frac{4\pi G_{\!N}}3(\rho+3p)
+ +\frac{\Lambda}{3}.
+\end{equation}
+Są to \emph{równania Friedmanna} dla przestrzennie płaskiego
+modelu FLRW. Równoważnie drugie z nich, razem z pierwszym,
+można zapisać jako
+$2\ddot a/a+H^2=\Lambda-8\pi G_{\!N}p$.
+Tożsamość Bianchiego i~\eqref{eq:flrw-einstein} implikują
+$\nabla_\mu T^{\mu\nu}=0$. Dla $\nu=0$ jest to równanie
+ciągłości
+\begin{equation}\label{eq:flrw-ciaglosc}
+ \dot\rho+3H(\rho+p)=0.
+\end{equation}
+Do wyznaczenia $a(t)$ potrzeba jeszcze \emph{równania stanu}
+łączącego $p$ i $\rho$: same równania Einsteina
+nie określają składu materii.
+\end{przyklad}
+
+\begin{przyklad}[rozwiązanie równań Friedmanna: pył i promieniowanie]
+\label{prz:flrw-rozwiazanie-ode}
+Niech $\Lambda=0$, $\rho>0$, a równanie stanu ma postać
+$p=w\rho$ ze stałą $w>-1$. Równanie~\eqref{eq:flrw-ciaglosc}
+daje po rozdzieleniu zmiennych
+\[
+ \frac{\dd\rho}{\rho}=-3(1+w)\frac{\dd a}{a},
+ \qquad \rho=\rho_0\left(\frac{a_0}{a}\right)^{3(1+w)}.
+\]
+Podstawiając do pierwszego równania~\eqref{eq:flrw-friedmann}
+i wybierając gałąź rozszerzającą się ($\dot a>0$), otrzymujemy
+\[
+ \dot a=C a^{-(1+3w)/2},\qquad
+ C=\sqrt{\frac{8\pi G_{\!N}}{3}\rho_0a_0^{3(1+w)}}.
+\]
+To równanie różniczkowe zwyczajne jest rozdzielne.
+Całkowanie daje
+$\frac{2}{3(1+w)}a^{3(1+w)/2}=C(t-t_B)$,
+a zatem
+\begin{equation}\label{eq:flrw-power-law}
+ a(t)=A(t-t_B)^{\frac{2}{3(1+w)}},\qquad
+ \rho(t)=\frac{1}{6\pi G_{\!N}(1+w)^2(t-t_B)^2},
+ \quad t>t_B,
+\end{equation}
+gdzie $A>0$ i $t_B$ są stałymi.
+Dla \emph{pyłu} ($p=0$, $w=0$), po wyborze początku czasu
+$t_B=0$ i normalizacji $a(t_*)=1$, mamy
+\begin{equation}\label{eq:flrw-dust}
+ a(t)=\left(\frac{t}{t_*}\right)^{2/3},\qquad
+ H(t)=\frac{2}{3t},\qquad
+ \rho(t)=\frac{1}{6\pi G_{\!N}t^2}.
+\end{equation}
+Dla \emph{promieniowania} ($p=\rho/3$, $w=1/3$)
+otrzymujemy $a(t)=(t/t_*)^{1/2}$ oraz
+$\rho(t)=3/(32\pi G_{\!N}t^2)$.
+Natomiast przy $w=-1$ gęstość jest stała, a równanie
+$\dot a=Ha$ daje $a(t)=a_0e^{H(t-t_0)}$,
+$H^2=8\pi G_{\!N}\rho/3$; w tym przypadku
+nie występuje osobliwość krzywizny przy skończonym $t$.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,x=1.05cm,y=.95cm]
+ \draw[->] (0,0)--(4.8,0) node[right] {$t$};
+ \draw[->] (0,0)--(0,3.1) node[above] {$a(t)$};
+ \draw[very thick,manifoldblue,domain=0:4,samples=80]
+  plot (\x,{2.5*pow(\x/4,0.6666667)});
+ \draw[thick,manifoldred,dashed,domain=0:4,samples=80]
+  plot (\x,{2.5*sqrt(\x/4)});
+ \draw[densely dotted] (4,0)--(4,2.5);
+ \fill (4,2.5) circle (1.4pt);
+ \node[below] at (4,0) {$t_*$};
+ \node[left] at (0,2.5) {$1$};
+ \node[manifoldblue,anchor=west] at (1.95,1.25) {$w=0$};
+ \node[manifoldred,anchor=west] at (1.05,2.4) {$w=\frac13$};
+ \fill (0,0) circle (1.3pt);
+\end{tikzpicture}
+\caption{Czynnik skali dla pyłu (linia ciągła) i promieniowania
+(linia przerywana), przy $a(t_*)=1$. Punkt $t=0$ jest granicą
+wykresów, a nie punktem rozważanej czasoprzestrzeni.}
+\label{fig:flrw-skala}
+\end{figure}
+\end{przyklad}
+
+\begin{przyklad}[czas konforemny i geodezyjne świetlne]
+\label{prz:flrw-konforemny}
+Dla modelu pyłowego~\eqref{eq:flrw-dust} wprowadźmy
+\emph{czas konforemny} $\eta$ przez $\dd\eta=\dd t/a(t)$.
+Wybierając $\eta\to0$ dla $t\to0^+$, otrzymujemy
+$\eta=3t_*^{2/3}t^{1/3}$ oraz
+\begin{equation}\label{eq:flrw-konforemna}
+ g=a(\eta)^2\bigl(-\dd\eta^2+\dd x^2+\dd y^2+\dd z^2\bigr).
+\end{equation}
+Ponieważ metryka jest konforemna do płaskiej metryki
+Minkowskiego, jej tensor Weyla znika identycznie.
+Promienie świetlne, rozumiane jako \emph{niesparametryzowane}
+geodezyjne zerowe, są zatem prostymi
+$\mathbf x(\eta)=\mathbf x_e+\mathbf n(\eta-\eta_e)$,
+$|\mathbf n|=1$. To nie znaczy, że $\eta$ jest ich
+parametrem afinicznym: dla niezerowego pędu $P$
+z~\eqref{eq:flrw-momenty} mamy
+$\dd\lambda/\dd t=a(t)/|P|$.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,x=1.05cm,y=1.05cm]
+ \draw[->] (-2.6,0)--(2.75,0) node[right] {$x$};
+ \draw[->] (0,0)--(0,3.6) node[above] {$\eta$};
+ \draw[densely dashed,manifoldred] (-2.5,0.08)--(2.5,0.08);
+ \node[manifoldred,below left] at (-1.6,0.08) {$t=0$};
+ \foreach \z in {-2,-1,1,2} {
+  \draw[gray!65] (\z,0.16)--(\z,3.3);
+ }
+ \node[gray!75!black] at (1.8,3.48) {obserwatorzy współporuszający się};
+ \fill[manifoldblue] (0,.75) circle (2pt);
+ \draw[very thick,manifoldblue,->] (0,.75)--(-2.1,2.85);
+ \draw[very thick,manifoldblue,->] (0,.75)--(2.1,2.85);
+ \node[manifoldblue,right] at (1.7,2.5) {światło};
+\end{tikzpicture}
+\caption{Przekrój diagramu konforemnego FLRW.
+Geodezyjne współporuszające się są pionowe, a promienie świetlne
+mają nachylenie $45^\circ$. Linia $t=0$ jest brzegiem
+wybranej czasoprzestrzeni, nie jej przekrojem.}
+\label{fig:flrw-konforemny}
+\end{figure}
+\end{przyklad}
+
+\begin{przyklad}[osobliwość Wielkiego Wybuchu: krzywizna i niezupełność]
+\label{prz:flrw-osobliwosc}
+W modelu pyłowym~\eqref{eq:flrw-dust} mamy
+$\dot a/a=2/(3t)$ i $\ddot a/a=-2/(9t^2)$.
+Wstawienie do~\eqref{eq:flrw-ricci}--\eqref{eq:flrw-kretschmann}
+daje
+\begin{align}\label{eq:flrw-dust-curvature}
+ \mathrm{Ric}_{00}&=\frac{2}{3t^2},&
+ \mathrm{Ric}_{ij}&=\frac{2a(t)^2}{3t^2}\delta_{ij},\notag\\
+ \mathrm{Scal}&=\frac{4}{3t^2},&
+ \mathcal K&=\frac{80}{27t^4}.
+\end{align}
+Zatem $\mathcal K\to+\infty$ przy $t\to0^+$.
+Nie jest to osobliwość wynikająca wyłącznie ze złego wyboru
+współrzędnych: $\mathcal K$ jest niezmiennikiem skalarnym,
+więc żadna zmiana współrzędnych nie może usunąć jego
+rozbieżności. W szczególności nie istnieje przedłużenie
+tego rozwiązania przez $t=0$ jako regularnej metryki
+lorentzowskiej klasy $C^2$, przez którą przechodzą te krzywe.
+
+Ten sam problem widać na geodezyjnych.
+Obserwator współporuszający się ma $\dd\tau=\dd t$,
+więc od $t=t_0$ do granicy $t=0$ upływa skończony
+czas własny $\Delta\tau=t_0$.
+Dla geodezyjnej świetlnej z $P\ne0$ wzory
+\eqref{eq:flrw-momenty}--\eqref{eq:flrw-pierwsza-calka} dają
+\[
+ \Delta\lambda=\frac1{|P|}\int_0^{t_0}a(t)\,\dd t
+ =\frac{3t_0^{5/3}}{5|P|t_*^{2/3}}<\infty.
+\]
+Geodezyjne są więc \emph{niezupełne ku przeszłości}:
+kończą się po skończonym parametrze afinicznym, choć
+$M=(0,\infty)\times\R^3$ nie zawiera punktów o $t=0$.
+
+Warto odróżnić brak wartości wzorów w $t=0$ od dokładnego
+wniosku geometrycznego. Dla rozważanego \emph{klasycznego
+rozwiązania} równań Einsteina z pyłem nie ma regularnego
+przedłużenia przez tę granicę; nie wynika stąd, że
+\emph{każde} rozwiązanie równań Einsteina ma osobliwość
+w $t=0$ albo że teoria nie opisuje czasów $t>0$.
+\end{przyklad}
+
+% ===== CODEX: ZARAZ PO prz:flrw-osobliwosc, PRZED prz:flrw-milne =====
+
+\begin{przyklad}[czas zespolony a osobliwość w modelu FLRW]
+\label{prz:flrw-czas-zespolony}
+Sprawdźmy, czy przedstawienie Poincarégo z
+Przykładu~\ref{prz:poincare-czas-urojony} pomaga
+zrozumieć granicę $t\to0^+$ modelu pyłowego.
+Dla metryki~\eqref{eq:flrw-metryka} z~\eqref{eq:flrw-dust},
+\[
+ g=-\dd t^2+\left(\frac{t}{t_*}\right)^{4/3}
+    (\dd x^2+\dd y^2+\dd z^2),\qquad t>0.
+\]
+Po formalnym podstawieniu $\zeta=\mathrm{i}t$,
+czyli $t=-\mathrm{i}\zeta$, otrzymujemy
+\begin{equation}\label{eq:flrw-complex-time}
+ g=\dd\zeta^2+
+ \left(\frac{-\mathrm{i}\zeta}{t_*}\right)^{4/3}
+ (\dd x^2+\dd y^2+\dd z^2).
+\end{equation}
+Na obrazie rzeczywistej półprostej $t>0$ mamy
+$\zeta\in\mathrm{i}(0,\infty)$; zapis ten nadal
+reprezentuje tę samą metrykę lorentzowską.
+Aby wyjść poza tę półprostą w płaszczyźnie
+zespolonej, trzeba wybrać gałąź funkcji
+$z^{4/3}$; punkt $z=0$ jest punktem rozgałęzienia.
+
+Nie jest to automatycznie \emph{obrót Wicka}.
+W tym drugim zabiegu próbuje się analitycznie
+kontynuować rozwiązanie do $t=-\mathrm{i}\tau$,
+$\tau\in\R$, a następnie otrzymać rzeczywistą
+metrykę riemannowską. W naszym przypadku dla
+$\tau>0$ na gałęzi głównej dostajemy jedynie
+zespoloną formę
+\[
+ g_{\mathrm E}^{\mathrm{formal}}
+ =\dd\tau^2+e^{-2\pi\mathrm{i}/3}
+  \left(\frac{\tau}{t_*}\right)^{4/3}
+  (\dd x^2+\dd y^2+\dd z^2),
+\]
+która nie jest rzeczywistą metryką riemannowską.
+
+Co ważniejsze, kontynuowanie samego niezmiennika
+Kretschmanna z~\eqref{eq:flrw-dust-curvature}
+daje
+\[
+ \mathcal K(-\mathrm{i}\zeta)
+  =\frac{80}{27\zeta^4},\qquad
+ \mathcal K(-\mathrm{i}\tau)
+  =\frac{80}{27\tau^4}.
+\]
+W pierwszym wzorze $\zeta=\mathrm{i}t$ i stosujemy
+$\mathcal K(t)=80/(27t^4)$, a w drugim
+kontynuujemy bezpośrednio $t\mapsto-\mathrm{i}\tau$.
+W obu zapisach biegun czwartego rzędu pozostaje
+w początku. Kontynuacja formalnego wzoru na
+niezmiennik nie zapewnia wprawdzie istnienia
+rzeczywistej metryki, ale wyklucza usunięcie
+tej rozbieżności przez samo przemianowanie czasu.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,x=1.1cm,y=1.1cm]
+ \draw[->] (-2.45,0)--(3.15,0) node[right] {$\operatorname{Re}t$};
+ \draw[->] (0,-2.4)--(0,2.35) node[above] {$\operatorname{Im}t$};
+ \draw[manifoldblue,very thick,->] (.16,0)--(2.8,0);
+ \node[manifoldblue,above] at (2.13,.06) {$t>0$};
+ \draw[manifoldred,very thick,->] (0,-.13)--(0,-2.12);
+ \node[manifoldred,right] at (.07,-1.86) {$t=-\mathrm{i}\tau$};
+ \draw[manifoldgold!85!black,very thick,->,
+       domain=0:80,samples=40,variable=\a]
+   plot ({1.35*cos(-\a)},{1.35*sin(-\a)});
+ \node[manifoldgold!70!black,right] at (1.38,-1.05)
+   {kontynuacja formalna};
+ \fill[white] (0,0) circle (3pt);
+ \draw[manifoldred,very thick] (0,0) circle (3pt);
+ \node[manifoldred,above left] at (-.08,.11)
+   {$t=0$};
+\end{tikzpicture}
+\caption{Schemat płaszczyzny czasu zespolonego.
+Dodatnia półprosta rzeczywista odpowiada fizycznemu
+czasowi modelu FLRW, a półprosta ujemnie urojona
+ilustruje próbę obrotu Wicka. Punkt $t=0$
+pozostaje osobliwy; łuk przedstawia kontynuację
+formalną, nie izometrię rzeczywistych czasoprzestrzeni.}
+\label{fig:flrw-wick}
+\end{figure}
+
+Nie twierdzimy, że każde rozwiązanie równań
+Einsteina jest osobliwe. Wniosek dotyczy tej
+konkretnej metryki pyłowej oraz jej rozbieżnych
+niezmienników krzywizny. W innych geometriach
+można uzyskać regularne kontynuacje euklidesowe,
+ale wymaga to osobnej konstrukcji.
+\end{przyklad}
+
+\begin{przyklad}[dlaczego zanik czynnika skali nie wystarcza]
+\label{prz:flrw-milne}
+Dla porównania rozważmy na $t>0$ metrykę
+\[
+ g=-\dd t^2+t^2\bigl(\dd\chi^2+
+ \sinh^2\chi\,(\dd\theta^2+\sin^2\theta\,\dd\phi^2)\bigr).
+\]
+Ma ona czynnik skali $a(t)=t$ i ujemną krzywiznę
+przekrojów przestrzennych (model Milne'a).
+Podstawienie $T=t\cosh\chi$, $R=t\sinh\chi$ daje
+\[
+ g=-\dd T^2+\dd R^2+
+ R^2(\dd\theta^2+\sin^2\theta\,\dd\phi^2),
+\]
+czyli metrykę Minkowskiego we wnętrzu przyszłego stożka
+świetlnego. Tensor Riemanna znika identycznie;
+pozorny problem przy $a(0)=0$ wynika tutaj z niepełnego
+pokrycia współrzędnymi, a nie z rozbieżności krzywizny.
+Wzór~\eqref{eq:flrw-kretschmann} dotyczył wyłącznie
+przestrzennie płaskiego modelu FLRW i nie wolno go
+stosować do tej metryki.
+
+Jeszcze inny kontrast stanowi płaski przestrzennie model
+z promieniowaniem: $a(t)\sim t^{1/2}$, dla którego
+$\mathrm{Scal}=0$, ale $\mathcal K=3/(2t^4)\to\infty$.
+Sam brak rozbieżności krzywizny skalarnej nie świadczy
+zatem o regularności czasoprzestrzeni.
+\end{przyklad}
