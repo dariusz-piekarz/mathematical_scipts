@@ -14,6 +14,26 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 2 — audyt bieżących zmian autora (2026-11-04)
+
+Sprawdzono różnicę rozdziału 2 względem `HEAD`, w szczególności
+rachunek Picarda i równania wariacyjnego, zmianę czasu dla pól
+$Y=fX$ oraz dowód składania lokalnych przepływów. Nie znaleziono
+błędnego wzoru ODE ani fałszywej tezy o przepływie. Poprawiono
+jednak dolną granicę całki przy dowolnym przedziale krzywej
+całkowej, dopisano argument zachowania maksymalności po dodatniej
+zmianie czasu i ujednolicono indeksy $U_j$ w dowodzie i na rysunku.
+Poprawiono też zdanie o pochodnych mieszanych oraz zapis $\D F$.
+Jest to audyt zmian, nie ponowna pełna recenzja rozdziału.
+
+Pełny `buduj_tomy.ps1` złożył cztery tomy: 219, 193, 104
+i 98 stron. Indeksy przyjęły 113, 102, 33 i 102 wpisy bez
+odrzuceń; logi nie mają błędów, brakujących lub powielonych
+etykiet, `Overfull` ani brakujących znaków. Sumy kopii PDF
+są zgodne. Obejrzano fizyczną stronę 78 tomu I z nowym
+rysunkiem; jego otoczenia i podpis odpowiadają rekurencji.
+`git diff --check` przeszedł.
+
 ## Rozdział 18 — nienumerowane podsekcje (2026-10-29)
 
 Zgodnie z życzeniem autora trzy podsekcje nowego dowodu indeksowego

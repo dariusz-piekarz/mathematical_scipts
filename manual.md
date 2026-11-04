@@ -12,6 +12,51 @@ oraz dodatki). Starsze wpisy poniżej dokumentują rzeczywiście
 wykonane wówczas polecenia dla dawnego podziału na trzy tomy;
 ich numery stron i nazwy PDF-ów są historyczne.
 
+### Audyt zmian autora w rozdziale 2 — 4 listopada 2026
+
+Katalog repozytorium: `C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts`.
+Projekt: `geometria i topologia różniczkowa`. Użyto istniejącego
+MiKTeX 25.12 i `latexmk` 4.88; skrypt `buduj_tomy.ps1` sam dodaje
+Perl 5.42.3 z Git for Windows do `PATH`, jeśli go brakuje.
+Do kontroli PDF użyto Popplera 24.04.0. Nie pobierano danych
+ani nowych zależności rozdziału.
+
+**Polecenia faktycznie wykonane.** W katalogu repozytorium:
+
+```powershell
+git fetch origin
+git rev-list --left-right --count HEAD...origin/review/rozdzialy-matematyka
+git diff --check
+```
+
+Przed zmianami porównanie gałęzi dało `0 0`. Porównano różnicę
+`tex/rozdzialy/02-pola-wektorowe.tex` z `HEAD` i poprawiono
+cztery konkretne usterki opisane w `mods.md`.
+W katalogu projektu wykonano pełny skład:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File '.\buduj_tomy.ps1'
+```
+
+Po składzie sprawdzono `geometria_tom1.pdf` poleceniami
+`pdfinfo`, `pdftotext`, `pdftoppm` i `git diff --check`.
+Pełny skład czterech tomów dał 219, 193, 104 i 98 stron;
+indeksy przyjęły 113, 102, 33 i 102 wpisy, bez odrzuceń.
+Logi nie zawierają błędów, brakujących lub powielonych
+odsyłaczy, `Overfull` ani brakujących znaków. Sumy SHA-256
+PDF-ów w katalogu projektu są zgodne z `build/tomy`.
+Obejrzano fizyczną stronę 78 tomu I z rysunkiem składania
+przesunięć lokalnego przepływu.
+
+**Instrukcja przygotowana do samodzielnego wykonania.**
+Na nowym stanowisku zainstaluj MiKTeX, Perl i Poppler
+według instrukcji w dalszej części pliku. W katalogu projektu
+uruchom `powershell -NoProfile -ExecutionPolicy Bypass -File
+'.\buduj_tomy.ps1'`; sprawdź powyższe logi i stronę rysunku.
+Bezpośrednie `latexmk -v` w zwykłej sesji bez Perla w `PATH`
+może zakończyć się błędem MiKTeX; użyj skryptu, który dodaje
+Perl z `C:\Program Files\Git\usr\bin`.
+
 ### Nienumerowane podsekcje indeksowe — przebieg 29 października 2026
 
 Katalog roboczy:

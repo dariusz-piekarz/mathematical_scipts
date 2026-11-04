@@ -1,5 +1,43 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-11-04 — audyt zmian autora w rozdziale 2
+
+### Problem
+
+Autor rozbudował rozdział o polach wektorowych o szczegółowy dowód
+istnienia i gładkiej zależności rozwiązań ODE, przykłady krzywych
+całkowych oraz dowód własności przepływu. Audyt różnicy względem
+`HEAD` znalazł cztery lokalne usterki: całkę od zera bez założenia
+`0\in I`, brak uzasadnienia maksymalności po zmianie czasu,
+sprzeczne indeksowanie otoczeń w rysunku składania przepływów
+oraz literówkę w zdaniu o pochodnych mieszanych. W rachunku
+różniczkowym występowały obok siebie zapisy `DF` i `\D F`.
+
+### Rozwiązanie i wpływ
+
+Zmiana czasu zaczyna się w wybranym `\tau_0\in I`.
+Uzasadnienie maksymalności używa dodatniości i gładkości
+funkcji mnożącej pole: przedłużenie nowej krzywej przez
+skończony koniec dałoby przedłużenie pierwotnej.
+W opisie i na rysunku użyto tej samej rekurencji:
+`U_1=U_0`, `U_2=U_1\cap\Psi_0^{-1}(W_1)` i
+`U_3=U_2\cap(\Psi_1\circ\Psi_0)^{-1}(W_2)`.
+Poprawiono zdanie o ciągłości pochodnych mieszanych,
+ujednolicono zapis `\D F` i usunięto końcową spację.
+Treść twierdzeń pozostała taka sama; poprawki zamykają
+luki w uzasadnieniu i dopasowują ilustrację do dowodu.
+Audyt dotyczył bieżących zmian autora, a nie ponownego
+sprawdzenia całego rozdziału.
+
+### Weryfikacja
+
+Porównano zmienione fragmenty z `HEAD`, sprawdzono
+rachunki równania wariacyjnego, reparametryzacji i przepływu.
+Pełny `buduj_tomy.ps1` złożył cztery tomy (219, 193,
+104 i 98 stron); indeksy, logi i sumy PDF są poprawne.
+Obejrzano fizyczną stronę 78 tomu I z poprawioną numeracją
+rysunku. `git diff --check` nie zgłasza błędów formatowania.
+
 ## 2026-10-29 — nienumerowane podsekcje dowodu indeksowego
 
 ### Problem
