@@ -1,5 +1,35 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-11-04 — naprawa startu CLI i weryfikacja hooków
+
+### Problem
+
+`-StartCodex` uruchamiał kopię `codex.exe` z rozszerzenia VS Code
+bez opcji `--no-daemon`. Program kończył się komunikatem
+`this CLI has no complete local package`, zanim użytkownik mógł
+otworzyć `/hooks`. Skrypt nie sprawdzał kodu wyjścia Codex.
+Brak ponownego pytania o zaufanie był mylący: pięć hooków miało
+już zapisane zaufane hashe w konfiguracji Codex.
+
+### Rozwiązanie i wpływ
+
+Wariant `-StartCodex` uruchamia teraz `codex.exe --no-daemon`
+przez istniejące `Invoke-Checked`, zachowując Pythona 3.14.8
+na początku `PATH` procesu. Opcja pozwala działać tej kopii
+CLI bez niekompletnego lokalnego pakietu demona, a błąd startu
+jest zgłaszany jako błąd skryptu. Nie zmieniono definicji ani
+ustawień hooków; zapisane zaufanie pozostaje ważne.
+
+### Weryfikacja
+
+Bezpośrednie `codex.exe --no-daemon` otworzyło terminalowy Codex.
+`/hooks` pokazało pięć hooków TokenEconomizer jako aktywne i
+zaufane. Po pierwszym zwykłym prompcie Codex pokazał `Running
+hook`, utworzył launcher `~/.tokeneconomizer/bin/te` i zapisał
+stan sesji. Poprawiony skrypt również otworzył terminal. Po
+`/exit` polecenie `te status` wykazało dwie złożone sesje,
+bez potwierdzonych oszczędności tokenów.
+
 ## 2026-11-04 — powtarzalna instalacja TokenEconomizer
 
 ### Problem

@@ -49,8 +49,9 @@ if ($resolvedPython -ine $pythonExe) {
 Invoke-Checked 'python.exe' @('-c', 'import sys; assert sys.version_info >= (3, 10); print(sys.executable, sys.version.split()[0])')
 
 if ($StartCodex) {
-    Write-Host 'Starting Codex with uv Python first on PATH.'
-    & codex.exe
+    Write-Host 'Starting Codex without the background daemon, with uv Python first on PATH.'
+    # The CLI bundled with this VS Code extension lacks the full local daemon package.
+    Invoke-Checked 'codex.exe' @('--no-daemon')
     return
 }
 

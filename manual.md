@@ -4,6 +4,40 @@ Ten plik zapisuje odtwarzalne polecenia środowiska, budowania i kontroli.
 Polecenia faktycznie wykonane są oddzielone od instrukcji przygotowanych
 do późniejszego użycia.
 
+## TokenEconomizer: uruchomienie hooków — 4 listopada 2026
+
+**Polecenia faktycznie wykonane** w katalogu repozytorium:
+
+```powershell
+$env:Path = "$env:USERPROFILE\.local\bin;$env:Path"
+codex.exe --no-daemon
+powershell -NoProfile -ExecutionPolicy Bypass -File '.\instaluj_tokeneconomizer.ps1' -StartCodex
+$te = (Join-Path $env:USERPROFILE '.tokeneconomizer\bin\te').Replace('\','/')
+& 'C:\Program Files\Git\bin\bash.exe' $te --host codex --cwd (Get-Location).Path status
+```
+
+Pierwsze wywołanie `-StartCodex` sprzed poprawki kończyło się
+komunikatem `this CLI has no complete local package`. Ta kopia
+Codex CLI z rozszerzenia VS Code wymaga `--no-daemon` do pracy
+w terminalu. Skrypt startowy przekazuje teraz tę opcję i kończy
+się błędem, jeśli Codex zgłosi niezerowy kod wyjścia.
+W poprawnie uruchomionym CLI polecenie `/hooks` pokazało pięć
+hooków TokenEconomizer jako aktywne i zaufane. Po wysłaniu
+pierwszej zwykłej wiadomości pojawiło się `Running hook` i
+powstał plik `%USERPROFILE%\.tokeneconomizer\bin\te`.
+Po zamknięciu sesji polecenie `status` wykazało dwie złożone
+sesje; nie wykazało jeszcze oszczędności tokenów.
+
+**Instrukcja przygotowana do samodzielnego wykonania.**
+Uruchom `powershell -NoProfile -ExecutionPolicy Bypass -File
+'.\instaluj_tokeneconomizer.ps1' -StartCodex`, w terminalowym
+Codex wpisz `/hooks`, następnie wyślij wiadomość i zakończ
+sesję przez `/exit`. W nowej sesji można wywołać
+`$tokeneconomizer:status`. Zaufanie do hooków zostało już
+zapisane, więc ekran zatwierdzania nie pojawia się ponownie,
+dopóki definicja hooka się nie zmieni. Okno czatu VS Code nie
+udostępnia terminalowego polecenia `/hooks`.
+
 ## Projekt „Geometria i topologia różniczkowa”
 
 Od 27 października 2026 bieżący skład ma cztery tomy:
