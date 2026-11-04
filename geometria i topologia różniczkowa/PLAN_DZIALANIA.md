@@ -1,6 +1,6 @@
 # Aktualny plan i pokrycie przeglądem
 
-Stan: 29 października 2026. Gałąź: `review/rozdzialy-matematyka`.
+Stan: 4 listopada 2026. Gałąź: `review/rozdzialy-matematyka`.
 Książka ma **38 rozdziałów, pięć części i trzy dodatki**. Numery w nazwach
 plików są historyczne; numer w PDF ustala kolejność importów.
 Skład roboczy podzielono na cztery tomy: rozdziały 1–10, 11–22,
@@ -336,7 +336,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | Dodatek A o wynikach zewnętrznych | — | Pełny niezależny audyt zakończono 25 października; nowe wejścia z 28 i 29 października sprawdzano osobno; 4 listopada skorygowano zakres cytowania Kervaire'a--Milnora | Skorygowano zakres Walla do $n\geq5$ i rozdzielono kryterium od twierdzeń realizacyjnych. Uzupełniono wersję $h$, Rothenberga, ciąg chirurgii, Whiteheada, miarę Hausdorffa i Haara, Ambrose'a--Singera, globalny de Rham, normalizację Cherna--Weila, wejścia Bardena, Eellsa--Kuipera, Kervaire'a--Milnora i Quinna. Doprecyzowano hipotezy w wymiarach 3 i 4. Nowe wpisy dokumentują chirurgię okręgu, rozszczepienie Shanesona--Ranickiego, wynik Milnora dla $C_5$, kontraktowalne wypełnienie i rozkład sumy spójnej Freedmana--Quinna. Wpis Donaldsona oddziela regularność, model redukcji, kompaktifikację, kołnierz i orientację od rachunków wykonanych w rozdziale; nie ponawiano audytu całego dodatku. |
 | Dodatek B: homologia singularna i Euler | — | Pełny niezależny audyt zakończono 25 października | Rachunki są poprawne. Nazwano użyty homeomorfizm, uzasadniono skończony model CW kobordyzmu z rozkładu uchwytowego i dodano konsekwencję dualności Poincarégo $\chi(M)=0$ w nieparzystym wymiarze. Odsyłacze do rozdziałów 8, 21 i 23 oraz strony 155–158 sprawdzono. |
 | Dodatek C: grupy macierzowe | — | Definicje, algebry i wymiary sprawdzone 8 października; tabela czytelna w PDF | Przy dalszej rozbudowie zachować rozróżnienie wymiaru rzeczywistego i zespolonego oraz $Sp(n)$ od $Sp(2n,\mathbb K)$ |
-| Końcowa kontrola całości | — | Częściowo: ujednolicono „Dalszą lekturę” i sprawdzono odsyłacze do źródeł | Mapa książki, oznaczenia, terminologia i pełny przegląd treści nadal wymagają osobnej kontroli; skład, indeks i PDF sprawdzane przy każdym etapie. |
+| Końcowa kontrola całości | — | Częściowo: ujednolicono „Dalszą lekturę”, sprawdzono odsyłacze do źródeł; 4 listopada sprawdzono mapę, importy, etykiety oraz wskazane oznaczenia i terminy | Pełna ponowna lektura merytoryczna wszystkich 38 rozdziałów pozostaje otwarta. Skład, indeks i PDF sprawdzane przy każdym etapie; zakres wykonanej kontroli opisuje `PRZEGLAD.md`. |
 
 ## Rejestr pojęć do decyzji autora
 

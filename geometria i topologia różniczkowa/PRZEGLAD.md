@@ -14,6 +14,65 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Końcowa kontrola: mapa, oznaczenia i terminologia (2026-11-04)
+
+Porównano kolejność importów składu zbiorczego z czterema tomami:
+wszystkie obejmują te same 38 rozdziałów i trzy dodatki,
+w tej samej kolejności. Pięć części i opisy przejść w mapie
+książki odpowiadają tej strukturze. W tabeli oznaczeń
+`tex/wstep.tex` dopisano indeks `\mathrm{DIFF}` do
+`\mathcal N` i `\mathcal S^s`, zgodnie z definicjami w
+rozdziale 28. W jego podsumowaniu również podano pełne
+`\mathcal S^s_{\mathrm{DIFF}}(X)`.
+
+Przejrzano użycia „mapy” jako chartu i jako odwzorowania
+w aktywnych rozdziałach. Jednoznaczne użycia matematycznego
+`map` zmieniono na odpowiednio odmienione „odwzorowanie”
+między innymi w rozdziałach 26–28, 29, 35 i 37;
+„mapę” pozostawiono dla chartów oraz mapy hipotez.
+W całym aktywnym `tex/` usunięto błędne „kołańcuch” na
+oznaczenie cochain, „fibracja” na fibration oraz
+„włączenie” na oznaczenie konkretnej inkluzji.
+Po tej zamianie poprawiono też odmianę w rozdziale 3:
+„z liniowej inkluzji”.
+W rozdziale 10 wyraźnie odróżniono funkcję pierwotną,
+formę pierwotną i przeciwobraz różniczki; kobrzeg
+singularny ma symbol `\dd`, zgodny z rozdziałem 6.
+W rachunku podwójnego kompleksu zapisano potrzebny znak
+`(-1)^p` przy wyborze pionowego przeciwobrazu.
+
+W rozdziale 26 dołączenie komórki opisano przez
+ograniczenie odwzorowania przyczepiającego do rdzenia
+`S^p\times\{0\}`. W rozdziale 14 odróżniono
+dyfeomorfizm `\exp_p:T_pM\to M` od globalnej mapy
+współrzędnych powstałej z jego odwrotności po wyborze bazy.
+W rozdziale 34 sprecyzowano przejścia PL jako
+homeomorfizmy kawałkami liniowe. Usunięto 13
+nieużywanych etykiet pod nienumerowanymi podsekcjami;
+bez zmiany żadnego używanego identyfikatora. Kontrola
+statyczna nie wykazała brakujących ani powielonych
+etykiet w aktywnym `tex/`.
+
+Pełny skład czterech tomów zakończył się kodem 0. PDF-y mają
+odpowiednio 219, 193, 104 i 98 stron; wszystkie indeksy mają
+`0 rejected`, a logi nie wykazują błędów, brakujących ani
+powielonych odsyłaczy, `Overfull` i brakujących znaków.
+Sumy PDF-ów w katalogu projektu są zgodne z `build/tomy`.
+Na stronach tytułowych potwierdzono po trzy łącza do
+pozostałych tomów. Obejrzano zmienione partie na fizycznych
+stronach I: 144, 210, 212; II: 27, 43, 86;
+III: 42, 58, 79; IV: 42, 62, 63.
+Opcjonalny skład zbiorczy przed ostatnią korektą odmiany
+dał 606 stron i indeks 350 wpisów bez odrzuceń;
+tabela oznaczeń na fizycznej stronie 7 jest czytelna.
+Po korekcie odmiany ponowiono pełny skład tomów i
+potwierdzono końcowe brzmienie w ekstrakcji tekstu tomu I.
+
+Ten etap obejmuje mapę, oznaczenia i terminologię oraz
+wymienione doprecyzowania. Nie stanowi pełnej ponownej
+lektury merytorycznej wszystkich 38 rozdziałów; ten
+zakres pozostaje otwarty w istniejącym planie.
+
 ## Tom II — materiał z `do_dodania.tex` (2026-11-04)
 
 Włączono definicję i przykład izomorfizmów muzycznych oraz wszystkie

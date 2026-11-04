@@ -4,6 +4,33 @@ Ten plik zapisuje odtwarzalne polecenia środowiska, budowania i kontroli.
 Polecenia faktycznie wykonane są oddzielone od instrukcji przygotowanych
 do późniejszego użycia.
 
+## TokenEconomizer: diagnostyka w bieżącym etapie — 4 listopada 2026
+
+**Polecenia faktycznie wykonane** w katalogu głównym repozytorium
+(PowerShell 5.1, Git Bash i Python 3.14.8 z `uv`):
+
+```powershell
+$env:TE_PYTHON='/c/Users/DXD/.local/bin/python.exe'
+$te=(Join-Path $env:USERPROFILE '.tokeneconomizer\bin\te').Replace('\','/')
+& 'C:\Program Files\Git\bin\bash.exe' $te --host codex --cwd (Get-Location).Path status
+& 'C:\Program Files\Git\bin\bash.exe' $te --host codex --cwd (Get-Location).Path config show
+```
+
+Oba polecenia zakończyły się kodem 0. Konfiguracja zgłasza
+`enabled: true`, `toolprune: auto`, `loopguard: nudge` i
+`microskills: off`; stan obejmuje dwie zakończone sesje. Próba
+bez `TE_PYTHON` zgłosiła `te: no python3 on PATH`, ponieważ
+Git Bash w tym procesie nie znajduje Pythona z `uv`.
+Nie zmieniano ustawień wtyczki.
+
+**Instrukcja przygotowana do samodzielnego wykonania.**
+Na innym koncie zastąp ścieżkę w `TE_PYTHON` rzeczywistą
+ścieżką do `python.exe` w zapisie Git Bash, na przykład
+`/c/Users/NAZWA/.local/bin/python.exe`, i wykonaj oba
+polecenia z bloku. Hooki wtyczki są ładowane przy starcie
+sesji Codex CLI, którą uruchamia `instaluj_tokeneconomizer.ps1
+-StartCodex`.
+
 ## TokenEconomizer: uruchomienie hooków — 4 listopada 2026
 
 **Polecenia faktycznie wykonane** w katalogu repozytorium:
@@ -45,6 +72,63 @@ I (rozdziały 1--10), II (11--22), III (23--30) i IV (31--38
 oraz dodatki). Starsze wpisy poniżej dokumentują rzeczywiście
 wykonane wówczas polecenia dla dawnego podziału na trzy tomy;
 ich numery stron i nazwy PDF-ów są historyczne.
+
+### Końcowa kontrola czterech tomów — 4 listopada 2026
+
+**Polecenia faktycznie wykonane** w katalogu
+`geometria i topologia różniczkowa` na Windows PowerShell 5.1,
+z istniejącymi MiKTeX 25.12, `latexmk` 4.88,
+Perlem 5.42.3 z Git for Windows i Popplerem 24.04.0:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File '.\buduj_tomy.ps1'
+$names = @('geometria_tom1','geometria_tom2','geometria_tom3','geometria_tom4')
+foreach ($n in $names) {
+    pdfinfo (Join-Path 'build/tomy' ($n + '.pdf')) | Select-String '^Pages:'
+    Select-String -Path (Join-Path 'build/tomy' ($n + '.ilg')) -Pattern 'accepted','rejected'
+    Select-String -Path (Join-Path 'build/tomy' ($n + '.log')) -Pattern '^!','Overfull','Missing character','LaTeX Warning: Reference .* undefined','There were undefined references','multiply defined'
+    $copy = (Get-FileHash -Algorithm SHA256 ($n + '.pdf')).Hash
+    $build = (Get-FileHash -Algorithm SHA256 (Join-Path 'build/tomy' ($n + '.pdf'))).Hash
+    $copy -eq $build
+    pdftohtml -q -xml -f 1 -l 2 -stdout ($n + '.pdf') |
+        Select-String -Pattern 'geometria_tom[1-4]\.pdf'
+}
+```
+
+Skład zakończył się kodem 0. Tomy mają odpowiednio 219, 193,
+104 i 98 stron. Wszystkie cztery indeksy mają `0 rejected`;
+kontrola końcowych logów nie znalazła błędów, brakujących ani
+powielonych odsyłaczy, `Overfull` lub brakujących znaków.
+Sumy SHA-256 czterech PDF-ów w katalogu projektu zgadzają się
+z odpowiednikami w `build/tomy`. W XML stron tytułowych
+potwierdzono po trzy łącza do pozostałych tomów. Sprawdzono
+wizualnie wybrane strony z poprawionymi wzorami i terminologią:
+I 144, 210, 212; II 27, 43, 86; III 42, 58, 79;
+IV 42, 62, 63. Nie instalowano nowych zależności.
+
+**Polecenie faktycznie wykonane** dla opcjonalnego składu
+zbiorczego, także w katalogu projektu:
+
+```powershell
+$env:Path = 'C:\Program Files\Git\usr\bin;' + $env:Path
+latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=build/sklad geometria_i_topologia_rozniczkowa.tex
+```
+
+Przed końcową jednozdaniową korektą odmiany w rozdziale 3
+skład zbiorczy zakończył się kodem 0: 606 stron, indeks
+350 przyjętych wpisów i `0 rejected`, bez błędów, `Overfull`,
+brakujących znaków, niezdefiniowanych ani powielonych etykiet.
+Tabela oznaczeń na fizycznej stronie 7 jest czytelna.
+Końcową korektę rozdziału 3 sprawdzono już w ponownym pełnym
+składzie czterech tomów i w tekstowej ekstrakcji tomu I.
+Nie kopiowano PDF-u z `build/sklad` do katalogu projektu,
+ponieważ tamtejszy PDF zbiorczy był wcześniej zmieniony przez autora.
+
+**Instrukcja przygotowana do samodzielnego wykonania.**
+Na innym stanowisku przygotuj wersje narzędzi podane wyżej,
+uruchom `buduj_tomy.ps1` w katalogu projektu i powtórz kontrolę
+logów, indeksów, sum oraz wybranych stron. Skrypt sam dodaje
+Perl z Git for Windows do `PATH`, jeśli jest potrzebny.
 
 ### Tom II, potok Ricciego i TokenEconomizer — 4 listopada 2026
 

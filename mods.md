@@ -1,5 +1,79 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-11-04 — końcowa kontrola mapy, oznaczeń i terminologii skryptu
+
+### Problem
+
+Otwarty punkt `Końcowa kontrola całości` obejmował mapę książki,
+oznaczenia i terminologię. W tabeli oznaczeń zapisano
+`\mathcal N(X)` i `\mathcal S^s(X)` bez indeksu kategorii,
+chociaż rozdział o ciągu chirurgii używa kategorii DIFF.
+W kilkunastu rozdziałach słowo „mapa” oznaczało odwzorowanie,
+„kołańcuch” oznaczał kochain, a „fibracja” rozwłóknienie,
+wbrew zasadom projektu. Nieużywane etykiety bezpośrednio pod
+nienumerowanymi podsekcjami wskazywałyby poprzednią sekcję.
+W dwóch miejscach skrót opisu zacierał różnicę między
+odwzorowaniem przyczepiającym i jego dziedziną oraz między
+`\exp_p` i mapą współrzędnych.
+
+### Rozwiązanie i wpływ
+
+W `tex/wstep.tex` i rozdziale 28 zapisano
+`\mathcal N_{\mathrm{DIFF}}(X)` oraz
+`\mathcal S^s_{\mathrm{DIFF}}(X)`. W źródłach czterech tomów
+ujednolicono odpowiednio
+„odwzorowanie”, „kochain”, „rozwłóknienie”, „inkluzja” oraz
+„funkcja/forma pierwotna”, zachowując „mapę” dla chartów i
+metaforycznej mapy hipotez. W rozdziale 10 oznaczono kobrzeg
+singularny przez `\dd`, zgodnie z rozdziałem 6; osobne
+odwzorowania łączące i różniczka Čechowska zachowują `\delta`.
+Po zmianie terminu w rozdziale 3 poprawiono również
+odmianę na „z liniowej inkluzji”.
+W dowodzie podwójnego kompleksu doprecyzowano znak
+`(-1)^p` przy pionowej różniczce. W rozdziale 26 opisano
+dołączenie komórki przez ograniczenie odwzorowania
+przyczepiającego do `S^p\times\{0\}`; w rozdziale 14
+globalnym dyfeomorfizmem nazwano `\exp_p`, a mapą
+współrzędnych jego odwrotność po wyborze bazy.
+
+Usunięto trzynaście nieużywanych etykiet pod `\subsection*`:
+cztery w rozdziale 37 i dziewięć w rozdziałach 5, 11–13,
+27 i 31. Nie zmieniono identyfikatorów używanych przez
+odsyłacze. Opis kategorii PL w rozdziale 34 nazywa zmiany
+współrzędnych homeomorfizmami kawałkami liniowymi.
+Kompromisem jest szerszy diff językowy w wielu rozdziałach;
+treść matematyczna zmienia się tylko w wymienionych
+doprecyzowaniach i w usunięciu mylących etykiet.
+
+### Weryfikacja
+
+Statyczne porównanie importów wykazało jednakową kolejność
+38 rozdziałów i trzech dodatków w czterech tomach i składzie
+zbiorczym. W aktywnych źródłach nie ma brakujących ani
+powielonych etykiet, a usuniętych etykiet nic nie przywołuje.
+`git diff --check` przeszedł; wyszukiwanie nie znajduje już
+„kołańcuch”, „fibracja”, „włączeni*” ani nieindeksowanych
+`\mathcal N(X)` i `\mathcal S^s(X)` w aktywnym `tex/`.
+Pełny skład czterech tomów zakończył się kodem 0 i dał PDF-y
+o 219, 193, 104 i 98 stronach. Wszystkie indeksy mają
+`0 rejected`; logi nie mają błędów, brakujących ani
+powielonych odsyłaczy, `Overfull` ani brakujących znaków.
+Sumy PDF-ów w katalogu projektu są zgodne z `build/tomy`.
+Wizualnie sprawdzono wybrane strony zmienionych partii
+(I: 144, 210, 212; II: 27, 43, 86; III: 42, 58, 79;
+IV: 42, 62, 63). PDF zbiorczy zmodyfikowany przed tą iteracją
+pozostawiono bez nadpisania.
+Opcjonalny skład zbiorczy przed ostatnią korektą odmiany
+zakończył się kodem 0: 606 stron, 350 wpisów indeksu i
+`0 rejected`, bez błędów, `Overfull`, brakujących znaków,
+brakujących odsyłaczy ani powielonych etykiet. Tabela
+oznaczeń na stronie 7 jest czytelna. Po korekcie odmiany
+ponowiono pełny skład czterech tomów z tymi samymi wynikami
+kontroli; ekstrakcja tekstu z tomu I potwierdza końcowe
+brzmienie „z liniowej inkluzji”.
+Pełna lektura merytoryczna wszystkich rozdziałów pozostaje
+otwartą częścią istniejącego punktu planu.
+
 ## 2026-11-04 — naprawa startu CLI i weryfikacja hooków
 
 ### Problem
