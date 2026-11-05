@@ -73,6 +73,44 @@ oraz dodatki). Starsze wpisy poniżej dokumentują rzeczywiście
 wykonane wówczas polecenia dla dawnego podziału na trzy tomy;
 ich numery stron i nazwy PDF-ów są historyczne.
 
+### Rozdział 4, sekcje 1–7 — ukończony etap z 6 listopada 2026
+
+Katalog projektu: `geometria i topologia różniczkowa`; źródło:
+`tex/rozdzialy/04-grassmanniany-clifford-spinory.tex`; plik główny
+tomu I: `geometria_tom1.tex`. Użyto istniejącego środowiska
+Windows PowerShell, MiKTeX 25.12, `latexmk` 4.88 i Perla z
+`C:\Program Files\Git\usr\bin`. Nie instalowano zależności ani
+nie pobierano danych. Skład wykonano po przejściu całego rozdziału.
+
+**Polecenia faktycznie wykonane** w katalogu projektu:
+
+```powershell
+$env:PATH = 'C:\Program Files\Git\usr\bin;' + $env:PATH
+latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=build/tomy geometria_tom1.tex *> build/tomy/review_ch4_build.txt
+$pages=@(119,122,127,130,133,136)
+foreach($n in $pages){pdftoppm -f $n -l $n -singlefile -png -r 105 'build/tomy/geometria_tom1.pdf' "build/tomy/ch4_p$n"}
+Copy-Item -LiteralPath 'build/tomy/geometria_tom1.pdf' -Destination 'geometria_tom1.pdf' -Force
+Get-FileHash -Algorithm SHA256 -LiteralPath 'build/tomy/geometria_tom1.pdf'
+Get-FileHash -Algorithm SHA256 -LiteralPath 'geometria_tom1.pdf'
+```
+
+`latexmk` zakończył się kodem 0; PDF ma 233 strony. W
+`build/tomy/geometria_tom1.log` nie ma błędów, nierozwiązanych
+odsyłaczy ani `Overfull`; pozostały dwa wcześniejsze ostrzeżenia
+o zamianie `h` na `ht` i jeden `Underfull` poza rozdziałem 4.
+`build/tomy/geometria_tom1.ilg` wykazuje 117 przyjętych wpisów,
+0 odrzuconych i 0 ostrzeżeń. Obejrzano wszystkie sześć wskazanych
+stron z rysunkami. Suma SHA-256 obu kopii PDF jest identyczna:
+`2FBF1DFF5F2401624034616617F4DEE26D198B99073E400E252CF4D41AFCD86D`.
+Nie składano tomów II–IV, ponieważ rozdział 4 należy do tomu I.
+
+**Instrukcja przygotowana do samodzielnego wykonania.** Na innym
+stanowisku otwórz PowerShell w katalogu projektu, zapewnij MiKTeX,
+`latexmk` i Perl w `PATH`, po ukończeniu rozdziału uruchom powyższy
+skład tomu I, sprawdź log, indeks i strony rysunków, a następnie
+skopiuj PDF i porównaj sumy SHA-256. Numery fizycznych stron
+rysunków mogą się zmienić po dalszych edycjach.
+
 ### Rozdział 3, sekcje 1–9 — ukończony etap z 5 listopada 2026
 
 Katalog repozytorium:

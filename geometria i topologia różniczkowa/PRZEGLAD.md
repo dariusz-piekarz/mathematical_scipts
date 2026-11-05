@@ -14,6 +14,61 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 4, §§4.1–4.7 — pełny przegląd dydaktyczny (2026-11-06)
+
+Przejrzano kolejno cały rozdział o grassmannianach, algebrze Clifforda,
+grupach Pin i Spin oraz spinorach. Wzorcem były szczegółowość dowodów,
+objaśnienia pojęć, obliczone przykłady i rysunki z rozdziału 1 oraz
+§§2.1–2.2. Wcześniejsze podstawowe twierdzenia i ich znaki były
+poprawne; dopisano kroki, które wymagały samodzielnego odtworzenia
+przez czytelnika, i przykłady wiążące konstrukcje algebraiczne
+z geometrią.
+
+W §§4.1–4.3 przejście między mapami grassmannianu obliczono na
+$\operatorname{Gr}_1(\R^2)$, a styczną do przestrzeni prostych
+wyznaczono z dwóch krzywych o tej samej prędkości. Funkcja przejścia
+wiązki tautologicznej pokazuje zmianę znaku we wstędze Möbiusa.
+Współrzędne Plückera powiązano jawnie z minorami rozdziału 3;
+rozpisano przykład dla $\operatorname{Gr}_2(\R^4)$ i wyjaśniono,
+skąd w dowodzie zanurzenia bierze się zwartość grassmannianu.
+Odwzorowanie Gaussa paraboli ma obliczoną różniczkę i normalną.
+Uściślono też osobno rzeczywistą i zespoloną wersję konstrukcji
+wiązki uniwersalnej.
+
+W §§4.4–4.5 uzasadniono rozkład algebry Clifforda według parzystości,
+rozpisano parowanie znaków dowodzące $\iota_v^2=0$, redukcję słowa
+oraz liczbowy rozkład $vw$ na skalar i dwuwektor. Rachunek odbicia
+i przykład $\operatorname{Pin}(2)$ pokazują rolę znaku w skręconym
+sprzężeniu. W dowodzie nakrycia
+$\operatorname{Spin}(n)\to\mathrm{SO}(n)$ jawnie oddzielono
+dwa otwarte płaty nad małym
+otoczeniem obrotu; obliczenie w $\operatorname{Spin}(2)$ pokazuje
+połowę kąta bez pominiętego mnożenia.
+
+W §§4.6–4.7 wyjaśniono dwa działania algebry Clifforda w wymiarze
+nieparzystym, udowodniono nieredukowalność i nieizomorficzność
+półspinorów oraz sprawdzono, że mnożenie Clifforda przez wektor
+styczny jest dobrze określone na wiązce spinorów. Na płaskim torusie
+skonstruowano cztery podniesienia ramek, wykazano, że wyczerpują
+struktury spinowe, i zapisano warunki okresowości pól spinorowych.
+Nowy schemat kwadratu fundamentalnego pokazuje dwa niezależne znaki.
+Test przeszkody $w_2$ zachowuje w tekście jawnie wskazane wejście
+z kohomologii Čecha. Konwencję $v^2=-\|v\|^2$ i zakres twierdzeń
+o spinorach sprawdzono względem
+[notatek Conrada](https://math.stanford.edu/~conrad/210CPage/handouts/clifford.pdf)
+oraz [Wernliego](https://arxiv.org/pdf/1911.09766).
+
+Po ukończeniu wszystkich siedmiu sekcji złożono wyłącznie tom I.
+`latexmk` zakończył pracę kodem 0 i utworzył PDF o 233 stronach.
+Log nie zawiera błędów, przepełnionych wierszy ani nierozwiązanych
+odsyłaczy. Indeks przyjął 117 haseł, bez odrzuceń i ostrzeżeń.
+Pozostały dwa wcześniejsze ostrzeżenia o specyfikatorze pływającym
+`h` oraz jeden `Underfull` poza rozdziałem 4. Obejrzano wszystkie
+sześć stron z rysunkami rozdziału (fizyczne strony PDF 119, 122,
+127, 130, 133 i 136), w tym nowy schemat torusa. Sprawdzoną
+wersję skopiowano do `geometria_tom1.pdf`; obie kopie mają SHA-256
+`2FBF1DFF5F2401624034616617F4DEE26D198B99073E400E252CF4D41AFCD86D`.
+
 ## Rozdział 3, §§3.1–3.9 — pełny przegląd dydaktyczny (2026-11-05)
 
 Przejrzano kolejno wszystkie dziewięć sekcji rozdziału o algebrze tensorowej.

@@ -1,5 +1,54 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-11-06 — pełny przegląd rozdziału 4, sekcje 1–7
+
+### Problem
+
+Rozdział o grassmannianach, algebrze Clifforda, grupach Pin i Spin
+oraz spinorach był poprawny w głównych wynikach, ale część przejść
+w dowodach i związków między konstrukcjami pozostawiał czytelnikowi.
+Brakowało obliczonych przejść współrzędnych, przykładu równości
+wektorów stycznych, jawnego znaku wiązki Möbiusa, rachunku działania
+Clifforda oraz konkretnego przykładu różnych struktur spinowych.
+
+### Rozwiązanie i wpływ
+
+- W §§4.1–4.3 dodano przejście map na prostej rzutowej, obliczenie
+  dwóch krzywych o tej samej stycznej, funkcję przejścia wiązki
+  tautologicznej, współrzędne Plückera dla płaszczyzn w $\R^4$
+  oraz różniczkę i normalną odwzorowania Gaussa paraboli.
+  Doprecyzowano zwartość grassmannianu i wersje wiązki
+  uniwersalnej nad $\R$ i $\C$.
+- W §§4.4–4.5 rozpisano gradację algebry, znaki w dowodzie
+  $\iota_v^2=0$, redukcję słów, liczbowy iloczyn Clifforda,
+  odbicie i przykład $\operatorname{Pin}(2)$. Dowód lokalnej
+  postaci nakrycia Spin oddziela dwa płaty, a przykład w
+  wymiarze dwa wyprowadza połowę kąta.
+- W §§4.6–4.7 wyjaśniono dwa działania w wymiarze nieparzystym,
+  dowiedziono własności półspinorów, sprawdzono zgodność globalnego
+  działania Clifforda z funkcjami przejścia i opisano cztery
+  struktury spinowe płaskiego torusa wraz z dowodem, że wyczerpują
+  wszystkie możliwości, oraz warunkami okresowości.
+  Dodano podpisany schemat dwóch znaków na kwadracie
+  fundamentalnym.
+
+Większa liczba rachunków i nowy rysunek wydłużają rozdział, ale
+pozwalają odtworzyć argumenty bez zgadywania pominiętych kroków.
+Zmieniono źródło rozdziału 4, PDF tomu I oraz rejestr i plan
+przeglądu. Następny etap zaczyna §5.1.
+
+### Weryfikacja
+
+Przeprowadzono audyt matematyczny §§4.1–4.7 i porównano konwencje
+z notatkami Conrada oraz Wernliego. Po ukończeniu całego rozdziału
+`latexmk` złożył wyłącznie tom I z kodem 0 i wynikiem 233 stron.
+Log nie ma błędów, nierozwiązanych odsyłaczy ani `Overfull`; indeks
+przyjął 117 wpisów bez odrzuceń i ostrzeżeń. Obejrzano fizyczne
+strony PDF 119, 122, 127, 130, 133 i 136 ze wszystkimi rysunkami
+rozdziału. Skopiowany PDF ma tę samą sumę SHA-256 co plik z katalogu
+budowania. Dwa ostrzeżenia o specyfikatorze `h` i jeden `Underfull`
+pozostają poza rozdziałem 4.
+
 ## 2026-11-05 — pełny przegląd rozdziału 3, sekcje 1–9
 
 ### Problem
