@@ -73,6 +73,79 @@ oraz dodatki). Starsze wpisy poniżej dokumentują rzeczywiście
 wykonane wówczas polecenia dla dawnego podziału na trzy tomy;
 ich numery stron i nazwy PDF-ów są historyczne.
 
+### Przegląd rozdziału 2, sekcje 3–7 — 5 listopada 2026
+
+Katalog repozytorium:
+`C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts`.
+Katalog projektu: `geometria i topologia różniczkowa`.
+Źródło rozdziału: `tex/rozdzialy/02-pola-wektorowe.tex`;
+plik główny tomu I: `geometria_tom1.tex`.
+Środowisko: Windows PowerShell, istniejący MiKTeX 25.12,
+`latexmk` 4.88 i Perl z `C:\Program Files\Git\usr\bin`.
+Nie instalowano zależności ani nie pobierano danych projektu.
+
+**Polecenia faktycznie wykonane.** W katalogu repozytorium
+przed rozpoczęciem edycji:
+
+```powershell
+git fetch origin review/rozdzialy-matematyka
+git rev-list --left-right --count HEAD...origin/review/rozdzialy-matematyka
+```
+
+Porównanie gałęzi dało `0 0`. Po przejrzeniu i poprawieniu
+wszystkich pięciu sekcji rozdziału, w katalogu projektu
+uruchomiono skład wyłącznie tomu I:
+
+```powershell
+$env:PATH = 'C:\Program Files\Git\usr\bin;' + $env:PATH
+latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=build/tomy geometria_tom1.tex
+```
+
+W katalogu repozytorium wykonano ponadto:
+
+```powershell
+pdfinfo 'geometria i topologia różniczkowa/build/tomy/geometria_tom1.pdf' | Select-String '^Pages:'
+Select-String -LiteralPath 'geometria i topologia różniczkowa/build/tomy/geometria_tom1.ilg' -Pattern 'entries accepted|rejected'
+Select-String -LiteralPath 'geometria i topologia różniczkowa/build/tomy/geometria_tom1.log' -Pattern '^!','Overfull','Missing character','LaTeX Warning: Reference .* undefined','There were undefined references','multiply defined'
+```
+
+PDF w `build/tomy` ma 225 stron, a indeks przyjął 117 wpisów
+i odrzucił 0. W końcowym logu nie znaleziono błędów,
+przepełnionych wierszy, brakujących znaków ani wskazanych
+problemów z odsyłaczami. Pierwszą próbę składu
+przerwano po doprecyzowaniu przez autora kolejności pracy;
+pełny skład uruchomiono dopiero po przejściu całego rozdziału.
+W tym etapie zmieniany rozdział należy tylko do tomu I.
+Skład pozostałych trzech tomów oraz pliku zbiorczego nie był
+potrzebny do sprawdzenia tej zmiany.
+
+W katalogu projektu wyrenderowano `pdftoppm` fizyczne strony
+77, 80–82, 85, 87, 89 i 91 do plików PNG w `build/tomy`
+i obejrzano na nich rysunki 2.2–2.10. Po kontroli wykonano:
+
+```powershell
+Copy-Item -LiteralPath 'build/tomy/geometria_tom1.pdf' -Destination 'geometria_tom1.pdf' -Force
+Get-FileHash -Algorithm SHA256 -LiteralPath 'build/tomy/geometria_tom1.pdf'
+Get-FileHash -Algorithm SHA256 -LiteralPath 'geometria_tom1.pdf'
+```
+
+Obie sumy SHA-256 były równe:
+`5CFE50A7EA0819EB8B8A8F0991C068FC3126860A9BDCB86808F423ED073558DD`.
+
+**Instrukcja przygotowana do samodzielnego wykonania.**
+Na innym stanowisku przygotuj MiKTeX z `latexmk` i Perl
+dostępny w `PATH`; wersje wskazane wyżej są sprawdzone
+w tej iteracji. Wejdź do katalogu projektu i wykonaj
+oba polecenia z bloku składu. Następnie z katalogu
+repozytorium powtórz trzy polecenia kontroli oraz sprawdź
+strony z nowymi rysunkami i wynik `git diff --check`.
+Po sprawdzeniu skopiuj
+`build/tomy/geometria_tom1.pdf` do katalogu projektu.
+Dla kolejnych rozdziałów obowiązuje kolejność ustalona
+przez autora: przegląd całego rozdziału, skład odpowiedniego
+tomu, kontrola, commit i push. Pełny `buduj_tomy.ps1` służy
+do okresowej kontroli wszystkich tomów i do publikacji.
+
 ### Końcowa kontrola czterech tomów — 4 listopada 2026
 
 **Polecenia faktycznie wykonane** w katalogu

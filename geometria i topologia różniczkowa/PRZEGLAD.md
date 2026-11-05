@@ -14,6 +14,56 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 2, §§2.3–2.7 — pełny przegląd dydaktyczny (2026-11-05)
+
+Punktem odniesienia były rozdział 1 oraz §§2.1–2.2: definicję poprzedza
+wyjaśnienie geometryczne, dowód podaje dziedziny i kolejne kroki, a tezę
+uzupełniają obliczalny przykład i rysunek tam, gdzie pomagają odczytać
+geometrię. Przejrzano po kolei wszystkie pozostałe sekcje rozdziału 2.
+Nowe uzupełnienia dotyczą pliku `tex/rozdzialy/02-pola-wektorowe.tex`.
+
+W §2.3 wyjaśniono różnicę między wektorem pola, krzywą całkową i jej
+śladem. W dowodzie istnienia podano przestrzeń zupełną i warunki
+twierdzenia Banacha dla operatora Picarda. Naprawiono krok jednoznaczności:
+porównanie dwóch rozwiązań po skróceniu czasu odbywa się na wspólnym
+przedziale, na którym działa odpowiedni operator. Dowód gładkiej
+zależności od warunku początkowego rozpisano przez równanie wariacyjne,
+drugą pochodną i indukcję po rzędzie pochodnej. W przykładach rozróżniono
+zbliżanie się do punktu równowagi w nieskończonym czasie od osiągnięcia
+go w czasie skończonym; krzywa na okręgu objaśnia przejście przez brzeg
+jednej mapy. Doprecyzowano również zachowanie maksymalnego przedziału
+przy dodatniej zmianie czasu.
+
+W §2.4 odróżniono przepływ lokalny, maksymalny i zupełny oraz rozpisano
+dziedzinę przepływu pola $x^2\partial_x$. Trzy istniejące schematy
+otrzymały podpisy i etykiety rysunków, do których odsyła tekst.
+W §2.5 objaśniono pierwszą całkę i ograniczenie wniosku o poziomicach,
+dodano globalne prostowanie pola $\partial_x+y\partial_y$ z rachunkiem
+orbit oraz rysunek. Dowód komutowania przepływów dla niezmienniczych pól
+korzysta bezpośrednio z równania wariacyjnego; podano też przykład dwóch
+komutujących pól. W §2.6 rachunek dla pól $x\partial_x$ i $\partial_x$
+pokazuje, dlaczego w pochodnej Liego trzeba przenieść wektor do wspólnej
+przestrzeni stycznej i skąd bierze się znak nawiasu.
+
+W §2.7 obliczono przepływ pola zależnego od czasu $X_t=t\partial_x$
+i pokazano jego ślady w czasoprzestrzeni. Gładki przykład uciekającej
+rodziny nośników wykazuje, że zwartość nośnika każdego $X_t$ osobno
+nie zapewnia istnienia przepływu do czasu końcowego. W twierdzeniu
+o przedłużeniu izotopii wskazano jawnie zewnętrzne źródło:
+[Hirsch, *Differential Topology*, rozdział 8, §1, twierdzenie 1.3](https://webhomes.maths.ed.ac.uk/~v1ranick/papers/hirschdx.pdf).
+Opis kołnierza zapisano we wspólnej współrzędnej normalnej.
+
+Pierwszy pełny skład kontrolny tomu I zakończył się kodem 0 i dał
+225 stron, lecz wykazał przepełniony wiersz nowego wzoru w §2.3.
+Po skróceniu zapisu wzoru ponowiono skład. Końcowy PDF ma 225 stron;
+indeks przyjął 117 haseł bez odrzuceń, a log nie zawiera błędów,
+`Overfull`, brakujących znaków ani brakujących lub powielonych
+odsyłaczy. Obejrzano fizyczne strony 77, 80–82, 85, 87, 89 i 91,
+zawierające rysunki 2.2–2.10. Oznaczenia, podpisy i układ są czytelne.
+PDF w katalogu projektu ma tę samą sumę SHA-256 co sprawdzony PDF
+w `build/tomy`. Zgodnie z ustaleniem autora złożono tylko tom I,
+po przejściu całego rozdziału.
+
 ## Końcowa kontrola: mapa, oznaczenia i terminologia (2026-11-04)
 
 Porównano kolejność importów składu zbiorczego z czterema tomami:

@@ -1,5 +1,76 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-11-05 — pełny przegląd rozdziału 2, sekcje 3–7
+
+### Problem
+
+Po porównaniu z poziomem szczegółowości rozdziału 1 oraz
+sekcji 1–2 rozdziału 2 dalsza część rozdziału o polach
+wektorowych wymagała dokładniejszego wyjaśnienia pojęć,
+rachunków i rysunków. W dowodzie jednoznaczności lokalnego
+rozwiązania ODE po skróceniu przedziału czasu błędnie
+odwoływano się do operatora Picarda zdefiniowanego na
+dłuższym przedziale. Indukcja wykazująca gładką zależność
+od warunku początkowego była zbyt skrótowa. Własności
+przepływu, prostowanie pola, transport w pochodnej Liego
+i pola zależne od czasu miały zbyt mało obliczonych przykładów.
+
+### Rozwiązanie i wpływ
+
+- W sekcji 3 wyjaśniono rolę aktualnego punktu i parametryzacji
+  krzywej. W dowodzie Picarda sprawdzono zupełność przestrzeni
+  i przeprowadzono argument jednoznaczności na tym samym
+  skróconym przedziale dla obu rozwiązań. Rozpisano drugi krok
+  różniczkowania po danych początkowych, wzór po podziałach
+  zbioru dla wyższych pochodnych i oszacowania reszt. Dodano
+  przykłady punktu równowagi, przejścia przez granicę mapy
+  kątowej oraz uzasadnienie maksymalności po zmianie czasu.
+- W sekcji 4 odróżniono przepływ lokalny, maksymalny i zupełny.
+  Obliczono pełną dziedzinę przepływu pola
+  $x^2\partial_x$ i sprawdzono wzory dla przepływów zupełnych.
+  Trzy istniejące schematy otrzymały podpisy, etykiety
+  i odsyłacze w tekście.
+- W sekcji 5 wprowadzono intuicję pierwszej całki oraz
+  przykład globalnego prostowania
+  $X=\partial_x+y\partial_y$ z rachunkiem przepływu,
+  współrzędnych, orbit i nasycenia przekroju; dodano rysunek.
+  Dowód równoważności $[X,Y]=0$, zachowania pola i komutowania
+  przepływów rozpisano przez równanie wariacyjne i dokładne
+  przedziały maksymalne. Dodano obliczenie komutujących pól
+  i przykład poziomicy obejmującej dwie orbity.
+- W sekcji 6 przykład skalowania pokazuje, dlaczego pochodna
+  Liego pola wymaga transportu wektorów do tej samej
+  przestrzeni stycznej; doprecyzowano znak nawiasu.
+- W sekcji 7 obliczono ewolucję pola zależnego od czasu
+  $X_t=t\partial_x$ i narysowano trajektorie w czasoprzestrzeni.
+  Kontrprzykład z nośnikami uciekającymi do nieskończoności
+  pokazuje, dlaczego potrzebny jest wspólny zwarty nośnik.
+  Przy twierdzeniu o rozszerzaniu izotopii podano dokładne
+  źródło u Hirscha, a opis kołnierza przy brzegu poprawiono.
+
+Większa liczba kroków i przykładów wydłuża tom I, lecz pozwala
+sprawdzić hipotezy i rachunki bez odgadywania pominiętych
+przejść. Twierdzenie Hirscha pozostaje nazwanym wejściem
+zewnętrznym, z podanym miejscem w literaturze. Zmiany treści
+dotyczą jednego rozdziału i nie wymagają przebudowy innych tomów.
+
+### Weryfikacja
+
+Całe sekcje 3–7 ponownie przejrzano merytorycznie; niezależne
+kontrole potwierdziły rachunki i znaki nowych przykładów.
+Po zakończeniu przeglądu uruchomiono `latexmk` dla tomu I;
+wynikowy PDF w `build/tomy` ma 225 stron. Indeks przyjął
+117 wpisów i odrzucił 0, a końcowy log nie zawiera błędów,
+`Overfull`, brakujących znaków ani brakujących lub
+powielonych odsyłaczy. Szczegółowe
+polecenia i rozdział czynności wykonanych od instrukcji
+przygotowanych podaje `manual.md`. Zgodnie z ustaloną przez
+autora kolejnością commit i push następują po końcowej
+kontroli składu całego rozdziału. Obejrzano fizyczne strony
+77, 80–82, 85, 87, 89 i 91 z rysunkami 2.2–2.10;
+podpisy i oznaczenia są czytelne. Kopia PDF-u tomu I w katalogu
+projektu ma sumę SHA-256 równą sprawdzonemu plikowi w `build/tomy`.
+
 ## 2026-11-04 — końcowa kontrola mapy, oznaczeń i terminologii skryptu
 
 ### Problem

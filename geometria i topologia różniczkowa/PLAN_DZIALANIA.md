@@ -1,6 +1,6 @@
 # Aktualny plan i pokrycie przeglądem
 
-Stan: 4 listopada 2026. Gałąź: `review/rozdzialy-matematyka`.
+Stan: 5 listopada 2026. Gałąź: `review/rozdzialy-matematyka`.
 Książka ma **38 rozdziałów, pięć części i trzy dodatki**. Numery w nazwach
 plików są historyczne; numer w PDF ustala kolejność importów.
 Skład roboczy podzielono na cztery tomy: rozdziały 1–10, 11–22,
@@ -12,6 +12,12 @@ sprawdzania konkretnych wersji są w [PRZEGLAD.md](PRZEGLAD.md), a budowanie
 i organizacja plików w [README.md](README.md).
 
 ## Bieżący zakres i kolejność
+
+Prowadzimy przegląd całej książki po kolei, rozdział po rozdziale i sekcja po
+sekcji, z poziomem objaśnień, przykładów, rysunków i szczegółowości
+dowodów przyjętym w rozdziale 1 oraz §§2.1–2.2. Rozdział 2,
+§§2.3–2.7, przejrzano, rozszerzono i sprawdzono w składzie
+tomu I. Następny etap to **rozdział 3, §3.1**.
 
 1. Niezależny audyt dodatków A i B zakończono 25 października.
    W dodatku A skorygowano zakres twierdzenia Walla do $n\geq5$
@@ -42,10 +48,12 @@ i organizacja plików w [README.md](README.md).
    chyba że etap wymaga wspólnego dowodu.
 3. Przed każdą iteracją pobierać zmiany współautora. Zmieniać źródło
    w odpowiednim pliku rozdziału, zapisywać uzasadnienia w
-   `PRZEGLAD.md`, składać odpowiedni tom i sprawdzać zmienione strony.
-   Przed wypchnięciem uruchamiać `buduj_tomy.ps1`, kontrolować indeksy
-   i odsyłacze między tomami, aktualizować PDF-y tomów, zatwierdzać
-   i wypychać ukończony etap. Skład zbiorczy jest okazjonalny.
+   `PRZEGLAD.md`. W bieżącym przeglądzie składać dopiero po przejściu
+   całego rozdziału i tylko tom, do którego należy; sprawdzać jego indeks,
+   odsyłacze i zmienione strony, następnie zatwierdzać oraz wypychać
+   ukończony etap. Dla rozdziału 2 jest to tom I. Cztery tomy składać
+   przy publikacji lub zmianie przekrojowej; skład zbiorczy jest
+   okazjonalny.
 
 Nie dopisujemy zadań ćwiczeniowych. Rozmaitości z brzegiem, grupy wolne, iloczyny wolne,
 geometria Kleina i geometrie Thurstona już są w źródłach; nie tworzymy ich
@@ -295,7 +303,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | Numer i temat | Plik w `tex/rozdzialy/` | Stan przeglądu | Kontrola / pozostały zakres |
 |---|---|---|---|
 | 1. Rozmaitości | `01-rozmaitosci.tex` | 13 października zakończono audyt dodatków o wiązkach wektorowych i kostycznych; 14 października ponownie sprawdzono §1.10; 18–19 października sprawdzono intuicję podrozmaitości i różniczkę w §1.11; 20 października uzupełniono §1.12 o przestrzeń styczną podrozmaitości, przykład i rysunek oraz o wzór z wektorami normalnymi | Skontrolowano sklejanie wiązek, funkcje przejścia, sekcje, sumę i wiązkę dualną, przykład Möbiusa, rachunek różniczki, przykład injektywnej immersji o gęstym obrazie, atlasy `TM` i `T*M`, diagramy oraz odsyłacze. W §1.11 połączono wcześniejszy wzór z §1.8 z różniczką odwzorowania, wyprowadzono macierz Jacobiego z działania na lokalne współrzędne i objaśniono utożsamienie $T_{f(p)}\R\cong\R$ przez funkcję $t$. Lokalność derywacji uzasadnia użycie współrzędnych na otoczeniu. Nowy wynik opisuje przestrzeń styczną podrozmaitości jako obraz różniczki inkluzji, z dowodem przez współrzędne wycinające i krzywe; towarzyszą mu przykład okręgu i rysunek. Wzór ogólny opisuje styczność przez jądra różniczek i prostopadłość do gradientów lokalnych równań. Ta iteracja nie stanowi ponownego audytu całego rozdziału. |
-| 2. Pola wektorowe | `02-pola-wektorowe.tex` | Audyt dodatków zakończono 6 października; §2.1 ponownie przejrzano 18–21 października; 22 października uzupełniono §2.2 oraz dowód Twierdzenia 2.3.2; 4 listopada sprawdzono bieżące zmiany autora | W §2.1 sprawdzono pola jako derywacje, przykłady na okręgu i sferze oraz pole wzdłuż odwzorowania. W §2.2 doprecyzowano nawias Liego i kryterium Frobeniusa. W §2.3 rozpisano przeniesienie równania do mapy, zakres czasów operatora Picarda oraz etapy dowodu gładkiej zależności. W nowej różnicy sprawdzono równanie wariacyjne, zmianę czasu, maksymalność orbit i składanie przepływów; poprawiono dolną granicę całki, argument maksymalności, indeksy otoczeń i notację pochodnej. Nie przeprowadzono ponownego audytu całego rozdziału. |
+| 2. Pola wektorowe | `02-pola-wektorowe.tex` | Audyt dodatków zakończono 6 października; §2.1 ponownie przejrzano 18–21 października; 22 października uzupełniono §2.2 oraz dowód Twierdzenia 2.3.2; 4 listopada sprawdzono bieżące zmiany autora; 5 listopada przejrzano i rozszerzono §§2.3–2.7 oraz sprawdzono końcowy skład tomu I | W §2.1 sprawdzono pola jako derywacje, przykłady na okręgu i sferze oraz pole wzdłuż odwzorowania. W §2.2 doprecyzowano nawias Liego i kryterium Frobeniusa. W §§2.3–2.7 uzupełniono krok jednoznaczności Picarda, dowód gładkiej zależności, geometrię przepływu, prostowanie, pierwsze całki, komutowanie, pochodną Liego i pola zależne od czasu. Dodano obliczalne przykłady i rysunki; rozdzielono własne dowody od zewnętrznego twierdzenia o przedłużeniu izotopii. Szczegóły i wynik kontroli składu są w `PRZEGLAD.md`. |
 | 3. Algebra tensorowa | `03-algebra-tensorowa.tex` | Audyt z 6 października; notacja poprawiona 9 października | Formalne generatory par zapisano jako [(v,w)]; zakres tej poprawki nie obejmuje ponownego audytu całego rozdziału. |
 | 4. Grassmanniany, Clifford i spinory | `04-grassmanniany-clifford-spinory.tex` | Wcześniejszy audyt z 6 października; 8 października dodano grupę Pin | Sprawdzono nakrycie $\operatorname{Pin}(n)\to O(n)$ i stronę 100 PDF |
 | 5. Algebra abstrakcyjna | `05-algebra-abstrakcyjna.tex` | Audyt i poprawki w `dbfe600`; porównano późniejsze różnice do `2777149` | Zachowano wprowadzone przez autora nienumerowane podsekcje i nazewnictwo iloczynu tensorowego; poprawiono „Iloczn”. Dowody dziedziny, ciała ułamków i lokalizacji zachowane. Opcjonalne definicje są w rejestrze poniżej. |
