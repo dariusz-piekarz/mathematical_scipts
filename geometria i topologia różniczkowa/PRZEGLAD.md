@@ -14,6 +14,68 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 3, §§3.1–3.9 — pełny przegląd dydaktyczny (2026-11-05)
+
+Przejrzano kolejno wszystkie dziewięć sekcji rozdziału o algebrze tensorowej.
+Punktem odniesienia była szczegółowość rozdziału 1 i §§2.1–2.2:
+intuicja przed definicją, jawne kroki dowodu, obliczony przykład oraz
+rysunek tam, gdzie ułatwia rozpoznanie konstrukcji. Podstawowe dowody
+istnienia i jednoznaczności iloczynu tensorowego, jego bazy,
+izomorfizmów z przestrzeniami funkcji wieloliniowych i operatorów
+oraz wzoru na rangę iloczynu odwzorowań były poprawne.
+
+W §3.1 diagram własności uniwersalnej otrzymał podpis i odsyłacz.
+Dopisano wzór faktoryzacji na dowolnej sumie tensorów prostych,
+argument $v\otimes w\ne0$ dla $v,w\ne0$ oraz obliczony przykład
+wyznacznika, który rozróżnia $e_1\otimes e_2$ i
+$e_2\otimes e_1$. W §3.2 zapisano jednoznaczną tablicę współczynników,
+pełne kryterium prostoty przez rząd macierzy, rysunek jej kolumn,
+szczegóły faktoryzacji odwzorowania trójliniowego i działanie
+przestawienia na współczynnikach. Wyjaśniono też kanoniczne
+utożsamienie $\mathbb K\otimes U\cong U$ oraz potęgę stopnia zero.
+
+W §3.3 doprecyzowano przypadek $T^0_0(V)$: skalar działa na pustym
+układzie argumentów swoją wartością. Objaśniono tensor prosty jako
+operator rangi co najwyżej jeden i granicę twierdzenia w nieskończonym
+wymiarze. Dodano osobliwy przykład iloczynu Kroneckera, wyjaśnienie,
+że kontrakcja nie wymaga metryki, diagram jej związku ze śladem oraz
+rachunki dla dwóch możliwych par czynników.
+
+W §3.4 uzasadniono dokładniej przejście od relacji sąsiednich zamian
+do ilorazu symetrycznego, rozdzielono izomorfizm kanoniczny od
+zależnego od bazy opisu wielomianowego i dodano diagram ilorazu.
+W §3.5 obliczony homomorfizm algebry zewnętrznej oraz przykład
+wyznacznika ilustrują własność uniwersalną; doprecyzowano znaki
+stopniowane, przypadki stopnia zero i normalizację antysymetryzacji.
+W §3.6 naprawiono argument niezależności bazy dla stopnia zerowego,
+wyprowadzono współczynniki przez minory i pokazano trzy rzuty
+równoległoboku w $\R^3$. Kwadrat nieprostego dwuwektora obliczono
+z oboma wyrazami mieszanymi.
+
+W §3.7 wyjaśniono interpretację potęg zewnętrznych i obliczono
+wzór Cauchy'ego--Bineta dla konkretnych macierzy prostokątnych;
+sprawdzono znaki oraz normalizacje utożsamienia form z wielowektorami
+dualnymi. W §3.8 zapisano macierze przejścia wiązek wraz z konwencją
+współrzędnych włókna, rząd wiązki tensorowej i gładką zależność
+Jacobich od punktu. Przykłady $y=x^2$ i biegunowej metryki
+euklidesowej pokazują niezmienność wartości tensora i długości
+wektorów bazowych; drugi ma osobny rysunek. W §3.9 diagram
+transportu przez przepływ, tensor mieszany i jawny wzór
+$\Lie_Xg$ wyjaśniają kierunki różniczki, znaki oraz zgodność
+z kontrakcją. Określono także lokalną dziedzinę przepływu.
+
+Niezależny audyt rachunków i rysunków w §§3.1–3.9 nie wykazał
+pozostawionych błędów matematycznych. Po ukończeniu całego
+rozdziału złożono wyłącznie tom I: `latexmk` zakończył się kodem 0,
+a PDF ma 230 stron. Log nie zawiera błędów, `Overfull` ani
+nierozwiązanych odsyłaczy; indeks przyjął 117 wpisów bez
+odrzuceń i ostrzeżeń. Obejrzano strony fizyczne 94, 97, 101,
+105, 108, 110, 114 i 115, zawierające wszystkie osiem rysunków
+rozdziału 3. Strzałki, podpisy i wzory są czytelne. Skopiowany
+do katalogu projektu `geometria_tom1.pdf` ma tę samą sumę SHA-256
+co zbudowany PDF:
+`AC4AADCDADD621B4FFDDD80F2B0E0AA48628F244AF2845A402388B8615521157`.
+
 ## Rozdział 2, §§2.3–2.7 — pełny przegląd dydaktyczny (2026-11-05)
 
 Punktem odniesienia były rozdział 1 oraz §§2.1–2.2: definicję poprzedza

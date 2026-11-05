@@ -1,5 +1,79 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-11-05 — pełny przegląd rozdziału 3, sekcje 1–9
+
+### Problem
+
+Pierwsze trzy sekcje algebry tensorowej miały poprawne główne
+dowody, lecz własność uniwersalna nie miała obliczonego przykładu,
+związek prostoty z rzędem macierzy był pokazany tylko w jedną
+stronę, a przejście przez odwzorowanie trójliniowe w dowodzie
+łączności było skrótowe. Konwencja $T^0_0(V)=\mathbb K$ wymagała
+jawnego utożsamienia $\mathbb K\otimes\mathbb K\cong\mathbb K$
+i określenia wartości skalara na pustym układzie argumentów.
+W dalszych sekcjach skrócono dowód opisu ilorazu symetrycznego,
+nie wydzielono stopnia zerowego w dowodzie bazy potęg zewnętrznych,
+a konstrukcje geometryczne miały zbyt mało obliczonych przykładów
+i schematów transportu.
+
+### Rozwiązanie i wpływ
+
+- W §3.1 podpisano diagram własności uniwersalnej, rozpisano
+  faktoryzację na sumie oraz dowiedziono, że iloczyn dwóch
+  niezerowych wektorów jest niezerowym tensorem. Przykład
+  wyznacznika pokazuje działanie funkcjonału na tensorach
+  i rozróżnia kolejność czynników.
+- W §3.2 wyprowadzono jednoznaczną macierz współczynników,
+  wykazano równoważność prostoty i rzędu co najwyżej jeden,
+  dodano rysunek kolumn oraz rozpisano liniowość potrzebną
+  w dowodzie łączności. Doprecyzowano przestawienie czynników,
+  kanoniczne utożsamienia ze skalarem i potęgę stopnia zero.
+- W §3.3 określono przypadek bez argumentów, objaśniono
+  operator odpowiadający tensorowi prostemu, dodano przykład
+  rangi osobliwego iloczynu Kroneckera i obliczenia kontrakcji
+  dla różnych par. Diagram pokazuje równość kontrakcji ze
+  śladem; tekst stwierdza, że do kontrakcji nie potrzeba metryki.
+- W §3.4 rozpisano, jak relacje sąsiednich zamian generują jądro
+  ilorazu symetrycznego, oddzielono kanoniczny izomorfizm od
+  zależnego od bazy opisu wielomianowego i dodano diagram.
+- W §3.5 wyjaśniono rolę relacji $v^2=0$, przypadki stopnia zero
+  i znaki bloków oraz obliczono dwa przykłady własności
+  uniwersalnej. Pokazano też zgodność normalizacji ilorazu
+  z antysymetryzatorem.
+- W §3.6 wydzielono $k=0$ przed zastosowaniem własności
+  uniwersalnej dla $k\geq1$, wyprowadzono wzór na współczynniki
+  iloczynu zewnętrznego przez minory i narysowano trzy rzuty
+  równoległoboku. Rozpisano oba wyrazy mieszane kwadratu
+  nieprostego dwuwektora.
+- W §3.7 dodano interpretację minorów i liczbowy przykład
+  Cauchy'ego--Bineta dla macierzy prostokątnych, z kontrolą
+  znaków. W §3.8 jawnie podano konwencję macierzy przejścia,
+  rząd wiązki, przykład niezmienności wartości metryki,
+  znoszenie się Jacobich dla tensora identycznościowego
+  oraz metrykę biegunową z rysunkiem.
+- W §3.9 dodano schemat cofnięcia przez przepływ, określono
+  jego lokalną dziedzinę, obliczono tensor mieszany
+  i podano jawny wzór pochodnej Liego metryki.
+
+Dodatkowe rachunki i siedem nowych podpisanych ilustracji wydłużają rozdział,
+ale pozwalają sprawdzić znaczenie konstrukcji bez domyślania się
+pominiętych przejść. Zmieniono źródło rozdziału 3, PDF tomu I
+oraz dokumentację. Rozdział 3 jest ukończony; następny etap zaczyna §4.1.
+
+### Weryfikacja
+
+Przeprowadzono niezależny audyt matematyczny §§3.1–3.9 oraz
+kontrolę nowych rachunków, oznaczeń i podpisów. Zgłoszone
+drobne nieścisłości poprawiono przed składem. `git diff --check`
+nie wykazał błędów formatowania. Po ukończeniu całego rozdziału
+`latexmk` złożył wyłącznie tom I z kodem 0 i wynikiem 230 stron.
+Log nie ma błędów, przepełnień ani brakujących odsyłaczy; indeks
+przyjął 117 wpisów bez odrzuceń i ostrzeżeń. Obejrzano strony
+fizyczne 94, 97, 101, 105, 108, 110, 114 i 115 ze wszystkimi
+rysunkami rozdziału. Skopiowany PDF ma tę samą sumę SHA-256 co
+plik z katalogu budowania. Pozostałe trzy tomy nie były składane,
+ponieważ zmiana dotyczy wyłącznie tomu I.
+
 ## 2026-11-05 — pełny przegląd rozdziału 2, sekcje 3–7
 
 ### Problem

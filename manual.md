@@ -73,6 +73,67 @@ oraz dodatki). Starsze wpisy poniżej dokumentują rzeczywiście
 wykonane wówczas polecenia dla dawnego podziału na trzy tomy;
 ich numery stron i nazwy PDF-ów są historyczne.
 
+### Rozdział 3, sekcje 1–9 — ukończony etap z 5 listopada 2026
+
+Katalog repozytorium:
+`C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts`.
+Katalog projektu: `geometria i topologia różniczkowa`.
+Edytowane źródło: `tex/rozdzialy/03-algebra-tensorowa.tex`.
+Obowiązuje to samo sprawdzone wcześniej środowisko Windows
+PowerShell, MiKTeX 25.12, `latexmk` 4.88 i Perl z
+`C:\Program Files\Git\usr\bin`; w tym etapie nie
+instalowano narzędzi ani nie pobierano danych.
+
+**Polecenia faktycznie wykonane** w katalogu repozytorium
+przed i po edycji:
+
+```powershell
+git rev-list --left-right --count HEAD...origin/review/rozdzialy-matematyka
+git fetch origin review/rozdzialy-matematyka
+git diff --check
+```
+
+Przed edycją porównanie gałęzi dało `0 0`. Przejrzano kolejno
+§§3.1–3.9 i niezależnie skontrolowano nowe rachunki oraz rysunki.
+Zgodnie z ustaloną kolejnością skład uruchomiono dopiero po
+ukończeniu całego rozdziału. W katalogu projektu wykonano
+**tylko skład tomu I**:
+
+```powershell
+$env:PATH = 'C:\Program Files\Git\usr\bin;' + $env:PATH
+latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=build/tomy geometria_tom1.tex *> build/tomy/review_ch3_build.txt
+```
+
+Kod wyjścia wyniósł `0`; otrzymano PDF o 230 stronach.
+W `build/tomy/geometria_tom1.log` sprawdzono ostrzeżenia,
+brakujące odsyłacze, błędy i przepełnione wiersze: nie ma
+błędów, nierozwiązanych odsyłaczy ani `Overfull`. Indeks
+`build/tomy/geometria_tom1.ilg` przyjął 117 wpisów, 0 odrzucił
+i podał 0 ostrzeżeń. Pozostały dwa ostrzeżenia o zamianie
+specyfikatora `h` na `ht` i jeden `Underfull` poza nowym rozdziałem.
+Wykonano również:
+
+```powershell
+$pages=@(94,97,101,105,108,110,114,115)
+foreach($n in $pages){pdftoppm -f $n -l $n -singlefile -png -r 105 'build/tomy/geometria_tom1.pdf' "build/tomy/ch3_p$n"}
+Copy-Item -LiteralPath 'build/tomy/geometria_tom1.pdf' -Destination 'geometria_tom1.pdf' -Force
+Get-FileHash -Algorithm SHA256 -LiteralPath 'build/tomy/geometria_tom1.pdf'
+Get-FileHash -Algorithm SHA256 -LiteralPath 'geometria_tom1.pdf'
+```
+
+Obejrzano strony fizyczne 94, 97, 101, 105, 108, 110, 114 i 115,
+zawierające wszystkie osiem rysunków rozdziału 3. Wersja robocza
+i kopia projektu mają tę samą sumę SHA-256:
+`AC4AADCDADD621B4FFDDD80F2B0E0AA48628F244AF2845A402388B8615521157`.
+
+**Instrukcja przygotowana do samodzielnego wykonania.** Na innym
+stanowisku otwórz PowerShell w katalogu projektu, dodaj katalog
+Perla z Git for Windows do `PATH` i wykonaj wskazane wyżej
+polecenie `latexmk`. Następnie sprawdź log oraz indeks, obejrzyj
+strony z rysunkami i dopiero po pomyślnej kontroli skopiuj PDF.
+Nie ma potrzeby składać pozostałych trzech tomów przy zmianie
+dotyczącej wyłącznie rozdziału 3.
+
 ### Przegląd rozdziału 2, sekcje 3–7 — 5 listopada 2026
 
 Katalog repozytorium:

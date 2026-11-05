@@ -31,7 +31,12 @@ $\tau(v,w)=v\otimes w$. Elementy $v\otimes w$ nazywamy
 \emph{tensorami prostymi}.
 \end{definicja}
 
-\begin{center}
+Rysunek~\ref{fig:tensor-wlasnosc-uniwersalna} pokazuje sens definicji:
+parę argumentów zastępujemy tensorem $v\otimes w$, a wartość
+każdej reguły dwuliniowej obliczamy przez odpowiednie
+odwzorowanie liniowe $\widetilde B$.
+\begin{figure}[H]
+\centering
 \begin{tikzpicture}[>=Latex, every node/.style={font=\small}]
  \node (vw) at (0,1.8) {$V\times W$};
  \node (tensor) at (3.8,1.8) {$V\otimes W$};
@@ -40,7 +45,10 @@ $\tau(v,w)=v\otimes w$. Elementy $v\otimes w$ nazywamy
  \draw[->,thick,manifoldred] (vw) -- node[below left] {$B$} (z);
  \draw[->,thick,manifoldgreen] (tensor) -- node[right] {$\exists!\,\widetilde B$} (z);
 \end{tikzpicture}
-\end{center}
+\caption{Własność uniwersalna: trójkąt komutuje, czyli
+$B(v,w)=\widetilde B(v\otimes w)$ dla każdej pary $(v,w)$.}
+\label{fig:tensor-wlasnosc-uniwersalna}
+\end{figure}
 
 Samo zapisanie $v\otimes w$ nie jest definicją: najpierw trzeba
 wykazać, że przestrzeń o tej własności istnieje.
@@ -111,6 +119,20 @@ spełniałoby tę samą równość, zgadzałoby się z $\widetilde B$
 na zbiorze rozpinającym $T$, a zatem wszędzie.
 \end{proof}
 
+W praktyce faktoryzacja działa na dowolnej skończonej sumie:
+\[
+ \widetilde B\!\left(\sum_{a=1}^N c_a v_a\otimes w_a\right)
+   =\sum_{a=1}^N c_a B(v_a,w_a).
+\]
+Ten wzór nie zależy od wybranego zapisu tensora jako sumy:
+wynika z odwzorowania $L$, które zeruje wszystkie relacje tworzące $R$.
+Relacje nie zerują też niezerowego tensora prostego. Jeżeli
+$v\ne0$ i $w\ne0$, dopełniamy je do baz i wybieramy
+$\alpha\in V^*$, $\beta\in W^*$ z
+$\alpha(v)=\beta(w)=1$. Dla dwuliniowego
+$B(x,y)=\alpha(x)\beta(y)$ mamy
+$\widetilde B(v\otimes w)=1$, więc $v\otimes w\ne0$.
+
 \begin{uwaga}[Faktoryzacja przez iloraz a izomorfizm]
 \label{rem:tensor-iloraz-izomorfizm}
 W dowodzie wystarczyło $R\subseteq\ker L$, aby otrzymać
@@ -145,6 +167,24 @@ Odwzorowanie $J$ jest więc izomorfizmem i jedynym możliwym odwzorowaniem
 zachowującym wskazane obrazy par $(v,w)$.
 \end{proof}
 
+\begin{przyklad}[Wyznacznik jako odwzorowanie liniowe na tensorach]
+Niech $V=W=\R^2$ i
+$B(v,w)=v_1w_2-v_2w_1=\det(v,w)$.
+Dwuliniowość wyznacznika daje dokładnie jedno
+$\widetilde B\colon\R^2\otimes\R^2\to\R$ takie, że
+\[
+ \widetilde B\!\left(\sum_{a=1}^N c_a v_a\otimes w_a\right)
+ =\sum_{a=1}^N c_a\det(v_a,w_a).
+\]
+Na wektorach bazy standardowej
+$\widetilde B(e_1\otimes e_2)=1$ i
+$\widetilde B(e_2\otimes e_1)=-1$.
+Zatem $e_1\otimes e_2\ne e_2\otimes e_1$:
+w zwykłym iloczynie tensorowym przestawienie czynników
+nie jest równością tensorów. Na przykład
+$\widetilde B(2e_1\otimes e_2-e_2\otimes e_1)=3$.
+\end{przyklad}
+
 W szczególności
 \begin{equation}\label{eq:tensor-biliniowosc}
  (av+bv')\otimes w=a(v\otimes w)+b(v'\otimes w),\qquad
@@ -155,6 +195,10 @@ prostych, ale nie musi sam być tensorem prostym.
 
 \section{Baza, wymiar i wiele czynników}
 \label{sec:baza-tensorowa}
+
+Wybór baz pozwala zapisać tensor jako tablicę współczynników.
+Najpierw sprawdzimy, że każdy element ma dokładnie jedną taką tablicę;
+liczba jej pól wyjaśni wymiar iloczynu tensorowego.
 
 \begin{twierdzenie}[Baza iloczynu tensorowego]
 \label{thm:baza-tensorowa}
@@ -180,8 +224,13 @@ daje $\widetilde B\colon V\otimes W\to\mathbb K^{m\times n}$
 z $\widetilde B(e_i\otimes f_j)=E_{ij}$. Jeśli
 $\sum_{i,j}c_{ij}e_i\otimes f_j=0$, zastosowanie
 $\widetilde B$ daje $\sum_{i,j}c_{ij}E_{ij}=0$, czyli
-wszystkie $c_{ij}=0$. Tak wykazaliśmy również podany wymiar.
+wszystkie $c_{ij}=0$. Każdy tensor ma więc jednoznaczną postać
+$T=\sum_{i,j}c_{ij}e_i\otimes f_j$, a $\widetilde B(T)=(c_{ij})$.
+Tak wykazaliśmy również podany wymiar.
 \end{proof}
+
+Utożsamienie $T$ z macierzą $(c_{ij})$ zależy od wybranych baz.
+Sam tensor i jego własność prostoty od nich nie zależą.
 
 \begin{przyklad}[Tensor prosty a suma tensorów]
 Dla $V=W=\R^2$ odwzorowanie z dowodu przypisuje
@@ -189,12 +238,46 @@ $(1,2)\otimes(3,-1)$ macierz
 $\begin{psmallmatrix}3&-1\\6&-2\end{psmallmatrix}$.
 Każdy niezerowy tensor prosty ma tu macierz rzędu $1$:
 jest ona iloczynem kolumny współrzędnych $v$ i wiersza
-współrzędnych $w$. Natomiast
+współrzędnych $w$. Odwrotnie, każda macierz rzędu $1$
+ma postać $ab^{\mathsf T}$: wybieramy niezerową kolumnę $a$,
+a pozostałe kolumny są jej wielokrotnościami $b_j a$.
+Macierz zerowa odpowiada tensorowi prostemu $0\otimes w=0$.
+Zatem na $\R^2\otimes\R^2$ tensor jest prosty dokładnie wtedy,
+gdy jego macierz ma rząd co najwyżej $1$, czyli wyznacznik $0$.
+Natomiast
 $e_1\otimes e_1+e_2\otimes e_2$ odpowiada macierzy
 identycznościowej rzędu $2$, więc nie jest prosty.
 Należy też pamiętać, że $v\otimes w$ nie oznacza pary $(v,w)$:
 na przykład $(2v)\otimes w=v\otimes(2w)$.
 \end{przyklad}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Latex, every node/.style={font=\small}]
+ \begin{scope}[xshift=-2.6cm]
+  \draw[gray!65,->] (-0.9,0)--(1.5,0);
+  \draw[gray!65,->] (0,-0.75)--(0,1.65);
+  \draw[manifoldblue,thick,->] (0,0)--(0.6,1.2)
+    node[above right] {$3v$};
+  \draw[manifoldred,thick,->] (0,0)--(-0.2,-0.4)
+    node[below left] {$-v$};
+  \node at (0,-1.1) {$v\otimes(3,-1)$};
+ \end{scope}
+ \begin{scope}[xshift=2.6cm]
+  \draw[gray!65,->] (-0.7,0)--(1.5,0);
+  \draw[gray!65,->] (0,-0.55)--(0,1.55);
+  \draw[manifoldblue,thick,->] (0,0)--(1,0)
+    node[below right] {$e_1$};
+  \draw[manifoldred,thick,->] (0,0)--(0,1)
+    node[above left] {$e_2$};
+  \node at (0,-1.1) {$e_1\otimes e_1+e_2\otimes e_2$};
+ \end{scope}
+\end{tikzpicture}
+\caption{Kolumny macierzy tensora prostego są współliniowe (po lewej:
+$v=(1,2)$, kolumny $3v$ i $-v$). Dwie kolumny macierzy
+identycznościowej są niezależne, więc odpowiadający jej tensor nie jest prosty.}
+\label{fig:tensor-prosty-rzad}
+\end{figure}
 
 \begin{stwierdzenie}[Łączność i przestawianie czynników]
 \label{prop:tensor-lacznosc}
@@ -213,11 +296,14 @@ Dlatego możemy pisać $V_1\otimes\cdots\otimes V_k$ bez nawiasów.
 Odwzorowanie $(v,w,u)\mapsto v\otimes(w\otimes u)$ jest
 trójliniowe. Każde odwzorowanie trójliniowe na $V\times W\times U$
 faktoryzuje jednoznacznie przez $(V\otimes W)\otimes U$:
-najpierw przy ustalonym $u$ faktoryzujemy względem $(v,w)$;
-otrzymane odwzorowania $(V\otimes W)\to Z$ zależą liniowo od $u$,
-co sprawdzamy na rozpinających $v\otimes w$. Następnie
-faktoryzujemy powstałe odwzorowanie dwuliniowe
-$(V\otimes W)\times U\to Z$. Otrzymujemy zatem odwzorowanie w treści
+gdy $H\colon V\times W\times U\to Z$ jest trójliniowe,
+przy ustalonym $u$ kładziemy $H_u(v,w):=H(v,w,u)$
+i faktoryzujemy je do liniowego $L_u\colon V\otimes W\to Z$.
+Równość
+$L_{au+bu'}(v\otimes w)=aL_u(v\otimes w)+bL_{u'}(v\otimes w)$
+na tensorach prostych daje $L_{au+bu'}=aL_u+bL_{u'}$.
+Stąd $(t,u)\mapsto L_u(t)$ jest dwuliniowe i faktoryzuje
+przez $(V\otimes W)\otimes U$. Otrzymujemy zatem odwzorowanie w treści
 stwierdzenia. Analogiczna konstrukcja w drugą stronę daje
 $v\otimes(w\otimes u)\mapsto(v\otimes w)\otimes u$.
 Oba złożenia są identycznością na tensorach prostych trzech
@@ -225,6 +311,11 @@ czynników, które rozpinają odpowiednie przestrzenie.
 Izomorfizm przestawiający dwa czynniki pochodzi z dwuliniowego
 odwzorowania $(v,w)\mapsto w\otimes v$; jego odwrotność powstaje
 po ponownym przestawieniu.
+Na współczynnikach $v\otimes w=\sum_{i,j}a_i b_j e_i\otimes f_j$
+przestawienie odpowiada transpozycji tablicy $(a_i b_j)$;
+przez liniowość ten sam opis działa dla dowolnego tensora.
+Jest to kanoniczny izomorfizm przestrzeni tensorowych,
+nie dosłowna równość ich elementów.
 Przy większej liczbie czynników dowolne dwa sposoby zmiany
 nawiasowania dają to samo odwzorowanie: na każdym tensorze
 prostym zachowują kolejność i wartości wszystkich czynników,
@@ -234,12 +325,19 @@ nawiasów również dla czterech i więcej przestrzeni.
 
 Kładziemy $V^{\otimes0}:=\mathbb K$ oraz
 $V^{\otimes k}:=V\otimes\cdots\otimes V$ dla $k\geq1$.
+Uzasadnia to kanoniczny izomorfizm
+$\mathbb K\otimes U\cong U$, $a\otimes u\mapsto au$,
+z odwrotnością $u\mapsto1\otimes u$; analogicznie
+$U\otimes\mathbb K\cong U$. Będziemy stosować te
+utożsamienia także wtedy, gdy $U=\mathbb K$.
 Jeżeli $\dim V=n$, iterowanie Twierdzenia~\ref{thm:baza-tensorowa}
 daje bazę $e_{i_1}\otimes\cdots\otimes e_{i_k}$ i wymiar
 \begin{equation}\label{eq:dim-potega-tensorowa}
  \dim V^{\otimes k}=n^k\qquad(k\geq0).
 \end{equation}
-Dla $k=0$ jest to konwencja $n^0=1$, również gdy $V=0$.
+Dla $k=0$ bazą jest $\{1\}$ i przyjmujemy $n^0=1$,
+również gdy $V=0$. Na przykład
+$\dim(\R^2)^{\otimes3}=2^3=8$.
 
 \section{Tensory mieszane i operacje na nich}
 \label{sec:operacje-tensorowe}
@@ -253,7 +351,7 @@ Dla nieujemnych $r,s$ przyjmujemy konwencję
 Tensory typu $(r,s)$ mają $r$ czynników wektorowych i $s$
 kowektorowych; powiązane z nimi funkcje wieloliniowe
 przyjmują $r$ kowektorów i $s$ wektorów. Na tensorze prostym
-wyznacza je wzór
+dla $r+s>0$ wyznacza je wzór
 \[
  (v_1\otimes\cdots\otimes v_r\otimes
  \alpha_1\otimes\cdots\otimes\alpha_s)
@@ -261,8 +359,10 @@ wyznacza je wzór
  =\prod_{a=1}^r\xi_a(v_a)\prod_{b=1}^s\alpha_b(w_b).
 \]
 Puste iloczyny mają wartość $1$. Dla $r=s=0$ mamy
-$T^0_0(V)=\mathbb K$; odwzorowanie bez argumentów określa po prostu
-skalar (dziedziną jest jednoelementowy zbiór pustych układów).
+$T^0_0(V)=\mathbb K$ po kanonicznym utożsamieniu
+$\mathbb K\otimes\mathbb K\cong\mathbb K$ z poprzedniej sekcji.
+Skalar $c$ przyjmuje na jedynym pustym układzie argumentów
+wartość $c$; dziedziną takiej funkcji jest zbiór jednoelementowy.
 
 \begin{twierdzenie}[Postać wieloliniowa tensora]
 \label{thm:tensor-wieloliniowy}
@@ -300,6 +400,10 @@ Otrzymany tensor ma te same wartości co $F$ na wszystkich
 układach elementów bazowych. Rozwinięcie argumentów i ich
 wieloliniowość dają równość na dowolnych argumentach.
 \end{proof}
+
+Współczynniki tensora są jego wartościami na wskazanych układach
+wektorów i kowektorów bazowych. Zmieniają się po zmianie bazy,
+choć sam tensor i określona przez niego funkcja pozostają te same.
 
 Przykładowo $T^0_2(V)$ to formy dwuliniowe na $V$.
 Związek tensorów z operatorami wymaga pilnowania,
@@ -356,6 +460,16 @@ złożenie też jest identycznością wszędzie. Wzór
 ale jest odwrotnością kanonicznej $\Theta_{V,W}$;
 dlatego jego wynik od bazy nie zależy.
 \end{proof}
+
+Tensor prosty $v\otimes\lambda$ działa na $w$ dwuetapowo:
+funkcjonał $\lambda$ odczytuje liczbę $\lambda(w)$,
+a ta liczba skaluje ustalony wektor $v$.
+Obraz operatora mieści się więc w prostej $\mathbb Kv$.
+Suma skończonej liczby takich tensorów daje operator skończonej
+rangi. Założenie skończonego wymiaru w Twierdzeniu~\ref{thm:tensor-hom}
+zapewnia, że każdy operator jest taką sumą;
+na przestrzeni nieskończenie wymiarowej identyczność nie ma
+skończonej rangi.
 
 Przy $W=V$ otrzymujemy
 $T^1_1(V)=V\otimes V^*\cong\operatorname{End}(V)$.
@@ -506,6 +620,10 @@ W takim porządku na przykład
  2&0&4&0\\0&3&0&6\\0&0&2&0\\0&0&0&3
  \end{pmatrix}.
 \]
+Rangę widać także w przykładzie osobliwym: dla
+$A=\operatorname{diag}(1,0)$ i $B=\operatorname{diag}(2,3)$
+macierz $A\otimes B=\operatorname{diag}(2,3,0,0)$ ma
+rangę $2=1\cdot2$.
 
 Iloczyn tensorów mieszanych wymaga ustalenia kolejności.
 Jeśli $S\in T^r_s(V)$ i $T\in T^{r'}_{s'}(V)$, ich surowy
@@ -534,6 +652,10 @@ w pierwotnej kolejności. Przykładowo kontrakcja pierwszej pary ma współczynn
 \]
 \end{definicja}
 
+Kontrakcja korzysta tylko z naturalnego sparowania
+$V^*\times V\to\mathbb K$; nie wymaga iloczynu skalarnego
+ani utożsamienia $V$ z $V^*$.
+
 \begin{stwierdzenie}[Kontrakcja i ślad]
 \label{prop:kontrakcja-slad}
 Kontrakcja jest liniowa i nie zależy od wyboru bazy. Dla
@@ -556,12 +678,35 @@ współczynniki $S^i{}_j$ są współczynnikami macierzy operatora,
 a powyższa suma jest jej śladem.
 \end{proof}
 
-\begin{przyklad}[Iloczyn i kontrakcja]
+Rysunek~\ref{fig:kontrakcja-slad} zapisuje tę samą operację
+dwiema drogami: bezpośrednią ewaluacją i śladem operatora.
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Latex, every node/.style={font=\small}]
+ \node (tensor) at (0,1.7) {$V\otimes V^*$};
+ \node (endo) at (4.6,1.7) {$\operatorname{End}(V)$};
+ \node (scalar) at (2.3,0) {$\mathbb K$};
+ \draw[->,thick,manifoldblue] (tensor)--node[above] {$\Theta_{V,V}$} (endo);
+ \draw[->,thick,manifoldgreen] (tensor)--node[below left] {$C$} (scalar);
+ \draw[->,thick,manifoldred] (endo)--node[below right] {$\operatorname{tr}$} (scalar);
+\end{tikzpicture}
+\caption{Kontrakcja jest śladem operatora odpowiadającego tensorowi:
+$C(v\otimes\alpha)=\alpha(v)=\operatorname{tr}(w\mapsto\alpha(w)v)$.}
+\label{fig:kontrakcja-slad}
+\end{figure}
+
+\begin{przyklad}[Ślad i wybór pary w kontrakcji]
 Niech $S=e_1\otimes e^1+2e_2\otimes e^2$ na $\R^2$.
 Wtedy $S(e_1)=e_1$, $S(e_2)=2e_2$, a $C(S)=3$.
 Dla $u\otimes v\otimes\alpha\in T^2_1(V)$ kontrakcja
 $v$ z $\alpha$ daje $\alpha(v)u$, zaś kontrakcja
-$u$ z $\alpha$ daje $\alpha(u)v$. Wybór pary ma znaczenie.
+$u$ z $\alpha$ daje $\alpha(u)v$. Wybór pary ma znaczenie:
+\[
+ C_{1,1}(e_1\otimes e_2\otimes e^1)=e_2,
+ \qquad C_{2,1}(e_1\otimes e_2\otimes e^1)=0.
+\]
+Wcześniejszy tensor $P$ z przykładu typu $(1,1)$ jest niezerowy,
+choć $C(P)=1-1=0$; dla $Q$ otrzymujemy $C(Q)=2$.
 \end{przyklad}
 
 \section{Algebra tensorowa i symetryzacja}
@@ -602,9 +747,11 @@ składników. Mnożenie tensorów jednorodnych definiujemy przez
 \]
 Rozszerzamy je dwuliniowo na $T(V)$; jedynką jest $1\in\mathbb K$.
 W stopniu $0$ mnożenie jest zwykłym mnożeniem przez skalar.
-Definicja na tensorach prostych przechodzi na całe potęgi tensorowe
-dzięki iterowanej własności uniwersalnej: jest liniowa w każdym
-czynniku. Skończoność nośnika sum zapewnia, że wynik znów należy do $T(V)$.
+Na całych potęgach to mnożenie jest kanonicznym złożeniem
+$V^{\otimes k}\otimes V^{\otimes\ell}\cong V^{\otimes(k+\ell)}$
+ze Stwierdzenia~\ref{prop:tensor-lacznosc}; dzięki temu nie zależy
+od zapisu tensorów jako sum prostych. Skończoność nośnika sum
+zapewnia, że wynik znów należy do $T(V)$.
 \end{definicja}
 \end{samepage}
 
@@ -642,6 +789,21 @@ musi przyjmować wartość $g(v_1)\cdots g(v_k)
 Stąd $g=\widehat f$.
 \end{proof}
 
+\begin{przyklad}[Słowa w dwóch generatorach]
+Niech $V=\R^2$ z bazą $e_1,e_2$, a
+$\mathcal A=M_2(\R)$. Zadajmy liniowo
+$f(e_1)=E_{12}$ i $f(e_2)=E_{21}$, gdzie $E_{ij}$ są
+jednostkami macierzowymi. Własność swobodna wyznacza
+$\widehat f\colon T(V)\to M_2(\R)$ i daje
+\[
+ \widehat f(e_1\otimes e_2)=E_{12}E_{21}=E_{11},
+ \qquad
+ \widehat f(e_2\otimes e_1)=E_{21}E_{12}=E_{22}.
+\]
+Obrazy są różne: w algebrze tensorowej kolejność liter
+w iloczynie zachowuje informację.
+\end{przyklad}
+
 Dla niezależnych $e_1,e_2$ tensory $e_1\otimes e_2$ i
 $e_2\otimes e_1$ są różnymi elementami $V^{\otimes2}$.
 Wymuszenie przemienności prowadzi do algebry symetrycznej,
@@ -670,7 +832,7 @@ $\operatorname{Sym}_0=\operatorname{Alt}_0=\id_{\mathbb K}$.
 
 \begin{twierdzenie}[Własności obu projekcji]
 \label{thm:sym-alt}
-Dla $t\in V^{\otimes k}$ zachodzi
+ Zachodzą równości operatorów
 \[
  \operatorname{Sym}_k^2=\operatorname{Sym}_k,\qquad
  \operatorname{Alt}_k^2=\operatorname{Alt}_k,
@@ -715,7 +877,7 @@ Dla $u=v$ drugi tensor znika. W stopniu $k=1$ obie
 projekcje są identycznością.
 
 \begin{przyklad}[Rozkład tensora dwukowariantnego]
-Niech $e^1,e^2$ będzie bazą $V^*$ i
+Niech $e_1,e_2$ będzie bazą $V$, a $e^1,e^2$ bazą dualną $V^*$; połóżmy
 $t=e^1\otimes e^2+3e^2\otimes e^1$.
 Wówczas $t(e_1,e_2)=1$, $t(e_2,e_1)=3$, a
 \[
@@ -782,10 +944,20 @@ rozmieszczenie $n-1$ przegród wśród $n+k-1$ pozycji,
 czyli $\binom{n+k-1}{k}$.
 
 Na koniec w stopniu $k$ zachodzi $q_kP_\sigma=q_k$,
-zatem $q_k\operatorname{Sym}_k=q_k$.
-Symetryzator zeruje generatory jednorodnej części ideału
-$J$: zamiana dwóch sąsiednich czynników nie zmienia
-średniej po wszystkich permutacjach. Przechodzi zatem
+zatem $q_k\operatorname{Sym}_k=q_k$. Dokładniej, permutację
+można złożyć z transpozycji sąsiednich miejsc, a po takiej
+zamianie klasy iloczynów są równe, bo $S(V)$ jest przemienna.
+Dla $k=0,1$ mamy $J\cap V^{\otimes k}=0$.
+Dla $k\ge2$ przestrzeń $J\cap V^{\otimes k}$ rozpinają elementy
+\[
+ a\otimes(u\otimes v-v\otimes u)\otimes b,
+ \qquad a\in V^{\otimes p},\quad b\in V^{\otimes q},
+ \quad p,q\ge0,\quad p+q=k-2.
+\]
+Tutaj $p=0$ lub $q=0$ oznacza czynnik skalarny.
+Symetryzator zeruje każdy taki element: transpozycja
+sąsiednich miejsc nie zmienia średniej po wszystkich
+permutacjach. Przechodzi zatem
 na odwzorowanie $S^k(V)\to\operatorname{im}\operatorname{Sym}_k$.
 W jedną stronę jego złożenie z $q_k$ daje symetryzator,
 w drugą $q_k\operatorname{Sym}_k=q_k$; są to izomorfizmy odwrotne.
@@ -796,6 +968,38 @@ jest identycznością. Jeśli $V=0$, to $S^0(V)=\mathbb K$
 i $S^k(V)=0$ dla $k>0$; wzoru z symbolem Newtona dla $n\ge1$
 nie stosujemy w tym przypadku.
 \end{proof}
+
+Izomorfizm $S(V)\cong\mathbb K[x_1,\ldots,x_n]$ powyżej zależy
+od wyboru bazy $e_i$. Natomiast
+$S^k(V)\cong\operatorname{im}\operatorname{Sym}_k$ jest kanoniczny:
+symetryzator i odwzorowanie ilorazowe nie potrzebują bazy.
+Dla $V=\R^2$ odwrotność ograniczenia $q_2$ ma postać
+\[
+ e_1^2\longmapsto e_1\otimes e_1,\qquad
+ e_1e_2\longmapsto\tfrac12(e_1\otimes e_2+e_2\otimes e_1),
+ \qquad e_2^2\longmapsto e_2\otimes e_2.
+\]
+W szczególności klasa $e_1e_2$ w ilorazie i jej symetryczny
+reprezentant w $V^{\otimes2}$ są różnymi opisami tego samego
+elementu po wskazanym izomorfizmie.
+Rysunek~\ref{fig:sym-iloraz} pokazuje obie drogi od tensora
+do jego klasy w $S^2(V)$.
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Latex, every node/.style={font=\small}]
+ \node (tensor) at (0,1.8) {$V^{\otimes2}$};
+ \node (sym) at (4.8,1.8) {$\operatorname{im}\operatorname{Sym}_2$};
+ \node (quot) at (2.4,0) {$S^2(V)$};
+ \draw[->,thick,manifoldblue] (tensor)--node[above] {$\operatorname{Sym}_2$} (sym);
+ \draw[->,thick,manifoldred] (tensor)--node[below left] {$q_2$} (quot);
+ \draw[->,thick,manifoldgreen] (sym)--node[below right] {$q_2$} (quot);
+\end{tikzpicture}
+\caption{Symetryzator wybiera średnią po permutacjach,
+a iloraz utożsamia tensory różniące się zamianą czynników.
+Prawa strzałka to ograniczenie $q_2$ do obrazu $\operatorname{Sym}_2$.
+Trójkąt komutuje: $q_2\circ\operatorname{Sym}_2=q_2$.}
+\label{fig:sym-iloraz}
+\end{figure}
 
 Dla $V=\R^2$ mamy np. bazę
 $S^2(V)=\langle e_1^2,e_1e_2,e_2^2\rangle$,
@@ -819,6 +1023,12 @@ Iloczyn w ilorazie zapisujemy $\wedge$, a obraz
 $v_1\otimes\cdots\otimes v_k$ oznaczamy
 $v_1\wedge\cdots\wedge v_k$.
 \end{definicja}
+
+Iloraz wymusza, by dwukrotne użycie tego samego kierunku
+dawało zero. Po rozwinięciu kwadratu $u+v$ będzie to oznaczało,
+że zamiana dwóch sąsiednich wektorów zmienia znak.
+Tak powstaje algebra uwzględniająca kolejność i orientację
+kierunków, odmienna od algebry słów $T(V)$.
 
 Ideał $I$ jest jednorodny: jego generatory mają stopień $2$,
 a każdy iloczyn z tensorami jednorodnymi ma określony stopień.
@@ -856,7 +1066,20 @@ $k\ell$ zamian miejsc sąsiednich wektorów. Każda zamiana
 zmienia znak, co dowodzi~\eqref{eq:wedge-graded} dla
 prostych wielowektorów. Te rozpinają składowe jednorodne,
 a dwuliniowość kończy dowód.
+Gdy $k=0$ lub $\ell=0$, wzór wynika też bezpośrednio
+z działania skalarów: każdy element $\Lambda^0(V)=\mathbb K$
+jest wielokrotnością jedynki.
 \end{proof}
+
+Na przykład dla trzech niezależnych wektorów
+$e_1,e_2,e_3$ mamy $e_1\wedge e_2=-e_2\wedge e_1$,
+ale
+\[
+ (e_1\wedge e_2)\wedge e_3
+ =e_3\wedge(e_1\wedge e_2).
+\]
+Przesunięcie $e_3$ przez dwa czynniki daje znak
+$(-1)^{2\cdot1}=+1$.
 
 \begin{twierdzenie}[Własność uniwersalna algebry zewnętrznej]
 \label{thm:wedge-algebra-universal}
@@ -872,6 +1095,11 @@ Z Twierdzenia~\ref{thm:algebra-tensorowa-universal} mamy
 jedyny homomorfizm $\widehat f\colon T(V)\to\mathcal A$
 przedłużający $f$. Dla każdego generatora ideału $I$
 zachodzi $\widehat f(v\otimes v)=f(v)^2=0$.
+Warunek ten oznacza także antykomutację obrazów:
+\[
+ 0=f(u+v)^2=f(u)f(v)+f(v)f(u),
+\]
+bo kwadraty $f(u)^2$ i $f(v)^2$ są zerowe.
 Jądro homomorfizmu jest ideałem obustronnym, więc zawiera
 cały $I$. Odwzorowanie
 $\bar f([t]):=\widehat f(t)$ na $T(V)/I$ jest zatem
@@ -881,6 +1109,20 @@ $v_1\wedge\cdots\wedge v_k$ przyjmować wartość
 $f(v_1)\cdots f(v_k)$; te klasy wraz z jedynką rozpinają
 $\Lambda(V)$. Stąd jednoznaczność.
 \end{proof}
+
+\begin{przyklad}[Przedłużenie odwzorowania liniowego]
+Niech $V=\R^2$ z bazą $e_1,e_2$ i $W=\R^2$ z bazą
+$a,b$. Zadajmy $f\colon V\to\Lambda(W)$ przez
+$f(e_1)=a$, $f(e_2)=2b$. Każdy $f(v)$ ma stopień $1$,
+więc $f(v)\wedge f(v)=0$. Twierdzenie daje homomorfizm
+$\bar f\colon\Lambda(V)\to\Lambda(W)$, dla którego
+$\bar f(1)=1$ i
+\[
+ \bar f(e_1\wedge e_2)=f(e_1)\wedge f(e_2)=2a\wedge b.
+\]
+Wartość na pozostałych iloczynach wyznaczają liniowość
+i mnożenie, bez wyboru dodatkowych reguł.
+\end{przyklad}
 
 Przypomnijmy związek alternowania ze znakiem. Jeśli odwzorowanie
 wieloliniowe $b$ znika przy powtórzeniu argumentów, to rozwinięcie
@@ -925,13 +1167,27 @@ $\widetilde b(v_1\otimes\cdots\otimes v_k)=b(v_1,\ldots,v_k)$.
 Jednorodna część $I\cap V^{\otimes k}$ jest rozpięta
 przez elementy postaci
 $x\otimes v\otimes v\otimes y$, gdzie $x,y$ są tensorami
-prostymi, a łączny stopień wynosi $k$. Na każdym z nich
+prostymi (dopuszczamy skalar w stopniu $0$), a łączny stopień
+wynosi $k$. Na każdym z nich
 $\widetilde b$ znika, bo w $b$ występują dwa jednakowe
 argumenty. Wobec tego $\widetilde b$ przechodzi na iloraz
 $\Lambda^k(V)$ i określa $\bar b$.
 Wielowektory proste rozpinają ten iloraz, więc faktoryzacja
 jest jednoznaczna.
 \end{proof}
+
+\begin{przyklad}[Wyznacznik na drugiej potędze zewnętrznej]
+Na $V=\R^2$ funkcja $b(v,w)=\det(v,w)$ jest dwuliniowa
+i alternująca. Własność uniwersalna daje jedyne liniowe
+$\bar b\colon\Lambda^2(\R^2)\to\R$ z
+$\bar b(v\wedge w)=\det(v,w)$.
+Ponieważ $\bar b(e_1\wedge e_2)=1$, wielowektor
+$e_1\wedge e_2$ nie jest zerowy. W
+Sekcji~\ref{sec:iloczyn-tensorowy} ten sam
+wyznacznik działał na całym $V\otimes V$;
+tutaj dodatkowo przechodzi przez iloraz, bo
+$\det(v,v)=0$.
+\end{przyklad}
 
 \begin{twierdzenie}[Antysymetryzacja a iloczyn zewnętrzny]
 \label{thm:wedge-alt}
@@ -986,7 +1242,12 @@ $u\otimes v$. Dopiero jego kanoniczny reprezentant w
 \emph{przestrzeni tensorów antysymetrycznych}, dany przez $j_2$,
 ma postać $\tfrac12(u\otimes v-v\otimes u)$. W szczególności
 nie wolno utożsamiać tych dwóch zapisów bez podania
-normalizacji. Dla kowektorów standardowe odwzorowanie
+normalizacji. Sprawdzenie w ilorazie daje
+\[
+ q_2\!\left(\tfrac12(u\otimes v-v\otimes u)\right)
+ =\tfrac12(u\wedge v-v\wedge u)=u\wedge v.
+\]
+Dla kowektorów standardowe odwzorowanie
 $\Lambda^k(V^*)$ na funkcje alternujące na $V^k$
 przyjmiemy z normalizacją przez wyznacznik w
 Sekcji~\ref{sec:wyznacznik}.
@@ -1011,6 +1272,8 @@ Dla $k>n$ zachodzi $\Lambda^k(V)=0$. W szczególności
 \end{equation}
 \end{twierdzenie}
 \begin{proof}
+Jeśli $k=0$, mamy $\Lambda^0(V)=\mathbb K$ z bazą $\{1\}$.
+Dalej niech $k\geq1$.
 Rozwijamy każdy czynnik $v_a$ w bazie $e_i$ i korzystamy
 z wieloliniowości iloczynu zewnętrznego. Otrzymujemy sumę
 wielowektorów $e_{j_1}\wedge\cdots\wedge e_{j_k}$.
@@ -1021,7 +1284,8 @@ z tezy rozpięła więc $\Lambda^k(V)$; dla $k>n$ wszystkie
 ciągi $k$ indeksów mają powtórzenie, więc
 cała przestrzeń jest zerowa.
 
-Aby udowodnić niezależność, nie wystarczy samo porządkowanie.
+Dla $1\leq k\leq n$ udowodnimy niezależność;
+nie wystarczy do tego samo porządkowanie.
 Dla rosnącego indeksu $I=(i_1<\cdots<i_k)$ i
 $v_b=\sum_j a_{jb}e_j$ definiujemy
 \begin{equation}\label{eq:wedge-wspolrzedne-minor}
@@ -1044,6 +1308,14 @@ jest zerowa, zastosowanie kolejno $\overline D_I$ daje
 $c_I=0$ dla każdego $I$. Rodzina jest liniowo niezależna.
 Indeksów rosnących długości $k$ jest $\binom nk$;
 sumę wymiarów obliczamy z dwumianu Newtona.
+Ponieważ $\overline D_I$ odczytuje współczynnik przy $e_I$,
+otrzymujemy także jawny wzór współrzędnych
+\begin{equation}\label{eq:wedge-rozwiniecie-minory}
+ v_1\wedge\cdots\wedge v_k
+ =\sum_{1\leq i_1<\cdots<i_k\leq n}
+ D_{(i_1,\ldots,i_k)}(v_1,\ldots,v_k)
+ e_{i_1}\wedge\cdots\wedge e_{i_k}.
+\end{equation}
 \end{proof}
 
 \begin{przyklad}[Współczynniki $u\wedge v$]
@@ -1054,16 +1326,74 @@ Dla $V=\R^3$, $u=e_1+2e_2$ i $v=e_2+e_3$ mamy
 \]
 Współczynnik przy $e_i\wedge e_j$ jest wyznacznikiem
 $\begin{psmallmatrix}u^i&v^i\\u^j&v^j\end{psmallmatrix}
-=u^iv^j-u^jv^i$, zgodnie z~\eqref{eq:wedge-wspolrzedne-minor}.
+=u^iv^j-u^jv^i$, zgodnie z~\eqref{eq:wedge-rozwiniecie-minory}.
+Tutaj macierz dwóch kolumn ma postać
+\[
+ [u\ v]=\begin{pmatrix}1&0\\2&1\\0&1\end{pmatrix}.
+\]
+Jej trzy minory wierszy $(1,2)$, $(1,3)$ i $(2,3)$
+wynoszą odpowiednio $1$, $1$ i $2$; są dokładnie trzema
+współczynnikami w otrzymanym rozwinięciu $u\wedge v$.
 \end{przyklad}
+
+W standardowej euklidesowej $\R^3$ minory można odczytać
+jako zorientowane pola rzutów ortogonalnych równoległoboku rozpiętego
+przez $(u,v)$ na trzy płaszczyzny współrzędnych.
+Rysunek~\ref{fig:wedge-minory-rzuty} przedstawia rzuty
+z powyższego przykładu w tej samej skali.
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Latex, every node/.style={font=\small}]
+ \begin{scope}[xshift=-4cm]
+  \fill[manifoldblue!18] (0,0)--(.6,1.2)--(.6,1.8)--(0,.6)--cycle;
+  \draw[manifoldblue!70] (0,0)--(.6,1.2)--(.6,1.8)--(0,.6)--cycle;
+  \draw[gray!70,->] (-.2,0)--(2,0) node[right] {$e_1$};
+  \draw[gray!70,->] (0,-.2)--(0,2.1) node[above] {$e_2$};
+  \draw[manifoldblue,thick,->] (0,0)--(.6,1.2);
+  \draw[manifoldred,thick,->] (0,0)--(0,.6);
+  \node at (.85,-.65) {$D_{12}=1$};
+ \end{scope}
+ \begin{scope}
+  \fill[manifoldblue!18] (0,0)--(.6,0)--(.6,.6)--(0,.6)--cycle;
+  \draw[manifoldblue!70] (0,0)--(.6,0)--(.6,.6)--(0,.6)--cycle;
+  \draw[gray!70,->] (-.2,0)--(2,0) node[right] {$e_1$};
+  \draw[gray!70,->] (0,-.2)--(0,2.1) node[above] {$e_3$};
+  \draw[manifoldblue,thick,->] (0,0)--(.6,0);
+  \draw[manifoldred,thick,->] (0,0)--(0,.6);
+  \node at (.85,-.65) {$D_{13}=1$};
+ \end{scope}
+ \begin{scope}[xshift=4cm]
+  \fill[manifoldblue!18] (0,0)--(1.2,0)--(1.8,.6)--(.6,.6)--cycle;
+  \draw[manifoldblue!70] (0,0)--(1.2,0)--(1.8,.6)--(.6,.6)--cycle;
+  \draw[gray!70,->] (-.2,0)--(2.2,0) node[right] {$e_2$};
+  \draw[gray!70,->] (0,-.2)--(0,2.1) node[above] {$e_3$};
+  \draw[manifoldblue,thick,->] (0,0)--(1.2,0);
+  \draw[manifoldred,thick,->] (0,0)--(.6,.6);
+  \node at (.85,-.65) {$D_{23}=2$};
+ \end{scope}
+\end{tikzpicture}
+\caption{Rzuty równoległoboku $(u,v)$ na płaszczyzny
+rozpięte przez $(e_1,e_2)$, $(e_1,e_3)$ i $(e_2,e_3)$
+w standardowej $\R^3$.
+Niebieska strzałka to rzut $u$, czerwona to rzut $v$;
+zorientowane pola rzutów wynoszą odpowiednio $1,1,2$.}
+\label{fig:wedge-minory-rzuty}
+\end{figure}
 
 \begin{przyklad}[Nie każdy dwuwektor jest prosty]
 W $\Lambda^2(\R^4)$ weźmy
 $\omega=e_1\wedge e_2+e_3\wedge e_4$. Wówczas
 \[
+\begin{aligned}
  \omega\wedge\omega
- =2e_1\wedge e_2\wedge e_3\wedge e_4\ne0.
+ &=(e_1\wedge e_2)\wedge(e_3\wedge e_4)
+   +(e_3\wedge e_4)\wedge(e_1\wedge e_2)\\
+ &=2e_1\wedge e_2\wedge e_3\wedge e_4\ne0.
+\end{aligned}
 \]
+Oba kwadraty składników prostych znikają, a dwa składniki
+mieszane są równe, ponieważ zamiana bloków stopni $2$ i $2$
+daje znak $(-1)^{2\cdot2}=+1$.
 Natomiast $(u\wedge v)\wedge(u\wedge v)=0$ dla każdego
 $u,v$, gdyż $u$ występuje dwa razy. Zatem $\omega$ nie
 jest pojedynczym iloczynem $u\wedge v$. Pokazuje to, że
@@ -1073,6 +1403,16 @@ prostych.
 
 \section{Potęgi zewnętrzne i wyznacznik}
 \label{sec:wyznacznik}
+
+Iloczyn $v_1\wedge\cdots\wedge v_k$ zapisuje
+antysymetryczną informację o $k$ wektorach. W standardowej $\R^n$
+jego współczynniki opisują zorientowane objętości
+rzutów na płaszczyzny współrzędnych. Odwzorowanie liniowe
+przenosi każdy wektor, a więc także ich iloczyn; macierz
+działania na wielowektorach ma w odpowiednich bazach minory
+jako współczynniki. Dla operatora
+$A\colon V\to V$ i $k=n=\dim V$ przestrzeń $\Lambda^n(V)$
+jest jednowymiarowa, więc pozostaje jeden skalar: wyznacznik.
 
 \begin{twierdzenie}[Potęga zewnętrzna odwzorowania]
 \label{thm:potega-zewn-operatora}
@@ -1182,6 +1522,7 @@ Wówczas
 Wartość $5$ jest polem równoległoboku ze znakiem określonym
 przez kolejność $(u,v)$; pole geometryczne wynosi $|5|$.
 Zmiana kolejności wektorów daje $v\wedge u=-5e_1\wedge e_2$.
+Para $(u,v)$ ma tu orientację dodatnią względem $(e_1,e_2)$.
 \end{przyklad}
 
 \begin{figure}[H]
@@ -1259,6 +1600,30 @@ Dla $k=0$ obie strony są równe $1$. Gdy $k>n$,
 nie ma indeksów $K$ i suma jest zerowa, zgodnie z tym,
 że $\Lambda^k(\mathbb K^n)=0$.
 \end{proof}
+
+\begin{przyklad}[Obliczenie wzoru Cauchy'ego--Bineta]
+Niech
+\[
+ A=\begin{pmatrix}1&2&0\\0&1&1\end{pmatrix},\qquad
+ B=\begin{pmatrix}1&0\\0&1\\1&2\end{pmatrix}.
+\]
+Macierze $\Lambda^2A\colon\Lambda^2\R^3\to\Lambda^2\R^2$
+i $\Lambda^2B\colon\Lambda^2\R^2\to\Lambda^2\R^3$ mają,
+w uporządkowaniu indeksów $12,13,23$, odpowiednio postacie
+\[
+ [\Lambda^2A]=\begin{pmatrix}1&1&2\end{pmatrix},\qquad
+ [\Lambda^2B]=\begin{pmatrix}1\\2\\-1\end{pmatrix}.
+\]
+Na przykład minor $A_{\{1,2\},\{2,3\}}$ wynosi
+$\det\bigl(\begin{smallmatrix}2&0\\1&1\end{smallmatrix}\bigr)=2$,
+a minor $B_{\{2,3\},\{1,2\}}$ wynosi
+$\det\bigl(\begin{smallmatrix}0&1\\1&2\end{smallmatrix}\bigr)=-1$.
+Zatem $\det(AB)=1\cdot1+1\cdot2+2\cdot(-1)=1$.
+Bezpośrednio $AB=\bigl(\begin{smallmatrix}1&2\\1&3\end{smallmatrix}\bigr)$,
+również o wyznaczniku $1$. Wzór sumuje wkłady trzech
+możliwych płaszczyzn współrzędnych przestrzeni pośredniej $\R^3$;
+ich znaki mogą się znosić.
+\end{przyklad}
 
 Oznaczamy przez $\operatorname{Alt}^k(V;\mathbb K)$ przestrzeń
 alternujących $k$-liniowych funkcji $V^k\to\mathbb K$.
@@ -1368,10 +1733,16 @@ Na obszarze, gdzie $E$ i $F$ mają bazy lokalne
 $e_1,\ldots,e_a$ oraz $f_1,\ldots,f_b$, ich $ab$
 iloczynów $e_u\otimes f_v$ stanowi bazę każdego włókna
 $E_p\otimes F_p$ na mocy twierdzenia o bazie iloczynu
-tensorowego. Gdy zmienimy obie bazy, wzór na współczynniki
-iloczynu prostego pokazuje, że nowe współczynniki otrzymujemy
-przez przemnożenie starych macierzą $g_{ji}\otimes h_{ji}$;
-jej elementy są iloczynami gładkich funkcji. Na przecięciu
+tensorowego. Oznaczmy przez $v_i\in\R^a$ i $w_i\in\R^b$
+współrzędne wektorów $v\in E_p$, $w\in F_p$ w lokalnych
+trywializacjach o numerze $i$. Przy konwencji przejścia
+$v_j=g_{ji}(p)v_i$ i $w_j=h_{ji}(p)w_i$ dostajemy
+\[
+ (v\otimes w)_j=(g_{ji}(p)\otimes h_{ji}(p))(v\otimes w)_i.
+\]
+Tensory proste rozpinają włókno, więc ta sama macierz działa
+na wszystkie jego elementy; jej współczynniki są iloczynami
+gładkich funkcji. Na przecięciu
 trzech obszarów własność złożenia z
 Twierdzenia~\ref{thm:tensor-operatorow} daje
 \[
@@ -1397,6 +1768,10 @@ Dokładnie: jest gładkim przekrojem wiązki
 \end{equation}
 Przy wykładniku $0$ rozumiemy czynnik jako wiązkę
 trywialną $M\times\R$.
+Jeśli $\dim M=n$, jej rząd wynosi $n^{r+s}$, przy umowie,
+że pusta potęga tensorowa ma rząd $1$. Przekrój wybiera
+jeden tensor z każdego włókna, a gładkość określa, jak
+ten wybór zmienia się przy przesuwaniu punktu $p$.
 \end{definicja}
 
 W lokalnej mapie $x^1,\ldots,x^n$ bazami włókien są
@@ -1416,8 +1791,8 @@ przepisanie tej samej wartości $T_p$ w nowych bazach
 narzuca współczynnikom prawa transformacji, które teraz rozpiszemy.
 Niech $x$ i $y$ będą dwiema mapami wokół $p$, a
 \[
- A^a{}_i=\frac{\partial y^a}{\partial x^i}(p),\qquad
- B^j{}_b=\frac{\partial x^j}{\partial y^b}(p),\qquad B=A^{-1}.
+ A^a{}_i(p)=\frac{\partial y^a}{\partial x^i}(p),\qquad
+ B^j{}_b(p)=\frac{\partial x^j}{\partial y^b}(p),\qquad B(p)=A(p)^{-1}.
 \]
 Reguła łańcucha i dualność dają
 \[
@@ -1437,7 +1812,8 @@ Wszystkie wartości odnoszą się do tego samego punktu $p$;
 zmienia się jedynie jego opis i baza. Każdy górny indeks wnosi
 macierz Jacobiego $A$, a każdy dolny jej odwrotność $B$.
 Odwracając zamianę map, odzyskujemy stare współczynniki.
-Ponieważ $A,B$ są gładkie, gładkość współczynników w jednej
+Ponieważ $A(p),B(p)$ zależą gładko od $p$ na przecięciu
+dziedzin map, gładkość współczynników w jednej
 mapie pociąga ją w każdej innej.
 
 Wiązka~\eqref{eq:wiazka-tensorowa} powstaje
@@ -1478,12 +1854,66 @@ wektory styczne w jednym punkcie i zwracający liczbę.
 Sama lista jego współczynników zmieni się przy zamianie
 współrzędnych, ale wartość $g(u,v)$ pozostanie ta sama.
 Na jednowymiarowym przykładzie widać konkretny czynnik:
-dla $x>0$ i $y=x^2$ tensor $\dd x\otimes\dd x$ ma zapis
+dla $x>0$ i $y=x^2$ tensor $g_1=\dd x\otimes\dd x$ ma zapis
 $\frac1{4y}\dd y\otimes\dd y$, bo
 $\dd x=\frac1{2\sqrt y}\dd y$. Zmiana współrzędnych nie
 pozwala więc po prostu zastąpić symbolu $x$ symbolem $y$
 przy pozostawieniu tych samych współczynników.
+Jeśli $u=\partial_x$ w punkcie $x=a>0$, to
+$u=2a\partial_y$ i w obu mapach otrzymujemy tę samą
+wartość: $g_1(u,u)=1=(4a^2)^{-1}(2a)^2$.
+W tym przykładzie dla tensora identycznościowego typu $(1,1)$
+czynniki Jacobiego się znoszą:
+$\partial_x\otimes\dd x
+ =(2x\partial_y)\otimes((2x)^{-1}\dd y)
+ =\partial_y\otimes\dd y$.
 \end{przyklad}
+
+\begin{przyklad}[Metryka euklidesowa we współrzędnych biegunowych]
+Na $\R^2\setminus\{0\}$, lokalnie przy
+$x=r\cos\theta$, $y=r\sin\theta$, mamy
+\[
+ \dd x=\cos\theta\,\dd r-r\sin\theta\,\dd\theta,
+ \qquad
+ \dd y=\sin\theta\,\dd r+r\cos\theta\,\dd\theta.
+\]
+Po podstawieniu do $g=\dd x\otimes\dd x+
+\dd y\otimes\dd y$ wyrazy mieszane się znoszą, a
+$\sin^2\theta+\cos^2\theta=1$ daje
+\[
+ g=\dd r\otimes\dd r+r^2\dd\theta\otimes\dd\theta.
+\]
+Istotnie $\partial_r=(\cos\theta,\sin\theta)$ ma
+długość $1$, natomiast
+$\partial_\theta=(-r\sin\theta,r\cos\theta)$ ma
+długość $r$. Zmiana kąta o małą wartość $\delta\theta$
+przemieszcza punkt o długość w przybliżeniu $r|\delta\theta|$.
+Ilustruje to Rysunek~\ref{fig:tensor-biegunowe}.
+\end{przyklad}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Latex,scale=1.0]
+ \coordinate (O) at (0,0);
+ \coordinate (P) at ({2.3*cos(30)},{2.3*sin(30)});
+ \draw[->,gray!65] (-0.2,0)--(3.4,0) node[right] {$x$};
+ \draw[->,gray!65] (0,-0.2)--(0,3.45) node[above] {$y$};
+ \draw[gray!65] (2.3,0) arc[start angle=0,end angle=70,radius=2.3];
+ \draw[gray!65] (0.62,0) arc[start angle=0,end angle=30,radius=0.62];
+ \draw[->,thick,manifoldblue] (O)--(P)
+    node[pos=0.57,below] {$r$};
+ \fill[manifoldblue] (P) circle (1.5pt) node[below right] {$p$};
+ \draw[->,very thick,manifoldred] (P)--++({cos(30)},{sin(30)})
+    node[right] {$\partial_r$, długość $1$};
+ \draw[->,very thick,manifoldgreen] (P)--++({-2.3*sin(30)},{2.3*cos(30)})
+    node[above] {$\partial_\theta$, długość $r$};
+ \node at (0.87,0.31) {$\theta$};
+\end{tikzpicture}
+\caption{Współrzędne biegunowe: wektor $\partial_r$ jest radialny,
+a $\partial_\theta$ styczny do okręgu o promieniu $r$.
+Współczynnik $r^2$ w metryce jest kwadratem długości drugiego wektora.}
+\label{fig:tensor-biegunowe}
+\end{figure}
 
 Podobnie $\Lambda^k(T_pM)$ ma wymiar $\binom nk$.
 W przypadku różniczki $\dd F_p\colon T_pM\to T_{F(p)}N$
@@ -1573,6 +2003,28 @@ na jednej parze:
 Obie strony są cofnięciem funkcji $p\mapsto\alpha_p(Y_p)$;
 z liniowości wynikają analogiczne równości dla innych tensorów.
 
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Latex]
+ \node (Tp) at (0,2) {$T_pM$};
+ \node (Tq) at (5.2,2) {$T_{\Phi_t(p)}M$};
+ \node (Tps) at (0,0.75) {$T_p^*M$};
+ \node (Tqs) at (5.2,0.75) {$T_{\Phi_t(p)}^*M$};
+ \draw[->,thick,manifoldred] (Tq) --
+    node[above] {$(\dd\Phi_t|_p)^{-1}$} (Tp);
+ \draw[->,thick,manifoldblue] (Tqs) --
+    node[above] {$(\dd\Phi_t|_p)^*$} (Tps);
+ \node at (0,-0.15) {$p$};
+ \node at (5.2,-0.15) {$\Phi_t(p)$};
+ \draw[->,gray!65] (0.65,-0.15) --
+    node[below] {$\Phi_t$} (4.45,-0.15);
+\end{tikzpicture}
+\caption{Cofnięcie przez przepływ przenosi wektor i kowektor
+z włókien nad $\Phi_t(p)$ do włókien nad $p$.
+Wektor przenosi odwrotna różniczka, a kowektor różniczka dualna.}
+\label{fig:lie-tensor-transport}
+\end{figure}
+
 \begin{definicja}[Pochodna Liego dowolnego pola tensorowego]
 \index{pochodna liego dowolnego pola tensorowego@Pochodna Liego dowolnego pola tensorowego}
 \label{def:lie-tensor}
@@ -1583,6 +2035,11 @@ Dla pola tensorowego $T$ dowolnego typu kładziemy
  :=\left.\frac{\dd}{\dd t}\right|_{t=0}
  (\Phi_t^*T)_p.
 \end{equation}
+W otoczeniu każdego $p$ przepływ jest określony dla $t$
+z pewnego przedziału wokół zera; dla takiego $t$
+$\Phi_t$ jest dyfeomorfizmem między odpowiednimi otwartymi
+podzbiorami $M$. Transport obrazuje
+Rysunek~\ref{fig:lie-tensor-transport}.
 Każdy tensor $(\Phi_t^*T)_p$ należy do tej samej
 przestrzeni $T^r_s(T_pM)$, zatem pochodna jest
 zwykłą pochodną krzywej w przestrzeni liniowej. Jest to gładkie
@@ -1732,9 +2189,42 @@ pozostaje funkcją stałą: $1+(-1)=0$ w regule
 Leibniza dla ewaluacji.
 \end{przyklad}
 
+\begin{przyklad}[Znoszenie się znaków w tensorze mieszanym]
+Dla tego samego przepływu weźmy
+$S=\partial_x\otimes\dd x$. Wówczas
+\[
+ \Phi_t^*S=(e^{-t}\partial_x)\otimes(e^t\dd x)=S,
+ \qquad \Lie_XS=0.
+\]
+Formuła współrzędnych potwierdza to dla jedynego
+niezerowego współczynnika $S^x{}_x=1$:
+$X(S^x{}_x)-S^x{}_x\partial_xX^x+
+S^x{}_x\partial_xX^x=0-1+1=0$.
+Kontrakcja $C(S)=\dd x(\partial_x)=1$ również ma
+pochodną Liego równą zeru, zgodnie z
+\eqref{eq:lie-kontrakcja}.
+\end{przyklad}
+
+Jeżeli tensor metryczny ma postać
+$g=\sum_{i,j}g_{ij}\dd x^i\otimes\dd x^j$, to
+ogólny wzór~\eqref{eq:lie-tensor-komponenty} przyjmuje postać
+\[
+ (\Lie_Xg)_{ij}
+ =\sum_a\bigl(X^a\partial_a g_{ij}
+  +g_{aj}\partial_iX^a+g_{ia}\partial_jX^a\bigr).
+\]
+Ostatnie dwa wyrazy opisują zmianę dwóch argumentów
+metryki pod przepływem.
+
 \begin{przyklad}[Jak zmienia się tensor metryczny]
 Dla $g=\dd x\otimes\dd x+\dd y\otimes\dd y$ i
 $X=x\partial_x$ mamy
+\[
+ (\Phi_t^*g)_p(v,w)
+ =g_{\Phi_t(p)}(\dd\Phi_t|_p v,\dd\Phi_t|_p w).
+\]
+Ponieważ $\dd\Phi_t$ mnoży składową $x$ wektora przez
+$e^t$, otrzymujemy
 \[
  \Phi_t^*g=e^{2t}\dd x\otimes\dd x
              +\dd y\otimes\dd y,\qquad
