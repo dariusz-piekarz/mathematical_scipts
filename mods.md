@@ -1,5 +1,60 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-11-06 — pełny przegląd rozdziału 6, sekcje 1–9
+
+### Problem
+
+Rozdział 6 zawierał poprawny szkielet algebry homologicznej, ale
+część pojęć nie miała obliczonego przykładu, a niektóre przejścia
+wymagały od czytelnika własnego rachunku. Dotyczyło to zwłaszcza
+rozszczepienia ciągu, różnicy między cyklem i brzegiem, działania
+odwzorowania łączącego, skasowania generatorów, filtracji i
+zastosowania lematu pięciu. Krótkie wzory bywały wydzielone z tekstu
+bez potrzeby, co zaburzało jednolity styl przyjęty po rozdziale 5.
+
+### Rozwiązanie i wpływ
+
+- W §§6.1–6.3 dodano kontrast rozszczepionego i nierozszczepionego
+  rozszerzenia $\Z/2\Z$, obliczenie homologii trójkąta i jego obwodu,
+  przykład działania odwzorowania łańcuchowego na klasach modulo $m$
+  oraz obliczenie $\delta_1=\times m$. Nowy rysunek wyjaśnia orientacje
+  krawędzi, a podpis istniejącego schematu precyzuje domenę $i^{-1}$.
+- W §§6.4–6.6 dopisano kohomologiczny przykład $\delta^0=\times2$,
+  rachunek kasowania pary w macierzy $2\times2$ z zachowaną torsją,
+  interpretację kochain względnych, wzór dla ciągu potrójnego oraz
+  dwa warianty filtracji. Rysunek pokazuje rolę różniczki w powstaniu
+  albo zabiciu klasy.
+- W §§6.7–6.9 dowiedziono niezależności wzoru Mayera--Vietorisa od
+  rozkładu cyklu, obliczono przykład dwóch krawędzi i narysowano je.
+  Sprawdzono niezależność $\delta$ przy redukcji modulo $m$, podano
+  kontrprzykład bez iniektywności $\times m$, a lemat pięciu
+  zastosowano do porównania krótkich ciągów kompleksów.
+- Krótkie, pojedyncze rachunki przeniesiono do zdań. Dwa pełne
+  rachunki tego samego trójkąta zastąpiono jednym rachunkiem w §6.2
+  i krótkim zastosowaniem charakterystyki Eulera w §6.8.
+
+Zmiany wydłużają źródło i tom I o dwie strony, lecz pozwalają
+odtworzyć argumenty na generatorach i zobaczyć sens strzałek
+łączących. Zachowano osobne wiersze dla ważnych ciągów, diagramów
+i dłuższych obliczeń. Zmieniono źródło rozdziału 6, PDF tomu I,
+rejestr przeglądu i plan. Następny etap zaczyna §7.1.
+
+### Weryfikacja
+
+Niezależny audyt matematyczny §§6.1–6.9 nie znalazł błędów w nowych
+rachunkach, znakach ani hipotezach. Konstrukcje długich ciągów i
+homotopii porównano z The Stacks Project, a znaki Mayera--Vietorisa
+z Hatcherem. Audyt statyczny nie znalazł zdublowanych etykiet ani
+brakujących odsyłaczy. `git diff --check` przeszedł. Po ukończeniu
+całego rozdziału złożono wyłącznie tom I; końcowe wywołanie `latexmk`
+zwróciło kod 0, a PDF ma 239 stron. Log nie ma błędów, `Overfull`
+ani nierozwiązanych odsyłaczy; indeks przyjął 122 hasła bez odrzuceń
+i ostrzeżeń. Obejrzano fizyczne strony 160, 161, 169 i 170 oraz
+powiększenie szerokiego schematu na stronie 161; etykiety i kolory
+są czytelne. Skopiowany PDF ma identyczną sumę SHA-256 jak plik
+z katalogu budowania. Dwa wcześniejsze ostrzeżenia `h`→`ht` i jeden
+`Underfull` pozostają poza rozdziałem 6.
+
 ## 2026-11-06 — pełny przegląd rozdziału 5, sekcje 1–5
 
 ### Problem

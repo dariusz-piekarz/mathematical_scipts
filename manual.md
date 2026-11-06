@@ -73,6 +73,51 @@ oraz dodatki). Starsze wpisy poniżej dokumentują rzeczywiście
 wykonane wówczas polecenia dla dawnego podziału na trzy tomy;
 ich numery stron i nazwy PDF-ów są historyczne.
 
+### Rozdział 6, sekcje 1–9 — ukończony etap z 6 listopada 2026
+
+Katalog projektu: `geometria i topologia różniczkowa`; źródło:
+`tex/rozdzialy/06-algebra-homologiczna.tex`; plik główny tomu I:
+`geometria_tom1.tex`. Użyto istniejącego środowiska Windows
+PowerShell, MiKTeX 25.12, `latexmk` 4.88, `pdftoppm` i Perla z
+`C:\Program Files\Git\usr\bin`. Nie instalowano zależności ani nie
+pobierano danych. Skład uruchomiono dopiero po ukończeniu całego
+rozdziału i wyłącznie dla tomu I.
+
+**Polecenia faktycznie wykonane** w katalogu projektu:
+
+```powershell
+$env:PATH = 'C:\Program Files\Git\usr\bin;' + $env:PATH
+latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=build/tomy geometria_tom1.tex *> build/tomy/review_ch6_build.txt
+latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=build/tomy geometria_tom1.tex
+pdfinfo 'build/tomy/geometria_tom1.pdf' | Select-String -Pattern 'Pages|Page size|File size'
+rg -n -i 'LaTeX Warning|Overfull|Underfull|undefined references|multiply defined|Fatal error|! LaTeX Error' build/tomy/geometria_tom1.log
+$pages=@(160,161,169,170)
+foreach($n in $pages){pdftoppm -f $n -l $n -singlefile -png -r 115 'build/tomy/geometria_tom1.pdf' "build/tomy/ch6_p$n"}
+pdftoppm -f 161 -l 161 -singlefile -png -r 180 'build/tomy/geometria_tom1.pdf' 'build/tomy/ch6_p161_hi'
+Copy-Item -LiteralPath 'build/tomy/geometria_tom1.pdf' -Destination 'geometria_tom1.pdf' -Force
+Get-FileHash -Algorithm SHA256 -LiteralPath 'build/tomy/geometria_tom1.pdf'
+Get-FileHash -Algorithm SHA256 -LiteralPath 'geometria_tom1.pdf'
+```
+
+Pierwsze wywołanie utworzyło końcowy PDF i indeks, ale PowerShell
+zwrócił kod 1, gdy komunikat `makeindex` ze stderr zapisał jako
+`NativeCommandError`. Drugie wywołanie `latexmk` bez przekierowania
+zakończyło się kodem 0 i potwierdziło aktualność wszystkich celów.
+PDF ma 239 stron. Końcowy log nie ma błędów, nierozwiązanych
+odsyłaczy ani `Overfull`; dwa wcześniejsze ostrzeżenia `h`→`ht`
+i jeden `Underfull` leżą poza rozdziałem 6. Indeks przyjął 122 hasła,
+0 odrzucił i nie zgłosił ostrzeżeń. Obejrzano wszystkie cztery strony
+z rysunkami oraz powiększenie schematu na stronie 161. Suma SHA-256
+obu kopii PDF jest identyczna:
+`B3C171A5C2FAD9B4E0503CBBC441940D8B04EC394857B4FE2AEE2E4EB2E577DD`.
+
+**Instrukcja przygotowana do samodzielnego wykonania.** Na innym
+stanowisku otwórz PowerShell w katalogu projektu, zapewnij MiKTeX,
+`latexmk`, Perl, `pdfinfo` i `pdftoppm` w `PATH`, po ukończeniu
+rozdziału uruchom skład tomu I bez przekierowania stderr, sprawdź
+log, indeks i strony rysunków, a następnie skopiuj PDF i porównaj
+sumy SHA-256. Fizyczne numery stron zmienią się po dalszych edycjach.
+
 ### Rozdział 5, sekcje 1–5 — ukończony etap z 6 listopada 2026
 
 Katalog projektu: `geometria i topologia różniczkowa`; źródło:

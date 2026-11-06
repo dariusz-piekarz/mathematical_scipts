@@ -14,6 +14,58 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 6, §§6.1–6.9 — pełny przegląd dydaktyczny (2026-11-06)
+
+Przejrzano kolejno cały rozdział algebry homologicznej, porównując
+szczegółowość dowodów, przykładów, intuicji i rysunków z rozdziałem 1
+oraz §§2.1–2.2. W §§6.1–6.3 rozpisano znaczenie dokładności i
+rozszczepienia, w tym dwa rozszerzenia tych samych modułów
+$\Z/2\Z$ przez $\Z/2\Z$ z różnym modułem środkowym.
+Obliczono homologię obwodu i wypełnionego trójkąta, działanie
+odwzorowania łańcuchowego na $\Z/m\Z$ oraz przykład, w którym
+odwzorowanie łączące jest mnożeniem przez $m$. Nowy rysunek
+trójkąta pokazuje znaki w brzegu, a podpis schematu $\delta$
+wyjaśnia, że $i^{-1}$ działa tylko na obrazie inkluzji.
+
+W §§6.4–6.6 dodano jawny przykład $\delta^0=\times2$ w
+kohomologii, doprecyzowano dualność algebraiczną i obliczono
+kasowanie pary generatorów dla macierzy
+$\bigl(\begin{smallmatrix}1&2\\3&8\end{smallmatrix}\bigr)$,
+po którym pozostaje $\Z/2\Z$. Wyjaśniono kochainy względne,
+wzór odwzorowania łączącego dla trzech zagnieżdżonych kompleksów
+oraz dwa warianty dołączenia warstwy: powstanie klasy i zabicie
+klasy. Ten ostatni wybór różniczki przedstawia nowy schemat.
+
+W §§6.7–6.9 uzupełniono niezależność wzoru Mayera--Vietorisa
+od rozkładu cyklu, obliczono cykl z dwóch skierowanych krawędzi
+i zilustrowano go rysunkiem. Przy redukcji modulo $m$ sprawdzono
+niezależność odwzorowania łączącego od obu wyborów oraz wskazano,
+gdzie potrzebna jest iniektywność mnożenia przez $m$.
+Charakterystykę Eulera obliczono na obwodzie i jego wypełnieniu,
+odsyłając do wcześniejszego rachunku zamiast go powtarzać.
+Lemat pięciu podano z wystarczającymi, słabszymi hipotezami,
+z obliczonym przykładem i wnioskiem o porównaniu krótkich ciągów
+kompleksów. Krótkie pojedyncze rachunki przeniesiono do zdań,
+pozostawiając wydzielone wzory dla ważnych ciągów i diagramów.
+
+Niezależny audyt matematyczny potwierdził znaki $\delta$,
+hipotezy twierdzeń i orientacje nowych rysunków. Porównano
+konstrukcje długich ciągów i homotopii z
+[The Stacks Project](https://stacks.math.columbia.edu/tag/0117)
+([homotopie](https://stacks.math.columbia.edu/tag/00LR)) oraz
+znaki Mayera--Vietorisa z
+[Hatcherem](https://pi.math.cornell.edu/~hatcher/AT/AT.pdf).
+Po ukończeniu całego rozdziału złożono wyłącznie tom I.
+Końcowy PDF ma 239 stron; log nie zawiera błędów, `Overfull`
+ani nierozwiązanych odsyłaczy, a indeks przyjął 122 hasła
+bez odrzuceń i ostrzeżeń. Pozostały dwa wcześniejsze ostrzeżenia
+o specyfikatorze `h` i jeden `Underfull` poza rozdziałem 6.
+Obejrzano fizyczne strony PDF 160, 161, 169 i 170 ze wszystkimi
+czterema rysunkami tego rozdziału, w tym powiększenie schematu
+odwzorowania łączącego. Końcowy wynik skopiowano do
+`geometria_tom1.pdf`; obie kopie mają SHA-256
+`B3C171A5C2FAD9B4E0503CBBC441940D8B04EC394857B4FE2AEE2E4EB2E577DD`.
+
 ## Rozdział 5, §§5.1–5.5 — pełny przegląd dydaktyczny (2026-11-06)
 
 Po kolei skontrolowano grupy, pierścienie, moduły, ich iloczyn tensorowy

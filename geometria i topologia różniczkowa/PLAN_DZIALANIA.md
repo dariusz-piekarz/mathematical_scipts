@@ -17,10 +17,10 @@ Prowadzimy przegląd całej książki po kolei, rozdział po rozdziale i sekcja 
 sekcji, z poziomem objaśnień, przykładów, rysunków i szczegółowości
 dowodów przyjętym w rozdziale 1 oraz §§2.1–2.2. Rozdział 2,
 §§2.3–2.7, przejrzano, rozszerzono i sprawdzono w składzie
-tomu I. Rozdziały 3–5 przejrzano i rozszerzono we wszystkich
+tomu I. Rozdziały 3–6 przejrzano i rozszerzono we wszystkich
 sekcjach, składając tylko tom I po ukończeniu każdego z nich.
-Następna w kolejności jest **§6.1 „Ciągi modułów i dokładność”**
-rozdziału 6. Przy kolejnych
+Następna w kolejności jest **§7.1 „Homotopie, drogi i grupa podstawowa”**
+rozdziału 7. Przy kolejnych
 rozdziałach obowiązuje ta sama zasada: skład tylko właściwego tomu,
 a potem commit i push po kontroli całego rozdziału.
 
@@ -312,7 +312,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 3. Algebra tensorowa | `03-algebra-tensorowa.tex` | Pełny przegląd dydaktyczny §§3.1–3.9 zakończony 5 listopada; wcześniejszy audyt z 6 października i korekta notacji z 9 października | Uzupełniono własności uniwersalne, bazy i rangi, operatory i kontrakcję, ilorazy symetryczne i zewnętrzne, minory, wyznacznik, wiązki tensorowe i pochodną Liego. Dodano obliczone przykłady i rysunki; skład i kontrola PDF-u dotyczą tylko tomu I. Szczegóły w `PRZEGLAD.md`. |
 | 4. Grassmanniany, Clifford i spinory | `04-grassmanniany-clifford-spinory.tex` | Pełny przegląd dydaktyczny §§4.1–4.7 zakończony 6 listopada; wcześniejszy audyt z 6 października i dodatek o Pin z 8 października | Rozpisano atlas i styczne grassmannianu, przykłady Plückera i Gaussa, rachunki Clifforda, lokalne płaty nakrycia Spin, półspinory i działanie Clifforda na wiązce. Cztery struktury spinowe torusa mają obliczone warunki brzegowe i rysunek. Skład i kontrola PDF-u dotyczą tylko tomu I; szczegóły w `PRZEGLAD.md`. |
 | 5. Algebra abstrakcyjna | `05-algebra-abstrakcyjna.tex` | Pełny przegląd dydaktyczny §§5.1–5.5 zakończony 6 listopada; wcześniejszy audyt i poprawki w `dbfe600` | Rozpisano normalność i ilorazy grup, prezentacje, ideały i moduły, dowód dokładności tensoru po prawej stronie, lokalizację oraz addytywność rangi. Dodano rachunkowe przykłady i trzy nowe rysunki oraz ujednolicono zapis krótkich wzorów; skład i kontrola PDF-u dotyczą tylko tomu I. Szczegóły w `PRZEGLAD.md`. |
-| 6. Algebra homologiczna | `06-algebra-homologiczna.tex` | Audyt dodatków zakończony 6 października; PDF 387 stron | Zachowana kompletność po przeniesieniu, przywrócone założenie o R i związek redukcji modulo m z tensorem |
+| 6. Algebra homologiczna | `06-algebra-homologiczna.tex` | Pełny przegląd dydaktyczny §§6.1–6.9 zakończony 6 listopada; wcześniejszy audyt dodatków z 6 października | Rozpisano rozszerzenia i długie ciągi, obliczono homologię trójkąta, homotopię i kasowanie pary, filtracje, ciąg Mayera--Vietorisa, redukcję modulo $m$, charakterystykę Eulera i zastosowanie lematu pięciu. Dodano trzy nowe rysunki, doprecyzowano istniejący i ograniczono zbędne wzory wydzielone. Skład i kontrola PDF-u dotyczą tylko tomu I; szczegóły w `PRZEGLAD.md`. |
 | 7. Homotopia, nakrycia i CW | `07-homotopia-nakrycia-cw.tex` | Wcześniejszy audyt z 6 października; 8 października dodano minimalną teorię grafów | Drzewo, las, korzeń, liść i rachunek krawędzi sprawdzone na stronie 151 PDF |
 | 8. Homologia przestrzeni | `08-homologia.tex` | Audyt dodatków zakończony 6 października; treść bez poprawek | Sprawdzone pięć wpisów indeksu, definicje, bibliografia i trzy ilustracje; PDF 397 stron |
 | 9. Wyższe grupy homotopii | `09-wyzsze-grupy-homotopii.tex` | Audyt dodatków zakończony 6 października; PDF 397 stron | Sprawdzone indeks, definicje i cztery rysunki; poprawiono 19 użyć słowa „mapa” na „odwzorowanie” |
