@@ -1,5 +1,66 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-11-06 — pełny przegląd rozdziału 5, sekcje 1–5
+
+### Problem
+
+Po wcześniejszym audycie podstawowe konstrukcje algebry abstrakcyjnej
+były poprawne, lecz rozdział 5 nie wszędzie osiągał szczegółowość
+dowodów i przykładów z rozdziału 1 i §§2.1–2.2. Czytelnik musiał
+sam wykazać konieczność normalności dla ilorazu grup, własności
+uniwersalne prezentacji i ilorazów, dokładność tensorowania po
+prawej stronie oraz związek rangi z torsją. Brakowało też rysunków
+wyjaśniających niektóre ilorazy.
+
+### Rozwiązanie i wpływ
+
+- W §5.1 dodano twierdzenie o homomorfizmie grup, konieczność
+  normalności i kontrprzykład w $S_3$, własność uniwersalną
+  prezentacji oraz przykłady grupy cyklicznej, iloczynu wolnego
+  i grupy diedralnej. Rysunek kwadratu torusa wiąże relację
+  $aba^{-1}b^{-1}$ z kierunkami sklejanych boków.
+- W §§5.2–5.3 dowiedziono klasyfikacji ideałów $\Z$ i własności
+  uniwersalnych ilorazów pierścieni i modułów. Przykłady
+  $\mathbb K[t]/(t^2)$, torsji w $\Z/6$, grupy
+  $\operatorname{Hom}_{\Z}(\Z/n,A)$ i ilorazów krat pokazują
+  skutki definicji. Dwa schematy przedstawiają klasy reszt
+  i poziome warstwy $\R^2/\R(1,0)$.
+- W §§5.4–5.5 rozpisano kanoniczność tensoru i dowód dokładności
+  po prawej stronie, obliczono tensory modułów cyklicznych,
+  dodano własność uniwersalną ciała ułamków, jawne rachunki
+  lokalizacji oraz przykłady addytywności rangi i zaniku torsji.
+- Na uwagę autora przeniesiono krótkie, pojedyncze wzory z osobnych
+  bloków do tekstu, szczególnie w §§5.2–5.3; centralne wzory
+  i rachunki wieloetapowe zachowano w wydzielonych blokach.
+  Do projektowego `AGENTS.md` dodano zasadę takiej kontroli
+  przy każdym kolejnym rozdziale. W rysunku torusa usunięto
+  kolizję napisu z etykietą boku, a na schemacie ilorazu
+  modułu zwiększono kontrast osi.
+
+Dodatkowe dowody, przykłady i trzy nowe rysunki wydłużają rozdział,
+ale pozwalają śledzić relacje bez odtwarzania pominiętych kroków.
+Zapis części prostych formuł w zdaniach zmniejsza liczbę przerw
+w lekturze kosztem mniejszego wyróżnienia tych formuł.
+Zmieniono źródło rozdziału 5, PDF tomu I oraz dokumentację planu
+i przeglądu. Następna iteracja zaczyna §6.1.
+
+### Weryfikacja
+
+Przeprowadzono niezależny audyt matematyczny §§5.1–5.5, który nie
+wykazał błędów w nowych twierdzeniach, dowodach ani przykładach.
+Porównano postać normalną iloczynu wolnego z Hatcherem oraz
+tensorowanie, lokalizację i addytywność rangi z The Stacks Project.
+`git diff --check` nie wykazał błędów formatowania. Po ukończeniu
+rozdziału i korekcie stylu `latexmk` złożył wyłącznie tom I
+z kodem 0 i wynikiem 237 stron. Log nie ma błędów, `Overfull`
+ani nierozwiązanych odsyłaczy; indeks przyjął 122 hasła bez
+odrzuceń i ostrzeżeń. Obejrzano fizyczne strony PDF 141, 143,
+147 i 149 ze wszystkimi rysunkami rozdziału. Skopiowany PDF ma
+tę samą sumę SHA-256 co plik z katalogu budowania. Pozostały
+dwa wcześniejsze ostrzeżenia `h`→`ht` i jeden `Underfull`
+poza rozdziałem 5. Poprawki kontrastu i etykiety sprawdzono
+w końcowym PDF.
+
 ## 2026-11-06 — pełny przegląd rozdziału 4, sekcje 1–7
 
 ### Problem

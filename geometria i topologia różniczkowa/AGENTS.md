@@ -11,6 +11,11 @@
 
 - Tekst jest po polsku i ma prowadzić od podstaw geometrii oraz topologii różniczkowej do teorii Morse'a, twierdzeń Smale'a i chirurgii rozmaitości.
 - Każda nowa definicja powinna mieć intuicję, precyzyjne założenia i przykład. Dowody rozpisuj krok po kroku; wyjaśniaj przejścia algebraiczne i geometryczne.
+- Krótkie wzory i pojedyncze równości zapisuj w toku zdania, jeżeli
+  pozostają czytelne. Środowiska `\[...\]` używaj dla wieloetapowych
+  rachunków, ważnych wzorów, układów i diagramów, którym osobny wiersz
+  rzeczywiście pomaga. Podczas przeglądu każdej sekcji usuwaj zbędne
+  wzory wydzielone, aby styl skryptu pozostał jednolity.
 - Jeżeli używasz głębokiego twierdzenia lub lematu, podaj jego dokładne założenia i wskaż źródło. Nie nazywaj szkicu pełnym dowodem.
 - Unikaj powielania definicji już wprowadzonych; odsyłaj do wcześniejszych miejsc.
 

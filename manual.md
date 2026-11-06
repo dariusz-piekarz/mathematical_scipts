@@ -73,6 +73,47 @@ oraz dodatki). Starsze wpisy poniżej dokumentują rzeczywiście
 wykonane wówczas polecenia dla dawnego podziału na trzy tomy;
 ich numery stron i nazwy PDF-ów są historyczne.
 
+### Rozdział 5, sekcje 1–5 — ukończony etap z 6 listopada 2026
+
+Katalog projektu: `geometria i topologia różniczkowa`; źródło:
+`tex/rozdzialy/05-algebra-abstrakcyjna.tex`; plik główny tomu I:
+`geometria_tom1.tex`. Użyto istniejącego środowiska Windows
+PowerShell, MiKTeX 25.12, `latexmk` 4.88 i Perla z
+`C:\Program Files\Git\usr\bin`. Nie instalowano zależności ani
+nie pobierano danych. Zgodnie z ustaloną kolejnością skład
+uruchomiono po przejściu całego rozdziału; po kontroli rysunków
+i redakcji wzorów wykonano go ponownie dla końcowej wersji.
+
+**Polecenia faktycznie wykonane** w katalogu projektu:
+
+```powershell
+$env:PATH = 'C:\Program Files\Git\usr\bin;' + $env:PATH
+latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=build/tomy geometria_tom1.tex *> build/tomy/review_ch5_build.txt
+$pages=@(141,143,147,149)
+foreach($n in $pages){pdftoppm -f $n -l $n -singlefile -png -r 115 'build/tomy/geometria_tom1.pdf' "build/tomy/ch5_p$n"}
+Copy-Item -LiteralPath 'build/tomy/geometria_tom1.pdf' -Destination 'geometria_tom1.pdf' -Force
+Get-FileHash -Algorithm SHA256 -LiteralPath 'build/tomy/geometria_tom1.pdf'
+Get-FileHash -Algorithm SHA256 -LiteralPath 'geometria_tom1.pdf'
+```
+
+Końcowy `latexmk` zakończył się kodem 0; PDF ma 237 stron.
+W `build/tomy/geometria_tom1.log` nie ma błędów, nierozwiązanych
+odsyłaczy ani `Overfull`; pozostały dwa wcześniejsze ostrzeżenia
+o zamianie `h` na `ht` i jeden `Underfull` poza rozdziałem 5.
+`build/tomy/geometria_tom1.ilg` wykazuje 122 przyjęte wpisy,
+0 odrzuconych i 0 ostrzeżeń. Obejrzano wskazane cztery strony
+ze wszystkimi rysunkami rozdziału. Suma SHA-256 obu kopii PDF
+jest identyczna:
+`94625049941CD80AE4A89D4A192E603522E58DDF6A81A7601E9CEDEBC8875A56`.
+Tomów II–IV nie składano, gdyż rozdział 5 należy do tomu I.
+
+**Instrukcja przygotowana do samodzielnego wykonania.** Na innym
+stanowisku otwórz PowerShell w katalogu projektu, zapewnij MiKTeX,
+`latexmk` i Perl w `PATH`, po ukończeniu rozdziału uruchom powyższy
+skład tomu I, sprawdź log, indeks i strony rysunków, a następnie
+skopiuj PDF i porównaj sumy SHA-256. Numery fizycznych stron
+rysunków mogą się zmienić po dalszych edycjach.
+
 ### Rozdział 4, sekcje 1–7 — ukończony etap z 6 listopada 2026
 
 Katalog projektu: `geometria i topologia różniczkowa`; źródło:

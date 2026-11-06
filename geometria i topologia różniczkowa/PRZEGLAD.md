@@ -14,6 +14,56 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 5, §§5.1–5.5 — pełny przegląd dydaktyczny (2026-11-06)
+
+Po kolei skontrolowano grupy, pierścienie, moduły, ich iloczyn tensorowy
+oraz rangę nad dziedziną. W §5.1 wykazano konieczność normalności dla
+mnożenia warstw i obliczono kontrprzykład w $S_3$. Dopisano twierdzenie
+o homomorfizmie grup i własność uniwersalną prezentacji wraz z pełnymi
+dowodami. Przykłady grupy cyklicznej, redukcji słów w iloczynie wolnym
+i mnożenia w $D_5$ pokazują działanie definicji. Nowy rysunek kwadratu
+torusa uzasadnia kolejność liter w słowie brzegowym.
+
+W §§5.2–5.3 rozpisano własności ilorazów pierścieni i modułów,
+klasyfikację ideałów $\Z$ oraz rachunek homomorfizmów
+$\operatorname{Hom}_{\Z}(\Z/n,A)\cong A[n]$.
+Przykłady $\mathbb K[t]/(t^2)$, $\Z^2/(2\Z\oplus3\Z)$
+i torsji w $\Z/6\Z$ oddzielają własności pierścienia,
+modułu i jego ilorazu. Dwa nowe schematy przedstawiają klasy
+reszt modulo trzy oraz poziome warstwy $\R^2/\R(1,0)$.
+
+W §§5.4–5.5 doprecyzowano kanoniczność konstrukcji tensoru,
+udowodniono jego dokładność po prawej stronie i obliczono tensory
+modułów cyklicznych, także przypadek zerowy. Własność uniwersalna
+ciała ułamków ma osobny dowód, a relacje i działania na lokalizacji
+są sprawdzone bez niedozwolonego skracania elementów modułu.
+Przykłady $\Z^2\oplus\Z/6$ i ilorazu
+$\Z^2/(2\Z\oplus\{0\})$ pokazują, dlaczego ranga nie mierzy
+torsji, mimo że jest addytywna. Postać normalną iloczynu wolnego
+porównano z [Hatcherem](https://pi.math.cornell.edu/~hatcher/AT/AT.pdf),
+a własności tensoru i lokalizacji z [The Stacks Project](https://stacks.math.columbia.edu/tag/00CV)
+([lokalizacja](https://stacks.math.columbia.edu/tag/00CM),
+[addytywność rangi](https://stacks.math.columbia.edu/tag/0H9T)).
+
+Na dodatkową uwagę autora ujednolicono zapis wzorów we wszystkich
+sekcjach. Krótkie równości przeniesiono do zdań, zachowując wydzielone
+rachunki tam, gdzie ich układ pomaga w dowodzie. W §§5.2–5.3 liczba
+bloków `\[...\]` spadła z 31 do 7; argument o wymiarze ilorazu
+pozostał pełny. Tę zasadę dopisano do projektowego `AGENTS.md`, aby
+stosować ją także przy dalszym przeglądzie książki.
+
+Po ukończeniu rozdziału i korekcie stylu złożono wyłącznie tom I.
+`latexmk` zakończył pracę kodem 0 i utworzył PDF o 237 stronach.
+Log nie zawiera błędów, `Overfull` ani nierozwiązanych odsyłaczy;
+indeks przyjął 122 hasła bez odrzuceń i ostrzeżeń. Pozostały
+dwa wcześniejsze ostrzeżenia o zamianie specyfikatora `h` na `ht`
+i jeden `Underfull` poza rozdziałem 5. Obejrzano fizyczne strony
+PDF 141, 143, 147 i 149 ze wszystkimi czterema rysunkami rozdziału.
+Po poprawieniu kolizji etykiety na kwadracie torusa i kontrastu osi
+schematu ilorazu skontrolowano je ponownie. Końcowy wynik skopiowano
+do `geometria_tom1.pdf`; obie kopie mają SHA-256
+`94625049941CD80AE4A89D4A192E603522E58DDF6A81A7601E9CEDEBC8875A56`.
+
 ## Rozdział 4, §§4.1–4.7 — pełny przegląd dydaktyczny (2026-11-06)
 
 Przejrzano kolejno cały rozdział o grassmannianach, algebrze Clifforda,
