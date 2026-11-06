@@ -1,5 +1,67 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-11-06 — pełny przegląd rozdziału 7, sekcje 1–6
+
+### Problem
+
+Rozdział 7 zawierał najważniejsze definicje i wyniki, ale część
+dowodów homotopijnych, nakryciowych i van Kampena przechodziła
+zbyt szybko przez wybór punktu bazowego, arkusza lub reprezentanta.
+Przykłady nie zawsze pokazywały, jak z geometrii odczytać grupę.
+Teoria grafów obejmowała dotąd tylko podstawowe nazwy, choć później
+używamy drzew rozpinających, grafów dualnych i liczby cykli.
+Czytelnik nie miał pełnego przejścia od grafu do prezentacji
+grupy podstawowej kompleksu CW. Dwa nowe podpisy na rysunkach
+wymagały też korekty po obejrzeniu składu.
+
+### Rozwiązanie i wpływ
+
+- W §§7.1–7.2 rozpisano homotopie i reparametryzacje, retrakcję
+  promieniową, zmianę punktu bazowego, podnoszenie dróg i
+  homotopii, klasyfikację nakryć i grupę transformacji pokrycia.
+  Dodano rysunki retrakcji i trzech arkuszy nakrycia.
+- W §§7.3–7.4 poprawiono szczegóły dowodu van Kampena, dodano
+  obliczenie dla przekłutego dysku i jego rysunek, a dla sympleksów
+  wykazano jednoznaczność współrzędnych barycentrycznych oraz
+  objaśniono znaki brzegu i orientacje trójkątów torusa.
+- W §7.5 zdefiniowano grafy z pętlami i krawędziami równoległymi,
+  lokalną skończoność, drzewa rozpinające i realizację grafu.
+  Udowodniono wzór na liczbę krawędzi lasu, istnienie drzewa
+  rozpinającego i wolną bazę $\pi_1$ grafu z krawędzi spoza drzewa.
+  Nowy rysunek pokazuje drzewo oraz dwa cykle w grafie pięciu
+  krawędzi.
+- W §7.6 wyjaśniono topologię słabą na przeliczalnym bukiecie,
+  warianty dołączenia $1$-komórki i relację narzuconą przez
+  $2$-komórkę. Wniosek o skończonym CW-kompleksie składa te wyniki
+  w prezentację grupy podstawowej.
+- Skrócono zbędne wzory wydzielone i poprawiono odsyłacz do §7.1.
+  Zmiany obejmują źródło rozdziału, PDF tomu I, dokumentację
+  przeglądu i plan następnego etapu (§8.1).
+
+Kompromisem jest dłuższy rozdział, ale szczegóły, które były
+domyślne w późniejszych dowodach, są teraz dostępne przed ich
+użyciem. Twierdzenia o drzewach i grafach udowodniono dla grafów
+skończonych tam, gdzie stosujemy wzory liczbowe; jedyność dróg
+odnotowano także dla drzew nieskończonych. Pozostałe wcześniejsze
+rysunki i wyniki zachowano.
+
+### Weryfikacja
+
+Niezależne audyty matematyczne §§7.1–7.4 i §§7.5–7.6 potwierdziły
+główne rachunki i hipotezy. Ich uwagi o dwóch krokach w dowodach
+nakryć, punkcie bazowym van Kampena dla grafu oraz lokalnej
+skończoności uwzględniono w źródle. Skład tomu I uruchomiono
+dopiero po przejściu całego rozdziału. Ostatnie `latexmk` zakończyło
+się kodem 0; PDF ma 245 stron. Log nie wykazuje błędów, `Overfull`
+ani nierozwiązanych odsyłaczy, a indeks przyjął 124 hasła,
+bez odrzuceń i ostrzeżeń. Obejrzano wszystkie dziesięć rysunków
+rozdziału, w tym końcowe wersje dwóch poprawionych schematów.
+Wcześniejsze ostrzeżenia `h`→`ht`, jeden `Underfull` i podwójny
+cel `page.1` są poza rozdziałem 7. `git diff --check` przeszedł.
+Kopia PDF w katalogu projektu ma identyczną sumę SHA-256 jak
+plik z katalogu składu:
+`07879481529EA25511938FEB3BF8512D839DC0DB43AA8DAE4A656D95380F8167`.
+
 ## 2026-11-06 — pełny przegląd rozdziału 6, sekcje 1–9
 
 ### Problem

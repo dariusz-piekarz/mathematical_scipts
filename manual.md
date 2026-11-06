@@ -73,6 +73,58 @@ oraz dodatki). Starsze wpisy poniżej dokumentują rzeczywiście
 wykonane wówczas polecenia dla dawnego podziału na trzy tomy;
 ich numery stron i nazwy PDF-ów są historyczne.
 
+### Rozdział 7, sekcje 1–6 — ukończony etap z 6 listopada 2026
+
+Katalog projektu: `geometria i topologia różniczkowa`; źródło:
+`tex/rozdzialy/07-homotopia-nakrycia-cw.tex`; plik główny tomu I:
+`geometria_tom1.tex`; wynik: `geometria_tom1.pdf`.
+Sprawdzony zestaw narzędzi na Windows: MiKTeX 25.12
+(pdfTeX 1.40.28, makeindex 2.16), `latexmk` 4.88,
+Perl 5.42.3 z PortableGit w `C:\Program Files\Git\usr\bin`,
+Git 2.55.0.windows.5 i Poppler 24.04.0 (`pdfinfo`, `pdftoppm`).
+Nie instalowano zależności i nie pobierano danych. Skład
+uruchomiono dopiero po przejściu całego rozdziału i tylko
+dla tomu I; pozostałych trzech tomów nie budowano.
+
+**Polecenia faktycznie wykonane** w katalogu projektu
+(bezpośrednio lub z tym katalogiem ustawionym jako katalog roboczy):
+
+```powershell
+git fetch origin review/rozdzialy-matematyka
+$env:PATH = 'C:\Program Files\Git\usr\bin;' + $env:PATH
+latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=build/tomy geometria_tom1.tex
+pdfinfo 'build/tomy/geometria_tom1.pdf' | Select-String -Pattern 'Pages:|Page size:|File size:'
+rg -n -i 'LaTeX Warning|Overfull|Underfull|undefined references|multiply defined|Fatal error|! LaTeX Error|Missing character|pdfTeX warning' build/tomy/geometria_tom1.log
+Get-Content -Encoding utf8 build/tomy/geometria_tom1.ilg -Tail 7
+$pages=@(175,176,178,184,185,187,189,191,192)
+foreach($n in $pages){pdftoppm -f $n -l $n -singlefile -scale-to 1450 -png 'build/tomy/geometria_tom1.pdf' "build/tomy/ch7_page_$n"}
+Copy-Item -LiteralPath 'build/tomy/geometria_tom1.pdf' -Destination 'geometria_tom1.pdf' -Force
+Get-FileHash -Algorithm SHA256 -LiteralPath 'build/tomy/geometria_tom1.pdf'
+Get-FileHash -Algorithm SHA256 -LiteralPath 'geometria_tom1.pdf'
+git diff --check
+```
+
+`latexmk` wykonano ponownie po poprawieniu jednego odsyłacza
+i etykiet dwóch rysunków; końcowe wywołanie zwróciło kod 0.
+PDF ma 245 stron A4. Indeks przyjął 124 hasła, nie odrzucił
+żadnego i nie zgłosił ostrzeżeń. Końcowy log nie zawiera błędów,
+`Overfull` ani nierozwiązanych odsyłaczy. Dwa dawne ostrzeżenia
+o zmianie `h` na `ht`, jeden `Underfull` i zduplikowany cel
+`page.1` dotyczą wcześniejszych stron. Wyrenderowano i obejrzano
+wszystkie dziesięć rysunków rozdziału na wymienionych stronach;
+po korektach dodatkowo ponownie obejrzano strony 175, 184, 188
+i 189. Obie kopie PDF mają SHA-256
+`07879481529EA25511938FEB3BF8512D839DC0DB43AA8DAE4A656D95380F8167`.
+
+**Instrukcja przygotowana do samodzielnego wykonania.** Na innym
+stanowisku przygotuj wymieniony zestaw MiKTeX, Git z Perlem i
+Popplerem. Otwórz PowerShell w katalogu projektu, ustaw `PATH`
+jak wyżej, a po ukończeniu zmian w całym rozdziale uruchom
+`latexmk` dla `geometria_tom1.tex`. Sprawdź log, indeks i strony
+rysunków, skopiuj PDF do katalogu projektu i porównaj obie
+sumy SHA-256. Fizyczne numery stron mogą się zmienić po
+następnych edycjach; odczytaj je wtedy z pliku `.aux`.
+
 ### Rozdział 6, sekcje 1–9 — ukończony etap z 6 listopada 2026
 
 Katalog projektu: `geometria i topologia różniczkowa`; źródło:

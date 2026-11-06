@@ -14,6 +14,77 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 7, §§7.1–7.6 — pełny przegląd dydaktyczny (2026-11-06)
+
+Przejrzano kolejno cały rozdział homotopii, nakryć, twierdzenia van
+Kampena, sympleksów, grafów i CW-kompleksów. W §7.1 dopisano dowód
+ściągalności dysku i zbiorów wypukłych, jawną retrakcję promieniową
+z rysunkiem, homotopię dróg w zbiorze wypukłym, reparametryzacje
+potrzebne do aksjomatów grupy podstawowej oraz pełny rachunek zmiany
+punktu bazowego i niezmienniczości przy homotopii. Rozróżniono
+ściągalność, retrakcję i równoważność homotopijną.
+
+W §7.2 rozpisano lokalne arkusze nakryć $q_m(z)=z^m$ i dodano
+rysunek trzech arkuszy. Uściślono podnoszenie dróg i homotopii,
+kryterium podnoszenia odwzorowania, budowę nakrycia z podgrupy,
+klasyfikację spójnych nakryć oraz liczbę arkuszy jako indeks
+podgrupy. Dla transformacji pokrycia rozpisano dowód wzoru
+$\operatorname{Deck}(p)\cong N_G(H)/H$ i kryterium normalności;
+przykład okręgu łączy podgrupy $m\Z$ z nakryciami stopnia $m$.
+
+W §7.3 doprecyzowano siatkę w dowodzie van Kampena, także krok
+jądra przy zmianie etykiety prostokąta na dolnej krawędzi.
+Obliczony przykład pokrycia dysku pokazuje, jak dołączenie małego
+dysku zabija generator pętli wokół dziury; nowy rysunek wskazuje
+oba zbiory i ich przecięcie. Przykład okręgu z niespójnym przecięciem
+pokazuje konieczność hipotezy twierdzenia. W §7.4 wyprowadzono
+jednoznaczność współrzędnych barycentrycznych i homeomorfizm
+sympleksu standardowego z geometrycznym. Oddzielono brzeg
+geometryczny od algebraicznego ze znakami i wyjaśniono zgodność
+orientacji dwóch trójkątów w modelu torusa.
+
+Zgodnie z uwagą autora rozbudowano §7.5 o teorię grafów faktycznie
+używaną w dalszych dowodach: dopuszczono pętle i krawędzie
+równoległe, zdefiniowano lokalną skończoność, drogi, cykle,
+drzewa i ich realizacje topologiczne. Udowodniono jedyność drogi
+w drzewie, wzór $|E|=|V|-c$ dla lasu, istnienie drzewa
+rozpinającego i liczbę krawędzi spoza niego. Na przykładzie
+kwadratu z przekątną i nowym rysunku pokazano dwa cykle.
+Pełny dowód przez van Kampena daje wolną bazę
+$\pi_1(|\Gamma|)\cong F_{|E|-|V|+1}$ złożoną z tych krawędzi.
+To uzasadnia późniejsze użycie drzew rozpinających i liczby cykli
+w rozdziałach o uchwytach, powierzchniach i wieżach Cassona.
+
+W §7.6 dodano dwa warianty dołączenia $1$-komórki, przykład
+przeliczalnego bukietu okręgów objaśniający topologię słabą oraz
+jawny element normalnie generujący relację dołączanej $2$-komórki.
+Nowy wniosek wyprowadza z grafu i brzegów komórek prezentację
+grupy podstawowej skończonego CW-kompleksu: krawędzie spoza
+drzewa dają generatory, $2$-komórki dają relacje, a wyższe
+komórki nie zmieniają $\pi_1$. Krótkie równości zapisano w tekście,
+zachowując wzory wydzielone tam, gdzie ułatwiają odczyt definicji
+lub dłuższego rachunku.
+
+Dowody i konwencje porównano z [Hatcherem, *Algebraic Topology*,
+rozdziały 0–2](https://pi.math.cornell.edu/~hatcher/AT/AT.pdf).
+Niezależne audyty §§7.1–7.4 i §§7.5–7.6 nie wykazały błędów
+matematycznych; zgłoszone skróty w dowodzie nakryć, wybór punktu
+bazowego w dowodzie dla grafu i definicję lokalnej skończoności
+uzupełniono przed końcowym składem.
+
+Po ukończeniu rozdziału złożono wyłącznie tom I. Końcowy PDF
+ma 245 stron. Log nie zawiera błędów, przepełnień ani
+nierozwiązanych odsyłaczy; indeks przyjął 124 hasła bez
+odrzuceń i ostrzeżeń. Obejrzano wszystkie dziesięć rysunków
+rozdziału na fizycznych stronach 175, 176, 178, 184, 185,
+187, 189, 191 i 192 PDF-u. Po kontroli przesunięto dwie
+nakładające się etykiety i ponownie sprawdzono strony 175,
+184, 188 i 189. Pozostałe dwa dawne ostrzeżenia `h`→`ht`,
+jeden `Underfull` i zduplikowany cel `page.1` leżą poza
+rozdziałem 7. `git diff --check` przeszedł. Kopia
+`geometria_tom1.pdf` ma tę samą sumę SHA-256 co PDF składu:
+`07879481529EA25511938FEB3BF8512D839DC0DB43AA8DAE4A656D95380F8167`.
+
 ## Rozdział 6, §§6.1–6.9 — pełny przegląd dydaktyczny (2026-11-06)
 
 Przejrzano kolejno cały rozdział algebry homologicznej, porównując
