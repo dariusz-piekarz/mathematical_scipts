@@ -11,6 +11,11 @@
 
 - Tekst jest po polsku i ma prowadzić od podstaw geometrii oraz topologii różniczkowej do teorii Morse'a, twierdzeń Smale'a i chirurgii rozmaitości.
 - Każda nowa definicja powinna mieć intuicję, precyzyjne założenia i przykład. Dowody rozpisuj krok po kroku; wyjaśniaj przejścia algebraiczne i geometryczne.
+- Wzorcem wystarczającej granularności jest rozdział 1 w wersji
+  poprawionej przez autora. Priorytetem przeglądu jest usuwanie
+  przeskoków w dowodach: wskazuj wykorzystane założenie lub wynik
+  i objaśniaj nietrywialny krok rachunkowy albo geometryczny.
+  Przykłady i rysunki dobieraj do przejść wymagających wyjaśnienia.
 - Krótkie wzory i pojedyncze równości zapisuj w toku zdania, jeżeli
   pozostają czytelne. Środowiska `\[...\]` używaj dla wieloetapowych
   rachunków, ważnych wzorów, układów i diagramów, którym osobny wiersz

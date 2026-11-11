@@ -14,6 +14,97 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 9, §§9.1–9.7 — przejścia w dowodach (2026-11-11)
+
+Przejrzano cały rozdział według doprecyzowania autora: wzorcem
+wystarczającej granularności jest rozdział 1 po jego poprawkach,
+a priorytetem jest usuwanie przeskoków w istniejących dowodach.
+Zapisano tę zasadę w `AGENTS.md` i w bieżącym zakresie planu.
+
+W §9.1 dopisano jawną homotopię kasującą odwrotność w grupie
+wyższej homotopii oraz wzór pasa zmiany bazy. Sprawdzono wartości
+na szwie i brzegu kostki, składanie pasów, niezależność od homotopii
+drogi i zgodność z homotopią o poruszającej się bazie.
+W §9.2 wyjaśniono aksjomaty grup względnych i przejście od spójności
+pary do izomorfizmów grup przestrzeni. W dowodzie dokładności
+zastąpiono skrót „zapominamy drugi dysk” jawnym doklejeniem
+nullhomotopii brzegu: wzór K_tau pokazuje, że klasa względna
+pozostaje ta sama, a końcowy dysk ma już cały brzeg stały.
+
+W §9.3 uzupełniono argument o nieskończonym dyskretnym podzbiorze
+zbioru zwartego, otwartość przekrojów w dowodzie ilorazowości
+q×id_I oraz zgodność radialnego usuwania punktu ze sklejeniem komórki.
+W wariancie równych wymiarów wskazano, dlaczego otoczenia wybranych
+przeciwobrazów leżą w obszarze, na którym funkcja odcinająca jest
+równa jeden. Doprecyzowano zachowanie ustalonych szkieletów
+i ciągłość przy końcu nieskończonej sekwencji homotopii.
+
+W §9.4 rozpisano singularny trójkąt dla konkatenacji dowolnych dróg,
+anulowanie dróg pomocniczych w C_1/im(partial_2) i oba złożenia
+homomorfizmów w dowodzie Hurewicza w stopniu pierwszym.
+W §9.5 podano dokładny krok indukcji w kompresji, sprawdzono
+kołnierz zatrzymujący cały brzeg oraz osobno stopień jeden
+w dowodzie Whiteheada. Jawne odwzorowania cylindra i dwie homotopie
+złożeń uzasadniają, że g=s∘i jest rzeczywiście odwrotnością.
+Ujednolicono znaki `\circ` i zachowano istniejące etykiety.
+
+Największe uzupełnienie §9.6 dotyczy pierwszych komórek i ich relacji.
+Wzór radialny Psi_t jednocześnie rozszerza małe dyski na całe
+komórki i przesuwa dopełnienie do A, zapewniając zgodność na brzegach.
+Przy rozcinaniu wzdłuż drzewa wyjaśniono dodatkowy konieczny krok:
+kontrakcja ściany cięcia w A, następnie HEP na brzegu w A i HEP
+na całym dysku w W dają stałą ścianę w punkcie bazowym.
+Dopiero wtedy rozcięcie przedstawia kostkową sumę klas.
+
+Dowód o relacjach przeprowadzono na wielościennym cylindrze B
+z wyciętymi małymi dyskami Q_j. Podano skończoną triangulację P,
+wyprowadzono jego jednospójność z van Kampena i zastosowano
+już udowodnioną pierwszą część lematu w wymiarze n+1 do pary (B,P).
+Oba długie ciągi pary i jawnie sprawdzona zgodność Hurewicza
+z odwzorowaniami brzegowymi identyfikują bazy w pi_n(P) i H_n(P).
+Brzeg łańcucha orientacji P daje równość zewnętrznej sfery z sumą
+wewnętrznych; po złożeniu otrzymujemy dokładną relację między
+końcami homotopii i odwzorowaniami dołączającymi, ze znakami.
+To uzasadnia również, dlaczego żadna dodatkowa relacja nie powstaje.
+
+W konstrukcji modelu CW rozpisano iloraz przez jądro, rolę retrakcji
+przy dołączaniu nowych sfer i iniektywność odwzorowania końcowego.
+W dowodzie względnego Hurewicza wyprowadzono najpierw jednospójność X
+i poprawiono rzeczywistą nieścisłość oznaczeń: etap Z_(n) zawiera
+całe A i nie musi być absolutnym szkieletem Z^n. Podano potrzebny
+fragment ciągu pary i wyjaśniono iloraz w stopniu n−1.
+W kryterium homologicznego Whiteheada rozpisano zerowanie grup
+względnych z dokładności. W §9.7 uzupełniono jądro, obraz i hipotezę
+spójności w przykładzie Moore'a oraz oparte generatory b_k i działanie
+przesunięć w nakryciu S^1∨S^2. Naturalność daje jawnie sumowanie
+współczynników przez h_2.
+
+Hipotezy i zakres wyników porównano z [Hatcherem, *Algebraic Topology*,
+§§4.1–4.2, w szczególności twierdzeniem 4.32 i lematem 4.38](https://pi.math.cornell.edu/~hatcher/AT/ATch4.pdf).
+Niezależne kontrole wszystkich sekcji oraz ponowna kontrola
+geometrycznego lematu potwierdziły zamknięcie argumentów.
+Sprawdzono kolejność zależności: przybliżenie i HEP, Whitehead,
+pierwsze komórki i ich relacje, model CW, Hurewicz, kryterium homologiczne.
+W dowodzie relacji użyta jest tylko wcześniejsza pierwsza część lematu,
+a nie późniejsze twierdzenie Hurewicza. Statyczna kontrola wykazała
+42 unikalne etykiety, poprawne cele ref/eqref i zagnieżdżenie środowisk.
+
+Po przejściu całego rozdziału złożono wyłącznie tom I.
+Końcowy PDF ma 259 stron; indeks przyjął 125 wpisów bez odrzuceń
+i ostrzeżeń. Brak błędów, przepełnień i nierozwiązanych odsyłaczy;
+rozdział 9 nie zgłasza ostrzeżeń składu. Dwa dawne ostrzeżenia
+`h`→`ht`, jeden `Underfull` i zduplikowany cel `page.1` dotyczą
+wcześniejszych rozdziałów. Obejrzano przegląd stron 215–236,
+a w powiększeniu cztery rysunki na stronach 216, 218, 227 i 235,
+kluczowe wzory, ścianę cięcia i diagram na stronach 217, 226–231
+oraz indeks na stronach 258–259. Rysunek cylindra umieszczono
+przy dowodzie Whiteheada, aby nie przerywał następnej definicji,
+i ponownie sprawdzono zmieniony skład. Wszystkie cele łączy
+między tomami istnieją w pozostałych PDF-ach; pozostałych tomów
+nie składano. `git diff --check` przeszedł.
+PDF w katalogu projektu i PDF składu mają identyczny SHA-256:
+`C2DC04E299A9BB0CBBBBB2DE5B7E01594D72B5E08D681DF0BD6A658D1ED9E266`.
+
 ## Rozdział 8, §§8.1–8.8 — pełny przegląd dydaktyczny (2026-11-11)
 
 Przeczytano plan oraz porównano sposób prowadzenia definicji, dowodów
