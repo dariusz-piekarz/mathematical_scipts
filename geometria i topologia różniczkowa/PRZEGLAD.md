@@ -14,6 +14,124 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 14, §§14.1–14.13 — krzywizna i twierdzenia globalne (2026-11-11)
+
+Przejrzano wszystkie trzynaście sekcji według granularności
+rozdziału 1 po poprawkach autora. Kontrola objęła wcześniejszy
+tekst i wszystkie dołączone przykłady Nil, Sol i czasoprzestrzeni,
+a także holonomię, rozkład de Rhama, drugą wariację,
+twierdzenia porównawcze i Gaussa–Bonneta.
+
+- **§§14.1–14.3.** Sprawdzono tensorowość, konwencję znaku,
+  rachunek transportu po małej pętli, symetrie i polaryzację
+  krzywizny sekcyjnej oraz równanie Gaussa.
+  Pierwszy rysunek ustawiono przed §14.2, aby nie rozdzielał
+  treści twierdzenia o symetriach tensora.
+- **§14.4.** Wyjaśniono, że macierz Jacobiego przy rozwinięciu
+  gęstości małej kuli jest zapisana w ramie ortonormalnej
+  przenoszonej równolegle; jej kolumny mają podane dane
+  początkowe, a pochodne współczynników są zwykłymi pochodnymi.
+  Sprawdzono ślady, rozwinięcia objętości, skalowanie,
+  modele hiperboliczne i obliczenia Nil/Sol. Nowy rysunek
+  pokazuje dwie płaszczyzny przez ten sam kierunek oraz
+  sumę ich krzywizn: `−3/4+1/4=−1/2` w Nil
+  i `1−1=0` w Sol.
+- **§§14.5–14.7.** Sprawdzono krzywiznę Minkowskiego, FLRW,
+  Schwarzschilda i Kerra oraz wnioski o horyzontach,
+  osobliwościach i niezupełności.
+  Równanie ciągłości FLRW wyprowadzono bezpośrednio
+  z obu równań Friedmanna, bez dzielenia przez `H`
+  i bez powoływania się na niewprowadzoną w tym miejscu
+  różniczkową tożsamość Bianchiego.
+  Proste tory światła w czasie konforemnym uzyskano
+  przez `dx/dη=(dx/dt)(dt/dη)=n` z wcześniejszych
+  całek geodezyjnych, zamiast przeskoku od własności
+  tensora Weyla do postaci toru.
+- **§§14.8–14.10.** Sprawdzono równoważności lokalnej płaskości,
+  kryterium Ricciego w wymiarze trzy, działanie holonomii
+  i lokalny rozkład metryki.
+  Złożenia transportów w tekście, wzorach i rysunku zapisano
+  jawnie przez `\circ`, łącznie ze sprzężeniem grupy holonomii
+  i wzorem Ambrose'a–Singera. W twierdzeniu o lokalnym
+  rozkładzie doprecyzowano spójność rozmaitości.
+  Globalny de Rham i Ambrose–Singer nadal są nazwanymi,
+  cytowanymi wynikami zewnętrznymi.
+- **§§14.11–14.12.** Sprawdzono drugą wariację energii
+  i długości, realizację pól Jacobiego, związek z różniczką
+  eksponenty i zakaz punktu sprzężonego we wnętrzu odcinka
+  minimalnego. Skontrolowano lemat indeksowy, Raucha,
+  porównanie hesjanu, Bonneta–Myersa, Cartana–Hadamarda
+  i Bishopa–Gromowa.
+  W lematach biegunowych rozpisano, jak lokalna odwrotność
+  eksponenty w chwili `t+η` daje otwartość dziedziny
+  przed czasem cięcia; zamiast ponownej definicji użyto
+  czasu i zbioru cięcia z rozdziału 13.
+  W dowodzie Bishopa–Gromowa podano jawny czynnik całkujący
+  i jego zachowanie przy zerze.
+  Uzupełniono przykład płaskiego walca: wybór najbliższego
+  podniesienia, całkę po dysku przeciętym pasem, oba wzory
+  na pole kuli i granicę `V(r)/(4πRr)→1`.
+  Nowy rysunek pokazuje rozwinięcie kuli i malejący iloraz
+  `V(r)/(πr²)`.
+- **§14.13.** Sprawdzono znaki krzywizny geodezyjnej,
+  skręty narożników, sklejanie triangulacji, przypadek
+  nieorientowalny, stożki i deficyty kątów.
+  Zweryfikowano normalizację Pfaffianu w wymiarach dwa
+  i cztery. W przykładzie `S²_a×S²_b` dodano drugi rachunek:
+  normy Riemanna i Ricciego oraz skalar dają gęstość
+  `8/(a²b²)` i ponownie charakterystykę Eulera `4`.
+  Dowód identyfikacji klasy Eulera i wersji brzegowej
+  pozostaje wskazany w rozdziale 17; sprawdzono treść
+  tych odsyłaczy i ich zależność od konstrukcji Thoma.
+
+Konwencję krzywizny porównano z
+[E. Meinrenkenem, *Riemannian Geometry*, §18](https://www.math.toronto.edu/mein/teaching/LectureNotes/rieall.pdf);
+porównania z [U. Langiem, *Riemannian and Metric Geometry*,
+§§3.3–3.4, 4.4 i 6.1](https://people.math.ethz.ch/~lang/RG.pdf),
+Gaussa–Bonneta z [R. Hale'em, §§4–5](https://www.math.uchicago.edu/~may/REU2022/REUPapers/Hale.pdf),
+a przedłużenie Kerra z
+[D. Tongiem, *General Relativity*, §6.3](https://davidtong.org/pdfs/teaching/general-relativity/gr6.pdf).
+Dwa niedostępne odsyłacze do notatek Langforda i Luriego
+zastąpiono działającym źródłem Langa z dokładnymi sekcjami.
+
+Wykonano **51 kontroli rachunków**. Obejmują one pełne
+macierze Ricciego Nil, Sol, FLRW i ogólnej statycznej metryki
+sferycznej, ich krzywizny i kontrakcje, równania modeli
+Jacobiego, rachunek konforemny, pył i promieniowanie,
+przedłużenie Kerra oraz ogólną czterowymiarową tożsamość
+Pfaffianu dla algebraicznego tensora krzywizny.
+Pełną tabelę krzywizny Kerra i ortogonalność ramy
+sprawdzono dodatkowo z metryki i jej drugich pochodnych
+w trzech dokładnych punktach o wymiernych współrzędnych
+i parametrach; jest to kontrola punktowa, nie dowód
+tożsamości dla wszystkich parametrów.
+Sprawdzono też funkcję pierwotną, zgodność obu wzorów
+na pole kuli walca, asymptotykę, pochodną ilorazu objętości,
+całki czapki sferycznej i zliczanie w triangulacji.
+Kontrola źródła: **171 etykiet**, brak powtórzeń i brakujących
+odsyłaczy, zgodne pary środowisk. Zachowano wszystkie
+dotychczasowe etykiety i numery twierdzeń oraz wzorów.
+Numeracja rysunków uwzględnia dwie nowe ilustracje;
+inne rozdziały nie odwołują się do rysunków rozdziału 14.
+
+Złożono wyłącznie `geometria_tom2.tex` przez `latexmk`,
+wraz z indeksem: **208 stron**, rozdział 14 na fizycznych
+stronach **65–109** (drukowanych 64–108).
+Obejrzano wszystkie strony rozdziału, spis i indeks;
+**15 rysunków** wyrenderowano także Popplerem.
+Nowe ilustracje 14.3 i 14.13 są na fizycznych stronach
+74 i 102. Po podglądzie poszerzono płaszczyzny w diagramie
+Nil/Sol, odsunięto opisy transportu i wykresu objętości
+od linii oraz ustawiono ilustracje FLRW przy ich przykładach.
+Brak wyjść tekstu poza stronę i nowych ostrzeżeń składu;
+pozostały wcześniejsze ostrzeżenia o `page.1`
+i jedno `Underfull \hbox` o badness 1057.
+Indeks: **106 wpisów przyjętych, 0 odrzuconych, 0 ostrzeżeń**.
+Cele łączy pomiędzy czterema gotowymi PDF-ami istnieją.
+Pozostałych tomów nie przebudowywano.
+SHA-256 sprawdzonego tomu II:
+`2A8ED349AD62E229B741887DB3D5A3F1AD3BA2E33EDE8C2C3F806CCC1498805C`.
+
 ## Rozdział 13, §§13.1–13.8 — geodezyjne i zupełność (2026-11-11)
 
 Przejrzano wszystkie osiem sekcji według granularności rozdziału 1
