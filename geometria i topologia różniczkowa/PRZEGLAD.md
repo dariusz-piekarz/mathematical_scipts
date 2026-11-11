@@ -14,6 +14,45 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 11 — wizualizacje geometrii Nil i Sol (2026-11-11)
+
+Na prośbę autora dodano do §11.2 dwa rysunki TikZ z objaśnieniami:
+
+- **Nil, rysunek 11.3.** Trzy przestrzenie styczne przy
+  $(x,0,0)$ dla $x=-1,0,1$ pokazują płaszczyzny
+  $\ker(\dd z-x\,\dd y)$, czyli $c=xb$ we współczynnikach
+  wektora $a\partial_x+b\partial_y+c\partial_z$.
+  Zaznaczono ortonormalne wektory
+  $E_1=\partial_x$, $E_2=\partial_y+x\partial_z$, $E_3=\partial_z$.
+  Tekst wyjaśnia ich długości oraz różnicę między prostopadłością
+  w metryce a kątem widocznym w perspektywie.
+  Dodano odsyłacz do późniejszego przykładu rozkładu kontaktowego.
+- **Sol, rysunek 11.4.** Perspektywiczny stos poziomych przekrojów
+  kul jednostkowych w przestrzeniach stycznych przy $(0,0,t)$
+  pokazuje półosie $(e^t,e^{-t})$ dla $t=-\log2,0,\log2$,
+  a więc $(1/2,2)$, $(1,1)$ i $(2,1/2)$.
+  Strzałki mają długość metryczną $1$. Objaśniono stały iloczyn
+  półosi i odróżniono normy wektorów od kul odległości w rozmaitości.
+
+Rysunki wyprowadzono bezpośrednio z metryk już obecnych w rozdziale.
+Symbolicznie sprawdzono tożsamość $E^{\mathsf T}G_NE=I$
+oraz ramę i parametryzację jednostkowej elipsy Sol dla dowolnego $t$.
+Kontrola źródła: osiem sekcji, 82 etykiety, bez brakujących
+odsyłaczy i powtórzeń. Po podglądzie przesunięto etykietę $E_2$
+w panelu Nil dla $x=-1$.
+Skrócono powtarzające się objaśnienia i podpisy.
+Końcowy przykład wraz z dalszą lekturą umieszczono w niełamanym bloku,
+aby literatura nie pozostawała sama na nowej stronie.
+
+Złożono tylko tom II: **202 strony**, rozdział 11 na fizycznych
+stronach **4–28**. Oba nowe rysunki są na fizycznej stronie **11**
+(drukowanej 10); sprawdzono je w renderze Popplera wraz z sąsiednimi
+stronami i zmienionym układem rozdziału. Brak nowych ostrzeżeń składu,
+wyjść tekstu poza stronę i brakujących celów łączy między tomami.
+Indeks nadal ma 106 przyjętych wpisów, 0 odrzuconych i 0 ostrzeżeń.
+SHA-256 sprawdzonego tomu II:
+`103C2FA78BD7E8DD1842C6B27DF76CA5D65EE9326356E6F176C18BBD670894E5`.
+
 ## Rozdział 11, §§11.1–11.8 — dowody, przykłady i rysunki (2026-11-11)
 
 Przejrzano cały rozdział „Tensor metryczny, długość i miara”,
