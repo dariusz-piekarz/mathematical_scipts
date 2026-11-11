@@ -14,6 +14,49 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 3 — ponowna kontrola wyprowadzeń, §§3.1–3.9 (2026-11-11)
+
+Ponownie przeczytano wszystkie dziewięć sekcji według kryterium
+wyprowadzania nietrywialnych równań. Wcześniejsze dowody konstrukcji
+ilorazowych, baz, minora, wyznacznika i pochodnej Liego mają już
+potrzebne kroki. Uzupełniono konkretne skróty:
+
+- Macierz Kroneckera wyprowadzono przez działanie na bazowym tensorze
+  i rozwinięcie obu obrazów; przykład liczbowy zawiera teraz
+  pośrednią macierz blokową.
+- W kontrakcji pokazano, jak delta Kroneckera pozostawia składniki
+  z jednakowym indeksem górnym i dolnym i skąd bierze się sumowanie.
+- Prawo składania permutacji wyprowadzono na pojedynczym miejscu
+  tensora, a przestawienie indeksów sumy alternującej rozpisano
+  ze znakiem. W przykładzie symetryzacji podano przestawiony tensor,
+  średnie i różnice jego współczynników.
+- Normalizację iloczynu form wyprowadzono w dwóch wierszach
+  z izomorfizmów j i E, z podstawieniem obu silni i skróceniem
+  silni zawartej w antysymetryzatorze.
+- W metryce biegunowej zapisano współczynniki obu diagonalnych
+  i obu mieszanych tensorów, pokazując ich kasowanie.
+
+Ujednolicono jawny znak złożenia w dowodzie jednoznaczności.
+W rozdziale nie występują całki; kontrola nie znalazła zapisów
+całek bez granic. Zachowano wszystkie numery wyników, wzorów i rysunków.
+Pozostało 86 jednoznacznych etykiet bez brakujących odsyłaczy.
+
+Przeszło 21 kontroli rachunkowych: macierze Kroneckera, ślady
+i zmiana bazy, symetryzacja przykładu, wszystkie 36 praw składania
+permutacji S3, idempotencja i rangi symetryzatora oraz
+antysymetryzatora, normalizacje iloczynu form stopni 1+2 i 2+2,
+przykład Cauchy'ego–Bineta oraz metryka biegunowa i cofnięcia tensorów.
+
+Złożono tylko tom I: **262 strony**, rozdział 3 na fizycznych
+stronach **94–118**. Obejrzano cały rozdział, osiem ilustracji,
+spis i indeks. Nie ma nowych ostrzeżeń, przepełnień ani tekstu poza
+stroną; pozostały wcześniejsze komunikaty o `page.1`, dwóch
+zmianach specyfikacji `h` na `ht` i niedopełnieniu w rozdziale 1.
+Indeks: 125 wpisów przyjętych, 0 odrzuconych, 0 ostrzeżeń.
+Wszystkie cele łączy między czterema PDF-ami istnieją.
+SHA-256 sprawdzonego tomu I:
+`D482793E343B053AAF3241D3D3E71A65417EDFAD33A9BC6F3FAAFFBDF10D9CC3`.
+
 ## Rozdział 2 — ponowna kontrola wyprowadzeń i całek, §§2.1–2.7 (2026-11-11)
 
 Na prośbę autora wrócono do początku kolejki i ponownie przeczytano

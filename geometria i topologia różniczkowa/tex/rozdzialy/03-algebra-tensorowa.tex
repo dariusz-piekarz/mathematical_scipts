@@ -160,9 +160,9 @@ izomorfizm spełniający
 Własność uniwersalna $(T,\tau)$ zastosowana do $\tau'$ daje
 jedyne odwzorowanie liniowe $J\colon T\to T'$ z~żądaną własnością.
 Podobnie $(T',\tau')$ daje $K\colon T'\to T$ z
-$K\circ\tau'=\tau$. Zatem $(KJ)\circ\tau=\tau$.
+$K\circ\tau'=\tau$. Zatem $(K\circ J)\circ\tau=\tau$.
 Również $\id_T\circ\tau=\tau$; jednoznaczność faktoryzacji
-przez $T$ wymusza $KJ=\id_T$. Tak samo $JK=\id_{T'}$.
+przez $T$ wymusza $K\circ J=\id_T$. Tak samo $J\circ K=\id_{T'}$.
 Odwzorowanie $J$ jest więc izomorfizmem i jedynym możliwym odwzorowaniem
 zachowującym wskazane obrazy par $(v,w)$.
 \end{proof}
@@ -607,7 +607,16 @@ w większym iloczynie tensorowym. Ich liczba to iloczyn rang.
 \end{proof}
 
 Jeśli macierze $A,B$ mają współczynniki $a_{pi},b_{qj}$,
-to w bazach $e_i\otimes f_j$ współczynnik macierzy
+to dla baz źródła $e_i,f_j$ i celu $e'_p,f'_q$ mamy
+\[
+ \begin{aligned}
+ (A\otimes B)(e_i\otimes f_j)
+ &=\left(\sum_p a_{pi}e'_p\right)\otimes
+   \left(\sum_q b_{qj}f'_q\right)\\
+ &=\sum_{p,q}a_{pi}b_{qj}\,e'_p\otimes f'_q.
+ \end{aligned}
+\]
+Zatem w bazach tensorowych współczynnik macierzy
 $A\otimes B$ o indeksach $(p,q),(i,j)$ jest $a_{pi}b_{qj}$.
 Jest to \emph{iloczyn Kroneckera}. Pary porządkujemy
 leksykograficznie: $(1,1),(1,2),\ldots,(2,1),\ldots$.
@@ -616,6 +625,8 @@ W takim porządku na przykład
  A=\begin{pmatrix}1&2\\0&1\end{pmatrix},\quad
  B=\begin{pmatrix}2&0\\0&3\end{pmatrix},\qquad
  A\otimes B=
+ \begin{pmatrix}1B&2B\\0B&1B\end{pmatrix}
+ =
  \begin{pmatrix}
  2&0&4&0\\0&3&0&6\\0&0&2&0\\0&0&0&3
  \end{pmatrix}.
@@ -676,6 +687,13 @@ Dla współrzędnych $C(e_i\otimes e^j)=e^j(e_i)=\delta_i^j$,
 więc $C(S)=\sum_i S^i{}_i$. Z~\eqref{eq:endo-tensor}
 współczynniki $S^i{}_j$ są współczynnikami macierzy operatora,
 a powyższa suma jest jej śladem.
+Ten sam rachunek wyjaśnia ogólny wzór z
+Definicji~\ref{def:kontrakcja}: na tensorze bazowym
+ewaluacja pierwszej pary wnosi
+$e^{j_1}(e_{i_1})=\delta^{j_1}_{i_1}$.
+Przy sumowaniu rozwinięcia \eqref{eq:wspolczynniki-tensora}
+zostają więc dokładnie składniki z $i_1=j_1=a$;
+sumujemy po $a$, a pozostałe indeksy zachowujemy.
 \end{proof}
 
 Rysunek~\ref{fig:kontrakcja-slad} zapisuje tę samą operację
@@ -843,9 +861,20 @@ $P_\sigma t=\operatorname{sgn}(\sigma)t$ dla każdego $\sigma$.
 \end{twierdzenie}
 \begin{proof}
 Dzięki wyborowi $\sigma^{-1}$ w definicji
-$P_\sigma P_\tau=P_{\sigma\tau}$; sprawdzamy to bezpośrednio
-na tensorach prostych. Dla ustalonej $\tau$ podstawienie
-$\rho=\tau\sigma$ w sumach~\eqref{eq:sym-alt} daje
+$P_\sigma\circ P_\tau=P_{\sigma\tau}$.
+Istotnie, na $i$-tym miejscu po dwóch przestawieniach
+stoi $v_{\tau^{-1}(\sigma^{-1}(i))}
+=v_{(\sigma\tau)^{-1}(i)}$, czyli czynnik z definicji
+$P_{\sigma\tau}$.
+Dla ustalonej $\tau$ podstawienie
+$\rho=\tau\sigma$ jest bijekcją zbioru permutacji.
+W sumie symetrycznej tylko zmienia nazwy składników.
+W sumie alternującej dodatkowo
+$\operatorname{sgn}(\sigma)
+=\operatorname{sgn}(\tau^{-1}\rho)
+=\operatorname{sgn}(\tau)\operatorname{sgn}(\rho)$,
+więc znak $\tau$ można wyłączyć przed sumę.
+Z \eqref{eq:sym-alt} otrzymujemy zatem
 \[
  P_\tau\operatorname{Sym}_k=\operatorname{Sym}_k,
  \qquad
@@ -879,7 +908,13 @@ projekcje są identycznością.
 \begin{przyklad}[Rozkład tensora dwukowariantnego]
 Niech $e_1,e_2$ będzie bazą $V$, a $e^1,e^2$ bazą dualną $V^*$; połóżmy
 $t=e^1\otimes e^2+3e^2\otimes e^1$.
-Wówczas $t(e_1,e_2)=1$, $t(e_2,e_1)=3$, a
+Wówczas $t(e_1,e_2)=1$, $t(e_2,e_1)=3$.
+Transpozycja zamienia oba czynniki:
+$P_{(12)}t=e^2\otimes e^1+3e^1\otimes e^2$.
+W średniej $\tfrac12(t+P_{(12)}t)$ współczynniki
+wynoszą $(1+3)/2=2$ i $(3+1)/2=2$,
+a w różnicy $\tfrac12(t-P_{(12)}t)$ odpowiednio
+$(1-3)/2=-1$ i $(3-1)/2=1$. Zatem
 \[
  \operatorname{Sym}_2(t)
  =2(e^1\otimes e^2+e^2\otimes e^1),\qquad
@@ -1702,8 +1737,24 @@ przestrzenie zewnętrzne, wzór zachodzi zawsze.
 Równoważnie współczynnik przed
 $\operatorname{Alt}_{k+\ell}(\omega\otimes\eta)$ jest równy
 $(k+\ell)!/(k!\ell!)$, gdy $\omega,\eta$ są już funkcjami
-alternującymi. Wynika to bezpośrednio z
-$\mathcal E_m=m!j_m$ i wzoru na mnożenie dla $j_m$.
+alternującymi. Rozpiszmy to przejście: dla
+$\alpha\in\Lambda^k(V^*)$, $\beta\in\Lambda^\ell(V^*)$
+oraz $\omega=\mathcal E_k(\alpha)$, $\eta=\mathcal E_\ell(\beta)$ mamy
+\[
+ \begin{aligned}
+ \mathcal E_{k+\ell}(\alpha\wedge\beta)
+ &=(k+\ell)!\operatorname{Alt}_{k+\ell}
+                  (j_k(\alpha)\otimes j_\ell(\beta))\\
+ &=\frac{(k+\ell)!}{k!\ell!}
+       \operatorname{Alt}_{k+\ell}(\omega\otimes\eta).
+ \end{aligned}
+\]
+Pierwszy wiersz używa mnożenia z
+Twierdzenia~\ref{thm:wedge-alt}, a drugi podstawień
+$j_k(\alpha)=\omega/k!$, $j_\ell(\beta)=\eta/\ell!$.
+Antysymetryzator dzieli swoją sumę przez $(k+\ell)!$,
+więc po skróceniu pozostaje dokładnie $1/(k!\ell!)$
+we wzorze \eqref{eq:wedge-alt-forms}.
 To wyjaśnia, dlaczego wzór w modelu tensorów antysymetrycznych
 i wzór dla form mają różne współczynniki, mimo że opisują tę samą algebrę.
 \end{uwaga}
@@ -1878,8 +1929,16 @@ $x=r\cos\theta$, $y=r\sin\theta$, mamy
  \dd y=\sin\theta\,\dd r+r\cos\theta\,\dd\theta.
 \]
 Po podstawieniu do $g=\dd x\otimes\dd x+
-\dd y\otimes\dd y$ wyrazy mieszane się znoszą, a
-$\sin^2\theta+\cos^2\theta=1$ daje
+\dd y\otimes\dd y$ zbieramy współczynniki.
+Przy $\dd r\otimes\dd r$ mamy
+$\cos^2\theta+\sin^2\theta=1$,
+a przy $\dd\theta\otimes\dd\theta$
+$r^2\sin^2\theta+r^2\cos^2\theta=r^2$.
+Przy każdym z dwóch mieszanych tensorów
+$\dd r\otimes\dd\theta$ i $\dd\theta\otimes\dd r$
+współczynnik wynosi
+$-r\cos\theta\sin\theta+r\sin\theta\cos\theta=0$.
+Zatem
 \[
  g=\dd r\otimes\dd r+r^2\dd\theta\otimes\dd\theta.
 \]
