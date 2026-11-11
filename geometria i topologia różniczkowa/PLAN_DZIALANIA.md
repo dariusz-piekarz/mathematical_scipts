@@ -20,7 +20,7 @@ wykorzystanego założenia, rachunku i przejścia geometrycznego.
 Przykłady i rysunki dobieramy do kroków wymagających objaśnienia.
 Rozdział 2,
 §§2.3–2.7, przejrzano, rozszerzono i sprawdzono w składzie
-tomu I. Rozdziały 3–9 przejrzano i rozszerzono we wszystkich
+tomu I. Rozdziały 3–10 przejrzano i rozszerzono we wszystkich
 sekcjach, składając tylko tom I po ukończeniu każdego z nich.
 11 listopada w rozdziale 7 ujednolicono jawny zapis złożeń `\circ`
 i ponownie sprawdzono tom I.
@@ -28,7 +28,11 @@ Rozdział 8, §§8.1–8.8, zakończono 11 listopada: uzupełniono
 rachunki, kroki dowodów i pięć rysunków, a następnie sprawdzono tom I.
 Rozdział 9, §§9.1–9.7, zakończono 11 listopada: uzupełniono
 brakujące konstrukcje i przejścia w dowodach, a następnie sprawdzono tom I.
-Następna w kolejności jest **§10.1 rozdziału 10 „Formy różniczkowe, orientacja i kohomologia de Rhama”**.
+Rozdział 10, §§10.1–10.10, zakończono 11 listopada: uzupełniono
+rachunki na formach, konstrukcję podziału jedności, argumenty przy brzegu,
+ciąg Mayera–Vietorisa i dowód de Rhama. Sprawdzono pięć rysunków
+i skład tomu I, zamykając przegląd rozdziałów tego tomu.
+Następna w kolejności jest **§11.1 rozdziału 11 „Tensor metryczny, długość i miara” (tom II)**.
 Przy kolejnych
 rozdziałach obowiązuje ta sama zasada: skład tylko właściwego tomu,
 a potem commit i push po kontroli całego rozdziału.
@@ -325,7 +329,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 7. Homotopia, nakrycia i CW | `07-homotopia-nakrycia-cw.tex` | Pełny przegląd dydaktyczny §§7.1–7.6 zakończony 6 listopada; wcześniejszy audyt z 6 października i teoria grafów z 8 października | Rozpisano dowody homotopii i grupy podstawowej, podnoszenia i klasyfikacji nakryć, van Kampena, sympleksów oraz dołączania komórek. Rozszerzono teorię grafów o drzewa rozpinające, wolną bazę $\pi_1$ grafu i prezentację $\pi_1$ skończonego CW-kompleksu. Dodano cztery rysunki, przykłady i wyjaśnienia topologii słabej; sprawdzono skład tylko tomu I. Szczegóły w `PRZEGLAD.md`. |
 | 8. Homologia przestrzeni | `08-homologia.tex` | Pełny przegląd dydaktyczny §§8.1–8.8 zakończony 11 listopada; wcześniejszy audyt dodatków z 6 października | Rozpisano macierze dwóch trójkątów, pryzmat, dokładność ciągu pary i przykład odcinka, podział singularny, wycinanie i generator Mayera–Vietorisa. Dodano diagram porównania, przykład dwóch dysków, szczegółowe rachunki torusa, torsji i dysku dołączonego stopniem m oraz homologię lokalną brzegu i trójnogu. Pięć nowych rysunków, jawne złożenia i nowy wpis indeksu. Złożono i sprawdzono tylko tom I; szczegóły w `PRZEGLAD.md`. |
 | 9. Wyższe grupy homotopii | `09-wyzsze-grupy-homotopii.tex` | Pełny przegląd dydaktyczny §§9.1–9.7 zakończony 11 listopada; wcześniejszy audyt dodatków z 6 października | Rozpisano zmianę bazy, dokładność ciągu pary, argumenty CW, rachunek Hurewicza w stopniu jeden i odwrotność Whiteheada. W dowodzie wyższego Hurewicza uzupełniono rozszerzanie lokalnych dysków, stałą ścianę cięcia przez HEP, relacje przez cylinder z otworami i oba ciągi pary oraz stabilizację modelu CW. Poprawiono oznaczenie etapu względnego i wyjaśniono hipotezy oraz generatory w przykładach. Skontrolowano cztery rysunki, indeks i odsyłacze; złożono tylko tom I. Szczegóły w `PRZEGLAD.md`. |
-| 10. Formy i de Rham | `10-formy-de-rham.tex` | Audyt dodatków zakończony 6 października; bez poprawek treści | Siedem wpisów indeksu, pięć ilustracji i zgodność konwencji przy brzegu; PDF 397 stron |
+| 10. Formy i de Rham | `10-formy-de-rham.tex` | Pełny przegląd dydaktyczny §§10.1–10.10 zakończony 11 listopada; wcześniejszy audyt dodatków z 6 października | Rozpisano naturalność różniczki, znaki Cartana, operator homotopii, podział jedności i argumenty przy brzegu. Uzupełniono odwzorowanie łączące Mayera–Vietorisa, rachunki okręgu, sfer i torusa oraz sklejanie, gładkie łańcuchy i dualność w dowodzie de Rhama. Sprawdzono pięć rysunków, tabelę porównania, indeks i odsyłacze; złożono tylko tom I. Szczegóły w `PRZEGLAD.md`. |
 | 11. Metryka, długość i miara | `11-metryka-dlugosc-miara.tex` | Audyt dodatków zakończony 6 października; 4 listopada zintegrowano materiał autora | Dawne definicje i ilustracje sprawdzone osobno. Nowe izomorfizmy muzyczne, przykład historyczny Poincarégo i metrykę FLRW zweryfikowano rachunkowo; rysunek na fizycznej stronie 10 tomu II obejrzano. |
 | 12. Koneksje i transport | `12-koneksje.tex` | Audyt dodatków zakończony 6 października; 4 listopada zintegrowano materiał autora | Dawne cztery wpisy indeksu, definicje i dwa rysunki sprawdzone osobno. Nowe symbole Christoffela FLRW wynikają ze wzoru metrycznego; etykiety sprawdzono w pełnym składzie. |
 | 13. Geodezyjne i zupełność | `13-geodezyjne.tex` | Audyt dodatków zakończony 6 października; 13 października dodano miejsce cięcia i promień injektywności; 4 listopada zintegrowano materiał autora | Dawne rachunki sfery i torusa zachowano. Nowe geodezyjne Minkowskiego oraz geodezyjne i pola Jacobiego FLRW sprawdzono ze znakami konwencji; rysunek na fizycznej stronie 43 tomu II obejrzano. |

@@ -14,6 +14,96 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 10, §§10.1–10.10 — przejścia w dowodach (2026-11-11)
+
+Przejrzano cały rozdział według wzorca granularności rozdziału 1
+po poprawkach autora. Uzupełnienia dotyczą konkretnych przejść
+w istniejących dowodach i przykładach. Zachowano pięć ilustracji,
+etykiety i kolejność zależności; nie dodawano zadań.
+
+W §§10.1–10.3 sprawdzono opis form w mapach i przykład wyznacznika.
+Naturalność różniczki rozpisano dla pojedynczego wyrazu a dy^I:
+reguła łańcucha oraz d²(F^j)=0 uzasadniają zgodność wzorów w mapach
+i cofnięcie przez dowolne gładkie odwzorowanie. W dowodzie Cartana
+podano znaki obu par wyrazów mieszanych oraz powód zamiany
+różniczkowania po parametrze przepływu z różniczką formy.
+W operatorze homotopii wskazano globalne definicje rodzin a(t), b(t),
+niezależność całkowania współczynników od map i dopuszczalność
+różniczkowania pod całką. Ujednolicono jawny zapis złożeń `\circ`
+oraz nawiasy przy kolejnych zastosowaniach operatorów do form.
+
+W §10.4 podano wzór funkcji odcinającej, indukcyjną konstrukcję
+zwartego wyczerpania i pełne uzasadnienie lokalnej skończoności.
+Nośniki funkcji leżą w domknięciach większych kul zawartych
+w dziedzinach map. W §10.5 wydzielono przypadek m=q regularnego
+przeciwobrazu: dodatkowa regularność na brzegu wyklucza tam punkty
+przeciwobrazu. Wyjaśniono ograniczenie twierdzenia o funkcji odwrotnej
+do półprzestrzeni i niezależność orientacji od podniesień przez
+naprzemienność formy. Rysunek orientacji brzegu umieszczono przed
+następnym twierdzeniem, aby nie przerywał jego treści.
+
+W §10.6 uzupełniono zmianę zmiennych dla map przybrzegowych:
+stosujemy ją we wnętrzu, a płaski brzeg ma miarę zero.
+W §10.7 uzasadniono zwartość nośników obu całek Stokesa.
+Sprawdzono cały lokalny rachunek, znak (−1)^m dla półprzestrzeni,
+orientację brzegu, sumowanie podziału jedności oraz klasyczne
+wnioski Greena, Stokesa o rotacji i Gaussa–Ostrogradskiego.
+Znaki tych wzorów nie wymagały poprawki.
+
+W §10.8 sprawdzono niezależność iloczynu klas od obu reprezentantów.
+Dla odwzorowania łączącego Mayera–Vietorisa rozpisano zmianę
+podniesienia, zmianę reprezentanta i dokładność przy H^k(U∩V).
+Dopisano pochodne współczynników formy kąta i jej normalizację
+do zadanego okresu. Obliczenie sfer uzasadniają teraz jawne gładkie
+ściągnięcia, retrakcja na równik i fragment ciągu z zerami po bokach.
+W przykładzie torusa podano cofnięcia przez parametryzację kwadratu
+oraz równania wykazujące niezależność dwóch klas.
+
+W §10.9 sprawdzono czterostopniowy dowód de Rhama, w tym znaki
+stożka i totalizacji, skończoność procedury usuwania składników
+oraz dwa zastosowania sklejania. Dowód nie zakłada istnienia dobrego
+pokrycia: najpierw obejmuje wszystkie otwarte podzbiory modelu
+euklidesowego lub półprzestrzeni, a potem przecięcia dziedzin map.
+Dopisano konstrukcję podziału jedności na sympleksie z narożami,
+anulowanie mieszanych składników D² i rachunek homotopii wierszy.
+Wyjaśniono ważny szczegół gładkich małych łańcuchów: operator
+homotopii podziału z rozdziału 8 powstaje z afinicznych sympleksów
+i stożków nad nimi; dopiero potem składamy je z gładkim sympleksem.
+Nie potrzeba założenia, że stożek nad dowolnym gładkim sympleksem
+byłby gładki przy wierzchołku. Rozpisano też, jak jądro i iloraz
+odwzorowania liniowego wykrywa dualność, bez założenia skończonego
+wymiaru. To uzasadnia reprezentowanie klas przez gładkie cykle.
+
+W §10.10 sprawdzono tabelę porównania trzech teorii, przejście
+do triangulacji lokalnie skończonych, parowanie przez okresy,
+współczynniki i torsję oraz przykłady grup homotopii.
+W algebraicznym dowodzie dualności wydzielono stopień zero.
+Przykład torusa z usuniętym dyskiem zawiera jawną radialną
+retrakcję pierścienia, zgodną z odwzorowaniem dołączającym.
+Twierdzenie o triangulacji nadal jest wyraźnie wskazanym wynikiem
+zewnętrznym; nie jest używane do dowodu de Rhama.
+
+Rachunki i konwencje porównano z [notatkami Uniwersytetu w Toronto
+o kohomologii, całkowaniu i Stokesie](https://www.math.toronto.edu/mgualt/courses/17-1300/docs/17-1300-notes-13.pdf)
+oraz [wykładami 32–34 MIT, zwłaszcza homotopią wierszy w wykładzie 33](https://ocw.mit.edu/courses/18-965-geometry-of-manifolds-fall-2004/pages/lecture-notes/).
+Kontrola statyczna wykazała 10 sekcji, 60 unikalnych etykiet,
+poprawne cele ref/eqref i zagnieżdżenie środowisk.
+
+Po kontroli całego rozdziału złożono wyłącznie tom I.
+Końcowy PDF ma 261 stron; rozdział 10 zajmuje fizyczne strony
+237–259. Obejrzano przegląd wszystkich tych stron, pięć rysunków
+na stronach 238, 244, 246, 251 i 256, powiększenia kluczowych
+rachunków oraz indeks na stronach 260–261. Po korekcie położenia
+rysunku ponownie sprawdzono zmienione strony. Brak nowych ostrzeżeń,
+przepełnień, błędów, nierozwiązanych odsyłaczy i tekstu poza stroną.
+Pozostają wcześniejsze dwa ostrzeżenia `h`→`ht`, jeden `Underfull`
+w rozdziale 1 i zduplikowany cel `page.1`.
+Indeks przyjął 125 wpisów bez odrzuceń i ostrzeżeń.
+Wszystkie osiem celów łączy między tomami istnieje w pozostałych
+PDF-ach; innych tomów nie składano. `git diff --check` przeszedł.
+PDF w katalogu projektu i PDF składu mają identyczny SHA-256:
+`2D75C1491CCABF6464E71E04694CE5AC8ED8E81ADD413260DF94E881A27C9D01`.
+
 ## Rozdział 9, §§9.1–9.7 — przejścia w dowodach (2026-11-11)
 
 Przejrzano cały rozdział według doprecyzowania autora: wzorcem
