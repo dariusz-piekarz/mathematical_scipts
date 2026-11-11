@@ -14,6 +14,43 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 11 — ponowna kontrola wyprowadzeń i całek (2026-11-11)
+
+Na prośbę autora wstrzymano dalszą kolejkę i ponownie przeczytano
+wszystkie osiem sekcji rozdziału 11, szukając równań bez wyprowadzenia
+oraz pominiętych dziedzin całkowania. Rozpisano:
+
+- obniżanie i podnoszenie indeksu przez obliczenie na bazie dualnej
+  i rozwiązanie układu z macierzą metryki;
+- zamianę czasu w zespolonej transformacji Lorentza oraz sumę dwóch
+  współczynników wyrazu mieszanego Kerra;
+- odległość na przekroju FLRW przez dolne oszacowanie długości
+  i odcinek osiągający równość, a następnie różniczkowanie przy
+  stałych współrzędnych współporuszających się;
+- odległości w półprzestrzeni i kuli hiperbolicznej: parametryzacje,
+  funkcje pierwotne, regułę łańcuchową i drogi osiągające oszacowania;
+- rzut ortogonalny z układu równań Grama i sprawdzenie własności rzutu;
+- całkę po odcinku parametrów w dowodzie zgodności miary Hausdorffa
+  z objętością, wraz z oszacowaniem jej normy.
+
+Uzupełniono siedem zapisów całek bez granic: dwa w dowodzie
+zachowania długości przez izometrię, cztery przy odległościach
+hiperbolicznych i jeden przy całce po łuku. Ponowne wyszukanie
+nie wykryło dalszych takich zapisów w tym rozdziale.
+Osiemnaście dotychczasowych kontroli symbolicznych przeszło;
+osobno sprawdzono obie funkcje pierwotne i macierz rzutu w bazie
+nieortogonalnej. Pozostały 82 etykiety bez powtórzeń i brakujących
+odsyłaczy; zachowano numery wzorów, wyników i ilustracji.
+
+Złożono tylko tom II: **209 stron**, rozdział 11 na fizycznych
+stronach **4–28**. Obejrzano cały rozdział, osiem ilustracji,
+spis i indeks. Brak nowych ostrzeżeń, przepełnień i tekstu poza
+stroną; pozostają wcześniejsze komunikaty o `page.1` i niedopełnieniu
+wiersza w rozdziale 15. Indeks: 106 wpisów przyjętych, 0 odrzuconych,
+0 ostrzeżeń. Wszystkie cele łączy między czterema PDF-ami istnieją.
+SHA-256 sprawdzonego tomu II:
+`6C39276C2FCF8243F386E35453153B7F41D145D40131EF2BD76C8D7D5A01315D`.
+
 ## Rozdział 14 — całka po małej pętli w Uwadze 14.1.3 (2026-11-11)
 
 Na prośbę autora rozpisano pochodzenie całki i wszystkie

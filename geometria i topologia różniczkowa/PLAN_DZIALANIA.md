@@ -96,7 +96,19 @@ parametryzację pętli, całkowanie równania transportu,
 wkłady czterech boków i oszacowania reszt.
 W rozdziale 14 każda całka oznaczona ma jawne granice
 lub dziedzinę; wymóg ten dopisano także do zasad projektu.
-Następna w kolejności jest **§15.1 rozdziału 15 „Grupy Liego i ich algebry” (tom II)**.
+Na prośbę autora przejście do rozdziału 15 jest **wstrzymane**.
+Bieżący etap to ponowna kontrola **rozdziałów 11–13**
+pod kątem niewyprowadzonych równań, przeskoków rachunkowych
+i całek bez jawnej dziedziny. Każdy z tych rozdziałów
+zamykamy osobnym cyklem ze składem tylko tomu II, kontrolą PDF,
+commitem i pushem. Ponowną kontrolę wszystkich ośmiu sekcji
+rozdziału 11 zakończono: wyprowadzono odległości hiperboliczne,
+rzut ortogonalny, wzory muzyczne i odległość FLRW, rozpisano
+rachunek po odcinku i uzupełniono granice całek.
+Sprawdzono skład tomu II; bieżący rozdział to **12**, następnie **13**.
+Szersza kontrola rozdziałów 2–10 według
+tego doprecyzowanego kryterium pozostaje do wykonania;
+nie zastępuje jej wcześniejszy przegląd dydaktyczny.
 Przy kolejnych
 rozdziałach obowiązuje ta sama zasada: skład tylko właściwego tomu,
 a potem commit i push po kontroli całego rozdziału.
