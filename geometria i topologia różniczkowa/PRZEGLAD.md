@@ -14,6 +14,115 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Integracja materiałów autora o geometriach Thurstona (2026-11-11)
+
+Na prośbę autora wykonano etap przekrojowy obejmujący dziewięć fragmentów
+z folderu `do dodania`, plan integracji i porównawczy szkic całego
+rozdziału. Zmiany dotyczą plików 11–14, 29a i 30b, czyli obecnych
+rozdziałów 11–14, 16 i 33, w tomach II i IV. Numerację ustalono
+z importów. Nie jest to pełny ponowny audyt całego przedziału rozdziałów.
+
+Wskazany lokalny PDF `D:\Moje\3 dimensional compact manifolds with zero
+ricci curvature.pdf` zawiera 76-stronicową pracę S. A. Pinillosa Prado,
+*Geometric structures on 3-dimensional manifolds* (UFMG, 2021).
+Sprawdzono jej spis treści, odpowiednie partie §§2.2.6–2.2.8, przykładu
+2.2.13 i rozdziału 3, w tym rysunki konstrukcji hiperbolicznych.
+Tekst jest dostępny także w [repozytorium UFMG](https://www.mat.ufmg.br/posgrad/wp-content/uploads/TesesDissertacoes/Diss370.pdf).
+Wyniki porównano z [J. S. Purcell, *Hyperbolic Knot Theory*, §§3.1–3.3
+i twierdzeniami 6.1, 6.13, 6.29–6.30](https://users.monash.edu/~jpurcell/book/HypKnotTheory.pdf)
+oraz [W. P. Thurstonem, *The Geometry and Topology of Three-Manifolds*,
+rozdział 4](https://library.slmath.org/nonmsri/gt3m/PDF/4.pdf), w szczególności
+opisem zerowego wypełnienia ósemki jako torusa odwzorowania.
+
+Audyt przed wstawieniem potwierdził wszystkie kotwice i brak kolizji
+etykiet. Mapa pokrycia znajduje się wyłącznie w `PLAN_DZIALANIA.md`.
+Aktualny rozdział 33 zawierał już osiem modeli, ilorazy, orbifoldy,
+tabelę Seiferta i geometryzację. Obszerny szkic porównawczy nie został
+włączony jako nowy rozdział. Dziewięć fragmentów zaadaptowano
+bezpośrednio w istniejących źródłach, zgodnie z organizacją projektu.
+
+W rozdziale 11 dopisano macierze metryk Nil i Sol, ich dodatnią
+określoność, wyznaczniki, formy objętości i anizotropię. Wskazano
+późniejsze uzasadnienie wzoru na element objętości, aby nie wprowadzać
+go jako nieobjaśnionego kroku. W rozdziale 12 wyprowadzono wzór Koszula
+w ortonormalnej ramie nieholonomicznej, pełną tabelę koneksji Nil
+i sprawdzono brak torsji dla wszystkich trzech par pól bazowych.
+
+Rozdział 13 zawiera pierwsze całki geodezyjnych Sol, redukcję do
+potencjału efektywnego i nowy wykres dla p_x=p_y=1, E=2.
+Równania Nil wyprowadzono z lagranżjanu, wskazując stałą w,
+prędkość obrotu, stały środek i promień rzutu geodezyjnej.
+Rozdział 14 korzysta z tej samej koneksji do wyliczenia krzywizn,
+Ricciego i skalara Nil; dla Sol podano ramę, nawiasy i koneksję.
+Uzasadniono również znikanie mieszanych składowych Ricciego.
+Istniejącego wyniku Ric=0 ⇒ Rm=0 w wymiarze trzy nie powielano.
+
+Nowa §16.4 opisuje atlas (G,X), rozwinięcie i reprezentację holonomii.
+Dowód obejmuje jednoznaczność izometrii przez dane lokalne, konkretne
+przejście do następnej mapy i niezmienniczość przez siatkę homotopii.
+Zupełność rozwinięcia uzasadniono przez podnoszenie geodezyjnych,
+surjektywność i rozłączne arkusze nad kulą normalną. Torus płaski
+rozróżnia holonomię struktury od holonomii Leviego-Civity, a otwarta
+kula pokazuje rolę zupełności. Dodanie sekcji zmienia numery późniejszych
+sekcji rozdziału 16; odpowiednie odsyłacze w tomie IV przeliczono.
+
+W rozdziale 33 wyprowadzono lokalną metrykę Sasakiego z normy
+prędkości punktu bazy i pochodnej kowariantnej jednostkowego wektora.
+Sprawdzono A=dx/y, alpha=dphi+A, d(alpha)=vol_H2 i znak zmiany kąta.
+Kontaktowy rozkład Nil ma theta∧d(theta)≠0; poziome podniesienie
+prostokąta daje Delta z=ab, co pokazuje nowy rysunek. Rozróżniono
+rzeczywisty przyrost od przyrostu modulo 1 we włóknie okręgowym.
+Konwencję Eulera uzasadnia macierz koneksji: Omega_12=−dA, więc
+e(TΣ) jest reprezentowana przez −dA/(2pi). Gauss–Bonnet daje 2−2g.
+
+Dopisano konstruktywne uzasadnienia zwartości obu ilorazów.
+W Nil każdą orbitę przenosimy do kostki przez całkowitą lewą translację.
+W Sol krata w bazie własnej to P^−1 Z², zachowywana przez D=P^−1 A P;
+nie zakładamy, że jest to standardowa krata osi współrzędnych.
+Sprawdzono izometryczność F(v,t)=(Dv,t+log(lambda)), swobodę,
+właściwą nieciągłość i zwarty obszar fundamentalny. Jawna identyfikacja
+(v,0)~(Dv,c) wyjaśnia, dlaczego przy regule górny→dolny pojawia się
+A^−1 i jak odwrócenie kierunku okręgu bazy zamienia obie konwencje.
+
+Nowa §33.4 obejmuje wielościany fundamentalne, metrykę i objętość
+ostrogi, Giesekinga, dopełnienie ósemki, Seiferta–Webera i sztywność
+Mostowa–Prasada. Istnienie poprawnych sklejeń oraz głębokie twierdzenia
+pozostają wyraźnie cytowanymi wynikami zewnętrznymi. Definicję
+wypełnienia Dehna uściślono przez prymitywne niezorientowane nachylenie.
+W dowodzie grupy po wypełnieniu dodano generator rdzenia pełnego torusa
+i wyeliminowano go z prezentacji van Kampena. Homologię zewnętrza węzła
+oraz preferowaną długość wyprowadzono z Mayera–Vietorisa.
+Warunek ∂N=T² w twierdzeniu o wypełnieniach zapewnia zamkniętość
+wyniku. Wyjaśniono też nieskończoność rodziny przez granicę objętości
+i jej ścisły spadek oraz związek zerowego wypełnienia ósemki z Sol.
+
+Niezależna kontrola symboliczna wyprowadzała koneksję z nawiasów ramy,
+następnie R i Ricciego przy konwencji
+R(X,Y)Z=∇_X(∇_Y Z)−∇_Y(∇_X Z)−∇_[X,Y]Z.
+Potwierdzono Nil: K=(−3/4,1/4,1/4), Ric=diag(−1/2,−1/2,1/2),
+Scal=−1/2; Sol: K=(1,−1,−1), Ric=diag(0,0,−2), Scal=−2.
+Kontrola metryki Sasakiego daje K=(−7/4,1/4,1/4), Ric=diag(−3/2,−3/2,1/2)
+i Scal=−5/2. Równania Eulera–Lagrange'a Nil/Sol i oba wyznaczniki
+metryk również sprawdzono symbolicznie. Kontrola etykiet i środowisk
+wykazała 36 nowych unikalnych etykiet, bez brakujących celów ref/eqref.
+
+Złożono i powtórnie sprawdzono tylko dotknięte tomy II oraz IV,
+z ponownym przeliczeniem zależności między nimi. Mają odpowiednio
+198 i 102 strony. Indeksy przyjęły 106 i 104 wpisy, bez odrzuceń
+i ostrzeżeń. Obejrzano zmienione partie tomu II na fizycznych stronach
+8–10, 29–32, 45–47, 64–66, 114–118 oraz cały rozdział 33 na stronach
+31–43 tomu IV, strony spisów i obu indeksów. W powiększeniu sprawdzono
+nowe rysunki na stronie 46 tomu II i stronie 36 tomu IV, wzory krzywizn
+i konwencję Eulera. Po drobnej korekcie podpisu rysunku Nil i nawiasów
+w rachunku krzywizny ponownie sprawdzono zmienione strony.
+Względem zapisanych logów poprzednich składów zestaw ostrzeżeń jest
+identyczny; nie ma błędów, przepełnień ani niezdefiniowanych odsyłaczy.
+Sprawdzono cele łączy między wszystkimi czterema PDF-ami; wszystkie istnieją.
+Tomów I i III nie składano. `git diff --check` przeszedł.
+PDF-y w katalogu projektu i składu mają identyczne SHA-256:
+tom II `46E788F1AC0D2E753B13C5A84C84774F78C2C087C5807962D8D40B3A3B313CE8`,
+tom IV `898D5BF4AB4C25D76B9A5BFF0FEFD08DE2DCD832DA821CA562A7BE2BB92840F4`.
+
 ## Rozdział 10, §§10.1–10.10 — przejścia w dowodach (2026-11-11)
 
 Przejrzano cały rozdział według wzorca granularności rozdziału 1
