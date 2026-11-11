@@ -14,6 +14,71 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 2 — ponowna kontrola wyprowadzeń i całek, §§2.1–2.7 (2026-11-11)
+
+Na prośbę autora wrócono do początku kolejki i ponownie przeczytano
+wszystkie siedem sekcji rozdziału 2. Punktem odniesienia pozostaje
+granularność rozdziału 1 po poprawkach autora. Sprawdzano także
+równania w przykładach i podpisach rysunków, a nie tylko dowody
+głównych twierdzeń.
+
+- **§§2.1–2.2.** Sprawdzono derywacje, zmianę współrzędnych,
+  przykłady na okręgu i sferze oraz pole wzdłuż odwzorowania.
+  W przykładach nawiasu dopisano oba współczynniki dla ścinania
+  oraz dla obrotu i skalowania. Objaśniono skrót składania operatorów
+  w rachunku Jacobiego.
+- **§2.3.** W lokalnym dowodzie jednoznaczności zastąpiono
+  górną granicę całki oznaczoną kropką jawnym parametrem czasu.
+  Wyprowadzono ograniczenie normy macierzy wariacyjnej i oszacowanie
+  różnicy dwóch takich macierzy przez odjęcie równań całkowych,
+  rozdzielenie składników i przeniesienie części kontrakcyjnej.
+  Wzór ruchu obrotowego otrzymano przez rozwiązanie zespolonego
+  równania pierwszego rzędu, zamiast podania samego wyniku.
+- **§2.4.** Wyprowadzono z równań krzywych całkowych sinusoidalny
+  przepływ, którego wzór wcześniej występował tylko w podpisie
+  Rysunku 2.6. Pokazano jego całkę z granicami i stałą etykietującą
+  trajektorie. Przepływ pola kwadratowego wyprowadzono przez
+  różniczkowanie odwrotności rozwiązania i całkowanie od 0 do t.
+  Zachowano osobne potraktowanie rozwiązania zerowego oraz
+  maksymalnych przedziałów. W schemacie składania dodano znak złożenia.
+- **§§2.5–2.6.** Sprawdzono prostowanie, cały dowód Frobeniusa
+  i komutowanie przepływów. Dopisano współczynniki drugiego pola
+  w prostujących współrzędnych i rachunek pierwszej całki obrotu.
+  W pochodnej Liego wyjaśniono różniczkowanie przepływu względem
+  punktu oraz znak rozwinięcia macierzy odwrotnej. W komutatorze
+  czterech przepływów rozpisano podstawienia Taylora w punktach
+  pośrednich, rzędy reszt i porównanie obu kolejności dwóch ruchów.
+- **§2.7.** Sprawdzono ewolucję nieautonomiczną, wspólny zwarty nośnik,
+  generator izotopii, dowód rozszerzenia izotopii i argument kołnierza.
+  Dopisano rachunek różnicy przesunięć pokazujący brak prawa grupowego
+  dla przykładu o zmiennej prędkości.
+
+Wszystkie całki oznaczone mają granice; w jedynym skrótowym
+zapisie operatorowym górny symbol zastępczy zamieniono na t.
+Nie znaleziono całek pozostawionych bez granic lub dziedziny.
+Nie dodawano nowych wyników numerowanych ani nowych rysunków.
+
+Przeszło 27 kontroli symbolicznych: nawiasy obu rozkładów i przykładów,
+równania obrotu, przepływ sinusoidalny i jego prawo grupowe,
+przepływ kwadratowy oraz równania jego pierwszych trzech pochodnych
+względem danych, prostowanie i pierwsza całka, cztery kroki
+komutatora dla nieliniowych pól, różnica kolejności ruchów
+oraz przykład nieautonomiczny. Pozostało 47 etykiet,
+bez powtórzeń i brakujących odsyłaczy.
+
+Złożono tylko tom I: **261 stron**, rozdział 2 na fizycznych
+stronach **63–93**. Obejrzano cały rozdział i wszystkie 10 ilustracji,
+spis treści oraz indeks; nowe rachunki sprawdzono także w pełnym
+powiększeniu. Nie ma nowych ostrzeżeń, przepełnień ani tekstu poza
+stroną. Zachowano dotychczasową numerację wyników, wzorów i rysunków.
+Pozostały wcześniejsze ostrzeżenia o `page.1`, dwóch zmianach
+specyfikacji pływania `h` na `ht` i niedopełnieniu w rozdziale 1.
+Indeks: 125 wpisów przyjętych, 0 odrzuconych, 0 ostrzeżeń.
+Wszystkie cele łączy między czterema PDF-ami istnieją.
+Tomy II–IV zachowały dotychczasowe sumy kontrolne.
+SHA-256 sprawdzonego tomu I:
+`7B1337969ABA78F8BE8B301DE57BDE7A580998BE26371F61C1D84A114C8F4FBE`.
+
 ## Rozdział 13 — ponowna kontrola wyprowadzeń i całek (2026-11-11)
 
 Ponownie przeczytano wszystkie osiem sekcji pod kątem nieobjaśnionych
