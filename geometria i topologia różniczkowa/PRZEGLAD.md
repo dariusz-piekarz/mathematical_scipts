@@ -14,6 +14,61 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 14 — całka po małej pętli w Uwadze 14.1.3 (2026-11-11)
+
+Na prośbę autora rozpisano pochodzenie całki i wszystkie
+przejścia w rachunku transportu po małym obwodzie.
+Zdefiniowano liniową parametryzację czterech boków
+`ξ_ε:[0,4]→T_pM`, ich kolejność i pętlę
+`γ_ε=exp_p∘ξ_ε`. Wskazano, że `V(s)` oznacza
+współczynniki transportowanego wektora w ramie współrzędnych.
+Całka z granicami `0` i `4` wynika teraz bezpośrednio
+z całkowania równania transportu: wartości wektora
+w trzech pośrednich wierzchołkach znoszą się po dodaniu
+czterech równości. Następnie zdefiniowano skrót
+`\oint_{γ_ε} A` jako całkę po tej konkretnej zorientowanej pętli.
+
+Oddzielnie uzasadniono zastąpienie `V(s)` przez `v`
+z błędem rzędu `ε⁴`. Tabela podaje parametryzację
+i wkład każdego boku, a drugi bok obliczono w całości
+z rozwinięcia Taylora i całki od `0` do `1`.
+Po zsumowaniu pokazano skracanie wyrazów z pochodnymi
+wzdłuż tego samego kierunku, identyfikację pozostałej
+różnicy z macierzą `R_p(X,Y)` i źródło znaku minus.
+Doprecyzowano także dzielenie zmiany transportu przez pole.
+
+Sprawdzono wszystkie całki w rozdziale 14. Trzy dalsze
+zapisy bez dziedziny uzupełniono: powierzchnia `S_0`
+po wycięciu dysków stożkowych oraz `M⁴` i `S`
+w porównaniu całek krzywizny skalarnej i Gaussa.
+Do `AGENTS.md` dodano wymóg jawnych granic lub dziedziny
+każdej całki oznaczonej, a dla krzywych także wskazania
+orientacji albo parametryzacji. Całki nieoznaczone są wyjątkiem.
+Zgodnie z dalszym doprecyzowaniem autora zapisano też wymóg
+wyprowadzania każdego nietrywialnego równania będącego wynikiem
+rachunku, także w przykładach i objaśnieniach; samo
+„po obliczeniu otrzymujemy” nie zastępuje potrzebnych kroków.
+
+Symbolicznie sprawdzono cztery wkłady, ich zorientowaną
+sumę i rząd reszty na przykładzie $1$-formy
+o współczynnikach wielomianowych stopnia co najwyżej dwa.
+Kontrola źródła nie znalazła żadnej całki oznaczonej
+bez granic lub dziedziny; nadal jest 171 etykiet,
+bez powtórzeń i brakujących odsyłaczy.
+
+Złożono tylko tom II: **209 stron**, rozdział 14 na fizycznych
+stronach **65–110**. Uzupełniona uwaga jest na fizycznych stronach
+**66–67** (drukowanych 65–66); obejrzano te strony, sąsiedni
+rysunek, pozostałe dopiski, spis i indeks.
+Brak nowych ostrzeżeń składu i wyjść tekstu poza stronę;
+pozostały wcześniejsze ostrzeżenia o `page.1`
+i `Underfull \hbox` o badness 1057.
+Indeks ma 106 przyjętych wpisów, 0 odrzuconych i 0 ostrzeżeń.
+Wszystkie cele łączy pomiędzy czterema PDF-ami istnieją;
+numery dotychczasowych twierdzeń, wzorów i rysunków zachowano.
+SHA-256 sprawdzonego tomu II:
+`2D95A88D35F57E4EE67E6B09E6B5FD93002D20B62544661BDE52CD164C8BA092`.
+
 ## Rozdział 14, §§14.1–14.13 — krzywizna i twierdzenia globalne (2026-11-11)
 
 Przejrzano wszystkie trzynaście sekcji według granularności

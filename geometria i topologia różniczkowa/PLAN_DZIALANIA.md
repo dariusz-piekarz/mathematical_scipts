@@ -46,6 +46,10 @@ Prowadzimy przegląd całej książki po kolei, rozdział po rozdziale i sekcja 
 sekcji. Wzorcem wystarczającej granularności jest rozdział 1 po poprawkach
 autora. Priorytetem jest usuwanie przeskoków w dowodach: wyjaśnienie
 wykorzystanego założenia, rachunku i przejścia geometrycznego.
+Dotyczy to także nietrywialnych równań pojawiających się
+w przykładach i objaśnieniach: każde wyprowadzać od wskazanego
+punktu wyjścia, z potrzebnymi podstawieniami i przekształceniami,
+albo odsyłać do konkretnego wcześniejszego wyprowadzenia.
 Przykłady i rysunki dobieramy do kroków wymagających objaśnienia.
 Rozdział 2,
 §§2.3–2.7, przejrzano, rozszerzono i sprawdzono w składzie
@@ -87,6 +91,11 @@ w dowodzie Bishopa–Gromowa. Dodano obliczenie pól kul płaskiego
 walca i dwa rysunki. Sprawdzono dowody wszystkich sekcji,
 rachunki krzywizn, 15 ilustracji i skład tylko tomu II;
 złożenia transportów zapisano jawnie przez `\circ`.
+Następnie, na prośbę autora, rozpisano Uwagę 14.1.3:
+parametryzację pętli, całkowanie równania transportu,
+wkłady czterech boków i oszacowania reszt.
+W rozdziale 14 każda całka oznaczona ma jawne granice
+lub dziedzinę; wymóg ten dopisano także do zasad projektu.
 Następna w kolejności jest **§15.1 rozdziału 15 „Grupy Liego i ich algebry” (tom II)**.
 Przy kolejnych
 rozdziałach obowiązuje ta sama zasada: skład tylko właściwego tomu,

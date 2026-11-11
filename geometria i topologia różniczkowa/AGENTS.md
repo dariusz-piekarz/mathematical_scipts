@@ -16,12 +16,22 @@
   przeskoków w dowodach: wskazuj wykorzystane założenie lub wynik
   i objaśniaj nietrywialny krok rachunkowy albo geometryczny.
   Przykłady i rysunki dobieraj do przejść wymagających wyjaśnienia.
+- Każde nietrywialne równanie będące wynikiem rachunku wyprowadzaj
+  od wskazanych definicji, założeń lub wcześniejszych wyników.
+  Pokazuj potrzebne podstawienia, przekształcenia i użyte własności.
+  Jeśli wyprowadzenie jest już w skrypcie, podaj dokładny odsyłacz.
+  Sam zapis wzoru albo stwierdzenie „po obliczeniu otrzymujemy”
+  nie zastępuje objaśnienia przejścia.
 - Krótkie wzory i pojedyncze równości zapisuj w toku zdania, jeżeli
   pozostają czytelne. Środowiska `\[...\]` używaj dla wieloetapowych
   rachunków, ważnych wzorów, układów i diagramów, którym osobny wiersz
   rzeczywiście pomaga. Podczas przeglądu każdej sekcji usuwaj zbędne
   wzory wydzielone, aby styl skryptu pozostał jednolity.
 - Jeżeli używasz głębokiego twierdzenia lub lematu, podaj jego dokładne założenia i wskaż źródło. Nie nazywaj szkicu pełnym dowodem.
+- Każda całka oznaczona musi mieć jawnie zapisane granice albo dziedzinę
+  całkowania. W całce po krzywej podawaj nazwę krzywej i określ jej
+  orientację lub parametryzację; nie zostawiaj samego symbolu `\oint`
+  ani `\int`. Wyjątkiem są całki nieoznaczone.
 - Unikaj powielania definicji już wprowadzonych; odsyłaj do wcześniejszych miejsc.
 
 ## Terminologia
