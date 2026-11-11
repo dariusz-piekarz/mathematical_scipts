@@ -105,7 +105,11 @@ commitem i pushem. Ponowną kontrolę wszystkich ośmiu sekcji
 rozdziału 11 zakończono: wyprowadzono odległości hiperboliczne,
 rzut ortogonalny, wzory muzyczne i odległość FLRW, rozpisano
 rachunek po odcinku i uzupełniono granice całek.
-Sprawdzono skład tomu II; bieżący rozdział to **12**, następnie **13**.
+Sprawdzono skład tomu II. Ponowną kontrolę wszystkich sześciu sekcji
+rozdziału 12 również zakończono: dopisano podstawienia do symboli
+Christoffela, wyprowadzenie całkowego równania transportu i oszacowania
+Grönwalla, rozwiązanie transportu po równoleżniku oraz rachunek bazy
+dualnej. Sprawdzono skład tylko tomu II; bieżący rozdział to **13**.
 Szersza kontrola rozdziałów 2–10 według
 tego doprecyzowanego kryterium pozostaje do wykonania;
 nie zastępuje jej wcześniejszy przegląd dydaktyczny.

@@ -14,6 +14,35 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 12 — ponowna kontrola wyprowadzeń i całek (2026-11-11)
+
+Przeczytano ponownie wszystkie sześć sekcji według doprecyzowanej
+zasady wyprowadzania równań. Dopisano jawne podstawienia dla
+wszystkich niezależnych symboli biegunowych, sfery i półprzestrzeni
+hiperbolicznej oraz brakujących wypisanych symboli Schwarzschilda.
+W tabeli Nil wyjaśniono trzeci niezależny współczynnik, pozostałe
+przez brak torsji, a zerowanie diagonalnych przez stałe nawiasów.
+W rachunku Kerra rozpisano regułę ilorazu i pochodną po kącie.
+
+Równanie transportu najpierw scałkowano z jawnymi granicami,
+następnie oszacowano normę i udowodniono używaną elementarną
+postać nierówności Grönwalla. Przy równoleżniku sfery rozpisano
+pochodne wektorów ramy, przejście do zespolonego równania
+pierwszego rzędu i czynnik całkujący. Przy tensorach wyprowadzono
+pochodną bazy dualnej, wyjaśniając znak minus dla dolnego indeksu.
+Stałość radialnie transportowanego iloczynu wyjaśniono regułą iloczynu.
+
+Kontrola nie wykryła całek bez jawnych granic lub dziedzin.
+Przeszło 35 kontroli symbolicznych; 63 etykiety pozostają
+jednoznaczne, odsyłacze i dotychczasowa numeracja są zachowane.
+Złożono tylko tom II: **210 stron**, rozdział 12 na fizycznych
+stronach **29–43**. Obejrzano cały rozdział, pięć ilustracji,
+spis i indeks. Nie ma nowych ostrzeżeń, przepełnień ani tekstu
+poza stroną. Indeks przyjął 106 wpisów bez odrzuceń i ostrzeżeń;
+wszystkie cele łączy między czterema PDF-ami istnieją.
+SHA-256 sprawdzonego tomu II:
+`D1CEABDD1B0C53FF3045BE448F46A1CF85844C24B58B6464E5FAFAB42B3F19BB`.
+
 ## Rozdział 11 — ponowna kontrola wyprowadzeń i całek (2026-11-11)
 
 Na prośbę autora wstrzymano dalszą kolejkę i ponownie przeczytano
