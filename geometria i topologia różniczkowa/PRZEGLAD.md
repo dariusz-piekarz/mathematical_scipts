@@ -14,6 +14,84 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 12, §§12.1–12.6 — koneksje i transport równoległy (2026-11-11)
+
+Przejrzano wszystkie sześć sekcji według granularności rozdziału 1
+po poprawkach autora, łącznie z wcześniejszymi dodatkami FLRW i Nil.
+Priorytetem były przejścia pomiędzy rachunkiem współrzędnych
+a konstrukcjami niezależnymi od mapy.
+
+- **§12.1.** W dowodzie tensorowości torsji i różnicy koneksji
+  dopisano przejście od liniowości nad funkcjami do punktowej
+  reprezentacji o gładkich współczynnikach. Przykład rodziny
+  koneksji na prostej pokazuje, że brak torsji nie wystarcza
+  do zgodności z ustaloną metryką.
+- **§12.2.** Zachowano szczegółowy dowód Koszula, uzupełniając
+  addytywność konstruowanej koneksji. Dla podrozmaitości
+  rozpisano obie pochodne w parametryzacji i skracanie
+  wyrazów z mieszanymi drugimi pochodnymi. Gładkość rzutu
+  odniesiono do wcześniejszej konstrukcji wiązki normalnej.
+  Przykład na okręgu promienia 2 i nowy rysunek 12.2
+  pokazują konkretny rozkład $D_TY=T-\nu/2$ oraz $\nabla_TY=T$.
+- **§12.3.** Obliczono zerową pochodną stałego pola kartezjańskiego
+  w bazie biegunowej: pochodne współczynników znoszą poprawki
+  z symbolami Christoffela. Nowy rysunek 12.3 pokazuje to samo
+  pole przy trzech kątach. Wyjaśniono skracanie stałego
+  przeskalowania metryki i wyprowadzono wzór na pochodną
+  wyznacznika użyty w dowodzie wzoru na dywergencję.
+  Sprawdzono również pełną tabelę koneksji Nil w ramie nieholonomicznej.
+- **§12.4.** Wyprowadzono oba składniki zmiany macierzy transportu,
+  w tym pochodną odwrotnego jakobianu. W dowodzie globalnego
+  transportu wyjaśniono skończony podział przedziału za pomocą
+  liczby Lebesgue'a oraz rozpisano różniczkowanie iloczynu
+  metrycznego. Podano jawne złożenie transportów przez $\circ$
+  i wzór dla drogi odwróconej. Rzeczywista macierz obrotu
+  i nowy rysunek 12.5 pokazują etapy transportu po równoleżniku
+  sfery, zgodne z dotychczasowym rysunkiem sferycznym 12.4.
+  Dla tensora mieszanego sprawdzono skracanie składników
+  koneksji przy kontrakcji.
+- **§12.5.** Doprecyzowano dziedzinę współrzędnych Schwarzschilda
+  i sprawdzono pozostałe składowe układu radialnego transportu
+  pola kątowego. Rozpisano redukcję radialnego symbolu Kerra
+  do odpowiedniego symbolu Schwarzschilda przy $a=0$.
+- **§12.6.** Dopisano wewnętrzną postać pierwszej wariacji
+  $\delta E=-\int g(\eta,D\dot\gamma/\dd t)\,\dd t$.
+  Przykład na prostej pokazuje, dlaczego nieliniowe
+  przeparametryzowanie zachowuje obraz drogi, lecz zmienia
+  równanie geodezyjnej z parametrem afinicznym.
+
+Wzór Koszula, symbole Christoffela i własności transportu porównano
+z [E. Meinrenkenem, *Riemannian Geometry*, §15](https://www.math.toronto.edu/mein/teaching/LectureNotes/rieall.pdf);
+metryki czasoprzestrzeni z podanymi w rozdziale źródłami
+[MIT](https://web.mit.edu/8.962/www/lecnotes/8_962TA-lec-all.pdf)
+i [OSU](https://sites.science.oregonstate.edu/coursewikis/GGR/book/content/kerr).
+Podpis źródła Meinrenkena doprecyzowano także w tekście.
+Wykonano **35 kontroli symbolicznych**, obejmujących wszystkie
+składowe Christoffela FLRW, współrzędnych biegunowych, sfery,
+półprzestrzeni hiperbolicznej, dysku Poincarégo i hiperboloidy,
+dziewięć pochodnych ramy Nil, symbole Schwarzschilda i pełny
+układ jego radialnego transportu, pięć wybranych symboli Kerra
+z granicami Schwarzschilda oraz rachunki stojące za nowymi rysunkami.
+Kontrola źródła: **63 etykiety**, brak powtórzeń, brak
+brakujących odsyłaczy, zgodne pary środowisk.
+Zachowano wszystkie dotychczasowe etykiety i numery twierdzeń
+oraz wzorów; numeracja rysunków uwzględnia nowe ilustracje.
+
+Złożono wyłącznie `geometria_tom2.tex` przez `latexmk`,
+wraz z indeksem: **204 strony**, rozdział 12 na fizycznych
+stronach **29–42** (drukowanych 28–41).
+Obejrzano wszystkie strony rozdziału, spis i indeks.
+Pięć rysunków sprawdzono także w renderach Popplera:
+nowe 12.2, 12.3 i 12.5 oraz dotychczasowe 12.1 i 12.4.
+Brak wyjść tekstu poza stronę i nowych ostrzeżeń składu;
+pozostały wcześniejsze ostrzeżenia o `page.1`
+i jedno `Underfull \hbox` o badness 1057.
+Indeks: **106 wpisów przyjętych, 0 odrzuconych, 0 ostrzeżeń**.
+Cele łączy między czterema gotowymi PDF-ami istnieją;
+pozostałych tomów nie przebudowywano.
+SHA-256 sprawdzonego tomu II:
+`B7145B51FDD5A030D38A6A3CBC1983842002CE6A9441B2522A7965561C983AE6`.
+
 ## Rozdział 11 — wizualizacje geometrii Nil i Sol (2026-11-11)
 
 Na prośbę autora dodano do §11.2 dwa rysunki TikZ z objaśnieniami:
