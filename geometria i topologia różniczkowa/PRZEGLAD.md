@@ -14,6 +14,71 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 4 — ponowna kontrola wyprowadzeń, §§4.1–4.7 (2026-11-11)
+
+Ponownie przeczytano wszystkie siedem sekcji pod kątem
+niewyprowadzonych równań i skrótów rachunkowych. Zachowano
+istniejące dowody atlasu, przestrzeni stycznej, bazy algebry
+Clifforda, nakrycia Spin, klasyfikacji modułów i wiązek.
+Uzupełniono następujące przejścia:
+
+- Rzut na wykres wyprowadzono z równania prostopadłości,
+  uzasadniono odwracalność macierzy Grama i odzyskiwanie
+  współrzędnej wykresowej z bloków rzutu.
+- W relacji Plückera wskazano wszystkie pary przeżywające
+  w kwadracie dwuwektora, ich znaki i czynnik 2.
+  Rozpisano także brakujący współczynnik w konstrukcji odwrotnej.
+- W rachunkach Clifforda dopisano relacje kwaternionowe,
+  znaki sprzęgania monomów w dowodzie jądra nakrycia, działanie
+  rotora oraz drugi obraz wektora bazowego w Spin(2).
+- Wyliczono trzy niezależne iloczyny macierzy Pauliego,
+  wyjaśniono znaki iloczynów odwrotnych i sprawdzono liniową
+  niezależność czterech macierzy modelu wymiaru dwa.
+  Podano odwrotność rozkładu zespolonej algebry wymiaru jeden,
+  dokładne iloczyny generatorów podalgebry parzystej,
+  normalizację nieparzystego elementu objętościowego
+  i obie wartości działania na półspinorach płaszczyzny.
+- W przykładzie SU(2) wyprowadzono unitarność, wyznacznik,
+  ogólną postać macierzy z warunków na kolumny oraz odpowiadające
+  jej cztery współczynniki kwaternionu. Dla sfery Blocha rozpisano
+  współrzędne, normę, macierz rzutu, niezmienniczość fazową
+  i odwrotność w mapie sfery.
+- Warunki okresowości i antyokresowości spinorów torusa
+  otrzymano z relacji wiązki stowarzyszonej. Zgodność znaków
+  na poczwórnych przecięciach wyprowadzono przez dwa
+  nawiasowania iloczynu funkcji przejścia i centralność znaków.
+
+W rozdziale nie występują całki. Pozostało 57 jednoznacznych
+etykiet bez brakujących odsyłaczy; wszystkie dotychczasowe
+numery wyników, wzorów i sześciu rysunków zachowano.
+Konwencję Clifforda porównano z notatkami
+[Conrada](https://math.stanford.edu/~conrad/210CPage/handouts/clifford.pdf),
+a normalizacje elementu objętościowego, półspinory i wiązki spinorów
+z §§1.5 i 2.3 notatek
+[Wernliego](https://arxiv.org/pdf/1911.09766).
+
+Przeszło 38 kontroli rachunkowych: rzut rzeczywisty i zespolony
+z użyciem sprzężenia hermitowskiego, sześć współrzędnych Plückera,
+kwaterniony, znaki sprzęgania wszystkich parzystych monomów
+w wymiarze cztery, obie kolumny obrotu Spin(2), generatory
+podalgebry parzystej, relacje Pauliego, rozkład algebry wymiaru jeden,
+rekurencja Clifforda i rangi półspinorów w wymiarach dwa i cztery,
+nieparzyste elementy objętościowe w wymiarach trzy i pięć,
+macierz SU(2) oraz współrzędne, macierz rzutu i mapy sfery Blocha.
+
+Złożono tylko tom I: **264 strony**, rozdział 4 na fizycznych
+stronach **119–140**. Obejrzano cały rozdział, wszystkie sześć
+rysunków, spis treści i indeks; nowe rachunki sprawdzono również
+w pełnym powiększeniu. Nie ma nowych ostrzeżeń, przepełnień
+ani tekstu poza stroną. Pozostały wcześniejsze komunikaty o
+`page.1`, dwóch zmianach specyfikacji `h` na `ht`
+i niedopełnieniu w rozdziale 1.
+Indeks: 125 wpisów przyjętych, 0 odrzuconych, 0 ostrzeżeń.
+Wszystkie cele łączy między czterema PDF-ami istnieją.
+Pozostałe tomy zachowały wcześniejsze sumy kontrolne.
+SHA-256 sprawdzonego tomu I:
+`118D7251D7D9D7F03ABF2B1EBF7C0FFA6E9BCF3A906D3DF21C86A081D31733FE`.
+
 ## Rozdział 3 — ponowna kontrola wyprowadzeń, §§3.1–3.9 (2026-11-11)
 
 Ponownie przeczytano wszystkie dziewięć sekcji według kryterium
