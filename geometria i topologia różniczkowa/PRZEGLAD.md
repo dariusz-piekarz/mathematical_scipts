@@ -14,6 +14,76 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 8, §§8.1–8.8 — pełny przegląd dydaktyczny (2026-11-11)
+
+Przeczytano plan oraz porównano sposób prowadzenia definicji, dowodów
+i przykładów ze szczegółowymi fragmentami rozdziałów 1–2. W całym
+rozdziale 8 zachowano zasadnicze dowody; uzupełnienia wyjaśniają
+przejścia od geometrii do grup łańcuchów, jąder i obrazów.
+
+W §8.1 dodano pełny rachunek dwóch trójkątów kwadratu: obie macierze
+brzegu, rozwiązanie równań cyklu nad liczbami całkowitymi,
+iniektywność brzegu w stopniu dwa i zniesienie wspólnej przekątnej.
+Usunięcie wnętrz pokazuje, dlaczego te same cykle przestają być brzegami.
+W §8.2 oddzielono odwrócenie parametryzacji singularnej od zmiany
+znaku formalnego generatora. Rozpisano sześć ścian pryzmatu nad drogą
+i zilustrowano dokładne zniesienie przekątnej.
+
+W §8.3 objaśniono oba ilorazy w homologii względnej, niezależność
+odwzorowania łączącego od reprezentanta oraz dokładność w trzech
+kolejnych miejscach ciągu pary. Obliczono parę odcinka z oboma końcami
+i porównano ją z parą odcinka z jednym końcem. W §8.4 dodano jawny
+podział singularnej drogi, rysunek sześciu części trójkąta,
+kontrprzykład do wycinania bez hipotezy o wnętrzu i opis generatora
+okręgu przez odwzorowanie Mayera–Vietorisa. Nowy rysunek zaznacza
+dwie składowe przecięcia otwartych łuków.
+
+W §8.5 pokazano przemienny diagram pięciu kolejnych wyrazów
+z dowolnym stopniem homologii q, oddzielonym od wymiaru n właśnie
+dołączanego sympleksu. W §8.6 połączono konstrukcję brzegu komórkowego
+z geometrią trzech kolejnych szkieletów. Dołączenie pierwszego dysku
+zabija klasę okręgu, a drugi dysk tworzy cykl sfery; podano jądro
+i obraz odpowiedniego operatora.
+
+W §8.7 rozpisano jądra i obrazy w obliczeniach torusa i płaszczyzny
+rzutowej oraz geometryczne znaczenie relacji 2a=0. Rysunek porównuje
+kwadrat torusa z antypodalnym sklejeniem brzegu dysku. Nowy przykład
+dysku dołączonego odwzorowaniem stopnia m daje Z/m w H_1 dla m≥1,
+z osobnym omówieniem m=0 i m=1. Doprecyzowano zmianę współczynników:
+najpierw zmieniamy kompleks, potem liczymy jego homologię.
+W §8.8 dodano dowód zerowania homologii lokalnej w punkcie brzegu
+przez retrakcję na domkniętą półsferę oraz rachunek trójnogu
+z mapą sumy Z³→Z i jawną bazą jądra. Jego lokalne H_1=Z² wyklucza
+model rozmaitości dowolnego wymiaru. Nowy rysunek zestawia punkt
+wewnętrzny odcinka, jego koniec i wierzchołek trójnogu.
+
+Ujednolicono jawny znak `\circ` w złożeniach odwzorowań i operatorów,
+objaśniając również potęgi operatorów. Dodano hasło indeksu
+„Homologia lokalna”. Zachowano istniejące etykiety. Dowody i konwencje
+sprawdzono względem [Hatchera, *Algebraic Topology*, rozdział 2](https://pi.math.cornell.edu/~hatcher/AT/ATch2.pdf).
+Dwa niezależne przeglądy nowych fragmentów nie wykazały błędów
+matematycznych; uwzględniono ich uwagi o stopniu q w diagramie
+i zakresie wniosku dla trójnogu. Niezależny rachunek z uporządkowanych
+ścian potwierdził obie macierze kwadratu, ich zerowy iloczyn oraz
+wszystkie znaki brzegu pryzmatu. Sprawdzono też zagnieżdżenie
+środowisk, unikalność 64 etykiet i istnienie celów odsyłaczy.
+
+Po ukończeniu wszystkich sekcji złożono wyłącznie tom I.
+Końcowy PDF ma 252 strony, a indeks przyjął 125 wpisów bez odrzuceń
+i ostrzeżeń. Brak błędów, przepełnień i nierozwiązanych odsyłaczy;
+rozdział 8 nie zgłasza ostrzeżeń składu. Dwa dawne ostrzeżenia
+`h`→`ht`, jeden `Underfull` i zduplikowany cel `page.1` dotyczą
+wcześniejszych rozdziałów. Obejrzano przegląd stron 194–214,
+a w powiększeniu wszystkie osiem rysunków na fizycznych stronach
+195, 197, 199, 202, 203, 209 i 213 oraz macierze, diagram i indeks
+na stronach 196, 206 i 251–252. Po pierwszej kontroli przeniesiono
+rysunek homologii lokalnej do objaśnianego tekstu i ponownie sprawdzono
+końcowe strony. Cele wszystkich łączy między tomami istnieją
+w pozostałych PDF-ach; ich składu nie uruchamiano.
+`git diff --check` przeszedł. PDF w katalogu projektu i PDF składu
+mają identyczny SHA-256:
+`E29134034FEA269DC2A313742E43F73A6DACF35938F39F48FE35C0335AAF8E05`.
+
 ## Rozdział 7 — jawny znak złożenia (2026-11-11)
 
 Na uwagę autora sprawdzono zapis składania odwzorowań w całym

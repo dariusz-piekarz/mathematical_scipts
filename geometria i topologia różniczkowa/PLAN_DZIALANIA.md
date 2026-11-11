@@ -17,11 +17,13 @@ Prowadzimy przegląd całej książki po kolei, rozdział po rozdziale i sekcja 
 sekcji, z poziomem objaśnień, przykładów, rysunków i szczegółowości
 dowodów przyjętym w rozdziale 1 oraz §§2.1–2.2. Rozdział 2,
 §§2.3–2.7, przejrzano, rozszerzono i sprawdzono w składzie
-tomu I. Rozdziały 3–7 przejrzano i rozszerzono we wszystkich
+tomu I. Rozdziały 3–8 przejrzano i rozszerzono we wszystkich
 sekcjach, składając tylko tom I po ukończeniu każdego z nich.
 11 listopada w rozdziale 7 ujednolicono jawny zapis złożeń `\circ`
 i ponownie sprawdzono tom I.
-Następna w kolejności jest **§8.1 rozdziału 8 „Homologia przestrzeni”**.
+Rozdział 8, §§8.1–8.8, zakończono 11 listopada: uzupełniono
+rachunki, kroki dowodów i pięć rysunków, a następnie sprawdzono tom I.
+Następna w kolejności jest **§9.1 rozdziału 9 „Wyższe grupy homotopii i związek z homologią”**.
 Przy kolejnych
 rozdziałach obowiązuje ta sama zasada: skład tylko właściwego tomu,
 a potem commit i push po kontroli całego rozdziału.
@@ -316,7 +318,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 5. Algebra abstrakcyjna | `05-algebra-abstrakcyjna.tex` | Pełny przegląd dydaktyczny §§5.1–5.5 zakończony 6 listopada; wcześniejszy audyt i poprawki w `dbfe600` | Rozpisano normalność i ilorazy grup, prezentacje, ideały i moduły, dowód dokładności tensoru po prawej stronie, lokalizację oraz addytywność rangi. Dodano rachunkowe przykłady i trzy nowe rysunki oraz ujednolicono zapis krótkich wzorów; skład i kontrola PDF-u dotyczą tylko tomu I. Szczegóły w `PRZEGLAD.md`. |
 | 6. Algebra homologiczna | `06-algebra-homologiczna.tex` | Pełny przegląd dydaktyczny §§6.1–6.9 zakończony 6 listopada; wcześniejszy audyt dodatków z 6 października | Rozpisano rozszerzenia i długie ciągi, obliczono homologię trójkąta, homotopię i kasowanie pary, filtracje, ciąg Mayera--Vietorisa, redukcję modulo $m$, charakterystykę Eulera i zastosowanie lematu pięciu. Dodano trzy nowe rysunki, doprecyzowano istniejący i ograniczono zbędne wzory wydzielone. Skład i kontrola PDF-u dotyczą tylko tomu I; szczegóły w `PRZEGLAD.md`. |
 | 7. Homotopia, nakrycia i CW | `07-homotopia-nakrycia-cw.tex` | Pełny przegląd dydaktyczny §§7.1–7.6 zakończony 6 listopada; wcześniejszy audyt z 6 października i teoria grafów z 8 października | Rozpisano dowody homotopii i grupy podstawowej, podnoszenia i klasyfikacji nakryć, van Kampena, sympleksów oraz dołączania komórek. Rozszerzono teorię grafów o drzewa rozpinające, wolną bazę $\pi_1$ grafu i prezentację $\pi_1$ skończonego CW-kompleksu. Dodano cztery rysunki, przykłady i wyjaśnienia topologii słabej; sprawdzono skład tylko tomu I. Szczegóły w `PRZEGLAD.md`. |
-| 8. Homologia przestrzeni | `08-homologia.tex` | Audyt dodatków zakończony 6 października; treść bez poprawek | Sprawdzone pięć wpisów indeksu, definicje, bibliografia i trzy ilustracje; PDF 397 stron |
+| 8. Homologia przestrzeni | `08-homologia.tex` | Pełny przegląd dydaktyczny §§8.1–8.8 zakończony 11 listopada; wcześniejszy audyt dodatków z 6 października | Rozpisano macierze dwóch trójkątów, pryzmat, dokładność ciągu pary i przykład odcinka, podział singularny, wycinanie i generator Mayera–Vietorisa. Dodano diagram porównania, przykład dwóch dysków, szczegółowe rachunki torusa, torsji i dysku dołączonego stopniem m oraz homologię lokalną brzegu i trójnogu. Pięć nowych rysunków, jawne złożenia i nowy wpis indeksu. Złożono i sprawdzono tylko tom I; szczegóły w `PRZEGLAD.md`. |
 | 9. Wyższe grupy homotopii | `09-wyzsze-grupy-homotopii.tex` | Audyt dodatków zakończony 6 października; PDF 397 stron | Sprawdzone indeks, definicje i cztery rysunki; poprawiono 19 użyć słowa „mapa” na „odwzorowanie” |
 | 10. Formy i de Rham | `10-formy-de-rham.tex` | Audyt dodatków zakończony 6 października; bez poprawek treści | Siedem wpisów indeksu, pięć ilustracji i zgodność konwencji przy brzegu; PDF 397 stron |
 | 11. Metryka, długość i miara | `11-metryka-dlugosc-miara.tex` | Audyt dodatków zakończony 6 października; 4 listopada zintegrowano materiał autora | Dawne definicje i ilustracje sprawdzone osobno. Nowe izomorfizmy muzyczne, przykład historyczny Poincarégo i metrykę FLRW zweryfikowano rachunkowo; rysunek na fizycznej stronie 10 tomu II obejrzano. |
