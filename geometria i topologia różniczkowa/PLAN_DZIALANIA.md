@@ -1,6 +1,6 @@
 # Aktualny plan i pokrycie przeglądem
 
-Stan: 6 listopada 2026. Gałąź: `review/rozdzialy-matematyka`.
+Stan: 11 listopada 2026. Gałąź: `review/rozdzialy-matematyka`.
 Książka ma **38 rozdziałów, pięć części i trzy dodatki**. Numery w nazwach
 plików są historyczne; numer w PDF ustala kolejność importów.
 Skład roboczy podzielono na cztery tomy: rozdziały 1–10, 11–22,
@@ -19,6 +19,8 @@ dowodów przyjętym w rozdziale 1 oraz §§2.1–2.2. Rozdział 2,
 §§2.3–2.7, przejrzano, rozszerzono i sprawdzono w składzie
 tomu I. Rozdziały 3–7 przejrzano i rozszerzono we wszystkich
 sekcjach, składając tylko tom I po ukończeniu każdego z nich.
+11 listopada w rozdziale 7 ujednolicono jawny zapis złożeń `\circ`
+i ponownie sprawdzono tom I.
 Następna w kolejności jest **§8.1 rozdziału 8 „Homologia przestrzeni”**.
 Przy kolejnych
 rozdziałach obowiązuje ta sama zasada: skład tylko właściwego tomu,

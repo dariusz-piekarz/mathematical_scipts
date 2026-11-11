@@ -14,6 +14,26 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 7 — jawny znak złożenia (2026-11-11)
+
+Na uwagę autora sprawdzono zapis składania odwzorowań w całym
+rozdziale. Sąsiedztwo symboli, na przykład `gf`, `pT` lub
+`g_*f_*`, było nieobjaśnionym skrótem złożenia. Zastąpiono je
+jawnym `\circ`, także w zmianach punktu bazowego, podnoszeniu
+odwzorowań i grupie transformacji nakrycia. Przy pierwszej definicji
+wyjaśniono kolejność stosowania odwzorowań. Iloczyny elementów grup,
+konkatenacje dróg i wartości homomorfizmów zachowały właściwe im
+oznaczenia; skontrolowano dziedziny i punkty bazowe poprawionych wzorów.
+
+Złożono wyłącznie tom I: 245 stron, 124 hasła indeksu przyjęte,
+zero odrzuceń i ostrzeżeń indeksu. Brak błędów, przepełnień
+i nierozwiązanych odsyłaczy. Obejrzano fizyczne strony 174–183
+ze zmienionymi wzorami i ich otoczeniem. Dwa ostrzeżenia `h`→`ht`,
+dwa komunikaty `Underfull` i zduplikowany cel `page.1` dotyczą
+innych rozdziałów. Zaktualizowano PDF tomu I; `git diff --check`
+przeszedł. Korekta notacji nie zastępuje wcześniejszego przeglądu
+merytorycznego rozdziału.
+
 ## Rozdział 7, §§7.1–7.6 — pełny przegląd dydaktyczny (2026-11-06)
 
 Przejrzano kolejno cały rozdział homotopii, nakryć, twierdzenia van
