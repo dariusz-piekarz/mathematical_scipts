@@ -14,6 +14,97 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 13, §§13.1–13.8 — geodezyjne i zupełność (2026-11-11)
+
+Przejrzano wszystkie osiem sekcji według granularności rozdziału 1
+po poprawkach autora, łącznie z wcześniejszymi dodatkami Nil, Sol,
+Schwarzschilda, Kerra i FLRW. Kontrola obejmuje cały rozdział,
+a nie tylko nowe fragmenty.
+
+- **§§13.1–13.3.** Sprawdzono pierwszą wariację długości,
+  dziedzinę odwzorowania wykładniczego i dowód lokalnej minimalności.
+  Rozpisano polaryzację zerującą symbole Christoffela
+  we współrzędnych normalnych. W dowodzie Gaussa wskazano,
+  gdzie otwartość i gwiaździstość dziedziny zapewniają istnienie
+  całej wariacji. Rozkład na składową radialną i poprzeczną
+  oraz nowy rysunek 13.2 pokazują dokładnie, jakie długości
+  i prostopadłości zachowuje różniczka eksponenty.
+- **§13.4.** Sprawdzono geodezyjne euklidesowe, sferyczne
+  i hiperboliczne, wzory odległości oraz równania Nil i Sol.
+  Poprawiono uszkodzoną komendę strzałki granicy we wzorze
+  na odległość od środka dysku Poincarégo.
+  Dla Nil i Sol dodano dowody zupełności wszystkich geodezyjnych:
+  całki pierwsze ograniczają położenie i prędkość na skończonym
+  przedziale, a gładkie ODE przedłuża rozwiązanie.
+  W Sol argument obejmuje także zerowe momenty.
+  W Nil obliczono `x=sin s`, `y=1−cos s`,
+  `z=3s/2−sin(2s)/4` dla podanych danych początkowych.
+  Nowy rysunek 13.9 pokazuje kołowy rzut i wzrost wysokości
+  do `3π` po jednym obiegu; podano prędkość metryczną.
+- **§13.5.** Nowy rysunek 13.10 wyjaśnia wariacyjne skracanie
+  narożnika. W dowodzie istnienia minimalnego promienia
+  rozpisano obie nierówności przy pierwszej małej sferze,
+  istnienie największego punktu zbioru parametrów oraz
+  dopuszczalność dalszego kroku. Przy przedłużaniu geodezyjnej
+  pokazano, jak ograniczone przyspieszenie daje granicę prędkości
+  i konkretne dane końcowe dla lokalnego twierdzenia ODE.
+- **§13.6.** Uzasadniono wybór zbieżnego podciągu wektorów
+  początkowych przez zwartość kuli w skończenie wymiarowej
+  przestrzeni stycznej. Sprawdzono dowody własności miejsca cięcia,
+  promienia injektywności i przykłady sfery oraz torusa.
+  Zweryfikowano też zależność od późniejszych wyników rozdziału 14
+  o różniczce eksponenty i braku punktu sprzężonego we wnętrzu
+  minimalnego odcinka: ich dowody nie używają twierdzenia
+  o miejscu cięcia, więc zależność nie jest kołowa.
+- **§§13.7–13.8.** Uzasadniono istnienie układu spoczynkowego
+  czasopodobnie rozdzielonych końców w argumencie Minkowskiego.
+  Sprawdzono lokalną maksymalność czasu własnego,
+  całki ruchu Schwarzschilda i Kerra oraz kandydatów na orbity kołowe.
+  Oddzielono ekstremalny przypadek Kerra: radialna odległość
+  do horyzontu jest nieskończona (rozbieżność logarytmiczna), więc argument
+  o niezupełności przekroju nie obejmuje tego przypadku.
+  W FLRW doprecyzowano niezerowy pęd światła i dodatniość `t_*`.
+  Dla `a(t)=(t/t_*)^(2/3)` wyprowadzono parametr afiniczny
+  z `ds/dt=a(t)/|P|`, odróżniając go od czasu kosmicznego.
+
+Dowody i źródła porównano z
+[E. Meinrenkenem, *Riemannian Geometry*, §16](https://www.math.toronto.edu/mein/teaching/LectureNotes/rieall.pdf),
+[D. Spiegelem, *The Hopf–Rinow Theorem*, §4.3](https://math.uchicago.edu/~may/REU2016/REUPapers/Spiegel.pdf)
+oraz [P. Petersenem, *Riemannian Geometry*, §§5.7.3–5.7.4](https://www.math.ucla.edu/~petersen/RG.pdf).
+W dalszej lekturze wskazano dokładne sekcje i poprawiono odsyłacz
+do [wykładu 22 MIT o orbitach Schwarzschilda](https://www.ocw.mit.edu/courses/8-033-relativity-fall-2006/1a22b370b6beb03149dec6e94b24a11b_lecture22_bh2.pdf).
+
+Wykonano **42 kontrole symboliczne**: równania i prędkości
+geodezyjnych sfery i modeli hiperbolicznych, wzory odległości,
+całki Nil, potencjał Sol, normalizację i równania radialne
+Schwarzschilda i Kerra, obie gałęzie prędkości kątowej,
+radialną całkę ekstremalnego Kerra oraz geodezyjną świetlną
+i parametr afiniczny FLRW.
+Kontrola źródła: **89 etykiet**, brak powtórzeń i brakujących
+odsyłaczy, zgodne pary środowisk. Zachowano dotychczasowe
+etykiety i numery twierdzeń oraz wzorów. Numeracja rysunków
+uwzględnia trzy nowe ilustracje; w pozostałych rozdziałach
+nie ma odsyłaczy do rysunków rozdziału 13.
+
+Złożono wyłącznie `geometria_tom2.tex` przez `latexmk`,
+wraz z indeksem: **206 stron**, rozdział 13 na fizycznych
+stronach **43–64** (drukowanych 42–63).
+Obejrzano wszystkie strony rozdziału, spis i indeks;
+wszystkie **16 rysunków** wyrenderowano także Popplerem.
+Przesunięto oznaczenie wariacji na rysunku narożnika,
+aby nie nakładało się na łuk.
+Brak wyjść tekstu poza stronę i nowych ostrzeżeń składu;
+pozostały wcześniejsze ostrzeżenia o `page.1`
+i jedno `Underfull \hbox` o badness 1057.
+Indeks: **106 wpisów przyjętych, 0 odrzuconych, 0 ostrzeżeń**.
+Cele łączy pomiędzy czterema gotowymi PDF-ami istnieją.
+Autor zgłosił wykonanie dwukrotnego pełnego składu wszystkich tomów
+i polecił dołączyć PDF-y do publikacji. Tomy I, III i IV dołączono
+w jego wersji, bez przebudowy; ich sumy kontrolne nie zmieniły się
+w tym cyklu.
+SHA-256 sprawdzonego tomu II:
+`C5260A8B80E05C02157A255D86E2B7F4F6706A7CF74AD4112686CF3903D5B345`.
+
 ## Rozdział 12, §§12.1–12.6 — koneksje i transport równoległy (2026-11-11)
 
 Przejrzano wszystkie sześć sekcji według granularności rozdziału 1
