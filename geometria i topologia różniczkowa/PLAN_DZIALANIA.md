@@ -37,7 +37,8 @@ złożono tylko tomy II i IV. Wyniki i uzasadnienia są w `PRZEGLAD.md`.
 Obszerny szkic `geometrie_thurstona_3rozmaitosci.tex` jest materiałem
 porównawczym: jego katalog modeli pokrywa się z rozdziałem 33.
 Numeracja wynika z importów, nie z historycznych prefiksów nazw plików.
-Ten etap nie zastępuje kolejnego pełnego przeglądu rozdziału 11.
+Zakres integracji pozostaje odrębny od pełnego przeglądu
+rozdziału 11 opisanego poniżej.
 
 ### Przegląd rozdziałów
 
@@ -60,7 +61,12 @@ Rozdział 10, §§10.1–10.10, zakończono 11 listopada: uzupełniono
 rachunki na formach, konstrukcję podziału jedności, argumenty przy brzegu,
 ciąg Mayera–Vietorisa i dowód de Rhama. Sprawdzono pięć rysunków
 i skład tomu I, zamykając przegląd rozdziałów tego tomu.
-Następna w kolejności jest **§11.1 rozdziału 11 „Tensor metryczny, długość i miara” (tom II)**.
+Rozdział 11, §§11.1–11.8, zakończono 11 listopada:
+uzupełniono rachunki metryk, konstrukcję odległości,
+sklejanie miar, wiązkę normalną i dowód zgodności miary
+Hausdorffa z objętością. Dodano trzy rysunki i przykłady;
+sprawdzono cały rozdział oraz skład tylko tomu II.
+Następna w kolejności jest **§12.1 rozdziału 12 „Koneksje i transport równoległy” (tom II)**.
 Przy kolejnych
 rozdziałach obowiązuje ta sama zasada: skład tylko właściwego tomu,
 a potem commit i push po kontroli całego rozdziału.
@@ -358,7 +364,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 8. Homologia przestrzeni | `08-homologia.tex` | Pełny przegląd dydaktyczny §§8.1–8.8 zakończony 11 listopada; wcześniejszy audyt dodatków z 6 października | Rozpisano macierze dwóch trójkątów, pryzmat, dokładność ciągu pary i przykład odcinka, podział singularny, wycinanie i generator Mayera–Vietorisa. Dodano diagram porównania, przykład dwóch dysków, szczegółowe rachunki torusa, torsji i dysku dołączonego stopniem m oraz homologię lokalną brzegu i trójnogu. Pięć nowych rysunków, jawne złożenia i nowy wpis indeksu. Złożono i sprawdzono tylko tom I; szczegóły w `PRZEGLAD.md`. |
 | 9. Wyższe grupy homotopii | `09-wyzsze-grupy-homotopii.tex` | Pełny przegląd dydaktyczny §§9.1–9.7 zakończony 11 listopada; wcześniejszy audyt dodatków z 6 października | Rozpisano zmianę bazy, dokładność ciągu pary, argumenty CW, rachunek Hurewicza w stopniu jeden i odwrotność Whiteheada. W dowodzie wyższego Hurewicza uzupełniono rozszerzanie lokalnych dysków, stałą ścianę cięcia przez HEP, relacje przez cylinder z otworami i oba ciągi pary oraz stabilizację modelu CW. Poprawiono oznaczenie etapu względnego i wyjaśniono hipotezy oraz generatory w przykładach. Skontrolowano cztery rysunki, indeks i odsyłacze; złożono tylko tom I. Szczegóły w `PRZEGLAD.md`. |
 | 10. Formy i de Rham | `10-formy-de-rham.tex` | Pełny przegląd dydaktyczny §§10.1–10.10 zakończony 11 listopada; wcześniejszy audyt dodatków z 6 października | Rozpisano naturalność różniczki, znaki Cartana, operator homotopii, podział jedności i argumenty przy brzegu. Uzupełniono odwzorowanie łączące Mayera–Vietorisa, rachunki okręgu, sfer i torusa oraz sklejanie, gładkie łańcuchy i dualność w dowodzie de Rhama. Sprawdzono pięć rysunków, tabelę porównania, indeks i odsyłacze; złożono tylko tom I. Szczegóły w `PRZEGLAD.md`. |
-| 11. Metryka, długość i miara | `11-metryka-dlugosc-miara.tex` | Audyt dodatków zakończony 6 października; 4 listopada zintegrowano materiał autora; 11 listopada sprawdzono dopisek o metrykach Nil i Sol | Dawne definicje i ilustracje sprawdzone osobno. Nowe izomorfizmy muzyczne, przykład historyczny Poincarégo i metrykę FLRW zweryfikowano rachunkowo; rysunek na fizycznej stronie 10 tomu II obejrzano. |
+| 11. Metryka, długość i miara | `11-metryka-dlugosc-miara.tex` | Pełny przegląd §§11.1–11.8 zakończony 11 listopada, po integracji metryk Nil i Sol | Uzupełniono kroki rachunków, dodatniość odległości, sklejanie miar, gładkość wiązki normalnej, dowód równości miary Hausdorffa i objętości oraz argumenty przy brzegu w twierdzeniu Gaussa. Dodano trzy rysunki i przykłady. Sprawdzono 18 tożsamości symbolicznych, wszystkie sześć rysunków, fizyczne strony 4–26 tomu II, indeks i cele łączy między tomami; złożono tylko tom II. |
 | 12. Koneksje i transport | `12-koneksje.tex` | Audyt dodatków zakończony 6 października; 4 listopada zintegrowano materiał autora; 11 listopada sprawdzono dopisek o ramie nieholonomicznej i koneksji Nil | Dawne cztery wpisy indeksu, definicje i dwa rysunki sprawdzone osobno. Nowe symbole Christoffela FLRW wynikają ze wzoru metrycznego; etykiety sprawdzono w pełnym składzie. |
 | 13. Geodezyjne i zupełność | `13-geodezyjne.tex` | Audyt dodatków zakończony 6 października; 13 października dodano miejsce cięcia i promień injektywności; 4 listopada zintegrowano materiał autora; 11 listopada sprawdzono dopiski o geodezyjnych Nil i Sol | Dawne rachunki sfery i torusa zachowano. Nowe geodezyjne Minkowskiego oraz geodezyjne i pola Jacobiego FLRW sprawdzono ze znakami konwencji; rysunek na fizycznej stronie 43 tomu II obejrzano. |
 | 14. Krzywizna | `14-krzywizna.tex` | Audyt dodatków zakończony 6 października; 13 października dodano holonomię i rozkład de Rhama; 4 listopada zintegrowano materiał autora; 11 listopada sprawdzono dopisek o krzywiznach Nil i Sol | Dawny audyt holonomii i rozkładu de Rhama zachowuje zakres. Nowe rachunki Minkowskiego, FLRW, Friedmanna, krzywizny i niezupełności sprawdzono; rysunki na fizycznych stronach 67 i 69 tomu II obejrzano. Globalny de Rham i Ambrose–Singer pozostają wynikami zewnętrznymi. |

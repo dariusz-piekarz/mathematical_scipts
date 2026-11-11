@@ -14,6 +14,89 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 11, §§11.1–11.8 — dowody, przykłady i rysunki (2026-11-11)
+
+Przejrzano cały rozdział „Tensor metryczny, długość i miara”,
+przyjmując wystarczającą granularność rozdziału 1 po poprawkach autora.
+Przegląd obejmuje także wcześniej dołączone przykłady Poincarégo,
+FLRW oraz metryki Nil i Sol. Nie jest to jedynie audyt ostatnich dopisków.
+
+- **§§11.1–11.3.** Uzasadniono, że izomorfizmy muzyczne mają gładkie
+  odwrotności, oraz dlaczego przedłużenie składników metryki przez zero
+  jest gładkie. Rozpisano znikanie wyrazów mieszanych w metryce
+  stereograficznej sfery. Dla przejścia z kuli do półprzestrzeni
+  hiperbolicznej sprawdzono dziedzinę odwrotności i wyjaśniono
+  ortogonalność odbicia w różniczce inwersji. W przykładzie Poincarégo
+  podano czynnik, który daje zespoloną ortogonalność macierzy boostu.
+  Rachunki metryk Kerra, Schwarzschilda, FLRW, Nil i Sol sprawdzono;
+  nie wyprowadza się tu metryk czasoprzestrzeni z równań Einsteina.
+- **§§11.4–11.6.** Podano dokładny rachunek prędkości po
+  przeparametryzowaniu długością łuku i przykład zmiany energii
+  z $1/2$ na $13/24$ przy zachowaniu drogi i długości.
+  W dowodzie dodatniości odległości zdefiniowano pierwszy moment
+  osiągnięcia sfery współrzędnych i rozpisano dolne oszacowanie
+  długości do tego momentu. Przy konstrukcji miary wyjaśniono
+  przypadek brzegu, wspólne rozdrobnienie dwóch rozbić i zamianę
+  nieujemnych sum. Dla wiązki normalnej podano konstrukcję lokalnej
+  bazy obrazu rzutu oraz gładką odwrotność izomorfizmu z wiązką ilorazową.
+  Złożenia pól z parametryzacjami zapisano jawnie przez $\circ$.
+- **§11.7.** Dodano pełne obliczenie miar $\mathcal H^s([0,1])$
+  dla trzech zakresów wykładnika. Dolne oszacowanie kosztu pokrycia
+  dotyczy dowolnych pokryć, a nie tylko regularnych podziałów odcinka.
+  Uzupełniono krok z warstwami w kryterium Carathéodory'ego, bez
+  zakładania ciągłości miary zewnętrznej. W dowodzie zgodności miar
+  doprecyzowano dokładne zewnętrzne wejścia: nierówność izodiametryczną
+  oraz wersję pokrycia otwartego zbioru rozłącznymi drobnymi kulami
+  z resztą zerowej miary. Sprawdzono ich założenia i numery
+  (twierdzenie A.8, lemat A.6; równość euklidesowa w twierdzeniu A.4)
+  w [notatkach Gautama Iyera, dodatek A](https://www.math.cmu.edu/~gautam/sj/teaching/2022-23/720-measure/pdfs/measure.pdf).
+  Dowód na podrozmaitości zawiera teraz obie pary oszacowań miar
+  i ich ilorazy, przed przejściem do granicy. Przykład okręgu
+  wyjaśnia, dlaczego długość cięciwy i długość łuku dają tę samą
+  miarę Hausdorffa, mimo różnych odległości globalnych.
+- **§11.8.** Gradient odniesiono do wcześniejszego izomorfizmu $\sharp$,
+  dodając przykład dla metryki anizotropowej. Uzasadniono kierunek
+  zewnętrznej normalnej za pomocą znaku $\dd s(-\nabla_gs)$.
+  W nieorientowalnym przypadku twierdzenia Gaussa doprecyzowano
+  wybór podziału jedności o zwartych nośnikach w mapach.
+  Powtórzony rachunek strumienia przez wykres, już obecny w §11.6,
+  zastąpiono przykładem jednostkowego pola $y\partial_y$ o dywergencji
+  $1-n$ w półprzestrzeni hiperbolicznej.
+
+Dodano trzy rysunki TikZ: elipsę jednostkowych wektorów i jej opis
+w bazie ortonormalnej (11.1), pierwszy fragment drogi opuszczającej
+kulę (11.4) oraz pokrycia odcinka czterema i ośmioma częściami (11.6).
+Obejrzano też dotychczasowe trzy modele hiperboliczne (11.2),
+boost Lorentza (11.3) i parametryzację powierzchni (11.5).
+Po pierwszym podglądzie poprawiono położenie etykiety przy sferze
+i odstęp między wierszami pokryć. Zachowano wcześniejsze etykiety
+i numerację twierdzeń; nowe przykłady nie przesuwają ich liczników.
+
+**Kontrola.** Sprawdzono osiem sekcji, 80 etykiet i równowagę środowisk:
+brak brakujących odsyłaczy i powtórzonych etykiet w rozdziale.
+Osiemnaście kontroli symbolicznych obejmuje cofnięcia metryk sfery
+i dwóch modeli hiperbolicznych, odwrotność przejścia do półprzestrzeni,
+macierz hiperboloidy, boost zespolony, blok czasowo-kątowy Kerra,
+jego wyznacznik i granicę Schwarzschilda, wyznaczniki Nil/Sol,
+energię przeparametryzowanej krzywej i pole paraboloidy.
+Postacie metryk porównano także z [kursem OSU: Schwarzschild](https://sites.science.oregonstate.edu/physics/coursewikis/GGR/_export/xhtml/book/ggr/schwarz.html)
+i [Kerr](https://sites.science.oregonstate.edu/coursewikis/GGR/book/content/kerr);
+datowanie przykładu Poincarégo sprawdzono w jego
+[pracy źródłowej](https://fr.wikisource.org/wiki/Sur_la_dynamique_de_l%E2%80%99%C3%A9lectron).
+
+Złożono wyłącznie `geometria_tom2.tex` przez `latexmk`, wraz z indeksem.
+Tom II ma **200 stron**, a rozdział 11 zajmuje fizyczne strony **4–26**
+(drukowane 3–25). Obejrzano wszystkie te strony, spis i indeks;
+trzy nowe rysunki sprawdzono także po renderowaniu przez Popplera.
+Brak tekstu wychodzącego poza stronę i brak nowych ostrzeżeń składu.
+Pozostały dwa ostrzeżenia identyczne z wersją wejściową:
+zdublowana kotwica `page.1` oraz jedno `Underfull \hbox` o badness 1057.
+Indeks: **106 wpisów przyjętych, 0 odrzuconych, 0 ostrzeżeń**.
+Sprawdzono cele łączy między wszystkimi czterema gotowymi PDF-ami:
+brak brakujących celów; pozostałych tomów nie przebudowywano.
+SHA-256 sprawdzonego tomu II:
+`2929F1A44802FE410A33C37CAFA4FFB894790EEF8F2FE7CE002B062C5D0162CD`.
+
 ## Integracja materiałów autora o geometriach Thurstona (2026-11-11)
 
 Na prośbę autora wykonano etap przekrojowy obejmujący dziewięć fragmentów
