@@ -1,0 +1,1246 @@
+% !TeX program = pdflatex
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[polish]{babel}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage[unicode]{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!45!black,urlcolor=blue!45!black,pdftitle={Zadania z teorii modeli},pdfauthor={}}
+\geometry{margin=2.35cm,headheight=15pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setlength{\emergencystretch}{4em}
+\setlist{topsep=3pt,itemsep=2pt}
+\numberwithin{equation}{section}
+\newcommand{\N}{\mathbb N}
+\newcommand{\PA}{\mathrm{PA}}
+\newcommand{\Q}{\mathrm Q}
+\newcommand{\Prov}{\operatorname{Prov}}
+\newcommand{\Prf}{\operatorname{Prf}}
+\newcommand{\Bew}{\operatorname{Bew}}
+\newcommand{\Con}{\operatorname{Con}}
+\newcommand{\dotminus}{\mathbin{\dot-}}
+\theoremstyle{definition}
+\newtheorem{zadanie}{Zadanie}[section]
+\newcommand{\wskazowka}[1]{\par\noindent{\small\emph{Wskazówka.} #1}\par}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Teoria modeli -- zadania}
+\fancyhead[R]{\small Zbiór ćwiczeń}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\title{Zadania z teorii modeli\\\large Składnia, semantyka, systemy formalne i twierdzenia Gödla}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+\begin{abstract}
+Zbiór zadań do skryptu \emph{Teoria modeli}. Szczególny nacisk położono na sekcje 1--3:
+języki formalne, termy i formuły, zmienne wolne i związane, wartościowania,
+modele, konsekwencję semantyczną i syntaktyczną oraz reguły dowodzenia.
+Pozostałe sekcje zawierają ćwiczenia utrwalające zastosowania przedstawionych twierdzeń.
+Wskazówki występują wyłącznie przy wybranych trudniejszych zadaniach.
+Pełnych rozwiązań nie zamieszczono.
+\end{abstract}
+\tableofcontents
+\clearpage
+\section{Wstęp i założenia}
+
+\noindent\textit{Założenia twierdzeń, przykłady i kontrprzykłady, rozróżnienie poziomów wypowiedzi.}
+
+
+\begin{zadanie}[Cztery warunki]
+Rozważ teorie: (a) teorię wszystkich prawdziwych zdań arytmetycznych w $\mathcal N$, (b) teorię pustą w języku arytmetyki, (c) $\mathrm{PA}$, (d) teorię zawierającą jednocześnie zdanie $0=S(0)$ oraz jego negację. Dla każdej oceń, które założenia pierwszego twierdzenia o niezupełności w wersji Rossera spełnia. Tam, gdzie odpowiedź zależy od znanego twierdzenia, wyraźnie je wskaż.
+
+\wskazowka{Nie utożsamiaj zbioru wszystkich zdań prawdziwych z efektywnie wyliczalnym zbiorem aksjomatów. Rozróżnij też siłę teorii od jej niesprzeczności.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Słaba teoria zupełna]
+W języku zawierającym tylko równość rozważ teorię $T_1$ mówiącą, że dziedzina składa się z dokładnie jednego elementu. Uzasadnij, że jest zupełna i efektywnie aksjomatyzowalna. Wyjaśnij, dlaczego nie przeczy to twierdzeniu Gödla.
+
+\wskazowka{Każde zdanie ma tę samą wartość we wszystkich jednoelementowych strukturach języka równości. Skorzystaj z zupełności rachunku pierwszego rzędu albo z eliminacji kwantyfikatorów w tym szczególnym przypadku.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Niesprzeczność a istnienie modelu]
+Wskaż, które implikacje między stwierdzeniami „$T$ ma model”, „$T$ jest niesprzeczna” oraz „$T$ nie dowodzi $0=S(0)$” wynikają z poprawności, a które wymagają dodatkowych założeń o $T$. Dla ostatniego warunku załóż, że $T$ jest teorią w języku arytmetyki.
+
+\wskazowka{W zwykłej teorii, która nie dowodzi zdania $0=S(0)$, można mimo to dowodzić jakiejś innej sprzeczności? W logice klasycznej sprzeczność daje dowolne zdanie.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Zewnętrzne i wewnętrzne stwierdzenia]
+Zapisz w dwóch kolumnach odpowiednio formuły metateorii i formuły języka obiektowego: „$n$ jest kodem dowodu $\varphi$”, „istnieje dowód $\varphi$”, „$T\vdash\varphi$”, „$\mathcal N\models\varphi$”. Wyjaśnij, które z tych zapisów są zdaniami o kodach, a które są relacjami opisanymi z zewnątrz.
+
+\wskazowka{Znak $\vdash$ nie jest symbolem języka arytmetyki. Predykat $\Prf_T$ jest formułą arytmetyczną dopiero po ustaleniu kodowania.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Skończenie wiele a wszystkie]
+Niech $\theta(x)$ będzie formułą definiującą w $\mathcal N$ własność „$x$ należy do $\{0,1,\ldots,100\}$”. Porównaj zdania $\theta(\overline n)$ dla $n\le100$ z $\forall x\,\theta(x)$. Następnie sformułuj analogiczne rozróżnienie dla rodziny $T\vdash\psi(\overline n)$ przy wszystkich standardowych $n$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Zależność od bazy]
+Wyjaśnij, dlaczego twierdzenie o niezupełności dla wszystkich niesprzecznych, efektywnie aksjomatyzowalnych rozszerzeń $Q$ jest silniejsze niż analogiczne twierdzenie tylko dla rozszerzeń $\mathrm{PA}$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Prawda nie jest dowodem]
+Podaj przykład języka, struktury i zdania $\varphi$, dla których $\mathcal M\models\varphi$, ale z pustego zbioru aksjomatów nie wynika $\vdash\varphi$. Wykorzystaj zdanie niebędące logiczną tautologią.
+
+\wskazowka{W języku z jedną stałą i jednym predykatem można interpretować predykat na dwa sposoby.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Niespójna teoria jako ostrzeżenie]
+Przypuśćmy, że $T\vdash\varphi$ oraz $T\vdash\neg\varphi$. Wyprowadź metateoretyczny wniosek o zbiorze zdań dowodliwych w $T$ i porównaj „zupełność” takiej teorii z zupełnością niesprzecznej teorii.
+
+\wskazowka{Użyj klasycznej zasady eksplozji: z $\varphi\land\neg\varphi$ wynika dowolne $\psi$.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Ustalenie zakresu twierdzenia]
+Przygotuj własną tabelę porównującą następujące własności: niesprzeczność, $\omega$-niesprzeczność, efektywna aksjomatyzowalność, zawieranie $Q$, zawieranie $\mathrm{PA}$. Zaznacz, które są potrzebne do twierdzenia Gödla w wersji pierwotnej, Rossera i do drugiego twierdzenia w postaci przyjętej w skrypcie.
+
+\end{zadanie}
+
+
+\section{Podstawy: od alfabetu do teorii}
+
+\noindent\textit{Ćwiczenia podstawowe. Najpierw słowa i gramatyka, potem zmienne, struktury oraz spełnianie.}
+
+
+\begin{zadanie}[Alfabet dwuznakowy]
+Dla $\Sigma=\{a,b\}$ wypisz wszystkie słowa długości $0$, $1$, $2$ i $3$. Ustal ich liczbę oraz liczbę słów długości co najwyżej $n$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Konkatenacja]
+Zdefiniuj konkatenację $uv$ dwóch słów $u,v\in\Sigma^*$. Dla $u=aba$, $v=bb$ oblicz $uv$ i $vu$. Sprawdź łączność konkatenacji i wskaż element neutralny.
+
+\wskazowka{Łączność dotyczy kolejności znaków w wynikowym ciągu, nie przemienności.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Słowa a podzbiory]
+Wyjaśnij, dlaczego słowa $aba$ i $aab$ są różne, mimo że zawierają te same symbole z tymi samymi krotnościami. Porównaj pojęcie słowa ze zbiorem i multizbiorem.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Skończony alfabet, nieskończony zbiór]
+Uzasadnij, że $\Sigma^*$ jest przeliczalny dla każdego niepustego skończonego alfabetu $\Sigma$. Czy dla alfabetu przeliczalnie nieskończonego wniosek się zmienia?
+
+\wskazowka{Rozłóż $\Sigma^*$ na sumę warstw $\Sigma^n$ dla $n\ge0$.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Napisy o zadanym prefiksie]
+Przy $\Sigma=\{0,1\}$ oblicz, ile jest słów długości $7$ rozpoczynających się od $101$ i ile kończy się na $00$. Oblicz też liczbę słów spełniających oba warunki.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Trzy znaczenia słowa „zero”]
+Rozdziel w przykładach: symbol $0$ w alfabecie, jednoznakowe słowo $0$, symbol stałej w sygnaturze oraz element $0^{\mathcal M}$ dziedziny. Które z tych obiektów może zależeć od interpretacji?
+
+\end{zadanie}
+
+
+\begin{zadanie}[Język dwóch relacji]
+Ustal sygnaturę z jednoargumentowym predykatem $P$ i dwuargumentowym predykatem $R$, bez symboli funkcyjnych i stałych. Wypisz pięć poprawnych formuł oraz pięć napisów, które nie są formułami. Dla każdego błędnego napisu podaj pierwszą złamaną regułę gramatyki.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Zmiana sygnatury]
+Porównaj języki $\mathcal L_1=\{R\}$, gdzie $R$ jest dwuargumentową relacją, i $\mathcal L_2=\{f\}$, gdzie $f$ jest dwuargumentową funkcją. Wyjaśnij, dlaczego $R(x,y)$ jest formułą tylko w pierwszym języku, a $f(x,y)$ jest termem tylko w drugim.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Rozpoznawanie termów]
+W sygnaturze $\tau=\{c,f,g,R\}$, gdzie $c$ jest stałą, $f$ funkcją jednoargumentową, $g$ funkcją dwuargumentową, a $R$ relacją dwuargumentową, ustal, które z napisów $g(f(c),x)$, $R(x,c)$, $f(x,y)$, $g(c)$, $g(f(c),g(x,c))$, $R(c)$ są termami, formułami atomowymi lub nie są żadnym z nich.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Budowa termu]
+Narysuj drzewo składni termu $g(f(g(x,c)),g(c,f(y)))$ w języku z poprzedniego zadania. Wskaż wszystkie jego podtermy i występujące w nim zmienne.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Termy domknięte]
+W sygnaturze $\{c,f\}$ z jedną stałą i funkcją jednoargumentową wypisz wszystkie termy domknięte o wysokości drzewa składni nie większej niż $4$ (stała ma wysokość $0$).
+
+\end{zadanie}
+
+
+\begin{zadanie}[Język bez stałych]
+Załóżmy, że sygnatura składa się tylko z jednego dwuargumentowego symbolu funkcyjnego. Czy istnieją w niej termy domknięte? Odpowiedź uzasadnij indukcją strukturalną.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Formuła czy term?]
+Dla języka arytmetyki sklasyfikuj napisy $S(0)+x$, $S(x)<y$, $\forall x\,(S(x)=0)$, $\exists S(x)\,(x=0)$, $(x+y)\land(x=0)$ oraz $S(x)=S(y)$ jako term, formułę lub napis niepoprawny. Podaj uzasadnienie.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Formuły atomowe]
+W języku z relacją $E$ arności $2$ oraz funkcją $f$ arności $1$ wypisz cztery różne formuły atomowe i trzy formuły nieatomowe. Wyjaśnij, dlaczego $f(x)=f(y)$ jest atomowa.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Drzewa formuł]
+Zbuduj drzewo składni formuły $\forall x\,\bigl(P(x)\to\exists y\,(R(x,y)\land\neg P(y))\bigr)$. Wskaż wszystkie podformuły i ich główne spójniki lub kwantyfikatory.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Budowanie formuł od środka]
+W języku z jednoargumentowym $P$ i dwuargumentowym $R$ napisz: (a) „każdy element spełniający $P$ ma następnika w relacji $R$ spełniającego $P$”, (b) „dokładnie jeden element spełnia $P$”, (c) „relacja $R$ jest symetryczna”.
+
+\wskazowka{Zwrot „dokładnie jeden” rozbij na istnienie i jednoznaczność.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Wiele sposobów zapisu]
+Napisz dwie logicznie równoważne formuły wyrażające: „nie każdy element ma własność $P$”. Następnie sformułuj ich odpowiedniki z relacją $R(x,y)$: „nie dla każdego $x$ istnieje $y$, dla którego zachodzi $R(x,y)$”.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Czytanie kwantyfikatorów]
+Przełóż na język naturalny i porównaj $\forall x\,\exists y\,R(x,y)$, $\exists y\,\forall x\,R(x,y)$ oraz $\forall y\,\exists x\,R(x,y)$. Znajdź strukturę, w której pierwsze zdanie jest prawdziwe, a drugie fałszywe.
+
+\wskazowka{Jako $R$ można wziąć relację ostrego porządku na liczbach naturalnych.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Wyrażenie dokładnie dwóch]
+W języku z równością i jednoargumentowym predykatem $P$ sformułuj zdanie: „dokładnie dwa różne elementy spełniają $P$”.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Bez skrótów matematycznych]
+W języku $\{0,S,+,\cdot,<\}$ zapisz bez używania symbolu $\le$ i bez słowa „dzieli” zdanie: „każdy dodatni $x$ ma dodatni dzielnik $y$ różny od $x$”. Nie badaj prawdziwości tego zdania.
+
+\wskazowka{Wprowadź zmienną oznaczającą iloraz; w języku nie ma pierwotnego symbolu dzielenia.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Sąsiednie symbole funkcyjne]
+Niech $h$ będzie funkcją dwuargumentową, a $f$ jednoargumentową. Rozstrzygnij, czy $h(f(x),y)=h(x,f(y))$ jest formułą atomową. Ustal zbiór zmiennych występujących w niej wolno.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Indukcja strukturalna dla termów]
+Udowodnij przez indukcję po budowie termu, że każdy podterm poprawnego termu jest poprawnym termem. Wyjaśnij, dlaczego analogiczne twierdzenie dla podnapisów jest fałszywe.
+
+\wskazowka{Podnapis może rozpoczynać się lub kończyć w połowie zapisu z nawiasami.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Liczba podformuł]
+Zdefiniuj $q(\varphi)$ jako liczbę wystąpień kwantyfikatorów w formule $\varphi$. Podaj rekursję strukturalną dla $q$ i oblicz $q$ w formule $\forall x\,(P(x)\lor\exists y\,(R(x,y)\to\forall z\,P(z)))$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Formuły bez kwantyfikatorów]
+Znajdź wszystkie wartościowania zdaniowe formuł atomowych $A,B$, przy których prawdziwe są jednocześnie $(A\to B)$ i $(B\to A)$. Sformułuj równoważność logiczną bez symbolu $\leftrightarrow$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Wystąpienia wolne i związane]
+Dla $\varphi=(\forall x\,(R(x,y)\lor\exists y\,R(y,z)))\land R(x,y)$ zaznacz każde wystąpienie $x,y,z$ jako wolne lub związane oraz oblicz $FV(\varphi)$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Przesłanianie kwantyfikatora]
+Przeanalizuj $\forall x\,(P(x)\lor\exists x\,(Q(x)\land R(x,y)))$. Ustal, który kwantyfikator wiąże każde wystąpienie $x$; przepisz formułę, zmieniając nazwy zmiennych związanych tak, aby się nie powtarzały.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Domknięcie formuły]
+Znajdź co najmniej dwa różne domknięcia formuły $R(x,y)$ poprzez dodanie kwantyfikatorów; podaj strukturę, w której mają różne wartości logiczne.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Alfa-równoważność]
+Porównaj $\forall x\,\exists y\,R(x,y)$ i $\forall u\,\exists v\,R(u,v)$. Wyjaśnij, w jakim sensie różnią się jako napisy, a w jakim mają to samo znaczenie. Następnie zbadaj, dlaczego zmiana $\forall x\,\exists y\,R(x,y)$ na $\forall y\,\exists y\,R(y,y)$ nie jest poprawnym przemianowaniem.
+
+\wskazowka{Sprawdź, które wystąpienie zmiennej jest związane przez jaki kwantyfikator.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Podstawienie bez przechwytywania]
+W formule $\forall y\,R(x,y)$ podstaw term $f(y)$ za wolne wystąpienia $x$. Pokaż niepoprawne podstawienie naiwne oraz prawidłowe podstawienie po zmianie nazwy związanej zmiennej.
+
+\wskazowka{Przed wstawieniem termu przemianuj związane $y$ na świeżą zmienną $z$.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Podstawienie numerału]
+Wyznacz wynik podstawienia $\overline3$ za wolne $x$ w formule $\exists x\,(x<y)\lor(x+0=S(x))$. Wyjaśnij, dlaczego pierwsze wystąpienia $x$ nie ulegają zmianie.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Wolne zmienne pod negacją]
+Dowiedź przez indukcję strukturalną tożsamości $FV(\neg\varphi)=FV(\varphi)$ i $FV(\forall x\,\varphi)=FV(\varphi)\setminus\{x\}$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Czy zdanie ma wolne zmienne?]
+Rozstrzygnij, które z $\forall x\,(x=x)$, $\exists x\,(x=y)$, $\forall x\,\exists y\,(x=y)$, $\exists x\,(x=x)\land(y=y)$ są zdaniami. Tam, gdzie zmienna pozostaje wolna, zaproponuj domknięcie.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Od formuły otwartej do zbioru]
+Niech $\mathcal M$ będzie strukturą języka $\{c,R\}$ z dziedziną $\mathbb Z$, gdzie $c^{\mathcal M}=0$ i $R^{\mathcal M}(x,y)\iff x<y$. Wyznacz zbiór wartości $a\in\mathbb Z$, dla których $\mathcal M,s[x\mapsto a]\models\exists y\,(R(x,y)\land R(y,c))$.
+
+\wskazowka{Przetłumacz formułę na nierówność $a<y<0$.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Dwie interpretacje tego samego symbolu]
+W języku $\{c,P\}$ z jedną stałą i predykatem jednoargumentowym podaj dwie struktury o tej samej dziedzinie $\{0,1\}$, w których zdanie $P(c)$ ma różną wartość logiczną.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Rachunek wartości termu]
+W strukturze $\mathcal M=(\mathbb Z; c^{\mathcal M}=2, f^{\mathcal M}(a)=a-1, g^{\mathcal M}(a,b)=a+2b)$ oblicz wartości termów $f(g(c,x))$ oraz $g(f(x),f(c))$ dla wartościowania $s(x)=-3$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Prawdziwość w skończonym modelu]
+Niech $M=\{0,1,2\}$ oraz $R^{\mathcal M}=\{(0,1),(1,2),(2,2)\}$. Oceń w $\mathcal M$ zdania $\forall x\,\exists y\,R(x,y)$, $\exists y\,\forall x\,R(x,y)$ i $\forall x\,R(x,x)$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Zamiana kolejności kwantyfikatorów]
+W języku z relacją $R$ skonstruuj na dwuelementowej dziedzinie model, w którym $\forall x\,\exists y\,R(x,y)$ jest prawdziwe, natomiast $\exists y\,\forall x\,R(x,y)$ jest fałszywe. Wskaż świadków dla poszczególnych $x$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Prawdziwość zależna od wartościowania]
+Przy $M=\{0,1,2\}$ i $R^{\mathcal M}(a,b)\iff a<b$ porównaj wartości formuły $\exists y\,R(x,y)$ dla $s(x)=0$, $s(x)=1$ i $s(x)=2$. Czy formuła jest zdaniem?
+
+\end{zadanie}
+
+
+\begin{zadanie}[Istnienie i jednoznaczność]
+W strukturze $(\mathbb Z;<)$ sprawdź zdania „każdy $x$ ma dokładnie jeden mniejszy element” i „każdy $x$ ma dokładnie jeden największy element mniejszy od $x$”. Najpierw zapisz je jako formuły pierwszego rzędu.
+
+\wskazowka{Nie używaj symbolu funkcji następnik, jeśli nie należy do ustalonej sygnatury.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Właściwości relacji]
+Zapisz w języku z binarną relacją $R$ zdania wyrażające zwrotność, symetrię, przechodniość i antysymetrię. Oceń je dla relacji $R=\{(0,0),(0,1),(1,1)\}$ na $M=\{0,1\}$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Funkcja jako relacja]
+Dla binarnej relacji $F$ napisz zdanie mówiące, że $F$ jest wykresem funkcji $M\to M$. Sprawdź je dla $F=\{(0,0),(1,1),(2,1)\}$ i $F^{\prime}=F\setminus\{(2,1)\}$ na $M=\{0,1,2\}$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Zmiana dziedziny]
+Zbadaj zdanie $\forall x\,\exists y\,(x\ne y)$ w strukturach o dziedzinach jedno-, dwu- i trzyelementowych, w języku zawierającym tylko równość. Zapisz formułę stwierdzającą „dziedzina ma co najmniej trzy elementy”.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Zdanie prawdziwe w jednym modelu]
+Znajdź zdanie języka z jedną relacją dwuargumentową, które jest prawdziwe w pewnym dwuelementowym modelu, ale fałszywe w innym modelu o tej samej dziedzinie. Wyjaśnij, dlaczego nie jest logicznie ważne.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Interpretacja funkcji a relacji]
+Na $M=\{0,1,2\}$ zinterpretuj jednoargumentowy symbol funkcyjny $f$ jako cykl $0\mapsto1\mapsto2\mapsto0$ i zinterpretuj relację $R(a,b)\iff f(a)=b$. Sprawdź formuły $\forall x\,R(x,f(x))$ oraz $\exists x\,R(x,x)$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Semantyczna równoważność]
+Udowodnij semantycznie, że dla dowolnej struktury i wartościowania $\neg\forall x\,P(x)$ jest równoważne $\exists x\,\neg P(x)$. Następnie pokaż, że $\forall x\,(P(x)\lor Q(x))$ nie jest w ogólności równoważne $\forall x\,P(x)\lor\forall x\,Q(x)$.
+
+\wskazowka{Do drugiej części wystarczy dziedzina dwuelementowa, na której $P$ i $Q$ zachodzą na różnych elementach.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Wolne zmienne są jedynymi istotnymi]
+Niech $s,t$ będą wartościowaniami w $\mathcal M$, które zgadzają się na wszystkich zmiennych wolnych formuły $\varphi$. Udowodnij, że $\mathcal M,s\models\varphi\iff\mathcal M,t\models\varphi$.
+
+\wskazowka{Prowadź indukcję po budowie formuły; w kroku kwantyfikatora porównuj odpowiednie zmodyfikowane wartościowania.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Zbiór aksjomatów i jego modele]
+W języku z relacją $R$ niech $T$ składa się z aksjomatu zwrotności i aksjomatu symetrii. Skonstruuj dwa nieizomorficzne modele $T$ o dwóch elementach. Czy $T$ wymusza przechodniość $R$?
+
+\end{zadanie}
+
+
+\begin{zadanie}[Aksjomat a jego konsekwencja]
+W języku z predykatami $P,Q$ niech $T=\{\forall x(P(x)\to Q(x)),\ \forall x P(x)\}$. Wyjaśnij semantycznie, dlaczego $T\models\forall x Q(x)$. Które z tych zdań jest aksjomatem, a które wnioskiem?
+
+\end{zadanie}
+
+
+\begin{zadanie}[Różne teorie o tych samych modelach]
+Zaproponuj dwa różne skończone zbiory aksjomatów w języku z równością, które mają dokładnie te same modele. Uzasadnij równoważność semantyczną.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Kontrmodel]
+Wykaż, że z $\forall x(P(x)\to Q(x))$ nie wynika $\forall x(Q(x)\to P(x))$, podając model pierwszego zdania, który nie spełnia drugiego.
+
+\end{zadanie}
+
+
+\section{Język i system formalny}
+
+\noindent\textit{Arytmetyczne termy i zdania, podstawienia, reguły dowodowe oraz podstawy metamatematyki.}
+
+
+\begin{zadanie}[Arności symboli arytmetyki]
+Wypisz symbole pozalogiczne języka $\mathcal L_A$ i ich arności. Rozdziel symbole funkcji, relacji oraz stałych. Wyjaśnij, dlaczego $<$ nie może wystąpić wewnątrz termu.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Od liczby do numerału]
+Zapisz numerały $\overline0$, $\overline2$, $\overline4$ w pełnej składni z symbolem $S$. Wyraźnie oddziel metaarytmetyczną liczbę $4$ od termu $\overline4$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Wartość termu a jego postać]
+Wyznacz wartość w $\mathcal N$ termów $S(S(0))\cdot S(0)$ i $S(0)+S(0)$. Czy termy te są identycznymi napisami? Czy ich równość jest prawdziwym zdaniem?
+
+\end{zadanie}
+
+
+\begin{zadanie}[Pełny zapis bez notacji infiksowej]
+Przepisz term $(x+S(0))\cdot(y+0)$ w notacji funkcyjnej z $+(u,v)$ i $\cdot(u,v)$. Następnie wskaż w pełni poprawne termy wśród $+(x)$, $+(S(x),0)$, $\cdot(x,+(y,0))$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Czy to zdanie arytmetyczne?]
+Sklasyfikuj wyrażenia $x<\overline3$, $\forall x\,\exists y\,(x+y=0)$, $\forall x\,(x<y)$, $\exists x\,S(x)=S(0)$ i $\forall x\,x+0$ jako zdania, formuły otwarte, termy lub napisy niepoprawne.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Definiowanie parzystości bez nowego symbolu]
+Zapisz w języku $\mathcal L_A$ formułę $\operatorname{Even}(x)$ mówiącą, że $x$ jest parzyste. Zbuduj z niej zdanie: „każda liczba parzysta ma parzysty kwadrat”.
+
+\wskazowka{Zastąp „$x$ parzysta” przez istnienie $y$ spełniającego $x=y+y$.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Formalizacja prostego porządku]
+Zapisz jako zdania $\mathcal L_A$: „$0$ jest najmniejszym elementem”, „każdy element ma element większy”, „istnieje element największy”. Określ ich wartości logiczne w $\mathcal N$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Dzielnik i liczba pierwsza]
+Napisz formułę $\operatorname{Div}(x,y)$ o znaczeniu „$x$ dzieli $y$”, a następnie formułę $\operatorname{Prime}(x)$ wyrażającą pierwszość $x$. Korzystaj wyłącznie z symboli $\mathcal L_A$ i skrótów definiowanych przez formuły.
+
+\wskazowka{Zwróć uwagę, aby wykluczyć $0$ i $1$ z liczb pierwszych.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Zmienna wolna w zdaniu z kwantyfikatorami]
+Dla $\psi(x,y)=\forall z\,(x+z=y\to\exists x\,(x<z))$ oblicz zbiór zmiennych wolnych, a następnie $\psi(\overline2,y)$. Wskaż, które wystąpienia $x$ uległy podstawieniu.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Prawda standardowa kontra wyprowadzalność]
+Wskaż przykład zdania arytmetycznego $\varphi$, które jest prawdziwe w $\mathcal N$, lecz nie jest logicznie ważne. Wytłumacz, dlaczego samo $\mathcal N\models\varphi$ nie stanowi dowodu $\vdash\varphi$ w pustej teorii.
+
+\wskazowka{Porównaj strukturę standardową z inną interpretacją symbolu $S$ lub $+$.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Modus ponens w praktyce]
+Niech $T$ ma aksjomaty $A$, $A\to B$, $B\to C$, gdzie $A,B,C$ są zdaniami ustalonego języka. Wypisz skończony ciąg formuł będący dowodem $C$ z $T$, podając uzasadnienie każdego wiersza.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Ograniczenia generalizacji]
+Wyjaśnij, dlaczego z założenia otwartego $P(x)$ nie wolno bez dodatkowych warunków wnioskować $\forall x\,P(x)$. Podaj konkretną strukturę i wartościowanie pokazujące zawodność takiej reguły.
+
+\wskazowka{Weź predykat prawdziwy tylko dla jednego elementu dwuelementowej dziedziny.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Generalizacja z dowodu zdania]
+Załóż, że $T\vdash\varphi$ i $\varphi$ jest zdaniem. Uzasadnij, że $T\vdash\forall x\,\varphi$ dla każdej zmiennej $x$. Czy to stwierdzenie mówi coś nowego o prawdziwości $\varphi$?
+
+\end{zadanie}
+
+
+\begin{zadanie}[Wniosek z dwóch implikacji]
+Przy $T\vdash A\to B$ i $T\vdash A\to\neg B$ wyprowadź $T\vdash\neg A$ za pomocą klasycznych tautologii i modus ponens.
+
+\wskazowka{Wykorzystaj tautologię $((A\to B)\land(A\to\neg B))\to\neg A$.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Weryfikacja rzekomego dowodu]
+Rozpatrz ciąg: (1) $P(0)$, (2) $\forall x\,P(x)$. Załóż, że $P(0)$ jest jedynym aksjomatem pozalogicznym. Czy ten ciąg jest dowodem drugiego wiersza w rachunku opisanym w skrypcie? Odpowiedź uzasadnij z uwzględnieniem reguły generalizacji.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Instancja logiczna czy nie?]
+Sprawdź, czy formuła $P(x)\to(Q(x)\to P(x))$ jest instancją tautologii zdaniowej. Następnie sprawdź, czy $P(x)\to\forall x\,P(x)$ jest logicznie ważna. Nie myl instancji schematu z dowolnym wynikiem kwantyfikacji.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Rachunek klasyczny a modele]
+Dla $T=\{\forall x P(x)\}$ wykaż, że $T\vdash P(c)$, gdzie $c$ jest symbolem stałej. Wskaż używaną regułę lub schemat kwantyfikatorowy. Sprawdź też semantycznie prawdziwość w każdym modelu $T$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Dowód z założeniem]
+Z teorii $S=\{A\to B\}$ i dodatkowego założenia $A$ wyprowadź $B$. Następnie użyj twierdzenia o dedukcji ze skryptu, aby uzyskać odpowiednią formułę dowodliwą w $S$. Nie powtarzaj dowodu samego twierdzenia o dedukcji.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Przeniesienie założenia niebędącego zdaniem]
+Przeanalizuj poprawność wnioskowania $\{P(x)\}\vdash\forall x P(x)$. Wyjaśnij, dlaczego założenie, że hipotezy twierdzenia o dedukcji są zdaniami, nie jest tylko technicznym szczegółem.
+
+\wskazowka{Kluczowe jest ograniczenie generalizacji dla zmiennej wolnej w nieusuniętym założeniu.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Kontrprzykład przez model]
+Przy $T=\{\forall x(P(x)\to Q(x))\}$ ustal, czy $T\vdash\forall x(Q(x)\to P(x))$. Jeśli nie, skonstruuj model $T$, w którym wniosek jest fałszywy.
+
+\wskazowka{Poprawność rachunku pozwala obalić istnienie dowodu przez kontrmodel.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Rozszerzenie teorii]
+Niech $T\subseteq U$ będą zbiorami zdań. Uzasadnij, że jeśli $T\vdash\varphi$, to $U\vdash\varphi$. Czy z zupełności $T$ wynika zupełność $U$? Czy z niesprzeczności $T$ wynika niesprzeczność $U$? Podaj precyzyjne odpowiedzi.
+
+\wskazowka{Zwiększenie liczby aksjomatów nie usuwa dawnych dowodów, ale może spowodować sprzeczność.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Konsekwencja skończonego fragmentu]
+Udowodnij, że jeśli $T\vdash\varphi$ dla dowolnego zbioru aksjomatów $T$, to istnieje skończony $T_0\subseteq T$ taki, że $T_0\vdash\varphi$.
+
+\wskazowka{Policz, ile różnych aksjomatów pozalogicznych pojawia się w danym skończonym dowodzie.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Teoria dwóch punktów]
+W języku zawierającym tylko równość zapisz pojedyncze zdanie wymuszające dokładnie dwa elementy dziedziny. Czy teoria składająca się z tego zdania jest niesprzeczna? Uzasadnij przez model.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Niesprzeczność teorii przez model]
+Niech $T=\{\forall x\,\exists y\,(x\ne y),\ \exists x\,\forall y\,(x=y)\}$. Pokaż bezpośrednio, że $T$ nie ma modelu, a następnie użyj zupełności rachunku pierwszego rzędu, aby wyjaśnić, co wynika dla sprzeczności $T$.
+
+\wskazowka{Pierwszy aksjomat wymaga co najmniej dwóch elementów; drugi dokładnie jednego.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Zupełność a teoria pusta]
+Pokaż, że pusta teoria w języku zawierającym tylko równość nie jest zupełna. Wskaż zdanie $\varphi$ i dwa modele, w których ma ono przeciwne wartości.
+
+\wskazowka{Rozważ zdanie „istnieją dwa różne elementy”.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Dwie niesprzeczne gałęzie]
+Niech $T$ będzie niesprzeczną teorią pierwszego rzędu, a $\varphi$ zdaniem takim, że $T\nvdash\varphi$ i $T\nvdash\neg\varphi$. Uzasadnij, że zarówno $T\cup\{\varphi\}$, jak i $T\cup\{\neg\varphi\}$ są niesprzeczne.
+
+\wskazowka{Zastosuj punkt (c) Lematu 3.6 do obu rozszerzeń.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Niesprzeczność i zupełność — niezależne pojęcia]
+Przygotuj przykłady teorii: (a) niesprzecznej i niezupełnej, (b) niesprzecznej i zupełnej, (c) sprzecznej i zupełnej. Dla każdego przykładu odwołaj się do definicji, a nie do intuicji o „wiedzy teorii”.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Różne aksjomatyzacje]
+Jeśli zbiory zdań $T$ i $U$ mają identyczne klasy modeli, wyjaśnij, dlaczego na gruncie poprawności i zupełności logiki pierwszego rzędu mają te same konsekwencje syntaktyczne. Czy muszą mieć identyczne zbiory aksjomatów?
+
+\wskazowka{Rozróżnij $T$ jako zbiór wypisanych aksjomatów od zbioru wszystkich twierdzeń z nich wynikających.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Niesprzeczne rozszerzenie może stracić model?]
+Przypuśćmy, że $T$ ma model i $\varphi$ jest prawdziwe w tym modelu. Czy $T\cup\{\varphi\}$ ma model? Czy musi być zupełne? Rozstrzygnij oba pytania.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Zdania nierozstrzygnięte w strukturze?]
+Wyjaśnij, dlaczego dla ustalonej struktury $\mathcal M$ i zdania $\varphi$ dokładnie jedno z $\mathcal M\models\varphi$, $\mathcal M\models\neg\varphi$ zachodzi w klasycznej semantyce. Dlaczego analogiczna alternatywa $T\vdash\varphi$ lub $T\vdash\neg\varphi$ może zawieść?
+
+\end{zadanie}
+
+
+\begin{zadanie}[Wiele modeli tej samej teorii]
+Skonstruuj dwa nieizomorficzne modele teorii pustej w języku z jednym predykatem jednoargumentowym. Rozstrzygnij, czy dla wybranego zdania teoria jest zupełna, odwołując się do tych modeli.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Teoria o stałej]
+Niech $\mathcal L=\{c,P\}$, a $T=\{P(c)\}$. Czy $T\vdash\exists x\,P(x)$? Czy $T\vdash\forall x\,P(x)$? Pierwsze rozstrzygnij rachunkowo, drugie semantycznie.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Dowód implikacji z założeń]
+Niech $T\vdash(A\land B)\to C$ i $T\vdash A$. Jakie dodatkowe twierdzenie wystarczyłoby, by wnioskować $T\vdash C$? Sformułuj pełny dowód z użyciem klasycznych tautologii i modus ponens.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Rozróżnianie semantyki i składni]
+Dla zdań $\varphi,\psi$ podaj znaczenie każdego z zapisów $T\vdash\varphi$, $T\models\varphi$, $\mathcal M\models\varphi$, $\models\varphi$, $T\vdash\varphi\to\psi$. Wskaż, które z nich wymagają wskazania struktury, a które dowodu.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Rozszerzenie języka o definicję]
+Niech $E(x,y)$ będzie skrótem formuły $\exists z\,(x+z=y)$. Rozwiń zapis $\forall x\,E(x,S(x))$ do poprawnej formuły $\mathcal L_A$. Czy zapis $E$ jest nowym symbolem pierwotnym języka?
+
+\end{zadanie}
+
+
+\begin{zadanie}[Na poziomie modelu i teorii]
+Niech $\varphi$ będzie zdaniem $\forall x\,(x+0=x)$. Oddziel trzy pytania: czy $\mathcal N\models\varphi$, czy $Q\vdash\varphi$, czy $\models\varphi$. Uzasadnij różnice w metodach rozstrzygania tych pytań.
+
+\wskazowka{Pierwsze dotyczy jednego modelu; drugie konkretnych aksjomatów; trzecie wszystkich struktur sygnatury.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Prawdziwa, lecz nieważna negacja]
+Dla $\chi=\forall x\,(S(x)\ne0)$ podaj strukturę $\mathcal M$ języka arytmetyki, w której $\chi$ jest fałszywa. Oceń $\chi$ w modelu standardowym i odróżnij $\mathcal N\models\chi$ od $\models\chi$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Formuły równoważne a równokształtne]
+Czy formuły $\forall x\,(x=x)$ i $\forall y\,(y=y)$ są identycznymi napisami? Czy są logicznie równoważne? Czy są zdaniami? Odpowiedz osobno na każde pytanie.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Pochodzenie numerali]
+Czy zapis $\overline{m+n}$ oznacza w definicji z sekcji 3 ten sam term co $\overline m+\overline n$? Wyjaśnij różnicę składniową, a następnie porównaj interpretacje obu termów w $\mathcal N$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Dowód a algorytm sprawdzający]
+Opisz, jakie dane są potrzebne, aby w skończonym ciągu formuł zweryfikować każdy krok wynikający z modus ponens. Zastanów się, co dodatkowo trzeba przechowywać, gdy zbiór aksjomatów $T$ jest tylko rekurencyjnie przeliczalny.
+
+\wskazowka{W pierwszym przypadku wskaż indeksy wcześniejszych wierszy; w drugim -- świadectwo tego, że użyty aksjomat pojawił się w wyliczeniu.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Niesprzeczność jako własność metateoretyczna]
+Zapisz precyzyjnie negację stwierdzenia „$T$ jest niesprzeczna”. Sprawdź, czy jej treścią jest istnienie modelu pewnego zdania, czy istnienie dwóch skończonych dowodów. Wyjaśnij, gdzie występuje kwantyfikacja po zdaniach.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Cztery role równości]
+Dla zapisów $x=y$, $\mathcal M\models x=y$ (z zadanym wartościowaniem), $T\vdash x=y$ (traktując $x=y$ jako formułę otwartą) i $x^{\mathcal M}=y^{\mathcal M}$ wyjaśnij, które są formułami języka, które metazapisami, a kiedy potrzebne jest wartościowanie. W razie potrzeby doprecyzuj zapis dla termów w miejsce samych zmiennych.
+
+\end{zadanie}
+
+
+\section{Arytmetyka Peana i Robinsona}
+
+\noindent\textit{Rachunki numerałów, siła aksjomatów i przykłady schematu indukcji.}
+
+
+\begin{zadanie}[Rachunek w słabej arytmetyce]
+Wyprowadź w $Q$ równość $\overline2+\overline3=\overline5$, używając wyłącznie właściwych aksjomatów dla dodawania i kolejnych kroków przekształcenia termów.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Mnożenie konkretnych numerali]
+Wyprowadź w $Q$ zdanie $\overline2\cdot\overline3=\overline6$. Wskaż miejsca, w których użyto aksjomatów (Q6) i (Q7).
+
+\end{zadanie}
+
+
+\begin{zadanie}[Porównanie z ustaloną granicą]
+Zapisz w postaci skończonej alternatywy formułę $x<\overline4$ i wyjaśnij, dlaczego taką równoważność można dowieść w $Q$ bez schematu indukcji.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Instancja indukcji]
+Podaj pełną instancję aksjomatu indukcji $\mathrm{PA}$ dla $\varphi(x,y)\equiv (x+ y=y+x)$. Zaznacz bazę, krok i wniosek. Nie musisz dowodzić tutaj przesłanek indukcji.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Dwa różne rodzaje twierdzeń]
+Rozróżnij zdania $Q\vdash\overline n+0=\overline n$ dla każdego ustalonego $n$ oraz $Q\vdash\forall x\,(x+0=x)$. Czy w tym przykładzie zachodzą oba? Dlaczego dla dowolnej formuły $\theta$ analogiczny przeskok do kwantyfikatora ogólnego nie jest uprawniony?
+
+\end{zadanie}
+
+
+\begin{zadanie}[Formuła ograniczona]
+Skonstruuj formułę $\Delta_0$ wyrażającą „$x$ ma dzielnik $d$ z przedziału $2\le d<x$”, używając wyłącznie kwantyfikatorów ograniczonych. Następnie zapisz zdanie $\Sigma_1$ mówiące, że taka liczba istnieje.
+
+\wskazowka{Iloraz w równaniu $d\cdot q=x$ możesz ograniczyć przez $x$, bo $d\ge2$.}
+
+\end{zadanie}
+
+
+\section{Funkcje i zbiory rekurencyjne}
+
+\noindent\textit{Konstrukcje algorytmiczne, rekursja prosta, minimalizacja i półrozstrzygalność.}
+
+
+\begin{zadanie}[Funkcja maksimum]
+Pokaż, że $\max(x,y)$ jest funkcją pierwotnie rekurencyjną, wyrażając ją przez dodawanie i obciętą różnicę $\dotminus$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Test bycia kwadratem]
+Zbuduj funkcję charakterystyczną zbioru kwadratów liczb naturalnych jako funkcję pierwotnie rekurencyjną.
+
+\wskazowka{Sprawdź, czy istnieje $y\le x$ spełniające $y^2=x$, używając ograniczonej kwantyfikacji.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Prosta rekursja]
+Zapisz rekurencyjnie funkcję $F(n)=\sum_{k=0}^n k^2$ i uzasadnij jej pierwotną rekurencyjność bez korzystania z zamkniętego wzoru na sumę.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Funkcja częściowa]
+Zdefiniuj funkcję częściową $f(n)$, która ma wartość $0$ dla $n=0$ i jest nieokreślona dla $n>0$, używając nieograniczonej minimalizacji totalnego testu pierwotnie rekurencyjnego.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Dwa programy wyszukujące]
+Porównaj procedury: (a) sprawdź kolejno $y=0,1,\dots,n$, (b) sprawdzaj $y=0,1,2,\dots$ bez granicy. Wyjaśnij, dlaczego pierwsza zawsze się zatrzymuje i dlaczego nie można tego wywnioskować dla drugiej nawet przy rozstrzygalnym predykacie sprawdzanym w każdym kroku.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Dopełnienie zbioru rekurencyjnie przeliczalnego]
+Uzasadnij, że jeśli zarówno $A\subseteq\N$, jak i $\N\setminus A$ są rekurencyjnie przeliczalne, to $A$ jest rozstrzygalny.
+
+\wskazowka{Uruchamiaj naprzemiennie po jednym kroku obu procedur półrozstrzygających.}
+
+\end{zadanie}
+
+
+\section{Numeracja Gödla}
+
+\noindent\textit{Kody napisów, ślady skończonych obliczeń i świadectwa dowodów.}
+
+
+\begin{zadanie}[Zakodowanie krótkiego słowa]
+Ustal pomocniczą numerację $\operatorname{kod}(a)=1$, $\operatorname{kod}(b)=2$. Dla kodowania przez kolejne liczby pierwsze oblicz kod słowa $aba$ i kod słowa pustego. Czy kodowanie rozróżnia $aba$ od $baa$?
+
+\end{zadanie}
+
+
+\begin{zadanie}[Odczyt kodu]
+Dla pomocniczego alfabetu z poprzedniego zadania odczytaj słowo o kodzie $2^3\cdot3^2\cdot5^3$. Ustal, czy liczba $2^2\cdot5^3$ jest poprawnym kodem słowa w podanym schemacie.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Kodowanie zer]
+Oblicz kod ciągu $(0,2,0)$ według konwencji $\langle a_1,\ldots,a_k\rangle=\prod_i p_i^{a_i+1}$. Wyjaśnij, dlaczego wykładnik $a_i$ bez dodawania jedynki nie pozwalałby jednoznacznie odczytać długości ciągu.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Ślad programu rejestrowego]
+Zapisz program rejestrowy obliczający $x+1$, gdy wejście $x$ znajduje się w $r_0$. Podaj pełny ślad obliczenia dla $x=2$, włącznie z numerami instrukcji.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Sprawdzanie dowodu i istnienie dowodu]
+Załóż, że relacja $\Prov_T(p,f)$ jest rozstrzygalna. Uzasadnij, dlaczego z samego tego faktu nie wynika rozstrzygalność predykatu $\exists p\,\Prov_T(p,f)$; opisz algorytm półrozstrzygający ten drugi warunek.
+
+\end{zadanie}
+
+
+\section{Reprezentowalność}
+
+\noindent\textit{Różnica między obliczalnością, reprezentowalnością i wewnętrznym dowodem totalności.}
+
+
+\begin{zadanie}[Reprezentacja parzystości]
+Zapisz formułę arytmetyczną $E(x)$ reprezentującą relację „$x$ jest parzyste”. Wskaż osobno, czego należy dowieść w $Q$ dla $E(\overline6)$ i $E(\overline7)$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Reprezentacja funkcji następnik]
+Przy $f(n)=n+1$ zaproponuj formułę $\varphi_f(x,y)$ reprezentującą jej wykres. Pokaż na konkretnym wejściu $n=2$, co znaczy jednoznaczność wartości wyrażona przez $\forall y(\varphi_f(\overline2,y)\leftrightarrow y=\overline3)$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Skończony ciąg przez funkcję beta]
+Dla ciągu $(2,0,1)$ sformułuj układ kongruencji, który trzeba rozwiązać, by dobrać parametry $a,b$ funkcji $\beta(a,b,i)$. Nie odtwarzaj ogólnego dowodu lematu o kodowaniu; wykonaj rachunek dla tego ciągu.
+
+\wskazowka{Możesz wybrać $b$ tak, by moduły $1+b$, $1+2b$, $1+3b$ były parami względnie pierwsze i większe od odpowiadających wyrazów.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Każdy przypadek a twierdzenie ogólne]
+Dla formuły $\varphi(x,y)$ wyjaśnij różnicę między rodziną $Q\vdash\forall y(\varphi(\overline n,y)\leftrightarrow y=\overline{f(n)})$ dla wszystkich standardowych $n$ a jednym zdaniem $Q\vdash\forall x\,\exists!y\,\varphi(x,y)$. Dlaczego drugie jest silniejsze?
+
+\end{zadanie}
+
+
+\begin{zadanie}[Prowadzenie obliczenia w teorii]
+Dla prostego programu rejestrowego, który z wejścia $x=1$ oblicza $2$, opisz, jakie informacje należy zakodować w arytmetyce, aby zdanie „istnieje poprawny ślad kończący się wynikiem $2$” miało sens jako formuła.
+
+\wskazowka{Osobno zakoduj konfiguracje, przejście między konfiguracjami, długość śladu i ostatni rejestr.}
+
+\end{zadanie}
+
+
+\section{Lemat o punkcie stałym (diagonalizacja)}
+
+\noindent\textit{Zastosowania gotowego lematu do nowych formuł.}
+
+
+\begin{zadanie}[Zdanie mówiące o własnej niedowodliwości]
+Dla formuły jednoargumentowej $\theta(x):=\neg\Bew_T(x)$ wskaż, jakie zdanie zapewnia lemat diagonalny, i zapisz otrzymywaną równoważność formalną. Nie odtwarzaj dowodu lematu.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Inny punkt stały]
+Zastosuj lemat diagonalny do $\theta(x):=\Bew_T(x)\lor (0=S(0))$. Jaka jest literalna treść punktu stałego? Czy z samej jego postaci wynika, że teoria dowodzi tego zdania?
+
+\end{zadanie}
+
+
+\begin{zadanie}[Prawidłowe i nieprawidłowe podstawienia]
+Wytłumacz, dlaczego w $\theta(\ulcorner G\urcorner)$ symbol $\ulcorner G\urcorner$ oznacza w metateorii kod zdania, a w języku arytmetyki musi być reprezentowany przez stosowny numerał.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Dwie wersje samoodniesienia]
+Porównaj formalną równoważność $T\vdash G\leftrightarrow\neg\Bew_T(\ulcorner G\urcorner)$ z nieformalnym stwierdzeniem „$G$ jest niedowodliwe”. Podaj rolę niesprzeczności $T$ w przejściu od formalnego kodowania do metawniosku.
+
+\wskazowka{Równoważność dowodliwa w $T$ sama nie mówi, który człon jest prawdziwy w $\mathcal N$.}
+
+\end{zadanie}
+
+
+\section{Pierwsze twierdzenie o niezupełności}
+
+\noindent\textit{Konsekwencje wersji Gödla i Rossera oraz ostrożne wnioskowanie z założeń.}
+
+
+\begin{zadanie}[Niesprzeczność kontra omega-niesprzeczność]
+Zapisz definicję $\omega$-niesprzeczności w postaci kwantyfikacji po formułach i numeralach. Wyjaśnij, dlaczego $\omega$-niesprzeczność pociąga zwykłą niesprzeczność.
+
+\wskazowka{Gdy teoria dowodzi $\varphi$ i $\neg\varphi$, można wybrać formułę niezależną od $x$.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Dwie różne wersje]
+Dla niesprzecznego, rekurencyjnie przeliczalnego $T\supseteq Q$, którego $\omega$-niesprzeczności nie zakładamy, wskaż, co wynika z wersji Rossera, a czego nie można wywnioskować z pierwotnej wersji Gödla dokładnie w postaci użytej w skrypcie.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Dodanie nierozstrzygniętego zdania]
+Niech $R_T$ będzie zdaniem Rossera niezależnym od $T$. Wyjaśnij, dlaczego obie teorie $T+R_T$ oraz $T+\neg R_T$ są niesprzeczne. Czy teorie te muszą być zupełne?
+
+\end{zadanie}
+
+
+\begin{zadanie}[Nierozstrzygalność zbioru twierdzeń]
+Przypuśćmy, że zbiór twierdzeń niesprzecznego efektywnie aksjomatyzowalnego rozszerzenia $Q$ byłby rozstrzygalny. Opisz, jak wykorzystać test dowodliwości do skonstruowania sprzecznego z pierwszym twierdzeniem postępowania rozstrzygającego wszystkie zdania teorii po jej domknięciu przez rozstrzygnięcia.
+
+\wskazowka{Zwróć uwagę: sama rozstrzygalność zbioru twierdzeń nie czyni teorii zupełną. Wykorzystaj fakt, że dla rozstrzygalnej teorii można efektywnie wybierać spójne rozstrzygnięcia kolejnych zdań i otrzymać rozstrzygalne zupełne rozszerzenie.}
+
+\end{zadanie}
+
+
+\section{Twierdzenie o niedefiniowalności prawdy (Tarski)}
+
+\noindent\textit{Prawda arytmetyczna, formuły prawdy i semantyczne samoodniesienie.}
+
+
+\begin{zadanie}[Formuła prawdy dla skończonej listy]
+Weź trzy ustalone zdania arytmetyczne $\varphi_1,\varphi_2,\varphi_3$. Wyjaśnij, dlaczego dla tej skończonej rodziny można zbudować formułę $Tr_3(x)$ spełniającą w $\mathcal N$ odpowiednie trzy równoważności prawdy; nie wynika z tego istnienie jednej definicji prawdy dla wszystkich zdań.
+
+\wskazowka{Zakoduj trzy przypadki jako alternatywę z porównaniem $x$ z ustalonymi kodami.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Prawda a dowodliwość]
+Porównaj własności zbioru kodów zdań dowodliwych w $\mathrm{PA}$ oraz zbioru kodów wszystkich zdań prawdziwych w $\mathcal N$. Który jest rekurencyjnie przeliczalny i dlaczego?
+
+\end{zadanie}
+
+
+\begin{zadanie}[Próba definicji własnej fałszywości]
+Załóż hipotetycznie, że istnieje arytmetyczna formuła $Tr(x)$ definiująca prawdę wszystkich zdań w $\mathcal N$. Zastosuj lemat diagonalny do $\neg Tr(x)$ i wyjaśnij, gdzie powstaje sprzeczność.
+
+\wskazowka{Skorzystaj z równoważności prawdy dla kodu otrzymanego zdania; rozumowanie odbywa się w metateorii.}
+
+\end{zadanie}
+
+
+\section{Warunki Hilberta--Bernaysa--Löba}
+
+\noindent\textit{Wewnętrzna dowodliwość i ostrożne użycie warunków D1--D3.}
+
+
+\begin{zadanie}[Dwie warstwy predykatu]
+Rozróżnij metastwierdzenie $T\vdash\varphi$ od zdania $\Bew_T(\ulcorner\varphi\urcorner)$. Wyjaśnij, które można umieścić pod kwantyfikatorem wewnątrz języka arytmetyki.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Warunek D2 w przykładzie]
+Przy założeniu $T\vdash A\to B$ pokaż, jak z warunków (D1) i (D2) uzyskać $T\vdash\Bew_T(\ulcorner A\urcorner)\to\Bew_T(\ulcorner B\urcorner)$.
+
+\wskazowka{Najpierw zastosuj (D1) do implikacji, potem modus ponens do instancji (D2).}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Iterowana dowodliwość]
+Zapisz poprawną instancję (D3) dla zdania $\varphi\equiv(0=0)$. Rozróżnij w niej trzy poziomy: samo $\varphi$, dowodliwość $\varphi$ i dowodliwość zdania o dowodliwości $\varphi$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Brak zasady prawdziwości]
+Wyjaśnij, dlaczego z samych (D1)--(D3) nie wolno wywnioskować $T\vdash\Bew_T(\ulcorner\varphi\urcorner)\to\varphi$ dla każdej $\varphi$. Sformułuj, jaką rolę odegrałoby to hipotetyczne założenie w twierdzeniu Löba.
+
+\end{zadanie}
+
+
+\section{Drugie twierdzenie o niezupełności}
+
+\noindent\textit{Formuła niesprzeczności i zakres drugiego twierdzenia.}
+
+
+\begin{zadanie}[Dwa sposoby zapisu niesprzeczności]
+Zapisz $\Con(T)$ jako negację zdania o dowodliwości sprzeczności, wykorzystując kod $0=S(0)$. Porównaj to zdanie z metateoretycznym stwierdzeniem, że $T$ jest niesprzeczna.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Co daje dodanie Con(T)?]
+Załóż, że $T\supseteq\mathrm{PA}$ jest niesprzeczna i efektywnie aksjomatyzowalna, a jej predykat dowodliwości spełnia założenia skryptu. Czy z tych warunków wynika niesprzeczność teorii $T+\Con(T)$? Przeanalizuj przykład $T=\mathrm{PA}+\neg\Con(\mathrm{PA})$, przy założeniu niesprzeczności $\mathrm{PA}$. Jakie dodatkowe założenie zapewnia niesprzeczność $T+\Con(T)$?
+
+\wskazowka{Niedowodliwość $\Con(T)$ nie oznacza niedowodliwości $\neg\Con(T)$. Z Lematu 3.6(c) wynika: $T+\Con(T)$ jest niesprzeczna wtedy i tylko wtedy, gdy $T\nvdash\neg\Con(T)$.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Zakres twierdzenia]
+Dla teorii pustej w języku czystej równości rozważ próbę zastosowania drugiego twierdzenia Gödla. Wskaż dokładnie, które założenia i konstrukcje z dowodu skryptu nie są dostępne.
+
+\end{zadanie}
+
+
+\section{Twierdzenie Löba}
+
+\noindent\textit{Przykłady wewnętrznej refleksji i właściwe użycie twierdzenia.}
+
+
+\begin{zadanie}[Konsekwencja Löba]
+Przyjmij, że $T$ spełnia warunki twierdzenia Löba. Jeśli $T\vdash\Bew_T(\ulcorner\varphi\urcorner)\to\varphi$, wyjaśnij, jaki metawynik otrzymujemy. Podaj przykład $\varphi$ będącego prostym twierdzeniem $T$, dla którego przesłanka zachodzi.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Dlaczego refleksja jest ryzykowna?]
+Załóż, że $T$ jest niesprzeczna, dostatecznie silna i spełnia (D1)--(D3). Czy może dowodzić wszystkich instancji $\Bew_T(\ulcorner\psi\urcorner)\to\psi$? Rozważ w szczególności $\psi\equiv(0=S(0))$.
+
+\wskazowka{Połącz twierdzenie Löba z niesprzecznością $T$.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Löb kontra zasada D3]
+Zestaw zdania $\Bew_T(\ulcorner\varphi\urcorner)\to\Bew_T(\ulcorner\Bew_T(\ulcorner\varphi\urcorner)\urcorner)$ oraz $\Bew_T(\ulcorner\varphi\urcorner)\to\varphi$. Wyjaśnij, które odpowiada warunkowi (D3), a które jest zasadą refleksji i dlaczego nie wolno ich utożsamiać.
+
+\end{zadanie}
+
+
+\section{Twierdzenie Löwenheima--Skolema}
+
+\noindent\textit{Modele, podstruktury, elementarność, zwartość i moc.}
+
+
+\begin{zadanie}[Podstruktura czystego porządku]
+Dla $\mathcal M=(\mathbb Z;<)$ i $A=\mathbb N\subseteq\mathbb Z$ sprawdź, że $(A;<|_A)$ jest podstrukturą w języku z relacją $<$. Następnie znajdź formułę z parametrem z $A$, która pokazuje, że nie jest podmodelem elementarnym.
+
+\wskazowka{Poszukaj elementu mniejszego od $0$: istnieje w $\mathbb Z$, lecz nie istnieje w podstrukturze $\mathbb N$.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Świadkowie dla formuł egzystencjalnych]
+Niech $\mathcal M=(\mathbb Q;<)$, a $A=\mathbb Q\cap(0,1)$. Sprawdź, czy $A$ jest podstrukturą. Dla parametrów $a,b\in A$ z $a<b$ przeanalizuj istnienie świadków zdań $\exists x\,(a<x<b)$, $\exists x\,(x<a)$ i $\exists x\,(a<x)$ w $\mathcal M$ i $A$. Wyjaśnij, dlaczego te trzy testy nie stanowią jeszcze pełnego sprawdzenia warunku Tarskiego--Vaughta.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Skolemizacja przez świadków]
+Opisz pierwszy etap konstrukcji przeliczalnego podmodelu elementarnego nieskończonej struktury $\mathcal M$ w języku przeliczalnym: startuj ze zbioru jednego elementu i dodawaj świadków formuł egzystencjalnych o parametrach już wybranych. Dlaczego jeden etap nie musi wystarczyć?
+
+\wskazowka{Nowo dodani świadkowie mogą pojawić się jako parametry kolejnych formuł.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Zwartość w praktyce]
+Rozważ teorię czystej równości $T=\{\exists x_1\cdots\exists x_n\,\bigwedge_{i<j}x_i\ne x_j:n\ge1\}$. Sprawdź spełnialność każdego skończonego fragmentu i zastosuj twierdzenie o zwartości. Co otrzymana teoria wymusza o mocach modeli?
+
+\end{zadanie}
+
+
+\begin{zadanie}[Model z nowymi elementami]
+Niech $T$ ma nieskończony model. Dodaj do języka nowe stałe $c_i$ ($i\in\N$) i aksjomaty $c_i\ne c_j$ dla $i\ne j$. Sprawdź spełnialność skończonych fragmentów. Wyjaśnij, jaki jest pierwszy krok dowodu istnienia modelu z nieskończenie wieloma wyróżnionymi elementami.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Zupełność rachunku kontra zupełność teorii]
+Wyjaśnij na przykładzie teorii gęstych porządków liniowych bez końców, jak zupełność rachunku pierwszego rzędu różni się od zupełności konkretnej teorii. Wskaż, co należy udowodnić, żeby rozstrzygnąć zupełność tej teorii.
+
+\wskazowka{Pierwsze twierdzenie porównuje semantyczną konsekwencję i dowód. Drugie dotyczy rozstrzygnięcia każdego zdania przez jedną teorię.}
+
+\end{zadanie}
+
+
+\section{Konsekwencje dla modeli: niestandardowe liczby i paradoks Skolema}
+
+\noindent\textit{Zastosowania zwartości i rozróżnienia modeli wewnętrznych i zewnętrznych.}
+
+
+\begin{zadanie}[Element większy od wszystkich numerali]
+Dodaj do teorii $\mathrm{PA}$ stałą $c$ i zdania $\overline n<c$ dla wszystkich $n\in\N$. Sprawdź spełnialność każdego skończonego fragmentu i zastosuj zwartość. Wyjaśnij, dlaczego $c$ w otrzymanym modelu nie jest wartością żadnego standardowego numerału.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Niestandardowe nie znaczy nieskończone]
+W modelu z poprzedniego zadania zdanie „$c$ jest większe od każdego standardowego numerału” ma sens w metateorii. Wyjaśnij, dlaczego nie jest to pojedyncze zdanie $\mathcal L_A$ z kwantyfikatorem po „standardowych liczbach”.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Wewnętrzna i zewnętrzna przeliczalność]
+Wyjaśnij, dlaczego istnienie zewnętrznie przeliczalnego modelu teorii mnogości nie powoduje, że model spełnia zdanie „każdy zbiór jest przeliczalny”. Wskaż, gdzie przebiega granica między relacją należenia wewnątrz modelu a zewnętrzną enumeracją.
+
+\wskazowka{Zewnętrzny wykaz wszystkich elementów zbioru modelu nie musi być elementem samego modelu.}
+
+\end{zadanie}
+
+
+\begin{zadanie}[Dwie struktury, jedna teoria]
+Za pomocą twierdzenia Löwenheima--Skolema wyjaśnij, dlaczego teoria pierwszego rzędu o nieskończonym modelu nie może, przy założeniu istnienia modeli wystarczająco dużych mocy, jednoznacznie wyznaczać mocy wszystkich swoich modeli.
+
+\end{zadanie}
+
+
+\section{Co niezupełność oznacza dla codziennej matematyki}
+
+\noindent\textit{Ścisłe rozumienie niezależności, prawdy i możliwości algorytmów.}
+
+
+\begin{zadanie}[Niezależność a dwa modele]
+Dla niesprzecznej teorii $T$ i zdania $\varphi$ niezależnego od $T$ wyjaśnij, dlaczego istnieją modele $T+\varphi$ i $T+\neg\varphi$. Jakiego twierdzenia logicznego potrzebujesz oprócz lematu o niesprzeczności rozszerzenia?
+
+\end{zadanie}
+
+
+\begin{zadanie}[Prawdziwe i niezależne]
+Sformułuj poprawnie zdanie „$\varphi$ jest prawdziwe, ale niezależne od $T$”. Czy ma ono sens bez wskazania struktury, w której $\varphi$ ma być prawdziwe?
+
+\end{zadanie}
+
+
+\begin{zadanie}[Granice algorytmizacji]
+Wytłumacz, dlaczego nierozstrzygalność zbioru wszystkich twierdzeń pewnej teorii arytmetycznej nie oznacza, że dla żadnego konkretnego zdania nie można efektywnie znaleźć dowodu.
+
+\end{zadanie}
+
+
+\section{Własna niesprzeczność i granice zaufania: Gödel II oraz Löb}
+
+\noindent\textit{Formuły niesprzeczności i ograniczenia formalnej autorefleksji.}
+
+
+\begin{zadanie}[Niesprzeczność po dodaniu aksjomatu]
+Niech $T$ spełnia założenia drugiego twierdzenia i jest niesprzeczna. Zbadaj niesprzeczność $T+\neg\Con(T)$, wykorzystując niedowodliwość $\Con(T)$ w $T$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Weryfikacja skończona kontra zdanie ogólne]
+Porównaj: „dla każdego ustalonego $n$ można sprawdzić, że $n$ nie koduje dowodu sprzeczności” i „$T\vdash\forall n\,\neg\Prf_T(n,\ulcorner\bot\urcorner)$”. Wyjaśnij rolę drugiego twierdzenia.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Niebezpieczna forma refleksji]
+Załóżmy, że $T$ dowodzi $\Bew_T(\ulcorner\bot\urcorner)\to\bot$. Co można wywnioskować o $\Con(T)$, a następnie o niesprzeczności $T$ przy założeniach twierdzenia Löba?
+
+\wskazowka{Zauważ, że $\neg\Bew_T(\ulcorner\bot\urcorner)$ jest formułą $\Con(T)$.}
+
+\end{zadanie}
+
+
+\section{Kodowanie, diagonalizacja i prawda: sens twierdzenia Tarskiego}
+
+\noindent\textit{Porównanie trzech ograniczeń formalizacji.}
+
+
+\begin{zadanie}[Kodowania nie utożsamiamy ze zdaniami]
+Wyjaśnij na konkretnym przykładzie, czym różni się zdanie $\varphi$ od jego liczby Gödla $\ulcorner\varphi\urcorner$ oraz od numerału oznaczającego ten kod wewnątrz arytmetyki.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Dlaczego nie jest to paradoks językowy?]
+Wskaż dwa różne poziomy w równoważności diagonalnej $T\vdash G\leftrightarrow\neg\Bew_T(\ulcorner G\urcorner)$. Wyjaśnij, dlaczego nie jest to zwykła sprzeczność $G\leftrightarrow\neg G$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Trzy rodzaje niemożliwości]
+Porównaj zdania: „prawda arytmetyczna nie jest definiowalna w arytmetyce”, „prawda arytmetyczna nie jest rekurencyjnie przeliczalna” i „dowodliwość w odpowiednio silnej teorii nie jest rozstrzygalna”. Wskaż odpowiednie wyniki ze skryptu i ich różne wnioski.
+
+\end{zadanie}
+
+
+\section{Czego te twierdzenia nie mówią}
+
+\noindent\textit{Przeciwprzykłady dla zbyt daleko idących interpretacji twierdzeń.}
+
+
+\begin{zadanie}[Teoria, której Gödel nie dotyczy]
+Podaj przykład niesprzecznej, efektywnie aksjomatyzowalnej i zupełnej teorii pierwszego rzędu, która nie zawiera arytmetyki Robinsona $Q$. Wyjaśnij, dlaczego nie jest kontrprzykładem do twierdzeń skryptu.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Indywidualne dowody nadal działają]
+Wyjaśnij, dlaczego z niezupełności $\mathrm{PA}$ nie wynika nierozstrzygalność każdego zdania w $\mathrm{PA}$. Podaj przykład łatwego zdania rozstrzyganego w $\mathrm{PA}$.
+
+\end{zadanie}
+
+
+\begin{zadanie}[Wybór teorii i języka]
+Porównaj dwa stwierdzenia „$\varphi$ jest niezależne od $T$” oraz „$\varphi$ jest fałszywe”. Dlaczego bez ustalenia teorii i struktury nie są to poprawne odpowiedzi na to samo pytanie?
+
+\end{zadanie}
+
+
+\end{document}
