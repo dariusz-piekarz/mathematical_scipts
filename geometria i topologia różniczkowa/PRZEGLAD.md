@@ -14,6 +14,60 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 13 — ponowna kontrola wyprowadzeń i całek (2026-11-11)
+
+Ponownie przeczytano wszystkie osiem sekcji pod kątem nieobjaśnionych
+równań i przeskoków rachunkowych. Rozpisano następujące przejścia:
+
+- Wzór geodezyjnej sfery wynika teraz z normalności przyspieszenia,
+  dwukrotnego różniczkowania równania sfery i rozwiązania oscylatora.
+  Przy hiperboloidzie wyjaśniono znak rzutu lorentzowskiego, równanie
+  przyspieszenia, jego rozwiązanie oraz styczność i normę wektora
+  odwracającego odwzorowanie wykładnicze.
+- W modelach hiperbolicznych pokazano funkcję pierwotną prowadzącą
+  do półokręgów, tożsamość połowy argumentu oraz oba rachunki odległości.
+  Dla półprzestrzeni zapisano izometrię do hiperboloidy i rozpisano
+  jej iloczyn Minkowskiego, zamiast samej zapowiedzi podstawienia.
+- W Nil podano pochodne lagranżjanu, rozwiązano układ prędkości
+  zespolonych i scałkowano trzecią współrzędną z jawnymi granicami.
+- W Schwarzschildzie zapisano pełne równanie radialne i pokazano,
+  jak całka pierwsza usuwa z niego energię bez dzielenia przez prędkość.
+  W Kerrze rozpisano pochodne lagranżjanu, odwrócenie dwóch kombinacji
+  prędkości, normalizację radialną, warunek orbity kołowej, wyróżnik
+  i skracanie czynników we wzorach na obie prędkości kątowe.
+- Długość przestrzennego promienia oszacowano przez całkę o jawnych
+  granicach; funkcja pierwotna uzasadnia zmianę granic także dla drogi
+  zawracającej. Skończoność całki przy zwykłym horyzoncie wynika
+  z konkretnego oszacowania, a rozbieżność w ekstremalnym Kerrze
+  z obliczonej całki niewłaściwej.
+- W FLRW pokazano regułę iloczynu dla stałych momentów, podstawienie
+  do normalizacji, obie całki potęgowe i rachunek pochodnej Hubble'a
+  w równaniu odchylenia.
+
+Uzupełniono osiem wcześniejszych zapisów całek bez granic:
+lokalna minimalność, minimalność łuku sfery, dwie przy pionie
+hiperbolicznym, czas własny, dwie w porównaniu czasopodobnych końców
+i długość przestrzennego promienia Schwarzschilda.
+Nowe całki również mają granice. Wyszukanie nie wykryło
+dalszych całek bez granic lub dziedzin w rozdziałach 11–13.
+
+Przeszły 42 wcześniejsze kontrole symboliczne i osiem dodatkowych:
+izometria półprzestrzeni do hiperboloidy, jej norma i iloczyn
+odległościowy, funkcja pierwotna półokręgu, wyróżnik i obie gałęzie
+rozwiązania Kerra oraz pochodna ekstremalnej całki radialnej.
+Pozostało 89 etykiet bez powtórzeń i brakujących odsyłaczy;
+numeracja istniejących wyników, wzorów i rysunków nie zmieniła się.
+
+Złożono tylko tom II: **211 stron**, rozdział 13 na fizycznych
+stronach **44–66**. Obejrzano cały rozdział, 16 ilustracji,
+spis i indeks. Usunięto przepełnienie nowego wzoru i niedopełnienie
+wiersza; w końcowym logu pozostały wyłącznie wcześniejsze komunikaty
+o `page.1` i niedopełnieniu w rozdziale 15. Nie ma tekstu poza stroną.
+Indeks: 106 wpisów przyjętych, 0 odrzuconych, 0 ostrzeżeń.
+Wszystkie cele łączy między czterema PDF-ami istnieją.
+SHA-256 sprawdzonego tomu II:
+`F039AF740609FD78EA5EBE2C5E278805035E6BA1DEB90E3A04DA8E3A7A710798`.
+
 ## Rozdział 12 — ponowna kontrola wyprowadzeń i całek (2026-11-11)
 
 Przeczytano ponownie wszystkie sześć sekcji według doprecyzowanej

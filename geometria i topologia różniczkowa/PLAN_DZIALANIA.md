@@ -97,7 +97,7 @@ wkłady czterech boków i oszacowania reszt.
 W rozdziale 14 każda całka oznaczona ma jawne granice
 lub dziedzinę; wymóg ten dopisano także do zasad projektu.
 Na prośbę autora przejście do rozdziału 15 jest **wstrzymane**.
-Bieżący etap to ponowna kontrola **rozdziałów 11–13**
+Zakończono ponowną kontrolę **rozdziałów 11–13**
 pod kątem niewyprowadzonych równań, przeskoków rachunkowych
 i całek bez jawnej dziedziny. Każdy z tych rozdziałów
 zamykamy osobnym cyklem ze składem tylko tomu II, kontrolą PDF,
@@ -109,7 +109,13 @@ Sprawdzono skład tomu II. Ponowną kontrolę wszystkich sześciu sekcji
 rozdziału 12 również zakończono: dopisano podstawienia do symboli
 Christoffela, wyprowadzenie całkowego równania transportu i oszacowania
 Grönwalla, rozwiązanie transportu po równoleżniku oraz rachunek bazy
-dualnej. Sprawdzono skład tylko tomu II; bieżący rozdział to **13**.
+dualnej. W rozdziale 13 ponownie przeczytano wszystkie osiem sekcji:
+uzupełniono osiem zapisów całek bez granic, wyprowadzono wzory
+geodezyjnych sfery i hiperboloidy, odległości hiperboliczne,
+przykład Nil oraz kroki rachunków Schwarzschilda, Kerra i FLRW.
+Każdy z rozdziałów 11–13 zamknięto osobnym składem i kontrolą
+tomu II, commitem i pushem; szczegóły są w `PRZEGLAD.md`.
+Przejście do rozdziału 15 pozostaje wstrzymane.
 Szersza kontrola rozdziałów 2–10 według
 tego doprecyzowanego kryterium pozostaje do wykonania;
 nie zastępuje jej wcześniejszy przegląd dydaktyczny.
