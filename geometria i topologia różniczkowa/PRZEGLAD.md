@@ -14,6 +14,82 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 15 — przykłady, dowody i rysunki (2026-11-12)
+
+Na prośbę autora wznowiono zwykły przegląd od rozdziału 15,
+„Grupy Liego i ich algebry”, w pliku `29-grupy-liego.tex`.
+Przeczytano i uzupełniono wszystkie pięć sekcji według
+granularności rozdziału 1, z uwzględnieniem wyprowadzeń
+wzorów i wcześniejszych wymagań dotyczących całek.
+
+- **§15.1:** uzasadniono wzór odwrotności przez macierz dopełnień,
+  otwartość SO(n) w O(n), niezależność działań torusa od
+  reprezentantów i lokalne odwrotności jego modeli.
+  Postać macierzy SU(2) otrzymano przez porównanie odwrotności
+  ze sprzężeniem hermitowskim; rozpisano sprawdzenie unitarności.
+- **§15.2:** uzupełniono rachunek przenoszenia nawiasu na funkcjach
+  i argument wymiarowy dla su(2). Nowy przykład Heisenberga zawiera
+  mnożenie, odwrotność, różniczkę translacji, pola, nawiasy i przepływy.
+  Obliczono cztery ruchy dające pionowy przyrost ab
+  oraz sprawdzono niezmienniczość metryki Nil z rozdziału 11.
+- **§15.3:** rozpisano przeniesienie równania krzywej całkowej
+  i sklejenie przedłużeń w dowodzie zupełności. Wyjaśniono rolę
+  lewej i prawej translacji oraz odróżniono eksponentę grupową
+  od geodezyjnej. Wyprowadzono różniczkowanie szeregu,
+  odwrotność, potęgi generatora SU(2), unitarność i wyznacznik.
+  Obliczono kończący się szereg Heisenberga i nierówność
+  eksponenty sumy oraz iloczynu eksponent. Macierz diag(-1,-2)
+  daje udowodniony brak surjektywności nawet w składowej jedności.
+  Nowy przykład torusa zawiera okres, dowód gęstości przy
+  niewymiernym nachyleniu oraz sprawdzenie, dlaczego
+  injektywna immersja nie jest zanurzeniem.
+- **§15.4:** wyprowadzono równość pól przy sprzężeniu, generator
+  przepływu i znak minus przy przenoszeniu pola. Rozpisano
+  zachowanie nawiasu i przykład macierzy 2×2. Dodano dowód,
+  że różniczka gładkiego homomorfizmu zachowuje nawias
+  i że homomorfizm komutuje z eksponentą.
+  Stąd otrzymano Ad(exp(tX)) = exp(t ad_X).
+  Złożenia zapisano jawnie przez `\circ`.
+- **§15.5:** dowód nakrycia SU(2) nad SO(3) podzielono na pięć kroków.
+  Wyprowadzono własności normy i części rzeczywistej kwaternionów,
+  wzór obrotu i jego znak, istnienie osi, jądro i lokalne arkusze.
+  Obliczono różniczkę z czynnikiem 2 i jej przenoszenie translacjami.
+  Nowy przykład obrotu o π/2 zawiera obie macierze i potęgi kwaternionu.
+  Uzasadniono zgodność z konstrukcją Spin(3) i obliczenie
+  grupy podstawowej SO(3) przez nakrycie.
+
+Dodano cztery rysunki TikZ: pole na okręgu, ruchy Heisenberga,
+podgrupy na kwadratach torusa i podwojenie kąta przy nakryciu.
+Współrzędne wierzchołków, nachylenia wszystkich 16 odcinków
+torusa, styczność strzałki i kąty sprawdzono rachunkowo.
+W rozdziale nie występują całki. Zachowano wszystkie 26
+dotychczasowych etykiet i numery wcześniejszych wyników;
+po uzupełnieniu są 34 etykiety.
+
+Przeszło **49 kontroli rachunkowych**: ogólne macierze SU(2),
+iloczyn i norma kwaternionów, równanie eksponenty, grupa,
+pola i metryka Heisenberga, działanie Ad, pełna macierz obrotu,
+norma, wyznacznik i zachowanie nawiasu przez różniczkę nakrycia.
+Definicje, znaki i założenia porównano z
+[notatkami van den Bana](https://www.staff.science.uu.nl/~ban00101/lecnotes/lie2010.pdf),
+§§2–4, 7 i 10, oraz z
+[wykładem Meinrenkena](https://www.math.toronto.edu/mein/teaching/MAT1120_LieGroups/l1.pdf).
+
+Złożono **tylko tom II: 217 stron**. Rozdział zajmuje
+fizyczne strony **114–126**. Obejrzano cały rozdział,
+cztery ilustracje w dwóch rendererach, spis treści i indeks;
+rachunki oraz etykiety sprawdzono także w powiększeniu.
+Poprawiono odstęp etykiet Heisenberga i złamanie krótkiej równości.
+Brak nowych ostrzeżeń, przepełnień, brakujących odsyłaczy
+i tekstu poza stroną. Pozostały wcześniejsze komunikaty
+o `page.1` oraz `Underfull` o badness 1057
+w definicji podgrupy jednoparametrowej; zmienił się tylko numer linii.
+Indeks: 107 wpisów przyjętych, 0 odrzuconych, 0 ostrzeżeń.
+Wszystkie cele łączy między czterema PDF-ami istnieją.
+Tomy I, III i IV zachowały poprzednie sumy kontrolne.
+SHA-256 sprawdzonego tomu II:
+`6FD67C8002D838367B3BB1E6093FAB82250EEA3A149D4C18CADEE947BD3014EA`.
+
 ## Rozdziały 9 i 10 — ponowna kontrola wyprowadzeń (2026-11-12)
 
 Przeczytano i uzupełniono wszystkie siedem sekcji rozdziału 9

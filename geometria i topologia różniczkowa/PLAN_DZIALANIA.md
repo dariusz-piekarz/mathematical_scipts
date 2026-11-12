@@ -96,7 +96,8 @@ parametryzację pętli, całkowanie równania transportu,
 wkłady czterech boków i oszacowania reszt.
 W rozdziale 14 każda całka oznaczona ma jawne granice
 lub dziedzinę; wymóg ten dopisano także do zasad projektu.
-Na prośbę autora przejście do rozdziału 15 jest **wstrzymane**.
+Na prośbę autora wstrzymano wtedy przejście do rozdziału 15,
+aby ponownie sprawdzić wcześniejsze rozdziały.
 Zakończono ponowną kontrolę **rozdziałów 11–13**
 pod kątem niewyprowadzonych równań, przeskoków rachunkowych
 i całek bez jawnej dziedziny. Każdy z tych rozdziałów
@@ -115,7 +116,7 @@ geodezyjnych sfery i hiperboloidy, odległości hiperboliczne,
 przykład Nil oraz kroki rachunków Schwarzschilda, Kerra i FLRW.
 Każdy z rozdziałów 11–13 zamknięto osobnym składem i kontrolą
 tomu II, commitem i pushem; szczegóły są w `PRZEGLAD.md`.
-Przejście do rozdziału 15 pozostaje wstrzymane.
+Na tym etapie przejście do rozdziału 15 pozostawało wstrzymane.
 Autor wyznaczył teraz **rozdział 2, §§2.1–2.7 (tom I)**:
 ponowną kontrolę wyprowadzeń równań, przejść rachunkowych
 i jawnych dziedzin całek. Kontrolę wszystkich siedmiu sekcji
@@ -170,8 +171,19 @@ w rozdziale 10 ma jawne granice albo dziedzinę; w rozdziale 9
 nie występują całki. Po uzupełnieniu obu złożono i sprawdzono
 tylko tom I, w tym dziewięć rysunków. Zachowano numerację.
 **Wyznaczony etap rozdziałów 9–10 jest zakończony.**
-Przejście do rozdziału 15 pozostaje wstrzymane zgodnie
-z wcześniejszą decyzją autora.
+12 listopada autor **wznowił przegląd od rozdziału 15
+„Grupy Liego i ich algebry” (tom II)**, plik
+`29-grupy-liego.tex`. Kontrolę wszystkich pięciu sekcji zakończono.
+Rozwinięto przykłady grup macierzy i torusa, dowody o polach
+niezmienniczych, eksponencie, działaniu adjungowanym i nakryciu
+SU(2) nad SO(3). Dodano grupę Heisenberga z metryką Nil,
+zamkniętą i gęstą podgrupę torusa, obrót o kąt prosty,
+dowód naturalności eksponenty i cztery rysunki.
+Wzory wyprowadzono krok po kroku; w rozdziale nie występują całki.
+Sprawdzono rachunki i skład tylko tomu II, zachowując numerację.
+**Wyznaczony etap rozdziału 15 jest zakończony.**
+Następny w kolejności jest rozdział 16
+„Geometria Kleina: przestrzeń i jej symetrie”.
 Przy kolejnych
 rozdziałach obowiązuje ta sama zasada: skład tylko właściwego tomu,
 a potem commit i push po kontroli całego rozdziału.
@@ -473,7 +485,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 12. Koneksje i transport | `12-koneksje.tex` | Pełny przegląd §§12.1–12.6 zakończony 11 listopada, wraz z wcześniejszymi dopiskami FLRW i Nil | Uzupełniono tensorowość, dowód koneksji przez rzut, przykłady obracającej się bazy, zmianę macierzy transportu, zachowanie metryki, kontrakcję tensorów i pierwszą wariację. Dodano trzy rysunki; pięć ilustracji sprawdzono w PDF. Kontrola rachunków obejmuje metryki modelowe, tabelę Nil i wybrane symbole Kerra. Złożono i sprawdzono tylko tom II, indeks i cele łączy między tomami. Szczegóły w `PRZEGLAD.md`. |
 | 13. Geodezyjne i zupełność | `13-geodezyjne.tex` | Pełny przegląd §§13.1–13.8 zakończony 11 listopada, wraz z wcześniejszymi dodatkami Nil, Sol i czasoprzestrzeni | Uzupełniono polaryzację, lemat Gaussa, kroki Hopfa–Rinowa i argument zwartości przy miejscu cięcia. Dodano dowody zupełności Nil/Sol, obliczony przykład Nil, parametr afiniczny FLRW i rozróżnienie ekstremalnego Kerra. Trzy nowe rysunki; sprawdzono 16 ilustracji, 42 rachunki symboliczne, indeks i cele łączy między czterema PDF-ami. Złożono tylko tom II; pozostałe PDF-y pochodzą ze składu autora. Szczegóły w `PRZEGLAD.md`. |
 | 14. Krzywizna | `14-krzywizna.tex` | Pełny przegląd §§14.1–14.13 zakończony 11 listopada, wraz z wcześniejszymi dodatkami Nil/Sol, czasoprzestrzeni, holonomii i twierdzeń globalnych | Sprawdzono tensor Riemanna, ślady, Gaussa, holonomię, drugą wariację, Jacobiego, porównania i Gaussa–Bonneta. Uzupełniono rachunki FLRW, ramę Jacobiego, otwartość dziedziny polarnej, czynnik całkujący i przykład pól kul walca; dodano dwa rysunki oraz test norm w czterowymiarowym wzorze Cherna. Jawne złożenia transportów, 51 kontroli rachunków, 15 ilustracji, indeks i cele łączy między tomami. Złożono tylko tom II. Globalny de Rham i Ambrose–Singer pozostają jawnymi wynikami zewnętrznymi, a dowód Cherna–Gaussa–Bonneta jest wskazany w rozdziale 17. Szczegóły w `PRZEGLAD.md`. |
-| 15. Grupy Liego | `29-grupy-liego.tex` | Pełny audyt zakończony 20 października | Sprawdzono przykłady, nawias, eksponentę, działanie adjungowane i nakrycie $\mathrm{SU}(2)\to\mathrm{SO}(3)$; doprecyzowano torus i oszacowanie pochodnych szeregu. |
+| 15. Grupy Liego | `29-grupy-liego.tex` | Pełny przegląd dydaktyczny §§15.1–15.5 zakończony 12 listopada; wcześniejszy audyt z 20 października | Rozwinięto przykłady macierzy i torusa, konstrukcję pól, zupełność i rachunki eksponenty. Dodano Heisenberga z metryką Nil, zamkniętą i gęstą podgrupę torusa oraz obrót o kąt prosty. Rozpisano znaki Ad, dowiedziono zachowania nawiasu i naturalności eksponenty dla homomorfizmu. Nakrycie SU(2) nad SO(3) wyprowadzono w pięciu krokach, z rachunkiem kąta, różniczki, arkuszy i grupy podstawowej. Dodano i sprawdzono cztery rysunki; przeszło 49 kontroli rachunkowych. Złożono tylko tom II, zachowując numerację. Szczegóły w `PRZEGLAD.md`. |
 | 16. Geometria Kleina (plik 29a) | `29a-geometria-kleina.tex` | Pełny audyt zakończony 20 października; 11 listopada sprawdzono nową §16.4 o strukturach (G,X) | Sprawdzono uśrednianie, właściwość działania na $G/H$, zupełność, ilorazy dyskretne, orbifoldy i modele Kleina; zawężono deklarację o izometriach hiperbolicznych do dowiedzionego działania $\mathrm{PSL}(2,\R)$. |
 | 17. Chern–Weil | `27-chern-weil.tex` | Pełny audyt zakończony 20 października | Sprawdzono normalizacje i transgresję; rozpisano model względny klasy Eulera, granicę wokół zer i wersję brzegową. Zgodność zespolonej formy Cherna z całkowitą klasą pozostaje jawnym wejściem zewnętrznym. |
 | 18. Hodge–Bochner | `28-hodge-bochner.tex` | Pełny audyt wcześniejszej treści zakończony 20 października; osobne uzupełnienie indeksowe 29 października | Wcześniej sprawdzono wejście analityczne, znaki Weitzenböcka i Bochnera oraz rozkład sygnatury. Nowa sekcja dowodzi trzech potrzebnych wzorów indeksowych przez jądro cieplne, z jawnym zewnętrznym oszacowaniem analitycznym. |
