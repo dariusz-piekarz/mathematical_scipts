@@ -14,6 +14,102 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 16 — ilorazy, rozwinięcie i rachunki modeli (2026-11-12)
+
+Na prośbę autora, po zakończeniu korekty pojęcia ramki,
+przeczytano i uzupełniono wszystkie dziewięć sekcji rozdziału 16
+w pliku `29a-geometria-kleina.tex`, według granularności
+rozdziału 1. Uwzględniono wymaganie wyprowadzania wzorów
+i podawania dziedziny lub granic każdej całki oznaczonej.
+
+- **§§16.1–16.2:** zapisano regułę łańcuchową w dowodzie
+  stałości rzędu orbity, argument jądra różniczki immersji
+  i gładkość działania na zanurzonej orbicie.
+  Podano jawny wzór przenoszenia iloczynu skalarnego,
+  sprawdzono niezależność od reprezentanta, niezmienniczość,
+  dodatnią określoność i gładkość przez lokalne przekroje.
+  Odbicia i zamiany wektorów bazy wykazują, dlaczego metryki
+  niezmiennicze dla E(n) różnią się tylko skalą.
+- **§16.3:** rozpisano dodatnie minimum w całce Haara
+  i podstawienie ℓ=hk, ze wskazaniem niezmienniczości miary.
+  Uzupełniono przedłużenie geodezyjnej przez eksponentę
+  i jednoznaczność, niezależność metryki ilorazowej
+  od podniesień oraz jej gładkość i jednoznaczność.
+  W przykładach orbifoldów dowiedziono homeomorficzności
+  dysku podkładowego, wyprowadzono kąt stożkowy z całki
+  długości i podano jawny wybór małych dysków.
+  Uzasadniono brak mapy rozmaitości dla R³/{±I}.
+  W dowodzie modelu orbifoldowego wyprowadzono dodatnią
+  odległość od innych punktów orbity, rozłączność kul
+  i skuteczność działania różniczek.
+- **§16.4:** wyjaśniono sklejanie metryki z atlasu,
+  równość przedłużanych map i kolejność iloczynu holonomii
+  zgodnie z konwencją dróg z rozdziału 7.
+  Dowód globalnego rozwinięcia zawiera jawne lokalne
+  odwrotności, ich otwarte obrazy, rozłączność i wyczerpywanie
+  przeciwobrazu kuli. Dyskretność obrazu holonomii
+  wyprowadzono z otoczenia jedności w G.
+  Niezupełność kuli wykazano ciągiem Cauchy'ego.
+  Nowy Przykład 16.4.6 oblicza nakrycie przebitej płaszczyzny,
+  jego różniczkę, metrykę i trywialną holonomię mimo
+  nietrywialnej grupy podstawowej.
+- **§§16.5–16.7:** rozpisano mnożenie i odwrotność ruchów
+  euklidesowych oraz dowód ich klasyfikacji przez polaryzację,
+  addytywność i ciągłość. Uzupełniono argument braku metryki
+  afinicznej, blok stabilizatora sfery i jądro działania
+  ortogonalnego na przestrzeni rzutowej.
+  Obliczono długości dwóch pętli przy różnych metrykach
+  płaskiego torusa oraz metrykę torusa obrotowego
+  przez obie pochodne parametryzacji i ich iloczyny skalarne.
+- **§§16.8–16.9:** wyprowadzono składanie ułamków Möbiusa,
+  niezerowość mianownika, część urojoną, pochodną,
+  przechodniość i zachowanie metryki. Uzasadniono
+  izomorfizm stabilizatora przez podwojenie kąta.
+  Dla Cayleya rozpisano odwrotność i jej dziedzinę,
+  różnicę kwadratów modułów, pochodną, przeniesienie metryki
+  i znak obrotu dysku. Długość drogi do brzegu wyprowadzono
+  z rozkładu na ułamki proste; nierówność dla dowolnej drogi
+  dowodzi nieskończonej długości także poza promieniami.
+  Mnożenie bloków dowodzi osadzenia grupy afinicznej w PGL;
+  wskazano jej obraz i przykład przejścia w nieskończoność.
+
+Dodano cztery rysunki TikZ: warstwę stabilizatora,
+sektor i zwierciadło orbifoldu, podniesienie pętli torusa
+z holonomią translacyjną oraz oś półpłaszczyzny
+i odpowiadającą jej średnicę dysku Cayleya.
+Każdy rysunek odnosi się do obliczonego przykładu.
+Zachowano wszystkie 40 dawnych etykiet i ich numery;
+po dodaniu przykładu i rysunków jest 45 etykiet.
+
+Przeszły **24 kontrole rachunkowe**: składanie Möbiusa,
+część urojona i pochodna, macierz przechodniości,
+odwrotność Cayleya i znak obrotu, trzy zaznaczone punkty,
+całka długości, metryka torusa, różniczka i metryka
+nakrycia przebitej płaszczyzny oraz bloki afiniczne i rzutowe.
+Wszystkie **10 zapisów całek** ma jawne granice lub dziedzinę.
+Założenia porównano z
+[notatkami van den Bana](https://www.staff.science.uu.nl/~ban00101/lecnotes/lie2010.pdf),
+§§13–15,
+[rozdziałem 3 Purcell](https://users.monash.edu/~jpurcell/book/Ch03_GeometricStructures.pdf),
+[rozdziałem 13 Thurstona](https://library.slmath.org/nonmsri/gt3m/PDF/13.pdf)
+i [wykładem Solomyaka](https://u.math.biu.ac.il/~solomyb/TEACH/21/GrAct/Lec5b.pdf).
+Twierdzenia o domkniętej podgrupie, gładkim ilorazie
+i mierze Haara pozostają wskazanymi wynikami zewnętrznymi.
+
+Złożono **tylko tom II: 221 stron**.
+Rozdział zajmuje fizyczne strony **127–144**.
+Obejrzano cały rozdział, spis treści i indeks,
+a wszystkie cztery ilustracje także po renderowaniu Popplerem.
+Nie ma nowych ostrzeżeń, przepełnień, brakujących odsyłaczy,
+tekstu poza stroną ani zmian numeracji wcześniejszych etykiet.
+Pozostały wcześniejsze komunikaty o `page.1`
+i niedopełnieniu wiersza o badness 1057 w rozdziale 15.
+Indeks: 107 wpisów przyjętych, 0 odrzuconych, 0 ostrzeżeń.
+Cele łączy między czterema PDF-ami istnieją.
+Tomy I, III i IV zachowały sumy kontrolne z korekty ramki.
+SHA-256 sprawdzonego tomu II:
+`744CA68B2C6F6D591E6B11C69B7D1D154875CEAD09832246FCBCD67D22BD3B8B`.
+
 ## Ramka — definicja i ujednolicenie terminologii (2026-11-12)
 
 Pierwsze użycie pojęcia bez definicji było w uwadze o grupie

@@ -190,6 +190,17 @@ ujednolicono nazwę „ramka”. Sprawdzono skład wszystkich czterech
 tomów i zachowanie numeracji oraz łączy.
 Autor wyznaczył następnie rozdział 16
 „Geometria Kleina: przestrzeń i jej symetrie” (tom II).
+Pełny przegląd §§16.1–16.9 zakończono 12 listopada:
+rozpisano różniczki orbit, przenoszenie i uśrednianie metryki,
+lokalne modele orbifoldowe, rozwinięcie i holonomię oraz
+rachunki Möbiusa, Cayleya i metryk torusa.
+Dodano przykład przebitej płaszczyzny i cztery rysunki;
+sprawdzono wszystkie dziesięć zapisów całek.
+Przeszły 24 kontrole rachunkowe i kontrola składu tylko tomu II,
+z zachowaniem dotychczasowej numeracji.
+**Wyznaczony etap rozdziału 16 jest zakończony.**
+Następny w kolejności jest rozdział 17
+„Teoria Cherna–Weila i dowód wzoru Cherna–Gaussa–Bonneta”.
 Przy kolejnych
 rozdziałach obowiązuje ta sama zasada: skład tylko właściwego tomu,
 a potem commit i push po kontroli całego rozdziału.
@@ -492,7 +503,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 13. Geodezyjne i zupełność | `13-geodezyjne.tex` | Pełny przegląd §§13.1–13.8 zakończony 11 listopada, wraz z wcześniejszymi dodatkami Nil, Sol i czasoprzestrzeni | Uzupełniono polaryzację, lemat Gaussa, kroki Hopfa–Rinowa i argument zwartości przy miejscu cięcia. Dodano dowody zupełności Nil/Sol, obliczony przykład Nil, parametr afiniczny FLRW i rozróżnienie ekstremalnego Kerra. Trzy nowe rysunki; sprawdzono 16 ilustracji, 42 rachunki symboliczne, indeks i cele łączy między czterema PDF-ami. Złożono tylko tom II; pozostałe PDF-y pochodzą ze składu autora. Szczegóły w `PRZEGLAD.md`. |
 | 14. Krzywizna | `14-krzywizna.tex` | Pełny przegląd §§14.1–14.13 zakończony 11 listopada, wraz z wcześniejszymi dodatkami Nil/Sol, czasoprzestrzeni, holonomii i twierdzeń globalnych | Sprawdzono tensor Riemanna, ślady, Gaussa, holonomię, drugą wariację, Jacobiego, porównania i Gaussa–Bonneta. Uzupełniono rachunki FLRW, ramkę Jacobiego, otwartość dziedziny polarnej, czynnik całkujący i przykład pól kul walca; dodano dwa rysunki oraz test norm w czterowymiarowym wzorze Cherna. Jawne złożenia transportów, 51 kontroli rachunków, 15 ilustracji, indeks i cele łączy między tomami. Złożono tylko tom II. Globalny de Rham i Ambrose–Singer pozostają jawnymi wynikami zewnętrznymi, a dowód Cherna–Gaussa–Bonneta jest wskazany w rozdziale 17. Szczegóły w `PRZEGLAD.md`. |
 | 15. Grupy Liego | `29-grupy-liego.tex` | Pełny przegląd dydaktyczny §§15.1–15.5 zakończony 12 listopada; wcześniejszy audyt z 20 października | Rozwinięto przykłady macierzy i torusa, konstrukcję pól, zupełność i rachunki eksponenty. Dodano Heisenberga z metryką Nil, zamkniętą i gęstą podgrupę torusa oraz obrót o kąt prosty. Rozpisano znaki Ad, dowiedziono zachowania nawiasu i naturalności eksponenty dla homomorfizmu. Nakrycie SU(2) nad SO(3) wyprowadzono w pięciu krokach, z rachunkiem kąta, różniczki, arkuszy i grupy podstawowej. Dodano i sprawdzono cztery rysunki; przeszło 49 kontroli rachunkowych. Złożono tylko tom II, zachowując numerację. Szczegóły w `PRZEGLAD.md`. |
-| 16. Geometria Kleina (plik 29a) | `29a-geometria-kleina.tex` | Pełny audyt zakończony 20 października; 11 listopada sprawdzono nową §16.4 o strukturach (G,X) | Sprawdzono uśrednianie, właściwość działania na $G/H$, zupełność, ilorazy dyskretne, orbifoldy i modele Kleina; zawężono deklarację o izometriach hiperbolicznych do dowiedzionego działania $\mathrm{PSL}(2,\R)$. |
+| 16. Geometria Kleina (plik 29a) | `29a-geometria-kleina.tex` | Pełny przegląd dydaktyczny §§16.1–16.9 zakończony 12 listopada; wcześniejszy audyt z 20 października i integracja struktur (G,X) z 11 listopada | Rozpisano różniczki orbit i metrykę niezmienniczą, podstawienie w całce Haara, ilorazy i lokalne modele orbifoldowe. Uzupełniono kolejność mnożenia holonomii, arkusze rozwinięcia i dyskretność jego obrazu przy zupełności; dodano kontrprzykład przebitej płaszczyzny. Wyprowadzono rachunki Möbiusa i Cayleya, długości do brzegu dysku, metrykę torusa i bloki grupy afinicznej. Dziesięć zapisów całek ma dziedziny lub granice. Dodano i sprawdzono cztery rysunki; przeszły 24 kontrole rachunkowe. Złożono tylko tom II, zachowując numerację. Szczegóły w `PRZEGLAD.md`. |
 | 17. Chern–Weil | `27-chern-weil.tex` | Pełny audyt zakończony 20 października | Sprawdzono normalizacje i transgresję; rozpisano model względny klasy Eulera, granicę wokół zer i wersję brzegową. Zgodność zespolonej formy Cherna z całkowitą klasą pozostaje jawnym wejściem zewnętrznym. |
 | 18. Hodge–Bochner | `28-hodge-bochner.tex` | Pełny audyt wcześniejszej treści zakończony 20 października; osobne uzupełnienie indeksowe 29 października | Wcześniej sprawdzono wejście analityczne, znaki Weitzenböcka i Bochnera oraz rozkład sygnatury. Nowa sekcja dowodzi trzech potrzebnych wzorów indeksowych przez jądro cieplne, z jawnym zewnętrznym oszacowaniem analitycznym. |
 | 19. Sard i transwersalność | `15-sard-transwersalnosc.tex` | Audyt dodatków zakończony 6 października; bez poprawek treści | Pięć wpisów indeksu, cztery ilustracje i warunki transwersalności przy brzegu sprawdzone; PDF 401 stron |
