@@ -14,6 +14,116 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 22 — od lokalnego modelu do różniczki Morse'a (2026-11-12)
+
+Na prośbę autora przeczytano i uzupełniono wszystkie siedem sekcji
+rozdziału 22 w pliku `18-morse.tex`, kończąc przegląd tomu II.
+Zachowano wzorzec szczegółowości rozdziału 1:
+wyjaśniano rachunki, założenia i przejścia geometryczne,
+zamiast pozostawiać same końcowe wzory.
+
+- **§22.1:** całkową postać reszty Taylora wyprowadzono
+  przez dwukrotne całkowanie funkcji F(t)=f(tx).
+  Obszar 0≤t≤s≤1 wyjaśnia czynnik 1−t.
+  Rozpisano dopełnienie kwadratu dla blokowej macierzy hesjanu
+  i znikanie pochodnych macierzy w różniczce zmiany współrzędnych.
+  Nowy Przykład 22.1.3 usuwa wyrazy 2x²y+x⁴
+  przez jawną zmianę z odwrotnością i jakobianem.
+  Schemat porównuje zakrzywione gałęzie poziomu krytycznego z prostymi.
+- **§22.2:** podano odwrotność parametryzacji uchwytu,
+  sprawdzono jego położenie względem obu podpoziomic
+  i wyprowadzono czas przejścia przez dopełnienie.
+  Kołnierz zapisano przez przepływ z czasem trafienia
+  i opisano jego odwrotność.
+  Dla sfery uzasadniono położenie obu punktów krytycznych.
+  Na torusie rozpisano podstawienie do wartości funkcji
+  i hesjanu oraz wyjaśniono, dlaczego drugi 1-uchwyt
+  musi połączyć dwa składniki brzegu pierścienia.
+- **§22.3:** zmianę współczynników opisano jako iloczyn tensorowy
+  i wyjaśniono, dlaczego otrzymany kompleks liczy homologię
+  ze współczynnikami w ciele. Rozpisano reindeksację
+  sum rzędów w mocnych nierównościach Morse'a.
+  W dowodzie Reeba podano oszacowanie ciągłości radialnego
+  przedłużenia i warunek konieczny jego różniczkowalności w zerze.
+  Nowy Przykład 22.3.6 konstruuje funkcję na RP²,
+  oblicza trzy punkty, hesjany i indeksy,
+  a także różniczkę 2 oraz jej redukcję modulo 2.
+- **§22.4:** w dowodzie rozmaitości stabilnej rozpisano
+  małość pochodnej odciętej reszty, wariację stałych
+  i przejście do całki do nieskończoności.
+  Obliczono oba jądra wykładnicze dające stałą kontrakcji
+  oraz oszacowanie utrzymujące rozwiązanie w niezmienionym polu.
+  Wzór linearyzacji gradientu połączono z wcześniejszym
+  wyprowadzeniem w §19.6.
+- **§22.5:** doprecyzowano topologię i ustalone metryki
+  przy punktach krytycznych w twierdzeniu o gęstości.
+  Wyprowadzono pochodną odwrotności metryki,
+  całkową wariację przepływu i rzut uwzględniający zmianę
+  czasu trafienia w poziomicę.
+  Skonstruowano perturbację realizującą dowolny kierunek
+  zmiany punktu trafienia.
+  Nowy Przykład 22.5.4 rozwiązuje przepływ na płaskim torusie,
+  wyznacza zbiory stabilne i niestabilne oraz sprawdza transwersalność.
+- **§22.6:** całki w dowodzie zwartości otrzymały przedział
+  czasu [a,b], długość łuku ℓ i przedział [0,ℓ].
+  Podano parametryzację, orientację i podstawienie ds=|∇f|dt.
+  W ogólnym sklejaniu rozpisano oszacowania reszt,
+  całkę jądra oraz jednolitą względem czasu stałą kontrakcji.
+  Rysunek 22.6 pokazuje hiperbole uv=ρ z czasem przejścia
+  −½ logρ i granicą łamaną.
+  Podano też pełny wzór metryki realizującej niezmienione pole
+  jako gradient przestawionej funkcji.
+  Nowy Przykład 22.6.7 oblicza cztery trajektorie na okręgu,
+  ich znaki, macierz różniczki, jądro, obraz i obie homologie.
+  Rysunek 22.7 pokazuje kierunki i znaki każdej gałęzi.
+- **§22.7:** nowy Przykład 22.7.1 wyprowadza rozkład brzegu
+  uchwytu i identyfikuje wymieniane części jako chirurgię.
+  Rozróżnia wymiar n podpoziomicy od n−1 poziomicy
+  oraz indeks λ uchwytu od indeksu λ−1 operowanej sfery.
+  W wymiarze trzy oblicza zmianę charakterystyki powierzchni
+  i pokazuje operację odwrotną.
+
+Lemat, uchwyty i nierówności porównano z
+[Cohenem, Igą i Norburym, Topics in Morse Theory](https://math.stanford.edu/~ralph/morsecourse/biglectures.pdf);
+poprawiono autorstwo i tytuł w dalszej lekturze.
+Konstrukcję kompleksu i przykłady sprawdzono w
+[wykładach Rittera](https://people.maths.ox.ac.uk/ritter/morse-cambridge/full.pdf),
+a zwartość, sklejanie i orientacje w
+[pracy Webera, §§3.2–3.4](https://arxiv.org/pdf/math/0411465).
+Sprawdzono także brak koła w odwołaniu do przestawiania
+punktów z rozdziału 23: jego argument nie używa
+utożsamienia homologii Morse'a z homologią rozmaitości.
+
+Przeszły **73 kontrole rachunkowe**:
+całkowy hesjan, blokowe dopełnienie kwadratu,
+pierwiastek macierzy, zmiana współrzędnych siodła,
+parametryzacja i przepływ uchwytu, hesjany sfery,
+cztery punkty, wartości, hesjany i znaczniki torusa.
+Dalsze kontrole obejmują sumy rzędów, funkcję na RP²,
+jądra kontrakcji, wariację metryki i punktu trafienia,
+przepływ iloczynowy, dopasowanie przy siodle,
+realizację pola przez nową metrykę, znaki i postać Smitha
+różniczki na okręgu oraz wymiary i charakterystykę chirurgii brzegu.
+Wszystkie **17 zapisów całek** mają jawne granice.
+Zachowano wszystkie **40 dawnych etykiet i ich numery**;
+po dodaniu pięciu przykładów i dwóch rysunków jest **47 etykiet**.
+
+Złożono **tylko tom II: 248 stron**.
+Rozdział zajmuje fizyczne strony **227–246**.
+Obejrzano wszystkie strony rozdziału, spis treści i indeks;
+siedem numerowanych rysunków oraz nowy schemat
+sprawdzono również rendererem Poppler.
+Nie ma nowych ostrzeżeń, przepełnień, brakujących odsyłaczy
+ani tekstu poza stroną. Dotychczasowa numeracja etykiet
+całego tomu pozostała bez zmian.
+Pozostały wcześniejsze komunikaty o `page.1`
+i niedopełnieniu wiersza o badness 1057 w rozdziale 15.
+Indeks: 107 wpisów przyjętych, 0 odrzuconych, 0 ostrzeżeń.
+Wszystkie cele odsyłaczy między czterema PDF-ami istnieją.
+Tomy I, III i IV zachowały poprzednie sumy kontrolne.
+SHA-256 sprawdzonego tomu II:
+`C55CF52D50C7AFA1407E8469116BE40D4FDFBC86D62843C427CEC55D8B02CDF5`.
+
 ## Rozdział 21 — rachunek znaków, dualność i przeszkody do obramowania (2026-11-12)
 
 Na prośbę autora przeczytano i uzupełniono wszystkie dziesięć sekcji

@@ -82,6 +82,19 @@ $t\mapsto tx$ daje \emph{dokładną} równość
 \]
 Macierz $H(x)$ zależy gładko od $x$,
 jest symetryczna i $H(0)=J$.
+Rozpiszmy źródło tej całki. Dla ustalonego $x$ kładziemy
+$F(t)=f(tx)$, $0\leq t\leq1$. Wówczas $F'(0)=0$ i
+$F''(t)=x^{\mathsf T}\operatorname{Hess}_{tx}f\,x$.
+Dwukrotne użycie twierdzenia podstawowego rachunku całkowego daje
+\[
+ F(1)-F(0)
+ =\int_0^1\int_0^s F''(t)\,\dd t\,\dd s
+ =\int_0^1(1-t)F''(t)\,\dd t.
+\]
+W ostatnim kroku zmieniamy kolejność całkowania
+na trójkącie $0\leq t\leq s\leq1$; dla ustalonego $t$
+odcinek $s\in[t,1]$ ma długość $1-t$.
+To dowodzi dokładnej równości, nie tylko asymptotyki Taylora.
 Rozbijmy $x=(x_-,x_+)$ i zapiszmy
 \[
  H(x)=
@@ -102,6 +115,11 @@ zależności macierzy od $x$:
        A(x_-+A^{-1}Bx_+)
    +x_+^{\mathsf T}Sx_+.
 \]
+Istotnie, rozwinięcie pierwszego składnika daje
+$x_-^{\mathsf T}Ax_-+2x_-^{\mathsf T}Bx_+
++x_+^{\mathsf T}B^{\mathsf T}A^{-1}Bx_+$,
+bo $A$ i $A^{-1}$ są symetryczne.
+Ostatni wyraz kasuje się z ujemnym składnikiem w $S$.
 Dodatnio określone macierze $-A$ i $S$
 mają gładko zależne od $x$ dodatnie
 pierwiastki kwadratowe. Blisko $I$
@@ -122,6 +140,9 @@ Otrzymujemy~\eqref{eq:postac-morsea-17}.
 W zerze różniczka zmiany
 $x\mapsto(u,v)$ jest identycznością,
 bo $A(0)=-I$, $B(0)=0$, $S(0)=I$.
+Dodatkowe pochodne macierzy nie wnoszą w zerze nic:
+w regule iloczynu każda z nich jest mnożona przez $x_-$
+lub $x_+$, które w tym punkcie są zerowe.
 Twierdzenie o funkcji odwrotnej
 czyni więc $(u,v)$ współrzędnymi
 na pewnym otoczeniu $p$.
@@ -155,7 +176,7 @@ przyklejenia decyduje wcześniejsza
 część rozmaitości.
 \end{przyklad}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
 \begin{tikzpicture}[>=Latex,line cap=round,font=\small,scale=.94]
  \begin{scope}[shift={(-4.15,0)}]
@@ -213,6 +234,44 @@ do maksimum ku środkowi. Przerywane proste
 przy siodle to poziom krytyczny.}
 \label{fig:poziomice-morse-17}
 \end{figure}
+
+\begin{przyklad}[Usunięcie wyrazów wyższych rzędów]
+\label{prz:morse-zakrzywione-siodlo-22}
+Funkcja $f(x,y)=-x^2+(y+x^2)^2$
+ma w zerze hesjan $\operatorname{diag}(-2,2)$,
+lecz zawiera także wyrazy $2x^2y+x^4$.
+Zmiana $u=x$, $v=y+x^2$ ma macierz różniczki
+$\begin{psmallmatrix}1&0\\2x&1\end{psmallmatrix}$
+o wyznaczniku $1$ i jawną odwrotność
+$x=u$, $y=v-u^2$. W tych współrzędnych
+$f=-u^2+v^2$ dokładnie, na całej płaszczyźnie.
+Poziom krytyczny $f=0$ tworzą więc krzywe
+$y=-x^2+x$ i $y=-x^2-x$, będące obrazami prostych $v=\pm u$.
+Wyższe wyrazy zmieniały kształt rysunku we współrzędnych,
+ale nie lokalny typ niezdegenerowanego siodła.
+
+\begin{center}
+\begin{tikzpicture}[>=Latex,font=\small,scale=.8]
+ \begin{scope}[xshift=-3.1cm]
+  \draw[->,gray!65] (-1.6,0)--(1.7,0) node[right] {$x$};
+  \draw[->,gray!65] (0,-2.1)--(0,1.1) node[above] {$y$};
+  \draw[manifoldblue,thick,domain=-1:1,samples=60] plot (\x,{-\x*\x+\x});
+  \draw[manifoldgold!85!black,thick,domain=-1:1,samples=60] plot (\x,{-\x*\x-\x});
+  \fill[manifoldred] (0,0) circle (2pt);
+  \node at (0,-2.55) {$y=-x^2\pm x$};
+ \end{scope}
+ \draw[->,thick] (-1,.4)--(1,.4) node[midway,above] {$(x,y)\mapsto(u,v)$};
+ \begin{scope}[xshift=3.1cm]
+  \draw[->,gray!65] (-1.6,0)--(1.7,0) node[right] {$u$};
+  \draw[->,gray!65] (0,-2.1)--(0,1.1) node[above] {$v$};
+  \draw[manifoldblue,thick] (-1,-1)--(1,1);
+  \draw[manifoldgold!85!black,thick] (-1,1)--(1,-1);
+  \fill[manifoldred] (0,0) circle (2pt);
+  \node at (0,-2.55) {$v=\pm u$};
+ \end{scope}
+\end{tikzpicture}
+\end{center}
+\end{przyklad}
 
 \section{Przekroczenie wartości krytycznej: uchwyt}
 \label{sec:uchwyt-morse-17}
@@ -287,6 +346,9 @@ Odwzorowanie
  \quad (|a|\leq1,\ |b|\leq1)
 \]
 jest dyfeomorfizmem $D^\lambda\times D^{n-\lambda}$ na $H$.
+Jego odwrotność to $b=v/r$ oraz
+$a=u/\sqrt{\varepsilon+|v|^2}$; mianowniki są dodatnie.
+Nierówności definiujące $H$ są dokładnie warunkami $|a|,|b|\leq1$.
 Ponadto $H\subset\operatorname{int}M^{c+\varepsilon}$ oraz
 \[
  H\cap M^{c-\varepsilon}
@@ -294,6 +356,13 @@ Ponadto $H\subset\operatorname{int}M^{c+\varepsilon}$ oraz
 \]
 Jest to dokładnie obraz $S^{\lambda-1}\times D^{n-\lambda}$;
 przy $\lambda=0$ przecięcie jest puste.
+Sprawdźmy oba położenia względem podpoziomic.
+Na $H$ mamy $f-c=-|u|^2+|v|^2\leq r^2<\varepsilon$,
+więc uchwyt leży poniżej górnego poziomu.
+Warunek $f\leq c-\varepsilon$ jest równoważny
+$|u|^2\geq\varepsilon+|v|^2$.
+W połączeniu z przeciwną nierównością definiującą $H$
+daje równość, a więc właśnie część przyczepianą.
 Rdzeń $v=0$ ma brzeg w poziomicy $c-\varepsilon$.
 Tak zdefiniowana część przyczepiana już leży na właściwym
 poziomie; nie trzeba przesuwać jej z płaskiej ściany pudełka.
@@ -325,6 +394,10 @@ Punkt $p$ leży w jej wnętrzu.
 Zbiór $K=M^{c+\varepsilon}\setminus\operatorname{int}L'$
 jest zwarty i nie zawiera punktów krytycznych.
 Stąd $-Xf\geq m>0$ na $K$.
+Wzdłuż trajektorii pozostającej w $K$ przez czas $T$
+mamy $f(\Phi_T(x))\leq f(x)-mT$.
+Ponieważ wartości $f$ na $K$ należą do $[c-\varepsilon,c+\varepsilon]$,
+taki czas nie może przekroczyć $2\varepsilon/m$.
 Każda trajektoria z górnego brzegu dociera do $\partial L'$
 w skończonym czasie: inaczej $f$ malałaby co najmniej
 z prędkością $m$ w zbiorze, na którym jest ograniczona.
@@ -335,6 +408,12 @@ Czas trafienia jest gładki na mocy twierdzenia
 o funkcji uwikłanej i poprzeczności.
 Przeskalowanie czasu na każdej trajektorii daje
 $K\cong\partial L'\times[0,1]$.
+Dokładniej, niech $\tau(z)>0$ oznacza czas dojścia
+z $z\in\partial L'$ do górnego brzegu przy przepływie $-X$.
+Dyfeomorfizm kołnierza ma postać
+$(z,s)\mapsto\Phi_{-s\tau(z)}(z)$.
+Odwrotność odzyskuje $z$ jako pierwsze trafienie w $\partial L'$
+przy przepływie $X$, a $s$ jako iloraz tego czasu i $\tau(z)$.
 Wchłonięcie tego kołnierza dowodzi tezy o uchwycie.
 Przy $\lambda=n$ nie ma ściany $|v|=r$;
 cały brzeg $H=D^n$ przykleja się do dolnej podpoziomicy.
@@ -364,7 +443,7 @@ i zerem w pozostałych stopniach, także dla
 $(D^0,S^{-1})=(\{\mathrm{punkt}\},\varnothing)$.
 \end{proof}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
 \begin{tikzpicture}[>=Latex,font=\small,line cap=round,line join=round]
  \tikzset{old/.style={draw=manifoldblue!80!black,thick,fill=manifoldblue!22},
@@ -420,6 +499,9 @@ może utworzyć otwór zamiast połączyć składowe.}
 Na jednostkowej sferze $S^2\subset\R^3$
 weźmy $f(x,y,z)=z$. Krytyczne są
 tylko biegun południowy i północny.
+Rzeczywiście, różniczka wysokości znika na całej płaszczyźnie
+stycznej dokładnie wtedy, gdy $e_z$ jest normalny do sfery,
+czyli równoległy do $(x,y,z)$.
 Przy południowym
 $z=-\sqrt{1-x^2-y^2}
  =-1+\tfrac12(x^2+y^2)+O(|(x,y)|^4)$,
@@ -470,7 +552,10 @@ Równanie $\cos\theta=\varepsilon s\sin\theta$ daje
  (x,y,z)=(sR+t\varepsilon h,\,0,\,th).
 \]
 Wartość funkcji w tym punkcie wynosi
-$f=\varepsilon sR+trL$. Te same współrzędne wykorzystano
+$f=\varepsilon sR+trL$, gdyż
+$r\sin\theta+\varepsilon r\cos\theta\,s
+=rt(1+\varepsilon^2)/L=rtL$.
+Te same współrzędne wykorzystano
 do umieszczenia znaczników na Rysunku~\ref{fig:torus-morse-17}.
 W tych punktach mieszana pochodna
 wynosi zero, a na przekątnej hesjanu
@@ -487,6 +572,11 @@ Pierwsza jest ujemna u góry
 i dodatnia u dołu; druga jest
 ujemna dla $\phi=0$
 i dodatnia dla $\phi=\pi$.
+Po podstawieniu znalezionych współrzędnych pierwsza wynosi
+$f_{\theta\theta}=-rtL$, a druga
+$f_{\phi\phi}=-\varepsilon sR-\varepsilon^2rt/L$.
+Znak drugiej wygodniej odczytać z pierwotnej postaci,
+bo czynnik $R+r\cos\theta$ jest dodatni.
 Zatem indeksy czterech punktów
 to kolejno $0,1,1,2$.
 Ich wartości, od najmniejszej
@@ -507,9 +597,17 @@ dołączenia uchwytów indeksów
 $0,1,1,2$. Sposób przyklejenia
 drugiego $1$-uchwytu rozstrzyga,
 że powstaje rodzaj $1$.
+Pierwszy $1$-uchwyt przyklejamy do jednego dysku;
+zachowanie orientacji daje pierścień.
+Drugi musi połączyć jego dwa składniki brzegu.
+Gdyby oba końce dołączyć do tego samego składnika,
+otrzymalibyśmy trzy okręgi brzegowe. Pozostały pojedynczy
+$2$-uchwyt zamyka tylko jeden okrąg, a wynik ma być zamkniętym torusem.
+Połączenie dwóch składników daje więc powierzchnię
+rodzaju jeden z jednym brzegiem, który zamyka maksimum.
 \end{przyklad}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
 \begin{tikzpicture}[>=Latex,font=\small,line cap=round]
  \node[font=\bfseries] at (0,1.94)
@@ -679,8 +777,11 @@ Na końcu otrzymujemy równość
 \end{equation}
 \end{twierdzenie}
 \begin{proof}
-Tensorujemy kompleks z poprzedniego
+Tworzymy iloczyn tensorowy kompleksu z poprzedniego
 twierdzenia z $\mathbb F$.
+Jest to kompleks komórkowy ze współczynnikami w $\mathbb F$:
+te same liczby incydencji działają teraz na elementach tego ciała.
+Jego homologią jest zatem $H_*(M;\mathbb F)$.
 Niech $r_k=\operatorname{rank}_{\mathbb F}
 (\partial_k:C_k\otimes\mathbb F
 \to C_{k-1}\otimes\mathbb F)$,
@@ -703,6 +804,10 @@ Po przemnożeniu~\eqref{eq:ranki-morse-17}
 przez $(-1)^{q-k}$ i zsumowaniu
 od $0$ do $q$ składniki $r_k$
 i $r_{k+1}$ skracają się parami.
+W drugiej sumie podstawiamy $j=k+1$.
+Współczynniki przy $r_j$, $1\leq j\leq q$, wynoszą
+$(-1)^{q-j}+(-1)^{q-j+1}=0$;
+wyraz przy $r_0$ znika z definicji, a przy $r_{q+1}$ pozostaje $+1$.
 Zostaje dokładnie
 \[
  \sum_{k=0}^q(-1)^{q-k}(c_k-b_k)
@@ -778,6 +883,8 @@ oraz $H(0)=0$.
 To przedłużenie jest ciągłe
 również w $0$, ma ciągłą
 odwrotność zbudowaną z $h^{-1}$.
+Istotnie, $|H(x)|=|x|$, więc zbieżność do zera jest zachowana
+niezależnie od kierunku; to samo oszacowanie działa dla $H^{-1}$.
 Zmieniając współrzędne
 na jednym dysku przez $H$,
 otrzymujemy standardowe
@@ -794,7 +901,47 @@ nie pozwala zastąpić słowa
 „dyfeomorficzna”. To rozróżnienie
 będzie ważne przy egzotycznych
 strukturach gładkich i chirurgii.
+Można dokładnie wskazać przeszkodę dla tego przedłużenia:
+gdyby istniała pochodna $L=\D_0H$, dla każdego jednostkowego $u$
+mielibyśmy $L(u)=\lim_{t\downarrow0}H(tu)/t=h(u)$.
+Zatem $h$ musiałby być ograniczeniem liniowego odwzorowania $L$.
+Dowolny dyfeomorfizm sfery nie spełnia tego warunku.
 \end{uwaga}
+
+\begin{przyklad}[Trzy punkty na płaszczyźnie rzutowej]
+\label{prz:morse-rp2-22}
+Niech $a_0<a_1<a_2$. Funkcja
+\[
+ f([x_0:x_1:x_2])
+ =\frac{a_0x_0^2+a_1x_1^2+a_2x_2^2}
+        {x_0^2+x_1^2+x_2^2}
+\]
+jest dobrze określona na $\R P^2$, bo licznik i mianownik
+mnożą się przez ten sam kwadrat przy zmianie reprezentanta.
+Na jednostkowej sferze warunek mnożników Lagrange'a ma postać
+$(a_i-\mu)x_i=0$ dla $i=0,1,2$.
+Różne $a_i$ pozwalają na tylko jedną niezerową współrzędną;
+po utożsamieniu antypodycznych punktów zostają trzy punkty $p_i=[e_i]$.
+W mapie $x_i\ne0$ kładziemy $y_j=x_j/x_i$ dla $j\ne i$.
+Wtedy dokładnie
+\[
+ f-a_i=\frac{\sum_{j\ne i}(a_j-a_i)y_j^2}
+                  {1+\sum_{j\ne i}y_j^2}.
+\]
+Hesjan w $p_i$ ma więc przekątną $2(a_j-a_i)$, $j\ne i$.
+Jest niezdegenerowany i ma dokładnie $i$ ujemnych kierunków.
+Otrzymujemy $c_0=c_1=c_2=1$ oraz
+$\chi(\R P^2)=1-1+1=1$.
+Nad $\mathbb F_2$ wszystkie trzy słabe nierówności są równościami.
+Nad $\Q$ pozostają dwa nadmiarowe generatory; w kompleksie
+całkowitym z Twierdzenia~\ref{thm:cw-morse-17},
+po odpowiednim wyborze orientacji, różniczki to
+$\Z\xrightarrow{2}\Z\xrightarrow{0}\Z$.
+Wynika to także z poznanej homologii:
+$H_0=\Z$ wymusza $\partial_1=0$, a
+$H_1=\Z/2$, $H_2=0$ wymuszają $\partial_2=\pm2$.
+Po redukcji modulo $2$ ta różniczka znika.
+\end{przyklad}
 
 \section{Gradient i rozmaitości trajektorii}
 \label{sec:gradient-morse-17}
@@ -827,7 +974,7 @@ punktami krytycznymi.
 Pierwsza równość to reguła łańcuchowa
 i definicja gradientu:
 $\dd f(-\nabla f)=-g(\nabla f,\nabla f)$.
-Równość zachodzi tylko w punkcie
+Równość z zerem zachodzi tylko w punkcie
 krytycznym; jeśli trajektoria
 do niego dotrze w skończonym czasie,
 jednoznaczność równania różniczkowego
@@ -986,7 +1133,7 @@ Nie twierdzimy, że globalna
 immersja jest właściwa.
 
 Uzasadnijmy teraz twierdzenie dla ogólnej metryki.
-W punkcie krytycznym
+Z rachunku w Sekcji~\ref{sec:transwersalnosc-smale} wiemy, że w punkcie krytycznym operator
 $A=DX_p=-g_p^{-1}\operatorname{Hess}_p f$ jest
 samosprzężony względem $g_p$ i nie ma zerowych
 wartości własnych. Ma $\lambda(p)$ dodatnich
@@ -1001,6 +1148,15 @@ W odpowiedniej normie, dla pewnego $\alpha>0$,
 \]
 Po zmniejszeniu kuli i odcięciu poza nią
 stała Lipschitza $R$ może być dowolnie mała.
+Istotnie, $DR(0)=0$ daje $|DR(x)|\leq C\delta$ oraz
+$|R(x)|\leq C\delta^2$ na kuli promienia $2\delta$.
+Dla ustalonej funkcji odcinającej $\chi$, równej $1$
+na kuli jednostkowej i $0$ poza kulą promienia $2$,
+pochodna $\chi(x/\delta)R(x)$ ma dwa składniki.
+Pierwszy jest rzędu $\delta$, a drugi ma oszacowanie
+$C\delta^{-1}|R(x)|\leq C'\delta$.
+Przedłużenie przez zero daje więc globalną stałą Lipschitza
+dążącą do zera wraz z $\delta$.
 Dla zadanego $x_s(0)=a$ rozwiązanie zbiegające
 do zera musi spełniać
 \begin{align*}
@@ -1011,6 +1167,15 @@ do zera musi spełniać
 \end{align*}
 Drugi wzór wynika z wariacji stałych i znikania
 rosnącego rozwiązania jednorodnego w nieskończoności.
+Dokładniej, dla $T>t$ wariacja stałych daje
+\[
+ x_u(t)=e^{A_u(t-T)}x_u(T)
+       -\int_t^T e^{A_u(t-\tau)}R_u(x(\tau))\,\dd\tau.
+\]
+Jeśli trajektoria jest ograniczona na przyszłość,
+pierwszy składnik dąży do zera przy $T\to\infty$,
+bo $\|e^{A_u(t-T)}\|\leq e^{-\alpha(T-t)}$.
+To wyprowadza całkę do nieskończoności i jej znak minus.
 W przestrzeni funkcji z normą
 $\|x\|_\beta=\sup_{t\geq0}e^{\beta t}|x(t)|$,
 gdzie $0<\beta<\alpha$, prawa strona jest kontrakcją:
@@ -1019,7 +1184,25 @@ jej stała jest nie większa niż
  \operatorname{Lip}(R)
  \left((\alpha-\beta)^{-1}+(\alpha+\beta)^{-1}\right)<1.
 \]
+Oba mianowniki wynikają z konkretnych jąder.
+Jeśli $\|x-y\|_\beta=D$, to
+$|R(x(\tau))-R(y(\tau))|\leq\operatorname{Lip}(R)D e^{-\beta\tau}$.
+Po przemnożeniu przez wagę $e^{\beta t}$ otrzymujemy
+\[
+ \begin{aligned}
+ e^{\beta t}\int_0^t e^{-\alpha(t-\tau)}e^{-\beta\tau}\,\dd\tau
+  &=\frac{1-e^{-(\alpha-\beta)t}}{\alpha-\beta},\\
+ e^{\beta t}\int_t^\infty e^{-\alpha(\tau-t)}e^{-\beta\tau}\,\dd\tau
+  &=\frac1{\alpha+\beta}.
+ \end{aligned}
+\]
+Ich suma daje wypisane oszacowanie stałej kontrakcji.
 Twierdzenie o punkcie stałym daje jedyne rozwiązanie.
+Jeśli $\kappa<1$ jest otrzymaną stałą kontrakcji, to
+$\|x\|_\beta\leq |a|+\kappa\|x\|_\beta$,
+czyli $\|x\|_\beta\leq |a|/(1-\kappa)$.
+Dostatecznie małe $a$ utrzymuje zatem całą trajektorię
+w kuli, w której odcięcie nie zmieniało oryginalnego pola.
 Gładka zależność od $a$ wynika z różniczkowania
 tego równania: operator $I-D\mathcal T$ ma odwrotność
 $\sum_{j\geq0}(D\mathcal T)^j$; argument powtarzamy
@@ -1045,7 +1228,7 @@ zgodnie z lokalnym kołnierzem brzegu kuli.
 Ten sam argument z odwróconym czasem kończy dowód.
 \end{proof}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
 \begin{tikzpicture}[>=Latex,scale=1]
  \shade[inner color=white,outer color=manifoldblue!43]
@@ -1164,9 +1347,9 @@ metrykę $g$, euklidesową w małych
 mapach Morse'a, tak aby
 $(f,g)$ była parą
 Morse'a--Smale'a. Takie metryki
-są gęste wśród metryk
-z ustalonym zachowaniem
-blisko punktów krytycznych.
+są gęste w topologii $C^\infty$ wśród metryk
+zgodnych z ustalonymi metrykami euklidesowymi
+w tych otoczeniach punktów krytycznych.
 \end{twierdzenie}
 \begin{proof}
 Pokażemy mechanizm
@@ -1197,6 +1380,10 @@ perturbacji $h$ metryki mamy
  \right|_{\varepsilon=0}
   =-g^{-1}hX.
 \]
+Różniczkując $(g+\varepsilon h)(g+\varepsilon h)^{-1}=I$,
+dostajemy pochodną odwrotności $-g^{-1}hg^{-1}$.
+Po pomnożeniu przez $-\dd f$ i użyciu $g^{-1}\dd f=-X$
+otrzymujemy właśnie znak minus w powyższym wzorze.
 Gdy $X\ne0$, odwzorowanie
 $h\mapsto h(X,\cdot)$ z form
 symetrycznych na kowektory
@@ -1215,14 +1402,33 @@ więc $W^s(q)\cap L$ nie zmienia
 się. Zmiana wektora prędkości
 w kierunku stycznym do $L$
 zmienia punkt trafienia w $L$
-w tym samym kierunku
-w pierwszym rzędzie: wynika
-to z całkowego równania
-dla zlinearyzowanego przepływu;
-przy zmniejszaniu kulki
-przeniesienie liniowe na
-krótkim odcinku zbliża się
-do identyczności.
+w dowolnie zadanym kierunku w pierwszym rzędzie.
+Rozpiszmy ten argument. Jeśli $V$ jest pochodną zmienianego
+pola, a $\gamma(t)=\Phi_t(x)$ trafia w $L$ w chwili $T$,
+to wariacja trajektorii przy ustalonym punkcie startowym wynosi
+\[
+ Y(T)=\int_0^T \D_{\gamma(t)}\Phi_{T-t}
+                          \bigl(V(\gamma(t))\bigr)\,\dd t.
+\]
+Jest to rozwiązanie równania wariacyjnego
+$\dot Y=DX(\gamma(t))Y+V(\gamma(t))$, $Y(0)=0$.
+Ponieważ zmienia się także czas trafienia, różniczka
+punktu trafienia jest rzutem $Y(T)$ na $TL$ wzdłuż $X$:
+\[
+ \delta E=Y(T)-X(\gamma(T))
+       \frac{\dd f_{\gamma(T)}(Y(T))}{\dd f_{\gamma(T)}(X)}.
+\]
+Wzór wynika z różniczkowania warunku $f(E)=s$;
+mianownik jest niezerowy.
+Dla zadanego $w\in T_{\gamma(T)}L$ wybieramy
+gładką funkcję $\chi$ podpartą w krótkim odcinku tuż
+przed $T$, z $\int_0^T\chi(t)\,\dd t=1$, i zadajemy
+$V(\gamma(t))=\chi(t)\D_{\gamma(T)}\Phi_{t-T}(w)$.
+Reguła składania różniczek przepływu daje wtedy $Y(T)=w$,
+a więc także $\delta E=w$.
+W mapie prostującej przepływ przedłużamy to pole
+na małą kulkę. Sprawdzona surjektywność $h\mapsto-g^{-1}hX$
+realizuje je perturbacją metryki.
 Wpływ perturbacji na
 trajektorię zależy gładko
 od jej skończenie wielu
@@ -1284,9 +1490,12 @@ przy $p=q$ lokalne osie
 $\{u=0\}$ i $\{v=0\}$
 przecinają się transwersalnie
 w $p$.
+Innych punktów $W^u(p)\cap W^s(p)$ nie ma:
+trajektoria nie może ściśle obniżać $f$ i mieć
+tej samej wartości $f(p)$ na obu końcach.
 \end{proof}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
 \begin{tikzpicture}[>=Latex,scale=.95]
  \draw[manifoldblue!30,densely dashed]
@@ -1314,6 +1523,43 @@ jednowymiarowej przestrzeni trajektorii,
 gdy różnica indeksów $p,q$ wynosi $2$.}
 \label{fig:lamane-trajektorie-morse-17}
 \end{figure}
+
+\begin{przyklad}[Jawna para Morse'a--Smale'a na torusie]
+\label{prz:morse-smale-produkt-22}
+Na torusie $(\R/2\pi\Z)^2$ z płaską metryką
+$g=\dd\theta^2+\dd\varphi^2$ weźmy
+$f(\theta,\varphi)=\cos\theta+2\cos\varphi$.
+Dla pola spadku równania rozdzielają się:
+$\dot\theta=\sin\theta$, $\dot\varphi=2\sin\varphi$.
+Poza stałymi rozwiązaniami $0,\pi$ mamy
+$\frac{\dd}{\dd t}\log|\tan(\theta/2)|=1$,
+bo pochodna $\log|\tan(\theta/2)|$ po $\theta$ to $1/\sin\theta$.
+Analogiczny rachunek dla $\varphi$ daje
+\[
+ \tan\frac{\theta(t)}2=e^t\tan\frac{\theta(0)}2,\qquad
+ \tan\frac{\varphi(t)}2=e^{2t}\tan\frac{\varphi(0)}2.
+\]
+W każdym wzorze wybieramy gałąź kąta należącą do tego
+samego otwartego półokręgu co punkt startowy.
+W jednym czynniku $0$ jest maksimum, a $\pi$ minimum:
+$W^u(0)=S^1\setminus\{\pi\}$, $W^s(0)=\{0\}$,
+$W^u(\pi)=\{\pi\}$, $W^s(\pi)=S^1\setminus\{0\}$.
+Na produkcie bierzemy iloczyny odpowiednich zbiorów.
+Na przykład dla siodła $p=(\pi,0)$ otrzymujemy
+\[
+ W^u(p)=\{\pi\}\times(S^1\setminus\{\pi\}),\qquad
+ W^s(p)=(S^1\setminus\{0\})\times\{0\}.
+\]
+Dla drugiego siodła $q=(0,\pi)$ role czynników się zamieniają.
+Nie ma trajektorii od $p$ do $q$, choć $f(p)=1>-1=f(q)$:
+$W^u(p)$ ma stale pierwszą współrzędną $\pi$,
+a $W^s(q)$ stale pierwszą współrzędną $0$.
+W każdym czynniku przy niepustym przecięciu stabilnym--niestabilnym
+przynajmniej jedna z dwóch przestrzeni stycznych jest całą prostą.
+Ich suma jest więc całą przestrzenią styczną okręgu.
+Suma tych warunków na produkcie daje transwersalność na torusie.
+Jest to konkretna para Morse'a--Smale'a.
+\end{przyklad}
 
 \section{Kompleks Morse'a: homologia z trajektorii}
 \label{sec:kompleks-morse-17}
@@ -1360,10 +1606,20 @@ Na zwartym obszarze między kulami $|\nabla f|\geq m>0$,
 a przejście między różnymi kulami wymaga długości
 co najmniej $d>0$. Spadek funkcji na tym przejściu wynosi
 \[
- \int |\nabla f|^2\,\dd t
- =\int |\nabla f|\,\dd s\geq md,
+ \begin{aligned}
+ f(\gamma(a))-f(\gamma(b))
+ &=\int_a^b|\nabla f(\gamma(t))|^2\,\dd t\\
+ &=\int_0^\ell|\nabla f(\widetilde\gamma(s))|\,\dd s
+ \geq m\ell\geq md.
+ \end{aligned}
 \]
-gdzie $s$ jest długością łuku. Nie może on zmieścić się
+Tutaj $\gamma|_{[a,b]}$ jest odcinkiem przejścia między kulami,
+leżącym poza ich wnętrzami, a $\widetilde\gamma:[0,\ell]\to M$
+to ten sam łuk, zorientowany zgodnie z rosnącym $t$
+i sparametryzowany długością łuku.
+Podstawienie jest poprawne, bo
+$\dd s=|\dot\gamma(t)|\,\dd t=|\nabla f(\gamma(t))|\,\dd t$.
+Ten dodatni spadek nie może zmieścić się
 w pasie o szerokości dążącej do zera.
 Tak więc oba odcinki mają wspólny punkt krytyczny.
 To samo rozumowanie na małych sferach wyjścia
@@ -1556,6 +1812,32 @@ tej normy pochodne mieszane są ograniczone przez
 stałą razy $\delta e^{-\eta(T-t)}$ lub
 $\delta e^{-\eta t}$. Całkowanie jąder wykładniczych
 daje stałą kontrakcji mniejszą od $1$ dla małego $\delta$.
+Podajmy potrzebne oszacowanie jawnie.
+Z gładkości i znikania na osiach wynika
+$|R_u(u,v)|\leq C\delta|u|$ oraz
+$\|\partial_vR_u(u,v)\|\leq C|u|$,
+a dla $R_s$ odpowiednio te same nierówności z zamienionymi $u,v$.
+Na kuli promienia $4\delta$ w powyższej normie ważonej
+dwie funkcje różniące się o normę $D$ spełniają więc
+\[
+ |\Delta R_u(t)|\leq C'\delta D e^{-\eta(T-t)},\qquad
+ |\Delta R_s(t)|\leq C'\delta D e^{-\eta t}.
+\]
+Stała $C'$ nie zależy od $T$.
+Na przykład wkład pierwszej całki po pomnożeniu przez wagę
+jest ograniczony przez $C'\delta D$ razy
+\[
+ e^{\eta(T-t)}\int_t^T
+ e^{-\alpha(\tau-t)}e^{-\eta(T-\tau)}\,\dd\tau
+ =\frac{1-e^{-(\alpha-\eta)(T-t)}}{\alpha-\eta}
+ \leq\frac1{\alpha-\eta}.
+\]
+Drugie jądro daje analogiczne ograniczenie.
+Cały operator ma zatem stałą co najwyżej
+$2C'\delta/(\alpha-\eta)$, mniejszą od $1$ po zmniejszeniu $\delta$.
+Wyrazy jednorodne mają łączną normę co najwyżej
+$|a|+|b_0|\leq2\delta$, a składniki nieliniowe są rzędu $\delta^2$,
+więc ta sama kula jest zachowana.
 Różniczkowanie równania punktu stałego daje
 te same oszacowania dla pochodnych po $a,b_0$.
 W szczególności odwzorowania
@@ -1634,6 +1916,39 @@ mówi, że liczba
 końców jest parzysta.
 \end{proof}
 
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Latex,font=\small,scale=3.1]
+ \fill[manifoldblue!5] (0,0) rectangle (1,1);
+ \draw[gray!45] (0,0) rectangle (1,1);
+ \foreach \r in {.35,.12,.035}{
+  \draw[manifoldblue,thick,domain=\r:1,samples=90]
+    plot (\x,{\r/\x});
+  \pgfmathsetmacro{\lo}{.85*sqrt(\r)}
+  \pgfmathsetmacro{\hi}{1.15*sqrt(\r)}
+  \draw[->,manifoldblue,thick,domain=\lo:\hi,samples=15]
+    plot (\x,{\r/\x});
+ }
+ \draw[->,manifoldgold!85!black,very thick] (0,1)--(0,.14);
+ \draw[->,manifoldgold!85!black,very thick] (.12,0)--(1,0);
+ \fill[manifoldred] (0,0) circle (.7pt);
+ \node[below left] at (0,0) {$r$};
+ \node[above] at (.5,1.05) {wejście: $v=\delta$};
+ \node[right,align=left] at (1.05,.5) {wyjście:\\$u=\delta$};
+ \node[below] at (.5,-.08) {$u$};
+ \node[left] at (-.04,.55) {$v$};
+\end{tikzpicture}
+\caption{Lokalne sklejanie przy siodle z równaniami
+$\dot u=2u$, $\dot v=-2v$, w dodatniej ćwiartce.
+W skali $\delta=1$ niebieskie łuki spełniają $uv=\rho$,
+wchodzą w $(\rho,1)$ i wychodzą w $(1,\rho)$.
+Czas przejścia to $T=-\tfrac12\log\rho$.
+Gdy $\rho\downarrow0$, rośnie on do nieskończoności,
+a łuki zbliżają się do złotej pary odcinków trajektorii.
+Punkt $r$ jest osiągany na tych odcinkach tylko w granicy czasu.}
+\label{fig:sklejanie-siodlo-22}
+\end{figure}
+
 \begin{twierdzenie}[Homologia Morse'a jest homologią $M$]
 \label{thm:homologia-morse-17}
 Dla zamkniętej rozmaitości
@@ -1680,6 +1995,17 @@ poza zerami kładziemy
  \widetilde g(X,\ker\dd F)=0,
 \]
 a na $\ker\dd F$ wybieramy dowolną dodatnią metrykę.
+Dla pełnego wzoru rozkładamy dowolny wektor jako
+$v=a(v)X+v_0$, gdzie
+$a(v)=\dd F(v)/\dd F(X)$ i $v_0\in\ker\dd F$.
+Jeśli $h$ jest dodatnią metryką na tym jądrze, to
+\[
+ \widetilde g(v,w)
+ =-\dd F(X)\,a(v)a(w)+h(v_0,w_0).
+\]
+Oba składniki są dodatnie na swoich podprzestrzeniach,
+a podstawienie $v=X$ daje
+$\widetilde g(X,w)=-\dd F(w)$.
 Blisko zer pozostawiamy $g$; sklejenie metryk podziałem
 jedności zachowuje liniową tożsamość
 $\widetilde g(X,\cdot)=-\dd F$.
@@ -1800,6 +2126,70 @@ sąsiednimi indeksami
 znoszą się w sumie.
 \end{przyklad}
 
+\begin{przyklad}[Różniczka na okręgu ze znakami]
+\label{prz:morse-okrag-znaki-22}
+Na jednostkowym okręgu z metryką $\dd\theta^2$ niech
+$f(\theta)=\cos2\theta$. Pole spadku spełnia
+$\dot\theta=2\sin2\theta$.
+Maksima $p_0$ i $p_\pi$ leżą przy kątach $0,\pi$,
+a minima $q_1,q_2$ przy $\pi/2,3\pi/2$.
+Hesjan to $f''=-4\cos2\theta$,
+więc indeksy wynoszą odpowiednio $1,1,0,0$.
+Każdy otwarty ćwierćokrąg jest jedną trajektorią bez parametryzacji:
+znak prędkości jest tam stały, a zera pola na końcach
+osiągamy tylko przy nieskończonym czasie.
+Para jest Morse'a--Smale'a, co sprawdzamy przez wymiary
+stycznych w jednowymiarowym otoczeniu.
+
+Orientujemy oba $W^u(p)$ przez rosnący kąt.
+Gałąź wychodząca w tym kierunku ma znak $+1$,
+a gałąź wychodząca w kierunku przeciwnym znak $-1$:
+w wymiarze jeden reguła
+$\operatorname{or}(TW^u)=\operatorname{or}(X)\otimes
+\operatorname{or}(T(W^u\cap L))$
+porównuje właśnie te dwa kierunki.
+Zatem
+\[
+ \partial p_0=q_1-q_2,\qquad
+ \partial p_\pi=q_2-q_1,\qquad
+ [\partial_1]_{(q_1,q_2),(p_0,p_\pi)}
+ =\begin{pmatrix}1&-1\\-1&1\end{pmatrix}.
+\]
+Jądro tworzą pary $(a,a)$, a obraz to $\Z(q_1-q_2)$.
+Stąd $H_1=\Z(p_0+p_\pi)$ i
+$H_0=(\Z q_1\oplus\Z q_2)/\Z(q_1-q_2)\cong\Z$.
+Mamy cztery punkty krytyczne, ale tylko dwie niezależne
+klasy homologii: pozostałą parę generatorów usuwa niezerowa różniczka.
+\end{przyklad}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Latex,font=\small]
+ \fill[manifoldblue!6] (0,0) circle (1.65);
+ \draw[manifoldblue!55,thick] (0,0) circle (1.65);
+ \foreach \a/\b in {8/82,172/98,188/262,352/278}
+  \draw[manifoldgold!85!black,very thick,->]
+    plot[domain=\a:\b,samples=40,variable=\t]
+     ({1.65*cos(\t)},{1.65*sin(\t)});
+ \foreach \x/\y/\lab/\pos in {1.65/0/p_0/right,-1.65/0/p_\pi/left,
+                             0/1.65/q_1/above,0/-1.65/q_2/below}{
+  \fill[manifoldred] (\x,\y) circle (2.2pt);
+  \node[\pos] at (\x,\y) {$\lab$};
+ }
+ \node at (1.45,1.35) {$+1$};
+ \node at (-1.45,1.35) {$-1$};
+ \node at (-1.45,-1.35) {$+1$};
+ \node at (1.45,-1.35) {$-1$};
+ \node at (0,0) {$f=\cos2\theta$};
+\end{tikzpicture}
+\caption{Cztery trajektorie od maksimów $p_0,p_\pi$
+do minimów $q_1,q_2$. Złote strzałki wskazują spadek $f$.
+Liczby przy łukach to znaki trajektorii przy orientowaniu
+obu rozmaitości niestabilnych przez rosnący kąt;
+nie są to indeksy punktów krytycznych.}
+\label{fig:morse-okrag-znaki-22}
+\end{figure}
+
 \section{Jak to prowadzi do Smale'a i chirurgii?}
 \label{sec:morse-most-17}
 
@@ -1844,9 +2234,46 @@ zamkniętej $M$ właśnie
 po to, aby takich
 warunków nie ukrywać.
 
+\begin{przyklad}[Uchwyt zmienia poziomicę przez chirurgię]
+\label{prz:morse-poziomica-chirurgia-22}
+Rozróżnijmy wymiar podpoziomicy $n$ od wymiaru
+jej regularnego brzegu $n-1$.
+Dla $1\leq\lambda\leq n-1$ brzeg uchwytu rozkłada się na
+\[
+ \partial(D^\lambda\times D^{n-\lambda})
+ =(S^{\lambda-1}\times D^{n-\lambda})
+  \cup_{S^{\lambda-1}\times S^{n-\lambda-1}}
+   (D^\lambda\times S^{n-\lambda-1}).
+\]
+Pierwsza część jest przyklejona do starego brzegu,
+więc po dołączeniu uchwytu staje się wewnętrznym szwem.
+W nowym brzegu zastępuje ją druga część.
+Jest to dokładnie chirurgia z
+Definicji~\ref{def:chirurgia-zarys-16},
+na rozmaitości wymiaru $n-1$ i na sferze wymiaru $\lambda-1$.
+Jej indeks w przyjętej tam konwencji wynosi zatem $\lambda-1$;
+indeks uchwytu w śladzie wynosi $\lambda$.
+Obramowanie w tej operacji pochodzi z produktowego
+czynnika $D^{n-\lambda}$ części przyczepianej.
+
+Na przykład przy $n=3$, $\lambda=1$ z powierzchni poziomicy
+usuwamy wnętrza dwóch dysków $S^0\times D^2$
+i wklejamy walec $D^1\times S^1$.
+Jeśli dyski leżą na jednej składowej zorientowanej powierzchni
+i zachowujemy orientację, otrzymujemy dodatkowy uchwyt powierzchni.
+Charakterystyka Eulera spada o $2$: usuwamy dwa dyski
+o łącznej charakterystyce $2$, a walec i okręgi szwu mają
+charakterystykę $0$. Równanie $\chi=2-2g$ dla zamkniętej
+spójnej powierzchni pokazuje więc wzrost rodzaju z $g$ do $g+1$.
+Przy $n=3$, $\lambda=2$ wymieniane części zamieniają role:
+wycinamy walec i zamykamy dwa powstałe okręgi dyskami.
+To geometryczny związek opisu Morse'a z operacjami
+omawianymi w następnym tomie.
+\end{przyklad}
+
 \par\smallskip
 {\footnotesize\noindent\emph{Dalsza lektura:}
-\href{https://math.stanford.edu/~ralph/morsecourse/biglectures.pdf}{R.\ Cohen, \emph{Morse Theory}, lemat Morse'a, uchwyty i nierówności},
+\href{https://math.stanford.edu/~ralph/morsecourse/biglectures.pdf}{R.\ Cohen, K.\ Iga i P.\ Norbury, \emph{Topics in Morse Theory}, lemat Morse'a, uchwyty i nierówności},
 \href{https://people.maths.ox.ac.uk/ritter/morse-cambridge/full.pdf}{A.\ Ritter, \emph{Morse Homology}, trajektorie i ich zliczanie},
 \href{https://arxiv.org/pdf/math/0411465}{J.\ Weber, \emph{The Morse--Witten complex via dynamical systems}, zwartość, sklejanie i orientacje},
 \href{https://ocw.mit.edu/courses/18-965-geometry-of-manifolds-fall-2004/pages/lecture-notes/}{MIT OCW, wykłady z geometrii rozmaitości}.\par}
