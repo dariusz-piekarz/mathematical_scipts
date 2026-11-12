@@ -40,6 +40,11 @@
 - Stosuj „inkluzja” dla odwzorowania włączającego, „funkcja pierwotna” zamiast samego „pierwotna”.
 - W homologiach operator brzegu to `\partial`; `d` jest dla różniczki w kohomologiach i formach.
 - „Kochainy” pozostają tłumaczeniem `cochains`; nie zamieniaj ich na „kołańcuchy”.
+- Angielskie `frame` tłumacz jako „ramka”, również w odmianie
+  („ramki”, „ramce”, „ramek”) i w określeniach „ramka lokalna”,
+  „ramka ortonormalna”, „ramka dualna”. Definicja ogólna jest
+  w §1.9; przy pierwszym użyciu jej szczególnego rodzaju podaj
+  warunek, który go wyróżnia.
 - Używaj określenia „iloczyn tensorowy”. Czynność opisuj jako
   „utworzenie iloczynu tensorowego”, bez skrótowej nazwy tej czynności.
 - Angielskie `germ` funkcji lub odwzorowania tłumacz jako „kiełek”.

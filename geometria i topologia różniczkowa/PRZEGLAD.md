@@ -14,6 +14,44 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Ramka — definicja i ujednolicenie terminologii (2026-11-12)
+
+Pierwsze użycie pojęcia bez definicji było w uwadze o grupie
+strukturalnej w §1.10. Przed nim, na końcu §1.9, dodano
+Definicję 1.9.12: ramka jest uporządkowaną bazą, a ramka lokalna
+wiązki to gładkie sekcje tworzące bazę w każdym włóknie.
+Rozróżniono ramkę pełną, k-ramkę, lokalną i globalną; określono
+ramkę ortonormalną i dualną, także w przypadku zespolonym.
+Stwierdzenie 1.9.13 zawiera dowód równoważności z trywializacją,
+w tym gładkość odwrotności macierzy współczynników i ramki dualnej.
+Przykład 1.9.14 oblicza ramkę na płaszczyźnie, jej wyznacznik,
+bazę dualną i współczynniki tego samego wektora w obu bazach.
+Definicję i związek z trywializacją porównano z
+[J. M. Lee, Introduction to Smooth Manifolds](https://www.math.colostate.edu/~renzo/teaching/DiffGeo2011/Introduction%20to%20Smooth%20Manifolds%20-%20J.%20Lee.pdf),
+wersja 3, rozdział 3, s. 60 i 64.
+
+W rozdziale 2 po (2.2.3) wyprowadzono niezerowy nawias pól
+z tego samego przykładu i wyjaśniono, dlaczego ramka nie pochodzi
+od współrzędnych. W §11.1 przypomniano warunek ortonormalności
+i sprawdzono go dla metryki diagonalnej. Przy pierwszych użyciach
+w rozdziałach 1, 4 i 15 dodano odsyłacze.
+W 15 plikach publikowanych rozdziałów zastąpiono 87 wystąpień
+nazwy „rama” i jej odmian przez „ramka” z odpowiednią odmianą.
+Poprawiono również dwa miejsca w planie i utrwalono zasadę w AGENTS.
+Identyfikatory etykiet pozostały bez zmian; zwykłe wyrażenie
+„w ramach rachunku form” zachowano.
+
+Złożono cztery tomy w dwóch przebiegach: 268, 217, 104 i 102 strony.
+Indeksy przyjęły odpowiednio 128, 107, 33 i 104 wpisy;
+nie ma odrzuceń ani ostrzeżeń indeksowania.
+Sprawdzono 46 stron z nowym materiałem lub ramkami oraz indeks tomu I;
+nowy fragment obejrzano także po renderowaniu Popplerem.
+Nie ma przepełnień, tekstu poza stroną, brakujących odsyłaczy
+ani zmian numerów dotychczasowych etykiet w żadnym tomie.
+Wszystkie cele łączy między PDF-ami istnieją.
+Lista ostrzeżeń każdego tomu jest taka sama jak przed zmianą
+po pominięciu zmienionych numerów linii źródła.
+
 ## Rozdział 15 — przykłady, dowody i rysunki (2026-11-12)
 
 Na prośbę autora wznowiono zwykły przegląd od rozdziału 15,
