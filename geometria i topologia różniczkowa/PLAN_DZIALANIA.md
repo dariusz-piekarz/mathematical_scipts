@@ -221,8 +221,20 @@ Przeszły 53 kontrole rachunkowe. Wszystkie 27 zapisów całek
 ma dziedzinę lub granice. Złożono i sprawdzono tylko tom II,
 zachowując numerację.
 **Wyznaczony etap rozdziału 18 jest zakończony.**
-Następny w kolejności jest rozdział 19
+Autor wyznaczył następnie rozdział 19
 „Twierdzenie Sarda i transwersalność” (tom II).
+Pełny przegląd §§19.1–19.6 zakończono 12 listopada:
+rozpisano redukcję rzędu i resztę Taylora w dowodzie Sarda,
+rachunki iloczynu włóknistego, współrzędne przy brzegu,
+jednostajny wybór perturbacji oraz zmianę hesjanu.
+Wyprowadzono linearyzację pola gradientowego i przepływ na okręgu.
+Dodano cztery przykłady, rysunek dwóch trajektorii i schemat
+kontaktu z brzegiem; sprawdzono także cztery wcześniejsze rysunki.
+Przeszły 43 kontrole rachunkowe; jedyna całka ma granice od 0 do 1.
+Złożono i sprawdzono tylko tom II, zachowując dotychczasową numerację.
+**Wyznaczony etap rozdziału 19 jest zakończony.**
+Następny w kolejności jest rozdział 20
+„Zanurzenia i otoczenia podrozmaitości” (tom II).
 Przy kolejnych
 rozdziałach obowiązuje ta sama zasada: skład tylko właściwego tomu,
 a potem commit i push po kontroli całego rozdziału.
@@ -528,7 +540,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 16. Geometria Kleina (plik 29a) | `29a-geometria-kleina.tex` | Pełny przegląd dydaktyczny §§16.1–16.9 zakończony 12 listopada; wcześniejszy audyt z 20 października i integracja struktur (G,X) z 11 listopada | Rozpisano różniczki orbit i metrykę niezmienniczą, podstawienie w całce Haara, ilorazy i lokalne modele orbifoldowe. Uzupełniono kolejność mnożenia holonomii, arkusze rozwinięcia i dyskretność jego obrazu przy zupełności; dodano kontrprzykład przebitej płaszczyzny. Wyprowadzono rachunki Möbiusa i Cayleya, długości do brzegu dysku, metrykę torusa i bloki grupy afinicznej. Dziesięć zapisów całek ma dziedziny lub granice. Dodano i sprawdzono cztery rysunki; przeszły 24 kontrole rachunkowe. Złożono tylko tom II, zachowując numerację. Szczegóły w `PRZEGLAD.md`. |
 | 17. Chern–Weil | `27-chern-weil.tex` | Pełny przegląd dydaktyczny §§17.1–17.3 zakończony 12 listopada; wcześniejszy audyt z 20 października | Rozpisano macierze koneksji, różniczkę kowariantną, Bianchiego i kasowanie komutatorów w transgresji; wyprowadzono współczynniki Pfaffianu i pierwszej formy Pontriagina. Obliczono normalizację formy kątowej, w tym całkę rekurencyjną i objętość sfery. Uzupełniono model względny Thoma, granicę przy zerach pola i wersję brzegową Poincarégo–Hopfa. Dodano trzy przykłady, rozszerzono przykład kuli o pierścień i dodano cztery rysunki. Przeszło 39 kontroli rachunkowych; 49 zapisów całek ma dziedziny lub granice. Złożono tylko tom II, zachowując numerację. Identyfikacja zespolonych form Cherna z klasami topologicznymi pozostaje jawnym wejściem zewnętrznym. Szczegóły w `PRZEGLAD.md`. |
 | 18. Hodge–Bochner | `28-hodge-bochner.tex` | Pełny przegląd §§18.1–18.5 zakończony 12 listopada | Rozpisane znaki gwiazdy, kodyferencjału i Bochnera; obliczony rozkład na torusie, okresy i forma przecięcia dwóch sfer. Wyprowadzone skalowanie Getzlera, model Mehlera, normalizacje indeksowe i symbol ASD; jawne wejścia analityczne. Trzy nowe przykłady, cztery rysunki, 53 kontrole rachunkowe i 27 całek z dziedziną lub granicami. Sprawdzono tylko tom II; numeracja zachowana. |
-| 19. Sard i transwersalność | `15-sard-transwersalnosc.tex` | Audyt dodatków zakończony 6 października; bez poprawek treści | Pięć wpisów indeksu, cztery ilustracje i warunki transwersalności przy brzegu sprawdzone; PDF 401 stron |
+| 19. Sard i transwersalność | `15-sard-transwersalnosc.tex` | Pełny przegląd §§19.1–19.6 zakończony 12 listopada | Wyprowadzone oszacowanie Taylora, redukcja rzędu, rachunki przy brzegu i jednostajny wybór perturbacji. Rozpisana zmiana hesjanu i linearyzacja gradientu. Cztery nowe przykłady: nieotwartość wartości regularnych, iloczyn włóknisty okręgu i prostej, niedomknięty cel transwersalności oraz dwie trajektorie na okręgu. Pięć numerowanych ilustracji i nowy schemat brzegowy, 43 kontrole rachunkowe. Jedyna całka z jawnymi granicami. Sprawdzono tylko tom II; dotychczasowa numeracja zachowana. |
 | 20. Zanurzenia i otoczenia | `16-zanurzenia-otoczenia.tex` | Audyt dodatków zakończony 6 października; PDF 401 stron | Sześć haseł indeksu, cztery ilustracje i kołnierze sprawdzone; poprawiono terminologię odwzorowań oraz zdanie o homotopii do odwzorowania stałego |
 | 21. Przecięcia, dualność i klasy | `17-przeciecia-dualnosc-klasy.tex` | Audyt dodatków zakończony 6 października | Sprawdzone indeks, konwencje znaków i cztery ilustracje; ujednolicono terminologię i rozwinięto argument Leraya–Hirscha dla wiązki rzutowej |
 | 22. Teoria Morse'a | `18-morse.tex` | Audyt dodatków zakończony 8 października | Sprawdzone definicje i pięć ilustracji; jawne współrzędne krytyczne torusa, dokładne prowadnice podpisów i poprawiona terminologia |

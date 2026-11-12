@@ -14,6 +14,114 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 19 — Sard, brzeg i jawne perturbacje (2026-11-12)
+
+Na prośbę autora przeczytano i uzupełniono wszystkie sześć sekcji
+rozdziału 19 w pliku `15-sard-transwersalnosc.tex`.
+Wzorcem pozostał rozdział 1, z naciskiem na wyprowadzanie
+użytych równań i wskazywanie wykorzystanych założeń.
+
+- **§19.1:** rozpisano stałą pokrycia obrazu kostki w przypadku m<n,
+  wyznacznik zmiany współrzędnych i operacje wierszowe w redukcji
+  rzędu. W warstwach znikania pochodnych podano konkretny wybór
+  wielowskaźnika i funkcji definiującej hiperpowierzchnię.
+  Oszacowanie Taylora wyprowadzono z funkcji na odcinku:
+  obliczono pochodne, współczynniki wielomianowe, resztę całkową
+  z granicami 0 i 1 oraz wspólną stałą na zwartej kostce.
+  Objaśniono wykładnik objętości pokrycia.
+  Wersję Sarda dla skończonej różniczkowalności oznaczono
+  jako przytoczony wynik z dokładnym źródłem.
+  Nowy Przykład 19.1.6 dla exp(−t) sin t pokazuje regularną
+  wartość 0, do której zbiegają niezerowe wartości krytyczne:
+  gęstość nie zapewnia otwartości przy niezwartej dziedzinie.
+- **§19.2:** rozpisano obie implikacje między surjektywnością
+  pochodnej normalnej a sumą przestrzeni stycznych.
+  Uzasadniono izomorfizm ilorazu przez diagonalę,
+  wyliczono wymiar przecięcia przez jądro różnicy i wyjaśniono
+  topologię utożsamienia dla inkluzji.
+  Nowy Przykład 19.2.6 oblicza iloczyn włóknisty parametryzowanego
+  okręgu i pionowej prostej. Samo przecięcie obrazów ma dwa punkty,
+  a iloczyn włóknisty jest nieskończony i dyskretny,
+  ponieważ pamięta wszystkie parametry.
+- **§19.3:** podano macierz blokową zmiany współrzędnych
+  zachowującej współrzędną brzegową i obliczono jej wyznacznik.
+  Przykład 19.3.2 rozszerzono o parabolę x²−y=0,
+  która dotyka brzegu półpłaszczyzny, choć sama nie ma brzegu,
+  oraz o poprawny przykład półprostej x=0.
+  Dodano nienumerowany schemat obu sytuacji wewnątrz przykładu.
+- **§19.4:** w rodzinie t²−a obliczono cały przeciwobraz zera,
+  jego styczną i pochodną rzutu na parametr.
+  Przy budowie perturbacji przez eksponentę pokazano
+  dwa osobne użycia zwartości: wspólną kulę określoności
+  i wspólną kulę surjektywności pochodnej parametrycznej.
+  Ten sam argument dopisano w perturbacji względnej.
+  Nowy Przykład 19.4.5 ze zbiorem Z={1/j} pokazuje,
+  że domkniętość celu transwersalności jest potrzebna
+  dla deklarowanej otwartości, nawet przy zwartej dziedzinie.
+- **§19.5:** wyprowadzono pełną drugą pochodną złożenia,
+  wskazując wyraz z drugimi pochodnymi zmiany mapy i przyczynę
+  jego znikania w punkcie krytycznym.
+  W rodzinie perturbacji funkcji rozpisano różniczkę iloczynu
+  funkcji odcinającej i współrzędnej.
+  W przykładzie x²+εy² obliczono równania krytyczności
+  i wyznacznik hesjanu.
+- **§19.6:** wyprowadzono ścisły spadek funkcji na niestałej
+  trajektorii oraz linearyzację −g⁻¹ Hess f w punkcie krytycznym.
+  Rozwiązanie liniowe objaśnia związek znaków hesjanu
+  z wymiarami rozmaitości stabilnej i niestabilnej.
+  Określono hipotezę hiperboliczności i wskazano dokładny
+  odsyłacz do dowodu potrzebnej wersji gradientowej,
+  Twierdzenia 22.4.3.
+  W przykładzie siodła wyprowadzono rozwiązanie ODE
+  i niezmiennik xy uzasadniający kształt narysowanej trajektorii.
+  Nowy Przykład 19.6.3 dla cos θ na okręgu rozwiązuje przepływ
+  przez u=tan(θ/2), wyznacza oba łuki, ich granice i działanie
+  przesunięć czasu. Iloraz ma dokładnie dwa punkty;
+  jego skończoność wynika z rachunku, a nie z samego wymiaru zero.
+  Dodano Rysunek 19.5 z poprawnymi kierunkami obu trajektorii.
+
+Zakres i kroki dowodu Sarda porównano z
+[notatkami Mügera, §IV.2](https://www.math.ru.nl/~mueger/diff_notes.pdf).
+Hipotezy i redukcję transwersalności parametrycznej,
+zera przekrojów oraz kryterium Morse'a sprawdzono z
+[wykładem 4 Rittera](https://people.maths.ox.ac.uk/ritter/morse-cambridge/lecture04.pdf);
+wersja Cʳ Sarda ma osobny odsyłacz do jego wykładu 3.
+Twierdzenie Fubiniego i jednowymiarowy wzór Taylora
+pozostają nazwanymi narzędziami analitycznymi.
+Wynik o rozmaitościach stabilnych jest w tym rozdziale
+użyty z odsyłaczem do dalszego dowodu;
+nie przedstawiono samej linearyzacji jako dowodu tego wyniku.
+
+Przeszły **43 kontrole rachunkowe**: pochodne kierunkowe
+i reszty Taylora, redukcja macierzy, warstwy znikania pochodnych,
+kontrprzykład regularnej wartości, iloraz przez diagonalę,
+iloczyn włóknisty, wyznacznik przy brzegu i rzutowanie na parametr.
+Sprawdzono także zmianę trywializacji przekroju, kongruencję
+hesjanu i dodatkowy wyraz poza punktem krytycznym,
+hesjan perturbacji, linearyzację gradientu, siodło
+oraz rozwiązanie na okręgu wraz z granicami i przesunięciami czasu.
+Jedyna całka w rozdziale ma jawne granice od 0 do 1.
+Zachowano wszystkie **32 dotychczasowe etykiety i ich numery**;
+obecnie jest **38 etykiet**.
+Skontrolowano pięć numerowanych rysunków oraz schemat brzegowy.
+Ilustracje ustawiono przy odpowiedniej treści.
+
+Złożono **tylko tom II: 236 stron**.
+Rozdział zajmuje fizyczne strony **172–185**.
+Obejrzano cały rozdział, spis treści i indeks;
+pięć ilustracji i schemat brzegowy sprawdzono również
+rendererem Poppler. Nie ma nowych ostrzeżeń, przepełnień,
+brakujących odsyłaczy ani tekstu poza stroną.
+Zachowano numery wszystkich dotychczasowych etykiet całego tomu,
+w tym dawnych rysunków.
+Pozostały wcześniejsze komunikaty o `page.1`
+i niedopełnieniu wiersza o badness 1057 w rozdziale 15.
+Indeks: 107 wpisów przyjętych, 0 odrzuconych, 0 ostrzeżeń.
+Wszystkie cele odsyłaczy między czterema PDF-ami istnieją.
+Tomy I, III i IV zachowały poprzednie sumy kontrolne.
+SHA-256 sprawdzonego tomu II:
+`05C38C10D575250EC44654419B6A6920430D1315A87F659652221413C7434EA2`.
+
 ## Rozdział 18 — gwiazda, rozkład i normalizacje indeksowe (2026-11-12)
 
 Na prośbę autora przeczytano i uzupełniono wszystkie pięć sekcji
