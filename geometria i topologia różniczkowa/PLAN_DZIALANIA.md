@@ -233,8 +233,21 @@ kontaktu z brzegiem; sprawdzono także cztery wcześniejsze rysunki.
 Przeszły 43 kontrole rachunkowe; jedyna całka ma granice od 0 do 1.
 Złożono i sprawdzono tylko tom II, zachowując dotychczasową numerację.
 **Wyznaczony etap rozdziału 19 jest zakończony.**
-Następny w kolejności jest rozdział 20
+Autor wyznaczył następnie rozdział 20
 „Zanurzenia i otoczenia podrozmaitości” (tom II).
+Pełny przegląd §§20.1–20.7 zakończono 12 listopada:
+rozpisano rachunki rzutowania, ruchu Whitneya i wiązki normalnej,
+konstrukcję zmiennego promienia rurki, różniczkę kołnierza
+oraz oszacowanie w dowodzie zupełności metryki.
+Rozwinięto przykłady sfer i wyczerpania przedziału;
+dodano obramowania okręgu, podwojenie dysku, ścinanie
+i jawny produktowy opis pierścienia.
+Dodano rysunek i dwa schematy. Przeszły 52 kontrole rachunkowe;
+wszystkie trzy zapisy całek mają granice od 0 do 1.
+Złożono i sprawdzono tylko tom II, zachowując dotychczasową numerację.
+**Wyznaczony etap rozdziału 20 jest zakończony.**
+Następny w kolejności jest rozdział 21
+„Przecięcia, dualność i klasy charakterystyczne” (tom II).
 Przy kolejnych
 rozdziałach obowiązuje ta sama zasada: skład tylko właściwego tomu,
 a potem commit i push po kontroli całego rozdziału.
@@ -541,7 +554,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 17. Chern–Weil | `27-chern-weil.tex` | Pełny przegląd dydaktyczny §§17.1–17.3 zakończony 12 listopada; wcześniejszy audyt z 20 października | Rozpisano macierze koneksji, różniczkę kowariantną, Bianchiego i kasowanie komutatorów w transgresji; wyprowadzono współczynniki Pfaffianu i pierwszej formy Pontriagina. Obliczono normalizację formy kątowej, w tym całkę rekurencyjną i objętość sfery. Uzupełniono model względny Thoma, granicę przy zerach pola i wersję brzegową Poincarégo–Hopfa. Dodano trzy przykłady, rozszerzono przykład kuli o pierścień i dodano cztery rysunki. Przeszło 39 kontroli rachunkowych; 49 zapisów całek ma dziedziny lub granice. Złożono tylko tom II, zachowując numerację. Identyfikacja zespolonych form Cherna z klasami topologicznymi pozostaje jawnym wejściem zewnętrznym. Szczegóły w `PRZEGLAD.md`. |
 | 18. Hodge–Bochner | `28-hodge-bochner.tex` | Pełny przegląd §§18.1–18.5 zakończony 12 listopada | Rozpisane znaki gwiazdy, kodyferencjału i Bochnera; obliczony rozkład na torusie, okresy i forma przecięcia dwóch sfer. Wyprowadzone skalowanie Getzlera, model Mehlera, normalizacje indeksowe i symbol ASD; jawne wejścia analityczne. Trzy nowe przykłady, cztery rysunki, 53 kontrole rachunkowe i 27 całek z dziedziną lub granicami. Sprawdzono tylko tom II; numeracja zachowana. |
 | 19. Sard i transwersalność | `15-sard-transwersalnosc.tex` | Pełny przegląd §§19.1–19.6 zakończony 12 listopada | Wyprowadzone oszacowanie Taylora, redukcja rzędu, rachunki przy brzegu i jednostajny wybór perturbacji. Rozpisana zmiana hesjanu i linearyzacja gradientu. Cztery nowe przykłady: nieotwartość wartości regularnych, iloczyn włóknisty okręgu i prostej, niedomknięty cel transwersalności oraz dwie trajektorie na okręgu. Pięć numerowanych ilustracji i nowy schemat brzegowy, 43 kontrole rachunkowe. Jedyna całka z jawnymi granicami. Sprawdzono tylko tom II; dotychczasowa numeracja zachowana. |
-| 20. Zanurzenia i otoczenia | `16-zanurzenia-otoczenia.tex` | Audyt dodatków zakończony 6 października; PDF 401 stron | Sześć haseł indeksu, cztery ilustracje i kołnierze sprawdzone; poprawiono terminologię odwzorowań oraz zdanie o homotopii do odwzorowania stałego |
+| 20. Zanurzenia i otoczenia | `16-zanurzenia-otoczenia.tex` | Pełny przegląd §§20.1–20.7 zakończony 12 listopada | Rozpisane rachunki rzutów, siecznych i ruchu Whitneya, przejścia wiązki normalnej, rzut przez macierz Grama i zmienny promień rurki. Wyprowadzone wzory kołnierza, przeniesienia metryki i zupełności. Cztery nowe przykłady: obramowania okręgu, podwojenie dysku, ścinanie i pierścień jako produkt; pięć numerowanych rysunków i dwa nowe schematy. Przeszły 52 kontrole rachunkowe; trzy całki mają jawne granice. Sprawdzono tylko tom II; numeracja zachowana. |
 | 21. Przecięcia, dualność i klasy | `17-przeciecia-dualnosc-klasy.tex` | Audyt dodatków zakończony 6 października | Sprawdzone indeks, konwencje znaków i cztery ilustracje; ujednolicono terminologię i rozwinięto argument Leraya–Hirscha dla wiązki rzutowej |
 | 22. Teoria Morse'a | `18-morse.tex` | Audyt dodatków zakończony 8 października | Sprawdzone definicje i pięć ilustracji; jawne współrzędne krytyczne torusa, dokładne prowadnice podpisów i poprawiona terminologia |
 | 23. Kobordyzmy i uchwyty | `19-kobordyzmy-uchwyty.tex` | Audyt dodatków zakończony 8 października; PDF 443 strony | Sprawdzone trzy hasła i pięć ilustracji; przywrócony warunek orientacji w podpisie, jawny opis sklejenia pierścieni i rozwinięty lokalny ruch Whitneya przy zachowanych założeniach o dyskach |

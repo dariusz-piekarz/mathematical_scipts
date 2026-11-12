@@ -14,6 +14,129 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 20 — normalne, obramowania i kontrola otoczeń (2026-11-12)
+
+Na prośbę autora przeczytano i uzupełniono wszystkie siedem sekcji
+rozdziału 20 w pliku `16-zanurzenia-otoczenia.tex`.
+Zachowano wzorzec szczegółowości z rozdziału 1:
+wyprowadzono użyte macierze i oszacowania,
+rozpisano nietrywialne kroki konstrukcji oraz rozwinięto przykłady.
+
+- **§20.1:** podano wzór rzutu ortogonalnego i wyjaśniono,
+  dlaczego kolizje po rzutowaniu odpowiadają kierunkom siecznych.
+  W perturbacji dysku rozpisano niezależny wybór wartości
+  i dwóch kolumn różniczki, a kowymiar warstwy macierzy
+  wyprowadzono przez eliminację blokową i liczbę parametrów.
+  Ruch Whitneya zapisano jako dwa konkretne pogrubione płaty:
+  sprawdzono immersyjność każdego etapu i brak przecięć na końcu,
+  także po wygaszeniu ruchu w kierunkach normalnych.
+  Poprawiono podpis Rysunku 20.1, odróżniając przedłużenie
+  rozkładu normalnego od przedłużenia dowolnej ramki brzegowej.
+  W mocnym twierdzeniu Whitneya obliczono różniczkę
+  projektowego odwzorowania siecznych i granicę krótkich siecznych,
+  z jawną całką od 0 do 1.
+  Sprawdzono wyznacznik dwóch płatów sfery Whitneya;
+  dla płaszczyzny projektowej podano rzeczywisty wzór i macierz różniczki.
+  Przykład okręgu rozszerzono o obliczenie utraty injektywności
+  i immersji przy rzucie do prostej, z nienumerowanym schematem.
+- **§20.2:** wyprowadzono blokową zmianę mapy plasterkowej
+  i gładkie funkcje przejścia wiązki ilorazowej.
+  Rzut normalny otrzymano z układu równań ortogonalności
+  i odwrotności macierzy Grama.
+  W przykładzie przekątnej podano odwrotny izomorfizm,
+  normalnego przedstawiciela klasy i czynnik jego normy.
+- **§20.3:** zamiast samego powołania się na podział jedności
+  podano konkretną dodatnią funkcję promienia:
+  otwarte pasy wyczerpania, stałe bℓ i sumę z wagami χℓ.
+  Sprawdzono indeksy i nierówności zapewniające jednolitą
+  różnowartościowość przy ewentualnej kolizji dwóch wektorów.
+  W retrakcji zapisano jawnie przeniesioną homotopię
+  i obie relacje odwrotności homotopijnej.
+  Przykład okręgu i sfery rozszerzono o różniczkę rurki,
+  jej odwrotność, zapaść przy t=−1 i wzór deformacji radialnej.
+- **§20.4:** połączono definicję obramowania z definicją
+  globalnej ramki. Jako orientowalną wiązkę bez obramowania
+  wskazano normalną przekątnej S², izomorficzną z TS²,
+  z niezerową liczbą Eulera.
+  Dla równika wyliczono styczne i normalne, a następnie
+  obramowane otoczenie przez eksponentę sferyczną,
+  z odsyłaczem do wcześniejszego wyprowadzenia.
+  Nowy Przykład 20.4.3 konstruuje obramowania okręgu indeksowane
+  przez m∈Z, oblicza zmianę kąta na torusie brzegowym
+  i klasę pętli ℓ+mμ. Dodano schemat obu pętli na kwadracie
+  z utożsamionymi bokami.
+- **§20.5:** wyjaśniono niezależność pojęcia pola skierowanego
+  do wnętrza od mapy. Różniczkę kołnierza wyprowadzono
+  z pochodnych po punkcie i czasie oraz własności grupowej
+  przepływu. Podano odwrotność przeskalowania zmiennego czasu.
+  Nowy Przykład 20.5.5 oblicza dyfeomorfizm podwojonego dysku
+  ze sferą, sprawdzając gładkość przy środku i przy szwie.
+  Przy szwie oba wzory przyjmują jedną postać we współrzędnej
+  kołnierzowej ze znakiem; nie poprzestano na ciągłym sklejeniu.
+- **§20.6:** przeniesienie otoczenia przez izotopię uzasadniono
+  równaniem dla eksponent i jednoznacznością geodezyjnych
+  przy przeniesionej metryce.
+  Nowy Przykład 20.6.3 pokazuje ścinanie okręgu:
+  przeniesiony normalny traci euklidesową prostopadłość,
+  a zachowuje ją dla jawnie obliczonej metryki przeniesionej.
+- **§20.7:** doprecyzowano gładkość granicy szeregu perturbacji
+  we właściwej funkcji Morse'a.
+  W dowodzie metryki zupełnej wyprowadzono zmianę gradientu
+  i jego normy, a następnie oszacowanie długości krzywej,
+  z granicami obu całek od 0 do 1.
+  Przykład wyczerpania przedziału rozszerzono o zwarte
+  podpoziomice, punkt Morse'a i dane hesjanu.
+  Współrzędna log(x/(1−x)) daje jawny model zupełnej metryki.
+  Nowy Przykład 20.7.8 rozwiązuje znormalizowany przepływ radialny
+  dla f=|x|² i wyznacza produktowy opis pierścienia wraz z odwrotnością.
+  Pokazuje też, co zawodzi po dopuszczeniu krytycznego poziomu 0.
+  Dodano Rysunek 20.5: pierścień i rozcięty produkt S¹×[1,4].
+
+Rachunek siecznych i rozkładu normalnego przy dysku porównano z
+[wykładami MIT 21–22](https://ocw.mit.edu/courses/18-965-geometry-of-manifolds-fall-2004/lecture21_22.pdf).
+Poprawiono prowadzący do nich stary, niedziałający adres.
+Zakres konstrukcji Whitneya sprawdzono także w
+[wykładach Benedettiego, §7.7](https://arxiv.org/pdf/1907.10297),
+a lokalną różniczkę otoczenia tubularnego w
+[wykładzie Auroux nr 5](https://ocw.mit.edu/courses/18-966-geometry-of-manifolds-spring-2007/238234d53148cb71c5880e529a96c73f_lect05.pdf).
+Klasyfikacja powierzchni pozostaje jawnie użytym wynikiem
+w części wymiaru dwa; argumentu dysku Whitneya nie stosuje się
+tam wbrew ograniczeniom wymiarowym.
+Terminologię rozwłóknień i koneksji dostosowano do zasad projektu.
+
+Przeszły **52 kontrole rachunkowe**: kowymiar warstw macierzy,
+perturbacje pierwszych pochodnych, pochodna siecznych i całka przyrostu,
+płaty sfery oraz ruch Whitneya, a także zanurzenie RP²
+w całej mapie stereograficznej i przy biegunach.
+Sprawdzono rzuty przez macierz Grama, normalną przekątnej,
+różniczkę i retrakcję rurki, normalną eksponentę równika,
+obramowania i zmianę współrzędnych torusa.
+Dalsze kontrole obejmują przepływ kołnierza, podwojenie dysku,
+metrykę ścinania, konforemną zmianę gradientu, funkcję wyczerpującą,
+współrzędną logistyczną i produktowy opis pierścienia.
+Sprawdzono także indeksy pasów w konstrukcji promienia.
+Wszystkie **trzy zapisy całek** mają granice od 0 do 1.
+Zachowano wszystkie **35 dawnych etykiet i ich numery**;
+po dodaniu czterech przykładów, rysunku i etykiety
+dotychczasowego przykładu jest **41 etykiet**.
+Skontrolowano pięć numerowanych rysunków i dwa nowe schematy.
+
+Złożono **tylko tom II: 240 stron**.
+Rozdział zajmuje fizyczne strony **186–204**.
+Obejrzano cały rozdział, spis treści i indeks;
+pięć numerowanych rysunków oraz oba schematy sprawdzono
+również rendererem Poppler.
+Nie ma nowych ostrzeżeń, przepełnień, brakujących odsyłaczy
+ani tekstu poza stroną. Dotychczasowa numeracja etykiet
+całego tomu pozostała bez zmian.
+Pozostały wcześniejsze komunikaty o `page.1`
+i niedopełnieniu wiersza o badness 1057 w rozdziale 15.
+Indeks: 107 wpisów przyjętych, 0 odrzuconych, 0 ostrzeżeń.
+Wszystkie cele odsyłaczy między czterema PDF-ami istnieją.
+Tomy I, III i IV zachowały poprzednie sumy kontrolne.
+SHA-256 sprawdzonego tomu II:
+`A0DE858D6122AD76A0B65269F03BBF9F61235031C1C523D58FC191D9EC0BD997`.
+
 ## Rozdział 19 — Sard, brzeg i jawne perturbacje (2026-11-12)
 
 Na prośbę autora przeczytano i uzupełniono wszystkie sześć sekcji
