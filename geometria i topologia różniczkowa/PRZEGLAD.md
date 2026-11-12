@@ -14,6 +14,95 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 17 — transgresja, forma kątowa i brzeg (2026-11-12)
+
+Na prośbę autora przejrzano i uzupełniono wszystkie trzy sekcje
+rozdziału 17, w pliku `27-chern-weil.tex`.
+Wzorcem pozostała granularność rozdziału 1:
+każdy użyty współczynnik, znak i granica otrzymały uzasadnienie
+albo dokładny odsyłacz do wcześniejszego rachunku.
+
+- **§17.1:** ustalono konwencję indeksów macierzy koneksji,
+  wyprowadzono jej skośną symetrię, krzywiznę i zmianę ramki.
+  Zdefiniowano podstawianie form do wielomianu niezmienniczego
+  i normalizację polaryzacji Pfaffianu.
+  Dowód Cherna–Weila podzielono na trzy kroki:
+  różnicę koneksji i różniczkę kowariantną,
+  kasowanie komutatorów przez pochodną niezmienniczości
+  oraz całkowanie po rodzinie koneksji.
+  Tożsamość Bianchiego i pochodną krzywizny obliczono wprost.
+  W przykładzie Pontriagina rozpisano kwadrat bloków
+  oraz współczynnik wyznacznika dający drugą formę Cherna.
+  Nowy Przykład 17.1.4 oblicza niezerową, dokładną formę Eulera
+  na trywialnej wiązce i sprawdza transgresję na prostokącie,
+  z podaną orientacją wszystkich boków.
+- **§17.2:** wyjaśniono podstawę wiązki cofniętej,
+  tautologiczny przekrój i konstrukcję koneksji czyniącej go
+  równoległym. Wyprowadzono macierz różnicy koneksji.
+  W normalizacji formy kątowej obliczono składniki krzywizny,
+  liczbę parowań, znaki i czynnik (2m−1)!!.
+  Całkowanie przez części daje rekurencję dla całki po t;
+  rachunek Gaussa, z granicami i podstawieniami, daje objętość
+  sfery i końcową całkę włóknową równą 1.
+  W modelu względnym Thoma rozpisano kwadrat różniczki,
+  odejmowanie par dokładnych, korektę formy pierwotnej
+  i znak całki względnej. Objaśniono cofnięcie przez przekrój
+  zerowy. Nowy Przykład 17.2.3 oblicza formę kątową w randze dwa
+  i sprawdza jej niezmienniczość przy zmianie ramki.
+- **§17.3:** określono normalną jako odwzorowanie do S(TM)
+  i orientację brzegu. Uzupełniono przejście do Stokesa,
+  znak przy dziurach, rozwinięcie Taylora pola,
+  dodatnie ograniczenie mianownika i zbieżność C¹
+  znormalizowanych pól. Uzasadniono zanikanie składników
+  zawierających różniczki podstawy oraz całek po usuniętych dyskach.
+  W wersji brzegowej Poincarégo–Hopfa wskazano konstrukcję
+  funkcji Morse'a z ustalonym kołnierzem, znak hesjanu,
+  wkład uchwytów i względną transwersalność homotopii pól.
+  Formę brzegową powierzchni wyprowadzono z pochodnej normalnej.
+  Przykład kuli rozszerzono o pierścień, z obliczonym znakiem
+  krzywizny na wewnętrznym okręgu.
+  Nowy Przykład 17.3.3 oblicza osobno wkład krzywizny
+  i brzegu czaszy sferycznej; ich suma jest równa 1.
+
+Dodano cztery rysunki TikZ: prostokąt transgresji,
+orientację włókna kołowego formy kątowej, orientacje
+po usunięciu dysków oraz przekrój czaszy sferycznej.
+Po kontroli składu ustalono położenie ilustracji tak,
+aby nie rozdzielały treści twierdzenia i były przy odpowiednich przykładach.
+Zachowano wszystkie 14 dawnych etykiet i ich numery;
+po dodaniu przykładów i rysunków jest 21 etykiet.
+
+Przeszło **39 kontroli rachunkowych**. Rachunek iloczynów
+zewnętrznych dla macierzy so(4) nad bazą wymiaru pięć sprawdził
+Bianchiego, zamkniętość Pfaffianu i śladu oraz obie transgresje,
+w tym całkę po parametrze. Dodatkowo sprawdzono parowania
+Pfaffianu w rangach 2, 4, 6 i 8, całki normalizujące,
+współczynnik wyznacznika, blok Pontriagina, krzywiznę czaszy
+i znaki obu okręgów pierścienia.
+Wszystkie **49 zapisów całek**, także na ilustracjach,
+ma jawnie wskazaną dziedzinę lub granice.
+Konwencje i normalizacje porównano z
+[pracą Cherna z 1944 roku](https://webhomes.maths.ed.ac.uk/~v1ranick/papers/chern7.pdf),
+[Cibotaru–Moroianu, Odd Pfaffian Forms](https://www.imar.ro/~sergium/fisiere/pfa.pdf),
+§§2 i 5, oraz
+[notatkami Biquarda](https://webusers.imj-prg.fr/~olivier.biquard/m2dg2022.pdf),
+§16. Identyfikacja zespolonych form Cherna z rzeczywistymi
+obrazami klas topologicznych pozostaje oznaczonym wynikiem zewnętrznym.
+
+Złożono **tylko tom II: 227 stron**.
+Rozdział zajmuje fizyczne strony **145–154**.
+Obejrzano cały rozdział, spis treści i indeks;
+cztery ilustracje sprawdzono również rendererem Poppler.
+Nie ma nowych ostrzeżeń, przepełnień, brakujących odsyłaczy,
+zmian dotychczasowej numeracji ani tekstu poza stroną.
+Pozostały wcześniejsze komunikaty o `page.1`
+i niedopełnieniu wiersza o badness 1057 w rozdziale 15.
+Indeks: 107 wpisów przyjętych, 0 odrzuconych, 0 ostrzeżeń.
+Wszystkie cele łączy między czterema PDF-ami istnieją.
+Tomy I, III i IV zachowały poprzednie sumy kontrolne.
+SHA-256 sprawdzonego tomu II:
+`59EAF4DD72525229C6B39EC6CCC1E328166C811210A41B4300D721C016B3027A`.
+
 ## Rozdział 16 — ilorazy, rozwinięcie i rachunki modeli (2026-11-12)
 
 Na prośbę autora, po zakończeniu korekty pojęcia ramki,
