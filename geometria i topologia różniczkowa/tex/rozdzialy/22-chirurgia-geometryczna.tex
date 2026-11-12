@@ -121,71 +121,99 @@ wymiar dysku normalnego $q$, a nie wymiar sfery wklejanej
 \S\S1 i 3)}.
 \end{przyklad}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
-\begin{tikzpicture}[>=Latex,font=\small,line cap=round,
-                    scale=1.20,transform shape]
- % Dwie osobne kule: na każdej zaznaczony jest jeden dysk.
- \foreach \x in {-4.70,-3.25}{
-  \shade[inner color=white,outer color=manifoldblue!48]
-    (\x,0) circle (.57);
-  \draw[manifoldblue!75!black,thick] (\x,0) circle (.57);
- }
- \fill[manifoldgold!55] (-4.32,0) ellipse (.11 and .19);
- \fill[manifoldgold!55] (-3.63,0) ellipse (.11 and .19);
- \draw[manifoldgold!78!black,thick]
-   (-4.32,0) ellipse (.11 and .19)
-   (-3.63,0) ellipse (.11 and .19);
+\begin{tikzpicture}[>=Latex,font=\small,line cap=round,line join=round,
+                    scale=1.02,transform shape]
 
- % Pierwszy uchwyt łączy kule: brzeg bryły jest nadal sferą.
- \fill[manifoldblue!39] (-1.15,-.18) rectangle (.50,.18);
- \draw[manifoldblue!75!black,thick]
-   (-1.15,-.18)--(.50,-.18)
-   (-1.15,.18)--(.50,.18);
- \foreach \x in {-1.15,.50}{
-  \shade[inner color=white,outer color=manifoldblue!48]
-    (\x,0) circle (.57);
-  \draw[manifoldblue!75!black,thick] (\x,0) circle (.57);
+ % Warstwy barwy modelują okrągły przekrój rury; wszystkie biegną po tej samej krzywej.
+ \def\softtube#1{%
+  \draw[manifoldblue!72!black,line width=14.6pt,line cap=butt] #1;
+  \foreach \w/\m in {13.2/65,11.8/57,10.4/49,9/41,7.6/34,6.2/28,4.8/23,3.4/19,2/16}{
+   \draw[manifoldblue!\m,line width=\w pt,line cap=butt] #1;
+  }
+  \begin{scope}[xshift=-.35pt,yshift=.7pt]
+   \draw[white,opacity=.32,line width=.8pt,line cap=butt] #1;
+  \end{scope}
  }
- \fill[manifoldgold!55] (-.78,.25) ellipse (.08 and .10);
- \fill[manifoldgold!55] (.13,.25) ellipse (.08 and .10);
- \draw[manifoldgold!78!black,thick]
-   (-.78,.25) ellipse (.08 and .10)
-   (.13,.25) ellipse (.08 and .10);
-
- % Drugi uchwyt tworzy pętlę; białe pole między rurkami jest otworem.
- \foreach \y in {-.30,.30}{
-  \fill[manifoldblue!39] (2.70,\y-.12) rectangle (4.35,\y+.12);
-  \draw[manifoldblue!75!black,thick]
-    (2.70,\y-.12)--(4.35,\y-.12)
-    (2.70,\y+.12)--(4.35,\y+.12);
- }
- \foreach \x in {2.70,4.35}{
-  \shade[inner color=white,outer color=manifoldblue!48]
-    (\x,0) circle (.57);
-  \draw[manifoldblue!75!black,thick] (\x,0) circle (.57);
+ \pgfdeclareradialshading{chirvolumeball}{\pgfpoint{-8bp}{9bp}}{%
+  color(0bp)=(white);color(14bp)=(manifoldblue!8);
+  color(25bp)=(manifoldblue!22);color(40bp)=(manifoldblue!44);
+  color(50bp)=(manifoldblue!62)}
+ \def\softball#1#2#3{%
+  \shade[shading=chirvolumeball] (#1,#2) circle (#3);
+  \draw[manifoldblue!73!black,line width=.75pt] (#1,#2) circle (#3);
  }
 
- \draw[->,manifoldred!80!black,very thick]
-   (-2.46,0)--(-1.82,0);
- \draw[->,manifoldred!80!black,very thick]
-   (1.29,0)--(2.00,0);
+ \def\bodyprofile{%
+  (-1.52,0)
+   .. controls (-1.52,.36) and (-1.23,.66) .. (-.86,.66)
+   .. controls (-.50,.66) and (-.43,.26) .. (-.14,.23)
+   .. controls (-.05,.22) and (.05,.22) .. (.14,.23)
+   .. controls (.43,.26) and (.50,.66) .. (.86,.66)
+   .. controls (1.23,.66) and (1.52,.36) .. (1.52,0)
+   .. controls (1.52,-.36) and (1.23,-.66) .. (.86,-.66)
+   .. controls (.50,-.66) and (.43,-.26) .. (.14,-.23)
+   .. controls (.05,-.22) and (-.05,-.22) .. (-.14,-.23)
+   .. controls (-.43,-.26) and (-.50,-.66) .. (-.86,-.66)
+   .. controls (-1.23,-.66) and (-1.52,-.36) .. cycle
+ }
+ \def\joinedballs{%
+  \shade[top color=manifoldblue!13,middle color=manifoldblue!30,
+         bottom color=manifoldblue!66] \bodyprofile;
+  \draw[manifoldblue!73!black,line width=.8pt] \bodyprofile;
+  \draw[manifoldblue!65,opacity=.32,line width=.45pt]
+   (-1.20,-.49) .. controls (-.74,-.31) and (-.74,.31) .. (-1.20,.49)
+   (1.20,-.49) .. controls (.74,-.31) and (.74,.31) .. (1.20,.49);
+ }
+ \def\goldpatch#1#2{%
+  \shade[top color=manifoldgold!18,bottom color=manifoldgold!65,
+    draw=manifoldgold!78!black,line width=.7pt]
+    (#1,#2) ellipse (.17 and .075);
+ }
+
+ \begin{scope}[xshift=-4.55cm]
+  \softball{-.79}{0}{.66}
+  \softball{.79}{0}{.66}
+  \foreach \x in {-.32,.32}{
+   \shade[left color=manifoldgold!18,right color=manifoldgold!65,
+          draw=manifoldgold!78!black,line width=.7pt]
+    (\x,0) ellipse (.105 and .205);
+  }
+  \node at (0,-1.05) {$S^2\sqcup S^2$};
+  \node[font=\scriptsize] at (0,-1.39) {$b_0=2,\quad\chi=4$};
+ \end{scope}
+ \begin{scope}
+  \joinedballs
+  \goldpatch{-.66}{.38}
+  \goldpatch{.66}{.38}
+  \node at (0,-1.05) {$S^2$};
+  \node[font=\scriptsize] at (0,-1.39) {$b_0=1,\quad\chi=2$};
+ \end{scope}
+ \begin{scope}[xshift=4.55cm]
+  \joinedballs
+  \foreach \x in {-.66,.66}
+   \fill[manifoldblue!70!black,opacity=.16] (\x,.34) ellipse (.22 and .10);
+  \softtube{(-.66,.38) .. controls (-.75,1.35) and (.75,1.35) .. (.66,.38)}
+  \foreach \x in {-.66,.66}
+   \draw[manifoldblue!68!black,opacity=.55,line width=.55pt]
+    ({\x-.16},.38) arc[start angle=180,end angle=360,x radius=.16,y radius=.065];
+  \node at (0,-1.05) {$T^2$};
+  \node[font=\scriptsize] at (0,-1.39) {$b_0=1,\quad\chi=0$};
+ \end{scope}
+ \draw[->,manifoldred!80!black,line width=1.1pt] (-2.85,0)--(-1.80,0);
+ \draw[->,manifoldred!80!black,line width=1.1pt] (1.80,0)--(2.85,0);
  \node[manifoldred!80!black,font=\scriptsize,align=center]
-   at (-2.14,.67) {pierwszy\\uchwyt};
+  at (-2.33,.55) {pierwszy\\uchwyt};
  \node[manifoldred!80!black,font=\scriptsize,align=center]
-   at (1.64,.67) {drugi\\uchwyt};
- \node at (-3.98,-.91) {$S^2\sqcup S^2$};
- \node at (-.32,-.91) {$S^2$};
- \node at (3.52,-.91) {$T^2$};
- \node[font=\scriptsize] at (-3.98,-1.28) {$b_0=2,\ \chi=4$};
- \node[font=\scriptsize] at (-.32,-1.28) {$b_0=1,\ \chi=2$};
- \node[font=\scriptsize] at (3.52,-1.28) {$b_0=1,\ \chi=0$};
+  at (2.33,.55) {drugi\\uchwyt};
 \end{tikzpicture}
-\caption{Dwa kolejne uchwyty indeksu jeden dołączone do brył
-trójwymiarowych; podpisy pod rysunkami podają topologię ich
-brzegów. Złote pola wskazują dyski wycinane w następnym kroku.
-Pierwszy uchwyt łączy składowe, drugi tworzy otwór.
-W obu krokach sklejanie zachowuje orientowalność.}
+\caption{Dwa kolejne uchwyty indeksu jeden dołączane do brył
+trójwymiarowych. Podpisy pod bryłami opisują ich brzegi.
+Złote pola wskazują dyski wybierane do następnego przyklejenia.
+Po pierwszym kroku powstaje jedna bryła kulista z gładką szyjką;
+drugi uchwyt tworzy widoczny tunel. W obu krokach
+sklejanie zachowuje orientowalność.}
 \label{fig:dwie-sfery-dwa-uchwyty-21}
 \end{figure}
 
@@ -220,72 +248,87 @@ homeomorficzny ze zwykłym $T^2$; różni się
 położeniem w przestrzeni i dopełnieniem.
 \end{przyklad}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
-\begin{tikzpicture}[line cap=round,font=\small]
- \def\knotpath#1#2{plot[domain=#1:#2,samples=180]
-  ({.48*(sin(\x)+2*sin(2*\x))},
-   {.48*(cos(\x)-2*cos(2*\x))})}
- \begin{scope}[shift={(-4.15,0)}]
-  \node[manifoldblue!75!black] at (0,2.05)
-    {$\partial B^3=S^2$};
-  \shade[inner color=white,outer color=manifoldblue!38]
-    (0,0) circle (.94);
-  \draw[manifoldblue!76!black,thick] (0,0) circle (.94);
-  \fill[manifoldgold!43] (-.38,-.09) ellipse (.17 and .28);
-  \fill[manifoldgold!43] (.38,-.09) ellipse (.17 and .28);
-  \draw[manifoldgold!75!black,thick]
-    (-.38,-.09) ellipse (.17 and .28)
-    (.38,-.09) ellipse (.17 and .28);
-  \node[font=\scriptsize] at (0,-1.42)
-    {dwa dyski $S^0\times D^2$};
+\begin{tikzpicture}[>=Latex,font=\small,line cap=round,line join=round]
+
+ % Warstwy barwy modelują okrągły przekrój rury; wszystkie biegną po tej samej krzywej.
+ \def\softtube#1{%
+  \draw[manifoldblue!72!black,line width=14.6pt,line cap=butt] #1;
+  \foreach \w/\m in {13.2/65,11.8/57,10.4/49,9/41,7.6/34,6.2/28,4.8/23,3.4/19,2/16}{
+   \draw[manifoldblue!\m,line width=\w pt,line cap=butt] #1;
+  }
+  \begin{scope}[xshift=-.35pt,yshift=.7pt]
+   \draw[white,opacity=.32,line width=.8pt,line cap=butt] #1;
+  \end{scope}
+ }
+ \pgfdeclareradialshading{chirvolumeball}{\pgfpoint{-8bp}{9bp}}{%
+  color(0bp)=(white);color(14bp)=(manifoldblue!8);
+  color(25bp)=(manifoldblue!22);color(40bp)=(manifoldblue!44);
+  color(50bp)=(manifoldblue!62)}
+ \def\softball#1#2#3{%
+  \shade[shading=chirvolumeball] (#1,#2) circle (#3);
+  \draw[manifoldblue!73!black,line width=.75pt] (#1,#2) circle (#3);
+ }
+
+ \def\knotpath#1#2{plot[domain=#1:#2,samples=220,smooth,variable=\t]
+  ({.52*(sin(\t)+2*sin(2*\t))},
+   {.52*(cos(\t)-2*cos(2*\t))})}
+ \begin{scope}[xshift=-4.45cm]
+  \node[manifoldblue!75!black] at (0,2.10) {$\partial B^3=S^2$};
+  \softball{0}{0}{.94}
+  \draw[manifoldblue!68,opacity=.30,dashed]
+   (-.94,0) arc[start angle=180,end angle=0,x radius=.94,y radius=.27];
+  \draw[manifoldblue!68,opacity=.35]
+   (-.94,0) arc[start angle=180,end angle=360,x radius=.94,y radius=.27];
+  \foreach \x in {-.37,.37}{
+   \shade[left color=manifoldgold!20,right color=manifoldgold!62,
+          draw=manifoldgold!78!black,line width=.75pt]
+    (\x,-.08) ellipse (.155 and .25);
+  }
+  \node[font=\scriptsize] at (0,-1.40) {dwa dyski $S^0\times D^2$};
  \end{scope}
- \draw[-{Latex[length=2.5mm]},manifoldred!80!black,
-    line width=1.1pt] (-2.90,0)--(-1.70,0);
  \begin{scope}
-  \node[manifoldblue!75!black] at (0,2.05)
-    {rdzeń: węzeł $K$};
-  \draw[manifoldblue!76!black,line width=2.0pt]
-    \knotpath{0}{360};
+  \node[manifoldblue!75!black] at (0,2.10) {rdzeń: węzeł $K$};
+  \draw[manifoldblue!77!black,line width=2.2pt] \knotpath{0}{360};
   \foreach \a/\b in {8/23,128/143,248/263}{
-   \draw[white,line width=6.5pt] \knotpath{\a}{\b};
-   \draw[manifoldblue!76!black,line width=2.0pt]
-     \knotpath{\a}{\b};
+   \draw[white,line width=6pt] \knotpath{\a}{\b};
+   \draw[manifoldblue!77!black,line width=2.2pt] \knotpath{\a}{\b};
   }
-  \draw[manifoldgold!78!black,dashed,thick]
-    (0,-.48) circle (.29);
-  \node[manifoldgold!60!black,font=\scriptsize,
-    anchor=north west] at (.30,-.62) {$B^3$};
+  \draw[manifoldgold!80!black,dashed,line width=.8pt]
+   (0,-.52) circle (.39);
+  \node[manifoldgold!65!black,font=\scriptsize,anchor=north west]
+   at (.35,-.66) {$B^3$};
  \end{scope}
- \draw[-{Latex[length=3mm]},manifoldred!80!black,
-    line width=1.2pt] (1.70,0)--(3.10,0);
- \node[manifoldred!80!black,font=\scriptsize,
-   align=center] at (2.40,1.30) {pogrubiamy\\łuk};
- \begin{scope}[shift={(4.55,0)}]
-  \node[manifoldblue!75!black] at (0,2.05)
-    {$T_K=\partial N(K)$};
-  \draw[manifoldblue!75!black,line width=17pt]
-    \knotpath{0}{360};
-  \draw[manifoldblue!25,line width=14pt]
-    \knotpath{0}{360};
+ \begin{scope}[xshift=4.60cm]
+  \node[manifoldblue!75!black] at (0,2.10) {$T_K=\partial N(K)$};
+  % Rurka jest dołączana do kuli; krótki łuk przy t=0 leży wewnątrz kuli.
+  \softtube{\knotpath{7}{353}}
   \foreach \a/\b in {8/23,128/143,248/263}{
-   \draw[white,line width=21pt] \knotpath{\a}{\b};
-   \draw[manifoldblue!75!black,line width=17pt]
-     \knotpath{\a}{\b};
-   \draw[manifoldblue!25,line width=14pt]
-     \knotpath{\a}{\b};
+   \draw[white,line width=19pt,line cap=butt] \knotpath{\a}{\b};
+   \softtube{\knotpath{\a}{\b}}
   }
+  \shade[shading=chirvolumeball] (0,-.52) circle (.39);
+  \draw[manifoldblue!73!black,line width=.75pt]
+   ({.39*cos(40)},{-.52+.39*sin(40)})
+    arc[start angle=40,end angle=140,radius=.39]
+   ({.39*cos(220)},{-.52+.39*sin(220)})
+    arc[start angle=220,end angle=320,radius=.39];
+  \node[font=\scriptsize] at (0,-1.93) {kula i zawęźlony $1$-uchwyt};
  \end{scope}
+ \draw[->,manifoldred!80!black,line width=1.1pt] (-3.20,0)--(-1.75,0);
+ \draw[->,manifoldred!80!black,line width=1.1pt] (1.75,0)--(2.85,0);
+ \node[manifoldred!80!black,font=\scriptsize,align=center]
+  at (2.20,.95) {pogrubiamy\\łuk};
 \end{tikzpicture}
-\caption{Przestrzenny przykład operacji z
-Rysunku~\ref{fig:krok-chirurgii-21}.
-Najpierw zaznaczamy dwa dyski na sferze.
-W środku widać rzut węzła trójlistnego;
-białe przerwy oznaczają przejścia pod spodem,
-a złoty okrąg małą kulę wokół fragmentu rdzenia.
-Po prawej pogrubiona pozostała część węzła
-jest $1$-uchwytem przyklejonym do kuli;
-jej brzeg to zawęźlony torus.}
+\caption{Przestrzenny przykład operacji z Rysunku~\ref{fig:krok-chirurgii-21}.
+Po lewej zaznaczono dwa dyski na sferze, w środku rzut rdzenia
+trójlistnego i małą kulę wokół jego krótkiego łuku.
+Po prawej pozostały łuk pogrubiono do okrągłej rurki
+i dołączono do kuli, otrzymując pełny zawęźlony torus $N(K)$.
+Niebieska powierzchnia przedstawia jego brzeg $T_K$.
+Przerwy przy skrzyżowaniach wskazują gałęzie biegnące pod spodem;
+rurka nie przecina samej siebie w przestrzeni.}
 \label{fig:knotted-torus-surgery-21}
 \end{figure}
 
@@ -327,110 +370,116 @@ przeplecionymi rdzeniami
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[font=\small,line cap=round,
-                    scale=1.04,transform shape]
- % Każda bryła ma cztery osobne stopy uchwytów na tej samej sferze.
- \def\bodyball{%
-  \shade[inner color=white,outer color=manifoldblue!52]
-    (0,-1.16) ellipse (1.50 and .96);
-  \draw[manifoldblue!77!black,thick]
-    (0,-1.16) ellipse (1.50 and .96);
+\begin{tikzpicture}[>=Latex,font=\small,line cap=round,line join=round,
+                    scale=1.02,transform shape]
+
+ % Warstwy barwy modelują okrągły przekrój rury; wszystkie biegną po tej samej krzywej.
+ \def\softtube#1{%
+  \draw[manifoldblue!72!black,line width=14.6pt,line cap=butt] #1;
+  \foreach \w/\m in {13.2/65,11.8/57,10.4/49,9/41,7.6/34,6.2/28,4.8/23,3.4/19,2/16}{
+   \draw[manifoldblue!\m,line width=\w pt,line cap=butt] #1;
+  }
+  \begin{scope}[xshift=-.35pt,yshift=.7pt]
+   \draw[white,opacity=.32,line width=.8pt,line cap=butt] #1;
+  \end{scope}
  }
- \def\tube#1{%
-  \draw[manifoldblue!78!black,line width=13pt] #1;
-  \draw[manifoldblue!30,line width=10pt] #1;
-  \draw[white,opacity=.42,line width=2.1pt] #1;
+ \pgfdeclareradialshading{chirvolumeball}{\pgfpoint{-8bp}{9bp}}{%
+  color(0bp)=(white);color(14bp)=(manifoldblue!8);
+  color(25bp)=(manifoldblue!22);color(40bp)=(manifoldblue!44);
+  color(50bp)=(manifoldblue!62)}
+ \def\softball#1#2#3{%
+  \shade[shading=chirvolumeball] (#1,#2) circle (#3);
+  \draw[manifoldblue!73!black,line width=.75pt] (#1,#2) circle (#3);
  }
- \def\stemAleft{(-1.13,-.73) .. controls (-1.75,-.47) and
-   (-1.70,.91) .. (-1.30,1.25)}
- \def\stemAright{(1.30,1.25) .. controls (1.70,.91) and
-   (1.75,-.47) .. (1.13,-.73)}
- \def\stemBleft{(-.83,-1.02) .. controls (-1.47,-.80) and
-   (-1.53,.12) .. (-1.30,.45)}
- \def\stemBright{(1.30,.45) .. controls (1.53,.12) and
-   (1.47,-.80) .. (.83,-1.02)}
+
+ \def\baseball{\softball{0}{-.95}{1.03}}
+ \def\stemAleft{(-.82,-.45) .. controls (-1.65,-.20) and
+  (-1.70,1.35) .. (-1.05,1.35)}
+ \def\stemAright{(1.05,1.35) .. controls (1.70,1.35) and
+  (1.65,-.20) .. (.82,-.45)}
+ \def\stemBleft{(-.54,-1.02) .. controls (-1.30,-.75) and
+  (-1.50,.55) .. (-1.05,.55)}
+ \def\stemBright{(1.05,.55) .. controls (1.50,.55) and
+  (1.30,-.75) .. (.54,-1.02)}
  \def\feet{%
-  \foreach \x/\y in {-1.13/-.73,1.13/-.73,-.83/-1.02,.83/-1.02}{
-   \draw[manifoldblue!68!black,line width=.7pt]
-      (\x,\y) ellipse (.10 and .16);
+  \foreach \x/\y/\a in {-.82/-.45/-18,.82/-.45/18,-.54/-1.02/-20,.54/-1.02/20}{
+   \begin{scope}[shift={(\x,\y)},rotate=\a]
+    \shade[top color=manifoldblue!15,bottom color=manifoldblue!48]
+     (0,0) ellipse (.13 and .255);
+    \draw[manifoldblue!70!black,opacity=.25,line width=.45pt]
+     (0,0) ellipse (.13 and .255);
+   \end{scope}
   }
  }
- % Pierwszy stan: dwie równoległe, rozłączne rurki.
- \begin{scope}[shift={(-4.80,0)}]
-  \bodyball
-  \tube{\stemAleft}
-  \tube{\stemAright}
-  \tube{(-1.30,1.25)--(1.30,1.25)}
-  \tube{\stemBleft}
-  \tube{\stemBright}
-  \tube{(-1.30,.45)--(1.30,.45)}
+ \def\cutmouth#1#2{%
+  \shade[left color=manifoldblue!80!black,right color=manifoldblue!47,
+         draw=manifoldgold!82!black,line width=1pt]
+   (#1,#2) ellipse (.085 and .255);
+  \draw[manifoldgold!28,line width=.55pt]
+   (#1,{#2+.20}) arc[start angle=90,end angle=270,x radius=.055,y radius=.20];
+ }
+ \begin{scope}[xshift=-4.65cm]
+  \baseball
+  \softtube{\stemAleft --(1.05,1.35)
+   .. controls (1.70,1.35) and (1.65,-.20) .. (.82,-.45)}
+  \softtube{\stemBleft --(1.05,.55)
+   .. controls (1.50,.55) and (1.30,-.75) .. (.54,-1.02)}
   \feet
-  \node[manifoldblue!75!black] at (0,1.83) {$\partial H=\Sigma_2$};
-  \node[align=center] at (0,-2.55) {dwa rozłączne\\uchwyty};
+  \node[manifoldblue!75!black] at (0,1.96) {$\partial H=\Sigma_2$};
+  \node[align=center] at (0,-2.46) {dwa rozłączne\\uchwyty};
  \end{scope}
- % Dwa cięcia dają cztery otwarte, złote obrzeża.
  \begin{scope}
-  \bodyball
-  \tube{\stemAleft}
-  \tube{\stemAright}
-  \tube{\stemBleft}
-  \tube{\stemBright}
-  \tube{(-1.30,1.25)--(-.28,1.25)}
-  \tube{(.28,1.25)--(1.30,1.25)}
-  \tube{(-1.30,.45)--(-.28,.45)}
-  \tube{(.28,.45)--(1.30,.45)}
-  \foreach \x/\y in {-.28/1.25,.28/1.25,-.28/.45,.28/.45}{
-   \fill[white] (\x,\y) ellipse (.055 and .135);
-   \draw[manifoldgold!75!black,line width=1.3pt]
-     (\x,\y) ellipse (.055 and .135);
-  }
+  \baseball
+  \softtube{\stemAleft --(-.24,1.35)}
+  \softtube{(.24,1.35)--(1.05,1.35)
+   .. controls (1.70,1.35) and (1.65,-.20) .. (.82,-.45)}
+  \softtube{\stemBleft --(-.24,.55)}
+  \softtube{(.24,.55)--(1.05,.55)
+   .. controls (1.50,.55) and (1.30,-.75) .. (.54,-1.02)}
+  \cutmouth{-.24}{1.35}
+  \cutmouth{.24}{1.35}
+  \cutmouth{-.24}{.55}
+  \cutmouth{.24}{.55}
   \feet
-  \node[manifoldgold!63!black,font=\scriptsize]
-    at (-.42,1.63) {$A_-$};
-  \node[manifoldgold!63!black,font=\scriptsize]
-    at (.42,1.63) {$A_+$};
-  \node[manifoldgold!63!black,font=\scriptsize]
-    at (-.42,.08) {$B_-$};
-  \node[manifoldgold!63!black,font=\scriptsize]
-    at (.42,.08) {$B_+$};
-  \node[align=center] at (0,-2.55) {cztery obrzeża\\po przecięciu};
+  \node[manifoldgold!65!black,font=\scriptsize] at (-.39,1.81) {$A_-$};
+  \node[manifoldgold!65!black,font=\scriptsize] at (.39,1.81) {$A_+$};
+  \node[manifoldgold!65!black,font=\scriptsize] at (-.39,.12) {$B_-$};
+  \node[manifoldgold!65!black,font=\scriptsize] at (.39,.12) {$B_+$};
+  \node[align=center] at (0,-2.46) {cztery obrzeża\\po przecięciu};
  \end{scope}
- % Ponowne połączenie z pełnym skrętem: dwa przecięcia tylko w rzucie.
- \begin{scope}[shift={(4.80,0)}]
-  \bodyball
-  \tube{\stemAleft}
-  \tube{\stemAright}
-  \tube{\stemBleft}
-  \tube{\stemBright}
-  \def\strandA#1#2{plot[domain=#1:#2,samples=90]
-    (\x,{.85+.40*cos(360*(\x+1.30)/2.60)})}
-  \def\strandB#1#2{plot[domain=#1:#2,samples=90]
-    (\x,{.85-.40*cos(360*(\x+1.30)/2.60)})}
-  \tube{\strandA{-1.30}{1.30}}
-  \tube{\strandB{-1.30}{1.30}}
-  % Pierwsze przejście: A z przodu; drugie: B z przodu.
-  \draw[white,line width=18pt] \strandA{-.80}{-.50};
-  \tube{\strandA{-.89}{-.41}}
-  \draw[white,line width=18pt] \strandB{.50}{.80};
-  \tube{\strandB{.41}{.89}}
+ \begin{scope}[xshift=4.65cm]
+  \baseball
+  \softtube{\stemAleft}
+  \softtube{\stemAright}
+  \softtube{\stemBleft}
+  \softtube{\stemBright}
+  \def\strandA#1#2{plot[domain=#1:#2,samples=100,smooth,variable=\t]
+   (\t,{.95+.40*cos(360*(\t+1.05)/2.10)})}
+  \def\strandB#1#2{plot[domain=#1:#2,samples=100,smooth,variable=\t]
+   (\t,{.95-.40*cos(360*(\t+1.05)/2.10)})}
+  \softtube{\strandA{-1.05}{1.05}}
+  \softtube{\strandB{-1.05}{1.05}}
+  % Pełny skręt: A jest z przodu przy pierwszym skrzyżowaniu, B przy drugim.
+  \draw[white,line width=19pt,line cap=butt] \strandA{-.68}{-.37};
+  \softtube{\strandA{-.75}{-.30}}
+  \draw[white,line width=19pt,line cap=butt] \strandB{.37}{.68};
+  \softtube{\strandB{.30}{.75}}
   \feet
-  \node[manifoldblue!75!black] at (0,1.83) {$\partial H'=\Sigma_2$};
-  \node[align=center] at (0,-2.55) {te same pary końców\\po przepleceniu};
+  \node[manifoldblue!75!black] at (0,1.96) {$\partial H'=\Sigma_2$};
+  \node[align=center] at (0,-2.46) {te same pary końców\\po przepleceniu};
  \end{scope}
- \draw[-{Latex[length=2.5mm]},manifoldred!80!black,
-       line width=1.1pt] (-2.95,-.30)--(-2.19,-.30);
- \node[manifoldred!80!black,font=\scriptsize]
-   at (-2.57,.03) {tnij};
- \draw[-{Latex[length=2.5mm]},manifoldred!80!black,
-       line width=1.1pt] (2.19,-.30)--(2.95,-.30);
+ \draw[->,manifoldred!80!black,line width=1.1pt] (-2.92,-.25)--(-2.04,-.25);
+ \node[manifoldred!80!black,font=\scriptsize] at (-2.48,.10) {tnij};
+ \draw[->,manifoldred!80!black,line width=1.1pt] (2.04,-.25)--(2.92,-.25);
  \node[manifoldred!80!black,font=\scriptsize,align=center]
-   at (2.57,.15) {zapleć\\i sklej};
+  at (2.48,.23) {zapleć\\i sklej};
 \end{tikzpicture}
-\caption{Sfera z dwoma rozłącznymi trójwymiarowymi $1$-uchwytami.
-Po rozcięciu pobocznic złote pierścienie wskazują cztery
-wolne obrzeża. Dwie rury przechodzą nad sobą na przemian
-w dwóch miejscach rzutu, bez stykania się w przestrzeni;
-każda wraca do swojej pierwotnej pary końców.
+\caption{Bryła kulista z dwoma rozłącznymi $1$-uchwytami.
+Po przecięciu pobocznic złote pierścienie obwodzą cztery
+otwarte przekroje rur. Podczas pełnego skrętu gałąź $A$
+przechodzi przed $B$ w pierwszym skrzyżowaniu rzutu,
+a gałąź $B$ przed $A$ w drugim; w przestrzeni pozostają rozłączne.
+Każda rurka łączy tę samą parę końców co przed cięciem.
 Po wygładzeniu sklejeń brzeg nadal jest powierzchnią rodzaju dwa.}
 \label{fig:przeplatanie-dwoch-uchwytow-21}
 \end{figure}

@@ -285,6 +285,16 @@ Etap zakończono: sprawdzono terminologię w 62 plikach TeX
 i w czterech gotowych PDF-ach, obie ilustracje, indeksy i odsyłacze.
 Pełny skład czterech tomów ustabilizował się po dwóch przebiegach;
 nie ma nowych ostrzeżeń ani zmian dotychczasowej numeracji.
+Na kolejną prośbę autora poprawiono przestrzenność i gładkość
+Rysunków 26.2–26.4: kule otrzymały jasne kierunkowe cieniowanie,
+rurki okrągły przekrój, a połączenie dwóch kul płynny profil.
+Wyraźnie pokazano tunel, przebieg zawęźlonego uchwytu,
+cztery otwarte przekroje i dwa skrzyżowania pełnego skrętu.
+Sprawdzono geometrię skrzyżowań, oznaczenia i układ stron;
+złożono tylko tom III (104 strony), bez nowych ostrzeżeń.
+**Etap poprawy Rysunków 26.2–26.4 jest zakończony.**
+Obejmuje wskazane ilustracje i ich podpisy; pełny przegląd
+matematyczny rozdziału 26 pozostaje w kolejce.
 Następny w kolejności jest rozdział 23
 „Kobordyzmy i rachunek uchwytów” (tom III).
 Przy kolejnych

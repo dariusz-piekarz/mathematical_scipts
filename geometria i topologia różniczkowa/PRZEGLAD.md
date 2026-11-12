@@ -14,6 +14,50 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rysunki 26.2–26.4 — głębia i gładkość brył (2026-11-12)
+
+Na prośbę autora przebudowano trzy ilustracje w rozdziale 26,
+w pliku `22-chirurgia-geometryczna.tex`.
+Kule mają jasne, kierunkowe cieniowanie zgodne ze stylistyką
+rozdziału 1, a rurki wielowarstwowe cieniowanie okrągłego przekroju.
+Kontury prowadzone są po gładkich krzywych; usunięto prostokątne
+łączniki i widoczne zakończenia nakładanych odcinków przy skrzyżowaniach.
+Ilustracje pozostają wektorowymi rysunkami TikZ.
+
+- **26.2:** dwie połączone kule opisuje jeden płynny kontur,
+  z wąską szyjką i łagodnymi przejściami do obu części kulistych.
+  Drugi uchwyt ma zaokrąglony łuk i wyraźny tunel.
+  Zachowano złote dyski przyklejenia, typy brzegów oraz wartości b₀ i χ.
+- **26.3:** pogrubiony węzeł ma okrągłą rurkę i kulistą część
+  łączącą jej końce. Trzy przejścia nad i pod rurką sprawdzono
+  z parametryzacją trójlistnika podaną w tekście: rzuty gałęzi
+  zgadzają się, a gałąź narysowana z przodu ma większą współrzędną z.
+  Oba końce pogrubianego łuku leżą w zaznaczonej małej kuli.
+- **26.4:** pokazano kulistą podstawę, dwa zaokrąglone uchwyty
+  oraz cztery ciemniejsze otwarte przekroje ze złotymi obrzeżami.
+  Pełny skręt ma gładkie połączenia z ramionami uchwytów:
+  A przechodzi z przodu przy pierwszym skrzyżowaniu, B przy drugim,
+  a każda rurka wraca do własnej pary końców.
+
+Podpisy dostosowano do nowych widoków, zachowując znaczenie
+topologiczne, numery i etykiety odsyłaczy. Zakres tej zmiany
+nie jest pełnym audytem matematycznym rozdziału 26.
+
+Złożono **tylko tom III: 104 strony**.
+Obejrzano trzy ilustracje rendererem Poppler na fizycznych stronach
+38–40 PDF-u (drukowane 37–39), ich sąsiedztwo, spis treści i indeks.
+Porównanie tekstu potwierdziło zmiany wyłącznie na tych trzech stronach;
+zachowano wszystkie dotychczasowe numery etykiet.
+Nie ma nowych ostrzeżeń, przepełnień, brakujących odsyłaczy
+ani tekstu poza stroną. Pozostały wcześniejsze trzy komunikaty
+`Underfull` i ostrzeżenie o powtórzonym celu `page.1`.
+Indeks przyjął 33 wpisy, bez odrzuceń i ostrzeżeń indeksu.
+Sprawdzono istnienie celów łączy między czterema PDF-ami.
+Tomy I, II i IV zachowały wcześniejsze sumy SHA-256.
+
+SHA-256 sprawdzonego tomu III:
+`A6A4240FF9F0078A03F366D0960E7A14ADCE5E0D9E698AE18FD1ACAD2C6FF6D5`.
+
 ## Terminologia rzutowa i Rysunki 22.2–22.3 (2026-11-12)
 
 Na polecenie autora przeprowadzono przekrojową korektę nazw
