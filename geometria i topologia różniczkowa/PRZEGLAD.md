@@ -14,6 +14,98 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdziały 9 i 10 — ponowna kontrola wyprowadzeń (2026-11-12)
+
+Przeczytano i uzupełniono wszystkie siedem sekcji rozdziału 9
+oraz dziesięć sekcji rozdziału 10. Dopiero po poprawieniu obu
+rozdziałów złożono tylko tom I. Kryterium stanowiły wyprowadzenia
+równań, uzasadnienia przejść w dowodach i jawne dziedziny całek,
+przy granularności wskazanej przez autora w rozdziale 1.
+
+W rozdziale 9 uzupełniono:
+
+- Identyfikację kostki z dyskiem: wyprowadzono promieniowe
+  odwzorowanie przez normę maksimum i normę euklidesową,
+  podano odwrotność oraz odsyłacz do wcześniejszego
+  wyprowadzenia ilorazu dysku przez brzeg.
+  W rozdziale 7 dodano wyłącznie etykietę do tej istniejącej uwagi.
+- Pochodzenie parametrów zmiany bazy i homotopii względnej:
+  rozwiązano warunki na końcach przeskalowywanych przedziałów.
+  Objaśniono skracanie drogi w homotopii odwrotności.
+- Retrakcję cylindra w HEP: poprowadzono promień z punktu (0,2),
+  rozwiązano równania trafienia w bok i dół i wyjaśniono minimum.
+  W przybliżeniu komórkowym rozpisano obie nierówności trójkąta
+  oraz dodatni pierwiastek równania przecięcia promienia ze sferą.
+- Kołnierz zatrzymujący brzeg w dowodzie Whiteheada
+  i promieniowe rozszerzanie małych dysków w dowodzie Hurewicza:
+  wyprowadzono interpolacje i obcięcie promienia oraz podano
+  jednolite oszacowanie ciągłości w środku.
+- Afiniczny parametr trójkąta w dowodzie Hurewicza w stopniu jeden,
+  zerowe grupy skrajne ciągu pary dysk–sfera oraz jądro i obraz
+  kompleksu komórkowego nakrycia bukietu sfer.
+
+W rozdziale 10 uzupełniono:
+
+- Cofnięcie iloczynu dwóch różniczek oraz pełne rozwinięcie
+  sześciu składników różniczki 1-formy na R³.
+  Znaki rotacji wyjaśniono przestawieniem par różniczek,
+  a dodatnie znaki dywergencji dwiema zamianami w trójkach.
+  Późniejsze dowody Stokesa i Gaussa odsyłają do tego rachunku.
+- Podstawienie do operatora Poincarégo i obliczenie całki po
+  parametrze; współczynniki zmiany mapy w całce wyprowadzono
+  z reguły łańcucha i wzoru wyznacznikowego.
+- Związek wartości 2-formy z iloczynem wektorowym i dodatnią
+  normalną w klasycznym twierdzeniu Stokesa.
+- Parametryzację i orientację okręgu, podstawienie do formy kąta
+  oraz stałość całki po przesuwanym okresie.
+  Na torusie podano obie zorientowane krzywe, ich cofnięcia
+  i rachunek całki iterowanej po kwadracie.
+- Znaczenie całki po gładkim sympleksie i liniowego całkowania
+  po łańcuchu; wyjaśniono także zespolenie kohomologii
+  przez części rzeczywistą i urojoną.
+
+W rozdziale 9 nie występują całki. Wszystkie **75 zapisów całek**
+w rozdziale 10 mają granice albo dziedzinę.
+Przejrzano również dziedziny, orientacje i parametryzacje
+w tekstach towarzyszących całkom. Zachowano wszystkie wcześniejsze
+etykiety i numery; dodano odsyłacz do przykładu rachunku na R³.
+Rozdziały mają obecnie odpowiednio 42 i 61 etykiet,
+bez powtórzeń i brakujących odsyłaczy.
+
+Warunki twierdzeń o przybliżeniu komórkowym, Whiteheadzie
+i Hurewiczu porównano z §§4.1–4.2
+[Hatchera](https://pi.math.cornell.edu/~hatcher/AT/ATch4.pdf).
+Konstrukcje na formach porównano z wykładami
+[32](https://ocw.mit.edu/courses/18-965-geometry-of-manifolds-fall-2004/lecture32.pdf)
+i [34](https://ocw.mit.edu/courses/18-965-geometry-of-manifolds-fall-2004/lecture34.pdf)
+kursu MIT Geometry of Manifolds.
+
+Przeszły **43 kontrole rachunkowe**: 13 dla rozdziału 9
+i 30 dla rozdziału 10. Sprawdzono odwrotność odwzorowania kostki,
+parametry i styki homotopii, retrakcje i przecięcia ze sferą,
+parametry trzech krawędzi trójkąta, kompleksy przykładów,
+ogólne współczynniki rotacji i dywergencji, kwadrat różniczki,
+regułę Leibniza oraz zgodność z nieliniowym cofnięciem.
+Wzór Cartana porównano z pochodną cofnięcia w stopniach 0–3;
+w tych samych stopniach sprawdzono radialną tożsamość homotopii
+dla form wielomianowych. Znaki ścian sympleksu sprawdzono
+do wymiaru pięć, orientację brzegu półprzestrzeni do wymiaru siedem.
+
+Złożono **tylko tom I: 267 stron**. Rozdział 9 zajmuje fizyczne
+strony **221–242**, a rozdział 10 strony **243–265**.
+Obejrzano oba rozdziały, wszystkie dziewięć rysunków,
+tabelę porównania teorii, spis treści i indeks.
+Nowe rachunki sprawdzono także w powiększeniu; usunięto
+podział jednego wzoru homotopii między stronami.
+Nie ma nowych ostrzeżeń, przepełnień ani tekstu poza stroną.
+Pozostały wcześniejsze komunikaty o `page.1`, dwóch zmianach
+`h` na `ht` i niedopełnieniu w rozdziale 1.
+Indeks: 125 wpisów przyjętych, 0 odrzuconych, 0 ostrzeżeń.
+Wszystkie cele łączy między czterema PDF-ami istnieją.
+Tomy II–IV zachowały wcześniejsze sumy kontrolne.
+SHA-256 sprawdzonego tomu I:
+`93B2110AAC4B1B6CCE85D1F892EA09FF35EC8CC437ACD7F4CDB880BD3C3C8BA4`.
+
 ## Rozdziały 7 i 8 — ponowna kontrola wyprowadzeń (2026-11-12)
 
 Najpierw przeczytano i uzupełniono oba rozdziały, a dopiero potem
