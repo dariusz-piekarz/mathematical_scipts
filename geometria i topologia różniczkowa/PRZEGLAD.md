@@ -14,6 +14,93 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdziały 7 i 8 — ponowna kontrola wyprowadzeń (2026-11-12)
+
+Najpierw przeczytano i uzupełniono oba rozdziały, a dopiero potem
+złożono tylko tom I. Weryfikowano wszystkie sześć sekcji rozdziału 7
+i osiem sekcji rozdziału 8, ze szczególnym uwzględnieniem
+pochodzenia wzorów, znaków i dokładnych odsyłaczy do wcześniejszych rachunków.
+
+W rozdziale 7 uzupełniono:
+
+- Reparametryzację w dowodzie łączności grupy podstawowej:
+  wskazano obrazy czterech chwil podziału, obliczono trzy nachylenia
+  i uzyskano z nich poszczególne wzory afiniczne.
+  Zmianę drogi punktu bazowego rozpisano przez dołączanie
+  pętli i odwrócenie kolejności przy drodze odwrotnej.
+- Działanie potęg okręgu na grupie podstawowej wyprowadzono
+  przez złożenie z reprezentantem dowolnej liczby owinięć
+  i jego podniesienie. W grupie transformacji nakrycia
+  obliczono zachowanie projekcji oraz prawo składania obrotów.
+- Deformację sfery pozbawionej biegunów na równik otrzymano
+  przez zmianę wysokości i wyznaczenie części poziomej z równania sfery.
+  W radialnej identyfikacji brzegu sympleksu obliczono
+  pierwsze trafienie w ścianę ze wszystkich nierówności barycentrycznych.
+- Oba brzegi trójkątów torusa oraz przeciwne orientacje
+  wyliczono z kolejności ścian i wyznaczników dwóch par wektorów.
+  Wzór identyfikacji ilorazu dysku ze sferą wyprowadzono z kąta
+  i promienia, sprawdzono ciągłość w zerze i podano odwrotną konstrukcję.
+
+Uściślono dwa sformułowania. W szczególnym przypadku van Kampena
+użyto jednoznacznego terminu „jednospójne”.
+W klasyfikacji nakryć warstwy Hg nazwano prawostronnymi
+i wyjaśniono ich pochodzenie z lewego działania H na klasach dróg.
+Poprzednia nazwa „lewe” nie zgadzała się z konwencją gH
+z Definicji 5.1.2.
+
+W rozdziale 8 uzupełniono:
+
+- Brzeg dowolnej kombinacji krawędzi obwodu trójkąta,
+  sumowanie naprzemiennych współczynników w kompleksie punktu
+  i iloczyny znaków przy wspólnych ścianach pryzmatu.
+- Wyznacznik modelowego sympleksu barycentrycznego:
+  zapisano kolumny w bazie afinicznej, przekątną
+  macierzy trójkątnej i wynik 1/(n+1)!.
+  Znak zewnętrznej ściany wyprowadzono przez liczbę transpozycji.
+- Krok indukcji w budowie homotopii podziału: obliczono brzeg
+  sumy łańcuchów ze ścian i pokazano zerowanie brzegu łańcucha z.
+  Brzeg stożka otrzymano z jego poszczególnych ścian,
+  z osobnym przypadkiem stopnia zero.
+  Tożsamość dla wielokrotnego podziału rozpisano jako sumę teleskopową.
+- Odsyłacz do jawnej homotopii wysokości w dowodzie homologii sfer,
+  przejście do Q i definicji rangi we wzorze Eulera,
+  pochodzenie pierwiastka w odwrotności rzutu półsfery
+  oraz rozwinięcie dowolnego elementu jądra dla trójnogu.
+
+W rozdziale 8 zastąpiono skrótową nazwę czynności wymaganym
+określeniem „utworzenie iloczynu tensorowego”.
+W obu rozdziałach nie występują całki.
+Zachowano dotychczasową numerację i wszystkie etykiety:
+59 w rozdziale 7 oraz 64 w rozdziale 8.
+Nie ma powtórzeń ani brakujących odsyłaczy.
+Warunki van Kampena i nakryć oraz konstrukcje podziału i stożka
+porównano z §§1.2–1.3 i 2.1
+[Hatchera](https://pi.math.cornell.edu/~hatcher/AT/AT.pdf).
+
+Przeszły **32 kontrole rachunkowe**: 11 dotyczących rozdziału 7
+i 21 dotyczących rozdziału 8. W szczególności sprawdzono dokładne
+tożsamości na uporządkowanych generatorach singularnych,
+bez zastępowania zmiany parametryzacji zmianą znaku generatora:
+pryzmat i podział barycentryczny w wymiarach 0–4, stożki w wymiarach 1–4
+i ich poprawkę w stopniu zero. Sprawdzono także znaki wszystkich
+zewnętrznych ścian podziału do wymiaru cztery, wyznaczniki i
+tożsamość barycentrów do wymiaru pięć, warstwy i normalizatory
+dwóch podgrup S3, reparametryzacje, odwzorowania sfer,
+macierze kwadratu, modele komórkowe i lokalne bazy grafów gwiaździstych.
+
+Złożono **tylko tom I: 267 stron**. Rozdział 7 zajmuje fizyczne
+strony **179–199**, a rozdział 8 strony **200–220**.
+Obejrzano oba rozdziały, wszystkie 18 rysunków, spis treści i indeks;
+nowe rachunki sprawdzono także w powiększeniu.
+Nie ma nowych ostrzeżeń, przepełnień ani tekstu poza stroną.
+Pozostały wcześniejsze komunikaty o `page.1`, dwóch zmianach
+`h` na `ht` i niedopełnieniu w rozdziale 1.
+Indeks: 125 wpisów przyjętych, 0 odrzuconych, 0 ostrzeżeń.
+Wszystkie cele łączy między czterema PDF-ami istnieją.
+Pozostałe tomy zachowały poprzednie sumy kontrolne.
+SHA-256 sprawdzonego tomu I:
+`1647D2F2A701C4A587B2D3C7F188EC97FDED9B1EAFA7C0E3CF8D2C53D106829B`.
+
 ## Rozdziały 5 i 6 — ponowna kontrola wyprowadzeń (2026-11-12)
 
 Zgodnie ze zmienioną kolejnością wskazaną przez autora najpierw
