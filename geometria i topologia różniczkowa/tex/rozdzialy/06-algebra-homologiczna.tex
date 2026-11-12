@@ -19,6 +19,12 @@ nimi są $R$-liniowe. Zachowujemy więc konwencję z
 Sekcji~\ref{sec:moduly}; w szczególności
 $\operatorname{Hom}_R(M,N)$ jest znów $R$-modułem.
 
+W rachunkach operatorowych stosujemy również skrót
+$fg:=f\circ g$: najpierw wykonujemy $g$, potem $f$,
+a na elemencie $x$ zapis ten oznacza $f(g(x))$.
+Pozwala to czytelnie zapisywać wielokrotnie występujące sumy
+złożeń, takie jak $\partial h+h\partial$.
+
 \section{Ciągi modułów i dokładność}
 \label{sec:dokladnosc-modulow}
 
@@ -158,6 +164,7 @@ Załóżmy najpierw, że mamy $s$.
 Każde $b\in B$ można rozłożyć jako
 $b=(b-s(p(b)))+s(p(b))$.
 Pierwszy składnik leży w $\ker p=\operatorname{im}i$.
+Istotnie, $p(b-s(p(b)))=p(b)-(p\circ s)(p(b))=p(b)-p(b)=0$.
 Ponieważ $i$ jest iniekcją, istnieje dokładnie
 jeden $a\in A$ taki, że $i(a)=b-s(p(b))$.
 Odwzorowanie
@@ -172,7 +179,8 @@ To dowodzi (1)$\Rightarrow$(3).
 Z izomorfizmu $\Phi:A\oplus C\to B$ w (3) i rzutu
 $\operatorname{pr}_A:A\oplus C\to A$ bierzemy
 $r=\operatorname{pr}_A\circ\Phi^{-1}$. Dostajemy
-$r:B\to A$ z $ri=\id_A$. To daje (3)$\Rightarrow$(2).
+$r:B\to A$ z $r(i(a))=\operatorname{pr}_A(\Phi^{-1}(\Phi(a,0)))=a$,
+czyli $r\circ i=\id_A$. To daje (3)$\Rightarrow$(2).
 Wreszcie, mając $r$, dla $c\in C$ wybierzmy
 jakikolwiek $b$ z $p(b)=c$ i połóżmy
 $s(c)=b-i(r(b))$. Jeśli zmienimy $b$ na
@@ -320,15 +328,20 @@ oraz $C_2=\Z t$; w pozostałych stopniach
 przyjmijmy $C_n=0$. Niech
 $\partial_1e_{ij}=v_j-v_i$ i
 $\partial_2t=e_{01}+e_{12}-e_{02}$.
-Trzy składniki $\partial_1\partial_2t$
-znoszą się parami, więc jest to kompleks.
+Po podstawieniu brzegów krawędzi otrzymujemy
+$\partial_1\partial_2t=(v_1-v_0)+(v_2-v_1)-(v_2-v_0)=0$,
+więc jest to kompleks.
 Znak minus przy $e_{02}$ oznacza, że obieg
 trójkąta biegnie po tej krawędzi przeciwnie
 do jej wybranej orientacji.
 
 Dla $z=x e_{01}+y e_{12}+w e_{02}$ mamy
 \[
- \partial_1 z=-(x+w)v_0+(x-y)v_1+(y+w)v_2.
+ \begin{aligned}
+ \partial_1 z
+ &=x(v_1-v_0)+y(v_2-v_1)+w(v_2-v_0)\\
+ &=-(x+w)v_0+(x-y)v_1+(y+w)v_2.
+ \end{aligned}
 \]
 Współczynniki są jednocześnie zerowe dokładnie
 wtedy, gdy $x=y=-w$. Zatem
@@ -407,9 +420,10 @@ $z$ na $z+\partial^C_{n+1}w$, jego obraz zmieni się o
 $f_n(\partial^C_{n+1}w)=\partial^D_{n+1}(f_{n+1}w)$,
 czyli o brzeg. Odwzorowanie na klasach jest więc
 dobrze określone i liniowe.
-Równości dla identyczności i złożenia
-wynikają przez zastosowanie wzorów
-do dowolnej klasy $[z]$.
+Równość dla identyczności to $[\id_C(z)]=[z]$.
+Dla złożenia otrzymujemy na dowolnej klasie
+$H_n(g\circ f)[z]=[g_n(f_n(z))]
+=(H_n(g)\circ H_n(f))[z]$.
 \end{proof}
 
 \begin{przyklad}[Odwzorowanie na klasach reszt]
@@ -1104,7 +1118,23 @@ $\partial_1x=2f+8g$. W tych bazach macierz różniczki
 ma postać $\bigl(\begin{smallmatrix}1&2\\3&8\end{smallmatrix}\bigr)$.
 Współczynnik przy $f$ w $\partial_1e$ jest jednostką.
 Po zmianach $f'=f+3g$ oraz $x'=x-2e$ otrzymujemy
-$\partial_1e=f'$ i $\partial_1x'=2g$.
+$\partial_1e=f'$ i
+$\partial_1x'=(2f+8g)-2(f+3g)=2g$.
+Możemy prześledzić również zmiany macierzy.
+Kolumny nowych baz w starych współrzędnych to
+$P=\bigl(\begin{smallmatrix}1&0\\3&1\end{smallmatrix}\bigr)$
+w stopniu $0$ i
+$Q=\bigl(\begin{smallmatrix}1&-2\\0&1\end{smallmatrix}\bigr)$
+w stopniu $1$.
+Jeśli $D$ jest starą macierzą różniczki, nowa wynosi
+\[
+ P^{-1}DQ
+ =\begin{pmatrix}1&2\\0&2\end{pmatrix}
+  \begin{pmatrix}1&-2\\0&1\end{pmatrix}
+ =\begin{pmatrix}1&0\\0&2\end{pmatrix}.
+\]
+Pierwszy czynnik po znaku równości to $P^{-1}D$:
+od drugiego wiersza $D$ odejmujemy trzykrotność pierwszego.
 Cały kompleks jest więc sumą pary ściągalnej
 $\Z e\xrightarrow{\cong}\Z f'$ oraz kompleksu
 $\Z x'\xrightarrow{\times2}\Z g$.
@@ -1566,6 +1596,12 @@ Obraz $\delta$ jest prostą $\mathbb K(x-y)$,
 dokładnie jądrem odwzorowania
 $H_0(A\cap B)\to H_0(A)\oplus H_0(B)$:
 w obu częściach przestrzeń brzegów to $\mathbb K(x-y)$.
+Identyfikujemy każdą z grup $H_0(A),H_0(B)$ z $\mathbb K$
+przez $[x]\mapsto1$, $[y]\mapsto1$.
+Wtedy odwzorowanie indukowane przez $j(t)=(t,-t)$ ma wzór
+$\alpha x+\beta y\mapsto(\alpha+\beta,-\alpha-\beta)$.
+Jego jądro opisuje równanie $\alpha+\beta=0$,
+czyli jest nim dokładnie $\mathbb K(x-y)$.
 Widzimy, jak brzeg
 jednej części zostaje zniesiony
 przez brzeg drugiej i powstaje
@@ -1687,6 +1723,11 @@ Nowa klasa stopnia $1$ pochodzi
 w~\eqref{eq:mod-m-homologia} z
 $H_0(C)[2]=\Z/2$, choć wcześniejsze
 $H_1(C)$ było zerowe.
+Jawny wzór z dowodu daje
+$\delta([\overline1])=[1]\in H_0(C)=\Z/2$:
+podnosimy $\overline1$ do $1\in C_1$,
+bierzemy $\partial_1(1)=2$ i zapisujemy $2=2\cdot1$.
+Ostatni czynnik $1\in C_0$ reprezentuje właśnie obraz klasy.
 Po przejściu do $\Q$, $\R$ lub $\C$
 różniczka $\times2$ staje się izomorfizmem,
 więc w tym samym przykładzie obie homologie znikają.
@@ -1703,6 +1744,10 @@ lewa oraz środkowa grupa w~\eqref{eq:mod-m-homologia}
 przy $n=1$ są równe $\Z/2$, lecz prawa także wynosi
 $H_0(C)[2]=\Z/2$. Nie istnieje krótki ciąg dokładny
 $0\to\Z/2\to\Z/2\to\Z/2\to0$.
+Pierwsza iniekcja między grupami dwuelementowymi musiałaby
+bowiem być surjekcją. Dokładność wymuszałaby wtedy,
+aby następna strzałka miała całe $\Z/2$ jako jądro,
+czyli była zerowa; taka strzałka nie jest surjekcją na $\Z/2$.
 \end{uwaga}
 
 \begin{uwaga}[Iloczyn tensorowy modułów i rozszerzenie skalarów]
@@ -1769,8 +1814,11 @@ sumą prostych tensorów; sprowadzając
 mianowniki do wspólnego, zapisujemy go jako
 $c/d$ z $c\in C_n$ i niezerowym
 $d\in\Z$. Ponieważ każda grupa $C_j$
-jest wolna, odwzorowania
-$C_j\to C_j\otimes_{\Z}\Q$ są iniektywne.
+jest wolna, równość $tx=0$ dla $t\in\Z_*$ wymusza
+$x=0$: w bazie oznacza $ta_i=0$ w $\Z$ dla każdego współczynnika $a_i$.
+Kryterium zerowania z
+Stwierdzenia~\ref{prop:tensor-cialo-ulamkow} pokazuje zatem,
+że odwzorowania $C_j\to C_j\otimes_{\Z}\Q$ są iniektywne.
 Jeśli $c/d$ jest cyklem, to
 $\partial c/d=0$, a więc $\partial c=0$.
 Każda klasa racjonalna pochodzi zatem
@@ -1809,7 +1857,13 @@ kompleksów $C_\bullet\otimes_{\Z}\mathbb F
 Jawnie, $(c\otimes q)\otimes a\mapsto c\otimes qa$,
 a odwrotnie $c\otimes a\mapsto(c\otimes1)\otimes a$.
 Relacje tensorowe pokazują, że oba wzory są dobrze określone
-i wzajemnie odwrotne; komutują też z różniczkami.
+i wzajemnie odwrotne. W jednym kierunku złożenie wysyła
+$c\otimes a$ na $(c\otimes1)\otimes a$, a potem na $c\otimes a$.
+W drugim wysyła $(c\otimes q)\otimes a$
+na $(c\otimes1)\otimes qa=(c\otimes q)\otimes a$;
+ostatnia równość przenosi skalar $q$ między czynnikami
+iloczynu nad $\Q$. Wzory komutują też z różniczkami,
+ponieważ w obu kierunkach różniczka zastępuje $c$ przez $\partial c$.
 Wyjaśnijmy, dlaczego utworzenie iloczynu tensorowego kompleksu
 przestrzeni liniowych nad ciałem z $\mathbb F$ zachowuje
 homologię. Oznaczmy na chwilę
@@ -2014,8 +2068,11 @@ a pośrodku $f_3(x,y)=(2x+y,3y)$.
 Równości $f_3i(a)=i(2a)$ oraz $pf_3(x,y)=3p(x,y)$
 pokazują przemienność diagramu. Lemat pięciu daje
 odwracalność $f_3$, mimo że obraz drugiego wektora
-bazowego ma składową w pierwszym. Można to sprawdzić
-rachunkiem: $f_3^{-1}(u,v)=(u/2-v/6,v/3)$.
+bazowego ma składową w pierwszym. Wyprowadźmy odwrotność
+z układu $u=2x+y$, $v=3y$.
+Drugie równanie daje $y=v/3$, a podstawienie do pierwszego
+daje $x=(u-v/3)/2=u/2-v/6$.
+Zatem $f_3^{-1}(u,v)=(u/2-v/6,v/3)$.
 \end{przyklad}
 
 \begin{wniosek}[Porównywanie krótkich ciągów kompleksów]

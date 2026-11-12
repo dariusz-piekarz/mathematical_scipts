@@ -40,6 +40,8 @@
 - Stosuj „inkluzja” dla odwzorowania włączającego, „funkcja pierwotna” zamiast samego „pierwotna”.
 - W homologiach operator brzegu to `\partial`; `d` jest dla różniczki w kohomologiach i formach.
 - „Kochainy” pozostają tłumaczeniem `cochains`; nie zamieniaj ich na „kołańcuchy”.
+- Używaj określenia „iloczyn tensorowy”. Czynność opisuj jako
+  „utworzenie iloczynu tensorowego”, bez skrótowej nazwy tej czynności.
 - Angielskie `germ` funkcji lub odwzorowania tłumacz jako „kiełek”.
 - Dla $A\in\{\Z,\Q,\R,\H,\C\}$ zapis $A_*$ oznacza $A\setminus\{0\}$.
   Gdy chodzi o zbiór liczb niezerowych, pisz $A_*$ zamiast $A^\times$;

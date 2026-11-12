@@ -14,6 +14,92 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdziały 5 i 6 — ponowna kontrola wyprowadzeń (2026-11-12)
+
+Zgodnie ze zmienioną kolejnością wskazaną przez autora najpierw
+przeczytano i uzupełniono oba rozdziały w całości, a dopiero potem
+złożono tom I. Kryterium pozostaje wyprowadzenie każdego
+nietrywialnego równania od wskazanych definicji i wcześniejszych wyników
+oraz jawne granice albo obszary całek oznaczonych.
+
+W rozdziale 5, §§5.1–5.5, uzupełniono:
+
+- Wyznaczenie odwrotności w iloczynie półprostym z obu współrzędnych
+  równania i sprawdzenie obu kolejności mnożenia. Relację diedralną
+  wyprowadzono przez obrót i sprzężenie zespolone.
+- Rozwinięcie iloczynu w pierścieniu z relacją t²=0 oraz wyznaczenie
+  dwóch homomorfizmów z Z/6 do Z/4 przez warunek podzielności.
+- Oba złożenia izomorfizmu jednostkowego iloczynu tensorowego.
+  Przy iloczynie tensorowym modułów cyklicznych obliczono jądro
+  odpowiedniej surjekcji i wyprowadzono równość ideału sumy
+  z ideałem generowanym przez największy wspólny dzielnik.
+  Wskazano dokładny wcześniejszy wynik o ideałach Z,
+  a przykłady modulo 4 i modulo 3 rozpisano na klasach.
+- Oba złożenia odwzorowań w dowodzie dokładności po prawej stronie
+  oraz związek tego izomorfizmu z poszukiwanym jądrem.
+  Rozkład modułu wolnego na moduł rzutowy i jądro surjekcji
+  otrzymał jawne wzajemnie odwrotne wzory.
+- Podstawienia w dowodzie niezależności sum i iloczynów ułamków
+  od przedstawicieli i rachunek rozdzielności. Rozpisano oba złożenia
+  izomorfizmu z lokalizacją, zerowanie torsji i dokładny odsyłacz
+  do wzoru na wymiar ilorazu w dowodzie addytywności rangi.
+
+W rozdziale 6, §§6.1–6.9, uzupełniono:
+
+- Obliczenia w dowodzie rozszczepienia, pełne podstawienie brzegów
+  krawędzi trójkąta i współczynniki jego dowolnego cyklu.
+  Prawo składania na homologii zapisano na reprezentancie klasy.
+- Kasowanie pary w przykładzie macierzowym: wyznaczono obie
+  macierze zmiany bazy i obliczono wynik P⁻¹DQ krok po kroku.
+- Strzałkę z H0 przecięcia w przykładzie Mayera–Vietorisa:
+  podano współrzędne obrazu i równanie jego jądra.
+- Obraz nowej klasy modulo 2 przez odwzorowanie łączące,
+  argument wykluczający krótki ciąg dokładny trzech grup dwuelementowych,
+  iniektywność przejścia wolnych grup do Q i oba złożenia
+  izomorfizmu kolejnego rozszerzania skalarów.
+- Wyprowadzenie odwrotności strzałki środkowej z lematu pięciu
+  przez rozwiązanie dwóch równań.
+
+Na początku rozdziału 6 jawnie objaśniono, że skrót fg
+w rachunkach operatorowych oznacza złożenie f po g,
+oraz wskazano powód stosowania go w sumach złożeń.
+W rozdziale 5 ujednolicono jawny znak złożenia
+w poprawianych dowodach własności uniwersalnej.
+Nazewnictwo dostosowano do wymagania „iloczyn tensorowy”,
+które utrwalono również w `AGENTS.md`.
+
+W obu rozdziałach nie występują całki. Zachowano dotychczasową
+numerację wyników, wzorów i rysunków; dodano jedynie etykietę
+do istniejącego wyniku o ideałach Z.
+Rozdział 5 ma 50 etykiet, rozdział 6 ma 71;
+nie ma powtórzeń ani brakujących odsyłaczy.
+Porównano użyte konstrukcje z
+[§10.12 Stacks Project](https://stacks.math.columbia.edu/tag/00CV),
+[lokalizacją w §10.9](https://stacks.math.columbia.edu/tag/00CM)
+i [kompleksami w §12.13](https://stacks.math.columbia.edu/tag/010V).
+
+Przeszło **45 kontroli rachunkowych**: 16 dla rozdziału 5
+i 29 dla rozdziału 6. Obejmują między innymi wszystkie
+1000 trójek w grupie D5 i obustronne odwrotności, 144 pary
+modułów cyklicznych, rozkład w Z/6, tożsamości ułamków
+i lokalizacji, brzegi i dualny kompleks trójkąta, zmiany baz
+i homotopię przy kasowaniu pary, 72 redukcje kompleksów
+z różniczką będącą mnożeniem, strzałki Mayera–Vietorisa
+oraz odwrotność macierzy i oba kwadraty diagramu z lematu pięciu.
+
+Złożono **tylko tom I: 266 stron**. Rozdział 5 zajmuje
+fizyczne strony **141–160**, a rozdział 6 strony **161–178**.
+Obejrzano obydwa rozdziały, wszystkie osiem rysunków,
+spis treści i indeks; nowe rachunki sprawdzono także w powiększeniu.
+Nie ma nowych ostrzeżeń, przepełnień ani tekstu poza stroną.
+Pozostały wcześniejsze komunikaty o `page.1`,
+dwóch zmianach `h` na `ht` i niedopełnieniu w rozdziale 1.
+Indeks: 125 wpisów przyjętych, 0 odrzuconych, 0 ostrzeżeń.
+Wszystkie cele łączy między czterema PDF-ami istnieją.
+Pozostałych tomów nie składano; zachowały wcześniejsze sumy kontrolne.
+SHA-256 sprawdzonego tomu I:
+`C421F744AC7F43AB12ADDD9A682B683963F55663FC516F5F9867A25322C8377C`.
+
 ## Rozdział 4 — ponowna kontrola wyprowadzeń, §§4.1–4.7 (2026-11-11)
 
 Ponownie przeczytano wszystkie siedem sekcji pod kątem
