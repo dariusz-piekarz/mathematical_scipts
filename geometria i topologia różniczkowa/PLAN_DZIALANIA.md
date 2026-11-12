@@ -273,6 +273,18 @@ ma granice albo dziedzinę, z orientacją i parametrami łuku w dowodzie zwarto�
 Złożono i sprawdzono tylko tom II, zachowując dotychczasową numerację.
 **Wyznaczony etap rozdziału 22 jest zakończony.**
 Zamknięto tym samym przegląd rozdziałów 11–22, czyli całego tomu II.
+Następnie autor zlecił przekrojową korektę nazw rzutowych
+we wszystkich tomach i dodatkach oraz poprawę Rysunków 22.2 i 22.3.
+Ujednolicono przestrzenie, proste, płaszczyzny, grupy,
+mapy i kwadryki rzutowe; poprawiono również hasła indeksowe.
+Zasadę dopisano do instrukcji projektu.
+Rysunek 22.2 otrzymał układ „przed + uchwyt = po”,
+a Rysunek 22.3 nowy widok torusa i przekrój z czterema punktami
+krytycznymi oraz promieniami R i r.
+Etap zakończono: sprawdzono terminologię w 62 plikach TeX
+i w czterech gotowych PDF-ach, obie ilustracje, indeksy i odsyłacze.
+Pełny skład czterech tomów ustabilizował się po dwóch przebiegach;
+nie ma nowych ostrzeżeń ani zmian dotychczasowej numeracji.
 Następny w kolejności jest rozdział 23
 „Kobordyzmy i rachunek uchwytów” (tom III).
 Przy kolejnych

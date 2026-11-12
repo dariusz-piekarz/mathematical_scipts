@@ -40,6 +40,11 @@
 - Stosuj „inkluzja” dla odwzorowania włączającego, „funkcja pierwotna” zamiast samego „pierwotna”.
 - W homologiach operator brzegu to `\partial`; `d` jest dla różniczki w kohomologiach i formach.
 - „Kochainy” pozostają tłumaczeniem `cochains`; nie zamieniaj ich na „kołańcuchy”.
+- Angielskie `projective space`, `projective line` i `projective group`
+  tłumacz jako „przestrzeń rzutowa”, „prosta rzutowa” i „grupa rzutowa”.
+  Stosuj także nazwy „płaszczyzna rzutowa”, „geometria rzutowa”,
+  „mapa rzutowa” i „kwadryka rzutowa”, z odpowiednią odmianą.
+  Dotyczy to również nagłówków, podpisów rysunków, indeksów i dodatków.
 - Angielskie `frame` tłumacz jako „ramka”, również w odmianie
   („ramki”, „ramce”, „ramek”) i w określeniach „ramka lokalna”,
   „ramka ortonormalna”, „ramka dualna”. Definicja ogólna jest

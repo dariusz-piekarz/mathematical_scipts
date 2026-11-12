@@ -14,6 +14,71 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Terminologia rzutowa i Rysunki 22.2–22.3 (2026-11-12)
+
+Na polecenie autora przeprowadzono przekrojową korektę nazw
+w źródłach wszystkich czterech tomów, łącznie z dodatkami.
+Stosujemy „przestrzeń rzutowa”, „prosta rzutowa”, „płaszczyzna rzutowa”
+i „grupa rzutowa”, a także przymiotnik „rzutowy” przy geometrii,
+mapach, klasach i kwadrykach. Zasadę wpisano do `AGENTS.md`.
+
+Poprawiono 27 wystąpień w siedmiu plikach:
+rozdziałach 4, 16, 20, 21 i 34, dodatku C
+oraz istniejącej wskazówce w osobnym pliku zadań.
+Zmiany obejmują także nagłówki, tytuł przykładu o CP¹
+i hasła indeksowe grup rzutowych.
+W dodatku C doprecyzowano nazwę prostej rzutowej P¹.
+Ujednolicono również matematyczne opisy w dawnych wpisach rejestru.
+Zachowano identyfikatory etykiet i odsyłaczy.
+
+**Rysunek 22.2** ma teraz trzy kolumny:
+dotychczasowa podpoziomica, dołączany uchwyt i wynik.
+Między częściami stoją znak dodawania i strzałka.
+Osobne jasne wiersze wyróżniają indeksy 0, 1 i 2,
+a legenda wyjaśnia kolory i czerwone linie przyklejenia.
+Na obu dołączanych krawędziach 1-uchwytu oraz na brzegu
+2-uchwytu zaznaczono odpowiadające sobie miejsca sklejenia.
+Zachowano znaczenie trzech niezależnych przykładów i numer rysunku.
+
+**Rysunek 22.3** otrzymał nowy widok i cieniowanie torusa
+oraz osobny przekrój y=0. W obu częściach użyto tych samych
+współrzędnych czterech punktów krytycznych.
+Oznaczenia p₀, p₁⁻, p₁⁺, p₂ odpowiadają rosnącym wartościom funkcji;
+puste znaczniki w widoku torusa wyróżniają dolne punkty.
+Przekrój pokazuje dwa okręgi, promienie R i r
+oraz kierunek gradientu funkcji liniowej w R³.
+Sprawdzono przynależność punktów do obu okręgów,
+ich położenie na torusie, warunek krytyczny i kolejność wartości.
+Obie ilustracje pozostają wektorowe.
+
+Kontrola objęła wszystkie **62 pliki TeX** oraz tekst
+wszystkich stron czterech wynikowych PDF-ów.
+W treści, nagłówkach, spisach i indeksach nie pozostały
+niespójne nazwy. Wewnętrzne identyfikatory etykiet zachowano.
+Porównanie plików pomocniczych czterech tomów potwierdziło
+zachowanie wszystkich dotychczasowych numerów i celów odsyłaczy.
+Obejrzano zmienione strony i strony sąsiednie, spisy treści oraz indeksy.
+Rysunki 22.2 i 22.3 sprawdzono dodatkowo rendererem Poppler.
+
+Uruchomiono pełny `buduj_tomy.ps1`: dwa przebiegi
+ustabilizowały odsyłacze między czterema tomami.
+Tomy I–IV mają odpowiednio **268, 248, 104 i 102 strony**.
+Indeksy przyjęły **128, 107, 33 i 104 wpisy**,
+we wszystkich przypadkach bez odrzuceń i ostrzeżeń indeksu.
+Nie ma nowych ostrzeżeń składu, przepełnień,
+brakujących odsyłaczy ani tekstu poza stroną.
+Wcześniejsze komunikaty składu pozostały takie jak przed zmianami.
+Wszystkie cele łączy między czterema PDF-ami istnieją.
+Zakres etapu to terminologia i ilustracje; kolejka przeglądu
+matematycznego pozostaje opisana w planie.
+
+SHA-256 sprawdzonych PDF-ów:
+
+- Tom I: `6B26D41DA6EDA370BDF08C7A1676824C1E8BD4DE69FA149324EC10575559B48A`.
+- Tom II: `14C7A43BCB179AF239D2042CC421E11F1FEFAE0CA5DFCCB4B2E3D7F0A12DCDCD`.
+- Tom III: `8D11263CC4D55C2899AC147718D5D7EECF583A0543C9B9B42EA31A2B076E1942`.
+- Tom IV: `C63B1F604F94DF0DD08DA9F51B3712666B98A653008D3A01DACC0274229F5B78`.
+
 ## Rozdział 22 — od lokalnego modelu do różniczki Morse'a (2026-11-12)
 
 Na prośbę autora przeczytano i uzupełniono wszystkie siedem sekcji
@@ -260,10 +325,10 @@ rozpisano nietrywialne kroki konstrukcji oraz rozwinięto przykłady.
   Poprawiono podpis Rysunku 20.1, odróżniając przedłużenie
   rozkładu normalnego od przedłużenia dowolnej ramki brzegowej.
   W mocnym twierdzeniu Whitneya obliczono różniczkę
-  projektowego odwzorowania siecznych i granicę krótkich siecznych,
+  rzutowego odwzorowania siecznych i granicę krótkich siecznych,
   z jawną całką od 0 do 1.
   Sprawdzono wyznacznik dwóch płatów sfery Whitneya;
-  dla płaszczyzny projektowej podano rzeczywisty wzór i macierz różniczki.
+  dla płaszczyzny rzutowej podano rzeczywisty wzór i macierz różniczki.
   Przykład okręgu rozszerzono o obliczenie utraty injektywności
   i immersji przy rzucie do prostej, z nienumerowanym schematem.
 - **§20.2:** wyprowadzono blokową zmianę mapy plasterkowej
@@ -6179,7 +6244,7 @@ i przeczytano wszystkie dziesięć sekcji oraz cztery ilustracje.
   w₁ do kohomologii singularnej przez monodromię pętli i H¹.
   Dopisano gładkość ram i wygładzenie homotopii w sklejaniu wiązek.
 - W konstrukcji wᵢ dopisano brakujące uzasadnienie bazy
-  1,x,…,x^(r−1) na włóknie projektowym: hiperpłaszczyzny są dualne
+  1,x,…,x^(r−1) na włóknie rzutowym: hiperpłaszczyzny są dualne
   do w₁ tautologicznej linii, a ich transwersalne przecięcia
   wykrywają kolejne potęgi. Uwzględniono rząd zero i zgodność
   nowego współczynnika w₁ z wcześniejszą definicją przez wyznaczniki.
@@ -6809,14 +6874,14 @@ przeniesienie nie zastępuje kontroli nowych grup, pierścieni i tensorów.
   do przyjętej w tej części konwencji pierścienia przemiennego.
 - Rozpisano izomorfizm tensoru sumy prostej z sumą tensorów i jego odwrotność,
   w tym skończoność nośnika. Uzupełniono rachunek 3R⊕4R=R dla R=Z/6,
-  wyjaśniający przykład modułu projektywnego, który nie jest wolny.
+  wyjaśniający przykład modułu rzutowego, który nie jest wolny.
 - Dla pierścienia nieprzemiennego podano poprawny obiekt wyjściowy:
   wolną grupę abelową na parach oraz relacje addytywności i zbalansowania.
   Sam wybór prawego i lewego modułu nie nadaje tensorowi struktury modułu
   nad tym pierścieniem; zaznaczono tę granicę i odzyskanie wcześniejszej
   konstrukcji w przypadku przemiennym.
 - Pozostałe dowody (ilorazy pierścieni i modułów, torsja, własność uniwersalna
-  tensoru, (R/I)⊗M, rozszerzenie skalarów i projektywność) sprawdzono,
+  tensoru, (R/I)⊗M, rozszerzenie skalarów i rzutowość) sprawdzono,
   zachowując poprawne rachunki. Rysunek przedstawia poprawny fragment grafu
   Cayleya, a nie pełną kulę; podpis już to zaznacza, więc nie zmieniano geometrii.
 
@@ -8195,7 +8260,7 @@ z $G/G_p$ przy jawnie wskazanym zewnętrznym twierdzeniu
 o ilorazie przez domkniętą podgrupę. Przykłady obejmują
 przestrzenie euklidesowe i afiniczne, $\mathbb{RP}^n$,
 sfery, torusy i dysk Poincarégo. Rozróżniono skuteczne
-i nieskuteczne działanie na torusie oraz geometrię projektową
+i nieskuteczne działanie na torusie oraz geometrię rzutową
 od metryki sferycznej.
 
 Rozdział o Poincarém w wymiarze trzy łączy istniejący potok
@@ -8284,7 +8349,7 @@ przekraczają uzgodnioną granicę długości.
 Nie dodano dowodów Borsuka--Ulama, Brouwera i
 niezmienniczości obszaru. Rozwinięta w skrypcie
 homologia nie zawiera jeszcze potrzebnego rachunku
-modulo $2$ dla przestrzeni projektowych, a pełne
+modulo $2$ dla przestrzeni rzutowych, a pełne
 przejście lokalne w niezmienniczości obszaru nie jest
 przygotowane. Zgodnie z warunkiem autora nie dopisano
 tych twierdzeń do dodatku A.
