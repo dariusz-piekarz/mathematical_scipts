@@ -14,6 +14,117 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 18 — gwiazda, rozkład i normalizacje indeksowe (2026-11-12)
+
+Na prośbę autora przeczytano i uzupełniono wszystkie pięć sekcji
+rozdziału 18 w pliku `28-hodge-bochner.tex`, według granularności
+rozdziału 1. Priorytetem były uzasadnienia znaków, współczynników
+i przejść od wzoru lokalnego do wniosku globalnego.
+
+- **§18.1:** doprecyzowano kwantyfikator w definicji gwiazdy,
+  uzasadniono jej jednoznaczność i gładkość. Przykład płaszczyzny
+  i torusa rozszerzono o metrykę dx²+4dy².
+  Rozpisano parzystość wykładnika w dowodzie sprzężenia,
+  przejście od zerowej całki do punktowego znikania oraz lokalne
+  wzory na d i δ. Wyjaśniono związek δ z dywergencją,
+  kwadrat δ, komutowanie z laplasjanem i nazwy form
+  współzamkniętych oraz współdokładnych.
+- **§18.2:** zdefiniowano symbol główny i eliptyczność.
+  W dowodzie rozkładu podano rzut na bazę form harmonicznych,
+  warunek rozwiązywalności równania, wybór potencjałów
+  i przyczynę ich niejednoznaczności. Uzasadniono przenoszenie
+  harmonicznych form przez gwiazdę.
+  Nowy Przykład 18.2.5 oblicza trzy składniki konkretnej formy
+  na płaskim torusie, ich ortogonalność i normy.
+  Odróżnia rozkład dowolnej formy od harmonicznego przedstawiciela
+  klasy zamkniętej formy i oblicza okres na zorientowanej pętli.
+- **§18.3:** skonstruowano ramkę normalną przez transport radialny,
+  wyprowadzono współrzędne δ dwusformy oraz znak krzywizny
+  działającej na kowektory. Rozpisano użycie dywergencji
+  w zintegrowanej tożsamości Bochnera i stałość normy formy równoległej.
+  Nowy Przykład 18.3.5 pokazuje na d(x²−y²), dlaczego zwartość
+  jest potrzebna: forma jest zamknięta i współzamknięta,
+  ale nie jest równoległa ani całkowalna z kwadratem.
+- **§18.4:** podano pełne ortonormalne bazy podprzestrzeni
+  samodualnej i antysamodualnej oraz uzasadniono ich ortogonalność.
+  Przykład dwóch sfer rozszerzono o różne pola czynników,
+  normalizację okresów, macierz przecięcia, działanie gwiazdy
+  i kwadraty klas własnych. Wyjaśniono, dlaczego zmiana metryki
+  zmienia harmoniczne przedstawienia, a zachowuje sygnaturę.
+- **§18.5:** rozpisano parowanie dodatnich przestrzeni własnych,
+  izometrię D/√λ i różnicę między śladem operatorowym a superśladem
+  macierzy na przekątnej jądra. W rachunku skręconego Diraca
+  dodano konieczne założenie unitarności koneksji W
+  i ustalono chiralię z rozdziału 4.
+  Lokalny dowód podzielono na sześć kroków: wzór radialny
+  jako całka od 0 do 1, kwadrat Diraca i kontrakcję krzywizny,
+  wagi skalowania, model Mehlera, przejście analityczne do granicy
+  oraz superślad i normalizację.
+  Oznaczenie modelowego F ustalono jako −F^W, tak aby czynnik
+  cieplny dawał przyjęty w rozdziale 17 charakter Cherna
+  tr exp(iF^W/(2π)). Wyjaśniono też przeciwny znak macierzy Ω
+  względem macierzy krzywizny TM i parzystość czynnika Â.
+  Jądro Mehlera wyprowadzono z ansatzu gaussowskiego,
+  z porównaniem czterech współczynników i warunkiem początkowym.
+  W kroku analitycznym wskazano tożsamość Duhamela,
+  hipotezy oszacowania i ustalony mały czas s*, zamiast
+  podstawiać czas 1 poza zadeklarowanym zakresem.
+  Uzasadniono jednostajność potrzebną do całkowania granicy na M.
+  Rozpisano chiralię operatora sygnatury, dzielenie szeregów
+  L i Â oraz eliminację dającą współczynnik 896.
+  Dla operatora ASD sprawdzono normę symbolu, a następnie
+  jego faktyczną identyfikację przez mnożenie Clifforda,
+  z jawnym skróceniem czynnika √2.
+  Wyjaśniono użycie dualnej wiązki półspinorowej,
+  kompleksyfikację, zwarte zaburzenia rzędu zero,
+  trzy składniki gęstości indeksowej i wagi wiązki adjungowanej.
+  Doprecyzowano warunki interpretacji indeksu jako wymiaru
+  oczekiwanego. Nowy Przykład 18.5.6 oblicza jądro i kojądro
+  dla płaskiej wiązki na S⁴ i wyjaśnia indeks −3.
+
+Rachunek spektralny operatorów eliptycznych, twierdzenie Rellicha,
+niezmienniczość indeksu Fredholma przy zwartych zaburzeniach
+oraz wskazane oszacowanie jądra cieplnego pozostają jawnymi
+wejściami analitycznymi. Własne wyprowadzenie nie jest przedstawiane
+jako dowód tych głębokich wyników.
+Założenia i skalowanie porównano z
+[pracą Getzlera z 1986 roku](https://www.maths.ed.ac.uk/~v1ranick/papers/getzler.pdf),
+w szczególności dodatkiem A; rozkład i symbol laplasjanu z
+[wykładem Auroux na MIT](https://ocw.mit.edu/courses/18-966-geometry-of-manifolds-spring-2007/d6848bb391c032ef27993e984fef4558_lect15.pdf).
+Źródło identyfikacji symbolu ASD podano przy dowodzie.
+
+Dodano cztery rysunki TikZ: dwa zastosowania gwiazdy na płaszczyźnie,
+trzy składniki formy na torusie, diagonalizację formy przecięcia
+dwóch sfer oraz parowanie przestrzeni własnych.
+Zachowano wszystkie **43 dawne etykiety i ich numery**;
+po dodaniu trzech przykładów, czterech ilustracji i etykiet
+dwóch dotychczasowych przykładów jest **52 etykiet**.
+
+Przeszły **53 kontrole rachunkowe**: kwadrat gwiazdy w wymiarach 1–6,
+antykomutator klina i kontrakcji, rachunki torusa i iloczynu sfer,
+odtworzenie koneksji radialnej, równania i granice Mehlera,
+chiralia i superślad w wymiarach 2, 4 i 6, znak podniesienia
+spinowego oraz kontrakcja Lichnerowicza dla algebraicznego
+tensora krzywizny. Sprawdzono także chiralię sygnatury,
+współczynniki L i Â, eliminację 896, działanie dwusform
+antysamodualnych na S⁺, symbol ASD i końcową gęstość indeksu.
+Wszystkie **27 zapisów całek** ma jawną dziedzinę lub granice;
+cykle w przykładach mają określone orientacje.
+
+Złożono **tylko tom II: 233 strony**.
+Rozdział zajmuje fizyczne strony **155–170**.
+Obejrzano cały rozdział, spis treści i indeks;
+cztery ilustracje sprawdzono także rendererem Poppler.
+Nie ma nowych ostrzeżeń, przepełnień, brakujących odsyłaczy,
+zmian dotychczasowej numeracji ani tekstu poza stroną.
+Pozostały wcześniejsze komunikaty o `page.1`
+i niedopełnieniu wiersza o badness 1057 w rozdziale 15.
+Indeks: 107 wpisów przyjętych, 0 odrzuconych, 0 ostrzeżeń.
+Wszystkie cele odsyłaczy między czterema PDF-ami istnieją.
+Tomy I, III i IV zachowały poprzednie sumy kontrolne.
+SHA-256 sprawdzonego tomu II:
+`D34915F72A4456B64CA30500492D66802A3C50548FDE312A0478965E854F8A14`.
+
 ## Rozdział 17 — transgresja, forma kątowa i brzeg (2026-11-12)
 
 Na prośbę autora przejrzano i uzupełniono wszystkie trzy sekcje

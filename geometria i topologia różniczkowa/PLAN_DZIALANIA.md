@@ -210,8 +210,19 @@ Dodano cztery rysunki; przeszło 39 kontroli rachunkowych.
 Wszystkie 49 zapisów całek ma dziedzinę lub granice.
 Złożono i sprawdzono tylko tom II, zachowując numerację.
 **Wyznaczony etap rozdziału 17 jest zakończony.**
-Następny w kolejności jest rozdział 18
+Autor wyznaczył następnie rozdział 18
 „Teoria Hodge'a i metoda Bochnera” (tom II).
+Pełny przegląd §§18.1–18.5 zakończono 12 listopada:
+rozpisano znaki gwiazdy i kodyferencjału, rozkład na torusie,
+rachunek Bochnera oraz normalizacje i przejścia w dowodach indeksowych.
+Dodano trzy przykłady i cztery rysunki; rozszerzono przykłady
+płaszczyzny, torusa oraz iloczynu dwóch sfer.
+Przeszły 53 kontrole rachunkowe. Wszystkie 27 zapisów całek
+ma dziedzinę lub granice. Złożono i sprawdzono tylko tom II,
+zachowując numerację.
+**Wyznaczony etap rozdziału 18 jest zakończony.**
+Następny w kolejności jest rozdział 19
+„Twierdzenie Sarda i transwersalność” (tom II).
 Przy kolejnych
 rozdziałach obowiązuje ta sama zasada: skład tylko właściwego tomu,
 a potem commit i push po kontroli całego rozdziału.
@@ -516,7 +527,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 15. Grupy Liego | `29-grupy-liego.tex` | Pełny przegląd dydaktyczny §§15.1–15.5 zakończony 12 listopada; wcześniejszy audyt z 20 października | Rozwinięto przykłady macierzy i torusa, konstrukcję pól, zupełność i rachunki eksponenty. Dodano Heisenberga z metryką Nil, zamkniętą i gęstą podgrupę torusa oraz obrót o kąt prosty. Rozpisano znaki Ad, dowiedziono zachowania nawiasu i naturalności eksponenty dla homomorfizmu. Nakrycie SU(2) nad SO(3) wyprowadzono w pięciu krokach, z rachunkiem kąta, różniczki, arkuszy i grupy podstawowej. Dodano i sprawdzono cztery rysunki; przeszło 49 kontroli rachunkowych. Złożono tylko tom II, zachowując numerację. Szczegóły w `PRZEGLAD.md`. |
 | 16. Geometria Kleina (plik 29a) | `29a-geometria-kleina.tex` | Pełny przegląd dydaktyczny §§16.1–16.9 zakończony 12 listopada; wcześniejszy audyt z 20 października i integracja struktur (G,X) z 11 listopada | Rozpisano różniczki orbit i metrykę niezmienniczą, podstawienie w całce Haara, ilorazy i lokalne modele orbifoldowe. Uzupełniono kolejność mnożenia holonomii, arkusze rozwinięcia i dyskretność jego obrazu przy zupełności; dodano kontrprzykład przebitej płaszczyzny. Wyprowadzono rachunki Möbiusa i Cayleya, długości do brzegu dysku, metrykę torusa i bloki grupy afinicznej. Dziesięć zapisów całek ma dziedziny lub granice. Dodano i sprawdzono cztery rysunki; przeszły 24 kontrole rachunkowe. Złożono tylko tom II, zachowując numerację. Szczegóły w `PRZEGLAD.md`. |
 | 17. Chern–Weil | `27-chern-weil.tex` | Pełny przegląd dydaktyczny §§17.1–17.3 zakończony 12 listopada; wcześniejszy audyt z 20 października | Rozpisano macierze koneksji, różniczkę kowariantną, Bianchiego i kasowanie komutatorów w transgresji; wyprowadzono współczynniki Pfaffianu i pierwszej formy Pontriagina. Obliczono normalizację formy kątowej, w tym całkę rekurencyjną i objętość sfery. Uzupełniono model względny Thoma, granicę przy zerach pola i wersję brzegową Poincarégo–Hopfa. Dodano trzy przykłady, rozszerzono przykład kuli o pierścień i dodano cztery rysunki. Przeszło 39 kontroli rachunkowych; 49 zapisów całek ma dziedziny lub granice. Złożono tylko tom II, zachowując numerację. Identyfikacja zespolonych form Cherna z klasami topologicznymi pozostaje jawnym wejściem zewnętrznym. Szczegóły w `PRZEGLAD.md`. |
-| 18. Hodge–Bochner | `28-hodge-bochner.tex` | Pełny audyt wcześniejszej treści zakończony 20 października; osobne uzupełnienie indeksowe 29 października | Wcześniej sprawdzono wejście analityczne, znaki Weitzenböcka i Bochnera oraz rozkład sygnatury. Nowa sekcja dowodzi trzech potrzebnych wzorów indeksowych przez jądro cieplne, z jawnym zewnętrznym oszacowaniem analitycznym. |
+| 18. Hodge–Bochner | `28-hodge-bochner.tex` | Pełny przegląd §§18.1–18.5 zakończony 12 listopada | Rozpisane znaki gwiazdy, kodyferencjału i Bochnera; obliczony rozkład na torusie, okresy i forma przecięcia dwóch sfer. Wyprowadzone skalowanie Getzlera, model Mehlera, normalizacje indeksowe i symbol ASD; jawne wejścia analityczne. Trzy nowe przykłady, cztery rysunki, 53 kontrole rachunkowe i 27 całek z dziedziną lub granicami. Sprawdzono tylko tom II; numeracja zachowana. |
 | 19. Sard i transwersalność | `15-sard-transwersalnosc.tex` | Audyt dodatków zakończony 6 października; bez poprawek treści | Pięć wpisów indeksu, cztery ilustracje i warunki transwersalności przy brzegu sprawdzone; PDF 401 stron |
 | 20. Zanurzenia i otoczenia | `16-zanurzenia-otoczenia.tex` | Audyt dodatków zakończony 6 października; PDF 401 stron | Sześć haseł indeksu, cztery ilustracje i kołnierze sprawdzone; poprawiono terminologię odwzorowań oraz zdanie o homotopii do odwzorowania stałego |
 | 21. Przecięcia, dualność i klasy | `17-przeciecia-dualnosc-klasy.tex` | Audyt dodatków zakończony 6 października | Sprawdzone indeks, konwencje znaków i cztery ilustracje; ujednolicono terminologię i rozwinięto argument Leraya–Hirscha dla wiązki rzutowej |
