@@ -14,6 +14,123 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rozdział 21 — rachunek znaków, dualność i przeszkody do obramowania (2026-11-12)
+
+Na prośbę autora przeczytano i uzupełniono wszystkie dziesięć sekcji
+rozdziału 21 w pliku `17-przeciecia-dualnosc-klasy.tex`.
+Wzorcem pozostała szczegółowość rozdziału 1:
+wyprowadzano użyte wzory, rozwijano przykłady i wskazywano
+założenia kolejnych przejść.
+
+- **§21.1:** rozpisano rozkład kompleksu nad ciałem
+  i identyfikację kohomologii z dualem homologii.
+  W dowodzie przemienności iloczynu kubkowego sprawdzono
+  znak zamiany czynników i podano jawne ściągnięcie
+  kompleksu iloczynu tensorowego, zamiast samego powołania się
+  na jego acykliczność. Wyprowadzono znak brzegu iloczynu kapowego,
+  rozdzielając ściany sympleksu i wskazując kasowane wyrazy.
+  Nowy Przykład 21.1.5 oblicza obie strony tożsamości na trójkącie;
+  schemat pokazuje wybieraną ścianę.
+  Wyjaśniono operatorowy skrót złożeń, np. ∂H=∂∘H.
+- **§21.2:** cykl fundamentalny sfery zapisano jako brzeg
+  czworościanu, z objaśnieniem znaków i kasowania krawędzi.
+  We wstępie podano założenia i źródło twierdzenia Whiteheada
+  o triangulacji; jego dowodu nie ukrywa się w konstrukcji dualnej.
+- **§21.3:** porównanie komórek dualnych z iloczynem kapowym
+  zastąpiono jawną indukcją konstruującą homotopię:
+  przeskalowanie znaków, cykl różnicy, jego nośnik w gwieździe
+  i wypełnienie. Przy brzegu rozpisano normalizację wag
+  barycentrycznych i zachowanie dopełnienia brzegu.
+  Na torusie obliczono okresy i znaki PD(ξ)=b, PD(η)=−a.
+  Nowy Przykład 21.3.4 rozróżnia obie wersje dualności
+  na dysku i wyznacza orientację homomorfizmu łączącego.
+- **§21.4:** dla krzywych o nachyleniach (1,1) i (1,−1)
+  wyznaczono dwa konkretne punkty spotkania oraz ich prędkości.
+  Każdy wyznacznik −2 daje znak −1, więc suma wynosi −2.
+  Dodano schemat obu krzywych na kwadracie torusa.
+- **§21.5:** pokazano brzeg skręconego trójkąta i kasowanie
+  transportów przy drugim brzegu.
+  Dla RP² zapisano oba kompleksy komórkowe:
+  stały z różniczkami 0 i 2 oraz orientacyjny z różniczkami −2 i 0.
+  Obliczono skręcone homologie, w tym H₀=Z/2,
+  i zestawiono je ze zwykłą kohomologią.
+- **§21.6:** wyprowadzono zmianę funkcji sklejającej przy zmianie
+  dwóch ramek. Dla TS² obliczono rzeczywistą macierz przejścia
+  z pochodnej −z⁻² oraz zmianę kąta −4π na równiku;
+  wyjaśniono zależność znaku liczby nawinięć od orientacji.
+- **§21.7:** doprecyzowano dobre pokrycie i uzasadniono
+  injektywność cofnięcia w zasadzie rozszczepienia przez
+  jednoznaczność współczynnika przy 1.
+  Sprawdzono argument Leraya–Hirscha oraz zależność konstrukcji
+  od niezależnie zbudowanej klasy Thoma.
+  Poprawiono odsyłacz do wcześniejszego rozdziału Cherna–Weila.
+  Nowe Przykłady 21.7.7–21.7.8 wyprowadzają
+  w(TRP²)=1+x+x² i pokazują, dlaczego w(TS²)=1
+  nie oznacza trywialności TS².
+- **§21.8:** sprawdzono niezależną konstrukcję Thoma,
+  orientacje zer przekroju i formułę samoprzecięcia.
+  Dla przekątnej w S²×S² wyznaczono orientację normalnej
+  przez macierz blokową o wyznaczniku 1 i otrzymano
+  samoprzecięcie 2. Potwierdzono je rachunkiem (A+B)²;
+  antyprzekątna daje (A−B)²=−2.
+- **§21.9:** podano ilościowe oszacowanie homotopii pola
+  do jego linearyzacji. Gładkie przedłużenie ilorazu przyrostu
+  przepływu wyprowadzono z równania ODE przez całkę
+  od 0 do t i podstawienie do przedziału [0,1].
+  Wyjaśniono rozwinięcie e⁻ᵗᴬ i znak wyznacznika.
+  Na sferze obliczono pochodne ±I₂ w biegunach,
+  a na płaskim torusie cztery zera konkretnego gradientu,
+  ich macierze i indeksy. Nowy Rysunek 21.5 pokazuje to pole.
+- **§21.10:** wyprowadzono parzystość rangi unimodularnej
+  formy antysymetrycznej. Dwa sklejenia walców zapisano
+  współrzędnymi, relacjami grup i ich abelianizacją:
+  Z² dla torusa oraz Z⊕Z/2 dla butelki Kleina.
+  Towarzyszy im Rysunek 21.6.
+  Nowy Przykład 21.10.5 konstruuje komórkę CP²,
+  oblicza homologię i wyznacza formę [1]
+  przez dwie poprzeczne zespolone proste i pokazuje,
+  że normalna do CP¹ nie ma obramowania wymaganego w chirurgii.
+
+Konwencje kapu, dualności i iloczynu kubkowego porównano z
+[Hatcherem, rozdział 3.3 i Przykład 3.31](https://pi.math.cornell.edu/~hatcher/AT/AT.pdf).
+Konstrukcję klas przez wiązkę rzutową i funkcje sklejające sprawdzono w
+[wykładach Hatchera o wiązkach](https://pi.math.cornell.edu/~hatcher/VBKT/VB.pdf),
+a klasę Thoma i interpretację przecięć w
+[wykładach Cohena](https://math.stanford.edu/~ralph/bookR4.pdf).
+Twierdzenie o triangulacji pozostaje jawnym wejściem zewnętrznym
+z odsyłaczem do pracy Whiteheada.
+
+Przeszło **56 kontroli rachunkowych**, obejmujących dokładną
+arytmetykę łańcuchów i kochainów do wymiaru 4:
+brzeg, Leibniza, Alexandera–Whitneya, homotopię przemienności,
+ściągnięcie iloczynu tensorowego i brzeg kapu.
+Dalsze kontrole obejmują znaki dualności i przecięć na torusie,
+transporty i kompleks RP², zmianę sklejania, nawinięcie TS²,
+wielomian Stiefela–Whitneya, normalną przekątnej,
+znaki wzoru Lefschetza, przepływ liniowy, indeksy pól,
+unimodularność, abelianizacje dwóch sklejeń
+i odwrotność współrzędnej radialnej komórki CP².
+Wszystkie **trzy zapisy całek** mają granice albo dziedzinę.
+Zachowano wszystkie **42 dawne etykiety i ich numery**;
+po dodaniu pięciu przykładów, dwóch rysunków
+i etykiet trzech istniejących przykładów są **52 etykiety**.
+
+Złożono **tylko tom II: 244 strony**.
+Rozdział zajmuje fizyczne strony **205–226**.
+Obejrzano cały rozdział, spis treści i indeks;
+sześć numerowanych rysunków oraz dwa nowe schematy
+sprawdzono także rendererem Poppler.
+Nie ma nowych ostrzeżeń, przepełnień, brakujących odsyłaczy
+ani tekstu poza stroną. Dotychczasowa numeracja etykiet
+całego tomu pozostała bez zmian.
+Pozostały wcześniejsze komunikaty o `page.1`
+i niedopełnieniu wiersza o badness 1057 w rozdziale 15.
+Indeks: 107 wpisów przyjętych, 0 odrzuconych, 0 ostrzeżeń.
+Wszystkie cele odsyłaczy między czterema PDF-ami istnieją.
+Tomy I, III i IV zachowały poprzednie sumy kontrolne.
+SHA-256 sprawdzonego tomu II:
+`205EA223FAC5DFD11BFD40724A800328D84F8DCF858A85CFC9078E63E17DFE99`.
+
 ## Rozdział 20 — normalne, obramowania i kontrola otoczeń (2026-11-12)
 
 Na prośbę autora przeczytano i uzupełniono wszystkie siedem sekcji
