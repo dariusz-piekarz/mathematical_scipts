@@ -14,6 +14,64 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Nasady uchwytów i torus wokół meridianu (2026-11-13)
+
+Na podstawie dwóch szkiców autora dopracowano Rysunki 26.2–26.4
+w `22-chirurgia-geometryczna.tex`.
+Widoczne nasady mają przednią część obwodu ciągłą i tylną
+przerywaną. Wypełnienie półeliptycznej nasady przedłuża
+cieniowaną pobocznicę rurki; usunięto osobne owalne denka.
+
+- **26.2:** rączka jest niższa i cieńsza; jej nasady odpowiadają
+  szkicowi autora. Połączona bryła otrzymała tę samą paletę
+  i zaokrąglony światłocień, z płynnymi rozjaśnieniami obu
+  części kulistych oraz szyjki. Zachowano złote pola przyklejenia.
+- **26.3(a):** obie kule mają wyraźniejsze światło i cień.
+  Nasady zawęźlonego uchwytu pokazano tak samo jak na szkicu,
+  z przednim łukiem ciągłym i tylnym przerywanym.
+- **26.4:** powiększono i wycieniowano kule. Kula zasłania
+  nasady tylnego uchwytu. Przedni uchwyt zachowuje widoczne
+  połączenia, a po cięciu nadal widać cztery otwarte obrzeża.
+
+Po wyjaśnieniu intencji zielonej pętli na drugim szkicu
+rozszerzono istniejący Przykład 26.1.3 o osobny pełny torus
+wokół meridianu węzła. Wyjaśniono wybór dysku normalnego,
+położenie jego brzegu poza pierwszą rurką i rozłączność
+nowego otoczenia przez oszacowanie jego promienia dodatnią
+odległością zwartych zbiorów. Brzeg ma dwie składowe torusowe.
+Nowa część **26.3(b)** pokazuje obie powierzchnie oraz przekrój:
+niebieski dysk znajduje się w otworze zielonego pierścienia.
+Nie dodawano nowego numerowanego środowiska ani rysunku,
+więc dotychczasowa numeracja pozostała bez zmian.
+
+Sprawdzono trzy skrzyżowania trójlistnika, końce łuku w małej
+kuli i dwa skrzyżowania pełnego skrętu. Dla nowej pętli
+sprawdzono prostopadłość jej płaszczyzny do stycznej rdzenia
+oraz wszystkie przecięcia rdzenia z tą płaszczyzną:
+wybrany dysk przecina rdzeń tylko w swoim środku.
+Dwa skrzyżowania rzutu meridianu z węzłem mają poprawną
+kolejność głębokości. Dodatkowa kontrola numeryczna odstępu
+rdzeni potwierdziła zapas względem sumy promieni rurek.
+Rysunki pozostają wektorowe, w niebieskiej i zielonej palecie książki.
+
+Złożono i sprawdzono **tylko tom III: 104 strony**.
+Rysunki 26.2–26.4 obejrzano rendererem Poppler na fizycznych
+stronach 38–40 PDF-u (drukowane 37–39).
+Obejrzano również zmienione strony i ich sąsiedztwo, spisy oraz indeks.
+Przełamanie tekstu zmieniło układ dalszej części rozdziału 26
+i odsyłacze stronicowe indeksu; rozdział 27 zaczyna się nadal na tej
+samej stronie. Wszystkie dotychczasowe numery etykiet zachowano.
+Nie ma nowych ostrzeżeń, przepełnień, brakujących odsyłaczy
+ani tekstu poza stroną. Pozostały wcześniejsze trzy komunikaty
+`Underfull` i ostrzeżenie o powtórzonym celu `page.1`.
+Indeks przyjął 33 wpisy, bez odrzuceń i ostrzeżeń indeksu.
+Cele łączy między czterema PDF-ami istnieją.
+Lokalne zmiany pozostałych PDF-ów zachowano poza zakresem tego etapu.
+Nie ponawiano pełnego audytu matematycznego rozdziału 26.
+
+SHA-256 sprawdzonego tomu III:
+`7F312FCF1556BEA0F427F15BB2DB93948075599C39434EF189CBD8AC7091C0FB`.
+
 ## Rysunki 26.2–26.4 — głębia i gładkość brył (2026-11-12)
 
 Na prośbę autora przebudowano trzy ilustracje w rozdziale 26,

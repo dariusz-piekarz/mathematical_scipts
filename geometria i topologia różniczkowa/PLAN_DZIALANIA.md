@@ -1,6 +1,6 @@
 # Aktualny plan i pokrycie przeglądem
 
-Stan: 12 listopada 2026. Gałąź: `review/rozdzialy-matematyka`.
+Stan: 13 listopada 2026. Gałąź: `review/rozdzialy-matematyka`.
 Książka ma **38 rozdziałów, pięć części i trzy dodatki**. Numery w nazwach
 plików są historyczne; numer w PDF ustala kolejność importów.
 Skład roboczy podzielono na cztery tomy: rozdziały 1–10, 11–22,
@@ -295,6 +295,17 @@ złożono tylko tom III (104 strony), bez nowych ostrzeżeń.
 **Etap poprawy Rysunków 26.2–26.4 jest zakończony.**
 Obejmuje wskazane ilustracje i ich podpisy; pełny przegląd
 matematyczny rozdziału 26 pozostaje w kolejce.
+13 listopada dopracowano te rysunki według dwóch szkiców autora:
+zmniejszono rączkę w 26.2 i dopasowano światłocień połączonej
+bryły, przy widocznych nasadach pokazano przednie łuki ciągłe
+i tylne przerywane, a nasady tylnego uchwytu w 26.4 ukryto za kulą.
+Kule w 26.4 powiększono, a w 26.3 i 26.4 wzmocniono cieniowanie.
+Za zgodą autora dodano do Przykładu 26.1.3 wariant z osobnym
+torusem oplatającym rurkę węzła: meridian, uzasadnienie
+rozłączności pełnych torusów i część (b) Rysunku 26.3 z przekrojem.
+Zachowano dotychczasowe numery przykładów, twierdzeń i rysunków.
+Etap zakończono składem i kontrolą tylko tomu III (104 strony),
+bez nowych ostrzeżeń. Szczegóły są w `PRZEGLAD.md`.
 Następny w kolejności jest rozdział 23
 „Kobordyzmy i rachunek uchwytów” (tom III).
 Przy kolejnych

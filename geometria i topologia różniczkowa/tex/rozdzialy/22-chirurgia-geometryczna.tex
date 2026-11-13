@@ -123,26 +123,50 @@ wymiar dysku normalnego $q$, a nie wymiar sfery wklejanej
 
 \begin{figure}[H]
 \centering
+\usetikzlibrary{fadings}
+\tikzfading[name=chirbodylight,inner color=transparent!0,outer color=transparent!100]
 \begin{tikzpicture}[>=Latex,font=\small,line cap=round,line join=round,
                     scale=1.02,transform shape]
 
  % Warstwy barwy modelują okrągły przekrój rury; wszystkie biegną po tej samej krzywej.
  \def\softtube#1{%
-  \draw[manifoldblue!72!black,line width=14.6pt,line cap=butt] #1;
-  \foreach \w/\m in {13.2/65,11.8/57,10.4/49,9/41,7.6/34,6.2/28,4.8/23,3.4/19,2/16}{
+  \draw[manifoldblue!72!black,line width=9.2pt,line cap=butt] #1;
+  \foreach \w/\m in {8.4/58,7.4/51,6.4/44,5.4/37,4.4/30,3.4/24,2.4/20,1.4/16}{
    \draw[manifoldblue!\m,line width=\w pt,line cap=butt] #1;
   }
   \begin{scope}[xshift=-.35pt,yshift=.7pt]
-   \draw[white,opacity=.32,line width=.8pt,line cap=butt] #1;
+   \draw[white,opacity=.32,line width=.55pt,line cap=butt] #1;
   \end{scope}
  }
  \pgfdeclareradialshading{chirvolumeball}{\pgfpoint{-8bp}{9bp}}{%
-  color(0bp)=(white);color(14bp)=(manifoldblue!8);
-  color(25bp)=(manifoldblue!22);color(40bp)=(manifoldblue!44);
-  color(50bp)=(manifoldblue!62)}
+  color(0bp)=(white);color(6bp)=(manifoldblue!8);
+  color(13bp)=(manifoldblue!28);color(21bp)=(manifoldblue!52);
+  color(25bp)=(manifoldblue!66);color(50bp)=(manifoldblue!70)}
  \def\softball#1#2#3{%
   \shade[shading=chirvolumeball] (#1,#2) circle (#3);
   \draw[manifoldblue!73!black,line width=.75pt] (#1,#2) circle (#3);
+ }
+
+
+ % Nasada jak na szkicu autora: przedni łuk ciągły, tylny przerywany.
+ % Półelipsa przedłuża pobocznicę, bez osobnego wypełnionego denka.
+ \def\softfoot#1#2#3#4#5{%
+  \begin{scope}[shift={(#1,#2)},rotate=#3]
+   \pgfmathsetmacro{\footradius}{#4/56.9055}
+   \begin{scope}
+    \clip (-.035,-\footradius)--(0,-\footradius)
+     arc[start angle=-90,end angle=90,x radius=#5,y radius=\footradius]
+     --(-.035,\footradius)--cycle;
+    \softtube{(-.035,0)--(#5,0)}
+   \end{scope}
+   \draw[manifoldblue!73!black,line width=.65pt]
+    (0,-\footradius)
+     arc[start angle=-90,end angle=90,x radius=#5,y radius=\footradius];
+   \draw[manifoldblue!73!black,opacity=.65,line width=.55pt,
+         dash pattern=on 1.2pt off 1.4pt]
+    (0,\footradius)
+     arc[start angle=90,end angle=270,x radius=#5,y radius=\footradius];
+  \end{scope}
  }
 
  \def\bodyprofile{%
@@ -159,8 +183,15 @@ wymiar dysku normalnego $q$, a nie wymiar sfery wklejanej
    .. controls (-1.23,-.66) and (-1.52,-.36) .. cycle
  }
  \def\joinedballs{%
-  \shade[top color=manifoldblue!13,middle color=manifoldblue!30,
-         bottom color=manifoldblue!66] \bodyprofile;
+  \begin{scope}
+   \clip \bodyprofile;
+   \fill[manifoldblue!58] (-1.6,-.7) rectangle (1.6,.7);
+   \foreach \x in {-.94,.94}
+    \fill[white,opacity=.75,path fading=chirbodylight]
+     (\x,.12) ellipse (.72 and .68);
+   \fill[white,opacity=.72,path fading=chirbodylight]
+    (0,.035) ellipse (.72 and .26);
+  \end{scope}
   \draw[manifoldblue!73!black,line width=.8pt] \bodyprofile;
   \draw[manifoldblue!65,opacity=.32,line width=.45pt]
    (-1.20,-.49) .. controls (-.74,-.31) and (-.74,.31) .. (-1.20,.49)
@@ -192,12 +223,9 @@ wymiar dysku normalnego $q$, a nie wymiar sfery wklejanej
  \end{scope}
  \begin{scope}[xshift=4.55cm]
   \joinedballs
-  \foreach \x in {-.66,.66}
-   \fill[manifoldblue!70!black,opacity=.16] (\x,.34) ellipse (.22 and .10);
-  \softtube{(-.66,.38) .. controls (-.75,1.35) and (.75,1.35) .. (.66,.38)}
-  \foreach \x in {-.66,.66}
-   \draw[manifoldblue!68!black,opacity=.55,line width=.55pt]
-    ({\x-.16},.38) arc[start angle=180,end angle=360,x radius=.16,y radius=.065];
+  \softtube{(-.66,.38) .. controls (-.72,1.08) and (.72,1.08) .. (.66,.38)}
+  \softfoot{-.66}{.38}{-85.10}{9.2}{.095}
+  \softfoot{.66}{.38}{-94.90}{9.2}{.095}
   \node at (0,-1.05) {$T^2$};
   \node[font=\scriptsize] at (0,-1.39) {$b_0=1,\quad\chi=0$};
  \end{scope}
@@ -246,6 +274,25 @@ $T_K=\partial N(K)\subset\R^3$.
 Jako samodzielna powierzchnia nadal jest
 homeomorficzny ze zwykłym $T^2$; różni się
 położeniem w przestrzeni i dopełnieniem.
+
+\smallskip
+\noindent\textbf{Dodatkowy torus oplatający rurkę.}
+Wybierzmy mały dysk normalny $D$ do rdzenia $K$.
+W lokalnych współrzędnych rurkowych jest to dysk w jednym
+włóknie normalnym; wybieramy go większym od przekroju
+$N(K)$, ale na tyle małym, aby przecinał rdzeń tylko w środku.
+Jego brzeg $\mu=\partial D$ nazywamy \emph{meridianem} węzła.
+Okrąg $\mu$ leży poza $N(K)$ i obejmuje jedną jego rurkę.
+Pogrubmy teraz także $\mu$ do cienkiego pełnego torusa $N(\mu)$.
+Rozłączność można zapewnić jawnie: zwarte zbiory
+$\mu$ i $N(K)$ mają dodatnią odległość, więc promień nowej
+rurki wybieramy mniejszy od połowy tej odległości.
+Na dole Rysunku~\ref{fig:knotted-torus-surgery-21}
+otrzymujemy dwie rozłączne powierzchnie torusowe
+$T_K\sqcup T_\mu$, gdzie $T_\mu=\partial N(\mu)$.
+Każda powstaje przez operację $S^2\to T^2$ na brzegu
+odpowiedniej kuli; położenie drugiego uchwytu sprawia,
+że jeden torus oplata rurkę drugiego.
 \end{przyklad}
 
 \begin{figure}[H]
@@ -263,17 +310,41 @@ położeniem w przestrzeni i dopełnieniem.
   \end{scope}
  }
  \pgfdeclareradialshading{chirvolumeball}{\pgfpoint{-8bp}{9bp}}{%
-  color(0bp)=(white);color(14bp)=(manifoldblue!8);
-  color(25bp)=(manifoldblue!22);color(40bp)=(manifoldblue!44);
-  color(50bp)=(manifoldblue!62)}
+  color(0bp)=(white);color(6bp)=(manifoldblue!8);
+  color(13bp)=(manifoldblue!28);color(21bp)=(manifoldblue!52);
+  color(25bp)=(manifoldblue!66);color(50bp)=(manifoldblue!70)}
  \def\softball#1#2#3{%
   \shade[shading=chirvolumeball] (#1,#2) circle (#3);
   \draw[manifoldblue!73!black,line width=.75pt] (#1,#2) circle (#3);
  }
 
+ % Nasada jak na szkicu autora: przedni łuk ciągły, tylny przerywany.
+ % Półelipsa przedłuża pobocznicę, bez osobnego wypełnionego denka.
+ \def\softfoot#1#2#3#4#5{%
+  \begin{scope}[shift={(#1,#2)},rotate=#3]
+   \pgfmathsetmacro{\footradius}{#4/56.9055}
+   \begin{scope}
+    \clip (-.035,-\footradius)--(0,-\footradius)
+     arc[start angle=-90,end angle=90,x radius=#5,y radius=\footradius]
+     --(-.035,\footradius)--cycle;
+    \softtube{(-.035,0)--(#5,0)}
+   \end{scope}
+   \draw[manifoldblue!73!black,line width=.65pt]
+    (0,-\footradius)
+     arc[start angle=-90,end angle=90,x radius=#5,y radius=\footradius];
+   \draw[manifoldblue!73!black,opacity=.65,line width=.55pt,
+         dash pattern=on 1.2pt off 1.4pt]
+    (0,\footradius)
+     arc[start angle=90,end angle=270,x radius=#5,y radius=\footradius];
+  \end{scope}
+ }
+
+
  \def\knotpath#1#2{plot[domain=#1:#2,samples=220,smooth,variable=\t]
   ({.52*(sin(\t)+2*sin(2*\t))},
    {.52*(cos(\t)-2*cos(2*\t))})}
+ \node[font=\small\bfseries,manifoldblue!75!black] at (0,2.68)
+  {(a) Przyklejenie zawęźlonego uchwytu};
  \begin{scope}[xshift=-4.45cm]
   \node[manifoldblue!75!black] at (0,2.10) {$\partial B^3=S^2$};
   \softball{0}{0}{.94}
@@ -314,21 +385,73 @@ położeniem w przestrzeni i dopełnieniem.
     arc[start angle=40,end angle=140,radius=.39]
    ({.39*cos(220)},{-.52+.39*sin(220)})
     arc[start angle=220,end angle=320,radius=.39];
+  % Końcowe odcinki leżą na przedniej stronie kuli, jak na szkicu autora.
+  \softtube{\knotpath{7}{12}}
+  \softtube{\knotpath{348}{353}}
+  \softfoot{-.31498}{-.49298}{-9.85}{14.6}{.10}
+  \softfoot{.31498}{-.49298}{189.85}{14.6}{.10}
   \node[font=\scriptsize] at (0,-1.93) {kula i zawęźlony $1$-uchwyt};
  \end{scope}
  \draw[->,manifoldred!80!black,line width=1.1pt] (-3.20,0)--(-1.75,0);
  \draw[->,manifoldred!80!black,line width=1.1pt] (1.75,0)--(2.85,0);
  \node[manifoldred!80!black,font=\scriptsize,align=center]
   at (2.20,.95) {pogrubiamy\\łuk};
+
+ \draw[manifoldblue!20,line width=.45pt] (-6.10,-2.34)--(6.10,-2.34);
+ \node[font=\small\bfseries,manifoldblue!75!black] at (0,-2.78)
+  {(b) Dodatkowy torus oplatający jedną rurkę};
+ \def\greentube#1{%
+  \draw[manifoldgreen!65!black,line width=7.2pt,line cap=butt] #1;
+  \foreach \w/\m in {6.3/65,5.4/55,4.5/44,3.6/34,2.7/25,1.8/18,.9/12}{
+   \draw[manifoldgreen!\m,line width=\w pt,line cap=butt] #1;
+  }
+ }
+ \begin{scope}[xshift=-2.40cm,yshift=-4.85cm,scale=1.30]
+  % K'(0) jest równoległy do (5,0,3); te osie wyznaczają płaszczyznę normalną.
+  % Dodatnia współrzędna z meridianu odpowiada lewej połowie jego rzutu.
+  \def\meridian#1#2{plot[domain=#1:#2,samples=120,smooth,variable=\t]
+   ({-.65*3/sqrt(34)*sin(\t)},{-.52+.65*cos(\t)})}
+  \greentube{\meridian{0}{360}}
+  \softtube{\knotpath{0}{360}}
+  \foreach \a/\b in {8/23,128/143,248/263}{
+   \draw[white,line width=19pt,line cap=butt] \knotpath{\a}{\b};
+   \softtube{\knotpath{\a}{\b}}
+  }
+  \greentube{\meridian{0}{180}}
+  \node[manifoldblue!75!black,font=\scriptsize] at (1.82,1.08) {$T_K$};
+  \draw[manifoldblue!70!black,line width=.5pt] (1.62,.99)--(1.25,.73);
+  \node[manifoldgreen!65!black,font=\scriptsize] at (0,-.90) {$T_\mu$};
+ \end{scope}
+ \begin{scope}[xshift=3.35cm,yshift=-5.05cm,scale=1.55]
+  \node[font=\scriptsize,align=center] at (0,1.12)
+   {przekrój płaszczyzną\\normalną do $K$};
+  \shade[even odd rule,top color=manifoldgreen!14,
+         middle color=manifoldgreen!32,bottom color=manifoldgreen!62]
+   (0,0) circle (.75) (0,0) circle (.55);
+  \draw[manifoldgreen!65!black,line width=.65pt]
+   (0,0) circle (.75) (0,0) circle (.55);
+  \fill[manifoldblue!28,draw=manifoldblue!73!black,line width=.65pt]
+   (0,0) circle (.20);
+  \fill[manifoldblue!73!black] (0,0) circle (.025);
+  \node[font=\scriptsize,manifoldblue!75!black] at (0,-1.01)
+   {przekrój rurki $N(K)$};
+  \draw[manifoldblue!65!black,line width=.5pt] (0,-.86)--(0,-.23);
+  \node[font=\scriptsize,manifoldgreen!65!black,anchor=west]
+   at (.92,.02) {$N(\mu)$};
+  \draw[manifoldgreen!65!black,line width=.5pt] (.89,.02)--(.71,.02);
+ \end{scope}
 \end{tikzpicture}
 \caption{Przestrzenny przykład operacji z Rysunku~\ref{fig:krok-chirurgii-21}.
-Po lewej zaznaczono dwa dyski na sferze, w środku rzut rdzenia
+W części (a) po lewej zaznaczono dwa dyski na sferze, w środku rzut rdzenia
 trójlistnego i małą kulę wokół jego krótkiego łuku.
 Po prawej pozostały łuk pogrubiono do okrągłej rurki
 i dołączono do kuli, otrzymując pełny zawęźlony torus $N(K)$.
 Niebieska powierzchnia przedstawia jego brzeg $T_K$.
 Przerwy przy skrzyżowaniach wskazują gałęzie biegnące pod spodem;
-rurka nie przecina samej siebie w przestrzeni.}
+rurka nie przecina samej siebie w przestrzeni.
+W części (b) zielony torus $T_\mu$ oplata jedną niebieską rurkę.
+Przekrój po prawej pokazuje rozłączność obu pełnych torusów:
+niebieski dysk leży w otworze zielonego pierścienia.}
 \label{fig:knotted-torus-surgery-21}
 \end{figure}
 
@@ -384,15 +507,37 @@ przeplecionymi rdzeniami
   \end{scope}
  }
  \pgfdeclareradialshading{chirvolumeball}{\pgfpoint{-8bp}{9bp}}{%
-  color(0bp)=(white);color(14bp)=(manifoldblue!8);
-  color(25bp)=(manifoldblue!22);color(40bp)=(manifoldblue!44);
-  color(50bp)=(manifoldblue!62)}
+  color(0bp)=(white);color(6bp)=(manifoldblue!8);
+  color(13bp)=(manifoldblue!28);color(21bp)=(manifoldblue!52);
+  color(25bp)=(manifoldblue!66);color(50bp)=(manifoldblue!70)}
  \def\softball#1#2#3{%
   \shade[shading=chirvolumeball] (#1,#2) circle (#3);
   \draw[manifoldblue!73!black,line width=.75pt] (#1,#2) circle (#3);
  }
 
- \def\baseball{\softball{0}{-.95}{1.03}}
+
+ % Nasada jak na szkicu autora: przedni łuk ciągły, tylny przerywany.
+ % Półelipsa przedłuża pobocznicę, bez osobnego wypełnionego denka.
+ \def\softfoot#1#2#3#4#5{%
+  \begin{scope}[shift={(#1,#2)},rotate=#3]
+   \pgfmathsetmacro{\footradius}{#4/56.9055}
+   \begin{scope}
+    \clip (-.035,-\footradius)--(0,-\footradius)
+     arc[start angle=-90,end angle=90,x radius=#5,y radius=\footradius]
+     --(-.035,\footradius)--cycle;
+    \softtube{(-.035,0)--(#5,0)}
+   \end{scope}
+   \draw[manifoldblue!73!black,line width=.65pt]
+    (0,-\footradius)
+     arc[start angle=-90,end angle=90,x radius=#5,y radius=\footradius];
+   \draw[manifoldblue!73!black,opacity=.65,line width=.55pt,
+         dash pattern=on 1.2pt off 1.4pt]
+    (0,\footradius)
+     arc[start angle=90,end angle=270,x radius=#5,y radius=\footradius];
+  \end{scope}
+ }
+
+ \def\baseball{\softball{0}{-1.22}{1.25}}
  \def\stemAleft{(-.82,-.45) .. controls (-1.65,-.20) and
   (-1.70,1.35) .. (-1.05,1.35)}
  \def\stemAright{(1.05,1.35) .. controls (1.70,1.35) and
@@ -402,14 +547,8 @@ przeplecionymi rdzeniami
  \def\stemBright{(1.05,.55) .. controls (1.50,.55) and
   (1.30,-.75) .. (.54,-1.02)}
  \def\feet{%
-  \foreach \x/\y/\a in {-.82/-.45/-18,.82/-.45/18,-.54/-1.02/-20,.54/-1.02/20}{
-   \begin{scope}[shift={(\x,\y)},rotate=\a]
-    \shade[top color=manifoldblue!15,bottom color=manifoldblue!48]
-     (0,0) ellipse (.13 and .255);
-    \draw[manifoldblue!70!black,opacity=.25,line width=.45pt]
-     (0,0) ellipse (.13 and .255);
-   \end{scope}
-  }
+  \softfoot{-.54}{-1.02}{-19.56}{14.6}{.14}
+  \softfoot{.54}{-1.02}{199.56}{14.6}{.14}
  }
  \def\cutmouth#1#2{%
   \shade[left color=manifoldblue!80!black,right color=manifoldblue!47,
@@ -419,20 +558,20 @@ przeplecionymi rdzeniami
    (#1,{#2+.20}) arc[start angle=90,end angle=270,x radius=.055,y radius=.20];
  }
  \begin{scope}[xshift=-4.65cm]
-  \baseball
   \softtube{\stemAleft --(1.05,1.35)
    .. controls (1.70,1.35) and (1.65,-.20) .. (.82,-.45)}
+  \baseball
   \softtube{\stemBleft --(1.05,.55)
    .. controls (1.50,.55) and (1.30,-.75) .. (.54,-1.02)}
   \feet
   \node[manifoldblue!75!black] at (0,1.96) {$\partial H=\Sigma_2$};
-  \node[align=center] at (0,-2.46) {dwa rozłączne\\uchwyty};
+  \node[align=center] at (0,-2.90) {dwa rozłączne\\uchwyty};
  \end{scope}
  \begin{scope}
-  \baseball
   \softtube{\stemAleft --(-.24,1.35)}
   \softtube{(.24,1.35)--(1.05,1.35)
    .. controls (1.70,1.35) and (1.65,-.20) .. (.82,-.45)}
+  \baseball
   \softtube{\stemBleft --(-.24,.55)}
   \softtube{(.24,.55)--(1.05,.55)
    .. controls (1.50,.55) and (1.30,-.75) .. (.54,-1.02)}
@@ -445,12 +584,12 @@ przeplecionymi rdzeniami
   \node[manifoldgold!65!black,font=\scriptsize] at (.39,1.81) {$A_+$};
   \node[manifoldgold!65!black,font=\scriptsize] at (-.39,.12) {$B_-$};
   \node[manifoldgold!65!black,font=\scriptsize] at (.39,.12) {$B_+$};
-  \node[align=center] at (0,-2.46) {cztery obrzeża\\po przecięciu};
+  \node[align=center] at (0,-2.90) {cztery obrzeża\\po przecięciu};
  \end{scope}
  \begin{scope}[xshift=4.65cm]
-  \baseball
   \softtube{\stemAleft}
   \softtube{\stemAright}
+  \baseball
   \softtube{\stemBleft}
   \softtube{\stemBright}
   \def\strandA#1#2{plot[domain=#1:#2,samples=100,smooth,variable=\t]
@@ -466,7 +605,7 @@ przeplecionymi rdzeniami
   \softtube{\strandB{.30}{.75}}
   \feet
   \node[manifoldblue!75!black] at (0,1.96) {$\partial H'=\Sigma_2$};
-  \node[align=center] at (0,-2.46) {te same pary końców\\po przepleceniu};
+  \node[align=center] at (0,-2.90) {te same pary końców\\po przepleceniu};
  \end{scope}
  \draw[->,manifoldred!80!black,line width=1.1pt] (-2.92,-.25)--(-2.04,-.25);
  \node[manifoldred!80!black,font=\scriptsize] at (-2.48,.10) {tnij};
@@ -475,6 +614,9 @@ przeplecionymi rdzeniami
   at (2.48,.23) {zapleć\\i sklej};
 \end{tikzpicture}
 \caption{Bryła kulista z dwoma rozłącznymi $1$-uchwytami.
+Nasady tylnego uchwytu są zasłonięte przez kulę.
+Przy widocznych nasadach przedniego uchwytu łuk ciągły
+wskazuje przednią część połączenia, a przerywany tylną.
 Po przecięciu pobocznic złote pierścienie obwodzą cztery
 otwarte przekroje rur. Podczas pełnego skrętu gałąź $A$
 przechodzi przed $B$ w pierwszym skrzyżowaniu rzutu,
