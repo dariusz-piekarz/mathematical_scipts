@@ -14,6 +14,48 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Konstrukcja chirurgiczna dla Rysunku 26.3(b) (2026-11-13)
+
+Na prośbę autora pod Rysunkiem 26.3 rozpisano powstawanie
+zielonego torusa przez chirurgię na brzegu kuli.
+Źródło wszystkich ilustracji pozostawiono bez zmian.
+
+1. Dwa punkty dzielą meridian μ na krótki łuk α i pozostały
+   łuk β. Współrzędne rurkowe pokazują, że pogrubienie α
+   jest kulą Bμ po wygładzeniu naroży.
+2. Pogrubienie β jest 1-uchwytem hμ. Jego dwa dyski końcowe
+   leżą na brzegu tej kuli; sklejenie odtwarza N(μ).
+   Przebieg uchwytu wzdłuż meridianu wyjaśnia oplatanie.
+3. Odczytano zmianę brzegu: dwa dyski zastępujemy pobocznicą
+   D¹×S¹, zgodnie z chirurgią typu (0,2) z Rysunku 26.1.
+   Cała konstrukcja leży w N(μ), więc zachowuje rozłączność z N(K).
+
+Uzasadniony tym opisem schemat zestawia dwa etapy:
+dwie sfery, torus i sfera, a następnie dwa torusy.
+Oba końce każdego uchwytu należą do jednej składowej,
+co wyjaśnia zachowanie dwóch składowych końcowego brzegu.
+Zachowano wszystkie dotychczasowe etykiety i numery.
+Zakres zmiany to objaśnienie konstrukcji w części (b),
+bez ponownego pełnego audytu rozdziału 26.
+
+Złożono i sprawdzono **tylko tom III: 105 stron**.
+Nowy opis znajduje się na fizycznych stronach 39–40 PDF-u
+(drukowane 38–39), bezpośrednio pod Rysunkiem 26.3.
+Obejrzano te strony, dalsze przełamanie rozdziału i jego sąsiedztwo,
+spis treści oraz indeks. Poprawiono podział listy, aby pierwszy
+wiersz kroku nie pozostawał samotnie u dołu strony.
+Porównanie źródeł potwierdziło zachowanie wszystkich ilustracji
+i etykiet bez zmian; numery dotychczasowych wyników zachowano.
+Nie ma nowych ostrzeżeń, przepełnień, brakujących odsyłaczy
+ani tekstu poza stroną. Wcześniejsze trzy komunikaty `Underfull`
+i ostrzeżenie o powtórzonym celu `page.1` pozostały bez zmian.
+Indeks przyjął 33 wpisy, bez odrzuceń i ostrzeżeń indeksu.
+Cele łączy między czterema PDF-ami istnieją.
+Pozostałe lokalne PDF-y zachowano bez zmian w tym cyklu.
+
+SHA-256 sprawdzonego tomu III:
+`384B4C269D6193C34BB9844A1B3452F70A5E55198EC774F57992763E8A316B73`.
+
 ## Nasady uchwytów i torus wokół meridianu (2026-11-13)
 
 Na podstawie dwóch szkiców autora dopracowano Rysunki 26.2–26.4

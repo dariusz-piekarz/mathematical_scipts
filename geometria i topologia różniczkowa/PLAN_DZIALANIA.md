@@ -306,6 +306,15 @@ rozłączności pełnych torusów i część (b) Rysunku 26.3 z przekrojem.
 Zachowano dotychczasowe numery przykładów, twierdzeń i rysunków.
 Etap zakończono składem i kontrolą tylko tomu III (104 strony),
 bez nowych ostrzeżeń. Szczegóły są w `PRZEGLAD.md`.
+Na kolejną prośbę autora pod Rysunkiem 26.3 dodano konstrukcję
+chirurgiczną zielonego torusa z części (b): wydzielenie kuli
+wokół krótkiego łuku meridianu, dołączenie uchwytu wzdłuż
+pozostałego łuku i zastąpienie dwóch dysków pobocznicą uchwytu.
+Wyjaśniono typ (0,2), rozłączność z niebieskim torusem
+oraz zachowanie dwóch składowych w schemacie obu operacji.
+Źródła rysunków i dotychczasową numerację zachowano.
+Uzupełnienie zakończono składem i kontrolą tylko tomu III
+(105 stron), bez nowych ostrzeżeń; szczegóły w `PRZEGLAD.md`.
 Następny w kolejności jest rozdział 23
 „Kobordyzmy i rachunek uchwytów” (tom III).
 Przy kolejnych
