@@ -13,7 +13,28 @@
 \usepackage{xcolor}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,calc,shapes.geometric,decorations.pathmorphing}
+\usepackage{graphicx}
+\usepackage{listings}
+\lstdefinestyle{kodNumeryczny}{
+  basicstyle=\ttfamily\scriptsize,
+  columns=fullflexible,keepspaces=true,
+  breaklines=true,showstringspaces=false,
+  numbers=left,numberstyle=\tiny\color{gray},
+  frame=single,framerule=.35pt,
+  rulecolor=\color{black!25},
+  backgroundcolor=\color{black!2},
+  xleftmargin=1.6em,framexleftmargin=1.6em,
+  aboveskip=7pt,belowskip=7pt
+}
+\lstdefinelanguage{Julia}{
+  morekeywords={using,for,in,end,while,if,else,break,true,false},
+  sensitive=true,morecomment=[l]{\#},morestring=[b]"
+}
+\lstset{style=kodNumeryczny}
 \usepackage[unicode]{hyperref}
+\usepackage{xr-hyper}
+\externaldocument[I-]{rachunek_prawdopodobienstwa_tom_I}[rachunek_prawdopodobienstwa_tom_I.pdf]
+\externaldocument[III-]{rachunek_prawdopodobienstwa_tom_III}[rachunek_prawdopodobienstwa_tom_III.pdf]
 \geometry{margin=2.65cm}
 \hypersetup{colorlinks=true,linkcolor=blue!45!black,urlcolor=blue!45!black}
 \setlength{\parindent}{0pt}
@@ -95,9 +116,10 @@ kiedy ma on ciągłe trajektorie? (3) Jak formalnie opisać narastającą
 w czasie informację i podejmować decyzje bez znajomości przyszłości?
 Rozdziały zostały ułożone tak, by konstrukcja procesu Wienera,
 miary Wienera i regularności trajektorii opierała się na ścisłych
-fundamentach probabilistycznych. Całka stochastyczna Itô,
-równania stochastyczne i systematyczna teoria całek po trajektoriach
-będą rozwinięte w tomie III, poświęconym analizie stochastycznej.
+fundamentach probabilistycznych. Całka stochastyczna Itô (tom~III, rozdział~\ref{III-chap:volIII:02}),
+równania stochastyczne (tom~III, rozdział~\ref{III-chap:volIII:05})
+i systematyczna teoria całek po trajektoriach (tom~III,
+rozdział~\ref{III-chap:volIII:15}) będą rozwinięte w tomie III, poświęconym analizie stochastycznej.
 Tom IV obejmie statystykę matematyczną i wnioskowanie bayesowskie.
 
 Zakładamy znajomość teorii miary i całki Lebesgue'a, twierdzenia
@@ -116,10 +138,15 @@ W rozdziałach 1--3 podkreślimy, że pojęcie modyfikacji nie wymaga
 równości procesów poza jednym zbiorem zerowym dla wszystkich chwil.
 To odróżnia je od nierozróżnialności.
 
+
+\par\smallskip\noindent{\small\textit{Ścieżka lektury:} \textup{tom~I}, sekcja~\ref{I-sec:volI:04:01} (zmienne losowe); \textup{tom~I}, sekcja~\ref{I-sec:volI:13:01} (filtracje dyskretne); sekcja~\ref{sec:volII:07:01} (proces Wienera); \textup{tom~III}, sekcja~\ref{III-sec:volIII:02:02} (całka Itô).}\par\smallskip
 \chapter{Procesy stochastyczne: od rozkładów do trajektorii}
+\label{chap:volII:01}
+\par\smallskip\noindent{\small\textit{Powiązania:} \textup{tom~I}, sekcja~\ref{I-sec:volI:04:01} (zmienne losowe i rozkłady); \textup{tom~I}, sekcja~\ref{I-sec:volI:07:01} (rodzaje zbieżności); sekcja~\ref{sec:volII:02:01} (konstrukcja procesu); tom~I, twierdzenie~\ref{I-thm:volI:04:01} (własności dystrybuanty).}\par\smallskip
+
 \label{ch:procesy}
 
-\section{Dlaczego pojedyncza zmienna losowa już nie wystarcza?}
+\section{Dlaczego pojedyncza zmienna losowa już nie wystarcza?}\label{sec:volII:01:01}
 Rozkład zmiennej $X$ odpowiada na pytanie, jakie wartości może przyjmować
 jeden pomiar. Jeżeli mierzymy temperaturę co godzinę, pozycję cząstki
 przez kilka sekund albo liczbę klientów w sklepie w ciągu dnia, to
@@ -133,7 +160,7 @@ $\Prob(X_0=X_1)$ wynosi odpowiednio $1/2$ albo $1$.
 Zrozumienie procesu wymaga więc danych o \emph{wspólnych} rozkładach
 pomiarów, a potem także informacji o zachowaniu trajektorii.
 
-\begin{definicja}[Proces stochastyczny]
+\begin{definicja}[Proces stochastyczny]\label{def:volII:01:01}
 Niech $(\Omega,\calF,\Prob)$ będzie przestrzenią probabilistyczną,
 $T\ne\varnothing$ dowolnym zbiorem indeksów, a $(E,\calE)$
 przestrzenią mierzalną. \emph{Procesem stochastycznym o przestrzeni
@@ -183,6 +210,8 @@ niezależnych przyrostach.
 \end{przyklad}
 
 \begin{przyklad}[Dwa procesy o tych samych rozkładach pojedynczych]
+Przez $\Law(Z)$ oznaczamy rozkład zmiennej losowej $Z$
+(jej miarę probabilistyczną na przestrzeni wartości).
 Niech $\xi_0,\xi_1,\ldots$ będą niezależnymi zmiennymi Bernoulliego
 z parametrem $1/2$, a $Z$ kolejną taką zmienną. Definiujemy
 $X_n=\xi_n$ i $Y_n=Z$ dla każdego $n\in\N_0$.
@@ -194,8 +223,8 @@ a $\Prob(Y_0=\cdots=Y_n)=1$.
 To pierwszy powód, aby badać rozkłady \emph{skończeniewymiarowe}.
 \end{przyklad}
 
-\section{Rozkłady skończeniewymiarowe i prawo procesu}
-\begin{definicja}[Rozkład skończeniewymiarowy]
+\section{Rozkłady skończeniewymiarowe i prawo procesu}\label{sec:volII:01:02}
+\begin{definicja}[Rozkład skończeniewymiarowy]\label{def:volII:01:02}
 Niech $X=(X_t)_{t\in T}$ będzie procesem o stanach w $(E,\calE)$.
 Dla każdego $m\ge1$ oraz $t_1,\ldots,t_m\in T$ definiujemy
 rozkład wektora $(X_{t_1},\ldots,X_{t_m})$ na
@@ -219,7 +248,7 @@ W szczególności $\Prob(X_s\in A,X_t\in B)$ nie jest na ogół
 iloczynem $\Prob(X_s\in A)\Prob(X_t\in B)$; taki iloczyn
 wymaga niezależności zmiennych $X_s$ i $X_t$.
 
-\begin{twierdzenie}[Zgodność rzeczywistych rozkładów procesu]
+\begin{twierdzenie}[Zgodność rzeczywistych rozkładów procesu]\label{thm:volII:01:01}
 Niech $X=(X_t)_{t\in T}$ będzie procesem o stanach w $(E,\calE)$.
 Wówczas dla dowolnych $m\ge1$, $t_1,\ldots,t_m\in T$,
 permutacji $\pi$ zbioru $\{1,\ldots,m\}$ oraz każdego
@@ -253,7 +282,7 @@ W drugą stronę powstaje podstawowe pytanie: \emph{jeśli zadamy
 rodzinę miar o tych własnościach, czy istnieje proces mający właśnie
 te rozkłady?} Odpowiemy na nie w rozdziale~\ref{ch:konstrukcja}.
 
-\begin{definicja}[Prawo procesu na przestrzeni iloczynowej]
+\begin{definicja}[Prawo procesu na przestrzeni iloczynowej]\label{def:volII:01:03}
 Niech $(E,\calE)$ będzie przestrzenią mierzalną, a
 $\calE^{\otimes T}$ najmniejszym $\sigma$-ciałem na $E^T$,
 które czyni wszystkie rzuty $\pi_t:E^T\to E$, $\pi_t(x)=x(t)$,
@@ -264,7 +293,7 @@ $\mathbf X:\Omega\to E^T$ jest dane wzorem
 $\mathbf X(\omega)=(X_t(\omega))_{t\in T}$.
 \end{definicja}
 
-\begin{stwierdzenie}[Mierzalność i jednoznaczność prawa]
+\begin{stwierdzenie}[Mierzalność i jednoznaczność prawa]\label{prop:volII:01:01}
 Dla dowolnego procesu $X$ odwzorowanie
 $\mathbf X:(\Omega,\calF)\to(E^T,\calE^{\otimes T})$ jest
 mierzalne. Jeśli procesy $X,Y$ o tym samym zbiorze czasów $T$
@@ -299,6 +328,8 @@ $C([0,T];\R^d)$.
 
 
 \begin{zadanie}[Prawdopodobieństwo dwóch pomiarów i maksimum trajektorii]
+Zapis $\Normal(0,1)$ oznacza standardowy rozkład normalny
+o średniej $0$ i wariancji $1$.
 Niech $Z$ ma rozkład $\Normal(0,1)$, a $X_t=tZ$ dla
 $t\in[0,2]$. Obliczyć $\Prob(X_1>0,X_2>1)$ oraz
 $\Prob(\sup_{0\le t\le2}X_t>1)$ i wyjaśnić, czy w obu pytaniach
@@ -319,13 +350,13 @@ też wyrazić jako supremum po przeliczalnym zbiorze chwil
 wymiernych, co zapewnia mierzalność zdarzenia.
 \end{zadanie}
 
-\section{Modyfikacje i nierozróżnialność}
+\section{Modyfikacje i nierozróżnialność}\label{sec:volII:01:03}
 W czasie dyskretnym można zsumować przeliczalnie wiele zbiorów
 zerowych. W czasie ciągłym jest nieprzeliczalnie wiele chwil;
 nie wolno zatem automatycznie zamieniać zdań ``dla każdego $t$
 prawie na pewno'' oraz ``prawie na pewno dla każdego $t$''.
 
-\begin{definicja}[Modyfikacja i nierozróżnialność]
+\begin{definicja}[Modyfikacja i nierozróżnialność]\label{def:volII:01:04}
 Niech $X,Y$ będą procesami na tej samej przestrzeni probabilistycznej,
 o wspólnym zbiorze indeksów $T$ i przestrzeni stanów $E$.
 Mówimy, że $Y$ jest \emph{modyfikacją} (wersją) $X$, jeśli
@@ -340,7 +371,7 @@ $\omega\notin N$ i wszystkich $t\in T$ zachodzi
 $X_t(\omega)=Y_t(\omega)$.
 \end{definicja}
 
-\begin{stwierdzenie}[Czas przeliczalny]
+\begin{stwierdzenie}[Czas przeliczalny]\label{prop:volII:01:02}
 Jeśli $T$ jest przeliczalny, a $X$ i $Y$ są swoimi
 modyfikacjami, to są nierozróżnialne.
 \end{stwierdzenie}
@@ -354,6 +385,8 @@ wszystkich $t$ równocześnie.
 \end{proof}
 
 \begin{przyklad}[Modyfikacja, która nie jest nierozróżnialna]
+Zapis $\ind{A}$ oznacza funkcję wskaźnikową zdarzenia $A$:
+równą $1$ na $A$ i $0$ poza $A$.
 Niech $\Omega=[0,1]$ z miarą Lebesgue'a i niech
 $U(\omega)=\omega$. Dla $t\in[0,1]$ definiujemy
 $X_t(\omega)=0$ oraz $Y_t(\omega)=\ind{\{U(\omega)=t\}}$.
@@ -366,7 +399,7 @@ nawet jeden wynik $\omega$, dla którego trajektorie byłyby
 wszędzie równe. Trajektorie $Y$ mają losowy ``kolec''.
 \end{przyklad}
 
-\begin{twierdzenie}[Ciągłe modyfikacje są nierozróżnialne]
+\begin{twierdzenie}[Ciągłe modyfikacje są nierozróżnialne]\label{thm:volII:01:02}
 Niech $T=[0,T_0]$ dla $T_0>0$, a $E$ będzie przestrzenią
 metryczną. Niech procesy $X,Y$ mają trajektorie ciągłe na $T$
 poza ewentualnymi, osobnymi mierzalnymi zbiorami zerowymi.
@@ -388,8 +421,8 @@ $X_s(\omega)=\lim_n X_{t_n}(\omega)
 Zbiór $N$ nie zależy od $s$, co jest kluczowym elementem dowodu.
 \end{proof}
 
-\section{Przestrzeń trajektorii ciągłych}
-\begin{definicja}[{Przestrzeń $C([0,T];\R^d)$}]
+\section{Przestrzeń trajektorii ciągłych}\label{sec:volII:01:04}
+\begin{definicja}[{Przestrzeń $C([0,T];\R^d)$}]\label{def:volII:01:05}
 Dla $T>0$ i $d\in\N$ oznaczamy przez
 $C([0,T];\R^d)$ zbiór wszystkich funkcji ciągłych
 $x:[0,T]\to\R^d$ i wyposażamy go w metrykę
@@ -398,7 +431,7 @@ Jego borelowskie $\sigma$-ciało oznaczamy przez
 $\calB(C([0,T];\R^d))$.
 \end{definicja}
 
-\begin{twierdzenie}[Mierzalność współrzędnych i generowanie $\sigma$-ciała]
+\begin{twierdzenie}[Mierzalność współrzędnych i generowanie $\sigma$-ciała]\label{thm:volII:01:03}
 Niech $T>0$, $d\ge1$ oraz
 $D=(\Q\cap[0,T])\cup\{T\}$.
 Dla każdego $t\in[0,T]$ ewaluacja
@@ -468,7 +501,7 @@ kanoniczna przestrzeń $E^T$, gdzie sama ciągłość trajektorii
 nie musi odpowiadać mierzalnemu zbiorowi cylindrycznemu.
 \end{uwaga}
 
-\section{Trajektorie ze skokami: przestrzeń funkcji c\`adl\`ag}
+\section{Trajektorie ze skokami: przestrzeń funkcji c\`adl\`ag}\label{sec:volII:01:05}
 Między procesem o trajektoriach ciągłych a procesem
 zupełnie nieregularnym istnieje ważna klasa pośrednia:
 trajektorie mogą mieć skoki, ale nie powinny oscylować
@@ -476,7 +509,7 @@ w dowolny sposób bezpośrednio przed każdą chwilą.
 Taki warunek będzie podstawowy dla procesów Poissona,
 łańcuchów Markowa w czasie ciągłym i procesów Lévy'ego.
 
-\begin{definicja}[Trajektoria c\`adl\`ag]
+\begin{definicja}[Trajektoria c\`adl\`ag]\label{def:volII:01:06}
 Niech $(E,d)$ będzie przestrzenią metryczną, a $T>0$.
 Funkcja $f:[0,T]\to E$ jest \emph{c\`adl\`ag}, jeżeli:
 \begin{enumerate}
@@ -515,8 +548,8 @@ przesunięcia czasu. Na razie potrzebujemy tylko
 samego pojęcia trajektorii c\`adl\`ag.
 \end{uwaga}
 
-\section{Przyrosty, stacjonarność i regularność w czasie}
-\begin{definicja}[Przyrosty]
+\section{Przyrosty, stacjonarność i regularność w czasie}\label{sec:volII:01:06}
+\begin{definicja}[Przyrosty]\label{def:volII:01:07}
 Niech $X=(X_t)_{t\ge0}$ będzie procesem o wartościach w $\R^d$.
 Mówimy, że ma \emph{niezależne przyrosty}, jeżeli dla
 każdych $m\ge1$ i $0\le t_0<t_1<\cdots<t_m$
@@ -530,7 +563,7 @@ $\lim_{s\to t}\Prob(\norm{X_s-X_t}>\varepsilon)=0$
 \end{definicja}
 
 
-\begin{twierdzenie}[Rozkład procesu wyznaczony przez niezależne przyrosty]
+\begin{twierdzenie}[Rozkład procesu wyznaczony przez niezależne przyrosty]\label{thm:volII:01:04}
 Niech $X=(X_t)_{t\ge0}$ będzie rzeczywistym procesem
 o niezależnych przyrostach i niech $X_0=0$ prawie na pewno.
 Dla $0=t_0<t_1<\cdots<t_m$ oznaczmy
@@ -587,7 +620,7 @@ od jednego zdarzenia pełnej miary, na którym wszystkie trajektorie
 mają żądaną regularność.
 \end{uwaga}
 
-\begin{definicja}[Stacjonarność ścisła i w drugim rzędzie]
+\begin{definicja}[Stacjonarność ścisła i w drugim rzędzie]\label{def:volII:01:08}
 Niech $T=\R$ lub $T=[0,\infty)$, a $X_t\in\R^d$.
 Proces jest \emph{ściśle stacjonarny}, jeżeli dla każdego
 $m\ge1$, $t_1,\ldots,t_m\in T$ i $h$ takich, że wszystkie
@@ -599,7 +632,7 @@ $\E X_t=m$ nie zależy od $t$, a $\Cov(X_s,X_t)=c(t-s)$
 dla pewnej funkcji $c$ i wszystkich $s,t\in T$.
 \end{definicja}
 
-\begin{twierdzenie}
+\begin{twierdzenie}\label{thm:volII:01:05}
 Każdy ściśle stacjonarny proces rzeczywisty,
 dla którego $\E X_t^2<\infty$ dla wszystkich $t$,
 jest stacjonarny w drugim rzędzie.
@@ -646,8 +679,8 @@ po obu stronach $U(\omega)$ miałyby różne granice jednostronne.
 Ciągła funkcja $Y(\omega)$ nie może mieć takiego zachowania.
 \end{przyklad}
 
-\section{Procesy gaussowskie jako zapowiedź konstrukcji}
-\begin{definicja}[Proces gaussowski]
+\section{Procesy gaussowskie jako zapowiedź konstrukcji}\label{sec:volII:01:07}
+\begin{definicja}[Proces gaussowski]\label{def:volII:01:09}
 Proces rzeczywisty $X=(X_t)_{t\in T}$ nazywamy
 \emph{gaussowskim}, jeżeli dla każdego $m\ge1$
 i $t_1,\ldots,t_m\in T$ wektor
@@ -657,7 +690,7 @@ Jego funkcjami średniej i kowariancji są odpowiednio
 $m(t)=\E X_t$ i $K(s,t)=\Cov(X_s,X_t)$.
 \end{definicja}
 
-\begin{stwierdzenie}[Dodatnia półokreśloność kowariancji]
+\begin{stwierdzenie}[Dodatnia półokreśloność kowariancji]\label{prop:volII:01:03}
 Jeśli $X=(X_t)_{t\in T}$ jest procesem rzeczywistym o
 skończonych drugich momentach, to funkcja
 $K(s,t)=\Cov(X_s,X_t)$ jest symetryczna i dla każdych
@@ -732,9 +765,12 @@ wszystkich procesów o skończonych drugich momentach.
 \end{przyklad}
 
 \chapter{Konstrukcja procesów i regularność trajektorii}
+\label{chap:volII:02}
+\par\smallskip\noindent{\small\textit{Powiązania:} sekcja~\ref{sec:volII:01:02} (rozkłady skończeniewymiarowe); \textup{tom~I}, sekcja~\ref{I-sec:volI:07:02} (zbieżność słaba); sekcja~\ref{sec:volII:07:01} (ruch Browna); twierdzenie~\ref{thm:volII:01:01} (zgodność rozkładów procesu).}\par\smallskip
+
 \label{ch:konstrukcja}
 
-\section{Problem istnienia: od tabel rozkładów do całego procesu}
+\section{Problem istnienia: od tabel rozkładów do całego procesu}\label{sec:volII:02:01}
 Załóżmy, że chcemy opisać losowy ruch bez podawania jawnego wzoru
 $X_t(\omega)$. Możemy zamiast tego ustalić, jak mają wyglądać
 rozkłady wszystkich wektorów
@@ -752,7 +788,7 @@ nie leży w sprawdzeniu skończenie wielu zmiennych, lecz w
 zbudowaniu miary na przestrzeni funkcji indeksowanych
 nieprzeliczalnym zbiorem chwil.
 
-\begin{definicja}[Zgodny układ rozkładów]
+\begin{definicja}[Zgodny układ rozkładów]\label{def:volII:02:01}
 Niech $T$ będzie niepustym zbiorem, a $E$ przestrzenią polską,
 tj. metryzowalną, zupełną i ośrodkową, z borelowskim
 $\sigma$-ciałem $\calB(E)$. Dla każdej skończonej
@@ -779,7 +815,7 @@ zmienną. Równoważnie można zadawać rozkłady tylko dla
 skończonych \emph{zbiorów} czasów i wymagać zgodności
 względem wszystkich rzutowań; wtedy problem powtórzeń znika.
 
-\begin{lemat}[Algebra cylindrów]
+\begin{lemat}[Algebra cylindrów]\label{lem:volII:02:01}
 Niech $E\ne\varnothing$ będzie przestrzenią polską, a $T$
 niepustym zbiorem. Niech $\cal A$ będzie rodziną podzbiorów
 $E^T$ postaci $\pi_J^{-1}(B)$, gdzie
@@ -816,7 +852,7 @@ nie mówi natomiast niczego o gładkości lub ciągłości
 otrzymanych trajektorii.
 \end{przyklad}
 
-\begin{twierdzenie}[Twierdzenie Kołmogorowa o istnieniu procesu]
+\begin{twierdzenie}[Twierdzenie Kołmogorowa o istnieniu procesu]\label{thm:volII:02:01}
 \label{thm:kol-ext}
 Niech $T$ będzie dowolnym niepustym zbiorem, a $(E,d)$
 niepustą przestrzenią polską z borelowskim $\sigma$-ciałem.
@@ -966,7 +1002,7 @@ trajektorii: otrzymaliśmy tylko mierzalność każdej
 współrzędnej $X_t$ z osobna.
 \end{uwaga}
 
-\section{Przykłady konstrukcji z zadanych rozkładów}
+\section{Przykłady konstrukcji z zadanych rozkładów}\label{sec:volII:02:02}
 \begin{przyklad}[Nieskończona rodzina niezależnych zmiennych]
 Niech $T$ będzie dowolnym zbiorem, a $\nu$ miarą
 probabilistyczną na przestrzeni polskiej $E$.
@@ -1067,7 +1103,7 @@ Różnica polega na tym, że w drugim pytaniu
 sumujemy po wszystkich możliwych stanach w chwili $1$.
 \end{przyklad}
 
-\section{Kiedy proces może mieć trajektorie ciągłe?}
+\section{Kiedy proces może mieć trajektorie ciągłe?}\label{sec:volII:02:03}
 Rozkłady skończeniewymiarowe odpowiadają na pytania o
 skończoną liczbę chwil, ale własność ciągłości wymaga
 jednoczesnej kontroli \emph{nieskończenie wielu} przyrostów.
@@ -1075,7 +1111,7 @@ Narzędziem będzie oszacowanie momentów przyrostów
 $\E\norm{X_t-X_s}^p$ o wykładniku potęgowym ściśle
 większym niż $1$ w jednowymiarowym parametrze czasu.
 
-\begin{definicja}[Ciągłość Höldera]
+\begin{definicja}[Ciągłość Höldera]\label{def:volII:02:02}
 Niech $T>0$ oraz $\gamma>0$.
 Funkcję $f:[0,T]\to\R^d$ nazywamy $\gamma$-h"olderowską,
 jeśli istnieje stała $C_f<\infty$ taka, że
@@ -1087,7 +1123,7 @@ to ten sam warunek daje
 $\norm{f(t)-f(s)}\le C_f\abs{t-s}^{\gamma}n^{1-\gamma}\to0$.
 \end{definicja}
 
-\begin{lemat}[Kontrola przyrostów na siatkach dyadycznych]
+\begin{lemat}[Kontrola przyrostów na siatkach dyadycznych]\label{lem:volII:02:02}
 \label{lem:dyadyczny}
 Niech $T>0$, $d\ge1$ i $0<\gamma<\infty$.
 Niech $D_n:=\{kT2^{-n}:k=0,\ldots,2^n\}$,
@@ -1141,7 +1177,7 @@ na domknięcie $D$, tj. na $[0,T]$; przejście do
 odpowiednich granic przenosi oszacowanie na wszystkie $s,t$.
 \end{proof}
 
-\begin{twierdzenie}[Kryterium ciągłości Kołmogorowa]
+\begin{twierdzenie}[Kryterium ciągłości Kołmogorowa]\label{thm:volII:02:02}
 \label{thm:kol-cont}
 Niech $T>0$, $d\ge1$ i niech
 $X=(X_t)_{t\in[0,T]}$ będzie procesem o wartościach w $\R^d$
@@ -1255,14 +1291,14 @@ oszacowaniami dla wyższych momentów, prowadzącymi do
 większych wykładników.
 \end{przyklad}
 
-\section{Konstrukcja procesu Wienera: pierwszy kontakt}
+\section{Konstrukcja procesu Wienera: pierwszy kontakt}\label{sec:volII:02:04}
 Rozdziały poświęcone ruchowi Browna i mierze Wienera
 rozwiną tę konstrukcję, ale teraz możemy ją już wykonać
 matematycznie poprawnie, korzystając z dwóch udowodnionych
 twierdzeń. Zauważmy, że nie potrzebujemy żadnej całki
 stochastycznej.
 
-\begin{twierdzenie}[Istnienie standardowego procesu Wienera]
+\begin{twierdzenie}[Istnienie standardowego procesu Wienera]\label{thm:volII:02:03}
 \label{thm:wiener-exists}
 Istnieją przestrzeń probabilistyczna i proces rzeczywisty
 $W=(W_t)_{t\ge0}$ takie, że:
@@ -1370,7 +1406,7 @@ jeszcze użyta w konstrukcji.
 \par\smallskip\small Poglądowa łamana, a nie numerycznie wygenerowana realizacja procesu Wienera.
 \end{center}
 
-\section{Zadanie rozwiązane: dlaczego ciągłość wymaga osobnego dowodu?}
+\section{Zadanie rozwiązane: dlaczego ciągłość wymaga osobnego dowodu?}\label{sec:volII:02:05}
 \begin{zadanie}[Proces o jednym losowym skoku]
 Niech $U\sim\operatorname{U}([0,1])$ i
 $X_t=\ind{\{U\le t\}}$ dla $t\in[0,1]$.
@@ -1414,9 +1450,12 @@ Ciągła modyfikacja nie istnieje.
 \end{zadanie}
 
 \chapter{Filtracje i obserwacja procesów w czasie ciągłym}
+\label{chap:volII:03}
+\par\smallskip\noindent{\small\textit{Powiązania:} \textup{tom~I}, sekcja~\ref{I-sec:volI:13:01} (filtracje dyskretne); \textup{tom~I}, sekcja~\ref{I-sec:volI:10:03} (warunkowa wartość oczekiwana); \textup{tom~III}, sekcja~\ref{III-sec:volIII:02:03} (procesy przewidywalne); tom~I, twierdzenie~\ref{I-thm:volI:13:04} (opcjonalne próbkowanie w czasie dyskretnym).}\par\smallskip
+
 \label{ch:filtracje}
 
-\section{Informacja: co wolno wiedzieć w chwili \texorpdfstring{$t$}{t}?}
+\section{Informacja: co wolno wiedzieć w chwili \texorpdfstring{$t$}{t}?}\label{sec:volII:03:01}
 Proces $X=(X_t)_{t\ge0}$ opisuje, co dzieje się z układem.
 Do zdefiniowania decyzji zależnej od przeszłości potrzebujemy jednak
 osobnego pojęcia \emph{informacji dostępnej w danej chwili}.
@@ -1429,7 +1468,7 @@ Matematycznym modelem tego rozróżnienia jest rosnąca rodzina
 $\sigma$-ciał: im późniejsza chwila, tym więcej zdarzeń umiemy
 rozpoznać na podstawie dostępnej informacji.
 
-\begin{definicja}[Filtracja i przestrzeń filtrowana]
+\begin{definicja}[Filtracja i przestrzeń filtrowana]\label{def:volII:03:01}
 Niech $(\Omega,\calF,\Prob)$ będzie przestrzenią
 probabilistyczną, a $T=[0,\infty)$ lub $T=[0,T_0]$
 przy $T_0>0$. \emph{Filtracją} nazywamy rodzinę
@@ -1440,7 +1479,7 @@ $(\Omega,\calF,\mathbb F,\Prob)$ nazywamy
 \emph{przestrzenią probabilistyczną z filtracją}.
 \end{definicja}
 
-\begin{definicja}[Filtracja naturalna i adaptacja]
+\begin{definicja}[Filtracja naturalna i adaptacja]\label{def:volII:03:02}
 Niech $X=(X_t)_{t\in T}$ będzie procesem o stanach w
 $(E,\calE)$. Jego \emph{filtracją naturalną} jest
 $\calF_t^X:=\sigma(X_s:0\le s\le t)$.
@@ -1449,7 +1488,7 @@ $\mathbb F$, jeżeli $X_t$ jest $\calF_t/\calE$-mierzalny
 dla każdego $t\in T$.
 \end{definicja}
 
-\begin{stwierdzenie}
+\begin{stwierdzenie}\label{prop:volII:03:01}
 Dla każdego procesu $X$ z czasem $T=[0,\infty)$
 jego filtracja naturalna $\mathbb F^X$ jest filtracją,
 $X$ jest do niej adaptowany, a jeżeli $\mathbb F$
@@ -1509,8 +1548,8 @@ co daje sprzeczność.
 \par\smallskip\small Rozróżnienie: wykres trajektorii oraz zbiory informacji $\calF_t$.
 \end{center}
 
-\section{Zupełność i prawostronna ciągłość filtracji}
-\begin{definicja}[Warunki zwykłe]
+\section{Zupełność i prawostronna ciągłość filtracji}\label{sec:volII:03:02}
+\begin{definicja}[Warunki zwykłe]\label{def:volII:03:03}
 Niech $\mathbb F=(\calF_t)_{t\ge0}$ będzie filtracją
 na $(\Omega,\calF,\Prob)$. Mówimy, że filtracja jest
 \emph{zupełna}, jeśli $\calF_0$ zawiera wszystkie
@@ -1534,7 +1573,7 @@ pomaga wykazać, że czasy pierwszego wejścia do
 zbiorów otwartych są czasami zatrzymania.
 Nie jest jednak automatyczną własnością każdej filtracji.
 
-\begin{stwierdzenie}[Prawostronnie ciągłe powiększenie]
+\begin{stwierdzenie}[Prawostronnie ciągłe powiększenie]\label{prop:volII:03:02}
 Niech $\mathbb F^0=(\calF_t^0)_{t\ge0}$ będzie
 filtracją na pełnej przestrzeni probabilistycznej
 $(\Omega,\calF,\Prob)$, a $\calN$ rodziną podzbiorów
@@ -1591,8 +1630,8 @@ trajektorie w zerze: właśnie skok przy $t=0$ umożliwia
 tak prosty kontrprzykład.
 \end{przyklad}
 
-\section{Mierzalność wspólna, progresywna i przewidywalna}
-\begin{definicja}[Mierzalność procesu]
+\section{Mierzalność wspólna, progresywna i przewidywalna}\label{sec:volII:03:03}
+\begin{definicja}[Mierzalność procesu]\label{def:volII:03:04}
 Niech $E$ będzie przestrzenią polską,
 $X:[0,\infty)\times\Omega\to E$ oraz
 $\mathbb F=(\calF_t)_{t\ge0}$ filtracją.
@@ -1622,7 +1661,7 @@ przedziale. Dlatego procesy proste w rachunku Itô
 będą zbudowane z wartości znanych na lewych końcach
 przedziałów.
 
-\begin{twierdzenie}[Regularne trajektorie dają mierzalność progresywną]
+\begin{twierdzenie}[Regularne trajektorie dają mierzalność progresywną]\label{thm:volII:03:01}
 \label{thm:prog}
 Niech $E$ będzie przestrzenią polską,
 $\mathbb F=(\calF_t)_{t\ge0}$ filtracją, a
@@ -1681,7 +1720,7 @@ bez regularności trajektorii, nie muszą być wspólnie,
 a tym bardziej progresywnie mierzalne.
 \end{uwaga}
 
-\begin{stwierdzenie}[Proste strategie przewidywalne]
+\begin{stwierdzenie}[Proste strategie przewidywalne]\label{prop:volII:03:03}
 Niech $0=t_0<t_1<\cdots<t_m<\infty$, a
 $H_0,\ldots,H_{m-1}$ będą rzeczywistymi zmiennymi
 losowymi, przy czym $H_k$ jest $\calF_{t_k}$-mierzalna.
@@ -1713,8 +1752,8 @@ Przy konstrukcji całki Itô wybierzemy zwykle $H_0=0$
 i pominiemy wkład pojedynczej chwili $0$.
 \end{uwaga}
 
-\section{Czasy zatrzymania}
-\begin{definicja}[Czas zatrzymania]
+\section{Czasy zatrzymania}\label{sec:volII:03:04}
+\begin{definicja}[Czas zatrzymania]\label{def:volII:03:05}
 Niech $\mathbb F=(\calF_t)_{t\ge0}$ będzie filtracją.
 Zmienną losową $\tau:\Omega\to[0,\infty]$
 nazywamy \emph{czasem zatrzymania względem $\mathbb F$},
@@ -1730,7 +1769,7 @@ Wymóg ten wyklucza strategie, które wybierają czas
 na podstawie wyniku z przyszłości. Nie wymaga natomiast,
 aby w chwili $0$ było wiadomo, jaka będzie wartość $\tau$.
 
-\begin{stwierdzenie}[Działania na czasach zatrzymania]
+\begin{stwierdzenie}[Działania na czasach zatrzymania]\label{prop:volII:03:04}
 Niech $\sigma,\tau$ będą czasami zatrzymania dla filtracji
 $\mathbb F=(\calF_t)_{t\ge0}$. Wtedy
 $\sigma\wedge\tau:=\min(\sigma,\tau)$,
@@ -1765,7 +1804,7 @@ $\bigcap_{k\ge1}\calF_{t+1/k}=\calF_t$
 przy prawostronnej ciągłości filtracji.
 \end{proof}
 
-\begin{twierdzenie}[Czas pierwszego trafienia w zbiór domknięty]
+\begin{twierdzenie}[Czas pierwszego trafienia w zbiór domknięty]\label{thm:volII:03:02}
 \label{thm:hitting-closed}
 Niech $(E,d)$ będzie przestrzenią metryczną,
 $F\subseteq E$ niepustym zbiorem domkniętym,
@@ -1804,7 +1843,7 @@ jest $\calF_t$-mierzalne. Zatem
 $\{\tau_F\le t\}\in\calF_t$.
 \end{proof}
 
-\begin{twierdzenie}[Czas wejścia do zbioru otwartego]
+\begin{twierdzenie}[Czas wejścia do zbioru otwartego]\label{thm:volII:03:03}
 Niech $(E,d)$ będzie przestrzenią metryczną,
 $O\subseteq E$ otwartym zbiorem,
 $\mathbb F=(\calF_t)_{t\ge0}$ prawostronnie ciągłą filtracją,
@@ -1843,8 +1882,8 @@ argumenty zachowują ważność po uwzględnieniu
 zbiorów zerowych.
 \end{uwaga}
 
-\section{Informacja dostępna w losowej chwili}
-\begin{definicja}[$\sigma$-ciało w czasie zatrzymania]
+\section{Informacja dostępna w losowej chwili}\label{sec:volII:03:05}
+\begin{definicja}[$\sigma$-ciało w czasie zatrzymania]\label{def:volII:03:06}
 Niech $\tau$ będzie czasem zatrzymania dla filtracji
 $\mathbb F=(\calF_t)_{t\ge0}$ na $(\Omega,\calF,\Prob)$.
 Definiujemy
@@ -1857,7 +1896,7 @@ Interpretujemy $\calF_\tau$ jako informację dostępną
 w chwili losowej $\tau$.
 \end{definicja}
 
-\begin{twierdzenie}[Podstawowe własności $\calF_\tau$]
+\begin{twierdzenie}[Podstawowe własności $\calF_\tau$]\label{thm:volII:03:04}
 Niech $\mathbb F$ będzie filtracją i $\tau$ jej czasem
 zatrzymania. Wtedy $\calF_\tau$ jest $\sigma$-ciałem.
 Jeśli $\sigma$ jest innym czasem zatrzymania i
@@ -1923,7 +1962,7 @@ gdzie $\calF_\infty=\sigma(\bigcup_t\calF_t)$
 nie należy utożsamiać $\calF_\infty$ z całym $\calF$.
 \end{uwaga}
 
-\begin{twierdzenie}[Mierzalność obserwacji w chwili zatrzymania]
+\begin{twierdzenie}[Mierzalność obserwacji w chwili zatrzymania]\label{thm:volII:03:05}
 \label{thm:sampled}
 Niech $E$ będzie przestrzenią polską,
 $X=(X_t)_{t\ge0}$ progresywnie mierzalnym procesem
@@ -1961,8 +2000,8 @@ Dla $\tau=\infty$ na zbiorze zerowym uzupełnienie
 jest mierzalne przy założonej zupełności filtracji.
 \end{proof}
 
-\section{Zatrzymywanie procesów i próbkowanie opcjonalne}
-\begin{definicja}[Proces zatrzymany]
+\section{Zatrzymywanie procesów i próbkowanie opcjonalne}\label{sec:volII:03:06}
+\begin{definicja}[Proces zatrzymany]\label{def:volII:03:07}
 Niech $X=(X_t)_{t\ge0}$ będzie procesem $E$-wartościowym,
 a $\tau$ czasem zatrzymania. \emph{Procesem zatrzymanym}
 nazywamy $X^\tau=(X_{t\wedge\tau})_{t\ge0}$.
@@ -1970,7 +2009,7 @@ W szczególności dla $\tau=\infty$ mamy
 $X_{t\wedge\tau}=X_t$ dla wszystkich skończonych $t$.
 \end{definicja}
 
-\begin{stwierdzenie}
+\begin{stwierdzenie}\label{prop:volII:03:05}
 Niech $X$ będzie progresywnie mierzalny i adaptowany do
 filtracji $\mathbb F$, a $\tau$ czasem zatrzymania.
 Wtedy proces $X^\tau$ jest adaptowany. Jeśli każda
@@ -1998,7 +2037,7 @@ Przytoczymy go tu z dowodem, aby od początku pilnować
 różnicy pomiędzy \emph{ograniczeniem czasu} a jedynie
 jego prawie pewną skończonością.
 
-\begin{lemat}[Jednostajna całkowalność warunkowych wartości oczekiwanych]
+\begin{lemat}[Jednostajna całkowalność warunkowych wartości oczekiwanych]\label{lem:volII:03:01}
 \label{lem:ui-cond}
 Niech $Y\in L^1(\Omega,\calF,\Prob)$.
 Rodzina $\{\E[Y\mid\calG]:\calG\subseteq\calF
@@ -2025,7 +2064,7 @@ Oszacowanie nie zależy od $\calG$, co dowodzi
 jednostajnej całkowalności całej rodziny.
 \end{proof}
 
-\begin{lemat}[Próbkowanie opcjonalne na skończonej siatce]
+\begin{lemat}[Próbkowanie opcjonalne na skończonej siatce]\label{lem:volII:03:02}
 \label{lem:disc-optional}
 Niech $(M_k)_{k=0}^N$ będzie całkowalnym martyngałem
 względem filtracji $(\calH_k)_{k=0}^N$,
@@ -2062,7 +2101,7 @@ charakterystyka warunkowej wartości oczekiwanej
 daje tezę.
 \end{proof}
 
-\begin{twierdzenie}[Opcjonalne próbkowanie w ograniczonym horyzoncie]
+\begin{twierdzenie}[Opcjonalne próbkowanie w ograniczonym horyzoncie]\label{thm:volII:03:06}
 \label{thm:optional-cont}
 Niech $(\Omega,\calF,\Prob)$ będzie przestrzenią
 probabilistyczną z filtracją $(\calF_t)_{0\le t\le T}$,
@@ -2141,7 +2180,7 @@ martyngałów w czasie ciągłym.
 \end{uwaga}
 
 
-\begin{twierdzenie}[Dwa martyngały związane z procesem Wienera]
+\begin{twierdzenie}[Dwa martyngały związane z procesem Wienera]\label{thm:volII:03:07}
 Niech $W=(W_t)_{t\ge0}$ będzie standardowym procesem
 Wienera o ciągłych trajektoriach,
 a $\calF_t^W=\sigma(W_s:0\le s\le t)$ jego filtracją
@@ -2239,7 +2278,7 @@ za pomocą oszacowania i odpowiednich twierdzeń
 o zbieżności.
 \end{zadanie}
 
-\section{Zadanie rozwiązane: informacja, zatrzymanie i uczciwa gra}
+\section{Zadanie rozwiązane: informacja, zatrzymanie i uczciwa gra}\label{sec:volII:03:07}
 \begin{zadanie}[Dwa rzuty monetą i chwila zatrzymania]
 Niech $\Omega=\{HH,HT,TH,TT\}$, gdzie litera $H$
 oznacza wynik $+1$, a $T$ wynik $-1$.
@@ -2298,7 +2337,7 @@ strategia używa przyszłego wyniku, czyli jej czas nie
 spełnia kluczowego założenia.
 \end{zadanie}
 
-\section{Co będzie potrzebne w rachunku Itô?}
+\section{Co będzie potrzebne w rachunku Itô?}\label{sec:volII:03:08}
 Na zakończenie zbierzmy logiczne zależności.
 Aby konstruować całkę stochastyczną względem procesu Wienera,
 będziemy musieli odróżniać następujące własności:
@@ -2325,9 +2364,12 @@ na przestrzeni trajektorii i całkę Itô.
 % TOM II. ROZDZIAŁ 4
 % ================================================================
 \chapter{Proces Poissona: losowe zliczanie zdarzeń}
+\label{chap:volII:04}
+\par\smallskip\noindent{\small\textit{Powiązania:} \textup{tom~I}, sekcja~\ref{I-sec:volI:06:04} (rozkład Poissona); sekcja~\ref{sec:volII:09:01} (procesy odnowy); \textup{tom~III}, sekcja~\ref{III-sec:volIII:10:03} (złożony proces Poissona); tom~I, twierdzenie~\ref{I-thm:volI:06:03} (prawo rzadkich zdarzeń).}\par\smallskip
+
 \label{ch:poisson-process}
 
-\section{Motywacja: od losowych odstępów do procesu zliczającego}
+\section{Motywacja: od losowych odstępów do procesu zliczającego}\label{sec:volII:04:01}
 W poprzednich rozdziałach skonstruowaliśmy procesy jako rodziny
 zmiennych losowych, a następnie opisaliśmy informację dostępną w czasie.
 Teraz zajmiemy się pierwszym ważnym modelem, w którym \emph{cała
@@ -2346,7 +2388,7 @@ w przedziale długości $t$ ma rozkład Poissona o parametrze $\lambda t$.
 Udowodnimy równoważność tych opisów, zamiast przyjmować ją jako
 nieuzasadnioną własność modelu.
 
-\begin{definicja}[Czasy nadejścia i proces zliczający]
+\begin{definicja}[Czasy nadejścia i proces zliczający]\label{def:volII:04:01}
 Niech $(\Omega,\calF,\Prob)$ będzie przestrzenią probabilistyczną,
 a $E_1,E_2,\ldots$ dodatnimi zmiennymi losowymi. Niech
 $T_0:=0$ i $T_n:=\sum_{k=1}^n E_k$, $n\ge1$.
@@ -2382,8 +2424,8 @@ dotyczą czasu $[0,\infty)$.
 punkty pełne pokazują przyjętą prawostronną ciągłość.
 \end{center}
 
-\section{Konstrukcja ze zmiennych wykładniczych}
-\begin{definicja}[Jednorodny proces Poissona]
+\section{Konstrukcja ze zmiennych wykładniczych}\label{sec:volII:04:02}
+\begin{definicja}[Jednorodny proces Poissona]\label{def:volII:04:02}
 Niech $\lambda>0$. \emph{Jednorodnym procesem Poissona o intensywności
 $\lambda$} nazywamy proces zliczający skonstruowany z niezależnych
 zmiennych $E_1,E_2,\ldots$ o wspólnym rozkładzie wykładniczym
@@ -2397,7 +2439,7 @@ Najpierw musimy sprawdzić, że konstrukcja ma sens dla wszystkich
 $t\ge0$. Nie wolno poprzestać na intuicji, że ``czasy są dodatnie'':
 suma nieskończenie wielu dodatnich liczb może być skończona.
 
-\begin{lemat}[Brak eksplozji dla stałej intensywności]
+\begin{lemat}[Brak eksplozji dla stałej intensywności]\label{lem:volII:04:01}
 Jeżeli $(E_n)_{n\ge1}$ są niezależnymi zmiennymi o rozkładzie
 $\operatorname{Exp}(\lambda)$, $\lambda>0$, to
 $T_n=\sum_{k=1}^n E_k\to\infty$ prawie na pewno.
@@ -2413,7 +2455,7 @@ i przekracza dowolną ustaloną wielokrotność $a$, a zatem dąży do
 nieskończoności.
 \end{proof}
 
-\begin{lemat}[Gęstość chwil nadejścia]
+\begin{lemat}[Gęstość chwil nadejścia]\label{lem:volII:04:02}
 Dla $\lambda>0$, $n\ge1$ i niezależnych
 $E_1,\ldots,E_n\sim\operatorname{Exp}(\lambda)$ wektor
 $(T_1,\ldots,T_n)$ ma gęstość
@@ -2436,7 +2478,7 @@ sympleksie $0<s_1<\cdots<s_{n-1}<t$ o objętości
 $t^{n-1}/(n-1)!$, co daje gęstość $T_n$.
 \end{proof}
 
-\begin{twierdzenie}[Rozkład liczby nadejść i niezależność przyrostów]
+\begin{twierdzenie}[Rozkład liczby nadejść i niezależność przyrostów]\label{thm:volII:04:01}
 \label{thm:poisson-fdd}
 Niech $N$ będzie procesem Poissona o intensywności $\lambda>0$.
 Wówczas $N_0=0$ oraz dla każdego $t\ge0$ i $n\in\N_0$
@@ -2502,7 +2544,7 @@ To dokładnie iloczyn rozkładów brzegowych. Dowód zakończony.
 \end{proof}
 
 
-\begin{twierdzenie}[Dwa równoważne opisy jednorodnego procesu Poissona]
+\begin{twierdzenie}[Dwa równoważne opisy jednorodnego procesu Poissona]\label{thm:volII:04:02}
 \label{thm:poisson-reverse}
 Niech $\lambda>0$, a $N=(N_t)_{t\ge0}$ będzie procesem
 o niemalejących trajektoriach c\`adl\`ag, wartościach
@@ -2590,8 +2632,26 @@ jednego nadejścia na bardzo krótkim przedziale jest w pierwszym
 przybliżeniu równe $\lambda h$.
 \end{uwaga}
 
-\section{Własność braku pamięci, filtracja i martyngał}
-\begin{stwierdzenie}[Brak pamięci rozkładu wykładniczego]
+
+% --- ROZSZERZENIE ILUSTRACYJNE: II_poisson ---
+\subsection*{Eksperyment: zegar procesu Poissona}
+Niech $S_j$ będą niezależne o rozkładzie wykładniczym z intensywnością
+$\lambda=2{,}5$, a $T_n=\sum_{j=1}^nS_j$. Na rysunku pokazano
+$N_t=\#\{n\ge1:T_n\le t\}$, gdzie $\# A$ oznacza liczbę elementów zbioru $A$, i deterministyczną funkcję $\E N_t=\lambda t$.
+Linia wartości oczekiwanej nie jest ścieżką procesu. Wykres pojedynczej
+realizacji ilustruje skoki o wysokości $1$ i losowe odstępy.
+\begin{center}
+\includegraphics[width=0.88\textwidth]{figures/II_poisson.pdf}\par
+\small\emph{Rysunek: Jedna trajektoria procesu Poissona i jej deterministyczna średnia.}
+\end{center}
+\noindent\textbf{Kod w Pythonie (NumPy, Matplotlib).} Plik \texttt{code/II\_poisson.py} można uruchomić niezależnie; zapisuje pokazany wykres.
+\lstinputlisting[language=Python]{code/II_poisson.py}
+\noindent\textbf{Odpowiednik w Julii (biblioteka standardowa).} Kod pokazuje to samo zjawisko w prostej symulacji.
+\lstinputlisting[language=Julia]{code/II_julia_poisson.jl}
+% --- KONIEC ROZSZERZENIA ILUSTRACYJNEGO ---
+
+\section{Własność braku pamięci, filtracja i martyngał}\label{sec:volII:04:03}
+\begin{stwierdzenie}[Brak pamięci rozkładu wykładniczego]\label{prop:volII:04:01}
 Jeżeli $E\sim\operatorname{Exp}(\lambda)$, $\lambda>0$, to
 $\Prob(E>s+t\mid E>s)=\Prob(E>t)$ dla wszystkich $s,t\ge0$.
 Wśród rozkładów na $[0,\infty)$ o ciągłej funkcji przeżycia,
@@ -2612,7 +2672,7 @@ właściwy rozkład ze skończoną wartością $E$ prawie na pewno,
 musimy mieć $\lim_{t\to\infty}g(t)=0$, a więc $\lambda>0$.
 \end{proof}
 
-\begin{twierdzenie}[Proces Poissona jest procesem Markowa]
+\begin{twierdzenie}[Proces Poissona jest procesem Markowa]\label{thm:volII:04:03}
 Niech $N$ będzie procesem Poissona o intensywności $\lambda>0$,
 a $\calF_t^N:=\sigma(N_s:0\le s\le t)$ jego naturalną
 filtracją. Dla $0\le s<t$ i każdego $k\in\N_0$ zachodzi
@@ -2639,7 +2699,7 @@ rozkładem bezwarunkowym, wyliczonym wcześniej.
 Ponieważ $N_t=N_s+(N_t-N_s)$, dostajemy tezę.
 \end{proof}
 
-\begin{wniosek}[Kompensowany proces Poissona]
+\begin{wniosek}[Kompensowany proces Poissona]\label{cor:volII:04:01}
 Dla procesu Poissona o intensywności $\lambda>0$ proces
 $M_t:=N_t-\lambda t$ jest kwadratowalnym martyngałem względem
 filtracji naturalnej $\mathbb F^N$, a
@@ -2674,8 +2734,8 @@ $\E(M_t-M_s)^2=\Var(N_t-N_s)=\lambda(t-s)$.
  czas pomiędzy kolejnymi punktami.
 \end{center}
 
-\section{Czasy nadejść i warunkowanie na liczbie zdarzeń}
-\begin{twierdzenie}[Chwila $n$-tego zdarzenia]
+\section{Czasy nadejść i warunkowanie na liczbie zdarzeń}\label{sec:volII:04:04}
+\begin{twierdzenie}[Chwila $n$-tego zdarzenia]\label{thm:volII:04:04}
 Dla $n\ge1$ w procesie Poissona z intensywnością $\lambda>0$
 czas $T_n$ ma rozkład gamma o parametrach $n$ i $\lambda$,
 przy konwencji, że drugi parametr jest intensywnością. Zachodzi
@@ -2693,7 +2753,7 @@ $T_n=E_1+\cdots+E_n$, niezależność i momenty rozkładu
 wykładniczego dają wskazane średnią i wariancję.
 \end{proof}
 
-\begin{twierdzenie}[Jednostajność chwil nadejść przy ustalonej liczbie]
+\begin{twierdzenie}[Jednostajność chwil nadejść przy ustalonej liczbie]\label{thm:volII:04:05}
 \label{thm:uniform-poisson-times}
 Niech $t>0$ i $n\ge1$. Warunkowo względem zdarzenia
 $\{N_t=n\}$ wektor $(T_1,\ldots,T_n)$ ma taki sam rozkład,
@@ -2775,8 +2835,8 @@ Wyniki nie zależą od $\lambda$: po ustaleniu liczby nadejść
 intensywność nie wpływa na względne położenie ich chwil.
 \end{zadanie}
 
-\section{Superpozycja i rozrzedzanie}
-\begin{twierdzenie}[Superpozycja]
+\section{Superpozycja i rozrzedzanie}\label{sec:volII:04:05}
+\begin{twierdzenie}[Superpozycja]\label{thm:volII:04:06}
 Niech $N^{(1)},\ldots,N^{(r)}$ będą niezależnymi procesami
 Poissona o intensywnościach $\lambda_1,\ldots,\lambda_r>0$.
 Wtedy $N_t:=\sum_{j=1}^rN_t^{(j)}$ jest procesem Poissona
@@ -2809,7 +2869,7 @@ Zatem suma spełnia charakterystykę z twierdzenia
 \ref{thm:poisson-fdd}.
 \end{proof}
 
-\begin{twierdzenie}[Niezależne rozrzedzanie]
+\begin{twierdzenie}[Niezależne rozrzedzanie]\label{thm:volII:04:07}
 Niech $N$ będzie procesem Poissona o intensywności $\lambda>0$.
 Każdy jego skok, niezależnie od innych skoków i od $N$,
 oznaczmy jako typu $A$ z prawdopodobieństwem $p\in[0,1]$,
@@ -2865,8 +2925,8 @@ pochodzi średnio z działu $A$, ale wynikiem jest tu
 konkretne prawdopodobieństwo typu \emph{pierwszego} zgłoszenia.
 \end{zadanie}
 
-\section{Złożony proces Poissona i kompensacja}
-\begin{definicja}[Złożony proces Poissona]
+\section{Złożony proces Poissona i kompensacja}\label{sec:volII:04:06}
+\begin{definicja}[Złożony proces Poissona]\label{def:volII:04:03}
 Niech $N$ będzie procesem Poissona o intensywności $\lambda>0$,
 a $(Y_k)_{k\ge1}$ ciągiem niezależnych rzeczywistych
 zmiennych losowych o wspólnym rozkładzie, niezależnym od $N$.
@@ -2880,7 +2940,7 @@ Model ma szerokie zastosowania: wypadki występują w chwilach
 Poissona, natomiast kwota szkody jest niezależnym losowym
 \emph{znacznikiem} zdarzenia. Dla $Y_k=1$ odzyskujemy $N_t$.
 
-\begin{twierdzenie}[Moment, wariancja i funkcja charakterystyczna]
+\begin{twierdzenie}[Moment, wariancja i funkcja charakterystyczna]\label{thm:volII:04:08}
 Załóżmy w poprzedniej definicji $\E|Y_1|<\infty$.
 Wtedy $\E S_t=\lambda t\E Y_1$.
 Jeśli ponadto $\E Y_1^2<\infty$, to
@@ -2916,12 +2976,12 @@ wynika to z niezależnych przyrostów procesu Poissona i z faktu,
 Stąd właściwość martyngałowa po odjęciu deterministycznej średniej.
 \end{proof}
 
-\section{Niejednorodny proces Poissona}
+\section{Niejednorodny proces Poissona}\label{sec:volII:04:07}
 Stała intensywność jest wygodna, ale liczba zgłoszeń w ciągu
 dnia na ogół zależy od godziny. Następująca konstrukcja pokazuje,
 że zmienna intensywność nie wymaga zmiany podstawowych idei.
 
-\begin{definicja}[Proces Poissona z deterministyczną intensywnością]
+\begin{definicja}[Proces Poissona z deterministyczną intensywnością]\label{def:volII:04:04}
 Niech $a:[0,\infty)\to[0,\infty)$ będzie funkcją borelowską,
 całkowalną na każdym przedziale $[0,t]$. Oznaczmy
 $A(t)=\int_0^t a(s)\,\dd s$.
@@ -2930,7 +2990,7 @@ o intensywności $1$, to proces $N_t=\widetilde N_{A(t)}$
 nazywamy \emph{niejednorodnym procesem Poissona o intensywności $a$}.
 \end{definicja}
 
-\begin{stwierdzenie}
+\begin{stwierdzenie}\label{prop:volII:04:02}
 Dla procesu z poprzedniej definicji i $0\le s<t$ przyrost
 $N_t-N_s$ ma rozkład
 $\operatorname{Poisson}(\int_s^t a(u)\,\dd u)$, a przyrosty
@@ -2959,12 +3019,12 @@ choć ich rozkłady nie są jednakowe: przyrosty pozostają
 niezależne, ale przestają być stacjonarne.
 \end{przyklad}
 
-\section{Charakterystyka przez przyrosty i zdarzenia rzadkie}
+\section{Charakterystyka przez przyrosty i zdarzenia rzadkie}\label{sec:volII:04:08}
 Dotychczas budowaliśmy proces Poissona z czasów wykładniczych.
 Można jednak rozpocząć od modelowania zliczeń w krótkich
 przedziałach. Poniższy wynik uzasadnia tę drogę konstrukcji.
 
-\begin{twierdzenie}[Charakterystyka procesu Poissona przez małe przyrosty]
+\begin{twierdzenie}[Charakterystyka procesu Poissona przez małe przyrosty]\label{thm:volII:04:09}
 \label{thm:poisson-infinitesimal}
 Niech $N=(N_t)_{t\ge0}$ będzie procesem o wartościach
 w $\N_0$, $N_0=0$, z niezależnymi i stacjonarnymi
@@ -3050,7 +3110,7 @@ dlaczego rozkład Poissona naturalnie opisuje wiele
 niezależnych, rzadkich zdarzeń.
 \end{przyklad}
 
-\section{Co wynika z modelu, a czego model nie mówi?}
+\section{Co wynika z modelu, a czego model nie mówi?}\label{sec:volII:04:09}
 Rozkład Poissona nie jest uniwersalnym opisem każdego
 zliczania. Jeśli nadejście klienta zwiększa lub zmniejsza
 szansę kolejnego nadejścia, niezależność przyrostów jest
@@ -3065,9 +3125,12 @@ po każdym skoku procesu.
 % TOM II. ROZDZIAŁ 5
 % ================================================================
 \chapter{Łańcuchy Markowa w czasie ciągłym}
+\label{chap:volII:05}
+\par\smallskip\noindent{\small\textit{Powiązania:} \textup{tom~I}, sekcja~\ref{I-sec:volI:12:02} (łańcuchy dyskretne); sekcja~\ref{sec:volII:04:02} (zegar Poissona); \textup{tom~III}, sekcja~\ref{III-sec:volIII:06:03} (generator dyfuzji); tom~I, twierdzenie~\ref{I-thm:volI:12:07} (mocna własność Markowa).}\par\smallskip
+
 \label{ch:ctmc}
 
-\section{Dlaczego macierz przejścia nie wystarcza?}
+\section{Dlaczego macierz przejścia nie wystarcza?}\label{sec:volII:05:01}
 W łańcuchu Markowa z czasu dyskretnego macierz $P=(p_{ij})$
 opisuje jeden krok. W czasie ciągłym pojawiają się dwie odrębne
 losowości: \emph{kiedy} następuje zmiana stanu oraz \emph{dokąd}
@@ -3076,7 +3139,7 @@ pozostawać sprawne, a po awarii przebywać w stanie uszkodzenia
 przez losowy czas. Sam ciąg odwiedzanych stanów nie opisuje
 czasów trwania poszczególnych faz.
 
-\begin{definicja}[Macierz intensywności]
+\begin{definicja}[Macierz intensywności]\label{def:volII:05:01}
 Niech $E$ będzie skończonym lub przeliczalnym zbiorem stanów.
 \emph{Konserwatywną macierzą intensywności} (macierzą $Q$)
 nazywamy macierz $Q=(q_{ij})_{i,j\in E}$ spełniającą:
@@ -3134,8 +3197,8 @@ skoku (nim jest $q_{ij}/q_i$), ani prawdopodobieństwem
 znalezienia się w $j$ po czasie $t$ (nim jest $p_{ij}(t)$).
 \end{uwaga}
 
-\section{Konstrukcja przez łańcuch skoków i czasy przebywania}
-\begin{twierdzenie}[Konstrukcja minimalnego procesu skokowego]
+\section{Konstrukcja przez łańcuch skoków i czasy przebywania}\label{sec:volII:05:02}
+\begin{twierdzenie}[Konstrukcja minimalnego procesu skokowego]\label{thm:volII:05:01}
 \label{thm:jump-construction}
 Niech $E$ będzie zbiorem przeliczalnym, $Q$ konserwatywną
 macierzą intensywności z $q_i<\infty$ dla każdego $i\in E$,
@@ -3219,8 +3282,8 @@ Przy innych prawach czasu przebywania można otrzymać
 dodać informację o czasie od ostatniej zmiany.
 \end{przyklad}
 
-\section{Eksplozja i jej wykluczanie}
-\begin{twierdzenie}[Ograniczone intensywności wykluczają eksplozję]
+\section{Eksplozja i jej wykluczanie}\label{sec:volII:05:03}
+\begin{twierdzenie}[Ograniczone intensywności wykluczają eksplozję]\label{thm:volII:05:02}
 \label{thm:bounded-rates}
 Niech proces minimalny z twierdzenia~\ref{thm:jump-construction}
 ma $\sup_{i\in E}q_i\le\Lambda<\infty$.
@@ -3256,7 +3319,7 @@ Natomiast dla $\lambda_n=n+1$ zbieżność $\sum1/\lambda_n$
 nie zachodzi; poniższe twierdzenie pokazuje brak eksplozji.
 \end{przyklad}
 
-\begin{twierdzenie}[Kryterium eksplozji procesu czystych urodzin]
+\begin{twierdzenie}[Kryterium eksplozji procesu czystych urodzin]\label{thm:volII:05:03}
 \label{thm:pure-birth-explosion}
 Niech $E=\N_0$, $X_0=0$, a jedyną możliwą zmianą stanu
 $n$ będzie przejście do $n+1$ z intensywnością
@@ -3296,13 +3359,13 @@ skończonej wartości $\zeta$ wykładnik jest ściśle dodatni.
 Stąd $\Prob(\zeta<\infty)=0$, co kończy dowód.
 \end{proof}
 
-\section{Macierz przejścia i równania Kołmogorowa}
+\section{Macierz przejścia i równania Kołmogorowa}\label{sec:volII:05:04}
 Teraz ograniczymy się do \emph{skończonej} przestrzeni $E$.
 Założenie jest istotne: w nieskończonym zbiorze stanów
 potrzebujemy dodatkowej kontroli, aby uzasadniać różniczkowanie
 nieskończonych szeregów i wykluczać eksplozję.
 
-\begin{definicja}[Macierz przejścia w czasie ciągłym]
+\begin{definicja}[Macierz przejścia w czasie ciągłym]\label{def:volII:05:02}
 Niech $E$ będzie skończone, a $X$ procesem o intensywnościach
 $Q$. Dla $i,j\in E$ i $t\ge0$ definiujemy
 $p_{ij}(t)=\Prob(X_t=j\mid X_0=i)$,
@@ -3313,13 +3376,13 @@ Macierz $P(t)=(p_{ij}(t))_{i,j\in E}$ nazywamy
 \emph{macierzą przejścia w czasie $t$}.
 \end{definicja}
 
-\section{Zegar Poissona i uniformizacja}
+\section{Zegar Poissona i uniformizacja}\label{sec:volII:05:05}
 Najwygodniejsza metoda konstrukcji skończonego łańcucha
 pozwala zarazem udowodnić równania różniczkowe macierzy
 przejścia bez odwoływania się do formalnej ``rachunkowości
 prawdopodobieństw $o(h)$''.
 
-\begin{twierdzenie}[Uniformizacja]
+\begin{twierdzenie}[Uniformizacja]\label{thm:volII:05:04}
 \label{thm:uniformization}
 Niech $E$ będzie niepustym zbiorem skończonym,
 a $Q$ konserwatywną macierzą intensywności.
@@ -3408,7 +3471,7 @@ kroków macierzy $R$, a przy prawdopodobieństwach przejścia
 stosować nieujemny szereg zamiast bezpośrednio obliczać
 wykładnik macierzowy.
 
-\begin{twierdzenie}[Równania Chapmana--Kołmogorowa i Kołmogorowa]
+\begin{twierdzenie}[Równania Chapmana--Kołmogorowa i Kołmogorowa]\label{thm:volII:05:05}
 \label{thm:kolmogorov-eq}
 Dla skończonej przestrzeni stanów i konserwatywnej macierzy
 intensywności $Q$ macierz przejścia $P(t)=e^{tQ}$ spełnia
@@ -3476,8 +3539,8 @@ a ``w chwili $t$ obserwuję stan początkowy'' będzie ważne
 przy modelowaniu trajektorii i przy zadaniach o czasach trafienia.
 \end{przyklad}
 
-\section{Warunkowanie, własność Markowa i czasy zatrzymania}
-\begin{twierdzenie}[Własność Markowa w czasie ciągłym]
+\section{Warunkowanie, własność Markowa i czasy zatrzymania}\label{sec:volII:05:06}
+\begin{twierdzenie}[Własność Markowa w czasie ciągłym]\label{thm:volII:05:06}
 Niech $E$ będzie skończone, $X$ procesem o intensywnościach $Q$,
 a $\calF_t^X=\sigma(X_s:0\le s\le t)$ filtracją naturalną.
 Dla każdego $s,t\ge0$ i każdej funkcji $f:E\to\R$
@@ -3535,7 +3598,7 @@ w terminach prawdopodobieństw warunkowych.
 \end{proof}
 
 
-\begin{lemat}[Własność Markowa po prawostronnym uzupełnieniu filtracji]
+\begin{lemat}[Własność Markowa po prawostronnym uzupełnieniu filtracji]\label{lem:volII:05:01}
 \label{lem:markov-aug}
 Niech $E$ będzie skończone, $X$ nieeksplodującym łańcuchem
 o macierzy intensywności $Q$ i trajektoriach prawostronnie
@@ -3576,7 +3639,7 @@ oraz $\calF_t$-mierzalność $(P(h)f)(X_t)$
 stanowią charakterystykę warunkowej wartości oczekiwanej.
 \end{proof}
 
-\begin{twierdzenie}[Mocna własność Markowa]
+\begin{twierdzenie}[Mocna własność Markowa]\label{thm:volII:05:07}
 \label{thm:ctmc-strong}
 Niech $X$ będzie nieeksplodującym łańcuchem w czasie
 ciągłym na skończonym zbiorze $E$, o macierzy intensywności
@@ -3662,8 +3725,8 @@ pierwszy skok prowadzi do $0$, a proces dopiero później
 przechodzi przez $1$ do $2$.
 \end{zadanie}
 
-\section{Dwa stany: pełne rozwiązanie równań}
-\begin{twierdzenie}[Przejścia modelu awarii i napraw]
+\section{Dwa stany: pełne rozwiązanie równań}\label{sec:volII:05:07}
+\begin{twierdzenie}[Przejścia modelu awarii i napraw]\label{thm:volII:05:08}
 Niech $E=\{0,1\}$, $\alpha,\beta>0$ oraz
 $Q=\left(\begin{smallmatrix}-\alpha&\alpha\\
 \beta&-\beta\end{smallmatrix}\right)$.
@@ -3718,8 +3781,25 @@ o stan po dwóch godzinach, odpowiedzią byłoby
 $\tfrac23(1-e^{-6})$. To dwa różne pytania probabilistyczne.
 \end{zadanie}
 
-\section{Generatory, martyngały i wzór Dynkina}
-\begin{definicja}[Generator skończonego łańcucha]
+
+% --- ROZSZERZENIE ILUSTRACYJNE: II_ctmc ---
+\subsection*{Eksperyment: równania Kołmogorowa i symulacja}
+Rozpatrzmy dwustanowy łańcuch z intensywnością przejścia $0\to1$
+równą $a=0{,}7$ i $1\to0$ równą $b=0{,}4$, startujący w stanie $0$.
+Jego prawdopodobieństwo przejścia wynosi
+$p_{01}(t)=a(a+b)^{-1}(1-\exp(-(a+b)t))$.
+W kodzie symulujemy niezależne czasy przebywania w kolejnych stanach
+i porównujemy empiryczny udział ścieżek w stanie $1$ z tym wzorem.
+\begin{center}
+\includegraphics[width=0.88\textwidth]{figures/II_ctmc.pdf}\par
+\small\emph{Rysunek: Równanie dwustanowego łańcucha a częstości z 10 000 trajektorii.}
+\end{center}
+\noindent\textbf{Kod w Pythonie (NumPy, Matplotlib).} Plik \texttt{code/II\_ctmc.py} można uruchomić niezależnie; zapisuje pokazany wykres.
+\lstinputlisting[language=Python]{code/II_ctmc.py}
+% --- KONIEC ROZSZERZENIA ILUSTRACYJNEGO ---
+
+\section{Generatory, martyngały i wzór Dynkina}\label{sec:volII:05:08}
+\begin{definicja}[Generator skończonego łańcucha]\label{def:volII:05:03}
 Dla skończonego $E$, macierzy intensywności $Q$ i funkcji
 $f:E\to\R$ definiujemy
 \[
@@ -3735,7 +3815,7 @@ ważymy zmiany wartości $f(j)-f(i)$ intensywnościami
 bezpośrednich skoków. Dla funkcji stałej generator znika,
 co jest analogią do pochodnej funkcji stałej.
 
-\begin{twierdzenie}[Wzór Dynkina i martyngał generatorowy]
+\begin{twierdzenie}[Wzór Dynkina i martyngał generatorowy]\label{thm:volII:05:09}
 \label{thm:dynkin}
 Niech $E$ będzie skończone, $X$ łańcuchem w czasie
 ciągłym o intensywnościach $Q$ i filtracji naturalnej.
@@ -3804,8 +3884,8 @@ jest martyngałem. Człon podcałkowy opisuje
 a jego odjęcie usuwa dryf.
 \end{przyklad}
 
-\section{Rozkłady stacjonarne, równowaga szczegółowa i ergodyczność}
-\begin{definicja}[Rozkład stacjonarny]
+\section{Rozkłady stacjonarne, równowaga szczegółowa i ergodyczność}\label{sec:volII:05:09}
+\begin{definicja}[Rozkład stacjonarny]\label{def:volII:05:04}
 Dla łańcucha z $E$ skończonym i macierzą przejścia
 $P(t)$ rozkład probabilistyczny $\pi=(\pi_i)_{i\in E}$
 nazywamy \emph{stacjonarnym}, jeżeli
@@ -3814,7 +3894,7 @@ Rozkład $\pi$ spełnia \emph{równania bilansu} jeśli
 $\pi Q=0$.
 \end{definicja}
 
-\begin{twierdzenie}[Bilans i równowaga szczegółowa]
+\begin{twierdzenie}[Bilans i równowaga szczegółowa]\label{thm:volII:05:10}
 Niech $E$ będzie skończone i $Q$ macierzą intensywności.
 Rozkład probabilistyczny $\pi$ jest stacjonarny wtedy i tylko
 wtedy, gdy $\pi Q=0$. Warunkiem wystarczającym jest
@@ -3842,7 +3922,7 @@ warunek szczegółowy jest silniejszy i nie zachodzi na przykład
 dla jednokierunkowego ruchu po cyklu z co najmniej trzema
 stanami, mimo istnienia rozkładu stacjonarnego.
 
-\begin{twierdzenie}[Granica w modelu skończonym]
+\begin{twierdzenie}[Granica w modelu skończonym]\label{thm:volII:05:11}
 Niech $E$ będzie skończonym zbiorem stanów, $Q$ macierzą
 intensywności, a graf przejść z krawędzią $i\to j$ wtedy
 i tylko wtedy, gdy $q_{ij}>0$, niech będzie silnie spójny.
@@ -3897,8 +3977,8 @@ $\pi_0q_{01}=\lambda/3>0$ i $\pi_1q_{10}=0$.
 Proces ma więc stacjonarny, niezerowy przepływ wokół cyklu.
 \end{przyklad}
 
-\section{Łańcuchy urodzin i śmierci}
-\begin{definicja}[Proces urodzin i śmierci]
+\section{Łańcuchy urodzin i śmierci}\label{sec:volII:05:10}
+\begin{definicja}[Proces urodzin i śmierci]\label{def:volII:05:05}
 Niech $E=\N_0$. Procesem urodzin i śmierci nazywamy
 minimalny łańcuch Markowa o jedynych dozwolonych przejściach
 $n\to n+1$ z intensywnością $\lambda_n\ge0$ i
@@ -3912,7 +3992,7 @@ jest zwiększeniem lub zmniejszeniem o jeden. Ta sama
 matematyka opisuje jednak liczbę klientów w kolejce, cząstek
 w systemie czy liczebność aktywnych urządzeń.
 
-\begin{stwierdzenie}[Rozkład stacjonarny przy równowadze lokalnej]
+\begin{stwierdzenie}[Rozkład stacjonarny przy równowadze lokalnej]\label{prop:volII:05:01}
 Załóżmy, że $\lambda_n>0$ dla $n\ge0$,
 $\mu_n>0$ dla $n\ge1$, oraz że proces jest nieeksplodujący.
 Jeżeli
@@ -4024,7 +4104,7 @@ $P(t)$; dla niektórych procesów na przestrzeniach
 nieskończonych taki wynik może być fałszywy.
 \end{uwaga}
 
-\section{Model kolejki \texorpdfstring{$M/M/1$}{M/M/1}}
+\section{Model kolejki \texorpdfstring{$M/M/1$}{M/M/1}}\label{sec:volII:05:11}
 \begin{przyklad}[Pojedynczy serwer]
 Klienci napływają zgodnie z procesem Poissona o intensywności
 $\lambda>0$. Czasy obsługi są niezależne, mają rozkład
@@ -4086,7 +4166,7 @@ nie są poprawnymi odpowiedziami na pytania o układ,
 który właśnie został uruchomiony z zerową liczbą klientów.
 \end{zadanie}
 
-\section{Model Ehrenfesta w czasie ciągłym}
+\section{Model Ehrenfesta w czasie ciągłym}\label{sec:volII:05:12}
 \begin{przyklad}[Dwie komory]
 Niech $K\in\N$ cząstek niezależnie przemieszcza się
 między komorami $A$ i $B$. Każda cząstka w $B$ przechodzi
@@ -4115,8 +4195,8 @@ przy niezależnych próbach, lecz także jako prawo
 stacjonarne łańcucha w czasie ciągłym.
 \end{przyklad}
 
-\section{Czas pochłonięcia i macierz fundamentalna}
-\begin{twierdzenie}[Oczekiwany czas pochłonięcia]
+\section{Czas pochłonięcia i macierz fundamentalna}\label{sec:volII:05:13}
+\begin{twierdzenie}[Oczekiwany czas pochłonięcia]\label{thm:volII:05:12}
 \label{thm:ctmc-absorption}
 Niech $E=T\mathbin{\dot\cup}A$ będzie skończonym zbiorem stanów,
 $A\ne\varnothing$ zbiorem stanów pochłaniających,
@@ -4221,14 +4301,14 @@ $u_0=1$, $u_1=1/2$ zgodnie z rachunkiem macierzowym.
 To jest praktyczna metoda \emph{analizy pierwszego skoku}.
 \end{zadanie}
 
-\section{Jak czytać prawdopodobieństwa trajektorii?}
+\section{Jak czytać prawdopodobieństwa trajektorii?}\label{sec:volII:05:14}
 Przy procesie dyskretnym używaliśmy wzoru
 $\Prob(X_0=i_0,\ldots,X_n=i_n)$.
 W czasie ciągłym należy rozróżnić obserwacje
 w \emph{ustalonych chwilach} od zarejestrowania
 \emph{dokładnych czasów skoków}.
 
-\begin{stwierdzenie}[Wspólny rozkład obserwacji w ustalonych chwilach]
+\begin{stwierdzenie}[Wspólny rozkład obserwacji w ustalonych chwilach]\label{prop:volII:05:02}
 Niech $X$ będzie skończonym łańcuchem w czasie ciągłym,
 $0=t_0<t_1<\cdots<t_n$, a $\mu$ rozkładem początkowym.
 Wtedy dla każdego $i_0,\ldots,i_n\in E$
@@ -4278,7 +4358,7 @@ wiarygodności ciągłych trajektorii procesów skokowych;
 sama statystyczna estymacja należy jednak do tomu III.
 \end{uwaga}
 
-\section{Podsumowanie i połączenie z procesem Wienera}
+\section{Podsumowanie i połączenie z procesem Wienera}\label{sec:volII:05:15}
 Proces Poissona miał \emph{stałą} intensywność skoków,
 a jego stan zawsze wzrastał o jeden. Łańcuch w czasie
 ciągłym dopuszcza zależną od stanu intensywność $q_i$,
@@ -4299,9 +4379,12 @@ funkcyjnymi w mechanice kwantowej.
 % TOM II — ROZDZIAŁ 6: PROCESY GAUSSOWSKIE
 % ==============================================================
 \chapter{Procesy gaussowskie: od kowariancji do prawa procesu}
+\label{chap:volII:06}
+\par\smallskip\noindent{\small\textit{Powiązania:} \textup{tom~I}, sekcja~\ref{I-sec:volI:04:04} (wektory losowe); sekcja~\ref{sec:volII:07:01} (proces Wienera); \textup{tom~III}, sekcja~\ref{III-sec:volIII:09:03} (przestrzeń Camerona–Martina); twierdzenie~\ref{thm:volII:02:02} (kryterium ciągłości Kołmogorowa).}\par\smallskip
+
 \label{ch:gauss}
 
-\section{Motywacja: czy średnia i kowariancja opisują cały proces?}
+\section{Motywacja: czy średnia i kowariancja opisują cały proces?}\label{sec:volII:06:01}
 W rozdziale pierwszym zobaczyliśmy, że znajomość rozkładu $X_t$ dla
 każdego $t$ nie wystarcza do określenia prawa procesu: potrzebujemy
 rozkładów \emph{łącznych} dla wszystkich skończonych zbiorów chwil.
@@ -4316,7 +4399,7 @@ i $X_t\sim\Normal(0,1)$, choć para $(X_s,X_t)$ nie ma rozkładu
 normalnego dwuwymiarowego. Dopiero odpowiedni warunek na każdą
 skończoną rodzinę rozstrzyga o gaussowskości procesu.
 
-\begin{definicja}[Wektor gaussowski]
+\begin{definicja}[Wektor gaussowski]\label{def:volII:06:01}
 Niech $d\in\N$ i $Z=(Z_1,\ldots,Z_d)$ będzie wektorem losowym
 o wartościach w $\R^d$. Nazywamy go \emph{wektorem gaussowskim},
 jeżeli dla każdego $a\in\R^d$ zmienna $\sum_{j=1}^d a_jZ_j$
@@ -4331,7 +4414,7 @@ $Z=(U,U)$, gdzie $U\sim\Normal(0,1)$, wektor $Z$ jest gaussowski,
 ale jego rozkład jest skoncentrowany na przekątnej $\{(x,x):x\in\R\}$,
 więc nie ma gęstości względem dwuwymiarowej miary Lebesgue'a.
 
-\begin{stwierdzenie}[Charakterystyka wektora gaussowskiego]
+\begin{stwierdzenie}[Charakterystyka wektora gaussowskiego]\label{prop:volII:06:01}
 Dla każdego $d\ge1$, $m\in\R^d$ i symetrycznej nieujemnie
 określonej macierzy $\Sigma\in\R^{d\times d}$ istnieje wektor
 $Z\sim\Normal_d(m,\Sigma)$, którego funkcja charakterystyczna ma postać
@@ -4356,7 +4439,7 @@ Z jednoznaczności funkcji charakterystycznej wynika jednoznaczność
 rozkładu wektora $Z$.
 \end{proof}
 
-\begin{definicja}[Proces gaussowski]
+\begin{definicja}[Proces gaussowski]\label{def:volII:06:02}
 Niech $T\ne\varnothing$ będzie zbiorem indeksów oraz
 $(\Omega,\calF,\Prob)$ przestrzenią probabilistyczną. Proces
 rzeczywisty $(X_t)_{t\in T}$ na tej przestrzeni nazywamy
@@ -4366,7 +4449,7 @@ jest gaussowski. Definiujemy
 $m(t):=\E X_t$ i $K(s,t):=\E[(X_s-m(s))(X_t-m(t))]$.
 \end{definicja}
 
-\begin{twierdzenie}[Średnia i kowariancja wyznaczają prawo]
+\begin{twierdzenie}[Średnia i kowariancja wyznaczają prawo]\label{thm:volII:06:01}
 Niech $X=(X_t)_{t\in T}$ i $Y=(Y_t)_{t\in T}$ będą rzeczywistymi
 procesami gaussowskimi (niekoniecznie na tej samej przestrzeni).
 Jeżeli dla wszystkich $s,t\in T$ zachodzą równości
@@ -4394,7 +4477,7 @@ Wektor gaussowski o takiej macierzy kowariancji miałby niezależne
 współrzędne, co jest sprzeczne z $|X|=|Y|$.
 \end{uwaga}
 
-\section{Jakie funkcje mogą być kowariancjami?}
+\section{Jakie funkcje mogą być kowariancjami?}\label{sec:volII:06:02}
 Zachodzi $K(s,t)=K(t,s)$, ale sama symetria nie wystarcza.
 Dla dowolnych $t_1,\ldots,t_n\in T$ i $a_1,\ldots,a_n\in\R$
 mamy
@@ -4404,7 +4487,7 @@ mamy
 \]
 Warunek ten nazywamy \emph{nieujemną określonością jądra} $K$.
 
-\begin{twierdzenie}[Istnienie procesu o zadanej kowariancji]
+\begin{twierdzenie}[Istnienie procesu o zadanej kowariancji]\label{thm:volII:06:02}
 Niech $T\ne\varnothing$ będzie dowolnym zbiorem,
 $m:T\to\R$ dowolną funkcją, zaś $K:T\times T\to\R$
 niech spełnia warunki: $K(s,t)=K(t,s)$ oraz
@@ -4475,8 +4558,8 @@ modyfikacji. Nie użyliśmy przy tym całki Itô, którą zdefiniujemy
 dopiero w dalszych rozdziałach.
 \end{przyklad}
 
-\section{Niezależność i warunkowanie dla procesów gaussowskich}
-\begin{twierdzenie}[Nieskorelowane podwektory gaussowskie są niezależne]
+\section{Niezależność i warunkowanie dla procesów gaussowskich}\label{sec:volII:06:03}
+\begin{twierdzenie}[Nieskorelowane podwektory gaussowskie są niezależne]\label{thm:volII:06:03}
 Niech $(U,V)$ będzie wektorem gaussowskim o wartościach
 w $\R^k\times\R^m$. Jeżeli $\Cov(U_i,V_j)=0$
 dla wszystkich $i,j$, to wektory $U$ i $V$ są niezależne.
@@ -4492,7 +4575,7 @@ Z jednoznaczności funkcji charakterystycznych wnioskujemy,
 że rozkład $(U,V)$ jest iloczynem praw brzegowych.
 \end{proof}
 
-\begin{twierdzenie}[Warunkowy rozkład gaussowski]
+\begin{twierdzenie}[Warunkowy rozkład gaussowski]\label{thm:volII:06:04}
 Niech $(X,Y)$ będzie dwuwymiarowym wektorem gaussowskim,
 $\E X=m_X$, $\E Y=m_Y$, $\Var X=\sigma_X^2$,
 $\Var Y=\sigma_Y^2>0$ i $\Cov(X,Y)=c$.
@@ -4549,7 +4632,7 @@ zależności między obserwacjami; bezmyślne odwracanie macierzy
 byłoby błędem.
 \end{uwaga}
 
-\begin{stwierdzenie}[Kryterium Markowa dla procesu gaussowskiego]
+\begin{stwierdzenie}[Kryterium Markowa dla procesu gaussowskiego]\label{prop:volII:06:02}
 Niech $X=(X_t)_{t\in I}$ będzie rzeczywistym, wycentrowanym
 procesem gaussowskim na przedziale $I$, z $K(t,t)>0$ dla
 wszystkich $t\in I$. Wówczas $X$ jest procesem Markowa
@@ -4588,7 +4671,7 @@ $\Cov(R_s,R_u)=0$, czyli żądana tożsamość.
 \end{proof}
 
 
-\begin{twierdzenie}[Warunkowanie wielowymiarowe: pełny wzór]
+\begin{twierdzenie}[Warunkowanie wielowymiarowe: pełny wzór]\label{thm:volII:06:05}
 Niech $(X,Y)$ będzie wspólnie gaussowskim wektorem,
 $X\in\R^k$, $Y\in\R^m$, o średnich $m_X,m_Y$ i blokowej
 macierzy kowariancji
@@ -4629,8 +4712,8 @@ parametrach. W szczególności nie wolno interpretować
 $\Sigma_Y^{-1}$ bez założenia odwracalności macierzy.
 \end{proof}
 
-\section{Od kowariancji do ciągłości trajektorii}
-\begin{lemat}[Moment przyrostu gaussowskiego]
+\section{Od kowariancji do ciągłości trajektorii}\label{sec:volII:06:04}
+\begin{lemat}[Moment przyrostu gaussowskiego]\label{lem:volII:06:01}
 Jeżeli $X$ jest rzeczywistym procesem gaussowskim,
 a $X_t-X_s$ ma średnią zero oraz wariancję $v(s,t)$,
 to dla każdego $p>0$
@@ -4648,7 +4731,7 @@ $\E|G|^p=(2/\sqrt{2\pi})\int_0^\infty
  x^p e^{-x^2/2}\dd x=c_p$.
 \end{proof}
 
-\begin{wniosek}[Praktyczne kryterium ciągłości procesu gaussowskiego]
+\begin{wniosek}[Praktyczne kryterium ciągłości procesu gaussowskiego]\label{cor:volII:06:01}
 Niech $X=(X_t)_{t\in[0,T]}$, $T>0$, będzie procesem gaussowskim.
 Załóżmy, że jego funkcja średniej jest stała oraz istnieją
 $C>0$, $\eta>0$ takie, że
@@ -4682,7 +4765,7 @@ zanikania wariancji przyrostów, a ogólnie stosuje się
 silniejsze warunki metrycznej entropii.
 \end{uwaga}
 
-\section{Most gaussowski: obserwacja końca zmienia cały proces}
+\section{Most gaussowski: obserwacja końca zmienia cały proces}\label{sec:volII:06:05}
 W następnym rozdziale skonstruujemy ruch Browna $W$.
 Już teraz zapowiedzmy jego charakterystyczną kowariancję
 $\Cov(W_s,W_t)=\min(s,t)$ dla $s,t\ge0$.
@@ -4693,7 +4776,7 @@ Ustalmy $T>0$ i zdefiniujmy na $[0,T]$
 Wówczas $\beta_0=\beta_T=0$, a zatem każda trajektoria
 \emph{mostu Browna} zaczyna i kończy się w zerze.
 
-\begin{twierdzenie}[Most Browna i warunkowanie na punkt końcowy]
+\begin{twierdzenie}[Most Browna i warunkowanie na punkt końcowy]\label{thm:volII:06:06}
 Niech $W$ będzie standardowym procesem Wienera i $T>0$.
 Proces $\beta=(\beta_t)_{0\le t\le T}$ jest wycentrowanym
 procesem gaussowskim, niezależnym od zmiennej $W_T$,
@@ -4767,7 +4850,23 @@ Zatem predykcją jest interpolacja liniowa między pomiarami,
 a błąd ma najmniejszą wariancję na końcach przedziału.
 \end{zadanie}
 
-\section{Podsumowanie: dlaczego procesy gaussowskie przygotowują ruch Browna?}
+
+% --- ROZSZERZENIE ILUSTRACYJNE: II_most_gaussowski ---
+\subsection*{Eksperyment: gaussowskie warunkowanie końca trajektorii}
+Dla ruchu Browna $B$ na $[0,1]$ proces $U_t=B_t-tB_1$
+jest mostem Browna z $U_0=U_1=0$ i
+$\operatorname{Cov}(U_s,U_t)=\min(s,t)-st$.
+Odejmowanie $tB_1$ zmienia zależności całej trajektorii, a nie tylko
+jej końcową wartość. Rysunek pokazuje sześć realizacji.
+\begin{center}
+\includegraphics[width=0.88\textwidth]{figures/II_most_gaussowski.pdf}\par
+\small\emph{Rysunek: Realizacje mostu gaussowskiego przywiązane do dwóch końców.}
+\end{center}
+\noindent\textbf{Kod w Pythonie (NumPy, Matplotlib).} Plik \texttt{code/II\_most\_gaussowski.py} można uruchomić niezależnie; zapisuje pokazany wykres.
+\lstinputlisting[language=Python]{code/II_most_gaussowski.py}
+% --- KONIEC ROZSZERZENIA ILUSTRACYJNEGO ---
+
+\section{Podsumowanie: dlaczego procesy gaussowskie przygotowują ruch Browna?}\label{sec:volII:06:06}
 Mamy już komplet narzędzi: jądro kowariancji pozwala skonstruować
 prawo procesu, formuły warunkowe opisują predykcję, a
 oszacowania momentów dają regularność trajektorii.
@@ -4779,9 +4878,12 @@ własnościach geometrycznych.
 % TOM II — ROZDZIAŁ 7: PROCES WIENERA
 % ==============================================================
 \chapter{Proces Wienera: własności probabilistyczne i geometria trajektorii}
+\label{chap:volII:07}
+\par\smallskip\noindent{\small\textit{Powiązania:} sekcja~\ref{sec:volII:02:04} (konstrukcja Wienera); sekcja~\ref{sec:volII:13:01} (wariacja kwadratowa); \textup{tom~III}, sekcja~\ref{III-sec:volIII:01:01} (konstrukcja całki Wienera); twierdzenie~\ref{thm:volII:02:03} (istnienie procesu Wienera).}\par\smallskip
+
 \label{ch:wiener}
 
-\section{Od sum niezależnych przyrostów do ruchu Browna}
+\section{Od sum niezależnych przyrostów do ruchu Browna}\label{sec:volII:07:01}
 Rozważmy błąd pomiaru, który narasta jako suma bardzo wielu drobnych,
 w przybliżeniu niezależnych zakłóceń. W granicy czasowej spodziewamy
 się procesu o przyrostach gaussowskich, którego wariancja rośnie
@@ -4792,7 +4894,7 @@ jest warunek \emph{niezależności przyrostów na rozłącznych
 przedziałach}. To właśnie on odróżnia Wienera od dowolnego
 procesu gaussowskiego.
 
-\begin{definicja}[Standardowy proces Wienera]
+\begin{definicja}[Standardowy proces Wienera]\label{def:volII:07:01}
 Niech $(\Omega,\calF,\Prob)$ będzie przestrzenią probabilistyczną.
 Proces rzeczywisty $W=(W_t)_{t\ge0}$ nazywamy
 \emph{standardowym procesem Wienera} (\emph{standardowym ruchem Browna}),
@@ -4819,7 +4921,7 @@ W dalszym ciągu możemy bez straty ogólności przyjąć,
 na jednym zbiorze zerowym, przypisując na nim trajektorię zerową.
 Takie ustalenie nie zmienia rozkładów skończeniewymiarowych.
 
-\begin{twierdzenie}[Równoważna charakteryzacja gaussowska]
+\begin{twierdzenie}[Równoważna charakteryzacja gaussowska]\label{thm:volII:07:01}
 Niech $X=(X_t)_{t\ge0}$ będzie rzeczywistym procesem
 o prawie na pewno ciągłych trajektoriach. Wówczas $X$
 jest standardowym procesem Wienera wtedy i tylko wtedy,
@@ -4866,8 +4968,8 @@ Nie należy tego mylić z pytaniem o rozkład $W_{t_3}$,
 który oczywiście zależy od stanu w chwili $t_1$.
 \end{przyklad}
 
-\section{Skalowanie, symetria i niezależność przyszłości}
-\begin{twierdzenie}[Symetrie i samopodobieństwo]
+\section{Skalowanie, symetria i niezależność przyszłości}\label{sec:volII:07:02}
+\begin{twierdzenie}[Symetrie i samopodobieństwo]\label{thm:volII:07:02}
 Niech $W$ będzie procesem Wienera, a $c>0$.
 Procesy $(c^{-1/2}W_{ct})_{t\ge0}$ i
 $(-W_t)_{t\ge0}$ mają to samo prawo na przestrzeni
@@ -4896,7 +4998,7 @@ niezmienniczości Donskera, wiążącej spacery losowe z
 ruchem Browna.
 \end{uwaga}
 
-\begin{twierdzenie}[Własność Markowa i półgrupa przejścia]
+\begin{twierdzenie}[Własność Markowa i półgrupa przejścia]\label{thm:volII:07:03}
 Niech $W$ będzie procesem Wienera względem filtracji
 $(\calF_t)_{t\ge0}$. Dla dowolnych $s,t\ge0$
 i ograniczonej mierzalnej funkcji $f:\R\to\R$ zachodzi
@@ -4924,7 +5026,7 @@ $P_s(P_tf)(x)=\E f(x+Z_s+Z_t)=P_{s+t}f(x)$;
 przejścia $s=0$ lub $t=0$ są oczywiste.
 \end{proof}
 
-\section{Mocna własność Markowa: można zacząć od losowej chwili}
+\section{Mocna własność Markowa: można zacząć od losowej chwili}\label{sec:volII:07:03}
 Dla deterministycznej chwili $s$ przyszły przyrost
 $W_{s+t}-W_s$ jest niezależny od $\calF_s$.
 Prawdziwie nowa treść pojawia się przy \emph{losowej}
@@ -4933,7 +5035,7 @@ Nie można po prostu podstawić $s=\tau(\omega)$ w definicji
 niezależności: musimy najpierw przybliżyć czas losowy
 czasami przyjmującymi przeliczalnie wiele wartości.
 
-\begin{twierdzenie}[Mocna własność Markowa procesu Wienera]
+\begin{twierdzenie}[Mocna własność Markowa procesu Wienera]\label{thm:volII:07:04}
 Niech $W$ będzie procesem Wienera względem filtracji
 $(\calF_t)_{t\ge0}$, a $\tau$ niech będzie względem niej
 czasem zatrzymania takim, że $\Prob(\tau<\infty)=1$.
@@ -4994,13 +5096,13 @@ Nie oznacza to niezależności samego położenia $W_{\tau_a+t}$
 od $W_{\tau_a}$, bo położenie zawiera znany punkt startowy.
 \end{przyklad}
 
-\section{Regularność trajektorii: ciągłość bez gładkości}
+\section{Regularność trajektorii: ciągłość bez gładkości}\label{sec:volII:07:04}
 Dla ustalonych $s<t$ przyrost ma skalę $\sqrt{t-s}$,
 a nie $t-s$. Ta pozornie drobna różnica ma zasadniczy
 skutek: trajektorie są ciągłe, ale prawie na pewno nie
 mają pochodnej w żadnym punkcie.
 
-\begin{twierdzenie}[Regularność H\"oldera poniżej $1/2$]
+\begin{twierdzenie}[Regularność H\"oldera poniżej $1/2$]\label{thm:volII:07:05}
 Dla każdego $T>0$ i standardowego procesu Wienera $W$
 zachodzi z prawdopodobieństwem $1$: dla każdego
 $\gamma\in(0,1/2)$ istnieje losowa stała
@@ -5024,14 +5126,14 @@ przecinamy zbiory o prawdopodobieństwie $1$ i
 otrzymujemy jednocześnie wszystkie $\gamma<1/2$.
 \end{proof}
 
-\section{Wariacja kwadratowa: niezwykła wielkość trajektorii}
+\section{Wariacja kwadratowa: niezwykła wielkość trajektorii}\label{sec:volII:07:05}
 Dla gładkiej funkcji $f$ i podziałów o coraz mniejszej
 średnicy suma kwadratów przyrostów $\sum(\Delta f)^2$
 dąży do zera. Dla Wienera dzieje się coś innego:
 suma ta dąży do długości przedziału. To najważniejszy
 mechanizm odróżniający rachunek Itô od klasycznego.
 
-\begin{twierdzenie}[Wariacja kwadratowa procesu Wienera]
+\begin{twierdzenie}[Wariacja kwadratowa procesu Wienera]\label{thm:volII:07:06}
 Niech $W$ będzie standardowym procesem Wienera, $T>0$, zaś
 $\pi_n=\{0=t_{0,n}<\cdots<t_{m_n,n}=T\}$
 ciągiem deterministycznych podziałów $[0,T]$ o średnicy
@@ -5071,7 +5173,7 @@ i przecinając przeliczalnie wiele zdarzeń pełnej miary,
 uzyskujemy $Q(\pi_n)\to T$ p.n.
 \end{proof}
 
-\begin{wniosek}[Jednostajna zbieżność wariacji kwadratowej]
+\begin{wniosek}[Jednostajna zbieżność wariacji kwadratowej]\label{cor:volII:07:01}
 Dla podziałów dyadycznych $t_{k,n}=kT2^{-n}$
 zdefiniujmy dla $t\in[0,T]$
 \[
@@ -5103,7 +5205,7 @@ ciągłości trajektorii $W$ na $[0,T]$.
 Połączenie obu oszacowań dowodzi tezy.
 \end{proof}
 
-\begin{wniosek}[Trajektorie nie mają skończonej wariacji całkowitej]
+\begin{wniosek}[Trajektorie nie mają skończonej wariacji całkowitej]\label{cor:volII:07:02}
 Dla każdego $T>0$ trajektorie $t\mapsto W_t(\omega)$
 mają z prawdopodobieństwem $1$ nieskończoną wariację
 całkowitą na $[0,T]$. Prawie na pewno jest tak nawet
@@ -5150,7 +5252,25 @@ Stratonovicha. Pełna konstrukcja obu całek pojawi
 się w części o rachunku stochastycznym.
 \end{przyklad}
 
-\section{Dlaczego ruch Browna nie ma pochodnej?}
+
+% --- ROZSZERZENIE ILUSTRACYJNE: II_wariacja ---
+\subsection*{Eksperyment: kwadraty przyrostów kontra moduły}
+Dla jednej trajektorii ruchu Browna na $[0,1]$ bierzemy zagnieżdżone
+podziały dyadyczne $\pi_n=\{k/n:k=0,\ldots,n\}$, gdzie $n=2^m$.
+Porównujemy sumy $Q_n=\sum_{k=0}^{n-1}(B_{(k+1)/n}-B_{k/n})^2$
+oraz $V_n=\sum_{k=0}^{n-1}|B_{(k+1)/n}-B_{k/n}|$.
+Pierwsze dążą do $1$ (przy rozważanych regularnych podziałach),
+podczas gdy drugie nie są ograniczone dla typowej trajektorii.
+Obie wielkości pokazujemy na różnych skalach pionowych.
+\begin{center}
+\includegraphics[width=0.88\textwidth]{figures/II_wariacja.pdf}\par
+\small\emph{Rysunek: Różnica między wariacją kwadratową i sumą modułów przyrostów.}
+\end{center}
+\noindent\textbf{Kod w Pythonie (NumPy, Matplotlib).} Plik \texttt{code/II\_wariacja.py} można uruchomić niezależnie; zapisuje pokazany wykres.
+\lstinputlisting[language=Python]{code/II_wariacja.py}
+% --- KONIEC ROZSZERZENIA ILUSTRACYJNEGO ---
+
+\section{Dlaczego ruch Browna nie ma pochodnej?}\label{sec:volII:07:06}
 Brak skończonej wariacji całkowitej na każdym przedziale nie
 wyklucza jeszcze pochodnej w pojedynczym punkcie. Potrzebny
 jest silniejszy argument. Pokażemy, że na drobnej siatce
@@ -5159,7 +5279,7 @@ bardzo małych} kolejnych przyrostów maleje wystarczająco szybko.
 Gdyby trajektoria miała pochodną, takie trzy małe przyrosty
 musiałyby się regularnie pojawiać blisko punktu różniczkowalności.
 
-\begin{twierdzenie}[Nieróżniczkowalność trajektorii Wienera]
+\begin{twierdzenie}[Nieróżniczkowalność trajektorii Wienera]\label{thm:volII:07:07}
 Niech $W$ będzie standardowym procesem Wienera i $T>0$.
 Wówczas z prawdopodobieństwem $1$ trajektoria
 $t\mapsto W_t(\omega)$ nie jest różniczkowalna
@@ -5219,7 +5339,7 @@ sytuację. W punkcie $T$ stosujemy analogiczny argument
 do $W_T-W_{T-h_n}$. To kończy dowód.
 \end{proof}
 
-\begin{wniosek}[Próg wykładnika H\"oldera]
+\begin{wniosek}[Próg wykładnika H\"oldera]\label{cor:volII:07:03}
 Z prawdopodobieństwem $1$ na żadnym przedziale
 $[a,b]\subset[0,\infty)$ o $a<b$ trajektoria Wienera
 nie spełnia oszacowania
@@ -5254,8 +5374,8 @@ Rysunek ma charakter poglądowy: prawdziwa trajektoria Wienera
 jest ciągła, ale nie jest łamaną o skończonej liczbie odcinków.
 \end{center}
 
-\section{Pierwsze trafienie i zasada odbicia}
-\begin{definicja}[Czas pierwszego trafienia]
+\section{Pierwsze trafienie i zasada odbicia}\label{sec:volII:07:07}
+\begin{definicja}[Czas pierwszego trafienia]\label{def:volII:07:02}
 Niech $W$ będzie ciągłym procesem Wienera i $a>0$.
 Definiujemy $\tau_a:=\inf\{t\ge0:W_t=a\}$,
 przyjmując $\inf\varnothing=\infty$.
@@ -5266,7 +5386,7 @@ a supremum ciągłej trajektorii można obliczać po
 chwilach wymiernych z $[0,t]$ wraz z końcem przedziału.
 \end{definicja}
 
-\begin{twierdzenie}[Zasada odbicia]
+\begin{twierdzenie}[Zasada odbicia]\label{thm:volII:07:08}
 Dla standardowego procesu Wienera $W$, $t>0$ i $a>0$
 zachodzi
 \[
@@ -5307,7 +5427,7 @@ $\{W_t<a\},\{W_t=a\},\{W_t>a\}$,
 dostajemy żądany wzór.
 \end{proof}
 
-\begin{wniosek}[Rozkład czasu trafienia]
+\begin{wniosek}[Rozkład czasu trafienia]\label{cor:volII:07:04}
 Dla $a>0$ czas $\tau_a$ jest skończony prawie na pewno,
 a jego dystrybuanta i gęstość na $(0,\infty)$ mają postać
 \[
@@ -5372,8 +5492,8 @@ Ta transformata będzie w przyszłości użyteczna przy
 porównywaniu ruchu Browna z procesami Lévy'ego.
 \end{zadanie}
 
-\section{Wyjście z przedziału: prawdopodobieństwa i średni czas}
-\begin{twierdzenie}[Wyjście procesu Wienera z $(-a,b)$]
+\section{Wyjście z przedziału: prawdopodobieństwa i średni czas}\label{sec:volII:07:08}
+\begin{twierdzenie}[Wyjście procesu Wienera z $(-a,b)$]\label{thm:volII:07:09}
 Niech $a,b>0$ oraz
 $\tau:=\inf\{t\ge0:W_t\notin(-a,b)\}$.
 Wtedy $\tau<\infty$ prawie na pewno,
@@ -5440,7 +5560,7 @@ Jest to pierwsza zapowiedź ścisłego związku procesów
 Markowa z równaniami różniczkowymi.
 \end{zadanie}
 
-\section{Miara Wienera: całkowanie po wszystkich trajektoriach}
+\section{Miara Wienera: całkowanie po wszystkich trajektoriach}\label{sec:volII:07:09}
 Proces $W$ można opisywać dwojako. Dla ustalonej chwili $t$
 zmienna $W_t$ jest normalna. Ale pojedynczy wynik
 $\omega\in\Omega$ wyznacza także całą ciągłą funkcję
@@ -5450,7 +5570,7 @@ prawdopodobieństwo zdarzenia zależącego od całej drogi,
 na przykład: ``trajektoria przez cały czas pozostaje
 poniżej bariery'' lub ``pole pod trajektorią jest dodatnie''.
 
-\begin{definicja}[Przestrzeń trajektorii i miara Wienera]
+\begin{definicja}[Przestrzeń trajektorii i miara Wienera]\label{def:volII:07:03}
 Dla $T>0$ definiujemy
 \[
 \calC_0([0,T]):=\{w\in C([0,T];\R):w(0)=0\},
@@ -5466,7 +5586,7 @@ $\mu_T:=\Prob\circ W^{-1}$ na
 $(\calC_0([0,T]),\calB(\calC_0([0,T])))$.
 \end{definicja}
 
-\begin{stwierdzenie}[Mierzalność odwzorowania trajektorii]
+\begin{stwierdzenie}[Mierzalność odwzorowania trajektorii]\label{prop:volII:07:01}
 Jeżeli $W$ ma ciągłe trajektorie i każda zmienna $W_t$
 jest mierzalna, to odwzorowanie
 $\omega\mapsto W(\omega)\in\calC_0([0,T])$ jest mierzalne.
@@ -5489,7 +5609,7 @@ Zatem przeciwobrazy zbiorów borelowskich przez $W$
 są mierzalne.
 \end{proof}
 
-\begin{twierdzenie}[Całki cylindryczne względem miary Wienera]
+\begin{twierdzenie}[Całki cylindryczne względem miary Wienera]\label{thm:volII:07:10}
 Niech $T>0$, $0<t_1<\cdots<t_m\le T$ oraz
 $F:\R^m\to\R$ będzie funkcją borelowską, nieujemną
 lub całkowalną względem rozkładu wektora
@@ -5578,7 +5698,7 @@ zwykłą całką względem miary probabilistycznej.
 \end{uwaga}
 
 
-\begin{stwierdzenie}[Most Browna i miara Wienera mają różne prawa]
+\begin{stwierdzenie}[Most Browna i miara Wienera mają różne prawa]\label{prop:volII:07:02}
 Dla $T>0$ niech $\mu_T$ będzie miarą Wienera na
 $\calC_0([0,T])$, a $\nu_T$ prawem mostu Browna
 $\beta_t=W_t-(t/T)W_T$. Wtedy $\mu_T$ i $\nu_T$
@@ -5604,8 +5724,8 @@ wybranej sekwencji podziałów. Ważne jest również,
 czy podziały wolno wybierać zależnie od trajektorii.
 \end{uwaga}
 
-\section{Równanie ciepła i generator ruchu Browna}
-\begin{twierdzenie}[Generator i równanie ciepła]
+\section{Równanie ciepła i generator ruchu Browna}\label{sec:volII:07:10}
+\begin{twierdzenie}[Generator i równanie ciepła]\label{thm:volII:07:11}
 Niech $(P_t)_{t\ge0}$ będzie półgrupą zdefiniowaną wzorem
 $(P_tf)(x)=\E f(x+W_t)$ dla ograniczonych borelowskich
 $f:\R\to\R$. Wówczas:
@@ -5679,7 +5799,7 @@ Jeden rachunek probabilistyczny dostarcza więc
 jawnego rozwiązania równania ciepła.
 \end{przyklad}
 
-\section{Podsumowanie i kierunek dalszej teorii}
+\section{Podsumowanie i kierunek dalszej teorii}\label{sec:volII:07:11}
 Proces Wienera łączy zaskakujące fakty: ma ciągłe
 trajektorie, ale żadna z nich nie jest różniczkowalna;
 ma nieskończoną wariację całkowitą, lecz jego wariacja
@@ -5701,9 +5821,12 @@ narzędzia do równań różniczkowych stochastycznych.
 % ROZDZIAŁ 8. ROZSZERZENIE TEORII RUCHU BROWNA
 % ==============================================================
 \chapter{Ruch Browna w wielu wymiarach i dalsze własności trajektorii}
+\label{chap:volII:08}
+\par\smallskip\noindent{\small\textit{Powiązania:} sekcja~\ref{sec:volII:07:02} (skalowanie Wienera); \textup{tom~I}, sekcja~\ref{I-sec:volI:05:02} (nierówności momentowe); \textup{tom~III}, sekcja~\ref{III-sec:volIII:03:06} (wielowymiarowy wzór Itô); twierdzenie~\ref{thm:volII:07:02} (symetrie procesu Wienera).}\par\smallskip
+
 \label{ch:brown-multi}
 
-\section{Dlaczego potrzebujemy procesu wielowymiarowego?}
+\section{Dlaczego potrzebujemy procesu wielowymiarowego?}\label{sec:volII:08:01}
 W ruchu jednowymiarowym możemy badać przekroczenie bariery przez
 cząstkę. Ruch w przestrzeni fizycznej wymaga jednak opisu wielu
 współrzędnych naraz. Pytania zmieniają się wtedy jakościowo:
@@ -5712,7 +5835,7 @@ punktu? Jak zmieniają się wyniki po obróceniu układu współrzędnych?
 Zacznijmy od konstrukcji, w której odpowiedź na ostatnie pytanie
 wynika ze szczególnej postaci macierzy kowariancji.
 
-\begin{definicja}[Standardowy wielowymiarowy ruch Browna]
+\begin{definicja}[Standardowy wielowymiarowy ruch Browna]\label{def:volII:08:01}
 Niech $d\in\N$. Proces $B=(B_t)_{t\ge0}$ o wartościach
 w $\R^d$, z prawie na pewno ciągłymi trajektoriami, nazywamy
 \emph{standardowym $d$-wymiarowym ruchem Browna}, jeżeli
@@ -5723,7 +5846,7 @@ rozpoczynającym się w $x$; jego prawo i wartość oczekiwaną oznaczamy
 odpowiednio przez $\Prob_x$ oraz $\E_x$.
 \end{definicja}
 
-\begin{twierdzenie}[Konstrukcja i izotropia]
+\begin{twierdzenie}[Konstrukcja i izotropia]\label{thm:volII:08:01}
 Dla każdego $d\ge1$ istnieje standardowy $d$-wymiarowy ruch
 Browna $B$. Jego współrzędne są niezależnymi standardowymi
 procesami Wienera, a dla $1\le i,j\le d$ i $s,t\ge0$
@@ -5759,7 +5882,7 @@ wynosi $sI_d$. Niezależne są \emph{przyrosty} na rozłącznych
 przedziałach czasu.
 \end{uwaga}
 
-\begin{twierdzenie}[Generator i wielowymiarowe równanie ciepła]
+\begin{twierdzenie}[Generator i wielowymiarowe równanie ciepła]\label{thm:volII:08:02}
 Niech $B$ będzie standardowym ruchem Browna w $\R^d$.
 Dla $t\ge0$ oraz ograniczonej funkcji borelowskiej
 $f:\R^d\to\R$ połóżmy $P_tf(x)=\E f(x+B_t)$.
@@ -5789,7 +5912,7 @@ Na każdym pasie czasowym $\delta\le t\le R$ pochodne
 $\partial_t p_t^{(d)}$ oraz $\partial_i p_t^{(d)}$,
 $\partial_{ij}p_t^{(d)}$ są zdominowane całkowalnymi
 funkcjami zmiennej $z$ (wielomian razy gaussowski ogon).
-Różniczkując splot $u(t,x)=\int f(x+z)p_t^{(d)}(z)\,\dd\lambda_d(z)$
+Różniczkując splot $u(t,x)=\int_{\R^d} f(x+z)p_t^{(d)}(z)\,\dd\lambda_d(z)$
 po jądrze, dostajemy $\partial_tu=\frac12\Delta u$.
 Zbieżność do warunku początkowego wynika z ciągłości $f$ w $x$,
 ograniczenia $f$ i faktu $\E|B_t|^2=dt\to0$, dokładnie jak
@@ -5830,8 +5953,8 @@ większy niż w drugim; nie można go odczytać z samej
 wartości oczekiwanej $\E X_t=0$.
 \end{zadanie}
 
-\section{Czas wyjścia z kuli i martyngał kwadratu promienia}
-\begin{twierdzenie}[Średni czas wyjścia z kuli]
+\section{Czas wyjścia z kuli i martyngał kwadratu promienia}\label{sec:volII:08:02}
+\begin{twierdzenie}[Średni czas wyjścia z kuli]\label{thm:volII:08:03}
 Niech $d\in\N$, $R>0$, $x\in\R^d$ i $|x|<R$.
 Dla standardowego $d$-wymiarowego ruchu Browna $B$ połóżmy
 $X_t=x+B_t$ oraz $\tau=\inf\{t\ge0:|X_t|\ge R\}$.
@@ -5874,13 +5997,13 @@ Zależność od $r$ jest kwadratowa, mimo że typowe wychylenie
 po czasie $t$ ma rząd $\sqrt t$.
 \end{zadanie}
 
-\section{Maksimum, zasada odbicia i rozkład końcowego położenia}
+\section{Maksimum, zasada odbicia i rozkład końcowego położenia}\label{sec:volII:08:03}
 W rozdziale poprzednim wyprowadziliśmy prawdopodobieństwo
 przekroczenia poziomu $a$ do chwili $T$. Często potrzebujemy
 więcej: co wiemy o położeniu końcowym, jeśli poziom został
 po drodze osiągnięty?
 
-\begin{twierdzenie}[Rozkład łączny maksimum i położenia]
+\begin{twierdzenie}[Rozkład łączny maksimum i położenia]\label{thm:volII:08:04}
 Niech $W$ będzie standardowym procesem Wienera,
 $T>0$, $a>0$ i $M_T:=\sup_{0\le s\le T}W_s$.
 Wówczas dla dowolnego borelowskiego $A\subset(-\infty,a)$
@@ -5917,7 +6040,7 @@ $|W_T|$. Stąd
 $\E M_T=\E|W_T|=\sqrt{2T/\pi}$.
 \end{proof}
 
-\begin{wniosek}[Maksimum mostu Browna]
+\begin{wniosek}[Maksimum mostu Browna]\label{cor:volII:08:01}
 Niech $\beta_t=W_t-(t/T)W_T$ dla $0\le t\le T$.
 Dla każdego $a>0$ zachodzi
 \[
@@ -6040,8 +6163,8 @@ jest deterministyczną prostą. Warunkowa wariancja jest
 dodatnia i wynosi $1/2$.
 \end{zadanie}
 
-\section{Oscylacje drogi na dowolnie małych przedziałach}
-\begin{twierdzenie}[Natychmiastowe oscylacje przy zadanej chwili]
+\section{Oscylacje drogi na dowolnie małych przedziałach}\label{sec:volII:08:04}
+\begin{twierdzenie}[Natychmiastowe oscylacje przy zadanej chwili]\label{thm:volII:08:05}
 Niech $W$ będzie standardowym procesem Wienera i niech
 $t_0\ge0$ będzie ustaloną deterministyczną chwilą.
 Wtedy z prawdopodobieństwem $1$ dla każdego $\varepsilon>0$
@@ -6075,8 +6198,8 @@ w twierdzeniach o trajektoriach.
 \end{uwaga}
 
 
-\section{Rozkład promienia i oszacowania ryzyka wyjścia}
-\begin{twierdzenie}[Rozkład odległości od początku]
+\section{Rozkład promienia i oszacowania ryzyka wyjścia}\label{sec:volII:08:05}
+\begin{twierdzenie}[Rozkład odległości od początku]\label{thm:volII:08:06}
 Niech $B$ będzie standardowym ruchem Browna w $\R^d$
 i $t>0$. Wtedy $|B_t|^2/t$ ma rozkład $\chi^2_d$,
 a w szczególności
@@ -6110,7 +6233,7 @@ ponieważ wielokrotnie zlicza trajektorie przekraczające
 kilka ścian sześcianu.
 \end{zadanie}
 
-\section{Schematyczny rysunek procesu dwuwymiarowego}
+\section{Schematyczny rysunek procesu dwuwymiarowego}\label{sec:volII:08:06}
 \begin{center}
 \begin{tikzpicture}[x=0.85cm,y=0.85cm,>=Latex]
  \draw[->,gray] (-3.2,0)--(3.7,0) node[right] {$x_1$};
@@ -6135,9 +6258,12 @@ jest ciągła i nieróżniczkowalna.
 % ROZDZIAŁ 9. PROCESY ODNOWY
 % ==============================================================
 \chapter{Procesy odnowy: zliczanie zdarzeń bez własności braku pamięci}
+\label{chap:volII:09}
+\par\smallskip\noindent{\small\textit{Powiązania:} sekcja~\ref{sec:volII:04:02} (proces Poissona); \textup{tom~I}, sekcja~\ref{I-sec:volI:08:01} (prawa wielkich liczb); sekcja~\ref{sec:volII:05:02} (czasy oczekiwania); twierdzenie~\ref{thm:volII:04:02} (charakterystyka procesu Poissona).}\par\smallskip
+
 \label{ch:renewal}
 
-\section{Dlaczego proces Poissona nie opisuje każdego strumienia zdarzeń?}
+\section{Dlaczego proces Poissona nie opisuje każdego strumienia zdarzeń?}\label{sec:volII:09:01}
 W procesie Poissona po dowolnym czasie obserwacji oczekiwanie na
 kolejne zdarzenie ma nadal rozkład wykładniczy. To wynika z własności
 braku pamięci. Awaria mechanizmu, którego prawdopodobieństwo
@@ -6147,7 +6273,7 @@ wykładniczymi czasami między kolejnymi zdarzeniami.
 \emph{Proces odnowy} opisuje liczbę ukończonych cykli, w których
 po każdym odnowieniu system zaczyna działać jak nowy.
 
-\begin{definicja}[Proces odnowy]
+\begin{definicja}[Proces odnowy]\label{def:volII:09:01}
 Niech $(T_n)_{n\ge1}$ będzie ciągiem niezależnych zmiennych
 losowych o jednakowym rozkładzie $F$ na $(0,\infty)$, przy czym
 $T_n>0$ prawie na pewno. Definiujemy $S_0=0$,
@@ -6161,7 +6287,7 @@ to czasy pomiędzy odnowieniami. Gdy $T_n\sim\mathrm{Exp}(\lambda)$,
 odzyskujemy proces Poissona o intensywności $\lambda$.
 \end{definicja}
 
-\begin{twierdzenie}[Brak eksplozji i podstawowe prawdopodobieństwa]
+\begin{twierdzenie}[Brak eksplozji i podstawowe prawdopodobieństwa]\label{thm:volII:09:01}
 Dla procesu odnowy z poprzedniej definicji, dla każdego $t\ge0$,
 $N_t<\infty$ prawie na pewno. W szczególności proces ma
 niemalejące, prawostronnie ciągłe trajektorie, które w skończonym
@@ -6201,7 +6327,7 @@ Jeżeli zaś $T_1=0$ prawie na pewno, wszystkie odnowienia
 nastąpiłyby w chwili zerowej, a $N_0=\infty$.
 \end{uwaga}
 
-\begin{stwierdzenie}[Skończona średnia liczby odnowień]
+\begin{stwierdzenie}[Skończona średnia liczby odnowień]\label{prop:volII:09:01}
 Dla każdego procesu odnowy z $T_1>0$ prawie na pewno i każdego
 $t<\infty$ zachodzi $\E N_t<\infty$, nawet gdy $\E T_1=\infty$.
 \end{stwierdzenie}
@@ -6257,7 +6383,7 @@ nie ma własności Markowa. Rzeczywisty kontrprzykład podajemy dalej.
 \end{przyklad}
 
 
-\begin{twierdzenie}[Proces odnowy nie musi być procesem Markowa]
+\begin{twierdzenie}[Proces odnowy nie musi być procesem Markowa]\label{thm:volII:09:02}
 Niech $(T_n)_{n\ge1}$ będą niezależnymi zmiennymi, dla których
 $\Prob(T_n=1)=\Prob(T_n=2)=1/2$, i niech
 $N_t=\sup\{n\ge0:\sum_{k=1}^nT_k\le t\}$.
@@ -6304,7 +6430,7 @@ utożsamiamy z własnością Markowa samego $N_t$.
 \end{uwaga}
 
 
-\begin{twierdzenie}[Wiek odnowy przywraca własność Markowa]
+\begin{twierdzenie}[Wiek odnowy przywraca własność Markowa]\label{thm:volII:09:03}
 \label{thm:wiek-markow}
 Niech $T_1,T_2,\ldots$ będą niezależnymi, jednakowo rozłożonymi
 zmiennymi o wartościach w $(0,\infty)$, o dystrybuancie $F$,
@@ -6389,8 +6515,8 @@ dotyczy regularnej wersji prawa warunkowego. Właśnie z tego
 powodu para $(N_t,A_t)$ przenosi więcej informacji niż $N_t$.
 \end{zadanie}
 
-\section{Równanie odnowy i jego jednoznaczność}
-\begin{twierdzenie}[Równanie dla średniej liczby odnowień]
+\section{Równanie odnowy i jego jednoznaczność}\label{sec:volII:09:02}
+\begin{twierdzenie}[Równanie dla średniej liczby odnowień]\label{thm:volII:09:04}
 Niech $N$ będzie procesem odnowy o dystrybuancie
 odstępów $F$. Funkcja $m(t)=\E N_t$ jest skończona
 dla $t\ge0$ i spełnia równanie
@@ -6438,8 +6564,8 @@ Z jednoznaczności rozwiązania równania odnowy otrzymujemy
 $\E N_t=\lambda t$.
 \end{przyklad}
 
-\section{Mocne i elementarne twierdzenie odnowy}
-\begin{twierdzenie}[Mocne prawo dla liczby odnowień]
+\section{Mocne i elementarne twierdzenie odnowy}\label{sec:volII:09:03}
+\begin{twierdzenie}[Mocne prawo dla liczby odnowień]\label{thm:volII:09:05}
 Niech $N$ będzie procesem odnowy z $T_n>0$ p.n.
 i $\mu=\E T_1\in(0,\infty]$.
 Wtedy
@@ -6472,7 +6598,7 @@ Ponownie $S_{N_t}\le t$ i $N_t\to\infty$, więc
 $t/N_t\ge S_{N_t}/N_t\to\infty$; stąd $N_t/t\to0$.
 \end{proof}
 
-\begin{lemat}[Tożsamość Walda dla chwili przekroczenia]
+\begin{lemat}[Tożsamość Walda dla chwili przekroczenia]\label{lem:volII:09:01}
 Niech $T_1,T_2,\ldots$ będą niezależne i jednakowo rozłożone,
 $T_n>0$ prawie na pewno, z $\mu=\E T_1<\infty$.
 Dla $t\ge0$ połóżmy $K_t=N_t+1=\inf\{n\ge1:S_n>t\}$.
@@ -6496,7 +6622,7 @@ liczba $N_t$ nie jest czasem zatrzymania względem
 odstępów $T_i$, bo $\{N_t\ge i\}$ zależy od $T_i$.
 \end{proof}
 
-\begin{twierdzenie}[Elementarne twierdzenie odnowy]
+\begin{twierdzenie}[Elementarne twierdzenie odnowy]\label{thm:volII:09:06}
 Przy założeniach definicji procesu odnowy niech
 $\mu=\E T_1\in(0,\infty]$. Wtedy
 \[
@@ -6539,15 +6665,15 @@ albo odrębne oszacowania. W powyższym dowodzie rolę takich
 oszacowań pełnią lemat Walda i obcięcie odstępów.
 \end{uwaga}
 
-\section{Wiek odnowy i czas pozostały do następnego zdarzenia}
-\begin{definicja}[Wiek i czas resztkowy]
+\section{Wiek odnowy i czas pozostały do następnego zdarzenia}\label{sec:volII:09:04}
+\begin{definicja}[Wiek i czas resztkowy]\label{def:volII:09:02}
 Dla $t\ge0$ oraz procesu odnowy o chwilach $S_n$ definiujemy
 $A_t:=t-S_{N_t}$ oraz $R_t:=S_{N_t+1}-t$.
 Nazywamy je odpowiednio \emph{wiekiem bieżącego cyklu}
 i \emph{pozostałym czasem do następnego odnowienia}.
 \end{definicja}
 
-\begin{stwierdzenie}[Warunkowy rozkład czasu resztkowego]
+\begin{stwierdzenie}[Warunkowy rozkład czasu resztkowego]\label{prop:volII:09:02}
 Niech $F$ będzie dystrybuantą ściśle dodatnich odstępów,
 $\overline F(u)=\Prob(T_1>u)$.
 Ustalmy $t\ge0$, $n\ge0$ oraz $s\in[0,t]$ takie, że
@@ -6585,8 +6711,33 @@ samego procesu $N_t$ w dowolnym procesie odnowy; często
 naturalnym stanem jest para $(N_t,A_t)$.
 \end{przyklad}
 
-\section{Nagrody w cyklach: twierdzenie odnowy z nagrodą}
-\begin{twierdzenie}[Długookresowa średnia nagrody]
+
+% --- ROZSZERZENIE ILUSTRACYJNE: schemat ---
+\subsection*{Schemat wieku i czasu oczekiwania w procesie odnowy}
+Jeżeli $T_n$ jest chwilą $n$-tego odnowienia i $N_t=\max\{n:T_n\le t\}$,
+to wiek procesu wynosi $A_t=t-T_{N_t}$, a czas pozostały do następnego
+odnowienia wynosi $R_t=T_{N_t+1}-t$. To wielkości losowe, które
+nie muszą mieć rozkładów wykładniczych.
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=0.97,every node/.style={font=\small}]
+\draw[->,thick] (0,0)--(8.4,0) node[right] {$s$};
+\draw[thick] (1.35,-.11)--(1.35,.11);
+\draw[thick] (4.10,-.11)--(4.10,.11);
+\draw[thick] (7.25,-.11)--(7.25,.11);
+\node[below] at (1.35,-.12) {$T_{N_t}$};
+\node[below] at (4.10,-.12) {$t$};
+\node[below] at (7.25,-.12) {$T_{N_t+1}$};
+\draw[<->,blue!70!black,thick] (1.35,.55)--node[above] {$A_t$} (4.10,.55);
+\draw[<->,blue!70!black,thick] (4.10,.55)--node[above] {$R_t$} (7.25,.55);
+\fill (1.35,0) circle (2pt); \fill (7.25,0) circle (2pt);
+\fill[white] (4.10,0) circle (2pt); \draw (4.10,0) circle (2pt);
+\end{tikzpicture}
+\par\small\emph{Rysunek: dekompozycja przedziału między kolejnymi odnowieniami.}
+\end{center}
+% --- KONIEC ROZSZERZENIA ILUSTRACYJNEGO ---
+
+\section{Nagrody w cyklach: twierdzenie odnowy z nagrodą}\label{sec:volII:09:05}
+\begin{twierdzenie}[Długookresowa średnia nagrody]\label{thm:volII:09:07}
 Niech $(T_n,R_n)_{n\ge1}$ będą niezależnymi parami o jednakowym
 rozkładzie w $(0,\infty)\times\R$, gdzie
 $0<\mu=\E T_1<\infty$ oraz $\E|R_1|<\infty$.
@@ -6641,8 +6792,8 @@ Dostajemy ten sam udział dla całego czasu $[0,t]$.
 \end{zadanie}
 
 
-\section{Transformaty procesu odnowy i przykład odstępów gamma}
-\begin{twierdzenie}[Transformata miary odnowy]
+\section{Transformaty procesu odnowy i przykład odstępów gamma}\label{sec:volII:09:06}
+\begin{twierdzenie}[Transformata miary odnowy]\label{thm:volII:09:08}
 Niech $S_0=0$ i $S_n=\sum_{k=1}^nT_k$ dla niezależnych,
 ściśle dodatnich odstępów o jednakowym rozkładzie.
 Zdefiniujmy lokalnie skończoną miarę na $[0,\infty)$
@@ -6664,7 +6815,7 @@ i poprzednie oszacowanie $\E N_t<\infty$ dowodzą
 lokalnej skończoności miary. Z twierdzenia Tonellego,
 nieujemności funkcji podcałkowej i niezależności odstępów
 \[
-\int e^{-\theta t}\,\dd U(t)
+\int_{[0,\infty)} e^{-\theta t}\,\dd U(t)
 =\sum_{n=0}^\infty\E e^{-\theta S_n}
 =\sum_{n=0}^\infty \varphi(\theta)^n.
 \]
@@ -6705,7 +6856,7 @@ Ale $N_t$ nie jest procesem Poissona: odstępy są gamma,
 a nie wykładnicze.
 \end{zadanie}
 
-\section{Podsumowanie i dalsze pytania}
+\section{Podsumowanie i dalsze pytania}\label{sec:volII:09:07}
 W procesie odnowy niezależne są całe kolejne cykle, a nie
 zwykle liczby zdarzeń w rozłącznych przedziałach. Wzór
 odnowy opisuje średnią liczbę zakończonych cykli, a oba
@@ -6720,9 +6871,12 @@ oraz procesy pół-Markowa pozwolą uogólnić ten model.
 % ROZDZIAŁ 10. PROCESY ROZGAŁĘZIAJĄCE
 % ==============================================================
 \chapter{Procesy rozgałęziające: losowy wzrost i wymieranie populacji}
+\label{chap:volII:10}
+\par\smallskip\noindent{\small\textit{Powiązania:} \textup{tom~I}, sekcja~\ref{I-sec:volI:14:07} (martyngał Galtona–Watsona); sekcja~\ref{sec:volII:05:03} (eksplozja procesów); sekcja~\ref{sec:volII:11:04} (martyngały lokalne); tom~I, twierdzenie~\ref{I-thm:volI:14:02} (transformacja martyngałowa).}\par\smallskip
+
 \label{ch:branching}
 
-\section{Od niezależnych osobników do zależnych pokoleń}
+\section{Od niezależnych osobników do zależnych pokoleń}\label{sec:volII:10:01}
 W procesie odnowy po każdej wymianie mechanizmu zaczyna się nowy
 cykl. W procesie rozgałęziającym każdy osobnik produkuje losową
 liczbę potomków, którzy w następnym pokoleniu rozmnażają się niezależnie.
@@ -6731,7 +6885,7 @@ ale cała genealogia powstaje z niezależnych lokalnych decyzji.
 Zasadnicze pytanie brzmi: kiedy populacja wymiera, a kiedy ma
 dodatnie prawdopodobieństwo przetrwania przez wszystkie pokolenia?
 
-\begin{definicja}[Proces Galtona--Watsona]
+\begin{definicja}[Proces Galtona--Watsona]\label{def:volII:10:01}
 Niech $\xi$ będzie zmienną losową o wartościach w $\N_0$,
 z rozkładem $p_k=\Prob(\xi=k)$, $k\ge0$.
 Niech $(\xi_{n,i})_{n\ge0,i\ge1}$ będą niezależnymi kopiami
@@ -6776,8 +6930,8 @@ proces Galtona--Watsona może być nieadekwatny.
 Proces zlicza liczby osobników, nie zapamiętuje pełnego drzewa.
 \end{center}
 
-\section{Własność Markowa i funkcje tworzące}
-\begin{definicja}[Funkcja tworząca potomstwa]
+\section{Własność Markowa i funkcje tworzące}\label{sec:volII:10:02}
+\begin{definicja}[Funkcja tworząca potomstwa]\label{def:volII:10:02}
 Dla zmiennej $\xi$ o wartościach w $\N_0$ jej funkcją tworzącą
 prawdopodobieństwa na $[0,1]$ jest
 $f(s)=\E[s^\xi]=\sum_{k=0}^\infty p_ks^k$.
@@ -6787,7 +6941,7 @@ $m=\E\xi\in[0,\infty]$, a gdy istnieje drugi moment,
 wariancję przez $\sigma^2=\Var(\xi)$.
 \end{definicja}
 
-\begin{twierdzenie}[Rozkład przejścia i składanie funkcji tworzących]
+\begin{twierdzenie}[Rozkład przejścia i składanie funkcji tworzących]\label{thm:volII:10:01}
 Niech proces Galtona--Watsona rozpoczyna się od $Z_0=1$.
 Wówczas jest łańcuchem Markowa na $\N_0$, a dla
 $0\le s\le1$ jego funkcja tworząca $g_n(s)=\E[s^{Z_n}]$
@@ -6816,7 +6970,7 @@ niezależnych drzew z jednym przodkiem, dlatego
 funkcje tworzące mnożą się, dając $(f^{\circ n}(s))^z$.
 \end{proof}
 
-\begin{twierdzenie}[Średnia liczba osobników]
+\begin{twierdzenie}[Średnia liczba osobników]\label{thm:volII:10:02}
 Niech $m=\E\xi<\infty$ i $Z_0=z\in\N_0$.
 Wtedy dla każdego $n\in\N_0$
 \[
@@ -6837,8 +6991,8 @@ dostajemy $\E[Z_{n+1}/m^{n+1}\mid\calF_n]=Z_n/m^n$.
 Całkowalność każdego wyrazu wykazaliśmy wcześniej.
 \end{proof}
 
-\section{Prawdopodobieństwo wymarcia jako punkt stały}
-\begin{definicja}[Wymarcie]
+\section{Prawdopodobieństwo wymarcia jako punkt stały}\label{sec:volII:10:03}
+\begin{definicja}[Wymarcie]\label{def:volII:10:03}
 Dla procesu Galtona--Watsona z $Z_0=1$ definiujemy
 $\mathrm{Ext}:=\{\exists n\ge0:Z_n=0\}$ oraz
 $q:=\Prob(\mathrm{Ext})$.
@@ -6846,7 +7000,7 @@ Ponieważ stan $0$ jest pochłaniający,
 zdarzenie wymarcia jest sumą rosnącą zdarzeń $\{Z_n=0\}$.
 \end{definicja}
 
-\begin{twierdzenie}[Najmniejszy punkt stały]
+\begin{twierdzenie}[Najmniejszy punkt stały]\label{thm:volII:10:03}
 Niech $f(s)=\E[s^\xi]$ będzie funkcją tworzącą potomstwa
 procesu Galtona--Watsona z jednym przodkiem.
 Wtedy prawdopodobieństwo wymarcia $q$ jest
@@ -6872,7 +7026,7 @@ Monotoniczność $f$ i indukcja dają $q_n\le r$
 dla każdego $n$, a więc $q\le r$. To dowodzi minimalności.
 \end{proof}
 
-\begin{twierdzenie}[Kryterium wymierania]
+\begin{twierdzenie}[Kryterium wymierania]\label{thm:volII:10:04}
 Niech $\xi$ będzie zmienną o wartościach w $\N_0$, z
 $0<m=\E\xi<\infty$ oraz $p_0=\Prob(\xi=0)>0$.
 Dla procesu Galtona--Watsona z jednym przodkiem:
@@ -6961,8 +7115,27 @@ $n$ jest zdarzeniem $\{Z_n=0\}$, a ciąg tych zdarzeń
 rośnie: raz wymarła populacja już się nie odradza.
 \end{zadanie}
 
-\section{Wariancja, normalizacja i granica martyngału}
-\begin{twierdzenie}[Wariancja pokolenia]
+
+% --- ROZSZERZENIE ILUSTRACYJNE: II_rozgalezienia ---
+\subsection*{Eksperyment: minimalny punkt stały funkcji tworzącej}
+W procesie Galtona--Watsona niech jeden osobnik ma $0$ potomków
+z prawdopodobieństwem $0{,}3$ albo $2$ potomków z prawdopodobieństwem
+$0{,}7$. Funkcja tworząca wynosi $g(s)=0{,}3+0{,}7s^2$, a
+$g'(1)=1{,}4>1$. Prawdopodobieństwo wymarcia wynosi $q=3/7$:
+to najmniejszy punkt stały $g$ w $[0,1]$.
+Wykres porównuje iteracje $q_{n+1}=g(q_n)$, $q_0=0$,
+z oszacowaniem metodą Monte Carlo, czyli częstością wymarcia
+wyznaczoną z wielu niezależnych symulacji, dla $\Prob(Z_n=0)$.
+\begin{center}
+\includegraphics[width=0.88\textwidth]{figures/II_rozgalezienia.pdf}\par
+\small\emph{Rysunek: Wymieranie populacji jako minimalny punkt stały funkcji tworzącej.}
+\end{center}
+\noindent\textbf{Kod w Pythonie (NumPy, Matplotlib).} Plik \texttt{code/II\_rozgalezienia.py} można uruchomić niezależnie; zapisuje pokazany wykres.
+\lstinputlisting[language=Python]{code/II_rozgalezienia.py}
+% --- KONIEC ROZSZERZENIA ILUSTRACYJNEGO ---
+
+\section{Wariancja, normalizacja i granica martyngału}\label{sec:volII:10:04}
+\begin{twierdzenie}[Wariancja pokolenia]\label{thm:volII:10:05}
 Załóżmy, że $Z_0=1$, $0<m=\E\xi<\infty$ oraz
 $\sigma^2=\Var(\xi)<\infty$. Wtedy
 \[
@@ -7014,8 +7187,8 @@ $\E[\xi\log^+\xi]$; ten głębszy wynik można omówić
 przy bardziej zaawansowanych procesach rozgałęziających.
 \end{uwaga}
 
-\section{Całkowita liczba urodzonych osobników}
-\begin{twierdzenie}[Średnia całkowita liczba osobników]
+\section{Całkowita liczba urodzonych osobników}\label{sec:volII:10:05}
+\begin{twierdzenie}[Średnia całkowita liczba osobników]\label{thm:volII:10:06}
 Niech $Z_0=1$ i $m=\E\xi<1$.
 Zdefiniujmy całkowitą liczebność drzewa genealogicznego
 $H=\sum_{n=0}^\infty Z_n$, gdzie suma może przyjmować $\infty$.
@@ -7033,7 +7206,7 @@ Gdyby $\Prob(H=\infty)>0$, wartość oczekiwana $H$
 byłaby nieskończona. Stąd $H<\infty$ prawie na pewno.
 \end{proof}
 
-\begin{stwierdzenie}[Funkcja tworząca całkowitej liczebności]
+\begin{stwierdzenie}[Funkcja tworząca całkowitej liczebności]\label{prop:volII:10:01}
 Niech $Z_0=1$ i $\Prob(H<\infty)=1$.
 Dla $s\in[0,1]$ funkcja $h(s)=\E[s^H]$ spełnia
 \[
@@ -7066,8 +7239,8 @@ To równanie pozwala numerycznie obliczać
 $\Prob(H=k)$, bez budowania całego losowego drzewa.
 \end{zadanie}
 
-\section{Model rozgałęziania w czasie ciągłym: proces Yule'a}
-\begin{definicja}[Proces czystych urodzin Yule'a]
+\section{Model rozgałęziania w czasie ciągłym: proces Yule'a}\label{sec:volII:10:06}
+\begin{definicja}[Proces czystych urodzin Yule'a]\label{def:volII:10:04}
 Niech $\lambda>0$. Procesem Yule'a rozpoczynającym się
 od jednego osobnika nazywamy minimalny łańcuch Markowa
 w czasie ciągłym na $\{1,2,3,\ldots\}$ z intensywnościami
@@ -7077,7 +7250,7 @@ Interpretacja: każdy z $n$ obecnych osobników rodzi
 kolejnego niezależnie z intensywnością $\lambda$.
 \end{definicja}
 
-\begin{twierdzenie}[Brak eksplozji i rozkład geometryczny]
+\begin{twierdzenie}[Brak eksplozji i rozkład geometryczny]\label{thm:volII:10:07}
 Proces Yule'a rozpoczynający się od $Z_0=1$ nie wybucha
 w skończonym czasie. Dla wszystkich $t\ge0$ i $n\ge1$
 \[
@@ -7146,8 +7319,8 @@ ale inne trajektorie, rozkłady i narzędzia obliczeniowe.
 \end{uwaga}
 
 
-\section{Jak szybko zanika prawdopodobieństwo przetrwania?}
-\begin{stwierdzenie}[Ogon czasu wymarcia w przypadku podkrytycznym]
+\section{Jak szybko zanika prawdopodobieństwo przetrwania?}\label{sec:volII:10:07}
+\begin{stwierdzenie}[Ogon czasu wymarcia w przypadku podkrytycznym]\label{prop:volII:10:02}
 Niech $Z$ będzie procesem Galtona--Watsona rozpoczynającym się
 od $Z_0=1$ ze średnią potomstwa $m\in[0,1)$.
 Niech $\tau=\inf\{n\ge0:Z_n=0\}$.
@@ -7178,8 +7351,8 @@ Dokładna asymptotyka jest osobnym twierdzeniem granicznym;
 nie wynika z samego argumentu o punktach stałych.
 \end{uwaga}
 
-\section{Urodzenia i śmierci w czasie ciągłym}
-\begin{twierdzenie}[Prawdopodobieństwo wymarcia liniowego procesu urodzin i śmierci]
+\section{Urodzenia i śmierci w czasie ciągłym}\label{sec:volII:10:08}
+\begin{twierdzenie}[Prawdopodobieństwo wymarcia liniowego procesu urodzin i śmierci]\label{thm:volII:10:08}
 Niech $\lambda,\delta>0$. Rozważmy minimalny łańcuch Markowa
 $Z$ na $\N_0$, rozpoczynający się od $Z_0=1$, z intensywnościami
 $q_{n,n+1}=\lambda n$, $q_{n,n-1}=\delta n$ dla $n\ge1$,
@@ -7297,7 +7470,7 @@ To przykład odrębnej własności braku pamięci
 a nie wykładniczego rozkładu czasów między skokami.
 \end{zadanie}
 
-\section{Podsumowanie i kierunek dalszej teorii}
+\section{Podsumowanie i kierunek dalszej teorii}\label{sec:volII:10:09}
 Łańcuch Markowa opisuje przejścia między stanami;
 proces odnowy opisuje cykle; proces rozgałęziający
 opisuje losową liczbę \emph{potomków}, którzy sami
@@ -7313,9 +7486,12 @@ stochastyczne zostaną skonstruowane dopiero w tomie III.
 % ROZDZIAŁ 11. MARTYNGAŁY W CZASIE CIĄGŁYM
 % ================================================================
 \chapter{Martyngały w czasie ciągłym: informacja, regularność i lokalizacja}
+\label{chap:volII:11}
+\par\smallskip\noindent{\small\textit{Powiązania:} \textup{tom~I}, sekcja~\ref{I-sec:volI:14:01} (martyngały dyskretne); \textup{tom~I}, sekcja~\ref{I-sec:volI:15:03} (zbieżność martyngałów); \textup{tom~III}, sekcja~\ref{III-sec:volIII:02:01} (konstrukcja całki Itô); tom~I, twierdzenie~\ref{I-thm:volI:15:03} (twierdzenie Dooba o zbieżności).}\par\smallskip
+
 \label{ch:mart-cont}
 
-\section{Dlaczego przejście od czasu dyskretnego nie jest automatyczne?}
+\section{Dlaczego przejście od czasu dyskretnego nie jest automatyczne?}\label{sec:volII:11:01}
 W tomie I martyngał był ciągiem $(M_n)_{n\ge0}$, którego
 warunkowa prognoza następnej wartości, przy znajomości przeszłości,
 wynosiła dokładnie wartość obecną. W czasie ciągłym rozważamy
@@ -7325,7 +7501,7 @@ zatrzymać proces w chwili wybranej na podstawie obserwacji?
 Później zobaczymy też, że proces ze skokami może być martyngałem,
 mimo że jego trajektorie mają skończoną wariację całkowitą.
 
-\begin{definicja}[Martyngał, podmartyngał i nadmartyngał]
+\begin{definicja}[Martyngał, podmartyngał i nadmartyngał]\label{def:volII:11:01}
 Niech $(\Omega,\calF,\Prob)$ będzie przestrzenią probabilistyczną,
 $(\calF_t)_{t\ge0}$ filtracją i $M=(M_t)_{t\ge0}$ procesem
 rzeczywistym, adaptowanym, takim że $\E|M_t|<\infty$
@@ -7360,7 +7536,7 @@ zdarzeń po chwili $s$ jest niezależny od przeszłości i ma
 ciągłe, ostatni ma skoki wysokości jeden.
 \end{przyklad}
 
-\begin{lemat}[Warunkowe wartości oczekiwane są jednostajnie całkowalne]
+\begin{lemat}[Warunkowe wartości oczekiwane są jednostajnie całkowalne]\label{lem:volII:11:01}
 Niech $X\in L^1(\Omega,\calF,\Prob)$. Rodzina
 $\{\E[X\mid\calG]:\calG\subseteq\calF\text{ jest pod-}\sigma\text{-ciałem}\}$
 jest jednostajnie całkowalna.
@@ -7384,21 +7560,21 @@ Prawa strona nie zależy od $\calG$ i dąży do zera
 przy $K\to\infty$ dzięki całkowalności $X$.
 \end{proof}
 
-\begin{wniosek}[Jednostajna całkowalność na skończonym horyzoncie]
+\begin{wniosek}[Jednostajna całkowalność na skończonym horyzoncie]\label{cor:volII:11:01}
 Niech $M$ będzie martyngałem oraz $T<\infty$.
 Wtedy rodzina $\{M_t:0\le t\le T\}$ jest jednostajnie
 całkowalna, gdyż $M_t=\E[M_T\mid\calF_t]$.
 \end{wniosek}
 
-\section{Prawostronne modyfikacje: skąd bierze się regularność?}
-\begin{definicja}[Trajektoria c\`adl\`ag]
+\section{Prawostronne modyfikacje: skąd bierze się regularność?}\label{sec:volII:11:02}
+\begin{definicja}[Trajektoria c\`adl\`ag]\label{def:volII:11:02}
 Funkcja $f:[0,\infty)\to\R$ jest c\`adl\`ag, jeśli
 jest prawostronnie ciągła i ma skończone granice lewostronne
 we wszystkich chwilach $t>0$. Proces jest c\`adl\`ag,
 gdy prawie wszystkie jego trajektorie mają tę własność.
 \end{definicja}
 
-\begin{lemat}[Zbieżność odwrotnych warunkowych wartości oczekiwanych]
+\begin{lemat}[Zbieżność odwrotnych warunkowych wartości oczekiwanych]\label{lem:volII:11:02}
 Niech $(\calG_n)_{n\ge1}$ będzie malejącym ciągiem
 pod-$\sigma$-ciał przestrzeni $(\Omega,\calF,\Prob)$,
 $\calG_\infty=\bigcap_n\calG_n$, a $X\in L^1$.
@@ -7425,7 +7601,7 @@ pozwala przenieść zbieżność z $X^{(K)}$ na $X$ po
 przejściu $K\to\infty$.
 \end{proof}
 
-\begin{lemat}[Dlaczego z ograniczonej liczby przekroczeń wynikają granice?]
+\begin{lemat}[Dlaczego z ograniczonej liczby przekroczeń wynikają granice?]\label{lem:volII:11:03}
 Niech $D$ będzie gęstym podzbiorem przedziału $[0,T]$,
 a $f:D\to\R$ funkcją ograniczoną. Załóżmy, że dla każdej
 pary liczb wymiernych $a<b$ funkcja $f$, oglądana w
@@ -7464,7 +7640,7 @@ Zatem $g$ jest prawostronnie ciągła i ma granice
 lewostronne.
 \end{proof}
 
-\begin{twierdzenie}[Regularizacja martyngału typu zamkniętego]
+\begin{twierdzenie}[Regularizacja martyngału typu zamkniętego]\label{thm:volII:11:01}
 \label{thm:regularizacja}
 Niech filtracja $(\calF_t)_{t\ge0}$ spełnia warunki zwykłe,
 a $X\in L^1(\Omega,\calF,\Prob)$. Proces
@@ -7548,7 +7724,7 @@ Ten przykład ujawnia, że regularizacja jest twierdzeniem o
 \emph{procesie oraz informacji}, a nie wyłącznie o funkcjach czasu.
 \end{przyklad}
 
-\begin{lemat}[Mierzalność wartości procesu zatrzymanego]
+\begin{lemat}[Mierzalność wartości procesu zatrzymanego]\label{lem:volII:11:04}
 Niech $X=(X_t)_{t\ge0}$ będzie rzeczywistym procesem adaptowanym
 o wszędzie prawostronnie ciągłych trajektoriach, a $\tau$ czasem zatrzymania.
 Dla każdego $t\ge0$ zmienna $X_{t\wedge\tau}$ jest $\calF_t$-mierzalna.
@@ -7569,15 +7745,15 @@ trajektoriach dla każdego $\omega$ argument jest punktowy.
 \end{proof}
 
 
-\section{Czasy zatrzymania i proces zatrzymany}
-\begin{definicja}[Proces zatrzymany]
+\section{Czasy zatrzymania i proces zatrzymany}\label{sec:volII:11:03}
+\begin{definicja}[Proces zatrzymany]\label{def:volII:11:03}
 Niech $X$ będzie procesem adaptowanym c\`adl\`ag,
 a $\tau$ czasem zatrzymania (dopuszczamy wartość $\infty$).
 Dla $t\ge0$ definiujemy $X_t^\tau=X_{t\wedge\tau}$.
 Gdy $\tau=\infty$, przyjmujemy $t\wedge\tau=t$.
 \end{definicja}
 
-\begin{twierdzenie}[Zatrzymanie w ustalonej chwili]
+\begin{twierdzenie}[Zatrzymanie w ustalonej chwili]\label{thm:volII:11:02}
 Niech $M$ będzie martyngałem c\`adl\`ag, a $\tau$
 czasem zatrzymania. Wtedy $M^\tau$ jest martyngałem.
 Jeżeli $X$ jest podmartyngałem (odpowiednio nadmartyngałem)
@@ -7651,8 +7827,8 @@ wariancji, którą w kolejnym rozdziale opiszemy za
 pomocą nawiasu procesu.
 \end{zadanie}
 
-\section{Martyngały lokalne}
-\begin{definicja}[Lokalny martyngał i lokalizacja]
+\section{Martyngały lokalne}\label{sec:volII:11:04}
+\begin{definicja}[Lokalny martyngał i lokalizacja]\label{def:volII:11:04}
 Niech $M$ będzie adaptowanym procesem c\`adl\`ag o
 wartościach rzeczywistych. Nazywamy go \emph{lokalnym
 martyngałem}, jeżeli istnieją czasy zatrzymania
@@ -7661,7 +7837,7 @@ każdego $k$ proces $M^{\tau_k}$ jest martyngałem.
 Ciąg $(\tau_k)$ nazywamy \emph{ciągiem lokalizującym}.
 \end{definicja}
 
-\begin{twierdzenie}[Zatrzymanie ograniczonego procesu lokalnego]
+\begin{twierdzenie}[Zatrzymanie ograniczonego procesu lokalnego]\label{thm:volII:11:03}
 Niech $M$ będzie ciągłym lokalnym martyngałem z $M_0=0$,
 a $\tau_K=\inf\{t\ge0:|M_t|\ge K\}$ dla $K>0$.
 Wówczas $M^{\tau_K}$ jest martyngałem ograniczonym
@@ -7701,7 +7877,7 @@ odcinkami liniowa i ma skoki wielkości $1$.
 \end{zadanie}
 
 
-\begin{twierdzenie}[Nieujemny lokalny martyngał jest nadmartyngałem]
+\begin{twierdzenie}[Nieujemny lokalny martyngał jest nadmartyngałem]\label{thm:volII:11:04}
 \label{thm:positive-local-supermart}
 Niech $M=(M_t)_{t\ge0}$ będzie rzeczywistym lokalnym
 martyngałem c\`adl\`ag względem filtracji $(\calF_t)$,
@@ -7744,8 +7920,8 @@ trzeba jeszcze kontrolować brak utraty masy przy lokalizacji.
 \end{uwaga}
 
 
-\section{Wykładnik gaussowski: martyngał, który traci średnią w granicy}
-\begin{twierdzenie}[Wykładnik procesu Wienera]
+\section{Wykładnik gaussowski: martyngał, który traci średnią w granicy}\label{sec:volII:11:05}
+\begin{twierdzenie}[Wykładnik procesu Wienera]\label{thm:volII:11:05}
 Niech $W$ będzie standardowym procesem Wienera, a
 $\theta\in\R$. Wtedy
 $Z_t=\exp(\theta W_t-\tfrac12\theta^2t)$
@@ -7784,7 +7960,7 @@ zbieżność prawie na pewno pociągałaby zbieżność w $L^1$,
 a zatem $\E Z_t\to0$. Przeczy to $\E Z_t=1$.
 \end{proof}
 
-\section{Przypadek zatrzymania na pierwszym trafieniu}
+\section{Przypadek zatrzymania na pierwszym trafieniu}\label{sec:volII:11:06}
 \begin{zadanie}[Dlaczego $\E M_\tau$ może różnić się od $\E M_0$?]
 Niech $W$ będzie procesem Wienera, a
 $\tau=\inf\{t\ge0:W_t=1\}$. Wykazać, że
@@ -7809,9 +7985,12 @@ stosowania próbkowania opcjonalnego.
 % ROZDZIAŁ 12. PRÓBKOWANIE, NIERÓWNOŚCI, ZBIEŻNOŚĆ
 % ================================================================
 \chapter{Zatrzymywanie, nierówności maksymalne i zbieżność martyngałów}
+\label{chap:volII:12}
+\par\smallskip\noindent{\small\textit{Powiązania:} \textup{tom~I}, sekcja~\ref{I-sec:volI:15:05} (opcjonalne zatrzymywanie); sekcja~\ref{sec:volII:11:03} (proces zatrzymany); \textup{tom~III}, sekcja~\ref{III-sec:volIII:02:05} (zatrzymywanie całki Itô); tom~I, twierdzenie~\ref{I-thm:volI:13:04} (próbkowanie opcjonalne).}\par\smallskip
+
 \label{ch:stop-cont}
 
-\section{Co wolno zrobić w losowej chwili?}
+\section{Co wolno zrobić w losowej chwili?}\label{sec:volII:12:01}
 Jeżeli znamy przyszłość, możemy zawsze „wybrać” korzystną
 chwilę sprzedaży. Twierdzenia o zatrzymywaniu wyjaśniają,
 dlaczego nie uzyskujemy takiego przywileju, gdy chwilę
@@ -7821,7 +8000,7 @@ przeniesienia równości wartości oczekiwanych na nieograniczony
 horyzont. W każdym zastosowaniu trzeba kontrolować
 całkowalność rodziny zatrzymanych wartości.
 
-\begin{twierdzenie}[Próbkowanie opcjonalne w ograniczonym horyzoncie]
+\begin{twierdzenie}[Próbkowanie opcjonalne w ograniczonym horyzoncie]\label{thm:volII:12:01}
 \label{thm:ost-cont}
 Niech $(\calF_t)$ będzie filtracją, $M$ martyngałem
 c\`adl\`ag i $\sigma,\tau$ czasami zatrzymania takimi,
@@ -7883,7 +8062,7 @@ usuwające tę trudność jest bezpiecznym warunkiem
 poprawności wersji dla pod- i nadmartyngałów.
 \end{uwaga}
 
-\begin{twierdzenie}[Zatrzymywanie martyngału]
+\begin{twierdzenie}[Zatrzymywanie martyngału]\label{thm:volII:12:02}
 Jeżeli $M$ jest martyngałem c\`adl\`ag, a $\tau$
 czasem zatrzymania o wartościach w $[0,\infty]$,
 to $M^\tau=(M_{t\wedge\tau})_{t\ge0}$ jest
@@ -7936,8 +8115,8 @@ korzystania z przyszłości, nie jest spełnione.
 \end{zadanie}
 
 
-\section{Maksimum procesu a jego wartość końcowa}
-\begin{twierdzenie}[Nierówność maksymalna Dooba]
+\section{Maksimum procesu a jego wartość końcowa}\label{sec:volII:12:02}
+\begin{twierdzenie}[Nierówność maksymalna Dooba]\label{thm:volII:12:03}
 \label{thm:doob-cont}
 Niech $M$ będzie martyngałem c\`adl\`ag na $[0,T]$.
 Jeżeli $p>1$ i $M_T\in L^p$, to
@@ -7986,7 +8165,7 @@ $(a-\varepsilon)\Prob(\sup_{t\le T}|M_t|\ge a)
 Dopiero potem pozwalamy $\varepsilon\downarrow0$.
 \end{proof}
 
-\begin{wniosek}[Maksimum ruchu Browna w $L^2$]
+\begin{wniosek}[Maksimum ruchu Browna w $L^2$]\label{cor:volII:12:01}
 Dla standardowego procesu Wienera $W$ oraz $T>0$
 \[
 \E\sup_{0\le t\le T}|W_t|^2\le4T.
@@ -8003,8 +8182,8 @@ $|B_t|^2=\sum_i(B_t^{(i)})^2$ oraz
 $\sup_t\sum_i a_i(t)\le\sum_i\sup_t a_i(t)$.
 \end{proof}
 
-\section{Nierówność przekroczeń i istnienie granic}
-\begin{definicja}[Przekroczenie przedziału]
+\section{Nierówność przekroczeń i istnienie granic}\label{sec:volII:12:03}
+\begin{definicja}[Przekroczenie przedziału]\label{def:volII:12:01}
 Dla funkcji rzeczywistej $x$ i liczb $a<b$\emph{
 pełne przekroczenie w górę przedziału $[a,b]$} to
 para kolejnych chwil $u<v$ takich, że $x(u)\le a$
@@ -8015,7 +8194,7 @@ takich rozłącznych przekroczeń do czasu $T$ oznaczamy
 $U_{a,b}(T)$.
 \end{definicja}
 
-\begin{lemat}[Przekroczenia dla martyngału dyskretnego]
+\begin{lemat}[Przekroczenia dla martyngału dyskretnego]\label{lem:volII:12:01}
 Niech $(M_k)_{k=0}^n$ będzie martyngałem całkowalnym,
 a $a<b$. Wtedy
 \[
@@ -8044,7 +8223,7 @@ $\E G_n=\sum_k\E[H_k\E(M_{k+1}-M_k\mid\calF_k)]=0$. Biorąc wartości
 oczekiwane w nierówności, otrzymujemy tezę.
 \end{proof}
 
-\begin{twierdzenie}[Zbieżność przy ograniczeniu w $L^1$]
+\begin{twierdzenie}[Zbieżność przy ograniczeniu w $L^1$]\label{thm:volII:12:04}
 Niech $M$ będzie martyngałem c\`adl\`ag na $[0,\infty)$
 takim, że $\sup_{t\ge0}\E|M_t|<\infty$.
 Wtedy istnieje zmienna losowa $M_\infty\in L^1$ taka, że
@@ -8080,7 +8259,7 @@ nie miały tej samej granicy, otrzymalibyśmy sprzeczność
 ze zbieżnością próbek wymiernych.
 \end{proof}
 
-\begin{twierdzenie}[Zbieżność jednostajnie całkowalnego martyngału]
+\begin{twierdzenie}[Zbieżność jednostajnie całkowalnego martyngału]\label{thm:volII:12:05}
 Niech $M$ będzie martyngałem c\`adl\`ag na
 $[0,\infty)$, a rodzina $\{M_t:t\ge0\}$
 jednostajnie całkowalna. Wtedy istnieje
@@ -8106,7 +8285,7 @@ Implikacja odwrotna wynika z lematu o jednostajnej
 całkowalności rodziny warunkowych wartości oczekiwanych.
 \end{proof}
 
-\begin{wniosek}[Zbieżność martyngałów w $L^p$]
+\begin{wniosek}[Zbieżność martyngałów w $L^p$]\label{cor:volII:12:02}
 Niech $p>1$, a $M$ będzie martyngałem c\`adl\`ag
 spełniającym $\sup_{t\ge0}\E|M_t|^p<\infty$.
 Wtedy istnieje $M_\infty\in L^p$ takie, że
@@ -8128,8 +8307,8 @@ Zbieżność prawie na pewno i kryterium Vitaliego dają
 $\E|M_t-M_\infty|^p\to0$.
 \end{proof}
 
-\section{Kiedy można zatrzymać martyngał bez ograniczenia czasu?}
-\begin{twierdzenie}[Próbkowanie dla jednostajnie całkowalnego martyngału]
+\section{Kiedy można zatrzymać martyngał bez ograniczenia czasu?}\label{sec:volII:12:04}
+\begin{twierdzenie}[Próbkowanie dla jednostajnie całkowalnego martyngału]\label{thm:volII:12:06}
 Niech $M$ będzie jednostajnie całkowalnym martyngałem
 c\`adl\`ag, $\tau$ skończonym prawie na pewno czasem
 zatrzymania. Wtedy $M_\tau\in L^1$ i
@@ -8240,9 +8419,12 @@ po zatrzymaniu posiada deterministyczne ograniczenie.
 % ROZDZIAŁ 13. WARIACJA KWADRATOWA
 % ================================================================
 \chapter{Wariacja kwadratowa i kowariacja ciągłych martyngałów}
+\label{chap:volII:13}
+\par\smallskip\noindent{\small\textit{Powiązania:} sekcja~\ref{sec:volII:07:05} (wariacja Wienera); sekcja~\ref{sec:volII:12:02} (nierówności maksymalne); \textup{tom~III}, sekcja~\ref{III-sec:volIII:03:02} (wariacja procesu Itô); twierdzenie~\ref{thm:volII:07:06} (wariacja kwadratowa Wienera).}\par\smallskip
+
 \label{ch:quadratic-cont}
 
-\section{Dlaczego kwadraty przyrostów są inne niż zwykła wariacja?}
+\section{Dlaczego kwadraty przyrostów są inne niż zwykła wariacja?}\label{sec:volII:13:01}
 Dla gładkiej funkcji $f$ na $[0,T]$ suma
 $\sum_i(f(t_{i+1})-f(t_i))^2$ dąży do zera, gdy
 średnica podziału dąży do zera: jest nie większa od
@@ -8254,7 +8436,7 @@ jego kwadrat ma rząd $\Delta t$. Suma kwadratów
 nie musi już zanikać. Właśnie ta obserwacja motywuje
 rachunek Itô, który pojawi się w tomie III.
 
-\begin{definicja}[Sumy kwadratów przyrostów]
+\begin{definicja}[Sumy kwadratów przyrostów]\label{def:volII:13:01}
 Niech $X$ będzie rzeczywistym procesem o trajektoriach
 ciągłych i $T>0$. Dla deterministycznego podziału
 $\pi=\{0=t_0<t_1<\cdots<t_m=T\}$, $t\in[0,T]$,
@@ -8274,7 +8456,7 @@ Skrót \emph{ucp} oznacza właśnie zbieżność jednostajną
 na przedziałach zwartych według prawdopodobieństwa.
 \end{definicja}
 
-\begin{lemat}[Znikanie wariacji kwadratowej skończonej wariacji]
+\begin{lemat}[Znikanie wariacji kwadratowej skończonej wariacji]\label{lem:volII:13:01}
 Niech $f:[0,T]\to\R$ będzie funkcją ciągłą o
 skończonej wariacji całkowitej $\operatorname{Var}_{[0,T]}(f)$.
 Dla dowolnego ciągu podziałów o średnicach malejących
@@ -8293,7 +8475,7 @@ pierwszy czynnik dąży do zera, jednostajnie w $t$.
 Drugi czynnik nie zależy od podziału ani od $t$.
 \end{proof}
 
-\begin{twierdzenie}[Wariacja kwadratowa procesu Wienera]
+\begin{twierdzenie}[Wariacja kwadratowa procesu Wienera]\label{thm:volII:13:01}
 \label{thm:brownian-bracket}
 Niech $W$ będzie standardowym procesem Wienera,
 a $T>0$. Dla dowolnych deterministycznych podziałów
@@ -8340,13 +8522,13 @@ Oscylacje wewnątrz komórek także zanikają prawie na pewno,
 więc zbieżność jest jednostajna prawie na pewno.
 \end{proof}
 
-\section{Dyskretny lemat izometrii: fundament konstrukcji}
+\section{Dyskretny lemat izometrii: fundament konstrukcji}\label{sec:volII:13:02}
 Zanim skonstruujemy wariację kwadratową \emph{dowolnego}
 ciągłego martyngału, potrzebujemy tylko elementarnego
 faktu o skończonych sumach. Nie konstruujemy jeszcze
 ogólnej całki Itô.
 
-\begin{lemat}[Izometria dla skończonej sumy przewidywalnej]
+\begin{lemat}[Izometria dla skończonej sumy przewidywalnej]\label{lem:volII:13:02}
 \label{lem:discrete-isometry}
 Niech $0=t_0<\cdots<t_m=T$ oraz
 $M$ będzie martyngałem ciągłym i kwadratowo całkowalnym
@@ -8376,8 +8558,8 @@ Pozostają wyłącznie wyrazy diagonalne; ich druga
 postać to zwykła własność warunkowej wartości oczekiwanej.
 \end{proof}
 
-\section{Konstrukcja nawiasu ciągłego martyngału bez całki Itô}
-\begin{twierdzenie}[Istnienie wariacji kwadratowej]
+\section{Konstrukcja nawiasu ciągłego martyngału bez całki Itô}\label{sec:volII:13:03}
+\begin{twierdzenie}[Istnienie wariacji kwadratowej]\label{thm:volII:13:02}
 \label{thm:general-bracket}
 Niech $(\calF_t)_{t\ge0}$ będzie filtracją,
 a $M$ ciągłym lokalnym martyngałem rzeczywistym,
@@ -8583,8 +8765,8 @@ Rozbieżność tych nawiasów zaczyna mieć znaczenie przy skokach.
 \end{uwaga}
 
 
-\section{Kowariacja i iloczyn martyngałów}
-\begin{definicja}[Kowariacja]
+\section{Kowariacja i iloczyn martyngałów}\label{sec:volII:13:04}
+\begin{definicja}[Kowariacja]\label{def:volII:13:02}
 Dla ciągłych lokalnych martyngałów $M,N$ definiujemy
 \[
 [M,N]_t=\frac14\bigl([M+N]_t-[M-N]_t\bigr).
@@ -8592,7 +8774,7 @@ Dla ciągłych lokalnych martyngałów $M,N$ definiujemy
 Jest to ciągły proces o skończonej wariacji lokalnej.
 \end{definicja}
 
-\begin{twierdzenie}[Wzór iloczynowy dla nawiasu]
+\begin{twierdzenie}[Wzór iloczynowy dla nawiasu]\label{thm:volII:13:03}
 Niech $M,N$ będą ciągłymi lokalnymi martyngałami
 z $M_0=N_0=0$. Wtedy
 $M_tN_t-[M,N]_t$ jest lokalnym martyngałem oraz
@@ -8618,7 +8800,7 @@ sumy mieszane są dwuliniowe dla każdego podziału;
 pojedynczy nawias to przypadek $M=N$.
 \end{proof}
 
-\begin{wniosek}[Kowariacja ruchu Browna]
+\begin{wniosek}[Kowariacja ruchu Browna]\label{cor:volII:13:01}
 Dla standardowego ruchu Browna
 $B=(B^{(1)},\ldots,B^{(d)})$ zachodzi
 $[B^{(i)},B^{(j)}]_t=\delta_{ij}t$.
@@ -8639,8 +8821,8 @@ dla $AB$ wynika z dwuliniowości.
 \end{proof}
 
 
-\section{Warunkowa wariancja przyrostu i elementarna izometria}
-\begin{twierdzenie}[Wariancja warunkowa przez nawias]
+\section{Warunkowa wariancja przyrostu i elementarna izometria}\label{sec:volII:13:05}
+\begin{twierdzenie}[Wariancja warunkowa przez nawias]\label{thm:volII:13:04}
 Niech $M$ będzie ciągłym, ograniczonym martyngałem
 z $M_0=0$ oraz $[M]$ jego wariacją kwadratową.
 Dla każdych $0\le s\le t$ zachodzi
@@ -8664,7 +8846,7 @@ Rozwinięcie $(M_t-M_s)^2=M_t^2-M_s^2-2M_s(M_t-M_s)$
 daje tezę. Biorąc $s=0$, otrzymujemy równość średnich.
 \end{proof}
 
-\begin{wniosek}[Izometria elementarnych strategii]
+\begin{wniosek}[Izometria elementarnych strategii]\label{cor:volII:13:02}
 Przy założeniach poprzedniego twierdzenia niech
 $0=t_0<\cdots<t_n=T$ i $H_i$ będą ograniczonymi
 $\calF_{t_i}$-mierzalnymi zmiennymi. Wtedy
@@ -8707,8 +8889,8 @@ może mieć skończony nawias na $[0,T]$, mimo że jego
 trajektorie mają nieskończoną wariację całkowitą.
 \end{uwaga}
 
-\section{Wariacja kwadratowa a czas zatrzymania}
-\begin{twierdzenie}[Wariacja kwadratowa procesu zatrzymanego]
+\section{Wariacja kwadratowa a czas zatrzymania}\label{sec:volII:13:06}
+\begin{twierdzenie}[Wariacja kwadratowa procesu zatrzymanego]\label{thm:volII:13:05}
 Jeśli $M$ jest ciągłym lokalnym martyngałem i
 $\tau$ czasem zatrzymania, to
 $[M^\tau]_t=[M]_{t\wedge\tau}$ dla $t\ge0$.
@@ -8752,9 +8934,12 @@ całki Itô.
 % ROZDZIAŁ 14. SKOKI, KOMPENSATORY, PODSUMOWANIE TOMU
 % ================================================================
 \chapter{Martyngały ze skokami, kompensacja i granica zakresu tomu II}
+\label{chap:volII:14}
+\par\smallskip\noindent{\small\textit{Powiązania:} sekcja~\ref{sec:volII:04:06} (kompensacja Poissona); sekcja~\ref{sec:volII:13:03} (nawias martyngału); \textup{tom~III}, sekcja~\ref{III-sec:volIII:11:01} (losowe miary skoków); twierdzenie~\ref{thm:volII:04:08} (momenty procesu Poissona).}\par\smallskip
+
 \label{ch:jump-mart}
 
-\section{Dlaczego trzeba oddzielić dwa rodzaje wariacji kwadratowej?}
+\section{Dlaczego trzeba oddzielić dwa rodzaje wariacji kwadratowej?}\label{sec:volII:14:01}
 Dla ciągłego lokalnego martyngału jego wariacja kwadratowa
 jest ciągłym procesem rosnącym i opisuje akumulację
 losowych fluktuacji. Przy skokach pojawia się dodatkowe
@@ -8765,7 +8950,7 @@ losowa suma kwadratów skoków, jak i jej przewidywalna
 średnia. Obie wielkości są użyteczne, ale w ogólności
 nie są sobie równe.
 
-\begin{definicja}[Wariacja kwadratowa procesu skokowego]
+\begin{definicja}[Wariacja kwadratowa procesu skokowego]\label{def:volII:14:01}
 Dla procesu c\`adl\`ag $X$ definiujemy skok
 $\Delta X_t=X_t-X_{t-}$, $t>0$. Jeśli trajektoria
 na $[0,T]$ ma skończenie wiele skoków i pomiędzy nimi
@@ -8780,7 +8965,7 @@ część teorii półmartyngałów rozwijanej w tomie III.
 \end{definicja}
 
 
-\begin{definicja}[Wariacja kwadratowa w klasie procesów z niniejszego rozdziału]
+\begin{definicja}[Wariacja kwadratowa w klasie procesów z niniejszego rozdziału]\label{def:volII:14:02}
 Dla rzeczywistego procesu c\`adl\`ag $X$ i podziału
 $\pi=\{0=t_0<\cdots<t_m=T\}$ definiujemy
 $V_t^\pi(X)=\sum_i(X_{t\wedge t_{i+1}}-X_{t\wedge t_i})^2$.
@@ -8794,7 +8979,7 @@ ze skończoną liczbą skoków na przedziałach zwartych;
 ogólną konstrukcję dla półmartyngałów pozostawiamy tomowi III.
 \end{definicja}
 
-\begin{lemat}[Dlaczego zostają wyłącznie skoki?]
+\begin{lemat}[Dlaczego zostają wyłącznie skoki?]\label{lem:volII:14:01}
 Niech $f:[0,T]\to\R$ będzie funkcją c\`adl\`ag,
 mającą skończenie wiele skoków i skończoną wariację
 całkowitą. Dla dowolnych deterministycznych podziałów
@@ -8830,7 +9015,7 @@ ponieważ liczba skoków jest skończona, a funkcja $g$
 jest jednostajnie ciągła.
 \end{proof}
 
-\begin{twierdzenie}[Nawias i kompensator procesu Poissona]
+\begin{twierdzenie}[Nawias i kompensator procesu Poissona]\label{thm:volII:14:01}
 Niech $N$ będzie procesem Poissona o intensywności
 $\lambda>0$, w jego uzupełnionej filtracji naturalnej,
 a $M_t=N_t-\lambda t$. Wtedy $M$ jest kwadratowo
@@ -8869,7 +9054,7 @@ $\E M_t^2=\lambda t$.
 \end{proof}
 
 
-\begin{lemat}[Jednoznaczność ciągłego kompensatora kwadratu]
+\begin{lemat}[Jednoznaczność ciągłego kompensatora kwadratu]\label{lem:volII:14:02}
 Niech $M$ będzie lokalnym martyngałem c\`adl\`ag, a $A$ i $B$
 ciągłymi, adaptowanymi procesami o lokalnie skończonej wariacji,
 $A_0=B_0=0$. Jeżeli zarówno $M^2-A$, jak i $M^2-B$
@@ -8905,8 +9090,8 @@ $[M]$ i $\langle M\rangle$, chociaż ich wartości
 oczekiwane są równe: $\E\bigl([M]_t\bigr)=\E\bigl(\langle M\rangle_t\bigr)=\lambda t$.
 \end{uwaga}
 
-\section{Złożony proces Poissona i jego fluktuacje}
-\begin{twierdzenie}[Kompensowane sumy losowych skoków]
+\section{Złożony proces Poissona i jego fluktuacje}\label{sec:volII:14:02}
+\begin{twierdzenie}[Kompensowane sumy losowych skoków]\label{thm:volII:14:02}
 Niech $N$ będzie procesem Poissona o intensywności
 $\lambda>0$, a $(Y_k)_{k\ge1}$ ciągiem niezależnych
 zmiennych o jednakowym rozkładzie, niezależnym od $N$.
@@ -8989,8 +9174,8 @@ zrealizowaną a jej przewidywalną kompensacją.
 \end{zadanie}
 
 
-\section{Skończone sumy przewidywalne dla procesów ze skokami}
-\begin{twierdzenie}[Izometria kompensowanej sumy]
+\section{Skończone sumy przewidywalne dla procesów ze skokami}\label{sec:volII:14:03}
+\begin{twierdzenie}[Izometria kompensowanej sumy]\label{thm:volII:14:03}
 Niech $M$ będzie kompensowanym procesem z poprzedniego
 twierdzenia, a $0=t_0<\cdots<t_n=T$.
 Jeśli $H_i\in L^\infty(\calF_{t_i})$, to
@@ -9016,8 +9201,8 @@ ponieważ kwadrat przyrostu jest niezależny od
 $\calF_{t_i}$. Po zsumowaniu dostajemy tezę.
 \end{proof}
 
-\section{Wykładnik procesu Poissona i oszacowania ogonów}
-\begin{twierdzenie}[Martyngał wykładniczy procesu Poissona]
+\section{Wykładnik procesu Poissona i oszacowania ogonów}\label{sec:volII:14:04}
+\begin{twierdzenie}[Martyngał wykładniczy procesu Poissona]\label{thm:volII:14:04}
 Niech $N$ będzie procesem Poissona o intensywności
 $\lambda>0$. Dla każdej $\theta\in\R$ proces
 \[
@@ -9048,9 +9233,9 @@ jak martyngał wykładniczy prowadzi do nierówności
 koncentracyjnej, a nie tylko do wzorów na momenty.
 \end{proof}
 
-\section{Martyngał ciągły i skokowy w jednym modelu}
+\section{Martyngał ciągły i skokowy w jednym modelu}\label{sec:volII:14:05}
 
-\begin{twierdzenie}[Dodanie skończonej wariacji do procesu ciągłego]
+\begin{twierdzenie}[Dodanie skończonej wariacji do procesu ciągłego]\label{thm:volII:14:05}
 \label{thm:finite-variation-jumps-bracket}
 Niech $C$ będzie procesem o ciągłych trajektoriach, dla którego
 wariacja kwadratowa $[C]$ istnieje w sensie zbieżności ucp.
@@ -9093,7 +9278,7 @@ w przeciwnym razie pojawiłyby się również iloczyny
 skoków $2\Delta C_s\Delta A_s$.
 \end{proof}
 
-\begin{stwierdzenie}[Brak kowariacji niezależnych składników]
+\begin{stwierdzenie}[Brak kowariacji niezależnych składników]\label{prop:volII:14:01}
 Niech $W$ będzie procesem Wienera, a $N$ niezależnym
 od niego procesem Poissona o intensywności $\lambda>0$.
 Dla $M_t=N_t-\lambda t$ i dowolnych deterministycznych
@@ -9137,7 +9322,7 @@ własnością regularności trajektorii, natomiast wzór
 na wariancję końcową korzysta również z niezależności.
 \end{proof}
 
-\section{Co przenosimy do tomu III?}
+\section{Co przenosimy do tomu III?}\label{sec:volII:14:06}
 Tom II został zbudowany wokół pytania \emph{jak zachowują
 się procesy losowe}. Badaliśmy ich rozkłady, trajektorie,
 filtracje, czasy zatrzymania, własność Markowa, strukturę
