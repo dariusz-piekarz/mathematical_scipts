@@ -1,0 +1,204 @@
+% Fragment gotowy do wklejenia do istniejacego skryptu LaTeX.
+% W preambule skryptu wymagane:
+% \usepackage{tikz}
+% \usetikzlibrary{arrows.meta,calc,shadings}
+% \usepackage{float} %% dla figure[H]
+% Barwy uzytkownika zachowujemy, jesli sa juz zdefiniowane:
+\providecolor{manifoldblue}{HTML}{387F9C}
+\providecolor{manifoldgold}{HTML}{C1934A}
+\providecolor{manifoldred}{HTML}{A85152}
+\providecolor{manifoldgreen}{HTML}{438777}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Latex,font=\small,line cap=round,line join=round]
+
+ % Warstwy barwy modeluja okragly przekroj rury; wszystkie biegna po tej samej krzywej.
+ \def\softtube#1{%
+  \draw[manifoldblue!72!black,line width=14.6pt,line cap=butt] #1;
+  \foreach \w/\m in {13.2/65,11.8/57,10.4/49,9/41,7.6/34,6.2/28,4.8/23,3.4/19,2/16}{
+   \draw[manifoldblue!\m,line width=\w pt,line cap=butt] #1;
+  }
+  \begin{scope}[xshift=-.35pt,yshift=.7pt]
+   \draw[white,opacity=.32,line width=.8pt,line cap=butt] #1;
+  \end{scope}
+ }
+ \pgfdeclareradialshading{chirvolumeball}{\pgfpoint{-8bp}{9bp}}{%
+  color(0bp)=(white);color(6bp)=(manifoldblue!8);
+  color(13bp)=(manifoldblue!28);color(21bp)=(manifoldblue!52);
+  color(25bp)=(manifoldblue!66);color(50bp)=(manifoldblue!70)}
+ \def\softball#1#2#3{%
+  \shade[shading=chirvolumeball] (#1,#2) circle (#3);
+  \draw[manifoldblue!73!black,line width=.75pt] (#1,#2) circle (#3);
+ }
+
+ % Nasada jak na szkicu autora: przedni luk ciagly, tylny przerywany.
+ \def\softfoot#1#2#3#4#5{%
+  \begin{scope}[shift={(#1,#2)},rotate=#3]
+   \pgfmathsetmacro{\footradius}{#4/56.9055}
+   \begin{scope}
+    \clip (-.035,-\footradius)--(0,-\footradius)
+     arc[start angle=-90,end angle=90,x radius=#5,y radius=\footradius]
+     --(-.035,\footradius)--cycle;
+    \softtube{(-.035,0)--(#5,0)}
+   \end{scope}
+   \draw[manifoldblue!73!black,line width=.65pt]
+    (0,-\footradius)
+     arc[start angle=-90,end angle=90,x radius=#5,y radius=\footradius];
+   \draw[manifoldblue!73!black,opacity=.65,line width=.55pt,
+         dash pattern=on 1.2pt off 1.4pt]
+    (0,\footradius)
+     arc[start angle=90,end angle=270,x radius=#5,y radius=\footradius];
+  \end{scope}
+ }
+
+ \def\knotpath#1#2{plot[domain=#1:#2,samples=60,smooth,variable=\t]
+  ({.52*(sin(\t)+2*sin(2*\t))},
+   {.52*(cos(\t)-2*cos(2*\t))})}
+ \node[font=\small\bfseries,manifoldblue!75!black] at (0,2.68)
+  {(a) Przyklejenie zawęźlonego uchwytu};
+ \begin{scope}[xshift=-4.45cm]
+  \node[manifoldblue!75!black] at (0,2.10) {$\partial B^3=S^2$};
+  \softball{0}{0}{.94}
+  \draw[manifoldblue!68,opacity=.30,dashed]
+   (-.94,0) arc[start angle=180,end angle=0,x radius=.94,y radius=.27];
+  \draw[manifoldblue!68,opacity=.35]
+   (-.94,0) arc[start angle=180,end angle=360,x radius=.94,y radius=.27];
+  \foreach \x in {-.37,.37}{
+   \shade[left color=manifoldgold!20,right color=manifoldgold!62,
+          draw=manifoldgold!78!black,line width=.75pt]
+    (\x,-.08) ellipse (.155 and .25);
+  }
+  \node[font=\scriptsize] at (0,-1.40) {dwa dyski $S^0\times D^2$};
+ \end{scope}
+ \begin{scope}
+  \node[manifoldblue!75!black] at (0,2.10) {rdzeń: węzeł $K$};
+  \draw[manifoldblue!77!black,line width=2.2pt] \knotpath{0}{360};
+  \foreach \a/\b in {8/23,128/143,248/263}{
+   \draw[white,line width=6pt] \knotpath{\a}{\b};
+   \draw[manifoldblue!77!black,line width=2.2pt] \knotpath{\a}{\b};
+  }
+  \draw[manifoldgold!80!black,dashed,line width=.8pt]
+   (0,-.52) circle (.39);
+  \node[manifoldgold!65!black,font=\scriptsize,anchor=north west]
+   at (.35,-.66) {$B^3$};
+ \end{scope}
+ \begin{scope}[xshift=4.60cm]
+  \node[manifoldblue!75!black] at (0,2.10) {$T_K=\partial N(K)$};
+  \softtube{\knotpath{7}{353}}
+  \foreach \a/\b in {8/23,128/143,248/263}{
+   \draw[white,line width=19pt,line cap=butt] \knotpath{\a}{\b};
+   \softtube{\knotpath{\a}{\b}}
+  }
+  \shade[shading=chirvolumeball] (0,-.52) circle (.39);
+  \draw[manifoldblue!73!black,line width=.75pt]
+   ({.39*cos(40)},{-.52+.39*sin(40)})
+    arc[start angle=40,end angle=140,radius=.39]
+   ({.39*cos(220)},{-.52+.39*sin(220)})
+    arc[start angle=220,end angle=320,radius=.39];
+  \softtube{\knotpath{7}{12}}
+  \softtube{\knotpath{348}{353}}
+  \softfoot{-.31498}{-.49298}{-9.85}{14.6}{.10}
+  \softfoot{.31498}{-.49298}{189.85}{14.6}{.10}
+  \node[font=\scriptsize] at (0,-1.93) {kula i zawęźlony $1$-uchwyt};
+ \end{scope}
+ \draw[->,manifoldred!80!black,line width=1.1pt] (-3.20,0)--(-1.75,0);
+ \draw[->,manifoldred!80!black,line width=1.1pt] (1.75,0)--(2.85,0);
+ \node[manifoldred!80!black,font=\scriptsize,align=center]
+  at (2.20,.95) {pogrubiamy\\łuk};
+
+ \draw[manifoldblue!20,line width=.45pt] (-6.10,-2.34)--(6.10,-2.34);
+ \node[font=\small\bfseries,manifoldblue!75!black] at (0,-2.78)
+  {(b) Dodatkowy torus oplatający jedną rurkę};
+ \def\greentube#1{%
+  \draw[manifoldgreen!65!black,line width=7.2pt,line cap=butt] #1;
+  \foreach \w/\m in {6.3/65,5.4/55,4.5/44,3.6/34,2.7/25,1.8/18,.9/12}{
+   \draw[manifoldgreen!\m,line width=\w pt,line cap=butt] #1;
+  }
+ }
+ \begin{scope}[xshift=-2.40cm,yshift=-4.85cm,scale=1.30]
+  \def\meridian#1#2{plot[domain=#1:#2,samples=48,smooth,variable=\t]
+   ({-.65*3/sqrt(34)*sin(\t)},{-.52+.65*cos(\t)})}
+  \greentube{\meridian{0}{360}}
+  \softtube{\knotpath{0}{360}}
+  \foreach \a/\b in {8/23,128/143,248/263}{
+   \draw[white,line width=19pt,line cap=butt] \knotpath{\a}{\b};
+   \softtube{\knotpath{\a}{\b}}
+  }
+  \greentube{\meridian{0}{180}}
+  \node[manifoldblue!75!black,font=\scriptsize] at (1.82,1.08) {$T_K$};
+  \draw[manifoldblue!70!black,line width=.5pt] (1.62,.99)--(1.25,.73);
+  \node[manifoldgreen!65!black,font=\scriptsize] at (0,-.90) {$T_\mu$};
+ \end{scope}
+ \begin{scope}[xshift=3.35cm,yshift=-5.05cm,scale=1.55]
+  \node[font=\scriptsize,align=center] at (0,1.12)
+   {przekrój płaszczyzną\\normalną do $K$};
+  \shade[even odd rule,top color=manifoldgreen!14,
+         middle color=manifoldgreen!32,bottom color=manifoldgreen!62]
+   (0,0) circle (.75) (0,0) circle (.55);
+  \draw[manifoldgreen!65!black,line width=.65pt]
+   (0,0) circle (.75) (0,0) circle (.55);
+  \fill[manifoldblue!28,draw=manifoldblue!73!black,line width=.65pt]
+   (0,0) circle (.20);
+  \fill[manifoldblue!73!black] (0,0) circle (.025);
+  \node[font=\scriptsize,manifoldblue!75!black] at (0,-1.01)
+   {przekrój rurki $N(K)$};
+  \draw[manifoldblue!65!black,line width=.5pt] (0,-.86)--(0,-.23);
+  \node[font=\scriptsize,manifoldgreen!65!black,anchor=west]
+   at (.92,.02) {$N(\mu)$};
+  \draw[manifoldgreen!65!black,line width=.5pt] (.89,.02)--(.71,.02);
+ \end{scope}
+
+ % (c) Zastepujemy kule torusem; polaczenia jak w panelu (a).
+ % Torus ma to samo spektrum blekitow co koniczyna, a przy polaczeniach
+ % nie ma gniazd: pozostaja jedynie gladko zaokraglone konce rurek.
+ \draw[manifoldblue!20,line width=.45pt] (-6.10,-7.36)--(6.10,-7.36);
+ \node[font=\small\bfseries,manifoldblue!75!black] at (0,-7.78)
+  {(c) Torus w miejscu kuli przy koniczynie};
+ \begin{scope}[shift={(0,-10.10)},scale=1.55]
+   \softtube{\knotpath{7}{353}}
+   \foreach \a/\b in {8/23,128/143,248/263}{%
+      \draw[white,line width=19pt,line cap=butt] \knotpath{\a}{\b};
+      \softtube{\knotpath{\a}{\b}}
+   }
+   % Torus o tym samym typie cieniowania co rurki koniczyny,
+   % ale nieco mniejszy, aby poza uchwytami nie stykał się z koniczyną.
+   \begin{scope}[shift={(0,-.52)},rotate=-3]
+      \draw[manifoldblue!72!black,line width=14.6pt] (0,0) ellipse[x radius=.345,y radius=.365];
+      \foreach \w/\m in {13.2/65,11.8/57,10.4/49,9/41,7.6/34,6.2/28,4.8/23,3.4/19,2/16}{%
+        \draw[manifoldblue!\m,line width=\w pt] (0,0) ellipse[x radius=.345,y radius=.365];
+      }
+      \begin{scope}[xshift=-.35pt,yshift=.7pt]
+        \draw[white,opacity=.32,line width=.8pt]
+          ({.325*cos(142)},{.345*sin(142)}) arc[start angle=142,end angle=45,x radius=.325,y radius=.345];
+      \end{scope}
+      % Sam otwór bez dodatkowych łuków wewnętrznych.
+      \fill[white] (0,0) ellipse[x radius=.118,y radius=.138];
+    \end{scope}
+   % Polaczenie skopiowane bezposrednio z panelu (a):
+   % te same koncowe fragmenty wezla oraz te same nasady softfoot.
+   % Nie ma dodatkowych bocznych lacznikow.
+   \softtube{\knotpath{7}{12}}
+   \softtube{\knotpath{348}{353}}
+   % Mniejsze eliptyczne obrzeza: ich zewnetrzna krawedz odpowiada
+   % teraz promieniowi rurki (14.6pt / 2), przy skali panelu 1.55.
+   \softfoot{-.31498}{-.49298}{-9.85}{9.5}{.10}
+   \softfoot{.31498}{-.49298}{189.85}{9.5}{.10}
+   \node[anchor=west,text=manifoldblue!72!black,font=\scriptsize]
+       at (1.14,-.76) {$T^2$ zamiast $B^3$};
+   \draw[manifoldblue!68!black,line width=.55pt]
+       (1.10,-.74)--(.36,-.68);
+   \node[font=\scriptsize] at (0,-1.51)
+       {torus z zawęźlonym $1$-uchwytem};
+ \end{scope}
+
+\end{tikzpicture}
+\caption{Zawęźlony uchwyt i jego modyfikacje. W (b) zielony torus
+meridionalny oplata jedną rurkę węzła, ale pozostaje osobną powierzchnią.
+W (c) kula z panelu (a) zostaje zastąpiona torusem w dokładnie
+tym samym położeniu: oba końce zawęźlonego $1$-uchwytu dochodzą do nowego korpusu. Po wygładzeniu otrzymujemy
+powierzchnię rodzaju dwa.
+Różne warstwy w miejscach skrzyżowań oznaczają przejścia nad i pod,
+nie zaś przecięcia powierzchni. Schemat topologiczny.}
+\label{fig:trefoil-torus-replaces-ball}
+\end{figure}
