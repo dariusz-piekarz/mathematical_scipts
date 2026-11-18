@@ -4,6 +4,62 @@ Ten plik zapisuje odtwarzalne polecenia środowiska, budowania i kontroli.
 Polecenia faktycznie wykonane są oddzielone od instrukcji przygotowanych
 do późniejszego użycia.
 
+## Rysunek 26.3, rogata sfera i spinory — 18 listopada 2026
+
+Projekt: `geometria i topologia różniczkowa` w katalogu głównym tego
+repozytorium. Środowisko: Windows PowerShell 5.1, MiKTeX 25.12,
+`latexmk` 4.88, Perl 5.42.3 z `C:\Program Files\Git\usr\bin`, Poppler
+24.04.0 (`pdfinfo`, `pdftoppm`) i Git. Skrypt `buduj_tomy.ps1` dodaje
+Perla do `PATH`, jeśli nie jest tam dostępny. Nie są potrzebne nowe
+zmienne środowiskowe ani pobieranie danych: materiały autora są
+w `do dodania`, źródła tomów w `tex/rozdzialy`, a nowy wspólny rysunek
+w `tex/rysunki`. Wyniki składu powstają w `build/tomy`, a sprawdzone
+PDF-y trafiają do katalogu projektu.
+
+**Polecenia faktycznie wykonane.** Z katalogu głównego repozytorium
+pobrano stan gałęzi współautora:
+
+```powershell
+git fetch origin review/rozdzialy-matematyka
+```
+
+Z katalogu `geometria i topologia różniczkowa` uruchomiono:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File '.\buduj_tomy.ps1'
+pdfinfo 'build/tomy/geometria_tom1.pdf' | Select-String '^Pages:|^File size:'
+pdftoppm -f 141 -l 141 -singlefile -scale-to 1600 -png 'build/tomy/geometria_tom1.pdf' 'build/tomy/spinor_ch4_p141'
+pdftoppm -f 40 -l 40 -singlefile -scale-to 1600 -png 'build/tomy/geometria_tom3.pdf' 'build/tomy/final2_tom3_p40'
+pdftoppm -f 41 -l 41 -singlefile -scale-to 1600 -png 'build/tomy/geometria_tom3.pdf' 'build/tomy/final2_tom3_p41'
+pdftoppm -f 42 -l 42 -singlefile -scale-to 1600 -png 'build/tomy/geometria_tom3.pdf' 'build/tomy/final2_tom3_p42'
+```
+
+Pełny skrypt zakończył się kodem 0: tomy mają odpowiednio
+269, 265, 107 i 102 strony. Indeksy przyjęły 129, 116, 33 i 104
+hasła, bez odrzuconych haseł i ostrzeżeń. W logach nie ma
+przepełnionych wierszy ani brakujących odsyłaczy; pozostały
+ostrzeżenia `Underfull` (odpowiednio 1, 2, 3 i 4).
+Sprawdzono obrazy stron 40–42 tomu III, strony z nowymi treściami
+spinorowymi w tomach I i II, obecność łączy między PDF-ami oraz
+zgodność sum SHA-256 czterech PDF-ów w katalogu projektu z plikami
+`build/tomy`.
+Z katalogu głównego repozytorium wykonano `git diff --check`
+z kodem 0.
+Jednorazowo, po przerwanym próbnym przebiegu tomu III, wyzerowano
+niekompletny `build/tomy/geometria_tom3.aux` przez `Set-Content
+-LiteralPath 'build/tomy/geometria_tom3.aux' -Value '' -Encoding Ascii`,
+aby nie był czytany przez pozostałe tomy. Tego kroku nie trzeba
+wykonywać przy normalnym składzie.
+
+**Instrukcja przygotowana do samodzielnego wykonania.** Otwórz
+PowerShell w katalogu projektu i uruchom `buduj_tomy.ps1` jak wyżej.
+Następnie sprawdź cztery PDF-y poleceniem `pdfinfo`, ostrzeżenia w
+`build/tomy/geometria_tomN.log`, linie `0 rejected` w odpowiednich
+`geometria_tomN.ilg` oraz strony z Rysunkiem 26.3, Uwagą 26.1.5
+i nowymi fragmentami spinorowymi przez `pdftoppm`. Dla zmian źródeł
+wykonaj także `git diff --check`. Skład pliku zbiorczego nie jest
+potrzebny do tej kontroli.
+
 ## TokenEconomizer: diagnostyka w bieżącym etapie — 4 listopada 2026
 
 **Polecenia faktycznie wykonane** w katalogu głównym repozytorium

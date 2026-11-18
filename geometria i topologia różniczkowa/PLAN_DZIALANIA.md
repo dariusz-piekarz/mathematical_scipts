@@ -1,6 +1,6 @@
 # Aktualny plan i pokrycie przeglądem
 
-Stan: 13 listopada 2026. Gałąź: `review/rozdzialy-matematyka`.
+Stan: 18 listopada 2026. Gałąź: `review/rozdzialy-matematyka`.
 Książka ma **38 rozdziałów, pięć części i trzy dodatki**. Numery w nazwach
 plików są historyczne; numer w PDF ustala kolejność importów.
 Skład roboczy podzielono na cztery tomy: rozdziały 1–10, 11–22,
@@ -12,6 +12,22 @@ sprawdzania konkretnych wersji są w [PRZEGLAD.md](PRZEGLAD.md), a budowanie
 i organizacja plików w [README.md](README.md).
 
 ## Bieżący zakres i kolejność
+
+### Integracja rysunków chirurgii i materiału o spinorach (18 listopada)
+
+Na prośbę autora rozszerzono Rysunek 26.3 o część (c), w której
+zawęźlony $1$-uchwyt dołącza się do pełnego torusa; opis wyprowadza
+brzeg rodzaju dwa z chirurgii $T^2\to\Sigma_2$. Poprawiono schemat
+rogatej sfery Alexandera i wstawiono go do Uwagi 26.1.5 wraz z
+rozróżnieniem etapów skończonych i granicy nieskończonej.
+Przejrzano dostarczony materiał o spinorach i zintegrowano jego nowe
+treści w rozdziałach 4, 11 i 18: pola spinorowe, kryterium $w_2$,
+równanie Diraca, przykłady lorentzowskie i riemannowski operator Diraca.
+Powtórzenia istniejących definicji i dowodu wzoru indeksowego pominięto.
+Jest to przegląd dopisków i ich styku z dotychczasowym tekstem,
+bez deklarowania ponownego pełnego audytu tych rozdziałów.
+Integrację i kontrolę czterech tomów zakończono. Wyniki składu,
+indeksów, odsyłaczy i oględzin stron zapisano w `PRZEGLAD.md`.
 
 ### Integracja materiałów o geometriach Thurstona (11 listopada)
 

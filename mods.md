@@ -1,5 +1,60 @@
 # Uzasadnienia zmian w repozytorium `mathematical_scipts`
 
+## 2026-11-18 — Rysunek 26.3, rogata sfera i spinory
+
+### Problem
+
+Rysunek 26.3 nie pokazywał wariantu z pełnym torusem w miejscu kuli,
+a tekst nie wyjaśniał, jakie chirurgiczne dołączenie uchwytu daje
+powierzchnię rodzaju dwa. Szkic rogatej sfery Alexandera miał
+nieczytelne rozgałęzienia i nie był wstawiony przy Uwadze 26.1.5.
+Materiał o spinorach w katalogu `do dodania` wymagał sprawdzenia
+rachunków i powiązania z istniejącymi rozdziałami, bez powtarzania
+wcześniejszych definicji i twierdzeń indeksowych.
+
+### Rozwiązanie i wpływ
+
+- Rozszerzono Rysunek 26.3 o część (c): pełny torus oraz zawęźlony
+  $1$-uchwyt. Opis konstruuje $V=B^3\cup h_0\cong S^1\times D^2$,
+  następnie $H=V\cup h_K$, i oblicza rodzaj brzegu z
+  $\chi(\partial H)=0-2=-2$. Części (a) i (b), ich etykiety oraz
+  wcześniejsza konstrukcja torusa wokół meridianu pozostały w tym
+  samym rysunku.
+- Przy Uwadze 26.1.5 dodano rysunek dwóch skończonych etapów
+  konstrukcji Alexandera. Rozdzielono cztery końcówki drugiego etapu
+  i objaśniono, że rogi są wypukłościami sfery, a dzikie osadzenie
+  powstaje dopiero w nieskończonej granicy. Tekst odsyła do
+  oryginalnej pracy Alexandera. Samodzielny plik w `do dodania`
+  korzysta z tego samego źródła TikZ co tom III.
+- W rozdziale 4 doprecyzowano przejście od reprezentacji Spin do
+  wiązki spinorowej i pól, w rozdziale 11 dodano kryterium $w_2$,
+  klasyfikację przez $H^1$ i przykłady struktur spinowych, a w
+  rozdziale 18 powiązano równanie Diraca w czasoprzestrzeni z
+  riemannowskim operatorem Diraca, wzorem Lichnerowicza i indeksem.
+  Wprowadzone rachunki obejmują m.in. mody swobodne, potencjał
+  Coulomba, model FLRW i płaski torus. Rozróżniono równanie
+  hiperboliczne od operatora eliptycznego.
+
+Kompromisem jest dłuższy rozdział 18; zachowano jego dotychczasową
+strukturę indeksową, a nowe podstawy operatora Diraca umieszczono
+przed tymi wynikami. Rozdziały 4, 11, 18 i 26 nie były ponownie
+audytowane w całości: ten etap obejmuje dopisany materiał oraz
+jego styki z istniejącym tekstem.
+
+### Weryfikacja
+
+Niezależny audyt dopisków spinorowych nie wykrył istotnych błędów
+w znakach koneksji, równaniu FLRW, rozwiązaniu Coulomba, kryterium
+$w_2$ ani wzorze Lichnerowicza. Obejrzano osobne podglądy obu
+rysunków oraz końcowe strony 40–42 tomu III z Rysunkami 26.3 i 26.5.
+Skrypt `buduj_tomy.ps1` zakończył się kodem 0; tomy I–IV mają
+269, 265, 107 i 102 strony. Indeksy przyjęły odpowiednio
+129, 116, 33 i 104 hasła, każde z 0 odrzuconych. W logach nie ma
+brakujących odsyłaczy ani `Overfull`; pozostałe `Underfull`
+nie przeszkadzają w odczycie sprawdzonych stron. PDF-y skopiowane
+do katalogu projektu są identyczne z wynikami `build/tomy`
+według SHA-256. Każdy tom zawiera łącza do innych tomów.
+
 ## 2026-11-06 — pełny przegląd rozdziału 7, sekcje 1–6
 
 ### Problem

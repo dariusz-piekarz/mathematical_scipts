@@ -1,249 +1,28 @@
 % !TeX program = pdflatex
+% Samodzielny podglad rysunku uzytego w Uwadze 26.1.5.
+% Kompilowac z katalogu glownego projektu (geometria i topologia rozniczkowa).
 \documentclass[11pt,a4paper]{article}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[polish]{babel}
 \usepackage{lmodern}
+\usepackage[margin=2.5cm]{geometry}
 \usepackage{amsmath,amssymb}
-\usepackage[margin=1.65cm]{geometry}
 \usepackage{tikz}
-\usetikzlibrary{shadings,arrows.meta,fadings}
-\usepackage{microtype}
-% Stonowane, matowe blekity. Geometria pierwotnego rysunku bez zmian.
-\definecolor{ahsdeep}{HTML}{29485A}
-\definecolor{ahsdark}{HTML}{467B8A}
-\definecolor{ahsmid}{HTML}{7DADB5}
-\definecolor{ahslight}{HTML}{D6E6E2}
-\definecolor{ahsbase}{HTML}{90B4BA}
-
-% Delikatna radialna gradacja na korpusie, bez ostrego blysku ``ball color''.
-\pgfdeclareradialshading{ahssoftvolume}{\pgfpoint{-7bp}{9bp}}{%
- color(0bp)=(ahsbase!33!white);
- color(7bp)=(ahsbase!44!white);
- color(16bp)=(ahsbase!75!white);
- color(28bp)=(ahsbase!86!ahsdark);
- color(40bp)=(ahsbase!56!ahsdark);
- color(55bp)=(ahsdeep!87!ahsbase)}
-
-% Maska przezroczystosci: 100% na poczatku nowego rogu,
-% do pelnej widocznosci w dolnych ~10 procentach dlugosci krzywej.
-% Wspolny gradient dla wszystkich barwnych warstw rurki.
-\pgfdeclareverticalshading{ahsrootgradient}{100bp}{%
-  color(0bp)=(pgftransparent!100);
-  color(25bp)=(pgftransparent!100);
-  color(29bp)=(pgftransparent!0);
-  color(75bp)=(pgftransparent!0);
-  color(100bp)=(pgftransparent!0)}
-\pgfdeclarefading{ahsrootfade}{\pgfuseshading{ahsrootgradient}}
-
-% Lagodne, koncentryczne przejscie tonow na rurze.
-% To samo centrum i dokladnie taka sama zewnetrzna grubosc, co oryginal.
-\newcommand{\AHSshadeTube}[2]{%
-  \draw[ahsdeep,line width=\AHSout,line cap=round,line join=round] #1;
-  \foreach \fraction/\mix in
-    {.96/18,.90/34,.83/48,.75/62,.66/72,.56/81,.46/87,.35/91,.25/94}{%
-    \pgfmathsetlengthmacro{\AHSgradwidth}{\AHSout*\fraction}%
-    \draw[#2!\mix!ahsdeep,line width=\AHSgradwidth,
-          line cap=round,line join=round] #1;
-  }
-  \draw[ahslight,opacity=.16,line width=\AHSshine,
-      line cap=round,line join=round] #1;
-}
-
-% Zwężana końcówka rogu w sąsiedztwie rozgałęzienia.
-% Odwzorowanie #1=1: lewy róg; #1=-1: prawy róg.
-% Wspólny tor Béziera jest niezmieniony, ale grubość stopniowo maleje.
-\newcommand{\AHSTaperTail}[2]{%
-  \begingroup
-  \let\AHSparentout\AHSout
-  \let\AHSparentshine\AHSshine
-  \begin{scope}[xscale=#1]
-  \begin{scope}
-    \pgfmathsetlengthmacro{\AHSout}{\AHSparentout*1.00}%
-    \pgfmathsetlengthmacro{\AHSshine}{\AHSparentshine*1.00}%
-    \AHSshadeTube{(-0.08000,2.37000) .. controls (0.04740,2.29980) and (0.15858,2.22622) .. (0.25019,2.16279)}{#2}%
-  \end{scope}
-  \begin{scope}
-    \pgfmathsetlengthmacro{\AHSout}{\AHSparentout*0.80}%
-    \pgfmathsetlengthmacro{\AHSshine}{\AHSparentshine*0.80}%
-    \AHSshadeTube{(0.25019,2.16279) .. controls (0.34180,2.09937) and (0.41385,2.04609) .. (0.46300,2.01651)}{#2}%
-  \end{scope}
-  \begin{scope}
-    \pgfmathsetlengthmacro{\AHSout}{\AHSparentout*0.59}%
-    \pgfmathsetlengthmacro{\AHSshine}{\AHSparentshine*0.59}%
-    \AHSshadeTube{(0.46300,2.01651) .. controls (0.51025,1.98806) and (0.53633,1.98151) .. (0.53827,2.00890)}{#2}%
-  \end{scope}
-  \begin{scope}
-    \pgfmathsetlengthmacro{\AHSout}{\AHSparentout*0.38}%
-    \pgfmathsetlengthmacro{\AHSshine}{\AHSparentshine*0.38}%
-    \AHSshadeTube{(0.53827,2.00890) .. controls (0.54005,2.03409) and (0.52140,2.08800) .. (0.48000,2.18000)}{#2}%
-  \end{scope}
-  \end{scope}
-  \endgroup
-}
-
-% Dodatkowy, bardzo maly przeplot na samych koncowkach.
-% Uzywany tylko wtedy, gdy chcemy juz w ostatnim stadium pokazac,
-% ze konce same zaczynaja sie wzajemnie oplatac.
-\newcommand{\AHSTerminalBraid}{%
-  \def\AHStbraidR{(.48,2.18)
-    .. controls (.67,2.36) and (.47,2.62) .. (.16,2.53)
-    .. controls (-.06,2.46) and (-.14,2.31) .. (-.15,2.49)}%
-  \def\AHStbraidL{(-.48,2.18)
-    .. controls (-.67,2.36) and (-.47,2.62) .. (-.16,2.53)
-    .. controls (.06,2.46) and (.14,2.31) .. (.15,2.49)}%
-  \AHSshadeTube{\AHStbraidR}{ahsdark}%
-  \AHSshadeTube{\AHStbraidL}{ahsmid}%
-  \shade[inner color=ahslight!72!ahsmid,outer color=ahsdark,
-         draw=ahsdeep,line width=\AHScap]
-    (-.15,2.49) ellipse [x radius=.035,y radius=.048,rotate=-12];
-  \shade[inner color=ahslight!72!ahsmid,outer color=ahsdark,
-         draw=ahsdeep,line width=\AHScap]
-    (.15,2.49) ellipse [x radius=.035,y radius=.048,rotate=12];
-}
+\usetikzlibrary{arrows.meta}
 \pagestyle{empty}
-
-% Para rogów: głębokość rekurencji, współczynnik grubości
-% oraz flaga: czy na końcu ma być zwykłe otwarcie (0), czy mini-przeplot (1).
-\newcommand{\AHSpara}[4]{%
-  \begingroup
-  \pgfmathsetlengthmacro{\AHSout}{17pt*(#2)}%
-  \pgfmathsetlengthmacro{\AHSin}{12pt*(#2)}%
-  \pgfmathsetlengthmacro{\AHSshine}{3.6pt*(#2)}%
-  \pgfmathsetlengthmacro{\AHScap}{0.35pt*(#2)}%
-  \ifnum#3=1\relax
-    \def\AHSstartL{(-1.08,.18) .. controls (-1.24,.33) and (-1.40,.70) .. (-1.46,1.04)}%
-    \def\AHSstartR{(1.08,.18) .. controls (1.24,.33) and (1.40,.70) .. (1.46,1.04)}%
-  \else
-    \def\AHSstartL{(0,0) .. controls (-.11,.18) and (-1.36,.51) .. (-1.46,1.04)}%
-    \def\AHSstartR{(0,0) .. controls (.11,.18) and (1.36,.51) .. (1.46,1.04)}%
-  \fi
-  % Osiowe krzywe rogów sa te same, lecz 25% końcowej krzywej
-  % płynnie odchudza się przed nasadą kolejnej generacji.
-  \def\AHSlewy{\AHSstartL
-    .. controls (-1.67,2.13) and (-.83,2.81) .. (-.08,2.37)}%
-  \def\AHSprawy{\AHSstartR
-    .. controls (1.67,2.13) and (.83,2.81) .. (.08,2.37)}%
-  \ifnum#3=0\relax
-    % Jednolity, gradientowy fade dolnej krawędzi młodych rurek.
-    % Brak osobnych segmentów: nie powstają dodatkowe okrągłe denka.
-    \begin{scope}[path fading=ahsrootfade]
-      \AHSshadeTube{\AHSprawy}{ahsdark}%
-    \end{scope}
-  \else
-    \AHSshadeTube{\AHSprawy}{ahsdark}%
-  \fi
-  \AHSTaperTail{-1}{ahsdark}%
-  \ifnum#3=0\relax
-    \begin{scope}[path fading=ahsrootfade]
-      \AHSshadeTube{\AHSlewy}{ahsmid}%
-    \end{scope}
-  \else
-    \AHSshadeTube{\AHSlewy}{ahsmid}%
-  \fi
-  \AHSTaperTail{1}{ahsmid}%
-  \ifnum#1>1\relax
-    % Brak denkow: kolejne rogi wyrastaja z poprzednich.
-    \pgfmathtruncatemacro{\AHSnext}{#1-1}%
-    \pgfmathsetmacro{\AHSnextpen}{#2*.355}%
-    \begin{scope}[shift={(-.48,2.18)},rotate=-11,scale=.355]
-      \AHSpara{\AHSnext}{\AHSnextpen}{0}{#4}%
-    \end{scope}
-    \begin{scope}[shift={(.48,2.18)},rotate=11,scale=.355]
-      \AHSpara{\AHSnext}{\AHSnextpen}{0}{#4}%
-    \end{scope}
-  \else
-    \ifnum#4=1\relax
-      \AHSTerminalBraid
-    \else
-      \shade[inner color=ahslight!72!ahsmid,outer color=ahsdark,
-             draw=ahsdeep,line width=\AHScap]
-        (.48,2.18) ellipse [x radius=.043,y radius=.059,rotate=16];
-      \shade[inner color=ahslight!72!ahsmid,outer color=ahsdark,
-             draw=ahsdeep,line width=\AHScap]
-        (-.48,2.18) ellipse [x radius=.043,y radius=.059,rotate=-16];
-    \fi
-  \fi
-  \endgroup
-}
-
-% Korpus sfery wraz z rogami. N=0 oznacza gładką sferę.
-\newcommand{\AHSstadium}[3]{%
- \begingroup
-  \shade[shading=ahssoftvolume] (0,-.57) circle (1.53);
-  \draw[ahsdeep!70,line width=.95pt] (0,-.57) circle (1.53);
-  \draw[white,opacity=.19,line width=2pt,line cap=round]
-     (-1.18,-1.37) .. controls (-.63,-2.08) and (.49,-2.04) .. (1.12,-1.39);
-  \ifnum#1>0\relax
-    \shade[inner color=ahsbase!52!white,outer color=ahsdark!85!ahsbase]
-      (-1.08,.18) ellipse (.28 and .20);
-    \shade[inner color=ahsbase!52!white,outer color=ahsdark!85!ahsbase]
-      (1.08,.18) ellipse (.28 and .20);
-    \AHSpara{#1}{#2}{1}{#3}
-  \fi
- \endgroup
-}
 \begin{document}
 \begin{center}
-{\Large\bfseries Rogata sfera Alexandera}\par
-\vspace{2mm}
-{\small Łagodne zwężenia i miękkie połączenia kolejnych generacji}
+  {\Large\bfseries Rogata sfera Alexandera: stadia skończone}\par
+  \medskip
+  \input{tex/rysunki/rogata-sfera-alexandera}
 \end{center}
 
-\begin{center}
-\begin{tikzpicture}[line cap=round,line join=round]
-  \begin{scope}[shift={(-3.6,5.95)},scale=.90]
-    \AHSstadium{0}{.90}{0}
-  \end{scope}
-  \node[font=\small] at (-3.6,3.71) {$n=0$ \quad (sfera)};
-
-  \begin{scope}[shift={(3.6,5.95)},scale=.90]
-    \AHSstadium{1}{.90}{0}
-  \end{scope}
-  \node[font=\small] at (3.6,3.71) {$n=1$ \quad (2 rogi)};
-
-  \begin{scope}[shift={(-3.6,0)},scale=.90]
-    \AHSstadium{2}{.90}{0}
-  \end{scope}
-  \node[font=\small] at (-3.6,-2.22) {$n=2$ \quad (4 końce)};
-
-  \begin{scope}[shift={(3.6,0)},scale=.90]
-    \AHSstadium{3}{.90}{1}
-  \end{scope}
-  \node[font=\small] at (3.6,-2.22) {$n=3$ \quad (końcówki już splecione)};
-\end{tikzpicture}
-\end{center}
-
-\noindent\small
-W każdym kroku każdy koniec rogu zastępujemy parą mniejszych,
-przeplatających się rogów. W tej wersji połączenia kolejnych generacji są płynnie zwężone,
-a w stadium $n=3$ ostatnie
-widoczne końcówki nie są już otwarte, lecz zostają doprowadzone
-do dodatkowego mini-przeplotu. Linie przecinają się tylko na rzucie:
-w przestrzeni rogi są rozłączne. Rysunek jest poglądowy, a nie
-ścisłym modelem topologicznym zanurzenia.
-
-\clearpage
-\begin{center}
-{\Large\bfseries Etap $n=4$: szesnaście końców rogów}\par
-\medskip
-\begin{tikzpicture}[line cap=round,line join=round,scale=2.20]
-  \AHSstadium{4}{2.20}{0}
-  % Oznaczenie górnej strefy akumulacji końców
-  \draw[ahsdeep!70,densely dashed,thin]
-    (0,3.27) ellipse [x radius=.75,y radius=.19];
-  \node[font=\scriptsize,align=center,anchor=west,text=ahsdeep]
-    at (1.19,3.31) {coraz mniejsze\\pary rogów};
-  \draw[-{Latex[length=2mm]},ahsdeep!70,thin]
-    (1.15,3.31) -- (.70,3.31);
-\end{tikzpicture}
-\end{center}
-
-\vspace{5mm}
-\noindent\textbf{Granica konstrukcji.}
-W idealnej konstrukcji kontynuuje się proces dla wszystkich $n$.
-Otrzymana powierzchnia jest homeomorficzna ze sferą $S^2$, ale jej
-dopełnienie w $\mathbb R^3$ nie jest jednospójne po stronie
-zewnętrznej. O istocie przykładu decyduje nie samo rozgałęzienie,
-lecz odpowiednio powtarzane \emph{sprzężenie} (przeplot) rogów.
+\noindent
+Każdy narysowany etap jest gładką sferą po wygładzeniu nasad rogów.
+Rogi są wypukłościami kuli, a nie dodatkowymi $1$-uchwytami.
+Przecięcia na rzucie oznaczają przejścia nad i pod; powierzchnia
+w przestrzeni nie przecina samej siebie. Właściwa rogata sfera
+powstaje dopiero przez nieskończone powtarzanie tego samego
+sprzężenia w coraz mniejszej skali.
 \end{document}

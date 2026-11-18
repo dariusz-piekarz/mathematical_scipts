@@ -14,6 +14,50 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## Rysunek 26.3, rogata sfera i spinory (2026-11-18)
+
+Autor dostarczył rozszerzenie Rysunku 26.3, schemat rogatej sfery
+Alexandera oraz materiał o spinorach. Ten etap obejmuje przegląd
+nowych fragmentów i ich integrację; nie powtarza pełnych audytów
+rozdziałów 4, 11, 18 ani 26.
+
+Rysunek 26.3 otrzymał część (c): pełny torus w miejscu kuli z części
+(a), z dołączonym zawęźlonym $1$-uchwytem. Tekst rozpisuje najpierw
+$V=B^3\cup h_0\cong S^1\times D^2$, potem $H=V\cup h_K$,
+a na brzegu wymianę dwóch dysków na cylinder. Z
+$\chi(\partial V)=0$ i $\chi(\partial H)=-2$ wynika rodzaj dwa.
+Zachowano numer Rysunku 26.3 i wcześniejsze wyjaśnienie części (b).
+Nowy rysunek przy Uwadze zmienia numery ilustracji po tej Uwadze;
+odsyłacze korzystają z istniejących etykiet.
+
+Nowy schemat przy Uwadze 26.1.5 pokazuje dwa skończone etapy
+rogatej sfery, z rozdzielonymi czterema końcówkami drugiego etapu.
+Wskazano, że skończone etapy są gładkimi sferami, natomiast
+nieskończona granica ma dzikie osadzenie i niejednospójne zewnętrze.
+Oryginalna praca Alexandera jest podana przy opisie. Osobny plik
+w `do dodania` służy jako podgląd tego samego źródła TikZ.
+
+Materiał spinorowy rozdzielono według zależności logicznych:
+w rozdziale 4 uściślono wiązkę i pola spinorowe oraz sklejanie
+koneksji; w rozdziale 11 wyprowadzono test $w_2$, klasyfikację
+struktur przez $H^1$, przykłady $S^2$, $T^2$, $\mathbb{CP}^2$
+i przypadek Lorentza; w rozdziale 18 omówiono macierze i równanie
+Diraca, mody, sprzężenie ładunkowe, granicę Pauliego, stan związany
+w potencjale Coulomba, FLRW, operator riemannowski i jego związek
+z metodą Bochnera oraz indeksem. Zachowano wcześniejszy dowód
+indeksowy i odesłano do istniejących definicji zamiast je powtarzać.
+
+Niezależny przegląd rachunków nie znalazł istotnych błędów w nowych
+znakach, kryterium spinowym, FLRW, rozwiązaniu Coulomba i formule
+Lichnerowicza. Próbne składy tomów I i II przeszły; samodzielne
+podglądy obu rysunków oraz końcowe strony 40–42 tomu III sprawdzono
+wizualnie. Pełny `buduj_tomy.ps1` zakończył się kodem 0; tomy I–IV
+mają 269, 265, 107 i 102 strony. Indeksy: 129, 116, 33 i 104
+przyjęte hasła, wszędzie 0 odrzuconych. Nie ma brakujących odsyłaczy
+ani wierszy `Overfull`; sprawdzono też łącza między tomami i zgodność
+kopii PDF z `build/tomy` według SHA-256. Pozostałe ostrzeżenia
+`Underfull` nie wpływają na czytelność nowych fragmentów.
+
 ## Konstrukcja chirurgiczna dla Rysunku 26.3(b) (2026-11-13)
 
 Na prośbę autora pod Rysunkiem 26.3 rozpisano powstawanie
