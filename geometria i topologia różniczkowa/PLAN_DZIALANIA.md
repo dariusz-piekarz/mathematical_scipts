@@ -13,6 +13,17 @@ i organizacja plików w [README.md](README.md).
 
 ## Bieżący zakres i kolejność
 
+### Rozdziały 23 i 24 — przegląd dydaktyczny (18 listopada)
+
+Autor wyznaczył wspólny etap rozdziałów „Kobordyzmy i rachunek uchwytów”
+oraz „Twierdzenie Smale'a o h-kobordyzmie” w tomie III.
+Sprawdzono wszystkie sekcje, rozpisano przejścia algebraiczne i model
+znoszenia, doprecyzowano hipotezy wymiarowe oraz użycie lokalnych narodzin.
+Zakończono kontrolę rachunkową, składu tomu III, indeksu oraz wszystkich
+stron obu rozdziałów i ośmiu ilustracji. Numery istniejących wyników
+i rysunków zachowano; wyniki zapisano w `PRZEGLAD.md`.
+Następny rozdział w kolejce to 25, o torsji Whiteheada i s-kobordyzmie.
+
 ### Grafy, węzły i wymiar cztery (18 listopada; selekcja, audyt i integracja)
 
 Źródło: `do dodania/grafy_wezly_do_ksiazki_po_audycie.tex` (36 rozdziałów,
@@ -360,8 +371,10 @@ oraz zachowanie dwóch składowych w schemacie obu operacji.
 Źródła rysunków i dotychczasową numerację zachowano.
 Uzupełnienie zakończono składem i kontrolą tylko tomu III
 (105 stron), bez nowych ostrzeżeń; szczegóły w `PRZEGLAD.md`.
-Następny w kolejności jest rozdział 23
-„Kobordyzmy i rachunek uchwytów” (tom III).
+18 listopada autor wznowił przegląd, wyznaczając łącznie rozdziały 23 i 24
+(kobordyzmy, uchwyty i twierdzenie Smale'a; tom III).
+Po tym etapie następny w kolejności jest rozdział 25
+„Torsja Whiteheada i twierdzenie o s-kobordyzmie” (tom III).
 Przy kolejnych
 rozdziałach obowiązuje ta sama zasada: skład tylko właściwego tomu,
 a potem commit i push po kontroli całego rozdziału.
@@ -671,8 +684,8 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 20. Zanurzenia i otoczenia | `16-zanurzenia-otoczenia.tex` | Pełny przegląd §§20.1–20.7 zakończony 12 listopada | Rozpisane rachunki rzutów, siecznych i ruchu Whitneya, przejścia wiązki normalnej, rzut przez macierz Grama i zmienny promień rurki. Wyprowadzone wzory kołnierza, przeniesienia metryki i zupełności. Cztery nowe przykłady: obramowania okręgu, podwojenie dysku, ścinanie i pierścień jako produkt; pięć numerowanych rysunków i dwa nowe schematy. Przeszły 52 kontrole rachunkowe; trzy całki mają jawne granice. Sprawdzono tylko tom II; numeracja zachowana. |
 | 21. Przecięcia, dualność i klasy | `17-przeciecia-dualnosc-klasy.tex` | Pełny przegląd dydaktyczny §§21.1–21.10 zakończony 12 listopada; wcześniejszy audyt dodatków z 6 października | Rozpisano homotopię łańcuchową, znaki kapu i dualności oraz rachunek RP² ze skręconymi współczynnikami. Rozwinięto sklejanie TS², klasy Stiefela–Whitneya, samoprzecięcia, indeksy pól i dwa sklejenia walców. Pięć nowych przykładów, dwa rysunki i dwa schematy; sprawdzono 56 rachunków, wszystkie sekcje, sześć numerowanych ilustracji, indeks i cele łączy między tomami. Złożono tylko tom II; zachowano dawną numerację. Szczegóły w `PRZEGLAD.md`. |
 | 22. Teoria Morse'a | `18-morse.tex` | Pełny przegląd dydaktyczny §§22.1–22.7 zakończony 12 listopada; wcześniejszy audyt dodatków z 8 października | Wyprowadzono całkę w lemacie Morse'a, rachunek uchwytu, kontrakcje i wariację punktu trafienia. Rozwinięto sferę, torus, RP², rozmaitości stabilne, sklejanie i różniczkę ze znakami. Pięć nowych przykładów, dwa rysunki i schemat; 73 kontrole rachunkowe. Sprawdzono wszystkie sekcje, 17 zapisów całek, siedem numerowanych ilustracji, indeks i cele łączy między tomami. Złożono tylko tom II; zachowano dawną numerację. Zakończono przegląd całego tomu II. Szczegóły w `PRZEGLAD.md`. |
-| 23. Kobordyzmy i uchwyty | `19-kobordyzmy-uchwyty.tex` | Audyt dodatków zakończony 8 października; PDF 443 strony | Sprawdzone trzy hasła i pięć ilustracji; przywrócony warunek orientacji w podpisie, jawny opis sklejenia pierścieni i rozwinięty lokalny ruch Whitneya przy zachowanych założeniach o dyskach |
-| 24. h-kobordyzm | `20-h-kobordyzm.tex` | Audyt i uzupełnienia zakończone 9 października; skład po scaleniu do `2777149`: 503 strony | Rozpisano wymianę 1→3, dopełnienia w kowymiarze 2, wstęgi i homologię wyciętej sfery. Dokładne założenia obramowanego lematu Whitneya podano jako jawny wynik zewnętrzny. Trzy rysunki, odsyłacze i indeks sprawdzone. |
+| 23. Kobordyzmy i uchwyty | `19-kobordyzmy-uchwyty.tex` | Przegląd dydaktyczny §§23.1–23.7 z 18 listopada; wcześniejszy audyt dodatków z 8 października | Sprawdzono rozkład względny, dualność, ślad chirurgii, kompleks, przestawianie, przesuwanie i znoszenie. Rozpisano kwadrat różniczki, sumę rang, obie zmiany macierzy, kontrakcję pary, hesjan, wartości krytyczne i trajektorię modelu oraz jednostajny wybór kołnierzy. Rozwinięto przykłady dysku i dwóch przyczepień do torusa. Lokalne narodziny mają jawny status wyniku zewnętrznego Milnora (lemat 8.2). Szczegóły i kontrola składu w `PRZEGLAD.md`. |
+| 24. h-kobordyzm | `20-h-kobordyzm.tex` | Przegląd dydaktyczny §§24.1–24.6 z 18 listopada; wcześniejszy audyt z 9 października | Sprawdzono usuwanie indeksów skrajnych, wymianę 1→3, dopełnienia, trik Whitneya, całkowitą redukcję i indukcję. Doprecyzowano warunki brzegowe i m≥6, ruch odwrotną izotopią, porządek znoszenia par oraz różnicę między wymiarami 5 i 6. Rozwinięto przykład prostokątnej macierzy i dokładnego kompleksu. Twierdzenie Milnora 6.6 i jego obramowany model pozostają jawnym wejściem zewnętrznym. Szczegóły i kontrola składu w `PRZEGLAD.md`. |
 | 25. Torsja i s-kobordyzm | `21-torsja-s-kobordyzm.tex` | Pełny audyt i uzupełnienia zakończone 11 października; PDF 505 stron | Poprawiono bazy i konwencje macierzowe, dowód niezależności kontrakcji, zakres lematu Whitneya, obramowania i dualność w realizacji torsji. Strony 390–401, oba schematy, odsyłacze i indeks sprawdzone; głębokie wejścia zewnętrzne wskazano dokładnie. |
 | 26. Chirurgia geometryczna | `22-chirurgia-geometryczna.tex` | Pełny audyt zakończony 8 października; 27 października osobno sprawdzono przykład śladu $S^6\to S^3\times S^3$; 28 października dodano dwa wizualne przykłady uchwytów oraz osobno sprawdzono dwa obramowania $S^1\subset S^4$ i strony 42–43 tomu III | Wcześniej sprawdzono obramowania, ślad i uchwyt dualny, homologię, $\pi_1$, formę jądra i rysunki. Przykład śladu wskazuje indeksy uchwytów i standardowe dane normalne. Pierwszy nowy rysunek pokazuje $S^2\sqcup S^2\to S^2\to T^2$, wybór dysków, $b_0$, $\chi$ i orientowalność, z odsyłaczem do wcześniejszej wersji jednej sfery. Drugi pokazuje cięcie, pełny skręt i sklejenie pierwotnych par końców dwóch uchwytów sfery; wynik nadal ma rodzaj dwa. Nowy przykład obramowań wyprowadza dwie wiązki $S^2$ nad $S^2$ oraz formy $H$ i nieparzystą; sprawdzono ciąg Mayera--Vietorisa i źródła Larsona oraz Wendla. Nie ponawiano audytu reszty rozdziału. |
 | 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Pełny audyt także nowego tekstu zakończony 20 października względem §§1–2, 5–6 Walla; zmianę z 27 października oraz nowe rachunki z 28 października i strony 57–59 tomu III sprawdzono osobno | Sprawdzono parzyste i nieparzyste kryterium, bazy i torsję nad $\Z[\pi]$, $SU/RU$, ruchy $T1$--$T4$, wymiar pięć i chirurgię środkową. Poprawiono stronę $\lambda$ w dualności, terminologię immersji i hipotezy lematu 5.7. Doprecyzowano zależność $\mu=0$ od wybranych danych normalnych w przykładzie lokalnej stabilizacji; nie ponawiano audytu reszty rozdziału. Nowe rachunki dają tabelę $L_n^s(\Z[\Z])$ i grupy Tate'a dla $C_5$, z dokładnymi hipotezami Shanesona i wnioskami z ciągu Rothenberga; sprawdzono je względem Walla, Ranickiego i Milnora. Głębokie lematy Walla, wersja $h$ i relacja formacji pozostają jawnymi wynikami zewnętrznymi. |

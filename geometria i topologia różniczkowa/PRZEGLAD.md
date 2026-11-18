@@ -10013,3 +10013,53 @@ W ekstrakcji XML końcowych PDF potwierdzono łącze z tomu II
 do tomu IV oraz łącza z rozdziału 39 do tomów I i II.
 Po ostatniej korekcie językowej w dowodzie o grafie Reeba
 sprawdzono jej obecność w końcowym PDF tomu II.
+
+## 2026-11-18 — podsekcja o polach spinorowych
+
+Na prośbę autora nagłówek „Pola spinorowe i zmiana ramki” otrzymał postać `\subsection*`, bez numeracji i wpisu w spisie treści. Fragment o koneksji uzasadnia potrzebę pochodnej kowariantnej i wyprowadza prawo transformacji jej lokalnych form; treść zachowano.
+Próba kompilacji tomu I nie powiodła się: lokalne programy MiKTeX zakończyły się bez komunikatu diagnostycznego; PDF nie został zaktualizowany.
+
+## 2026-11-18 — przeniesienie koneksji spinorowej do tomu II
+
+Na prośbę autora przeniesiono motywację, prawo transformacji koneksji na wiązce spinorowej wraz z dowodem oraz uwagę o koneksji Leviego–Civity do rozdziału o koneksjach w tomie II, po pochodnej kowariantnej pól tensorowych. Nowy nagłówek ma postać `\subsection*`. Zachowano etykiety twierdzenia i wzoru; w tomie I pozostawiono odsyłacz.
+
+Weryfikacja: oba tomy złożono dwukrotnie programem pdflatex z odświeżeniem indeksów; końcowy log tomu I nie zawiera brakujących odsyłaczy. Zaktualizowano PDF-y tomów I i II.
+
+## 2026-11-18 — audyt dydaktyczny rozdziałów 23 i 24
+
+Zakres wyznaczony przez autora: wszystkie §§23.1–23.7 oraz §§24.1–24.6 tomu III. Numery rozdziałów wynikają z pliku głównego; nazwy źródeł `19-kobordyzmy-uchwyty.tex` i `20-h-kobordyzm.tex` zachowano. Jest to ponowny przegląd obecnej treści, po wcześniejszych audytach październikowych.
+
+### Rozdział 23 — przejścia i rachunki
+
+- §23.1: sprawdzono kołnierze, względną perturbację Morse'a, rozkład na uchwyty oraz puste końce. Doprecyzowano zakres parametru kołnierza i rozpisano różniczkę oraz hesjan funkcji na dysku, także po odwróceniu kobordyzmu. Założenie zwartości odniesiono do kobordyzmów i ich brzegów, a nie do lokalnych modeli euklidesowych.
+- §§23.2–23.3: sprawdzono wymiary rdzenia, współrdzenia i sfer, zamianę indeksów przy dualności, rozkład brzegu uchwytu oraz obramowanie. Skontrolowano sklejenie dwóch pierścieni, warunek orientacji, dyfeomorfizm z torusem i operację odwrotną.
+- §23.4: wyjaśniono zerowanie kwadratu różniczki przez dokładność ciągu trójki. Rozpisano kasowanie rang obrazów w formule Eulera i kontrakcję wydzielonej pary generatorów. W przykładzie dwóch przyczepień do torusa obliczono grupy względne: różniczka ±1 daje kompleks acykliczny, a różniczka 0 daje po jednej kopii Z w stopniach 1 i 2; oba mają tę samą charakterystykę względną.
+- §23.5: sprawdzono przestawianie wartości przy ustalonym polu i obramowaną wstęgę przesunięcia. Dopisano macierz T=I+σE_qp, jej odwrotność oraz obie sąsiednie różniczki D'_k=D_kT i D'_{k+1}=T^{-1}D_{k+1}. Zmiana bazy musi objąć obie macierze.
+- §23.6: sprawdzono kolejne kroki znoszenia, w tym dostosowanie modeli, rozkład blokowy różniczki przejścia i kontrolę powrotów. Rozpisano hesjan modelu narodzin, wartości obu punktów krytycznych, rozwiązania kierunków poprzecznych i trajektorię z funkcją tanh. Uzupełniono jednostajne oszacowanie do wyboru funkcji odcinającej i sprawdzenie zgodności nowej funkcji ze starą przy obu końcach pasa.
+- §§23.6–23.7: oddzielono lokalny model wielomianowy od wyniku o narodzinach z nośnikiem w małym otoczeniu. Ten drugi wynik ma pełne założenia i jawny status zewnętrzny: Milnor, lemat 8.2; Morgan, wykład III, stwierdzenie 3.3. Warunkowy ruch Whitneya nadal wymaga założonego czystego, zanurzonego i prawidłowo obramowanego dysku. Nie zastępuje się tego warunku trywialnością wiązki nad dyskiem.
+
+### Rozdział 24 — hipotezy i indukcja
+
+- §24.1: sprawdzono hipotezy Smale'a i acykliczność. W lemacie produktowym zapisano dokładnie F^{-1}(0)=N_- i F^{-1}(1)=N_+.
+- §24.2: rozpisano porządek kontrakcji krawędzi drzewa przy usuwaniu 0-uchwytów. Sprawdzono argument dualny, porównania grup fundamentalnych, wymiary w pozycji ogólnej i transport obramowania przy wymianie 1→3. Wskazano dokładnie wynik o lokalnych narodzinach, zamiast wywodzić lokalizację ze wzoru wielomianu.
+- §24.3: jawnie dopisano m≥6 w lemacie o poziomicy i dopełnieniu. Wyjaśniono różnicę między dołączeniem 2-komórki a komórek wyższych wymiarów. Sprawdzono retrakcje w kowymiarze 2 oraz hipotezy twierdzenia Milnora 6.6 dla całych rodzin. Rozpisano przejście przez odwrotną izotopię, gdy początkowo poruszana jest rodzina B. Zestawiono pary wymiarów (2,3), (3,2) w poziomicy pięciowymiarowej z niedopuszczalną tutaj parą (2,2) w wymiarze cztery.
+- §24.4: sprawdzono indukcyjny dowód redukcji surjekcji samymi kolumnami, bez zmiany ustalonej bazy celu. Rozwinięto istniejący przykład o macierz 2×3, unimodularną zmianę bazy, całkowity generator jądra (1,-3,1) i dokładny kompleks. Wyjaśniono, dlaczego nadmiarowe generatory przechodzą do następnego etapu.
+- §§24.5–24.6: uzupełniono kolejność wartości krytycznych potrzebną do izolowania pary i przenoszenie pozostałych danych przyczepienia. Sprawdzono spadek liczby uchwytów, homologię sfery z wyciętymi dwoma dyskami, użycie Whiteheada oraz radialne przedłużenie dające homeomorfizm. Granicę między homeomorfizmem a dyfeomorfizmem zachowano.
+
+Źródła porównane z tekstem pierwotnym:
+[Milnor, *Lectures on the h-Cobordism Theorem*, twierdzenie 6.6, lematy 6.7, 6.13 i 8.2 oraz §8](https://webhomes.maths.ed.ac.uk/~v1ranick/surgery/hcobord.pdf),
+[Morgan, wykład III, stwierdzenie 3.3 i dowód twierdzenia](https://www.math.columbia.edu/~jmorgan/Lecture_III_H-cobordism_Theorem.pdf),
+[Morgan, wykład IIIA, twierdzenie 1.1, model lokalny i kontrola powrotów 1.5–1.7](https://www.math.columbia.edu/~jmorgan/Lecture_IIIA_hcobordism_Contd.pdf).
+Obramowany lemat Whitneya i lokalizacja narodzin pozostają nazwanymi wynikami zewnętrznymi; kontrola ich hipotez nie jest deklaracją własnego dowodu tych wyników.
+
+### Kontrola rachunkowa i skład
+
+Przeprowadzono sześć grup pomocniczych kontroli rachunkowych: prostokątna redukcja i wyznacznik T; generator jądra; odwrotność elementarnych zmian baz przy obu znakach; nierówności wymiarowe dla 6≤m≤30; wartości krytyczne i równanie jawnej trajektorii; znak sumy Eulera po dualizacji. Te kontrole uzupełniają przeczytanie dowodów, nie zastępują ich.
+
+W rozdziale 23 wszystkie siedem zapisów całek ma granice. W rozdziale 24 nie ma całek. Zachowano numery istniejących twierdzeń, przykładów, wzorów i ośmiu ilustracji; nowy nagłówek o narodzinach jest podsekcją z gwiazdką.
+
+Skład wykonano tylko dla tomu III, zgodnie z zakresem bieżącej kolejki. `latexmk` nie uruchomił się z powodu błędu konfiguracji MiKTeX dotyczącego ścieżki C:\Users\Daric\.gitconfig; zastosowano opisaną w README ścieżkę bez latexmk: pdflatex, makeindex i kolejne przebiegi pdflatex. Tom ma 110 stron; indeks przyjął 34 wpisy bez odrzuceń i ostrzeżeń. Końcowa kontrola nie wykazała błędów TeX-a, brakujących odsyłaczy, przepełnionych wierszy ani brakujących znaków. Pozostaje wcześniejszy komunikat hyperref o dwóch kotwicach page.1, wynikający ze strony tytułowej i ponownego początku numeracji; nie dotyczy odsyłaczy audytowanych rozdziałów.
+
+Wyrenderowano i obejrzano wszystkie strony 3–26 tomu III (strony PDF 4–27), obejmujące oba rozdziały i osiem ilustracji. Sprawdzono czytelność macierzy, indeksy we wzorach, podpisy, układ stron i miejsca podziału dowodów. Nie dodawano nowych numerowanych ilustracji ani zadań.
+
+Ostatni przebieg zachował identyczny SHA-256 pliku AUX i nie zgłosił potrzeby kolejnego przebiegu. Po końcowym doprecyzowaniu pochodnej trajektorii ponownie obejrzano strony 13–15. Ekstrakcja XML potwierdziła łącza do pozostałych tomów; zachowanie kolejności istniejących liczników i etykiet sprawdzono względem HEAD. Zaktualizowano `geometria_tom3.pdf`. Etap rozdziałów 23 i 24 zakończono.
