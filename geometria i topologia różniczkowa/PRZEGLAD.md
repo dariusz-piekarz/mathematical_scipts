@@ -10063,3 +10063,8 @@ Skład wykonano tylko dla tomu III, zgodnie z zakresem bieżącej kolejki. `late
 Wyrenderowano i obejrzano wszystkie strony 3–26 tomu III (strony PDF 4–27), obejmujące oba rozdziały i osiem ilustracji. Sprawdzono czytelność macierzy, indeksy we wzorach, podpisy, układ stron i miejsca podziału dowodów. Nie dodawano nowych numerowanych ilustracji ani zadań.
 
 Ostatni przebieg zachował identyczny SHA-256 pliku AUX i nie zgłosił potrzeby kolejnego przebiegu. Po końcowym doprecyzowaniu pochodnej trajektorii ponownie obejrzano strony 13–15. Ekstrakcja XML potwierdziła łącza do pozostałych tomów; zachowanie kolejności istniejących liczników i etykiet sprawdzono względem HEAD. Zaktualizowano `geometria_tom3.pdf`. Etap rozdziałów 23 i 24 zakończono.
+
+## 2026-11-18 — torus na Rysunku 23.2
+
+Na prośbę autora zastąpiono powierzchnię torusa na Rysunku 23.2 modelem z Rysunku 22.3: skopiowano parametryzację, widok 25°/28°, próbkowanie, niebieską paletę i kierunkowe cieniowanie. Pominięto znaczniki punktów krytycznych oraz przekrój, które dotyczą funkcji Morse'a na Rysunku 22.3. Dopasowano rozmiar torusa do schematu chirurgii. Numer, etykieta i podpis pozostają zachowane.
+Kontrola: złożono tom III (110 stron), bez błędów TeX-a, brakujących odsyłaczy i przepełnień; obejrzano stronę 6 z Rysunkiem 23.2. Torus i strzałka są rozdzielone, podpisy czytelne. Zaktualizowano PDF tomu III.
