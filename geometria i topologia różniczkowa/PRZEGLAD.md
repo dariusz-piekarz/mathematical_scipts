@@ -9963,3 +9963,53 @@ komunikaty o niedopełnionych wierszach poza nowym fragmentem oraz
 dwa ostrzeżenia o położeniu rysunków w tomie I. Sprawdzono nazwy
 plików w odsyłaczach między tomami i obejrzano strony PDF 70–71
 tomu III (drukowane 69–70), zawierające lemat i cały jego dowód.
+
+## 18 listopada 2026 — audyt selekcji z materiału o grafach i węzłach
+
+Przed redakcją porównano spis 36 rozdziałów pliku
+`do dodania/grafy_wezly_do_ksiazki_po_audycie.tex` z miejscami docelowymi
+czterech tomów. Wyodrębniony zakres zapisano w `PLAN_DZIALANIA.md`.
+Sprawdzono hipotezy, kolejność pojęć, rachunki i zależność od twierdzeń
+zewnętrznych w wybranych sekcjach źródła; ocena nie oznacza audytu
+wszystkich 18 510 wierszy ani ponownego pełnego audytu tomów.
+
+| Moduł | Wynik audytu i decyzja redakcyjna |
+|---|---|
+| Incydencja, $H_0,H_1$ | Dowód przez las rozpinający i formuła $m-n+c$ są poprawne. Źródło zakłada graf prosty, tom I dopuszcza pętle i krawędzie równoległe: w adaptacji pętla ma zerowy brzeg i tworzy niezależny cykl. Nie powtarzać dowodu $\pi_1(G)$ z rozdziału 7. |
+| Węzły i Wirtinger | Definicje i lokalna relacja przejścia nad/pod są użyteczne; formalny dowód algorytmu wymaga van Kampena dla rozkładu zewnętrza. Przykład trójlistnika musi wskazywać konkretne relacje, zamiast wyprowadzać grupę z samego wyglądu diagramu. Doprecyzować orientację i długość preferowaną. |
+| Seifert i Alexander | Macierz $V$ oraz rachunek $\det(tV-V^{\mathsf T})$ dla trójlistnika sprawdzono wprost. Niezależność wielomianu od powierzchni Seiferta wymaga twierdzenia o równoważności $S$ lub modułu z nakrycia cyklicznego; w krótkim dodatku zaznaczyć ją jako wynik zewnętrzny. Symetrię i normalizację wyprowadzić z $V-V^{\mathsf T}$. |
+| Graf Reeba | Rachunek $2e=c_0+c_2+3c_1$ i $b_1=g$ jest poprawny dla prostej funkcji Morse'a na spójnej, zamkniętej, orientowalnej powierzchni. Nie przenosić go na dowolną rozmaitość ani na poziomy z kilkoma punktami krytycznymi. Odróżnić graf Reeba od twierdzenia Reeba o dwóch punktach. |
+| Plumbing i $C_p$ | Macierz wag i przecięć, rekurencja minorów $d_k=2d_{k-1}-d_{k-2}=1+k(p+1)$, $\det Q_p=(-1)^{p-1}p^2$, ujemna określoność i $H_1(\partial C_p)\cong\Z/p^2$ są poprawne. Sam wyznacznik nie identyfikuje przestrzeni soczewkowej: potrzebny ułamek łańcuchowy i konwencja orientacji. Pierwotny tekst Fintushela--Sterna używa odmiennego zapisu orientacji przestrzeni soczewkowej; w skrypcie $L(n,q)$ oznacza $n/q$-chirurgię i odpowiednio orientujemy $B_p$. Istnienie tej kuli jest zewnętrzną konstrukcją Cassona--Harera. |
+| Kontrakcja wymierna | Z rozkładu $X=W\cup C_p$ i wymiernej sfery homologicznej na brzegu wynikają $\Delta\chi=-(p-1)$ i $\Delta\sigma=p-1$. Sama prosta spójność $X$ nie gwarantuje prostej spójności $W$; warunek na $\pi_1(W)$ podać jawnie. Nie utożsamiać liczby $2\chi+3\sigma$ z $c_1^2$ bez struktury prawie zespolonej. |
+| Chirurgia wzdłuż węzła | Warunek sklejenia meridianu torusa z długością preferowaną, rachunek homologii i przykład K3 nadają się do tomu IV. Formuła SW jest głębokim wynikiem Fintushela--Sterna, nie konsekwencją samej sekwencji Mayera--Vietorisa. Trzeba zachować hipotezy o torusie w otoczeniu cusp, dopełnieniu i $b_2^+>1$ oraz użyć zmiennej $\exp(2[T])$. Przykład nie rozstrzyga par o równych wielomianach Alexandera. |
+
+Źródła pierwotne dla głębokich wejść:
+[Hatcher, *Algebraic Topology*, §1.2, ćw. 22](https://pi.math.cornell.edu/~hatcher/AT/ATch1.pdf)
+dla prezentacji Wirtingera;
+[Witten, *Monopoles and Four-Manifolds*](https://arxiv.org/abs/hep-th/9411102),
+[Casson--Harer, *Some homology lens spaces which bound rational homology balls*](https://msp.org/pjm/1981/96-1/pjm-v96-n1-p03-s.pdf),
+[Fintushel--Stern, *Rational blowdowns of smooth 4-manifolds*](https://arxiv.org/abs/alg-geom/9505018)
+oraz [Fintushel--Stern, *Knots, Links, and 4-Manifolds*](https://arxiv.org/abs/dg-ga/9612014).
+Definicje i elementarne rachunki będą zapisane z pełnym uzasadnieniem;
+przy twierdzeniach zewnętrznych tekst ma wyraźnie oznaczać granicę dowodu.
+Pomijamy powtórzenie $E_8$, wypełnienia Dehna oraz pełne rozdziały
+o niezmiennikach Jonesa i Khovanova. Analityczna konstrukcja moduli SW
+i szczegółowy przykład Parka wymagają osobnej iteracji, co zapisano
+w planie tomu IV.
+
+### Kontrola wykonanej integracji
+
+`buduj_tomy.ps1` zakończył trzy przebiegi czterech tomów kodem 0;
+pliki `.aux` ustabilizowały się, a skrypt skopiował końcowe PDF-y.
+Tomy I–IV mają odpowiednio 271, 268, 107 i 107 stron A4.
+Indeksy przyjęły odpowiednio 131, 122, 33 i 110 haseł,
+bez odrzuceń oraz ostrzeżeń. W końcowych logach nie ma
+błędów TeX-a, `Overfull`, brakujących znaków ani nierozwiązanych
+odsyłaczy. Wyrenderowano i obejrzano stronę 216 tomu I,
+strony 216–218 i 253 tomu II oraz cały rozdział 39
+na stronach 78–82 tomu IV. Diagram skrzyżowania, graf Reeba,
+graf $C_p$, wzory i odsyłacze pozostają czytelne.
+W ekstrakcji XML końcowych PDF potwierdzono łącze z tomu II
+do tomu IV oraz łącza z rozdziału 39 do tomów I i II.
+Po ostatniej korekcie językowej w dowodzie o grafie Reeba
+sprawdzono jej obecność w końcowym PDF tomu II.

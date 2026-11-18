@@ -13,7 +13,7 @@ geometria_i_topologia_rozniczkowa.tex   kolejność części i początek/koniec 
 geometria_tom1.tex                    tom I: rozdziały 1–10
 geometria_tom2.tex                    tom II: rozdziały 11–22
 geometria_tom3.tex                    tom III: rozdziały 23–30
-geometria_tom4.tex                    tom IV: rozdziały 31–38 i dodatki
+geometria_tom4.tex                    tom IV: rozdziały 31–39 i dodatki
 buduj_tomy.ps1                        pełny skład czterech tomów i indeksów
 tex/
   preambula.tex                      pakiety, makra, kolory, liczniki i nagłówki
@@ -34,6 +34,7 @@ tex/
   rozdzialy/33-freedman-klasyfikacja.tex  klasyfikacja Freedmana
   rozdzialy/34-donaldson.tex          przeszkoda Donaldsona
   rozdzialy/35-egzotyczne-r4.tex       egzotyczne R⁴, włączone do składu
+  rozdzialy/36-grafy-wezly-cztery.tex  plumbing, kontrakcja wymierna, chirurgia wzdłuż węzła
   dodatki/a-zaleznosci-zewnetrzne.tex  dodatek o wynikach zewnętrznych
   dodatki/b-homologia-singularna-euler.tex  dodatek o homologii singularnej i cesze Eulera
   dodatki/c-algebry_grupy_macierzowe.tex  grupy macierzowe i ich wymiary
@@ -51,7 +52,7 @@ unikalne w całej książce. Nowy rozdział wymaga dodania pliku i odpowiedniego
 `\input` w pliku głównym tomu oraz dokumencie zbiorczym. Rysunki TikZ
 pozostają przy omawiającym je tekście.
 
-Dokument zbiorczy obejmuje 38 rozdziałów w pięciu częściach
+Dokument zbiorczy obejmuje 39 rozdziałów w pięciu częściach
 i trzy dodatki. Rozdział o Donaldsonie poprzedza rozdział o egzotycznych
 strukturach na $\R^4$; oba są na liście importów.
 Cztery tomy zachowują numery rozdziałów i etykiety dokumentu zbiorczego.

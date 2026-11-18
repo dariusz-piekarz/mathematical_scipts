@@ -1,10 +1,10 @@
 # Aktualny plan i pokrycie przeglądem
 
 Stan: 18 listopada 2026. Gałąź: `review/rozdzialy-matematyka`.
-Książka ma **38 rozdziałów, pięć części i trzy dodatki**. Numery w nazwach
+Książka ma **39 rozdziałów, pięć części i trzy dodatki**. Numery w nazwach
 plików są historyczne; numer w PDF ustala kolejność importów.
 Skład roboczy podzielono na cztery tomy: rozdziały 1–10, 11–22,
-23–30 oraz 31–38 z dodatkami. Plik zbiorczy pozostaje dostępny
+23–30 oraz 31–39 z dodatkami. Plik zbiorczy pozostaje dostępny
 do okazjonalnego składu.
 
 To jedyna bieżąca lista zadań i propozycji. Uzasadnienia zmian oraz wyniki
@@ -12,6 +12,35 @@ sprawdzania konkretnych wersji są w [PRZEGLAD.md](PRZEGLAD.md), a budowanie
 i organizacja plików w [README.md](README.md).
 
 ## Bieżący zakres i kolejność
+
+### Grafy, węzły i wymiar cztery (18 listopada; selekcja, audyt i integracja)
+
+Źródło: `do dodania/grafy_wezly_do_ksiazki_po_audycie.tex` (36 rozdziałów,
+18 510 wierszy). Zintegrowano wybrane moduły bez przenoszenia całego
+równoległego podręcznika. Zakres po audycie: (1) macierz incydencji i homologia grafu w rozdziale 8
+tomu I; (2) podstawy węzłów, diagramów, grupy węzła i wielomianu Alexandera przy izotopiach
+w rozdziale 20 tomu II; (3) graf Reeba i rodzaj powierzchni przy twierdzeniu
+Reeba w rozdziale 22 tomu II; (4) nowy rozdział tomu IV po egzotycznych
+$\R^4$, obejmujący graf plumbingowy, model $C_p$ i wymierną kontrakcję,
+oraz chirurgię wzdłuż węzła i jej związek z niezmiennikiem
+Seiberga--Wittena. Przy wynikach Fintushela--Sterna i Cassona--Harera
+podano pełne hipotezy i status wyniku zewnętrznego.
+Kontrolę składu czterech tomów, indeksów, odsyłaczy i stron z nowymi
+rysunkami zakończono; wyniki są w `PRZEGLAD.md`.
+
+Tom IV wymaga szczególnego uzupełnienia: obecne rozdziały 34--38
+obliczają formy i omawiają Freedmana, Donaldsona oraz egzotyczne $\R^4$,
+ale nie rozwijają konstrukcji gładkich *zamkniętych* czterorozmaitości.
+Wybrane moduły tworzą przejście od diagramu uchwytów do dwóch różnych
+operacji dających takie przykłady. Dalej w kolejce pozostają dokładny
+przykład Parka, komory $b_2^+=1$, uogólnione $C_{p,q}$ i analityczny
+dowód teorii SW; wymagają odrębnego przeglądu źródeł i hipotez.
+Graf dualny w rozdziale 29 można dopracować przy audycie tego rozdziału.
+Rozdziały o Mengerze, Hallu, Tuttem, Jonesie, Khovanovie, JSJ i pełnym
+rachunku Kirby'ego pozostają materiałem do osobnego skryptu.
+
+Audyt wybranych fragmentów i konkretne korekty zapisano w `PRZEGLAD.md`.
+Nie jest to ponowny audyt całych rozdziałów, do których trafiają dodatki.
 
 ### Integracja rysunków chirurgii i materiału o spinorach (18 listopada)
 
@@ -474,7 +503,7 @@ ze zmienionymi rysunkami.
    Mapa syntetyzuje istniejące wyniki; wariant TOP pozostaje
    jawnym wejściem zewnętrznym.
 
-### Tom IV — wymiary trzy i cztery, rozdziały 31–38 i dodatki
+### Tom IV — wymiary trzy i cztery, rozdziały 31–39 i dodatki
 
 1. **Rozdziały 34–36 — droga do klasyfikacji TOP; etap zakończony 28 października.**
    W rozdziale 34 dodano diagram obramowanego splotu Hopfa i niewęzła,
@@ -658,11 +687,12 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 36. Klasyfikacja Freedmana (plik 33) | `33-freedman-klasyfikacja.tex` | Pełny audyt zakończony 27 października; uzupełnienia z 28 i 29 października sprawdzono osobno | W audycie sprawdzono klasyfikację TOP, wzór $\operatorname{ks}\equiv\sigma/8$, zakres twierdzenia o zanurzaniu sfer, rachunek $\pi_1$ chirurgii, wniosek Poincarégo i przykłady $H$, $[1]$, $E_8$, $2E_8$. Nowy schemat porządkuje drogę od dysków i wież Cassona do klasyfikacji w przypadku $\pi_1=1$, a tabela zestawia parzystość, sygnaturę, $\operatorname{ks}$ i istnienie wygładzenia, w tym oba typy o formie $[1]$; nie ponowiono audytu całego rozdziału. 29 października rozpisano sklejanie plumbowania $E_8$ z kontraktowalnym wypełnieniem i konstrukcję drugiego typu $[1]$ przez twierdzenie o rozkładzie sumy spójnej. Poprawiono opis sfer zerowych plumbowania i objaśniono mechanizm jednoznaczności. Rozróżnienie oryginalnego twierdzenia Freedmana od pełnej wersji Freedmana--Quinna zachowano; wypełnienie, rozkład, klasyfikacja, zanurzanie i topologiczny $s$-kobordyzm pozostają zewnętrzne. |
 | 37. Donaldson (plik 34) | `34-donaldson.tex` | Pełny audyt wcześniejszej treści zakończony 27 października; osobne uzupełnienia z 28 i 29 października | W audycie sprawdzono lokalność trywializacji, ASD, całkowity $c_1$, znaki $c_2$ i energii, orientację w źródłowym dowodzie oraz wnioski $E_8$ i $2E_8$. Przykład BPST oblicza krzywiznę, energię $8\pi^2$, $c_2=1$ i przedłużenie na $S^4$. Uzupełnienie z 29 października rozpisuje kompleks deformacji, liczbę redukcji, model linku $\C P^2$, granicę z jednym bąblem i dowód $\sigma(\partial W)=0$. Pakiet perturbacji, zwartości, kołnierza i orientacji oraz twierdzenie Donaldsona pozostają zewnętrzne; nie ponawiano audytu całego rozdziału. |
 | 38. Egzotyczne $\R^4$ (plik 35) | `35-egzotyczne-r4.tex` | Pełny audyt wcześniejszej treści zakończony 27 października; uzupełnienie i jego skład sprawdzono 28 października | W audycie sprawdzono obie przeszkody Gompfa, lematy 1.1–1.2, rachunek dopełnienia charakterystycznego wektora i indukcję ze zwartymi świadkami. Nowy opis małej rodziny rozdziela topologiczny promień, wspólny zwarty rdzeń $K$, zewnętrzną analizę końców okresowych i przeliczalność klas izotopii osadzeń $K$. Diagram zestawia tę drogę z dużą rodziną Gompfa oraz zachowuje warunki orientacji i ogolenia. Twierdzenia o uchwytach Cassona, wyniki Freedmana, Gompfa oraz De Michelisa–Freedmana pozostają zewnętrzne; nie ponawiano audytu całego rozdziału. |
+| 39. Grafy i węzły w wymiarze cztery (plik 36) | `36-grafy-wezly-cztery.tex` | Nowy rozdział z selekcyjnego audytu 18 listopada | Łączy graf plumbingowy z formą przecięcia i homologią brzegu, rachunek łańcucha $C_p$, kontrakcję wymierną, elementarne wprowadzenie do SW i chirurgię wzdłuż węzła z przykładem egzotycznych K3. Twierdzenia Cassona--Harera i Fintushela--Sterna mają status zewnętrzny; szczegóły w `PRZEGLAD.md`. |
 | Podział źródeł i importy | — | Zakończono, `9148128` | Kontrola regresji przy dalszych zmianach |
 | Dodatek A o wynikach zewnętrznych | — | Pełny niezależny audyt zakończono 25 października; nowe wejścia z 28 i 29 października sprawdzano osobno; 4 listopada skorygowano zakres cytowania Kervaire'a--Milnora | Skorygowano zakres Walla do $n\geq5$ i rozdzielono kryterium od twierdzeń realizacyjnych. Uzupełniono wersję $h$, Rothenberga, ciąg chirurgii, Whiteheada, miarę Hausdorffa i Haara, Ambrose'a--Singera, globalny de Rham, normalizację Cherna--Weila, wejścia Bardena, Eellsa--Kuipera, Kervaire'a--Milnora i Quinna. Doprecyzowano hipotezy w wymiarach 3 i 4. Nowe wpisy dokumentują chirurgię okręgu, rozszczepienie Shanesona--Ranickiego, wynik Milnora dla $C_5$, kontraktowalne wypełnienie i rozkład sumy spójnej Freedmana--Quinna. Wpis Donaldsona oddziela regularność, model redukcji, kompaktifikację, kołnierz i orientację od rachunków wykonanych w rozdziale; nie ponawiano audytu całego dodatku. |
 | Dodatek B: homologia singularna i Euler | — | Pełny niezależny audyt zakończono 25 października | Rachunki są poprawne. Nazwano użyty homeomorfizm, uzasadniono skończony model CW kobordyzmu z rozkładu uchwytowego i dodano konsekwencję dualności Poincarégo $\chi(M)=0$ w nieparzystym wymiarze. Odsyłacze do rozdziałów 8, 21 i 23 oraz strony 155–158 sprawdzono. |
 | Dodatek C: grupy macierzowe | — | Definicje, algebry i wymiary sprawdzone 8 października; tabela czytelna w PDF | Przy dalszej rozbudowie zachować rozróżnienie wymiaru rzeczywistego i zespolonego oraz $Sp(n)$ od $Sp(2n,\mathbb K)$ |
-| Końcowa kontrola całości | — | Częściowo: ujednolicono „Dalszą lekturę”, sprawdzono odsyłacze do źródeł; 4 listopada sprawdzono mapę, importy, etykiety oraz wskazane oznaczenia i terminy | Pełna ponowna lektura merytoryczna wszystkich 38 rozdziałów pozostaje otwarta. Skład, indeks i PDF sprawdzane przy każdym etapie; zakres wykonanej kontroli opisuje `PRZEGLAD.md`. |
+| Końcowa kontrola całości | — | Częściowo: ujednolicono „Dalszą lekturę”, sprawdzono odsyłacze do źródeł; 4 listopada sprawdzono mapę, importy, etykiety oraz wskazane oznaczenia i terminy | Pełna ponowna lektura merytoryczna całego skryptu, obecnie 39 rozdziałów, pozostaje otwarta. Skład, indeks i PDF sprawdzane przy każdym etapie; zakres wykonanej kontroli opisuje `PRZEGLAD.md`. |
 
 ## Rejestr pojęć do decyzji autora
 

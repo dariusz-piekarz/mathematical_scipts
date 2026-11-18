@@ -1898,3 +1898,63 @@ tekst i XML, po czym sprawdzono odsyłacze do tomów I i II. Znane
 ostrzeżenia `Underfull`, zduplikowany cel `page.1` oraz dwa ostrzeżenia
 tomu I o zmianie specyfikatora rysunku z `h` na `ht` były obecne przed
 tym etapem i nie dotyczą zmienionych stron.
+
+## 18 listopada 2026 — grafy, węzły i nowe konstrukcje wymiaru cztery
+
+### Problem i wybór zakresu
+
+Dostarczony plik `do dodania/grafy_wezly_do_ksiazki_po_audycie.tex` ma
+36 rozdziałów i 18 510 wierszy. Jego znaczna część powtarza podstawy
+grafów, wypełnienia Dehna lub formę $E_8$ już obecną w tomach.
+Audyt spisu i wybranych fragmentów wykazał natomiast brak konkretnego
+rachunku homologii grafu, krótkiego wejścia do diagramów i wielomianu
+Alexandera, grafu Reeba oraz zamkniętych konstrukcji czterowymiarowych.
+Zakres i dalsze etapy zapisano w `PLAN_DZIALANIA.md`, a hipotezy,
+rachunki i źródła pierwotne w `PRZEGLAD.md`.
+
+### Zmiany i uzasadnienie
+
+- W rozdziale 8 dodano macierz incydencji i dowód
+  $H_0(|G|)=\Z^c$, $H_1(|G|)=\Z^{m-n+c}$ przez las rozpinający.
+  Adaptacja obejmuje pętle i krawędzie równoległe, zgodnie z definicją
+  grafu w rozdziale 7; źródło dodatkowe zakładało tylko graf prosty.
+- W rozdziale 20 dodano definicje węzła, splotu, diagramu, meridianu
+  i długości preferowanej, twierdzenia Reidemeistera i Wirtingera,
+  rachunek grupy trójlistnika oraz macierz Seiferta i wielomian
+  Alexandera z obliczeniem dla trójlistnika. Rozróżniono dowody
+  elementarne od klasycznego twierdzenia o niezmienniczości $\Delta_K$.
+- W rozdziale 22 dodano graf Reeba prostej funkcji Morse'a i dowód
+  równości $b_1(R_f)=g$ dla zamkniętej powierzchni orientowalnej.
+  Jawne hipotezy zapobiegają błędnemu przenoszeniu wzoru na inne
+  powierzchnie lub funkcje z wieloma punktami krytycznymi na poziomie.
+- Nowy rozdział 39 tomu IV wyprowadza formę i homologię brzegu
+  plumbingowego drzewa, rachunek konfiguracji $C_p$ i zmianę
+  $\chi,\sigma,b_2^\pm$ po wymiernej kontrakcji. Wprowadza równania
+  Seiberga--Wittena tylko w zakresie potrzebnym do formuły chirurgii
+  wzdłuż węzła; na K3 daje rodzinę homeomorficznych,
+  niedyfeomorficznych przykładów. Konstrukcję $B_p$ i formułę
+  Fintushela--Sterna oznaczono jako głębokie wyniki zewnętrzne.
+- Dodano import nowego rozdziału do tomu IV i składu zbiorczego,
+  przejście w rozdziale 38, mapę skryptu oraz aktualizacje `README.md`,
+  `AGENTS.md` i `PLAN_DZIALANIA.md` do 39 rozdziałów.
+
+Kompromis: uogólnione konfiguracje $C_{p,q}$, dokładny przykład Parka
+i analityczny dowód teorii Seiberga--Wittena pozostają w planie
+jako osobne audyty. Nie przypisujemy nowemu rozdziałowi dowodów tych
+głębokich wyników. Materiał o Mengerze, Hallu, Tuttem i innych
+niezmiennikach węzłów jest odpowiedniejszy do osobnego skryptu.
+
+### Weryfikacja
+
+Wykonano kontrolę etykiet i odsyłaczy nowego rozdziału oraz
+rekurencji wyznacznika $C_p$ dla $p=2,\ldots,8$;
+wszystkie wartości zgadzają się z $p^2$.
+`buduj_tomy.ps1` zakończył trzy przebiegi czterech tomów kodem 0.
+PDF-y mają 271, 268, 107 i 107 stron A4; indeksy przyjęły
+131, 122, 33 i 110 haseł bez odrzuceń i ostrzeżeń.
+Końcowe logi nie zawierają błędów TeX-a, `Overfull`, brakujących
+znaków ani nierozwiązanych odsyłaczy. Obejrzano końcowe strony
+z nową homologią grafu, diagramem węzła, wielomianem Alexandera,
+grafem Reeba oraz wszystkie strony rozdziału 39.
+Sprawdzono łącza PDF między tomami I, II i IV. Szczegóły i granice
+audytu są w `PRZEGLAD.md`.

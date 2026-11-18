@@ -2058,3 +2058,44 @@ co Banach--Tarski; osobno nie pobiera się danych. Z katalogu
 `teoria modeli` uruchom dwa przebiegi `pdflatex` z bloku powyżej.
 Jeśli Perl z Git for Windows jest w `PATH`, można zamiast tego
 użyć `latexmk -pdf`; tej alternatywy nie wykonano w tym audycie.
+
+## Geometria i topologia różniczkowa — grafy, węzły i wymiar cztery (18 listopada 2026)
+
+Katalog projektu: `C:\Users\DXD\Desktop\projekty\Latex\mathematical_scipts\geometria i topologia różniczkowa`.
+Źródła czterech tomów to `geometria_tom1.tex`–`geometria_tom4.tex`;
+nowy rozdział 39 jest w `tex/rozdzialy/36-grafy-wezly-cztery.tex`.
+Materiał wejściowy znajdował się w `do dodania/grafy_wezly_do_ksiazki_po_audycie.tex`.
+Nie pobierano w tej iteracji danych ani nowych pakietów.
+
+Na tym stanowisku sprawdzono: Windows PowerShell 5.1.19041.6456,
+Git for Windows 2.55.0, MiKTeX 25.12, pdfTeX 4.23, `latexmk` 4.88
+i Perl 5.42.3 z `C:\Program Files\Git\usr\bin`.
+Polecenie `latexmk` wywołane bezpośrednio z bieżącej powłoki nie
+znajdowało Perla. Skrypt `buduj_tomy.ps1` sam dodaje katalog Perla
+z Git for Windows do `PATH`, gdy jest to potrzebne.
+
+### Polecenia wykonane
+
+Z katalogu głównego repozytorium:
+
+```powershell
+git fetch origin review/rozdzialy-matematyka
+Set-Location -LiteralPath 'geometria i topologia różniczkowa'
+powershell -NoProfile -ExecutionPolicy Bypass -File .\buduj_tomy.ps1
+```
+
+Skrypt uruchamia `latexmk` dla czterech tomów, powtarza przebiegi do
+ustabilizowania plików `.aux`, sprawdza odsyłacze i odrzucone hasła
+indeksu, a następnie kopiuje końcowe PDF do katalogu projektu.
+Logi i pomocnicze pliki składu są w `build/tomy/`.
+
+### Instrukcja przygotowana do samodzielnego wykonania
+
+Na innym stanowisku zainstaluj MiKTeX z użytymi przez projekt pakietami
+LaTeX, `latexmk`, Perl oraz Poppler (`pdfinfo`, `pdftotext`, `pdftoppm`).
+Ustaw `PATH` tak, aby polecenia `latexmk`, `pdflatex`, `perl` i narzędzia
+Popplera były dostępne. Następnie przejdź do katalogu projektu i uruchom
+`powershell -NoProfile -ExecutionPolicy Bypass -File .\buduj_tomy.ps1`.
+Skrypt wymaga także dostępu do plików źródłowych wszystkich tomów, gdyż
+odsyłacze są rozwiązywane między tomami. Kroki instalacji zależności
+na nowym stanowisku przygotowano jako instrukcję; nie wykonywano ich tutaj.
