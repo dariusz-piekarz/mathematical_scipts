@@ -1,0 +1,350 @@
+\chapter{Graf jako przestrzeń topologiczna}
+\label{ch:tg-topology}
+
+Dotychczas traktowaliśmy graf jako zbiór wierzchołków i krawędzi.
+Od teraz każdą krawędź zastępujemy rzeczywistym odcinkiem.
+Tak powstała przestrzeń jest jednowymiarowym kompleksem CW.
+Dla topologii ważne jest, że nawet jeśli narysujemy graf
+na płaszczyźnie z przecięciami, nie wprowadzamy tam
+nowych wierzchołków bez wyraźnej identyfikacji.
+
+\section{Kompleks CW, charakterystyka Eulera i zwijanie drzewa}
+\label{sec:tg-collapse-tree}
+
+Przypomnijmy konstrukcję realizacji geometrycznej $|G|$
+z pierwszego rozdziału: dla każdego $v\in V$ bierzemy
+$0$-komórkę, a dla każdej krawędzi $e$ odcinek z końcami
+doklejonymi do odpowiednich wierzchołków. Krawędzie
+równoległe i pętle również dają poprawne CW-kompleksy,
+gdy zachowamy osobne odcinki i odrębnie określimy mapy
+przyklejania ich końców.
+
+\begin{definicja}[Charakterystyka Eulera]
+Dla skończonego kompleksu CW $X$ oznaczamy przez $c_k(X)$
+liczbę jego otwartych $k$-komórek i definiujemy
+$\chi(X)=\sum_{k\ge0}(-1)^k c_k(X)$.
+Dla realizacji skończonego grafu $G$ otrzymujemy
+$\chi(|G|)=|V(G)|-|E(G)|$.
+\end{definicja}
+
+\begin{lemat}[Zwinięcie kontraktowalnego podkompleksu]
+\label{lem:tg-collapse-CW}
+Niech $X$ będzie kompleksem CW, a $A\subseteq X$
+niepustym, kontraktowalnym podkompleksem CW.
+Wtedy naturalne odwzorowanie ilorazowe $q:X\to X/A$
+jest równoważnością homotopijną.
+\end{lemat}
+
+\begin{proof}
+Ponieważ $(X,A)$ jest parą CW, ma własność przedłużania
+homotopii: każdą homotopię $A\times[0,1]\to X$,
+rozpoczynającą się od włożenia $A\hookrightarrow X$,
+można przedłużyć do homotopii $H:X\times[0,1]\to X$
+z $H_0=\operatorname{id}_X$. Wybieramy kontrakcję
+$A$ do punktu $a_0\in A$, tak aby $H_t(A)\subseteq A$
+i $H_1(A)=\{a_0\}$. Wtedy $H_1$ jest stałe na $A$,
+więc faktoryzuje się przez iloraz jako $H_1=g\circ q$
+dla pewnego ciągłego $g:X/A\to X$.
+
+Z jednej strony $gq=H_1\simeq\operatorname{id}_X$.
+Z drugiej strony $qH_t$ jest stałe na $A$ dla każdego $t$,
+więc daje homotopię na ilorazie od
+$\operatorname{id}_{X/A}$ do $qg$.
+Stąd również $qg\simeq\operatorname{id}_{X/A}$.
+Obie równości homotopijne dowodzą tezy.
+\end{proof}
+
+\begin{uwaga}
+W dowodzie użyto standardowej własności par CW.
+Zwijanie dowolnego kontraktowalnego podzbioru przestrzeni
+bez założenia o podkompleksie lub odpowiednim warunku
+kofibracji nie musi dawać równoważności homotopijnej. Warunek ten jest istotny.
+\end{uwaga}
+
+\begin{twierdzenie}[Graf jest homotopijnie równoważny bukietowi okręgów]
+\label{thm:tg-wedge}
+Niech $G$ będzie skończonym spójnym grafem prostym
+z $n\ge1$ wierzchołkami i $m$ krawędziami.
+Dla dowolnego drzewa rozpinającego $T\subseteq G$
+przestrzeń $|G|$ jest homotopijnie równoważna bukietowi
+$\bigvee_{j=1}^{m-n+1}S^1$.
+Przy zerowej liczbie okręgów bukiet oznacza pojedynczy punkt.
+\end{twierdzenie}
+
+\begin{proof}
+Drzewo $T$ jest kontraktowalne. Aby to zobaczyć,
+można kolejno usuwać otwarte krawędzie przylegające
+do liścia, przesuwając każdy liść wzdłuż jego jedynej
+krawędzi do sąsiedniego wierzchołka. Ponieważ drzewo
+jest skończone, po skończonej liczbie deformacji
+pozostaje pojedynczy wierzchołek.
+
+Z lematu \ref{lem:tg-collapse-CW} iloraz
+$q:|G|\to|G|/|T|$ jest równoważnością homotopijną.
+W ilorazie wszystkie wierzchołki drzewa, czyli wszystkie
+wierzchołki $G$, stają się jednym punktem.
+Każda krawędź spoza $T$ pozostaje odcinkiem, którego
+oba końce zostały ze sobą utożsamione, a więc tworzy
+okrąg. Różne okręgi mają wspólny tylko ten punkt.
+Ich liczba wynosi $m-(n-1)=m-n+1$.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[scale=.96,line cap=round,>=Stealth]
+ \node[tgBlueVertex] (a) at (-3.9,.8) {$a$};
+ \node[tgBlueVertex] (b) at (-2.1,1.25) {$b$};
+ \node[tgBlueVertex] (c) at (-1.8,-.65) {$c$};
+ \node[tgBlueVertex] (d) at (-3.7,-.8) {$d$};
+ \draw[tgTree] (a)--(b)--(c)--(d);
+ \draw[tgAccent] (d)--(a) (a)--(c);
+ \draw[tgTeal,-{Stealth[length=2.6mm]},line width=1.6pt] (-.85,.15)--(.25,.15);
+ \node[font=\footnotesize,text=tgNavy] at (-.25,.51) {zwiń $T$};
+ \node[tgBlueVertex] (o) at (2.0,.15) {$*$};
+ \draw[tgAccent,line width=2pt] (o) .. controls (1.2,1.9) and (3.6,1.9) .. (o);
+ \draw[tgAccent,line width=2pt] (o) .. controls (1.2,-1.4) and (3.6,-1.4) .. (o);
+ \node[font=\footnotesize,text=tgNavy] at (1.95,-1.78) {bukiet dwóch okręgów};
+\end{tikzpicture}
+
+{\footnotesize Zwijamy zielone drzewo. Dwie czerwone krawędzie
+pozostają generatorami dwóch niezależnych okręgów.}
+\end{center}
+
+\section{Grupa fundamentalna grafu}
+\label{sec:tg-pi1}
+
+\begin{definicja}[Grupa wolna]
+Dla zbioru $S$ przez $F(S)$ oznaczamy grupę, której elementami
+są zredukowane słowa z liter $s$ i $s^{-1}$, $s\in S$,
+z mnożeniem przez konkatenację i redukcję sąsiadujących par
+$s s^{-1}$ lub $s^{-1}s$. Dla $|S|=r<\infty$ piszemy $F_r$.
+Grupą $F_0$ jest grupa trywialna.
+\end{definicja}
+
+\begin{twierdzenie}[Grupa fundamentalna skończonego grafu]
+\label{thm:tg-free-pi1}
+Niech $G$ będzie skończonym spójnym grafem prostym,
+a $x_0\in|G|$ dowolnym punktem bazowym. Jeżeli
+$\beta=m-n+1$, to $\pi_1(|G|,x_0)\cong F_\beta$.
+W szczególności $|G|$ jest po prostu spójna wtedy i tylko
+wtedy, gdy $G$ jest drzewem.
+\end{twierdzenie}
+
+\begin{proof}
+Wybierzmy drzewo rozpinające $T$ i wierzchołek bazowy
+$r\in T$. Poprzednie twierdzenie daje równoważność
+homotopijną $|G|\simeq\bigvee_\beta S^1$.
+Grupa fundamentalna bukietu $\beta$ okręgów jest wolna
+na $\beta$ generatorach. Przypomnijmy uzasadnienie
+przez twierdzenie van Kampena: dla każdego okręgu
+wybieramy otoczenie jego wnętrza wraz z niewielkim wspólnym
+otoczeniem punktu sklejenia. Każde takie otoczenie wnosi
+jeden generator $\mathbb Z$, a przecięcia, po odpowiednim
+zmniejszeniu otoczeń, są ściągalne, więc nie nakładają
+żadnych dodatkowych relacji. Iteracja van Kampena
+daje wolny iloczyn $\mathbb Z*\cdots*\mathbb Z=F_\beta$.
+
+Generatorowi odpowiada pętla: od $r$ idziemy po jedynej
+ścieżce drzewowej do początku wybranej krawędzi
+$e\notin T$, przechodzimy $e$ i wracamy po drzewie do $r$.
+Zmiana punktu bazowego wewnątrz spójnego $|G|$ nie zmienia
+typu izomorfizmu grupy fundamentalnej.
+
+Jeśli $\beta=0$, graf nie ma cykli i jest drzewem.
+Gdy $\beta\ge1$, grupa $F_\beta$ zawiera nietrywialną
+pętlę, a więc $|G|$ nie jest po prostu spójna.
+\end{proof}
+
+\begin{przyklad}[Trójkąt i graf theta]
+Dla trójkąta $K_3$ mamy $n=m=3$ i $\beta=1$.
+Zatem $|K_3|\simeq S^1$ oraz
+$\pi_1(|K_3|)\cong\mathbb Z$.
+
+Graf theta składa się z dwóch wierzchołków połączonych
+trzema różnymi krawędziami (jest to multigraf bez pętli).
+Ma $n=2$, $m=3$, więc $\beta=2$.
+Jego realizacja jest homotopijnie równoważna bukietowi
+dwóch okręgów, a grupa fundamentalna jest izomorficzna
+z wolną grupą $F_2$, która jest nieprzemienna.
+To pokazuje, że przestrzenie jednowymiarowe mogą mieć
+nietrywialne, nawet nieprzemienne grupy fundamentalne.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[scale=.98,line cap=round]
+ \node[tgBlueVertex] (u) at (-1.75,0) {$u$};
+ \node[tgBlueVertex] (v) at (1.75,0) {$v$};
+ \draw[tgBlue,line width=2.1pt] (u) to[bend left=48] (v);
+ \draw[tgTeal,line width=2.1pt] (u)--(v);
+ \draw[tgCoral,line width=2.1pt] (u) to[bend right=48] (v);
+ \node[text=tgNavy,font=\footnotesize] at (0,-1.22) {graf theta, $\pi_1\cong F_2$};
+\end{tikzpicture}
+\end{center}
+
+\section{Nakrycie uniwersalne i drzewa}
+\label{sec:tg-universal-cover}
+
+Sytuacja staje się jeszcze ciekawsza, gdy zastąpimy skończony graf
+jego nakryciem. Nakrycie jest lokalnie takie samo, ale może mieć
+nieskończenie wiele wierzchołków i krawędzi.
+
+\begin{definicja}[Nakrycie grafów]
+Dla grafów $\widetilde G,G$ o realizacjach geometrycznych
+odwzorowanie ciągłe i surjektywne
+$p:|\widetilde G|\to|G|$ nazywamy
+\emph{nakryciem grafowym}, jeżeli przenosi wierzchołki na
+wierzchołki, każdą otwartą krawędź homeomorficznie na
+otwartą krawędź, jest zgodne z odwzorowaniem końców
+krawędzi oraz dla każdego wierzchołka
+$\widetilde v$ indukuje bijekcję między zbiorami
+\emph{incydencji} (końców krawędzi wychodzących z
+$\widetilde v$) i $p(\widetilde v)$.
+Dopuszczamy także grafy nieskończone, lokalnie skończone;
+każda pętla wnosi do zbioru incydencji dwa końce.
+\end{definicja}
+
+Dla realizacji jednowymiarowych podany warunek jest dokładnie
+lokalnym warunkiem nakryciowym: małe gwiazdowe otoczenie
+każdego wierzchołka ma rozłączne kopie w przestrzeni nakrywającej.
+
+\begin{twierdzenie}[Nakrycie uniwersalne realizacji grafu]
+\label{thm:tg-universal}
+Każdy spójny, skończony graf $G$ posiada spójne nakrycie
+$p:|\widetilde G|\to|G|$, w którym $\widetilde G$ jest drzewem.
+Nakrycie to jest uniwersalne.
+\end{twierdzenie}
+
+\begin{proof}[Konstrukcja ze zredukowanych ścieżek]
+Wybierzmy wierzchołek $r\in G$ i orientację pomocniczą
+krawędzi. Wierzchołkami $\widetilde G$ uczynimy wszystkie
+\emph{zredukowane spacery krawędziowe} rozpoczynające się w $r$:
+nie dopuszczamy dwóch kolejnych kroków po tej samej krawędzi
+w przeciwnych kierunkach. Spacer pusty jest korzeniem $\widetilde r$.
+Każdy taki spacer kończy się w pewnym wierzchołku $v\in G$.
+Każdy niepusty zredukowany spacer $w$ określa dokładnie
+jedną krawędź w $\widetilde G$, łączącą $w$ ze spacerem
+powstałym przez skreślenie jego ostatniego kroku.
+Tym samym nie liczymy tej samej krawędzi dwukrotnie.
+Z punktu $w$ można wykonać każdy krok po incydentnej
+krawędzi $e$ w kierunku od wierzchołka końcowego $w$:
+jeśli jest to odwrotność ostatniego kroku,
+przechodzimy do poprzednika, a w przeciwnym razie
+do spaceru uzyskanego przez dopisanie tego kroku.
+W przypadku pętli rozróżniamy oba kierunki jej przejścia.
+Różne krawędzie równoległe w $G$ pozostają rozróżnione.
+
+Rzutowanie $p$ przyporządkowuje spacerowi jego koniec w $G$,
+a każdej nowej krawędzi odpowiadającą jej krawędź bazową.
+Przy każdym wierzchołku $w$ i każdym możliwym kroku w $G$
+istnieje dokładnie jedno odpowiednie przejście w $\widetilde G$.
+Stąd $p$ spełnia warunek lokalnej bijekcji i jest nakryciem.
+
+Każdy niepusty zredukowany spacer ma jednego poprzednika:
+otrzymujemy go przez usunięcie ostatniego kroku.
+Każda inna krawędź wychodząca z tego wierzchołka wydłuża
+spacer o jeden krok. Wobec tego każdy wierzchołek można
+połączyć z $\widetilde r$ przez jednoznaczny ciąg poprzedników.
+Cykl w $\widetilde G$ musiałby mieć wierzchołek największej
+długości spaceru; miałby on na cyklu dwóch różnych sąsiadów
+o mniejszej długości, mimo że istnieje tylko jeden poprzednik.
+To niemożliwe. Zatem $\widetilde G$ jest spójnym drzewem.
+
+Realizacja drzewa jest kontraktowalna, więc po prostu spójna.
+Z definicji nakrycia uniwersalnego otrzymujemy wniosek.
+\end{proof}
+
+\begin{uwaga}[Skończoność nakrycia]
+Jeśli bazowy graf jest drzewem, jego nakrycie uniwersalne
+jest z nim izomorficzne. Jeśli graf ma cykl, nakrycie
+uniwersalne jest nieskończone: zamknięty zredukowany obieg
+można przechodzić dowolną liczbę razy, otrzymując
+coraz dłuższe różne zredukowane spacery.
+\end{uwaga}
+
+\section{Nakrycia skończone i wzór Nielsena--Schreiera}
+\label{sec:tg-finite-cover}
+
+\begin{twierdzenie}[Charakterystyka Eulera nakrycia]
+Niech $G$ będzie skończonym spójnym grafem, a
+$p:|\widehat G|\to|G|$ spójnym, $d$-kartkowym nakryciem,
+gdzie $d\ge1$ i $\widehat G$ jest grafem skończonym.
+Wtedy $|V(\widehat G)|=d|V(G)|$ oraz
+$|E(\widehat G)|=d|E(G)|$, a zatem
+$\chi(|\widehat G|)=d\chi(|G|)$.
+Jeśli $\pi_1(|G|)\cong F_r$, to
+$\pi_1(|\widehat G|)\cong F_{1+d(r-1)}$.
+\end{twierdzenie}
+
+\begin{proof}
+Każdy wierzchołek $v\in G$ ma dokładnie $d$ przeciwobrazów,
+bo liczba kartek nakrycia jest stała na spójnej bazie.
+Nad wnętrzem każdej krawędzi otrzymujemy dokładnie $d$
+rozłącznych otwartych odcinków, stanowiących wnętrza
+krawędzi $\widehat G$. To daje pierwsze dwie równości.
+Odejmując liczby komórek wymiaru jeden od liczby
+komórek wymiaru zero, dostajemy równość dla $\chi$.
+
+Graf $\widehat G$ jest spójny, zatem jego liczba cyklomatyczna
+wynosi
+$|E(\widehat G)|-|V(\widehat G)|+1
+=d(m-n)+1=1+d(r-1)$.
+Z twierdzenia \ref{thm:tg-free-pi1} grupa fundamentalna
+$\widehat G$ jest wolna o tej liczbie generatorów.
+\end{proof}
+
+\begin{przyklad}[Nakrycie trzykartkowe bukietu]
+Niech $G$ będzie bukietem dwóch okręgów, przedstawionym jako
+graf z jednym wierzchołkiem i dwiema pętlami. Dla dowolnego
+spójnego nakrycia trzykartkowego $\widehat G$ mamy
+$|V(\widehat G)|=3$, $|E(\widehat G)|=6$, a więc
+$\pi_1(|\widehat G|)\cong F_{6-3+1}=F_4$.
+W języku grup oznacza to, że podgrupa indeksu trzy
+grupy wolnej rzędu dwa jest wolna rzędu cztery.
+\end{przyklad}
+
+\begin{uwaga}[Subdywizje a nakrycia multigrafów]
+Twierdzenie o grupie fundamentalnej sformułowaliśmy wcześniej
+dla grafów prostych. Jego dowód działa również dla multigrafów
+i pętli: wystarczy podzielić każdą krawędź w dwóch różnych
+punktach, otrzymując graf prosty o tej samej realizacji
+topologicznej. Liczba $m-n+c$ nie zmienia się przy pojedynczej
+subdywizji. Dlatego obliczenie dla bukietu z pętlami
+jest szczególnym przypadkiem tej samej teorii.
+\end{uwaga}
+
+\section{Metryka długości na grafie}
+\label{sec:tg-metric}
+
+\begin{definicja}[Metryka długości]
+Niech $G$ będzie spójnym grafem skończonym. Nadajmy każdej
+krawędzi długość jeden i utożsammy ją z odcinkiem $[0,1]$.
+Długość krzywej w $|G|$ liczymy odcinkami euklidesowymi;
+przez $d_{|G|}(x,y)$ oznaczamy infimum długości krzywych
+łączących $x,y\in|G|$.
+\end{definicja}
+
+\begin{stwierdzenie}[Zgodność metryki grafowej z metryką długości]
+Dla spójnego skończonego grafu $G$ i dowolnych wierzchołków
+$u,v\in V(G)$ zachodzi $d_{|G|}(u,v)=d_G(u,v)$.
+\end{stwierdzenie}
+
+\begin{proof}
+Kombinatoryczna najkrótsza ścieżka długości $k=d_G(u,v)$
+po sklejeniu odcinków jest krzywą w $|G|$ długości $k$,
+a zatem $d_{|G|}(u,v)\le k$.
+
+Dla nierówności odwrotnej określmy na wierzchołkach funkcję
+$f(w)=d_G(u,w)$. Na końcach każdej krawędzi $ab$ mamy
+$|f(a)-f(b)|\le1$, na mocy nierówności trójkąta dla
+metryki grafowej. Przedłużmy $f$ liniowo na każdej krawędzi.
+Tak uzyskana funkcja jest $1$-Lipschitzowska na każdym
+odcinku o długości jeden. Wzdłuż dowolnej prostowalnej
+krzywej $\gamma$ w $|G|$ zmiana jej wartości nie może
+przekroczyć długości $\gamma$: wynika to przez podział
+krzywej na fragmenty zawarte w krawędziach, a następnie
+przez aproksymację dowolnej krzywej skończonymi takimi
+fragmentami. W konsekwencji
+$k=|f(v)-f(u)|\le\operatorname{len}(\gamma)$.
+Biorąc infimum po wszystkich $\gamma$, otrzymujemy
+$d_{|G|}(u,v)\ge k$.
+\end{proof}
+

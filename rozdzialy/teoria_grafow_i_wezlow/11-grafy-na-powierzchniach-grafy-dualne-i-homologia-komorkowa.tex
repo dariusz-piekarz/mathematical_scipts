@@ -1,0 +1,435 @@
+\chapter{Grafy na powierzchniach, grafy dualne i homologia komórkowa}
+\label{ch:tg-powierzchnie}
+
+\section{Zanurzenia komórkowe i rodzaj powierzchni}
+\label{sec:tg-cellular-surface}
+
+\begin{definicja}[Zanurzenie komórkowe]
+Niech $\Sigma$ będzie zwartą, spójną powierzchnią bez brzegu,
+a $G$ skończonym spójnym grafem. Zanurzenie
+$\iota:|G|\hookrightarrow\Sigma$ nazywamy \emph{komórkowym},
+jeżeli każda składowa dopełnienia $\Sigma\setminus\iota(|G|)$
+jest homeomorficzna z otwartym dyskiem. Te składowe nazywamy
+\emph{ścianami} zanurzenia; po dołączeniu ich jako dwukomórek
+otrzymujemy strukturę CW na $\Sigma$.
+\end{definicja}
+
+\begin{uwaga}[Dlaczego wymagana jest komórkowość]
+Graf jednowierzchołkowy zanurzony w torusie ma dopełnienie
+homeomorficzne z torusem bez punktu, a nie z otwartym dyskiem.
+Nie wolno więc liczyć tego dopełnienia jako pojedynczej
+dwukomórki. Równość $n-m+f=\chi(\Sigma)$ wymaga
+zanurzenia komórkowego. W szczególności nie stosujemy jej
+automatycznie do dowolnego rysunku grafu na torusie.
+\end{uwaga}
+
+\begin{twierdzenie}[Euler--Poincaré dla powierzchni orientowalnej]
+\label{thm:tg-surface-euler}
+Niech $\Sigma_g$ będzie zwartą, spójną, orientowalną powierzchnią
+bez brzegu rodzaju $g\ge0$. Niech spójny graf $G$ będzie
+zanurzony komórkowo w $\Sigma_g$, a $n,m,f$ oznaczają
+odpowiednio liczby wierzchołków, krawędzi i ścian tego zanurzenia.
+Wtedy
+\[
+ n-m+f=2-2g.
+\]
+\end{twierdzenie}
+
+\begin{proof}
+Z założenia wierzchołki, otwarte krawędzie i ściany
+tworzą rozkład CW powierzchni $\Sigma_g$ na $n$
+komórek wymiaru zero, $m$ komórek wymiaru jeden i $f$
+komórek wymiaru dwa. Z definicji charakterystyki Eulera
+$\chi(\Sigma_g)=n-m+f$. Klasyfikacja zwartych, spójnych,
+orientowalnych powierzchni mówi, że
+$\Sigma_g\cong\#^g(S^1\times S^1)$ i
+$\chi(\Sigma_g)=2-2g$. Łącząc te równości,
+otrzymujemy tezę. W tym dowodzie przyjmujemy znany,
+wcześniej udowodniony w topologii powierzchni wzór
+na charakterystykę Eulera \(\Sigma_g\); nie jest on
+ukrytą konsekwencją samej definicji grafu.
+\end{proof}
+
+\begin{stwierdzenie}[Oszacowanie rodzaju z liczby krawędzi]
+Niech prosty spójny graf $G$ o $n\ge3$ wierzchołkach
+i $m$ krawędziach ma komórkowe zanurzenie w orientowalnej
+powierzchni $\Sigma_g$. Wtedy
+\[
+ m\le3n-6+6g.
+\]
+Jeżeli $G$ jest dwudzielny, to
+$m\le2n-4+4g$.
+\end{stwierdzenie}
+
+\begin{proof}
+Każdy obchód ścianowy ma długość co najmniej trzy,
+a w przypadku grafu dwudzielnego co najmniej cztery.
+Jest to lokalny argument identyczny jak dla sfery;
+założenie spójności i $n\ge3$ wyklucza ściany długości
+dwa w grafie prostym. Zatem odpowiednio $3f\le2m$
+lub $4f\le2m$. Podstawiając
+$f=2-2g-n+m$ z poprzedniego twierdzenia,
+otrzymujemy obie nierówności po uporządkowaniu.
+\end{proof}
+
+\begin{przyklad}[Dlaczego $K_5$ potrzebuje uchwytu]
+Dla $K_5$ mamy $n=5$ i $m=10$. Gdyby istniało
+komórkowe zanurzenie w $\Sigma_0=S^2$, musiałaby zachodzić
+nierówność $10\le9$, co jest niemożliwe.
+Oszacowanie dla ogólnego rodzaju daje
+$10\le9+6g$, a więc $g\ge1$.
+Istnieje zanurzenie $K_5$ w torusie, więc minimalny
+rodzaj orientowalny tego grafu jest równy jeden.
+Podobnie $K_{3,3}$ ma minimalny rodzaj orientowalny jeden.
+Samo oszacowanie daje dolne ograniczenia; stwierdzenie
+istnienia zanurzeń w torusie jest dodatkowym faktem
+geometrycznym, a nie wnioskiem z nierówności.
+\end{przyklad}
+
+\section{Cykliczne porządki incydencji i grafy wstęgowe}
+\label{sec:tg-rotation}
+
+Samo abstrakcyjne $G=(V,E)$ nie zapamiętuje, jak krawędzie
+są ułożone wokół wierzchołków na zorientowanej powierzchni.
+Dane te można zakodować skończoną rodziną permutacji.
+
+\begin{definicja}[Półkrawędź i układ rotacji]
+Niech $G$ będzie skończonym spójnym multigrafem. Każda
+krawędź daje dwie \emph{półkrawędzie} (ang. \emph{darts});
+ich zbiór oznaczamy przez $D$. Także pętla daje dwie
+różne półkrawędzie incydentne z tym samym wierzchołkiem.
+Przez $\alpha:D\to D$ oznaczamy inwolucję bez punktów stałych,
+która zamienia półkrawędzie tej samej krawędzi.
+\emph{Układem rotacji} nazywamy permutację $\sigma$ zbioru $D$,
+której cykle odpowiadają cyklicznej kolejności półkrawędzi
+wokół poszczególnych wierzchołków. Dla wierzchołka
+izolowanego kolejność jest pusta; w dalszych rachunkach
+zakładamy graf spójny z co najmniej jedną krawędzią.
+\end{definicja}
+
+\begin{twierdzenie}[Powierzchnia wyznaczona przez układ rotacji]
+\label{thm:tg-rotation-genus}
+Niech $G$ będzie skończonym spójnym multigrafem o $n$
+wierzchołkach i $m\ge1$ krawędziach, a $\alpha$ inwolucją parującą półkrawędzie i $\sigma$
+permutacją, której cyklami są dokładnie zbiory półkrawędzi
+przy kolejnych wierzchołkach, z zadanym porządkiem cyklicznym. Istnieje zorientowana, zamknięta,
+spójna powierzchnia $\Sigma_g$ oraz komórkowe zanurzenie
+$G\hookrightarrow\Sigma_g$ realizujące te porządki.
+Jeżeli $f$ oznacza liczbę cykli permutacji
+$\varphi:=\sigma\circ\alpha$ na $D$, to
+\[
+ 2-2g=n-m+f,
+ \qquad g=\frac{2-n+m-f}{2}.
+\]
+\end{twierdzenie}
+
+\begin{proof}[Konstrukcja przez otoczenie wstęgowe]
+Każdy wierzchołek zastępujemy małym zorientowanym
+dyskiem. Na jego brzegu wyznaczamy rozłączne odcinki
+odpowiadające incydentnym półkrawędziom, zachowując
+kolejność cykliczną zapisaną w $\sigma$.
+Dla każdej krawędzi doklejamy prostokąt
+$[0,1]\times[0,1]$ do dwóch odpowiednich odcinków
+brzegowych dysków. Doklejenia dobieramy w sposób
+zachowujący orientację powstającej powierzchni z brzegiem.
+Dopuszczamy, że oba końce prostokąta spotykają ten sam dysk,
+co modeluje pętlę.
+
+Uzyskujemy spójną, orientowalną powierzchnię wstęgową $N$
+(z brzegiem), która deformacyjnie retraktuje się na $|G|$.
+Śledzenie jej brzegu polega na przejściu wzdłuż danej
+półkrawędzi na drugi koniec tej samej krawędzi (działanie
+$\alpha$), a następnie do kolejnej półkrawędzi przy
+wierzchołku (działanie $\sigma$). A więc składowe brzegu
+$N$ odpowiadają dokładnie cyklom $\varphi=\sigma\alpha$.
+Jest ich $f$.
+
+Do każdej składowej brzegu $N$ doklejamy dysk.
+Otrzymujemy zwartą, spójną powierzchnię zorientowaną
+bez brzegu, w której $G$ jest szkieletem jednowymiarowym,
+a wnętrza dołączonych dysków są komórkowymi ścianami.
+Ponieważ $N$ ma charakterystykę $n-m$, po dołączeniu
+$f$ dysków mamy $\chi(\Sigma)=n-m+f$.
+Klasyfikacja powierzchni daje $\chi(\Sigma)=2-2g$,
+co kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Dwa układy rotacji tego samego grafu theta]
+Rozważmy multigraf z wierzchołkami $u,v$ połączonymi trzema
+równoległymi krawędziami. Niech $a_i$ i $b_i$ będą ich
+półkrawędziami przy odpowiednio $u$ i $v$.
+Wtedy $\alpha=(a_1b_1)(a_2b_2)(a_3b_3)$.
+W obu modelach przy $u$ ustalamy porządek
+$(a_1a_2a_3)$.
+
+Jeśli przy $v$ przyjmiemy porządek $(b_1b_3b_2)$,
+permutacja $\varphi=\sigma\alpha$ ma trzy cykle
+$(a_1b_3)$, $(a_2b_1)$, $(a_3b_2)$.
+Zatem $f=3$ oraz $2-2g=2-3+3=2$; otrzymujemy sferę.
+Jeśli natomiast przy $v$ przyjmiemy ten sam porządek
+$(b_1b_2b_3)$, $\varphi$ ma jeden cykl długości sześć:
+$(a_1b_2a_3b_1a_2b_3)$. Teraz $f=1$ i
+$2-2g=2-3+1=0$; otrzymujemy torus.
+To samo abstrakcyjne $G$ ma więc dwa komórkowe zanurzenia
+o różnych rodzajach powierzchni.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[scale=.95,line cap=round]
+  \begin{scope}[shift={(-2.9,0)}]
+    \node[tgBlueVertex] (u) at (-1.05,0) {$u$};
+    \node[tgRedVertex] (v) at (1.05,0) {$v$};
+    \draw[tgBlue,line width=1.8pt] (u) to[bend left=43] (v);
+    \draw[tgTeal,line width=1.8pt] (u)--(v);
+    \draw[tgCoral,line width=1.8pt] (u) to[bend right=43] (v);
+    \node[text=tgNavy,font=\small] at (0,-1.38) {$f=3$, $g=0$};
+    \node[text=tgPurple,font=\footnotesize] at (0,-1.72) {$(b_1b_3b_2)$};
+  \end{scope}
+  \begin{scope}[shift={(2.9,0)}]
+    \node[tgBlueVertex] (u) at (-1.05,0) {$u$};
+    \node[tgRedVertex] (v) at (1.05,0) {$v$};
+    \draw[tgBlue,line width=1.8pt] (u) to[bend left=43] (v);
+    \draw[tgTeal,line width=1.8pt] (u)--(v);
+    \draw[tgCoral,line width=1.8pt] (u) to[bend right=43] (v);
+    \node[text=tgNavy,font=\small] at (0,-1.38) {$f=1$, $g=1$};
+    \node[text=tgPurple,font=\footnotesize] at (0,-1.72) {$(b_1b_2b_3)$};
+  \end{scope}
+  \node[text=tgNavy,font=\footnotesize,align=center] at (0,-2.48)
+    {Różnica leży w cyklicznym porządku \emph{półkrawędzi};\\
+     dwuwymiarowy rysunek nie zastępuje danych rotacji.};
+\end{tikzpicture}
+\end{center}
+
+\section{Graf dualny na sferze}
+\label{sec:tg-dual}
+
+\begin{definicja}[Graf dualny]
+Niech $G\subset S^2$ będzie spójnym, skończonym grafem
+płaskim o zbiorze ścian $F$. W każdej ścianie wybieramy
+punkt $v_F$. Dla każdej krawędzi $e$ grafu $G$ rysujemy
+łuk $e^*$ łączący punkty dwóch ścian leżących po
+przeciwnych stronach $e$, przecinający $e$ dokładnie
+raz i nieprzecinający innych krawędzi pierwotnych.
+Graf z wierzchołkami $v_F$ i krawędziami $e^*$
+nazywamy \emph{grafem dualnym} i oznaczamy $G^*$.
+Jeśli obie strony $e$ należą do tej samej ściany,
+$e^*$ jest pętlą; dualny graf może mieć krawędzie równoległe.
+\end{definicja}
+
+\begin{stwierdzenie}[Podstawowe własności dualności]
+\label{thm:tg-dual-basic}
+Dla skończonego spójnego grafu płaskiego $G\subset S^2$
+graf dualny $G^*$ jest spójny i ma
+$|V(G^*)|=f(G)$ oraz $|E(G^*)|=|E(G)|$.
+Ponadto $(G^*)^*$ jest równoważny $G$ jako graf zanurzony
+w sferze. Krawędź $e\in E(G)$ jest mostem wtedy i tylko
+wtedy, gdy $e^*$ jest pętlą w $G^*$.
+\end{stwierdzenie}
+
+\begin{proof}
+Pierwsze dwie równości wynikają z konstrukcji.
+Aby wykazać spójność, bierzemy dwa punkty w różnych
+ścianach i łączymy je krzywą na sferze, omijającą
+wierzchołki pierwotnego grafu i przecinającą jego
+krawędzie poprzecznie. Zapisując kolejne napotkane
+ściany, otrzymujemy spacer w $G^*$.
+
+Przy skonstruowaniu drugiego grafu dualnego można
+wybrać jego wierzchołki w pobliżu pierwotnych
+wierzchołków $G$ i prowadzić krawędzie wzdłuż
+pierwotnych krawędzi. Daje to izomorfizm zanurzeń.
+
+Jeżeli $e$ jest mostem, usunięcie jej wnętrza nie
+rozdziela żadnej ściany na dwie; oba jej boki należą
+do tej samej ściany, więc $e^*$ jest pętlą.
+Odwrotnie, jeśli oba boki $e$ są po tej samej stronie,
+to $e$ nie może należeć do żadnego cyklu prostego:
+cykl tworzyłby krzywą Jordana, której dwa boki
+przy $e$ należą do różnych ścian. Z kryterium mostu
+wynika wtedy, że $e$ jest mostem.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[scale=.88,line cap=round,line join=round]
+ \begin{scope}[shift={(-3.1,0)}]
+  \coordinate (a) at (-1.3,-1);\coordinate (b) at (1.3,-1);
+  \coordinate (c) at (1.3,1);\coordinate (d) at (-1.3,1);
+  \fill[tgBlue!9] (a)--(b)--(c)--cycle;
+  \fill[tgTeal!9] (a)--(c)--(d)--cycle;
+  \draw[tgEdge] (a)--(b)--(c)--(d)--cycle;
+  \draw[tgAccent,line width=2pt] (a)--(c);
+  \foreach \pt in {a,b,c,d} \node[tgBlueVertex] at (\pt) {};
+  \node[text=tgBlue] at (.52,-.44) {$F_1$};
+  \node[text=tgTeal] at (-.5,.45) {$F_2$};
+  \node[text=tgNavy,font=\footnotesize] at (0,-1.55) {$G$};
+ \end{scope}
+ \begin{scope}[shift={(3.1,0)}]
+  \node[tgBlueVertex] (f1) at (0,-.6) {$F_1$};
+  \node[tgTealVertex] (f2) at (0,.8) {$F_2$};
+  \node[tgRedVertex] (f3) at (1.8,.1) {$F_3$};
+  \draw[tgAccent] (f1)--(f2);
+  \draw[tgBlue,line width=1.7pt] (f1) to[bend right=27] (f3);
+  \draw[tgBlue,line width=1.7pt] (f1) to[bend left=27] (f3);
+  \draw[tgTeal,line width=1.7pt] (f2) to[bend left=27] (f3);
+  \draw[tgTeal,line width=1.7pt] (f2) to[bend right=27] (f3);
+  \node[text=tgNavy,font=\footnotesize] at (.7,-1.55) {$G^*$};
+ \end{scope}
+\end{tikzpicture}
+
+{\footnotesize Dualność zamienia ściany w wierzchołki i zachowuje
+liczbę krawędzi. Dwie krawędzie między tymi samymi ścianami
+stają się równoległymi krawędziami dualnymi.}
+\end{center}
+
+\begin{twierdzenie}[Drzewo dualne dopełniające]
+\label{thm:tg-dual-spanning}
+Niech $G\subset S^2$ będzie spójnym grafem płaskim,
+a $T$ jego drzewem rozpinającym. Wtedy zbiór
+$\{e^*:e\in E(G)\setminus E(T)\}$ tworzy drzewo
+rozpinające w $G^*$.
+\end{twierdzenie}
+
+\begin{proof}
+Z twierdzenia Eulera $f=m-n+2$, a więc liczba krawędzi
+dualnych, które pozostawiamy, wynosi
+$m-(n-1)=f-1=|V(G^*)|-1$.
+Wystarczy zatem wykazać spójność wybranego podgrafu dualnego.
+Gdyby nie był spójny, istniałby niepusty przekrój
+$\delta_{G^*}(S)$, którego żadna krawędź nie została
+wybrana. Oznaczałoby to, że wszystkie jego krawędzie
+pierwotne należą do $T$. Jednak przekrój w grafie
+dualnym odpowiada zbiorowi cykli w grafie pierwotnym
+(najprostszy przypadek to obwód brzegu sumy ścian
+należących do $S$). Niech $A$ będzie zbiorem pierwotnych krawędzi odpowiadających
+temu przekrojowi. Każdy wierzchołek pierwotny ma parzystą
+liczbę incydencji z $A$: kiedy przechodzimy wokoło niego
+po kolejnych sektorach, liczba zmian między ścianami z $S$
+i spoza $S$ jest parzysta. Dotyczy to również pętli,
+których dwie półkrawędzie liczymy osobno. Zatem $A$
+wyznacza cykl nad $\mathbb F_2$. Ponieważ przekrój jest
+niepusty, $A\ne\varnothing$ i graf $(V,A)$ zawiera cykl
+(w razie pętli jest to cykl długości jeden). Wszystkie
+krawędzie $A$ należałyby do drzewa $T$, sprzeczność.
+Wybrany podgraf dualny jest więc spójny i ma $f-1$
+krawędzi, czyli jest drzewem rozpinającym.
+\end{proof}
+
+\section{Od ścian do kompleksu łańcuchowego powierzchni}
+\label{sec:tg-surface-chains}
+
+\begin{definicja}[Operator brzegu dwukomórek]
+Niech skończony spójny graf $G$ będzie komórkowo zanurzony
+w zorientowanej zamkniętej powierzchni $\Sigma$.
+Oznaczmy przez $F$ zbiór ścian. Definiujemy grupy
+$C_2:=\mathbb Z^F$, $C_1:=\mathbb Z^E$ i
+$C_0:=\mathbb Z^V$. Operator $\partial_1:C_1\to C_0$
+jest macierzą incydencji z poprzednich rozdziałów,
+a $\partial_2:C_2\to C_1$ wysyła zorientowaną ścianę
+na sumę zorientowanych krawędzi jej obchodu brzegowego,
+ze znakami zależnymi od kierunku przejścia.
+\end{definicja}
+
+\begin{stwierdzenie}[Warunek łańcuchowy]
+Dla operatorów $\partial_2$ i $\partial_1$ określonych
+powyżej zachodzi $\partial_1\partial_2=0$.
+\end{stwierdzenie}
+
+\begin{proof}
+Każda ściana ma obchód będący zamkniętym spacerem.
+Pod zastosowaniem $\partial_1$ wkład przy każdym kroku
+jest różnicą końca i początku krawędzi. W sumie
+wierzchołek będący końcem jednego kroku jest zarazem
+początkiem następnego; wkłady teleskopowo się znoszą.
+Zatem brzeg brzegu każdej komórki wymiaru dwa jest zerowy,
+a przez liniowość zachodzi $\partial_1\partial_2=0$.
+\end{proof}
+
+\begin{twierdzenie}[Homologia komórkowa powierzchni orientowalnej]
+\label{thm:tg-surface-homology}
+Niech $G$ będzie skończonym spójnym grafem z komórkowym
+zanurzeniem w zorientowanej, spójnej zamkniętej powierzchni
+$\Sigma_g$. Dla powyższego kompleksu łańcuchowego
+otrzymujemy
+\[
+H_0(\Sigma_g;\mathbb R)\cong\mathbb R,
+\qquad H_1(\Sigma_g;\mathbb R)\cong\mathbb R^{2g},
+\qquad H_2(\Sigma_g;\mathbb R)\cong\mathbb R.
+\]
+\end{twierdzenie}
+
+\begin{proof}
+Graf jest spójny, zatem $\operatorname{rank}\partial_1=n-1$
+i $\dim\ker\partial_1=m-n+1$. Udowodnimy, że
+$\ker\partial_2$ jest jednowymiarowe. W orientowanej
+powierzchni każda krawędź sąsiaduje z dwiema stronami
+ścian, z przeciwnymi znakami w ich obwodach. Jeśli
+$z=\sum_{F\in\mathcal F}a_F[F]$ spełnia
+$\partial_2z=0$, to po porównaniu współczynnika
+przy dowolnej krawędzi między ścianami $F,F'$ dostajemy
+$a_F=a_{F'}$. Dualny graf ścian jest spójny:
+dowolne dwie ściany można połączyć łukiem przecinającym
+graf transwersalnie i omijającym wierzchołki.
+Zatem wszystkie $a_F$ są równe. Z drugiej strony
+suma wszystkich zorientowanych ścian ma brzeg zero,
+bo każda krawędź pojawia się dwukrotnie z przeciwnymi
+znakami. Stąd
+$\ker\partial_2=\mathbb R\sum_F[F]$, a więc
+$\operatorname{rank}\partial_2=f-1$.
+
+Wynika z tego
+\[
+\dim H_1=\dim\ker\partial_1-\operatorname{rank}\partial_2
+=(m-n+1)-(f-1)=m-n-f+2=2g,
+\]
+gdzie ostatnia równość wynika z twierdzenia Eulera--Poincarégo.
+Ponadto $H_2=\ker\partial_2\cong\mathbb R$,
+a $H_0=C_0/\operatorname{im}\partial_1\cong\mathbb R$.
+To wyprowadza homologiczne znaczenie rodzaju powierzchni
+bez pomijania roli operatora $\partial_2$.
+\end{proof}
+
+\begin{przyklad}[Sfera i torus -- co zmienia doklejenie ścian]
+Rozważmy trójkąt jako graf na sferze. Ma jedną niezależną
+klasę w $H_1(|G|;\mathbb Z)\cong\mathbb Z$, reprezentowaną
+przez obieg trójkąta. Po dołączeniu dwóch ścian
+(wewnętrznej i zewnętrznej) otrzymujemy sferę.
+Brzeg pierwszej ściany jest dodatnim obiegiem trójkąta,
+a drugiej jego przeciwnym obiegiem, więc
+$H_1(S^2;\mathbb Z)=0$.
+
+Standardowy model torusa ma z kolei jedną zerokomórkę,
+dwie jednokomórki $a,b$ i jedną dwukomórkę dołączoną
+wzdłuż słowa $aba^{-1}b^{-1}$. Operator $\partial_1$ znika,
+a $\partial_2$ również znika, ponieważ suma wykładników
+każdego generatora w słowie przyklejającym jest zerowa.
+Stąd $H_1(T^2;\mathbb Z)\cong\mathbb Z^2$, choć grupa
+fundamentalna samego szkieletu jednowymiarowego jest
+wolna: $\pi_1(S^1\vee S^1)\cong F_2$.
+Dołączenie dwukomórki dokłada relację
+$aba^{-1}b^{-1}=1$, która zmienia grupę fundamentalną
+na $\pi_1(T^2)\cong\mathbb Z^2$.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[scale=.90,>=Stealth,line cap=round]
+  \fill[tgBlue!8] (0,0) rectangle (4,2.7);
+  \draw[tgEdge] (0,0) rectangle (4,2.7);
+  \draw[tgAccent,-{Stealth[length=2.8mm]},line width=2.2pt] (.25,0)--(3.65,0);
+  \draw[tgAccent,-{Stealth[length=2.8mm]},line width=2.2pt] (.25,2.7)--(3.65,2.7);
+  \draw[tgTeal,-{Stealth[length=2.8mm]},line width=2.2pt] (0,.25)--(0,2.35);
+  \draw[tgTeal,-{Stealth[length=2.8mm]},line width=2.2pt] (4,.25)--(4,2.35);
+  \node[text=tgCoral,font=\small] at (2,-.35) {$a$};
+  \node[text=tgCoral,font=\small] at (2,3.08) {$a$};
+  \node[text=tgTeal,font=\small] at (-.36,1.35) {$b$};
+  \node[text=tgTeal,font=\small] at (4.36,1.35) {$b$};
+  \node[text=tgNavy,align=center] at (2,1.35) {$aba^{-1}b^{-1}$\\[2pt] jedna ściana};
+\end{tikzpicture}
+
+{\footnotesize Kwadrat fundamentalny torusa: przeciwległe boki
+utożsamiamy zgodnie ze strzałkami, otrzymując $n=1$, $m=2$, $f=1$.}
+\end{center}
+
+
+% ============================================================
+% Iteracja 4, rozdział 12
+% ============================================================

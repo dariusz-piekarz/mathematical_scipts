@@ -1,0 +1,305 @@
+\chapter{Grafy planarne, ściany i wzór Eulera}
+\label{ch:tg-planarne}
+
+Dotychczas krawędzie grafu były abstrakcyjnymi odcinkami. Od tej chwili
+istotne będzie również to, \emph{jak} graf umieszczamy w powierzchni.
+Na przykład narysowanie dwóch krawędzi przecinających się na kartce
+nie oznacza, że ich punkt przecięcia jest wierzchołkiem grafu.
+Właśnie to rozróżnienie prowadzi do planarności, ścian, dualności
+i do związku z charakterystyką Eulera powierzchni.
+
+\section{Rysunek grafu a zanurzenie topologiczne}
+\label{sec:tg-osadzanie-planarne}
+
+\begin{definicja}[Zanurzenie grafu w powierzchnię]
+Niech $G$ będzie skończonym grafem, dopuszczającym również pętle
+i krawędzie równoległe, a $S$ powierzchnią topologiczną.
+\emph{Zanurzeniem topologicznym grafu w $S$} (ang. \emph{embedding})
+nazywamy ciągłe odwzorowanie różnowartościowe $\iota:|G|\to S$.
+Z powodu zwartości $|G|$ i własności Hausdorffa przestrzeni $S$
+jest ono homeomorfizmem na swój obraz. Graf nazywamy \emph{planarnym},
+jeżeli istnieje takie $\iota$ dla $S=\mathbb R^2$.
+W przypadku $S=\mathbb R^2$ konkretny graf wraz z wybranym
+zanurzeniem nazywamy \emph{grafem płaskim}. Wnętrza obrazów różnych
+krawędzi są rozłączne i nie zawierają obrazów wierzchołków;
+dwie krawędzie mogą mieć wspólny punkt wyłącznie wtedy, gdy
+mają wspólny koniec.
+\end{definicja}
+
+\begin{uwaga}[Płaszczyzna i sfera]
+Graf skończony jest planarny wtedy i tylko wtedy, gdy można go
+zanurzyć w sferze $S^2$. W jedną stronę stosujemy dołączenie
+punktu w nieskończoności $\mathbb R^2\subset S^2$.
+W drugą wybieramy punkt $p\in S^2\setminus\iota(|G|)$
+(taki punkt istnieje, ponieważ skończona suma zanurzonych łuków
+i punktów ma puste wnętrze w powierzchni)
+i identyfikujemy $S^2\setminus\{p\}$ z $\mathbb R^2$.
+Na sferze żadna ściana nie jest wyróżniona jako zewnętrzna.
+\end{uwaga}
+
+\begin{definicja}[Ściana]
+Niech $\iota:|G|\hookrightarrow S^2$ będzie zanurzeniem grafu
+skończonego. \emph{Ścianami} są składowe spójne dopełnienia
+$S^2\setminus\iota(|G|)$. Ich liczbę oznaczamy przez $f(G,\iota)$.
+Dla grafu płaskiego jedna ze ścian jest nieograniczona.
+\end{definicja}
+
+\begin{przyklad}[Ten sam graf, różne rysunki]
+Graf $K_4$ można narysować z przecięciami na rysunku czworokąta
+z obiema przekątnymi. Nie dowodzi to nieplanarności: wystarczy
+umieścić trzy wierzchołki na brzegu trójkąta, a czwarty w jego wnętrzu.
+Otrzymujemy wtedy cztery ściany na sferze, wszystkie ograniczone
+trójkątami.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[line cap=round,line join=round,scale=.95]
+  \begin{scope}[shift={(-3.3,0)}]
+    \coordinate (a) at (-1.15,-.9); \coordinate (b) at (1.15,-.9);
+    \coordinate (c) at (0,1.30); \coordinate (d) at (0,-.15);
+    \fill[tgBlue!8] (a)--(b)--(d)--cycle;
+    \fill[tgTeal!12] (a)--(c)--(d)--cycle;
+    \fill[tgGold!17] (b)--(c)--(d)--cycle;
+    \draw[tgEdge] (a)--(b)--(c)--cycle (a)--(d)--(b) (c)--(d);
+    \foreach \pt/\name in {a/a,b/b,c/c,d/d}
+      \node[tgBlueVertex] at (\pt) {$\name$};
+    \node[text=tgNavy,font=\small] at (0,-1.58) {$K_4$ bez przecięć};
+  \end{scope}
+  \begin{scope}[shift={(3.3,0)}]
+    \coordinate (a) at (-1.10,-.95);\coordinate (b) at (1.10,-.95);
+    \coordinate (c) at (1.10,.95);\coordinate (d) at (-1.10,.95);
+    \draw[tgEdge] (a)--(b)--(c)--(d)--cycle;
+    \draw[tgAccent] (a)--(c) (b)--(d);
+    \foreach \pt/\name in {a/a,b/b,c/c,d/d}
+      \node[tgRedVertex] at (\pt) {$\name$};
+    \node[text=tgNavy,font=\small] at (0,-1.58) {inny rysunek $K_4$};
+  \end{scope}
+\end{tikzpicture}
+
+{\footnotesize Czerwone przekątne po prawej przecinają się, lecz ten punkt
+nie jest dodatkowym wierzchołkiem. Rysunek po lewej dowodzi planarności $K_4$.}
+\end{center}
+
+\section{Wzór Eulera: pełny dowód kombinatoryczny}
+\label{sec:tg-planarny-euler}
+
+\begin{twierdzenie}[Euler dla grafów zanurzonych w sferze]
+\label{thm:tg-euler-plane}
+Niech $G$ będzie skończonym grafem o $n\ge1$ wierzchołkach,
+$m$ krawędziach i $c$ składowych spójnych, zanurzonym w $S^2$.
+Jeżeli $f$ oznacza liczbę ścian tego zanurzenia, to
+\[
+ n-m+f=1+c.
+\]
+W szczególności dla grafu spójnego zachodzi $n-m+f=2$.
+Wynik jest prawdziwy także dla pętli i krawędzi równoległych.
+\end{twierdzenie}
+
+\begin{proof}
+Ustalamy jedno zanurzenie i dodajemy jego krawędzie po kolei,
+nie zmieniając ich położenia. Zaczynamy od $n$ izolowanych
+wierzchołków. Mamy wtedy $m_0=0$, $c_0=n$, a dopełnienie
+skończonego zbioru punktów w $S^2$ jest spójne, więc $f_0=1$.
+Stąd $n-m_0+f_0=n+1=1+c_0$.
+
+Przypuśćmy, że do rozważonego podgrafu dodajemy krawędź $e$.
+Jej wnętrze leży w jednej ze ścian dotychczasowego rysunku.
+Rozpatrzmy dwa przypadki.
+
+Jeżeli końce $e$ należą do różnych składowych aktualnego grafu,
+to $e$ scala te składowe: liczba $c$ maleje o jeden,
+zaś liczba ścian się nie zmienia. Ostatni fakt można
+uzasadnić, przesuwając mały łuk łączący dwa rozłączne
+podzbiory grafu: taki łuk nie zamyka krzywej Jordana
+ani nie rozcina na dwie składowe żadnej ściany.
+
+Jeżeli końce $e$ są już połączone ścieżką w aktualnym
+grafie (dopuszczamy też pętlę), to suma tej ścieżki
+i nowej krawędzi zawiera krzywą prostą zamkniętą
+w sensie topologicznym. Wybieramy prostą ścieżkę $P$ w dotychczasowym grafie
+łączącą końce $e$; jeśli $e$ jest pętlą, bierzemy ścieżkę
+stałą w jej wierzchołku. Obraz $P$ połączony z obrazem
+$e$ tworzy krzywą Jordana. Jej dopełnienie ma dwie składowe,
+a nowa krawędź leży w jednej dotychczasowej ścianie.
+Obie strony $e$ należą po dołączeniu do różnych ścian,
+a żadna inna ściana nie zostaje rozcięta. Zatem $f$ wzrasta
+o jeden, podczas gdy $c$ pozostaje bez zmiany.
+
+W pierwszym przypadku $m$ wzrasta o jeden, $c$ maleje
+o jeden, $f$ się nie zmienia; w drugim $m$ i $f$
+wzrastają jednocześnie o jeden. W obu sytuacjach
+równość $n-m+f=1+c$ pozostaje prawdziwa. Indukcja
+po liczbie krawędzi kończy dowód.
+\end{proof}
+
+\begin{uwaga}[Co oznacza brzeg ściany]
+Brzeg ściany nie musi być cyklem prostym. W drzewie
+cała sfera poza grafem jest jedną ścianą, a przejście
+wokół jej brzegu używa każdej krawędzi dwa razy.
+W ogólności śledzimy \emph{obchody ścianowe}: zamknięte
+spacery krawędziowe, w których liczymy każdą stronę
+krawędzi osobno. Suma ich długości, liczonych z krotnościami,
+wynosi $2m$, także gdy występują mosty i pętle.
+Dla grafów niespójnych pojedyncza ściana może mieć kilka
+składowych brzegowych.
+\end{uwaga}
+
+\begin{przyklad}[Drzewo, cykl i kwadrat z przekątną]
+Każde drzewo o $n$ wierzchołkach ma $m=n-1$ krawędzi.
+Euler daje $f=1$. Cykl $C_n$ ma $n$ krawędzi i dwie ściany:
+wnętrze i zewnętrze. Kwadrat z jedną przekątną ma
+$n=4$, $m=5$, więc $f=2-4+5=3$.
+Dwie wewnętrzne ściany są trójkątne, trzecia jest zewnętrzna.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[scale=.95,line cap=round,line join=round]
+  \coordinate (a) at (-2,0);\coordinate (b) at (2,0);
+  \coordinate (c) at (2,2.0);\coordinate (d) at (-2,2.0);
+  \fill[tgBlue!11] (a)--(b)--(c)--cycle;
+  \fill[tgTeal!11] (a)--(c)--(d)--cycle;
+  \draw[tgEdge] (a)--(b)--(c)--(d)--cycle;
+  \draw[tgAccent] (a)--(c);
+  \foreach \pt in {a,b,c,d} \node[tgBlueVertex] at (\pt) {};
+  \node[text=tgBlue] at (.9,.55) {$F_1$};
+  \node[text=tgTeal] at (-.9,1.45) {$F_2$};
+  \node[text=tgNavy] at (0,-.65) {$F_3$ -- ściana zewnętrzna};
+\end{tikzpicture}
+\end{center}
+
+\section{Oszacowania liczby krawędzi i nieplanarność}
+\label{sec:tg-planarne-granice}
+
+\begin{lemat}[Stopnie ścianowe]
+Niech $G$ będzie spójnym, prostym grafem płaskim,
+$n\ge3$, o $m$ krawędziach i $f$ ścianach.
+Długość obchodu brzegowego każdej ściany, liczona
+z krotnościami skierowanych wystąpień krawędzi, jest
+co najmniej trzy, a suma długości wszystkich obchodów
+to $2m$. Jeśli $G$ jest ponadto dwudzielny, każdy
+obchód jest parzystej długości, a więc ma długość co najmniej cztery.
+\end{lemat}
+
+\begin{proof}
+Każda krawędź ma dwie strony, które należą do ścian
+(niekoniecznie różnych). Idąc po obwodzie każdej ściany,
+przechodzimy każdą stronę dokładnie raz, skąd suma długości
+wynosi $2m$. Obchód długości jeden wymagałby pętli, co jest
+sprzeczne z prostotą. Obchód długości dwa mógłby powstać
+z dwóch krawędzi równoległych albo z pojedynczej krawędzi
+przechodzonej dwukrotnie. Jeśli zaś obchód składa się z dwukrotnego przejścia
+jednej krawędzi, krawędź ta jest mostem, a obydwa jej końce
+mają stopień jeden w odpowiednim brzegu ściany.
+W przypadku grafu spójnego oznaczałoby to, że graf jest
+pojedynczą krawędzią $K_2$; wyklucza to $n\ge3$.
+Zatem każda długość jest co najmniej trzy.
+
+W grafie dwudzielnym dowolny zamknięty spacer przechodzi
+naprzemiennie pomiędzy obiema klasami wierzchołków,
+ma więc długość parzystą. Wobec poprzedniego oszacowania
+długość każdej ściany jest nie mniejsza niż cztery.
+\end{proof}
+
+\begin{twierdzenie}[Ograniczenia planarne]
+\label{thm:tg-planarne-bound}
+Jeżeli $G$ jest spójnym grafem prostym, planarnym,
+o $n\ge3$ wierzchołkach i $m$ krawędziach, to
+$m\le3n-6$. Jeżeli ponadto $G$ jest dwudzielny,
+to $m\le2n-4$.
+\end{twierdzenie}
+
+\begin{proof}
+Ustalmy zanurzenie płaskie. Poprzedni lemat daje
+$3f\le2m$. Ze wzoru Eulera $f=2-n+m$,
+więc $3(2-n+m)\le2m$, co po uporządkowaniu
+daje $m\le3n-6$. W przypadku grafu dwudzielnego
+mamy mocniejsze $4f\le2m$, a stąd
+$4(2-n+m)\le2m$ oraz $m\le2n-4$.
+\end{proof}
+
+\begin{przyklad}[Dwie klasyczne przeszkody]
+Graf $K_5$ ma pięć wierzchołków i dziesięć krawędzi,
+lecz $10>3\cdot5-6=9$, więc nie jest planarny.
+Graf $K_{3,3}$ ma sześć wierzchołków i dziewięć krawędzi,
+jest dwudzielny, a $9>2\cdot6-4=8$, więc również
+nie jest planarny. Samo ograniczenie $m\le3n-6$
+nie wystarczyłoby do wykrycia nieplanarności $K_{3,3}$.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[scale=.82,line cap=round,>=Stealth]
+ \begin{scope}[shift={(-3.3,0)}]
+  \foreach \i in {0,...,4} {
+    \coordinate (p\i) at ({90-72*\i}:1.2);
+  }
+  \foreach \i in {0,...,4} {
+    \foreach \j in {0,...,4} {
+      \ifnum\i<\j \draw[tgEdge] (p\i)--(p\j);\fi
+    }
+  }
+  \foreach \i in {0,...,4} \node[tgBlueVertex] at (p\i) {};
+  \node[text=tgNavy,font=\small] at (0,-1.80) {$K_5$: $10>9$};
+ \end{scope}
+ \begin{scope}[shift={(3.3,0)}]
+  \foreach \i in {1,2,3} {
+    \coordinate (u\i) at (-1.25,{2-\i});
+    \coordinate (v\i) at (1.25,{2-\i});
+  }
+  \foreach \i in {1,2,3} \foreach \j in {1,2,3}
+      \draw[tgEdge] (u\i)--(v\j);
+  \foreach \i in {1,2,3} {
+    \node[tgBlueVertex] at (u\i) {};
+    \node[tgRedVertex] at (v\i) {};
+  }
+  \node[text=tgNavy,font=\small] at (0,-1.80) {$K_{3,3}$: $9>8$};
+ \end{scope}
+\end{tikzpicture}
+
+{\footnotesize Rysunki mają przecięcia niebędące wierzchołkami.
+Nieplanarność tych grafów wynika z dowodów liczbowych, nie z wyglądu rysunków.}
+\end{center}
+
+\section{Kolorowanie ścian i graf dwudzielny w planie}
+\label{sec:tg-planarne-color}
+
+\begin{stwierdzenie}[Dwukolorowanie ścian]
+Niech $G\subset S^2$ będzie spójnym grafem płaskim,
+przy czym każdy wierzchołek ma parzysty stopień.
+Wtedy ściany można pokolorować dwoma kolorami w taki sposób,
+że ściany po przeciwnych stronach każdej krawędzi mają różne kolory.
+W szczególności żadna krawędź takiego grafu nie jest mostem.
+\end{stwierdzenie}
+
+\begin{proof}
+Każdy spójny graf, w którym wszystkie stopnie są parzyste,
+ma zamknięty szlak Eulera. Żadna krawędź nie jest mostem,
+ponieważ usunięcie mostu rozdzielałoby graf na dwie części,
+każda mająca dokładnie jeden wierzchołek o nieparzystym stopniu
+po usunięciu tej krawędzi, wbrew lematowi o uściskach dłoni.
+
+Przypiszmy ścianie zewnętrznej kolor zero.
+Dla dowolnej innej ściany wybieramy drogę w sferze
+od ustalonego punktu ściany zewnętrznej do jej wnętrza,
+przecinającą graf poprzecznie w skończenie wielu punktach
+wnętrz krawędzi. Kolor określamy jako parzystość liczby
+przecięć. Jest ona niezależna od drogi: różnica dwóch
+takich dróg jest zamkniętą krzywą w sferze, a liczba
+jej przecięć z cyklem eulerowskim jest parzysta.
+Istotnie, mod $2$ cykl Eulera jest sumą cykli prostych,
+a dowolna zamknięta krzywa w $S^2$ przecina każdy taki
+cykl parzyście (twierdzenie Jordana i ogólne położenie).
+Przekroczenie pojedynczej krawędzi zmienia parzystość,
+a więc także kolor. To daje żądaną kolorystykę.
+\end{proof}
+
+\begin{uwaga}
+Warunek parzystych stopni wierzchołków nie jest równoważny
+dwudzielności grafu: cykl trójkątny ma wszystkie stopnie
+parzyste, lecz nie jest dwudzielny. Stwierdzenie dotyczy
+kolorowania \emph{ścian}, a nie wierzchołków.
+\end{uwaga}
+
+
+% ============================================================
+% Iteracja 4, rozdział 10
+% ============================================================

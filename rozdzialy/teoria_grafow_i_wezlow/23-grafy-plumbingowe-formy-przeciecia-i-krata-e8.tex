@@ -1,0 +1,933 @@
+\chapter{Grafy plumbingowe, formy przecięcia i krata \texorpdfstring{$E_8$}{E8}}
+\label{ch:tg-plumbing}
+
+W poprzednich rozdziałach rozpatrywaliśmy dwie konstrukcje: z jednej
+strony grafy, których wierzchołki kodują części rozmaitości, z drugiej
+strony ramowane sploty opisujące dołączanie uchwytów indeksu dwa.
+\emph{Plumbing} łączy te punkty widzenia. Z prostego grafu z wagami
+całkowitymi budujemy gładką czterorozmaitość $P_\Gamma$, a następnie
+odczytujemy z grafu jej formę przecięcia i homologię brzegu.
+To jeden z najbardziej użytecznych sposobów przechodzenia od
+kombinatoryki do topologii czterowymiarowej.
+
+Zaczniemy od drzew o wierzchołkach reprezentujących sfery. W tym
+przypadku konstrukcja jest elementarna i pozwala przeprowadzić
+rachunki bez rozbudowanego aparatu rozmaitości Seiferta. Na końcu
+omówimy ograniczenia metody oraz jej związek z teorią Donaldsona
+i klasyfikacją Freedmana. Wszystkie rozmaitości plumbingowe
+rozważamy jako \emph{zwarte rozmaitości gładkie z brzegiem};
+nie są one automatycznie rozmaitościami zamkniętymi.
+
+\section{Wiązki dyskowe i lokalna operacja plumbing}
+\label{sec:tg-plumbing-definition}
+
+\begin{definicja}[Zorientowana wiązka dysków nad sferą]
+Niech $e\in\mathbb Z$. Przez $E(e)\to S^2$ oznaczamy zorientowaną
+wiązkę $D^2$ o grupie strukturalnej $SO(2)$, której skojarzona
+zorientowana wiązka wektorowa rzędu dwa ma klasę Eulera
+$e\,u\in H^2(S^2;\mathbb Z)$, gdzie $u$ jest generatorem
+wyznaczonym przez orientację sfery. \emph{Sekcją zerową}
+nazywamy obraz odwzorowania $s\colon S^2\to E(e)$ przypisującego
+punktowi bazowemu wektor zerowy jego włókna.
+\end{definicja}
+
+Każdą zorientowaną wiązkę płaszczyzn nad $S^2$ klasyfikuje
+liczba całkowita: stopień funkcji przejścia
+$S^1\to SO(2)\cong S^1$ między dwiema trywializacjami
+na półkulach. Jest to właśnie liczba Eulera $e$.
+Jeżeli przez $S$ oznaczymy obraz sekcji zerowej,
+to jej wiązka normalna w $E(e)$ jest pierwotną wiązką
+płaszczyzn, zatem $S\cdot S=e$. Równość tę należy
+rozumieć jako liczbę przecięcia $S$ z niewielkim,
+generycznym przesunięciem w kierunku normalnym.
+Jej znak zależy od ustalonych orientacji.
+
+\begin{definicja}[Dodatni plumbing dwóch wiązek]
+Niech $E_1\to S^2$ i $E_2\to S^2$ będą zorientowanymi
+wiązkami dyskowymi. W każdej wybieramy dysk $D_i\subset S^2$
+nieprzecinający dysków wybranych dla innych operacji.
+Nad $D_i$ ustalamy trywializację, która daje blok
+$D^2_{\text{baza}}\times D^2_{\text{włókno}}$.
+W lokalnym modelu plumbingowania identyfikujemy wybrane
+bloki obu wiązek (po odpowiednim ograniczeniu ich
+trywializacji), używając odwzorowania
+\[
+(z,w)\longmapsto(w,z), \qquad (z,w)\in D^2\times D^2,
+\]
+z dobranymi orientacjami, tak aby sekcje zerowe przecinały się
+w powstałym bloku dodatnio i poprzecznie w jednym punkcie.
+Po wygładzeniu narożników otrzymujemy \emph{dodatni plumbing}.
+\end{definicja}
+
+\begin{uwaga}[Lokalna geometria i znaki]
+W bloku $D^2\times D^2$ sekcje zerowe dwóch wiązek
+reprezentują odpowiednio dyski $D^2\times\{0\}$ i
+$\{0\}\times D^2$. Mają jeden punkt przecięcia $(0,0)$.
+Zamiana czynników zachowuje orientację czterowymiarową,
+ponieważ permutuje dwa czynniki rzeczywiste wymiaru dwa.
+Orientacje samych sfer i wiązek trzeba dobrać konsekwentnie:
+wówczas znak lokalnego przecięcia wynosi $+1$. Zmiana
+orientacji jednej sfery odwraca znaki wszystkich jej przecięć
+z sąsiednimi sferami, ale nie zmienia jej samoprzecięcia.
+\end{uwaga}
+
+\begin{center}
+\begin{tikzpicture}[scale=.98,line cap=round,>=Stealth]
+  \begin{scope}[shift={(-2.65,0)}]
+    \fill[tgBlue!15] (-1,-.65) rectangle (1,.65);
+    \draw[tgBlue,very thick] (-1,-.65) rectangle (1,.65);
+    \fill[tgCoral!22] (-.27,-.65) rectangle (.27,.65);
+    \draw[tgCoral,line width=2.6pt] (0,-.65)--(0,.65);
+    \draw[tgBlue,line width=2.4pt] (-1,0)--(1,0);
+    \node[text=tgNavy,font=\footnotesize] at (0,-1.05) {$D^2_{\text{baza}}\times D^2_{\text{włókno}}$};
+  \end{scope}
+  \draw[tgTeal,-{Stealth[length=3mm]},line width=1.6pt] (-.75,.05)--(.75,.05);
+  \node[text=tgTeal,font=\footnotesize] at (0,.42) {zamiana ról};
+  \begin{scope}[shift={(2.65,0)}]
+    \fill[tgCoral!15] (-1,-.65) rectangle (1,.65);
+    \draw[tgCoral,very thick] (-1,-.65) rectangle (1,.65);
+    \draw[tgBlue,line width=2.4pt] (0,-.65)--(0,.65);
+    \draw[tgCoral,line width=2.6pt] (-1,0)--(1,0);
+    \fill[tgPurple] (0,0) circle (.09);
+    \node[text=tgNavy,font=\footnotesize] at (0,-1.05) {przecięcie dwóch sekcji};
+  \end{scope}
+  \node[text=tgNavy,font=\scriptsize] at (0,-1.52)
+    {Model lokalny: jeden punkt przecięcia, bez utożsamiania całych sfer.};
+\end{tikzpicture}
+\end{center}
+
+\begin{definicja}[Ważone drzewo plumbingowe]
+Niech $\Gamma=(V,E)$ będzie skończonym, spójnym drzewem
+prostym, a $e\colon V\to\mathbb Z$ funkcją wag.
+Dla $v\in V$ bierzemy wiązkę $E(e_v)\to S^2$.
+Dla każdej krawędzi $uv\in E$ wykonujemy dodatni plumbing
+wiązek przypisanych do $u$ i $v$, używając rozłącznych
+dysków bazowych przy różnych krawędziach. Po wygładzeniu
+narożników otrzymujemy zwartą, zorientowaną, gładką
+czterorozmaitość z brzegiem $P_\Gamma$.
+\end{definicja}
+
+W ogólnym grafie można także stosować wagi ujemne na
+krawędziach i dopuszczać pętle; trzeba wtedy ustalić dodatkowe
+dane orientacyjne i sposób sklejenia. W tej części, jeżeli nie
+zaznaczono inaczej, graf oznacza \emph{ważone drzewo} z dodatnim
+lokalnym znakiem przecinania, tak jak w powyższej definicji.
+
+\section{Forma przecięcia z grafu}
+\label{sec:tg-plumbing-Q}
+
+\begin{twierdzenie}[Forma przecięcia drzewa plumbingowego]
+\label{thm:tg-plumbing-intersection}
+Niech $\Gamma=(V,E)$ będzie skończonym, spójnym, ważonym
+drzewem plumbingowym, a $P_\Gamma$ czterorozmaitością
+z poprzedniej definicji. Wtedy $\pi_1(P_\Gamma)=0$ oraz
+$H_2(P_\Gamma;\mathbb Z)\cong\mathbb Z^{|V|}$.
+W bazie $[S_v]$ wyznaczonej przez obrazy sekcji zerowych
+macierz formy przecięcia wynosi
+\[
+Q_\Gamma=(q_{uv})_{u,v\in V},\qquad
+q_{uv}=\begin{cases}
+e_v,&u=v,\\
+1,&uv\in E,\\
+0,&u\ne v\text{ i }uv\notin E.
+\end{cases}
+\]
+\end{twierdzenie}
+
+\begin{proof}
+Najpierw rozpatrujemy pojedynczy wierzchołek $v$.
+Wiązka $E(e_v)$ retraktuje się na sekcję zerową $S^2$,
+a więc jest po prostu spójna i ma drugą grupę homologii
+izomorficzną z $\mathbb Z$. Dodajmy teraz do zbudowanego
+już plumbingowania nową wiązkę $E(e_w)$ przyłączaną
+przez krawędź drzewa. Wybierając kolejne liście drzewa,
+możemy zapewnić, że nowa część styka się z poprzednią
+w jednym bloku plumbingowym homeomorficznym z $D^4$.
+W szczególności to przecięcie jest ściągalne.
+Twierdzenie van Kampena daje więc nadal trywialną grupę
+fundamentalną, natomiast ciąg Mayera--Vietorisa w stopniu
+drugim ma postać
+\[
+0\longrightarrow H_2(P_{\rm stary};\mathbb Z)\oplus
+H_2(E(e_w);\mathbb Z)\longrightarrow
+H_2(P_{\rm nowy};\mathbb Z)\longrightarrow0.
+\]
+Indukcja względem liczby wierzchołków daje opis grupy
+$H_2$ oraz bazę sekcji zerowych.
+
+Dla $v=u$ liczbę $S_v\cdot S_v$ wyznacza klasa Eulera
+wiązki normalnej, zatem wynosi ona $e_v$. Gdy $uv\in E$,
+sekcje $S_u$ i $S_v$ przecinają się dokładnie w jednym
+bloku plumbingowym i znak ich przecięcia, zgodnie z
+przyjętą orientacją, jest dodatni. Gdy brak krawędzi,
+sekcje można reprezentować rozłącznie. Otrzymujemy
+wskazane elementy macierzy. Symetria macierzy wynika
+z symetrii formy przecięcia w wymiarze cztery.
+\end{proof}
+
+\begin{przyklad}[Dwa wierzchołki]
+Dla drzewa z jednym bokiem i wagami $-2,-3$ dostajemy
+\[
+Q_\Gamma=\begin{pmatrix}-2&1\\1&-3\end{pmatrix},
+\qquad \det Q_\Gamma=5.
+\]
+Dwie sfery bazowe mają samoprzecięcia $-2$ i $-3$ oraz
+przecinają się dodatnio w jednym punkcie. Jak zobaczymy,
+ze względu na niezerowy wyznacznik brzeg tej czterorozmaitości
+jest wymierną sferą homologiczną i ma pierwszą grupę homologii
+rzędu pięć.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[scale=1,>=Stealth]
+  \node[tgBlueVertex,minimum size=12mm] (a) at (-1.5,0) {$-2$};
+  \node[tgRedVertex,minimum size=12mm] (b) at (1.5,0) {$-3$};
+  \draw[tgTree] (a)--(b);
+  \node[font=\footnotesize,text=tgNavy] at (0,-.95)
+    {Jedna krawędź: liczba przecięcia $[S_a]\cdot[S_b]=1$.};
+\end{tikzpicture}
+\end{center}
+
+\begin{uwaga}[Konstrukcja przez uchwyty]
+Ten sam $P_\Gamma$ można opisać za pomocą ramowanego splotu
+w $S^3$. Każdemu wierzchołkowi odpowiada niezawiązany okrąg
+z ramowaniem $e_v$, a każdej krawędzi -- dodatnie splecenie
+tych dwóch okręgów równe jeden. Dla drzewa można wybrać
+standardowy splot plumbingowy, w którym pozostałe liczby
+splecenia wynoszą zero. Dołączenie do $B^4$ uchwytów indeksu
+dwa wzdłuż tego splotu daje dyfeomorficzną czterorozmaitość.
+Identyfikacja ta wynika z lokalnego modelu plumbing i
+standardowego rachunku uchwytów; jej szczegółowa konstrukcja
+za pomocą diagramów Kirby'ego została omówiona wcześniej.
+W szczególności macierz splecenia tego splotu jest macierzą
+$Q_\Gamma$.
+\end{uwaga}
+
+\section{Homologia i forma splecenia brzegu}
+\label{sec:tg-plumbing-boundary}
+
+\begin{twierdzenie}[Homologia brzegu plumbingowania]
+\label{thm:tg-plumbing-boundary}
+Niech $\Gamma$ będzie skończonym, spójnym, ważonym drzewem,
+a $Y_\Gamma:=\partial P_\Gamma$ brzegiem odpowiadającej
+mu czterorozmaitości. Wtedy
+\[
+H_1(Y_\Gamma;\mathbb Z)\cong
+\operatorname{coker}(Q_\Gamma:\mathbb Z^{|V|}\to\mathbb Z^{|V|}),
+\qquad
+H_2(Y_\Gamma;\mathbb Z)\cong\ker Q_\Gamma.
+\]
+Jeżeli $\det Q_\Gamma\ne0$, to $Y_\Gamma$ jest wymierną
+sferą homologiczną oraz
+$|H_1(Y_\Gamma;\mathbb Z)|=|\det Q_\Gamma|$.
+Jeżeli $|\det Q_\Gamma|=1$, to $Y_\Gamma$ jest całkowitą
+sferą homologiczną.
+\end{twierdzenie}
+
+\begin{proof}
+Oznaczmy $W=P_\Gamma$, $Y=\partial W$ i $r=|V|$.
+W poprzednim twierdzeniu wykazaliśmy, że $H_1(W;\mathbb Z)=0$
+i $H_2(W;\mathbb Z)\cong\mathbb Z^r$.
+W długim ciągu dokładnym pary $(W,Y)$ występuje fragment
+\[
+H_3(W,Y)\longrightarrow H_2(Y)\longrightarrow H_2(W)
+\xrightarrow{\ j\ }H_2(W,Y)\longrightarrow H_1(Y)
+\longrightarrow H_1(W).
+\]
+Z dualności Poincarégo--Lefschetza i uniwersalnego twierdzenia
+o współczynnikach wynika
+$H_3(W,Y)\cong H^1(W)=0$ oraz
+$H_2(W,Y)\cong H^2(W)\cong\operatorname{Hom}(H_2(W),\mathbb Z)$.
+W wybranych bazach odwzorowanie $j$ zapisuje się jako macierz
+formy przecięcia $Q_\Gamma$: obraz klasy $x$ jest funkcjonałem
+$y\mapsto x\cdot y$. Ciąg dokładny upraszcza się więc do
+\[
+0\longrightarrow H_2(Y)\longrightarrow\mathbb Z^r
+\xrightarrow{Q_\Gamma}\mathbb Z^r
+\longrightarrow H_1(Y)\longrightarrow0,
+\]
+co dowodzi dwóch pierwszych izomorfizmów. Jeśli $Q_\Gamma$
+ma niezerowy wyznacznik, jego jądro nad $\mathbb Z$ jest zerowe,
+a iloraz $\mathbb Z^r/Q_\Gamma\mathbb Z^r$ jest skończony
+o liczbie elementów $|\det Q_\Gamma|$ (np. z postaci normalnej
+Smitha). Dualność Poincarégo na zamkniętej, spójnej,
+zorientowanej trójrozmaitości daje wtedy pozostałe grupy
+homologii takie jak dla sfery nad $\mathbb Q$.
+Przy wyznaczniku $\pm1$ również $H_1(Y)=0$, co daje
+analogiczne stwierdzenie nad $\mathbb Z$.
+\end{proof}
+
+\begin{przyklad}[Macierz i relacje w pierwszej homologii]
+Dla drzewa o wagach $-2,-3$ macierz z poprzedniego
+przykładu daje prezentację
+$H_1(Y;\mathbb Z)=\langle x,y\mid -2x+y=0,\ x-3y=0\rangle$.
+Pierwsza relacja daje $y=2x$, a druga $-5x=0$.
+Zatem $H_1(Y;\mathbb Z)\cong\mathbb Z/5\mathbb Z$.
+Zauważmy, że wyznacznik macierzy wystarcza do obliczenia
+\emph{rzędu} tej grupy, ale nie zawsze do wyznaczenia
+jej struktury: przykładem będzie graf typu $D_4$.
+\end{przyklad}
+
+\begin{stwierdzenie}[Forma splecenia brzegu]
+Niech $\Gamma$ będzie jak wyżej i niech $Q_\Gamma$ będzie
+nieosobliwa nad $\mathbb Q$. Dla $Y=\partial P_\Gamma$
+forma splecenia na skończonej grupie
+$H_1(Y;\mathbb Z)\cong\mathbb Z^r/Q_\Gamma\mathbb Z^r$
+ma, przy konwencji orientacyjnej brzegu jako $\partial P_\Gamma$,
+postać
+\[
+\lambda_Y([x],[y])\equiv-\,x^TQ_\Gamma^{-1}y
+\pmod{\mathbb Z}, \qquad x,y\in\mathbb Z^r.
+\]
+\end{stwierdzenie}
+
+\begin{proof}
+Macierz $Q_\Gamma$ jest całkowita, symetryczna i nieosobliwa.
+Jeżeli zastąpimy $x$ przez $x+Q_\Gamma z$, wyrażenie po prawej
+zmienia się o $-z^Ty\in\mathbb Z$; analogicznie dla $y$.
+Forma jest zatem dobrze określona modulo $\mathbb Z$.
+Jej niezdegenerowanie wynika z tego, że jeśli
+$x^TQ_\Gamma^{-1}y\in\mathbb Z$ dla każdego $y\in\mathbb Z^r$,
+to $Q_\Gamma^{-1}x\in\mathbb Z^r$, a więc
+$[x]=0$ w grupie ilorazowej. Identyfikację tej formy
+z geometryczną liczbą splecenia otrzymujemy następująco.
+Klasę skrętnej krzywej na brzegu reprezentuje cykl, którego
+wielokrotność ogranicza łańcuch dwuwymiarowy.
+Po umieszczeniu takiego łańcucha w $W$ jego klasy
+względne mierzy odwrotność macierzy $j=Q_\Gamma$ z
+dowodu poprzedniego twierdzenia. Liczba przecięcia tego
+łańcucha z drugim cyklem, podzielona przez odpowiednią
+wielokrotność, daje właśnie współczynnik $Q_\Gamma^{-1}$;
+znak minus pochodzi z konwencji orientacji brzegu.
+Jest to szczególny przypadek rachunku formy splecenia
+przez formę przecięcia czterorozmaitości.
+\end{proof}
+
+\begin{uwaga}
+Przy odwróceniu orientacji $Y$ forma splecenia zmienia znak.
+Nie należy więc porównywać formuł $Q^{-1}$ i $-Q^{-1}$
+bez sprawdzenia orientacji i definicji dodatniego meridianu.
+Sama grupa $H_1(Y;\mathbb Z)$ na ogół nie rozróżnia
+różnych trójrozmaitości.
+\end{uwaga}
+
+\section{Łańcuchy ważone, ułamki łańcuchowe i przestrzenie soczewkowe}
+\label{sec:tg-plumbing-chains}
+
+Najłatwiejsze rachunki wykonujemy dla grafów liniowych.
+Złożenie kolejnych bloków można wtedy opisać zarówno
+macierzą trójdiagonalną, jak i ułamkiem łańcuchowym.
+
+\begin{definicja}[Łańcuch plumbingowy]
+Niech $r\ge1$ i niech $a_1,\dots,a_r\in\mathbb Z$.
+Przez $C(a_1,\dots,a_r)$ oznaczamy ważone drzewo o
+wierzchołkach $v_1,\dots,v_r$, krawędziach
+$v_iv_{i+1}$ dla $1\le i<r$ i wagach $e(v_i)=a_i$.
+Jego macierz przecięcia oznaczamy przez $Q(a_1,\dots,a_r)$.
+\end{definicja}
+
+\begin{lemat}[Rekurencja wyznaczników]
+Dla $r\ge2$ wyznaczniki
+$d_r:=\det Q(a_1,\dots,a_r)$ spełniają
+\[
+d_r=a_r d_{r-1}-d_{r-2},\qquad
+ d_0=1,\quad d_1=a_1.
+\]
+\end{lemat}
+\begin{proof}
+Ostatni wiersz macierzy $Q(a_1,\dots,a_r)$ ma
+jedynie dwa potencjalnie niezerowe wyrazy: $1$ na pozycji
+$r-1$ oraz $a_r$ na pozycji $r$. Rozwijamy wyznacznik
+Laplace'a wzdłuż ostatniego wiersza. Składnik z $a_r$
+równa się $a_r d_{r-1}$. Minor odpowiadający wyrazowi $1$
+na pozycji $r-1$ ma w ostatniej kolumnie tylko jedną
+jedynkę; po drugim rozwinięciu dostajemy $-d_{r-2}$.
+Dla $r=2$ otrzymujemy bezpośrednio
+$d_2=a_1a_2-1$, co zgadza się z rekurencją.
+\end{proof}
+
+\begin{stwierdzenie}[Ułamek łańcuchowy dla chirurgii]
+Niech $a_1,\dots,a_r\in\mathbb Z$ będą liczbami,
+dla których wszystkie mianowniki w poniższym wyrażeniu
+są niezerowe. Niech $L$ będzie standardowym ramowanym
+splotem będącym łańcuchem niezawiązanych okręgów o
+ramowaniach $a_1,\dots,a_r$. Operacje \emph{slam-dunk}
+(racjonalnej eliminacji kolejnego torusa pełnego)
+prowadzą do wymiernej chirurgii na jednym węźle trywialnym
+o współczynniku
+\[
+[a_1,\dots,a_r]^-:=a_1-\cfrac1{a_2-
+\cfrac1{\ddots-\cfrac1{a_r}}}.
+\]
+W szczególności brzeg odpowiadającego plumbingowania
+jest przestrzenią soczewkową, gdy licznik tego ułamka
+jest niezerowy (z uwzględnieniem orientacji i konwencji
+parametrów przestrzeni soczewkowych).
+\end{stwierdzenie}
+
+\begin{proof}[Rachunek współczynnika]
+Ostatni element łańcucha jest meridianem poprzedniego
+węzła i ma ramowanie $a_r$. Z lokalnego rachunku chirurgii
+Dehna wynika, że po wypełnieniu tego elementu
+współczynnik chirurgii na poprzednim zmienia się z
+$a_{r-1}$ na $a_{r-1}-1/a_r$. Powtarzając operację,
+otrzymujemy wskazany ułamek łańcuchowy. Operacja lokalna
+polega na zmianie bazy meridian--długość na torusie
+brzegowym i jest równoważna sklejaniu dwóch torusów
+pełnych; ma więc również interpretację geometryczną.
+Szczegółowa klasyfikacja przestrzeni soczewkowych
+zależy od konwencji $L(p,q)$ i nie wynika z samej
+pierwszej homologii. Ostatnie wypełnienie jest chirurgią
+na węźle trywialnym, a zatem sklejeniem dwóch torusów
+pełnych, czyli przestrzenią soczewkową.
+\end{proof}
+
+\begin{uwaga}[Orientacja współczynnika]
+Dla łańcucha ujemnych wag $-b_i$, gdzie $b_i\ge2$,
+wartość $[-b_1,\dots,-b_r]^-$ jest ujemna.
+Przy przejściu od tej liczby do oznaczenia $L(p,q)$
+trzeba ustalić znak licznika oraz orientację brzegu;
+różne podręczniki stosują konwencje $L(p,q)$ i
+$L(p,q^{-1})$ lub ich odbicia lustrzane.
+Poniższe obliczenia homologii nie zależą od tych wyborów.
+\end{uwaga}
+
+\begin{twierdzenie}[Łańcuch typu $A_n$]
+\label{thm:tg-plumbing-An}
+Niech $n\ge1$, a $\Gamma=A_n$ będzie łańcuchem
+$n$ wierzchołków o wagach $-2$. Niech $P_{A_n}$
+będzie jego czterorozmaitością plumbingową. Wtedy
+\[
+\det Q_{A_n}=(-1)^n(n+1),\qquad
+H_1(\partial P_{A_n};\mathbb Z)\cong\mathbb Z/(n+1)\mathbb Z.
+\]
+Forma przecięcia $Q_{A_n}$ jest ujemnie określona.
+Jej brzeg jest przestrzenią soczewkową o pierwszej
+grupie homologii rzędu $n+1$.
+\end{twierdzenie}
+\begin{proof}
+Niech $d_n$ będzie wyznacznikiem odpowiedniej macierzy.
+Z lematu o wyznaczniku łańcucha mamy
+$d_n=-2d_{n-1}-d_{n-2}$, gdzie $d_0=1$, $d_1=-2$.
+Podstawienie $d_n=(-1)^n(n+1)$ spełnia rekurencję
+i warunki początkowe, zatem wzór jest prawdziwy dla
+wszystkich $n$.
+
+Aby wyznaczyć grupę, oznaczmy jej generatory odpowiadające
+kolejnym wierzchołkom przez $x_1,\dots,x_n$. Dla $n=1$ grupa jest bezpośrednio
+$\mathbb Z/2\mathbb Z$, więc dalej przyjmijmy $n\ge2$.
+Relacje
+macierzowe mają postać
+$-2x_1+x_2=0$ na początku,
+$x_{i-1}-2x_i+x_{i+1}=0$ dla $1<i<n$ oraz
+$x_{n-1}-2x_n=0$ na końcu.
+Przyjmując formalnie $x_0=x_{n+1}=0$, zapisujemy je
+jednolicie jako $x_{i-1}-2x_i+x_{i+1}=0$.
+Indukcyjnie otrzymujemy $x_i=i x_1$, a ostatnia relacja
+daje $(n+1)x_1=0$. Grupa jest więc cykliczna i ma
+rząd $n+1$ na mocy poprzedniego twierdzenia.
+
+Wszystkie wiodące minory główne macierzy $Q_{A_n}$
+mają wyznaczniki $(-1)^k(k+1)$. Z kryterium Sylvestera
+wynika, że $Q_{A_n}$ jest ujemnie określona.
+Wreszcie współczynnik chirurgii wyrażony przez ułamek
+łańcuchowy wynosi
+$[-2,\dots,-2]^-=-(n+1)/n$ dla $n\ge1$.
+Dlatego brzeg otrzymuje się przez wymierną chirurgię
+na węźle trywialnym, co kończy dowód.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[scale=.95,line cap=round]
+  \foreach \x in {0,1,2,3,4}{
+    \node[tgBlueVertex,minimum size=9mm] (v\x) at ({1.45*\x},0) {$-2$};
+  }
+  \foreach \x in {0,1,2,3}{
+    \pgfmathtruncatemacro{\y}{\x+1}
+    \draw[tgTree] (v\x)--(v\y);
+  }
+  \node[text=tgNavy,font=\small] at (2.9,-.85) {Przykład: $A_5$, wyznacznik $-6$};
+\end{tikzpicture}
+\end{center}
+
+\section{Rozgałęzienia: typ \texorpdfstring{$D_n$}{Dn} i różne grupy brzegowe}
+\label{sec:tg-plumbing-Dn}
+
+\begin{przyklad}[Graf $D_4$: wyznacznik nie wystarcza]
+Rozważmy gwiazdę z czterema wierzchołkami, w której
+wierzchołek centralny łączy się z trzema liśćmi,
+a wszystkie wagi wynoszą $-2$. W kolejności
+(centrum, trzy liście) forma przecięcia ma macierz
+\[
+Q_{D_4}=\begin{pmatrix}
+-2&1&1&1\\1&-2&0&0\\1&0&-2&0\\1&0&0&-2
+\end{pmatrix}.
+\]
+Blok odpowiadający trzem liściom jest równy $-2I_3$.
+Jego dopełnienie Schura to
+$-2-(1,1,1)(-\tfrac12I_3)(1,1,1)^T=-\tfrac12$.
+Dlatego $\det Q_{D_4}=(-2)^3(-\tfrac12)=4$.
+
+Rachunek modulo dwa pokazuje jednak, że
+$H_1(\partial P_{D_4};\mathbb Z)$ nie jest grupą
+$\mathbb Z/4\mathbb Z$. Rzeczywiście, macierz
+$Q_{D_4}$ po redukcji modulo dwa ma rząd $2$, więc
+\[
+\dim_{\mathbb F_2}
+(H_1(\partial P_{D_4};\mathbb Z)\otimes\mathbb F_2)=2.
+\]
+Grupa rzędu cztery z dwoma niezależnymi elementami
+modulo dwa musi być izomorficzna z
+$\mathbb Z/2\mathbb Z\oplus\mathbb Z/2\mathbb Z$.
+Pokazuje to, że rząd $|\det Q|$ nie określa całej
+grupy; potrzebna jest np. postać normalna Smitha.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[scale=.9]
+  \node[draw=tgPurple,fill=tgPurple!14,circle,
+    minimum size=10mm] (c) at (0,0) {$-2$};
+  \node[tgBlueVertex,minimum size=10mm] (a) at (-1.6,0) {$-2$};
+  \node[tgRedVertex,minimum size=10mm] (b) at (1.6,0) {$-2$};
+  \node[tgTealVertex,minimum size=10mm] (d) at (0,1.35) {$-2$};
+  \draw[tgEdge] (a)--(c)--(b) (c)--(d);
+  \node[font=\footnotesize,text=tgNavy] at (0,-.9)
+    {$D_4$: centralny wierzchołek o stopniu trzy};
+\end{tikzpicture}
+\end{center}
+
+\begin{uwaga}[Cała rodzina $D_n$]
+Dla standardowego grafu Dynkina $D_n$, $n\ge4$, z wagami
+$-2$ i dodatnimi przecięciami na krawędziach, zachodzi
+$|\det Q_{D_n}|=4$. Dokładniejszy rachunek postaci normalnej
+Smitha daje grupę brzegu $\mathbb Z/4\mathbb Z$ dla $n$
+nieparzystego oraz
+$\mathbb Z/2\mathbb Z\oplus\mathbb Z/2\mathbb Z$ dla $n$
+parzystego. Oto szczegóły. Usunięcie centralnego wierzchołka rozdziela
+graf na ramiona długości $n-3,1,1$. Z wyznaczników
+łańcuchów $A_m$ oraz dopełnienia Schura otrzymujemy
+$|\det Q_{D_n}|=4$. Aby rozpoznać strukturę grupy,
+przechodzimy do prezentacji jej generatorów: wzdłuż długiego
+ramienia relacje $-2x_i+x_{i-1}+x_{i+1}=0$ wyrażają
+kolejne $x_i$ przez generator $x$ przy wolnym końcu.
+Jeśli $u,v$ oznaczają dwa krótkie liście, relacje przy
+nich dają $2u=2v=(n-2)x$, zaś relacja centralna daje
+$u+v=(n-1)x$. Eliminacja $v$ prowadzi zatem do
+\[
+H_1(\partial P_{D_n};\mathbb Z)
+\cong \langle x,u\mid 2u=(n-2)x,\ 2x=0\rangle.
+\]
+Dla $n$ parzystego pierwsza relacja sprowadza się do
+$2u=0$, więc otrzymujemy $(\mathbb Z/2)^2$.
+Dla $n$ nieparzystego jest równoważna $2u=x$,
+a wtedy $4u=0$ i otrzymujemy $\mathbb Z/4$.
+Rachunek uzasadnia podaną wcześniej klasyfikację.
+\end{uwaga}
+
+\section{Graf \texorpdfstring{$E_8$}{E8} i jego macierz przecięcia}
+\label{sec:tg-plumbing-E8}
+
+Najważniejszym przykładem jest rozgałęzione drzewo z ośmioma
+wierzchołkami, występujące również jako diagram Dynkina
+układu pierwiastków $E_8$. Wagi wszystkich wierzchołków
+przyjmujemy równe $-2$.
+
+\begin{definicja}[Ujemna forma $E_8$]
+Niech $\Gamma_{E_8}$ będzie drzewem o wierzchołkach
+$v_1,\ldots,v_8$, którego krawędzie to
+$v_iv_{i+1}$ dla $1\le i\le6$ oraz $v_3v_8$.
+Niech $Q_{E_8}$ ma elementy diagonalne równe $-2$,
+pozadiagonalne równe $1$ dla sąsiednich wierzchołków
+i zero w pozostałych miejscach. \emph{Ujemną formą
+$E_8$} nazywamy formę całkowitą o macierzy $Q_{E_8}$.
+Plumbing odpowiadający temu grafowi oznaczamy
+przez $P_{E_8}$.
+\end{definicja}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0,line cap=round]
+  \foreach \i in {1,...,7}{
+    \node[tgBlueVertex,minimum size=10mm] (v\i) at ({1.15*(\i-1)},0) {$-2$};
+  }
+  \foreach \i in {1,...,6}{
+    \pgfmathtruncatemacro{\j}{\i+1}
+    \draw[tgTree] (v\i)--(v\j);
+  }
+  \node[tgRedVertex,minimum size=10mm] (v8) at (2.30,1.40) {$-2$};
+  \draw[tgAccent] (v3)--(v8);
+  \node[font=\footnotesize,text=tgNavy] at (3.45,-.85)
+    {Drzewo $E_8$: długości ramion $2$, $4$ i $1$.};
+\end{tikzpicture}
+\end{center}
+
+\begin{twierdzenie}[Rachunek macierzy $E_8$]
+\label{thm:tg-E8-unimodular}
+Forma $Q_{E_8}$ jest parzysta, unimodularna i ujemnie
+określona. W szczególności
+\[
+\det Q_{E_8}=1,\qquad \operatorname{sign}(Q_{E_8})=-8,
+\qquad H_1(\partial P_{E_8};\mathbb Z)=0.
+\]
+\end{twierdzenie}
+
+\begin{proof}
+\emph{Krok pierwszy: parzystość.}
+Dla $x=(x_v)_{v\in V}\in\mathbb Z^8$ mamy
+\[
+x^TQ_{E_8}x=-2\sum_vx_v^2+2\sum_{uv\in E}x_ux_v.
+\]
+Liczba ta jest parzysta, ponieważ oba składniki są
+podzielne przez dwa. Jest to definicja parzystości
+całkowitej formy biliniowej symetrycznej.
+
+\emph{Krok drugi: wyznacznik i określoność.}
+Usuńmy z drzewa wierzchołek trójwalentny $v_3$.
+Powstają trzy rozłączne łańcuchy o długościach odpowiednio
+$2$, $4$ i $1$, z macierzami $A_2,A_4,A_1$ z poprzedniej
+sekcji. Każda z tych macierzy jest ujemnie określona.
+Ich wyznaczniki wynoszą odpowiednio $3$, $5$ i $-2$.
+Wszystkie trzy bloki razem mają więc wyznacznik $-30$.
+
+Obliczmy dopełnienie Schura odpowiadające środkowemu
+wierzchołkowi. Dla ujemnego łańcucha $A_m$ z
+wpisami $-2$ na przekątnej i $1$ na sąsiednich
+pozycjach wartość $(A_m^{-1})_{11}$ przy jego końcu
+wynosi $-m/(m+1)$. Aby to wykazać, wystarczy użyć
+wzoru na element macierzy odwrotnej jako iloraz
+minorów: po usunięciu pierwszego wiersza i kolumny
+pozostaje $A_{m-1}$, zatem
+$(A_m^{-1})_{11}=\det A_{m-1}/\det A_m=-m/(m+1)$.
+Wynik pozostaje taki sam, gdy ramie zapisujemy w
+odwrotnej kolejności.
+
+Dopełnienie Schura macierzy z trzema ramionami wynosi
+\[
+S=-2-\left(-\frac23-\frac45-\frac12\right)
+=-2+\frac23+\frac45+\frac12=-\frac1{30}.
+\]
+Stąd ze wzoru wyznacznika blokowego
+$\det Q_{E_8}=(-30)(-1/30)=1$. Ponieważ wszystkie
+bloki ramion są ujemnie określone i ich dopełnienie
+Schura także jest ujemne, kryterium określoności
+dla macierzy blokowych daje ujemną określoność
+całej macierzy $Q_{E_8}$. Ma ona zatem osiem
+ujemnych wartości własnych i żadnej dodatniej,
+więc jej sygnatura jest równa $-8$.
+
+\emph{Krok trzeci: brzeg.}
+Wyznacznik jest równy $1$, więc macierz $Q_{E_8}$
+należy do $GL_8(\mathbb Z)$. Twierdzenie
+\ref{thm:tg-plumbing-boundary} daje
+$H_1(\partial P_{E_8};\mathbb Z)=0$.
+Razem z dualnością Poincarégo w wymiarze trzy
+pokazuje to, że brzeg jest całkowitą sferą homologiczną.
+\end{proof}
+
+\begin{uwaga}[Dlaczego to wyjątkowy przykład]
+Wśród dodatnio określonych parzystych krat unimodularnych
+najmniejsza możliwa dodatnia ranga wynosi osiem; jej
+pierwszym przykładem jest dodatnia krata $E_8$.
+Tutaj otrzymaliśmy jej wersję ujemnie określoną.
+Parzystość oznacza, że wszystkie samoprzecięcia klas
+całkowitych są parzyste, natomiast unimodularność
+wiąże formę z homologiczną trywialnością brzegu.
+Nie jest jednak prawdą, że każda całkowita sfera
+homologiczna jest dyfeomorficzna z $S^3$.
+\end{uwaga}
+
+\begin{stwierdzenie}[Brzeg $E_8$ i sfera homologiczna Poincarégo]
+Brzeg ujemnie określonego plumbingowania $P_{E_8}$
+jest, z dokładnością do konwencji orientacyjnej,
+\emph{sferą homologiczną Poincarégo}
+$\Sigma(2,3,5)$. Jej grupa fundamentalna jest
+nieprzemienna i nietrywialna; w szczególności
+$\partial P_{E_8}$ nie jest homeomorficzny z $S^3$.
+\end{stwierdzenie}
+
+\begin{proof}[Identyfikacja przez rozwarstwienie Seiferta]
+Graf $E_8$ jest gwiazdą z centralną wagą $-2$ i trzema
+ramionami złożonymi odpowiednio z $1$, $2$ i $4$
+wierzchołków o wadze $-2$. Ułamki łańcuchowe tych ramion
+wynoszą $-2/1$, $-3/2$ i $-5/4$, co sprawdza się
+indukcyjnie ze wzoru $[-2,\ldots,-2]^-=-(m+1)/m$.
+Twierdzenie~\ref{thm:tg-star-seifert}, udowodnione w
+następnym rozdziale przez redukcję ramion do wypełnień Dehna,
+identyfikuje brzeg z rozmaitością o znormalizowanych danych
+Seiferta $M(0;-2;(2,1),(3,2),(5,4))$.
+Jej identyfikacja ze sferą Brieskorna $\Sigma(2,3,5)$
+wykorzystuje klasyfikację rozwarstwień Seiferta; ten ostatni,
+nieelementarny krok przyjmujemy z literatury.
+
+Dla niebanalności grupy fundamentalnej nie trzeba
+znać jej pełnej prezentacji. Prezentacja grupy rozmaitości
+Seiferta posiada centralny generator $h$ regularnego
+włókna i generatory $x_1,x_2,x_3$ wyjątkowych włókien.
+Po dodaniu relacji $h=1$ otrzymujemy grupę trójkątną
+\[
+\Delta(2,3,5)=\langle x_1,x_2,x_3\mid
+x_1^2=x_2^3=x_3^5=x_1x_2x_3=1\rangle.
+\]
+Jest ona izomorficzna z grupą obrotów dwudziestościanu,
+czyli z grupą $A_5$ rzędu $60$. Istnieje więc
+surjekcja $\pi_1(\partial P_{E_8})\twoheadrightarrow A_5$.
+Grupa fundamentalna brzegu jest zatem nietrywialna.
+Z drugiej strony, jak wykazaliśmy, jej abelianizacja
+jest zerowa. Otrzymujemy przykład przestrzeni będącej
+sferą homologiczną, ale nie homotopijną.
+\end{proof}
+
+\begin{uwaga}[Pełna grupa fundamentalna]
+W istocie $\pi_1(\Sigma(2,3,5))$ jest binarną grupą
+dwudziestościenną rzędu $120$, czyli pewnym centralnym
+rozszerzeniem $A_5$ przez $\mathbb Z/2\mathbb Z$.
+Pełne obliczenie tej grupy nie jest potrzebne do
+wykazania, że brzeg jest różny od $S^3$.
+\end{uwaga}
+
+\section{Rachunek Kirby'ego, przesuwanie uchwytów i wydmuchiwanie}
+\label{sec:tg-plumbing-kirby}
+
+\begin{stwierdzenie}[Przesunięcie uchwytu a kongruencja macierzy]
+Niech $W$ będzie czterorozmaitością zbudowaną z $B^4$
+przez dołączenie $r$ uchwytów indeksu dwa, o macierzy
+przecięcia $Q$ w bazie klas powierzchni domkniętych.
+Przesunięcie $i$-tego uchwytu po $j$-tym odpowiada
+zastąpieniu $e_i$ przez $e_i\pm e_j$. Macierz formy
+w nowej bazie ma postać $P^TQP$, gdzie
+$P\in GL_r(\mathbb Z)$ realizuje taką zmianę bazy.
+W szczególności wyznacznik oraz sygnatura formy
+pozostają niezmienione.
+\end{stwierdzenie}
+\begin{proof}
+Forma przecięcia jest formą dwuliniową na
+$H_2(W;\mathbb Z)$. Jeśli kolumny macierzy $P$
+reprezentują nowe wektory bazowe w starej bazie,
+to ich wzajemne iloczyny skalarne tworzą macierz
+$P^TQP$. W rozkładzie na uchwyty przesunięcie
+przeprowadza na poziomie klas homologii dokładnie dodawanie lub
+odejmowanie jednej klasy rdzenia od drugiej.
+Macierz $P$ ma wyznacznik $\pm1$, a zatem
+$\det(P^TQP)=(\det P)^2\det Q=\det Q$.
+Z prawa bezwładności Sylvestera wynika niezmienniczość
+liczby dodatnich i ujemnych wartości własnych.
+\end{proof}
+
+\begin{przyklad}[Jawny rachunek przesunięcia]
+Niech $Q=\begin{psmallmatrix}a&\ell\\\ell&b\end{psmallmatrix}$.
+Po zastąpieniu pierwszego wektora $e_1$ przez
+$e_1+e_2$ otrzymujemy
+\[
+Q'=\begin{pmatrix}a+2\ell+b&\ell+b\\\ell+b&b\end{pmatrix},
+\qquad \det Q'=ab-\ell^2=\det Q.
+\]
+Rachunek pokazuje dokładnie, skąd bierze się wyraz
+$2\ell$ w nowym ramowaniu: pochodzi z obu iloczynów
+mieszanych formy symetrycznej.
+\end{przyklad}
+
+\begin{stwierdzenie}[Algebraiczne usunięcie liścia o wadze $-1$]
+Niech $\Gamma$ będzie ważonym drzewem i niech $v$
+będzie liściem o wadze $-1$, połączonym tylko z
+wierzchołkiem $u$ o wadze $b$. Wtedy macierz
+$Q_\Gamma$ jest kongruentna nad $\mathbb Z$
+z sumą ortogonalną $[-1]\oplus Q_{\Gamma'}$, gdzie
+$\Gamma'$ otrzymujemy przez usunięcie liścia $v$
+i zwiększenie wagi $u$ z $b$ do $b+1$.
+W szczególności $\det Q_\Gamma=-\det Q_{\Gamma'}$.
+\end{stwierdzenie}
+\begin{proof}
+Niech $e_v,e_u$ oznaczają odpowiednie wektory bazowe.
+Dane przecięcia to $e_v^2=-1$, $e_v\cdot e_u=1$
+i $e_v\cdot e_w=0$ dla $w\notin\{u,v\}$.
+Wprowadźmy nową bazę: zostawiamy $e_v$, a $e_u$
+zastępujemy przez $f_u=e_u+e_v$. Wtedy
+$e_v\cdot f_u=1-1=0$ oraz
+$f_u^2=b+2-1=b+1$. Dla pozostałych wierzchołków
+$w$ mamy $f_u\cdot e_w=e_u\cdot e_w$, ponieważ
+$e_v\cdot e_w=0$. Otrzymaliśmy więc dokładnie
+wymaganą sumę ortogonalną. Zmiana bazy jest
+unimodularna, a równość wyznaczników wynika ze wzoru
+na wyznacznik sumy blokowej.
+\end{proof}
+
+\begin{uwaga}[Geometria operacji blow-down]
+Jeżeli klasę $e_v$ reprezentuje gładko zanurzona sfera
+o samoprzecięciu $-1$, to jej otoczenie tubularne jest
+ujemną wiązką dyskową $E(-1)$, której brzeg jest
+$S^3$. Można zastąpić to otoczenie przez kulę
+$B^4$; nazywa się to \emph{wydmuchiwaniem w dół}
+(\emph{blow-down}). Dla liścia plumbingowego operacja
+prowadzi do grafu $\Gamma'$ ze zmienioną wagą.
+Przeciwnie, \emph{wydmuchanie} (\emph{blow-up}) dodaje
+lokalną sferę wyjątkową o samoprzecięciu $-1$.
+Nie jest to dowolne skreślanie wiersza macierzy:
+konieczna jest geometryczna obecność odpowiedniej sfery.
+\end{uwaga}
+
+\begin{center}
+\begin{tikzpicture}[scale=.95,>=Stealth]
+  \node[tgRedVertex,minimum size=11mm] (a) at (-2.5,0) {$-1$};
+  \node[tgBlueVertex,minimum size=11mm] (b) at (-.8,0) {$b$};
+  \draw[tgAccent] (a)--(b);
+  \draw[tgTeal,-{Stealth[length=3.3mm]},line width=1.6pt] (.25,0)--(1.40,0);
+  \node[tgTealVertex,minimum size=11mm] (c) at (2.65,0) {$b+1$};
+  \node[text=tgNavy,font=\footnotesize] at (.05,-1.00)
+    {Algebraiczne usunięcie liścia $-1$; w geometrii -- blow-down.};
+\end{tikzpicture}
+\end{center}
+
+\section{Plumbing \texorpdfstring{$E_8$}{E8}, twierdzenia Freedmana i Donaldsona}
+\label{sec:tg-plumbing-freedman}
+
+\begin{twierdzenie}[Donaldson; diagonalizacja form określonych]
+Niech $X$ będzie gładką, zamkniętą, spójną i po prostu
+spójną zorientowaną czterorozmaitością. Jeśli całkowita
+forma przecięcia $Q_X$ jest dodatnio lub ujemnie określona,
+to jest izomorficzna odpowiednio z formą diagonalną
+$\langle1\rangle^{\oplus b_2(X)}$ albo
+$\langle-1\rangle^{\oplus b_2(X)}$.
+\end{twierdzenie}
+
+Wynik Simona Donaldsona jest głębokim twierdzeniem
+teorii połączeń antysamodualnych. Przyjmujemy go bez dowodu;
+w naszej konstrukcji potrzebujemy jedynie jego konsekwencji:
+\emph{żadna gładka zamknięta po prostu spójna czterorozmaitość
+nie ma określonej formy przecięcia $\pm E_8$}.
+Rzeczywiście, forma $\pm E_8$ jest parzysta, natomiast każda
+niezerowa forma diagonalna $\pm I_8$ ma wektor bazowy
+z nieparzystym samoprzecięciem $\pm1$.
+
+\begin{twierdzenie}[Niedopuszczalność gładkiego wypełnienia kontraktywnego]
+\label{thm:tg-E8-no-smooth-fill}
+Niech $Y=\partial P_{E_8}$ będzie zorientowanym brzegiem
+ujemnego plumbingowania $E_8$. Nie istnieje zwarta,
+gładka, kontraktywna czterorozmaitość $C$ taka, że
+$\partial C$ jest orientacyjnie przeciwna do $Y$.
+W szczególności sfera homologiczna Poincarégo nie może
+być brzegiem gładkiej rozmaitości kontraktywnej.
+\end{twierdzenie}
+\begin{proof}
+Przypuśćmy, że taka $C$ istnieje. Sklejmy ją z
+$P_{E_8}$ wzdłuż przeciwstawnie zorientowanych brzegów:
+$X=P_{E_8}\cup_Y C$. Ponieważ obie części są gładkie,
+po użyciu kołnierza i wygładzeniu sklejenia otrzymujemy
+gładką, zamkniętą, orientowaną czterorozmaitość.
+Twierdzenie van Kampena, wykorzystujące
+$\pi_1(P_{E_8})=0$ i $\pi_1(C)=0$, daje
+$\pi_1(X)=0$. Z ciągu Mayera--Vietorisa,
+$H_1(Y)=H_2(Y)=0$ i kontraktywności $C$ wynika
+$H_2(X;\mathbb Z)\cong H_2(P_{E_8};\mathbb Z)$.
+Ponadto przecięcia klas reprezentowanych przez sfery
+we wnętrzu $P_{E_8}$ nie ulegają zmianie przy sklejeniu.
+Stąd forma przecięcia zamkniętej $X$ jest dokładnie
+$Q_{E_8}$: parzysta, unimodularna i ujemnie określona.
+Przeczy to przytoczonemu twierdzeniu Donaldsona,
+gdyż $Q_{E_8}$ nie jest diagonalizowalna nad $\mathbb Z$.
+\end{proof}
+
+\begin{twierdzenie}[Freedman; topologiczne wypełnianie sfer homologicznych]
+Każda zamknięta, zorientowana całkowita sfera homologiczna
+trójwymiarowa $Y$ jest brzegiem zwartej,
+kontraktywnej \emph{topologicznej} czterorozmaitości $C$.
+Nie zakłada się, że $C$ ma strukturę gładką.
+\end{twierdzenie}
+
+Przyjmujemy to twierdzenie z literatury. Jego dowód
+korzysta z czterowymiarowej topologicznej teorii chirurgii
+i twierdzenia o zanurzaniu dysków. Właśnie różnica między
+słowami \emph{topologiczna} i \emph{gładka} jest tu istotą
+zagadnienia, a nie jedynie techniczną uwagą.
+
+\begin{wniosek}[Zamknięta topologiczna rozmaitość $E_8$]
+Istnieje zamknięta, spójna, zorientowana, po prostu
+spójna topologiczna czterorozmaitość $X_{E_8}$,
+której całkowita forma przecięcia jest równa
+ujemnej formie $E_8$. Nie dopuszcza ona struktury gładkiej.
+\end{wniosek}
+\begin{proof}
+Niech $Y=\partial P_{E_8}$. Z udowodnionego rachunku
+homologii wynika, że $Y$ jest całkowitą sferą homologiczną.
+Z twierdzenia Freedmana istnieje kontraktywna topologiczna
+czterorozmaitość $C$ o brzegu $-Y$. Sklejamy
+$X_{E_8}=P_{E_8}\cup_Y C$. Argument z twierdzenia
+\ref{thm:tg-E8-no-smooth-fill}, oparty na van Kampenie
+i Mayerze--Vietorisie, nie używa gładkości przy
+obliczaniu grupy fundamentalnej ani formy przecięcia.
+Stąd $X_{E_8}$ jest po prostu spójna, zamknięta
+i ma formę $Q_{E_8}$. Gdyby dopuszczała strukturę gładką,
+twierdzenie Donaldsona wymuszałoby diagonalizację
+jej ujemnie określonej formy przecięcia. Jest to
+niemożliwe ze względu na parzystość $Q_{E_8}$.
+\end{proof}
+
+\begin{uwaga}[Nie należy utożsamiać trzech rozmaitości]
+Występują tu trzy różne obiekty:
+\begin{enumerate}[label=(\roman*)]
+\item $P_{E_8}$ jest \emph{gładką zwartą} czterorozmaitością
+z niepustym brzegiem $\Sigma(2,3,5)$;
+\item $C$ jest \emph{topologiczną kontraktywną}
+czterorozmaitością z przeciwnie zorientowanym brzegiem;
+\item $X_{E_8}=P_{E_8}\cup C$ jest \emph{zamkniętą
+czterorozmaitością topologiczną}, która nie może być wygładzona.
+\end{enumerate}
+Sama obecność formy $E_8$ na rozmaitości \emph{z brzegiem}
+nie przeczy twierdzeniu Donaldsona. Sprzeczność powstaje
+dopiero po gładkim zamknięciu rozmaitości, którego
+w tym przykładzie nie da się wykonać.
+\end{uwaga}
+
+\section{Odczytywanie topologii z grafu: zestawienie i dalsze kierunki}
+\label{sec:tg-plumbing-conclusions}
+
+\begin{przyklad}[Trzy grafy i trzy różne informacje]
+\begin{enumerate}[label=(\roman*)]
+\item Łańcuch $A_3$ z wagami $-2$ ma macierz
+$Q=\begin{psmallmatrix}-2&1&0\\1&-2&1\\0&1&-2\end{psmallmatrix}$,
+wyznacznik $-4$ i brzeg o grupie $H_1\cong\mathbb Z/4\mathbb Z$.
+\item Gwiazda $D_4$ ma wyznacznik $4$, ale
+$H_1\cong\mathbb Z/2\oplus\mathbb Z/2$.
+\item Graf $E_8$ ma wyznacznik $1$, więc jego brzeg jest
+sferą homologiczną, lecz nie jest sferą $S^3$.
+\end{enumerate}
+Wyznacznik dostarcza pierwszej informacji o brzegu,
+postać Smitha rozróżnia możliwe struktury grupy,
+a grupa fundamentalna i geometryczne dane sklejania
+potrafią rozróżnić także rozmaitości o identycznej homologii.
+\end{przyklad}
+
+\begin{uwaga}[Zakres stosowalności metody]
+Wielkości $\det Q$, $\operatorname{sign}Q$ i
+$\operatorname{coker}Q$ są dostępne przez elementarne rachunki
+na macierzach. Nie wyznaczają jednak samodzielnie
+typu homeomorfizmu ani dyfeomorfizmu brzegu.
+Różne ważone grafy mogą opisywać tę samą rozmaitość,
+a ich porównanie wymaga operacji Kirby'ego i odpowiednich
+ruchów na grafach. Z kolei przy konstrukcji z pętlami,
+powierzchniami bazowymi o dodatnim rodzaju czy grafami
+o znakowanych krawędziach trzeba zachować dodatkowe
+dane geometryczne: sam wektor wag nie wystarcza.
+\end{uwaga}
+
+\begin{uwaga}[Dalsze zastosowania]
+Grafy plumbingowe pojawiają się w rozdzielczościach
+osobliwości powierzchni zespolonych, teorii splotów
+algebraicznych, rozmaitościach Seiferta, rachunku Kirby'ego,
+a także w badaniach niezmienników Floera i nierówności
+dla gładkich wypełnień. Bardziej zaawansowana konstrukcja
+\emph{rational blow-down} zastępuje odpowiednie ujemnie
+określone plumbingowanie przez racjonalną kulę homologiczną;
+wymaga ona dodatkowej wiedzy o gładkich czterorozmaitościach.
+Tutaj ograniczamy się do fundamentów potrzebnych do
+rozumienia form przecięcia i przypadku $E_8$.
+\end{uwaga}
+
+\medskip
+\noindent\textbf{Literatura do rozdziału.}
+R. E. Gompf, A. I. Stipsicz, \emph{4-Manifolds and Kirby Calculus};
+M. H. Freedman, F. Quinn, \emph{Topology of 4-Manifolds};
+W. D. Neumann, \emph{A calculus for plumbing applied to the
+topology of complex surface singularities and degenerating complex
+curves}; R. Kirby, \emph{The topology of $4$-manifolds}.
+
+
+% Iteracja 8: uzupelnienie teorii Seiferta i rachunku Kirby'ego.
