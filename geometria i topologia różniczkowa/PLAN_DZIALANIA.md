@@ -13,6 +13,20 @@ i organizacja plików w [README.md](README.md).
 
 ## Bieżący zakres i kolejność
 
+### Rozdziały 30 i 31 — audyt dydaktyczny (19 listopada)
+
+Przejrzano §§30.1–30.4 o sferach Milnora oraz §§31.1–31.8
+o potoku Ricciego przed osobliwościami. Uzupełniono założenia
+wypełnienia, przypadek zerowej klasy Eulera, eliminację liczb
+charakterystycznych, wariację koneksji, całkowanie równań iloczynu,
+rachunek Bergera, komutatory pełnej krzywizny, normalizację operatora
+i indukcję prowadzącą do gładkiej granicy metryk.
+Zachowano etykiety, numerację i obie ilustracje; nie dodano zadań.
+Kontrole rachunkowe i strukturalne przeszły; szczegóły kontroli
+składu oraz źródeł zapisano w `PRZEGLAD.md`.
+Następny w kolejce jest rozdział 32, „Hipoteza Poincarégo
+w wymiarze trzy”.
+
 ### Rozdziały 28 i 29 — audyt dydaktyczny (19 listopada)
 
 Na polecenie autora przejrzano wszystkie §§28.1–28.6 oraz
@@ -25,8 +39,7 @@ normalnej wiązki S2, zakres Haefligera, dualność względnych H3,
 kontrolę torsji, relacje sklejania i normalizację form wiązania.
 Zachowano numerację i etykiety. Przeszło osiem grup kontroli
 rachunkowych i strukturalnych; szczegóły składu i porównania źródeł
-są w `PRZEGLAD.md`. Następny w kolejce jest rozdział 30,
-„Sfery Milnora: ten sam typ topologiczny, różne struktury gładkie”.
+są w `PRZEGLAD.md`. Audyt rozdziałów 30 i 31 opisano powyżej.
 
 ### Rozdział 27 — audyt dydaktyczny (19 listopada)
 
