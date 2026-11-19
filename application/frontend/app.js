@@ -155,9 +155,19 @@ async function previewLabel(label,anchor){
     if(request!==state.tooltipKey)return;
     state.tooltipData=result;
     const body=$("tipBody");body.replaceChildren();
-    body.append(node("h3",{},result.entity_title || result.title || label));
-    body.append(node("p",{className:"tip-meta"},`${label} · ${result.document_id} · wiersz ${result.line}`));
-    body.append(node("div",{className:"tip-code"},crop(result.latex,1100)));
+    if(result.ambiguous){
+      body.append(node("h3",{},"Etykieta występuje w kilku rozdziałach"));
+      body.append(node("p",{className:"tip-meta"},`${label} · wybierz właściwy rozdział`));
+      for(const choice of result.candidates){
+        const target=node("button",{className:"ref-choice"},`${choice.document_id}: ${choice.title} (wiersz ${choice.line})`);
+        target.addEventListener("click",()=>{closeTip();openModule(choice.document_id);});
+        body.append(target);
+      }
+    }else{
+      body.append(node("h3",{},result.entity_title || result.title || label));
+      body.append(node("p",{className:"tip-meta"},`${label} · ${result.document_id} · wiersz ${result.line}`));
+      body.append(node("div",{className:"tip-code"},crop(result.latex,1100)));
+    }
     const r=anchor.getBoundingClientRect();const tip=$("referenceTip");tip.classList.remove("hidden");
     tip.style.left=Math.max(8,Math.min(window.innerWidth-448,r.left))+"px";
     tip.style.top=Math.max(8,Math.min(window.innerHeight-tip.offsetHeight-12,r.bottom+8))+"px";
@@ -167,7 +177,8 @@ function closeTip(){state.tooltipKey++;state.tooltipData=null;$("referenceTip").
 async function openLabel(label){
   try{
     const result=state.tooltipData?.name===label?state.tooltipData:await api(`/api/labels/${encodeURIComponent(label)}`);
-    closeTip();if(result.entity_id)await openEntity(result.entity_id);else await openModule(result.document_id);
+    closeTip();if(result.ambiguous){toast("Etykieta jest niejednoznaczna. Wybierz rozdział w podglądzie odsyłacza.");return;}
+    if(result.entity_id)await openEntity(result.entity_id);else await openModule(result.document_id);
   }catch(e){toast(e.message);}
 }
 function setupSearch(){
@@ -390,4 +401,3 @@ function listeners(){
   setupSearch();
 }
 listeners();init();
-

@@ -1,3 +1,15 @@
+# Atlas matematyczny — iteration VI
+
+**352 chapter modules in the bundled offline database:** existing 264 plus 20 differential geometry, 35 functional analysis and 33 PDE I chapters; the 31 measure-theory chapters have been refreshed, not duplicated. Their titles are navigable in Explorer. Book/TeX compilation sources remain canonical in the GitHub repository.
+
+**Reference policy:** the parser indexes all explicit LaTeX labels and references. It records label collisions and does not silently redirect cross-book ambiguous references. The UI offers chapter choices when a label has multiple owners. Current snapshot reports 303 overlapping label names, 159 ambiguous references and 17 unresolved references; this is an audit backlog, not a passed global-reference check. Preserve original labels until the associated mathematical chapters have been deduplicated and their proofs compared.
+
+**Source resolution:** when `../chapters/pl` exists (GitHub checkout), `build_index.ps1` and `start.ps1` index that canonical tree recursively; when it is absent (portable offline ZIP), use the bundled flat `rozdzialy/` snapshots. The index is stored in `data/biblioteka.db` and may be rebuilt without changing any TeX sources.
+
+**Naming:** directory names and code APIs are English, while chapter text remains Polish. Chapter files use a numeric prefix and a human-readable slug; book entrypoints live in `books/pl/` in the repository.
+
+**PDE:** the canonical book `books/pl/partial_differential_equations.tex` imports 33 chapters under `chapters/pl/partial_differential_equations/`. The whole source was split without dropping or rewriting TeX body material; its original monolith is archived in the associated source ZIP.
+
 # Atlas matematyczny — aplikacja do wspólnej Biblioteki
 
 **Current application version: 0.5 (264 indexed chapters, including measure theory and jets, plus drafts/save/X-close cleanup); historical 0.3 notes below.**

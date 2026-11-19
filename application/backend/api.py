@@ -176,6 +176,13 @@ def label_detail(label: str):
     if len(label)>300:
         raise HTTPException(status_code=400,detail="Zbyt długa etykieta.")
     with db_connection() as con:
+        options = con.execute("""SELECT c.document_id,c.line,c.entity_id,d.title,d.domain
+             FROM label_conflicts c JOIN documents d ON d.id=c.document_id
+             WHERE c.name=? ORDER BY c.document_id""", (label,)).fetchall()
+        if options:
+            count = con.execute("SELECT count(*) FROM references_tex WHERE target_label=?", (label,)).fetchone()[0]
+            return {"name":label,"ambiguous":True,"candidates":[dict(x) for x in options],
+                    "incoming_references":count}
         result = show_label(con,label,max_chars=1700)
         if not result:
             raise HTTPException(status_code=404,detail="Etykieta nie istnieje.")
