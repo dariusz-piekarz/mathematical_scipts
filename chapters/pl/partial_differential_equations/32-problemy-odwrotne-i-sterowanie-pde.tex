@@ -1,0 +1,489 @@
+\chapter[Problemy odwrotne i sterowanie PDE]{Problemy odwrotne i sterowanie optymalne dla równań różniczkowych cząstkowych}
+\label{chap:pde32}
+
+\section{Problem prosty, odwrotny i sens stabilności}
+Zagadnienie proste polega na wyznaczeniu rozwiązania $y$ PDE
+z danych, np. źródła $f$ i współczynników operatora.
+W zagadnieniu odwrotnym obserwujemy częściowo $y$ i próbujemy
+odzyskać nieznane $f$, współczynniki albo warunki początkowe.
+Problem sterowania polega natomiast na doborze danych wejściowych
+$u$, aby wymusić pożądaną własność rozwiązania.
+
+\begin{definicja}[Stabilność zagadnienia odwrotnego]
+Niech $X,Y$ będą przestrzeniami unormowanymi, $K:X\to Y$
+operatorem obserwacji, a $y=Kf$ danymi bez szumu.
+Zagadnienie odtworzenia $f$ jest stabilne w tych normach,
+jeśli istnieje stała $C>0$ spełniająca
+$\|f_1-f_2\|_X\le C\|Kf_1-Kf_2\|_Y$ dla wszystkich
+$f_1,f_2$ z rozważanej klasy. Sama jednoznaczność, tj.
+$\ker K=\{0\}$, nie gwarantuje stabilności.
+\end{definicja}
+
+\begin{przyklad}[Odtwarzanie źródła równania eliptycznego]
+\label{ex:pde32-elliptic-inverse}
+Niech $\Omega\subset\R^d$ będzie ograniczonym obszarem
+Lipschitzowskim, a $A=-\Delta+I$ z jednorodnym warunkiem
+Dirichleta. Dla $f\in L^2(\Omega)$ niech $y=Kf=A^{-1}f$.
+Operator $K:L^2(\Omega)\to L^2(\Omega)$ jest zwarty:
+rozwiązania są jednostajnie ograniczone w $H_0^1(\Omega)$,
+a zanurzenie $H_0^1\hookrightarrow L^2$ jest zwarte.
+Jeśli $e_k$ jest znormalizowaną funkcją własną laplasjanu
+Dirichleta z wartością własną $\lambda_k\to\infty$, to
+$Ke_k=(1+\lambda_k)^{-1}e_k$. Mamy
+$\|e_k\|_2=1$ i $\|Ke_k\|_2\to0$: nie istnieje
+jednostajnie ciągła odwrotność $K^{-1}$ na jego obrazie,
+mimo że $K$ jest różnowartościowy.
+\end{przyklad}
+
+\begin{uwaga}[Odtwarzanie warunku początkowego równania ciepła]
+Dla operatora $-\Delta_D$ obserwacja rozwiązania po czasie
+$T>0$ jest dana przez $K_T=\exp(T\Delta_D)$.
+Na funkcjach własnych $K_Te_k=e^{-T\lambda_k}e_k$.
+Współczynniki wysokoczęstotliwościowe są tłumione
+wykładniczo; ich odzyskanie wzmacnia nawet niewielki szum.
+Jest to przykład \emph{silnej niestabilności} zagadnienia odwrotnego.
+\end{uwaga}
+
+\section{Regularyzacja Tichonowa: istnienie i równanie normalne}
+\begin{twierdzenie}[Regularyzacja kwadratowa]\label{thm:pde32-tikhonov}
+Niech $X,Y$ będą rzeczywistymi przestrzeniami Hilberta,
+$K\in\mathcal L(X,Y)$, $y^\delta\in Y$ oraz $\alpha>0$.
+Funkcjonał
+\begin{equation}\label{eq:pde32-tikhonov}
+ J_\alpha(f)=\frac12\|Kf-y^\delta\|_Y^2
+ +\frac\alpha2\|f\|_X^2
+\end{equation}
+ma dokładnie jeden minimizator $f_\alpha^\delta\in X$.
+Jest on jedynym rozwiązaniem równania normalnego
+\begin{equation}\label{eq:pde32-normal}
+ (K^*K+\alpha I)f_\alpha^\delta=K^*y^\delta.
+\end{equation}
+Jeżeli $\|y^\delta-y\|_Y\le\delta$ i $y=Kf^\dagger$,
+gdzie $f^\dagger$ jest rozwiązaniem równania $Kf=y$
+o najmniejszej normie, to przy $\alpha\downarrow0$
+i $\delta/\sqrt\alpha\to0$ zachodzi
+$\|f_\alpha^\delta-f^\dagger\|_X\to0$.
+\end{twierdzenie}
+\begin{proof}
+Funkcjonał jest ściśle wypukły, ciągły i koercywny.
+Każdy ciąg minimalizujący jest ograniczony; z refleksywności
+przestrzeni Hilberta wybieramy słabo zbieżny podciąg.
+Normy po zastosowaniu ograniczonego operatora $K$ są słabo
+dolnie półciągłe, więc granica minimalizuje $J_\alpha$.
+Ścisła wypukłość składnika $\alpha\|f\|^2/2$ daje
+jednoznaczność. Zróżniczkowanie w kierunku $h\in X$ daje
+$\langle Kf-y^\delta,Kh\rangle_Y+
+\alpha\langle f,h\rangle_X=0$; to właśnie
+\eqref{eq:pde32-normal}. Alternatywnie jego rozwiązywalność
+wynika z twierdzenia Laxa--Milgrama.
+
+Niech $A_0=K^*K\ge0$ i $f_\alpha^0=(A_0+\alpha I)^{-1}A_0f^\dagger$.
+Z równania normalnego
+\[
+ f_\alpha^\delta-f^\dagger
+ =-\alpha(A_0+\alpha I)^{-1}f^\dagger
+ +(A_0+\alpha I)^{-1}K^*(y^\delta-y).
+\]
+Rozkład spektralny operatora $A_0$ i fakt
+$f^\dagger\perp\ker A_0$ pokazują, że pierwszy składnik
+zbiega silnie do zera: mnożniki $\alpha/(t+\alpha)$
+są ograniczone przez jeden i zbiegają do zera dla $t>0$.
+Dla drugiego składnika korzystamy z tożsamości
+$\|(A_0+\alpha I)^{-1}K^*\|
+\le\sup_{t\ge0}\sqrt t/(t+\alpha)=1/(2\sqrt\alpha)$.
+Stąd błąd od szumu nie przekracza $\delta/(2\sqrt\alpha)$,
+co kończy dowód.
+\end{proof}
+
+\begin{stwierdzenie}[Oszacowanie ze źródłowym warunkiem regularności]
+\label{prop:pde32-source}
+Przy założeniach twierdzenia~\ref{thm:pde32-tikhonov}, jeśli
+$f^\dagger=K^*w$ dla pewnego $w\in Y$, to
+\begin{equation}\label{eq:pde32-rate}
+ \|f_\alpha^\delta-f^\dagger\|_X
+ \le \frac{\sqrt\alpha}{2}\|w\|_Y
+ +\frac\delta{2\sqrt\alpha}.
+\end{equation}
+Wybór $\alpha\asymp\delta$ daje błąd $O(\sqrt\delta)$,
+przy ustalonym $\|w\|_Y$.
+\end{stwierdzenie}
+\begin{proof}
+Z komutacji funkcji spektralnych $KK^*$ z $K^*$ mamy
+$\alpha(A_0+\alpha I)^{-1}K^*w
+=K^*\alpha(KK^*+\alpha I)^{-1}w$.
+Jego norma nie przekracza
+$\sup_{t\ge0}\alpha\sqrt t/(t+\alpha)\|w\|
+=(\sqrt\alpha/2)\|w\|$.
+Część odpowiadającą szumowi oszacowano w poprzednim dowodzie.
+\end{proof}
+
+
+\begin{twierdzenie}[Ułamkowy warunek źródłowy i tempo Tichonowa]
+\label{thm:pde32-fractional-source}
+Niech $X,Y$ będą rzeczywistymi przestrzeniami Hilberta,
+$K\in\mathcal L(X,Y)$, $A_0=K^*K$,
+$0<\nu\le1$, $w\in X$ oraz
+$f^\dagger=A_0^\nu w$. Przyjmijmy
+$y=Kf^\dagger$ i $\|y^\delta-y\|_Y\le\delta$.
+Wtedy $f^\dagger$ jest rozwiązaniem $Kf=y$
+o najmniejszej normie, a minimizator
+\eqref{eq:pde32-tikhonov} spełnia
+\begin{equation}\label{eq:pde32-fractional-rate}
+ \|f_\alpha^\delta-f^\dagger\|_X
+ \le C_\nu\alpha^\nu\|w\|_X+
+ \frac{\delta}{2\sqrt\alpha},\qquad
+ C_\nu=\sup_{r\ge0}\frac{r^\nu}{1+r}<\infty.
+\end{equation}
+Jeżeli $\delta\downarrow0$ i $\|w\|_X$ pozostaje
+ograniczona, to wybór
+$\alpha\asymp\delta^{2/(2\nu+1)}$
+daje błąd $O(\delta^{2\nu/(2\nu+1)})$.
+\end{twierdzenie}
+\begin{proof}
+Z twierdzenia spektralnego dla dodatniego ograniczonego
+operatora samosprzężonego $A_0$ definiujemy
+$A_0^\nu$. Dla $\nu>0$ obraz $A_0^\nu$ jest
+prostopadły do $\ker A_0=\ker K$; dlatego
+$f^\dagger$ jest rozwiązaniem o najmniejszej normie.
+Rozkład błędu w dowodzie
+\ref{thm:pde32-tikhonov} ma postać
+\[
+ f_\alpha^\delta-f^\dagger
+ =-\alpha(A_0+\alpha I)^{-1}A_0^\nu w
+ +(A_0+\alpha I)^{-1}K^*(y^\delta-y).
+\]
+Twierdzenie spektralne daje
+\[
+ \|\alpha(A_0+\alpha I)^{-1}A_0^\nu\|
+ \le\sup_{t\ge0}\frac{\alpha t^\nu}{t+\alpha}
+ =\alpha^\nu\sup_{r\ge0}\frac{r^\nu}{1+r}
+ =C_\nu\alpha^\nu.
+\]
+Stała $C_\nu$ jest skończona dla $0<\nu\le1$.
+Część pochodząca od szumu ma normę nie większą
+niż $\delta/(2\sqrt\alpha)$, jak wykazano w
+\ref{thm:pde32-tikhonov}. To dowodzi oszacowania.
+Porównanie wykładników $\alpha^\nu$ i
+$\delta\alpha^{-1/2}$ prowadzi do
+$\alpha^{\nu+1/2}\asymp\delta$, skąd podane tempo.
+\end{proof}
+
+\begin{uwaga}[Zakres tempa]
+Jest to oszacowanie warunkowe: bez założenia
+$f^\dagger\in\operatorname{Ran}(A_0^\nu)$
+nie można przypisać wszystkim danym tempa
+$\delta^{2\nu/(2\nu+1)}$. Ponadto w standardowej
+regularyzacji Tichonowa wykładnik $\nu>1$ nie
+prowadzi tą metodą do analogicznego polepszenia
+członu obciążenia (zjawisko nasycenia).
+\end{uwaga}
+
+\begin{przyklad}[Zbyt mała regularyzacja]
+Dla $K_T=\exp(T\Delta_D)$ mamy
+$\sigma_k=e^{-T\lambda_k}$. Na obserwacji pojedynczego
+modu $y^\delta=\sigma_ke_k+\delta e_k$ nieuregulowana
+odwrotność mnoży szum przez $1/\sigma_k=e^{T\lambda_k}$.
+Regularyzacja Tichonowa zastępuje ten mnożnik przez
+$\sigma_k/(\sigma_k^2+\alpha)$, którego moduł jest
+ograniczony przez $1/(2\sqrt\alpha)$. W celu uzyskania zbieżności do rozwiązania dokładnego przy
+zanikającym szumie trzeba dobierać $\alpha=\alpha(\delta)$;
+parametr stały ogranicza wpływ szumu, ale pozostawia
+niezanikający błąd regularyzacji.
+\end{przyklad}
+
+\section{Sterowanie rozłożone w obszarze: operator stanu}
+Niech $\Omega\subset\R^d$ będzie ograniczonym obszarem
+Lipschitzowskim, $V=H_0^1(\Omega)$ i $H=L^2(\Omega)$.
+Przyjmujemy mierzalną symetryczną macierz
+$A\in L^\infty(\Omega;\R^{d\times d})$
+i $\xi^{\mathsf T}A(x)\xi\ge\lambda|\xi|^2$ dla
+każdego $\xi$ i prawie każdego $x$, z $\lambda>0$.
+Niech $c\in L^\infty(\Omega)$, $c\ge0$.
+Forma
+$\mathfrak a(y,v)=\int_\Omega
+(A\nabla y\cdot\nabla v+cyv)\,\mathrm d\lambda_d(x)$
+jest koercywna i symetryczna na $V$.
+Niech $f\in V'$ oraz $u\in H$. Przez $y(u)\in V$
+oznaczamy jedyne rozwiązanie
+\begin{equation}\label{eq:pde32-state}
+ \mathfrak a(y(u),v)=\langle f,v\rangle_{V',V}
+ +\int_\Omega uv\,\mathrm d\lambda_d(x)
+ \quad\text{dla każdego }v\in V.
+\end{equation}
+Odwzorowanie $u\mapsto y(u)$ jest afiniczne i ciągłe
+$H\to V$. Kładziemy $S(u)=y(u)-y(0)$; jest to liniowy
+operator rozwiązania dla źródła $u$.
+
+\begin{twierdzenie}[Istnienie sterowania optymalnego]\label{thm:pde32-control}
+Niech $y_d\in H$, $\alpha>0$ i $U_{\mathrm{ad}}\subset H$
+będzie niepustym, domkniętym i wypukłym podzbiorem.
+Wtedy problem
+\begin{equation}\label{eq:pde32-opt}
+ \min_{u\in U_{\mathrm{ad}}}
+ \mathcal J(u),\qquad
+ \mathcal J(u)=\frac12\|y(u)-y_d\|_H^2
+ +\frac\alpha2\|u\|_H^2
+\end{equation}
+ma dokładnie jedno rozwiązanie optymalne $\bar u$.
+\end{twierdzenie}
+\begin{proof}
+Dla dowolnego ciągu minimalizującego $(u_n)$ nierówność
+$\alpha\|u_n\|_H^2/2\le\mathcal J(u_n)$ daje ograniczoność.
+Istnieje słabo zbieżny podciąg $u_n\rightharpoonup\bar u$ w $H$.
+Każdy domknięty wypukły podzbiór przestrzeni Hilberta jest
+słabo domknięty, więc $\bar u\in U_{\mathrm{ad}}$.
+Ciągłość liniowa $S$ daje słabą zbieżność
+$y(u_n)\rightharpoonup y(\bar u)$ w $H$.
+Słaba dolna półciągłość norm daje
+$\mathcal J(\bar u)\le\liminf\mathcal J(u_n)$.
+Składnik z $\alpha>0$ zapewnia ścisłą wypukłość
+$\mathcal J$, a wraz z wypukłością $U_{\mathrm{ad}}$
+także jednoznaczność minimizatora.
+\end{proof}
+
+\section{Równanie sprzężone i warunki optymalności}
+\begin{twierdzenie}[Warunek pierwszego rzędu i rzut na sterowania dopuszczalne]
+\label{thm:pde32-adjoint}
+Niech $\bar u$ będzie rozwiązaniem~\eqref{eq:pde32-opt},
+$\bar y=y(\bar u)$, a $\bar p\in V$ niech będzie
+jedynym rozwiązaniem równania sprzężonego
+\begin{equation}\label{eq:pde32-adj}
+ \mathfrak a(v,\bar p)
+ =\int_\Omega(\bar y-y_d)v\,\mathrm d\lambda_d(x)
+ \qquad(v\in V).
+\end{equation}
+Wówczas $\bar u$ charakteryzuje nierówność wariacyjna
+\begin{equation}\label{eq:pde32-variational-control}
+ \int_\Omega(\bar p+\alpha\bar u)(v-\bar u)
+ \,\mathrm d\lambda_d(x)\ge0
+ \quad\text{dla każdego }v\in U_{\mathrm{ad}},
+\end{equation}
+a równoważnie
+$\bar u=P_{U_{\mathrm{ad}}}(-\bar p/\alpha)$,
+gdzie $P_{U_{\mathrm{ad}}}$ jest rzutem metrycznym na
+niepusty domknięty wypukły podzbiór przestrzeni Hilberta.
+Jeżeli $U_{\mathrm{ad}}=\{v\in L^2(\Omega):a\le v\le b
+\text{ prawie wszędzie}\}$ dla liczb $a<b$,
+to $\bar u(x)=\min\{b,\max\{a,-\bar p(x)/\alpha\}\}$
+dla prawie każdego $x\in\Omega$.
+\end{twierdzenie}
+\begin{proof}
+Dla $h\in H$ pochodna stanu $z=S h$ spełnia
+$\mathfrak a(z,v)=\int_\Omega hv\,\mathrm d\lambda_d(x)$.
+Różniczkując funkcjonał otrzymujemy
+$\mathcal J'(\bar u)h=(\bar y-y_d,z)_H+
+\alpha(\bar u,h)_H$. Z równań dla $z$ i $\bar p$
+wynika
+$(\bar y-y_d,z)_H=\mathfrak a(z,\bar p)=
+(h,\bar p)_H$. Stąd $\mathcal J'(\bar u)h=
+(\bar p+\alpha\bar u,h)_H$.
+Dla $v\in U_{\mathrm{ad}}$ funkcja
+$t\mapsto\mathcal J(\bar u+t(v-\bar u))$ ma minimum
+w $t=0$ na $[0,1]$, co daje~\eqref{eq:pde32-variational-control}.
+Odwrotnie, nierówność i wypukłość $\mathcal J$ zapewniają minimum.
+Charakterystyka rzutu Hilbertowskiego
+$z=P_Cw\iff (z-w,v-z)_H\ge0$ dla każdego $v\in C$
+daje formułę z $w=-\bar p/\alpha$.
+Dla ograniczeń punktowych minimalizacja
+$\|v-w\|_{L^2}^2$ rozdziela się punktowo,
+co prowadzi do obcięcia wartości do przedziału $[a,b]$.
+\end{proof}
+
+\begin{uwaga}[Dlaczego równanie sprzężone jest użyteczne?]
+Bez zmiennej sprzężonej obliczenie gradientu kosztu
+wymagałoby rozwiązania nowego PDE dla każdego kierunku $h$.
+Równanie~\eqref{eq:pde32-adj} wymaga jednego dodatkowego
+rozwiązania PDE i daje gradient jako funkcję $\alpha u+p$.
+To podstawowy mechanizm metod numerycznych sterowania.
+\end{uwaga}
+
+\section{Sterowanie równaniem ciepła i czas wsteczny}
+\begin{stwierdzenie}[Równanie sprzężone dla parabolicznego sterowania rozłożonego]
+\label{prop:pde32-heat-adjoint}
+Niech $T>0$, $\Omega$ będzie ograniczonym obszarem
+Lipschitzowskim, $u_0\in L^2(\Omega)$, $y_d\in
+L^2((0,T)\times\Omega)$ oraz $\alpha>0$.
+Dla $v\in L^2((0,T)\times\Omega)$ niech $y(v)$ będzie
+słabym rozwiązaniem
+$y_t-\Delta y=v$ w $(0,T)\times\Omega$,
+$y=0$ na $(0,T)\times\partial\Omega$ i $y(0)=u_0$.
+Koszt
+$\mathcal J_T(v)=\frac12\|y(v)-y_d\|_{L^2((0,T)\times\Omega)}^2
++\frac\alpha2\|v\|_{L^2((0,T)\times\Omega)}^2$
+ma pochodną
+$\mathcal J_T'(v)h=
+\int_0^T\!\int_\Omega(\alpha v+p)h
+\,\mathrm d\lambda_d(x)\,\mathrm d\lambda_1(t)$,
+gdzie $p$ jest rozwiązaniem równania sprzężonego
+\[
+ -p_t-\Delta p=y(v)-y_d,
+ \qquad p(T)=0,\qquad p|_{\partial\Omega}=0.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Pochodna stanu $z$ w kierunku $h$ spełnia
+$z_t-\Delta z=h$, $z(0)=0$, z jednorodnym warunkiem brzegowym.
+Słabe rozwiązania należą do
+$L^2(0,T;H_0^1)$, a ich pochodne czasowe do
+$L^2(0,T;H^{-1})$, więc wolno użyć formuły całkowania
+przez części w trójce Gelfanda, udowodnionej w rozdziale 20.
+Mnożąc równanie $z$ przez $p$ i równanie $p$ przez $z$,
+a następnie odejmując, uzyskujemy
+\[
+ \int_0^T\!\int_\Omega(y(v)-y_d)z
+ \,\mathrm d\lambda_d(x)\,\mathrm d\lambda_1(t)
+ =\int_0^T\!\int_\Omega ph
+ \,\mathrm d\lambda_d(x)\,\mathrm d\lambda_1(t).
+\]
+Składniki brzegowe w czasie znikają z $z(0)=0$ i $p(T)=0$.
+Różniczkowanie kosztu oraz powyższa tożsamość
+dają tezę.
+\end{proof}
+
+\section{Odtwarzanie współczynnika i granice identyfikowalności}
+\begin{stwierdzenie}[Pochodna względem współczynnika dyfuzji]
+\label{prop:pde32-coeff-gradient}
+Niech $\Omega$ będzie ograniczonym obszarem Lipschitzowskim,
+$0<\lambda\le a\le\Lambda$ prawie wszędzie,
+$a\in L^\infty(\Omega)$, $f\in H^{-1}(\Omega)$.
+Niech $y(a)\in H_0^1(\Omega)$ będzie jedynym rozwiązaniem
+$-\diver(a\nabla y(a))=f$.
+Dla $h\in L^\infty(\Omega)$ i $|\eps|$ dostatecznie małych
+niech $a_\eps=a+\eps h$. Wtedy istnieje pochodna kierunkowa
+$z=\lim_{\eps\to0}(y(a_\eps)-y(a))/\eps$ w $H_0^1(\Omega)$
+i spełnia
+\begin{equation}\label{eq:pde32-coeff-linear}
+ \int_\Omega a\nabla z\cdot\nabla v
+ \,\mathrm d\lambda_d(x)
+ =-\int_\Omega h\nabla y(a)\cdot\nabla v
+ \,\mathrm d\lambda_d(x)\qquad(v\in H_0^1(\Omega)).
+\end{equation}
+Jeżeli $y_d\in L^2(\Omega)$,
+$\mathcal F(a)=\frac12\|y(a)-y_d\|_2^2$,
+a $p$ spełnia
+$-\diver(a\nabla p)=y(a)-y_d$ w $H^{-1}$, to
+$\mathcal F'(a)h=-\int_\Omega
+h\nabla y(a)\cdot\nabla p\,\mathrm d\lambda_d(x)$.
+\end{stwierdzenie}
+\begin{proof}
+Z jednolitej eliptyczności $a_\eps$ wynika, że
+$y(a_\eps)$ jest jednostajnie ograniczona w $H_0^1$.
+Odejmując równania i testując różnicą rozwiązań
+otrzymujemy
+$\|y(a_\eps)-y(a)\|_{H_0^1}\le
+C|\eps|\|h\|_\infty\|f\|_{H^{-1}}$.
+Iloraz różnicowy $z_\eps$ spełnia
+$\int_\Omega a\nabla z_\eps\cdot\nabla v\,\mathrm d\lambda_d(x)
+=-\int_\Omega h\nabla y(a_\eps)\cdot\nabla v\,\mathrm d\lambda_d(x)$.
+Prawa strona zbiega silnie w $H^{-1}$ do funkcjonału
+$v\mapsto-\int_\Omega h\nabla y(a)\cdot\nabla v
+\,\mathrm d\lambda_d(x)$;
+koercywność daje silną zbieżność $z_\eps\to z$ w $H_0^1$.
+Z definicji $p$ i~\eqref{eq:pde32-coeff-linear}
+$\mathcal F'(a)h=(y(a)-y_d,z)_2
+=\int_\Omega a\nabla p\cdot\nabla z\,\mathrm d\lambda_d(x)
+=-\int_\Omega h\nabla y(a)\cdot\nabla p\,\mathrm d\lambda_d(x)$.
+\end{proof}
+
+
+\begin{wniosek}[Różniczkowalność w normie $L^\infty$]
+\label{cor:pde32-frechet}
+Przy założeniach stwierdzenia~\ref{prop:pde32-coeff-gradient}
+operator rozwiązania $a\mapsto y(a)$ jest różniczkowalny
+w sensie Frécheta jako odwzorowanie z otwartego zbioru
+$\{a\in L^\infty(\Omega):\operatorname*{ess\,inf}a>0\}$
+do $H_0^1(\Omega)$. Jego pochodna w kierunku $h\in L^\infty$
+jest jedynym rozwiązaniem~\eqref{eq:pde32-coeff-linear}.
+Dla $\|h\|_\infty\le\lambda/2$ istnieje stała $C$
+zależna wyłącznie od $\lambda$, dla której
+\[
+ \|y(a+h)-y(a)-z_h\|_{H_0^1}
+ \le C\|h\|_\infty^2\|f\|_{H^{-1}}.
+\]
+\end{wniosek}
+\begin{proof}
+Oznaczmy $y_h=y(a+h)$, $y=y(a)$ i $\delta y=y_h-y$.
+Odejmowanie równań stanów daje
+$\int_\Omega a\nabla\delta y\cdot\nabla v
+=-\int_\Omega h\nabla y_h\cdot\nabla v$.
+Ponieważ $a+h\ge\lambda/2$, z oszacowań energetycznych
+wynikają $\|y_h\|_{H_0^1}\le2\lambda^{-1}\|f\|_{H^{-1}}$
+i $\|\delta y\|_{H_0^1}\le
+2\lambda^{-2}\|h\|_\infty\|f\|_{H^{-1}}$.
+Pochodna kandydacka $z_h$ spełnia
+$\int_\Omega a\nabla z_h\cdot\nabla v
+=-\int_\Omega h\nabla y\cdot\nabla v$.
+Dla reszty $r_h=\delta y-z_h$ otrzymujemy więc
+\[
+ \int_\Omega a\nabla r_h\cdot\nabla v
+ =-\int_\Omega h\nabla\delta y\cdot\nabla v.
+\]
+Testując przez $v=r_h$ i wykorzystując koercywność,
+otrzymujemy $\|r_h\|_{H_0^1}\le
+2\lambda^{-3}\|h\|_\infty^2\|f\|_{H^{-1}}$.
+Zależność $h\mapsto z_h$ jest liniowa i ograniczona,
+a reszta jest kwadratowa względem normy $L^\infty$.
+To dowodzi różniczkowalności Frécheta.
+\end{proof}
+
+\begin{kontrprzyklad}[Brak identyfikowalności z jednej obserwacji]
+Dla $f=0$ i jednorodnych warunków Dirichleta rozwiązaniem
+$-\diver(a\nabla y)=0$ jest $y=0$ dla dowolnego dodatniego,
+ograniczonego współczynnika $a$. Zatem obserwacja całej
+funkcji $y$ nie wyznacza $a$ bez odpowiedniego pobudzenia.
+To nie jest wada regularyzacji, lecz strukturalny brak informacji.
+\end{kontrprzyklad}
+
+\section{Sterowanie skończenie wieloma modami równania ciepła}
+\begin{twierdzenie}[Dokładny koszt sterowania pojedynczego modu]
+\label{thm:pde32-gramian}
+Niech $\lambda>0$, $T>0$ i $a\in\R$. Spośród wszystkich
+$h\in L^2(0,T)$, dla których rozwiązanie
+$z'(t)+\lambda z(t)=h(t)$, $z(0)=0$, spełnia $z(T)=a$,
+minimalną normę ma
+\[
+ h_*(s)=\frac{a\,e^{-\lambda(T-s)}}{W_\lambda(T)},
+ \qquad W_\lambda(T)=\frac{1-e^{-2\lambda T}}{2\lambda}.
+\]
+Ponadto $\int_0^T|h_*(s)|^2\,\mathrm d\lambda_1(s)
+=a^2/W_\lambda(T)$.
+\end{twierdzenie}
+\begin{proof}
+Ze wzoru wariacji stałej
+$z(T)=\int_0^T e^{-\lambda(T-s)}h(s)
+\,\mathrm d\lambda_1(s)$.
+Nierówność Cauchy'ego--Schwarza daje
+$|a|^2\le W_\lambda(T)\|h\|_{L^2(0,T)}^2$.
+Równość zachodzi dokładnie dla $h$ proporcjonalnej
+do $s\mapsto e^{-\lambda(T-s)}$.
+Dobrany współczynnik proporcjonalności wynika z warunku
+$z(T)=a$ i daje powyższy wzór.
+\end{proof}
+
+\begin{uwaga}[Zasięg twierdzenia o sterowalności]
+Dla skończonej liczby modów laplasjanu wybieramy sterowania
+wzdłuż odpowiadających im funkcji własnych i sumujemy koszty.
+Jednak $W_{\lambda_k}(T)^{-1}\sim 2\lambda_k$,
+więc ogólny cel $\sum_k a_ke_k\in L^2$ może wymagać
+nieskończonego kosztu. Uzyskana dokładna sterowalność
+każdego skończonego zestawu modów \emph{nie oznacza}
+dokładnej sterowalności w całej przestrzeni $L^2$.
+Na tym polega fundamentalna różnica pomiędzy problemem
+skończenie wymiarowym a równaniem parabolicznym.
+\end{uwaga}
+
+\section{Podsumowanie metod i ograniczeń}
+Regularyzacja stabilizuje problem odwrotny, lecz nie przywraca
+informacji utraconej przez operator obserwacji.
+W sterowaniu optymalnym istnienie i jednoznaczność wynikają
+z wypukłości, a równanie sprzężone pozwala obliczyć pochodną
+kosztu bez rozwiązywania osobnego PDE dla każdego kierunku.
+Ogólna teoria identyfikacji współczynników z danych brzegowych
+(np. problem Calderóna), nierówności obserwowalności,
+sterowalność dokładna i przybliżona oraz problemy optymalizacji
+nieliniowych układów PDE są bardziej zaawansowane;
+nie przypisujemy im dowodów uzyskanych tylko dla
+kwadratowego zadania eliptycznego lub skończonego zestawu modów.
+
+
+\appendix
