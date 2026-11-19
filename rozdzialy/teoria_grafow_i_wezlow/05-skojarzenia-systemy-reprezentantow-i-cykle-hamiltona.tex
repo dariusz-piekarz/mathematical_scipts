@@ -1,0 +1,469 @@
+\chapter{Skojarzenia, systemy reprezentantów i cykle Hamiltona}
+\label{ch:tg-skojarzenia}
+
+Drugim podstawowym problemem kombinatorycznym jest wyszukiwanie
+wielu krawędzi, które nie mogą ze sobą kolidować. Skojarzenia
+opisują przydziały, równoległe parowania i układy niezależnych
+wyborów. Na końcu rozdziału wrócimy do przechodzenia po grafach,
+ale zamiast wszystkich \emph{krawędzi} spróbujemy odwiedzić
+wszystkie \emph{wierzchołki} dokładnie raz. Takie jest
+zasadnicze rozróżnienie między teorią Eulera i Hamiltona.
+
+\section{Skojarzenia i ścieżki powiększające}
+\label{sec:tg-matchings}
+
+\begin{definicja}[Skojarzenie]
+Niech $G=(V,E)$ będzie skończonym grafem prostym.
+\emph{Skojarzeniem} nazywamy podzbiór $M\subseteq E$,
+w którym żadne dwie krawędzie nie mają wspólnego końca.
+Wierzchołek jest \emph{skojarzony}, jeśli jest końcem
+pewnej krawędzi z $M$, a w przeciwnym razie jest
+\emph{wolny}. Skojarzenie jest \emph{maksymalne}, gdy
+nie można dodać do niego kolejnej krawędzi bez
+naruszenia warunku; jest \emph{największe}, gdy ma
+największą możliwą liczbę krawędzi. Jest \emph{doskonałe},
+gdy każdy wierzchołek jest skojarzony.
+\end{definicja}
+
+Maksymalność nie oznacza największej liczności.
+Przykładowo w ścieżce czterowierzchołkowej $a-b-c-d$
+skojarzenie $\{bc\}$ jest maksymalne, lecz nie największe:
+$\{ab,cd\}$ ma dwie krawędzie.
+
+\begin{definicja}[Ścieżka naprzemienna i powiększająca]
+Niech $M$ będzie skojarzeniem grafu $G$. \emph{Ścieżką
+naprzemienną względem $M$} nazywamy ścieżkę, na której
+krawędzie należące do $M$ i do $E\setminus M$
+występują naprzemiennie. Jest ona \emph{powiększająca},
+jeżeli oba jej końce są wolne, a pierwsza i ostatnia
+krawędź nie należą do $M$. Dopuszczamy tylko ścieżki
+z co najmniej jedną krawędzią.
+\end{definicja}
+
+\begin{lemat}[Odwrócenie ścieżki powiększającej]
+Niech $P$ będzie ścieżką powiększającą względem
+skojarzenia $M$ w grafie $G$. Wtedy
+$M':=M\mathbin{\triangle}E(P)$ jest skojarzeniem,
+a $|M'|=|M|+1$, gdzie $\triangle$ oznacza różnicę
+symetryczną zbiorów.
+\end{lemat}
+
+\begin{proof}
+Na wewnętrznych wierzchołkach $P$ jedna z dwóch
+krawędzi ścieżki należy do $M$, a druga nie.
+Po zamianie ról tych krawędzi każdy taki wierzchołek
+nadal jest incydentny dokładnie z jedną krawędzią
+nowego skojarzenia. Końce $P$ były wolne,
+a teraz dostają po jednej krawędzi. Poza $P$
+skojarzenie się nie zmienia. Ścieżka rozpoczyna się
+i kończy krawędzią spoza $M$, zatem liczba usuniętych
+krawędzi $M$ jest o jeden mniejsza od liczby dodanych.
+Daje to $|M'|=|M|+1$.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[scale=.85,line cap=round]
+\foreach \i/\n in {0/a,1/b,2/c,3/d,4/e,5/f}
+ {\node[tgVertex] (\n) at (1.3*\i,0) {$\n$};}
+\draw[tgTree,line width=2.6pt] (b)--(c) (d)--(e);
+\draw[tgAccent,line width=2.5pt] (a)--(b) (c)--(d) (e)--(f);
+\node[font=\footnotesize,text=tgNavy] at (3.25,-.80)
+ {Zielone krawędzie należą do $M$, czerwone — do $E\setminus M$.};
+\end{tikzpicture}
+
+{\footnotesize Po zamianie kolorów na tej ścieżce
+otrzymujemy skojarzenie o jedną krawędź większe.}
+\end{center}
+
+\begin{twierdzenie}[Berge]
+\label{thm:tg-berge}
+Skojarzenie $M$ skończonego grafu prostego $G$
+jest największe wtedy i tylko wtedy, gdy
+nie istnieje ścieżka powiększająca względem $M$.
+\end{twierdzenie}
+
+\begin{proof}
+Jeśli istnieje ścieżka powiększająca, poprzedni lemat
+daje skojarzenie większe od $M$.
+
+Załóżmy odwrotnie, że $M$ nie jest największe.
+Wybieramy skojarzenie $N$ o $|N|>|M|$.
+Rozważmy graf o zbiorze krawędzi $M\triangle N$.
+Ponieważ każdemu wierzchołkowi przylega co najwyżej
+jedna krawędź z $M$ i co najwyżej jedna z $N$,
+w grafie tym stopień każdego wierzchołka jest co
+najwyżej dwa. Jego nieizolowane składowe są zatem
+ścieżkami albo cyklami. Ponieważ na każdej składowej
+kolejne krawędzie muszą na przemian należeć do $M$
+i $N$, każdy cykl ma parzystą liczbę krawędzi
+z obu skojarzeń, a więc nie zmienia różnicy ich
+liczności. Ścieżki mają równe liczby krawędzi
+obu typów albo różnią się o jedną.
+
+Ponieważ łącznie $|N|>|M|$, istnieje składowa
+będąca ścieżką z jedną krawędzią $N$ więcej
+niż $M$. Jej pierwsza i ostatnia krawędź
+należą do $N\setminus M$. Jej końce są wolne
+w $M$: gdyby któryś był skojarzony przez $M$,
+odpowiednia krawędź musiałaby należeć do $M\triangle N$
+i przedłużać ścieżkę (albo pokrywać się z krawędzią
+$N$, co jest niemożliwe). Otrzymaliśmy ścieżkę
+powiększającą względem $M$.
+\end{proof}
+
+\section{Grafy dwudzielne i twierdzenie Halla}
+\label{sec:tg-hall}
+
+\begin{definicja}[Sąsiedztwo zbioru]
+Niech $G=(A\sqcup B,E)$ będzie skończonym grafem
+dwudzielnym o ustalonych częściach $A$ i $B$.
+Dla $S\subseteq A$ kładziemy
+$N(S):=\{b\in B:\exists a\in S,\ ab\in E\}$.
+Mówimy, że skojarzenie \emph{pokrywa $A$}, jeżeli
+każdy wierzchołek $a\in A$ jest końcem pewnej
+krawędzi skojarzenia.
+\end{definicja}
+
+\begin{twierdzenie}[Hall: twierdzenie o małżeństwach]
+\label{thm:tg-hall}
+Niech $G=(A\sqcup B,E)$ będzie skończonym grafem
+dwudzielnym. Istnieje skojarzenie pokrywające
+wszystkie wierzchołki zbioru $A$ wtedy i tylko wtedy,
+gdy dla każdego $S\subseteq A$ zachodzi
+\[
+|N(S)|\ge |S|.
+\]
+\end{twierdzenie}
+
+\begin{proof}[Dowód indukcyjny]
+Konieczność jest natychmiastowa: różne wierzchołki
+$S$ muszą być skojarzone z różnymi wierzchołkami
+zbioru $N(S)$.
+
+Dla dostateczności indukujemy względem $|A|$.
+Jeśli $|A|=0$, skojarzenie puste działa.
+Jeśli $|A|=1$, warunek Halla daje choć jednego
+sąsiada, więc możemy wybrać jedną krawędź.
+Załóżmy, że $|A|\ge2$ i twierdzenie zostało
+udowodnione dla mniejszych części lewych.
+
+\emph{Przypadek pierwszy:} istnieje niepusty, właściwy
+zbiór $S\subsetneq A$ z $|N(S)|=|S|$.
+W podgrafie indukowanym na $S\sqcup N(S)$
+warunek Halla jest spełniony, więc z założenia
+indukcyjnego istnieje skojarzenie pokrywające $S$.
+Na grafie z częściami $A\setminus S$
+i $B\setminus N(S)$ warunek również jest spełniony:
+dla $T\subseteq A\setminus S$ mamy
+$|N(S\cup T)|\ge|S|+|T|$, a zatem
+$|N(T)\setminus N(S)|\ge|T|$.
+Stąd drugie skojarzenie pokrywa $A\setminus S$.
+Ponieważ zbiory wierzchołków użytych przez obydwa
+skojarzenia są rozłączne, ich suma pokrywa $A$.
+
+\emph{Przypadek drugi:} dla każdego niepustego
+właściwego $S\subsetneq A$ zachodzi
+$|N(S)|\ge|S|+1$. Wybierzmy dowolne $a\in A$.
+Warunek Halla dla $\{a\}$ zapewnia istnienie
+sąsiada $b\in B$. Usuwamy $a$ i $b$.
+Dla dowolnego niepustego $T\subseteq A\setminus\{a\}$
+zbiór $T$ jest właściwym podzbiorem $A$, więc
+$|N(T)\setminus\{b\}|\ge|N(T)|-1\ge|T|$.
+Dla $T=\varnothing$ warunek jest automatyczny.
+Z założenia indukcyjnego otrzymujemy skojarzenie
+pokrywające $A\setminus\{a\}$ w pozostałym grafie;
+po dodaniu krawędzi $ab$ uzyskujemy skojarzenie
+pokrywające $A$.
+Oba przypadki wyczerpują możliwości.
+\end{proof}
+
+\begin{przyklad}[Przydział trzech osób do trzech stanowisk]
+Niech $A=\{a_1,a_2,a_3\}$ oznacza osoby,
+$B=\{b_1,b_2,b_3\}$ stanowiska, a krawędź
+łączy osobę ze stanowiskiem, na którym może pracować.
+Załóżmy, że $N(a_1)=\{b_1,b_2\}$,
+$N(a_2)=\{b_2\}$, $N(a_3)=\{b_2,b_3\}$.
+Warunek Halla jest spełniony: dla pojedynczych osób
+każdy zbiór sąsiadów jest niepusty, dla par są
+co najmniej dwa dostępne stanowiska, a dla całego $A$
+są trzy. Jedynym sposobem przypisania $a_2$ jest
+$b_2$, po czym można wybrać $a_1b_1$ i $a_3b_3$.
+Dostajemy skojarzenie doskonałe.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[scale=.95,line cap=round]
+ \foreach \y/\x in {1.2/1,0/2,-1.2/3}{
+  \node[tgBlueVertex] (a\x) at (-2.6,\y) {$a_{\x}$};
+  \node[tgRedVertex] (b\x) at (2.6,\y) {$b_{\x}$};
+ }
+ \draw[tgTree,line width=2.7pt] (a1)--(b1) (a2)--(b2) (a3)--(b3);
+ \draw[tgGhost] (a1)--(b2) (a3)--(b2);
+ \node[font=\footnotesize,text=tgNavy] at (0,-1.75)
+ {Zielone: skojarzenie pokrywające wszystkie trzy osoby.};
+\end{tikzpicture}
+\end{center}
+
+\begin{stwierdzenie}[Wzór na deficyt Halla]
+\label{prop:tg-hall-def}
+Niech $G=(A\sqcup B,E)$ będzie skończonym grafem
+dwudzielnym. Oznaczmy przez $\nu(G)$ maksymalną
+liczność skojarzenia. Wtedy
+\[
+\nu(G)=|A|-\max_{S\subseteq A}\bigl(|S|-|N(S)|\bigr).
+\]
+\end{stwierdzenie}
+
+\begin{proof}
+Niech $M$ będzie dowolnym skojarzeniem, a $S\subseteq A$.
+Co najwyżej $|N(S)|$ wierzchołków $S$ może być
+skojarzonych z sąsiadami, więc co najmniej
+$|S|-|N(S)|$ wierzchołków $A$ pozostaje wolnych.
+Zatem $|M|\le|A|-|S|+|N(S)|$; minimalizując
+prawą stronę, uzyskujemy górne oszacowanie.
+
+Niech $d:=\max_{S\subseteq A}(|S|-|N(S)|)$.
+Ponieważ $S=\varnothing$ daje zero, $d\ge0$.
+Dodajmy do prawej części grafu $d$ nowych
+wierzchołków, każdy połączony ze wszystkimi
+wierzchołkami $A$. Dla każdego $S\subseteq A$
+nowe sąsiedztwo ma moc $|N(S)|+d\ge|S|$.
+Z twierdzenia Halla istnieje skojarzenie
+pokrywające $A$ w powiększonym grafie.
+Co najwyżej $d$ jego krawędzi prowadzi do nowych
+wierzchołków. Po usunięciu tych krawędzi
+pozostaje skojarzenie w oryginalnym grafie
+o co najmniej $|A|-d$ krawędziach.
+To daje nierówność odwrotną.
+\end{proof}
+
+\section{Pokrycia wierzchołkowe i twierdzenie Kőniga}
+\label{sec:tg-konig}
+
+\begin{definicja}[Pokrycie wierzchołkowe]
+Dla grafu $G=(V,E)$ zbiór $C\subseteq V$ nazywamy
+\emph{pokryciem wierzchołkowym}, jeśli każda krawędź
+ma co najmniej jeden koniec w $C$.
+Najmniejszą możliwą liczność takiego zbioru
+oznaczamy przez $\tau(G)$.
+\end{definicja}
+
+Każde pokrycie wierzchołkowe musi zawierać przynajmniej
+jeden koniec każdej krawędzi skojarzenia. Ponieważ
+krawędzie skojarzenia są rozłączne w końcach,
+$\nu(G)\le\tau(G)$ dla dowolnego grafu. Dla grafów
+dwudzielnych zachodzi równość.
+
+\begin{twierdzenie}[Kőnig]
+\label{thm:tg-konig}
+Niech $G=(A\sqcup B,E)$ będzie skończonym grafem
+dwudzielnym. Wtedy minimalna moc pokrycia
+wierzchołkowego jest równa maksymalnej liczności
+skojarzenia: $\tau(G)=\nu(G)$.
+\end{twierdzenie}
+
+\begin{proof}
+Wybieramy skojarzenie największe $M$ i oznaczamy
+przez $A_0\subseteq A$ zbiór wierzchołków wolnych.
+Rozważamy wszystkie ścieżki naprzemienne zaczynające
+się w $A_0$ i przechodzące z $A$ do $B$ wyłącznie
+krawędziami spoza $M$, a z $B$ do $A$ wyłącznie
+krawędziami $M$. Niech $Z_A\subseteq A$ i $Z_B\subseteq B$
+będą zbiorami wierzchołków osiągalnych w ten sposób.
+
+Żaden wierzchołek $Z_B$ nie jest wolny: w przeciwnym
+razie otrzymalibyśmy ścieżkę powiększającą,
+sprzecznie z twierdzeniem \ref{thm:tg-berge}.
+Zatem każdy $b\in Z_B$ jest skojarzony z pewnym
+$a\in Z_A$. Ponadto każdy skojarzony $a\in Z_A$
+ma partnera w $Z_B$ (do $a$ mogliśmy dojść
+po krawędzi skojarzenia). Zbiory skojarzonych
+wierzchołków w $Z_A$ i wszystkich wierzchołków
+$Z_B$ są więc w bijekcji za pomocą krawędzi $M$.
+
+Definiujemy $C:=(A\setminus Z_A)\cup Z_B$.
+Pokażemy, że jest to pokrycie. Gdyby jakaś
+krawędź $ab$ miała oba końce poza $C$,
+to $a\in Z_A$ i $b\notin Z_B$.
+Jeżeli $ab\notin M$, z definicji osiągalności
+musielibyśmy mieć $b\in Z_B$. Jeśli zaś $ab\in M$,
+to skoro $a\in Z_A$, również jego partner $b$
+należy do $Z_B$. W obu przypadkach sprzeczność.
+
+Każda krawędź $M$ ma dokładnie jeden koniec w $C$:
+partnerzy z $Z_A$ i $Z_B$ przechodzą do $C$ tylko
+po stronie $B$, a partnerzy poza nimi tylko po
+stronie $A$. Żaden wierzchołek wolny nie należy
+do $C$ (wolne w $A$ są w $Z_A$, a wolnych
+w $Z_B$ nie ma). W konsekwencji $|C|=|M|$.
+Ponieważ zawsze $\nu(G)\le\tau(G)$, a znaleźliśmy
+pokrycie o mocy $|M|=\nu(G)$, otrzymujemy równość.
+\end{proof}
+
+\begin{uwaga}
+Twierdzenia Halla, Bergego i Kőniga są odrębnymi opisami
+tego samego zjawiska: przeszkoda w znalezieniu dużego
+skojarzenia ma postać zbioru wierzchołków ze zbyt małą
+liczbą dostępnych sąsiadów. W dalszej części skryptu
+podobne idee będą wyrażane przez rząd macierzy,
+przekroje i przepływy, a później przez grupy homologii.
+\end{uwaga}
+
+\section{Ścieżki i cykle Hamiltona}
+\label{sec:tg-hamilton}
+
+\begin{definicja}[Hamiltonowskość]
+Niech $G$ będzie skończonym grafem prostym.
+\emph{Ścieżką Hamiltona} nazywamy ścieżkę zawierającą
+wszystkie wierzchołki $G$. \emph{Cyklem Hamiltona}
+nazywamy cykl zawierający wszystkie wierzchołki $G$.
+Graf z cyklem Hamiltona nazywamy \emph{hamiltonowskim}.
+\end{definicja}
+
+Obecność cyklu Eulera i Hamiltona to dwa różne warunki.
+Cykl Eulera przechodzi przez wszystkie krawędzie,
+a cykl Hamiltona przez wszystkie wierzchołki.
+Cykl $C_n$ spełnia oba warunki. Dwa trójkąty o jednym
+wspólnym wierzchołku mają cykl Eulera, ale nie mają
+cyklu Hamiltona: usunięcie wspólnego wierzchołka
+rozspaja graf, podczas gdy usunięcie dowolnego
+wierzchołka z cyklu Hamiltona pozostawia ścieżkę
+zawierającą wszystkie pozostałe wierzchołki.
+
+\begin{center}
+\begin{tikzpicture}[scale=.95,line cap=round]
+ \foreach \x/\y/\n in {-2/0/a,-1/1.25/b,0/0/c,1/1.25/d,2/0/e}
+   \node[tgBlueVertex] (\n) at (\x,\y) {$\n$};
+ \draw[tgTree] (a)--(b)--(c)--(a);
+ \draw[tgAccent] (c)--(d)--(e)--(c);
+ \node[font=\footnotesize,text=tgNavy] at (0,-.65)
+   {Euler: tak. Hamilton: nie (wierzchołek rozcinający $c$).};
+\end{tikzpicture}
+\end{center}
+
+\begin{twierdzenie}[Dirac]
+\label{thm:tg-dirac}
+Niech $G$ będzie skończonym grafem prostym o
+$n\ge3$ wierzchołkach i minimalnym stopniu
+$\delta(G)\ge n/2$. Wtedy $G$ ma cykl Hamiltona.
+\end{twierdzenie}
+
+\begin{proof}
+Najpierw zauważmy, że $G$ jest spójny.
+Gdyby miał co najmniej dwie składowe, w każdej
+z nich liczba wierzchołków byłaby co najmniej
+$\delta(G)+1\ge n/2+1$. Suma liczebności dwóch
+składowych przekroczyłaby $n$, sprzeczność.
+
+Wybierzmy ścieżkę o największej liczbie wierzchołków:
+$P=v_1,v_2,\ldots,v_k$. Wszystkich sąsiadów obu
+końców $v_1,v_k$ musi zawierać $P$, bo w przeciwnym
+razie przedłużylibyśmy ścieżkę.
+Dla $i=1,\ldots,k-1$ rozważmy dwa warunki:
+$v_1v_{i+1}\in E$ oraz $v_iv_k\in E$.
+Pierwszy jest spełniony dla dokładnie $d(v_1)$ indeksów,
+a drugi dla dokładnie $d(v_k)$ indeksów.
+Ponieważ $d(v_1)+d(v_k)\ge n>k-1$, obydwa
+zbiory indeksów muszą mieć punkt wspólny.
+Wybierzmy takie $i$.
+
+Wtedy ciąg
+$v_1,v_2,\ldots,v_i,v_k,v_{k-1},\ldots,v_{i+1},v_1$
+stanowi cykl prosty zawierający wszystkie wierzchołki
+ścieżki $P$. W szczególności $k\ge3$.
+
+Gdyby $k<n$, spójność $G$ zapewniałaby istnienie
+krawędzi między tym cyklem a pewnym wierzchołkiem
+$w\notin V(P)$ (bierzemy pierwszą krawędź ścieżki
+wychodzącej poza cykl). Usuwając z cyklu jedną
+krawędź incydentną z wierzchołkiem sąsiadującym
+z $w$ i rozpoczynając obieg od przeciwnego końca
+tej krawędzi, otrzymalibyśmy ścieżkę zawierającą
+wszystkie $k$ wierzchołków cyklu oraz $w$.
+Byłaby dłuższa od $P$, sprzeczność.
+Zatem $k=n$, a znaleziony cykl jest Hamiltona.
+\end{proof}
+
+\begin{twierdzenie}[Ore]
+\label{thm:tg-ore}
+Niech $G$ będzie skończonym grafem prostym o
+$n\ge3$ wierzchołkach. Jeżeli dla każdej pary
+różnych niesąsiadujących wierzchołków $u,v$
+zachodzi $d(u)+d(v)\ge n$, to $G$ jest hamiltonowski.
+\end{twierdzenie}
+
+\begin{proof}
+Wykażemy najpierw pomocniczą zasadę: jeśli $u,v$
+są niesąsiadujące i $d(u)+d(v)\ge n$, to
+dodanie krawędzi $uv$ nie zmienia odpowiedzi
+na pytanie o istnienie cyklu Hamiltona.
+Jeden kierunek jest oczywisty: cykl Hamiltona
+w $G$ pozostaje cyklem w $G+uv$.
+
+Załóżmy, że w $G+uv$ istnieje cykl Hamiltona
+używający nowej krawędzi $uv$ (inaczej już jest
+cyklem w $G$). Po usunięciu tej krawędzi otrzymujemy
+ścieżkę Hamiltona $P=x_1,x_2,\ldots,x_n$ w $G$
+z $x_1=u$ i $x_n=v$. Dla $i=1,\ldots,n-1$
+rozważmy warunki $ux_{i+1}\in E$ i $vx_i\in E$.
+Liczby indeksów spełniających te warunki to
+odpowiednio $d(u)$ i $d(v)$ (ponieważ $u,v$
+nie sąsiadują). Ponieważ ich suma wynosi co
+najmniej $n>n-1$, istnieje wspólny indeks $i$.
+Wtedy
+$u=x_1,x_2,\ldots,x_i,v=x_n,x_{n-1},\ldots,x_{i+1},u$
+jest cyklem Hamiltona w $G$.
+
+Dodawajmy teraz kolejno wszystkie brakujące
+krawędzie grafu $G$. Przy każdym kroku suma stopni
+końców dodawanej krawędzi jest co najmniej $n$,
+bo stopnie mogą tylko wzrastać. Z udowodnionej
+zasady dodawanie żadnej z krawędzi nie zmienia
+hamiltonowskości. Ostatecznie otrzymujemy $K_n$,
+który ma cykl Hamiltona. Zatem również $G$ go ma.
+\end{proof}
+
+\begin{przyklad}[Porównanie kryteriów Diraca i Ore'a]
+Graf $K_{3,3}$ ma $n=6$ i wszystkie stopnie równe trzy,
+więc spełnia warunek Diraca i jest hamiltonowski.
+Z kolei cykl $C_5$ ma stopnie równe dwa; nie spełnia
+warunku Diraca, choć sam jest cyklem Hamiltona.
+Warunki Diraca i Ore'a są więc wystarczające, niekonieczne.
+
+Istnieją także grafy, dla których działa kryterium Ore'a,
+ale kryterium Diraca już nie. Rozważmy graf $K_5$
+po usunięciu dwóch krawędzi o wspólnym końcu $a$.
+Jego stopnie to $2,3,3,4,4$, zatem
+$\delta(G)=2<5/2$. Jedyne pary niesąsiadujące
+to końce dwóch usuniętych krawędzi; dla każdej
+suma stopni wynosi $2+3=5=n$.
+Z twierdzenia Ore'a wynika hamiltonowskość.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[scale=.92,line cap=round]
+  \foreach \ang/\name in {90/a,18/b,-54/c,-126/d,162/e}{
+    \node[tgBlueVertex] (\name) at (\ang:1.7) {$\name$};
+  }
+  \foreach \u/\v in {a/d,a/e,b/c,b/d,b/e,c/d,c/e,d/e}
+    \draw[tgEdge] (\u)--(\v);
+  \node[font=\footnotesize,text=tgNavy] at (0,-2.2)
+     {$K_5$ bez dwóch krawędzi przy $a$: wariant z warunkiem Ore'a.};
+\end{tikzpicture}
+\end{center}
+
+\section*{Od kombinatoryki do algebry i topologii}
+\addcontentsline{toc}{section}{Od kombinatoryki do algebry i topologii}
+
+Dotychczas rozpoznawaliśmy cykle, drzewa, rozłączne ścieżki
+i skojarzenia za pomocą metod kombinatorycznych. Teraz przechodzimy
+do przestrzeni łańcuchów, macierzy incydencji i operatorów Laplace'a.
+Pozwoli to zrozumieć te same obiekty jako jednowymiarowe kompleksy
+CW, a ich cykle jako elementy grup homologii.
+
+
+% ============================================================
+% ITERACJA 3. Algebra, homologia, grafy jako CW, laplasjan.
+% Tekst wymaga preambuły istniejącego skryptu.
+% ============================================================
+

@@ -1,0 +1,333 @@
+\chapter{Grafy Cayleya, działania na drzewach i teoria Bassa--Serre'a}
+\label{ch:tg-bass-serre}
+
+Dotychczas traktowaliśmy graf jako skończoną przestrzeń kombinatoryczną lub
+jednowymiarowy kompleks CW. Teraz dopuszczamy także grafy nieskończone. Niektóre z nich,
+jak graf Cayleya grupy względem skończonego zbioru generatorów,
+są lokalnie skończone: każdy wierzchołek ma skończony stopień.
+Natomiast drzewa pojawiające się w teorii Bassa--Serre'a mogą
+mieć wierzchołki nieskończonego stopnia. Grafy nieskończone
+występują naturalnie jako nakrycia kompleksów oraz przestrzenie,
+na których działają grupy. Działania na drzewach pozwalają
+odczytywać rozkłady grup fundamentalnych, a następnie rozkłady rozmaitości.
+
+\section{Grafy Cayleya i prezentacje grup}
+\label{sec:tg-cayley}
+
+\begin{definicja}[Graf Cayleya]
+Niech $G$ będzie grupą, a $S\subseteq G\setminus\{1\}$
+skończonym, symetrycznym zbiorem, czyli $S=S^{-1}$.
+\emph{Grafem Cayleya} $\operatorname{Cay}(G,S)$ nazywamy graf,
+którego zbiorem wierzchołków jest $G$, a krawędzie łączą
+$g$ z $gs$ dla wszystkich $g\in G$ i $s\in S$.
+Jeżeli $s=s^{-1}$, odpowiednią nieorientowaną krawędź liczymy
+jednokrotnie. Gdy potrzebujemy zachować pełną informację o generatorach,
+rozpatrujemy graf skierowany z łukami $g\to gs$
+etykietowanymi przez $s$. W niezorientowanym grafie
+utożsamiamy łuk $(g,s)$ z łukiem $(gs,s^{-1})$.
+\end{definicja}
+
+\begin{stwierdzenie}
+Niech $G$ będzie grupą, a $S\subseteq G\setminus\{1\}$
+skończonym zbiorem symetrycznym. Graf $\operatorname{Cay}(G,S)$
+jest spójny wtedy i tylko wtedy, gdy $S$ generuje $G$.
+\end{stwierdzenie}
+\begin{proof}
+Jeżeli $S$ generuje $G$, to dla dowolnego $g\in G$ istnieje
+rozkład $g=s_1\cdots s_k$, gdzie $s_i\in S$. Kolejne
+wierzchołki $1,s_1,s_1s_2,\ldots,g$ tworzą spacer od
+jedności do $g$. Ponieważ z każdego $g$ otrzymujemy
+spacer do $h$ przez translację spaceru od $1$ do
+$g^{-1}h$, graf jest spójny. Odwrotnie, jeżeli istnieje
+spacer $1=g_0,g_1,\ldots,g_k=g$, to dla każdego $i$
+z definicji krawędzi $g_{i-1}^{-1}g_i\in S$.
+Po wymnożeniu równości dostajemy
+$g=(g_0^{-1}g_1)\cdots(g_{k-1}^{-1}g_k)$, a więc
+każdy element należy do podgrupy generowanej przez $S$.
+\end{proof}
+
+\begin{przyklad}[Trzy rodziny grafów Cayleya]
+Dla $G=\mathbb Z$ i $S=\{-1,1\}$ otrzymujemy
+nieskończoną prostą, z wierzchołkami oznaczonymi liczbami całkowitymi.
+Dla $G=\mathbb Z/n\mathbb Z$, $n\ge3$, oraz $S=\{-1,1\}$
+otrzymujemy cykl $C_n$. Dla $G=\mathbb Z^2$ i
+$S=\{(\pm1,0),(0,\pm1)\}$ powstaje kwadratowa sieć
+płaszczyzny. W dwóch ostatnich przykładach odczytujemy
+z grafu odpowiednio relację $a^n=1$ i przemienność
+generatorów odpowiadających przesunięciom poziomym
+oraz pionowym.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[line cap=round,>=Stealth,scale=.94]
+ \foreach \x in {-2,-1,0,1,2} {
+   \node[tgBlueVertex] (z\x) at (\x*.58,0) {};
+   \node[font=\scriptsize,text=tgNavy] at (\x*.58,-.38) {$\x$};
+ }
+ \draw[tgEdge] (z-2)--(z-1)--(z0)--(z1)--(z2);
+ \draw[tgEdge,dashed] (-1.70,0)--(-1.38,0) (1.38,0)--(1.70,0);
+ \node[font=\small,text=tgNavy] at (0,.62) {$\operatorname{Cay}(\mathbb Z,\{\pm1\})$};
+ \begin{scope}[shift={(4.45,0)}]
+  \foreach \a in {0,60,...,300} {
+    \node[tgTealVertex] (c\a) at (\a:1.02) {};
+    \node[font=\scriptsize,text=tgNavy] at (\a:1.37) {$\pgfmathparse{int(\a/60)}\pgfmathresult$};
+  }
+  \foreach \a [evaluate=\a as \b using {int(mod(\a+60,360))}] in {0,60,...,300} {
+    \draw[tgTree] (c\a)--(c\b);
+  }
+  \node[font=\small,text=tgNavy] at (0,-1.72) {$\operatorname{Cay}(\mathbb Z/6\mathbb Z,\{\pm1\})$};
+ \end{scope}
+\end{tikzpicture}
+\end{center}
+
+\begin{twierdzenie}[Graf Cayleya grupy wolnej]
+Niech $F_r=\langle a_1,\ldots,a_r\rangle$, $r\ge1$,
+będzie grupą wolną, a $S=\{a_1^{\pm1},\ldots,a_r^{\pm1}\}$.
+Wtedy $\operatorname{Cay}(F_r,S)$ jest drzewem,
+a dla $r\ge2$ każdy wierzchołek ma stopień $2r$.
+\end{twierdzenie}
+\begin{proof}
+Z poprzedniego stwierdzenia graf jest spójny. Gdyby istniał
+cykl prosty $g_0,g_1,\ldots,g_k=g_0$, $k\ge1$, to
+kolejne etykiety krawędzi dawałyby relację
+$s_1\cdots s_k=1$ w $F_r$. Ponieważ cykl nie zawraca
+natychmiast tą samą krawędzią, słowo nie zawiera sąsiedniej
+pary $a_i a_i^{-1}$ ani $a_i^{-1}a_i$; jest więc słowem
+zredukowanym i niepustym. W grupie wolnej słowo takie
+nie reprezentuje jedności, co daje sprzeczność.
+Spójny graf bez cykli jest drzewem. Dla $r\ge2$
+różne generatory i ich odwrotności dają $2r$
+różnych sąsiadów każdego wierzchołka.
+\end{proof}
+
+\section{Działania grup na drzewach i ilorazy}
+\label{sec:tg-tree-actions}
+
+\begin{definicja}[Działanie bez inwersji]
+Niech grupa $G$ działa przez automorfizmy na drzewie $T$.
+Mówimy, że działanie jest \emph{bez inwersji}, jeżeli
+żaden element $g\in G$ nie zamienia końców krawędzi,
+pozostawiając tę krawędź jako zbiór niezmienniczy.
+Stabilizatorem wierzchołka $v$ jest
+$G_v=\{g\in G:gv=v\}$, a krawędzi $e$ stabilizator
+$G_e=\{g\in G:ge=e\}$.
+\end{definicja}
+
+\begin{stwierdzenie}[Wolne działania na drzewach]
+Niech grupa $G$ działa swobodnie i bez inwersji na drzewie
+$T$ przez automorfizmy grafu. Wtedy odwzorowanie
+$T\to G\backslash T$ jest nakryciem grafów, $T$ jest
+nakryciem uniwersalnym ilorazu, a grupa $G$ jest wolna.
+Jeżeli iloraz jest skończonym grafem spójnym z $v$
+wierzchołkami i $e$ krawędziami, to $G\cong F_{e-v+1}$.
+\end{stwierdzenie}
+\begin{proof}
+Swoboda i brak inwersji oznaczają, że żadne nietrywialne
+przekształcenie nie identyfikuje dwóch półkrawędzi
+wychodzących z tego samego wierzchołka. Faktycznie,
+jeśli $g$ przenosi $e_1$ na $e_2$, a ich wspólny początek
+$v$ pozostaje w tej samej orbicie, to dla lokalnej
+identyfikacji wybieramy element stabilizujący $v$;
+ze swobody musi być on jednością. Gwiazdy wierzchołków
+odwzorowują się więc bijektywnie na gwiazdy obrazów:
+to definicja nakrycia grafów. Drzewo jest po prostu
+spójne, zatem nakrycie jest uniwersalne. Z teorii
+nakryć mamy $G\cong\pi_1(G\backslash T)$, a grupa
+fundamentalna spójnego grafu jest wolna. Jeżeli
+iloraz jest skończony, wzór na rząd otrzymujemy z
+liczby krawędzi poza drzewem rozpinającym: $e-v+1$.
+\end{proof}
+
+\section{Grafy grup i twierdzenie van Kampena}
+\label{sec:tg-graphs-of-groups}
+
+\begin{definicja}[Graf grup]
+Niech $\Gamma$ będzie spójnym grafem, którego każdą
+krawędź rozpatrujemy w dwóch przeciwnych orientacjach
+$e$ oraz $\bar e$. \emph{Graf grup} składa się z grup
+$G_v$ przypisanych wierzchołkom, grup $G_e=G_{\bar e}$
+przypisanych krawędziom oraz monomorfizmów
+$\iota_{e,-}:G_e\hookrightarrow G_{o(e)}$ i
+$\iota_{e,+}:G_e\hookrightarrow G_{t(e)}$.
+Zmiana orientacji krawędzi wymienia oba monomorfizmy.
+\end{definicja}
+
+\begin{twierdzenie}[Dwa podstawowe przypadki van Kampena]
+\label{thm:tg-vk-amalgam-hnn}
+\begin{enumerate}[label=(\roman*)]
+\item Niech $X=A\cup B$ będzie łukowo spójną
+przestrzenią, gdzie $A,B,A\cap B$ są otwarte,
+łukowo spójne i zawierają wspólny punkt bazowy.
+Załóżmy, że homomorfizmy
+$\pi_1(A\cap B)\to\pi_1(A)$ i
+$\pi_1(A\cap B)\to\pi_1(B)$ są injekcjami.
+Wtedy
+$\pi_1(X)\cong\pi_1(A)*_{\pi_1(A\cap B)}\pi_1(B)$.
+\item Niech $Y,Z$ będą łukowo spójnymi przestrzeniami,
+a $\iota_-,\iota_+\colon Z\to Y$ ciągłymi odwzorowaniami
+indukującymi monomorfizmy na grupach fundamentalnych
+(po wyborze zgodnych punktów bazowych). Jeśli przestrzeń
+powstaje przez dołączenie cylindra $Z\times[0,1]$ do $Y$
+za pomocą $\iota_-$ i $\iota_+$ na jego końcach,
+to jej grupa fundamentalna jest
+rozszerzeniem HNN grupy $\pi_1(Y)$ po odpowiednio
+utożsamionych obrazach $\pi_1(Z)$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+W przypadku (i) klasyczne twierdzenie van Kampena stwierdza, że
+$\pi_1(X)$ jest ilorazem iloczynu wolnego
+$\pi_1(A)*\pi_1(B)$ przez relacje utożsamiające
+oba obrazy każdego elementu $\pi_1(A\cap B)$.
+Ponieważ oba odwzorowania są injektywne, jest to
+właśnie iloczyn wolny z amalgamacją. W przypadku (ii) przestrzenie $Y$ i $Z$ są łukowo spójne,
+a iloraz powstaje ze $Y\sqcup(Z\times[0,1])$ przez
+utożsamienie $(z,0)$ z $\iota_-(z)$ i $(z,1)$ z
+$\iota_+(z)$; oba homomorfizmy $\pi_1(Z)\to\pi_1(Y)$
+są injekcjami. Ustalmy $z_0\in Z$, $y_0\in Y$
+oraz ścieżki w $Y$ od $y_0$ do obrazów $z_0$.
+Odcinek $\{z_0\}\times[0,1]$, wraz z tymi ścieżkami,
+tworzy nową pętlę, której klasę oznaczamy przez $t$.
+Po rozcięciu cylindra w jego środku otrzymujemy pokrycie
+z niespójnym przecięciem. Grupoidowa wersja twierdzenia
+van Kampena (lub zwykła wersja po dołączeniu pomocniczego
+łuku bazowego) daje jedną nową literę $t$ i relacje
+utożsamiające obrazy pętli w dwóch końcach cylindra.
+Dostajemy prezentację
+\[
+\langle \pi_1(Y),t\mid t\iota_-(c)t^{-1}=\iota_+(c)
+\ \text{dla wszystkich }c\in\pi_1(Z)\rangle.
+\]
+Ta prezentacja definiuje rozszerzenie HNN. Przy zmianie ścieżek bazowych odpowiednie monomorfizmy
+zmieniają się przez sprzężenie, zatem otrzymane prezentacje
+nadal opisują izomorficzne grupy. W szczególności nie można
+pominąć nowego generatora $t$: inaczej utracilibyśmy
+informację o cyklu w grafie sklejania.
+\end{proof}
+
+\begin{przyklad}[Iloczyn wolny i torus jako HNN]
+Gdy graf grup jest odcinkiem, grupy na jego końcach to
+$\mathbb Z=\langle a\rangle$ i
+$\mathbb Z=\langle b\rangle$, a grupa krawędzi jest
+trywialna, otrzymujemy $\mathbb Z*\mathbb Z\cong F_2$.
+Gdy graf jest jedną pętlą, grupa wierzchołka i krawędzi
+są równe $\mathbb Z$, a oba monomorfizmy grupy krawędzi
+w grupę wierzchołka są identycznościami, otrzymujemy
+\[
+\langle a,t\mid tat^{-1}=a\rangle\cong\mathbb Z^2.
+\]
+Pierwszy przykład odpowiada sklejaniu dwóch okręgów
+w punkcie, drugi jest przykładem cylindrycznego
+sklejania prowadzącego do torusa.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=1]
+ \node[tgBlueVertex] (a) at (-2.5,0) {};
+ \node[tgRedVertex] (b) at (-.5,0) {};
+ \draw[tgEdge] (a)--node[above,font=\small] {$G_e$}(b);
+ \node[below=5pt of a,font=\scriptsize] {$G_{v_1}$};
+ \node[below=5pt of b,font=\scriptsize] {$G_{v_2}$};
+ \node[tgTealVertex] (c) at (2.5,0) {};
+ \draw[tgAccent] (c) .. controls (1.65,.95) and (3.35,.95) .. (c);
+ \node[font=\scriptsize,text=tgNavy] at (2.5,1.16) {jedna krawędź pętlowa};
+ \node[below=5pt of c,font=\scriptsize] {$G_v$};
+ \node[text=tgNavy,font=\scriptsize] at (-1.5,-.80) {amalgamacja};
+ \node[text=tgNavy,font=\scriptsize] at (2.5,-.80) {rozszerzenie HNN};
+\end{tikzpicture}
+\end{center}
+
+\begin{uwaga}[Wymagane dane grafu grup]
+Nie wystarcza znajomość abstrakcyjnego grafu ilorazowego
+$G\backslash T$. Konstrukcja potrzebuje stabilizatorów
+wierzchołków i krawędzi, homomorfizmów włączających oraz
+wybranych elementów realizujących zmianę przedstawicieli orbit.
+Dwa działania o jednakowym grafie ilorazowym mogą dawać
+grupy podstawowe o różnych prezentacjach.
+Ponadto drzewo Bassa--Serre'a nie musi być lokalnie skończone:
+stopnie wierzchołków zależą od indeksów podgrup krawędziowych.
+\end{uwaga}
+
+\begin{twierdzenie}[Fundamentalne twierdzenie Bassa--Serre'a]
+Niech $G$ działa bez inwersji na drzewie $T$.
+Po wybraniu przedstawicieli orbit wierzchołków i krawędzi,
+dróg do tych przedstawicieli i odpowiednich elementów grupy,
+działanie określa graf grup na grafie ilorazowym
+$G\backslash T$. Jego grupami wierzchołków i krawędzi
+są stabilizatory, a monomorfizmy krawędziowe pochodzą
+z inkluzji stabilizatorów po potrzebnych sprzężeniach. Grupa fundamentalna tego
+grafu grup jest izomorficzna z $G$. Odwrotnie, każdy graf
+grup posiada drzewo Bassa--Serre'a, na którym jego grupa
+fundamentalna działa bez inwersji, a otrzymany graf grup
+jest izomorficzny z wyjściowym (po odpowiednich wyborach).
+\end{twierdzenie}
+
+\begin{uwaga}[Zakres dowodu]
+Powyższy wynik jest bardziej ogólny niż twierdzenie van
+Kampena o amalgamacji i HNN. Do pełnego dowodu trzeba
+skonstruować normalną postać słów i drzewo Bassa--Serre'a
+jako graf klas bocznych oraz sprawdzić, że nie ma w nim
+cykli. Są to dodatkowe wyniki, które tutaj przyjmujemy.
+Dowiedzione wcześniej przypadki pokazują natomiast,
+dlaczego w rozkładach topologicznych pojawiają się właśnie
+iloczyny wolne z amalgamacją i rozszerzenia HNN.
+\end{uwaga}
+
+\begin{stwierdzenie}[Stopnie w drzewie Bassa--Serre'a]
+Niech $\mathcal G$ będzie spójnym grafem grup o grafie bazowym
+$\Gamma$, a $T$ jego drzewem Bassa--Serre'a. Dla
+wierzchołka $\widetilde v\in T$ nad $v\in V(\Gamma)$
+liczba półkrawędzi wychodzących z $\widetilde v$ wynosi
+\[
+\deg_T(\widetilde v)=
+\sum_{e\colon o(e)=v}[G_v:\iota_{e,-}(G_e)],
+\]
+przy czym sumujemy po wszystkich zorientowanych
+półkrawędziach grafu $\Gamma$ rozpoczynających się w $v$;
+w pętli obie orientacje są osobnymi składnikami.
+Sumy i indeksy mogą być nieskończone.
+\end{stwierdzenie}
+\begin{proof}
+W konstrukcji drzewa Bassa--Serre'a wierzchołki nad $v$
+są klasami bocznymi grup $G_v$ w grupie fundamentalnej
+grafu grup. Po ustaleniu $\widetilde v$ półkrawędzie
+przypisane określonemu $e$ są dokładnie orbitą działania
+$G_v$ na wybranej półkrawędzi. Jej stabilizator jest
+obrazem $\iota_{e,-}(G_e)$, a z twierdzenia o orbitach
+i stabilizatorach liczba tych półkrawędzi to podany indeks.
+Zsumowanie po różnych orbitach krawędzi daje wzór.
+\end{proof}
+\begin{przyklad}
+Dla iloczynu wolnego $C_2*C_3$ graf grup ma dwa wierzchołki
+z grupami $C_2$ i $C_3$ oraz jedną krawędź z grupą trywialną.
+Drzewo Bassa--Serre'a jest dwudzielne: stopnie wierzchołków
+obu typów wynoszą odpowiednio $2$ i $3$. Natomiast
+$\mathbb Z*\mathbb Z$ otrzymane z dwóch grup $\mathbb Z$
+i trywialnej grupy krawędzi daje drzewo o nieskończonych
+stopniach wierzchołków. Nie można więc zakładać lokalnej
+skończoności drzew Bassa--Serre'a bez dodatkowych hipotez.
+\end{przyklad}
+
+\begin{uwaga}[Literatura]
+Pełną konstrukcję drzew i grafów grup opisuje J.-P. Serre,
+\emph{Trees} oraz wykład J. F. Manninga
+\emph{Bass--Serre Theory and Complexes of Groups}.
+\end{uwaga}
+
+
+% !TeX encoding = UTF-8
+% Teoria wezlow -- tresc bez preambuly.
+% W ksiazce: \input{teoria_wezlow_tresc.tex}
+% Wersja samodzielna: kompilowac teoria_wezlow.tex.
+% Wymagane srodowiska: definicja, twierdzenie, lemat, stwierdzenie,
+% wniosek, przyklad, uwaga, proof; pakiety w preambule pliku glownego.
+
+% Rysunki TikZ: xcolor, tikz oraz biblioteki arrows.meta,calc,positioning.
+\definecolor{ktBlue}{HTML}{2369A8}
+\definecolor{ktTeal}{HTML}{178F87}
+\definecolor{ktCoral}{HTML}{D96152}
+\definecolor{ktPurple}{HTML}{7755A7}
+\definecolor{ktGold}{HTML}{C9932D}
+\definecolor{ktInk}{HTML}{283747}
+
+

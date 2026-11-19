@@ -1,0 +1,407 @@
+\chapter{Metody Monte Carlo: symulacja, błąd i redukcja wariancji}
+\label{ch:monte-carlo}
+\paragraph{Powiązania i odsyłacze.} Prawo wielkich liczb i CTG pochodzą z tomu I (rozdziały~\ref{I-ch:lln} i~\ref{I-ch:clt}); symulacje procesów dyfuzyjnych omawia tom III, rozdział~\ref{III-ch:sde-properties}.
+
+
+\section{Dlaczego losować, skoro mamy całkę?}
+W statystyce często chcemy obliczyć całkę względem rozkładu a posteriori,
+wartość predykcyjną albo ryzyko decyzji, a gęstość tego rozkładu jest
+znana tylko z dokładnością do stałej normalizującej. Nawet gdy wartość
+całki jest jednoznacznie zdefiniowana, obliczenie jej metodami
+analitycznymi może być bardzo trudne. Metody Monte Carlo zastępują
+całkowanie uśrednianiem odpowiednio dobranych zmiennych losowych.
+W odróżnieniu od liczby danych $n$ z eksperymentu statystycznego,
+liczbę \emph{symulacji} będziemy oznaczać przez $N$. Wzrost $N$ zmniejsza
+błąd \emph{numeryczny}, lecz sam w sobie nie zwiększa informacji
+statystycznej zawartej w pierwotnych danych.
+
+\begin{definicja}[Podstawowy estymator Monte Carlo]
+\label{def:mc-basic}
+Niech $(\mathsf X,\mathcal A,P)$ będzie przestrzenią probabilistyczną,
+$f\colon\mathsf X\to\R$ funkcją mierzalną i $f\in L^1(P)$.
+Dla niezależnych $X_1,\ldots,X_N\sim P$ definiujemy
+$\mu=\E_P[f(X_1)]=\int_{\mathsf X}f(x)\,\dd P(x)$ oraz
+$\widehat\mu_N=N^{-1}\sum_{i=1}^N f(X_i)$.
+Jeżeli $f\in L^2(P)$, oznaczamy
+$\sigma_f^2=\Var_P(f(X_1))$.
+\end{definicja}
+
+\begin{twierdzenie}[Nieobciążoność, zgodność i centralne twierdzenie graniczne]
+\label{thm:mc-lln-clt}
+W warunkach definicji~\ref{def:mc-basic}, dla każdego $N\ge1$
+$\E_P\widehat\mu_N=\mu$ oraz $\widehat\mu_N\to\mu$
+prawie na pewno. Jeżeli ponadto $0<\sigma_f^2<\infty$, to
+\[
+ \Var_P(\widehat\mu_N)=\frac{\sigma_f^2}{N},\qquad
+ \frac{\sqrt N(\widehat\mu_N-\mu)}{\sigma_f}
+ \Rightarrow\Normal(0,1).
+\]
+Jeżeli $\sigma_f^2=0$, wówczas $\widehat\mu_N=\mu$ prawie na pewno.
+\end{twierdzenie}
+\begin{proof}
+Liniowość wartości oczekiwanej daje nieobciążoność, a mocne prawo
+wielkich liczb dla niezależnych zmiennych o jednakowym rozkładzie
+-- zgodność. W przypadku $f\in L^2(P)$ niezależność zeruje
+kowariancje między składnikami średniej, więc wariancja wynosi
+$N^{-2}N\sigma_f^2=\sigma_f^2/N$.
+Ostatnia zbieżność jest klasycznym centralnym twierdzeniem granicznym
+z tomu I, zastosowanym do $f(X_i)$. Gdy wariancja jest zerowa,
+$f(X_i)=\mu$ prawie na pewno dla każdego $i$; przeliczalność
+rodziny pozwala uzyskać wspólne zdarzenie prawdopodobieństwa jeden.
+\end{proof}
+
+\begin{wniosek}[Przybliżony błąd Monte Carlo i liczba losowań]
+\label{cor:mc-se}
+W założeniach twierdzenia~\ref{thm:mc-lln-clt}, przy $N\ge2$, niech
+$S_N^2=(N-1)^{-1}\sum_{i=1}^N(f(X_i)-\widehat\mu_N)^2$.
+Wtedy $S_N^2\to\sigma_f^2$ prawie na pewno i
+$\widehat{\mathrm{SE}}_{\rm MC}=S_N/\sqrt N$ jest zgodnym
+oszacowaniem błędu standardowego Monte Carlo. Dla dużego $N$
+przedział $\widehat\mu_N\pm z_{1-\alpha/2}S_N/\sqrt N$
+ma asymptotyczne pokrycie $1-\alpha$ dla ustalonej całki $\mu$.
+Aby zmniejszyć błąd standardowy dwukrotnie, przy niezmienionej
+wariancji całkowanej funkcji trzeba około \emph{czterokrotnie}
+zwiększyć $N$.
+\end{wniosek}
+\begin{proof}
+Z mocnego prawa wielkich liczb dla $f(X_i)^2$ oraz dla $f(X_i)$
+wynika $S_N^2\to\sigma_f^2$ prawie na pewno.
+Twierdzenie~\ref{thm:mc-lln-clt} i twierdzenie Slutsky'ego
+dają normalną granicę statystyki po podstawieniu $S_N$.
+Zależność od $N^{-1/2}$ wyjaśnia ostatnie stwierdzenie.
+\end{proof}
+
+\begin{uwaga}[Błąd Monte Carlo nie jest błędem estymacji parametru]
+Jeśli $\pi(\theta\mid x)$ jest posteriorem po danych $x$, to
+całka $\mu(x)=\int_\Theta f(\theta)\pi(\theta\mid x)\,
+\dd\lambda_d(\theta)$ jest \emph{ustaloną funkcją danych}.
+Błąd przybliżenia $\widehat\mu_N(x)$ jest warunkowym błędem
+numerycznym. Szerokość posterioru opisuje natomiast niepewność
+$\theta$ przy danym $x$. Długi przebieg symulacji może bardzo dobrze
+obliczyć szeroki posterior, lecz go nie zawęzi.
+\end{uwaga}
+
+\begin{przyklad}[Rzadkie zdarzenie -- ograniczenia naiwnego Monte Carlo]
+\label{ex:mc-rare}
+Jeśli $A$ ma prawdopodobieństwo $p$, bierzemy
+$f=\ind{A}$; wtedy $\widehat p_N$ jest średnią z prób Bernoulliego,
+a $\Var(\widehat p_N)=p(1-p)/N$. Względny błąd standardowy wynosi
+$\sqrt{(1-p)/(Np)}$. Jeżeli $p=10^{-6}$ i $N=10^4$,
+to oczekiwana liczba trafień to $0{,}01$, a prawdopodobieństwo
+\emph{ani jednego trafienia} wynosi $(1-p)^N\approx0{,}99005$.
+Otrzymane zero nie dowodzi, że zdarzenie jest niemożliwe.
+\end{przyklad}
+
+\section{Dwa sposoby zmniejszania kosztu: warunkowanie i zmienna kontrolna}
+Idea warunkowania nawiązuje do twierdzenia Rao--Blackwella z rozdziału~\ref{ch:sufficiency}; tym razem służy redukcji błędu numerycznego, a nie ocenie ryzyka estymatora parametru.
+\begin{twierdzenie}[Rao--Blackwell dla symulacji]
+\label{thm:mc-rao-blackwell}
+Niech $Z\in L^2(P)$ i $\mathcal G\subseteq\mathcal A$ będzie
+pod-$\sigma$-ciałem. Wtedy
+$\E[\E(Z\mid\mathcal G)]=\E Z$ oraz
+$\Var(\E(Z\mid\mathcal G))\le\Var(Z)$,
+z równością wtedy i tylko wtedy, gdy
+$Z=\E(Z\mid\mathcal G)$ prawie na pewno.
+Dlatego, jeżeli można obliczyć warunkową wartość oczekiwaną
+bez kosztownej symulacji pozostałej losowości, warto symulować
+$\E(Z\mid\mathcal G)$ zamiast $Z$.
+\end{twierdzenie}
+\begin{proof}
+Pierwsza teza wynika z własności wieży, druga z rozkładu
+$\Var(Z)=\E[\Var(Z\mid\mathcal G)]
+ +\Var(\E[Z\mid\mathcal G])$.
+Pierwszy składnik jest nieujemny i znika dokładnie wtedy,
+gdy $Z=\E(Z\mid\mathcal G)$ prawie na pewno.
+\end{proof}
+
+\begin{twierdzenie}[Zmienna kontrolna]
+\label{thm:control-variate}
+Niech $Y,C\in L^2(P)$, $\E C=c$ jest dokładnie znane,
+a $\Var(C)>0$. Dla ustalonej liczby $\beta\in\R$
+zdefiniujmy $Z_\beta=Y-\beta(C-c)$.
+Wtedy $\E Z_\beta=\E Y$ i
+\[
+ \Var(Z_\beta)=\Var(Y)-2\beta\Cov(Y,C)
+                      +\beta^2\Var(C).
+\]
+Wariancję minimalizuje
+$\beta_*=\Cov(Y,C)/\Var(C)$, a jej minimum wynosi
+$\Var(Y)(1-\rho_{Y,C}^2)$, gdy $\Var(Y)>0$ i
+$\rho_{Y,C}$ oznacza współczynnik korelacji.
+\end{twierdzenie}
+\begin{proof}
+Odjęcie zmiennej o średniej zero nie zmienia wartości oczekiwanej.
+Rozwinięcie wariancji kombinacji liniowej daje wielomian kwadratowy.
+Po uzupełnieniu kwadratu
+$\Var(Z_\beta)=\Var(C)(\beta-\beta_*)^2+
+\Var(Y)-\Cov(Y,C)^2/\Var(C)$.
+Wzór na korelację daje postać końcową.
+\end{proof}
+
+\begin{uwaga}[Pułapka doboru współczynnika na tych samych symulacjach]
+Twierdzenie~\ref{thm:control-variate} dotyczy \emph{ustalonego}
+$\beta$. Jeżeli wybieramy $\widehat\beta$ na podstawie tych
+samych symulacji, które uśredniamy, nie wolno bez dowodu
+przypisywać otrzymanej średniej dokładnej nieobciążoności.
+Prosta metoda zachowania nieobciążoności polega na oszacowaniu
+$\widehat\beta$ z niezależnej próby pilotażowej, a następnie
+użyciu go jako stałej w nowej próbie.
+\end{uwaga}
+
+\begin{przyklad}[Średnia zmiennej lognormalnej]
+Niech $Z\sim\Normal(0,1)$ i
+$Y=e^Z$, $C=Z$. Wiemy, że $\E C=0$,
+$\E Y=e^{1/2}$, $\Cov(Y,Z)=\E[Ze^Z]=e^{1/2}$
+oraz $\Var(e^Z)=e^2-e$.
+Najlepszy współczynnik kontrolny to $\beta_*=e^{1/2}$,
+a wariancja maleje z $e^2-e$ do $e^2-2e$.
+W przykładzie traktujemy $\E Y$ jako szukaną całkę,
+mimo że znamy jej dokładną wartość i możemy sprawdzić błąd symulacji.
+\end{przyklad}
+
+\begin{stwierdzenie}[Zmienne antytetyczne]
+\label{prop:antithetic}
+Niech $U\sim\operatorname{Unif}(0,1)$, a
+$f\in L^2((0,1),\lambda_1)$ będzie monotoniczna.
+Wtedy $\Cov(f(U),f(1-U))\le0$.
+Zatem estymator $[f(U)+f(1-U)]/2$ ma wariancję
+nie większą niż $\Var(f(U))/2$.
+Dla $N$ niezależnych par dzielimy tę wariancję przez $N$.
+\end{stwierdzenie}
+\begin{proof}
+Niech $V$ będzie niezależną kopią $U$. Dla monotonicznej
+$f$ funkcja $u\mapsto f(u)$ jest monotoniczna, a
+$u\mapsto f(1-u)$ ma monotoniczność przeciwną.
+Wobec tego
+$[f(U)-f(V)][f(1-U)-f(1-V)]\le0$ prawie na pewno.
+Po rozwinięciu i wykorzystaniu niezależności $U,V$
+wartość oczekiwana lewej strony jest dwukrotnością
+$\Cov(f(U),f(1-U))$, co daje tezę.
+Wariancja średniej dwóch zmiennych o tej samej wariancji
+wynosi $(\Var(f(U))+\Cov(f(U),f(1-U)))/2$.
+\end{proof}
+
+\section{Importance sampling: zmiana rozkładu losowania}
+\begin{definicja}[Próbkowanie ważone]
+\label{def:importance-sampling}
+Niech $p,q$ będą gęstościami probabilistycznymi względem
+tej samej miary $\sigma$-skończonej $\nu$ na $(\mathsf X,\mathcal A)$,
+a $f\colon\mathsf X\to\R$ będzie mierzalna z
+$\int_{\mathsf X}|f(x)|p(x)\,\dd\nu(x)<\infty$.
+Zakładamy, że $q(x)>0$ dla $\nu$-prawie wszystkich $x$,
+dla których $|f(x)|p(x)>0$. Definiujemy wagę
+$w(x)=p(x)/q(x)$ dla $q(x)>0$ oraz $w(x)=0$ dla $q(x)=0$.
+Dla niezależnych $X_i\sim q\,\nu$ estymatorem \emph{importance sampling}
+jest $\widehat\mu_{N,\mathrm{IS}}=N^{-1}\sum_{i=1}^N f(X_i)w(X_i)$.
+\end{definicja}
+
+\begin{twierdzenie}[Nieobciążoność i wariancja importance sampling]
+\label{thm:is-variance}
+Przy założeniach definicji~\ref{def:importance-sampling} zachodzi
+$\E_q\widehat\mu_{N,\mathrm{IS}}=\mu=
+\int_{\mathsf X}f(x)p(x)\,\dd\nu(x)$.
+Jeżeli ponadto
+$\int_{\mathsf X}f(x)^2p(x)^2/q(x)\,\dd\nu(x)<\infty$
+(z ilorazem rozumianym jako zero w punktach, w których $f(x)p(x)=0$), to
+\[
+ \Var_q(\widehat\mu_{N,\mathrm{IS}})=\frac1N
+ \left(\int_{\mathsf X}\frac{f(x)^2p(x)^2}{q(x)}\,
+       \dd\nu(x)-\mu^2\right).
+\]
+Spośród wszystkich gęstości $q$ dodatnich na $\{|f|p>0\}$
+minimum drugiego momentu osiąga $q_*(x)=|f(x)|p(x)/A$,
+gdzie $A=\int_{\mathsf X}|f(x)|p(x)\,\dd\nu(x)>0$.
+Dla nieujemnego $f$ wariancja przy $q_*$ wynosi zero,
+\emph{ale} konstrukcja $q_*$ wymaga znajomości całki $A=\mu$
+i możliwości losowania z tego rozkładu.
+\end{twierdzenie}
+\begin{proof}
+Z założenia nośnikowego $f(x)p(x)=0$ na $\{q=0\}$
+prawie wszędzie. Zatem
+$\E_q[fw]=\int_{\{q>0\}} f(x)p(x)\,\dd\nu(x)=\mu$.
+Rachunek drugiego momentu i niezależność $X_i$ dają wariancję.
+Dla dowolnej dopuszczalnej gęstości $q$, z nierówności
+Cauchy'ego--Schwarza,
+\[
+ A^2=\left(\int_{\mathsf X}
+       \frac{|f|p}{\sqrt q}\sqrt q\,\dd\nu(x)\right)^2
+ \le\left(\int_{\mathsf X}\frac{f^2p^2}{q}\,\dd\nu(x)\right)
+       \int_{\mathsf X}q(x)\,\dd\nu(x)
+ =\int_{\mathsf X}\frac{f^2p^2}{q}\,\dd\nu(x).
+\]
+Równość zachodzi, gdy $|f|p/q$ jest stałe na nośniku $q$;
+stąd $q_*=|f|p/A$. Gdy $f\ge0$, ważona wartość
+$f(X)w(X)$ przy tym $q_*$ jest prawie na pewno równa $A$.
+\end{proof}
+
+\begin{uwaga}[Kiedy optymalny rozkład propozycji jest praktycznie nieosiągalny]
+Gęstość $q_*$ z twierdzenia~\ref{thm:is-variance} jest optymalna dla
+\emph{konkretnego} funkcjonału $f$, a nie jednocześnie dla wszystkich
+całek względem $p$. Dla $f$ zmieniającej znak minimalna wariancja
+wynosi $A^2-\mu^2$, która jest dodatnia, chyba że $f$ ma stały znak
+$p$-prawie wszędzie. W praktycznych algorytmach przybliżamy $q_*$
+rozwiązaniem parametrycznym, a potem oceniamy drugi moment wag:
+duże ESS nie zastępuje weryfikacji pokrycia nośnika.
+\end{uwaga}
+
+\begin{uwaga}[Zero w mianowniku i nieistniejąca wariancja]
+Może zachodzić $\E_q|fw|<\infty$, ale
+$\E_q[(fw)^2]=\infty$. Wtedy estymator jest zgodny
+na mocy mocnego prawa, lecz zwykły błąd standardowy
+oparty na CLT nie ma uzasadnienia. W praktyce należy
+kontrolować ogony wag i to, czy rozkład propozycji
+$q$ jest dostatecznie szeroki na obszarach ważnych dla całki.
+\end{uwaga}
+
+\begin{twierdzenie}[Samonormalizowane importance sampling]
+\label{thm:sn-is}
+Niech $p$ będzie gęstością probabilistyczną,
+$q>0$ na $\{p>0\}$ prawie wszędzie,
+$f\in L^1(p\,\nu)$ oraz $X_i\iid q\,\nu$.
+Zdefiniujmy $w_i=p(X_i)/q(X_i)$ oraz
+$\widetilde\mu_N=\sum_{i=1}^Nw_i f(X_i)/\sum_{i=1}^Nw_i$
+na zdarzeniu dodatniego mianownika (poza nim przyjmujemy
+umownie wartość zero). Wtedy
+$\widetilde\mu_N\to\mu$ prawie na pewno.
+Jeżeli $\E_q[w^2(f-\mu)^2]<\infty$ i
+$0<\Var_q(w(f-\mu))$, to
+\[
+ \sqrt N(\widetilde\mu_N-\mu)
+ \Rightarrow\Normal\left(0,\E_q[w^2(f-\mu)^2]\right).
+\]
+Ten estymator nie jest na ogół dokładnie nieobciążony.
+\end{twierdzenie}
+\begin{proof}
+Z warunku nośnikowego $\E_q w=1$ i
+$\E_q(wf)=\mu$. MLLN dla obu średnich daje zgodność i
+w szczególności dodatniość mianownika dla dużych $N$
+prawie na pewno. Ponadto
+\[
+ \widetilde\mu_N-\mu=
+ \frac{N^{-1}\sum_{i=1}^N w_i(f(X_i)-\mu)}
+      {N^{-1}\sum_{i=1}^N w_i}.
+\]
+Licznik jest średnią niezależnych, wycentrowanych
+zmiennych o skończonej wariancji wskazanej w tezie.
+Z CLT i twierdzenia Slutsky'ego uzyskujemy normalną granicę.
+Iloraz losowych średnich nie musi mieć wartości oczekiwanej
+równej ilorazowi ich wartości oczekiwanych; już dla $N=1$
+i różnych $p,q$ samonormalizowana średnia równa się
+$f(X_1)$ przy $w_1>0$, więc jej wartość oczekiwana
+może być inna niż $\mu$.
+\end{proof}
+
+\begin{uwaga}[Efektywna liczebność próby ważonej]
+W praktyce oblicza się
+$\mathrm{ESS}_{\rm w}=(\sum_iw_i)^2/\sum_iw_i^2\in[1,N]$
+na zdarzeniu, że suma wag jest dodatnia.
+Jest to \emph{wskaźnik koncentracji wag}, a nie dokładna
+gwarancja błędu $\widetilde\mu_N$; przy wagach zerowych
+liczymy tylko dodatnie składniki. Mała wartość oznacza,
+że kilka losowań dominuje wynik. Sama duża wartość ESS
+nie dowodzi, że rozkład propozycji pokrywa wszystkie
+istotne obszary ani że istniała wariancja wag.
+\end{uwaga}
+
+\begin{przyklad}[Ekspozycyjna zmiana miary dla rzadkiego ogona]
+Niech $Z\sim\Normal(0,1)$, $a>0$, a
+$p=\Prob(Z>a)=\int_{(a,\infty)}\varphi(z)\,\dd\lambda_1(z)$,
+gdzie $\varphi$ oznacza standardową gęstość normalną.
+W naiwnej symulacji liczymy $\ind{\{Z>a\}}$.
+W importance sampling losujemy $Y\sim\Normal(a,1)$ i liczymy
+\[
+ W(Y)=\ind{\{Y>a\}}\exp(-aY+a^2/2).
+\]
+Ponieważ $\varphi(y)/\varphi(y-a)=\exp(-ay+a^2/2)$,
+$\E W(Y)=p$. Wybór przesunięcia $a$ sprawia, że
+przekroczenie progu występuje pod propozycją
+z prawdopodobieństwem $1/2$, zamiast bardzo rzadko.
+Dobre ustawienie propozycji trzeba jednak ocenić przez
+wariancję wag, a nie samą częstość przekroczeń.
+\end{przyklad}
+
+\section{Co kiedy stosować? Porównanie w jednym miejscu}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.25\textwidth}>{\raggedright\arraybackslash}p{.30\textwidth}>{\raggedright\arraybackslash}p{.29\textwidth}}
+\toprule
+\textbf{Zadanie} & \textbf{Metoda do rozważenia} & \textbf{Kontrola jakości}\\
+\midrule
+Znamy rozkład, umiemy losować niezależnie & Zwykłe Monte Carlo & Błąd $S_N/\sqrt N$ przy skończonej wariancji\\
+Rzadkie zdarzenie lub dominujące ogony & Importance sampling & Nośnik propozycji, ogony wag i ESS\\
+Znamy średnią skorelowanej zmiennej & Zmienna kontrolna & Zysk wariancyjny; osobna próba pilotażowa\\
+Umiemy scałkować część losowości & Warunkowanie Rao--Blackwella & Koszt wyliczenia warunkowej średniej\\
+Monotoniczny funkcjonał jednego kwantyla & Losowania antytetyczne & Faktyczna kowariancja w parach\\
+Posterior znany tylko do normalizacji & MCMC z rozdziału~\ref{ch:mcmc} & Diagnostyka wielu łańcuchów, autokorelacja\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Laboratorium: błąd i rzadkie zdarzenia}
+\begin{lstlisting}[language=Python,caption={Kompletny program: Monte Carlo, zmienna kontrolna i importance sampling dla ogona normalnego (Python, NumPy i SciPy).}]
+import numpy as np
+from scipy.stats import norm
+
+rng = np.random.default_rng(2026)
+n = 100_000
+z = rng.standard_normal(n)
+y = np.exp(z)
+naive = y.mean()
+control = (y - np.exp(0.5) * z).mean()
+print("E[exp(Z)] exact:", np.exp(0.5))
+print("naive estimate:", naive, "SE:", y.std(ddof=1) / np.sqrt(n))
+print("control estimate:", control)
+
+a = 4.0
+x = rng.standard_normal(n)
+rare_plain = (x > a).astype(float)
+y_is = rng.normal(loc=a, scale=1.0, size=n)
+w_is = (y_is > a) * np.exp(-a * y_is + a*a/2)
+print("tail exact:", norm.sf(a))
+print("plain:", rare_plain.mean(), "hits:", int(rare_plain.sum()))
+print("importance sampling:", w_is.mean())
+print("IS estimated SE:", w_is.std(ddof=1) / np.sqrt(n))
+
+# Self-normalized importance sampling has generally nonzero bias.
+weights = np.exp(-a * y_is + a*a/2)
+snis = np.sum(weights * (y_is > a)) / weights.sum()
+ess = weights.sum()**2 / np.sum(weights**2)
+print("SNIS estimate:", snis, "weight ESS:", ess)
+\end{lstlisting}
+
+\begin{lstlisting}[language=Julia,caption={Kompletny program: redukcja wariancji przez zmienną kontrolną i estymacja rzadkiego ogona (Julia, Random i Statistics).}]
+using Random, Statistics
+Random.seed!(2026)
+N = 100_000
+z = randn(N)
+y = exp.(z)
+beta = exp(0.5)
+println("exact E[exp(Z)]: ", beta)
+println("plain: ", mean(y))
+println("control: ", mean(y .- beta .* z))
+
+a = 4.0
+x = randn(N)
+plain = mean(x .> a)
+yis = randn(N) .+ a
+wis = (yis .> a) .* exp.(-a .* yis .+ a^2 / 2)
+println("plain tail estimate: ", plain)
+println("importance sampling tail estimate: ", mean(wis))
+println("IS estimated standard error: ", std(wis) / sqrt(N))
+\end{lstlisting}
+
+\begin{zadanie}[Dwie metody dla tej samej całki]
+Niech $U\sim\operatorname{Unif}(0,1)$ i $f(u)=u^2$.
+Porównać wariancje pojedynczej wartości $f(U)$ i
+średniej antytetycznej $[f(U)+f(1-U)]/2$.
+\par\emph{Rozwiązanie.} Mamy $\E U^2=1/3$,
+$\E U^4=1/5$, więc $\Var(U^2)=4/45$.
+Ponieważ $\E[U^2(1-U)^2]=1/30$,
+$\Cov(U^2,(1-U)^2)=1/30-1/9=-7/90$.
+Wariancja średniej pary jest
+$\tfrac12(4/45-7/90)=1/180$.
+Przy dwóch niezależnych próbach wariancja ich średniej
+wynosiłaby $2/45$. Para antytetyczna jest więc przy
+tej samej liczbie dwóch ewaluacji znacznie dokładniejsza.
+\end{zadanie}
+
+

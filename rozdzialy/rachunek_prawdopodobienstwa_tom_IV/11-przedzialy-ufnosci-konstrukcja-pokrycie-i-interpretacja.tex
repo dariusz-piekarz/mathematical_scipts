@@ -1,0 +1,502 @@
+\chapter{Przedziały ufności: konstrukcja, pokrycie i interpretacja}
+\label{ch:confidence-intervals}
+\paragraph{Powiązania i odsyłacze.} Związek przedziałów z testami wyjaśnia rozdział~\ref{ch:testing}; przykłady dokładnych rozkładów statystyk podaje rozdział~\ref{ch:parametric-tests}.
+
+
+\section{Co dokładnie oznacza 95\% ufności?}
+Zaobserwowany odsetek wadliwych produktów wynosi $7/100$. Samo
+$\widehat p=0{,}07$ nie mówi, jaka jest precyzja wnioskowania.
+Przedział ufności jest sposobem opisania tej niepewności, ale
+nie jest rozkładem prawdopodobieństwa nieznanego parametru.
+
+\begin{definicja}[Zbiór ufności i pokrycie]\label{def:confidence-set}
+Niech $(\mathsf X,\mathcal A,\{P_\theta:\theta\in\Theta\})$
+będzie eksperymentem statystycznym, a
+$g:\Theta\to\mathsf T$ ustaloną funkcją parametru,
+gdzie $(\mathsf T,\mathcal T)$ jest przestrzenią mierzalną.
+\emph{Zbiorem ufności} na poziomie $1-\alpha$, gdzie
+$0<\alpha<1$, nazywamy losowy zbiór $C(X)\subseteq\mathsf T$
+taki, że dla każdego $\theta\in\Theta$ zdarzenie
+$\{g(\theta)\in C(X)\}$ jest mierzalne i
+\[
+ P_\theta\bigl(g(\theta)\in C(X)\bigr)\ge1-\alpha.
+\]
+Jeśli $\mathsf T=\R$ i $C(X)=[L(X),U(X)]$ dla
+mierzalnych $L\le U$, nazywamy go \emph{przedziałem ufności}.
+Powyższe prawdopodobieństwo jest \emph{pokryciem} przy $\theta$.
+Gdy dla każdego parametru zachodzi równość, mówimy o
+\emph{dokładnym pokryciu nominalnym}; procedura z pokryciem
+większym od nominalnego jest \emph{konserwatywna}.
+\end{definicja}
+
+Losowość należy do przedziału $C(X)$, zanim zaobserwujemy próbę.
+Po podstawieniu konkretnych danych $x$ otrzymujemy ustalony zbiór
+$C(x)$. W interpretacji klasycznej nie stwierdzamy wtedy, że
+„parametr z prawdopodobieństwem $95\%$ leży w tym konkretnym
+przedziale”. Stwierdzamy, że \emph{procedura} konstruowania
+przedziałów ma zadane pokrycie w powtarzanych doświadczeniach.
+Rozkład wiarygodności a posteriori prowadzący do innego rodzaju
+przedziału zostanie wprowadzony w części bayesowskiej.
+
+\begin{uwaga}[Pokrycie punktowe, jednostajne i przybliżone]
+Zapis $P_\theta(g(\theta)\in C_n)\to1-\alpha$ dla każdego
+ustalonego $\theta$ oznacza pokrycie asymptotyczne \emph{punktowe}.
+Silniejsze żądanie
+$\liminf_{n\to\infty}\inf_{\theta\in\Theta}
+P_\theta(g(\theta)\in C_n)\ge1-\alpha$
+gwarantuje pokrycie asymptotyczne \emph{jednostajne}.
+Pierwsze nie implikuje drugiego; przy granicach przestrzeni
+parametrów klasyczne przybliżenie normalne może działać
+bardzo źle. W zastosowaniach małych prób pytamy zatem nie tylko
+o nominalny procent, lecz także o zakres parametrów, dla których
+gwarancja jest prawdziwa.
+\end{uwaga}
+
+\section{Dualność testów i przedziałów ufności}
+\begin{twierdzenie}[Odwracanie rodziny testów]\label{thm:test-inversion}
+Niech $\{P_\theta:\theta\in\Theta\}$ będzie rodziną miar
+na $(\mathsf X,\mathcal A)$ oraz $g:\Theta\to\mathsf T$.
+Dla każdego $t\in g(\Theta)$ niech $\varphi_t:\mathsf X\to\{0,1\}$
+będzie mierzalnym testem hipotezy
+$H_{0,t}:g(\theta)=t$ o poziomie co najwyżej $\alpha$:
+\[
+ \sup_{\theta:g(\theta)=t}\E_\theta\varphi_t(X)\le\alpha.
+\]
+Zakładamy ponadto, że zbiór
+$C(x)=\{t\in g(\Theta):\varphi_t(x)=0\}$ ma mierzalne
+zdarzenia przynależności. Wtedy $C(X)$ jest zbiorem ufności
+dla $g(\theta)$ o pokryciu co najmniej $1-\alpha$.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $\theta\in\Theta$ i przyjmijmy $t=g(\theta)$.
+Z definicji konstrukcji $g(\theta)\notin C(X)$ wtedy i tylko
+wtedy, gdy $\varphi_t(X)=1$. Zatem
+$P_\theta(g(\theta)\notin C(X))
+=\E_\theta\varphi_t(X)\le\alpha$, co daje tezę.
+Nie trzeba zakładać, że test dla każdego $t$ odrzuca
+jednakowe wartości obserwowanej statystyki: istotna jest
+\emph{jednoczesna definicja rodziny testów}, a nie pojedynczy
+test dopasowany do danych.
+\end{proof}
+
+\begin{uwaga}[Co oznacza odwrotna implikacja?]
+Dla danego zbioru ufności $C(X)$ można zdefiniować test
+hipotezy $g(\theta)=t$ przez
+$\varphi_t(X)=\ind{\{t\notin C(X)\}}$. Jeśli
+pokrycie jest co najmniej $1-\alpha$, każdy z tych testów ma
+poziom co najwyżej $\alpha$. Testy i przedziały są więc
+różnymi reprezentacjami tej samej reguły wnioskowania,
+\emph{o ile} zostały skonstruowane z tą samą rodziną hipotez
+i tymi samymi założeniami.
+\end{uwaga}
+
+\section{Prawidłowy model normalny: przedział dla średniej i wariancji}
+\begin{twierdzenie}[Średnia i wariancja przy nieznanych parametrach]
+\label{thm:normal-mean-var-ci}
+Niech $n\ge2$, $X_1,\ldots,X_n\iid\Normal(\mu,\sigma^2)$,
+$\mu\in\R$, $\sigma>0$, oraz niech $\bar X$ i $S^2$ oznaczają
+średnią i wariancję z mianownikiem $n-1$. Dla $0<\alpha<1$
+przedziały
+\[
+ C_\mu(X)=\left[\bar X-t_{n-1,1-\alpha/2}\frac{S}{\sqrt n},
+ \bar X+t_{n-1,1-\alpha/2}\frac{S}{\sqrt n}\right],
+\]
+\[
+ C_{\sigma^2}(X)=\left[
+ \frac{(n-1)S^2}{\chi^2_{n-1,1-\alpha/2}},
+ \frac{(n-1)S^2}{\chi^2_{n-1,\alpha/2}}\right]
+\]
+mają \emph{każdy osobno} pokrycie dokładnie $1-\alpha$.
+Symbol $\chi^2_{\nu,q}$ oznacza kwantyl rzędu $q$ rozkładu
+chi-kwadrat o $\nu>0$ stopniach swobody; symbol
+$t_{\nu,q}$ wprowadzono w rozdziale~\ref{ch:parametric-tests}.
+\end{twierdzenie}
+\begin{proof}
+Rozkład próby normalnej zapewnia niezależne zmienne
+$Z=\sqrt n(\bar X-\mu)/\sigma\sim\Normal(0,1)$ i
+$V=(n-1)S^2/\sigma^2\sim\chi^2_{n-1}$. Stąd
+$Z/\sqrt{V/(n-1)}\sim t_{n-1}$. Zdarzenie
+$\{|Z/\sqrt{V/(n-1)}|\le t_{n-1,1-\alpha/2}\}$ jest
+dokładnie zdarzeniem $\{\mu\in C_\mu(X)\}$ i ma
+prawdopodobieństwo $1-\alpha$. Analogicznie
+$\{\chi^2_{n-1,\alpha/2}\le V\le
+\chi^2_{n-1,1-\alpha/2}\}$ ma prawdopodobieństwo
+$1-\alpha$ i po rozwiązaniu nierówności względem
+$\sigma^2$ daje drugi przedział. Użyliśmy ciągłości
+rozkładów; dla obu przedziałów razem nie zadeklarowano
+tu pokrycia jednoczesnego.
+\end{proof}
+
+\begin{stwierdzenie}[Przedział dla ilorazu dwóch wariancji]
+\label{prop:ratio-var-ci}
+Niech próby $X_1,\ldots,X_n\iid\Normal(\mu_X,\sigma_X^2)$
+i $Y_1,\ldots,Y_m\iid\Normal(\mu_Y,\sigma_Y^2)$ będą
+niezależne, $n,m\ge2$, $\sigma_X,\sigma_Y>0$.
+Jeśli $R=S_X^2/S_Y^2$ oraz $q=\sigma_X^2/\sigma_Y^2$,
+to przedział
+\[
+ \left[\frac{R}{F_{n-1,m-1,1-\alpha/2}},
+       \frac{R}{F_{n-1,m-1,\alpha/2}}\right]
+\]
+obejmuje $q$ z prawdopodobieństwem $1-\alpha$,
+gdzie $F_{a,b,u}$ jest kwantylem rzędu $u$
+rozkładu Fishera--Snedecora z $a,b>0$ stopniami swobody.
+\end{stwierdzenie}
+\begin{proof}
+Zmienne
+$(n-1)S_X^2/\sigma_X^2$ i
+$(m-1)S_Y^2/\sigma_Y^2$ są niezależne i mają
+rozkłady chi-kwadrat. Z definicji rozkładu F
+$R/q\sim F_{n-1,m-1}$, więc odwrócenie nierówności
+między kwantylami daje wskazany przedział.
+\end{proof}
+
+\begin{przyklad}[Dwie niezależne technologie a pomiary sparowane]
+W zadaniu~\ref{zad:welch-case} dane pochodzą z dwóch
+\emph{niezależnych} grup. Przy nierównych wariancjach
+przedział dla $\mu_X-\mu_Y$ uzyskany metodą Welcha ma
+postać
+$[\bar X-\bar Y\pm t_{\nu,1-\alpha/2}
+\sqrt{S_X^2/n+S_Y^2/m}]$, gdzie losowe $\nu$
+zdefiniowano w rozdziale~\ref{ch:parametric-tests}.
+Jest to przedział \emph{przybliżony}, nie dokładny.
+Jeżeli te same jednostki zmierzono dwukrotnie i różnice
+$D_i$ są niezależne między parami oraz normalne,
+przedział oparty na $\bar D\pm t_{n-1,1-\alpha/2}S_D/\sqrt n$
+jest \emph{dokładny}. Nie wolno podmieniać tych procedur
+bez zmiany założeń o zależności.
+\end{przyklad}
+
+\section{Odsetek wad: trzy przedziały dla parametru Bernoulliego}
+Niech $X_1,\ldots,X_n\iid\operatorname{Bernoulli}(p)$,
+$n\ge1$, $p\in[0,1]$, $S=\sum_iX_i$ i
+$\widehat p=S/n$. Trzy popularne konstrukcje odpowiadają
+na to samo pytanie, ale opierają się na różnych argumentach.
+
+\paragraph{Wald: prosta formuła bez gwarancji przy małych częstościach.}
+Dla $z=z_{1-\alpha/2}$ przedział Walda ma postać
+\[
+ C_{\rm Wald}(X)=\left[\widehat p-z\sqrt{\frac{\widehat p(1-\widehat p)}n},
+\widehat p+z\sqrt{\frac{\widehat p(1-\widehat p)}n}\right]
+\cap[0,1].
+\]
+Z twierdzenia centralnego granicznego i twierdzenia Slutsky'ego
+wynika pokrycie zbieżne do $1-\alpha$ \emph{dla każdego
+ustalonego} $p\in(0,1)$. Nie jest to jednak gwarancja
+jednostajna, szczególnie blisko $p=0$ i $p=1$.
+Przy $S=0$ przedział redukuje się do $\{0\}$, więc dla
+każdego prawdziwego $p>0$ ten wynik próby nie pokrywa
+parametru. W praktyce nie zalecamy Walda dla rzadkich
+zdarzeń ani małych prób.
+
+\begin{twierdzenie}[Przedział Wilsona przez odwrócenie testu score]
+\label{thm:wilson-ci}
+Przy powyższych założeniach i $0<\alpha<1$ niech
+$z=z_{1-\alpha/2}$. Zbiór parametrów $p\in[0,1]$
+spełniających
+\[
+ \frac{n(\widehat p-p)^2}{p(1-p)}\le z^2,
+ \qquad 0<p<1,
+\]
+z domknięciem rozwiązań przy $p=0,1$, jest przedziałem
+$[c-h,c+h]$, gdzie
+\[
+ c=\frac{\widehat p+z^2/(2n)}{1+z^2/n},\qquad
+ h=\frac{z}{1+z^2/n}\sqrt{
+ \frac{\widehat p(1-\widehat p)}n+\frac{z^2}{4n^2}}.
+\]
+To \emph{przedział Wilsona}. Jego pokrycie wynosi
+$1-\alpha+o(1)$ przy $n\to\infty$ dla każdego
+ustalonego $p\in(0,1)$, lecz nie musi wynosić dokładnie
+$1-\alpha$ dla skończonego $n$.
+\end{twierdzenie}
+\begin{proof}
+W modelu Bernoulliego dla ustalonego $p\in(0,1)$
+statystyka score $Z_p=\sqrt n(\widehat p-p)/\sqrt{p(1-p)}$
+ma na mocy CLT rozkład asymptotycznie standardowy normalny.
+Nierówność $|Z_p|\le z$ jest równoważna
+$n(\widehat p-p)^2\le z^2p(1-p)$, czyli
+\[
+ (n+z^2)p^2-(2n\widehat p+z^2)p+n\widehat p^2\le0.
+\]
+Trójmian kwadratowy o dodatnim współczynniku przy $p^2$
+przyjmuje wartości niedodatnie między pierwiastkami.
+Wzory na środek i połowę ich różnicy upraszczają się
+odpowiednio do $c$ i $h$. Dla $\widehat p=0$ albo $1$
+odpowiednie domknięcie w punkcie brzegowym daje tę samą
+formułę; otrzymane końce zawsze należą do $[0,1]$.
+Przy ustalonym $p\in(0,1)$ na mocy CLT prawdopodobieństwo
+nierówności dąży do $1-\alpha$. Nie wyciągamy wniosku
+o jednostajnym pokryciu bez dodatkowego dowodu.
+\end{proof}
+
+\begin{twierdzenie}[Dokładny konserwatywny przedział Cloppera--Pearsona]
+\label{thm:clopper-pearson}
+Dla $0<\alpha<1$, $s\in\{0,\ldots,n\}$ definiujemy
+$L(s)$ i $U(s)$ następująco:
+\begin{itemize}
+\item $L(0)=0$, a dla $s\ge1$ liczba $L(s)\in(0,1)$
+jest jedynym rozwiązaniem $P_{L(s)}(S\ge s)=\alpha/2$;
+\item $U(n)=1$, a dla $s\le n-1$ liczba $U(s)\in(0,1)$
+jest jedynym rozwiązaniem $P_{U(s)}(S\le s)=\alpha/2$,
+\end{itemize}
+gdzie w obu równaniach $S\sim\Bin(n,p)$ z parametrem
+$p$ wskazanym w indeksie. Wtedy dla każdego $p\in[0,1]$
+\[
+ P_p\bigl(L(S)\le p\le U(S)\bigr)\ge1-\alpha.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla $1\le s\le n$ funkcja
+$p\mapsto P_p(S\ge s)$ jest ciągła i ściśle rosnąca
+na $(0,1)$, z granicami $0$ i $1$; wynika to na przykład
+z różniczkowania sumy dwumianowej albo ze sprzężenia
+wskaźnikami $\ind{\{U_i\le p\}}$ z rozdziału~\ref{ch:testing}.
+Analogicznie $p\mapsto P_p(S\le s)$ dla
+$0\le s\le n-1$ jest ściśle malejąca od $1$ do $0$.
+Zatem końce istnieją i są jednoznaczne.
+
+Ustalmy prawdziwe $p\in(0,1)$ i oznaczmy przez
+$S'$ pomocniczą zmienną o rozkładzie $\Bin(n,p)$.
+Jeśli $p<L(S)$, to z monotoniczności ogona w parametrze
+otrzymujemy $P_p(S'\ge S)<\alpha/2$.
+Dla każdego dyskretnego rozkładu funkcja
+$u(s)=P_p(S'\ge s)$ jest nierosnąca, a zbiór
+$\{s:u(s)\le t\}$ jest końcowym przedziałem liczb
+całkowitych (albo jest pusty). Jeżeli jego najmniejszy
+element to $s_t$, mamy
+$P_p(u(S)\le t)=P_p(S\ge s_t)=u(s_t)\le t$.
+Stąd $P_p(p<L(S))\le\alpha/2$.
+Analogicznie używając lewego ogona $P_p(S'\le S)$
+otrzymujemy $P_p(p>U(S))\le\alpha/2$.
+Nierówność sumy prawdopodobieństw daje
+$P_p(p\notin[L(S),U(S)])\le\alpha$.
+Dla $p=0$ lub $p=1$ właściwy koniec przedziału jest
+równy parametrowi z prawdopodobieństwem jeden.
+\end{proof}
+
+\begin{uwaga}[Dokładny test, lecz niekoniecznie pokrycie równe nominalnemu]
+Słowo „dokładny” odnosi się tu do gwarancji skończonopróbkowej
+bez przybliżenia normalnego. Wskutek dyskretności rozkładu
+pokrycie Cloppera--Pearsona jest często \emph{większe} niż
+$1-\alpha$, a przedział może być szerszy niż Wilsona.
+Nie należy mówić, że „Clopper--Pearson zawsze pokrywa dokładnie
+$95\%$” w znaczeniu równości dla każdego $p$.
+\end{uwaga}
+
+\begin{zadanie}[7 wad na 100 sztuk: trzy różne odpowiedzi]
+\label{zad:ci-seven}
+Dla $n=100$, $s=7$ i $\alpha=0{,}05$ oblicz trzy
+przedziały dla $p$ i zdecyduj, czy istnieją mocne podstawy,
+by przyjąć $p<0{,}1$.
+\par\emph{Rozwiązanie.} Punktowy estymator wynosi
+$\widehat p=0{,}07$. Dla $z_{0{,}975}\approx1{,}96$
+po podstawieniu do wzorów otrzymujemy
+\[
+ \begin{aligned}
+ C_{\mathrm{Wald}}&\approx[0{,}01999;\ 0{,}12001],\\
+ C_{\mathrm{Wilson}}&\approx[0{,}03432;\ 0{,}13750],\\
+ C_{\mathrm{CP}}&\approx[0{,}02861;\ 0{,}13892].
+ \end{aligned}
+\]
+Przedziały różnią się istotnie dolnym końcem, choć
+wszystkie obejmują wartość $0{,}1$. Dla hipotezy
+$H_0:p\ge0{,}1$ przeciw $p<0{,}1$ z rozdziału~\ref{ch:testing}
+\emph{dokładna jednostronna górna granica} poziomu $95\%$
+to $U_1(s)$ rozwiązujące
+$P_{U_1(s)}(S\le s)=0{,}05$; przy $s=7$
+wynosi $U_1(7)\approx0{,}12746$. Wobec tego
+nie możemy na poziomie $5\%$ stwierdzić, że
+$p<0{,}1$. Równoważne jest to temu, że jednostronny
+test dokładny daje $p\text{-value}\approx0{,}20605$.
+\emph{Dwustronny} przedział ufności poziomu $95\%$
+nie jest automatycznie dualny do \emph{jednostronnego}
+testu na poziomie $5\%$; ich zgodność tutaj nie
+usprawiedliwia utożsamiania obu procedur.
+\end{zadanie}
+
+\begin{zadanie}[Przedział dla średniej różnicy w pomiarach sparowanych]
+W zadaniu z rozdziału~\ref{ch:parametric-tests} osiem
+niezależnych par miało różnice
+$D=(3,2,4,3,1,2,5,2)$. Pod założeniem normalności
+różnic przedział $95\%$ dla średniej różnicy $\delta$
+ma postać $\bar D\pm t_{7,0{,}975}S_D/\sqrt8$.
+Ponieważ $\bar D=2{,}75$, $S_D^2=23/14$ i
+$t_{7,0{,}975}\approx2{,}365$, otrzymujemy
+przedział w przybliżeniu $[1{,}68;\ 3{,}82]$.
+Wnioskujemy o średniej \emph{różnicy wewnątrz jednostki},
+a nie o różnicy średnich z dwóch niezależnych prób.
+Interpretacja przyczynowa nadal wymaga odpowiedniego
+projektu badania.
+\end{zadanie}
+
+\section{Proces Poissona: przedział dla intensywności zdarzeń}
+Jeśli w czasie ekspozycji $T>0$ zaobserwowano $S=s$
+zdarzeń, a model zakłada $S\sim\Pois(\lambda T)$,
+to estymator $\widehat\lambda=s/T$ nie opisuje niepewności
+przy małych $s$. W szczególności $s=0$ nie dowodzi,
+że $\lambda=0$.
+
+\begin{twierdzenie}[Dokładny przedział dla intensywności Poissona]
+\label{thm:poisson-ci}
+Niech $T>0$, $S\sim\Pois(\lambda T)$, $\lambda\ge0$,
+oraz $0<\alpha<1$. Zdefiniujmy $a(0)=0$,
+$a(s)=\chi^2_{2s,\alpha/2}/2$ dla $s\ge1$, a
+$b(s)=\chi^2_{2(s+1),1-\alpha/2}/2$ dla $s\ge0$.
+Wówczas
+\[
+ C_\lambda(S)=\left[\frac{a(S)}T,\frac{b(S)}T\right]
+\]
+ma pokrycie co najmniej $1-\alpha$ dla wszystkich
+$\lambda\ge0$.
+\end{twierdzenie}
+\begin{proof}
+Dla $s\ge1$ i $u>0$ związek pomiędzy rozkładami
+Poissona i chi-kwadrat daje
+\[
+ P_{u}(S\ge s)=P(\chi^2_{2s}\le2u),\qquad
+ P_{u}(S\le s)=P(\chi^2_{2(s+1)}>2u),
+\]
+gdzie w ogonach po lewej $S\sim\Pois(u)$.
+Tożsamości wynikają z całkowania gęstości gamma albo
+z pochodnej odpowiednich skończonych sum
+$e^{-u}\sum_{j=0}^{s-1}u^j/j!$ i
+$e^{-u}\sum_{j=0}^{s}u^j/j!$ z warunkiem brzegowym
+przy $u=0$. Stąd $a(s)$ rozwiązuje
+$P_{a(s)}(S\ge s)=\alpha/2$, a $b(s)$ rozwiązuje
+$P_{b(s)}(S\le s)=\alpha/2$.
+Tak jak w dowodzie twierdzenia~\ref{thm:clopper-pearson},
+przekroczenie dolnego lub górnego końca oznacza wystąpienie
+odpowiedniej jednostronnej wartości p mniejszej niż
+$\alpha/2$. Nierówność sumy prawdopodobieństw kończy
+dowód. Dla $\lambda=0$ mamy $S=0$ prawie na pewno
+i przedział zawiera zero.
+\end{proof}
+
+\begin{przyklad}[Zero awarii nie oznacza zerowej intensywności]
+Przy $s=0$ dolny koniec przedziału wynosi zero,
+a górny wynosi $-\log(\alpha/2)/T$. Dla
+$\alpha=0{,}05$ i $T=100$ godzin daje to około
+$0{,}03689$ awarii na godzinę. Jeśli z góry
+interesuje nas wyłącznie \emph{górna} granica, można
+uzyskać krótszy, jednostronny przedział z końcem
+$-\log(\alpha)/T\approx0{,}02996$; trzeba jednak
+podać w raporcie, że chodzi o granicę jednostronną.
+\end{przyklad}
+
+\section{Gdy nie ufamy rozkładowi: przedział z nierówności Hoeffdinga}
+\begin{twierdzenie}[Przedział rozkładowo niezależny dla średniej]
+\label{thm:hoeffding-ci}
+Niech $X_1,\ldots,X_n$ będą niezależnymi zmiennymi
+losowymi o wspólnej wartości oczekiwanej $\mu$,
+a przy tym $a\le X_i\le b$ prawie na pewno dla
+pewnych znanych liczb $a<b$. Dla $0<\alpha<1$
+przedział
+\[
+ \left[\bar X-(b-a)\sqrt{\frac{\log(2/\alpha)}{2n}},
+       \bar X+(b-a)\sqrt{\frac{\log(2/\alpha)}{2n}}\right]
+\]
+ma pokrycie co najmniej $1-\alpha$.
+\end{twierdzenie}
+\begin{proof}
+Nierówność Hoeffdinga dla niezależnych zmiennych
+ograniczonych z tym samym przedziałem wartości zapewnia
+$P(|\bar X-\mu|\ge\varepsilon)
+\le2\exp[-2n\varepsilon^2/(b-a)^2]$.
+Po podstawieniu
+$\varepsilon=(b-a)\sqrt{\log(2/\alpha)/(2n)}$
+prawa strona jest równa $\alpha$. Ponieważ zdarzenie
+niepokrycia przedziałem implikuje
+$|\bar X-\mu|\ge\varepsilon$, otrzymujemy tezę.
+Nie wymagana jest normalność, ale \emph{znane ograniczenie}
+$a\le X_i\le b$ jest istotnym założeniem.
+\end{proof}
+
+\begin{uwaga}[Praktyczne ograniczenia]
+Przedział Hoeffdinga bywa szerszy od przedziału t lub Wilsona,
+ponieważ kupujemy gwarancję przy słabszych założeniach
+o rozkładzie. Nie działa automatycznie dla nieograniczonego
+czasu awarii, wielokrotnych pomiarów tej samej osoby ani
+danych z nieznanym mechanizmem selekcji.
+Przedział $1-\alpha$ dla jednego ustalonego $n$ nie jest
+automatycznie \emph{sekwencją ufności} zachowującą pokrycie
+przy dowolnym, wybranym adaptacyjnie czasie zatrzymania.
+\end{uwaga}
+
+\section{Jak wybrać przedział i jak go raportować?}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.31\textwidth}>{\raggedright\arraybackslash}p{0.29\textwidth}>{\raggedright\arraybackslash}p{0.30\textwidth}}
+\toprule
+\textbf{Cel i dane} & \textbf{Konstrukcja} & \textbf{Co trzeba sprawdzić?}\\
+\midrule
+Średnia przy iid normalnych, $\sigma$ nieznana & Przedział t & Niezależność, normalność modelu; przy małych $n$ szczególnie istotne.\\
+Średnia w dużej próbie o skończonej wariancji & Asymptotyczny przedział ze średniej i SE & Ciężkie ogony, zależność, wiarygodność oszacowania SE.\\
+Średnia przy znanych granicach obserwacji & Hoeffding & Czy każde $X_i$ naprawdę mieści się w $[a,b]$?\\
+Prawdopodobieństwo sukcesu w próbie Bernoulliego & Wilson & Przybliżone pokrycie; ostrożność przy skrajnych $p$.\\
+Prawdopodobieństwo, mała próba lub skrajne częstości & Clopper--Pearson & Konserwatywność, możliwie duża szerokość.\\
+Wariancja/iloraz wariancji próby normalnej & Chi-kwadrat/F & Wrażliwość na brak normalności.\\
+Różnica średnich dwóch niezależnych grup & Welch (przybliżony) & Niezależność grup, ogony, próby niezrównoważone.\\
+Intensywność zliczeń i znana ekspozycja & Dokładny Poisson & Model stałej intensywności; nadmierna dyspersja.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Co koniecznie podajemy?}
+Podajemy estymowany parametr i jego jednostkę, schemat
+losowania, zastosowaną konstrukcję, poziom ufności,
+liczebność lub ekspozycję, punktowe oszacowanie oraz
+oba końce przedziału. W metodach asymptotycznych warto
+podać przybliżenie i przeprowadzić analizę wrażliwości.
+Jeżeli porównujemy wiele efektów naraz, przedziały
+\emph{indywidualne} nie zapewniają automatycznie
+jednoczesnego pokrycia całej rodziny.
+
+\begin{lstlisting}[language=Python,caption={Porównanie przedziałów Walda, Wilsona i Cloppera--Pearsona oraz granica dla Poissona (SciPy).}]
+from math import sqrt
+from scipy.stats import beta, chi2, norm
+
+n, s, alpha = 100, 7, 0.05
+phat = s / n
+z = norm.ppf(1 - alpha / 2)
+wald = (max(0.0, phat - z * sqrt(phat * (1-phat)/n)),
+        min(1.0, phat + z * sqrt(phat * (1-phat)/n)))
+center = (phat + z*z/(2*n)) / (1 + z*z/n)
+half = z/(1 + z*z/n) * sqrt(phat*(1-phat)/n + z*z/(4*n*n))
+wilson = (center - half, center + half)
+clopper = (0.0 if s == 0 else beta.ppf(alpha/2, s, n-s+1),
+           1.0 if s == n else beta.ppf(1-alpha/2, s+1, n-s))
+print('Wald:', wald)
+print('Wilson:', wilson)
+print('Clopper-Pearson:', clopper)
+
+s_events, exposure = 0, 100.0
+rate_upper_2s = chi2.ppf(1-alpha/2, 2*s_events+2) / (2*exposure)
+print('Poisson upper (two-sided):', rate_upper_2s)
+\end{lstlisting}
+
+\begin{lstlisting}[language=Julia,caption={Przedział Wilsona i dokładny przedział dwumianowy w Julii (Distributions.jl).}]
+using Distributions
+
+n, s, alpha = 100, 7, 0.05
+phat = s / n
+z = quantile(Normal(), 1 - alpha/2)
+center = (phat + z^2/(2n))/(1+z^2/n)
+half = z/(1+z^2/n)*sqrt(phat*(1-phat)/n + z^2/(4n^2))
+wilson = (center-half, center+half)
+lower = s == 0 ? 0.0 : quantile(Beta(s, n-s+1), alpha/2)
+upper = s == n ? 1.0 : quantile(Beta(s+1, n-s), 1-alpha/2)
+println((wilson=wilson, clopper=(lower, upper)))
+\end{lstlisting}
+
+\paragraph{Interpretacja kodu.}
+Funkcje \texttt{beta.ppf} oraz \texttt{quantile(Beta(...))}
+służą wyłącznie jako wygodny sposób numerycznego
+rozwiązania równań definiujących Cloppera--Pearsona;
+nie oznacza to, że z góry przyjęliśmy bayesowski rozkład
+a priori. Kompletne uzasadnienie pokrycia zostało podane
+w twierdzeniu~\ref{thm:clopper-pearson}.
+
+
+% ================================================================
+% ROZDZIAL 12 -- WIELOKROTNE TESTOWANIE
+% ================================================================

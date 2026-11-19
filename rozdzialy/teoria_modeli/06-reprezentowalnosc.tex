@@ -1,0 +1,120 @@
+\section{Reprezentowalność}\label{sec:reprezentowalnosc}
+
+\begin{definicja}[Reprezentowalność relacji]\label{res:7:1}
+Relacja $R\subseteq\N^k$ jest \emph{reprezentowalna} w teorii $T$, jeśli istnieje formuła $\rho(\vec x)$ taka, że dla każdej krotki $\vec n\in\N^k$ zachodzi
+\[
+R(\vec n)\Longrightarrow T\vdash\rho(\overline{\vec n}),\qquad
+\neg R(\vec n)\Longrightarrow T\vdash\neg\rho(\overline{\vec n}).
+\]
+\end{definicja}
+
+\begin{definicja}[Reprezentowalność funkcji]\label{res:7:2}
+Funkcja częściowa $f:\N^k\rightharpoonup\N$ jest \emph{reprezentowalna} w $T$, jeśli istnieje formuła $\varphi_f(\vec x,y)$ taka, że dla każdego standardowego wejścia $\vec n$, dla którego $f(\vec n)\downarrow=m$, zachodzi
+\[
+T\vdash\forall y\,\bigl(\varphi_f(\overline{\vec n},y)
+\leftrightarrow y=\overline m\bigr).
+\]
+Na wejściach spoza dziedziny $f$ nie wymagamy dowodu nieistnienia wyniku. Dla funkcji totalnej warunek dotyczy każdego standardowego wejścia.
+\end{definicja}
+
+\begin{uwaga}[Obliczenie konkretne a totalność]\label{res:7:3}
+Definicja~\ref{res:7:2} wymaga osobnego dowodu dla każdej ustalonej krotki numerałów; nie wynika z niej $T\vdash\forall\vec x\,\exists!y\,\varphi_f(\vec x,y)$. Pierwszy warunek wystarcza do diagonalizacji, natomiast drugi jest istotnie silniejszy i nie zachodzi dla dowolnej funkcji totalnej obliczalnej w PA.
+\end{uwaga}
+
+\begin{lemat}[Kodowanie ciągów funkcją $\beta$]\label{res:7:4}
+Funkcja $\beta(a,b,i)=a\bmod(1+(i+1)b)$ jest pierwotnie rekurencyjna. Dla każdego skończonego ciągu $c_0,\ldots,c_s$ istnieją $a,b\in\N$ takie, że $\beta(a,b,i)=c_i$ dla $i\le s$. Jej graf w modelu standardowym opisuje formuła $\Delta_0$
+\[
+B(a,b,i,r):=r<1+(i+1)b\ \land\
+\exists q\le a\,[a=q(1+(i+1)b)+r].
+\]
+Ponadto parę $(a,b)$ kodującą dany ciąg można wyznaczyć funkcją pierwotnie rekurencyjną jego kodu.
+\end{lemat}
+\begin{proof}
+Pierwotna rekurencyjność $\beta$ wynika z Lematu~\ref{res:5:8}. Wybierzmy $b=(s+1)!(1+\max_{i\le s}c_i)$ i oznaczmy $m_i=1+(i+1)b$. Mamy $c_i<m_i$. Moduły $m_0,\ldots,m_s$ są parami względnie pierwsze: gdyby liczba pierwsza $p$ dzieliła $m_i$ i $m_j$ dla $i<j$, to dzieliłaby $(j-i)b$. Nie dzieli $b$, ponieważ $m_i\equiv1\pmod p$ dla każdego dzielnika $p$ liczby $b$. Musiałaby zatem dzielić $j-i\le s$, a więc również $b$, co daje sprzeczność.
+
+Z chińskiego twierdzenia o resztach istnieje $a$ spełniające $a\equiv c_i\pmod{m_i}$ dla każdego $i\le s$. Możemy wybrać $0\le a<M$, gdzie $M=\prod_{i\le s}m_i$; wtedy $\beta(a,b,i)=c_i$. Przypomnijmy, że konstrukcja reszt jest efektywna: dla $M_i=M/m_i$ wyznaczamy współczynniki Bézouta $u_iM_i+v_im_i=1$ i bierzemy resztę liczby $\sum_i c_i u_iM_i$ modulo $M$.
+
+Wybór kodu jest nawet p.r. Obliczenie $b$ i $M$ wymaga tylko ograniczonych iloczynów i maksimum, a najmniejsze $a<M$ spełniające wszystkie kongruencje znajdujemy przez ograniczone przeszukiwanie. Formuła $B$ jest $\Delta_0$, bo dzielnik jest dodatni, a iloraz $q$ nie przekracza $a$.
+\end{proof}
+
+\begin{lemat}[Arytmetyczny opis skończonego obliczenia]\label{res:7:5}
+Dla ustalonego programu rejestrowego $e$ z Definicji~\ref{res:6:2} istnieje formuła $\Delta_0$ $C_e(\vec x,y,t,\vec a,\vec b)$ taka, że
+\[
+e(\vec n)\downarrow=m\quad\Longleftrightarrow\quad
+\mathcal N\models\exists t\,\exists\vec a\,\exists\vec b\,
+C_e(\overline{\vec n},\overline m,t,\vec a,\vec b).
+\]
+Ponadto PA dowodzi jednoznaczności wyniku: dwa ślady o tym samym wejściu, spełniające $C_e$, mają ten sam wynik.
+\end{lemat}
+\begin{proof}
+Konfiguracja programu składa się ze stanu i zawartości $d$ rejestrów, czyli $d+1$ liczb. Każdą składową śladu kodujemy osobną parą $(a_h,b_h)$ z Lematu~\ref{res:7:4}, gdzie $0\le h\le d$. Przyjmijmy skróty
+$B_i(u):=\bigwedge_{h=0}^d B(a_h,b_h,i,u_h)$ i
+$A:=1+\sum_{h=0}^d a_h$; zapis $\exists u<A$ oznacza ograniczenie wszystkich współrzędnych krotki $u$ przez $A$.
+Niech $I_e(\vec x,u)$ oznacza poprawną konfigurację początkową, $H_e(u)$ --- stan zatrzymania, a $S_e(u,v)$ --- wykonanie jednej instrukcji. Są to formuły bez kwantyfikatorów, wyrażające odpowiednio wartości rejestrów, skończoną alternatywę po instrukcjach oraz właściwy przypadek zwiększenia bądź zmniejszenia rejestru; $u_1$ jest zawartością rejestru wynikowego $r_0$.
+
+Definiujemy
+\begin{align*}
+C_e(\vec x,y,t,\vec a,\vec b):={}&
+\exists u<A\,[B_0(u)\land I_e(\vec x,u)]\\
+&\land\forall i<t\ \exists u<A\ \exists v<A\,
+[B_i(u)\land B_{S(i)}(v)\land\neg H_e(u)\land S_e(u,v)]\\
+&\land\exists u<A\,[B_t(u)\land H_e(u)\land u_1=y].
+\end{align*}
+Jest to formuła $\Delta_0$. Dla rzeczywistego śladu wszystkie odczyty $\beta(a_h,b_h,i)$ są nie większe od $a_h<A$, więc kodowanie z poprzedniego lematu dostarcza świadków. Odwrotnie, w $\N$ jednoznaczność reszty sprawia, że formuła opisuje kolejne konfiguracje tego samego obliczenia. Warunek $\neg H_e(u)$ dla $i<t$ oznacza, że ślad kończy się przy pierwszym zatrzymaniu.
+
+Uzasadnijmy ostatnie stwierdzenie \emph{wewnątrz PA}. Arytmetyka ta dowodzi istnienia i jednoznaczności reszty przy dzieleniu przez dowolną dodatnią liczbę: istnienie otrzymujemy przez indukcję po dzielnej, a jednoznaczność z własności porządku i mnożenia. Stąd PA dowodzi, że każdy kod $(a_h,b_h)$ wyznacza dokładnie jedną wartość składowej w dowolnej chwili. Dla dwóch śladów o tym samym wejściu indukcja po wspólnym odcinku ich czasów wykazuje równość kolejnych konfiguracji: baza wynika z $I_e$, a krok z deterministyczności $S_e$. Gdyby jeden ślad kończył się wcześniej, drugi wymagałby w tej samej chwili $\neg H_e$, sprzecznie z $H_e$ w pierwszym. Czasy zatrzymania, a więc i wyniki, są równe. Argument wykorzystuje indukcję w PA; nie przenosimy go bez zmian do $Q$.
+\end{proof}
+
+\begin{twierdzenie}[Reprezentowalność funkcji rekurencyjnych]\label{res:7:6}
+Każda funkcja częściowo rekurencyjna jest reprezentowalna w $Q$ w sensie Definicji~\ref{res:7:2}; dotyczy to w szczególności funkcji totalnych rekurencyjnych. Każda relacja rekurencyjna jest reprezentowalna w $Q$ w sensie Definicji~\ref{res:7:1}. Formuły te reprezentują odpowiednie funkcje i relacje także w każdym rozszerzeniu $T\supseteq Q$.
+\end{twierdzenie}
+\begin{proof}
+Na mocy Lematu~\ref{res:6:3} wybieramy program $e$ obliczający $f$. Nie możemy powtórzyć rozumowania z Lematu~\ref{res:7:5}, ponieważ $Q$ nie ma indukcji i nie dowodzi ogólnej jednoznaczności dzielenia z resztą. Wzmocnimy więc formułę kodującą ślad o warunki potrzebne do prześledzenia \emph{każdego konkretnego} obliczenia.
+
+Niech
+\begin{align*}
+D(t)&:=\forall u\le t\ \forall j<u\,(j<t),\\
+U(\vec a,\vec b,t)&:=\forall i\le t\ \bigwedge_{h=0}^d\forall v\,\forall w\,
+\bigl((B(a_h,b_h,i,v)\land B(a_h,b_h,i,w))\to v=w\bigr).
+\end{align*}
+Pierwszy warunek pozwala przechodzić do wcześniejszych indeksów śladu bez używania w $Q$ ogólnej przechodniości porządku; drugi gwarantuje jednoznaczność odczytów również dla niestandardowych parametrów. Kładziemy
+\[
+\varphi_f(\vec x,y):=\exists t\,\exists\vec a\,\exists\vec b\,
+\bigl(C_e(\vec x,y,t,\vec a,\vec b)\land D(t)\land U(\vec a,\vec b,t)\bigr).
+\]
+Nie zakładamy, że formuła $\varphi_f$ jest $\Sigma_1$; wymaganie to nie występuje w Definicji~\ref{res:7:2}.
+
+Ustalmy $\vec n$ takie, że $f(\vec n)\downarrow=m$, i niech $s$ będzie rzeczywistą liczbą kroków do zatrzymania. Wybieramy standardowe kody tego śladu. Zamknięte instancje $C_e$ i $D(\overline s)$ są prawdziwymi zdaniami $\Delta_0$, zatem $Q$ je dowodzi na mocy Lematu~\ref{res:4:7}. Dla wybranych numerałów $\overline{\vec a},\overline{\vec b},\overline s$ teoria $Q$ dowodzi również $U$: z Lematu~\ref{res:4:4} ograniczamy $i$ do skończonej liczby numerałów, a dla każdego z nich warunek $B$ ogranicza odczyty $v,w$ do skończonych zakresów. Pozostają konkretne równości i nierówności arytmetyczne. Otrzymujemy
+$Q\vdash\varphi_f(\overline{\vec n},\overline m)$.
+
+Musimy jeszcze wykazać, że \emph{dowolny} wynik wskazany przez formułę $\varphi_f(\overline{\vec n},y)$ jest równy $\overline m$; świadkowie jej kwantyfikatorów nie muszą odpowiadać liczbom standardowym. Pracujemy w $Q$ pod założeniem, że $C_e\land D\land U$ zachodzi dla pewnych $t,\vec a,\vec b$. Lemat~\ref{res:4:4} pozwala rozpatrzyć przypadki $t<\overline s$, $t=\overline s$ i $\overline s<t$.
+
+Jeżeli $t<\overline s$, to $t$ jest jednym z numerałów $\overline0,\ldots,\overline{s-1}$. Dla każdej takiej możliwości wypisujemy \emph{skończenie wiele} kroków obliczenia. Początek śladu jest ustalony, a pojedyncza instrukcja jest deterministyczna na konkretnej konfiguracji. Warunek $U$ utożsamia odczyty tego samego miejsca kodu w kolejnych warunkach. W chwili $t$ dostajemy zatem konfigurację prawdziwego obliczenia, która nie jest jeszcze zatrzymana; przeczy to końcowemu warunkowi $H_e$.
+
+Gdy $t=\overline s$, analogiczne skończone rozwinięcie obejmuje całą rzeczywistą historię i wyznacza wynik $y=\overline m$. Jeśli natomiast $\overline s<t$, warunek $D(t)$ zapewnia $\overline j<t$ dla każdego ustalonego $j<s$, a samo założenie daje $\overline s<t$. Możemy więc wykorzystać przejścia dla chwil $0,\ldots,s$ oraz jednoznaczność odczytów z $U$. Pierwsze $s$ przejść prowadzi do rzeczywistej konfiguracji zatrzymanej w chwili $s$, lecz warunek przejścia dla $i=\overline s$ wymaga tam $\neg H_e$: sprzeczność. Przy $s=0$ ten sam argument stosuje się bez kroków pośrednich.
+
+Wykazaliśmy w ten sposób w $Q$, bez stosowania indukcji do zmiennego czasu obliczenia, że
+$\varphi_f(\overline{\vec n},y)\to y=\overline m$.
+Łącząc to z udowodnionym istnieniem i podstawianiem równości, otrzymujemy
+$Q\vdash\forall y\,(\varphi_f(\overline{\vec n},y)\leftrightarrow y=\overline m)$.
+
+Dla relacji rekurencyjnej $R$ bierzemy jej totalną funkcję charakterystyczną i definiujemy $\rho_R(\vec x):=\varphi_{\chi_R}(\vec x,\overline1)$. Gdy $R(\vec n)$ zachodzi, otrzymujemy dowód $\rho_R(\overline{\vec n})$; gdy nie zachodzi, reprezentowalność wartości $0$ daje jej negację, ponieważ $Q\vdash\overline0\ne\overline1$. Dowody z $Q$ pozostają dowodami w każdym rozszerzeniu tej teorii.
+\end{proof}
+
+\begin{lemat}[Standardowy arytmetyczny predykat dowodu]\label{res:7:7}
+Dla efektywnie aksjomatyzowalnej teorii $T$ można wybrać kodowanie pełnych dowodów tak, aby formuła $\operatorname{Prf}_T(p,x)$ była klasy $\Delta_0$ i poprawnie rozstrzygała relację dowodu w modelu standardowym. Dla każdej pary numerałów $\overline p,\overline x$ teoria $Q$ dowodzi odpowiedniej instancji $\operatorname{Prf}_T$ albo jej negacji. Wówczas $\operatorname{Bew}_T(x):=\exists p\,\operatorname{Prf}_T(p,x)$ jest formułą $\Sigma_1$.
+\end{lemat}
+\begin{proof}
+Z Lematu~\ref{res:6:5} mamy pierwotnie rekurencyjny weryfikator $V_T(d,x)$ pełnego dowodu $d$, zawierającego certyfikaty pochodzenia aksjomatów. Ustalamy program obliczający $V_T$ i dołączamy do $d,x$ kod całego śladu jego obliczenia, kończącego się wynikiem $1$.
+
+Dane $(d,t,\vec a,\vec b)$ pakujemy iterowanym parowaniem
+$\langle u,v\rangle=(u+v)^2+u$. Jest ono p.r. i różnowartościowe: przy ustalonej sumie $u+v=s$ przyjmuje wartości w przedziale $[s^2,s^2+s]$, rozłącznym z przedziałami dla innych sum. Każda składowa jest nie większa od pełnego kodu $p$. Niech $\operatorname{Pack}(p;d,t,\vec a,\vec b)$ opisuje tę równość. Definiujemy
+\[
+\operatorname{Prf}_T(p,x):=\exists d,t,\vec a,\vec b\le p\,
+\bigl(\operatorname{Pack}(p;d,t,\vec a,\vec b)\land
+C_{V_T}(d,x,1,t,\vec a,\vec b)\bigr).
+\]
+Ponieważ wszystkie kwantyfikatory są ograniczone, formuła jest $\Delta_0$. Każdy rzeczywisty dowód można uzupełnić o skończony ślad poprawnej pracy weryfikatora; odwrotnie, taki ślad świadczy o zaakceptowaniu dowodu. Definicja odpowiada więc relacji $\operatorname{Prov}_T$ przy konwencji pełnego kodu z dołączonym świadectwem. Dla konkretnych numerałów jej prawdziwość albo fałszywość jest dowodliwa w $Q$ na mocy Lematu~\ref{res:4:7}. Egzystencjalne domknięcie po $p$ jest $\Sigma_1$.
+\end{proof}
+
+% Rozdziały 8--10, strony 17--19.

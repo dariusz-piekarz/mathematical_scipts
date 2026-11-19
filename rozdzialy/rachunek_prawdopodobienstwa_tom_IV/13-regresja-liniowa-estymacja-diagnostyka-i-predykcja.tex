@@ -1,0 +1,516 @@
+\chapter{Regresja liniowa: estymacja, diagnostyka i predykcja}
+\label{ch:linear-regression}
+\paragraph{Powiązania i odsyłacze.} Metody predykcji i doboru złożoności rozwija rozdział~\ref{ch:model-selection}, a teorię testów~\ref{ch:parametric-tests}.
+
+
+\section{Kiedy statystyka średniej przestaje wystarczać?}
+Porównując trzy technologie, w rozdziale~\ref{ch:parametric-tests}
+analizowaliśmy różnice średnich między grupami. Co jednak zrobić, gdy
+sprawność urządzenia zależy także od temperatury, czasu pracy i wieku
+maszyny? Potrzebujemy modelu opisującego \emph{warunkową średnią}
+wyniku przy ustalonych cechach. Regresja liniowa jest najprostszą
+konstrukcją o tej własności. Jej nazwa odnosi się do liniowości
+\emph{współczynników}, niekoniecznie do liniowości wszystkich funkcji
+wykorzystanych jako zmienne objaśniające: można używać $x^2$ lub
+interakcji $xz$, a nadal otrzymać model liniowy względem parametrów.
+
+\begin{definicja}[Model liniowy przy ustalonym planie doświadczenia]
+\label{def:linear-fixed}
+Niech $n,p\in\N$, $n>p\ge1$, a
+$X\in\R^{n\times p}$ będzie znaną macierzą o rzędzie $p$.
+Niech $\beta\in\R^p$, zaś $\varepsilon\in\R^n$ będzie
+losowym wektorem o $\E\varepsilon=0$ i
+$\Cov(\varepsilon)=\sigma^2I_n$, gdzie $\sigma^2>0$.
+W \emph{liniowym modelu homoskedastycznym} obserwujemy
+$Y=X\beta+\varepsilon$. Jeśli dodatkowo
+$\varepsilon\sim\mathcal N_n(0,\sigma^2I_n)$, mówimy o
+\emph{normalnym modelu liniowym}. Macierz $X$ to
+\emph{macierz planu}, a $\beta$ to wektor współczynników.
+Wiersz $x_i^\top$ macierzy $X$ opisuje cechy $i$-tej jednostki.
+\end{definicja}
+
+Przy losowych cechach $X$ wszystkie poniższe twierdzenia można
+stosować \emph{warunkowo względem $X$}, o ile odpowiednie założenia
+spełnione są prawie na pewno. Sam fakt losowości cech nie unieważnia
+regresji. Potrzebujemy jednak warunkowych założeń
+$\E(\varepsilon\mid X)=0$ i
+$\Cov(\varepsilon\mid X)=\sigma^2I_n$,
+aby bez zmian stosować twierdzenia o nieobciążoności
+i wariancji warunkowej. Same warunki bezwarunkowe
+$\E\varepsilon=0$ i $\Cov(\varepsilon)=\sigma^2I_n$
+nie wystarczają. Przykładowo dla skalarnych
+$X\sim\Normal(0,1)$ i $\varepsilon=X$ mamy
+$\E\varepsilon=0$, ale $\E(\varepsilon\mid X)=X$.
+Problem ten występuje m.in. przy pominięciu
+istotnej zmiennej zakłócającej.
+
+\begin{przyklad}[Co oznacza współczynnik w modelu?]
+Jeśli $\E(Y_i\mid X)=\beta_0+\beta_1t_i+\beta_2g_i$,
+gdzie $t_i$ to temperatura, a $g_i\in\{0,1\}$ oznacza
+technologię B, to $\beta_1$ jest zmianą średniej odpowiedzi
+na wzrost temperatury o jedną jednostkę \emph{przy tej samej
+technologii}, a $\beta_2$ jest różnicą średnich B--A
+\emph{przy tej samej temperaturze}. Gdy znaczenie temperatury
+może zależeć od technologii, sprawdzamy rozszerzenie
+$\beta_3t_ig_i$. Wtedy różnica B--A to
+$\beta_2+\beta_3t_i$ i nie wolno przypisywać
+$\beta_2$ znaczenia stałej różnicy między grupami.
+To zapowiada analizę kowariancji (ANCOVA).
+\end{przyklad}
+
+\section{Metoda najmniejszych kwadratów jako rzut ortogonalny}
+\begin{twierdzenie}[Istnienie, jednoznaczność i postać MNK]
+\label{thm:ols-formula}
+Załóżmy, że $X\in\R^{n\times p}$ ma rząd $p\le n$.
+Dla dowolnego $y\in\R^n$ funkcja
+$Q_y(b)=\|y-Xb\|_2^2$ ma dokładnie jedno minimum
+na $\R^p$, osiągane w punkcie
+\[
+ \widehat\beta=(X^\top X)^{-1}X^\top y.
+\]
+Przy $H=X(X^\top X)^{-1}X^\top$ wektor
+$\widehat y=Hy$ jest rzutem ortogonalnym $y$ na
+$\operatorname{im}X$, a reszta $e=(I_n-H)y$ jest
+prostopadła do każdej kolumny $X$.
+\end{twierdzenie}
+\begin{proof}
+Macierz $X^\top X$ jest dodatnio określona, ponieważ
+dla $v\ne0$ zachodzi
+$v^\top X^\top Xv=\|Xv\|_2^2>0$.
+Zdefiniujmy $b_*=(X^\top X)^{-1}X^\top y$.
+Wtedy $X^\top(y-Xb_*)=0$, więc $y-Xb_*$ jest
+prostopadły do wszystkich wektorów postaci $Xv$.
+Dla dowolnego $b$ z twierdzenia Pitagorasa otrzymujemy
+$\|y-Xb\|_2^2=\|y-Xb_*\|_2^2+\|X(b-b_*)\|_2^2$.
+Drugi składnik jest zerowy tylko dla $b=b_*$.
+Ponadto $H^\top=H$ i $H^2=H$, zatem $H$ jest
+rzutem ortogonalnym na $\operatorname{im}X$.
+\end{proof}
+
+\begin{uwaga}[Dlaczego nie obliczamy odwrotności w programie?]
+Wzór teoretyczny zawiera $(X^\top X)^{-1}$, ale
+jawne wyznaczanie tej odwrotności jest niepotrzebne i
+bywa niestabilne numerycznie, ponieważ liczba uwarunkowania
+$X^\top X$ jest kwadratem liczby uwarunkowania $X$.
+W praktyce stosujemy rozkład QR lub SVD (rozkład według
+wartości osobliwych). W przykładzie programistycznym
+użyjemy \texttt{numpy.linalg.lstsq}. Analogicznie,
+przy regularizacji ridge w rozdziale~\ref{ch:model-selection}
+nie będziemy formować odwrotności macierzy wprost.
+\end{uwaga}
+
+\section{Dlaczego współczynniki MNK bywają optymalne?}
+\begin{twierdzenie}[Nieobciążoność i macierz kowariancji]
+\label{thm:ols-cov}
+W modelu~\ref{def:linear-fixed} przy pełnym rzędzie $X$
+estymator $\widehat\beta=(X^\top X)^{-1}X^\top Y$
+spełnia
+\[
+ \E\widehat\beta=\beta,\qquad
+ \Cov(\widehat\beta)=\sigma^2(X^\top X)^{-1}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Z tożsamości $\widehat\beta-\beta=A\varepsilon$ dla
+$A=(X^\top X)^{-1}X^\top$ wynika
+$\E\widehat\beta-\beta=A\E\varepsilon=0$.
+Ponadto $\Cov(A\varepsilon)=A(\sigma^2I_n)A^\top
+=\sigma^2(X^\top X)^{-1}$, ponieważ
+$AA^\top=(X^\top X)^{-1}X^\top X(X^\top X)^{-1}$.
+\end{proof}
+
+\begin{twierdzenie}[Gauss--Markow: najlepszy liniowy nieobciążony]
+\label{thm:gauss-markov}
+W założeniach twierdzenia~\ref{thm:ols-cov}, niech
+$\widetilde\beta=CY$ dla ustalonej macierzy
+$C\in\R^{p\times n}$ takiej, że $CX=I_p$.
+Wtedy różnica
+$\Cov(\widetilde\beta)-\Cov(\widehat\beta)$
+jest nieujemnie określona. Zatem MNK ma najmniejszą
+macierz kowariancji w porządku Loewnera \emph{w klasie
+liniowych nieobciążonych estymatorów}.
+Do twierdzenia nie jest potrzebna normalność błędów.
+\end{twierdzenie}
+\begin{proof}
+Niech $A=(X^\top X)^{-1}X^\top$ i $D=C-A$.
+Z równości $CX=AX=I_p$ wynika $DX=0$.
+Ponieważ $AD^\top=(X^\top X)^{-1}X^\top D^\top
+=(X^\top X)^{-1}(DX)^\top=0$, mamy
+$CC^\top=AA^\top+DD^\top$.
+W konsekwencji
+$\Cov(CY)-\Cov(AY)=\sigma^2DD^\top$,
+a dla każdego $v\in\R^p$ zachodzi
+$v^\top DD^\top v=\|D^\top v\|_2^2\ge0$.
+\end{proof}
+
+\begin{uwaga}[Czego twierdzenie Gaussa--Markowa nie dowodzi?]
+Nie oznacza ono, że MNK jest najlepszy spośród wszystkich
+estymatorów, odporny na dowolne odstające obserwacje ani że
+współczynniki mają rozkład normalny. To ostatnie wymaga
+założenia normalności (lub odpowiedniej asymptotyki).
+Jeśli $\Cov(\varepsilon)=\Omega\ne\sigma^2I_n$,
+to klasyczna minimalność MNK nie wynika z twierdzenia;
+po właściwym opisaniu $\Omega$ można rozważyć ważone
+najmniejsze kwadraty.
+\end{uwaga}
+
+\section{Reszty, wariancja i dokładne rozkłady w modelu normalnym}
+\begin{twierdzenie}[Rozkład współczynników i sumy kwadratów reszt]
+\label{thm:ols-gaussian}
+Niech $n>p\ge1$, $X$ ma pełny rząd kolumnowy i
+$Y\sim\mathcal N_n(X\beta,\sigma^2I_n)$, $\sigma>0$.
+Niech $e=(I_n-H)Y$, $\mathrm{RSS}=\|e\|_2^2$ oraz
+$s^2=\mathrm{RSS}/(n-p)$. Wtedy:
+\begin{enumerate}
+\item $\widehat\beta\sim\mathcal N_p\!\bigl(\beta,
+ \sigma^2(X^\top X)^{-1}\bigr)$;
+\item $\mathrm{RSS}/\sigma^2\sim\chi^2_{n-p}$;
+\item $\widehat\beta$ i $\mathrm{RSS}$ są niezależne,
+ a $\E(s^2)=\sigma^2$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Estymator jest liniowym przekształceniem wektora normalnego,
+więc pierwszy punkt wynika z obliczonej już macierzy kowariancji.
+Macierz $H$ jest rzutem ortogonalnym rzędu $p$, zatem
+$I_n-H$ jest rzutem ortogonalnym rzędu $n-p$.
+Niech $U$ będzie macierzą ortogonalną, która diagonalizuje
+$I_n-H$ do $\operatorname{diag}(I_{n-p},0_p)$.
+Wektor $U^\top\varepsilon/\sigma$ ma niezależne
+współrzędne $\mathcal N(0,1)$. Ponieważ
+$(I_n-H)X\beta=0$, otrzymujemy
+$\mathrm{RSS}/\sigma^2=\sum_{j=1}^{n-p}Z_j^2$.
+Niezależność wynika z ortogonalności rzutów:
+$\Cov(H\varepsilon,(I_n-H)\varepsilon)=0$,
+a wspólna normalność oznacza niezależność wektorów.
+Estymator zależy jedynie od $HY$, zaś RSS jedynie od
+$(I_n-H)Y$. Wreszcie średnia rozkładu
+$\chi^2_{n-p}$ wynosi $n-p$.
+\end{proof}
+
+\begin{wniosek}[Dokładny przedział dla współczynnika]
+\label{cor:ols-ci}
+W założeniach twierdzenia~\ref{thm:ols-gaussian}
+niech $c\in\R^p\setminus\{0\}$ będzie ustalonym
+wektorem. Wtedy
+\[
+ T_c=\frac{c^\top\widehat\beta-c^\top\beta}
+ {s\sqrt{c^\top(X^\top X)^{-1}c}}\sim t_{n-p}.
+\]
+W rezultacie przedział
+$c^\top\widehat\beta\pm t_{n-p,1-\alpha/2}
+ s\sqrt{c^\top(X^\top X)^{-1}c}$
+ma pokrycie $1-\alpha$, dla $0<\alpha<1$.
+\end{wniosek}
+\begin{proof}
+Licznik podzielony przez
+$\sigma\sqrt{c^\top(X^\top X)^{-1}c}$ ma rozkład
+$\mathcal N(0,1)$; zgodnie z twierdzeniem
+\ref{thm:ols-gaussian} jest niezależny od
+$(n-p)s^2/\sigma^2\sim\chi^2_{n-p}$.
+Ich iloraz ma rozkład $t_{n-p}$.
+\end{proof}
+
+\begin{przyklad}[Dlaczego zmiana jednostek nie zmienia istotności?]
+Jeżeli temperatura jest mierzona w stopniach Celsjusza,
+a następnie zastąpimy ją różnicą skali, np. podzielimy
+przez $10$, odpowiedni współczynnik zostanie pomnożony
+przez $10$, podobnie jak jego błąd standardowy.
+Statystyka t dla testu zerowego współczynnika pozostanie
+niezmieniona. Interpretując efekt, zawsze podajemy
+\emph{jednostkę} zmiennej objaśniającej.
+\end{przyklad}
+
+\section{Predykcja przyszłej obserwacji a szacowanie średniej}
+\begin{twierdzenie}[Przedział ufności i przedział predykcji]
+\label{thm:prediction-vs-mean}
+Przy założeniach twierdzenia~\ref{thm:ols-gaussian}
+ustalmy niezerowy wektor cech $x_0\in\R^p\setminus\{0\}$ i niech
+$Y_0=x_0^\top\beta+\varepsilon_0$, gdzie
+$\varepsilon_0\sim\Normal(0,\sigma^2)$ jest niezależna
+od $Y$. Niech $h_0=x_0^\top(X^\top X)^{-1}x_0$.
+Wówczas przedział ufności dla średniej warunkowej
+$\mu_0=x_0^\top\beta$ wynosi
+$x_0^\top\widehat\beta\pm t_{n-p,1-\alpha/2}s\sqrt{h_0}$,
+a przedział predykcji dla nowego $Y_0$ ma postać
+\[
+ x_0^\top\widehat\beta\pm
+ t_{n-p,1-\alpha/2}s\sqrt{1+h_0}.
+\]
+Każdy z przedziałów ma odpowiednio pokrycie
+$1-\alpha$ dla własnego celu; drugi dotyczy \emph{losowej
+nowej obserwacji}, nie stałej wartości parametru.
+\end{twierdzenie}
+\begin{proof}
+Z poprzedniego twierdzenia
+$x_0^\top(\widehat\beta-\beta)$ jest normalny o
+wariancji $\sigma^2h_0$. Dla nowego wyniku błąd
+$Y_0-x_0^\top\widehat\beta$ jest sumą niezależnych
+składników $\varepsilon_0$ i
+$-x_0^\top(\widehat\beta-\beta)$, ma więc wariancję
+$\sigma^2(1+h_0)$ i rozkład normalny.
+Oba błędy są niezależne od $s^2$, bo $\varepsilon_0$
+jest niezależne od próby, a estymator i RSS są niezależne.
+Standaryzacja przez $s$ prowadzi do rozkładu t.
+\end{proof}
+
+\begin{uwaga}[Ekstrapolacja]
+Gdy $x_0$ jest daleko od zebranych obserwacji, wartość
+$h_0$ może być duża; dodatkowo liniowa zależność może
+w tym obszarze nie obowiązywać. Nawet węższy przedział
+ufności dla średniej nie gwarantuje prawidłowości modelu
+poza zakresem danych. \emph{Ekstrapolacja} wymaga
+uzasadnienia dziedzinowego, nie tylko małej wartości p.
+\end{uwaga}
+
+\section{Ogólny test F i dlaczego ANOVA jest regresją}
+\begin{twierdzenie}[Test zagnieżdżonych modeli normalnych]
+\label{thm:partial-f-test}
+Niech $Y\sim\mathcal N_n(\mu,\sigma^2I_n)$,
+$\sigma>0$, a $V_0\subsetneq V_1$ będą ustalonymi
+podprzestrzeniami $\R^n$ wymiarów odpowiednio
+$p_0<p_1<n$. Oznaczmy ich rzuty ortogonalne przez
+$H_0,H_1$ i resztowe sumy kwadratów przez
+$\mathrm{RSS}_j=\|(I_n-H_j)Y\|_2^2$.
+Przy hipotezie zerowej $\mu\in V_0$ statystyka
+\[
+ F=\frac{(\mathrm{RSS}_0-\mathrm{RSS}_1)/(p_1-p_0)}
+ {\mathrm{RSS}_1/(n-p_1)}\sim F_{p_1-p_0,n-p_1}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Ponieważ $V_0\subset V_1$, macierz $H_1-H_0$ jest
+rzutem ortogonalnym na $V_1\cap V_0^\perp$ rzędu
+$p_1-p_0$. Macierz $I_n-H_1$ jest rzutem na
+$V_1^\perp$ rzędu $n-p_1$. Są to rzuty ortogonalne
+o iloczynie zero; wektor średniej $\mu\in V_0$ leży
+w jądrach obu. Z twierdzenia o ortogonalnych składowych
+wektora normalnego kwadraty norm przeskalowane przez
+$\sigma^2$ są niezależnymi zmiennymi o rozkładach
+$\chi^2_{p_1-p_0}$ i $\chi^2_{n-p_1}$.
+Ponieważ $\mathrm{RSS}_0-\mathrm{RSS}_1
+=\|(H_1-H_0)Y\|_2^2$, ich iloraz ma podany rozkład.
+\end{proof}
+
+\begin{przyklad}[Jednoczynnikowa ANOVA jako test F regresji]
+Niech $G_i\in\{1,\ldots,k\}$ oznacza grupę obserwacji
+i załóżmy, że w każdej grupie jest przynajmniej jedna
+jednostka. W modelu ograniczonym $V_0$ wszystkie grupy
+mają wspólną średnią; w pełnym $V_1$ każda grupa ma
+osobną średnią. Wymiary tych przestrzeni wynoszą
+odpowiednio $1$ i $k$. Resztowe sumy kwadratów to
+$\mathrm{RSS}_0=\sum_i(Y_i-\bar Y)^2$ i
+$\mathrm{RSS}_1=\sum_g\sum_{i:G_i=g}(Y_i-\bar Y_g)^2$.
+Różnica jest sumą kwadratów między grupami,
+$\sum_gn_g(\bar Y_g-\bar Y)^2$.
+Podstawienie do twierdzenia~\ref{thm:partial-f-test}
+odtwarza statystykę ANOVA z rozdziału~\ref{ch:parametric-tests}.
+\end{przyklad}
+
+\begin{uwaga}[ANCOVA jest kolejnym krokiem]
+Jeśli do macierzy planu dodamy kolumnę temperatury,
+test ogólnej różnicy grup kontrolując temperaturę jest
+porównaniem zagnieżdżonych przestrzeni kolumn. Warto
+sprawdzić interakcję grupy z temperaturą przed przyjęciem
+jednego wspólnego nachylenia. Nie należy utożsamiać
+istotności współczynnika z przyczynowym efektem
+zmiany technologii bez argumentu o randomizacji
+lub identyfikacji przyczynowej.
+\end{uwaga}
+
+\section{Diagnostyka modelu: co może zepsuć poprawne wzory?}
+\begin{definicja}[Dźwignia obserwacji i reszta studencka]
+Dla macierzy planu $X$ o pełnym rzędzie i rzutowania
+$H=X(X^\top X)^{-1}X^\top$ liczbę $h_{ii}=H_{ii}$
+nazywamy \emph{dźwignią} $i$-tej obserwacji.
+Przy $h_{ii}<1$ i oszacowaniu $s>0$ definiujemy
+\emph{wewnętrznie standaryzowaną resztę}
+$r_i=e_i/(s\sqrt{1-h_{ii}})$.
+\end{definicja}
+
+\begin{stwierdzenie}[Dlaczego obserwacje skrajne mogą mieć małe reszty?]
+W modelu $Y=X\beta+\varepsilon$ z
+$\Cov(\varepsilon)=\sigma^2I_n$ reszta $e=(I_n-H)Y$
+spełnia $\E e=0$ i
+$\Cov(e)=\sigma^2(I_n-H)$.
+W szczególności $\Var(e_i)=\sigma^2(1-h_{ii})$,
+a $0\le h_{ii}\le1$ oraz $\sum_ih_{ii}=p$.
+\end{stwierdzenie}
+\begin{proof}
+Równość $(I_n-H)X=0$ zapewnia
+$e=(I_n-H)\varepsilon$. Korzystając z
+$(I_n-H)^2=I_n-H=(I_n-H)^\top$,
+otrzymujemy macierz kowariancji. Z własności rzutu
+$h_{ii}=e_i^\top He_i=\|He_i\|_2^2\in[0,1]$,
+a jego ślad jest równy rzędowi $p$.
+\end{proof}
+
+\paragraph{Pięć pytań diagnostycznych.}
+\begin{enumerate}
+\item \emph{Czy średnia jest właściwie opisana?}
+Rysujemy reszty względem wartości przewidywanych i cech,
+sprawdzając krzywiznę i interakcje. To kontrola poprawności
+postaci modelu, a nie tylko test pojedynczego współczynnika.
+\item \emph{Czy wariancja jest stała?} Jeśli rozrzut rośnie
+wraz z poziomem sygnału, klasyczne błędy standardowe mogą być
+niewłaściwe. Rozważamy ważone MNK, odporne oszacowania
+kowariancji lub inny model rozkładu.
+\item \emph{Czy obserwacje są niezależne?} Przy powtarzanych
+pomiarach osoby lub silnej autokorelacji potrzebna może być
+kowariancja klastrowa albo jawny model zależności.
+\item \emph{Czy istnieją punkty wpływowe?} Analizujemy
+\emph{dźwignie}, reszty i zmianę współczynników po usunięciu
+obserwacji; sam duży $|r_i|$ nie wyczerpuje diagnostyki.
+\item \emph{Czy kolumny planu są rozróżnialne?}
+Silna współliniowość może znacznie powiększyć
+$\operatorname{diag}((X^\top X)^{-1})$, a przy dokładnej
+zależności liniowej $\widehat\beta$ nie jest jednoznaczny.
+\end{enumerate}
+
+\begin{stwierdzenie}[Korekta odporna na heteroskedastyczność]
+\label{prop:hetero-ols}
+Jeśli $Y=X\beta+\varepsilon$, $\E\varepsilon=0$ oraz
+$\Cov(\varepsilon)=\Omega$ dla znanej nieujemnie
+określonej macierzy $\Omega$, to
+\[
+ \Cov(\widehat\beta)=(X^\top X)^{-1}X^\top
+ \Omega X(X^\top X)^{-1}.
+\]
+Gdy błędy są nieskorelowane, lecz mają różne wariancje,
+można \emph{oszacowywać} $\Omega$ diagonalnie poprzez
+$e_i^2/(1-h_{ii})^2$ dla $h_{ii}<1$. Otrzymana
+macierz kanapkowa HC3 jest narzędziem asymptotycznym;
+nie daje automatycznie dokładnych małopróbkowych testów t.
+\end{stwierdzenie}
+\begin{proof}
+Wciąż $\widehat\beta-\beta
+=(X^\top X)^{-1}X^\top\varepsilon$.
+Wzór na kowariancję liniowego przekształcenia daje tezę.
+Zastąpienie nieznanych elementów $\Omega$ oszacowaniami
+nie jest tożsamością skończonopróbkową i wymaga osobnej
+analizy asymptotycznej.
+\end{proof}
+
+\begin{przyklad}[Pominięta zmienna i pozorna istotność]
+Niech prawdziwa zależność warunkowej średniej ma postać
+$\E(Y\mid x,z)=\beta_0+\beta_1x+\gamma z$.
+Jeżeli regresujemy $Y$ wyłącznie na $1$ i $x$,
+to średnia estymowanego nachylenia, przy ustalonych
+wektorach $x,z$ i błędach o średniej zero, wynosi
+\[
+ \E\widehat b_1=\beta_1+
+ \gamma\frac{\sum_i(x_i-\bar x)(z_i-\bar z)}
+                   {\sum_i(x_i-\bar x)^2}.
+\]
+Współczynnik może być istotnie różny od zera nawet
+gdy $\beta_1=0$, jeśli $z$ jest związane z $x$.
+Sama większa próba nie usuwa tego rodzaju obciążenia.
+\end{przyklad}
+
+\section{Studium praktyczne: jak czytać wynik regresji?}
+Rozważmy dane z pomiarów procesu technologicznego:
+czas działania w godzinach $t_i=1,\ldots,8$ i wyniki
+$y=(4{,}8,5{,}1,6{,}0,6{,}1,7{,}2,7{,}4,8{,}1,8{,}9)$.
+Modelujemy $\E(Y_i\mid t_i)=\beta_0+\beta_1t_i$.
+Przed interpretacją parametru $\beta_1$ pytamy, czy
+każdy pomiar dotyczy innej, niezależnej partii, czy tej
+samej maszyny śledzonej w czasie. W drugim przypadku
+standardowa analiza niezależnych błędów może nie być
+poprawna, choć dopasowana prosta będzie wyglądała tak samo.
+
+\begin{lstlisting}[language=Python,caption={Kompletny program: MNK, przedział dla nachylenia, diagnostyka dźwigni i predykcja (NumPy, SciPy).}]
+import numpy as np
+from scipy.stats import t as student
+
+t = np.arange(1.0, 9.0)
+y = np.array([4.8, 5.1, 6.0, 6.1, 7.2, 7.4, 8.1, 8.9])
+X = np.column_stack((np.ones_like(t), t))
+n, p = X.shape
+
+beta, _, rank, _ = np.linalg.lstsq(X, y, rcond=None)
+assert rank == p
+residual = y - X @ beta
+rss = residual @ residual
+s2 = rss / (n-p)
+xtx_inv = np.linalg.solve(X.T @ X, np.eye(p))
+se = np.sqrt(np.diag(s2 * xtx_inv))
+quant = student.ppf(0.975, n-p)
+ci_slope = (beta[1] - quant*se[1], beta[1] + quant*se[1])
+
+H_diag = np.sum((X @ xtx_inv) * X, axis=1)
+standardized_residual = residual / np.sqrt(s2 * (1-H_diag))
+x0 = np.array([1.0, 9.0])
+mean_prediction = x0 @ beta
+h0 = x0 @ xtx_inv @ x0
+pi = (mean_prediction - quant*np.sqrt(s2*(1+h0)),
+      mean_prediction + quant*np.sqrt(s2*(1+h0)))
+print('coefficients:', beta)
+print('95% CI slope:', ci_slope)
+print('leverages:', H_diag)
+print('standardized residuals:', standardized_residual)
+print('prediction interval at t=9:', pi)
+\end{lstlisting}
+
+\begin{lstlisting}[language=Julia,caption={MNK poprzez rozkład QR i błąd standardowy w Julii (standardowe LinearAlgebra, Statistics).}]
+using LinearAlgebra, Statistics
+
+t = collect(1.0:8.0)
+y = [4.8, 5.1, 6.0, 6.1, 7.2, 7.4, 8.1, 8.9]
+X = hcat(ones(length(t)), t)
+beta = X \ y  # stabilniejsze niz inv(X'X) * X'y
+r = y - X * beta
+n, p = size(X)
+s2 = sum(abs2, r) / (n - p)
+xtx_inverse = (X' * X) \ Matrix{Float64}(I, p, p)
+se = sqrt.(diag(s2 * xtx_inverse))
+println((beta=beta, se=se, rss=sum(abs2, r)))
+\end{lstlisting}
+
+\paragraph{Interpretacja programu.}
+Dla podanych danych program otrzymuje \(\widehat\beta_0\approx4{,}075\)
+i \(\widehat\beta_1\approx0{,}5833\), a przedział ufności
+$95\%$ dla nachylenia to w przybliżeniu
+$[0{,}5035;\ 0{,}6632]$. W modelu zakładającym
+niezależne normalne błędy przedział predykcji nowego
+wyniku dla $t_0=9$ wynosi około $[8{,}669;\ 9{,}981]$.
+Są to \emph{współczynniki modelu warunkowej średniej},
+nie gotowe twierdzenia przyczynowe. Przedział predykcji zawiera składnik
+wariancji nowej obserwacji i jest zwykle szerszy
+niż przedział ufności dla średniej. Jeżeli reszty
+wykazują autokorelację lub heteroskedastyczność,
+nie należy raportować klasycznych wartości p bez
+ponownego oszacowania niepewności.
+
+\section{Wybór metody i kontrola jakości analizy}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.29\textwidth}>{\raggedright\arraybackslash}p{.31\textwidth}>{\raggedright\arraybackslash}p{.29\textwidth}}
+\toprule
+\textbf{Sytuacja} & \textbf{Rozważana metoda} & \textbf{Ograniczenia}\\
+\midrule
+Wynik ciągły, średnia liniowa, błędy o stałej wariancji & Zwykłe MNK; przy normalności dokładne t i F & Zależność, nieliniowość średniej, punkty wpływowe.\\
+Zmienna wynikowa ciągła, niejednakowe wariancje & MNK z odpornym SE lub WLS & WLS wymaga uzasadnienia wag; HC3 jest przybliżeniem.\\
+Silna zależność w czasie albo grupowanie pomiarów & Model korelacji, GLS, modele mieszane lub odporny SE klastrowy & Liczba niezależnych jednostek i specyfikacja zależności.\\
+Wpływ skrajnych wyników & Regresja odporna, kontrola wpływu, analiza wrażliwości & Nie usuwać punktów wyłącznie na podstawie p-value.\\
+Dane binarne lub zliczenia & GLM z odpowiednią rodziną & Przedział wartości średniej, wariancja zależna od średniej.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{zadanie}[Czy dwa modele mówią to samo?]
+W badaniu stwierdzono, że współczynnik temperatury jest
+istotny w regresji bez zmiennej opisującej wiek maszyny,
+a nieistotny po jej dodaniu. Czy to dowód, że temperatura
+nie wpływa na wynik?
+\par\emph{Rozwiązanie.} Nie. W pierwszym modelu współczynnik
+może odzwierciedlać również skorelowany z temperaturą wiek.
+W drugim rośnie liczba współczynników i może wzrosnąć
+błąd standardowy. Właściwe jest porównanie założeń,
+przedziałów ufności, rozkładu cech oraz celu analizy,
+a przy twierdzeniach przyczynowych także projektu badania.
+Sama zmiana przekroczenia progu $p=0{,}05$ nie dowodzi
+braku efektu.
+\end{zadanie}
+
+% ================================================================
+% ROZDZIAL 14 -- GLM
+% ================================================================

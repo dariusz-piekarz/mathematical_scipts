@@ -1,0 +1,477 @@
+\chapter{Statystyczna teoria decyzji: od danych do działania}
+\label{ch:decision}
+\paragraph{Powiązania i odsyłacze.} Różnice między regułą klasyczną a bayesowską stają się szczególnie istotne w rozdziałach~\ref{ch:bayes-foundations} i~\ref{ch:bayes-estimation-prediction}.
+
+
+\section{Dlaczego estymator nie jest jeszcze decyzją?}
+Poznanie nieznanego parametru jest zwykle środkiem do celu: musimy
+zdecydować, czy zatrzymać linię produkcyjną, wymienić urządzenie,
+wdrożyć określony wariant leczenia lub zakwalifikować transakcję do
+weryfikacji. Dwa sposoby szacowania parametru mogą prowadzić do
+różnych decyzji, a ten sam błąd liczbowy może mieć bardzo różną cenę
+w zależności od kierunku pomyłki.
+
+\begin{przyklad}[Awaria i koszt decyzji]
+Rozważmy dwie pomyłki: niepotrzebne zatrzymanie sprawnego urządzenia
+kosztuje $100$ jednostek, zaś zignorowanie groźnej awarii kosztuje
+$5000$ jednostek. Reguła minimalizująca \emph{liczbę błędnych decyzji}
+nie musi minimalizować \emph{oczekiwany koszt}. Właśnie dlatego
+w statystyce trzeba jawnie sformułować funkcję straty.
+\end{przyklad}
+
+\begin{definicja}[Problem decyzji statystycznej]\label{def:decision-problem}
+Niech $\mathcal E=(\mathsf X,\calA,\{P_\theta:\theta\in\Theta\})$ będzie
+eksperymentem statystycznym, $(\mathsf A,\mathcal C)$ przestrzenią
+mierzalną \emph{działań}, a $L:\Theta\times\mathsf A\to[0,\infty]$
+\emph{funkcją straty}; zakładamy mierzalność $a\mapsto L(\theta,a)$
+dla każdego $\theta\in\Theta$. \emph{Nielosową regułą decyzyjną}
+nazywamy odwzorowanie mierzalne $\delta:\mathsf X\to\mathsf A$.
+Jej \emph{funkcją ryzyka} jest
+\[
+R(\theta,\delta)
+=\E_\theta[L(\theta,\delta(X))]
+=\int_{\mathsf X}L(\theta,\delta(x))\,\dd P_\theta(x),
+\qquad\theta\in\Theta.
+\]
+Dopuszczamy wartość $+\infty$. W szczególności reguła estymacji
+$\delta(X)\in\Theta$ jest przypadkiem decyzji, ale przestrzeń działań
+nie musi być równa przestrzeni parametrów.
+\end{definicja}
+
+\begin{uwaga}[Na czym polega częstotliwościowy charakter ryzyka?]
+Dla każdego ustalonego $\theta$ liczymy wartość oczekiwaną względem
+losowości \emph{danych} $X\sim P_\theta$. Wynikiem jest funkcja
+$\theta\mapsto R(\theta,\delta)$, a nie jedna liczba niezależna od
+nieznanego parametru. Stąd różne zasady wyboru reguły: można
+porównywać całe funkcje ryzyka, minimalizować ryzyko najgorszego
+przypadku albo uśrednić ryzyko względem jawnie przyjętego rozkładu
+parametru. Każda odpowiada na inne pytanie.
+\end{uwaga}
+
+\begin{definicja}[Ważne funkcje straty]
+Dla rzeczywistego parametru $\theta$ i decyzji liczbowej $a\in\R$
+rozważamy stratę kwadratową $L_2(\theta,a)=(a-\theta)^2$ i absolutną
+$L_1(\theta,a)=|a-\theta|$. Dla decyzji binarnej
+$\theta,a\in\{0,1\}$ strata błędu klasyfikacji ma postać
+$L_{01}(\theta,a)=\ind{\{\theta\ne a\}}$.
+Stratę asymetryczną definiujemy, ustalając koszty
+$c_{\mathrm{FP}},c_{\mathrm{FN}}>0$: wartość to
+$c_{\mathrm{FP}}$ przy $(\theta,a)=(0,1)$,
+$c_{\mathrm{FN}}$ przy $(1,0)$ i zero przy poprawnej decyzji.
+\end{definicja}
+
+\section{Strata kwadratowa, ryzyko i kompromis obciążenia z wariancją}
+\begin{twierdzenie}[Dekompozycja ryzyka kwadratowego]\label{thm:decision-mse}
+Niech $\theta\in\R$, $T:\mathsf X\to\R$ będzie statystyką taką, że
+$\E_\theta T^2<\infty$, a $\delta_T(x)=T(x)$ regułą estymacyjną.
+Dla straty $L_2$ zachodzi
+\[
+R(\theta,\delta_T)
+=\Var_\theta(T)+(\E_\theta T-\theta)^2.
+\]
+W szczególności mniejsze obciążenie nie musi oznaczać mniejszego ryzyka.
+\end{twierdzenie}
+\begin{proof}
+Rozkładamy błąd jako
+$T-\theta=(T-\E_\theta T)+(\E_\theta T-\theta)$.
+Po podniesieniu do kwadratu i wzięciu wartości oczekiwanej
+wyraz mieszany znika. Pozostałe składniki to odpowiednio wariancja
+i kwadrat obciążenia. Warunek drugiego momentu zapewnia skończoność
+każdego użytego składnika. Jest to tożsamość już poznana w rozdziale 2,
+teraz interpretowana jako funkcja ryzyka reguły decyzyjnej.
+\end{proof}
+
+\begin{przyklad}[Dwie reguły estymacji prawdopodobieństwa sukcesu]
+Mamy tylko jedną obserwację $X\sim\operatorname{Bernoulli}(p)$,
+$p\in[0,1]$. Reguła $\delta_1(X)=X$ jest nieobciążona i ma
+$R(p,\delta_1)=p(1-p)$. Reguła stała $\delta_0(X)=1/2$ ma
+$R(p,\delta_0)=(p-1/2)^2$.
+Gdy $p=1/2$, druga reguła ma ryzyko zero, podczas gdy pierwsza ma
+ryzyko $1/4$. Gdy $p=0$ lub $p=1$, pierwsza reguła ma ryzyko zero,
+a druga $1/4$. \emph{Nie ma więc dominacji jednej reguły nad drugą}.
+Bez wskazania kryterium nie istnieje jedna odpowiedź na pytanie,
+która z nich jest „najlepsza”.
+\end{przyklad}
+
+\begin{definicja}[Dominacja i dopuszczalność]\label{def:admissible}
+Niech $\delta_1,\delta_2$ będą regułami o ryzykach określonych
+na $\Theta$. Mówimy, że $\delta_1$ \emph{dominuje} $\delta_2$,
+jeśli $R(\theta,\delta_1)\le R(\theta,\delta_2)$ dla każdego
+$\theta\in\Theta$ oraz nierówność jest ostra dla co najmniej jednego
+$\theta$. Reguła $\delta$ jest \emph{dopuszczalna}, jeśli w rozważanej
+klasie reguł nie istnieje reguła ją dominująca.
+\end{definicja}
+
+\begin{uwaga}[Interpretacja geometryczna]
+Możemy wyobrazić sobie wykresy $\theta\mapsto R(\theta,\delta)$.
+Dominacja oznacza, że jeden wykres leży wszędzie nie wyżej od
+drugiego, a gdzieś ściśle niżej. Krzyżowanie się wykresów oznacza,
+że preferencja zależy od wartości nieznanego parametru.
+\end{uwaga}
+
+\section{Reguła minimaksowa: zabezpieczenie przed najgorszym przypadkiem}
+\begin{definicja}[Ryzyko maksymalne i minimaksowość]\label{def:minimax}
+Dla reguły decyzyjnej $\delta$ definiujemy
+$R^{\max}(\delta)=\sup_{\theta\in\Theta}R(\theta,\delta)$.
+Jeśli reguła $\delta^*$ spełnia
+$R^{\max}(\delta^*)=\inf_\delta R^{\max}(\delta)$, to nazywamy ją
+\emph{minimaksową} w danej klasie dopuszczalnych reguł.
+Dla ogólnej przestrzeni $\Theta$ ani istnienie, ani jednoznaczność
+takiej reguły nie są automatyczne.
+\end{definicja}
+
+\begin{twierdzenie}[Dokładna reguła minimaksowa z jednej próby Bernoulliego]
+\label{thm:minimax-bernoulli-one}
+Niech $X\sim\operatorname{Bernoulli}(p)$, $p\in[0,1]$.
+Szacujemy $p$ za pomocą dowolnej mierzalnej reguły
+$\delta:\{0,1\}\to\R$ przy stracie kwadratowej.
+Wtedy reguła
+\[
+\delta^*(0)=\frac14,\qquad \delta^*(1)=\frac34
+\]
+ma stałe ryzyko $R(p,\delta^*)=1/16$ dla każdego $p\in[0,1]$
+i jest minimaksowa w klasie wszystkich takich reguł.
+Ten sam dolny kres obowiązuje także dla reguł losowych, jeżeli
+losowanie dodatkowe jest niezależne od parametru przy ustalonych danych.
+\end{twierdzenie}
+\begin{proof}
+Najpierw obliczamy bezpośrednio
+\[
+R(p,\delta^*)=(1-p)(\tfrac14-p)^2+p(\tfrac34-p)^2
+=\frac1{16},
+\]
+gdyż po rozwinięciu składniki zawierające $p$, $p^2$ i $p^3$
+wzajemnie się redukują. To daje górne ograniczenie wartości
+minimaksowej przez $1/16$.
+
+Potrzebujemy \emph{dolnego} ograniczenia dla dowolnej konkurencyjnej
+reguły. Wykorzystamy do tego pomocniczy rozkład na przestrzeni
+parametrów: niech $\Pi$ ma rozkład
+$\operatorname{Beta}(1/2,1/2)$, a warunkowo na $\Pi=p$ niech
+$X\sim\operatorname{Bernoulli}(p)$. Jest to sposób ważenia ryzyk,
+nie zmiana definicji częstotliwościowego ryzyka $R(p,\delta)$.
+Z rachunku rozkładu beta dostajemy $\Prob(X=1)=\E\Pi=1/2$.
+Dla $x=0,1$ warunkowy rozkład $\Pi$ po ustaleniu $X=x$ ma gęstość
+proporcjonalną do
+$p^{x-1/2}(1-p)^{1-x-1/2}$, czyli jest równy
+$\operatorname{Beta}(x+1/2,3/2-x)$.
+Jego średnia wynosi $(x+1/2)/2$, a wariancja
+\[
+\Var(\Pi\mid X=x)
+=\frac{(x+1/2)(3/2-x)}{2^2(2+1)}
+=\frac1{16}.
+\]
+Dla każdej reguły $\delta$ zachodzi warunkowa tożsamość Pitagorasa
+\[
+\E[(\delta(X)-\Pi)^2\mid X]
+=(\delta(X)-\E[\Pi\mid X])^2+\Var(\Pi\mid X)
+\ge\frac1{16}.
+\]
+Po wzięciu wartości oczekiwanej i użyciu Tonellego otrzymujemy
+$\int_0^1R(p,\delta)\,\dd\Pi(p)\ge1/16$.
+Zawsze
+$\sup_pR(p,\delta)\ge\int_{p\in[0,1]}R(p,\delta)\,\dd\Pi(p)$,
+zatem $R^{\max}(\delta)\ge1/16$.
+Dodatkowe losowanie nie może obniżyć warunkowego błędu kwadratowego:
+dla losowej akcji $A$ i danej $X$ nierówność Jensena daje
+$\E[(A-\Pi)^2\mid X,\Pi]\ge(\E[A\mid X]-\Pi)^2$,
+jeśli losowanie akcji warunkowo na $X$ jest niezależne od $\Pi$.
+To kończy dowód także dla reguł losowych.
+\end{proof}
+
+\emph{Co jest zaskakujące?} MLE $\widehat p=X$ przy jednej obserwacji
+jest nieobciążony, ale jego największe ryzyko wynosi $1/4$.
+Reguła $\delta^*$ jest obciążona, jednak zmniejsza największy błąd
+średniokwadratowy \emph{czterokrotnie}. Nie oznacza to, że zawsze jest
+lepsza: przy $p=0$ lub $p=1$ MLE ma ryzyko zero. Reguła minimaksowa
+chroni przed najgorszym przypadkiem, nie jest zaś punktowo najlepsza.
+
+\begin{center}
+\begin{tikzpicture}[x=10cm,y=9cm,>=Latex]
+  \draw[->] (0,0)--(1.07,0) node[right] {$p$};
+  \draw[->] (0,0)--(0,.30) node[above] {$R(p,\delta)$};
+  \foreach \x/\lab in {0/{0},.25/{1/4},.5/{1/2},.75/{3/4},1/{1}} {
+    \draw (\x,-.004)--(\x,.004) node[below=3pt] {\scriptsize $\lab$};
+  }
+  \foreach \y/\lab in {.0625/{1/16},.25/{1/4}} {
+    \draw (-.005,\y)--(.005,\y) node[left=3pt] {\scriptsize $\lab$};
+  }
+  \draw[very thick,blue!70!black,domain=0:1,samples=100]
+    plot (\x,{\x*(1-\x)});
+  \draw[very thick,red!65!black,domain=0:1]
+    plot (\x,{.0625});
+  \node[blue!70!black,anchor=west] at (.63,.22) {\scriptsize $\delta(X)=X$};
+  \node[red!65!black,anchor=west] at (.58,.077) {\scriptsize $\delta^*(X)$};
+\end{tikzpicture}
+\end{center}
+\noindent\emph{Rysunek 4.1.} Ryzyko kwadratowe MLE i reguły
+minimaksowej dla jednej próby Bernoulliego. Reguła minimaksowa ma
+mniejsze ryzyko maksymalne, ale nie jest najlepsza przy każdym $p$.
+
+
+\section{Ryzyko uśrednione i zasada wyboru przy danej wiedzy a priori}
+\begin{definicja}[Ryzyko Bayesa w teorii decyzji]\label{def:bayes-risk}
+Niech $(\Theta,\mathcal T)$ będzie przestrzenią mierzalną,
+$\pi$ miarą probabilistyczną na niej. Zakładamy, że
+$\theta\mapsto P_\theta(B)$ jest $\mathcal T$-mierzalna dla
+każdego $B\in\calA$ (a więc $(P_\theta)$ stanowi jądro
+probabilistyczne) oraz że $L:\Theta\times\mathsf A\to[0,\infty]$
+jest mierzalna względem $\mathcal T\otimes\mathcal C$.
+Wtedy $\theta\mapsto R(\theta,\delta)$ jest mierzalna;
+wynika to z twierdzenia o klasie monotonicznej, najpierw dla
+wskaźników prostokątów, a następnie z aproksymacji dodatnimi
+funkcjami prostymi i zbieżności monotonicznej.
+\emph{Ryzykiem Bayesa} reguły $\delta$ nazywamy
+$\rho_\pi(\delta)=\int_\Theta R(\theta,\delta)\,\dd\pi(\theta)$.
+Reguła minimalizująca to ryzyko jest \emph{regułą Bayesa względem $\pi$}.
+W dalszej części tomu IV wprowadzimy pełną teorię rozkładów
+a priori i a posteriori. Tutaj rozpatrujemy tylko niezbędną
+konstrukcję decyzyjną.
+\end{definicja}
+
+\begin{stwierdzenie}[Punktowa minimalizacja warunkowej straty]
+\label{prop:conditional-decision}
+Niech $\Theta$ i $\mathsf X$ będą skończone, $\pi$ rozkładem na
+$\Theta$, a $P_\theta$ prawami obserwacji na $\mathsf X$.
+Niech $\mathsf A$ będzie skończonym zbiorem akcji i
+$L:\Theta\times\mathsf A\to[0,\infty)$ funkcją straty.
+Dla $x$ o dodatnim prawdopodobieństwie brzegowym
+$w_x=\sum_{\theta}\pi(\theta)P_\theta(\{x\})$ zdefiniujmy
+$q_x(\theta)=\pi(\theta)P_\theta(\{x\})/w_x$.
+Reguła $\delta$ minimalizuje ryzyko Bayesa wtedy i tylko wtedy,
+gdy dla każdego $x$ z $w_x>0$ wybiera akcję minimalizującą
+$\sum_{\theta}L(\theta,a)q_x(\theta)$.
+\end{stwierdzenie}
+\begin{proof}
+Rozwijamy skończoną sumę i grupujemy składniki według obserwacji:
+\[
+\rho_\pi(\delta)
+=\sum_{\theta,x}\pi(\theta)P_\theta(\{x\})L(\theta,\delta(x))
+=\sum_{x:w_x>0}w_x\sum_{\theta}q_x(\theta)L(\theta,\delta(x)).
+\]
+Każdy współczynnik $w_x$ jest dodatni, a wybór $\delta(x)$ dla
+jednego $x$ nie ogranicza wyboru $\delta(y)$ dla $y\ne x$.
+Zatem suma jest minimalna dokładnie wtedy, gdy minimalny jest każdy
+jej niezerowy składnik. Na obserwacjach o $w_x=0$ regułę
+można określić dowolnie.
+\end{proof}
+
+\begin{uwaga}[Kiedy której reguły używać?]
+Ryzyko Bayesa zależy od wagi $\pi$, a minimaksowe od najgorszej
+wartości parametru. Priory zbyt arbitralne lub niewiarygodne mogą
+prowadzić do decyzji nieodpowiednich dla celu. Jeśli nie umiemy
+uzasadnić żadnego rozkładu a priori, nie wolno przedstawiać
+reguły Bayesa jako decyzji wynikającej wyłącznie z danych.
+Jednocześnie zasadzie minimaksowej może towarzyszyć nadmierna
+ostrożność w typowych sytuacjach.
+\end{uwaga}
+
+\section{Od testu diagnostycznego do decyzji: koszty błędów i częstość bazowa}
+\begin{twierdzenie}[Optymalny próg dla dwóch stanów]\label{thm:decision-lr}
+Niech nieznany stan $\Theta\in\{0,1\}$ ma w modelu decyzyjnym
+prawdopodobieństwo a priori $\Prob(\Theta=1)=q\in(0,1)$.
+Niech $X$ ma warunkową funkcję masy $f_j(x)$ przy $\Theta=j$
+na wspólnym przeliczalnym zbiorze obserwacji $\mathsf X$.
+Możliwe akcje to $a=0$ i $a=1$; koszt pomyłki przy
+$(\Theta,a)=(0,1)$ wynosi $c_{\mathrm{FP}}>0$, a przy $(1,0)$
+wynosi $c_{\mathrm{FN}}>0$; poprawne decyzje kosztują zero.
+Dla $x$ z dodatnią mieszaną masą
+$(1-q)f_0(x)+qf_1(x)$ reguła minimalizująca ryzyko Bayesa
+wybiera $a=1$ wtedy i tylko wtedy, gdy
+\[
+ c_{\mathrm{FN}}\,q f_1(x)
+>c_{\mathrm{FP}}\,(1-q) f_0(x),
+\]
+a przy równości obie akcje są optymalne. Dla $f_0(x)>0$ jest to
+równoważne nierówności ilorazu wiarygodności
+$f_1(x)/f_0(x)>c_{\mathrm{FP}}(1-q)/(c_{\mathrm{FN}}q)$.
+\end{twierdzenie}
+\begin{proof}
+Po obserwacji $X=x$ warunkowy oczekiwany koszt akcji $a=1$ to
+$c_{\mathrm{FP}}\Prob(\Theta=0\mid X=x)$; dla $a=0$ jest to
+$c_{\mathrm{FN}}\Prob(\Theta=1\mid X=x)$.
+Dzieląc przez dodatni mianownik rozkładu warunkowego, widzimy, że
+pierwszy koszt jest mniejszy od drugiego dokładnie przy podanej
+nierówności. Z poprzedniego stwierdzenia minimalizacja warunkowa dla
+każdej wartości $x$ minimalizuje całkowite ryzyko Bayesa.
+\end{proof}
+
+\begin{zadanie}[Rzadkie zdarzenie i dodatni wynik testu]\label{zad:rare-classification}
+W populacji częstość groźnej usterki to $q=0{,}01$.
+Test wykrywa usterkę z czułością $0{,}90$ i ma swoistość $0{,}95$.
+Dodatni wynik pojawił się na sprawdzanym urządzeniu. Porównaj decyzję
+„interweniować” przy jednakowych kosztach pomyłek z sytuacją,
+gdy przeoczenie usterki kosztuje dziesięć razy więcej niż fałszywy alarm.
+\par\emph{Rozwiązanie.}
+Dla wyniku dodatniego $f_1(+)=0{,}90$ i $f_0(+)=0{,}05$.
+Iloraz wiarygodności wynosi $18$, lecz stosując rachunek warunkowy,
+\[
+\Prob(\Theta=1\mid +)
+=\frac{0{,}01\cdot0{,}90}
+ {0{,}01\cdot0{,}90+0{,}99\cdot0{,}05}
+=\frac{0{,}009}{0{,}0585}\approx0{,}154.
+\]
+Przy jednakowych kosztach błędów mniejszy oczekiwany koszt ma
+brak interwencji, ponieważ prawdopodobieństwo usterki jest mniejsze niż
+$1/2$. Gdy $c_{\mathrm{FN}}=10$ i $c_{\mathrm{FP}}=1$,
+próg ilorazu wiarygodności wynosi
+$0{,}99/(10\cdot0{,}01)=9{,}9$, więc $18>9{,}9$ i należy
+interweniować. Równoważnie koszt zignorowania usterki po wyniku
+pozytywnym wynosi około $10\cdot0{,}154=1{,}54$, podczas gdy koszt
+fałszywego alarmu to około $1\cdot0{,}846=0{,}846$.
+\emph{Wniosek:} jeden wynik badania może uzasadniać różne działania przy
+różnych kosztach. Test nie jest decyzją; jest źródłem informacji dla decyzji.
+\end{zadanie}
+
+\section{Wybór straty: średnia, mediana i kwantyle}
+\begin{stwierdzenie}[Najlepsza stała przy różnych stratach]
+\label{prop:optimal-constant-loss}
+Niech $Y$ będzie całkowalną rzeczywistą zmienną losową.
+Jeśli $Y\in L^2$, jedyną stałą $a\in\R$ minimalizującą
+$\E(Y-a)^2$ jest $a=\E Y$.
+Zbiór stałych minimalizujących $\E|Y-a|$ jest zbiorem median
+rozkładu $Y$, tj. zbiorem tych $a$, dla których
+$\Prob(Y\le a)\ge1/2$ i $\Prob(Y\ge a)\ge1/2$.
+\end{stwierdzenie}
+\begin{proof}
+Dla $Y\in L^2$ tożsamość
+$\E(Y-a)^2=\Var(Y)+(a-\E Y)^2$ dowodzi pierwszej tezy.
+Dla straty absolutnej funkcja $g(a)=\E|Y-a|$ jest skończona
+i wypukła. Różnicę ilorazową
+$\bigl(|Y-a-h|-|Y-a|\bigr)/h$ dla $h>0$
+można ograniczyć co do modułu przez $1$.
+Twierdzenie o zbieżności zdominowanej daje pochodną prawostronną
+$g'_+(a)=\Prob(Y\le a)-\Prob(Y>a)=2F_Y(a)-1$.
+Analogicznie pochodna lewostronna wynosi
+$g'_-(a)=\Prob(Y<a)-\Prob(Y\ge a)=2F_Y(a-)-1$.
+Dla funkcji wypukłej minimum występuje dokładnie wtedy, gdy
+$g'_-(a)\le0\le g'_+(a)$, co jest równoważne warunkom mediany.
+\end{proof}
+
+
+\begin{stwierdzenie}[Asymetryczna strata absolutna prowadzi do kwantyla]
+\label{prop:pinball-quantile}
+Niech $Y\in L^1$ będzie rzeczywistą zmienną losową, a $\tau\in(0,1)$.
+Dla decyzji $a\in\R$ określmy
+$L_\tau(Y,a)=\tau(Y-a)_++(1-\tau)(a-Y)_+$.
+Wtedy zbiór minimizatorów $a\mapsto\E L_\tau(Y,a)$
+składa się dokładnie z tych $a$, które spełniają
+$P(Y<a)\le\tau\le P(Y\le a)$.
+\end{stwierdzenie}
+\begin{proof}
+Funkcja $g(a)=\E L_\tau(Y,a)$ jest skończona, ponieważ
+$Y\in L^1$, i wypukła jako średnia funkcji wypukłych.
+Dla każdego $h\ne0$ bezwzględna wartość ilorazu
+$[L_\tau(Y,a+h)-L_\tau(Y,a)]/h$ jest ograniczona przez $1$.
+Dla $h\downarrow0$ pochodna punktowa względem $a$ równa się
+$1-\tau$ na $\{Y\le a\}$ i $-\tau$ na $\{Y>a\}$.
+Zbieżność zdominowana daje zatem $g'_+(a)=F_Y(a)-\tau$.
+Analogicznie $g'_-(a)=F_Y(a-)-\tau$.
+Wypukła funkcja rzeczywista przyjmuje minimum w $a$ wtedy i tylko
+wtedy, gdy $g'_-(a)\le0\le g'_+(a)$. Po podstawieniu obu
+pochodnych otrzymujemy wskazane nierówności dla dystrybuanty.
+\end{proof}
+
+\begin{przyklad}[Zapas magazynowy: koszt nadmiaru i niedoboru]
+Jeśli popyt $Y$ jest nieujemny, koszt każdej niezaspokojonej
+jednostki wynosi $c_u>0$, a nadmiarowej $c_o>0$, oczekiwany koszt
+przy zamówieniu $a$ jest równy
+$c_u\E(Y-a)_++c_o\E(a-Y)_+$. Jest to dodatnia wielokrotność
+straty z poprzedniego stwierdzenia, z poziomem
+$\tau=c_u/(c_u+c_o)$. Przy $c_u=9c_o$ optymalny zapas wyznacza
+\emph{kwantyl rzędu $0{,}9$}, a nie średnia ani mediana popytu.
+Wynik wymaga przyjętego modelu kosztów; przy ograniczeniu
+magazynowym rozwiązanie trzeba dodatkowo ograniczyć do
+zbioru działań dopuszczalnych.
+\end{przyklad}
+
+\begin{uwaga}[Nie ma jednej „najlepszej statystyki położenia”]
+Jeżeli model strat nagradza dokładność średniokwadratową, naturalnym
+celem jest średnia warunkowa. Jeżeli koszt rośnie liniowo z
+bezwzględnym błędem, naturalna jest mediana warunkowa.
+Przy asymetrycznych kosztach niedoszacowania i przeszacowania
+pojawiają się kwantyle. Przykład zarządzania zapasami: jeśli brak
+towaru jest wielokrotnie droższy niż jego nadmiar, poziom zapasu
+powinien leżeć powyżej mediany prognozowanego popytu.
+\end{uwaga}
+
+\section{Kiedy stosować poszczególne kryteria?}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}p{0.32\textwidth}>{\raggedright\arraybackslash}p{0.31\textwidth}}
+\toprule
+\textbf{Cel} & \textbf{Kryterium / reguła} & \textbf{Ograniczenie i alternatywa}\\
+\midrule
+Dobre oszacowanie w błędzie kwadratowym & MSE; porównanie obciążenia i wariancji & Estymator obciążony może być lepszy; zależy od $\theta$\\
+Ochrona najgorszego przypadku & Minimax: $\inf_\delta\sup_\theta R(\theta,\delta)$ & Bywa konserwatywny w typowych sytuacjach\\
+Ważenie realistycznych scenariuszy & Średnie ryzyko przy jawnej $\pi$ & Wynik zależy od przyjętego rozkładu scenariuszy\\
+Wykrywanie groźnego zdarzenia & Strata asymetryczna; koszty FP i FN & Częstość bazowa i błędna kalibracja zmieniają decyzję\\
+Prognoza typowej wartości & Strata absolutna; mediana & Inny cel niż prognoza sumy i średniej\\
+Prognoza całkowitego kosztu & Strata kwadratowa lub odpowiednio dobrana ekonomiczna & Ekstremalne obserwacje mogą być istotne dla kosztu\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Schemat praktycznej analizy decyzji.}
+Najpierw określamy \emph{działania}, które rzeczywiście możemy podjąć.
+Następnie ustalamy koszty poszczególnych pomyłek, model obserwacji,
+możliwe parametry i sposób porównywania funkcji ryzyka. Dopiero
+na końcu obliczamy regułę. Często dobrą praktyką jest \emph{analiza
+wrażliwości}: powtarzamy rachunki przy kilku wiarygodnych funkcjach
+straty, kosztach i parametrach modelu. Jeżeli decyzja się zmienia,
+trzeba to jawnie zasygnalizować.
+
+\Needspace{16\baselineskip}
+\noindent\textbf{Przykład obliczeniowy: analiza kosztów w Pythonie.}\par
+\par
+\Needspace{13\baselineskip}
+\smallskip
+\begin{lstlisting}[language=Python,caption={Wpływ kosztów pomyłek na decyzję (Python).}]
+prevalence = 0.01
+sensitivity, specificity = 0.90, 0.95
+p_pos_if_fault = sensitivity
+p_pos_if_ok = 1 - specificity
+posterior = prevalence * p_pos_if_fault / (
+    prevalence * p_pos_if_fault + (1-prevalence) * p_pos_if_ok
+)
+false_positive_cost, false_negative_cost = 1, 10
+cost_intervene = false_positive_cost * (1-posterior)
+cost_ignore = false_negative_cost * posterior
+print(posterior, cost_intervene, cost_ignore)
+print('interweniowac:', cost_intervene < cost_ignore)
+\end{lstlisting}
+Ten kod pozwala przeprowadzić \emph{analizę wrażliwości}: należy
+zmieniać częstość bazową, czułość, swoistość i koszty, a następnie
+obserwować, kiedy optymalna decyzja ulega zmianie.
+
+\section{Zadanie łączące wiarygodność i teorię decyzji}
+\begin{zadanie}[Ta sama próba, różne kryteria]\label{zad:compare-likelihood-decision}
+Niech $X\sim\operatorname{Bernoulli}(p)$, $p\in[0,1]$.
+Wyznacz MLE $p$ i porównaj jego ryzyko kwadratowe z regułą minimaksową
+z twierdzenia~\ref{thm:minimax-bernoulli-one} dla
+$p\in\{0,1/4,1/2,3/4,1\}$.
+\par\emph{Rozwiązanie.} MLE wynosi $\widehat p=X$.
+Jego ryzyko to $p(1-p)$; wartości przy wymienionych parametrach to
+odpowiednio $0$, $3/16$, $1/4$, $3/16$, $0$.
+Dla reguły $\delta^*(X)=1/4+X/2$ ryzyko jest stale równe $1/16$.
+To, że minimaks wygrywa przy $p=1/2$, nie unieważnia MLE przy
+$p=0$ albo $p=1$. MLE odpowiada na pytanie, który parametr
+maksymalizuje wiarygodność zaobserwowanego wyniku, a reguła
+minimaksowa na pytanie o najniższy możliwy największy koszt
+szacowania. Są to inne cele matematyczne.
+\end{zadanie}
+
+\paragraph{Zakończenie części wprowadzającej.}
+Rozdziały 1--4 rozdzielają cztery poziomy wnioskowania:
+\emph{eksperyment} określa rodzinę możliwych praw danych,
+\emph{statystyka} redukuje obserwacje,
+\emph{wiarygodność} porównuje parametry względem obserwowanych danych,
+a \emph{reguła decyzyjna} przypisuje danym działanie oceniane przez
+ryzyko. Dopiero po takim rozróżnieniu można sensownie mówić o
+optymalnych estymatorach, testach i metodach bayesowskich.
+Rozdziały 5--6 rozwiną formalne porównywanie estymatorów,
+dostateczność i zupełność; później przejdziemy do granic efektywności.
+
+
+% ================================================================
+% ROZDZIAL 5 -- KONSTRUKCJA ESTYMATOROW
+% ================================================================

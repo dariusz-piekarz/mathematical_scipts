@@ -1,0 +1,560 @@
+\chapter{Uogólnione modele liniowe: regresja logistyczna i Poissona}
+\label{ch:glm}
+\paragraph{Powiązania i odsyłacze.} Bazujemy na wiarygodności z rozdziału~\ref{ch:likelihood}; model liniowy i jego diagnostykę wprowadziliśmy w rozdziale~\ref{ch:linear-regression}.
+
+
+\section{Dlaczego liniowy model średniej nie wystarcza dla każdego wyniku?}
+Prawdopodobieństwo wady należy do $[0,1]$, a liczba
+awarii jest nieujemną liczbą całkowitą. Regresja
+liniowa z dowolnymi współczynnikami może przewidywać
+$p<0$ lub ujemną liczbę awarii. Ponadto wariancja
+zmiennej Bernoulliego wynosi $p(1-p)$, a Poissona
+$\lambda$: zmienia się z warunkową średnią.
+\emph{Uogólnione modele liniowe} (GLM) rozdzielają
+trzy elementy: rozkład odpowiedzi warunkowo względem
+cech, model średniej oraz \emph{funkcję łączącą}
+pozwalającą opisać tę średnią za pomocą kombinacji
+liniowej cech. Pozornie podobne dane wymagają więc
+różnych modeli w zależności od ich mechanizmu powstawania.
+
+\begin{definicja}[Rodzina wykładnicza z parametrem dyspersji]
+\label{def:glm-family}
+Niech $\Theta_0\subset\R$ będzie otwartym przedziałem,
+$\Phi\subset(0,\infty)$ oraz $\nu$ miarą na przestrzeni
+obserwacji $\mathsf Y\subset\R$. Rozważmy rodzinę
+rozkładów z gęstością lub funkcją masy względem $\nu$:
+\[
+ f(y;\theta,\phi)=\exp\!\left\{
+ \frac{y\theta-b(\theta)}{a(\phi)}+c(y,\phi)\right\},
+ \quad \theta\in\Theta_0,\ \phi\in\Phi,
+\]
+gdzie $a(\phi)>0$, a nośnik względem $\nu$ nie zależy
+od $\theta$. Zakładamy, że gęstości całkują się do $1$
+oraz że wolno dwukrotnie różniczkować pod całką względem
+$\theta$. Parametr $\theta$ nazywamy \emph{kanonicznym},
+zaś $a(\phi)$ jest skalą dyspersji.
+\end{definicja}
+
+\begin{twierdzenie}[Średnia i wariancja rodziny wykładniczej]
+\label{thm:glm-moments}
+W założeniach definicji~\ref{def:glm-family}, jeżeli
+$Y$ ma rozkład $f(\cdot;\theta,\phi)$, to
+\[
+ \E_{\theta,\phi}Y=b'(\theta),\qquad
+ \Var_{\theta,\phi}(Y)=a(\phi)b''(\theta).
+\]
+\end{twierdzenie}
+\begin{proof}
+Niech $\ell(\theta;y)=\log f(y;\theta,\phi)$.
+Różniczkując równość
+$\int_{\mathsf Y}f(y;\theta,\phi)\,\dd\nu(y)=1$
+otrzymujemy
+$0=\E\{\partial_\theta\ell(\theta;Y)\}$,
+a więc $0=(\E Y-b'(\theta))/a(\phi)$.
+Po ponownym różniczkowaniu normalizacji i
+wykorzystaniu
+$\partial_\theta^2\ell=-b''(\theta)/a(\phi)$
+mamy
+$0=\E[(\partial_\theta\ell)^2]+
+\E[\partial_\theta^2\ell]$.
+Po podstawieniu $\E Y=b'(\theta)$ i pomnożeniu przez
+$a(\phi)^2$ otrzymujemy żądany wzór na wariancję.
+\end{proof}
+
+\begin{definicja}[Uogólniony model liniowy]
+\label{def:glm}
+Niech $x_i\in\R^p$, $i=1,\ldots,n$, będą ustalonymi
+wektorami cech, a $Y_1,\ldots,Y_n$ niezależnymi
+odpowiedziami, których rozkłady należą do rodziny
+z definicji~\ref{def:glm-family} przy wspólnym $\phi$.
+Dla każdego $i$ niech $\mu_i=\E Y_i$ i niech
+$g$ będzie ustaloną różniczkowalną, odwracalną funkcją
+na dopuszczalnym zbiorze średnich. Model
+\[
+ g(\mu_i)=\eta_i=x_i^\top\beta,
+ \quad \beta\in B\subseteq\R^p
+\]
+nazywamy GLM, jeśli wszystkie $\mu_i=g^{-1}(x_i^\top\beta)$
+należą do zbioru średnich rodziny. Funkcja $g$
+to \emph{funkcja łącząca}; łącze
+$g=b'^{-1}$ na odpowiedniej dziedzinie
+nazywamy \emph{kanonicznym}.
+\end{definicja}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.20\textwidth}>{\raggedright\arraybackslash}p{.18\textwidth}>{\raggedright\arraybackslash}p{.23\textwidth}>{\raggedright\arraybackslash}p{.23\textwidth}}
+\toprule
+\textbf{Rozkład} & \textbf{Średnia} & \textbf{Łącze kanoniczne} & \textbf{Wariancja warunkowa}\\
+\midrule
+Normalny, stała wariancja & $\mu\in\R$ & $g(\mu)=\mu$ & $\sigma^2$\\
+Bernoulliego & $p\in(0,1)$ & $\log(p/(1-p))$ & $p(1-p)$\\
+Poissona & $\mu>0$ & $g(\mu)=\log\mu$ & $\mu$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Regresja logistyczna: prawdopodobieństwa, ilorazy szans i decyzje}
+Niech $Y_i\in\{0,1\}$ będzie wskaźnikiem wady i
+$Y_i\mid x_i\sim\operatorname{Bernoulli}(p_i)$.
+Regresja logistyczna zakłada
+\[
+ p_i=\frac{\exp(x_i^\top\beta)}
+          {1+\exp(x_i^\top\beta)},\qquad
+ \log\frac{p_i}{1-p_i}=x_i^\top\beta.
+\]
+Dla modelu z wyrazem wolnym i zmienną $x$ zwiększenie
+$x$ o jednostkę mnoży \emph{szanse} $p/(1-p)$ przez
+$\exp(\beta_1)$; nie mnoży na ogół samego
+prawdopodobieństwa przez tę liczbę.
+
+\begin{przyklad}[Dlaczego szansa i prawdopodobieństwo są różne?]
+Niech $\beta_1=\log2$. Szanse ulegają podwojeniu.
+Jeśli prawdopodobieństwo początkowe wynosi $0{,}1$,
+to szanse wzrastają z $1/9$ do $2/9$,
+a prawdopodobieństwo do $2/11\approx0{,}1818$.
+Jeżeli prawdopodobieństwo początkowe wynosi $0{,}6$,
+to szanse wzrastają z $3/2$ do $3$,
+a prawdopodobieństwo do $0{,}75$.
+Taki sam iloraz szans odpowiada więc różnym zmianom
+prawdopodobieństwa.
+\end{przyklad}
+
+\begin{twierdzenie}[Log-wiarygodność i wklęsłość w regresji logistycznej]
+\label{thm:logit-score}
+Niech $Y_1,\ldots,Y_n$ będą niezależnymi zmiennymi
+Bernoulliego z parametrami
+$p_i(\beta)=\exp(x_i^\top\beta)/
+(1+\exp(x_i^\top\beta))$, $\beta\in\R^p$, gdzie
+$X$ ma wiersze $x_i^\top$. Wówczas log-wiarygodność
+(z pominięciem składników niezależnych od $\beta$),
+jej gradient i hesjan wynoszą
+\[
+ \ell(\beta)=\sum_{i=1}^n\bigl[Y_i x_i^\top\beta
+        -\log(1+e^{x_i^\top\beta})\bigr],\quad
+ \nabla\ell=X^\top(Y-p),\quad
+ \nabla^2\ell=-X^\top W X,
+\]
+gdzie $p=(p_1,\ldots,p_n)^\top$ oraz
+$W=\operatorname{diag}(p_i(1-p_i))$.
+Funkcja $\ell$ jest wklęsła, a jeśli $X$ ma rząd $p$,
+to jest ściśle wklęsła dla każdego skończonego $\beta$.
+\end{twierdzenie}
+\begin{proof}
+Dla obserwacji Bernoulliego
+$\log P_\beta(Y_i=y_i)=y_i\log p_i+(1-y_i)\log(1-p_i)$.
+Po podstawieniu logitu otrzymujemy
+$y_ix_i^\top\beta-\log(1+e^{x_i^\top\beta})$.
+Pochodna funkcji $\log(1+e^u)$ wynosi
+$e^u/(1+e^u)=p_i$, a druga pochodna to $p_i(1-p_i)$.
+Dlatego dla każdego $v\in\R^p$
+$v^\top(-\nabla^2\ell)v=
+\sum_i p_i(1-p_i)(x_i^\top v)^2\ge0$.
+Przy pełnym rzędzie $X$ i skończonym $\beta$ wszystkie
+wagi są dodatnie, co daje ścisłą nierówność dla $v\ne0$.
+\end{proof}
+
+\begin{uwaga}[Ścisła wklęsłość nie zapewnia istnienia MLE]
+\label{rem:glm-separation}
+Jeżeli obserwacje z $Y_i=0$ oraz $Y_i=1$ można
+idealnie rozdzielić pewną liniową kombinacją cech,
+log-wiarygodność może rosnąć wzdłuż kierunku
+$\|\beta\|\to\infty$, nie osiągając maksimum
+w $\R^p$. Nazywamy to \emph{separacją}.
+Przykładowo dla dwóch obserwacji $(x,y)=(0,0)$
+i $(1,1)$ w modelu z wyrazem wolnym wartości
+$\beta_0=-t$, $\beta_1=2t$ przy $t\to\infty$
+dają prawdopodobieństwa sukcesu dążące odpowiednio
+do $0$ i $1$. Log-wiarygodność dąży do supremum
+$0$, lecz nie osiąga go w skończonym punkcie.
+Analogiczny problem może wystąpić przy separacji
+quasi-zupełnej; brak doskonałej klasyfikacji wszystkich
+obserwacji nie gwarantuje więc istnienia skończonego MLE.
+W praktyce sprawdzamy separację; można zastosować
+regularizację lub metody redukcji obciążenia, ale
+wtedy jawnie zmienia się zadanie estymacji.
+\end{uwaga}
+
+\section{Regresja Poissona: intensywność, liczba zdarzeń i ekspozycja}
+\begin{twierdzenie}[Model Poissona i jego log-wiarygodność]
+\label{thm:poisson-glm-score}
+Niech $t_i>0$ oznacza znaną ekspozycję, a
+$Y_i$, $i=1,\ldots,n$, będą niezależne oraz
+$Y_i\sim\Pois(\mu_i)$, gdzie
+$\mu_i=t_i\exp(x_i^\top\beta)$, $\beta\in\R^p$.
+Wówczas log-wiarygodność, jej gradient i hesjan są równe
+\[
+ \begin{aligned}
+ \ell(\beta)&=\sum_{i=1}^n
+ [Y_i(\log t_i+x_i^\top\beta)
+      -t_i e^{x_i^\top\beta}-\log(Y_i!)],\\
+ \nabla\ell(\beta)&=X^\top(Y-\mu),\\
+ \nabla^2\ell(\beta)&=-X^\top\operatorname{diag}(\mu_i)X.
+ \end{aligned}
+\]
+Jeśli $X$ ma pełny rząd kolumnowy, log-wiarygodność
+jest ściśle wklęsła w każdym punkcie $\R^p$.
+\end{twierdzenie}
+\begin{proof}
+W modelu Poissona
+$\log P(Y_i=y_i)=y_i\log\mu_i-\mu_i-\log(y_i!)$.
+Podstawiamy $\log\mu_i=\log t_i+x_i^\top\beta$.
+Ponieważ $\partial_\beta\mu_i=\mu_ix_i$,
+różniczkowanie po $\beta$ daje gradient.
+Ponowne różniczkowanie daje
+$-\sum_i\mu_ix_ix_i^\top$.
+Każda $\mu_i>0$, a więc pełny rząd $X$ zapewnia
+ujemną określoność hesjanu.
+\end{proof}
+
+\begin{przyklad}[Nie wolno pomijać ekspozycji]
+Dwie maszyny mają odpowiednio $4$ awarie w ciągu
+$20$ godzin oraz $8$ awarii w ciągu $100$ godzin.
+Surowo druga ma dwa razy więcej awarii, ale
+obserwowane częstości wynoszą $0{,}20$ i $0{,}08$
+na godzinę. Model $\mu_i=t_i e^{x_i^\top\beta}$
+traktuje $\log t_i$ jako \emph{offset}, czyli
+znany składnik predyktora o współczynniku równym $1$.
+Nie estymujemy współczynnika przy ekspozycji,
+chyba że świadomie zmieniamy model procesu.
+\end{przyklad}
+
+\begin{uwaga}[Zera w zliczeniach i brzeg przestrzeni parametrów]
+Dla niezależnych $Y_i\sim\Pois(t_i\lambda)$,
+$t_i>0$, z ograniczeniem $\lambda>0$, jeśli
+$\sum_iY_i=0$, log-wiarygodność jest ściśle
+malejąca jako funkcja $\lambda$. Jej supremum jest
+osiągane jedynie w granicy $\lambda\downarrow0$;
+w otwartej przestrzeni parametrów nie istnieje MLE.
+Jeśli model dopuszcza $\lambda=0$, MLE wynosi $0$,
+ale jest to punkt brzegowy i zwykła normalna asymptotyka
+Walda nie musi tam obowiązywać. Problem dotyczy
+zwłaszcza rzadkich zdarzeń.
+\end{uwaga}
+
+\section{Score i informacja Fishera w ogólnym GLM}
+\begin{twierdzenie}[Równania score i informacja dla ustalonej dyspersji]
+\label{thm:glm-general-score}
+Niech model spełnia definicję~\ref{def:glm}.
+Załóżmy, że $b''(\theta_i)>0$, że
+$\mu_i(\eta)=g^{-1}(\eta)$ jest różniczkowalna,
+$\dd\mu_i/\dd\eta_i\ne0$ i że $a(\phi)>0$
+jest znane. Oznaczmy $V_i=b''(\theta_i)$,
+a przez $\dot\mu_i$ pochodną $\mu_i$ względem
+$\eta_i=x_i^\top\beta$. Wówczas
+\[
+ \nabla\ell(\beta)=\sum_{i=1}^n
+ \frac{Y_i-\mu_i}{a(\phi)V_i}\dot\mu_i x_i,
+ \qquad
+ \mathcal I(\beta)=\sum_{i=1}^n
+ \frac{\dot\mu_i^2}{a(\phi)V_i}x_ix_i^\top.
+\]
+W przypadku łącza kanonicznego
+$\dot\mu_i=V_i$, a równanie score przyjmuje postać
+$\sum_i x_i(Y_i-\mu_i)=0$.
+\end{twierdzenie}
+\begin{proof}
+Pochodna log-gęstości względem $\theta_i$ wynosi
+$(Y_i-b'(\theta_i))/a(\phi)=(Y_i-\mu_i)/a(\phi)$.
+Ponieważ $\dd\mu_i/\dd\theta_i=V_i>0$,
+reguła łańcuchowa daje
+$\dd\theta_i/\dd\eta_i=\dot\mu_i/V_i$.
+Pomnożenie przez $x_i=\nabla_\beta\eta_i$ prowadzi
+do pierwszego wzoru. Niezależność obserwacji i
+$\Var(Y_i)=a(\phi)V_i$ oznaczają, że macierz
+kowariancji score jest sumą
+$\dot\mu_i^2x_ix_i^\top/[a(\phi)V_i]$.
+Przy łączu kanonicznym $\eta_i=\theta_i$, skąd
+$\dot\mu_i=b''(\theta_i)=V_i$.
+\end{proof}
+
+\section{Skąd bierze się IRLS? Iteracyjnie ważone najmniejsze kwadraty}
+Z punktu widzenia obliczeń MLE rozwiązujemy na ogół
+nieliniowe równania score. \emph{Fisher scoring} to
+iteracja $\beta^{(k+1)}=\beta^{(k)}+
+\mathcal I(\beta^{(k)})^{-1}\nabla\ell(\beta^{(k)})$,
+o ile macierz informacji jest odwracalna.
+Niech $\eta_i=x_i^\top\beta^{(k)}$, $\mu_i=g^{-1}(\eta_i)$,
+$\dot\mu_i\ne0$ i zdefiniujmy
+\[
+ w_i=\frac{\dot\mu_i^2}{a(\phi)V_i},\qquad
+ z_i=\eta_i+\frac{Y_i-\mu_i}{\dot\mu_i}.
+\]
+Równanie normalne dla ważonych najmniejszych kwadratów
+$\min_{b\in\R^p}\sum_iw_i(z_i-x_i^\top b)^2$
+przy pełnym rzędzie macierzy ważonej daje
+$\beta^{(k+1)}=(X^\top WX)^{-1}X^\top Wz$.
+Ponieważ
+$X^\top W(z-X\beta^{(k)})=
+\sum_i[(Y_i-\mu_i)\dot\mu_i/(a(\phi)V_i)]x_i$,
+iteracja jest dokładnie krokiem Fisher scoring.
+Jest to \emph{IRLS} (iteratively reweighted least squares).
+
+\begin{uwaga}[Kiedy algorytm może nie zbiegać?]
+Krok Fisher scoring nie musi automatycznie zwiększać
+wiarygodności, a iteracja może być niestabilna przy
+separacji, niemal osobliwej macierzy planu lub zbyt
+dużym kroku. Produkcyjne implementacje stosują
+kontrolę kroku, ograniczenia parametrów i diagnostykę
+zbieżności. Żaden wynik programu nie jest wiarygodny,
+jeśli algorytm jedynie zakończył iteracje z ostrzeżeniem.
+\end{uwaga}
+
+\section{Testowanie współczynników i diagnostyka modelu GLM}
+\begin{stwierdzenie}[Informacja i przybliżone błędy standardowe]
+\label{prop:glm-asymptotic-se}
+Jeśli w ciągu modeli GLM spełnione są warunki
+regularności z rozdziału~\ref{ch:asymptotic-estimation} zapewniające
+istnienie zgodnego MLE $\widehat\beta$, asymptotyczną
+normalność oraz zgodność oszacowania informacji,
+to przybliżona macierz kowariancji estymatora wynosi
+$\mathcal I(\widehat\beta)^{-1}$. Dla współczynnika
+$\beta_j$ daje to orientacyjny błąd standardowy
+$\mathrm{SE}_j=\sqrt{[\mathcal I(\widehat\beta)^{-1}]_{jj}}$
+oraz przedział Walda $\widehat\beta_j\pm
+z_{1-\alpha/2}\mathrm{SE}_j$.
+Dla ilorazu szans $\exp(\beta_j)$ przekształcamy
+\emph{oba końce} przedziału przez funkcję wykładniczą.
+Nie są to dokładne przedziały dla małych prób.
+\end{stwierdzenie}
+
+\begin{definicja}[Dewiancja i reszty Pearsona]
+Dla modelu o funkcji wiarygodności $L(\beta)$ oraz
+modelu nasyconego, który dopasowuje osobną dopuszczalną
+średnią każdej obserwacji, definiujemy \emph{dewiancję}
+$D=2(\sup\ell_{\rm sat}-\ell(\widehat\beta))$
+przy tej samej ustalonej dyspersji; w modelach
+Poissona i Bernoulliego bez dodatkowej dyspersji
+jest ona nieujemna. Dla danych $Y_i$ i wartości
+$\widehat\mu_i$ resztę Pearsona określamy wzorem
+$r_{P,i}=(Y_i-\widehat\mu_i)/\sqrt{\widehat{\Var}(Y_i)}$,
+gdy oszacowana wariancja jest dodatnia.
+\end{definicja}
+
+\begin{stwierdzenie}[Dewiancja w regresji Poissona]
+\label{prop:poisson-deviance}
+Dla niezależnych zliczeń $Y_i\sim\Pois(\mu_i)$ i
+oszacowań $\widehat\mu_i>0$ otrzymujemy
+\[
+ D=2\sum_{i=1}^n\left[
+ Y_i\log\frac{Y_i}{\widehat\mu_i}
+ -(Y_i-\widehat\mu_i)\right],
+\]
+przy konwencji $0\log(0/a)=0$ dla $a>0$.
+Każdy składnik sumy jest nieujemny.
+\end{stwierdzenie}
+\begin{proof}
+Dla ustalonego $y_i\ge0$ maksimum
+$y_i\log\mu_i-\mu_i-\log(y_i!)$
+po $\mu_i\ge0$ osiąga się w punkcie $\mu_i=y_i$;
+przy $y_i=0$ rozumiemy maksimum na domknięciu
+$[0,\infty)$, zaś rozkład Poissona z parametrem
+$\mu=0$ jest zdegenerowany. Odejmując log-wiarygodność
+modelu ograniczonego od supremum nasyconego, otrzymujemy wzór.
+Nierówność $z\log z-z+1\ge0$ dla $z>0$,
+z granicą w $z=0$, dowodzi nieujemności składników.
+\end{proof}
+
+\paragraph{Jak używać diagnostyki?}
+Dla regresji logistycznej porównujemy przewidywane
+prawdopodobieństwa z obserwowanymi częstościami
+w odpowiednich grupach, oceniamy kalibrację,
+zdolność rozróżniania klas i ryzyko separacji.
+Dla zliczeń sprawdzamy nie tylko średnią, lecz również
+zróżnicowanie: model Poissona zakłada
+$\Var(Y_i\mid x_i)=\E(Y_i\mid x_i)$.
+W obu przypadkach sprawdzamy punkty wpływowe,
+strukturę reszt i poprawność niezależności obserwacji.
+Brak widocznej struktury na wykresie reszt nie dowodzi
+niezależności; dane uporządkowane chronologicznie należy
+również analizować w funkcji czasu. Szczegóły diagnostyki
+autokorelacji rozwiniemy w rozdziale~\ref{ch:time-series}.
+
+\section{Nadmierna dyspersja i błędna specyfikacja}
+\begin{przyklad}[Dlaczego standardowy Poisson może zaniżać niepewność?]
+W identycznych warunkach średnia liczba awarii
+wynosi $2$, natomiast empiryczna wariancja z
+wielu niezależnych okresów wynosi około $9$.
+Poisson wymaga równości średniej i wariancji,
+więc sam model warunkowej średniej nie opisuje
+wariancji danych. Klasyczne błędy standardowe
+oparte na informacji Poissona mogą być zaniżone.
+Trzeba sprawdzić, czy wynika to ze zmienności
+niezaobserwowanych intensywności, zależności,
+nadmiernej liczby zer lub innej specyfikacji.
+\end{przyklad}
+
+\begin{stwierdzenie}[Mieszanina Poisson--gamma prowadzi do nadmiernej dyspersji]
+\label{prop:poisson-gamma}
+Niech $\Lambda$ będzie dodatnią zmienną losową o
+$\E\Lambda=\mu>0$ i $\Var(\Lambda)=\kappa\mu^2$,
+$\kappa>0$. Niech warunkowo względem $\Lambda$
+zmienna $Y$ ma rozkład $\Pois(\Lambda)$.
+Wtedy $\E Y=\mu$ i
+$\Var(Y)=\mu+\kappa\mu^2$.
+Jeżeli dodatkowo $\Lambda$ ma rozkład gamma z
+parametrem kształtu $1/\kappa$ i parametrem skali
+$\kappa\mu$, to marginalny rozkład $Y$ jest
+ujemnym dwumianowym.
+\end{stwierdzenie}
+\begin{proof}
+Z prawa całkowitej wartości oczekiwanej mamy
+$\E Y=\E(\E[Y\mid\Lambda])=\E\Lambda=\mu$.
+Z prawa całkowitej wariancji
+$\Var(Y)=\E(\Var(Y\mid\Lambda))+
+\Var(\E[Y\mid\Lambda])=
+\E\Lambda+\Var(\Lambda)=\mu+\kappa\mu^2$.
+W wypadku gamma funkcja tworząca dla $Y$ jest równa
+$\E[z^Y]=\E[e^{\Lambda(z-1)}]
+=(1+\kappa\mu(1-z))^{-1/\kappa}$
+dla $0\le z\le1$. Rozwinięcie dwumianowe tej
+funkcji daje rozkład ujemny dwumianowy.
+\end{proof}
+
+\begin{uwaga}[Poisson, quasi-Poisson czy ujemny dwumianowy?]
+Quasi-Poisson zachowuje funkcję średniej Poissona,
+ale zakłada $\Var(Y_i\mid x_i)=\phi\mu_i$ dla
+$\phi>0$ i nie wyznacza pełnego rozkładu obserwacji.
+Nie używamy zatem klasycznego AIC opartego na
+pełnej wiarygodności quasi-Poissona tak, jak dla
+zwykłego modelu Poissona. Model ujemny dwumianowy
+z wariancją $\mu_i+\kappa\mu_i^2$ wymaga określenia
+pełnego rozkładu i estymacji $\kappa$.
+Jeśli źródłem problemu są skorelowane obserwacje,
+sama zmiana rodziny rozkładów może nie wystarczyć.
+\end{uwaga}
+
+\section{Studium przypadku: od modelu do użytecznej decyzji}
+Rozważmy dwie technologie, A i B. W każdej przebadano
+po $100$ niezależnych produktów: w A stwierdzono
+$7$ wad, a w B $15$. Model z jedną zmienną binarną
+$g_i=0$ dla A i $g_i=1$ dla B ma
+$\operatorname{logit}(p_i)=\beta_0+\beta_1g_i$.
+Ponieważ obie grupy mają dodatnią liczbę sukcesów
+i porażek, log-wiarygodność osiąga maksimum
+przy $\widehat p_A=0{,}07$ i $\widehat p_B=0{,}15$.
+Stąd
+\[
+ \widehat\beta_1=
+ \log\frac{0{,}15/(1-0{,}15)}{0{,}07/(1-0{,}07)}
+ =\log\frac{15\cdot93}{85\cdot7}
+ \approx0{,}852,\qquad
+ \exp(\widehat\beta_1)\approx2{,}345.
+\]
+Interpretujemy: szanse wady w grupie B są oszacowane
+na około $2{,}35$ razy większe niż w A. Nie jest to
+tożsame z \emph{ryzykiem względnym}, równym
+$0{,}15/0{,}07\approx2{,}14$, ani z różnicą
+prawdopodobieństw, wynoszącą $0{,}08$.
+Dla decyzji o wdrożeniu technologii zwykle potrzebujemy
+również przedziałów niepewności, kosztów jednostkowych
+wad i oceny porównywalności obu prób. Przybliżony
+przedział $95\%$ dla ilorazu szans obliczony w programie
+poniżej wynosi $[0{,}912;\ 6{,}027]$: obejmuje $1$.
+Mimo znacznej różnicy oszacowań punktowych ten zbiór
+danych nie uzasadnia zatem odrzucenia hipotezy równości
+szans przy dwustronnej klasycznej procedurze Walda
+na poziomie $5\%$. Jest to ilustracja różnicy między
+rozmiarem oszacowanego efektu a jego niepewnością.
+
+\begin{lstlisting}[language=Python,caption={Kompletny program: dwie grupy binarne, iloraz szans i przedział przybliżony (Python).}]
+from math import exp, log, sqrt
+from scipy.stats import norm
+
+bad_a, total_a = 7, 100
+bad_b, total_b = 15, 100
+ok_a, ok_b = total_a - bad_a, total_b - bad_b
+
+odds_ratio = bad_b * ok_a / (ok_b * bad_a)
+log_or = log(odds_ratio)
+se_log_or = sqrt(1/bad_b + 1/ok_b + 1/bad_a + 1/ok_a)
+z = norm.ppf(0.975)
+ci_or = (exp(log_or - z*se_log_or),
+         exp(log_or + z*se_log_or))
+risk_ratio = (bad_b/total_b) / (bad_a/total_a)
+print('odds ratio:', odds_ratio)
+print('risk ratio:', risk_ratio)
+print('approximate 95% CI odds ratio:', ci_or)
+# For zero cells consider exact/penalized approaches.
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python,caption={Kompletny program: MLE intensywności i offset w modelu Poissona (SciPy).}]
+import numpy as np
+from scipy.optimize import minimize
+
+exposure = np.array([10., 30., 15., 40., 20., 50.])
+group_b = np.array([0., 0., 0., 1., 1., 1.])
+counts = np.array([2., 4., 1., 4., 3., 5.])
+X = np.column_stack((np.ones_like(exposure), group_b))
+
+def negative_loglik(beta):
+    eta = np.log(exposure) + X @ beta
+    return float(np.exp(eta).sum() - counts @ eta)
+
+def gradient(beta):
+    eta = np.log(exposure) + X @ beta
+    return X.T @ (np.exp(eta) - counts)
+
+fit = minimize(negative_loglik, x0=np.array([-2., 0.]),
+               method='BFGS', jac=gradient, tol=1e-8)
+assert np.isfinite(fit.x).all()
+rate_ratio_b_to_a = np.exp(fit.x[1])
+rate_a = np.exp(fit.x[0])
+rate_b = np.exp(fit.x[0] + fit.x[1])
+print('rates per unit exposure:', rate_a, rate_b)
+print('rate ratio B/A:', rate_ratio_b_to_a)
+print('converged:', fit.success, fit.message)
+if not fit.success:
+    raise RuntimeError('Optimizer did not converge')
+\end{lstlisting}
+
+\paragraph{Jak interpretować obliczenia?}
+Przy połączonych licznikach grup A i B powyższy model
+Poissona ma dwa parametry i dzięki dostateczności sum
+w grupach jego MLE można otrzymać również bez optymalizatora:
+$\widehat\lambda_A=\sum_{i:g_i=0}Y_i/
+\sum_{i:g_i=0}t_i$ oraz analogicznie dla B.
+Program numeryczny ilustruje użycie offsetu: daje intensywności
+$\widehat\lambda_A\approx0{,}1273$ i
+$\widehat\lambda_B\approx0{,}1091$ na jednostkę
+czasu, stąd iloraz intensywności około $0{,}8571$.
+Nie jest to dowód różnicy między technologiami.
+Wynik należy sprawdzić z podanymi wzorami, a ponadto
+zbadać, czy wariancja danych odpowiada modelowi.
+
+\section{Dobór modelu: praktyczna tabela porównawcza}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.28\textwidth}>{\raggedright\arraybackslash}p{.30\textwidth}>{\raggedright\arraybackslash}p{.30\textwidth}}
+\toprule
+\textbf{Cel i rodzaj odpowiedzi} & \textbf{Model do rozważenia} & \textbf{Kontrola i ograniczenia}\\
+\midrule
+Wynik ciągły o liniowej średniej & Regresja liniowa normalna / MNK & Rozkład reszt dla dokładnej inferencji, wariancja, zależność.\\
+Wynik binarny, np. wada / brak wady & Logistyczny GLM & Separacja, kalibracja, liczba zdarzeń, iloraz szans $\ne$ iloraz ryzyka.\\
+Zliczenia przy znanej ekspozycji & Poisson z offsetem & Średnia $=$ wariancja warunkowa, niezależność, poprawna ekspozycja.\\
+Zliczenia z nadmierną dyspersją & Ujemny dwumianowy lub quasi-Poisson & Źródło dyspersji, zależność i nadmiar zer; AIC nie dla quasi-likelihood.\\
+Powtarzane pomiary binarne lub zliczenia & GLMM, GEE lub jawny model zależności & Właściwa jednostka niezależności; inna interpretacja parametrów.\\
+Dane o czasie do awarii z cenzorowaniem & Modele przeżycia, np. Cox & Nie zastępować cenzorowanych czasów zliczeniami bez uzasadnienia.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{zadanie}[Czy zawsze logistyczna?]
+W zakładzie zbadano $n=200$ produktów, ale nie tylko
+liczbę wad, lecz również \emph{czas do uszkodzenia},
+przy czym obserwacja wielu produktów zakończyła się
+przed awarią. Analityk proponuje regresję logistyczną
+wskaźnika „awaria wystąpiła do dnia zakończenia badania”.
+Czy jest ona wystarczająca?
+\par\emph{Rozwiązanie.} Taka regresja może być właściwa,
+jeśli wszystkie produkty miały ten sam ustalony horyzont
+obserwacji i interesuje nas wyłącznie zdarzenie do
+tego horyzontu. Jeśli horyzonty są różne, a część
+czasów cenzorowana, zwykła regresja wskaźnika zignoruje
+czas ekspozycji oraz mechanizm cenzorowania. Wtedy
+rozważamy model przeżycia albo model intensywności
+zdarzeń z prawidłowym opisem czasu zagrożenia.
+\end{zadanie}
+
+
+% ================================================================
+% ROZDZIAL 15 -- WYBOR I WALIDACJA MODELI
+% ================================================================

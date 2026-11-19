@@ -1,0 +1,736 @@
+\chapter{Zmienne losowe i rozkłady prawdopodobieństwa}
+\label{ch:random-variables}
+
+\section{Zmienna losowa i jej rozkład}
+Przestrzeń wyników może być bardzo złożona: pojedynczym wynikiem
+może być pięć kart, pełna trajektoria urządzenia albo nieskończony
+ciąg rzutów monetą. W praktyce interesuje nas często tylko jedna
+liczba, na przykład liczba czerwonych kart lub czas oczekiwania.
+Zmienna losowa jest więc funkcją, która tłumaczy wyniki doświadczenia
+na wartości liczbowe. Jej rozkład opisuje, z jakimi
+prawdopodobieństwami pojawiają się zbiory tych wartości.
+
+Mierzalność zapewnia, że zdanie „$X$ przyjmuje wartość należącą
+do borelowskiego zbioru $B$” jest dopuszczalnym zdarzeniem.
+Nie jest to warunek ciągłości ani losowości samej funkcji.
+
+\begin{definicja}
+Niech $(\Omega,\mathcal F,\Prob)$ będzie przestrzenią probabilistyczną.
+Zmienną losową rzeczywistą nazywamy funkcję
+$X:\Omega\to\R$, dla której $X^{-1}(B)\in\mathcal F$
+dla każdego $B\in\mathcal B(\R)$. Jej rozkładem nazywamy miarę
+probabilistyczną $\mu_X$ na $\mathcal B(\R)$, zadaną wzorem
+$\mu_X(B):=\Prob(X\in B)=\Prob(X^{-1}(B))$.
+Stosujemy oznaczenie $\Law(X)=\mu_X$ oraz $X\sim\mu_X$.
+\end{definicja}
+
+\begin{stwierdzenie}[Kryterium mierzalności]
+Funkcja $X:\Omega\to\R$ jest zmienną losową wtedy i tylko wtedy,
+gdy $\{X\leq x\}\in\mathcal F$ dla każdego $x\in\R$.
+\end{stwierdzenie}
+\begin{proof}
+Konieczność wynika z borelowskości przedziału $(-\infty,x]$.
+Dla dostateczności zauważamy, że przedziały $(-\infty,x]$ generują
+$\mathcal B(\R)$. Rodzina $\{B\subseteq\R:X^{-1}(B)\in\mathcal F\}$
+jest $\sigma$-ciałem, gdyż przeciwobrazy zachowują dopełnienia
+i sumy przeliczalne, a więc zawiera całe $\mathcal B(\R)$.
+\end{proof}
+
+\begin{przyklad}
+W modelu dwóch kostek funkcja $X(i,j)=i+j$ jest zmienną losową,
+której rozkład skupia się na $\{2,\ldots,12\}$.
+Na $([0,1],\mathcal B([0,1]),\lambda_1)$ zmienna $U(\omega)=\omega$
+ma rozkład jednostajny na $[0,1]$. Samo $\Omega$ nie przesądza więc
+o postaci rozkładu: ważna jest również zmienna losowa.
+\end{przyklad}
+
+\begin{definicja}
+Niech $\mu$ będzie borelowską miarą probabilistyczną na $\R$.
+Nośnikiem topologicznym $\mu$ nazywamy zbiór
+$\supp\mu:=\{x\in\R:\mu((x-\varepsilon,x+\varepsilon))>0
+\text{ dla każdego }\varepsilon>0\}$.
+\end{definicja}
+
+\begin{uwaga}
+Rozkład $\mu_X$ zawiera pełną informację o prawdopodobieństwach
+zdarzeń wyrażalnych przez wartości $X$, ale nie o zależności $X$
+od innych zmiennych. Dwie zmienne mogą mieć identyczne rozkłady,
+choć jedna jest równa drugiej, a inna od niej niezależna.
+\end{uwaga}
+
+\section{Dystrybuanta}
+Rozkład można opisywać przez prawdopodobieństwo każdego zbioru
+borelowskiego, lecz w wymiarze jednym wygodniej zebrać
+informację w jednej funkcji $F(x)=\Prob(X\leq x)$.
+Przechowuje ona prawdopodobieństwa wszystkich lewych półprostych,
+a z ich różnic odzyskujemy masy przedziałów. Skok dystrybuanty
+w punkcie oznacza dodatnie prawdopodobieństwo dokładnie tej wartości.
+Prawostronna ciągłość nie jest dodatkową umową: wynika z
+przeliczalnej addytywności miary.
+
+\begin{definicja}
+Dystrybuantą rzeczywistej zmiennej losowej $X$ nazywamy funkcję
+$F_X:\R\to[0,1]$ określoną wzorem
+$F_X(x):=\Prob(X\leq x)=\mu_X((\! -\infty,x])$.
+\end{definicja}
+
+\begin{twierdzenie}[Własności dystrybuanty]
+Niech $X$ będzie rzeczywistą zmienną losową o dystrybuancie $F$.
+Wówczas $F$ jest niemalejąca, prawostronnie ciągła oraz
+$\lim_{x\to-\infty}F(x)=0$ i $\lim_{x\to+\infty}F(x)=1$.
+Dla dowolnych $a<b$ zachodzą ponadto
+\[
+\Prob(a<X\leq b)=F(b)-F(a),\qquad
+\Prob(X=a)=F(a)-F(a-),
+\]
+gdzie $F(a-):=\lim_{x\uparrow a}F(x)$.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $x\leq y$, to każdy wynik spełniający $X\leq x$
+spełnia też $X\leq y$. Zatem
+$\{X\leq x\}\subseteq\{X\leq y\}$ i monotoniczność
+miary daje $F(x)\leq F(y)$.
+
+Ustalmy $x\in\R$ i weźmy dowolny ciąg $x_n\downarrow x$.
+Zdarzenia $A_n=\{X\leq x_n\}$ maleją. Ich przekrój
+to $\{X\leq x\}$: jeśli $X(\omega)>x$, to dla
+dostatecznie dużego $n$ mamy $x_n<X(\omega)$,
+więc $\omega\notin A_n$. Z ciągłości miary z góry
+wynika $F(x_n)\to F(x)$. Jest to prawostronna ciągłość.
+
+Dla $x_n=-n$ zbiory $\{X\leq-n\}$ maleją
+do zbioru pustego, ponieważ $X$ przyjmuje tylko
+wartości rzeczywiste. Ich prawdopodobieństwa dążą do zera.
+Podobnie zbiory $\{X\leq n\}$ rosną do $\Omega$,
+więc ich prawdopodobieństwa dążą do jedności.
+Monotoniczność $F$ pozwala otrzymane granice dla
+ciągów $\pm n$ przenieść na całe półproste.
+
+Dla $a<b$ mamy rozłączny rozkład
+$\{X\leq b\}=\{X\leq a\}\mathbin{\dot\cup}
+\{a<X\leq b\}$, więc
+$\Prob(a<X\leq b)=F(b)-F(a)$.
+Wreszcie dla dowolnego ciągu $x_n\uparrow a$
+zachodzi $\{X\leq x_n\}\uparrow\{X<a\}$.
+Z ciągłości miary z dołu dostajemy
+$F(a-)=\Prob(X<a)$. Ponieważ
+$\{X\leq a\}=\{X<a\}\mathbin{\dot\cup}\{X=a\}$,
+otrzymujemy $\Prob(X=a)=F(a)-F(a-)$.
+\end{proof}
+
+\begin{wniosek}
+Dystrybuanta jest ciągła w punkcie $a$ wtedy i tylko wtedy,
+gdy $\Prob(X=a)=0$. Zmiana dystrybuanty w pojedynczym punkcie
+może zniszczyć jej prawostronną ciągłość i dlatego nie można
+modyfikować dystrybuanty dowolnie na zbiorze miary zero.
+\end{wniosek}
+
+\begin{twierdzenie}[Charakteryzacja dystrybuant]
+Funkcja $F:\R\to\R$ jest dystrybuantą pewnej rzeczywistej
+zmiennej losowej wtedy i tylko wtedy, gdy jest niemalejąca,
+prawostronnie ciągła, ma granicę $0$ przy $-\infty$
+i granicę $1$ przy $+\infty$.
+\end{twierdzenie}
+\begin{proof}
+Konieczność wszystkich warunków wynika z poprzedniego
+twierdzenia. Pokażemy, że są one także wystarczające,
+konstruując zmienną o zadanej dystrybuancie.
+Niech $\Omega=(0,1)$, $\mathcal F=\mathcal B((0,1))$,
+a $\Prob$ będzie miarą Lebesgue'a.
+Dla $u\in(0,1)$ zdefiniujmy
+$Q(u)=\inf\{x\in\R:F(x)\geq u\}$.
+Z granic $F$ wynika, że dla każdego $u\in(0,1)$
+istnieją $a,b\in\R$ z $F(a)<u\leq F(b)$.
+Zbiór pod infimum jest więc niepusty i zawiera się
+w $(a,\infty)$; liczba $Q(u)$ jest skończona.
+
+Sprawdźmy kluczową równoważność. Jeżeli $u\leq F(x)$,
+to $x$ należy do zbioru w definicji i $Q(u)\leq x$.
+Odwrotnie, jeśli $Q(u)\leq x$, to z definicji infimum
+istnieje ciąg $x_n\downarrow Q(u)$ taki, że
+$F(x_n)\geq u$. Prawostronna ciągłość daje
+$F(Q(u))\geq u$, a monotoniczność implikuje
+$F(x)\geq F(Q(u))\geq u$.
+Otrzymaliśmy zatem dla wszystkich $x\in\R$, $u\in(0,1)$
+\[
+Q(u)\leq x\quad\Longleftrightarrow\quad u\leq F(x).
+\]
+Funkcja $Q$ jest niemalejąca (większe $u$ wymaga
+większego kwantyla), a więc mierzalna.
+Dla $U(\omega)=\omega$ mamy
+$\Prob(Q(U)\leq x)=\Prob(U\leq F(x))=F(x)$,
+ponieważ $U$ jest jednostajna na $(0,1)$, a $0\leq F(x)\leq1$.
+Zmienna $X=Q(U)$ realizuje więc żądaną dystrybuantę.
+\end{proof}
+
+\begin{definicja}
+Dla zmiennej losowej $X$ o dystrybuancie $F_X$ i $u\in(0,1)$
+kwantylem rzędu $u$ nazywamy
+$Q_X(u):=\inf\{x\in\R:F_X(x)\geq u\}$.
+Medianą nazywamy dowolną liczbę $m$ spełniającą
+$\Prob(X\leq m)\geq1/2$ i $\Prob(X\geq m)\geq1/2$.
+\end{definicja}
+
+\begin{uwaga}
+Kwantyl $Q_X(1/2)$ jest medianą, ale mediana nie musi być jedyna.
+Przykładowo zmienna przyjmująca $0$ i $2$ z prawdopodobieństwami
+po $1/2$ ma za medianę każdą liczbę z przedziału $[0,2]$.
+\end{uwaga}
+
+\section{Rozkłady dyskretne, ciągłe i singularne}
+W przypadku dyskretnym przypisujemy masy poszczególnym punktom.
+W przypadku rozkładu mającego gęstość zamiast mas punktowych
+opisujemy prawdopodobieństwa \emph{przedziałów} przez całkę.
+Wartość $f(x)$ nie jest prawdopodobieństwem, że $X=x$:
+może przekraczać jeden, podczas gdy $\Prob(X=x)=0$.
+Gęstość ma znaczenie lokalne: $f(x)h$ przy małym $h$
+przybliża masę krótkiego odcinka tam, gdzie $f$ jest regularna.
+Nie każda ciągła dystrybuanta posiada gęstość. Rozkład Cantora
+wykaże, dlaczego to rozróżnienie jest ważne.
+
+\begin{definicja}
+Rozkład $\mu$ na $\R$ nazywamy dyskretnym, jeśli istnieje zbiór
+co najwyżej przeliczalny $D\subseteq\R$ taki, że $\mu(D)=1$.
+Dla $x\in\R$ piszemy wtedy $p(x):=\mu(\{x\})$, a funkcję $p$
+nazywamy funkcją masy prawdopodobieństwa.
+\end{definicja}
+
+Jeżeli $\mu$ jest dyskretna i $D$ jest zbiorem jej atomów o dodatnich
+masach, to $\sum_{x\in D}p(x)=1$ i
+$\mu(B)=\sum_{x\in B\cap D}p(x)$ dla każdego $B\in\mathcal B(\R)$.
+Z kolei dowolne nieujemne masy o sumie jeden definiują w ten sposób
+rozkład dyskretny.
+
+\begin{definicja}
+Borelowską miarę probabilistyczną $\mu$ na $\R$ nazywamy
+absolutnie ciągłą względem miary Lebesgue'a $\lambda_1$,
+gdy $\lambda_1(B)=0$ implikuje $\mu(B)=0$ dla każdego
+$B\in\mathcal B(\R)$. Wówczas na mocy twierdzenia Radona--Nikodyma
+istnieje mierzalna funkcja $f:\R\to[0,\infty]$ taka, że
+\begin{equation}\label{eq:density}
+\mu(B)=\int_B f(x)\,\dd\lambda_1(x)
+\quad(B\in\mathcal B(\R)),\qquad
+\int_\R f(x)\,\dd\lambda_1(x)=1.
+\end{equation}
+Funkcję $f$ nazywamy gęstością prawdopodobieństwa; jest ona
+wyznaczona jednoznacznie z dokładnością do równości
+$\lambda_1$-prawie wszędzie.
+\end{definicja}
+
+\begin{stwierdzenie}
+Jeżeli $X$ ma gęstość $f$, to
+$F_X(x)=\int_{(-\infty,x]} f(t)\,\dd\lambda_1(t)$.
+Dystrybuanta $F_X$ jest ciągła, a $F_X'(x)=f(x)$
+dla $\lambda_1$-prawie każdego $x$.
+\end{stwierdzenie}
+\begin{proof}
+Z definicji gęstości otrzymujemy bezpośrednio
+\[
+F_X(x)=\mu_X((\!-\infty,x])
+=\int_{(-\infty,x]}f(t)\,\dd\lambda_1(t).
+\]
+Pojedynczy punkt $\{x\}$ ma miarę Lebesgue'a zero,
+więc z absolutnej ciągłości rozkładu
+$\Prob(X=x)=\mu_X(\{x\})=0$.
+Z twierdzenia o skokach dystrybuanty wiemy,
+że $F_X(x)-F_X(x-)=\Prob(X=x)=0$.
+Ponieważ dystrybuanta jest zawsze prawostronnie ciągła,
+nie ma również nieciągłości z lewej strony; jest więc ciągła.
+
+Funkcja $f$ jest całkowalna na $\R$, a więc lokalnie
+całkowalna. Dla każdego $a\in\R$ możemy zapisać
+$F_X(x)=F_X(a)+\int_a^x f(t)\,\dd\lambda_1(t)$,
+przyjmując odpowiedni znak całki dla $x<a$.
+Twierdzenie o różniczkowaniu całek Lebesgue'a
+(fakt z analizy, którego tutaj nie dowodzimy) zapewnia,
+że dla $\lambda_1$-prawie każdego $x$ pochodna ostatniej
+całki jest równa $f(x)$. Stąd $F_X'(x)=f(x)$ prawie wszędzie.
+Nie wolno jednak odwracać tego wniosku bez dodatkowej
+absolutnej ciągłości: sama pochodna istniejąca prawie
+wszędzie nie odzyskuje rozkładu singularnego.
+\end{proof}
+
+\begin{uwaga}
+Sama ciągłość dystrybuanty nie oznacza istnienia gęstości.
+Istnieją \emph{rozkłady singularne ciągłe}, na przykład rozkład
+Cantora: jest skupiony na zbiorze Cantora o mierze Lebesgue'a zero,
+a jednocześnie nie ma atomów. Jego dystrybuanta jest ciągła,
+ale nie jest absolutnie ciągła. Ogólna miara probabilistyczna na $\R$
+może zawierać jednocześnie część dyskretną, absolutnie ciągłą
+i singularną ciągłą.
+\end{uwaga}
+
+
+\begin{twierdzenie}[Rozkład miary na część dyskretną, absolutnie ciągłą i singularną ciągłą]
+Niech $\mu$ będzie borelowską miarą probabilistyczną na $\R$.
+Wówczas istnieją jednoznaczne miary skończone
+$\mu_{\mathrm d},\mu_{\mathrm{ac}},\mu_{\mathrm{sc}}$
+takie, że $\mu=\mu_{\mathrm d}+\mu_{\mathrm{ac}}+
+\mu_{\mathrm{sc}}$, gdzie $\mu_{\mathrm d}$ jest skupiona
+na zbiorze co najwyżej przeliczalnym,
+$\mu_{\mathrm{ac}}\ll\lambda_1$,
+a $\mu_{\mathrm{sc}}\perp\lambda_1$ i nie ma atomów.
+Każda z trzech miar może mieć masę mniejszą od jedności,
+a nawet być miarą zerową.
+\end{twierdzenie}
+\begin{proof}
+Najpierw zbiór atomów punktowych
+$D=\{x\in\R:\mu(\{x\})>0\}$ jest co najwyżej
+przeliczalny: dla każdego $m\geq1$ istnieje najwyżej
+$m$ punktów o masie większej niż $1/m$, a
+$D$ jest sumą tych skończonych zbiorów.
+Definiujemy $\mu_{\mathrm d}(B)=\mu(B\cap D)$
+oraz $\rho(B)=\mu(B\setminus D)$. Miara $\rho$
+nie ma atomów punktowych.
+
+Wyprowadzimy teraz potrzebny rozkład na część absolutnie
+ciągłą i singularną z przyjętego twierdzenia
+Radona--Nikodyma. Połóżmy $\nu=\rho+\lambda_1$.
+Miara $\nu$ jest $\sigma$-skończona, ponieważ
+$\rho$ jest skończona, a $\lambda_1$ jest
+$\sigma$-skończona. Istnieją więc funkcje
+$h=\dd\rho/\dd\nu$ i $g=\dd\lambda_1/\dd\nu$.
+Dla $S=\{x:g(x)=0\}$ mamy $\lambda_1(S)=0$.
+Definiujemy $\mu_{\mathrm{sc}}=\ind{S}\rho$ oraz
+$\mu_{\mathrm{ac}}=\ind{\R\setminus S}\rho$.
+Pierwsza miara jest singularna, bo skupia się na $S$.
+Druga jest absolutnie ciągła względem $\lambda_1$:
+jeśli $\lambda_1(B)=0$, to
+$\int_B g\,\dd\nu=0$, a więc $g=0$
+$\nu$-prawie wszędzie na $B$. Stąd
+$\nu(B\cap\{g>0\})=0$ i
+$\mu_{\mathrm{ac}}(B)=0$.
+Obie części dziedziczą brak atomów od $\rho$.
+
+Dla jednoznaczności zauważmy najpierw, że cała
+masa punktowa musi należeć do $\mu_{\mathrm d}$,
+gdyż dwie pozostałe części nie mają atomów.
+Przypuśćmy następnie, że
+$\rho=\alpha_1+\beta_1=\alpha_2+\beta_2$,
+gdzie $\alpha_i\ll\lambda_1$, a $\beta_i$
+są skupione na zbiorach $S_i$ o miarze Lebesgue'a zero.
+Dla $S=S_1\cup S_2$ obie miary $\beta_i$
+zanikają poza $S$, więc $\alpha_1$ i $\alpha_2$
+są tam równe $\rho$. Na samym $S$ obie zanikają
+z absolutnej ciągłości względem $\lambda_1$.
+Zatem $\alpha_1=\alpha_2$ oraz
+$\beta_1=\beta_2$. To kończy dowód jednoznaczności.
+\end{proof}
+
+\begin{przyklad}[Gęstość większa niż jeden i zerowa masa punktu]
+Niech $X$ będzie jednostajna na $(0,1/4)$. Jej gęstość
+to $f_X(x)=4\ind{\{0<x<1/4\}}$. Mamy $f_X(1/8)=4$,
+co nie przeczy aksjomatom, ponieważ gęstość nie jest
+prawdopodobieństwem zdarzenia $\{X=1/8\}$.
+W rzeczywistości $\Prob(X=1/8)=0$, zaś
+$\Prob(0<X<1/8)=\int_0^{1/8}4\,\dd\lambda_1(x)=1/2$.
+Parametr gęstości ma jednostkę odwrotną do jednostki $x$;
+liczbą z przedziału $[0,1]$ jest całka po zdarzeniu.
+\end{przyklad}
+
+\begin{przyklad}[Rozkład Cantora i brak gęstości]
+Niech $(B_n)_{n\geq1}$ będą niezależne i
+$\Prob(B_n=0)=\Prob(B_n=1)=1/2$. Szereg
+$X=\sum_{n=1}^\infty 2B_n/3^n$ zbiega bezwzględnie,
+a jego wartość należy do zbioru Cantora $C\subset[0,1]$.
+Ponieważ $\lambda_1(C)=0$ oraz $\Prob(X\in C)=1$,
+rozkład $X$ nie może mieć gęstości względem $\lambda_1$.
+
+Pokażemy również, że nie ma atomów. Każde $m$ pierwszych
+cyfr trójkowych $2B_1,\ldots,2B_m$ wyznacza przedział
+konstrukcyjny długości $3^{-m}$ o masie $2^{-m}$.
+Wartość $x\in C$ należy na każdym etapie do co najwyżej
+dwóch takich domkniętych przedziałów (ewentualnie styka się
+z ich końcami). Zatem $\Prob(X=x)\leq2\cdot2^{-m}$
+dla każdego $m$, co po przejściu do granicy daje zero.
+Dystrybuanta $X$ jest więc ciągła, choć jej rozkład
+jest osobliwy względem miary Lebesgue'a.
+\end{przyklad}
+
+\begin{przyklad}[Rozkład mieszany]
+Niech $B$ przyjmuje wartości $0$ i $1$ z prawdopodobieństwami po $1/2$,
+a $U$ jest od niego niezależna i jednostajna na $(0,1)$.
+Definiujemy $X=BU$. Wtedy $\Prob(X=0)=1/2$, a dla $0<x<1$
+zachodzi $F_X(x)=1/2+x/2$. Łącznie
+\[
+F_X(x)=\begin{cases}
+0,&x<0,\\
+\frac12,&x=0,\\
+\frac{1+x}{2},&0<x<1,\\
+1,&x\geq1.
+\end{cases}
+\]
+Rozkład nie ma gęstości względem $\lambda_1$, gdyż ma atom w zerze,
+ale jego część na $(0,1)$ ma gęstość $1/2$.
+\end{przyklad}
+
+\section{Wektory losowe i rozkłady łączne}
+Znajomość rozkładu wzrostu i rozkładu masy ciała osobno nie
+mówi, czy wzrost i masa są ze sobą związane. Potrzebny jest
+\emph{rozkład łączny} wektora dwóch cech. Rozkłady brzegowe
+powstają przez „zapomnienie” o jednej współrzędnej, czyli
+całkowanie gęstości łącznej po tej współrzędnej. Odwrotna
+rekonstrukcja rozkładu łącznego z samych rozkładów brzegowych
+na ogół nie jest możliwa; niezależność stanowi szczególny
+przypadek, gdy taka rekonstrukcja jest możliwa przez iloczyn.
+
+\begin{definicja}
+Niech $d\geq1$. Wektorem losowym w $\R^d$ nazywamy funkcję
+$X=(X_1,\ldots,X_d):\Omega\to\R^d$ mierzalną względem
+$\mathcal F$ i $\mathcal B(\R^d)$. Jej rozkładem łącznym jest
+$\mu_X(B)=\Prob(X\in B)$ dla $B\in\mathcal B(\R^d)$.
+Rozkład $X_i$ nazywamy $i$-tym rozkładem brzegowym.
+\end{definicja}
+
+\begin{stwierdzenie}
+Wektor $X=(X_1,\ldots,X_d)$ jest mierzalny wtedy i tylko wtedy,
+gdy każda współrzędna $X_i$ jest rzeczywistą zmienną losową.
+\end{stwierdzenie}
+\begin{proof}
+Rzuty współrzędne są funkcjami ciągłymi, co daje jeden kierunek.
+W przeciwnym kierunku przeciwobraz prostokąta
+$B_1\times\cdots\times B_d$, gdzie $B_i\in\mathcal B(\R)$,
+jest przecięciem zdarzeń $\{X_i\in B_i\}$. Ponieważ
+borelowskie prostokąty generują $\mathcal B(\R^d)$,
+otrzymujemy mierzalność wektora.
+\end{proof}
+
+\begin{definicja}
+Rzeczywiste zmienne losowe $X_1,\ldots,X_d$ nazywamy niezależnymi,
+jeżeli dla wszystkich $B_1,\ldots,B_d\in\mathcal B(\R)$ zachodzi
+$\Prob(X_1\in B_1,\ldots,X_d\in B_d)=\prod_{i=1}^d\Prob(X_i\in B_i)$.
+Dla dowolnej rodziny zmiennych losowych niezależność oznacza
+spełnienie tej własności przez każdy skończony podzbiór rodziny.
+\end{definicja}
+
+\begin{definicja}
+Jeśli rozkład wektora $X\in\R^d$ jest absolutnie ciągły względem
+$d$-wymiarowej miary Lebesgue'a $\lambda_d$, funkcję
+$f_X:\R^d\to[0,\infty]$ spełniającą
+$\Prob(X\in B)=\int_B f_X(x)\,\dd\lambda_d(x)$ nazywamy
+gęstością łączną.
+\end{definicja}
+
+\begin{twierdzenie}[Gęstości brzegowe i niezależność]
+Niech $(X,Y)$ będzie wektorem losowym o gęstości łącznej
+$f_{X,Y}:\R^2\to[0,\infty]$. Wówczas funkcje
+\[
+f_X(x)=\int_\R f_{X,Y}(x,y)\,\dd\lambda_1(y),\qquad
+f_Y(y)=\int_\R f_{X,Y}(x,y)\,\dd\lambda_1(x)
+\]
+są gęstościami rozkładów brzegowych (z dokładnością do wersji
+prawie wszędzie). Zmienne $X,Y$ są niezależne wtedy i tylko wtedy,
+gdy $f_{X,Y}(x,y)=f_X(x)f_Y(y)$ dla $\lambda_2$-prawie każdego
+$(x,y)\in\R^2$.
+\end{twierdzenie}
+\begin{proof}
+Najpierw sprawdźmy, że podane całki są rzeczywiście
+gęstościami brzegowymi. Dla borelowskiego $A\subseteq\R$
+z definicji rozkładu łącznego
+\[
+\Prob(X\in A)=\Prob((X,Y)\in A\times\R)
+=\int_{A\times\R}f_{X,Y}(x,y)\,\dd\lambda_2(x,y).
+\]
+Ponieważ funkcja podcałkowa jest nieujemna, możemy
+zastosować twierdzenie Tonellego i scałkować najpierw po $y$:
+\[
+\Prob(X\in A)=\int_A
+\left(\int_\R f_{X,Y}(x,y)\,\dd\lambda_1(y)\right)
+\dd\lambda_1(x).
+\]
+Tak otrzymujemy gęstość $f_X$; argument dla $f_Y$
+jest symetryczny.
+
+Jeśli $f_{X,Y}=f_X f_Y$ prawie wszędzie, to dla
+borelowskich $A,B$ twierdzenie Tonellego daje
+$\Prob(X\in A,Y\in B)
+=(\int_A f_X\,\dd\lambda_1)
+ (\int_B f_Y\,\dd\lambda_1)
+=\Prob(X\in A)\Prob(Y\in B)$.
+Jest to definicja niezależności.
+
+Odwrotnie, przy niezależności dla wszystkich prostokątów
+$A\times B$ miara łączna i miara produktowa
+$\mu_X\otimes\mu_Y$ mają te same wartości.
+Przez jednoznaczność miar na $\sigma$-ciele generowanym
+przez prostokąty są identyczne. Miara produktowa ma
+gęstość $f_X(x)f_Y(y)$ względem $\lambda_2$
+(ponownie Tonelli). Jednoznaczność pochodnej
+Radona--Nikodyma daje
+$f_{X,Y}=f_Xf_Y$ dla $\lambda_2$-prawie każdego punktu.
+\end{proof}
+
+\begin{przyklad}[Jednostajność na trójkącie]
+Niech $(X,Y)$ ma gęstość $f_{X,Y}(x,y)=2$ na zbiorze
+$T=\{(x,y):0<x<y<1\}$ i zero poza nim.
+Ponieważ pole $T$ wynosi $1/2$, funkcja jest unormowana.
+Dla $0<x<1$ mamy $f_X(x)=\int_x^1 2\,\dd\lambda_1(y)=2(1-x)$,
+a dla $0<y<1$ mamy $f_Y(y)=\int_0^y 2\,\dd\lambda_1(x)=2y$.
+Zatem obie gęstości brzegowe nie są jednostajne, a $X,Y$ nie są
+niezależne, co widać także ze zdarzenia $\{X<Y\}$
+o prawdopodobieństwie jeden.
+\end{przyklad}
+
+\section{Rozkłady warunkowe przy istnieniu gęstości}
+Przy ciągłej zmiennej $Y$ zdarzenie $\{Y=y\}$ ma zwykle
+prawdopodobieństwo zero. Wyrażenia $\Prob(X\in A\mid Y=y)$
+nie można zatem bezpośrednio rozumieć jako ilorazu zdarzeń.
+Gdy istnieje gęstość łączna, jej rozkład na czynniki
+„gęstość brzegowa razy gęstość warunkowa” stanowi
+naturalne rozszerzenie wzoru na warunkowanie. Na tym etapie
+konstruujemy je bez wchodzenia w ogólną teorię regularnych
+prawdopodobieństw warunkowych.
+
+\begin{stwierdzenie}[Warunkowa gęstość]
+Niech $(X,Y)$ będzie wektorem losowym o gęstości łącznej $f_{X,Y}$,
+a $f_Y$ niech oznacza gęstość brzegową $Y$.
+Wybierzmy borelowskie wersje $f_{X,Y}$ i $f_Y$; po ewentualnej
+zmianie na zbiorze wartości $y$ o zerowej mierze możemy przyjąć
+$f_Y(y)=\int_\R f_{X,Y}(x,y)\,\dd\lambda_1(x)$,
+gdy całka jest skończona. Dla $y$ z $0<f_Y(y)<\infty$
+połóżmy $f_{X\mid Y=y}(x)=f_{X,Y}(x,y)/f_Y(y)$.
+Dla pozostałych $y$ wybierzmy dowolną ustaloną gęstość,
+np. standardową normalną. Tak wybrana funkcja
+$x\mapsto f_{X\mid Y=y}(x)$ jest gęstością
+probabilistyczną dla każdego $y$, po zmianie wersji na zbiorze
+wyjątkowym o $\Law(Y)$-mierze zero.
+Ponadto dla borelowskich $A,B\subseteq\R$
+\begin{equation}\label{eq:joint_cond}
+\Prob(X\in A,Y\in B)
+=\int_B\left(\int_A f_{X\mid Y=y}(x)\,\dd\lambda_1(x)\right)
+ f_Y(y)\,\dd\lambda_1(y),
+\end{equation}
+przy dowolnym wyborze gęstości probabilistycznej dla tych wartości $y$,
+dla których iloraz nie jest określony.
+\end{stwierdzenie}
+\begin{proof}
+Z twierdzenia Tonellego $f_Y(y)=\int_\R f_{X,Y}(x,y)\,
+\dd\lambda_1(x)$ dla prawie wszystkich $y$, więc dla
+$0<f_Y(y)<\infty$ całka z ilorazu po $x$ wynosi jeden.
+Wzór \eqref{eq:joint_cond} wynika z przemnożenia przez $f_Y(y)$
+i zastosowania twierdzenia Fubiniego--Tonellego.
+\end{proof}
+
+\begin{uwaga}
+Symbol $\Prob(X\in A\mid Y=y)$, rozumiany przez powyższy wzór,
+nie jest zwykłym ilorazem $\Prob(X\in A,Y=y)/\Prob(Y=y)$,
+gdyż przy rozkładzie ciągłym obie wielkości często wynoszą zero.
+Wersje gęstości warunkowej mogą się różnić na zbiorze wartości $y$
+o zerowym prawdopodobieństwie.
+\end{uwaga}
+
+\begin{przyklad}[Warunkowanie na ustaloną wartość zmiennej ciągłej]
+Wróćmy do rozkładu jednostajnego na trójkącie
+$0<x<y<1$, o gęstości łącznej $f_{X,Y}(x,y)=2$.
+Wykazaliśmy, że $f_Y(y)=2y$ dla $0<y<1$.
+Zatem dla każdej takiej wartości $y$ możemy wybrać
+wersję gęstości warunkowej
+$f_{X\mid Y=y}(x)=y^{-1}\ind{\{0<x<y\}}$.
+Jest ona unormowana, gdyż $\int_0^y y^{-1}\,\dd\lambda_1(x)=1$.
+Na przykład przy $0<a<y<1$ otrzymujemy
+$\Prob(X\leq a\mid Y=y)=a/y$ w sensie tej wersji
+rozkładu warunkowego. Wniosek ma prostą interpretację:
+jeśli obserwujemy wartość $Y=y$, to $X$ jest jednostajna
+na przedziale $(0,y)$. Nie obliczaliśmy tu ilorazu
+prawdopodobieństw zdarzeń o zerowej mierze;
+posłużyliśmy się rozkładem łącznym i jego faktoryzacją.
+\end{przyklad}
+
+
+
+\begin{twierdzenie}[Warunkowa wartość oczekiwana obliczana z gęstości]
+Niech $(X,Y)$ będzie rzeczywistym wektorem losowym
+mającym borelowską gęstość łączną $f_{X,Y}$.
+Niech $k(y,x)$ będzie gęstością warunkową
+$f_{X\mid Y=y}(x)$ z poprzedniego stwierdzenia,
+przy ustalonym borelowskim wyborze wersji.
+Jeśli $h:\R\to\R$ jest funkcją borelowską i
+$\E|h(X)|<\infty$, to funkcja
+$g(y)=\int_\R h(x)k(y,x)\,\dd\lambda_1(x)$,
+przy dowolnej wartości na zbiorze, gdzie całka nie jest
+bezwzględnie zbieżna, jest borelowska i spełnia
+\[
+\E[h(X)\mid\sigma(Y)]=g(Y)\quad\text{p.n.}
+\]
+\end{twierdzenie}
+\begin{proof}
+Najpierw rozważmy $h\geq0$. Z mierzalności wspólnej
+funkcji $(y,x)\mapsto h(x)k(y,x)$ oraz twierdzenia
+Tonellego wynika borelowska mierzalność $g$.
+Dla dowolnego zbioru borelowskiego $B\subseteq\R$
+z poprzedniego wzoru na gęstość warunkową
+otrzymujemy
+\[
+\E[h(X)\ind{\{Y\in B\}}]
+=\int_B\!\left(\int_\R h(x)k(y,x)\,\dd\lambda_1(x)\right)
+\dd\Law(Y)(y).
+\]
+Tożsamość dla funkcji nieujemnej można uzyskać przez
+aproksymację rosnącą funkcjami prostymi, a następnie
+zastosowanie zbieżności monotonicznej.
+Dla ogólnej całkowalnej $h$ stosujemy ten argument
+osobno do $h^+$ i $h^-$. Po scałkowaniu przy $B=\R$
+widzimy, że obie odpowiednie funkcje warunkowe są
+skończone dla $\Law(Y)$-prawie każdego $y$.
+Różnica jest zatem dobrze określona prawie wszędzie,
+a jej złożenie z $Y$ jest $\sigma(Y)$-mierzalne.
+Zdarzenia $\{Y\in B\}$, $B\in\mathcal B(\R)$,
+stanowią dokładnie $\sigma(Y)$, więc uzyskana
+równość całek jest definicją warunkowej wartości
+oczekiwanej. Jednoznaczność wersji kończy dowód.
+\end{proof}
+\begin{przyklad}[Obliczanie warunkowej średniej i wariancji]
+W modelu jednostajnym na trójkącie $0<x<y<1$
+mamy $k(y,x)=y^{-1}\ind{\{0<x<y\}}$ dla $0<y<1$.
+Zatem
+$\E[X\mid Y=y]=y^{-1}\int_0^y x\,\dd\lambda_1(x)=y/2$
+oraz
+$\E[X^2\mid Y=y]=y^{-1}\int_0^y x^2\,\dd\lambda_1(x)=y^2/3$.
+Wariancja warunkowa jest równa $y^2/3-(y/2)^2=y^2/12$.
+Stąd, w sensie wersji warunkowej,
+$\E[X\mid\sigma(Y)]=Y/2$ i
+$\Var(X\mid\sigma(Y))=Y^2/12$.
+To przykład, w którym pojedyncza obserwacja $Y$
+zmienia nie tylko prognozę, lecz również pozostałą
+niepewność co do $X$.
+\end{przyklad}
+
+\section{Przekształcanie zmiennych i suma niezależnych zmiennych}
+Jeśli znamy rozkład $X$, to często chcemy poznać rozkład
+$g(X)$, na przykład kwadratu, logarytmu lub odwrotności.
+Przy zmianie zmiennych gęstość musi być skorygowana o to,
+jak $g$ rozciąga albo ściska małe przedziały: stąd pochodna
+funkcji odwrotnej. Przy sumie niezależnych zmiennych na
+ustaloną wartość $s$ składają się wszystkie pary $(x,s-x)$;
+„sumowanie” ich wkładów prowadzi do splotu.
+
+\begin{stwierdzenie}[Transformacja monotoniczna]
+Niech $X$ ma gęstość $f_X$, a $g:I\to J$ będzie dyfeomorfizmem
+przedziałów otwartych $I,J\subseteq\R$. Załóżmy, że
+$\Prob(X\in I)=1$. Wtedy $Y=g(X)$ ma gęstość
+$f_Y(y)=f_X(g^{-1}(y))\,|(g^{-1})'(y)|$ dla $y\in J$
+i gęstość zero poza $J$.
+\end{stwierdzenie}
+\begin{proof}
+Dla dowolnego borelowskiego zbioru $B\subseteq\R$
+rozpoczynamy od definicji rozkładu zmiennej $Y=g(X)$:
+\[
+\Prob(Y\in B)=\Prob(X\in g^{-1}(B\cap J))
+=\int_{g^{-1}(B\cap J)}f_X(x)\,\dd\lambda_1(x).
+\]
+Ostatnia równość wynika z założenia $\Prob(X\in I)=1$.
+Ponieważ $g:I\to J$ jest dyfeomorfizmem, stosujemy
+jednowymiarowe twierdzenie o zmianie zmiennych
+$y=g(x)$ i otrzymujemy
+\[
+\Prob(Y\in B)=\int_{B\cap J}
+ f_X(g^{-1}(y))\,|(g^{-1})'(y)|\,\dd\lambda_1(y).
+\]
+Zatem wskazana funkcja jest gęstością rozkładu $Y$.
+Wartość bezwzględna przy pochodnej jest konieczna,
+ponieważ odwracanie orientacji przedziału nie może
+prowadzić do ujemnej gęstości.
+\end{proof}
+
+\begin{stwierdzenie}[Skończenie wiele gałęzi]
+Niech $X$ ma gęstość $f_X$ i niech rozłączne przedziały otwarte
+$I_1,\ldots,I_r$ spełniają $\Prob(X\in\bigcup_jI_j)=1$.
+Załóżmy, że dla każdego $j$ funkcja $g|_{I_j}$ jest
+$C^1$-dyfeomorfizmem na przedział $J_j$.
+Wtedy $Y=g(X)$ ma gęstość
+\[
+f_Y(y)=\sum_{j:y\in J_j}
+\frac{f_X((g|_{I_j})^{-1}(y))}
+{|g'((g|_{I_j})^{-1}(y))|}
+\quad\text{dla prawie wszystkich }y\in\R.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Niech $B\subseteq\R$ będzie borelowski. Ponieważ
+$\Prob(X\in\bigcup_j I_j)=1$ i przedziały $I_j$
+są rozłączne, możemy rozłożyć zdarzenie $\{g(X)\in B\}$
+według gałęzi:
+\[
+\Prob(g(X)\in B)=\sum_{j=1}^r
+\int_{I_j\cap g^{-1}(B)} f_X(x)\,\dd\lambda_1(x).
+\]
+Na każdym $I_j$ funkcja $g$ jest dyfeomorfizmem
+na $J_j$, więc poprzednie twierdzenie pozwala
+przejść od $x$ do $y=g(x)$. Otrzymujemy
+\[
+\Prob(g(X)\in B)=\sum_{j=1}^r
+\int_{B\cap J_j}
+\frac{f_X((g|_{I_j})^{-1}(y))}
+{|g'((g|_{I_j})^{-1}(y))|}\,\dd\lambda_1(y).
+\]
+Przenosimy sumę skończoną pod całkę, uzyskując
+podany wzór. Wszystkie gałęzie prowadzące do tej samej
+wartości $y$ muszą zostać dodane: w przeciwieństwie
+do przypadku monotonicznego, pojedynczy wynik $Y=y$
+może mieć kilka wartości przeciwobrazu.
+\end{proof}
+
+\begin{twierdzenie}[Splot]
+Niech $X,Y$ będą niezależnymi rzeczywistymi zmiennymi losowymi
+o gęstościach $f_X,f_Y$. Wtedy $S=X+Y$ ma gęstość
+\begin{equation}\label{eq:convolution}
+ f_S(s)=(f_X*f_Y)(s)
+ :=\int_\R f_X(x)f_Y(s-x)\,\dd\lambda_1(x)
+\end{equation}
+dla $\lambda_1$-prawie każdego $s$.
+\end{twierdzenie}
+\begin{proof}
+Z niezależności rozkład pary $(X,Y)$ jest iloczynem
+rozkładów brzegowych, a więc ma gęstość
+$f_{X,Y}(x,y)=f_X(x)f_Y(y)$.
+Niech $B\subseteq\R$ będzie dowolnym zbiorem borelowskim.
+Z definicji $S=X+Y$ i twierdzenia Tonellego
+\[
+\Prob(S\in B)=\int_{\R^2}\ind{\{x+y\in B\}}
+ f_X(x)f_Y(y)\,\dd\lambda_2(x,y).
+\]
+Rozważmy liniową zmianę współrzędnych
+$(x,y)\mapsto (x,s=x+y)$, której macierz ma wyznacznik
+równy jeden. Jej odwrotność to $(x,s)\mapsto(x,s-x)$.
+Po zmianie zmiennych otrzymujemy
+\[
+\Prob(S\in B)=\int_{\R^2}\ind{\{s\in B\}}
+ f_X(x)f_Y(s-x)\,\dd\lambda_2(x,s).
+\]
+Ponieważ funkcja podcałkowa jest nieujemna,
+możemy zmienić kolejność całkowania:
+\[
+\Prob(S\in B)=\int_B\left(
+\int_\R f_X(x)f_Y(s-x)\,\dd\lambda_1(x)
+\right)\dd\lambda_1(s).
+\]
+Z definicji gęstości wynika wzór na splot. W szczególności
+całka z prawej strony po całej $\R$ wynosi jeden,
+a splot nieujemnych gęstości jest znów gęstością.
+\end{proof}
+
+\begin{przyklad}[Suma dwóch jednostajnych zmiennych]
+Jeśli $U,V$ są niezależne i jednostajne na $(0,1)$,
+to dla $S=U+V$ ze wzoru na splot otrzymujemy
+\[
+f_S(s)=\begin{cases}
+s,&0<s\leq1,\\
+2-s,&1<s<2,\\
+0,&\text{w pozostałych przypadkach}.
+\end{cases}
+\]
+Rozkład sumy nie jest jednostajny: dla $s$ bliskiego $1$
+istnieje więcej par $(u,v)$ o sumie $s$ niż dla $s$ bliskiego $0$.
+\end{przyklad}
+
+\begin{przyklad}[Bez niezależności wzór na splot może zawieść]
+Niech $U\sim\Unif(0,1)$ oraz $V=1-U$.
+Wtedy również $V\sim\Unif(0,1)$, lecz $U+V=1$
+prawie na pewno. Rozkład sumy jest więc skupiony
+w jednym punkcie i nie ma gęstości względem miary
+Lebesgue'a, mimo że obie zmienne mają gęstości.
+Nie jest to sprzeczne z twierdzeniem o splocie,
+ponieważ $U$ i $V$ nie są niezależne.
+\end{przyklad}
+
+

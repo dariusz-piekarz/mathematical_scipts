@@ -1,0 +1,682 @@
+\chapter{Konstrukcja procesów i regularność trajektorii}
+\label{ch:konstrukcja}
+
+\section{Problem istnienia: od tabel rozkładów do całego procesu}
+Załóżmy, że chcemy opisać losowy ruch bez podawania jawnego wzoru
+$X_t(\omega)$. Możemy zamiast tego ustalić, jak mają wyglądać
+rozkłady wszystkich wektorów
+$(X_{t_1},\ldots,X_{t_m})$. Nie każda dowolna lista rozkładów
+może jednak pochodzić od jednej rodziny zmiennych losowych.
+Jeżeli np. zadamy $\Prob(X_1=0)=1$, a jednocześnie
+$\Prob(X_1=1,X_2=0)=1$, otrzymamy sprzeczność.
+Rozkłady muszą dawać zgodne odpowiedzi na pytania o te same
+pomiarowe współrzędne.
+
+W rozdziale~\ref{ch:procesy} wykazaliśmy, że rzeczywiste
+rozkłady procesu spełniają relacje permutacji i marginalizacji.
+Teraz udowodnimy twierdzenie odwrotne. Jego zasadnicza trudność
+nie leży w sprawdzeniu skończenie wielu zmiennych, lecz w
+zbudowaniu miary na przestrzeni funkcji indeksowanych
+nieprzeliczalnym zbiorem chwil.
+
+\begin{definicja}[Zgodny układ rozkładów]
+Niech $T$ będzie niepustym zbiorem, a $E$ przestrzenią polską,
+tj. metryzowalną, zupełną i ośrodkową, z borelowskim
+$\sigma$-ciałem $\calB(E)$. Dla każdej skończonej
+\emph{listy} $\mathbf t=(t_1,\ldots,t_m)$ indeksów z $T$
+(niekoniecznie parami różnych) niech $\mu_{\mathbf t}$
+będzie miarą probabilistyczną na $E^m$.
+Rodzinę $(\mu_{\mathbf t})$ nazywamy \emph{zgodną}, jeżeli:
+\begin{enumerate}
+\item dla każdej permutacji $\pi$ indeksów $1,\ldots,m$,
+$\mu_{t_{\pi(1)},\ldots,t_{\pi(m)}}=(\Pi_\pi)_\#\mu_{t_1,\ldots,t_m}$;
+\item dla $k<m$ rzut $E^m\to E^k$ na pierwsze $k$ współrzędnych
+przenosi $\mu_{t_1,\ldots,t_m}$ w $\mu_{t_1,\ldots,t_k}$;
+\item jeżeli $t_i=t_j$, to $\mu_{t_1,\ldots,t_m}$ nadaje
+prawdopodobieństwo $1$ zbiorowi $\{x\in E^m:x_i=x_j\}$.
+\end{enumerate}
+Symbol $(f)_\#\mu$ oznacza miarę obrazową
+$((f)_\#\mu)(A)=\mu(f^{-1}(A))$.
+\end{definicja}
+
+Warunek dotyczący powtórzonych indeksów nie jest dodatkową
+``własnością niezależności''. Wyraża po prostu to, że
+$X_t$ oglądane dwa razy w tej samej chwili musi być tą samą
+zmienną. Równoważnie można zadawać rozkłady tylko dla
+skończonych \emph{zbiorów} czasów i wymagać zgodności
+względem wszystkich rzutowań; wtedy problem powtórzeń znika.
+
+\begin{lemat}[Algebra cylindrów]
+Niech $E\ne\varnothing$ będzie przestrzenią polską, a $T$
+niepustym zbiorem. Niech $\cal A$ będzie rodziną podzbiorów
+$E^T$ postaci $\pi_J^{-1}(B)$, gdzie
+$J\subseteq T$ jest skończony, $\pi_J:E^T\to E^J$
+jest rzutowaniem, a $B\in\calB(E^J)$.
+Wówczas $\cal A$ jest algebrą zbiorów i
+$\sigma(\cal A)=\calB(E)^{\otimes T}$.
+\end{lemat}
+\begin{proof}
+Zbiory $\varnothing,E^T$ należą do $\cal A$.
+Dopełnienie $\pi_J^{-1}(B)$ jest równe
+$\pi_J^{-1}(E^J\setminus B)$. Jeśli
+$A=\pi_J^{-1}(B)$, $A'=\pi_K^{-1}(B')$, to
+$A\cup A'$ jest cylindrem zależnym od skończonego zbioru
+$J\cup K$: jego baza jest sumą przeciwobrazów $B,B'$ przez
+odpowiednie rzuty $E^{J\cup K}\to E^J,E^K$.
+Dowodzi to domknięcia na skończone sumy i dopełnienia.
+Każdy cylinder jest mierzalny względem produktowego
+$\sigma$-ciała, a cylindry jednokoordynatowe generują
+to $\sigma$-ciało. Stąd równość.
+\end{proof}
+
+
+\begin{przyklad}[Dlaczego nie wystarczy zgodność pojedynczych rozkładów?]
+Niech $T=\{0,1\}$, $E=\{0,1\}$ i zażądajmy, aby
+$X_0$ oraz $X_1$ miały symetryczny rozkład Bernoulliego.
+Te wymagania dopuszczają zarówno niezależność
+($\Prob(X_0=X_1)=1/2$), jak i równość $X_0=X_1$ prawie
+na pewno. Trzeba więc wybrać także \emph{wspólne} prawo pary.
+Następnie ten wybór musi być zgodny z prawami trójek,
+czwórek itd. Twierdzenie Kołmogorowa mówi, że przy
+zgodności \emph{całej} rodziny problem jest rozwiązywalny;
+nie mówi natomiast niczego o gładkości lub ciągłości
+otrzymanych trajektorii.
+\end{przyklad}
+
+\begin{twierdzenie}[Twierdzenie Kołmogorowa o istnieniu procesu]
+\label{thm:kol-ext}
+Niech $T$ będzie dowolnym niepustym zbiorem, a $(E,d)$
+niepustą przestrzenią polską z borelowskim $\sigma$-ciałem.
+Niech dla każdej skończonej listy $\mathbf t=(t_1,\ldots,t_m)$
+indeksów z $T$ dana będzie miara probabilistyczna
+$\mu_{\mathbf t}$ na $E^m$, przy czym rodzina tych miar
+jest zgodna w sensie powyższej definicji.
+Wówczas istnieją przestrzeń probabilistyczna
+$(\Omega,\calF,\Prob)$ i proces
+$(X_t)_{t\in T}$ o stanach w $E$ takie, że
+\[
+\Law(X_{t_1},\ldots,X_{t_m})=\mu_{t_1,\ldots,t_m}
+\quad\text{dla wszystkich }m\ge1\text{ i }t_1,\ldots,t_m\in T.
+\]
+Można wybrać $\Omega=E^T$,
+$\calF=\calB(E)^{\otimes T}$ i $X_t(\omega)=\omega(t)$.
+Prawo procesu na tej przestrzeni jest jednoznacznie wyznaczone
+przez rodzinę $\mu_{\mathbf t}$.
+\end{twierdzenie}
+
+\begin{proof}
+\emph{Krok 1: miara na cylindrach.}
+Niech $\cal A$ będzie algebrą z poprzedniego lematu.
+Dla cylindra $A=\pi_J^{-1}(B)$ definiujemy
+$\mu_0(A)=\mu_J(B)$, gdzie dla skończonego $J$
+przez $\mu_J$ rozumiemy rozkład we współrzędnych $J$
+w dowolnej ustalonej kolejności. Relacje permutacji i
+marginalizacji dowodzą, że wynik nie zależy od kolejności
+ani od dołączenia sztucznych współrzędnych. W szczególności
+wartość $\mu_0(A)$ nie zależy od wybranej prezentacji
+cylindra: dwie prezentacje przenosimy na ich wspólny,
+skończony zbiór współrzędnych i korzystamy ze zgodności.
+Stąd $\mu_0(E^T)=1$ i $\mu_0$ jest skończenie addytywna:
+dla rozłącznych cylindrów $A,B$ wyrażamy oba na
+wspólnym skończonym zbiorze współrzędnych i stosujemy
+addytywność miary skończeniewymiarowej.
+
+\emph{Krok 2: dlaczego potrzebujemy ciągłości z góry.}
+Aby rozszerzyć $\mu_0$ na $\sigma(\cal A)$ za pomocą
+twierdzenia Carathéodory'ego, musimy pokazać przeliczalną
+addytywność $\mu_0$ na $\cal A$. W przypadku skończonej
+miary skończenie addytywnej wystarczy następujący warunek:
+\[
+A_n\in\cal A,\quad A_{n+1}\subseteq A_n,\quad
+\bigcap_{n\ge1}A_n=\varnothing
+\quad\Longrightarrow\quad \mu_0(A_n)\longrightarrow0.
+\tag{$*$}
+\]
+Rzeczywiście, jeżeli $A=\bigsqcup_{k\ge1}B_k$,
+przy $A,B_k\in\cal A$, to zbiory
+$R_n=A\setminus\bigcup_{k=1}^n B_k$ należą do $\cal A$,
+maleją do $\varnothing$, a skończona addytywność daje
+$\mu_0(A)=\sum_{k=1}^n\mu_0(B_k)+\mu_0(R_n)$.
+Przejście do granicy daje przeliczalną addytywność.
+
+\emph{Krok 3: dowód warunku $(*)$ przy użyciu zwartości.}
+Przypuśćmy, że $A_n\downarrow\varnothing$ i że
+$\mu_0(A_n)\not\to0$. Ponieważ wartości miar są
+nierosnące, istnieje $\varepsilon>0$ takie, że
+$\mu_0(A_n)\ge\varepsilon$ dla wszystkich $n$.
+Każdy $A_n$ zależy od pewnego skończonego zbioru
+współrzędnych $J_n\subseteq T$. Ich suma
+$S:=\bigcup_{n\ge1}J_n$ jest co najwyżej przeliczalna.
+Jeśli $S=\varnothing$, wszystkie cylindry $A_n$ są
+równe $\varnothing$ albo $E^T$, więc sprzeczność jest
+natychmiastowa. W przeciwnym razie wypiszmy elementy
+$S$ jako $s_1,s_2,\ldots$ (dla skończonego $S$
+lista kończy się po skończenie wielu wyrazach). Ponieważ rozkłady
+jednowymiarowe są miarami borelowskimi na przestrzeni
+polskiej, są ciasne: dla każdego $j$ istnieje niepusty
+zwarty $K_j\subseteq E$ taki, że
+\[
+\mu_{s_j}(E\setminus K_j)<\varepsilon2^{-j-3}.
+\tag{1}
+\]
+Dla każdego $n$ zapiszmy $A_n=\pi_{J_n}^{-1}(B_n)$.
+Regularność miary $\mu_{J_n}$ daje niepusty zwarty
+$C_n\subseteq B_n$ taki, że
+\[
+\mu_{J_n}(B_n\setminus C_n)<\varepsilon2^{-n-3}.
+\tag{2}
+\]
+Zbiory $C_n$ są niepuste, ponieważ
+$\mu_{J_n}(B_n)=\mu_0(A_n)\ge\varepsilon$.
+
+Ustalmy $N$ i niech $I_N=\bigcup_{n=1}^N J_n$.
+W skończeniewymiarowej przestrzeni $E^{I_N}$
+rozważmy jednoczesne warunki
+$\pi_{J_n}(x)\in C_n$ dla $1\le n\le N$
+oraz $x(s_j)\in K_j$ dla wszystkich $s_j\in I_N$.
+Ich wspólna miara pod $\mu_{I_N}$ jest co najmniej
+\[
+\begin{aligned}
+\mu_0(A_N)
+&-\sum_{n=1}^N \mu_0\big(A_n\setminus\pi_{J_n}^{-1}(C_n)\big)
+-\sum_{\{j:s_j\in I_N\}}\mu_{s_j}(E\setminus K_j)\\
+&>\varepsilon-\frac\varepsilon8-\frac\varepsilon8
+=\frac{3\varepsilon}{4}>0.
+\end{aligned}
+\tag{3}
+\]
+Użyliśmy tutaj $A_N\subseteq A_n$ dla $n\le N$ oraz
+nierówności na miarę sumy. Zatem istnieje wybór
+współrzędnych na $I_N$, spełniający wszystkie te warunki.
+
+Produkt $K:=\prod_{s_j\in S}K_j$ jest niepustą przestrzenią
+zwartą (dla skończonego $S$ jest to produkt skończony).
+Dla każdego $n$ zbiór
+$F_n:=\{x\in K:\pi_{J_n}(x)\in C_n\}$
+jest domknięty w $K$, ponieważ $C_n$ jest zwarty,
+więc domknięty w $E^{J_n}$. Oszacowanie (3) pokazuje,
+że dla każdego $N$ przecięcie $F_1\cap\cdots\cap F_N$
+nie jest puste: znalezione wartości na skończonym $I_N$
+można dopełnić dowolnymi punktami $K_j$ dla
+pozostałych współrzędnych. Z własności zwartości
+i skończonych przecięć dostajemy
+$\bigcap_{n\ge1}F_n\ne\varnothing$.
+Wybierzmy $x$ z tego przecięcia. Wówczas
+$\pi_{J_n}(x)\in C_n\subseteq B_n$ dla każdego $n$.
+Rozszerzając $x$ do elementu $E^T$ poprzez wybór
+stałego punktu $e_0\in E$ poza $S$, otrzymujemy
+$\omega\in\bigcap_{n\ge1}A_n$, sprzeczność.
+Wobec tego warunek $(*)$ jest spełniony.
+
+\emph{Krok 4: rozszerzenie i proces kanoniczny.}
+Na mocy kroku 2 i twierdzenia Carathéodory'ego istnieje
+miara probabilistyczna $\Prob$ na
+$\calF=\sigma(\cal A)=\calB(E)^{\otimes T}$,
+której ograniczenie do $\cal A$ jest równe $\mu_0$.
+Odwzorowania współrzędne $X_t(\omega)=\omega(t)$ są
+mierzalne z definicji produktowego $\sigma$-ciała,
+a ich rozkłady skończeniewymiarowe są zadanymi
+$\mu_{\mathbf t}$ z definicji $\mu_0$.
+Jednoznaczność prawa wynika z jednoznaczności miar,
+które zgadzają się na generującej algebrze cylindrów.
+\end{proof}
+
+\begin{uwaga}[Rola założenia o przestrzeni polskiej]
+Założenie polskości $E$ pojawia się w kroku 3: gwarantuje,
+że miary skończeniewymiarowe można od wewnątrz
+przybliżać zbiorami zwartymi, a marginesy są ciasne.
+Bez odpowiednich założeń o przestrzeni stanów
+rozszerzenie zgodnej rodziny rozkładów może zawieść.
+Twierdzenie nie daje jeszcze ciągłych, ani nawet
+mierzalnych względem wspólnej pary $(t,\omega)$,
+trajektorii: otrzymaliśmy tylko mierzalność każdej
+współrzędnej $X_t$ z osobna.
+\end{uwaga}
+
+\section{Przykłady konstrukcji z zadanych rozkładów}
+\begin{przyklad}[Nieskończona rodzina niezależnych zmiennych]
+Niech $T$ będzie dowolnym zbiorem, a $\nu$ miarą
+probabilistyczną na przestrzeni polskiej $E$.
+Dla $t_1,\ldots,t_m$ parami różnych zadajmy
+$\mu_{t_1,\ldots,t_m}=\nu^{\otimes m}$,
+a dla powtórzonych indeksów utożsammy odpowiednie
+współrzędne. Jest to rodzina zgodna, ponieważ
+permutacja współrzędnych nie zmienia miary produktowej,
+a rzut usuwa niepotrzebne czynniki.
+Twierdzenie Kołmogorowa tworzy proces o niezależnych
+$X_t$ i identycznych rozkładach $\nu$.
+
+Jeżeli $T=[0,1]$ i $\nu$ jest rozkładem Bernoulliego z
+parametrem $1/2$, to dla różnych $s,t$
+$\Prob(|X_t-X_s|=1)=1/2$. Prawa strona nie dąży do
+zera przy $s\to t$. Taki proces nie jest stochastycznie
+ciągły i nie może mieć ciągłej modyfikacji. Samo
+istnienie procesu jest więc znacznie słabsze niż
+regularność jego trajektorii.
+\end{przyklad}
+
+\begin{przyklad}[Proces gaussowski z zadanej kowariancji]
+Niech $T$ będzie zbiorem, $m:T\to\R$ dowolną funkcją,
+a $K:T\times T\to\R$ funkcją symetryczną taką, że
+dla wszystkich $k\ge1$, $t_1,\ldots,t_k\in T$
+i $a_1,\ldots,a_k\in\R$ zachodzi
+$\sum_{i,j=1}^k a_ia_jK(t_i,t_j)\ge0$.
+Dla listy czasów $t_1,\ldots,t_k$ zadawajmy
+$\mu_{t_1,\ldots,t_k}=\Normal(m_{\mathbf t},K_{\mathbf t})$,
+gdzie $m_{\mathbf t}=(m(t_i))_{i=1}^k$,
+$K_{\mathbf t}=[K(t_i,t_j)]_{i,j=1}^k$.
+Nawet gdy $K_{\mathbf t}$ jest osobliwa, rozkład normalny
+istnieje: można zapisać $m_{\mathbf t}+AZ$, gdzie
+$Z\sim\Normal(0,I_k)$ i $AA^\top=K_{\mathbf t}$.
+Rzut i permutacja wektora gaussowskiego zachowują jego
+gaussowskość i odpowiednio przekształcają średnią
+oraz kowariancję. Powtórzone czasy dają różnicę o
+zerowej wariancji, więc odpowiadające im współrzędne
+są równe prawie na pewno. Zatem rodzina jest zgodna
+i istnieje proces gaussowski o średniej $m$ i kowariancji $K$.
+\end{przyklad}
+
+
+\begin{przyklad}[Konstrukcja łańcucha Markowa z macierzy przejścia]
+Niech $E=\{0,1\}$, $T=\N_0$, $\mu=(\mu_0,\mu_1)$
+będzie rozkładem początkowym, a
+$P=(p_{ij})_{i,j\in E}$ macierzą stochastyczną:
+$p_{ij}\ge0$ i $\sum_{j\in E}p_{ij}=1$ dla każdego $i$.
+Zadajmy dla $n\ge0$ i $x_0,\ldots,x_n\in E$
+\[
+\mu_{0,1,\ldots,n}(\{(x_0,\ldots,x_n)\})
+:=\mu_{x_0}\prod_{k=1}^n p_{x_{k-1}x_k}.
+\tag{7}
+\]
+Sumując po $x_n$ i korzystając z
+$\sum_{x_n\in E}p_{x_{n-1}x_n}=1$, widzimy,
+że ostatnia współrzędna może zostać usunięta
+bez zmiany prawa wcześniejszych współrzędnych.
+Gdy pomijamy chwilę pośrednią $k$, pojawia się suma
+$\sum_j p_{ij}p_{j\ell}=(P^2)_{i\ell}$,
+a po pominięciu większej liczby chwil
+odpowiednie potęgi $P$.
+Dokładniej, dla $0\le t_1<\cdots<t_m$ i
+$x_1,\ldots,x_m\in E$ określamy
+\[
+\mu_{t_1,\ldots,t_m}(\{(x_1,\ldots,x_m)\})
+=(\mu P^{t_1})_{x_1}
+\prod_{k=2}^m (P^{t_k-t_{k-1}})_{x_{k-1}x_k}.
+\]
+Równość $P^{a+b}=P^aP^b$ pokazuje zgodność
+z dowolnymi rzutowaniami; powtórzenie chwili
+oznacza z definicji powtórzenie tej samej współrzędnej.
+Twierdzenie~\ref{thm:kol-ext} daje więc proces
+$(X_n)_{n\ge0}$ o tych rozkładach.
+
+Dla zdarzenia o dodatnim prawdopodobieństwie
+$\{X_0=x_0,\ldots,X_n=x_n\}$ obliczamy z (7)
+\[
+\begin{aligned}
+&\Prob(X_{n+1}=j\mid X_0=x_0,\ldots,X_n=x_n)\\
+&\quad=\frac{\mu_{x_0}\,p_{x_0x_1}\cdots
+p_{x_{n-1}x_n}\,p_{x_nj}}
+{\mu_{x_0}\,p_{x_0x_1}\cdots p_{x_{n-1}x_n}}
+=p_{x_nj}.
+\end{aligned}
+\]
+Tak otrzymujemy własność Markowa, a nie tylko
+jej formalną deklarację.
+
+Dla konkretnego modelu weźmy
+$\mu=(1,0)$ i
+$P=\begin{pmatrix}3/4&1/4\\1/2&1/2\end{pmatrix}$.
+Wtedy $\Prob(X_0=0,X_1=0,X_2=1)
+=1\cdot(3/4)\cdot(1/4)=3/16$, podczas gdy
+$\Prob(X_2=1)=(P^2)_{01}
+=3/4\cdot1/4+1/4\cdot1/2=5/16$.
+Różnica polega na tym, że w drugim pytaniu
+sumujemy po wszystkich możliwych stanach w chwili $1$.
+\end{przyklad}
+
+\section{Kiedy proces może mieć trajektorie ciągłe?}
+Rozkłady skończeniewymiarowe odpowiadają na pytania o
+skończoną liczbę chwil, ale własność ciągłości wymaga
+jednoczesnej kontroli \emph{nieskończenie wielu} przyrostów.
+Narzędziem będzie oszacowanie momentów przyrostów
+$\E\norm{X_t-X_s}^p$ o wykładniku potęgowym ściśle
+większym niż $1$ w jednowymiarowym parametrze czasu.
+
+\begin{definicja}[Ciągłość Höldera]
+Niech $T>0$ oraz $\gamma>0$.
+Funkcję $f:[0,T]\to\R^d$ nazywamy $\gamma$-h"olderowską,
+jeśli istnieje stała $C_f<\infty$ taka, że
+$\norm{f(t)-f(s)}\le C_f\abs{t-s}^{\gamma}$
+dla wszystkich $s,t\in[0,T]$.
+Gdy $\gamma>1$, funkcja o tej własności musi być stała:
+dzieląc przedział $[s,t]$ na $n$ równych części,
+to ten sam warunek daje
+$\norm{f(t)-f(s)}\le C_f\abs{t-s}^{\gamma}n^{1-\gamma}\to0$.
+\end{definicja}
+
+\begin{lemat}[Kontrola przyrostów na siatkach dyadycznych]
+\label{lem:dyadyczny}
+Niech $T>0$, $d\ge1$ i $0<\gamma<\infty$.
+Niech $D_n:=\{kT2^{-n}:k=0,\ldots,2^n\}$,
+$D:=\bigcup_{n\ge0}D_n$. Jeżeli $f:D\to\R^d$
+spełnia dla pewnego $N\ge0$
+\[
+\norm{f((k+1)T2^{-n})-f(kT2^{-n})}
+\le 2^{-n\gamma}
+\quad(n\ge N,\ 0\le k<2^n),
+\]
+to $f$ jest jednostajnie ciągła na $D$,
+przedłuża się jednoznacznie do ciągłej funkcji
+$\bar f:[0,T]\to\R^d$, a dla pewnej stałej
+$C_{\gamma,T,N,f}<\infty$ zachodzi
+$\norm{\bar f(t)-\bar f(s)}\le C_{\gamma,T,N,f}|t-s|^\gamma$.
+\end{lemat}
+\begin{proof}
+Dla $u\in D$ i $n\ge N$ oznaczmy przez
+$u_n=T2^{-n}\lfloor 2^n u/T\rfloor$ lewy koniec
+komórki siatki $D_n$, w której leży $u$.
+Dla dostatecznie dużego $m$ mamy $u_m=u$,
+a kolejne przybliżenia $u_j,u_{j+1}$ są albo równe,
+albo sąsiadują na siatce $D_{j+1}$. Z założenia
+\[
+\norm{f(u)-f(u_n)}
+\le\sum_{j=n}^{m-1}2^{-(j+1)\gamma}
+\le\frac{2^{-(n+1)\gamma}}{1-2^{-\gamma}}.
+\tag{4}
+\]
+Jeśli $u,v\in D$ i $\abs{u-v}\le T2^{-n}$,
+to ich lewostronne przybliżenia $u_n,v_n$
+są identyczne lub sąsiadują na siatce $D_n$.
+Wraz z (4) otrzymujemy
+\[
+\norm{f(u)-f(v)}\le
+\left(1+\frac{2^{1-\gamma}}{1-2^{-\gamma}}\right)
+2^{-n\gamma}.
+\tag{5}
+\]
+Gdy $0<\abs{u-v}\le T2^{-N}$, wybierzmy $n\ge N$
+tak, aby $T2^{-(n+1)}<\abs{u-v}\le T2^{-n}$.
+Stąd $2^{-n\gamma}<(2\abs{u-v}/T)^\gamma$.
+Z (5) dostajemy oszacowanie h"olderowskie na parach
+wystarczająco bliskich. Dla par odległych o co najmniej
+$T2^{-N}$ wykorzystujemy ograniczoność funkcji $f$ na
+$D$, wynikającą z (4) oraz skończoności siatki $D_N$.
+W ten sposób oszacowanie obowiązuje dla wszystkich par
+w $D$ z pewną skończoną stałą. Ponieważ $\R^d$ jest
+zupełna, $f$ ma jednoznaczne ciągłe przedłużenie
+na domknięcie $D$, tj. na $[0,T]$; przejście do
+odpowiednich granic przenosi oszacowanie na wszystkie $s,t$.
+\end{proof}
+
+\begin{twierdzenie}[Kryterium ciągłości Kołmogorowa]
+\label{thm:kol-cont}
+Niech $T>0$, $d\ge1$ i niech
+$X=(X_t)_{t\in[0,T]}$ będzie procesem o wartościach w $\R^d$
+na przestrzeni probabilistycznej $(\Omega,\calF,\Prob)$.
+Załóżmy, że istnieją stałe $p>0$, $\beta>0$ i $C<\infty$
+takie, że dla wszystkich $s,t\in[0,T]$ zachodzi
+\[
+\E\norm{X_t-X_s}^{p}\le C\abs{t-s}^{1+\beta}.
+\tag{6}
+\]
+Wówczas istnieje modyfikacja $\widetilde X$ procesu $X$,
+której trajektorie są ciągłe. Co więcej, można wybrać
+$\widetilde X$ tak, że z prawdopodobieństwem $1$ jej
+trajektorie są $\gamma$-h"olderowskie dla
+\emph{każdego} $0<\gamma<\beta/p$.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: duże przyrosty na pojedynczej siatce.}
+Ustalmy $0<\gamma_0<\beta/p$ i siatki
+$D_n=\{kT2^{-n}:0\le k\le2^n\}$.
+Niech $A_n$ będzie zdarzeniem, że istnieje sąsiednia
+para punktów $D_n$, dla której przyrost przekracza
+$2^{-n\gamma_0}$. Z nierówności Markowa, (6) i oszacowania
+miary sumy mamy
+\[
+\begin{aligned}
+\Prob(A_n)
+&\le\sum_{k=0}^{2^n-1}
+\frac{\E\norm{X_{(k+1)T2^{-n}}-X_{kT2^{-n}}}^{p}}
+{2^{-np\gamma_0}}\\
+&\le C T^{1+\beta}\,2^{-n(\beta-p\gamma_0)}.
+\end{aligned}
+\]
+Ponieważ $\beta-p\gamma_0>0$, szereg
+$\sum_{n\ge0}\Prob(A_n)$ jest zbieżny.
+
+\emph{Krok 2: kontrola wszystkich dostatecznie drobnych siatek.}
+Z pierwszego lematu Borela--Cantellego wynika, że z
+prawdopodobieństwem $1$ zachodzi tylko skończenie wiele
+zdarzeń $A_n$. Zatem na pewnym mierzalnym zbiorze
+$\Omega_0$ o mierze $1$, dla każdego $\omega\in\Omega_0$
+istnieje liczba całkowita $N(\omega)$ taka, że
+wszystkie przyrosty sąsiednie na każdej siatce
+$D_n$, $n\ge N(\omega)$, mają normę nie większą niż
+$2^{-n\gamma_0}$. Dla takiego $\omega$ lemat
+\ref{lem:dyadyczny} zastosowany do funkcji
+$t\mapsto X_t(\omega)$ na $D:=\bigcup_nD_n$
+daje jednoznaczne przedłużenie
+$t\mapsto\widetilde X_t(\omega)$, które jest
+$\gamma_0$-h"olderowskie.
+Dla $\omega\notin\Omega_0$ ustawiamy
+$\widetilde X_t(\omega)=0$ dla wszystkich $t$.
+Przy ustalonym $t$ wybierzmy deterministyczny ciąg
+$t_m\in D$ z $t_m\to t$. Na $\Omega_0$ mamy
+$\widetilde X_t=\lim_m X_{t_m}$, a poza $\Omega_0$
+zdefiniowaliśmy wartość stałą. Jest to zmienna mierzalna
+jako granica punktowa zmiennych mierzalnych po
+odpowiednim rozbiciu na zdarzenie $\Omega_0$ i jego dopełnienie.
+
+\emph{Krok 3: przedłużenie jest modyfikacją.}
+Dla ustalonego $t$ z (6) wynika
+$\E\norm{X_{t_m}-X_t}^{p}\le C|t_m-t|^{1+\beta}\to0$.
+Nierówność Markowa daje zbieżność $X_{t_m}\to X_t$
+w prawdopodobieństwie, również gdy $0<p<1$.
+Z drugiej strony $X_{t_m}\to\widetilde X_t$
+prawie na pewno na $\Omega_0$, zatem także w
+prawdopodobieństwie. Jednoznaczność granicy w
+prawdopodobieństwie daje $\Prob(\widetilde X_t=X_t)=1$.
+Ważne, że argument dotyczy osobno każdej ustalonej chwili;
+nie zakładamy z góry nierozróżnialności.
+
+\emph{Krok 4: wszystkie wykładniki mniejsze od $\beta/p$.}
+Wybierzmy rosnący ciąg liczb
+$0<\gamma_j<\beta/p$ taki, że
+$\gamma_j\uparrow\beta/p$. Dla każdego $j$
+powtórzmy kroki 1--2 z wykładnikiem $\gamma_j$.
+Każdy z tych argumentów daje zbiór pełnej miary,
+na którym ograniczenie procesu do \emph{tego samego}
+zbioru $D$ ma ciągłe przedłużenie.
+Przecinając te przeliczalnie liczne zbiory i używając
+jednoznaczności ciągłego przedłużenia z $D$,
+dostajemy jedną modyfikację, której trajektorie są
+$\gamma_j$-h"olderowskie dla wszystkich $j$.
+Jeśli $0<\gamma<\beta/p$, wybieramy $j$ z
+$\gamma<\gamma_j$ i wykorzystujemy
+$|t-s|^{\gamma_j}\le T^{\gamma_j-\gamma}|t-s|^\gamma$.
+To kończy dowód.
+\end{proof}
+
+\begin{uwaga}[Znaczenie wykładnika $1+\beta$]
+Przy siatce dyadycznej liczba sąsiednich par jest rzędu
+$2^n$, czyli rośnie odwrotnie proporcjonalnie do długości
+kroku. Pojedynczy przyrost ma moment rzędu
+$2^{-n(1+\beta)}$. Po zsumowaniu po wszystkich parach
+zyskujemy więc czynnik $2^{-n\beta}$.
+Właśnie ta \emph{nadwyżka wykładnika ponad $1$}
+pozwala zastosować Borela--Cantellego i otrzymać
+jedno wspólne zdarzenie pełnej miary, kontrolujące
+nieskończenie wiele chwil.
+\end{uwaga}
+
+\begin{przyklad}[Jak wybrać moment w kryterium Kołmogorowa?]
+Załóżmy, że dla pewnego $p=4$ i $s,t\in[0,T]$
+zachodzi $\E|X_t-X_s|^4\le C|t-s|^2$.
+W zapisie twierdzenia mamy $1+\beta=2$, zatem $\beta=1$
+i $\beta/p=1/4$. Otrzymujemy modyfikację o trajektoriach
+h"olderowskich każdego rzędu $\gamma<1/4$.
+Nie twierdzimy, że wykładnik $1/4$ jest optymalny:
+może się okazać, że dysponujemy mocniejszymi
+oszacowaniami dla wyższych momentów, prowadzącymi do
+większych wykładników.
+\end{przyklad}
+
+\section{Konstrukcja procesu Wienera: pierwszy kontakt}
+Rozdziały poświęcone ruchowi Browna i mierze Wienera
+rozwiną tę konstrukcję, ale teraz możemy ją już wykonać
+matematycznie poprawnie, korzystając z dwóch udowodnionych
+twierdzeń. Zauważmy, że nie potrzebujemy żadnej całki
+stochastycznej.
+
+\begin{twierdzenie}[Istnienie standardowego procesu Wienera]
+\label{thm:wiener-exists}
+Istnieją przestrzeń probabilistyczna i proces rzeczywisty
+$W=(W_t)_{t\ge0}$ takie, że:
+\begin{enumerate}
+\item $W_0=0$ prawie na pewno;
+\item $W$ ma niezależne przyrosty;
+\item dla $0\le s<t$ zachodzi
+$W_t-W_s\sim\Normal(0,t-s)$;
+\item trajektorie $t\mapsto W_t$ są ciągłe prawie na pewno.
+\end{enumerate}
+Można ponadto wybrać wspólny zbiór pełnej miary,
+na którym trajektorie są $\gamma$-h"olderowskie
+na każdym przedziale $[0,T]$ dla każdego $\gamma<1/2$.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: zgodne rozkłady gaussowskie.}
+Dla $s,t\ge0$ niech $K(s,t)=\min(s,t)$.
+Jest to funkcja dodatnio półokreślona, ponieważ
+\[
+\sum_{i,j=1}^m a_ia_j\min(t_i,t_j)
+=\int_0^\infty
+\left(\sum_{i=1}^m a_i\ind{[0,t_i]}(u)\right)^2\dd u\ge0.
+\]
+Z przykładu o procesach gaussowskich i twierdzenia
+\ref{thm:kol-ext} istnieje proces gaussowski $X$
+o zerowej średniej i kowariancji $K$.
+Ponieważ $K(0,0)=0$, $X_0=0$ prawie na pewno.
+
+\emph{Krok 2: niezależne przyrosty i ich rozkłady.}
+Dla $0\le s<t$ wariancja przyrostu wynosi
+\[
+\Var(X_t-X_s)=K(t,t)+K(s,s)-2K(s,t)=t-s.
+\]
+Jest to zmienna gaussowska o średniej $0$.
+Dla dwóch rozłącznych przedziałów $[a,b]$ i $[c,d]$,
+gdzie $a<b\le c<d$, obliczamy
+\[
+\Cov(X_b-X_a,X_d-X_c)
+=K(b,d)-K(b,c)-K(a,d)+K(a,c)
+=b-b-a+a=0.
+\]
+Wektor wszystkich przyrostów jest gaussowski, ponieważ
+jest liniowym obrazem skończonego wektora gaussowskiego.
+Jego macierz kowariancji jest diagonalna dla
+parami rozłącznych przedziałów, więc te przyrosty są
+\emph{łącznie niezależne}; sama parami zerowa kowariancja
+nie wystarczyłaby dla dowolnych rozkładów, lecz wystarcza
+dla wektora gaussowskiego.
+
+\emph{Krok 3: ciągła modyfikacja.}
+Jeśli $Z\sim\Normal(0,1)$, to dla każdego $p>0$
+stała $c_p:=\E|Z|^p$ jest skończona i
+\[
+\E|X_t-X_s|^p=c_p|t-s|^{p/2}.
+\]
+Dla $p>2$ wykładnik $p/2$ jest większy niż $1$.
+Kryterium \ref{thm:kol-cont} na $[0,T]$ daje
+ciągłą modyfikację o trajektoriach h"olderowskich
+każdego rzędu $\gamma<1/2-1/p$.
+Aby otrzymać jeden proces na $[0,\infty)$, stosujemy
+konstrukcję na przedziałach $[0,n]$, $n\in\N$.
+Na wspólnym zbiorze pełnej miary przedłużenia
+zgadzają się na wspólnych punktach wymiernych,
+bo wszystkie są modyfikacjami tego samego $X$.
+Z ciągłości zgadzają się więc na całych częściach wspólnych
+przedziałów. Sklejamy je do jednej ciągłej modyfikacji $W$.
+
+\emph{Krok 4: zachowanie rozkładów i wykładniki.}
+Modyfikacja nie zmienia żadnego rozkładu
+skończeniewymiarowego: dla skończonej liczby chwil
+przecięcie zbiorów, na których $W_t=X_t$, ma miarę $1$.
+Stąd $W$ zachowuje wszystkie własności z kroków 1--2.
+Dla każdego $p>2$ można zastosować kryterium ciągłości
+na każdym $[0,n]$ i wziąć przeliczalny ciąg
+$p_k\to\infty$. Po przecięciu zbiorów pełnej miary
+i użyciu jednoznaczności ciągłych modyfikacji dostajemy
+$\gamma$-h"olderowskość dla każdego $\gamma<1/2$.
+\end{proof}
+
+\begin{uwaga}[Co dokładnie skonstruowaliśmy?]
+Proces Wienera jest tutaj \emph{wnioskiem} z twierdzenia
+o istnieniu rozkładów i kryterium ciągłości.
+Jego pełną teorię -- zasadę odbicia, czasy trafienia,
+własność Markowa, nieróżniczkowalność, wariację
+kwadratową, most Browna i miarę Wienera --
+przedstawimy w kolejnych rozdziałach tomu II.
+Żadna z tych dodatkowych własności nie została
+jeszcze użyta w konstrukcji.
+\end{uwaga}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex,scale=1]
+\draw[->] (0,0)--(10.4,0) node[right] {$t$};
+\draw[->] (0,-1.7)--(0,1.9) node[above] {$W_t$};
+\draw[gray!40,step=0.5] (0,-1.5) grid (10,1.5);
+\draw[very thick,blue!65!black]
+(0,0)--(0.45,0.35)--(0.85,0.06)--(1.1,0.43)--(1.45,0.11)--
+(1.8,0.57)--(2.15,0.30)--(2.35,0.74)--(2.65,0.28)--(3,0.46)--
+(3.3,-0.05)--(3.62,0.37)--(3.85,0.04)--(4.1,-0.50)--(4.32,-0.22)--
+(4.58,-0.84)--(4.82,-0.50)--(5.10,-0.95)--(5.34,-0.63)--(5.62,-1.12)--
+(5.88,-0.61)--(6.12,-0.74)--(6.36,-0.25)--(6.60,-0.55)--(6.92,0.05)--
+(7.20,-0.30)--(7.46,0.19)--(7.74,-0.12)--(8.02,0.30)--(8.28,0.02)--
+(8.54,0.42)--(8.81,0.05)--(9.1,0.53)--(9.42,0.31)--(9.75,0.81);
+\end{tikzpicture}
+\par\smallskip\small Poglądowa łamana, a nie numerycznie wygenerowana realizacja procesu Wienera.
+\end{center}
+
+\section{Zadanie rozwiązane: dlaczego ciągłość wymaga osobnego dowodu?}
+\begin{zadanie}[Proces o jednym losowym skoku]
+Niech $U\sim\operatorname{U}([0,1])$ i
+$X_t=\ind{\{U\le t\}}$ dla $t\in[0,1]$.
+\emph{(a)} Obliczyć $\Prob(X_s=0,X_t=1)$ dla $0\le s<t\le1$.
+\emph{(b)} Wykazać stochastyczną ciągłość.
+\emph{(c)} Sprawdzić, czy kryterium Kołmogorowa może
+zostać zastosowane do procesu $X$.
+\emph{(d)} Ustalić, czy istnieje ciągła modyfikacja.
+
+\emph{Rozwiązanie.}
+(a) Zdarzenie $\{X_s=0,X_t=1\}$ jest dokładnie
+$\{s<U\le t\}$, a zatem ma prawdopodobieństwo $t-s$.
+Podobnie $\Prob(X_s=1,X_t=0)=0$, co odzwierciedla
+niemalejące trajektorie.
+
+(b) Dla $s<t$ mamy $|X_t-X_s|\in\{0,1\}$ i
+$\Prob(|X_t-X_s|=1)=t-s$. W konsekwencji dla każdego
+$0<\varepsilon<1$ zachodzi
+$\Prob(|X_t-X_s|>\varepsilon)=|t-s|\to0$.
+Dla $\varepsilon\ge1$ prawdopodobieństwo wynosi $0$.
+To dowodzi ciągłości stochastycznej.
+
+(c) Dla każdego $p>0$ zachodzi
+$\E|X_t-X_s|^p=|t-s|$, ponieważ zmienna
+$|X_t-X_s|$ przyjmuje tylko wartości $0,1$.
+Nie istnieją więc $C<\infty$ i $\beta>0$ takie, że
+$|t-s|\le C|t-s|^{1+\beta}$ dla wszystkich $s,t$:
+dzieląc przez $|t-s|>0$ i posyłając $t\to s$,
+dostalibyśmy $1\le0$. Założenie kryterium
+Kołmogorowa nie jest spełnione.
+
+(d) Dla każdej realizacji z $U\in(0,1)$ funkcja
+$t\mapsto X_t$ ma skok. Sam ten fakt nie wystarcza,
+by odrzucić możliwość \emph{innej} modyfikacji.
+Jednak każda modyfikacja musi zgadzać się z $X$
+we wszystkich chwilach wymiernych poza jednym zbiorem
+zerowym. Po obu stronach $U$ wartości w chwilach
+wymiernych są odpowiednio równe $0$ i $1$; nie
+mogą więc być wartościami funkcji ciągłej.
+Ciągła modyfikacja nie istnieje.
+\end{zadanie}
+

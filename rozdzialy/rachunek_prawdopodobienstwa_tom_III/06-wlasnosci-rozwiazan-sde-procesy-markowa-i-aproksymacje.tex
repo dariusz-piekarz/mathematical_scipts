@@ -1,0 +1,753 @@
+\chapter{Własności rozwiązań SDE, procesy Markowa i aproksymacje}
+\label{ch:sde-properties}
+\paragraph{Odsyłacze międzytomowe.} Estymację parametrów procesów zależnych i dobór modeli omawia tom IV, rozdziały~\ref{IV-ch:time-series} i~\ref{IV-ch:model-selection}.
+
+
+\section{Od równania do ewolucji prawdopodobieństwa}
+W poprzednim rozdziale skonstruowaliśmy proces $X$ na tej
+samej przestrzeni co zadany proces Wienera. Chcemy teraz
+zrozumieć jego \emph{rozkład} i sposób, w jaki zależy od
+warunku początkowego. W tym celu potrzebujemy dwóch
+perspektyw. Pierwsza śledzi trajektorie z użyciem wspólnego
+szumu; druga opisuje ewolucję wartości oczekiwanych
+funkcji testowych. Ich punktem wspólnym jest wzór Itô.
+
+Wszystkie twierdzenia tej sekcji dotyczą rozwiązania
+\[
+X_t^x=x+\int_0^t b(X_s^x)\,\dd s
++\int_0^t\sigma(X_s^x)\,\dd W_s,\qquad t\ge0,
+\tag{6.1}\label{eq:timehom-sde}
+\]
+gdzie $b:\R^d\to\R^d$, $\sigma:\R^d\to\R^{d\times m}$
+są globalnie Lipschitzowskie, a $W$ jest $m$-wymiarowym
+procesem Wienera względem filtracji spełniającej warunki
+zwykłe. Na każdym skończonym przedziale proces jest
+skonstruowany przez twierdzenie \ref{th:sde-global};
+jego rozszerzenia na rosnące przedziały są zgodne
+dzięki jednoznaczności ścieżkowej.
+
+\section{Własność Markowa wynikająca z jednoznaczności silnej}
+\begin{definicja}[Półgrupa przejścia]
+Dla $t\ge0$, $x\in\R^d$ i ograniczonej funkcji
+borelowskiej $f:\R^d\to\R$ oznaczamy
+\[
+P_tf(x)=\E[f(X_t^x)],\qquad
+P_t(x,A)=\Prob(X_t^x\in A),\quad A\in\calB(\R^d).
+\tag{6.2}\label{eq:sde-semigroup}
+\]
+Wartości te nie zależą od konkretnej przestrzeni
+probabilistycznej, na której skonstruowano rozwiązanie:
+rozwiązania otrzymane metodą Picarda z identycznych
+danych mają te same rozkłady.
+\end{definicja}
+
+\begin{lemat}[Zależność rozkładu od warunku początkowego]
+\label{lem:sde-kernel}
+Dla każdego $t\ge0$ funkcja $x\mapsto P_tf(x)$
+jest ciągła, jeżeli $f:\R^d\to\R$ jest ograniczona
+i ciągła. Ponadto dla każdej ograniczonej funkcji
+borelowskiej $f$ odwzorowanie $x\mapsto P_tf(x)$
+jest borelowskie.
+\end{lemat}
+\begin{proof}
+Niech $x_n\to x$ i sprzęgnijmy rozwiązania
+$X^{x_n},X^x$ przez ten sam proces $W$.
+Z twierdzenia \ref{th:sde-stability} otrzymujemy
+$\E\sup_{s\le t}\norm{X_s^{x_n}-X_s^x}^2\to0$.
+Stąd $X_t^{x_n}\to X_t^x$ według prawdopodobieństwa.
+Jeśli $f$ jest ograniczona i ciągła, to
+$f(X_t^{x_n})\to f(X_t^x)$ według prawdopodobieństwa,
+a z ograniczoności wynika zbieżność wartości oczekiwanych.
+Dla ogólnej funkcji borelowskiej rozpatrujemy klasę
+ograniczonych funkcji $f$, dla których $P_tf$ jest
+borelowska. Zawiera ona ograniczone funkcje ciągłe;
+pozostaje też zamknięta na ograniczone granice punktowe,
+ponieważ zbieżność zdominowana działa dla każdej
+ustalonej wartości $x$. Ograniczone funkcje ciągłe
+wyznaczają borelowskie $\sigma$-ciało na $\R^d$.
+Twierdzenie o klasie monotonicznej, zastosowane do
+funkcji, daje zatem wszystkie ograniczone funkcje
+borelowskie. Jest to zarazem uzasadnienie, że
+$P_t(x,A)$ jest jądrem probabilistycznym, a nie
+tylko formalnym symbolem.
+\end{proof}
+
+\begin{twierdzenie}[Własność Markowa i równania Chapmana--Kołmogorowa]
+\label{th:sde-markov}
+Niech $X$ będzie rozwiązaniem \eqref{eq:timehom-sde}
+z $\calF_0$-mierzalnym $X_0\in L^2$, a $W$ procesem
+Wienera względem tej filtracji. Wówczas dla dowolnych
+$s,t\ge0$ i ograniczonej funkcji borelowskiej $f$
+\[
+\E[f(X_{s+t})\mid\calF_s]=P_tf(X_s)
+\quad\text{prawie na pewno}.
+\tag{6.3}\label{eq:sde-markov}
+\]
+W szczególności $P_0f=f$ i $P_sP_tf=P_{s+t}f$.
+Własność ta dotyczy \emph{całej przeszłości} zawartej
+w $\calF_s$, a nie tylko pojedynczej zmiennej $X_s$.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $s$ i rozważmy szum przesunięty
+$\widehat W_u=W_{s+u}-W_s$. Jest on procesem Wienera
+niezależnym od $\calF_s$. Na przedziale $[s,s+t]$
+proces $Z_u=X_{s+u}$ spełnia równanie
+\[
+Z_u=X_s+\int_0^u b(Z_v)\,\dd v
++\int_0^u\sigma(Z_v)\,\dd\widehat W_v.
+\]
+Porównajmy go z iteracjami Picarda uruchomionymi
+w chwili $s$: $Z^{(0)}_u=X_s$ i
+$Z^{(n+1)}_u=X_s+\int_0^u b(Z_v^{(n)})\,\dd v
++\int_0^u\sigma(Z_v^{(n)})\,\dd\widehat W_v$.
+Dla deterministycznego $x$ analogiczne iteracje
+zaczynają się w $x$ i korzystają wyłącznie z
+$\widehat W$. Dla dowolnej ograniczonej funkcji
+borelowskiej $f$ wartość warunkowa
+$\E[f(Z_t^{(n)})\mid\calF_s]$ zależy wyłącznie od
+$X_s$: w kroku indukcyjnym korzystamy z niezależności
+całego procesu $\widehat W$ od $\calF_s$ oraz z
+mierzalności iteracji względem $X_s$ i $\widehat W$.
+Dokładniej, dla skończenie wielu prostych przybliżeń
+całek Itô jest to zwykła własność warunkowania
+funkcji dwóch niezależnych zmiennych losowych;
+przejście do granicy w $L^2$ uzasadnia tę samą
+własność dla iteracji Picarda.
+
+Z twierdzenia \ref{th:sde-global} iteracje zbiegają do
+$Z$ w $L^2(\Omega;C([0,t];\R^d))$.
+Dla ograniczonego ciągłego $f$ wynika stąd
+zbieżność $f(Z_t^{(n)})\to f(Z_t)$ w $L^1$.
+Odpowiednie prawa dla deterministycznego $x$
+zbiegać będą do $P_tf(x)$; zatem
+$\E[f(Z_t)\mid\calF_s]=P_tf(X_s)$.
+Przejście do ograniczonych funkcji borelowskich
+uzyskujemy przez klasę monotoniczną, używając
+lematu \ref{lem:sde-kernel} dla mierzalności
+prawej strony. Na końcu korzystamy z tower property:
+$P_{s+t}f(x)=\E[P_tf(X_s^x)]=P_s(P_tf)(x)$.
+\end{proof}
+
+\begin{twierdzenie}[Mocna własność Markowa]
+\label{th:sde-strongmarkov}
+Przy założeniach twierdzenia \ref{th:sde-markov}
+niech $\tau$ będzie prawie na pewno skończonym
+czasem zatrzymania. Dla każdego $t\ge0$ i dowolnej
+ograniczonej funkcji borelowskiej $f$ zachodzi
+\[
+\E[f(X_{\tau+t})\mid\calF_\tau]=P_tf(X_\tau)
+\quad\text{prawie na pewno}.
+\tag{6.4}\label{eq:sde-strongmarkov}
+\]
+\end{twierdzenie}
+\begin{proof}
+Najpierw niech $\tau$ przyjmuje skończenie wiele
+wartości $s_1,\ldots,s_N$. Mnożąc
+\eqref{eq:sde-markov} przez wskaźnik
+$\ind{\{\tau=s_k\}}\in\calF_{s_k}$ i sumując,
+otrzymujemy warunkową równość dla $\tau$.
+
+Następnie niech $\tau\le R$ prawie na pewno.
+Przybliżamy ją z góry czasami
+$\tau_n=2^{-n}\lceil2^n\tau\rceil$,
+które są czasami zatrzymania dla filtracji
+prawostronnie ciągłej, przyjmują skończenie wiele
+wartości i spełniają $\tau_n\downarrow\tau$.
+Dla $A\in\calF_\tau$ mamy $A\in\calF_{\tau_n}$,
+zatem
+\[
+\E[\ind A f(X_{\tau_n+t})]
+=\E[\ind A P_tf(X_{\tau_n})].
+\]
+Jeżeli $f$ jest ograniczona i ciągła, to lemat
+\ref{lem:sde-kernel}, ciągłość trajektorii $X$
+i zbieżność zdominowana pozwalają przejść do granicy,
+dając identyczną równość z $\tau$.
+Dla ograniczonej funkcji borelowskiej $f$ stosujemy
+ponownie twierdzenie o klasie monotonicznej.
+Ograniczenie $\tau\le R$ usuwamy przez zastosowanie
+wyniku do $\tau\wedge R$ i przejście $R\to\infty$;
+na zdarzeniu $\{\tau\le R\}$ odpowiednie tożsamości
+pokrywają się, zaś $\Prob(\tau>R)\to0$.
+\end{proof}
+
+\begin{przyklad}[Co proces Markowa naprawdę „pamięta”?]
+Dla procesu Ornsteina--Uhlenbecka z zadania
+\ref{zad:ou}, przy ustalonych $s,t\ge0$,
+\[
+\E[X_{s+t}\mid\calF_s]
+=m+(X_s-m)e^{-\theta t},
+\quad
+\Var(X_{s+t}\mid\calF_s)
+=\frac{\eta^2}{2\theta}(1-e^{-2\theta t}).
+\]
+To wynika z rozbicia całki stochastycznej w chwili
+$s$ i niezależności przyszłych przyrostów. Znajomość
+całej trajektorii do chwili $s$ nie zmienia tych
+wzorów po ustaleniu $X_s$. Nie jest to jednak
+niezależność kolejnych wartości procesu.
+\end{przyklad}
+
+\section{Generator dyfuzji i wzór Dynkina}
+\begin{definicja}[Operator generatora]
+Dla funkcji $f\in C_c^2(\R^d)$ określamy
+\[
+Lf(x)=\sum_{i=1}^d b_i(x)\partial_i f(x)
++\frac12\sum_{i,j=1}^d a_{ij}(x)\partial_{ij}f(x),
+\qquad a(x)=\sigma(x)\sigma(x)^{\mathsf T}.
+\tag{6.5}\label{eq:sde-generator}
+\]
+Operator $L$ nazywamy \emph{generatorem różniczkowym}
+dyfuzji. Nie zakładamy w tej definicji, że funkcja
+$f$ leży już w dziedzinie generatora silnej półgrupy
+w przestrzeni funkcji ograniczonych.
+\end{definicja}
+
+\begin{twierdzenie}[Wzór Dynkina w skończonym horyzoncie]
+\label{th:sde-dynkin}
+Niech $X^x$ będzie rozwiązaniem \eqref{eq:timehom-sde}
+z deterministycznym $x\in\R^d$ i niech
+$f\in C_c^2(\R^d)$. Wówczas proces
+\[
+M_t^f=f(X_t^x)-f(x)-\int_0^tLf(X_s^x)\,\dd s
+\tag{6.6}\label{eq:dynkin-mart}
+\]
+jest kwadratowo całkowalnym martyngałem na każdym
+skończonym przedziale. Dla dowolnego ograniczonego
+czasu zatrzymania $\tau$ otrzymujemy
+\[
+\E f(X_\tau^x)=f(x)+\E\int_0^\tau Lf(X_s^x)\,\dd s.
+\tag{6.7}\label{eq:dynkin-optional}
+\]
+\end{twierdzenie}
+\begin{proof}
+Wzór Itô \ref{th:ito-multi} zastosowany do $f(X_t)$
+daje
+$\dd f(X_t)=Lf(X_t)\,\dd t+
+\nabla f(X_t)\sigma(X_t)\,\dd W_t$.
+Ponieważ $f$ ma zwarty nośnik, $\nabla f$ i
+$D^2 f$ są ograniczone i zerują się poza pewnym
+zbiorem zwartym. Współczynniki $b,\sigma$ są
+ciągłe i lokalnie ograniczone, więc $Lf$ oraz
+$\nabla f\,\sigma$ są \emph{globalnie ograniczone}.
+W szczególności
+$\E\int_0^T\norm{\nabla f(X_s)\sigma(X_s)}^2\,\dd s
+\le T\sup_x\norm{\nabla f(x)\sigma(x)}^2<\infty$.
+Stąd całka stochastyczna jest kwadratowo całkowalnym
+martyngałem, co daje \eqref{eq:dynkin-mart}.
+Dla ograniczonego $\tau$ stosujemy twierdzenie
+o próbkowaniu opcjonalnym, a do skończenie zmiennej
+w czasie całki względem $s$ — Fubiniego.
+\end{proof}
+
+\begin{wniosek}[Generator jako pochodna średniej]
+\label{cor:sde-gen-limit}
+Przy założeniach twierdzenia \ref{th:sde-dynkin},
+dla każdej funkcji $f\in C_c^2(\R^d)$ i każdego
+$x\in\R^d$ zachodzi
+\[
+\lim_{t\downarrow0}\frac{P_tf(x)-f(x)}{t}=Lf(x).
+\tag{6.8}\label{eq:genlimit}
+\]
+\end{wniosek}
+\begin{proof}
+Z \eqref{eq:dynkin-mart} po wzięciu oczekiwanych mamy
+$(P_tf(x)-f(x))/t=(1/t)\int_0^t\E Lf(X_s^x)\,\dd s$.
+Funkcja $Lf$ jest ograniczona i ciągła, a
+$X_s^x\to x$ prawie na pewno, gdy $s\downarrow0$.
+Z twierdzenia o zbieżności zdominowanej wynika
+$\E Lf(X_s^x)\to Lf(x)$.
+Średnia Cesàro takiej funkcji również dąży do
+$Lf(x)$, co dowodzi tezy.
+\end{proof}
+
+\begin{uwaga}[Co mierzy generator?]
+Dla bardzo małego $h>0$ mamy w przybliżeniu
+$\E[f(X_{t+h})\mid X_t=x]-f(x)\approx hLf(x)$.
+Pierwsze pochodne w \eqref{eq:sde-generator}
+opisują dryf, a pochodne drugiego rzędu są
+konsekwencją wariacji kwadratowej szumu.
+To związek z równaniami parabolicznymi, który
+będzie rozwijany w rozdziałach o półgrupach i
+wzorze Feynmana--Kaca.
+\end{uwaga}
+
+\begin{zadanie}[Wyjście dyfuzji z przedziału: generator i warunek brzegowy]
+\label{zad:exit-drift}
+Niech $a>0$, $\mu\in\R$, $\sigma_0>0$ i niech
+$X_t=x+\mu t+\sigma_0W_t$, gdzie $x\in(0,a)$.
+Dla $\tau=\inf\{t\ge0:X_t\notin(0,a)\}$ obliczyć
+$\Prob_x(X_\tau=a)$.
+
+\emph{Rozwiązanie.} W pierwszym kroku dowodzimy, że
+$\tau<\infty$ prawie na pewno. Ustalmy $\delta>0$.
+Niezależnie od położenia procesu w $(0,a)$ na początku
+przedziału długości $\delta$, zdarzenie
+$\{\mu\delta+\sigma_0(W_{s+\delta}-W_s)>a\}$
+wymusza opuszczenie $(0,a)$ do chwili $s+\delta$.
+Ma ono prawdopodobieństwo $q>0$, niezależne od
+$\calF_s$. Iterowane warunkowanie daje
+$\Prob_x(\tau>n\delta)\le(1-q)^n$.
+W szczególności $\E_x\tau<\infty$ i $X_\tau\in\{0,a\}$.
+
+Generator ma postać $L=\mu\partial_x+
+(\sigma_0^2/2)\partial_{xx}$. Poszukujemy funkcji
+$u\in C^2([0,a])$ spełniającej
+$Lu=0$ na $(0,a)$, $u(0)=0$, $u(a)=1$.
+Jeśli $\mu\ne0$, równanie
+$u''+(2\mu/\sigma_0^2)u'=0$ po jednokrotnym
+scałkowaniu daje
+$u'(z)=C\exp(-2\mu z/\sigma_0^2)$;
+po uwzględnieniu wartości brzegowych otrzymujemy
+\[
+u(x)=\frac{1-\exp(-2\mu x/\sigma_0^2)}
+{1-\exp(-2\mu a/\sigma_0^2)}.
+\]
+Dla $\mu=0$ równanie $u''=0$ daje $u(x)=x/a$.
+
+Aby wykazać, że to rzeczywiście szukane prawdopodobieństwo,
+stosujemy wzór Itô do $u(X_{t\wedge\tau})$.
+Ponieważ $Lu=0$ przed wyjściem, jest to lokalny
+martyngał. Jest on jednak ograniczony przez $1$,
+więc jest prawdziwym martyngałem i
+$\E_xu(X_{t\wedge\tau})=u(x)$.
+Dzięki prawie pewnej skończoności $\tau$ i ograniczoności
+$u$ możemy zastosować zbieżność zdominowaną, uzyskując
+$u(x)=\E_xu(X_\tau)=\Prob_x(X_\tau=a)$.
+Nie wyciągamy zatem wyniku z samego formalnego rozwiązania
+równania różniczkowego: wskazaliśmy, dlaczego jego
+rozwiązanie przedstawia prawdopodobieństwo zdarzenia.
+\end{zadanie}
+
+\section{Równanie w przód: rozkład prawdopodobieństwa jako rozwiązanie słabe}
+\begin{twierdzenie}[Słabe równanie Fokkera--Plancka]
+\label{th:sde-fp}
+Niech $X$ będzie rozwiązaniem \eqref{eq:timehom-sde}
+z $X_0\in L^2(\Omega;\R^d)$, a
+$\mu_t=\Law(X_t)$ dla $t\ge0$. Wówczas dla każdej
+$f\in C_c^2(\R^d)$
+\[
+\int_{\R^d}f(x)\,\dd\mu_t(x)
+=\int_{\R^d}f(x)\,\dd\mu_0(x)
++\int_0^t\int_{\R^d}Lf(x)\,\dd\mu_s(x)\,\dd s.
+\tag{6.9}\label{eq:fp-weak}
+\]
+Jeśli ponadto dla $t>0$ rozkład $\mu_t$ ma gęstość
+$\rho(t,\cdot)$, funkcja $\rho$ jest klasy $C^1$
+w zmiennej $t$, a funkcje $b_i\rho$ i $a_{ij}\rho$
+mają ciągłe pochodne przestrzenne odpowiednio rzędu
+pierwszego i drugiego, przy lokalnej całkowalności
+umożliwiającej różniczkowanie całek funkcji testowych,
+to $\rho$ spełnia klasycznie równanie
+\[
+\partial_t\rho
+=-\sum_i\partial_i(b_i\rho)
++\tfrac12\sum_{i,j}\partial_{ij}(a_{ij}\rho),
+\qquad a=\sigma\sigma^{\mathsf T}.
+\tag{6.10}\label{eq:fp-formal}
+\]
+Bez tych dodatkowych założeń \eqref{eq:fp-weak}
+jest właściwym, matematycznie ścisłym sformułowaniem.
+\end{twierdzenie}
+\begin{proof}
+Ze wzoru Itô i oszacowania w dowodzie twierdzenia
+\ref{th:sde-dynkin} wynika
+$\E f(X_t)-\E f(X_0)=\E\int_0^t Lf(X_s)\,\dd s$.
+Ponieważ $Lf$ jest ograniczone, twierdzenie Fubiniego
+daje \eqref{eq:fp-weak} po zapisaniu wartości
+oczekiwanych jako całek względem rozkładów $\mu_s$.
+W przypadku istnienia regularnej gęstości podstawiamy
+$\dd\mu_s(x)=\rho(s,x)\,\dd\lambda_d(x)$.
+Dla każdej funkcji testowej o zwartym nośniku możemy
+różniczkować lewą stronę względem czasu (na dowolnym
+zwartym podprzedziale dodatnich chwil). Po scałkowaniu
+przez części w przestrzeni dostajemy
+$\int f\,\partial_t\rho\,\dd\lambda_d
+=\int f[-\partial_i(b_i\rho)+\frac12\partial_{ij}(a_{ij}\rho)]
+\,\dd\lambda_d$ (z sumowaniem po indeksach).
+Wszystkie te funkcje są ciągłe na rozpatrywanym obszarze.
+Lemat podstawowy rachunku wariacyjnego, stosowany do
+$C_c^\infty(\R^d)$, utożsamia ich wartości punktowo.
+To uzasadnia postać klasyczną \eqref{eq:fp-formal},
+a nie tylko jej zapis formalny.
+\end{proof}
+
+\begin{zadanie}[Ruch Browna i równanie ciepła]
+Niech $X_t=x+W_t$ w $\R^d$. Wykazać, że jego gęstość
+spełnia równanie ciepła z generatorem $\tfrac12\Delta$.
+
+\emph{Rozwiązanie.} Tutaj $b=0$, $\sigma=I_d$,
+a więc $Lf=\tfrac12\Delta f$. Dla $t>0$ gęstość
+\[
+p_t(x,y)=\frac1{(2\pi t)^{d/2}}
+\exp\!\left(-\frac{\norm{y-x}^2}{2t}\right)
+\]
+spełnia $\partial_t p_t=\frac12\Delta_y p_t$:
+bezpośrednie różniczkowanie daje
+$\partial_t p_t=p_t(-d/(2t)+\norm{y-x}^2/(2t^2))$
+oraz
+$\Delta_y p_t=p_t(-d/t+\norm{y-x}^2/t^2)$.
+Tożsamość jest zatem sprawdzona wprost.
+Co ważne, w chwili $t=0$ prawo procesu jest miarą
+Diraca $\delta_x$, nie zwykłą funkcją-gęstością.
+Stąd naturalne jest słabe sformułowanie
+\eqref{eq:fp-weak}.
+\end{zadanie}
+
+\begin{zadanie}[Rozkład stacjonarny procesu Ornsteina--Uhlenbecka]
+Niech $X$ spełnia równanie z zadania \ref{zad:ou}
+ze stałymi $\theta,\eta>0$ i $m\in\R$.
+Znaleźć rozkład niezmienniczy i sprawdzić jego
+niezmienniczość.
+
+\emph{Rozwiązanie.} Z \eqref{eq:ou-solution}
+wynika, że dla deterministycznego $X_0=x$ rozkład
+$X_t$ jest normalny o średniej
+$m+(x-m)e^{-\theta t}$ i wariancji
+$\eta^2(1-e^{-2\theta t})/(2\theta)$.
+Kandydatem na rozkład niezmienniczy jest
+$\pi=\Normal(m,\eta^2/(2\theta))$.
+Jeżeli $X_0\sim\pi$ i $X_0$ jest niezależny od
+przyszłych przyrostów $W$ (co wynika z założeń
+filtracji), to \eqref{eq:ou-solution} jest sumą
+niezależnych zmiennych normalnych, a jej średnia
+wynosi $m$ i wariancja
+\[
+\frac{\eta^2}{2\theta}e^{-2\theta t}
++\frac{\eta^2}{2\theta}(1-e^{-2\theta t})
+=\frac{\eta^2}{2\theta}.
+\]
+Stąd $\Law(X_t)=\pi$ dla każdego $t\ge0$.
+To sprawdza niezmienniczość. Zbieżność rozkładów
+przy deterministycznym punkcie startowym, otrzymana
+w poprzednim rozdziale, wyjaśnia fizyczną intuicję
+powrotu do równowagi.
+\end{zadanie}
+
+\section{Porównywanie rozwiązań w jednym wymiarze}
+\begin{twierdzenie}[Zasada porównania]
+\label{th:sde-comparison}
+Niech $b_1,b_2,\sigma:[0,T]\times\R\to\R$
+będą borelowskie, globalnie Lipschitzowskie w
+zmiennej przestrzennej jednostajnie względem czasu
+i ograniczone w zerze. Zakładamy, że
+$b_1(t,x)\le b_2(t,x)$ dla wszystkich $t,x$.
+Niech $X,Y$ będą silnymi rozwiązaniami napędzanymi
+tym samym procesem Wienera, odpowiednio,
+\[
+\dd X_t=b_1(t,X_t)\,\dd t+\sigma(t,X_t)\,\dd W_t,
+\quad
+\dd Y_t=b_2(t,Y_t)\,\dd t+\sigma(t,Y_t)\,\dd W_t,
+\]
+z $X_0,Y_0\in L^2(\Omega)$ i $X_0\le Y_0$ prawie
+na pewno. Wówczas
+$\Prob(X_t\le Y_t\ \text{dla wszystkich }t\in[0,T])=1$.
+\end{twierdzenie}
+\begin{proof}
+Niech $D_t=X_t-Y_t$. Wybierzmy gładką, niemalejącą
+funkcję $g:\R\to[0,1]$, dla której $g(z)=0$
+przy $z\le0$ oraz $g(z)=1$ przy $z\ge1$.
+Istnieje stała $C_g<\infty$ taka, że
+$0\le g'(z)\le C_g\ind{\{0<z<1\}}$.
+Dla $\varepsilon>0$ określmy
+$\psi_\varepsilon(z)=\int_0^{z^+}g(u/\varepsilon)\,\dd u$.
+Jest to funkcja klasy $C^2$, wypukła, spełniająca
+\[
+0\le\psi_\varepsilon'(z)\le\ind{\{z>0\}},\quad
+0\le z^+-\psi_\varepsilon(z)\le\varepsilon,\quad
+0\le\psi_\varepsilon''(z)\le
+\frac{C_g}{\varepsilon}\ind{\{0<z<\varepsilon\}}.
+\]
+Możemy więc zastosować zwykły wzór Itô bez
+odwoływania się do niesformułowanej wersji dla
+funkcji z nieciągłą drugą pochodną. Po wzięciu
+wartości oczekiwanych
+całka stochastyczna znika, ponieważ
+$\psi_\varepsilon'$ jest ograniczona, a
+$\sigma(t,X_t)-\sigma(t,Y_t)$ jest kwadratowo
+całkowalna. Otrzymujemy
+\[
+\begin{split}
+\E\psi_\varepsilon(D_t)
+=&\E\psi_\varepsilon(D_0)
++\E\int_0^t\psi_\varepsilon'(D_s)
+[b_1(s,X_s)-b_2(s,Y_s)]\,\dd s\\
+&+\frac12\E\int_0^t\psi_\varepsilon''(D_s)
+[\sigma(s,X_s)-\sigma(s,Y_s)]^2\,\dd s.
+\end{split}
+\]
+Pierwszy składnik jest zerowy, gdyż $D_0\le0$.
+Na zbiorze $D_s>0$ mamy
+$b_1(s,X_s)-b_2(s,Y_s)
+\le b_1(s,X_s)-b_1(s,Y_s)\le L D_s^+$.
+Dla wyrazu drugiego rzędu warunek Lipschitza daje
+\[
+\psi_\varepsilon''(D_s)
+[\sigma(s,X_s)-\sigma(s,Y_s)]^2
+\le \frac{C_gL^2}{\varepsilon}D_s^2
+\ind{\{0<D_s<\varepsilon\}}\le C_gL^2\varepsilon.
+\]
+Wobec tego
+$\E\psi_\varepsilon(D_t)
+\le L\int_0^t\E D_s^+\,\dd s+
+\tfrac12 C_gL^2\varepsilon t$.
+Ponieważ $0\le D_t^+-\psi_\varepsilon(D_t)\le\varepsilon$,
+po przejściu $\varepsilon\downarrow0$ mamy
+$\E D_t^+\le L\int_0^t\E D_s^+\,\dd s$.
+Lemat Gronwalla daje $\E D_t^+=0$ dla każdego $t$.
+Na przeliczalnym zbiorze gęstym i dzięki ciągłości
+trajektorii otrzymujemy żądaną nierówność
+jednocześnie dla wszystkich chwil.
+\end{proof}
+
+\begin{uwaga}
+Kluczowym założeniem jest \emph{wspólny} współczynnik
+dyfuzji $\sigma$, a nie tylko porządek dryfów.
+Jeśli różne szumy działają na oba procesy, nawet
+początkowy porządek nie musi się utrzymać.
+\end{uwaga}
+
+\section{Metoda Eulera--Maruyamy: pierwszy schemat numeryczny}
+\begin{definicja}[Schemat Eulera--Maruyamy]
+\label{def:em}
+Niech $T>0$, $h=T/N$ i $t_k=kh$, $k=0,\ldots,N$.
+Dla funkcji $b,\sigma$ z rozdziału
+\ref{ch:sde-existence} przyjmujemy
+$\bar X_0=X_0$ oraz
+\[
+\bar X_{k+1}=\bar X_k+b(t_k,\bar X_k)h
++\sigma(t_k,\bar X_k)(W_{t_{k+1}}-W_{t_k}).
+\tag{6.11}\label{eq:em}
+\]
+Ciągły interpolant \emph{stochastyczny} definiujemy
+przez $X_t^h=X_0+\int_0^t b(\eta_h(s),X^h_{\eta_h(s)})\,\dd s
++\int_0^t\sigma(\eta_h(s),X^h_{\eta_h(s)})\,\dd W_s$,
+gdzie $\eta_h(s)=t_k$ dla $s\in[t_k,t_{k+1})$.
+W punktach siatki $X_{t_k}^h=\bar X_k$.
+\end{definicja}
+
+\begin{uwaga}[Dwa rodzaje błędu]
+Błąd \emph{silny} kontroluje różnicę $X^h-X$
+na tej samej realizacji szumu. Błąd \emph{słaby}
+dotyczy różnicy wartości oczekiwanych
+$\E f(X_T^h)-\E f(X_T)$ dla funkcji testowych.
+Poniżej dowodzimy wyłącznie oszacowania silnego;
+błędy słabe wymagają odrębnych założeń i analizy.
+\end{uwaga}
+
+\begin{twierdzenie}[Silna zbieżność metody Eulera--Maruyamy]
+\label{th:em-rate}
+Niech $X$ będzie rozwiązaniem SDE z twierdzenia
+\ref{th:sde-global}, a $X^h$ interpolantem
+\ref{def:em}, napędzanym tym samym procesem Wienera
+i z tym samym $X_0\in L^2$. Zakładamy dodatkowo,
+że istnieje $K$ takie, iż dla wszystkich $s,t\in[0,T]$
+i $x\in\R^d$
+\[
+\norm{b(t,x)-b(s,x)}+
+\norm{\sigma(t,x)-\sigma(s,x)}_{\mathrm F}
+\le K(1+\norm{x})|t-s|^{1/2}.
+\tag{6.12}\label{eq:time-holder}
+\]
+Wówczas dla pewnej stałej $C=C(T,L,K,\E\norm{X_0}^2)$,
+niezależnej od $N$,
+\[
+\E\sup_{t\le T}\norm{X_t-X_t^h}^2\le Ch.
+\tag{6.13}\label{eq:em-strong}
+\]
+Oznacza to silny rząd $1/2$ w normie
+$\|\sup_{t\le T}\norm{X_t-X_t^h}\|_{L^2}$.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: jednostajne ograniczenie momentów schematu.}
+Z definicji interpolantu, liniowego wzrostu
+współczynników i lematu \ref{lem:sde-sup} otrzymujemy
+\[
+\E\sup_{r\le t}\norm{X_r^h}^2
+\le C_0(1+\E\norm{X_0}^2)
++C_1\int_0^t\E\norm{X^h_{\eta_h(s)}}^2\,\dd s.
+\]
+Ponieważ $\eta_h(s)\le s$, ostatnia wartość
+oczekiwana jest nie większa niż
+$\E\sup_{u\le s}\norm{X_u^h}^2$.
+Z lematu Gronwalla
+\[
+\sup_{N\ge1}\E\sup_{t\le T}\norm{X_t^h}^2<\infty.
+\tag{6.14}\label{eq:em-moment}
+\]
+
+\emph{Krok 2: przyrost wewnątrz pojedynczego kroku.}
+Dla $s\in[t_k,t_{k+1})$, warunkując względem
+$\calF_{t_k}$ i korzystając z izometrii,
+otrzymujemy
+\[
+\begin{split}
+\E\norm{X_s^h-X_{t_k}^h}^2
+&\le2(s-t_k)^2\E\norm{b(t_k,X_{t_k}^h)}^2\\
+&\quad+2(s-t_k)\E\norm{\sigma(t_k,X_{t_k}^h)}_{\mathrm F}^2
+\le C_2h,
+\end{split}
+\]
+gdzie ostatni krok wynika z liniowego wzrostu i
+\eqref{eq:em-moment}. W szczególności
+$\int_0^T\E\norm{X_s^h-X_{\eta_h(s)}^h}^2\,\dd s
+\le C_2Th$.
+
+\emph{Krok 3: porównanie równań całkowych.}
+Oznaczmy $e_t=X_t-X_t^h$. Odejmując równania,
+a następnie stosując lemat \ref{lem:sde-sup},
+rozkładamy różnice współczynników na trzy składniki:
+\[
+\begin{split}
+\norm{b(s,X_s)-b(\eta_h(s),X^h_{\eta_h(s)})}
+&\le L\norm{X_s-X_s^h}
++L\norm{X_s^h-X^h_{\eta_h(s)}}\\
+&\quad+K(1+\norm{X^h_{\eta_h(s)}})\sqrt h,
+\end{split}
+\]
+i analogiczną nierówność dla macierzy $\sigma$.
+Po podniesieniu do kwadratu, scałkowaniu i
+wykorzystaniu kroków 1--2 otrzymujemy
+\[
+\E\sup_{r\le t}\norm{e_r}^2
+\le C_3\int_0^t\E\sup_{u\le s}\norm{e_u}^2\,\dd s
++C_4h.
+\]
+Lemat Gronwalla daje \eqref{eq:em-strong}.
+Oszacowanie jest jednostajne na całym przedziale,
+a nie tylko w punktach siatki.
+\end{proof}
+
+\begin{zadanie}[Schemat Eulera dla procesu Ornsteina--Uhlenbecka]
+Dla równania $\dd X_t=\theta(m-X_t)\,\dd t+\eta\,\dd W_t$
+z deterministycznym $X_0=x_0$ wyznaczyć rekurencję
+Eulera, jej średnią i wariancję po $k$ krokach.
+
+\emph{Rozwiązanie.} Ze wzoru \eqref{eq:em}
+\[
+\bar X_{k+1}=(1-\theta h)\bar X_k+\theta hm
++\eta\Delta_kW.
+\]
+Wprowadźmy $a=1-\theta h$. Po odjęciu $m$
+i iteracji otrzymujemy
+$\bar X_k-m=a^k(x_0-m)+\eta\sum_{j=0}^{k-1}
+a^{k-1-j}\Delta_jW$. Przyrosty są niezależne,
+mają wariancję $h$, więc
+\[
+\E\bar X_k=m+a^k(x_0-m),\qquad
+\Var(\bar X_k)=\eta^2h\sum_{j=0}^{k-1}a^{2j}.
+\]
+Jeżeli $|a|<1$, to wariancja graniczna schematu
+przy stałym $h$ wynosi $\eta^2h/(1-a^2)$,
+co na ogół nie jest równe dokładnej wariancji
+stacjonarnej $\eta^2/(2\theta)$.
+To pokazuje, dlaczego dyskretyzacja może zmieniać
+własności długoczasowe, nawet gdy zbiega na każdym
+ustalonym przedziale wraz z $h\downarrow0$.
+\end{zadanie}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex,x=1cm,y=.7cm]
+\draw[->] (0,0)--(10,0) node[right] {$t$};
+\draw[->] (0,-.3)--(0,3) node[above] {$X_t$};
+\draw[thick,blue!70!black] (0,.6)--(.6,.95)--(1.2,.72)--(1.8,1.48)
+--(2.4,1.3)--(3,1.65)--(3.6,1.12)--(4.2,1.85)
+--(4.8,1.43)--(5.4,1.7)--(6,2.35)--(6.6,1.9)
+--(7.2,2.55)--(7.8,2.06)--(8.4,2.53)--(9,2.18);
+\draw[very thick,orange!85!black] (0,.6)--(1.8,1.25)--(3.6,1.05)
+--(5.4,1.65)--(7.2,2.32)--(9,2.2);
+\foreach \x in {0,1.8,3.6,5.4,7.2,9} \draw[dashed,gray!55] (\x,0)--(\x,2.8);
+\node[blue!70!black,anchor=west,scale=.82] at (5.8,2.95)
+{trajektoria procesu (schemat)};
+\node[orange!75!black,anchor=west,scale=.82] at (5.9,.6)
+{przybliżenie na siatce};
+\end{tikzpicture}
+\par\smallskip\small Ilustracja idei dyskretyzacji; nie przedstawia obliczonej próbki konkretnego SDE.
+\end{center}
+
+\section{Kryterium nieeksplozji poza przypadkiem liniowego wzrostu}
+\begin{twierdzenie}[Przykład kryterium Lapunowa]
+\label{th:lyapunov-example}
+Niech $W$ będzie jednowymiarowym procesem Wienera,
+a $X$ lokalnym rozwiązaniem
+\[
+\dd X_t=-X_t^3\,\dd t+\dd W_t,\qquad X_0=x\in\R.
+\]
+Współczynniki są lokalnie Lipschitzowskie, lecz dryf
+nie ma liniowego wzrostu. Mimo tego rozwiązanie jest
+nieeksplozywne na każdym skończonym przedziale.
+\end{twierdzenie}
+\begin{proof}
+Z obcięcia współczynników, jak w dowodzie twierdzenia
+\ref{th:sde-local}, otrzymujemy zgodne lokalne
+rozwiązania do czasów $\tau_R=\inf\{t:\abs{X_t}\ge R\}$.
+Stosujemy wzór Itô do $V(x)=x^2$ i procesu
+zatrzymanego w chwili $\tau_R$:
+\[
+\abs{X_{t\wedge\tau_R}}^2
+=x^2+\int_0^{t\wedge\tau_R}(1-2X_s^4)\,\dd s
++2\int_0^{t\wedge\tau_R}X_s\,\dd W_s.
+\]
+Na przedziale przed $\tau_R$ integrand ostatniej
+całki jest ograniczony przez $R$, a więc całka
+ma średnią zero. Dostajemy
+$\E\abs{X_{t\wedge\tau_R}}^2\le x^2+t$.
+Na zdarzeniu $\{\tau_R\le t\}$ ciągłość trajektorii
+daje $\abs{X_{t\wedge\tau_R}}=R$, zatem
+$R^2\Prob(\tau_R\le t)\le x^2+t$.
+Po przejściu $R\to\infty$ wnioskujemy, że czas
+życia lokalnego rozwiązania jest nieskończony
+prawie na pewno.
+\end{proof}
+
+\begin{uwaga}
+Powyższy argument jest przykładem metody funkcji
+Lapunowa. Ujemny składnik $-2X^4$ przeciwdziała
+ucieczce rozwiązania do nieskończoności. W ogólnej
+wersji poszukuje się nieujemnej funkcji $V$, która
+rośnie przy $\norm{x}\to\infty$ i spełnia odpowiednią
+nierówność dla generatora $LV$.
+\end{uwaga}
+
+\section{Dwa przykłady pokazujące granice twierdzeń}
+\begin{przyklad}[Silna i słaba jednoznaczność dla równania deterministycznego]
+Równanie $\dd X_t=2\sqrt{|X_t|}\,\dd t$, $X_0=0$,
+ma zarówno rozwiązanie $X_t\equiv0$, jak i
+$X_t=(t-c)_+^2$ dla każdego $c\ge0$.
+Możemy nadać dowolne rozkłady losowemu opóźnieniu $c$,
+otrzymując różne prawa na przestrzeni trajektorii.
+Nie ma zatem ani jednoznaczności ścieżkowej, ani
+jednoznaczności co do prawa. Oba pojęcia są różne,
+choć w tym przykładzie zawodzą jednocześnie.
+\end{przyklad}
+\begin{przyklad}[Dlaczego sama zbieżność rozkładów nie daje zbieżności silnej?]
+Niech $W$ i $\widehat W$ będą niezależnymi ruchami Browna
+na tej samej przestrzeni. Dla dowolnego $t>0$ mają identyczny
+rozkład $\Normal(0,t)$, ale
+$\E|W_t-\widehat W_t|^2=2t$.
+Nie można więc wnioskować o błędzie silnym metody
+numerycznej ze zbieżności jej rozkładów jednowymiarowych.
+W twierdzeniu \ref{th:em-rate} proces i przybliżenie
+korzystają z \emph{tych samych} przyrostów Wienera.
+\end{przyklad}
+
+\section{Podsumowanie i dalsza droga}
+W rozdziałach 5--6 zbudowaliśmy rozwiązania SDE i
+wyprowadziliśmy ich podstawowe własności bez
+zakładania z góry teorii rozwiązań. Globalny warunek
+Lipschitza zapewnia istnienie silne i jednoznaczność
+ścieżkową, a lokalny warunek wraz z odpowiednią
+kontrolą wzrostu — brak eksplozji. Własność Markowa
+i generator wiążą proces z równaniami różniczkowymi
+cząstkowymi, natomiast zasada porównania i metoda
+Eulera--Maruyamy opisują zależność od danych i
+możliwość obliczeń numerycznych.
+
+W dalszej części tomu przejdziemy do słabych
+rozwiązań SDE, problemów martyngałowych, wzoru
+Feynmana--Kaca, zmiany miary Girsanowa oraz
+bardziej ogólnego rachunku dla półmartyngałów.
+
+% ============================================================================
+% ROZDZIAL 7 — Problem martyngalowy i Feynman--Kac
+% ============================================================================

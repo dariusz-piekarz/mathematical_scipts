@@ -1,0 +1,52 @@
+\section{Język i system formalny}\label{sec:system-formalny}
+Formalizujemy teraz pojęcia z poprzedniej sekcji dla konkretnego przypadku arytmetyki.
+
+\begin{definicja}[Język arytmetyki]\label{res:3:1}
+\emph{Językiem arytmetyki} $\mathcal L_A$ nazywamy język pierwszego rzędu z równością (Def.~\ref{res:2:6}), o sygnaturze $\{0,S,+,\cdot,<\}$, gdzie $0$ jest symbolem stałej, $S$ jednoargumentowym symbolem funkcyjnym (następnik), $+$ oraz $\cdot$ dwuargumentowymi symbolami funkcyjnymi, a $<$ dwuargumentowym symbolem relacyjnym. Termy i formuły budujemy zgodnie z Def.~\ref{res:2:8} i~\ref{res:2:10}.
+\end{definicja}
+
+\begin{definicja}[Numerały]\label{res:3:2}
+Dla $n\in\mathbb N$ definiujemy \emph{numerał} $\overline n$ indukcyjnie: $\overline0:=0$ oraz $\overline{n+1}:=S(\overline n)$. Numerał $\overline n$ jest termem domkniętym reprezentującym w języku liczbę $n$.
+\end{definicja}
+
+\begin{definicja}[Zdanie]\label{res:3:3}
+\emph{Zdaniem} nazywamy formułę bez zmiennych wolnych. Formułę o jednej zmiennej wolnej $x$ oznaczamy $\varphi(x)$; przez $\varphi(\overline n)$ rozumiemy wynik podstawienia numerału $\overline n$ za $x$.
+\end{definicja}
+
+\begin{definicja}[System formalny]\label{res:3:4}
+\emph{Systemem formalnym} (teorią) $T$ nazywamy trójkę złożoną z:
+\begin{enumerate}[label=(\alph*)]
+\item języka $\mathcal L_A$;
+\item rekurencyjnie przeliczalnego zbioru aksjomatów pozalogicznych $\operatorname{Ax}(T)$, będących zdaniami $\mathcal L_A$;
+\item ustalonego klasycznego rachunku pierwszego rzędu z równością: efektywnych schematów aksjomatów logicznych oraz reguł modus ponens i generalizacji.
+\end{enumerate}
+\emph{Dowodem} zdania $\varphi$ w $T$ nazywamy skończony ciąg formuł $\psi_1,\ldots,\psi_k$ taki, że $\psi_k=\varphi$ i każde $\psi_i$ jest aksjomatem logicznym, aksjomatem $T$ albo wynika z wcześniejszych formuł przez regułę wnioskowania. Piszemy $T\vdash\varphi$, gdy istnieje dowód $\varphi$ w $T$. Instancje schematów i zastosowania reguł sprawdzamy składniowo, łącznie z warunkami dotyczącymi zmiennych i podstawień bez przechwytywania. Generalizacja ma postać $\psi/\forall x\,\psi$; ponieważ aksjomaty pozalogiczne są zdaniami, nie generalizujemy zmiennej wolnej w nieusuniętym założeniu. Przy kodowaniu dołączymy do dowodu świadectwa pochodzenia aksjomatów z wyliczenia. Nie zmienia to zbioru zdań dowodliwych.
+\end{definicja}
+
+\begin{definicja}[Niesprzeczność i zupełność]\label{res:3:5}
+Teoria $T$ jest \emph{niesprzeczna}, jeśli nie istnieje zdanie $\varphi$ takie, że $T\vdash\varphi$ oraz $T\vdash\neg\varphi$. Teoria $T$ jest \emph{zupełna}, jeśli dla każdego zdania $\varphi$ zachodzi $T\vdash\varphi$ lub $T\vdash\neg\varphi$. Teorię, która nie jest zupełna, nazywamy \emph{niezupełną}.
+\end{definicja}
+
+\begin{lemat}[Poprawność rachunku i przenoszenie założenia]\label{res:3:6}
+Niech $S$ będzie dowolnym zbiorem zdań, a $\alpha,\beta$ zdaniami ustalonego języka pierwszego rzędu. Wówczas:
+\begin{enumerate}[label=(\alph*)]
+\item jeśli $S\vdash\alpha$ i $\mathcal M\models S$, to $\mathcal M\models\alpha$;
+\item $S\cup\{\alpha\}\vdash\beta$ wtedy i tylko wtedy, gdy $S\vdash\alpha\to\beta$;
+\item $S\cup\{\alpha\}$ jest sprzeczny wtedy i tylko wtedy, gdy $S\vdash\neg\alpha$.
+\end{enumerate}
+Punkt (b) to \emph{twierdzenie o dedukcji}. Nie zakładamy efektywności zbioru $S$; wystarcza, że każdy dowód jest skończony.
+\end{lemat}
+
+\begin{proof}
+\emph{(a) Poprawność.} Ustalamy model aksjomatów $S$ i przechodzimy po wierszach dowodu. Aksjomaty logiczne są prawdziwe przy każdym wartościowaniu, a aksjomaty $S$ są prawdziwe z wyboru modelu. Modus ponens zachowuje prawdziwość: z $\gamma$ i $\gamma\to\eta$ wynika $\eta$. Przy generalizacji istotne jest, że dotychczasowy wniosek zachodzi przy \emph{każdym} wartościowaniu. Można więc zmieniać wartość generalizowanej zmiennej, otrzymując $\forall x\,\gamma$. Indukcja po długości dowodu daje tezę.
+
+\emph{(b) Dedukcja.} Z dowodu korzystającego z dodatkowego założenia $\alpha$ budujemy dowód, w którym każdy wiersz $\gamma$ zastępujemy wnioskiem $\alpha\to\gamma$. Dla aksjomatu lub założenia z $S$ używamy tautologii $\gamma\to(\alpha\to\gamma)$; dla samego $\alpha$ używamy $\alpha\to\alpha$. Krok modus ponens obsługuje tautologia
+\[
+(\alpha\to(\gamma\to\eta))\to((\alpha\to\gamma)\to(\alpha\to\eta)).
+\]
+Jeśli wiersz powstał przez generalizację $\gamma/\forall x\,\gamma$, generalizujemy wcześniej uzyskane $\alpha\to\gamma$ i stosujemy $\forall x(\alpha\to\gamma)\to(\alpha\to\forall x\,\gamma)$. Warunek tej reguły jest spełniony: $x$ nie występuje wolno w zdaniu $\alpha$. Otrzymujemy $S\vdash\alpha\to\beta$. Kierunek odwrotny jest jednym zastosowaniem modus ponens z założeniem $\alpha$.
+
+\emph{(c) Sprzeczne rozszerzenie.} Jeśli z $S\cup\{\alpha\}$ otrzymujemy $\gamma$ i $\neg\gamma$, punkt (b) daje w $S$ obie implikacje $\alpha\to\gamma$ i $\alpha\to\neg\gamma$. Logika klasyczna daje z nich $\neg\alpha$. Odwrotnie, dowód $\neg\alpha$ z $S$ przeczy dodatkowemu aksjomatowi $\alpha$. W szczególności teoria mająca model nie może być sprzeczna, na mocy (a).
+\end{proof}
+
+% Strony 7--9 oryginału, rozdział 4.

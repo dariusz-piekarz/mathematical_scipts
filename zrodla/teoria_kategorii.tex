@@ -1,0 +1,1379 @@
+% !TeX program = pdflatex
+% Samodzielny skrypt: Teoria kategorii — podstawy i przyklady.
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[polish]{babel}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools,amscd}
+\usepackage{mathrsfs}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage[unicode]{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!45!black,urlcolor=blue!45!black}
+\geometry{margin=2.5cm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setlength{\emergencystretch}{2em}
+\setlist[enumerate]{topsep=4pt,itemsep=2pt,leftmargin=*}
+\setlist[itemize]{topsep=4pt,itemsep=2pt,leftmargin=*}
+\numberwithin{equation}{section}
+\theoremstyle{plain}
+\newtheorem{twierdzenie}{Twierdzenie}[section]
+\newtheorem{stwierdzenie}[twierdzenie]{Stwierdzenie}
+\newtheorem{lemat}[twierdzenie]{Lemat}
+\newtheorem{wniosek}[twierdzenie]{Wniosek}
+\theoremstyle{definition}
+\newtheorem{definicja}[twierdzenie]{Definicja}
+\newtheorem{przyklad}[twierdzenie]{Przykład}
+\theoremstyle{remark}
+\newtheorem{uwaga}[twierdzenie]{Uwaga}
+\newcommand{\cat}[1]{\mathsf{#1}}
+\newcommand{\Set}{\cat{Set}}
+\newcommand{\Grp}{\cat{Grp}}
+\newcommand{\Mon}{\cat{Mon}}
+\newcommand{\Ring}{\cat{Ring}}
+\newcommand{\Top}{\cat{Top}}
+\newcommand{\Vect}{\cat{Vect}}
+\newcommand{\Ab}{\cat{Ab}}
+\newcommand{\Pos}{\cat{Pos}}
+\newcommand{\Rel}{\cat{Rel}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\Ob}{\operatorname{Ob}}
+\newcommand{\Nat}{\operatorname{Nat}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\Ker}{\operatorname{ker}}
+\newcommand{\colim}{\operatorname{colim}}
+\DeclareMathOperator{\End}{End}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\ev}{ev}
+\title{\textbf{Teoria kategorii od podstaw}\\\large Definicje, intuicje, przykłady i najważniejsze konstrukcje}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+\begin{abstract}
+Skrypt wprowadza język teorii kategorii, zakładając znajomość podstaw algebry liniowej, teorii mnogości i elementarnej algebry. Punktem wyjścia są konkretne przykłady: zbiory i funkcje, grupy i homomorfizmy, przestrzenie wektorowe i odwzorowania liniowe oraz zbiory uporządkowane. Następnie omawiamy funktory, transformacje naturalne, konstrukcje uniwersalne, granice i kogranice, lemat Yonedy, sprzężenia oraz podstawowe idee monad. Przy każdym nowym pojęciu wyjaśniamy zarówno jego formalną treść, jak i to, jakie pytanie matematyczne rozwiązuje. Ćwiczenia przeznaczone do samodzielnego rozwiązania znajdują się w osobnym zbiorze zadań; przykłady z objaśnieniami pozostają w skrypcie.
+\end{abstract}
+\tableofcontents
+\newpage
+
+\section{Po co teoria kategorii?}\label{sec:motywacja}
+
+W wielu działach matematyki pojawia się podobna sytuacja. Mamy pewnego rodzaju obiekty i odwzorowania, które zachowują strukturę tych obiektów. Dla zbiorów są to funkcje, dla grup homomorfizmy, dla przestrzeni topologicznych odwzorowania ciągłe, a dla przestrzeni wektorowych odwzorowania liniowe. Odwzorowania można składać, a każdy obiekt ma odwzorowanie identycznościowe.
+
+Teoria kategorii bada własności, które można sformułować wyłącznie za pomocą obiektów, odwzorowań i ich składania. Nie usiłuje zastąpić algebry lub topologii. Pozwala natomiast rozpoznawać te same konstrukcje w różnych działach matematyki i wyjaśnia, dlaczego są one do siebie podobne.
+
+\begin{przyklad}[Iloczyn kartezjański i iloczyn grup]
+Dla zbiorów $A,B$ definiujemy $A\times B$ i rzuty $p_A:A\times B\to A$, $p_B:A\times B\to B$. Jeśli mamy funkcje $f:X\to A$ i $g:X\to B$, istnieje dokładnie jedna funkcja $h:X\to A\times B$ spełniająca $p_A\circ h=f$ oraz $p_B\circ h=g$, mianowicie $h(x)=(f(x),g(x))$. Ta sama własność charakteryzuje iloczyn grup z rzutami będącymi homomorfizmami. Własność tę nazwiemy \emph{uniwersalną}. Jej zaletą jest to, że nie odwołuje się do elementów iloczynu.
+\end{przyklad}
+
+\begin{uwaga}[Jak czytać diagramy]
+Zapis $A\xrightarrow{f}B$ oznacza morfizm $f$ z $A$ do $B$. Diagram jest \emph{przemienny}, gdy dowolne dwie skierowane drogi prowadzące od tego samego obiektu do tego samego obiektu końcowego wyznaczają ten sam morfizm. Przykładowo diagram
+\[
+\begin{CD}
+A @>f>> B\\
+@VgVV @VVhV\\
+C @>>k> D
+\end{CD}
+\]
+jest przemienny wtedy i tylko wtedy, gdy $h\circ f=k\circ g$. Diagram jest więc graficznym zapisem równania.
+\end{uwaga}
+
+\section{Kategorie i ich pierwsze przykłady}\label{sec:kategorie}
+
+\subsection{Definicja kategorii}
+
+\begin{definicja}[Kategoria]\label{def:kategoria}
+\emph{Kategorią} $\mathcal C$ nazywamy dane obejmujące:
+\begin{enumerate}
+\item klasę obiektów $\Ob(\mathcal C)$;
+\item dla każdej pary obiektów $A,B$ klasę morfizmów $\Hom_{\mathcal C}(A,B)$; w tym skrypcie zakładamy, że jest ona zbiorem;
+\item dla każdej trójki obiektów $A,B,C$ operację składania
+$\Hom_{\mathcal C}(B,C)\times\Hom_{\mathcal C}(A,B)\to\Hom_{\mathcal C}(A,C)$, $(g,f)\mapsto g\circ f$;
+\item dla każdego obiektu $A$ wyróżniony morfizm $\id_A\in\Hom_{\mathcal C}(A,A)$.
+\end{enumerate}
+Dane te muszą spełniać dwa aksjomaty:
+\begin{enumerate}[label=(\roman*)]
+\item \emph{Łączność}: jeśli $f:A\to B$, $g:B\to C$ i $h:C\to D$, to $h\circ(g\circ f)=(h\circ g)\circ f$.
+\item \emph{Jednostki}: dla każdego $f:A\to B$ zachodzi $f\circ\id_A=f=\id_B\circ f$.
+\end{enumerate}
+Kategorię, w której wszystkie zbiory morfizmów są rzeczywiście zbiorami, nazywamy \emph{lokalnie małą}; to właśnie konwencja przyjęta dalej. Kategoria jest \emph{mała}, jeśli także jej obiekty i wszystkie morfizmy tworzą zbiory.
+\end{definicja}
+
+Morfizmy nie muszą być funkcjami pomiędzy zbiorami. Aksjomaty wymagają tylko możliwości ich składania i istnienia identyczności. W zapisie $g\circ f$ najpierw wykonujemy $f$, a następnie $g$.
+
+\begin{lemat}[Jednoznaczność identyczności]
+Jeśli $e,e':A\to A$ są morfizmami spełniającymi aksjomat jednostki dla wszystkich morfizmów o odpowiednich dziedzinach i przeciwdziedzinach, to $e=e'$.
+\end{lemat}
+\begin{proof}
+Z faktu, że $e$ jest jednostką lewostronną, wynika $e\circ e'=e'$. Z faktu, że $e'$ jest jednostką prawostronną, wynika $e\circ e'=e$. Zatem $e=e'$.
+\end{proof}
+
+
+\begin{uwaga}[Kwestie teoriomnogościowe]
+Obiekty kategorii nie muszą tworzyć zbioru: na przykład ``wszystkie zbiory'' tworzą klasę właściwą. Przyjmujemy standardową konwencję, że rozpatrywane kategorie są lokalnie małe, a słowo \emph{mały diagram} oznacza diagram indeksowany małą kategorią. Gdy chcemy tworzyć kategorię wszystkich funktorów pomiędzy dużymi kategoriami, trzeba dodatkowo kontrolować wielkość kolekcji transformacji naturalnych. Przy głównych zastosowaniach rozróżnienie to zaznaczymy jawnie.
+\end{uwaga}
+
+
+\subsection{Kategorie znane z innych dziedzin}
+
+\begin{przyklad}[Zbiory]
+W kategorii $\Set$ obiektami są zbiory, morfizmami są funkcje, a składanie i identyczności są zwykłymi operacjami na funkcjach. Jest to przykład kategorii lokalnie małej, ale nie małej: nie istnieje zbiór wszystkich zbiorów.
+\end{przyklad}
+
+\begin{przyklad}[Grupy i monoidy]
+W $\Grp$ obiektami są grupy, a morfizmami homomorfizmy grup. W $\Mon$ obiektami są monoidy (zbiory z łącznym działaniem i elementem neutralnym), a morfizmami homomorfizmy zachowujące działanie i element neutralny. Złożenie homomorfizmów i identyczność są homomorfizmami, dlatego otrzymujemy kategorie.
+\end{przyklad}
+
+\begin{przyklad}[Przestrzenie liniowe]
+Ustalmy ciało $k$. W kategorii $\Vect_k$ obiektami są przestrzenie wektorowe nad $k$, a morfizmami odwzorowania $k$-liniowe. Kategoria $\Vect_k^{\mathrm{fd}}$ to jej pełna podkategoria przestrzeni skończenie wymiarowych: oznacza to, że rozpatrujemy tylko takie obiekty, lecz wszystkie odwzorowania liniowe pomiędzy nimi. W kategorii $\Ab$ obiektami są grupy abelowe, a morfizmami homomorfizmy.
+\end{przyklad}
+
+\begin{przyklad}[Topologia i pierścienie]
+W $\Top$ obiektami są przestrzenie topologiczne, a morfizmami odwzorowania ciągłe. W $\Ring$ rozważamy pierścienie przemienne z jedynką i homomorfizmy zachowujące $1$. Ważne jest określenie konwencji: bez podania, jakie pierścienie i jakie homomorfizmy rozważamy, nazwa kategorii nie wyznacza całej struktury.
+\end{przyklad}
+
+\begin{przyklad}[Kategoria dyskretna]
+Dla zbioru $S$ zdefiniujmy kategorię $\mathcal D_S$ o obiektach $S$, w której $\Hom(x,x)=\{\id_x\}$, a $\Hom(x,y)=\varnothing$ dla $x\neq y$. Morfizmami są wyłącznie identyczności. Taka kategoria przechowuje informację o elementach $S$, ale nie o relacjach między nimi.
+\end{przyklad}
+
+\begin{przyklad}[Zbiory uporządkowane]\label{przyklad:poset}
+Niech $(P,\leq)$ będzie zbiorem częściowo uporządkowanym. Obiektami kategorii $\mathcal P$ są elementy $P$, a $\Hom_{\mathcal P}(x,y)$ jest zbiorem jednoelementowym, gdy $x\leq y$, i pustym w przeciwnym przypadku. Zwrotność zapewnia identyczności, przechodniość zapewnia składanie, a łączność wynika z tego, że między ustalonymi obiektami istnieje co najwyżej jeden morfizm.
+
+Dla przykładu zbiór $\{1,2,3,6\}$ uporządkowany przez podzielność ma morfizm $2\to 6$, ale nie ma morfizmu $6\to 2$. Nie należy interpretować tych strzałek jako funkcji pomiędzy liczbami. Każdy \emph{praporządek} (relacja zwrotna i przechodnia, niekoniecznie antysymetryczna) także definiuje kategorię.
+\end{przyklad}
+
+\begin{przyklad}[Monoid jako kategoria z jednym obiektem]\label{przyklad:monoid-kat}
+Niech $(M,\cdot,1)$ będzie monoidem. Tworzymy kategorię z jednym obiektem $*$, przyjmując $\Hom(*,*)=M$. Składanie definiujemy przez $g\circ f=g\cdot f$, a identycznością jest $1$. Aksjomaty kategorii to dokładnie łączność i istnienie jednostki w monoidzie.
+
+W szczególności grupa $G$ jest kategorią z jednym obiektem, której wszystkie morfizmy są odwracalne. Tym samym teoria kategorii zawiera teorię monoidów i grup jako szczególne przypadki.
+\end{przyklad}
+
+\begin{przyklad}[Macierze i standardowe współrzędne]\label{przyklad:mat}
+W kategorii $\cat{Mat}_k$ obiektami są liczby $0,1,2,\ldots$, a morfizmami $n\to m$ macierze o $m$ wierszach i $n$ kolumnach z wyrazami w $k$. Składaniem jest mnożenie macierzy w tej samej kolejności co składanie odwzorowań, a identycznością macierz jednostkowa $I_n$ (dla $n=0$ pusta macierz $0\times0$).
+
+Przykładowo macierz $\begin{pmatrix}1&2\\0&1\\3&0\end{pmatrix}$ jest morfizmem $2\to3$. Kategoria ta koduje wszystkie skończenie wymiarowe przestrzenie liniowe \emph{z wyborem wzorcowego modelu} $k^n$.
+\end{przyklad}
+
+\begin{przyklad}[Relacje zamiast funkcji]
+W $\Rel$ obiektami są zbiory, a morfizm $R:A\to B$ to relacja $R\subseteq A\times B$. Dla $R:A\to B$ i $S:B\to C$ definiujemy $S\circ R=\{(a,c):\text{istnieje }b\in B\text{ z }(a,b)\in R,(b,c)\in S\}$. Identycznością na $A$ jest przekątna $\Delta_A=\{(a,a):a\in A\}$. Złożenie relacji jest łączne, co można sprawdzić, rozwijając dwa kwantyfikatory egzystencjalne.
+
+Na przykład dla $A=B=C=\{1,2\}$ oraz $R=\{(1,1),(1,2)\}$, $S=\{(1,2),(2,2)\}$ otrzymujemy $S\circ R=\{(1,2)\}$. Kategoria $\Rel$ pokazuje, że kategorie nie muszą być zbudowane z funkcji.
+\end{przyklad}
+
+
+\begin{przyklad}[Ścieżki w grafie skierowanym]\label{przyklad:sciezki}
+Rozważmy graf z wierzchołkami $a,b,c$ i krawędziami $u:a\to b$, $v:b\to c$. Obiektami kategorii ścieżek są wierzchołki; morfizmami są skończone skierowane ścieżki, w tym ścieżki długości $0$ (identyczności). W szczególności istnieje morfizm $v\circ u:a\to c$, chociaż w wyjściowym grafie nie było osobnej krawędzi $a\to c$. Składanie polega na dopisywaniu jednej ścieżki do drugiej i jest łączne. Otrzymujemy przykład \emph{kategorii swobodnej na grafie}. Pokazuje on, że sam graf skierowany nie jest jeszcze kategorią: trzeba uwzględnić również wszystkie wymagane złożenia.
+\end{przyklad}
+
+\begin{przyklad}[Przestrzenie z wyróżnionym punktem]
+W kategorii $\Top_*$ obiektami są pary $(X,x_0)$ z przestrzenią topologiczną $X$ i wyróżnionym punktem $x_0\in X$. Morfizm $f:(X,x_0)\to(Y,y_0)$ to odwzorowanie ciągłe spełniające $f(x_0)=y_0$. Przykładowo funkcja $t\mapsto t^2$ daje morfizm $([0,1],0)\to([0,1],0)$, ale nie daje morfizmu $([0,1],1)\to([0,1],0)$. Ten sam wzór funkcji może więc być morfizmem w jednej kategorii, a w innej nie.
+\end{przyklad}
+
+
+
+
+
+
+\subsection{Podkategorie i kategoria przeciwna}
+
+\begin{definicja}[Podkategoria]
+\emph{Podkategorią} $\mathcal D$ kategorii $\mathcal C$ nazywamy kategorię, której obiekty są obiektami $\mathcal C$, zbiory morfizmów $\Hom_{\mathcal D}(A,B)$ są podzbiorami $\Hom_{\mathcal C}(A,B)$, a identyczności i składanie są odziedziczone z $\mathcal C$. Jest \emph{pełna}, jeśli dla dowolnych $A,B\in\Ob(\mathcal D)$ zachodzi $\Hom_{\mathcal D}(A,B)=\Hom_{\mathcal C}(A,B)$.
+\end{definicja}
+
+\begin{przyklad}
+Przestrzenie skończenie wymiarowe tworzą pełną podkategorię $\Vect_k$. Z kolei kategoria mająca te same obiekty co $\Vect_k$, ale jedynie liniowe izomorfizmy jako morfizmy, nie jest pełną podkategorią $\Vect_k$: pomija np. odwzorowanie zerowe $k\to k$.
+\end{przyklad}
+
+\begin{definicja}[Kategoria przeciwna]\label{def:op}
+Dla kategorii $\mathcal C$ \emph{kategorię przeciwną} $\mathcal C^{\op}$ otrzymujemy, pozostawiając te same obiekty i odwracając kierunki morfizmów: $\Hom_{\mathcal C^{\op}}(A,B)=\Hom_{\mathcal C}(B,A)$. Jeśli w $\mathcal C^{\op}$ mamy $u:A\to B$ oraz $v:B\to C$, to ich złożenie $v\circ_{\mathcal C^{\op}}u$ jest z definicji morfizmem $u\circ_{\mathcal C}v:C\to A$ w $\mathcal C$.
+\end{definicja}
+
+\begin{uwaga}
+Dwukrotne odwrócenie strzałek daje $(\mathcal C^{\op})^{\op}=\mathcal C$. Jeśli kategoria pochodzi ze zbioru uporządkowanego, jej kategoria przeciwna odpowiada porządkowi odwrotnemu. Pojęcie \emph{dualności} polega na tym, że każde twierdzenie wynikające wyłącznie z aksjomatów kategorii ma wersję z odwróconymi wszystkimi strzałkami.
+\end{uwaga}
+
+\section{Izomorfizmy, monomorfizmy i epimorfizmy}\label{sec:morfizmy}
+
+\begin{definicja}[Izomorfizm]
+Morfizm $f:A\to B$ w kategorii $\mathcal C$ jest \emph{izomorfizmem}, jeśli istnieje $g:B\to A$ takie, że $g\circ f=\id_A$ i $f\circ g=\id_B$. Morfizm $g$ nazywamy odwrotnością $f$ i oznaczamy $f^{-1}$. Piszemy $A\cong B$, jeśli istnieje izomorfizm między $A$ i $B$.
+\end{definicja}
+
+\begin{stwierdzenie}
+Odwrotność izomorfizmu jest jednoznaczna. Złożenie dwóch izomorfizmów jest izomorfizmem, a odwrotnością złożenia jest złożenie odwrotności w odwrotnej kolejności.
+\end{stwierdzenie}
+\begin{proof}
+Jeśli $g,h:B\to A$ są odwrotnościami $f:A\to B$, to $g=g\circ(f\circ h)=(g\circ f)\circ h=h$. Dla izomorfizmów $f:A\to B$, $u:B\to C$ mamy $(u\circ f)\circ(f^{-1}\circ u^{-1})=\id_C$ oraz $(f^{-1}\circ u^{-1})\circ(u\circ f)=\id_A$, korzystając z łączności.
+\end{proof}
+
+\begin{przyklad}[Co oznacza izomorfizm?]
+W $\Set$ jest nim bijekcja, w $\Grp$ izomorfizm grup, w $\Vect_k$ odwracalne odwzorowanie liniowe, a w $\Top$ homeomorfizm. W kategorii pochodzącej z porządku częściowego jedynymi izomorfizmami są identyczności (bo $x\leq y$ i $y\leq x$ pociągają $x=y$). W kategorii praporządku różne obiekty mogą być izomorficzne.
+\end{przyklad}
+
+\begin{definicja}[Monomorfizm i epimorfizm]\label{def:mono-epi}
+Morfizm $f:A\to B$ jest \emph{monomorfizmem}, jeśli dla każdego obiektu $X$ i wszystkich $u,v:X\to A$ zachodzi $f\circ u=f\circ v\Rightarrow u=v$. Morfizm $f:A\to B$ jest \emph{epimorfizmem}, jeśli dla każdego obiektu $Y$ i wszystkich $u,v:B\to Y$ zachodzi $u\circ f=v\circ f\Rightarrow u=v$.
+\end{definicja}
+
+Inaczej mówiąc, monomorfizmy można skracać z lewej strony równania, a epimorfizmy z prawej. Definicje te nie używają elementów ani obrazu odwzorowania.
+
+\begin{twierdzenie}\label{tw:set-mono-epi}
+Dla funkcji $f:A\to B$ w $\Set$ zachodzą równoważności: $f$ jest monomorfizmem wtedy i tylko wtedy, gdy jest różnowartościowa; $f$ jest epimorfizmem wtedy i tylko wtedy, gdy jest surjektywna.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $f$ jest różnowartościowa, to równość $f\circ u=f\circ v$ daje $u(x)=v(x)$ dla każdego $x$. Odwrotnie, jeśli $f(a)=f(a')$, rozważmy funkcje $u,v:\{*\}\to A$ dane przez $u(*)=a$, $v(*)=a'$. Moniczność $f$ daje $u=v$, a więc $a=a'$.
+
+Jeżeli $f$ jest surjektywna, to z $u\circ f=v\circ f$ wynika $u=v$ przez sprawdzenie na dowolnym $b=f(a)$. Jeśli $f$ nie jest surjektywna, wybierzmy $b_0\notin f(A)$ oraz funkcje $u,v:B\to\{0,1\}$, gdzie $u$ jest stale równa $0$, a $v(b_0)=1$ i $v(b)=0$ dla $b\neq b_0$. Mamy $u\neq v$, lecz $u\circ f=v\circ f$.
+\end{proof}
+
+\begin{przyklad}[Uwaga na kategorię]\label{przyklad:epi-pierscienie}
+W kategorii $\Ring$ inkluzja $\mathbb Z\hookrightarrow\mathbb Q$ jest epimorfizmem, chociaż nie jest surjektywna. Istotnie, jeżeli $u,v:\mathbb Q\to R$ są homomorfizmami pierścieni z jedynką, które zgadzają się na $\mathbb Z$, to dla $n\in\mathbb Z\setminus\{0\}$ elementy $u(1/n)$ i $v(1/n)$ są obydwa odwrotnościami tego samego elementu $u(n)=v(n)$, a więc są równe. W konsekwencji $u(a/n)=v(a/n)$ dla wszystkich liczb wymiernych. Zatem $u=v$.
+
+Przeciwnie, w kategorii pochodzącej z dowolnego porządku częściowego \emph{każdy istniejący} morfizm jest jednocześnie monomorfizmem i epimorfizmem, ponieważ każda klasa $\Hom(x,y)$ ma co najwyżej jeden element. Nie oznacza to, że każdy morfizm jest tam izomorfizmem.
+\end{przyklad}
+
+\begin{definicja}[Sekcja i retrakcja]
+Dla morfizmu $f:A\to B$ morfizm $s:B\to A$ spełniający $f\circ s=\id_B$ nazywamy \emph{sekcją} $f$ (prawą odwrotnością $f$); sam $f$ jest wówczas \emph{rozszczepionym epimorfizmem}. Morfizm $r:B\to A$ spełniający $r\circ f=\id_A$ nazywamy \emph{retrakcją} $f$ (lewą odwrotnością $f$); sam $f$ jest wówczas \emph{rozszczepionym monomorfizmem}.
+\end{definicja}
+
+\begin{stwierdzenie}
+Każdy rozszczepiony monomorfizm jest monomorfizmem, a każdy rozszczepiony epimorfizm jest epimorfizmem.
+\end{stwierdzenie}
+\begin{proof}
+Jeżeli $r\circ f=\id_A$ i $f\circ u=f\circ v$, to $u=r\circ f\circ u=r\circ f\circ v=v$. Drugi przypadek otrzymujemy przez odwrócenie strzałek.
+\end{proof}
+
+\begin{przyklad}
+W $\Vect_k$ włożenie $i:k\to k^2$, $i(x)=(x,0)$, ma lewą odwrotność $p:k^2\to k$, $p(x,y)=x$, bo $p\circ i=\id_k$. Zatem $i$ jest rozszczepionym monomorfizmem, a $p$ rozszczepionym epimorfizmem. W $\Set$ funkcja $\varnothing\to\{*\}$ jest monomorfizmem, ale nie ma lewej odwrotności: nie istnieje funkcja $\{*\}\to\varnothing$.
+\end{przyklad}
+
+\begin{uwaga}
+Morfizm będący jednocześnie mono- i epimorfizmem nie musi być izomorfizmem; świadczy o tym przykład $2\to6$ w kategorii porządku podzielności z przykładu~\ref{przyklad:poset}. Kategorie, w których każdy taki morfizm jest izomorfizmem, nazywa się \emph{zrównoważonymi} (ang. \emph{balanced}). Kategoria $\Set$ jest zrównoważona na mocy twierdzenia~\ref{tw:set-mono-epi}.
+\end{uwaga}
+
+
+\begin{przyklad}[Funktor zapominania nie musi zachowywać epimorfizmów]
+Dla pierścieni przemiennych z jedynką funktor $U:\Ring\to\Set$ zapomina strukturę. Jak pokazano w przykładzie~\ref{przyklad:epi-pierscienie}, morfizm $\mathbb Z\hookrightarrow\mathbb Q$ jest epimorfizmem w $\Ring$. Jego obraz przez $U$ nie jest epimorfizmem w $\Set$, gdyż nie jest surjektywny. To konkretny kontrprzykład do błędnego przekonania, że każdy funktor zachowuje epimorfizmy.
+\end{przyklad}
+
+\begin{przyklad}[Monomorfizmy w kategorii grup]
+Homomorfizm grup $f:G\to H$ jest monomorfizmem wtedy i tylko wtedy, gdy jest różnowartościowy. Jeden kierunek wynika ze skracania funkcji różnowartościowych. Jeśli $f(a)=f(b)$, weźmy dwa homomorfizmy $u,v:\mathbb Z\to G$ określone przez $u(1)=a$ i $v(1)=b$. Wówczas $f\circ u=f\circ v$, więc moniczność wymusza $u=v$, a stąd $a=b$. W ten sposób dla grup rolę jednoelementowego zbioru testowego z kategorii $\Set$ pełni grupa wolna na jednym generatorze.
+\end{przyklad}
+
+
+\section{Funktory: odwzorowania między kategoriami}\label{sec:funktory}
+
+\subsection{Definicja i przykłady}
+
+\begin{definicja}[Funktor kowariantny]\label{def:funktor}
+Niech $\mathcal C,\mathcal D$ będą kategoriami. \emph{Funktor (kowariantny)} $F:\mathcal C\to\mathcal D$ przyporządkowuje każdemu obiektowi $A$ obiekt $F(A)$ i każdemu morfizmowi $f:A\to B$ morfizm $F(f):F(A)\to F(B)$ w taki sposób, że dla wszystkich odpowiednich morfizmów zachodzi $F(\id_A)=\id_{F(A)}$ oraz $F(g\circ f)=F(g)\circ F(f)$.
+\end{definicja}
+
+Funktor zachowuje \emph{sposób organizacji strzałek}. Nie musi zachowywać dosłownie wszystkich dodatkowych struktur, które możemy rozpoznać w wyjściowej kategorii.
+
+\begin{przyklad}[Funktor zapominania]
+Funktor $U:\Grp\to\Set$ przypisuje grupie $G$ jej zbiór elementów $U(G)$, a homomorfizmowi $\varphi:G\to H$ tę samą funkcję, traktowaną wyłącznie jako odwzorowanie zbiorów. Niczego nie zmienia w funkcji $\varphi$; jedynie \emph{zapomina}, że funkcja zachowuje mnożenie. Analogicznie mamy $U:\Vect_k\to\Set$ i $U:\Top\to\Set$.
+\end{przyklad}
+
+\begin{przyklad}[Fundamentalny przykład z algebry liniowej]
+Funktor $F:\cat{Mat}_k\to\Vect_k^{\mathrm{fd}}$ definiujemy przez $F(n)=k^n$ i $F(A)(x)=Ax$. Zachowanie składania jest równością $(BA)x=B(Ax)$, a zachowanie identyczności wynika z $I_nx=x$. Każda skończenie wymiarowa przestrzeń wektorowa jest izomorficzna z pewnym $F(n)$, lecz nie jest dosłownie równa takiej przestrzeni bez wyboru bazy.
+\end{przyklad}
+
+\begin{przyklad}[Potęga symetryczna jako funktor]
+Ustalmy $r\geq1$. Dla przestrzeni $V$ nad $k$ oznaczmy przez $\operatorname{Sym}^r(V)$ $r$-tą potęgę symetryczną, a dla $f:V\to W$ przez $\operatorname{Sym}^r(f)$ jedyne odwzorowanie liniowe określone na iloczynach symetrycznych wzorem $v_1\cdots v_r\mapsto f(v_1)\cdots f(v_r)$. Wtedy $\operatorname{Sym}^r:\Vect_k\to\Vect_k$ jest funktorem. To przykład konstrukcji algebraicznej działającej również na odwzorowaniach.
+\end{przyklad}
+
+\begin{przyklad}[Grupa działająca na zbiorze]\label{przyklad:dzialanie-funktor}
+Traktujmy grupę $G$ jako kategorię z jednym obiektem $*$, jak w przykładzie~\ref{przyklad:monoid-kat}. Funktor $F:G\to\Set$ wybiera zbiór $X=F(*)$ i dla każdego $g\in G$ bijekcję $F(g):X\to X$ (bijekcję, ponieważ $F(g^{-1})$ jest odwrotnością $F(g)$). Równość $F(gh)=F(g)\circ F(h)$ oznacza dokładnie aksjomat lewego działania $g\cdot(h\cdot x)=(gh)\cdot x$. A zatem \emph{lewe działania grupy $G$ na zbiorach są tym samym co funktory $G\to\Set$}.
+\end{przyklad}
+
+\begin{przyklad}[Funktory między kategoriami z jednym obiektem]
+Monoidy $M,N$ rozumiemy jako kategorie z jednym obiektem. Funktor $F:M\to N$ jest dokładnie homomorfizmem monoidów: funkcja $M\to N$ musi zachować jednostkę i iloczyn. Jeśli oba monoidy są grupami, otrzymujemy zwykłe homomorfizmy grup. Tak jeden i ten sam aksjomat funktora przybiera postać znajomego warunku algebraicznego.
+\end{przyklad}
+
+
+\begin{przyklad}[Zbiór składowych spójnych jako funktor]
+Niech $\pi_0(X)$ oznacza zbiór składowych spójnych przestrzeni topologicznej $X$. Dla ciągłego $f:X\to Y$ obraz każdej składowej spójnej $K\subseteq X$ jest spójny, więc zawiera się w dokładnie jednej składowej $L\subseteq Y$. Możemy zatem zdefiniować $\pi_0(f)(K)=L$. To działanie zachowuje identyczności i składanie, dając funktor $\pi_0:\Top\to\Set$. Dla sumy topologicznej dwóch niepustych przedziałów składowe są dwie; dla przedziału $[0,1]$ jest jedna. Funktor wydobywa niezmiennik topologiczny i pamięta działanie ciągłych odwzorowań na tym niezmienniku.
+\end{przyklad}
+
+\begin{przyklad}[Funktor określony przez diagram]
+Niech $\mathcal J$ będzie kategorią z obiektami $0,1$ i jedną nietrywialną strzałką $a:0\to1$. Funktor $F:\mathcal J\to\Set$ jest dokładnie wyborem dwóch zbiorów $X=F(0)$, $Y=F(1)$ i funkcji $f=F(a):X\to Y$. Dla $X=\{1,2,3\}$, $Y=\{a,b\}$ i $f(1)=f(2)=a$, $f(3)=b$ otrzymujemy konkretny diagram, który sam jest funktorem. Zmiana kształtu kategorii indeksującej prowadzi do innych typów diagramów.
+\end{przyklad}
+
+
+\subsection{Funktory kontrawariantne}
+
+\begin{definicja}[Funktor kontrawariantny]
+\emph{Funktor kontrawariantny} z $\mathcal C$ do $\mathcal D$ jest funktorem kowariantnym $F:\mathcal C^{\op}\to\mathcal D$. W zapisie z morfizmami kategorii $\mathcal C$ oznacza to, że strzałce $f:A\to B$ przypisujemy strzałkę $F(f):F(B)\to F(A)$, przy czym $F(g\circ f)=F(f)\circ F(g)$.
+\end{definicja}
+
+\begin{przyklad}[Przeciwobraz]
+Dla zbioru $X$ niech $\mathcal P(X)$ oznacza zbiór jego podzbiorów. Funkcji $f:X\to Y$ przyporządkujmy $\mathcal P(f):\mathcal P(Y)\to\mathcal P(X)$, $B\mapsto f^{-1}(B)$. Równość $(g\circ f)^{-1}(C)=f^{-1}(g^{-1}(C))$ daje funktor kontrawariantny $\mathcal P:\Set^{\op}\to\Set$.
+
+Istnieje też \emph{inny}, kowariantny funktor potęgowy $\mathcal P_+:\Set\to\Set$, który funkcji $f:X\to Y$ przypisuje $A\mapsto f(A)$. Warto nie mylić tych dwóch konstrukcji.
+\end{przyklad}
+
+\begin{przyklad}[Przestrzeń dualna]\label{przyklad:dualny}
+Dla przestrzeni wektorowej $V$ niech $V^*=\Hom_k(V,k)$. Odwzorowaniu liniowemu $f:V\to W$ przypisujemy $f^*:W^*\to V^*$, $\lambda\mapsto\lambda\circ f$. Mamy $(g\circ f)^*=f^*\circ g^*$, a zatem $(-)^*:\Vect_k^{\op}\to\Vect_k$ jest funktorem kontrawariantnym. Dla skończenie wymiarowych $V$ jest on szczególnie dobrze związany z podwójną dualnością, którą omówimy w sekcji~\ref{sec:naturalne}.
+\end{przyklad}
+
+\begin{stwierdzenie}\label{tw:funktory-iso}
+Każdy funktor $F:\mathcal C\to\mathcal D$ przenosi izomorfizmy na izomorfizmy. Jeśli $f:A\to B$ jest izomorfizmem w $\mathcal C$, to $F(f)^{-1}=F(f^{-1})$.
+\end{stwierdzenie}
+\begin{proof}
+Z $f^{-1}\circ f=\id_A$ otrzymujemy $F(f^{-1})\circ F(f)=F(\id_A)=\id_{F(A)}$. Podobnie $F(f)\circ F(f^{-1})=\id_{F(B)}$.
+\end{proof}
+
+\begin{uwaga}
+Funktor nie musi przenosić dowolnych monomorfizmów na monomorfizmy ani dowolnych epimorfizmów na epimorfizmy. Powód jest subtelny: w definicji mono- lub epimorfizmu kwantyfikujemy po \emph{wszystkich} morfizmach w danej kategorii, a po przejściu do drugiej kategorii mogą pojawić się nowe morfizmy, których nie widzieliśmy w wyjściowej.
+\end{uwaga}
+
+\subsection{Wierność i pełność}
+
+\begin{definicja}[Funktor wierny i pełny]\label{def:pelny}
+Funktor $F:\mathcal C\to\mathcal D$ indukuje dla każdego $A,B\in\Ob(\mathcal C)$ funkcję $F_{A,B}:\Hom_{\mathcal C}(A,B)\to\Hom_{\mathcal D}(F(A),F(B))$, $f\mapsto F(f)$. Funktor jest \emph{wierny}, jeśli wszystkie $F_{A,B}$ są różnowartościowe; jest \emph{pełny}, jeśli wszystkie $F_{A,B}$ są surjektywne; jest \emph{w pełni wierny}, jeśli wszystkie są bijekcjami.
+\end{definicja}
+
+\begin{przyklad}
+Funktor zapominania $U:\Grp\to\Set$ jest wierny: dwa homomorfizmy o tej samej funkcji na elementach są równe. Nie jest pełny: np. dowolna funkcja $\mathbb Z\to\mathbb Z$ nie musi zachowywać dodawania. Istnienie funkcji nie oznacza istnienia odpowiadającego jej homomorfizmu.
+\end{przyklad}
+
+\begin{przyklad}
+Włączenie pełnej podkategorii $\Vect_k^{\mathrm{fd}}\hookrightarrow\Vect_k$ jest w pełni wierne. Funktor $\cat{Mat}_k\to\Vect_k^{\mathrm{fd}}$ z poprzedniego przykładu również jest w pełni wierny: każdemu odwzorowaniu liniowemu $k^n\to k^m$ odpowiada dokładnie jedna macierz o rozmiarach $m\times n$.
+\end{przyklad}
+
+
+\begin{stwierdzenie}[W pełni wierne funktory odzwierciedlają izomorfizmy]\label{tw:ff-reflect-iso}
+Niech $F:\mathcal C\to\mathcal D$ będzie w pełni wierny. Jeśli $f:A\to B$ jest morfizmem w $\mathcal C$ i $F(f)$ jest izomorfizmem w $\mathcal D$, to $f$ jest izomorfizmem w $\mathcal C$.
+\end{stwierdzenie}
+\begin{proof}
+Pełność daje $g:B\to A$ z $F(g)=F(f)^{-1}$. Z funktorialności wynika $F(gf)=F(g)F(f)=\id_{F(A)}=F(\id_A)$, więc wierność daje $gf=\id_A$. Analogicznie $fg=\id_B$.
+\end{proof}
+
+\begin{przyklad}[Wierność bez pełności]
+Funktor zapominania $U:\Grp\to\Set$ jest wierny, lecz niepełny. Na przykład funkcja $q:\mathbb Z\to\mathbb Z$, $q(n)=n^2$, jest funkcją zbiorów, ale nie jest homomorfizmem grup addytywnych, ponieważ $q(1+1)=4\neq 2=q(1)+q(1)$. Pełność wymaga reprezentowania \emph{każdej} funkcji między odpowiednimi zbiorami jako obrazu homomorfizmu, co w tym przykładzie zawodzi.
+\end{przyklad}
+
+
+\subsection{Funktory Hom}
+
+\begin{definicja}[Funktory reprezentowane przez obiekt]\label{def:hom-funktory}
+Niech $\mathcal C$ będzie kategorią lokalnie małą i $A\in\Ob(\mathcal C)$. Definiujemy funktor kowariantny $h^A:\mathcal C\to\Set$ przez $h^A(X)=\Hom_{\mathcal C}(A,X)$ oraz $h^A(f)(u)=f\circ u$ dla $f:X\to Y$ i $u:A\to X$. Definiujemy też funktor kontrawariantny $h_A:\mathcal C^{\op}\to\Set$ przez $h_A(X)=\Hom_{\mathcal C}(X,A)$ oraz $h_A(f)(v)=v\circ f$ dla $f:X\to Y$ i $v:Y\to A$.
+\end{definicja}
+
+\begin{przyklad}
+W $\Set$ funktor $h^1=\Hom_{\Set}(\{*\},-)$ jest naturalnie izomorficzny z funktorem identycznościowym, ponieważ każda funkcja $\{*\}\to X$ jest wyznaczona przez obraz $*$. Natomiast $h^{\{0,1\}}(X)$ jest naturalnie utożsamiany ze zbiorem $X\times X$, ponieważ funkcję na zbiorze dwuelementowym opisują dwa jej obrazy.
+\end{przyklad}
+
+\section{Transformacje naturalne}\label{sec:naturalne}
+
+Dwa funktory mogą przyporządkowywać obiektom różne struktury, a mimo to być ze sobą systematycznie powiązane. Pojedyncza rodzina odwzorowań nie wystarczy: trzeba jeszcze wymagać zgodności z każdym morfizmem kategorii wyjściowej.
+
+\begin{definicja}[Transformacja naturalna]\label{def:naturalna}
+Dla funktorów $F,G:\mathcal C\to\mathcal D$ \emph{transformacja naturalna} $\eta:F\Rightarrow G$ jest rodziną morfizmów $\eta_A:F(A)\to G(A)$, po jednym dla każdego $A\in\Ob(\mathcal C)$, spełniającą dla każdego $f:A\to B$ warunek $G(f)\circ\eta_A=\eta_B\circ F(f)$. Innymi słowy, poniższy diagram jest przemienny:
+\[
+\begin{CD}
+F(A) @>{\eta_A}>> G(A)\\
+@V{F(f)}VV @VV{G(f)}V\\
+F(B) @>>{\eta_B}> G(B).
+\end{CD}
+\]
+Jeśli wszystkie $\eta_A$ są izomorfizmami, to $\eta$ nazywamy \emph{izomorfizmem naturalnym} i piszemy $F\cong G$.
+\end{definicja}
+
+\begin{stwierdzenie}[Funktory i transformacje naturalne między posetami]\label{tw:fun-posety}
+Niech $(P,\le_P)$ i $(Q,\le_Q)$ będą zbiorami częściowo uporządkowanymi, traktowanymi jako kategorie. Funktory $F:P\to Q$ są dokładnie funkcjami monotonicznymi. Jeśli $F,G:P\to Q$ są monotoniczne, to istnieje transformacja naturalna $F\Rightarrow G$ wtedy i tylko wtedy, gdy $F(x)\le_Q G(x)$ dla każdego $x\in P$; jest ona wówczas jednoznaczna.
+\end{stwierdzenie}
+\begin{proof}
+W $P$ istnieje morfizm $x\to y$ dokładnie wtedy, gdy $x\le_P y$. Funktor musi więc wysyłać każdą taką parę w parę $F(x)\le_Q F(y)$, co jest monotonicznością. Odwrotnie, funkcja monotoniczna definiuje morfizm $F(x)\to F(y)$ dla każdego $x\to y$; identyczności i złożenia są zachowane, gdyż odpowiednie zbiory morfizmów w $Q$ mają co najwyżej jeden element. Komponent transformacji naturalnej $\eta_x:F(x)\to G(x)$ istnieje dokładnie przy wskazanej nierówności. Dla $x\le_P y$ obie strony równania naturalności są wówczas morfizmami $F(x)\to G(y)$, a więc są równe.
+\end{proof}
+
+\begin{przyklad}[Kategoria zbiorów podzielnych przez włączenie]
+W posetowej kategorii $(\mathcal P(\{1,2,3\}),\subseteq)$ istnieje strzałka $\{1\}\to\{1,2\}$, ale nie strzałka odwrotna. Funkcja $F(U)=U\cap\{1,2\}$ jest monotoniczna, zatem daje funktor. Ponadto $F(U)\subseteq U$ dla każdego $U$, co określa transformację naturalną $F\Rightarrow\id$. Nie jest ona izomorfizmem naturalnym, bo np. $F(\{3\})=\varnothing\neq\{3\}$.
+\end{przyklad}
+
+\begin{przyklad}[Przekształcenie naturalne z przestrzeni do podwójnej dualnej]\label{przyklad:podwojny-dual}
+W $\Vect_k$ dla każdej przestrzeni $V$ definiujemy $\iota_V:V\to V^{**}$ przez $\iota_V(v)(\lambda)=\lambda(v)$ dla $v\in V$, $\lambda\in V^*$. Jest to odwzorowanie liniowe. Jeśli $f:V\to W$, to $f^{**}:V^{**}\to W^{**}$ spełnia
+$f^{**}(\iota_V(v))(\mu)=\iota_V(v)(f^*(\mu))=\mu(f(v))=\iota_W(f(v))(\mu)$
+dla wszystkich $v\in V$ i $\mu\in W^*$. Stąd $f^{**}\circ\iota_V=\iota_W\circ f$: rodzina $(\iota_V)$ jest transformacją naturalną $\id_{\Vect_k}\Rightarrow(-)^{**}$.
+
+Gdy $V$ jest skończenie wymiarowa, $\iota_V$ jest izomorfizmem, więc na $\Vect_k^{\mathrm{fd}}$ otrzymujemy izomorfizm naturalny. Dla przestrzeni nieskończenie wymiarowych $\iota_V$ na ogół nie jest surjektywna.
+\end{przyklad}
+
+\begin{przyklad}[Naturalna jednoelementowość podzbioru]
+Dla kowariantnego funktora potęgowego $\mathcal P_+$ z sekcji~\ref{sec:funktory} definiujemy $\eta_X:X\to\mathcal P(X)$ przez $\eta_X(x)=\{x\}$. Dla funkcji $f:X\to Y$ mamy $\mathcal P_+(f)(\eta_X(x))=\{f(x)\}=\eta_Y(f(x))$. Zatem $\eta:\id_{\Set}\Rightarrow\mathcal P_+$ jest naturalna.
+\end{przyklad}
+
+\begin{przyklad}[Naturalność i działania grup]
+Niech $G$ będzie grupą, a $F,H:G\to\Set$ funktorami reprezentującymi lewe działania $G$ na zbiorach $X$ i $Y$ (przykład~\ref{przyklad:dzialanie-funktor}). Transformacja naturalna $\eta:F\Rightarrow H$ składa się z jednej funkcji $\eta_*:X\to Y$. Warunek naturalności dla morfizmu $g\in G$ ma postać $\eta_*(g\cdot x)=g\cdot\eta_*(x)$. Jest to dokładnie definicja odwzorowania $G$-ekwiwariantnego.
+\end{przyklad}
+
+\begin{twierdzenie}[Naturalne endomorfizmy identyczności w przestrzeniach liniowych]\label{tw:skalarnosc}
+Niech $k$ będzie ciałem. Każda transformacja naturalna $\eta:\id_{\Vect_k}\Rightarrow\id_{\Vect_k}$ ma postać $\eta_V=\lambda\id_V$ dla pewnego $\lambda\in k$, niezależnego od $V$. Odwrotnie, każdy $\lambda\in k$ definiuje taką transformację naturalną.
+\end{twierdzenie}
+\begin{proof}
+Ponieważ $\eta_k:k\to k$ jest liniowa, istnieje $\lambda=\eta_k(1)\in k$ takie, że $\eta_k(t)=\lambda t$. Dla dowolnego $V$ i $v\in V$ rozważmy liniową funkcję $f_v:k\to V$, $t\mapsto tv$. Naturalność daje $\eta_V(f_v(1))=f_v(\eta_k(1))$, więc $\eta_V(v)=\lambda v$. Odwrotnie, dla dowolnego liniowego $f:V\to W$ mamy $f(\lambda v)=\lambda f(v)$, co jest warunkiem naturalności.
+\end{proof}
+
+\begin{uwaga}[Naturalny nie znaczy dowolnie wybrany]
+Każda skończenie wymiarowa przestrzeń wektorowa ma bazę, ale \emph{wybór bazy} zazwyczaj nie jest naturalny: różne automorfizmy tej samej przestrzeni nie muszą zachowywać wybranej bazy. Natomiast odwzorowanie $V\to V^{**}$ z przykładu~\ref{przyklad:podwojny-dual} nie zależy od wyboru bazy. Naturalność formalizuje to rozróżnienie.
+\end{uwaga}
+
+\begin{stwierdzenie}[Składanie transformacji]
+Jeśli $F,G,H:\mathcal C\to\mathcal D$ i $\eta:F\Rightarrow G$, $\theta:G\Rightarrow H$ są transformacjami naturalnymi, to rodzina $(\theta\circ\eta)_A=\theta_A\circ\eta_A$ jest transformacją naturalną $F\Rightarrow H$. Dla małych $\mathcal C$ i lokalnie małych $\mathcal D$ funktory $\mathcal C\to\mathcal D$ z transformacjami naturalnymi tworzą kategorię $[\mathcal C,\mathcal D]$.
+\end{stwierdzenie}
+\begin{proof}
+Dla $f:A\to B$ mamy $H(f)\theta_A\eta_A=\theta_B G(f)\eta_A=\theta_B\eta_B F(f)$, gdzie pominięto znaki składania. Łączność wynika z łączności w $\mathcal D$, a identycznością funktora $F$ jest rodzina $(\id_{F(A)})_A$.
+\end{proof}
+
+
+\begin{twierdzenie}[Jedyna naturalna operacja jednoargumentowa na zbiorach]\label{tw:only-id-set}
+Każda transformacja naturalna $\eta:\id_{\Set}\Rightarrow\id_{\Set}$ jest identycznościowa.
+\end{twierdzenie}
+\begin{proof}
+Dla jednoelementowego zbioru $1=\{*\}$ istnieje tylko jedna funkcja $1\to1$, zatem $\eta_1=\id_1$. Niech $X$ będzie dowolnym zbiorem, a $x\in X$. Dla funkcji $f_x:1\to X$, $f_x(*)=x$, naturalność daje $\eta_X(x)=\eta_X(f_x(*))=f_x(\eta_1(*))=x$. Ponieważ równość zachodzi dla każdego $x\in X$, otrzymujemy $\eta_X=\id_X$ (również gdy $X=\varnothing$, gdzie funkcja $X\to X$ jest jednoznaczna).
+\end{proof}
+
+\begin{przyklad}[Dlaczego wybór bazy nie jest naturalny]
+Dla $V=\mathbb R^2$ wybierzmy bazę $(v_1,v_2)$. Istnieje automorfizm liniowy $T:V\to V$ spełniający $T(v_1)=v_1+v_2$ i $T(v_2)=v_2$. Wybór uporządkowanej bazy zgodny z \emph{każdym} izomorfizmem wymagałby, aby automorfizm $T$ zachowywał oba wybrane wektory, co jest fałszem. Przeciwieństwem jest naturalne odwzorowanie $V\to V^{**}$: dla niego zgodność z dowolnym $T$ została wykazana w przykładzie~\ref{przyklad:podwojny-dual}.
+\end{przyklad}
+
+
+
+\begin{stwierdzenie}[Kiedy transformacja naturalna jest odwracalna]\label{tw:nat-iso-components}
+Niech $F,G:\mathcal C\to\mathcal D$ będą funktorami i $\eta:F\Rightarrow G$ transformacją naturalną. Istnieje transformacja naturalna $\theta:G\Rightarrow F$ z $\theta\circ\eta=\id_F$ i $\eta\circ\theta=\id_G$ wtedy i tylko wtedy, gdy każda składowa $\eta_A:F(A)\to G(A)$ jest izomorfizmem w $\mathcal D$.
+\end{stwierdzenie}
+\begin{proof}
+Jeśli $\theta$ jest odwrotnością naturalną, to $\theta_A\eta_A=\id_{F(A)}$ i $\eta_A\theta_A=\id_{G(A)}$ dla każdego $A$, więc $\eta_A$ jest izomorfizmem. Odwrotnie, załóżmy odwracalność wszystkich $\eta_A$ i zdefiniujmy $\theta_A=\eta_A^{-1}$. Dla $f:A\to B$ naturalność $\eta$ to $G(f)\eta_A=\eta_BF(f)$. Składając z lewej strony z $\eta_B^{-1}$, a z prawej z $\eta_A^{-1}$, otrzymujemy $F(f)\eta_A^{-1}=\eta_B^{-1}G(f)$, czyli naturalność $\theta$. Równości $\theta\eta=\id_F$ i $\eta\theta=\id_G$ zachodzą składowa po składowej.
+\end{proof}
+
+
+\section{Obiekty uniwersalne: początkowe, końcowe, zerowe}\label{sec:uniwersalne}
+
+\begin{definicja}[Obiekt początkowy i końcowy]\label{def:poczatkowy}
+Obiekt $I$ kategorii $\mathcal C$ jest \emph{początkowy}, jeśli dla każdego $A\in\Ob(\mathcal C)$ istnieje dokładnie jeden morfizm $I\to A$. Obiekt $T$ jest \emph{końcowy}, jeśli dla każdego $A\in\Ob(\mathcal C)$ istnieje dokładnie jeden morfizm $A\to T$. Obiekt będący jednocześnie początkowym i końcowym nazywamy \emph{obiektem zerowym}.
+\end{definicja}
+
+\begin{przyklad}[Zbiory, grupy, przestrzenie]
+W $\Set$ zbiór pusty $\varnothing$ jest początkowy, ponieważ istnieje dokładnie jedna funkcja $\varnothing\to A$ dla każdego zbioru $A$. Dowolny singleton $\{*\}$ jest końcowy: każda funkcja $A\to\{*\}$ jest stała. W $\Grp$ grupa trywialna $\{e\}$ jest jednocześnie początkowa i końcowa, czyli zerowa. W $\Vect_k$ analogicznie obiektem zerowym jest przestrzeń $\{0\}$. W $\Top$ obiektem początkowym jest przestrzeń pusta, a końcowym dowolna przestrzeń jednoelementowa.
+\end{przyklad}
+
+\begin{przyklad}[Minimum i maksimum]
+W kategorii częściowego porządku $(P,\leq)$ obiekt początkowy to najmniejszy element $P$, jeśli istnieje; obiekt końcowy to największy element. Na przykład w $(\mathcal P(S),\subseteq)$ są to odpowiednio $\varnothing$ i $S$.
+\end{przyklad}
+
+\begin{twierdzenie}[Jednoznaczność z dokładnością do jedynego izomorfizmu]\label{tw:unique-universal}
+Jeśli $I,J$ są obiektami początkowymi tej samej kategorii, to istnieje dokładnie jeden izomorfizm $I\to J$. Analogicznie dla dwóch obiektów końcowych.
+\end{twierdzenie}
+\begin{proof}
+Z początkowości $I$ istnieje jedyny $f:I\to J$, a z początkowości $J$ jedyny $g:J\to I$. Złożenie $g\circ f:I\to I$ musi być równe $\id_I$, ponieważ istnieje dokładnie jeden morfizm $I\to I$; podobnie $f\circ g=\id_J$. Jedyność izomorfizmu wynika z jedyności dowolnego morfizmu $I\to J$. Dla obiektów końcowych odwracamy wszystkie strzałki.
+\end{proof}
+
+\begin{uwaga}
+Wyrażenie \emph{jednoznaczny z dokładnością do jedynego izomorfizmu} jest mocniejsze od zwykłego \emph{jednoznaczny z dokładnością do izomorfizmu}: nie tylko obiekty muszą być izomorficzne, lecz także odpowiedni izomorfizm jest wymuszony przez daną własność uniwersalną. Ta idea wróci przy iloczynach, granicach i sprzężeniach.
+\end{uwaga}
+
+
+
+
+
+\section{Iloczyny, koprodukty i konstrukcje uniwersalne}\label{sec:produkty}
+
+\subsection{Iloczyn}
+
+\begin{definicja}[Iloczyn dwóch obiektów]\label{def:produkt}
+Niech $A,B$ będą obiektami kategorii $\mathcal C$. \emph{Iloczynem} $A$ i $B$ nazywamy obiekt $P$ wraz z morfizmami $p_A:P\to A$ i $p_B:P\to B$ o własności: dla każdego obiektu $X$ i każdej pary morfizmów $f:X\to A$, $g:X\to B$ istnieje dokładnie jeden morfizm $\langle f,g\rangle:X\to P$ taki, że $p_A\circ\langle f,g\rangle=f$ i $p_B\circ\langle f,g\rangle=g$.
+\end{definicja}
+
+Warunek można zilustrować dwoma przemiennymi diagramami; obie strzałki poziome $\langle f,g\rangle$ mają być tą samą, jednoznacznie wyznaczoną strzałką:
+\[
+\begin{CD}
+X @>{\langle f,g\rangle}>> P\\
+@V{f}VV @VV{p_A}V\\
+A @>>{\id_A}> A
+\end{CD}
+\qquad
+\begin{CD}
+X @>{\langle f,g\rangle}>> P\\
+@V{g}VV @VV{p_B}V\\
+B @>>{\id_B}> B.
+\end{CD}
+\]
+Przyjmujemy zwykle zapis $P=A\times B$, ale trzeba pamiętać, że chodzi o obiekt z określonymi rzutami, a nie tylko samą klasę izomorfizmu obiektu.
+
+\begin{przyklad}[Zbiory]
+W $\Set$ iloczynem jest zbiór par $A\times B$. Unikalna funkcja z definicji ma postać $\langle f,g\rangle(x)=(f(x),g(x))$. W szczególności funkcję do iloczynu można podać, podając osobno obie jej współrzędne.
+\end{przyklad}
+
+\begin{przyklad}[Grupy i topologia]
+W $\Grp$ iloczynem jest $A\times B$ z mnożeniem $(a,b)(a',b')=(aa',bb')$. W $\Top$ jest nim kartezjański iloczyn wyposażony w topologię produktową. W obu przypadkach uniwersalny morfizm jest odwzorowaniem parującym $x\mapsto(f(x),g(x))$; w topologii jego ciągłość wynika z definicji topologii produktowej.
+\end{przyklad}
+
+\begin{przyklad}[Iloczyn w przestrzeniach liniowych]
+W $\Vect_k$ iloczynem dwóch przestrzeni $V,W$ jest przestrzeń $V\oplus W$ z rzutami na współrzędne. Dla \emph{skończonej} liczby przestrzeni suma prosta i iloczyn prosty są kanonicznie izomorficzne; przy nieskończonej rodzinie należy je rozróżnić.
+\end{przyklad}
+
+\begin{przyklad}[Iloczyn w porządku]
+W kategorii zbioru częściowo uporządkowanego $P$ iloczyn obiektów $a,b$ istnieje wtedy i tylko wtedy, gdy istnieje ich kres dolny $a\wedge b$. Rzuty istnieją, bo $a\wedge b\leq a,b$. Każde $x$ spełniające $x\leq a,b$ spełnia $x\leq a\wedge b$. Zatem logiczne \emph{``i''} odpowiada kategorii iloczynu.
+\end{przyklad}
+
+\begin{twierdzenie}[Jednoznaczność iloczynu]\label{tw:produkt-unique}
+Jeśli $(P,p_A,p_B)$ i $(Q,q_A,q_B)$ są dwoma iloczynami tych samych obiektów $A,B$, to istnieje dokładnie jeden izomorfizm $u:P\to Q$ spełniający $q_A\circ u=p_A$ i $q_B\circ u=p_B$.
+\end{twierdzenie}
+\begin{proof}
+Z własności $Q$ wynika istnienie jedynego $u:P\to Q$ o wymaganych równościach. Z własności $P$ wynika analogicznie istnienie jedynego $v:Q\to P$ zgodnego z rzutami. Teraz $p_A\circ(v\circ u)=q_A\circ u=p_A$ i tak samo dla $p_B$. Ponieważ $\id_P$ również spełnia te dwa równania, jedyność w definicji iloczynu daje $v\circ u=\id_P$. Symetrycznie $u\circ v=\id_Q$.
+\end{proof}
+
+\subsection{Koprodukt}
+
+\begin{definicja}[Koprodukt dwóch obiektów]\label{def:koprodukt}
+Niech $A,B\in\Ob(\mathcal C)$. \emph{Koprodukt} $A,B$ to obiekt $Q$ z morfizmami $i_A:A\to Q$, $i_B:B\to Q$ taki, że dla każdego $X$ oraz morfizmów $f:A\to X$, $g:B\to X$ istnieje dokładnie jeden $[f,g]:Q\to X$ spełniający $[f,g]\circ i_A=f$ i $[f,g]\circ i_B=g$.
+\end{definicja}
+
+Koprodukt jest pojęciem dualnym do iloczynu: definicję otrzymujemy przez odwrócenie wszystkich strzałek. Dlatego twierdzenie~\ref{tw:produkt-unique} ma odpowiednik dla koproduktów.
+
+\begin{przyklad}[Suma rozłączna zbiorów]
+W $\Set$ koproduktem jest $A\sqcup B=(A\times\{0\})\cup(B\times\{1\})$, a $i_A(a)=(a,0)$, $i_B(b)=(b,1)$. Dla $f:A\to X$ i $g:B\to X$ jedyna funkcja $[f,g]$ jest określona na obu rozłącznych częściach przez $[f,g](a,0)=f(a)$, $[f,g](b,1)=g(b)$. Nawet gdy $A\cap B\neq\varnothing$, koprodukt zachowuje informacje, z której kopii pochodzi element.
+\end{przyklad}
+
+\begin{przyklad}[Koprodukt w grupach]
+W $\Grp$ koproduktem jest \emph{iloczyn wolny} $G*H$. Można go intuicyjnie budować ze zredukowanych słów, których litery pochodzą naprzemiennie z $G\setminus\{e\}$ i $H\setminus\{e\}$. Homomorfizmy $G\to K$ i $H\to K$ wyznaczają dokładnie jeden homomorfizm $G*H\to K$. Nie jest to zwykle iloczyn kartezjański $G\times H$: w $G\times H$ elementy z obu czynników komutują, podczas gdy w $G*H$ nie muszą.
+\end{przyklad}
+
+\begin{przyklad}[Suma prosta przestrzeni]
+W $\Vect_k$ koproduktem $V,W$ jest także $V\oplus W$, ale tym razem z włożeniami $i_V(v)=(v,0)$, $i_W(w)=(0,w)$. Jedyny morfizm $[f,g]:V\oplus W\to X$ ma wzór $[f,g](v,w)=f(v)+g(w)$. Iloczyn i koprodukt mogą więc mieć ten sam obiekt nośny, lecz są określone przez \emph{inne strzałki i inne własności uniwersalne}.
+\end{przyklad}
+
+\begin{przyklad}[Koprodukt w porządku]
+Dla kategorii posetu $P$ koprodukt $a,b$ jest ich kresem górnym $a\vee b$, o ile istnieje. Zestawienie przykładów pokazuje dwie kategoryczne wersje słów \emph{``i''} (iloczyn) oraz \emph{``lub''} (koprodukt) w teorii porządku.
+\end{przyklad}
+
+
+\begin{przyklad}[Suma prosta a iloczyn tensorowy]
+Niech $V=k^2$ i $W=k^3$. Ich produkt w $\Vect_k$ ma wymiar $2+3=5$; jest nim $V\oplus W$, wyposażony w dwa rzuty. Iloczyn tensorowy $V\otimes_k W$ ma wymiar $2\cdot3=6$, więc nie może być produktem w tej kategorii. Tensor jest opisywany przez \emph{inną} własność uniwersalną: dla każdej przestrzeni $Z$ odwzorowania liniowe $V\otimes_k W\to Z$ są w naturalnej bijekcji z odwzorowaniami dwuliniowymi $V\times W\to Z$. Sama nazwa ``iloczyn'' nie przesądza zatem o konstrukcji kategorialnej.
+\end{przyklad}
+
+\begin{przyklad}[Puste produkty i puste koprodukty]
+Iloczyn pustej rodziny obiektów w kategorii $\mathcal C$, jeśli istnieje, to obiekt końcowy: dla każdego $X$ ma istnieć dokładnie jedna strzałka $X\to P$, bo nie ma żadnych rzutów, których zgodność trzeba sprawdzać. Dualnie koprodukt pustej rodziny jest obiektem początkowym. W $\Set$ odpowiadają im odpowiednio singleton i zbiór pusty. To ważny przypadek brzegowy definicji granicy i kogranicy.
+\end{przyklad}
+
+\begin{przyklad}[Biprodukt dwóch przestrzeni liniowych]
+W $\Vect_k$ dla $V\oplus W$ występują włożenia $i_V(v)=(v,0)$, $i_W(w)=(0,w)$ i rzuty $p_V(v,w)=v$, $p_W(v,w)=w$. Spełniają one $p_Vi_V=\id_V$, $p_Wi_W=\id_W$, $p_Vi_W=0$, $p_Wi_V=0$ oraz $i_Vp_V+i_Wp_W=\id_{V\oplus W}$. Ostatnią równość sprawdzamy na $(v,w)$: lewa strona daje $(v,0)+(0,w)=(v,w)$. Te wzory uzasadniają nazwę \emph{biprodukt}: jeden obiekt realizuje jednocześnie produkt i koprodukt, przy ściśle zgodnych włożeniach i rzutach.
+\end{przyklad}
+
+
+\subsection{Nie należy mylić istnienia z konstrukcją}
+
+\begin{uwaga}
+Nie w każdej kategorii istnieją iloczyny i koprodukty. Dla posetu, w którym dwa elementy nie mają kresu dolnego, odpowiedni iloczyn nie istnieje. Również wtedy, gdy w danej kategorii znamy wygodną konstrukcję na elementach, \emph{własność uniwersalna} jest właściwym narzędziem sprawdzania, czy ta konstrukcja rzeczywiście jest produktem lub koproduktem.
+\end{uwaga}
+
+\begin{stwierdzenie}[Zachowanie własności przez izomorfizm]
+Jeżeli $(P,p_A,p_B)$ jest iloczynem $A,B$ i $u:Q\to P$ jest izomorfizmem, to $(Q,p_A\circ u,p_B\circ u)$ również jest iloczynem $A,B$. Analogiczne stwierdzenie zachodzi dla koproduktów.
+\end{stwierdzenie}
+\begin{proof}
+Dla danych $f:X\to A$, $g:X\to B$ wyznaczmy jedyne $h:X\to P$ zgodne z rzutami. Wtedy $u^{-1}\circ h:X\to Q$ jest zgodny z nowymi rzutami. Jeśli $t:X\to Q$ także jest zgodny, to $u\circ t=h$ na mocy jedyności w $P$, czyli $t=u^{-1}\circ h$.
+\end{proof}
+
+\section{Equalizatory, koequalizatory i kwadraty kartezjańskie}\label{sec:equalizatory}
+
+W konstrukcji iloczynu porównujemy dwie strzałki o wspólnej dziedzinie. Czasem potrzebujemy z kolei \emph{wymusić równość} dwóch strzałek lub połączyć dwa obiekty nad wspólną bazą. Te potrzeby prowadzą do equalizatorów i kwadratów kartezjańskich.
+
+\subsection{Equalizator i koequalizator}
+
+\begin{definicja}[Equalizator]\label{def:equalizer}
+Niech $f,g:A\to B$ będą dwoma morfizmami w kategorii $\mathcal C$. \emph{Equalizatorem} $f$ i $g$ nazywamy morfizm $e:E\to A$ taki, że $f\circ e=g\circ e$, oraz taki, że dla każdego $u:X\to A$ z $f\circ u=g\circ u$ istnieje dokładnie jeden $\bar u:X\to E$ spełniający $e\circ\bar u=u$.
+\end{definicja}
+
+\begin{przyklad}[Equalizator w zbiorach]
+Dla funkcji $f,g:A\to B$ przyjmijmy $E=\{a\in A:f(a)=g(a)\}$, a za $e:E\hookrightarrow A$ weźmy włączenie. Jeśli $u:X\to A$ spełnia $fu=gu$, to $u(x)\in E$ dla każdego $x$, zatem $u$ ma dokładnie jedno rozłożenie przez $e$. Na przykład dla $f,g:\mathbb R\to\mathbb R$ danych przez $f(x)=x^2$ i $g(x)=x$ otrzymujemy $E=\{0,1\}$.
+\end{przyklad}
+
+\begin{przyklad}[Jądro jako equalizator]
+W $\Vect_k$ jądro odwzorowania $f:V\to W$ jest equalizatorem pary $f,0:V\to W$, gdzie $0$ jest odwzorowaniem zerowym. Istotnie, $f|_{\Ker f}=0$, a każde $u:X\to V$ z $fu=0$ przyjmuje wartości w $\Ker f$. To pierwsza wskazówka, że jądro jest konstrukcją kategorialną, a nie wyłącznie zbiorem rozwiązań równania.
+\end{przyklad}
+
+\begin{definicja}[Koequalizator]\label{def:coeq}
+Dla morfizmów $f,g:A\to B$ \emph{koequalizatorem} nazywamy morfizm $q:B\to Q$ taki, że $q\circ f=q\circ g$ oraz dla każdego $v:B\to X$ spełniającego $v\circ f=v\circ g$ istnieje dokładnie jeden $\bar v:Q\to X$ o własności $\bar v\circ q=v$.
+\end{definicja}
+
+\begin{przyklad}[Iloraz zbioru]
+W $\Set$ koequalizator można zbudować, biorąc najmniejszą relację równoważności $\sim$ na $B$, dla której $f(a)\sim g(a)$ dla każdego $a\in A$, oraz rzut $q:B\to B/{\sim}$. Każda funkcja $v:B\to X$ o własności $vf=vg$ jest stała na klasach relacji $\sim$, więc przechodzi jednoznacznie na iloraz.
+
+Jeśli $A=\{*\}$, $B=\{0,1,2\}$, $f(*)=0$ i $g(*)=1$, to $Q$ ma dwie klasy: $\{0,1\}$ i $\{2\}$. Koequalizator \emph{skleja} obrazy wskazane przez parę morfizmów.
+\end{przyklad}
+
+\begin{przyklad}[Kojądro]
+W $\Vect_k$ \emph{kojądro} odwzorowania $f:V\to W$ jest koequalizatorem pary $f,0:V\to W$. Ma postać rzutu $q:W\to W/\im f$. Jeśli $v:W\to X$ jest liniowa i $vf=0$, to $\im f\subseteq\Ker v$, więc $v$ przechodzi jednoznacznie przez $q$.
+\end{przyklad}
+
+\begin{stwierdzenie}
+Każdy equalizator jest monomorfizmem. Każdy koequalizator jest epimorfizmem.
+\end{stwierdzenie}
+\begin{proof}
+Niech $e:E\to A$ będzie equalizatorem $f,g:A\to B$. Jeśli $eu=ev$ dla $u,v:X\to E$, to wspólny morfizm $w=eu=ev$ spełnia $fw=gw$, więc na mocy jedyności rozkładu przez $e$ mamy $u=v$. Wersja dualna jest identycznym argumentem ze strzałkami odwróconymi.
+\end{proof}
+
+
+\begin{przyklad}[Equalizator dwóch homomorfizmów]
+W kategorii $\Ab$ rozważmy $f,g:\mathbb Z\to\mathbb Z/6\mathbb Z$ określone przez $f(n)=[2n]_6$ oraz $g(n)=[5n]_6$. Warunek $f(n)=g(n)$ jest równoważny $3n\equiv0\pmod 6$, a więc $n$ jest parzyste. Equalizatorem jest włożenie $2\mathbb Z\hookrightarrow\mathbb Z$. Jeśli homomorfizm $u:H\to\mathbb Z$ spełnia $fu=gu$, to jego obraz jest zawarty w $2\mathbb Z$; dokładnie stąd wynika istnienie i jedyność wymaganego rozkładu. To przykład, w którym definicja uniwersalna daje równanie arytmetyczne.
+\end{przyklad}
+
+\begin{przyklad}[Koequalizator w grupach]
+Niech $f,g:A\to B$ będą homomorfizmami grup. Oznaczmy przez $N$ najmniejszą podgrupę normalną $B$ zawierającą elementy $f(a)g(a)^{-1}$ dla wszystkich $a\in A$. Wówczas projekcja $q:B\to B/N$ jest koequalizatorem $f,g$. Rzeczywiście $qf=qg$. Jeśli $v:B\to K$ spełnia $vf=vg$, to $f(a)g(a)^{-1}\in\Ker v$, a normalność jądra daje $N\subseteq\Ker v$; powstaje jedyny homomorfizm $\bar v:B/N\to K$ z $\bar vq=v$. W kategorii grup nie wystarcza więc zwykła relacja równoważności zbiorów: utożsamienia muszą być zgodne z mnożeniem.
+\end{przyklad}
+
+
+\subsection{Pullback: para spełniająca warunek zgodności}
+
+\begin{definicja}[Kwadrat kartezjański, pullback]\label{def:pullback}
+Niech $f:A\to C$ i $g:B\to C$ będą morfizmami kategorii $\mathcal C$. \emph{Pullbackiem} (iloczynem włóknistym) tej pary jest obiekt $P$ z morfizmami $p_A:P\to A$, $p_B:P\to B$ spełniającymi $f\circ p_A=g\circ p_B$, takimi że dla każdego $X$ i pary $u:X\to A$, $v:X\to B$ z $f\circ u=g\circ v$ istnieje dokładnie jeden $h:X\to P$ spełniający $p_A\circ h=u$, $p_B\circ h=v$. Diagram
+\[
+\begin{CD}
+P @>{p_B}>> B\\
+@V{p_A}VV @VV{g}V\\
+A @>>{f}> C
+\end{CD}
+\]
+nazywamy wówczas \emph{kwadratem kartezjańskim}.
+\end{definicja}
+
+\begin{przyklad}[Iloczyn włóknisty zbiorów]\label{przyklad:włokna}
+W $\Set$ konstrukcja ma bardzo konkretną postać:
+\[
+A\times_C B:=\{(a,b)\in A\times B:f(a)=g(b)\}.
+\]
+Rzutami są $p_A(a,b)=a$, $p_B(a,b)=b$. Jeśli $u:X\to A$ i $v:X\to B$ spełniają $fu=gv$, to jedyna możliwa funkcja $h$ jest dana przez $h(x)=(u(x),v(x))$. Warunek zgodności gwarantuje, że wartości $h$ rzeczywiście należą do $A\times_C B$.
+\end{przyklad}
+
+\begin{przyklad}[Włókno funkcji]
+Dla $f:A\to C$ i ustalonego $c\in C$ weźmy $B=\{*\}$ i $g(*)=c$. Wówczas $A\times_C\{*\}$ można utożsamić ze zbiorem $f^{-1}(\{c\})$. A zatem \emph{włókno nad punktem} jest szczególnym przypadkiem pullbacku. Ten sam pomysł działa dla wiązek w topologii i geometrii różniczkowej.
+\end{przyklad}
+
+\begin{przyklad}[Ograniczenie rodziny do podzbioru]
+Niech $p:E\to B$ będzie ciągłą funkcją, a $i:U\hookrightarrow B$ włączeniem podprzestrzeni. Pullback w $\Top$ jest $E\times_B U\cong p^{-1}(U)$ z topologią podprzestrzeni, wyposażony w odwzorowanie do $U$. W języku wiązek oznacza to \emph{ograniczenie obiektu nad $B$ do $U$}.
+\end{przyklad}
+
+\begin{przyklad}[Wspólny fragment dwóch odwzorowań]
+Niech $A=B=\mathbb R$, $C=\mathbb R$ oraz $f(a)=a^2$, $g(b)=b^2$. Pullback w $\Set$ jest zbiorem $\{(a,b):a^2=b^2\}$, czyli sumą prostych $b=a$ oraz $b=-a$ w $\mathbb R^2$. Nie jest nim zwykły iloczyn $\mathbb R^2$: warunek wspólnego obrazu usuwa większość par.
+\end{przyklad}
+
+
+\begin{przyklad}[Pullback jako konkretne równanie liniowe]
+Pracujmy w $\Vect_{\mathbb R}$. Niech $f:\mathbb R^2\to\mathbb R$ będzie dane przez $f(x,y)=x+y$, a $g:\mathbb R\to\mathbb R$ przez $g(t)=2t$. Iloczyn włóknisty to podprzestrzeń
+\[
+P=\{(x,y,t)\in\mathbb R^3:x+y=2t\}=\{(x,2t-x,t):x,t\in\mathbb R\}.
+\]
+W szczególności $\dim P=2$. Jeżeli $u:Z\to\mathbb R^2$ i $v:Z\to\mathbb R$ są liniowe i spełniają $fu=gv$, to odwzorowanie $z\mapsto(u(z),v(z))$ jest liniowe, przyjmuje wartości w $P$ i jest jedynym odwzorowaniem zgodnym z rzutami. Obliczyliśmy więc zarówno przestrzeń, jak i jej własność uniwersalną.
+\end{przyklad}
+
+\begin{przyklad}[Przeciwobrazy jako pullbacki]
+Dla funkcji $f:X\to Y$ oraz włączenia $i:B\hookrightarrow Y$ produkt włóknisty $X\times_Y B$ jest naturalnie izomorficzny ze zbiorem $f^{-1}(B)$. Ustalmy $f:\mathbb Z\to\mathbb Z$, $f(n)=n^2$, i $B=\{0,1,4\}$. Wówczas $f^{-1}(B)=\{-2,-1,0,1,2\}$, a rzut na $X$ identyfikuje produkt włóknisty z tym podzbiorem. Ten sposób rozumowania działa również dla podprzestrzeni topologicznych oraz dla przeciwobrazów podrozmaitości, gdy odpowiednie struktury istnieją.
+\end{przyklad}
+
+
+\subsection{Pushout: sklejanie po wspólnej części}
+
+\begin{definicja}[Pushout]\label{def:pushout}
+Niech $f:C\to A$ i $g:C\to B$ będą morfizmami kategorii $\mathcal C$. \emph{Pushoutem} pary $(f,g)$ nazywamy obiekt $Q$ z morfizmami $i_A:A\to Q$, $i_B:B\to Q$ spełniającymi $i_A\circ f=i_B\circ g$, takimi że dla każdego $X$ oraz $u:A\to X$, $v:B\to X$ z $u\circ f=v\circ g$ istnieje dokładnie jeden $h:Q\to X$ z $h\circ i_A=u$, $h\circ i_B=v$.
+\end{definicja}
+
+\begin{przyklad}[Sklejanie zbiorów]
+W $\Set$ pushout $A\sqcup_C B$ ma postać $(A\sqcup B)/{\sim}$, gdzie $\sim$ jest najmniejszą relacją równoważności identyfikującą $i_A(f(c))$ z $i_B(g(c))$ dla każdego $c\in C$. W ten sposób łączymy dwa zbiory, sklejając punkty odpowiadające sobie przez wspólne dane z $C$.
+\end{przyklad}
+
+\begin{przyklad}[Sklejanie przedziałów w topologii]
+Weźmy dwie kopie przedziału $[0,1]$ i jednopunktowy zbiór $C=\{*\}$, który odwzorowujemy w punkt $1$ pierwszego przedziału i $0$ drugiego. Pushout w $\Top$ jest przestrzenią ilorazową otrzymaną przez sklejenie końców; jest homeomorficzny z $[0,2]$. Wersja z identyfikacją obu końców \emph{jednego} przedziału prowadzi z kolei do okręgu $S^1$ i może być opisana przez odpowiedni koequalizator.
+\end{przyklad}
+
+\begin{uwaga}
+Pullback to granica diagramu $A\to C\leftarrow B$, a pushout to kogranica diagramu $A\leftarrow C\to B$. Związek ten uzasadnimy ogólnie w sekcji~\ref{sec:granice}. Nazwy angielskie są często używane również w polskich tekstach, więc warto je rozpoznawać.
+\end{uwaga}
+
+
+\begin{przyklad}[Pushout dwóch homomorfizmów liczb całkowitych]
+W kategorii $\Ab$ weźmy $C=A=B=\mathbb Z$ i morfizmy $f(n)=2n$, $g(n)=3n$. Pushout jest ilorazem
+\[
+Q=(\mathbb Z\oplus\mathbb Z)/\langle(2,-3)\rangle.
+\]
+Mapy kanoniczne są określone przez $i_A(a)=[(a,0)]$ oraz $i_B(b)=[(0,b)]$. Ponieważ $2i_A(1)=3i_B(1)$, diagram komutuje. Każda para homomorfizmów $u,v:\mathbb Z\to H$ do grupy abelowej $H$ z $u(2n)=v(3n)$ definiuje homomorfizm $\widehat h:\mathbb Z\oplus\mathbb Z\to H$ dany przez $(a,b)\mapsto u(a)+v(b)$; ma on w jądrze $(2,-3)$, więc jednoznacznie przechodzi na $Q$. Ponadto $Q\cong\mathbb Z$: funkcja $(a,b)\mapsto3a+2b$ jest surjektywna i ma jądro dokładnie $\langle(2,-3)\rangle$. Zwykłe sklejanie zbiorów nie pozwoliłoby uzyskać tej własności addytywnej.
+\end{przyklad}
+
+\begin{przyklad}[Sklejenie dwóch odcinków i jego topologia]
+Dla dwóch kopii $[0,1]$ ze sklejanymi końcami $(1,\mathrm{lewy})\sim(0,\mathrm{prawy})$ otrzymujemy przestrzeń $Q=([0,1]\sqcup[0,1])/{\sim}$ z topologią ilorazową. Funkcja określona na sumie rozłącznej wzorami $t\mapsto t$ na pierwszej kopii i $t\mapsto1+t$ na drugiej jest ciągła i stała na klasach relacji. Indukuje bijekcję $Q\to[0,2]$. Jest to homeomorfizm, gdyż $Q$ jest zwarty, a $[0,2]$ jest Hausdorffa. Ta konstrukcja realizuje pushout w $\Top$, a nie tylko w $\Set$, ponieważ topologia ilorazowa zapewnia ciągłość każdego odwzorowania określonego zgodnie na obu odcinkach.
+\end{przyklad}
+
+
+\section{Granice i kogranice: wspólna teoria konstrukcji}\label{sec:granice}
+
+\subsection{Diagram jako funktor}
+
+\begin{definicja}[Diagram, stożek, granica]\label{def:limit}
+Niech $\mathcal J$ będzie małą kategorią (\emph{kategorią indeksującą}), $\mathcal C$ kategorią i $D:\mathcal J\to\mathcal C$ funktorem, zwanym \emph{diagramem kształtu $\mathcal J$}. \emph{Stożek} nad $D$ o wierzchołku $X\in\Ob(\mathcal C)$ jest rodziną morfizmów $p_j:X\to D(j)$, po jednym dla każdego obiektu $j$ kategorii $\mathcal J$, taką że dla każdego $\alpha:j\to j'$ w $\mathcal J$ zachodzi $D(\alpha)\circ p_j=p_{j'}$.
+
+\emph{Granicą} diagramu $D$ nazywamy stożek $(L,(\ell_j)_j)$ taki, że dla każdego stożka $(X,(p_j)_j)$ istnieje dokładnie jeden morfizm $u:X\to L$ spełniający $\ell_j\circ u=p_j$ dla wszystkich $j$. Oznaczamy $L=\varprojlim_{j\in\mathcal J}D(j)$ lub $L=\lim D$.
+\end{definicja}
+
+Przekładając definicję: diagram to układ obiektów połączonych strzałkami; stożek to jeden obiekt z kompatybilnymi strzałkami do całego układu; granica jest \emph{najbardziej uniwersalnym} takim obiektem, ponieważ przez nią w jeden sposób przechodzą wszystkie inne stożki.
+
+\begin{przyklad}[Iloczyn jako granica]
+Niech $\mathcal J$ będzie dyskretną kategorią o dwóch obiektach, a $D(0)=A$, $D(1)=B$. Nie ma żadnych strzałek zgodności między różnymi obiektami. Stożek nad $D$ to dowolne dwa morfizmy $X\to A$ i $X\to B$, a uniwersalny stożek jest właśnie iloczynem $A\times B$ z definicji~\ref{def:produkt}. Dla rodziny indeksowanej zbiorem $I$ otrzymujemy w ten sposób iloczyn $\prod_{i\in I}A_i$.
+\end{przyklad}
+
+\begin{przyklad}[Equalizator jako granica]
+Niech $\mathcal J$ ma dwa obiekty $0,1$ oraz dwa różne równoległe morfizmy $\alpha,\beta:0\to1$, oprócz identyczności. Wybór diagramu $D$ jest równoważny wyborowi pary $f,g:A\to B$. Stożek o wierzchołku $X$ ma strzałki $p_0:X\to A$ i $p_1:X\to B$ z $fp_0=p_1=gp_0$. Wszystkie dane poza $p_0$ są wymuszone, a warunek istnienia stożka to $fp_0=gp_0$. Granica jest więc equalizatorem $f$ i $g$.
+\end{przyklad}
+
+\begin{przyklad}[Granice w porządkach]
+Dla kategorii posetu $(P,\leq)$ stożek o wierzchołku $x$ nad diagramem $D$ istnieje dokładnie wtedy, gdy $x\leq D(j)$ dla wszystkich $j$. Granica, jeśli istnieje, jest kresem dolnym zbioru wartości diagramu. Relacje między obiektami diagramu nie wnoszą tu dodatkowych równań, ponieważ odpowiednie hom-zbiory są co najwyżej jednoelementowe.
+\end{przyklad}
+
+\begin{twierdzenie}[Jednoznaczność granicy]\label{tw:limit-unique}
+Jeśli dwa stożki $(L,(\ell_j)_j)$ i $(L',(\ell'_j)_j)$ są granicami tego samego diagramu $D$, to istnieje dokładnie jeden izomorfizm $u:L\to L'$ spełniający $\ell'_j\circ u=\ell_j$ dla wszystkich $j$.
+\end{twierdzenie}
+\begin{proof}
+Z uniwersalności $L'$ dostajemy jedyny morfizm $u:L\to L'$ zgodny ze stożkami. Symetrycznie dostajemy $v:L'\to L$. Złożenie $v\circ u$ jest morfizmem $L\to L$ zgodnym ze wszystkimi strzałkami $\ell_j$, podobnie jak $\id_L$. Jedyność wymusza $v\circ u=\id_L$. Analogicznie $u\circ v=\id_{L'}$.
+\end{proof}
+
+
+\begin{twierdzenie}[Konstrukcja wszystkich małych granic w $\Set$]\label{tw:limits-set}
+Niech $\mathcal J$ będzie małą kategorią i $D:\mathcal J\to\Set$ funktorem. Wówczas granica diagramu $D$ istnieje. Można ją zrealizować jako zbiór
+\[
+L=\left\{(x_j)_{j\in\Ob(\mathcal J)}\in\prod_{j\in\Ob(\mathcal J)}D(j):
+D(\alpha)(x_j)=x_{j'}\ \text{dla każdego }\alpha:j\to j'\right\},
+\]
+z rzutami $\ell_j:L\to D(j)$, $\ell_j((x_i)_i)=x_j$.
+\end{twierdzenie}
+\begin{proof}
+Rodzina rzutów jest stożkiem, ponieważ dla $\alpha:j\to j'$ oraz $x=(x_i)_i\in L$ z definicji mamy $D(\alpha)(\ell_j(x))=D(\alpha)(x_j)=x_{j'}=\ell_{j'}(x)$. Niech $X$ będzie dowolnym zbiorem ze stożkiem $p_j:X\to D(j)$. Zdefiniujmy $u:X\to\prod_jD(j)$ przez $u(x)=(p_j(x))_j$. Zgodność stożka daje $D(\alpha)(p_j(x))=p_{j'}(x)$, więc $u(x)\in L$. Dla każdego $j$ zachodzi $\ell_ju=p_j$. Jeśli $v:X\to L$ spełnia te same równości, to dla każdego $x\in X$ i każdego $j$ współrzędne $v(x)$ i $u(x)$ są równe. Zatem $u=v$. Otrzymaliśmy własność uniwersalną granicy, również gdy $\mathcal J$ jest pusta.
+\end{proof}
+
+\begin{przyklad}[Granica nad pustym diagramem i nad ciągiem stałym]
+Jeżeli $\mathcal J$ nie ma obiektów, to iloczyn pustej rodziny zbiorów jest singletonem, a dodatkowe warunki nie występują. Granica pustego diagramu w $\Set$ jest więc jednoelementowa. Jeśli natomiast $X_n=\{0,1\}$ dla wszystkich $n$, a funkcje $p_n:X_{n+1}\to X_n$ są identycznościami, to granica odwrotna ma dokładnie dwa elementy: ciągi $(0,0,\ldots)$ oraz $(1,1,\ldots)$. Gdy wszystkie $p_n$ są stałe równe $0$, jedynym zgodnym ciągiem jest $(0,0,\ldots)$.
+\end{przyklad}
+
+\begin{przyklad}[Granice skończone w kategoriach przestrzeni liniowych]
+Dla diagramu $D:\mathcal J\to\Vect_k$ o skończenie wielu obiektach i morfizmach granica jest podprzestrzenią $\prod_jD(j)$ zadaną liniowymi równaniami $D(\alpha)(x_j)=x_{j'}$. Jest więc jądrem odpowiedniej mapy liniowej z produktu do produktu przestrzeni współdziedzin strzałek. Konstrukcja z twierdzenia~\ref{tw:limits-set} nie jest przypadkowym trikiem zbiorowym: w algebrze liniowej sprowadza granice do układów równań liniowych.
+\end{przyklad}
+
+
+\subsection{Kogranica}
+
+\begin{definicja}[Kostożek i kogranica]\label{def:colimit}
+Dla diagramu $D:\mathcal J\to\mathcal C$ \emph{kostożek} o wierzchołku $X$ to rodzina $i_j:D(j)\to X$ spełniająca $i_{j'}\circ D(\alpha)=i_j$ dla każdego $\alpha:j\to j'$. \emph{Kogranicą} jest kostożek $(Q,(q_j)_j)$ taki, że każdy kostożek $(X,(i_j)_j)$ wyznacza dokładnie jeden $u:Q\to X$ spełniający $u\circ q_j=i_j$ dla wszystkich $j$. Oznaczamy $Q=\varinjlim_{j\in\mathcal J}D(j)$ lub $Q=\colim D$.
+\end{definicja}
+
+\begin{przyklad}[Koprodukt, koequalizator i pushout]
+Koprodukt to kogranica diagramu dyskretnego. Koequalizator to kogranica diagramu dwóch równoległych strzałek. Pushout to kogranica diagramu $A\leftarrow C\to B$. Na odwrót, produkt, equalizator i pullback są odpowiednimi granicami. Formalne definicje tych sześciu pojęć to po prostu różne kształty tej samej własności uniwersalnej.
+\end{przyklad}
+
+\begin{przyklad}[Granica odwrotna ciągu zbiorów]\label{przyklad:inverse-limit}
+Niech $X_0,X_1,X_2,\ldots$ będą zbiorami, a $p_n:X_{n+1}\to X_n$ funkcjami dla $n\geq0$. Granica odwrotna tego diagramu w $\Set$ jest zbiorem
+\[
+\varprojlim_{n\geq0}X_n=\{(x_0,x_1,\ldots)\in\prod_{n\geq0}X_n:p_n(x_{n+1})=x_n\text{ dla każdego }n\geq0\}.
+\]
+Zatem granica wybiera \emph{zgodne ciągi} elementów. Przykładowo dla $X_n=\mathbb Z/2^{n+1}\mathbb Z$ i redukcji modulo $2^{n+1}$ otrzymujemy zbiór $2$-adycznych liczb całkowitych $\mathbb Z_2$ (z odpowiednią strukturą pierścieniową).
+\end{przyklad}
+
+\begin{przyklad}[Kogranica rosnącego ciągu zbiorów]
+Jeśli $X_0\subseteq X_1\subseteq\cdots$ i morfizmami są włączenia, to kogranicą w $\Set$ jest zwykła suma $\bigcup_{n\geq0}X_n$. Jeżeli zamiast włączeń występują dowolne funkcje $X_n\to X_{n+1}$, odpowiednią kogranicę tworzymy z sumy rozłącznej wszystkich $X_n$, identyfikując element $x\in X_n$ z jego obrazem w $X_{n+1}$ i domykając te identyfikacje do relacji równoważności.
+\end{przyklad}
+
+\begin{przyklad}[Granice w rachunku liniowym]
+W $\Vect_k$ granice skończonych diagramów można skonstruować za pomocą skończonych iloczynów i jąder, a kogranice za pomocą skończonych koproduktów i kojąder. Przykładowo dla $f:V\to W$ jądro $\Ker f$ to equalizator $f$ i zera; przestrzeń ilorazowa $W/\im f$ to ich koequalizator. Jest to początek języka kategorii addytywnych i abelowych.
+\end{przyklad}
+
+\begin{uwaga}[Ograniczenia wielkości]
+Zakładamy, że $\mathcal J$ jest mała, więc wszystkie obiekty i strzałki diagramu są indeksowane zbiorami. W przeciwnym razie formuły typu $\prod_{j\in\Ob(\mathcal J)}D(j)$ mogą prowadzić do problemów teoriomnogościowych. Istnienie wszystkich \emph{małych} granic (odpowiednio kogranic) w kategorii nazywamy \emph{zupełnością} (odpowiednio \emph{kozupełnością}).
+\end{uwaga}
+
+
+\begin{twierdzenie}[Konstrukcja wszystkich małych kogranic w $\Set$]\label{tw:colimits-set}
+Niech $\mathcal J$ będzie małą kategorią i $D:\mathcal J\to\Set$ diagramem. Zbudujmy sumę rozłączną $S=\coprod_{j\in\Ob(\mathcal J)}D(j)$, której elementy zapisujemy jako $(j,x)$ z $x\in D(j)$. Niech $\sim$ będzie najmniejszą relacją równoważności zawierającą pary
+\[
+(j,x)\sim(j',D(\alpha)(x))\quad \text{dla każdego }\alpha:j\to j'\text{ i }x\in D(j).
+\]
+Wówczas $Q=S/{\sim}$ wraz z mapami $q_j(x)=[(j,x)]$ jest kogranicą diagramu $D$.
+\end{twierdzenie}
+\begin{proof}
+Dla $\alpha:j\to j'$ z definicji relacji mamy $q_{j'}(D(\alpha)(x))=[(j',D(\alpha)(x))]=[(j,x)]=q_j(x)$, więc $q_j$ tworzą kostożek. Niech $i_j:D(j)\to X$ będzie dowolnym kostożkiem. Funkcję $h:S\to X$ definiujemy na każdej składowej przez $h(j,x)=i_j(x)$. Warunek $i_{j'}D(\alpha)=i_j$ zapewnia, że $h$ przyjmuje jednakowe wartości na parach generujących $\sim$; stąd jest stała na całych klasach równoważności. Zatem istnieje jednoznaczna funkcja $\bar h:Q\to X$, $\bar h([(j,x)])=i_j(x)$, i spełnia ona $\bar hq_j=i_j$. Jedyność wynika z tego, że każdy element $Q$ jest klasą pewnego $(j,x)$; wartości na obrazach wszystkich $q_j$ wyznaczają więc całą funkcję. Dla pustego $\mathcal J$ otrzymujemy $Q=\varnothing$.
+\end{proof}
+
+\begin{przyklad}[Kogranica diagramu, który scala dwa punkty]
+Niech $X_n=\{0,1\}$ dla $n\geq0$, a wszystkie mapy $f_n:X_n\to X_{n+1}$ będą stałe i równe $0$. W kogranicy elementy $(n,0)$ oraz $(n,1)$ są utożsamione, gdyż oba przechodzą do $(n+1,0)$. Wszystkie elementy całej sumy rozłącznej należą do jednej klasy, więc kogranica jest singletonem. Gdy zamiast tego wszystkie $f_n$ są identycznościami, pozostają dokładnie dwie klasy, odpowiadające $0$ i $1$.
+\end{przyklad}
+
+\begin{przyklad}[Liczby $2$-adyczne jako zgodne reszty]
+W przykładzie~\ref{przyklad:inverse-limit} weźmy układ reszt modulo $2,4,8,16,\ldots$. Ciąg $([1]_2,[3]_4,[7]_8,[15]_{16},\ldots)$ jest zgodny, ponieważ $2^{n+2}-1$ redukuje się modulo $2^{n+1}$ do $2^{n+1}-1$. Reprezentuje on liczbę $-1$ w pierścieniu $\mathbb Z_2$. Natomiast ciąg $([0]_2,[1]_4,\ldots)$ nie jest zgodny: $[1]_4$ po redukcji modulo $2$ daje $[1]_2$, a nie $[0]_2$. Ten prosty rachunek wyjaśnia, jakie dane dopuszcza granica odwrotna.
+\end{przyklad}
+
+
+\section{Własności uniwersalne jako reprezentowanie funktorów}\label{sec:reprezentacja}
+
+Definicje z poprzednich sekcji mają jeszcze jedną wspólną cechę. Dla dowolnego obiektu testowego $X$ opisują wszystkie strzałki $X\to U$ przez prostsze dane. Taki sposób myślenia prowadzi do pojęcia funktora reprezentowalnego.
+
+\begin{definicja}[Reprezentowalność]\label{def:representable}
+Niech $\mathcal C$ będzie kategorią lokalnie małą i $F:\mathcal C\to\Set$ funktorem. Mówimy, że $F$ jest \emph{reprezentowalny}, jeśli istnieje obiekt $A\in\Ob(\mathcal C)$ oraz izomorfizm naturalny $\Hom_{\mathcal C}(A,-)\cong F$. Wtedy $A$ \emph{reprezentuje} $F$. Dla funktora kontrawariantnego $G:\mathcal C^{\op}\to\Set$ reprezentowalność oznacza istnienie $A$ oraz izomorfizmu naturalnego $\Hom_{\mathcal C}(-,A)\cong G$.
+\end{definicja}
+
+\begin{przyklad}[Iloczyn jako reprezentowanie]
+Ustalmy obiekty $A,B$ i rozważmy kontrawariantny funktor $G(X)=\Hom_{\mathcal C}(X,A)\times\Hom_{\mathcal C}(X,B)$, z działaniem na morfizmach przez poprzedzanie składaniem. Jeśli iloczyn $A\times B$ istnieje, to uniwersalna własność daje bijekcje
+\[
+\Hom_{\mathcal C}(X,A\times B)\longrightarrow\Hom_{\mathcal C}(X,A)\times\Hom_{\mathcal C}(X,B),\qquad h\longmapsto(p_Ah,p_Bh).
+\]
+Są one naturalne względem $X$: dla $u:Y\to X$ obie drogi prowadzą od $h$ do $(p_Ahu,p_Bhu)$. Zatem iloczyn reprezentuje funktor $G$.
+\end{przyklad}
+
+\begin{przyklad}[Koprodukt jako reprezentowanie]
+Koprodukt $A\sqcup B$ reprezentuje kowariantny funktor $X\mapsto\Hom_{\mathcal C}(A,X)\times\Hom_{\mathcal C}(B,X)$ w sensie izomorfizmu $\Hom_{\mathcal C}(A\sqcup B,X)\cong\Hom_{\mathcal C}(A,X)\times\Hom_{\mathcal C}(B,X)$. Różnica kierunku argumentu $X$ jest istotna.
+\end{przyklad}
+
+\begin{twierdzenie}[Reprezentowalność i element uniwersalny]\label{tw:univ-element}
+Niech $\mathcal C$ będzie lokalnie mała, a $F:\mathcal C\to\Set$ funktorem. Następujące warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item istnieje obiekt $A\in\Ob(\mathcal C)$ i izomorfizm naturalny $\Phi:\Hom_{\mathcal C}(A,-)\Rightarrow F$;
+\item istnieje para $(A,u)$, gdzie $A\in\Ob(\mathcal C)$ oraz $u\in F(A)$, taka że dla każdego $X\in\Ob(\mathcal C)$ i każdego $x\in F(X)$ istnieje dokładnie jeden morfizm $f:A\to X$ spełniający $F(f)(u)=x$.
+\end{enumerate}
+W przypadku (i) można wziąć $u=\Phi_A(\id_A)$.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy (i) i ustalmy $X$. Dla $f:A\to X$ naturalność $\Phi$ względem $f$ daje $\Phi_X(f)=F(f)(\Phi_A(\id_A))=F(f)(u)$. Funkcja $\Phi_X$ jest bijekcją, więc dla każdego $x\in F(X)$ istnieje dokładnie jeden $f$ taki, że $F(f)(u)=x$. Otrzymujemy (ii).
+
+Załóżmy (ii). Dla każdego $X$ definiujemy $\Phi_X:\Hom(A,X)\to F(X)$ przez $\Phi_X(f)=F(f)(u)$. Warunek uniwersalności mówi dokładnie, że $\Phi_X$ jest bijekcją. Dla strzałki $g:X\to Y$ i $f:A\to X$ zachodzi $\Phi_Y(gf)=F(gf)(u)=F(g)(F(f)(u))=F(g)(\Phi_X(f))$, czyli rodzina $\Phi_X$ jest naturalna. Mamy zatem izomorfizm naturalny wymagany w (i).
+\end{proof}
+
+
+
+\begin{przyklad}[Reprezentowanie funktora zapominania dla zbiorów punktowanych]
+W kategorii $\Set_*$ zbiorów z wyróżnionym punktem i funkcji zachowujących ten punkt niech $D=\{*,a\}$, gdzie $*$ jest punktem wyróżnionym. Funktor zapominania $U:\Set_*\to\Set$ jest reprezentowany przez $D$: odwzorowanie punktowane $f:D\to(X,x_0)$ jest jednoznacznie wyznaczone przez wartość $f(a)\in X$, ponieważ musi spełniać $f(*)=x_0$. Dostajemy naturalną bijekcję $\Hom_{\Set_*}(D,(X,x_0))\cong X$. Elementem uniwersalnym jest $a\in U(D)$, nie zaś punkt wyróżniony $*$.
+\end{przyklad}
+
+\section{Lemat Yonedy: obiekt poznajemy przez wszystkie morfizmy}\label{sec:yoneda}
+
+Lemat Yonedy jest jednym z centralnych twierdzeń teorii kategorii. Jego treść można zapamiętać tak: jeśli znamy wszystkie morfizmy wychodzące z obiektu $A$ i wiemy, jak zachowują się przy składaniu, to opisaliśmy ten obiekt w sposób wystarczający, by odzyskać każdą naturalną operację na tych morfizmach.
+
+\begin{twierdzenie}[Lemat Yonedy, postać kowariantna]\label{tw:yoneda}
+Niech $\mathcal C$ będzie kategorią lokalnie małą, $A\in\Ob(\mathcal C)$ oraz $F:\mathcal C\to\Set$ funktorem. Istnieje kanoniczna bijekcja
+\[
+\Nat\bigl(\Hom_{\mathcal C}(A,-),F\bigr)\ \cong\ F(A),
+\]
+która transformacji naturalnej $\alpha$ przypisuje element $\alpha_A(\id_A)$. Odwrotnie, element $a\in F(A)$ wyznacza transformację naturalną $\alpha^a$, określoną dla $X\in\Ob(\mathcal C)$ i $f:A\to X$ wzorem $\alpha^a_X(f)=F(f)(a)$.
+\end{twierdzenie}
+\begin{proof}
+Najpierw sprawdzamy, że wzór definiuje transformację naturalną. Dla $u:X\to Y$ i $f:A\to X$ mamy $F(u)(\alpha^a_X(f))=F(u)(F(f)(a))=F(u\circ f)(a)=\alpha^a_Y(u\circ f)$, co jest dokładnie warunkiem naturalności.
+
+Załóżmy następnie, że $\alpha:\Hom(A,-)\Rightarrow F$ jest dowolna. Naturalność względem $f:A\to X$ daje
+\[
+\alpha_X(f)=\alpha_X(f\circ\id_A)=F(f)(\alpha_A(\id_A)).
+\]
+Zatem $\alpha$ jest jednoznacznie wyznaczona przez $a=\alpha_A(\id_A)$. Odwrotnie, dla transformacji $\alpha^a$ mamy $\alpha^a_A(\id_A)=F(\id_A)(a)=a$. Obie konstrukcje są więc wzajemnie odwrotne.
+\end{proof}
+
+\begin{uwaga}[Postać kontrawariantna]
+Dla funktora $G:\mathcal C^{\op}\to\Set$ istnieje analogiczna bijekcja $\Nat(\Hom_{\mathcal C}(-,A),G)\cong G(A)$. Jeśli $a\in G(A)$, odpowiadająca transformacja jest dana przez $\alpha^a_X(f)=G(f)(a)$ dla $f:X\to A$. Jest to dokładnie twierdzenie~\ref{tw:yoneda} zastosowane do kategorii przeciwnej.
+\end{uwaga}
+
+\begin{przyklad}[Wszystkie naturalne wybory wartości funkcji]
+Ustalmy zbiór $A$ i rozważmy funktory na $\Set$. Lemat Yonedy daje $\Nat(\Hom_{\Set}(A,-),\id_{\Set})\cong A$. Rzeczywiście, każdy element $a\in A$ definiuje naturalną rodzinę \emph{ewaluacji} $\ev_a^X:\Hom(A,X)\to X$, $f\mapsto f(a)$. Yoneda mówi, że \emph{każda} naturalna rodzina funkcji o tej postaci pochodzi z wyboru jednego $a\in A$.
+\end{przyklad}
+
+\begin{przyklad}[Przekształcenia na zbiorach elementów]
+W kategorii $\Grp$ niech $A=\mathbb Z$. Homomorfizm $f:\mathbb Z\to G$ jest jednoznacznie zadany przez $f(1)\in G$, zatem funktor $\Hom_{\Grp}(\mathbb Z,-)$ jest naturalnie izomorficzny z funktorem zapominania $U:\Grp\to\Set$. Sformułowanie to wyjaśnia kategorialnie, dlaczego $\mathbb Z$ jest \emph{grupą wolną na jednym generatorze}: morfizmy wychodzące z $\mathbb Z$ są tym samym co pojedyncze elementy grupy.
+\end{przyklad}
+
+
+\begin{przyklad}[Yoneda klasyfikuje operacje na parach i trójkach]\label{przyklad:yoneda-tuple}
+W $\Set$ funktor $X\mapsto X^n$ (wysyłający $f:X\to Y$ na $(x_1,\ldots,x_n)\mapsto(f(x_1),\ldots,f(x_n))$) możemy rozumieć jako $\Hom_{\Set}(\{1,\ldots,n\},X)$, gdzie $n\geq1$. Dla $m,n\geq1$ lemat Yonedy daje bijekcję
+\[
+\Nat\bigl((- )^n,(- )^m\bigr)\cong\Hom_{\Set}(\{1,\ldots,m\},\{1,\ldots,n\}).
+\]
+Każda naturalna operacja zamieniająca $n$-kę w $m$-kę polega więc wyłącznie na wybieraniu współrzędnych wejścia (z możliwymi powtórzeniami). Na przykład dla $n=2$, $m=3$ jest dokładnie $2^3=8$ takich operacji, m.in. $(x,y)\mapsto(x,y,x)$ oraz $(x,y)\mapsto(y,y,y)$. Nie istnieje naturalne ``dodawanie'' elementów dowolnego zbioru: wymagałoby dodatkowej struktury.
+\end{przyklad}
+
+\begin{przyklad}[Wszystkie naturalne mapy $X\to\mathcal P(X)$]
+Niech $\mathcal P_+:\Set\to\Set$ oznacza kowariantny funktor potęgowy, działający na funkcjach przez obrazy podzbiorów. Ponieważ $\Hom_{\Set}(1,-)\cong\id_{\Set}$, z lematu Yonedy wynika
+$\Nat(\id_{\Set},\mathcal P_+)\cong\mathcal P_+(1)$. Jednoelementowy zbiór ma dokładnie dwa podzbiory. Stąd istnieją dokładnie dwie naturalne rodziny funkcji $X\to\mathcal P(X)$: $x\mapsto\varnothing$ oraz $x\mapsto\{x\}$. Ich naturalność sprawdzamy przez równości $f(\varnothing)=\varnothing$ i $f(\{x\})=\{f(x)\}$. Wniosek jest znacznie silniejszy niż samo wskazanie dwóch przykładów: innych rodzin naturalnych nie ma.
+\end{przyklad}
+
+\begin{przyklad}[Yoneda w najmniejszej nietrywialnej kategorii]
+Rozważmy kategorię posetu $0<1$. Jej funktory $h_0=\Hom(-,0)$ i $h_1=\Hom(-,1)$ spełniają
+$h_0(0)=\{*\}$, $h_0(1)=\varnothing$, $h_1(0)=\{*\}$, $h_1(1)=\{*\}$. Istnieje dokładnie jedna transformacja naturalna $h_0\Rightarrow h_1$, ale żadna $h_1\Rightarrow h_0$. Tak funktory Hom pamiętają, że w wyjściowej kategorii istnieje morfizm $0\to1$, lecz nie $1\to0$.
+\end{przyklad}
+
+
+\begin{twierdzenie}[Włożenie Yonedy]\label{tw:yoneda-embedding}
+Niech $\mathcal C$ będzie małą kategorią. Przyporządkowanie $A\mapsto h_A=\Hom_{\mathcal C}(-,A)$, $f:A\to B\mapsto h_f:h_A\Rightarrow h_B$, gdzie $(h_f)_X(u)=f\circ u$, definiuje w pełni wierny funktor $y:\mathcal C\to[\mathcal C^{\op},\Set]$.
+\end{twierdzenie}
+\begin{proof}
+Przyporządkowanie $h_f$ jest naturalne, ponieważ dla $v:Y\to X$ w $\mathcal C$ mamy $(f\circ u)\circ v=f\circ(u\circ v)$. Zachowanie identyczności i składania wynika z łączności w $\mathcal C$. Lemat Yonedy w postaci kontrawariantnej daje dla każdych $A,B$ bijekcję $\Nat(h_A,h_B)\cong h_B(A)=\Hom_{\mathcal C}(A,B)$. Jej odwrotność jest dokładnie funkcją $f\mapsto h_f$. Stąd pełność i wierność.
+\end{proof}
+
+\begin{wniosek}[Obiekt jest wyznaczony przez swoje morfizmy]
+Dla małej kategorii $\mathcal C$ i jej obiektów $A,B$ zachodzi $h_A\cong h_B$ wtedy i tylko wtedy, gdy $A\cong B$.
+\end{wniosek}
+\begin{proof}
+Izomorfizm $A\to B$ daje izomorfizm naturalny $h_A\to h_B$. Odwrotnie, izomorfizm naturalny i jego naturalna odwrotność odpowiadają przez w pełni wierny funktor Yonedy morfizmom $f:A\to B$ i $g:B\to A$, których złożenia są identycznościami.
+\end{proof}
+
+\begin{uwaga}[Na czym polega siła Yonedy?]
+Twierdzenie nie stwierdza, że obiekt można po prostu utożsamić z \emph{zbiorem} jego morfizmów. Istotna jest cała rodzina zbiorów $\Hom(X,A)$ dla różnych $X$ i ich zgodność ze składaniem. Inaczej sam zbiór morfizmów, bez informacji o dziedzinach i składaniu, byłby zbyt ubogim opisem.
+\end{uwaga}
+
+
+\section{Obiekty wykładnicze i przestrzenie odwzorowań}\label{sec:exponentials}
+
+Iloczyn pozwala zbudować parę elementów. Inną naturalną konstrukcją jest zbiór \emph{wszystkich odwzorowań} pomiędzy dwoma zbiorami. Poniżej zobaczymy, że również ona ma własność uniwersalną, lecz wymaga już posiadania iloczynów.
+
+\begin{definicja}[Obiekt wykładniczy]\label{def:exponential}
+Niech $\mathcal C$ będzie kategorią mającą iloczyny dwóch obiektów i niech $A,B\in\Ob(\mathcal C)$. \emph{Obiektem wykładniczym} $B^A$ nazywamy obiekt z morfizmem ewaluacji $\ev:B^A\times A\to B$ o własności: dla każdego $X\in\Ob(\mathcal C)$ i morfizmu $f:X\times A\to B$ istnieje dokładnie jeden morfizm $\widetilde f:X\to B^A$ taki, że $\ev\circ(\widetilde f\times\id_A)=f$. Operacja $(u,v)\mapsto u\times v$ na morfizmach iloczynów jest określona jednoznacznie przez warunki zgodności z rzutami.
+\end{definicja}
+
+W języku funktorów jest to naturalna bijekcja $\Hom_{\mathcal C}(X\times A,B)\cong\Hom_{\mathcal C}(X,B^A)$, a więc sprzężenie $(-)\times A\dashv(-)^A$, o ile obiekty wykładnicze istnieją dla wszystkich odpowiednich $B$. Odwzorowanie $f\mapsto\widetilde f$ nazywamy \emph{curryingiem} (od nazwiska Haskella Curry'ego).
+
+\begin{przyklad}[Zbiór wszystkich funkcji]\label{przyklad:exponential-set}
+W $\Set$ obiekt $B^A$ jest po prostu zbiorem wszystkich funkcji $A\to B$. Ewaluacja ma wzór $\ev(\varphi,a)=\varphi(a)$. Dla $f:X\times A\to B$ określamy $\widetilde f(x)(a)=f(x,a)$. Odwrotnie, każda $h:X\to B^A$ daje funkcję $(x,a)\mapsto h(x)(a)$. Obie operacje są odwrotne, co dowodzi własności uniwersalnej.
+
+Jeśli $A=\{0,1\}$, to $B^A\cong B\times B$: funkcja na zbiorze dwuelementowym jest opisana przez parę wartości. Jeśli $A=\varnothing$, to $B^A$ jest singletonem, nawet gdy $B=\varnothing$, bo istnieje dokładnie jedna funkcja $\varnothing\to B$.
+\end{przyklad}
+
+\begin{przyklad}[Implikacja logiczna jako obiekt wykładniczy]
+Niech $S$ będzie zbiorem i rozważmy poset $(\mathcal P(S),\subseteq)$ jako kategorię. Iloczynem obiektów jest przecięcie, a obiektem wykładniczym $B^A$ jest podzbiór $(S\setminus A)\cup B$. Istotnie, dla każdego $X\subseteq S$ mamy równoważność
+$X\cap A\subseteq B\ \Longleftrightarrow\ X\subseteq(S\setminus A)\cup B$.
+Jest to dokładnie bijekcja hom-zbiorów potrzebna w definicji~\ref{def:exponential}, ponieważ w posetach każdy niepusty hom-zbiór jest jednoelementowy. W algebrach Heytinga takie $B^A$ interpretuje się jako implikację $A\Rightarrow B$.
+\end{przyklad}
+
+\begin{przyklad}[Dlaczego $\Grp$ nie ma wszystkich obiektów wykładniczych]
+Przypuśćmy, że w $\Grp$ istnieje obiekt wykładniczy $\mathbb Z^{\mathbb Z}$. Ponieważ grupa trywialna $1$ jest końcowa i $1\times\mathbb Z\cong\mathbb Z$, własność uniwersalna wymagałaby bijekcji
+$\Hom_{\Grp}(\mathbb Z,\mathbb Z)\cong\Hom_{\Grp}(1,\mathbb Z^{\mathbb Z})$.
+Jednak lewy zbiór jest nieskończony: homomorfizm $\mathbb Z\to\mathbb Z$ może wysłać $1$ na dowolną liczbę całkowitą. Prawy zbiór jest jednoelementowy, bo z grupy trywialnej do dowolnej grupy istnieje tylko jeden homomorfizm. Sprzeczność. Obiekt wykładniczy nie istnieje więc dla tej pary.
+\end{przyklad}
+
+\begin{definicja}[Kategoria kartezjańsko domknięta]
+Kategorię nazywamy \emph{kartezjańsko domkniętą}, jeśli ma obiekt końcowy, iloczyny wszystkich par obiektów i obiekty wykładnicze $B^A$ dla wszystkich par $A,B$. Kategoria $\Set$ jest kartezjańsko domknięta, ale $\Grp$ nie jest.
+\end{definicja}
+
+\section{Obiekty nad ustaloną bazą i kategorie przecinkowe}\label{sec:slice}
+
+W geometrii często nie rozważa się po prostu przestrzeni $X$, lecz przestrzeń $X$ \emph{nad bazą} $B$, czyli odwzorowanie $p:X\to B$. Na przykład wiązka wektorowa ma projekcję na rozmaitość bazową. Naturalną kategorią dla takich danych jest kategoria obiektów nad $B$.
+
+\begin{definicja}[Kategoria obiektów nad ustaloną bazą, slice category]\label{def:slice}
+Niech $\mathcal C$ będzie kategorią i $B\in\Ob(\mathcal C)$. \emph{Kategorią obiektów nad $B$}, oznaczaną $\mathcal C/B$, nazywamy kategorię, której obiektami są morfizmy $p:X\to B$ w $\mathcal C$, a morfizm z $(X,p)$ do $(Y,q)$ jest morfizmem $u:X\to Y$ w $\mathcal C$ spełniającym $q\circ u=p$. Składanie dziedziczymy z $\mathcal C$.
+\end{definicja}
+
+\begin{przyklad}[Obiekty początkowe i końcowe w kategorii przecinkowej]
+Dla ustalonego zbioru $B$ w kategorii $\Set/B$ obiektem końcowym jest $\id_B:B\to B$, ponieważ każdy obiekt $p:X\to B$ ma dokładnie jeden morfizm do $\id_B$, mianowicie $p$. Obiektem początkowym jest jednoznaczna funkcja $\varnothing\to B$, ponieważ do każdego $p:X\to B$ istnieje dokładnie jedna funkcja $\varnothing\to X$. Przykład ten można w pełni zrozumieć po definicji kategorii $\mathcal C/B$ w sekcji~\ref{sec:slice}.
+\end{przyklad}
+
+Obiekt kategorii $\mathcal C/B$ to więc cała strzałka, a nie samo $X$. Morfizm to przemienny trójkąt
+\[
+\begin{CD}
+X @>{u}>> Y\\
+@V{p}VV @VV{q}V\\
+B @>>{\id_B}> B.
+\end{CD}
+\]
+
+\begin{przyklad}[Zbiory nad zbiorem bazowym]
+W $\Set/B$ obiektami są funkcje $p:X\to B$. Możemy rozumieć je jako \emph{rodziny zbiorów} $(X_b)_{b\in B}$, gdzie $X_b=p^{-1}(\{b\})$. Morfizm $u:(X,p)\to(Y,q)$ zachowuje włókna: z $p(x)=b$ wynika $q(u(x))=b$, więc $u$ wysyła $X_b$ do $Y_b$. Innymi słowy, morfizm jest rodziną funkcji $u_b:X_b\to Y_b$ indeksowaną przez $B$.
+\end{przyklad}
+
+\begin{stwierdzenie}[Pullback jako iloczyn nad bazą]
+Niech $p:X\to B$ i $q:Y\to B$ będą obiektami kategorii $\mathcal C/B$. Jeśli w $\mathcal C$ istnieje pullback $X\times_B Y$, to wraz ze wspólną projekcją $r:X\times_B Y\to B$ jest on iloczynem obiektów $(X,p)$ i $(Y,q)$ w kategorii $\mathcal C/B$.
+\end{stwierdzenie}
+\begin{proof}
+Morfizmy rzutów $\pi_X:X\times_B Y\to X$ i $\pi_Y:X\times_B Y\to Y$ są morfizmami w $\mathcal C/B$, ponieważ $p\pi_X=r=q\pi_Y$. Niech $(Z,t)$ będzie obiektem nad $B$ z morfizmami $u:Z\to X$, $v:Z\to Y$ nad $B$. Wówczas $pu=t=qv$, więc z uniwersalności pullbacku otrzymujemy dokładnie jeden $h:Z\to X\times_B Y$ o własnościach $\pi_Xh=u$, $\pi_Yh=v$. Zachodzi $rh=p\pi_Xh=pu=t$, a zatem $h$ jest także morfizmem nad $B$. To dokładnie własność iloczynu w $\mathcal C/B$.
+\end{proof}
+
+\begin{przyklad}[Włókna produktu nad bazą]
+Dla $p:X\to B$ i $q:Y\to B$ w $\Set$ mamy $(X\times_B Y)_b\cong X_b\times Y_b$. Para $(x,y)$ należy do włókna nad $b$ wtedy i tylko wtedy, gdy $p(x)=b=q(y)$. Ta równość wyjaśnia, dlaczego pullback nazywa się \emph{iloczynem włóknistym}.
+\end{przyklad}
+
+\begin{uwaga}[Ogólna kategoria przecinkowa]
+Jeżeli $F:\mathcal A\to\mathcal C$ i $G:\mathcal B\to\mathcal C$ są funktorami, to \emph{kategoria przecinkowa} $(F\downarrow G)$ ma obiekty $(A,B,u)$, gdzie $A\in\mathcal A$, $B\in\mathcal B$, $u:F(A)\to G(B)$, a jej morfizmy $(a,b):(A,B,u)\to(A',B',u')$ spełniają $G(b)\circ u=u'\circ F(a)$. Kategoria $\mathcal C/B$ jest szczególnym przypadkiem tej konstrukcji, gdy jeden z funktorów jest funktorem stałym wskazującym $B$. Kategorie przecinkowe są przydatne przy ogólnych definicjach obiektów uniwersalnych i granic.
+\end{uwaga}
+
+
+\section{Równoważności kategorii}\label{sec:equivalence}
+
+W algebrze odróżniamy równość od izomorfizmu: przestrzeń $V$ może być izomorficzna z $k^n$, choć nie jest tym samym zbiorem. Podobne zjawisko występuje na poziomie całych kategorii. Równość kategorii jest zwykle zbyt rygorystyczna, dlatego wprowadzamy równoważność.
+
+\begin{definicja}[Równoważność kategorii]\label{def:equivalence}
+Funktor $F:\mathcal C\to\mathcal D$ jest \emph{równoważnością kategorii}, jeśli istnieje funktor $G:\mathcal D\to\mathcal C$ oraz izomorfizmy naturalne $G\circ F\cong\id_{\mathcal C}$ i $F\circ G\cong\id_{\mathcal D}$. Mówimy wtedy, że $\mathcal C$ i $\mathcal D$ są \emph{równoważne}, i piszemy $\mathcal C\simeq\mathcal D$. Funktor $G$ jest \emph{quasi-odwrotnością} $F$.
+\end{definicja}
+
+Nie wymagamy, aby $G\circ F$ oraz $F\circ G$ były \emph{równe} odpowiednim identycznościom. Wystarcza, że można je z identycznościami porównać przez izomorfizmy naturalne.
+
+\begin{definicja}[Istotna surjektywność na obiektach]
+Funktor $F:\mathcal C\to\mathcal D$ jest \emph{istotnie surjektywny na obiektach}, jeśli dla każdego obiektu $Y\in\Ob(\mathcal D)$ istnieje $X\in\Ob(\mathcal C)$ oraz izomorfizm $F(X)\cong Y$ w $\mathcal D$.
+\end{definicja}
+
+\begin{twierdzenie}[Kryterium równoważności]\label{tw:equivalence}
+Niech $\mathcal C$ i $\mathcal D$ będą małymi kategoriami. Funktor $F:\mathcal C\to\mathcal D$ jest równoważnością wtedy i tylko wtedy, gdy jest w pełni wierny i istotnie surjektywny na obiektach.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy najpierw, że $F$ jest równoważnością. Wybierzmy quasi-odwrotność $G$ i izomorfizmy naturalne $\alpha:GF\Rightarrow\id_{\mathcal C}$ oraz $\beta:FG\Rightarrow\id_{\mathcal D}$. Dla każdego $Y\in\Ob(\mathcal D)$ morfizm $\beta_Y:FG(Y)\to Y$ jest izomorfizmem, co dowodzi istotnej surjektywności. Jeśli $f,g:A\to B$ i $F(f)=F(g)$, to $GF(f)=GF(g)$. Naturalność $\alpha$ daje $\alpha_BGF(f)=f\alpha_A$ oraz $\alpha_BGF(g)=g\alpha_A$; ponieważ $\alpha_A$ jest odwracalny, wynika $f=g$. To dowodzi wierności.
+
+Sprawdźmy pełność bez nieuzasadnionego zakładania, że $F(\alpha_X)=\beta_{F(X)}$. Dla $X\in\Ob(\mathcal C)$ zdefiniujmy automorfizm $c_X:F(X)\to F(X)$ przez $c_X=F(\alpha_X)\circ\beta_{F(X)}^{-1}$. Niech $u:F(A)\to F(B)$ będzie dowolnym morfizmem. Połóżmy $u'=c_B^{-1}\circ u\circ c_A$ i $f=\alpha_B\circ G(u')\circ\alpha_A^{-1}:A\to B$. Naturalność $\beta$ daje
+$FG(u')=\beta_{F(B)}^{-1}\circ u'\circ\beta_{F(A)}$, zatem
+\[
+F(f)=F(\alpha_B)\circ FG(u')\circ F(\alpha_A)^{-1}
+=c_B\circ u'\circ c_A^{-1}=u.
+\]
+Każdy $u$ ma więc przeciwobraz przez $F_{A,B}$; funktor $F$ jest pełny.
+
+Na odwrót, załóżmy pełną wierność i istotną surjektywność $F$. Dla każdego $Y\in\Ob(\mathcal D)$ wybierzmy obiekt $G(Y)\in\Ob(\mathcal C)$ i izomorfizm $\varepsilon_Y:F(G(Y))\to Y$. Możemy to zrobić jednocześnie dla wszystkich $Y$, ponieważ $\mathcal D$ jest mała (używamy aksjomatu wyboru). Dla strzałki $u:Y\to Y'$ pełność i wierność dają dokładnie jeden morfizm $G(u):G(Y)\to G(Y')$ spełniający
+\[
+F(G(u))=\varepsilon_{Y'}^{-1}\circ u\circ\varepsilon_Y.
+\]
+Dla identyczności prawa strona jest identycznością, więc wierność daje $G(\id_Y)=\id_{G(Y)}$. Dla złożenia $v\circ u$ prawa strona jest iloczynem odpowiednich wyrażeń dla $v$ i $u$; ponowna wierność daje $G(vu)=G(v)G(u)$. Tak powstaje funktor $G:\mathcal D\to\mathcal C$. Definiująca go równość to jednocześnie naturalność izomorfizmu $\varepsilon:FG\Rightarrow\id_{\mathcal D}$.
+
+Dla $A\in\Ob(\mathcal C)$ pełna wierność wyznacza dokładnie jeden $\eta_A:A\to GF(A)$ z $F(\eta_A)=\varepsilon_{F(A)}^{-1}$. Jest to izomorfizm: odwrotność $\varepsilon_{F(A)}$ jest izomorfizmem w $\mathcal D$, więc z pełności możemy podnieść także jego odwrotność, a wierność pozwala sprawdzić obie tożsamości. Dla $f:A\to A'$ naturalność $\varepsilon$ daje
+$FGF(f)\circ\varepsilon_{F(A)}^{-1}=\varepsilon_{F(A')}^{-1}\circ F(f)$. Stąd
+$F(GF(f)\eta_A)=F(\eta_{A'}f)$, a z wierności $GF(f)\eta_A=\eta_{A'}f$. Zatem $\eta:\id_{\mathcal C}\Rightarrow GF$ jest izomorfizmem naturalnym, a $F$ ma quasi-odwrotność.
+\end{proof}
+
+
+\begin{uwaga}[Zakres założenia o małości]
+Małość kategorii w twierdzeniu~\ref{tw:equivalence} jest wygodnym warunkiem uzasadniającym jednoczesny wybór reprezentantów. W praktyce kryterium stosuje się również do kategorii lokalnie małych, przy odpowiedniej konwencji dotyczącej wyborów dla dużych klas. Kategoria wszystkich skończenie wymiarowych przestrzeni wektorowych nie jest dosłownie mała; można jednak pracować z jej małą podkategorią reprezentantów $k^0,k^1,k^2,\ldots$ lub przeprowadzić konstrukcję w ustalonym uniwersum zbiorów. Wniosek dotyczący macierzy jest niezależny od tych technicznych szczegółów.
+\end{uwaga}
+
+
+\begin{przyklad}[Macierze i przestrzenie skończenie wymiarowe]\label{przyklad:mat-equivalence}
+Funktor $F:\cat{Mat}_k\to\Vect_k^{\mathrm{fd}}$ z przykładu~\ref{przyklad:mat} jest w pełni wierny, bo każdemu odwzorowaniu liniowemu $k^n\to k^m$ odpowiada dokładnie jedna macierz. Jest też istotnie surjektywny, ponieważ każda skończenie wymiarowa przestrzeń $V$ jest izomorficzna z $k^{\dim V}$. Zatem
+\[
+\cat{Mat}_k\simeq\Vect_k^{\mathrm{fd}}.
+\]
+Kategorie te nie są jednak dosłownie równe: w pierwszej obiektami są liczby naturalne, a w drugiej przestrzenie wektorowe (zwykle rozpatrywane bez uprzedniego wyboru baz). To modelowa sytuacja, w której równoważność jest właściwszym pojęciem niż równość.
+\end{przyklad}
+
+\begin{przyklad}[Szkielet kategorii]
+\emph{Szkieletem} kategorii $\mathcal C$ nazywamy pełną podkategorię zawierającą dokładnie po jednym reprezentancie każdej klasy izomorfizmu obiektów (o ile taki wybór można przeprowadzić). Dla $\Vect_k^{\mathrm{fd}}$ można wybrać reprezentantów $k^0,k^1,k^2,\ldots$, co daje kategorię równoważną $\cat{Mat}_k$. Każda mała kategoria jest równoważna swojemu szkieletowi, lecz szkielet nie musi być dosłownie jednoznaczny. W przykładzie przestrzeni wektorowych, dla pełnej formalności teoriomnogościowej, można pracować w ustalonym uniwersum zbiorów albo zastąpić rozważaną kategorię małym modelem zawierającym reprezentantów wszystkich jej klas izomorfizmu.
+\end{przyklad}
+
+\begin{uwaga}[Kiedy używać jakiego pojęcia?]
+Izomorfizm $A\cong B$ porównuje \emph{obiekty tej samej kategorii}. Izomorfizm naturalny $F\cong G$ porównuje \emph{funktory z tymi samymi dziedziną i przeciwdziedziną}. Równoważność $\mathcal C\simeq\mathcal D$ porównuje \emph{całe kategorie}. Są to trzy różne poziomy pojęcia ``to samo z dokładnością do odpowiedniej struktury''.
+\end{uwaga}
+
+\section{Sprzężenia funktorów}\label{sec:adjunctions}
+
+Sprzężenie opisuje sytuację, w której konstrukcja nowego obiektu jest \emph{najswobodniejsza} lub \emph{najbardziej uniwersalna} względem zapomnienia pewnej struktury. To jeden z najczęściej występujących wzorców we współczesnej algebrze i topologii.
+
+\subsection{Definicja przez naturalne bijekcje}
+
+\begin{definicja}[Para funktorów sprzężonych]\label{def:adjunction}
+Niech $F:\mathcal C\to\mathcal D$ i $G:\mathcal D\to\mathcal C$ będą funktorami. Mówimy, że $F$ jest \emph{lewym sprzężeniem} $G$, a $G$ \emph{prawym sprzężeniem} $F$, jeśli dla wszystkich $A\in\Ob(\mathcal C)$ i $B\in\Ob(\mathcal D)$ mamy bijekcje
+\[
+\Phi_{A,B}:\Hom_{\mathcal D}(F(A),B)\ \overset{\cong}{\longrightarrow}\ \Hom_{\mathcal C}(A,G(B)),
+\]
+naturalne jednocześnie względem $A$ i $B$. Piszemy $F\dashv G$.
+\end{definicja}
+
+Naturalność względem obu zmiennych oznacza konkretnie, że dla $u:A'\to A$, $v:B\to B'$ i $h:F(A)\to B$ zachodzą
+$\Phi_{A',B}(h\circ F(u))=\Phi_{A,B}(h)\circ u$ oraz $\Phi_{A,B'}(v\circ h)=G(v)\circ\Phi_{A,B}(h)$.
+
+\begin{przyklad}[Wolna przestrzeń wektorowa]\label{przyklad:free-vect}
+Dla zbioru $S$ niech $k^{(S)}$ oznacza przestrzeń wektorową funkcji $a:S\to k$ o \emph{skończonym nośniku} (tj. zbiór $\{s:a(s)\neq0\}$ jest skończony). Dla $s\in S$ oznaczmy przez $e_s$ funkcję przyjmującą wartość $1$ w $s$ i $0$ poza $s$. Każdy wektor ma jednoznaczny zapis $\sum_{s\in S}a_s e_s$ z tylko skończenie wieloma niezerowymi współczynnikami. Definiujemy funktor $F:\Set\to\Vect_k$ przez $F(S)=k^{(S)}$ i $F(f)(e_s)=e_{f(s)}$ dla funkcji $f:S\to T$, a następnie rozszerzamy liniowo.
+
+Jeśli $U:\Vect_k\to\Set$ jest funktorem zapominania, to każda funkcja $\varphi:S\to U(V)$ ma dokładnie jedno przedłużenie liniowe $\widetilde\varphi:k^{(S)}\to V$, dane przez $\widetilde\varphi(\sum a_s e_s)=\sum a_s\varphi(s)$. Odwrotnie, przekształceniu liniowemu $L:k^{(S)}\to V$ odpowiada funkcja $s\mapsto L(e_s)$. Otrzymujemy naturalną bijekcję
+\[
+\Hom_{\Vect_k}(k^{(S)},V)\cong\Hom_{\Set}(S,U(V)),
+\]
+czyli $F\dashv U$. Wolna przestrzeń jest tak skonstruowana, aby \emph{każda} funkcja ze zbioru generatorów jednoznacznie przedłużała się liniowo.
+\end{przyklad}
+
+\begin{przyklad}[Uniwersalny element wolnej przestrzeni]
+Dla ustalonego zbioru $S$ i funktora $G:\Vect_k\to\Set$ określonego przez $G(V)=\Hom_{\Set}(S,U(V))$ reprezentującym obiektem jest $k^{(S)}$. Element uniwersalny $u\in G(k^{(S)})$ to funkcja $s\mapsto e_s$. Dla dowolnej $\varphi:S\to U(V)$ istnieje dokładnie jedno odwzorowanie liniowe $L:k^{(S)}\to V$, dla którego $G(L)(u)=\varphi$, czyli $L(e_s)=\varphi(s)$ dla wszystkich $s$. Jest to element uniwersalny odpowiadający sprzężeniu wolnej przestrzeni z funktorem zapominania.
+\end{przyklad}
+
+\begin{przyklad}[Grupa wolna]
+Dla zbioru $S$ istnieje grupa wolna $F_{\Grp}(S)$ na generatorach $S$ (elementami są zredukowane słowa w symbolach $s$ oraz $s^{-1}$). Każdą funkcję $S\to U(G)$ do zbioru elementów grupy $G$ przedłużamy jednoznacznie do homomorfizmu $F_{\Grp}(S)\to G$. Otrzymujemy sprzężenie $F_{\Grp}:\Set\rightleftarrows\Grp:U$. Dla $S=\{*\}$ grupa wolna jest izomorficzna z $\mathbb Z$, co zgadza się z przykładem w sekcji~\ref{sec:yoneda}.
+\end{przyklad}
+
+\begin{przyklad}[Dwie konstrukcje topologiczne]
+Niech $U:\Top\to\Set$ zapomina topologię. Dla zbioru $S$ oznaczmy przez $D(S)$ zbiór $S$ z topologią dyskretną (wszystkie podzbiory są otwarte), a przez $I(S)$ zbiór $S$ z topologią antydyskretną (otwarte są tylko $\varnothing$ i $S$). Każda funkcja $D(S)\to X$ jest ciągła, a każda funkcja $X\to I(S)$ jest ciągła. Dlatego mamy dwa sprzężenia
+\[
+D\dashv U\dashv I.
+\]
+Rzeczywiście $\Hom_{\Top}(D(S),X)\cong\Hom_{\Set}(S,U(X))$ oraz $\Hom_{\Set}(U(X),S)\cong\Hom_{\Top}(X,I(S))$. Jeden funktor zapominania może zatem mieć zarówno lewe, jak i prawe sprzężenie.
+\end{przyklad}
+
+\begin{przyklad}[Przekątna, iloczyn i koprodukt]\label{przyklad:diag-adj}
+W $\Set$ niech $\Delta:\Set\to\Set\times\Set$ będzie funktorem przekątnym, $\Delta(X)=(X,X)$. Niech $\times:\Set\times\Set\to\Set$ oznacza iloczyn dwóch zbiorów, a $\sqcup:\Set\times\Set\to\Set$ ich sumę rozłączną. Uniwersalne własności iloczynu i koproduktu można zapisać jako dwa sprzężenia
+\[
+\sqcup\ \dashv\ \Delta\ \dashv\ \times.
+\]
+Pierwsze wynika z $\Hom(A\sqcup B,X)\cong\Hom(A,X)\times\Hom(B,X)$, a drugie z $\Hom(X,A\times B)\cong\Hom(X,A)\times\Hom(X,B)$.
+\end{przyklad}
+
+
+\begin{przyklad}[Sprzężenie funkcji monotonicznych na liczbach całkowitych]\label{przyklad:adj-poset}
+Traktujmy $(\mathbb Z,\leq)$ jako kategorię. Funkcje $F,G:\mathbb Z\to\mathbb Z$ dane przez $F(n)=2n$ i $G(m)=\lfloor m/2\rfloor$ są monotoniczne, a więc są funktorami. Dla dowolnych liczb całkowitych $n,m$ zachodzi
+$F(n)\leq m\ \Longleftrightarrow\ 2n\leq m\ \Longleftrightarrow\ n\leq\lfloor m/2\rfloor\ \Longleftrightarrow\ n\leq G(m)$.
+Każda ze stron oznacza niepustość odpowiedniego zbioru morfizmów, a skoro te zbiory są puste lub jednoelementowe, dostajemy bijekcję naturalną $\Hom(F(n),m)\cong\Hom(n,G(m))$. Zatem $F\dashv G$. Na przykład dla $n=3,m=7$ nierówności $6\leq7$ i $3\leq3$ są prawdziwe; dla $n=4,m=7$ obie są fałszywe.
+\end{przyklad}
+
+\begin{przyklad}[Obraz, przeciwobraz i kwantyfikator ``dla każdego'']\label{przyklad:adj-inverse-image}
+Niech $f:X\to Y$ będzie funkcją. Na posetach podzbiorów mamy trzy monotoniczne funkcje:
+\begin{itemize}
+\item $\exists_f:\mathcal P(X)\to\mathcal P(Y)$, $\exists_f(A)=f(A)$;
+\item $f^{-1}:\mathcal P(Y)\to\mathcal P(X)$, $f^{-1}(B)=\{x:f(x)\in B\}$;
+\item $\forall_f:\mathcal P(X)\to\mathcal P(Y)$, $\forall_f(A)=\{y\in Y:f^{-1}(\{y\})\subseteq A\}$.
+\end{itemize}
+Dla $A\subseteq X$, $B\subseteq Y$ zachodzą równoważności
+\[
+f(A)\subseteq B\ \Longleftrightarrow\ A\subseteq f^{-1}(B),\qquad
+f^{-1}(B)\subseteq A\ \Longleftrightarrow\ B\subseteq\forall_f(A).
+\]
+Są to dokładnie własności dwóch sprzężeń $\exists_f\dashv f^{-1}\dashv\forall_f$. Pierwszą równoważność sprawdzamy bezpośrednio: $f(x)\in B$ dla wszystkich $x\in A$ wtedy i tylko wtedy, gdy $x\in f^{-1}(B)$ dla wszystkich $x\in A$. Druga mówi, że każde włókno nad $y\in B$ jest zawarte w $A$ wtedy i tylko wtedy, gdy $y\in\forall_f(A)$.
+
+Przykładowo dla $X=\{a,b,c\}$, $Y=\{0,1\}$, $f(a)=0$, $f(b)=f(c)=1$ i $A=\{a,b\}$ otrzymujemy $\exists_f(A)=\{0,1\}$, lecz $\forall_f(A)=\{0\}$. Obie strony sprzężeń mają więc wyraźnie różne zadania: ``istnieje element włókna'' i ``wszystkie elementy włókna''.
+\end{przyklad}
+
+\begin{przyklad}[Naturalność sprzężenia wolnej przestrzeni]
+Dla zbioru $S$, przestrzeni $V$, funkcji $\varphi:S\to U(V)$ odpowiadające jej liniowe przedłużenie spełnia $\widetilde\varphi(e_s)=\varphi(s)$. Sprawdźmy obie zmienne. Jeśli $a:S'\to S$, to $(\widetilde\varphi\circ F(a))(e_{s'})=\widetilde\varphi(e_{a(s')})=\varphi(a(s'))$, czyli liniowy morfizm odpowiadający $\varphi\circ a$. Jeśli $b:V\to W$ jest liniowe, to $(b\circ\widetilde\varphi)(e_s)=b(\varphi(s))$, a zatem odpowiada funkcji $U(b)\circ\varphi$. Wykazaliśmy naturalność bijekcji z przykładu~\ref{przyklad:free-vect} względem $S$ i $V$, a nie tylko bijektywność dla każdej ustalonej pary.
+\end{przyklad}
+
+
+\subsection{Jednostka, kojednostka i tożsamości trójkątne}
+
+\begin{definicja}[Jednostka i kojednostka sprzężenia]\label{def:unit-counit}
+Dla sprzężenia $F:\mathcal C\rightleftarrows\mathcal D:G$ z bijekcjami $\Phi_{A,B}$ definiujemy \emph{jednostkę} $\eta:\id_{\mathcal C}\Rightarrow GF$ przez $\eta_A:=\Phi_{A,F(A)}(\id_{F(A)})$. Definiujemy \emph{kojednostkę} $\varepsilon:FG\Rightarrow\id_{\mathcal D}$ przez $\varepsilon_B:=\Phi_{G(B),B}^{-1}(\id_{G(B)})$.
+\end{definicja}
+
+Jednostka wprowadza obiekt $A$ do jego swobodnej konstrukcji $GF(A)$, a kojednostka \emph{realizuje} obiekt swobodny nad obiektem, który już ma wymaganą strukturę. W przykładzie wolnej przestrzeni wektorowej $\eta_S(s)=e_s$, natomiast
+$\varepsilon_V:k^{(U(V))}\to V$ spełnia $\varepsilon_V(e_v)=v$ i jest liniowa.
+
+\begin{twierdzenie}[Tożsamości trójkątne i odtworzenie sprzężenia]\label{tw:triangles}
+Dla każdego sprzężenia $F\dashv G$ jednostka $\eta$ i kojednostka $\varepsilon$ są transformacjami naturalnymi spełniającymi dla wszystkich $A\in\Ob(\mathcal C)$ i $B\in\Ob(\mathcal D)$ równości
+\[
+\varepsilon_{F(A)}\circ F(\eta_A)=\id_{F(A)},\qquad G(\varepsilon_B)\circ\eta_{G(B)}=\id_{G(B)}.
+\]
+Odwrotnie, jeśli dane są funktory $F,G$ i transformacje naturalne $\eta:\id_{\mathcal C}\Rightarrow GF$, $\varepsilon:FG\Rightarrow\id_{\mathcal D}$ spełniające te równości, to definiują sprzężenie $F\dashv G$.
+\end{twierdzenie}
+\begin{proof}
+Najpierw wychodzimy od naturalnych bijekcji $\Phi_{A,B}$ z definicji sprzężenia. Zdefiniowane w sekcji jednostka $\eta$ i kojednostka $\varepsilon$ są naturalne: dla $u:A\to A'$ naturalność $\Phi$ w pierwszej i drugiej zmiennej daje
+$GF(u)\eta_A=\Phi_{A,F(A')}(F(u))=\eta_{A'}u$. Analogicznie, stosując $\Phi^{-1}$, otrzymujemy $v\varepsilon_B=\varepsilon_{B'}FG(v)$ dla $v:B\to B'$.
+
+Z naturalności $\Phi$ w drugiej zmiennej, zastosowanej do $h:F(A)\to B$ i $\id_{F(A)}$, wynika ważny wzór
+$\Phi_{A,B}(h)=G(h)\eta_A$.
+Z naturalności $\Phi^{-1}$ w pierwszej zmiennej, zastosowanej do $u:A\to G(B)$ i $\id_{G(B)}$, wynika wzór odwrotny
+$\Phi_{A,B}^{-1}(u)=\varepsilon_BF(u)$.
+Zastosujmy drugi wzór przy $B=F(A)$ i $u=\eta_A$. Ponieważ $\eta_A=\Phi_{A,F(A)}(\id_{F(A)})$, mamy
+\[
+\varepsilon_{F(A)}F(\eta_A)
+=\Phi_{A,F(A)}^{-1}(\eta_A)=\id_{F(A)}.
+\]
+Z kolei pierwszy wzór przy $A=G(B)$ i $h=\varepsilon_B$ daje
+$G(\varepsilon_B)\eta_{G(B)}=\Phi_{G(B),B}(\varepsilon_B)=\id_{G(B)}$.
+To dowodzi obu tożsamości trójkątnych, bez pomijania kroku prowadzącego od naturalności do wzorów na morfizmy sprzężone.
+
+Odwrotnie, niech dane będą naturalne transformacje $\eta:\id_{\mathcal C}\Rightarrow GF$ i $\varepsilon:FG\Rightarrow\id_{\mathcal D}$ spełniające tożsamości trójkątne. Definiujemy dla $h:F(A)\to B$ oraz $u:A\to G(B)$ morfizmy
+\[
+\Phi_{A,B}(h)=G(h)\eta_A,\qquad
+\Psi_{A,B}(u)=\varepsilon_BF(u).
+\]
+Mają one odpowiednie dziedziny i przeciwdziedziny. Naturalność $\varepsilon$ dla $h$ daje $\varepsilon_BFG(h)=h\varepsilon_{F(A)}$, stąd
+$\Psi(\Phi(h))=\varepsilon_BFG(h)F(\eta_A)=h\varepsilon_{F(A)}F(\eta_A)=h$.
+Naturalność $\eta$ dla $u$ daje $GF(u)\eta_A=\eta_{G(B)}u$, zatem
+$\Phi(\Psi(u))=G(\varepsilon_B)GF(u)\eta_A=G(\varepsilon_B)\eta_{G(B)}u=u$.
+Funkcje $\Phi_{A,B}$ i $\Psi_{A,B}$ są więc wzajemnie odwrotne. Naturalność $\Phi$ względem $u_0:A'\to A$ wynika z rachunku
+$\Phi_{A',B}(hF(u_0))=G(h)GF(u_0)\eta_{A'}=G(h)\eta_Au_0=\Phi_{A,B}(h)u_0$.
+Jej naturalność względem $v:B\to B'$ wynika z $\Phi_{A,B'}(vh)=G(v)G(h)\eta_A=G(v)\Phi_{A,B}(h)$. Tak otrzymujemy wymagane sprzężenie.
+\end{proof}
+
+\begin{przyklad}[Sprawdzenie pierwszego trójkąta dla wolnej przestrzeni]
+Dla $S\in\Ob(\Set)$ i generatora $e_s\in F(S)$ mamy $F(\eta_S)(e_s)=e_{e_s}\in F(U(F(S)))$, po czym $\varepsilon_{F(S)}(e_{e_s})=e_s$. Obie strony $\varepsilon_{F(S)}\circ F(\eta_S)$ i $\id_{F(S)}$ są liniowe i zgadzają się na bazie $(e_s)_{s\in S}$, zatem są równe. To konkretna realizacja pierwszej tożsamości trójkątnej.
+\end{przyklad}
+
+
+\begin{przyklad}[Oba trójkąty dla sprzężenia dyskretnego]
+W sprzężeniu $D:\Set\rightleftarrows\Top:U$ z przykładu w sekcji~\ref{sec:adjunctions} mamy $UD=\id_{\Set}$ dosłownie, więc $\eta_S=\id_S$. Dla przestrzeni $X$ kojednostka $\varepsilon_X:D(U(X))\to X$ jest identycznością jako funkcja między zbiorami, a ciągłość wynika z dyskretności dziedziny. Pierwszy trójkąt mówi, że złożenie $D(S)\xrightarrow{D(\eta_S)}DUD(S)\xrightarrow{\varepsilon_{D(S)}}D(S)$ jest identycznością. Drugi mówi, że $U(X)\xrightarrow{\eta_{U(X)}}UDU(X)\xrightarrow{U(\varepsilon_X)}U(X)$ również jest identycznością. Oba wnioski są natychmiastowe po podstawieniu definicji, ale pokazują różnicę między identycznością funkcji a homeomorfizmem: $\varepsilon_X$ nie musi być homeomorfizmem.
+\end{przyklad}
+
+
+\subsection{Sprzężenia a zachowanie konstrukcji}
+
+\begin{twierdzenie}[Lewe sprzężenia zachowują kogranice]\label{tw:adjoints-preserve}
+Niech $F:\mathcal C\to\mathcal D$ i $G:\mathcal D\to\mathcal C$ będą funktorami ze sprzężeniem $F\dashv G$. Niech $J$ będzie małą kategorią i $D:J\to\mathcal C$ diagramem mającym kogranicę $(Q,(q_j)_j)$. Wówczas $(F(Q),(F(q_j))_j)$ jest kogranicą diagramu $F\circ D$ w $\mathcal D$. Dualnie, prawy sprzężony $G$ zachowuje wszystkie istniejące małe granice.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy obiekt $Y\in\Ob(\mathcal D)$. Sprzężenie daje naturalną bijekcję między morfizmami $F(Q)\to Y$ a morfizmami $Q\to G(Y)$. Z uniwersalności kogranicy $Q$ te ostatnie są w bijekcji z rodzinami morfizmów $a_j:D(j)\to G(Y)$ spełniającymi $a_{j'}\circ D(\alpha)=a_j$ dla każdej strzałki $\alpha:j\to j'$ w $J$. Stosując bijekcję sprzężenia dla każdego $j$ i jej naturalność względem $D(\alpha)$, utożsamiamy takie rodziny z kostożkami $F(D(j))\to Y$. Wszystkie bijekcje są zgodne z morfizmami wychodzącymi z $F(Q)$, co jest dokładnie własnością uniwersalną kogranicy. Twierdzenie dualne stosujemy do kategorii przeciwnych.
+\end{proof}
+
+\begin{przyklad}[Dlaczego wolna przestrzeń zachowuje koprodukty]
+Dla zbiorów $S,T$ mamy kanoniczny izomorfizm $k^{(S\sqcup T)}\cong k^{(S)}\oplus k^{(T)}$. Można go sprawdzić bezpośrednio: funkcja o skończonym nośniku na sumie rozłącznej to para funkcji o skończonych nośnikach na jej składnikach. Twierdzenie~\ref{tw:adjoints-preserve} przewiduje ten izomorfizm bez rachunku na współrzędnych, ponieważ funktor wolnej przestrzeni jest lewym sprzężeniem i musi zachowywać koprodukty.
+\end{przyklad}
+
+\begin{uwaga}[Lewe i prawe są asymetryczne]
+Lewe sprzężenie zachowuje kogranice, a prawe granice. Nie można bez dodatkowych założeń zamienić tych słów. Na przykład wolna przestrzeń $F:\Set\to\Vect_k$ nie zachowuje wszystkich iloczynów: dla zbiorów $S$ i $T$ o odpowiednio $2$ i $3$ elementach przestrzeń $F(S\times T)$ ma wymiar $6$, podczas gdy iloczyn $F(S)\times F(T)$ w $\Vect_k$ ma wymiar $2+3=5$.
+\end{uwaga}
+
+
+\begin{przyklad}[Prawy sprzężony zachowuje iloczyny]
+Niech $U:\Grp\to\Set$ będzie funktorem zapominania. Ponieważ $U$ jest prawym sprzężeniem do funktora grupy wolnej, zachowuje granice. Dla grup $G,H$ dostajemy zatem kanoniczną bijekcję $U(G\times H)\cong U(G)\times U(H)$. Konkretna grupa $G\times H$ ma elementy $(g,h)$, więc bijekcja jest tu oczywista. Znaczenie twierdzenia polega jednak na tym, że działa ono także dla bardziej skomplikowanych granic, np. equalizatorów dowolnych homomorfizmów grup.
+\end{przyklad}
+
+
+\section{Monady: jak opisać konstrukcję swobodną na jednym poziomie}\label{sec:monads}
+
+Monady pojawiają się naturalnie w teorii algebry, semantyce języków programowania i teorii obliczeń. Na poziomie podstawowym można je rozumieć jako funktory wyposażone w operację \emph{włożenia pojedynczego elementu} i operację \emph{spłaszczenia dwóch warstw tej samej konstrukcji}.
+
+\begin{definicja}[Monad]\label{def:monad}
+\emph{Monadą} na kategorii $\mathcal C$ jest trójka $(T,\eta,\mu)$, gdzie $T:\mathcal C\to\mathcal C$ jest funktorem, $\eta:\id_{\mathcal C}\Rightarrow T$ i $\mu:T\circ T\Rightarrow T$ są transformacjami naturalnymi, a dla każdego obiektu $A$ zachodzą równości
+\[
+\mu_A\circ T(\mu_A)=\mu_A\circ\mu_{T(A)},\qquad\mu_A\circ T(\eta_A)=\id_{T(A)}=\mu_A\circ\eta_{T(A)}.
+\]
+Pierwsza to \emph{łączność spłaszczania}, a dwie pozostałe to \emph{prawa i lewa jednostka}.
+\end{definicja}
+
+\begin{przyklad}[Monada skończonych list]\label{przyklad:list-monad}
+Dla zbioru $X$ niech $T(X)$ oznacza zbiór wszystkich skończonych list elementów $X$, włącznie z listą pustą. Funkcja $f:X\to Y$ działa na listach przez zastosowanie $f$ do każdego elementu. Definiujemy $\eta_X(x)=[x]$ oraz $\mu_X([[x_1,x_2],[x_3],[],[x_4]])=[x_1,x_2,x_3,x_4]$. W ogólności $\mu_X$ skleja listę list w jedną listę. Dwie strony równania łączności dają ten sam wynik: usuwają oba poziomy nawiasów w liście list list. Równania jednostek mówią, że spłaszczenie $[[x_1,\ldots,x_n]]$ i spłaszczenie $[[x_1],\ldots,[x_n]]$ daje $[x_1,\ldots,x_n]$.
+\end{przyklad}
+
+\begin{przyklad}[Monada z wolnego monoidu]
+Skończone listy elementów zbioru $X$ tworzą \emph{monoid wolny} na $X$ z działaniem konkatenacji i pustą listą jako jednostką. Niech $F:\Set\to\Mon$ będzie funktorem wolnego monoidu, a $U:\Mon\to\Set$ funktorem zapominania. Mamy sprzężenie $F\dashv U$, a złożenie $T=UF$ jest dokładnie funktorem list z poprzedniego przykładu. Jednostka sprzężenia jest operacją $x\mapsto[x]$, a jej kojednostka indukuje spłaszczanie list list.
+\end{przyklad}
+
+
+\begin{przyklad}[Monada podzbiorów]\label{przyklad:powerset-monad}
+Na kategorii $\Set$ weźmy kowariantny funktor $T=\mathcal P_+$, który funkcji $f:X\to Y$ przypisuje obraz bezpośredni $A\mapsto f(A)$. Definiujemy $\eta_X(x)=\{x\}$ i $\mu_X:\mathcal P(\mathcal P(X))\to\mathcal P(X)$ przez $\mu_X(\mathscr A)=\bigcup_{A\in\mathscr A}A$. Naturalność $\eta$ pokazaliśmy wcześniej. Naturalność $\mu$ wynika z tożsamości $f(\bigcup_{A\in\mathscr A}A)=\bigcup_{A\in\mathscr A}f(A)$: obraz sumy jest sumą obrazów. Aksjomat łączności jest równością dwóch sposobów wykonania trzykrotnej sumy zbiorów; aksjomaty jednostki wynikają z $\bigcup\{A\}=A$ i $\bigcup_{x\in A}\{x\}=A$. Dla $X=\{1,2,3\}$ i $\mathscr A=\{\{1,2\},\{2,3\},\varnothing\}$ dostajemy $\mu_X(\mathscr A)=\{1,2,3\}$. Jest to inny przykład monady niż listy: \emph{kolejność i powtórzenia} nie mają tu znaczenia.
+\end{przyklad}
+
+\begin{przyklad}[Monada ``możliwego braku wyniku'']
+Dla zbioru $X$ zdefiniujmy $T(X)=X\sqcup\{\bot\}$; symbol $\bot$ oznacza nowy element, który nie należy do $X$. Dla funkcji $f:X\to Y$ określamy $T(f)(x)=f(x)$, gdy $x\in X$, oraz $T(f)(\bot)=\bot$. Jednostka $\eta_X:X\to T(X)$ jest włączeniem. Zbiór $T(T(X))$ zawiera zwykłe wyniki oraz dwa rodzaje symbolu braku wyniku (wewnętrzny i zewnętrzny); mnożenie $\mu_X:T(T(X))\to T(X)$ zachowuje zwykłe wyniki i wysyła oba symbole na $\bot$. Spłaszczenie trzech warstw zawsze daje pierwotny wynik, jeśli taki istnieje, albo jeden symbol $\bot$, niezależnie od kolejności spłaszczania. Naturalność wynika z tego, że funkcje $T(f)$ zachowują symbol $\bot$. Otrzymujemy monadę przydatną przy opisie obliczeń częściowych.
+\end{przyklad}
+
+\begin{przyklad}[Konkatenacja list i składanie Kleisliego]
+Niech $X=\{1,2\}$, $Y=\{a,b\}$, $Z=\{0,1\}$. Przyjmijmy funkcje $f:X\to T(Y)$ i $g:Y\to T(Z)$ dane przez
+$f(1)=[a,b]$, $f(2)=[b]$, $g(a)=[0]$, $g(b)=[1,1]$.
+Ich składanie w kategorii Kleisliego monady list ma wzór $(g\star f)(x)=\mu_Z(T(g)(f(x)))$. Dla $x=1$ otrzymujemy kolejno $f(1)=[a,b]$, następnie $T(g)([a,b])=[[0],[1,1]]$, a na końcu $(g\star f)(1)=[0,1,1]$. Dla $x=2$ wynikiem jest $[1,1]$. Nie jest to zwykłe składanie funkcji: wartością pośrednią jest lista, a nie pojedynczy element $Y$.
+\end{przyklad}
+
+
+\begin{twierdzenie}[Monada z każdego sprzężenia]
+Niech $F:\mathcal C\to\mathcal D$ i $G:\mathcal D\to\mathcal C$ spełniają $F\dashv G$, z jednostką $\eta:\id_{\mathcal C}\Rightarrow GF$ i kojednostką $\varepsilon:FG\Rightarrow\id_{\mathcal D}$. Wówczas $T=GF$ z jednostką $\eta$ i mnożeniem $\mu_A:=G(\varepsilon_{F(A)}):GFGF(A)\to GF(A)$ jest monadą na $\mathcal C$.
+\end{twierdzenie}
+\begin{proof}
+Naturalność $\mu$ wynika z naturalności $\varepsilon$. Najpierw dwie tożsamości jednostkowe z definicji~\ref{def:monad} wynikają z tożsamości trójkątnych:
+$\mu_A\circ T(\eta_A)=G(\varepsilon_{F(A)}\circ F(\eta_A))=\id_{GF(A)}$ oraz
+$\mu_A\circ\eta_{T(A)}=G(\varepsilon_{F(A)})\circ\eta_{GF(A)}=\id_{GF(A)}$.
+
+Pozostaje łączność. Naturalność kojednostki $\varepsilon$ dla morfizmu $\varepsilon_{F(A)}:FGF(A)\to F(A)$ daje
+$\varepsilon_{F(A)}\circ FG(\varepsilon_{F(A)})=\varepsilon_{F(A)}\circ\varepsilon_{FGF(A)}$. Po zastosowaniu $G$ lewa strona jest równa $\mu_A\circ T(\mu_A)$, a prawa $\mu_A\circ\mu_{T(A)}$. Otrzymujemy trzeci aksjomat monady.
+\end{proof}
+
+\begin{uwaga}[Co jeszcze daje teoria monad?]
+Dla monady $(T,\eta,\mu)$ można budować kategorię Kleisliego: obiektami są obiekty $\mathcal C$, a morfizmem $A\to B$ jest zwykła strzałka $A\to T(B)$ w $\mathcal C$. Dwie strzałki $f:A\to T(B)$ i $g:B\to T(C)$ składamy jako $\mu_C\circ T(g)\circ f:A\to T(C)$. Jednostką w $A$ jest $\eta_A:A\to T(A)$. Aksjomaty monady gwarantują łączność i aksjomaty jednostki tego składania. W przypadku list składanie odpowiada mapowaniu elementów do list, a następnie ich konkatenacji.
+\end{uwaga}
+
+\section{Powiązania z innymi działami matematyki}\label{sec:powiazania}
+
+\subsection{Algebra: od jąder do kategorii abelowych}
+
+Kategoria $\Vect_k$ ma obiekt zerowy, jądra i kojądra wszystkich morfizmów, a każdy zbiór morfizmów $\Hom(V,W)$ jest grupą abelową względem dodawania odwzorowań liniowych. Ponadto składanie jest addytywne w każdej zmiennej:
+$(f_1+f_2)\circ g=f_1\circ g+f_2\circ g$ oraz $f\circ(g_1+g_2)=f\circ g_1+f\circ g_2$.
+
+Podobnie zachowuje się kategoria $\Ab$ grup abelowych. To nie przypadek: obie są przykładami \emph{kategorii abelowych}, czyli kategorii addytywnych z odpowiednimi warunkami na jądra, kojądra i rozkłady morfizmów. W takich kategoriach można prowadzić teorię ciągów dokładnych, homologii i funktorów pochodnych bez sprowadzania każdej konstrukcji do elementów zbiorów. Pełną definicję kategorii abelowej odkładamy poza podstawowy zakres skryptu.
+
+\begin{przyklad}[Krótki ciąg dokładny]
+Dla liniowego $f:V\to W$ mamy ciąg $0\to\Ker f\xrightarrow{i}V\xrightarrow{f}W\xrightarrow{q}W/\im f\to0$, gdzie $i$ jest włożeniem, $q$ jest rzutem, a $0$ oznacza przestrzeń zerową. Ciąg jest \emph{dokładny}: w każdym miejscu obraz poprzedzającego morfizmu jest jądrem następnego. Definicja używa tylko jąder i obrazów, które dają się opisywać kategorycznie.
+\end{przyklad}
+
+\subsection{Topologia: funktorialność niezmienników}
+
+Z punktu widzenia teorii kategorii wielu niezmienników topologicznych nie należy traktować jako pojedynczych liczb lub grup, lecz jako funktory. Przykładowo grupa podstawowa przyporządkowuje \emph{punktowanej} przestrzeni topologicznej $(X,x_0)$ grupę $\pi_1(X,x_0)$. Każde ciągłe odwzorowanie punktowane $f:(X,x_0)\to(Y,y_0)$ indukuje homomorfizm $\pi_1(f):\pi_1(X,x_0)\to\pi_1(Y,y_0)$ przez $[\gamma]\mapsto[f\circ\gamma]$. Ta konstrukcja zachowuje identyczności i składanie, więc jest funktorem z kategorii punktowanych przestrzeni topologicznych do $\Grp$.
+
+\begin{przyklad}[Homologia jako funktor]
+Dla każdego $n\geq0$ $n$-ta homologia singularna jest funktorem $H_n:\Top\to\Ab$. Odwzorowanie ciągłe $f:X\to Y$ indukuje homomorfizm $H_n(f):H_n(X)\to H_n(Y)$, a dla $g:Y\to Z$ mamy $H_n(g\circ f)=H_n(g)\circ H_n(f)$. To dlatego homeomorficzne przestrzenie mają izomorficzne grupy homologii: stosujemy ogólne twierdzenie~\ref{tw:funktory-iso} o zachowywaniu izomorfizmów przez funktory.
+\end{przyklad}
+
+\subsection{Analiza: przestrzenie funkcji jako funktory Hom}
+
+Jeśli rozważamy kategorię odpowiednio dobranych przestrzeni analitycznych i dozwolonych odwzorowań, to zapis $\Hom(X,Y)$ oznacza \emph{przestrzeń odwzorowań zgodnych ze strukturą}, np. ciągłych lub holomorficznych. Własności uniwersalne mogą wtedy opisywać obiekty nie przez ich punkty, lecz przez wszystkie rodziny odwzorowań do nich i z nich. To jest podstawowy punkt widzenia geometrii algebraicznej, teorii schematów i geometrii analitycznej.
+
+\begin{uwaga}[Dalsza ścieżka]
+Po opanowaniu podstaw warto kolejno poznać kategorie addytywne i abelowe, kategorie monoidalne, sprzężenia i monady w większej ogólności, algebry nad monadą, a następnie kategorie pochodne lub kategorie wyższe. Nie są one wymagane do zrozumienia definicji funktora, transformacji naturalnej czy lematu Yonedy, lecz rozwijają te same idee.
+\end{uwaga}
+
+\section{Przykłady przekrojowe: jedno zadanie, wiele kategorii}\label{sec:przekrojowe}
+
+Zestawmy teraz w jednym miejscu kilka konstrukcji, żeby wyraźniej zobaczyć, co jest wspólne, a co zależy od kategorii.
+
+\begin{przyklad}[Co jest iloczynem dwóch obiektów?]
+\leavevmode\par\noindent
+\begin{itemize}
+\item W $\Set$: $A\times B$ i zwykłe rzuty.
+\item W $\Grp$: $G\times H$ z mnożeniem współrzędnym.
+\item W $\Top$: $X\times Y$ z topologią produktową.
+\item W $\Vect_k$: $V\oplus W$ (dla dwóch czynników).
+\item W posetach: $a\wedge b$ (kres dolny), jeśli istnieje.
+\end{itemize}
+We wszystkich przypadkach testem jest \emph{ta sama} własność uniwersalna z definicji~\ref{def:produkt}, mimo że konkretne konstrukcje wyglądają inaczej.
+\end{przyklad}
+
+\begin{przyklad}[Co jest koproduktem dwóch obiektów?]
+\leavevmode\par\noindent
+\begin{itemize}
+\item W $\Set$: suma rozłączna $A\sqcup B$.
+\item W $\Grp$: iloczyn wolny $G*H$.
+\item W $\Top$: suma rozłączna z topologią sumy topologicznej.
+\item W $\Vect_k$: $V\oplus W$.
+\item W posetach: $a\vee b$ (kres górny), jeśli istnieje.
+\end{itemize}
+Szczególnie pouczający jest kontrast $G\times H$ i $G*H$: w teorii grup produkt i koprodukt są zasadniczo różnymi konstrukcjami.
+\end{przyklad}
+
+\begin{przyklad}[Co oznacza strzałka?]
+W $\Set$ strzałką jest funkcja; w $\Grp$ homomorfizm; w $\Rel$ relacja; w kategorii porządku pojedynczy dowód nierówności $x\leq y$ na poziomie istnienia morfizmu; w kategorii monoidu z jednym obiektem strzałką jest element monoidu. Zatem nie ma sensu pytać, czy morfizm kategorii jest \emph{zawsze ciągły} lub \emph{zawsze różnowartościowy}: właściwe pytanie zależy od wybranej kategorii.
+\end{przyklad}
+
+\begin{przyklad}[Rozwiązywanie problemu przez własność uniwersalną]
+Załóżmy, że chcemy określić homomorfizm $h:G*H\to K$. W podejściu elementarnym musielibyśmy opisać, jak $h$ działa na zredukowanych słowach, i sprawdzić zgodność z mnożeniem. W podejściu kategorialnym wystarczy podać dwa homomorfizmy $f:G\to K$ i $g:H\to K$: własność koproduktu gwarantuje, że istnieje dokładnie jeden $h$ z $h\circ i_G=f$, $h\circ i_H=g$. To jest praktyczna oszczędność pracy, a nie jedynie zmiana notacji.
+\end{przyklad}
+
+\begin{przyklad}[Funktor może ujawniać strukturę ukrytą]
+Każda grupa $G$ działa na sobie przez lewe mnożenie. Odpowiadający jej funktor $G\to\Set$ przypisuje jedynemu obiektowi zbiór $G$, a elementowi $g\in G$ permutację $L_g(x)=gx$. Ta obserwacja prowadzi do twierdzenia Cayleya: odwzorowanie $g\mapsto L_g$ jest homomorfizmem $G\to\operatorname{Sym}(G)$, a jest różnowartościowe, ponieważ $L_g(e)=g$.
+\end{przyklad}
+
+
+\begin{przyklad}[Dlaczego własność uniwersalna daje jednoznaczność konstrukcji]
+Załóżmy, że obiekt $P$ z rzutami $p_A,p_B$ ma uniwersalną własność iloczynu, podobnie jak $Q$ z rzutami $q_A,q_B$. Nie wybieramy żadnych reprezentantów elementów. Uniwersalność $Q$ tworzy $u:P\to Q$, a uniwersalność $P$ tworzy $v:Q\to P$. Równania $p_Avu=p_A$ i $p_Bvu=p_B$ prowadzą do $vu=\id_P$; analogicznie $uv=\id_Q$. Ten dowód jest typowym wzorcem: \emph{aby porównać dwa obiekty uniwersalne, zastosuj ich uniwersalności do siebie nawzajem}.
+\end{przyklad}
+
+\begin{przyklad}[Operacje na zbiorach a operacje na przestrzeniach liniowych]
+Dla zbioru $X$ nie ma naturalnego działania $X\times X\to X$ wyznaczonego samą strukturą zbioru poza wyborem pierwszej albo drugiej współrzędnej. W istocie lemat Yonedy z przykładu~\ref{przyklad:yoneda-tuple} daje dokładnie dwa naturalne odwzorowania $X^2\to X$: $(x,y)\mapsto x$ i $(x,y)\mapsto y$. Natomiast dla przestrzeni wektorowej $V$ istnieje naturalne dodawanie $V\oplus V\to V$, $(v,w)\mapsto v+w$, ponieważ każdy liniowy $f:V\to W$ spełnia $f(v+w)=f(v)+f(w)$. \emph{Naturalność zawsze zależy od kategorii i jej morfizmów}, a nie tylko od wzoru na elementach.
+\end{przyklad}
+
+
+\section{Słownik oznaczeń i krótkie podsumowanie}\label{sec:slownik}
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+$\mathcal C,\mathcal D$ & kategorie \\
+$\Ob(\mathcal C)$ & klasa obiektów kategorii $\mathcal C$ \\
+$\Hom_{\mathcal C}(A,B)$ & zbiór morfizmów $A\to B$ \\
+$\id_A$ & morfizm identycznościowy obiektu $A$ \\
+$\mathcal C^{\op}$ & kategoria przeciwna \\
+$F:\mathcal C\to\mathcal D$ & funktor kowariantny \\
+$F\Rightarrow G$ & transformacja naturalna \\
+$A\cong B$ & izomorfizm obiektów \\
+$\mathcal C\simeq\mathcal D$ & równoważność kategorii \\
+$A\times B$, $A\sqcup B$ & iloczyn i koprodukt \\
+$A\times_C B$, $A\sqcup_C B$ & pullback i pushout \\
+$\lim D$, $\colim D$ & granica i kogranica diagramu \\
+$h^A=\Hom(A,-)$ & kowariantny funktor Hom \\
+$h_A=\Hom(-,A)$ & kontrawariantny funktor Hom \\
+$F\dashv G$ & $F$ jest lewym sprzężeniem $G$ \\
+$(T,\eta,\mu)$ & monada \\
+\end{tabular}
+\end{center}
+
+Podstawowe konstrukcje teorii kategorii tworzą spójny obraz. \emph{Kategoria} koduje obiekty i morfizmy; \emph{funktor} przenosi ten kod do innej kategorii; \emph{transformacja naturalna} porównuje dwa funktory w sposób zgodny ze składaniem; \emph{własność uniwersalna} rozpoznaje obiekt po wszystkich zgodnych strzałkach; \emph{granica i kogranica} obejmują wiele pozornie różnych konstrukcji; \emph{Yoneda} wyjaśnia, że obiekty są opisane przez swoje funktory Hom; \emph{sprzężenie} formalizuje przechodzenie pomiędzy konstrukcją swobodną a zapominaniem struktury; \emph{monada} rejestruje część tej konstrukcji na poziomie jednej kategorii.
+
+Najważniejsza praktyczna zasada brzmi: kiedy spotykamy nowy obiekt matematyczny, warto zapytać, \emph{jakie morfizmy do niego lub z niego wychodzą i czy można je opisać uniwersalnie}. W wielu sytuacjach taka charakterystyka jest trwalsza, prostsza i bardziej użyteczna niż konstrukcja na elementach.
+
+\end{document}

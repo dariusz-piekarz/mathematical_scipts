@@ -1,0 +1,833 @@
+\chapter{Drzewa, mosty i cykle fundamentalne}
+\label{ch:tg-drzewa}
+
+Drzewa są najprostszymi grafami spójnymi: można przemieszczać się
+między dowolnymi dwoma wierzchołkami, ale nie ma możliwości
+obchodzenia cykli. Dzięki tej sztywnej strukturze udowodnimy
+wiele twierdzeń w kilku równoważnych postaciach. Później
+zobaczymy, że wybór drzewa rozpinającego pozwala wyznaczać
+bazę pierwszej homologii dowolnego grafu.
+
+\section{Drzewa i ich równoważne charakteryzacje}
+\label{sec:tg-def-drzewo}
+
+\begin{definicja}[Drzewo i las]
+\emph{Drzewem} nazywamy skończony, spójny, acykliczny
+graf prosty. \emph{Lasem} nazywamy graf prosty
+acykliczny, niekoniecznie spójny. W szczególności
+każda składowa spójna lasu jest drzewem.
+\end{definicja}
+
+Dopuszczamy drzewo jednowierzchołkowe $K_1$; nie ma
+ono krawędzi. Trzeba pamiętać, że acykliczność
+nie oznacza braku zamkniętych spacerów (można
+wracać tą samą krawędzią).
+
+\begin{twierdzenie}[Jedyność drogi w drzewie]
+Niech $G$ będzie skończonym, niepustym grafem prostym.
+Wtedy $G$ jest drzewem wtedy i tylko wtedy, gdy
+dla dowolnych różnych $u,v\in V(G)$ istnieje
+dokładnie jedna droga prosta z $u$ do $v$.
+\end{twierdzenie}
+
+\begin{proof}
+Załóżmy, że $G$ jest drzewem. Jego spójność zapewnia
+istnienie spaceru między $u$ a $v$, a lemat o usuwaniu
+powtórzeń --- istnienie drogi prostej. Gdyby istniały
+dwie różne drogi proste $P$ i $Q$ z $u$ do $v$,
+wybierzmy pierwszy wierzchołek $x$, w którym
+rozchodzą się one przy przechodzeniu od $u$.
+Idąc dalej po $P$, wybierzmy pierwszy wierzchołek
+$y\ne x$ należący również do $Q$ po $x$;
+taki wierzchołek istnieje, bo $v$ należy do obu
+dróg. Fragmenty $P$ i $Q$ między $x$ i $y$
+są wewnętrznie rozłączne i mają różne pierwsze
+krawędzie. Ich suma tworzy cykl, co przeczy
+acykliczności.
+
+W drugą stronę, jeżeli pomiędzy każdymi dwoma
+różnymi wierzchołkami jest dokładnie jedna droga
+prosta, graf jest spójny. Gdyby zawierał cykl,
+pomiędzy dowolnymi dwoma różnymi wierzchołkami
+tego cyklu byłyby dwie drogi proste: dwa łuki
+cyklu prowadzące w przeciwnych kierunkach.
+Otrzymalibyśmy sprzeczność. Zatem graf jest
+spójny i acykliczny, czyli jest drzewem.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[scale=.92]
+  \node[tgTealVertex] (a) at (-2.2,0) {$a$};
+  \node[tgTealVertex] (b) at (-.7,1.15) {$b$};
+  \node[tgTealVertex] (c) at (-.7,-1.15) {$c$};
+  \node[tgTealVertex] (d) at (.8,1.5) {$d$};
+  \node[tgTealVertex] (e) at (.8,.3) {$e$};
+  \node[tgTealVertex] (f) at (.8,-1.35) {$f$};
+  \draw[tgTree] (a)--(b)--(d) (b)--(e) (a)--(c)--(f);
+  \draw[tgAccent] (d)--(b)--(a)--(c)--(f);
+  \node[font=\small,text=tgNavy] at (2.3,.1) {droga $d\to f$};
+\end{tikzpicture}
+
+{\footnotesize W drzewie istnieje tylko jedna droga między
+wierzchołkami $d$ i $f$ (zaznaczona na czerwono).}
+\end{center}
+
+\begin{lemat}[Liście w drzewie]
+Niech $T$ będzie skończonym drzewem mającym
+co najmniej dwa wierzchołki. Wtedy $T$ ma
+co najmniej dwa różne wierzchołki stopnia jeden.
+\end{lemat}
+
+\begin{proof}
+Wybierzmy drogę prostą $P=v_0v_1\ldots v_k$
+o największej możliwej długości. Ponieważ drzewo
+ma co najmniej dwa wierzchołki i jest spójne,
+$k\ge1$. Pokażemy, że $d_T(v_0)=1$.
+Gdyby $v_0$ miał sąsiada $w\ne v_1$, możliwe
+byłyby dwa przypadki. Jeżeli $w$ leżałby na
+$P$, krawędź $v_0w$ wraz z odpowiednim fragmentem
+$P$ tworzyłaby cykl. Jeżeli $w$ nie leżałby
+na $P$, droga $wv_0v_1\ldots v_k$ byłaby
+dłuższa niż $P$. Oba przypadki są niemożliwe.
+Zatem $v_0$ ma tylko jednego sąsiada $v_1$.
+Tak samo $v_k$ ma stopień jeden, a ponieważ
+$k\ge1$, oba końce są różne.
+\end{proof}
+
+\begin{twierdzenie}[Liczba krawędzi drzewa]
+Dla każdego skończonego drzewa $T$ o $n\ge1$
+wierzchołkach zachodzi $|E(T)|=n-1$.
+\end{twierdzenie}
+
+\begin{proof}
+Dowodzimy przez indukcję po $n$. Dla $n=1$
+drzewo nie ma krawędzi, więc wzór jest prawdziwy.
+Niech $n\ge2$ i załóżmy tezę dla drzew o $n-1$
+wierzchołkach. Z poprzedniego lematu $T$ ma
+liść $v$ i dokładnie jedną krawędź $e$ incydentną
+z $v$. Usuńmy $v$ oraz $e$. Pozostały graf $T-v$
+nie ma cykli, bo jest podgrafem drzewa. Jest
+też spójny: jedyna droga między dwoma dowolnymi
+wierzchołkami różnymi od $v$ nie mogła przechodzić
+przez liść $v$ jako wierzchołek wewnętrzny, bo
+wymagałoby to dwóch różnych krawędzi przy $v$.
+Stąd $T-v$ jest drzewem o $n-1$ wierzchołkach
+i z założenia indukcyjnego ma $n-2$ krawędzie.
+Po dołączeniu $e$ otrzymujemy $n-1$ krawędzi w $T$.
+\end{proof}
+
+\begin{wniosek}[Krawędzie lasu]
+Niech $F$ będzie skończonym lasem o $n$ wierzchołkach
+i $c$ składowych spójnych. Wtedy $|E(F)|=n-c$.
+\end{wniosek}
+
+\begin{proof}
+Niech składowe mają odpowiednio $n_1,\ldots,n_c$
+wierzchołków. Każda jest drzewem, zatem ma
+$n_i-1$ krawędzi. Sumując, dostajemy
+$|E(F)|=\sum_{i=1}^{c}(n_i-1)
+=\sum_{i=1}^{c}n_i-c=n-c$.
+\end{proof}
+
+\begin{twierdzenie}[Charakteryzacja przez liczbę krawędzi]
+Niech $G=(V,E)$ będzie skończonym grafem prostym
+o $n\ge1$ wierzchołkach i $m$ krawędziach.
+Następujące warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $G$ jest drzewem;
+\item $G$ jest spójny oraz $m=n-1$;
+\item $G$ jest acykliczny oraz $m=n-1$;
+\item $G$ jest spójny i usunięcie dowolnej
+krawędzi niszczy spójność;
+\item $G$ jest acykliczny i dołączenie dowolnej
+krawędzi łączącej dwa dotąd niesąsiadujące
+wierzchołki tworzy cykl (jeśli takie pary istnieją).
+\end{enumerate}
+\end{twierdzenie}
+
+\begin{proof}
+Wykazaliśmy już (i)$\Rightarrow$(ii) oraz
+(i)$\Rightarrow$(iii). Aby udowodnić
+(ii)$\Rightarrow$(i), wybierzmy spośród wszystkich
+spójnych podgrafów $G$ o pełnym zbiorze
+wierzchołków taki, który ma najmniej krawędzi.
+Nie zawiera cyklu: gdyby zawierał, usunięcie
+jednej krawędzi cyklu nie zniszczyłoby spójności,
+ponieważ można ją zastąpić pozostałym fragmentem
+cyklu. Otrzymujemy drzewo rozpinające $T$.
+Ma ono $n-1$ krawędzi; ponieważ sam $G$ także
+ma $n-1$ krawędzi, musi zachodzić $E(G)=E(T)$.
+Zatem $G=T$ jest drzewem.
+
+Aby wykazać (iii)$\Rightarrow$(i), oznaczmy
+przez $c$ liczbę składowych spójnych $G$.
+Acykliczny $G$ jest lasem, zatem z poprzedniego
+wniosku $m=n-c$. Z założenia $m=n-1$ wynika
+$c=1$, a więc $G$ jest spójny i dlatego jest
+drzewem.
+
+Jeśli (i) zachodzi, to każde dwa wierzchołki
+drzewa łączy jedyna droga prosta. Usunięcie
+dowolnej krawędzi $uv$ niszczy tę drogę, czyli
+wierzchołki $u$ i $v$ przestają być połączone;
+mamy (iv). Odwrotnie, gdyby graf spełniający
+(iv) zawierał cykl, usunięcie dowolnej krawędzi
+tego cyklu zachowałoby spójność, co przeczy (iv).
+Stąd (iv)$\Rightarrow$(i).
+
+Na koniec załóżmy (i). Dla dwóch niesąsiadujących
+wierzchołków $u,v$ istnieje w $G$ jedyna droga
+prosta od $u$ do $v$. Dołączenie krawędzi $uv$
+zamyka tę drogę w cykl, co daje (v).
+Jeżeli natomiast (v) zachodzi, lecz $G$ nie
+jest spójny, weźmy wierzchołki $u,v$ z różnych
+składowych. Nie sąsiadują ze sobą, a dodanie
+krawędzi $uv$ nie może utworzyć cyklu, bo
+przed jej dodaniem nie było drogi między nimi.
+Sprzeczność. Zatem $G$ jest spójny, a jako
+acykliczny jest drzewem.
+\end{proof}
+
+\begin{uwaga}
+W warunku (v) warto osobno sprawdzić przypadek grafu
+pełnego. Jeżeli graf jest pełny i acykliczny,
+może mieć co najwyżej dwa wierzchołki; wówczas
+jest drzewem. Warunek o ,,każdej brakującej krawędzi''
+pozostaje logicznie prawdziwy również wtedy, gdy
+takich krawędzi nie ma.
+\end{uwaga}
+
+\section{Drzewa rozpinające}
+\label{sec:tg-rozpinajace}
+
+\begin{definicja}[Drzewo rozpinające]
+Niech $G=(V,E)$ będzie grafem spójnym.
+\emph{Drzewem rozpinającym} $G$ nazywamy
+drugi graf $T=(V,E_T)$, gdzie $E_T\subseteq E$
+oraz $T$ jest drzewem. Innymi słowy:
+$T$ ma dokładnie te same wierzchołki co $G$
+i pewien podzbiór jego krawędzi.
+\end{definicja}
+
+\begin{twierdzenie}[Istnienie drzewa rozpinającego]
+Każdy skończony spójny graf prosty ma drzewo
+rozpinające. Graf o $n$ wierzchołkach jest
+spójny wtedy i tylko wtedy, gdy zawiera
+dr łewo rozpinające. W szczególności każdy
+spójny graf ma co najmniej $n-1$ krawędzi.
+\end{twierdzenie}
+
+\begin{proof}
+Wśród wszystkich podgrafów $G$ o zbiorze
+wierzchołków $V(G)$ wybieramy spójny podgraf
+$T$ z minimalną liczbą krawędzi. Taki wybór
+jest możliwy, bo sam $G$ jest jednym z
+rozważanych podgrafów, a zbiór krawędzi jest
+skończony. Gdyby $T$ zawierał cykl, można
+by usunąć z niego jedną krawędź cyklu
+bez utraty spójności, sprzecznie z minimalnością.
+Zatem $T$ jest drzewem rozpinającym.
+
+Jeżeli $G$ zawiera drzewo rozpinające, to
+każde dwa wierzchołki łączy droga w $T$, a więc
+również w $G$; jest on spójny. Ostatnia
+nierówność wynika z $|E(T)|=n-1$ i z
+$E(T)\subseteq E(G)$.
+\end{proof}
+
+\begin{przyklad}[Szkielet grafu z cyklami]
+Dla grafu o wierzchołkach $a,b,c,d,e$ i krawędziach
+$ab,bc,cd,de,ea,ac,ce$ jedno z drzew rozpinających
+ma krawędzie $ab,bc,cd,de$; jest to droga
+$a-b-c-d-e$. Pozostałe trzy krawędzie, po
+ponownym dołączeniu, tworzą niezależne
+fundamentalne cykle. Pojęcie ,,niezależności''
+sformalizujemy w sekcji o przestrzeni cykli.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[scale=.88]
+ \node[tgBlueVertex] (a) at (-2.1,0) {$a$};
+ \node[tgBlueVertex] (b) at (-.8,1.4) {$b$};
+ \node[tgBlueVertex] (c) at (.9,1.4) {$c$};
+ \node[tgBlueVertex] (d) at (2.1,0) {$d$};
+ \node[tgBlueVertex] (e) at (0,-1.2) {$e$};
+ \draw[tgGhost] (e)--(a) (a)--(c) (c)--(e);
+ \draw[tgTree] (a)--(b)--(c)--(d)--(e);
+ \node[font=\footnotesize,text=tgTeal] at (0,-1.78)
+  {zielone: drzewo rozpinające; szare: krawędzie pozostałe};
+\end{tikzpicture}
+\end{center}
+
+\begin{uwaga}[Konstrukcja algorytmiczna]
+Drzewo rozpinające można otrzymać bez przeglądania
+wszystkich podgrafów. Wybieramy wierzchołek
+początkowy, następnie stopniowo dołączamy
+krawędzie do jeszcze nieodwiedzonych wierzchołków.
+Nigdy nie dołączamy krawędzi między dwiema
+już odwiedzonymi pozycjami: taka krawędź
+zamknęłaby cykl. Spójność gwarantuje, że
+proces kończy się dopiero po odwiedzeniu
+wszystkich wierzchołków. Wybór kolejności
+może odpowiadać przeszukiwaniu wszerz (BFS)
+lub w głąb (DFS).
+\end{uwaga}
+
+\section{Drzewo ukorzenione i odległości}
+\label{sec:tg-ukorzenione}
+
+\begin{definicja}[Korzeń, rodzic, głębokość]
+\emph{Drzewem ukorzenionym} nazywamy parę
+$(T,r)$, gdzie $T$ jest drzewem, a
+$r\in V(T)$ jest wyróżnionym
+\emph{korzeniem}. Dla $v\ne r$ jedyna droga
+od $r$ do $v$ ma przedostatni wierzchołek
+$p(v)$, zwany \emph{rodzicem} $v$. Każdy
+wierzchołek $w$ o $p(w)=v$ jest \emph{dzieckiem}
+$v$. \emph{Głębokością} $v$ nazywamy
+$h(v)=d_T(r,v)$.
+\end{definicja}
+
+\begin{stwierdzenie}[Poziomy drzewa]
+Niech $(T,r)$ będzie skończonym drzewem
+ukorzenionym. Wtedy dla każdej krawędzi
+$uv\in E(T)$ zachodzi $|h(u)-h(v)|=1$.
+Każdy wierzchołek różny od $r$ ma dokładnie
+jednego rodzica, a wzdłuż kolejnych rodziców
+głębokość maleje o jeden aż do $r$.
+\end{stwierdzenie}
+
+\begin{proof}
+Jeżeli $uv$ jest krawędzią, to
+$|h(u)-h(v)|\le1$ z nierówności trójkąta
+dla odległości grafowej. Gdyby głębokości
+były równe, drogi od $r$ do $u$ i do $v$
+musiałyby najpierw mieć wspólny odcinek,
+a potem rozdzielić się (bo $u\ne v$).
+Fragmenty obu dróg od ostatniego wspólnego
+wierzchołka do $u,v$ oraz krawędź $uv$
+utworzyłyby cykl, co jest niemożliwe.
+Stąd różnica głębokości wynosi jeden.
+
+Dla $v\ne r$ jedyna droga od $r$ do $v$
+ma dokładnie jeden wierzchołek bezpośrednio
+poprzedzający $v$ i jego głębokość wynosi
+$h(v)-1$. Gdyby istniał inny sąsiad o
+takiej głębokości, powstałyby dwie różne
+drogi od $r$ do $v$, wbrew jedyności.
+Kolejne zastosowanie rodzica zmniejsza
+nieujemną liczbę całkowitą $h$ o jeden,
+a więc kończy się dokładnie w korzeniu.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[scale=.91]
+  \node[tgRedVertex] (r) at (0,2.4) {$r$};
+  \node[tgBlueVertex] (a) at (-2,1.15) {$a$};
+  \node[tgBlueVertex] (b) at (1.75,1.15) {$b$};
+  \node[tgTealVertex] (c) at (-3,0) {$c$};
+  \node[tgTealVertex] (d) at (-1,0) {$d$};
+  \node[tgTealVertex] (e) at (1,0) {$e$};
+  \node[tgTealVertex] (f) at (2.55,0) {$f$};
+  \draw[tgTree] (r)--(a) (r)--(b) (a)--(c) (a)--(d)
+    (b)--(e) (b)--(f);
+  \node[text=tgNavy,font=\footnotesize,anchor=west] at (3.25,2.4) {$h=0$};
+  \node[text=tgNavy,font=\footnotesize,anchor=west] at (3.25,1.15) {$h=1$};
+  \node[text=tgNavy,font=\footnotesize,anchor=west] at (3.25,0) {$h=2$};
+\end{tikzpicture}
+
+{\footnotesize Korzeń $r$ i trzy poziomy drzewa.
+Każdy wierzchołek poza $r$ ma jednoznacznego rodzica.}
+\end{center}
+
+\begin{twierdzenie}[Konstrukcja BFS i odległości]
+Niech $G=(V,E)$ będzie skończonym spójnym
+grafem prostym, a $r\in V$. Rozważmy algorytm,
+który nadaje $r$ poziom $0$, a pozostałym
+wierzchołkom kolejne poziomy przez przeglądanie
+sąsiadów w kolejności niemalejących poziomów.
+Gdy wierzchołek $v$ zostaje pierwszy raz
+odkryty jako sąsiad już odkrytego $u$,
+nadajemy mu poziom $h(v)=h(u)+1$ i zapisujemy
+krawędź $uv$ jako krawędź rodzicielską.
+Wtedy $h(v)=d_G(r,v)$ dla każdego $v\in V$,
+a krawędzie rodzicielskie tworzą drzewo
+rozpinające $G$.
+\end{twierdzenie}
+
+\begin{proof}
+Najpierw pokażmy, że każdemu wierzchołkowi
+przypisany zostanie poziom. Gdyby po zakończeniu
+procedury pozostał nieodkryty wierzchołek,
+spójność grafu gwarantowałaby krawędź między
+zbiorem odkrytych i nieodkrytych wierzchołków.
+Algorytm musiałby ją rozważyć podczas
+przeglądania wszystkich sąsiadów odkrytego
+wierzchołka, więc jej drugi koniec również
+zostałby odkryty. Sprzeczność.
+
+Poziomy są rozpatrywane w kolejności $0,1,2,\ldots$.
+W chwili odkrycia $v$ z poziomem $h(v)=k$
+istnieje łańcuch kolejnych krawędzi
+rodzicielskich długości $k$ prowadzący od $r$
+do $v$. Wobec tego $d_G(r,v)\le k$.
+Gdyby istniała krótsza droga długości $\ell<k$,
+to indukcyjnie po kolejnych wierzchołkach tej
+drogi algorytm odkryłby wierzchołek na pozycji
+$j$ nie później niż przy przetwarzaniu poziomu
+$j-1$. W szczególności $v$ otrzymałby poziom
+co najwyżej $\ell$, sprzecznie z przypisaniem
+poziomu $k$. Zatem $h(v)=d_G(r,v)$.
+
+Każdy $v\ne r$ ma dokładnie jedną wybraną
+krawędź rodzicielską. Wzdłuż tych krawędzi
+poziom ściśle maleje w kierunku korzenia,
+więc nie ma cykli. Możemy też dojść z
+każdego wierzchołka do $r$, a więc podgraf
+rodzicielski jest spójny i acykliczny.
+Jest zatem drzewem rozpinającym.
+\end{proof}
+
+\begin{przyklad}[Rozbieżność między drzewem BFS a grafem]
+W kwadracie $a-b-c-d-a$ wybierzmy korzeń $a$.
+Mamy $d_G(a,b)=d_G(a,d)=1$ oraz $d_G(a,c)=2$.
+Jedno z drzew BFS składa się z krawędzi
+$ab,ad,bc$, drugie może zawierać $ab,ad,dc$.
+Oba odtwarzają odległości od $a$, choć
+nie są tym samym podgrafem. Nieużyta krawędź
+zamyka cykl i jest celowo pomijana przez algorytm.
+\end{przyklad}
+
+\section{Mosty i przekroje krawędziowe}
+\label{sec:tg-mosty}
+
+\begin{definicja}[Most]
+Niech $G$ będzie skończonym grafem prostym.
+Krawędź $e\in E(G)$ nazywamy \emph{mostem},
+jeżeli graf $G-e$ ma więcej składowych spójnych
+niż $G$.
+\end{definicja}
+
+Usunięcie jednej krawędzi może zwiększyć liczbę składowych
+co najwyżej o jeden, ponieważ jedynie składowa zawierająca
+tę krawędź może ulec rozdzieleniu. W szczególności
+w drzewie każda krawędź jest mostem.
+
+\begin{twierdzenie}[Kryterium mostu]
+Niech $G$ będzie skończonym grafem prostym,
+a $e\in E(G)$. Krawędź $e$ jest mostem wtedy
+i tylko wtedy, gdy nie należy do żadnego cyklu grafu.
+\end{twierdzenie}
+
+\begin{proof}
+Niech $e=uv$ leży na cyklu $C$. Po jej
+usunięciu pozostałe krawędzie cyklu wciąż
+tworzą drogę z $u$ do $v$. Jeżeli spacer
+w $G$ pomiędzy dowolnymi wierzchołkami
+przechodził przez $e$, możemy każde takie
+przejście zastąpić pozostałym fragmentem
+$C$. Otrzymujemy spacer o tych samych
+końcach w $G-e$. Zatem usunięcie $e$
+nie zmienia składowych spójnych, więc $e$
+nie jest mostem.
+
+Załóżmy odwrotnie, że $e=uv$ nie jest
+mostem. Wtedy $u$ i $v$ są połączone
+w $G-e$, ponieważ w przeciwnym razie
+usunięcie $e$ rozdzieliłoby ich wspólną
+składową. Z lematu o redukcji spaceru
+istnieje w $G-e$ droga prosta $P$ z $u$
+do $v$. Ponieważ $e\notin P$, suma $P$
+i krawędzi $e$ jest cyklem zawierającym $e$.
+\end{proof}
+
+\begin{definicja}[Przekrój krawędziowy]
+Dla grafu $G=(V,E)$ i zbioru
+$S\subseteq V$ definiujemy \emph{przekrój}
+$\delta_G(S)=\{uv\in E:u\in S,\ v\in V\setminus S\}$.
+Przekrój jest \emph{nietrywialny}, jeśli
+$\varnothing\ne S\ne V$.
+\end{definicja}
+
+\begin{stwierdzenie}[Most jako przekrój jednoelementowy]
+Niech $G$ będzie spójnym grafem prostym,
+a $e\in E(G)$. Wówczas $e$ jest mostem
+dokładnie wtedy, gdy istnieje niepusty
+właściwy podzbiór $S\subset V(G)$ taki, że
+$\delta_G(S)=\{e\}$.
+\end{stwierdzenie}
+
+\begin{proof}
+Załóżmy, że $e=uv$ jest mostem. W grafie
+$G-e$ wierzchołki $u,v$ należą do różnych
+składowych. Niech $S$ będzie zbiorem
+wierzchołków składowej zawierającej $u$.
+Jest on niepusty i właściwy, a żadna krawędź
+$G-e$ nie prowadzi od $S$ do jego dopełnienia.
+Ponieważ $e$ łączy $u\in S$ z $v\notin S$,
+mamy $\delta_G(S)=\{e\}$.
+
+W drugą stronę, jeśli $\delta_G(S)=\{e\}$,
+to po usunięciu $e$ nie istnieje żadna
+krawędź łącząca $S$ z $V\setminus S$.
+Oba zbiory są niepuste, więc w $G-e$
+brak spaceru z dowolnego punktu jednego
+zbioru do dowolnego punktu drugiego.
+Graf nie jest spójny, a zatem $e$ jest mostem.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[scale=.95]
+  \node[tgBlueVertex] (a) at (-2.7,1.0) {$a$};
+  \node[tgBlueVertex] (b) at (-1.1,1.0) {$b$};
+  \node[tgBlueVertex] (c) at (-1.9,-.45) {$c$};
+  \node[tgRedVertex] (d) at (.7,.35) {$d$};
+  \node[tgRedVertex] (e) at (2.45,1.0) {$e$};
+  \node[tgRedVertex] (f) at (2.45,-.55) {$f$};
+  \draw[tgEdge] (a)--(b)--(c)--(a) (d)--(e)--(f)--(d);
+  \draw[tgAccent] (b)--(d);
+  \node[font=\small,text=tgCoral] at (-.1,1.12) {most $e$};
+  \draw[tgPurple,densely dashed,line width=1pt]
+     (-.18,-1.05)--(-.18,1.75);
+  \node[font=\footnotesize,text=tgPurple] at (-.3,-1.35)
+     {$\delta(S)=\{e\}$};
+\end{tikzpicture}
+
+{\footnotesize Jedyna krawędź między dwoma fragmentami
+grafu jest mostem; krawędzie należące do trójkątów nim nie są.}
+\end{center}
+
+\begin{przyklad}[Mosty na schemacie układu połączeń]
+Załóżmy, że dwa cykle $C_3$ połączono dokładnie jedną
+krawędzią $e$. Krawędź $e$ jest mostem, ponieważ
+nie leży na żadnym cyklu. Wszystkie sześć krawędzi
+obu trójkątów leży na cyklach i nie jest mostami.
+Po usunięciu $e$ graf rozpada się na dwie składowe.
+\end{przyklad}
+
+\section{Krawędzie spoza drzewa i cykle fundamentalne}
+\label{sec:tg-fundamentalne}
+
+\begin{definicja}[Cykl fundamentalny]
+Niech $G$ będzie skończonym spójnym grafem
+prostym i niech $T$ będzie jego drzewem
+rozpinającym. Dla każdej krawędzi
+$e=uv\in E(G)\setminus E(T)$ jedyna droga
+$P_T(u,v)$ w $T$ wraz z krawędzią $e$
+tworzy cykl $C_e$, zwany \emph{cyklem
+fundamentalnym krawędzi $e$ względem $T$}.
+\end{definicja}
+
+Jeżeli graf ma $n$ wierzchołków i $m$ krawędzi,
+każde drzewo rozpinające ma $n-1$ krawędzi,
+a więc pozostaje dokładnie $m-n+1$ krawędzi
+nie należących do drzewa. Tyle jest cykli
+fundamentalnych, choć wszystkich cykli grafu
+może być znacznie więcej.
+
+\begin{center}
+\begin{tikzpicture}[scale=1]
+  \node[tgBlueVertex] (a) at (-2,0) {$a$};
+  \node[tgBlueVertex] (b) at (-.65,1.1) {$b$};
+  \node[tgBlueVertex] (c) at (.85,1.1) {$c$};
+  \node[tgBlueVertex] (d) at (2.0,0) {$d$};
+  \node[tgBlueVertex] (e) at (0,-1.2) {$e$};
+  \draw[tgTree] (a)--(b)--(c)--(d)--(e);
+  \draw[tgGhost] (a)--(e) (a)--(c);
+  \draw[tgAccent] (c)--(e);
+  \node[text=tgCoral,font=\footnotesize] at (1.25,-.35) {$e=ce$};
+  \node[text=tgNavy,font=\footnotesize] at (0,-1.8)
+    {dodanie $ce$ tworzy cykl $c-d-e-c$};
+\end{tikzpicture}
+\end{center}
+
+\begin{definicja}[Przestrzeń krawędzi nad $\mathbb F_2$]
+Dla skończonego grafu $G=(V,E)$ oznaczmy
+przez $\mathbb F_2^E$ przestrzeń wszystkich
+funkcji $x:E\to\mathbb F_2=\{0,1\}$, ze
+zwykłym dodawaniem modulo $2$.
+Zbiór krawędzi $F\subseteq E$ utożsamiamy
+z funkcją charakterystyczną $\mathbf1_F$.
+Dla dwóch zbiorów krawędzi suma odpowiada
+\emph{różnicy symetrycznej}:
+$F\triangle H=(F\setminus H)\cup(H\setminus F)$.
+\end{definicja}
+
+\begin{definicja}[Przestrzeń cykli]
+\emph{Przestrzenią cykli} $\mathcal C(G)$ grafu
+$G$ nazywamy podprzestrzeń $\mathbb F_2^E$
+rozpiętą przez wektory $\mathbf1_C$,
+gdzie $C$ przebiega wszystkie cykle proste grafu.
+Jeśli graf nie ma cykli, przyjmujemy
+$\mathcal C(G)=\{0\}$.
+\end{definicja}
+
+\begin{lemat}[Rozkład zbioru krawędzi o parzystych stopniach]
+Niech $G=(V,E)$ będzie grafem prostym,
+a $F\subseteq E$ takim zbiorem krawędzi,
+że w podgrafie $(V,F)$ każdy wierzchołek ma
+parzysty stopień. Wtedy $F$ jest rozłączną
+sumą zbiorów krawędzi cykli prostych
+(w szczególności $\mathbf1_F\in\mathcal C(G)$).
+\end{lemat}
+
+\begin{proof}
+Dowodzimy przez indukcję po $|F|$. Gdy $F=\varnothing$,
+teza jest oczywista. W przeciwnym razie
+weźmy składową grafu $(V,F)$ zawierającą
+co najmniej jedną krawędź. Każdy jej
+nieizolowany wierzchołek ma stopień co najmniej
+dwa, bo stopnie są parzyste. W skończonym
+grafie o tej własności istnieje cykl:
+rozpocznijmy spacer, w każdym kroku przechodząc
+krawędzią inną niż ta, którą właśnie weszliśmy.
+Nie możemy zakończyć ruchu w wierzchołku
+stopnia co najmniej dwa; ponieważ graf jest
+skończony, pewien wierzchołek zostanie
+powtórzony. Fragment od pierwszego do
+następnego wystąpienia powtarzającego się
+wierzchołka, po ewentualnym odrzuceniu
+wcześniejszego fragmentu, daje cykl prosty $C$.
+
+Usuńmy wszystkie krawędzie $C$ z $F$.
+Każdy wierzchołek na cyklu traci dokładnie
+dwie krawędzie, a inne nie tracą żadnej.
+Wobec tego w pozostałym podgrafie nadal
+wszystkie stopnie są parzyste. Zbiór
+krawędzi zmniejszył się, więc z założenia
+indukcyjnego jest rozłączną sumą cykli.
+Dołączając $C$, otrzymujemy rozkład całego $F$.
+\end{proof}
+
+\begin{twierdzenie}[Cykle fundamentalne tworzą bazę]
+Niech $G=(V,E)$ będzie skończonym spójnym
+grafem prostym, $|V|=n$, $|E|=m$,
+a $T$ jego drzewem rozpinającym. Rodzina
+$\{\mathbf1_{C_e}:e\in E\setminus E(T)\}$
+jest bazą przestrzeni cykli $\mathcal C(G)$
+nad $\mathbb F_2$. W szczególności
+\[
+\dim_{\mathbb F_2}\mathcal C(G)=m-n+1.
+\]
+\end{twierdzenie}
+
+\begin{proof}
+Najpierw pokażmy liniową niezależność.
+Każdy cykl fundamentalny $C_e$ zawiera
+jedną krawędź spoza drzewa, mianowicie
+samą $e$; wszystkie inne jego krawędzie
+należą do $T$. Dlatego w sumie
+$\sum_{e\notin E(T)}a_e\mathbf1_{C_e}$
+współrzędna przy krawędzi $f\notin E(T)$
+jest dokładnie równa $a_f$. Jeśli cała
+suma jest zerowa, każdy $a_f$ musi być
+zerem. Rodzina jest więc liniowo niezależna.
+
+Aby wykazać rozpinanie, weźmy dowolny
+cykl prosty $C$ i rozważmy zbiór
+$F=E(C)\triangle\bigtriangleup_{e\in E(C)\setminus E(T)} E(C_e)$.
+Każda krawędź spoza drzewa należąca do $C$
+pojawia się dokładnie dwa razy i znika w
+różnicy symetrycznej; krawędzie spoza
+drzewa nie należące do $C$ nie pojawiają się
+wcale. Zatem $F\subseteq E(T)$.
+Ponieważ cykl ma przy każdym wierzchołku
+stopień parzysty, a własność parzystych
+stopni zachowuje się przy różnicy symetrycznej,
+$F$ ma wszędzie parzyste stopnie.
+Ale niepusty las nie może mieć wszystkich
+stopni parzystych: dowolna jego niepusta
+składowa z krawędzią ma liść stopnia jeden.
+Stąd $F=\varnothing$ i
+$\mathbf1_C=\sum_{e\in E(C)\setminus E(T)}\mathbf1_{C_e}$.
+W ten sposób każdy cykl leży w rozpiętości
+cykli fundamentalnych, więc jest to baza.
+
+Liczba jej elementów wynosi
+$|E\setminus E(T)|=m-(n-1)=m-n+1$.
+\end{proof}
+
+\begin{przyklad}[Dwa cykle i ich różnica symetryczna]
+Rozważmy kwadrat $a-b-c-d-a$ z przekątną $ac$.
+Jako drzewo rozpinające weźmy krawędzie
+$ab,bc,cd$. Krawędź $da$ tworzy fundamentalny
+cykl $a-b-c-d-a$, a krawędź $ac$ tworzy
+cykl $a-b-c-a$. Ich różnica symetryczna to
+trójkąt $a-c-d-a$, gdyż krawędzie $ab$ i $bc$
+występują w obu i znikają modulo $2$.
+Mamy $n=4$, $m=5$, więc $\dim\mathcal C(G)=2$.
+Wszystkie trzy cykle są zależne: suma ich
+wektorów charakterystycznych wynosi zero.
+\end{przyklad}
+
+\section{Przekroje fundamentalne i parzystość przecięć}
+\label{sec:tg-przekroje-fundamentalne}
+
+\begin{definicja}[Przekrój fundamentalny]
+Niech $G$ będzie skończonym spójnym grafem
+prostym, a $T$ jego drzewem rozpinającym.
+Dla krawędzi $f\in E(T)$ graf $T-f$
+ma dokładnie dwie składowe o zbiorach
+wierzchołków $S_f$ i $V\setminus S_f$.
+Zbiór $D_f=\delta_G(S_f)$ nazywamy
+\emph{przekrojem fundamentalnym $f$
+względem $T$}.
+\end{definicja}
+
+\begin{stwierdzenie}[Parzysta liczba przecięć cyklu i przekroju]
+Niech $G=(V,E)$ będzie skończonym grafem prostym,
+$C$ jego cyklem prostym, a $S\subseteq V$.
+Wtedy
+\[
+|E(C)\cap\delta_G(S)|\equiv0\pmod2.
+\]
+\end{stwierdzenie}
+
+\begin{proof}
+Przemieszczając się wzdłuż cyklu $C$, za
+każdym razem, gdy przechodzimy krawędzią
+z przekroju $\delta_G(S)$, zmieniamy
+stronę podziału $S\sqcup(V\setminus S)$.
+Przejście krawędzią spoza przekroju pozostawia
+nas po tej samej stronie. Ponieważ spacer
+jest zamknięty, po pełnym obiegu wracamy
+do tej samej strony, od której zaczęliśmy.
+Liczba zmian strony musi być więc parzysta.
+Jest nią dokładnie liczba krawędzi
+$E(C)\cap\delta_G(S)$.
+\end{proof}
+
+\begin{stwierdzenie}[Dualność fundamentalna]
+Niech $G$ będzie spójnym grafem prostym,
+$T$ jego drzewem rozpinającym, $e\notin E(T)$,
+a $f\in E(T)$. Wtedy
+\[
+e\in D_f\quad\Longleftrightarrow\quad f\in C_e.
+\]
+Ponadto $D_f\cap E(T)=\{f\}$.
+\end{stwierdzenie}
+
+\begin{proof}
+Usunięcie $f$ rozcina drzewo $T$ na
+dwie składowe o zbiorach wierzchołków
+$S_f$ i $V\setminus S_f$. Jedyna droga
+drzewowa pomiędzy końcami $e$ przechodzi
+przez $f$ dokładnie wtedy, gdy końce
+$e$ leżą po przeciwnych stronach podziału.
+Pierwszy warunek oznacza $f\in C_e$,
+a drugi dokładnie $e\in D_f$.
+W drzewie $T$ jedyną krawędzią
+prowadzącą z $S_f$ do dopełnienia jest
+$f$, bo gdyby była druga, po jej
+dodaniu do $T-f$ powstałby cykl.
+Wobec tego $D_f\cap E(T)=\{f\}$.
+\end{proof}
+
+\begin{uwaga}[Dlaczego wynik jest przygotowaniem do homologii]
+W dalszej części wprowadzimy operator brzegowy
+$\partial_1:\mathbb F_2^E\to\mathbb F_2^V$.
+Warunek ,,każdy wierzchołek ma stopień
+parzysty'' będzie równoważny $\partial_1x=0$.
+Dzisiejsze twierdzenie o bazie cykli fundamentalnych
+przyjmie więc postać obliczenia
+$\dim\ker\partial_1=m-n+1$ dla grafu spójnego.
+Po przejściu do realizacji $|G|$ otrzymamy
+$H_1(|G|;\mathbb F_2)\cong\mathbb F_2^{m-n+1}$.
+W szczególności $|T|$ dla drzewa $T$
+nie ma nietrywialnej pierwszej homologii.
+\end{uwaga}
+
+\section{Liczba cyklomatyczna i geometryczna intuicja}
+\label{sec:tg-cyklomatyczna}
+
+\begin{definicja}[Liczba cyklomatyczna]
+Niech $G$ będzie skończonym grafem prostym
+o $n$ wierzchołkach, $m$ krawędziach
+i $c$ składowych spójnych. Liczbę
+$\beta(G)=m-n+c$ nazywamy
+\emph{liczbą cyklomatyczną} grafu.
+\end{definicja}
+
+\begin{twierdzenie}
+Dla każdego skończonego grafu prostego $G$
+zachodzi
+$\dim_{\mathbb F_2}\mathcal C(G)=m-n+c$.
+W szczególności $\beta(G)\ge0$ i
+$\beta(G)=0$ wtedy i tylko wtedy, gdy
+$G$ jest lasem.
+\end{twierdzenie}
+
+\begin{proof}
+Niech składowe spójne $G_1,\ldots,G_c$
+mają odpowiednio $n_i$ wierzchołków
+i $m_i$ krawędzi. Cykl nie może przebiegać
+przez więcej niż jedną składową, więc
+$\mathcal C(G)$ jest sumą prostą
+przestrzeni $\mathcal C(G_i)$. Z twierdzenia
+o bazie cykli fundamentalnych otrzymujemy
+$\dim\mathcal C(G_i)=m_i-n_i+1$.
+Sumując po $i$, dostajemy
+$\dim\mathcal C(G)=\sum_i(m_i-n_i+1)=m-n+c$.
+Wymiar przestrzeni jest nieujemny.
+Jest równy zero dokładnie wtedy, gdy
+żadna składowa nie zawiera cyklu, czyli
+gdy cały graf jest lasem.
+\end{proof}
+
+\begin{przyklad}[Co mierzy liczba $\beta$?]
+Dla drzewa na dziesięciu wierzchołkach mamy
+$m=9$, $c=1$, stąd $\beta=0$.
+Jeśli dołączymy do niego trzy nowe krawędzie
+między dotąd niesąsiadującymi wierzchołkami,
+to $n$ i $c$ pozostają bez zmian, a $m$
+wzrasta o trzy. Dostajemy $\beta=3$:
+nie oznacza to, że graf ma dokładnie trzy
+cykle, tylko że przestrzeń cykli ma
+wymiar trzy. Rzeczywistych cykli może
+być znacznie więcej, ponieważ sumy
+fundamentalnych cykli mogą tworzyć
+nowe cykle.
+\end{przyklad}
+
+\begin{stwierdzenie}[Zmiana liczby cyklomatycznej]
+Niech $G$ będzie skończonym grafem prostym,
+a $e\in E(G)$. Wtedy:
+\begin{enumerate}[label=(\roman*)]
+\item jeżeli $e$ jest mostem, to $\beta(G-e)=\beta(G)$;
+\item jeżeli $e$ nie jest mostem, to
+$\beta(G-e)=\beta(G)-1$.
+\end{enumerate}
+\end{stwierdzenie}
+
+\begin{proof}
+Usunięcie krawędzi zmniejsza $m$ o jeden
+i nie zmienia $n$. Jeśli $e$ jest mostem,
+liczba składowych zwiększa się dokładnie
+o jeden: $\beta(G-e)=(m-1)-n+(c+1)=m-n+c$.
+Jeśli $e$ nie jest mostem, liczba
+składowych pozostaje równa $c$, więc
+$\beta(G-e)=(m-1)-n+c=\beta(G)-1$.
+\end{proof}
+
+\section*{Podsumowanie części podstawowej}
+\addcontentsline{toc}{section}{Podsumowanie części podstawowej}
+
+W dwóch pierwszych rozdziałach wprowadziliśmy grafy bez
+odwoływania się do topologii algebraicznej. Znamy już ich
+podstawowe modele, stopnie wierzchołków i macierze, wiemy,
+jak budować drogi oraz rozpoznawać spójność i dwudzielność.
+Rozumiemy również, dlaczego drzewa są minimalnymi grafami
+spójnymi, a ich krawędzie stanowią szkielet dowolnego
+spójnego grafu. Najważniejszy wynik przygotowujący dalszą
+część ma postać $\dim\mathcal C(G)=m-n+c$: za chwilę
+zinterpretujemy go jako obliczenie pierwszej grupy homologii.
+
+Dalsze rozdziały rozbudują klasyczną teorię spójności,
+cykle Eulera i skojarzenia. Następnie powrócimy do
+macierzy incydencji, łańcuchów i operatora Laplace'a.
+
+% ============================================================
+% ITERACJA II: klasyczna teoria grafów — rozdziały 3--5
+% Wszystkie rysunki w TikZ; brak osobnych zadań.
+% ============================================================
+

@@ -1,0 +1,610 @@
+\chapter{Dalsze twierdzenia graniczne i koncentracja prawdopodobieństwa}
+\label{ch:advancedlimits}
+
+\section{Od praw asymptotycznych do skończonych prób}
+
+Prawo wielkich liczb odpowiada na pytanie, czy średnia
+stabilizuje się w granicy $n\to\infty$, a CTG opisuje
+kształt rozkładu przeskalowanych błędów. W praktyce
+często chcemy wiedzieć więcej: jak szybko zanika
+prawdopodobieństwo dużego odchylenia, co zrobić, jeśli
+składniki mają różne rozkłady, albo czy zbieżność
+średniej pozostaje prawdziwa po nieliniowym
+przekształceniu. Wprowadzimy narzędzia
+odpowiadające na te pytania, zachowując pełne
+dowody w przedstawianych wersjach twierdzeń.
+
+\section{Lemat Hoeffdinga i koncentracja średniej}
+
+\begin{lemat}[Nierówność na wariancję zmiennej ograniczonej]
+Niech $Z$ będzie rzeczywistą zmienną losową taką,
+że $a\leq Z\leq b$ p.n., gdzie $a<b$.
+Wówczas $\Var(Z)\leq(b-a)^2/4$.
+\end{lemat}
+\begin{proof}
+Ponieważ $(Z-a)(b-Z)\geq0$, po rozwinięciu
+i uśrednieniu otrzymujemy
+$\E Z^2\leq(a+b)\E Z-ab$.
+Niech $m=\E Z$. Wobec tego
+$\Var(Z)=\E Z^2-m^2\leq(b-m)(m-a)$.
+Iloczyn dwóch nieujemnych liczb o sumie $b-a$
+nie przekracza $(b-a)^2/4$. To dowodzi tezy.
+\end{proof}
+
+\begin{lemat}[Lemat Hoeffdinga]
+Niech $Z$ będzie rzeczywistą zmienną losową,
+$a\leq Z\leq b$ p.n. dla pewnych $a<b$.
+Dla każdego $t\in\R$ zachodzi
+\[
+\E\exp(t(Z-\E Z))
+\leq\exp\left(\frac{t^2(b-a)^2}{8}\right).
+\]
+\end{lemat}
+\begin{proof}
+Zdefiniujmy $M(t)=\E e^{tZ}$ i
+$h(t)=\log M(t)$. Ponieważ $Z$ jest ograniczona,
+możemy różniczkować pod znakiem całki dowolną
+liczbę razy, a $M(t)>0$. Obliczamy
+$h'(t)=M'(t)/M(t)$ oraz
+$h''(t)=M''(t)/M(t)-(M'(t)/M(t))^2$.
+Dla każdego $t$ wyrażenie $h''(t)$ jest
+wariancją $Z$ względem nowej miary
+$\dd\Prob_t=e^{tZ}\dd\Prob/M(t)$. Nowa miara jest
+probabilistyczna i nadal skupiona na $[a,b]$.
+Poprzedni lemat daje więc
+$0\leq h''(t)\leq(b-a)^2/4$ dla wszystkich $t$.
+
+Funkcja $g(t)=h(t)-th'(0)$ spełnia $g(0)=g'(0)=0$,
+a $g''(t)=h''(t)\leq(b-a)^2/4$.
+Całkując tę nierówność dwukrotnie od zera do $t$
+(dla $t<0$ całkujemy po odcinku $[t,0]$),
+dostajemy $g(t)\leq t^2(b-a)^2/8$.
+Ponieważ $h'(0)=\E Z$,
+$g(t)=\log\E e^{t(Z-\E Z)}$.
+Potęgowanie daje tezę.
+\end{proof}
+
+\begin{twierdzenie}[Nierówność Hoeffdinga dla niezależnych składników]
+Niech $X_1,\ldots,X_n$ będą niezależnymi rzeczywistymi
+zmiennymi losowymi oraz niech $a_k\leq X_k\leq b_k$
+p.n., gdzie $a_k<b_k$. Oznaczmy
+$S_n=\sum_{k=1}^n(X_k-\E X_k)$.
+Dla każdego $u>0$ zachodzą nierówności
+\[
+\Prob(S_n\geq u)\leq
+\exp\left(-\frac{2u^2}{\sum_{k=1}^n(b_k-a_k)^2}\right),
+\qquad
+\Prob(|S_n|\geq u)\leq
+2\exp\left(-\frac{2u^2}{\sum_{k=1}^n(b_k-a_k)^2}\right).
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla $t>0$ nierówność Markowa zastosowana
+do $e^{tS_n}$ daje
+$\Prob(S_n\geq u)\leq e^{-tu}\E e^{tS_n}$.
+Z niezależności i lematu Hoeffdinga
+$\E e^{tS_n}=\prod_k\E e^{t(X_k-\E X_k)}
+\leq\exp(t^2V/8)$,
+gdzie $V=\sum_k(b_k-a_k)^2$.
+Otrzymujemy oszacowanie
+$\Prob(S_n\geq u)\leq\exp(-tu+t^2V/8)$.
+Minimalizując kwadratową funkcję wykładnika po $t>0$,
+wybieramy $t=4u/V$, skąd $-tu+t^2V/8=-2u^2/V$.
+Tę samą nierówność stosujemy do $-S_n$ i korzystamy
+z sumowania prawdopodobieństw dwóch ogonów.
+\end{proof}
+
+\begin{przyklad}[Ile prób potrzeba do kontroli częstości?]
+Jeżeli $B_1,\ldots,B_n$ są niezależnymi próbami
+Bernoulliego z parametrem $p$, to $0\leq B_k\leq1$
+i $\E\overline B_n=p$. Nierówność Hoeffdinga
+przy $u=n\varepsilon$ daje
+$\Prob(|\overline B_n-p|\geq\varepsilon)
+\leq2e^{-2n\varepsilon^2}$.
+Aby prawa strona była nie większa niż zadane
+$\delta\in(0,1)$, wystarczy
+$n\geq\log(2/\delta)/(2\varepsilon^2)$.
+Jest to gwarancja nieasymptotyczna, ważna dla
+każdego $n$, choć nie zawsze ostra.
+\end{przyklad}
+
+\begin{twierdzenie}[Prawie pewna szybkość stabilizacji średnich]
+Niech $X_1,X_2,\ldots$ będą niezależnymi rzeczywistymi
+zmiennymi losowymi o wspólnej średniej $m$ oraz
+$a\leq X_k\leq b$ p.n. dla wszystkich $k$,
+gdzie $a<b$. Dla każdego $\eta>0$ zachodzi
+\[
+|\overline X_n-m|\leq
+(b-a)\sqrt{\frac{(1+\eta)\log n}{2n}}
+\quad\text{dla wszystkich dostatecznie dużych }n
+\text{ prawie na pewno}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Wstawiamy
+$\varepsilon_n=(b-a)\sqrt{(1+\eta)\log n/(2n)}$
+do dwustronnego oszacowania Hoeffdinga. Dla $n\geq2$
+\[
+\Prob(|\overline X_n-m|\geq\varepsilon_n)
+\leq2e^{-2n\varepsilon_n^2/(b-a)^2}
+=2n^{-(1+\eta)}.
+\]
+Szereg tych prawdopodobieństw jest zbieżny.
+Pierwszy lemat Borela--Cantellego stwierdza, że
+odchylenia przekraczające próg $\varepsilon_n$
+zdarzają się tylko skończenie wiele razy p.n.
+\end{proof}
+
+\begin{uwaga}
+Oszacowanie rzędu $\sqrt{(\log n)/n}$ jest
+wystarczającym, prostym w dowodzie tempem
+prawie pewnej zbieżności. Nie należy utożsamiać
+go z optymalnymi, bardziej subtelnymi wynikami
+o fluktuacjach pojedynczych trajektorii.
+\end{uwaga}
+
+\section{Centralne twierdzenie graniczne dla niejednakowych składników}
+
+Warunek jednakowego rozkładu w podstawowym CTG
+można osłabić. Problemem stają się wówczas duże,
+rzadkie składniki: jeden z nich może zdominować
+całą sumę i zniszczyć granicę normalną.
+Warunek Lindeberga wymusza, aby ich wkład do
+wariancji po odpowiednim skalowaniu zanikał.
+
+\begin{definicja}[Schemat trójkątny i warunek Lindeberga]
+Dla $n\geq1$ niech $k_n\in\N$, a
+$Y_{n,1},\ldots,Y_{n,k_n}$ niech będą
+niezależnymi \emph{w obrębie każdego wiersza}
+rzeczywistymi zmiennymi losowymi spełniającymi
+$\E Y_{n,k}=0$ i $\E Y_{n,k}^2<\infty$.
+Nie zakładamy niezależności między różnymi wierszami.
+Połóżmy
+$s_n^2=\sum_{k=1}^{k_n}\E Y_{n,k}^2>0$.
+Mówimy, że zachodzi \emph{warunek Lindeberga}, jeżeli
+ dla każdego $\varepsilon>0$
+\[
+\frac1{s_n^2}\sum_{k=1}^{k_n}
+\E\left[Y_{n,k}^2\ind{\{|Y_{n,k}|>\varepsilon s_n\}}\right]
+\longrightarrow0.
+\]
+\end{definicja}
+
+\begin{twierdzenie}[CTG w wersji Lindeberga: kierunek wystarczający]
+Jeżeli schemat trójkątny spełnia powyższe założenia
+oraz warunek Lindeberga, to
+\[
+\frac{1}{s_n}\sum_{k=1}^{k_n}Y_{n,k}
+\xrightarrow{d}\Normal(0,1).
+\]
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: normalizacja i znikanie największej
+wariancji.} Połóżmy $Z_{n,k}=Y_{n,k}/s_n$.
+Wtedy $\sum_k\E Z_{n,k}^2=1$, a warunek Lindeberga
+przyjmuje postać
+$\sum_k\E[Z_{n,k}^2\ind{\{|Z_{n,k}|>\varepsilon\}}]\to0$.
+Dla dowolnego $\varepsilon>0$
+\[
+\E Z_{n,k}^2\leq\varepsilon^2+
+\E[Z_{n,k}^2\ind{\{|Z_{n,k}|>\varepsilon\}}],
+\]
+zatem $\limsup_n\max_k\E Z_{n,k}^2\leq\varepsilon^2$.
+Ponieważ $\varepsilon$ jest dowolne,
+$\max_k\E Z_{n,k}^2\to0$. To jest warunek,
+że żadna pojedyncza zmienna nie niesie zauważalnej
+części całkowitej wariancji.
+
+\emph{Krok 2: rozwinięcie pojedynczych funkcji
+charakterystycznych.} Ustalmy $t\in\R$.
+Dla każdej liczby rzeczywistej $u$ zachodzi
+$|e^{iu}-1-iu|\leq u^2/2$ oraz
+$|e^{iu}-1-iu+u^2/2|\leq C u^2\min(|u|,1)$
+z pewną stałą bezwzględną $C$.
+Dla $|u|\leq1$ druga nierówność wynika z reszty
+Taylora rzędu trzeciego, a dla $|u|>1$ z oszacowania
+wszystkich składników przez stałą razy $u^2$.
+Oznaczmy $\psi_{n,k}(t)=\E e^{itZ_{n,k}}$.
+Ponieważ $\E Z_{n,k}=0$, dostajemy
+\[
+\psi_{n,k}(t)=1-\frac{t^2}{2}\E Z_{n,k}^2+r_{n,k}(t),
+\qquad
+|\psi_{n,k}(t)-1|\leq\frac{t^2}{2}\E Z_{n,k}^2.
+\]
+Pozostaje sprawdzić, że $\sum_k|r_{n,k}(t)|\to0$.
+Dla ustalonego $\delta>0$ rozbijmy oczekiwanie
+w reszcie na $\{|Z_{n,k}|\leq\delta\}$ i dopełnienie.
+Na pierwszej części mamy oszacowanie
+$C_t\delta\E Z_{n,k}^2$, na drugiej
+$C_t\E[Z_{n,k}^2\ind{\{|Z_{n,k}|>\delta\}}]$,
+gdzie $C_t$ nie zależy od $n,k$. Po zsumowaniu
+i wykorzystaniu sumy wariancji równej jeden,
+\[
+\limsup_n\sum_k|r_{n,k}(t)|\leq C_t\delta.
+\]
+Możemy puścić $\delta\downarrow0$, uzyskując
+$\sum_k|r_{n,k}(t)|\to0$, a więc
+$\sum_k(\psi_{n,k}(t)-1)\to-t^2/2$.
+
+\emph{Krok 3: od sumy do iloczynu.} Niech
+$z_{n,k}=\psi_{n,k}(t)-1$. Z poprzednich oszacowań
+$\max_k|z_{n,k}|\to0$ oraz
+$\sum_k|z_{n,k}|\leq t^2/2$.
+W konsekwencji
+$\sum_k|z_{n,k}|^2\leq
+(\max_k|z_{n,k}|)\sum_k|z_{n,k}|\to0$.
+Dla dużych $n$ wszystkie $1+z_{n,k}$ leżą
+w otoczeniu jedynki, gdzie
+$\log(1+z)=z+O(|z|^2)$. Stąd
+\[
+\log\prod_{k=1}^{k_n}\psi_{n,k}(t)
+=\sum_kz_{n,k}+O\!\left(\sum_k|z_{n,k}|^2\right)
+\longrightarrow-\frac{t^2}{2}.
+\]
+Niezależność w każdym wierszu daje
+$\varphi_{\sum_kZ_{n,k}}(t)=\prod_k\psi_{n,k}(t)$.
+Po potęgowaniu granicą funkcji charakterystycznych
+jest $e^{-t^2/2}$. Twierdzenie Lévy'ego kończy dowód.
+\end{proof}
+
+\begin{wniosek}[Warunek Lapunowa]
+Przy założeniach schematu trójkątnego załóżmy,
+że dla pewnego $\delta>0$ istnieją wszystkie momenty
+$\E|Y_{n,k}|^{2+\delta}$ i
+\[
+\frac{1}{s_n^{2+\delta}}
+\sum_{k=1}^{k_n}\E|Y_{n,k}|^{2+\delta}
+\longrightarrow0.
+\]
+Wówczas $s_n^{-1}\sum_{k=1}^{k_n}Y_{n,k}$
+zbiega według rozkładu do $\Normal(0,1)$.
+\end{wniosek}
+\begin{proof}
+Na zdarzeniu $\{|Y_{n,k}|>\varepsilon s_n\}$
+mamy $|Y_{n,k}|^2\leq
+|Y_{n,k}|^{2+\delta}/(\varepsilon s_n)^\delta$.
+Sumując wartości oczekiwane i dzieląc przez $s_n^2$,
+otrzymujemy lewą stronę warunku Lindeberga
+nie większą niż $\varepsilon^{-\delta}$ razy
+wyrażenie z założenia. To wyrażenie dąży do zera,
+więc stosujemy poprzednie CTG.
+\end{proof}
+
+\begin{przyklad}[Zmienne niezależne, ale niejednakowo rozłożone]
+Niech $X_k$ będą niezależne, $\E X_k=0$,
+$|X_k|\leq C$ i
+$s_n^2=\sum_{k=1}^n\Var(X_k)$.
+Jeśli $s_n\to\infty$, to dla ustalonego
+$\varepsilon>0$ od pewnego $n$ mamy
+$|X_k|\leq C<\varepsilon s_n$ dla każdego
+$k\leq n$. Warunek Lindeberga jest więc
+spełniony automatycznie, a zatem
+$\sum_{k=1}^nX_k/s_n\xrightarrow d N(0,1)$.
+Wspólny rozkład nie jest potrzebny; ważna jest
+całkowita wariancja oraz brak dominujących składników.
+\end{przyklad}
+
+\begin{przyklad}[Dlaczego warunek na duże składniki jest potrzebny]
+W każdym wierszu niech $Y_{n,1}$ przyjmuje
+wartości $\pm1$ z prawdopodobieństwami $1/2$,
+a $Y_{n,k}=0$ dla $2\leq k\leq n$.
+Wiersz jest niezależny, ma $s_n^2=1$,
+lecz suma znormalizowana zawsze ma rozkład
+Rademachera, a nie normalny.
+Warunek Lindeberga nie zachodzi dla
+$\varepsilon\in(0,1)$: jedyny niezerowy składnik
+wnosi pełną jednostkę do sumy obciętych drugich
+momentów.
+\end{przyklad}
+
+\section{Metoda delty: granice nieliniowych funkcji średnich}
+
+Centralne twierdzenie graniczne mówi o przybliżeniu
+normalnym dla średniej. Jeśli interesuje nas
+$f(\overline X_n)$, np. logarytm, odwrotność albo
+pierwiastek, nie powinniśmy od nowa analizować
+całego rozkładu. Wystarczy lokalne rozwinięcie
+funkcji wokół granicy średnich.
+
+\begin{twierdzenie}[Metoda delty pierwszego rzędu]
+Niech $T_n$ będą rzeczywistymi zmiennymi losowymi,
+$\theta\in\R$, $a_n>0$ i $a_n\to\infty$.
+Załóżmy, że $a_n(T_n-\theta)\xrightarrow d Z$
+dla pewnej rzeczywistej zmiennej losowej $Z$.
+Jeśli $g:\R\to\R$ jest funkcją borelowską, różniczkowalną
+w punkcie $\theta$, to
+\[
+a_n\bigl(g(T_n)-g(\theta)\bigr)
+\xrightarrow d g'(\theta)Z.
+\]
+\end{twierdzenie}
+\begin{proof}
+Najpierw zauważmy, że rodzina rozkładów
+$a_n(T_n-\theta)$ jest ciasna, bo zbiega według
+rozkładu. Dla dowolnych $\varepsilon,\delta>0$
+\[
+\Prob(|T_n-\theta|>\varepsilon)
+\leq\Prob(|a_n(T_n-\theta)|>\varepsilon a_n)
+\longrightarrow0,
+\]
+co wynika z ciasności i $\varepsilon a_n\to\infty$.
+A zatem $T_n\xrightarrow{\Prob}\theta$.
+Z różniczkowalności $g$ w $\theta$ wynika
+reprezentacja
+$g(x)-g(\theta)=(x-\theta)(g'(\theta)+r(x))$,
+gdzie $r(x)\to0$ dla $x\to\theta$
+i przyjmujemy $r(\theta)=0$.
+Wówczas $r(T_n)\xrightarrow{\Prob}0$.
+Po pomnożeniu przez $a_n$ mamy
+\[
+a_n(g(T_n)-g(\theta))
+=[a_n(T_n-\theta)]\,[g'(\theta)+r(T_n)].
+\]
+Twierdzenie Slutsky'ego daje granicę
+$Z\,g'(\theta)$, zgodnie z tezą.
+\end{proof}
+
+\begin{wniosek}[Metoda delty drugiego rzędu]
+Przy założeniach poprzedniego twierdzenia załóżmy
+dodatkowo, że $g$ jest dwukrotnie różniczkowalna
+w punkcie $\theta$ oraz $g'(\theta)=0$.
+Wtedy
+\[
+a_n^2(g(T_n)-g(\theta))
+\xrightarrow d\frac{g''(\theta)}2Z^2.
+\]
+\end{wniosek}
+\begin{proof}
+Z rozwinięcia Taylora w punkcie $\theta$ mamy
+$g(x)-g(\theta)=\frac12g''(\theta)(x-\theta)^2
++o((x-\theta)^2)$. Ponieważ $T_n\to\theta$
+według prawdopodobieństwa, iloraz reszty przez
+$(T_n-\theta)^2$ (z wartością zero w punkcie
+równości) dąży do zera według prawdopodobieństwa.
+Zatem
+$a_n^2(g(T_n)-g(\theta))
+=(\frac12g''(\theta)+o_{\Prob}(1))
+[a_n(T_n-\theta)]^2$.
+Z twierdzenia o ciągłym przekształceniu
+$[a_n(T_n-\theta)]^2\xrightarrow d Z^2$;
+Slutsky kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Asymptotyka logarytmu średniej]
+Niech $X_1,X_2,\ldots$ będą niezależne, jednakowo
+rozłożone, $\E X_1=m>0$ i
+$0<\Var(X_1)=\sigma^2<\infty$.
+Przez MPWL prawdopodobieństwo zdarzenia
+$\{\overline X_n>0\}$ dąży do jedności;
+na jego dopełnieniu możemy umownie ustawić
+$T_n=\log m$, a na nim $T_n=\log\overline X_n$.
+Z metody delty dla $g(x)=\log x$ w otoczeniu $m$
+(rozszerzonej dowolnie poza tym otoczeniem)
+otrzymujemy
+$\sqrt n(T_n-\log m)\xrightarrow d
+\Normal(0,\sigma^2/m^2)$.
+Wzór pokazuje, skąd bierze się czynnik $1/m$
+w przybliżeniu niepewności logarytmu średniej.
+\end{przyklad}
+
+\begin{przyklad}[Gdy pochodna pierwszego rzędu znika]
+Niech $Z_1,Z_2,\ldots$ będą niezależne
+$\Normal(0,1)$ i $T_n=\overline Z_n$.
+Mamy $\sqrt n T_n\xrightarrow d N(0,1)$.
+Dla $g(x)=x^2$ zachodzi $g'(0)=0$
+i $g''(0)=2$, zatem
+$nT_n^2\xrightarrow d Z^2\sim\chi^2_1$.
+W tym przykładzie równość rozkładów jest nawet
+prawdziwa dla każdego $n$, ponieważ
+$\sqrt n\,T_n\sim N(0,1)$. Zastosowanie
+metody delty pierwszego rzędu dawałoby tylko
+zdegenerowaną granicę zero przy skali $\sqrt n$.
+\end{przyklad}
+
+\section{Studentyzacja: nieznana wariancja w CTG}
+
+\begin{twierdzenie}[CTG po zastąpieniu wariancji estymatorem]
+Niech $X_1,X_2,\ldots$ będą niezależnymi,
+jednakowo rozłożonymi rzeczywistymi zmiennymi losowymi,
+$\E X_1=m$ i $0<\Var(X_1)=\sigma^2<\infty$.
+Dla $n\geq2$ połóżmy
+$V_n=n^{-1}\sum_{k=1}^n(X_k-\overline X_n)^2$.
+Wtedy $V_n\to\sigma^2$ prawie na pewno i
+\[
+\frac{\sqrt n(\overline X_n-m)}{\sqrt{V_n}}
+\xrightarrow d\Normal(0,1),
+\]
+przy dowolnym określeniu ilorazu na zdarzeniu
+$\{V_n=0\}$.
+\end{twierdzenie}
+\begin{proof}
+Rozwijając kwadrat, otrzymujemy dokładną tożsamość
+$V_n=n^{-1}\sum_{k\leq n}X_k^2-\overline X_n^2$.
+Ponieważ $\E X_1^2<\infty$, mocne prawo wielkich
+liczb można zastosować zarówno do $X_k$, jak i $X_k^2$:
+$\overline X_n\to m$ i
+$n^{-1}\sum_{k\leq n}X_k^2\to\E X_1^2$
+prawie na pewno. Stąd $V_n\to\sigma^2>0$ p.n.,
+a więc $1/\sqrt{V_n}\to1/\sigma$ według
+prawdopodobieństwa (prawdopodobieństwo $V_n=0$
+równe zero nie jest wymagane dla skończonych $n$).
+Z podstawowego CTG
+$\sqrt n(\overline X_n-m)\xrightarrow d N(0,\sigma^2)$.
+Twierdzenie Slutsky'ego daje wskazaną granicę.
+\end{proof}
+
+\begin{uwaga}
+\emph{Asymptotyczna} normalność zmiennej
+studentyzowanej zachodzi dla wielu rozkładów
+z drugim momentem. Nie jest tym samym co
+\emph{dokładny} rozkład t-Studenta, który
+wynika z dodatkowych własności próby normalnej.
+Rozróżnienie to jest ważne przy przejściu
+do statystyki matematycznej w tomie IV.
+\end{uwaga}
+
+\section{Jednostajna zbieżność dystrybuanty empirycznej}
+
+Dla próby $X_1,\ldots,X_n$ obserwujemy nie tylko
+średnią, ale i empiryczny rozkład: każda obserwacja
+otrzymuje masę $1/n$. Dystrybuanta empiryczna ma
+postać
+$F_n(x)=n^{-1}\sum_{k=1}^n\ind{\{X_k\leq x\}}$.
+Dla ustalonego $x$ jest to średnia prób Bernoulliego
+z parametrem $F(x)$, więc MPWL daje
+$F_n(x)\to F(x)$ p.n. Istotne jest mocniejsze pytanie:
+czy możemy jednocześnie kontrolować błąd
+na \emph{całej prostej}? W tym miejscu potrzebujemy
+odrobiny więcej niż punktowego MPWL.
+
+\begin{twierdzenie}[Glivenki--Cantellego]
+Niech $X_1,X_2,\ldots$ będą niezależnymi
+jednakowo rozłożonymi rzeczywistymi zmiennymi losowymi
+o wspólnej dystrybuancie $F$ i niech
+$F_n(x)=n^{-1}\sum_{k=1}^n\ind{\{X_k\leq x\}}$.
+Wówczas
+\[
+\sup_{x\in\R}|F_n(x)-F(x)|\longrightarrow0
+\qquad\text{prawie na pewno}.
+\]
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok pierwszy: rozkład jednostajny.}
+Niech $U_1,U_2,\ldots$ będą niezależne
+$\Unif(0,1)$ i
+$H_n(t)=n^{-1}\sum_{k\leq n}\ind{\{U_k\leq t\}}$.
+Dla każdego ustalonego $t\in[0,1]$ MPWL
+daje $H_n(t)\to t$ p.n. Zastosujemy je
+jednocześnie tylko do przeliczalnego zbioru
+liczb wymiernych $t\in[0,1]$. Ich przecięcie
+zdarzeń pełnej miary nadal ma miarę jeden.
+Ustalmy trajektorię z tego przecięcia i
+liczbę całkowitą $m\geq1$. Dla
+$0\leq j\leq m$ mamy
+$H_n(j/m)\to j/m$.
+Jeżeli $j/m\leq t\leq(j+1)/m$, to monotoniczność
+dystrybuanty empirycznej daje
+\[
+H_n(j/m)-\frac{j+1}{m}\leq H_n(t)-t
+\leq H_n((j+1)/m)-\frac{j}{m}.
+\]
+Zatem
+$\sup_{t\in[0,1]}|H_n(t)-t|\leq
+\max_{0\leq j\leq m}|H_n(j/m)-j/m|+1/m$.
+Po przejściu z $n\to\infty$ mamy limsup
+nie większy niż $1/m$, dla każdego $m$.
+Ponieważ $m$ jest dowolne, wynika stąd
+$\sup_{t\in[0,1]}|H_n(t)-t|\to0$ p.n.
+
+\emph{Krok drugi: dowolna dystrybuanta.}
+Niech $Q(u)=\inf\{x\in\R:F(x)\geq u\}$,
+$u\in(0,1)$, będzie lewostronną funkcją kwantylową.
+Jest niemalejąca i borelowska, a jej podstawowa
+własność, wynikająca z monotoniczności i
+prawostronnej ciągłości $F$, brzmi
+$Q(u)\leq x\iff u\leq F(x)$.
+Wobec tego zmienne $Q(U_k)$ są niezależne i mają
+wspólną dystrybuantę $F$. Dla nich odpowiednia
+dystrybuanta empiryczna jest równa
+$H_n(F(x))$ dla każdego $x$.
+Dlatego
+$\sup_x|F_n(x)-F(x)|\leq\sup_{t\in[0,1]}|H_n(t)-t|\to0$
+prawie na pewno w skonstruowanym modelu.
+
+Ostatni krok przenosimy do dowolnej próby iid o
+tej samej dystrybuancie: skończone układy obserwacji
+mają ten sam rozkład, a zdarzenie
+$\{\sup_x|F_n(x)-F(x)|\to0\}$ jest mierzalne
+względem całego ciągu obserwacji. Mierzalność
+wynika z prawostronnej ciągłości $F_n,F$:
+$\sup_x|F_n(x)-F(x)|=\sup_{q\in\mathbb Q}
+|F_n(q)-F(q)|$. Zdarzenie ma zatem to samo
+prawdopodobieństwo w obu modelach, a w modelu
+kwantylowym prawdopodobieństwo to wynosi jeden.
+\end{proof}
+
+\begin{przyklad}[Dystrybuanta empiryczna próby Bernoulliego]
+Niech $X_k\sim\operatorname{Bernoulli}(p)$ będą
+niezależne. Dla $x<0$ obie dystrybuanty są zerowe,
+a dla $x\geq1$ obie są jedynką. Na $0\leq x<1$
+mamy $F_n(x)=1-\overline X_n$ oraz $F(x)=1-p$.
+Stąd
+$\sup_x|F_n(x)-F(x)|=|\overline X_n-p|$.
+W tym szczególnym przypadku twierdzenie
+Glivenki--Cantellego jest dokładnie mocnym prawem
+wielkich liczb dla częstości sukcesów.
+\end{przyklad}
+
+\section{Koncentracja i funkcje Lipschitza}
+
+\begin{przyklad}[Koncentracja odpowiedzi układu, a nie tylko średniej]
+Niech $B_1,\ldots,B_n$ będą niezależnymi próbami Bernoulliego,
+$S_n=\sum_{k=1}^n B_k$, a $g:\R\to\R$ będzie
+funkcją $L$-Lipschitza z $L>0$, tzn.
+$|g(x)-g(y)|\leq L|x-y|$ dla wszystkich $x,y$.
+Z nierówności Hoeffdinga z rozdziału~\ref{ch:advancedlimits}
+wynika dla każdego $\varepsilon>0$
+\[
+\Prob\bigl(|g(S_n/n)-g(p)|\geq L\varepsilon\bigr)
+\leq 2e^{-2n\varepsilon^2}.
+\]
+Ograniczenie $L>0$ jest konieczne przy zapisanym
+zdarzeniu z nierównością $\geq$: dla $L=0$
+zdarzenie $\{|g(S_n/n)-g(p)|\geq0\}$ jest pewne,
+a prawa strona może być mniejsza od jedności.
+Dla $L>0$ wynik wynika z implikacji
+$|g(S_n/n)-g(p)|\geq L\varepsilon\Longrightarrow
+|S_n/n-p|\geq\varepsilon$.
+Ten przykład przygotowuje późniejszą nierówność
+Azumy--Hoeffdinga dla martyngałów: po zastąpieniu
+niezależnych składników różnicami martyngałowymi
+uzyskamy podobną kontrolę.
+\end{przyklad}
+
+\begin{uwaga}[Dokładny zakres twierdzenia Lindeberga]
+W rozdziale~\ref{ch:advancedlimits} udowodniono
+\emph{kierunek wystarczający} twierdzenia Lindeberga--Fellera.
+Sama zbieżność sum do rozkładu normalnego nie implikuje
+warunku Lindeberga bez dodatkowych hipotez, takich jak
+asymptotyczne zanikanie największych wariancji
+(w wersji twierdzenia o równoważności).
+Warunek Lindeberga kontroluje nie tylko prawdopodobieństwo
+rzadkiego dużego skoku, ale jego wkład do \emph{drugiego momentu}.
+Zastąpienie $Y_{n,k}^2$ samym wskaźnikiem
+$\ind{\{|Y_{n,k}|>\varepsilon s_n\}}$
+byłoby zbyt słabe: zdarzenie rzadkie może nieść
+niemal całą wariancję sumy.
+\end{uwaga}
+
+\begin{przyklad}[Rzadki skok o istotnej wariancji]
+Dla każdego $n$ niech $Y_{n,1}$ przyjmuje $\sqrt n$
+i $-\sqrt n$ z prawdopodobieństwami $1/(2n)$
+każde, a zero z prawdopodobieństwem $1-1/n$.
+Pozostałe wyrazy wiersza są zerowe. Mamy
+$\E Y_{n,1}=0$, $s_n^2=\E Y_{n,1}^2=1$.
+Zmienna sumy zbiega do zera według prawdopodobieństwa,
+bo prawdopodobieństwo niezerowego wyniku wynosi $1/n$,
+choć jej wariancja pozostaje równa jeden.
+Dla dowolnego $\varepsilon>0$ i $n>\varepsilon^2$
+wyrażenie z warunku Lindeberga wynosi $1$.
+Nie można więc uzyskać granicy normalnej przez
+argument opierający się wyłącznie na malejącej
+częstości dużych skoków.
+\end{przyklad}
+
+\section{Synteza: jak wybrać właściwe twierdzenie?}
+
+Jeśli interesuje nas wartość średniej przy dużym $n$,
+stosujemy SPWL lub MPWL. Jeśli potrzebujemy rozkładu
+fluktuacji o skali $n^{-1/2}$, używamy CTG, a dla
+niejednakowych składników warunku Lindeberga lub
+Lapunowa. Gdy pytamy o konkretną liczbę prób potrzebną
+do ograniczenia ryzyka odchylenia, pomocna jest
+nierówność Hoeffdinga. Metoda delty opisuje
+przekształcone estymatory, studentyzacja pozwala
+zastąpić nieznaną wariancję jej empiryczną wersją,
+a twierdzenie Glivenki--Cantellego kontroluje
+cały rozkład empiryczny, nie tylko jedną średnią.
+Wszystkie te rezultaty będą miały dalsze zastosowania
+w teorii procesów stochastycznych i statystyce.
+

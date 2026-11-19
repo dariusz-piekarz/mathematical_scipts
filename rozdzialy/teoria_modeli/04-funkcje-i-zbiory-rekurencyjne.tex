@@ -1,0 +1,91 @@
+\section{Funkcje i zbiory rekurencyjne}\label{sec:funkcje-rekurencyjne}
+\begin{definicja}[Funkcje pierwotnie rekurencyjne]\label{res:5:1}
+Klasa \emph{funkcji pierwotnie rekurencyjnych} to najmniejsza klasa funkcji $f:\mathbb N^k\to\mathbb N$ zawierająca:
+\begin{enumerate}[label=(\roman*)]
+\item funkcję zerową $Z(x)=0$;
+\item następnik $S(x)=x+1$;
+\item rzutowania $P_i^k(x_1,\ldots,x_k)=x_i$;
+\end{enumerate}
+i zamknięta ze względu na:
+\begin{enumerate}[label=(\alph*)]
+\item \emph{złożenie}: jeśli $g:\mathbb N^m\to\mathbb N$ oraz $h_1,\ldots,h_m:\mathbb N^k\to\mathbb N$ są p.r., to $f(\vec x)=g(h_1(\vec x),\ldots,h_m(\vec x))$ jest p.r.;
+\item \emph{rekursję prostą}: jeśli $g,h$ są p.r., to funkcja $f$ określona przez
+\[
+f(\vec x,0)=g(\vec x),\qquad f(\vec x,S(y))=h(\vec x,y,f(\vec x,y))
+\]
+jest p.r.
+\end{enumerate}
+\end{definicja}
+
+\begin{definicja}[Funkcja charakterystyczna zbioru]\label{res:5:2}
+\emph{Funkcją charakterystyczną} zbioru (relacji) $R\subseteq\mathbb N^k$ nazywamy funkcję $\chi_R:\mathbb N^k\to\mathbb N$ zdefiniowaną wzorem
+\[
+\chi_R(\vec x)=\begin{cases}1,&\vec x\in R\quad(\text{„warunek zachodzi”}),\\0,&\vec x\notin R\quad(\text{„warunek nie zachodzi”}).\end{cases}
+\]
+Innymi słowy $\chi_R$ zamienia \emph{pytanie} „czy $\vec x$ należy do $R$?” na \emph{liczbę} ($1$ = tak, $0$ = nie). Dzięki temu „rozstrzyganie”, czy coś zachodzi, staje się po prostu obliczaniem wartości funkcji --- a o funkcjach umiemy już mówić, że są (lub nie są) rekurencyjne.
+\end{definicja}
+
+\begin{uwaga}[Po co funkcja charakterystyczna?]\label{res:5:3}
+Cała teoria obliczalności mówi wprost tylko o funkcjach $\mathbb N^k\to\mathbb N$. Zbiory i relacje (np. „$x$ jest liczbą pierwszą”, „$p$ jest dowodem formuły $f$”) to obiekty innego rodzaju --- to warunki prawda/fałsz. Funkcja charakterystyczna jest mostem: pozwala przełożyć „rozstrzygalność zbioru” na „obliczalność funkcji”. Mówimy, że zbiór jest \emph{rozstrzygalny z definicji} wtedy i tylko wtedy, gdy istnieje mechaniczna procedura licząca jego $\chi_R$.
+\end{uwaga}
+
+\begin{przyklad}[Funkcje charakterystyczne konkretnych zbiorów]\label{res:5:4}
+\begin{itemize}
+\item Zbiór liczb parzystych: $\chi_{\mathrm{parz}}(x)=1$ dla $x\in\{0,2,4,\ldots\}$, w przeciwnym razie $0$. Jest pierwotnie rekurencyjna, bo $\chi_{\mathrm{parz}}(x)=1-(x\bmod 2)$, a reszta z dzielenia jest p.r. (Lemat~\ref{res:5:8}).
+\item Relacja równości $E=\{(x,y):x=y\}$: $\chi_E(x,y)=1-\operatorname{sgn}((x\dotminus y)+(y\dotminus x))$; wynik jest $1$ dokładnie wtedy, gdy obie obcięte różnice są zerowe, czyli gdy $x=y$.
+\item Relacja $\le$: $\chi_{\le}(x,y)=1-\operatorname{sgn}(x\dotminus y)$, bo $x\dotminus y=0$ dokładnie wtedy, gdy $x\le y$.
+\item Zbiór liczb pierwszych: $\chi_{\mathrm{pr}}(x)=1$, gdy $x>1$ i żadna liczba $2\le d<x$ nie dzieli $x$; warunek wyrażalny ograniczonym kwantyfikatorem $\forall d<x$, więc też p.r.
+\end{itemize}
+Widać wspólny wzorzec: „tak/nie” kodujemy jako $1/0$, a logiczne spójniki odwzorowujemy na operacje arytmetyczne ($\land$ odpowiada mnożeniu, $\neg$ odpowiada $1-(\cdot)$).
+\end{przyklad}
+
+\begin{definicja}[Funkcje częściowo rekurencyjne i rekurencyjne]\label{res:5:5}
+Funkcja częściowa $f:\mathbb N^k\rightharpoonup\mathbb N$ może nie mieć wartości dla niektórych argumentów. Piszemy $f(\vec n)\downarrow=m$, gdy wartość istnieje i wynosi $m$, oraz $f(\vec n)\uparrow$, gdy nie istnieje.
+
+Klasa funkcji \emph{częściowo rekurencyjnych} powstaje z funkcji bazowych z Definicji~\ref{res:5:1} przez złożenie, rekursję prostą i \emph{minimalizację}:
+\[
+(\mu g)(\vec x)\downarrow=y\quad\Longleftrightarrow\quad
+g(\vec x,y)\downarrow=0\ \text{oraz}\ (\forall z<y)\ g(\vec x,z)\downarrow\ne0.
+\]
+Przy złożeniu i rekursji wynik istnieje tylko wtedy, gdy istnieją wszystkie wartości potrzebne do jego obliczenia. Funkcję częściowo rekurencyjną określoną dla wszystkich argumentów nazywamy \emph{rekurencyjną} (\emph{totalną obliczalną}).
+
+Zbiór $R\subseteq\mathbb N^k$ jest \emph{rekurencyjny} (\emph{rozstrzygalny}), gdy $\chi_R$ jest funkcją totalną rekurencyjną. Jest \emph{rekurencyjnie przeliczalny} (\emph{efektywnie wyliczalny}), gdy stanowi dziedzinę funkcji częściowo rekurencyjnej.
+\end{definicja}
+
+\begin{uwaga}[Czym $\mu g$ różni się od $\min\{\cdots\}$]\label{res:5:6}
+Jeśli $\mu y\,[g(\vec x,y)=0]$ jest określone, jego wartość równa się $\min\{y\in\mathbb N:g(\vec x,y)=0\}$ --- to faktycznie najmniejszy argument zerujący $g$. Dla częściowego $g$ samo istnienie tego minimum nie gwarantuje jednak określoności $\mu g$. Znaczenie ma również sposób wyznaczania wyniku:
+\begin{itemize}
+\item Zwykłe $\min\{\cdots\}$ to statyczny zapis teoriomnogościowy: „weź najmniejszy element tego zbioru”. Milczy o tym, jak ów element znaleźć, i ma sens także wtedy, gdy zbioru nie da się efektywnie przeszukać.
+\item Operator $\mu$ to przepis obliczeniowy (procedura): $y\gets0$; dopóki $g(\vec x,y)\ne0$, wykonuj $y\gets y+1$; zwróć $y$. Sprawdzamy kolejno $y=0,1,2,\ldots$ i zatrzymujemy się na pierwszym trafieniu. Dlatego $\mu$ zachowuje obliczalność.
+\end{itemize}
+\emph{Totalność a ograniczoność przeszukiwania.} Gdy $g$ jest totalna, pętla kończy się na danym wejściu dokładnie wtedy, gdy istnieje zero. Gdy $g$ jest częściowa, może utknąć już przy obliczaniu wcześniejszej wartości $g(\vec x,z)$, nawet jeśli późniejsze $g(\vec x,y)$ wynosi zero. Na przykład przy $g(\vec x,0)\uparrow$ i $g(\vec x,1)=0$ zbiór zer ma minimum $1$, ale procedura $\mu g$ utknie już na argumencie $0$.
+
+Jeśli test jest totalny i zero istnieje na każdym wejściu, otrzymana funkcja jest totalna obliczalna. Samo zakończenie każdego obliczenia nie gwarantuje pierwotnej rekurencyjności. Jeśli test i z góry znane ograniczenie przeszukiwania są p.r., ograniczona minimalizacja również jest p.r. (Lemat~\ref{res:5:8}). Nieograniczona minimalizacja pozwala wyjść poza klasę p.r., także wtedy, gdy wynikowa funkcja jest totalna. Brak zakończenia nie jest jedyną różnicą między tymi klasami.
+
+\emph{Umowa notacyjna:} gdy piszemy $\mu y\,[W(y)]$ dla warunku $W$, rozumiemy przez to $\mu y\,[\chi_{\neg W}(y)=0]$, tj. najmniejsze $y$ spełniające $W$ (funkcja charakterystyczna, Def.~\ref{res:5:2}, tłumaczy „warunek” na „zerowanie funkcji”).
+\end{uwaga}
+
+\begin{przyklad}[Operator $\mu$ w działaniu]\label{res:5:7}
+Funkcja „część całkowita pierwiastka” $\lfloor\sqrt x\rfloor$ to $\mu y\,[(y+1)^2>x]$, czyli najmniejsze $y$, dla którego $(y+1)^2$ przekracza $x$. Dla $x=10$ dostajemy $y=3$ (bo $4^2=16>10$, a $3^2=9\le10$). Ten przykład pokazuje typową rolę $\mu$: „szukaj najmniejszego świadka spełniającego warunek”. Tutaj można ograniczyć przeszukiwanie przez $y\le x$, bo $(x+1)^2>x$. Test i ograniczenie są p.r., więc funkcja jest p.r. Nie wystarczyłoby samo stwierdzenie, że dla każdego wejścia przeszukiwanie kiedyś się kończy.
+\end{przyklad}
+
+\begin{lemat}[Zamkniętość p.r.]\label{res:5:8}
+Klasa funkcji pierwotnie rekurencyjnych zawiera dodawanie, mnożenie, potęgowanie, funkcję poprzednika, obciętą różnicę $\dotminus$, oraz jest zamknięta ze względu na definicje przez przypadki z warunkami p.r., ograniczone kwantyfikatory oraz ograniczoną minimalizację relacji p.r.
+\end{lemat}
+\begin{proof}
+Dodawanie definiują $x+0=x$, $x+S(y)=S(x+y)$; mnożenie --- $x\cdot0=0$, $x\cdot S(y)=x\cdot y+x$; potęgowanie --- $x^0=1$, $x^{S(y)}=x^y\cdot x$. Są to kolejne zastosowania rekursji prostej. Poprzednik spełnia $\operatorname{pd}(0)=0$, $\operatorname{pd}(S(y))=y$, a obcięta różnica $x\dotminus0=x$, $x\dotminus S(y)=\operatorname{pd}(x\dotminus y)$.
+
+Niech $r(\vec x,y)\in\{0,1\}$ będzie p.r. funkcją charakterystyczną relacji $R$. Ograniczone sumy i iloczyny są p.r. przez rekursję po liczbie składników. Stąd
+\[
+\chi_{\forall y<n\,R(\vec x,y)}=\prod_{y<n}r(\vec x,y),\qquad
+\chi_{\exists y<n\,R(\vec x,y)}=1-\prod_{y<n}(1-r(\vec x,y)).
+\]
+Iloczyn pusty wynosi $1$. Definicję przez dwa przypadki zapisujemy jako $\chi_R f+(1-\chi_R)g$. Najmniejsze $y\le n$ spełniające $R$, z wartością zastępczą $n+1$ przy braku świadka, jest równe
+\[
+\sum_{j=0}^{n}\prod_{i=0}^{j}(1-r(\vec x,i)).
+\]
+Jeśli pierwszym trafieniem jest $y$, dokładnie pierwszych $y$ iloczynów wynosi $1$; jeśli trafienia nie ma, wszystkie $n+1$ iloczynów wynoszą $1$. To daje ograniczoną minimalizację bez użycia nieograniczonego $\mu$.
+
+Dla $d>0$ relacja $d\mid x$ ma postać $\exists q\le x\,(dq=x)$, a iloraz i resztę znajdujemy przez ograniczone przeszukiwanie; dla $d=0$ ustalamy wartość zastępczą $0$. Własność bycia liczbą pierwszą jest zatem p.r. Również $i$-ta liczba pierwsza jest p.r.: zaczynamy od $p_1=2$, a $p_{i+1}$ szukamy między $p_i+1$ a $p_i!+1$. Pierwszy dzielnik pierwszy $p_i!+1$ jest większy od $p_i$, więc ograniczenie wystarcza. Silnia sama jest p.r. jako ograniczony iloczyn.
+\end{proof}
+
