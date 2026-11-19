@@ -1,0 +1,664 @@
+\chapter[Równania Naviera--Stokesa]{Równania Naviera--Stokesa: rozkład Helmholtza, rozwiązania Leraya--Hopfa i struktura wirów}
+\label{chap:pde28}
+
+\section{Równanie nieściśliwego płynu i wybór przestrzeni}
+Niech $d\in\{2,3\}$, $\nu>0$, $T>0$ i $\T^d=(\R/2\pi\mathbb Z)^d$.
+Szukamy prędkości $u:(0,T)\times\T^d\to\R^d$ i ciśnienia
+$p:(0,T)\times\T^d\to\R$ spełniających
+\begin{equation}\label{eq:pde28-ns}
+ \partial_tu+(u\cdot\nabla)u-\nu\Delta u+\nabla p=0,
+ \qquad \diver u=0,
+ \qquad u(0)=u_0.
+\end{equation}
+Współczynnik $\nu$ jest lepkością kinematyczną, $u$ jest \emph{polem
+prędkości}, natomiast ciśnienie jest mnożnikiem wymuszającym warunek
+nieściśliwości. Przyjęcie torusa pozwala wyprowadzić zasadnicze
+argumenty bez dodatkowych założeń o regularności brzegu. Dla
+pól wektorowych symbol $\nabla u$ oznacza macierz
+$(\partial_j u_i)_{i,j}$, a $\diver(u\otimes u)$ jest wektorem
+o współrzędnych $\sum_j\partial_j(u_i u_j)$.
+
+Zakładamy $\int_{\T^d}u_0\,\mathrm d\lambda_d(x)=0$; średnia
+prędkości zachowuje się w czasie i można ją wyeliminować przez
+przejście do układu poruszającego się ze stałą prędkością.
+Dla pól o średniej zero używamy przestrzeni
+\[
+ H=\{v\in L^2(\T^d;\R^d):\diver v=0\text{ w }\mathcal D',\ \textstyle\int_{\T^d}v\,\mathrm d\lambda_d=0\},
+ \quad V=H\cap H^1(\T^d;\R^d).
+\]
+Na $V$ normy $\|\nabla v\|_2$ i $\|v\|_{H^1}$ są równoważne
+na mocy nierówności Poincarégo. Dalej $V'$ jest przestrzenią
+dualną $V$, a $V\subset H\simeq H'\subset V'$ oznacza trójkę
+przestrzeni Hilberta z gęstymi, ciągłymi zanurzeniami.
+
+\section{Rozkład Helmholtza i rzut Leraya}
+\begin{twierdzenie}[Rozkład Helmholtza na torusie]\label{thm:pde28-helmholtz}
+Niech $d\ge2$ i $F\in L^2(\T^d;\R^d)$ ma średnią zero.
+Istnieje dokładnie jedna para $(v,\phi)$, gdzie
+$v\in H$, $\phi\in H^1(\T^d)$ ma średnią zero, taka że
+$F=v+\nabla\phi$. Składniki są ortogonalne w $L^2$.
+Przyporządkowanie $PF=v$ jest ortogonalnym rzutem
+$L^2_0(\T^d;\R^d)\to H$, przy czym dla
+$k\in\mathbb Z^d\setminus\{0\}$
+\begin{equation}\label{eq:pde28-P}
+ \widehat{PF}(k)=\left(I-\frac{k\otimes k}{|k|^2}\right)\widehat F(k),
+ \qquad \widehat\phi(k)=-\frac{i k\cdot\widehat F(k)}{|k|^2}.
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Przyjmujemy konwencję $\widehat F(k)=(2\pi)^{-d}
+\int_{\T^d}F(x)e^{-ik\cdot x}\,\mathrm d\lambda_d(x)$.
+Tak jak dla szeregów Fouriera w rozdziale~\ref{chap:pde-fourier}
+współczynniki są uśredniane; normy $L^2$ użyte przy oszacowaniach
+energii płynu odnoszą się jednak do pełnej miary $\lambda_d$,
+bez dzielenia przez $(2\pi)^d$.
+Dla każdego $k\ne0$ macierz w~\eqref{eq:pde28-P} jest rzutem
+ortogonalnym na podprzestrzeń prostopadłą do $k$.
+Ponieważ jej norma operatorowa nie przekracza $1$, wzór definiuje
+$PF\in L^2$. Mamy $k\cdot\widehat{PF}(k)=0$, zatem
+$\diver PF=0$, a średnia $PF$ jest zerowa.
+Z drugiej strony $ik\widehat\phi(k)=\widehat F(k)-\widehat{PF}(k)$.
+Nierówność $|k||\widehat\phi(k)|\le|\widehat F(k)|$
+i twierdzenie Parsevala pokazują, że $\phi\in H^1$.
+Dla $v\in H$ i $\phi\in H^1$ zachodzi
+$\int_{\T^d}v\cdot\nabla\phi\,\mathrm d\lambda_d=0$
+na mocy definicji dywergencji dystrybucyjnej; jest to
+ortogonalność składników. Jeżeli $F=v_1+\nabla\phi_1
+=v_2+\nabla\phi_2$, to różnica obu rozkładów leży jednocześnie
+w $H$ i w jego ortogonalnym dopełnieniu, zatem znika.
+Warunek zerowej średniej wyznacza jednoznacznie $\phi$.
+\end{proof}
+
+\begin{uwaga}[Operator Stokesa]
+Na $H$ określamy $A=-P\Delta$ z dziedziną
+$D(A)=H^2(\T^d;\R^d)\cap H$. Ponieważ $P$ komutuje
+z $\Delta$ na torusie, mamy $Av=-\Delta v$, a
+$(Av,v)_H=\|\nabla v\|_2^2$. Własności bazy Fouriera
+dają dodatnią samosprzężoność $A$ oraz zwartość $A^{-1}$.
+Rzut $P$ nie jest mnożeniem przez stałą macierz w przestrzeni
+fizycznej, lecz nielokalnym operatorem Fouriera.
+\end{uwaga}
+
+\section{Tożsamość energii i słaba postać równania}
+Dla $a,b,c\in V$ określamy formę trójliniową
+\[
+ b(a,b,c)=\int_{\T^d}(a\cdot\nabla)b\cdot c\,\mathrm d\lambda_d(x).
+\]
+W wymiarach $2$ i $3$ jest ona dobrze określona na $V^3$ przez
+nierówności Sobolewa i Höldera. Przy $\diver a=0$ zachodzi
+$b(a,b,c)=-b(a,c,b)$, a w szczególności $b(a,b,b)=0$.
+Ta ostatnia równość jest podstawowym mechanizmem dyssypacji energii.
+
+\begin{definicja}[Rozwiązanie Leraya--Hopfa na torusie]\label{def:pde28-leray}
+Niech $u_0\in H$, $\nu>0$ i $T>0$. Pole $u$ nazywamy
+rozwiązaniem Leraya--Hopfa zagadnienia~\eqref{eq:pde28-ns} na $[0,T]$,
+jeżeli $u\in L^\infty(0,T;H)\cap L^2(0,T;V)$,
+$u\in C([0,T];H_{\mathrm w})$, $u(0)=u_0$ oraz dla każdego
+$\varphi\in V$ i $t\in[0,T]$ spełnia tożsamość
+\begin{equation}\label{eq:pde28-weak}
+ (u(t),\varphi)_H-(u_0,\varphi)_H
+ +\nu\int_0^t(\nabla u(s),\nabla\varphi)_{L^2}\,\mathrm ds
+ +\int_0^t b(u(s),u(s),\varphi)\,\mathrm ds=0.
+\end{equation}
+Zapis $C([0,T];H_{\mathrm w})$ oznacza ciągłość wszystkich
+funkcji skalarnych $t\mapsto(u(t),h)_H$, $h\in H$.
+Wymagamy ponadto nierówności energii
+\begin{equation}\label{eq:pde28-energy}
+ \frac12\|u(t)\|_2^2+\nu\int_0^t\|\nabla u(s)\|_2^2\,\mathrm ds
+ \le\frac12\|u_0\|_2^2\qquad (0\le t\le T).
+\end{equation}
+\end{definicja}
+
+\begin{lemat}[Oszacowanie nieliniowości w przestrzeni dualnej]
+\label{lem:pde28-B-est}
+Niech $B(u,v)\in V'$ będzie określony przez
+$\langle B(u,v),\varphi\rangle=b(u,v,\varphi)$.
+Dla $u\in V$ zachodzą oszacowania
+\[
+ \|B(u,u)\|_{V'}\le
+ \begin{cases}
+ C\|u\|_2\|\nabla u\|_2,&d=2,\\
+ C\|u\|_2^{1/2}\|\nabla u\|_2^{3/2},&d=3.
+ \end{cases}
+\]
+Stała $C$ zależy tylko od wymiaru i wielkości torusa.
+\end{lemat}
+\begin{proof}
+Wykorzystujemy antysymetrię w dwóch ostatnich zmiennych:
+$|b(u,u,\varphi)|=|b(u,\varphi,u)|
+\le\|u\|_4^2\|\nabla\varphi\|_2$.
+Nierówność Gagliarda--Nirenberga na torusie, wraz z zerową średnią,
+daje $\|u\|_4^2\le C\|u\|_2\|\nabla u\|_2$ w wymiarze $2$
+oraz $\|u\|_4^2\le C\|u\|_2^{1/2}
+\|\nabla u\|_2^{3/2}$ w wymiarze $3$.
+Po podzieleniu przez $\|\varphi\|_V=\|\nabla\varphi\|_2$
+i wzięciu supremum otrzymujemy tezę.
+\end{proof}
+
+\section{Globalne istnienie rozwiązania Leraya--Hopfa}
+\begin{twierdzenie}[Istnienie słabego rozwiązania w wymiarach $2$ i $3$]
+\label{thm:pde28-existence}
+Niech $d\in\{2,3\}$, $\nu>0$, $T>0$ i $u_0\in H$.
+Istnieje rozwiązanie Leraya--Hopfa zagadnienia~\eqref{eq:pde28-ns}
+na $[0,T]$. Można je wybrać tak, że
+$\partial_tu\in L^{4/3}(0,T;V')$ dla $d=3$,
+a $\partial_tu\in L^2(0,T;V')$ dla $d=2$.
+Ponadto $u(t)\to u_0$ silnie w $H$ przy $t\downarrow0$.
+\end{twierdzenie}
+\begin{proof}
+\textbf{Krok 1: układy Galerkina.}
+Niech $(w_j)_{j\ge1}$ będzie ortonormalną bazą $H$
+złożoną z gładkich, rzeczywistych, bezdywergencyjnych
+funkcji własnych operatora Stokesa, z uwzględnieniem krotności.
+Oznaczmy $H_m=\operatorname{span}\{w_1,\dots,w_m\}$
+i niech $P_m$ będzie rzutem ortogonalnym na $H_m$.
+Szukamy $u_m:[0,T]\to H_m$ o współrzędnych
+spełniających dla $1\le j\le m$
+\begin{equation}\label{eq:pde28-galerkin}
+ (u_m',w_j)_H+\nu(\nabla u_m,\nabla w_j)_{L^2}
+ +b(u_m,u_m,w_j)=0,\quad u_m(0)=P_m u_0.
+\end{equation}
+Jest to skończony układ ODE o gładkiej prawej stronie;
+przynajmniej lokalnie ma jednoznaczne rozwiązanie.
+
+\textbf{Krok 2: energia i istnienie globalne przybliżeń.}
+Mnożymy $j$-te równanie przez współrzędną $u_m$ przy $w_j$
+i sumujemy. Wykorzystując $b(u_m,u_m,u_m)=0$, otrzymujemy
+\begin{equation}\label{eq:pde28-gal-energy}
+ \frac12\|u_m(t)\|_2^2+\nu\int_0^t\|\nabla u_m(s)\|_2^2
+ \,\mathrm ds=\frac12\|P_m u_0\|_2^2\le\frac12\|u_0\|_2^2.
+\end{equation}
+Norma $u_m$ nie może eksplodować w skończonym czasie,
+a skończony układ ODE można przedłużyć na dowolny $[0,T]$.
+Oszacowania są jednostajne względem $m$.
+
+\textbf{Krok 3: pochodne czasowe.}
+Rzut $P_m$ jest kontrakcją na $V$ i $V'$:
+bazę wybrano z funkcji własnych operatora Stokesa,
+które są ortogonalne również dla iloczynu skalarnego
+$(\nabla v,\nabla w)_{L^2}$. Wobec tego
+$\|P_m\varphi\|_V\le\|\varphi\|_V$;
+następnie z definicji normy dualnej
+$\|P_m F\|_{V'}=\sup_{\|\varphi\|_V\le1}
+|\langle F,P_m\varphi\rangle|\le\|F\|_{V'}$.
+Z równania Galerkina oraz lematu~\ref{lem:pde28-B-est} mamy
+\[
+ \|u_m'\|_{V'}\le\nu\|\nabla u_m\|_2+
+ \begin{cases}
+ C\|u_m\|_2\|\nabla u_m\|_2,&d=2,\\
+ C\|u_m\|_2^{1/2}\|\nabla u_m\|_2^{3/2},&d=3.
+ \end{cases}
+\]
+Prawa strona jest ograniczona odpowiednio w
+$L^2(0,T)$ i $L^{4/3}(0,T)$; dla pierwszego składnika
+w drugim przypadku korzystamy z $T<\infty$.
+
+\textbf{Krok 4: zwartość w przestrzeni i czasie.}
+Z oszacowań wynika, po wybraniu podciągu,
+$u_m\stackrel{*}{\rightharpoonup}u$ w $L^\infty(0,T;H)$,
+$u_m\rightharpoonup u$ w $L^2(0,T;V)$ i
+$u_m'\rightharpoonup u_t$ we wskazanej przestrzeni dualnej.
+Zwartość $V\hookrightarrow H$ i ciągłość $H\hookrightarrow V'$
+pozwalają zastosować twierdzenie Aubina--Lionsa
+(zob. rozdział~\ref{chap:pde20}):
+\begin{equation}\label{eq:pde28-strong}
+ u_m\longrightarrow u\quad\text{silnie w }L^2(0,T;H).
+\end{equation}
+W szczególności $u_m\otimes u_m\to u\otimes u$ w
+$L^1((0,T)\times\T^d)$, gdyż
+$\|a\otimes a-b\otimes b\|_1
+\le(\|a\|_2+\|b\|_2)\|a-b\|_2$ na czasoprzestrzeni.
+
+\textbf{Krok 5: przejście do granicy w równaniu.}
+Niech $\varphi\in\bigcup_{j\ge1}H_j$ i
+$\eta\in C_c^\infty(0,T)$. Testujemy~\eqref{eq:pde28-galerkin}
+przez $\eta(t)\varphi$ i całkujemy w czasie.
+Człon liniowy przechodzi do granicy słabo, a człon nieliniowy
+po całkowaniu przez części przestrzennym ma postać
+$-\int_0^T\int_{\T^d}(u_m\otimes u_m):\nabla\varphi\,\mathrm d\lambda_d(x)\,\mathrm dt$,
+więc przechodzi do granicy na mocy~\eqref{eq:pde28-strong}.
+Gęstość sumy $H_j$ w $V$ i jednostajne oszacowanie
+$B(u_m,u_m)$ w przestrzeni $L^{4/3}(0,T;V')$
+($L^2$ dla $d=2$) rozszerzają tożsamość do wszystkich
+$\varphi\in V$ i dają~\eqref{eq:pde28-weak}.
+
+\textbf{Krok 6: warunek początkowy i nierówność energii.}
+Dla każdego $\varphi\in V$ funkcje
+$t\mapsto(u_m(t),\varphi)_H$ są jednostajnie ograniczone
+i jednostajnie Hölderowskie w czasie: z kroku 3,
+$|(u_m(t)-u_m(s),\varphi)|\le
+C\|\varphi\|_V|t-s|^{1-1/q}$, gdzie $q=4/3$ lub $2$.
+Diagonale dla przeliczalnego gęstego zbioru testów,
+wraz z jednostajnym ograniczeniem w $H$,
+dają $u_m(t)\rightharpoonup u(t)$ w $H$ dla
+\emph{każdego} $t\in[0,T]$, a także
+$u\in C([0,T];H_{\mathrm w})$.
+Ponieważ $u_m(0)=P_m u_0\to u_0$ w $H$,
+warunek początkowy jest zachowany.
+Dla ustalonego $t$ stosujemy słabą półciągłość dolną
+normy $\|u_m(t)\|_2$ i normy
+$\|\nabla u_m\|_{L^2(0,t;L^2)}$ do~\eqref{eq:pde28-gal-energy},
+otrzymując~\eqref{eq:pde28-energy} dla każdego $t$.
+Wreszcie $u(t)\rightharpoonup u_0$ w $H$ przy $t\downarrow0$,
+a nierówność energii daje
+$\limsup_{t\downarrow0}\|u(t)\|_2\le\|u_0\|_2$.
+Słaba zbieżność wraz ze zbieżnością norm dowodzi
+$u(t)\to u_0$ silnie w $H$.
+\end{proof}
+
+\begin{uwaga}[Ciśnienie rozwiązania słabego]
+Dla gładkiego rozwiązania warunek $\diver u=0$
+i równanie~\eqref{eq:pde28-ns} dają
+$-\Delta p=\sum_{i,j}\partial_i\partial_j(u_i u_j)$.
+Na torusie wybieramy normalizację
+$\int_{\T^d}p(t,x)\,\mathrm d\lambda_d(x)=0$.
+Dla rozwiązania Leraya--Hopfa wzór ten określa $p$
+w sensie dystrybucji przestrzennych i czasowych;
+nie należy bez dodatkowych założeń traktować go
+jako tożsamości klasycznych funkcji. Dla ustalonego czasu w sensie dystrybucji
+przestrzennych rozwiązujemy równanie Poissona dla
+$p$ o średniej zero; w bazie Fouriera, dla $k\ne0$,
+$\widehat p(k)=-|k|^{-2}\sum_{i,j}k_i k_j
+\widehat{(u_i u_j)}(k)$.
+Współczynniki iloczynów $u_i u_j$ są dobrze określone,
+gdy $u(t)\in L^2$. Stąd $p$ jest dobrze określoną
+dystrybucją z dokładnością do funkcji samego czasu.
+Z projekcji równania przez $P$ wynika
+$\nabla p=-(I-P)\diver(u\otimes u)$.
+\end{uwaga}
+
+
+\begin{twierdzenie}[Równość energii i ciągłość silna w wymiarze dwa]
+\label{thm:pde28-energy-equality-2d}
+Niech $\nu>0$, $T>0$, $d=2$ i $u_0\in H$.
+Każde rozwiązanie Leraya--Hopfa $u$ na $[0,T]$
+należy do $C([0,T];H)$ i spełnia dla wszystkich
+$t\in[0,T]$ dokładną równość
+\begin{equation}\label{eq:pde28-energy-equality-2d}
+ \frac12\|u(t)\|_2^2+
+ \nu\int_0^t\|\nabla u(s)\|_2^2\,\mathrm ds
+ =\frac12\|u_0\|_2^2.
+\end{equation}
+Ponadto, ponieważ na torusie $2\pi$ funkcje w $H$
+mają zerową średnią,
+$\|u(t)\|_2^2\le e^{-2\nu t}\|u_0\|_2^2$.
+\end{twierdzenie}
+\begin{proof}
+Z lematu~\ref{lem:pde28-B-est} i warunków
+$u\in L^\infty(0,T;H)\cap L^2(0,T;V)$ wynika
+$\|B(u,u)\|_{V'}\le C\|u\|_2\|\nabla u\|_2\in
+L^2(0,T)$. Niech $\mathcal A:V\to V'$ oznacza rozszerzenie
+operatora Stokesa określone przez
+$\langle\mathcal Au,\varphi\rangle=
+(\nabla u,\nabla\varphi)_{L^2}$.
+Wówczas $\|\mathcal Au\|_{V'}\le\|u\|_V$,
+a równość słaba daje
+$u_t=-\nu\mathcal Au-B(u,u)\in L^2(0,T;V')$.
+W trójce Hilberta $V\subset H\subset V'$ mamy
+zatem $u\in L^2(0,T;V)$ oraz $u_t\in L^2(0,T;V')$.
+Lemat o regule łańcuchowej w trójce Hilberta,
+omówiony w rozdziale~\ref{chap:pde20}, zapewnia
+$u\in C([0,T];H)$ i
+$\frac12\frac{\mathrm d}{\mathrm dt}\|u(t)\|_2^2
+=\langle u_t(t),u(t)\rangle$ prawie wszędzie.
+Testujemy równanie słabe przez $u(t)\in V$.
+Dla takich chwil $b(u,u,u)=0$ na mocy
+antysymetrii i gęstości gładkich pól bezdywergencyjnych.
+Otrzymujemy pochodną
+$\frac12(\|u\|_2^2)'=-\nu\|\nabla u\|_2^2$;
+całkowanie w czasie daje~\eqref{eq:pde28-energy-equality-2d}.
+
+Na torusie $\T^2$ najmniejsza dodatnia wartość
+własna $-\Delta$ wynosi $1$, więc nierówność
+Poincarégo ma postać $\|u\|_2\le\|\nabla u\|_2$.
+Dla $E(t)=\|u(t)\|_2^2$ otrzymujemy
+$E'(t)\le-2\nu E(t)$ prawie wszędzie.
+Całkowanie tej nierówności daje wskazany zanik.
+\end{proof}
+
+\begin{wniosek}[Wykładniczy zanik energii rozwiązania Galerkina w 3D]
+\label{cor:pde28-decay-3d}
+Niech $\nu>0$, $T>0$, $u_0\in H$ i $d=3$.
+Rozwiązanie Leraya--Hopfa otrzymane w dowodzie
+twierdzenia~\ref{thm:pde28-existence} można wybrać tak, że
+\[
+ \|u(t)\|_2^2\le e^{-2\nu t}\|u_0\|_2^2,
+ \qquad 0\le t\le T.
+\]
+Nie jest tu zakładana gładkość ani jednoznaczność
+rozwiązań trójwymiarowych.
+\end{wniosek}
+\begin{proof}
+Dla przybliżeń Galerkina z~\eqref{eq:pde28-gal-energy}
+różniczkujemy energię i używamy
+$\|\nabla u_m\|_2^2\ge\|u_m\|_2^2$:
+$\frac{\mathrm d}{\mathrm dt}\|u_m(t)\|_2^2
+\le-2\nu\|u_m(t)\|_2^2$.
+Stąd $\|u_m(t)\|_2^2\le
+ e^{-2\nu t}\|P_mu_0\|_2^2\le e^{-2\nu t}\|u_0\|_2^2$.
+W kroku 6 dowodu~\ref{thm:pde28-existence} wybrano
+jeden podciąg zbieżny słabo w $H$ dla każdej chwili
+$t\in[0,T]$. Słaba półciągłość dolna normy przy
+ustalonym $t$ daje pożądane oszacowanie dla tej granicy.
+W szczególności w tym wniosku nie korzystamy z
+nieudowodnionej równości energii dla wszystkich
+rozwiązań Leraya--Hopfa w wymiarze trzy.
+\end{proof}
+
+
+\section{Wymiar dwa: jednoznaczność i wirowość}
+\begin{twierdzenie}[Jednoznaczność słabych rozwiązań w wymiarze dwa]
+\label{thm:pde28-unique2d}
+Niech $\nu>0$, $T>0$ i $u_0\in H$ dla $d=2$.
+Rozwiązanie Leraya--Hopfa na $[0,T]$ jest jednoznaczne.
+Jeśli $u,v$ odpowiadają danym $u_0,v_0\in H$, to
+\[
+ \|u(t)-v(t)\|_2^2\le\|u_0-v_0\|_2^2
+ \exp\left(\frac C\nu\int_0^t\|\nabla v(s)\|_2^2\,\mathrm ds\right),
+ \qquad 0\le t\le T.
+\]
+\end{twierdzenie}
+\begin{proof}
+Z kroku 3 poprzedniego dowodu wynika
+$u_t,v_t\in L^2(0,T;V')$, a więc tożsamość energii
+w trójce $V\subset H\subset V'$ stosuje się do
+$w=u-v$ (por. rozdział~\ref{chap:pde20}).
+Odejmując równania i wykorzystując
+$b(u,w,w)=0$, otrzymujemy
+\[
+ \frac12\frac{\mathrm d}{\mathrm dt}\|w\|_2^2
+ +\nu\|\nabla w\|_2^2=-b(w,v,w).
+\]
+Wymiar dwa pozwala użyć nierówności Ladyżenskiej:
+$|b(w,v,w)|\le\|w\|_4^2\|\nabla v\|_2
+\le C\|w\|_2\|\nabla w\|_2\|\nabla v\|_2$.
+Z nierówności Younga dostajemy
+$\frac{\mathrm d}{\mathrm dt}\|w\|_2^2
+\le (C/\nu)\|\nabla v\|_2^2\|w\|_2^2$.
+Ponieważ $\nabla v\in L^2(0,T;L^2)$,
+lemat Gronwalla daje podane oszacowanie, a dla równych
+danych otrzymujemy $u=v$.
+\end{proof}
+
+\begin{stwierdzenie}[Równanie wirowości i zanik enstrofii]
+\label{prop:pde28-vorticity}
+Niech $d=2$, a $(u,p)$ będzie gładkim rozwiązaniem
+\eqref{eq:pde28-ns} na $[0,T]\times\T^2$.
+Przyjmijmy $\omega=\partial_1u_2-\partial_2u_1$
+oraz $\mathcal E_\omega(t)=\frac12\|\omega(t)\|_2^2$.
+Wówczas
+\[
+ \partial_t\omega+u\cdot\nabla\omega=\nu\Delta\omega,
+ \qquad \mathcal E_\omega(t)+\nu\int_0^t\|\nabla\omega(s)\|_2^2
+ \,\mathrm ds=\mathcal E_\omega(0).
+\]
+Dodatkowo dla bezdywergencyjnych pól o zerowej średniej
+$\|\nabla u(t)\|_2=\|\omega(t)\|_2$.
+\end{stwierdzenie}
+\begin{proof}
+Stosując operator $\partial_1$ do drugiego równania
+wektorowego i odejmując $\partial_2$ pierwszego,
+zwijamy gradient ciśnienia. Rozwijając pochodne
+składników konwekcyjnych, korzystamy z
+$\partial_1u_1+\partial_2u_2=0$;
+pozostaje $u\cdot\nabla\omega$.
+Mnożymy równanie przez $\omega$ i całkujemy po torusie.
+Składnik konwekcyjny znika:
+$\int_{\T^2}u\cdot\nabla(\omega^2/2)\,\mathrm d\lambda_2(x)=0$.
+Równość norm wynika z tożsamości
+$\int_{\T^2}|\nabla u|^2\,\mathrm d\lambda_2(x)=\int_{\T^2}(|\diver u|^2+|\operatorname{curl}u|^2)\,\mathrm d\lambda_2(x)$,
+którą otrzymujemy przez całkowanie przez części.
+\end{proof}
+
+\begin{twierdzenie}[Globalne oszacowanie $H^1$ w wymiarze dwa]
+\label{thm:pde28-H1-2d}
+Niech $d=2$, $\nu>0$, $T>0$ oraz $u_0\in V$.
+Jedyne rozwiązanie Leraya--Hopfa $u$ na $[0,T]$ spełnia
+$u\in L^\infty(0,T;V)\cap L^2(0,T;H^2(\T^2;\R^2))$
+oraz dla prawie każdego $t\in(0,T)$
+\[
+ \|\nabla u(t)\|_2^2+2\nu\int_0^t\|\Delta u(s)\|_2^2
+ \,\mathrm ds\le\|\nabla u_0\|_2^2.
+\]
+\end{twierdzenie}
+\begin{proof}
+Wybieramy w dowodzie twierdzenia~\ref{thm:pde28-existence}
+przestrzenie Galerkina złożone ze wszystkich bezdywergencyjnych
+modów Fouriera $0<|k|\le N$. Dla $\omega_N=\partial_1u_{N,2}
+-\partial_2u_{N,1}$ równanie rzutowane ma postać
+$\partial_t\omega_N+Q_N(u_N\cdot\nabla\omega_N)
+=\nu\Delta\omega_N$, gdzie $Q_N$ jest ortogonalnym
+rzutem na skalarne mody z $0<|k|\le N$.
+Ponieważ $Q_N\omega_N=\omega_N$, mnożenie przez
+$\omega_N$ daje
+\[
+ \frac12\frac{\mathrm d}{\mathrm dt}\|\omega_N\|_2^2
+ +\nu\|\nabla\omega_N\|_2^2=0.
+\]
+Przy tym człon transportowy znika przez $\diver u_N=0$.
+Dla bezdywergencyjnego pola o zerowej średniej zachodzą
+$\|\omega_N\|_2=\|\nabla u_N\|_2$ i
+$\|\nabla\omega_N\|_2=\|\Delta u_N\|_2$,
+co można sprawdzić oddzielnie na każdym modzie Fouriera.
+Otrzymujemy zatem jednostajne ograniczenia w
+$L^\infty(0,T;V)$ i $L^2(0,T;H^2)$.
+Słaba zwartość i słaba półciągłość dolna norm
+dają tezę dla granicy Galerkina. Na mocy
+jednoznaczności z twierdzenia~\ref{thm:pde28-unique2d}
+jest to wybrane rozwiązanie $u$.
+\end{proof}
+
+\begin{uwaga}[Dlaczego wymiar trzy jest inny]
+W wymiarze $3$ wirowość $\boldsymbol\omega=\nabla\times u$
+spełnia dla gładkiego rozwiązania
+$\partial_t\boldsymbol\omega+(u\cdot\nabla)\boldsymbol\omega
+=(\boldsymbol\omega\cdot\nabla)u+\nu\Delta\boldsymbol\omega$.
+Pojawia się człon \emph{rozciągania wirów}, który nie ma
+odpowiednika w wymiarze $2$. Z tożsamości energii $L^2$
+nie otrzymuje się wprost ograniczenia normy $\|\nabla u\|_2$
+we wszystkich czasach w wymiarze $3$.
+\end{uwaga}
+
+\section{Wymiar trzy: kryterium warunkowej jednoznaczności}
+\begin{twierdzenie}[Jednoznaczność przy dodatkowej całkowalności]
+\label{thm:pde28-serrin}
+Niech $d=3$, $\nu>0$, $T>0$ i $u_0\in H$.
+Niech $u,v$ będą rozwiązaniami Leraya--Hopfa na $[0,T]$
+o tych samych danych początkowych. Załóżmy dodatkowo, że
+$v\in L^\infty(0,T;V)\cap L^2(0,T;D(A))$,
+$\partial_tv\in L^2(0,T;H)$ oraz
+$v\in L^q(0,T;L^p(\T^3))$, gdzie $p>3$ i
+$2/q+3/p\le1$. Wówczas $u=v$ prawie wszędzie na
+$(0,T)\times\T^3$.
+\end{twierdzenie}
+\begin{proof}
+Podane silniejsze założenia regularności $v$ pozwalają
+uzasadnić tożsamość mieszaną dla iloczynu $(u(t),v(t))_H$.
+Istotnie, zastępujemy $v$ skończonym rzutem spektralnym
+$P_nv$ i wygładzamy go w czasie. W równaniu dla $u$
+możemy używać takiego pola jako testu; przy przejściu do
+granicy $P_nv\to v$ silnie w $L^4(0,T;V)$,
+ponieważ $v\in L^\infty(0,T;V)$, a
+$\partial_tu\in L^{4/3}(0,T;V')$.
+Z kolei $\partial_tv\in L^2(0,T;H)$
+pozwala przejść do granicy w pochodnej iloczynu.
+Pozostałe składniki przechodzą przez nierówności
+Höldera i oszacowanie z lematu~\ref{lem:pde28-B-est}.
+Łącząc otrzymaną tożsamość mieszaną z nierównością
+energii dla $u$ i równością energii dla $v$,
+uzyskujemy dla $w=u-v$ nierówność
+\[
+ \frac12\|w(t)\|_2^2+\nu\int_0^t\|\nabla w\|_2^2\,\mathrm ds
+ \le-\int_0^t b(w(s),v(s),w(s))\,\mathrm ds.
+\]
+To jest nierówność względnej energii potrzebna dalej.
+Z nierówności Höldera i interpolacji
+$L^2\!\!\;\text{--}\!L^6$ mamy
+\[
+ |b(w,w,v)|\le\|v\|_p\|w\|_{2p/(p-2)}\|\nabla w\|_2
+ \le C\|v\|_p\|w\|_2^{1-3/p}
+ \|\nabla w\|_2^{1+3/p}.
+\]
+Nierówność Younga daje, przy $r=2p/(p-3)$,
+$|b(w,w,v)|\le(\nu/2)\|\nabla w\|_2^2
++C_{\nu,p}\|v\|_p^r\|w\|_2^2$.
+Warunek $2/q+3/p\le1$ zapewnia $q\ge r$,
+więc $\|v\|_p^r$ jest całkowalna w czasie.
+Z lematu Gronwalla i $w(0)=0$ otrzymujemy $w=0$.
+\end{proof}
+
+\begin{uwaga}[Co pozostaje otwarte]
+Dla $d=3$ twierdzenie~\ref{thm:pde28-existence} gwarantuje
+istnienie globalnych rozwiązań słabych, ale nie dowodzi
+ich jednoznaczności ani gładkości dla dowolnych danych w $H$.
+Dowód twierdzenia~\ref{thm:pde28-serrin} jest dowodem
+jednoznaczności słabego rozwiązania w obecności rozwiązania
+o silniejszej regularności. Usunięcie tych dodatkowych założeń
+i pozostawienie jedynie warunku $v\in L^q_tL^p_x$
+daje znacznie silniejsze twierdzenie Prodiego--Serrina,
+którego pełnego dowodu tutaj nie podajemy.
+Argument wymiaru dwa wykorzystuje całkowalność
+$\|\nabla v\|_2^2$ i nierówność Ladyżenskiej, której
+odpowiednik w wymiarze trzy daje zbyt wysoką potęgę
+$\|\nabla v\|_2$. Przejście od warunkowej jednoznaczności
+do pełnej wymagałoby wykazania dodatkowej regularności;
+nie należy tego zakładać bez dowodu.
+\end{uwaga}
+
+\section{Lokalne oszacowanie silnych rozwiązań i skala problemu}
+\begin{stwierdzenie}[Oszacowanie normy $H^1$ w wymiarze trzy]
+\label{prop:pde28-H1}
+Niech $d=3$, $\nu>0$ i $(u,p)$ będzie gładkim rozwiązaniem
+\eqref{eq:pde28-ns} na $[0,T]\times\T^3$, o średniej $u$ równej zero.
+Istnieje $C>0$, zależna tylko od torusa, taka że
+\[
+ \frac{\mathrm d}{\mathrm dt}\|\nabla u(t)\|_2^2
+ +\nu\|\Delta u(t)\|_2^2
+ \le C\nu^{-3}\|\nabla u(t)\|_2^6.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Iloczyn skalarny równania z $-\Delta u$ daje
+$\frac12\frac{\mathrm d}{\mathrm dt}\|\nabla u\|_2^2
++\nu\|\Delta u\|_2^2
+\le\|u\|_6\|\nabla u\|_3\|\Delta u\|_2$.
+Z nierówności Sobolewa i Gagliarda--Nirenberga mamy
+$\|u\|_6\le C\|\nabla u\|_2$ i
+$\|\nabla u\|_3\le C\|\nabla u\|_2^{1/2}
+\|\Delta u\|_2^{1/2}$.
+Stąd prawa strona jest ograniczona przez
+$C\|\nabla u\|_2^{3/2}\|\Delta u\|_2^{3/2}$.
+Nierówność Younga z wykładnikami $4/3$ i $4$
+pozwala pochłonąć połowę składnika
+$\nu\|\Delta u\|_2^2$ i pozostawia
+$C\nu^{-3}\|\nabla u\|_2^6$; pomnożenie przez $2$
+i zmianę stałej kończy dowód.
+\end{proof}
+
+\begin{kontrprzyklad}[Dlaczego sama energia $L^2$ nie wystarcza]
+Funkcje $u_n(x)=\sin(nx_1)e_2$ na $\T^3$, gdzie
+$e_2=(0,1,0)$, mają zerową dywergencję i średnią.
+Ich normy $\|u_n\|_2$ są jednakowo ograniczone,
+podczas gdy $\|\nabla u_n\|_2\to\infty$.
+Wobec tego kontrola samej energii $L^2$ nie daje
+jednostajnego oszacowania $H^1$ w pojedynczych chwilach.
+Nie jest to kontrprzykład dla regularności rozwiązań
+równań Naviera--Stokesa, lecz przykład braku
+odpowiedniego wniosku funkcjonalno-analitycznego.
+\end{kontrprzyklad}
+
+\section{Dokładne rozwiązanie: wir Taylora--Greena}
+\begin{przyklad}[Wir Taylora--Greena na torusie dwuwymiarowym]
+\label{ex:pde28-TG}
+Niech $\nu>0$ i $(x,y)\in\T^2$. Funkcje
+\begin{align*}
+ u(t,x,y)&=e^{-2\nu t}(\sin x\cos y,-\cos x\sin y),\\
+ p(t,x,y)&=\tfrac14e^{-4\nu t}(\cos 2x+\cos 2y)
+\end{align*}
+rozwiązują~\eqref{eq:pde28-ns}. Rzeczywiście,
+$\diver u=0$, $\Delta u=-2u$, a
+$(u\cdot\nabla)u=\tfrac12e^{-4\nu t}(\sin2x,\sin2y)
+=-\nabla p$. Ponadto
+\[
+ \frac12\|u(t)\|_2^2=\pi^2e^{-4\nu t},\qquad
+ \|\nabla u(t)\|_2^2=4\pi^2e^{-4\nu t},\qquad
+ \omega(t,x,y)=2e^{-2\nu t}\sin x\sin y.
+\]
+Stąd tożsamość energii jest dokładna i pozwala
+sprawdzić schematy numeryczne niezależnie od siatki.
+\end{przyklad}
+
+
+\begin{przyklad}[Trójwymiarowy wir Taylora--Greena: dane początkowe]
+\label{ex:pde28-TG3D}
+Na torusie $\T^3=([0,2\pi]/\sim)^3$ rozważmy
+bezdywergencyjne pole początkowe
+\[
+ u_0(x,y,z)=(\sin x\cos y\cos z,\,-\cos x\sin y\cos z,\,0).
+\]
+Istotnie, $\partial_x u_{0,1}+\partial_y u_{0,2}=0$.
+Jego wirowość jest \emph{wektorem}
+\[
+ \nabla\times u_0=(-\cos x\sin y\sin z,\,
+ -\sin x\cos y\sin z,\,2\sin x\sin y\cos z).
+\]
+W szczególności trzecia składowa wirowości wynosi
+$\omega_{0,z}=2\sin x\sin y\cos z$. Energia początkowa
+względem miary Lebesgue'a na sześcianie okresowym wynosi
+\[
+ E(0)=\frac12\int_{[0,2\pi]^3}|u_0(x,y,z)|^2
+ \,\mathrm d\lambda_3(x,y,z)=\pi^3.
+\]
+Ponieważ $u_{0,3}=0$, \emph{linie prądu pola początkowego}
+leżą w płaszczyznach $z=\mathrm{const}$. Dla ustalonego
+$z$ są liniami poziomicowymi funkcji prądu
+$\psi_z(x,y)=\sin x\sin y\cos z$. Nie twierdzimy,
+że trzecia składowa pozostanie zerowa podczas ewolucji
+trójwymiarowych równań Naviera--Stokesa: jest to warunek
+początkowy, nie jawny wzór rozwiązania w czasie.
+
+\begin{center}
+\includegraphics[width=.91\textwidth]{figures/taylor_green_3d_slices.png}
+
+{\small\emph{Rysunek:} Obliczone z podanego pola przekroje
+$z=\pi/4,3\pi/4,5\pi/4$: poziome strzałki wskazują kierunek
+przepływu, barwy oznaczają podpisaną składową $\omega_{0,z}$
+wirowości, a krzywe są poziomicami $\psi_z$. Obliczenie można
+powtórzyć za pomocą pliku \texttt{scripts/taylor\_green\_3d\_plot.py};
+interaktywny widok Plotly jest dołączony jako HTML.}
+\end{center}
+
+\begin{center}
+\begin{minipage}{.90\textwidth}
+\centering
+\includegraphics[width=.90\linewidth]{figures/taylor_green_3d_schematic.png}
+
+{\small\emph{Ilustracja schematyczna:} Przestrzenna wizualizacja
+wirów Taylora--Greena. Jest to obraz koncepcyjny,
+\emph{nie} wynik całkowania trajektorii powyższego pola
+$u_0$ ani poprawna mapa podpisanej wielkości całej wirowości.
+Fizycznie wierną wizualizacją danych początkowych jest
+poprzedni rysunek.}
+\end{minipage}
+\end{center}
+\end{przyklad}
+
+\section{Porównanie zagadnień brzegowych i dalsze kierunki}
+Na ograniczonym obszarze Lipschitzowskim $\Omega\subset\R^d$
+z warunkiem przylegania $u|_{\partial\Omega}=0$
+przestrzenie $H,V$ tworzy się przez domknięcie
+gładkich bezdywergencyjnych pól o zwartym nośniku.
+Odzyskiwanie ciśnienia wymaga wówczas analizy warunków
+brzegowych, a operator Stokesa nie sprowadza się do
+prostego mnożnika Fouriera. Dlatego powyższe dowody
+są sformułowane na torusie; ich bezpośrednie przeniesienie
+na dowolny obszar bez dodatkowych twierdzeń byłoby nieuzasadnione.
+
+Podstawowa różnica między wymiarami jest następująca:
+energia $L^2$ i globalne istnienie rozwiązań Leraya--Hopfa
+działają w $d=2,3$; w wymiarze dwa mamy dodatkowo
+jednoznaczność i kontrolę wirowości, podczas gdy w wymiarze trzy
+pojawia się rozciąganie wirów i warunkowe kryteria regularności.
+W kolejnych rozdziałach będziemy badać inne mechanizmy
+nieliniowe: swobodne brzegi i homogenizację.
+

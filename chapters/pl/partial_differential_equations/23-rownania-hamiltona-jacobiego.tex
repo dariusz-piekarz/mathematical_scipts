@@ -1,0 +1,566 @@
+\chapter[Równania Hamiltona--Jacobiego]{Równania Hamiltona--Jacobiego: charakterystyki, rozwiązania lepkościowe i wzór Hopfa--Laxa}
+\label{chap:pde23}
+
+\section{Zagadnienie Cauchy'ego i geometryczne znaczenie hamiltonianu}
+Niech $T>0$, $d\ge1$, $g\colon\R^d\to\R$, a
+$H\colon\R^d\times\R^d\to\R$ będzie hamiltonianem.
+Rozważamy równanie
+\begin{equation}\label{eq:pde23-hj}
+ \partial_tu(t,x)+H(x,\nabla_xu(t,x))=0,
+ \qquad u(0,x)=g(x).
+\end{equation}
+W pierwszej części zakładamy gładkość danych, potem będziemy
+rozpatrywać funkcje ciągłe, niekoniecznie różniczkowalne.
+Odróżniamy gradient względem $x$ od gradientu $D_pH$
+względem zmiennej pędowej $p$.
+
+Równanie~\eqref{eq:pde23-hj} występuje w mechanice
+Hamiltonowskiej, optymalnym sterowaniu i prawach zachowania.
+Nawet jeśli $g$ i $H$ są gładkie, rozwiązanie klasyczne
+może utracić różniczkowalność po skończonym czasie.
+Nie jest to problem złej definicji pochodnej słabej:
+po przecięciu charakterystyk potrzebna jest dodatkowa
+zasada wyboru rozwiązania. Lokalną konstrukcję klasycznych
+charakterystyk poznaliśmy w rozdziale~\ref{chap:pde-characteristics};
+poniżej wyjaśnimy, dlaczego samo jej przedłużanie nie
+rozwiązuje kwestii jednoznaczności.
+
+\begin{definicja}[Rozwiązanie klasyczne]
+Niech $H$ będzie ciągły, a $g$ ciągła. Funkcja
+$u\in C([0,T]\times\R^d)\cap C^1((0,T)\times\R^d)$
+jest rozwiązaniem klasycznym~\eqref{eq:pde23-hj}, jeżeli
+spełnia równanie punktowo dla $0<t<T$ oraz $u(0,x)=g(x)$.
+\end{definicja}
+
+\section{Charakterystyki układu Hamiltona i utrata gładkości}
+\begin{twierdzenie}[Układ charakterystyczny]
+\label{thm:pde23-char}
+Niech $H\in C^2(\R^d_x\times\R^d_p)$ i niech
+$u\in C^2((0,T)\times\R^d)$ spełnia
+$u_t+H(x,\nabla u)=0$. Dla dowolnego punktu $(t_0,x_0)$
+rozważmy lokalne rozwiązanie układu
+\begin{equation}\label{eq:pde23-hamilton}
+ \dot X=D_pH(X,P),\qquad \dot P=-D_xH(X,P),
+ \qquad X(t_0)=x_0,\quad P(t_0)=\nabla u(t_0,x_0).
+\end{equation}
+Wtedy $P(t)=\nabla u(t,X(t))$ i
+\begin{equation}\label{eq:pde23-action}
+ \frac{\mathrm d}{\mathrm dt}u(t,X(t))
+ =P(t)\cdot D_pH(X(t),P(t))-H(X(t),P(t)).
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Różniczkujemy równanie Hamiltona--Jacobiego względem $x_j$:
+\[
+ \partial_tu_{x_j}+\sum_k H_{p_k}(x,\nabla u)u_{x_jx_k}
+ +H_{x_j}(x,\nabla u)=0.
+\]
+Jeżeli $X$ rozwiązuje
+$\dot X=D_pH(X,\nabla u(t,X))$, to reguła łańcuchowa daje
+$\frac{\mathrm d}{\mathrm dt}\nabla u(t,X(t))=-D_xH(X(t),\nabla u(t,X(t)))$.
+Wobec jednoznaczności układu ODE otrzymujemy dokładnie
+$P(t)=\nabla u(t,X(t))$. Dalsze różniczkowanie prowadzi do
+$\frac{\mathrm d}{\mathrm dt}u=u_t+\nabla u\cdot\dot X
+=-H+P\cdot D_pH$.
+\end{proof}
+
+Dla $H=H(p)$ druga część układu daje $P(t)=P(0)$.
+Jeśli $g\in C^2(\R^d)$, charakterystyka wychodząca
+z $y$ ma zatem postać
+\begin{equation}\label{eq:pde23-explicit-char}
+ X(t,y)=y+tD_pH(\nabla g(y)),\qquad P(t,y)=\nabla g(y).
+\end{equation}
+Przy odwracalności $y\mapsto X(t,y)$ wzór
+\eqref{eq:pde23-action} wyznacza lokalne rozwiązanie
+klasyczne. Jego wartość na charakterystyce wynosi
+$g(y)+t[\nabla g(y)\cdot D_pH(\nabla g(y))-H(\nabla g(y))]$.
+Warunek lokalnej odwracalności jest kontrolowany przez
+\begin{equation}\label{eq:pde23-jacobian}
+ D_yX(t,y)=I+tD_{pp}^2H(\nabla g(y))D^2g(y).
+\end{equation}
+Jeśli wyznacznik tej macierzy znika, metoda klasyczna
+nie gwarantuje już jednowartościowego gradientu.
+
+\begin{przyklad}[Powstanie osobliwości z gładkich danych]
+\label{ex:pde23-cos}
+Niech $d=1$, $H(p)=p^2/2$ i $g(y)=\cos y$. Wtedy
+$X(t,y)=y-t\sin y$, a $\partial_yX=1-t\cos y$.
+Dla $0\le t<1$ pochodna jest dodatnia dla wszystkich $y$.
+W chwili $t=1$ zeruje się przy $y\in2\pi\mathbb Z$;
+po czasie $t=1$ charakterystyki przecinają się i
+klasyczna metoda nie wyznacza już globalnej funkcji $C^1$.
+Poniżej wyprowadzimy jednoznaczne rozwiązanie lepkościowe
+istniejące również dla $t>1$.
+\end{przyklad}
+
+\section{Rozwiązania lepkościowe: definicja bez pochodnych rozwiązania}
+\begin{definicja}[Rozwiązanie lepkościowe]
+\label{def:pde23-visc}
+Niech $Q=(0,T)\times\Omega$, gdzie $\Omega\subset\R^d$
+jest obszarem, a $H\colon\Omega\times\R^d\to\R$ jest
+ciągły. Funkcja $u\in C(Q)$ jest \emph{podrozwiązaniem
+lepkościowym} równania $u_t+H(x,\nabla u)=0$, jeśli dla
+każdego $(t_0,x_0)\in Q$ i każdej funkcji
+$\varphi\in C^1(Q)$, dla której $u-\varphi$ ma
+lokalne maksimum w $(t_0,x_0)$, zachodzi
+\begin{equation}\label{eq:pde23-sub}
+ \varphi_t(t_0,x_0)+H(x_0,\nabla\varphi(t_0,x_0))\le0.
+\end{equation}
+\emph{Nadrozwiązanie lepkościowe} to funkcja, dla której
+w każdym punkcie lokalnego minimum $u-\varphi$ zachodzi
+odwrotna nierówność $\ge0$. \emph{Rozwiązanie lepkościowe}
+jest jednocześnie podrozwiązaniem i nadrozwiązaniem.
+Warunek początkowy $u(0,x)=g(x)$ rozumiemy w sensie ciągłości.
+\end{definicja}
+
+\begin{uwaga}
+Słowo „lepkościowe” pochodzi z przybliżenia równań pierwszego
+rzędu równaniami $u_t+H(x,\nabla u)=\eps\Delta u$,
+$\eps\downarrow0$. Definicja nie wymaga istnienia takiego
+przybliżenia ani pochodnych $u$. Korzysta wyłącznie
+z pochodnych gładkiej funkcji testowej.
+Nie utożsamiamy jej automatycznie z rozwiązaniem słabym
+w sensie dystrybucyjnym.
+\end{uwaga}
+
+\begin{stwierdzenie}[Zgodność z rozwiązaniem klasycznym]
+\label{prop:pde23-smooth-visc}
+Jeżeli $u\in C^1(Q)$, to $u$ jest rozwiązaniem
+lepkościowym równania $u_t+H(x,\nabla u)=0$
+wtedy i tylko wtedy, gdy spełnia je punktowo.
+\end{stwierdzenie}
+\begin{proof}
+Jeżeli $u$ spełnia równanie punktowo i $u-\varphi$ ma
+lokalne ekstremum, pochodne $u-\varphi$ znikają:
+$\varphi_t=u_t$ i $\nabla\varphi=\nabla u$. Dostajemy
+właściwą nierówność, a nawet równość. W drugą stronę
+w ustalonym punkcie $(t_0,x_0)$ bierzemy $\varphi=u$.
+Różnica $u-\varphi\equiv0$ ma zarazem maksimum i minimum.
+Obie nierówności wymuszają równość.
+\end{proof}
+
+\section{Zasada porównania na torusie}
+Przez $\T^d=\R^d/(2\pi\mathbb Z)^d$ rozumiemy płaski torus,
+a przez $\lambda_d$ na $\T^d$ miarę indukowaną przez miarę
+Lebesgue'a na $[0,2\pi)^d$, bez normalizacji do jedynki;
+w szczególności $\lambda_d(\T^d)=(2\pi)^d$.
+Najważniejszym argumentem zapewniającym jednoznaczność
+jest \emph{podwajanie zmiennych}. Podajemy pełny dowód
+modelowego twierdzenia, w którym brak brzegu pozwala
+oddzielić istotę argumentu od technicznych barier.
+
+\begin{twierdzenie}[Porównanie rozwiązań lepkościowych]
+\label{thm:pde23-comparison}
+Niech $T>0$, a $H\colon\T^d\times\R^d\to\R$ będzie
+ciągły i niech istnieje $L>0$ takie, że dla wszystkich
+$x,y\in\T^d$, $p\in\R^d$ i dla dostatecznie bliskich
+$x,y$, przy użyciu tej samej lokalnej reprezentacji
+współrzędnych,
+\begin{equation}\label{eq:pde23-HxLip}
+ |H(x,p)-H(y,p)|\le L|x-y|(1+|p|).
+\end{equation}
+Niech $u,v\in C([0,T]\times\T^d)$ będą odpowiednio
+podrozwiązaniem i nadrozwiązaniem lepkościowym
+$w_t+H(x,\nabla w)=0$ w $(0,T)\times\T^d$.
+Jeśli $u(0,x)\le v(0,x)$ dla każdego $x$, to
+$u(t,x)\le v(t,x)$ dla wszystkich $(t,x)\in[0,T]\times\T^d$.
+\end{twierdzenie}
+\begin{proof}
+Przypuśćmy, że nierówność jest fałszywa. Wybieramy
+$0<\tau<T$ oraz $(t_*,x_*)\in(0,\tau)\times\T^d$
+takie, że $u(t_*,x_*)-v(t_*,x_*)>0$.
+Wybieramy małe $\delta,\kappa>0$ spełniające
+$u(t_*,x_*)-v(t_*,x_*)-\delta t_*-\kappa/(\tau-t_*)>0$.
+Dla $\eps,\alpha>0$ maksymalizujemy dla
+$t\in[0,\tau)$, $s\in[0,\tau]$ i $x,y\in\T^d$ funkcję
+\begin{equation}\label{eq:pde23-doubling}
+ \Phi_{\eps,\alpha}(t,x,s,y)=u(t,x)-v(s,y)
+ -\frac{d_{\T}(x,y)^2}{2\eps}
+ -\frac{(t-s)^2}{2\alpha}
+ -\delta t-\frac{\kappa}{\tau-t}.
+\end{equation}
+Z powodu ostatniego składnika maksimum jest osiągane
+przy $t<\tau$; przy ustalonym $t$ wybór $s\in[0,\tau]$
+nie wymaga osobnej bariery. Maksimum jest dodatnie,
+bo można wstawić $t=s=t_*$ i $x=y=x_*$.
+Niech $C_0=2\max(\|u\|_\infty,\|v\|_\infty)+1$.
+W punkcie dodatniego maksimum wszystkie składniki kary
+są nieujemne, toteż $\kappa/(\tau-t_\eps)\le C_0$.
+A zatem $t_\eps\le\tau-\kappa/C_0$ niezależnie od
+$\eps,\alpha$. Po wykazaniu, że
+$|t_\eps-s_\alpha|\to0$, dostajemy również $s_\alpha<\tau$
+dla dostatecznie małych parametrów. Odrębnie poniżej
+wykluczamy ich zerowanie się przy $t=0$.
+
+Niech $(t_\eps,x_\eps,s_\alpha,y_\eps)$ będzie
+punktem maksimum; dla czytelności pomijamy w indeksach
+część parametrów. Porównanie z punktem
+$(t_\eps,x_\eps,s_\alpha,x_\eps)$ oraz jednostajna
+ciągłość $v$ dają
+$\frac{d_{\T}(x_\eps,y_\eps)^2}{2\eps}
+\le \omega_v(d_{\T}(x_\eps,y_\eps))$.
+Z ograniczoności $u,v$ wynika
+$d_{\T}(x_\eps,y_\eps)\to0$, a z powyższej
+nierówności
+\begin{equation}\label{eq:pde23-pen-small}
+ \frac{d_{\T}(x_\eps,y_\eps)^2}{\eps}\longrightarrow0.
+\end{equation}
+Analogicznie porównanie z $s=t$ i jednostajna ciągłość
+$v$ w czasie dają $|t_\eps-s_\alpha|\to0$ i
+$(t_\eps-s_\alpha)^2/\alpha\to0$. Wybieramy
+kolejność granic $\eps\downarrow0$, $\alpha\downarrow0$
+lub wspólną kolejność zbieżną do zera.
+
+Dla dostatecznie małych parametrów zarówno $t_\eps$,
+jak i $s_\alpha$ należą do $(0,\tau)$.
+Gdyby na przykład $t_\eps=0$ dla pewnego ciągu parametrów,
+to $s_\alpha\to0$, $d_{\T}(x_\eps,y_\eps)\to0$;
+jednostajna ciągłość i warunek początkowy dawałyby
+graniczną wartość maksimum $\le0$, w sprzeczności
+z ustaloną dodatnią wartością w punkcie $(t_*,x_*)$.
+Tak samo wykluczamy $s_\alpha=0$.
+
+Ponieważ punkty przestrzenne są bliskie, kwadrat
+odległości ma w ich otoczeniu gładką postać euklidesową.
+Oznaczmy $p=(x_\eps-y_\eps)/\eps$ w lokalnych
+współrzędnych. Z definicji maksimum skonstruowane
+przez zamrożenie $(s,y)$ funkcje testowe dotykają $u$
+z góry, a przez zamrożenie $(t,x)$ dotykają $v$ z dołu.
+Otrzymujemy zatem
+\begin{align*}
+ \frac{t_\eps-s_\alpha}{\alpha}+\delta
+  +\frac{\kappa}{(\tau-t_\eps)^2}+H(x_\eps,p)&\le0,\\
+ \frac{t_\eps-s_\alpha}{\alpha}+H(y_\eps,p)&\ge0.
+\end{align*}
+Po odjęciu dostajemy
+$\delta\le H(y_\eps,p)-H(x_\eps,p)$.
+Założenie~\eqref{eq:pde23-HxLip} pozwala ograniczyć
+prawą stronę przez
+$L|x_\eps-y_\eps|+L|x_\eps-y_\eps|^2/\eps$,
+co dąży do zera na mocy~\eqref{eq:pde23-pen-small}.
+Sprzeczność dowodzi twierdzenia dla $t<\tau$,
+a dowolność $\tau$ i ciągłość dają tezę do czasu $T$.
+\end{proof}
+
+\begin{wniosek}[Jednoznaczność i kontrakcja]
+\label{cor:pde23-contract}
+Przy założeniach Twierdzenia~\ref{thm:pde23-comparison}
+rozwiązanie lepkościowe z danymi $g\in C(\T^d)$ jest
+co najwyżej jedno. Jeżeli $u,v$ są dwoma rozwiązaniami
+dla danych $g,h\in C(\T^d)$, to
+$\|u(t)-v(t)\|_{L^\infty(\T^d)}\le
+\|g-h\|_{L^\infty(\T^d)}$ dla $0\le t\le T$.
+\end{wniosek}
+\begin{proof}
+Równanie nie zależy od wartości $u$, zatem $v+c$
+jest rozwiązaniem, ilekroć $v$ nim jest. Stosujemy
+porównanie do pary $(u,v+c)$, gdzie
+$c=\|g-h\|_\infty$, a następnie zamieniamy rolami $u,v$.
+\end{proof}
+
+\section{Transformata Legendre'a i wzór Hopfa--Laxa}
+\begin{definicja}[Funkcja sprzężona Legendre'a]
+Niech $H\colon\R^d\to\R$ będzie funkcją wypukłą.
+Jej funkcję sprzężoną definiujemy wzorem
+$L(v)=\sup_{p\in\R^d}(p\cdot v-H(p))$.
+Funkcję $H$ nazywamy \emph{superliniową}, gdy
+$H(p)/|p|\to\infty$ przy $|p|\to\infty$.
+\end{definicja}
+
+\begin{lemat}[Dualność i kontrola prędkości minimalizatorów]
+\label{lem:pde23-legendre}
+Niech $H\in C^1(\R^d)$ będzie wypukła i superliniowa.
+Wtedy $L$ jest skończona, ciągła, wypukła i superliniowa,
+a dla każdego $p\in\R^d$ zachodzi
+\begin{equation}\label{eq:pde23-duality}
+ H(p)=\sup_{v\in\R^d}(p\cdot v-L(v)).
+\end{equation}
+Jeżeli $g$ jest globalnie $K$-lipschitzowska, to
+$y\mapsto g(y)+tL((x-y)/t)$ osiąga minimum, a każda
+jego minimalizująca wartość $v=(x-y)/t$ spełnia
+$L(v)-K|v|\le L(0)$. W szczególności prędkości
+minimalizatorów są ograniczone liczbą zależną tylko od
+$H$ i $K$.
+\end{lemat}
+\begin{proof}
+Ponieważ $H$ jest superliniowa, funkcja
+$p\mapsto p\cdot v-H(p)$ dąży do $-\infty$ dla
+$|p|\to\infty$, więc supremum definiujące $L(v)$
+jest skończone i osiągane. Jako supremum funkcji
+afinicznych $L$ jest wypukła i dolnie półciągła,
+a skończona funkcja wypukła na całej $\R^d$ jest ciągła.
+Dla dowolnego $R>0$ i $v\ne0$ wybieramy
+$p=R v/|v|$, zatem $L(v)\ge R|v|-\max_{|p|=R}H(p)$.
+Po podzieleniu przez $|v|$ i przejściu $|v|\to\infty$
+wnioskujemy o superliniowości $L$, ponieważ $R$ jest
+dowolne.
+
+Z definicji $L$ mamy $p\cdot v-L(v)\le H(p)$.
+Jeśli jednak $v=D H(p)$, wypukłość daje dla każdego $q$
+$H(q)\ge H(p)+v\cdot(q-p)$, stąd
+$L(v)=p\cdot v-H(p)$; powstaje równość w~\eqref{eq:pde23-duality}.
+
+Dla ustalonych $x,t>0$ i $y=x-tv$ warunek Lipschitza
+daje $g(x-tv)\ge g(x)-Kt|v|$. Ponieważ $L$ jest
+superliniowa, funkcja $g(x-tv)+tL(v)$ dąży do
+$+\infty$ przy $|v|\to\infty$; ciągłość zapewnia
+osiągnięcie minimum. Porównując je z próbą $v=0$,
+dostajemy
+$g(x-tv)+tL(v)\le g(x)+tL(0)$.
+Wykorzystanie nierówności Lipschitza daje ostatnią tezę.
+\end{proof}
+
+\begin{twierdzenie}[Wzór Hopfa--Laxa]
+\label{thm:pde23-hopflax}
+Niech $H\in C^1(\R^d)$ będzie wypukła i superliniowa,
+a $g\colon\R^d\to\R$ niech będzie funkcją ograniczoną
+i globalnie $K$-lipschitzowską. Dla $t>0$ zdefiniujmy
+\begin{equation}\label{eq:pde23-hopflax}
+ u(t,x)=\min_{y\in\R^d}\left\{
+ g(y)+tL\!\left(\frac{x-y}{t}\right)\right\},
+ \qquad u(0,x)=g(x).
+\end{equation}
+Wtedy $u$ jest ograniczona i globalnie Lipschitzowska
+na $[0,T]\times\R^d$ dla każdego $T>0$ oraz jest
+rozwiązaniem lepkościowym równania
+$u_t+H(\nabla u)=0$. Ponadto
+\begin{equation}\label{eq:pde23-dpp}
+ u(t,x)=\min_{z\in\R^d}
+ \left\{u(s,z)+(t-s)L\!\left(\frac{x-z}{t-s}\right)\right\}
+ \quad (0\le s<t).
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+\textbf{Krok 1: ograniczenie minimalizatorów i ciągłość.}
+Lemat~\ref{lem:pde23-legendre} daje osiąganie minimum
+oraz wspólne ograniczenie $|x-y|/t\le R$.
+Wybór dowolnego $v$ w równoważnej reprezentacji
+$u(t,x)=\min_v\{g(x-tv)+tL(v)\}$ daje
+$u(t,x)\le g(x)+tL(0)$, a nierówność Lipschitza
+$g(x-tv)\ge g(x)-Kt|v|$ daje
+$u(t,x)\ge g(x)+t\min_v(L(v)-K|v|)$.
+Wynika stąd $\|u(t)-g\|_\infty\le Ct$.
+Przy przesunięciu $x\mapsto x+h$ każda próba $v$
+zmienia składnik $g(x-tv)$ o co najwyżej $K|h|$;
+po wzięciu minimów otrzymujemy
+$|u(t,x+h)-u(t,x)|\le K|h|$.
+
+\textbf{Krok 2: zasada programowania dynamicznego.}
+Oznaczmy $a=t-s$, $b=s$ i użyjmy wypukłości $L$.
+Dla dowolnych $y,z\in\R^d$ mamy
+\[
+ aL\!\left(\frac{x-z}{a}\right)
+ +bL\!\left(\frac{z-y}{b}\right)
+ \ge (a+b)L\!\left(\frac{x-y}{a+b}\right).
+\]
+Minimalizacja kolejno po $y,z$ daje kierunek „$\ge$”
+w~\eqref{eq:pde23-dpp}. Kierunek przeciwny otrzymujemy
+przez wybór $z=y+\frac{s}{t}(x-y)$ na prostym odcinku
+łączącym $y$ z $x$, kiedy obie prędkości są równe
+$(x-y)/t$ i nierówność wypukłości staje się równością.
+Przypadek $s=0$ wynika bezpośrednio z definicji.
+
+Stosując wzór dynamiczny na przedziale długości $h>0$
+i argument kroku pierwszego do funkcji $u(s,\cdot)$,
+dostajemy $|u(s+h,x)-u(s,x)|\le Ch$ ze stałą
+zależną tylko od $K,H$. Razem z oszacowaniem
+przestrzennym dowodzi to globalnej ciągłości Lipschitza.
+
+\textbf{Krok 3: nierówność dla funkcji dotykającej z góry.}
+Niech $u-\varphi$ ma lokalne maksimum równe zero
+w $(t,x)$, $t>0$. Ustalmy dowolne $v\in\R^d$.
+Z~\eqref{eq:pde23-dpp} dla małych $h>0$ dostajemy
+$u(t,x)\le u(t-h,x-hv)+hL(v)$.
+Ponieważ $u(t-h,x-hv)\le\varphi(t-h,x-hv)$,
+mamy $\varphi(t,x)\le\varphi(t-h,x-hv)+hL(v)$.
+Po podzieleniu przez $h$ i przejściu do granicy
+$\varphi_t+v\cdot\nabla\varphi\le L(v)$.
+Warunek zachodzi dla każdego $v$; dzięki
+\eqref{eq:pde23-duality} otrzymujemy
+$\varphi_t+H(\nabla\varphi)\le0$.
+
+\textbf{Krok 4: nierówność dla funkcji dotykającej z dołu.}
+Niech $u-\varphi$ ma lokalne minimum równe zero
+w $(t,x)$. Wybieramy minimalizator $z_h=x-hv_h$
+w~\eqref{eq:pde23-dpp}. Wspólne oszacowanie Lipschitza
+funkcji $u(t-h,\cdot)$ i Lemat~\ref{lem:pde23-legendre}
+dają ograniczenie $|v_h|\le R$.
+Z minimalności i dotykania z dołu wynika
+$\varphi(t,x)\ge\varphi(t-h,x-hv_h)+hL(v_h)$.
+Taylor z resztą $o(h)$ jednostajną dla $|v_h|\le R$
+daje
+$\varphi_t+v_h\cdot\nabla\varphi\ge L(v_h)+o(1)$.
+Ale $L(v_h)-v_h\cdot\nabla\varphi\ge-H(\nabla\varphi)$,
+więc $\varphi_t+H(\nabla\varphi)\ge o(1)$.
+Przechodzimy do $h\downarrow0$.
+Obie nierówności dowodzą rozwiązania lepkościowego.
+\end{proof}
+
+\begin{uwaga}[O jednoznaczności na całej przestrzeni]
+Dla autonomicznego $H=H(p)$ powyższe rozwiązanie jest
+jedynym ograniczonym, globalnie Lipschitzowskim
+rozwiązaniem lepkościowym o danych $g$.
+Dowód porównania na $\R^d$ otrzymuje się z dowodu
+Twierdzenia~\ref{thm:pde23-comparison}, dodając do
+funkcji podwajanej zmiennej składnik
+$-\beta\sqrt{1+|x|^2}$, który zapewnia osiąganie
+maksimum. Dla funkcji Lipschitzowskich gradienty funkcji
+testowych w punktach styczności są jednostajnie
+ograniczone. Nierówność dla $H$ wynika więc z jego
+lokalnej lipschitzowskości w zmiennej pędowej, a dodatkowy
+błąd ma rozmiar $O(\beta)$. Najpierw przechodzimy
+$\eps,\alpha\downarrow0$, później $\beta\downarrow0$.
+Jest to ta sama zasada porównania, z dodatkową lokalizacją
+maksimum; nie korzysta z wypukłości $H$.
+\end{uwaga}
+
+
+\begin{wniosek}[Skończony obszar zależności we wzorze Hopfa--Laxa]
+\label{cor:pde23-hopflax-local}
+Niech $H$ spełnia założenia Twierdzenia~\ref{thm:pde23-hopflax},
+a $g,h\colon\R^d\to\R$ będą ograniczone i globalnie
+$K$-lipschitzowskie. Niech $u_g,u_h$ oznaczają funkcje
+zdefiniowane przez wzór Hopfa--Laxa odpowiednio dla $g$ i $h$.
+Istnieje $R_{H,K}<\infty$, zależne tylko od $H,K$, takie, że
+jeśli $g=h$ na domkniętej kuli $\overline B_R(x_0)$, to
+\[
+ u_g(t,x)=u_h(t,x)
+ \quad\text{dla }t>0,\qquad |x-x_0|+tR_{H,K}\le R.
+\]
+Jeżeli $R_{H,K}=0$, nierówność interpretujemy bez
+ograniczenia czasu. Analogiczna własność zachodzi w chwili $t=0$.
+\end{wniosek}
+\begin{proof}
+Z Lematu~\ref{lem:pde23-legendre} wszyscy minimalizatorzy
+dla obu danych są postaci $y=x-tv$, gdzie
+$L(v)-K|v|\le L(0)$. Ponieważ $L$ jest superliniowa,
+ten podpoziom jest zwarty; wybieramy $R_{H,K}$ nie mniejsze
+niż maksimum $|v|$ na nim. Gdy
+$|x-x_0|+tR_{H,K}\le R$, każdy minimalizator dla $g$
+i każdy minimalizator dla $h$ leży w $\overline B_R(x_0)$.
+Na tej kuli obie funkcje minimalizowane są identyczne.
+Minimum globalne każdej jest osiągane wewnątrz kuli,
+więc obie wartości minimalne są równe.
+\end{proof}
+
+
+\section{Rozwiązanie na przeciętych charakterystykach i półwklęsłość}
+\begin{twierdzenie}[Półwklęsłość w przypadku kwadratowym]
+\label{thm:pde23-semiconcave}
+Niech $H(p)=|p|^2/2$, $g$ będzie ograniczona i
+Lipschitzowska, a $u$ będzie dane przez
+\eqref{eq:pde23-hopflax}. Dla każdego $t>0$
+funkcja $x\mapsto u(t,x)-|x|^2/(2t)$ jest wklęsła.
+W szczególności $u(t,\cdot)$ jest lokalnie Lipschitzowska
+i dwukrotnie różniczkowalna prawie wszędzie w sensie
+Alexandrowa (ostatni fakt jest klasycznym twierdzeniem
+o funkcjach półwklęsłych, którego tutaj nie dowodzimy).
+\end{twierdzenie}
+\begin{proof}
+Ponieważ $L(v)=|v|^2/2$, mamy
+\[
+ u(t,x)-\frac{|x|^2}{2t}
+ =\inf_{y\in\R^d}\left\{
+ g(y)+\frac{|y|^2}{2t}-\frac{x\cdot y}{t}\right\}.
+\]
+Dla ustalonego $y$ prawa strona pod nawiasem jest
+funkcją afiniczną względem $x$. Infimum funkcji
+afinicznych jest funkcją wklęsłą. Lokalna
+lipschitzowskość wynika tu również bezpośrednio
+z Twierdzenia~\ref{thm:pde23-hopflax}.
+\end{proof}
+
+\begin{przyklad}[Utrata różniczkowalności i wybór lepkościowy]
+\label{ex:pde23-shock}
+Dla $g(x)=\cos x$ i $H(p)=p^2/2$ otrzymujemy
+$u(t,x)=\min_y\{\cos y+(x-y)^2/(2t)\}$.
+Jeśli $0<t<1$, mapa charakterystyk
+$y\mapsto y-t\sin y$ jest ściśle rosnąca.
+Gdy $t>1$ i $x=0$, funkcja minimalizowana jest parzysta;
+punkt $y=0$ jest lokalnym maksimum, ponieważ druga pochodna
+w $0$ wynosi $-1+1/t<0$. Dla $t$ dostatecznie bliskiego $1$
+ma ona dwa symetryczne globalne minima $\pm a(t)$,
+$a(t)>0$, spełniające $a(t)=t\sin a(t)$.
+Dla $x$ dodatnich bliskich zera minimalizatorem jest
+gałąź $+a(t)$, a dla ujemnych gałąź $-a(t)$.
+Z twierdzenia o różniczkowaniu wartości minimalnej
+(lub bezpośrednio z różnic ilorazowych) pochodne jednostronne
+$u_x(t,0+)$ i $u_x(t,0-)$ wynoszą odpowiednio
+$-a(t)/t$ i $a(t)/t$. Funkcja jest więc ciągła, lecz
+nie jest różniczkowalna w $x=0$. Rozwiązanie lepkościowe
+istnieje mimo przecięcia charakterystyk i jest jednoznaczne
+w klasie ograniczonych rozwiązań Lipschitzowskich.
+\end{przyklad}
+
+\section{Związek z równaniem Burgersa i warunkiem entropii}
+Jeżeli $u$ jest gładka i spełnia
+$u_t+(u_x)^2/2=0$, to $w=u_x$ spełnia
+$w_t+(w^2/2)_x=0$. Po powstaniu osobliwości
+różniczkowanie można interpretować dystrybucyjnie.
+Pochodna rozwiązania lepkościowego odpowiada
+rozwiązaniu entropijnemu równania Burgersa dla
+odpowiednich danych Lipschitzowskich.
+Warunek entropii jest więc odpowiednikiem wyboru
+lepkościowego na poziomie prawa zachowania.
+Nie wyprowadzamy tutaj pełnego twierdzenia Krużkowa;
+zostanie ono udowodnione w rozdziale o prawach zachowania.
+
+\begin{stwierdzenie}[Różniczkowanie lepkiego równania Hamiltona--Jacobiego]
+\label{prop:pde-v43-hj-viscous}
+Niech $f\in C^2(\R)$, $\varepsilon>0$ oraz
+$U\in C^{1,3}((0,T)\times\R;\R)$ spełnia
+$U_t+f(U_x)=\varepsilon U_{xx}$ punktowo.
+Wówczas $w=U_x\in C^{1,2}$ spełnia
+$w_t+\partial_x f(w)=\varepsilon w_{xx}$.
+Ponadto dla każdej wypukłej $\eta\in C^2(\R)$ i
+strumienia $q$ określonego przez $q'=\eta' f'$ zachodzi
+\[
+ \partial_t\eta(w)+\partial_x q(w)
+ =\varepsilon\partial_{xx}\eta(w)
+ -\varepsilon\eta''(w)|w_x|^2
+ \le\varepsilon\partial_{xx}\eta(w).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Różniczkujemy równanie dla $U$ względem $x$:
+$w_t+f'(w)w_x=\varepsilon w_{xx}$.
+Po pomnożeniu przez $\eta'(w)$ otrzymujemy
+$\partial_t\eta(w)+\partial_xq(w)
+=\varepsilon\eta'(w)w_{xx}$.
+Reguła łańcuchowa daje
+$\eta'(w)w_{xx}=\partial_{xx}\eta(w)-\eta''(w)|w_x|^2$.
+Ostatni wyraz jest niedodatni przez wypukłość $\eta$.
+\end{proof}
+
+\begin{uwaga}[Różniczkowanie nie jest jeszcze przejściem do granicy]
+Powyższa tożsamość obowiązuje dla gładkich rozwiązań
+\emph{z tą samą lepkością} $\varepsilon$ i łączy
+rachunek w rozdziałach~\ref{chap:pde23} i~\ref{chap:pde24}.
+Aby stwierdzić, że $\partial_xU$ jest rozwiązaniem
+entropijnym dla granicznego $U$, trzeba ponadto
+uzasadnić zbieżność pochodnych przy
+$\varepsilon\downarrow0$ i zgodność danych początkowych;
+sama zbieżność jednostajna $U^\varepsilon\to U$
+nie zapewnia silnej zbieżności $U_x^\varepsilon$.
+\end{uwaga}
+
+
+\begin{uwaga}[Zakres wyników]
+Twierdzenie o porównaniu udowodniliśmy na torusie
+w założeniach~\eqref{eq:pde23-HxLip}; wzór Hopfa--Laxa
+udowodniliśmy dla autonomicznego hamiltonianu wypukłego
+i superliniowego. Ogólna teoria dla hamiltonianów
+niewypukłych, zależnych od $x$ i sterowania optymalnego
+wymaga osobnych hipotez i metod. Samo stosowanie
+wzoru~\eqref{eq:pde23-hopflax} poza tymi założeniami
+nie jest uzasadnione.
+\end{uwaga}
+
+\section{Wskazówki do dalszej lektury rozdziału}
+W następnym rozdziale przejdziemy od potencjału $u$
+do skalarnego prawa zachowania dla $w=u_x$, gdzie
+pojawią się rozwiązania słabe, fale uderzeniowe,
+warunki Rankine'a--Hugoniota i selekcja entropijna.
+Charakterystyki i geometria ich przecinania
+pozostaną podstawowym źródłem przykładów.
+

@@ -1,0 +1,599 @@
+\chapter[Równania półliniowe i eksplozja]{Równania półliniowe: lokalne istnienie, przedłużanie, eksplozja i energia}
+\label{chap:pde25}
+
+\section{Model, pojęcia i konieczność doboru przestrzeni}
+Równanie jest \emph{półliniowe}, gdy najwyższe pochodne niewiadomej
+występują liniowo, a ich współczynniki nie zależą od niewiadomej.
+Przykładami są $u_t-\Delta u=f(u)$ oraz
+$u_{tt}-\Delta u=f(u)$; natomiast $u_t-\diver(a(u)\nabla u)=0$
+jest na ogół równaniem quasi-liniowym.
+Dla zwięzłości pełny dowód lokalnego istnienia przeprowadzimy
+najpierw na płaskim torusie $\T^d=\R^d/(2\pi\mathbb Z)^d$.
+Przez $C(\T^d)$ rozumiemy rzeczywistą przestrzeń Banacha funkcji
+ciągłych z normą supremum. W przeciwieństwie do znormalizowanej
+normy $L^2(\T)$ z rozdziału~\ref{chap:pde-fourier},
+tu używamy nieznormalizowanej miary objętości. Miara $\lambda_d$ na torusie jest
+miarą Lebesgue'a przeniesioną z kostki $[0,2\pi)^d$;
+$|\T^d|=(2\pi)^d$. Na torusie nie ma warunków brzegowych,
+więc nieliniowość i mechanizmy rozwoju osobliwości nie są zasłaniane
+kwestią regularności brzegu.
+
+\begin{definicja}[Rozwiązanie łagodne]
+\label{def:pde25-mild}
+Niech $u_0\in C(\T^d)$, $f\in C^1(\R)$ i $T>0$.
+Funkcję $u\in C([0,T];C(\T^d))$ nazywamy
+\emph{rozwiązaniem łagodnym} równania $u_t-\Delta u=f(u)$
+z warunkiem $u(0)=u_0$, jeżeli
+\begin{equation}\label{eq:pde25-duhamel}
+ u(t)=S(t)u_0+\int_0^tS(t-s)f(u(s))\,\mathrm ds,
+ \qquad 0\le t\le T,
+\end{equation}
+gdzie $S(t)=e^{t\Delta}$ jest półgrupą cieplną na $\T^d$,
+a $f(u(s))$ oznacza złożenie funkcji $f$ z $u(s,\cdot)$.
+Całka w~\eqref{eq:pde25-duhamel} jest całką Bochnera
+w przestrzeni Banacha $C(\T^d)$.
+\end{definicja}
+
+\begin{lemat}[Półgrupa ciepła na torusie]
+\label{lem:pde25-heat}
+Dla każdego $d\ge1$ operatory $S(t)$, $t\ge0$, tworzą silnie
+ciągłą półgrupę na $C(\T^d)$. Są dodatnie, zachowują stałe
+i spełniają $\|S(t)v\|_\infty\le\|v\|_\infty$.
+Ponadto $\int_{\T^d}S(t)v\,\mathrm d\lambda_d
+=\int_{\T^d}v\,\mathrm d\lambda_d$.
+\end{lemat}
+\begin{proof}
+Dla $t>0$ periodyzujemy jądro Gaussa:
+$K_t(z)=\sum_{k\in\mathbb Z^d}(4\pi t)^{-d/2}
+\exp(-|z+2\pi k|^2/(4t))$.
+Szereg wraz z dowolną liczbą pochodnych zbiega jednostajnie
+dla ustalonego $t>0$. Mamy $K_t\ge0$ i
+$\int_{\T^d}K_t(z)\,\mathrm d\lambda_d(z)=1$;
+stąd dodatniość, kontrakcja i zachowanie stałych dla
+$S(t)v=K_t*v$. Splot jąder Gaussa na $\R^d$ oraz
+periodyzacja dają $S(t)S(s)=S(t+s)$. Dla $v$ ciągłej
+i jednostajnie ciągłej na torusie rozdzielamy całkę splotową
+na $|z|<\delta$ i $|z|\ge\delta$ (odległość liczona na torusie).
+Pierwszą część oszacowujemy przez moduł ciągłości $v$,
+a druga dąży do zera, ponieważ masy jąder poza każdym
+ustalonym otoczeniem zera zanikają przy $t\downarrow0$.
+Zatem $\|S(t)v-v\|_\infty\to0$. Tożsamość całek wynika
+z twierdzenia Fubiniego i jednostkowej masy jądra.
+\end{proof}
+
+\begin{uwaga}[Dlaczego nie zaczynamy od $L^2$?]
+Dla wielomianowej nieliniowości $f(u)=u^3$ operator
+Nemyckiego $u\mapsto f(u)$ nie jest lokalnie Lipschitzowski
+z $L^2(\T^d)$ do $L^2(\T^d)$: funkcje o coraz wyższych
+wąskich pikach mogą mieć małą normę $L^2$, a ich sześciany
+ogromną normę $L^2$. Twierdzenie Picarda w tej przestrzeni
+nie byłoby więc uzasadnione. Przestrzeń $C(\T^d)$ pozwala
+przeprowadzić argument bez założeń o wykładnikach Sobolewa.
+\end{uwaga}
+
+\section{Twierdzenie Picarda i kryterium przedłużania}
+\begin{twierdzenie}[Lokalne istnienie i jednoznaczność]
+\label{thm:pde25-local}
+Niech $d\ge1$, $u_0\in C(\T^d)$ i $f\in C^1(\R)$.
+Istnieje $T_0>0$ i dokładnie jedno rozwiązanie łagodne
+$u\in C([0,T_0];C(\T^d))$ równania~\eqref{eq:pde25-duhamel}.
+Rozwiązanie posiada jednoznaczne maksymalne przedłużenie
+na przedział $[0,T_{\max})$, gdzie $T_{\max}\in(0,\infty]$.
+Jeżeli $T_{\max}<\infty$, to
+\begin{equation}\label{eq:pde25-blowalt}
+ \limsup_{t\uparrow T_{\max}}\|u(t)\|_\infty=\infty.
+\end{equation}
+W rzeczywistości w takim przypadku norma dąży do
+nieskończoności w sensie granicy.
+\end{twierdzenie}
+\begin{proof}
+\textbf{Krok 1: wybór kuli.} Ustalmy $R>\|u_0\|_\infty+1$.
+Na $[-R,R]$ przyjmijmy
+$L_R=\max_{|z|\le R}|f'(z)|$ i
+$M_R=\max_{|z|\le R}|f(z)|$.
+W zupełnej przestrzeni $Z_T=C([0,T];C(\T^d))$
+rozważmy domkniętą kulę
+$B_R=\{v:\|v\|_{Z_T}\le R\}$.
+Definiujemy $\Phi(v)$ jako prawą stronę~\eqref{eq:pde25-duhamel}.
+Lemat~\ref{lem:pde25-heat} daje
+$\|\Phi(v)(t)\|_\infty\le\|u_0\|_\infty+TM_R$.
+Wybierając $T$ tak, by $TM_R\le R-\|u_0\|_\infty$,
+otrzymujemy $\Phi(B_R)\subseteq B_R$.
+
+\textbf{Krok 2: kontrakcja.} Twierdzenie o wartości średniej
+i kontrakcja półgrupy implikują
+$\|\Phi(v)-\Phi(w)\|_{Z_T}\le TL_R\|v-w\|_{Z_T}$.
+Jeśli $TL_R<1$, zasada Banacha daje jedyny punkt stały
+w $B_R$. Jednoznaczność nie zależy od wybranej kuli:
+dla dowolnych dwóch rozwiązań na wspólnym przedziale
+ich zakresy są ograniczone przez pewne $R$, a nierówność
+$\|u(t)-v(t)\|_\infty\le
+L_R\int_0^t\|u(s)-v(s)\|_\infty\,\mathrm ds$
+i lemat Gronwalla wymuszają równość.
+
+\textbf{Krok 3: sklejanie.} Półgrupowość pozwala przepisać
+wzór Duhamela od dowolnego czasu $t_0$:
+$u(t_0+t)=S(t)u(t_0)+\int_0^tS(t-s)f(u(t_0+s))\,\mathrm ds$.
+To daje przedłużanie i maksymalny czas istnienia.
+
+\textbf{Krok 4: alternatywa eksplozji.} Jeśli $T_{\max}<\infty$
+i $\|u(t)\|_\infty\le R$ dla wszystkich $t$ bliskich
+$T_{\max}$, to w konstrukcji z kroku pierwszego można
+zastosować stale tę samą większą kulę oraz ten sam czas
+lokalnego istnienia $\tau_R>0$, niezależny od chwili restartu.
+Wybierając $t_0\in(T_{\max}-\tau_R/2,T_{\max})$
+przedłużamy rozwiązanie poza $T_{\max}$, sprzeczność.
+Ten sam argument pokazuje, że nie może istnieć ciąg
+$t_n\uparrow T_{\max}$ z $\|u(t_n)\|_\infty\le R$,
+ponieważ restart w $t_n$ daje przedłużenie o stały czas.
+Zatem norma rzeczywiście dąży do nieskończoności.
+\end{proof}
+
+\begin{twierdzenie}[Stabilność i ciągła zależność od danych]
+\label{thm:pde25-stability}
+Niech $u,v$ będą rozwiązaniami łagodnymi na $[0,T]$,
+z początkami $u_0,v_0\in C(\T^d)$, dla tej samej
+$f\in C^1(\R)$. Jeśli
+$\max\{\|u\|_{Z_T},\|v\|_{Z_T}\}\le R$, to
+$\|u(t)-v(t)\|_\infty\le e^{L_Rt}\|u_0-v_0\|_\infty$
+dla każdego $0\le t\le T$.
+\end{twierdzenie}
+\begin{proof}
+Odejmujemy wzory Duhamela, używamy oszacowania
+$|f(a)-f(b)|\le L_R|a-b|$ dla $|a|,|b|\le R$,
+a następnie lematu Gronwalla w postaci całkowej.
+\end{proof}
+
+\section{Zasada porównania, dodatniość i istnienie globalne}
+\begin{twierdzenie}[Porównanie rozwiązań półliniowych]
+\label{thm:pde25-comparison}
+Niech $f\in C^1(\R)$, $T>0$, a $u,v\in Z_T$
+będą rozwiązaniami łagodnymi z danymi $u_0,v_0$.
+Jeżeli $u_0(x)\le v_0(x)$ dla każdego $x\in\T^d$,
+to $u(t,x)\le v(t,x)$ dla wszystkich
+$(t,x)\in[0,T]\times\T^d$.
+Nie zakładamy monotoniczności $f$.
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy $w=v-u$ i
+$a(t,x)=\int_0^1f'(u+\theta(v-u))\,\mathrm d\theta$.
+Wtedy $f(v)-f(u)=aw$ i $|a|\le L$ dla pewnej
+stałej $L$ zależnej od zakresów rozwiązań.
+Dla $z(t,x)=e^{Lt}w(t,x)$ wzór Duhamela ma postać
+\[
+ z(t)=S(t)w(0)+\int_0^tS(t-s)((a(s)+L)z(s))\,\mathrm ds.
+\]
+Tu $a+L\ge0$. Kolejne iteracje tego liniowego równania
+Volterry, zaczynając od $z_0(t)=S(t)w(0)\ge0$, pozostają
+nieujemne, gdyż półgrupa jest dodatnia. Iteracje zbiegają
+jednostajnie na dostatecznie krótkim przedziale przez
+kontrakcję ($T\|a+L\|_\infty<1$). Na pozostałych
+częściach $[0,T]$ powtarzamy ten sam argument.
+Otrzymujemy $w\ge0$.
+\end{proof}
+
+\begin{wniosek}[Globalność przy wzroście liniowym]
+\label{cor:pde25-global}
+Jeśli $f\in C^1(\R)$ i dla pewnych $A,B\ge0$ zachodzi
+$|f(s)|\le A+B|s|$ dla każdego $s\in\R$, to każde
+rozwiązanie łagodne na $\T^d$ istnieje dla wszystkich
+$t\ge0$. Ponadto
+\[
+ \|u(t)\|_\infty\le
+ e^{Bt}\|u_0\|_\infty+\frac AB(e^{Bt}-1)
+\]
+dla $B>0$; przy $B=0$ ostatni składnik należy zastąpić
+przez $At$.
+\end{wniosek}
+\begin{proof}
+Z kontrakcji półgrupy i wzoru Duhamela wynika
+$\|u(t)\|_\infty\le\|u_0\|_\infty+
+\int_0^t(A+B\|u(s)\|_\infty)\,\mathrm ds$.
+Gronwall daje żądane ograniczenie na każdym skończonym
+przedziale. Alternatywa~\eqref{eq:pde25-blowalt}
+wyklucza skończony czas maksymalnego istnienia.
+\end{proof}
+
+\begin{przyklad}[Równanie logistyczne]
+\label{ex:pde25-logistic}
+Dla $u_t=\Delta u+u(1-u)$ i
+$0\le u_0\in C(\T^d)$ otrzymujemy
+$0\le u(t,x)\le M=\max\{1,\|u_0\|_\infty\}$.
+Funkcja stała $0$ jest rozwiązaniem, a $M$ jest
+supersolucją, bo $M(1-M)\le0$. Porównanie z funkcją
+stałą $M$ można uzasadnić bez dodatkowej teorii
+supersolucji: niech $m(t)$ rozwiązuje
+$m'=m(1-m)$, $m(0)=M$; wtedy $m(t)\le M$.
+Twierdzenie~\ref{thm:pde25-comparison} zastosowane
+do rozwiązań $u$ i $m$ daje ograniczenie i globalność.
+Choć $f(s)=s(1-s)$ rośnie kwadratowo w module,
+nie występuje eksplozja dla takich danych nieujemnych.
+\end{przyklad}
+
+
+\begin{twierdzenie}[Oszacowanie przez równanie skalarne; warunek Osgooda]
+\label{thm:pde25-osgood}
+Niech $d\ge1$, $u_0\in C(\T^d)$ i $f\in C^1(\R)$.
+Załóżmy, że funkcja $h:[0,\infty)\to(0,\infty)$ jest
+niemalejąca, lokalnie lipschitzowska i spełnia
+$|f(s)|\le h(|s|)$ dla wszystkich $s\in\R$.
+Niech $M=\|u_0\|_\infty$, a $y:[0,\tau_M)\to[0,\infty)$
+będzie maksymalnym rozwiązaniem $y'=h(y)$, $y(0)=M$.
+Wówczas maksymalne rozwiązanie łagodne równania
+$u_t=\Delta u+f(u)$ spełnia
+$T_{\max}\ge\tau_M$ oraz
+$\|u(t)\|_\infty\le y(t)$ dla $0\le t<\tau_M$.
+Ponadto
+\begin{equation}\label{eq:pde25-osgood}
+ \tau_M=\int_M^\infty\frac{\mathrm ds}{h(s)},
+\end{equation}
+gdzie dopuszczamy wartość $+\infty$.
+W szczególności rozbieżność całki w~\eqref{eq:pde25-osgood}
+gwarantuje globalne istnienie rozwiązania $u$.
+\end{twierdzenie}
+\begin{proof}
+Ponieważ $h>0$ i jest lokalnie lipschitzowska,
+rozwiązanie $y$ jest ściśle rosnące. Rozdzielenie zmiennych
+daje $t=\int_M^{y(t)}h(s)^{-1}\,\mathrm ds$; standardowe
+kryterium przedłużania ODE dowodzi~\eqref{eq:pde25-osgood}.
+
+Ustalmy $T<\min\{T_{\max},\tau_M\}$. Funkcje stałe
+w przestrzeni $\overline y(t,x)=y(t)$ oraz
+$\underline y(t,x)=-y(t)$ spełniają odpowiednio
+$\overline y_t-\Delta\overline y-f(\overline y)\ge0$
+i $\underline y_t-\Delta\underline y-f(\underline y)\le0$.
+Dla uzasadnienia porównania w klasie łagodnej zauważmy,
+że $w=\overline y-u$ spełnia wzór Duhamela z nieujemnym
+danym początkowym $M-u_0$ oraz dodatkowym nieujemnym
+źródłem $h(y)-f(y)$. Pozostała część źródła jest równa
+$a(t,x)w$, gdzie
+$a=\int_0^1f'(u+\theta(\overline y-u))\,\mathrm d\theta$
+jest ograniczona. Mnożnik $e^{Lt}$, $L\ge\|a\|_\infty$,
+przekształca to równanie w równanie Volterry z dodatnim
+jądrem i nieujemnym współczynnikiem. Iteracja jak w dowodzie
+twierdzenia~\ref{thm:pde25-comparison} daje $w\ge0$.
+Analogicznie $u-\underline y\ge0$ (dodatkowe źródło wynosi
+$f(-y)+h(y)\ge0$). Zatem $|u(t,x)|\le y(t)$.
+
+Gdyby $T_{\max}<\tau_M$, funkcja $y$ byłaby ograniczona
+na $[0,T_{\max}]$. Uzyskane oszacowanie przeczyłoby
+alternatywie eksplozji z twierdzenia~\ref{thm:pde25-local}.
+Wobec tego $T_{\max}\ge\tau_M$.
+\end{proof}
+
+\begin{przyklad}[Wzrost szybszy niż liniowy bez eksplozji z tego kryterium]
+Dla $h(s)=(1+s)\log(e+s)$ całka
+$\int_M^\infty h(s)^{-1}\,\mathrm ds$ jest rozbieżna.
+Każda nieliniowość $f\in C^1(\R)$ spełniająca
+$|f(s)|\le(1+|s|)\log(e+|s|)$ daje więc globalne
+rozwiązania na torusie dla dowolnych danych ciągłych.
+Pokazuje to, że warunek wzrostu liniowego z
+wniosku~\ref{cor:pde25-global} nie jest konieczny.
+\end{przyklad}
+
+
+\section{Eksplozja w skończonym czasie: zasada średniej}
+\begin{twierdzenie}[Wybuch dla dodatniego źródła na torusie]
+\label{thm:pde25-blowup}
+Niech $d\ge1$, $p>1$ oraz
+$u_0\in C(\T^d)$, $u_0\ge0$, $u_0\not\equiv0$.
+Niech $u$ będzie maksymalnym rozwiązaniem łagodnym
+równania $u_t=\Delta u+(u_+)^p$, gdzie $u_+=\max\{u,0\}$.
+Oznaczmy $m_0=|\T^d|^{-1}\int_{\T^d}u_0(x)
+\,\mathrm d\lambda_d(x)>0$. Wówczas $u\ge0$ i
+\begin{equation}\label{eq:pde25-mass-blowup}
+ T_{\max}\le\frac{m_0^{1-p}}{p-1}<\infty.
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Funkcja $s\mapsto(s_+)^p$ należy do $C^1(\R)$,
+więc twierdzenie lokalne obowiązuje. Porównanie z
+rozwiązaniem zerowym daje $u\ge0$. Z zachowania masy
+przez półgrupę i~\eqref{eq:pde25-duhamel} wynika
+\[
+ m(t)=m_0+\int_0^t
+ \frac1{|\T^d|}\int_{\T^d}u(s,x)^p\,
+ \mathrm d\lambda_d(x)\,\mathrm ds.
+\]
+Funkcja $m$ jest klasy $C^1$ i, na mocy nierówności
+Jensena dla wypukłej funkcji $s\mapsto s^p$ na
+$[0,\infty)$, spełnia $m'(t)\ge m(t)^p$.
+Ponieważ $m(t)>0$, możemy podzielić przez $m(t)^p$:
+$\frac{\mathrm d}{\mathrm dt}m(t)^{1-p}
+=(1-p)m(t)^{-p}m'(t)\le-(p-1)$.
+Stąd $m(t)^{1-p}\le m_0^{1-p}-(p-1)t$.
+Lewa strona jest dodatnia na całym przedziale istnienia,
+co wymusza~\eqref{eq:pde25-mass-blowup}.
+\end{proof}
+
+\begin{uwaga}[Źródło eksplozji]
+Wzrost normy wynika tu z nierówności różniczkowej dla
+średniej, a nie z nieciągłości współczynników lub
+braku regularności danych. Co więcej, nawet niewielkie,
+niezerowe dane nieujemne prowadzą do eksplozji na torusie.
+To twierdzenie nie przenosi się bez zmian na $\R^d$,
+gdzie rozpraszanie masy może zapobiegać wybuchowi.
+Wymagane są tam inne argumenty i krytyczne wykładniki.
+\end{uwaga}
+
+\begin{twierdzenie}[Wybuch dla dużych danych Dirichleta]
+\label{thm:pde25-kaplan}
+Niech $\Omega\subset\R^d$ będzie ograniczonym obszarem
+klasy $C^2$, $p>1$ i $u$ nieujemnym rozwiązaniem klasycznym
+na $[0,T_{\max})\times\overline\Omega$ zagadnienia
+$u_t-\Delta u=u^p$, $u|_{\partial\Omega}=0$.
+Niech $\lambda_1>0$ będzie pierwszą wartością własną
+$-\Delta$ z warunkiem Dirichleta, a $\phi_1>0$
+odpowiadającą jej funkcją własną,
+$\int_\Omega\phi_1\,\mathrm d\lambda_d=1$.
+Jeśli
+$y_0=\int_\Omega u_0(x)\phi_1(x)\,\mathrm d\lambda_d(x)
+>\lambda_1^{1/(p-1)}$,
+to $T_{\max}<\infty$ i
+$\|u(t)\|_\infty\to\infty$ dla $t\uparrow T_{\max}$,
+o ile rozwiązanie należy do klasy, dla której obowiązuje
+lokalne przedłużanie po oszacowaniu supremum.
+\end{twierdzenie}
+\begin{proof}
+Dla $y(t)=\int_\Omega u(t,x)\phi_1(x)
+\,\mathrm d\lambda_d(x)$ całkowanie przez części,
+warunki Dirichleta i równanie na $\phi_1$ dają
+$y'=-\lambda_1y+\int_\Omega u^p\phi_1\,
+\mathrm d\lambda_d$.
+Miara $\phi_1\,\mathrm d\lambda_d$ ma masę $1$,
+więc Jensen zapewnia $y'\ge-\lambda_1y+y^p$.
+Dla $y\ge y_0$ prawa strona jest dodatnia; stąd $y$
+rośnie. Ustalmy $K>\max\{y_0,(2\lambda_1)^{1/(p-1)}\}$.
+Dopóki $y\in[y_0,K]$, pochodna jest ograniczona
+od dołu przez dodatnią stałą
+$\min_{s\in[y_0,K]}(s^p-\lambda_1s)$,
+a zatem $y$ osiąga $K$ w skończonym czasie.
+Później $y'\ge\frac12 y^p$ i argument z poprzedniego
+twierdzenia daje wybuch w skończonym czasie.
+Ponieważ $0\le y(t)\le\|u(t)\|_\infty$,
+nie może istnieć globalne rozwiązanie ograniczone.
+\end{proof}
+
+\section{Funkcjonał energii i równanie Allena--Cahna}
+\begin{twierdzenie}[Dyssypacja energii]
+\label{thm:pde25-energy}
+Niech $V\in C^2(\R)$ i niech
+$u\in C^1([0,T];C^1(\T^d))\cap C([0,T];C^2(\T^d))$ będzie rzeczywistym
+rozwiązaniem $u_t=\Delta u-V'(u)$.
+Definiujemy
+\[
+ E(u)=\int_{\T^d}\left(
+ \frac12|\nabla u(x)|^2+V(u(x))\right)
+ \,\mathrm d\lambda_d(x).
+\]
+Wtedy $t\mapsto E(u(t))$ jest różniczkowalna i
+\begin{equation}\label{eq:pde25-energy}
+ \frac{\mathrm d}{\mathrm dt}E(u(t))
+ =-\int_{\T^d}|u_t(t,x)|^2\,\mathrm d\lambda_d(x)\le0.
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Przy przyjętej regularności wolno różniczkować gradient w czasie i pod znakiem całki. Periodyczność i
+całkowanie przez części dają
+$\frac{\mathrm d}{\mathrm dt}E(u(t))
+=\int_{\T^d}(-\Delta u+V'(u))u_t
+\,\mathrm d\lambda_d$.
+Z równania mamy $-\Delta u+V'(u)=-u_t$,
+więc otrzymujemy~\eqref{eq:pde25-energy}.
+\end{proof}
+
+\begin{przyklad}[Równanie Allena--Cahna]
+Dla $V(s)=\frac14(s^2-1)^2$ równanie
+$u_t=\Delta u+u-u^3$ ma stabilne, stałe stany $u\equiv\pm1$
+i niestabilny stan $u\equiv0$ w sensie liniaryzacji
+jednorodnych perturbacji. Porównanie z rozwiązaniami
+stałymi $\pm M$, gdzie $M\ge\max\{1,\|u_0\|_\infty\}$,
+pokazuje globalne istnienie przy danych ciągłych.
+Energia maleje zgodnie z~\eqref{eq:pde25-energy};
+sama monotoniczność energii nie oznacza jednak,
+że rozwiązanie musi zbiegać do konkretnego stanu
+stałego bez dalszych argumentów zwartości.
+\end{przyklad}
+
+\section{Półliniowe równanie falowe w jednym wymiarze}
+Dotychczas wykorzystywaliśmy wygładzającą półgrupę ciepła.
+Dla równania falowego nieliniowość nie jest wygładzana:
+wymagana jest przestrzeń, w której operator Nemyckiego
+jest lokalnie Lipschitzowski. Pracujemy na $\T^1$.
+Niech $A=1-\partial_x^2$ w przestrzeni Hilberta
+$L^2(\T^1)$, a
+$Y=H^1(\T^1)\times L^2(\T^1)$ z normą
+$\|(u,v)\|_Y^2=\|A^{1/2}u\|_2^2+\|v\|_2^2$.
+
+\begin{twierdzenie}[Lokalne istnienie dla równania falowego]
+\label{thm:pde25-wave}
+Niech $g\in C^1(\R)$, $(u_0,u_1)\in Y$
+i $T>0$ będzie wystarczająco mały, zależnie od normy
+danych i $g$. Wtedy zagadnienie
+\[
+ u_{tt}-u_{xx}+u=g(u),\quad
+ u(0)=u_0,\quad u_t(0)=u_1
+\]
+ma dokładnie jedno rozwiązanie łagodne
+$(u,u_t)\in C([0,T];Y)$. Rozwiązanie zależy
+lokalnie Lipschitzowsko od danych w normie $Y$.
+\end{twierdzenie}
+\begin{proof}
+\textbf{Krok 1: grupa liniowa.} W bazie Fouriera operator
+$A$ ma wartości własne $1+k^2$, $k\in\mathbb Z$.
+Definiujemy $C(t)=\cos(tA^{1/2})$ i
+$D(t)=A^{-1/2}\sin(tA^{1/2})$ przez mnożniki Fouriera.
+Równanie liniowe ma postać
+$u(t)=C(t)u_0+D(t)u_1$,
+$u_t(t)=-A^{1/2}\sin(tA^{1/2})u_0+C(t)u_1$.
+Z tożsamości $\cos^2+\sin^2=1$ wynika, że operator
+przejścia $U(t)$ jest izometrią na $Y$.
+
+\textbf{Krok 2: lokalna lipschitzowskość.} Wymiar jeden
+zapewnia zanurzenie $H^1(\T^1)\hookrightarrow C(\T^1)$.
+Jeśli $\|v\|_{H^1},\|w\|_{H^1}\le R$, to
+$\|g(v)-g(w)\|_2\le L_{CR}\|v-w\|_2
+\le L_{CR}\|v-w\|_{H^1}$, gdzie
+$L_{CR}=\max_{|s|\le CR}|g'(s)|$.
+
+\textbf{Krok 3: punkt stały.} Dla $z=(u,v)$ definiujemy
+\[
+ \Psi(z)(t)=U(t)(u_0,u_1)
+ +\int_0^tU(t-s)(0,g(u(s)))\,\mathrm ds.
+\]
+Na kuli $\|z\|_{C([0,T];Y)}\le R$
+operator $\Psi$ jest odwzorowaniem w siebie, gdy
+$T$ jest dość małe, ponieważ
+$\|U(t-s)(0,h)\|_Y=\|h\|_2$.
+Ponadto $\|\Psi(z)-\Psi(w)\|_{C Y}
+\le TL_{CR}\|z-w\|_{C Y}$.
+Po wybraniu $TL_{CR}<1$ zasada Banacha daje punkt stały.
+Wzór Duhamela identyfikuje drugą składową z pochodną
+czasową pierwszej w $L^2$. Różnicę dwóch rozwiązań
+szacujemy jak w twierdzeniu~\ref{thm:pde25-stability}.
+\end{proof}
+
+\begin{stwierdzenie}[Energia półliniowego równania falowego]
+\label{prop:pde25-waveenergy}
+Niech $g\in C^1(\R)$, $G(s)=\int_0^s g(r)\,\mathrm dr$,
+a $u$ będzie wystarczająco gładkim rzeczywistym
+rozwiązaniem na $\T^1$ równania z poprzedniego twierdzenia.
+Wtedy
+\[
+ \mathcal E(t)=\int_{\T^1}\left(
+ \tfrac12u_t^2+\tfrac12u_x^2+\tfrac12u^2-G(u)\right)
+ \,\mathrm d\lambda_1(x)
+\]
+jest stała w czasie.
+\end{stwierdzenie}
+\begin{proof}
+Po pomnożeniu równania przez $u_t$ i scałkowaniu
+po torusie składnik $-u_{xx}u_t$ po całkowaniu
+przez części jest pochodną $\tfrac12\|u_x\|_2^2$;
+pozostałe składniki są odpowiednio pochodnymi
+$\tfrac12\|u_t\|_2^2$, $\tfrac12\|u\|_2^2$
+i $-\int_{\T^1}G(u(t,x))\,\mathrm d\lambda_1(x)$. Suma pochodnych wynosi zero.
+\end{proof}
+
+\begin{uwaga}[Energia nie zawsze kontroluje normę]
+Jeżeli $G$ rośnie szybciej niż kwadratowo i z dodatnim
+znakiem, składnik $-G(u)$ może sprawić, że energia
+nie jest ograniczona od dołu. Jej zachowanie samo w sobie
+nie daje globalnego istnienia. Dla nieliniowości
+$g(u)=-u^3$ energia ma natomiast dodatni człon
+$\int_{\T^1}u(t,x)^4/4\,\mathrm d\lambda_1(x)$ i kontroluje normę energetyczną.
+\end{uwaga}
+
+\section{Eliptyczne równanie półliniowe i tożsamość Pohozaeva}
+Rozważmy $-\Delta u=u^p$ w ograniczonym obszarze
+$\Omega\subset\R^d$, $d\ge3$, z zerowym warunkiem
+Dirichleta i $u>0$ wewnątrz. W przeciwieństwie do teorii
+liniowej rozwiązanie może nie istnieć z przyczyn
+wynikających z geometrii obszaru i wykładnika $p$.
+
+\begin{lemat}[Tożsamość Pohozaeva]
+\label{lem:pde25-pohozaev}
+Niech $d\ge2$, $\Omega\subset\R^d$ będzie ograniczonym
+obszarem klasy $C^2$, $F\in C^1(\R)$, $F(0)=0$,
+a $u\in C^2(\overline\Omega)$ spełnia
+$-\Delta u=F'(u)$ w $\Omega$ i $u=0$ na $\partial\Omega$.
+Jeśli $\nu$ jest jednostkową normalną zewnętrzną, to
+\begin{equation}\label{eq:pde25-pohozaev}
+ \frac{d-2}{2}\int_\Omega|\nabla u|^2\,\mathrm d\lambda_d
+ -d\int_\Omega F(u)\,\mathrm d\lambda_d
+ =-\frac12\int_{\partial\Omega}(x\cdot\nu)
+ (\partial_\nu u)^2\,\mathrm d\sigma(x),
+\end{equation}
+gdzie $\sigma$ jest miarą powierzchniową na brzegu.
+\end{lemat}
+\begin{proof}
+Mnożymy równanie przez $x\cdot\nabla u$ i całkujemy.
+Z jednej strony, ponieważ $\nabla F(u)=F'(u)\nabla u$,
+$\int_\Omega F'(u)(x\cdot\nabla u)\,\mathrm d\lambda_d
+=-d\int_\Omega F(u)\,\mathrm d\lambda_d$;
+wyraz brzegowy $\int_{\partial\Omega}(x\cdot\nu)F(u)
+\,\mathrm d\sigma$ znika z uwagi na $F(0)=0$.
+Z drugiej strony całkowanie przez części daje
+\[
+ \begin{aligned}
+ \int_\Omega(-\Delta u)(x\cdot\nabla u)\,\mathrm d\lambda_d
+ &= -\int_{\partial\Omega}\partial_\nu u
+ (x\cdot\nabla u)\,\mathrm d\sigma
+ +\int_\Omega\nabla u\cdot\nabla(x\cdot\nabla u)
+ \,\mathrm d\lambda_d\\
+ &= -\int_{\partial\Omega}(x\cdot\nu)(\partial_\nu u)^2
+ \,\mathrm d\sigma
+ +\int_\Omega\bigl(|\nabla u|^2
+ +\tfrac12 x\cdot\nabla|\nabla u|^2\bigr)
+ \,\mathrm d\lambda_d.
+ \end{aligned}
+\]
+Ponieważ $u$ ma stały ślad na brzegu, jego pochodne
+styczne znikają tam, zatem $\nabla u=(\partial_\nu u)\nu$.
+Twierdzenie o dywergencji zastosowane do
+$x|\nabla u|^2$ zamienia ostatni składnik objętościowy
+na $-\frac d2\int_\Omega|\nabla u|^2\,
+\mathrm d\lambda_d+\frac12\int_{\partial\Omega}
+(x\cdot\nu)(\partial_\nu u)^2\,\mathrm d\sigma$.
+Po porównaniu z pierwszą stroną otrzymujemy
+\eqref{eq:pde25-pohozaev}.
+\end{proof}
+
+\begin{twierdzenie}[Nieistnienie dodatnich rozwiązań przy wykładniku krytycznym]
+\label{thm:pde25-pohozaev-nonexist}
+Niech $d\ge3$, $p\ge(d+2)/(d-2)$ oraz
+$\Omega\subset\R^d$ będzie ograniczonym obszarem klasy
+$C^2$, \emph{ściśle gwiaździstym względem zera}:
+$x\cdot\nu(x)>0$ dla każdego $x\in\partial\Omega$.
+Nie istnieje funkcja $u\in C^2(\overline\Omega)$
+taka, że $u>0$ w $\Omega$, $u=0$ na $\partial\Omega$
+i $-\Delta u=u^p$ w $\Omega$.
+\end{twierdzenie}
+\begin{proof}
+Mnożenie równania przez $u$ i całkowanie przez części
+daje $\int_\Omega|\nabla u|^2\,\mathrm d\lambda_d
+=\int_\Omega u^{p+1}\,\mathrm d\lambda_d$.
+Stosujemy Lemat~\ref{lem:pde25-pohozaev}
+do $F(s)=s^{p+1}/(p+1)$ dla $s\ge0$,
+z dowolnym przedłużeniem $C^1$ na $\R$ i $F(0)=0$.
+Otrzymujemy
+\[
+ \left(\frac{d-2}{2}-\frac{d}{p+1}\right)
+ \int_\Omega|\nabla u|^2\,\mathrm d\lambda_d
+ =-\frac12\int_{\partial\Omega}(x\cdot\nu)
+ (\partial_\nu u)^2\,\mathrm d\sigma.
+\]
+Dla $p>(d+2)/(d-2)$ lewy współczynnik jest dodatni,
+a prawa strona niedodatnia, więc $u\equiv0$,
+sprzeczność. W przypadku krytycznym współczynnik
+znika; ścisła gwiaździstość wymusza
+$\partial_\nu u\equiv0$ na brzegu. Tymczasem $-\Delta u=u^p>0$
+i $u>0$ wewnątrz, więc lemat Hopfa dla obszaru
+klasy $C^2$ daje $\partial_\nu u<0$ na brzegu.
+To sprzeczność kończąca dowód.
+\end{proof}
+
+\begin{uwaga}[Wykładnik krytyczny i ograniczenia twierdzenia]
+Liczba $(d+2)/(d-2)$ odpowiada krytycznemu wykładnikowi
+zanurzenia Sobolewa $H_0^1\hookrightarrow L^{2d/(d-2)}$.
+Nie twierdzimy, że nie istnieją rozwiązania zmieniające znak
+w przypadku krytycznym, ani że zachodzi ten sam wynik
+na dowolnych obszarach: użyliśmy dodatniości oraz
+ściśle gwiaździstej geometrii w twierdzeniu Pohozaeva.
+\end{uwaga}
+
+\section{Porównanie trzech mechanizmów i dalszy plan}
+Dla równania ciepła z nieliniowością odpowiedni dobór
+przestrzeni i kontrakcja dają lokalną jednoznaczność,
+ale wzrost reakcji może wymusić eksplozję. Dla równania
+falowego nieliniowość działa w układzie bez wygładzania,
+co ogranicza bezpośredni argument do przestrzeni
+zamkniętej na składanie z $g$. Dla zagadnienia
+eliptycznego nawet bardzo gładkie dane i brzeg nie
+zapewniają istnienia z powodu tożsamości całkowej.
+W następnym rozdziale wykorzystamy operatory monotoniczne
+i $p$-laplasjan, które prowadzą do innego mechanizmu istnienia
+rozwiązań nieliniowych, bez kontrakcji Picarda.
+
+
+% ROZDZIAL 26: monotonicznosc i plaplasjan
