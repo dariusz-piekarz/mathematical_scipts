@@ -60,6 +60,14 @@ class GeneratorTests(unittest.TestCase):
         self.assertIn('ALG-05',report['modules'])
         self.assertLess(report['references_external'],5)
 
+    def test_letter_suffixed_module_identifiers(self):
+        from backend.generator import MODULE_ID
+        self.assertTrue(MODULE_ID.fullmatch('FA-15A'))
+        self.assertTrue(MODULE_ID.fullmatch('FA-15B'))
+        self.assertTrue(MODULE_ID.fullmatch('TOP-03'))
+        self.assertFalse(MODULE_ID.fullmatch('FA-15C'))
+        self.assertFalse(MODULE_ID.fullmatch('../FA-15A'))
+
     def test_unknown_module_or_entity_rejected(self):
         with self.assertRaises(GenerationError):project_files(self.con,['../main'],[],'Bad')
         with self.assertRaises(GenerationError):project_files(self.con,[],['non-existent'],'Bad')
