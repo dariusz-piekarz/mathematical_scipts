@@ -21,12 +21,18 @@ class APITests(unittest.TestCase):
 
     def test_stats(self):
         data=self.client.get("/api/stats").json()
-        self.assertEqual((data["documents"],data["labels"],data["references"]),(233,2363,1515))
+        self.assertEqual((data["documents"],data["labels"],data["references"]),(264,3071,2121))
         self.assertEqual(data["missing_references"],0)
+
+    def test_measure_theory_and_jets_available(self):
+        result=self.client.get("/api/modules/ME-31")
+        self.assertEqual(result.status_code,200)
+        self.assertIn("Dżety",result.json()["module"]["title"])
+        self.assertIn("teoria miary",result.json()["module"]["domain"])
 
     def test_domains(self):
         data=self.client.get("/api/domains").json()
-        self.assertEqual(sum(x["modules"] for x in data),233)
+        self.assertEqual(sum(x["modules"] for x in data),264)
         self.assertIn("geometria algebraiczna",{x["name"] for x in data})
 
     def test_modules(self):

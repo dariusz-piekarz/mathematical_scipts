@@ -1,6 +1,6 @@
 # Atlas matematyczny — aplikacja do wspólnej Biblioteki
 
-**Current application version: 0.4 (drafts, save, X-close cleanup); historical 0.3 notes below.**
+**Current application version: 0.5 (264 indexed chapters, including measure theory and jets, plus drafts/save/X-close cleanup); historical 0.3 notes below.**
 
 **Wersja 0.3 — API + Explorer + czytnik + graf zależności + generator skryptów z xr-hyper.**  
 **Źródła:** 233 wspólne moduły `.tex` w `rozdzialy/` (migawka z 19.11.2026).  
@@ -171,3 +171,18 @@ Endpoints: `POST /api/drafts`, `POST /api/drafts/{id}/save`,
 
 **Important:** no full browser automation suite was run in this environment;
 Python API tests and JavaScript syntax checks passed.
+
+
+## Version 0.5 — measure theory and jets in Explorer
+
+Added 31 audited measure-theory modules (`ME-01` through `ME-31`).
+Module `ME-31` is the combined chapter on geometric and measure-theoretic jets.
+The SQLite index was rebuilt from 264 canonical .tex source modules, yielding
+3,071 labels, 2,121 references, **zero missing references, zero duplicate
+labels and zero parse warnings**. The 264 TeX files and the SQLite index are
+included in the complete v0.5 distribution. The master measure theory book
+and its supplements are maintained in the GitHub repository at
+`books/pl/measure_theory.tex` and `chapters/pl/measure_theory/` respectively.
+
+A monolithic measure-theory+jets .tex and matching 256-page PDF are also
+available separately in the ChatGPT Library.

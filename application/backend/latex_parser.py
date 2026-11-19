@@ -51,6 +51,7 @@ PREFIX_DOMAINS = {
     "CAL": "teoria całki", "BT": "Banach–Tarski",
     "P1": "rachunek prawdopodobieństwa I", "P2": "procesy stochastyczne",
     "P3": "analiza stochastyczna", "P4": "statystyka matematyczna",
+    "ME": "teoria miary",
 }
 COMMAND = re.compile(r"\\([A-Za-z@]+|.)")
 RE_WS = re.compile(r"\s+")
