@@ -1,0 +1,590 @@
+\chapter{Metody nieparametryczne i odporne: rozkład, rangi i obserwacje odstające}
+\label{ch:nonparametric}
+\paragraph{Powiązania i odsyłacze.} Dystrybuantę empiryczną omówiliśmy w rozdziale~\ref{ch:statystyki}, a bootstrap i testy permutacyjne w rozdziale~\ref{ch:resampling}.
+
+
+\section{Co oznacza brak założenia parametrycznego?}
+W modelu parametrycznym ustalamy rodzinę rozkładów
+$\{P_\theta:\theta\in\Theta\}$, a w modelu nieparametrycznym
+przestrzeń dopuszczalnych rozkładów jest znacznie większa,
+np. obejmuje wszystkie rozkłady o skończonej wariancji.
+Nie znaczy to, że metoda nieparametryczna nie wymaga
+\emph{żadnych} założeń: test rangowy może wymagać wymienności,
+estymacja gęstości -- gładkości, a test dla par -- odpowiednio
+symetrycznego rozkładu różnic. Często wybieramy pomiędzy
+\emph{różnymi hipotezami} i różnymi miarami efektu,
+a nie tylko pomiędzy dwoma wzorami na wartość p.
+
+\section{Dystrybuanta empiryczna i dokładność jej aproksymacji}
+\begin{definicja}[Dystrybuanta empiryczna]
+Niech $X_1,\ldots,X_n$ będą niezależne o jednakowej
+dystrybuancie $F$. Definiujemy
+$F_n(t)=n^{-1}\sum_{i=1}^n\ind{\{X_i\le t\}}$,
+$t\in\R$. Dla ustalonego $t$ zmienna $nF_n(t)$
+ma rozkład $\Bin(n,F(t))$.
+\end{definicja}
+
+\begin{twierdzenie}[Jednopunktowa kontrola dystrybuanty]
+\label{thm:empirical-hoeffding}
+Dla dowolnego $n\ge1$, $t\in\R$ i $\varepsilon>0$,
+\[
+ \Prob\bigl(|F_n(t)-F(t)|\ge\varepsilon\bigr)
+ \le2\exp(-2n\varepsilon^2).
+\]
+\end{twierdzenie}
+\begin{proof}
+Zmienne $\ind{\{X_i\le t\}}$ są niezależne, przyjmują
+wartości w $[0,1]$ i mają wspólną średnią $F(t)$.
+Nierówność Hoeffdinga dla średniej z ograniczonych
+zmiennych daje tezę.
+\end{proof}
+
+\begin{uwaga}[Co znaczy jednoczesny pas ufności?]
+Nierówność powyższa dotyczy \emph{ustalonego} $t$.
+Nie wolno jej bez uzasadnienia stosować równocześnie
+do wszystkich $t\in\R$. Silniejsza nierówność
+Dvoretzky'ego--Kiefera--Wolfowitza--Massarta głosi,
+że dla próby niezależnej o jednakowym rozkładzie
+\[
+ \Prob\left(\sup_{t\in\R}|F_n(t)-F(t)|>\varepsilon\right)
+ \le2\exp(-2n\varepsilon^2).
+\]
+Jest to głębsze twierdzenie, którego pełnego dowodu
+tu nie przeprowadzamy. Daje jednoczesny pas
+$F_n(t)\pm\sqrt{\log(2/\alpha)/(2n)}$, obcięty do
+$[0,1]$, o pokryciu co najmniej $1-\alpha$.
+Nie należy mylić go z punktowym przedziałem dla $F(t)$.
+\end{uwaga}
+
+\section{Mediana, kwantyle i odporność na skażenia}
+\begin{definicja}[Funkcjonał kwantyla i punkt skażenia]
+Dla dystrybuanty $F$ i $p\in(0,1)$ definiujemy
+$Q_p(F)=\inf\{x\in\R:F(x)\ge p\}$.
+Dla $0\le\varepsilon\le1$ i $z\in\R$ rozważamy
+\emph{model skażenia}
+$F_{\varepsilon,z}=(1-\varepsilon)F+\varepsilon\delta_z$,
+gdzie $\delta_z$ oznacza rozkład punktowy w $z$.
+\emph{Funkcją wpływu} funkcjonału $T$ w punkcie $z$ nazywamy,
+jeśli granica istnieje,
+\[
+ \mathrm{IF}(z;T,F)=
+ \lim_{\varepsilon\downarrow0}
+ \frac{T(F_{\varepsilon,z})-T(F)}{\varepsilon}.
+\]
+Jest to miara lokalnej wrażliwości na niewielką domieszkę
+obserwacji w punkcie $z$, nie zaś dokładny opis
+arbitralnie dużego skażenia.
+\end{definicja}
+
+\begin{twierdzenie}[Funkcje wpływu średniej i kwantyla]
+\label{thm:influence-mean-quantile}
+Niech $F$ ma skończoną średnią $\mu$.
+Dla funkcjonału $T(F)=\int_\R x\,\dd F(x)$
+zachodzi $\mathrm{IF}(z;T,F)=z-\mu$.
+Niech ponadto $q=Q_p(F)$ będzie jedynym kwantylem
+rzędu $p$, a $F$ ma w otoczeniu $q$ ciągłą,
+dodatnią gęstość $f$, tak że $F(q)=p$.
+Wówczas dla każdego $z\ne q$
+\[
+ \mathrm{IF}(z;Q_p,F)=
+ \frac{p-\ind{\{z\le q\}}}{f(q)}.
+\]
+Funkcja wpływu kwantyla jest zatem ograniczona
+dla ustalonego $F$ i $p$, podczas gdy funkcja wpływu
+średniej jest nieograniczona.
+\end{twierdzenie}
+\begin{proof}
+Średnia przy skażeniu wynosi
+$(1-\varepsilon)\mu+\varepsilon z$, co daje pierwszy wzór.
+Dla $z\ne q$ przy małym $\varepsilon$ kwantyl
+$q_\varepsilon=Q_p(F_{\varepsilon,z})$ pozostaje
+w otoczeniu $q$ nie zawierającym $z$.
+Rozwiązujemy zatem równanie
+$(1-\varepsilon)F(q_\varepsilon)+
+\varepsilon\ind{\{z\le q\}}=p$.
+Różniczkując jednostronnie w $\varepsilon=0$,
+przy $f(q)>0$, otrzymujemy
+$-p+f(q)q'_0+\ind{\{z\le q\}}=0$.
+To daje drugi wzór i wskazane ograniczenia.
+\end{proof}
+
+\begin{przyklad}[Jedna obserwacja odstająca i dwie różne odpowiedzi]
+Rozważmy pomiary $9,10,10,11,12$. Średnia wynosi $10{,}4$,
+a mediana $10$. Jeśli pomiar $12$ zostanie zastąpiony
+przez $120$, nowa średnia wyniesie $32$, ale mediana
+pozostanie równa $10$. Mediana ma wysoką odporność
+na kilka skrajnych wartości, lecz przy regularnym modelu
+normalnym może być mniej efektywna od średniej.
+Wybór zależy od celu: jeśli mierzymy oczekiwany
+\emph{łączny koszt}, średnia może być właściwym funkcjonałem
+nawet dla rozkładu z ogonem; jeśli szukamy typowego
+poziomu, mediana może być łatwiejsza do interpretacji.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[x=.072cm,y=1.0cm,>=Latex]
+\draw[->] (0,0)--(130,0) node[right] {pomiar};
+\foreach \x in {0,20,40,60,80,100,120} {
+ \draw (\x,-.06)--(\x,.06) node[below=4pt,font=\scriptsize] {\x};
+}
+\foreach \x in {9,10,11} {
+ \fill[blue!70!black] (\x,0.40) circle[radius=2.7pt];
+}
+\fill[blue!70!black] (10,.62) circle[radius=2.7pt];
+\fill[red!75!black] (120,.40) circle[radius=3.2pt];
+\draw[red!70!black,very thick] (32,.18)--(32,.86)
+ node[above,font=\scriptsize] {średnia $32$};
+\draw[green!50!black,very thick] (10,.86)--(10,1.35)
+ node[above,font=\scriptsize] {mediana $10$};
+\node[anchor=west,font=\scriptsize] at (52,1.20)
+ {Punkt czerwony zastępuje $12$ przez $120$};
+\end{tikzpicture}
+
+{\small\emph{Rysunek 26.1.} Jeden skrajny pomiar może silnie przesunąć średnią,\newline
+nie zmieniając mediany. Punkty w pobliżu zera nachodzą na siebie w tej skali.}
+\end{center}
+
+\section{Testy rangowe dla dwóch niezależnych grup}
+\begin{definicja}[Statystyka Manna--Whitneya]
+\label{def:mann-whitney}
+Dla niezależnych prób $X_1,\ldots,X_m$ i
+$Y_1,\ldots,Y_k$ definiujemy
+\[
+ U=\sum_{i=1}^m\sum_{j=1}^k
+ \left(\ind{\{X_i<Y_j\}}+
+ \frac12\ind{\{X_i=Y_j\}}\right).
+\]
+Jeśli grupy są niezależne i każda jest próbą
+z odpowiedniego rozkładu $F$ lub $G$, to
+$\E U/(mk)=\Prob(X<Y)+\tfrac12\Prob(X=Y)$,
+gdzie $X\sim F$, $Y\sim G$ są niezależne.
+\end{definicja}
+
+\begin{twierdzenie}[Rozkład rang i momenty $U$ pod hipotezą zerową]
+\label{thm:mann-whitney-moments}
+Niech wszystkie $m+k$ obserwacji będą niezależne
+i mają wspólny \emph{ciągły} rozkład, przy $m,k\ge1$.
+Wtedy
+\[
+ \E U=\frac{mk}{2},\qquad
+ \Var(U)=\frac{mk(m+k+1)}{12}.
+\]
+Ponadto rozkład $U$ zależy tylko od $(m,k)$,
+a nie od wspólnego ciągłego rozkładu obserwacji.
+\end{twierdzenie}
+\begin{proof}
+Przez ciągłość wszystkie obserwacje są różne prawie na pewno.
+W wyniku wymienności wspólnych obserwacji każda z
+$\binom{m+k}{m}$ konfiguracji rang pierwszej grupy
+jest jednakowo prawdopodobna. Jeśli $R_1,\ldots,R_m$
+oznaczają jej rangi (od najmniejszej), to
+$U=mk+m(m+1)/2-\sum_{i=1}^mR_i$ przy naszej
+konwencji zliczania $X_i<Y_j$.
+Z losowania bez zwracania $m$ rang z $1,\ldots,m+k$
+wynika $\E\sum_iR_i=m(m+k+1)/2$.
+Wariancja sumy rang jest równa
+\[
+ \frac{mk}{m+k-1}\cdot
+ \frac{(m+k)^2-1}{12}
+ =\frac{mk(m+k+1)}{12}.
+\]
+Odjęcie sumy rang od stałej nie zmienia wariancji.
+Rozkład rang jest jednostajny, więc nie zależy od
+wspólnej dystrybuanty.
+\end{proof}
+
+\begin{uwaga}[Mann--Whitney nie jest automatycznie testem median]
+Hipoteza o identycznych rozkładach $F=G$ daje
+\emph{dokładną} rangową kalibrację testu.
+Przy rodzinie przesunięć o tym samym kształcie można
+go interpretować jako test położenia.
+Bez tego założenia różnica median nie jest równoważna
+zmianie $\Prob(X<Y)$; grupy mogą mieć tę samą medianę,
+ale inne wariancje i istotnie różne wartości statystyki $U$.
+Gdy celem jest test \emph{równości średnich}, zamiast
+Manna--Whitneya warto rozważyć test Welcha,
+studentyzowaną permutację lub właściwy model odpornościowy.
+\end{uwaga}
+
+\section{Dane sparowane: test znaków i Wilcoxona}
+\begin{twierdzenie}[Test Wilcoxona rangowanych znaków]
+\label{thm:wilcoxon-signed-rank}
+Niech $D_1,\ldots,D_n$ będą niezależne i mają ten sam
+ciągły rozkład symetryczny względem zera, a
+$\Prob(D_i=0)=0$. Niech $R_i$ będzie rangą
+$|D_i|$ wśród $|D_1|,\ldots,|D_n|$, a
+$W_+=\sum_{i=1}^nR_i\ind{\{D_i>0\}}$.
+Wówczas
+\[
+ \E W_+=\frac{n(n+1)}4,\qquad
+ \Var(W_+)=\frac{n(n+1)(2n+1)}{24}.
+\]
+Warunkowo względem wartości bezwzględnych $|D_i|$
+rozkład $W_+$ jest taki sam jak rozkład
+$\sum_{r=1}^nrB_r$, gdzie $B_r$ są niezależnymi
+zmiennymi Bernoulliego o parametrze $1/2$.
+\end{twierdzenie}
+\begin{proof}
+Z ciągłości i symetrii znak każdej różnicy jest
+niezależny od jej wartości bezwzględnej, przyjmuje
+$+1$ i $-1$ z prawdopodobieństwem $1/2$,
+a znaki wszystkich różnic są niezależne.
+Po warunkowaniu wartości bezwzględnych rangi tworzą pewną permutację
+$1,\ldots,n$, zatem $W_+$ ma wskazany rozkład sumy
+niezależnych ważonych zmiennych Bernoulliego.
+Jego średnia wynosi $\tfrac12\sum_{r=1}^nr=n(n+1)/4$,
+a wariancja $\tfrac14\sum_{r=1}^nr^2
+=n(n+1)(2n+1)/24$.
+\end{proof}
+
+\begin{uwaga}[Warunki testu i postępowanie z remisami]
+Test znaków bada same znaki różnic, podczas gdy
+Wilcoxon wykorzystuje dodatkowo rangi wartości
+bezwzględnych. Dla różnic o symetrycznym rozkładzie
+test Wilcoxona bywa mocniejszy, lecz jego
+\emph{dokładny} rozkład opisany wyżej wymaga
+braku zerowych różnic i remisów rang.
+Przy zerach i remisach trzeba jawnie wybrać
+konwencję i kalibrację. Test Wilcoxona nie jest
+automatycznie dokładnym testem hipotezy
+$\E D_i=0$ dla dowolnego niesymetrycznego rozkładu.
+\end{uwaga}
+
+\section{Porównywanie więcej niż dwóch grup i danych sparowanych}
+\begin{stwierdzenie}[Statystyka Kruskala--Wallisa i jej kalibracja]
+\label{prop:kruskal-wallis}
+Niech $k\ge2$ grup składa się z niezależnych próbek,
+grupa $j$ ma $n_j\ge1$ obserwacji i
+$N=\sum_{j=1}^kn_j$. Przy wspólnym \emph{ciągłym}
+rozkładzie pod $H_0$ oznaczmy przez $\overline R_j$
+średnią rang w grupie $j$.
+Statystyka Kruskala--Wallisa, przy braku remisów, wynosi
+\[
+ H=\frac{12}{N(N+1)}
+ \sum_{j=1}^kn_j
+ \left(\overline R_j-\frac{N+1}{2}\right)^2.
+\]
+Jeżeli $k$ jest stałe, $\min_jn_j\to\infty$ i
+$\min_j n_j/N$ pozostaje oddalone od zera,
+to $H\Rightarrow\chi^2_{k-1}$ pod $H_0$.
+Dla małych prób można zastosować dokładny lub
+Monte Carlo test permutacyjny na rangach.
+\end{stwierdzenie}
+\begin{proof}
+Wzór jest definicją statystyki jako ważonej sumy
+kwadratów odchyleń średnich rang od rangi globalnej.
+Ponieważ pod $H_0$ wszystkie przypisania rang do grup
+są jednakowo prawdopodobne, permutacyjna kalibracja
+wynika z twierdzenia~\ref{thm:permutation-exact}
+(po zastąpieniu dwóch grup dowolnym ustalonym
+podziałem na $k$ grup). Asymptotyczny rozkład
+$\chi^2_{k-1}$ wynika z wielowymiarowego CLT dla
+rang przy losowym podziale i jest tu \emph{przywoływany},
+a nie dowodzony w pełnej ogólności.
+\end{proof}
+
+\begin{uwaga}[Przykład: trzy grupy i pomiary wielokrotne]
+Kruskal--Wallis wymaga niezależnych grup.
+Przy pomiarach tego samego pacjenta w kilku warunkach
+obserwacje nie są niezależne; stosujemy np.
+test Friedmana, który rangowuje warunki \emph{wewnątrz}
+każdego bloku lub pacjenta, ewentualnie model mieszany.
+W sytuacji z dwoma pomiarami sparowanymi
+rozważamy Wilcoxona lub test znaków,
+a nie Manna--Whitneya.
+Przed wyborem testu zawsze ustalamy, która jednostka
+jest niezależna i jaka hipoteza ma zostać sprawdzona.
+\end{uwaga}
+
+\section{Test Kołmogorowa--Smirnowa i problem dopasowywania parametrów}
+\begin{stwierdzenie}[Bezrozkładowość testu KS dla znanego $F_0$]
+\label{prop:ks-distributionfree}
+Niech $X_1,\ldots,X_n$ będą niezależne o wspólnej,
+\emph{znanej pod hipotezą zerową}, ciągłej i ściśle
+rosnącej dystrybuancie $F_0$ na jej nośniku.
+Wtedy rozkład statystyki
+$D_n=\sup_{t\in\R}|F_n(t)-F_0(t)|$
+nie zależy od $F_0$, tylko od $n$.
+\end{stwierdzenie}
+\begin{proof}
+Z transformacji całkowej prawdopodobieństwa
+$U_i=F_0(X_i)$ mają niezależny rozkład
+$\operatorname{Unif}(0,1)$. Po przepisaniu
+$F_n(t)=n^{-1}\sum_{i=1}^n\ind{\{U_i\le F_0(t)\}}$
+i przejściu do supremum po $u\in(0,1)$
+dostajemy statystykę zbudowaną wyłącznie z
+niezależnych zmiennych jednostajnych.
+\end{proof}
+
+\begin{uwaga}[Błąd często spotykany przy testach normalności]
+Jeśli z tych samych danych oszacujemy średnią i
+odchylenie standardowe, a potem obliczymy
+$\sup_t|F_n(t)-\Phi((t-\overline X_n)/S_n)|$,
+to \emph{nie} wolno używać klasycznych wartości
+krytycznych testu KS dla ustalonej, znanej $F_0$.
+Rozkład statystyki zmienia się przez estymację parametrów.
+W takim problemie rozważamy odpowiednią kalibrację
+Lillieforsa, bootstrap parametryczny odtwarzający
+\emph{całą} procedurę estymacji albo test Shapiro--Wilka,
+którego pełne omówienie umieścimy w osobnym
+rozdziale diagnostycznym.
+\end{uwaga}
+
+\section{Estymacja gęstości metodą jądrową}
+\begin{definicja}[Estymator jądrowy KDE]
+\label{def:kde}
+Niech $X_1,\ldots,X_n$ będą niezależne o wspólnej
+gęstości $f$ względem $\lambda_1$. Niech
+$K\colon\R\to[0,\infty)$ będzie mierzalna,
+$\int_\R K(u)\,\dd\lambda_1(u)=1$,
+a $h>0$ oznacza \emph{szerokość pasma}.
+Definiujemy
+\[
+ \widehat f_{n,h}(x)=\frac1{nh}
+ \sum_{i=1}^nK\left(\frac{x-X_i}{h}\right).
+\]
+\end{definicja}
+
+\begin{twierdzenie}[Obciążenie, wariancja i dobór pasma KDE]
+\label{thm:kde-bias-var}
+Załóżmy, że $f\in C^2(\R)$, $f$ i $f''$ są ograniczone,
+a $f$ jest ciągła w ustalonym $x$.
+Niech $K\ge0$ spełnia
+$\int_\R K(u)\,\dd\lambda_1(u)=1$, $\int_\R uK(u)\,\dd\lambda_1(u)=0$,
+$\mu_2(K)=\int_\R u^2K(u)\,\dd\lambda_1(u)<\infty$,
+oraz $R(K)=\int_\R K(u)^2\,\dd\lambda_1(u)<\infty$.
+Przy $h=h_n\downarrow0$, $nh_n\to\infty$ mamy
+\[
+ \begin{aligned}
+ \E\widehat f_{n,h}(x)-f(x)
+   &=\tfrac12h^2\mu_2(K)f''(x)+o(h^2),\\
+ \Var(\widehat f_{n,h}(x))
+   &=\frac{f(x)R(K)}{nh}+o((nh)^{-1}).
+ \end{aligned}
+\]
+Jeżeli $f(x)>0$, $f''(x)\ne0$ i $\mu_2(K)>0$,
+to minimalizacja głównych członów punktowego MSE daje
+$h\asymp n^{-1/5}$, a MSE rzędu $n^{-4/5}$.
+\end{twierdzenie}
+\begin{proof}
+Zmiana zmiennej w całce daje
+$\E\widehat f_{n,h}(x)=
+\int_\R K(u)f(x-hu)\,\dd\lambda_1(u)$.
+Ze wzoru Taylora
+$f(x-hu)=f(x)-hu f'(x)+
+\tfrac12h^2u^2f''(x)+h^2u^2r_h(u)$,
+gdzie $r_h(u)\to0$ dla każdego $u$, a dzięki
+globalnej ograniczoności $f''$ mamy jednostajne
+ograniczenie $|r_h(u)|\le C$.
+Symetria pierwszego momentu jądra i zbieżność
+zdominowana dla $u^2K(u)$ dają wzór na obciążenie.
+Dla wariancji niezależność implikuje
+\[
+ \Var(\widehat f_{n,h}(x))=
+ \frac1n\left[\frac1h
+ \int_\R K(u)^2f(x-hu)\,\dd\lambda_1(u)
+ -(\E\widehat f_{n,h}(x))^2\right].
+\]
+Dominacja przez $\norm f_\infty K(u)^2$ i ciągłość $f$
+dają zbieżność pierwszej całki do $f(x)R(K)$.
+Drugi składnik jest $O(n^{-1})=o((nh)^{-1})$.
+Kwadrat dominującego obciążenia ma rząd $h^4$,
+a wariancja rząd $(nh)^{-1}$; zrównanie tych rzędów
+daje $h\asymp n^{-1/5}$.
+\end{proof}
+
+\begin{uwaga}[KDE przy granicy nośnika]
+Ponieważ zwykły estymator KDE nie uwzględnia z góry granic
+nośnika, jego poprawność punktowa we wnętrzu przestrzeni nie
+musi przenosić się na brzeg.
+Jeżeli prawdziwy rozkład ma nośnik $[0,\infty)$,
+a stosujemy symetryczne jądro bez korekty, to
+przy $x=0$ część masy jądra wychodzi poza nośnik,
+a zwykły wynik o obciążeniu rzędu $h^2$ nie musi
+obowiązywać. Rozważamy transformację (np. logarytm),
+jądro jednostronne lub odpowiednią korektę brzegową.
+Przed porównywaniem KDE różnych prób należy też
+ustalić sposób doboru pasma: zbyt małe daje poszarpaną
+gęstość, zbyt duże ukrywa rzeczywiste wielomodalności.
+\end{uwaga}
+
+\section{Estymatory M odporne na obserwacje odstające}
+\begin{definicja}[Estymator Hubera w modelu położenia]
+\label{def:huber}
+Niech $c>0$ i $s>0$ będą ustalonymi parametrami.
+Definiujemy funkcję
+$\psi_c(u)=\min\{c,\max\{-c,u\}\}$.
+\emph{Estymatorem położenia Hubera} nazywamy rozwiązanie
+względem $t$ równania
+\[
+ \sum_{i=1}^n\psi_c\left(\frac{X_i-t}{s}\right)=0.
+\]
+Jest to warunek pierwszego rzędu minimalizacji
+sumy strat $\rho_c((X_i-t)/s)$, gdzie
+$\rho_c(u)=u^2/2$ dla $|u|\le c$ oraz
+$\rho_c(u)=c|u|-c^2/2$ dla $|u|>c$.
+\end{definicja}
+
+\begin{stwierdzenie}[Asymptotyczna wariancja estymatora Hubera]
+\label{prop:huber-asympt}
+Niech $X_i=\theta+\varepsilon_i$, gdzie $\varepsilon_i$
+są niezależne o jednakowym rozkładzie symetrycznym
+względem zera, $s>0$ jest znane,
+$\E\psi_c(\varepsilon_1/s)^2<\infty$ oraz
+$A=\E\psi_c'(\varepsilon_1/s)>0$.
+Załóżmy, że rozkład $\varepsilon_1$ nie ma atomów
+w punktach $\pm cs$, a rozwiązania $\widehat\theta_n$
+są zgodne i spełniają lokalne rozwinięcie
+$\sum_i\psi_c((X_i-\widehat\theta_n)/s)
+=\sum_i\psi_c(\varepsilon_i/s)
+-(\widehat\theta_n-\theta) n A/s
++o_\Prob(\sqrt n+ n|\widehat\theta_n-\theta|)$.
+Wówczas
+\[
+ \sqrt n(\widehat\theta_n-\theta)
+ \Rightarrow\Normal\left(0,
+ \frac{s^2\E[\psi_c(\varepsilon_1/s)^2]}{A^2}\right).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Symetria i nieparzystość $\psi_c$ zapewniają
+$\E\psi_c(\varepsilon_1/s)=0$.
+CLT daje normalną granicę dla
+$n^{-1/2}\sum_i\psi_c(\varepsilon_i/s)$.
+Wykorzystujemy rozwinięcie z tezy w równaniu estymatora.
+Dodatniość $A$ i zgodność umożliwiają przeniesienie
+składnika liniowego na drugą stronę oraz otrzymanie
+reprezentacji
+\[
+ \sqrt n(\widehat\theta_n-\theta)
+ =\frac{s}{A\sqrt n}\sum_{i=1}^n
+ \psi_c(\varepsilon_i/s)+o_\Prob(1).
+\]
+Twierdzenie Slutsky'ego prowadzi do wskazanej granicy.
+Warunek lokalnego rozwinięcia jest standardowym krokiem
+teorii M-estymatorów, a jego weryfikacja dla konkretnego
+modelu wymaga odrębnej kontroli regularności.
+\end{proof}
+
+\begin{uwaga}[Interpretacja parametru $c$]
+Małe $c$ silniej ogranicza wpływ skrajnych reszt,
+ale może zmniejszać efektywność w dokładnie normalnym
+modelu. Duże $c$ zbliża algorytm do średniej i MNK,
+lecz zwiększa wrażliwość na skrajne obserwacje.
+Przed zastosowaniem trzeba zdefiniować skalę $s$
+(np. odpornie przez MAD), ponieważ próg $cs$ działa
+w jednostkach oryginalnych danych. Wyboru $c$
+nie należy optymalizować jedynie na podstawie
+pojedynczej realizacji z obserwacją odstającą.
+\end{uwaga}
+
+\section{Praktyczna mapa decyzji}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.26\textwidth}>{\raggedright\arraybackslash}p{.29\textwidth}>{\raggedright\arraybackslash}p{.29\textwidth}}
+\toprule
+\textbf{Cel} & \textbf{Metoda} & \textbf{Sprawdź najpierw}\\
+\midrule
+Porównać dwa niezależne rozkłady & Mann--Whitney, KS, permutacje & Czy interesuje Cię położenie, średnia czy cała dystrybuanta?\\
+Porównać pomiary przed i po & Wilcoxon, test znaków, model par & Czy parowanie jest rzeczywiste i czy rozkład różnic jest symetryczny?\\
+Porównać co najmniej trzy grupy & Kruskal--Wallis & Czy grupy są niezależne, czy to powtarzane pomiary?\\
+Porównać powtarzane warunki & Friedman, model mieszany & Pacjent/blok jest jednostką niezależną\\
+Zbadać zgodność z zadanym rozkładem & KS, Anderson--Darling, Shapiro--Wilk & Czy parametry hipotezy są znane czy estymowane?\\
+Oszacować gęstość i mody & KDE & Pasmo, granice nośnika i liczba obserwacji\\
+Oszacować typowy poziom przy outlierach & Mediana, estymator Hubera & Czy celem jest mediana/położenie, czy prawdziwa średnia?\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Laboratorium: rangi, gęstość i odporność}
+\begin{lstlisting}[language=Python,caption={Kompletny program: testy rangowe, KS, KDE oraz estymator Hubera (Python, NumPy i SciPy).}]
+import numpy as np
+from scipy import stats
+
+x = np.array([9., 10., 10., 11., 12.])
+y = np.array([10., 11., 12., 13., 14.])
+print("Mann-Whitney:", stats.mannwhitneyu(x, y, alternative="two-sided"))
+
+before = np.array([21., 25., 23., 28., 22., 24.])
+after = np.array([20., 23., 20., 24., 17., 18.])
+print("Wilcoxon paired:", stats.wilcoxon(after-before, method="exact"))
+
+samples = [np.array([6., 7., 6., 8., 7.]),
+           np.array([9., 8., 10., 9., 11.]),
+           np.array([11., 12., 10., 13., 12.])]
+print("Kruskal-Wallis:", stats.kruskal(*samples))
+
+rng = np.random.default_rng(2026)
+z = rng.normal(size=80)
+# Valid KS calibration: test against a fully specified N(0,1).
+print("KS fixed normal:", stats.kstest(z, "norm", args=(0, 1)))
+# For fitted mean and variance, this p-value would not be valid.
+
+contaminated = np.r_[rng.normal(size=80), [15.0, 20.0]]
+print("mean, median:", np.mean(contaminated), np.median(contaminated))
+
+scale = stats.median_abs_deviation(contaminated, scale="normal")
+c = 1.345
+center = np.median(contaminated)
+for _ in range(100):
+    residual = (contaminated - center) / scale
+    weights = np.ones_like(residual)
+    mask = np.abs(residual) > c
+    weights[mask] = c / np.abs(residual[mask])
+    next_center = np.sum(weights * contaminated) / np.sum(weights)
+    if abs(next_center - center) < 1e-12:
+        break
+    center = next_center
+print("Huber location:", center)
+
+kde = stats.gaussian_kde(contaminated)
+for point in [-1.0, 0.0, 1.0]:
+    print("KDE at", point, float(kde(point)[0]))
+\end{lstlisting}
+
+\begin{lstlisting}[language=Julia,caption={Kompletny program: odporna estymacja i jądrowa estymacja gęstości (Julia, Random i Statistics).}]
+using Random, Statistics
+Random.seed!(2026)
+x = vcat(randn(80), [15.0, 20.0])
+println("mean: ", mean(x), " median: ", median(x))
+
+# Huber location with robust initial MAD scale.
+scale = 1.4826 * median(abs.(x .- median(x)))
+c = 1.345
+center = median(x)
+for _ in 1:100
+    residual = (x .- center) ./ scale
+    weight = min.(1.0, c ./ max.(abs.(residual), 1e-12))
+    nextcenter = sum(weight .* x) / sum(weight)
+    if abs(nextcenter - center) < 1e-12
+        center = nextcenter
+        break
+    end
+    center = nextcenter
+end
+println("Huber location: ", center)
+
+# Gaussian KDE implemented with elementary functions.
+n = length(x)
+sigma = std(x)
+h = 1.06 * sigma * n^(-1/5)  # rule of thumb; sensitive to outliers
+kde(t) = sum(exp.(-0.5 .* ((t .- x)./h).^2)) / (n*h*sqrt(2*pi))
+for point in (-1.0, 0.0, 1.0)
+    println("KDE at ", point, ": ", kde(point))
+end
+\end{lstlisting}
+
+\begin{zadanie}[Dlaczego test Manna--Whitneya nie zawsze bada średnią?]
+Niech $X$ będzie stała równa zero, a $Y$ przyjmuje
+wartość $-1$ z prawdopodobieństwem $0{,}9$ i wartość
+$9$ z prawdopodobieństwem $0{,}1$. Wyznaczyć
+$\E X$, $\E Y$ oraz $\Prob(X<Y)$.
+\par\emph{Rozwiązanie.} Mamy $\E X=0$,
+$\E Y=-0{,}9+0{,}9=0$, ale
+$\Prob(X<Y)=\Prob(Y=9)=0{,}1$.
+Wobec tego równość średnich nie wymusza
+$\Prob(X<Y)=1/2$. Test oparty na porządku obserwacji
+może wykrywać różnicę mimo równości średnich;
+nie jest to sprzeczność, lecz różnica między hipotezami.
+\end{zadanie}
+
+

@@ -1,0 +1,486 @@
+\chapter{Statystyki i rozkłady z próby}
+\label{ch:statystyki}
+\paragraph{Powiązania i odsyłacze.} Rozkłady klasyczne i momenty omawia tom I, rozdziały~\ref{I-ch:distributions} i~\ref{I-ch:expectation}; zbieżności i granice próbek — rozdziały~\ref{I-ch:convergence}--\ref{I-ch:clt}.
+
+\section{Po co zastępować próbę kilkoma liczbami?}
+Próba $x_1,\ldots,x_n$ może być bardzo długa. Nie zawsze potrzebujemy przechowywać cały wektor, aby udzielić odpowiedzi na ustalone pytanie. Jeśli interesuje nas typowy poziom pomiaru, naturalne są średnia lub mediana; jeśli zmienność, wariancja lub rozstęp międzykwartylowy; jeśli ryzyko przekroczenia progu, odsetek wartości powyżej progu. Ta redukcja jest jednak \emph{zależna od celu}. Średnia nie opisuje wystarczająco rozkładu z dwoma wyraźnymi skupieniami, a mediana nie jest na ogół najlepszym narzędziem do szacowania całkowitej sumy.
+
+\begin{definicja}[Statystyka i jej rozkład]\label{def:statistic}
+Niech $\mathcal E=(\mathsf X,\calA,\{P_\theta:\theta\in\Theta\})$ będzie eksperymentem statystycznym, a $(\mathsf Y,\mathcal C)$ przestrzenią mierzalną. Każde mierzalne odwzorowanie $T:(\mathsf X,\calA)\to(\mathsf Y,\mathcal C)$ nazywamy \emph{statystyką}. Jej \emph{rozkład z próby} przy parametrze $\theta$ to miara $P_\theta\circ T^{-1}$ na $\mathcal C$.
+\end{definicja}
+
+W praktyce słowo „statystyka” bywa używane zarówno dla funkcji $T$ obliczanej z \emph{losowej} próby, jak i dla zaobserwowanej wartości $T(x)$. Rozróżnienie jest ważne. Przy tworzeniu przedziałów ufności wykorzystujemy rozkład losowej statystyki, natomiast po zebraniu danych podstawiamy konkretny wynik.
+
+\begin{przyklad}[Średnia kontra liczba przekroczeń]
+Dla $X=(X_1,\ldots,X_n)\in\R^n$ funkcje $\overline X_n=n^{-1}\sum_iX_i$ oraz $N_a=\sum_i\ind{\{X_i>a\}}$ są statystykami. Jeśli chcemy poznać średni poziom $\E X_1$, pierwsza jest naturalnym kandydatem. Jeśli pytamy o prawdopodobieństwo przekroczenia dopuszczalnej temperatury $a$, druga statystyka jest dopasowana do celu, a średnia może ukryć częste przekroczenia progu.
+\end{przyklad}
+
+\section{Średnia, wariancja i błąd standardowy}
+\begin{definicja}[Podstawowe statystyki liczbowe]\label{def:meanvar}
+Dla $n\ge2$ i próby rzeczywistej $X_1,\ldots,X_n$ definiujemy
+\[
+\overline X_n=\frac1n\sum_{i=1}^nX_i,\qquad
+S_n^2=\frac1{n-1}\sum_{i=1}^n(X_i-\overline X_n)^2,\qquad S_n=\sqrt{S_n^2}.
+\]
+Dla $n=1$ średnia jest określona, lecz wzór na $S_n^2$ nie jest zdefiniowany. Wzór z mianownikiem $n$ oznaczymy przez $V_n=n^{-1}\sum_i(X_i-\overline X_n)^2$ i nie będziemy utożsamiać tych dwóch wielkości.
+\end{definicja}
+
+\begin{lemat}[Tożsamość sumy kwadratów]\label{lem:sum-of-squares}
+Dla dowolnych liczb rzeczywistych $x_1,\ldots,x_n$ i dowolnego $a\in\R$, przy $\bar x=n^{-1}\sum_i x_i$, zachodzi
+\[
+\sum_{i=1}^n(x_i-a)^2
+=\sum_{i=1}^n(x_i-\bar x)^2+n(\bar x-a)^2.
+\]
+\end{lemat}
+\begin{proof}
+Podstawiamy $x_i-a=(x_i-\bar x)+(\bar x-a)$ i rozwijamy kwadraty. Suma wyrazów mieszanych to $2(\bar x-a)\sum_i(x_i-\bar x)=0$ z definicji średniej. Pozostają dwa pozostałe składniki.
+\end{proof}
+
+\emph{Intuicja.} Średnia $\bar x$ minimalizuje sumę kwadratów odległości od stałej: w poprzedniej tożsamości składnik $n(\bar x-a)^2$ jest nieujemny i znika tylko przy $a=\bar x$. Stąd związek średniej z metodą najmniejszych kwadratów, którą rozwiniemy w rozdziale o regresji.
+
+\begin{twierdzenie}[Nieobciążoność średniej i wariancji]\label{thm:unbiased-variance}
+Niech $n\ge2$, a $X_1,\ldots,X_n$ będą niezależnymi zmiennymi o jednakowym rozkładzie rzeczywistym, z $\mu=\E X_1\in\R$ oraz $\sigma^2=\Var(X_1)<\infty$. Wówczas
+\[
+\E\overline X_n=\mu,\qquad
+\Var(\overline X_n)=\frac{\sigma^2}{n},\qquad
+\E S_n^2=\sigma^2,
+\]
+podczas gdy $\E V_n=(n-1)\sigma^2/n$.
+\end{twierdzenie}
+\begin{proof}
+Z liniowości wartości oczekiwanej $\E\overline X_n=n^{-1}\sum_i\E X_i=\mu$. Z niezależności $\Var(\overline X_n)=n^{-2}\sum_i\Var(X_i)=\sigma^2/n$. Stosując lemat~\ref{lem:sum-of-squares} do losowych wartości $x_i=X_i$ i $a=\mu$, dostajemy tożsamość prawie na pewno
+\[
+\sum_{i=1}^n(X_i-\overline X_n)^2
+=\sum_{i=1}^n(X_i-\mu)^2-n(\overline X_n-\mu)^2.
+\]
+Wszystkie składniki są całkowalne, gdyż istnieje drugi moment. Po wzięciu wartości oczekiwanych prawa strona ma wartość $n\sigma^2-n\sigma^2/n=(n-1)\sigma^2$. Podzielenie przez $n-1$, a następnie przez $n$, daje pozostałe równości.
+\end{proof}
+
+\begin{uwaga}[Dlaczego $n-1$?]
+Nie chodzi o umowną poprawkę, która zawsze zwiększa dokładność każdej możliwej procedury. Podczas liczenia odchyleń $X_i-\overline X_n$ oszacowaliśmy średnią z tych samych danych i otrzymaliśmy liniowy warunek $\sum_i(X_i-\overline X_n)=0$. Dla modelu i celu opisanego w twierdzeniu mianownik $n-1$ koryguje oczekiwane zmniejszenie sumy kwadratów. Nie wynika stąd, że $S_n^2$ zawsze ma mniejszy błąd średniokwadratowy niż $V_n$; są to różne kryteria jakości.
+\end{uwaga}
+
+\begin{wniosek}[Ograniczenie precyzji średniej]\label{cor:se}
+Przy założeniach twierdzenia~\ref{thm:unbiased-variance} odchylenie standardowe losowej średniej wynosi $\sigma/\sqrt n$. Wielkość $S_n/\sqrt n$ jest jego naturalnym estymatorem i bywa nazywana \emph{szacowanym błędem standardowym średniej}. Nie należy mylić jej z $S_n$, które mierzy rozproszenie pojedynczych obserwacji.
+\end{wniosek}
+
+\begin{stwierdzenie}[Błąd estymatora: wariancja i obciążenie]\label{prop:biasvar}
+Niech $T$ będzie kwadratowo całkowalną rzeczywistą statystyką w modelu z parametrem rzeczywistym $\theta$. Definiując $\operatorname{Bias}_\theta(T)=\E_\theta T-\theta$ oraz $\MSE_\theta(T)=\E_\theta(T-\theta)^2$, mamy
+\[
+\MSE_\theta(T)=\Var_\theta(T)+\bigl(\operatorname{Bias}_\theta(T)\bigr)^2.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Piszemy $T-\theta=(T-\E_\theta T)+(\E_\theta T-\theta)$ i rozwijamy kwadrat. Wyraz mieszany znika po wzięciu wartości oczekiwanej, ponieważ $\E_\theta(T-\E_\theta T)=0$.
+\end{proof}
+
+\paragraph{Wykorzystanie w praktyce.}
+Gdy estymujemy $\sigma^2$ w opisanym modelu i wymagamy nieobciążoności, naturalnym wyborem jest $S_n^2$. Nie jest to jednak automatyczny wybór dla wszystkich innych parametrów i funkcji straty. Gdy celem jest predykcja albo minimalizowanie błędu kwadratowego, porównujemy MSE i nie wykluczamy estymatorów obciążonych. Dopiero dalsza teoria estymacji pozwoli formalnie oceniać tę wymianę wariancji na obciążenie.
+
+\section{Prawa wielkich liczb i centralne twierdzenie graniczne w praktyce}
+\begin{twierdzenie}[Przypomnienie SPWL i CTG dla średniej]\label{thm:clt-review}
+Niech $X_1,X_2,\ldots$ będą niezależne i o jednakowym rozkładzie rzeczywistym, z $\mu=\E X_1$ oraz $0<\sigma^2=\Var(X_1)<\infty$. Wówczas $\overline X_n\to\mu$ według prawdopodobieństwa oraz
+\[
+\frac{\sqrt n(\overline X_n-\mu)}{\sigma}\;\xrightarrow{\mathcal D}\;\Normal(0,1).
+\]
+Jeśli $S_n^2$ jest wariancją z próby, to również
+$\sqrt n(\overline X_n-\mu)/S_n\xrightarrow{\mathcal D}\Normal(0,1)$, gdzie iloraz definiujemy arbitralnie na zdarzeniu $S_n=0$.
+\end{twierdzenie}
+\begin{proof}
+Pierwszy wniosek wynika z prawa wielkich liczb, a drugi z klasycznego CTG udowodnionego w tomie I. Aby uzasadnić zastąpienie $\sigma$ przez $S_n$, korzystamy z tożsamości
+$S_n^2=\tfrac n{n-1}\bigl(n^{-1}\sum_iX_i^2-\overline X_n^2\bigr)$. Z prawa wielkich liczb zastosowanego do $X_i$ i $X_i^2$ (oba mają skończone pierwsze momenty) prawa strona zbiega według prawdopodobieństwa do $\E X_1^2-\mu^2=\sigma^2$. Zatem $S_n/\sigma\to1$ według prawdopodobieństwa. Twierdzenie Slutsky'ego daje tezę. Ponieważ $\sigma>0$, prawdopodobieństwo $S_n=0$ dąży do zera, więc ustalona tam konwencja nie wpływa na granicę.
+\end{proof}
+
+\begin{uwaga}[CTG nie stwierdza, że dane są normalne]
+Centralne twierdzenie graniczne mówi o \emph{odpowiednio standaryzowanej średniej}, a nie o rozkładzie każdej pojedynczej obserwacji. Dla bardzo ciężkich ogonów wariancja może nie istnieć, a klasyczna wersja CTG nie ma zastosowania. Dla danych zależnych mogą być potrzebne inne skalowania i inna wariancja graniczna. W szczególności nie ma ogólnej reguły, że dla $n=30$ każda próba staje się „normalna”.
+\end{uwaga}
+
+\section{Wskaźniki i częstości: próba Bernoulliego}
+\begin{twierdzenie}[Rozkład i momenty odsetka sukcesów]\label{thm:prop-bin}
+Jeżeli $X_1,\ldots,X_n$ są niezależne, o jednakowym rozkładzie Bernoulliego z parametrem $p\in[0,1]$, to $S_n^*=\sum_iX_i\sim\Bin(n,p)$ oraz $\widehat p_n=\overline X_n$ spełnia
+\[
+\E\widehat p_n=p,\qquad \Var(\widehat p_n)=\frac{p(1-p)}n.
+\]
+Jeśli $0<p<1$, to $\sqrt n(\widehat p_n-p)/\sqrt{p(1-p)}\xrightarrow{\mathcal D}\Normal(0,1)$.
+\end{twierdzenie}
+\begin{proof}
+Dla każdego $k\in\{0,\ldots,n\}$ jest $\binom nk$ wektorów z dokładnie $k$ jedynkami. Każdy ma prawdopodobieństwo $p^k(1-p)^{n-k}$, co daje rozkład dwumianowy. Wyniki o średniej i wariancji są szczególnym przypadkiem twierdzenia~\ref{thm:unbiased-variance}, ponieważ $\E X_i=p$ i $\Var(X_i)=p(1-p)$. Dla $0<p<1$ założenia CTG są spełnione i otrzymujemy podaną zbieżność.
+\end{proof}
+
+\begin{przyklad}[Prawdopodobieństwo a obserwowany odsetek]\label{ex:failure-rate}
+Zaobserwowaliśmy $7$ wad na $100$ niezależnie losowanych produktach i przyjmujemy model Bernoulliego. Odsetek w próbie to $\widehat p=0{,}07$. Gdyby prawdziwe $p$ rzeczywiście wynosiło $0{,}07$, odchylenie standardowe losowego odsetka wynosiłoby $\sqrt{0{,}07\cdot0{,}93/100}\approx0{,}0255$. Jest to \emph{rachunek zależny od przyjętego $p$}, a nie wyznaczenie jego nieznanej wartości. W praktyce zastępuje się $p$ przez $\widehat p$, uzyskując szacowany błąd standardowy. Dla niewielkiej liczby sukcesów albo wartości bliskich $0$ i $1$ lepiej jednak używać odpowiednich przedziałów dla dwumianu, np. Wilsona lub metod dokładnych, zamiast bezkrytycznie korzystać z symetrycznego przybliżenia normalnego.
+\end{przyklad}
+
+\section{Dokładny rozkład średniej i wariancji w próbie normalnej}
+\begin{lemat}[Niezmienniczość rozkładu normalnego względem przekształceń ortogonalnych]\label{lem:gauss-rotation}
+Niech $Z=(Z_1,\ldots,Z_n)\sim\Normal_n(0,I_n)$, czyli $Z_i$ są niezależne i $\Normal(0,1)$. Dla dowolnej rzeczywistej macierzy ortogonalnej $U\in\R^{n\times n}$ wektor $UZ$ ma także rozkład $\Normal_n(0,I_n)$, a więc jego współrzędne są niezależnymi standardowymi zmiennymi normalnymi.
+\end{lemat}
+\begin{proof}
+Gęstość wektora $Z$ względem $n$-wymiarowej miary Lebesgue'a ma postać
+\[
+ p_Z(z)=(2\pi)^{-n/2}\exp(-\norm{z}^2/2).
+\]
+Zmiana zmiennych $y=Uz$ ma wyznacznik Jacobiego o module $1$, zaś $\norm{U^{-1}y}=\norm y$. Gęstość wektora $UZ$ jest więc identyczna z gęstością $Z$. Ponieważ gęstość ta rozkłada się na iloczyn gęstości standardowych normalnych, współrzędne $UZ$ są niezależne.
+\end{proof}
+
+\begin{twierdzenie}[Rozkłady statystyk normalnych i ich niezależność]\label{thm:normal-sampling}
+Niech $n\ge2$ oraz $X_1,\ldots,X_n$ będą niezależne o rozkładzie $\Normal(\mu,\sigma^2)$, gdzie $\mu\in\R$ i $\sigma>0$. Wówczas
+\begin{enumerate}
+\item $\overline X_n\sim\Normal(\mu,\sigma^2/n)$;
+\item $\dfrac{(n-1)S_n^2}{\sigma^2}\sim\chi^2_{n-1}$;
+\item $\overline X_n$ i $S_n^2$ są niezależne;
+\item $\dfrac{\sqrt n(\overline X_n-\mu)}{S_n}\sim t_{n-1}$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Niech $Z_i=(X_i-\mu)/\sigma$ i $Z=(Z_1,\ldots,Z_n)$. Wybierzmy wektor $e_1=n^{-1/2}(1,\ldots,1)$ i uzupełnijmy go do bazy ortonormalnej $e_1,\ldots,e_n$ w $\R^n$. Istnieje więc macierz ortogonalna $U$, której wiersze są tymi wektorami. Niech $Y=UZ$. Na mocy lematu~\ref{lem:gauss-rotation} wszystkie $Y_1,\ldots,Y_n$ są niezależne i $\Normal(0,1)$. Pierwsza współrzędna to $Y_1=\sqrt n(\overline X_n-\mu)/\sigma$, zatem pierwsza teza wynika bezpośrednio z przeskalowania rozkładu normalnego.
+
+Rzut ortogonalny $Z$ na prostą rozpiętą przez $e_1$ ma postać $\langle Z,e_1\rangle e_1$. Kwadrat długości składowej prostopadłej wynosi
+\[
+\sum_{i=1}^n\left(Z_i-\overline Z\right)^2
+=\norm Z^2-\langle Z,e_1\rangle^2
+=\sum_{j=2}^nY_j^2
+=\frac{(n-1)S_n^2}{\sigma^2}.
+\]
+Z definicji rozkładu $\chi^2$ suma kwadratów $n-1$ niezależnych standardowych normalnych ma rozkład $\chi^2_{n-1}$, co dowodzi punktu 2. Statystyka $\overline X_n$ zależy wyłącznie od $Y_1$, a $S_n^2$ wyłącznie od $(Y_2,\ldots,Y_n)$; niezależność współrzędnych daje punkt 3. Wreszcie iloraz $Y_1/\sqrt{(\sum_{j=2}^nY_j^2)/(n-1)}$ ma, z definicji, rozkład Studenta o $n-1$ stopniach swobody. Ten iloraz jest równy wyrażeniu z punktu 4. Ponieważ suma kwadratów $n-1$ standardowych normalnych jest dodatnia prawie na pewno, mianownik nie znika prawie na pewno.
+\end{proof}
+
+
+\begin{stwierdzenie}[W modelu normalnym nieobciążoność może kosztować MSE]
+\label{prop:mse-samplevariance}
+Niech $n\ge2$ i $X_1,\ldots,X_n$ będą niezależne o rozkładzie
+$\Normal(\mu,\sigma^2)$ z $\sigma^2>0$. Niech
+$S_n^2=(n-1)^{-1}\sum_i(X_i-\overline X_n)^2$ i
+$V_n=n^{-1}\sum_i(X_i-\overline X_n)^2$.
+Wówczas dla estymacji $\sigma^2$ przy stracie kwadratowej
+\[
+\MSE(S_n^2)=\frac{2\sigma^4}{n-1},\qquad
+\MSE(V_n)=\frac{(2n-1)\sigma^4}{n^2},
+\]
+więc $\MSE(V_n)<\MSE(S_n^2)$ dla każdego $n\ge2$.
+\end{stwierdzenie}
+\begin{proof}
+Na mocy twierdzenia~\ref{thm:normal-sampling} zmienna
+$Y=(n-1)S_n^2/\sigma^2$ ma rozkład $\chi^2_{n-1}$.
+Z jego momentów $\E Y=n-1$ i $\Var(Y)=2(n-1)$ otrzymujemy
+$\Var(S_n^2)=2\sigma^4/(n-1)$, a estymator ten jest nieobciążony.
+Ponieważ $V_n=(n-1)S_n^2/n$, jego wariancja wynosi
+$2(n-1)\sigma^4/n^2$, a obciążenie $-\sigma^2/n$.
+Dodanie kwadratu obciążenia daje drugi wzór.
+Różnica \mbox{$2/(n-1)-(2n-1)/n^2=(3n-1)/(n^2(n-1))>0$},
+co kończy dowód.
+\end{proof}
+\emph{Wniosek praktyczny.} Jeśli celem jest oszacowanie wariancji z
+zerowym obciążeniem, $S_n^2$ spełnia ten warunek. Jeśli przyjmiemy
+błąd średniokwadratowy jako kryterium, nawet prosty estymator
+$V_n$ ma mniejsze ryzyko w modelu normalnym. Nie oznacza to, że
+jest najlepszy spośród \emph{wszystkich} możliwych estymatorów.
+
+\begin{uwaga}[Co dokładnie jest założone?]
+Dokładny rozkład $t_{n-1}$ wynika z \emph{normalności całej próby}, a nie wyłącznie z istnienia wariancji. Gdy próba jest nienormalna, odpowiedni iloraz może być asymptotycznie normalny, ale nie musi mieć dokładnego rozkładu Studenta przy skończonym $n$. Test Shapiro--Wilka, diagnostyka wykresów Q--Q i alternatywy dla testu t pojawią się w rozdziałach o diagnostyce i testowaniu hipotez. Nie należy testować normalności surowych danych z różnych grup jako zamiennika sprawdzania założeń modelu błędów.
+\end{uwaga}
+
+\begin{przyklad}[Obliczenie statystyki Studenta, bez przedwczesnego testowania]\label{ex:t-demo}
+Załóżmy, że mamy próbę $n=9$ z modelu $\Normal(\mu,\sigma^2)$, a wyniki dają $\bar x=102$ i $s=6$. Dla hipotetycznej wartości $\mu_0=100$ otrzymujemy $t=\sqrt9(102-100)/6=1$. Gdy prawdziwe $\mu=\mu_0$, statystyka ma dokładny rozkład $t_8$. Sam wynik $t=1$ nie jest jeszcze decyzją: trzeba z góry ustalić hipotezę alternatywną, poziom istotności i regułę testowania. W ten sposób zapobiegamy myleniu opisu statystyki z gotowym wnioskiem badawczym.
+\end{przyklad}
+
+\section{Dystrybuanta empiryczna: dane opisują cały rozkład}\label{sec:ecdf}
+\begin{definicja}[Miara i dystrybuanta empiryczna]
+Niech $X_1,\ldots,X_n$ będą rzeczywistymi obserwacjami, gdzie $n\ge1$. \emph{Miarą empiryczną} na $\calB(\R)$ nazywamy
+$\widehat P_n=n^{-1}\sum_{i=1}^n\delta_{X_i}$, a \emph{dystrybuantą empiryczną} funkcję
+\[
+\widehat F_n(x)=\widehat P_n(( -\infty,x])=\frac1n\sum_{i=1}^n\ind{\{X_i\le x\}},\qquad x\in\R.
+\]
+\end{definicja}
+
+Funkcja $\widehat F_n$ jest niemalejąca, prawostronnie ciągła, ma wartości w $\{0,1/n,\ldots,1\}$ i przyjmuje granice $0$ oraz $1$ na końcach prostej. To nie jest założenie o kształcie nieznanego rozkładu: dystrybuantę empiryczną możemy obliczyć z dowolnych danych rzeczywistych.
+
+\begin{stwierdzenie}[Rozkład dystrybuanty empirycznej w ustalonym punkcie]\label{prop:ecdf-pointwise}
+Niech $X_1,\ldots,X_n$ będą niezależne i o wspólnej dystrybuancie $F$. Dla dowolnego ustalonego $x\in\R$ zachodzi
+\[
+n\widehat F_n(x)\sim\Bin(n,F(x)),\quad
+\E\widehat F_n(x)=F(x),\quad
+\Var(\widehat F_n(x))=\frac{F(x)(1-F(x))}{n}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Zmienne $I_i(x)=\ind{\{X_i\le x\}}$ są niezależnymi zmiennymi Bernoulliego o parametrze $F(x)$; ich suma jest równa $n\widehat F_n(x)$. Stosujemy twierdzenie~\ref{thm:prop-bin}.
+\end{proof}
+
+\begin{twierdzenie}[Jednostajna zgodność dystrybuanty empirycznej]\label{thm:gc}
+Jeżeli $X_1,X_2,\ldots$ są niezależne i mają wspólną dystrybuantę $F$, to
+\[
+\sup_{x\in\R}\abs{\widehat F_n(x)-F(x)}\longrightarrow0
+\qquad\text{prawie na pewno}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Jest to twierdzenie Glivenki--Cantellego, którego dowód przedstawiono w tomie I. Zwracamy uwagę na jego treść: zbieżność jest \emph{jednostajna po wszystkich progach $x$} i zachodzi bez założenia ciągłości dystrybuanty $F$. W szczególności wynik obejmuje rozkłady dyskretne, ciągłe i mieszane.
+\end{proof}
+
+\begin{uwaga}[Co to znaczy dla praktyki?]
+Dystrybuanta empiryczna umożliwia oszacowanie \emph{dowolnego} prawdopodobieństwa przekroczenia progu: $\Prob(X>a)=1-F(a)$ estymujemy przez $1-\widehat F_n(a)$. W diagnostyce modelu porównujemy $\widehat F_n$ z dystrybuantą dopasowanego rozkładu. Jednak samo twierdzenie Glivenki--Cantellego nie daje przedziału o określonym poziomie ufności przy skończonym $n$; w tym celu potrzebne są dodatkowe nierówności lub kwantyle rozkładu odpowiedniej statystyki.
+\end{uwaga}
+
+\begin{center}
+\begin{tikzpicture}[x=0.75cm,y=4.1cm,>=Latex]
+\draw[->] (-.3,0)--(10.6,0) node[right] {$x$};
+\draw[->] (0,-.05)--(0,1.13) node[above] {$\widehat F_5(x)$};
+\foreach \y/\lab in {.2/{1/5},.4/{2/5},.6/{3/5},.8/{4/5},1/{1}} {
+  \draw (-.08,\y)--(.08,\y) node[left=3pt] {$\lab$};
+}
+\foreach \x in {1,2,4,7,9} {\draw (\x,-.015)--(\x,.015) node[below=4pt] {\small $\x$};}
+\draw[very thick,blue!65!black] (0,0)--(1,0) (1,.2)--(2,.2) (2,.4)--(4,.4) (4,.6)--(7,.6) (7,.8)--(9,.8) (9,1)--(10.2,1);
+\foreach \x/\yl/\yh in {1/0/.2,2/.2/.4,4/.4/.6,7/.6/.8,9/.8/1} {
+\draw[blue!65!black,fill=white] (\x,\yl) circle (1.6pt);
+\fill[blue!65!black] (\x,\yh) circle (1.6pt);
+}
+\end{tikzpicture}
+\end{center}
+\noindent\emph{Rysunek 2.1.} Dystrybuanta empiryczna pięciu obserwacji $1,2,4,7,9$. Skok następuje w zaobserwowanej wartości, a zaznaczenie punktu pełnego po prawej obrazuje prawostronną ciągłość.
+
+\section{Statystyki pozycyjne: minimum, maksimum, kwantyle}\label{sec:orderstats}
+\begin{definicja}[Statystyki porządkowe]\label{def:order}
+Dla rzeczywistej próby $(X_1,\ldots,X_n)$ niech $X_{(1)}\le X_{(2)}\le\cdots\le X_{(n)}$ oznaczają wartości tej próby uporządkowane niemalejąco, z uwzględnieniem powtórzeń. Są one \emph{statystykami porządkowymi}. Dla $p\in(0,1)$ \emph{empirycznym kwantylem lewostronnym} nazywamy $\widehat q_p=\inf\{x:\widehat F_n(x)\ge p\}=X_{(\lceil np\rceil)}$. Przy parzystym $n$ przez \emph{medianę obliczeniową} często rozumie się $\bigl(X_{(n/2)}+X_{(n/2+1)}\bigr)/2$; ta konwencja może różnić się od lewostronnego kwantyla $\widehat q_{1/2}$.
+\end{definicja}
+
+\begin{twierdzenie}[Rozkład statystyk porządkowych]\label{thm:order-cdf}
+Niech $X_1,\ldots,X_n$ będą niezależne o jednakowej dystrybuancie $F$. Dla dowolnych $k\in\{1,\ldots,n\}$ oraz $x\in\R$ zachodzi
+\[
+\Prob(X_{(k)}\le x)=\sum_{j=k}^n\binom nj F(x)^j\bigl(1-F(x)\bigr)^{n-j}.
+\]
+W szczególności $\Prob(X_{(1)}>x)=(1-F(x))^n$ oraz $\Prob(X_{(n)}\le x)=F(x)^n$. Jeśli $F$ ma gęstość $f$ względem miary Lebesgue'a, to $X_{(k)}$ ma gęstość
+\[
+f_{(k)}(x)=\frac{n!}{(k-1)!(n-k)!}F(x)^{k-1}(1-F(x))^{n-k}f(x)
+\]
+dla prawie wszystkich $x\in\R$.
+\end{twierdzenie}
+\begin{proof}
+Zdarzenie $\{X_{(k)}\le x\}$ zachodzi wtedy i tylko wtedy, gdy co najmniej $k$ spośród $X_i$ jest mniejsze lub równe $x$. Liczba takich obserwacji ma rozkład $\Bin(n,F(x))$, co daje pierwszy wzór. W szczególności minimum jest większe od $x$ dokładnie wtedy, gdy wszystkie $X_i>x$, a maksimum jest mniejsze lub równe $x$ dokładnie wtedy, gdy wszystkie $X_i\le x$.
+
+Przy założeniu istnienia gęstości dystrybuanta $F$ jest absolutnie ciągła. Funkcja $G(u)=\sum_{j=k}^n\binom nj u^j(1-u)^{n-j}$ jest wielomianem, więc $G\circ F$ jest absolutnie ciągła na każdym przedziale zwartym i ma prawie wszędzie pochodną $G'(F(x))f(x)$. Różniczkujemy skończoną sumę. Przy kolejnym wyrazie wykorzystujemy $j\binom nj=n\binom{n-1}{j-1}$ oraz $(n-j)\binom nj=n\binom{n-1}j$; wszystkie składniki wewnętrzne skracają się parami, pozostawiając
+$G'(u)=n\binom{n-1}{k-1}u^{k-1}(1-u)^{n-k}$. Otrzymujemy podaną gęstość.
+\end{proof}
+
+\begin{wniosek}[Jednostajny rozkład statystyk porządkowych]\label{cor:uniform-beta}
+Jeśli $U_1,\ldots,U_n$ są niezależne i jednostajne na $(0,1)$, to $U_{(k)}\sim\operatorname{Beta}(k,n+1-k)$ oraz $\E U_{(k)}=k/(n+1)$.
+\end{wniosek}
+\begin{proof}
+W twierdzeniu~\ref{thm:order-cdf} przy $0<x<1$ podstawiamy $F(x)=x$ oraz $f(x)=1$. Otrzymujemy gęstość $\frac{n!}{(k-1)!(n-k)!}x^{k-1}(1-x)^{n-k}$, która jest gęstością beta z parametrami $k,n+1-k$. Wzór na wartość oczekiwaną rozkładu beta, udowodniony w tomie I, daje $k/(n+1)$.
+\end{proof}
+
+\begin{przyklad}[Kiedy maksimum jest informatywne?]\label{ex:max-uniform}
+Niech $X_1,\ldots,X_n$ będą niezależne i jednostajne na $(0,\theta)$, gdzie $\theta>0$. Z poprzedniego twierdzenia $\Prob(X_{(n)}\le x)=(x/\theta)^n$ dla $0<x<\theta$, a z przeskalowania jednostajnego rozkładu wynika $\E X_{(n)}=n\theta/(n+1)$. Zatem statystyka $\frac{n+1}{n}X_{(n)}$ jest nieobciążonym estymatorem $\theta$. W tym modelu maksimum jest bardzo użyteczne, ponieważ parametr jest końcem nośnika. W modelu normalnym maksimum zachowuje się całkiem inaczej i z reguły nie jest pierwszym wyborem do estymowania średniej.
+\end{przyklad}
+
+\begin{twierdzenie}[Zgodność kwantyla empirycznego]\label{thm:quant-consistency}
+Niech $X_1,X_2,\ldots$ będą niezależne i o jednakowej dystrybuancie $F$. Ustalmy $p\in(0,1)$ i $q\in\R$ takie, że dla każdego $\varepsilon>0$ zachodzi
+\[
+F(q-\varepsilon)<p<F(q+\varepsilon).
+\]
+Wówczas empiryczny kwantyl lewostronny $\widehat q_p=\inf\{x:\widehat F_n(x)\ge p\}$ zbiega do $q$ prawie na pewno.
+\end{twierdzenie}
+\begin{proof}
+Na zdarzeniu prawdopodobieństwa $1$, na którym zbieżność jednostajna z twierdzenia~\ref{thm:gc} zachodzi, ustalmy $\varepsilon>0$. Liczby $p-F(q-\varepsilon)$ i $F(q+\varepsilon)-p$ są dodatnie. Dla dostatecznie dużych $n$ mamy więc $\widehat F_n(q-\varepsilon)<p<\widehat F_n(q+\varepsilon)$. Z definicji lewostronnego kwantyla wynika wówczas $q-\varepsilon<\widehat q_p\le q+\varepsilon$. Ponieważ $\varepsilon$ było dowolne, zbieżność wynika na tym samym zdarzeniu. Wystarczy formalnie wybrać najpierw przeliczalną rodzinę $\varepsilon=1/m$, $m\in\N$, aby uzyskać jedno zdarzenie pełnej miary spełniające wszystkie potrzebne oszacowania.
+\end{proof}
+
+\begin{uwaga}[Dlaczego założenie ma znaczenie?]
+Gdy dystrybuanta ma płaski fragment na poziomie $p$, „kwantyl” nie musi być stabilny względem niewielkich zaburzeń dystrybuanty. Nie wystarcza zatem powiedzieć, że dystrybuanta empiryczna zbiega jednostajnie; trzeba jeszcze zadbać o jednoznaczne, stabilne przecięcie poziomu $p$.
+\end{uwaga}
+
+\section{Mediana, średnia obcięta i obserwacje odstające}\label{sec:robust}
+\begin{stwierdzenie}[Mediana minimalizuje sumę odchyleń bezwzględnych]\label{prop:median-min}
+Niech $x_1,\ldots,x_n\in\R$, a $x_{(1)}\le\cdots\le x_{(n)}$ będą wartościami uporządkowanymi. Funkcja $a\mapsto\sum_{i=1}^n\abs{x_i-a}$ przyjmuje minimum dokładnie dla $a\in[x_{(\lceil n/2\rceil)},x_{(\lfloor n/2+1\rfloor)}]$. Dla nieparzystego $n$ zbiór ten jest jednopunktowy; dla parzystego jest przedziałem między dwiema środkowymi obserwacjami.
+\end{stwierdzenie}
+\begin{proof}
+Niech $g(a)=\sum_i\abs{x_i-a}$. Jeśli $a$ nie jest równy żadnej obserwacji, pochodna wynosi $g'(a)=\#\{i:x_i<a\}-\#\{i:x_i>a\}$: składnik $\abs{x_i-a}$ ma pochodną $1$ przy $a>x_i$ i $-1$ przy $a<x_i$. Gdy ponad połowa obserwacji leży po prawej, pochodna jest ujemna i przesunięcie $a$ w prawo zmniejsza $g$; gdy ponad połowa leży po lewej, pochodna jest dodatnia. W punktach $a=x_i$ używamy jednostronnych pochodnych funkcji wypukłej. Minimum występuje tam, gdzie lewa pochodna jest niedodatnia, a prawa nieujemna, czyli dokładnie między środkowymi obserwacjami. Ten argument obejmuje także wartości powtarzające się.
+\end{proof}
+
+W ten sposób otrzymujemy podstawowe geometryczne porównanie: \emph{średnia minimalizuje sumę kwadratów}, a \emph{mediana minimalizuje sumę wartości bezwzględnych}. Dlatego pojedyncza ekstremalna obserwacja ma silniejszy wpływ na średnią niż na medianę.
+
+\begin{definicja}[Wskaźniki odpornego opisu]
+Dla rzeczywistych danych $x_1,\ldots,x_n$ definiujemy \emph{rozstęp międzykwartylowy} $\operatorname{IQR}=\widehat q_{3/4}-\widehat q_{1/4}$ w zadanej wcześniej konwencji kwantyli. \emph{Medianowe odchylenie bezwzględne} to $\operatorname{MAD}=\Med_i\abs{x_i-m}$, gdzie $m$ jest wybraną medianą danych. \emph{Średnią obciętą} nazywamy średnią pozostającą po usunięciu ustalonej liczby obserwacji z obu krańców uporządkowanej próby.
+\end{definicja}
+
+\begin{zadanie}[Średnia, mediana i odporność na skrajną obserwację]\label{zad:outlier}
+Wyniki kolejnych dwunastu pomiarów wynoszą
+\[
+8,10,10,11,11,12,12,13,13,14,15,31.
+\]
+Oblicz średnią, wariancję z próby, medianę, rozstęp międzykwartylowy i średnią po usunięciu jednej najmniejszej oraz jednej największej wartości. Zinterpretuj wyniki.
+\par\emph{Rozwiązanie.} Suma obserwacji to $160$, a suma ich kwadratów $2514$. Stąd
+\[
+\bar x=\frac{160}{12}=13\tfrac13,\qquad
+s^2=\frac1{11}\left(2514-\frac{160^2}{12}\right)=\frac{1142}{33}\approx34{,}606,
+\qquad s\approx5{,}883.
+\]
+Środkowe obserwacje są obie równe $12$, więc mediana wynosi $12$. W konwencji kwantyli lewostronnych $\widehat q_{1/4}=x_{(3)}=10$, $\widehat q_{3/4}=x_{(9)}=13$, zatem $\operatorname{IQR}=3$. Średnia obcięta po usunięciu $8$ i $31$ wynosi $(160-8-31)/10=12{,}1$.
+
+Wartość $31$ podnosi średnią i odchylenie standardowe, podczas gdy mediana oraz środkowy zakres danych są znacznie mniej wrażliwe. Jeśli $31$ jest skutkiem błędu zapisu, należy najpierw zweryfikować pomiar. Jeśli jest rzeczywistą obserwacją, nie wolno jej arbitralnie usunąć: może mieć istotne znaczenie np. dla oceny ryzyka przekroczenia progu. Wybór między średnią i medianą zależy od pytania, nie od automatycznej reguły usuwania wartości odstających.
+\end{zadanie}
+
+\begin{uwaga}[Różne konwencje kwantyli]
+Programy statystyczne stosują różne sposoby interpolacji kwantyli przy skończonym $n$. W powyższym zadaniu użyliśmy definicji przez odwrotność dystrybuanty empirycznej. Jeśli oprogramowanie zwraca inne kwartyle, należy sprawdzić jego ustawienia, a nie uznawać jednego z wyników za błąd matematyczny.
+\end{uwaga}
+
+\section{Wielowymiarowa próba: kowariancja i korelacja}\label{sec:sample-covariance}
+\begin{definicja}[Kowariancja z próby]\label{def:samplecov}
+Dla $n\ge2$ i obserwacji wektorowych $X_1,\ldots,X_n\in\R^d$ definiujemy $\overline X=n^{-1}\sum_iX_i$ oraz macierz
+\[
+\widehat\Sigma=\frac1{n-1}\sum_{i=1}^n(X_i-\overline X)(X_i-\overline X)^{\mathsf T}.
+\]
+Jeżeli $d=2$, pozadiagonalny współczynnik jest kowariancją z próby; współczynnik korelacji Pearsona uzyskujemy przez podzielenie jej przez iloczyn dodatnich odchyleń standardowych dwóch współrzędnych. Korelacja nie jest zdefiniowana, gdy odchylenie standardowe którejś współrzędnej wynosi zero.
+\end{definicja}
+
+\begin{twierdzenie}[Nieobciążoność macierzy kowariancji]\label{thm:samplecov-unbiased}
+Niech $X_1,\ldots,X_n$ będą niezależnymi, jednakowo rozłożonymi wektorami w $\R^d$ z $\E\norm{X_1}^2<\infty$, średnią $m=\E X_1$ i macierzą kowariancji $\Sigma=\E[(X_1-m)(X_1-m)^{\mathsf T}]$. Dla $n\ge2$ zachodzi $\E\widehat\Sigma=\Sigma$. Ponadto $\widehat\Sigma$ jest symetryczna i nieujemnie określona dla każdej realizacji próby.
+\end{twierdzenie}
+\begin{proof}
+Rozwijamy macierzową tożsamość
+\[
+\sum_i(X_i-\overline X)(X_i-\overline X)^{\mathsf T}
+=\sum_i(X_i-m)(X_i-m)^{\mathsf T}
+-n(\overline X-m)(\overline X-m)^{\mathsf T}.
+\]
+Wyrazy mieszane znikają, gdyż $\sum_i(X_i-\overline X)=0$. Wartość oczekiwana pierwszej sumy wynosi $n\Sigma$, a drugiego składnika $n\cdot\Sigma/n=\Sigma$ dzięki niezależności wektorów i faktowi $\E\overline X=m$. Po podzieleniu przez $n-1$ dostajemy nieobciążoność. Dla dowolnego $v\in\R^d$ mamy $v^{\mathsf T}\widehat\Sigma v=(n-1)^{-1}\sum_i\langle v,X_i-\overline X\rangle^2\ge0$, więc macierz jest nieujemnie określona.
+\end{proof}
+
+\begin{przyklad}[Korelacja zerowa, lecz zależność istotna]
+Niech $X\sim\operatorname{Unif}(-1,1)$ i $Y=X^2$. Wówczas $\Cov(X,Y)=\E X^3-(\E X)(\E X^2)=0$. Mimo to $Y$ jest całkowicie wyznaczona przez $X$ i zmienne nie są niezależne. W praktyce wykres rozrzutu może ujawnić wyraźny związek kwadratowy mimo korelacji Pearsona bliskiej zeru. Z tego powodu nie wolno używać pojedynczego współczynnika korelacji jako ogólnego miernika dowolnej zależności.
+\end{przyklad}
+
+\section{Co zmienia próba bez zwracania? Poprawka na skończoną populację}\label{sec:fpc}
+\begin{twierdzenie}[Wariancja średniej przy losowaniu bez zwracania]\label{thm:fpc}
+Niech $N\ge2$ i $y_1,\ldots,y_N\in\R$ oznaczają ustalone wartości w populacji skończonej. Wybieramy $n\in\{1,\ldots,N\}$ jednostek jednostajnie spośród wszystkich uporządkowanych prób bez zwracania i zapisujemy ich wartości jako $X_1,\ldots,X_n$. Niech $\mu_N=N^{-1}\sum_i y_i$ oraz $v_N=N^{-1}\sum_i(y_i-\mu_N)^2$. Wówczas
+\[
+\E\overline X_n=\mu_N,\qquad
+\Var(\overline X_n)=\frac{v_N}{n}\frac{N-n}{N-1}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Każda pozycja losowania ma rozkład jednostajny na populacji, więc $\E X_i=\mu_N$ oraz $\Var(X_i)=v_N$. Dla $i\ne j$ każda uporządkowana para dwóch różnych jednostek występuje jednakowo często, stąd
+\[
+\E(X_iX_j)=\frac1{N(N-1)}\sum_{a\ne b}y_ay_b
+=\frac{(\sum_a y_a)^2-\sum_a y_a^2}{N(N-1)}.
+\]
+Po odjęciu $\mu_N^2$ i uporządkowaniu otrzymujemy $\Cov(X_i,X_j)=-v_N/(N-1)$. Zatem
+\[
+\Var(\overline X_n)=\frac1{n^2}\left(nv_N+n(n-1)\frac{-v_N}{N-1}\right)
+=\frac{v_N}{n}\frac{N-n}{N-1}.
+\]
+Wartość oczekiwana średniej jest równa $\mu_N$ z liniowości wartości oczekiwanej. Dla $n=N$ wariancja rzeczywiście znika: poznaliśmy całą populację.
+\end{proof}
+
+\begin{uwaga}[Porównanie z próbą prostą z populacji nieskończonej]
+Czynnik $(N-n)/(N-1)$ zmniejsza wariancję średniej względem losowania ze zwracaniem. W podręcznikach spotyka się równoważny zapis $\Var(\overline X_n)=(1-n/N)S_N^2/n$, gdzie $S_N^2=(N-1)^{-1}\sum_i(y_i-\mu_N)^2$. Poprawka jest istotna przy dużym udziale próby w populacji; nie należy jej stosować bezrefleksyjnie do danych zależnych z innych powodów, np. do szeregu czasowego.
+\end{uwaga}
+
+\section{Oszacowania koncentracji: ile obserwacji potrzeba?}
+\begin{twierdzenie}[Przypomnienie nierówności Hoeffdinga]\label{thm:hoeffding-demo}
+Niech $X_1,\ldots,X_n$ będą niezależnymi zmiennymi losowymi przyjmującymi wartości w $[0,1]$, niekoniecznie o jednakowych rozkładach. Niech $m_n=n^{-1}\sum_i\E X_i$. Dla każdego $\varepsilon>0$,
+\[
+\Prob\!\left(\abs{\overline X_n-m_n}\ge\varepsilon\right)
+\le 2e^{-2n\varepsilon^2}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Jest to szczególny przypadek nierówności Hoeffdinga, udowodnionej w tomie I. Jej zaletą jest brak konieczności znajomości dokładnego rozkładu zmiennych poza niezależnością i ograniczeniem przedziałem $[0,1]$.
+\end{proof}
+
+\begin{zadanie}[Orientacyjna liczebność próby]\label{zad:sample-size}
+Chcemy, aby przy niezależnych pomiarach Bernoulliego prawdopodobieństwo odchylenia $\widehat p_n$ od $p$ o co najmniej $0{,}1$ było co najwyżej $0{,}05$. Jaką liczebność $n$ gwarantuje nierówność Hoeffdinga?
+\par\emph{Rozwiązanie.} Wystarczy zapewnić $2\exp(-2n\cdot0{,}1^2)\le0{,}05$, czyli
+\[
+n\ge\frac{\log(2/0{,}05)}{2\cdot0{,}1^2}=\frac{\log40}{0{,}02}\approx184{,}44.
+\]
+Zatem $n=185$ jest wystarczające. Jest to konserwatywna gwarancja dla każdego $p\in[0,1]$ przy niezależności, a nie optymalna liczba obserwacji w każdym modelu. W praktyce należy dodatkowo uwzględnić schemat losowania, koszty pomiaru i to, jak precyzyjny wniosek jest potrzebny.
+\end{zadanie}
+
+\section{Różne cele, różne statystyki: porównanie metod}\label{sec:choose-stats}
+W praktyce nie zaczynamy od pytania „który test jest najlepszy?”, lecz od pytania, \emph{co chcemy oszacować lub porównać}. Na przykład dla danych z zadania~\ref{zad:outlier} odpowiedź zależy od celu: średnia opisuje sumę podzieloną przez liczbę pomiarów, mediana opisuje środek uporządkowanej próby, a odsetek przekroczeń progu $20$ mierzy ryzyko dużego wyniku.
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}p{0.27\textwidth}>{\raggedright\arraybackslash}p{0.36\textwidth}}
+\toprule
+\textbf{Pytanie} & \textbf{Co obliczyć najpierw?} & \textbf{Kiedy uważać?}\\
+\midrule
+Średni wynik lub łączna produkcja & Średnia, odchylenie standardowe, błąd standardowy & Zależne obserwacje, brak reprezentatywności, ciężkie ogony\\
+Typowa obserwacja & Mediana, kwartyle, IQR & Przy bardzo małej próbie kwantyle są niestabilne; definicje różnią się\\
+Przekroczenia progu & Odsetek, dystrybuanta empiryczna & Zbyt mało przekroczeń dla przybliżeń normalnych\\
+Rozproszenie pomiarów & $S_n$, IQR, MAD & Jednostka, asymetria, wartości skrajne\\
+Zależność dwóch wielkości & Wykres rozrzutu, kowariancja, korelacja & Nieliniowość, obserwacje odstające, wspólna przyczyna\\
+Porównanie grup & Statystyki w każdej grupie osobno & Różne liczebności, heteroskedastyczność, sparowanie\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Diagnostyka jest częścią analizy.}
+Przed późniejszym testem Shapiro--Wilka lub ANOVA warto obejrzeć histogram, wykres Q--Q, wykres reszt i wykresy poszczególnych grup. W modelach ANOVA normalność dotyczy rozkładu błędów przy danych wartościach czynników (w klasycznym modelu normalnym), a nie koniecznie połączonego histogramu wszystkich obserwacji. Wynik testu normalności z wartością $p>0{,}05$ nie dowodzi normalności; wynik $p<0{,}05$ nie oznacza automatycznie, że każda metoda oparta na średnich jest bezużyteczna. O właściwym doborze metody decydują także odporność na naruszenia założeń, wielkość próby i cel badania.
+
+\section{Pełne studium przypadku: produkcja, progi i wybór statystyki}\label{sec:case-study}
+\begin{zadanie}[Dwa pytania o te same dane]\label{zad:full-case}
+Zmierzyliśmy w sekundach czas wykonania zadania przez dwanaście identycznych urządzeń, uzyskując dane z zadania~\ref{zad:outlier}. Dział kontroli jakości chce odpowiedzi na dwa pytania: (i) jaki jest typowy czas wykonania? (ii) jak często czas przekracza $20$ sekund? Jakie statystyki i założenia należy zaproponować?
+\par\emph{Rozwiązanie.} Dla pytania (i) najpierw przedstawiamy zarówno średnią $13{,}33$ s, jak i medianę $12$ s, IQR równy $3$ s oraz wartość odstającą $31$ s. Jeśli priorytetem jest przewidywanie \emph{całkowitego czasu wszystkich operacji}, średnia może być właściwą wielkością docelową mimo wartości skrajnej. Jeśli priorytetem jest \emph{typowa operacja}, mediana jest czytelniejsza. Jednocześnie sprawdzamy, czy $31$ s jest pomyłką, czy rzeczywistym opóźnieniem.
+
+Dla pytania (ii) zliczamy $\sum_i\ind{\{x_i>20\}}=1$, stąd odsetek w próbie wynosi $1/12\approx0{,}0833$. Nie należy uznawać tego za dokładne prawdopodobieństwo przekroczenia progu w populacji; próba jest mała, a jeden przypadek daje ograniczoną informację. Jeśli urządzenia pracowały w różnych warunkach lub nie zostały losowo dobrane, potrzebujemy modelu uwzględniającego te okoliczności. Gdy niezależność i jednakowe warunki są wiarygodne, wskaźnik przekroczenia można modelować Bernoullim i skorzystać później z odpowiednich przedziałów dwumianowych.
+
+\emph{Wniosek praktyczny:} jeden zbiór danych uzasadnia \emph{różne} statystyki zależnie od pytania. Średnia, mediana i odsetek przekroczeń nie są konkurentami o jeden uniwersalny tytuł „najlepszej statystyki”; mierzą różne aspekty rozkładu.
+\end{zadanie}
+
+\section{Przykład numeryczny w Pythonie i Julii}
+Poniższe skrypty obliczają opis próbki z zadania~\ref{zad:outlier}. Nie przeprowadzają żadnego testu hipotez: najpierw trzeba poprawnie zdefiniować cel i model. Do kwartyli używamy tutaj konwencji odwrotności dystrybuanty empirycznej, nie domyślnej interpolacji oprogramowania.
+
+\Needspace{16\baselineskip}
+\noindent\textbf{Python (NumPy).}\par
+\par
+\Needspace{13\baselineskip}
+\smallskip
+\begin{lstlisting}[language=Python,caption={Opis próby: średnia, mediana, wariancja i kwantyle (Python).}]
+import numpy as np
+x = np.array([8, 10, 10, 11, 11, 12, 12, 13, 13, 14, 15, 31])
+mean = x.mean()
+median = np.median(x)
+variance_unbiased = x.var(ddof=1)
+q25 = np.quantile(x, 0.25, method="inverted_cdf")
+q75 = np.quantile(x, 0.75, method="inverted_cdf")
+share_above_20 = np.mean(x > 20)
+print(mean, median, variance_unbiased, q25, q75, share_above_20)
+\end{lstlisting}
+
+\Needspace{16\baselineskip}
+\noindent\textbf{Julia (Statistics).}\par
+\par
+\Needspace{13\baselineskip}
+\smallskip
+\begin{lstlisting}[language=Julia,caption={Opis próby z użyciem pakietu Statistics (Julia).}]
+using Statistics
+x = [8, 10, 10, 11, 11, 12, 12, 13, 13, 14, 15, 31]
+mu = mean(x)
+med = median(x)
+s2 = var(x; corrected=true)
+y = sort(x)
+q25 = y[ceil(Int, length(y) * 0.25)]
+q75 = y[ceil(Int, length(y) * 0.75)]
+share_above_20 = count(v -> v > 20, x) / length(x)
+println((mu, med, s2, q25, q75, share_above_20))
+\end{lstlisting}
+
+\paragraph{Jak interpretować wyniki programu?}
+Obliczenia nie sprawdzają założeń modelu ani nie rozstrzygają, czy wartość $31$ jest błędem pomiarowym. Kod nie stanowi również uzasadnienia, że obserwacje są niezależne. Jeśli próba pochodzi z wielu partii lub z jednego szeregu czasowego, należy zmienić model niepewności, zamiast jedynie wybrać inną funkcję z biblioteki statystycznej.
+
+\section{Wskazówki do dalszej lektury: od opisu do wnioskowania}
+Z rozdziału 1 wiemy, jaki model obserwacji jest rozważany, a z rozdziału 2 -- jakie statystyki można obliczyć i jakie mają rozkłady. Kolejnym krokiem będzie \emph{funkcja wiarygodności}, następnie \emph{ocena decyzji przez funkcję straty}, a w dalszych rozdziałach teoria estymatorów, testów i przedziałów. W szczególności porównamy:
+\begin{itemize}
+\item średnią jako estymator $\mu$ i medianę jako estymator typowego położenia, w tym ich odporność i własności asymptotyczne;
+\item estymatory parametryczne i nieparametryczne, MLE, metodę momentów i metody odporne;
+\item dokładne wnioskowanie z rozkładu t-Studenta i przybliżenia asymptotyczne;
+\item ANOVA, ANCOVA, testy Welcha i testy nieparametryczne, podając jawnie warunki ich stosowania;
+\item klasyczne przedziały ufności i bayesowskie przedziały wiarygodności, interpretowane w odpowiednich modelach.
+\end{itemize}
+
+\paragraph{Lista kontrolna przed obliczeniami.}
+Niezależnie od dziedziny zastosowania należy umieć odpowiedzieć na cztery pytania: \emph{kto jest jednostką obserwacji?}, \emph{co jest parametrem docelowym?}, \emph{jakie losowanie i jaka zależność są założone?}, \emph{czy wybrana statystyka rzeczywiście mierzy tę wielkość?}. Dopiero wtedy konkretny test lub algorytm nabiera właściwego znaczenia.
+
+% ================================================================
+% ROZDZIAL 3 -- FUNKCJA WIARYGODNOSCI
+% ================================================================

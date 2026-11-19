@@ -1,0 +1,231 @@
+\chapter{Eksperyment statystyczny i model danych}
+\label{ch:eksperyment}
+\paragraph{Powiązania i odsyłacze.} Przypomnienie konstrukcji przestrzeni probabilistycznej i zmiennych losowych znajduje się w tomie I, rozdziałach~\ref{I-ch:probability} i~\ref{I-ch:random-variables}. Zależność czasową obserwacji formalizujemy w tomie II, rozdziale~\ref{II-ch:procesy}.
+
+\section{Od problemu praktycznego do modelu probabilistycznego}
+Rozważmy urządzenie, które przy każdym użyciu może ulec awarii. Jeżeli interesuje nas \emph{tylko} liczba awarii w $n$ niezależnych próbach o jednakowym prawdopodobieństwie awarii $p$, naturalnym modelem jest rozkład dwumianowy. W praktyce nie wiemy, czy wartość $p$ wynosi $0{,}01$, $0{,}05$ czy $0{,}2$. Rozważamy więc całą rodzinę prawdopodobieństw. Każda z nich opisuje inny, możliwy mechanizm powstawania danych.
+
+\begin{definicja}[Eksperyment statystyczny]\label{def:eksperyment}
+Niech $(\mathsf X,\calA)$ będzie przestrzenią mierzalną, $\Theta$ niepustym zbiorem oraz $\{P_\theta:\theta\in\Theta\}$ rodziną miar probabilistycznych na $(\mathsf X,\calA)$. Trójkę
+\[
+\mathcal E=(\mathsf X,\calA,\{P_\theta:\theta\in\Theta\})
+\]
+nazywamy \emph{eksperymentem statystycznym}. Zbiór $\Theta$ jest \emph{przestrzenią parametrów}, a $(\mathsf X,\calA)$ \emph{przestrzenią obserwacji}. W modelu klasycznym nieznany $\theta\in\Theta$ jest ustalony: losowe są obserwacje o prawie $P_\theta$.
+\end{definicja}
+
+Przestrzenią obserwacji może być zbiór $\{0,1\}^{100}$, przestrzeń $\R^n$, przestrzeń wszystkich tabel kontyngencji albo przestrzeń trajektorii procesu. Nie wolno utożsamiać parametru z konkretną obserwacją: parametr indeksuje \emph{rozkład}, z którego może powstać każda z wielu prób.
+
+\begin{przyklad}[Produkt sprawny lub wadliwy]\label{ex:bernoulli-exp}
+Dla jednej sztuki niech $\mathsf X=\{0,1\}$, gdzie $1$ oznacza wadę. Model Bernoulliego przyjmuje $\Theta=[0,1]$ oraz $P_p(\{1\})=p$, $P_p(\{0\})=1-p$. Dla $n$ niezależnych sztuk model ma postać
+\[
+\mathsf X_n=\{0,1\}^n,\qquad
+P_p^{\otimes n}(\{(x_1,\ldots,x_n)\})=p^{\sum_i x_i}(1-p)^{n-\sum_i x_i}.
+\]
+Dla $p\in\{0,1\}$ stosujemy naturalną interpretację prawdopodobieństw zdarzeń niemożliwych i pewnych. Statystyka $S=\sum_iX_i$ ma rozkład $\Bin(n,p)$, ale pełna próba to uporządkowany wektor $(X_1,\ldots,X_n)$: przejście do $S$ jest osobną decyzją o redukcji danych, którą uzasadnimy później teorią dostateczności.
+\end{przyklad}
+
+\begin{przyklad}[Pomiar ciągły]
+Zakładamy, że wynik $X$ pomiaru temperatury ma rozkład $\Normal(\mu,\sigma^2)$, gdzie $\mu\in\R$ i $\sigma>0$ są nieznane. Parametr jest dwuwymiarowy $\theta=(\mu,\sigma)$, a jego przestrzeń wynosi $\Theta=\R\times(0,\infty)$. Jeśli znamy dokładność przyrządu i chcemy estymować wyłącznie $\mu$, możemy uznać $\sigma$ za znaną. Jest to jednak \emph{inny eksperyment statystyczny} i inne założenie, a nie tylko wygodniejszy sposób zapisania tego samego problemu.
+\end{przyklad}
+
+\begin{przyklad}[Zliczanie z ekspozycją]\label{ex:exposure}
+Niech $Y_j$ oznacza liczbę awarii maszyny w czasie pracy $t_j>0$. W modelu Poissona $Y_j\sim\Pois(\lambda t_j)$, gdzie $\lambda>0$ jest nieznaną intensywnością na jednostkę czasu. Liczb $Y_j$ nie należy bezrefleksyjnie porównywać, gdy $t_j$ są różne. Gdyby dwie maszyny miały po $5$ awarii, lecz pracowały odpowiednio $10$ i $100$ godzin, surowe liczby byłyby identyczne, a obserwowane intensywności dziesięciokrotnie różne. Ten przykład motywuje rolę \emph{ekspozycji} i późniejsze modele z offsetem.
+\end{przyklad}
+
+\section{Obserwacja, próba, schemat losowania}
+\begin{definicja}[Próba losowa]\label{def:sample}
+Niech $(\mathsf S,\mathcal S)$ będzie przestrzenią mierzalną, a $Q_\theta$ miarą probabilistyczną na niej dla każdego $\theta\in\Theta$. Mówimy, że $X_1,\ldots,X_n$ są \emph{próbą prostą} z rozkładu $Q_\theta$, jeśli są niezależne i każda ma rozkład $Q_\theta$. Wówczas prawo wektora $X=(X_1,\ldots,X_n)$ jest iloczynem $Q_\theta^{\otimes n}$.
+\end{definicja}
+
+Próba prosta to założenie probabilistyczne, nie automatyczna cecha tabeli danych. Powtarzane pomiary tej samej osoby, kolejne dni działania jednej maszyny czy transakcje pochodzące z jednego silnego zdarzenia rynkowego zwykle nie są niezależnymi obserwacjami. Liczba wierszy tabeli nie musi zatem być liczbą niezależnych jednostek informacji.
+
+\begin{przyklad}[Dwie konstrukcje próby z urny]\label{ex:replacement}
+W urnie znajduje się $N$ kul, z czego $K$ jest oznaczonych. Losujemy $n\le N$ kul i zapisujemy liczbę oznaczonych jako $S$. Jeśli po każdym losowaniu zwracamy kulę do urny, to kolejne wskaźniki oznaczenia są niezależne o prawdopodobieństwie $K/N$ i $S\sim\Bin(n,K/N)$. Jeśli losujemy \emph{bez zwracania}, wskaźniki nie są niezależne i
+\[
+\Prob(S=k)=\frac{\binom Kk\binom{N-K}{n-k}}{\binom Nn},\qquad
+\max(0,n-N+K)\le k\le\min(n,K).
+\]
+\emph{Wyprowadzenie.} Wśród $\binom Nn$ jednakowo prawdopodobnych nieuporządkowanych prób dokładnie $\binom Kk\binom{N-K}{n-k}$ zawiera $k$ kul oznaczonych. Warunków brzegowych nie można pominąć: zapis z symbolami Newtona jest równoważny jedynie przy przyjęciu, że $\binom ab=0$ poza zakresem $0\le b\le a$.
+\end{przyklad}
+
+\begin{stwierdzenie}[Zależność przy losowaniu bez zwracania]\label{prop:without-replacement-cov}
+Niech $N\ge2$ i $K\in\{0,\ldots,N\}$. Jeśli $X_1,X_2$ są wskaźnikami oznaczenia w pierwszym i drugim losowaniu bez zwracania z opisanej wyżej urny, to
+\[
+\E X_i=\frac KN=:p,\qquad
+\Cov(X_1,X_2)=-\frac{p(1-p)}{N-1}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Warunkowo względem $X_1=1$ w urnie pozostaje $K-1$ oznaczonych kul spośród $N-1$, zatem $\E(X_1X_2)=\Prob(X_1=1,X_2=1)=K(K-1)/(N(N-1))$. Odejmując $p^2=K^2/N^2$ i sprowadzając do wspólnego mianownika, otrzymujemy
+$\Cov(X_1,X_2)=-K(N-K)/(N^2(N-1))$, co jest równoważne tezie.
+\end{proof}
+
+\section{Jakie dane mamy? Jednostka obserwacji i typ zmiennej}
+Przed wyborem wzoru trzeba ustalić, czym jest obserwowana jednostka. \emph{Zmienne jakościowe nominalne} (np. producent, klasa urządzenia) mają kategorie bez naturalnego porządku; \emph{porządkowe} (np. poziom satysfakcji) mają porządek, lecz odległość między kategoriami nie musi mieć znaczenia liczbowego. Zmienne \emph{liczbowe dyskretne} zliczają zdarzenia; \emph{ciągłe} mierzą wielkości. Czas do awarii jest szczególną wielkością: może być \emph{cenzorowany}, gdy dla niektórych urządzeń wiadomo jedynie, że przeżyły do końca obserwacji.
+
+\begin{center}
+\begin{tikzpicture}[>=Latex,node distance=6mm and 8mm,every node/.style={font=\small},box/.style={draw,rounded corners,align=center,inner sep=5pt}]
+\node[box] (goal) {Pytanie o populację\\i parametr};
+\node[box,right=of goal] (design) {Schemat wyboru\\jednostek i pomiaru};
+\node[box,right=of design] (data) {Dane $X_1,\ldots,X_n$\\i ich zależność};
+\node[box,below=10mm of data] (method) {Statystyka lub metoda\\dopasowana do celu};
+\node[box,left=of method] (check) {Diagnostyka założeń\\i niepewność};
+\node[box,left=of check] (decision) {Wniosek dla populacji\\z ograniczeniami};
+\draw[->,thick] (goal)--(design);
+\draw[->,thick] (design)--(data);
+\draw[->,thick] (data)--(method);
+\draw[->,thick] (method)--(check);
+\draw[->,thick] (check)--(decision);
+\end{tikzpicture}
+\end{center}
+\noindent\emph{Rysunek 1.1.} Łańcuch wnioskowania statystycznego. Źle dobranego schematu obserwacji nie naprawi późniejszy wybór bardziej wyrafinowanego testu.
+
+\paragraph{Trzy układy danych.}
+Dla \emph{niezależnych grup} każda osoba lub maszyna należy do jednej grupy. Dla \emph{prób sparowanych} ten sam obiekt obserwujemy przed i po interwencji, a właściwą jednostką analizy jest para (lub różnica w parze). Dla \emph{szeregu czasowego} obserwacje są uporządkowane i zależność może dotyczyć wielu opóźnień. W tomie IV wrócimy do tego rozróżnienia przy teście Welcha, teście t dla prób zależnych, ANOVA z powtarzanymi pomiarami i modelach mieszanych.
+
+
+\begin{twierdzenie}[Ile niezależnej informacji zawierają pomiary w grupach?]\label{thm:cluster-design}
+Niech $g,m\ge1$ i niech $X_{ji}$, $j=1,\ldots,g$, $i=1,\ldots,m$,
+będą rzeczywistymi kwadratowo całkowalnymi zmiennymi losowymi.
+Załóżmy, że wszystkie mają średnią $\mu$ i wariancję $\sigma^2>0$,
+że różne grupy są niezależne, a kowariancja dwóch różnych pomiarów
+w tej samej grupie jest równa $\rho\sigma^2$ (dla wartości $\rho$
+zgodnych z nieujemną określonością macierzy kowariancji).
+Dla średniej $\overline X=(gm)^{-1}\sum_{j,i}X_{ji}$ zachodzi
+\[
+\Var(\overline X)=\frac{\sigma^2}{gm}\bigl(1+(m-1)\rho\bigr).
+\]
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy sumę wszystkich obserwacji przez $S$. Rozwijając wariancję,
+uwzględniamy $gm$ składników wariancji $\sigma^2$ i
+$gm(m-1)$ uporządkowanych par różnych obserwacji z tej samej grupy,
+każdą o kowariancji $\rho\sigma^2$. Pary z różnych grup wnoszą zero.
+Stąd $\Var(S)=gm\sigma^2+gm(m-1)\rho\sigma^2$.
+Dzieląc przez $(gm)^2$, otrzymujemy tezę.
+\end{proof}
+\begin{przyklad}[Sto pomiarów nie musi oznaczać stu niezależnych obserwacji]
+Zmierzono $20$ urządzeń po $5$ razy, razem $100$ wyników.
+Jeżeli w modelu poprzedniego twierdzenia $\rho=0{,}6$, wariancja
+średniej jest $1+4\cdot0{,}6=3{,}4$ razy większa niż przy
+niezależności wszystkich stu wyników. Liczba około $100/3{,}4\approx29{,}4$
+opisuje wyłącznie \emph{równoważną liczebność ze względu na wariancję
+średniej}; nie oznacza istnienia $29{,}4$ niezależnych obserwacji.
+W praktyce należy uwzględnić strukturę grupową lub sprowadzić
+analizę do poziomu niezależnych jednostek, jeżeli odpowiada to celowi.
+\end{przyklad}
+
+\section{Identyfikowalność: czy parametr da się w ogóle odzyskać?}
+\begin{definicja}[Identyfikowalność]\label{def:ident}
+Eksperyment statystyczny $\mathcal E=(\mathsf X,\calA,\{P_\theta:\theta\in\Theta\})$ nazywamy \emph{identyfikowalnym}, jeżeli dla dowolnych $\theta_1,\theta_2\in\Theta$ zachodzi implikacja
+\[
+P_{\theta_1}=P_{\theta_2}\quad\Longrightarrow\quad \theta_1=\theta_2.
+\]
+Równość po lewej jest równością miar na $\calA$, nie tylko zbieżnością kilku wybranych momentów.
+\end{definicja}
+
+\begin{przyklad}[Nieobserwowalny znak parametru]\label{ex:not-identifiable}
+Niech $\Theta=\R$ i $X\sim\Normal(\theta^2,1)$. Wówczas dla dowolnego $a>0$ rozkłady $P_a$ i $P_{-a}$ są identyczne. Z dowolnie wielu niezależnych obserwacji można próbować odzyskać $\theta^2$, ale nie znak $\theta$: dane nie rozróżniają dwóch wartości parametru. Nie jest to problem małej liczby obserwacji ani słabego algorytmu. Jest to ograniczenie samego eksperymentu.
+\end{przyklad}
+
+\begin{twierdzenie}[Brak zgodności przy braku identyfikowalności]\label{thm:no-consistency}
+Niech $\Theta$ będzie przestrzenią metryczną z metryką $d$, a dla każdego $n\ge1$ dane $(X_1,\ldots,X_n)$ mają prawo $P_\theta^{\otimes n}$ na przestrzeni $\mathsf X^n$. Załóżmy, że istnieją różne $\theta_1,\theta_2\in\Theta$ takie, że $P_{\theta_1}=P_{\theta_2}$. Nie istnieje ciąg estymatorów $T_n:\mathsf X^n\to\Theta$, który byłby zgodny według prawdopodobieństwa jednocześnie dla $\theta_1$ i $\theta_2$, tzn. dla obu wartości miałby $d(T_n,\theta_j)\to0$ według $P_{\theta_j}^{\otimes n}$.
+\end{twierdzenie}
+\begin{proof}
+Niech $\varepsilon=d(\theta_1,\theta_2)/3>0$ i zdefiniujmy zdarzenia $A_{n,j}=\{d(T_n,\theta_j)<\varepsilon\}$ dla $j=1,2$. Nierówność trójkąta daje $A_{n,1}\cap A_{n,2}=\varnothing$, ponieważ na ich przecięciu mielibyśmy $d(\theta_1,\theta_2)<2\varepsilon<d(\theta_1,\theta_2)$. Z drugiej strony rozkłady danych dla obu parametrów są takie same dla każdego $n$, gdyż równość miar zachowuje się przy iloczynie. Oznaczmy to wspólne prawo przez $Q_n$. Zgodność w $\theta_1$ oznacza $Q_n(A_{n,1})\to1$, a zgodność w $\theta_2$ oznacza $Q_n(A_{n,2})\to1$. To przeczy $Q_n(A_{n,1})+Q_n(A_{n,2})\le1$.
+\end{proof}
+
+\begin{uwaga}
+Identyfikowalność nie wystarcza sama w sobie do istnienia estymatora o dobrych własnościach. Jest \emph{warunkiem koniecznym}, lecz do zgodności potrzebujemy również odpowiednio rozróżnialnych rozkładów oraz kontroli zachowania statystyk przy rosnącej próbie.
+\end{uwaga}
+
+\section{Model zdominowany, gęstość i dlaczego nie zaczynamy od wiarygodności}
+\begin{definicja}[Model zdominowany]
+Eksperyment $\mathcal E$ nazywamy \emph{zdominowanym}, jeżeli istnieje miara $\sigma$-skończona $\mu$ na $(\mathsf X,\calA)$ taka, że $P_\theta\ll\mu$ dla każdego $\theta\in\Theta$. Wówczas istnieją pochodne Radona--Nikodyma $p_\theta=\dd P_\theta/\dd\mu$. Dla każdej mierzalnej $A\subseteq\mathsf X$ zachodzi $P_\theta(A)=\int_Ap_\theta(x)\,\dd\mu(x)$.
+\end{definicja}
+
+W rodzinie Bernoulliego wybieramy miarę liczącą, a w rodzinie normalnej miarę Lebesgue'a. Dominacja pozwala później zdefiniować funkcję wiarygodności $L(\theta;x)$ poprzez $p_\theta(x)$ dla zaobserwowanego $x$. Trzeba jednak pamiętać, że funkcja wiarygodności \emph{nie jest rozkładem prawdopodobieństwa parametru} w podejściu klasycznym. Rozkłady a priori i a posteriori pojawią się w części bayesowskiej; do tej pory zmienna losowa jest obserwacją, a parametr pozostaje ustalony.
+
+\begin{przyklad}[Parametr wpływający na nośnik]\label{ex:uniform-support}
+Dla $\theta>0$ niech $X\sim\operatorname{Unif}(0,\theta)$, czyli $p_\theta(x)=\theta^{-1}\ind{(0,\theta)}(x)$. Obserwacja $x>0$ wyklucza wszystkie $\theta<x$. Nie wolno więc w analizie tego modelu pomijać zależności nośnika od parametru. Później zobaczymy, dlaczego standardowe twierdzenia asymptotyczne o MLE wymagają osobnego sprawdzenia warunków regularności.
+\end{przyklad}
+
+\section{Próba reprezentatywna, selekcja i obciążenie}
+\paragraph{Dwie losowości.}
+W modelu \emph{superpopulacyjnym} wartości badanych jednostek są zmiennymi losowymi o określonym rozkładzie. W modelu \emph{losowania z populacji skończonej} wartości $y_1,\ldots,y_N$ mogą być ustalone, a losowy jest wybór jednostek. Rozróżnienie ma znaczenie przy interpretacji wartości oczekiwanej i przy obliczaniu błędu estymatora.
+
+\begin{przyklad}[Nierówna reprezentacja grup]\label{ex:selection}
+Populacja zawiera 90 pracowników z grupy $A$, których średni wynik wynosi $10$, oraz 10 pracowników z grupy $B$, których średni wynik wynosi $50$. Średnia populacyjna to $0{,}9\cdot10+0{,}1\cdot50=14$. Jeśli z każdej grupy weźmiemy po 10 osób, otrzymamy w tych dwóch próbach średnie równe odpowiednio $10$ i $50$ oraz policzymy nieważoną średnią tych średnich grupowych, dostaniemy $30$, a nie $14$. To \emph{nie} oznacza, że średnia arytmetyczna jest złym wzorem; oznacza, że w próbie inna jest struktura grup niż w populacji. Poprawna średnia ważona udziałami populacyjnymi odzyskuje $14$, o ile średnie w grupach są reprezentatywne dla tych grup.
+\end{przyklad}
+
+\begin{twierdzenie}[Nieobciążoność estymatora Horvitza--Thompsona]\label{thm:HT}
+Niech populacja składa się z $N\ge1$ jednostek o ustalonych wartościach $y_1,\ldots,y_N\in\R$. Niech $I_i\in\{0,1\}$ będzie wskaźnikiem włączenia jednostki $i$ do próby według dowolnego probabilistycznego schematu, dla którego $\pi_i=\E I_i=\Prob(I_i=1)>0$. Estymator sumy populacyjnej
+\[
+\widehat T_{\mathrm{HT}}=\sum_{i=1}^N\frac{I_i y_i}{\pi_i}
+\]
+spełnia $\E\widehat T_{\mathrm{HT}}=\sum_{i=1}^Ny_i$. Nie wymaga to niezależności wskaźników $I_i$.
+\end{twierdzenie}
+\begin{proof}
+Każdy składnik jest całkowalny, ponieważ liczba jednostek jest skończona, a $\pi_i>0$. Z liniowości wartości oczekiwanej,
+$\E\widehat T_{\mathrm{HT}}=\sum_i(y_i/\pi_i)\E I_i=\sum_i y_i$. W dowodzie nie obliczamy żadnego iloczynu $I_iI_j$, dlatego założenie niezależności nie jest potrzebne. Przy liczeniu \emph{wariancji} trzeba byłoby uwzględnić wspólne prawdopodobieństwa włączenia jednostek.
+\end{proof}
+
+\begin{uwaga}[Kiedy nawet ważenie nie rozwiązuje problemu?]
+Jeśli nie znamy prawdopodobieństw włączenia lub ich oszacowania są błędne, waga $1/\pi_i$ może nie korygować selekcji. Jeśli dla pewnej jednostki $\pi_i=0$, nie można w ten sposób odzyskać jej wkładu do sumy z dostępnego schematu. Ponadto ekstremalnie duże wagi zwiększają wariancję. Statystyczna poprawność i precyzja to dwa różne zagadnienia.
+\end{uwaga}
+
+\section{Obserwacje brakujące, cenzorowanie i mechanizm zbierania danych}
+Brak danej nie zawsze oznacza pustą komórkę, którą można bez szkody usunąć. Niech $X$ oznacza wartość, którą chcielibyśmy zaobserwować, $Z$ zmienne pomocnicze dostępne dla każdej jednostki, a $R\in\{0,1\}$ wskaźnik obserwacji $X$. Rozróżniamy trzy klasyczne sytuacje opisowe:
+\begin{itemize}
+\item \emph{MCAR} (brak całkowicie losowy): $R$ jest niezależny od $(X,Z)$; usuwanie rekordów nie powoduje selekcji względem tych zmiennych, lecz zmniejsza liczebność próby.
+\item \emph{MAR} (brak losowy warunkowo): $R$ i $X$ są warunkowo niezależne przy zadanym $Z$; po uwzględnieniu obserwowanych zmiennych $Z$ brak nie zależy już od niezaobserwowanego $X$.
+\item \emph{MNAR} (brak zależny od niezaobserwowanych wartości): zależność braków od $X$ pozostaje nawet po warunkowaniu względem $Z$; z danych obserwowanych zwykle nie da się jej jednoznacznie rozpoznać bez dodatkowych założeń.
+\end{itemize}
+Powyższe sformułowania dotyczą uproszczonego przypadku, w którym $Z$ jest zawsze obserwowana, a brak może dotyczyć tylko $X$. Nie wynika z nich, że zwykłe usuwanie brakujących rekordów przy MAR daje nieobciążone oszacowania: potrzebne jest poprawne uwzględnienie $Z$ i mechanizmu selekcji. Terminologia jest zależna od tego, które zmienne uznajemy za obserwowane. W rzeczywistych problemach z wieloma brakującymi zmiennymi formalne definicje odnoszą się do całej maski braków i części obserwowanej danych.
+
+\begin{przyklad}[Cenzorowanie a brak danych]
+W badaniu awaryjności obserwujemy maszynę przez $T=100$ godzin. Jeśli do chwili $T$ nie uległa awarii, nie wiemy, kiedy awaria wystąpi, ale wiemy, że czas życia przekracza $100$. Jest to \emph{prawostronne cenzorowanie}, a nie obserwacja, którą można utożsamiać z czasem awarii równym $100$. Późniejsze metody analizy przeżycia muszą włączyć tę informację do modelu.
+\end{przyklad}
+
+\section{Czego nie zapewniają same dane: zależność, mylenie korelacji z przyczynowością i błędna specyfikacja}
+Przyjmijmy, że mamy dane o liczbie reklamacji i czasie pracy urządzenia. Obserwowana korelacja może pochodzić z tego, że dłużej pracujące urządzenia częściej ulegają awarii, bez różnicy w ich niezawodności. Wnioskowanie o przyczynach wymaga osobnego modelu mechanizmu interwencji lub kontroli zmiennych zakłócających. Zależność statystyczna nie jest równoznaczna ze związkiem przyczynowym.
+
+\begin{przyklad}[Przybliżony model dwumianowy może zawodzić]
+Jeśli wadliwość zależy od partii, to warunkowo na losowym parametrze partii $P$ wyniki mogą być niezależnymi zmiennymi Bernoulliego, ale bez warunkowania dodatnio skorelowane. Przy $X_i\mid P\sim\operatorname{Bernoulli}(P)$ i niezależności warunkowej,
+\[
+\Cov(X_i,X_j)=\Var(P),\qquad i\neq j.
+\]
+\emph{Uzasadnienie.} Wzór na kowariancję całkowitą daje $\Cov(X_i,X_j)=\E\Cov(X_i,X_j\mid P)+\Cov(\E[X_i\mid P],\E[X_j\mid P])=0+\Var(P)$. Jeśli $P$ nie jest stałe prawie na pewno, liczba obserwacji nie zapewnia informacji takiej jak w niezależnym modelu $\Bin(n,p)$.
+\end{przyklad}
+
+\section{Jak w praktyce wybrać model?}
+Poniższa tabela jest \emph{procedurą rozpoznania problemu}, a nie automatycznym doborem testu. W rozdziale 2 zobaczymy odpowiednie statystyki opisowe; w dalszych rozdziałach zbudujemy estymatory, testy i przedziały.
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.27\textwidth}>{\raggedright\arraybackslash}p{0.29\textwidth}>{\raggedright\arraybackslash}p{0.32\textwidth}}
+\toprule
+\textbf{Co obserwujemy?} & \textbf{Model do rozważenia} & \textbf{Co sprawdzić przed użyciem?}\\
+\midrule
+Wada: tak/nie & Bernoulli, dwumianowy & Losowanie, zależność w partiach, jednakowe $p$\\
+Liczba zgłoszeń w czasie & Poisson, ujemny dwumianowy & Ekspozycja, nadmierna dyspersja, sezonowość\\
+Wynik pomiaru & Normalny, lognormalny, model odporny & Symetria, ogony, granice skali, wartości odstające\\
+Czas do awarii & Wykładniczy, Weibulla, analiza przeżycia & Cenzorowanie, zmienność intensywności awarii\\
+Pomiar przed/po & Model sparowany & Powiązanie par i rozkład różnic\\
+Wielokrotne pomiary & Model zależności, model mieszany & Identyfikator jednostki, korelacja w czasie\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{zadanie}[Pierwsza analiza jakości produkcji]\label{zad:quality-case}
+W próbie $100$ produktów stwierdzono $7$ wadliwych. Wiadomo, że $80$ produktów pochodzi z jednej zmiany, a pozostałe $20$ z innej. Jakie informacje mamy, co możemy obliczyć i czego jeszcze nie wolno wnioskować?
+\par\emph{Rozwiązanie.} Wskaźnik wadliwości próby wynosi $\widehat p=7/100=0{,}07$. Nie jest on automatycznie prawdopodobieństwem wady w całej produkcji. Do tego potrzebujemy określić populację, sposób losowania i zależność między wynikami. Jeśli produkty pobrano losowo i niezależnie z procesu o wspólnym parametrze $p$, liczba wad ma prawo $\Bin(100,p)$; w innym przypadku może być potrzebny model z efektem zmiany lub model hierarchiczny. Bez podania liczby wad na każdej zmianie nie możemy również porównać zmian. Testowanie hipotezy $p=0{,}05$ albo przedział ufności dla $p$ należy do kolejnych rozdziałów, ponieważ wymaga jeszcze zdefiniowania poziomu błędu i metody konstrukcji wniosku.
+\end{zadanie}
+
+\begin{zadanie}[Kiedy próba prosta nie jest właściwym modelem?]
+Dla każdego z $40$ pacjentów wykonano po $3$ pomiary ciśnienia w kolejnych dniach. Czy dysponujemy próbą prostą o liczności $120$?
+\par\emph{Rozwiązanie.} Nie wynika to z opisu. Pomiary tej samej osoby mogą dzielić wspólną nieobserwowaną cechę. Nie wolno więc traktować liczby $120$ jako liczby niezależnych pacjentów. Potrzebujemy identyfikatora osoby i modelu korelacji wewnątrzosobniczej (np. modelu efektów losowych) lub statystyki sprowadzającej dane do poziomu pacjenta, jeśli to odpowiada celowi analizy. Dalsze porównania powtórzonych pomiarów przedstawimy przy modelach mieszanych.
+\end{zadanie}
+
+\paragraph{Podsumowanie praktyczne rozdziału 1.}
+Statystyka zaczyna się \emph{przed} obliczeniem pierwszej średniej. Trzeba ustalić: (i) populację docelową, (ii) mechanizm pomiaru i selekcji, (iii) przestrzeń możliwych rozkładów, (iv) parametr lub wielkość, którą chcemy poznać, (v) rodzaj zależności między obserwacjami i (vi) możliwe naruszenia założeń. Gdy te elementy nie są określone, nawet poprawny algebraicznie test może odpowiadać na niewłaściwe pytanie.
+

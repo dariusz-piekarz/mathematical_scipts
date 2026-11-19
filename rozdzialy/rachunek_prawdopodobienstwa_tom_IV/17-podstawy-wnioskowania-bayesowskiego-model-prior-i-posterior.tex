@@ -1,0 +1,378 @@
+\chapter{Podstawy wnioskowania bayesowskiego: model, prior i posterior}
+\label{ch:bayes-foundations}
+\paragraph{Powiązania i odsyłacze.} Formalne warunkowanie omawia tom I, rozdział~\ref{I-ch:condexp}; funkcję wiarygodności i teorię decyzji — rozdziały~\ref{ch:likelihood} i~\ref{ch:decision}.
+
+
+\section{Od wiarygodności do rozkładu warunkowego parametru}
+W modelu klasycznym parametr $\theta$ jest ustalony, ale nieznany,
+a rozkład danych $P_\theta$ służy do oceny procedury estymacji lub
+testu przy każdym $\theta$. W podejściu bayesowskim określamy dodatkowo
+\emph{rozkład a priori} $\pi$ na przestrzeni parametrów. Wtedy parametr
+$\Theta$ jest zmienną losową w modelu wspólnym, a obserwacja $X=x$
+aktualizuje naszą informację o jego wartości. Samo przypisanie prioru
+nie dowodzi, że wybrany model opisuje rzeczywistość; w szczególności
+niedopasowane prawdopodobieństwo obserwacji może prowadzić do mylącego
+posterioru niezależnie od poprawności rachunków.
+
+\begin{definicja}[Eksperyment bayesowski i rozkład a posteriori]
+\label{def:bayes-model}
+Niech $(\Theta_0,\mathcal T)$ będzie przestrzenią parametrów,
+$(\mathsf X,\mathcal X)$ przestrzenią obserwacji, $\pi$ miarą
+probabilistyczną na $(\Theta_0,\mathcal T)$, a
+$K:\Theta_0\times\mathcal X\to[0,1]$ jądrem probabilistycznym:
+$K(\theta,\cdot)$ jest rozkładem obserwacji przy parametrze $\theta$,
+a $\theta\mapsto K(\theta,A)$ jest mierzalna dla każdego $A\in\mathcal X$.
+\emph{Rozkład a priori} to $\pi$, a \emph{rozkład predykcyjny przed
+obserwacją} jest miarą $M(A)=\int_{\Theta_0}K(\theta,A)\,\dd\pi(\theta)$.
+\emph{Rozkładem a posteriori} nazywamy jądro probabilistyczne
+$\Pi:\mathsf X\times\mathcal T\to[0,1]$ spełniające dla wszystkich
+$B\in\mathcal T$, $A\in\mathcal X$ tożsamość
+\[
+ \int_A\Pi(x,B)\,\dd M(x)
+ =\int_B K(\theta,A)\,\dd\pi(\theta).
+\]
+Jest to regularny rozkład warunkowy $\mathcal L(\Theta\mid X=x)$
+w modelu wspólnym $\dd Q(\theta,x)=\dd\pi(\theta)K(\theta,\dd x)$.
+Jeżeli obie przestrzenie są standardowymi przestrzeniami borelowskimi,
+taki rozkład istnieje; jego wersja jest jednoznaczna tylko $M$-prawie
+wszędzie. Twierdzenie o istnieniu regularnych rozkładów warunkowych
+przyjmujemy z teorii miary, a w poniższych modelach podajemy ich
+konstrukcję jawną.
+\end{definicja}
+
+\begin{twierdzenie}[Wzór Bayesa dla modelu zdominowanego]
+\label{thm:bayes-dominated}
+Niech $(\Theta_0,\mathcal T)$ i $(\mathsf X,\mathcal X)$ będą
+standardowymi przestrzeniami borelowskimi. Niech $\pi$ będzie
+rozkładem a priori, $\nu$ miarą $\sigma$-skończoną na $\mathsf X$,
+a $p:\Theta_0\times\mathsf X\to[0,\infty)$ wspólnie mierzalną
+funkcją taką, że
+$K(\theta,A)=\int_A p(x\mid\theta)\,\dd\nu(x)$
+jest miarą probabilistyczną dla każdego $\theta\in\Theta_0$.
+Niech $m(x)=\int_{\Theta_0}p(x\mid\theta)\,\dd\pi(\theta)$.
+Dla $x$ takich, że $0<m(x)<\infty$, wzór
+\[
+ \Pi(x,B)=\frac{\int_B p(x\mid\theta)\,\dd\pi(\theta)}{m(x)},
+ \qquad B\in\mathcal T,
+\]
+definiuje rozkład a posteriori. Na pozostałym zbiorze $x$ możemy
+wybrać dowolną ustaloną miarę probabilistyczną na $\Theta_0$;
+wybór ten nie zmienia tożsamości warunkowania.
+\end{twierdzenie}
+\begin{proof}
+Z twierdzenia Tonellego $m$ jest mierzalna i
+$\int_{\mathsf X}m(x)\,\dd\nu(x)=
+\int_{\Theta_0}\int_{\mathsf X}p(x\mid\theta)\,\dd\nu(x)\,\dd\pi(\theta)=1$.
+W szczególności $m(x)$ jest dodatnia i skończona dla
+$M$-prawie każdego $x$. Dla takich $x$ licznik jest miarą w
+zmiennej $B$, a mianownik normalizuje ją do jedności.
+Mierzalność $x\mapsto\Pi(x,B)$ wynika z Tonellego i mierzalności
+$p$. Dla $A\in\mathcal X$ i $B\in\mathcal T$ otrzymujemy
+\[
+ \int_A\Pi(x,B)m(x)\,\dd\nu(x)
+ =\int_A\int_B p(x\mid\theta)\,\dd\pi(\theta)\,\dd\nu(x)
+ =\int_BK(\theta,A)\,\dd\pi(\theta),
+\]
+co jest definicją rozkładu warunkowego. Zmiany na zbiorze
+$M$-miary zero nie mają wpływu na tę tożsamość.
+\end{proof}
+
+\begin{uwaga}[Gęstość posterioru i mianownik]
+Jeśli $\pi$ ma gęstość $q(\theta)$ względem miary $\mu$,
+to gęstość posterioru ma postać
+$q(\theta\mid x)=p(x\mid\theta)q(\theta)/m(x)$,
+gdzie $m(x)=\int_{\Theta_0}p(x\mid\theta)q(\theta)\,\dd\mu(\theta)$.
+Oznaczenie $p(x\mid\theta)$ to \emph{gęstość obserwacji}, a nie
+prawdopodobieństwo konkretnego punktu, jeśli $X$ jest ciągła.
+W jednym modelu $m(x)$ jest też gęstością predykcyjną obserwacji;
+w porównywaniu modeli służy jako \emph{wiarygodność zintegrowana}
+(ang. \emph{marginal likelihood}, nazywana również \emph{evidence}).
+Zapis $\Pi(\dd\theta\mid x)\propto p(x\mid\theta)\pi(\dd\theta)$
+ma sens dopiero po sprawdzeniu, że całka normalizująca jest dodatnia
+i skończona. Symbol $\propto$ oznacza równość z dokładnością do
+\emph{dodatniego} czynnika niezależnego od $\theta$.
+\end{uwaga}
+
+\section{Rozkład a priori: informacja, wrażliwość i uczciwość modelowania}
+Rozkład a priori może kodować rzeczywiste wcześniejsze informacje,
+wiedzę o skali parametru lub ograniczenia fizyczne. Może też pełnić rolę
+regularizacji. Należy jednak pamiętać, że „słaby” prior nie musi być
+nieinformatywny po zmianie parametryzacji, a szeroki prior bywa
+bardzo informatywny przy porównywaniu modeli.
+
+\begin{przyklad}[Dwa priory, te same dane]
+Niech $X_1,\ldots,X_n\mid p\iid\operatorname{Bernoulli}(p)$,
+$p\in(0,1)$ i $S=\sum_{i=1}^nX_i$. Dla prioru $p\sim
+\operatorname{Beta}(a,b)$ posterior to $\operatorname{Beta}(a+S,b+n-S)$;
+ścisły dowód podamy w rozdziale~\ref{ch:conjugate-families}.
+Przy $S=7$, $n=100$ prior jednostajny $\operatorname{Beta}(1,1)$
+daje średnią posterioru $8/102\approx0{,}0784$, a prior
+$\operatorname{Beta}(20,80)$ daje $27/200=0{,}135$.
+Oba wyniki są poprawne w \emph{różnych} modelach wspólnych, ale
+znacząco się różnią. W raporcie należy więc podawać prior i
+analizę wrażliwości, a nie tylko jedną liczbę „bayesowską”.
+\end{przyklad}
+
+\begin{definicja}[Prior niewłaściwy i poprawność posterioru]
+Niech $\mu$ będzie miarą $\sigma$-skończoną na przestrzeni
+parametrów $\Theta_0$, lecz $\mu(\Theta_0)=\infty$.
+Jeśli dla obserwacji $x$ zachodzi
+$0<Z_\mu(x)=\int_{\Theta_0}p(x\mid\theta)\,\dd\mu(\theta)<\infty$,
+to $\Pi_\mu(x,B)=Z_\mu(x)^{-1}\int_B p(x\mid\theta)\,\dd\mu(\theta)$
+jest \emph{poprawnym rozkładem a posteriori z prioru niewłaściwego}.
+W tym przypadku $\mu$ nie jest rozkładem prawdopodobieństwa,
+a obliczenie jest formalną normalizacją, nie warunkowaniem we wspólnym
+rozkładzie probabilistycznym parametru i obserwacji. Nie wolno z tego
+wnioskować o prawidłowej zintegrowanej wiarygodności modelu.
+\end{definicja}
+
+\begin{przyklad}[Prior płaski: posterior poprawny albo niewłaściwy]
+W modelu $X_1,\ldots,X_n\mid\mu\iid\mathcal N(\mu,\sigma^2)$
+przy znanym $\sigma^2>0$, $n\ge1$, formalny prior
+$\dd\lambda_1(\mu)$ na $\R$ daje posterior
+$\mathcal N(\overline X,\sigma^2/n)$, ponieważ w funkcji $\mu$
+wiarygodność jest proporcjonalna do gęstości normalnej.
+Natomiast przy priorze $\dd\lambda_1(\theta)$ na $\R$ i danych
+$X\mid\theta\sim\operatorname{Bernoulli}(g(\theta))$, gdzie
+$g(\theta)=(1+e^{-\theta})^{-1}$, dla pojedynczej obserwacji
+$X=1$ mamy $\int_\R g(\theta)\,\dd\lambda_1(\theta)=\infty$:
+posterior nie istnieje. Utrzymujące się dodatnie prawdopodobieństwo
+na ogonie $\theta\to+\infty$ uniemożliwia normalizację.
+Pierwszy z przykładów dotyczy posterioru dla parametrów przy
+ustalonym $\sigma$; nie można rozszerzyć wniosku bez sprawdzenia
+całkowalności na model ze wspólnie nieznanymi $\mu,\sigma$.
+\end{przyklad}
+
+\begin{uwaga}[Dlaczego niewłaściwy prior nie daje zwykle ilorazu Bayesa?]
+Jeśli $\mu$ jest niewłaściwa, zastąpienie jej przez $c\mu$, $c>0$,
+nie zmienia posterioru, ale mnoży całkę $Z_\mu(x)$ przez $c$.
+Gdy porównujemy dwa modele z \emph{oddzielnymi} nieustalonymi
+stałymi, ich iloraz zintegrowanych wiarygodności staje się
+arbitralny. Istnieją wyspecjalizowane konstrukcje eliminujące część
+tych trudności, ale prosty iloraz nie jest wtedy poprawną procedurą.
+\end{uwaga}
+
+\section{Estymator Bayesa i decyzja optymalna względem posterioru}
+Po obserwacji $x$ możemy podejmować decyzję $a$ z przestrzeni
+$\mathsf A$. Nie ma uniwersalnej „najlepszej” punktowej reprezentacji
+posterioru: zależy ona od funkcji straty.
+
+\begin{twierdzenie}[Średnia, mediana i dominanta posterioru]
+\label{thm:bayes-actions}
+Niech $\Pi_x$ będzie rozkładem probabilistycznym na $\R$.
+\begin{enumerate}
+\item Jeżeli $\int_\R\theta^2\,\dd\Pi_x(\theta)<\infty$, to
+jedynym minimizatorem $\int_\R(\theta-a)^2\,\dd\Pi_x(\theta)$
+po $a\in\R$ jest $a=\int_\R\theta\,\dd\Pi_x(\theta)$.
+\item Jeżeli $\int_\R|\theta|\,\dd\Pi_x(\theta)<\infty$,
+to zbiór minimizatorów $\int_\R|\theta-a|\,\dd\Pi_x(\theta)$
+po $a\in\R$ jest zbiorem median $\Pi_x$, tj. tych $a$, dla których
+$\Pi_x(({-}\infty,a])\ge1/2$ i $\Pi_x([a,\infty))\ge1/2$.
+\end{enumerate}
+Dominanta (MAP, \emph{maximum a posteriori}) nie jest ogólnie
+rozwiązaniem żadnego z tych dwóch problemów. Jeśli rozkład ma gęstość
+względem ustalonej miary, MAP oznacza punkt maksymalizujący tę gęstość,
+a wynik zależy od wybranej parametryzacji i miary odniesienia.
+\end{twierdzenie}
+\begin{proof}
+Dla pierwszej części oznaczmy $m=\int_\R\theta\,\dd\Pi_x(\theta)$.
+Z tożsamości $(\theta-a)^2=(\theta-m)^2+(m-a)^2
++2(\theta-m)(m-a)$ i centrowania otrzymujemy
+$\int_\R(\theta-a)^2\,\dd\Pi_x(\theta)
+=\int_\R(\theta-m)^2\,\dd\Pi_x(\theta)+(m-a)^2$.
+W drugiej części niech $F$ będzie dystrybuantą $\Pi_x$.
+Dla $a<b$ rachunek różnicy funkcji wypukłej daje
+$\int_\R (|\theta-b|-|\theta-a|)\,\dd\Pi_x(\theta)
+=\int_a^b(2F(t)-1)\,\dd\lambda_1(t)$;
+wartość dystrybuanty w punktach skoku nie ma wpływu na całkę.
+Zatem funkcja jest niemalejąca na prawo od każdej mediany
+i nierosnąca na lewo; odwrotnie, gdyby punkt nie był medianą,
+jedna z jednostronnych pochodnych wskazywałaby kierunek spadku.
+\end{proof}
+
+\begin{przyklad}[Próg decyzji zależy od kosztów]
+Po obserwacji danych interesuje nas zdarzenie $H=\{\theta>\theta_0\}$
+i jego prawdopodobieństwo a posteriori $q=\Pi_x(H)$.
+Są dwie decyzje: $a=1$ (ogłaszamy zagrożenie) i $a=0$ (brak alarmu).
+Niech fałszywy alarm kosztuje $C_{\rm FP}>0$, a przeoczenie
+$C_{\rm FN}>0$; poprawna decyzja ma stratę zerową.
+Ryzyko posteriorowe alarmu to $C_{\rm FP}(1-q)$,
+a milczenia $C_{\rm FN}q$. Wybieramy alarm wtedy i tylko wtedy, gdy
+$q>C_{\rm FP}/(C_{\rm FP}+C_{\rm FN})$;
+przy równości obie decyzje są równoważne.
+W zastosowaniu nie zastępujemy jednak przemyślanej funkcji kosztów
+uniwersalnym progiem $0{,}95$.
+\end{przyklad}
+
+\begin{przyklad}[MAP nie jest niezmienniczy względem zmiany parametru]
+Niech posterior parametru $p\in(0,1)$ ma rozkład
+$\operatorname{Beta}(2,2)$ o gęstości $f(p)=6p(1-p)$.
+Dominanta w parametryzacji $p$ wynosi $p_{\rm MAP}=1/2$.
+Wprowadzamy jednak iloraz szans $u=p/(1-p)\in(0,\infty)$.
+Z wzoru na zmianę zmiennych gęstość $u$ jest równa
+$g(u)=6u/(1+u)^4$. Jej pochodna ma znak $1-3u$,
+więc maksimum przypada na $u_{\rm MAP}=1/3$,
+co odpowiada $p=1/4$, a nie $1/2$.
+Średnia posterioru i prawdopodobieństwo zdarzenia są
+jednoznacznymi funkcjami rozkładu, ale dominanta
+\emph{gęstości względem konkretnej miary} zależy od współrzędnych.
+\end{przyklad}
+
+\begin{stwierdzenie}[Aktualizacja sekwencyjna bez ponownego używania danych]
+\label{prop:sequential-bayes}
+Niech prior $\pi$ będzie właściwy, a $X$ i $Y$ przy znanym
+$\theta$ będą warunkowo niezależne i mają gęstości
+$p(x\mid\theta)$ oraz $r(y\mid\theta)$ względem ustalonych
+miar $\sigma$-skończonych. Załóżmy, że dla danych $(x,y)$
+wszystkie mianowniki aktualizacji są dodatnie i skończone.
+Wtedy posterior uzyskany najpierw z $x$, a później z $y$,
+jest identyczny z posteriorem uzyskanym jednorazowo z $(x,y)$.
+\end{stwierdzenie}
+\begin{proof}
+Pierwsza aktualizacja daje miarę
+$\Pi_x(\dd\theta)=p(x\mid\theta)\pi(\dd\theta)/m(x)$.
+Druga, z wykorzystaniem wyłącznie nowej wiarygodności,
+daje jądro proporcjonalne do
+$r(y\mid\theta)p(x\mid\theta)\pi(\dd\theta)$.
+Ponieważ warunkowa niezależność zapewnia, że wiarygodność
+połączonych danych jest iloczynem $p(x\mid\theta)r(y\mid\theta)$,
+po normalizacji otrzymujemy ten sam posterior.
+Jeżeli jednak $Y$ jest funkcją wcześniej użytych danych albo
+zachodzi zależność warunkowa, takie mnożenie byłoby niepoprawne.
+\end{proof}
+
+\section{Przedziały wiarygodności i ich interpretacja}
+\begin{definicja}[Zbiór wiarygodności i HPD]
+Niech $\Pi_x$ będzie rozkładem posterioru na $\Theta_0$.
+Zbiór mierzalny $C_x\subset\Theta_0$ taki, że
+$\Pi_x(C_x)\ge1-\alpha$, $0<\alpha<1$, nazywamy
+\emph{zbiorem wiarygodności na poziomie $1-\alpha$}.
+W przypadku rozkładu na $\R$, przy ciągłej i ściśle rosnącej
+dystrybuancie $F_x$, \emph{centralny przedział wiarygodności}
+ma końce $F_x^{-1}(\alpha/2)$ i $F_x^{-1}(1-\alpha/2)$.
+Jeżeli posterior ma gęstość $q_x$ względem ustalonej miary $\mu$,
+zbiór \emph{HPD} (highest posterior density) przy odpowiednim
+progu $c\ge0$ ma postać $\{\theta:q_x(\theta)\ge c\}$
+i posteriorową masę co najmniej $1-\alpha$. Nie zawsze istnieje
+próg dający równość, a zbiór HPD może być niespójny.
+Przy płaskich fragmentach gęstości próg może dawać wiele równoważnych
+wyborów zbioru: nie należy wówczas ogłaszać jedynego HPD bez
+ustalenia reguły rozstrzygania remisów. Własność HPD zależy ponadto
+od miary odniesienia i nie jest niezmiennicza względem dowolnej
+nieliniowej reparametryzacji.
+\end{definicja}
+
+\begin{uwaga}[Dwie odmienne gwarancje]
+Klasyczny zbiór ufności $C(X)$ ma gwarancję
+$P_\theta(\theta\in C(X))\ge1-\alpha$ dla każdego $\theta$
+w określonym modelu. Bayesowski zbiór wiarygodności $C_x$ ma
+$\Pi_x(C_x)\ge1-\alpha$ \emph{po zaobserwowaniu $x$}.
+Gwarancja bayesowska nie implikuje automatycznie gwarancji pokrycia
+częstościowego dla każdego ustalonego $\theta$. Przy poprawnym
+modelu wspólnym ma jednak interpretację średniego pokrycia
+względem prioru, co zaraz udowodnimy.
+\end{uwaga}
+
+\begin{twierdzenie}[Średnie priorowe pokrycie zbiorów wiarygodności]
+\label{thm:prior-coverage}
+Niech $(\Theta,X)$ ma wspólny rozkład $Q$ z definicji
+\ref{def:bayes-model}, a $C:\mathsf X\to\mathcal T$ będzie
+mierzalną wielowartościową regułą w sensie, że
+$\{(x,\theta):\theta\in C(x)\}\in\mathcal X\otimes\mathcal T$.
+Jeśli $\Pi(X,C(X))\ge1-\alpha$ $M$-prawie na pewno,
+to $Q(\Theta\in C(X))\ge1-\alpha$. Jeśli masa zbioru
+jest równa $1-\alpha$ prawie na pewno, zachodzi równość.
+\end{twierdzenie}
+\begin{proof}
+Z definicji rozkładu warunkowego i aproksymacji funkcji
+mierzalnych funkcjami prostymi
+$\E_Q[\ind{\Theta\in C(X)}\mid X]=\Pi(X,C(X))$
+prawie na pewno. Całkując obie strony względem wspólnego prawa,
+otrzymujemy $Q(\Theta\in C(X))=\E_M\Pi(X,C(X))\ge1-\alpha$.
+Zapis jest tożsamością uśrednioną po priorze, a nie gwarancją
+jednostajną w $\theta$.
+\end{proof}
+
+\section{Posterior predictive: prognozowanie, nie tylko estymacja}
+\begin{definicja}[Rozkład predykcyjny a posteriori]
+Niech warunkowo względem $\Theta=\theta$ obserwacja przyszła
+$Y$ ma jądro $L(\theta,\cdot)$, a $X$ i $Y$ są warunkowo
+niezależne przy znanym $\Theta$. Wówczas rozkład
+\emph{predykcyjny a posteriori} wynosi
+$P(Y\in A\mid X=x)=\int_{\Theta_0}L(\theta,A)\,\dd\Pi_x(\theta)$.
+Dla liczbowego $Y$ o skończonym drugim momencie zachodzi
+\[
+ \Var(Y\mid X)=\E[\Var(Y\mid\Theta,X)\mid X]
+ +\Var(\E[Y\mid\Theta,X]\mid X).
+\]
+Pierwszy składnik to niepewność przyszłej obserwacji przy ustalonym
+parametrze; drugi uwzględnia niepewność samego parametru.
+\end{definicja}
+
+\begin{przyklad}[Dlaczego prognoza ma szerszą niepewność?]
+Dla $X_i\mid\mu\iid\mathcal N(\mu,\sigma^2)$ przy znanym
+$\sigma^2$ i normalnym posteriorze $\mu\mid X=x\sim
+\mathcal N(m_n,v_n)$ przyszła obserwacja $Y\mid\mu\sim
+\mathcal N(\mu,\sigma^2)$, warunkowo niezależna od danych,
+ma rozkład predykcyjny $Y\mid X=x\sim\mathcal N(m_n,\sigma^2+v_n)$.
+Przedział dla przyszłego pomiaru musi więc uwzględniać zarówno
+$\sigma^2$, jak i $v_n$; użycie samego posterioru parametru
+sztucznie zaniżyłoby niepewność prognozy.
+\end{przyklad}
+
+\begin{center}
+\begin{minipage}{\textwidth}
+\centering
+\begin{tikzpicture}[
+ node distance=1.3cm and 1.5cm,
+ every node/.style={font=\small,align=center},
+ block/.style={draw=blue!45!black,rounded corners=3pt,
+ fill=blue!5,minimum height=9mm,text width=4.1cm},
+ source/.style={draw=gray!60,rounded corners=3pt,
+ fill=gray!6,minimum height=9mm,text width=4.1cm},
+ >={Stealth[length=2.4mm]}]
+\node[source] (prior) at (-3,1.8) {Prior: $\pi(\dd\theta)$};
+\node[source] (data) at (3,1.8) {Dane: $p(x\mid\theta)$};
+\node[block] (post) at (0,0.25) {Posterior: $\Pi(\dd\theta\mid x)$};
+\node[source] (predict) at (-3,-1.35) {Predykcja nowych danych};
+\node[source] (decision) at (3,-1.35) {Decyzja i funkcja straty};
+\draw[->,thick] (prior.south) -- (post.north west);
+\draw[->,thick] (data.south) -- (post.north east);
+\draw[->,thick] (post.south west) -- (predict.north);
+\draw[->,thick] (post.south east) -- (decision.north);
+\end{tikzpicture}
+
+{\small Schemat wnioskowania: obliczenie posterioru nie kończy analizy;
+prognoza i decyzja rozwiązują odrębne zadania.}
+\end{minipage}
+\end{center}
+
+\section{Jak korzystać z metod bayesowskich w praktyce?}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.25\textwidth}>{\raggedright\arraybackslash}p{.32\textwidth}>{\raggedright\arraybackslash}p{.30\textwidth}}
+\toprule
+\textbf{Problem} & \textbf{Wybór} & \textbf{Sprawdzenie / ograniczenie}\\
+\midrule
+Znane wcześniejsze informacje & Prior uzasadniony danymi zewnętrznymi & Czy informacje nie dublują bieżącej próby?\\
+Mało danych, stabilne parametry & Model sprzężony i analiza wrażliwości & Jak silnie wynik zależy od prioru?\\
+Parametry rzadkich zdarzeń & Posterior i rozkład predykcyjny & Czy model Bernoulliego lub Poissona jest właściwy?\\
+Porównanie modeli & Właściwe priory, zintegrowane wiarygodności & Niewłaściwy prior uniemożliwia prosty Bayes factor.\\
+Prognoza nowych obserwacji & Posterior predictive & Rozróżnić zmienność obserwacji i niepewność parametru.\\
+Decyzja przy asymetrycznych kosztach & Reguła minimalizująca stratę posteriorową & Jak wyznaczono koszty i konsekwencje błędów?\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{zadanie}[Ryzyko alarmu i próg decyzji]
+Załóżmy, że posteriorowe prawdopodobieństwo awarii wynosi $q=0{,}08$.
+Fałszywy alarm kosztuje $3$ jednostki, a przeoczenie awarii $50$.
+Jaką decyzję rekomenduje reguła Bayesa?
+\par\emph{Rozwiązanie.} Alarm kosztuje średnio
+$3(1-0{,}08)=2{,}76$ jednostki, brak alarmu
+$50\cdot0{,}08=4$. Zatem alarm minimalizuje ryzyko
+posteriorowe, choć prawdopodobieństwo awarii jest niskie.
+\end{zadanie}
+
+% ================================================================
+% ROZDZIAL 18 -- RODZINY SPRZEZONE
+% ================================================================

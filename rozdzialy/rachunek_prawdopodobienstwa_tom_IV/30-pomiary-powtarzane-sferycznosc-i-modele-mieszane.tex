@@ -1,0 +1,257 @@
+\chapter{Pomiary powtarzane, sferyczność i modele mieszane}
+\label{ch:repeated-measures}
+\paragraph{Powiązania i odsyłacze.} Zależność pomiarów i procesy stochastyczne omawia tom II, rozdział~\ref{II-ch:procesy}; ANOVA oraz MANOVA znajdują się w rozdziałach~\ref{ch:anova-ancova} i~\ref{ch:manova-mancova}.
+
+
+\section{Jednostka badania, powtórzenie i pseudoreplikacja}
+Mierzymy ciśnienie u $n$ pacjentów przed leczeniem i w trzech kolejnych terminach. Otrzymujemy $4n$ liczb, ale nadal tylko $n$ \emph{niezależnych osób}. Pomiary u jednej osoby mogą być silnie skorelowane, a ich zależność jest częścią modelu, nie przeszkodą możliwą do pominięcia. Jednoczynnikowa ANOVA niezależnych obserwacji zastosowana do wszystkich $4n$ liczb ma na ogół błędny mianownik statystyki testowej.
+
+\begin{center}
+\begin{tikzpicture}[x=1.25cm,y=.65cm,>=Latex]
+\draw[->] (0,0)--(5,0) node[right,font=\small] {wizyta};
+\draw[->] (0,0)--(0,4.9) node[above,font=\small] {wynik};
+\foreach \x/\lab in {1/1,2/2,3/3,4/4} {\draw (\x,.1)--(\x,-.1) node[below,font=\scriptsize] {\lab};}
+\draw[blue!65!black,thick] (1,1.2)--(2,1.9)--(3,2.4)--(4,2.2);
+\draw[red!70!black,thick] (1,2.2)--(2,2.0)--(3,3.1)--(4,3.4);
+\draw[green!55!black,thick] (1,3.1)--(2,3.6)--(3,3.3)--(4,4.1);
+\foreach \x/\y in {1/1.2,2/1.9,3/2.4,4/2.2} {\fill[blue!65!black] (\x,\y) circle (2pt);}
+\foreach \x/\y in {1/2.2,2/2,3/3.1,4/3.4} {\fill[red!70!black] (\x,\y) circle (2pt);}
+\foreach \x/\y in {1/3.1,2/3.6,3/3.3,4/4.1} {\fill[green!55!black] (\x,\y) circle (2pt);}
+\node[font=\footnotesize,blue!65!black,right] at (4.1,2.2) {osoba 1};
+\node[font=\footnotesize,red!70!black,right] at (4.1,3.4) {osoba 2};
+\node[font=\footnotesize,green!55!black,right] at (4.1,4.1) {osoba 3};
+\end{tikzpicture}
+
+{\small\emph{Rysunek 30.1.} Schemat trajektorii: pomiary tej samej osoby tworzą parę lub całą serię, a nie kilka nowych niezależnych jednostek.}
+\end{center}
+
+\begin{definicja}[Model powtarzanych pomiarów]\label{def:rm-model}
+Niech $n\ge2$, $k\ge2$. Dla osoby $i=1,\ldots,n$ obserwujemy wektor $Y_i=(Y_{i1},\ldots,Y_{ik})^\top\in\R^k$ zawierający $k$ pomiarów w ustalonych terminach. W podstawowym modelu zakładamy, że $Y_1,\ldots,Y_n$ są niezależne, $Y_i\sim\Normal_k(\mu,\Sigma)$, gdzie $\mu\in\R^k$ jest nieznane, a $\Sigma$ jest dodatnio określona. Testujemy hipotezę
+\[
+ H_0:\mu_1=\cdots=\mu_k.
+\]
+Nie zakładamy niezależności współrzędnych $Y_i$. Projekt określający kolejność wizyt i brakujące pomiary będzie wymagał osobnego komentarza.
+\end{definicja}
+
+\begin{przyklad}[Ile wynosi wariancja zmiany?]
+Dla dwóch pomiarów $Y_1,Y_2$ jednej osoby o wariancjach $\sigma_1^2,\sigma_2^2$ i korelacji $\rho$ mamy $\Var(Y_2-Y_1)=\sigma_1^2+\sigma_2^2-2\rho\sigma_1\sigma_2$. Przy dodatniej korelacji porównanie \emph{sparowanych różnic} może być znacznie dokładniejsze niż test zakładający dwie niezależne próby. Nie należy jednak zastępować wielu niezależnych osób wieloma replikatami tej samej osoby.
+\end{przyklad}
+
+\section{Ortogonalne kontrasty i istota sferyczności}
+\begin{definicja}[Kontrasty i sferyczność]\label{def:sphericity}
+Niech $k\ge2$, $d=k-1$ i niech $C\in\R^{d\times k}$ ma ortonormalne wiersze, $CC^\top=I_d$, $C\mathbf1_k=0$. Macierz $C$ nazywamy \emph{macierzą ortonormalnych kontrastów czasowych}. Dla dodatnio określonej macierzy $\Sigma\in\R^{k\times k}$ niech $\Omega=C\Sigma C^\top$. Mówimy, że zachodzi \emph{sferyczność}, jeżeli istnieje $\sigma_c^2>0$ takie, że $\Omega=\sigma_c^2 I_d$. Definicja nie zależy od wyboru macierzy $C$.
+\end{definicja}
+
+\begin{twierdzenie}[Sferyczność a wariancje różnic]\label{thm:sphericity-differences}
+Niech $k\ge2$, $\Sigma$ będzie dodatnio określona, a $Y\in\R^k$ wektorem losowym o macierzy kowariancji $\Sigma$. Sferyczność jest równoważna istnieniu liczby $v>0$ takiej, że
+\[
+ \Var(Y_j-Y_l)=v\quad\text{dla wszystkich }j\ne l.
+\]
+Dla $k=2$ warunek zachodzi automatycznie.
+\end{twierdzenie}
+\begin{proof}
+Niech $P=I_k-k^{-1}\mathbf1_k\mathbf1_k^\top=C^\top C$ będzie rzutem na przestrzeń kontrastów. Jeśli $C\Sigma C^\top=\sigma_c^2 I_d$, to $P\Sigma P=\sigma_c^2P$. Ponieważ $e_j-e_l$ należy do obrazu $P$ i ma normę $\sqrt2$, otrzymujemy $\Var(Y_j-Y_l)=2\sigma_c^2$.
+
+Odwrotnie, niech $D\in\R^{k\times k}$ będzie macierzą o wyrazach $D_{jl}=\Var(Y_j-Y_l)$, czyli $D_{jl}=\Sigma_{jj}+\Sigma_{ll}-2\Sigma_{jl}$. Po obustronnym przemnożeniu przez $P$ składniki postaci $a\mathbf1_k^\top$ i $\mathbf1_k a^\top$ znikają, stąd $PDP=-2P\Sigma P$. Jeżeli $D_{jj}=0$ i $D_{jl}=v$ dla $j\ne l$, to $D=v(\mathbf1_k\mathbf1_k^\top-I_k)$ i $PDP=-vP$. Wynika stąd $P\Sigma P=(v/2)P$, a po pomnożeniu przez $C$ i $C^\top$ otrzymujemy $\Omega=(v/2)I_d$. Gdy $k=2$, przestrzeń kontrastów jest jednowymiarowa, więc każda dodatnia forma kwadratowa jest w niej wielokrotnością identyczności.
+\end{proof}
+
+\begin{uwaga}[Sferyczność to nie to samo co niezależność ani compound symmetry]
+Silniejszym warunkiem jest \emph{symetria złożona} (ang. \emph{compound symmetry}), czyli $\Sigma=\sigma^2I_k+\tau^2\mathbf1_k\mathbf1_k^\top$ w dopuszczalnym zakresie parametrów. Oznacza ona wspólne wariancje i wspólne kowariancje wszystkich par; implikuje sferyczność, ale nie jest z nią równoważna. Na przykład dla $k=3$ wektor $v=(0{,}1,0,-0{,}1)^\top$ i $\Sigma=I_3+\mathbf1_3v^\top+v\mathbf1_3^\top$ dają dodatnio określoną macierz (norma operatorowa perturbacji jest mniejsza od $2\sqrt3\|v\|_2<1$), dla której $P\Sigma P=P$, choć przekątne i pozaprzekątne wyrazy $\Sigma$ nie są stałe.
+\end{uwaga}
+
+\section{Dokładny test \texorpdfstring{$F$}{F} w klasycznej RM--ANOVA}
+\begin{twierdzenie}[Rozkład statystyki powtarzanych pomiarów przy sferyczności]\label{thm:rm-F}
+Niech $n\ge2$, $k\ge2$, $d=k-1$, a $Y_i\sim\Normal_k(\mu,\Sigma)$ będą niezależne jak w definicji~\ref{def:rm-model}. Załóżmy sferyczność $C\Sigma C^\top=\sigma_c^2 I_d$. Oznaczmy $Z_i=CY_i$ i $\bar Z=n^{-1}\sum_i Z_i$. Jeśli $H_0:C\mu=0$, to
+\[
+ F_{\mathrm{RM}}=
+ \frac{n\|\bar Z\|_2^2/d}{\bigl(\sum_{i=1}^n\|Z_i-\bar Z\|_2^2\bigr)/((n-1)d)}
+ \sim F_{d,(n-1)d}.
+\]
+\end{twierdzenie}
+\begin{proof}
+W modelu kontrastów $Z_i$ są niezależne o rozkładzie $\Normal_d(C\mu,\sigma_c^2 I_d)$. Pod $H_0$ wektory te są centrowane. Ortogonalny obrót współrzędnych w przestrzeni $\R^n$ osób rozdziela ich macierz na wiersz $\sqrt n\,\bar Z$ oraz $n-1$ wierszy będących kontrastami między osobami. Ze względu na wspólną izotropową macierz kowariancji te $n$ wierszy są niezależne, a ich współrzędne mają rozkład $\Normal(0,\sigma_c^2)$. Zatem $n\|\bar Z\|_2^2/\sigma_c^2\sim\chi_d^2$ oraz $\sum_i\|Z_i-\bar Z\|_2^2/\sigma_c^2\sim\chi_{(n-1)d}^2$, niezależnie. Ich odpowiednio przeskalowany iloraz ma deklarowany rozkład.
+\end{proof}
+
+\begin{uwaga}[Co się zmienia bez sferyczności?]
+Jeżeli $\Omega=C\Sigma C^\top$ ma różne wartości własne $\lambda_1,\ldots,\lambda_d$, to pod $H_0$ kwadrat normy średniej z kontrastów ma rozkład sumy $\sum_{j=1}^d\lambda_j Z_j^2$ z niezależnymi $Z_j\sim\Normal(0,1)$. Odpowiedni iloraz w ogólności nie jest dokładnie rozkładem $F$. Dla dwóch terminów ($d=1$) problem sferyczności nie występuje i test odpowiada sparowanemu testowi $t$ po podniesieniu statystyki do kwadratu.
+\end{uwaga}
+
+\section{Test Mauchly'ego i poprawki Greenhouse'a--Geissera oraz Huynha--Feldta}
+\begin{definicja}[Współczynnik $\epsilon$ i estymator GG]\label{def:gg-epsilon}
+Niech $d=k-1\ge2$, $\Omega=C\Sigma C^\top$ będzie dodatnio określona. Definiujemy \emph{populacyjny współczynnik niesferyczności}
+\[
+ \epsilon=\frac{(\operatorname{tr}\Omega)^2}{d\,\operatorname{tr}(\Omega^2)}.
+\]
+Dla $n>d$ i niezależnych pełnych obserwacji $Y_1,\ldots,Y_n$ definiujemy empiryczną macierz kowariancji w przestrzeni kontrastów
+$S_C=(n-1)^{-1}\sum_i (CY_i-\overline{CY})(CY_i-\overline{CY})^\top$.
+Jeśli $S_C$ jest dodatnio określona, estymator \emph{Greenhouse'a--Geissera} wynosi $\widehat\epsilon_{\mathrm{GG}}=(\operatorname{tr}S_C)^2/[d\operatorname{tr}(S_C^2)]$.
+\end{definicja}
+
+\begin{twierdzenie}[Zakres współczynnika $\epsilon$]\label{thm:gg-bound}
+Dla każdej dodatnio określonej macierzy $\Omega\in\R^{d\times d}$, $d\ge1$, zachodzi $1/d\le\epsilon\le1$. Równość $\epsilon=1$ występuje wtedy i tylko wtedy, gdy $\Omega$ jest wielokrotnością $I_d$.
+\end{twierdzenie}
+\begin{proof}
+Dla dodatnich wartości własnych $\lambda_1,\ldots,\lambda_d$ otrzymujemy $\epsilon=(\sum_j\lambda_j)^2/(d\sum_j\lambda_j^2)$. Górne ograniczenie jest nierównością Cauchy'ego--Schwarza i zamienia się w równość dokładnie przy wszystkich $\lambda_j$ jednakowych. Dolne ograniczenie wynika z $\sum_j\lambda_j^2\le(\sum_j\lambda_j)^2$; dla dodatnio określonej macierzy o $d>1$ jest ono w rzeczywistości ostre jedynie w granicy degeneracji. Dla $d=1$ mamy $\epsilon=1$.
+\end{proof}
+
+\begin{definicja}[Statystyka Mauchly'ego]\label{def:mauchly}
+Niech $n>d$, $d=k-1\ge2$, $S_C$ będzie dodatnio określona jak w definicji~\ref{def:gg-epsilon}. Definiujemy $W_M=\det(S_C)/[\operatorname{tr}(S_C)/d]^d$. Z nierówności między średnią geometryczną i arytmetyczną wartości własnych wynika $0<W_M\le1$. Małe wartości sygnalizują odstępstwo od sferyczności. Przy niezależnych normalnych wektorach kontrastów, pod hipotezą \emph{sferyczności macierzy kowariancji}, dla ustalonego $d$ i $n\to\infty$ stosuje się przybliżenie
+\[
+ T_M=-\left[(n-1)-\frac{2d^2+d+2}{6d}\right]\log W_M.
+\]
+Rozkład zerowy statystyki $T_M$ przybliża rozkład $\chi^2_{d(d+1)/2-1}$. Jest to \emph{przybliżenie}, nie skończonopróbkowa równość rozkładów.
+\end{definicja}
+
+\begin{uwaga}[Dwa problemy z automatycznym testowaniem sferyczności]
+Test Mauchly'ego wymaga modelowych warunków kalibracji i ma ograniczoną moc przy niewielkiej liczbie osób. Brak odrzucenia nie dowodzi sferyczności. Wybór korekty wyłącznie na podstawie testu Mauchly'ego może dodatkowo komplikować kontrolę poziomu błędu całej procedury. Warto obok testu podać oszacowanie $\widehat\epsilon$, liczbę terminów, wykres średnich i oszacowania różnic wraz z niepewnością.
+\end{uwaga}
+
+\begin{definicja}[Korekty stopni swobody]\label{def:gg-hf}
+W klasycznej jednoczynnikowej RM--ANOVA statystykę liczbową $F_{\mathrm{RM}}$ pozostawia się bez zmian, ale do oceny wartości p używa się rozkładu $F$ ze skorygowanymi stopniami swobody $d_1=\widehat\epsilon\,d$ i $d_2=\widehat\epsilon\,(n-1)d$. Korekta GG stosuje $\widehat\epsilon=\widehat\epsilon_{\mathrm{GG}}$. Dla $d\ge2$, $n>d+1$ i dodatniego mianownika, prosty wariant estymatora Huynha--Feldta to
+\[
+ \widehat\epsilon_{\mathrm{HF}}=\min\left\{1,\;\frac{nd\,\widehat\epsilon_{\mathrm{GG}}-2}{d\bigl(n-1-d\widehat\epsilon_{\mathrm{GG}}\bigr)}\right\}.
+\]
+W praktyce, gdy wzór HF prowadzi poza przedział, używa się ograniczenia do $[1/d,1]$ i trzeba sprawdzić przyjętą w programie odmianę poprawki (niektóre implementacje stosują również modyfikację Lecoutre'a). Te procedury mają naturę przybliżeń; nie odzyskują dokładnego rozkładu $F$ przy dowolnej macierzy kowariancji.
+\end{definicja}
+
+\begin{przyklad}[Dlaczego stopnie swobody bywają niecałkowite?]
+Przy $k=4$ terminach i $n=30$ osobach mamy $d=3$, klasyczne stopnie swobody $3$ i $87$. Jeżeli $\widehat\epsilon_{\mathrm{GG}}=0{,}65$, przy ocenie p pozostawiamy obserwowaną statystykę $F$, ale używamy $F_{1{,}95;\,56{,}55}$. Nie oznacza to, że liczba obserwacji została zmieniona: zmieniamy przybliżenie rozkładu referencyjnego w celu uwzględnienia nierównej zmienności kontrastów.
+\end{przyklad}
+
+\section{Modele mieszane i niejednakowa liczba wizyt}
+\begin{definicja}[Liniowy model mieszany]\label{def:lmm}
+Niech $i=1,\ldots,n$ indeksuje niezależne jednostki, a $m_i\ge1$ ich liczbę pomiarów. Dla każdej jednostki zakładamy model wektorowy
+\[
+ Y_i=X_i\beta+Z_i b_i+\varepsilon_i,
+\]
+gdzie $Y_i\in\R^{m_i}$, $X_i\in\R^{m_i\times r}$, $Z_i\in\R^{m_i\times q}$ są zadane, $\beta\in\R^r$ jest wektorem efektów stałych, $b_i\sim\Normal_q(0,D)$ losowym efektem jednostki, a $\varepsilon_i\sim\Normal_{m_i}(0,R_i)$ błędem wewnątrz jednostki. Zakładamy, że rodziny $(b_i,\varepsilon_i)$ są niezależne między jednostkami i $b_i\perp\varepsilon_i$, przy dodatnio półokreślonej $D$ i dodatnio określonych $R_i$.
+\end{definicja}
+
+\begin{twierdzenie}[Marginalny rozkład w modelu mieszanym]\label{thm:lmm-marginal}
+W modelu~\ref{def:lmm}, dla każdej jednostki $i$ zachodzi
+\[
+ Y_i\sim\Normal_{m_i}(X_i\beta,V_i),\qquad V_i=Z_iDZ_i^\top+R_i.
+\]
+Jeżeli $V_i$ są znane i dodatnio określone, a $X$ powstała przez pionowe zestawienie $X_i$ ma pełną rangę, uogólniony estymator najmniejszych kwadratów
+\[
+ \widehat\beta_{\mathrm{GLS}}=\left(\sum_iX_i^\top V_i^{-1}X_i\right)^{-1}\sum_iX_i^\top V_i^{-1}Y_i
+\]
+jest nieobciążony i ma macierz kowariancji $\left(\sum_iX_i^\top V_i^{-1}X_i\right)^{-1}$.
+\end{twierdzenie}
+\begin{proof}
+Wektor $Z_ib_i+\varepsilon_i$ jest sumą niezależnych normalnych wektorów, więc jest normalny, a jego kowariancja jest sumą macierzy $Z_iDZ_i^\top$ i $R_i$. Wstawienie $Y_i=X_i\beta+\xi_i$ do wzoru GLS daje różnicę $\widehat\beta_{\mathrm{GLS}}-\beta=A^{-1}\sum_iX_i^\top V_i^{-1}\xi_i$, gdzie $A=\sum_iX_i^\top V_i^{-1}X_i$. Wartość oczekiwana jest zerowa. Ponieważ $\xi_i$ są niezależne między jednostkami, wariancja sumy jest $\sum_iX_i^\top V_i^{-1}V_iV_i^{-1}X_i=A$. Ostatecznie $\Cov(\widehat\beta_{\mathrm{GLS}})=A^{-1}$.
+\end{proof}
+
+\begin{przyklad}[Losowy punkt początkowy i losowe nachylenie]
+Dla czasu $t_{ij}$ można przyjąć $Y_{ij}=\beta_0+\beta_1t_{ij}+b_{0i}+b_{1i}t_{ij}+\varepsilon_{ij}$, gdzie $(b_{0i},b_{1i})$ jest dwuwymiarowym normalnym wektorem losowym. Wariancja $Y_{ij}$ i kowariancja między wizytami zależą teraz od czasów $t_{ij}$, co nie odpowiada na ogół sferyczności. Model mieszany dopuszcza różną liczbę pomiarów na osobę i rzeczywiste, nierównomiernie rozłożone chwile pomiaru. Dla danych bez kompletu wizyt wnioskowanie na podstawie obserwowanych danych wymaga jednak uzasadnionego mechanizmu brakowania, np. MAR, oraz poprawnego modelu warunkowego; sam program nie usuwa problemu MNAR.
+\end{przyklad}
+
+\begin{uwaga}[ML, REML i estymowana kowariancja]
+W praktyce macierze $D,R_i$ są nieznane i estymuje się je zwykle przez ML lub \emph{restricted maximum likelihood} (REML), co zmienia rozkłady statystyk opartych na estymowanym $V_i$. Testy efektów stałych w małych próbach mogą wymagać przybliżeń Satterthwaite'a lub Kenwarda--Rogera, bootstrapu parametrycznego albo innych jawnie uzasadnionych procedur. Porównując modele o \emph{różnych efektach stałych} za pomocą ilorazu wiarygodności, należy używać dopasowania ML, nie bezpośredniego porównania wartości ograniczonej wiarygodności REML. Gdy liczba grup jest mała albo estymator wariancji efektu losowego leży na brzegu przestrzeni parametrów, standardowe asymptotyczne reguły $\chi^2$ mogą nie obowiązywać.
+\end{uwaga}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.28\textwidth}>{\raggedright\arraybackslash}p{.27\textwidth}>{\raggedright\arraybackslash}p{.30\textwidth}}
+\toprule
+\textbf{Projekt i cel} & \textbf{Metoda do rozważenia} & \textbf{Krytyczne pytanie}\\
+\midrule
+Dwa pomiary na osobę & Test $t$ dla par; model różnic & Czy pary są niezależne między osobami?\\
+$k\ge3$ terminów, kompletne dane & RM--ANOVA, GG/HF & Czy sferyczność jest wiarygodna?\\
+Czasy nierówne, różne liczby wizyt & Liniowy model mieszany & Jaki model kowariancji i braków danych?\\
+Dane binarne lub zliczenia w czasie & GLMM albo GEE & Rozkład warunkowy, cel marginalny/indywidualny\\
+Kilka odrębnych wyników na osobę & MANOVA/MANCOVA & Czy pytamy o wspólny wektor średnich?\\
+Zależność szeregów w czasie & Modele ARMA, GLS/HAC & Czy obserwacje tworzą jeden szereg czy wiele osób?\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Laboratorium: sferyczność, korekty i model mieszany}
+\begin{lstlisting}[language=Python,caption={Kompletny program: RM--ANOVA, współczynniki GG/HF i przybliżenie testu Mauchly'ego (Python, NumPy, SciPy).}]
+import numpy as np
+from scipy import stats
+
+rng = np.random.default_rng(2026)
+n, k = 36, 4
+mu = np.array([0.0, 0.4, 0.8, 1.0])
+# Non-spherical covariance: first-order autoregressive correlations.
+cov = np.fromfunction(lambda i, j: 0.65 ** np.abs(i-j), (k, k))
+Y = rng.multivariate_normal(mu, cov, size=n)
+# Orthonormal rows spanning the subspace perpendicular to (1,...,1).
+Q, _ = np.linalg.qr(np.column_stack((np.ones(k),
+                                     np.eye(k)[:, :k-1])))
+C = Q[:, 1:].T
+Z = Y @ C.T
+zbar = Z.mean(axis=0)
+d = k - 1
+SS_t = n * np.sum(zbar ** 2)
+SS_e = np.sum((Z - zbar) ** 2)
+F = (SS_t / d) / (SS_e / ((n-1)*d))
+S = np.cov(Z, rowvar=False)
+epsGG = np.trace(S)**2 / (d * np.trace(S @ S))
+epsHF = min(1.0, (n*d*epsGG - 2)/(d*(n-1-d*epsGG)))
+epsHF = max(1/d, epsHF)
+W = np.linalg.det(S) / (np.trace(S)/d)**d
+chi_m = -((n-1) - (2*d*d+d+2)/(6*d))*np.log(W)
+p_m = stats.chi2.sf(chi_m, d*(d+1)//2 - 1)
+print("RM F:", F, "uncorrected p:", stats.f.sf(F, d, (n-1)*d))
+print("GG epsilon:", epsGG, "GG p:",
+      stats.f.sf(F, epsGG*d, epsGG*(n-1)*d))
+print("HF epsilon:", epsHF, "HF p:",
+      stats.f.sf(F, epsHF*d, epsHF*(n-1)*d))
+print("Mauchly W:", W, "approximate p:", p_m)
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python,caption={Kompletny program: liniowy model mieszany z losowym punktem początkowym i różną liczbą wizyt (Python, pandas, statsmodels).}]
+import numpy as np
+import pandas as pd
+import statsmodels.formula.api as smf
+
+rng = np.random.default_rng(2027)
+rows = []
+for subject in range(80):
+    intercept = rng.normal(0, 1.5)
+    # Different visit counts; missingness here is generated independently.
+    times = np.sort(rng.choice(np.arange(5),
+                               size=rng.integers(2, 6), replace=False))
+    for time in times:
+        y = 10 + 0.6*time + intercept + rng.normal(0, 0.8)
+        rows.append((subject, float(time), y))
+df = pd.DataFrame(rows, columns=["subject", "time", "response"])
+model = smf.mixedlm("response ~ time", data=df,
+                    groups=df["subject"], re_formula="1")
+fit = model.fit(reml=True, method="lbfgs")
+print(fit.summary())
+print("estimated time effect:", fit.params["time"])
+# Random intercept alone induces compound symmetry, not arbitrary AR(1).
+# For AR-structured within-subject residuals use a suitable GLS/GEE model.
+\end{lstlisting}
+
+\begin{lstlisting}[language=Julia,caption={Kompletny program: empiryczny współczynnik Greenhouse'a--Geissera z ortonormalnych kontrastów (Julia, Random, Statistics, LinearAlgebra).}]
+using Random, Statistics, LinearAlgebra
+Random.seed!(2026)
+n, k = 36, 4
+C = transpose(Matrix(qr(hcat(ones(k), Matrix{Float64}(I, k, k-1))).Q)[:, 2:k])
+# Data matrix: each row is one independent subject, each column a visit.
+Y = randn(n, k) .+ reshape([0.0, 0.4, 0.8, 1.0], 1, :)
+Z = Y * transpose(C)
+S = cov(Z; dims=1)
+d = k - 1
+epsilon_gg = tr(S)^2 / (d * tr(S*S))
+println("GG epsilon: ", epsilon_gg)
+println("GG degrees of freedom: ", epsilon_gg*d, ", ", epsilon_gg*(n-1)*d)
+# With k=2 sphericity holds automatically, and epsilon is exactly 1.
+\end{lstlisting}
+
+\begin{przyklad}[Wartości p bez i z korektą sferyczności]
+W laboratorium powyżej zasymulowano $n=36$ niezależnych osób z $k=4$ wizytami i macierzą kowariancji o postaci autoregresyjnej. Wartości p uzyskane po korektach GG/HF są aproksymacjami; ich ważność wymaga założeń dotyczących wspólnej struktury wewnątrzosobowej, nie jest gwarantowana przy dowolnym procesie brakowania wizyt. Dla ustalonego ziarna otrzymujemy $F_{\mathrm{RM}}\approx9{,}259$ i $\widehat\epsilon_{\mathrm{GG}}\approx0{,}782$. Nieskorygowane przybliżenie daje $p\approx1{,}73\cdot10^{-5}$; korekta GG daje $p\approx1{,}04\cdot10^{-4}$, a wersja HF $p\approx6{,}35\cdot10^{-5}$. Wszystkie trzy metody wskazują tutaj odrzucenie, ale niepewność wyraźnie się zmienia. Są to wartości obliczone na \emph{jednym konkretnym zbiorze danych}, a nie uniwersalne gwarancje tych korekt.
+\end{przyklad}
+
+\begin{zadanie}[Trzy wizyty, sześć pomiarów -- ile niezależnych jednostek?]
+U $40$ pacjentów wykonano po trzy pomiary w sześciu technicznie powtarzanych próbach. Badacz raportuje $720$ ``niezależnych obserwacji'' i klasyczną ANOVA trzech grup. Oceń ten wybór.\par
+\emph{Rozwiązanie.} Niezależnych pacjentów jest $40$, a nie $720$. Pomiary są zagnieżdżone: repliki techniczne w wizytach, wizyty w pacjentach. Model musi uwzględniać oba poziomy zależności albo najpierw uzasadnić agregację replik technicznych. Test ANOVA niezależnych obserwacji może znacznie zaniżać błąd standardowy. Wybór modelu zależy od tego, czy celem jest zmiana średniej w czasie, porównanie osób czy analiza dokładności technicznego pomiaru.
+\end{zadanie}
+
+\paragraph{Dalsze źródła dotyczące kalibracji.}
+Dokładną konwencję używaną do korekt $\epsilon$ i testów wielowymiarowych należy sprawdzić w dokumentacji programu. Zarówno test Mauchly'ego, jak i korekty GG/HF odnoszą się do struktury kowariancji \emph{wewnątrz osoby}; nie kontrolują zależności pomiędzy osobami, selektywnych braków danych ani wyboru terminów pomiaru po obejrzeniu wyników. Zobacz także np. \href{https://support.sas.com/documentation/cdl/en/statug/68162/HTML/default/statug_glm_details46.htm}{SAS, Repeated Measures Analysis of Variance} albo \href{https://www.mathworks.com/help/stats/repeatedmeasuresmodel.epsilon.html}{MATLAB, Epsilon Adjustment}. Podstawowe twierdzenie~\ref{thm:rm-F} jest dokładne pod jawnie zapisanymi hipotezami; procedury GG/HF i Mauchly'ego wykorzystują odpowiednie aproksymacje.
+
+% --- Rozdzial 31: eksperymenty i wnioskowanie przyczynowe ---

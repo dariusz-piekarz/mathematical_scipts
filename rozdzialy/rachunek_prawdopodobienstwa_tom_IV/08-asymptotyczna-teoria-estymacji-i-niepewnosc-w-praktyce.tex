@@ -1,0 +1,481 @@
+\chapter{Asymptotyczna teoria estymacji i niepewność w praktyce}
+\label{ch:asymptotic-estimation}
+\paragraph{Powiązania i odsyłacze.} Wymagane prawa wielkich liczb i CTG przypomina tom I, rozdziały~\ref{I-ch:lln} i~\ref{I-ch:clt}; informację Fishera wprowadziliśmy w rozdziale~\ref{ch:fisher-information}.
+
+
+\section{Dlaczego rozkład dokładny bywa nieosiągalny?}
+Dla średniej z próby normalnej dysponujemy dokładnym rozkładem.
+Dla MLE skomplikowanego modelu regresyjnego znamy natomiast zwykle
+jedynie równanie optymalizacji. Zamiast próbować obliczać pełną
+gęstość estymatora, pytamy, co dzieje się przy $n\to\infty$.
+Otrzymujemy wtedy narzędzia do konstrukcji błędów standardowych,
+przedziałów i testów. Nie należy jednak mylić \emph{asymptotycznej
+normalności} ze zdaniem, że w dowolnej małej próbie rozkład błędu
+jest w przybliżeniu normalny.
+
+\section{Jednostajna zbieżność kryterium i zgodność estymatora}
+\begin{lemat}[Jednostajne prawo wielkich liczb przy warunku Lipschitza]
+\label{lem:uniform-lln}
+Niech $\Theta\subset\R^d$ będzie niepustym zbiorem zwartym,
+$X_1,X_2,\ldots$ niezależnymi zmiennymi o tym samym prawie $P$,
+a $m:\mathsf X\times\Theta\to\R$ funkcją mierzalną względem $x$
+i ciągłą względem $\theta$. Załóżmy, że dla ustalonego
+$\theta_*\in\Theta$ zachodzi $\E|m(X_1,\theta_*)|<\infty$
+oraz że istnieje nieujemna zmienna $L(X_1)$ z $\E L(X_1)<\infty$
+taka, że dla wszystkich $\theta,\eta\in\Theta$
+$|m(X_1,\theta)-m(X_1,\eta)|\le L(X_1)\|\theta-\eta\|$
+prawie na pewno na jednym wspólnym zdarzeniu. Wtedy
+\[
+\sup_{\theta\in\Theta}\left|\frac1n\sum_{i=1}^n
+m(X_i,\theta)-\E m(X_1,\theta)\right|
+\longrightarrow0\quad\text{prawie na pewno}.
+\]
+\end{lemat}
+\begin{proof}
+Dzięki zwartości $\Theta$ dla każdego $\delta>0$ istnieje
+skończona $\delta$-sieć $\{\theta_1,\ldots,\theta_N\}$.
+Dla $\theta\in\Theta$ wybieramy węzeł odległy o mniej niż
+$\delta$. Nierówność trójkąta i wspólne oszacowanie Lipschitza
+dają
+\[
+\sup_{\theta\in\Theta}|P_nm_\theta-Pm_\theta|
+\le\max_{1\le j\le N}|P_nm_{\theta_j}-Pm_{\theta_j}|
++\delta(P_nL+PL),
+\]
+gdzie $P_nf=n^{-1}\sum_i f(X_i)$ i $Pf=\E f(X_1)$.
+Mocne prawo wielkich liczb stosowane do skończenie wielu $m_{\theta_j}$
+i do $L$ zapewnia, że granica górna lewej strony jest nie większa
+niż $2\delta\E L$ prawie na pewno. Bierzemy przeliczalny
+ciąg $\delta=1/k$ i przecinamy odpowiadające mu zdarzenia
+prawdopodobieństwa jeden; przejście $k\to\infty$ kończy dowód.
+\end{proof}
+
+\begin{twierdzenie}[Zgodność maksymalizatora]\label{thm:m-est-consistency}
+Przy założeniach lematu~\ref{lem:uniform-lln} oznaczmy
+$M(\theta)=\E m(X_1,\theta)$ i
+$M_n(\theta)=n^{-1}\sum_i m(X_i,\theta)$.
+Jeżeli $M$ ma dokładnie jeden maksymalizator $\theta_0\in\Theta$
+i $\widehat\theta_n$ jest mierzalnym maksymalizatorem $M_n$
+na $\Theta$ (albo mierzalnym przybliżonym maksymalizatorem
+z błędem $o_P(1)$), to $\widehat\theta_n\to\theta_0$
+według prawdopodobieństwa. Dla maksymalizatorów dokładnych
+zachodzi nawet zbieżność prawie na pewno.
+\end{twierdzenie}
+\begin{proof}
+Ponieważ $M$ jest ciągła na zwartej $\Theta$, dla każdego
+$\varepsilon>0$ zbiór
+$F_\varepsilon=\{\theta\in\Theta:\|\theta-\theta_0\|
+\ge\varepsilon\}$ jest zwarty. Jeśli jest niepusty,
+jedyność maksimum daje dodatnią lukę
+$\Delta_\varepsilon=M(\theta_0)-\max_{F_\varepsilon}M>0$.
+Na zdarzeniu $\sup_\theta|M_n-M|<\Delta_\varepsilon/3$
+dla $\theta\in F_\varepsilon$ mamy
+$M_n(\theta)\le M(\theta_0)-2\Delta_\varepsilon/3$,
+a $M_n(\theta_0)\ge M(\theta_0)-\Delta_\varepsilon/3$.
+Żaden dokładny maksymalizator nie należy więc do
+$F_\varepsilon$. Lemat zapewnia tę nierówność od pewnego
+indeksu prawie na pewno. Dla przybliżonych maksymalizatorów
+potrzebujemy dodatkowo, by ich błąd optymalizacji był mniejszy niż
+$\Delta_\varepsilon/3$; zachodzi to z prawdopodobieństwem dążącym
+do jedności. Dowód jest zakończony.
+\end{proof}
+
+\begin{przyklad}[Zgodność MLE przez dywergencję KL]
+W identyfikowalnym, poprawnie określonym modelu zdominowanym
+$P_\theta$ średnie log-wiarygodności spełniają, przy warunkach
+całkowalności, $\E_{\theta_0}\log p_\theta(X)
+=\E_{\theta_0}\log p_{\theta_0}(X)
+-D_{\mathrm{KL}}(P_{\theta_0}\|P_\theta)$.
+Zatem funkcja graniczna ma jednoznaczne maksimum w $\theta_0$.
+Aby zastosować poprzednie twierdzenie, trzeba \emph{dodatkowo}
+wykazać jednostajną zbieżność po $\theta$; sama identyfikowalność
+ani punktowe MPWL nie wystarczają.
+\end{przyklad}
+
+\section{Asymptotyczna normalność M-estymatorów}
+\begin{twierdzenie}[Rozwinięcie równania estymacyjnego]
+\label{thm:m-est-normality}
+Niech $\theta_0\in\R^d$ i $\widehat\theta_n\to\theta_0$
+według prawdopodobieństwa. Niech $\Psi_n:\Theta\to\R^d$
+będzie losową funkcją klasy $C^1$ w ustalonym wypukłym otoczeniu
+$U$ punktu $\theta_0\in U\subset\Theta$. Załóżmy, że
+$\Prob(\widehat\theta_n\in U)\to1$,
+$\Prob(\Psi_n(\widehat\theta_n)=0)\to1$,
+$\sqrt n\Psi_n(\theta_0)\xrightarrow{d}\Normal_d(0,B)$,
+gdzie $B$ jest nieujemnie określona, oraz że istnieje
+ciągła funkcja $H:U\to\R^{d\times d}$ taka, że
+$A:=H(\theta_0)$ jest nieosobliwa i
+\[
+\sup_{\theta\in U}\|D\Psi_n(\theta)-H(\theta)\|
+\xrightarrow{P}0.
+\]
+Wtedy
+\[
+\sqrt n(\widehat\theta_n-\theta_0)
+\xrightarrow{d}\Normal_d(0,A^{-1}B A^{-\mathsf T}).
+\]
+\end{twierdzenie}
+\begin{proof}
+Na zdarzeniu $\widehat\theta_n\in U$ i
+$\Psi_n(\widehat\theta_n)=0$ wzór Newtona--Leibniza dla
+funkcji wektorowej na odcinku daje
+$0=\Psi_n(\theta_0)+A_n(\widehat\theta_n-\theta_0)$,
+gdzie $A_n=\int_0^1D\Psi_n(\theta_0+t(\widehat\theta_n-
+\theta_0))\,\dd t$.
+Jednostajna zbieżność $D\Psi_n$ do $H$, ciągłość $H$ w
+$\theta_0$ oraz zgodność $\widehat\theta_n$ zapewniają
+$A_n\to H(\theta_0)=A$ według prawdopodobieństwa.
+Z nieosobliwości $A$ wynika odwracalność
+$A_n$ z prawdopodobieństwem dążącym do jedności.
+Wobec tego $\sqrt n(\widehat\theta_n-\theta_0)
+=-A_n^{-1}\sqrt n\Psi_n(\theta_0)$ na takim zdarzeniu.
+Twierdzenie Slutsky'ego i liniowa transformacja rozkładu normalnego
+dają tezę. Dowód nie wymaga założenia normalności danych.
+\end{proof}
+
+W praktyce $\Psi_n(\theta)=n^{-1}\sum_i\psi(X_i,\theta)$,
+$A=\E D_\theta\psi(X_i,\theta_0)$ i
+$B=\E[\psi(X_i,\theta_0)\psi(X_i,\theta_0)^{\mathsf T}]$,
+przy założeniu zerowej średniej i skończonego drugiego momentu
+$\psi$. Wówczas \emph{macierz kanapkowa}
+$A^{-1}BA^{-\mathsf T}$ jest podstawą odpornego na błędną
+specyfikację oszacowania niepewności, o ile estymand jest
+właściwie określony przez równanie $\E\psi=0$.
+
+\begin{wniosek}[Regularna asymptotyka MLE]
+\label{cor:mle-asymptotic}
+Niech $\Theta\subset\R^d$ będzie otwarta, a
+$X_1,X_2,\ldots$ będą iid o rozkładzie $P_{\theta_0}$,
+$\theta_0\in\Theta$. Niech $s_\theta(x)$ będzie score,
+różniczkowalnym względem $\theta$ w wypukłym otoczeniu
+$U$ punktu $\theta_0$, i załóżmy:
+\begin{enumerate}
+\item $\E_{\theta_0}s_{\theta_0}(X_1)=0$,
+$\E_{\theta_0}\|s_{\theta_0}(X_1)\|^2<\infty$ oraz
+$I(\theta_0)=\E_{\theta_0}[s_{\theta_0}s_{\theta_0}^{\mathsf T}]$
+jest dodatnio określona;
+\item zachodzi druga tożsamość informacyjna
+$\E_{\theta_0}D_\theta s_{\theta_0}(X_1)=-I(\theta_0)$;
+\item dla $\Psi_n(\theta)=n^{-1}\sum_{i=1}^n s_\theta(X_i)$
+istnieje ciągła funkcja $H:U\to\R^{d\times d}$ z
+$H(\theta_0)=-I(\theta_0)$, taka że
+$\sup_{\theta\in U}\|D\Psi_n(\theta)-H(\theta)\|\to0$
+według prawdopodobieństwa;
+\item istnieje mierzalny estymator $\widehat\theta_n$ taki,
+że $\widehat\theta_n\to\theta_0$ według prawdopodobieństwa,
+$P(\widehat\theta_n\in U,\;\Psi_n(\widehat\theta_n)=0)\to1$.
+\end{enumerate}
+Wtedy
+\[
+\sqrt n(\widehat\theta_n-\theta_0)
+\xrightarrow{d}\Normal_d(0,I(\theta_0)^{-1}).
+\]
+\end{wniosek}
+\begin{proof}
+W poprzednim twierdzeniu wybieramy $\Psi_n(\theta)=
+n^{-1}\sum_i s_\theta(X_i)$. Z CLT wynika $B=I(\theta_0)$,
+a z tożsamości informacyjnej
+$A=\E\partial_\theta s_{\theta_0}=-I(\theta_0)$.
+Po wstawieniu do macierzy kanapkowej otrzymujemy
+$(-I)^{-1}I(-I)^{-\mathsf T}=I^{-1}$.
+\end{proof}
+
+\section{Metoda delty i przedziały asymptotyczne}
+\begin{twierdzenie}[Wielowymiarowa metoda delty]
+Niech $\sqrt n(T_n-\theta_0)\xrightarrow{d}Z$ w $\R^d$,
+a $g:\R^d\to\R^k$ będzie różniczkowalna w $\theta_0$.
+Wtedy
+$\sqrt n(g(T_n)-g(\theta_0))\xrightarrow{d}Dg(\theta_0)Z$.
+Jeśli $Z\sim\Normal_d(0,V)$, granica jest normalna o macierzy
+kowariancji $Dg(\theta_0)V Dg(\theta_0)^{\mathsf T}$.
+\end{twierdzenie}
+\begin{proof}
+Z różniczkowalności
+$g(\theta_0+h)=g(\theta_0)+Dg(\theta_0)h+o(\|h\|)$.
+Ciąg $\sqrt n(T_n-\theta_0)$ jest ciasny, a więc
+$T_n\to\theta_0$ według prawdopodobieństwa.
+Mnożąc resztę Taylora przez $\sqrt n$ dostajemy iloczyn
+$\sqrt n\|T_n-\theta_0\|=O_P(1)$ i
+$o_P(1)$, czyli składnik dążący do zera według
+prawdopodobieństwa. Teza wynika ze Slutsky'ego.
+\end{proof}
+
+\begin{stwierdzenie}[Asymptotyczny przedział Waldowski]
+\label{prop:wald-ci}
+Niech $\widehat\theta_n$ estymuje rzeczywisty parametr
+$\theta_0$ i załóżmy
+$\sqrt n(\widehat\theta_n-\theta_0)\xrightarrow{d}
+\Normal(0,V)$ dla $0<V<\infty$.
+Jeśli $\widehat V_n\to V$ według prawdopodobieństwa
+oraz $\widehat V_n>0$ z prawdopodobieństwem dążącym do
+jedności, to przedział
+$[\widehat\theta_n-z_{1-\alpha/2}\sqrt{\widehat V_n/n},
+\widehat\theta_n+z_{1-\alpha/2}\sqrt{\widehat V_n/n}]$
+ma asymptotyczne prawdopodobieństwo pokrycia $1-\alpha$,
+gdzie $z_q$ jest kwantylem rzędu $q$ rozkładu $\Normal(0,1)$.
+\end{stwierdzenie}
+\begin{proof}
+Z oszacowania $\widehat V_n\to V>0$ i twierdzenia Slutsky'ego
+mamy $(\widehat\theta_n-\theta_0)/\sqrt{\widehat V_n/n}
+\xrightarrow{d}\Normal(0,1)$. Ponieważ rozkład graniczny
+jest ciągły, prawdopodobieństwo znalezienia się pomiędzy
+$\pm z_{1-\alpha/2}$ dąży do $1-\alpha$; jest to dokładnie
+zdarzenie pokrycia.
+\end{proof}
+
+\begin{uwaga}[Wariancja estymowana i zdarzenia wyjątkowe]
+Warunek dodatniości $\widehat V_n$ z prawdopodobieństwem
+dążącym do jedności nie wymaga, by oszacowanie było dodatnie
+dla każdej próby. Na zdarzeniu, na którym nie jest dodatnie,
+należy jawnie określić konwencję postępowania, np. nie
+raportować przedziału Waldowskiego. Przy małej liczbie sukcesów
+w próbie Bernoulliego metoda Wilsona zwykle zachowuje się
+lepiej niż symetryczny przedział Walda.
+\end{uwaga}
+
+\begin{zadanie}[7 wad w próbie 100 sztuk: Wald czy Wilson?]
+\label{zad:wilson-100}
+Niech $X_i\iid\operatorname{Bernoulli}(p)$, $n=100$,
+$S=7$ i $\widehat p=0{,}07$. Dla $z=1{,}96$ (poziom około
+$95\%$) porównaj asymptotyczny przedział Waldowski i
+przedział Wilsona uzyskany przez odwrócenie nierówności
+$|\widehat p-p|\le z\sqrt{p(1-p)/n}$.
+\par\emph{Rozwiązanie.} Przedział Waldowski to
+$\widehat p\pm z\sqrt{\widehat p(1-\widehat p)/n}$.
+Dla Wilsona przenosimy wszystkie składniki nierówności na
+jedną stronę i otrzymujemy nierówność kwadratową względem $p$.
+Jej pierwiastki są
+\[
+\frac{\widehat p+z^2/(2n)\pm
+z\sqrt{\widehat p(1-\widehat p)/n+z^2/(4n^2)}}{1+z^2/n}.
+\]
+W odróżnieniu od Walda Wilson uwzględnia zależność wariancji
+od testowanej wartości $p$ i pozostaje w $[0,1]$.
+Nie jest jednak dokładnym przedziałem o nominalnym pokryciu
+dla dowolnego $n$. Gdy $S=0$, Wald daje przedział zdegenerowany
+w zerze, podczas gdy Wilson zachowuje dodatni górny kraniec.
+\end{zadanie}
+
+
+\section{Metoda delty drugiego rzędu: gdy pierwsza pochodna znika}
+\begin{twierdzenie}[Jednowymiarowa metoda delty drugiego rzędu]
+\label{thm:delta-second}
+Niech $\sqrt n(T_n-\theta_0)\xrightarrow{d}Z$ oraz niech
+$g:\R\to\R$ będzie dwukrotnie różniczkowalna w otoczeniu
+$\theta_0$ z ciągłą drugą pochodną w $\theta_0$ i
+$g'(\theta_0)=0$. Wtedy
+\[
+n\bigl(g(T_n)-g(\theta_0)\bigr)
+\xrightarrow{d}\frac12g''(\theta_0)Z^2.
+\]
+\end{twierdzenie}
+\begin{proof}
+Wzór Taylora daje
+$g(\theta_0+h)-g(\theta_0)=\frac12g''(\theta_0)h^2+
+o(h^2)$. Ponieważ $\sqrt n(T_n-\theta_0)$ jest ciasny,
+$T_n\to\theta_0$ według prawdopodobieństwa oraz
+$n(T_n-\theta_0)^2=O_P(1)$. Przemnożenie rozwinięcia
+przez $n$ daje resztę $o_P(1)$ i wskazaną granicę na mocy
+ciągłego odwzorowania i Slutsky'ego.
+\end{proof}
+\begin{zadanie}[Estymacja kwadratu średniej w zerze]
+Niech $X_i\iid\Normal(0,1)$ i $T_n=\bar X$. Jak zachowuje
+się estymator $T_n^2$ wartości $\mu^2$ przy $\mu=0$?
+\par\emph{Rozwiązanie.} Z dokładnego rozkładu
+$\sqrt n\bar X\sim\Normal(0,1)$ otrzymujemy
+$n\bar X^2\sim\chi_1^2$ dla każdego $n$.
+Zwykła metoda delty dla $g(\mu)=\mu^2$ daje zdegenerowaną
+granicę, gdyż $g'(0)=0$. Metoda drugiego rzędu odzyskuje
+niegaussowski rozkład graniczny. W tym modelu warto również
+rozważyć nieobciążony estymator $\bar X^2-S^2/n$,
+który może przyjmować wartości ujemne: sama nieobciążoność
+nie gwarantuje zachowania ograniczeń estymandu.
+\end{zadanie}
+
+\section{Model błędnie określony i wariancja kanapkowa}
+\begin{zadanie}[Zliczenia z nadmierną dyspersją]
+Zaobserwowano liczby zgłoszeń w dziesięciu porównywalnych
+okresach: $0,0,0,0,1,1,2,2,2,10$. Oblicz estymator średniej
+intensywności i porównaj błędy standardowe pod modelem Poissona
+oraz bez zakładania równości średniej i wariancji.
+\par\emph{Rozwiązanie.} Średnia wynosi $\bar x=1{,}8$,
+a wariancja z mianownikiem $n-1$ wynosi
+$s^2=9{,}0667$. Gdy przyjmiemy model
+$X_i\iid\Pois(\lambda)$, MLE to $\widehat\lambda=\bar x$,
+a modelowy błąd standardowy wynosi
+$\sqrt{\widehat\lambda/n}\approx0{,}424$.
+Jeżeli obserwacje są nadal iid, ale ich wspólny rozkład nie
+musi być poissonowski, z CLT dla średniej i spójności
+$s^2$ wynika oszacowanie błędu standardowego
+$s/\sqrt n\approx0{,}952$.
+Rozbieżność jest bardzo duża i wskazuje na nadmierną dyspersję.
+Nie dowodzi sama w sobie, jaki jest jej mechanizm. Przyczyną
+mogą być zmienne warunki pracy, heterogeniczność, nadmiar zer
+albo obserwacja odstająca. W analizie należy porównać model
+ujemnego dwumianowego, modele hierarchiczne i diagnostykę danych.
+\end{zadanie}
+
+\begin{stwierdzenie}[Kanapkowa wariancja estymatora średniej]
+Niech $X_1,X_2,\ldots$ będą iid z $\E X_i=\mu$ oraz
+$0<\Var(X_i)=v<\infty$. Dla równania estymacyjnego
+$\Psi_n(\theta)=n^{-1}\sum_i(X_i-\theta)$ otrzymujemy
+$\widehat\theta_n=\bar X$, $A=-1$, $B=v$ i
+asymptotyczną wariancję $v/n$. Gdy dodatkowo błędnie
+założymy model Poissona, modelowa informacja daje zamiast
+tego $\mu/n$, co jest poprawne tylko przy $v=\mu$.
+\end{stwierdzenie}
+\begin{proof}
+Score zastępczy $\psi(x,\theta)=x-\theta$ ma
+$\E\psi(X,\mu)=0$, pochodną $\partial_\theta\psi=-1$,
+a wariancję $\Var(\psi(X,\mu))=v$. Twierdzenie
+\ref{thm:m-est-normality} daje
+$\sqrt n(\bar X-\mu)\xrightarrow{d}\Normal(0,v)$.
+Pod modelem Poissona $v=\mu$; poza nim równanie średniej
+pozostaje sensowne, ale przy błędnej wariancji nie otrzymujemy
+poprawnej kalibracji niepewności.
+\end{proof}
+
+\section{Trzy testy asymptotyczne z tej samej wiarygodności}
+\begin{twierdzenie}[Jednoparametrowe twierdzenie Wilksa przy regularności]
+\label{thm:wilks-one}
+Niech $\theta_0$ leży we wnętrzu otwartego przedziału
+$\Theta$. Dla próby iid rozważamy dwukrotnie różniczkowalną
+log-wiarygodność $\ell_n$. Załóżmy istnienie zgodnego
+maksymalizatora wewnętrznego $\widehat\theta_n$, takiego że
+$\ell_n'(\widehat\theta_n)=0$, i niech
+$\ell_n'(\theta_0)/\sqrt n\xrightarrow{d}\Normal(0,I_0)$,
+gdzie $I_0>0$, oraz że istnieje wypukłe otoczenie
+$U\subset\Theta$ parametru $\theta_0$ i ciągła funkcja
+$J:U\to\R$ z $J(\theta_0)=I_0$, takie że
+$\sup_{\theta\in U}|-\ell_n''(\theta)/n-J(\theta)|
+\xrightarrow{P}0$. Wtedy
+\[
+2[\ell_n(\widehat\theta_n)-\ell_n(\theta_0)]
+\xrightarrow{d}\chi_1^2.
+\]
+\end{twierdzenie}
+\begin{proof}
+Z twierdzenia Taylora dla pochodnej
+$0=\ell_n'(\widehat\theta_n)
+=\ell_n'(\theta_0)+\ell_n''(\xi_n)(\widehat\theta_n-
+\theta_0)$, gdzie $\xi_n$ leży pomiędzy parametrami.
+Zatem $\sqrt n(\widehat\theta_n-\theta_0)
+=[\ell_n'(\theta_0)/\sqrt n]/[-\ell_n''(\xi_n)/n]$
+i ma rozkład graniczny $\Normal(0,I_0^{-1})$.
+Rozwijając z kolei $\ell_n(\widehat\theta_n)$ wokół
+$\widehat\theta_n$, gdzie pierwsza pochodna znika, otrzymujemy
+$2(\ell_n(\widehat\theta_n)-\ell_n(\theta_0))
+= -\ell_n''(\zeta_n)(\widehat\theta_n-\theta_0)^2$,
+przy $\zeta_n$ między $\theta_0$ a $\widehat\theta_n$.
+Ponieważ $\widehat\theta_n\to\theta_0$, również punkty
+$\xi_n$ i $\zeta_n$ dążą do $\theta_0$ według
+prawdopodobieństwa. Ciągłość $J$ i jednostajna zbieżność
+krzywizny dają zatem
+$-\ell_n''(\xi_n)/n\to I_0$ i
+$-\ell_n''(\zeta_n)/n\to I_0$ według
+prawdopodobieństwa. Ostatnia postać ilorazu wiarygodności
+zbiega więc do kwadratu zmiennej $\Normal(0,1)$,
+czyli do $\chi_1^2$.
+\end{proof}
+
+\begin{przyklad}[Wald, score i LR: kiedy wyniki się rozchodzą?]
+W regularnym modelu jednoparametrowym test Waldowski porównuje
+$|\widehat\theta-\theta_0|$ z oszacowanym błędem standardowym,
+test score używa $\ell_n'(\theta_0)$ i informacji przy hipotezie
+zerowej, a test ilorazu wiarygodności używa
+$2[\ell_n(\widehat\theta)-\ell_n(\theta_0)]$.
+Asymptotycznie wszystkie trzy mają typową kalibrację normalną lub
+$\chi^2_1$ pod $H_0$, lecz w małych próbach mogą dawać różne
+wartości. Wald jest szczególnie wrażliwy na parametryzację i
+przybliżenia w pobliżu brzegu. Testy dokładne i permutacyjne
+omówimy w następnych częściach tomu.
+\end{przyklad}
+
+\section{Kiedy asymptotyka zawodzi? Zmienny nośnik i rzadkie zdarzenia}
+\begin{twierdzenie}[Niegaussowska granica maksimum w modelu jednostajnym]
+Niech $X_1,\ldots,X_n\iid U(0,\theta)$, $\theta>0$, i
+$M_n=\max_iX_i$. Wtedy
+$\frac n\theta(\theta-M_n)\xrightarrow{d}\operatorname{Exp}(1)$.
+\end{twierdzenie}
+\begin{proof}
+Dla $x\ge0$ i $n>x$ mamy
+\[
+\Prob_\theta\left(\frac n\theta(\theta-M_n)>x\right)
+=\Prob_\theta(M_n<\theta(1-x/n))=(1-x/n)^n.
+\]
+Granica jest $e^{-x}$, funkcją przeżycia rozkładu
+wykładniczego z intensywnością jeden; w punktach $x<0$
+prawdopodobieństwo przeżycia jest równe $1$.
+Scharakteryzowanie funkcji rozkładu przez granice
+w punktach jej ciągłości kończy dowód.
+\end{proof}
+
+Wyraz $n^{-1}$, a nie $n^{-1/2}$, jest naturalną skalą błędu
+maksimum. Dlatego mechaniczne zastosowanie informacji Fishera
+lub przedziału Waldowskiego byłoby błędem. Innym wyzwaniem jest
+mała liczba sukcesów w modelu Bernoulliego: mimo liczebności
+$n=100$ obserwacja $S=0$ lub $S=1$ może powodować bardzo słabe
+działanie symetrycznego przybliżenia normalnego.
+
+\section{Przykład obliczeniowy i tabela doboru metod}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}p{0.31\textwidth}>{\raggedright\arraybackslash}p{0.31\textwidth}}
+\toprule
+\textbf{Sytuacja} & \textbf{Pierwsza metoda} & \textbf{Weryfikacja lub alternatywa}\\
+\midrule
+Duża próba iid, parametr wewnętrzny & MLE i informacja Fishera & Krzywizna i diagnostyka modelu, przedział profilowy\\
+Brzeg przestrzeni parametrów & Dokładna analiza rozkładu lub jednostronny przedział & Nie polegać na symetrycznym Waldzie\\
+Liczba zdarzeń i ekspozycja & MLE intensywności Poissona & Dla małych liczebności przedział dokładny\\
+Model może być błędnie określony & M-estymator i macierz kanapkowa & Interpretacja parametru pseudo-prawdziwego\\
+Zależne obserwacje & Model zależności, korekta struktury kowariancji & Nie używać bezrefleksyjnie wariancji iid\\
+Parametr zmienia nośnik & Statystyki porządkowe, rachunek dokładny & Cramér--Rao i Wilks wymagają regularności\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\Needspace{16\baselineskip}
+\noindent\textbf{Przykład numeryczny w Pythonie (tylko biblioteka standardowa).}\par
+\par
+\Needspace{13\baselineskip}
+\smallskip
+\begin{lstlisting}[language=Python,caption={Porównanie przedziałów Walda i Wilsona dla odsetka wad.}]
+from math import sqrt
+n, k, z = 100, 7, 1.96
+p = k / n
+wald = (p - z * sqrt(p * (1-p)/n),
+        p + z * sqrt(p * (1-p)/n))
+den = 1 + z*z/n
+center = (p + z*z/(2*n)) / den
+half = z * sqrt(p*(1-p)/n + z*z/(4*n*n)) / den
+wilson = (center-half, center+half)
+print("Wald:", wald)
+print("Wilson:", wilson)
+\end{lstlisting}
+
+\Needspace{16\baselineskip}
+\noindent\textbf{Ten sam rachunek w Julii.}\par
+\par
+\Needspace{13\baselineskip}
+\smallskip
+\begin{lstlisting}[language=Julia,caption={Obliczanie przedziałów Walda i Wilsona w Julii.}]
+n, k, z = 100, 7, 1.96
+p = k / n
+wald = (p-z*sqrt(p*(1-p)/n), p+z*sqrt(p*(1-p)/n))
+den = 1 + z^2/n
+center = (p + z^2/(2n)) / den
+half = z*sqrt(p*(1-p)/n + z^2/(4n^2)) / den
+println((wald=wald, wilson=(center-half, center+half)))
+\end{lstlisting}
+
+\paragraph{Jak używać tych wyników?}
+Po pierwsze, podajemy założenie modelu niezależnych prób o wspólnym
+$p$. Po drugie, raportujemy liczbę obserwacji i licznik sukcesów.
+Po trzecie, sprawdzamy zachowanie przedziału na brzegu i zgodność
+jego interpretacji z celem eksperymentu. Po czwarte, odróżniamy
+\emph{niepewność parametru przy ustalonym modelu} od błędu
+selekcji i błędów pomiaru, których żaden przedział wyznaczony z
+błędnego modelu automatycznie nie naprawi.
+
+% ================================================================
+% ROZDZIAL 9 -- TESTOWANIE HIPOTEZ
+% ================================================================

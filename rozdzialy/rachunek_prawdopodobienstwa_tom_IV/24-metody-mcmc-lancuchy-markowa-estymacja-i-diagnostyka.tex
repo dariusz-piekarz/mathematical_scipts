@@ -1,0 +1,697 @@
+\chapter{Metody MCMC: łańcuchy Markowa, estymacja i diagnostyka}
+\label{ch:mcmc}
+\paragraph{Powiązania i odsyłacze.} Podstawy łańcuchów Markowa omawiają tom I, rozdział~\ref{I-ch:markov}, i tom II, rozdział~\ref{II-ch:ctmc}; metodę Monte Carlo — rozdział~\ref{ch:monte-carlo}.
+
+
+\section{Gdy nie umiemy losować z rozkładu a posteriori}
+Niech dane $x$ wyznaczają posterior o gęstości
+$\pi(\theta\mid x)=\widetilde\pi(\theta\mid x)/Z(x)$,
+gdzie $\widetilde\pi\ge0$ można obliczać punktowo, lecz
+$Z(x)=\int_\Theta\widetilde\pi(\theta\mid x)\,
+\dd\lambda_d(\theta)$ nie ma wygodnego wzoru.
+Zakładamy $0<Z(x)<\infty$, ponieważ niewłaściwy posterior
+nie jest rozkładem, z którego można poprawnie losować.
+Metody \emph{Markov chain Monte Carlo} (MCMC) konstruują
+łańcuch o rozkładzie niezmienniczym $\pi$ i estymują
+$\mu=\int_\Theta f(\theta)\pi(\theta\mid x)\,
+\dd\lambda_d(\theta)$ przez średnią wzdłuż trajektorii.
+Nie należy zakładać, że kolejne stany łańcucha są niezależne.
+Związek długookresowej wariancji ze zjawiskiem autokorelacji omówiliśmy wcześniej w rozdziale~\ref{ch:time-series}.
+Wszystkie te pojęcia odnoszą się do ustalonych danych $x$;
+parametr $N$ poniżej oznacza długość łańcucha, nie liczbę
+danych wykorzystanych do obliczenia posterioru.
+
+\begin{definicja}[Jądro Markowa i miara niezmiennicza]
+\label{def:mcmc-kernel}
+Na przestrzeni mierzalnej $(\Theta,\mathcal A)$ \emph{jądrem Markowa}
+nazywamy odwzorowanie $P\colon\Theta\times\mathcal A\to[0,1]$
+takie, że $P(\theta,\cdot)$ jest prawdopodobieństwem dla
+każdego $\theta$ oraz $P(\cdot,A)$ jest mierzalna dla każdego $A$.
+Miara probabilistyczna $\pi$ jest \emph{niezmiennicza}, jeśli
+$\int_\Theta P(\theta,A)\,\dd\pi(\theta)=\pi(A)$ dla każdego $A$.
+Jądro spełnia \emph{warunek szczegółowej równowagi} względem $\pi$,
+gdy miary na $\Theta\times\Theta$ zadane przez
+$\pi(\dd\theta)P(\theta,\dd\vartheta)$ i
+$\pi(\dd\vartheta)P(\vartheta,\dd\theta)$ są równe.
+Taki łańcuch nazywamy \emph{odwracalnym} względem $\pi$.
+\end{definicja}
+
+\begin{stwierdzenie}[Szczegółowa równowaga implikuje niezmienniczość]
+\label{prop:balance-invariant}
+Jeżeli jądro $P$ spełnia szczegółową równowagę względem
+prawdopodobieństwa $\pi$, to $\pi P=\pi$.
+\end{stwierdzenie}
+\begin{proof}
+Dla każdego $A\in\mathcal A$ całkujemy równość miar
+szczegółowej równowagi po $\Theta\times A$.
+Lewa strona jest $\int_\Theta P(\theta,A)\,\dd\pi(\theta)$,
+a prawa $\int_A P(\vartheta,\Theta)\,\dd\pi(\vartheta)=\pi(A)$.
+\end{proof}
+
+\begin{uwaga}[Niezmienniczość nie jest jeszcze zbieżnością]
+Łańcuch $X_{k+1}=X_k$ ma \emph{każdy} rozkład jako
+niezmienniczy, ale nie bada rozkładu docelowego.
+Aby średnie MCMC były użyteczne, potrzebujemy dodatkowo
+odpowiednich własności ergodycznych: przede wszystkim
+osiągalności regionów o dodatniej masie docelowej,
+a w typowych twierdzeniach również nieokresowości.
+\end{uwaga}
+
+\section{Metropolis--Hastings: dowód poprawności algorytmu}
+\begin{twierdzenie}[Jądro Metropolisa--Hastingsa]
+\label{thm:mh-detailed}
+Niech $\Theta\subseteq\R^d$ będzie mierzalna,
+$\pi$ gęstością prawdopodobieństwa względem $\lambda_d$,
+a $q(y\mid x)$ mierzalną gęstością propozycji względem
+$\lambda_d$ dla każdego $x\in\Theta$.
+Dla $\pi(x)q(y\mid x)>0$ zdefiniujmy
+\[
+ \alpha(x,y)=\min\left\{1,
+ \frac{\pi(y)q(x\mid y)}{\pi(x)q(y\mid x)}\right\};
+\]
+na pozostałych parach z $q(y\mid x)>0$ można ustalić
+$\alpha(x,y)$ w dowolny mierzalny sposób zgodny z
+zachowaniem na nośniku $\pi$; w szczególności dla
+$\pi(x)>0$ i $\pi(y)=0$ przyjmujemy $\alpha(x,y)=0$.
+Algorytm: z punktu $x$ losujemy $Y\sim q(\cdot\mid x)$,
+a następnie przechodzimy do $Y$ z prawdopodobieństwem
+$\alpha(x,Y)$, w przeciwnym razie pozostajemy w $x$.
+Tak otrzymane jądro $P$ ma $\pi$ jako rozkład niezmienniczy.
+Do obliczania $\alpha$ wystarczy nieunormowana
+gęstość $\widetilde\pi=Z\pi$, gdy $0<Z<\infty$.
+\end{twierdzenie}
+\begin{proof}
+Dla $x\ne y$ gęstość przepływu zaakceptowanych przejść
+względem $\lambda_{2d}$ jest równa
+\[
+ \pi(x)q(y\mid x)\alpha(x,y)
+ =\min\{\pi(x)q(y\mid x),\pi(y)q(x\mid y)\},
+\]
+co jest symetryczne w $x,y$. Pozostała masa przejść
+znajduje się na przekątnej $\{(x,x):x\in\Theta\}$,
+a ta miara także pozostaje niezmieniona po zamianie
+współrzędnych. Dla stanów spoza nośnika $\pi$
+wybór jądra nie wpływa na powyższe równości miar.
+Otrzymaliśmy szczegółową równowagę i możemy zastosować
+stwierdzenie~\ref{prop:balance-invariant}.
+Stała $Z$ skraca się w ilorazie $\pi(y)/\pi(x)$.
+\end{proof}
+
+\begin{przyklad}[Dwie propozycje i ich konsekwencje]
+Jeżeli $q(y\mid x)=q(x\mid y)$, to
+$\alpha(x,y)=\min\{1,\widetilde\pi(y)/\widetilde\pi(x)\}$.
+Tak jest np. dla propozycji $Y=X+\varepsilon$,
+$\varepsilon\sim\Normal_d(0,s^2I_d)$; metoda nazywa się
+\emph{random-walk Metropolis}. Dla małego $s$ akceptacja
+może być wysoka, lecz łańcuch porusza się powoli. Dla
+bardzo dużego $s$ częste odrzucenia mogą powodować
+powtarzanie tych samych stanów.
+Jeżeli natomiast $q(y\mid x)=g(y)$ nie zależy od $x$,
+to $\alpha(x,y)=\min\{1,\pi(y)g(x)/(\pi(x)g(y))\}$.
+Nie wolno pominąć ilorazu propozycji, chyba że
+propozycja jest rzeczywiście symetryczna.
+\end{przyklad}
+
+\section{Dlaczego średnie MCMC zbieżne są w szczególnych warunkach?}
+\begin{twierdzenie}[Jednoznaczność i zbieżność z warunku minoracji]
+\label{thm:mcmc-minorization}
+Niech $P$ będzie jądrem Markowa na mierzalnej przestrzeni
+$(\Theta,\mathcal A)$. Załóżmy, że istnieją
+$m\ge1$, $\varepsilon\in(0,1]$ i prawdopodobieństwo $\nu$
+takie, że dla każdego $x\in\Theta$ i $A\in\mathcal A$
+$P^m(x,A)\ge\varepsilon\nu(A)$.
+Wtedy $P$ ma dokładnie jedną miarę niezmienniczą $\pi$
+i dla każdej początkowej miary $\mu$,
+\[
+ \norm{\mu P^{km}-\pi}_{\rm TV}
+ \le(1-\varepsilon)^k\norm{\mu-\pi}_{\rm TV},
+ \qquad k\ge0.
+\]
+W szczególności całkowita wariacja rozkładu łańcucha
+dąży do zera również dla ogólnych $N\to\infty$.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $0<\varepsilon<1$, zapisujemy
+$P^m(x,\cdot)=\varepsilon\nu(\cdot)
+ +(1-\varepsilon)R(x,\cdot)$, gdzie $R$ jest jądrem
+Markowa. Dla dwóch miar probabilistycznych $\mu_1,\mu_2$
+mamy
+$\mu_1P^m-\mu_2P^m=(1-\varepsilon)(\mu_1R-\mu_2R)$.
+Ponieważ jądro Markowa nie zwiększa odległości
+w całkowitej wariacji, otrzymujemy kontrakcję o czynnik
+$1-\varepsilon$. Przestrzeń miar probabilistycznych
+z odległością całkowitej wariacji jest zupełna,
+więc twierdzenie Banacha o punkcie stałym daje
+jedyny stały punkt $\pi$ operatora $\mu\mapsto\mu P^m$.
+Ponieważ $\pi P$ także jest jego punktem stałym,
+$\pi P=\pi$. Każda miara niezmiennicza dla $P$
+jest też niezmiennicza dla $P^m$, więc musi być $\pi$.
+Iterowanie kontrakcji daje oszacowanie.
+Dla $N=km+r$, $0\le r<m$, korzystamy z
+$\pi P^r=\pi$ i nieekspansywności jądra $P^r$.
+Przy $\varepsilon=1$ mamy $P^m(x,\cdot)=\nu$
+dla wszystkich $x$ i tezy są natychmiastowe.
+\end{proof}
+
+\begin{uwaga}[Warunek jest mocny, ale przejrzysty]
+Dla wielu ciągłych przestrzeni stanów, zwłaszcza
+nieograniczonych, globalna minoracja nie zachodzi.
+Używa się wtedy warunków Harrisa, funkcji Lyapunova
+i małych zbiorów. Nie zakładamy, że każda propozycja
+Metropolisa--Hastingsa daje zbieżność geometryczną.
+Co więcej, samo trafienie w pobliże jednego maksimum
+posterioru nie gwarantuje odwiedzenia innych modów.
+\end{uwaga}
+
+\begin{twierdzenie}[Prawo wielkich liczb dla skończonego łańcucha]
+\label{thm:mcmc-finite-slln}
+Niech $\Theta=\{1,\ldots,K\}$ i $P$ będzie macierzą
+przejścia nieprzywiedlnego łańcucha Markowa na $\Theta$.
+Niech $\pi$ oznacza jego jedyny rozkład stacjonarny.
+Dla dowolnej funkcji $f\colon\Theta\to\R$ oraz
+\emph{dowolnego} rozkładu początkowego,
+$N^{-1}\sum_{k=0}^{N-1}f(X_k)\to\sum_{x=1}^Kf(x)\pi(x)$
+prawie na pewno. Nieokresowość nie jest potrzebna
+do tego prawa wielkich liczb.
+\end{twierdzenie}
+\begin{proof}
+Niech $g=f-\pi(f)$, gdzie
+$\pi(f)=\sum_xf(x)\pi(x)$. Dla skończonego,
+nieprzywiedlnego łańcucha równanie Poissona
+$(I-P)h=g$ ma rozwiązanie $h$, ponieważ przestrzeń
+wektorów o średniej $\pi$ równej zero jest obrazem
+$I-P$. Istotnie, wektor w jądrze $I-P$ jest stały:
+zasada maksimum i nieprzywiedlność wymuszają
+równość współrzędnych, a stąd rząd $I-P$ wynosi $K-1$.
+Zatem $g(X_k)=h(X_k)-Ph(X_k)$ i
+\[
+ \sum_{k=0}^{N-1}g(X_k)
+ =h(X_0)-h(X_N)+\sum_{k=1}^{N}
+   \big(h(X_k)-Ph(X_{k-1})\big).
+\]
+Suma po prawej stronie jest martyngałem z przyrostami
+o zerowej warunkowej średniej, a wszystkie przyrosty
+są ograniczone stałą $2\norm h_\infty$.
+Z nierówności Azumy--Hoeffdinga dla takich martyngałów
+wynika, że dla każdego $\delta>0$ prawdopodobieństwo
+przekroczenia przez wartość bezwzględną martyngału
+progu $\delta N$ jest ograniczone przez
+$2\exp[-c_\delta N]$ dla pewnego $c_\delta>0$.
+Pierwszy lemat Borela--Cantellego daje zatem
+zbieżność martyngału podzielonego przez $N$ do zera
+prawie na pewno. Wyraz brzegowy jest ograniczony
+przez $2\norm h_\infty/N\to0$. Sumując po
+przeliczalnym zbiorze dodatnich wymiernych $\delta$
+otrzymujemy tezę.
+\end{proof}
+
+\begin{lemat}[CLT dla ograniczonych różnic martyngałowych]
+\label{lem:bounded-martingale-clt}
+Niech $(D_k,\mathcal F_k)_{k\ge1}$ będzie ciągiem różnic
+martyngałowych na jednej przestrzeni probabilistycznej,
+$\E[D_k\mid\mathcal F_{k-1}]=0$, oraz niech
+$|D_k|\le C$ prawie na pewno dla pewnego $C<\infty$
+i wszystkich $k$. Oznaczmy
+$V_k=\E[D_k^2\mid\mathcal F_{k-1}]$.
+Jeżeli $N^{-1}\sum_{k=1}^NV_k\to v$ według
+prawdopodobieństwa dla pewnej stałej $v\ge0$, to
+$N^{-1/2}\sum_{k=1}^ND_k\Rightarrow\Normal(0,v)$.
+Dla $v=0$ przez $\Normal(0,0)$ rozumiemy masę Diraca w zerze.
+\end{lemat}
+\begin{proof}
+Ustalmy $t\in\R$ i napiszmy
+$a_{N,k}=\E[\exp(itD_k/\sqrt N)\mid\mathcal F_{k-1}]$.
+Z rozwinięcia wykładnika do drugiego rzędu, ograniczoności
+$D_k$ i zerowej warunkowej średniej wynika jednostajnie
+w $k\le N$ i niemal wszystkich realizacjach
+\[
+ a_{N,k}=1-\frac{t^2V_k}{2N}+O(N^{-3/2}),
+ \quad
+ \log a_{N,k}=-\frac{t^2V_k}{2N}+O(N^{-3/2}).
+\]
+Dla dużego $N$ wszystkie $a_{N,k}$ są niezerowe i ich
+moduły są co najmniej $1-C_t/N$ dla pewnej stałej $C_t$.
+Dla $S_k=\sum_{j=1}^kD_j$ proces
+\[
+ M_{N,k}=\frac{\exp(itS_k/\sqrt N)}
+ {\prod_{j=1}^k a_{N,j}},\qquad 0\le k\le N,
+\]
+jest martyngałem zespolonym względem $\mathcal F_k$,
+gdyż mianownik po dodaniu czynnika $a_{N,k}$ jest
+$\mathcal F_{k-1}$-mierzalny. Mamy $\E M_{N,N}=1$,
+a ponadto $|M_{N,N}|\le(1-C_t/N)^{-N}\le e^{2C_t}$
+dla dostatecznie dużych $N$.
+Zsumowanie rozwinięć logarytmu daje
+$\prod_{k=1}^N a_{N,k}=
+\exp[-t^2(2N)^{-1}\sum_{k=1}^NV_k+O(N^{-1/2})]$.
+Ponieważ $N^{-1}\sum V_k\to v$ według prawdopodobieństwa,
+ten iloczyn dąży do $\exp(-t^2v/2)$ według
+prawdopodobieństwa i jest jednostajnie ograniczony.
+Korzystając z ograniczoności $M_{N,N}$ otrzymujemy
+\[
+ \E\exp(itS_N/\sqrt N)
+ =\E\left[M_{N,N}\prod_{k=1}^Na_{N,k}\right]
+ \longrightarrow e^{-t^2v/2}\E M_{N,N}
+ =e^{-t^2v/2}.
+\]
+Twierdzenie Lévy'ego o ciągłości funkcji charakterystycznych
+kończy dowód.
+\end{proof}
+
+\section{Autokorelacja, długookresowa wariancja i ESS}
+\begin{stwierdzenie}[Wariancja średniej ze stacjonarnego łańcucha]
+\label{prop:mcmc-autocorrelation}
+Niech $(X_k)_{k\ge0}$ będzie ściśle stacjonarnym
+łańcuchem Markowa o rozkładzie $\pi$ i niech
+$Y_k=f(X_k)$ ma skończoną, dodatnią wariancję
+$\gamma_0=\Var_\pi(Y_0)$. Oznaczmy
+$\gamma_h=\Cov_\pi(Y_0,Y_h)$ oraz
+$\rho_h=\gamma_h/\gamma_0$. Wtedy dla każdego $N\ge1$
+\[
+ \Var\left(\frac1N\sum_{k=0}^{N-1}Y_k\right)
+ =\frac{\gamma_0}{N}\left(1+2\sum_{h=1}^{N-1}
+ (1-h/N)\rho_h\right).
+\]
+Jeżeli $\sum_{h\ge1}|\gamma_h|<\infty$, to
+$N\Var(N^{-1}\sum_{k=0}^{N-1}Y_k)\to
+\sigma_\infty^2=\gamma_0+2\sum_{h\ge1}\gamma_h\ge0$.
+Gdy $\sigma_\infty^2>0$, definiujemy
+$\tau_{\rm int}=\sigma_\infty^2/\gamma_0$ i
+$N_{\rm eff}=N/\tau_{\rm int}$ jako asymptotyczną
+\emph{efektywną liczebność próby dla funkcji $f$}.
+\end{stwierdzenie}
+\begin{proof}
+Wariancja sumy wynosi
+$\sum_{i,j=0}^{N-1}\Cov(Y_i,Y_j)$.
+Ze stacjonarności, dla każdego opóźnienia $h\ge1$
+występuje $2(N-h)$ par o kowariancji $\gamma_h$
+oraz $N$ par z kowariancją $\gamma_0$.
+Podzielenie przez $N^2$ daje pierwszy wzór.
+Przy bezwzględnej sumowalności można zastosować
+twierdzenie o zbieżności zdominowanej dla szeregu,
+ponieważ $|1-h/N|\le1$ dla $h<N$.
+Nieujemność granicy wynika z nieujemności wariancji.
+\end{proof}
+
+\begin{twierdzenie}[Skończony odwracalny łańcuch: widmo i CLT]
+\label{thm:mcmc-reversible-clt}
+Niech $P$ będzie nieprzywiedlną i nieokresową
+macierzą przejścia na skończonej przestrzeni $\Theta$,
+odwracalną względem stacjonarnego $\pi$.
+Dla $f\colon\Theta\to\R$ o $\pi$-średniej $\mu$ niech
+$g=f-\mu$. Niech $(\lambda_j,e_j)_{j=2}^K$
+stanowi układ ortonormalnych wektorów własnych
+operatora $P$ w $L^2(\pi)$ prostopadłych do stałych,
+tak że $g=\sum_{j=2}^Kc_je_j$.
+Wtedy $-1<\lambda_j<1$ i
+\[
+ \sigma_\infty^2
+ =\sum_{j=2}^K c_j^2\frac{1+\lambda_j}{1-\lambda_j}.
+\]
+Jeżeli $g\not\equiv0$, to $\sigma_\infty^2>0$.
+Przy \emph{dowolnym} rozkładzie początkowym zachodzi
+\[
+ \sqrt N\left(\frac1N\sum_{k=0}^{N-1}f(X_k)-\mu\right)
+ \Rightarrow\Normal(0,\sigma_\infty^2).
+\]
+\end{twierdzenie}
+\begin{proof}
+Szczegółowa równowaga oznacza, że $P$ jest samosprzężony
+w $L^2(\pi)$. Jest operatorem kontrakcji, więc jego
+wartości własne leżą w $[-1,1]$. Nieprzywiedlność i
+nieokresowość w skończonym stanie dają prostą wartość
+własną $1$ i wykluczają $-1$.
+Dla startu stacjonarnego
+$\gamma_h=\langle g,P^hg\rangle_\pi=
+\sum_{j=2}^Kc_j^2\lambda_j^h$.
+Sumując zbieżny szereg geometryczny otrzymujemy
+$\gamma_0+2\sum_{h\ge1}\gamma_h
+=\sum_jc_j^2(1+\lambda_j)/(1-\lambda_j)$.
+Aby uzasadnić CLT, rozwiązujemy $(I-P)h=g$ tak jak
+w dowodzie twierdzenia~\ref{thm:mcmc-finite-slln}.
+Suma $g(X_k)$ różni się o ograniczony wyraz brzegowy
+od sumy różnic martyngałowych
+$D_k=h(X_k)-Ph(X_{k-1})$. Ich warunkowe wariancje
+wynoszą $V(X_{k-1})=Ph^2(X_{k-1})-(Ph(X_{k-1}))^2$.
+Z udowodnionego prawa wielkich liczb
+$N^{-1}\sum_{k=1}^NV(X_{k-1})\to\pi(V)$
+prawie na pewno. Przyrosty $D_k$ są ograniczone,
+więc spełniają warunek Lindeberga. Stosujemy lemat~\ref{lem:bounded-martingale-clt},
+którego założenia zostały tu sprawdzone.
+Otrzymujemy normalną granicę z wariancją $\pi(V)$. Ta wariancja
+równa się obliczonej wcześniej $\sigma_\infty^2$,
+gdyż oba wzory są granicą $N^{-1}\Var_\pi(
+\sum_{k=0}^{N-1}g(X_k))$; dla ograniczonych przyrostów
+różnice od wyrazu brzegowego są $o(N)$ w $L^2$.
+Wyjściowy rozkład nie wpływa na CLT: po skończonej
+liczbie kroków jego wpływ na znormalizowaną sumę
+zanika, co można formalnie uzasadnić sprzężeniem
+ze stacjonarną kopią łańcucha (zbieżność geometryczna
+w skończonej nieprzywiedlnej nieokresowej przestrzeni).
+\end{proof}
+
+\begin{uwaga}[Czego ESS nie gwarantuje]
+Dla silnie dodatniej autokorelacji $\tau_{\rm int}\gg1$,
+więc $N_{\rm eff}\ll N$. Przy ujemnych korelacjach
+może być też $\tau_{\rm int}<1$, a $N_{\rm eff}>N$;
+nie jest to liczba faktycznie niezależnych obserwacji.
+Efektywna liczebność zależy od funkcji $f$ i od
+stacjonarnego rozkładu. Oszacowanie ESS z krótkiego,
+źle mieszającego się łańcucha może być bardzo mylące.
+\end{uwaga}
+
+\section{Gibbs sampling i modele hierarchiczne}
+\begin{twierdzenie}[Kroki Gibbsa zachowują posterior]
+\label{thm:gibbs-invariant}
+Niech $\pi(x,y)$ będzie wspólną, właściwą gęstością
+na $\R^r\times\R^s$ względem $\lambda_{r+s}$.
+Załóżmy, że warunkowe gęstości $\pi(x\mid y)$ oraz
+$\pi(y\mid x)$ są określone dla prawie wszystkich
+wartości odpowiednich zmiennych. Jądro aktualizujące
+$x$ przez losowanie z $\pi(\cdot\mid y)$ przy
+ustalonym $y$ oraz jądro aktualizujące $y$ przez
+losowanie z $\pi(\cdot\mid x)$ przy ustalonym $x$
+mają $\pi$ jako miarę niezmienniczą. Ich złożenie,
+\emph{systematyczny skan Gibbsa}, również zachowuje $\pi$.
+Nie musi jednak samo być odwracalne względem $\pi$.
+\end{twierdzenie}
+\begin{proof}
+Dla zbiorów mierzalnych $A\subset\R^r$, $B\subset\R^s$
+po aktualizacji pierwszej współrzędnej otrzymujemy
+\[
+ \int_{\R^s}\pi_Y(y)
+ \left(\int_A\pi(x\mid y)\,\dd\lambda_r(x)\right)
+ \ind{B}(y)\,\dd\lambda_s(y)
+ =\int_{A\times B}\pi(x,y)\,\dd\lambda_{r+s}(x,y).
+\]
+Jest to dokładnie $\pi(A\times B)$. Zbiory prostokątne
+generują borelowskie $\sigma$-ciało, więc pierwsze
+jądro zachowuje $\pi$; identycznie rozumujemy dla drugiego.
+Z równości $\pi P_x=\pi$ i $\pi P_y=\pi$
+wynika $\pi(P_xP_y)=\pi$.
+\end{proof}
+
+\begin{przyklad}[Gibbs dla skorelowanej pary normalnej]
+Niech $(X,Y)$ ma normalny rozkład dwuwymiarowy o średniej
+$(0,0)$, wariancjach $1$ i korelacji $\rho\in(-1,1)$.
+Wtedy
+$X\mid Y=y\sim\Normal(\rho y,1-\rho^2)$ oraz
+$Y\mid X=x\sim\Normal(\rho x,1-\rho^2)$.
+Algorytm naprzemiennie losuje z tych dwóch rozkładów.
+Gdy $|\rho|$ jest bliskie jedności, kolejne iteracje
+są mocno powiązane, mimo że \emph{każdy krok warunkowy}
+ma dokładny rozkład. Może być wtedy lepiej wykonać
+aktualizację blokową lub zmienić parametryzację.
+\end{przyklad}
+
+\section{Hamiltonian Monte Carlo: dlaczego gradient pomaga?}
+\label{sec:hmc-intro}
+Niech posterior ma dodatnią, różniczkowalną gęstość
+$\pi(q)\propto\exp[-U(q)]$ na $\R^d$, a $M$
+będzie dodatnio określoną macierzą masy. Wprowadzamy
+pomocniczy pęd $p\sim\Normal_d(0,M)$ oraz
+\emph{hamiltonian} $H(q,p)=U(q)+\frac12p^\top M^{-1}p$.
+Wspólny rozkład docelowy na przestrzeni fazowej
+jest proporcjonalny do $\exp[-H(q,p)]$.
+Ideą jest wykonywanie długich, skorelowanych ruchów
+wzdłuż przybliżonych trajektorii hamiltonowskich,
+zamiast małych, losowych kroków bez informacji o gradiencie.
+
+\begin{stwierdzenie}[Zachowanie rozkładu przez krok HMC]
+\label{prop:hmc-step}
+Załóżmy, że $U\in C^1(\R^d)$, $M$ jest dodatnio
+określona i $\int_{\R^d}e^{-U(q)}\,\dd\lambda_d(q)<\infty$.
+Niech $\Phi$ będzie złożeniem skończonej liczby
+kroków algorytmu leapfrog o stałym kroku $\epsilon>0$:
+\[
+ \begin{aligned}
+ p_{1/2}&=p-\tfrac\epsilon2\nabla U(q),\\
+ q'&=q+\epsilon M^{-1}p_{1/2},\\
+ p'&=p_{1/2}-\tfrac\epsilon2\nabla U(q').
+ \end{aligned}
+\]
+Po złożeniu z odwróceniem pędu $R(q,p)=(q,-p)$
+propozycja $T=R\circ\Phi$ jest odwracalną inwolucją
+zachowującą miarę Lebesgue'a na $\R^{2d}$.
+Akceptowanie jej z prawdopodobieństwem
+$\min\{1,\exp[H(q,p)-H(T(q,p))]\}$ zachowuje
+wspólny rozkład o gęstości proporcjonalnej do $e^{-H}$.
+Odświeżenie pędu z $\Normal_d(0,M)$ również zachowuje
+ten rozkład. Łańcuch położeń $q$ ma więc $\pi$
+jako rozkład niezmienniczy.
+\end{stwierdzenie}
+\begin{proof}
+Każda podoperacja leapfrog jest ścinaniem:
+$(q,p)\mapsto(q,p-\frac\epsilon2\nabla U(q))$
+lub $(q,p)\mapsto(q+\epsilon M^{-1}p,p)$.
+Dla ustalonej drugiej współrzędnej pierwsze ścinanie
+przesuwa $p$, a drugie dla ustalonego $p$ przesuwa $q$;
+obie transformacje zachowują miarę Lebesgue'a
+(bez potrzeby zakładania istnienia drugich pochodnych).
+Każde ma odwrotność przez zmianę $\epsilon$ na $-\epsilon$.
+Symetria kompozycji daje $R\Phi R=\Phi^{-1}$,
+stąd $(R\Phi)^2=I$. Również $R$ zachowuje objętość.
+Dla odwracalnej, zachowującej objętość inwolucji $T$
+przepływ masy między $z$ i $T(z)$ po odrzuceniach
+jest symetryczny:
+$e^{-H(z)}\min(1,e^{H(z)-H(Tz)})
+=\min(e^{-H(z)},e^{-H(Tz)})$.
+Jest to szczegółowa równowaga na przestrzeni fazowej.
+Odświeżenie pędu zachowuje produkt rozkładu $q$ i
+normalnego rozkładu $p$, zatem złożenie zachowuje
+wspólny rozkład. Po marginalizacji otrzymujemy $\pi$.
+\end{proof}
+
+\begin{uwaga}[Co wymaga kontroli przy HMC]
+Samo zachowanie rozkładu nie dowodzi ergodyczności.
+Błędny gradient, niestabilne kroki, zbyt duże $\epsilon$,
+wielomodalność lub parametryzacja z wąskimi obszarami
+mogą prowadzić do problemów. Należy kontrolować
+akceptację, rozbieżne trajektorie numeryczne, efektywne
+liczebności próby i zgodność wielu łańcuchów.
+Właściwa implementacja NUTS wymaga osobnego uzasadnienia
+reguły zatrzymywania trajektorii; nie utożsamiamy jej
+z opisanym tu algorytmem o stałej liczbie kroków.
+\end{uwaga}
+
+\section{Diagnostyka: co można sprawdzić, a czego nie można udowodnić wykresem?}
+\begin{definicja}[Dwie proste diagnostyki wielu łańcuchów]
+Załóżmy, że mamy $m\ge2$ łańcuchów, każdy długości
+$N\ge2$, wartości $z_{ji}$ badanego funkcjonału,
+$\overline z_j=N^{-1}\sum_{i=1}^Nz_{ji}$ oraz
+$\overline z=m^{-1}\sum_{j=1}^m\overline z_j$.
+Definiujemy
+\[
+ W=\frac1m\sum_{j=1}^m
+ \frac1{N-1}\sum_{i=1}^N(z_{ji}-\overline z_j)^2,
+ \qquad
+ B=\frac N{m-1}\sum_{j=1}^m(\overline z_j-\overline z)^2.
+\]
+Jeżeli $W>0$, to klasyczna diagnostyka Gelmana--Rubina
+ma postać
+\[
+ \widehat R=\sqrt{\frac{(N-1)W+B}{NW}}.
+\]
+W praktyce warto stosować podział łańcuchów na połowy
+(\emph{split-$\widehat R$}) oraz wersje rangowe
+i diagnostykę ogonów rozkładu.
+\end{definicja}
+
+\begin{uwaga}[Wygrzewanie i przerzedzanie łańcucha]
+Odrzucenie początkowych iteracji (\emph{warm-up}, także \emph{burn-in})
+może zmniejszać wpływ startu, ale arbitralna liczba odrzuconych kroków
+nie gwarantuje osiągnięcia stacjonarności. Przerzedzanie (\emph{thinning}),
+czyli zapisywanie co $k$-tej iteracji, na ogół nie poprawia
+precyzji estymacji przy ustalonym koszcie wygenerowania pełnego łańcucha;
+może natomiast ograniczać zużycie pamięci. W raporcie należy podać
+liczbę iteracji przed i po warm-up, liczbę łańcuchów i sposób diagnostyki.
+\end{uwaga}
+
+\begin{przyklad}[Pozorna zgodność łańcuchów i nieodwiedzony mod]
+Niech docelowy rozkład na $\R$ będzie mieszaniną
+$\tfrac12\Normal(-a,1)+\tfrac12\Normal(a,1)$ dla dużego $a$.
+Jeżeli wszystkie łańcuchy rozpoczynamy w pobliżu $-a$ i używamy
+małych kroków random-walk Metropolisa, mogą przez cały dostępny
+czas odwiedzać wyłącznie lewy mod. Ich średnie i wariancje
+międzyłańcuchowe będą podobne, zatem $\widehat R$ może być
+bliska jedności, mimo że estymata $\E_\pi X=0$ będzie bliska $-a$.
+To nie jest kontrprzykład do poprawności algorytmu Metropolisa,
+lecz do \emph{wnioskowania o zbieżności jedynie z diagnostyki}.
+Należy stosować różne punkty startowe, w tym odległe mody,
+i sprawdzać stabilność oszacowań przy zmianach parametryzacji
+oraz propozycji.
+\end{przyklad}
+
+\begin{uwaga}[Nie istnieje magiczny próg zapewniający zbieżność]
+Wartość $\widehat R$ bliska jeden nie dowodzi,
+że łańcuchy odwiedziły wszystkie istotne mody. Może
+się zdarzyć, że wszystkie łańcuchy utknęły w tym samym
+obszarze. Same wykresy śladu i histogramy również nie
+stanowią dowodu osiągnięcia rozkładu stacjonarnego.
+Bezpieczna procedura obejmuje różne punkty startowe,
+kontrolę $\widehat R$, ESS dla średnich i ogonów,
+błąd Monte Carlo, analizę posterior predictive oraz
+badanie wrażliwości na parametry algorytmu.
+\end{uwaga}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.25\textwidth}>{\raggedright\arraybackslash}p{.30\textwidth}>{\raggedright\arraybackslash}p{.29\textwidth}}
+\toprule
+\textbf{Sytuacja} & \textbf{Algorytm} & \textbf{Na co uważać}\\
+\midrule
+Dokładne warunkowe rozkłady łatwe do losowania & Gibbs & Zależność współrzędnych, wolne mieszanie\\
+Posterior jednowymiarowy, gęstość do stałej & Random-walk MH & Skala propozycji, autokorelacja\\
+Gładki posterior w większym wymiarze & HMC/NUTS & Gradient, rozbieżności, parametryzacja\\
+Trudny multimodalny posterior & Metody tempering / specjalne propozycje & Pozorne zbieganie wszystkich łańcuchów\\
+Proste losowanie niezależne dostępne & Zwykłe MC, nie MCMC & Po co wprowadzać zależność?\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex, every node/.style={font=\small},node distance=16mm]
+\node[draw,rounded corners,fill=blue!5,minimum width=22mm] (a1) {Losowanie 1};
+\node[draw,rounded corners,fill=blue!5,minimum width=22mm,right=of a1] (a2) {Losowanie 2};
+\node[draw,rounded corners,fill=blue!5,minimum width=22mm,right=of a2] (a3) {Losowanie 3};
+\node[below=12mm of a1,draw,rounded corners,fill=green!6] (b1) {$X_0$};
+\node[below=12mm of a2,draw,rounded corners,fill=green!6] (b2) {$X_1$};
+\node[below=12mm of a3,draw,rounded corners,fill=green!6] (b3) {$X_2$};
+\draw[->,thick] (b1)--node[above] {$P$} (b2);
+\draw[->,thick] (b2)--node[above] {$P$} (b3);
+\node[below=7mm of b2,font=\footnotesize,text width=100mm,align=center]
+ {Górny wiersz: niezależne losowania z rozkładu docelowego.\\
+ Dolny wiersz: łańcuch MCMC, zależność przez jądro $P$.};
+\end{tikzpicture}
+
+{\small\emph{Rysunek 24.1.} Zwykłe Monte Carlo i MCMC wymagają odmiennych wzorów na błąd standardowy.}
+\end{center}
+
+\section{Laboratorium: posterior beta, cztery łańcuchy i diagnostyka}
+\label{sec:mcmc-laboratorium}
+Na danych o $7$ wadach ze $100$ prób przy priorze
+$\operatorname{Beta}(1,1)$ posterior ma rozkład
+$\operatorname{Beta}(8,94)$. Ponieważ umiemy z niego
+losować \emph{bezpośrednio}, w rzeczywistym zastosowaniu
+wybralibyśmy samodzielne losowania Monte Carlo.
+Celowo użyjemy jednak tego przykładu do sprawdzenia
+implementacji Metropolisa--Hastingsa: wiemy, jaka
+jest dokładna średnia posterioru, i możemy porównać
+wynik łańcuchów z wartością $8/102$.
+Współrzędna $z=\log[p/(1-p)]$ obejmuje całą $\R$.
+Ważne: po transformacji gęstość względem $\dd\lambda_1(z)$
+zawiera \emph{jakobian} $p(1-p)$.
+Stąd dla $p=(1+e^{-z})^{-1}$ log-gęstość docelowa
+współrzędnej $z$ jest (z dokładnością do stałej)
+$a\log p+b\log(1-p)$, a nie
+$(a-1)\log p+(b-1)\log(1-p)$.
+
+\begin{lstlisting}[language=Python,caption={Kompletny program: cztery łańcuchy Metropolisa--Hastingsa dla posterioru beta, split-R-hat i przybliżony ESS (Python, NumPy i SciPy).}]
+import numpy as np
+from scipy.special import expit
+
+A, B = 8.0, 94.0
+N, BURN, CHAINS = 24_000, 4_000, 4
+STEP = 0.65
+rng = np.random.default_rng(2026)
+
+def log_target(z):
+    # Posterior in logit coordinate: beta density times Jacobian.
+    log_p = -np.logaddexp(0.0, -z)
+    log_1mp = -np.logaddexp(0.0, z)
+    return A * log_p + B * log_1mp
+
+def run_chain(z0):
+    z, accepted = float(z0), 0
+    samples = np.empty(N)
+    current = log_target(z)
+    for k in range(N):
+        proposed = z + rng.normal(0.0, STEP)
+        newlog = log_target(proposed)
+        if np.log(rng.random()) < min(0.0, newlog - current):
+            z, current = proposed, newlog
+            accepted += 1
+        samples[k] = expit(z)
+    return samples[BURN:], accepted / N
+
+starts = np.array([-5.0, -3.0, -1.0, 1.0])
+results = [run_chain(z0) for z0 in starts]
+chains = np.stack([r[0] for r in results])
+print("acceptances:", [round(r[1], 3) for r in results])
+print("posterior mean estimate:", chains.mean())
+print("exact posterior mean:", A / (A + B))
+
+# Split R-hat (original moment-based version).
+L = chains.shape[1]
+half = L // 2
+split = np.concatenate([chains[:, :half], chains[:, -half:]], axis=0)
+m = split.shape[0]
+n = split.shape[1]
+means = split.mean(axis=1)
+W = split.var(axis=1, ddof=1).mean()
+B_between = n * means.var(ddof=1)
+rhat = np.sqrt(((n - 1) * W / n + B_between / n) / W)
+print("split R-hat:", rhat)
+
+# Descriptive autocorrelation-based ESS (not a convergence proof).
+def acf_fft(x):
+    x = np.asarray(x) - np.mean(x)
+    n = len(x)
+    cov = np.fft.irfft(np.abs(np.fft.rfft(x, n=2*n))**2,
+                       n=2*n)[:n]
+    return cov / cov[0]
+
+acf = np.array([acf_fft(c) for c in chains])
+rho = acf.mean(axis=0)
+tau = 1.0
+# Truncate at the first nonpositive adjacent-pair sum.
+for k in range(1, min(1000, len(rho) - 1), 2):
+    pair = rho[k] + rho[k + 1]
+    if pair <= 0:
+        break
+    tau += 2 * pair
+print("approximate ESS:", chains.size / tau)
+print("approximate MC SE:", np.sqrt(chains.var(ddof=1)
+                                     * tau / chains.size))
+\end{lstlisting}
+
+\begin{lstlisting}[language=Julia,caption={Kompletny program: random-walk Metropolis dla posterioru beta we współrzędnej logit (Julia, Random i Statistics).}]
+using Random, Statistics
+Random.seed!(2026)
+a, b = 8.0, 94.0
+N, burn, step = 30_000, 5_000, 0.65
+
+sigmoid(z) = z >= 0 ? inv(1 + exp(-z)) : exp(z) / (1 + exp(z))
+softplus(z) = max(z, 0.0) + log1p(exp(-abs(z)))
+logtarget(z) = -a * softplus(-z) - b * softplus(z)
+
+z = log(a / b)
+oldlog = logtarget(z)
+samples = zeros(Float64, N)
+accept = 0
+for k in 1:N
+    prop = z + step * randn()
+    newlog = logtarget(prop)
+    if log(rand()) < min(0.0, newlog - oldlog)
+        z, oldlog = prop, newlog
+        accept += 1
+    end
+    samples[k] = sigmoid(z)
+end
+println("acceptance: ", accept / N)
+println("MCMC posterior mean: ", mean(samples[(burn+1):end]))
+println("exact posterior mean: ", a / (a+b))
+\end{lstlisting}
+
+\begin{zadanie}[Zależność zmienia wariancję średniej]
+Załóżmy, że w stacjonarnym łańcuchu $\Var(Y_0)=4$ oraz
+$\rho_h=\rho^h$ dla pewnego $|\rho|<1$.
+Wyznaczyć $\sigma_\infty^2$ i asymptotyczny ESS.
+\par\emph{Rozwiązanie.} Z sumy szeregu geometrycznego
+$\tau_{\rm int}=1+2\rho/(1-\rho)=(1+\rho)/(1-\rho)$,
+$\sigma_\infty^2=4(1+\rho)/(1-\rho)$, a
+$N_{\rm eff}=N(1-\rho)/(1+\rho)$.
+Przy $\rho=0{,}9$ efektywna liczebność jest w przybliżeniu
+$N/19$, chociaż samych iteracji jest $N$.
+Dla ujemnej korelacji ESS może przewyższać $N$.
+\end{zadanie}
+

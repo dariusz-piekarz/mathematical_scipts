@@ -1,0 +1,176 @@
+\chapter{Diagnostyka rozkładu i założeń: normalność, wariancje i zależność}
+\label{ch:diagnostics}
+\paragraph{Powiązania i odsyłacze.} Testy parametryczne przedstawiono w rozdziale~\ref{ch:parametric-tests}, modele regresji w rozdziale~\ref{ch:linear-regression}, a ANOVA/ANCOVA rozwijamy w rozdziale~\ref{ch:anova-ancova}.
+
+
+\section{Co sprawdzamy przed wyborem testu?}
+Nie istnieje uniwersalny test, który odpowiada na pytanie, czy dane nadają się do analizy statystycznej. Najpierw formułujemy model, cel i jednostkę niezależnego losowania; następnie sprawdzamy wymagania konkretnego wniosku. W modelu regresji $Y_i=x_i^\top\beta+\varepsilon_i$ normalność -- gdy jest potrzebna do dokładnych testów $t$ i $F$ -- dotyczy \emph{warunkowego rozkładu błędów} $\varepsilon_i$ przy danym projekcie $x_i$, a nie marginalnego rozkładu wszystkich wartości $Y_i$. Jeśli grupy mają różne średnie, połączone dane mogą być wielomodalne, mimo że każdy błąd wewnątrz grupy jest normalny.
+
+\begin{przyklad}[Trzy grupy, normalne błędy, nienormalna mieszanina]
+Niech $G$ ma rozkład jednostajny na $\{1,2,3\}$, $\varepsilon\sim\Normal(0,1)$ i $G$ będzie niezależne od $\varepsilon$. Dla $(\mu_1,\mu_2,\mu_3)=(-5,0,5)$ definiujemy $Y=\mu_G+\varepsilon$. Każdy rozkład $\Law(Y\mid G=j)$ jest normalny, ale rozkład marginalny $Y$ jest mieszaniną trzech normalnych rozkładów. Zastosowanie Shapiro--Wilka do \emph{połączonego} $Y$ może więc wykryć rzeczywiste odstępstwo od normalności, które nie narusza założenia normalności błędów ANOVA.
+\end{przyklad}
+
+\begin{uwaga}[Trzy niezależne decyzje]
+\emph{Normalność} dotyczy kształtu rozkładu, \emph{homoskedastyczność} -- równości wariancji warunkowych, a \emph{niezależność} -- wspólnego rozkładu wielu obserwacji. Możliwy jest model normalny i heteroskedastyczny, jak również model nienormalny z równymi wariancjami. Test Shapiro--Wilka nie wykrywa automatycznie zależności w czasie; test Levene'a nie sprawdza niezależności. Dla reszt dopasowanego modelu rozkład statystyki diagnostycznej może różnić się od tego dla \emph{bezpośrednio obserwowanej} próby iid, ponieważ reszty są związane równaniami estymacyjnymi.
+\end{uwaga}
+
+\section{Test Shapiro--Wilka: konstrukcja i własności}
+\begin{definicja}[Statystyka Shapiro--Wilka]\label{def:shapiro-wilk}
+Niech $n\ge3$ i $x_1,\ldots,x_n\in\R$ nie będą wszystkie równe; $x_{(1)}\le\cdots\le x_{(n)}$ oznaczają statystyki porządkowe, $\bar x=n^{-1}\sum_i x_i$. Niech $Z_1,\ldots,Z_n$ będą niezależne o rozkładzie $\Normal(0,1)$, $m_i=\E Z_{(i)}$, $V_{ij}=\Cov(Z_{(i)},Z_{(j)})$, $m=(m_i)_{i=1}^n$, a $V=(V_{ij})_{i,j=1}^n$. Zakładamy odwracalność $V$ i definiujemy wektor współczynników $a=V^{-1}m/\|V^{-1}m\|_2$. Statystyką Shapiro--Wilka nazywamy
+\[
+ W_n=\frac{\bigl(\sum_{i=1}^n a_i x_{(i)}\bigr)^2}{\sum_{i=1}^n(x_i-\bar x)^2}.
+\]
+Hipoteza zerowa głosi, że $X_1,\ldots,X_n$ są niezależne i mają ten sam rozkład $\Normal(\mu,\sigma^2)$ z pewnymi $\mu\in\R$ i $\sigma>0$. W praktycznych implementacjach współczynniki i dystrybuantę zerową oblicza się numerycznie lub aproksymacyjnie; nie są one prostymi funkcjami elementarnymi $n$.
+\end{definicja}
+
+\begin{twierdzenie}[Niezmienniczość i zakres statystyki]\label{thm:shapiro-properties}
+Niech $n\ge3$, $a$ będzie wektorem z definicji~\ref{def:shapiro-wilk}, a $x\in\R^n$ nie będzie stały. Wówczas $\sum_i a_i=0$, $a_{n+1-i}=-a_i$, $0\le W_n\le1$. Dla dowolnych $c\in\R$ i $b\in\R\setminus\{0\}$ zachodzi $W_n(bx_1+c,\ldots,bx_n+c)=W_n(x_1,\ldots,x_n)$.
+\end{twierdzenie}
+\begin{proof}
+Niech $J$ oznacza macierz odwracającą kolejność współrzędnych. Ze względu na symetrię rozkładu normalnego względem zera wektor statystyk porządkowych $(Z_{(1)},\ldots,Z_{(n)})$ ma taki sam rozkład jak $(-Z_{(n)},\ldots,-Z_{(1)})$. Stąd $Jm=-m$ i $JVJ=V$. W konsekwencji $JV^{-1}m=-V^{-1}m$, więc $Ja=-a$ i $\sum_i a_i=0$. Dla wektora $x^\circ=(x_{(i)}-\bar x)_{i=1}^n$, na mocy nierówności Cauchy'ego--Schwarza, $|a^\top x^\circ|^2\le\|a\|_2^2\|x^\circ\|_2^2=\|x^\circ\|_2^2$. Ponieważ $a^\top x^\circ=a^\top x_{()}$, otrzymujemy ograniczenia. Przy $b>0$ uporządkowanie obserwacji pozostaje takie samo; licznik i mianownik mnożą się przez $b^2$, a przesunięcie znika dzięki $\sum_i a_i=0$. Gdy $b<0$, kolejność ulega odwróceniu, a równość $Ja=-a$ daje ten sam wynik.
+\end{proof}
+
+\begin{uwaga}[Dlaczego test odrzuca przy małym $W$?]
+W statystyce $W$ licznik porównuje uporządkowaną próbę z kierunkiem określonym przez oczekiwane normalne statystyki porządkowe, a mianownik mierzy całkowitą zmienność próby. Mała wartość oznacza, że znacznej części zmienności nie opisuje normalny wzorzec uporządkowania. Kalibracja wartości p wymaga rozkładu $W_n$ pod hipotezą normalności. Wynik $p>\alpha$ oznacza jedynie brak podstaw do odrzucenia; nie dowodzi normalności. Dla bardzo dużych prób test może reagować na nieistotne praktycznie odchylenia, dla bardzo małych mieć niewielką moc. Dla wszystkich jednakowych obserwacji $W$ jest niezdefiniowana (mianownik równy zeru), a nie równa $1$.
+\end{uwaga}
+
+\begin{przyklad}[Normalność danych kontra normalność błędów]
+Przy porównaniu trzech maszyn testujemy normalność \emph{reszt w obrębie modelu}, a nie połączonych surowych wyników produkcji. Najpierw wykreślamy wykres kwantyl--kwantyl (Q--Q), sprawdzamy wartości odstające, jednostki obserwacji i kształt ogonów; Shapiro--Wilka traktujemy jako dodatkową informację. Mała wartość p nie oznacza automatycznie konieczności zastosowania Kruskala--Wallisa: jeśli badamy \emph{średnie}, możemy rozważyć odporny test Welcha, transformację uzasadnioną modelem lub dobrze skalibrowaną permutację.
+\end{przyklad}
+
+\section{Anderson--Darling, Jarque--Bera, Shapiro--Francia i KS}
+\begin{definicja}[Statystyka Andersona--Darlinga dla ustalonego rozkładu]\label{def:ad}
+Niech $F_0$ będzie w pełni określoną ciągłą dystrybuantą, a $X_1,\ldots,X_n$ niezależną próbą pod hipotezą zerową z $F_0$. Dla $U_{(i)}=F_0(X_{(i)})$ definiujemy, gdy $0<U_{(1)}\le\cdots\le U_{(n)}<1$,
+\[
+ A_n^2=-n-\frac1n\sum_{i=1}^n(2i-1)\bigl[\log U_{(i)}+\log(1-U_{(n+1-i)})\bigr].
+\]
+Duże wartości świadczą o niezgodności; logarytmy zwiększają wagę ogonów. Jeśli parametry $F_0$ wyznaczono z tej samej próby, rozkład zerowy zmienia się i trzeba zastosować odpowiednią, osobno skalibrowaną wersję testu.
+\end{definicja}
+
+\begin{definicja}[Statystyka Jarque'a--Bery]\label{def:jarque-bera}
+Dla obserwacji $x_1,\ldots,x_n$ i $m_r=n^{-1}\sum_i(x_i-\bar x)^r$ ($m_2>0$) niech $g_1=m_3/m_2^{3/2}$ i $g_2=m_4/m_2^2$. Definiujemy $\mathrm{JB}=n[g_1^2/6+(g_2-3)^2/24]$. Przy niezależnej próbie z niedegenerowanego rozkładu normalnego mamy $\mathrm{JB}\Rightarrow\chi^2_2$; jest to kalibracja asymptotyczna, nie dokładna dla małego $n$.
+\end{definicja}
+
+\begin{twierdzenie}[Asymptotyczny rozkład JB w modelu normalnym]\label{thm:jb}
+Jeżeli $(X_i)_{i\ge1}$ są niezależne o wspólnym rozkładzie $\Normal(\mu,\sigma^2)$, $\sigma>0$, to dla $n\to\infty$ zachodzi $\mathrm{JB}\Rightarrow\chi^2_2$.
+\end{twierdzenie}
+\begin{proof}
+Ze względu na niezmienniczość względem przesunięcia i skali możemy założyć $\mu=0$, $\sigma=1$. Z wielowymiarowego CLT dla empirycznych momentów do rzędu czwartego i metody delty funkcjonały skośności oraz kurtozy mają funkcje wpływu odpowiednio $H_3(z)=z^3-3z$ i $H_4(z)=z^4-6z^2+3$. Można to sprawdzić różniczkując $m_3/m_2^{3/2}$ i $m_4/m_2^2$ po empirycznych momentach surowych w punkcie $(\E Z,\E Z^2,\E Z^3,\E Z^4)=(0,1,0,3)$, z uwzględnieniem centrowania przez $\bar X_n$. W konsekwencji
+\[
+ \sqrt n\binom{g_1}{g_2-3}=\frac1{\sqrt n}\sum_{i=1}^n\binom{H_3(X_i)}{H_4(X_i)}+o_\Prob(1).
+\]
+Z momentów standardowego rozkładu normalnego otrzymujemy $\E H_3(Z)^2=6$, $\E H_4(Z)^2=24$ i $\E[H_3(Z)H_4(Z)]=0$. Wielowymiarowe CLT i twierdzenie Slutsky'ego dają granicę $\Normal(0,\diag(6,24))$. Suma kwadratów obu wystandaryzowanych współrzędnych ma więc rozkład $\chi^2_2$.
+\end{proof}
+
+\begin{uwaga}[Co rzeczywiście testuje JB?]
+Wielkie $\mathrm{JB}$ wskazuje na odchylenie skośności lub kurtozy od wartości normalnych. Nie wykrywa \emph{wszystkich} odstępstw od normalności: istnieją rozkłady nienormalne z taką samą skośnością i kurtozą jak rozkład normalny. Test D'Agostina--Pearsona stosuje inne transformacje miar skośności i kurtozy. Shapiro--Francia opiera się na korelacji uporządkowanych obserwacji z oczekiwanymi normalnymi statystykami porządkowymi, z wagami proporcjonalnymi do wektora ich średnich, zamiast pełnego ważenia macierzą $V^{-1}$. Nie należy mylić tych procedur z testem Kołmogorowa--Smirnowa o \emph{całkowicie znanej} dystrybuancie zerowej; przypadek dopasowywania parametrów omówiliśmy w rozdziale~\ref{ch:nonparametric}.
+\end{uwaga}
+
+\section{Równość wariancji: Bartlett, Levene i Brown--Forsythe}
+\begin{definicja}[Statystyka Bartletta]\label{def:bartlett}
+Niech grupy $j=1,\ldots,k$ zawierają niezależne próby o licznościach $n_j\ge2$. Oznaczmy $N=\sum_j n_j$, przez $S_j^2$ nieobciążoną wariancję w grupie oraz przez $S_p^2=\sum_j(n_j-1)S_j^2/(N-k)$ wariancję łączoną. Jeżeli wszystkie wariancje są dodatnie i $N>k$, definiujemy
+\[
+ B=\frac{(N-k)\log S_p^2-\sum_{j=1}^k(n_j-1)\log S_j^2}{1+\frac1{3(k-1)}\bigl(\sum_{j=1}^k\frac1{n_j-1}-\frac1{N-k}\bigr)}.
+\]
+Dla niezależnych prób normalnych, przy wspólnej wariancji pod $H_0$ i ustalonym $k$ oraz $\min_j n_j\to\infty$, $B\Rightarrow\chi^2_{k-1}$. Test może silnie reagować na nienormalność, nawet jeśli wariancje grup są równe.
+\end{definicja}
+
+\begin{definicja}[Levene i Brown--Forsythe]\label{def:levene}
+Niech $x_{ji}$ oznacza obserwację $i$ w grupie $j$, $n_j\ge2$, $k\ge2$. Dla zadanych centrów $c_j$ definiujemy $Z_{ji}=|x_{ji}-c_j|$, $\bar Z_j=n_j^{-1}\sum_i Z_{ji}$, $\bar Z=N^{-1}\sum_{j,i} Z_{ji}$. Statystyka Levene'a to klasyczna statystyka jednoczynnikowej ANOVA zastosowana do $Z_{ji}$:
+\[
+ F_L=\frac{\sum_j n_j(\bar Z_j-\bar Z)^2/(k-1)}{\sum_{j,i}(Z_{ji}-\bar Z_j)^2/(N-k)}.
+\]
+Wersja z $c_j=\bar x_j$ to klasyczny Levene, a z $c_j=\mathrm{Med}(x_{j1},\ldots,x_{jn_j})$ -- wariant Browna--Forsythe'a. W praktyce p-value uzyskuje się przez przybliżenie rozkładem $F_{k-1,N-k}$; przy estymowanych centrach nie jest to ogólnie dokładny skończonopróbkowy rozkład zerowy.
+\end{definicja}
+
+\begin{stwierdzenie}[Wspólna skala w rodzinie położenie--skala]\label{prop:levene-scale}
+Niech $X_{ji}=\mu_j+\sigma_j\varepsilon_{ji}$, $\sigma_j>0$, przy czym wszystkie $\varepsilon_{ji}$ są niezależne i mają wspólny rozkład symetryczny względem zera, dla którego $\E|\varepsilon_{11}|<\infty$. Wówczas $\E|X_{ji}-\mu_j|=\sigma_j\E|\varepsilon_{11}|$. Jeśli $\varepsilon_{11}$ nie jest zerowa prawie na pewno, równość oczekiwanych odchyleń bezwzględnych od centrów $\mu_j$ jest równoważna równości skal $\sigma_j$.
+\end{stwierdzenie}
+\begin{proof}
+Ze wzoru $X_{ji}-\mu_j=\sigma_j\varepsilon_{ji}$ i dodatniości $\sigma_j$ dostajemy $|X_{ji}-\mu_j|=\sigma_j|\varepsilon_{ji}|$. Biorąc wartości oczekiwane, otrzymujemy pierwszą równość. Ponieważ $\E|\varepsilon_{11}|>0$, druga równoważność wynika z podzielenia przez tę liczbę.
+\end{proof}
+
+\begin{uwaga}[Równość wariancji a równość odchyleń bezwzględnych]
+Powyższy wniosek jest uzasadniony w \emph{rodzinie wspólnego kształtu i zmiennej skali}. Bez wspólnego kształtu rozkładów równość $\E|X-\mu|$ i równość wariancji nie są równoważne. Levene i Brown--Forsythe są użytecznymi \emph{testami diagnostycznymi}, ale ich interpretacja wymaga sprawdzenia różnic kształtu, skośności i obserwacji odstających. Bartlett jest szczególnie efektywny przy normalności, ale może być zawodny przy grubych ogonach.
+\end{uwaga}
+
+\section{Wykresy diagnostyczne, wybór metody i konsekwencje testowania założeń}
+\begin{center}
+\begin{tikzpicture}[scale=.78,>=Latex]
+\draw[->] (0,0)--(5,0) node[right,font=\small]{wartość dopasowana};
+\draw[->] (0,-1.8)--(0,1.8) node[above,font=\small]{reszta};
+\draw[dashed,gray] (0,0)--(5,0);
+\foreach \x/\y in {.5/.10,.9/-.18,1.2/.21,1.6/-.40,2/.53,2.4/-.64,2.7/.32,3.0/-.90,3.3/1.10,3.6/-.50,4/1.28,4.2/-1.31,4.6/1.52}
+{\fill[blue!65!black] (\x,\y) circle (1.7pt);}
+\draw[red!65!black,densely dashed] (.25,.05)--(4.8,1.55);
+\draw[red!65!black,densely dashed] (.25,-.05)--(4.8,-1.55);
+\node[align=center,font=\footnotesize] at (2.5,-2.32) {Przykład: rozszerzający się rozrzut reszt\\ sugeruje heteroskedastyczność};
+\end{tikzpicture}
+\end{center}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.29\textwidth}>{\raggedright\arraybackslash}p{.29\textwidth}>{\raggedright\arraybackslash}p{.27\textwidth}}
+\toprule
+\textbf{Cel} & \textbf{Narzędzie} & \textbf{Co naprawdę wynika?}\\
+\midrule
+Ocenić normalność modelowych błędów & Q--Q, Shapiro--Wilk, Anderson--Darling & Odstępstwa od rozkładu normalnego; nie test niezależności\\
+Sprawdzić skośność i ogony & JB, wykres gęstości i Q--Q & Czułość na określone momenty; JB nie wykrywa wszystkiego\\
+Porównać rozrzut w grupach & Brown--Forsythe, Levene; Bartlett przy normalności & Wskazówki o skali; nie zastępują modelu grup\\
+Badać autokorelację & Wykres ACF, Ljung--Box, analiza projektu & Zależność w czasie; wymaga właściwej kalibracji\\
+Porównać średnie przy nierównych wariancjach & Welch, heteroskedastycznie odporna regresja & Możliwa alternatywa dla klasycznej ANOVA\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{uwaga}[Dlaczego nie wolno mechanicznie testować, a następnie wybierać?]\label{rem:pretest}
+Niech $A$ będzie zdarzeniem ``test normalności nie odrzucił'', a $T$ wybranym po obejrzeniu danych testem średniej. Nominalny poziom osobno skalibrowanego testu $T$ nie daje automatycznej kontroli $\Prob_{H_0}(\text{odrzucenie przez procedurę }T(X)\mid A)$ ani całkowitego poziomu procedury przełączającej testy. Selekcja zależy od tych samych danych, z których liczy się końcową wartość p. Lepiej uzasadnić główną procedurę na etapie planowania, wykorzystać diagnostykę do interpretacji i analizy wrażliwości, a w razie konieczności modelować \emph{całą} procedurę selekcji w symulacji.
+\end{uwaga}
+
+\begin{uwaga}[Próba zamiast samej wartości p: przykład praktyczny]\label{rem:diagnostic-workflow}
+Dla trzech niezależnych grup przed wykonaniem ANOVA zapisz \emph{jednostkę losowania}, szacowany parametr (np. różnicę średnich) i planowane kontrasty. Następnie zestaw średnie, odchylenia standardowe i liczności grup oraz wykresy reszt względem wartości dopasowanych i Q--Q. Testy Shapiro--Wilka oraz Browna--Forsythe'a można podać jako dodatkową diagnostykę, lecz ich wartości p nie są automatycznym przełącznikiem między ANOVA i Kruskalem--Wallisem. Jeżeli najważniejszy jest efekt w średniej przy nierównych wariancjach, rozważ test Welcha; jeśli badamy różnicę rozkładów lub dominację stochastyczną, pytanie odpowiadające testowi rangowemu jest inne. Przy małej liczbie niezależnych jednostek rozważ czułość wniosku na model i obserwacje skrajne.\end{uwaga}
+
+\section{Laboratorium: normalność i jednorodność wariancji}
+\begin{lstlisting}[language=Python,caption={Kompletny program: normalność w grupach, normalność połączonych danych i testy jednorodności wariancji (Python, NumPy, SciPy).}]
+import numpy as np
+from scipy import stats
+
+rng = np.random.default_rng(2026)
+# Same normal noise law, different group means.
+groups = [rng.normal(loc=mu, scale=1.0, size=45)
+          for mu in (-5.0, 0.0, 5.0)]
+pooled = np.concatenate(groups)
+residuals = np.concatenate([g - g.mean() for g in groups])
+print("Shapiro pooled:", stats.shapiro(pooled))
+print("Shapiro residuals (descriptive):", stats.shapiro(residuals))
+print("Shapiro within groups:", [stats.shapiro(g).pvalue for g in groups])
+print("Brown-Forsythe:", stats.levene(*groups, center="median"))
+print("Bartlett:", stats.bartlett(*groups))
+print("Jarque-Bera of within-group residuals:", stats.jarque_bera(residuals))
+
+# Heteroscedastic alternative, same expected value.
+hetero = [rng.normal(0.0, scale=s, size=45) for s in (1.0, 1.8, 3.0)]
+print("Brown-Forsythe heteroscedastic:",
+      stats.levene(*hetero, center="median"))
+print("Welch ANOVA (SciPy when supported) is different from testing variances")
+\end{lstlisting}
+
+\begin{lstlisting}[language=Julia,caption={Kompletny program: diagnostyczne statystyki odchyleń absolutnych od median i wariancje grup (Julia, Random i Statistics).}]
+using Random, Statistics
+Random.seed!(2026)
+groups = [mu .+ randn(45) for mu in (-5.0, 0.0, 5.0)]
+all_values = vcat(groups...)
+resid = vcat([g .- mean(g) for g in groups]...)
+println("pooled variance: ", var(all_values))
+println("within-group residual variance: ", var(resid))
+for (j, g) in enumerate(groups)
+    z = abs.(g .- median(g))
+    println("group ", j, ": mean absolute deviation from median = ", mean(z))
+end
+# For a calibrated Brown-Forsythe p-value use a distribution package
+# or the corresponding scipy.stats.levene(..., center="median") routine.
+\end{lstlisting}
+
+\begin{zadanie}[Czy Shapiro--Wilk rozstrzyga o użyciu testu Welcha?]
+Niech w dwóch niezależnych grupach obserwujemy wyniki o skośnych rozkładach, ale skończonych wariancjach. Obie próby mają po $400$ obserwacji. Wartość p Shapiro--Wilka w obu grupach wynosi mniej niż $0{,}001$. Czy oznacza to, że nie wolno porównywać średnich testem Welcha?\par\emph{Rozwiązanie.} Nie. Odrzucenie dokładnej normalności nie dowodzi zawodności przybliżenia normalnego dla różnicy średnich; o jego adekwatności decydują m.in. ogony, skończoność wariancji, nierównowaga grup i wpływ obserwacji skrajnych. Przy dostatecznych warunkach CLT test Welcha może być sensowny mimo małych wartości p Shapiro--Wilka. Dla ciężkich ogonów należy sprawdzić stabilność, rozważyć odporne oszacowanie średniej albo właściwy bootstrap. Test rangowy odpowiada na inne pytanie, chyba że założono dodatkowy wspólny kształt rozkładów.
+\end{zadanie}
+

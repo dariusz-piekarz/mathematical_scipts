@@ -1,0 +1,355 @@
+\chapter{Estymacja i predykcja bayesowska: od posterioru do decyzji}
+\label{ch:bayes-estimation-prediction}
+\paragraph{Powiązania i odsyłacze.} Konstrukcje posteriorów pochodzą z rozdziałów~\ref{ch:bayes-foundations} i~\ref{ch:conjugate-families}; funkcje straty z rozdziału~\ref{ch:decision}.
+
+
+\section{Co właściwie chcemy oszacować?}
+W rozdziałach~\ref{ch:bayes-foundations}--\ref{ch:conjugate-families}
+wyprowadziliśmy rozkłady a posteriori. Sam posterior nie rozstrzyga
+jednak, \emph{jaką liczbę powinniśmy podać} ani \emph{jaką decyzję
+podjąć}. Te dwa pytania mają różne odpowiedzi: pierwsze wymaga
+wyboru funkcji straty, drugie dodatkowo określenia rzeczywistych
+konsekwencji działań. Jeszcze inne pytanie dotyczy prognozy
+nowej obserwacji. Dla przykładu w kontroli jakości rozróżniamy
+trzy cele: oszacowanie nieznanego odsetka wad $p$, przewidzenie
+liczby wad w następnej partii i podjęcie decyzji o zatrzymaniu produkcji.
+
+\begin{definicja}[Reguła bayesowska i ryzyko posteriorowe]
+\label{def:bayes-rule-ch19}
+Niech $(\Theta_0,\mathcal T)$, $(\mathsf X,\mathcal X)$ i
+$(\mathsf A,\mathcal G)$ będą przestrzeniami mierzalnymi,
+$\pi$ właściwym priorem, $K(\theta,\cdot)$ jądrem modelu danych,
+a $\Pi(x,\cdot)$ jego posteriorem. Niech
+$L:\Theta_0\times\mathsf A\to[0,\infty]$ będzie mierzalną
+funkcją straty. Dla obserwacji $x$ i działania $a$ definiujemy
+\emph{ryzyko posteriorowe}
+$\rho_x(a)=\int_{\Theta_0}L(\theta,a)\,\dd\Pi(x,\theta)$.
+Mierzalną regułę $\delta:\mathsf X\to\mathsf A$ nazywamy
+\emph{regułą Bayesa}, jeśli $\rho_x(\delta(x))=\inf_{a\in\mathsf A}\rho_x(a)$
+dla $M$-prawie każdego $x$, gdzie $M$ jest rozkładem
+predykcyjnym danych przed ich obserwacją. Istnienie mierzalnego
+minimizatora wymaga osobnego uzasadnienia; sama definicja go
+nie gwarantuje.
+\end{definicja}
+
+\begin{twierdzenie}[Optymalizacja posteriorowa minimalizuje ryzyko Bayesa]
+\label{thm:bayes-risk-tower}
+W założeniach definicji~\ref{def:bayes-rule-ch19} niech
+$\delta_*$ będzie mierzalną regułą Bayesa. Wtedy dla każdej
+mierzalnej reguły $\delta:\mathsf X\to\mathsf A$ zachodzi
+\[
+\int_{\Theta_0}\int_{\mathsf X}
+ L(\theta,\delta_*(x))\,\dd K(\theta,x)\,\dd\pi(\theta)
+\le
+\int_{\Theta_0}\int_{\mathsf X}
+ L(\theta,\delta(x))\,\dd K(\theta,x)\,\dd\pi(\theta).
+\]
+Dla obu stron dopuszczamy wartość $+\infty$.
+\end{twierdzenie}
+\begin{proof}
+Nieujemność i mierzalność straty pozwalają zastosować Tonellego.
+Z własności warunkowania, najpierw dla funkcji prostych, a potem
+przez monotoniczną zbieżność,
+\[
+\int_{\Theta_0}\int_{\mathsf X}L(\theta,\delta(x))
+\,\dd K(\theta,x)\,\dd\pi(\theta)
+=\int_{\mathsf X}\rho_x(\delta(x))\,\dd M(x).
+\]
+Przy każdym $x$ poza zbiorem $M$-miary zero reguła $\delta_*$
+minimalizuje wyrażenie pod całką. Całkowanie tej nierówności
+daje tezę. To minimalizacja ryzyka \emph{uśrednionego względem
+prioru}; nie wynika z niej dominacja ryzyka częstotliwościowego
+przy każdym ustalonym $\theta$. Wynik dotyczy wyłącznie
+porównywanych reguł, ustalonego modelu i przyjętej funkcji straty.
+\end{proof}
+
+\section{Funkcja straty wyznacza estymator}
+W twierdzeniu~\ref{thm:bayes-actions} wykazaliśmy, że strata
+kwadratowa prowadzi do średniej posterioru, a bezwzględna do
+mediany. Do decyzji o rezerwie lub zapasie części zamiennych
+bardziej pasuje niekiedy \emph{strata asymetryczna}: zaniżenie
+przewidywanej liczby awarii kosztuje więcej niż jej zawyżenie.
+
+\begin{definicja}[Asymetryczna strata liniowa]
+Dla $\tau\in(0,1)$ i rzeczywistych $\theta,a$ definiujemy
+$L_\tau(\theta,a)=\tau(\theta-a)_++(1-\tau)(a-\theta)_+$,
+gdzie $t_+=\max(t,0)$. Parametr $\tau$ określa względny
+koszt niedoszacowania, a $1-\tau$ przeszacowania.
+\end{definicja}
+
+\begin{twierdzenie}[Kwantyl posterioru jako optymalna decyzja]
+\label{thm:bayes-quantile-loss}
+Niech $\Pi_x$ będzie rozkładem na $\R$ o skończonym
+pierwszym momencie, a $F_x(t)=\Pi_x(({-}\infty,t])$ jego
+dystrybuantą. Dla $\tau\in(0,1)$ liczba $a$ minimalizuje
+$\int_\R L_\tau(\theta,a)\,\dd\Pi_x(\theta)$ po $a\in\R$
+wtedy i tylko wtedy, gdy
+$F_x(a-)\le\tau\le F_x(a)$.
+W szczególności przy ciągłej, ściśle rosnącej dystrybuancie
+jedyną optymalną decyzją jest kwantyl $F_x^{-1}(\tau)$.
+\end{twierdzenie}
+\begin{proof}
+Strata jest wypukła względem $a$ i ograniczona przez
+$|\theta|+|a|$, więc jej wartość oczekiwana jest skończona.
+Dla $a$ niebędącego atomem rozkładu pochodna po $a$ jest
+równa $F_x(a)-\tau$: przy $\theta<a$ pochodna wynosi
+$1-\tau$, a przy $\theta>a$ jest równa $-\tau$.
+Ogólnie jednostronne pochodne funkcji ryzyka to
+$F_x(a-)-\tau$ oraz $F_x(a)-\tau$, co wynika
+z ilorazów różnicowych i zbieżności zdominowanej.
+Wypukła funkcja osiąga minimum w punkcie $a$ dokładnie
+wtedy, gdy lewa pochodna jest nie większa od zera,
+a prawa nie mniejsza od zera. To daje tezę.
+\end{proof}
+
+\begin{przyklad}[Wielkość zapasu części na kolejny tydzień]
+Niech predykcyjna liczba awarii $Y$ ma rozkład, dla którego
+kwantyl rzędu $0{,}9$ wynosi $q_{0{,}9}$. Jeśli koszt
+brakującej części jest dziewięciokrotnie większy niż koszt
+zbędnej części, strata liniowa ma $\tau=0{,}9$.
+Optymalna liczba części jest \emph{całkowitoliczbowym}
+kwantylem predykcyjnym rzędu $0{,}9$, a nie średnią
+posterioru intensywności. W praktyce należy również sprawdzić
+koszty magazynowania, ograniczenia pojemności i możliwość
+dokupienia części w trakcie tygodnia.
+\end{przyklad}
+
+\section{Rozkład parametru a rozkład przyszłych obserwacji}
+Niech $\lambda$ oznacza intensywność awarii na godzinę,
+a nowe zliczenie $Y_*$ dotyczy $e_*>0$ godzin. Gdy znamy
+$\lambda$, losowość $Y_*$ jest poissonowska. Gdy jej nie
+znamy, predykcja musi scałkować tę losowość po posteriorze.
+
+\begin{twierdzenie}[Predykcja gamma--Poisson ma większą wariancję]
+\label{thm:gamma-poisson-dispersion}
+Jeżeli $\lambda\mid X=x\sim\operatorname{Gamma}(r,v)$,
+$r,v>0$, a $Y_*\mid\lambda,X=x\sim\operatorname{Pois}(e\lambda)$
+dla $e>0$, to
+\[
+\E[Y_*\mid X=x]=\frac{er}{v},\qquad
+\Var(Y_*\mid X=x)=\frac{er}{v}+\frac{e^2r}{v^2}.
+\]
+W szczególności $\Var(Y_*\mid X=x)>\E[Y_*\mid X=x]$.
+\end{twierdzenie}
+\begin{proof}
+Korzystamy kolejno z
+$\E[Y_*\mid\lambda,x]=e\lambda$,
+$\Var(Y_*\mid\lambda,x)=e\lambda$ i z prawa całkowitej
+wariancji względem posterioru. Pierwszy składnik daje
+$e\E[\lambda\mid x]=er/v$, drugi
+$e^2\Var(\lambda\mid x)=e^2r/v^2$.
+Dodatniość ostatniego składnika wynika z $e,r,v>0$.
+\end{proof}
+
+\begin{przyklad}[Ile awarii przewidzimy?]
+Z rozdziału~\ref{ch:conjugate-families} weźmy posterior
+$\operatorname{Gamma}(6,300)$ (intensywność na godzinę).
+Przy ekspozycji $e=50$ predykcja ma średnią $1$ i wariancję
+$7/6$. Dokładny rozkład liczby awarii jest ujemny
+dwumianowy; z twierdzenia~\ref{thm:gamma-poisson}
+$\Prob(Y_*=0\mid x)=(6/7)^6\approx0{,}39657$,
+a $\Prob(Y_*\ge3\mid x)\approx0{,}09356$.
+Jeśli konieczne jest zabezpieczenie przed co najmniej trzema
+awariami, stosujemy ostatnie prawdopodobieństwo, a nie tylko
+średnią prognozy równą jeden.
+\end{przyklad}
+
+\section{Predykcja optymalna względem właściwych funkcji oceny}
+Przy ocenianiu prognoz probabilistycznych chcemy nagradzać
+podawanie całego rozkładu, a nie tylko liczby. Oczekiwane
+ryzyko obliczamy zawsze względem jawnie wskazanego prawa
+przyszłej obserwacji; nie jest to automatycznie to samo, co
+częstościowa ocena modelu na niezależnej próbie testowej. \emph{Właściwa
+funkcja oceny} (ang. \emph{proper scoring rule}) jest taką funkcją
+straty, dla której prawdziwy rozkład predykcyjny minimalizuje
+oczekiwaną stratę. Rozróżnijmy dwa elementarne przypadki.
+
+\begin{twierdzenie}[Poprawność miary Briera dla zdarzenia binarnego]
+\label{thm:brier}
+Niech $Y\in\{0,1\}$ przy zadanej informacji ma rozkład
+$\operatorname{Bernoulli}(p)$, $p\in[0,1]$. Prognozujemy
+$p$ liczbą $q\in[0,1]$ i stosujemy stratę Briera
+$S(q,Y)=(q-Y)^2$. Wtedy
+\[
+\E[S(q,Y)]=(q-p)^2+p(1-p).
+\]
+Jedynym optymalnym wyborem jest $q=p$.
+\end{twierdzenie}
+\begin{proof}
+Ponieważ $Y^2=Y$, mamy
+$\E(q-Y)^2=q^2-2qp+p=(q-p)^2+p-p^2$.
+Zatem nadwyżka ryzyka względem prawidłowej prognozy
+jest dokładnie kwadratem błędu prognozowanego
+prawdopodobieństwa.
+\end{proof}
+
+\begin{twierdzenie}[Reguła logarytmiczna i dywergencja KL]
+\label{thm:log-score-bayes}
+Niech $\mathsf Y=\{1,\ldots,k\}$, $k\ge2$, a
+$P=(p_1,\ldots,p_k)$ będzie rzeczywistym rozkładem przyszłej
+obserwacji. Dla prognozy $Q=(q_1,\ldots,q_k)$ z $q_j>0$
+gdy $p_j>0$, strata logarytmiczna ma postać
+$S(Q,Y)=-\log q_Y$. Wówczas
+\[
+\E_P S(Q,Y)-\E_P S(P,Y)
+=\sum_{j:p_j>0}p_j\log\frac{p_j}{q_j}
+= D_{\mathrm{KL}}(P\Vert Q)\ge0,
+\]
+a równość zachodzi dokładnie, gdy $Q=P$.
+\end{twierdzenie}
+\begin{proof}
+Pierwsza równość to bezpośrednie odjęcie skończonych sum.
+Do dowodu nierówności stosujemy $\log t\le t-1$ do
+$t=q_j/p_j$ dla $p_j>0$:
+$\sum_{p_j>0}p_j\log(q_j/p_j)
+\le\sum_{p_j>0}(q_j-p_j)\le0$.
+Jeśli zachodzi równość, to każdy składnik wymusza
+$q_j=p_j$ dla $p_j>0$; normalizacja wymusza też
+$q_j=0$ poza nośnikiem $P$.
+\end{proof}
+
+\begin{uwaga}[Walidacja predykcji]
+Porównując modele na wspólnym zbiorze testowym, możemy
+obliczyć średnią stratę Briera dla prognoz prawdopodobieństw
+lub średnią stratę logarytmiczną. Nie należy dobierać priorów
+i parametrów na tym samym zbiorze, który ma następnie służyć
+za niezależną ocenę uogólnienia. Przy szeregach czasowych
+konieczne jest zachowanie chronologii walidacji.
+\end{uwaga}
+
+\section{Przedział wiarygodności, przedział ufności i przedział predykcyjny}
+\begin{przyklad}[Trzy różne pytania dla siedmiu wad na sto]
+Załóżmy $S=7$, $n=100$ w modelu Bernoulliego. Estymator MLE
+odsetka wad to $\widehat p=0{,}07$. Klasyczny 95\% przedział
+Wilsona z rozdziału~\ref{ch:confidence-intervals} jest w przybliżeniu
+$[0{,}03432,0{,}13750]$. Przy priorze
+$\operatorname{Beta}(1,1)$ posterior to
+$\operatorname{Beta}(8,94)$, którego centralny 95\%
+przedział wiarygodności wynosi w przybliżeniu
+$[0{,}03482,0{,}13760]$.
+Oba przedziały są liczbami bliskie, ale oznaczają co innego:
+pierwszy ma (przy przyjętym modelu) przybliżoną gwarancję
+powtarzalnego pokrycia, drugi ma posteriorową masę $0{,}95$
+po obserwacji danych. Predykcja liczby wad w kolejnych
+dziesięciu sztukach nie jest żadnym z tych przedziałów:
+ma rozkład beta--dwumianowy, a
+$\Prob(T=0\mid S=7)=B(8,104)/B(8,94)\approx0{,}45772$.
+Do planowania liczby kontroli lub zapasu części należy używać
+rozkładu predykcyjnego, a nie wyłącznie niepewności parametru.
+\end{przyklad}
+
+\section{Sprawdzanie modelu przez replikację danych}
+Analiza posterioru zakłada, że określony model generowania
+danych jest wystarczająco wiarygodny. \emph{Posterior predictive
+check} (PPC) polega na wylosowaniu $\theta\sim\Pi(\cdot\mid x)$,
+a potem nowych danych $X^{\rm rep}\sim P_\theta$ oraz
+porównaniu statystyki diagnostycznej $T(X^{\rm rep})$ z $T(x)$.
+Statystyka $T$ powinna celować w charakterystyczne odchylenie:
+liczbę zer, rozrzut, ogony, autokorelację lub zależność między
+grupami. Nie jest to automatycznie klasyczny test o jednostajnym
+rozkładzie wartości p.
+
+\begin{przyklad}[Dlaczego posterior predictive p-value nie jest jednostajna?]
+Niech $p\sim\operatorname{Beta}(1,1)$ i
+$X\mid p\sim\operatorname{Bernoulli}(p)$, zaś
+$X^{\rm rep}\mid p$ niech będzie warunkowo niezależną kopią.
+Jako statystykę przyjmijmy $T(X)=X$ i zdefiniujmy
+$q(X)=\Prob(X^{\rm rep}\ge X\mid X)$.
+Dla $X=0$ zachodzi $q(0)=1$. Dla $X=1$
+posterior jest $\operatorname{Beta}(2,1)$, więc
+$q(1)=\E[p\mid X=1]=2/3$.
+W rozkładzie predykcyjnym przed obserwacją
+$\Prob(X=0)=\Prob(X=1)=1/2$, stąd $q(X)$ przyjmuje
+wyłącznie wartości $1$ i $2/3$, każdą z prawdopodobieństwem
+$1/2$. Nie jest jednostajna na $[0,1]$.
+To konkretny powód, aby nie interpretować automatycznie PPC
+jako standardowej wartości p z gwarancją poziomu testu.
+\end{przyklad}
+
+\begin{stwierdzenie}[Rozkład predykcyjny beta--dwumianowy przed obserwacją]
+\label{prop:prior-predictive-betabinomial}
+Niech $p\sim\operatorname{Beta}(a,b)$, $a,b>0$,
+a warunkowo przy znanym $p$ zmienna $S$ ma rozkład
+$\Bin(n,p)$, $n\ge1$. Wtedy dla $s=0,\ldots,n$
+\[
+\Prob(S=s)=\binom ns\frac{B(a+s,b+n-s)}{B(a,b)}.
+\]
+Przy priorze jednostajnym $\operatorname{Beta}(1,1)$
+rozkład $S$ jest jednostajny na $\{0,\ldots,n\}$.
+\end{stwierdzenie}
+\begin{proof}
+Pierwszy wzór wynika z całkowania
+$\binom ns p^s(1-p)^{n-s}$ względem gęstości prioru,
+co daje iloraz całek beta. Dla $a=b=1$ korzystamy
+z $B(s+1,n-s+1)=s!(n-s)!/(n+1)!$ i otrzymujemy
+$\binom ns B(s+1,n-s+1)=1/(n+1)$.
+\end{proof}
+\begin{uwaga}
+Jednostajność liczby sukcesów przed obserwacją \emph{nie oznacza},
+że wszystkie wartości $p$ są równie wiarygodne po zobaczeniu danych.
+Rozkład predykcyjny przed obserwacją może ujawnić, czy prior
+przewiduje realistyczne dane: w modelu beta--dwumianowym
+$\operatorname{Beta}(1,1)$ dopuszcza bardzo duży rozrzut liczby
+wad, mimo że pojedyncza obserwacja ma prawdopodobieństwo
+wady $1/2$. Przy aktualnej wiedzy o rzadkich awariach
+taki prior może być nieodpowiedni.
+\end{uwaga}
+
+\section{Praktyczny schemat: od celu do metody}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.27\textwidth}>{\raggedright\arraybackslash}p{.31\textwidth}>{\raggedright\arraybackslash}p{.27\textwidth}}
+\toprule
+\textbf{Pytanie} & \textbf{Właściwe narzędzie} & \textbf{Co koniecznie sprawdzić}\tabularnewline
+\midrule
+Jaka jest nieznana wartość parametru? & Średnia lub kwantyl posterioru, zależnie od straty & Rozkład a priori i identyfikowalność.\\
+Ile awarii będzie w kolejnej partii? & Rozkład posterior predictive, jego ogon i kwantyle & Ekspozycja i zmienność między okresami.\\
+Jak dobrać zapas? & Kwantyl predykcyjny przy asymetrycznej stracie & Rzeczywiste koszty braków i nadmiaru.\\
+Który model lepiej prognozuje? & Brier lub log-loss na danych testowych & Przeciek danych i zależność czasowa.\\
+Czy model jest wiarygodny? & PPC, diagnostyka reszt, walidacja predykcyjna & PPC nie jest automatycznie testem poziomu $\alpha$.\\
+Czy mamy gwarancję pokrycia dla każdego parametru? & Klasyczny przedział ufności, np. Wilsona & Rodzaj gwarancji i założenia losowania.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\Needspace{26\baselineskip}
+\begin{lstlisting}[language=Python,caption={Kompletny program: estymacja, predykcja, ryzyko alarmu i przedziały (Python, SciPy).}]
+from scipy.stats import beta, betabinom, nbinom
+
+n, defects = 100, 7
+a, b = 1, 1
+post_a, post_b = a + defects, b + n - defects
+print("Posterior mean:", post_a / (post_a + post_b))
+print("95% credible interval:", beta.ppf([0.025, 0.975], post_a, post_b))
+
+# Defects in the next ten independent devices.
+future_n = 10
+print("P(no defects):", betabinom.pmf(0, future_n, post_a, post_b))
+print("P(at least two defects):", betabinom.sf(1, future_n, post_a, post_b))
+print("Predictive 90% quantile:", betabinom.ppf(0.9, future_n, post_a, post_b))
+
+# Failures in 50 hours, given posterior Gamma(shape=6, rate=300).
+shape, rate, exposure = 6, 300, 50
+prob_3plus = nbinom.sf(2, shape, rate / (rate + exposure))
+print("P(three or more failures):", prob_3plus)
+
+# A warning costs 3 if unjustified; a missed event costs 50.
+false_alarm, missed_event = 3.0, 50.0
+threshold = false_alarm / (false_alarm + missed_event)
+print("Alarm threshold:", threshold, "Warn:", prob_3plus > threshold)
+\end{lstlisting}
+
+\begin{zadanie}[Rezerwa dla nierównej straty]
+W posteriorze $p\mid x\sim\operatorname{Beta}(8,94)$ chcemy
+podać jedną liczbę reprezentującą $p$. Za jednostkową wartość
+niedoszacowania płacimy dziewięć razy więcej niż za przeszacowanie.
+Jaki estymator Bayesa stosujemy?
+\par\emph{Rozwiązanie.} Korzystamy z asymetrycznej straty
+liniowej o $\tau=9/(9+1)=0{,}9$. Twierdzenie
+\ref{thm:bayes-quantile-loss} daje $F_{\operatorname{Beta}(8,94)}^{-1}(0{,}9)$.
+Średnia $8/102$ minimalizowałaby inną, kwadratową stratę,
+więc nie jest tu rozwiązaniem zadania decyzyjnego.
+\end{zadanie}
+
+% ================================================================
+% ROZDZIAL 20 -- BAYESOWSKIE TESTOWANIE HIPOTEZ
+% ================================================================

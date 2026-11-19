@@ -1,0 +1,542 @@
+\chapter{Asymptotyka bayesowska: koncentracja posterioru i twierdzenie Bernsteina--von Misesa}
+\label{ch:bayesian-asymptotics}
+\paragraph{Powiązania i odsyłacze.} Warunki klasycznej asymptotyki zebrano w rozdziale~\ref{ch:asymptotic-estimation}; metody posteriorowe i hierarchiczne w rozdziałach~\ref{ch:bayes-foundations} i~\ref{ch:hierarchical-bayes}.
+
+
+\section{Dwa rodzaje gwarancji i dwa sposoby granicznego rozumowania}
+Rozkład a posteriori jest prawdopodobieństwem warunkowym przy
+zadanym priorze i modelu. Nie oznacza to automatycznie, że dla
+każdej ustalonej wartości parametru jego przedziały wiarygodności
+mają deklarowane pokrycie częstościowe. Zbieżność tych dwóch
+opisów pojawia się w wielu \emph{regularnych} modelach przy dużej
+próbie, ale nie jest uniwersalnym prawem.
+
+W tym rozdziale rozróżnimy: (i) \emph{zgodność} -- koncentrację
+posterioru wokół prawdziwego parametru; (ii) \emph{tempo koncentracji}
+-- wielkość otoczeń, w których skupia się posterior;
+(iii) \emph{kształt} posterioru po odpowiednim przeskalowaniu.
+Dopiero trzeci krok prowadzi do twierdzenia Bernsteina--von Misesa.
+Dla przejrzystości ogólne twierdzenie sformułujemy przy jawnych
+założeniach lokalnej asymptotycznej normalności i koncentracji
+w skali $n^{-1/2}$; wykażemy te warunki w modelach normalnym
+i Bernoulliego. Nie będziemy przedstawiać lokalnej normalności
+jako wystarczającej bez kontroli ogonów posterioru.
+
+\begin{definicja}[Zgodność posterioru]
+\label{def:posterior-consistency}
+Niech $(\Theta,d)$ będzie przestrzenią metryczną,
+$\theta_0\in\Theta$ prawdziwym parametrem, a
+$X_1,X_2,\ldots$ niezależnymi obserwacjami o wspólnym
+prawie $P_{\theta_0}$. Niech $\Pi_n(\cdot\mid X_1,\ldots,X_n)$
+stanowi posterior na $\Theta$.
+Posterior jest \emph{zgodny w punkcie $\theta_0$ według
+prawdopodobieństwa}, jeśli dla każdych $\varepsilon,\eta>0$
+\[
+ P_{\theta_0}\!\left(
+ \Pi_n(\{\theta:d(\theta,\theta_0)>\varepsilon\}\mid X_1,\ldots,X_n)
+ >\eta\right)\longrightarrow0.
+\]
+O \emph{zgodności prawie na pewno} mówimy, gdy dla każdego
+$\varepsilon>0$ posteriorowa masa powyższego zbioru
+zbiega do zera $P_{\theta_0}$-prawie na pewno.
+\end{definicja}
+
+\begin{uwaga}
+Prawdziwy parametr nie musi być losowany z prioru.
+Symbol $P_{\theta_0}$ oznacza rzeczywiste prawo generowania
+danych przy ustalonym $\theta_0$; posterior jest losową
+miarą, ponieważ zależy od próby. W modelu źle określonym
+może nie istnieć żaden $\theta_0$ dający rzeczywisty rozkład
+obserwacji; taki przypadek wymaga odrębnej analizy.
+\end{uwaga}
+
+\section{Pierwsze dowody zgodności: Bernoulli i skończona przestrzeń parametrów}
+\begin{twierdzenie}[Zgodność posterioru beta--Bernoulli]
+\label{thm:beta-posterior-consistency}
+Niech $a,b>0$, $p_0\in[0,1]$, $X_1,X_2,\ldots$
+będą niezależne o rozkładzie $\operatorname{Bernoulli}(p_0)$
+i niech prior $p$ będzie równy $\operatorname{Beta}(a,b)$.
+Wówczas posterior $\operatorname{Beta}(a+S_n,b+n-S_n)$,
+$S_n=\sum_{i=1}^nX_i$, jest zgodny prawie na pewno
+w punkcie $p_0$ dla metryki $|p-q|$ na $[0,1]$.
+Twierdzenie obejmuje także $p_0=0$ i $p_0=1$,
+chociaż sam prior nie przypisuje tym punktom dodatniej masy.
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy przez $m_n$ i $v_n$ średnią oraz wariancję
+posterioru. Z twierdzenia~\ref{thm:beta-binomial}
+\[
+ m_n=\frac{a+S_n}{n+a+b},\qquad
+ v_n=\frac{(a+S_n)(b+n-S_n)}{(n+a+b)^2(n+a+b+1)}
+ \le\frac1{4(n+a+b+1)}.
+\]
+Z mocnego prawa wielkich liczb $S_n/n\to p_0$
+$P_{p_0}$-prawie na pewno, więc także $m_n\to p_0$.
+Dla dowolnego $\varepsilon>0$, gdy
+$|m_n-p_0|<\varepsilon/2$, nierówność Czebyszewa
+zastosowana \emph{do rozkładu posterioru} daje
+\[
+ \Pi_n(|p-p_0|>\varepsilon\mid X_1,\ldots,X_n)
+ \le\Pi_n(|p-m_n|>\varepsilon/2\mid X_1,\ldots,X_n)
+ \le\frac{4v_n}{\varepsilon^2}\longrightarrow0.
+\]
+Warunek $|m_n-p_0|<\varepsilon/2$ zachodzi ostatecznie
+na zdarzeniu prawdopodobieństwa jeden, a oszacowanie
+wariancji jest deterministyczne. Dowód nie wykorzystuje
+warunku $p_0\in(0,1)$.
+\end{proof}
+
+\begin{twierdzenie}[Zgodność przy skończonej liczbie hipotez]
+\label{thm:finite-bayes-consistency}
+Niech $\Theta=\{\theta_1,\ldots,\theta_K\}$,
+$K\ge2$, z priorem $\pi(\theta)>0$ dla każdego $\theta$.
+Niech $\theta_0\in\Theta$ będzie prawdziwym parametrem,
+$X_i\iid P_{\theta_0}$, a każde $P_\theta$ posiada
+gęstość $f_\theta$ względem wspólnej miary $\sigma$-skończonej.
+Załóżmy, że dla $\theta\ne\theta_0$ iloraz
+$f_\theta(X_1)/f_{\theta_0}(X_1)$ jest dodatni
+$P_{\theta_0}$-prawie na pewno, jego logarytm jest
+całkowalny oraz
+\[
+ D(\theta_0\Vert\theta)
+ :=\E_{\theta_0}\!\left[
+  \log\frac{f_{\theta_0}(X_1)}{f_\theta(X_1)}\right]>0.
+\]
+Wtedy $\Pi_n(\{\theta_0\}\mid X_1,\ldots,X_n)\to1$
+$P_{\theta_0}$-prawie na pewno.
+\end{twierdzenie}
+\begin{proof}
+Dla dowolnego $\theta\ne\theta_0$ posteriorowy iloraz
+prawdopodobieństw ma postać
+\[
+ \frac{\Pi_n(\{\theta\}\mid X)}{\Pi_n(\{\theta_0\}\mid X)}
+ =\frac{\pi(\theta)}{\pi(\theta_0)}
+ \prod_{i=1}^n\frac{f_\theta(X_i)}{f_{\theta_0}(X_i)}.
+\]
+Logarytm ilorazu podzielony przez $n$ zbiega
+prawie na pewno do $-D(\theta_0\Vert\theta)<0$
+na mocy mocnego prawa wielkich liczb. Każdy z $K-1$
+ilorazów dąży więc do zera. Sumując te ilorazy,
+otrzymujemy
+$\Pi_n(\{\theta_0\}\mid X)
+ =(1+\sum_{\theta\ne\theta_0}\Pi_n(\{\theta\}\mid X)/
+ \Pi_n(\{\theta_0\}\mid X))^{-1}\to1$.
+\end{proof}
+
+\begin{uwaga}[Czego nie dowodzi ostatnie twierdzenie]
+Skończoność przestrzeni parametrów pozwala przejść od
+zbieżności każdego ilorazu do zbieżności ich sumy.
+Przy nieskończonej przestrzeni wymagana jest dodatkowa
+kontrola złożoności modelu i zachowania prioru. Zgodność
+w modelu skończonym nie stanowi dowodu ogólnego twierdzenia
+o zgodności dowolnych nieparametrycznych posteriorów.
+\end{uwaga}
+
+\section{Dokładny model normalny: co dzieje się z priorem?}
+\begin{twierdzenie}[Normalny posterior i asymptotyczna normalność]
+\label{thm:normal-conjugate-bvm}
+Niech $\sigma^2,\tau^2>0$, $m_0\in\R$ i
+$X_1,\ldots,X_n\iid\Normal(\theta_0,\sigma^2)$
+przy ustalonym $\theta_0\in\R$.
+W analizie bayesowskiej przyjmijmy właściwy prior
+$\theta\sim\Normal(m_0,\tau^2)$. Posterior jest normalny
+z parametrami
+\[
+ v_n=(\tau^{-2}+n\sigma^{-2})^{-1},\qquad
+ m_n=v_n\left(m_0/\tau^2+n\overline X_n/\sigma^2\right).
+\]
+Przy $n\to\infty$ zachodzi
+$\sqrt n(m_n-\overline X_n)\to0$ w prawdopodobieństwie,
+$n v_n\to\sigma^2$ i
+\[
+ \Law\big(\sqrt n(\theta-\overline X_n)\mid X_1,\ldots,X_n\big)
+ \longrightarrow\Normal(0,\sigma^2)
+\]
+w odległości całkowitej wariacji, w prawdopodobieństwie
+$P_{\theta_0}$. Ponadto centralny posteriorowy przedział
+wiarygodności poziomu $1-\alpha$ ma pokrycie częstościowe
+dążące do $1-\alpha$ dla każdego $\alpha\in(0,1)$.
+\end{twierdzenie}
+\begin{proof}
+Pierwsze wzory pochodzą z uzupełnienia kwadratu
+w iloczynie normalnej wiarygodności i prioru.
+Zachodzi dokładnie
+$m_n-\overline X_n=\sigma^2(m_0-\overline X_n)/
+(\sigma^2+n\tau^2)$.
+Ponieważ $\overline X_n\to\theta_0$ w prawdopodobieństwie,
+mnożenie przez $\sqrt n$ daje granicę zero.
+Z kolei $nv_n=\sigma^2n\tau^2/(\sigma^2+n\tau^2)\to\sigma^2$.
+Rozkład przeskalowanego parametru jest dokładnie
+$\Normal(\sqrt n(m_n-\overline X_n),nv_n)$.
+Ciągłość gęstości normalnej względem parametrów
+w $L^1(\lambda_1)$, którą otrzymujemy z lematu Scheffégo,
+daje zbieżność w całkowitej wariacji.
+Centralny przedział ma końce
+$m_n\pm z_{1-\alpha/2}\sqrt{v_n}$,
+gdzie $z_{1-\alpha/2}$ jest kwantylem standardowego
+rozkładu normalnego. Z centralnego twierdzenia granicznego,
+$\sqrt n(m_n-\theta_0)/\sigma\Rightarrow\Normal(0,1)$
+oraz $\sqrt{nv_n}/\sigma\to1$; zatem prawdopodobieństwo
+zdarzenia $|m_n-\theta_0|\le z_{1-\alpha/2}\sqrt{v_n}$
+dąży do $1-\alpha$.
+\end{proof}
+
+\section{Lokalna asymptotyczna normalność: precyzyjne warunki}
+Aby oddzielić własność \emph{wiarygodności} od własności
+\emph{posterioru}, wprowadzamy formalną lokalną aproksymację
+log-wiarygodności. Jest to warunek, a nie uniwersalna
+własność każdego modelu statystycznego.
+
+\begin{definicja}[Lokalna asymptotyczna normalność (LAN)]
+\label{def:lan}
+Niech $\Theta\subseteq\R^d$ będzie zbiorem otwartym,
+$\theta_0\in\Theta$, $d\ge1$, a $\ell_n(\theta)$
+logarytmem wiarygodności z próby $n$ obserwacji
+w eksperymencie o prawie $P_{\theta_0}^{(n)}$.
+Mówimy, że model spełnia warunek LAN w $\theta_0$
+z macierzą informacji $I_0\in\R^{d\times d}$ dodatnio
+określoną, jeśli istnieją wektory losowe $\Delta_n\in\R^d$
+takie, że $\Delta_n\Rightarrow\Normal_d(0,I_0)$ pod
+$P_{\theta_0}^{(n)}$ oraz dla każdego $M<\infty$
+\[
+ \sup_{\norm{h}\le M}\left|
+ \ell_n(\theta_0+h/\sqrt n)-\ell_n(\theta_0)
+ -h^\top\Delta_n+\frac12h^\top I_0h\right|
+ \xrightarrow{P_{\theta_0}}0,
+\]
+przy czym dla dostatecznie dużego $n$ wszystkie
+$\theta_0+h/\sqrt n$ z $\norm h\le M$ należą do $\Theta$.
+\end{definicja}
+
+\begin{definicja}[Koncentracja posterioru w skali $n^{-1/2}$]
+\label{def:root-n-tightness}
+Przy $\Theta\subseteq\R^d$ i prawdziwym $\theta_0$
+niech $H_n=\sqrt n(\theta-\theta_0)$ będzie zmienną
+posteriorową. Posterior jest \emph{ciasny w skali $n^{-1/2}$
+w prawdopodobieństwie}, jeśli dla każdego $\eta>0$
+\[
+ \lim_{M\to\infty}\limsup_{n\to\infty}
+ P_{\theta_0}^{(n)}\!\left(
+ \Pi_n(\norm{H_n}>M\mid X^{(n)})>\eta\right)=0.
+\]
+To warunek mocniejszy niż zgodność w każdym ustalonym
+otoczeniu $\theta_0$.
+\end{definicja}
+
+\begin{twierdzenie}[Bernstein--von Mises przy jawnych warunkach]
+\label{thm:bvm-under-lan}
+Niech $\Theta\subseteq\R^d$ będzie otwarty,
+$\theta_0\in\Theta$, a dane $X^{(n)}$ pochodziły z
+modelu zdominowanego z log-wiarygodnością $\ell_n$.
+Zakładamy, że:
+\begin{enumerate}
+\item model spełnia LAN z macierzą $I_0$ w sensie
+definicji~\ref{def:lan};
+\item prior ma gęstość $\pi$ względem $\lambda_d$,
+ciągłą i ściśle dodatnią w punkcie $\theta_0$;
+\item posterior jest właściwy oraz spełnia warunek
+z definicji~\ref{def:root-n-tightness}.
+\end{enumerate}
+Niech $\mathcal Q_n$ oznacza posteriorowy rozkład
+$H_n=\sqrt n(\theta-\theta_0)$, a $\mathcal G_n$
+rozkład $\Normal_d(I_0^{-1}\Delta_n,I_0^{-1})$.
+Wtedy
+\[
+ \norm{\mathcal Q_n-\mathcal G_n}_{\rm TV}
+ :=\sup_{A\in\calB(\R^d)}|\mathcal Q_n(A)-\mathcal G_n(A)|
+ \xrightarrow{P_{\theta_0}}0.
+\]
+Jeżeli ponadto estymator $\widehat\theta_n$ spełnia
+$\sqrt n(\widehat\theta_n-\theta_0)=I_0^{-1}\Delta_n+o_{P_{\theta_0}}(1)$,
+to posteriorowy rozkład
+$\sqrt n(\theta-\widehat\theta_n)$ zbiega w całkowitej
+wariacji, w prawdopodobieństwie, do $\Normal_d(0,I_0^{-1})$.
+\end{twierdzenie}
+\begin{proof}
+Dla $h$ takiego, że $\theta_0+h/\sqrt n\in\Theta$,
+posterior ma względem $\lambda_d$ gęstość proporcjonalną do
+\[
+ g_n(h)=\exp\big(\ell_n(\theta_0+h/\sqrt n)-\ell_n(\theta_0)\big)
+ \pi(\theta_0+h/\sqrt n).
+\]
+Czynnik $n^{-d/2}$ po zmianie zmiennych jest wspólny
+i skraca się przy normalizacji.
+Z warunku LAN i ciągłości prioru, na każdej kuli
+$K_M=\{h:\norm h\le M\}$ funkcja $g_n(h)$
+po podzieleniu przez stałą $\pi(\theta_0)$ jest
+jednostajnie, w prawdopodobieństwie, bliska
+$g_n^0(h)=\exp(h^\top\Delta_n-h^\top I_0h/2)$.
+Aby sformułować to bez niejawnego ograniczenia $\Delta_n$,
+ustalamy $C>0$. Na zdarzeniu $\norm{\Delta_n}\le C$
+obie funkcje są na $K_M$ ograniczone z góry i z dołu
+przez dodatnie stałe zależne od $C,M,I_0$.
+Ponieważ $\Delta_n=O_{P_{\theta_0}}(1)$,
+można dobrać $C$ tak, aby dopełnienie tego zdarzenia
+miało dowolnie małe prawdopodobieństwo.
+Stąd unormowane ograniczenia $\mathcal Q_n$ i $\mathcal G_n$
+do $K_M$ (po podzieleniu przez ich masy na $K_M$)
+zbliżają się do siebie w całkowitej wariacji.
+Istotnie, zbieżność jednostajna ich nieunormowanych
+gęstości na $K_M$ pociąga zbieżność całek normalizujących
+i następnie gęstości unormowanych w $L^1(\lambda_d)$.
+Dla dowolnych miar prawdopodobieństwa $Q,G$ oraz zbioru
+$K$ o dodatnich masach mamy oszacowanie
+\[
+ \norm{Q-G}_{\rm TV}
+ \le \norm{Q(\cdot\mid K)-G(\cdot\mid K)}_{\rm TV}
+       +Q(K^c)+G(K^c).
+\]
+Wybieramy $M$ tak duże, aby warunek koncentracji posterioru
+zapewniał małą masę $\mathcal Q_n(K_M^c)$ z dużym
+prawdopodobieństwem. Jednocześnie
+$\mathcal G_n(K_M^c)$ jest mała z dużym prawdopodobieństwem,
+ponieważ $\Delta_n=O_P(1)$ i macierz kowariancji
+$I_0^{-1}$ jest stała. Następnie stosujemy zbieżność
+na kuli, a na końcu pozwalamy zwiększać $M$.
+Daje to pierwszą tezę.
+Druga wynika przez przesunięcie obu miar o
+$-\sqrt n(\widehat\theta_n-\theta_0)$ i z ciągłości
+w całkowitej wariacji rodziny normalnej względem wektora
+średnich, gdy różnica średnich jest $o_P(1)$.
+\end{proof}
+
+\begin{uwaga}[Dlaczego założenie o ogonach jest istotne?]
+LAN opisuje wiarygodność tylko dla lokalnych zmian parametru
+rzędu $n^{-1/2}$. Nie wyklucza odległych obszarów przestrzeni
+parametrów, które zachowują znaczną masę posteriorową.
+W zastosowaniach do ogólnych modeli warunek ciasności
+w skali $n^{-1/2}$ wyprowadza się zwykle z identyfikowalności,
+regularności i istnienia odpowiednich testów lub oszacowań
+wiarygodności. Tego głębokiego kroku nie zastępujemy
+samym rozwinięciem Taylora.
+\end{uwaga}
+
+\section{Model Bernoulliego: pełna weryfikacja warunków LAN i koncentracji}
+\begin{twierdzenie}[Bernstein--von Mises dla prioru beta we wnętrzu]
+\label{thm:bernoulli-bvm}
+Niech $p_0\in(0,1)$, $a,b>0$,
+$X_1,\ldots,X_n\iid\operatorname{Bernoulli}(p_0)$,
+a prior $p$ ma rozkład $\operatorname{Beta}(a,b)$.
+Niech $\widehat p_n=S_n/n$. Wówczas posteriorowy rozkład
+$\sqrt n(p-\widehat p_n)$ zbiega w całkowitej wariacji,
+w prawdopodobieństwie $P_{p_0}$, do
+$\Normal(0,p_0(1-p_0))$.
+W szczególności dla $\alpha\in(0,1)$ centralny
+posteriorowy przedział wiarygodności poziomu $1-\alpha$
+ma asymptotyczne pokrycie częstościowe $1-\alpha$.
+\end{twierdzenie}
+\begin{proof}
+Dla $\ell_n(p)=S_n\log p+(n-S_n)\log(1-p)$
+na $(0,1)$ wynik różniczkowania w $p_0$ daje
+\[
+ \Delta_n=\frac{S_n-np_0}{\sqrt n\,p_0(1-p_0)},
+ \qquad I_0=\frac1{p_0(1-p_0)}.
+\]
+Z centralnego twierdzenia granicznego
+$\Delta_n\Rightarrow\Normal(0,I_0)$.
+Rozwinięcie Taylora $\ell_n(p_0+h/\sqrt n)$ wokół $p_0$
+ma drugi współczynnik
+$\ell_n''(p)/n=-S_n/(np^2)-(1-S_n/n)/(1-p)^2$.
+Na każdym zwartym otoczeniu $p_0$ wyrażenie to zbiega
+jednostajnie w prawdopodobieństwie do
+$-p_0/p^2-(1-p_0)/(1-p)^2$, a w $p_0$ przyjmuje
+wartość $-I_0$. Dla ograniczonych $h$ otrzymujemy LAN.
+Gęstość beta jest ciągła i dodatnia w $p_0$.
+
+Pozostaje sprawdzić \emph{tempo} koncentracji.
+Niech $m_n=(a+S_n)/(n+a+b)$ i
+$v_n=\Var(p\mid X)\le1/[4(n+a+b+1)]$.
+Ponieważ $m_n-\widehat p_n=O(1/n)$ jednostajnie
+w $S_n\in\{0,\ldots,n\}$, a
+$\sqrt n(\widehat p_n-p_0)=O_{P_{p_0}}(1)$,
+mamy $\sqrt n(m_n-p_0)=O_{P_{p_0}}(1)$.
+Nierówność Czebyszewa pod posteriorem daje dla $M>0$
+\[
+ \Pi_n(\sqrt n|p-p_0|>M\mid X)
+ \le\frac{4nv_n}{M^2}
+ \quad\text{na zdarzeniu }\sqrt n|m_n-p_0|\le M/2.
+\]
+Ponieważ $nv_n\le1/4$, wybierając najpierw $M$ duże,
+a potem $n$ duże otrzymujemy ciasność posterioru
+w skali $n^{-1/2}$. Możemy zatem zastosować
+twierdzenie~\ref{thm:bvm-under-lan}, a z równości
+$I_0^{-1}\Delta_n=\sqrt n(\widehat p_n-p_0)$
+wynika pierwsza teza.
+Zbieżność całkowitej wariacji do normalnego rozkładu
+o dodatniej gęstości implikuje zbieżność posteriorowych
+kwantyli po standaryzacji. Z CLT dla $\widehat p_n$
+wynika wtedy asymptotyczne pokrycie centralnego
+przedziału.
+\end{proof}
+
+\section{Co się dzieje na brzegu? Ścisły kontrprzykład normalności}
+\begin{twierdzenie}[Posterior przy prawdziwym $p_0=0$]
+\label{thm:boundary-beta-gamma}
+Niech $a,b>0$ i $X_1,\ldots,X_n\iid\operatorname{Bernoulli}(0)$.
+W analizie użyjmy prioru $\operatorname{Beta}(a,b)$,
+a więc posterioru $p\mid X\sim\operatorname{Beta}(a,b+n)$.
+Wtedy
+\[
+ \Law(np\mid X_1,\ldots,X_n)
+ \Rightarrow\operatorname{Gamma}(a,1),
+\]
+gdzie $\operatorname{Gamma}(a,1)$ oznacza rozkład gamma
+z parametrem kształtu $a$ i intensywnością $1$.
+Zatem właściwą skalą w tym modelu brzegowym jest $n^{-1}$,
+a granica nie jest normalna.
+\end{twierdzenie}
+\begin{proof}
+Przy $p_0=0$ wszystkie obserwacje są zerowe z
+prawdopodobieństwem jeden. Gęstość $U_n=np$ względem
+$\lambda_1$ jest dla $0<u<n$ równa
+\[
+ f_n(u)=\frac{u^{a-1}(1-u/n)^{n+b-1}}{n^a B(a,b+n)}.
+\]
+Z asymptotyki funkcji gamma, wynikającej np. ze wzoru
+Stirlinga, $n^a B(a,b+n)\to\Gamma(a)$.
+Dla ustalonego $u>0$ mamy
+$(1-u/n)^{n+b-1}\to e^{-u}$, stąd
+$f_n(u)\to u^{a-1}e^{-u}/\Gamma(a)$.
+Granica jest gęstością probabilistyczną na $(0,\infty)$.
+Lemat Scheffégo (zbieżność prawie wszędzie nieujemnych
+gęstości o całce jeden do gęstości o całce jeden)
+daje nawet zbieżność w $L^1(\lambda_1)$, a zatem
+zbieżność w całkowitej wariacji.
+\end{proof}
+
+\begin{przyklad}[Próba bez wad nie uzasadnia normalnego przedziału]
+Przy $a=b=1$, jeśli nie stwierdzono żadnej wady
+w $n$ niezależnych próbach, posterior to
+$\operatorname{Beta}(1,n+1)$.
+Jego średnia wynosi $1/(n+2)$, natomiast asymptotycznie
+$n p$ ma rozkład wykładniczy o średniej jeden.
+Symetryczny przedział otrzymany przez naiwną aproksymację
+normalną może wychodzić poza $[0,1]$ i pomijać
+asymetrię posterioru. W tej sytuacji należy stosować
+dokładne kwantyle beta albo odpowiedni jednostronny
+przedział, a nie automatycznie wzór oparty na CLT we wnętrzu.
+\end{przyklad}
+
+\section{Jak interpretować przedziały i jak rozpoznać zawodność asymptotyki?}
+\begin{stwierdzenie}[Zbieżność pokrycia w regularnym modelu jednowymiarowym]
+\label{prop:credible-frequentist-coverage}
+W założeniach twierdzenia~\ref{thm:bvm-under-lan} dla $d=1$
+załóżmy dodatkowo, że istnieje estymator
+$\widehat\theta_n$ spełniający jego ostatni warunek.
+Niech $[L_n,U_n]$ będzie centralnym posteriorowym
+przedziałem wiarygodności o masie $1-\alpha$,
+$\alpha\in(0,1)$, gdzie kwantyle są brane względem
+posterioru $\theta$.
+Wtedy $P_{\theta_0}(\theta_0\in[L_n,U_n])\to1-\alpha$.
+\end{stwierdzenie}
+\begin{proof}
+Po standaryzacji $\sqrt n(\theta-\widehat\theta_n)$
+posterior zbiega w całkowitej wariacji do
+$\Normal(0,I_0^{-1})$ w prawdopodobieństwie.
+Ponieważ dystrybuanta tego rozkładu jest ciągła i ściśle
+rosnąca, dolny i górny posteriorowy kwantyl mają postać
+$\sqrt n(L_n-\widehat\theta_n)
+ =-z_{1-\alpha/2}/\sqrt{I_0}+o_P(1)$ i
+$\sqrt n(U_n-\widehat\theta_n)
+ = z_{1-\alpha/2}/\sqrt{I_0}+o_P(1)$.
+Z założenia dotyczącego estymatora i z LAN
+$\sqrt n(\widehat\theta_n-\theta_0)
+ \Rightarrow\Normal(0,I_0^{-1})$.
+Wobec tego zdarzenie pokrycia jest asymptotycznie
+równoważne nierówności
+$|\sqrt{nI_0}(\widehat\theta_n-\theta_0)|
+ \le z_{1-\alpha/2}+o_P(1)$, której prawdopodobieństwo
+zbiega do $1-\alpha$.
+\end{proof}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.26\textwidth}>{\raggedright\arraybackslash}p{.32\textwidth}>{\raggedright\arraybackslash}p{.27\textwidth}}
+\toprule
+\textbf{Sytuacja} & \textbf{Czy normalność jest uzasadniona?} & \textbf{Lepszy krok praktyczny}\\
+\midrule
+Duża próba, parametr we wnętrzu regularnego modelu & Często tak, przy spełnieniu LAN i koncentracji & Porównać kwantyle posterioru z aproksymacją normalną.\\
+Prawdopodobieństwo bliskie $0$ lub $1$ & Aproksymacja może być zła, na brzegu bywa fałszywa & Dokładny posterior beta, przedział jednostronny.\\
+Model mieszaninowy z zamiennymi etykietami & Lokalna LAN nie wyklucza wielomodalnego posterioru & Parametry identyfikowalne lub funkcjonały niezmiennicze.\\
+Mało grup, nieznana wariancja międzygrupowa & Hyperposterior może być bardzo szeroki & Pełny Bayes i analiza wrażliwości hiperprioru.\\
+Liczba parametrów rośnie z $n$ & Klasyczne twierdzenie o ustalonym $d$ nie wystarcza & Osobne warunki wysokowymiarowe.\\
+Źle określony model & Koncentracja może zajść wokół pseudo-prawdy & Diagnostyka i odporna niepewność.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Laboratorium: porównanie skończonej próby z granicą}
+W programie porównujemy dokładny posterior beta z rozkładem
+normalnym wynikającym z teorii asymptotycznej. Dla małych
+$n$ i rzadkich zdarzeń rozbieżności bywają widoczne.
+Nie wolno na podstawie samej symulacji wnioskować o
+spełnieniu warunków twierdzenia w dowolnym modelu.
+
+\Needspace{23\baselineskip}
+\begin{lstlisting}[language=Python,caption={Kompletny program: zbieżność posterioru beta do aproksymacji normalnej i przykład brzegowy (Python, SciPy).}]
+import numpy as np
+from scipy.stats import beta, gamma, norm
+
+rng = np.random.default_rng(2026)
+p0, a, b = 0.07, 2.0, 18.0
+z = norm.ppf(0.975)
+for n in [25, 100, 1000, 10000]:
+    s = rng.binomial(n, p0)
+    phat = s / n
+    post_a, post_b = a + s, b + n - s
+    exact_ci = beta.ppf([0.025, 0.975], post_a, post_b)
+    # Operational Wald approximation: plug in the observed proportion.
+    gaussian_ci = phat + np.array([-1, 1]) * z * np.sqrt(phat*(1-phat)/n)
+    print("n", n, "s", s, "exact", exact_ci, "Wald", gaussian_ci)
+
+# At the boundary p0=0, n*p converges to Gamma(a, rate=1).
+n = 10000
+post_a, post_b = a, b + n
+print("n * posterior median:", n * beta.ppf(0.5, post_a, post_b))
+print("limiting Gamma median:", gamma.ppf(0.5, a, scale=1.0))
+\end{lstlisting}
+
+\Needspace{23\baselineskip}
+\begin{lstlisting}[language=Julia,caption={Kompletny program: posterior normalny i asymptotyczna niepewność średniej (Julia, Distributions.jl).}]
+using Random, Statistics, Distributions
+
+Random.seed!(2026)
+sigma, tau, m0, theta0 = 2.0, 3.0, 0.0, 1.2
+for n in (20, 200, 2000)
+    x = rand(Normal(theta0, sigma), n)
+    xbar = mean(x)
+    vpost = inv(inv(tau^2) + n / sigma^2)
+    mpost = vpost * (m0 / tau^2 + n * xbar / sigma^2)
+    exact = quantile(Normal(mpost, sqrt(vpost)), [0.025, 0.975])
+    asymptotic = xbar .+ [-1.0, 1.0] .* (1.9599639845 * sigma / sqrt(n))
+    println((n=n, posterior=exact, asymptotic=asymptotic))
+end
+\end{lstlisting}
+
+\begin{uwaga}[Aproksymacja operacyjna a znany tylko w symulacji parametr]
+W listingu powyżej czynnik wariancji w przedziale Walda obliczamy
+z $\widehat p_n$, a nie z $p_0$. W rzeczywistej analizie
+$p_0$ jest nieznany. Przy $S_n=0$ operacyjny przedział
+Walda degeneruje się do $[0,0]$, podczas gdy dokładny
+posterior beta pozostaje nietrywialny. Znajomość $p_0$
+w kodzie symulacyjnym służy jedynie generowaniu danych
+i ocenie błędu, nie konstruowaniu przedziału.
+\end{uwaga}
+
+\begin{zadanie}[Asymptotyka przy nieznanej jakości]
+W modelu Bernoulliego z priorem $\operatorname{Beta}(1,1)$
+zaobserwowano $S_n$ wad na $n$ niezależnych prób.
+Zakładając $p_0\in(0,1)$ i $S_n/n\to p_0$,
+obliczyć granicę $n\Var(p\mid S_n)$.
+\par\emph{Rozwiązanie.} Z wzoru na wariancję posterioru
+\[
+ n\Var(p\mid S_n)=
+ \frac{n(S_n+1)(n-S_n+1)}{(n+2)^2(n+3)}.
+\]
+Dzieląc licznik i mianownik przez $n^3$ otrzymujemy
+granicę $p_0(1-p_0)$.
+To zgadza się z odwrotnością jednostkowej informacji
+Fishera $I_0^{-1}=p_0(1-p_0)$; samo takie dopasowanie
+wariancji nie dowodzi jeszcze zbieżności całego rozkładu
+posterioru do normalnego.
+\end{zadanie}
+
