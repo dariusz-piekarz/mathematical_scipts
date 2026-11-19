@@ -57,3 +57,10 @@ audited; language-aware relocation alone is not a merge.
 - Build: `latexmk -cd -pdf books/pl/measure_theory.tex`.
 
 The source language is Polish; directory names are English. Any later merge with integration theory requires proof-by-proof review.
+
+## Functional analysis (Polish)
+
+- [Book entry point](books/pl/functional_analysis.tex): 35 modular chapters in [chapters/pl/functional_analysis](chapters/pl/functional_analysis).
+- [Chapter documentation](docs/pl/functional_analysis.md).
+- The Polish term is **zbieżność zmajoryzowana**, including theorem headings.
+- Build from `books/pl`: `latexmk -pdf functional_analysis.tex`.
