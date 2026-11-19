@@ -1,0 +1,359 @@
+\chapter{Prawdopodobieństwo klasyczne, warunkowanie i niezależność}
+\label{ch:conditioning}
+\paragraph{Odsyłacze międzytomowe.} Zastosowania warunkowania do rozkładów a posteriori znajdują się w tomie IV, rozdziale~\ref{IV-ch:bayes-foundations}; modele sprzężone w tomie IV, rozdziale~\ref{IV-ch:conjugate-families}.
+
+
+\section{Model Laplace'a}
+Najprostszy pomysł: jeśli istnieje $N$ równie możliwych wyników,
+a zdarzenie sprzyjające zawiera $k$ z nich, przypisujemy mu
+szansę $k/N$. Jest to jednak \emph{warunkowe} zastosowanie
+symetrii: trzeba najpierw uzasadnić, dlaczego wybrane wyniki
+elementarne są równoprawdopodobne. Przy dwóch kostkach są nimi
+uporządkowane pary oczek, nie sumy oczek. Wzór Laplace'a jest
+konsekwencją wcześniejszej konstrukcji miary jednostajnej,
+a nie dodatkowym aksjomatem.
+
+\begin{definicja}
+Modelem Laplace'a nazywamy przestrzeń probabilistyczną
+$(\Omega,2^\Omega,\Prob)$, w której $\Omega$ jest niepustym zbiorem
+skończonym, a $\Prob(\{\omega\})=1/|\Omega|$ dla każdego
+$\omega\in\Omega$. Dla dowolnego $A\subseteq\Omega$ zachodzi wówczas
+$\Prob(A)=|A|/|\Omega|$.
+\end{definicja}
+
+\begin{uwaga}
+Warunek jednakowego prawdopodobieństwa wyników jest założeniem
+modelu, a nie wnioskiem z samej symetrii językowego opisu.
+Przykładowo podczas rzucania dwiema uczciwymi kostkami
+36 uporządkowanych par ma równe prawdopodobieństwa; 11 możliwych sum
+oczek nie ma rozkładu jednostajnego.
+\end{uwaga}
+
+\begin{przyklad}[Dwie kostki]
+Niech $\Omega=\{1,\ldots,6\}^2$ z rozkładem jednostajnym.
+Zdarzenie sumy równej siedem składa się z sześciu par,
+więc ma prawdopodobieństwo $6/36=1/6$. Zdarzenie sumy równej dwa
+składa się tylko z $(1,1)$, toteż jego prawdopodobieństwo wynosi $1/36$.
+\end{przyklad}
+
+\begin{przyklad}[Losowanie bez zwracania]
+W urnie znajduje się $N$ różnych kul, z których $K$ jest czerwonych.
+Losujemy jednocześnie $n$ kul, gdzie $0\leq n\leq N$, i zakładamy
+jednostajność wszystkich $n$-elementowych podzbiorów.
+Prawdopodobieństwo dokładnie $k$ czerwonych kul wynosi
+\[
+\frac{\binom Kk\binom{N-K}{n-k}}{\binom Nn}.
+\]
+W liczniku niezależnie \emph{zliczamy wybory} kul obu kolorów;
+nie należy mylić tej kombinatorycznej zasady iloczynu
+ze stochastyczną niezależnością kolejnych losowań.
+\end{przyklad}
+
+\section{Prawdopodobieństwo warunkowe}
+Otrzymanie informacji zmienia przestrzeń rozważanych przypadków.
+Jeśli wiemy, że zaszło $B$, to interesujące nas zdarzenie $A$
+może zajść jedynie przez $A\cap B$. Aby pozostała pewna
+możliwość miała prawdopodobieństwo jeden, normalizujemy
+wagi przez $\Prob(B)$. To intuicja ilorazu
+$\Prob(A\cap B)/\Prob(B)$.
+
+Warunek $\Prob(B)>0$ nie jest formalnością: dla zdarzeń
+zerowych dostalibyśmy iloraz $0/0$. Warunkowanie względem
+wartości ciągłej zmiennej losowej wymaga później innej konstrukcji.
+
+\begin{definicja}
+Niech $(\Omega,\mathcal F,\Prob)$ będzie przestrzenią probabilistyczną,
+a $A,B\in\mathcal F$ oraz $\Prob(B)>0$.
+Prawdopodobieństwo warunkowe zdarzenia $A$ przy założeniu $B$
+definiujemy wzorem
+\begin{equation}\label{eq:cond}
+\Prob(A\mid B):=\frac{\Prob(A\cap B)}{\Prob(B)}.
+\end{equation}
+\end{definicja}
+
+\begin{stwierdzenie}
+Dla każdego zdarzenia $B\in\mathcal F$ z $\Prob(B)>0$
+funkcja $\Prob_B(A):=\Prob(A\mid B)$, $A\in\mathcal F$,
+jest miarą probabilistyczną na $(\Omega,\mathcal F)$.
+Ponadto $\Prob(B\mid B)=1$ i $\Prob(A^c\mid B)=1-\Prob(A\mid B)$.
+\end{stwierdzenie}
+\begin{proof}
+Musimy sprawdzić wszystkie aksjomaty miary, nie tylko
+nieujemność. Dla $A\in\mathcal F$ mamy
+$0\leq\Prob(A\cap B)\leq\Prob(B)$, stąd
+$\Prob_B(A)\in[0,1]$. Dalej
+$\Prob_B(\Omega)=\Prob(\Omega\cap B)/\Prob(B)=1$.
+
+Jeśli $A_1,A_2,\ldots$ są parami rozłączne, to zbiory
+$A_n\cap B$ są również parami rozłączne, a
+$B\cap\bigcup_n A_n=\bigcup_n(B\cap A_n)$.
+Przeliczalna addytywność miary $\Prob$ daje
+\[
+\Prob_B\!\left(\bigcup_n A_n\right)
+=\frac{\sum_n\Prob(A_n\cap B)}{\Prob(B)}
+=\sum_n\Prob_B(A_n).
+\]
+Wreszcie $\Prob(B\mid B)=\Prob(B)/\Prob(B)=1$, zaś
+$B=(A\cap B)\mathbin{\dot\cup}(A^c\cap B)$.
+Dzieląc równość dla mas obu części przez $\Prob(B)$,
+otrzymujemy $\Prob(A^c\mid B)=1-\Prob(A\mid B)$.
+\end{proof}
+
+
+\begin{przyklad}[Warunkowanie jako nowa miara na przestrzeni dwupunktowej]
+Wróćmy do uczciwej monety
+$\Omega=\{o,r\}$, $\Prob(\{o\})=\Prob(\{r\})=1/2$.
+Warunkujemy względem zdarzenia $B=\{o\}$.
+Wtedy $\Prob_B(\{o\})=1$ i $\Prob_B(\{r\})=0$.
+Wynik doświadczenia nie zmienił się wstecznie;
+zmieniła się miara, która opisuje naszą informację
+po dowiedzeniu się, że zaszło $B$.
+Ta prosta konstrukcja ilustruje, dlaczego rozkład warunkowy
+jest nadal miarą probabilistyczną i dlaczego prawdopodobieństwa
+$0$ oraz $1$ mogą pojawić się po warunkowaniu.
+\end{przyklad}
+
+\begin{przyklad}[Warunkowanie nie jest symetryczne]
+W urnie znajdują się dwie kule czerwone i jedna niebieska.
+Losujemy dwie kule kolejno bez zwracania. Niech $A$ oznacza,
+że pierwsza jest czerwona, a $B$, że druga jest czerwona.
+Z symetrii $\Prob(A)=\Prob(B)=2/3$.
+Natomiast
+$\Prob(A\cap B)=(2/3)(1/2)=1/3$, więc
+$\Prob(B\mid A)=(1/3)/(2/3)=1/2$.
+W tym szczególnym przykładzie również $\Prob(A\mid B)=1/2$,
+co wynika z symetrii kolejności losowań; nie jest to jednak
+ogólna reguła. Jeśli zdarzenia mają różne masy, na przykład
+$\Prob(A)=1/2$, $\Prob(B)=1/4$ i
+$\Prob(A\cap B)=1/8$, to
+$\Prob(A\mid B)=1/2$, lecz $\Prob(B\mid A)=1/4$.
+Dane te realizuje na przykład przestrzeń ośmiu
+jednakowo prawdopodobnych wyników $\Omega=\{1,\ldots,8\}$,
+w której $A=\{1,2,3,4\}$ oraz $B=\{1,5\}$.
+\end{przyklad}
+
+\begin{twierdzenie}[Reguła mnożenia]
+Niech $A_1,\ldots,A_n\in\mathcal F$, gdzie $n\geq2$, i załóżmy,
+że $\Prob(A_1\cap\cdots\cap A_{j})>0$ dla $1\leq j<n$.
+Wtedy
+\[
+\Prob\!\left(\bigcap_{j=1}^n A_j\right)
+=\Prob(A_1)\prod_{j=2}^n
+\Prob\!\left(A_j\,\middle|\,\bigcap_{i=1}^{j-1}A_i\right).
+\]
+\end{twierdzenie}
+\begin{proof}
+Wprowadźmy $C_j=\bigcap_{i=1}^j A_i$ dla
+$j=1,\ldots,n$. Założenia zapewniają,
+że $\Prob(C_{j-1})>0$ dla $j=2,\ldots,n$;
+wszystkie występujące prawdopodobieństwa warunkowe
+są więc prawidłowo zdefiniowane. Ponieważ
+$C_j=C_{j-1}\cap A_j$, z definicji mamy
+\[
+\Prob(A_j\mid C_{j-1})
+=\frac{\Prob(C_j)}{\Prob(C_{j-1})}.
+\]
+Mnożąc te równości dla $j=2,\ldots,n$ i dopisując
+$\Prob(A_1)=\Prob(C_1)$, otrzymujemy iloczyn
+\[
+\Prob(C_1)\frac{\Prob(C_2)}{\Prob(C_1)}
+\frac{\Prob(C_3)}{\Prob(C_2)}\cdots
+\frac{\Prob(C_n)}{\Prob(C_{n-1})}=\Prob(C_n).
+\]
+To właśnie prawdopodobieństwo przecięcia wszystkich $A_j$.
+Na żadnym etapie nie założyliśmy niezależności:
+każdy czynnik odpowiada sytuacji po uwzględnieniu
+poprzednich zdarzeń.
+\end{proof}
+
+\begin{przyklad}[Bez zwracania i ze zwracaniem]
+W urnie znajduje się pięć czerwonych i trzy niebieskie kule.
+Przy dwóch losowaniach bez zwracania prawdopodobieństwo dwóch
+czerwonych kul wynosi $(5/8)(4/7)=5/14$.
+Przy losowaniu ze zwracaniem wynosi $(5/8)^2=25/64$.
+Różnica bierze się stąd, że po pierwszym losowaniu bez zwracania
+zmienia się skład urny, a więc rozkład wyniku drugiego losowania.
+\end{przyklad}
+
+\section{Niezależność zdarzeń}
+W kontekście warunkowania można teraz powiedzieć precyzyjniej:
+przy $\Prob(B)>0$ zdarzenie $B$ nie wnosi informacji o $A$
+wtedy i tylko wtedy, gdy $\Prob(A\mid B)=\Prob(A)$.
+Przykład trzech zdarzeń zależnych wyłącznie jako trójka
+wyjaśni, dlaczego żądanie niezależności wszystkich skończonych
+przekrojów jest silniejsze od niezależności parami.
+
+Niezależność zdarzeń została zdefiniowana przed sformułowaniem
+lematów Borela--Cantellego. Rozróżnienie niezależności wzajemnej
+i parami niezależnej ma znaczenie również dla skończonych rodzin.
+
+
+\begin{stwierdzenie}
+Niech $A,B\in\mathcal F$ i $\Prob(B)>0$.
+Wówczas $A$ i $B$ są niezależne wtedy i tylko wtedy, gdy
+$\Prob(A\mid B)=\Prob(A)$. Jeżeli $A$ i $B$ są niezależne,
+to niezależne są także pary $A^c,B$ oraz $A^c,B^c$.
+\end{stwierdzenie}
+\begin{proof}
+Pierwsza równoważność wynika przez podstawienie do \eqref{eq:cond}.
+Ponadto $\Prob(A^c\cap B)=\Prob(B)-\Prob(A\cap B)
+=(1-\Prob(A))\Prob(B)$, a więc $A^c$ i $B$ są niezależne.
+Powtarzamy rozumowanie po zamianie $B$ na $B^c$.
+\end{proof}
+
+\begin{przyklad}[Niezależność parami nie wystarcza]
+Przeprowadzamy dwa niezależne rzuty uczciwą monetą.
+W przestrzeni $\Omega=\{0,1\}^2$ z prawdopodobieństwem jednostajnym
+rozważamy $A=\{(1,0),(1,1)\}$,
+$B=\{(0,1),(1,1)\}$ i $C=\{(0,0),(1,1)\}$.
+Każde zdarzenie ma prawdopodobieństwo $1/2$, a każde przecięcie
+dwóch różnych z nich ma prawdopodobieństwo $1/4$.
+Są zatem parami niezależne. Jednak $\Prob(A\cap B\cap C)=1/4$,
+podczas gdy $\Prob(A)\Prob(B)\Prob(C)=1/8$.
+\end{przyklad}
+
+\begin{uwaga}
+Zdarzenia rozłączne o dodatnich prawdopodobieństwach \emph{nie są}
+niezależne: ich przecięcie ma prawdopodobieństwo zero,
+a iloczyn ich prawdopodobieństw jest dodatni.
+\end{uwaga}
+
+\section{Prawdopodobieństwo całkowite i wzór Bayesa}
+Jeżeli doświadczenie przebiega dwustopniowo, na przykład najpierw
+wybieramy urnę, a potem kulę, możemy obliczyć szansę zdarzenia
+końcowego osobno dla każdego sposobu rozpoczęcia doświadczenia.
+Wzór na prawdopodobieństwo całkowite jest sumowaniem tych
+rozłącznych dróg. Wzór Bayesa jest natomiast czysto algebraicznym
+odwróceniem warunku: znając szansę obserwacji przy poszczególnych
+scenariuszach, obliczamy szansę scenariusza pod warunkiem obserwacji.
+Nie wprowadzamy tutaj jeszcze odrębnego aparatu wnioskowania
+bayesowskiego.
+
+\begin{twierdzenie}[Wzór na prawdopodobieństwo całkowite]
+Niech $(B_i)_{i\in I}$ będzie skończoną lub przeliczalną rodziną
+parami rozłącznych zdarzeń z $\Prob(B_i)>0$ dla każdego $i\in I$
+oraz $\Prob(\bigcup_{i\in I}B_i)=1$.
+Wtedy dla każdego $A\in\mathcal F$
+\begin{equation}\label{eq:totalprob}
+\Prob(A)=\sum_{i\in I}\Prob(A\mid B_i)\Prob(B_i).
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Niech $B=\bigcup_{i\in I}B_i$.
+Z założenia $\Prob(B)=1$, a więc $\Prob(B^c)=0$.
+Rozkładamy $A$ na rozłączne części
+$A=(A\cap B)\mathbin{\dot\cup}(A\cap B^c)$.
+Ponieważ $A\cap B^c\subseteq B^c$, monotoniczność
+daje $\Prob(A\cap B^c)=0$ i
+$\Prob(A)=\Prob(A\cap B)$.
+
+W dalszym kroku korzystamy z rozłączności $B_i$:
+$A\cap B=\bigcup_{i\in I}(A\cap B_i)$,
+a zbiory $A\cap B_i$ są parami rozłączne. Zatem
+\[
+\Prob(A)=\sum_{i\in I}\Prob(A\cap B_i)
+=\sum_{i\in I}\Prob(A\mid B_i)\Prob(B_i).
+\]
+Ostatnia równość to definicja prawdopodobieństwa
+warunkowego zastosowana osobno do każdego $B_i$.
+Jeśli $I$ jest nieskończony, użyliśmy przeliczalnej,
+a nie tylko skończonej addytywności.
+\end{proof}
+
+\begin{twierdzenie}[Wzór Bayesa]
+Niech $(B_i)_{i\in I}$ spełnia warunki poprzedniego twierdzenia,
+a $A\in\mathcal F$ ma dodatnie prawdopodobieństwo.
+Wtedy dla każdego $j\in I$
+\begin{equation}\label{eq:bayes}
+\Prob(B_j\mid A)
+=\frac{\Prob(A\mid B_j)\Prob(B_j)}
+{\sum_{i\in I}\Prob(A\mid B_i)\Prob(B_i)}.
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Z definicji warunkowania, ponieważ $\Prob(A)>0$,
+\[
+\Prob(B_j\mid A)=\frac{\Prob(B_j\cap A)}{\Prob(A)}.
+\]
+Licznik możemy zapisać jako
+$\Prob(A\mid B_j)\Prob(B_j)$, gdyż $\Prob(B_j)>0$.
+Natomiast mianownik jest sumą wkładów rozłącznych
+scenariuszy $B_i$ z poprzedniego twierdzenia:
+$\Prob(A)=\sum_{i\in I}\Prob(A\mid B_i)\Prob(B_i)$.
+Po podstawieniu obu równości otrzymujemy tezę.
+Nie ma tu nowego aksjomatu ani nowej interpretacji
+prawdopodobieństwa: wzór wynika bezpośrednio z
+warunkowania i rozbicia przestrzeni na rozłączne przypadki.
+\end{proof}
+
+\begin{przyklad}[Test diagnostyczny]
+Niech $D$ oznacza występowanie pewnej choroby, a $T$ dodatni wynik
+testu. Przyjmijmy $\Prob(D)=0{,}01$,
+$\Prob(T\mid D)=0{,}99$ i $\Prob(T\mid D^c)=0{,}05$.
+Wtedy
+\[
+\Prob(D\mid T)
+=\frac{0{,}99\cdot0{,}01}
+{0{,}99\cdot0{,}01+0{,}05\cdot0{,}99}
+=\frac16.
+\]
+Dodatni wynik nie oznacza więc prawdopodobieństwa choroby równego
+$99\%$. Wartość predykcyjna wyniku zależy zarówno od jakości testu,
+jak i częstości choroby w rozpatrywanej populacji.
+\end{przyklad}
+
+\begin{przyklad}[Trzy drzwi --- problem Monty'ego Halla]
+Załóżmy, że nagroda znajduje się jednostajnie za jednymi z trzech drzwi.
+Gracz wybiera drzwi, nie znając położenia nagrody. Prowadzący zna jej
+położenie, zawsze otwiera inne drzwi, za którymi nie ma nagrody,
+a gdy ma wybór, rozstrzyga go losowo i symetrycznie. Gracz może
+pozostać przy swoim wyborze albo zamienić go na jedne pozostałe
+zamknięte drzwi. Początkowy wybór był prawidłowy z prawdopodobieństwem
+$1/3$; wtedy zamiana przegrywa. Był nieprawidłowy z prawdopodobieństwem
+$2/3$; wtedy prowadzący musi wskazać drugie puste drzwi, a zamiana
+wygrywa. Zatem strategia zamiany daje prawdopodobieństwo wygranej $2/3$.
+Warunki dotyczące zachowania prowadzącego są częścią modelu;
+po ich zmianie wynik może być inny.
+\end{przyklad}
+
+\begin{przyklad}[Wybór urny po obserwacji koloru]
+Najpierw losujemy urnę: pierwszą z prawdopodobieństwem $1/3$,
+drugą z prawdopodobieństwem $2/3$. Pierwsza zawiera trzy kule
+czerwone i jedną niebieską, druga jedną czerwoną i trzy niebieskie.
+Następnie losujemy jednostajnie jedną kulę z wybranej urny.
+Niech $U_1$ oznacza wybranie pierwszej urny, a $R$ wylosowanie
+czerwonej kuli. Wtedy $\Prob(R\mid U_1)=3/4$ oraz
+$\Prob(R\mid U_1^c)=1/4$. Po zobaczeniu czerwonej kuli
+otrzymujemy ze wzoru Bayesa
+\[
+\Prob(U_1\mid R)
+=\frac{(1/3)(3/4)}{(1/3)(3/4)+(2/3)(1/4)}
+=\frac35.
+\]
+Przed obserwacją pierwsza urna była mniej prawdopodobna;
+po obserwacji czerwonej kuli prawdopodobieństwo jej wyboru wzrasta.
+Jest to wyłącznie rachunek prawdopodobieństwa warunkowego.
+\end{przyklad}
+
+\section{Warunkowanie a pozorna zależność}
+Zależności widoczne w poszczególnych podgrupach mogą zniknąć
+albo nawet zmienić znak po złączeniu obserwacji. Wynika to z tego,
+że średnie warunkowe ważymy różnymi prawdopodobieństwami podgrup.
+Tak zwany paradoks Simpsona nie jest paradoksem logicznym:
+wskazuje, że przy porównywaniu danych trzeba jawnie określić,
+na jakiej populacji warunkujemy.
+
+\begin{przyklad}[Paradoks Simpsona]
+W dwóch grupach porównujemy skuteczność metod $A$ i $B$.
+W grupie I metoda $A$ daje $9$ sukcesów na $10$ prób, a metoda $B$
+$80$ sukcesów na $100$ prób; w grupie II metoda $A$ daje
+$20$ sukcesów na $100$ prób, a metoda $B$ $1$ sukces na $10$ prób.
+W każdej grupie metoda $A$ ma większą częstość sukcesu:
+$9/10>80/100$ oraz $20/100>1/10$.
+Po połączeniu grup metoda $A$ ma jednak $29/110$ sukcesów,
+a metoda $B$ $81/110$, więc kierunek porównania się odwraca.
+Zmieniły się proporcje obu grup w populacjach stosujących dane metody.
+Nie jest to sprzeczność, lecz ostrzeżenie przed utożsamianiem
+prawdopodobieństw warunkowych i bezwarunkowych.
+\end{przyklad}
+

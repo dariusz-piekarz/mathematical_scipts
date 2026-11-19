@@ -1,0 +1,853 @@
+\chapter{Warunkowa wartość oczekiwana i projekcje w \texorpdfstring{$L^2$}{L2}}
+\label{ch:condexp}
+\paragraph{Odsyłacze międzytomowe.} Statystyczne zastosowania warunkowej wartości oczekiwanej to teoria Rao--Blackwella i reguły Bayesa w tomie IV, rozdziałach~\ref{IV-ch:sufficiency} i~\ref{IV-ch:bayes-foundations}.
+
+\section{Dlaczego warunkowanie wymaga nowej definicji?}
+
+W elementarnych zadaniach, gdy $B\in\mathcal F$ i
+$\Prob(B)>0$, używaliśmy
+$\E[X\mid B]=\E[X\ind B]/\Prob(B)$.
+Ten zapis opisuje jedną liczbę: średnią wartości $X$
+po ograniczeniu próby do $B$. W wielu zastosowaniach
+obserwujemy jednak nie jedno zdarzenie, lecz pewną
+\emph{informację}: wynik części doświadczenia, wartość
+pomiaru lub przynależność do jednego z wielu zbiorów.
+Zanim poznamy tę informację, średnia zależna od niej
+jest zmienną losową, a nie ustaloną liczbą.
+
+Informację reprezentuje pod-$\sigma$-ciało
+$\mathcal G\subseteq\mathcal F$: zdarzenia z
+$\mathcal G$ są dokładnie tymi, których zajście
+potrafimy rozstrzygnąć na podstawie dostępnej obserwacji.
+Wartość $\E[X\mid\mathcal G]$ musi zatem
+spełniać dwa warunki. Po pierwsze ma zależeć jedynie
+od dostępnej informacji, czyli być
+$\mathcal G$-mierzalna. Po drugie na \emph{każdym}
+zdarzeniu $A\in\mathcal G$ jej całka powinna być
+taka sama jak całka oryginalnej zmiennej $X$.
+Ten drugi warunek wyznacza właściwą średnią bez
+odwoływania się do nieformalnego „warunkowania
+na wynik o zerowym prawdopodobieństwie”.
+
+\begin{definicja}[Warunkowa wartość oczekiwana]
+Niech $(\Omega,\mathcal F,\Prob)$ będzie przestrzenią
+probabilistyczną, $\mathcal G\subseteq\mathcal F$
+niech będzie pod-$\sigma$-ciałem, a $X\in L^1(\Omega,
+\mathcal F,\Prob)$. Zmienną losową
+$Y\in L^1(\Omega,\mathcal G,\Prob)$ nazywamy
+\emph{warunkową wartością oczekiwaną $X$ względem
+$\mathcal G$}, gdy
+\[
+\int_A Y\,\dd\Prob=\int_A X\,\dd\Prob
+\qquad\text{dla każdego }A\in\mathcal G.
+\]
+Piszemy $Y=\E[X\mid\mathcal G]$.
+Równość rozumiemy z dokładnością do zbioru
+$\Prob$-miary zero.
+\end{definicja}
+
+\begin{twierdzenie}[Istnienie i jednoznaczność przez Radona--Nikodyma]
+Dla każdej przestrzeni probabilistycznej
+$(\Omega,\mathcal F,\Prob)$, pod-$\sigma$-ciała
+$\mathcal G\subseteq\mathcal F$ i zmiennej
+$X\in L^1(\Prob)$ istnieje warunkowa wartość
+oczekiwana $\E[X\mid\mathcal G]$, która jest
+jednoznaczna $\Prob$-prawie na pewno.
+\end{twierdzenie}
+\begin{proof}
+Rozłóżmy $X=X^+-X^-$, gdzie
+$X^+=\max(X,0)$ i $X^-=\max(-X,0)$.
+Na $(\Omega,\mathcal G)$ definiujemy skończone
+miary dodatnie $\nu_\pm(A)=\E[X^\pm\ind A]$.
+Są przeliczalnie addytywne przez twierdzenie
+Tonellego i spełniają $\nu_\pm\ll\Prob|_\mathcal G$:
+gdy $\Prob(A)=0$, to $\nu_\pm(A)=0$.
+Twierdzenie Radona--Nikodyma, zastosowane do miar
+na \emph{mniejszym} $\sigma$-ciele $\mathcal G$,
+daje nieujemne funkcje $Y_\pm$, mierzalne względem
+$\mathcal G$, takie że
+$\nu_\pm(A)=\int_A Y_\pm\,\dd\Prob$ dla
+każdego $A\in\mathcal G$. Ponieważ
+$\E Y_\pm=\nu_\pm(\Omega)=\E X^\pm<\infty$,
+zmienna $Y=Y_+-Y_-$ należy do $L^1$ i spełnia
+wymaganą tożsamość.
+
+Jeśli $Y$ i $Z$ spełniają tę samą tożsamość,
+różnica $D=Y-Z$ jest $\mathcal G$-mierzalna i
+$\int_A D\,\dd\Prob=0$ dla wszystkich
+$A\in\mathcal G$. W szczególności dla
+$A_+=\{D>0\}$ całka $\E[D\ind{A_+}]=0$.
+Nieujemna zmienna $D\ind{A_+}$ jest więc zerowa
+p.n. Podobnie dla $A_-=\{D<0\}$.
+Otrzymujemy $Y=Z$ p.n. Istnienie i jednoznaczność
+wynikają zatem dokładnie z konstrukcji pochodnej
+Radona--Nikodyma.
+\end{proof}
+
+\begin{uwaga}
+Definicja nie wymaga, aby wszystkie zdarzenia
+z $\mathcal G$ miały dodatnie prawdopodobieństwo.
+Wartości warunkowej wartości oczekiwanej na zbiorach
+zerowych nie są wyznaczone jednoznacznie. Jest to
+własność definicji, a nie przeszkoda techniczna.
+\end{uwaga}
+
+\section{Pierwsze modele: od średniej liczbowej do funkcji obserwacji}
+
+\begin{przyklad}[Brak informacji i pełna informacja]
+Jeżeli $\mathcal G=\{\varnothing,\Omega\}$, to
+każda $\mathcal G$-mierzalna zmienna rzeczywista jest
+stała. Warunek całkowy wymusza
+$\E[X\mid\mathcal G]=\E X$ p.n. Gdy
+$\mathcal G=\mathcal F$, warunek spełnia sama
+zmienna $X$, stąd $\E[X\mid\mathcal F]=X$ p.n.
+Warunkowanie interpoluje między całkowitą niewiedzą
+i pełną znajomością wyniku.
+\end{przyklad}
+
+\begin{twierdzenie}[Średnia na atomach skończonego podziału]
+Niech $A_1,\ldots,A_m\in\mathcal F$ tworzą
+rozłączny podział $\Omega$ i niech
+$\mathcal G=\sigma(A_1,\ldots,A_m)$.
+Jeśli $X\in L^1$, to wersją $\E[X\mid\mathcal G]$ jest
+\[
+\sum_{j:\Prob(A_j)>0}
+\frac{\E[X\ind{A_j}]}{\Prob(A_j)}\ind{A_j},
+\]
+przy dowolnych wartościach na atomach zerowych.
+\end{twierdzenie}
+\begin{proof}
+Zmienna z tezy jest stała na każdym atomie $A_j$,
+więc jest $\mathcal G$-mierzalna. Na atomie
+z $\Prob(A_j)>0$ jej całka jest równa
+$\E[X\ind{A_j}]$; na atomie zerowym obie całki
+wynoszą zero. Każde zdarzenie z $\mathcal G$
+jest sumą pewnych atomów, zatem dodając równości
+całek dla atomów otrzymujemy równość dla wszystkich
+$A\in\mathcal G$.
+\end{proof}
+
+\begin{przyklad}[Jedna informacja o wyniku dwóch kostek]
+Niech $D_1,D_2$ będą niezależnymi wynikami dwóch
+uczciwych kostek. Obserwujemy tylko, czy $D_1$ jest
+parzysta, tj. $\mathcal G=\sigma(\{D_1\in\{2,4,6\}\})$.
+Dla $X=D_1+D_2$ mamy
+$\E[D_1\mid D_1\text{ parzysta}]=4$,
+$\E[D_1\mid D_1\text{ nieparzysta}]=3$,
+a $\E D_2=7/2$. Zatem
+\[
+\E[X\mid\mathcal G]
+=\frac{15}{2}\ind{\{D_1\text{ parzysta}\}}
++\frac{13}{2}\ind{\{D_1\text{ nieparzysta}\}}.
+\]
+To dwuwartościowa zmienna losowa: zanim zobaczymy
+parzystość, nie wiemy, którą z dwóch średnich otrzymamy.
+\end{przyklad}
+
+\begin{przyklad}[Wiedza o wartości bezwzględnej nie określa znaku]
+Niech $U\sim\Unif(-1,1)$ i
+$\mathcal G=\sigma(U^2)$. Symetria rozkładu sprawia,
+że $\E[U\mid\mathcal G]=0$, mimo że $U$ nie jest
+zmienną stałą. Aby to uzasadnić bez odwoływania się
+do intuicji, zauważmy, że dla każdego borelowskiego
+$B\subseteq[0,1]$ mamy
+$\E[U\ind{\{U^2\in B\}}]=0$:
+całka po symetrycznym zbiorze z funkcji nieparzystej
+jest zerowa. Ponieważ zdarzenia $\{U^2\in B\}$
+tworzą $\sigma(U^2)$, zmienna zerowa spełnia
+definicję warunkowej wartości oczekiwanej.
+Jednocześnie $\E[U^2\mid\sigma(U^2)]=U^2$.
+\end{przyklad}
+
+\begin{twierdzenie}[Zmienna warunkowa jako funkcja obserwacji]
+Jeżeli $V:\Omega\to\R$ jest zmienną losową,
+$\mathcal G=\sigma(V)$ oraz $Y$ jest rzeczywistą
+$\mathcal G$-mierzalną zmienną losową, to istnieje
+funkcja borelowska $g:\R\to\R$ taka, że
+$Y=g(V)$ na całej $\Omega$. W szczególności
+istnieje funkcja borelowska $g$ spełniająca
+$\E[X\mid\sigma(V)]=g(V)$ prawie na pewno.
+\end{twierdzenie}
+\begin{proof}
+Każde zdarzenie $A\in\sigma(V)$ ma postać
+$V^{-1}(B)$ dla pewnego $B\in\mathcal B(\R)$,
+ponieważ rodzina wszystkich takich przeciwobrazów
+jest dokładnie $\sigma(V)$. Dla prostej funkcji
+$Y=\sum_j c_j\ind{A_j}$ otrzymujemy reprezentację
+$Y=g(V)$ z borelowską funkcją
+$g=\sum_j c_j\ind{B_j}$.
+Dla dowolnej mierzalnej rzeczywistej $Y$
+konstruujemy ciąg funkcji prostych $Y_m\to Y$
+punktowo (osobno aproksymując części dodatnią
+i ujemną). Każdą zapisujemy $Y_m=g_m(V)$.
+Funkcja $g(t)=\lim_m g_m(t)$ w punktach, w których
+granica jest skończona, oraz $g(t)=0$ gdzie indziej,
+jest borelowska. Ponieważ $Y_m(\omega)\to Y(\omega)$
+dla każdego $\omega$, dostajemy $g(V(\omega))=Y(\omega)$.
+\end{proof}
+
+\section{Reguły rachunkowe i twierdzenie o wieży}
+
+\begin{twierdzenie}[Podstawowe własności warunkowej wartości oczekiwanej]
+Niech $X,Y\in L^1(\Omega,\mathcal F,\Prob)$,
+$\mathcal G\subseteq\mathcal F$ i $a,b\in\R$.
+Wszystkie poniższe równości oraz nierówności zachodzą
+prawie na pewno:
+\begin{enumerate}
+\item \emph{Liniowość:}
+$\E[aX+bY\mid\mathcal G]=a\E[X\mid\mathcal G]+b\E[Y\mid\mathcal G]$.
+\item \emph{Dodatniość i monotoniczność:} jeśli $X\geq0$,
+to $\E[X\mid\mathcal G]\geq0$; jeśli $X\leq Y$,
+to $\E[X\mid\mathcal G]\leq\E[Y\mid\mathcal G]$.
+\item \emph{Zachowanie całki:}
+$\E[\E[X\mid\mathcal G]]=\E X$.
+\item \emph{Znane wielkości:} jeśli $X$ jest
+$\mathcal G$-mierzalna, to
+$\E[X\mid\mathcal G]=X$.
+\item \emph{Wyciąganie czynnika:} jeśli $H$ jest
+ograniczoną $\mathcal G$-mierzalną zmienną, to
+$\E[HX\mid\mathcal G]=H\E[X\mid\mathcal G]$.
+\item \emph{Niezależność:} jeśli $X$ jest niezależna
+od $\mathcal G$ (tj. od każdego zdarzenia
+w $\mathcal G$), to $\E[X\mid\mathcal G]=\E X$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Liniowość wynika z liniowości całki na każdym
+$A\in\mathcal G$ oraz jednoznaczności definicji.
+Dla dodatniości niech $Z=\E[X\mid\mathcal G]$
+i $X\geq0$. Gdyby $\Prob(Z<0)>0$, to dla
+pewnego $r\in\N$ zdarzenie $A=\{Z\leq-1/r\}$
+miałoby dodatnią miarę. Wówczas
+$\int_A Z\,\dd\Prob\leq-\Prob(A)/r<0$,
+co przeczy $\int_AZ\,\dd\Prob=\int_AX\,\dd\Prob\geq0$.
+Monotoniczność otrzymujemy przez zastosowanie
+dodatniości do $Y-X$.
+
+Własność (3) to definicja dla $A=\Omega$.
+Własność (4) wynika z tego, że sama zmienna $X$
+spełnia oba warunki definicji. Dla (5) zaczynamy
+od $H=\ind B$, $B\in\mathcal G$: dla
+$A\in\mathcal G$ mamy
+$\int_A\ind B\,\E[X\mid\mathcal G] \,\dd\Prob
+=\int_{A\cap B}X\,\dd\Prob$.
+Liniowość rozszerza to na funkcje proste, a
+jednostajna aproksymacja ograniczonych funkcji
+mierzalnych przez proste oraz zdominowana zbieżność
+na dowolne ograniczone $H$.
+Wreszcie dla niezależnego $X$ i $A\in\mathcal G$
+$\E[X\ind A]=\E X\,\Prob(A)$.
+Dla całkowalnych zmiennych wynika to z definicji
+niezależności i aproksymacji funkcjami prostymi;
+stała $\E X$ spełnia zatem wymaganą tożsamość.
+\end{proof}
+
+\begin{twierdzenie}[Własność wieży]
+Jeśli $\mathcal G\subseteq\mathcal H\subseteq\mathcal F$
+są $\sigma$-ciałami i $X\in L^1$, to
+\[
+\E[\E[X\mid\mathcal H]\mid\mathcal G]
+=\E[X\mid\mathcal G],
+\qquad
+\E[\E[X\mid\mathcal G]\mid\mathcal H]
+=\E[X\mid\mathcal G].
+\]
+\end{twierdzenie}
+\begin{proof}
+Pierwsza lewa strona jest $\mathcal G$-mierzalna.
+Dla $A\in\mathcal G\subseteq\mathcal H$
+na mocy dwóch kolejnych definicji mamy
+\[
+\int_A \E[\E[X\mid\mathcal H]\mid\mathcal G]
+\,\dd\Prob
+=\int_A\E[X\mid\mathcal H]\,\dd\Prob
+=\int_A X\,\dd\Prob.
+\]
+Jednoznaczność daje pierwszą równość.
+Dla drugiej zauważamy, że $\E[X\mid\mathcal G]$
+jest już $\mathcal H$-mierzalna, więc jej ponowne
+warunkowanie względem $\mathcal H$ nic nie zmienia.
+\end{proof}
+
+\begin{przyklad}[Trzy poziomy informacji]
+Niech $D_1,D_2$ będą niezależnymi wynikami kostek,
+$X=D_1+D_2$, $\mathcal H=\sigma(D_1)$,
+a $\mathcal G=\sigma(\ind{\{D_1\text{ parzysta}\}})$.
+Wtedy
+$\E[X\mid\mathcal H]=D_1+7/2$,
+a następnie $\E[D_1+7/2\mid\mathcal G]$
+daje tę samą dwuwartościową zmienną co
+bezpośrednie $\E[X\mid\mathcal G]$ z wcześniejszego
+przykładu. Własność wieży oznacza, że można
+najpierw uśrednić względem informacji dokładniejszej,
+a potem grubszej; wynik nie zależy od tego
+pośredniego kroku.
+\end{przyklad}
+
+\begin{przyklad}[Wieża nie działa dowolnie dla nieporównywalnych informacji]
+Niech $\Omega=\{1,2,3\}$, każdy punkt z masą $1/3$,
+$X=\ind{\{1\}}$, $\mathcal G=\sigma(\{1\})$
+i $\mathcal H=\sigma(\{2\})$.
+Zapisując zmienne jako wektory wartości na
+$(1,2,3)$, dostajemy
+\[
+\E[\E[X\mid\mathcal G]\mid\mathcal H]
+=(1/2,0,1/2),\qquad
+\E[\E[X\mid\mathcal H]\mid\mathcal G]
+=(1/2,1/4,1/4).
+\]
+Te wyniki są różne. Własność wieży zakłada
+\emph{zawieranie się} odpowiednich $\sigma$-ciał;
+bez niego kolejne projekcje na różne zbiory
+informacji nie muszą być przemienne.
+\end{przyklad}
+
+\section{Granice pod warunkowaniem i nierówność Jensena}
+
+\begin{twierdzenie}[Monotoniczna i zdominowana zbieżność warunkowa]
+Niech $\mathcal G\subseteq\mathcal F$.
+\begin{enumerate}
+\item Jeśli $0\leq X_n\uparrow X$ p.n., a $X\in L^1$,
+to $\E[X_n\mid\mathcal G]\uparrow\E[X\mid\mathcal G]$
+prawie na pewno.
+\item Jeśli $X_n\to X$ p.n., a $|X_n|\leq W$
+p.n. dla wszystkich $n$, gdzie $W\in L^1$, to
+$\E[X_n\mid\mathcal G]\to\E[X\mid\mathcal G]$
+prawie na pewno oraz w $L^1$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+W (1) monotoniczność warunkowej wartości oczekiwanej
+daje niemalejący ciąg $Y_n=\E[X_n\mid\mathcal G]$.
+Jest on ograniczony z góry przez
+$\E[X\mid\mathcal G]\in L^1$, więc granica
+$Y=\lim_nY_n$ jest skończona p.n. Dla dowolnego
+$A\in\mathcal G$ twierdzenie o zbieżności monotonicznej
+daje
+$\E[Y\ind A]=\lim_n\E[Y_n\ind A]
+=\lim_n\E[X_n\ind A]=\E[X\ind A]$.
+Jednoznaczność dowodzi (1).
+
+Dla (2) mamy $X_n+W\geq0$ i $W-X_n\geq0$,
+więc można zastosować (1) po uprzednim zastąpieniu
+ogólnego ciągu przez suprema i infima ogonowe.
+Dokładniej, niech
+$L_n=\inf_{k\geq n}X_k$ i
+$U_n=\sup_{k\geq n}X_k$. Wtedy
+$L_n\uparrow X$, $U_n\downarrow X$ p.n., a
+$-W\leq L_n\leq X_n\leq U_n\leq W$.
+Wersja monotoniczna zastosowana do $L_n+W$ oraz
+do $W-U_n$ daje
+$\E[L_n\mid\mathcal G]\uparrow\E[X\mid\mathcal G]$
+i $\E[U_n\mid\mathcal G]\downarrow\E[X\mid\mathcal G]$.
+Monotoniczność i twierdzenie o trzech ciągach
+dają zbieżność p.n. warunkowych wartości $X_n$.
+Są one ograniczone modułem przez $\E[W\mid\mathcal G]$
+na mocy dodatniości, a ten majorant jest całkowalny;
+zdominowana zbieżność daje też zbieżność w $L^1$.
+\end{proof}
+
+\begin{twierdzenie}[Nierówność Jensena warunkowa]
+Niech $X\in L^1(\Prob)$, a $\phi:\R\to\R$ będzie
+skończoną funkcją wypukłą taką, że
+$\phi(X)\in L^1(\Prob)$. Wówczas dla każdego
+$\mathcal G\subseteq\mathcal F$
+zachodzi
+\[
+\phi(\E[X\mid\mathcal G])
+\leq\E[\phi(X)\mid\mathcal G]
+\qquad\text{prawie na pewno}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla dowolnego $r\in\mathbb Q$ wybierzmy prostą
+podpierającą wykres wypukłej funkcji $\phi$ w punkcie
+$r$, czyli liczbę $s_r$ taką, że
+$\phi(x)\geq\phi(r)+s_r(x-r)$ dla wszystkich $x\in\R$.
+Istnienie $s_r$ wynika z nierówności pomiędzy
+lewą i prawą pochodną funkcji wypukłej.
+Dodatniość i liniowość warunkowej wartości
+oczekiwanej dają
+\[
+\E[\phi(X)\mid\mathcal G]
+\geq\phi(r)+s_r(\E[X\mid\mathcal G]-r)
+\quad\text{p.n.}
+\]
+Ponieważ liczb wymiernych jest przeliczalnie wiele,
+możemy wybrać \emph{jeden} zbiór pełnej miary,
+na którym nierówność zachodzi dla wszystkich $r$.
+Dla ciągłej skończonej funkcji wypukłej zachodzi
+$\phi(x)=\sup_{r\in\mathbb Q}\{\phi(r)+s_r(x-r)\}$:
+z prawej strony mamy co najwyżej $\phi(x)$,
+a dla wymiernych $r\to x$ wyrażenia zbliżają się
+do $\phi(x)$, ponieważ lokalnie nachylenia
+podpierające są ograniczone. Podstawienie
+$x=\E[X\mid\mathcal G]$ daje tezę.
+\end{proof}
+
+\begin{wniosek}[Kontrakcja w $L^p$]
+Niech $1\leq p<\infty$, $X\in L^p(\Prob)$ i
+$\mathcal G\subseteq\mathcal F$. Wówczas
+$\E[X\mid\mathcal G]\in L^p$ oraz
+$\|\E[X\mid\mathcal G]\|_p\leq\|X\|_p$.
+\end{wniosek}
+\begin{proof}
+Dla $p\geq1$ funkcja $x\mapsto|x|^p$ jest wypukła.
+Stosując warunkowego Jensena, a następnie całkując,
+dostajemy
+$\E|\E[X\mid\mathcal G]|^p\leq
+\E\E[|X|^p\mid\mathcal G]=\E|X|^p$.
+\end{proof}
+
+\begin{przyklad}[Dlaczego średnia warunkowa zmniejsza błąd średniokwadratowy]
+Niech $X=Z+\varepsilon$, gdzie $Z$ jest całkowalna
+i $\varepsilon$ jest niezależna od $Z$ o średniej
+zero i skończonej wariancji. Jeśli obserwujemy $Z$,
+to $\E[X\mid\sigma(Z)]=Z$. Zmienna $Z$ jest więc
+średnią przewidywaną na podstawie obserwacji, a
+$\varepsilon$ pozostaje nieprzewidywalnym błędem.
+Gdy oba składniki są w $L^2$, ich zależność
+z formalną projekcją zostanie wyprowadzona poniżej.
+\end{przyklad}
+
+\section{Interpretacja geometryczna: rzut ortogonalny w \texorpdfstring{$L^2$}{L2}}
+
+Oznaczmy przez $L^2(\mathcal F)$ przestrzeń
+rzeczywistych zmiennych losowych o skończonym drugim
+momencie, utożsamiając zmienne równe prawie na pewno.
+Iloczyn skalarny $\langle U,V\rangle=\E[UV]$
+czyni tę przestrzeń przestrzenią Hilberta.
+Podprzestrzeń $L^2(\mathcal G)$ składa się z klas
+$\mathcal G$-mierzalnych zmiennych całkowalnych z
+kwadratem. Jest domknięta w $L^2(\mathcal F)$:
+jeżeli $Y_n\in L^2(\mathcal G)$ i $Y_n\to Y$
+w $L^2$, to z kryterium podciągowego istnieje
+podciąg zbiegający do $Y$ prawie na pewno.
+Jego granica jest $\mathcal G$-mierzalna (po wyborze
+odpowiedniej wersji $Y$), co dowodzi domkniętości.
+
+\begin{twierdzenie}[Warunkowa wartość oczekiwana jako rzut]
+Niech $X\in L^2(\Omega,\mathcal F,\Prob)$ i
+$\mathcal G\subseteq\mathcal F$. Wtedy
+$P_{\mathcal G}X:=\E[X\mid\mathcal G]$ jest
+jedynym elementem $L^2(\mathcal G)$ spełniającym
+\[
+\E\big[(X-P_{\mathcal G}X)Z\big]=0
+\qquad\text{dla każdego } Z\in L^2(\mathcal G).
+\]
+W szczególności dla każdego $Z\in L^2(\mathcal G)$
+zachodzi tożsamość Pitagorasa
+\[
+\E|X-Z|^2
+=\E|X-P_{\mathcal G}X|^2
++\E|P_{\mathcal G}X-Z|^2.
+\]
+Zmienna $P_{\mathcal G}X$ jest zatem jedynym
+najlepszym przybliżeniem $X$ przez zmienne
+$\mathcal G$-mierzalne w normie $L^2$.
+\end{twierdzenie}
+\begin{proof}
+Kontrakcja w $L^2$ dowodzi, że $P_{\mathcal G}X$
+należy do $L^2(\mathcal G)$. Z definicji mamy
+$\E[(X-P_{\mathcal G}X)\ind A]=0$
+dla wszystkich $A\in\mathcal G$.
+Liniowość rozszerza równość na proste funkcje
+$\mathcal G$-mierzalne. Jeżeli $Z\in L^2(\mathcal G)$,
+istnieją proste $Z_j\to Z$ w $L^2$. Na mocy
+nierówności Cauchy'ego--Schwarza
+\[
+\left|\E[(X-P_{\mathcal G}X)(Z_j-Z)]\right|
+\leq\|X-P_{\mathcal G}X\|_2\,\|Z_j-Z\|_2\to0.
+\]
+Przechodzimy do granicy i otrzymujemy ortogonalność.
+
+Teraz rozkładamy
+$X-Z=(X-P_{\mathcal G}X)+(P_{\mathcal G}X-Z)$.
+Drugi składnik należy do $L^2(\mathcal G)$,
+więc wyraz mieszany w kwadracie normy jest zerowy.
+To daje tożsamość Pitagorasa. Drugi składnik
+po prawej jest nieujemny i znika wtedy i tylko
+wtedy, gdy $Z=P_{\mathcal G}X$ w $L^2$.
+Jednoznaczność najlepszego przybliżenia jest dowiedziona.
+\end{proof}
+
+\begin{wniosek}[Własności operatora projekcji]
+Dla $X,Y\in L^2(\mathcal F)$ i
+$\mathcal G\subseteq\mathcal F$ operator
+$P_{\mathcal G}:L^2(\mathcal F)\to L^2(\mathcal F)$
+jest liniowy, samosprzężony, idempotentny
+($P_{\mathcal G}^2=P_{\mathcal G}$) i kontrakcyjny.
+Jeśli $\mathcal G\subseteq\mathcal H$, to
+$P_{\mathcal G}P_{\mathcal H}
+=P_{\mathcal H}P_{\mathcal G}=P_{\mathcal G}$.
+\end{wniosek}
+\begin{proof}
+Liniowość i kontrakcję wykazano wcześniej,
+a idempotentność wynika z warunkowania zmiennej
+już $\mathcal G$-mierzalnej. Z ortogonalności
+$X-P_{\mathcal G}X$ do $L^2(\mathcal G)$
+dostajemy, dla dowolnych $X,Y$,
+$\langle P_{\mathcal G}X,Y\rangle
+=\langle P_{\mathcal G}X,P_{\mathcal G}Y\rangle
+=\langle X,P_{\mathcal G}Y\rangle$,
+co jest samosprzężonością.
+Ostatnie równości to dokładnie obie wersje
+własności wieży dla zagnieżdżonych $\sigma$-ciał.
+\end{proof}
+
+\begin{przyklad}[Rzut na stałe i elementarna tożsamość wariancyjna]
+Jeśli $\mathcal G=\{\varnothing,\Omega\}$ i $X\in L^2$,
+to $P_{\mathcal G}X=\E X$. Równość Pitagorasa
+przy $Z=c\in\R$ daje
+$\E(X-c)^2=\Var(X)+(\E X-c)^2$.
+Wyjaśnia to geometrycznie, dlaczego \emph{średnia}
+minimalizuje oczekiwany kwadrat błędu, a nie np.
+mediana (ta ostatnia minimalizuje inny rodzaj straty).
+\end{przyklad}
+
+\section{Wariancja warunkowa, dekompozycja błędu i kowariancja}
+
+\begin{definicja}
+Dla $X\in L^2(\Prob)$ i pod-$\sigma$-ciała
+$\mathcal G\subseteq\mathcal F$ definiujemy
+\emph{warunkową wariancję}
+\[
+\Var(X\mid\mathcal G)
+:=\E[(X-\E[X\mid\mathcal G])^2\mid\mathcal G].
+\]
+Jest to nieujemna, $\mathcal G$-mierzalna
+zmienna losowa.
+\end{definicja}
+
+\begin{twierdzenie}[Wzór na wariancję całkowitą]
+Dla każdego $X\in L^2(\Prob)$ oraz
+$\mathcal G\subseteq\mathcal F$ zachodzą
+\[
+\Var(X\mid\mathcal G)=
+\E[X^2\mid\mathcal G]-\E[X\mid\mathcal G]^2
+\quad\text{p.n.}
+\]
+oraz
+\[
+\Var(X)=\E[\Var(X\mid\mathcal G)]
++\Var(\E[X\mid\mathcal G]).
+\]
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy $M=\E[X\mid\mathcal G]$.
+Rozwinięcie kwadratu i reguła wyciągania
+czynnika (najpierw dla ograniczonych obcięć $M$,
+a potem przez zbieżność w $L^1$ wynikającą
+z Cauchy'ego--Schwarza) dają
+$\E[X M\mid\mathcal G]=M\E[X\mid\mathcal G]=M^2$.
+Podobnie $\E[M^2\mid\mathcal G]=M^2$.
+Stąd pierwszy wzór.
+
+Zastosujmy następnie Pitagorasa do rozkładu
+$X-\E X=(X-M)+(M-\E X)$.
+Jego pierwszy składnik jest ortogonalny do
+drugiego, bo drugi jest $\mathcal G$-mierzalny.
+Otrzymujemy
+$\Var(X)=\E(X-M)^2+\E(M-\E X)^2$.
+Z własności zachowania wartości oczekiwanej
+$\E(M)=\E X$, a z definicji wariancji
+warunkowej $\E(X-M)^2=\E\Var(X\mid\mathcal G)$.
+To dowodzi drugiej równości.
+\end{proof}
+
+\begin{przyklad}[Losowanie z dwóch grup]
+Wybieramy grupę $G\in\{0,1\}$ z równymi
+prawdopodobieństwami, a następnie obserwujemy
+$X=2G+Z$, gdzie $Z$ jest niezależna od $G$,
+$\E Z=0$, $\Var(Z)=1$. Wówczas
+$\E[X\mid G]=2G$ i
+$\Var(X\mid G)=1$. Wzór na wariancję całkowitą
+daje $\Var(X)=1+\Var(2G)=1+1=2$.
+Pierwszy składnik opisuje rozproszenie \emph{wewnątrz}
+grup, drugi różnicę pomiędzy średnimi grupowymi.
+\end{przyklad}
+
+\begin{twierdzenie}[Kowariancja całkowita]
+Niech $X,Y\in L^2(\Prob)$ i
+$\mathcal G\subseteq\mathcal F$. Wówczas
+\[
+\Cov(X,Y)=\E[\Cov(X,Y\mid\mathcal G)]
++\Cov(\E[X\mid\mathcal G],\E[Y\mid\mathcal G]),
+\]
+gdzie
+$\Cov(X,Y\mid\mathcal G)=
+\E[XY\mid\mathcal G]-
+\E[X\mid\mathcal G]\E[Y\mid\mathcal G]$.
+\end{twierdzenie}
+\begin{proof}
+Niech $M=\E[X\mid\mathcal G]$ i
+$N=\E[Y\mid\mathcal G]$. Własność wieży daje
+$\E\Cov(X,Y\mid\mathcal G)=\E[XY]-\E[MN]$.
+Ponieważ $\E M=\E X$ i $\E N=\E Y$,
+$\Cov(M,N)=\E[MN]-\E X\E Y$.
+Dodajemy obie równości i otrzymujemy tezę.
+\end{proof}
+
+\section{Warunkowanie względem zmiennej ciągłej i gęstości}
+
+Jeżeli znamy wspólną gęstość pary $(X,V)$,
+możemy jawnie obliczyć funkcję $g$ z reprezentacji
+$\E[X\mid\sigma(V)]=g(V)$. Należy przy tym
+oddzielić równość całkową określającą średnią
+od naiwnego warunku „$V=v$”, który w modelu
+ciągłym zwykle ma prawdopodobieństwo zero.
+
+\begin{twierdzenie}[Wzór przez gęstość warunkową]
+Niech $(X,V)$ będzie rzeczywistym wektorem losowym
+o wspólnej gęstości $f_{X,V}$ względem miary
+$\lambda_2$ oraz niech $\E|X|<\infty$.
+Niech $f_V(v)=\int_\R f_{X,V}(x,v)\,\dd\lambda_1(x)$.
+Dla tych $v$, dla których $0<f_V(v)<\infty$ oraz
+$\int_\R |x|f_{X,V}(x,v)\,\dd\lambda_1(x)<\infty$,
+połóżmy
+\[
+g(v)=\frac{\int_\R x f_{X,V}(x,v)\,\dd\lambda_1(x)}{f_V(v)},
+\]
+a w pozostałych punktach niech $g(v)=0$.
+Wówczas $g(V)$ jest wersją
+$\E[X\mid\sigma(V)]$.
+\end{twierdzenie}
+\begin{proof}
+Z twierdzenia Tonellego i założenia $\E|X|<\infty$
+wynika
+\[
+\int_\R\int_\R |x|f_{X,V}(x,v)
+\,\dd\lambda_1(x)\,\dd\lambda_1(v)<\infty.
+\]
+Stąd licznik w definicji $g$ istnieje dla
+$\lambda_1$-prawie wszystkich $v$; zbiory, na których
+$f_V=0$ lub $f_V=\infty$, mają zerową masę
+względem rozkładu $V$. Ponadto
+$\int |g(v)|f_V(v)\,\dd\lambda_1(v)\leq\E|X|$,
+więc $g(V)\in L^1$. Dla każdego zbioru borelowskiego
+$B\subseteq\R$ twierdzenie Fubiniego daje
+\[
+\E[g(V)\ind{\{V\in B\}}]
+=\int_Bg(v)f_V(v)\,\dd\lambda_1(v)
+=\int_B\int_\R xf_{X,V}(x,v)
+\,\dd\lambda_1(x)\,\dd\lambda_1(v)
+=\E[X\ind{\{V\in B\}}].
+\]
+Każde zdarzenie z $\sigma(V)$ ma postać
+$\{V\in B\}$, więc jest to dokładnie
+tożsamość definiująca warunkową wartość oczekiwaną.
+\end{proof}
+
+\begin{przyklad}[Jednostajny punkt trójkąta]
+Niech $(X,V)$ będzie jednostajny na zbiorze
+$T=\{(x,v):0<v<x<1\}$, a więc jego gęstość
+wynosi $2\ind T$. Dla $v\in(0,1)$ mamy
+$f_V(v)=\int_v^1 2\,\dd\lambda_1(x)=2(1-v)$,
+a gęstość $X$ warunkowo przy $V=v$ jest
+jednostajna na $(v,1)$. Otrzymujemy
+$\E[X\mid V=v]=(1+v)/2$ dla $v\in(0,1)$
+i w konsekwencji
+$\E[X\mid\sigma(V)]=(1+V)/2$ p.n.
+Sprawdźmy to bezpośrednio: dla dowolnego
+borelowskiego $B\subseteq(0,1)$
+\[
+\E[X\ind{\{V\in B\}}]
+=2\int_B\!\int_v^1 x\,\dd\lambda_1(x)
+\,\dd\lambda_1(v)
+=\int_B(1-v^2)\,\dd\lambda_1(v),
+\]
+podczas gdy
+$\E[((1+V)/2)\ind{\{V\in B\}}]
+=\int_B (1+v)(1-v)\,\dd\lambda_1(v)$.
+Obie całki są równe. Ten rachunek pokazuje
+zarówno funkcję warunkową, jak i poprawne znaczenie
+warunkowania na konkretną wartość zmiennej ciągłej.
+\end{przyklad}
+
+\begin{przyklad}[Suma niezależnych, jednakowo rozłożonych składników]
+Niech $X,Y\in L^1$ będą niezależne i jednakowo
+rozłożone, $S=X+Y$. Wtedy $\sigma(S)$
+nie rozróżnia zamiany $X$ z $Y$. Formalnie
+wspólny rozkład $(X,Y)$ jest niezmienniczy na taką
+zamianę, więc dla każdego ograniczonego
+borelowskiego $h$ zachodzi
+$\E[Xh(S)]=\E[Yh(S)]$.
+Dodając równości, dostajemy
+$2\E[Xh(S)]=\E[Sh(S)]$. Definicja warunkowa
+daje zatem $\E[X\mid\sigma(S)]=S/2$,
+niezależnie od tego, czy rozkład składników ma gęstość.
+\end{przyklad}
+
+\begin{uwaga}[Wersje i zdarzenia zerowe]
+Funkcja $g(v)$ w twierdzeniu o gęstości warunkowej
+jest określona jednoznacznie tylko dla
+$\Law(V)$-prawie wszystkich $v$. Nie ma żadnego
+aksjomatu nakazującego konkretną wartość w punkcie,
+w którym $f_V(v)=0$. Sformalizowane rozkłady
+warunkowe jako rodziny miar zależnych od $v$
+można konstruować na standardowych przestrzeniach
+borelowskich, ale ta dodatkowa teoria nie jest
+potrzebna do definicji i własności
+$\E[X\mid\sigma(V)]$.
+\end{uwaga}
+
+\section{Co warto zapamiętać przed procesami stochastycznymi?}
+Warunkowa wartość oczekiwana działa w dwóch językach.
+W języku miary zachowuje całki na zdarzeniach
+obserwowalnych. W języku geometrii jest rzutem
+ortogonalnym na domkniętą przestrzeń zmiennych
+zależnych od dostępnej informacji. Zmiana informacji
+zmienia rzut, a własność wieży kontroluje kolejne
+etapy ujawniania danych. W drugim tomie właśnie
+ten mechanizm będzie podstawą definicji martyngału,
+w którym zachodzi $\E[M_{n+1}\mid\mathcal F_n]=M_n$.
+
+\section{Warunkowanie: czynnik nie musi być ograniczony}
+
+W rozdziale~\ref{ch:condexp} reguła wyciągania czynnika została wykazana dla
+ograniczonej zmiennej $H$. To założenie nie jest konieczne, ale jego
+usunięcie wymaga całkowalności odpowiednich iloczynów.
+
+\begin{twierdzenie}[Wyciąganie czynnika w pełnej wersji]
+Niech $(\Omega,\mathcal F,\Prob)$ będzie przestrzenią probabilistyczną,
+$\mathcal G\subseteq\mathcal F$, $X\in L^1(\Prob)$ i niech $H$
+będzie rzeczywistą $\mathcal G$-mierzalną zmienną losową. Jeżeli
+$HX\in L^1(\Prob)$, to $H\E[X\mid\mathcal G]\in L^1(\Prob)$ oraz
+\[
+\E[HX\mid\mathcal G]=H\E[X\mid\mathcal G]\quad\text{p.n.}
+\]
+\end{twierdzenie}
+\begin{proof}
+Z warunkowego Jensena mamy
+$|\E[X\mid\mathcal G]|\leq \E[|X|\mid\mathcal G]$.
+Dla $H_m=\min(|H|,m)$, który jest nieujemny, ograniczony
+i $\mathcal G$-mierzalny, reguła wyciągania czynnika daje
+$\E[H_m|X|\mid\mathcal G]=H_m\E[|X|\mid\mathcal G]$.
+Po scałkowaniu i przejściu do granicy przez twierdzenie
+Beppo Leviego otrzymujemy
+\[
+\E[|H|\E(|X|\mid\mathcal G)]=\E|HX|<\infty.
+\]
+W szczególności $H\E[X\mid\mathcal G]$ jest całkowalna.
+Dla $H^{(m)}=(-m)\vee(H\wedge m)$ zachodzi
+$H^{(m)}X\to HX$ i $H^{(m)}\E[X\mid\mathcal G]\to
+H\E[X\mid\mathcal G]$ prawie na pewno, a obie rodziny
+są zdominowane odpowiednio przez $|HX|$ oraz
+$|H|\E[|X|\mid\mathcal G]$. Stosujemy wcześniejszą
+regułę dla $H^{(m)}$, całkujemy po dowolnym $A\in\mathcal G$
+i przechodzimy do granicy. Jednoznaczność warunkowej
+wartości oczekiwanej kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Dlaczego potrzebujemy warunku całkowalności]
+Jeśli $X\equiv1$ oraz $H\geq0$ jest $\mathcal G$-mierzalna,
+ale $\E H=\infty$, to formalna równość
+$\E[HX\mid\mathcal G]=H\E[X\mid\mathcal G]$
+nie jest równością dwóch elementów $L^1$.
+Można osobno rozwijać warunkowe wartości oczekiwane
+nieujemnych zmiennych o nieskończonej średniej,
+lecz wymaga to definicji o wartościach w $[0,\infty]$.
+\end{przyklad}
+
+\section{Granice i jednostajna całkowalność}
+
+\begin{twierdzenie}[Zbieżność $L^1$ zachowuje się przy warunkowaniu]
+Niech $X_n,X\in L^1(\Prob)$, $\mathcal G\subseteq\mathcal F$.
+Jeżeli $\E|X_n-X|\to0$, to
+\[
+\E\bigl|\E[X_n\mid\mathcal G]-\E[X\mid\mathcal G]\bigr|\to0.
+\]
+W szczególności wyniku tego nie trzeba wyprowadzać
+z prawie pewnej zbieżności $X_n$: jest on bezpośrednią
+konsekwencją kontrakcji w $L^1$.
+\end{twierdzenie}
+\begin{proof}
+Z liniowości i warunkowej nierówności Jensena
+\[
+\E\left|\E[X_n-X\mid\mathcal G]\right|
+\leq \E\E[|X_n-X|\mid\mathcal G]=\E|X_n-X|\to0.
+\]
+\end{proof}
+
+\begin{przyklad}[Zbieżność prawie na pewno nie wystarcza]
+Na $((0,1),\mathcal B((0,1)),\lambda_1)$ niech
+$X_n=n\ind{(0,1/n)}$. Wtedy $X_n\to0$ prawie na pewno,
+ale $\E X_n=1$ dla każdego $n$.
+Przy trywialnym $\mathcal G$ mamy zatem
+$\E[X_n\mid\mathcal G]=1\not\to0=\E[0\mid\mathcal G]$.
+To wyjaśnia, dlaczego w twierdzeniu o zbieżności zdominowanej
+w rozdziale~\ref{ch:condexp} rzeczywiście potrzebny jest majorant
+całkowalny lub inny warunek gwarantujący $L^1$.
+\end{przyklad}
+
+
+
+\begin{przyklad}[Niezależność warunkowa nie jest niezależnością]
+Niech $B_1,B_2$ będą niezależnymi próbami Bernoulliego
+z parametrem $1/2$ i $S=B_1+B_2$.
+Zmienne $B_1,B_2$ są niezależne, ale po poznaniu
+$S=1$ wiemy, że dokładnie jedna z nich jest równa $1$.
+Istotnie,
+$\Prob(B_1=1,B_2=1\mid S=1)=0$, natomiast
+$\Prob(B_1=1\mid S=1)=\Prob(B_2=1\mid S=1)=1/2$.
+Iloczyn prawdopodobieństw brzegowych warunkowych
+wynosi zatem $1/4$, nie zero. Obserwacja sumy
+wprowadza zależność warunkową mimo wcześniejszej
+niezależności; w szczególności nie wolno automatycznie
+zastępować warunkowej wartości oczekiwanej iloczynu
+iloczynem warunkowych wartości oczekiwanych.
+\end{przyklad}
+
+\section{Dwa dalsze przykłady warunkowania: rozkład dyskretny i gaussowski}
+
+\begin{przyklad}[Suma niezależnych zmiennych Poissona]
+Niech $X\sim\Poi(\lambda)$ i $Y\sim\Poi(\mu)$ będą
+niezależne, gdzie $\lambda,\mu>0$, i niech $S=X+Y$.
+Z rozkładu splotu wiemy, że $S\sim\Poi(\lambda+\mu)$.
+Dla $n\in\N_0$ i $0\leq k\leq n$ obliczamy
+\begin{align*}
+\Prob(X=k\mid S=n)
+&=\frac{\Prob(X=k,Y=n-k)}{\Prob(S=n)}\\
+&=\binom nk\left(\frac{\lambda}{\lambda+\mu}\right)^k
+\left(\frac{\mu}{\lambda+\mu}\right)^{n-k}.
+\end{align*}
+Zatem $X$ przy warunku $S=n$ ma rozkład
+$\Bin(n,\lambda/(\lambda+\mu))$. Ponieważ
+$\sigma(S)$ jest generowana przez rozłączny,
+przeliczalny podział $\{S=n\}$,
+\[
+\E[X\mid\sigma(S)]
+=\frac{\lambda}{\lambda+\mu}S,
+\quad
+\Var(X\mid\sigma(S))
+=\frac{\lambda\mu}{(\lambda+\mu)^2}S.
+\]
+Intuicyjnie suma mówi, ile zdarzeń zaszło,
+a parametry $\lambda$ i $\mu$ określają,
+jaka część z nich pochodzi z każdego źródła.
+\end{przyklad}
+
+\begin{przyklad}[Dwie niezależne obserwacje normalne]
+Niech $X,Z\sim\Normal(0,1)$ będą niezależne.
+Obserwujemy tylko sumę $S=X+Z$ i chcemy
+przewidzieć $X$. Z symetrii otrzymujemy
+$\E[X\mid\sigma(S)]=S/2$.
+Aby poznać również wariancję warunkową,
+połóżmy $D=(X-Z)/2$. Wtedy
+$X=S/2+D$, a odwrotną transformacją jest
+$X=S/2+D$, $Z=S/2-D$, o wyznaczniku
+Jacobianu o module $1$. Wspólna gęstość
+$(S,D)$ wynosi
+\[
+f_{S,D}(s,d)=\frac1{2\pi}
+\exp\left(-\frac{s^2}{4}-d^2\right),
+\]
+co rozkłada się na iloczyn gęstości
+$\Normal(0,2)$ dla $S$ i $\Normal(0,1/2)$
+dla $D$. Są więc niezależne.
+Wobec $X=S/2+D$ i $\E D=0$ mamy
+$\Var(X\mid\sigma(S))=\Var(D)=1/2$.
+Po obserwacji sumy pozostaje połowa pierwotnej
+wariancji pojedynczego składnika.
+\end{przyklad}
+
