@@ -14,6 +14,26 @@ Decyzją autora głębokie wyniki Walla pozostają jawnie cytowanymi
 wejściami zewnętrznymi; audyt wyprowadzonego tekstu wykonano
 bez samodzielnego dowodzenia tych lematów.
 
+## 2026-11-19 — audyt dydaktyczny rozdziału 27
+
+Przeczytano wszystkie §§27.1–27.7 w `tex/rozdzialy/23-przeszkoda-chirurgiczna.tex`, łącznie z argumentem parzystym nad pierścieniem grupowym, przygotowaniem kobordyzmu i nieparzystą przeszkodą SU/RU. Zachowano siedem sekcji, etykiety, numerację wyników i trzy ilustracje; nie dodano zadań. Rozdział nie zawiera całek.
+
+- Dopisano wyprowadzenie prawa skalowania μ(ax) dla dowolnej skończonej sumy a=Σnᵢgᵢ. Najpierw wyprowadzono μ(nx)=n²μ(x), także dla ujemnych n, następnie zebrano wyrazy mieszane w ilorazie addytywnym Q. Wskazano rolę zerowego normalnego składnika Eulera.
+- Poprawiono opis zmiany bazy: przy lewych modułach i liniowości λ w pierwszej zmiennej podano wzór na poszczególne współczynniki nowej macierzy. Dotychczasowe polecenie zastąpienia transpozycji transpozycją sprzężoną sugerowało niewłaściwą stronę sprzężenia. Kolejność czynników pozostaje jawna również nad nieprzemiennym pierścieniem.
+- Uściślono stabilną swobodność i zgodne preferowane bazy w dekoracji s, również dla lagranżjanu. Sprawdzono poprawkę do bazy hiperbolicznej, diagonalny lagranżjan i torsję przy usuwaniu pary.
+- W lokalnej stabilizacji zastąpiono błędne stwierdzenie, że nowe sfery leżą w dysku, ich położeniem w nowym składniku sumy spójnej. Odsunięcie starych reprezentantów uzasadniono zakresem homotopii po usunięciu dysku.
+- Rozpisano przejście od acykliczności nad Z[π] do równoważności: izomorfizm π₁, nakrycia uniwersalne, względne twierdzenie Hurewicza i Whitehead. Poprawiono też zgodę gramatyczną w analogicznym kroku jednospójnym.
+
+Sprawdzono inwolucję, parowanie samoprzecięć, nierówności wymiarowe dysków Whitneya, skończoną redukcję poniżej środka, oba ciągi parzystej chirurgii, dualność i lagranżjan brzegu. W części nieparzystej skontrolowano formę na E⊕E*, jądro i cokernel T, formację z T=2, ruchy T1–T4, kolejność mnożenia przez σ oraz oddzielenie kryterium w wymiarze pięć od realizacji w wymiarach co najmniej siedem.
+
+Porównanie źródeł objęło [Walla, *Surgery on Compact Manifolds*, §§1–2, 5–6 i 17D](https://www.maths.ed.ac.uk/~v1ranick/books/scm.pdf), [Ranickiego o rozszczepieniach](https://webhomes.maths.ed.ac.uk/~v1ranick/papers/splitkl.pdf), [Milnora, *Whitehead Torsion*, przykład 6.6](https://webhomes.maths.ed.ac.uk/~v1ranick/papers/milnorwh.pdf) oraz [Ranickiego, *An Introduction to Algebraic Surgery*, wstęp i przykład 2.16](https://www.maths.ed.ac.uk/~v1ranick/surgery/ranicki.pdf). Przykład 2.16 ma dodatkową hipotezę o izomorfizmie π₁ brzegu i celu; nie używano go do dowodzenia pełnej wersji relatywnej bez tej hipotezy. Wersja h pozostaje wynikiem zewnętrznym. Plik Shanesona był dostępny jako skan bez tekstu: nie deklaruje się ponownej pełnej lektury jego dowodów. Ciąg Rothenberga i dekoracje rozszczepienia porównano z §17D Walla i pracą Ranickiego. Geometryczne lematy Whitneya, klasyfikacja immersji, przygotowanie kobordyzmu i relacja formacji pozostają jawnymi wejściami zewnętrznymi.
+
+Przeszło osiem grup pomocniczych kontroli: minory E8 (2,4,6,5,4,3,2,1), zmiana bazy pary, cztery sumy Gaussa dla Arfa, jednostka w Z[C5], ruch σ dla obu znaków, ruch T4 dla obu znaków, skalowanie funkcji kwadratowej i tabela rozszczepienia dla Z. Rachunek Tate'a sprawdzono bezpośrednio z jąder 1−T i 1+T. Kontrole obliczeniowe uzupełniają lekturę, nie zastępują dowodów geometrycznych.
+
+Złożono tylko tom III programami pdflatex i makeindex; latexmk nie uruchamiał się z powodu lokalnego błędu MiKTeX dotyczącego ścieżki `.gitconfig`. Końcowy tom ma 113 stron A4. Dwa ostatnie AUX mają identyczny SHA-256; ostatni log nie żąda ponownego przebiegu. Indeks przyjął 34 wpisy bez odrzuceń i ostrzeżeń. Brak błędów TeX-a, nierozwiązanych odsyłaczy, przepełnień i brakujących znaków; pozostają trzy komunikaty Underfull: jeden przy śródtytule kroku dowodu w rozdziale 27, dwa w pozostałych rozdziałach. Kontrola wizualna nie wykazała usterki składu w tym miejscu.
+
+Wyrenderowano i obejrzano wszystkie strony drukowane 56–85 (PDF 57–86), w tym nowe wzory, trzy ilustracje i tabelę grup; sprawdzono też indeks. Nie stwierdzono kolizji ani obcięć. Sprawdzono istnienie wszystkich 44 celów łączy do pozostałych tomów w ich PDF-ach. Materiały pomocnicze są w ignorowanym `build/audyt-27`. Zaktualizowano PDF tomu III; pozostałe tomy nie były ponownie składane.
+
 ## Rysunek 26.3, rogata sfera i spinory (2026-11-18)
 
 Autor dostarczył rozszerzenie Rysunku 26.3, schemat rogatej sfery

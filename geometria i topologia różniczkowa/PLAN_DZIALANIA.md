@@ -13,6 +13,21 @@ i organizacja plików w [README.md](README.md).
 
 ## Bieżący zakres i kolejność
 
+### Rozdział 27 — audyt dydaktyczny (19 listopada)
+
+Przejrzano wszystkie §§27.1–27.7, „Formy kwadratowe
+i przeszkoda chirurgiczna”, w tomie III. Wyprowadzono prawo
+skalowania funkcji samoprzecięć dla dowolnego elementu pierścienia
+grupowego, poprawiono konwencję zmiany bazy dla lewych modułów,
+uściślono stabilną swobodność w dekoracji s, położenie sfer
+po lokalnej stabilizacji i przejście od acykliczności do równoważności.
+Sprawdzono parzysty i nieparzysty argument Walla, siedem sekcji,
+rachunki E8, Arfa, C5, Tate'a oraz rozszczepienie Shanesona–Ranickiego.
+Przeszło osiem grup pomocniczych kontroli rachunkowych.
+Szczegóły kontroli składu i granice porównania źródeł zapisano
+w `PRZEGLAD.md`. Następny w kolejce jest rozdział 28,
+„Ciąg dokładny chirurgii”.
+
 ### Rozdział 26 — audyt dydaktyczny (19 listopada)
 
 Na polecenie autora przejrzano wszystkie §§26.1–26.7,
@@ -28,8 +43,7 @@ Złożono tylko tom III (112 stron); sprawdzono wszystkie strony 41–55,
 osiem ilustracji, indeks i 44 łącza między tomami.
 Końcowy AUX i obrazy stron są stabilne; PDF tomu III zaktualizowano.
 Wyniki i ograniczenia porównania źródeł zapisano w `PRZEGLAD.md`.
-Następny rozdział w kolejce to 27, „Formy kwadratowe
-i przeszkoda chirurgiczna”.
+Audyt następnego rozdziału 27 opisano powyżej.
 
 ### Rozdziały 23–25 — audyt i ponowna kontrola (18–19 listopada)
 
@@ -732,7 +746,7 @@ Poprzedni audyt 18-rozdziałowej wersji `a36c920` nie zastępuje tej tabeli.
 | 24. h-kobordyzm | `20-h-kobordyzm.tex` | Przegląd §§24.1–24.6 z 18 listopada i drugi pełny audyt z 19 listopada; wcześniejszy audyt z 9 października | Ponownie sprawdzono wymianę 1→3, obramowania, dopełnienia i skrajne indeksy, redukcję kolumnami oraz indukcję. Uzupełniono jawny wymiar w przykładzie i ciągłość radialnego przedłużenia wraz z odwrotnością. Sprawdzono strony 17–26 i trzy ilustracje w końcowym tomie III; twierdzenie Milnora pozostaje wynikiem zewnętrznym. Szczegóły w `PRZEGLAD.md`. |
 | 25. Torsja i s-kobordyzm | `21-torsja-s-kobordyzm.tex` | Audyt z 11 października; ponowny przegląd wszystkich §§25.1–25.6 zakończony 19 listopada | Rozpisano komutatory i faktoryzacje K1, augmentację, kontrakcje i stożek, znaki zmian baz, ruchy macierzowe, transport torsji, wzór w2 i dualizację. Poprawiono rozróżnienie zwykłej acykliczności, acykliczności nad pierścieniem grupowym i zerowej torsji. Sprawdzono strony 27–40, oba schematy, indeks i odsyłacze w końcowym tomie III (112 stron). Szczegóły w `PRZEGLAD.md`. |
 | 26. Chirurgia geometryczna | `22-chirurgia-geometryczna.tex` | Audyt z 8 października i późniejsze kontrole dodatków; ponowny audyt całych §§26.1–26.7 zakończony 19 listopada | Uściślono operację odwrotną przy p=0, orientację S0, klasy obramowań, stabilne wiązki i normalną kobordancję. Rozpisano parametryzację trójlistnika, zmianę bazy form, przedłużanie ramek, stopień odwzorowania zgniatającego, pi2(O)=0 oraz ortogonalność i unimodularność jądra. Przeszło osiem grup kontroli; zachowano numery i etykiety. Sprawdzono strony 41–55, osiem ilustracji, indeks i odsyłacze w tomie III (112 stron). Szczegóły w `PRZEGLAD.md`. |
-| 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Pełny audyt także nowego tekstu zakończony 20 października względem §§1–2, 5–6 Walla; zmianę z 27 października oraz nowe rachunki z 28 października i strony 57–59 tomu III sprawdzono osobno | Sprawdzono parzyste i nieparzyste kryterium, bazy i torsję nad $\Z[\pi]$, $SU/RU$, ruchy $T1$--$T4$, wymiar pięć i chirurgię środkową. Poprawiono stronę $\lambda$ w dualności, terminologię immersji i hipotezy lematu 5.7. Doprecyzowano zależność $\mu=0$ od wybranych danych normalnych w przykładzie lokalnej stabilizacji; nie ponawiano audytu reszty rozdziału. Nowe rachunki dają tabelę $L_n^s(\Z[\Z])$ i grupy Tate'a dla $C_5$, z dokładnymi hipotezami Shanesona i wnioskami z ciągu Rothenberga; sprawdzono je względem Walla, Ranickiego i Milnora. Głębokie lematy Walla, wersja $h$ i relacja formacji pozostają jawnymi wynikami zewnętrznymi. |
+| 27. Przeszkoda chirurgiczna | `23-przeszkoda-chirurgiczna.tex` | Ponowny audyt dydaktyczny wszystkich §§27.1–27.7 zakończono 19 listopada; wyprowadzono skalowanie μ, poprawiono zmianę bazy i doprecyzowano stabilizację oraz kryterium Whiteheada. Pełny audyt także nowego tekstu zakończony 20 października względem §§1–2, 5–6 Walla; zmianę z 27 października oraz nowe rachunki z 28 października i strony 57–59 tomu III sprawdzono osobno | Sprawdzono parzyste i nieparzyste kryterium, bazy i torsję nad $\Z[\pi]$, $SU/RU$, ruchy $T1$--$T4$, wymiar pięć i chirurgię środkową. Poprawiono stronę $\lambda$ w dualności, terminologię immersji i hipotezy lematu 5.7. Doprecyzowano zależność $\mu=0$ od wybranych danych normalnych w przykładzie lokalnej stabilizacji; nie ponawiano audytu reszty rozdziału. Nowe rachunki dają tabelę $L_n^s(\Z[\Z])$ i grupy Tate'a dla $C_5$, z dokładnymi hipotezami Shanesona i wnioskami z ciągu Rothenberga; sprawdzono je względem Walla, Ranickiego i Milnora. Głębokie lematy Walla, wersja $h$ i relacja formacji pozostają jawnymi wynikami zewnętrznymi. |
 | 28. Ciąg chirurgii | `24-ciag-chirurgii.tex` | Pełny audyt wcześniejszej treści zakończony 20 października względem §10 oraz twierdzeń 5.8 i 6.5 Walla; uzupełnienia z 27–28 października sprawdzono osobno | Sprawdzono dokładność, działanie $L_{n+1}^s$, zakres $n\geq5$, lewą strzałkę i przejście do $s$-kobordyzmu; doprecyzowano racjonalne jądro w rachunku sygnatury. Nowe fragmenty objaśniają strzałki, ślad nad cylindrem, warunek brzegowy, przykład $S^7$, przejście śladu $S^6\to S^3\times S^3$ przez Arfa i punkt bazowy $[S^6,G/O]$. Mapa hipotez rozdziela DIFF/TOP, $n=5$ od śladu wymiaru sześć, dowolność $\pi_1$, ustalony brzeg i dekoracje $s/h$; nie ponawiano audytu reszty rozdziału. Bijekcja z $[X,G/O]$ i działanie grupy $L$ pozostają wynikami Walla, a wariant TOP jest osobnym wynikiem zewnętrznym. |
 | 29. Poincaré | `25-poincare.tex` | Pełny audyt rozdziału zakończony 20 października; twierdzenia 2.2 i 2.3 Bardena porównano z oryginałem | Wymiar 2, osobno 5 i wyższe; homeomorfizm a dyfeomorfizm; lematy 3.1 i 4.1–4.4, indukcja, modele $M_k,X_j$, formy wiązania i przykłady spin/niespin. Doprecyzowano źródło triangulacji, mieszaną parę torsyjną, hipotezy lematu 4.4 i orientację przy wniosku pięciowymiarowym. Głębokie wejścia pozostają zewnętrzne. |
 | 30. Sfery Milnora | `26-sfery-milnora.tex` | Audyt wcześniejszej treści zakończony 19 października; klasyfikację dopisano 20 października; odsyłacze indeksowe 29 października; cytowanie liczby 28 poprawione 4 listopada | Sprawdzono sklejanie, klasy $e,p_1$, ciąg Mayera--Vietorisa, kryterium Whiteheada, obie sygnatury, $\lambda$, $\mu$, przykłady i rysunek. Rachunek klasyfikuje 16 typów wiązkowych oraz 28 klas $\Theta_7$ (15 bez orientacji) przez sumy $M_3$. Wzór Hirzebrucha i całkowitość indeksu Diraca są teraz dowiedzione w rozdziale 18; zupełność $\mu$ i $\Theta_7\cong\Z/28$ pozostają wynikami zewnętrznymi; część I Kervaire'a--Milnora podaje rząd w tabeli, lecz nie pełny rachunek. |
