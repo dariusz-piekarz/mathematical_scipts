@@ -13,6 +13,22 @@ i organizacja plików w [README.md](README.md).
 
 ## Bieżący zakres i kolejność
 
+### Rozdziały 32 i 33 — audyt dydaktyczny (19 listopada)
+
+Przejrzano §§32.1–32.7 o twierdzeniu Poincarégo w wymiarze trzy
+oraz §§33.1–33.6 o geometryzacji. Uzupełniono porównanie skalarne,
+równanie sprzężone entropii, gładkość i krzywizny czapy,
+warunki granic powiększeń, topologię cięcia nierozdzielającego
+i całkowanie nierówności wygasania. W rozdziale 33 rozpisano
+iloraz dający RP3#RP3, krzywizny metryki Sasakiego, argument
+o podgrupach Sol, definicję wymiernej liczby Eulera i rachunek
+ostrogi; wyjaśniono też różnicę między cięciem JSJ a cięciem
+na części z geometrią o skończonej objętości.
+Zachowano numerację i etykiety, bez nowych zadań.
+Wyniki kontroli rachunków, składu tomu IV i źródeł zapisano
+w `PRZEGLAD.md`. Następny w kolejce jest rozdział 34
+o formach przecięcia w wymiarze cztery.
+
 ### Rozdziały 30 i 31 — audyt dydaktyczny (19 listopada)
 
 Przejrzano §§30.1–30.4 o sferach Milnora oraz §§31.1–31.8
@@ -24,8 +40,7 @@ i indukcję prowadzącą do gładkiej granicy metryk.
 Zachowano etykiety, numerację i obie ilustracje; nie dodano zadań.
 Kontrole rachunkowe i strukturalne przeszły; szczegóły kontroli
 składu oraz źródeł zapisano w `PRZEGLAD.md`.
-Następny w kolejce jest rozdział 32, „Hipoteza Poincarégo
-w wymiarze trzy”.
+Audyt rozdziałów 32 i 33 opisano powyżej.
 
 ### Rozdziały 28 i 29 — audyt dydaktyczny (19 listopada)
 
