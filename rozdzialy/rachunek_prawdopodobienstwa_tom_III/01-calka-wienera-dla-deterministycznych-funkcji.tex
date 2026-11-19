@@ -1,0 +1,556 @@
+\chapter{Całka Wienera dla deterministycznych funkcji}
+\label{ch:wiener-integral}
+\paragraph{Odsyłacze międzytomowe.} Własności procesu Wienera przypomina tom II, rozdział~\ref{II-ch:wiener}, a całkowanie Monte Carlo i redukcję wariancji omawia tom IV, rozdział~\ref{IV-ch:monte-carlo}.
+
+\section{Dlaczego nie zaczynamy od Riemanna--Stieltjesa?}
+Dla gładkiej funkcji $g$ klasyczne wyrażenie
+$\int_0^T f(t)\,\dd g(t)$ można rozumieć jako
+$\int_0^T f(t)g'(t)\,\dd t$. Jeżeli $g$ ma jedynie
+skończoną wariację, całka Riemanna--Stieltjesa nadal istnieje
+dla każdej ciągłej funkcji $f$. Tymczasem dla prawie każdej
+trajektorii $w(t)=W_t(\omega)$ żadne z tych założeń nie zachodzi.
+
+Nie oznacza to, że nie da się obliczyć żadnej całki względem $w$:
+na przykład przy wystarczającej regularności funkcji $f$ można
+zastosować całkowanie przez części. Problem polega na tym,
+że nie mamy ogólnej, ciągłej konstrukcji wzdłuż trajektorii,
+która działałaby dla dowolnego $f\in L^2([0,T])$.
+Co ciekawe, \emph{losowość} pozwoli ten brak regularności pokonać.
+
+\begin{przyklad}[Dlaczego punkt próbkowania ma znaczenie]
+Weźmy podział $\pi=\{0=t_0<\cdots<t_n=T\}$ i oznaczmy
+$\Delta_kW=W_{t_{k+1}}-W_{t_k}$. Z tożsamości
+$W_{t_{k+1}}^2-W_{t_k}^2=2W_{t_k}\Delta_kW+(\Delta_kW)^2$
+wynika dokładnie
+\[
+\sum_{k=0}^{n-1}W_{t_k}\Delta_kW
+=\frac12W_T^2-\frac12\sum_{k=0}^{n-1}(\Delta_kW)^2.
+\]
+W tomie II pokazaliśmy, że ostatnia suma zbiega do $T$ w $L^2$
+dla podziałów deterministycznych o średnicy dążącej do zera.
+Dlatego sumy \emph{lewostronne} mają granicę
+$\frac12(W_T^2-T)$ w $L^2$. Gdy w każdej sumie użyjemy
+punktu środkowego w \emph{wartościach procesu}, czyli
+$\frac12(W_{t_k}+W_{t_{k+1}})$, otrzymamy zamiast tego
+$\frac12W_T^2$ dla każdego podziału: odpowiednia suma
+jest teleskopowa.
+
+Dwie pozornie podobne reguły próbkowania dają różne odpowiedzi.
+Nie jest to usterka rachunku, ale sygnał, że przy całkowaniu względem
+procesu Wienera należy \emph{ustalić konwencję}. W całce Itô
+stosujemy wartości funkcji podcałkowej dostępne \emph{przed} przyrostem.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex,x=1.05cm,y=0.9cm]
+\draw[->] (0,0)--(8.3,0) node[right] {$t$};
+\draw[->] (0,-1.45)--(0,2.35) node[above] {$w(t)$};
+\draw[thick,blue!75!black] (0,0)--(.5,.3)--(1,.15)--(1.5,1.1)--(2,.5)--(2.5,.7)--(3,-.55)--(3.5,-.15)--(4.1,-.8)--(4.6,-.15)--(5.2,.75)--(5.7,.4)--(6.2,1.65)--(6.8,1.1)--(7.4,1.75);
+\foreach \x in {0,1.5,3,4.6,6.2,7.4}{\draw[dashed,gray!65] (\x,-1.15)--(\x,2);}
+\node[below,scale=.78] at (0,0) {$t_0$};
+\node[below,scale=.78] at (1.5,0) {$t_1$};
+\node[below,scale=.78] at (3,0) {$t_2$};
+\node[below,scale=.78] at (4.6,0) {$t_3$};
+\node[below,scale=.78] at (6.2,0) {$t_4$};
+\node[below,scale=.78] at (7.4,0) {$t_5$};
+\node[align=left,scale=.85] at (4.1,2.05) {Przyrost jest znany dopiero\\po osiągnięciu prawego końca};
+\end{tikzpicture}
+\par\smallskip\small Schemat przyrostów: reguła lewego końca nie korzysta z przyszłych wartości procesu.
+\end{center}
+
+\section{Funkcje schodkowe i pierwszy wzór całkowy}
+\begin{definicja}[Deterministyczna funkcja schodkowa]
+Funkcją schodkową na $[0,T]$ nazywamy funkcję postaci
+$f=\sum_{k=0}^{n-1}a_k\ind{(t_k,t_{k+1}]}$, gdzie
+$0=t_0<t_1<\cdots<t_n=T$ i $a_k\in\R$.
+Jej wartość w punkcie $0$ nie ma znaczenia dla całek względem
+miary Lebesgue'a ani dla konstruowanej całki Wienera.
+Przestrzeń takich funkcji oznaczamy przez $\calS_T$.
+\end{definicja}
+
+\begin{definicja}[Całka Wienera dla funkcji schodkowej]
+Dla $f=\sum_{k=0}^{n-1}a_k\ind{(t_k,t_{k+1}]}\in\calS_T$
+definiujemy
+\[
+I_W(f):=\sum_{k=0}^{n-1}a_k(W_{t_{k+1}}-W_{t_k}).
+\tag{1.1}\label{eq:wiener-simple}
+\]
+Wynikiem jest zmienna losowa z $L^2(\Omega)$.
+\end{definicja}
+
+\begin{lemat}[Niezależność reprezentacji]
+Dla każdej funkcji $f\in\calS_T$ wartość $I_W(f)$
+nie zależy od wyboru podziału ani od zapisu $f$ jako sumy
+funkcji wskaźnikowych przedziałów. Odwzorowanie
+$I_W:\calS_T\to L^2(\Omega)$ jest liniowe.
+\end{lemat}
+\begin{proof}
+Jeżeli podzielimy $(t_k,t_{k+1}]$ w punkcie $u$, to
+$W_{t_{k+1}}-W_{t_k}=(W_u-W_{t_k})+(W_{t_{k+1}}-W_u)$.
+Wkład przedziału do sumy nie zmienia się. Dwa przedstawienia
+funkcji schodkowej mają wspólne rozdrobnienie podziałów.
+Po przejściu do niego współczynniki na każdym przedziale są
+równe (poza punktami końcowymi), ponieważ oba przedstawienia
+określają tę samą funkcję prawie wszędzie. Stąd równość sum.
+Liniowość uzyskujemy przez sprowadzenie dwóch funkcji do
+wspólnego podziału i dodanie współczynników.
+\end{proof}
+
+\begin{twierdzenie}[Izometria Wienera i prawo Gaussa]\label{th:wiener-isometry}
+Dla dowolnych $f,g\in\calS_T$ zachodzą
+\[
+\E I_W(f)=0,\qquad
+\E[I_W(f)I_W(g)]=\int_0^T f(t)g(t)\,\dd t.
+\tag{1.2}\label{eq:wienscalar}
+\]
+Ponadto $I_W(f)$ ma rozkład normalny
+$\Normal(0,\int_0^Tf(t)^2\,\dd t)$,
+przy czym wariancja zero oznacza rozkład skupiony w zerze.
+\end{twierdzenie}
+\begin{proof}
+Z poprzedniego lematu możemy przyjąć wspólny podział,
+tak że $f=\sum a_k\ind{(t_k,t_{k+1}]}$ i
+$g=\sum b_k\ind{(t_k,t_{k+1}]}$. Oznaczmy
+$\Delta_kW=W_{t_{k+1}}-W_{t_k}$. Ponieważ przyrosty Wienera
+mają średnią zero, $\E I_W(f)=0$. Dla $j\ne k$
+niezależność i zerowa średnia przyrostów dają
+$\E[\Delta_jW\Delta_kW]=0$; dla $j=k$ mamy
+$\E(\Delta_kW)^2=t_{k+1}-t_k$. Zatem
+\[
+\E[I_W(f)I_W(g)]
+=\sum_{j,k}a_jb_k\E[\Delta_jW\Delta_kW]
+=\sum_k a_kb_k(t_{k+1}-t_k)
+=\int_0^Tfg\,\dd t.
+\]
+Na koniec przyrosty $\Delta_kW$ są niezależnymi zmiennymi
+normalnymi, a ich kombinacja liniowa jest normalna.
+Obliczona wariancja określa dokładnie jej rozkład.
+\end{proof}
+
+\begin{uwaga}[Ograniczenie do funkcji deterministycznych]
+W powyższym dowodzie wolno było wyciągnąć współczynniki
+$a_k$ i $b_k$ przed wartość oczekiwaną, ponieważ były liczbami.
+Dla losowych współczynników nie jest to dopuszczalne.
+W rozdziale drugim użyjemy w zamian warunkowania względem
+$\calF_{t_k}$ oraz niezależności przyszłego przyrostu od tej
+$\sigma$-algebry. Właśnie to prowadzi do przewidywalności.
+\end{uwaga}
+
+\section{Domknięcie przestrzeni: definicja dla funkcji kwadratowalnych}
+\begin{lemat}[Gęstość funkcji schodkowych]
+Przestrzeń $\calS_T$ jest gęsta w $L^2([0,T])$.
+\end{lemat}
+\begin{proof}
+Wskaźniki przedziałów półotwartych generują $\calB([0,T])$.
+Ich skończone kombinacje liniowe są gęste w $L^2$:
+po pierwsze, wskaźniki zbiorów borelowskich można
+aproksymować w $L^2$ wskaźnikami skończonych sum przedziałów
+(z regularności miary Lebesgue'a); po drugie,
+każdą funkcję z $L^2$ przybliża się funkcjami prostymi,
+najpierw przez obcięcie, a potem przez kwantyzację jej wartości.
+Po wspólnym rozdrobnieniu przedziałów wszystkie aproksymacje
+należą do $\calS_T$.
+\end{proof}
+
+\begin{twierdzenie}[Całka Wienera w $L^2$]\label{th:wiener-extension}
+Istnieje dokładnie jedno liniowe i ciągłe odwzorowanie
+$I_W:L^2([0,T])\to L^2(\Omega)$, które zgadza się z
+\eqref{eq:wiener-simple} na $\calS_T$. Jest izometrią:
+\[
+\norm{I_W(f)}_{L^2(\Omega)}=\norm{f}_{L^2([0,T])}.
+\tag{1.3}\label{eq:wiener-iso}
+\]
+W szczególności $I_W(f)$ jest granicą w $L^2(\Omega)$
+zmiennych $I_W(f_n)$ dla dowolnego ciągu $f_n\in\calS_T$
+zbiegającego do $f$ w $L^2([0,T])$. Definicja granicy
+nie zależy od wyboru ciągu aproksymującego.
+\end{twierdzenie}
+\begin{proof}
+Z izometrii funkcji schodkowych dostajemy dla $m,n$
+$\norm{I_W(f_n)-I_W(f_m)}_2=\norm{f_n-f_m}_2$.
+Skoro $f_n\to f$ w $L^2([0,T])$, ciąg $(f_n)$ jest Cauchy'ego,
+a więc $(I_W(f_n))$ jest Cauchy'ego w zupełnej przestrzeni
+$L^2(\Omega)$. Ma zatem granicę $Y$. Jeżeli $g_n\to f$
+jest innym ciągiem schodkowym, to
+$\norm{I_W(f_n)-I_W(g_n)}_2=\norm{f_n-g_n}_2\to0$,
+więc oba ciągi mają tę samą granicę. Kładziemy $I_W(f)=Y$.
+Liniowość wynika z liniowości dla funkcji schodkowych i
+ciągłości dodawania w $L^2$. Przechodząc do granicy w izometrii
+otrzymujemy \eqref{eq:wiener-iso}; dowodzi to także ciągłości.
+Jeżeli inne ciągłe liniowe odwzorowanie zgadzałoby się na gęstej
+podprzestrzeni $\calS_T$, to przez ciągłość zgadzałoby się
+wszędzie.
+\end{proof}
+
+\begin{twierdzenie}[Gaussowskość i kowariancja całki]\label{th:wiener-gaussian}
+Dla dowolnych $f_1,\ldots,f_m\in L^2([0,T])$ wektor
+$(I_W(f_1),\ldots,I_W(f_m))$ jest centrowanym wektorem gaussowskim
+z macierzą kowariancji
+$\big(\int_0^T f_i(t)f_j(t)\,\dd t\big)_{i,j=1}^m$.
+W szczególności
+\[
+\E e^{iuI_W(f)}=\exp\left(-\frac{u^2}{2}\norm{f}_2^2\right),
+\quad u\in\R.
+\tag{1.4}
+\]
+Jeżeli $\int_0^Tfg\,\dd t=0$, to $I_W(f)$ i $I_W(g)$
+są niezależne.
+\end{twierdzenie}
+\begin{proof}
+Dla każdej kombinacji liniowej $h=\sum_{j=1}^ma_jf_j$
+zmienna $I_W(h)$ jest granicą w $L^2$, a więc według
+rozkładu, zmiennych normalnych $I_W(h_n)$ o wariancjach
+dążących do $\norm{h}_2^2$. Zbieżność funkcji
+charakterystycznych daje $I_W(h)\sim\Normal(0,\norm{h}_2^2)$.
+Każda kombinacja liniowa wektora całek jest więc normalna,
+co stanowi definicję wspólnej gaussowskości. Wzór na kowariancję
+wynika z polaryzacji izometrii:
+$\E I_W(f)I_W(g)=\int_0^Tfg\,\dd t$.
+Dla wektora gaussowskiego nieskorelowanie dwóch współrzędnych
+implikuje niezależność, co daje ostatnie stwierdzenie.
+\end{proof}
+
+\begin{wniosek}[Całkowanie po rozłącznych przedziałach]
+Jeżeli $f,g\in L^2([0,T])$ mają rozłączne nośniki z dokładnością
+do zbioru miary Lebesgue'a zero, to $I_W(f)$ i $I_W(g)$
+są niezależne. Dla $0\le a<b\le T$ mamy
+$I_W(\ind{(a,b]})=W_b-W_a$.
+\end{wniosek}
+
+\begin{przyklad}[Od funkcji stałej do funkcji wykładniczej]
+Dla $f\equiv1$ mamy $I_W(f)=W_T\sim\Normal(0,T)$.
+Dla $f=\ind{(a,b]}$ otrzymujemy przyrost Wienera.
+Dla $f(t)=e^{-\lambda t}$, $\lambda>0$, wynik jest
+zmienną normalną o średniej zero i wariancji
+\[
+\int_0^Te^{-2\lambda t}\,\dd t
+=\frac{1-e^{-2\lambda T}}{2\lambda}.
+\]
+Łatwo w ten sposób znaleźć rozkład całki mimo braku
+klasycznego całkowania wzdłuż trajektorii.
+\end{przyklad}
+
+\begin{zadanie}[Rozkład całki i niezależność]
+Obliczyć prawo losowej zmiennej
+$X=\int_0^T(2t-T)\,\dd W_t$ oraz ustalić,
+czy jest ona niezależna od $W_T$.
+
+\emph{Rozwiązanie.}
+Z twierdzenia \ref{th:wiener-gaussian} zmienna $X$ ma rozkład
+normalny $\Normal(0,\sigma^2)$, gdzie
+$\sigma^2=\int_0^T(2t-T)^2\,\dd t=T^3/3$.
+Ponadto
+$\Cov(X,W_T)=\int_0^T(2t-T)\cdot1\,\dd t=0$.
+Para $(X,W_T)$ jest wspólnie gaussowska, zatem jej
+współrzędne są niezależne. Samo zerowanie się kowariancji
+bez wspólnej gaussowskości nie wystarczyłoby do tego wniosku.
+\end{zadanie}
+
+
+\begin{zadanie}[Osobliwość funkcji podcałkowej]
+Ustalić, dla jakich $\alpha\in\R$ istnieje całka Wienera
+$X_\alpha=\int_0^Tt^{-\alpha}\,\dd W_t$, a dla jakich
+nie może powstać jako granica całek obciętych
+$\int_\varepsilon^Tt^{-\alpha}\,\dd W_t$
+w prawdopodobieństwie, gdy $\varepsilon\downarrow0$.
+
+\emph{Rozwiązanie.} Funkcja $t^{-\alpha}$ należy do
+$L^2([0,T])$ wtedy i tylko wtedy, gdy
+$\int_0^Tt^{-2\alpha}\,\dd t<\infty$, czyli
+$2\alpha<1$. Dla $\alpha<1/2$ całka istnieje,
+a jej rozkład jest normalny ze średnią zero i wariancją
+$T^{1-2\alpha}/(1-2\alpha)$.
+
+Jeżeli $\alpha\ge1/2$, to dla każdego $\varepsilon>0$
+zmienna $X_\varepsilon:=\int_\varepsilon^T t^{-\alpha}\,\dd W_t$
+jest normalna z wariancją
+$v_\varepsilon=\int_\varepsilon^Tt^{-2\alpha}\,\dd t$,
+która dąży do nieskończoności. Ponieważ
+$X_\varepsilon/\sqrt{v_\varepsilon}\sim\Normal(0,1)$,
+dla każdego ustalonego $R>0$ zachodzi
+$\Prob(|X_\varepsilon|\le R)
+=\Prob(|Z|\le R/\sqrt{v_\varepsilon})\to0$.
+Rodzina rozkładów $(X_\varepsilon)$ nie jest ciasna,
+a więc nie może zbiegać w prawdopodobieństwie do
+skończonej zmiennej losowej. W ten sposób warunek
+$f\in L^2$ otrzymuje także konkretne znaczenie:
+zapobiega nieograniczonemu wzrostowi wariancji.
+\end{zadanie}
+
+\begin{przyklad}[Ziarno wykładnicze i początek procesu Ornsteina--Uhlenbecka]
+Dla $\lambda>0$ i $t\in[0,T]$ rozważmy
+$X_t:=\int_0^te^{-\lambda(t-s)}\,\dd W_s$.
+Dla każdej ustalonej chwili $t$ funkcja
+$s\mapsto e^{-\lambda(t-s)}\ind{(0,t]}(s)$
+jest deterministyczna i należy do $L^2([0,T])$.
+Stąd $X_t$ jest centrowaną zmienną normalną, a
+\[
+\Var(X_t)=\int_0^te^{-2\lambda(t-s)}\,\dd s
+=\frac{1-e^{-2\lambda t}}{2\lambda}.
+\]
+Dla $0\le s\le t$ izometria spolaryzowana daje
+\[
+\Cov(X_s,X_t)
+=\int_0^s e^{-\lambda(s-u)}e^{-\lambda(t-u)}\,\dd u
+=e^{-\lambda(t-s)}\frac{1-e^{-2\lambda s}}{2\lambda}.
+\]
+Otrzymaliśmy bez rozwiązywania równania stochastycznego
+konkretny proces gaussowski z pamięcią wykładniczą.
+W dalszych rozdziałach pokażemy, że jest to rozwiązanie
+liniowego równania stochastycznego z dryfem
+$-\lambda X_t$.
+\end{przyklad}
+
+\section{Proces całkowy dla deterministycznej funkcji}
+\begin{definicja}[Proces całek Wienera]
+Dla $f\in L^2([0,T])$ i $t\in[0,T]$ kładziemy
+$M_t^f:=I_W(f\ind{(0,t]})$.
+Zmienna $M_t^f$ jest dobrze określona w $L^2(\Omega)$.
+\end{definicja}
+\begin{twierdzenie}[Martyngał, kowariancja i przyrosty]
+Proces $(M_t^f)_{0\le t\le T}$ jest martyngałem względem
+$(\calF_t)$ i ma ciągłą modyfikację. Dla $0\le s\le t\le T$
+zachodzą
+\[
+\E[M_t^f\mid\calF_s]=M_s^f,\qquad
+\E[M_s^fM_t^f]=\int_0^sf(u)^2\,\dd u.
+\tag{1.5}
+\]
+Przyrost $M_t^f-M_s^f$ jest niezależny od $\calF_s$
+i ma rozkład $\Normal(0,\int_s^tf(u)^2\,\dd u)$.
+\end{twierdzenie}
+\begin{proof}
+Najpierw załóżmy, że $f$ jest schodkowa. Przyrost
+$M_t^f-M_s^f$ jest deterministyczną kombinacją przyrostów
+procesu Wienera na $(s,t]$. Jest więc niezależny od $\calF_s$
+i ma średnią zero. Zatem własność martyngałowa zachodzi.
+Dla ogólnego $f$ wybierzmy $f_n\in\calS_T$ z
+$\norm{f_n-f}_2\to0$. Z izometrii wynika
+$M_t^{f_n}\to M_t^f$ w $L^2$ dla każdego $t$.
+Warunkowa wartość oczekiwana jest kontrakcją w $L^1$,
+więc przechodząc do granicy otrzymujemy
+$\E[M_t^f\mid\calF_s]=M_s^f$. Jednocześnie rozkład
+i niezależność przyrostu od $\calF_s$ wynikają z granicy
+w $L^2$ oraz faktu, że zmienne niezależne od danej
+$\sigma$-algebry zachowują tę własność przy zbieżności
+według prawdopodobieństwa (wystarczy sprawdzić równość
+oczekiwań $\E[g(Y_n)\ind A]=\E g(Y_n)\Prob(A)$ dla
+$A\in\calF_s$, a następnie przejść do granicy dla
+granicznie ograniczonych ciągłych $g$). Wzór na kowariancję
+wynika z \eqref{eq:wienscalar} po domknięciu.
+
+Ciągłość trajektorii wymaga osobnego argumentu. Dla
+schodkowej $f_n$ proces $M^{f_n}$ jest ciągły, a
+nierówność maksymalna Dooba i izometria dają
+\[
+\E\sup_{0\le t\le T}|M_t^{f_n}-M_t^{f_m}|^2
+\le4\norm{f_n-f_m}_2^2.
+\]
+Możemy więc wybrać podciąg, dla którego
+$\sum_j\big(\E\sup_t|M_t^{f_{n_{j+1}}}-M_t^{f_{n_j}}|^2\big)^{1/2}<\infty$.
+Nierówność Cauchy'ego--Schwarza i twierdzenie o monotonicznej
+zbieżności pokazują, że suma supremów różnic jest skończona
+prawie na pewno. Wobec tego podciąg zbiega jednostajnie
+prawie na pewno do procesu o ciągłych trajektoriach.
+Dla każdego ustalonego $t$ granica zgadza się z $M_t^f$
+w $L^2$, a więc jest jego modyfikacją.
+\end{proof}
+
+\begin{uwaga}[Zmiana czasu]
+Funkcja $A_f(t):=\int_0^tf(u)^2\,\dd u$ jest ciągła
+i niemalejąca. Rozkłady skończeniewymiarowe procesu $M^f$
+są takie same jak procesu $B_{A_f(t)}$, gdzie $B$
+jest standardowym ruchem Browna na odpowiednio rozszerzonej
+przestrzeni czasu. Jest to równość \emph{praw procesów},
+a nie stwierdzenie $M_t^f=B_{A_f(t)}$ dla ustalonego
+wcześniej, niezależnego ruchu Browna.
+\end{uwaga}
+
+\section{Całkowanie przez części i granica sum}
+\begin{twierdzenie}[Deterministyczne całkowanie przez części]
+Jeżeli $f:[0,T]\to\R$ jest funkcją absolutnie ciągłą
+i $f'\in L^2([0,T])$, to
+\[
+\int_0^T f(t)\,\dd W_t
+=f(T)W_T-\int_0^T f'(t)W_t\,\dd t
+\quad\text{prawie na pewno}.
+\tag{1.6}\label{eq:ibp-det}
+\]
+Całka po prawej jest zwykłą całką Lebesgue'a względem czasu.
+\end{twierdzenie}
+\begin{proof}
+Dla funkcji schodkowej wyznaczonej wartościami $f(t_k)$
+suma Wienera spełnia dyskretne całkowanie przez części:
+\[
+\sum_{k=0}^{n-1}f(t_k)\Delta_kW
+=f(T)W_T-\sum_{k=0}^{n-1}W_{t_{k+1}}(f(t_{k+1})-f(t_k))
+\]
+jest dokładną tożsamością teleskopową, ponieważ $W_0=0$.
+Wystarczy zatem zbadać granice obu stron. Funkcje $f_n(t)=f(t_k)$ dla
+$t\in(t_k,t_{k+1}]$ zbiegają jednostajnie do $f$,
+a więc w $L^2([0,T])$. Lewa strona zbiega zatem do
+$I_W(f)$ w $L^2(\Omega)$.
+Ponieważ $f$ jest absolutnie ciągła,
+$\Delta_k f=\int_{t_k}^{t_{k+1}}f'(u)\,\dd u$,
+a więc druga suma jest równa
+$\int_0^T W_{r_n(u)}f'(u)\,\dd u$,
+gdzie $r_n(u)$ jest prawym końcem przedziału zawierającego $u$.
+Ciągłość trajektorii $W$ zapewnia jednostajną zbieżność
+$W_{r_n(u)}\to W_u$ prawie na pewno. Ponieważ
+$\int_0^T|f'(u)|\,\dd u<\infty$, suma zbiega niemal
+na pewno do $\int_0^TW_uf'(u)\,\dd u$.
+Granice w prawdopodobieństwie są jednoznaczne, co daje tezę.
+\end{proof}
+
+\begin{przyklad}[Ważona całka z procesu Wienera]
+Dla $f(t)=t$ otrzymujemy
+$\int_0^Tt\,\dd W_t=T W_T-\int_0^TW_t\,\dd t$.
+Losowa zmienna po lewej ma rozkład
+$\Normal(0,\int_0^Tt^2\,\dd t)=\Normal(0,T^3/3)$.
+Nie mylimy jej ze zwykłą całką $\int_0^TW_t\,\dd t$.
+Co ciekawe, obie zmienne mają ten sam rozkład normalny
+$\Normal(0,T^3/3)$, a nawet tę samą kowariancję
+$T^2/2$ z $W_T$. Nie są jednak równe:
+na mocy \eqref{eq:ibp-det} ich różnica to
+$\int_0^T(2t-T)\,\dd W_t$, mająca wariancję
+$T^3/3>0$. To przykład pokazujący, że jednakowy
+rozkład nie oznacza równości zmiennych losowych.
+\end{przyklad}
+
+\section{Miara Wienera a całka po trajektoriach}
+Dotychczas całkowaliśmy funkcję czasu względem losowych
+przyrostów. Istnieje jeszcze inny rodzaj całkowania:
+całkowanie funkcjonałów całej ścieżki względem \emph{miary
+Wienera}. Nie wolno tych pojęć utożsamiać.
+
+\begin{definicja}[Miara Wienera i całka po trajektoriach]
+Niech $C_0([0,T])$ oznacza przestrzeń funkcji ciągłych
+$w:[0,T]\to\R$ o $w(0)=0$, z normą supremum i borelowskim
+$\sigma$-ciałem. Niech $\mu_W$ będzie rozkładem procesu Wienera
+jako zmiennej losowej o wartościach w $C_0([0,T])$:
+$\mu_W(A):=\Prob(W\in A)$ dla $A\in\calB(C_0([0,T]))$.
+Dla mierzalnego i całkowalnego funkcjonału
+$F:C_0([0,T])\to\R$ jego \emph{całką względem miary Wienera}
+nazywamy
+\[
+\int_{C_0([0,T])}F(w)\,\dd\mu_W(w)=\E[F(W)].
+\tag{1.7}
+\]
+\end{definicja}
+
+\begin{uwaga}[Różne obiekty po dwóch stronach znaku całki]
+W $\int_0^Tf(t)\,\dd W_t$ zmienna $t$ przebiega przedział
+czasu, a wynikiem jest zmienna losowa. W
+$\int_{C_0([0,T])}F(w)\,\dd\mu_W(w)$ przebiegamy zbiór
+całych funkcji $w$ i otrzymujemy liczbę. Funkcjonał $F$
+może zależeć na przykład od maksimum trajektorii,
+jej pola pod wykresem albo wartości w wielu chwilach.
+Zapis $\dd\mu_W(w)$ jest ścisłym zapisem całki po trajektoriach
+w czasie euklidesowym. Formalna całka Feynmana o oscylacyjnym
+czynniku $\exp(iS/\hbar)$ wymaga innej konstrukcji.
+\end{uwaga}
+
+\begin{zadanie}[Całka funkcyjna dla pola pod trajektorią]\label{zad:area-char}
+Obliczyć dla $u\in\R$ całkę
+\[
+\int_{C_0([0,T])}
+\exp\left(iu\int_0^T w(s)\,\dd s\right)\,\dd\mu_W(w).
+\]
+\emph{Rozwiązanie.}
+Kładziemy $A_T=\int_0^TW_s\,\dd s$.
+Z \eqref{eq:ibp-det} zastosowanego do $f(s)=T-s$
+wynika $A_T=I_W(T-\cdot)$, ponieważ $(T-s)'=-1$
+i $f(T)=0$. Jest to zmienna normalna o średniej zero
+i wariancji
+$\int_0^T(T-s)^2\,\dd s=T^3/3$.
+Zatem jej funkcja charakterystyczna wynosi
+\[
+\E e^{iuA_T}=\exp\left(-\frac{u^2T^3}{6}\right).
+\]
+Otrzymaliśmy całkę po nieskończeniewymiarowej przestrzeni
+trajektorii, sprowadzając ją do funkcji charakterystycznej
+jednej normalnej zmiennej losowej.
+\end{zadanie}
+
+\begin{przyklad}[Całka cylindryczna]
+Niech $0<t_1<\cdots<t_m\le T$ i
+$F(w)=\varphi(w(t_1),\ldots,w(t_m))$ dla ograniczonej
+funkcji borelowskiej $\varphi:\R^m\to\R$.
+Wówczas $\int F\,\dd\mu_W$ jest zwykłą
+$m$-wymiarową całką względem wspólnego rozkładu
+$(W_{t_1},\ldots,W_{t_m})$. Jest to rozkład gaussowski
+z macierzą kowariancji $K_{ij}=\min(t_i,t_j)$.
+Dla przykładów nieskończeniewymiarowych naturalną metodą
+jest aproksymowanie funkcjonału takimi funkcjonałami
+cylindrycznymi, a następnie uzasadnienie zbieżności całek.
+\end{przyklad}
+
+\section{Dlaczego całka Wienera nie jest punktowym funkcjonałem ciągłym?}
+Izometria \eqref{eq:wiener-iso} zachodzi pomiędzy
+\emph{przestrzeniami klas funkcji}. Nie mówi, że dla prawie
+każdego $\omega$ odwzorowanie
+$f\mapsto I_W(f)(\omega)$ jest ograniczonym funkcjonałem
+liniowym na $L^2([0,T])$. Takie stwierdzenie byłoby fałszywe.
+
+\begin{twierdzenie}[Brak jednoczesnej ścieżkowej ciągłości]
+Nie istnieje zbiór $\Omega_0\subset\Omega$ o
+$\Prob(\Omega_0)=1$ i rodzina ograniczonych liniowych
+funkcjonałów $L_\omega:L^2([0,T])\to\R$, $\omega\in\Omega_0$,
+taka że dla każdego $f\in L^2([0,T])$ równość
+$L_\omega(f)=I_W(f)(\omega)$ zachodzi niemal na pewno
+(w sensie wybranych wersji zmiennych $I_W(f)$).
+\end{twierdzenie}
+\begin{proof}
+Niech $(e_n)_{n\ge1}$ będzie układem ortonormalnym zupełnym
+w $L^2([0,T])$; taka baza istnieje, ponieważ jest to
+separowalna przestrzeń Hilberta. Z twierdzenia
+\ref{th:wiener-gaussian} wynika, że
+$Z_n:=I_W(e_n)$ są niezależnymi zmiennymi o rozkładzie
+$\Normal(0,1)$. Ponieważ baza jest przeliczalna, możemy
+wybrać wspólny zbiór pełnego prawdopodobieństwa, na którym
+$L_\omega(e_n)=Z_n(\omega)$ dla wszystkich $n$.
+Jeżeli $L_\omega$ jest ograniczonym funkcjonałem liniowym,
+na mocy twierdzenia Riesza istnieje $h_\omega\in L^2([0,T])$
+taka, że $L_\omega(f)=\langle f,h_\omega\rangle$.
+Nierówność Bessela daje wtedy
+$\sum_{n\ge1}Z_n(\omega)^2\le\norm{h_\omega}_2^2<\infty$.
+Tymczasem mocne prawo wielkich liczb dla niezależnych
+zmiennych $Z_n^2$ zapewnia
+$n^{-1}\sum_{k=1}^nZ_k^2\to\E Z_1^2=1$ prawie na pewno.
+Oznacza to, że suma $\sum Z_n^2$ jest nieskończona
+prawie na pewno, sprzeczność.
+\end{proof}
+
+\begin{uwaga}[Intuicja: biały szum]
+Zapis heurystyczny $\dd W_t=\xi(t)\,\dd t$ sugeruje,
+że całkujemy $f$ względem \emph{białego szumu} $\xi$.
+Powyższe twierdzenie wyjaśnia, dlaczego $\xi$ nie może
+być zwykłą losową funkcją z $L^2([0,T])$. Można jednak
+zdefiniować biały szum jako losowy obiekt uogólniony,
+który działa na funkcjach testowych; ścisłą teorię
+dystrybucji losowych rozwiniemy w dalszej części tomu.
+\end{uwaga}
+
+\section{Podsumowanie konstrukcji i zadania}
+Konstrukcja całki Wienera opiera się na trzech zasadach:
+niezależnych normalnych przyrostach, izometrii w $L^2$
+i zupełności tej przestrzeni. Umożliwia ona całkowanie
+funkcji deterministycznych $f\in L^2$, lecz nie wystarcza
+dla losowej funkcji podcałkowej zależnej od wartości
+procesu w chwili $t$. Tę trudność rozwiążemy przez
+warunkowanie względem informacji dostępnej do czasu $t$.
+
+\begin{zadanie}[Niezależne całki z niepokrywających się przedziałów]
+Dla $0<a<b<c<T$ wyznaczyć rozkład wektora
+$(X,Y)$, gdzie $X=\int_a^b t\,\dd W_t$,
+$Y=\int_b^c (t-b)\,\dd W_t$. Czy jego współrzędne
+są niezależne?
+
+\emph{Rozwiązanie.} Jest to wektor centrowany gaussowski.
+Wariancje wynoszą $\Var(X)=(b^3-a^3)/3$ oraz
+$\Var(Y)=(c-b)^3/3$, a kowariancja jest równa zero,
+gdyż iloczyn funkcji podcałkowych znika niemal wszędzie.
+Stąd $X$ i $Y$ są niezależne. Wspólny punkt $b$ nie
+wpływa na wynik, ponieważ ma zerową miarę Lebesgue'a.
+\end{zadanie}
+

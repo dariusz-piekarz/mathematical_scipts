@@ -1,0 +1,944 @@
+\chapter{Całka Itô: losowe funkcje podcałkowe}
+\label{ch:ito-construction}
+\section{Dlaczego funkcja podcałkowa musi znać tylko przeszłość?}
+W rozdziale pierwszym współczynnik $a_k$ w sumie
+$\sum a_k\Delta_kW$ był ustaloną liczbą. Jeżeli chcemy
+modelować strategię inwestycyjną, siłę losowego zakłócenia
+albo przyrost procesu zależny od aktualnego położenia,
+to naturalny współczynnik ma postać $H_{t_k}(\omega)$.
+Aby rachunek nie wykorzystywał przyszłości, musimy żądać,
+by $H_{t_k}$ był mierzalny względem $\calF_{t_k}$.
+
+W przeciwnym razie suma mogłaby znać znak następnego
+przyrostu i osiągać dodatnią średnią nawet wtedy, gdy
+podstawowy proces Wienera jest martyngałem. Na przykład
+$H_{t_k}=\operatorname{sgn}(\Delta_kW)$
+uzależnia decyzję od przyrostu, który jeszcze nie nastąpił:
+wtedy każdy składnik $H_{t_k}\Delta_kW=|\Delta_kW|$
+jest nieujemny. Taka strategia nie jest przewidywalna.
+
+\begin{definicja}[Proces prosty przewidywalny]
+Proces $H:[0,T]\times\Omega\to\R$ nazywamy prostym
+przewidywalnym, jeżeli istnieje deterministyczny podział
+$0=t_0<\cdots<t_n=T$ i zmienne losowe $\xi_k$
+mierzalne względem $\calF_{t_k}$, takie że
+\[
+H_t=\sum_{k=0}^{n-1}\xi_k\ind{(t_k,t_{k+1}]}(t),
+\qquad 0\le t\le T.
+\tag{2.1}\label{eq:ito-step}
+\]
+W przestrzeni $\calS_{\mathrm{pred}}^2$ rozpatrujemy
+te procesy proste, dla których $\E\xi_k^2<\infty$
+na każdym przedziale o dodatniej długości.
+\end{definicja}
+
+\begin{uwaga}[Wspólna filtracja ma znaczenie]
+Jeżeli do filtracji dołączylibyśmy już w chwili zerowej
+wartość $W_T$, to $W$ nie byłby procesem Wienera
+\emph{względem powiększonej filtracji}: przyrost
+$W_T-W_0$ nie byłby niezależny od $\calF_0$.
+Dlatego każda definicja całki stochastycznej zawiera
+zarówno proces Wienera, jak i filtrację, względem której
+jest on procesem Wienera.
+\end{uwaga}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex,x=1cm,y=0.9cm]
+\draw[->] (0,0)--(9.2,0) node[right] {$t$};
+\draw[->] (0,-.35)--(0,2.8) node[above] {$H_t$};
+\fill[blue!12] (.2,0) rectangle (2,1.35);
+\fill[blue!20] (2,0) rectangle (4.15,2.15);
+\fill[blue!12] (4.15,0) rectangle (6.4,.8);
+\fill[blue!20] (6.4,0) rectangle (8.45,1.8);
+\draw[thick,blue!65!black] (.2,1.35)--(2,1.35) (2,2.15)--(4.15,2.15)
+(4.15,.8)--(6.4,.8) (6.4,1.8)--(8.45,1.8);
+\foreach \x/\name in {0.2/{t_0},2/{t_1},4.15/{t_2},6.4/{t_3},8.45/{t_4}}{
+ \draw[dashed,gray] (\x,0)--(\x,2.5);
+ \node[below,scale=.83] at (\x,0) {$\name$};}
+\node[scale=.86,blue!55!black] at (1.05,1.68) {$\xi_0$};
+\node[scale=.86,blue!55!black] at (3.05,2.48) {$\xi_1$};
+\node[scale=.86,blue!55!black] at (5.3,1.13) {$\xi_2$};
+\node[scale=.86,blue!55!black] at (7.5,2.12) {$\xi_3$};
+\end{tikzpicture}
+\par\smallskip\small Przewidywalny proces prosty: wysokość przedziału jest znana przy jego lewym końcu.
+\end{center}
+
+\section{Całka prostego procesu i warunkowa izometria}
+\begin{definicja}[Całka Itô dla procesów prostych]
+Dla $H$ postaci \eqref{eq:ito-step} i $t\in[0,T]$ kładziemy
+\[
+I_t(H):=\int_0^t H_s\,\dd W_s
+:=\sum_{k=0}^{n-1}\xi_k
+\big(W_{t\wedge t_{k+1}}-W_{t\wedge t_k}\big).
+\tag{2.2}\label{eq:ito-simple}
+\]
+Zmienna $I_t(H)$ jest $\calF_t$-mierzalna.
+\end{definicja}
+
+\begin{lemat}[Poprawność definicji]
+Wzór \eqref{eq:ito-simple} nie zależy od wyboru
+reprezentacji $H$ jako procesu prostego (z dokładnością
+do równości $\dd t\otimes\dd\Prob$-prawie wszędzie).
+Dla prostych procesów $H,K$ i $a,b\in\R$ zachodzi
+$I_t(aH+bK)=aI_t(H)+bI_t(K)$ niemal na pewno.
+\end{lemat}
+\begin{proof}
+Przy rozdrobnieniu deterministycznego podziału współczynnik
+$\xi_k$ na każdym nowym przedziale pozostaje mierzalny
+względem $\calF$ jego lewego końca, bo filtracja jest rosnąca.
+Przyrost procesu Wienera dzieli się na sumę przyrostów,
+więc wartość całki nie zmienia się. Dwie reprezentacje
+procesu sprowadzamy do wspólnego podziału. Na każdym
+przedziale ich współczynniki są równe niemal na pewno,
+ponieważ norma różnicy w przestrzeni produktowej jest zerowa:
+$\E\int_0^T|H-K|^2\,\dd t=0$.
+Po usunięciu skończenie wielu zbiorów zerowych
+współczynniki są równe jednocześnie. Stąd niezależność
+od reprezentacji i liniowość.
+\end{proof}
+
+\begin{twierdzenie}[Martyngałowość i izometria Itô dla procesów prostych]
+\label{th:ito-simple-iso}
+Niech $H,K\in\calS_{\mathrm{pred}}^2$. Wtedy
+$I(H)=(I_t(H))_{0\le t\le T}$ jest ciągłym
+martyngałem z $I_0(H)=0$ i zachodzą
+\[
+\E I_t(H)=0,\qquad
+\E[I_t(H)I_t(K)]
+=\E\int_0^tH_sK_s\,\dd s,
+\tag{2.3}\label{eq:ito-iso-simple}
+\]
+\[
+\E\big[(I_t(H)-I_s(H))^2\mid\calF_s\big]
+=\E\left[\left.\int_s^tH_u^2\,\dd u\,\right|\calF_s\right]
+\quad(0\le s\le t\le T).
+\tag{2.4}\label{eq:ito-conditional-var}
+\]
+\end{twierdzenie}
+\begin{proof}
+Ustalmy wspólny podział dla $H,K$ i początkowo przyjmijmy
+$t=T$. Zapiszmy $H=\sum\xi_k\ind{(t_k,t_{k+1}]}$,
+$K=\sum\eta_k\ind{(t_k,t_{k+1}]}$ i
+$\Delta_kW=W_{t_{k+1}}-W_{t_k}$.
+Dla każdej $k$ mamy
+$\E[\Delta_kW\mid\calF_{t_k}]=0$ i
+$\E[(\Delta_kW)^2\mid\calF_{t_k}]=\Delta t_k$,
+ponieważ przyrost jest niezależny od $\calF_{t_k}$.
+Stąd
+$\E[\xi_k\Delta_kW\mid\calF_{t_k}]=0$ i
+$\E[\xi_k\eta_k(\Delta_kW)^2]=\E[\xi_k\eta_k]\Delta t_k$.
+
+Dla $j<k$ zmienna $\xi_j\eta_k\Delta_jW$ jest
+$\calF_{t_k}$-mierzalna, zatem
+\[
+\E[\xi_j\eta_k\Delta_jW\Delta_kW]
+=\E\big[\xi_j\eta_k\Delta_jW\,
+\E(\Delta_kW\mid\calF_{t_k})\big]=0.
+\]
+Identycznie znikają wyrazy o $k<j$.
+Po wymnożeniu iloczynu dwóch sum pozostają więc
+wyłącznie wyrazy diagonalne:
+\[
+\E[I_T(H)I_T(K)]
+=\sum_k\E(\xi_k\eta_k)\Delta t_k
+=\E\int_0^TH_sK_s\,\dd s.
+\]
+Gdy $t<T$, wystarczy uciąć procesy na $(0,t]$,
+co dowodzi \eqref{eq:ito-iso-simple}. Analogicznie,
+aby pokazać własność martyngałową, dzielimy $I_t(H)$
+na $I_s(H)$ i sumę przyrostów z $(s,t]$. Każdy taki
+składnik ma warunkową średnią zero względem informacji
+w swoim lewym końcu; iterowane warunkowanie daje
+$\E[I_t(H)-I_s(H)\mid\calF_s]=0$. Ciągłość trajektorii
+wynika ze skończonej sumy ciągłych procesów przyrostowych.
+
+Na koniec zastosujmy identyczne rozwinięcie kwadratu
+do całki na przedziale $(s,t]$, ale tym razem z warunkowaniem
+względem $\calF_s$. Wyrazy mieszane znikają po iterowanym
+warunkowaniu, a składniki diagonalne mają warunkową
+wartość oczekiwaną równą
+$\E[\xi_k^2\Delta t_k\mid\calF_s]$.
+Zsumowanie daje \eqref{eq:ito-conditional-var}.
+\end{proof}
+
+\begin{uwaga}[Uzasadnienie całkowalności iloczynów]
+Jeżeli $\E\xi_k^2$ i $\E\eta_k^2$ są skończone,
+to $\E|\xi_k\eta_k|<\infty$ z nierówności
+Cauchy'ego--Schwarza. Same składniki całek mają skończone
+drugie momenty dzięki warunkowej wariancji przyszłego
+przyrostu. W konsekwencji wszystkie zastosowania
+warunkowej wartości oczekiwanej w dowodzie są uprawnione.
+\end{uwaga}
+
+\section{Procesy przewidywalne i przestrzeń całkowania}
+W praktyce proces $H$ nie musi mieć skończonej liczby zmian.
+Na przykład $H_t=W_t$ jest ciągły i zależy od całej
+przeszłości. Aby przybliżać takie procesy przez
+$\calS_{\mathrm{pred}}^2$, potrzebujemy dokładnie określonej
+mierzalności względem czasu i zdarzeń losowych.
+
+\begin{definicja}[Przewidywalne $\sigma$-ciało]
+Na przestrzeni $[0,T]\times\Omega$ definiujemy
+\emph{przewidywalne $\sigma$-ciało} $\calP_T$ jako
+$\sigma$-ciało generowane przez zbiory
+$\{0\}\times A$, $A\in\calF_0$, oraz
+$(s,t]\times A$, gdzie $0\le s<t\le T$ i $A\in\calF_s$.
+Proces $H$ nazywamy \emph{przewidywalnym}, gdy odwzorowanie
+$(t,\omega)\mapsto H_t(\omega)$ jest
+$\calP_T/\calB(\R)$-mierzalne.
+Definiujemy
+\[
+\calH_T^2:=\left\{H\text{ przewidywalny}:
+\E\int_0^T H_t^2\,\dd t<\infty\right\}\big/\sim,
+\quad H\sim K\iff H=K\quad
+(\dd t\otimes\Prob)\text{-p.w.}
+\tag{2.5}
+\]
+Norma ma postać
+$\norm{H}_{\calH_T^2}:=(\E\int_0^TH_t^2\,\dd t)^{1/2}$.
+\end{definicja}
+
+\begin{uwaga}[Oznaczenia i mierzalność]
+Produktem miar w \eqref{eq:ito-iso-simple} jest
+$\dd t\otimes\dd\Prob$, w zwykłym znaczeniu miary
+Lebesgue'a na czasie i miary probabilistycznej na $\Omega$.
+Nie każdy proces adaptowany jest automatycznie przewidywalny.
+Natomiast każdy adaptowany proces o ciągłych albo
+lewostronnie ciągłych trajektoriach jest przewidywalny:
+można przybliżać go punktowo procesami stałymi na
+przedziałach, używając wartości w lewych końcach.
+\end{uwaga}
+
+\begin{lemat}[Gęstość prostych procesów przewidywalnych]
+\label{lem:pred-dense}
+Przestrzeń $\calS_{\mathrm{pred}}^2$ jest gęsta w
+$\calH_T^2$.
+\end{lemat}
+\begin{proof}
+Przestrzeń $\calH_T^2$ jest zamkniętą podprzestrzenią
+$L^2([0,T]\times\Omega,\calB([0,T])\otimes\calF,
+\dd t\otimes\Prob)$ z warunkiem mierzalności względem
+$\calP_T$, a więc jest zupełna.
+Rozważmy rodzinę prostokątów $(s,t]\times A$ z
+$A\in\calF_s$. Ich wskaźniki odpowiadają dokładnie
+prostym procesom przewidywalnym
+$\ind A\ind{(s,t]}$. Rodzina tych prostokątów, wraz
+ze zbiorami z chwili zerowej, jest zamknięta na
+skończone przecięcia: jeśli $s\le u$, to
+$\big((s,t]\times A\big)\cap\big((u,v]\times B\big)$
+jest albo pusta, albo równa
+$(u,\min\{t,v\}]\times(A\cap B)$, gdzie
+$A\cap B\in\calF_u$. Tak więc jest to $\pi$-układ
+generujący $\calP_T$.
+
+Niech $\calD$ będzie klasą zbiorów $C\in\calP_T$,
+dla których wskaźnik $\ind C$ należy do domknięcia
+w $L^2(\dd t\otimes\Prob)$ przestrzeni liniowej
+rozpiętej przez wskaźniki wspomnianych prostokątów.
+Ponieważ miara produktowa ma skończoną masę $T$,
+$\calD$ jest klasą Dynkina: zawiera całą przestrzeń
+(z dokładnością do przekroju $\{0\}\times\Omega$ o
+zerowej mierze produktowej), jest zamknięta na różnice
+zbiorów zagnieżdżonych oraz na przeliczalne rozłączne
+sumy, co wynika ze zbieżności wskaźników w $L^2$
+i z domknięcia. Twierdzenie o $\pi$- i $\lambda$-układach
+daje $\calD=\calP_T$. Wobec tego wskaźniki dowolnych
+zbiorów przewidywalnych dają się aproksymować w $L^2$
+przez skończone liniowe kombinacje wskaźników prostokątów.
+Na koniec każdą funkcję z $L^2(\calP_T)$ przybliżamy
+funkcjami prostymi. Otrzymane aproksymacje są
+prostymi procesami przewidywalnymi o ograniczonych
+współczynnikach, a zatem należą do
+$\calS_{\mathrm{pred}}^2$.
+\end{proof}
+
+\begin{twierdzenie}[Konstrukcja całki Itô w $L^2$]\label{th:ito-extension}
+Dla każdego $H\in\calH_T^2$ istnieje jednoznaczny
+(z dokładnością do nierozróżnialności) ciągły,
+adaptowany martyngał $I(H)=(I_t(H))_{0\le t\le T}$
+z $I_0(H)=0$, taki że dla każdego ciągu
+$H^n\in\calS_{\mathrm{pred}}^2$ z
+$\norm{H^n-H}_{\calH_T^2}\to0$ zachodzi
+\[
+\E\sup_{0\le t\le T}|I_t(H^n)-I_t(H)|^2\longrightarrow0.
+\tag{2.6}\label{eq:ito-process-limit}
+\]
+Odwzorowanie $H\mapsto I_T(H)$ jest liniową izometrią
+$\calH_T^2\to L^2(\Omega)$ oraz dla dowolnych
+$H,K\in\calH_T^2$ i $t\in[0,T]$ zachodzi
+\[
+\E\left|\int_0^tH_s\,\dd W_s\right|^2
+=\E\int_0^tH_s^2\,\dd s,
+\qquad
+\E\left[\int_0^tH_s\,\dd W_s\int_0^tK_s\,\dd W_s\right]
+=\E\int_0^tH_sK_s\,\dd s.
+\tag{2.7}\label{eq:ito-full-iso}
+\]
+\end{twierdzenie}
+\begin{proof}
+Gęstość z lematu \ref{lem:pred-dense} zapewnia istnienie
+$H^n\to H$ w $\calH_T^2$. Dla procesów prostych
+$M^n:=I(H^n)$ nierówność maksymalna Dooba i
+\eqref{eq:ito-iso-simple} dają
+\[
+\E\sup_{t\le T}|M_t^n-M_t^m|^2
+\le4\E|M_T^n-M_T^m|^2
+=4\norm{H^n-H^m}_{\calH_T^2}^2.
+\tag{2.8}\label{eq:ito-doob-cauchy}
+\]
+W szczególności $(M^n)$ jest ciągiem Cauchy'ego
+w normie $\norm{M}_{\mathbb S^2}:=(\E\sup_{t\le T}|M_t|^2)^{1/2}$.
+Aby nie opierać się niejawnie na zupełności przestrzeni
+procesów, wybierzmy podciąg $(M^{n_j})$, dla którego
+$\sum_j\norm{M^{n_{j+1}}-M^{n_j}}_{\mathbb S^2}<\infty$.
+Z nierówności Jensena i zbieżności monotonicznej
+$\E\sum_j\sup_t|M_t^{n_{j+1}}-M_t^{n_j}|<\infty$.
+Zatem suma supremów jest skończona prawie na pewno,
+a podciąg zbiega jednostajnie na $[0,T]$ poza jednym
+zbiorem zerowym. Jego granica ma ciągłe trajektorie.
+Niech $M$ oznacza ten proces, z wartością zero na
+wyjątkowym zbiorze (który można wybrać w $\calF_0$
+przez zupełność filtracji).
+
+Ponieważ procesy $M^{n_j}$ są adaptowane, ich granice
+punktowe są $\calF_t$-mierzalne. Z nierówności
+\eqref{eq:ito-doob-cauchy} wynika, że cały ciąg
+$(M^n)$ zbiega do $M$ w normie $\mathbb S^2$.
+Dla $s\le t$ mamy
+$\E[M_t^n\mid\calF_s]=M_s^n$; zbieżność w $L^2$
+i kontrakcja warunkowej wartości oczekiwanej pozwalają
+przejść do granicy i otrzymać $\E[M_t\mid\calF_s]=M_s$.
+Tym samym $M$ jest martyngałem.
+
+Gdybyśmy wybrali inny ciąg aproksymujący $K^n\to H$,
+to \eqref{eq:ito-doob-cauchy} dla różnicy pokazuje,
+że oba procesy graniczne mają zerową normę odległości
+w $\mathbb S^2$. Są więc nierozróżnialne.
+Izometrię \eqref{eq:ito-full-iso} otrzymujemy,
+przechodząc do granicy w odpowiedniej równości dla
+procesów prostych, najpierw dla kwadratów, a następnie
+stosując polaryzację. Dokładnie to samo daje
+\eqref{eq:ito-process-limit}.
+\end{proof}
+
+\begin{wniosek}[Oszacowanie maksymalne]
+Dla każdego $H\in\calH_T^2$ zachodzi
+\[
+\E\sup_{0\le t\le T}\left|\int_0^tH_s\,\dd W_s\right|^2
+\le4\E\int_0^TH_s^2\,\dd s.
+\tag{2.9}\label{eq:ito-max}
+\]
+\end{wniosek}
+\begin{proof}
+Jest to nierówność maksymalna Dooba dla martyngału
+z twierdzenia \ref{th:ito-extension} wraz z izometrią.
+\end{proof}
+
+\begin{uwaga}[Co daje oszacowanie maksymalne?]
+Sama izometria w chwili $T$ kontroluje tylko
+$\E|I_T(H)|^2$. Oszacowanie \eqref{eq:ito-max}
+kontroluje \emph{całą ścieżkę} całki stochastycznej.
+Pozwala więc uzyskać zbieżność jednostajną na zwartym
+przedziale w prawdopodobieństwie, a po wyborze podciągu
+również zbieżność jednostajną prawie na pewno. To właśnie
+uzasadnia wybór ciągłej wersji procesu całkowego.
+\end{uwaga}
+
+
+\begin{lemat}[Ciągły proces adaptowany jest przewidywalny]
+Jeżeli $H$ jest rzeczywistym, adaptowanym procesem
+o ciągłych trajektoriach, to jest przewidywalny.
+Jeśli ponadto $\E\int_0^TH_t^2\,\dd t<\infty$,
+to należy do $\calH_T^2$.
+\end{lemat}
+\begin{proof}
+Dla każdego $n$ wybierzmy deterministyczny podział
+$0=t_0^{(n)}<\cdots<t_{k_n}^{(n)}=T$ o średnicy
+dążącej do zera i zdefiniujmy
+$H_t^{(n)}=\sum_k H_{t_k^{(n)}}
+\ind{(t_k^{(n)},t_{k+1}^{(n)}]}(t)$,
+a w punkcie zero przyjmijmy $H_0^{(n)}=H_0$.
+Każdy $H^{(n)}$ jest przewidywalny, bo
+$H_{t_k^{(n)}}$ jest $\calF_{t_k^{(n)}}$-mierzalny.
+Dla każdej ciągłej trajektorii mamy
+$H_t^{(n)}\to H_t$ dla każdego $t$ dzięki
+ciągłości w czasie. Granica punktowa funkcji
+mierzalnych względem $\calP_T$ pozostaje
+$\calP_T$-mierzalna. Druga część wynika wprost
+z definicji przestrzeni $\calH_T^2$.
+\end{proof}
+
+\begin{przyklad}[Aproksymacja $H_t=g(W_t)$ i jej dokładność]
+Niech $g:\R\to\R$ będzie funkcją globalnie Lipschitzowską
+z pewną stałą $L\ge0$. Proces $H_t=g(W_t)$ jest
+adaptowany i ciągły, a także należy do $\calH_T^2$,
+ponieważ $|g(x)|\le|g(0)|+L|x|$ i
+$\E W_t^2=t$. Na równomiernej siatce $t_k=kT/n$
+przybliżmy $H$ przez
+$H_t^{(n)}=g(W_{t_k})$ dla $t\in(t_k,t_{k+1}]$.
+Wówczas
+\[
+\E\int_0^T|H_t^{(n)}-H_t|^2\,\dd t
+\le L^2\sum_{k=0}^{n-1}\int_{t_k}^{t_{k+1}}
+\E|W_t-W_{t_k}|^2\,\dd t
+=\frac{L^2T^2}{2n}.
+\]
+Izometria Itô daje błąd średniokwadratowy całki
+w chwili $T$ nie większy niż $L^2T^2/(2n)$,
+a nierówność Dooba daje analogiczną kontrolę
+całego procesu, z czterokrotnie większą stałą.
+Takie oszacowanie jest punktem wyjścia
+numerycznej aproksymacji całek stochastycznych.
+\end{przyklad}
+
+\section{Podstawowe własności wynikające z konstrukcji}
+\begin{twierdzenie}[Lokalność w czasie i zależność od informacji]
+\label{th:ito-properties}
+Niech $H,K\in\calH_T^2$, $0\le s\le t\le T$.
+Wówczas:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item $\displaystyle\int_0^tH_u\,\dd W_u
+=\int_0^T H_u\ind{(0,t]}(u)\,\dd W_u$;
+\item jeśli $H=K$ $\dd t\otimes\Prob$-prawie wszędzie
+na $[0,t]\times\Omega$, to $I_u(H)=I_u(K)$ dla wszystkich
+$u\le t$ poza jednym zbiorem zerowym;
+\item $\displaystyle I_t(H)-I_s(H)=\int_0^TH_u\ind{(s,t]}(u)\,\dd W_u$;
+\item jeśli $A\in\calF_s$, to
+$\displaystyle\ind A\big(I_t(H)-I_s(H)\big)
+=\int_s^t\ind A H_u\,\dd W_u$;
+\item zachodzi warunkowa izometria
+\[
+\E\big[(I_t(H)-I_s(H))^2\mid\calF_s\big]
+=\E\left[\left.\int_s^tH_u^2\,\dd u\,\right|\calF_s\right].
+\]
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Dla procesów prostych (i) i (iii) wynikają z samej
+definicji sum. Dla ogólnych procesów przechodzimy
+do granicy w $\calH_T^2$; pomnożenie procesu przez
+wskaźnik deterministycznego przedziału nie zwiększa
+normy. W (ii) izometria stosowana do $(H-K)\ind{(0,t]}$
+daje równość całek w każdej chwili $u\le t$;
+ciągłość obu procesów rozszerza ją z chwil wymiernych
+na wszystkie chwile poza jednym zbiorem zerowym.
+
+W (iv) proces $\ind A H_u\ind{(s,t]}(u)$ jest
+przewidywalny, ponieważ $A\in\calF_s$ i na
+$(s,t]$ informacja $A$ jest już dostępna. Dla procesu
+prostego wzór wynika z przeniesienia wskaźnika $\ind A$
+przed skończoną sumę. Dla ogólnego $H$ aproksymujemy
+przez procesy proste i korzystamy z izometrii,
+gdyż mnożenie przez $\ind A$ jest kontrakcją
+w $\calH_T^2$.
+
+W (v) dla procesu prostego mamy \eqref{eq:ito-conditional-var}.
+Dla $H^n\to H$ w $\calH_T^2$ przyrosty całek
+zbiegają w $L^2$, więc ich kwadraty zbiegają w $L^1$:
+$\E|X_n^2-X^2|\le\norm{X_n-X}_2(\norm{X_n}_2+\norm X_2)$.
+Jednocześnie $\int_s^t(H_u^n)^2\,\dd u$ zbiega
+w $L^1(\Omega)$ do $\int_s^tH_u^2\,\dd u$,
+co wynika z tej samej nierówności Cauchy'ego--Schwarza
+zastosowanej w przestrzeni produktowej.
+Ponieważ warunkowa wartość oczekiwana jest kontrakcją
+w $L^1$, przechodzimy do granicy w tożsamości
+warunkowej dla procesów prostych.
+\end{proof}
+
+\begin{twierdzenie}[Kwadrat całki i przewidywalny nawias]
+\label{th:ito-bracket}
+Dla $H\in\calH_T^2$ proces
+\[
+Q_t:=\left(\int_0^tH_s\,\dd W_s\right)^2
+-\int_0^tH_s^2\,\dd s,\qquad 0\le t\le T,
+\tag{2.10}\label{eq:ito-square-mg}
+\]
+jest martyngałem. Jeżeli przez $\langle M\rangle$
+oznaczamy przewidywalny nawias ciągłego martyngału
+kwadratowo całkowalnego z tomu II, to dla
+$M_t=\int_0^tH_s\,\dd W_s$ mamy
+$\langle M\rangle_t=\int_0^tH_s^2\,\dd s$.
+W szczególności dla ciągłego martyngału
+$[M]=\langle M\rangle$, więc
+$[M]_t=\int_0^tH_s^2\,\dd s$.
+\end{twierdzenie}
+\begin{proof}
+Własność martyngałową $M$ oraz warunkową izometrię
+ustaliliśmy powyżej. Dla $s\le t$ zapisujemy
+$M_t=M_s+(M_t-M_s)$ i rozwijamy kwadrat.
+Po warunkowaniu względem $\calF_s$ składnik liniowy
+$2M_s\E[M_t-M_s\mid\calF_s]$ znika. Pozostaje
+\[
+\E[M_t^2\mid\calF_s]
+=M_s^2+\E\left[\left.\int_s^tH_u^2\,\dd u\,\right|\calF_s\right].
+\]
+Odjęcie $\E[\int_0^tH_u^2\,\dd u\mid\calF_s]$
+daje $\E[Q_t\mid\calF_s]=Q_s$. Wszystkie wyrazy
+są całkowalne na mocy izometrii.
+Proces $A_t=\int_0^tH_s^2\,\dd s$ jest adaptowany,
+ciągły i niemalejący, a więc przewidywalny.
+Z definicji i jednoznaczności przewidywalnego nawiasu
+ciągłego martyngału kwadratowo całkowalnego wynika
+$\langle M\rangle=A$. W tomie II wykazaliśmy,
+że dla ciągłych lokalnych martyngałów wariacja
+kwadratowa i nawias przewidywalny są tym samym
+ciągłym procesem; stąd ostatnia równość.
+\end{proof}
+
+\begin{uwaga}[Nie jest to jeszcze pełny wzór Itô]
+Tożsamość \eqref{eq:ito-square-mg} identyfikuje
+martyngałowy kompensator kwadratu. W kolejnym rozdziale
+wyprowadzimy wzór dla ogólnego $F(t,X_t)$, a także
+rachunek różniczkowy z poprawką wariacji kwadratowej.
+Nie powinniśmy traktować symboli $(\dd W_t)^2=\dd t$
+jako zwykłej algebry nieskończenie małych wielkości;
+są one skrótem dla ścisłych twierdzeń o granicach sum.
+\end{uwaga}
+
+
+\begin{przyklad}[Martyngał bez niezależnych przyrostów]
+Proces $M_t:=\int_0^tW_u\,\dd W_u$
+jest martyngałem, ale jego przyrosty nie są niezależne
+od przeszłości. Z warunkowej izometrii dla $s<t$
+wynika
+\[
+\E[(M_t-M_s)^2\mid\calF_s]
+=\E\left[\left.\int_s^tW_u^2\,\dd u\,\right|\calF_s\right]
+=\int_s^t\big(W_s^2+(u-s)\big)\,\dd u
+=(t-s)W_s^2+\frac{(t-s)^2}{2}.
+\]
+W drugim przejściu użyliśmy rozkładu
+$W_u=W_s+(W_u-W_s)$ oraz niezależności
+przyrostu od $\calF_s$. Prawa strona jest
+rzeczywiście losowa dla $s>0$. Gdyby
+$M_t-M_s$ był niezależny od $\calF_s$, jego
+warunkowy drugi moment byłby stałą, co przeczy
+otrzymanemu wzorowi. Ta obserwacja odróżnia
+martyngałowość od własności niezależnych przyrostów.
+\end{przyklad}
+
+\section{Zatrzymywanie i całka stochastyczna}
+Przy zatrzymywaniu strategii na losowym horyzoncie nie
+wystarcza zwykłe pomnożenie przez wskaźnik zdarzenia
+$\{\tau\le t\}$. Potrzebujemy procesu, który w chwili $u$
+wskazuje, czy strategia jeszcze działa. Właśnie taki proces
+jest przewidywalny.
+
+\begin{twierdzenie}[Zatrzymanie całki Itô]\label{th:ito-stopping}
+Niech $H\in\calH_T^2$ i niech $\tau$ będzie czasem
+zatrzymania o wartościach w $[0,T]$. Wówczas proces
+$H_u\ind{(0,\tau]}(u)$ jest przewidywalny i należy
+do $\calH_T^2$, a dla wszystkich $t\in[0,T]$
+zachodzi, poza jednym zbiorem zerowym,
+\[
+\int_0^{t\wedge\tau}H_u\,\dd W_u
+=\int_0^t H_u\ind{\{u\le\tau\}}\,\dd W_u.
+\tag{2.11}\label{eq:stopped-ito}
+\]
+\end{twierdzenie}
+\begin{proof}
+Proces $u\mapsto\ind{\{u\le\tau\}}$ jest adaptowany
+i lewostronnie ciągły dla każdej trajektorii na $(0,T]$,
+więc jest przewidywalny. Iloczyn z przewidywalnym $H$
+też jest przewidywalny, a jego norma w $\calH_T^2$
+nie przekracza normy $H$.
+
+Najpierw niech $H$ będzie procesem prostym. Ustalmy
+ciąg czasów $\tau_n:=2^{-n}\lceil2^n\tau\rceil\wedge T$,
+gdzie w razie potrzeby ostatni przedział siatki skracamy
+do $T$. Każdy $\tau_n$ jest czasem zatrzymania o skończenie
+wielu wartościach, a $\tau_n\downarrow\tau$.
+Po wspólnym rozdrobnieniu siatki procesu $H$ i siatki
+czasu $\tau_n$ można zapisać proces
+$H\ind{(0,\tau_n]}$ jako prosty przewidywalny:
+współczynnik na odcinku $(u,v]$ zawiera wskaźnik
+$\{\tau_n\ge v\}=\{\tau_n>u\}$, który jest
+$\calF_u$-mierzalny. Z definicji sum wynika dokładnie
+$I_t(H\ind{(0,\tau_n]})=I_{t\wedge\tau_n}(H)$.
+Ponieważ $H$ jest kwadratowo całkowalny,
+\[
+\E\int_0^T H_u^2
+|\ind{\{u\le\tau_n\}}-\ind{\{u\le\tau\}}|^2\,\dd u
+\longrightarrow0
+\]
+na mocy zbieżności zdominowanej względem
+$\dd t\otimes\dd\Prob$; pojedyncza chwila $u=\tau$
+nie wpływa na całkę po czasie. Izometria Itô pozwala
+przejść do granicy po prawej, a ciągłość trajektorii
+$I(H)$ po lewej. Dostajemy tezę dla prostego $H$.
+
+W przypadku ogólnym wybierzmy proste $H^m\to H$
+w $\calH_T^2$. Po zatrzymaniu zachodzi ta sama
+zbieżność w $\calH_T^2$, gdyż mnożenie przez
+$\ind{(0,\tau]}$ jest kontrakcją.
+Nierówność maksymalna \eqref{eq:ito-max} daje zbieżność
+całych procesów $I(H^m)\to I(H)$ oraz
+$I(H^m\ind{(0,\tau]})\to I(H\ind{(0,\tau]})$
+w normie $\mathbb S^2$. Tożsamość dla $H^m$
+przechodzi zatem do granicy. Równość w chwilach wymiernych
+i ciągłość procesów zapewniają wspólny zbiór pełnego
+prawdopodobieństwa, na którym zachodzi dla wszystkich $t$.
+\end{proof}
+
+\begin{zadanie}[Zatrzymany ruch Browna]
+Niech $a>0$, a proces Wienera będzie określony na
+$[0,\infty)$. Niech $\tau_a=\inf\{t\ge0:W_t=a\}$.
+Dla ustalonego $T>0$
+wyznaczyć $\int_0^T\ind{\{t\le\tau_a\}}\,\dd W_t$
+i jego wartość oczekiwaną.
+
+\emph{Rozwiązanie.} Z twierdzenia \ref{th:ito-stopping}
+i równości $\int_0^t1\,\dd W_s=W_t$ otrzymujemy
+$\int_0^T\ind{\{t\le\tau_a\}}\,\dd W_t=W_{T\wedge\tau_a}$.
+Ponieważ czas $T\wedge\tau_a$ jest ograniczony,
+próbkowanie opcjonalne lub bezpośrednia martyngałowość
+całki daje $\E W_{T\wedge\tau_a}=0$.
+Nie wolno bez dodatkowych warunków przechodzić tu do
+$T\to\infty$ pod wartością oczekiwaną:
+$W_{\tau_a}=a$ prawie na pewno, ale $\E W_{\tau_a}=a$,
+a nie zero. Przy granicy traci się odpowiednią
+jednostajną całkowalność.
+\end{zadanie}
+
+\section{Lokalna całkowalność: wyjście poza przestrzeń kwadratowalną}
+Warunek $\E\int_0^T H_t^2\,\dd t<\infty$ jest
+wygodny do konstrukcji, ale w wielu zastosowaniach
+okazuje się zbyt mocny. Proces może mieć dobrze
+zdefiniowaną całkę mimo nieskończonej wartości oczekiwanej
+energii, jeśli energia każdej pojedynczej trajektorii
+jest skończona.
+
+\begin{definicja}[Całkowalność lokalna względem procesu Wienera]
+Mówimy, że przewidywalny proces $H$ należy do
+$\calH_{\mathrm{loc},T}^2$, gdy
+$\int_0^T H_t^2\,\dd t<\infty$ prawie na pewno.
+Nie zakładamy skończoności wartości oczekiwanej tej całki.
+\end{definicja}
+
+\begin{twierdzenie}[Konstrukcja całki Itô przez lokalizację]\label{th:ito-local}
+Dla każdego $H\in\calH_{\mathrm{loc},T}^2$
+istnieje jednoznaczny, z dokładnością do nierozróżnialności,
+ciągły lokalny martyngał $I(H)$, taki że dla
+$\tau_n:=\inf\{t\in[0,T]:\int_0^t H_s^2\,\dd s\ge n\}\wedge T$
+zachodzi
+\[
+I_{t\wedge\tau_n}(H)
+=\int_0^tH_s\ind{\{s\le\tau_n\}}\,\dd W_s,
+\qquad 0\le t\le T.
+\tag{2.12}
+\]
+Procesy po prawej są zdefiniowane przez
+poprzednią konstrukcję w $L^2$, a $\tau_n\uparrow T$
+prawie na pewno. Całka zachowuje liniowość i własność
+zatrzymywania.
+\end{twierdzenie}
+\begin{proof}
+Proces $A_t=\int_0^tH_s^2\,\dd s$ jest adaptowany,
+ciągły i niemalejący, więc $\tau_n$ jest czasem
+zatrzymania. Ciągłość $A$ zapewnia
+$A_{\tau_n}\le n$, chyba że $\tau_n=T$ i $A_T<n$;
+w obu przypadkach nierówność pozostaje prawdziwa.
+Zatem
+\[
+\E\int_0^T H_s^2\ind{\{s\le\tau_n\}}\,\dd s
+=\E A_{\tau_n}\le n.
+\]
+W konsekwencji każdy proces
+$H^{(n)}:=H\ind{(0,\tau_n]}$ należy do $\calH_T^2$.
+Dla $m\ge n$ mamy
+$H^{(m)}\ind{(0,\tau_n]}=H^{(n)}$ niemal wszędzie.
+Twierdzenie \ref{th:ito-stopping} daje więc
+$I_{t\wedge\tau_n}(H^{(m)})=I_t(H^{(n)})$ dla wszystkich
+$t$ poza wspólnym zbiorem zerowym.
+Można zatem skleić ciągłe procesy $I(H^{(n)})$
+w jedną ciągłą trajektorię: definiujemy ją w chwili $t$
+przez $I_t(H^{(n)})$, jeśli $t\le\tau_n$, co jest
+niezależne od dostatecznie dużego $n$.
+Ponieważ $A_T<\infty$ prawie na pewno, dla każdego
+$\omega$ poza zbiorem zerowym przy dostatecznie dużym
+$n$ mamy $\tau_n(\omega)=T$; sklejanie obejmuje więc
+cały przedział. Otrzymany proces jest lokalnym martyngałem,
+bo każdy zatrzymany proces $I_{\cdot\wedge\tau_n}(H)$
+jest martyngałem kwadratowo całkowalnym.
+Jednoznaczność wynika z jednoznaczności wszystkich
+zatrzymanych procesów. Liniowość otrzymujemy,
+lokalizując równocześnie dwa integrandy przez
+wspólną sekwencję czasów opartą na sumie ich energii.
+\end{proof}
+
+\begin{uwaga}[Kres własności całki]
+Dla lokalnie kwadratowo całkowalnego procesu $H$ całka
+$I_t(H)$ \emph{nie musi} należeć do $L^2(\Omega)$ ani
+być prawdziwym martyngałem. Jej podstawową własnością
+jest lokalna martyngałowość. Nie wolno więc bezwarunkowo
+stosować wzoru $\E I_t(H)=0$ ani izometrii w postaci
+z nieskończoną prawą stroną. Poprawny jest zawsze
+wzór lokalny, po zatrzymaniu na $\tau_n$.
+\end{uwaga}
+
+\begin{przyklad}[Proces lokalnie całkowalny, lecz nie w $\calH_T^2$]
+Niech $Z$ będzie zmienną losową niezależną od $W$,
+$Z<\infty$ prawie na pewno, ale $\E Z^2=\infty$.
+Rozszerzmy filtrację przez ujawnienie $Z$ w chwili $0$
+i zdefiniujmy $H_t=Z$. Proces jest przewidywalny i
+$\int_0^TH_t^2\,\dd t=TZ^2<\infty$ prawie na pewno,
+lecz jego wartość oczekiwana jest nieskończona.
+Całka lokalna ma postać $I_t(H)=ZW_t$.
+Proces zatrzymujemy po przekroczeniu poziomu energii;
+w tej prostej sytuacji można też bezpośrednio lokalizować
+przez zdarzenia $\{|Z|\le n\}\in\calF_0$.
+\end{przyklad}
+
+\section{Obliczanie całek: trzy szczegółowe przykłady}
+\begin{zadanie}[Podstawowa całka $\int W\,\dd W$]\label{zad:W-dW}
+Obliczyć $\int_0^T W_t\,\dd W_t$ bez używania wzoru Itô.
+
+\emph{Rozwiązanie.}
+Proces $H_t=W_t$ jest adaptowany i ciągły,
+a więc przewidywalny. Ponadto
+$\E\int_0^TW_t^2\,\dd t=\int_0^Tt\,\dd t=T^2/2<\infty$.
+Na równomiernej siatce $t_k=kT/n$ rozważmy proces
+$H_t^{(n)}=W_{t_k}$ dla $t\in(t_k,t_{k+1}]$.
+Z niezależności przyrostów
+\[
+\E\int_0^T|H_t^{(n)}-W_t|^2\,\dd t
+=\sum_k\int_{t_k}^{t_{k+1}}(t-t_k)\,\dd t
+=\frac{T^2}{2n}\longrightarrow0.
+\]
+Izometria Itô daje więc zbieżność sum
+$\sum_kW_{t_k}\Delta_kW$ do szukanej całki w $L^2$.
+Z tożsamości algebraicznej
+\[
+2\sum_kW_{t_k}\Delta_kW
+=W_T^2-\sum_k(\Delta_kW)^2
+\]
+oraz zbieżności wariacji kwadratowej z tomu II
+$\sum_k(\Delta_kW)^2\to T$ w $L^2$ otrzymujemy
+\[
+\int_0^TW_t\,\dd W_t=\frac12(W_T^2-T)
+\quad\text{prawie na pewno}.
+\tag{2.13}\label{eq:W-dW}
+\]
+Warto zauważyć, że średnia prawej strony wynosi zero,
+a jej wariancja jest równa
+$\frac14\Var(W_T^2)=T^2/2$, zgodnie z izometrią.
+\end{zadanie}
+
+\begin{zadanie}[Całka $\int W^2\,\dd W$ bez wzoru Itô]
+Obliczyć $\int_0^T W_t^2\,\dd W_t$ bez stosowania
+rachunku Itô do funkcji $x\mapsto x^3$.
+
+\emph{Rozwiązanie.} Proces $W_t^2$ jest przewidywalny,
+a $\E\int_0^T W_t^4\,\dd t
+=3\int_0^T t^2\,\dd t=T^3<\infty$.
+Dla siatki równomiernej $t_k=k\Delta$, $\Delta=T/n$,
+przyrostów $\Delta_kW=W_{t_{k+1}}-W_{t_k}$ mamy
+dokładną tożsamość algebraiczną
+\[
+W_T^3
+=3\sum_kW_{t_k}^2\Delta_kW
++3\sum_kW_{t_k}(\Delta_kW)^2
++\sum_k(\Delta_kW)^3.
+\tag{2.14}\label{eq:ito-cube-expand}
+\]
+Najpierw udowodnimy zbieżność pierwszej sumy do całki Itô.
+Na przedziale $[t_k,t_{k+1}]$, pisząc
+$W_t=W_{t_k}+\delta_t$ z przyrostem niezależnym od
+$\calF_{t_k}$, otrzymujemy
+$\E(W_t^2-W_{t_k}^2)^2
+=4t_k(t-t_k)+3(t-t_k)^2$.
+Wobec tego
+\[
+\E\int_0^T|W_t^2-W_{t_k(t)}^2|^2\,\dd t
+\le 4T^2\Delta+3T\Delta^2\longrightarrow0,
+\]
+gdzie $t_k(t)$ oznacza lewy koniec przedziału
+zawierającego $t$. Izometria daje pożądaną zbieżność
+pierwszej sumy w $L^2$.
+
+Drugi składnik rozdzielamy na
+\[
+\sum_kW_{t_k}(\Delta_kW)^2
+=\sum_kW_{t_k}\Delta+R_n,\qquad
+R_n:=\sum_kW_{t_k}[(\Delta_kW)^2-\Delta].
+\]
+Poszczególne składniki $R_n$ są różnicami
+martyngałowymi, więc są ortogonalne w $L^2$. Ponieważ
+$\E[(\Delta_kW)^2-\Delta]^2=2\Delta^2$,
+\[
+\E R_n^2
+=2\Delta^2\sum_k\E W_{t_k}^2
+\le2T^2\Delta\longrightarrow0.
+\]
+Suma Riemanna $\sum_kW_{t_k}\Delta$ dąży do
+$\int_0^TW_t\,\dd t$ w $L^2$ (na przykład
+z nierówności Cauchy'ego--Schwarza oraz ciągłości
+średniokwadratowej $W$). Wreszcie składniki
+$(\Delta_kW)^3$ są niezależne, mają średnią zero
+i szóste momenty $15\Delta^3$. Stąd
+$\E|\sum_k(\Delta_kW)^3|^2=15n\Delta^3=15T\Delta^2\to0$.
+Przechodząc w \eqref{eq:ito-cube-expand} do granicy w $L^2$
+otrzymujemy
+\[
+\int_0^TW_t^2\,\dd W_t
+=\frac13W_T^3-\int_0^TW_t\,\dd t.
+\tag{2.15}\label{eq:W2-dW}
+\]
+Ta tożsamość jest zapowiedzią wzoru Itô dla
+funkcji $x^3$ i pokazuje, skąd bierze się dodatkowy
+wyraz względem zwykłego rachunku różniczkowego.
+\end{zadanie}
+
+\begin{zadanie}[Strategia zależna od pierwszej obserwacji]
+Załóżmy, że inwestor obserwuje $W_{T/2}$, a następnie
+w drugiej połowie przedziału utrzymuje pozycję równą
+$1$, jeśli $W_{T/2}>0$, i zero w przeciwnym przypadku.
+Wyznaczyć prawo końcowego zysku
+$X=\int_0^T\ind{\{W_{T/2}>0\}}\ind{(T/2,T]}(t)\,\dd W_t$.
+
+\emph{Rozwiązanie.} Funkcja podcałkowa jest prostym
+procesem przewidywalnym: decyzja jest
+$\calF_{T/2}$-mierzalna. Z definicji
+$X=\ind{\{W_{T/2}>0\}}(W_T-W_{T/2})$.
+Przyrost $Y=W_T-W_{T/2}\sim\Normal(0,T/2)$ jest
+niezależny od $W_{T/2}$. Z symetrii rozkładu normalnego
+$\Prob(W_{T/2}>0)=1/2$. Zatem rozkład $X$ jest mieszaniną
+$\frac12\delta_0+\frac12\Normal(0,T/2)$.
+Nie jest rozkładem normalnym, ponieważ ma atom
+w zerze o masie $1/2$. Jednocześnie
+$\E X=0$ i $\Var(X)=(1/2)(T/2)=T/4$,
+co potwierdza izometria Itô.
+\end{zadanie}
+
+\section{Przewidywalność nie jest kosmetycznym założeniem}
+\begin{przyklad}[Integrand antycypujący]
+Przypuśćmy błędnie, że moglibyśmy w całej konstrukcji
+brać losowy współczynnik $\xi=W_T$ niezależnie od
+czasu. Formalna suma dawałaby
+$\sum_kW_T\Delta_kW=W_T^2$.
+Jeśli nierozważnie użyć izometrii Itô, otrzymalibyśmy
+$\E W_T^4\overset{?}=\E\int_0^TW_T^2\,\dd t=T^2$.
+Lewa strona wynosi jednak $3T^2$.
+Sprzeczność bierze się stąd, że $W_T$ nie jest
+$\calF_{t_k}$-mierzalny dla $t_k<T$.
+Nie oznacza to, że nigdy nie można całkować
+antycypująco: istnieje na przykład całka Skorochoda,
+lecz ma inną konstrukcję i inne własności.
+\end{przyklad}
+
+\begin{przyklad}[Dlaczego całka Itô nie musi mieć rozkładu normalnego]
+Niech $Z\in\{0,1\}$ będzie zmienną Bernoulliego
+z parametrem $1/2$, niezależną od procesu Wienera,
+i niech $Z$ będzie znana w chwili $0$.
+Wtedy $H_t=Z$ jest przewidywalny, zaś
+$\int_0^TH_t\,\dd W_t=ZW_T$.
+Prawo tej całki jest mieszaniną
+$\frac12\delta_0+\frac12\Normal(0,T)$.
+Choć każdy składnik sumy w definicji całki ma
+normalny przyrost warunkowo względem przeszłości,
+całka z \emph{losowym} integrandem nie musi być
+normalna. Teza o gaussowskości całki z rozdziału
+pierwszego obowiązywała dla funkcji deterministycznych.
+\end{przyklad}
+
+
+% Uzupełnienie audytowe rozdzialu 2: osobne uzasadnienia dwoch przejsc granicznych.
+\section{Dwa kryteria przybliżania całek i ich ograniczenia}
+\begin{lemat}[Lewostronna aproksymacja procesu ciągłego]
+\label{lem:step-approx-ito}
+Niech $H$ będzie ciągłym, adaptowanym procesem na
+$[0,T]$, a $\sigma$ przewidywalnym procesem spełniającym
+$\int_0^T\sigma_s^2\,\dd s<\infty$ prawie na pewno.
+Niech $\pi_n$ będą deterministycznymi podziałami
+$[0,T]$ o średnicy dążącej do zera, a
+$H_s^{(n)}=H_{t_k}$ dla $s\in(t_k,t_{k+1}]$.
+Wówczas, w sensie całek zlokalizowanych,
+\[
+\sup_{t\le T}\left|
+\int_0^t(H_s^{(n)}-H_s)\sigma_s\,\dd W_s\right|
+\longrightarrow0\quad\text{według prawdopodobieństwa}.
+\]
+W szczególności sumy lewostronne
+$\sum_kH_{t_k}(W_{t_{k+1}\wedge t}-W_{t_k\wedge t})$
+zbiegają do $\int_0^tH_s\,\dd W_s$ jednostajnie
+według prawdopodobieństwa.
+\end{lemat}
+\begin{proof}
+Ponieważ każda trajektoria $H$ jest jednostajnie
+ciągła na $[0,T]$, mamy
+$\norm{H^{(n)}-H}_\infty\to0$ prawie na pewno.
+Wprowadźmy czas zatrzymania
+$\tau_m=\inf\{t:\int_0^t\sigma_s^2\,\dd s\ge m\}
+\wedge T$ oraz $\rho_m=\inf\{t:|H_t|\ge m\}\wedge T$.
+Rozważmy $\theta_m=\tau_m\wedge\rho_m$.
+Na $[0,\theta_m]$ mamy
+$\int_0^{\theta_m}\sigma_s^2\,\dd s\le m$ oraz
+$|H_s|\le m$; dla procesów $H^{(n)}$ po przekroczeniu
+$\theta_m$ nie całkujemy, a ich wartości na
+$[0,\theta_m]$ są ograniczone przez $m$.
+Zatem na mocy izometrii i zbieżności zdominowanej
+na przestrzeni $\Omega$,
+\[
+\E\int_0^{\theta_m}|H_s^{(n)}-H_s|^2
+\sigma_s^2\,\dd s
+\le \E\left[
+\Big(\sup_{s\le\theta_m}|H_s^{(n)}-H_s|\Big)^2
+\int_0^{\theta_m}\sigma_s^2\,\dd s\right]\longrightarrow0,
+\]
+ponieważ supremum na zatrzymanym przedziale jest
+ograniczone przez $2m$ i zbiega do zera prawie na pewno.
+Nierówność Dooba zapewnia
+zbieżność zatrzymanych całek w $L^2$ normy supremum.
+Ponieważ $\Prob(\theta_m<T)\to0$, usunięcie
+lokalizacji daje tezę. Dla $\sigma\equiv1$
+pierwsza równość wprost identyfikuje granicę
+sum lewostronnych.
+\end{proof}
+
+\begin{zadanie}[Dlaczego zbieżność w $L^2$ nie daje zbieżności
+ścieżkowej dla całego ciągu?]
+Niech $(Y_n)$ będzie ciągiem niezależnych zdarzeń
+z $\Prob(Y_n=1)=1/n$ i $\Prob(Y_n=0)=1-1/n$
+($n\ge2$). Wyznaczyć rodzaje zbieżności $Y_n$ do zera.
+
+\emph{Rozwiązanie.} Mamy $\E|Y_n|^2=1/n\to0$,
+a zatem $Y_n\to0$ w $L^2$ i według prawdopodobieństwa.
+Ponieważ $\sum_n\Prob(Y_n=1)=\infty$ i zdarzenia są
+niezależne, drugi lemat Borela--Cantellego daje
+$\Prob(Y_n=1\ \text{nieskończenie często})=1$.
+Zatem nie ma zbieżności do zera prawie na pewno.
+Wyjaśnia to, dlaczego w konstrukcji całki Itô potrzebny
+był wybór odpowiedniego podciągu do uzyskania ciągłej
+wersji procesu: z samej zbieżności w $L^2$ całego
+ciągu nie wolno wyciągać wniosku o zbieżności
+ścieżkowej całego ciągu.
+\end{zadanie}
+
+
+\section{Co udowodniliśmy, a co pozostaje do zrobienia?}
+Całka Itô jest obecnie określona dla wszystkich
+procesów przewidywalnych o skończonej oczekiwanej energii,
+a przez lokalizację również dla procesów o energii
+skończonej niemal na pewno. Udowodniliśmy izometrię,
+martyngałowość, ciągłość, zatrzymywanie i identyfikację
+wariacji kwadratowej. Na tej podstawie można już
+formułować stochastyczne równania całkowe
+$X_t=X_0+\int_0^tb_s\,\dd s+\int_0^t\sigma_s\,\dd W_s$.
+Nie udowodniliśmy jeszcze ogólnego wzoru Itô,
+nie skonstruowaliśmy całki Stratonovicha i nie badaliśmy
+istnienia oraz jednoznaczności rozwiązań SDE.
+Te zagadnienia będą przedmiotem kolejnych rozdziałów.
+
+\begin{uwaga}[Konwencje na dalszą część tomu]
+Przez $\int_0^tH_s\,\dd W_s$ będziemy rozumieli
+całkę Itô, o ile wyraźnie nie zaznaczymy innej
+konwencji. Skrót $\dd X_t=b_t\,\dd t+\sigma_t\,\dd W_t$
+zawsze będziemy interpretować przez odpowiednie
+równanie całkowe. Całki po trajektoriach z miarą
+Wienera i całki względem pojedynczego procesu
+pozostają odrębnymi konstrukcjami, nawet gdy
+w szczególnych przykładach łączy je wzór Feynmana--Kaca.
+\end{uwaga}
+% ============================================================================
+% ROZDZIAL 3 — WZOR ITO
+% ============================================================================

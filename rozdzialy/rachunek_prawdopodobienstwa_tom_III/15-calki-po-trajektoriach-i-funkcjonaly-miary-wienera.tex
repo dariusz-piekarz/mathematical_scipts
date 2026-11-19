@@ -1,0 +1,647 @@
+\chapter{Całki po trajektoriach i funkcjonały miary Wienera}
+\label{ch:path-integrals}
+\paragraph{Odsyłacze międzytomowe.} Wykorzystanie metod próbkowania do aproksymacji całek omawia tom IV, rozdział~\ref{IV-ch:monte-carlo}.
+
+
+\section{Motywacja: całkujemy po przestrzeni funkcji}
+
+W zwykłej całce Lebesgue'a argumentem funkcji podcałkowej jest liczba
+albo punkt przestrzeni euklidesowej. W całce \emph{po trajektoriach}
+argumentem jest cała funkcja $w:[0,T]\to\R^d$. Przykładowo
+$F(w)=\exp(-\int_0^T V(w(s))\,\dd s)$ zależy od tego, w jakich
+obszarach przestrzeni przebywała trajektoria w całym przedziale czasu.
+Chcemy nadać ścisły sens wyrażeniu $\int F(w)\,\dd\mu(w)$, a nie
+wprowadzać nieokreślony symbol $\mathcal D w$.
+
+W rozdziale~\ref{ch:cameron-martin} skonstruowaliśmy miarę Wienera.
+Teraz użyjemy jej do obliczeń, zbudujemy \emph{miarę mostu Browna},
+a następnie przejdziemy od funkcjonałów trajektorii do jądra
+operatora Feynmana--Kaca. Jest to punkt wyjścia do matematycznej
+interpretacji niektórych całek stosowanych w mechanice kwantowej.
+Przypominamy rozróżnienie: $\int_0^T H_s\,\dd W_s$ jest zmienną
+losową, natomiast $\int F(w)\,\dd\mu_W(w)$ jest liczbą, o ile
+funkcjonał $F$ jest całkowalny.
+
+\begin{definicja}[Kanoniczna przestrzeń trajektorii i miara Wienera]
+\label{def:path-wiener}
+Niech $d\in\N$, $T>0$ i $x\in\R^d$. Oznaczmy
+$\calC_{x,T}=\{w\in C([0,T];\R^d):w(0)=x\}$, z normą
+supremum i borelowskim $\sigma$-ciałem. Niech $B$ będzie
+$d$-wymiarowym standardowym ruchem Browna. Miara
+$\mu_{x,T}:=\Law((x+B_s)_{0\le s\le T})$ na $\calC_{x,T}$
+nazywa się \emph{miarą Wienera rozpoczynającą się w $x$}.
+Jeżeli $F:\calC_{x,T}\to\R$ jest funkcjonałem borelowskim
+i $\int|F|\,\dd\mu_{x,T}<\infty$, to jego \emph{całką
+po trajektoriach} jest $\int_{\calC_{x,T}}F(w)\,\dd\mu_{x,T}(w)$.
+\end{definicja}
+
+Definicja nie używa fikcyjnego „jednostajnego rozkładu” na
+nieskończeniewymiarowej przestrzeni funkcji. Miara Wienera jest
+skoncentrowana na trajektoriach ciągłych, ale prawie na pewno
+nigdzie nieróżniczkowalnych. Tych własności nie można ignorować
+w całkach po trajektoriach.
+
+Dla $t>0$ oznaczmy przez
+$p_t(x,y)=(2\pi t)^{-d/2}\exp(-\|y-x\|^2/(2t))$
+jądro cieplne generatora $\frac12\Delta$.
+
+\begin{twierdzenie}[Całki cylindryczne i rozkłady skończeniewymiarowe]
+\label{th:path-cylinder}
+Niech $0<t_1<\cdots<t_n\le T$, niech
+$\Phi:(\R^d)^n\to\R$ będzie borelowska i całkowalna
+względem rozkładu $(x+B_{t_1},\ldots,x+B_{t_n})$.
+Wówczas
+\[
+\begin{split}
+ &\int_{\calC_{x,T}}\Phi(w(t_1),\ldots,w(t_n))\,
+       \dd\mu_{x,T}(w)\\
+ &\quad=\int_{(\R^d)^n}\Phi(x_1,\ldots,x_n)
+   \prod_{k=1}^n p_{t_k-t_{k-1}}(x_{k-1},x_k)
+   \,\dd\lambda_{dn}(x_1,\ldots,x_n),
+\end{split}
+\]
+przy konwencji $t_0=0$, $x_0=x$. Funkcjonały cylindryczne
+wyznaczają jednoznacznie całki wszystkich ograniczonych
+borelowskich funkcjonałów na $\calC_{x,T}$.
+\end{twierdzenie}
+\begin{proof}
+Przyrosty $B_{t_k}-B_{t_{k-1}}$ są niezależne i mają gęstości
+$p_{t_k-t_{k-1}}(0,\cdot)$. Odwzorowanie liniowe wysyłające
+przyrosty na kolejne położenia ma wyznacznik równy $1$,
+więc wspólna gęstość położeń jest iloczynem zapisanym w tezie.
+Otrzymujemy wzór najpierw dla funkcji wskaźnikowych
+prostokątów, następnie przez liniowość i twierdzenie o
+zbieżności monotonicznej dla wszystkich nieujemnych
+funkcji borelowskich, a przez rozdzielenie części dodatniej
+i ujemnej dla całkowalnych.
+
+Wreszcie borelowskie $\sigma$-ciało na przestrzeni
+ciągłych trajektorii jest generowane przez odwzorowania
+$w\mapsto w(q)$ dla wymiernych $q\in[0,T]$.
+Istotnie, norma supremum dwóch trajektorii jest supremum
+odległości w chwilach wymiernych. Klasa zbiorów, dla
+których miary się zgadzają, jest klasą Dynkina zawierającą
+cylindry i ich skończone przecięcia; twierdzenie o
+$\pi$-$\lambda$-układach daje jednoznaczność.
+\end{proof}
+
+\section{Most Browna: prawidłowe warunkowanie względem końca trajektorii}
+
+Zdarzenie $\{x+B_T=y\}$ ma prawdopodobieństwo zero dla
+każdego ustalonego $y$. Dlatego nie możemy zdefiniować mostu
+przez elementarny iloraz prawdopodobieństw.
+Rozwiązaniem jest \emph{regularny rozkład warunkowy}, który
+możemy w tym przypadku skonstruować wprost.
+
+\begin{definicja}[Most Browna pomiędzy ustalonymi końcami]
+\label{def:brownian-bridge-path}
+Niech $x,y\in\R^d$, $T>0$, a $B$ będzie standardowym
+$d$-wymiarowym ruchem Browna. Proces
+\[
+ \beta_s^{x,y,T}=x+\frac{s}{T}(y-x)+B_s-\frac{s}{T}B_T,
+ \qquad 0\le s\le T,
+\]
+nazywamy \emph{mostem Browna z $x$ do $y$ w czasie $T$}.
+Jego prawo na
+$\calC_{x,y,T}:=\{w\in C([0,T];\R^d):w(0)=x,\ w(T)=y\}$
+oznaczamy przez $\mu_{x,y,T}^{\mathrm{br}}$.
+\end{definicja}
+
+\begin{twierdzenie}[Konstrukcja gaussowska i warunkowanie]
+\label{th:bridge-conditional}
+Dla każdego $x,y\in\R^d$ proces $\beta^{x,y,T}$ ma
+ciągłe trajektorie, średnią
+$m_s=x+\frac{s}{T}(y-x)$ i macierz kowariancji
+\[
+\operatorname{Cov}(\beta_s^{x,y,T},\beta_r^{x,y,T})
+ =\left(\min(s,r)-\frac{sr}{T}\right)I_d.
+\]
+Dla $0<t_1<\cdots<t_n<T$ jego rozkład wektora
+$(\beta_{t_1},\ldots,\beta_{t_n})$ ma gęstość
+\[
+\frac{p_{t_1}(x,x_1)\,p_{t_2-t_1}(x_1,x_2)
+ \cdots p_{t_n-t_{n-1}}(x_{n-1},x_n)
+ p_{T-t_n}(x_n,y)}{p_T(x,y)}.
+\tag{15.1}\label{eq:bridge-density}
+\]
+Ponadto rodzina $y\mapsto\mu_{x,y,T}^{\mathrm{br}}$
+jest wersją regularnego rozkładu warunkowego miary Wienera
+$\mu_{x,T}$ względem $w(T)=y$: dla nieujemnego borelowskiego
+funkcjonału $F$ i nieujemnej borelowskiej funkcji $g$,
+\[
+ \int F(w)g(w(T))\,\dd\mu_{x,T}(w)
+ =\int_{\R^d}p_T(x,y)g(y)
+    \left(\int F(w)\,\dd\mu_{x,y,T}^{\mathrm{br}}(w)\right)
+    \dd\lambda_d(y).
+\tag{15.2}\label{eq:bridge-disintegration}
+\]
+\end{twierdzenie}
+\begin{proof}
+Wektor $(B_{t_1},\ldots,B_{t_n},B_T)$ jest gaussowski.
+Dla $s,r\le T$ obliczamy
+$\operatorname{Cov}(B_s-\frac sT B_T,
+B_r-\frac rT B_T)=\min(s,r)-sr/T$.
+Co więcej, proces $B_s-sB_T/T$ jest niezależny od $B_T$:
+ma zerową kowariancję z $B_T$, a cała rodzina jest wspólnie
+gaussowska. Zatem warunkowanie procesu $x+B$ przy wartości
+końcowej $y$ daje proces o tej samej kowariancji, lecz z
+podstawioną średnią $m_s$. To jest dokładnie prawo
+$\beta^{x,y,T}$.
+
+Gęstość wspólnego rozkładu
+$(x+B_{t_1},\ldots,x+B_{t_n},x+B_T)$ jest iloczynem
+jąder cieplnych. Dzieląc przez dodatnią gęstość brzegową
+$p_T(x,y)$, otrzymujemy \eqref{eq:bridge-density} dla
+każdego $y$ (przy takim wyborze wersji jądra).
+Tożsamość \eqref{eq:bridge-disintegration} wynika więc
+najpierw dla cylindrycznych $F$ i prostych $g$ z twierdzenia
+Fubiniego. Klasa tych funkcjonałów generuje całe borelowskie
+$\sigma$-ciało przestrzeni trajektorii; twierdzenie o klasie
+monotonicznej rozszerza tożsamość na wszystkie nieujemne
+borelowskie $F$ i $g$. Mierzalność względem $y$ wynika
+również z jawnej reprezentacji
+$\beta^{x,y,T}=\beta^{x,0,T}+(s/T)y$.
+\end{proof}
+
+\begin{wniosek}[Gęstość początkowego fragmentu mostu]
+\label{cor:bridge-initial-density}
+Niech $0<s<T$, $y\in\R^d$ i niech $F$ będzie
+ograniczonym borelowskim funkcjonałem zależnym wyłącznie
+od trajektorii do chwili $s$. Wówczas
+\[
+ \E_{x,y,T}^{\mathrm{br}}F
+ =\frac{1}{p_T(x,y)}\E_x\left[
+    F(x+B)\,p_{T-s}(x+B_s,y)\right].
+\tag{15.3}\label{eq:bridge-likelihood}
+\]
+Dla każdego $s<T$ prawo mostu na $[0,s]$ jest więc
+równoważne prawu zwykłego ruchu Browna na $[0,s]$.
+Na pełnym przedziale $[0,T]$ miary te są natomiast
+wzajemnie singularne.
+\end{wniosek}
+\begin{proof}
+Po ustaleniu przeszłości do $s$ niezależny przyrost
+$B_T-B_s$ ma gęstość $p_{T-s}(x+B_s,\cdot)$.
+Stosujemy tę własność do wspólnej miary
+$\E_x[F\ind{\{x+B_T\in A\}}]$, a następnie porównujemy
+gęstości względem $\lambda_d(y)$ i używamy ciągłej wersji
+jądra z \eqref{eq:bridge-disintegration}. Współczynnik
+$p_{T-s}/p_T$ jest ściśle dodatni i skończony,
+co daje równoważność miar na $[0,s]$.
+W chwili końcowej most spełnia $w(T)=y$ z
+prawdopodobieństwem $1$, a zwykła miara Wienera przypisuje
+temu zdarzeniu prawdopodobieństwo $0$. To dowodzi
+singularności na $[0,T]$.
+\end{proof}
+
+\begin{przyklad}[Położenie w połowie drogi]
+W jednowymiarowym moście z $x$ do $y$ w czasie $T$
+zmienna $\beta_{T/2}$ ma rozkład
+$\Normal((x+y)/2,T/4)$, a nie rozkład jednostajny.
+Średnia jest liniową interpolacją końców, natomiast
+wariancja $T/4$ jest konsekwencją wymagania zakończenia
+trajektorii dokładnie w $y$.
+\end{przyklad}
+
+
+
+\begin{zadanie}[Prawdopodobieństwo przejścia mostu w przód]
+Niech $0\le s<t<T$ i $\beta^{x,y,T}$ będzie
+$d$-wymiarowym mostem Browna. Wyznaczyć gęstość warunkową
+$\beta_t$ przy zadanej wartości $\beta_s=z$.
+
+\emph{Rozwiązanie.} Z formuły
+\eqref{eq:bridge-density}, po wycałkowaniu pozostałych
+współrzędnych, otrzymujemy jądro
+\[
+ p^{\mathrm{br}}_{s,t}(z,z')=
+ \frac{p_{t-s}(z,z')p_{T-t}(z',y)}{p_{T-s}(z,y)}.
+\]
+Mianownik jest dodatni, a całka prawej strony względem
+$z'$ wynosi $1$ dzięki półgrupowej własności jądra
+cieplnego. Jądro zależy od obu chwil $s,t$, zatem most
+jest \emph{niejednorodnym w czasie} procesem Markowa.
+Dodatkowy czynnik $p_{T-t}(z',y)$ nadaje większą wagę
+położeniom, z których łatwiej dotrzeć do końca $y$.
+To wyjaśnia kierunek dryfu w następnym twierdzeniu.
+\end{zadanie}
+
+\section{Dynamika mostu: dryf, który wymusza punkt końcowy}
+
+\begin{twierdzenie}[Stochastyczne równanie mostu Browna]
+\label{th:bridge-sde}
+Niech $x,y\in\R$, $T>0$, a $W$ będzie standardowym
+ruchem Browna. Dla $0\le s<T$ określmy
+\[
+ Y_s=x+\frac{s}{T}(y-x)+(T-s)\int_0^s\frac1{T-r}\,\dd W_r.
+\tag{15.4}\label{eq:bridge-adapted}
+\]
+Proces $Y$ ma to samo prawo co most Browna z $x$ do $y$
+i przyjmuje ciągłą modyfikację na $[0,T]$ spełniającą
+$Y_T=y$. Na $[0,T)$ jest jedynym silnym rozwiązaniem
+\[
+ \dd Y_s=\frac{y-Y_s}{T-s}\,\dd s+\dd W_s,
+ \qquad Y_0=x.
+\tag{15.5}\label{eq:bridge-sde}
+\]
+\end{twierdzenie}
+\begin{proof}
+Na każdym $[0,T-\varepsilon]$ funkcja
+$(T-s)^{-1}$ jest ograniczona i kwadratowo całkowalna,
+więc całka Itô w \eqref{eq:bridge-adapted} jest
+poprawnie określona i adaptowana. Z izometrii Wienera,
+dla $s\le r<T$,
+\[
+\begin{split}
+&\Cov\left((T-s)\int_0^s\frac{\dd W_u}{T-u},
+ (T-r)\int_0^r\frac{\dd W_u}{T-u}\right)\\
+&\qquad=(T-s)(T-r)\int_0^s\frac{\dd u}{(T-u)^2}
+ =s-\frac{sr}{T}.
+\end{split}
+\]
+Średnia $Y_s$ jest równa $x+s(y-x)/T$.
+Wspólna gaussowskość daje zatem te same rozkłady
+skończeniewymiarowe, co w
+Twierdzeniu~\ref{th:bridge-conditional}.
+Na każdym $[0,T-\varepsilon]$ proces $Y$ ma trajektorie
+ciągłe. Uzasadnijmy osobno zachowanie w chwili $T$.
+Wybierzmy zbiór $D=\mathbb Q\cap[0,T)$, gęsty w $[0,T)$.
+Zgodność rozkładów skończeniewymiarowych $Y$ i mostu
+$\beta^{x,y,T}$ oznacza zgodność ich praw na
+przeliczalnej przestrzeni współrzędnych $\mathbb R^D$.
+Dla mostu z ciągłości na $[0,T]$ wynika, że dla każdego
+$k\in\N$ istnieje $\delta>0$ takie, że
+$|\beta_q-y|<1/k$ dla wszystkich $q\in D$,
+$T-\delta<q<T$. Zdarzenie to jest borelowskie
+w przestrzeni $\mathbb R^D$, zatem ten sam warunek
+spełnia $Y$ prawie na pewno. Ponieważ $Y$ jest ciągły
+na $[0,T)$, oszacowanie rozciąga się z wymiernych $q$
+na wszystkie $s$ dostatecznie bliskie $T$. Otrzymujemy
+$\lim_{s\uparrow T}Y_s=y$ prawie na pewno. Ustalając
+$Y_T=y$, dostajemy ciągłe przedłużenie i prawo mostu
+na całym $[0,T]$. Nie wystarczyłaby tu sama zbieżność
+$Y_s\to y$ według prawdopodobieństwa.
+
+Z reguły iloczynu, ponieważ $s\mapsto T-s$ ma
+skończoną wariację, otrzymujemy
+\[
+\dd\left((T-s)\int_0^s\frac{\dd W_r}{T-r}\right)
+ =-\left(\int_0^s\frac{\dd W_r}{T-r}\right)\dd s+\dd W_s.
+\]
+Po dodaniu pochodnej deterministycznej średniej
+upraszcza się to do \eqref{eq:bridge-sde}.
+Jednoznaczność na $[0,T-\varepsilon]$ wynika z
+liniowości równania lub z mnożenia różnicy dwóch
+rozwiązań przez $(T-s)^{-1}$; ponieważ
+$\varepsilon>0$ jest dowolne, otrzymujemy
+jednoznaczność na $[0,T)$.
+\end{proof}
+
+\begin{uwaga}[Intuicja dryfu mostu]
+Współczynnik $(y-Y_s)/(T-s)$ jest tym większy, im
+mniej czasu pozostało do końca i im dalej proces
+znajduje się od $y$. Nie jest on ograniczony przy
+$s\uparrow T$, ale równanie jest dobrze określone
+na każdym przedziale $[0,T-\varepsilon]$, a w granicy
+trajektoria dochodzi do wyznaczonego punktu.
+To bardzo konkretny przykład \emph{niejednorodnego
+w czasie procesu Markowa}.
+\end{uwaga}
+
+\section{Funkcjonały liniowe i pierwsze obliczenia całek po trajektoriach}
+
+\begin{twierdzenie}[Całka trajektorii mostu jest gaussowska]
+\label{th:bridge-integrated}
+Jeżeli $d=1$, $T>0$ i $x,y\in\R$, to
+\[
+ A_T:=\int_0^T\beta_s^{x,y,T}\,\dd s
+ \sim\Normal\!\left(\frac{T(x+y)}2,\frac{T^3}{12}\right).
+\]
+W szczególności dla każdego $u\in\R$,
+\[
+ \int_{\calC_{x,y,T}}\exp\left(iu\int_0^Tw(s)\,\dd s\right)
+     \,\dd\mu_{x,y,T}^{\mathrm{br}}(w)
+ =\exp\left(\frac{iuT(x+y)}2-\frac{u^2T^3}{24}\right).
+ \tag{15.6}\label{eq:bridge-area-char}
+\]
+\end{twierdzenie}
+\begin{proof}
+Sumy Riemanna są liniowymi kombinacjami wspólnie
+gaussowskich zmiennych, a z ciągłości trajektorii zbiegają
+prawie na pewno. Aby uzasadnić również zbieżność w $L^2$,
+niech $\beta^{(n)}_s$ oznacza funkcję schodkową równą
+$\beta_{t_k}$ na przedziale $[t_k,t_{k+1})$.
+Z nierówności Cauchy'ego--Schwarza
+\[
+\E\left|\int_0^T(\beta^{(n)}_s-\beta_s)\,\dd s\right|^2
+\le T\int_0^T\E|\beta^{(n)}_s-\beta_s|^2\,\dd s.
+\]
+Dla mostu
+$\E|\beta_t-\beta_s|^2\le |t-s|+
+\|y-x\|^2|t-s|^2/T^2$,
+bo wariancja przyrostu wynosi
+$|t-s|-(t-s)^2/T$; oba składniki znikają wraz
+ze średnicą podziału. Prawa strona
+zmierza więc do zera wraz ze średnicą podziału. Funkcje
+charakterystyczne gaussowskich sum przechodzą do granicy,
+co pokazuje, że sama całka ma rozkład gaussowski.
+Jej średnia jest całką funkcji $m_s$ i wynosi
+$T(x+y)/2$. Z twierdzenia Fubiniego
+\[
+ \Var(A_T)=\int_0^T\!\int_0^T
+ \left(\min(s,r)-\frac{sr}{T}\right)\dd s\,\dd r
+ =\frac{T^3}{3}-\frac{T^3}{4}=\frac{T^3}{12}.
+\]
+Wzór \eqref{eq:bridge-area-char} jest teraz funkcją
+charakterystyczną rozkładu normalnego.
+\end{proof}
+
+\begin{zadanie}[Potencjał liniowy: jawna całka funkcyjna]
+Dla $\lambda\in\R$ obliczyć
+$\E_{x,y,T}^{\mathrm{br}}
+\exp(-\lambda\int_0^T\beta_s\,\dd s)$.
+
+\emph{Rozwiązanie.} Z twierdzenia powyżej i wzoru na
+transformatę Laplace'a rozkładu normalnego otrzymujemy
+\[
+ \E_{x,y,T}^{\mathrm{br}}
+  \exp\!\left(-\lambda\int_0^T\beta_s\,\dd s\right)
+ =\exp\left(-\frac{\lambda T(x+y)}2
+           +\frac{\lambda^2T^3}{24}\right).
+\]
+Funkcjonał jest całkowalny pomimo tego, że potencjał
+$V(z)=\lambda z$ nie jest ograniczony. Wynik pochodzi
+z rachunku gaussowskiego, a nie z ogólnego twierdzenia
+o całkach z dowolnym nieograniczonym potencjałem.
+\end{zadanie}
+
+
+\section{Nieliniowy funkcjonał: całka z kwadratu ruchu Browna}
+
+\begin{twierdzenie}[Transformata Laplace'a energii trajektorii]
+\label{th:brownian-square-laplace}
+Niech $B$ będzie standardowym jednowymiarowym
+ruchem Browna z $B_0=0$. Dla $\alpha\ge0$ i $T>0$,
+\[
+ \E\exp\left(-\alpha\int_0^T B_s^2\,\dd s\right)
+ =\frac1{\sqrt{\cosh(T\sqrt{2\alpha})}}.
+\tag{15.7}\label{eq:brownian-square-laplace}
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla $x\in\R$ rozważmy $X_s=x+B_s$ i funkcję
+$u(t,x)=\E_x\exp(-\alpha\int_0^tX_s^2\,\dd s)$.
+Zamiast zakładać z góry, że $u$ jest rozwiązaniem PDE,
+znajdziemy jego kandydata i zweryfikujemy go przez
+wzór Itô. Szukamy funkcji $v(t,x)=A(t)e^{-q(t)x^2}$
+spełniającej
+$\partial_tv=\tfrac12\partial_{xx}v-\alpha x^2v$,
+$v(0,x)=1$. Po podstawieniu otrzymujemy
+\[
+ q'(t)=\alpha-2q(t)^2,\qquad
+ A'(t)=-q(t)A(t),\qquad q(0)=0,\quad A(0)=1.
+\]
+Dla $\alpha>0$ rozwiązaniami są
+\[
+ q(t)=\sqrt{\alpha/2}\tanh(t\sqrt{2\alpha}),\qquad
+ A(t)=\cosh(t\sqrt{2\alpha})^{-1/2}.
+\]
+Zatem $0<v(t,x)\le1$ oraz $v(0,x)=1$.
+Dla ustalonego $t>0$ stosujemy wzór Itô do procesu
+\[
+ M_s=\exp\left(-\alpha\int_0^sX_r^2\,\dd r\right)
+ v(t-s,X_s),\qquad 0\le s\le t.
+\]
+Drift znika na mocy równania PDE. Po zatrzymaniu w
+$\tau_R=\inf\{s:|X_s|\ge R\}$ część stochastyczna
+jest martyngałem. Ponieważ $0\le M_s\le1$, można
+usunąć zatrzymanie przez zbieżność zdominowaną,
+a w chwili $t$ mamy $v(0,X_t)=1$. Dostajemy
+$v(t,x)=\E_xe^{-\alpha\int_0^tX_s^2\,\dd s}$.
+Podstawiając $x=0$, otrzymujemy tezę. Dla
+$\alpha=0$ obie strony są równe $1$.
+\end{proof}
+
+\begin{uwaga}[Dwa rodzaje funkcjonałów]
+Całka $\int_0^T B_s\,\dd s$ jest gaussowska,
+ponieważ jest liniowym funkcjonałem procesu
+gaussowskiego. Całka $\int_0^T B_s^2\,\dd s$
+nie jest gaussowska: jest nieujemna i ma transformację
+Laplace'a \eqref{eq:brownian-square-laplace}.
+Obliczenie drugiej wymaga więcej niż znajomości
+funkcji kowariancji i prowadzi naturalnie do
+równania parabolicznego.
+\end{uwaga}
+
+\section{Feynmana--Kaca półgrupa ważona i jej jądro}
+
+\begin{definicja}[Półgrupa z potencjałem]
+\label{def:path-weighted-semigroup}
+Niech $V:\R^d\to\R$ będzie ograniczoną funkcją borelowską.
+Dla $t\ge0$ i ograniczonej borelowskiej funkcji
+$f:\R^d\to\R$ określamy
+\[
+ (P_t^Vf)(x)=\E_x\left[
+ \exp\left(-\int_0^tV(X_s)\,\dd s\right)f(X_t)\right],
+ \quad X_s=x+B_s.
+\tag{15.8}\label{eq:path-FK-semigroup}
+\]
+Całka względem $s$ jest zwykłą całką Lebesgue'a;
+całość jest całką po prawie trajektorii $X$.
+\end{definicja}
+
+\begin{twierdzenie}[Własność półgrupowa i jądro mostowe]
+\label{th:path-FK-kernel}
+Przy założeniach Definicji~\ref{def:path-weighted-semigroup}:
+\begin{enumerate}
+\item $P_{s+t}^V=P_s^VP_t^V$ dla $s,t\ge0$,
+$P_0^V=I$ oraz
+$\|P_t^V f\|_\infty\le e^{t\|V\|_\infty}\|f\|_\infty$;
+\item $P_t^V$ jest operatorem dodatnim;
+\item dla $t>0$ funkcja
+\[
+ k_t^V(x,y)=p_t(x,y)\,
+ \E_{x,y,t}^{\mathrm{br}}\left[
+   \exp\left(-\int_0^tV(\beta_s)\,\dd s\right)\right]
+ \tag{15.9}\label{eq:path-FK-kernel}
+\]
+jest mierzalnym jądrem całkowym, tj.
+$(P_t^Vf)(x)=\int_{\R^d}k_t^V(x,y)f(y)\,\dd\lambda_d(y)$;
+\item jądra spełniają tożsamość Chapmana--Kołmogorowa:
+\[
+ k_{s+t}^V(x,y)=\int_{\R^d}k_s^V(x,z)k_t^V(z,y)
+ \,\dd\lambda_d(z)
+\]
+dla $s,t>0$ i prawie wszystkich $y$
+(przy ustalonych $x,s,t$).
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Niech $X=x+B$. Dla ustalonych $s,t\ge0$ rozdzielamy
+całkę potencjału na $[0,s]$ i $[s,s+t]$. Dzięki własności
+Markowa, dla funkcjonału dalszej trajektorii otrzymujemy
+\[
+ \E_x\left[e^{-\int_s^{s+t}V(X_r)\,\dd r}
+    f(X_{s+t})\mid\calF_s\right]=(P_t^V f)(X_s).
+\]
+Tożsamość najpierw zachodzi dla prostych funkcjonałów
+zależnych od skończenie wielu chwil, a przez aproksymację
+monotoniczną dla funkcjonałów mierzalnych całej przyszłej
+trajektorii. Funkcjonał $\int_s^{s+t}V(X_r)\,\dd r$
+jest mierzalny: można go otrzymać jako granicę całek
+funkcji prostych względem czasu, ponieważ
+$(r,\omega)\mapsto V(X_r(\omega))$ jest produktowo
+mierzalne. Własność wieży daje $P_{s+t}^V=P_s^VP_t^V$.
+Dodatniość i oszacowanie normy wynikają z granic
+$e^{-t\|V\|_\infty}\le e^{-\int_0^tV}\le e^{t\|V\|_\infty}$.
+
+Aby otrzymać jądro, stosujemy rozkład warunkowy
+\eqref{eq:bridge-disintegration} do funkcjonału
+$F(w)=\exp(-\int_0^tV(w(r))\,\dd r)$
+i funkcji $g(w(t))=f(w(t))$ (najpierw dla funkcji
+nieujemnych, potem przez rozkład na części dodatnią
+i ujemną). Dostajemy \eqref{eq:path-FK-kernel}.
+Złożenie dwóch operatorów całkowych, twierdzenie
+Fubiniego i własność półgrupowa dają ostatnią tezę
+jako równość jąder dla prawie wszystkich $y$.
+\end{proof}
+
+\begin{uwaga}[Brak konieczności istnienia gęstości trajektorii]
+Wyrażenie \eqref{eq:path-FK-kernel} nie sugeruje, że
+istnieje gęstość miary Wienera względem jakiejś
+„miary Lebesgue'a” na $C([0,t])$. Czynnik $p_t(x,y)$
+pochodzi wyłącznie z gęstości \emph{końcowego położenia}.
+Pozostały czynnik jest zwykłą wartością oczekiwaną po
+moście, który ma dobrze określoną miarę probabilistyczną.
+\end{uwaga}
+
+\section{Dyskretyzacja czasu: dlaczego powstaje całka po trajektoriach?}
+
+\begin{twierdzenie}[Skończeniewymiarowe aproksymacje całki po trajektoriach]
+\label{th:path-time-slice}
+Niech $T>0$, $x\in\R^d$, $V:\R^d\to\R$ będzie
+\emph{ograniczona i ciągła}, a $f:\R^d\to\R$
+ograniczona i borelowska. Niech $\Delta=T/n$,
+$t_k=k\Delta$. Wtedy
+\[
+\begin{split}
+ (P_T^Vf)(x)&=\lim_{n\to\infty}
+ \int_{(\R^d)^n}f(x_n)
+ \exp\left(-\Delta\sum_{k=0}^{n-1}V(x_k)\right)\\
+ &\hspace{2cm}\cdot\prod_{k=1}^n p_\Delta(x_{k-1},x_k)
+ \,\dd\lambda_{dn}(x_1,\ldots,x_n),\qquad x_0=x.
+\end{split}
+\tag{15.10}\label{eq:path-time-slice}
+\]
+Dla ustalonych $x,y$ jądro \eqref{eq:path-FK-kernel}
+jest granicą analogicznych całek po
+$(\R^d)^{n-1}$ z $x_n=y$ (\emph{bez} końcowego
+czynnika $f(x_n)$). W tych całkach iloczyn jąder
+cieplnych pozostaje bez normalizacji; dopiero po
+podzieleniu go przez $p_T(x,y)$ otrzymuje się gęstość
+rozkładu punktów pośrednich mostu.
+\end{twierdzenie}
+\begin{proof}
+Z Twierdzenia~\ref{th:path-cylinder} całka po
+$(\R^d)^n$ jest równa
+$\E_x[e^{-\Delta\sum_{k=0}^{n-1}V(X_{k\Delta})}f(X_T)]$.
+Do zbieżności wykładnika nie potrzeba ciągłości $f$:
+wartość $f(X_T)$ pozostaje taka sama dla wszystkich $n$.
+Dla każdej ciągłej trajektorii $w$ jej obraz $w([0,T])$
+jest zwarty, a $V$ jest na tym obrazie jednostajnie ciągła.
+Zatem lewostronne sumy Riemanna zbiegają do
+$\int_0^TV(w(s))\,\dd s$. Wykładniki są ograniczone
+przez $e^{T\|V\|_\infty}$, więc twierdzenie o zbieżności
+zdominowanej prowadzi do \eqref{eq:path-time-slice}.
+
+Dla mostu \eqref{eq:bridge-density} daje rozkład
+kolejnych położeń przed chwilą $T$; ten sam argument
+Riemanna i zbieżności zdominowanej obowiązuje przy
+każdym ustalonym $y$. Mnożąc przez $p_T(x,y)$,
+otrzymujemy jądro \eqref{eq:path-FK-kernel}.
+\end{proof}
+
+\begin{uwaga}[Dlaczego wymagana jest ciągłość $V$?]
+Dla ograniczonego potencjału borelowskiego
+$\int_0^TV(X_s)\,\dd s$ nadal jest określona,
+a twierdzenie o jądrze pozostaje prawdziwe.
+Nie wolno jednak automatycznie twierdzić, że \emph{sumy
+Riemanna przy ustalonej siatce} zbiegają dla każdej
+trajektorii: funkcja $s\mapsto V(w(s))$ może być
+nieciągła i niecałkowalna w sensie Riemanna.
+Takie uogólnienie wymaga innej aproksymacji.
+\end{uwaga}
+
+\begin{center}
+\begin{tikzpicture}[x=0.9cm,y=0.8cm,>=Latex]
+\draw[->] (0,0)--(10.2,0) node[right] {$s$};
+\draw[->] (0,-1.2)--(0,2.7) node[above] {$w(s)$};
+\draw[thick,blue!65!black] plot[smooth] coordinates
+ {(0,0.1) (0.6,0.5) (1.0,-0.05) (1.5,1.05) (2.0,0.55)
+ (2.4,0.95) (3.1,0.3) (3.8,1.45) (4.2,0.85)
+ (5.0,1.65) (5.8,0.95) (6.5,1.85) (7.0,0.8)
+ (7.8,1.4) (8.3,0.75) (9.0,1.7) (9.8,1.15)};
+\foreach \x in {0,2,4,6,8,10} {\draw[gray!70] (\x,-0.14)--(\x,0.14);}
+\draw[dashed,gray!65] (2,-1.08)--(2,2.25);
+\draw[dashed,gray!65] (4,-1.08)--(4,2.25);
+\draw[dashed,gray!65] (6,-1.08)--(6,2.25);
+\draw[dashed,gray!65] (8,-1.08)--(8,2.25);
+\node[font=\small,align=center] at (5,-1.72)
+ {Jedna trajektoria ciągła i kolejne chwile dyskretyzacji;\\
+  całka po trajektoriach uśrednia funkcjonały po wszystkich takich drogach.};
+\end{tikzpicture}
+\end{center}
+
+\section{Dwa zadania łączące probabilistykę z potencjałami}
+
+\begin{zadanie}[Potencjał stały i ubytek masy]
+Niech $V(x)\equiv v\ge0$. Wyznaczyć $P_t^V1$,
+jądro i wyjaśnić sens probabilistyczny.
+
+\emph{Rozwiązanie.} Ponieważ całka $\int_0^t V(X_s)\,\dd s=vt$
+nie zależy od trajektorii, mamy
+$(P_t^Vf)(x)=e^{-vt}\E_xf(X_t)$ i
+$k_t^V(x,y)=e^{-vt}p_t(x,y)$. W szczególności
+$(P_t^V1)(x)=e^{-vt}$. Ubytek masy interpretuje się
+jako przeżycie cząstki zabijanej z intensywnością $v$;
+nie jest to przejściowe jądro procesu konserwatywnego,
+bo całka jądra po $y$ jest mniejsza niż $1$ dla $t>0$.
+\end{zadanie}
+
+\begin{zadanie}[Liczba odwiedzin a czas przebywania]
+Niech $A\subset\R^d$ będzie borelowski,
+$\lambda>0$ i $V=\lambda\ind{A}$. Wykazać, że
+\[
+ (P_T^V1)(x)=\E_x e^{-\lambda\,\ell_T(A)},
+ \qquad \ell_T(A)=\int_0^T\ind{\{X_s\in A\}}\,\dd s.
+\]
+
+\emph{Rozwiązanie.} Podstawiamy $V$ w
+\eqref{eq:path-FK-semigroup}. Zmienna $\ell_T(A)$
+to \emph{czas okupacji} zbioru, a nie liczba jego odwiedzin.
+Dla Brownowskiej trajektorii pojedyncze przecięcie granicy
+zbioru może nie mieć sensownej liczności, lecz czas
+okupacji pozostaje poprawnie określoną zmienną z przedziału
+$[0,T]$. Z monotoniczności funkcji wykładniczej wynika
+$0\le (P_T^V1)(x)\le1$, co odpowiada prawdopodobieństwu
+przeżycia przy intensywności zabijania $\lambda$ wyłącznie
+podczas pobytu w $A$.
+\end{zadanie}
+
+\section{Przejście do mechaniki kwantowej}
+
+Wszystkie obiekty tego rozdziału są ściśle określonymi
+całkami Lebesgue'a względem \emph{dodatnich} miar
+probabilistycznych. W szczególności
+$e^{-\int_0^T V(w(s))\,\dd s}$ jest dodatnią wagą dla
+rzeczywistego $V$. W fizyce kwantowej pojawia się natomiast
+czynnik $e^{iS[w]/\hbar}$, gdzie $S$ jest działaniem
+klasycznym. W następnym rozdziale pokażemy, skąd bierze się
+formalna analogia oraz dlaczego nie wolno zastępować
+miary Wienera nieokreśloną „miarą fazową” bez oddzielnego
+uzasadnienia matematycznego.
+
+
+% ===========================================================================
+% ROZDZIAŁ 16: całki Feynmana, Wick, propagator, oscylator
+% ===========================================================================
