@@ -28,8 +28,10 @@
   rzeczywiście pomaga. Podczas przeglądu każdej sekcji usuwaj zbędne
   wzory wydzielone, aby styl skryptu pozostał jednolity.
 - Jeżeli używasz głębokiego twierdzenia lub lematu, podaj jego dokładne założenia i wskaż źródło. Nie nazywaj szkicu pełnym dowodem.
-- Każda całka oznaczona musi mieć jawnie zapisane granice albo dziedzinę
-  całkowania. W całce po krzywej podawaj nazwę krzywej i określ jej
+- Każda całka, która nie jest całką nieoznaczoną, musi mieć jawnie zapisane
+  granice albo dziedzinę całkowania. Dotyczy to także całek niewłaściwych,
+  wielokrotnych, po krzywych i po rozmaitościach. W całce po krzywej
+  podawaj nazwę krzywej i określ jej
   orientację lub parametryzację; nie zostawiaj samego symbolu `\oint`
   ani `\int`. Wyjątkiem są całki nieoznaczone.
 - Unikaj powielania definicji już wprowadzonych; odsyłaj do wcześniejszych miejsc.
