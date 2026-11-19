@@ -30,3 +30,11 @@ Część oryginałów może mieć własne błędy kompilacji i zależności syst
 - `audyt/macierz_nakladek.csv` zawiera ranking podobieństw rozdziałów.
 
 Uruchom: `python narzedzia/sprawdz_podzial.py` (automatycznie wybiera kontrolę integracji) albo `python narzedzia/sprawdz_integracje.py`. Twierdzenie wspólne jest włączane automatycznie z obu skryptów.
+
+## Iteracja III — rozdmuchanie punktu
+
+- `wspolne/rozdmuchanie_punktu_normalna.tex`: dwa warianty obliczenia wiązki normalnej wyjątkowego dzielnika.
+- `wspolne/rozdmuchanie_punktu_kohomologia.tex`: integralne grupy kohomologii, przecięcia, sygnatura i charakterystyka Eulera.
+- `manifest_integracji_3.json` odnotowuje dokładnie pięć edycji w trzech rozdziałach, przeprowadzonych na wersji po iteracji II.
+- `audyt/raport_rozdmuchania_iteracja_3.md` dokumentuje założenia, zachowane dowody i ograniczenia scalenia.
+- `narzedzia/sprawdz_integracje_3.py` odtwarza źródła i wszystkie etapy; zawołaj `python narzedzia/sprawdz_podzial.py`.
