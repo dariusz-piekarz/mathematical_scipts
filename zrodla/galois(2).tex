@@ -1,0 +1,1348 @@
+% !TeX program = pdflatex
+\documentclass[11pt,a4paper,oneside]{book}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[polish]{babel}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[unicode]{hyperref}
+
+\hypersetup{colorlinks=true,linkcolor=blue!45!black,urlcolor=blue!45!black}
+\geometry{margin=2.5cm,headheight=15pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setlength{\emergencystretch}{2em}
+\setlist[enumerate]{topsep=4pt,itemsep=2pt}
+\setlist[itemize]{topsep=4pt,itemsep=2pt}
+\numberwithin{equation}{section}
+
+\theoremstyle{plain}
+\newtheorem{twierdzenie}{Twierdzenie}[chapter]
+\newtheorem{lemat}[twierdzenie]{Lemat}
+\newtheorem{wniosek}[twierdzenie]{Wniosek}
+\theoremstyle{definition}
+\newtheorem{definicja}[twierdzenie]{Definicja}
+\newtheorem{przyklad}[twierdzenie]{Przykład}
+\theoremstyle{remark}
+\newtheorem{uwaga}[twierdzenie]{Uwaga}
+\renewcommand{\proofname}{Dowód}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Teoria Galois}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \fancyfoot[C]{\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\Gal}{\operatorname{Gal}}
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\Nm}{\operatorname{N}}
+\newcommand{\ord}{\operatorname{ord}}
+\newcommand{\charac}{\operatorname{char}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\res}{\operatorname{res}}
+\newcommand{\dd}{\,\mathrm{d}}
+\title{Teoria Galois\\\large Rozszerzenia ciał, równania wielomianowe,\\ konstrukcje geometryczne i całki elementarne}
+\author{}
+\date{6 października 2026}
+\begin{document}
+\frontmatter
+\maketitle
+\tableofcontents
+\mainmatter
+
+\chapter{Ciała i rozszerzenia}
+
+\section{Ciała, zanurzenia i charakterystyka}
+
+\begin{definicja}
+Ciało $K$ to zbiór z dodawaniem i mnożeniem, w którym $(K,+)$ oraz $(K^\times,\cdot)$ są grupami abelowymi, mnożenie jest rozdzielne względem dodawania i $0\ne1$. Tutaj $K^\times=K\setminus\{0\}$. Homomorfizm ciał zachowuje $0,1,+,\cdot$. Rozszerzenie $L/K$ oznacza, że $K$ jest podciałem $L$.
+\end{definicja}
+
+Homomorfizm ciał jest różnowartościowy: gdyby $a\ne0$ miał obraz zero, to obraz $aa^{-1}=1$ również byłby zerem. Dlatego nazywamy go \emph{zanurzeniem}. Zanurzenie $L\to M$ jest zanurzeniem \emph{nad $K$}, jeżeli ustala każdy element wspólnego podciała $K$.
+
+\begin{przyklad}
+Ciałami są $\Q,\R,\C$, ciało funkcji wymiernych $K(t)$ oraz $\F_p=\Z/p\Z$ dla liczby pierwszej $p$. Pierścień $\Z$ nie jest ciałem: liczba $2$ nie ma w nim odwrotności. Symbol $K(\alpha_1,\dots,\alpha_r)$ oznacza najmniejsze podciało zawierające $K$ i wskazane elementy.
+\end{przyklad}
+
+Charakterystyka $K$ jest najmniejszym $n>0$, dla którego $n\cdot1=0$, lub zerem, jeśli takie $n$ nie istnieje. Dodatnia charakterystyka musi być pierwsza: $n=ab$ z $1<a,b<n$ dawałoby iloczyn dwóch niezerowych elementów równy zeru. W charakterystyce $p$ wzór Newtona daje $(a+b)^p=a^p+b^p$. Odwzorowanie $a\mapsto a^p$ jest różnowartościowym endomorfizmem, zwanym endomorfizmem Frobeniusa. Jest automorfizmem na ciele skończonym; na dowolnym ciele charakterystyki $p$ nie musi być „na”.
+
+\noindent\textbf{Konwencja.} Dowody dotyczące zanurzeń, teorii Galois i pierwiastników prowadzimy dalej w charakterystyce zero. Osobny przykład ciał skończonych będzie wyraźnie oznaczony. Dzięki temu nie trzeba wprowadzać teorii rozszerzeń nierozdzielczych.
+
+\section{Dołączenie pierwiastka i wielomian minimalny}
+
+Wielomian dodatniego stopnia z $K[T]$ jest \emph{nierozkładalny}, jeśli nie jest iloczynem dwóch wielomianów dodatniego stopnia z $K[T]$. Korzystamy z dzielenia z resztą i algorytmu Euklidesa w $K[T]$.
+
+\begin{twierdzenie}[Dołączenie formalnego pierwiastka]
+Jeżeli $p\in K[T]$ jest nierozkładalny i $d=\deg p$, to $K[T]/(p)$ jest ciałem. Element $\alpha=T+(p)$ spełnia $p(\alpha)=0$, a każdy element tego ciała ma jednoznaczną postać
+\[
+a_0+a_1\alpha+\cdots+a_{d-1}\alpha^{d-1},\qquad a_j\in K.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dzielenie przez $p$ daje reprezentanta stopnia mniejszego niż $d$. Dwaj różni tacy reprezentanci nie mogą różnić się o wielokrotność $p$, co dowodzi jednoznaczności. Dla niezerowej klasy wybierzmy reprezentanta $q$ niepodzielnego przez $p$. Nierozkładalność $p$ daje $\gcd(p,q)=1$, więc istnieją $u,v\in K[T]$ z $up+vq=1$. Klasa $v$ jest odwrotnością klasy $q$. Stałe z $K$ zachowują różne klasy, więc $K$ zanurza się w ilorazie. Wreszcie klasa $p(T)$ jest zerowa, czyli $p(\alpha)=0$.
+\end{proof}
+
+Element $\alpha$ jest \emph{algebraiczny nad $K$}, jeśli zeruje niezerowy wielomian z $K[T]$; w przeciwnym razie jest \emph{przestępny}. Dla algebraicznego $\alpha$ wybieramy unormowany wielomian $m_{\alpha,K}$ najmniejszego stopnia zerujący $\alpha$. Dzielenie z resztą pokazuje, że dzieli on każdy wielomian zerujący $\alpha$. Jest nierozkładalny, bo z $uv(\alpha)=0$ wynikałoby $u(\alpha)=0$ albo $v(\alpha)=0$, wbrew minimalności stopnia. Odwzorowanie $q\mapsto q(\alpha)$ daje więc
+\[
+K[T]/(m_{\alpha,K})\simeq K[\alpha]=K(\alpha).
+\]
+Ostatnia równość wynika z tego, że iloraz jest już ciałem, a nie tylko pierścieniem. Jest to uzasadnienie wszystkich relacji między potęgami $\alpha$, którego będziemy potrzebować przy przedłużaniu zanurzeń.
+
+\begin{przyklad}
+$\Q[T]/(T^2-2)\simeq\Q(\sqrt2)$ oraz $\R[T]/(T^2+1)\simeq\C$. W pierwszym przykładzie każdy element ma postać $a+b\sqrt2$, $a,b\in\Q$.
+\end{przyklad}
+
+\section{Stopień rozszerzenia i twierdzenie o wieży}
+
+Stopień $[L:K]$ to wymiar przestrzeni wektorowej $L$ nad $K$. Z konstrukcji ilorazowej wynika $[K(\alpha):K]=\deg m_{\alpha,K}$, z bazą $1,\alpha,\dots,\alpha^{d-1}$.
+
+\begin{twierdzenie}[O wieży]
+Jeśli $K\subseteq E\subseteq L$, a $[E:K]$ i $[L:E]$ są skończone, to
+\[
+[L:K]=[L:E]\,[E:K].
+\]
+Jeśli $[L:K]$ jest skończony, oba stopnie po prawej także są skończone i zachodzi ta sama równość.
+\end{twierdzenie}
+\begin{proof}
+Niech $u_1,\dots,u_r$ będzie bazą $E/K$, a $v_1,\dots,v_s$ bazą $L/E$. Każde $x\in L$ zapisujemy jako $\sum_j b_jv_j$, a następnie każde $b_j$ jako $\sum_i a_{ij}u_i$ z $a_{ij}\in K$. Iloczyny $u_iv_j$ rozpinają więc $L$ nad $K$. Jeżeli $\sum_{i,j}a_{ij}u_iv_j=0$, to niezależność $v_j$ nad $E$ daje $\sum_i a_{ij}u_i=0$ dla każdego $j$. Niezależność $u_i$ nad $K$ daje wszystkie $a_{ij}=0$. Iloczyny tworzą bazę złożoną z $rs$ elementów.
+
+Jeśli $[L:K]<\infty$, to $E$ jest podprzestrzenią skończonego wymiaru. Ponadto każda rodzina niezależna nad $E$ jest niezależna nad $K$, więc $[L:E]$ też jest skończony. Stosujemy już udowodnioną część.
+\end{proof}
+
+Każdy element skończonego rozszerzenia jest algebraiczny: dostatecznie wiele jego potęg jest liniowo zależnych. Odwrotnie, dołączenie skończenie wielu elementów algebraicznych daje rozszerzenie skończone, na mocy twierdzenia o wieży. Nie oznacza to, że każde rozszerzenie algebraiczne ma skończony stopień.
+
+\section{Przedłużanie zanurzeń: podstawowe narzędzie}
+
+Ciało $\Omega$ jest \emph{algebraicznie domknięte}, gdy każdy wielomian dodatniego stopnia z $\Omega[T]$ ma w $\Omega$ zero. Domknięcie algebraiczne $\overline K/K$ jest rozszerzeniem algebraicznym, którego ciało $\overline K$ jest algebraicznie domknięte. Korzystamy ze standardowego twierdzenia o istnieniu domknięcia algebraicznego, którego konstrukcja teoriomnogościowa nie jest tu potrzebna. W przykładach liczbowych możemy umieszczać wszystkie rozważane rozszerzenia w $\C$.
+
+\begin{lemat}[Przedłużenie przez jeden element]
+Niech $\sigma:K\to\Omega$ będzie zanurzeniem, a $\alpha$ algebraiczny nad $K$, z $p=m_{\alpha,K}$. Dla każdego zera $\beta$ wielomianu $\sigma(p)$, otrzymanego przez zastosowanie $\sigma$ do współczynników, istnieje dokładnie jedno przedłużenie
+\[
+\widetilde\sigma:K(\alpha)\longrightarrow\Omega,
+\qquad \widetilde\sigma(\alpha)=\beta.
+\]
+Każde przedłużenie powstaje w ten sposób.
+\end{lemat}
+\begin{proof}
+Wielomian $\sigma(p)$ jest nierozkładalny nad $\sigma(K)$: jego rozkład po zastosowaniu $\sigma^{-1}$ dałby rozkład $p$. Wobec tego jest wielomianem minimalnym $\beta$ nad $\sigma(K)$. Wzór
+\[
+\sum_{j=0}^{d-1}a_j\alpha^j\longmapsto
+\sum_{j=0}^{d-1}\sigma(a_j)\beta^j
+\]
+indukuje izomorfizm odpowiednich ilorazów przez $(p)$ i $(\sigma(p))$, a następnie zanurzenie do $\Omega$. Zachowuje więc wszystkie działania i relacje, nie tylko relację $p(\alpha)=0$. Jednoznaczność wynika z generowania ciała przez $K$ i $\alpha$. Każde zanurzenie musi wysłać $\alpha$ na zero $\sigma(p)$, bo zachowuje równania wielomianowe.
+\end{proof}
+
+\begin{twierdzenie}[Przedłużanie zanurzeń]
+Niech $L/K$ będzie rozszerzeniem skończonym, a $\Omega$ ciałem algebraicznie domkniętym. Każde zanurzenie $K\to\Omega$ przedłuża się do zanurzenia $L\to\Omega$.
+\end{twierdzenie}
+\begin{proof}
+Wybierzmy skończoną rodzinę generatorów $L=K(\alpha_1,\dots,\alpha_r)$, na przykład bazę $L/K$. Po skonstruowaniu zanurzenia $K(\alpha_1,\dots,\alpha_{i-1})$ stosujemy poprzedni lemat do wielomianu minimalnego $\alpha_i$ nad tym ciałem. Jego obraz ma zero w $\Omega$, więc następny krok jest możliwy. Po $r$ krokach otrzymujemy wymagane zanurzenie.
+\end{proof}
+
+\begin{twierdzenie}[Liczba zanurzeń]
+Skończone rozszerzenie $L/K$ w charakterystyce zero ma dokładnie $[L:K]$ różnych $K$-zanurzeń do ustalonego domknięcia algebraicznego $\overline K$.
+\end{twierdzenie}
+\begin{proof}
+Nierozkładalny wielomian $p$ w charakterystyce zero ma różne zera: jego pochodna jest niezerowa i ma mniejszy stopień, więc $\gcd(p,p')=1$. W wieży z poprzedniego dowodu oznaczmy kolejne stopnie przez $d_i$. Lemat 1.6 daje dokładnie $d_i$ przedłużeń każdego dotychczasowego zanurzenia, bo obraz wielomianu minimalnego ma $d_i$ różnych zer. Różne wybory dają różne zanurzenia, a każde zanurzenie powstaje z takich wyborów. Ich liczba to $\prod_i d_i=[L:K]$.
+\end{proof}
+
+\begin{przyklad}
+$\Q(\sqrt2)$ ma dwa $\Q$-zanurzenia i oba są automorfizmami tego ciała. $\Q(\sqrt[3]{2})$ ma trzy $\Q$-zanurzenia do $\C$, lecz tylko jedno jest jego automorfizmem: dwa pozostałe wysyłają rzeczywisty generator na $\omega\sqrt[3]{2}$ lub $\omega^2\sqrt[3]{2}$, gdzie $\omega=e^{2\pi i/3}$. Zanurzenie wysyła zatem element na jedno z jego sprzężeń, niekoniecznie na element różny od niego.
+\end{przyklad}
+
+
+\chapter{Ciała rozkładu i grupy Galois}
+
+\section{Ciała rozkładu, normalność i rozdzielczość}
+
+\begin{definicja}
+Ciałem rozkładu niezerowego wielomianu $f\in K[T]$ jest rozszerzenie $L=K(\alpha_1,\dots,\alpha_r)$ generowane przez wszystkie jego różne zera, w którym $f$ rozkłada się na czynniki liniowe. Wielomian jest \emph{rozdzielczy}, jeśli nie ma zer wielokrotnych.
+\end{definicja}
+
+\begin{twierdzenie}
+Ciało rozkładu istnieje, jest skończone nad $K$ i jest jednoznaczne z dokładnością do izomorfizmu nad $K$.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli wielomian nie jest już iloczynem czynników liniowych, dołączamy zero jednego z jego nierozkładalnych czynników, korzystając z twierdzenia 1.3. W nowym ciele wydzielamy czynnik liniowy. Indukcja po stopniu pozostałej części kończy się po skończenie wielu krokach. Każdy krok jest skończony, więc twierdzenie o wieży daje skończoność całego rozszerzenia.
+
+Niech $L$ i $M$ będą dwoma ciałami rozkładu. Zanurzamy $L$ w domknięciu algebraicznym $M$, przedłużając identyczność $K$. Obrazy wszystkich różnych zer $f$ są różnymi zerami $f$, zatem są dokładnie wszystkimi zerami w $M$. Obraz $L$ jest ciałem przez nie generowanym, czyli $M$. Otrzymane zanurzenie jest więc izomorfizmem $L\simeq M$ nad $K$.
+\end{proof}
+
+Rozszerzenie algebraiczne jest \emph{normalne}, jeśli każdy nierozkładalny wielomian nad bazą mający w nim zero rozkłada się tam całkowicie. Jest \emph{rozdzielcze}, jeśli wszystkie wielomiany minimalne jego elementów są rozdzielcze. W charakterystyce zero druga własność zachodzi automatycznie, jak pokazano w dowodzie liczby zanurzeń.
+
+\begin{lemat}[Trzy opisy normalności]
+Dla skończonego rozszerzenia $L/K$ zawartego w $\overline K$ równoważne są:
+\begin{enumerate}
+\item $L/K$ jest normalne;
+\item każde $K$-zanurzenie $\sigma:L\to\overline K$ spełnia $\sigma(L)=L$;
+\item $L$ jest ciałem rozkładu pewnego wielomianu nad $K$.
+\end{enumerate}
+\end{lemat}
+\begin{proof}
+Jeżeli $L/K$ jest normalne, obraz każdego $\alpha\in L$ jest zerem jego wielomianu minimalnego, więc należy do $L$. Zanurzenie $L\to L$ jest surjektywne, bo jest różnowartościowym operatorem $K$-liniowym na przestrzeni skończonego wymiaru. To daje (1)$\Rightarrow$(2).
+
+Załóżmy (2). Jeśli $\alpha\in L$ i $\beta$ jest dowolnym zerem $m_{\alpha,K}$, to zanurzenie $K(\alpha)\to\overline K$, $\alpha\mapsto\beta$, przedłuża się do $L$. Warunek (2) daje $\beta\in L$. Zatem $L/K$ jest normalne.
+
+Przy (1) wybieramy generatory $\alpha_1,\dots,\alpha_r$ ciała $L/K$. Iloczyn ich wielomianów minimalnych rozkłada się w $L$, a jego zera generują dokładnie $L$. Otrzymujemy (3). Przy (3) każde zanurzenie permutuje cały skończony zbiór zer wielomianu definiującego ciało rozkładu; stąd jego obrazem jest $L$, co daje (2).
+\end{proof}
+
+\begin{definicja}
+Skończone normalne i rozdzielcze rozszerzenie nazywamy \emph{rozszerzeniem Galois}. Jego grupa Galois to
+\[
+\Gal(L/K)=\Aut_K(L)=\{\sigma:L\xrightarrow{\sim}L:\sigma|_K=\id_K\}.
+\]
+Grupa Galois wielomianu $f$ oznacza grupę jego ciała rozkładu nad ciałem współczynników.
+\end{definicja}
+
+\begin{twierdzenie}[Liczba automorfizmów]
+Dla skończonego $L/K$ w charakterystyce zero zachodzi $|\Aut_K(L)|\le[L:K]$. Równość zachodzi wtedy i tylko wtedy, gdy $L/K$ jest Galois.
+\end{twierdzenie}
+\begin{proof}
+Automorfizmy są szczególnymi zanurzeniami, których jest $[L:K]$. Równość oznacza, że każde zanurzenie ma obraz $L$. Jest to dokładnie normalność z lematu 2.3; rozdzielczość jest automatyczna.
+\end{proof}
+
+Jeśli $f$ ma $n$ różnych zer, grupa jego ciała rozkładu działa na nich wiernie: automorfizm ustalający wszystkie generatory jest identycznością. Możemy więc traktować ją jako podgrupę $S_n$. Gdy $f$ jest nierozkładalny, działanie jest przechodnie. Istotnie, zanurzenie wysyłające jedno zero na dowolne inne przedłuża się do ciała rozkładu, a normalność zamienia to przedłużenie w automorfizm.
+
+\section{Trzy obliczenia grup Galois}
+
+\begin{przyklad}[Rozszerzenie kwadratowe]
+Jeśli $d\in\Q$ nie jest kwadratem, to $\Q(\sqrt d)/\Q$ ma stopień $2$ i jest ciałem rozkładu $T^2-d$. Jego automorfizmy to identyczność oraz $a+b\sqrt d\mapsto a-b\sqrt d$. Grupa jest izomorficzna z $C_2$.
+\end{przyklad}
+
+\begin{przyklad}[Ciało rozkładu wielomianu sześciennego]
+Niech $\alpha=\sqrt[3]{2}$ i $\omega=e^{2\pi i/3}$. Wielomian $T^3-2$ nie ma zera wymiernego: dla nieskracalnego $a/b$ równanie $a^3=2b^3$ przeczy porównaniu wykładników liczby pierwszej $2$. Wielomian stopnia $3$ bez zera wymiernego jest nierozkładalny, ponieważ w każdym jego nietrywialnym rozkładzie jeden czynnik musiałby być liniowy.
+
+Ciało rozkładu to $L=\Q(\alpha,\omega)$. Mamy $[\Q(\alpha):\Q]=3$ oraz $[L:\Q(\alpha)]=2$: element $\omega$ spełnia $T^2+T+1=0$ i nie należy do rzeczywistego ciała $\Q(\alpha)$. Zatem $[L:\Q]=6$. Grupa Galois ma sześć elementów i zanurza się w $S_3$, więc jest całą $S_3$. W szczególności istnieją automorfizmy
+\[
+\sigma(\alpha)=\omega\alpha,\quad\sigma(\omega)=\omega,
+\qquad\tau(\alpha)=\alpha,\quad\tau(\omega)=\omega^2.
+\]
+Spełniają $\sigma^3=\tau^2=1$ i $\tau\sigma\tau=\sigma^{-1}$. Istnienie $\sigma$ wynika tu z już obliczonej pełnej grupy permutacji, a nie tylko z formalnego przypisania obrazów generatorom.
+\end{przyklad}
+
+\begin{przyklad}[Rozszerzenie dwukwadratowe]
+Dla $L=\Q(\sqrt2,\sqrt3)$ sprawdzamy najpierw stopień. Gdyby $\sqrt3=a+b\sqrt2$ z $a,b\in\Q$, to po podniesieniu do kwadratu $3=a^2+2b^2+2ab\sqrt2$. Niewymierność $\sqrt2$ daje $ab=0$. Otrzymalibyśmy $a^2=3$ albo $b^2=3/2$, a żadna z tych liczb nie jest kwadratem wymiernym (wykładniki liczb pierwszych w kwadracie są parzyste). Stąd $[L:\Q]=4$. Jest to ciało rozkładu $(T^2-2)(T^2-3)$.
+
+Każdy automorfizm wybiera znaki obrazów obu pierwiastków. Są co najwyżej cztery takie wybory i dokładnie cztery automorfizmy, więc wszystkie wybory występują. Zmiany znaków komutują i mają rząd $2$, toteż $\Gal(L/\Q)\simeq C_2\times C_2$.
+\end{przyklad}
+
+
+\chapter{Odpowiedniość Galois}
+
+\section{Niezależność zanurzeń i twierdzenie Artina}
+
+\begin{lemat}[Liniowa niezależność homomorfizmów]
+Różne homomorfizmy ciał $\sigma_1,\dots,\sigma_m:L\to M$ są liniowo niezależne nad $M$ jako funkcje: z $\sum_{j=1}^m c_j\sigma_j(x)=0$ dla każdego $x\in L$ wynika $c_1=\cdots=c_m=0$.
+\end{lemat}
+\begin{proof}
+Przypuśćmy, że istnieje niezerowa relacja, i wybierzmy taką z najmniejszą liczbą niezerowych współczynników. Jeden składnik nie wystarcza, co widać dla $x=1$. Numerując składniki, możemy założyć $c_1,c_m\ne0$. Ponieważ $\sigma_1\ne\sigma_m$, istnieje $a\in L$ takie, że $\sigma_1(a)\ne\sigma_m(a)$. Od relacji obliczonej w $ax$ odejmujemy relację w $x$ pomnożoną przez $\sigma_m(a)$. Dostajemy
+\[
+\sum_{j=1}^{m-1}c_j\bigl(\sigma_j(a)-\sigma_m(a)\bigr)\sigma_j(x)=0.
+\]
+Współczynnik pierwszego składnika jest niezerowy. To relacja z mniejszą liczbą składników, wbrew wyborowi.
+\end{proof}
+
+\begin{twierdzenie}[Artina: stopień nad ciałem stałym]
+Niech $H$ będzie skończoną grupą automorfizmów ciała $L$, a
+\[
+F=L^H=\{a\in L:\sigma(a)=a\text{ dla każdego }\sigma\in H\}.
+\]
+Wtedy $[L:F]=|H|$ oraz $\Aut_F(L)=H$.
+\end{twierdzenie}
+\begin{proof}
+Niech $m=|H|$. Najpierw wykażemy $[L:F]\le m$, nie zakładając z góry skończoności tego stopnia. Dla dowolnych $x_1,\dots,x_{m+1}\in L$ układ $m$ równań
+\[
+\sum_{j=1}^{m+1}c_j\sigma(x_j)=0\qquad(\sigma\in H)
+\]
+ma niezerowe rozwiązanie $(c_j)$ nad $L$. Wybierzmy rozwiązanie o najmniejszej liczbie niezerowych współrzędnych i unormujmy jedną z nich do $c_1=1$, w razie potrzeby zmieniając numerację. Dla $\tau\in H$ wektor $(\tau(c_j))$ też jest rozwiązaniem: zastosowanie $\tau$ do układu jedynie permutuje wiersze $\tau\sigma$. Różnica $(\tau(c_j)-c_j)$ ma nośnik zawarty w nośniku $(c_j)$ i zerową pierwszą współrzędną. Minimalność wymusza, że jest zerowa. Wszystkie $c_j$ należą zatem do $F$. Wiersz odpowiadający identyczności daje niezerową zależność $F$-liniową między $x_j$. Stąd $[L:F]\le m$.
+
+Oznaczmy $d=[L:F]$. Przestrzeń $F$-liniowych odwzorowań $L\to L$ ma wymiar $d$ nad $L$: odwzorowanie jest wyznaczone dowolnymi obrazami $d$ elementów bazy. Lemat 3.1 daje $m\le d$, więc $d=m$. Każde $d+1$ różnych $F$-automorfizmów przeczyłoby temu samemu lematowi. Ponieważ $H\subseteq\Aut_F(L)$ i $|H|=d$, zachodzi $\Aut_F(L)=H$.
+\end{proof}
+
+\section{Twierdzenie główne z pełnym dowodem}
+
+\begin{twierdzenie}[Podstawowe twierdzenie teorii Galois]
+Niech $L/K$ będzie skończonym rozszerzeniem Galois w charakterystyce zero, $G=\Gal(L/K)$. Odwzorowania
+\[
+E\longmapsto\Gal(L/E),\qquad H\longmapsto L^H
+\]
+są wzajemnie odwrotnymi bijekcjami między ciałami pośrednimi a podgrupami $G$, odwracają inkluzje i spełniają
+\[
+[L:E]=|\Gal(L/E)|,\qquad [E:K]=|G:\Gal(L/E)|.
+\]
+Jeśli $H=\Gal(L/E)$, to $E/K$ jest Galois wtedy i tylko wtedy, gdy $H\triangleleft G$. W tym przypadku ograniczenie automorfizmów daje $\Gal(E/K)\simeq G/H$.
+\end{twierdzenie}
+\begin{proof}
+\emph{Ciała odzyskujemy z podgrup.} Ciało $L$ jest ciałem rozkładu pewnego $f\in K[T]$, więc jest też ciałem rozkładu $f$ nad każdym $E$. Stąd $L/E$ jest Galois i $|\Gal(L/E)|=[L:E]$. Przy $H=\Gal(L/E)$ mamy $E\subseteq L^H$, a twierdzenie Artina daje $[L:L^H]=|H|=[L:E]$. Twierdzenie o wieży wymusza $E=L^H$. W szczególności $L^G=K$.
+
+\emph{Podgrupy odzyskujemy z ciał.} Dla $H\le G$ twierdzenie Artina daje bezpośrednio $\Gal(L/L^H)=H$. Są to więc bijekcje odwrotne. Większa podgrupa ustala mniej elementów, a większe ciało pozostawia mniej automorfizmów; stąd odwrócenie inkluzji. Wzór na $[E:K]$ wynika z twierdzenia o wieży oraz $[L:K]=|G|$.
+
+\emph{Normalność.} Dla $\sigma\in G$ bezpośrednio z definicji wynika
+\[
+\sigma(L^H)=L^{\sigma H\sigma^{-1}}.
+\]
+Istotnie, $h(a)=a$ jest równoważne $(\sigma h\sigma^{-1})(\sigma(a))=\sigma(a)$. Jeśli $H$ jest normalna, to każde $\sigma$ zachowuje $E=L^H$. Dowolne $K$-zanurzenie $E\to\overline K$ przedłuża się do $L$; normalność $L/K$ sprawia, że przedłużenie należy do $G$. Każde takie zanurzenie ma więc obraz $E$. Lemat 2.3 daje normalność $E/K$. Odwrotnie, gdy $E/K$ jest normalne, $\sigma(E)=E$ dla każdego $\sigma\in G$. Wzór powyżej i bijekcja podgrup z ciałami dają $\sigma H\sigma^{-1}=H$.
+
+\emph{Grupa ilorazowa.} Przy normalności ograniczenie $G\to\Gal(E/K)$ jest homomorfizmem z jądrem $H$. Jest surjektywne, ponieważ każde zanurzenie $E$ przedłuża się do $L$. Twierdzenie o homomorfizmie grup daje $\Gal(E/K)\simeq G/H$.
+\end{proof}
+
+\section{Jak czytać odpowiedniość na przykładach}
+
+Dla $L=\Q(\sqrt2,\sqrt3)$ niech $s$ zmienia znak $\sqrt2$, a $t$ znak $\sqrt3$. Wszystkie podgrupy i odpowiadające im ciała to
+\[
+\begin{array}{c|ccccc}
+H & \{1\} & \langle s\rangle & \langle t\rangle & \langle st\rangle & G\\ \hline
+L^H & L & \Q(\sqrt3) & \Q(\sqrt2) & \Q(\sqrt6) & \Q.
+\end{array}
+\]
+Na przykład $\sqrt6$ jest ustalane przez $st$, a jego ciało ma stopień $2$; wzór na stopnie dowodzi, że jest to całe ciało stałe, nie tylko jego podciało. Wszystkie podgrupy są normalne, więc wszystkie rozszerzenia pośrednie nad $\Q$ są Galois.
+
+Dla $T^3-2$ grupa $S_3$ ma trzy podgrupy rzędu $2$. Każda ustala jedno zero i odpowiada generowanemu przez nie ciału sześciennemu. Te podgrupy nie są normalne i ciała sześcienne nie są normalne nad $\Q$. Podgrupa $A_3=\langle\sigma\rangle$ jest normalna i ustala $\Q(\omega)$: ciało to ma stopień $2$ i $\sigma(\omega)=\omega$. Tak odróżniamy stopień rozszerzenia od liczby jego automorfizmów, gdy nie ma normalności.
+
+\section{Wyróżnik: szybki test dla grupy wielomianu}
+
+Niech unormowany rozdzielczy $f\in K[T]$ ma zera $\alpha_1,\dots,\alpha_n$ w ciele rozkładu $L$. Połóżmy
+\[
+\delta=\prod_{i<j}(\alpha_i-\alpha_j),\qquad \Delta(f)=\delta^2.
+\]
+Zamiana dwóch zer zmienia znak $\delta$; każda permutacja daje zatem $\sigma(\delta)=\operatorname{sgn}(\sigma)\delta$. Kwadrat $\delta^2$ jest ustalany przez całą grupę, więc należy do $K$. Ponieważ $\delta\ne0$ i $\charac K=0$, otrzymujemy
+\[
+\Gal(f/K)\subseteq A_n\quad\Longleftrightarrow\quad \delta\in K
+\quad\Longleftrightarrow\quad \Delta(f)\text{ jest kwadratem w }K.
+\]
+W ostatnim kroku, jeśli $\Delta=b^2$ dla $b\in K$, to $(\delta-b)(\delta+b)=0$ i $\delta=\pm b$. Warunek rozdzielczości jest istotny: dla $\Delta=0$ ten argument nie wykrywa parzystości permutacji.
+
+\section{Ślad i norma: przygotowanie do całkowania}
+
+Dla skończonego $L/K$ w charakterystyce zero i $d=[L:K]$ definiujemy
+\[
+\Tr_{L/K}(a)=\sum_{j=1}^d\sigma_j(a),\qquad
+\Nm_{L/K}(a)=\prod_{j=1}^d\sigma_j(a),
+\]
+gdzie $\sigma_j$ są wszystkimi $K$-zanurzeniami $L$ do wspólnego domknięcia algebraicznego. Nie ograniczamy sumy do automorfizmów samego $L$, których w rozszerzeniu nienormalnym może być mniej.
+
+Oba wyrażenia należą do $K$. Aby to uzasadnić, weźmy ciało rozkładu iloczynu wielomianów minimalnych skończonej rodziny generatorów $L$. To skończone rozszerzenie Galois $N/K$ zawiera wszystkie obrazy $L$. Automorfizmy $N/K$ permutują zanurzenia $\sigma_j$, zatem ustalają sumę i iloczyn. Równość $N^{\Gal(N/K)}=K$ dowodzi tezy.
+
+Ślad jest $K$-liniowy, norma jest multiplikatywna i norma elementu niezerowego jest niezerowa. Dla $a\in K$ mamy $\Tr_{L/K}(a)=da$ oraz $\Nm_{L/K}(a)=a^d$. W części o całkach udowodnimy, że ślad komutuje z pochodną, a norma zamienia ślad pochodnej logarytmicznej w pochodną logarytmiczną normy.
+
+
+\chapter{Grupy rozwiązalne i rozszerzenia przez pierwiastniki}
+
+\section{Szeregi pochodne grup}
+
+\begin{definicja}
+Komutator to $[g,h]=ghg^{-1}h^{-1}$. Podgrupa pochodna $G'=[G,G]$ jest podgrupą generowaną przez wszystkie komutatory. Definiujemy $G^{(0)}=G$, $G^{(i+1)}=(G^{(i)})'$. Grupa jest \emph{rozwiązalna}, jeżeli $G^{(r)}=\{1\}$ dla pewnego $r$.
+\end{definicja}
+
+Podgrupa $G'$ jest normalna, ponieważ sprzężenie komutatora jest komutatorem sprzężonych elementów. Dla $N\triangleleft G$ iloraz $G/N$ jest abelowy dokładnie wtedy, gdy $G'\subseteq N$: równość klas $ghN=hgN$ jest równoważna przynależności komutatora do $N$.
+
+\begin{lemat}[Własności rozwiązalności]
+Podgrupy i obrazy homomorficzne grup rozwiązalnych są rozwiązalne. Jeżeli $N\triangleleft G$, a $N$ i $G/N$ są rozwiązalne, to $G$ też jest rozwiązalna. Równoważnie, rozwiązalność oznacza istnienie szeregu
+\[
+G=G_0\triangleright G_1\triangleright\cdots\triangleright G_r=\{1\}
+\]
+o abelowych ilorazach $G_{i-1}/G_i$. Dla skończonej grupy można wybrać szereg, którego ilorazy są cykliczne rzędu będącego liczbą pierwszą.
+\end{lemat}
+\begin{proof}
+Dla $H\le G$ indukcja daje $H^{(i)}\subseteq G^{(i)}$. Homomorfizm $\varphi$ wysyła komutatory na komutatory, więc $\varphi(G^{(i)})=\varphi(G)^{(i)}$. To dowodzi dwóch pierwszych własności. Jeśli $(G/N)^{(r)}=1$, to $G^{(r)}\subseteq N$. Jeśli ponadto $N^{(s)}=1$, to $G^{(r+s)}\subseteq N^{(s)}=1$.
+
+Szereg pochodny grupy rozwiązalnej ma abelowe ilorazy. Odwrotnie, przy szeregu z abelowymi ilorazami indukcja daje $G^{(i)}\subseteq G_i$, bo $G_{i-1}'\subseteq G_i$. Zatem $G^{(r)}=1$.
+
+Pozostaje udoskonalenie skończonego szeregu. Każda nietrywialna skończona grupa abelowa $A$ ma maksymalną właściwą podgrupę $B$. Grupa $A/B$ jest prosta i abelowa: każdy element różny od jedności generuje całość, a cykliczna grupa rzędu złożonego ma właściwą nietrywialną podgrupę. Stąd $A/B\simeq C_p$ dla pewnego pierwszego $p$. Powtarzając argument dla $B$ i biorąc przeciwobrazy podgrup w kolejnych abelowych ilorazach, otrzymujemy szereg z ilorazami cyklicznymi rzędu pierwszego.
+\end{proof}
+
+\begin{uwaga}
+Jest to szereg subnormalny: $G_i$ ma być normalna w $G_{i-1}$, niekoniecznie w całym $G$. To wystarcza do zastosowania odpowiedniości Galois na każdym piętrze osobno.
+\end{uwaga}
+
+\begin{przyklad}[Dlaczego stopnie do czterech są szczególne]
+Grupa $S_3$ ma szereg $S_3\triangleright A_3\triangleright\{1\}$ z ilorazami $C_2,C_3$. Dla $S_4$ używamy
+\[
+S_4\triangleright A_4\triangleright V_4\triangleright\{1\},\qquad
+V_4=\{1,(12)(34),(13)(24),(14)(23)\}.
+\]
+Sprzężenie permutuje trzy podwójne transpozycje, więc $V_4$ jest normalna. Jej elementy różne od jedności mają rząd $2$, a iloczyn dwóch różnych takich elementów jest trzecim; stąd $V_4\simeq C_2\times C_2$. Ilorazy w szeregu mają rzędy $2,3,4$ i są abelowe. Zatem $S_4$, a także wszystkie podgrupy $S_n$ dla $n\le4$, są rozwiązalne.
+\end{przyklad}
+
+\section{Wieże pierwiastnikowe}
+
+\begin{definicja}[Rozwiązalność przez pierwiastniki]
+Wieża pierwiastnikowa to skończona wieża
+\[
+K=K_0\subseteq K_1\subseteq\cdots\subseteq K_r=M,\qquad
+K_i=K_{i-1}(\alpha_i),\quad \alpha_i^{n_i}\in K_{i-1},\quad n_i\ge2.
+\]
+Wielomian jest rozwiązalny przez pierwiastniki nad $K$, jeśli jego ciało rozkładu zawiera się w końcowym ciele takiej wieży.
+\end{definicja}
+
+Dozwolone są działania arytmetyczne oraz wybór dowolnego zera $T^n-a$, także zespolonego. W szczególności wolno dołączać pierwiastki jedności. To szersza klasa operacji niż rzeczywiste pierwiastki kwadratowe występujące w konstrukcjach geometrycznych.
+
+\section{Dwa lematy o dołączaniu pierwiastków}
+
+Niech $\mu_n$ oznacza grupę zer $T^n-1$ w domknięciu algebraicznym. W charakterystyce zero ma ona $n$ elementów i jest cykliczna. Oto krótkie uzasadnienie używanej cykliczności. Każda skończona podgrupa $A$ grupy multiplikatywnej ciała jest abelowa. Jeśli $e$ jest najmniejszą wspólną wielokrotnością rzędów jej elementów, to $A$ zawiera element rzędu $e$: dla każdej potęgi pierwszej w $e$ wybieramy element, którego rząd zawiera tę potęgę, potęgowaniem usuwamy pozostałe czynniki i mnożymy otrzymane elementy o parami względnie pierwszych rzędach. Ich iloczyn ma rząd równy iloczynowi tych rzędów. Wszystkie elementy $A$ zerują $T^e-1$, więc $|A|\le e$. Element rzędu $e$ daje odwrotną nierówność, zatem generuje $A$. Generator $\mu_n$ oznaczamy przez $\zeta_n$.
+
+\begin{lemat}
+Rozszerzenie $K(\zeta_n)/K$ jest Galois z abelową grupą. Jeżeli $\mu_n\subseteq K$, $\alpha\ne0$ i $\alpha^n\in K$, to $K(\alpha)/K$ jest Galois, a jego grupa jest cykliczna rzędu dzielącego $n$.
+\end{lemat}
+\begin{proof}
+Ciało $K(\zeta_n)$ jest ciałem rozkładu $T^n-1$. Automorfizm wysyła $\zeta_n$ na $\zeta_n^a$ z $\gcd(a,n)=1$, ponieważ zachowuje rząd multiplikatywny. Przypisanie automorfizmowi klasy $a$ zanurza grupę w abelowej grupie $(\Z/n\Z)^\times$.
+
+Przy $\mu_n\subseteq K$ wszystkie zera $T^n-\alpha^n$ mają postać $\xi\alpha$, $\xi\in\mu_n$, i należą do $K(\alpha)$. Jest to zatem ciało rozkładu. Odwzorowanie $\sigma\mapsto\sigma(\alpha)/\alpha$ jest różnowartościowym homomorfizmem do $\mu_n$: elementy $\mu_n$ są ustalane przez $\sigma$, co zapewnia zachowanie mnożenia. Podgrupa grupy cyklicznej jest cykliczna.
+\end{proof}
+
+\begin{lemat}[Krok cykliczny rzędu pierwszego]
+Niech $E/F$ będzie rozszerzeniem Galois z grupą cykliczną rzędu pierwszego $p$. Jeśli $\zeta_p\in F$, to istnieje $\alpha\in E$ takie, że $E=F(\alpha)$ oraz $\alpha^p\in F$.
+\end{lemat}
+\begin{proof}
+Niech $\sigma$ generuje grupę. Z liniowej niezależności automorfizmów (lemat 3.1) operator
+\[
+R=\sum_{j=0}^{p-1}\zeta_p^{-j}\sigma^j
+\]
+nie jest zerowy. Wybierzmy $b\in E$ z $\alpha=R(b)\ne0$. Ponieważ $\sigma(\zeta_p)=\zeta_p$ i $\sigma^p=1$, przesunięcie indeksów daje $\sigma(\alpha)=\zeta_p\alpha$. Stąd $\alpha^p$ jest ustalane przez całą grupę, więc należy do $F$. Natomiast $\alpha\notin F$, bo $\zeta_p\ne1$. Stopień $[F(\alpha):F]>1$ dzieli pierwszy stopień $[E:F]=p$, więc jest równy $p$ i $F(\alpha)=E$.
+\end{proof}
+
+\section{Kryterium Galois: oba kierunki}
+
+\begin{twierdzenie}[Kryterium pierwiastnikowe]
+Niezerowy wielomian $f\in K[T]$ nad ciałem charakterystyki zero jest rozwiązalny przez pierwiastniki wtedy i tylko wtedy, gdy grupa jego ciała rozkładu jest rozwiązalna.
+\end{twierdzenie}
+\begin{proof}
+Niech $L$ będzie ciałem rozkładu $f$.
+
+\emph{Od pierwiastników do grupy.} Przypuśćmy, że $L\subseteq K_r$ dla wieży $K_i=K_{i-1}(\alpha_i)$, $\alpha_i^{n_i}=a_i\in K_{i-1}$. Usuwamy kroki z $a_i=0$, które nie powiększają ciała. Wybierzmy wspólną wielokrotność $N$ liczb $n_i$ i połóżmy $M_0=K(\zeta_N)$. Rozszerzenie $M_0/K$ jest Galois z abelową grupą.
+
+Indukcyjnie zbudujemy skończone rozszerzenia Galois $M_i/K$ takie, że $K_i\subseteq M_i$ i $\Gal(M_i/K)$ jest rozwiązalna. Mając $M_{i-1}$, dołączamy wszystkie zera wielomianów
+\[
+T^{n_i}-\sigma(a_i),\qquad \sigma\in\Gal(M_{i-1}/K).
+\]
+Otrzymane ciało oznaczamy przez $M_i$. Zawiera $\alpha_i$ oraz $K_i$. Iloczyn wypisanych wielomianów ma współczynniki w $K$, bo grupa permutuje jego czynniki, a ciałem stałym jest $K$. Jeśli $g\in K[T]$ ma ciało rozkładu $M_{i-1}$, to $M_i$ jest ciałem rozkładu iloczynu $g$ i tego nowego wielomianu. Zatem $M_i/K$ jest rzeczywiście Galois.
+
+Grupa $\Gal(M_i/M_{i-1})$ jest abelowa. Dla każdego nowego równania wybieramy jedno zero $\beta_\sigma$; pozostałe różnią się czynnikami z $\mu_{n_i}\subseteq M_{i-1}$. Odwzorowanie
+\[
+\tau\longmapsto\bigl(\tau(\beta_\sigma)/\beta_\sigma\bigr)_\sigma
+\]
+zanurza tę grupę w iloczynie grup $\mu_{n_i}$. Jest homomorfizmem, ponieważ wszystkie pierwiastki jedności są ustalane, i jest różnowartościowe, ponieważ wybrane zera generują rozszerzenie. Odpowiedniość Galois daje
+\[
+\Gal(M_i/K)/\Gal(M_i/M_{i-1})\simeq\Gal(M_{i-1}/K).
+\]
+Lemat 4.2 kończy indukcję. Na końcu $L\subseteq M_r$ i $L/K$ jest Galois, więc $\Gal(L/K)$ jest ilorazem rozwiązalnej grupy $\Gal(M_r/K)$. Jest zatem rozwiązalna.
+
+\emph{Od grupy do pierwiastników.} Niech $G=\Gal(L/K)$ będzie rozwiązalna. Dla $G=1$ teza jest oczywista. W pozostałych przypadkach połóżmy $n=|G|$, $K'=K(\zeta_n)$ i $L'=LK'$, czyli najmniejsze ciało zawierające $L$ i $K'$. Rozszerzenie $L'/K'$ jest Galois, gdyż jest ciałem rozkładu $f$ nad $K'$. Ograniczenie automorfizmów do $L$ zanurza $\Gal(L'/K')$ w $G$: $L$ jest zachowywane jako ciało generowane przez zera $f$, a automorfizm ustalający $L$ i $K'$ ustala ich złożenie. Stąd grupa $G'=\Gal(L'/K')$ jest rozwiązalna.
+
+Wybierzmy szereg subnormalny $G'=H_0\triangleright\cdots\triangleright H_r=1$ o ilorazach $H_{i-1}/H_i\simeq C_{p_i}$. Liczby pierwsze $p_i$ dzielą $|G'|$, a więc także $n$. Dla $E_i=(L')^{H_i}$ mamy
+\[
+K'=E_0\subseteq E_1\subseteq\cdots\subseteq E_r=L',
+\qquad \Gal(E_i/E_{i-1})\simeq H_{i-1}/H_i\simeq C_{p_i}.
+\]
+Tutaj $E_i/E_{i-1}$ jest Galois, ponieważ $H_i\triangleleft H_{i-1}$, i stosujemy odpowiedniość Galois do rozszerzenia $L'/E_{i-1}$.
+Każde $E_{i-1}$ zawiera $\zeta_{p_i}$ jako potęgę $\zeta_n$. Lemat 4.7 przedstawia więc każdy krok jako dołączenie pierwiastka $p_i$-tego stopnia. Pierwszy krok $K'/K$ też jest pierwiastnikowy, bo $\zeta_n^n=1$. Cała wieża jest pierwiastnikowa i jej koniec zawiera $L$, co dowodzi tezy.
+\end{proof}
+
+\begin{uwaga}[Dlaczego potrzebna była dodatkowa konstrukcja]
+Z normalności kolejnych kroków wieży nie wynika normalność jej końca nad początkiem. W pierwszym kierunku dowodu dołączaliśmy dlatego wszystkie sprzężone pierwiastki, a nie tylko pierwiastki występujące w jednym wyrażeniu. Pominięcie tego kroku pozostawiałoby lukę w kryterium, na którym opiera się twierdzenie Abela--Ruffiniego.
+\end{uwaga}
+
+\begin{wniosek}
+Każdy wielomian stopnia co najwyżej $4$ nad ciałem charakterystyki zero jest rozwiązalny przez pierwiastniki.
+\end{wniosek}
+\begin{proof}
+Jego grupa Galois jest podgrupą $S_m$, gdzie $m\le4$ jest liczbą różnych zer. Wykazaliśmy rozwiązalność takich podgrup, więc stosujemy twierdzenie 4.8.
+\end{proof}
+
+Klasyczne wzory Cardana i Ferrariego są jawnymi wzorami dla stopni $3$ i $4$. Udowodnione kryterium wyjaśnia, dlaczego można je zbudować, nawet bez wypisywania ich rozbudowanej postaci.
+
+
+\chapter{Dlaczego nie ma ogólnego wzoru od stopnia piątego}
+
+\section{Co znaczy „wzór ogólny”?}
+
+Niech $a_1,\dots,a_n$ będą algebraicznie niezależnymi zmiennymi nad $\Q$. Ogólny wielomian unormowany stopnia $n$ to
+\[
+F(T)=T^n+a_1T^{n-1}+\cdots+a_n\in\Q(a_1,\dots,a_n)[T].
+\]
+Ogólny wzór przez pierwiastniki oznaczałby wyrażenie jego zer za pomocą $a_i$, działań $+,-,\cdot,/$ i skończenie wielu operacji wyciągania pierwiastków. Taki wzór można specjalizować do konkretnych współczynników, o ile nie zeruje się któryś z mianowników i dobierze się odpowiednie gałęzie. Algebraiczna niezależność oznacza, że współczynniki nie spełniają żadnego szczególnego związku wielomianowego. To jest sens słowa \emph{ogólny} (generyczny): po specjalizacji grupa Galois może się zmniejszyć, dlatego twierdzenie o przypadku generycznym nie unieważnia wzorów dla konkretnych wielomianów.
+
+\section{Grupa Galois ogólnego wielomianu}
+
+Weźmy algebraicznie niezależne zmienne $x_1,\dots,x_n$ i elementarne wielomiany symetryczne
+\[
+e_k=\sum_{1\le i_1<\cdots<i_k\le n}x_{i_1}\cdots x_{i_k},\qquad(1\le k\le n).
+\]
+Wówczas
+\[
+\prod_{i=1}^n(T-x_i)=T^n-e_1T^{n-1}+e_2T^{n-2}-\cdots+(-1)^ne_n.
+\]
+
+\begin{lemat}
+Wielomiany $e_1,\dots,e_n$ są algebraicznie niezależne nad $\Q$. Każdy symetryczny wielomian w $x_1,\dots,x_n$ jest wielomianem w $e_k$, a każda symetryczna funkcja wymierna jest funkcją wymierną w $e_k$.
+\end{lemat}
+\begin{proof}
+Porządkujemy jednomiany leksykograficznie, z $x_1>\cdots>x_n$. Wyraz wiodący $e_k$ to $x_1\cdots x_k$, więc wyraz wiodący $e_1^{b_1}\cdots e_n^{b_n}$ ma wektor wykładników
+\[
+(b_1+\cdots+b_n,\ b_2+\cdots+b_n,\ \dots,\ b_n).
+\]
+Różne wektory $(b_1,\dots,b_n)$ dają różne wektory wynikowe. W niezerowej kombinacji wielomianowej w $e_k$ największy z tych wyrazów wiodących nie może się więc skasować. Dowodzi to niezależności algebraicznej.
+
+Niech symetryczny wielomian $P$ ma wyraz wiodący $c x_1^{a_1}\cdots x_n^{a_n}$. Symetria wymusza $a_1\ge\cdots\ge a_n$: gdyby $a_i<a_j$ dla $i<j$, zamiana $x_i,x_j$ dałaby większy leksykograficznie wyraz występujący w $P$. Odejmujemy od $P$ wielomian
+\[
+c\,e_1^{a_1-a_2}e_2^{a_2-a_3}\cdots e_{n-1}^{a_{n-1}-a_n}e_n^{a_n}.
+\]
+Ma on ten sam wyraz wiodący i ten sam stopień całkowity co ten wyraz. Reszta nadal jest symetryczna, ma mniejszy wyraz wiodący i stopień nie większy niż początkowe $P$. Istnieje tylko skończenie wiele jednomianów takiego stopnia, więc powtarzanie procesu kończy się zerem. To daje żądane przedstawienie wielomianowe.
+
+Dla symetrycznej funkcji $r=p/q$ połóżmy $Q=\prod_{\sigma\in S_n}\sigma(q)$. To niezerowy symetryczny wielomian. Iloczyn $rQ$ też jest wielomianem, ponieważ $q$ jest jednym z czynników $Q$, i jest symetryczny. Zarówno $rQ$, jak i $Q$ są wielomianami w $e_k$, więc $r=(rQ)/Q\in\Q(e_1,\dots,e_n)$.
+\end{proof}
+
+\begin{wniosek}
+Grupa Galois ogólnego wielomianu stopnia $n$ nad ciałem jego współczynników jest izomorficzna z $S_n$.
+\end{wniosek}
+\begin{proof}
+Ciało $\Q(x_1,\dots,x_n)$ jest ciałem rozkładu wypisanego wielomianu nad $\Q(e_1,\dots,e_n)$. Każda permutacja niezależnych zmiennych $x_i$ daje automorfizm ciała funkcji wymiernych i ustala wszystkie $e_k$. Odwrotnie, automorfizm nad $\Q(e_1,\dots,e_n)$ musi permutować zera $x_i$, a te generują całe ciało. Grupą jest więc dokładnie $S_n$. Udowodniona niezależność algebraiczna $e_k$ pozwala utożsamić niezależne współczynniki $a_k$ z $(-1)^ke_k$. Przy tym utożsamieniu otrzymujemy właśnie ogólny wielomian $F$.
+\end{proof}
+
+\section{Nierozwiązalność $S_n$ dla $n\ge5$}
+
+Nie potrzebujemy ogólnego twierdzenia o prostocie grup $A_n$. Wystarczy wykazać, że $A_n$ jest nietrywialna i równa własnej podgrupie pochodnej. Permutacje składamy od prawej do lewej.
+
+\begin{lemat}
+Dla $n\ge5$ zachodzi $A_n'=A_n\ne\{1\}$.
+\end{lemat}
+\begin{proof}
+Najpierw $3$-cykle generują $A_n$. Każda permutacja jest iloczynem transpozycji, a parzystą można pogrupować w pary transpozycji. Para identycznych znika. Para z jednym wspólnym punktem jest $3$-cyklem lub jego odwrotnością. Dla czterech różnych punktów mamy
+\[
+(ab)(cd)=(acb)(acd).
+\]
+Zatem również para rozłącznych transpozycji jest iloczynem $3$-cykli.
+
+Dla dowolnych trzech różnych punktów $a,b,c$ wybieramy jeszcze dwa różne punkty $d,e$. Permutacje $u=(ab)(de)$ i $v=(bc)(de)$ należą do $A_n$, są inwolucjami i $uv=(abc)$. Wobec tego
+\[
+[u,v]=uvuv=(abc)^2=(acb).
+\]
+Podgrupa pochodna zawiera odwrotności swoich elementów, więc zawiera także $(abc)$. Zawiera wszystkie $3$-cykle, a zatem całe $A_n$. W drugą stronę $A_n'\subseteq A_n$ zawsze. Grupa jest nietrywialna, bo zawiera $(123)$.
+\end{proof}
+
+\begin{wniosek}
+Dla $n\ge5$ grupa $S_n$ nie jest rozwiązalna.
+\end{wniosek}
+\begin{proof}
+Szereg pochodny $A_n$ pozostaje równy $A_n$, więc nie dochodzi do $1$. Gdyby $S_n$ była rozwiązalna, jej podgrupa $A_n$ też byłaby rozwiązalna, wbrew poprzedniemu lematowi.
+\end{proof}
+
+\section{Twierdzenie Abela--Ruffiniego}
+
+\begin{twierdzenie}[Abela--Ruffiniego]
+Dla każdego $n\ge5$ nie istnieje ogólny wzór przez pierwiastniki na zera wielomianu stopnia $n$ w zależności od jego współczynników.
+\end{twierdzenie}
+\begin{proof}
+Grupą Galois ogólnego wielomianu jest $S_n$, na mocy wniosku 5.2. Dla $n\ge5$ grupa ta nie jest rozwiązalna (wniosek 5.4). Kryterium Galois (twierdzenie 4.8) mówi zatem, że ogólny wielomian nie jest rozwiązalny przez pierwiastniki.
+\end{proof}
+
+\section{Konkretny nierozwiązalny wielomian piątego stopnia}
+
+Do następnego przykładu potrzebne są dwa krótkie fakty. Podajemy ich dowody, aby wniosek o grupie $S_5$ nie zależał od niewypowiedzianego testu nierozkładalności ani od klasyfikacji podgrup $S_5$.
+
+\begin{lemat}[Kryterium Eisensteina dla wielomianu unormowanego]
+Niech $f=T^n+a_{n-1}T^{n-1}+\cdots+a_0\in\Z[T]$. Jeśli pewna liczba pierwsza $p$ dzieli wszystkie $a_i$, lecz $p^2$ nie dzieli $a_0$, to $f$ jest nierozkładalny nad $\Q$.
+\end{lemat}
+\begin{proof}
+Przypomnijmy potrzebną postać lematu Gaussa. Wielomian całkowity jest pierwotny, gdy największy wspólny dzielnik jego współczynników wynosi $1$. Iloczyn dwóch pierwotnych wielomianów jest pierwotny: gdyby pewne $p$ dzieliło wszystkie jego współczynniki, redukcje czynników byłyby niezerowymi wielomianami o zerowym iloczynie w $\F_p[T]$, co jest niemożliwe. Przez usunięcie mianowników i wyłączenie wspólnych dzielników każdy rozkład nad $\Q$ przyjmuje postać $f=cgh$, gdzie $g,h$ są pierwotne całkowite, a $c\in\Q^\times$. Jeśli także $f$ jest pierwotny całkowity, to $c=\pm1$: mianownik $c$ musiałby dzielić wszystkie współczynniki $gh$, a licznik byłby wspólnym dzielnikiem współczynników $f$. Dla unormowanego $f$ możemy więc przyjąć czynniki $g,h$ unormowane i całkowite.
+
+Gdyby taki nietrywialny rozkład $f=gh$ istniał, redukcja modulo $p$ dawałaby $\overline g\,\overline h=T^n$. Oba czynniki są unormowane i zachowują stopnie, więc muszą być dodatnimi potęgami $T$. Ich wyrazy wolne byłyby podzielne przez $p$, a wyraz wolny $f$ przez $p^2$. To sprzeczność.
+\end{proof}
+
+\begin{lemat}[Cauchy, potrzebna postać]
+Jeżeli liczba pierwsza $p$ dzieli rząd skończonej grupy $G$, to $G$ ma element rzędu $p$.
+\end{lemat}
+\begin{proof}
+Rozważmy krotki $(g_1,\dots,g_p)$ spełniające $g_1\cdots g_p=1$. Jest ich $|G|^{p-1}$, bo ostatni element jest wyznaczony przez pozostałe. Przesunięcie cykliczne zachowuje ten zbiór: z $g_1\cdots g_p=1$ wynika $g_2\cdots g_pg_1=g_1^{-1}(g_1\cdots g_p)g_1=1$. Orbity przesunięcia mają rozmiar $1$ albo $p$. Stałe krotki mają postać $(g,\dots,g)$ z $g^p=1$. Ich liczba jest więc podzielna przez $p$, tak jak liczba wszystkich krotek. Jedna taka krotka odpowiada $g=1$; musi istnieć jeszcze inna. Dla jej elementu $g\ne1$ rząd wynosi $p$.
+\end{proof}
+
+\begin{twierdzenie}
+Wielomian $f(x)=x^5-4x+2$ ma grupę Galois $S_5$ nad $\Q$, a więc nie jest rozwiązalny przez pierwiastniki.
+\end{twierdzenie}
+\begin{proof}
+Kryterium Eisensteina (lemat 5.6) dla $p=2$ pokazuje nierozkładalność: wszystkie współczynniki poza wiodącym są podzielne przez $2$, a wyraz wolny nie jest podzielny przez $4$. Grupa Galois działa więc przechodnio na pięciu zerach. Z twierdzenia o orbicie i stabilizatorze jej rząd jest podzielny przez $5$. Lemat 5.7 daje element rzędu $5$; w $S_5$ musi być on $5$-cyklem, ponieważ rząd permutacji jest najmniejszą wspólną wielokrotnością długości jej rozłącznych cykli.
+
+Pochodna $f'(x)=5x^4-4$ ma dwa rzeczywiste punkty krytyczne $\pm a$, gdzie $a=(4/5)^{1/4}$. Funkcja rośnie na $(-\infty,-a)$, maleje na $(-a,a)$ i rośnie na $(a,\infty)$. Ponadto
+\[
+f(-a)=2+\frac{16}{5}a>0,\qquad
+f(a)=2-\frac{16}{5}a<0.
+\]
+Ostatnia nierówność wynika z $a>5/8$, bo $a^4=4/5>(5/8)^4$. Granice $f$ w $-\infty$ i $+\infty$ wynoszą odpowiednio $-\infty$ i $+\infty$. Twierdzenie o wartości pośredniej oraz ścisła monotoniczność dają dokładnie po jednym zerze na każdym z trzech przedziałów. Zatem $f$ ma dokładnie trzy zera rzeczywiste i jedną parę nierzeczywistych zer sprzężonych. Sprzężenie zespolone zachowuje ciało rozkładu i działa na zerach jako pojedyncza transpozycja.
+
+Oznaczmy punkty cyklu przez $\Z/5\Z$ tak, by $5$-cykl był przesunięciem $k\mapsto k+1$. Jeżeli transpozycja zamienia $u$ i $v$, to jej sprzężenia potęgami cyklu zamieniają $u+k$ i $v+k$. Krawędzie te tworzą spójny graf, ponieważ $u-v\ne0$ generuje addytywną grupę $\Z/5\Z$. Transpozycje krawędzi spójnego grafu generują wszystkie transpozycje: wzdłuż prostej ścieżki można kolejno otrzymywać transpozycję jej końców, używając tożsamości $(ab)(bc)(ab)=(ac)$. Wszystkie transpozycje generują grupę symetryczną. Zatem grupa Galois jest $S_5$.
+\end{proof}
+
+\section{Czego twierdzenie nie mówi}
+\begin{itemize}
+\item Wielomiany $x^n-a$ są rozwiązalne przez pierwiastniki dla każdego $n$. Stopień sam w sobie nie przesądza o konkretnym równaniu.
+\item Równanie $x^5-1=0$ ma zera $\zeta_5^j$. Jego grupa Galois nad $\Q$ jest abelowa, izomorficzna z $(\Z/5\Z)^\times$.
+\item Nierozwiązalność przez pierwiastniki nie oznacza braku metod numerycznych ani braku wzorów używających funkcji specjalnych.
+\item Twierdzenie dotyczy skończonych wyrażeń algebraicznych. Nie zabrania szeregów, granic, całek ani rozwiązań przybliżonych.
+\end{itemize}
+
+
+\chapter{Konstrukcje cyrklem i linijką}
+
+\section{Które operacje są dozwolone?}
+
+Zaczynamy od punktów $O=(0,0)$ i $I=(1,0)$, ustalających jednostkę. Wolno prowadzić prostą przez dwa różne znane punkty, rysować okrąg o znanym środku i promieniu równym odległości dwóch znanych punktów, oraz wybierać izolowane punkty przecięcia tak otrzymanych prostych i okręgów. Linijka nie ma podziałki. Pokrywające się proste lub okręgi nie pozwalają wybierać dowolnego nowego punktu.
+
+Punkt jest \emph{konstruowalny}, jeśli powstaje po skończenie wielu krokach. Liczbę rzeczywistą $a$ nazywamy konstruowalną, jeśli konstruowalny jest punkt $(a,0)$. Przez prostopadłe i przenoszenie odcinków równoważnie możemy mówić o konstruowalności obu współrzędnych punktu $(a,b)$.
+
+Przypomnijmy podstawowe operacje geometryczne. Przecięcia dwóch okręgów o równych promieniach wyznaczają symetralną odcinka łączącego ich środki: równość kwadratów odległości po odjęciu daje właśnie równanie tej prostej. Pozwala to konstruować środki odcinków i prostopadłe, a przez dwie kolejne prostopadłe także proste równoległe. Dodawanie odcinków, odbijanie ich względem początku i przenoszenie cyrklem daje dodawanie, odejmowanie oraz zmianę znaku współrzędnej.
+
+Dokładniej, prostopadłą przez punkt $P$ do danej prostej otrzymujemy jako symetralną cięciwy wyciętej na niej przez okrąg o środku $P$. Promień wybieramy większy niż odległość $P$ od prostej; można go uzyskać przez kolejne podwajanie jednostki. Końce cięciwy są równoodległe od $P$, więc jej symetralna przechodzi przez $P$.
+
+\section{Dokładne kryterium algebraiczne}
+
+\begin{twierdzenie}[Wieże kwadratowe]
+Liczba rzeczywista $a$ jest konstruowalna wtedy i tylko wtedy, gdy należy do pewnego ciała $K_r$ w wieży rzeczywistych rozszerzeń
+\[
+\Q=K_0\subseteq K_1\subseteq\cdots\subseteq K_r,\qquad
+K_i=K_{i-1}(\sqrt{b_i}),\quad b_i\in K_{i-1},\ b_i>0.
+\]
+Kroki, które rzeczywiście powiększają ciało, mają stopień $2$.
+\end{twierdzenie}
+\begin{proof}
+\emph{Od konstrukcji do wieży.} Załóżmy, że dotychczasowe współrzędne należą do rzeczywistego ciała $K$. Prosta przez dwa znane punkty ma równanie liniowe ze współczynnikami w $K$. Okrąg ma równanie
+\[
+(x-u)^2+(y-v)^2=p,\qquad u,v,p\in K,
+\]
+bo kwadrat promienia jest sumą kwadratów różnic znanych współrzędnych. Przecięcie dwóch nierównoległych prostych otrzymujemy przez rozwiązanie układu liniowego, więc jego współrzędne są w $K$.
+
+Przy przecięciu prostej z okręgiem parametryzujemy prostą w postaci $(x,y)=(x_0,y_0)+t(v_1,v_2)$ z parametrami w $K$. Po podstawieniu otrzymujemy równanie kwadratowe w $t$. Jego rzeczywiste rozwiązania należą do $K$ albo do $K(\sqrt b)$ dla dodatniego $b\in K$. Przy dwóch okręgach o różnych środkach odejmowanie ich równań daje prostą, więc sytuacja redukuje się do poprzedniej. Okręgi współśrodkowe są rozłączne albo pokrywają się i nie dają izolowanych nowych punktów. Każdy dozwolony krok powiększa zatem ciało co najwyżej kwadratowo. Indukcja po liczbie kroków daje wieżę z tezy.
+
+\emph{Od wieży do konstrukcji.} Trzeba wykazać, że konstruowalne liczby tworzą ciało i można wyciągać z dodatnich takich liczb pierwiastki kwadratowe. Dodawanie i odejmowanie opisaliśmy wyżej. Dla mnożenia weźmy prostą przez $(1,0)$ i $(0,a)$. Ma równanie $y=a(1-x)$. Równoległa do niej przez $(b,0)$ przecina oś pionową w $(0,ab)$, co konstruuje iloczyn. Dla $a\ne0$ równoległa do tej samej prostej przez $(0,b)$ przecina oś poziomą w $(b/a,0)$. Przypadek mnożenia przez zero jest natychmiastowy. Otrzymujemy więc wszystkie działania ciała, w tym liczby wymierne.
+
+Dla konstruowalnego $b>0$ rysujemy okrąg o średnicy od $(-1,0)$ do $(b,0)$. Środek i promień są konstruowalne. Przecięcie z osią pionową spełnia
+\[
+\left(\frac{b-1}{2}\right)^2+y^2=\left(\frac{b+1}{2}\right)^2,
+\qquad y^2=b.
+\]
+Górne przecięcie daje $\sqrt b$. Indukcyjnie wszystkie elementy każdego $K_i$ są więc konstruowalne, a w szczególności $a$.
+
+Każde rzeczywiste rozszerzenie stopnia $2$ ma używaną wyżej postać: jeżeli generuje je $\alpha$ o wielomianie minimalnym $T^2+pT+q$, to $(2\alpha+p)^2=p^2-4q$. Wyróżnik jest dodatni, bo $\alpha$ jest rzeczywiste, a nierozkładalny wielomian w charakterystyce zero nie ma zera podwójnego. Zatem ciało jest generowane przez pierwiastek kwadratowy z wyróżnika.
+\end{proof}
+
+\begin{wniosek}
+Jeżeli $a$ jest konstruowalne, to jest algebraiczne nad $\Q$, a stopień $[\Q(a):\Q]$ jest potęgą liczby $2$.
+\end{wniosek}
+\begin{proof}
+Po usunięciu trywialnych kroków wieża z twierdzenia ma stopień $2^r$ nad $\Q$. Ponieważ $\Q\subseteq\Q(a)\subseteq K_r$, twierdzenie o wieży daje $[\Q(a):\Q]\mid 2^r$. Każdy dodatni dzielnik $2^r$ jest potęgą $2$.
+\end{proof}
+
+To warunek konieczny. Pełnym kryterium jest przynależność do wieży kwadratowej; samo stwierdzenie, że wielomian minimalny ma stopień $4$, $8$ lub $16$, nie zastępuje zbudowania takiej wieży.
+
+\section{Podwojenie sześcianu i trysekcja kąta}
+
+\begin{twierdzenie}
+Nie można cyrklem i linijką podwoić objętości danego sześcianu ani dokonać trysekcji dowolnego danego kąta.
+\end{twierdzenie}
+\begin{proof}
+\emph{Sześcian.} Przy boku początkowym $1$ nowy bok musiałby wynosić $\sqrt[3]{2}$. Jego wielomian minimalny to $T^3-2$, którego nierozkładalność wykazano w przykładzie 2.7. Stopień $3$ nie jest potęgą $2$, więc stosujemy wniosek 6.2.
+
+\emph{Kąt.} Kąt $60^\circ$ jest konstruowalny, na przykład jako kąt trójkąta równobocznego. Gdyby zawsze można było dokonać trysekcji, można byłoby skonstruować kąt $20^\circ$, a przez przecięcie jego ramienia z okręgiem jednostkowym również $u=2\cos20^\circ$. Tożsamość $2\cos3\theta=(2\cos\theta)^3-3(2\cos\theta)$ daje
+\[
+u^3-3u-1=0.
+\]
+Wymierne zero unormowanego wielomianu całkowitego musi być całkowite i dzielić wyraz wolny: wynika to po podstawieniu nieskracalnego ułamka i porównaniu podzielności. Możliwe byłyby tu tylko $1$ i $-1$, ale wartości wielomianu to odpowiednio $-3$ i $1$. Nie ma więc zera wymiernego. Wielomian stopnia $3$ jest nierozkładalny, a $u$ ma stopień $3$, ponownie niemożliwy dla liczby konstruowalnej.
+\end{proof}
+
+Niemożliwa jest \emph{ogólna} trysekcja. Niektóre kąty można podzielić na trzy równe części, na przykład $90^\circ$ na trzy kąty po $30^\circ$. Twierdzenie nie dotyczy też konstrukcji z linijką z podziałką ani origami: są to inne zestawy dozwolonych operacji.
+
+\section{Wielokąty foremne: dwa pełne przykłady}
+
+Foremny $n$-kąt wpisany w okrąg jednostkowy można skonstruować, jeśli można skonstruować punkt $(\cos(2\pi/n),\sin(2\pi/n))$. Kolejne wierzchołki otrzymujemy przez odkładanie tej samej cięciwy. Odwrotnie, z gotowego wielokąta i jego środka otrzymujemy taki punkt po przeniesieniu i przeskalowaniu figury.
+
+\begin{przyklad}[Pięciokąt]
+Niech $\zeta=e^{2\pi i/5}$ i $u=\zeta+\zeta^{-1}=2\cos(2\pi/5)>0$. Suma szeregu geometrycznego daje $1+\zeta+\cdots+\zeta^4=0$. Dzieląc przez $\zeta^2$ i używając $\zeta^2+\zeta^{-2}=u^2-2$, otrzymujemy $u^2+u-1=0$. Stąd
+\[
+\cos\frac{2\pi}{5}=\frac{\sqrt5-1}{4},\qquad
+\sin\frac{2\pi}{5}=\sqrt{1-\left(\frac{\sqrt5-1}{4}\right)^2}.
+\]
+Obie współrzędne uzyskujemy przez działania ciała i dodatnie pierwiastki kwadratowe. Twierdzenie 6.1 daje konstrukcję pięciokąta.
+\end{przyklad}
+
+\begin{przyklad}[Siedmiokąt]
+Teraz niech $\zeta=e^{2\pi i/7}$ i $u=\zeta+\zeta^{-1}=2\cos(2\pi/7)$. Po podzieleniu $1+\zeta+\cdots+\zeta^6=0$ przez $\zeta^3$ dostajemy
+\[
+1+u+(u^2-2)+(u^3-3u)=0,\qquad u^3+u^2-2u-1=0.
+\]
+Jedynymi kandydatami na zera wymierne są $\pm1$, lecz wartości wynoszą odpowiednio $-1$ i $1$. Wielomian jest nierozkładalny stopnia $3$. Gdyby siedmiokąt był konstruowalny, konstruowalne byłoby $u$, co przeczy wnioskowi 6.2. Siedmiokąta foremnego nie można więc skonstruować cyrklem i linijką.
+\end{przyklad}
+
+\subsection*{Wielomiany cyklotomiczne i pełna klasyfikacja}
+
+Niech $\zeta_n=e^{2\pi i/n}$ i niech $\varphi(n)$ oznacza liczbę klas odwracalnych modulo $n$. Wielomian cyklotomiczny definiujemy przez
+\[
+\Phi_n(T)=\prod_{\substack{1\le a\le n\\\gcd(a,n)=1}}(T-\zeta_n^a).
+\]
+Współczynniki $\Phi_n$ są całkowite. Istotnie, pierwiastki wielomianu $T^n-1$ dzielą się na rozłączne zbiory pierwiastków pierwotnych rzędów $d\mid n$, więc
+$T^n-1=\prod_{d\mid n}\Phi_d(T)$. Indukcja po $n$ i dzielenie wielomianów unormowanych w $\Z[T]$ pokazują, że $\Phi_n\in\Z[T]$.
+
+\begin{lemat}[Nierozkładalność wielomianów cyklotomicznych]
+Dla każdego $n\ge1$ wielomian $\Phi_n$ jest nierozkładalny nad $\Q$. W konsekwencji
+$[\Q(\zeta_n):\Q]=\varphi(n)$ oraz
+$\Gal(\Q(\zeta_n)/\Q)\simeq(\Z/n\Z)^\times$.
+\end{lemat}
+\begin{proof}
+Niech $f\in\Z[T]$ będzie unormowanym wielomianem minimalnym $\zeta_n$ nad $\Q$. Dzieli on $\Phi_n$, na mocy lematu Gaussa. Pokażemy, że jeśli $\ell$ jest liczbą pierwszą i $\ell\nmid n$, to $\zeta_n^\ell$ także zeruje $f$.
+
+Przypuśćmy przeciwnie i oznaczmy przez $g\in\Z[T]$ unormowany wielomian minimalny $\zeta_n^\ell$. Jest to inny nierozkładalny czynnik $\Phi_n$. Ponieważ $g(\zeta_n^\ell)=0$, mamy $f(T)\mid g(T^\ell)$ w $\Z[T]$. Po redukcji modulo $\ell$ zachodzi
+$\overline{g(T^\ell)}=\overline{g(T)}^\ell$; zatem $\bar f$ i $\bar g$ mają wspólny nierozkładalny czynnik. Z drugiej strony $fg\mid T^n-1$, także po redukcji, a $T^n-1$ nad $\F_\ell$ jest bez pierwiastków wielokrotnych, gdyż jego pochodna $nT^{n-1}$ jest z nim względnie pierwsza. Sprzeczność.
+
+Ten sam argument stosuje się do dowolnego pierwotnego pierwiastka $n$-tego stopnia. Rozkładając każde $a$ względnie pierwsze z $n$ na czynniki pierwsze, widzimy zatem, że $f(\zeta_n^a)=0$ dla wszystkich takich $a$. Stąd $\Phi_n\mid f$, więc $f=\Phi_n$. Liczba różnych pierwiastków wynosi $\varphi(n)$, co daje stopień. Każdy automorfizm wysyła $\zeta_n$ na $\zeta_n^a$ z $\gcd(a,n)=1$, a wszystkie takie obrazy występują jako sprzężenia. Otrzymujemy wskazany izomorfizm grup.
+\end{proof}
+
+\begin{twierdzenie}[Gaussa--Wantzela]
+Dla $n\ge3$ foremny $n$-kąt jest konstruowalny cyrklem i linijką wtedy i tylko wtedy, gdy
+\[
+n=2^r p_1\cdots p_s,\qquad r\ge0,
+\]
+gdzie $p_1,\ldots,p_s$ są parami różnymi liczbami pierwszymi Fermata, czyli liczbami pierwszymi postaci $2^{2^m}+1$.
+\end{twierdzenie}
+\begin{proof}
+Połóżmy $u=\zeta_n+\zeta_n^{-1}=2\cos(2\pi/n)$. Konstrukcja wielokąta jest równoważna konstruowalności $u$: w jedną stronę odczytujemy współrzędną wierzchołka, a w drugą konstruujemy $\cos(2\pi/n)=u/2$ i dodatnią liczbę $\sin(2\pi/n)=\sqrt{1-u^2/4}$ (dla $n\ge3$). Następnie odkładamy odpowiednią cięciwę.
+
+Jeżeli wielokąt jest konstruowalny, to $u$ należy do rzeczywistej wieży kwadratowej. Dlatego $[\Q(u):\Q]$ jest potęgą $2$. Ponieważ $\zeta_n$ spełnia $T^2-uT+1=0$ i nie jest rzeczywisty, mamy $[\Q(\zeta_n):\Q(u)]=2$. Poprzedni lemat daje zatem $\varphi(n)=2[\Q(u):\Q]$, a więc $\varphi(n)$ jest potęgą $2$.
+
+Odwrotnie, jeśli $\varphi(n)$ jest potęgą $2$, to $L=\Q(\zeta_n)$ jest rozszerzeniem Galois z abelową grupą rzędu będącego potęgą $2$. Sprzężenie zespolone generuje podgrupę $H$ rzędu $2$, której ciałem stałym jest $L^H=\Q(u)$: po pierwsze $u$ jest ustalane, po drugie $[L:\Q(u)]=2$. Abeliowość grupy zapewnia, że $\Q(u)/\Q$ jest Galois z abelową grupą $2$-pierwotną. Taka grupa ma szereg podgrup o kolejnych indeksach $2$. Odpowiedniość Galois daje wieżę rozszerzeń kwadratowych od $\Q$ do $\Q(u)$, a wszystkie jej ciała leżą w $\R$. Każdy krok można więc zapisać jako dołączenie dodatniego pierwiastka kwadratowego. Twierdzenie 6.1 pokazuje, że $u$ jest konstruowalne, a zatem również wielokąt.
+
+Pozostaje opisać liczby $n$, dla których $\varphi(n)$ jest potęgą $2$. Jeśli $n=2^r\prod_j p_j^{e_j}$, gdzie $p_j$ są różnymi nieparzystymi liczbami pierwszymi, to
+\[
+\varphi(n)=\varphi(2^r)\prod_j p_j^{e_j-1}(p_j-1).
+\]
+Warunek potęgi $2$ wymusza $e_j=1$ i $p_j-1=2^{m_j}$. Jeśli $2^{m_j}+1$ jest pierwsza, to $m_j$ musi być potęgą $2$: gdyby $m_j=2^k d$ z nieparzystym $d>1$, liczba $(2^{2^k})^d+1$ dzieliłaby się przez $2^{2^k}+1$ i nie byłaby pierwsza. Otrzymujemy dokładnie liczby pierwsze Fermata. W drugą stronę każda wypisana w tezie liczba $n$ ma $\varphi(n)$ będące potęgą $2$, co kończy dowód.
+\end{proof}
+
+\begin{przyklad}
+Liczba $17=2^{2^2}+1$ jest pierwsza, zatem $\varphi(17)=16$ i foremny siedemnastokąt jest konstruowalny. Dowód daje wieżę rozszerzeń kwadratowych; nie wymaga wypisywania pełnego klasycznego wzoru na $\cos(2\pi/17)$.
+\end{przyklad}
+
+
+\chapter{Dalsze przykłady ciał i zastosowań}
+
+Ten krótki rozdział zawiera przykłady ilustrujące teorię ciał. Nie stanowi dodatkowego ciągu twierdzeń potrzebnych do głównych celów.
+
+\section{Ciało czteroelementowe i automorfizm Frobeniusa}
+
+Pracujemy tu wyjątkowo w charakterystyce $2$. Wielomian $T^2+T+1\in\F_2[T]$ nie ma zera w $\F_2$, więc jest nierozkładalny. Twierdzenie o ilorazie, ważne w każdej charakterystyce, daje ciało
+\[
+\F_4=\F_2[T]/(T^2+T+1)=\{0,1,\alpha,\alpha+1\},\qquad \alpha^2=\alpha+1.
+\]
+Automorfizm Frobeniusa $a\mapsto a^2$ ustala $0,1$ i zamienia $\alpha$ z $\alpha+1$, bo $(\alpha+1)^2=\alpha^2+1=\alpha$. Ma więc rząd $2$. Każdy automorfizm musi wysłać $\alpha$ na jedno z dwóch zer $T^2+T+1$, zatem są dokładnie dwa automorfizmy: identyczność i automorfizm Frobeniusa. Grupa automorfizmów jest więc grupą $C_2$.
+
+\begin{twierdzenie}[Istnienie i jednoznaczność ciał skończonych]
+Dla każdej liczby pierwszej $p$ i $m\ge1$ istnieje, z dokładnością do izomorfizmu, dokładnie jedno ciało $\F_{p^m}$ o $p^m$ elementach. Jest ono ciałem rozkładu $T^{p^m}-T$ nad $\F_p$, a jego grupa Galois nad $\F_p$ jest cykliczna rzędu $m$, generowana przez Frobeniusa $\operatorname{Fr}(a)=a^p$.
+\end{twierdzenie}
+\begin{proof}
+W domknięciu algebraicznym $\overline{\F}_p$ rozważmy zbiór $E=\{a:a^{p^m}=a\}$. Pochodna wielomianu $T^{p^m}-T$ wynosi $-1$, więc ma on dokładnie $p^m$ różnych pierwiastków. Ponieważ odwzorowanie $a\mapsto a^{p^m}$ zachowuje sumy i iloczyny, zbiór $E$ jest zamknięty na dodawanie, odejmowanie i mnożenie. Dla $a\ne0$ z $a^{p^m}=a$ wynika $a^{p^m-1}=1$, skąd także $a^{-1}\in E$. Zatem $E$ jest ciałem o $p^m$ elementach.
+
+Jeśli $F$ jest dowolnym ciałem o $p^m$ elementach, jego charakterystyka to $p$ i dla każdego $a\in F^\times$ twierdzenie Lagrange'a daje $a^{p^m-1}=1$. Zatem wszystkie elementy $F$ zerują $T^{p^m}-T$, więc $F$ jest izomorficzne z $E$ (po zanurzeniu w domknięcie algebraiczne $\F_p$).
+
+Frobenius $a\mapsto a^p$ jest automorfizmem $E$ i $\operatorname{Fr}^m=1$. Jego rząd jest dokładnie $m$, gdyż dla $0<d<m$ wielomian $T^{p^d}-T$ ma mniej niż $p^m$ pierwiastków. Natomiast $[E:\F_p]=m$, ponieważ $|E|=p^{[E:\F_p]}$. Liczba automorfizmów nad $\F_p$ nie przekracza stopnia rozszerzenia, a mamy już $m$ różnych potęg Frobeniusa. Są to więc wszystkie automorfizmy.
+\end{proof}
+
+\section{Co można odczytać z redukcji wielomianu?}
+
+Dla unormowanego wielomianu $f(T)=\prod_{j=1}^n(T-\alpha_j)\in\Z[T]$ o różnych pierwiastkach definiujemy wyróżnik
+$\Delta(f)=\prod_{i<j}(\alpha_i-\alpha_j)^2\in\Z$. Warunek $p\nmid\Delta(f)$ oznacza, że wielomian $\bar f\in\F_p[T]$ jest rozdzielczy.
+
+Aby wykazać związek redukcji z grupą Galois, wykorzystamy krótko liczby $p$-adyczne. Pierścień $\Z_p$ to granica odwrotna pierścieni $\Z/p^k\Z$: element jest zgodnym układem reszt modulo $p,p^2,\ldots$. Mamy naturalną redukcję $\Z_p\to\F_p$, a każde równanie przybliżone z dokładnością do $p^k$ można rozważać dla dowolnie dużego $k$. Pierścień $\Z_p$ jest zupełny w tej topologii, zaś $\Q_p$ oznacza jego ciało ułamków. Użyjemy tylko zupełności i następującego lematu, będącego prostą wersją lematu Hensela.
+
+\begin{lemat}[Proste podnoszenie pierwiastka modulo $p$]
+Niech $A$ będzie przemiennym pierścieniem, który jako moduł nad $\Z_p$ jest skończony i wolny, i niech $A/pA$ będzie ciałem. Jeżeli $F\in A[T]$ oraz $\bar b\in A/pA$ spełnia $\bar F(\bar b)=0$ i $\bar F'(\bar b)\ne0$, to istnieje dokładnie jeden $b\in A$ redukujący się do $\bar b$ i spełniający $F(b)=0$.
+\end{lemat}
+\begin{proof}
+Wybieramy podniesienie $b_1$ pierwiastka $\bar b$. Element $F'(b_1)$ jest odwracalny w $A$, ponieważ ma niezerowy obraz w ciele $A/pA$; wystarcza podnieść odwrotność modulo $p$ i użyć zbieżnego szeregu geometrycznego. Definiujemy rekurencyjnie $b_{k+1}=b_k-F(b_k)/F'(b_k)$. Z rozwinięcia Taylora wielomianu wynika, że jeśli $F(b_k)\in p^k A$, to $F(b_{k+1})\in p^{2k}A$. Ponieważ $A$ jest zupełny w topologii $p$-adycznej, ciąg zbiega do zera $F$ o wymaganej redukcji. Jeśli $b,c$ są dwoma takimi zerami, to $F(b)-F(c)=(b-c)H(b,c)$, gdzie $H(b,c)$ ma redukcję $\bar F'(\bar b)\ne0$ i jest odwracalny. Stąd $b=c$.
+\end{proof}
+
+\begin{twierdzenie}[Typ cykli z redukcji modulo $p$]
+Niech $f\in\Z[T]$ będzie unormowanym wielomianem stopnia $n$ bez pierwiastków wielokrotnych. Jeśli $p\nmid\Delta(f)$ oraz
+$\bar f=\bar f_1\cdots\bar f_r$ jest rozkładem na różne unormowane czynniki nierozkładalne w $\F_p[T]$, przy $d_j=\deg\bar f_j$, to $\Gal(f/\Q)$ zawiera element, którego rozłączne cykle na pierwiastkach $f$ mają długości $d_1,\dots,d_r$.
+\end{twierdzenie}
+\begin{proof}
+Pokażemy, skąd pochodzi ten element. Korzystamy z ciała liczb $p$-adycznych $\Q_p$, jego pierścienia $\Z_p$ i poprzedniego lematu; ten krótki argument zastępuje ogólną teorię rozkładu ideałów pierwszych.
+
+Niech $N$ będzie wspólną wielokrotnością $d_1,\dots,d_r$. Ciało $\F_{p^N}$ zawiera wszystkie pierwiastki $\bar f$. Wybieramy element $\bar\theta$ generujący $\F_{p^N}$ nad $\F_p$ i jego wielomian minimalny $\bar h$ stopnia $N$. Podnosimy $\bar h$ do wielomianu unormowanego $h\in\Z_p[T]$ i kładziemy $A=\Z_p[T]/(h)$. Nierozkładalność $\bar h$ zapewnia, że $h$ jest nierozkładalny nad $\Q_p$, a $A/pA\simeq\F_{p^N}$. Ciało ułamków $U=\Q_p[T]/(h)$ ma stopień $N$ nad $\Q_p$.
+
+Wielomian $\bar h$ ma $N$ różnych pierwiastków w $\F_{p^N}$. Poprzedni lemat podnosi każdy z nich jednoznacznie do pierwiastka $h$ w $A$, więc $U/\Q_p$ jest rozszerzeniem Galois. W szczególności podstawienie klasy $\theta$ na pierwiastek $h$ redukujący się do $\bar\theta^p$ definiuje automorfizm $\sigma$ ciała $U$, którego redukcja na $A/pA$ jest Frobeniusem $a\mapsto a^p$.
+
+Wielomian $\bar f$ rozkłada się w $A/pA$ na $n$ różnych czynników liniowych. Znowu stosujemy lemat o podnoszeniu: każdy pierwiastek $\bar f$ ma dokładnie jedno podniesienie będące pierwiastkiem $f$ w $A$. Wszystkie pierwiastki $f$ leżą więc w $U$. Automorfizm $\sigma$ permutuje je, a wskutek jednoznaczności podnoszenia działa na nich tak samo jak Frobenius na pierwiastkach $\bar f$.
+
+Dla nierozkładalnego czynnika $\bar f_j$ stopnia $d_j$ Frobenius działa przechodnio na jego $d_j$ pierwiastkach: jego orbita nad dowolnym pierwiastkiem ma długość równą stopniowi tego pierwiastka nad $\F_p$. Otrzymujemy zatem rozłączne cykle długości $d_1,\ldots,d_r$. Ustalamy zanurzenie globalnego ciała rozkładu $f$ nad $\Q$ do $U$ (wszystkie pierwiastki należą do $U$). Automorfizm $\sigma$ zachowuje to podciało, gdyż permutuje pierwiastki i ustala $\Q$. Jego ograniczenie jest szukanym elementem $\Gal(f/\Q)$.
+\end{proof}
+
+\begin{przyklad}[Redukcje wielomianu sześciennego]
+Dla $f=T^3-2$ mamy $\Delta(f)=-108$. Modulo $5$ otrzymujemy
+$\bar f=(T-3)(T^2+3T+4)$. Drugi czynnik jest nierozkładalny, bo jego wyróżnik wynosi $3$, niebędące kwadratem w $\F_5$. W grupie Galois występuje więc transpozycja. Natomiast modulo $7$ wielomian $T^3-2$ jest nierozkładalny: nie ma zera, gdyż sześciany w $\F_7$ to $0,1,6$. Grupa zawiera zatem również $3$-cykl. To drugi, arytmetyczny dowód, że grupa Galois $T^3-2$ nad $\Q$ jest równa $S_3$.
+\end{przyklad}
+
+\begin{uwaga}
+W powyższym dowodzie ważny jest warunek $p\nmid\Delta(f)$. Jeśli $\bar f$ ma pierwiastki wielokrotne, jednoznaczne podnoszenie przestaje działać i sam rozkład na czynniki nie daje w ten sposób typu cykli. W dowodzie grupy wielomianu $T^5-4T+2$ nie potrzebowaliśmy tego twierdzenia: wystarczyły nierozkładalność, analiza zer rzeczywistych i elementarny argument o permutacjach.
+\end{uwaga}
+
+
+\chapter{Ciała różniczkowe i twierdzenie Liouville'a}
+
+\section{Pochodna, stałe i lokalny sens funkcji}
+
+Pytanie o wzór przez pierwiastniki dotyczy równań algebraicznych. Pytanie o funkcję pierwotną dotyczy równania $DF=f$. Do drugiego problemu potrzebujemy ciała wyposażonego także w operację różniczkowania. Kluczowym narzędziem będzie twierdzenie Liouville'a, a nie samo kryterium rozwiązalności skończonej grupy Galois.
+
+\begin{definicja}[Ciało różniczkowe]
+Ciało różniczkowe $(K,D)$ jest ciałem charakterystyki zero z derywacją $D:K\to K$, to znaczy operacją spełniającą
+\[
+D(a+b)=Da+Db,\qquad D(ab)=a\,Db+b\,Da.
+\]
+Ciało stałych to $C_K=\{a\in K:Da=0\}$. Rozszerzenie różniczkowe zachowuje derywację na ciele bazowym. Jest \emph{rozszerzeniem bez nowych stałych}, jeśli ciało stałych się nie powiększa.
+\end{definicja}
+
+Z reguły iloczynu wynikają $D1=0$ i $D(a^{-1})=-Da/a^2$ dla $a\ne0$, więc otrzymujemy zwykłą regułę ilorazu. Podstawowy przykład to $\C(x)$ z $D=\mathrm{d}/\mathrm{d}x$ i stałymi $\C$. W całej tej części zakładamy algebraiczną domkniętość ciała stałych $C$; w przykładach będzie to właśnie $\C$.
+
+W interpretacji analitycznej pracujemy lokalnie, na małym otoczeniu punktu, w którym wybrane gałęzie pierwiastków i logarytmów są określone. Elementami ciała mogą być zarodki funkcji meromorficznych: dwa wyrażenia reprezentują ten sam zarodek, jeśli zgadzają się w pewnym otoczeniu punktu. Zarodek o zerowej pochodnej jest stały. Ciała takich funkcji, zawierające wszystkie stałe zespolone, nie dodają więc nowych stałych. Nie żądamy globalnej jednowartościowości logarytmu.
+
+\begin{definicja}[Rozszerzenie elementarne]
+Rozszerzenie $E/K$ jest elementarne, gdy istnieje skończona wieża $K=K_0\subseteq\cdots\subseteq K_r=E$, w której $K_i=K_{i-1}(\theta_i)$ i zachodzi jeden z warunków:
+\begin{enumerate}
+\item $\theta_i$ jest algebraiczny nad $K_{i-1}$;
+\item $D\theta_i=Du/u$ dla pewnego $u\in K_{i-1}^\times$ (krok logarytmiczny);
+\item $\theta_i\ne0$ i $D\theta_i/\theta_i=Du$ dla pewnego $u\in K_{i-1}$ (krok wykładniczy).
+\end{enumerate}
+W twierdzeniu o całkowaniu wymagamy dodatkowo $C_E=C_K$. Element $f\in K$ ma elementarną funkcję pierwotną nad $K$, jeśli w takim rozszerzeniu istnieje $F$ spełniające $DF=f$.
+\end{definicja}
+
+To definicja obejmująca działania arytmetyczne, funkcje algebraiczne, wykładnicze i logarytmy, zagnieżdżane skończenie wiele razy. Funkcje trygonometryczne też się w niej mieszczą, na przykład $\sin x=(e^{ix}-e^{-ix})/(2i)$. Także $\arctan x=(\log(1+ix)-\log(1-ix))/(2i)$, po lokalnym wyborze gałęzi i stałej. Nie wolno natomiast zastępować drugiego warunku dowolnym $D\theta\in K_{i-1}$: oznaczałoby to dopuszczenie dowolnych całek już w definicji, a więc zmianę badanego problemu.
+
+\section{Krok algebraiczny: pochodna, ślad i norma}
+
+\begin{lemat}
+Derywacja ciała charakterystyki zero przedłuża się jednoznacznie do każdego jego rozszerzenia algebraicznego. Jeśli ciało stałych $C$ jest algebraicznie domknięte, takie rozszerzenie nie dodaje stałych.
+\end{lemat}
+\begin{proof}
+Niech $\alpha$ ma unormowany wielomian minimalny $p(T)\in K[T]$. Przez $p^D$ oznaczamy wielomian otrzymany przez zróżniczkowanie współczynników, a przez $p_T$ zwykłą pochodną względem $T$. Z relacji $p(\alpha)=0$ musi wynikać
+\[
+D\alpha=-\frac{p^D(\alpha)}{p_T(\alpha)}.
+\]
+Mianownik jest niezerowy dzięki rozdzielczości. Wzór $D(q(\alpha))=q^D(\alpha)+q_T(\alpha)D\alpha$ jest dobrze określony: pochodna wielokrotności $p$ znika po podstawieniu $\alpha$ właśnie dzięki powyższej równości. Reguły sumy i iloczynu sprawdzamy na wielomianach, a reguła ilorazu przedłuża derywację na ciało. To dowodzi istnienia i jednoznaczności na rozszerzeniu prostym. Indukcja daje przedłużenie na każde rozszerzenie skończone. Każdy element dowolnego rozszerzenia algebraicznego należy do pewnego skończonego podrozszerzenia. Na dwóch takich podrozszerzeniach pochodne obliczone z wielomianu minimalnego są zgodne na części wspólnej, ponieważ przedłużenie derywacji do ciała algebraicznego, jeśli istnieje, jest jednoznaczne. Definiuje to derywację na sumie skierowanej wszystkich skończonych podrozszerzeń, czyli na całym rozszerzeniu algebraicznym.
+
+Jeżeli algebraiczny element $\alpha$ spełnia $D\alpha=0$, to $p^D(\alpha)=0$. Wielomian $p$ jest unormowany, więc $\deg p^D<\deg p$, o ile $p^D\ne0$. Minimalność wymusza $p^D=0$. Wszystkie współczynniki $p$ należą do $C$, zatem $\alpha$ jest algebraiczny nad $C$. Domkniętość algebraiczna $C$ daje $\alpha\in C$.
+\end{proof}
+
+Zanurzenia algebraiczne nad ciałem różniczkowym komutują z $D$: oba sposoby obliczenia pochodnej obrazu generatora dają ten sam wzór z wielomianu minimalnego. Dla skończonego $L/K$, różniczkując sumę i iloczyn po wszystkich zanurzeniach, otrzymujemy więc
+\begin{equation}\label{eq:trace-norm}
+D\Tr_{L/K}(v)=\Tr_{L/K}(Dv),\qquad
+\frac{D\Nm_{L/K}(u)}{\Nm_{L/K}(u)}
+=\Tr_{L/K}\!\left(\frac{Du}{u}\right),\quad u\ne0.
+\end{equation}
+W drugiej równości użyliśmy reguły pochodnej iloczynu podzielonej przez sam iloczyn. Normalność $L/K$ nie jest wymagana.
+
+\section{Część wielomianowa funkcji wymiernej}
+
+Niech $t$ będzie przestępny nad ciałem różniczkowym $F$. Dzielenie wielomianów daje jednoznaczny rozkład $R=P+Q$ dla $R\in F(t)$, gdzie $P\in F[t]$, a $Q$ jest właściwą funkcją wymierną, czyli ma licznik stopnia mniejszego od mianownika. Oznaczamy $P=\operatorname{pp}_t(R)$.
+
+Równoważnie rozwijamy formalnie względem $t^{-1}$:
+\[
+R=\sum_{j\le m}r_jt^j,\qquad r_j\in F,\quad
+\operatorname{pp}_t(R)=\sum_{j\ge0}r_jt^j.
+\]
+Rozwinięcie istnieje, ponieważ po wyłączeniu potęgi $t$ z mianownika możemy odwrócić szereg o niezerowym wyrazie stałym. Jest jednoznaczne. To rachunek formalny w zmiennej $t$, nie granica $x\to\infty$ po podstawieniu $t=e^x$.
+
+\begin{lemat}[Części wielomianowe pochodnych]
+Jeśli $Dt=a\in F$ albo $Dt=ht$ z $h\in F$, to
+\[
+\operatorname{pp}_t(DR)=D\operatorname{pp}_t(R).
+\]
+Dla $u=b\,p(t)/q(t)\ne0$, gdzie $b\in F^\times$, a $p,q\in F[t]$ są unormowanymi wielomianami, zachodzi
+\[
+\operatorname{pp}_t\left(\frac{Du}{u}\right)=
+\begin{cases}
+Db/b, & Dt=a,\\
+Db/b+(\deg p-\deg q)h, & Dt=ht.
+\end{cases}
+\]
+W szczególności te pochodne logarytmiczne nie mają dodatnich potęg $t$ w części wielomianowej.
+\end{lemat}
+\begin{proof}
+Dla pojedynczego wyrazu szeregu mamy odpowiednio
+\[
+D(r_jt^j)=(Dr_j)t^j+j a r_jt^{j-1},\qquad
+D(r_jt^j)=(Dr_j+jhr_j)t^j.
+\]
+Ujemne potęgi pozostają ujemne, a pochodna wielomianu pozostaje wielomianem. To daje pierwszą równość.
+
+Dla unormowanego $p$ stopnia $d$ i $Dt=a$ zachodzi $\deg Dp<d$. Dlatego $Dp/p$ jest właściwe. Dla $Dt=ht$ współczynnik wiodący $Dp$ wynosi $dh$, więc $Dp/p-dh$ jest właściwe. Stosujemy te obserwacje do tożsamości $Du/u=Db/b+Dp/p-Dq/q$.
+\end{proof}
+
+\section{Kiedy dołączenie funkcji pierwotnej dodaje stałe?}
+
+\begin{lemat}
+Niech $C_F=C$, a $t$ będzie przestępny nad $F$ z $Dt=a\in F$. Wtedy $C_{F(t)}=C$ dokładnie wtedy, gdy w $F$ nie ma elementu $b$ spełniającego $Db=a$.
+\end{lemat}
+\begin{proof}
+Jeśli $Db=a$, to $t-b$ jest nową stałą, nienależącą do $F$. Odwrotnie, niech $R\in F(t)\setminus C$ i $DR=0$. Rozwińmy $R$ formalnie w nieskończoności. Jeżeli najwyższy wykładnik wynosi $0$, to jego współczynnik ma pochodną zero i należy do $C$; odejmujemy go. Pozostaje niezerowy szereg o najwyższym wykładniku $m\ne0$, ponieważ w przeciwnym razie $R$ od początku należałoby do $C$. Możliwy jest również $m<0$.
+
+Z dwóch najwyższych współczynników równania $DR=0$ otrzymujemy
+\[
+Dr_m=0,\qquad Dr_{m-1}+m a r_m=0,\qquad r_m\ne0.
+\]
+W charakterystyce zero liczba $m$ jest niezerowa w $F$. Ponieważ $r_m\in C^\times$, element $b=-r_{m-1}/(mr_m)\in F$ spełnia $Db=a$. To dowodzi koniecznego i dostatecznego warunku.
+\end{proof}
+
+\section{Twierdzenie Liouville'a o całkowaniu elementarnym}
+
+\begin{twierdzenie}[Liouville'a]
+Niech $(K,D)$ ma charakterystykę zero i algebraicznie domknięte ciało stałych $C$. Element $f\in K$ ma funkcję pierwotną w elementarnym rozszerzeniu bez nowych stałych wtedy i tylko wtedy, gdy istnieją $v\in K$, $u_1,\dots,u_r\in K^\times$, $c_1,\dots,c_r\in C$ takie, że
+\begin{equation}\label{eq:liouville}
+f=Dv+\sum_{j=1}^r c_j\frac{Du_j}{u_j}.
+\end{equation}
+Dopuszczamy $r=0$. Wszystkie $v,u_j$ można wybrać w ciele bazowym $K$, a nie dopiero w jego rozszerzeniu algebraicznym.
+\end{twierdzenie}
+\begin{proof}
+\emph{Konieczność: schodzenie po wieży.} W końcowym ciele wieży elementarnej mamy $f=DV$, czyli przedstawienie \eqref{eq:liouville} bez składników logarytmicznych. Pokażemy, że przedstawienie z $v,u_j$ w pojedynczym rozszerzeniu $L/F$ można zastąpić takim przedstawieniem z elementami $F$, jeśli $f\in F$. Wszystkie ciała pośrednie mają stałe $C$, ponieważ zawierają $C$ i są podciałami końcowego rozszerzenia bez nowych stałych.
+
+\emph{1. Krok algebraiczny.} Jeśli $[L:F]=d$, bierzemy ślad przedstawienia i dzielimy przez $d$. Równości \eqref{eq:trace-norm} dają
+\[
+f=D\left(\frac{\Tr_{L/F}(v)}{d}\right)
++\sum_j\frac{c_j}{d}\,
+\frac{D\Nm_{L/F}(u_j)}{\Nm_{L/F}(u_j)}.
+\]
+Ślad i normy należą do $F$, normy są niezerowe, a $c_j/d\in C$. Otrzymujemy przedstawienie na niższym piętrze.
+
+\emph{2. Przestępny krok logarytmiczny.} Niech $L=F(t)$, $Dt=a=Db/b$, $b\in F^\times$. Zastosujmy część wielomianową względem $t$ do przedstawienia $f$. Jeśli $P=\operatorname{pp}_t(v)$, lemat 8.4 daje
+\[
+f=DP+\sum_j c_j\frac{Db_j}{b_j},\qquad b_j\in F^\times.
+\]
+W szczególności $DP\in F$. Gdy $P=p_mt^m+\cdots+p_0$ i $m\ge1$, współczynnik przy $t^m$ daje $Dp_m=0$, więc $p_m\in C^\times$. Jeśli $m\ge2$, musi zniknąć także współczynnik przy $t^{m-1}$:
+\[
+Dp_{m-1}+m p_ma=0.
+\]
+Stąd $a=Dw$ dla $w=-p_{m-1}/(mp_m)\in F$. Wówczas $D(t-w)=0$, więc brak nowych stałych dawałby $t-w\in C\subseteq F$, sprzecznie z przestępnością $t$. Pozostaje $P=p_0+ct$ z $c\in C$ (także $c=0$). Wobec tego
+\[
+f=Dp_0+c\frac{Db}{b}+\sum_j c_j\frac{Db_j}{b_j},
+\]
+co jest wymaganą postacią w $F$.
+
+\emph{3. Przestępny krok wykładniczy.} Niech $L=F(t)$, $Dt=ht$ z $h=Da$, $a\in F$. Część wielomianowa daje teraz
+\[
+f=DP+\sum_j c_j\frac{Db_j}{b_j}+Ah,\qquad A=\sum_j c_jm_j\in C,
+\]
+gdzie $m_j\in\Z$ są różnicami stopni liczników i mianowników. Dla $P=\sum_{j\ge0}p_jt^j$ współczynniki dodatnich potęg spełniają $Dp_j+jhp_j=0$. Niezerowe $p_j$ dla $j>0$ dawałoby $D(p_jt^j)=0$, więc $p_jt^j\in C^\times$. Oznaczałoby to $t^j\in F$, wbrew przestępności $t$. Zatem $P=p_0$ i
+\[
+f=D(p_0+Aa)+\sum_j c_j\frac{Db_j}{b_j}.
+\]
+Tu wykorzystaliśmy dokładnie warunek $h=Da$ z definicji kroku wykładniczego.
+
+Jeśli generator logarytmiczny lub wykładniczy jest algebraiczny, stosujemy krok 1 zamiast kroków 2--3. Przechodząc skończenie wiele razy w dół wieży, otrzymujemy \eqref{eq:liouville} w $K$.
+
+\emph{Dostateczność: kontrolowane dołączanie logarytmów.} Mając \eqref{eq:liouville}, chcemy otrzymać $v+\sum_j c_j\log u_j$. Aby nie wprowadzić nowych stałych formalnym dołączeniem zbędnego generatora, postępujemy kolejno. W aktualnym ciele szukamy funkcji pierwotnej $b_j$ elementu $Du_j/u_j$. Jeśli istnieje, korzystamy z niej bez powiększania ciała. Jeśli nie istnieje, dołączamy przestępny $z_j$ z relacją $Dz_j=Du_j/u_j$. Lemat 8.5 zapewnia, że nie powstają nowe stałe. Każdy dołączany krok jest logarytmiczny. Po skończenie wielu krokach element $v+\sum_j c_jb_j$ (gdzie $b_j$ oznacza wybraną lub dołączoną funkcję pierwotną) ma pochodną $f$, co kończy dowód.
+\end{proof}
+
+\begin{uwaga}
+Twierdzenie ogranicza postać jakiejś funkcji pierwotnej, o ile istnieje elementarna funkcja pierwotna; nie wymaga, by pierwotnie podany wzór od razu był zapisany w tej postaci. Przy algebraicznie domkniętych stałych przedstawienie w skończonym rozszerzeniu algebraicznym zawsze można sprowadzić do bazy śladem i normą. Nie jest to dodatkowe założenie dotyczące wybranych przykładów.
+\end{uwaga}
+
+\section{Sprawdzenie założeń dla funkcji wykładniczych}
+
+\begin{lemat}
+Jeżeli $p\in\C[x]$ jest niestały, to $t=e^{p(x)}$ jest przestępny nad $\C(x)$, a ciało stałych $\C(x,t)$ jest równe $\C$.
+\end{lemat}
+\begin{proof}
+Dla dowolnego $q\in\C(x)^\times$ rozkład na czynniki liniowe daje
+\[
+q=c\prod_j(x-a_j)^{m_j},\qquad
+\frac{q'}{q}=\sum_j\frac{m_j}{x-a_j},\qquad m_j\in\Z.
+\]
+Suma jest skończona; wykładniki ujemne oznaczają bieguny. Pochodna logarytmiczna $q'/q$ jest więc właściwą funkcją wymierną i nie może być niezerowym wielomianem.
+
+Gdyby $t$ było algebraiczne, dla $L=\C(x,t)$ stopnia $d$ norma $q=\Nm_{L/\C(x)}(t)\ne0$ spełniałaby
+\[
+\frac{q'}{q}=\Tr_{L/\C(x)}(Dt/t)=d\,p'(x).
+\]
+Prawa strona jest niezerowym wielomianem, co daje sprzeczność.
+
+Pozostaje sprawdzić stałe; można to zrobić także czysto algebraicznie. Gdyby $R\in\C(x,t)\setminus\C$ spełniało $DR=0$, w formalnym rozwinięciu względem $t^{-1}$ wybieramy najwyższą potęgę $t^m$. Jeśli $m=0$, współczynnik jest stały; odejmujemy go i otrzymujemy niezerowy szereg z $m\ne0$. Współczynnik $r_m\ne0$ musi spełniać
+\[
+\frac{r_m'}{r_m}=-m p'(x).
+\]
+Znów pochodna logarytmiczna funkcji wymiernej musiałaby być niezerowym wielomianem. To niemożliwe, więc nowych stałych nie ma.
+\end{proof}
+
+\section{Kryterium hiperwykładnicze z dowodem}
+
+\begin{definicja}[Element hiperwykładniczy]
+W tym skrypcie elementem hiperwykładniczym nad $\C(x)$ nazywamy element $t$ przestępny nad $\C(x)$, spełniający $Dt=h(x)t$ dla $h\in\C(x)$, przy założeniu $C_{\C(x,t)}=\C$. Poprzedni lemat sprawdza te założenia dla wszystkich $e^{p(x)}$ z niestałym wielomianem $p$.
+\end{definicja}
+
+\begin{twierdzenie}[Kryterium hiperwykładnicze]
+Niech $t$ będzie jak w definicji, a $s\in\C(x)$. Element $s(x)t$ ma elementarną funkcję pierwotną nad $\C(x,t)$ wtedy i tylko wtedy, gdy istnieje $r\in\C(x)$ spełniające
+\begin{equation}\label{eq:hyperexp}
+r'+hr=s.
+\end{equation}
+Jeżeli rozwiązanie istnieje, funkcją pierwotną jest $rt$.
+\end{twierdzenie}
+\begin{proof}
+Dostateczność wynika z $D(rt)=(r'+hr)t=st$. Przy elementarnej funkcji pierwotnej stosujemy twierdzenie Liouville'a z ciałem bazowym $\C(x,t)$. Otrzymujemy
+\[
+st=Dv+\sum_j c_j\frac{Du_j}{u_j},\qquad v,u_j\in\C(x,t).
+\]
+Pochodne logarytmiczne nie mają dodatnich potęg $t$ w części wielomianowej, na mocy lematu 8.4. Niech $r$ będzie współczynnikiem przy $t$ w $\operatorname{pp}_t(v)$, z $r=0$, jeśli takiego wyrazu nie ma. Porównanie współczynnika przy $t$ daje dokładnie $s=r'+hr$. Przestępność $t$ uzasadnia jednoznaczność tego porównania.
+\end{proof}
+
+\begin{wniosek}[Rozdzielenie potęg w sumie Laurenta]
+Jeżeli skończona suma $\sum_k s_k(x)t^k$, $s_k\in\C(x)$, ma elementarną funkcję pierwotną, to dla każdego $k\ne0$ istnieje $r_k\in\C(x)$ spełniające
+\[
+r_k'+khr_k=s_k.
+\]
+\end{wniosek}
+\begin{proof}
+Dla $k>0$ stosujemy poprzednie porównanie do współczynnika przy $t^k$. Dla $k<0$ zmieniamy generator na $w=t^{-1}$. Mamy to samo ciało $\C(x,w)=\C(x,t)$ i $Dw=-hw$, więc wystarczy ponownie porównać dodatnie potęgi nowego generatora.
+\end{proof}
+
+Nie można po prostu porównywać ujemnych potęg w tym samym rozwinięciu w nieskończoności: na przykład
+\[
+\frac{D(t-1)}{t-1}=\frac{ht}{t-1}
+=h+\frac{h}{t-1}=h+ht^{-1}+ht^{-2}+\cdots.
+\]
+Pochodna logarytmiczna nie ma tu dodatnich potęg, ale ma ujemne. Dla $k=0$ wniosek także nie twierdzi istnienia wymiernej funkcji pierwotnej: funkcja $1/x$ ma funkcję pierwotną $\log x$, a nie funkcję wymierną. W ten sposób redukcja nie zakłada żadnej nieprawdziwej niezależności $t$ i $t^{-1}$.
+
+
+\chapter{Cztery ważne całki nieelementarne}
+
+Wyniki dotyczą funkcji pierwotnych na niepustych otwartych przedziałach oraz ich lokalnych zespolonych odpowiedników. Wykluczenie funkcji pierwotnej nawet w zespolonym rozszerzeniu elementarnym wyklucza rzeczywisty wzór elementarny. Dla skończonej liczby jego podwyrażeń wybieramy wspólny zwykły punkt, unikając biegunów, rozgałęzień i zer argumentów logarytmów. Tam wszystkie wybrane gałęzie mają holomorficzne odpowiedniki, więc rzeczywisty wzór dawałby także wzór zespolony.
+
+\section{Lokalny test biegunów}
+
+Jeżeli funkcja wymierna $r$ ma w $a$ biegun rzędu $m\ge1$, to jej rozwinięcie zaczyna się od $c(x-a)^{-m}$, $c\ne0$. Pochodna zaczyna się od $-mc(x-a)^{-m-1}$ i ma biegun rzędu $m+1$. Funkcja wymierna bez biegunów skończonych jest wielomianem: mianownik nieskracalnego ułamka nie może mieć zera nad $\C$.
+
+\begin{lemat}
+Jeśli $h\in\C(x)$ jest regularne w $a$, a $s\in\C(x)$ ma tam biegun prosty, to $r'+hr=s$ nie ma rozwiązania $r\in\C(x)$.
+\end{lemat}
+\begin{proof}
+Gdy $r$ jest regularne w $a$, lewa strona też jest regularna. Gdy $r$ ma biegun rzędu $m\ge1$, pochodna ma biegun rzędu $m+1$, a $hr$ co najwyżej $m$. Biegun rzędu $m+1\ge2$ nie może się skasować. W żadnym przypadku nie otrzymamy bieguna prostego.
+\end{proof}
+
+\section{Całka Gaussa: $\int e^{-x^2}\dd x$}
+
+\begin{twierdzenie}
+Funkcja $e^{-x^2}$ nie ma elementarnej funkcji pierwotnej nad $\C(x,e^{-x^2})$.
+\end{twierdzenie}
+\begin{proof}
+Lemat 8.8 sprawdza przestępność $t=e^{-x^2}$ i brak nowych stałych. Mamy $Dt/t=-2x$. Twierdzenie 8.10 z $s=1$ wymagałoby $r\in\C(x)$ z
+\[
+r'-2xr=1.
+\]
+Każdy skończony biegun $r$ rzędu $m$ dawałby w $r'$ biegun rzędu $m+1$, którego $-2xr$ nie może usunąć: czynnik $-2x$ nie ma biegunów. Prawa strona jest regularna, więc $r$ nie ma żadnych biegunów skończonych i jest wielomianem.
+
+Jeśli $r\ne0$ ma stopień $d\ge0$, to $-2xr$ ma stopień $d+1$, a $r'$ stopień mniejszy; dla stałego $r$ pochodna jest zerowa. Suma nie może być stałą $1$. Także $r=0$ nie jest rozwiązaniem. Kryterium daje brak elementarnej funkcji pierwotnej.
+\end{proof}
+
+Funkcja pierwotna istnieje jako funkcja określona całką; definiuje się na przykład funkcję
+\[
+\operatorname{erf}(x)=\frac{2}{\sqrt\pi}\int_0^x e^{-t^2}\dd t.
+\]
+Udowodniliśmy ograniczenie jej możliwej postaci, nie brak istnienia funkcji.
+
+\subsection{Pełne obliczenie całki oznaczonej}
+
+Niech $I=\int_0^\infty e^{-x^2}\dd x$. Całka jest zbieżna: na $[0,1]$ funkcja jest ograniczona, a dla $x\ge1$ mamy $e^{-x^2}\le e^{-x}$. Dodatniość funkcji, twierdzenie Tonellego i zamiana zmiennych na biegunowe dają
+\[
+I^2=\int_0^\infty\int_0^\infty e^{-(x^2+y^2)}\dd x\dd y
+=\int_0^{\pi/2}\int_0^\infty e^{-r^2}r\dd r\dd\theta
+=\frac\pi4.
+\]
+Ponieważ $I>0$, otrzymujemy $I=\sqrt\pi/2$. Argument dwuwymiarowy oblicza jedną liczbę, nie daje elementarnego wzoru na funkcję $x\mapsto\int_0^x e^{-t^2}\dd t$.
+
+\section{Całka sinusowa: $\int \frac{\sin x}{x}\dd x$}
+
+\begin{twierdzenie}
+Funkcja $\sin x/x$, przedłużona wartością $1$ w zerze, nie ma elementarnej funkcji pierwotnej nad $\C(x,e^{ix})$.
+\end{twierdzenie}
+\begin{proof}
+Niech $z=e^{ix}$. Przestępność i ciało stałych sprawdza lemat 8.8, zastosowany do $p(x)=ix$. Ponieważ $Dz=iz$, mamy
+\[
+\frac{\sin x}{x}=\frac{z-z^{-1}}{2ix}.
+\]
+Przy elementarnej funkcji pierwotnej dodatnia potęga $z$ wymuszałaby na mocy wniosku 8.11 rozwiązanie $r_1'+ir_1=1/(2ix)$ z $r_1\in\C(x)$. Dla $r=2ir_1$ dostalibyśmy
+\[
+r'+ir=\frac1x.
+\]
+To niemożliwe na mocy lematu 9.1 w punkcie $0$, z $h=i$. Nie trzeba już analizować potęgi $z^{-1}$.
+\end{proof}
+
+Nie twierdzimy, że $e^{ix}$ i $e^{-ix}$ są algebraicznie niezależne: ich iloczyn wynosi $1$. Użyliśmy dwóch potęg jednego przestępnego generatora. Brak rzeczywistej osobliwości samej funkcji $\sin x/x$ w zerze nie przeczy argumentowi: test biegunów dotyczy wymiernego równania wymuszonego przez współczynnik przy $z$, a nie całej funkcji. Oznaczamy
+\[
+\operatorname{Si}(x)=\int_0^x\frac{\sin t}{t}\dd t.
+\]
+
+\subsection{Dlaczego całka niewłaściwa wynosi połowę liczby $\pi$?}
+
+Dla $\varepsilon>0$ wprowadźmy tłumienie
+\[
+I(\varepsilon)=\int_0^\infty e^{-\varepsilon x}\frac{\sin x}{x}\dd x.
+\]
+Całka jest bezwzględnie zbieżna. Na każdym zwartym przedziale dodatnich $\varepsilon$ pochodną funkcji podcałkowej dominuje funkcja $e^{-\delta x}$ dla pewnego $\delta>0$, więc wolno różniczkować pod znakiem całki. Otrzymujemy
+\[
+I'(\varepsilon)=-\int_0^\infty e^{-\varepsilon x}\sin x\dd x
+=-\frac1{1+\varepsilon^2}.
+\]
+Ostatnią całkę obliczamy jako część urojoną $\int_0^\infty e^{-(\varepsilon-i)x}\dd x=1/(\varepsilon-i)$. Ponadto $|\sin x|/x\le1$ dla $x>0$ daje $|I(\varepsilon)|\le1/\varepsilon$, więc
+\[
+I(\varepsilon)=\int_\varepsilon^\infty\frac{\dd t}{1+t^2}
+=\frac\pi2-\arctan\varepsilon,
+\qquad\lim_{\varepsilon\downarrow0}I(\varepsilon)=\frac\pi2.
+\]
+
+Trzeba jeszcze wykazać, że ta granica jest całką niewłaściwą bez tłumienia. Dla $g_\varepsilon(x)=e^{-\varepsilon x}/x$, $\varepsilon\ge0$, funkcja $g_\varepsilon$ maleje do zera. Całkowanie przez części na $[A,B]$, $0<A<B$, daje
+\[
+\left|\int_A^B g_\varepsilon(x)\sin x\dd x\right|
+\le g_\varepsilon(A)+g_\varepsilon(B)
++\int_A^B|g_\varepsilon'(x)|\dd x
+=2g_\varepsilon(A)\le\frac2A.
+\]
+Dla $\varepsilon=0$ jest to kryterium Cauchy'ego zbieżności ogona. Oszacowanie jest jednostajne względem $\varepsilon\ge0$. Na $[0,A]$ funkcje podcałkowe zbiegają jednostajnie do $\sin x/x$, z wartością $1$ w zerze. Możemy więc przejść do granicy całek na tym odcinku, a ogony są dowolnie małe po wyborze dużego $A$. Stąd
+\[
+\int_0^\infty\frac{\sin x}{x}\dd x=\frac\pi2.
+\]
+
+\section{Logarytm całkowy: $\int \frac{\dd x}{\log x}$}
+
+\begin{twierdzenie}
+Na żadnym niepustym otwartym przedziale zawartym w $(0,1)$ lub $(1,\infty)$ funkcja $1/\log x$ nie ma elementarnej funkcji pierwotnej.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy, że istnieje elementarna funkcja pierwotna $F(x)$. Podstawmy $x=e^u$, wybierając lokalnie $u=\log x$. Reguła łańcuchowa daje
+\[
+\frac{\dd}{\dd u}F(e^u)=\frac{e^u}{u}.
+\]
+Podstawienie do skończonego wyrażenia elementarnego zachowuje jego elementarność: działania arytmetyczne, logarytmy i funkcje wykładnicze nadal są tego samego typu, a równania algebraiczne mają podstawione współczynniki. Dostawalibyśmy więc elementarną funkcję pierwotną $e^u/u$ nad $\C(u,e^u)$.
+
+Twierdzenie 8.10, z $h=1$ i $s=1/u$, wymaga rozwiązania
+\[
+r'+r=\frac1u,\qquad r\in\C(u).
+\]
+Lemat 9.1 wyklucza je w punkcie $u=0$. Równanie dotyczy tożsamości funkcji wymiernych, dlatego jego biegun w zerze jest przeszkodą również wtedy, gdy wyjściowy przedział nie zawiera zera. Otrzymujemy sprzeczność.
+\end{proof}
+
+Do nazwania funkcji pierwotnej na $x>1$ wystarcza definicja
+\[
+\operatorname{Li}(x)=\int_2^x\frac{\dd t}{\log t}.
+\]
+Tutaj droga całkowania nie przechodzi przez $1$, więc nie potrzeba wartości głównej. Na $(0,1)$ można wybrać dowolny punkt początkowy w tym przedziale. Wybór stałej całkowania nie zmienia nieelementarności.
+
+\section{Całka eliptyczna: $\int \frac{\dd x}{\sqrt{1-x^4}}$}
+
+Ten przykład jest innego typu: całkowana funkcja jest algebraiczna, a nie wykładnicza. Zastosujemy samo twierdzenie Liouville'a oraz lokalne rzędy zer i biegunów. Nie potrzebujemy teorii rodzaju krzywej ani osobnego twierdzenia o całkach abelowych.
+
+\subsection{Ciało funkcji i punkty nad nieskończonością}
+
+Pracujemy w ciele $K=\C(x,y)$ z relacją $y^2=1-x^4$. Wielomian $1-x^4$ nie jest kwadratem funkcji wymiernej, bo ma proste zera, a kwadrat ma parzyste rzędy zer i biegunów. Dlatego $[K:\C(x)]=2$ i każdy element ma jednoznaczną postać $A(x)+B(x)y$, gdzie $A,B\in\C(x)$.
+
+Derywację określają
+\[
+Dx=1,\qquad Dy=-\frac{2x^3}{y}.
+\]
+Jej stałe są równe $\C$, na mocy lematu 8.3. Funkcje z $K$ rozpatrujemy na krzywej $y^2=1-x^4$ wraz z punktami nad nieskończonością. Potrzebne lokalne współrzędne opisujemy jawnie.
+\begin{itemize}
+\item Gdy $y\ne0$, lokalną współrzędną jest $x-a$, gdzie $a$ jest współrzędną rozważanego punktu. Druga współrzędna jest lokalną gałęzią pierwiastka.
+\item Przy $y=0$ mamy $x=a$ z $a^4=1$. Ponieważ pochodna $4x^3$ nie znika przy $x=a$, z twierdzenia o funkcji uwikłanej $x$ jest holomorficzną funkcją $y$ w otoczeniu tego punktu. Lokalną współrzędną jest $y$, a $x=a(1-y^2)^{1/4}$. Wybieramy gałąź pierwiastka o wartości $1$ w zerze, tak aby $x(0)=a$. W szczególności $x-a$ ma rząd $2$, a $y$ rząd $1$.
+\item Przy nieskończoności wprowadzamy $s=1/x$, $w=y/x^2$, $w^2=s^4-1$. Dodajemy dwa punkty $(s,w)=(0,i)$ i $(0,-i)$, nie jeden. Ponieważ $2w\ne0$ w obu tych punktach, równanie $w^2=s^4-1$ wyznacza tam holomorficznie $w$ jako funkcję $s$. W obu lokalną współrzędną jest $s$, a $y=w/s^2$ ma biegun rzędu $2$. Te dwa punkty domykają opis nad nieskończonością: poza nimi i punktami o skończonym $x$ nie ma innych punktów wymaganych do badania zer i biegunów funkcji z $K$.
+\end{itemize}
+Zmiana między opisami jest dana wypisanymi funkcjami wymiernymi. W tych współrzędnych każda niezerowa funkcja z $K$ ma rozwinięcie Laurenta, więc można mówić o jej rzędzie $\ord_P(u)$ w punkcie $P$. Rząd jest dodatni dla zera, ujemny dla bieguna i zerowy dla funkcji regularnej i niezerowej w punkcie.
+
+\begin{lemat}
+Funkcja z $K$ bez biegunów we wszystkich wyżej opisanych punktach jest stała.
+\end{lemat}
+\begin{proof}
+Niech $v=A+By$ nie ma biegunów. Inwolucja $\tau(x,y)=(x,-y)$ permutuje punkty krzywej, także dwa punkty nad nieskończonością. Dlatego $\tau(v)=A-By$ również nie ma biegunów. Stąd ani $A=(v+\tau(v))/2$, ani $By=(v-\tau(v))/2$ nie mają biegunów.
+
+Funkcja wymierna $A(x)$ nie może mieć bieguna w żadnym skończonym $x=a$, bo dawałoby to biegun w punkcie nad $a$. Jest więc wielomianem. Nie może też mieć dodatniego stopnia, bo wtedy ma biegun przy $s=0$. Zatem $A$ jest stała.
+
+Jeśli $B$ miałoby biegun rzędu $m\ge1$ w punkcie $a$ z $1-a^4\ne0$, to $By$ miałoby tam biegun, ponieważ $y$ jest regularne i niezerowe. Dla $a^4=1$ rząd $By$ wynosiłby $1-2m<0$, co też daje biegun. Funkcja $B$ nie ma więc skończonych biegunów i jest wielomianem. Jeśli $B\ne0$ ma stopień $d$, to przy nieskończoności $By$ ma biegun rzędu $d+2$. Stąd $B=0$, a $v=A$ jest stała.
+\end{proof}
+
+\subsection{Forma różniczkowa bez biegunów}
+
+Forma różniczkowa ma w lokalnej współrzędnej $z$ postać $a(z)\dd z$ i zmienia się według reguły łańcuchowej. Jest holomorficzna, jeśli $a(z)$ nie ma bieguna. Dla $v\in K$ mamy $\dd v=(Dv)\dd x$. Sprawdźmy formę
+\[
+\omega=\frac{\dd x}{y}.
+\]
+Przy $y\ne0$ jest regularna i niezerowa. Przy punkcie rozgałęzienia różniczkowanie $y^2=1-x^4$ daje $2y\dd y=-4x^3\dd x$, więc $\omega=-\dd y/(2x^3)$. Ponieważ tam $x^4=1$, współczynnik jest regularny i niezerowy. Przy nieskończoności
+\[
+\omega=\frac{-s^{-2}\dd s}{w/s^2}=-\frac{\dd s}{w},
+\]
+co również jest regularne i niezerowe przy $w=\pm i$. Forma $\omega$ nie ma więc bieguna w żadnym punkcie i nie jest zerowa.
+
+\subsection{Dlaczego nie może to być pochodna elementarna?}
+
+\begin{twierdzenie}
+Element $1/y\in K$, $y^2=1-x^4$, nie ma elementarnej funkcji pierwotnej. W szczególności $1/\sqrt{1-x^4}$ nie ma takiej funkcji pierwotnej na $(-1,1)$.
+\end{twierdzenie}
+\begin{proof}
+Gdyby funkcja pierwotna była elementarna, twierdzenie Liouville'a zastosowane do $K$ i pomnożone przez $\dd x$ dawałoby
+\begin{equation}\label{eq:elliptic-liouville}
+\omega=\dd v+\sum_{j=1}^r c_j\frac{\dd u_j}{u_j},\qquad
+v\in K,\quad u_j\in K^\times,\quad c_j\in\C.
+\end{equation}
+Wybrana zwykła gałąź daje zanurzenie różniczkowe $K$ w ciele zarodków meromorficznych. Jest ono różnowartościowe, jak każdy homomorfizm ciał. Dlatego równość uzyskana z lokalnej funkcji pierwotnej jest tożsamością w $K$; możemy badać ją we wszystkich punktach. Nie zakładamy globalnego przedłużenia samej hipotetycznej funkcji pierwotnej.
+
+\emph{Część dokładna.} Gdyby $v$ miało biegun rzędu $m\ge1$ w lokalnej współrzędnej $z$, to $\dd v$ miałoby biegun rzędu $m+1\ge2$. Tymczasem dla $u=z^k h(z)$, z $h$ regularną i $h(0)\ne0$, mamy
+\[
+\frac{\dd u}{u}=k\frac{\dd z}{z}+\frac{\dd h}{h}.
+\]
+Pochodne logarytmiczne mają co najwyżej bieguny proste. Nie mogą usunąć bieguna $\dd v$ rzędu co najmniej $2$, a $\omega$ nie ma biegunów. Zatem $v$ nie ma biegunów i na mocy lematu 9.5 jest stałe. Część $\dd v$ znika.
+
+\emph{Część logarytmiczna.} Współczynnik przy $\dd z/z$, zwany residuum, w $\dd u/u$ jest równy całkowitej liczbie $\ord_P(u)$. Ponieważ $\omega$ jest holomorficzna, dla każdego punktu $P$ mamy
+\[
+\sum_j c_j\ord_P(u_j)=0.
+\]
+Wybierzmy bazę $\gamma_1,\dots,\gamma_s$ nad $\Q$ przestrzeni rozpiętej przez skończenie wiele $c_j$ i zapiszmy $c_j=\sum_i q_{ij}\gamma_i$, $q_{ij}\in\Q$. Niezależność nad $\Q$ daje
+\[
+\sum_j q_{ij}\ord_P(u_j)=0\qquad\text{dla każdego }i\text{ i }P.
+\]
+Wybierzmy wspólny dodatni mianownik $N$ wszystkich $q_{ij}$ i połóżmy $U_i=\prod_j u_j^{Nq_{ij}}$. Wykładniki są całkowite, więc $U_i$ jest zwykłym niezerowym elementem $K$, a nie wielowartościową potęgą. We wszystkich punktach ma rząd zero. Nie ma biegunów, więc jest stały na mocy lematu 9.5. Stąd
+\[
+\sum_j c_j\frac{\dd u_j}{u_j}
+=\frac1N\sum_i\gamma_i\frac{\dd U_i}{U_i}=0.
+\]
+Jeśli wszystkie $c_j$ są zerowe, wniosek jest natychmiastowy bez wyboru bazy. Tożsamość \eqref{eq:elliptic-liouville} dawałaby więc $\omega=0$, wbrew bezpośredniemu sprawdzeniu.
+
+Istotne były całkowite rzędy zer i biegunów funkcji $u_j$. Samo znikanie residuów nie dowodzi, że dowolna forma jest zerowa: właśnie $\omega$ jest niezerową formą bez residuów. Udowodniliśmy znikanie konkretnej kombinacji pochodnych logarytmicznych, wykorzystując bazę nad $\Q$.
+\end{proof}
+
+\section{Przykłady dla kontrastu}
+
+Niewielka zmiana całkowanej funkcji może przywrócić elementarność:
+\[
+\int x e^{x^2}\dd x=\frac12e^{x^2}+C,\qquad
+\int\frac{\dd x}{x\log x}=\log|\log x|+C,
+\qquad
+\int\frac{2x}{x^2+1}\dd x=\log(x^2+1)+C.
+\]
+Drugi wzór jest rzeczywisty na każdym z przedziałów $(0,1)$ i $(1,\infty)$; w wersji zespolonej wybieramy lokalną gałąź $\log(\log x)$. Wszystkie równości sprawdzamy przez różniczkowanie. W pierwszej równanie $r'+2xr=x$ ma rozwiązanie $r=1/2$; w pozostałych występują pochodne logarytmiczne.
+
+\begin{twierdzenie}
+Każda funkcja wymierna nad $\C$ ma lokalną elementarną funkcję pierwotną.
+\end{twierdzenie}
+\begin{proof}
+Odejmując skończone części główne rozwinięć przy wszystkich biegunach, otrzymujemy funkcję wymierną bez biegunów skończonych, czyli wielomian. Daje to rozkład
+\[
+f(x)=P(x)+\sum_a\sum_{k=1}^{m_a}\frac{c_{a,k}}{(x-a)^k}.
+\]
+Wielomian całkujemy wyraz po wyrazie. Dla $k\ge2$ mamy
+\[
+\int\frac{c_{a,k}}{(x-a)^k}\dd x
+=-\frac{c_{a,k}}{(k-1)(x-a)^{k-1}},
+\]
+a dla $k=1$ funkcją pierwotną jest $c_{a,1}\log(x-a)$ z lokalną gałęzią. Skończona suma tych wyrażeń jest elementarna i ma pochodną $f$.
+\end{proof}
+
+
+\chapter{Przykłady z równań różniczkowych}
+
+Zachowujemy kilka przykładów pokazujących, jak automorfizmy współgrają z pochodną. Nie są one przesłankami dowodów z rozdziału o całkach. Nie rozwijamy tu ogólnej teorii liniowych grup algebraicznych.
+
+\section{Automorfizmy zachowujące pochodną}
+
+Dla rozszerzenia różniczkowego $L/K$ rozważamy grupę automorfizmów ciała $L$, które ustalają $K$ i spełniają
+\[
+D\sigma(u)=\sigma(Du)\qquad(u\in L).
+\]
+Ten dodatkowy warunek wymusza zachowanie równań różniczkowych. W trzech następnych przykładach $K=\C(x)$, $D=\dd/\dd x$, a ciało stałych pozostaje równe $\C$.
+
+\begin{przyklad}[Równanie wykładnicze]
+Dla $y'=y$ wybierzmy $t=e^x$ i $L=\C(x,t)$. Jeżeli $\sigma$ jest automorfizmem różniczkowym nad $K$, to
+\[
+D\left(\frac{\sigma(t)}{t}\right)
+=\frac{D\sigma(t)\cdot t-\sigma(t)Dt}{t^2}=0.
+\]
+Zatem $\sigma(t)=ct$ dla pewnego $c\in\C^\times$. Odwrotnie, każdy taki wybór daje automorfizm $t\mapsto ct$, ponieważ $t$ jest przestępny; jego odwrotnością jest $t\mapsto c^{-1}t$. Sprawdzenie na generatorach pokazuje, że komutuje z $D$. Grupa jest więc dokładnie grupą multiplikatywną $\C^\times$.
+\end{przyklad}
+
+\begin{przyklad}[Równanie logarytmiczne]
+Dla $y'=1/x$ weźmy lokalną gałąź $\ell=\log x$ i $L=\C(x,\ell)$. Element $\ell$ jest przestępny: gdyby był algebraiczny stopnia $d$, to $b=\Tr(\ell)/d\in\C(x)$ spełniałoby $b'=1/x$. Jest to niemożliwe na mocy lematu 9.1 z $h=0$. Ten sam brak wymiernej funkcji pierwotnej i lemat 8.5 zapewniają brak nowych stałych.
+
+Dla automorfizmu różniczkowego mamy $D(\sigma(\ell)-\ell)=0$, więc $\sigma(\ell)=\ell+c$, $c\in\C$. Przestępność pokazuje, że wszystkie takie przesunięcia są automorfizmami; ich składanie dodaje parametry. Otrzymujemy grupę addytywną $(\C,+)$. Jest to przykład równania niejednorodnego, lecz definicja grupy automorfizmów nadal ma sens.
+\end{przyklad}
+
+\begin{przyklad}[Oscylator]
+Równanie $y''+y=0$ ma rozwiązania $z=e^{ix}$ i $z^{-1}=e^{-ix}$. Są liniowo niezależne nad $\C$, ponieważ
+\[
+\det\begin{pmatrix}z&z^{-1}\\iz&-iz^{-1}\end{pmatrix}=-2i\ne0.
+\]
+Ciało generowane przez nie i ich pochodne to $L=\C(x,z)$. Tak jak w przykładzie wykładniczym wszystkie automorfizmy mają postać $z\mapsto cz$, $c\in\C^\times$. Na drugie rozwiązanie działają jako $z^{-1}\mapsto c^{-1}z^{-1}$. W tej bazie grupa ma więc macierze
+\[
+\begin{pmatrix}c&0\\0&c^{-1}\end{pmatrix},\qquad c\in\C^\times.
+\]
+Nie możemy niezależnie skalować obu rozwiązań, bo ich iloczyn wynosi $1$. To ta sama zależność, którą uwzględnialiśmy przy całce sinusowej.
+\end{przyklad}
+
+\section{Nieelementarne nie znaczy nieliouvillowskie}
+
+Rozszerzenie liouvillowskie dopuszcza, obok kroków algebraicznych, kroki $D\theta\in F$ oraz $D\theta/\theta\in F$ nad poprzednim ciałem $F$, bez nowych stałych. Są to dowolne funkcje pierwotne i eksponenty funkcji pierwotnych, nie tylko logarytmy i eksponenty elementów $F$. Klasa ta jest szersza od klasy rozszerzeń elementarnych.
+
+Na przykład $F(x)=\int_0^x e^{-t^2}\dd t$ nie jest elementarne, ale jest liouvillowskie z samej definicji: najpierw dołączamy $e^{-x^2}$, a potem jego funkcję pierwotną. Ponadto
+\[
+F'=e^{-x^2},\qquad F''=-2xe^{-x^2},\qquad F''+2xF'=0.
+\]
+Nieelementarna funkcja może więc rozwiązywać bardzo proste liniowe równanie różniczkowe. Nie ma w tym sprzeczności z twierdzeniem Liouville'a.
+
+\subsection*{Równanie Airy'ego i równanie Riccatiego}
+
+Dla kontrastu rozważmy $y''-xy=0$ nad $K=\C(x)$. Pokażemy, dlaczego nie ma ono niezerowych rozwiązań liouvillowskich i dlaczego jego różniczkowa grupa Galois to $\mathrm{SL}_2(\C)$. Sam rachunek nie wymaga algorytmu Kovacica, ale użyjemy jednego klasycznego kryterium z teorii Picarda--Vessiota. Nie jest ono konsekwencją zwykłego twierdzenia Galois z rozdziału 3.
+
+\begin{lemat}[Algebraiczne rozwiązania równania Riccatiego]
+Równanie
+\begin{equation}\label{eq:airy-riccati}
+r'+r^2=x
+\end{equation}
+nie ma rozwiązań algebraicznych nad $\C(x)$.
+\end{lemat}
+\begin{proof}
+Załóżmy, że $r$ jest algebraiczne. Każda jego lokalna gałąź w pobliżu skończonego punktu $x=a$ ma rozwinięcie Puiseux, a więc w punkcie nad $a$ ma granicę w $\C\cup\{\infty\}$.
+
+Jeżeli granica wynosi $c\in\C$, to równanie $r'=x-r^2$ ma analityczną prawą stronę. Twierdzenie o istnieniu i jednoznaczności dla holomorficznego równania pierwszego rzędu daje jedną holomorficzną gałąź z warunkiem $r(a)=c$. Nasza gałąź musi się z nią pokrywać: można to zobaczyć także przez podstawienie szeregu Puiseux do równania, które kolejno wyznacza współczynniki zwykłego szeregu Taylora i wyklucza wykładniki ułamkowe.
+
+Jeżeli $r$ ma biegun, rozważamy $u=1/r$. Z równania wynika $u'=1-xu^2$; tu również prawa strona jest holomorficzna i warunek $u(a)=0$ wyznacza jednoznaczną holomorficzną gałąź. Tak więc $r$ może mieć biegun, lecz nie ma rozgałęzienia nad żadnym skończonym punktem $a$.
+
+W rezultacie skończone przykrycie płaszczyzny $\C$ określone przez wielomian minimalny $r$ jest nierozgałęzione. Ponieważ $\C$ jest po prostu spójna, każde spójne skończone nierozgałęzione przykrycie $\C$ ma jeden arkusz. Stąd $[\C(x,r):\C(x)]=1$, czyli $r\in\C(x)$.
+
+Nie istnieje jednak rozwiązanie wymierne. Niech $d$ będzie stopniem części wielomianowej funkcji wymiernej $r$. Jeśli $d\ge1$, to w nieskończoności $r^2$ ma biegun rzędu $2d$, podczas gdy $r'$ ma co najwyżej rząd $d-1$; lewa strona \eqref{eq:airy-riccati} ma zatem rząd bieguna $2d$, a prawa rząd $1$. Jeśli $r$ jest regularna w nieskończoności, to $r^2+r'$ także jest tam regularna, natomiast $x$ ma biegun. W obu przypadkach otrzymujemy sprzeczność.
+\end{proof}
+
+Potrzebujemy teraz następującej standardowej konsekwencji teorii Picarda--Vessiota i twierdzenia Liego--Kołczyna: dla równania $y''=q(x)y$, $q\in\C(x)$, istnieje niezerowe rozwiązanie liouvillowskie wtedy i tylko wtedy, gdy równanie Riccatiego $r'+r^2=q$ ma rozwiązanie algebraiczne nad $\C(x)$. Wyjaśnijmy rolę tego kryterium. Z rozwiązania algebraicznego $r$ otrzymujemy $y=\exp(\int r\,\dd x)$ w rozszerzeniu liouvillowskim. W drugą stronę, jeśli jedno rozwiązanie jest liouvillowskie, to drugie można otrzymać przez redukcję rzędu $y_2=y_1\int y_1^{-2}\dd x$; grupa Picarda--Vessiota ma wtedy rozwiązalną składową spójną. Twierdzenie Liego--Kołczyna zapewnia jej niezmienniczą prostą w dwuwymiarowej przestrzeni rozwiązań. Iloraz $r=y'/y$ odpowiadającego wektora jest ustalany przez tę składową, a więc jest algebraiczny nad ciałem bazowym (grupa ma skończenie wiele składowych). Ten ostatni krok korzysta z podstawowego twierdzenia różniczkowej teorii Galois.
+
+\begin{twierdzenie}[Równanie Airy'ego]
+Równanie $y''-xy=0$ nie ma niezerowych rozwiązań liouvillowskich nad $\C(x)$. Jego różniczkowa grupa Galois nad $\C(x)$ jest równa $\mathrm{SL}_2(\C)$.
+\end{twierdzenie}
+\begin{proof}
+Pierwsza teza wynika z kryterium Riccatiego oraz poprzedniego lematu.
+
+Niech $G$ będzie grupą Picarda--Vessiota równania Airy'ego. Wrońskian dwóch rozwiązań spełnia $W'=0$, bo w równaniu nie ma wyrazu z $y'$. Wybierając bazę o wrońskianie równym $1$, otrzymujemy $G\subseteq\mathrm{SL}_2(\C)$. Z braku rozwiązań liouvillowskich wynika, że składowa spójna $G^\circ$ nie jest rozwiązalna. Tymczasem każda właściwa spójna algebraiczna podgrupa $\mathrm{SL}_2(\C)$ jest rozwiązalna: jej algebra Liego jest właściwą podalgebrą trójwymiarowej $\mathfrak{sl}_2(\C)$, ma więc wymiar co najwyżej $2$; każda algebra Liego wymiaru co najwyżej $2$ jest rozwiązalna. Stąd $G^\circ=\mathrm{SL}_2(\C)$ i tym bardziej $G=\mathrm{SL}_2(\C)$.
+\end{proof}
+
+\begin{uwaga}
+Dowód nieelementarności w rozdziale 9 był samodzielny po udowodnieniu twierdzenia Liouville'a. Tutaj odwołaliśmy się jawnie do innego, głębszego wyniku: kryterium Picarda--Vessiota dla rozwiązań liouvillowskich. Elementarne sprawdzenie, że równanie Riccatiego nie ma rozwiązań algebraicznych, nie zastępuje dowodu tego ogólnego kryterium.
+\end{uwaga}
+
+\section{Krótka uwaga o algorytmach}
+
+Redukcja do równań takich jak $r'+hr=s$ jest jednym z narzędzi algorytmu Rischa do całkowania elementarnego. Pełna procedura wymaga efektywnego opisu ciał i rozwiązywania odpowiednich problemów w ciele stałych; sam dowód Liouville'a nie jest jeszcze implementacją algorytmu. Inny problem, istnienie niezerowych rozwiązań liouvillowskich liniowych jednorodnych równań drugiego rzędu o wymiernych współczynnikach, jest przedmiotem algorytmu Kovacica. Nie rozwijamy ani nie dowodzimy poprawności tych procedur.
+
+\end{document}
