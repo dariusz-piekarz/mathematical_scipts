@@ -1,0 +1,70 @@
+\section{Numeracja Gödla}\label{sec:numeracja-godla}
+\begin{definicja}[Kod Gödla]\label{res:6:1}
+Ustalamy różnowartościowe, pierwotnie rekurencyjne kodowanie symboli: symbole inne niż zmienne otrzymują kolejne kody $1,\ldots,b-1$, a zmienna $v_i$ kod $b+i$. Dzięki temu rozpoznawanie rodzaju symbolu i odzyskiwanie indeksu zmiennej jest p.r. Ciągowi symboli $s_1\ldots s_k$ przypisujemy liczbę
+\[
+\ulcorner s_1\ldots s_k\urcorner=\prod_{i=1}^k p_i^{\operatorname{kod}(s_i)+1},
+\]
+gdzie $p_i$ jest $i$-tą liczbą pierwszą. Kod pustego napisu wynosi $1$, a $0$ nie jest kodem napisu. Poprawny kod ma dodatnie wykładniki dokładnie przy początkowym odcinku liczb pierwszych, bez luk. Dowolny ciąg liczb kodujemy przez
+\[
+\langle a_1,\ldots,a_k\rangle=\prod_{i=1}^k p_i^{a_i+1}.
+\]
+Przesunięcie o $1$ pozwala kodować także zera. Te konstrukcje iterujemy dla ciągów wierszy dowodu i konfiguracji obliczenia. Operacje na niepoprawnych kodach mają ustalone wartości zastępcze, np. $0$, dzięki czemu są funkcjami totalnymi.
+\end{definicja}
+
+\begin{definicja}[Skończone obliczenie rejestrowe]\label{res:6:2}
+Program używa skończenie wielu rejestrów $r_0,\ldots,r_{d-1}$ z liczbami naturalnymi oraz numerowanych instrukcji. Dopuszczamy:
+\begin{itemize}
+\item $\operatorname{Inc}(i,j)$: zwiększ $r_i$ o $1$ i przejdź do instrukcji $j$;
+\item $\operatorname{Dec}(i,j,k)$: jeśli $r_i=0$, przejdź do $j$; w przeciwnym razie zmniejsz $r_i$ o $1$ i przejdź do $k$;
+\item $\operatorname{Halt}$: zakończ, zwracając zawartość $r_0$.
+\end{itemize}
+Konfiguracja to numer instrukcji i zawartości wszystkich rejestrów. Po zatrzymaniu umownie konfiguracja pozostaje niezmieniona. Na wejściu $\vec x$ rejestry wejściowe zawierają $\vec x$, pozostałe $0$. Ślad obliczenia to skończony ciąg konfiguracji, w którym każda następna wynika z poprzedniej zgodnie z programem.
+\end{definicja}
+
+\begin{lemat}[Programy i funkcje częściowo rekurencyjne]\label{res:6:3}
+Funkcje obliczane przez powyższe programy są dokładnie funkcjami częściowo rekurencyjnymi. Weryfikacja podanego skończonego śladu jest p.r.
+\end{lemat}
+\begin{proof}
+\emph{Od definicji rekurencyjnej do programu.} Wyzerowanie rejestru wykonujemy przez pętlę zmniejszania. Zawartość rejestru kopiujemy, przenosząc ją do dwóch rejestrów pomocniczych i odtwarzając oryginał z jednego z nich. Daje to funkcje bazowe. Złożenie wykonujemy przez kolejne wywołania programów dla argumentów, z rozłącznymi rejestrami roboczymi, a następnie programu funkcji zewnętrznej. Przy rekursji prostej najpierw obliczamy $g(\vec x)$, potem wykonujemy pętlę z licznikiem $i=0,\ldots,y-1$, zastępując bieżący wynik $z$ przez $h(\vec x,i,z)$. W minimalizacji wywołujemy kolejno program $g(\vec x,0),g(\vec x,1),\ldots$ i kończymy na pierwszym zerze. Jeśli wywołanie nie kończy się, nie przechodzimy do następnego argumentu. To dokładnie konwencja z Definicji~\ref{res:5:5}.
+
+\emph{Od programu do funkcji rekurencyjnej.} Jednokrokowe przejście konfiguracji jest p.r.: wybiera jedną ze skończenie wielu instrukcji i używa następnika, poprzednika oraz testu zera. Konfigurację po $t$ krokach definiujemy rekursją prostą po $t$. Minimalizacja wybiera pierwszy moment zatrzymania, a odczyt $r_0$ zwraca wynik. Gdy zatrzymania nie ma, funkcja pozostaje nieokreślona. Weryfikacja gotowego śladu wymaga jedynie ograniczonej liczby testów początku, kolejnych przejść i końca; operacje odczytu kodu uzasadniamy w Lemacie~\ref{res:6:5}. Nie szukamy tutaj czasu zatrzymania.
+\end{proof}
+
+\begin{uwaga}[Wyliczanie a półrozstrzyganie]\label{res:6:4}
+Jeżeli $A$ jest dziedziną programu, symulujemy etapami program na wszystkich wejściach: w etapie $s$ wykonujemy $s$ kroków na wejściach $0,\ldots,s$ i wypisujemy te, na których nastąpiło zatrzymanie. Każdy element $A$ pojawi się po skończonym czasie. Odwrotnie, program na wejściu $n$ może czekać, aż wyliczenie wypisze $n$. Zatrzyma się dokładnie dla $n\in A$. Dla krotek używamy kodowania ciągów. To uzasadnia równoważność dwóch opisów zbioru rekurencyjnie przeliczalnego, także gdy zbiór jest pusty.
+\end{uwaga}
+
+\begin{lemat}[Rekurencyjność składni]\label{res:6:5}
+Następujące zbiory i funkcje są pierwotnie rekurencyjne:
+\begin{enumerate}[label=(\alph*)]
+\item zbiór liczb Gödla poprawnych termów;
+\item zbiór liczb Gödla poprawnych formuł;
+\item funkcja $\operatorname{sub}(f,x,n)$ zwracająca liczbę Gödla formuły powstałej z formuły o kodzie $f$ przez podstawienie numerału $\overline n$ za zmienną o kodzie $x$;
+\item dla efektywnie aksjomatyzowalnej teorii $T$ relacja $\operatorname{Prov}_T(p,f)$: „$p$ koduje poprawny dowód formuły o kodzie $f$ wraz ze świadectwami pochodzenia użytych aksjomatów”.
+\end{enumerate}
+\end{lemat}
+\begin{proof}
+\emph{Odczyt i sklejanie.} Dla $n>0$ wykładnik $p_i$ w $n$ jest najmniejszym $k\le n$, dla którego $p_i^{k+1}\nmid n$. Długość odczytujemy, szukając pierwszego brakującego czynnika pierwszego, a poprawność kodu sprawdzamy przez odtworzenie całego iloczynu. Dla $n=0$ stosujemy wartość zastępczą. Wszystkie te operacje są p.r. na mocy Lematu~\ref{res:5:8}. Konkatenacja kodów $m,n$ to odpowiednie przesunięcie indeksów liczb pierwszych w rozkładzie $n$, możliwe przez ograniczone iloczyny. Podciąg, dołączenie elementu i odczyt wiersza dowodu mają ten sam charakter.
+
+\emph{Rozpoznawanie gramatyki.} Dla napisu długości $\ell$ tworzymy tablicę wszystkich jego podnapisów. Przechodzimy kolejno po długościach $1,\ldots,\ell$. Dla danego podnapisu sprawdzamy skończenie wiele podziałów na bezpośrednie składniki z Definicji~\ref{res:2:8} lub~\ref{res:2:10}, korzystając wyłącznie z wcześniej obliczonych wpisów tablicy. Jest co najwyżej $\ell^2$ podnapisów, a liczba podziałów jest ograniczona funkcją p.r. od $\ell$. Kod tablicy aktualizujemy rekursją prostą. To ważne uzupełnienie: sama rekurencyjna definicja „podformuły są formułami” nie dowodzi jeszcze pierwotnej rekurencyjności testu poprawności.
+
+\emph{Podstawienie.} Korzystając z drzewa rozbioru, przechodzimy po pozycjach napisu i zaznaczamy zasięgi kwantyfikatorów wiążących daną zmienną. Wolne wystąpienia zastępujemy napisem $S^n(0)$, inne pozostawiamy. Numerał jest domknięty, więc nie grozi przechwycenie jego zmiennych. Długość wyniku jest ograniczona przez $\ell(3n+1)$ przy zapisie $S(\cdot)$ z nawiasami; każda czynność i sklejenie kodów są p.r. Tak samo otrzymujemy funkcje $\operatorname{neg}(f)$ i $\operatorname{imp}(f,g)$.
+
+\emph{Dowody z certyfikatami.} Wyliczenie aksjomatów zastępujemy programem, który na wejściu $a$ czeka, aż pojawi się aksjomat o kodzie $a$, i wtedy zwraca $1$ (Uwaga~\ref{res:6:4}). Jest to program częściowo rekurencyjny, więc może mieć postać rejestrową z Definicji~\ref{res:6:2}. Wiersz dowodu zawiera kod formuły, rodzaj uzasadnienia i odpowiednie dane: instancję schematu logicznego, numery wcześniejszych przesłanek albo skończony ślad akceptacji aksjomatu pozalogicznego przez ten program. Nie rozstrzygamy, czy program kiedyś się zatrzyma: sprawdzamy już podany ślad. To jest nasze „świadectwo pochodzenia z wyliczenia”. Ślady, modus ponens, generalizacja i warunki dotyczące zmiennych wymagają wyłącznie ograniczonych testów. Liczba wierszy i długości dołączonych danych są ograniczone przez cały kod $p$. Zatem $\operatorname{Prov}_T(p,f)$ jest p.r.
+
+Każdy zwykły dowód można uzupełnić o certyfikaty: występuje w nim tylko skończenie wiele aksjomatów, a każdy zostaje kiedyś wypisany. Usunięcie certyfikatów daje zwykły dowód. Mamy więc dokładnie
+\[
+T\vdash\varphi\quad\Longleftrightarrow\quad\exists p\in\mathbb N\ \operatorname{Prov}_T(p,\ulcorner\varphi\urcorner).
+\]
+Bez certyfikatów rozstrzygalne, lecz nie p.r. sprawdzanie aksjomatów dawałoby jedynie rekurencyjność relacji dowodu. Ograniczone kwantyfikatory nie zmieniają funkcji rekurencyjnej w funkcję p.r.
+\end{proof}
+
+\begin{przyklad}[Sprawdzenie dowodu a poszukiwanie dowodu]\label{res:6:6}
+Sprawdzenie $\operatorname{Prov}_T(p,f)$ jest jak sprawdzanie gotowego rozwiązania: mając na papierze cały dowód (kod $p$), mechanicznie weryfikujemy linijka po linijce, że każdy krok jest dozwolony --- to skończona, ograniczona robota, stąd rekurencyjność. Natomiast pytanie $\exists p\,\operatorname{Prov}_T(p,f)$ każe znaleźć dowód wśród nieskończenie wielu kandydatów $p$. Nieograniczony kwantyfikator egzystencjalny nie zachowuje w ogólności rozstrzygalności: gdy dowód istnieje, przeszukiwanie kiedyś go znajdzie (stąd rekurencyjna przeliczalność), ale gdy nie istnieje --- szukanie może trwać w nieskończoność. To rozróżnienie „ograniczone a nieograniczone przeszukiwanie” jest sednem różnicy między zbiorem rekurencyjnym a rekurencyjnie przeliczalnym.
+\end{przyklad}
+
+\begin{definicja}[Predykat dowodliwości]\label{res:6:7}
+Dla teorii $T$ definiujemy $\operatorname{Bew}_T(x):=\exists p\,\operatorname{Prf}_T(p,x)$, gdzie $\operatorname{Prf}_T$ jest formułą arytmetyczną reprezentującą relację $\operatorname{Prov}_T$; jej standardowy wybór skonstruujemy po dowodzie reprezentowalności (Lemat~\ref{res:7:7}). Odróżniamy zatem relację na rzeczywistych liczbach $\operatorname{Prov}_T$ od formuły $\operatorname{Prf}_T$, którą można umieścić pod znakiem $T\vdash$. Obie wersje zgadzają się w $\mathcal N$. Zbiór kodów zdań dowodliwych jest rekurencyjnie przeliczalny, jako rzut relacji rekurencyjnej; nierozstrzygalność w rozpatrywanych niesprzecznych rozszerzeniach $Q$ uzasadnimy osobno we Wniosku~\ref{res:9:6}.
+\end{definicja}
+
+% Rozdział 7, strony 14--17.

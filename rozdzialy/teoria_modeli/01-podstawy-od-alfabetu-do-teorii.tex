@@ -1,0 +1,114 @@
+\section{Podstawy: od alfabetu do teorii}\label{sec:podstawy}
+Ta sekcja jest napisana „od zera”. Zakładamy jedynie znajomość intuicyjnego pojęcia liczby naturalnej $(0,1,2,\ldots)$ i zbioru. Wszystkie pozostałe pojęcia budujemy krok po kroku.
+
+\subsection*{Alfabet i słowa}\label{sec:alfabet-slowa}
+\begin{definicja}[Alfabet]\label{res:2:1}
+\emph{Alfabetem} nazywamy dowolny niepusty zbiór $\Sigma$, którego elementy nazywamy \emph{symbolami} (lub \emph{znakami}). Alfabet może być skończony (np. $\{a,b\}$) albo nieskończony (np. nieskończony zapas zmiennych).
+\end{definicja}
+
+\begin{definicja}[Słowo / napis]\label{res:2:2}
+\emph{Słowem} (albo \emph{napisem, ciągiem}) nad alfabetem $\Sigma$ nazywamy skończony ciąg symboli $s_1s_2\ldots s_k$, gdzie każdy $s_i\in\Sigma$. Liczbę $k$ nazywamy \emph{długością} słowa. Dopuszczamy \emph{słowo puste} (długości $0$). Zbiór wszystkich słów nad $\Sigma$ oznaczamy $\Sigma^*$.
+\end{definicja}
+
+\begin{przyklad}\label{res:2:3}
+Nad alfabetem $\Sigma=\{0,S,(,)\}$ przykładowymi słowami są: „$0$”, „$S(0)$”, „$S(S(0))$”, ale też bezsensowne „$))S0($”. Sama definicja słowa \emph{nie} rozróżnia napisów „sensownych” od „bezsensownych” --- to zrobi dopiero gramatyka termów i formuł.
+\end{przyklad}
+
+\begin{uwaga}[Po co ta ścisłość?]\label{res:2:4}
+Twierdzenia Gödla mówią o \emph{napisach} (formułach i dowodach) oraz o tym, jak można nimi manipulować mechanicznie. Dlatego musimy odróżnić: \emph{symbol} (znak), \emph{słowo} (ciąg znaków), \emph{znaczenie} (co dany napis „mówi”). Cała „magia” Gödla polega na zakodowaniu napisów jako liczb i mówieniu o napisach \emph{wewnątrz} arytmetyki.
+\end{uwaga}
+
+\subsection*{Czym jest język pierwszego rzędu}\label{sec:jezyk-pierwszego-rzedu}
+Intuicyjnie: \emph{język pierwszego rzędu} to ustalony zestaw symboli plus reguły, jak z nich budować sensowne wyrażenia. Symbole dzielą się na dwie grupy: \emph{logiczne} (wspólne dla wszystkich takich języków) oraz \emph{pozalogiczne} (specyficzne dla danej dziedziny, np. arytmetyki).
+
+\begin{definicja}[Symbole logiczne]\label{res:2:5}
+\emph{Symbolami logicznymi} nazywamy ustalony, wspólny zestaw:
+\begin{itemize}
+\item nieskończony zapas zmiennych $v_0,v_1,v_2,\ldots$;
+\item spójniki zdaniowe: $\neg$ („nie”), $\land$ („i”), $\lor$ („lub”), $\to$ („jeśli\ldots{} to”), $\leftrightarrow$ („wtedy i tylko wtedy”);
+\item kwantyfikatory: $\forall$ („dla każdego”), $\exists$ („istnieje”);
+\item symbol równości $=$;
+\item symbole pomocnicze: nawiasy $(,)$ i przecinek.
+\end{itemize}
+\end{definicja}
+
+\begin{definicja}[Sygnatura / symbole pozalogiczne]\label{res:2:6}
+\emph{Sygnaturą} (albo \emph{słownikiem pozalogicznym}) nazywamy zbiór $\tau$ złożony z:
+\begin{itemize}
+\item \emph{symboli stałych} (oznaczają wyróżnione elementy, np. $0$);
+\item \emph{symboli funkcyjnych}, każdy z przypisaną \emph{arnością} (liczbą argumentów), np. $S$ arności $1$, $+$ arności $2$;
+\item \emph{symboli relacyjnych}, każdy z arnością, np. $<$ arności $2$.
+\end{itemize}
+\emph{Językiem pierwszego rzędu} $\mathcal L$ o sygnaturze $\tau$ nazywamy zestaw wszystkich symboli logicznych (Def.~\ref{res:2:5}) wraz z $\tau$, razem z gramatyką termów i formuł opisaną niżej.
+\end{definicja}
+
+\begin{uwaga}[Dlaczego „pierwszego rzędu”?]\label{res:2:7}
+Nazwa „pierwszego rzędu” oznacza, że kwantyfikatory $\forall,\exists$ przebiegają wyłącznie po \emph{elementach} dziedziny (np. po liczbach), a nie po \emph{zbiorach} elementów czy relacjach. Zdanie „dla każdej liczby $x$” jest pierwszego rzędu; „dla każdego zbioru liczb $X$” byłoby drugiego rzędu. Twierdzenia dowodzimy tutaj w klasycznej logice pierwszego rzędu. Ogólniej zasadnicza jest efektywność rachunku dowodowego, a nie sama nazwa „pierwszy rząd”. Pełna semantyka logiki drugiego rzędu nie ma efektywnego, poprawnego i zupełnego rachunku dowodowego, więc nie stanowi obejścia twierdzeń.
+\end{uwaga}
+
+\begin{definicja}[Term]\label{res:2:8}
+\emph{Termy} języka $\mathcal L$ definiujemy indukcyjnie (są to napisy oznaczające „obiekty”, np. konkretne liczby):
+\begin{enumerate}[label=(\roman*)]
+\item każda zmienna $v_i$ jest termem;
+\item każdy symbol stałej (np. $0$) jest termem;
+\item jeśli $f$ jest symbolem funkcyjnym arności $n$, a $t_1,\ldots,t_n$ są termami, to $f(t_1,\ldots,t_n)$ jest termem;
+\item nic innego nie jest termem.
+\end{enumerate}
+\emph{Term domknięty} to term bez zmiennych (np. $S(S(0))$).
+\end{definicja}
+
+\begin{definicja}[Formuła atomowa]\label{res:2:9}
+\emph{Formułą atomową} nazywamy napis postaci $t_1=t_2$ (równość dwóch termów) albo $R(t_1,\ldots,t_n)$, gdzie $R$ jest symbolem relacyjnym arności $n$, a $t_1,\ldots,t_n$ termami. To najprostsze formuły; jeśli zawierają zmienne wolne, ich wartość logiczna zależy także od wartościowania.
+\end{definicja}
+
+\begin{definicja}[Formuła]\label{res:2:10}
+\emph{Formuły} definiujemy indukcyjnie:
+\begin{enumerate}[label=(\roman*)]
+\item każda formuła atomowa jest formułą;
+\item jeśli $\varphi$ jest formułą, to $\neg\varphi$ jest formułą;
+\item jeśli $\varphi,\psi$ są formułami, to $(\varphi\land\psi)$, $(\varphi\lor\psi)$, $(\varphi\to\psi)$, $(\varphi\leftrightarrow\psi)$ są formułami;
+\item jeśli $\varphi$ jest formułą, a $x$ zmienną, to $\forall x\,\varphi$ oraz $\exists x\,\varphi$ są formułami;
+\item nic innego nie jest formułą.
+\end{enumerate}
+\end{definicja}
+
+\begin{definicja}[Zmienna wolna i związana]\label{res:2:11}
+Wystąpienie zmiennej $x$ jest \emph{związane}, jeśli leży w zasięgu kwantyfikatora $\forall x$ lub $\exists x$; w przeciwnym razie jest \emph{wolne}. Formułę bez zmiennych wolnych nazywamy \emph{zdaniem} (por. Def.~\ref{res:3:3}). Zdania można oceniać w danej strukturze bez podawania wartościowania. Formuły otwarte również można oceniać, lecz względem przypisania wartości zmiennym wolnym.
+\end{definicja}
+
+\begin{przyklad}\label{res:2:12}
+W formule $\exists y\,(x=y+y)$ zmienna $y$ jest związana, a $x$ wolna. To formuła (o jednej zmiennej wolnej $x$) „mówiąca”, że $x$ jest parzyste. Dopiero podstawiając konkretną liczbę za $x$, otrzymamy zdanie prawdziwe (np. dla $4$) lub fałszywe (np. dla $3$).
+\end{przyklad}
+
+\subsection*{Znaczenie: struktury i prawda}\label{sec:struktury-prawda}
+Dotąd mówiliśmy o czystej \emph{składni} (napisach). Żeby napis coś „znaczył”, potrzebujemy \emph{struktury} --- świata, w którym symbole są zinterpretowane.
+
+\begin{definicja}[Struktura]\label{res:2:13}
+\emph{Strukturą} $\mathcal M$ dla sygnatury $\tau$ nazywamy parę złożoną z:
+\begin{itemize}
+\item niepustego zbioru $M$ zwanego \emph{dziedziną} (uniwersum);
+\item interpretacji każdego symbolu z $\tau$: każdej stałej $c$ przypisujemy element $c^{\mathcal M}\in M$; każdemu symbolowi funkcyjnemu $f$ arności $n$ --- funkcję $f^{\mathcal M}:M^n\to M$; każdemu symbolowi relacyjnemu $R$ arności $n$ --- relację $R^{\mathcal M}\subseteq M^n$.
+\end{itemize}
+\end{definicja}
+
+\begin{przyklad}[Model standardowy]\label{res:2:14}
+\emph{Modelem standardowym} arytmetyki nazywamy strukturę $\mathcal N=(\mathbb N;0,S,+,\cdot,<)$, w której dziedziną jest zbiór liczb naturalnych $\mathbb N=\{0,1,2,\ldots\}$, a symbole interpretujemy „naturalnie”: $0^{\mathcal N}=0$, $S^{\mathcal N}(n)=n+1$, $+,\cdot$ to zwykłe działania, a $<$ to zwykły porządek. To jest „świat, o którym naprawdę chcemy mówić”.
+\end{przyklad}
+
+\begin{definicja}[Spełnianie, prawda --- nieformalnie]\label{res:2:15}
+Mając strukturę $\mathcal M$ i wartościowanie $s$ (przypisanie elementów $M$ zmiennym), definiujemy przez indukcję po budowie formuły, kiedy $\mathcal M,s$ \emph{spełnia} formułę $\varphi$ (piszemy $\mathcal M,s\models\varphi$): formuły atomowe sprawdzamy wprost w interpretacji; $\neg,\land,\lor,\to,\leftrightarrow$ zgodnie z tabelami prawdziwościowymi; $\forall x\,\varphi$ jest spełnione, gdy $\varphi$ zachodzi dla \emph{każdego} podstawienia elementu $M$ za $x$, przy niezmienionych wartościach pozostałych zmiennych; $\exists x\,\varphi$ --- gdy dla \emph{pewnego}. Dla zdania wynik nie zależy od $s$; piszemy wtedy $\mathcal M\models\varphi$.
+\end{definicja}
+
+\begin{uwaga}[Prawda a dowodliwość]\label{res:2:16}
+Rozróżnienie między \emph{prawdą} w strukturze ($\models$, pojęcie semantyczne) a \emph{dowodliwością} w teorii ($\vdash$, pojęcie składniowe, Def.~\ref{res:3:4}) jest sercem całej opowieści. Zdanie Gödla będzie \emph{prawdziwe} w modelu standardowym, lecz \emph{niedowodliwe} w teorii.
+\end{uwaga}
+
+\subsection*{Teoria, aksjomaty, dowód --- intuicja}\label{sec:teoria-dowod-intuicja}
+\begin{definicja}[Teoria --- nieformalnie]\label{res:2:17}
+\emph{Teorią} nazywamy zbiór zdań (aksjomatów) w ustalonym języku wraz z mechanicznymi \emph{regułami wnioskowania} pozwalającymi wyprowadzać nowe zdania (\emph{twierdzenia}) z już przyjętych. Formalizację podaje Def.~\ref{res:3:4}. Intuicyjnie: aksjomaty to „reguły gry”, a dowód to skończona rozgrywka prowadząca od aksjomatów do tezy wyłącznie dozwolonymi ruchami.
+\end{definicja}
+
+\begin{uwaga}[„Efektywnie aksjomatyzowalna”]\label{res:2:18}
+Wystarczy procedura wypisująca wszystkie aksjomaty, nawet jeśli nie umie potwierdzić, że dane zdanie nigdy na liście się nie pojawi. Silniejszy warunek, \emph{rozstrzygalność}, daje odpowiedź „tak” lub „nie” dla każdego wejścia (Def.~\ref{res:5:5}). Zbiór wszystkich zdań prawdziwych w $\mathcal N$ nie jest nawet rekurencyjnie przeliczalny; uzasadnimy to we Wniosku~\ref{res:9:5}.
+\end{uwaga}
+
