@@ -640,28 +640,97 @@ trójwymiarowych równań Naviera--Stokesa: jest to warunek
 początkowy, nie jawny wzór rozwiązania w czasie.
 
 \begin{center}
-\includegraphics[width=.91\textwidth]{figures/taylor_green_3d_slices.png}
+\begin{tikzpicture}[x=.86cm,y=.86cm,>=Stealth,font=\footnotesize]
+\foreach \shift/\az/\zlabel in
+ {0/45/{\pi/4},5.25/135/{3\pi/4},10.5/225/{5\pi/4}} {
+  \begin{scope}[shift={(\shift,0)}]
+  \fill[gray!5] (0,0) rectangle (4.6,4.6);
+  \foreach \i in {0,...,7} {
+   \foreach \j in {0,...,7} {
+    \pgfmathsetmacro{\xx}{360*(\i+.5)/8}
+    \pgfmathsetmacro{\yy}{360*(\j+.5)/8}
+    \pgfmathsetmacro{\ww}{2*sin(\xx)*sin(\yy)*cos(\az)}
+    \pgfmathsetmacro{\opa}{min(.68,abs(\ww)*.43)}
+    \pgfmathsetmacro{\xlo}{4.6*\i/8}
+    \pgfmathsetmacro{\ylo}{4.6*\j/8}
+    \pgfmathsetmacro{\xhi}{4.6*(\i+1)/8}
+    \pgfmathsetmacro{\yhi}{4.6*(\j+1)/8}
+    \ifdim\ww pt>0pt
+      \fill[red,opacity=\opa] (\xlo,\ylo) rectangle (\xhi,\yhi);
+    \else
+      \fill[blue,opacity=\opa] (\xlo,\ylo) rectangle (\xhi,\yhi);
+    \fi
+   }
+  }
+  \foreach \i in {1,...,8} {
+   \foreach \j in {1,...,8} {
+    \pgfmathsetmacro{\xx}{360*(\i-.5)/8}
+    \pgfmathsetmacro{\yy}{360*(\j-.5)/8}
+    \pgfmathsetmacro{\ux}{sin(\xx)*cos(\yy)*cos(\az)}
+    \pgfmathsetmacro{\uy}{-cos(\xx)*sin(\yy)*cos(\az)}
+    \pgfmathsetmacro{\px}{4.6*(\i-.5)/8}
+    \pgfmathsetmacro{\py}{4.6*(\j-.5)/8}
+    \draw[-{Stealth[length=2pt]},black!85,line width=.4pt]
+      (\px,\py)--++({.36*\ux},{.36*\uy});
+   }
+  }
+  \draw[black!60] (0,0) rectangle (4.6,4.6);
+  \node[anchor=south] at (2.3,4.68) {$z=\zlabel$};
+  \node[anchor=north] at (0,0) {$0$};
+  \node[anchor=north] at (4.6,0) {$2\pi$};
+  \end{scope}
+}
+\node[anchor=west,font=\scriptsize] at (0,-.9)
+  {\textcolor{red}{\rule{8pt}{6pt}}\ $\omega_{0,z}>0$\qquad
+   \textcolor{blue}{\rule{8pt}{6pt}}\ $\omega_{0,z}<0$\qquad
+   strzałki: $(u_{0,1},u_{0,2})$};
+\end{tikzpicture}
 
-{\small\emph{Rysunek:} Obliczone z podanego pola przekroje
-$z=\pi/4,3\pi/4,5\pi/4$: poziome strzałki wskazują kierunek
-przepływu, barwy oznaczają podpisaną składową $\omega_{0,z}$
-wirowości, a krzywe są poziomicami $\psi_z$. Obliczenie można
-powtórzyć za pomocą pliku \texttt{scripts/taylor\_green\_3d\_plot.py};
-interaktywny widok Plotly można wygenerować jako HTML.}
+{\small\emph{Rysunek:} Trzy przekroje pola początkowego wiru
+Taylora--Greena, obliczone wprost ze wzorów na $u_0$ i
+$\omega_{0,z}$. Strzałki przedstawiają rzuty prędkości na
+płaszczyznę $xy$, a czerwień i błękit oznaczają znak pionowej
+składowej wirowości (nasycenie barwy rośnie z jej modułem).
+Rysunek powstaje w TikZ bez zewnętrznych obrazów i skryptów.}
 \end{center}
 
 \begin{center}
-\begin{minipage}{.90\textwidth}
-\centering
-\includegraphics[width=.90\linewidth]{figures/taylor_green_3d_schematic.png}
+\begin{tikzpicture}[x=.88cm,y=.88cm,>=Stealth,font=\footnotesize]
+\draw[->,line width=.8pt] (.35,.3)--(.35,6.2) node[above] {$z$};
+\draw[->,line width=.8pt] (.35,.3)--(7.4,.3) node[right] {$x$};
+\draw[->,line width=.8pt] (.35,.3)--(1.65,1.4) node[right] {$y$};
+\begin{scope}[shift={(1,1.0)}]
+ \fill[red!12] (0,0)--(4.8,0)--(5.9,1.2)--(1.1,1.2)--cycle;
+ \draw[black!60] (0,0)--(4.8,0)--(5.9,1.2)--(1.1,1.2)--cycle;
+ \draw[red!70!black,very thick,->] (2.3,.58) ++(0:.48)
+   arc[start angle=0,end angle=280,x radius=.48,y radius=.30];
+ \draw[red!70!black,very thick,->] (4.25,.58) ++(0:.48)
+   arc[start angle=0,end angle=280,x radius=.48,y radius=.30];
+ \node[anchor=west] at (6.1,.5) {$z=0$: $\cos z=1$};
+\end{scope}
+\begin{scope}[shift={(1,2.85)}]
+ \fill[gray!13] (0,0)--(4.8,0)--(5.9,1.2)--(1.1,1.2)--cycle;
+ \draw[black!55] (0,0)--(4.8,0)--(5.9,1.2)--(1.1,1.2)--cycle;
+ \node at (3.05,.57) {$u_0=0$};
+ \node[anchor=west] at (6.1,.5) {$z=\pi/2$: $\cos z=0$};
+\end{scope}
+\begin{scope}[shift={(1,4.7)}]
+ \fill[blue!12] (0,0)--(4.8,0)--(5.9,1.2)--(1.1,1.2)--cycle;
+ \draw[black!60] (0,0)--(4.8,0)--(5.9,1.2)--(1.1,1.2)--cycle;
+ \draw[blue!70!black,very thick,->] (2.3,.58) ++(0:.48)
+   arc[start angle=0,end angle=-280,x radius=.48,y radius=.30];
+ \draw[blue!70!black,very thick,->] (4.25,.58) ++(0:.48)
+   arc[start angle=0,end angle=-280,x radius=.48,y radius=.30];
+ \node[anchor=west] at (6.1,.5) {$z=\pi$: $\cos z=-1$};
+\end{scope}
+\end{tikzpicture}
 
-{\small\emph{Ilustracja schematyczna:} Przestrzenna wizualizacja
-wirów Taylora--Greena. Jest to obraz koncepcyjny,
-\emph{nie} wynik całkowania trajektorii powyższego pola
-$u_0$ ani poprawna mapa podpisanej wielkości całej wirowości.
-Fizycznie wierną wizualizacją danych początkowych jest
-poprzedni rysunek.}
-\end{minipage}
+{\small\emph{Ilustracja schematyczna:} Zmiana zwrotu
+poziomego pola $u_0$ pod wpływem czynnika $\cos z$.
+Na środkowej płaszczyźnie pole zanika, a pomiędzy
+$z=0$ i $z=\pi$ kierunek przepływu odwraca się.
+Szkic nie przedstawia całkowania trajektorii
+trójwymiarowych ani ewolucji w czasie.}
 \end{center}
 \end{przyklad}
 
