@@ -1,4 +1,4 @@
-# Mathematical library — repository structure (iteration IV)
+# Mathematical library — repository structure (iteration VI)
 
 The source language is currently **Polish**. Directory identifiers, code comments,
 function names and descriptions are in **English** to support future locales.
@@ -15,7 +15,7 @@ catalog/new_chapters.json          # 20 additional chapters, SHA-256 provenance
 catalog/topic_registry.json        # Planned canonical subject ownership
 ```
 
-The 236 existing chapters were relocated to English-language subject directories.
+During iteration IV, 236 existing chapters were relocated to English-language subject directories.
 Twelve book entry points retain all of their existing chapter imports after the move.
 The 20 newly supplied chapters are located in
 `chapters/pl/differential_geometry_and_topology/`, and are assembled by
@@ -25,6 +25,44 @@ The 20 newly supplied chapters are located in
 `latexmk -pdf -interaction=nonstopmode -halt-on-error differential_geometry_and_topology.tex`.
 
 **Validating:** from the repository root run `python tools/validate_repository.py`.
+
+## Chapter contribution and dependency rules (iteration VI)
+
+The canonical repository contains **355 numbered Polish chapters**, **two
+measure-theory supplements**, and **16 book entrypoints**. An older portable
+application snapshot describes 352 indexed chapters; when the repository
+source tree is available, the indexer reads the current canonical tree and
+deliberately skips `supplements/`.
+
+New chapters must use
+`chapters/pl/<english_subject>/NN-polski-tytul-rozdzialu.tex` with ASCII path
+names. The existing letter-suffix convention `15A`/`15B` is also supported.
+The body stays in the chapter; the book preamble and
+`\input{../../chapters/pl/...}` entries stay in `books/pl/`.
+Register every addition and its exact order in `catalog/books.json`, update
+app category mappings, topic registry, and provenance manifests when affected.
+Keep mathematical labels stable until a content-level deduplication audit.
+
+**No missing asset dependencies:** use inline TikZ and inline listings where
+feasible. Never introduce references to absent PNG/PDF/CSV/Python/Julia files,
+untracked directories, or local absolute paths. If an external file is truly
+required, it must be versioned and resolvable in the canonical repository and
+in generated application projects. The existing three `shared/pl/` modules
+are intentional internal canonical imports, *not* self-contained individual
+chapters; preserving them avoids duplicating mathematical proofs.
+
+Validate each iteration from the repository root:
+
+```sh
+python tools/audit_chapter_dependencies.py
+python tools/validate_repository.py
+python -m unittest discover -s tools/tests -v
+```
+
+See [iteration VI dependency audit](audits/iteration_6_chapter_dependencies.md)
+for fixed missing figures, cross-volume `xr-hyper` references, and remaining
+limitations. Conflicting labels and unresolved mathematical references are a
+separate pending audit.
 
 ## Content-merging policy
 
