@@ -1,0 +1,742 @@
+\chapter{Proces Poissona: losowe zliczanie zdarzeń}
+\label{ch:poisson-process}
+\paragraph{Odsyłacze międzytomowe.} Estymację intensywności procesu Poissona i modele Poisson GLM omawia tom IV, rozdziały~\ref{IV-ch:conjugate-families} i~\ref{IV-ch:glm}.
+
+
+\section{Motywacja: od losowych odstępów do procesu zliczającego}
+W poprzednich rozdziałach skonstruowaliśmy procesy jako rodziny
+zmiennych losowych, a następnie opisaliśmy informację dostępną w czasie.
+Teraz zajmiemy się pierwszym ważnym modelem, w którym \emph{cała
+trajektoria} ma prostą interpretację. Liczymy zgłoszenia do serwisu,
+przybycia klientów, impulsy z detektora promieniowania albo błędy
+transmisji. Interesują nas nie tylko liczby zdarzeń, lecz także czasy
+ich wystąpienia, odstępy, zdarzenia po chwili obserwacji i reakcja na
+zmianę intensywności.
+
+Dwa pozornie różne opisy mogą prowadzić do tego samego procesu:
+\begin{itemize}
+\item odstępy między kolejnymi zgłoszeniami są niezależne i wykładnicze;
+\item liczby zgłoszeń w rozłącznych przedziałach są niezależne, a liczba
+w przedziale długości $t$ ma rozkład Poissona o parametrze $\lambda t$.
+\end{itemize}
+Udowodnimy równoważność tych opisów, zamiast przyjmować ją jako
+nieuzasadnioną własność modelu.
+
+\begin{definicja}[Czasy nadejścia i proces zliczający]
+Niech $(\Omega,\calF,\Prob)$ będzie przestrzenią probabilistyczną,
+a $E_1,E_2,\ldots$ dodatnimi zmiennymi losowymi. Niech
+$T_0:=0$ i $T_n:=\sum_{k=1}^n E_k$, $n\ge1$.
+Jeżeli $T_n\to\infty$ prawie na pewno, to dla $t\ge0$ określamy
+\[
+N_t:=\sum_{n=1}^\infty\ind{\{T_n\le t\}}
+      =\max\{n\in\N_0:T_n\le t\}.
+\]
+Proces $N=(N_t)_{t\ge0}$ jest \emph{procesem zliczającym} zdarzenia
+w chwilach $T_1,T_2,\ldots$. Warunek $T_n\to\infty$ oznacza, że na
+żadnym ograniczonym przedziale nie występuje nieskończenie wiele
+zdarzeń (brak eksplozji).
+\end{definicja}
+
+Każda trajektoria $N$ jest niemalejącą funkcją schodkową, prawostronnie
+ciągłą i posiadającą granice lewostronne; jej skoki są równe jeden,
+gdyż $E_k>0$. Dla przejrzystości wszystkie twierdzenia tego rozdziału
+dotyczą czasu $[0,\infty)$.
+
+\begin{center}
+\begin{tikzpicture}[>=Latex,x=1.05cm,y=.62cm]
+\draw[->] (-.3,0)--(8.1,0) node[right] {$t$};
+\draw[->] (0,-.3)--(0,4.8) node[above] {$N_t$};
+\foreach \j in {1,2,3,4} {\draw (-.09,\j)--(.09,\j) node[left=4pt] {$\j$};}
+\draw[very thick,blue!70!black] (0,0)--(1.05,0)--(1.05,1)--(2.55,1)--(2.55,2)--(3.6,2)--(3.6,3)--(6.2,3)--(6.2,4)--(7.75,4);
+\foreach \x/\j in {1.05/1,2.55/2,3.6/3,6.2/4} {
+\fill[blue!70!black] (\x,\j) circle (2pt);
+\draw[fill=white,blue!70!black] (\x,{\j-1}) circle (2pt);
+\draw[densely dashed,gray] (\x,0)--(\x,\j);
+\node[below=4pt] at (\x,0) {$T_{\j}$};}
+\end{tikzpicture}
+\par\smallskip\small Przykładowa trajektoria: $N_t$ liczy zdarzenia w $(0,t]$;
+punkty pełne pokazują przyjętą prawostronną ciągłość.
+\end{center}
+
+\section{Konstrukcja ze zmiennych wykładniczych}
+\begin{definicja}[Jednorodny proces Poissona]
+Niech $\lambda>0$. \emph{Jednorodnym procesem Poissona o intensywności
+$\lambda$} nazywamy proces zliczający skonstruowany z niezależnych
+zmiennych $E_1,E_2,\ldots$ o wspólnym rozkładzie wykładniczym
+$\operatorname{Exp}(\lambda)$, czyli
+$\Prob(E_k>u)=e^{-\lambda u}$ dla $u\ge0$.
+Czasy $T_n$ nazywamy chwilami nadejścia, a $E_n$ odstępami między
+nadejściami.
+\end{definicja}
+
+Najpierw musimy sprawdzić, że konstrukcja ma sens dla wszystkich
+$t\ge0$. Nie wolno poprzestać na intuicji, że ``czasy są dodatnie'':
+suma nieskończenie wielu dodatnich liczb może być skończona.
+
+\begin{lemat}[Brak eksplozji dla stałej intensywności]
+Jeżeli $(E_n)_{n\ge1}$ są niezależnymi zmiennymi o rozkładzie
+$\operatorname{Exp}(\lambda)$, $\lambda>0$, to
+$T_n=\sum_{k=1}^n E_k\to\infty$ prawie na pewno.
+\end{lemat}
+\begin{proof}
+Ustalmy $a=1/\lambda$. Wydarzenia $A_n=\{E_n\ge a\}$ są niezależne
+i $\Prob(A_n)=e^{-1}>0$. Mamy więc
+$\sum_n\Prob(A_n)=\infty$. Drugi lemat Borela--Cantellego daje
+$\Prob(A_n\ \text{nieskończenie często})=1$. Na każdym takim
+wyniku $\omega$ nieskończenie wiele składników $E_n(\omega)$ jest
+nie mniejszych od $a$. Suma częściowa $T_n(\omega)$ jest niemalejąca
+i przekracza dowolną ustaloną wielokrotność $a$, a zatem dąży do
+nieskończoności.
+\end{proof}
+
+\begin{lemat}[Gęstość chwil nadejścia]
+Dla $\lambda>0$, $n\ge1$ i niezależnych
+$E_1,\ldots,E_n\sim\operatorname{Exp}(\lambda)$ wektor
+$(T_1,\ldots,T_n)$ ma gęstość
+\[
+(s_1,\ldots,s_n)\longmapsto
+\lambda^n e^{-\lambda s_n}\ind{\{0<s_1<\cdots<s_n\}}.
+\]
+W szczególności $T_n$ ma gęstość gamma
+$f_{T_n}(t)=\lambda^n t^{n-1}e^{-\lambda t}/(n-1)!$ dla $t>0$.
+\end{lemat}
+\begin{proof}
+Wektor $(E_1,\ldots,E_n)$ ma na dodatnim ortancie gęstość
+$\lambda^n\exp(-\lambda\sum_{k=1}^n e_k)$.
+Podstawiamy $s_k=e_1+\cdots+e_k$. Odwrotna transformacja ma postać
+$e_1=s_1$, $e_k=s_k-s_{k-1}$ dla $k\ge2$ i trójkątny jakobian
+równy $1$. Dodatniość wszystkich $e_k$ jest równoważna
+$0<s_1<\cdots<s_n$, natomiast suma $e_k$ równa się $s_n$.
+Otrzymujemy wskazaną gęstość wspólną. Dla $s_n=t$ całkujemy po
+sympleksie $0<s_1<\cdots<s_{n-1}<t$ o objętości
+$t^{n-1}/(n-1)!$, co daje gęstość $T_n$.
+\end{proof}
+
+\begin{twierdzenie}[Rozkład liczby nadejść i niezależność przyrostów]
+\label{thm:poisson-fdd}
+Niech $N$ będzie procesem Poissona o intensywności $\lambda>0$.
+Wówczas $N_0=0$ oraz dla każdego $t\ge0$ i $n\in\N_0$
+\[
+\Prob(N_t=n)=e^{-\lambda t}\frac{(\lambda t)^n}{n!}.
+\]
+Jeżeli $0=t_0<t_1<\cdots<t_m$, to przyrosty
+$N_{t_k}-N_{t_{k-1}}$, $k=1,\ldots,m$, są niezależne, a ich
+rozkłady to odpowiednio
+$\operatorname{Poisson}(\lambda(t_k-t_{k-1}))$.
+W szczególności przyrosty są stacjonarne.
+\end{twierdzenie}
+\begin{proof}
+Zdarzenie $\{N_t=n\}$ oznacza $\{T_n\le t<T_{n+1}\}$,
+przy $n=0$ rozumiane jako $\{E_1>t\}$.
+Dla $n\ge1$ po ustaleniu $0<s_1<\cdots<s_n<t$ prawdopodobieństwo,
+że następny niezależny odstęp przekracza $t-s_n$, wynosi
+$e^{-\lambda(t-s_n)}$. Wykorzystując poprzedni lemat, otrzymujemy
+gęstość wspólną $n$ kolejnych chwil nadejścia \emph{i braku następnego
+zdarzenia do chwili $t$}:
+\[
+\lambda^n e^{-\lambda s_n}e^{-\lambda(t-s_n)}
+\ind{\{0<s_1<\cdots<s_n<t\}}
+=\lambda^n e^{-\lambda t}\ind{\{0<s_1<\cdots<s_n<t\}}.
+\]
+Jej całka po sympleksie ma wartość
+$e^{-\lambda t}\lambda^n t^n/n!$. Dla $n=0$ wzór wynika
+bezpośrednio z rozkładu $E_1$.
+
+Aby udowodnić \emph{niezależność}, nie wystarczy znać każdego
+rozkładu brzegowego. Ustalmy liczby całkowite $n_1,\ldots,n_m\ge0$
+i $n=\sum_k n_k$. Warunkowo względem $N_{t_m}=n$ chwile
+$T_1,\ldots,T_n$ mają na uporządkowanym sympleksie stałą gęstość
+$n!/t_m^n$: otrzymujemy ją przez podzielenie wyliczonej przed chwilą
+gęstości wspólnej przez $\Prob(N_{t_m}=n)$.
+Jest to prawo statystyk pozycyjnych $n$ niezależnych punktów
+jednostajnych na $(0,t_m)$. Rzeczywiście, $n$ punktów
+nieuporządkowanych ma stałą gęstość $t_m^{-n}$ na
+$(0,t_m)^n$, a niemal każdy ich układ ma dokładnie $n!$
+różnych uporządkowań. Po uporządkowaniu otrzymujemy więc
+gęstość $n!/t_m^n$ na sympleksie. Z kolei przypisanie
+$n$ niezależnych punktów do $m$ przedziałów ma
+$\frac{n!}{n_1!\cdots n_m!}$ możliwych ustawień
+z określonymi licznościami $n_1,\ldots,n_m$; prawdopodobieństwo
+każdego ustawienia to iloczyn potęg ich względnych długości.
+Dlatego liczby punktów w kolejnych
+przedziałach $(t_{k-1},t_k]$ mają warunkowo rozkład wielomianowy:
+\[
+\Prob\bigl(N_{t_k}-N_{t_{k-1}}=n_k,\ 1\le k\le m
+ \mid N_{t_m}=n\bigr)
+=\frac{n!}{\prod_k n_k!}\prod_{k=1}^m
+ \left(\frac{t_k-t_{k-1}}{t_m}\right)^{n_k}.
+\]
+Mnożąc tę liczbę przez $e^{-\lambda t_m}(\lambda t_m)^n/n!$
+i rozkładając $e^{-\lambda t_m}=\prod_k e^{-\lambda(t_k-t_{k-1})}$,
+uzyskujemy
+\[
+\Prob\bigl(N_{t_k}-N_{t_{k-1}}=n_k,\ 1\le k\le m\bigr)
+=\prod_{k=1}^m e^{-\lambda(t_k-t_{k-1})}
+  \frac{[\lambda(t_k-t_{k-1})]^{n_k}}{n_k!}.
+\]
+To dokładnie iloczyn rozkładów brzegowych. Dowód zakończony.
+\end{proof}
+
+
+\begin{twierdzenie}[Dwa równoważne opisy jednorodnego procesu Poissona]
+\label{thm:poisson-reverse}
+Niech $\lambda>0$, a $N=(N_t)_{t\ge0}$ będzie procesem
+o niemalejących trajektoriach c\`adl\`ag, wartościach
+w $\N_0$, $N_0=0$ i skokach o wielkości dokładnie $1$.
+Załóżmy, że $N$ ma niezależne, stacjonarne przyrosty
+oraz $N_t\sim\operatorname{Poisson}(\lambda t)$ dla każdego
+$t\ge0$. Wtedy chwile nadejść
+$T_k:=\inf\{t\ge0:N_t\ge k\}$, $k\ge1$,
+są prawie na pewno skończone, a odstępy
+$E_k:=T_k-T_{k-1}$, $T_0=0$, są niezależne i mają
+wspólny rozkład $\operatorname{Exp}(\lambda)$.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: chwile $T_k$ istnieją i są skończone.}
+Dla każdego $k\ge1$ oraz $t\ge0$, dzięki niemalejącym
+trajektoriom i ich prawostronnej ciągłości,
+$\{T_k\le t\}=\{N_t\ge k\}$.
+W szczególności $\Prob(T_k>t)=\Prob(N_t<k)$.
+Dla ustalonego $k$ prawa strona dąży do zera, gdy
+$t\to\infty$: dla $N_t\sim\operatorname{Poisson}(\lambda t)$
+na przykład nierówność Czebyszewa daje
+$\Prob(N_t<k)\le\lambda t/(\lambda t-k)^2$
+dla $\lambda t>k$.
+Zatem każdy $T_k$ jest skończony prawie na pewno;
+przecinamy te przeliczalnie liczne zdarzenia.
+
+\emph{Krok 2: rozkłady wszystkich skończonych rodzin czasów.}
+Prawo wektora $(T_1,\ldots,T_m)$ jest wyznaczone
+przez prawdopodobieństwa
+\[
+\Prob(T_1\le t_1,\ldots,T_m\le t_m)
+=\Prob(N_{t_1}\ge1,\ldots,N_{t_m}\ge m),
+\qquad t_1,\ldots,t_m\ge0.
+\]
+Prawa strona zależy wyłącznie od rozkładów
+skończeniewymiarowych $N$. Te zaś są jednoznacznie
+wyznaczone przez $N_0=0$ oraz rozkłady niezależnych
+przyrostów: dla uporządkowanych chwil $0=t_0<t_1<\cdots<t_r$
+wektor wartości $N_{t_j}$ jest obrazem wektora
+niezależnych przyrostów $N_{t_j}-N_{t_{j-1}}$ przez
+odwzorowanie polegające na sumowaniu współrzędnych.
+
+\emph{Krok 3: porównanie z wcześniej skonstruowanym modelem.}
+W twierdzeniu~\ref{thm:poisson-fdd} skonstruowaliśmy
+proces $\widehat N$ z niezależnych odstępów
+$\widehat E_k\sim\operatorname{Exp}(\lambda)$ i wykazaliśmy,
+że ma dokładnie takie same rozkłady skończeniewymiarowe jak $N$.
+Krok 2 oznacza zatem, że dla każdego $m$
+$(T_1,\ldots,T_m)$ i $(\widehat T_1,\ldots,\widehat T_m)$
+mają te same rozkłady. Przekształcenie liniowe
+$(t_1,\ldots,t_m)\mapsto(t_1,t_2-t_1,\ldots,t_m-t_{m-1})$
+pokazuje identyczność praw wektorów
+$(E_1,\ldots,E_m)$ i $(\widehat E_1,\ldots,\widehat E_m)$.
+Drugi wektor ma rozkład produktowy
+$\operatorname{Exp}(\lambda)^{\otimes m}$.
+Ponieważ $m$ jest dowolne, wszystkie odstępy $E_k$
+są niezależne i jednakowo wykładnicze, co kończy dowód.
+\end{proof}
+
+\begin{uwaga}
+Kierunek odwrotny nie wymagał dodatkowego założenia o
+mocnej własności Markowa w losowych chwilach $T_k$.
+Najpierw porównaliśmy \emph{rozkłady skończeniewymiarowe},
+a dopiero potem wyprowadziliśmy z nich wspólne prawo
+czasów nadejść. To dobry przykład konstrukcyjnego
+użycia twierdzenia o jednoznaczności prawa procesu.
+\end{uwaga}
+
+Wynika stąd $\E N_t=\Var(N_t)=\lambda t$,
+a dla $0\le s\le t$ mamy
+$\Cov(N_s,N_t)=\Var(N_s)=\lambda s$: zapisujemy
+$N_t=N_s+(N_t-N_s)$ i korzystamy z niezależności przyrostu.
+
+\begin{uwaga}[Co dokładnie znaczy niezależność przyrostów?]
+Własność oznacza niezależność \emph{liczb zdarzeń} na rozłącznych
+przedziałach, nie niezależność $N_s$ i $N_t$. Przeciwnie,
+$N_t\ge N_s$ dla $t\ge s$ i zwykle
+$\Cov(N_s,N_t)=\lambda s>0$. Co więcej, dla ustalonych
+$t\ge0$ i $h>0$ mamy
+$\Prob(N_{t+h}-N_t=0)=e^{-\lambda h}$,
+$\Prob(N_{t+h}-N_t=1)=\lambda h+O(h^2)$
+oraz $\Prob(N_{t+h}-N_t\ge2)=O(h^2)$ przy $h\downarrow0$.
+To wyjaśnia pojęcie \emph{intensywności}: prawdopodobieństwo
+jednego nadejścia na bardzo krótkim przedziale jest w pierwszym
+przybliżeniu równe $\lambda h$.
+\end{uwaga}
+
+\section{Własność braku pamięci, filtracja i martyngał}
+\begin{stwierdzenie}[Brak pamięci rozkładu wykładniczego]
+Jeżeli $E\sim\operatorname{Exp}(\lambda)$, $\lambda>0$, to
+$\Prob(E>s+t\mid E>s)=\Prob(E>t)$ dla wszystkich $s,t\ge0$.
+Wśród rozkładów na $[0,\infty)$ o ciągłej funkcji przeżycia,
+ściśle dodatniej dla argumentów skończonych i przyjmującej wartość
+$1$ w zerze, ta własność charakteryzuje rozkład wykładniczy.
+\end{stwierdzenie}
+\begin{proof}
+Pierwsza równość wynika ze wzoru
+$e^{-\lambda(s+t)}/e^{-\lambda s}=e^{-\lambda t}$.
+Dla odwrotnego kierunku oznaczmy $g(t)=\Prob(E>t)$.
+Z własności warunkowania wynika $g(s+t)=g(s)g(t)$.
+Funkcja $h(t):=-\log g(t)$ jest ciągła, spełnia równanie
+$h(s+t)=h(s)+h(t)$ dla $s,t\ge0$ i $h(0)=0$.
+Stąd najpierw dla argumentów wymiernych, a potem przez ciągłość
+dla wszystkich $t\ge0$ otrzymujemy $h(t)=\lambda t$.
+Ponieważ $g$ jest nierosnąca, $\lambda\ge0$; aby otrzymać
+właściwy rozkład ze skończoną wartością $E$ prawie na pewno,
+musimy mieć $\lim_{t\to\infty}g(t)=0$, a więc $\lambda>0$.
+\end{proof}
+
+\begin{twierdzenie}[Proces Poissona jest procesem Markowa]
+Niech $N$ będzie procesem Poissona o intensywności $\lambda>0$,
+a $\calF_t^N:=\sigma(N_s:0\le s\le t)$ jego naturalną
+filtracją. Dla $0\le s<t$ i każdego $k\in\N_0$ zachodzi
+\[
+\Prob(N_t=N_s+k\mid\calF_s^N)
+=e^{-\lambda(t-s)}\frac{[\lambda(t-s)]^k}{k!}
+\quad\text{prawie na pewno}.
+\]
+W szczególności rozkład przyszłego stanu warunkowo względem
+całej przeszłości zależy wyłącznie od aktualnego $N_s$.
+\end{twierdzenie}
+\begin{proof}
+Z twierdzenia~\ref{thm:poisson-fdd} wynika niezależność
+$N_t-N_s$ od wszystkich wektorów
+$(N_{u_1},\ldots,N_{u_r})$ z $u_j\le s$:
+możemy każdy $N_{u_j}$ zapisać jako sumę przyrostów na podziale
+przedziału $[0,s]$ zawierającym wszystkie $u_j$.
+Klasa zdarzeń cylindrycznych wyznaczonych przez takie wektory
+jest $\pi$-układem generującym $\calF_s^N$.
+Przez twierdzenie o jednoznaczności miar (argument
+$\pi$--$\lambda$) niezależność rozciąga się na całe
+$\calF_s^N$. Zatem rozkład warunkowy przyrostu jest jego
+rozkładem bezwarunkowym, wyliczonym wcześniej.
+Ponieważ $N_t=N_s+(N_t-N_s)$, dostajemy tezę.
+\end{proof}
+
+\begin{wniosek}[Kompensowany proces Poissona]
+Dla procesu Poissona o intensywności $\lambda>0$ proces
+$M_t:=N_t-\lambda t$ jest kwadratowalnym martyngałem względem
+filtracji naturalnej $\mathbb F^N$, a
+$\E(M_t-M_s)^2=\lambda(t-s)$ dla $0\le s\le t$.
+\end{wniosek}
+\begin{proof}
+Dla $s\le t$ niezależność przyrostów daje
+$\E[N_t-N_s\mid\calF_s^N]=\lambda(t-s)$,
+więc $\E[M_t\mid\calF_s^N]=M_s$.
+Całkowalność i kwadratowalność wynikają z momentów
+rozkładu Poissona. Wreszcie
+$\E(M_t-M_s)^2=\Var(N_t-N_s)=\lambda(t-s)$.
+\end{proof}
+
+
+\begin{center}
+\begin{tikzpicture}[>=Latex,x=.95cm,y=.78cm]
+\draw[->] (0,0)--(10,0) node[right] {$t$};
+\foreach \x/\lab in {1/$T_1$,3/$T_2$,6/$T_3$,8/$T_4$}{
+  \draw[red!65!black,very thick] (\x,-.16)--(\x,.16);
+  \node[above=3pt] at (\x,.17) {\lab};
+}
+\draw[<->,blue!60!black] (1,-.52)--(3,-.52)
+ node[midway,below] {$E_2=T_2-T_1$};
+\draw[<->,blue!60!black] (3,-1.1)--(6,-1.1)
+ node[midway,below] {$E_3=T_3-T_2$};
+\node[align=left] at (5,1.05)
+ {czasy nadejść: $T_1,T_2,\ldots$\qquad odstępy: $E_1,E_2,\ldots$};
+\end{tikzpicture}
+\par\smallskip\small Oś chwil nadejścia. Zliczenia na przedziale $(s,t]$
+ zależą od liczby zaznaczonych punktów, a odstępy opisują
+ czas pomiędzy kolejnymi punktami.
+\end{center}
+
+\section{Czasy nadejść i warunkowanie na liczbie zdarzeń}
+\begin{twierdzenie}[Chwila $n$-tego zdarzenia]
+Dla $n\ge1$ w procesie Poissona z intensywnością $\lambda>0$
+czas $T_n$ ma rozkład gamma o parametrach $n$ i $\lambda$,
+przy konwencji, że drugi parametr jest intensywnością. Zachodzi
+\[
+\Prob(T_n>t)=e^{-\lambda t}\sum_{k=0}^{n-1}
+\frac{(\lambda t)^k}{k!},\qquad
+\E T_n=\frac n\lambda,\qquad \Var(T_n)=\frac n{\lambda^2}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Gęstość została wyprowadzona wcześniej. Zdarzenie
+$\{T_n>t\}$ jest identyczne ze zdarzeniem $\{N_t\le n-1\}$;
+stąd wzór na funkcję przeżycia. Ponieważ
+$T_n=E_1+\cdots+E_n$, niezależność i momenty rozkładu
+wykładniczego dają wskazane średnią i wariancję.
+\end{proof}
+
+\begin{twierdzenie}[Jednostajność chwil nadejść przy ustalonej liczbie]
+\label{thm:uniform-poisson-times}
+Niech $t>0$ i $n\ge1$. Warunkowo względem zdarzenia
+$\{N_t=n\}$ wektor $(T_1,\ldots,T_n)$ ma taki sam rozkład,
+jak uporządkowane statystyki pozycyjne $n$ niezależnych
+zmiennych o rozkładzie jednostajnym na $(0,t)$.
+W szczególności dla $0<s<t$ i $0\le k\le n$
+\[
+\Prob(N_s=k\mid N_t=n)
+=\binom nk\left(\frac{s}{t}\right)^k
+\left(1-\frac{s}{t}\right)^{n-k}.
+\]
+\end{twierdzenie}
+\begin{proof}
+W dowodzie twierdzenia~\ref{thm:poisson-fdd} otrzymaliśmy
+warunkową gęstość $n!/t^n$ na sympleksie
+$0<s_1<\cdots<s_n<t$. Dokładnie taka jest gęstość
+statystyk pozycyjnych z jednostajnego losowania
+(gęstość wspólna nieuporządkowanego wektora to $t^{-n}$,
+a każdy porządek z $n!$ ma jednakowe prawdopodobieństwo).
+Liczba wylosowanych punktów należących do $(0,s]$ jest sumą
+$n$ niezależnych zmiennych Bernoulliego z parametrem $s/t$,
+co daje wzór dwumianowy.
+\end{proof}
+
+Warto zauważyć zmianę perspektywy: bez warunkowania liczby
+nadejść w rozłącznych przedziałach są niezależne, ale po warunku
+$N_t=n$ przestają być niezależne, bo ich suma musi wynosić $n$.
+
+\begin{zadanie}[Cztery zgłoszenia w godzinę]
+Zgłoszenia pojawiają się zgodnie z procesem Poissona o
+intensywności $\lambda=4$ na godzinę. Obliczyć: (a)
+prawdopodobieństwo dokładnie trzech zgłoszeń w pierwszej godzinie;
+(b) prawdopodobieństwo, że do chwili $15$ minut nadejdzie
+przynajmniej jedno zgłoszenie; (c) prawdopodobieństwo,
+że przy dokładnie czterech zgłoszeniach w godzinie dwa z nich
+wystąpiły w pierwszych piętnastu minutach;
+(d) oczekiwany czas czwartego zgłoszenia.
+
+\emph{Rozwiązanie.} Przyjmujemy czas w godzinach.
+(a) Z rozkładu Poissona dostajemy
+$\Prob(N_1=3)=e^{-4}4^3/3!$.
+(b) Na odcinku $[0,1/4]$ oczekiwana liczba zgłoszeń wynosi
+$1$, więc $\Prob(N_{1/4}\ge1)=1-e^{-1}$.
+(c) Z twierdzenia~\ref{thm:uniform-poisson-times} liczba
+zgłoszeń w pierwszym kwadransie pod warunkiem $N_1=4$
+ma rozkład $\operatorname{Bin}(4,1/4)$; prawdopodobieństwo
+wynosi $\binom42(1/4)^2(3/4)^2=27/128$.
+(d) Suma czterech niezależnych odstępów wykładniczych ma średnią
+$4/\lambda=1$ godzinę. Średnia ta nie oznacza oczywiście, że
+czwarte zgłoszenie przychodzi dokładnie po godzinie.
+\end{zadanie}
+
+
+\begin{zadanie}[Dokładne chwile nadejść po warunkowaniu]
+Klienci przybywają według procesu Poissona o intensywności
+$\lambda>0$. Wiemy, że w ciągu dwóch godzin przybyło dokładnie
+dwóch klientów. Niech $T_1<T_2$ będą ich chwilami przybycia.
+Obliczyć $\Prob(T_1<1<T_2\mid N_2=2)$,
+$\E[T_1\mid N_2=2]$ oraz gęstość wspólną $(T_1,T_2)$
+przy tym warunku.
+
+\emph{Rozwiązanie.} Warunkowo względem $N_2=2$
+dwie chwile są statystykami pozycyjnymi dwóch niezależnych
+zmiennych o rozkładzie jednostajnym na $[0,2]$.
+Ich uporządkowana gęstość wynosi
+$f(s_1,s_2)=\frac{2!}{2^2}=\frac12$ na trójkącie
+$0<s_1<s_2<2$ i jest zerowa poza nim. Zdarzenie
+$T_1<1<T_2$ oznacza, że jedna chwila znajduje się
+w $(0,1)$, a druga w $(1,2)$; dlatego ma warunkowe
+prawdopodobieństwo $2(1/2)^2=1/2$.
+Dystrybuanta minimum dwóch zmiennych jednostajnych daje
+$\Prob(T_1>u\mid N_2=2)=(1-u/2)^2$ dla $0\le u\le2$.
+Stąd, całkując funkcję przeżycia,
+\[
+\E[T_1\mid N_2=2]
+=\int_0^2(1-u/2)^2\,\dd u=\frac23.
+\]
+Wyniki nie zależą od $\lambda$: po ustaleniu liczby nadejść
+intensywność nie wpływa na względne położenie ich chwil.
+\end{zadanie}
+
+\section{Superpozycja i rozrzedzanie}
+\begin{twierdzenie}[Superpozycja]
+Niech $N^{(1)},\ldots,N^{(r)}$ będą niezależnymi procesami
+Poissona o intensywnościach $\lambda_1,\ldots,\lambda_r>0$.
+Wtedy $N_t:=\sum_{j=1}^rN_t^{(j)}$ jest procesem Poissona
+o intensywności $\lambda:=\sum_j\lambda_j$.
+\end{twierdzenie}
+\begin{proof}
+Trajektorie sumy są niemalejące i prawostronnie ciągłe.
+W ustalonej chwili prawdopodobieństwo jednoczesnego skoku
+dwóch niezależnych procesów wynosi zero: warunkowo względem
+skończonej liczby skoków pierwszego procesu na przedziale
+$[0,m]$, ich chwile mają rozkład z gęstością;
+dla każdej deterministycznej chwili prawdopodobieństwo skoku
+drugiego procesu jest zero. Sumując po chwilach i po $m\in\N$,
+wykluczamy wspólne skoki prawie na pewno.
+
+Dla rozłącznych przedziałów przyrosty sumy są niezależne,
+ponieważ wszystkie przyrosty procesów składowych z tych
+przedziałów tworzą niezależną rodzinę. Dla pojedynczego
+przedziału długości $h$ funkcja tworząca prawdopodobieństwa
+przyrostu wynosi
+\[
+\E z^{\sum_j (N_{t+h}^{(j)}-N_t^{(j)})}
+=\prod_j e^{\lambda_j h(z-1)}
+=e^{(\sum_j\lambda_j)h(z-1)},\qquad 0\le z\le1.
+\]
+Jest to funkcja tworząca rozkładu
+$\operatorname{Poisson}(\lambda h)$; jednoznaczność
+współczynników szeregu potęgowego daje taki właśnie rozkład.
+Zatem suma spełnia charakterystykę z twierdzenia
+\ref{thm:poisson-fdd}.
+\end{proof}
+
+\begin{twierdzenie}[Niezależne rozrzedzanie]
+Niech $N$ będzie procesem Poissona o intensywności $\lambda>0$.
+Każdy jego skok, niezależnie od innych skoków i od $N$,
+oznaczmy jako typu $A$ z prawdopodobieństwem $p\in[0,1]$,
+a jako typu $B$ z prawdopodobieństwem $1-p$.
+Niech $N_t^A$ oraz $N_t^B$ zliczają odpowiednie typy do chwili $t$.
+Wtedy $N^A$ i $N^B$ są \emph{niezależnymi} procesami Poissona
+o intensywnościach $\lambda p$ i $\lambda(1-p)$
+(z konwencją, że intensywność $0$ oznacza proces zerowy).
+\end{twierdzenie}
+\begin{proof}
+Na ustalonym przedziale długości $h$, warunkowo względem
+$N_{t+h}-N_t=n$, liczba oznaczeń $A$ ma rozkład
+$\operatorname{Bin}(n,p)$, a liczba $B$ jest dopełnieniem do $n$.
+Dla $|u|,|v|\le1$ wspólna funkcja tworząca wynosi
+\[
+\E\left[u^{N^A_{t+h}-N^A_t}v^{N^B_{t+h}-N^B_t}\right]
+=\E[ (pu+(1-p)v)^{N_{t+h}-N_t}]
+=e^{\lambda h p(u-1)}e^{\lambda h(1-p)(v-1)}.
+\]
+Iloczyn wskazuje jednocześnie rozkłady Poissona i
+niezależność dwóch liczników na tym przedziale.
+Ponieważ podstawowy proces ma niezależne przyrosty, a
+oznaczenia na rozłącznych przedziałach są niezależne,
+rozumowanie stosuje się łącznie do dowolnej skończonej
+rodziny rozłącznych przedziałów. Tym samym oba powstałe
+procesy są niezależne jako rodziny zmiennych losowych,
+a nie tylko dla każdego ustalonego $t$.
+\end{proof}
+
+\begin{zadanie}[Dwa strumienie i klasyfikacja zgłoszeń]
+Przychodzą niezależne zgłoszenia z działów $A$ i $B$
+o intensywnościach odpowiednio $2$ i $3$ na godzinę.
+Dodatkowo każde zgłoszenie, niezależnie od pozostałych, jest
+pilne z prawdopodobieństwem $1/5$. Obliczyć
+prawdopodobieństwo braku pilnych zgłoszeń w ciągu dwóch godzin;
+oraz prawdopodobieństwo, że pierwsze zgłoszenie całego systemu
+pochodzi z działu $A$.
+
+\emph{Rozwiązanie.} Superpozycja daje intensywność $5$.
+Rozrzedzenie pilnych zgłoszeń ma intensywność $5/5=1$;
+w ciągu dwóch godzin liczba pilnych zgłoszeń jest więc
+$\operatorname{Poisson}(2)$, a prawdopodobieństwo zera wynosi
+$e^{-2}$.
+Pierwsze czasy nadejść z działów $A$ i $B$ są niezależne,
+$U\sim\operatorname{Exp}(2)$ i
+$V\sim\operatorname{Exp}(3)$. Zatem
+\[
+\Prob(U<V)=\int_0^\infty \Prob(V>u)\,2e^{-2u}\,\dd u
+=\int_0^\infty 2e^{-5u}\,\dd u=\frac25.
+\]
+Interpretacja: spośród wszystkich zdarzeń frakcja $2/5$
+pochodzi średnio z działu $A$, ale wynikiem jest tu
+konkretne prawdopodobieństwo typu \emph{pierwszego} zgłoszenia.
+\end{zadanie}
+
+\section{Złożony proces Poissona i kompensacja}
+\begin{definicja}[Złożony proces Poissona]
+Niech $N$ będzie procesem Poissona o intensywności $\lambda>0$,
+a $(Y_k)_{k\ge1}$ ciągiem niezależnych rzeczywistych
+zmiennych losowych o wspólnym rozkładzie, niezależnym od $N$.
+Definiujemy $S_t=\sum_{k=1}^{N_t}Y_k$,
+gdzie pusta suma wynosi zero. Proces $S$ nazywamy
+\emph{złożonym procesem Poissona}. Skok $S$ w chwili $T_k$
+ma wielkość $Y_k$.
+\end{definicja}
+
+Model ma szerokie zastosowania: wypadki występują w chwilach
+Poissona, natomiast kwota szkody jest niezależnym losowym
+\emph{znacznikiem} zdarzenia. Dla $Y_k=1$ odzyskujemy $N_t$.
+
+\begin{twierdzenie}[Moment, wariancja i funkcja charakterystyczna]
+Załóżmy w poprzedniej definicji $\E|Y_1|<\infty$.
+Wtedy $\E S_t=\lambda t\E Y_1$.
+Jeśli ponadto $\E Y_1^2<\infty$, to
+$\Var(S_t)=\lambda t\E Y_1^2$.
+Bez założeń momentowych zachodzi dla $u\in\R$
+\[
+\E e^{iuS_t}=\exp\!\bigl(\lambda t(\E e^{iuY_1}-1)\bigr).
+\]
+Przy $\E|Y_1|<\infty$ proces
+$S_t-\lambda t\E Y_1$ jest martyngałem względem
+filtracji generowanej przez zaznaczone zdarzenia do chwili $t$.
+\end{twierdzenie}
+\begin{proof}
+Warunkując względem $N_t=n$ i używając niezależności znaczników,
+uzyskujemy $\E[S_t\mid N_t=n]=n\E Y_1$,
+$\Var(S_t\mid N_t=n)=n\Var(Y_1)$ i
+$\E[e^{iuS_t}\mid N_t=n]=(\E e^{iuY_1})^n$.
+Po uśrednieniu pierwsza równość jest oczywista. Ze wzoru
+na wariancję całkowitą wynika
+\begin{align*}
+\Var(S_t)&=\E[N_t\Var(Y_1)]
+ +\Var(N_t\E Y_1)\\
+&=\lambda t\bigl(\Var(Y_1)+(\E Y_1)^2\bigr)
+=\lambda t\E Y_1^2.
+\end{align*}
+Uśrednienie funkcji charakterystycznej wykorzystuje szereg
+$\sum_{n\ge0}e^{-\lambda t}(\lambda t)^n z^n/n!
+=e^{\lambda t(z-1)}$.
+Przyrosty $S_t-S_s$ są niezależne od informacji do chwili $s$
+i mają średnią $\lambda(t-s)\E Y_1$:
+wynika to z niezależnych przyrostów procesu Poissona i z faktu,
+że znaczniki przyszłych zdarzeń są niezależne od przeszłych.
+Stąd właściwość martyngałowa po odjęciu deterministycznej średniej.
+\end{proof}
+
+\section{Niejednorodny proces Poissona}
+Stała intensywność jest wygodna, ale liczba zgłoszeń w ciągu
+dnia na ogół zależy od godziny. Następująca konstrukcja pokazuje,
+że zmienna intensywność nie wymaga zmiany podstawowych idei.
+
+\begin{definicja}[Proces Poissona z deterministyczną intensywnością]
+Niech $a:[0,\infty)\to[0,\infty)$ będzie funkcją borelowską,
+całkowalną na każdym przedziale $[0,t]$. Oznaczmy
+$A(t)=\int_0^t a(s)\,\dd s$.
+Jeżeli $\widetilde N$ jest standardowym procesem Poissona
+o intensywności $1$, to proces $N_t=\widetilde N_{A(t)}$
+nazywamy \emph{niejednorodnym procesem Poissona o intensywności $a$}.
+\end{definicja}
+
+\begin{stwierdzenie}
+Dla procesu z poprzedniej definicji i $0\le s<t$ przyrost
+$N_t-N_s$ ma rozkład
+$\operatorname{Poisson}(\int_s^t a(u)\,\dd u)$, a przyrosty
+na rozłącznych przedziałach są niezależne. Ponadto
+$\Prob(N_t-N_s=0)=\exp(-\int_s^t a(u)\,\dd u)$.
+\end{stwierdzenie}
+\begin{proof}
+Funkcja $A$ jest ciągła i niemalejąca, a
+$A(t)-A(s)=\int_s^t a(u)\,\dd u$.
+Stąd $N_t-N_s=\widetilde N_{A(t)}-\widetilde N_{A(s)}$.
+Przedziały obrazowe $[A(s),A(t)]$ odpowiadające rozłącznym
+przedziałom czasu mają rozłączne wnętrza; przedziały o
+zerowej długości dają zerowe przyrosty. Zatem po zastosowaniu
+niezależnych i stacjonarnych przyrostów $\widetilde N$
+dostajemy wszystkie tezy.
+\end{proof}
+
+\begin{przyklad}[Intensywność sezonowa]
+Niech $a(t)=2+t$ dla $0\le t\le2$ i $a(t)=4$ dla $t>2$.
+W ciągu pierwszej godziny średnia liczba zdarzeń wynosi
+$A(1)=\int_0^1(2+s)\,\dd s=5/2$,
+a prawdopodobieństwo braku zgłoszeń jest $e^{-5/2}$.
+Pomiędzy godziną pierwszą a drugą średnia przyrostu
+wynosi $A(2)-A(1)=7/2$. Obie liczby zdarzeń są niezależne,
+choć ich rozkłady nie są jednakowe: przyrosty pozostają
+niezależne, ale przestają być stacjonarne.
+\end{przyklad}
+
+\section{Charakterystyka przez przyrosty i zdarzenia rzadkie}
+Dotychczas budowaliśmy proces Poissona z czasów wykładniczych.
+Można jednak rozpocząć od modelowania zliczeń w krótkich
+przedziałach. Poniższy wynik uzasadnia tę drogę konstrukcji.
+
+\begin{twierdzenie}[Charakterystyka procesu Poissona przez małe przyrosty]
+\label{thm:poisson-infinitesimal}
+Niech $N=(N_t)_{t\ge0}$ będzie procesem o wartościach
+w $\N_0$, $N_0=0$, z niezależnymi i stacjonarnymi
+nieujemnymi przyrostami. Załóżmy, że istnieje $\lambda>0$
+takie, iż przy $h\downarrow0$
+\[
+\Prob(N_h=1)=\lambda h+o(h),\qquad
+\Prob(N_h\ge2)=o(h).
+\]
+Wtedy dla każdego $t\ge0$ zachodzi
+$N_t\sim\operatorname{Poisson}(\lambda t)$,
+a rozkłady skończeniewymiarowe $N$ są takie same jak
+rozkłady procesu Poissona o intensywności $\lambda$.
+Jeżeli ponadto $N$ ma niemalejące trajektorie c\`adl\`ag,
+to proces ten ma prawo procesu Poissona także jako
+zmienna losowa w przestrzeni trajektorii c\`adl\`ag.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $z\in[0,1]$ i funkcję tworzącą
+$G_t(z)=\E z^{N_t}$, przyjmując $0^0=1$.
+Z niezależnych i stacjonarnych przyrostów wynika
+$G_{t+h}(z)=G_t(z)G_h(z)$. Ponieważ
+$\Prob(N_h=0)=1-\lambda h+o(h)$, a wkład stanów
+$N_h\ge2$ do $G_h(z)$ ma moduł nie większy niż
+$\Prob(N_h\ge2)=o(h)$, otrzymujemy
+\[
+G_h(z)=1+\lambda h(z-1)+o(h).
+\]
+Zatem dla $t\ge0$ pochodna prawostronna spełnia
+\[
+\frac{\partial}{\partial t^+}G_t(z)
+=\lim_{h\downarrow0}G_t(z)\frac{G_h(z)-1}{h}
+=\lambda(z-1)G_t(z).
+\]
+Dodatkowo z $\Prob(N_h=0)\to1$ oraz niezależnych przyrostów
+wynika ciągłość $t\mapsto G_t(z)$: z prawej na mocy
+$G_{t+h}=G_tG_h$, a z lewej, dla $0<h\le t$,
+$G_t=G_{t-h}G_h$ i $G_h\to1$; ponieważ
+$0\le G_{t-h}\le1$, różnica dąży do zera.
+Funkcja ciągła z ciągłą pochodną prawostronną zadaną
+powyższym równaniem ma jego zwykłe rozwiązanie,
+co można sprawdzić dla
+$H_t=e^{-\lambda(z-1)t}G_t(z)$:
+jej pochodna prawostronna znika w każdym punkcie,
+a więc $H$ jest stała (wynika to z twierdzenia
+o wartości średniej w wersji dla pochodnych jednostronnych,
+lub z zastosowania argumentu o ekstremum do
+$H_t\pm\varepsilon t$). Ponieważ $G_0(z)=1$,
+\[
+G_t(z)=e^{\lambda t(z-1)}.
+\]
+Współczynniki szeregu potęgowego są równe
+$e^{-\lambda t}(\lambda t)^n/n!$, co daje rozkład Poissona.
+Ponieważ przyrosty są niezależne i stacjonarne,
+wszystkie rozkłady skończeniewymiarowe są wyznaczone
+przez właśnie otrzymane rozkłady pojedynczych przyrostów.
+Dla procesów c\`adl\`ag na przestrzeni $D([0,\infty),\N_0)$
+rozkłady skończeniewymiarowe wyznaczają prawo procesu
+(jego borelowską $\sigma$-algebrę generują współrzędne),
+co kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Rozrzedzony schemat Bernoulliego]
+Ustalmy $t>0$ i rozważmy $m$ niezależnych prób
+na siatce $t/m,2t/m,\ldots,t$, z prawdopodobieństwem
+sukcesu $\lambda t/m$ w każdej próbie (dla dostatecznie
+dużych $m$). Liczba sukcesów ma rozkład
+$\operatorname{Bin}(m,\lambda t/m)$.
+Dla ustalonego $k\ge0$ jej prawdopodobieństwo wynosi
+\[
+\binom mk\left(\frac{\lambda t}{m}\right)^k
+\left(1-\frac{\lambda t}{m}\right)^{m-k}
+\longrightarrow e^{-\lambda t}\frac{(\lambda t)^k}{k!}.
+\]
+Granica wynika z
+$\binom mk/m^k\to1/k!$ i
+$(1-\lambda t/m)^m\to e^{-\lambda t}$.
+Dla wszystkich rozłącznych odcinków siatki liczby
+sukcesów są niezależne; analogicznie otrzymujemy
+zbieżność ich wspólnych rozkładów do niezależnych
+przyrostów Poissona. Jest to matematyczne wyjaśnienie,
+dlaczego rozkład Poissona naturalnie opisuje wiele
+niezależnych, rzadkich zdarzeń.
+\end{przyklad}
+
+\section{Co wynika z modelu, a czego model nie mówi?}
+Rozkład Poissona nie jest uniwersalnym opisem każdego
+zliczania. Jeśli nadejście klienta zwiększa lub zmniejsza
+szansę kolejnego nadejścia, niezależność przyrostów jest
+nieadekwatna. Jeśli urządzenie ma okres refrakcji, to
+bardzo krótkie odstępy między zdarzeniami nie są wykładnicze.
+Na dalszych stronach uogólnimy ideę zliczania przez
+\emph{intensywności zależne od stanu}. Otrzymamy łańcuchy
+Markowa w czasie ciągłym, których czasy oczekiwania będą
+nadal wykładnicze, ale ich parametry będą zmieniać się
+po każdym skoku procesu.
+% ================================================================
+% TOM II. ROZDZIAŁ 5
+% ================================================================

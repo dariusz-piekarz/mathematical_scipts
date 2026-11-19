@@ -1,0 +1,924 @@
+\chapter{Proces Wienera: własności probabilistyczne i geometria trajektorii}
+\label{ch:wiener}
+\paragraph{Odsyłacze międzytomowe.} Rachunek całkowy względem Wienera zaczyna się w tomie III, rozdziale~\ref{III-ch:wiener-integral}; zastosowania symulacyjne znajdują się w tomie IV, rozdziale~\ref{IV-ch:monte-carlo}.
+
+
+\section{Od sum niezależnych przyrostów do ruchu Browna}
+Rozważmy błąd pomiaru, który narasta jako suma bardzo wielu drobnych,
+w przybliżeniu niezależnych zakłóceń. W granicy czasowej spodziewamy
+się procesu o przyrostach gaussowskich, którego wariancja rośnie
+proporcjonalnie do długości przedziału. Tak powstaje matematyczna
+motywacja standardowego procesu Wienera, czyli ruchu Browna.
+Dla każdego $t$ mamy rozkład normalny, ale znacznie silniejszy
+jest warunek \emph{niezależności przyrostów na rozłącznych
+przedziałach}. To właśnie on odróżnia Wienera od dowolnego
+procesu gaussowskiego.
+
+\begin{definicja}[Standardowy proces Wienera]
+Niech $(\Omega,\calF,\Prob)$ będzie przestrzenią probabilistyczną.
+Proces rzeczywisty $W=(W_t)_{t\ge0}$ nazywamy
+\emph{standardowym procesem Wienera} (\emph{standardowym ruchem Browna}),
+jeżeli:
+\begin{enumerate}
+\item $W_0=0$ prawie na pewno;
+\item jego trajektorie $t\mapsto W_t(\omega)$ są ciągłe dla prawie
+wszystkich $\omega$;
+\item dla dowolnych $0\le t_0<t_1<\cdots<t_n$ przyrosty
+$W_{t_1}-W_{t_0},\ldots,W_{t_n}-W_{t_{n-1}}$
+są wzajemnie niezależne;
+\item $W_t-W_s\sim\Normal(0,t-s)$ dla wszystkich $0\le s<t$.
+\end{enumerate}
+Jeżeli ponadto zadano filtrację $(\calF_t)_{t\ge0}$, to $W$
+nazywamy procesem Wienera \emph{względem tej filtracji},
+gdy jest do niej adaptowany oraz $W_t-W_s$ jest niezależny
+od $\calF_s$ dla wszystkich $s<t$.
+\end{definicja}
+
+Rozdział~\ref{ch:konstrukcja} dowiódł już istnienia takiego
+procesu na pewnej przestrzeni probabilistycznej.
+W dalszym ciągu możemy bez straty ogólności przyjąć,
+że wszystkie jego trajektorie są ciągłe: modyfikujemy proces
+na jednym zbiorze zerowym, przypisując na nim trajektorię zerową.
+Takie ustalenie nie zmienia rozkładów skończeniewymiarowych.
+
+\begin{twierdzenie}[Równoważna charakteryzacja gaussowska]
+Niech $X=(X_t)_{t\ge0}$ będzie rzeczywistym procesem
+o prawie na pewno ciągłych trajektoriach. Wówczas $X$
+jest standardowym procesem Wienera wtedy i tylko wtedy,
+gdy jest procesem gaussowskim i dla wszystkich $s,t\ge0$
+zachodzi
+\[
+\E X_t=0,\qquad \Cov(X_s,X_t)=\min(s,t).
+\]
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $X=W$ jest procesem Wienera, to dla
+$0=t_0<t_1<\cdots<t_n$ wektor $(W_{t_1},\ldots,W_{t_n})$
+jest liniowym obrazem wektora niezależnych przyrostów normalnych,
+więc jest gaussowski. Przy $s\le t$ korzystamy z rozkładu
+$W_t=W_s+(W_t-W_s)$ oraz niezależności przyrostu od $W_s$:
+$\Cov(W_s,W_t)=\Var(W_s)=s$. Średnie wynoszą zero.
+
+Odwrotnie, $\Var(X_0)=K(0,0)=0$ i $\E X_0=0$,
+a więc $X_0=0$ p.n. Dla $s<t$
+$\Var(X_t-X_s)=t+s-2s=t-s$ i średnia przyrostu
+jest zero. Jeżeli $[a,b]$ i $[c,d]$ są rozłączne oraz $b\le c$,
+to $\Cov(X_b-X_a,X_d-X_c)=0$, co wynika z podstawienia
+czterech wartości funkcji $\min(\cdot,\cdot)$.
+Dowolne skończone rodziny takich przyrostów są wspólnie
+gaussowskie, zatem ich zerowe kowariancje oznaczają niezależność.
+Dostajemy wszystkie punkty definicji.
+\end{proof}
+
+\begin{przyklad}[Rozkład kilku obserwacji]
+Dla $0<s<t$ wektor $(W_s,W_t)$ jest normalny dwuwymiarowo
+ze średnią zero i macierzą kowariancji
+$\left(\begin{smallmatrix}s&s\\s&t\end{smallmatrix}\right)$.
+Jego współrzędne są zależne: $\Cov(W_s,W_t)=s$.
+Jednak $W_s$ i $W_t-W_s$ są niezależne.
+Dla $0<t_1<t_2<t_3$ mamy na przykład
+\[
+\Prob(W_{t_3}-W_{t_2}>a\mid W_{t_1}=x)
+=1-\Phi\left(\frac{a}{\sqrt{t_3-t_2}}\right),
+\]
+gdzie równość rozumiana jest jako odpowiednia wersja
+regularnego prawdopodobieństwa warunkowego.
+Warunek na $W_{t_1}$ nie wpływa na późniejszy rozłączny przyrost.
+Nie należy tego mylić z pytaniem o rozkład $W_{t_3}$,
+który oczywiście zależy od stanu w chwili $t_1$.
+\end{przyklad}
+
+\section{Skalowanie, symetria i niezależność przyszłości}
+\begin{twierdzenie}[Symetrie i samopodobieństwo]
+Niech $W$ będzie procesem Wienera, a $c>0$.
+Procesy $(c^{-1/2}W_{ct})_{t\ge0}$ i
+$(-W_t)_{t\ge0}$ mają to samo prawo na przestrzeni
+ciągłych trajektorii co $W$. Dla każdego $T>0$ proces
+$(W_T-W_{T-t})_{0\le t\le T}$ ma prawo procesu Wienera
+ograniczonego do $[0,T]$.
+\end{twierdzenie}
+\begin{proof}
+Każdy z wymienionych procesów ma ciągłe trajektorie,
+wartość początkową zero i jest gaussowski.
+Dla pierwszego procesu kowariancja wynosi
+$c^{-1}\min(cs,ct)=\min(s,t)$; dla drugiego
+jest taka sama. Dla trzeciego, gdy $0\le s\le t\le T$,
+przyrosty $W_T-W_{T-s}$ oraz $W_T-W_{T-t}$ mają
+kowariancję $s$: wspólnym składnikiem są przyrosty
+na przedziale $[T-s,T]$. Z poprzedniego twierdzenia
+i jednoznaczności prawa procesu otrzymujemy tezy.
+\end{proof}
+
+\begin{uwaga}[Jak rozumieć skalowanie?]
+Jeśli skala czasu rośnie $c$ razy, typowe wychylenie
+rośnie $\sqrt c$ razy, a nie $c$ razy.
+To odpowiada zależności $\Var(W_t)=t$.
+Samopodobieństwo stanowi podstawę późniejszej zasady
+niezmienniczości Donskera, wiążącej spacery losowe z
+ruchem Browna.
+\end{uwaga}
+
+\begin{twierdzenie}[Własność Markowa i półgrupa przejścia]
+Niech $W$ będzie procesem Wienera względem filtracji
+$(\calF_t)_{t\ge0}$. Dla dowolnych $s,t\ge0$
+i ograniczonej mierzalnej funkcji $f:\R\to\R$ zachodzi
+\[
+\E[f(W_{s+t})\mid\calF_s]
+=(P_tf)(W_s),\qquad
+(P_tf)(x):=\int_\R f(x+y)p_t(y)\,\dd\lambda_1(y),
+\]
+gdzie $p_t(y)=(2\pi t)^{-1/2}\exp(-y^2/(2t))$ dla $t>0$,
+a $P_0f=f$. Ponadto $P_{s+t}=P_sP_t$.
+\end{twierdzenie}
+\begin{proof}
+Zapiszmy $W_{s+t}=W_s+Z$, gdzie $Z=W_{s+t}-W_s$
+jest niezależna od $\calF_s$ i ma rozkład $\Normal(0,t)$.
+Dla funkcji $f(x)=\ind{\{x\in A\}}$ własność
+warunkowania niezależnej zmiennej daje żądany wzór.
+Przez liniowość uzyskujemy go dla funkcji prostych, a
+następnie przez zbieżność monotoniczną i rozkład na
+części dodatnią i ujemną dla wszystkich ograniczonych
+funkcji mierzalnych.
+Aby udowodnić własność półgrupy, bierzemy niezależne
+$Z_s\sim\Normal(0,s)$ i $Z_t\sim\Normal(0,t)$.
+Ich suma ma rozkład $\Normal(0,s+t)$. Stąd
+$P_s(P_tf)(x)=\E f(x+Z_s+Z_t)=P_{s+t}f(x)$;
+przejścia $s=0$ lub $t=0$ są oczywiste.
+\end{proof}
+
+\section{Mocna własność Markowa: można zacząć od losowej chwili}
+Dla deterministycznej chwili $s$ przyszły przyrost
+$W_{s+t}-W_s$ jest niezależny od $\calF_s$.
+Prawdziwie nowa treść pojawia się przy \emph{losowej}
+chwili $\tau$, np. pierwszym trafieniu w poziom $a$.
+Nie można po prostu podstawić $s=\tau(\omega)$ w definicji
+niezależności: musimy najpierw przybliżyć czas losowy
+czasami przyjmującymi przeliczalnie wiele wartości.
+
+\begin{twierdzenie}[Mocna własność Markowa procesu Wienera]
+Niech $W$ będzie procesem Wienera względem filtracji
+$(\calF_t)_{t\ge0}$, a $\tau$ niech będzie względem niej
+czasem zatrzymania takim, że $\Prob(\tau<\infty)=1$.
+Wtedy proces $(W_{\tau+t}-W_\tau)_{t\ge0}$ jest
+standardowym procesem Wienera i jest niezależny od
+sigma-ciała $\calF_\tau$.
+\end{twierdzenie}
+\begin{proof}
+Dla $n\ge1$ niech $h_n=2^{-n}$ i
+$\tau_n=h_n\lceil\tau/h_n\rceil$.
+Ponieważ $\{\tau_n\le t\}$ jest zdarzeniem określonym
+przez warunek $\{\tau\le h_n\lfloor t/h_n\rfloor\}$,
+czas $\tau_n$ jest czasem zatrzymania, przyjmuje wartości
+w siatce $h_n\N_0$, spełnia $\tau\le\tau_n<\tau+h_n$
+i zbiega do $\tau$ prawie na pewno.
+
+Niech $A\in\calF_\tau$. Z nierówności $\tau\le\tau_n$
+wynika $A\in\calF_{\tau_n}$. Ustalmy
+$0\le t_1<\cdots<t_m$ i $u=(u_1,\ldots,u_m)\in\R^m$.
+Dla zdarzenia $A\cap\{\tau_n=kh_n\}\in\calF_{kh_n}$
+niezależność przyrostów po chwili $kh_n$ od tej
+sigma-algebry daje
+\begin{align*}
+&\E\left[\ind{A\cap\{\tau_n=kh_n\}}
+\exp\left(i\sum_{j=1}^m u_j(W_{\tau_n+t_j}-W_{\tau_n})\right)\right]\\
+&\qquad=\Prob(A\cap\{\tau_n=kh_n\})
+\exp\left(-\frac12\sum_{j,l=1}^m u_ju_l\min(t_j,t_l)\right).
+\end{align*}
+Sumujemy po $k\ge0$; jest to dozwolone przez
+zbieżność zdominowaną, gdyż moduł każdego czynnika
+wykładniczego nie przekracza $1$. Otrzymujemy
+\[
+\E\left[\ind A\exp\left(i\sum_j u_j
+(W_{\tau_n+t_j}-W_{\tau_n})\right)\right]
+=\Prob(A)\exp\left(-\frac12\sum_{j,l}
+ u_ju_l\min(t_j,t_l)\right).
+\]
+Ciągłość trajektorii i $\tau_n\to\tau$ zapewniają
+$W_{\tau_n+t_j}-W_{\tau_n}\to W_{\tau+t_j}-W_\tau$
+prawie na pewno. Ponownie stosujemy zbieżność zdominowaną.
+Otrzymana równość dla wszystkich $u$ oznacza, z jednoznaczności
+funkcji charakterystycznych, że wektor przyszłych przyrostów
+ma standardowy rozkład gaussowski i jest niezależny
+od każdego $A\in\calF_\tau$. Niezależność
+całej ciągłej trajektorii od $\calF_\tau$ wynika z faktu,
+że borelowskie sigma-ciało przestrzeni ciągłych trajektorii
+jest generowane przez odczyty w chwilach wymiernych.
+Ciągłość przyszłych trajektorii wynika z ciągłości $W$.
+\end{proof}
+
+\begin{przyklad}[Co znaczy ``zapominanie'' w losowej chwili?]
+Niech $a>0$ i $\tau_a=\inf\{t\ge0:W_t=a\}$.
+Na zdarzeniu $\{\tau_a<\infty\}$ obserwator zna
+całą przeszłą drogę oraz fakt, że cząstka właśnie dotarła
+do $a$. Mocna własność Markowa mówi, że przyszły \emph{przyrost}
+$W_{\tau_a+t}-a$ jest niezależnym, nowym ruchem Browna.
+Nie oznacza to niezależności samego położenia $W_{\tau_a+t}$
+od $W_{\tau_a}$, bo położenie zawiera znany punkt startowy.
+\end{przyklad}
+
+\section{Regularność trajektorii: ciągłość bez gładkości}
+Dla ustalonych $s<t$ przyrost ma skalę $\sqrt{t-s}$,
+a nie $t-s$. Ta pozornie drobna różnica ma zasadniczy
+skutek: trajektorie są ciągłe, ale prawie na pewno nie
+mają pochodnej w żadnym punkcie.
+
+\begin{twierdzenie}[Regularność H\"oldera poniżej $1/2$]
+Dla każdego $T>0$ i standardowego procesu Wienera $W$
+zachodzi z prawdopodobieństwem $1$: dla każdego
+$\gamma\in(0,1/2)$ istnieje losowa stała
+$C_{\gamma,T}(\omega)<\infty$ taka, że
+\[
+|W_t(\omega)-W_s(\omega)|
+\le C_{\gamma,T}(\omega)|t-s|^\gamma,
+\qquad s,t\in[0,T].
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla każdego $p>2$ i $s,t\in[0,T]$ mamy
+$\E|W_t-W_s|^p=c_p|t-s|^{p/2}$.
+Kryterium ciągłości Kołmogorowa daje modyfikację
+o trajektoriach H\"oldera każdego rzędu
+$\gamma<1/2-1/p$. Ponieważ zarówno $W$, jak i ta
+modyfikacja mają ciągłe trajektorie, są nierozróżnialne;
+możemy więc przypisać tę własność $W$.
+Wybierając przeliczalny ciąg $p_k\to\infty$,
+przecinamy zbiory o prawdopodobieństwie $1$ i
+otrzymujemy jednocześnie wszystkie $\gamma<1/2$.
+\end{proof}
+
+\section{Wariacja kwadratowa: niezwykła wielkość trajektorii}
+Dla gładkiej funkcji $f$ i podziałów o coraz mniejszej
+średnicy suma kwadratów przyrostów $\sum(\Delta f)^2$
+dąży do zera. Dla Wienera dzieje się coś innego:
+suma ta dąży do długości przedziału. To najważniejszy
+mechanizm odróżniający rachunek Itô od klasycznego.
+
+\begin{twierdzenie}[Wariacja kwadratowa procesu Wienera]
+Niech $W$ będzie standardowym procesem Wienera, $T>0$, zaś
+$\pi_n=\{0=t_{0,n}<\cdots<t_{m_n,n}=T\}$
+ciągiem deterministycznych podziałów $[0,T]$ o średnicy
+$|\pi_n|:=\max_k(t_{k+1,n}-t_{k,n})\to0$.
+Wówczas
+\[
+Q(\pi_n):=\sum_{k=0}^{m_n-1}
+(W_{t_{k+1,n}}-W_{t_{k,n}})^2
+\longrightarrow T\quad\text{w }L^2.
+\]
+Jeżeli $\pi_n$ jest podziałem dyadycznym, to zbieżność
+zachodzi również prawie na pewno.
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy $\Delta_{k,n}=W_{t_{k+1,n}}-W_{t_{k,n}}$
+oraz $h_{k,n}=t_{k+1,n}-t_{k,n}$.
+Przyrosty są niezależne, $\Delta_{k,n}\sim\Normal(0,h_{k,n})$,
+a $\E\Delta_{k,n}^2=h_{k,n}$ i
+$\E\Delta_{k,n}^4=3h_{k,n}^2$. Zatem
+$\Var(\Delta_{k,n}^2)=2h_{k,n}^2$.
+Dzięki niezależności
+\[
+\E Q(\pi_n)=\sum_k h_{k,n}=T,
+\qquad
+\E\bigl|Q(\pi_n)-T\bigr|^2
+=2\sum_k h_{k,n}^2\le 2T|\pi_n|\to0.
+\]
+Dla siatek dyadycznych $|\pi_n|=T2^{-n}$.
+Nierówność Czebyszewa daje, dla każdego $\varepsilon>0$,
+$\Prob(|Q(\pi_n)-T|>\varepsilon)
+\le 2T^2 2^{-n}/\varepsilon^2$.
+Suma po $n$ jest skończona, więc z pierwszego lematu
+Borela--Cantellego odchylenie większe niż $\varepsilon$
+występuje tylko skończenie wiele razy prawie na pewno.
+Stosując to do $\varepsilon=1,1/2,1/3,\ldots$
+i przecinając przeliczalnie wiele zdarzeń pełnej miary,
+uzyskujemy $Q(\pi_n)\to T$ p.n.
+\end{proof}
+
+\begin{wniosek}[Jednostajna zbieżność wariacji kwadratowej]
+Dla podziałów dyadycznych $t_{k,n}=kT2^{-n}$
+zdefiniujmy dla $t\in[0,T]$
+\[
+Q_n(t)=\sum_{k=0}^{2^n-1}
+\bigl(W_{t\wedge t_{k+1,n}}-W_{t\wedge t_{k,n}}\bigr)^2.
+\]
+Wówczas $\sup_{0\le t\le T}|Q_n(t)-t|\to0$
+prawie na pewno.
+\end{wniosek}
+\begin{proof}
+Niech $h=T2^{-n}$ i
+$Y_{k,n}=(W_{(k+1)h}-W_{kh})^2-h$.
+Zmienne $Y_{k,n}$ są niezależne, wycentrowane i
+$\sum_k\Var Y_{k,n}=2Th$.
+Nierówność maksymalna Kołmogorowa daje
+\[
+\Prob\left(\max_{0\le j\le 2^n}
+\left|\sum_{k<j}Y_{k,n}\right|>\varepsilon\right)
+\le \frac{2Th}{\varepsilon^2}.
+\]
+Prawa strona jest sumowalna po $n$, więc maksimum
+sum cząstkowych dąży do zera p.n. Gdy
+$t\in[jh,(j+1)h]$, różnica między $Q_n(t)-t$
+a sumą $\sum_{k<j}Y_{k,n}$ jest równa
+$(W_t-W_{jh})^2-(t-jh)$. Jej moduł nie przekracza
+$\max_j\sup_{u\in[jh,(j+1)h]}|W_u-W_{jh}|^2+h$.
+Ta wielkość dąży do zera p.n. z jednostajnej
+ciągłości trajektorii $W$ na $[0,T]$.
+Połączenie obu oszacowań dowodzi tezy.
+\end{proof}
+
+\begin{wniosek}[Trajektorie nie mają skończonej wariacji całkowitej]
+Dla każdego $T>0$ trajektorie $t\mapsto W_t(\omega)$
+mają z prawdopodobieństwem $1$ nieskończoną wariację
+całkowitą na $[0,T]$. Prawie na pewno jest tak nawet
+na każdym przedziale o dodatniej długości.
+\end{wniosek}
+\begin{proof}
+Gdyby pewna ciągła trajektoria $w$ miała skończoną
+wariację całkowitą $V$, to dla dowolnego podziału
+$\sum_k(w(t_{k+1})-w(t_k))^2
+\le\max_k|w(t_{k+1})-w(t_k)|\,V$.
+Jednostajna ciągłość $w$ zapewnia zbieżność maksimum
+przyrostów do zera wraz ze średnicą podziału.
+Stąd suma kwadratów dążyłaby do zera, co przeczy
+poprzedniemu twierdzeniu, dającemu granicę $T>0$.
+Aby uzyskać twierdzenie dla wszystkich nietrywialnych
+przedziałów jednocześnie, stosujemy ten sam dowód do
+przedziałów o wymiernych końcach i przecinamy
+przeliczalnie wiele zbiorów pełnej miary.
+Każdy przedział o dodatniej długości zawiera taki
+wymierny podprzedział; wariacja na większym przedziale
+nie może być mniejsza od wariacji na mniejszym.
+\end{proof}
+
+\begin{przyklad}[Dlaczego lewy i środkowy punkt przedziału dają inne całki?]
+Niech $t_k=kT/n$. Tożsamość algebraiczna
+$W_{t_{k+1}}^2-W_{t_k}^2
+=2W_{t_k}\Delta_kW+(\Delta_kW)^2$
+daje
+\[
+\sum_{k=0}^{n-1}W_{t_k}(W_{t_{k+1}}-W_{t_k})
+=\frac12W_T^2-\frac12\sum_{k=0}^{n-1}(\Delta_kW)^2
+\longrightarrow \frac12(W_T^2-T)
+\quad\text{w }L^2.
+\]
+Z kolei suma z uśrednieniem wartości na końcach
+$\frac12(W_{t_k}+W_{t_{k+1}})$ spełnia
+\[
+\sum_{k=0}^{n-1}\frac{W_{t_k}+W_{t_{k+1}}}{2}
+ (W_{t_{k+1}}-W_{t_k})=\frac12W_T^2
+\]
+\emph{dokładnie} dla każdego $n$.
+To algebraiczny początek rozróżnienia całki Itô i
+Stratonovicha. Pełna konstrukcja obu całek pojawi
+się w części o rachunku stochastycznym.
+\end{przyklad}
+
+\section{Dlaczego ruch Browna nie ma pochodnej?}
+Brak skończonej wariacji całkowitej na każdym przedziale nie
+wyklucza jeszcze pochodnej w pojedynczym punkcie. Potrzebny
+jest silniejszy argument. Pokażemy, że na drobnej siatce
+prawdopodobieństwo wystąpienia choćby trzech \emph{jednocześnie
+bardzo małych} kolejnych przyrostów maleje wystarczająco szybko.
+Gdyby trajektoria miała pochodną, takie trzy małe przyrosty
+musiałyby się regularnie pojawiać blisko punktu różniczkowalności.
+
+\begin{twierdzenie}[Nieróżniczkowalność trajektorii Wienera]
+Niech $W$ będzie standardowym procesem Wienera i $T>0$.
+Wówczas z prawdopodobieństwem $1$ trajektoria
+$t\mapsto W_t(\omega)$ nie jest różniczkowalna
+w żadnym punkcie $t\in(0,T)$ i nie ma skończonej
+pochodnej jednostronnej w punktach $0,T$.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy liczbę całkowitą $M\ge1$ i siatkę dyadyczną
+o kroku $h_n=T2^{-n}$. Niech $A_n(M)$ oznacza zdarzenie,
+że istnieje $k\in\{0,\ldots,2^n-3\}$, dla którego
+trzy kolejne przyrosty
+$\Delta_{k,n}W,\Delta_{k+1,n}W,\Delta_{k+2,n}W$
+mają moduł nie większy niż $8Mh_n$.
+Każdy z tych przyrostów ma rozkład $\Normal(0,h_n)$,
+a są one niezależne. Z oszacowania gęstości standardowej
+normalnej przez $1/\sqrt{2\pi}$ dostajemy
+\[
+\Prob(|\Delta_{k,n}W|\le8Mh_n)
+=\Prob(|G|\le8M\sqrt{h_n})
+\le \frac{16M}{\sqrt{2\pi}}\sqrt{h_n}.
+\]
+Stąd, z niezależności trzech przyrostów i sumowania
+prawdopodobieństw po najwyżej $T/h_n$ pozycjach,
+\[
+\Prob(A_n(M))\le C\,M^3T\sqrt{h_n},
+\]
+gdzie $C$ jest stałą liczbową. Szereg po $n$ jest zbieżny,
+więc lemat Borela--Cantellego daje
+$\Prob(A_n(M)\text{ nieskończenie często})=0$.
+
+Przypuśćmy teraz, że ciągła trajektoria $w$ ma skończoną
+pochodną w pewnym $t\in(0,T)$. Z definicji pochodnej
+istnieją $M\in\N$ i $\delta>0$ takie, że
+$|w(s)-w(t)|\le M|s-t|$ dla $|s-t|<\delta$.
+Dla dostatecznie dużego $n$ istnieje $k$ z
+$kh_n\le t<(k+1)h_n$, a punkty
+$kh_n,(k+1)h_n,(k+2)h_n,(k+3)h_n$
+leżą w $(t-\delta,t+\delta)\cap[0,T]$.
+Dla $j=0,1,2$ nierówność trójkąta daje
+\[
+|w((k+j+1)h_n)-w((k+j)h_n)|
+\le M(|(k+j+1)h_n-t|+|(k+j)h_n-t|)
+\le 8Mh_n.
+\]
+Zatem $A_n(M)$ zachodzi dla wszystkich dostatecznie
+dużych $n$, w sprzeczności z poprzednim wnioskiem.
+Przecinając zbiory pełnej miary po $M\in\N$,
+wykluczamy wszystkie punkty różniczkowalności wewnątrz
+$[0,T]$ naraz.
+
+Dla końca $t=0$, istnienie skończonej pochodnej
+prawostronnej oznaczałoby $|W_{h_n}|\le Mh_n$
+dla pewnego całkowitego $M$ i wszystkich dużych $n$.
+Jednak $\Prob(|W_{h_n}|\le Mh_n)\le C M\sqrt{h_n}$,
+co jest sumowalne. Borel--Cantelli wyklucza taką
+sytuację. W punkcie $T$ stosujemy analogiczny argument
+do $W_T-W_{T-h_n}$. To kończy dowód.
+\end{proof}
+
+\begin{wniosek}[Próg wykładnika H\"oldera]
+Z prawdopodobieństwem $1$ na żadnym przedziale
+$[a,b]\subset[0,\infty)$ o $a<b$ trajektoria Wienera
+nie spełnia oszacowania
+$|W_t-W_s|\le C|t-s|^\gamma$ dla wszystkich $s,t\in[a,b]$
+z jakimkolwiek $C<\infty$ i $\gamma>1/2$.
+\end{wniosek}
+\begin{proof}
+Gdyby takie oszacowanie zachodziło, to dla równomiernego
+podziału na $n$ przedziałów suma kwadratów przyrostów
+nie przekraczałaby $C^2(b-a)^{2\gamma}n^{1-2\gamma}$,
+a więc dążyłaby do zera. To sprzeczne z dodatnią
+wariacją kwadratową na każdym przedziale o wymiernych
+końcach (przy niemal pewnym wspólnym zdarzeniu).
+Każdy przedział $[a,b]$ z $a<b$ zawiera przedział
+$[r,s]$ o wymiernych końcach i dodatniej długości;
+oszacowanie H\"oldera na $[a,b]$ przeniosłoby się na
+$[r,s]$. To daje sprzeczność.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[x=0.9cm,y=0.8cm,>=Latex]
+\draw[->] (-0.2,0)--(10.5,0) node[right] {$t$};
+\draw[->] (0,-1.3)--(0,2.6) node[above] {$W_t$};
+\draw[blue!75!black,thick] (0,0)--(0.45,0.55)--(0.8,0.18)--(1.18,1.05)--(1.55,0.82)--(1.83,1.5)--(2.14,0.9)--(2.5,1.1)--(2.86,0.22)--(3.2,0.67)--(3.45,0.08)--(3.75,-0.45)--(4.1,0.36)--(4.4,-0.05)--(4.7,0.78)--(5.04,0.42)--(5.37,1.2)--(5.65,0.66)--(5.95,1.3)--(6.25,0.55)--(6.56,0.1)--(6.86,0.88)--(7.21,0.47)--(7.5,1.22)--(7.83,1.0)--(8.15,1.72)--(8.53,1.03)--(8.85,1.4)--(9.2,0.82)--(9.6,1.65)--(10,1.15);
+\draw[dashed,red!70!black] (0,1.42)--(10,1.42);
+\node[red!70!black,above left] at (10,1.42) {$a$};
+\draw[densely dotted,red!70!black] (1.80,0)--(1.80,1.42);
+\node[below] at (1.80,0) {$\tau_a$};
+\end{tikzpicture}
+\par\smallskip\small Schemat trajektorii i pierwszego trafienia w poziom $a$.
+Rysunek ma charakter poglądowy: prawdziwa trajektoria Wienera
+jest ciągła, ale nie jest łamaną o skończonej liczbie odcinków.
+\end{center}
+
+\section{Pierwsze trafienie i zasada odbicia}
+\begin{definicja}[Czas pierwszego trafienia]
+Niech $W$ będzie ciągłym procesem Wienera i $a>0$.
+Definiujemy $\tau_a:=\inf\{t\ge0:W_t=a\}$,
+przyjmując $\inf\varnothing=\infty$.
+Dla naturalnej filtracji (lub dowolnej filtracji, do której
+$W$ jest adaptowany) jest to czas zatrzymania, gdyż
+$\{\tau_a\le t\}=\{\sup_{0\le s\le t}W_s\ge a\}$,
+a supremum ciągłej trajektorii można obliczać po
+chwilach wymiernych z $[0,t]$ wraz z końcem przedziału.
+\end{definicja}
+
+\begin{twierdzenie}[Zasada odbicia]
+Dla standardowego procesu Wienera $W$, $t>0$ i $a>0$
+zachodzi
+\[
+\Prob\left(\sup_{0\le s\le t}W_s\ge a\right)
+=2\Prob(W_t\ge a)
+=2\left(1-\Phi\left(\frac{a}{\sqrt t}\right)\right),
+\]
+gdzie $\Phi$ jest dystrybuantą standardowego rozkładu normalnego.
+\end{twierdzenie}
+\begin{proof}
+Niech $\tau=\tau_a$. Z ciągłości trajektorii
+$\{\sup_{s\le t}W_s\ge a\}=\{\tau\le t\}$.
+Jeśli $W_t>a$, to z ciągłości i $W_0=0<a$ musieliśmy
+wcześniej osiągnąć $a$, zatem $\{W_t>a\}\subset\{\tau\le t\}$.
+
+Na zdarzeniu $\{\tau\le t\}$ mamy $W_\tau=a$.
+Z mocnej własności Markowa przyszły przyrost
+$W_t-W_\tau$, przy zadanym $\calF_\tau$ i czasie
+pozostałym $t-\tau$, ma symetryczny rozkład
+$\Normal(0,t-\tau)$. Możemy to sformalizować,
+warunkując najpierw względem $\calF_\tau$ i stosując
+mocną własność Markowa do przyszłego procesu
+$B_u=W_{\tau+u}-W_\tau$ oraz mierzalnej funkcji
+$u=t-\tau$; fakt dla prostych $u$ przenosimy do
+ogólnego $u$ przez aproksymację i ciągłość trajektorii.
+Stąd
+\[
+\Prob(\tau\le t,\ W_t<a)
+=\Prob(\tau\le t,\ W_t>a).
+\]
+Równość jest prawdziwa także na granicy $\tau=t$,
+gdyż oba zdarzenia tam nie zachodzą.
+Ponieważ $W_t$ ma rozkład ciągły,
+$\Prob(W_t=a)=0$ i
+$\Prob(\tau\le t,\ W_t>a)=\Prob(W_t>a)$.
+Dzieląc $\{\tau\le t\}$ według zdarzeń
+$\{W_t<a\},\{W_t=a\},\{W_t>a\}$,
+dostajemy żądany wzór.
+\end{proof}
+
+\begin{wniosek}[Rozkład czasu trafienia]
+Dla $a>0$ czas $\tau_a$ jest skończony prawie na pewno,
+a jego dystrybuanta i gęstość na $(0,\infty)$ mają postać
+\[
+\Prob(\tau_a\le t)=2\left(1-\Phi(a/\sqrt t)\right),
+\qquad
+f_{\tau_a}(t)=\frac{a}{\sqrt{2\pi}\,t^{3/2}}
+\exp\left(-\frac{a^2}{2t}\right).
+\]
+Jednak $\E\tau_a=\infty$.
+\end{wniosek}
+\begin{proof}
+Pierwszy wzór jest zasadą odbicia. Gdy $t\to\infty$,
+argument $a/\sqrt t$ dąży do zera, więc dystrybuanta
+dąży do $2(1-\Phi(0))=1$: czas jest skończony p.n.
+Różniczkując dystrybuantę po $t>0$, dostajemy gęstość.
+Ponadto, z twierdzenia o wartości średniej dla $\Phi$,
+\[
+\Prob(\tau_a>t)=2(\Phi(a/\sqrt t)-1/2)
+\sim \sqrt{\frac2\pi}\frac{a}{\sqrt t}
+\quad\text{gdy }t\to\infty.
+\]
+Dla nieujemnej zmiennej losowej zachodzi
+$\E\tau_a=\int_0^\infty\Prob(\tau_a>t)\,\dd t$
+(z twierdzenia Tonellego). Całka jest rozbieżna,
+gdyż $\int_1^\infty t^{-1/2}\,\dd t=\infty$.
+\end{proof}
+
+\begin{uwaga}[Prawie pewne zakończenie nie daje skończonego średniego czasu]
+Ruch Browna dociera do ustalonego dodatniego poziomu
+z prawdopodobieństwem $1$, lecz wartość oczekiwana
+czasu oczekiwania jest nieskończona.
+To ważny kontrprzykład: nie wolno bez dodatkowych
+warunków stosować próbkowania opcjonalnego bezpośrednio
+w chwili $\tau_a$. Istnienie granicy $W_{\tau_a}=a$
+prawie na pewno nie oznacza, że
+$\E W_{\tau_a}=\E W_0$.
+\end{uwaga}
+
+\begin{zadanie}[Transformata Laplace'a czasu pierwszego trafienia]
+Niech $W$ będzie procesem Wienera, $a>0$,
+$\tau_a=\inf\{t\ge0:W_t=a\}$.
+Obliczyć $\E e^{-\lambda\tau_a}$ dla $\lambda>0$.
+
+\emph{Rozwiązanie.} Dla $\theta=\sqrt{2\lambda}>0$
+proces $M_t=\exp(\theta W_t-\theta^2t/2)$
+jest martyngałem: wynika to z niezależności przyrostów i
+$\E e^{\theta(W_t-W_s)}=e^{\theta^2(t-s)/2}$.
+Dla ograniczonego czasu $\tau_a\wedge n$ twierdzenie o
+próbkowaniu opcjonalnym daje
+$1=\E M_{\tau_a\wedge n}$.
+Przed trafieniem w $a$ mamy $W_t<a$, a w chwili
+trafienia $W_{\tau_a}=a$, więc
+$0\le M_{\tau_a\wedge n}\le e^{\theta a}$.
+Wiemy już, że $\tau_a<\infty$ p.n.; zatem
+$M_{\tau_a\wedge n}\to\exp(\theta a-\lambda\tau_a)$
+p.n. Zbieżność zdominowana pozwala przejść do granicy:
+$1=e^{\theta a}\E e^{-\lambda\tau_a}$, skąd
+\[
+\E e^{-\lambda\tau_a}=e^{-a\sqrt{2\lambda}}.
+\]
+Ta transformata będzie w przyszłości użyteczna przy
+porównywaniu ruchu Browna z procesami Lévy'ego.
+\end{zadanie}
+
+\section{Wyjście z przedziału: prawdopodobieństwa i średni czas}
+\begin{twierdzenie}[Wyjście procesu Wienera z $(-a,b)$]
+Niech $a,b>0$ oraz
+$\tau:=\inf\{t\ge0:W_t\notin(-a,b)\}$.
+Wtedy $\tau<\infty$ prawie na pewno,
+$\E\tau=ab$ oraz
+\[
+\Prob(W_\tau=b)=\frac{a}{a+b},\qquad
+\Prob(W_\tau=-a)=\frac{b}{a+b}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Z ciągłości $W_{t\wedge\tau}\in[-a,b]$ i
+$W_\tau\in\{-a,b\}$ na zdarzeniu $\{\tau<\infty\}$.
+Z przyrostów gaussowskich wynika, że zarówno $W_t$,
+jak i $W_t^2-t$ są martyngałami. Dla drugiego procesu
+sprawdzamy bowiem, że przy $s<t$:
+\[
+\E[W_t^2-t\mid\calF_s]
+=W_s^2+\E[(W_t-W_s)^2]-t=W_s^2-s,
+\]
+gdyż mieszany wyraz ma zerową warunkową wartość oczekiwaną.
+Z próbkowania opcjonalnego w ograniczonej chwili
+$t\wedge\tau$ dostajemy
+$\E W_{t\wedge\tau}=0$ oraz
+$\E W_{t\wedge\tau}^2=\E(t\wedge\tau)$.
+Wprowadzając $M=\max(a,b)$, otrzymujemy
+$\E(t\wedge\tau)\le M^2$. Zbieżność monotoniczna
+przy $t\to\infty$ daje $\E\tau\le M^2<\infty$,
+a więc $\tau<\infty$ p.n.
+
+Ze zbieżności zdominowanej,
+$W_{t\wedge\tau}\to W_\tau$ zarówno w $L^1$,
+jak i w $L^2$; zatem
+$\E W_\tau=0$ i
+$\E W_\tau^2=\E\tau$.
+Niech $p=\Prob(W_\tau=b)$. Ponieważ
+$W_\tau$ przyjmuje tylko dwie wartości,
+$0=\E W_\tau=bp-a(1-p)$, skąd $p=a/(a+b)$.
+Następnie
+\[
+\E\tau=\E W_\tau^2
+=b^2\frac{a}{a+b}+a^2\frac{b}{a+b}=ab.
+\]
+Wszystkie przejścia do granicy zostały więc uzasadnione
+odpowiednio zbieżnością monotoniczną i zdominowaną.
+\end{proof}
+
+\begin{zadanie}[Start z dowolnego punktu przedziału]
+Niech $x\in(-a,b)$, $a,b>0$, a proces
+$X_t=x+W_t$. Obliczyć prawdopodobieństwo wyjścia
+przez prawą krawędź i oczekiwany czas wyjścia.
+
+\emph{Rozwiązanie.} Wyjście $X$ z $(-a,b)$ jest
+równoważne wyjściu $W$ z przedziału
+$(-a-x,b-x)$. W poprzednim twierdzeniu podstawiamy
+$a'=a+x$, $b'=b-x$, obie liczby są dodatnie. Dostajemy
+\[
+\Prob(X_\tau=b)=\frac{a+x}{a+b},\qquad
+\E\tau=(a+x)(b-x).
+\]
+Zwróćmy uwagę, że funkcja $u(x)=(a+x)(b-x)$
+spełnia równanie $\frac12u''(x)=-1$ na $(-a,b)$
+i warunki brzegowe $u(-a)=u(b)=0$.
+Jest to pierwsza zapowiedź ścisłego związku procesów
+Markowa z równaniami różniczkowymi.
+\end{zadanie}
+
+\section{Miara Wienera: całkowanie po wszystkich trajektoriach}
+Proces $W$ można opisywać dwojako. Dla ustalonej chwili $t$
+zmienna $W_t$ jest normalna. Ale pojedynczy wynik
+$\omega\in\Omega$ wyznacza także całą ciągłą funkcję
+$t\mapsto W_t(\omega)$. Możemy zatem zapytać nie tylko
+o prawdopodobieństwo $\{W_t\in A\}$, lecz także o
+prawdopodobieństwo zdarzenia zależącego od całej drogi,
+na przykład: ``trajektoria przez cały czas pozostaje
+poniżej bariery'' lub ``pole pod trajektorią jest dodatnie''.
+
+\begin{definicja}[Przestrzeń trajektorii i miara Wienera]
+Dla $T>0$ definiujemy
+\[
+\calC_0([0,T]):=\{w\in C([0,T];\R):w(0)=0\},
+\qquad \norm{w}_\infty=\sup_{0\le t\le T}|w(t)|.
+\]
+Niech $W$ będzie standardowym procesem Wienera o ciągłych
+trajektoriach, traktowanym jako odwzorowanie
+$W:\Omega\to\calC_0([0,T])$,
+$W(\omega)(t)=W_t(\omega)$.
+Jego \emph{prawem na przestrzeni trajektorii}, nazywanym
+\emph{miarą Wienera}, jest miara probabilistyczna
+$\mu_T:=\Prob\circ W^{-1}$ na
+$(\calC_0([0,T]),\calB(\calC_0([0,T])))$.
+\end{definicja}
+
+\begin{stwierdzenie}[Mierzalność odwzorowania trajektorii]
+Jeżeli $W$ ma ciągłe trajektorie i każda zmienna $W_t$
+jest mierzalna, to odwzorowanie
+$\omega\mapsto W(\omega)\in\calC_0([0,T])$ jest mierzalne.
+\end{stwierdzenie}
+\begin{proof}
+Dla każdej wymiernej chwili $r\in[0,T]$ odwzorowanie
+ewaluacji $e_r(w)=w(r)$ jest ciągłe w normie supremum,
+a $e_r\circ W=W_r$ jest mierzalne.
+Przestrzeń $\calC_0([0,T])$ jest ośrodkową przestrzenią
+metryczną (można przybliżać funkcje ciągłe łamanymi
+o wymiernych węzłach i wymiernych wartościach).
+Borelowskie sigma-ciało tej przestrzeni jest generowane
+przez ewaluacje w przeliczalnym gęstym zbiorze chwil:
+rzeczywiście $\norm{w-v}_\infty=\sup_{r\in D}|w(r)-v(r)|$
+dla gęstego przeliczalnego $D$ zawierającego końce,
+więc każda kula otwarta jest mierzalna względem
+$\sigma(e_r:r\in D)$; dzięki ośrodkowości każdy zbiór
+otwarty jest przeliczalną sumą takich kul.
+Zatem przeciwobrazy zbiorów borelowskich przez $W$
+są mierzalne.
+\end{proof}
+
+\begin{twierdzenie}[Całki cylindryczne względem miary Wienera]
+Niech $T>0$, $0<t_1<\cdots<t_m\le T$ oraz
+$F:\R^m\to\R$ będzie funkcją borelowską, nieujemną
+lub całkowalną względem rozkładu wektora
+$(W_{t_1},\ldots,W_{t_m})$. Wówczas
+\begin{align*}
+&\int_{\calC_0([0,T])}F(w(t_1),\ldots,w(t_m))\,\dd\mu_T(w)\\
+&\quad=\int_{\R^m}F(x_1,\ldots,x_m)
+\prod_{k=1}^m p_{t_k-t_{k-1}}(x_k-x_{k-1})
+\,\dd\lambda_m(x_1,\ldots,x_m),
+\end{align*}
+gdzie $t_0=0$, $x_0=0$ i $p_h(z)$ jest gęstością
+$\Normal(0,h)$.
+\end{twierdzenie}
+\begin{proof}
+Z definicji miary obrazowej całka po lewej jest równa
+$\E F(W_{t_1},\ldots,W_{t_m})$.
+Przeprowadzamy liniowe przekształcenie od przyrostów
+$Z_k=W_{t_k}-W_{t_{k-1}}$ do kolejnych położeń
+$x_k=Z_1+\cdots+Z_k$.
+Przyrosty są niezależne, $Z_k$ mają gęstości
+$p_{t_k-t_{k-1}}$, więc wektor $Z$ ma gęstość
+będącą ich iloczynem. Macierz przekształcenia z $Z$
+do $x$ jest trójkątna z jedynkami na przekątnej,
+a zatem jej wyznacznik ma moduł $1$.
+Wzór na zmianę zmiennych w całce Lebesgue'a
+daje tezę. Dla $F\ge0$ dopuszczalność całkowania
+wynika z twierdzenia Tonellego; w przypadku funkcji
+całkowalnej stosujemy rozkład na części dodatnią i ujemną.
+\end{proof}
+
+\begin{zadanie}[Całka z całej trajektorii jako zmienna gaussowska]
+Niech $A_T:=\int_0^T W_s\,\dd s$, gdzie całka jest zwykłą
+całką Riemanna (równoważnie Lebesgue'a) z ciągłej trajektorii.
+Obliczyć rozkład $A_T$ i jego funkcję charakterystyczną.
+
+\emph{Rozwiązanie.} Aproksymujmy całkę sumami Riemanna
+$A_T^{(n)}=\sum_{k=0}^{n-1}W_{kT/n}\,(T/n)$.
+Każda suma jest gaussowska, ponieważ jest liniową
+kombinacją wspólnie gaussowskich zmiennych.
+Z ciągłości trajektorii $A_T^{(n)}\to A_T$ p.n.
+Co więcej, jeśli $\varphi_n(s)$ jest lewym końcem
+przedziału siatki zawierającego $s$, to nierówność
+Cauchy'ego--Schwarza i twierdzenie Fubiniego dają
+\begin{align*}
+\E|A_T^{(n)}-A_T|^2
+&\le T\int_0^T\E|W_{\varphi_n(s)}-W_s|^2\,\dd s\\
+&\le T^2\frac{T}{n}\longrightarrow0.
+\end{align*}
+Zatem $A_T^{(n)}$ zbiega w $L^2$ do $A_T$,
+a jego średnie i wariancje zbiegają do odpowiednich
+wielkości granicy. Granica rozkładów normalnych o
+zbieżnych parametrach jest normalna (wynika to wprost
+ze zbieżności funkcji charakterystycznych).
+Ponieważ $\E A_T=0$ i
+\[
+\Var(A_T)=\int_0^T\!\int_0^T\Cov(W_s,W_t)
+\,\dd s\,\dd t
+=\int_0^T\!\int_0^T\min(s,t)\,\dd s\,\dd t
+=\frac{T^3}{3},
+\]
+dostajemy $A_T\sim\Normal(0,T^3/3)$ oraz
+\[
+\E e^{iuA_T}=\exp\left(-\frac{u^2T^3}{6}\right).
+\]
+W języku miary Wienera jest to dokładnie obliczenie
+całki po trajektoriach
+\[
+\int_{\calC_0([0,T])}
+\exp\left(iu\int_0^T w(s)\,\dd s\right)\,\dd\mu_T(w).
+\]
+\end{zadanie}
+
+\begin{uwaga}[Trzy całki, których nie wolno utożsamiać]
+Wyrażenie $\int_0^T W_s\,\dd s$ jest zwykłą całką
+po czasie z jednej losowej, ciągłej funkcji.
+Wyrażenie $\int_0^T H_s\,\dd W_s$ będzie całką
+stochastyczną Itô, skonstruowaną później z przyrostów
+procesu Wienera. Wreszcie
+$\int_{\calC_0([0,T])}F(w)\,\dd\mu_T(w)$
+całkuje funkcjonał $F$ \emph{po wszystkich możliwych
+trajektoriach}. Jest to ścisła matematyczna całka Wienera
+po drogach, stanowiąca punkt wyjścia do wzoru
+Feynmana--Kaca. Oscylacyjna całka Feynmana w czasie
+rzeczywistym wymaga odrębnej analizy i nie jest
+zwykłą całką względem miary probabilistycznej.
+\end{uwaga}
+
+
+\begin{stwierdzenie}[Most Browna i miara Wienera mają różne prawa]
+Dla $T>0$ niech $\mu_T$ będzie miarą Wienera na
+$\calC_0([0,T])$, a $\nu_T$ prawem mostu Browna
+$\beta_t=W_t-(t/T)W_T$. Wtedy $\mu_T$ i $\nu_T$
+są wzajemnie singularne.
+\end{stwierdzenie}
+\begin{proof}
+Zbiór $A=\{w\in\calC_0([0,T]):w(T)=0\}$ jest domknięty,
+więc borelowski. Ponieważ $\beta_T=0$, mamy $\nu_T(A)=1$.
+Natomiast $W_T\sim\Normal(0,T)$ ma rozkład bezatomowy,
+więc $\mu_T(A)=\Prob(W_T=0)=0$. Jest to definicja
+wzajemnej singularności miar.
+\end{proof}
+
+\begin{uwaga}[Jaki typ zbieżności wariacji kwadratowej udowodniono?]
+Dla \emph{dowolnych deterministycznych} podziałów
+$[0,T]$ o średnicy zmierzającej do zera wykazaliśmy
+zbieżność sum kwadratów przyrostów w $L^2$, a zatem
+według prawdopodobieństwa. Zbieżność prawie na pewno
+uzyskaliśmy dla \emph{konkretnego ciągu siatek dyadycznych}.
+Z tych dwóch zdań nie wolno wyciągać wniosku, że
+zbieżność prawie na pewno zachodzi dla każdej dowolnie
+wybranej sekwencji podziałów. Ważne jest również,
+czy podziały wolno wybierać zależnie od trajektorii.
+\end{uwaga}
+
+\section{Równanie ciepła i generator ruchu Browna}
+\begin{twierdzenie}[Generator i równanie ciepła]
+Niech $(P_t)_{t\ge0}$ będzie półgrupą zdefiniowaną wzorem
+$(P_tf)(x)=\E f(x+W_t)$ dla ograniczonych borelowskich
+$f:\R\to\R$. Wówczas:
+\begin{enumerate}
+\item dla każdej $f\in C_b^3(\R)$, czyli funkcji o
+ciągłych i ograniczonych pochodnych do rzędu trzeciego,
+zachodzi dla każdego $x\in\R$
+\[
+\lim_{t\downarrow0}\frac{(P_tf)(x)-f(x)}{t}
+=\frac12 f''(x);
+\]
+\item jeżeli $f\in C_b(\R)$, to funkcja
+$u(t,x)=(P_tf)(x)$ jest klasy $C^{1,2}$ na
+$(0,\infty)\times\R$, spełnia
+$\partial_tu=\frac12\partial_{xx}u$
+oraz $u(t,x)\to f(x)$ dla każdego $x$ przy $t\downarrow0$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Dla $f\in C_b^3(\R)$ wzór Taylora z resztą daje
+\[
+f(x+h)=f(x)+hf'(x)+\frac12h^2f''(x)+R(x,h),\qquad
+|R(x,h)|\le\frac{\norm{f'''}_\infty}{6}|h|^3.
+\]
+Podstawmy $h=W_t\sim\Normal(0,t)$ i uśrednijmy.
+Mamy $\E W_t=0$, $\E W_t^2=t$ i
+$\E|W_t|^3=c_3t^{3/2}$. Zatem
+$|(P_tf)(x)-f(x)-tf''(x)/2|
+\le \norm{f'''}_\infty c_3t^{3/2}/6$.
+Po podzieleniu przez $t$ reszta dąży do zera,
+co dowodzi pierwszej części.
+
+Dla $t>0$ możemy zapisać
+$u(t,x)=\int_\R f(y)p_t(y-x)\,\dd\lambda_1(y)$.
+Na każdym przedziale czasowym $t\in[\delta,R]$
+($0<\delta<R$) pochodne jądra gaussowskiego
+$\partial_t p_t(z)$, $\partial_zp_t(z)$ i
+$\partial_{zz}p_t(z)$ są ograniczone przez całkowalne
+funkcje zmiennej $z$, niezależne od $t$ w tym przedziale.
+Wynika to z jawnej postaci pochodnych, będących
+wielomianami w $z$ pomnożonymi przez
+$\exp(-z^2/(2R))$, z odpowiednimi stałymi.
+Twierdzenie o różniczkowaniu pod znakiem całki daje
+istnienie i ciągłość wskazanych pochodnych $u$.
+Bezpośredni rachunek gęstości wykazuje
+$\partial_t p_t(z)=\frac12\partial_{zz}p_t(z)$,
+a więc po przeniesieniu pochodnych pod całkę
+$\partial_tu=\frac12\partial_{xx}u$.
+
+Na koniec $W_t\to0$ według prawdopodobieństwa,
+bo $\E W_t^2=t\to0$. Dla ustalonego $x$ i
+$\varepsilon>0$ ciągłość $f$ w $x$ daje $\delta>0$
+takie, że $|f(x+z)-f(x)|<\varepsilon$ dla $|z|<\delta$.
+Dzieląc wartość oczekiwaną według $|W_t|<\delta$
+i jego dopełnienia, otrzymujemy
+$|P_tf(x)-f(x)|\le\varepsilon
++2\norm f_\infty\Prob(|W_t|\ge\delta)\to\varepsilon$.
+Dowolność $\varepsilon$ daje wymaganą zbieżność.
+\end{proof}
+
+\begin{przyklad}[Od losowej trajektorii do równania różniczkowego]
+Dla $f(x)=\cos(kx)$, $k\in\R$, mamy
+$P_tf(x)=\E\cos(kx+kW_t)
+=e^{-k^2t/2}\cos(kx)$.
+Rzeczywiście, część urojona funkcji charakterystycznej
+rozkładu $\Normal(0,t)$ znika, a część rzeczywista
+wynosi $e^{-k^2t/2}$. Jednocześnie
+$\partial_tu=-(k^2/2)u$ i
+$\frac12\partial_{xx}u=-(k^2/2)u$.
+Jeden rachunek probabilistyczny dostarcza więc
+jawnego rozwiązania równania ciepła.
+\end{przyklad}
+
+\section{Podsumowanie i kierunek dalszej teorii}
+Proces Wienera łączy zaskakujące fakty: ma ciągłe
+trajektorie, ale żadna z nich nie jest różniczkowalna;
+ma nieskończoną wariację całkowitą, lecz jego wariacja
+kwadratowa jest dokładnie równa upływającemu czasowi.
+Jednocześnie można go analizować za pomocą elementarnych
+narzędzi gaussowskich, mocnej własności Markowa i
+równania ciepła.
+
+Przygotowaliśmy również przestrzeń trajektorii i miarę Wienera.
+Dalsze rozdziały rozwiną całki po drogach, ruch Browna
+w wielu wymiarach i ścisły rachunek stochastyczny.
+W szczególności wzór Feynmana--Kaca połączy
+ważone miary trajektorii z półgrupami operatorów
+Schrödingera, a całka Itô zbuduje matematyczne
+narzędzia do równań różniczkowych stochastycznych.
+
+
+% ==============================================================
+% ROZDZIAŁ 8. ROZSZERZENIE TEORII RUCHU BROWNA
+% ==============================================================

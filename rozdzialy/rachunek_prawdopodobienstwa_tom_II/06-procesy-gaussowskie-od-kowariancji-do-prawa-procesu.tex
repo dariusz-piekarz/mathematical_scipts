@@ -1,0 +1,480 @@
+\chapter{Procesy gaussowskie: od kowariancji do prawa procesu}
+\label{ch:gauss}
+
+\section{Motywacja: czy średnia i kowariancja opisują cały proces?}
+W rozdziale pierwszym zobaczyliśmy, że znajomość rozkładu $X_t$ dla
+każdego $t$ nie wystarcza do określenia prawa procesu: potrzebujemy
+rozkładów \emph{łącznych} dla wszystkich skończonych zbiorów chwil.
+W ogólności obliczanie tych rozkładów jest bardzo trudne. Procesy
+gaussowskie są niezwykłe właśnie dlatego, że wszystkie ich rozkłady
+skończeniewymiarowe można odtworzyć z dwóch funkcji:
+$m(t)=\E X_t$ oraz $K(s,t)=\Cov(X_s,X_t)$.
+
+Warto od razu oddzielić \emph{gaussowskość pojedynczych zmiennych}
+od \emph{gaussowskości całego procesu}. Można mieć $X_s\sim\Normal(0,1)$
+i $X_t\sim\Normal(0,1)$, choć para $(X_s,X_t)$ nie ma rozkładu
+normalnego dwuwymiarowego. Dopiero odpowiedni warunek na każdą
+skończoną rodzinę rozstrzyga o gaussowskości procesu.
+
+\begin{definicja}[Wektor gaussowski]
+Niech $d\in\N$ i $Z=(Z_1,\ldots,Z_d)$ będzie wektorem losowym
+o wartościach w $\R^d$. Nazywamy go \emph{wektorem gaussowskim},
+jeżeli dla każdego $a\in\R^d$ zmienna $\sum_{j=1}^d a_jZ_j$
+ma rozkład normalny (dopuszczamy rozkład zdegenerowany, czyli
+skoncentrowany w jednym punkcie). Jeżeli $m=\E Z$ oraz
+$\Sigma=(\Cov(Z_i,Z_j))_{i,j=1}^d$, zapisujemy
+$Z\sim\Normal_d(m,\Sigma)$.
+\end{definicja}
+
+Dopuszczenie degeneracji nie jest tylko wygodą techniczną. Dla
+$Z=(U,U)$, gdzie $U\sim\Normal(0,1)$, wektor $Z$ jest gaussowski,
+ale jego rozkład jest skoncentrowany na przekątnej $\{(x,x):x\in\R\}$,
+więc nie ma gęstości względem dwuwymiarowej miary Lebesgue'a.
+
+\begin{stwierdzenie}[Charakterystyka wektora gaussowskiego]
+Dla każdego $d\ge1$, $m\in\R^d$ i symetrycznej nieujemnie
+określonej macierzy $\Sigma\in\R^{d\times d}$ istnieje wektor
+$Z\sim\Normal_d(m,\Sigma)$, którego funkcja charakterystyczna ma postać
+\[
+\E e^{i\langle u,Z\rangle}
+=\exp\left(i\langle u,m\rangle-\frac12 u^\top\Sigma u\right),
+\qquad u\in\R^d.
+\]
+Prawo tego wektora jest jednoznacznie wyznaczone przez $m$ i $\Sigma$.
+\end{stwierdzenie}
+\begin{proof}
+Z twierdzenia spektralnego mamy $\Sigma=ADA^\top$, gdzie $A$
+jest ortogonalna, $D=\operatorname{diag}(\lambda_1,\ldots,\lambda_d)$
+i $\lambda_j\ge0$. Niech $G_1,\ldots,G_d$ będą niezależnymi
+zmiennymi $\Normal(0,1)$ i połóżmy
+$Z=m+AD^{1/2}G$. Wówczas
+$\langle u,Z-m\rangle$ jest liniową kombinacją niezależnych
+zmiennych normalnych, a zatem jest normalna o wariancji
+$u^\top AD A^\top u=u^\top\Sigma u$. Jego funkcję charakterystyczną
+otrzymujemy, mnożąc funkcje charakterystyczne składników.
+Z jednoznaczności funkcji charakterystycznej wynika jednoznaczność
+rozkładu wektora $Z$.
+\end{proof}
+
+\begin{definicja}[Proces gaussowski]
+Niech $T\ne\varnothing$ będzie zbiorem indeksów oraz
+$(\Omega,\calF,\Prob)$ przestrzenią probabilistyczną. Proces
+rzeczywisty $(X_t)_{t\in T}$ na tej przestrzeni nazywamy
+\emph{gaussowskim}, jeżeli dla dowolnego $n\ge1$ oraz
+$t_1,\ldots,t_n\in T$ wektor $(X_{t_1},\ldots,X_{t_n})$
+jest gaussowski. Definiujemy
+$m(t):=\E X_t$ i $K(s,t):=\E[(X_s-m(s))(X_t-m(t))]$.
+\end{definicja}
+
+\begin{twierdzenie}[Średnia i kowariancja wyznaczają prawo]
+Niech $X=(X_t)_{t\in T}$ i $Y=(Y_t)_{t\in T}$ będą rzeczywistymi
+procesami gaussowskimi (niekoniecznie na tej samej przestrzeni).
+Jeżeli dla wszystkich $s,t\in T$ zachodzą równości
+$\E X_t=\E Y_t$ i $\Cov(X_s,X_t)=\Cov(Y_s,Y_t)$, to $X$ i $Y$
+mają te same rozkłady skończeniewymiarowe.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $t_1,\ldots,t_n$. Oba odpowiadające im wektory są
+gaussowskie, mają wektor średnich
+$(m(t_1),\ldots,m(t_n))$ i tę samą macierz kowariancji
+$(K(t_i,t_j))_{i,j}$. Z poprzedniego stwierdzenia ich funkcje
+charakterystyczne są identyczne. Jednoznaczność funkcji
+charakterystycznej daje równość rozkładów. Ponieważ wybór chwil był
+dowolny, otrzymujemy tezę.
+\end{proof}
+
+\begin{uwaga}[Dlaczego warunek wspólnej normalności jest istotny?]
+Niech $U\sim\Normal(0,1)$, a $\varepsilon$ będzie od niego
+niezależnym symetrycznym znakiem o wartościach $\pm1$.
+Wtedy $X=U$, $Y=\varepsilon U$ mają standardowe rozkłady normalne,
+a $\Cov(X,Y)=0$, ponieważ $\E\varepsilon=0$.
+Jednak $|X|=|Y|$ prawie na pewno, zatem zmienne są zależne,
+a para $(X,Y)$ nie jest wektorem gaussowskim.
+Wektor gaussowski o takiej macierzy kowariancji miałby niezależne
+współrzędne, co jest sprzeczne z $|X|=|Y|$.
+\end{uwaga}
+
+\section{Jakie funkcje mogą być kowariancjami?}
+Zachodzi $K(s,t)=K(t,s)$, ale sama symetria nie wystarcza.
+Dla dowolnych $t_1,\ldots,t_n\in T$ i $a_1,\ldots,a_n\in\R$
+mamy
+\[
+\sum_{i,j=1}^n a_i a_jK(t_i,t_j)
+=\Var\left(\sum_{i=1}^n a_iX_{t_i}\right)\ge0.
+\]
+Warunek ten nazywamy \emph{nieujemną określonością jądra} $K$.
+
+\begin{twierdzenie}[Istnienie procesu o zadanej kowariancji]
+Niech $T\ne\varnothing$ będzie dowolnym zbiorem,
+$m:T\to\R$ dowolną funkcją, zaś $K:T\times T\to\R$
+niech spełnia warunki: $K(s,t)=K(t,s)$ oraz
+$\sum_{i,j=1}^n a_i a_jK(t_i,t_j)\ge0$ dla wszystkich
+$n\in\N$, $t_1,\ldots,t_n\in T$ i $a_1,\ldots,a_n\in\R$.
+Wtedy istnieje przestrzeń probabilistyczna i rzeczywisty proces
+gaussowski $X=(X_t)_{t\in T}$, dla którego
+$\E X_t=m(t)$ oraz $\Cov(X_s,X_t)=K(s,t)$.
+\end{twierdzenie}
+\begin{proof}
+Dla każdej skończonej uporządkowanej rodziny chwil
+$\mathbf t=(t_1,\ldots,t_n)$ wybierzmy rozkład gaussowski
+$\mu_{\mathbf t}=\Normal_n(m_{\mathbf t},\Sigma_{\mathbf t})$,
+gdzie $m_{\mathbf t}=(m(t_1),\ldots,m(t_n))$,
+$\Sigma_{\mathbf t}=(K(t_i,t_j))_{i,j}$. Jest to dobrze określony
+rozkład, bo macierz kowariancji jest nieujemnie określona.
+
+Trzeba sprawdzić zgodność tej rodziny. Usunięcie części współrzędnych
+z wektora gaussowskiego daje wektor gaussowski, którego średnia i
+kowariancja są odpowiednimi podwektorami i podmacierzami.
+Zmiana kolejności współrzędnych jedynie permutuje średnią i macierz.
+Przy powtórzeniu chwili $t_i=t_j$ różnica odpowiednich współrzędnych
+ma wariancję $K(t_i,t_i)+K(t_j,t_j)-2K(t_i,t_j)=0$ i średnią zero;
+zatem współrzędne są równe prawie na pewno.
+Warunki zgodności obowiązują więc także dla powtórzonych chwil.
+
+Możemy teraz zastosować udowodnione w rozdziale~\ref{ch:konstrukcja}
+twierdzenie Kołmogorowa o istnieniu procesu, które daje proces
+z zadanymi rozkładami skończeniewymiarowymi. Wszystkie te rozkłady
+są gaussowskie, a ich średnie i kowariancje są równe $m,K$.
+\end{proof}
+
+\begin{przyklad}[Losowa prosta i losowa fala]
+Niech $A,B$ będą niezależne o rozkładzie $\Normal(0,1)$.
+Proces $X_t=A+tB$ ma średnią zero i kowariancję
+$K_X(s,t)=1+st$. Jego trajektorie są prostymi; proces jest
+gaussowski, ponieważ każda skończona rodzina jego wartości
+jest liniowym obrazem wektora $(A,B)$.
+
+Dla ustalonej $\omega_0>0$ proces
+$Y_t=A\cos(\omega_0t)+B\sin(\omega_0t)$ również jest gaussowski,
+a $K_Y(s,t)=\cos(\omega_0(t-s))$. Jest to proces stacjonarny
+w sensie rozkładów skończeniewymiarowych, choć każda trajektoria
+jest gładką, okresową funkcją. Stacjonarność nie wymaga więc
+ani niezależnych wartości, ani nieregularnych trajektorii.
+\end{przyklad}
+
+\begin{przyklad}[Kowariancja wykładnicza: proces typu Ornsteina--Uhlenbecka]
+Ustalmy $\sigma>0$ i $\alpha>0$. Zdefiniujmy
+$K(s,t)=\sigma^2 e^{-\alpha|t-s|}$ dla $s,t\ge0$.
+Rzeczywiście jest to jądro nieujemnie określone, ponieważ
+\[
+K(s,t)=2\alpha\sigma^2\int_{-\infty}^{\min(s,t)}
+ e^{-\alpha(s-u)}e^{-\alpha(t-u)}\,\dd u.
+\]
+Dla dowolnych $a_i,t_i$ odpowiadająca mu forma kwadratowa jest
+całką z nieujemnego kwadratu:
+\[
+\sum_{i,j}a_ia_jK(t_i,t_j)=2\alpha\sigma^2\int_{-\infty}^\infty
+\left(\sum_i a_i\ind{\{u\le t_i\}}e^{-\alpha(t_i-u)}\right)^2\dd u\ge0.
+\]
+Poprzednie twierdzenie daje zatem stacjonarny proces gaussowski
+$Y$ o tej kowariancji. Co więcej,
+$\E|Y_t-Y_s|^4=3\,[2\sigma^2(1-e^{-\alpha|t-s|})]^2
+\le12\sigma^4\alpha^2|t-s|^2$.
+Kryterium ciągłości Kołmogorowa zapewnia istnienie jego ciągłej
+modyfikacji. Nie użyliśmy przy tym całki Itô, którą zdefiniujemy
+dopiero w dalszych rozdziałach.
+\end{przyklad}
+
+\section{Niezależność i warunkowanie dla procesów gaussowskich}
+\begin{twierdzenie}[Nieskorelowane podwektory gaussowskie są niezależne]
+Niech $(U,V)$ będzie wektorem gaussowskim o wartościach
+w $\R^k\times\R^m$. Jeżeli $\Cov(U_i,V_j)=0$
+dla wszystkich $i,j$, to wektory $U$ i $V$ są niezależne.
+\end{twierdzenie}
+\begin{proof}
+Macierz kowariancji wektora $(U,V)$ jest blokowo diagonalna:
+$\Sigma=\operatorname{diag}(\Sigma_U,\Sigma_V)$.
+Jego funkcja charakterystyczna w punkcie $(u,v)$ jest zatem
+iloczynem funkcji charakterystycznych $U$ i $V$,
+ponieważ wyrażenie kwadratowe rozdziela się na sumę
+$u^\top\Sigma_Uu+v^\top\Sigma_Vv$.
+Z jednoznaczności funkcji charakterystycznych wnioskujemy,
+że rozkład $(U,V)$ jest iloczynem praw brzegowych.
+\end{proof}
+
+\begin{twierdzenie}[Warunkowy rozkład gaussowski]
+Niech $(X,Y)$ będzie dwuwymiarowym wektorem gaussowskim,
+$\E X=m_X$, $\E Y=m_Y$, $\Var X=\sigma_X^2$,
+$\Var Y=\sigma_Y^2>0$ i $\Cov(X,Y)=c$.
+Wówczas
+\[
+X\mid(Y=y)\ \sim\ \Normal\left(
+ m_X+\frac{c}{\sigma_Y^2}(y-m_Y),\,
+ \sigma_X^2-\frac{c^2}{\sigma_Y^2}\right)
+\]
+stanowi wersję regularnego rozkładu warunkowego $X$ przy zadanej
+wartości $Y=y$. W szczególności
+$\E[X\mid\sigma(Y)]=m_X+\frac{c}{\sigma_Y^2}(Y-m_Y)$
+i $\Var(X\mid\sigma(Y))=\sigma_X^2-c^2/\sigma_Y^2$ p.n.
+\end{twierdzenie}
+\begin{proof}
+Połóżmy $a=c/\sigma_Y^2$ oraz
+$Z=X-m_X-a(Y-m_Y)$. Para $(Z,Y)$ jest gaussowska,
+a $\Cov(Z,Y)=c-a\sigma_Y^2=0$.
+Z poprzedniego twierdzenia $Z$ i $Y$ są niezależne.
+Bezpośredni rachunek daje $\E Z=0$ i
+$\Var Z=\sigma_X^2-c^2/\sigma_Y^2\ge0$.
+Otrzymaliśmy rozkład $X=m_X+a(Y-m_Y)+Z$,
+w którym $Z$ jest niezależna od $Y$.
+Dla dowolnej ograniczonej mierzalnej funkcji $f$ i dowolnego
+zbioru borelowskiego $A$ niezależność oraz twierdzenie Fubiniego
+dają
+\[
+\E[f(X)\ind{\{Y\in A\}}]
+=\int_A\left(\int_\R f(m_X+a(y-m_Y)+z)\,\dd\Law(Z)(z)\right)
+\dd\Law(Y)(y).
+\]
+Wewnętrzna całka jest całką względem zadeklarowanego rozkładu
+normalnego (także w przypadku wariancji zero), co dowodzi
+własności rozkładu warunkowego. Dla $f(x)=x$ i $x^2$
+stosujemy obcięcia i przejście do granicy, wykorzystując
+całkowalność drugich momentów, uzyskując obie formuły.
+\end{proof}
+
+\begin{uwaga}[Wiele obserwacji i problem najlepszego przewidywania]
+Jeżeli $Y\in\R^m$ jest wektorem gaussowskim z odwracalną macierzą
+kowariancji $\Sigma_Y$, a $(X,Y)$ jest wspólnie gaussowski,
+to ten sam argument z resztą
+$Z=X-m_X-\Cov(X,Y)\Sigma_Y^{-1}(Y-m_Y)$ dowodzi wzoru
+\[
+\E[X\mid\sigma(Y)]
+=m_X+\Cov(X,Y)\Sigma_Y^{-1}(Y-m_Y).
+\]
+Wektor reszt jest nieskorelowany z każdą współrzędną $Y$,
+więc niezależny od całego $Y$. To objaśnia, dlaczego
+w modelu gaussowskim \emph{najlepsza predykcja średniokwadratowa}
+jest funkcją liniowo-afiniczną zaobserwowanych wartości.
+Gdy $\Sigma_Y$ jest osobliwa, należy uwzględnić liniowe
+zależności między obserwacjami; bezmyślne odwracanie macierzy
+byłoby błędem.
+\end{uwaga}
+
+\begin{stwierdzenie}[Kryterium Markowa dla procesu gaussowskiego]
+Niech $X=(X_t)_{t\in I}$ będzie rzeczywistym, wycentrowanym
+procesem gaussowskim na przedziale $I$, z $K(t,t)>0$ dla
+wszystkich $t\in I$. Wówczas $X$ jest procesem Markowa
+względem swojej filtracji naturalnej wtedy i tylko wtedy, gdy
+\[
+K(s,u)=\frac{K(s,t)K(t,u)}{K(t,t)}
+\quad\text{dla wszystkich }s<t<u\text{ w }I.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Zastosujmy wzór na warunkowy rozkład gaussowski do par
+$(X_s,X_t)$ i $(X_u,X_t)$. Reszty
+$R_s=X_s-\frac{K(s,t)}{K(t,t)}X_t$ oraz
+$R_u=X_u-\frac{K(u,t)}{K(t,t)}X_t$
+są niezależne od $X_t$. Obliczenie daje
+$\Cov(R_s,R_u)=K(s,u)-K(s,t)K(t,u)/K(t,t)$.
+
+Jeżeli zachodzi wskazana tożsamość dla każdych $s<t<u$,
+to dla dowolnych skończonych zbiorów chwil
+$s_1,\ldots,s_k<t<u_1,\ldots,u_m$ wektory reszt
+$(R_{s_j})_j$ i $(R_{u_l})_l$ są nieskorelowane, a zatem
+niezależne (również od $X_t$). Wynika stąd warunkowa
+niezależność skończonej przyszłości i przeszłości przy
+ustalonym $X_t$. Przez klasę monotoniczną przenosimy tę
+własność ze zdarzeń cylindrycznych na $\sigma(X_s:s\le t)$,
+co jest własnością Markowa.
+
+Odwrotnie, własność Markowa daje warunkową niezależność
+$X_s$ i $X_u$ względem $X_t$ dla $s<t<u$: dla
+ograniczonych funkcji przeszłości i przyszłości stosujemy
+własność wieży i warunkowanie przyszłości względem
+$\sigma(X_r:r\le t)$; funkcje nieograniczone dopuszczamy
+następnie przez obcięcie w $L^2$. Stąd
+$\E[R_sR_u\mid X_t]=0$ p.n. i po uśrednieniu
+$\Cov(R_s,R_u)=0$, czyli żądana tożsamość.
+\end{proof}
+
+
+\begin{twierdzenie}[Warunkowanie wielowymiarowe: pełny wzór]
+Niech $(X,Y)$ będzie wspólnie gaussowskim wektorem,
+$X\in\R^k$, $Y\in\R^m$, o średnich $m_X,m_Y$ i blokowej
+macierzy kowariancji
+$\left(\begin{smallmatrix}\Sigma_X&C\\ C^\top&\Sigma_Y\end{smallmatrix}\right)$.
+Załóżmy, że $\Sigma_Y$ jest dodatnio określona.
+Wtedy regularny rozkład warunkowy $X$ przy $Y=y$ jest
+normalny z parametrami
+\[
+\mu(y)=m_X+C\Sigma_Y^{-1}(y-m_Y),\qquad
+V=\Sigma_X-C\Sigma_Y^{-1}C^\top.
+\]
+Macierz $V$ jest nieujemnie określona, także wtedy,
+gdy rozkład warunkowy jest zdegenerowany.
+\end{twierdzenie}
+\begin{proof}
+Połóżmy $A=C\Sigma_Y^{-1}$ i
+$R=X-m_X-A(Y-m_Y)$. Wektor $(R,Y)$ jest gaussowski,
+bo jest afinicznym obrazem wektora $(X,Y)$.
+Ponieważ
+$\Cov(R,Y)=C-A\Sigma_Y=C-C\Sigma_Y^{-1}\Sigma_Y=0$,
+wektory $R,Y$ są niezależne. Rozwijając iloczyn
+$\Cov(R,R)$, otrzymujemy
+\[
+\Cov(R,R)=\Sigma_X-AC^\top-CA^\top+A\Sigma_YA^\top
+=\Sigma_X-C\Sigma_Y^{-1}C^\top=V.
+\]
+Jako macierz kowariancji $V$ musi być nieujemnie określona.
+Ponadto $X=m_X+A(Y-m_Y)+R$. Dla ograniczonej funkcji
+borelowskiej $h$ na $\R^k$ i zbioru borelowskiego
+$D\subset\R^m$, z niezależności oraz twierdzenia Fubiniego,
+\[
+\E[h(X)\ind{\{Y\in D\}}]
+=\int_D\int_{\R^k}h(m_X+A(y-m_Y)+r)
+\,\dd\Law(R)(r)\,\dd\Law(Y)(y).
+\]
+To dokładnie własność rozkładu warunkowego o podanych
+parametrach. W szczególności nie wolno interpretować
+$\Sigma_Y^{-1}$ bez założenia odwracalności macierzy.
+\end{proof}
+
+\section{Od kowariancji do ciągłości trajektorii}
+\begin{lemat}[Moment przyrostu gaussowskiego]
+Jeżeli $X$ jest rzeczywistym procesem gaussowskim,
+a $X_t-X_s$ ma średnią zero oraz wariancję $v(s,t)$,
+to dla każdego $p>0$
+\[
+\E|X_t-X_s|^p=c_p\,v(s,t)^{p/2},\qquad
+c_p=\frac{2^{p/2}\Gamma((p+1)/2)}{\sqrt\pi}.
+\]
+\end{lemat}
+\begin{proof}
+Gdy $v(s,t)=0$, przyrost wynosi zero prawie na pewno.
+W przeciwnym razie $(X_t-X_s)/\sqrt{v(s,t)}$ ma standardowy
+rozkład normalny. Podstawienie w całce względem jego gęstości
+i zastosowanie definicji funkcji gamma daje
+$\E|G|^p=(2/\sqrt{2\pi})\int_0^\infty
+ x^p e^{-x^2/2}\dd x=c_p$.
+\end{proof}
+
+\begin{wniosek}[Praktyczne kryterium ciągłości procesu gaussowskiego]
+Niech $X=(X_t)_{t\in[0,T]}$, $T>0$, będzie procesem gaussowskim.
+Załóżmy, że jego funkcja średniej jest stała oraz istnieją
+$C>0$, $\eta>0$ takie, że
+$\E|X_t-X_s|^2\le C|t-s|^{\eta}$ dla wszystkich $s,t\in[0,T]$.
+Wtedy $X$ ma ciągłą modyfikację. Co więcej, ma modyfikację,
+której trajektorie są lokalnie h\"olderowskie każdego rzędu
+$\gamma<\eta/2$, o ile $\gamma<1$.
+\end{wniosek}
+\begin{proof}
+Dla dowolnie dużego $p\ge2$ poprzedni lemat daje
+$\E|X_t-X_s|^p\le c_p C^{p/2}|t-s|^{\eta p/2}$.
+Wybierzmy $p$ tak duże, by $\eta p/2>1$.
+Twierdzenie~\ref{thm:kol-cont} daje ciągłą modyfikację,
+a także wykładniki H\"oldera mniejsze niż
+$(\eta p/2-1)/p=\eta/2-1/p$ (oraz mniejsze niż $1$).
+Dążąc z $p$ do nieskończoności i korzystając z
+nierozróżnialności ciągłych modyfikacji, otrzymujemy
+jedną modyfikację o wszystkich wskazanych wykładnikach
+(po ograniczeniu do przeliczalnego ciągu wykładników
+zbiegającego do $\min(\eta/2,1)$).
+\end{proof}
+
+\begin{uwaga}[Ciągłość kowariancji to nie całe rozwiązanie]
+W szczególności, jeżeli proces gaussowski jest wycentrowany,
+to $\E|X_t-X_s|^2=K(t,t)+K(s,s)-2K(s,t)$.
+Oszacowanie tej różnicy daje konkretne kryterium regularności.
+Nie należy jednak wnioskować automatycznie o ciągłości
+trajektorii wyłącznie z samej ciągłości funkcji $K$:
+kryterium momentowe wymaga kontroli \emph{szybkości}
+zanikania wariancji przyrostów, a ogólnie stosuje się
+silniejsze warunki metrycznej entropii.
+\end{uwaga}
+
+\section{Most gaussowski: obserwacja końca zmienia cały proces}
+W następnym rozdziale skonstruujemy ruch Browna $W$.
+Już teraz zapowiedzmy jego charakterystyczną kowariancję
+$\Cov(W_s,W_t)=\min(s,t)$ dla $s,t\ge0$.
+Ustalmy $T>0$ i zdefiniujmy na $[0,T]$
+\[
+\beta_t:=W_t-\frac{t}{T}W_T.
+\]
+Wówczas $\beta_0=\beta_T=0$, a zatem każda trajektoria
+\emph{mostu Browna} zaczyna i kończy się w zerze.
+
+\begin{twierdzenie}[Most Browna i warunkowanie na punkt końcowy]
+Niech $W$ będzie standardowym procesem Wienera i $T>0$.
+Proces $\beta=(\beta_t)_{0\le t\le T}$ jest wycentrowanym
+procesem gaussowskim, niezależnym od zmiennej $W_T$,
+z funkcją kowariancji
+\[
+K_\beta(s,t)=\min(s,t)-\frac{st}{T},
+\qquad 0\le s,t\le T.
+\]
+Ponadto dla dowolnego $y\in\R$ proces
+$t\mapsto (t/T)y+\beta_t$ ma rozkłady skończeniewymiarowe
+równe regularnym rozkładom warunkowym procesu
+$(W_t)_{0\le t\le T}$ przy warunku $W_T=y$.
+\end{twierdzenie}
+\begin{proof}
+Każdy skończony wektor wartości $\beta$ jest liniowym obrazem
+wektora wartości $W$, więc jest gaussowski.
+Ponieważ $\Cov(W_t,W_T)=t$ oraz $\Var W_T=T$,
+otrzymujemy $\Cov(\beta_t,W_T)=t-t=0$.
+Wspólna gaussowskość wszystkich skończonych wektorów daje
+niezależność $(\beta_{t_1},\ldots,\beta_{t_n})$ od $W_T$.
+Przechodząc ze zdarzeń cylindrycznych do sigma-ciała generowanego
+przez proces, otrzymujemy niezależność całego $\beta$ od $W_T$.
+Rachunek kowariancji daje wskazany wzór.
+Na koniec równość $W_t=(t/T)W_T+\beta_t$ i niezależność
+pozwalają rozwarunkować względem $W_T$ dokładnie tak,
+jak w dowodzie wzoru na warunkowy rozkład gaussowski.
+Dla każdej ograniczonej borelowskiej funkcji $F$ skończonej
+liczby współrzędnych oraz zbioru $A$ zachodzi
+\[
+\E\bigl[F(W_{t_1},\ldots,W_{t_n})\ind{\{W_T\in A\}}\bigr]
+=\int_A \E\bigl[F((t_1/T)y+\beta_{t_1},\ldots,
+(t_n/T)y+\beta_{t_n})\bigr]\,\dd\Law(W_T)(y),
+\]
+co dowodzi tezy o rozkładach warunkowych.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[x=0.9cm,y=0.8cm,>=Latex]
+\draw[->] (-0.3,0)--(10.3,0) node[right] {$t$};
+\draw[->] (0,-1.4)--(0,2.0) node[above] {$\beta_t$};
+\draw[dashed,gray] (0,0)--(10,0);
+\draw[very thick,blue!70!black]
+ plot[smooth] coordinates {(0,0)(0.6,0.5)(1.2,0.2)(1.8,1.1)(2.5,0.35)(3,0.8)(3.7,0.2)(4.5,-0.8)(5.1,-0.35)(5.9,0.9)(6.6,0.2)(7.3,0.85)(8.1,0.25)(8.8,-0.35)(9.4,0.2)(10,0)};
+\node[below] at (0,0) {$0$};
+\node[below] at (10,0) {$T$};
+\node[above right,blue!70!black] at (2,1.15) {przykładowy most};
+\end{tikzpicture}
+\par\smallskip\small Schematyczna trajektoria mostu Browna: koniec jest przypięty do zera,
+choć między chwilami $0$ i $T$ proces pozostaje losowy.
+\end{center}
+
+\begin{zadanie}[Predykcja wartości procesu Wienera na podstawie dwóch obserwacji]
+Niech $W$ będzie procesem Wienera, $0<s<t$ oraz $0\le u\le t$.
+Obliczyć $\E[W_u\mid W_s,W_t]$ oraz wariancję warunkową,
+gdy $s\le u\le t$.
+
+\emph{Rozwiązanie.} Z niezależności przyrostów wektory
+$(W_s,W_u-W_s,W_t-W_s)$ mają niezależną pierwszą współrzędną
+od pary pozostałych. W szczególności
+$\E[W_u\mid W_s,W_t]=W_s+\E[W_u-W_s\mid W_t-W_s]$.
+Obserwowane dwa przyrosty są wspólnie gaussowskie,
+a $\Cov(W_u-W_s,W_t-W_s)=u-s$ i
+$\Var(W_t-W_s)=t-s$.
+Wzór na warunkowy rozkład gaussowski daje
+\[
+\E[W_u\mid W_s,W_t]
+=W_s+\frac{u-s}{t-s}(W_t-W_s),\qquad
+\Var(W_u\mid W_s,W_t)=\frac{(u-s)(t-u)}{t-s}.
+\]
+Zatem predykcją jest interpolacja liniowa między pomiarami,
+a błąd ma najmniejszą wariancję na końcach przedziału.
+\end{zadanie}
+
+\section{Podsumowanie: dlaczego procesy gaussowskie przygotowują ruch Browna?}
+Mamy już komplet narzędzi: jądro kowariancji pozwala skonstruować
+prawo procesu, formuły warunkowe opisują predykcję, a
+oszacowania momentów dają regularność trajektorii.
+Następny rozdział pokaże, że prosty wzór $K(s,t)=\min(s,t)$
+prowadzi do procesu o bardzo bogatych, a nawet zaskakujących
+własnościach geometrycznych.
+
+% ==============================================================
+% TOM II — ROZDZIAŁ 7: PROCES WIENERA
+% ==============================================================
