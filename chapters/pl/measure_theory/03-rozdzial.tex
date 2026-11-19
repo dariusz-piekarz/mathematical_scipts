@@ -1,0 +1,525 @@
+% ROZDZIAŁ 3 — plik włączany przez main.tex
+\chapter{Miary zewnętrzne i konstrukcja Carathéodory'ego}
+\label{ch:caratheodory}
+
+\section{Problem konstrukcji miary}
+
+W rozdziale \ref{ch:miary-wlasnosci} badaliśmy miarę już określoną na
+$\sigma$-algebrze. Teraz odwrócimy pytanie: jeśli znamy ``rozmiary''
+prostych zbiorów, to jak zbudować miarę na znacznie większej rodzinie?
+Przykładowo na prostej chcemy przypisać przedziałowi $[a,b)$ długość
+$b-a$, a następnie mierzyć zbiory otrzymane przez przeliczalne operacje.
+Sam warunek skończonej addytywności jest za słaby. Kluczową rolę odgrywa
+przeliczalna addytywność oraz możliwość pokrywania dowolnego zbioru
+zbiorami prostszymi.
+
+W całym rozdziale $X$ oznacza ustalony zbiór, a wszystkie funkcje
+zbiorów przyjmują wartości w $[0,\infty]$, jeśli wyraźnie nie
+zaznaczono inaczej. Przyjmujemy $\inf\varnothing=\infty$ oraz
+$\sum_{n=1}^\infty a_n=\sup_{N\ge1}\sum_{n=1}^N a_n$ dla $a_n\ge0$.
+
+\section{Miara zewnętrzna: definicja i własności}
+
+\begin{definicja}[Miara zewnętrzna]
+\label{def:outer-measure}
+Funkcję $\mu^*:\mathcal P(X)\to[0,\infty]$ nazywamy
+\emph{miarą zewnętrzną}, jeśli:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item $\mu^*(\varnothing)=0$;
+\item $A\subseteq B$ implikuje $\mu^*(A)\le\mu^*(B)$;
+\item dla dowolnego ciągu $(A_n)_{n\ge1}$ podzbiorów $X$ zachodzi
+\begin{equation}\label{eq:outer-subadd}
+\mu^*\Big(\bigcup_{n=1}^\infty A_n\Big)
+\le\sum_{n=1}^\infty\mu^*(A_n).
+\end{equation}
+\end{enumerate}
+Nie zakładamy, że $\mu^*$ jest miarą na $\mathcal P(X)$:
+na ogół nie jest addytywna nawet dla rozłącznych zbiorów.
+\end{definicja}
+
+\begin{przyklad}[Najprostsze miary zewnętrzne]
+Dla każdego zbioru $X$ funkcja $\mu^*(A)=0$ jest miarą zewnętrzną.
+Miara licząca $\#(A)$ z przykładu \ref{ex:counting}, traktowana
+jako funkcja na $\mathcal P(X)$, także jest miarą zewnętrzną.
+Bardziej pouczający przykład otrzymujemy na $X=\{a,b\}$, gdy
+$\mu^*(\varnothing)=0$ i $\mu^*(A)=1$ dla każdego $A\ne\varnothing$.
+Wtedy $\mu^*(\{a\}\cup\{b\})=1\ne2=\mu^*(\{a\})+\mu^*(\{b\})$.
+Wkrótce zobaczymy, że jej zbiory mierzalne w sensie Carathéodory'ego
+to jedynie $\varnothing$ i $X$.
+\end{przyklad}
+
+\subsection{Miara zewnętrzna z kosztu pokryć}
+
+\begin{twierdzenie}[Konstrukcja przez pokrycia]
+\label{thm:outer-from-cover}
+Niech $\mathcal C\subseteq\mathcal P(X)$ będzie rodziną zawierającą
+$\varnothing$ oraz taką, że $X$ jest sumą przeliczalnie wielu zbiorów
+z $\mathcal C$. Niech $c:\mathcal C\to[0,\infty]$ spełnia
+$c(\varnothing)=0$. Dla każdego $E\subseteq X$ określmy
+\begin{equation}\label{eq:outer-cover}
+\mu_c^*(E):=\inf\Big\{\sum_{n=1}^\infty c(C_n):
+C_n\in\mathcal C,\quad E\subseteq\bigcup_{n=1}^\infty C_n\Big\}.
+\end{equation}
+Wówczas $\mu_c^*$ jest miarą zewnętrzną.
+\end{twierdzenie}
+
+\begin{proof}
+Pusty zbiór można pokryć ciągiem zbiorów pustych, więc
+$0\le\mu_c^*(\varnothing)\le0$. Jeżeli $E\subseteq F$, to każde
+pokrycie $F$ dopuszczalne w \eqref{eq:outer-cover} jest pokryciem $E$;
+przy infimum po większej rodzinie nie można uzyskać większej wartości.
+
+Pozostaje podaddytywność. Niech $E=\bigcup_{j\ge1}E_j$.
+Jeżeli $\sum_j\mu_c^*(E_j)=\infty$, teza jest automatyczna.
+W przeciwnym przypadku, przy ustalonym $\varepsilon>0$, dla każdego
+$j$ wybieramy pokrycie $E_j\subseteq\bigcup_{k\ge1}C_{j,k}$, dla
+którego
+$\sum_{k\ge1}c(C_{j,k})<\mu_c^*(E_j)+\varepsilon2^{-j}$.
+Taki wybór jest możliwy z definicji infimum; sumy skończone też
+można uzupełnić pustymi zbiorami. Rodzina
+$\{C_{j,k}:j,k\ge1\}$ jest przeliczalna i pokrywa $E$. Zatem
+\[
+\mu_c^*(E)\le \sum_{j,k\ge1}c(C_{j,k})
+\le\sum_{j\ge1}\mu_c^*(E_j)+\varepsilon.
+\]
+Ponieważ $\varepsilon>0$ było dowolne, otrzymujemy
+\eqref{eq:outer-subadd}. Przestawianie sum jest tu dozwolone,
+gdyż wszystkie składniki są nieujemne: obie sumy to kresy górne
+sum po skończonych podzbiorach $\mathbb N^2$.
+\end{proof}
+
+\begin{uwaga}[Rola założeń]
+W konstrukcji wystarczy, aby każde $E\subseteq X$ miało jakieś
+przeliczalne pokrycie zbiorami z $\mathcal C$; przyjęte założenie
+zapewnia to jednocześnie wszystkim $E$. Nie wymagamy addytywności $c$.
+Z drugiej strony samo pokrywanie nie gwarantuje, że
+$\mu_c^*(C)=c(C)$ dla $C\in\mathcal C$.
+Równość uzyskamy dopiero przy założeniu, że $c$ jest premiarą.
+\end{uwaga}
+
+\section{Kryterium mierzalności Carathéodory'ego}
+
+\begin{definicja}[Zbiór mierzalny w sensie Carathéodory'ego]
+\label{def:caratheodory-measurable}
+Niech $\mu^*$ będzie miarą zewnętrzną na $X$. Zbiór $E\subseteq X$
+nazywamy $\mu^*$-\emph{mierzalnym}, jeśli dla każdego $T\subseteq X$
+zachodzi
+\begin{equation}\label{eq:caratheodory-criterion}
+\mu^*(T)=\mu^*(T\cap E)+\mu^*(T\setminus E).
+\end{equation}
+Rodzinę takich zbiorów oznaczamy przez $\mathcal M_{\mu^*}$.
+\end{definicja}
+
+Z nierówności \eqref{eq:outer-subadd} zawsze wynika
+$\mu^*(T)\le\mu^*(T\cap E)+\mu^*(T\setminus E)$.
+Weryfikacja \eqref{eq:caratheodory-criterion} polega więc na
+udowodnieniu \emph{odwrotnej} nierówności, także wtedy, gdy
+$\mu^*(T)=\infty$.
+
+\begin{twierdzenie}[Twierdzenie Carathéodory'ego]
+\label{thm:caratheodory}
+Jeśli $\mu^*$ jest miarą zewnętrzną na $X$, to
+$\mathcal M_{\mu^*}$ jest $\sigma$-algebrą na $X$, zaś
+$\mu:=\mu^*|_{\mathcal M_{\mu^*}}$ jest miarą. Ponadto miara
+$\mu$ jest zupełna: każdy podzbiór zbioru $\mu$-miary zero jest
+$\mu^*$-mierzalny i ma miarę zero.
+\end{twierdzenie}
+
+\begin{proof}
+\emph{Krok 1: dopełnienia i zbiory trywialne.}
+Dla $E=\varnothing$ równość
+\eqref{eq:caratheodory-criterion} ma postać
+$\mu^*(T)=0+\mu^*(T)$. Warunek jest symetryczny względem
+$E$ i $X\setminus E$, toteż mierzalność $E$ pociąga mierzalność
+jego dopełnienia. W szczególności $X\in\mathcal M_{\mu^*}$.
+
+\emph{Krok 2: sumy dwóch zbiorów.}
+Dla $E,F\in\mathcal M_{\mu^*}$ i dowolnego $T\subseteq X$
+rozkładamy najpierw $T$ według $E$, a potem $T\setminus E$
+według $F$:
+\begin{align*}
+\mu^*(T)
+&=\mu^*(T\cap E)+\mu^*(T\setminus E)\\
+&=\mu^*(T\cap E)+\mu^*((T\setminus E)\cap F)
+  +\mu^*(T\setminus(E\cup F))\\
+&\ge\mu^*(T\cap(E\cup F))
+  +\mu^*(T\setminus(E\cup F)).
+\end{align*}
+Ostatnia nierówność wynika z podaddytywności, gdyż
+$T\cap(E\cup F)=(T\cap E)\cup((T\setminus E)\cap F)$.
+Nierówność w drugą stronę obowiązuje dla każdego zbioru, a zatem
+$E\cup F$ jest mierzalny. Mamy też zamkniętość na skończone
+przekroje, dzięki prawom de Morgana.
+
+\emph{Krok 3: przeliczalne sumy rozłączne.}
+Niech $(E_n)_{n\ge1}$ będzie parami rozłącznym ciągiem
+zbiorów mierzalnych, a $E=\bigcup_nE_n$.
+Wielokrotnie stosując kryterium do $E_1,\ldots,E_N$,
+otrzymujemy dla dowolnego $T\subseteq X$
+\[
+\mu^*(T)=\sum_{n=1}^N\mu^*(T\cap E_n)
++\mu^*\Big(T\setminus\bigcup_{n=1}^N E_n\Big).
+\]
+Ponieważ $T\setminus E\subseteq T\setminus\bigcup_{n=1}^N E_n$,
+monotoniczność daje
+$\mu^*(T)\ge\sum_{n=1}^N\mu^*(T\cap E_n)
++\mu^*(T\setminus E)$.
+Przechodząc do kresu górnego po $N$, otrzymujemy
+\[
+\mu^*(T)\ge\sum_{n=1}^\infty\mu^*(T\cap E_n)
++\mu^*(T\setminus E)
+\ge\mu^*(T\cap E)+\mu^*(T\setminus E).
+\]
+Ostatnie przejście korzysta z podaddytywności dla
+$T\cap E=\bigcup_n(T\cap E_n)$. To dowodzi mierzalności $E$.
+
+\emph{Krok 4: dowolne sumy przeliczalne.}
+Dla mierzalnych $A_n$ stosujemy rozłącznienie
+$E_1=A_1$ oraz $E_n=A_n\setminus\bigcup_{k<n}A_k$ dla $n\ge2$.
+Na mocy poprzednich kroków wszystkie $E_n$ są mierzalne i
+$\bigcup_n A_n=\bigcup_n E_n$; zatem
+$\mathcal M_{\mu^*}$ jest $\sigma$-algebrą.
+
+\emph{Krok 5: przeliczalna addytywność.}
+Dla rozłącznych mierzalnych $E_n$ podstawiamy $T=E=\bigcup_nE_n$
+do nierówności z kroku 3. Otrzymujemy
+$\mu^*(E)\ge\sum_n\mu^*(E_n)$, a odwrotną nierówność zapewnia
+\eqref{eq:outer-subadd}. Ponadto $\mu^*(\varnothing)=0$,
+więc ograniczenie $\mu$ jest miarą.
+
+\emph{Krok 6: zupełność.}
+Niech $N\in\mathcal M_{\mu^*}$, $\mu^*(N)=0$ i $S\subseteq N$.
+Dla dowolnego $T$ z monotoniczności mamy
+$\mu^*(T\cap S)=0$ i
+$\mu^*(T\setminus S)\le\mu^*(T)$.
+Stąd
+$\mu^*(T\cap S)+\mu^*(T\setminus S)\le\mu^*(T)$.
+Podaddytywność daje nierówność przeciwną. Zatem $S$ jest
+mierzalny oraz $\mu^*(S)=0$.
+\end{proof}
+
+\begin{przyklad}[Miara zewnętrzna, która nie mierzy wszystkich zbiorów]
+Niech $X=\{a,b\}$ oraz $\mu^*(A)=1$ dla $A\ne\varnothing$.
+Gdyby $E=\{a\}$ było mierzalne, podstawienie $T=X$ dałoby
+$1=\mu^*(X)=\mu^*(\{a\})+\mu^*(\{b\})=2$,
+sprzeczność. Stąd $\mathcal M_{\mu^*}=\{\varnothing,X\}$.
+To pokazuje, że kryterium Carathéodory'ego ma rzeczywistą treść.
+\end{przyklad}
+
+\section{Premiary na algebrach zbiorów}
+
+\begin{definicja}[Premiara]
+\label{def:premeasure}
+Niech $\mathcal A$ będzie algebrą podzbiorów $X$.
+Funkcję $\mu_0:\mathcal A\to[0,\infty]$ nazywamy
+\emph{premiarą}, jeżeli $\mu_0(\varnothing)=0$ i dla każdego
+ciągu parami rozłącznych $A_n\in\mathcal A$ takiego, że
+$A=\bigcup_{n\ge1}A_n\in\mathcal A$, zachodzi
+\begin{equation}\label{eq:premeasure}
+\mu_0(A)=\sum_{n=1}^\infty\mu_0(A_n).
+\end{equation}
+Warunek nie zakłada, że $\bigcup_nA_n$ zawsze należy do
+$\mathcal A$; algebra nie musi być $\sigma$-algebrą.
+\end{definicja}
+
+\begin{lemat}[Podaddytywność premiary na pokryciach]
+\label{lem:premeasure-cover}
+Jeżeli $\mu_0$ jest premiarą na $\mathcal A$, zaś
+$A,A_n\in\mathcal A$ i $A\subseteq\bigcup_{n\ge1}A_n$,
+to $\mu_0(A)\le\sum_{n\ge1}\mu_0(A_n)$.
+\end{lemat}
+
+\begin{proof}
+Tworzymy rozłączne zbiory
+$B_1=A\cap A_1$ i
+$B_n=(A\cap A_n)\setminus\bigcup_{k<n}A_k$ dla $n\ge2$.
+Wszystkie należą do algebry, a $A=\bigsqcup_nB_n$.
+Z \eqref{eq:premeasure} oraz monotoniczności premiary
+(wynikającej ze skończonej addytywności) dostajemy
+$\mu_0(A)=\sum_n\mu_0(B_n)\le\sum_n\mu_0(A_n)$.
+\end{proof}
+
+\begin{przyklad}[Skończona addytywność nie wystarcza]
+Na $X=\mathbb N$ niech $\mathcal A$ będzie algebrą
+zbiorów skończonych i kofinitywnych. Określmy
+$\nu_0(A)=0$, gdy $A$ jest skończony, oraz
+$\nu_0(A)=1$, gdy $\mathbb N\setminus A$ jest skończony.
+Jest to funkcja skończenie addytywna: dwa rozłączne
+zbiory kofinitywne nie istnieją, a dołączenie zbioru
+skończonego nie zmienia wartości. Nie jest premiarą, gdyż
+$\mathbb N=\bigsqcup_{n\ge1}\{n\}$, natomiast
+$\nu_0(\mathbb N)=1\ne\sum_n\nu_0(\{n\})=0$.
+Każda miara rozszerzająca $\nu_0$ musiałaby spełniać
+sprzeczną równość, toteż takie rozszerzenie nie istnieje.
+\end{przyklad}
+
+\begin{twierdzenie}[Kryterium ciągłości premiary skończonej]
+\label{thm:premeasure-continuity}
+Niech $\mathcal A$ będzie algebrą podzbiorów $X$, a
+$\mu_0:\mathcal A\to[0,\infty)$ funkcją skończenie addytywną
+spełniającą $\mu_0(X)<\infty$ i $\mu_0(\varnothing)=0$.
+Wówczas $\mu_0$ jest premiarą wtedy i tylko wtedy, gdy
+$A_n\in\mathcal A$, $A_n\downarrow\varnothing$ implikuje
+$\mu_0(A_n)\to0$.
+\end{twierdzenie}
+
+\begin{proof}
+Jeśli $\mu_0$ jest premiarą, to dla
+$A_n\downarrow\varnothing$ zbiory $D_n=A_n\setminus A_{n+1}$
+są rozłączne i $A_1=\bigsqcup_nD_n$.
+W konsekwencji
+$\mu_0(A_n)=\sum_{k\ge n}\mu_0(D_k)\to0$,
+gdyż szereg ma skończoną sumę $\mu_0(A_1)\le\mu_0(X)$.
+
+Odwrotnie, niech $A=\bigsqcup_n A_n$ i wszystkie te zbiory
+należą do $\mathcal A$. Dla
+$R_N=A\setminus\bigcup_{n=1}^N A_n$ mamy
+$R_N\downarrow\varnothing$, a skończona addytywność daje
+$\mu_0(A)=\sum_{n=1}^N\mu_0(A_n)+\mu_0(R_N)$.
+Po przejściu do granicy otrzymujemy \eqref{eq:premeasure}.
+\end{proof}
+
+\begin{uwaga}
+Nie wolno bez zmian stosować twierdzenia
+\ref{thm:premeasure-continuity} przy $\mu_0(X)=\infty$.
+Na przykład miara licząca na $\mathbb N$ jest premiarą,
+lecz dla $A_n=\{n,n+1,\ldots\}$ mamy $A_n\downarrow\varnothing$
+i $\mu_0(A_n)=\infty$ dla wszystkich $n$.
+\end{uwaga}
+
+\section{Twierdzenie o rozszerzaniu miar}
+
+\begin{twierdzenie}[Rozszerzenie Carathéodory'ego]
+\label{thm:extension-caratheodory}
+Niech $\mathcal A$ będzie algebrą podzbiorów $X$, a
+$\mu_0$ premiarą na $\mathcal A$. Zdefiniujmy $\mu^*$
+przez \eqref{eq:outer-cover}, biorąc $\mathcal C=\mathcal A$
+i $c=\mu_0$. Wówczas:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item $\mu^*$ jest miarą zewnętrzną;
+\item każdy $A\in\mathcal A$ jest $\mu^*$-mierzalny;
+\item $\mu^*(A)=\mu_0(A)$ dla wszystkich $A\in\mathcal A$;
+\item $\mu=\mu^*|_{\mathcal M_{\mu^*}}$ jest zupełną miarą
+rozszerzającą $\mu_0$, a jej ograniczenie do
+$\sigma(\mathcal A)$ jest miarą na $\sigma(\mathcal A)$.
+Miara na $\sigma(\mathcal A)$ nie musi jednak być zupełna.
+\end{enumerate}
+\end{twierdzenie}
+
+\begin{proof}
+Punkt (i) wynika z twierdzenia \ref{thm:outer-from-cover},
+gdyż $X\in\mathcal A$.
+Ustalmy $A\in\mathcal A$ i dowolny $T\subseteq X$.
+Dla każdego pokrycia $T\subseteq\bigcup_nC_n$ przez
+$C_n\in\mathcal A$ zbiory $C_n\cap A$ pokrywają $T\cap A$,
+a $C_n\setminus A$ pokrywają $T\setminus A$. Dlatego
+\begin{align*}
+\mu^*(T\cap A)+\mu^*(T\setminus A)
+&\le\sum_n\mu_0(C_n\cap A)+\sum_n\mu_0(C_n\setminus A)\\
+&=\sum_n\mu_0(C_n).
+\end{align*}
+Równość korzysta ze skończonej addytywności $\mu_0$.
+Biorąc infimum po pokryciach, otrzymujemy
+$\mu^*(T\cap A)+\mu^*(T\setminus A)\le\mu^*(T)$.
+W połączeniu z podaddytywnością jest to warunek
+\eqref{eq:caratheodory-criterion}; dowodzi (ii).
+
+Dla każdego $A\in\mathcal A$ pokrycie $A$ samym $A$
+(i pozostałymi zbiorami pustymi) daje
+$\mu^*(A)\le\mu_0(A)$. Z drugiej strony
+lemat \ref{lem:premeasure-cover} zapewnia
+$\mu_0(A)\le\sum_n\mu_0(C_n)$ dla dowolnego pokrycia
+$A\subseteq\bigcup_nC_n$. Infimum daje
+$\mu_0(A)\le\mu^*(A)$, a więc (iii).
+
+Punkt (iv) jest już konsekwencją twierdzenia
+\ref{thm:caratheodory}: $\mathcal M_{\mu^*}$ jest
+$\sigma$-algebrą zawierającą $\mathcal A$, zatem
+zawiera $\sigma(\mathcal A)$; ograniczenie $\mu^*$
+jest na niej miarą, zaś na $\mathcal M_{\mu^*}$ miarą zupełną.
+\end{proof}
+
+\begin{definicja}[\texorpdfstring{$\sigma$}{sigma}-skończona premiara]\label{idx:03:definicja:09}
+
+Premiarę $\mu_0$ na algebrze $\mathcal A$ nazywamy
+$\sigma$-\emph{skończoną}, jeżeli istnieją
+$A_n\in\mathcal A$ takie, że $X=\bigcup_nA_n$ oraz
+$\mu_0(A_n)<\infty$ dla każdego $n$.
+Możemy zawsze zastąpić $A_n$ sumami skończonymi
+$A_1\cup\cdots\cup A_n$, otrzymując ciąg rosnący.
+\end{definicja}
+
+\begin{twierdzenie}[Jednoznaczność rozszerzenia]
+\label{thm:extension-uniqueness}
+Jeśli premiara $\mu_0$ na algebrze $\mathcal A$ jest
+$\sigma$-skończona, to istnieje dokładnie jedna miara
+na $\sigma(\mathcal A)$, której ograniczenie do
+$\mathcal A$ jest równe $\mu_0$.
+\end{twierdzenie}
+
+\begin{proof}
+Istnienie daje twierdzenie \ref{thm:extension-caratheodory}.
+Niech $\mu$ i $\nu$ będą dwoma rozszerzeniami.
+Wybierzmy rosnący ciąg $A_n\in\mathcal A$ o
+$\bigcup_n A_n=X$ i $\mu_0(A_n)<\infty$.
+Dla ustalonego $n$ funkcje
+$\mu_n(E)=\mu(E\cap A_n)$ oraz $\nu_n(E)=\nu(E\cap A_n)$,
+$E\in\sigma(\mathcal A)$, są miarami skończonymi.
+Zgadzają się na algebrze $\mathcal A$, ponieważ
+$E\cap A_n\in\mathcal A$ dla $E\in\mathcal A$.
+Algebra jest układem $\pi$ i generuje
+$\sigma(\mathcal A)$. Z twierdzenia
+\ref{thm:uniqueness-finite} otrzymujemy
+$\mu_n(E)=\nu_n(E)$ dla każdego $E\in\sigma(\mathcal A)$.
+Ponieważ $E\cap A_n\uparrow E$, ciągłość miary z dołu
+(twierdzenie \ref{thm:measure-continuity}) daje
+$\mu(E)=\lim_n\mu_n(E)=\lim_n\nu_n(E)=\nu(E)$.
+\end{proof}
+
+\begin{przyklad}[Dlaczego potrzebna jest $\sigma$-skończoność]
+\label{ex:nonunique-extension}
+Na $X=\mathbb R$ niech $\mathcal A$ będzie algebrą
+generowaną przez przedziały $[a,b)$, gdzie $a<b$ są
+rzeczywiste. Każdy niepusty element $\mathcal A$ zawiera
+niezdegenerowany przedział; ponadto
+$\sigma(\mathcal A)=\mathcal B(\mathbb R)$.
+Na zbiorach borelowskich rozważmy dwie miary:
+\[
+\mu(E)=\#E,\qquad
+\nu(E)=\begin{cases}0,&E\text{ jest przeliczalny},\\
+\infty,&E\text{ jest nieprzeliczalny}.
+\end{cases}
+\]
+Funkcja $\nu$ jest miarą, gdyż przeliczalna suma zbiorów
+przeliczalnych jest przeliczalna, a suma zawierająca
+zbiór nieprzeliczalny jest nieprzeliczalna. Na każdym
+niepustym elemencie $\mathcal A$ obie miary mają wartość
+$\infty$, zaś na pustym obie są równe zero. Są to więc
+różne rozszerzenia tej samej premiary:
+$\mu(\{0\})=1$, natomiast $\nu(\{0\})=0$.
+Premiara nie jest $\sigma$-skończona: jej jedynym
+zbiorem o skończonej mierze jest $\varnothing$.
+\end{przyklad}
+
+\begin{uwaga}[Różne role założeń]
+Premiara daje istnienie rozszerzenia na $\sigma(\mathcal A)$
+bez założenia $\sigma$-skończoności. To założenie pojawia się
+dopiero przy jednoznaczności rozszerzenia oraz przy
+identyfikacji całej rodziny zbiorów Carathéodory'ego
+z uzupełnieniem $\sigma(\mathcal A)$. W szczególności
+stwierdzenie o istnieniu i stwierdzenie o jednoznaczności
+nie są jednym i tym samym twierdzeniem.
+\end{uwaga}
+
+\section{Kiedy mierzalność Carathéodory'ego jest uzupełnieniem rozszerzenia?}
+
+Rozszerzenie otrzymane z twierdzenia
+\ref{thm:extension-caratheodory} jest określone na
+$\mathcal M_{\mu^*}$, zwykle większej niż $\sigma(\mathcal A)$.
+Nie należy utożsamiać tych rodzin bez dowodu.
+Poniższy rezultat określa ich związek przy
+$\sigma$-skończoności.
+
+\begin{lemat}[Aproksymacja od góry]
+\label{lem:outer-approx-algebra}
+Niech $\mu_0$ będzie premiarą na algebrze $\mathcal A$ i
+$\mu^*$ jej miarą zewnętrzną. Jeśli $E\subseteq X$ oraz
+$\mu^*(E)<\infty$, to dla każdego $\varepsilon>0$
+istnieje $B\in\sigma(\mathcal A)$, $E\subseteq B$, takie, że
+$\mu^*(B)\le\mu^*(E)+\varepsilon$.
+Jeżeli dodatkowo $E\in\mathcal M_{\mu^*}$, to
+$\mu(B\setminus E)<\varepsilon$.
+\end{lemat}
+
+\begin{proof}
+Wybieramy pokrycie $E\subseteq\bigcup_nA_n$ przez
+$A_n\in\mathcal A$ z $\sum_n\mu_0(A_n)<\mu^*(E)+\varepsilon$.
+Wystarczy wziąć $B=\bigcup_nA_n$. Z podaddytywności i
+równości $\mu^*(A_n)=\mu_0(A_n)$ dostajemy
+$\mu^*(B)\le\sum_n\mu_0(A_n)<\mu^*(E)+\varepsilon$.
+Jeśli $E$ jest mierzalny, to $B\setminus E$ jest mierzalny
+i $\mu(B)=\mu(E)+\mu(B\setminus E)$.
+Obie pierwsze wartości są skończone, więc
+$\mu(B\setminus E)<\varepsilon$.
+\end{proof}
+
+\begin{twierdzenie}[Uzupełnienie rozszerzenia]
+\label{thm:caratheodory-completion}
+Załóżmy, że premiara $\mu_0$ na algebrze $\mathcal A$
+jest $\sigma$-skończona. Niech $\mu^*$ będzie wyznaczoną
+przez nią miarą zewnętrzną, a $\mu_B=\mu^*|_{\sigma(\mathcal A)}$.
+Wówczas przestrzeń
+$(X,\mathcal M_{\mu^*},\mu^*|_{\mathcal M_{\mu^*}})$
+jest uzupełnieniem przestrzeni
+$(X,\sigma(\mathcal A),\mu_B)$ w sensie twierdzenia
+\ref{thm:completion}. Dokładniej: dla każdego
+$E\in\mathcal M_{\mu^*}$ istnieją
+$C,D\in\sigma(\mathcal A)$ takie, że
+$C\subseteq E\subseteq D$ i $\mu_B(D\setminus C)=0$.
+\end{twierdzenie}
+
+\begin{proof}
+Wybierzmy rosnący ciąg $A_n\in\mathcal A$ pokrywający $X$,
+przy czym $\mu_0(A_n)<\infty$. Dla ustalonego mierzalnego
+$E$ zbiór $E_n=E\cap A_n$ jest mierzalny i ma skończoną miarę.
+Dla każdego $k,n\ge1$ lemat \ref{lem:outer-approx-algebra}
+daje $B_{n,k}\in\sigma(\mathcal A)$ z
+$E_n\subseteq B_{n,k}$ oraz
+$\mu(B_{n,k}\setminus E_n)<2^{-n}/k$.
+Połóżmy $D_k=\bigcup_{n\ge1}B_{n,k}$.
+Wtedy $D_k\in\sigma(\mathcal A)$,
+$E\subseteq D_k$, gdyż $E=\bigcup_nE_n$, i
+\[
+\mu(D_k\setminus E)
+\le\sum_n\mu(B_{n,k}\setminus E)
+\le\sum_n\mu(B_{n,k}\setminus E_n)<\frac1k.
+\]
+Zbiór $D=\bigcap_{k\ge1}D_k$ należy do
+$\sigma(\mathcal A)$, zawiera $E$ i spełnia
+$\mu(D\setminus E)=0$, ponieważ
+$D\setminus E\subseteq D_k\setminus E$ dla każdego $k$.
+Powtarzamy konstrukcję dla mierzalnego zbioru
+$X\setminus E$, otrzymując zbiór należący do
+$\sigma(\mathcal A)$, mianowicie $H\supseteq X\setminus E$,
+taki że $\mu(H\setminus(X\setminus E))=0$.
+Wtedy $C=X\setminus H\in\sigma(\mathcal A)$,
+$C\subseteq E$ i $\mu(E\setminus C)=0$.
+Wobec $C\subseteq E\subseteq D$ mamy
+$D\setminus C=(D\setminus E)\sqcup(E\setminus C)$,
+zatem $\mu_B(D\setminus C)=0$.
+
+Każdy zbiór z uzupełnienia $\sigma(\mathcal A)$ różni
+się od zbioru z $\sigma(\mathcal A)$ o podzbiór
+zbioru $\mu_B$-zerowego, a więc jest
+$\mu^*$-mierzalny z zupełności twierdzenia
+\ref{thm:caratheodory}. Przed chwilą udowodniliśmy
+zawieranie przeciwne, kończąc dowód.
+\end{proof}
+
+\begin{uwaga}[Dlaczego to rozróżnienie jest ważne?]
+W rozdziale \ref{ch:lebesgue} rozróżnimy zbiory borelowskie
+i zbiory mierzalne w sensie Lebesgue'a. Konstrukcja
+Carathéodory'ego od razu daje miarę zupełną; ograniczenie
+do borelowskiej $\sigma$-algebry nie musi być zupełne.
+\end{uwaga}
+
+\section{Jeszcze jeden sposób interpretacji konstrukcji}
+
+Dla zbioru $E\subseteq X$ liczba $\mu^*(E)$ jest
+najmniejszym kosztem \emph{przeliczalnego pokrycia} $E$
+przez zbiory z wyjściowej algebry. Mierzalność w sensie
+Carathéodory'ego oznacza, że przecięcie z $E$ oraz z jego
+dopełnieniem nie powoduje sztucznej utraty kosztu,
+niezależnie od badanego zbioru $T$.
+
+Następujące trzy kroki to logiczny szkielet rozdziału:
+\begin{enumerate}
+\item z premiary $\mu_0$ tworzymy $\mu^*$ na całej $\mathcal P(X)$;
+\item warunek \eqref{eq:caratheodory-criterion} wyodrębnia
+$\sigma$-algebrę, na której $\mu^*$ jest miarą;
+\item przy $\sigma$-skończoności dostajemy jedyne
+rozszerzenie na $\sigma(\mathcal A)$, a po uzupełnieniu
+pełną dziedzinę mierzalności Carathéodory'ego.
+\end{enumerate}
+W następnym rozdziale zrealizujemy ten program dla
+objętości prostopadłościanów w $\mathbb R^d$.

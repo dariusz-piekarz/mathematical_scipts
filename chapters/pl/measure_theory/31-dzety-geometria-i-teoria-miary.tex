@@ -1,0 +1,1091 @@
+% Rozdział współdzielony tematycznie z geometrią różniczkową; wersja audytowana 2026-11-19.
+% Samodzielny rozdział do włączenia przez \input{rozdzial_dzety.tex}.
+% Wymaga: amsmath, amssymb, amsthm, mathtools, tikz, hyperref.
+% Środowiska: definicja, twierdzenie, lemat, wniosek, uwaga, przyklad, proof.
+\chapter{Dżety: od geometrii różniczkowej do teorii miary}
+\label{ch:dzety}
+
+\section{Motywacja: ile informacji niesie punkt?}
+W rozdziale~\ref{ch:area-coarea-28} wyprowadziliśmy twierdzenie
+Rademachera i wzory miarowo-geometryczne. Teraz interpretujemy
+różniczkowalność prawie wszędzie językiem dżetów, zachowując też
+pełne ujęcie geometryczne, formy kontaktowe i twierdzenia Whitneya.
+Wartość $f(p)$ opisuje jedynie punkt obrazu, pochodna $Df(p)$ ---
+przybliżenie liniowe, a kolejne pochodne --- coraz dokładniejsze
+przybliżenia lokalne. \emph{Dżet rzędu $k$} jest sposobem zebrania
+tej informacji w jeden obiekt. Rozróżniamy trzy sytuacje:
+\begin{enumerate}
+\item w geometrii gładkiej dżet jest klasą równoważności
+kiełków odwzorowań lub przekrojów;
+\item w równaniach różniczkowych współrzędne dżetowe
+traktuje się jako formalnie niezależne, lecz rozwiązania
+muszą spełniać warunki holonomiczności;
+\item w teorii miary dżet może istnieć tylko prawie wszędzie,
+a zwykłą granicę zastępuje się \emph{granicą przybliżoną}.
+\end{enumerate}
+Te trzy punkty widzenia spotykają się w twierdzeniu Whitneya:
+\emph{kiedy formalnie zadane pochodne dają się zrealizować przez
+prawdziwą funkcję gładką?} Wersja Whitneya--Luzina mówi zaś,
+że wiele funkcji mierzalnych staje się gładkimi po pominięciu
+zbioru o dowolnie małej mierze.
+
+\section{Kiełki, klasy równoważności i wielomiany Taylora}
+\begin{definicja}[Kiełek odwzorowania]
+\label{def:dzety-kielek}
+Niech $M,N$ będą gładkimi rozmaitościami i $p\in M$.
+Dwa gładkie odwzorowania $f:U\to N$ i $g:V\to N$,
+gdzie $p\in U\cap V$, mają ten sam \emph{kiełek w $p$},
+jeżeli pokrywają się na pewnym otoczeniu $p$ zawartym w $U\cap V$.
+Zbiór kiełków oznaczamy przez $\mathcal C^\infty_p(M,N)$.
+\end{definicja}
+
+\begin{definicja}[$k$-dżet odwzorowania]
+\label{def:dzety-klasa}
+Niech $k\in\mathbb N_0$, $f,g$ będą gładkie w otoczeniu $p\in M$,
+a $f(p)=g(p)=q\in N$. Piszemy $f\sim_{p,k}g$, jeżeli
+po wybraniu mapy $x$ wokół $p$ i mapy $y$ wokół $q$ zachodzi
+\[
+ \partial^\alpha (y\circ f\circ x^{-1})(x(p))
+ =\partial^\alpha (y\circ g\circ x^{-1})(x(p)),
+ \qquad |\alpha|\le k.
+\]
+Klasę równoważności oznaczamy przez $j_p^k f$ i nazywamy
+\emph{$k$-dżetem $f$ w $p$}. Dla $k=0$ jest to po prostu para
+$(p,f(p))$. Wartości pochodnych liczymy składowo.
+\end{definicja}
+
+\begin{lemat}[Niezależność od map]
+\label{lem:dzety-mapy}
+Relacja w Definicji~\ref{def:dzety-klasa} nie zależy od wyboru
+map źródła i celu.
+\end{lemat}
+\begin{proof}
+Niech $\varphi,\psi$ będą zmianami współrzędnych.
+Dla odwzorowania współrzędnego $F$ nowy zapis ma postać
+$\psi\circ F\circ\varphi^{-1}$. Reguła łańcuchowa mówi,
+że jego pochodna rzędu $r\le k$ jest skończoną sumą wyrażeń
+zawierających pochodne $F$ rzędów od $1$ do $r$, pochodne
+$\psi,\varphi^{-1}$ i wartości funkcji w rozpatrywanym punkcie.
+Jeżeli odpowiednie dane dla $F$ i $G$ są równe do rzędu $k$,
+to równe są także wszystkie nowe pochodne. Zmieniając mapy
+w przeciwnym kierunku, otrzymujemy równoważność.
+\end{proof}
+
+\begin{przyklad}[Różne funkcje, ten sam dżet]
+\label{ex:dzety-taylor}
+Dla $f(x)=\sin x$ i $g(x)=x$ mamy $j_0^2f=j_0^2g$,
+ale $j_0^3f\ne j_0^3g$. Natomiast $f(x)=x+x^2$
+i $g(x)=x-x^2$ mają identyczne $1$-dżety w zerze,
+ale różne $2$-dżety.
+\end{przyklad}
+
+\begin{uwaga}[Nie należy utożsamiać drugiej pochodnej z tensorem]
+\label{rem:dzety-hess}
+Pierwsza pochodna funkcji skalarnych definiuje kanoniczny
+kowektor $\mathrm df_p\in T_p^*M$. Dla drugiej pochodnej jest inaczej.
+Współrzędna $x$ na $\mathbb R$ i współrzędna $y=x+x^2$ wokół zera
+dałyby dla funkcji $f(x)=x$ odpowiednio $f''(0)=0$
+oraz $\frac{\mathrm d^2 f}{\mathrm dy^2}(0)=-2$.
+Oznacza to, że $2$-dżet jest obiektem niezmienniczym,
+ale same współrzędne drugich pochodnych nie są tensorami.
+Tensor Hessego powstaje kanonicznie dopiero po określeniu
+koneksji (lub w punkcie krytycznym funkcji).
+\end{uwaga}
+
+\begin{definicja}[Algebra dżetów funkcji skalarnych]
+\label{def:dzety-algebra}
+Niech $\mathcal E_p$ oznacza pierścień kiełków gładkich
+funkcji rzeczywistych na $M$ w punkcie $p$ i
+$\mathfrak m_p=\{[f]:f(p)=0\}$ jego ideał maksymalny.
+Definiujemy $\mathcal J_p^k=\mathcal E_p/\mathfrak m_p^{k+1}$.
+\end{definicja}
+
+\begin{twierdzenie}[Algebra i wielomiany Taylora]
+\label{thm:dzety-algebra}
+Dla $M=\mathbb R^n$ i $p=0$ odwzorowanie
+\[
+ [f]\longmapsto \sum_{|\alpha|\le k}
+ \frac{\partial^\alpha f(0)}{\alpha!}X^\alpha
+\]
+indukuje izomorfizm algebr
+$\mathcal J_0^k\cong\mathbb R[X_1,\ldots,X_n]/(X_1,\ldots,X_n)^{k+1}$.
+W szczególności $\dim\mathcal J_0^k=\binom{n+k}{k}$.
+\end{twierdzenie}
+\begin{proof}
+Wielomian Taylora rzędu $k$ iloczynu jest iloczynem
+wielomianów Taylora po odrzuceniu wyrazów stopnia większego niż $k$,
+co wynika z reguły Leibniza. Jądro odwzorowania składa się
+z kiełków o pochodnych rzędów $0,\ldots,k$ równych zeru.
+Lemat Hadamarda, otrzymywany przez całkowanie
+$f(x)-f(0)=\sum_i x_i\int_0^1 \partial_i f(tx)\,\mathrm d\lambda_1(t)$,
+daje kolejno dla takiego kiełka rozkład
+$f(x)=\sum_{|\alpha|=k+1}x^\alpha h_\alpha(x)$
+z funkcjami gładkimi $h_\alpha$ w otoczeniu zera.
+To znaczy, że jądrem jest $\mathfrak m_0^{k+1}$.
+Każdy wielomian stopnia co najwyżej $k$ sam jest gładki,
+więc homomorfizm jest surjektywny. Liczba jednomianów
+o $|\alpha|\le k$ wynosi $\binom{n+k}{k}$.
+\end{proof}
+
+\begin{przyklad}[Liczby dualne]
+\label{ex:dzety-dualne}
+Dla $n=k=1$ dostajemy
+$\mathcal J_0^1\cong\mathbb R[\varepsilon]/(\varepsilon^2)$.
+Dżet funkcji $f$ ma zapis $f(0)+f'(0)\varepsilon$;
+reguła mnożenia automatycznie daje wzór na pochodną iloczynu.
+To algebraiczne źródło arytmetyki liczb dualnych używanej
+w automatycznym różniczkowaniu.
+\end{przyklad}
+
+\section{Wiązki dżetów i ich naturalne odwzorowania}
+\begin{definicja}[Wiązka dżetów odwzorowań]
+\label{def:dzety-bundle}
+Dla gładkich rozmaitości $M,N$ oznaczamy przez $J^k(M,N)$
+zbiór wszystkich $k$-dżetów lokalnych gładkich odwzorowań
+$M\to N$. Naturalne odwzorowania to
+$\pi_0^k(j_p^k f)=(p,f(p))$ oraz dla $0\le r\le k$
+$\pi_r^k(j_p^k f)=j_p^r f$.
+Dla ustalonego $f$ odwzorowanie $j^kf:p\mapsto j_p^kf$
+nazywamy \emph{przedłużeniem dżetowym}.
+\end{definicja}
+
+W lokalnych współrzędnych na $M$ i $N$, o wymiarach $n,m$,
+przestrzeń $J^k(M,N)$ ma współrzędne $(x^i,u^a,u^a_\alpha)$,
+$1\le|\alpha|\le k$, gdzie $u^a_\alpha$ odpowiada pochodnej
+$\partial^\alpha u^a$. Jej wymiar wynosi
+$n+m\binom{n+k}{k}$. Przestrzeń ta jest rozmaitością gładką,
+ponieważ zmiany współrzędnych są otrzymywane z reguły
+łańcuchowej i zależą gładko od skończonej liczby pochodnych.
+
+\begin{twierdzenie}[Pierwsze dżety i struktura afiniczna]
+\label{thm:dzety-affine}
+Dla dowolnych $(p,q)\in M\times N$ włókno
+$(\pi_0^1)^{-1}(p,q)$ utożsamia się kanonicznie z
+$\operatorname{Hom}(T_pM,T_qN)$. Dla $k\ge2$ włókna
+$\pi_{k-1}^k:J^k(M,N)\to J^{k-1}(M,N)$ są przestrzeniami
+afinicznymi modelowanymi na
+$S^kT_p^*M\otimes T_qN$, gdzie $(p,q)$ jest
+wartością rozpatrywanego $(k-1)$-dżetu.
+\end{twierdzenie}
+\begin{proof}
+Wartość i różniczka $f$ w $p$ jednoznacznie wyznaczają
+$1$-dżet, a dowolne odwzorowanie liniowe
+$T_pM\to T_qN$ jest różniczką odpowiedniej lokalnej funkcji
+w mapach. Dla $k\ge2$ dwa przedłużenia tego samego
+$(k-1)$-dżetu różnią się tylko pochodną rzędu $k$.
+W regule zmiany współrzędnych wszystkie wyrazy
+nieliniowe w pochodnych rzędu mniejszego niż $k$ znikają
+przy odejmowaniu obu dżetów. Pozostaje tensorowe
+przekształcenie symetrycznej $k$-formy o wartościach
+w $T_qN$. Pozwala to odejmować dwa przedłużenia,
+ale nie wybiera wyróżnionego zera w takim włóknie.
+\end{proof}
+
+\begin{uwaga}
+Nie należy nazywać całej $J^k(M,N)$ wiązką wektorową
+nad $M\times N$ dla $k\ge2$: zmiany współrzędnych
+zawierają wyrazy niższych rzędów. Różnica między
+\emph{wiązka wektorowa} a \emph{wiązka afiniczna}
+jest w tym miejscu istotna.
+\end{uwaga}
+
+\section{Dżety przekrojów, holonomiczność i formy kontaktowe}
+Niech $\pi:E\to M$ będzie gładką wiązką lokalnie trywialną.
+Dżety lokalnych przekrojów $s$ tworzą $J^kE$.
+Na włóknie lokalne współrzędne mają postać
+$(x^i,u^a,u^a_\alpha)$ z $|\alpha|\le k$.
+Każde $j^ks$ jest przekrojem $J^kE\to M$.
+
+\begin{definicja}[Przekrój holonomiczny]
+\label{def:dzety-holonomic}
+Przekrój ciągły $\sigma:U\to J^kE$ nazywamy
+\emph{holonomicznym}, jeżeli istnieje przekrój
+$s:U\to E$ klasy $C^k$ taki, że $\sigma=j^ks$.
+Gdy ponadto $\sigma$ jest klasy $C^1$, to $s$ jest
+klasy $C^{k+1}$; wynika to kolejno ze współrzędnych
+$u^a_\alpha\circ\sigma$, które są pochodnymi $s$.
+\end{definicja}
+
+Na $J^kE$ występują \emph{formy kontaktowe}
+\[
+ \theta^a_\alpha=\mathrm d u^a_\alpha
+ -\sum_{i=1}^n u^a_{\alpha+e_i}\,\mathrm d x^i,
+ \qquad |\alpha|\le k-1.
+\]
+Dla $\alpha=0$ przyjmujemy $u_0^a=u^a$.
+
+\begin{twierdzenie}[Kryterium holonomiczności]
+\label{thm:dzety-contact}
+Niech $U\subseteq M$ będzie otwarty, $k\ge1$,
+a $\sigma:U\to J^kE$ będzie przekrojem klasy $C^1$.
+Wtedy $\sigma=j^ks$ dla pewnego przekroju
+$s:U\to E$ klasy $C^{k+1}$ wtedy i tylko wtedy, gdy
+$\sigma^*\theta^a_\alpha=0$ dla wszystkich form
+kontaktowych, w dowolnych lokalnych trywializacjach.
+\end{twierdzenie}
+\begin{proof}
+Dla $\sigma=j^ks$ zachodzi
+$u^a_\alpha\circ\sigma=\partial^\alpha s^a$,
+więc $\sigma^*\theta^a_\alpha=0$ wynika z różniczkowania.
+Odwrotnie, niech $s=\pi_0^k\circ\sigma$, tj. składowa
+zerowego rzędu. Równości $\sigma^*\theta^a_0=0$ dają
+$\partial_i s^a=u^a_{e_i}\circ\sigma$. Indukcyjnie,
+$\sigma^*\theta^a_\alpha=0$ implikuje
+$\partial_i(u^a_\alpha\circ\sigma)
+=u^a_{\alpha+e_i}\circ\sigma$. Otrzymujemy
+$u^a_\alpha\circ\sigma=\partial^\alpha s^a$
+dla $|\alpha|\le k$. Ponieważ wszystkie współrzędne $u^a_\alpha\circ\sigma$
+są klasy $C^1$, otrzymujemy ponadto $s\in C^{k+1}$.
+W szczególności regularność $C^1$ pola dżetów nie jest
+tożsama z regularnością $C^1$ przekroju wyjściowego.
+Konstrukcja jest zgodna na nakładaniu się map.
+\end{proof}
+
+\begin{przyklad}[Formalne dane nie muszą być pochodnymi]
+W trywialnej wiązce $\mathbb R\times\mathbb R\to\mathbb R$
+przekrój $\sigma(x)=(x,u(x),p(x))=(x,0,1)$
+przestrzeni $J^1E$ ma zerową składową wartości i
+stałą składową pochodnej równą $1$. Nie pochodzi od
+żadnej funkcji $u$, ponieważ
+$\sigma^*(\mathrm du-p\,\mathrm dx)=-\mathrm dx\ne0$.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[>=stealth, every node/.style={font=\small}]
+ \node (jk) at (0,1) {$J^kE$};
+ \node (jm) at (2.2,1) {$J^{k-1}E$};
+ \node (je) at (3.8,1) {$\cdots$};
+ \node (e) at (5.2,1) {$E$};
+ \node (m) at (6.6,1) {$M$};
+ \node (u) at (0,-.25) {$U\subset M$};
+ \draw[->] (jk) -- node[above] {$\pi_{k-1}^k$} (jm);
+ \draw[->] (jm) -- (je);
+ \draw[->] (je) -- (e);
+ \draw[->] (e) -- node[above] {$\pi$} (m);
+ \draw[->] (u) -- node[left] {$j^k s$} (jk);
+\end{tikzpicture}
+
+{\small Rzutowania w wieży dżetów odrzucają pochodne najwyższego rzędu.}
+\end{center}
+
+\section{Równania różniczkowe jako podzbiory przestrzeni dżetów}
+\begin{definicja}[Równanie różniczkowe rzędu $k$]
+\label{def:dzety-pde}
+Niech $\pi:E\to M$ będzie gładką wiązką.
+Układ równań różniczkowych rzędu nie większego niż $k$
+możemy opisać \emph{lokalnie} zbiorem zer
+$\mathcal R\cap V=\{z\in V:F(z)=0\}$, gdzie
+$V\subseteq J^kE$ jest otwarty, a
+$F:V\to\mathbb R^r$ jest gładkie. Nie każda globalna
+podrozmaitość równań musi być zbiorem zer jednego
+globalnie określonego odwzorowania do $\mathbb R^r$.
+Przekrój $s$ jest rozwiązaniem, gdy $j^ks(x)\in\mathcal R$
+dla każdego $x$ z jego obszaru określenia.
+\end{definicja}
+
+\begin{przyklad}[Hamilton--Jacobi i równanie Laplace'a]
+Dla rzeczywistej funkcji $u$ na $\mathbb R^n$
+równanie Hamiltona--Jacobiego
+$H(x,\nabla u(x))=0$ jest podzbiorem $J^1E$
+opisanym przez $H(x,p)=0$. Równanie Laplace'a
+$\sum_i\partial_{ii}u=0$ jest hiperpłaszczyzną
+w każdym włóknie $J^2E\to J^1E$ o równaniu
+$\sum_i u_{2e_i}=0$. W obu przypadkach sam wybór
+punktu z $\mathcal R$ nie wystarcza: rozwiązanie
+musi ponadto wyznaczać przekrój holonomiczny.
+\end{przyklad}
+
+\begin{definicja}[Symbol główny operatora liniowego]
+\label{def:dzety-symbol}
+Dla skalarnego liniowego operatora
+$Lu=\sum_{|\alpha|\le k}a_\alpha(x)\partial^\alpha u$
+o gładkich współczynnikach, na otwartym $U\subset\mathbb R^n$,
+jego symbol główny jest wielomianem
+$\sigma_k(L)(x,\xi)=\sum_{|\alpha|=k}a_\alpha(x)\xi^\alpha$.
+\end{definicja}
+
+\begin{uwaga}
+Symbol główny jest zależny wyłącznie od najwyższej części
+dżetu; pod zmianą map jego współczynniki przekształcają się
+zgodnie z tensorową częścią struktury afinicznej
+Twierdzenia~\ref{thm:dzety-affine}. Dla Laplasjanu
+$\sigma_2(\Delta)(x,\xi)=|\xi|^2$.
+\end{uwaga}
+
+\begin{przyklad}[Równanie Eulera--Lagrange'a]
+Niech $\Omega\subset\mathbb R^n$ będzie ograniczonym obszarem,
+$u\in C^2(\Omega)$, a $L(x,z,p)$ będzie funkcją klasy $C^2$.
+Zakładamy, że $L(x,u(x),\nabla u(x))$ jest całkowalna na $\Omega$.
+Funkcjonał zależący od $1$-dżetu ma postać
+\[
+ \mathcal A(u)=\int_\Omega L(x,u(x),\nabla u(x))
+ \,\mathrm d\lambda_n(x).
+\]
+Dla $\varphi\in C_c^\infty(\Omega)$ i zróżniczkowanego
+pod całką wyrażenia (na zwartym nośniku $\varphi$) mamy
+\[
+ \frac{\mathrm d}{\mathrm dt}\mathcal A(u+t\varphi)\big|_{t=0}
+ =\int_\Omega\left(L_z\varphi+
+ \sum_i L_{p_i}\partial_i\varphi\right)\mathrm d\lambda_n(x).
+\]
+Jeżeli $u$ jest punktem stacjonarnym, czyli powyższa
+pierwsza wariacja znika dla wszystkich
+$\varphi\in C_c^\infty(\Omega)$, to po całkowaniu
+przez części i zastosowaniu lematu podstawowego rachunku
+wariacyjnego otrzymujemy równanie
+$L_z-\sum_i\partial_i L_{p_i}=0$ w $\Omega$.
+Jest ono zazwyczaj równaniem drugiego rzędu, a zatem
+jego geometria znajduje się w $J^2E$, mimo że
+sam funkcjonał zależy tylko od $J^1E$.
+\end{przyklad}
+
+\section{Od gładkości do miary: gęstość i granice przybliżone}
+Odtąd pracujemy na $\mathbb R^n$. Przez $\lambda_n$ oznaczamy
+miarę Lebesgue'a, a przez $B(x,r)$ kulę otwartą.
+
+\begin{definicja}[Punkt gęstości i granica przybliżona]
+\label{def:dzety-ap-limit}
+Dla zbioru mierzalnego $A\subset\mathbb R^n$ punkt $x$
+ma gęstość $1$ względem $A$, jeżeli
+\[
+ \lim_{r\downarrow0}
+ \frac{\lambda_n(A\cap B(x,r))}{\lambda_n(B(x,r))}=1.
+\]
+Jeżeli $v$ jest funkcją mierzalną w otoczeniu $x$,
+to piszemy $\operatorname{ap}\!\lim_{y\to x}v(y)=L$,
+gdy dla każdego $\varepsilon>0$ zbiór
+$\{y:|v(y)-L|>\varepsilon\}$ ma w $x$ gęstość $0$.
+W przypadku funkcji określonej tylko na zbiorze mierzalnym
+$A$ zakładamy, że $x$ jest punktem gęstości $1$ zbioru $A$
+i liczymy gęstość zbiorów wyjątkowych w $A\cap B(x,r)$.
+\end{definicja}
+
+\begin{definicja}[Przybliżony $k$-dżet]
+\label{def:dzety-approx-jet}
+Niech $A\subset\mathbb R^n$ będzie mierzalny,
+$x\in A$ punktem jego gęstości $1$, a
+$f:A\to\mathbb R^m$ funkcją mierzalną.
+Mówimy, że $f$ ma \emph{przybliżony dżet Peana rzędu $k\ge1$}
+w $x$, jeżeli istnieje wielomian wektorowy
+$P_x(h)=\sum_{|\alpha|\le k}a_\alpha(x)h^\alpha/\alpha!$,
+przy $a_0(x)=f(x)$, taki że
+\[
+ \operatorname{ap}\!\lim_{\substack{y\to x\\y\in A}}
+ \frac{f(y)-P_x(y-x)}{|y-x|^k}=0.
+\]
+Dla $k=1$ współczynniki liniowe wyznaczają
+\emph{różniczkę przybliżoną} $D_{\mathrm{ap}}f(x)$.
+W tym sformułowaniu wartość $f(x)$ jest częścią danych:
+zmiana wartości funkcji w samym punkcie $x$ może więc
+zniszczyć istnienie dżetu w tym punkcie. Natomiast
+\emph{prawie wszędzie} pojęcie to zależy wyłącznie od
+klasy funkcji modulo zbiory miary zero: dwa równe prawie
+wszędzie przedstawiciele mają te same dżety w punktach
+gęstości zbioru, na którym są równe.
+\end{definicja}
+
+\begin{lemat}[Jednoznaczność przybliżonego dżetu]
+\label{lem:dzety-approx-unique}
+Jeżeli $x$ jest punktem gęstości $1$ zbioru $A$,
+to wielomian $P_x$ spełniający
+Definicję~\ref{def:dzety-approx-jet} jest jednoznaczny.
+\end{lemat}
+\begin{proof}
+Niech $Q=P_x-\widetilde P_x$ będzie różnicą dwóch takich
+wielomianów. Wtedy $Q(0)=0$ i
+$\operatorname{ap}\!\lim_{h\to0}Q(h)/|h|^k=0$.
+Gdyby $Q\ne0$, jego pierwszy niezerowy jednorodny składnik
+$Q_j$, $j\le k$, byłby niezerowy na pewnym otwartym
+podzbiorze sfery jednostkowej. Na stożku o dodatnim kącie
+bryłowym zachodziłoby
+$|Q(h)|/|h|^k\ge c|h|^{j-k}$ dla dostatecznie małych $h$.
+Stożek ma dodatnią, niezależną od promienia, względną miarę
+w każdej kuli, co przeczy granicy przybliżonej.
+\end{proof}
+
+\begin{przyklad}[Funkcja nieciągła z przybliżoną pochodną]
+\label{ex:dzety-approx}
+Niech $A=\bigcup_{j\ge1}(2^{-j},2^{-j}+2^{-3j})$
+i $f(x)=\chi_A(x)$, gdzie $\chi_A$ oznacza funkcję
+charakterystyczną zbioru $A$ i $f(0)=0$. Wtedy $A$ ma
+w zerze gęstość $0$, zatem $f$ ma w zerze przybliżoną
+granicę równą $0$. Ponadto
+$\lambda_1(A\cap(-r,r))=O(r^3)$ dla $r\downarrow0$,
+a więc również $D_{\mathrm{ap}}f(0)=0$.
+Zwykła ciągłość (a tym bardziej różniczkowalność) nie zachodzi,
+ponieważ w każdym otoczeniu zera są punkty $f=1$.
+\end{przyklad}
+
+\begin{przyklad}[Dlaczego trzeba ustalić przedstawiciela?]
+Niech $f=\chi_{\mathbb Q}$ na $\mathbb R$. W punktach
+niewymiernych funkcja ma przybliżony dżet każdego rzędu
+równy zeru, ponieważ zbiór $\mathbb Q$ ma miarę zero.
+W punktach wymiernych $f(x)=1$, więc nie ma nawet
+przybliżonej granicy równej własnej wartości $f(x)$.
+Przedstawiciel zerowy tej samej klasy w $L^0$ ma natomiast
+dżet zerowy w każdym punkcie. Rozróżnienie to nie ma
+znaczenia dla twierdzeń prawie wszędzie.
+\end{przyklad}
+
+\begin{uwaga}[Gdzie tkwi istota mierzalności?]
+Równość $D_{\mathrm{ap}}f(x)=A$ nie oznacza
+zbieżności po \emph{wszystkich} punktach $y\to x$.
+Wystarcza odrzucanie zbioru o gęstości zerowej,
+który może być gęsty topologicznie. Dlatego dżety
+przybliżone nie są dżetami kiełków w sensie
+Definicji~\ref{def:dzety-klasa}.
+\end{uwaga}
+
+\section{Rademacher, Sobolew i $BV$}
+\begin{twierdzenie}[Rademacher i mierzalny pierwszy dżet]
+\label{thm:dzety-rademacher}
+Niech $U\subset\mathbb R^n$ będzie otwarty, a
+$f:U\to\mathbb R^m$ lokalnie Lipschitzowskie.
+Wtedy $f$ jest różniczkowalne w $\lambda_n$-prawie każdym
+punkcie $U$. W tych punktach istnieje przybliżony
+$1$-dżet i $D_{\mathrm{ap}}f(x)=Df(x)$.
+Ponadto $x\mapsto Df(x)$ ma mierzalny przedstawiciel.
+\end{twierdzenie}
+\begin{proof}
+Istnienie zwykłej różniczki prawie wszędzie jest treścią
+twierdzenia Rademachera. Zwykła granica implikuje
+przybliżoną, więc równość dżetów jest natychmiastowa.
+Zbiór różniczkowalności jest borelowski. Istotnie,
+na zbiorze istnienia wszystkich pochodnych cząstkowych
+ich wartości są granicami ilorazów różnicowych z
+przyrostami $1/j$, a więc są funkcjami borelowskimi.
+Warunek
+$|f(x+h)-f(x)-A(x)h|\le |h|/m$
+dla wszystkich dostatecznie małych niezerowych $h$
+można, dzięki ciągłości $f$, sprawdzać na przeliczalnym
+zbiorze przyrostów wymiernych. Kwantyfikatory
+$\forall m\in\mathbb N\,\exists j\in\mathbb N\,
+\forall h\in\mathbb Q^n\setminus\{0\}$ z $|h|<1/j$
+i $x+h\in U$ opisują zatem borelowski podzbiór $S$,
+który jest dokładnie zbiorem różniczkowalności.
+Wynika to z ciągłości wyrażenia względem przyrostu $h$
+poza $h=0$. Przedłużenie macierzy
+$Df$ przez zero na dopełnienie tego zbioru jest mierzalne.
+\end{proof}
+
+\begin{przyklad}[Punkt o dwóch geometrycznych dżetach]
+Funkcja $f(x)=|x|$ na $\mathbb R$ ma zwykłą różniczkę
+$Df(x)=\operatorname{sgn}(x)$ dla $x\ne0$.
+W zerze nie ma ani zwykłego, ani przybliżonego
+$1$-dżetu: dodatnia i ujemna półprosta mają dodatnią
+gęstość i dawałyby sprzeczne pochodne. Brak dżetu w jednym
+punkcie nie narusza twierdzenia Rademachera.
+\end{przyklad}
+
+\begin{twierdzenie}[Dżet przybliżony funkcji Sobolewa]
+\label{thm:dzety-sobolev}
+Niech $U\subset\mathbb R^n$ będzie otwarty,
+$1\le p\le\infty$, a $u\in W_{\mathrm{loc}}^{1,p}(U)$.
+Wówczas istnieje przedstawiciel $u$, który ma
+przybliżony $1$-dżet w $\lambda_n$-prawie każdym
+punkcie $U$, przy czym
+$D_{\mathrm{ap}}u(x)=\nabla u(x)$ prawie wszędzie.
+Po prawej stronie występuje gradient słaby.
+\end{twierdzenie}
+\begin{proof}
+Korzystamy z następującego twierdzenia o precyzyjnych
+przedstawicielach Sobolewa: funkcja klasy $W^{1,1}_{\rm loc}$
+jest przybliżenie różniczkowalna prawie wszędzie, a jej
+różniczka przybliżona pokrywa się z gradientem słabym.
+Standardowy dowód tego wyniku opiera się na różniczkowaniu
+całek i przybliżeniu funkcji Sobolewa przez funkcje gładkie.
+Dla $p>1$ można go uzyskać także z oszacowań funkcji
+maksymalnej Hardy'ego--Littlewooda; przypadek $p=1$
+wymaga wersji słabego typu $(1,1)$. Ponieważ
+$W^{1,p}_{\rm loc}\subset W^{1,1}_{\rm loc}$,
+otrzymujemy tezę. Podany rezultat o przedstawicielach
+Sobolewa jest w tym dowodzie \emph{jawnie użytym
+wcześniejszym twierdzeniem}, a nie wynikiem wyprowadzonym
+z samej definicji dżetu.
+\end{proof}
+
+\begin{uwaga}[Funkcje $BV$ i punkty skoku]
+\label{rem:dzety-bv}
+Dla $u\in BV_{\rm loc}(U)$ istnieje przybliżona
+różniczka w prawie każdym punkcie względem $\lambda_n$,
+lecz pochodna dystrybucyjna jest miarą wektorową, która
+może mieć część osobliwą. W pełnym twierdzeniu
+strukturalnym dla $BV$ rozkłada się ją na
+\[
+ Du=\nabla u\,\lambda_n
+ +(u^+-u^-)\nu_u\,\mathcal H^{n-1}\llcorner J_u+D^cu,
+\]
+gdzie $J_u$ jest przybliżonym zbiorem skoków,
+$u^\pm$ jednostronnymi śladami, $\nu_u$ normalną,
+a $D^cu$ częścią Cantora. Jest to odrębny, głębszy wynik:
+nie należy wyprowadzać go wyłącznie z istnienia
+przybliżonego $1$-dżetu prawie wszędzie.
+\end{uwaga}
+
+\begin{przyklad}[Skok a przybliżony dżet]
+Dla $E=\{x\in\mathbb R^n:x_1>0\}$ funkcja
+$u=\chi_E$ jest lokalnie stała poza hiperpłaszczyzną
+$x_1=0$, więc $D_{\mathrm{ap}}u=0$ prawie wszędzie.
+Jednak $Du=e_1\,\mathcal H^{n-1}\llcorner\{x_1=0\}$
+(z orientacją odpowiadającą przejściu z $0$ do $1$).
+Zatem przybliżony dżet pierwszego rzędu nie opisuje
+całej miary pochodnej funkcji $BV$.
+\end{przyklad}
+
+\section{Jakobiany i wzory area/coarea odczytywane z dżetów}
+Niech $f:U\subseteq\mathbb R^k\to\mathbb R^N$,
+$k\le N$, będzie lokalnie Lipschitzowskie.
+W punkcie różniczkowalności określamy
+$J_kf(x)=\sqrt{\det(Df(x)^{\mathsf T}Df(x))}$.
+Jest to funkcja samego \emph{liniowego składnika $1$-dżetu}.
+Dla mierzalnego $A\subset U$ i nieujemnej
+mierzalnej funkcji $h:U\to[0,\infty]$ wzór area ma postać
+\[
+ \int_A h(x)J_kf(x)\,\mathrm d\lambda_k(x)
+ =\int_{\mathbb R^N}\sum_{x\in A\cap f^{-1}(\{y\})}
+ h(x)\,\mathrm d\mathcal H^k(y).
+\]
+Dla lokalnie Lipschitzowskiego $F:V\subset\mathbb R^n\to
+\mathbb R^m$, $n\ge m$, gdzie $V$ jest otwarty,
+i nieujemnej mierzalnej $g:V\to[0,\infty]$, wzór
+koobszaru brzmi
+\[
+ \int_V g(x)\sqrt{\det(DF(x)DF(x)^{\mathsf T})}
+ \,\mathrm d\lambda_n(x)
+ =\int_{\mathbb R^m}\left(
+ \int_{F^{-1}(\{y\})}g(x)\,\mathrm d\mathcal H^{n-m}(x)
+ \right)\mathrm d\lambda_m(y).
+\]
+W obu wzorach miary Hausdorffa są znormalizowane tak,
+że $\mathcal H^j|_{\mathbb R^j}=\lambda_j$ dla całkowitych
+$j\ge1$ oraz $\mathcal H^0$ jest miarą liczącą.
+Dla zbiorów mierzalnych w sensie Lebesgue'a konieczne
+są właściwe sformułowania twierdzeń, uwzględniające
+ukończenie miar i mierzalność funkcji krotnościowej.
+W szczególności sama teoria dżetów nie rozwiązuje
+kwestii mierzalności włókien i całek po nich.
+
+\begin{uwaga}
+Teoria dżetów wyjaśnia, \emph{jakie dane} wyznaczają
+lokalny współczynnik geometryczny. Sam wzór area/coarea
+wymaga jednak niezależnie twierdzeń o mierzalności,
+różniczkowaniu i krotnościach włókien. Nie jest więc
+czysto formalną konsekwencją teorii dżetów.
+\end{uwaga}
+
+\section{Pola dżetów i twierdzenie Whitneya}
+\begin{definicja}[Pole dżetów Whitneya klasy $C^k$]
+\label{def:dzety-whitney-field}
+Niech $K\subset\mathbb R^n$ będzie domknięty,
+$k\in\mathbb N_0$, a dla każdego $|\alpha|\le k$
+niech $a_\alpha:K\to\mathbb R$ będzie funkcją.
+Kładziemy $P_x(z)=\sum_{|\alpha|\le k}
+ a_\alpha(x)(z-x)^\alpha/\alpha!$.
+Rodzinę $(P_x)_{x\in K}$ nazywamy
+\emph{polem dżetów Whitneya klasy $C^k$}, jeżeli
+wszystkie $a_\alpha$ są ciągłe i dla każdego zwartego
+$K_0\subset K$ oraz każdego $|\alpha|\le k$ zachodzi
+\[
+ \lim_{\delta\downarrow0}
+ \sup_{\substack{x,y\in K_0,\;0<|x-y|<\delta}}
+ \frac{|D^\alpha P_x(y)-a_\alpha(y)|}
+ {|x-y|^{k-|\alpha|}}=0,
+\]
+przy umowie, że supremum po zbiorze pustym wynosi $0$.
+\end{definicja}
+
+\begin{uwaga}
+Dla $|\alpha|=k$ mianownik jest równy $1$:
+warunek mówi o ciągłości najwyższych pochodnych.
+Dla $k=1$ warunki na zwartym $K$ sprowadzają się do
+ciągłości $a_0,v=(a_{e_1},\ldots,a_{e_n})$ i
+$|a_0(y)-a_0(x)-v(x)\cdot(y-x)|=o(|x-y|)$
+jednostajnie dla $x,y\in K$.
+\end{uwaga}
+
+\begin{lemat}[Kostki Whitneya i rozkład jedności]
+\label{lem:dzety-whitney-cubes}
+Niech $K\subset\mathbb R^n$ będzie niepustym zbiorem
+domkniętym, różnym od całej przestrzeni, a
+$\Omega=\mathbb R^n\setminus K$. Istnieje przeliczalna
+rodzina domkniętych kostek diadycznych $Q$, o rozłącznych
+wnętrzach pokrywających $\Omega$, taka że
+$\ell(Q)\asymp\operatorname{dist}(Q,K)$. Istnieje
+również gładki rozkład jedności $(\varphi_Q)$ na $\Omega$
+o nośnikach w nieznacznie powiększonych kostkach $Q^*$,
+takich że
+$|D^\alpha\varphi_Q|\le C_\alpha\ell(Q)^{-|\alpha|}$.
+W każdym punkcie co najwyżej $N(n)$ funkcji
+$\varphi_Q$ jest niezerowych.
+\end{lemat}
+\begin{proof}
+Rozważmy siatkę wszystkich kostek diadycznych i wybierzmy
+maksymalne kostki $Q$ spełniające
+$8\sqrt n\,\ell(Q)\le\operatorname{dist}(Q,K)$.
+Każdy punkt $z\in\Omega$ leży w takiej kostce, ponieważ
+w dostatecznie małej skali nierówność jest spełniona,
+a w dostatecznie dużej skali przestaje być spełniona.
+Maksymalne kostki mają rozłączne wnętrza.
+Nierówność wyboru daje dolne oszacowanie odległości.
+Gdyby odległość była nieporównywalnie większa od boku,
+to również kostka rodzicielska spełniałaby warunek,
+wbrew maksymalności; daje to oszacowanie górne.
+Kostki o przecinających się niewielkich powiększeniach
+mają porównywalne boki, bo ich odległości od $K$
+są porównywalne. Dlatego, po ustaleniu współczynnika
+powiększenia dostatecznie bliskiego $1$, ich krotność
+jest ograniczona liczbą zależną tylko od wymiaru.
+Dla każdej kostki wybieramy funkcję $\eta_Q\in C_c^\infty(Q^*)$
+równą $1$ na $Q$, z
+$|D^\alpha\eta_Q|\le C_\alpha\ell(Q)^{-|\alpha|}$;
+uzyskujemy ją przez przeskalowanie ustalonej funkcji
+obcięcia na kostce jednostkowej. Suma
+$S=\sum_Q\eta_Q$ jest lokalnie skończona,
+$1\le S\le N(n)$. Funkcje
+$\varphi_Q=\eta_Q/S$ mają wymagane własności
+na mocy reguły Leibniza i oszacowania nakładania się
+kostek.
+\end{proof}
+
+\begin{lemat}[Sklejanie ciągłych pochodnych przez zbiór domknięty]
+\label{lem:dzety-glue}
+Niech $K\subset\mathbb R^n$ będzie domknięty. Załóżmy, że
+$H:\mathbb R^n\to\mathbb R$ jest ciągła, klasy $C^1$ poza $K$,
+a $V:\mathbb R^n\to\mathbb R^n$ jest ciągła i spełnia
+$V=\nabla H$ poza $K$. Jeżeli dla każdego $a\in K$
+zachodzi $H(a+h)=H(a)+V(a)\cdot h+o(|h|)$, to
+$H\in C^1(\mathbb R^n)$ i $\nabla H=V$ wszędzie.
+\end{lemat}
+\begin{proof}
+Poza $K$ teza jest znana. W punkcie $a\in K$ podany
+warunek jest definicją różniczkowalności i daje
+$\nabla H(a)=V(a)$. Ponieważ $V$ jest ciągła na całej
+przestrzeni, otrzymany gradient jest ciągły, czyli
+$H\in C^1$. Nie trzeba różniczkować po krzywych
+zawartych w $K$.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie Whitneya o przedłużaniu]
+\label{thm:dzety-whitney-extension}
+Niech $K\subset\mathbb R^n$ będzie domknięty,
+$k\in\mathbb N_0$, a $(a_\alpha)_{|\alpha|\le k}$
+polem dżetów Whitneya klasy $C^k$ na $K$.
+Wtedy istnieje $F\in C^k(\mathbb R^n)$ spełniająca
+$D^\alpha F(x)=a_\alpha(x)$ dla wszystkich
+$x\in K$ i $|\alpha|\le k$.
+Warunki Definicji~\ref{def:dzety-whitney-field} są
+zarazem konieczne dla takich przedłużeń.
+\end{twierdzenie}
+
+\begin{proof}
+Konieczność wynika z wzoru Taylora z resztą Peana,
+stosowanego do wszystkich $D^\alpha F$, i z jednostajnej
+ciągłości pochodnych na zbiorach zwartych.
+Przedstawimy konstrukcję wystarczalności; dla $K=\varnothing$
+można przyjąć $F=0$.
+
+\emph{Krok 1: kostki Whitneya.}
+Jeżeli $K=\mathbb R^n$, przyjmujemy $F=a_0$
+i teza wynika wprost z warunków Whitneya.
+W przeciwnym przypadku Lemat~\ref{lem:dzety-whitney-cubes}
+dostarcza rozkładu zbioru
+$\Omega=\mathbb R^n\setminus K$
+na kostki $Q$, wraz z rozkładem jedności
+$(\varphi_Q)$ i oszacowaniami ich pochodnych.
+
+\emph{Krok 2: sklejanie wielomianów.}
+Dla każdej kostki wybierzmy $b_Q\in K$ takie, że
+$|b_Q-Q|\le2\operatorname{dist}(Q,K)$, i połóżmy
+$F(z)=\sum_Q\varphi_Q(z)P_{b_Q}(z)$ dla $z\in\Omega$,
+a na $K$ niech $F(x)=a_0(x)$. Suma jest lokalnie skończona
+i funkcja jest gładka poza $K$.
+
+\emph{Krok 3: oszacowanie w pobliżu brzegu.}
+Ustalmy zwarty fragment $K_0\subset K$ i niewielką
+jego otoczkę. Z warunków Whitneya istnieje funkcja
+$\omega(t)\downarrow0$ dla $t\downarrow0$ taka, że
+jeżeli $a,b$ należą do tej otoczki i $|a-b|\le t$, to
+\[
+ |D^\beta P_a(b)-a_\beta(b)|
+ \le\omega(t)|a-b|^{k-|\beta|},\qquad |\beta|\le k.
+\]
+Z rozwinięcia wielomianów i tego oszacowania wynika,
+że dla $|z-a|+|z-b|\le Ct$ zachodzi
+$|D^\beta(P_a-P_b)(z)|\le C\omega(Ct)t^{k-|\beta|}$.
+Niech teraz $z\in\Omega$, $r=\operatorname{dist}(z,K)$,
+a $a\in K$ spełnia $|z-a|\le2r$. Wszystkie kostki
+$Q$ z $\varphi_Q(z)\ne0$ mają $\ell(Q)\asymp r$
+i $|b_Q-a|\le Cr$. Różniczkując
+$F(z)-P_a(z)=\sum_Q\varphi_Q(z)(P_{b_Q}(z)-P_a(z))$
+i korzystając z ograniczenia liczby nakładających się
+kostek otrzymujemy dla $|\beta|\le k$
+\[
+ |D^\beta F(z)-D^\beta P_a(z)|
+ \le C\omega(Cr)r^{k-|\beta|}.
+\]
+W szczególności pochodne do rzędu $k$ mają przy $K$
+granice zadane przez współczynniki $a_\beta$.
+
+\emph{Krok 4: regularność na $K$.}
+Dla $x\in K$ i $z\to x$ porównujemy $P_a$ z $P_x$,
+gdzie $a\in K$ jest jak wyżej położonym punktem najbliższym
+$z$. Z poprzednich oszacowań i warunków Whitneya wynika
+$F(z)-P_x(z)=o(|z-x|^k)$; analogiczne rozwinięcia
+obowiązują dla przedłużeń $D^\beta F$ rzędu do
+$k-|\beta|$. Dla $k=0$ wystarcza uzyskana ciągłość $F$ na $K$
+i na $\Omega$. Dla $k\ge1$ doprecyzujemy indukcję.
+Dla
+$|\beta|\le k$ na $\Omega$ mamy funkcję
+$D^\beta F$, której ciągłym przedłużeniem na $K$
+jest $a_\beta$ (wynika to z oszacowania poprzedniego
+kroku i ciągłości danych). Dla $|\beta|<k$ warunki
+Whitneya zapewniają w każdym $a\in K$ rozwinięcie
+tego przedłużenia pierwszego rzędu z gradientem
+$(a_{\beta+e_i})_{i=1}^n$. Stosując
+Lemat~\ref{lem:dzety-glue} kolejno do pochodnych
+rzędów $0,1,\ldots,k-1$, wykazujemy
+$F\in C^k(\mathbb R^n)$ oraz $D^\alpha F|_K=a_\alpha$.
+W ten sposób przejście przez $K$ nie wymaga
+nieuzasadnionego różniczkowania funkcji na samym zbiorze
+$K$, który może mieć puste wnętrze.
+\end{proof}
+
+\begin{przyklad}[Dlaczego sama ciągłość dżetów nie wystarcza?]
+Niech $K=\{0\}\cup\{1/j:j\ge1\}\subset\mathbb R$,
+$a_0(0)=0$, $a_0(1/j)=1/j$ i $a_1\equiv0$.
+Obie funkcje $a_0,a_1$ są ciągłe na $K$, ale
+$|a_0(1/j)-a_0(0)-a_1(0)/j|/(1/j)=1$.
+Nie istnieje więc funkcja $C^1$ o tych wartościach i
+pochodnych. Jest to konkretne naruszenie warunku Whitneya.
+\end{przyklad}
+
+\section{Twierdzenie Whitneya--Luzina: od dżetów przybliżonych do $C^1$}
+\begin{lemat}[Mierzalność różniczki przybliżonej]
+\label{lem:dzety-ap-meas}
+Niech $U\subset\mathbb R^n$ będzie otwarty,
+a $f:U\to\mathbb R^m$ mierzalna. Na mierzalnym
+zbiorze punktów, w których $f$ jest przybliżenie
+różniczkowalna, odwzorowanie $D_{\mathrm{ap}}f$
+ma mierzalny przedstawiciel.
+\end{lemat}
+\begin{proof}
+Zmienimy wartości na zbiorze miary zero tylko wtedy,
+gdy jest to potrzebne do zdefiniowania funkcji na całym $U$.
+Dla $M\in\mathbb N$ i $r>0$ rozważmy macierz
+\[
+ T_{M,r}(x)=\frac{n}{\lambda_n(B(0,r))}
+ \int_{B(0,r)}\frac{f(x+h)-f(x)}{|h|}
+ \frac{h^{\mathsf T}}{|h|}
+ \chi_{\{|f(x+h)-f(x)|\le M|h|\}}
+ \,\mathrm d\lambda_n(h),
+\]
+gdzie dla $x+h\notin U$ całkowaną funkcję przyjmujemy za zero.
+Jest to odwzorowanie mierzalne, ponieważ całkowana funkcja
+jest mierzalna i ograniczona przez $M$.
+Jeżeli $f$ ma różniczkę przybliżoną $A$ w $x$ i
+$M>\|A\|+1$, to na kulach malejących do zera
+iloraz różnicowy jest w mierze bliski
+$A(h/|h|)$; obcięcie nie usuwa prawie wszystkich
+kierunków. Ponieważ całkowana funkcja jest ograniczona,
+własność zbieżności w mierze daje
+$\lim_{r\downarrow0}T_{M,r}(x)=A$.
+Wykorzystaliśmy tożsamość
+$\lambda_n(B(0,r))^{-1}\int_{B(0,r)}
+ hh^{\mathsf T}/|h|^2\,\mathrm d\lambda_n(h)=I_n/n$.
+Dla ciągu $r=1/j$ granice macierzy $T_{M,1/j}$ są
+mierzalne na zbiorach swojego istnienia. W każdym punkcie
+przybliżonej różniczkowalności wszystkie dostatecznie
+duże wartości $M$ dają tę samą granicę $A$.
+Wybór pierwszego stabilnego ogona tych granic jest
+operacją na przeliczalnej rodzinie funkcji mierzalnych,
+a więc daje mierzalny przedstawiciel $A$.
+\end{proof}
+
+\begin{twierdzenie}[Whitney--Luzin dla pierwszego dżetu]
+\label{thm:dzety-whitney-lusin}
+Niech $U\subset\mathbb R^n$ będzie otwarty,
+a $f:U\to\mathbb R^m$ funkcją mierzalną,
+przybliżenie różniczkowalną w $\lambda_n$-prawie każdym
+punkcie $U$. Dla każdego zbioru mierzalnego $A\subset U$
+o skończonej mierze i każdego $\varepsilon>0$ istnieją
+zbiór zwarty $K\subset A$ i odwzorowanie
+$F\in C^1(\mathbb R^n,\mathbb R^m)$ takie, że
+\[
+ \lambda_n(A\setminus K)<\varepsilon,
+ \qquad F(x)=f(x),\quad DF(x)=D_{\mathrm{ap}}f(x)
+ \quad (x\in K).
+\]
+Odwrotnie, jeżeli dla każdego mierzalnego $A\subset U$
+o skończonej mierze i każdego $\varepsilon>0$ istnieją
+$K,F$ spełniające powyższą równość wartości (bez wymogu
+dotyczącego pochodnych), to $f$ jest przybliżenie
+różniczkowalna prawie wszędzie na $U$.
+\end{twierdzenie}
+
+\begin{proof}
+Wystarczy dowodzić dla funkcji rzeczywistej: dla wektorowych
+stosujemy ten sam wybór zwartego zbioru i wspólne
+oszacowania normy w $\mathbb R^m$.
+
+\emph{Krok 1: duży zbiór z ciągłymi danymi.}
+Niech $D$ będzie pełnomiarowym podzbiorem $U$, gdzie
+istnieje różniczka przybliżona $G(x)=D_{\mathrm{ap}}f(x)$.
+Dla sformułowania „prawie wszędzie” wybieramy mierzalny
+zbiór $D$ o pełnej mierze, na którym dżet istnieje;
+na nim działa Lemat~\ref{lem:dzety-ap-meas}.
+Funkcje $f,G$ są więc mierzalne na $D$. Z twierdzenia Luzina i regularności
+miary Lebesgue'a wybieramy zwarty $K_0\subset A\cap D$,
+$\lambda_n(A\setminus K_0)<\varepsilon/3$, tak że
+$f|_{K_0}$ i $G|_{K_0}$ są ciągłe.
+W szczególności $G|_{K_0}$ jest jednostajnie ciągła.
+Ponieważ $K_0\Subset U$, ma dodatnią odległość od
+$\mathbb R^n\setminus U$.
+
+\emph{Krok 2: jednostajna kontrola zbiorów złych.}
+Dla $j\in\mathbb N$ i $r>0$ oznaczmy przez
+$\vartheta_{j,r}(x)$ iloraz
+\[
+ \frac{\lambda_n\bigl(\{z\in B(x,r)\cap U:
+ |f(z)-f(x)-G(x)(z-x)|>j^{-1}|z-x|\}\bigr)}
+ {\lambda_n(B(x,r))}.
+\]
+Z przybliżonej różniczkowalności wynika
+$\vartheta_{j,r}(x)\to0$ przy $r\downarrow0$ dla
+każdego $x\in D$. Dla ustalonego $j$ funkcje
+$H_{j,l}(x)=\sup_{0<r<1/l}\vartheta_{j,r}(x)$ są
+mierzalne: dla ustalonego $x$ licznik zależy ciągle
+od $r$ (sfery mają miarę zero), toteż supremum można
+brać po promieniach wymiernych; mierzalność całki
+zależącej od $x$ daje twierdzenie Tonellego.
+Mamy $H_{j,l}(x)\downarrow0$.
+
+Wybierzmy stałą $\delta=8^{-n}$. Z twierdzenia Jegorowa
+stosowanego kolejno dla $j=1,2,\ldots$ wybieramy
+mierzalne podzbiory $E_j\subset K_0$ tak, że
+$\lambda_n(K_0\setminus E_j)<\varepsilon/(3\cdot 2^j)$
+oraz $H_{j,l}\to0$ jednostajnie na $E_j$.
+Niech $E=\bigcap_j E_j$. Następnie wybierzmy zwarty
+$K\subset E$ z $\lambda_n(E\setminus K)<\varepsilon/3$.
+Wtedy $\lambda_n(A\setminus K)<\varepsilon$.
+Dla każdego $j$ istnieje $\rho_j>0$ taka, że
+$\vartheta_{j,r}(x)<\delta$ jednocześnie dla
+$x\in K$ i $0<r<\rho_j$.
+
+\emph{Krok 3: z kontroli w mierze do warunku Whitneya.}
+Niech $x,y\in K$, $d=|x-y|>0$ i
+$2d<\rho_j$; wymagamy także, aby $B(x,2d),B(y,2d)$
+były zawarte w $U$. Przecięcie tych kul zawiera
+$B((x+y)/2,3d/2)$, więc jego miara jest większa
+niż suma dwóch górnych oszacowań
+$\delta\lambda_n(B(0,2d))$ na zbiory złe
+(dla $\delta=8^{-n}$). Istnieje zatem punkt $z$
+w przecięciu, dla którego jednocześnie
+\[
+ |f(z)-f(x)-G(x)(z-x)|\le 2d/j,
+ \quad |f(z)-f(y)-G(y)(z-y)|\le 2d/j.
+\]
+Odejmując równości otrzymujemy
+\[
+ |f(y)-f(x)-G(x)(y-x)|
+ \le4d/j+2d\,\|G(x)-G(y)\|.
+\]
+Jednostajna ciągłość $G$ na $K$ i dowolność $j$
+dowodzą, że iloraz lewej strony przez $|x-y|$
+dąży jednostajnie do zera. Tak więc $(f|_K,G|_K)$
+jest polem dżetów Whitneya klasy $C^1$.
+
+\emph{Krok 4: przedłużenie.}
+Twierdzenie~\ref{thm:dzety-whitney-extension}
+daje $F\in C^1(\mathbb R^n)$ o danych wartościach
+i różniczkach na $K$.
+
+\emph{Odwrotność.}
+Dla każdego wyczerpującego ciągu zbiorów
+$A_l=U\cap B(0,l)$ i każdego $l$ możemy wybrać
+zbiory zwarte $K_{l,j}\subset A_l$, na których
+$f=F_{l,j}\in C^1$, z
+$\lambda_n(A_l\setminus K_{l,j})<1/j$.
+Prawie każdy punkt $A_l$ należy do przynajmniej
+jednego z tych zbiorów i jest jego punktem gęstości.
+W takim punkcie $f$ ma przybliżoną różniczkę
+$DF_{l,j}$, ponieważ obie funkcje zgadzają się na
+zbiorze gęstości $1$. Biorąc sumę po $l$,
+otrzymujemy przybliżoną różniczkowalność prawie wszędzie.
+\end{proof}
+
+\begin{wniosek}[Luzinowskie wygładzenie odwzorowania Lipschitzowskiego]
+\label{cor:dzety-lusin-lipschitz}
+Niech $U\subset\mathbb R^n$ będzie otwarty,
+$f:U\to\mathbb R^m$ lokalnie Lipschitzowskie,
+a $A\subset U$ mierzalny o skończonej mierze.
+Dla każdego $\varepsilon>0$ istnieje
+$F\in C^1(\mathbb R^n,\mathbb R^m)$ takie, że
+\[
+ \lambda_n(\{x\in A:F(x)\ne f(x)\})<\varepsilon,
+\]
+a na pewnym zwartym $K\subset A$ o
+$\lambda_n(A\setminus K)<\varepsilon$ zachodzi
+$DF=Df$.
+\end{wniosek}
+\begin{proof}
+Twierdzenie Rademachera daje przybliżoną
+różniczkowalność prawie wszędzie.
+Stosujemy Twierdzenie~\ref{thm:dzety-whitney-lusin}.
+\end{proof}
+
+\begin{uwaga}[Granice twierdzenia]
+Twierdzenie~\ref{thm:dzety-whitney-lusin} nie mówi,
+że $f$ jest funkcją $C^1$ po zmianie na zbiorze miary zero.
+Wolno odrzucić zbiór o \emph{dowolnie małej}, lecz niekoniecznie
+zerowej mierze, zależny od $\varepsilon$.
+Na przykład $f(x)=|x|$ na $(-1,1)$ nie ma globalnego
+przedstawiciela $C^1$ równego $f$ prawie wszędzie.
+\end{uwaga}
+
+\section{Dżety wyższych rzędów i zgodność danych}
+Dla $k\ge2$ sam formalny zapis danych
+$(a_\alpha(x))_{|\alpha|\le k}$ nie gwarantuje,
+że są one pochodnymi jednej funkcji. W teorii miary
+istotne jest, czy można znaleźć duży zbiór, na którym
+dane spełniają \emph{wszystkie} warunki Whitneya.
+
+\begin{twierdzenie}[Luzinowskie przedłużenie zgodnych dżetów rzędu $k$]
+\label{thm:dzety-lusin-higher}
+Niech $U\subset\mathbb R^n$ będzie otwarty, $k\ge1$,
+a $a_\alpha:U\to\mathbb R$, $|\alpha|\le k$,
+będą funkcjami mierzalnymi. Załóżmy, że dla
+$\lambda_n$-prawie każdego $x\in U$ i każdego
+$|\alpha|\le k$ zachodzi zwykła, względna do
+pełnomiarowego zbioru $D\subset U$, ekspansja
+\[
+ a_\alpha(y)=\sum_{|\beta|\le k-|\alpha|}
+ \frac{a_{\alpha+\beta}(x)}{\beta!}(y-x)^\beta
+ +o(|y-x|^{k-|\alpha|})\quad(D\ni y\to x).
+\]
+Wówczas dla każdego mierzalnego $A\subset U$
+o skończonej mierze i każdego $\varepsilon>0$
+istnieją $K\subset A$ zwarty i
+$F\in C^k(\mathbb R^n)$ takie, że
+$\lambda_n(A\setminus K)<\varepsilon$ oraz
+$D^\alpha F|_K=a_\alpha|_K$ dla wszystkich
+$|\alpha|\le k$.
+\end{twierdzenie}
+\begin{proof}
+Twierdzenie Luzina zastosowane do skończonej rodziny
+$a_\alpha$ daje zwarty $K_0\subset A\cap D$ o dowolnie
+małym dopełnieniu i ciągłości wszystkich współczynników.
+Dla każdej wielopochodnej $\alpha$ i promienia $r$
+weźmy supremum po $y\in K_0$ z $0<|x-y|<r$
+ilorazu reszty Taylora przez $|x-y|^{k-|\alpha|}$.
+Jest to funkcja mierzalna względem $x\in K_0$:
+możemy zastąpić wszystkie $y$ przeliczalnym zbiorem
+gęstym w $K_0$, ponieważ na $K_0$ współczynniki
+są ciągłe. Z hipotezy supremum dąży do zera punktowo przy
+$r\downarrow0$, ponieważ $K_0\subset D$ i każda
+reszta jest oceniana wzdłuż całego zbioru $D$.
+To właśnie tu korzystamy z silniejszej, względnej
+wersji założenia, a nie jedynie ze zbieżności przybliżonej. Twierdzenie Jegorowa
+pozwala przejść do zwartego $K\subset K_0$ z
+arbitralnie małą utratą miary, na którym zbieżność
+jest jednostajna dla skończenie wielu $\alpha$.
+Właśnie to są warunki pola Whitneya z
+Definicji~\ref{def:dzety-whitney-field}. Zastosowanie
+Twierdzenia~\ref{thm:dzety-whitney-extension}
+kończy dowód.
+\end{proof}
+
+\begin{uwaga}[Ważne rozróżnienie]
+Warunek z Twierdzenia~\ref{thm:dzety-lusin-higher}
+jest mocniejszy od samego istnienia przybliżonego
+wielomianu Peana rzędu $k$ dla jednej funkcji.
+Dla ogólnego twierdzenia o przybliżonych dżetach
+wyższych rzędów potrzebny jest dodatkowy krok
+przechodzący od informacji w mierze do zgodności
+wszystkich pochodnych na wybranym zbiorze.
+Nie wolno pomijać go, stosując twierdzenie Whitneya.
+\end{uwaga}
+
+\section{Dodatkowe przykłady i powiązania}
+\begin{przyklad}[Dżet holomorficzny]
+Niech $U\subset\mathbb C^n$ będzie obszarem,
+$p\in U$ i $f\in\mathcal O(U)$. Jego holomorficzny
+$k$-dżet zapisujemy w lokalnych współrzędnych jako
+\[
+ j_p^kf\equiv\sum_{|\alpha|\le k}
+ \frac{\partial_z^\alpha f(p)}{\alpha!}(z-p)^\alpha
+ \pmod{\mathfrak m_p^{k+1}}.
+\]
+Warunki interpolacji wartości i pochodnych
+(np. w zadaniach typu Carathéodory'ego--Fejéra)
+są warunkami na holomorficzne dżety.
+W przeciwieństwie do dowolnych gładkich funkcji,
+holomorficzne dżety podlegają globalnym ograniczeniom
+wynikającym z istnienia funkcji holomorficznej na
+ustalonym obszarze. Twierdzenie Whitneya w klasie $C^k$
+nie zapewnia holomorficznego przedłużenia.
+\end{przyklad}
+
+\begin{przyklad}[Dżety a metoda elementów skończonych]
+Przybliżenia typu Hermite'a w jednym wymiarze
+łączą zadane wartości $u(x_i)$ i pochodne $u'(x_i)$
+na końcach przedziałów. Są więc interpolacją
+$1$-dżetów na skończonym zbiorze węzłów.
+Warunki zgodności na węzłach decydują,
+czy powstaje aproksymacja klasy $C^1$.
+\end{przyklad}
+
+\begin{przyklad}[Dżety i geometryczne oszacowania rzędu]
+Dwie gładkie funkcje o identycznym $k$-dżecie w $p$
+mogą różnić się globalnie, ale ich różnica
+spełnia $f(x)-g(x)=o(|x-p|^k)$ przy $x\to p$.
+Jeżeli mają również równe pochodne rzędu $k+1$,
+to ich $(k+1)$-dżety są równe i otrzymujemy
+odpowiednią poprawę lokalnego rzędu reszty.
+\end{przyklad}
+
+\section{Mapa zależności i zakres udowodnionych rezultatów}
+\begin{center}
+\begin{tikzpicture}[>=stealth, every node/.style={font=\small,align=center},
+ box/.style={draw,rounded corners=2pt,inner sep=5pt,text width=3.8cm}]
+ \node[box] (j) at (-2.4,2.8) {Dżety gładkie\\wiązki i formy kontaktowe};
+ \node[box] (a) at (2.4,2.8) {Gęstość Lebesgue'a\\dżety przybliżone};
+ \node[box] (w) at (-2.4,0.7) {Warunki Whitneya\\przedłużenie $C^k$};
+ \node[box] (l) at (2.4,0.7) {Whitney--Luzin\\wybór dużego $K$};
+ \node[box] (c) at (0,-1.45) {Zastosowania: Sobolew, $BV$,\\area/coarea, PDE};
+ \draw[->] (j) -- (w);
+ \draw[->] (a) -- (l);
+ \draw[->] (w) -- (l);
+ \draw[->] (l) -- (c);
+\end{tikzpicture}
+\end{center}
+
+\begin{uwaga}[Co zostało udowodnione, a co przyjęte?]
+W tym rozdziale szczegółowo wyprowadzono algebraiczny opis
+dżetów, strukturę afiniczną, kryterium holonomiczności,
+jednoznaczność dżetów przybliżonych, twierdzenie Whitneya
+metodą kostek i twierdzenie Whitneya--Luzina dla $C^1$.
+Osobno przyjęto znane twierdzenia Rademachera, Luzina,
+Jegorowa i Sobolewa o przybliżonej różniczkowalności
+oraz ogólne wzory area/coarea i rozkład $BV$.
+Ich przytoczenie pokazuje zastosowania, nie stanowi
+nowego dowodu tych wyników.
+\end{uwaga}
+
+
+\section*{Wskazówki bibliograficzne}
+Konstrukcja wiązek dżetów i form kontaktowych jest standardowo
+przedstawiana w monografii D.~J.~Saundersa,
+\emph{The Geometry of Jet Bundles}. Dla teorii przedłużeń
+podstawową pracą jest H.~Whitney,
+\emph{Analytic extensions of differentiable functions defined
+in closed sets} (1934). Przybliżona różniczkowalność,
+twierdzenia typu Luzina i ich związek z teorią Sobolewa i $BV$
+są omawiane w książce L.~C.~Evansa i R.~F.~Gariepy'ego,
+\emph{Measure Theory and Fine Properties of Functions}.
+W tekście rozdzielono twierdzenia dowodzone tutaj od
+rezultatów zewnętrznych (Rademacher, własności Sobolewa,
+wzory area i koobszaru). W konstrukcji Whitneya wykorzystuje
+się standardowy rozkład na kostki i rozkład jedności;
+podano ich własności oraz argument sklejania na zbiorze
+domkniętym. Dowody powinny być czytane z zachowaniem
+wskazanych założeń regularności.

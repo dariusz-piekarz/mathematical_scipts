@@ -1,0 +1,775 @@
+% ROZDZIAŁ 2 — plik włączany przez main.tex
+\chapter{Miary i ich podstawowe własności}
+\label{ch:miary-wlasnosci}
+
+\section{Definicja i pierwsze przykłady}
+
+W rozdziale \ref{ch:przestrzenie-mierzalne} ustaliliśmy, które podzbiory
+przestrzeni mają być mierzalne. Teraz przypiszemy im liczby z przedziału
+$[0,\infty]$. Dopuszczenie wartości $\infty$ jest konieczne już dla
+naturalnego pojęcia liczby elementów zbioru, a następnie dla miary
+objętości na przestrzeniach nieograniczonych.
+
+\begin{definicja}[Miara]
+\label{def:measure}
+Niech $(X,\mathcal F)$ będzie przestrzenią mierzalną.
+\emph{Miarą} na $(X,\mathcal F)$ nazywamy funkcję
+$\mu:\mathcal F\to[0,\infty]$ spełniającą:
+\begin{enumerate}
+\item $\mu(\varnothing)=0$;
+\item dla każdego ciągu $(A_n)_{n\geq1}$ parami rozłącznych zbiorów
+z $\mathcal F$ zachodzi \emph{przeliczalna addytywność}
+\begin{equation}
+\label{eq:countable-additivity}
+\mu\left(\bigcup_{n=1}^{\infty}A_n\right)
+=\sum_{n=1}^{\infty}\mu(A_n).
+\end{equation}
+\end{enumerate}
+Trójkę $(X,\mathcal F,\mu)$ nazywamy \emph{przestrzenią z miarą}.
+Wszystkie sumy liczb nieujemnych rozumiemy jako kres górny sum
+częściowych, dopuszczając wartość $\infty$.
+\end{definicja}
+
+\begin{uwaga}
+Nie jest wymagane, aby $\mu(X)$ było skończone. Aksjomat
+$\mu(\varnothing)=0$ zapisujemy oddzielnie, ponieważ bez niego
+funkcja stale równa $\infty$ spełniałaby równość
+\eqref{eq:countable-additivity} dla każdej rodziny rozłącznej,
+ale nie miałaby zamierzonych własności miary.
+\end{uwaga}
+
+\begin{przyklad}[Miara zerowa i miara Diraca]
+\label{ex:dirac}
+Na dowolnej przestrzeni mierzalnej $(X,\mathcal F)$ funkcja
+$\mu(A)=0$ dla $A\in\mathcal F$ jest miarą zerową.
+Dla ustalonego $x\in X$ definiujemy \emph{miarę Diraca} wzorem
+\[
+\delta_x(A)=\begin{cases}1,&x\in A,\\0,&x\notin A,\end{cases}
+\qquad A\in\mathcal F.
+\]
+Jeśli $(A_n)$ są parami rozłączne, punkt $x$ należy co najwyżej
+do jednego z tych zbiorów. Daje to przeliczalną addytywność.
+Nie zakładamy przy tym, że singleton $\{x\}$ należy do $\mathcal F$.
+\end{przyklad}
+
+\begin{przyklad}[Miara licząca]
+\label{ex:counting}
+Na $(X,\mathcal P(X))$ definiujemy
+\[
+\#(A)=\begin{cases}
+|A|,&A\text{ jest skończony},\\
+\infty,&A\text{ jest nieskończony}.
+\end{cases}
+\]
+Dla parami rozłącznych zbiorów $A_n$ liczność ich sumy jest sumą
+liczności w podanym sensie: jeśli suma jest skończona, tylko
+skończenie wiele $A_n$ jest niepustych i każde jest skończone;
+jeśli jest nieskończona, po prawej stronie także otrzymujemy
+$\infty$. Jest to \emph{miara licząca}.
+\end{przyklad}
+
+\begin{przyklad}[Miara na $\sigma$-algebrze przeliczalno-koprzeliczalnej]
+\label{ex:cocountable-measure}
+Niech $X$ będzie nieprzeliczalnym zbiorem i niech
+$\mathcal C_X$ będzie $\sigma$-algebrą z przykładu
+\ref{ex:countable-cocountable}. Określmy
+\[
+\mu(A)=\begin{cases}
+0,&A\text{ jest przeliczalny},\\
+1,&X\setminus A\text{ jest przeliczalny}.
+\end{cases}
+\qquad A\in\mathcal C_X.
+\]
+Definicja jest jednoznaczna, ponieważ nieprzeliczalny zbiór
+$X$ nie może być jednocześnie przeliczalny i mieć przeliczalne
+dopełnienie. Dwie rozłączne części $X$ nie mogą obie mieć
+przeliczalnego dopełnienia. Dla przeliczalnej rodziny
+rozłącznych zbiorów z $\mathcal C_X$ albo wszystkie mają miarę
+zero, a ich suma jest przeliczalna, albo dokładnie jeden ma
+miarę jeden, a suma ma miarę jeden. Jest to zatem miara.
+Ten przykład pokaże w sekcji \ref{sec:atoms}, że atomy
+nie muszą być singletonami.
+\end{przyklad}
+
+\begin{przyklad}[Ważone miary dyskretne]
+\label{ex:weighted-discrete}
+Niech $X$ będzie zbiorem, $\mathcal F=\mathcal P(X)$,
+$(x_n)_{n\geq1}$ ciągiem punktów $X$, a $(w_n)_{n\geq1}$
+ciągiem liczb z $[0,\infty)$. Wtedy
+\[
+\mu(A)=\sum_{n=1}^{\infty}w_n\chi_A(x_n),
+\qquad A\subseteq X,
+\]
+jest miarą. Dla rozłącznych $A_k$ równość
+$\chi_{\cup_kA_k}(x_n)=\sum_k\chi_{A_k}(x_n)$
+pozwala zmienić kolejność dwóch szeregów o wyrazach
+nieujemnych. Nie wymagamy, aby punkty $x_n$ były różne ani by
+$\sum_nw_n$ było skończone.
+\end{przyklad}
+
+\section{Monotoniczność i przeliczalna podaddytywność}
+
+\begin{twierdzenie}[Podstawowe własności miary]
+\label{thm:basic-measure}
+Niech $(X,\mathcal F,\mu)$ będzie przestrzenią z miarą.
+Wówczas:
+\begin{enumerate}
+\item dla dowolnych $A,B\in\mathcal F$ z $A\subseteq B$ zachodzi
+$\mu(A)\leq\mu(B)$;
+\item dla dowolnych $A,B\in\mathcal F$ zachodzi
+$\mu(A\cup B)\leq\mu(A)+\mu(B)$;
+\item dla dowolnych $A_n\in\mathcal F$, $n\geq1$, zachodzi
+\begin{equation}
+\label{eq:subadditivity}
+\mu\left(\bigcup_{n=1}^{\infty}A_n\right)
+\leq\sum_{n=1}^{\infty}\mu(A_n);
+\end{equation}
+\item jeśli $A,B\in\mathcal F$, $A\subseteq B$ i $\mu(A)<\infty$,
+to $\mu(B\setminus A)=\mu(B)-\mu(A)$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Zbiory $A$ i $B\setminus A$ są rozłączne, a ich suma jest równa $B$.
+Przeliczalna addytywność, zastosowana do rodziny uzupełnionej
+zbiorami pustymi, daje
+$\mu(B)=\mu(A)+\mu(B\setminus A)$. Wynika stąd monotoniczność,
+a jeżeli $\mu(A)<\infty$, również wzór na różnicę.
+
+Ponadto $A\cup B=A\,\dot\cup\,(B\setminus A)$, więc
+$\mu(A\cup B)\leq\mu(A)+\mu(B)$.
+Dla dowolnego ciągu $(A_n)$ definiujemy
+$B_1=A_1$ oraz
+$B_n=A_n\setminus\bigcup_{k<n}A_k$ dla $n\geq2$.
+Zbiory $B_n$ są parami rozłączne, $B_n\subseteq A_n$
+i $\bigcup_nB_n=\bigcup_nA_n$. Stąd
+$\mu(\bigcup_nA_n)=\sum_n\mu(B_n)\leq\sum_n\mu(A_n)$.
+\end{proof}
+
+\begin{uwaga}[Arytmetyka z nieskończonością]
+Warunku $\mu(A)<\infty$ w ostatnim punkcie twierdzenia
+\ref{thm:basic-measure} nie wolno usuwać. Jeśli
+$\mu(A)=\mu(B)=\infty$, wyrażenie $\infty-\infty$
+nie ma określonej wartości. Prawidłowym wzorem pozostaje
+$\mu(B)=\mu(A)+\mu(B\setminus A)$, który nie wymaga odejmowania.
+\end{uwaga}
+
+\begin{wniosek}[Przeliczalne sumy zbiorów miary zero]
+\label{cor:null-union}
+Jeżeli $(X,\mathcal F,\mu)$ jest przestrzenią z miarą oraz
+$N_n\in\mathcal F$ i $\mu(N_n)=0$ dla każdego $n\in\mathbb N$,
+to $\mu(\bigcup_nN_n)=0$.
+\end{wniosek}
+\begin{proof}
+Z podaddytywności mamy
+$0\leq\mu(\bigcup_nN_n)\leq\sum_n\mu(N_n)=0$.
+\end{proof}
+
+\section{Ciągłość miary względem granic zbiorów}
+
+\begin{twierdzenie}[Ciągłość z dołu i z góry]
+\label{thm:measure-continuity}
+Niech $(X,\mathcal F,\mu)$ będzie przestrzenią z miarą.
+\begin{enumerate}
+\item Jeśli $A_n\in\mathcal F$ oraz $A_n\uparrow A$, to
+$A\in\mathcal F$ i
+\begin{equation}
+\label{eq:continuity-below}
+\mu(A)=\lim_{n\to\infty}\mu(A_n).
+\end{equation}
+\item Jeśli $B_n\in\mathcal F$, $B_n\downarrow B$ oraz
+$\mu(B_1)<\infty$, to $B\in\mathcal F$ i
+\begin{equation}
+\label{eq:continuity-above}
+\mu(B)=\lim_{n\to\infty}\mu(B_n).
+\end{equation}
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Dla ciągu rosnącego przyjmujemy $E_1=A_1$ i
+$E_n=A_n\setminus A_{n-1}$ dla $n\geq2$.
+Zbiory $E_n$ są parami rozłączne oraz
+$A=\bigcup_nE_n$ i $A_k=\bigcup_{n=1}^kE_n$.
+Stąd
+$\mu(A)=\sum_n\mu(E_n)=\lim_{k\to\infty}\sum_{n=1}^k\mu(E_n)
+=\lim_k\mu(A_k)$.
+
+Dla ciągu malejącego zbiory $C_n=B_1\setminus B_n$ rosną
+do $B_1\setminus B$. Z pierwszej części mamy
+$\mu(C_n)\to\mu(B_1\setminus B)$. Ponieważ
+$\mu(B_1)<\infty$, wolno zastosować wzór na różnicę:
+$\mu(C_n)=\mu(B_1)-\mu(B_n)$ oraz
+$\mu(B_1\setminus B)=\mu(B_1)-\mu(B)$.
+Po odjęciu od $\mu(B_1)$ otrzymujemy żądaną równość.
+\end{proof}
+
+\begin{uwaga}[Wystarczy skończoność miary jednego wyrazu]
+W drugim punkcie twierdzenia~\ref{thm:measure-continuity} można
+zastąpić założenie $\mu(B_1)<\infty$ słabszym
+$\mu(B_m)<\infty$ dla pewnego $m\ge1$: wystarczy
+zastosować twierdzenie do ogona ciągu
+$(B_{m+k-1})_{k\ge1}$, którego przekrój jest nadal równy $B$.
+Nie wystarcza natomiast sama skończoność $\mu(B)$.
+\end{uwaga}
+
+\begin{przyklad}[Dlaczego założenie skończoności jest niezbędne]
+\label{ex:continuity-counterexample}
+Na $X=\mathbb N$ z miarą liczącą zbiory
+$B_n=\{n,n+1,n+2,\ldots\}$ tworzą ciąg malejący o pustym
+przekroju. Każdy $B_n$ ma miarę $\infty$, ale
+$\mu(\bigcap_nB_n)=\mu(\varnothing)=0$.
+Tak więc ciągłość z góry nie zachodzi bez odpowiedniej
+hipotezy skończoności.
+\end{przyklad}
+
+\begin{definicja}[Granica górna i dolna zbiorów]
+\label{def:limsup-sets}
+Dla ciągu $(A_n)_{n\geq1}$ podzbiorów $X$ definiujemy
+\[
+\liminf_{n\to\infty}A_n
+=\bigcup_{m=1}^{\infty}\bigcap_{n\geq m}A_n,
+\qquad
+\limsup_{n\to\infty}A_n
+=\bigcap_{m=1}^{\infty}\bigcup_{n\geq m}A_n.
+\]
+Pierwszy zbiór składa się z punktów należących do wszystkich
+$A_n$ od pewnego miejsca, drugi --- z punktów należących do
+nieskończenie wielu $A_n$. Jeśli oba zbiory są równe,
+ich wspólną wartość oznaczamy przez $\lim_nA_n$.
+\end{definicja}
+
+\begin{twierdzenie}[Nierówności dla granic zbiorów]
+\label{thm:fatou-for-sets}
+Niech $(X,\mathcal F,\mu)$ będzie przestrzenią z miarą
+oraz $A_n\in\mathcal F$ dla wszystkich $n\ge1$.
+Wówczas
+\[
+ \mu(\liminf_{n\to\infty}A_n)
+ \le \liminf_{n\to\infty}\mu(A_n).
+\]
+Jeżeli dodatkowo $\mu(X)<\infty$, to
+\[
+ \limsup_{n\to\infty}\mu(A_n)
+ \le \mu(\limsup_{n\to\infty}A_n).
+\]
+\end{twierdzenie}
+\begin{proof}
+Niech $C_m=\bigcap_{n\ge m}A_n$.
+Zbiory $C_m$ tworzą ciąg rosnący,
+$\bigcup_m C_m=\liminf_n A_n$ oraz
+$\mu(C_m)\le\inf_{n\ge m}\mu(A_n)$.
+Ciągłość miary z dołu daje
+$\mu(\liminf_n A_n)=\lim_m\mu(C_m)
+\le\lim_m\inf_{n\ge m}\mu(A_n)$.
+Dla drugiej nierówności kładziemy
+$D_m=\bigcup_{n\ge m}A_n$.
+Zbiory $D_m$ maleją do $\limsup_n A_n$,
+a $\mu(D_m)\ge\sup_{n\ge m}\mu(A_n)$.
+Ponieważ $\mu(D_1)\le\mu(X)<\infty$,
+ciągłość miary z góry pozwala przejść do granicy:
+$\mu(\limsup_n A_n)=\lim_m\mu(D_m)
+\ge\lim_m\sup_{n\ge m}\mu(A_n)$.
+\end{proof}
+\begin{uwaga}
+Założenie skończoności jest istotne w drugiej nierówności.
+Dla miary liczącej na $\mathbb N$ i
+$A_n=\{n,n+1,\ldots\}$ mamy
+$\limsup_n\mu(A_n)=\infty$, lecz
+$\limsup_n A_n=\varnothing$.
+\end{uwaga}
+
+\begin{twierdzenie}[Lemat Borela--Cantellego, część pierwsza]
+\label{thm:borel-cantelli-1}
+Niech $(X,\mathcal F,\mu)$ będzie przestrzenią z miarą
+oraz $(A_n)_{n\geq1}$ ciągiem zbiorów z $\mathcal F$.
+Jeżeli $\sum_{n=1}^{\infty}\mu(A_n)<\infty$, to
+$\mu(\limsup_{n\to\infty}A_n)=0$.
+\end{twierdzenie}
+\begin{proof}
+Zbiór $\limsup_nA_n$ jest mierzalny i dla każdego
+$m\in\mathbb N$ zawiera się w $\bigcup_{n\geq m}A_n$.
+Z monotoniczności i podaddytywności wynika
+\[
+0\leq\mu(\limsup_nA_n)
+\leq\sum_{n\geq m}\mu(A_n).
+\]
+Ponieważ ogólny szereg jest zbieżny, jego ogon dąży do zera,
+gdy $m\to\infty$. To kończy dowód. Nie użyliśmy ani
+skończoności $\mu(X)$, ani niezależności zbiorów.
+\end{proof}
+
+\begin{przyklad}[Interpretacja]
+Jeśli $\mu(A_n)\leq2^{-n}$ dla wszystkich $n\geq1$, to
+$\mu(\limsup_nA_n)=0$. Prawie każdy punkt (w sensie, który
+zaraz zdefiniujemy) może należeć tylko do skończenie wielu $A_n$.
+W rachunku prawdopodobieństwa po wprowadzeniu niezależności
+uzyskuje się drugą część lematu Borela--Cantellego, z innymi
+założeniami i przeciwnym wnioskiem.
+\end{przyklad}
+
+\section{Skończoność, \texorpdfstring{$\sigma$}{sigma}-skończoność i półskończoność}
+
+\begin{definicja}[Klasy miar]
+\label{def:measure-finiteness}
+Niech $(X,\mathcal F,\mu)$ będzie przestrzenią z miarą.
+\begin{enumerate}
+\item Miara $\mu$ jest \emph{skończona}, gdy $\mu(X)<\infty$.
+\item Miara $\mu$ jest \emph{probabilistyczna}, gdy $\mu(X)=1$.
+\item Miara $\mu$ jest \emph{$\sigma$-skończona}, gdy istnieją
+$E_n\in\mathcal F$, $n\geq1$, takie że
+$X=\bigcup_nE_n$ i $\mu(E_n)<\infty$ dla wszystkich $n$.
+\item Miara $\mu$ jest \emph{półskończona}, gdy dla każdego
+$A\in\mathcal F$ z $\mu(A)>0$ istnieje $B\in\mathcal F$
+takie, że $B\subseteq A$ oraz $0<\mu(B)<\infty$.
+\end{enumerate}
+Jeśli $(X,\tau)$ jest przestrzenią topologiczną, a
+$\mathcal F\supseteq\mathcal B(X)$, nazywamy $\mu$
+\emph{lokalnie skończoną}, gdy każdy $x\in X$ posiada
+otwarte otoczenie $U$ o $\mu(U)<\infty$.
+\end{definicja}
+
+\begin{twierdzenie}[Implikacje]
+\label{thm:finiteness-implications}
+Każda miara skończona na przestrzeni mierzalnej jest
+$\sigma$-skończona, a każda miara $\sigma$-skończona
+jest półskończona. Implikacje odwrotne są na ogół fałszywe.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $\mu(X)<\infty$, można w definicji $\sigma$-skończoności
+przyjąć $E_n=X$. Niech teraz $X=\bigcup_nE_n$ z
+$\mu(E_n)<\infty$. Dla $A\in\mathcal F$ o $\mu(A)>0$
+nie wszystkie przekroje $A\cap E_n$ mogą mieć miarę zero:
+w przeciwnym razie podaddytywność dałaby
+$\mu(A)\leq\sum_n\mu(A\cap E_n)=0$.
+Istnieje więc $n$ z $0<\mu(A\cap E_n)<\infty$.
+
+Miara licząca na $\mathbb N$ jest $\sigma$-skończona,
+ale nieskończona. Miara licząca na nieprzeliczalnym
+zbiorze $X$ jest półskończona (każdy niepusty zbiór
+zawiera singleton miary jeden), ale nie jest
+$\sigma$-skończona, gdyż zbiory o skończonej mierze
+są skończone, a przeliczalna suma zbiorów skończonych
+jest przeliczalna.
+\end{proof}
+
+\begin{przyklad}[Miara, która nie jest półskończona]
+Niech $X$ będzie niepustym zbiorem z $\mathcal F=\mathcal P(X)$
+i niech $\mu(\varnothing)=0$ oraz $\mu(A)=\infty$
+dla $A\ne\varnothing$. Jest to miara: dla rodziny
+rozłącznej z niepustą sumą co najmniej jeden składnik
+ma miarę $\infty$. Nie ma jednak żadnego podzbioru
+o mierze dodatniej i skończonej.
+\end{przyklad}
+
+\begin{uwaga}[Lokalna skończoność a $\sigma$-skończoność]
+Na przestrzeni topologicznej mającej przeliczalną bazę
+lokalnie skończona miara borelowska jest $\sigma$-skończona.
+Istotnie, otwarte otoczenia o skończonej mierze tworzą
+pokrycie; własność Lindelöfa (wynikająca z istnienia
+przeliczalnej bazy) pozwala wybrać pokrycie przeliczalne.
+Bez założenia topologicznego takiej implikacji nie ma:
+miara licząca na nieprzeliczalnej przestrzeni dyskretnej
+jest lokalnie skończona, lecz nie jest $\sigma$-skończona.
+\end{uwaga}
+
+\section{Zbiory miary zero, własności prawie wszędzie i zupełność}
+
+\begin{definicja}[Własność prawie wszędzie]
+\label{def:almost-everywhere}
+Niech $(X,\mathcal F,\mu)$ będzie przestrzenią z miarą.
+Mówimy, że własność $P(x)$ zachodzi \emph{$\mu$-prawie wszędzie}
+(skrót: $\mu$-p.w.), jeśli istnieje $N\in\mathcal F$
+o $\mu(N)=0$ takie, że $P(x)$ zachodzi dla każdego
+$x\in X\setminus N$. Nie wymagamy mierzalności zbioru
+$\{x\in X:P(x)\text{ nie zachodzi}\}$.
+Jeśli jest on mierzalny, jest to równoważne temu,
+że ma miarę zero.
+\end{definicja}
+
+\begin{uwaga}
+Dzięki wnioskowi \ref{cor:null-union} przeliczalnie wiele
+własności zachodzących $\mu$-p.w. zachodzi jednocześnie
+$\mu$-p.w. Bez przeliczalności nie można wyciągać tego
+wniosku: przy miarze z przykładu \ref{ex:cocountable-measure}
+każdy singleton ma miarę zero, lecz suma wszystkich singletonów
+jest równa $X$ i ma miarę jeden.
+\end{uwaga}
+
+\begin{definicja}[Miara zupełna]
+\label{def:complete-measure}
+Miara $\mu$ na $(X,\mathcal F)$ jest \emph{zupełna}, jeżeli
+dla każdego $N\in\mathcal F$ spełniającego $\mu(N)=0$
+każdy podzbiór $A\subseteq N$ należy do $\mathcal F$.
+Z monotoniczności wynika wówczas $\mu(A)=0$.
+\end{definicja}
+
+\begin{przyklad}[Miara niezupełna na trzech punktach]
+\label{ex:incomplete-measure}
+Niech $X=\{a,b,c\}$ oraz
+$\mathcal F=\{\varnothing,\{a,b\},\{c\},X\}$.
+Określmy $\mu(\{a,b\})=0$ i $\mu(\{c\})=1$,
+a pozostałe wartości wyznaczmy przez addytywność:
+$\mu(\varnothing)=0$, $\mu(X)=1$.
+To dobrze określona miara na $\mathcal F$.
+Zbiór $N=\{a,b\}$ ma miarę zero, ale jego podzbiór
+$\{a\}$ nie jest mierzalny. Zatem $\mu$ nie jest zupełna.
+\end{przyklad}
+
+\begin{twierdzenie}[Uzupełnienie przestrzeni z miarą]
+\label{thm:completion}
+Niech $(X,\mathcal F,\mu)$ będzie przestrzenią z miarą.
+Zdefiniujmy
+\[
+\overline{\mathcal F}
+=\{E\subseteq X:\text{istnieją }A,B\in\mathcal F
+\text{ takie, że }A\subseteq E\subseteq B
+\text{ oraz }\mu(B\setminus A)=0\}.
+\]
+Wówczas $\overline{\mathcal F}$ jest $\sigma$-algebrą zawierającą
+$\mathcal F$, a wzór
+\[
+\overline\mu(E)=\mu(A),\qquad
+A\subseteq E\subseteq B,\quad A,B\in\mathcal F,
+\quad\mu(B\setminus A)=0,
+\]
+definiuje na niej miarę zupełną. Miara $\overline\mu$
+przedłuża $\mu$, a $\overline{\mathcal F}$ jest najmniejszą
+$\sigma$-algebrą zawierającą $\mathcal F$ i wszystkie
+podzbiory zbiorów z $\mathcal F$ o mierze zero.
+\end{twierdzenie}
+\begin{proof}
+Najpierw sprawdzamy jednoznaczność definicji $\overline\mu$.
+Jeśli $A_i\subseteq E\subseteq B_i$ i
+$\mu(B_i\setminus A_i)=0$ dla $i=1,2$, to
+$A_1\setminus A_2\subseteq B_2\setminus A_2$.
+Z monotoniczności mamy $\mu(A_1\setminus A_2)=0$,
+a stąd $\mu(A_1)\leq\mu(A_2)$, nawet jeśli
+jedna z miar jest nieskończona. Zamiana indeksów
+daje $\mu(A_1)=\mu(A_2)$. Ponadto
+$\mu(A_i)=\mu(B_i)$, gdyż
+$B_i=A_i\,\dot\cup\,(B_i\setminus A_i)$.
+
+Jeśli $E\in\overline{\mathcal F}$ i
+$A\subseteq E\subseteq B$ są jak w tezie, to
+$X\setminus B\subseteq X\setminus E\subseteq X\setminus A$,
+a różnica zbiorów skrajnych wynosi $B\setminus A$
+i ma miarę zero. To dowodzi zamknięcia na dopełnienia.
+Jeśli $E_n\in\overline{\mathcal F}$ i
+$A_n\subseteq E_n\subseteq B_n$ z
+$\mu(B_n\setminus A_n)=0$, to
+\[
+\bigcup_nA_n\subseteq\bigcup_nE_n\subseteq\bigcup_nB_n,
+\qquad
+\left(\bigcup_nB_n\right)\setminus\left(\bigcup_nA_n\right)
+\subseteq\bigcup_n(B_n\setminus A_n).
+\]
+Ostatni zbiór ma miarę zero na mocy wniosku
+\ref{cor:null-union}, więc przeliczalna suma należy do
+$\overline{\mathcal F}$. Zawieranie $\mathcal F$ wynika
+z wyboru $A=B=E\in\mathcal F$.
+
+Dla parami rozłącznych $E_n\in\overline{\mathcal F}$
+wybieramy $A_n\subseteq E_n$ jak wyżej. Zbiory $A_n$
+są parami rozłączne i
+$\overline\mu(\bigcup_nE_n)=\mu(\bigcup_nA_n)
+=\sum_n\mu(A_n)=\sum_n\overline\mu(E_n)$.
+Zatem $\overline\mu$ jest miarą i przedłuża $\mu$.
+
+Aby wykazać zupełność, niech $E\in\overline{\mathcal F}$
+i $\overline\mu(E)=0$. Wybierzmy $A,B\in\mathcal F$
+takie, że $A\subseteq E\subseteq B$ i
+$\mu(B\setminus A)=0$. Mamy $\mu(B)=\mu(A)=0$.
+Dla dowolnego $T\subseteq E$ zachodzi
+$\varnothing\subseteq T\subseteq B$, przy $\mu(B)=0$,
+więc $T\in\overline{\mathcal F}$.
+
+Wreszcie, jeśli $\mathcal G$ jest $\sigma$-algebrą zawierającą
+$\mathcal F$ i wszystkie podzbiory jej zbiorów miary zero,
+to dla $E\in\overline{\mathcal F}$ jak wyżej zbiór
+$E\setminus A$ jest podzbiorem mierzalnego zbioru
+$B\setminus A$ miary zero. Zatem $E\setminus A\in\mathcal G$
+i $E=A\cup(E\setminus A)\in\mathcal G$. Dowodzi to minimalności.
+\end{proof}
+
+\begin{uwaga}[Jednoznaczność uzupełnienia]
+Konstrukcja z twierdzenia \ref{thm:completion} nie polega
+na arbitralnym wyborze wartości dla nowych podzbiorów.
+Zbiory nowo dołączone różnią się od starych zbiorów
+mierzalnych jedynie o części zbiorów miary zero.
+Rozróżnienie między miarą borelowską a jej uzupełnieniem
+będzie ważne przy konstrukcji miary Lebesgue'a.
+\end{uwaga}
+
+\section{Operacje na miarach}
+
+\begin{twierdzenie}[Sumy i mnożenie przez stałą]
+\label{thm:measure-operations}
+Niech $(X,\mathcal F)$ będzie przestrzenią mierzalną,
+$(\mu_n)_{n\geq1}$ ciągiem miar na $\mathcal F$,
+a $(c_n)_{n\geq1}$ ciągiem liczb nieujemnych i skończonych.
+Wówczas
+$\mu(A)=\sum_{n=1}^{\infty}c_n\mu_n(A)$ dla $A\in\mathcal F$
+jest miarą, przy konwencji, że $0\mu_n$ oznacza miarę
+zerową również wtedy, gdy $\mu_n(A)=\infty$.
+\end{twierdzenie}
+\begin{proof}
+Wszystkie składniki są nieujemne i wartość na zbiorze pustym
+wynosi zero. Dla parami rozłącznych $A_k$ otrzymujemy
+\[
+\mu\left(\bigcup_kA_k\right)
+=\sum_n c_n\sum_k\mu_n(A_k)
+=\sum_k\sum_n c_n\mu_n(A_k)
+=\sum_k\mu(A_k).
+\]
+Wolno przestawić kolejność sumowania, ponieważ obie strony
+środkowej równości są kresami górnymi tych samych sum
+skończonych wyrazów nieujemnych.
+\end{proof}
+
+\begin{definicja}[Miara śladowa i ograniczenie]
+\label{def:restriction}
+Niech $(X,\mathcal F,\mu)$ będzie przestrzenią z miarą
+i $E\in\mathcal F$. Na przestrzeni mierzalnej
+$(E,\mathcal F|_E)$ definiujemy \emph{miarę śladową}
+$\mu|_E$ wzorem
+$(\mu|_E)(B)=\mu(B)$ dla $B\in\mathcal F|_E$.
+Ponieważ $E\in\mathcal F$, każdy zbiór śladowy
+$B=A\cap E$ jest elementem $\mathcal F$.
+Można też określić na $(X,\mathcal F)$ miarę
+$\mu_E(A)=\mu(A\cap E)$; obie konstrukcje mają
+różne dziedziny i nie należy ich utożsamiać.
+\end{definicja}
+
+\begin{proof}[Sprawdzenie aksjomatów]
+Miary obu typów przypisują zbiorowi pustemu wartość zero.
+Jeśli $B_n\subseteq E$ są parami rozłączne, to ich
+suma jest rozłączna również w $X$, a przeliczalna
+addytywność $\mu$ daje addytywność $\mu|_E$.
+Dla $\mu_E$ korzystamy z tożsamości
+$(\bigcup_nA_n)\cap E=\bigcup_n(A_n\cap E)$.
+\end{proof}
+
+\begin{definicja}[Miara obrazowa]
+\label{def:pushforward}
+Niech $(X,\mathcal F,\mu)$ będzie przestrzenią z miarą,
+$(Y,\mathcal G)$ przestrzenią mierzalną, a
+$T:X\to Y$ odwzorowaniem $(\mathcal F,\mathcal G)$-mierzalnym.
+\emph{Miarą obrazową} $T_\#\mu$ na $(Y,\mathcal G)$ nazywamy
+miarę określoną wzorem
+\[
+(T_\#\mu)(B)=\mu(T^{-1}(B)),\qquad B\in\mathcal G.
+\]
+\end{definicja}
+
+\begin{proof}[Sprawdzenie aksjomatów]
+Z mierzalności $T$ wszystkie obrazy odwrotne występujące
+we wzorze są mierzalne. Obraz odwrotny zbioru pustego
+jest pusty. Dla parami rozłącznych $B_n$ zbiory
+$T^{-1}(B_n)$ są parami rozłączne i
+$T^{-1}(\bigcup_nB_n)=\bigcup_nT^{-1}(B_n)$.
+Równość przeliczalnej addytywności jest zatem konsekwencją
+tego samego aksjomatu dla $\mu$.
+\end{proof}
+
+\begin{przyklad}[Obraz miary Diraca]
+Jeżeli $x\in X$ i $T:X\to Y$ jest mierzalne, to
+$T_\#\delta_x=\delta_{T(x)}$.
+W szczególności obraz miary dyskretnej
+$\sum_nw_n\delta_{x_n}$ jest równy
+$\sum_nw_n\delta_{T(x_n)}$; punkty o tym samym obrazie
+mogą powodować sumowanie wag.
+\end{przyklad}
+
+\begin{przyklad}[Normalizacja]
+Jeżeli miara $\mu$ na $(X,\mathcal F)$ spełnia
+$0<\mu(X)<\infty$, to $\mathbb P(A)=\mu(A)/\mu(X)$
+jest miarą probabilistyczną. Nie można tego zrobić
+w ten sposób dla miary o całkowitej masie nieskończonej.
+\end{przyklad}
+
+\section{Jednoznaczność miar na układach generujących}
+
+\begin{twierdzenie}[Jednoznaczność miar skończonych]
+\label{thm:uniqueness-finite}
+Niech $X$ będzie zbiorem, $\mathcal P$ układem $\pi$
+podzbiorów $X$, a $\mathcal F=\sigma(\mathcal P)$.
+Jeżeli $\mu,\nu$ są miarami skończonymi na $(X,\mathcal F)$
+spełniającymi $\mu(X)=\nu(X)$ i
+$\mu(P)=\nu(P)$ dla każdego $P\in\mathcal P$,
+to $\mu=\nu$ na całej $\mathcal F$.
+\end{twierdzenie}
+\begin{proof}
+Niech $\mathcal D=\{A\in\mathcal F:\mu(A)=\nu(A)\}$.
+Z założenia $X\in\mathcal D$ i $\mathcal P\subseteq\mathcal D$.
+Jeżeli $A,B\in\mathcal D$ i $A\subseteq B$, to
+$\mu(B\setminus A)=\mu(B)-\mu(A)
+=\nu(B)-\nu(A)=\nu(B\setminus A)$.
+Odejmowanie jest dopuszczalne, gdyż obie miary są skończone.
+Dla parami rozłącznych $A_n\in\mathcal D$ mamy
+$\mu(\bigcup_nA_n)=\sum_n\mu(A_n)
+=\sum_n\nu(A_n)=\nu(\bigcup_nA_n)$.
+Zatem $\mathcal D$ jest układem Dynkina zawierającym
+$\mathcal P$. Twierdzenie \ref{thm:pi-lambda} daje
+$\mathcal F\subseteq\mathcal D$.
+\end{proof}
+
+\begin{twierdzenie}[Jednoznaczność przy wspólnym wyczerpaniu]
+\label{thm:uniqueness-sigma-finite}
+Niech $X$ będzie zbiorem, $\mathcal P$ układem $\pi$ na $X$,
+$\mathcal F=\sigma(\mathcal P)$, a $\mu,\nu$ miarami
+na $(X,\mathcal F)$ zgodnymi na $\mathcal P$.
+Załóżmy, że istnieją zbiory $E_n\in\mathcal P$ takie, że
+$E_n\subseteq E_{n+1}$, $\bigcup_nE_n=X$ oraz
+$\mu(E_n)=\nu(E_n)<\infty$ dla każdego $n$.
+Wtedy $\mu=\nu$ na $\mathcal F$.
+\end{twierdzenie}
+\begin{proof}
+Dla każdego $n$ definiujemy miary skończone na $\mathcal F$:
+$\mu_n(A)=\mu(A\cap E_n)$ i
+$\nu_n(A)=\nu(A\cap E_n)$.
+Ponieważ $E_n\in\mathcal P$ i $\mathcal P$ jest układem $\pi$,
+dla każdego $P\in\mathcal P$ zachodzi
+$P\cap E_n\in\mathcal P$, a więc
+$\mu_n(P)=\nu_n(P)$. Ponadto
+$\mu_n(X)=\nu_n(X)<\infty$. Z twierdzenia
+\ref{thm:uniqueness-finite} wynika $\mu_n=\nu_n$.
+Dla dowolnego $A\in\mathcal F$ zbiory
+$A\cap E_n$ rosną do $A$. Ciągłość miary z dołu
+daje
+$\mu(A)=\lim_n\mu(A\cap E_n)
+=\lim_n\nu(A\cap E_n)=\nu(A)$.
+\end{proof}
+
+\begin{przyklad}[Miara określona wartościami dystrybuanty]
+\label{ex:unique-cdf}
+Niech $\mu$ i $\nu$ będą miarami probabilistycznymi
+na $(\mathbb R,\mathcal B(\mathbb R))$.
+Jeśli dla każdego $t\in\mathbb R$ zachodzi
+$\mu((-\infty,t])=\nu((-\infty,t])$, to $\mu=\nu$.
+Wystarczy bowiem zastosować twierdzenie
+\ref{thm:uniqueness-finite} do układu $\pi$
+$\{(-\infty,t]:t\in\mathbb R\}$.
+Układ ten generuje $\mathcal B(\mathbb R)$,
+a równość całkowitych mas wynika z probabilistyczności.
+To wyjaśnia, dlaczego dystrybuanta jednoznacznie
+wyznacza rozkład zmiennej losowej.
+\end{przyklad}
+
+\begin{przyklad}[Dlaczego wartości $\infty$ nie wystarczają]
+\label{ex:uniqueness-fails}
+Na $X=\mathbb R$ wyposażonym w $\mathcal B(\mathbb R)$
+niech $\mu$ będzie miarą liczącą, a $\nu=2\mu$.
+Obie miary przypisują wartość $\infty$ każdemu niepustemu
+otwartemu przedziałowi o końcach wymiernych oraz wartość
+zero zbiorowi pustemu. Zgadzają się zatem na układzie
+$\pi$ tych przedziałów (razem ze zbiorem pustym),
+który generuje $\mathcal B(\mathbb R)$.
+Jednak $\mu(\{0\})=1$, a $\nu(\{0\})=2$.
+Nie ma tu wspólnego wyczerpania zbiorami z układu $\pi$
+o skończonych miarach. Przykład dowodzi, że zgodność
+na generatorach bez odpowiednich warunków skończoności
+nie wyznacza miary jednoznacznie.
+\end{przyklad}
+
+\section{Atomy miar}
+\label{sec:atoms}
+
+\begin{definicja}[Atom i miara bezatomowa]
+\label{def:atom}
+Niech $(X,\mathcal F,\mu)$ będzie przestrzenią z miarą.
+Zbiór $A\in\mathcal F$ nazywamy \emph{atomem miary $\mu$},
+jeżeli $\mu(A)>0$ oraz dla każdego $B\in\mathcal F$
+zawartego w $A$ zachodzi $\mu(B)=0$ lub
+$\mu(A\setminus B)=0$.
+Miarę $\mu$ nazywamy \emph{bezatomową}, jeśli nie ma atomów.
+\end{definicja}
+
+\begin{przyklad}[Atomy miary dyskretnej]
+Dla miary Diraca $\delta_x$ każdy mierzalny zbiór
+zawierający $x$ jest atomem; wszystkie takie zbiory
+są równoważne z dokładnością do zbiorów miary zero.
+Dla miary liczącej na $\mathcal P(X)$ atomami są
+dokładnie singletony: zbiór liczący co najmniej dwa punkty
+można rozłożyć na dwie niepuste mierzalne części
+o dodatniej mierze.
+\end{przyklad}
+
+\begin{przyklad}[Atom, który nie jest singletonem]
+W przestrzeni z przykładu \ref{ex:cocountable-measure}
+cały zbiór $X$ jest atomem: jego mierzalne podzbiory
+mają miarę zero albo ich dopełnienia mają miarę zero.
+Jednocześnie każdy singleton ma miarę zero.
+Zatem nawet miara probabilistyczna może być atomowa,
+chociaż żaden punkt nie ma dodatniej miary. Wniosek
+``miara bez atomów wtedy i tylko wtedy, gdy wszystkie
+singletony mają miarę zero'' jest bez dodatkowych
+założeń fałszywy.
+\end{przyklad}
+
+\begin{twierdzenie}[Atomy miar $\sigma$-skończonych mają skończoną masę]
+\label{thm:atom-sigma-finite}
+Jeżeli $\mu$ jest miarą $\sigma$-skończoną na
+$(X,\mathcal F)$ i $A\in\mathcal F$ jest atomem $\mu$,
+to $0<\mu(A)<\infty$.
+\end{twierdzenie}
+\begin{proof}
+Niech $X=\bigcup_nE_n$ z $\mu(E_n)<\infty$.
+Gdyby wszystkie $A\cap E_n$ miały miarę zero,
+to $\mu(A)=0$ na mocy przeliczalnej podaddytywności.
+Istnieje więc $n$ z $\mu(A\cap E_n)>0$.
+Atomowość $A$ implikuje $\mu(A\setminus E_n)=0$.
+Otrzymujemy
+$\mu(A)=\mu(A\cap E_n)+\mu(A\setminus E_n)
+=\mu(A\cap E_n)\leq\mu(E_n)<\infty$.
+\end{proof}
+
+\begin{wniosek}[Przeliczalność rozłącznych atomów]
+\label{cor:countably-many-disjoint-atoms}
+Niech $\mu$ będzie miarą $\sigma$-skończoną na
+$(X,\mathcal F)$, a $(A_i)_{i\in I}$ rodziną parami rozłącznych
+atomów miary $\mu$. Wtedy zbiór indeksów $I$ jest co najwyżej
+przeliczalny.
+\end{wniosek}
+\begin{proof}
+Wybierzmy $X=\bigcup_{n\ge1}E_n$ z $\mu(E_n)<\infty$.
+Z twierdzenia~\ref{thm:atom-sigma-finite} każdy $A_i$ ma
+miarę dodatnią i skończoną. Istnieje więc $n$ takie, że
+$\mu(A_i\cap E_n)>0$; z atomowości wynika wówczas
+$\mu(A_i\cap E_n)=\mu(A_i)$. Dla ustalonych $n,k\ge1$
+rodzina tych indeksów $i$, dla których
+$\mu(A_i\cap E_n)\ge1/k$, jest skończona:
+w przeciwnym przypadku suma miar dowolnie wielu
+rozłącznych fragmentów przekroczyłaby $\mu(E_n)$.
+Każdy indeks należy do przynajmniej jednej takiej
+rodziny, więc $I$ jest przeliczalną sumą zbiorów
+skończonych.
+\end{proof}
+
+\begin{uwaga}[Co daje $\sigma$-skończoność?]
+$\sigma$-skończoność nie jest jedynie wygodnym
+wzmocnieniem skończoności. Stanowi istotne założenie
+jednoznaczności rozszerzenia miary, wielu wersji
+twierdzenia Fubiniego oraz twierdzenia Radona--Nikodyma.
+Nie należy jednak automatycznie zastępować
+$\sigma$-skończoności półskończonością: są to różne hipotezy.
+\end{uwaga}
+
+\section{Synteza rozdziału i perspektywa dalszych konstrukcji}
+
+Z rozdziałów \ref{ch:przestrzenie-mierzalne} i
+\ref{ch:miary-wlasnosci} otrzymaliśmy następujący obraz.
+$\sigma$-algebra kontroluje stabilność zbiorów mierzalnych
+przy granicach przeliczalnych, zaś miara przekształca
+rozłączne sumy w szeregi liczb nieujemnych. Te dwa
+aksjomaty wystarczają do otrzymania monotoniczności,
+podaddytywności, ciągłości z dołu i z góry oraz pierwszych
+argumentów typu ``prawie wszędzie''.
+
+Pozostaje jednak zasadnicze pytanie konstrukcyjne:
+jak otrzymać miarę o zadanych wartościach na prostych
+zbiorach, na przykład na prostokątach w $\mathbb R^d$?
+Twierdzenia o jednoznaczności mówią, że pewne dane
+wyznaczają miarę co najwyżej jedną; nie zapewniają
+jej istnienia. W następnym rozdziale przejdziemy
+do miar zewnętrznych i konstrukcji Carathéodory'ego,
+która pozwoli przejść od prostych danych do prawdziwej
+przeliczalnie addytywnej miary.
