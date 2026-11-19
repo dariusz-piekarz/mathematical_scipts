@@ -1,0 +1,692 @@
+\chapter[Metody Fouriera i rozdzielenie zmiennych]{Szeregi Fouriera, rozdzielenie zmiennych i zagadnienia Sturma--Liouville'a}
+\label{chap:pde-fourier}
+
+W rozdziałach~\ref{chap:pde-heat} i~\ref{chap:pde-wave} uzyskaliśmy rozwiązania na
+całej przestrzeni i w prostych obszarach. Na przedziale lub prostokącie
+bardziej naturalne jest korzystanie z \emph{modów własnych} operatora
+przestrzennego. Metoda rozdzielenia zmiennych będzie skuteczna tylko wtedy,
+gdy uzasadnimy, że funkcje własne tworzą dostatecznie bogatą rodzinę.
+Najpierw przeprowadzimy odpowiedni rachunek dla szeregów Fouriera,
+a następnie zbadamy jego wersję dla regularnych zagadnień
+Sturma--Liouville'a. Formalny rachunek dystrybucji przedstawimy w rozdziale~\ref{chap:pde-distributions},
+a transformatę Fouriera na $\R^n$ i dystrybucje temperowane ---
+w rozdziale~\ref{chap:pde-fourier-Rd}, po wprowadzeniu
+przestrzeni Schwartza. Rozróżnienie szeregów Fouriera na torusie
+i transformaty na całej przestrzeni jest istotne także dla normalizacji.
+
+\section{Szereg Fouriera: współczynniki, ortogonalność i zbieżność}
+\label{sec:pde6-fourier}
+
+Przez $\mathbb T=\R/(2\pi\mathbb Z)$ rozumiemy okrąg z
+współrzędną $x\in[-\pi,\pi]$ i utożsamionymi końcami.
+Dla $f\in L^1(-\pi,\pi)$ definiujemy
+$\widehat f(k)=(2\pi)^{-1}\int_{-\pi}^{\pi}f(x)e^{-ikx}\,\mathrm d\lambda_1(x)$,
+$k\in\mathbb Z$, oraz sumę częściową
+$S_Nf(x)=\sum_{|k|\le N}\widehat f(k)e^{ikx}$.
+W tym rozdziale $L^2(\mathbb T)$ oznacza zespoloną przestrzeń Hilberta
+z iloczynem skalarnym
+$\langle f,g\rangle=(2\pi)^{-1}\int_{-\pi}^{\pi}f(x)\overline{g(x)}\,\mathrm d\lambda_1(x)$.
+Pojęcie całki Lebesgue'a i podstawowe własności $L^p$ traktujemy
+jako znane; szerszą teorię funkcjonalną rozwiniemy w dalszych tomach.
+Zwracamy uwagę na normalizację: w tym rozdziale norma $L^2(\T)$
+pochodzi od miary $\mathrm d\lambda_1(x)/(2\pi)$.
+W dalszych rozdziałach o PDE na torusie stosujemy zwykle
+nieznormalizowaną miarę $\mathrm d\lambda_d(x)$; wzory
+na wartości własne i współczynniki Fouriera pozostają zgodne,
+ale normy $L^2$ różnią się odpowiednim czynnikiem.
+
+\begin{lemat}[Ortogonalność i nierówność Bessela]
+\label{lem:pde6-bessel}
+Niech $f\in L^2(\mathbb T)$ oraz $N\ge0$. Wówczas
+$\langle e^{ikx},e^{i\ell x}\rangle=\delta_{k\ell}$,
+$\|S_Nf\|_2^2=\sum_{|k|\le N}|\widehat f(k)|^2$ i
+$\sum_{|k|\le N}|\widehat f(k)|^2\le\|f\|_2^2$.
+\end{lemat}
+\begin{proof}
+Pierwsza równość wynika z całki z $e^{i(k-\ell)x}$.
+Reszta pierwszej tożsamości to twierdzenie Pitagorasa dla skończonego
+układu ortonormalnego. Ponadto $f-S_Nf$ jest prostopadłe do każdego
+$e^{ikx}$, $|k|\le N$, toteż
+$\|f\|_2^2=\|S_Nf\|_2^2+\|f-S_Nf\|_2^2$.
+\end{proof}
+
+Nie można jednak wywnioskować z ortogonalności, że $S_Nf\to f$.
+Do tego potrzebujemy zupełności układu wykładniczego.
+
+\begin{lemat}[Jądro Fejéra]
+\label{lem:pde6-fejer}
+Dla $N\ge0$ niech
+\begin{equation}\label{eq:pde6-fejer}
+ F_N(t)=\frac1{N+1}\left|\sum_{j=0}^Ne^{ijt}\right|^2
+ =\frac1{N+1}\left(\frac{\sin((N+1)t/2)}{\sin(t/2)}\right)^2
+\end{equation}
+(z wartością $F_N(0)=N+1$). Wówczas $F_N\ge0$,
+$(2\pi)^{-1}\int_{-\pi}^{\pi}F_N(t)\,\mathrm d\lambda_1(t)=1$ oraz
+dla każdego $\delta\in(0,\pi)$
+$\int_{\delta\le|t|\le\pi}F_N(t)\,\mathrm d\lambda_1(t)\to0$.
+\end{lemat}
+\begin{proof}
+Rozwinięcie kwadratu modułu daje
+$F_N(t)=\sum_{|k|\le N}(1-|k|/(N+1))e^{ikt}$.
+Wyraz stały jest równy $1$, skąd normalizacja.
+Gdy $\delta\le|t|\le\pi$, mianownik drugiego wzoru
+jest ograniczony od zera, a licznik przez $1$;
+stąd $F_N(t)\le[(N+1)\sin^2(\delta/2)]^{-1}$.
+\end{proof}
+
+\begin{twierdzenie}[Fejér i zupełność układu trygonometrycznego]
+\label{thm:pde6-fejer}
+Niech $f\in C(\mathbb T)$. Średnie Cesàra
+$\sigma_N f=(N+1)^{-1}\sum_{j=0}^N S_jf$
+zbieżne są jednostajnie do $f$ na $\mathbb T$.
+W konsekwencji wielomiany trygonometryczne są gęste
+w $C(\mathbb T)$ w normie supremum i w $L^2(\mathbb T)$
+w normie $L^2$.
+\end{twierdzenie}
+\begin{proof}
+Z lematu~\ref{lem:pde6-fejer} wynika
+$\sigma_N f(x)=(2\pi)^{-1}\int_{-\pi}^{\pi}
+F_N(t)f(x-t)\,\mathrm d\lambda_1(t)$.
+Odejmujemy $f(x)$ i dzielimy całkę na $|t|<\delta$
+oraz $\delta\le|t|\le\pi$. Z jednostajnej ciągłości $f$
+możemy dobrać $\delta$ tak, aby pierwszy składnik
+miał moduł co najwyżej $\varepsilon$ dla wszystkich $x,N$.
+Drugi ma moduł nie większy niż
+$2\|f\|_\infty(2\pi)^{-1}\int_{|t|\ge\delta}F_N(t)
+\,\mathrm d\lambda_1(t)$, co dąży do zera.
+Gęstość w $L^2$ wynika dodatkowo z gęstości
+funkcji ciągłych w $L^2$ na zwartym przedziale,
+którą można udowodnić aproksymacją funkcji prostych
+przez funkcje ciągłe (dla zbiorów mierzalnych używamy
+regularności miary Lebesgue'a).
+\end{proof}
+
+\begin{twierdzenie}[Zbieżność w $L^2$ i tożsamość Parsevala]
+\label{thm:pde6-parseval}
+Dla dowolnego $f\in L^2(\mathbb T)$ zachodzą
+$S_Nf\to f$ w normie $L^2$ oraz
+\begin{equation}\label{eq:pde6-parseval}
+ \frac1{2\pi}\int_{-\pi}^{\pi}|f(x)|^2\,\mathrm d\lambda_1(x)
+ =\sum_{k\in\mathbb Z}|\widehat f(k)|^2.
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Dla $\varepsilon>0$ wybieramy wielomian trygonometryczny $p$
+z $\|f-p\|_2<\varepsilon$. Dla $N$ większych niż stopień
+$p$ mamy $S_Np=p$. Ponieważ $S_N$ jest rzutem ortogonalnym,
+$\|S_N(f-p)\|_2\le\|f-p\|_2$; zatem
+$\|f-S_Nf\|_2\le2\varepsilon$.
+Przechodząc do granicy w tożsamości Pitagorasa z
+lematu~\ref{lem:pde6-bessel}, otrzymujemy Parsevala.
+\end{proof}
+
+\begin{uwaga}[Jakiego rodzaju zbieżność została udowodniona?]
+Zbieżność $L^2$ nie oznacza zbieżności jednostajnej ani
+punktowej. Dla funkcji ciągłych jednostajnie zbieżne są
+\emph{średnie Fejéra}, niekoniecznie zwykłe sumy $S_N$.
+W dalszej części do różniczkowania szeregów użyjemy
+gładkich danych, dla których zachodzi dodatkowe szybkie
+zanikanie współczynników.
+\end{uwaga}
+
+\begin{lemat}[Zanikanie współczynników gładkiej funkcji]
+\label{lem:pde6-decay}
+Jeśli $f\in C^m(\mathbb T)$, $m\ge1$, to dla $k\ne0$
+$|\widehat f(k)|\le\|f^{(m)}\|_{L^1(-\pi,\pi)}/(2\pi|k|^m)$.
+Jeśli $f\in C^\infty(\mathbb T)$, to szereg Fouriera wraz
+ze wszystkimi szeregami otrzymanymi przez różniczkowanie
+zbiega jednostajnie.
+\end{lemat}
+\begin{proof}
+$m$-krotnie całkujemy przez części; wyrazy brzegowe
+znikają dzięki zgodności pochodnych na końcach przedziału.
+Dla $f\in C^\infty$ i ustalonego $r\ge0$ wybieramy
+$m\ge r+2$ i szacujemy szereg
+$\sum_{k\ne0}|k|^r|\widehat f(k)|$ przez
+stałą pomnożoną przez $\sum_{k\ne0}|k|^{r-m}<\infty$.
+\end{proof}
+
+\section{Zagadnienie własne laplasjanu na odcinku}
+\label{sec:pde6-dirichlet}
+
+Dla $L>0$ rozważmy
+\begin{equation}\label{eq:pde6-eigen}
+ -X''(x)=\lambda X(x),\quad 0<x<L,\qquad X(0)=X(L)=0.
+\end{equation}
+\begin{twierdzenie}[Pełne spektrum Dirichleta w jednym wymiarze]
+\label{thm:pde6-spectrum}
+Dla $L>0$ zagadnienie~\eqref{eq:pde6-eigen} ma
+nietrywialne rozwiązanie $X\in C^2([0,L])$
+wtedy i tylko wtedy, gdy
+$\lambda=\lambda_n=(n\pi/L)^2$ dla pewnego $n\in\N$.
+Jego przestrzeń rozwiązań jest rozpięta przez
+$X_n(x)=\sin(n\pi x/L)$. Ponadto funkcje
+$e_n(x)=\sqrt{2/L}\sin(n\pi x/L)$, $n\ge1$,
+tworzą bazę ortonormalną w $L^2(0,L)$.
+\end{twierdzenie}
+\begin{proof}
+Mnożąc~\eqref{eq:pde6-eigen} przez $\overline X$
+i całkując przez części otrzymujemy
+$\lambda\int_0^L|X(x)|^2\,\mathrm d\lambda_1(x)
+=\int_0^L|X'(x)|^2\,\mathrm d\lambda_1(x)$.
+Dla nietrywialnego $X$ mamy $\lambda>0$ i jest rzeczywista.
+Ogólne rozwiązanie ODE to
+$A\sin(\sqrt\lambda x)+B\cos(\sqrt\lambda x)$.
+Warunek w $0$ daje $B=0$, a warunek w $L$ wymusza
+$\sqrt\lambda L\in\pi\N$. Ortogonalność i normowanie
+sprawdza się całkowaniem elementarnym.
+Dla zupełności weźmy $f\in L^2(0,L)$ i przedłużmy
+ją nieparzyście do $\widetilde f\in L^2(-L,L)$,
+a następnie $2L$-okresowo. Przeskalowana wersja
+twierdzenia~\ref{thm:pde6-parseval} daje zbieżność
+szeregu Fouriera $\widetilde f$ w $L^2(-L,L)$.
+Przez nieparzystość wszystkie współczynniki cosinusowe
+znikają; po ograniczeniu do $(0,L)$ pozostają wyłącznie
+mody $\sin(n\pi x/L)$.
+\end{proof}
+
+\begin{wniosek}[Nierówność Poincarégo dla funkcji gładkich]
+\label{cor:pde6-poincare}
+Jeżeli $v\in C^1([0,L])$, $v(0)=v(L)=0$, to
+\begin{equation}\label{eq:pde6-poincare}
+ \int_0^L|v(x)|^2\,\mathrm d\lambda_1(x)
+ \le \left(\frac L\pi\right)^2
+ \int_0^L|v'(x)|^2\,\mathrm d\lambda_1(x).
+\end{equation}
+Stała $(L/\pi)^2$ jest optymalna.
+\end{wniosek}
+\begin{proof}
+Niech $v_n=\langle v,e_n\rangle_{L^2(0,L)}$.
+Całkowanie przez części daje
+$\langle v',\sqrt{2/L}\cos(n\pi x/L)\rangle
+=(n\pi/L)v_n$.
+Rodzina kosinusów dla $n\ge1$ jest ortonormalna;
+przez nierówność Bessela
+$\sum_{n\ge1}(n\pi/L)^2|v_n|^2\le\|v'\|_2^2$.
+Z Parsevala dla $v$ dostajemy~\eqref{eq:pde6-poincare}.
+Równość zachodzi dla $v(x)=\sin(\pi x/L)$.
+\end{proof}
+
+\begin{uwaga}[Po co zachowywać stałe w oszacowaniach?]
+Nierówność~\eqref{eq:pde6-poincare} wzmacnia
+oszacowanie elementarne uzyskane w rozdziale~\ref{chap:pde-heat}.
+Najmniejsza wartość własna $\lambda_1=\pi^2/L^2$
+wyznacza dokładną szybkość zaniku pierwszego modu
+równania ciepła i najniższą częstość drgań struny.
+\end{uwaga}
+
+\section{Rozdzielenie zmiennych: równanie ciepła}
+\label{sec:pde6-heat}
+
+Niech $\kappa,L>0$, a $u_t=\kappa u_{xx}$ dla $t>0$,
+$x\in(0,L)$, z $u(t,0)=u(t,L)=0$ i $u(0,x)=g(x)$.
+Podstawienie $u(t,x)=T(t)X(x)$ dla niezerowego iloczynu
+daje $T'/(\kappa T)=X''/X=-\lambda$.
+Dla $\lambda=\lambda_n$ otrzymujemy $T(t)=e^{-\kappa\lambda_nt}$.
+
+
+\begin{lemat}[Jądro Gaussa i kontrakcja na odcinku]
+\label{lem:pde6-dirichlet-heat}
+Niech $L,\kappa>0$ i niech
+$g\in C([0,L])$ spełnia $g(0)=g(L)=0$.
+Oznaczmy przez $\widetilde g$ jej nieparzyste
+$2L$-okresowe przedłużenie na $\R$. Dla $t>0$ połóżmy
+\[
+ (Q_tg)(x)=\int_{\R}(4\pi\kappa t)^{-1/2}
+ e^{-z^2/(4\kappa t)}\widetilde g(x-z)
+ \,\mathrm d\lambda_1(z),\qquad x\in[0,L].
+\]
+Wówczas $Q_tg$ znika dla $x=0,L$,
+$\|Q_tg\|_{C([0,L])}\le\|g\|_{C([0,L])}$ oraz
+$\|Q_tg-g\|_{C([0,L])}\to0$ dla $t\downarrow0$.
+Ponadto współczynnik sinusowy $Q_tg$ odpowiadający
+$\sin(n\pi x/L)$ jest równy
+$e^{-\kappa(n\pi/L)^2t}b_n$, gdzie
+$b_n=(2/L)\int_0^Lg(x)\sin(n\pi x/L)\,\mathrm d\lambda_1(x)$.
+\end{lemat}
+\begin{proof}
+Przedłużenie jest ciągłe i jednostajnie ciągłe na $\R$,
+a jego norma supremum jest równa normie $g$.
+Jądro Gaussa jest dodatnie i ma całkę $1$, co daje
+kontrakcję. Ponieważ splot funkcji parzystej z funkcją
+nieparzystą jest nieparzysty, a splot zachowuje okres
+$2L$, otrzymana funkcja znika dla $x=0$ i $x=L$.
+Dla dowolnego $\delta>0$ rozdzielamy całkę splotową
+na $|z|<\delta$ i $|z|\ge\delta$. Na pierwszej części
+różnica $|\widetilde g(x-z)-\widetilde g(x)|$ jest
+jednostajnie mała z jednostajnej ciągłości, a na drugiej
+nie przekracza $2\|g\|_\infty$ i masa Gaussa dąży do
+zera przy $t\downarrow0$. Daje to zbieżność jednostajną.
+Aby znaleźć współczynniki, zapisujemy splot jako
+splot okresowy z jądrem
+$\sum_{k\in\mathbb Z}G_t(\cdot+2kL)$.
+Szereg jąder zbiega jednostajnie na okresie dla $t>0$;
+można zatem zastosować twierdzenie Fubiniego.
+Dla częstości $n\pi/L$ współczynnik tego jądra
+jest równy całce Gaussowskiej
+$\int_{\R}G_t(z)e^{-in\pi z/L}\,\mathrm d\lambda_1(z)
+=e^{-\kappa(n\pi/L)^2t}$.
+Ponieważ $\widetilde g$ jest nieparzysta, współczynniki
+cosinusowe znikają, co daje tezę.
+\end{proof}
+
+\begin{twierdzenie}[Rozwiązanie przez szereg sinusowy]
+\label{thm:pde6-heat}
+Niech $\kappa,L>0$ i $g\in C([0,L])$ spełnia
+$g(0)=g(L)=0$. Definiujemy
+$b_n=(2/L)\int_0^Lg(x)\sin(n\pi x/L)\,\mathrm d\lambda_1(x)$.
+Wówczas
+\begin{equation}\label{eq:pde6-heat}
+ u(t,x)=\sum_{n=1}^\infty b_n e^{-\kappa\lambda_nt}
+ \sin(n\pi x/L),\qquad t>0,\;x\in[0,L],
+\end{equation}
+jest klasycznym rozwiązaniem równania ciepła dla $t>0$,
+ciągłym na $[0,\infty)\times[0,L]$ i przyjmuje dane $g$
+w sposób jednostajny, gdy $t\downarrow0$. Rozwiązanie to
+jest jedyne w klasie funkcji ciągłych na każdym
+$[0,T]\times[0,L]$, klasy $C^{1,2}$ we wnętrzu
+i spełniających dane i warunki Dirichleta.
+\end{twierdzenie}
+\begin{proof}
+Z ograniczoności $g$ mamy $|b_n|\le2\|g\|_\infty$.
+Dla $t\ge\delta>0$ szereg i wszystkie szeregi
+z pochodnymi czasowymi i przestrzennymi zbieżne są
+jednostajnie, bo dla dowolnych $r,s\ge0$
+$\sum_{n\ge1}n^{r+2s}e^{-\kappa(n\pi/L)^2\delta}<\infty$.
+Równanie i warunki brzegowe sprawdzamy wyraz po wyrazie.
+Zagadnienie zbieżności w chwili $t=0$ wymaga osobnego kroku.
+Dla wielomianu sinusowego $p$ rozwiązanie
+$P_tp=\sum p_ne^{-\kappa\lambda_nt}\sin(n\pi x/L)$
+zbiega jednostajnie do $p$. Każdą funkcję ciągłą na
+$[0,L]$, zerującą się na końcach, można jednostajnie
+aproksymować wielomianami sinusowymi: wystarczy
+przedłużyć ją nieparzyście na $[-L,L]$, a potem
+$2L$-okresowo, i zastosować
+\ref{thm:pde6-fejer}.
+Z lematu~\ref{lem:pde6-dirichlet-heat} wynika,
+że operator splotu Gaussa po nieparzystym przedłużeniu
+jest kontrakcją w normie supremum i ma dokładnie
+te same współczynniki sinusowe co szereg w tezie.
+Dla $t>0$ oba wyrażenia są funkcjami ciągłymi,
+a zupełność układu sinusowego
+(twierdzenie~\ref{thm:pde6-spectrum}) zapewnia ich równość.
+W ten sposób kontrakcja została wykazana bez zakładania
+z góry istnienia abstrakcyjnej półgrupy Dirichleta.
+Stąd $\|P_tg-g\|_\infty\le
+2\|g-p\|_\infty+\|P_tp-p\|_\infty\to 2\|g-p\|_\infty$,
+a następnie wybieramy dowolnie dokładny $p$.
+Jednoznaczność wynika z parabolicznej zasady maksimum
+z rozdziału~\ref{chap:pde-heat}, zastosowanej do różnicy.
+\end{proof}
+
+\begin{wniosek}[Ostry wykładnik zaniku w normie $L^2$]
+\label{cor:pde6-decay}
+Jeżeli $g\in C([0,L])$ i $g(0)=g(L)=0$, to dla
+rozwiązania~\eqref{eq:pde6-heat}
+\begin{equation}\label{eq:pde6-decay}
+ \|u(t,\cdot)\|_{L^2(0,L)}
+ \le e^{-\kappa\pi^2t/L^2}\|g\|_{L^2(0,L)},\qquad t\ge0.
+\end{equation}
+Stała w wykładniku jest optymalna.
+\end{wniosek}
+\begin{proof}
+Dla $t>0$ stosujemy ortogonalność sinusów i Parsevala:
+\[
+\|u(t)\|_2^2=\frac L2\sum_{n\ge1}|b_n|^2e^{-2\kappa\lambda_nt}
+\le e^{-2\kappa\lambda_1t}\|g\|_2^2.
+\]
+Dla $t=0$ jest to równość. Przy $g(x)=\sin(\pi x/L)$
+zachodzi równość dla każdego $t$.
+\end{proof}
+
+
+\begin{stwierdzenie}[Rozwiązanie cieplne dla danych $L^2$]
+\label{prop:pde6-L2-semigroup}
+Niech $\kappa,L>0$, $g\in L^2(0,L)$ i niech
+$g_n=\langle g,e_n\rangle_{L^2(0,L)}$ dla ortonormalnych
+funkcji $e_n$ z twierdzenia~\ref{thm:pde6-spectrum}.
+Szereg $u(t)=\sum_{n\ge1}e^{-\kappa\lambda_nt}g_ne_n$
+wyznacza funkcję $u\in C([0,\infty);L^2(0,L))$,
+przy czym $u(0)=g$, a dla każdego $t>0$ otrzymujemy
+funkcję gładką względem $x\in[0,L]$, klasyczną
+w $t>0$ i spełniającą zerowe warunki Dirichleta.
+Zachodzi także $\|u(t)\|_2\le e^{-\kappa\lambda_1t}\|g\|_2$.
+\end{stwierdzenie}
+\begin{proof}
+Z twierdzenia Parsevala mamy $\sum_{n\ge1}|g_n|^2<\infty$.
+Dla $t\ge0$ szereg zbiega w $L^2$, a
+\[
+ \|u(t)-g\|_2^2=\sum_{n\ge1}
+ |e^{-\kappa\lambda_nt}-1|^2|g_n|^2\longrightarrow0
+ \quad(t\downarrow0)
+\]
+na mocy zbieżności zdominowanej dla szeregów.
+Ten sam argument w dowolnej chwili $t_0\ge0$
+uzasadnia ciągłość $L^2$ w czasie.
+Dla $t\ge\delta>0$ nierówność Cauchy'ego--Schwarza
+zapewnia jednostajną zbieżność szeregów pochodnych:
+\[
+ \sum_{n\ge1}|g_n|n^k e^{-\kappa\lambda_n t}
+ \le\Bigl(\sum_{n\ge1}|g_n|^2\Bigr)^{1/2}
+ \Bigl(\sum_{n\ge1}n^{2k}e^{-2\kappa\lambda_n\delta}\Bigr)^{1/2}
+ <\infty.
+\]
+Uwzględnienie dodatkowych potęg $\lambda_n$
+pozwala również różniczkować po czasie. Stąd równanie
+klasyczne i warunki brzegowe. Ostatnie oszacowanie
+wynika wprost z $\lambda_n\ge\lambda_1$ i Parsevala.
+\end{proof}
+
+\section{Rozdzielenie zmiennych: równanie falowe i energia modów}
+\label{sec:pde6-wave}
+
+Rozważmy $u_{tt}=c^2u_{xx}$ na $(0,L)$,
+z zerowymi warunkami Dirichleta oraz danymi
+$u(0,x)=g(x)$, $u_t(0,x)=h(x)$.
+Dla $X_n(x)=\sin(n\pi x/L)$ otrzymujemy równanie
+$T_n''+c^2\lambda_nT_n=0$.
+
+\begin{twierdzenie}[Struna: reprezentacja modalna]
+\label{thm:pde6-wave}
+Niech $c,L>0$ i $g,h\in C_c^\infty(0,L)$.
+Niech $a_n=(2/L)\int_0^Lg(x)\sin(n\pi x/L)
+\,\mathrm d\lambda_1(x)$ i
+$b_n=(2/L)\int_0^Lh(x)\sin(n\pi x/L)\,\mathrm d\lambda_1(x)$.
+Wówczas funkcja
+\begin{equation}\label{eq:pde6-wave}
+ u(t,x)=\sum_{n=1}^\infty
+ \left[a_n\cos(c\sqrt{\lambda_n}t)
+ +\frac{b_n}{c\sqrt{\lambda_n}}
+ \sin(c\sqrt{\lambda_n}t)\right]\sin(n\pi x/L)
+\end{equation}
+jest jedynym rozwiązaniem klasy $C^2(\R\times[0,L])$
+powyższego zagadnienia wśród rozwiązań klasycznych.
+Jego energia falowa
+$E(t)=\frac12\int_0^L(u_t(t,x)^2+c^2u_x(t,x)^2)
+\,\mathrm d\lambda_1(x)$ jest stała.
+\end{twierdzenie}
+\begin{proof}
+Nieparzyste $2L$-okresowe przedłużenia $g,h$
+są klasy $C^\infty$, ponieważ obie funkcje
+zerują się w otoczeniach końców przedziału.
+Całkowanie przez części dowolnie wiele razy
+pokazuje, że $|a_n|+|b_n|\le C_mn^{-m}$
+dla każdego $m\ge0$. Na dowolnym zwartym przedziale
+czasowym można więc różniczkować szereg
+\eqref{eq:pde6-wave} dowolnie wiele razy;
+uzyskujemy równanie, warunki początkowe i brzegowe.
+Jednoznaczność wynika z zachowania energii
+na odcinku (rozdział~\ref{chap:pde-wave}): różnica
+rozwiązań ma energię zerową, więc $w_t=w_x=0$;
+z zerowych warunków brzegowych wynika $w=0$.
+Zachowanie energii można też otrzymać, sumując
+energię modów za pomocą ortogonalności
+$(\sin(n\pi x/L))_{n\ge1}$ i
+$(\cos(n\pi x/L))_{n\ge1}$.
+\end{proof}
+
+\begin{przyklad}[Wygładzanie a brak wygładzania]
+\label{ex:pde6-smoothing}
+Dla równania ciepła amplituda modu $n$ zanika jak
+$e^{-\kappa(n\pi/L)^2t}$. Dla równania falowego
+mod ma amplitudę oscylującą i nie znika
+z upływem czasu. Na przykład dla
+$g(x)=\sin(n\pi x/L)$, $h=0$ otrzymujemy odpowiednio
+$e^{-\kappa\lambda_nt}g(x)$ i
+$\cos(c\sqrt{\lambda_n}t)g(x)$.
+Ten kontrast jest spektralnym wyjaśnieniem
+wygładzania parabolicznego.
+\end{przyklad}
+
+\section{Niejednorodne równania i wzór modalny Duhamela}
+\label{sec:pde6-forcing}
+
+Rozważmy $u_t-\kappa u_{xx}=f(t,x)$ na $(0,L)$
+z jednorodnymi warunkami Dirichleta oraz danymi $g$.
+Dla $f\in C^\infty([0,T]\times[0,L])$ z nośnikiem
+przestrzennym zawartym w pewnym stałym zwartym
+podzbiorze $(0,L)$, a także $g\in C_c^\infty(0,L)$,
+możemy rozwijać wszystko w szeregi sinusowe.
+Niech
+$f_n(t)=(2/L)\int_0^Lf(t,x)\sin(n\pi x/L)
+\,\mathrm d\lambda_1(x)$.
+Mnożąc równanie przez odpowiedni mod i całkując
+po $x$ otrzymujemy
+$b_n'(t)+\kappa\lambda_nb_n(t)=f_n(t)$,
+$\ b_n(0)=g_n$.
+Po zastosowaniu czynnika całkującego dostajemy
+\begin{equation}\label{eq:pde6-duhamel}
+ b_n(t)=e^{-\kappa\lambda_nt}g_n
+ +\int_0^t e^{-\kappa\lambda_n(t-s)}f_n(s)
+ \,\mathrm d\lambda_1(s).
+\end{equation}
+W konsekwencji $u(t,x)=\sum_{n\ge1}b_n(t)
+\sin(n\pi x/L)$. W podanych założeniach wszystkie
+pochodne potrzebne do równania można sumować
+jednostajnie na $[0,T]\times[0,L]$:
+wielokrotne całkowanie przez części daje
+$\sup_{t\in[0,T]}|f_n^{(j)}(t)|\le C_{m,j}n^{-m}$
+i analogicznie dla $g_n$. Zatem wzór nie jest
+jedynie rachunkiem formalnym.
+
+\section{Regularne zagadnienie Sturma--Liouville'a}
+\label{sec:pde6-sturm}
+
+Przy rozdzieleniu zmiennych w równaniach ze
+zmiennymi współczynnikami otrzymujemy często operator
+$\mathcal L y=-(py')'+qy$. Zdefiniujmy dokładnie
+zagadnienie i przestrzeń, w której badamy funkcje własne.
+
+\begin{definicja}[Regularne zagadnienie Dirichleta]
+\label{def:pde6-sturm}
+Niech $L>0$, $p\in C^1([0,L];\R)$,
+$q,w\in C([0,L];\R)$, $p(x)>0$, $w(x)>0$
+i $q(x)\ge0$ na $[0,L]$. Zagadnieniem
+Sturma--Liouville'a z warunkami Dirichleta nazywamy
+\begin{equation}\label{eq:pde6-sturm}
+ -(p(x)y'(x))'+q(x)y(x)=\lambda w(x)y(x),
+ \quad y(0)=y(L)=0.
+\end{equation}
+Rozwiązaniem jest $y\in C^2([0,L])$ spełniające
+równanie punktowo. Pracujemy w przestrzeni
+$H=L^2((0,L),w(x)\,\mathrm d\lambda_1(x))$ z
+iloczynem skalarnym $\langle f,g\rangle_H
+=\int_0^Lf(x)\overline{g(x)}w(x)\,\mathrm d\lambda_1(x)$.
+\end{definicja}
+
+\begin{lemat}[Tożsamość Lagrange'a i rzeczywistość widma]
+\label{lem:pde6-lagrange}
+Niech $y,z\in C^2([0,L])$. Wtedy
+\begin{equation}\label{eq:pde6-lagrange}
+ \int_0^L\bigl((\mathcal Ly)(x)\overline{z(x)}
+ -y(x)\overline{(\mathcal Lz)(x)}\bigr)\,\mathrm d\lambda_1(x)
+ =\left[p\left(y\overline{z'}-y'\overline z\right)\right]_0^L.
+\end{equation}
+Jeżeli $y\not\equiv0$ jest funkcją własną
+z jednorodnymi warunkami Dirichleta, to $\lambda>0$
+jest rzeczywista. Funkcje własne dla różnych
+wartości własnych są ortogonalne w $H$.
+\end{lemat}
+\begin{proof}
+Pierwszą równość otrzymujemy przez całkowanie
+przez części. Dla $z=y$ i jednorodnych warunków
+brzegowych mamy
+$\lambda\int_0^Lw(x)|y(x)|^2\,\mathrm d\lambda_1(x)
+=\int_0^L(p(x)|y'(x)|^2+q(x)|y(x)|^2)\,\mathrm d\lambda_1(x)>0$.
+Dla pary funkcji własnych $y,z$ o wartościach
+$\lambda,\mu$ stosujemy tożsamość Lagrange'a;
+ze znikania brzegów i rzeczywistości liczb własnych
+wynika $(\lambda-\mu)\langle y,z\rangle_H=0$.
+\end{proof}
+
+\begin{twierdzenie}[Dyskretność i zupełność widma]
+\label{thm:pde6-sturm}
+Przy założeniach definicji~\ref{def:pde6-sturm}
+istnieje rosnący do nieskończoności ciąg
+$0<\lambda_1<\lambda_2<\cdots$ i odpowiednie
+rzeczywiste funkcje własne $y_n\in C^2([0,L])$,
+które po unormowaniu tworzą bazę ortonormalną $H$.
+Każda wartość własna jest prosta.
+\end{twierdzenie}
+\begin{proof}
+Najpierw konstruujemy operator zwarty, do którego
+zastosujemy \emph{twierdzenie spektralne dla zwartych
+operatorów samosprzężonych w przestrzeni Hilberta}:
+każdy taki operator ma bazę ortonormalną złożoną
+z wektorów własnych i wektorów należących do jądra.
+Twierdzenie to traktujemy jako jawnie wskazany
+wynik analizy funkcjonalnej, a nie dowód ukryty
+we własnościach szeregów Fouriera.
+
+Równanie $\mathcal Ly=f$ z danymi Dirichleta ma
+dokładnie jedno rozwiązanie dla $f\in C([0,L])$.
+Rzeczywiście, jednorodność i $q\ge0$ gwarantują
+trywialność jądra przez energię. Standardowa
+teoria liniowego ODE z dwoma warunkami brzegowymi
+daje wtedy istnienie: wybieramy dowolne rozwiązanie
+szczególne z warunkiem $y(0)=0$ i korygujemy
+je wielokrotnością rozwiązania jednorodnego
+z $y(0)=0$, $y'(0)=1$. To ostatnie nie może
+zerować się w $L$, bo mielibyśmy nietrywialne
+rozwiązanie jednorodne z dwoma zerowymi brzegami.
+
+Niech $G(x,s)$ oznacza funkcję Greena dla $\mathcal L$
+z warunkami Dirichleta, skonstruowaną z dwóch
+rozwiązań jednorodnych: pierwszego o $y_1(0)=0$,
+$y_1'(0)=1$ i drugiego o $y_2(L)=0$, $y_2'(L)=-1$.
+Z równości $[p(y_1'y_2-y_1y_2')]'=0$ wynika,
+że $C=p(s)(y_1'(s)y_2(s)-y_1(s)y_2'(s))$
+jest stałą różną od zera, oraz
+\begin{equation}\label{eq:pde6-green}
+ G(x,s)=\frac{y_1(\min\{x,s\})y_2(\max\{x,s\})}{C}.
+\end{equation}
+Funkcja $G$ jest ciągła i symetryczna na
+$[0,L]^2$ oraz spełnia
+$\mathcal L_xG(x,s)=\delta_s$ w sensie skoku
+$-p(s)(\partial_xG(s^+,s)-\partial_xG(s^-,s))=1$.
+Definiujemy $Tf(x)=\int_0^LG(x,s)w(s)f(s)
+\,\mathrm d\lambda_1(s)$ dla $f\in H$.
+Jądro $G$ jest ciągłe, a $w$ dodatnia i ciągła;
+zatem $T$ jest zwartym operatorem na $H$:
+aproksymując jednostajnie jądro
+$G(x,s)$ sumami rozdzielonych funkcji $a_j(x)b_j(s)$,
+uzyskujemy operatory skończonego rzędu
+zbieżne do $T$ w normie operatorowej.
+Takie przybliżenie można skonstruować jawnie:
+wybieramy podział $0=x_0<\cdots<x_N=L$ i liniowe
+funkcje kapeluszowe $\theta_j$ tworzące rozkład jedności.
+Interpolant
+$G_N(x,s)=\sum_{i,j=0}^N G(x_i,x_j)\theta_i(x)\theta_j(s)$
+jest sumą skończenie wielu iloczynów funkcji jednej zmiennej.
+Z jednostajnej ciągłości $G$ na $[0,L]^2$ wynika
+$\|G_N-G\|_\infty\to0$, a z nierówności
+Cauchy'ego--Schwarza i ograniczoności dodatniej wagi $w$
+wynika $\|T_N-T\|_{H\to H}\le
+L\,\|w\|_\infty\,\|G_N-G\|_\infty\to0$.
+Zatem zwartość nie wymaga tu nieudowodnionego twierdzenia
+o aproksymacji ciągłych jąder.
+Symetria jądra daje samosprzężoność.
+Dla $f\in H$ funkcja $y=Tf$ jest klasy $C^1([0,L])$,
+a $py'$ jest absolutnie ciągła. Istotnie, rozpisując całkę
+z jądrem~\eqref{eq:pde6-green} na przedziały $[0,x]$
+i $[x,L]$, można ją zróżniczkować po $x$; składniki
+pochodzące z ruchomego punktu podziału znoszą się.
+Ponowne zróżniczkowanie w sensie prawie wszędzie
+oraz warunek skoku jądra dają
+$-(py')'+qy=wf$ prawie wszędzie. Nie twierdzimy
+jeszcze, że $y$ jest klasy $C^2$ dla dowolnego $f\in H$.
+Całkowanie przez części z użyciem absolutnej ciągłości
+$py'$ zapewnia
+$\langle Tf,f\rangle_H=
+\int_0^L(p(x)|y'(x)|^2+q(x)|y(x)|^2)\,\mathrm d\lambda_1(x)\ge0$;
+dla $f\ne0$ nierówność jest ostra. Operator $T$
+ma więc trywialne jądro, a z samosprzężoności
+wynika $\overline{\operatorname{ran}T}=H$.
+Twierdzenie spektralne daje bazę funkcji własnych
+$Ty_n=\mu_n y_n$ z $\mu_n>0$ i $\mu_n\downarrow0$.
+Ponieważ $\mathcal L(Ty_n)=wy_n$ prawie wszędzie,
+otrzymujemy $\mathcal Ly_n=\mu_n^{-1}wy_n$ w tym
+samym sensie. Funkcja $y_n=\mu_n^{-1}Ty_n$ jest ciągła,
+a więc prawa strona równania jest ciągła. Ponieważ
+$p\in C^1$ jest dodatnia, równanie daje najpierw
+$py_n'\in C^1$, a następnie $y_n\in C^2([0,L])$.
+Równanie zachodzi wtedy punktowo. Nie może być skończenie
+wielu niezerowych wartości własnych, bo $T$ jest
+iniektywny na nieskończeniewymiarowym $H$.
+Wreszcie prostota wynika z tego, że dla
+ustalonej $\lambda$ dwa rozwiązania warunku
+$y(0)=0$ są proporcjonalne (są wyznaczone
+przez wartość $y'(0)$).
+\end{proof}
+
+\begin{uwaga}[Co jest tu nowe?]
+Dla stałych współczynników mieliśmy jawne funkcje
+$\sin(n\pi x/L)$; przy zmiennych współczynnikach
+możemy zwykle nie znać ich w postaci elementarnej,
+ale nadal mamy dyskretne wartości własne oraz
+zupełny układ modów. To właśnie uzasadnia metodę
+rozdzielenia zmiennych również bez jawnych wzorów.
+Twierdzenie o oscylacji Sturma, mówiące o liczbie
+zer kolejnych funkcji własnych, omówimy osobno,
+gdy będziemy dysponować szerszą teorią ODE i
+zagadnień spektralnych.
+\end{uwaga}
+
+\section{Wyższe wymiary: prostokąt i geometria widma}
+\label{sec:pde6-rectangle}
+
+Dla prostokąta $\Omega=(0,L_1)\times(0,L_2)$
+problem Dirichleta $-\Delta X=\lambda X$ rozdziela się
+na dwa jednowymiarowe zagadnienia własne.
+Otrzymujemy
+\begin{equation}\label{eq:pde6-rectangle}
+ X_{mn}(x,y)=\sin\left(\frac{m\pi x}{L_1}\right)
+ \sin\left(\frac{n\pi y}{L_2}\right),\quad
+ \lambda_{mn}=\pi^2\left(\frac{m^2}{L_1^2}
+ +\frac{n^2}{L_2^2}\right),\quad m,n\ge1.
+\end{equation}
+Rodzina $\{2(L_1L_2)^{-1/2}X_{mn}\}_{m,n\ge1}$
+jest bazą ortonormalną $L^2(\Omega)$. Rzeczywiście,
+ortogonalność wynika z rozdzielenia całek, a
+zupełność z zastosowania jednowymiarowego rozwinięcia
+w zmiennej $x$, a potem $y$ (twierdzenie Fubiniego
+i zbieżność w $L^2$ pozwalają na ten krok).
+Niekoniecznie wszystkie wartości $\lambda_{mn}$ są
+różne: symetria kwadratu $L_1=L_2$ powoduje
+na przykład $\lambda_{12}=\lambda_{21}$.
+Wartości własne mogą mieć krotność większą niż jeden,
+mimo że na przedziale każda jest prosta.
+
+\section{Dlaczego nie można bezwarunkowo odwrócić ewolucji cieplnej?}
+\label{sec:pde6-backward}
+
+Niech $\kappa,L,T>0$. Rozważmy operator
+$P_T:g\mapsto u(T,\cdot)$ dla rozwiązania równania
+ciepła z jednorodnymi warunkami Dirichleta.
+Na modzie $e_n$ działa on przez mnożnik
+$e^{-\kappa\lambda_nT}$. Stąd
+$\|P_Te_n\|_2=e^{-\kappa\lambda_nT}\to0$,
+podczas gdy $\|e_n\|_2=1$.
+Jeżeli odwrotność $P_T^{-1}$ na jego obrazie byłaby
+ograniczona w normie $L^2$, istniałaby stała $C>0$
+z $1=\|e_n\|_2\le C\|P_Te_n\|_2$, sprzeczność.
+Nie ma więc ciągłego operatora odtwarzającego
+dowolne dane początkowe z dokładnych danych końcowych
+w normie $L^2$. To spektralna wersja
+niestabilności Hadamarda z rozdziału~\ref{chap:pde-heat}.
+
+\section{Podsumowanie i dalsza perspektywa}
+\label{sec:pde6-summary}
+
+Dzięki średnim Fejéra uzyskaliśmy zupełność układu
+trygonometrycznego i twierdzenie Parsevala.
+Na ich podstawie skonstruowaliśmy jawne rozwiązania
+ciepła i fal na odcinku oraz ostre oszacowanie zaniku.
+Metoda ta przechodzi na zmienne współczynniki przez
+regularną teorię Sturma--Liouville'a i na prostokąty
+przez iloczyny tensorowe. W kolejnych rozdziałach
+rozszerzymy ją na rozwiązania słabe, operatory
+samosprzężone, metody wariacyjne i transformatę
+Fouriera na $\R^n$.
+
+

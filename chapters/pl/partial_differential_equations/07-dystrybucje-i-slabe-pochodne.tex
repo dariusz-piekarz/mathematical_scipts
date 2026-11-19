@@ -1,0 +1,804 @@
+\chapter[Dystrybucje i słabe pochodne]{Dystrybucje, słabe pochodne i rozwiązania fundamentalne}
+\label{chap:pde-distributions}
+
+W poprzednich rozdziałach rozwiązanie klasyczne musiało mieć tyle pochodnych,
+ile wymagało równanie. W praktyce taki warunek jest często zbyt silny:
+profil fali może mieć skok, dane początkowe mogą być tylko całkowalne,
+a rozwiązanie eliptyczne może być najpierw otrzymane przez minimalizację
+energii. Potrzebujemy rachunku różniczkowego, w którym można różniczkować
+nawet funkcję skokową. Nie chodzi o arbitralne przypisywanie jej wartości
+pochodnej w punkcie skoku, lecz o zastąpienie równań punktowych przez
+tożsamości całkowe z funkcjami testowymi.
+
+\section{Przestrzeń funkcji testowych}
+\label{sec:pde7-tests}
+
+\begin{definicja}[Funkcje testowe i ich zbieżność]
+\label{def:pde7-test}
+Niech $d\ge1$ oraz $\Omega\subset\R^d$ będzie niepustym zbiorem otwartym.
+Przez $\mathcal D(\Omega)=C_c^\infty(\Omega;\C)$ oznaczamy przestrzeń
+zespolonych funkcji nieskończenie różniczkowalnych o zwartym nośniku
+zawartym w $\Omega$. Dla $K\Subset\Omega$ definiujemy
+$\mathcal D_K(\Omega)=\{\varphi\in\mathcal D(\Omega):\supp\varphi\subset K\}$
+oraz półnormy
+$p_{K,m}(\varphi)=\max_{|\alpha|\le m}\sup_{x\in K}|\partial^\alpha\varphi(x)|$,
+$m\in\N_0$. Mówimy, że $\varphi_j\to0$ w $\mathcal D(\Omega)$,
+jeżeli istnieje jeden zbiór zwarty $K\Subset\Omega$ obejmujący nośniki
+wszystkich $\varphi_j$ od pewnego indeksu oraz
+$p_{K,m}(\varphi_j)\to0$ dla każdego $m\in\N_0$.
+Topologia $\mathcal D(\Omega)$ jest standardową topologią granicy
+induktywnej przestrzeni $\mathcal D_K(\Omega)$; powyższy opis
+określa w szczególności jej zbieżne ciągi.
+\end{definicja}
+
+Notacja $K\Subset\Omega$ oznacza, że $K$ jest zwarty i $K\subset\Omega$.
+Warto odróżnić tę sytuację od żądania $\varphi\in C^\infty(\overline\Omega)$:
+funkcja testowa znika na pewnym otoczeniu brzegu $\Omega$.
+Istnieje wiele funkcji testowych. Dla przykładu funkcja
+\[
+ \eta(x)=\begin{cases}
+ \exp\!\bigl(-1/(1-|x|^2)\bigr),& |x|<1,\\
+ 0,& |x|\ge1
+ \end{cases}
+\]
+jest klasy $C_c^\infty(\R^d)$ i jest dodatnia w $B_1(0)$.
+Podczas weryfikacji gładkości na sferze wykorzystujemy fakt, że
+$e^{-1/s}$ wraz ze wszystkimi pochodnymi dąży do zera przy $s\downarrow0$.
+
+\begin{uwaga}[Dlaczego potrzebny jest wspólny nośnik?]
+Przesunięcia $\varphi_j(x)=\eta(x-j)$ na $\R$ mają wszystkie pochodne
+jednostajnie ograniczone, a dla każdego ustalonego $x$ od pewnego miejsca
+znikają. Mimo to nie dążą do zera w $\mathcal D(\R)$, ponieważ ich
+nośniki uciekają do nieskończoności. To rozróżnienie okaże się niezbędne
+dla definicji dystrybucji.
+\end{uwaga}
+
+\section{Dystrybucje jako ciągłe funkcjonały liniowe}
+\label{sec:pde7-def}
+
+\begin{definicja}[Dystrybucja]
+\label{def:pde7-distribution}
+Dla niepustego otwartego $\Omega\subset\R^d$ dystrybucją na $\Omega$
+nazywamy ciągły funkcjonał \emph{liniowy} $T:\mathcal D(\Omega)\to\C$.
+Zbiór wszystkich takich funkcjonałów oznaczamy przez $\mathcal D'(\Omega)$.
+Wartość funkcjonału zapisujemy jako $\langle T,\varphi\rangle$;
+nie jest to na ogół iloczyn skalarny, a w szczególności
+zapis jest liniowy względem $\varphi$, bez sprzężenia zespolonego.
+\end{definicja}
+
+Związek z definicją topologiczną można wyrazić za pomocą lokalnych
+oszacowań. Jest to pierwszy ważny przykład tego, że element
+przestrzeni dualnej do przestrzeni funkcji można opisywać
+przez oszacowania na jej półnormach.
+
+\begin{twierdzenie}[Lokalne oszacowanie dystrybucji]
+\label{thm:pde7-local-order}
+Niech $\Omega\subset\R^d$ będzie otwarta, a $T$ liniowym funkcjonałem
+na $\mathcal D(\Omega)$. Wówczas $T\in\mathcal D'(\Omega)$ wtedy i tylko
+wtedy, gdy dla każdego $K\Subset\Omega$ istnieją $m_K\in\N_0$
+oraz $C_K>0$ takie, że
+\begin{equation}\label{eq:pde7-estimate}
+ |\langle T,\varphi\rangle|\le C_K
+ \max_{|\alpha|\le m_K}\sup_{x\in K}|\partial^\alpha\varphi(x)|,
+ \qquad \varphi\in\mathcal D_K(\Omega).
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $T$ jest ciągły, to jego ograniczenie do przestrzeni
+$\mathcal D_K(\Omega)$ jest ciągłym funkcjonałem liniowym na przestrzeni
+Frécheta opisanej przez rosnącą rodzinę półnorm $p_{K,m}$.
+Ciągłość w zerze oznacza, że dla pewnych $m$ i $\delta>0$ mamy
+$|T(\varphi)|<1$, gdy $p_{K,m}(\varphi)<\delta$. Skalując
+$\varphi$ przez dodatnią liczbę (a przypadek $p_{K,m}(\varphi)=0$
+rozpatrując oddzielnie), otrzymujemy
+$|T(\varphi)|\le (2/\delta)p_{K,m}(\varphi)$.
+Odwrotnie, jeśli zachodzi \eqref{eq:pde7-estimate}, to $T$ jest
+ciągły na każdym $\mathcal D_K(\Omega)$, a więc ciągły dla
+opisanej topologii granicy induktywnej.
+\end{proof}
+
+Liczba $m_K$ może zależeć od $K$. Mówimy wtedy o \emph{lokalnie
+skończonym rzędzie} dystrybucji. Nie należy bez dodatkowych założeń
+wnioskować, że jedna liczba $m$ działa na wszystkich zwartych
+podzbiorach obszaru, \emph{nawet gdy jest on ograniczony}.
+Istotnie, na $\Omega=(0,1)$ połóżmy
+$T=\sum_{k=2}^\infty 2^{-k^2}\partial^k\delta_{1/k}$.
+Każda funkcja testowa ma nośnik oddzielony od zera, więc
+na jej nośniku występuje jedynie skończenie wiele
+składników. Suma określa dystrybucję w $\mathcal D'(0,1)$.
+Nie istnieje jednak wspólny skończony rząd $m$:
+w otoczeniu dowolnego punktu $1/k$ nieprzecinającym
+pozostałych punktów nośnika dystrybucji mamy
+$T=2^{-k^2}\partial^k\delta_{1/k}$, którego rząd wynosi $k$.
+To pokazuje, że ograniczoność obszaru nie wystarcza
+do globalnego oszacowania rzędu dystrybucji.
+
+\begin{przyklad}[Dystrybucja regularna i miara punktowa]
+\label{ex:pde7-regular}
+Jeśli $f\in L^1_{\mathrm{loc}}(\Omega)$, to wzór
+\begin{equation}\label{eq:pde7-regular}
+ \langle T_f,\varphi\rangle
+ =\int_\Omega f(x)\varphi(x)\,\mathrm d\lambda_d(x)
+\end{equation}
+definiuje dystrybucję, ponieważ dla $\supp\varphi\subset K$ zachodzi
+$|T_f(\varphi)|\le\|\varphi\|_\infty\int_K|f(x)|\,\mathrm d\lambda_d(x)$.
+Dla $a\in\Omega$ wzór $\langle\delta_a,\varphi\rangle=\varphi(a)$
+definiuje \emph{deltę Diraca}, również dystrybucję rzędu zerowego
+na każdym zwartym podzbiorze $\Omega$.
+\end{przyklad}
+
+\begin{stwierdzenie}[Iniektywność odwzorowania $f\mapsto T_f$]
+\label{prop:pde7-injective}
+Jeżeli $f,g\in L^1_{\mathrm{loc}}(\Omega)$ i $T_f=T_g$, to $f=g$
+prawie wszędzie w $\Omega$ względem miary Lebesgue'a.
+\end{stwierdzenie}
+\begin{proof}
+Wystarczy rozważyć $h=f-g$. Wybierzmy $a\in\Omega$
+i $r>0$ tak, aby $B_{2r}(a)\Subset\Omega$.
+Ustalmy nieujemną funkcję $\rho\in C_c^\infty(B_1(0))$
+o całce $1$ i połóżmy
+$\rho_\eps(x)=\eps^{-d}\rho(x/\eps)$ dla $0<\eps<r$.
+Dla każdego $x\in B_r(a)$ funkcja
+$y\mapsto\rho_\eps(x-y)$ jest testowa i ma nośnik
+w $B_{2r}(a)$. Ponieważ $T_h=0$, mamy
+$(h*\rho_\eps)(x)=0$ dla wszystkich takich $x$.
+Aby przejść do granicy, przedłużmy $h$ po obcięciu do
+$B_{2r}(a)$ przez zero i oznaczmy otrzymaną funkcję
+przez $H\in L^1(\R^d)$. Z nierówności Minkowskiego
+wynika
+\[
+ \|H*\rho_\eps-H\|_{L^1(\R^d)}
+ \le\int_{B_1(0)}\rho(z)
+ \|H(\cdot-\eps z)-H\|_{L^1(\R^d)}
+ \,\mathrm d\lambda_d(z)\longrightarrow0.
+\]
+Istotnie, przesunięcia są ciągłe w $L^1$: najpierw
+sprawdza się to dla funkcji ciągłych o zwartym nośniku,
+a następnie przez ich gęstość w $L^1$; pod całką
+stosuje się ograniczenie $2\|H\|_1$.
+Na $B_r(a)$ sploty $H*\rho_\eps$ są zerowe, stąd
+$h=0$ prawie wszędzie na tej kuli. Pokrywając $\Omega$
+przeliczalnie takimi kulami, otrzymujemy tezę.
+Ogólną teorię przybliżonych jedynek rozwiniemy później
+w sekcji~\ref{sec:pde7-mollifiers}; nie jest ona
+przesłanką niniejszego dowodu.
+\end{proof}
+
+\begin{uwaga}[Dlaczego delta nie jest zwykłą funkcją?]
+Załóżmy, że $\delta_0=T_f$ dla pewnego
+$f\in L^1_{\mathrm{loc}}(\R^d)$. Wybierzmy funkcję
+$\chi\in\mathcal D(\R^d)$, $0\le\chi\le1$,
+$\chi(0)=1$, $\supp\chi\subset B_1(0)$, i połóżmy
+$\chi_\varepsilon(x)=\chi(x/\varepsilon)$.
+Wtedy $\langle\delta_0,\chi_\varepsilon\rangle=1$,
+natomiast
+$|\langle T_f,\chi_\varepsilon\rangle|
+\le\int_{B_\varepsilon}|f(x)|\,\mathrm d\lambda_d(x)\to0$
+przez absolutną ciągłość całki Lebesgue'a. Sprzeczność.
+\end{uwaga}
+
+\section{Pochodne dystrybucyjne i skoki}
+\label{sec:pde7-derivatives}
+
+\begin{definicja}[Pochodna dystrybucyjna]
+\label{def:pde7-derivative}
+Dla $T\in\mathcal D'(\Omega)$ i wielowskaźnika
+$\alpha\in\N_0^d$ określamy $\partial^\alpha T\in\mathcal D'(\Omega)$
+wzorem
+\begin{equation}\label{eq:pde7-distributional-derivative}
+ \langle\partial^\alpha T,\varphi\rangle
+ =(-1)^{|\alpha|}\langle T,\partial^\alpha\varphi\rangle,
+ \qquad\varphi\in\mathcal D(\Omega).
+\end{equation}
+\end{definicja}
+
+Definicja ma sens, gdyż różniczkowanie funkcji testowej jest
+ciągłym operatorem $\mathcal D(\Omega)\to\mathcal D(\Omega)$.
+Dzięki temu \emph{każda} dystrybucja ma pochodne dowolnego rzędu,
+a mieszane pochodne komutują.
+
+\begin{stwierdzenie}[Zgodność z klasycznym różniczkowaniem]
+\label{prop:pde7-classical}
+Jeśli $u\in C^1(\Omega)$, to $\partial_jT_u=T_{\partial_j u}$.
+Jeśli $T\in\mathcal D'(\Omega)$ i $a\in C^\infty(\Omega)$,
+to iloczyn $aT$, dany wzorem
+$\langle aT,\varphi\rangle=\langle T,a\varphi\rangle$,
+jest dystrybucją i zachodzi reguła Leibniza
+$\partial_j(aT)=(\partial_ja)T+a\partial_jT$.
+\end{stwierdzenie}
+\begin{proof}
+Dla funkcji $C^1$ wzór wynika z całkowania przez części,
+bez składnika brzegowego, bo $\varphi$ ma zwarty nośnik w $\Omega$.
+Dla iloczynu i testu $\varphi$ liczymy
+$\langle\partial_j(aT),\varphi\rangle
+=-\langle T,\partial_j(a\varphi)\rangle
+=-\langle T,(\partial_ja)\varphi+a\partial_j\varphi\rangle$,
+co po przegrupowaniu jest żądaną równością.
+\end{proof}
+
+\begin{przyklad}[Funkcja Heaviside'a]
+\label{ex:pde7-heaviside}
+Niech $H(x)=0$ dla $x<0$ i $H(x)=1$ dla $x>0$;
+wartość w zerze nie ma znaczenia. Dla $\varphi\in\mathcal D(\R)$
+\[
+ \langle H',\varphi\rangle
+ =-\int_0^\infty\varphi'(x)\,\mathrm d\lambda_1(x)
+ =\varphi(0)=\langle\delta_0,\varphi\rangle.
+\]
+Zatem $H'=\delta_0$ w $\mathcal D'(\R)$.
+Ponadto dla $u(x)=|x|$ zachodzi
+$u'=\operatorname{sgn}(x)$ i $u''=2\delta_0$.
+\end{przyklad}
+
+\begin{przyklad}[Pochodna delty]
+Dystrybucja $\delta'_0$ nie jest miarą, a jej działanie opisuje
+$\langle\delta'_0,\varphi\rangle=-\varphi'(0)$.
+Ogólniej $\langle\partial^\alpha\delta_a,\varphi\rangle
+=(-1)^{|\alpha|}\partial^\alpha\varphi(a)$.
+Jest to dystrybucja rzędu co najwyżej $|\alpha|$ na zwartych
+podzbiorach zawierających punkt $a$.
+\end{przyklad}
+
+\begin{twierdzenie}[Wzór skoku przez hiperpowierzchnię]
+\label{thm:pde7-jump}
+Niech $\Omega\subset\R^d$ będzie otwarta, a
+$S\subset\Omega$ zorientowaną hiperpowierzchnią klasy $C^1$,
+która lokalnie rozdziela $\Omega$ na strony $\Omega_-$ i $\Omega_+$.
+Niech $\nu$ będzie jednostkowym wektorem normalnym skierowanym
+od $\Omega_-$ do $\Omega_+$. Załóżmy, że funkcja $u$ jest klasy
+$C^1$ po obu stronach $S$, ma jednostronne ślady $u_\pm$ klasy $C^1$
+aż do $S$ i jest lokalnie całkowalna. Wtedy, w sensie dystrybucji,
+\begin{equation}\label{eq:pde7-jump}
+ \partial_jT_u=T_{(\partial_ju)_{\mathrm{reg}}}
+ +(u_+-u_-)\nu_j\delta_S,
+\end{equation}
+gdzie $(\partial_ju)_{\mathrm{reg}}$ oznacza klasyczną pochodną
+poza $S$, natomiast
+$\langle b\delta_S,\varphi\rangle
+=\int_S b(s)\varphi(s)\,\mathrm d\sigma(s)$
+dla ciągłej funkcji $b$ na $S$ (całka jest lokalna, gdy $S$ jest
+niezwarta).
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $\varphi\in\mathcal D(\Omega)$ i wybierzmy otoczenie
+jej nośnika, w którym można zastosować wzór Gaussa po obu stronach
+$S$ (w ogólnym przypadku używamy skończonego podziału jedności).
+Całkując $-u\partial_j\varphi$ po $\Omega_+$ i $\Omega_-$,
+otrzymujemy całki objętościowe z klasycznych pochodnych i
+składniki brzegowe $-u_+\varphi(-\nu_j)$ oraz
+$-u_-\varphi\nu_j$. Ich suma to
+$(u_+-u_-)\nu_j\varphi$, a wkłady z pozostałych granic
+znikają dzięki nośnikowi $\varphi$. Daje to
+\eqref{eq:pde7-jump}.
+\end{proof}
+
+\begin{wniosek}[Skok strumienia i równanie ciągłości]
+Niech $F\in L^1_{\mathrm{loc}}(\Omega;\R^d)$ będzie polem
+klasy $C^1$ po stronach hiperpowierzchni $S$ jak wyżej.
+Wówczas
+$\operatorname{div}T_F=T_{(\operatorname{div}F)_{\mathrm{reg}}}
++[F]\cdot\nu\,\delta_S$, gdzie $[F]=F_+-F_-$.
+Stąd równanie dywergencji $\operatorname{div}F=0$
+w sensie dystrybucyjnym wymaga zanikania skoku normalnego
+strumienia. To jest ogólna postać mechanizmu stojącego za warunkiem
+Rankine'a--Hugoniota z rozdziału~\ref{chap:pde-characteristics}.
+\end{wniosek}
+
+\section{Nośnik, lokalność i zbieżność dystrybucji}
+\label{sec:pde7-support}
+
+\begin{definicja}[Nośnik dystrybucji]
+Dla $T\in\mathcal D'(\Omega)$ nośnik $\supp T$ jest dopełnieniem
+największego otwartego zbioru $U\subset\Omega$ takiego, że
+$\langle T,\varphi\rangle=0$ dla wszystkich
+$\varphi\in\mathcal D(U)$.
+Mówimy, że ciąg $T_n\in\mathcal D'(\Omega)$ zbiega do
+$T\in\mathcal D'(\Omega)$ w sensie dystrybucji, jeśli
+$\langle T_n,\varphi\rangle\to\langle T,\varphi\rangle$
+dla każdego $\varphi\in\mathcal D(\Omega)$.
+\end{definicja}
+
+Dla funkcji lokalnie całkowalnej nośnik $T_f$ jest domknięciem
+zbioru, na którym $f$ nie znika w sensie lokalnym prawie wszędzie.
+Mamy $\supp(\partial^\alpha T)\subset\supp T$,
+ponieważ test i wszystkie jego pochodne są zerowe
+poza nośnikiem testu.
+
+\begin{stwierdzenie}[Różniczkowanie a granica dystrybucyjna]
+\label{prop:pde7-derivative-limit}
+Niech $\Omega\subset\R^d$ będzie otwarta i
+$T_n\to T$ w $\mathcal D'(\Omega)$. Dla każdego
+wielowskaźnika $\alpha$ zachodzi
+$\partial^\alpha T_n\to\partial^\alpha T$ w $\mathcal D'(\Omega)$.
+\end{stwierdzenie}
+\begin{proof}
+Dla każdego $\varphi\in\mathcal D(\Omega)$ mamy
+$\langle\partial^\alpha T_n,\varphi\rangle
+=(-1)^{|\alpha|}\langle T_n,\partial^\alpha\varphi\rangle$.
+Ponieważ $\partial^\alpha\varphi$ jest funkcją testową,
+przechodzimy do granicy po prawej stronie.
+\end{proof}
+
+\begin{przyklad}[Gładkie funkcje zbieżne do delty]
+Jeśli $\rho\in\mathcal D(\R^d)$ spełnia $\rho\ge0$ i
+$\int_{\R^d}\rho(x)\,\mathrm d\lambda_d(x)=1$, a
+$\rho_\varepsilon(x)=\varepsilon^{-d}\rho(x/\varepsilon)$,
+to $T_{\rho_\varepsilon}\to\delta_0$ w $\mathcal D'(\R^d)$.
+Rzeczywiście,
+$\langle T_{\rho_\varepsilon},\varphi\rangle
+=\int_{\R^d}\rho(y)\varphi(\varepsilon y)\,\mathrm d\lambda_d(y)
+\to\varphi(0)$ przez zbieżność jednostajną na nośniku $\rho$.
+\end{przyklad}
+
+\section{Wygładzanie i przybliżone jedynki}
+\label{sec:pde7-mollifiers}
+
+Wybierzmy odtąd $\rho\in C_c^\infty(B_1(0))$,
+$\rho\ge0$, o całce równej $1$, i definiujmy
+$\rho_\varepsilon(x)=\varepsilon^{-d}\rho(x/\varepsilon)$.
+Dla $u\in L^1_{\mathrm{loc}}(\Omega)$ i punktów
+$x\in\Omega_\varepsilon
+=\{x\in\Omega:\operatorname{dist}(x,\R^d\setminus\Omega)>\varepsilon\}$
+wprowadzamy
+$u_\varepsilon(x)=\int_\Omega u(y)\rho_\varepsilon(x-y)
+\,\mathrm d\lambda_d(y)$. Dla dystrybucji stosujemy analogiczną
+definicję $T_\varepsilon(x)=\langle T(y),\rho_\varepsilon(x-y)\rangle$.
+Zapis $T(y)$ w nawiasie jest tylko sposobem wskazania zmiennej
+funkcji testowej; nie oznacza wartości punktowej dystrybucji.
+Splot jest tu \emph{lokalny}: dla danego $x$ musimy mieć
+$\operatorname{supp}(\rho_\varepsilon(x-\cdot))\Subset\Omega$.
+Nie wolno automatycznie rozciągać takiej definicji na całą
+$\R^d$ bez przedłużenia $T$ lub założeń o nośniku.
+
+\begin{twierdzenie}[Wygładzanie dystrybucji]
+\label{thm:pde7-mollify}
+Niech $\Omega\subset\R^d$ będzie otwarta, $T\in\mathcal D'(\Omega)$
+i $\rho_\varepsilon$ jak wyżej. Wówczas
+$T_\varepsilon\in C^\infty(\Omega_\varepsilon)$ oraz
+\begin{equation}\label{eq:pde7-deriv-mollify}
+ \partial^\alpha T_\varepsilon
+ =(\partial^\alpha T)*\rho_\varepsilon
+ =T*(\partial^\alpha\rho_\varepsilon)
+ \quad\text{na }\Omega_\varepsilon.
+\end{equation}
+Ponadto $T_\varepsilon\to T$ w $\mathcal D'(\Omega)$,
+rozumiejąc każde $T_\varepsilon$ na zwartych podzbiorach,
+na których jest określone, dla dostatecznie małych $\varepsilon$.
+\end{twierdzenie}
+\begin{proof}
+Dla ustalonego $x\in\Omega_\varepsilon$ przesunięta funkcja
+$y\mapsto\rho_\varepsilon(x-y)$ jest testowa i jej nośnik
+leży w $\Omega$. Z ciągłości $T$ oraz gładkiej zależności
+funkcji testowej od $x$ wynikają gładkość $T_\varepsilon$
+i wzór przez różniczkowanie po parametrze.
+Tożsamość z $\partial^\alpha T$ wynika z definicji pochodnej
+po scałkowaniu przez części w zmiennej testowej.
+Dla $\varphi\in\mathcal D(\Omega)$ i małego $\varepsilon$
+zamiana działania $T$ z całką daje
+$\langle T_\varepsilon,\varphi\rangle
+=\langle T,\check\rho_\varepsilon*\varphi\rangle$,
+gdzie $\check\rho(x)=\rho(-x)$.
+Na jednym zwartym podzbiorze $\Omega$ mamy
+$\check\rho_\varepsilon*\varphi\to\varphi$
+jednostajnie ze wszystkimi pochodnymi; wynika to
+z jednostajnej ciągłości każdej pochodnej $\varphi$.
+Z definicji ciągłości $T$ otrzymujemy zbieżność dystrybucyjną.
+\end{proof}
+
+\begin{twierdzenie}[Aproksymacja w $L^p_{\mathrm{loc}}$]
+\label{thm:pde7-approx-id}
+Niech $\Omega\subset\R^d$ będzie otwarta,
+$1\le p<\infty$ i $u\in L^p_{\mathrm{loc}}(\Omega)$.
+Wówczas $u_\varepsilon\to u$ w $L^p(K)$ dla każdego
+$K\Subset\Omega$.
+\end{twierdzenie}
+\begin{proof}
+Dla $K\Subset\Omega$ wybierzmy otwarty zbiór
+$V$ o $K\subset V\Subset\Omega$ i funkcję odcinającą
+$\chi\in C_c^\infty(\Omega)$ równą $1$ na $V$.
+Funkcja $v=\chi u$ przedłużona zerem na $\R^d$
+należy do $L^p(\R^d)$ i $u_\varepsilon=v*\rho_\varepsilon$
+na $K$ dla małego $\varepsilon$. Z nierówności Minkowskiego
+otrzymujemy
+\[
+ \|v*\rho_\varepsilon-v\|_{L^p(\R^d)}
+ \le\int_{\R^d}\rho(z)
+ \|v(\cdot-\varepsilon z)-v\|_{L^p(\R^d)}
+ \,\mathrm d\lambda_d(z).
+\]
+Ciągłość przesunięć w $L^p(\R^d)$ daje zbieżność do zera
+jednostajnie dla $z$ z ustalonego zwartego nośnika $\rho$.
+Ciągłość przesunięć można wykazać najpierw dla
+$C_c^\infty(\R^d)$, a następnie przez gęstość tych funkcji
+w $L^p$ i izometryczność przesunięcia. To kończy dowód.
+\end{proof}
+
+\begin{uwaga}[Nie mylić sposobów zbieżności]
+Dla $p=\infty$ na ogół nie zachodzi zbieżność w normie
+$L^\infty$: wygładzenie skoku nie może aproksymować go
+jednostajnie w otoczeniu skoku. Dla funkcji ciągłych
+przybliżona jedynka daje jednak zbieżność jednostajną
+na zwartych podzbiorach.
+\end{uwaga}
+
+\begin{center}
+\begin{tikzpicture}[scale=.86,>=Stealth]
+ \draw[->] (-4.3,0)--(4.7,0) node[below] {$x$};
+ \draw[->] (0,-.1)--(0,3.5) node[left] {$\rho_\varepsilon(x)$};
+ \draw[thick,blue!65!black,domain=-2.2:2.2,samples=80,smooth]
+   plot (\x,{1.05*exp(-3*(\x)^2)});
+ \draw[thick,red!70!black,domain=-1:1,samples=80,smooth]
+   plot (\x,{2.7*exp(-13*(\x)^2)});
+ \node[blue!65!black,anchor=west] at (2.05,1.05) {$\varepsilon$ większe};
+ \node[red!70!black,anchor=west] at (.75,2.65) {$\varepsilon$ mniejsze};
+ \node[below] at (0,-.1) {$0$};
+\end{tikzpicture}
+\par\smallskip\small
+Poglądowe profile przybliżonej jedynki: masa pozostaje równa $1$,
+choć wysokość rośnie, a nośnik koncentruje się wokół zera.
+Rysunek ilustruje zjawisko, nie przedstawia znormalizowanej
+funkcji o zadanym wzorze analitycznym.
+\end{center}
+
+\section{Słabe pochodne i pierwsze przestrzenie Sobolewa}
+\label{sec:pde7-weak}
+
+\begin{definicja}[Pochodna słaba]
+\label{def:pde7-weak}
+Niech $\Omega\subset\R^d$ będzie otwarta,
+$u\in L^1_{\mathrm{loc}}(\Omega)$ i $\alpha\in\N_0^d$.
+Funkcję $v\in L^1_{\mathrm{loc}}(\Omega)$ nazywamy
+\emph{słabą pochodną} $\partial^\alpha u$, jeżeli
+\begin{equation}\label{eq:pde7-weak}
+ \int_\Omega u(x)\partial^\alpha\varphi(x)\,\mathrm d\lambda_d(x)
+ =(-1)^{|\alpha|}\int_\Omega v(x)\varphi(x)\,
+ \mathrm d\lambda_d(x)
+ \quad (\varphi\in C_c^\infty(\Omega)).
+\end{equation}
+Słaba pochodna jest jednoznaczna prawie wszędzie,
+bo $T_v=\partial^\alpha T_u$ i działa
+stwierdzenie~\ref{prop:pde7-injective}.
+\end{definicja}
+
+Pochodna dystrybucyjna istnieje zawsze, ale słaba
+pochodna w powyższym znaczeniu istnieje tylko wtedy,
+gdy odpowiadająca jej dystrybucja jest regularna.
+To rozróżnienie jest istotne: pochodna $H$ jest deltą,
+która nie pochodzi od funkcji lokalnie całkowalnej.
+
+\begin{definicja}[Przestrzeń $W^{1,p}$]
+Niech $\Omega\subset\R^d$ będzie otwarta i $1\le p\le\infty$.
+Przez $W^{1,p}(\Omega)$ oznaczamy zbiór tych
+$u\in L^p(\Omega)$, dla których wszystkie pochodne
+dystrybucyjne $\partial_jT_u$ są reprezentowane przez
+funkcje z $L^p(\Omega)$. Przestrzeń wyposażamy w normę
+$\|u\|_{W^{1,p}}=\|u\|_{L^p}+\sum_{j=1}^d
+\|\partial_ju\|_{L^p}$. Pełną teorię przestrzeni Sobolewa,
+włącznie ze zupełnością i twierdzeniami o zanurzeniach,
+rozwiniemy w rozdziale 9.
+\end{definicja}
+
+\begin{uwaga}[Jak ten skrót ma się do dalszych rozdziałów?]
+W tym rozdziale przestrzeń $W^{1,p}(\Omega)$ pojawia się
+jedynie jako pierwszy przykład funkcji o słabych pochodnych.
+Rozdział~\ref{chap:pde-sobolev} zbuduje ogólną teorię
+$W^{k,p}(\Omega)$ na obszarach, wraz z zupełnością,
+aproksymacją i przedłużaniem. Z kolei
+rozdział~\ref{chap:pde-fourier-Rd} wprowadza
+przestrzenie $H^s(\R^d)$ definiowane przez transformatę Fouriera.
+Dla całkowitych rzędów na całej przestrzeni zachodzi
+$H^m(\R^d)=W^{m,2}(\R^d)$, lecz na obszarach są to różne
+konstrukcje i nie należy utożsamiać ich definicji.
+\end{uwaga}
+
+\begin{przyklad}[Funkcja z załamaniem i funkcja ze skokiem]
+Na $(-1,1)$ funkcja $u(x)=|x|$ należy do
+$W^{1,p}((-1,1))$ dla każdego $1\le p\le\infty$:
+jej słabą pochodną jest $\operatorname{sgn}(x)$.
+Natomiast funkcja Heaviside'a ograniczona do $(-1,1)$
+nie należy do $W^{1,1}((-1,1))$, ponieważ jej
+pochodna dystrybucyjna jest deltą.
+Obie funkcje są niegładkie klasycznie, lecz tylko jedna
+ma całkowalną słabą pochodną.
+\end{przyklad}
+
+\begin{twierdzenie}[Pochodna zerowa oznacza stałość w wymiarze jeden]
+\label{thm:pde7-constant}
+Niech $I\subset\R$ będzie przedziałem otwartym,
+$T\in\mathcal D'(I)$ i $T'=0$. Istnieje dokładnie jedna
+stała $c\in\C$ taka, że $T=T_c$ na $I$.
+\end{twierdzenie}
+\begin{proof}
+Wybierzmy $\eta\in\mathcal D(I)$ o
+$\int_I\eta(x)\,\mathrm d\lambda_1(x)=1$ i połóżmy
+$c=\langle T,\eta\rangle$.
+Dla dowolnej $\varphi\in\mathcal D(I)$ zdefiniujmy
+$\psi=\varphi-\bigl(\int_I\varphi(x)\,\mathrm d\lambda_1(x)\bigr)\eta$.
+Wtedy $\int_I\psi(x)\,\mathrm d\lambda_1(x)=0$. Ponieważ $I$ jest
+przedziałem, funkcja $\Psi(x)=\int_{-\infty}^x\psi(t)
+\,\mathrm d\lambda_1(t)$, po przedłużeniu $\psi$ zerem,
+ma zwarty nośnik zawarty w $I$ i jest klasy $C^\infty$.
+Mamy $\Psi'=\psi$, a więc
+$\langle T,\psi\rangle=\langle T,\Psi'\rangle
+=-\langle T',\Psi\rangle=0$. Otrzymujemy
+$\langle T,\varphi\rangle=c\int_I\varphi(x)\,\mathrm d\lambda_1(x)$.
+Jednoznaczność $c$ wynika z wyboru testu o niezerowej całce.
+\end{proof}
+
+\section{Rozwiązania fundamentalne operatorów różniczkowych}
+\label{sec:pde7-fundamental}
+
+\begin{definicja}[Rozwiązanie fundamentalne]
+Niech $P(\partial)=\sum_{|\alpha|\le m}a_\alpha\partial^\alpha$
+będzie operatorem różniczkowym o stałych współczynnikach
+na $\R^d$, gdzie $a_\alpha\in\C$.
+Dystrybucję $E\in\mathcal D'(\R^d)$ nazywamy
+\emph{rozwiązaniem fundamentalnym} $P$, gdy
+$P(\partial)E=\delta_0$ w $\mathcal D'(\R^d)$.
+\end{definicja}
+
+Jeśli $f\in C_c^\infty(\R^d)$, możemy zdefiniować
+$(E*f)(x)=\langle E(y),f(x-y)\rangle$.
+Funkcja ta jest gładka i spełnia
+$P(\partial)(E*f)=(P(\partial)E)*f=\delta_0*f=f$.
+Stąd rozwiązanie fundamentalne daje narzędzie rozwiązywania
+niejednorodnego równania na całej przestrzeni.
+Nie twierdzimy na tym etapie, że $E*f$ opisuje wszystkie
+rozwiązania ani że bez dodatkowych warunków można w ten sposób
+rozwiązywać dowolne zadanie brzegowe.
+
+
+\begin{lemat}[Różniczkowanie splotu z dystrybucją]
+\label{lem:pde7-convolution-derivatives}
+Niech $d\ge1$, $T\in\mathcal D'(\R^d)$ i
+$\psi\in C_c^\infty(\R^d)$. Funkcja
+$u(x)=\langle T(y),\psi(x-y)\rangle$ należy do
+$C^\infty(\R^d)$ i dla każdego wielowskaźnika
+$\alpha\in\N_0^d$ zachodzi
+\[
+ \partial^\alpha(T*\psi)
+ =T*(\partial^\alpha\psi)=(\partial^\alpha T)*\psi.
+\]
+W szczególności dla operatora o stałych współczynnikach
+$P(\partial)$ i rozwiązania fundamentalnego $E$ mamy
+$P(\partial)(E*\psi)=\psi$.
+\end{lemat}
+\begin{proof}
+Dla $x$ w ustalonym zbiorze zwartym nośniki wszystkich
+funkcji $y\mapsto\psi(x-y)$ są zawarte w jednym zwartym
+zbiorze. Odwzorowanie $x\mapsto\psi(x-\cdot)$ jest więc
+gładkie jako odwzorowanie w przestrzeń funkcji testowych:
+każda pochodna względem parametru $x$ powstaje przez
+różniczkowanie $\psi$. Ciągłość funkcjonału $T$ daje
+$\partial_x^\alpha u(x)=\langle T(y),
+\partial_x^\alpha\psi(x-y)\rangle$.
+Dla pochodnej pierwszego rzędu korzystamy z definicji
+pochodnej dystrybucyjnej:
+\[
+ \langle\partial_{y_j}T(y),\psi(x-y)\rangle
+ =-\langle T(y),\partial_{y_j}\psi(x-y)\rangle
+ =\langle T(y),\partial_{x_j}\psi(x-y)\rangle.
+\]
+Iteracja daje wszystkie wielowskaźniki. Na koniec
+$P(\partial)(E*\psi)=(P(\partial)E)*\psi
+=\delta_0*\psi=\psi$, gdzie ostatnia równość
+wynika bezpośrednio z działania delty na test.
+\end{proof}
+
+\begin{twierdzenie}[Rozwiązanie fundamentalne operatora $-\Delta$]
+\label{thm:pde7-laplace}
+Niech $d\ge1$ i niech $\omega_d$ oznacza pole powierzchni
+sfery jednostkowej $S^{d-1}\subset\R^d$ dla $d\ge2$.
+Funkcja lokalnie całkowalna
+\begin{equation}\label{eq:pde7-laplace-fundamental}
+ \Phi_d(x)=\begin{cases}
+ -|x|/2,&d=1,\\
+ (2\pi)^{-1}\log(1/|x|),&d=2,\\
+ ((d-2)\omega_d)^{-1}|x|^{2-d},&d\ge3,
+ \end{cases}
+\end{equation}
+spełnia $-\Delta T_{\Phi_d}=\delta_0$ na $\R^d$.
+\end{twierdzenie}
+\begin{proof}
+W wymiarze jeden stwierdzenie wynika z
+$\partial_x^2|x|=2\delta_0$.
+Dla $d\ge2$ funkcja $\Phi_d$ jest harmoniczna poza zerem
+i spełnia $\partial_r\Phi_d(r)=-1/(\omega_dr^{d-1})$.
+Dla $\varphi\in\mathcal D(\R^d)$ wybierzmy $R>0$
+tak, że $\supp\varphi\Subset B_R$, i stosujmy drugą
+tożsamość Greena na pierścieniu $B_R\setminus\overline{B_\varepsilon}$:
+\[
+ -\int_{B_R\setminus B_\varepsilon}\Phi_d(x)\Delta\varphi(x)
+ \,\mathrm d\lambda_d(x)
+ =\int_{\partial B_\varepsilon}\varphi(x)
+ \frac{1}{\omega_d\varepsilon^{d-1}}\,\mathrm d\sigma(x)
+ -\int_{\partial B_\varepsilon}\Phi_d(x)
+ \partial_\nu\varphi(x)\,\mathrm d\sigma(x).
+\]
+Tu $\nu$ oznacza normalną zewnętrzną \emph{pierścienia},
+a więc na wewnętrznym brzegu $\nu=-x/|x|$.
+Pierwsza całka dąży do $\varphi(0)$; druga ma moduł
+$O(\varepsilon)$ dla $d\ge3$ oraz
+$O(\varepsilon|\log\varepsilon|)$ dla $d=2$.
+Całka objętościowa na $B_\varepsilon$ jest znikoma,
+ponieważ $\Phi_d\in L^1_{\mathrm{loc}}$.
+Przechodząc do granicy, otrzymujemy
+$\langle-\Delta T_{\Phi_d},\varphi\rangle=\varphi(0)$.
+\end{proof}
+
+\begin{uwaga}[Zgodność z wcześniejszą teorią potencjału]
+W rozdziale~\ref{chap:pde-laplace} otrzymaliśmy te same
+funkcje $\Phi_d$ w klasycznej teorii potencjału.
+Tutaj wykazaliśmy dokładniejszą tożsamość:
+nawet jeśli $\Phi_d$ nie ma klasycznej drugiej pochodnej
+w zerze, jej laplasjan dystrybucyjny jest dokładnie
+miarą punktową z odpowiednim znakiem.
+\end{uwaga}
+
+\section{Równanie ciepła i delta w chwili początkowej}
+\label{sec:pde7-heat}
+
+\begin{twierdzenie}[Jądro cieplne jako rozwiązanie fundamentalne]
+\label{thm:pde7-heat}
+Niech $d\ge1$ i $\kappa>0$. Na $\R^{1+d}$ definiujemy
+funkcję lokalnie całkowalną
+\[
+ E(t,x)=\begin{cases}
+ (4\pi\kappa t)^{-d/2}
+ \exp\!\bigl(-|x|^2/(4\kappa t)\bigr),&t>0,\\
+ 0,&t\le0.
+ \end{cases}
+\]
+Wtedy dla $L=\partial_t-\kappa\Delta_x$ zachodzi
+$L T_E=\delta_{(0,0)}$ w $\mathcal D'(\R^{1+d})$.
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy przez $\Gamma_\kappa(t,x)$ dodatnią część
+funkcji $E$. Dla $t>0$ mamy
+$(\partial_t-\kappa\Delta_x)\Gamma_\kappa=0$ i
+$\int_{\R^d}\Gamma_\kappa(t,x)\,\mathrm d\lambda_d(x)=1$.
+Niech $\varphi\in\mathcal D(\R^{1+d})$. Z definicji
+pochodnej dystrybucyjnej i dwukrotnego całkowania
+przez części względem $x$ otrzymujemy
+\[
+ \langle LT_E,\varphi\rangle
+ =\lim_{\varepsilon\downarrow0}
+ \int_\varepsilon^\infty\int_{\R^d}
+ \Gamma_\kappa(t,x)
+ [-\partial_t\varphi(t,x)-\kappa\Delta_x\varphi(t,x)]
+ \,\mathrm d\lambda_d(x)\,\mathrm d\lambda_1(t).
+\]
+Na obszarze $t>\varepsilon$ używamy równania
+spełnianego przez $\Gamma_\kappa$ i całkowania przez części:
+całka równa się
+$\int_{\R^d}\Gamma_\kappa(\varepsilon,x)
+\varphi(\varepsilon,x)\,\mathrm d\lambda_d(x)$.
+Po podstawieniu $x=\sqrt{4\kappa\varepsilon}\,z$
+dostajemy całkę Gaussowską z
+$\varphi(\varepsilon,\sqrt{4\kappa\varepsilon}\,z)$,
+która dąży do $\varphi(0,0)$ na mocy zbieżności
+zdominowanej. To oznacza dokładnie
+$LT_E=\delta_{(0,0)}$.
+\end{proof}
+
+\begin{uwaga}[Nie jest to rozwiązanie klasyczne w $t=0$]
+Funkcja $E$ jest klasycznie gładka dla $t>0$, ale
+jej przedłużenie przez zero dla $t\le0$ nie
+spełnia równania jednorodnego na całej czasoprzestrzeni.
+Osobliwość w chwili $t=0$ koduje punktowe źródło.
+To rozróżnienie będzie ważne dla wzoru Duhamela,
+źródeł impulsowych i równań ewolucyjnych.
+\end{uwaga}
+
+\section{Lemat Weyla: rozwiązanie dystrybucyjne jest gładkie}
+\label{sec:pde7-weyl}
+
+\begin{twierdzenie}[Lemat Weyla]
+\label{thm:pde7-weyl}
+Niech $d\ge2$, $\Omega\subset\R^d$ będzie otwarta,
+a $T\in\mathcal D'(\Omega)$ spełnia $\Delta T=0$.
+Wówczas istnieje dokładnie jedna harmoniczna funkcja
+$h\in C^\infty(\Omega)$ taka, że $T=T_h$.
+W szczególności $h$ jest rzeczywiście analityczna.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $a\in\Omega$ i $r>0$ takie, że
+$\overline{B_{3r}(a)}\subset\Omega$. Dla
+$0<\varepsilon<r$ połóżmy $u_\varepsilon=T*\rho_\varepsilon$
+na $B_{2r}(a)$. Ze wzoru \eqref{eq:pde7-deriv-mollify}
+wynika $\Delta u_\varepsilon=0$.
+Wybierzmy radialną $\eta\in C_c^\infty(B_r(0))$,
+$\eta\ge0$, o całce $1$. Dla $x\in B_r(a)$
+własność wartości średniej dla funkcji harmonicznych
+i rozkład całki na sfery dają
+\[
+ u_\varepsilon(x)=\int_{\R^d}
+ u_\varepsilon(y)\eta(x-y)\,\mathrm d\lambda_d(y).
+\]
+Prawa strona jest $u_\varepsilon*\eta$ na $B_r(a)$.
+Wiemy, że $u_\varepsilon\to T$ w $\mathcal D'(\Omega)$.
+Przejście do granicy uzasadnimy wprost na funkcjach testowych.
+Niech $\varphi\in\mathcal D(B_r(a))$. Ponieważ
+$\eta$ ma nośnik w $B_r(0)$, funkcja
+$\check\eta*\varphi$ ma nośnik w $B_{2r}(a)$,
+gdzie zdefiniowano $u_\varepsilon$; przyjmujemy
+$\check\eta(x)=\eta(-x)=\eta(x)$. Z twierdzenia Fubiniego
+i definicji splotu funkcji gładkich dostajemy
+\[
+ \langle T,\varphi\rangle
+ =\lim_{\varepsilon\downarrow0}
+ \int_{B_r(a)}u_\varepsilon(x)\varphi(x)
+ \,\mathrm d\lambda_d(x)
+ =\lim_{\varepsilon\downarrow0}
+ \int_{B_{2r}(a)}u_\varepsilon(y)
+ (\check\eta*\varphi)(y)\,\mathrm d\lambda_d(y)
+ =\langle T,\check\eta*\varphi\rangle.
+\]
+Ostatnia liczba jest, z definicji lokalnego splotu,
+równa $\langle T*\eta,\varphi\rangle$.
+Pokazaliśmy więc $T=T*\eta$ na $B_r(a)$
+bez nieuzasadnionego zamieniania granic w rodzinie
+przesuniętych testów. Prawa strona jest klasy $C^\infty$,
+więc $T$ ma gładką
+reprezentację w otoczeniu $a$. Ponieważ $a$ jest dowolny,
+otrzymujemy funkcję $h\in C^\infty(\Omega)$;
+iniektywność regularnego osadzenia zapewnia zgodność
+lokalnych reprezentacji. Z $\Delta T_h=0$ i
+iniektywności wynika $\Delta h=0$ punktowo.
+Analityczność wykazano już w
+\ref{thm:pde3-analytic}.
+\end{proof}
+
+\section{Ograniczenia rachunku dystrybucji}
+\label{sec:pde7-limits}
+
+Pochodne i mnożenie przez funkcje gładkie są dobrze określone
+na $\mathcal D'(\Omega)$, ale \emph{nie istnieje kanoniczny iloczyn
+dowolnych dwóch dystrybucji}, który jednocześnie zachowuje
+wszystkie naturalne własności mnożenia funkcji i reguły
+różniczkowania. Zapis $\delta_0^2$ nie ma więc standardowego
+znaczenia w teorii Schwartza. Analogicznie wyrażenie $u\,\partial_xu$
+dla nieciągłego $u$ nie musi być określone dystrybucyjnie.
+
+Dla równań zachowania rozwiązaniem jest najczęściej
+\emph{postać dywergencyjna}, np.
+$\partial_tu+\partial_x(u^2/2)=0$:
+jeśli $u\in L^2_{\mathrm{loc}}$, to $u^2/2\in L^1_{\mathrm{loc}}$
+i oba składniki są dystrybucjami. Nie oznacza to jeszcze
+jednoznaczności rozwiązań; do niej potrzebne bywają
+warunki entropijne omówione wcześniej i rozwinięte
+w rozdziale o prawach zachowania.
+
+\begin{przyklad}[Skąd bierze się problem z $\delta^2$?]
+Niech $\rho_\varepsilon(x)=\varepsilon^{-1}\rho(x/\varepsilon)$
+na $\R$, gdzie $\rho\in C_c^\infty(\R)$, $\rho\ge0$,
+$\int_\R\rho(x)\,\mathrm d\lambda_1(x)=1$ i $\rho\not\equiv0$.
+Mamy $\rho_\varepsilon\to\delta_0$, lecz dla testu
+$\varphi$ z $\varphi(0)>0$
+\[
+ \int_\R \rho_\varepsilon(x)^2\varphi(x)
+ \,\mathrm d\lambda_1(x)
+ =\varepsilon^{-1}\int_\R \rho(y)^2\varphi(\varepsilon y)
+ \,\mathrm d\lambda_1(y)\longrightarrow+\infty.
+\]
+Zatem kwadraty tej naturalnej aproksymacji delty
+nie mają granicy w $\mathcal D'(\R)$.
+Nie dowodzi to samo przez się żadnego twierdzenia o
+niemożliwości wszystkich możliwych rozszerzeń iloczynu,
+ale jasno pokazuje, dlaczego naiwny iloczyn nie działa.
+\end{przyklad}
+
+\section[Podsumowanie: przygotowanie do analizy Fouriera]{Podsumowanie i przygotowanie do analizy Fouriera na $\R^d$}
+Dystrybucje pozwalają różniczkować obiekty niegładkie
+bez tracenia zgodności z klasyczną analizą. Przybliżone jedynki
+łączą rachunek dystrybucyjny z aproksymacją w $L^p$.
+Rozwiązania fundamentalne zamieniają liniowe PDE o stałych
+współczynnikach na operacje splotu, a lemat Weyla pokazuje,
+że niektóre równania narzucają regularność nawet wtedy,
+gdy nie zakładamy jej na początku. W następnym rozdziale
+zbadamy transformatę Fouriera na przestrzeni Schwartza
+i dystrybucjach temperowanych; to umożliwi m.in. opis
+symboli operatorów i jąder potencjałowych w języku mnożników.
+
+
+

@@ -1,0 +1,943 @@
+\chapter[Wprowadzenie do PDE]{Równania różniczkowe cząstkowe: pojęcia i pierwsze zjawiska}
+\label{chap:pde-intro}
+
+Równania różniczkowe cząstkowe (ang. \emph{partial differential equations}, PDE)
+opisują związki między pochodnymi funkcji wielu zmiennych. Przy ich pomocy
+formułuje się prawa przepływu ciepła, rozchodzenia się fal, ruchu płynów,
+dynamiki kwantowej i geometrii rozmaitości. Ten sam operator różniczkowy
+może prowadzić do zupełnie różnych zagadnień w zależności od tego, na
+jakim obszarze pracujemy, jakie narzucamy warunki i w jakiej klasie
+szukamy rozwiązań.
+
+Celem rozdziału jest zbudowanie języka potrzebnego w dalszej części
+skryptu. Wprowadzimy rząd i typ nieliniowości równania, symbol główny,
+powierzchnie charakterystyczne i podstawowe klasy równań. Następnie,
+na przykładach, oddzielimy trzy problemy: istnienie rozwiązania,
+jego jednoznaczność i stabilną zależność od danych.
+
+\section{Co jest niewiadomą w równaniu PDE?}
+\label{sec:pde-unknown}
+
+Niech $n\geq1$, $\Omega\subset\R^n$ będzie niepustym zbiorem otwartym,
+a $u\colon\Omega\to\R$ funkcją niewiadomą. Równanie różniczkowe
+cząstkowe wiąże wartości $u$ i jej pochodnych cząstkowych. Przykładowo:
+\begin{align}
+ -\Delta u&=f &&\text{(równanie Poissona)},\label{eq:poisson-intro}\\
+ u_t-\kappa\Delta_xu&=0,\quad \kappa>0
+ &&\text{(równanie ciepła)},\label{eq:heat-intro}\\
+ u_{tt}-c^2\Delta_xu&=0,\quad c>0
+ &&\text{(równanie falowe)},\label{eq:wave-intro}\\
+ u_t+u\,u_x&=0 &&\text{(równanie Burgersa bez lepkości)}.
+ \label{eq:burgers-intro}
+\end{align}
+W trzech ostatnich równaniach niewiadoma zależy od czasu $t$ i
+zmiennych przestrzennych $x=(x_1,\ldots,x_d)$. Zapis $\Delta_x$ oznacza
+laplasjan liczony wyłącznie względem zmiennych przestrzennych, tj.
+$\Delta_xu=\sum_{j=1}^d\partial_{x_j}^2u$.
+
+\begin{uwaga}[Rozwiązanie to równanie wraz z warunkami]
+Samo równanie $-\Delta u=f$ ma zwykle wiele rozwiązań. Dopiero po
+określeniu obszaru, warunków brzegowych i klasy funkcji otrzymujemy
+konkretne \emph{zagadnienie}. Przykładowo każda funkcja afiniczna
+$u(x)=a\cdot x+b$ jest harmoniczna w $\R^n$; nie można zatem mówić
+o jednoznaczności bez dalszych założeń.
+\end{uwaga}
+
+W pierwszych rozdziałach przez rozwiązanie klasyczne równania rzędu
+$m$ rozumiemy funkcję klasy $C^m$ spełniającą równanie punktowo. Dla równań
+ewolucyjnych wygodniej jest osobno liczyć pochodne czasowe i
+przestrzenne; na przykład $C^{1,2}$ dla kolejności argumentów $(t,x)$ oznacza jedną ciągłą
+pochodną czasową i dwie przestrzenne. Rozwiązania słabe i dystrybucyjne
+wprowadzimy później.
+
+\section{Rząd równania i rodzaje nieliniowości}
+\label{sec:pde-types}
+
+Dla wielowskaźnika $\alpha=(\alpha_1,\ldots,\alpha_n)\in\N_0^n$
+przyjmujemy $|\alpha|=\alpha_1+\cdots+\alpha_n$ i
+$\partial^\alpha=\partial_{x_1}^{\alpha_1}\cdots
+\partial_{x_n}^{\alpha_n}$. Niech $m\geq1$, a $J^m u(x)$ oznacza
+uporządkowaną rodzinę wszystkich wartości $\partial^\alpha u(x)$,
+$|\alpha|\leq m$ (tzw. $m$-dżet funkcji w punkcie).
+
+\begin{definicja}[Równanie rzędu $m$]
+Niech $\Omega\subset\R^n$ będzie otwarta, a $F$ funkcją określoną
+na odpowiednim otwartym podzbiorze przestrzeni zmiennych
+$(x,(z_\alpha)_{|\alpha|\leq m})$. Równanie
+$F(x,J^m u(x))=0$ nazywamy równaniem rzędu $m$, jeżeli
+$F$ zależy nietrywialnie od co najmniej jednej zmiennej $z_\alpha$
+o $|\alpha|=m$. Pojęcie rzędu odnosi się do przedstawionego równania.
+W szczególnych punktach część najwyższego rzędu może znikać;
+na przykład operator $x\,\partial_x^2+\partial_x$ ma rząd $2$
+na $\R$, choć w punkcie $x=0$ jego symbol drugiego rzędu
+zeruje się dla każdego kowektora.
+\end{definicja}
+
+\begin{definicja}[Liniowość, półliniowość i quasiliniowość]
+Niech $\Omega\subset\R^n$ będzie otwarta i $m\geq1$.
+\begin{enumerate}
+\item Równanie \emph{liniowe} rzędu $m$ ma postać
+$Lu=f$, gdzie $Lu=\sum_{|\alpha|\leq m}a_\alpha(x)\partial^\alpha u$,
+a współczynniki $a_\alpha$ oraz $f$ nie zależą od $u$.
+Jest \emph{jednorodne}, jeśli $f=0$.
+\item Równanie jest \emph{półliniowe} (semiliniowe), jeśli ma postać
+$\sum_{|\alpha|=m}a_\alpha(x)\partial^\alpha u
++G(x,J^{m-1}u)=0$. Pochodne najwyższego rzędu wchodzą zatem
+liniowo, a ich współczynniki zależą tylko od $x$.
+\item Równanie jest \emph{quasiliniowe}, jeśli można je zapisać jako
+$\sum_{|\alpha|=m}a_\alpha(x,J^{m-1}u)\partial^\alpha u
++G(x,J^{m-1}u)=0$.
+\item Równanie nazywamy \emph{w pełni nieliniowym}, gdy jego zależność
+od pochodnych najwyższego rzędu nie jest afiniczna.
+\end{enumerate}
+Terminy te dotyczą przyjętego rzędu i postaci równania; równania
+liniowe są szczególnym przypadkiem półliniowych, a półliniowe
+szczególnym przypadkiem quasiliniowych. Klasyfikacja odnosi się do
+\emph{wyrażenia różniczkowego}, nie wyłącznie do zbioru jego
+rozwiązań: równania $\Delta u=0$ i $(\Delta u)^2=0$ mają ten
+sam zbiór rozwiązań klasycznych, ale inne postaci algebraiczne.
+\end{definicja}
+
+\begin{przyklad}[Rozpoznawanie typu]
+Dla niewiadomej $u=u(x,y)$:
+\begin{enumerate}
+\item $u_{xx}+u_{yy}=\sin x$ jest liniowe i niejednorodne.
+\item $u_{xx}+u_{yy}+u^3=0$ jest półliniowe.
+\item $(1+u_x^2)u_{xx}+u_{yy}=0$ jest quasiliniowe: współczynnik
+przy $u_{xx}$ zależy od pochodnej pierwszego rzędu.
+\item $u_{xx}u_{yy}-u_{xy}^2=1$ jest w pełni nieliniowe
+(równanie typu Monge'a--Ampère'a).
+\item $u_t+u\,u_x=0$ jest quasiliniowe pierwszego rzędu.
+\end{enumerate}
+\end{przyklad}
+
+\begin{stwierdzenie}[Zasada superpozycji]
+Niech $V,W$ będą przestrzeniami wektorowymi funkcji, a
+$L\colon V\to W$ operatorem liniowym. Jeśli $Lu_1=f_1$ i
+$Lu_2=f_2$, to dla dowolnych $a,b\in\R$ zachodzi
+$L(au_1+bu_2)=af_1+bf_2$. W szczególności zbiór rozwiązań
+równania jednorodnego $Lu=0$ jest podprzestrzenią wektorową
+$V$, a zbiór rozwiązań $Lu=f$, jeżeli jest niepusty,
+ma postać $u_0+\ker L$.
+\end{stwierdzenie}
+\begin{proof}
+Pierwsza równość wynika bezpośrednio z liniowości $L$.
+Jeżeli $Lu_0=f$, to $Lu=f$ jest równoważne
+$L(u-u_0)=0$, skąd wynika ostatnie stwierdzenie.
+\end{proof}
+
+\begin{uwaga}
+Dla równania nieliniowego nie wolno zazwyczaj dodawać rozwiązań.
+Rozważmy na przykład równanie $w_x=w^2$ na
+$\Omega=(-1,1)^2$, gdzie $w=w(x,y)$.
+Funkcje $w_1(x,y)=1/(2-x)$ i $w_2(x,y)=1/(3-x)$
+są rozwiązaniami, ponieważ $w_j'=w_j^2$.
+Ich suma nie jest jednak rozwiązaniem, gdyż
+$(w_1+w_2)'=w_1^2+w_2^2\ne(w_1+w_2)^2$.
+Podobnie $2w_1$ nie jest rozwiązaniem: pokazuje to,
+że nie działa również zwykłe mnożenie rozwiązań przez skalar.
+\end{uwaga}
+
+\section{Dane początkowe i brzegowe}
+\label{sec:pde-data}
+
+Niech $\Omega\subset\R^d$ będzie obszarem ograniczonym, tj.
+niepustym, spójnym zbiorem otwartym, i załóżmy, że jej brzeg
+$\partial\Omega$ jest co najmniej klasy $C^1$ tam, gdzie używamy
+wektora normalnego $\nu$ skierowanego na zewnątrz.
+
+\begin{definicja}[Podstawowe warunki brzegowe]
+Dla dostatecznie regularnej funkcji $u$ określonej na $\overline\Omega$ rozważamy:
+\begin{enumerate}
+\item \emph{warunek Dirichleta}: $u|_{\partial\Omega}=g$;
+\item \emph{warunek Neumanna}: $\partial_\nu u|_{\partial\Omega}=g$,
+ gdzie $\partial_\nu u=\nabla u\cdot\nu$;
+\item \emph{warunek Robina}: $\partial_\nu u+\beta u=g$
+ na $\partial\Omega$, gdzie $\beta$ jest zadaną funkcją.
+\end{enumerate}
+Warunki te rozumiemy na razie punktowo, dla funkcji o odpowiedniej
+regularności aż do brzegu.
+\end{definicja}
+
+Dla zagadnień ewolucyjnych na $(0,T)\times\Omega$, gdzie $T>0$,
+warunek początkowy zapisujemy na przykład jako $u(0,x)=u_0(x)$.
+Równanie falowe drugiego rzędu względem czasu wymaga zwykle także
+warunku $u_t(0,x)=u_1(x)$. Jeśli $\Omega$ jest ograniczona,
+potrzebne są ponadto odpowiednie warunki na bocznym brzegu
+$(0,T)\times\partial\Omega$.
+
+\begin{przyklad}[Zgodność danych na krawędzi czasoprzestrzeni]
+Jeżeli $u\in C([0,T]\times\overline\Omega)$ spełnia
+$u(0,x)=u_0(x)$ dla $x\in\overline\Omega$ oraz
+$u(t,x)=g(t,x)$ dla $(t,x)\in[0,T]\times\partial\Omega$,
+to koniecznie $u_0(x)=g(0,x)$ dla każdego $x\in\partial\Omega$.
+Jest to najprostszy \emph{warunek zgodności} danych; wyższa
+regularność często narzuca dalsze warunki.
+\end{przyklad}
+
+\begin{uwaga}[Zagadnienie Cauchy'ego]
+Przez zagadnienie Cauchy'ego rozumiemy poszukiwanie rozwiązania
+na podstawie danych zadanych na odpowiedniej hiperpłaszczyźnie
+lub hiperpowierzchni. Nie należy utożsamiać go z zagadnieniem
+Dirichleta. Na przykład zadanie wartości $u$ i pochodnej normalnej
+na części brzegu dla równania Laplace'a jest zagadnieniem Cauchy'ego,
+które, jak zobaczymy w~\S\ref{sec:pde-hadamard}, jest niestabilne.
+\end{uwaga}
+
+\section{Symbol główny i powierzchnie charakterystyczne}
+\label{sec:pde-symbol}
+
+Pojęcie symbolu ujawnia, co z równania pozostaje przy badaniu
+oscylacji o bardzo dużej częstości. Niech $m\geq1$,
+$\Omega\subset\R^n$ będzie otwarta, a
+$P=\sum_{|\alpha|\leq m}a_\alpha(x)\partial^\alpha$
+liniowym operatorem różniczkowym o współczynnikach ciągłych
+na $\Omega$. Zakładamy, że przynajmniej jeden współczynnik
+najwyższego rzędu nie znika identycznie.
+
+\begin{definicja}[Symbol główny]
+\emph{Symbolem głównym} operatora $P$ nazywamy wielomian
+$p_m\colon\Omega\times\R^n\to\C$ dany wzorem
+\begin{equation}\label{eq:principal-symbol}
+ p_m(x,\xi)=\sum_{|\alpha|=m}a_\alpha(x)\xi^\alpha.
+\end{equation}
+W naszej konwencji $\partial^\alpha$ nie zawiera czynników $-i$.
+Przy konwencji $D_j=-i\partial_{x_j}$ symbol różni się o
+odpowiedni czynnik potęgi $i$.
+\end{definicja}
+
+\begin{stwierdzenie}[Test wysokich częstości]
+Niech $P$ będzie operatorem opisanym powyżej, a
+$x\in\Omega$, $\xi\in\R^n$. Dla $\lambda>0$ oraz
+$v_\lambda(z)=e^{i\lambda z\cdot\xi}$ zachodzi
+\[
+ e^{-i\lambda x\cdot\xi}Pv_\lambda(x)
+ =i^m\lambda^m p_m(x,\xi)+O(\lambda^{m-1})
+ \quad\text{gdy }\lambda\to\infty.
+\]
+Stała w symbolu $O(\lambda^{m-1})$ może zależeć od $x$ i $\xi$.
+\end{stwierdzenie}
+\begin{proof}
+Mamy $\partial^\alpha v_\lambda(x)=
+(i\lambda)^{|\alpha|}\xi^\alpha v_\lambda(x)$.
+Po podstawieniu do definicji $P$ wyrazy z $|\alpha|=m$
+dają dokładnie $i^m\lambda^mp_m(x,\xi)$, a skończona
+suma pozostałych wyrazów jest rzędu co najwyżej $\lambda^{m-1}$.
+\end{proof}
+
+\begin{definicja}[Eliptyczność]
+Liniowy operator skalarny $P$ rzędu $m$ na zbiorze otwartym
+$\Omega\subset\R^n$ nazywamy \emph{eliptycznym w punkcie}
+$x\in\Omega$, jeżeli $p_m(x,\xi)\ne0$ dla każdego
+$\xi\in\R^n\setminus\{0\}$. Jest \emph{eliptyczny na $\Omega$},
+gdy warunek zachodzi w każdym punkcie.
+\end{definicja}
+
+\begin{przyklad}
+Dla $P=-\Delta=-\sum_{j=1}^n\partial_{x_j}^2$
+przyjęta konwencja daje $p_2(x,\xi)=-|\xi|^2$.
+Symbol nie zeruje się poza $\xi=0$, więc laplasjan jest
+operatorem eliptycznym. Znak symbolu nie ma znaczenia
+dla samej definicji eliptyczności.
+\end{przyklad}
+
+\begin{uwaga}[Eliptyczność a jednostajna eliptyczność]
+Dla rzeczywistej symetrycznej macierzy współczynników
+$A(x)=(a_{ij}(x))_{i,j=1}^n$ warunek jednostajnej
+eliptyczności ma postać
+$\xi^{\mathsf T}A(x)\xi\ge\lambda|\xi|^2$
+dla wszystkich $x\in\Omega$, $\xi\in\R^n$ i pewnej
+\emph{jednej} stałej $\lambda>0$. Samo niezerowanie się
+symbolu głównego w poszczególnych punktach nie daje
+takiej stałej. Przykładowo operator
+$P=-x^2\partial_x^2$ jest eliptyczny na $(0,1)$,
+ale nie jest jednostajnie eliptyczny: dla $x\downarrow0$
+wartość współczynnika $x^2$ dąży do zera.
+Wymóg dolnego oszacowania przez $\lambda|\xi|^2$
+dotyczy operatorów drugiego rzędu w postaci dodatnio
+określonej; nie jest definicją wszystkich eliptycznych
+operatorów dowolnego rzędu.
+\end{uwaga}
+
+\begin{definicja}[Powierzchnia charakterystyczna]
+Niech $P$ będzie liniowym operatorem skalarnym rzędu $m$ na
+$\Omega\subset\R^n$, a $\Sigma\subset\Omega$ gładką
+hiperpowierzchnią lokalnie opisaną jako
+$\Sigma=\{x\in\Omega:\phi(x)=0\}$, gdzie
+$\phi\in C^1(\Omega)$ i $\mathrm d\phi\ne0$ na $\Sigma$.
+Mówimy, że $\Sigma$ jest \emph{charakterystyczna dla $P$
+w punkcie} $x\in\Sigma$, jeżeli
+$p_m(x,\mathrm d\phi(x))=0$. W przeciwnym razie jest
+\emph{niecharakterystyczna w $x$}. Warunek nie zależy od
+wyboru lokalnej funkcji definiującej $\phi$.
+\end{definicja}
+
+\begin{proof}[Uzasadnienie niezależności od funkcji definiującej]
+Dwie funkcje definiujące tę samą gładką hiperpowierzchnię mają
+w rozważanym punkcie niezerowe i proporcjonalne różniczki:
+$\mathrm d\psi(x)=a\,\mathrm d\phi(x)$ dla pewnego $a\ne0$.
+Ponieważ $p_m(x,\cdot)$ jest jednorodny stopnia $m$,
+$p_m(x,\mathrm d\psi(x))=a^mp_m(x,\mathrm d\phi(x))$.
+Oba wyrażenia zerują się zatem jednocześnie.
+\end{proof}
+
+\begin{przyklad}[Stożek charakterystyczny równania falowego]
+Dla operatora $P=\partial_t^2-c^2\Delta_x$ w $\R^{1+d}$
+symbol główny jest równy
+$p_2(t,x;\tau,\xi)=\tau^2-c^2|\xi|^2$.
+Wektory kowariantne $(\tau,\xi)\ne0$ spełniające
+$\tau^2=c^2|\xi|^2$ są charakterystyczne. W przypadku
+jednego wymiaru przestrzennego proste $t-x/c=\mathrm{const}$
+i $t+x/c=\mathrm{const}$ są charakterystyczne.
+Natomiast powierzchnia początkowa $t=0$ jest
+niecharakterystyczna, bo $p_2(1,0)=1$.
+\end{przyklad}
+
+\begin{uwaga}[Pułapka: symbol równania ciepła]
+Dla $P=\partial_t-\kappa\Delta_x$, traktowanego jako zwykły
+operator drugiego rzędu we wszystkich zmiennych $(t,x)$,
+symbol główny wynosi $-\kappa|\xi|^2$: nie zależy od $\tau$.
+W takim sensie powierzchnia $t=0$ jest charakterystyczna
+($p_2((t,x),(1,0))=0$),
+chociaż zadanie początkowe dla równania ciepła jest naturalne
+i stabilne w odpowiednich przestrzeniach. Dlatego równania
+paraboliczne klasyfikuje się przy użyciu \emph{ważonego}
+porządku pochodnych: jednej pochodnej czasowej przypisuje się
+wagę $2$, a przestrzennej wagę $1$. Przy konwencji symbolu
+$D_j=-i\partial_{x_j}$ prowadzi to dla operatora ciepła do
+symbolu parabolicznego $i\tau+\kappa|\xi|^2$, który dla
+rzeczywistych $(\tau,\xi)\ne0$ nie znika. W szczególności
+nie wolno bez dodatkowych zastrzeżeń stosować do równania
+ciepła intuicji charakterystyk równania falowego.
+\end{uwaga}
+
+\section{Klasyfikacja operatorów drugiego rzędu}
+\label{sec:pde-classification}
+
+Dla równania drugiego rzędu w dwóch zmiennych rzeczywistych
+rozważmy część główną
+\begin{equation}\label{eq:2d-principal}
+ A(x,y)u_{xx}+2B(x,y)u_{xy}+C(x,y)u_{yy}.
+\end{equation}
+Współczynniki $A,B,C$ są rzeczywiste i ciągłe, a odpowiadająca
+im macierz symetryczna to
+$\mathsf A(x,y)=\begin{pmatrix}A&B\\B&C\end{pmatrix}$.
+
+\begin{definicja}[Klasyfikacja w dwóch zmiennych]
+Niech $\Omega\subset\R^2$ będzie otwarta i
+$\mathsf A(x,y)\ne0$ w rozważanym punkcie $(x,y)\in\Omega$.
+Oznaczmy $\delta(x,y)=B(x,y)^2-A(x,y)C(x,y)$.
+Równanie z częścią główną~\eqref{eq:2d-principal} ma w tym punkcie
+typ \emph{eliptyczny}, gdy $\delta<0$;
+\emph{hiperboliczny}, gdy $\delta>0$;
+\emph{paraboliczny w tradycyjnej klasyfikacji dwuzmiennowej},
+gdy $\delta=0$ i $\mathsf A\ne0$.
+Jeśli $\mathsf A=0$, część drugiego rzędu zanika i tej
+klasyfikacji tam nie stosujemy.
+\end{definicja}
+
+\begin{stwierdzenie}[Interpretacja geometryczna i niezmienniczość typu]
+Niech $\mathsf A$ będzie rzeczywistą, symetryczną macierzą
+$2\times2$, różną od zera. Wtedy:
+\begin{enumerate}
+\item $B^2-AC<0$ wtedy i tylko wtedy, gdy $\mathsf A$ jest
+ dodatnio albo ujemnie określona;
+\item $B^2-AC>0$ wtedy i tylko wtedy, gdy $\mathsf A$ ma
+ wartości własne przeciwnych znaków;
+\item $B^2-AC=0$ wtedy i tylko wtedy, gdy $\mathsf A$ ma rząd $1$.
+\end{enumerate}
+Pod lokalną zmianą współrzędnych klasy $C^2$ o nieosobliwym
+jakobianie liczba dodatnich, ujemnych i zerowych wartości własnych
+macierzy części głównej nie zmienia się. W konsekwencji typ
+równania jest niezmienniczy względem takich zmian współrzędnych.
+\end{stwierdzenie}
+\begin{proof}
+Macierz $\mathsf A$ ma rzeczywiste wartości własne
+$\lambda_1,\lambda_2$, przy czym
+$\lambda_1\lambda_2=\det\mathsf A=AC-B^2=-\delta$.
+Jeśli $\delta<0$, iloczyn jest dodatni i obie niezerowe
+wartości własne mają ten sam znak. Jeśli $\delta>0$,
+mają znaki przeciwne. Gdy $\delta=0$, jedna wartość własna
+jest zerowa, a druga niezerowa, ponieważ $\mathsf A\ne0$.
+
+Niech $z=\Phi(x)$ będzie lokalną zmianą współrzędnych,
+$J=D\Phi(x)$ jej nieosobliwym jakobianem i
+$u(x)=v(\Phi(x))$. Z reguły łańcuchowej wynika, że
+macierz współczynników drugich pochodnych $v$ jest równa
+$J\mathsf A J^{\mathsf T}$; pochodne drugie $\Phi$
+wnoszą jedynie wyrazy pierwszego rzędu. Prawo bezwładności
+Sylvestera zapewnia równość liczby dodatnich, ujemnych
+i zerowych wartości własnych obu macierzy.
+\end{proof}
+
+\begin{przyklad}[Trzy podstawowe typy]
+\begin{enumerate}
+\item $u_{xx}+u_{yy}=0$: $A=C=1$, $B=0$, więc $\delta=-1$;
+ typ eliptyczny.
+\item $u_{xx}-u_{yy}=0$: $A=1$, $C=-1$, $B=0$, więc
+ $\delta=1$; typ hiperboliczny.
+\item $u_{xx}+2u_{xy}+u_{yy}=0$: $A=B=C=1$, więc
+ $\delta=0$; typ paraboliczny w klasyfikacji dwuzmiennowej.
+ Część główna ma postać $(\partial_x+\partial_y)^2$.
+\end{enumerate}
+\end{przyklad}
+
+\begin{przyklad}[Równanie zmieniające typ]
+Rozważmy na $\R^2$ równanie Tricomiego
+\begin{equation}\label{eq:tricomi}
+ u_{xx}+x\,u_{yy}=0.
+\end{equation}
+Mamy $A=1$, $B=0$, $C=x$, zatem $\delta=-x$. Równanie jest
+eliptyczne w obszarze $x>0$, hiperboliczne w obszarze $x<0$
+i typu parabolicznego na prostej $x=0$.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[scale=.9,>=Stealth]
+ \fill[gray!10] (-4,-1.25) rectangle (0,1.25);
+ \fill[gray!23] (0,-1.25) rectangle (4,1.25);
+ \draw[->] (-4.3,0)--(4.45,0) node[right] {$x$};
+ \draw[->] (0,-1.5)--(0,1.5);
+ \draw[line width=1.1pt] (0,-1.25)--(0,1.25);
+ \node[align=center] at (-2,0.45) {hiperboliczny\\$x<0$};
+ \node[align=center] at (2,0.45) {eliptyczny\\$x>0$};
+ \node[above,align=center] at (0,1.6) {$x=0$: typ paraboliczny};
+\end{tikzpicture}
+\par\smallskip\small
+Typ równania Tricomiego zmienia się na prostej $x=0$.
+\end{center}
+
+\begin{uwaga}[Dwa znaczenia słowa „paraboliczny”]
+Typ paraboliczny w klasyfikacji wyrażenia
+$Au_{xx}+2Bu_{xy}+Cu_{yy}$ dotyczy macierzy części
+drugiego rzędu w \emph{dwóch równorzędnych zmiennych}.
+Równanie ciepła $u_t-\kappa\Delta_xu=0$ jest natomiast
+parabolicznym \emph{równaniem ewolucyjnym} z wyróżnionym
+czasem i z innym skalowaniem pochodnych. Terminy są
+powiązane historycznie, ale nie należy utożsamiać tych
+definicji bez wskazania konwencji.
+\end{uwaga}
+
+W większej liczbie zmiennych sama nieokreśloność macierzy
+części głównej nie wystarcza do pełnej definicji
+hiperboliczności. Dla równania falowego wyróżnia się
+kowektor czasowy oraz wymaga odpowiednich własności
+rzeczywistych pierwiastków wielomianu symbolu w kierunku
+czasowym. Systematyczną teorię rozwinie rozdział o
+równaniach hiperbolicznych.
+
+\section{Pierwsze modele: co można udowodnić od razu?}
+\label{sec:pde-models}
+
+\subsection{Laplasjan: zasada maksimum i jednoznaczność}
+
+\begin{twierdzenie}[Słaba zasada maksimum]
+\label{thm:laplace-max}
+Niech $\Omega\subset\R^n$ będzie niepustym, ograniczonym
+zbiorem otwartym i niech $u\in C^2(\Omega)\cap
+C(\overline\Omega)$ będzie funkcją rzeczywistą. Jeśli
+$\Delta u\geq0$ w $\Omega$, to
+\begin{equation}\label{eq:maximum-principle}
+ \max_{\overline\Omega}u\leq\max_{\partial\Omega}u.
+\end{equation}
+Jeśli $\Delta u\leq0$, to
+$\min_{\overline\Omega}u\geq\min_{\partial\Omega}u$.
+W szczególności, gdy $\Delta u=0$, oba wnioski zachodzą.
+\end{twierdzenie}
+\begin{proof}
+Dla $\eps>0$ określmy $u_\eps(x)=u(x)+\eps|x|^2$.
+W $\Omega$ zachodzi
+$\Delta u_\eps=\Delta u+2n\eps>0$.
+Funkcja $u_\eps$ jest ciągła na zwartym zbiorze
+$\overline\Omega$, zatem osiąga maksimum. Gdyby osiągała
+je w punkcie wewnętrznym, jej hesjan byłby w tym punkcie
+ujemnie półokreślony, stąd $\Delta u_\eps\leq0$,
+co daje sprzeczność. Maksimum $u_\eps$ leży zatem na brzegu.
+Wobec tego dla każdego $x\in\overline\Omega$ mamy
+$u(x)+\eps|x|^2\leq
+\max_{z\in\partial\Omega}(u(z)+\eps|z|^2)$.
+Ponieważ $\overline\Omega$ jest ograniczony,
+możemy przejść z $\eps$ do zera i otrzymać
+$u(x)\leq\max_{\partial\Omega}u$.
+Dla $\Delta u\leq0$ stosujemy wykazany wynik do $-u$.
+\end{proof}
+
+\begin{wniosek}[Jednoznaczność i stabilność zagadnienia Dirichleta]
+\label{cor:dirichlet-stability}
+Niech $\Omega\subset\R^n$ będzie niepustym ograniczonym
+zbiorem otwartym, a $u,v\in C^2(\Omega)\cap
+C(\overline\Omega)$ niech spełniają $\Delta u=\Delta v$
+w $\Omega$. Wówczas
+\[
+ \max_{x\in\overline\Omega}|u(x)-v(x)|
+ \leq\max_{x\in\partial\Omega}|u(x)-v(x)|.
+\]
+W szczególności dwa rozwiązania klasyczne zagadnienia
+$-\Delta u=f$ z takimi samymi wartościami brzegowymi
+muszą być równe.
+\end{wniosek}
+\begin{proof}
+Różnica $w=u-v$ jest harmoniczna. Twierdzenie
+\ref{thm:laplace-max}, zastosowane do $w$ i $-w$,
+daje odpowiednio oszacowania $w$ z góry i z dołu
+przez wartości na $\partial\Omega$. Złożenie tych
+oszacowań daje nierówność dla $|w|$.
+\end{proof}
+
+Zauważmy, że udowodniliśmy \emph{jednoznaczność i stabilność},
+ale nie istnienie rozwiązania Dirichleta dla dowolnego obszaru
+i dowolnych danych. Istnienie wymaga osobnej argumentacji.
+
+\subsection{Warunek Neumanna: brak jednoznaczności i warunek zgodności}
+
+\begin{stwierdzenie}[Konieczny warunek zgodności]
+Niech $\Omega\subset\R^n$ będzie obszarem ograniczonym
+o brzegu klasy $C^1$, a $f\in C(\overline\Omega)$ i
+$g\in C(\partial\Omega)$. Jeśli
+$u\in C^2(\overline\Omega)$ spełnia
+$-\Delta u=f$ w $\Omega$ oraz $\partial_\nu u=g$
+na $\partial\Omega$, to
+\begin{equation}\label{eq:neumann-compatibility}
+ \int_\Omega f(x)\,\mathrm d\lambda_n(x)
+ +\int_{\partial\Omega}g(x)\,\mathrm d\sigma(x)=0.
+\end{equation}
+Tutaj $\lambda_n$ oznacza miarę Lebesgue'a na $\R^n$,
+a $\sigma$ miarę powierzchniową na $\partial\Omega$.
+Jeśli $u,v\in C^2(\overline\Omega)$ rozwiązują to samo
+zagadnienie Neumanna, to $u-v$ jest stała na $\Omega$.
+\end{stwierdzenie}
+\begin{proof}
+Z twierdzenia Gaussa wynika
+$\int_\Omega\Delta u(x)\,\mathrm d\lambda_n(x)
+=\int_{\partial\Omega}\partial_\nu u(x)\,\mathrm d\sigma(x)$.
+Po wstawieniu równania otrzymujemy
+\eqref{eq:neumann-compatibility}.
+
+Dla $w=u-v$ zachodzi $\Delta w=0$ i $\partial_\nu w=0$.
+Pierwsza tożsamość Greena daje
+\[
+ \int_\Omega|\nabla w(x)|^2\,\mathrm d\lambda_n(x)
+ =\int_{\partial\Omega}w(x)\partial_\nu w(x)\,
+ \mathrm d\sigma(x)
+ -\int_\Omega w(x)\Delta w(x)\,\mathrm d\lambda_n(x)=0.
+\]
+Z ciągłości $\nabla w$ wynika $\nabla w=0$ w $\Omega$,
+a spójność $\Omega$ implikuje stałość $w$.
+\end{proof}
+
+\subsection{Transport: rozwiązanie przesuwa się po charakterystykach}
+
+\begin{stwierdzenie}[Transport ze stałą prędkością]
+\label{prop:transport}
+Niech $c\in\R$ i $u_0\in C^1(\R)$. Funkcja
+$u\colon[0,\infty)\times\R\to\R$ określona wzorem
+$u(t,x)=u_0(x-ct)$ jest rozwiązaniem klasycznym
+$u_t+c\,u_x=0$ z warunkiem $u(0,x)=u_0(x)$.
+Jest to jedyne rozwiązanie klasy $C^1$ na
+$[0,\infty)\times\R$ z tym warunkiem.
+\end{stwierdzenie}
+\begin{proof}
+Różniczkując, dostajemy $u_t=-c\,u_0'(x-ct)$
+i $u_x=u_0'(x-ct)$; równanie jest spełnione.
+Jeśli $v$ jest dowolnym innym rozwiązaniem, to dla
+ustalonego $\xi\in\R$ funkcja
+$h(t)=v(t,\xi+ct)$ spełnia
+$h'(t)=v_t(t,\xi+ct)+c v_x(t,\xi+ct)=0$.
+Zatem $v(t,\xi+ct)=v(0,\xi)=u_0(\xi)$, czyli
+$v(t,x)=u_0(x-ct)$.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=.95]
+ \draw[->] (-3.5,0)--(4.3,0) node[right] {$x$};
+ \draw[->] (-3.15,-.15)--(-3.15,3.1) node[above] {$t$};
+ \foreach \x in {-2.4,-1.3,-.2,.9} {
+   \draw[blue!55!black,thick] (\x,0)--({\x+1.3},2.6);
+ }
+ \draw[densely dashed] (-3.15,2.6)--(3.7,2.6);
+ \node[below] at (-1.3,0) {$\xi$};
+ \node[above right] at (0,2.6) {$(t,\xi+ct)$};
+ \node[anchor=west] at (2.6,1) {$c>0$};
+\end{tikzpicture}
+\par\smallskip\small
+Charakterystyki równania $u_t+c\,u_x=0$ są prostymi $x=\xi+ct$;
+wartość $u$ pozostaje na każdej z nich stała (rysunek dla $c>0$).
+\end{center}
+
+\begin{przyklad}[Utrata gładkości mimo gładkich danych]
+\label{ex:burgers-blowup}
+Rozważmy na $[0,T)\times\R$ równanie
+$u_t+u\,u_x=0$ z warunkiem $u(0,x)=-\sin x$.
+Wzdłuż charakterystyki startującej z punktu $\xi$
+wartość $u$ jest stała i równa $-\sin\xi$;
+zatem charakterystyka ma równanie
+\begin{equation}\label{eq:burgers-characteristics}
+ x=\xi-t\sin\xi,\qquad u(t,x)=-\sin\xi.
+\end{equation}
+Dla $0\leq t<1$ pochodna odwzorowania
+$\xi\mapsto\xi-t\sin\xi$ wynosi $1-t\cos\xi\geq1-t>0$.
+Odwzorowanie jest bijekcją $\R\to\R$ i ma gładką odwrotność,
+więc~\eqref{eq:burgers-characteristics} definiuje gładkie
+rozwiązanie. Różniczkując względem $x$ i korzystając
+z reguły łańcuchowej, dostajemy
+\begin{equation}\label{eq:burgers-gradient}
+ u_x(t,x)=\frac{-\cos\xi}{1-t\cos\xi}.
+\end{equation}
+Dla $x=0$ odpowiada $\xi=0$, a więc
+$u_x(t,0)=-1/(1-t)\to-\infty$ gdy $t\uparrow1$.
+Rozwiązanie pozostaje ograniczone, ale jego pochodna
+przestrzenna staje się nieograniczona w skończonym czasie.
+To najprostszy mechanizm powstawania osobliwości i
+fal uderzeniowych.
+\end{przyklad}
+
+\subsection{Równanie ciepła: natychmiastowe rozprzestrzenianie}
+
+\begin{stwierdzenie}[Jądro ciepła na całej przestrzeni]
+\label{prop:heat-kernel}
+Niech $d\geq1$, $\kappa>0$, $u_0\in C_c^\infty(\R^d)$.
+Dla $t>0$, $x\in\R^d$ zdefiniujmy
+\begin{equation}\label{eq:heat-kernel}
+ \Gamma_\kappa(t,x)=\frac{1}{(4\pi\kappa t)^{d/2}}
+ \exp\!\left(-\frac{|x|^2}{4\kappa t}\right),\qquad
+ u(t,x)=\int_{\R^d}\Gamma_\kappa(t,x-y)u_0(y)\,
+ \mathrm d\lambda_d(y).
+\end{equation}
+Wówczas $u\in C^\infty((0,\infty)\times\R^d)$,
+$u_t-\kappa\Delta_xu=0$ i
+$u(t,\cdot)\to u_0$ jednostajnie, gdy $t\downarrow0$.
+Jeśli dodatkowo $u_0\geq0$ i $u_0\not\equiv0$, to
+$u(t,x)>0$ dla każdego $t>0$ oraz $x\in\R^d$.
+\end{stwierdzenie}
+\begin{proof}
+Bezpośrednie różniczkowanie funkcji $\Gamma_\kappa$
+(dla $t>0$) daje
+$\partial_t\Gamma_\kappa=\kappa\Delta_x\Gamma_\kappa$.
+Ponieważ $u_0$ ma zwarty nośnik, na każdym zwartym podzbiorze
+$(0,\infty)\times\R^d$ możemy dowolnie wiele razy
+różniczkować całkę~\eqref{eq:heat-kernel} pod znakiem całki.
+Stąd gładkość i równanie ciepła.
+
+Ze wzoru na całkę Gaussa wynika
+$\int_{\R^d}\Gamma_\kappa(t,z)\,\mathrm d\lambda_d(z)=1$.
+Dlatego
+$u(t,x)-u_0(x)=\int_{\R^d}\Gamma_\kappa(t,z)
+\bigl(u_0(x-z)-u_0(x)\bigr)\,\mathrm d\lambda_d(z)$.
+Funkcja $u_0$ jest jednostajnie ciągła. Ustalmy $\eps>0$
+i wybierzmy $r>0$ tak, aby
+$|u_0(x-z)-u_0(x)|<\eps$ dla $|z|<r$, niezależnie od $x$.
+Część całki po $|z|<r$ ma moduł nie większy od $\eps$;
+część po $|z|\geq r$ jest ograniczona przez
+$2\|u_0\|_\infty\int_{|z|\geq r}\Gamma_\kappa(t,z)
+\,\mathrm d\lambda_d(z)$, a ostatnia całka dąży do zera,
+gdy $t\downarrow0$ (po podstawieniu $z=\sqrt t\,w$
+i zastosowaniu zbieżności zdominowanej). Dowodzi to
+zbieżności jednostajnej.
+
+Jeżeli $u_0\geq0$ i $u_0\not\equiv0$, to z ciągłości
+wynika, że $u_0$ jest dodatnia na pewnym niepustym zbiorze
+otwartym. Ponieważ $\Gamma_\kappa(t,x-y)>0$ dla wszystkich
+$t>0$, $x,y\in\R^d$, całka we wzorze na $u(t,x)$
+jest ściśle dodatnia.
+\end{proof}
+
+Jest to pierwsza istotna różnica między równaniem ciepła
+a równaniem falowym: nawet jeśli $u_0$ jest dodatnia tylko na
+niewielkim obszarze, dla dowolnie małego $t>0$ rozwiązanie
+równania ciepła staje się dodatnie w całej $\R^d$.
+Nie oznacza to, że zaburzenie ma wszędzie porównywalną
+wielkość; daleko od nośnika danych wartości są bardzo małe.
+
+\begin{stwierdzenie}[Energetyczna jednoznaczność równania ciepła]
+\label{prop:heat-uniqueness}
+Niech $\Omega\subset\R^d$ będzie obszarem ograniczonym
+o brzegu klasy $C^1$, $T>0$ i $\kappa>0$.
+Jeśli $u,v\in C^{1,2}([0,T]\times\overline\Omega)$
+spełniają $w_t-\kappa\Delta_xw=0$ dla $w=u-v$
+na $(0,T)\times\Omega$, a ponadto
+$u(0,\cdot)=v(0,\cdot)$ w $\Omega$ oraz
+$u=v$ na $[0,T]\times\partial\Omega$, to $u=v$
+na $[0,T]\times\overline\Omega$.
+\end{stwierdzenie}
+\begin{proof}
+Niech $E(t)=\frac12\int_\Omega w(t,x)^2\,
+\mathrm d\lambda_d(x)$. Różniczkowanie pod znakiem całki,
+a następnie całkowanie przez części (przy $w=0$ na brzegu)
+daje
+\[
+ E'(t)=\int_\Omega w(t,x)w_t(t,x)\,\mathrm d\lambda_d(x)
+ =-\kappa\int_\Omega|\nabla_xw(t,x)|^2\,
+ \mathrm d\lambda_d(x)\leq0.
+\]
+Ponieważ $E(0)=0$ i $E(t)\geq0$, mamy $E(t)=0$
+dla każdego $t\in[0,T]$. Z ciągłości $w$ wynika
+$w\equiv0$.
+\end{proof}
+
+\subsection{Równanie falowe: skończona prędkość propagacji}
+
+\begin{twierdzenie}[Wzór d'Alemberta]
+\label{thm:dalembert}
+Niech $c>0$, $u_0\in C^2(\R)$ i $u_1\in C^1(\R)$.
+Jedynym rozwiązaniem klasy $C^2$ na $[0,\infty)\times\R$
+zagadnienia
+$u_{tt}-c^2u_{xx}=0$, $u(0,x)=u_0(x)$,
+$u_t(0,x)=u_1(x)$ jest
+\begin{equation}\label{eq:dalembert}
+ u(t,x)=\frac{u_0(x-ct)+u_0(x+ct)}{2}
+ +\frac{1}{2c}\int_{x-ct}^{x+ct}u_1(s)\,\mathrm ds.
+\end{equation}
+Jeśli $\supp u_0\cup\supp u_1\subset[-R,R]$ dla $R>0$,
+to $u(t,x)=0$ dla $|x|>R+ct$.
+\end{twierdzenie}
+\begin{proof}
+Wprowadzamy zmienne $\xi=x+ct$ i $\eta=x-ct$.
+Dla $v(\xi,\eta)=u(t,x)$ równanie falowe staje się
+$\partial_\xi\partial_\eta v=0$ (z niezerowym
+czynnikiem $-4c^2$ przed pochodną). Na płaszczyźnie
+$(\xi,\eta)$ oznacza to $v(\xi,\eta)=F(\xi)+G(\eta)$.
+Zatem $u(t,x)=F(x+ct)+G(x-ct)$.
+Warunki początkowe dają
+$F(x)+G(x)=u_0(x)$ i
+$cF'(x)-cG'(x)=u_1(x)$.
+Różniczkując pierwszą równość i rozwiązując układ względem
+$F',G'$, otrzymujemy
+$F'=(u_0'+u_1/c)/2$ i
+$G'=(u_0'-u_1/c)/2$.
+Całkowanie tych pochodnych, a następnie dodanie $F$ i $G$,
+daje~\eqref{eq:dalembert}; stałe całkowania znoszą się
+dzięki warunkowi $F+G=u_0$.
+Otrzymany wzór definiuje rozwiązanie $C^2$, co można także
+sprawdzić przez różniczkowanie, i pokazuje jego jednoznaczność.
+
+Jeżeli $|x|>R+ct$, to oba punkty $x-ct$, $x+ct$ leżą
+po tej samej stronie przedziału $[-R,R]$, a przedział
+$[x-ct,x+ct]$ nie przecina nośnika $u_1$.
+Wszystkie składniki~\eqref{eq:dalembert} są więc równe zeru.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=1]
+ \draw[->] (-4.0,0)--(4.05,0) node[right] {$x$};
+ \draw[->] (0,-.2)--(0,3.9) node[above] {$t$};
+ \coordinate (P) at (.7,3.0);
+ \coordinate (L) at (-1.6,0);
+ \coordinate (R) at (3.0,0);
+ \fill[gray!14] (L)--(P)--(R)--cycle;
+ \draw[blue!65!black,thick] (L)--(P)--(R);
+ \draw[very thick] (L)--(R);
+ \fill (P) circle (2pt);
+ \node[above right] at (P) {$(x_0,t_0)$};
+ \node[below] at (L) {$x_0-ct_0$};
+ \node[below] at (R) {$x_0+ct_0$};
+ \node[align=center] at (.7,1.0) {obszar\\zależności};
+\end{tikzpicture}
+\par\smallskip\small
+Dla równania falowego w jednym wymiarze wartość w punkcie
+$(x_0,t_0)$ zależy wyłącznie od danych początkowych na
+$[x_0-ct_0,x_0+ct_0]$.
+\end{center}
+
+\begin{stwierdzenie}[Lokalny bilans energii w zwężającym się przedziale]
+\label{prop:pde-v31-wave-cone}
+Niech $c>0$, $a<b$, $0<T<(b-a)/(2c)$ oraz
+$u\in C^2([0,T]\times\R)$ spełnia $u_{tt}-c^2u_{xx}=0$.
+Dla $0\le t\le T$ połóżmy $L(t)=a+ct$, $R(t)=b-ct$ i
+\[
+ E(t)=\frac12\int_{L(t)}^{R(t)}
+ \bigl(u_t(t,x)^2+c^2u_x(t,x)^2\bigr)\,\mathrm d\lambda_1(x).
+\]
+Wtedy
+\begin{equation}\label{eq:pde-v31-wave-cone}
+ E'(t)=-\frac c2\bigl(u_t-cu_x\bigr)^2(t,R(t))
+       -\frac c2\bigl(u_t+cu_x\bigr)^2(t,L(t))\le0.
+\end{equation}
+Jeśli ponadto $u(0,x)=u_t(0,x)=0$ dla $x\in[a,b]$,
+to $u(t,x)=0$ dla $0\le t\le T$ i $L(t)\le x\le R(t)$.
+\end{stwierdzenie}
+\begin{proof}
+Oznaczmy $e=(u_t^2+c^2u_x^2)/2$. Z równania falowego,
+reguły iloczynu i równości pochodnych mieszanych otrzymujemy
+$\partial_t e=c^2\partial_x(u_tu_x)$.
+Reguła Leibniza dla całki o ruchomych końcach, z
+$L'=c$ oraz $R'=-c$, daje
+\[
+ E'(t)=c^2[u_tu_x]_{L(t)}^{R(t)}
+       -ce(t,R(t))-ce(t,L(t)).
+\]
+Po osobnym zebraniu wyrazów przy prawym i lewym końcu
+przedziału otrzymujemy dokładnie~\eqref{eq:pde-v31-wave-cone}.
+Jeśli dane początkowe są zerowe na $[a,b]$, to $E(0)=0$.
+Ponieważ $E\ge0$ i $E$ jest nierosnąca, mamy $E(t)=0$.
+Ciągłość pochodnych daje $u_t=u_x=0$ w otwartym stożku
+$0<t<T$, $L(t)<x<R(t)$. Dla każdego punktu tego stożka
+odcinek pionowy od chwili $0$ pozostaje w stożku, zatem
+$u(t,x)=u(0,x)=0$. Ciągłość daje też równość na jego brzegu.
+\end{proof}
+
+\begin{uwaga}[Dlaczego bilans lokalny jest ważniejszy od samego wzoru]
+Oszacowanie~\eqref{eq:pde-v31-wave-cone} dowodzi skończonej
+prędkości propagacji bez użycia jawnego wzoru d'Alemberta.
+Ta sama idea, po modyfikacji geometrii i wyrazów brzegowych,
+pojawia się przy wielowymiarowym równaniu falowym i układach
+hiperbolicznych; tam jawny wzór na ogół nie jest dostępny.
+\end{uwaga}
+
+\section{Poprawność w sensie Hadamarda}
+\label{sec:pde-hadamard}
+
+Wyrażenie „rozwiązać równanie” nie jest wystarczające,
+jeśli nie kontrolujemy wpływu niewielkich perturbacji danych.
+Ustalmy przestrzenie danych $X$ i rozwiązań $Y$, wyposażone
+w określone topologie, oraz dopuszczalny zbiór danych
+$D\subset X$.
+
+\begin{definicja}[Poprawność Hadamarda]
+Zagadnienie jest \emph{poprawnie postawione w sensie Hadamarda}
+w parze przestrzeni $(X,Y)$ na zbiorze danych $D\subset X$,
+jeśli:
+\begin{enumerate}
+\item dla każdego $f\in D$ istnieje rozwiązanie $u\in Y$;
+\item takie rozwiązanie jest jednoznaczne w $Y$;
+\item odwzorowanie rozwiązujące $S\colon D\to Y$, $S(f)=u$,
+jest ciągłe względem topologii podprzestrzeni na $D$.
+\end{enumerate}
+W zależności od zagadnienia „dane” mogą obejmować prawą stronę,
+warunki początkowe, warunki brzegowe lub ich kombinację.
+\end{definicja}
+
+Trzeci warunek jest równie istotny jak pozostałe: dane
+pochodzące z pomiarów lub obliczeń numerycznych zawsze
+zawierają niewielki błąd.
+
+\begin{kontrprzyklad}[Niestabilne zagadnienie Cauchy'ego dla laplasjanu]
+\label{ex:laplace-illposed}
+Niech $\Omega=(0,\pi)\times(0,1)$ i rozważmy równanie
+$u_{xx}+u_{yy}=0$ w $\Omega$ z danymi na dolnym brzegu
+$u(x,0)=0$ i $u_y(x,0)=g(x)$.
+Dla każdej liczby naturalnej $k\geq1$ określmy
+\begin{equation}\label{eq:hadamard-counterexample}
+ \eps_k=e^{-k/2},\qquad
+ u_k(x,y)=\frac{\eps_k}{k}\sinh(ky)\sin(kx).
+\end{equation}
+Wtedy $u_k$ jest funkcją harmoniczną,
+$u_k(x,0)=0$ i $\partial_yu_k(x,0)=\eps_k\sin(kx)$.
+Dla każdego ustalonego $r\in\N_0$ zachodzi
+\[
+ \|g_k\|_{C^r([0,\pi])}\leq C_r k^r e^{-k/2}\longrightarrow0,
+ \qquad g_k(x)=\eps_k\sin(kx),
+\]
+przy stałej $C_r$ niezależnej od $k$.
+A więc dane dążą do zera nawet w topologii $C^\infty$.
+Tymczasem na poziomie $y=3/4$ otrzymujemy
+\[
+ \|u_k(\cdot,3/4)\|_{L^2(0,\pi)}
+ =\sqrt{\frac\pi2}\,\frac{e^{-k/2}}{k}\sinh(3k/4)
+ \underset{k\to\infty}{\sim}
+ \sqrt{\frac\pi8}\,\frac{e^{k/4}}{k}
+ \longrightarrow\infty.
+\]
+W konsekwencji nie istnieje ciągła w zerze operacja
+rekonstrukcji rozwiązania z tych danych Cauchy'ego,
+która wszystkie $u_k$ przypisywałaby danym $g_k$ i
+której przestrzeń wynikowa kontrolowałaby powyższą normę.
+Zagadnienie jest niestabilne pomimo gładkości równania
+i danych, a także mimo tego, że prosta $y=0$ jest
+niecharakterystyczna dla laplasjanu.
+\end{kontrprzyklad}
+
+\begin{uwaga}[Dlaczego to nie przeczy zasadzie maksimum?]
+We wniosku~\ref{cor:dirichlet-stability} podawaliśmy
+\emph{wartości funkcji na całym brzegu}.
+W kontrprzykładzie~\ref{ex:laplace-illposed} zadaliśmy
+\emph{wartość i pochodną normalną tylko na części brzegu}.
+To dwa zupełnie różne zagadnienia. W szczególności
+zasada maksimum nie oszacowuje rozwiązania w prostokącie
+przez dane Cauchy'ego wyłącznie na dolnej krawędzi.
+\end{uwaga}
+
+\begin{kontrprzyklad}[Równanie ciepła odwrócone w czasie]
+\label{ex:backward-heat}
+Niech $\kappa>0$, $T>0$, $\T=\R/(2\pi\mathbb Z)$.
+Rozważmy na $[0,T]\times\T$ równanie
+$u_t=-\kappa u_{xx}$. Dla każdej liczby całkowitej $k\geq1$
+funkcja
+\[
+ u_k(t,x)=\exp\!\bigl(\kappa k^2(t-T/2)\bigr)\sin(kx)
+\]
+jest gładkim rozwiązaniem. Jej dane początkowe
+$u_k(0,x)=e^{-\kappa k^2T/2}\sin(kx)$ dążą do zera
+w $C^\infty(\T)$, podczas gdy
+$\|u_k(T,\cdot)\|_{L^2(\T)}=
+\sqrt\pi\,e^{\kappa k^2T/2}\to\infty$.
+Zatem problem ewolucji wstecznej jest niestabilny;
+formalna zmiana znaku przy laplasjanie odwraca mechanizm
+wygładzania w gwałtowne wzmacnianie wysokich częstości.
+\end{kontrprzyklad}
+
+\section{Skalowanie i związek typu równania z geometrią}
+\label{sec:pde-scaling}
+
+Dla równań ewolucyjnych czas i przestrzeń nie zawsze
+skalują się w ten sam sposób. Współczynniki $c$ i $\kappa$
+mają odpowiednio wymiary długość/czas oraz
+długość$^2$/czas. To sugeruje dwa odmienne skalowania.
+
+\begin{stwierdzenie}[Skalowania równań ciepła i falowego]
+Niech $\lambda>0$ i $d\geq1$.
+\begin{enumerate}
+\item Jeśli $u$ jest rozwiązaniem klasycznym
+$u_t-\kappa\Delta_xu=0$ na zbiorze otwartym
+$Q\subset\R\times\R^d$, to
+$u_\lambda(t,x)=u(\lambda^2t,\lambda x)$
+rozwiązuje to samo równanie na
+$Q_\lambda=\{(t,x):(\lambda^2t,\lambda x)\in Q\}$.
+\item Jeśli $u$ jest rozwiązaniem klasycznym
+$u_{tt}-c^2\Delta_xu=0$ na $Q$, to
+$v_\lambda(t,x)=u(\lambda t,\lambda x)$
+rozwiązuje to samo równanie na
+$\{(t,x):(\lambda t,\lambda x)\in Q\}$.
+\end{enumerate}
+\end{stwierdzenie}
+\begin{proof}
+W pierwszym przypadku reguła łańcuchowa daje
+$\partial_tu_\lambda=\lambda^2u_t(\lambda^2t,\lambda x)$
+i $\Delta_xu_\lambda=\lambda^2\Delta_xu(\lambda^2t,\lambda x)$.
+W drugim przypadku zarówno druga pochodna czasowa, jak
+i każda druga pochodna przestrzenna wprowadza czynnik
+$\lambda^2$. Po podstawieniu odpowiednie równania
+są spełnione.
+\end{proof}
+
+Przy skali przestrzennej $\ell$ typowy czas dyfuzji ma więc
+rzędu $\ell^2/\kappa$, natomiast czas propagacji fali
+na odległość $\ell$ ma rzędu $\ell/c$.
+To różnica strukturalna, nie tylko rachunkowa.
+
+\section{Co będzie potrzebne dalej?}
+\label{sec:pde-outlook}
+
+Podsumujmy rozróżnienia, które pozostaną ważne przez cały skrypt:
+\begin{enumerate}
+\item \emph{Równanie a zagadnienie.} Dwa takie same operatory
+mogą prowadzić do różnych problemów przy innych danych
+początkowych lub brzegowych.
+\item \emph{Istnienie, jednoznaczność, stabilność.} Każde z tych
+zagadnień wymaga osobnego rozumowania. Udowodnienie
+jednoznaczności nie implikuje istnienia.
+\item \emph{Typ operatora.} Eliptyczność, hiperboliczność
+i paraboliczność opisują zasadniczo różne mechanizmy.
+\item \emph{Klasa rozwiązań.} Rozwiązania klasyczne są tylko
+początkiem. Naturalnymi obiektami bywają funkcje Sobolewa,
+dystrybucje oraz rozwiązania słabe i lepkościowe.
+\item \emph{Rola geometrii.} Symbol główny, charakterystyki,
+struktura brzegu i skalowanie decydują o propagacji
+i regularności rozwiązań.
+\end{enumerate}
+
+W następnym rozdziale rozwiniemy metodę charakterystyk dla
+równań pierwszego rzędu: od liniowego transportu przez
+quasiliniowe zagadnienia Cauchy'ego po tworzenie się
+fal uderzeniowych.
+
+% Rozdział 2.

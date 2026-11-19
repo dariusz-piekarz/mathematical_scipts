@@ -1,0 +1,945 @@
+\chapter[Charakterystyki i PDE pierwszego rzędu]{Równania pierwszego rzędu i metoda charakterystyk}
+\label{chap:pde-characteristics}
+
+W tym rozdziale zamienimy równania pierwszego rzędu na układy
+równań zwyczajnych. Wersja liniowa metody pozwala rozwiązywać
+równania transportu i ciągłości, natomiast wersja quasiliniowa
+wyjaśnia powstawanie osobliwości z gładkich danych. Dla równań
+w pełni nieliniowych skonstruujemy układ charakterystyczny
+Charpita i zastosujemy go do równań Hamiltona--Jacobiego.
+
+W całym rozdziale $d\geq1$, $T>0$ oraz $\lambda_d$ oznacza
+miarę Lebesgue'a na $\R^d$. Wszystkie pochodne występujące
+w sformułowaniach klasycznych rozumiemy w sensie punktowym.
+W szczególności przez $C^1([0,T]\times\R^d)$ rozumiemy
+funkcje o pochodnych pierwszego rzędu ciągłych aż do
+$t=0,T$ (jednostronnie w tych punktach).
+
+\section{Pochodna wzdłuż krzywej i najprostsze równanie transportu}
+\label{sec:pde2-basic}
+
+Niech $u\in C^1((0,T)\times\R^d)$ i niech
+$X\colon I\to\R^d$ będzie krzywą klasy $C^1$, gdzie
+$I\subset(0,T)$ jest przedziałem. Reguła łańcuchowa daje
+\begin{equation}\label{eq:pde2-chain}
+ \frac{\mathrm d}{\mathrm dt}u(t,X(t))
+ =u_t(t,X(t))+\nabla_xu(t,X(t))\cdot\dot X(t).
+\end{equation}
+Dobierając $\dot X(t)$ do współczynników równania,
+możemy przekształcić PDE w równanie zwyczajne
+wzdłuż krzywej $t\mapsto(t,X(t))$. Taką krzywą nazywamy
+\emph{charakterystyką} równania transportu.
+
+\begin{stwierdzenie}[Transport ze stałą prędkością i źródłem]
+\label{prop:pde2-constant}
+Niech $c\in\R^d$, $u_0\in C^1(\R^d)$,
+$f\in C^1([0,T]\times\R^d)$. Istnieje dokładnie jedno
+rozwiązanie $u\in C^1([0,T]\times\R^d)$ zagadnienia
+\[
+ u_t+c\cdot\nabla_xu=f(t,x),\qquad u(0,x)=u_0(x).
+\]
+Jest ono dane wzorem
+\begin{equation}\label{eq:pde2-constant-formula}
+ u(t,x)=u_0(x-tc)+\int_0^t f(s,x-(t-s)c)\,\mathrm ds.
+\end{equation}
+\end{stwierdzenie}
+\begin{proof}
+Charakterystyka wychodząca z $\xi$ ma postać
+$X(t;\xi)=\xi+tc$. Dla każdego rozwiązania klasy $C^1$
+reguła \eqref{eq:pde2-chain} pokazuje, że
+$\frac{\mathrm d}{\mathrm dt}u(t,\xi+tc)=f(t,\xi+tc)$.
+Całkując od $0$ do $t$ i podstawiając $\xi=x-tc$,
+otrzymujemy \eqref{eq:pde2-constant-formula}; dowodzi to
+jednoznaczności. Odwrotnie, wzór definiuje funkcję klasy
+$C^1$. Po podstawieniu $x=\xi+tc$ jego prawa strona
+jest równa $u_0(\xi)+\int_0^t f(s,\xi+sc)\,\mathrm ds$,
+zatem reguła łańcuchowa daje żądane PDE i warunek początkowy.
+\end{proof}
+
+\begin{przyklad}[Tłumienie wzdłuż charakterystyk]
+Niech $\gamma>0$. Dla równania
+$u_t+c\cdot\nabla u+\gamma u=0$ z danymi $u_0$
+otrzymujemy $u(t,x)=e^{-\gamma t}u_0(x-tc)$.
+Transport przesuwa profil, podczas gdy czynnik wykładniczy
+tłumi jego amplitudę.
+\end{przyklad}
+
+\section{Zmienne pole prędkości: przepływ charakterystyk}
+\label{sec:pde2-linear}
+
+Rozważmy równanie
+\begin{equation}\label{eq:pde2-linear}
+ u_t+b(t,x)\cdot\nabla_xu+c(t,x)u=f(t,x)
+ \quad\text{na }(0,T)\times\R^d.
+\end{equation}
+Dla przejrzystości przyjmiemy dość mocne założenia
+zapewniające globalny przepływ; później będziemy je osłabiać.
+
+\begin{twierdzenie}[Metoda charakterystyk dla transportu liniowego]
+\label{thm:pde2-linear}
+Niech $b\colon[0,T]\times\R^d\to\R^d$ będzie klasy $C^1$
+i niech istnieje $M>0$ takie, że
+$\|D_xb(t,x)\|\leq M$ i $|b(t,x)|\leq M(1+|x|)$
+dla wszystkich $(t,x)$. Niech $c,f\in C^1([0,T]\times\R^d)$
+oraz $u_0\in C^1(\R^d)$. Wówczas istnieje dokładnie jedno
+rozwiązanie $u\in C^1([0,T]\times\R^d)$ zagadnienia
+\eqref{eq:pde2-linear} z $u(0,x)=u_0(x)$.
+
+Niech $X(t;\xi)$ będzie rozwiązaniem
+\begin{equation}\label{eq:pde2-flow-ode}
+ \dot X(t;\xi)=b(t,X(t;\xi)),\qquad X(0;\xi)=\xi.
+\end{equation}
+Dla każdego $t\in[0,T]$ odwzorowanie
+$X_t\colon\xi\mapsto X(t;\xi)$ jest dyfeomorfizmem klasy $C^1$
+przestrzeni $\R^d$ na siebie. Rozwiązanie jest określone przez
+\begin{equation}\label{eq:pde2-solution}
+ \begin{aligned}
+ u(t,X(t;\xi))={}&e^{-C(t;\xi)}u_0(\xi)\\
+ &+\int_0^t e^{-(C(t;\xi)-C(s;\xi))}
+ f(s,X(s;\xi))\,\mathrm ds,
+ \end{aligned}
+\end{equation}
+gdzie $C(t;\xi)=\int_0^t c(r,X(r;\xi))\,\mathrm dr$.
+\end{twierdzenie}
+\begin{proof}
+Pole $b$ jest lokalnie lipschitzowskie względem $x$,
+a dzięki warunkowi na $D_xb$ jest jednostajnie
+lipschitzowskie na całej przestrzeni. Wzrost co najwyżej
+liniowy i nierówność Gronwalla wykluczają ucieczkę
+rozwiązania \eqref{eq:pde2-flow-ode} do nieskończoności
+w skończonym czasie. Twierdzenie o zależności rozwiązań
+ODE od warunków początkowych daje $C^1$-gładkość $X$
+względem $(t,\xi)$.
+
+Dla ustalonego $t$ odwrotne odwzorowanie wyznacza
+rozwiązanie tego samego ODE rozwiązywane od chwili $t$
+do chwili $0$. Jednoznaczność ODE zapewnia, że jest to
+$X_t^{-1}$, a regularna zależność od warunku końcowego
+pokazuje, że odwrotność jest klasy $C^1$. Tak więc
+$X_t$ jest dyfeomorfizmem.
+
+Dla dowolnego rozwiązania $u$ postawmy
+$U(t;\xi)=u(t,X(t;\xi))$. Z \eqref{eq:pde2-chain}
+wynika $\dot U+c(t,X(t;\xi))U=f(t,X(t;\xi))$.
+Mnożąc przez czynnik całkujący $e^{C(t;\xi)}$,
+otrzymujemy \eqref{eq:pde2-solution}.
+
+Odwrotnie, prawa strona \eqref{eq:pde2-solution} wyznacza
+funkcję $U\in C^1$; dzięki dyfeomorfizmowi $X_t$
+definiuje ona $u(t,x)=U(t;X_t^{-1}(x))$ klasy $C^1$.
+Różniczkowanie po charakterystykach daje
+\eqref{eq:pde2-linear}. Każde inne rozwiązanie prowadzi
+do tej samej funkcji $U$, co kończy dowód jednoznaczności.
+\end{proof}
+
+\begin{przyklad}[Transport w polu dylatacji]
+Niech $b(x)=x$, $c=f=0$, $u_0\in C^1(\R^d)$.
+Wówczas $X(t;\xi)=e^t\xi$ i
+$u(t,x)=u_0(e^{-t}x)$. Profil rozszerza się
+wraz z przepływem, ale wartości wzdłuż charakterystyk
+nie zmieniają się.
+\end{przyklad}
+
+\begin{uwaga}[Odwracalność przepływu a odwracalność ewolucji]
+W twierdzeniu \ref{thm:pde2-linear} w skończonym czasie
+przepływ przestrzenny jest odwracalny. Nie oznacza to,
+że każdy operator ewolucyjny PDE jest odwracalny
+w dobrze postawionej klasie funkcji: dla równania ciepła
+występuje wygładzanie, a dla transportu quasiliniowego
+charakterystyki mogą przestać tworzyć układ współrzędnych.
+\end{uwaga}
+
+\section{Jak zmieniają się objętość i masa?}
+\label{sec:pde2-jacobian}
+
+Transport wartości skalarnej i transport gęstości to
+dwa różne zagadnienia. Dla tego samego pola $b$ porównajmy
+$u_t+b\cdot\nabla u=0$ oraz
+$\rho_t+\diver_x(\rho b)=0$. Drugie równanie nazywamy
+\emph{równaniem ciągłości}; w nim dodatkowo występuje
+czynnik $(\diver_x b)\rho$.
+
+\begin{stwierdzenie}[Wzór Jacobiego--Liouville'a]
+\label{prop:pde2-liouville}
+Niech $b$ spełnia założenia twierdzenia
+\ref{thm:pde2-linear}, a $X$ będzie przepływem
+\eqref{eq:pde2-flow-ode}. Dla $J(t;\xi)=\det D_\xi X(t;\xi)$
+zachodzi
+\begin{equation}\label{eq:pde2-jacobian}
+ \frac{\mathrm d}{\mathrm dt}J(t;\xi)
+ =\bigl(\diver_x b\bigr)(t,X(t;\xi))J(t;\xi),
+ \qquad J(0;\xi)=1.
+\end{equation}
+W szczególności
+$J(t;\xi)=\exp\!\bigl(\int_0^t
+(\diver_x b)(s,X(s;\xi))\,\mathrm ds\bigr)>0$.
+\end{stwierdzenie}
+\begin{proof}
+Różniczkując \eqref{eq:pde2-flow-ode} względem $\xi$,
+otrzymujemy dla $A(t)=D_\xi X(t;\xi)$
+$\dot A(t)=D_xb(t,X(t;\xi))A(t)$ i $A(0)=I$.
+Macierz $A(t)$ jest odwracalna na mocy twierdzenia
+\ref{thm:pde2-linear}. Zatem wzór na pochodną wyznacznika
+daje $\frac{\mathrm d}{\mathrm dt}\det A
+=\det A\,\tr(A^{-1}\dot A)$.
+Cykliczność śladu i $\dot A=D_xb\,A$ prowadzą do
+$\tr(A^{-1}\dot A)=\tr(D_xb)=\diver_xb$.
+Równanie skalarne \eqref{eq:pde2-jacobian} rozwiązujemy
+przez całkowanie.
+\end{proof}
+
+\begin{twierdzenie}[Transport gęstości i zachowanie masy]
+\label{thm:pde2-mass}
+Niech $b\in C^2([0,T]\times\R^d;\R^d)$ spełnia
+warunki wzrostu i lipschitzowskości z twierdzenia
+\ref{thm:pde2-linear}. Zakładamy ponadto, że wszystkie
+pochodne przestrzenne $b$ rzędu $1$ i $2$ są ograniczone.
+Dla dowolnej $\rho_0\in C_c^1(\R^d)$ istnieje dokładnie jedno
+rozwiązanie $\rho\in C^1([0,T]\times\R^d)$ równania
+\[
+ \rho_t+\diver_x(\rho b)=0,\qquad \rho(0,x)=\rho_0(x).
+\]
+Jest ono zadane zależnością
+\begin{equation}\label{eq:pde2-mass-flow}
+ \rho(t,X(t;\xi))J(t;\xi)=\rho_0(\xi).
+\end{equation}
+Ponadto $\int_{\R^d}\rho(t,x)\,\mathrm d\lambda_d(x)
+=\int_{\R^d}\rho_0(x)\,\mathrm d\lambda_d(x)$ dla $t\in[0,T]$.
+\end{twierdzenie}
+\begin{proof}
+Ponieważ $\diver_x(\rho b)=b\cdot\nabla\rho+
+(\diver_xb)\rho$, twierdzenie \ref{thm:pde2-linear}
+można zastosować z $c=\diver_xb$, $f=0$.
+Założenie $b\in C^2$ zapewnia, że $\diver_x b\in C^1$,
+więc wzór \eqref{eq:pde2-mass-flow} daje rozwiązanie
+klasy $C^1$. Można też bezpośrednio różniczkować
+iloczyn po trajektorii: z \eqref{eq:pde2-jacobian}
+wynika
+\[
+ \frac{\mathrm d}{\mathrm dt}
+ \bigl(\rho(t,X(t;\xi))J(t;\xi)\bigr)=0.
+\]
+Następnie stosujemy zmianę zmiennych $x=X(t;\xi)$.
+Dodatniość $J$ i \eqref{eq:pde2-mass-flow} dają
+\[
+ \int_{\R^d}\rho(t,x)\,\mathrm d\lambda_d(x)
+ =\int_{\R^d}\rho(t,X(t;\xi))J(t;\xi)
+ \,\mathrm d\lambda_d(\xi)
+ =\int_{\R^d}\rho_0(\xi)\,\mathrm d\lambda_d(\xi).
+\]
+Zwarty nośnik $\rho_0$ zapewnia, że całki są skończone.
+\end{proof}
+
+\begin{uwaga}[Warunki regularności]
+Wzór \eqref{eq:pde2-mass-flow} zachowuje sens również
+przy słabszych założeniach. W poprzednim dowodzie
+zastosowaliśmy dodatkową regularność $b$, aby pozostać
+w klasie rozwiązań klasycznych; teoria dystrybucyjna
+pozwoli te wymagania osłabić.
+\end{uwaga}
+
+\begin{stwierdzenie}[Kontrola jakobianu i norm przy transporcie]
+\label{prop:pde-v31-transport-lp}
+Niech $T>0$, $d\ge1$, a $b$ spełnia założenia
+twierdzenia~\ref{thm:pde2-linear} z $\|D_xb\|\le M$.
+Niech $X_t$ i $J(t;\xi)=\det D_\xi X_t(\xi)$ będą
+odpowiednio przepływem i jego jakobianem. Wówczas
+\[
+ e^{-dMt}\le J(t;\xi)\le e^{dMt}
+ \qquad(0\le t\le T,\ \xi\in\R^d).
+\]
+Jeśli $u_0\in C^1(\R^d)\cap L^p(\R^d)$ dla
+$1\le p<\infty$, a $u$ rozwiązuje
+$u_t+b\cdot\nabla u=0$, $u(0)=u_0$, to
+\begin{equation}\label{eq:pde-v31-transport-lp}
+ e^{-dMt/p}\|u_0\|_p\le\|u(t,\cdot)\|_p
+ \le e^{dMt/p}\|u_0\|_p.
+\end{equation}
+Dla ograniczonego $u_0\in C^1(\R^d)$ zachodzi ponadto
+$\|u(t,\cdot)\|_\infty=\|u_0\|_\infty$.
+Jeśli $\diver_xb=0$, to $J\equiv1$ i wszystkie wymienione
+normy $L^p$ są zachowane.
+\end{stwierdzenie}
+\begin{proof}
+Ponieważ każda wartość własna rzeczywistej macierzy
+$D_xb$ ma moduł co najwyżej $M$, mamy
+$|\tr D_xb|\le dM$ (można też użyć nierówności
+$|\tr A|\le d\|A\|$ bez odwoływania się do widma).
+Wzór~\eqref{eq:pde2-jacobian} i jego rozwiązanie dają
+pierwsze oszacowanie. Wzdłuż charakterystyk
+$u(t,X_t(\xi))=u_0(\xi)$. Ponieważ $X_t$ jest
+dyfeomorfizmem, wzór na zmianę zmiennych daje
+\[
+ \|u(t,\cdot)\|_p^p
+ =\int_{\R^d}|u_0(\xi)|^pJ(t;\xi)\,
+   \mathrm d\lambda_d(\xi).
+\]
+Podstawiamy ograniczenia na $J$ i wyciągamy pierwiastek
+stopnia $p$. Dla normy supremum korzystamy z tego,
+że $X_t$ jest bijekcją. W przypadku zerowej dywergencji
+równanie na $J$ ma rozwiązanie stałe równe $1$.
+\end{proof}
+
+\section{Niecharakterystyczne dane Cauchy'ego na hiperpowierzchni}
+\label{sec:pde2-noncharacteristic}
+
+Rozważmy równanie bez wyróżnionego czasu
+\begin{equation}\label{eq:pde2-static}
+ a(x)\cdot\nabla u(x)+c(x)u(x)=f(x),\qquad x\in\Omega,
+\end{equation}
+gdzie $\Omega\subset\R^n$ jest otwarta, $n\geq2$.
+Gdy dane zadano na hiperpowierzchni $\Sigma$, istotne
+jest, czy charakterystyki przecinają ją poprzecznie.
+
+\begin{definicja}[Niecharakterystyczność dla transportu]
+Niech $\Omega\subset\R^n$ będzie otwarta, $a\in C^1(\Omega;\R^n)$,
+a $\Sigma\subset\Omega$ hiperpowierzchnią klasy $C^2$.
+Mówimy, że $\Sigma$ jest niecharakterystyczna w punkcie
+$x_0\in\Sigma$ dla operatora $a\cdot\nabla$, jeżeli
+$a(x_0)\notin T_{x_0}\Sigma$. Jeśli
+$\Sigma=\{x:\phi(x)=0\}$ lokalnie, jest to równoważne
+warunkowi $a(x_0)\cdot\nabla\phi(x_0)\ne0$.
+\end{definicja}
+
+\begin{twierdzenie}[Lokalne zagadnienie Cauchy'ego]
+\label{thm:pde2-cauchy}
+Niech $\Omega\subset\R^n$ będzie otwarta,
+$a\in C^1(\Omega;\R^n)$, $c,f\in C^1(\Omega)$,
+$\Sigma\subset\Omega$
+hiperpowierzchnią klasy $C^2$, a $x_0\in\Sigma$.
+Niech $g\in C^1(\Sigma)$ w otoczeniu $x_0$.
+Jeśli $\Sigma$ jest niecharakterystyczna w $x_0$,
+to istnieje otoczenie $U\subset\Omega$ punktu $x_0$
+oraz dokładnie jedno rozwiązanie $u\in C^1(U)$ zagadnienia
+\eqref{eq:pde2-static} spełniające $u|_{U\cap\Sigma}=g$,
+rozumiane jako jednoznaczność zarodka rozwiązania
+w otoczeniu $x_0$.
+\end{twierdzenie}
+\begin{proof}
+Wybierzmy lokalną parametryzację
+$\gamma\colon V\to\Sigma$, gdzie $V\subset\R^{n-1}$
+jest otwarty, $\gamma(0)=x_0$, a wektory
+$\partial_{y_1}\gamma(0),\ldots,\partial_{y_{n-1}}\gamma(0)$
+są liniowo niezależne. Niech $\Phi_s(x)$ oznacza lokalny
+przepływ pola $a$, tj. $\partial_s\Phi_s(x)=a(\Phi_s(x))$
+i $\Phi_0(x)=x$. Zdefiniujmy
+$\Psi(s,y)=\Phi_s(\gamma(y))$.
+
+Macierz pochodnej $D\Psi(0,0)$ ma kolumny
+$a(x_0)$ oraz $\partial_{y_j}\gamma(0)$. Założenie
+niecharakterystyczności mówi dokładnie, że tworzą bazę
+$\R^n$. Z twierdzenia o funkcji odwrotnej istnieją
+otoczenia $W$ punktu $(0,0)$ i $U$ punktu $x_0$,
+dla których $\Psi\colon W\to U$ jest dyfeomorfizmem.
+Po ewentualnym zmniejszeniu otoczeń można zapewnić,
+że $\Psi(0,y)$ parametryzuje całe $U\cap\Sigma$.
+
+Niech $v(s,y)=u(\Psi(s,y))$. Równanie
+\eqref{eq:pde2-static} sprowadza się do ODE
+$\partial_sv+c(\Psi(s,y))v=f(\Psi(s,y))$
+z danymi $v(0,y)=g(\gamma(y))$. Dla
+$C(s,y)=\int_0^s c(\Psi(r,y))\,\mathrm dr$ rozwiązanie ma
+postać
+\[
+ v(s,y)=e^{-C(s,y)}g(\gamma(y))+
+ \int_0^s e^{-(C(s,y)-C(r,y))}
+ f(\Psi(r,y))\,\mathrm dr.
+\]
+Różniczkowalność przepływu i danych pokazuje, że $v$
+jest klasy $C^1$. Złożenie z $\Psi^{-1}$ definiuje
+$u\in C^1(U)$, które spełnia równanie i dane. Każde
+inne rozwiązanie ma w tych samych współrzędnych
+charakterystycznych identyczny problem ODE, a więc
+jest równe $u$ na dostatecznie małym otoczeniu $x_0$.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=.92]
+ \draw[->] (-3.3,-1.35)--(3.8,-1.35) node[right] {$x_1$};
+ \draw[->] (-3.1,-1.55)--(-3.1,2.5) node[above] {$x_2$};
+ \draw[very thick] (-2.55,-.65)..controls (-.8,-.8) and (1.3,-.18)..(2.9,-.45);
+ \node[below] at (2.6,-.6) {$\Sigma$};
+ \foreach \x/\yy in {-1.75/-.64,-.65/-.52,.55/-.37,1.65/-.34} {
+   \draw[blue!65!black,thick,->] (\x,\yy)--({\x+.48},{\yy+1.85});
+   \fill (\x,\yy) circle (1.5pt);
+ }
+ \fill[red!70!black] (.55,-.37) circle (2.4pt);
+ \node[below] at (.55,-.76) {$x_0$};
+ \node[above] at (1.7,1.4) {charakterystyki};
+\end{tikzpicture}
+\par\smallskip\small
+Dane są zadawane na $\Sigma$; przechodzące przez nią
+poprzecznie charakterystyki tworzą lokalny układ współrzędnych.
+\end{center}
+
+\begin{kontrprzyklad}[Dane na powierzchni charakterystycznej]
+\label{ex:pde2-char-data}
+Rozważmy $u_x=0$ na $\R^2$, gdzie $u=u(x,y)$,
+oraz dane $u(x,0)=g(x)$ na prostej $\Sigma=\{y=0\}$.
+Każde rozwiązanie ma postać $u(x,y)=h(y)$, stąd
+istnienie wymaga, by $g$ była stała. Gdy $g\equiv c$,
+rozwiązań jest nieskończenie wiele: można wybrać
+dowolne $h\in C^1(\R)$ z $h(0)=c$. Prosta $y=0$
+jest charakterystyczna, bo pole $(1,0)$ leży
+w jej przestrzeni stycznej.
+\end{kontrprzyklad}
+
+\section{Quasiliniowe równania pierwszego rzędu}
+\label{sec:pde2-quasilinear}
+
+Teraz prędkość charakterystyki może zależeć od niewiadomej:
+\begin{equation}\label{eq:pde2-quasilinear}
+ u_t+a(t,x,u)\cdot\nabla_xu=b(t,x,u),
+ \qquad u(0,x)=u_0(x).
+\end{equation}
+W odróżnieniu od przypadku liniowego nie znamy przepływu
+z góry: równocześnie musimy wyznaczać jego położenie
+$X$ oraz wartość $U$ rozwiązania na charakterystyce.
+
+\begin{twierdzenie}[Lokalna konstrukcja i jednoznaczność]
+\label{thm:pde2-quasilinear}
+Niech $a\colon(-T,T)\times\R^d\times\R\to\R^d$
+i $b\colon(-T,T)\times\R^d\times\R\to\R$
+będą klasy $C^2$, a $u_0\in C^2(\R^d)$.
+Dla dowolnego $\xi_0\in\R^d$ istnieją otoczenie
+$V\subset\R^d$ punktu $\xi_0$, liczba $\delta>0$
+i otwarty zbiór $Q\subset(-\delta,\delta)\times\R^d$
+zawierający $(0,\xi_0)$, na którym zagadnienie
+\eqref{eq:pde2-quasilinear} ma rozwiązanie $u\in C^1(Q)$
+z danymi $u(0,x)=u_0(x)$ dla $(0,x)\in Q$.
+Rozwiązanie jest jednoznaczne jako zarodek klasy $C^1$
+w otoczeniu $(0,\xi_0)$.
+
+Dokładniej, niech $(X,U)$ rozwiązują układ ODE
+\begin{equation}\label{eq:pde2-quasi-chars}
+ \begin{aligned}
+ \dot X(t;\xi)&=a(t,X(t;\xi),U(t;\xi)),& X(0;\xi)&=\xi,\\
+ \dot U(t;\xi)&=b(t,X(t;\xi),U(t;\xi)),& U(0;\xi)&=u_0(\xi).
+ \end{aligned}
+\end{equation}
+W dostatecznie małym otoczeniu $(0,\xi_0)$
+odwzorowanie $(t,\xi)\mapsto(t,X(t;\xi))$
+jest lokalnym dyfeomorfizmem; rozwiązanie spełnia
+$u(t,X(t;\xi))=U(t;\xi)$.
+\end{twierdzenie}
+\begin{proof}
+Ponieważ prawa strona układu \eqref{eq:pde2-quasi-chars}
+jest klasy $C^2$, lokalne twierdzenie o istnieniu
+ODE i gładkiej zależności od danych daje rozwiązania
+$(X,U)$ klasy co najmniej $C^1$ względem $(t,\xi)$.
+W chwili $t=0$ mamy $D_\xi X(0;\xi)=I$. Zatem
+jakobian mapy $(t,\xi)\mapsto(t,X(t;\xi))$ w
+$(0,\xi_0)$ jest niezerowy. Twierdzenie o funkcji odwrotnej
+pozwala w odpowiednich otoczeniach odwrócić tę mapę.
+
+Niech $\xi=\Xi(t,x)$ oznacza jej lokalną odwrotność
+współrzędnych przestrzennych. Kładziemy
+$u(t,x)=U(t;\Xi(t,x))$. Różniczkując tożsamość
+$u(t,X(t;\xi))=U(t;\xi)$ po $t$ przy ustalonym $\xi$,
+otrzymujemy
+\[
+ u_t(t,X)+\nabla_xu(t,X)\cdot a(t,X,U)
+ =b(t,X,U).
+\]
+Ponieważ $U=u(t,X)$, jest to \eqref{eq:pde2-quasilinear}.
+W chwili $t=0$ mamy $X(0;\xi)=\xi$ i
+$U(0;\xi)=u_0(\xi)$, więc warunek początkowy zachodzi.
+
+Jeśli $v\in C^1$ jest innym lokalnym rozwiązaniem z tymi
+danymi, rozwiązujemy ODE dla $\dot Y=a(t,Y,v(t,Y))$
+z $Y(0)=\xi$. Funkcja $V(t)=v(t,Y(t))$ spełnia
+$\dot V=b(t,Y,V)$, więc para $(Y,V)$ rozwiązuje układ
+\eqref{eq:pde2-quasi-chars}. Jednoznaczność ODE wymusza
+$(Y,V)=(X,U)$ na wspólnym małym przedziale; stąd $v=u$
+w dostatecznie małym otoczeniu $(0,\xi_0)$.
+\end{proof}
+
+\begin{uwaga}[Co może uniemożliwić przedłużenie?]
+Lokalna konstrukcja wymaga zarówno istnienia rozwiązań
+układu ODE, jak i odwracalności mapy $\xi\mapsto X(t;\xi)$.
+W zagadnieniach quasiliniowych nawet przy globalnym
+istnieniu charakterystyk może wystąpić
+$\det D_\xi X=0$: wtedy klasyczne współrzędne
+charakterystyczne zawodzą. W modelach skalarnych jest
+to typowy mechanizm utraty regularności rozwiązania.
+\end{uwaga}
+
+\section{Fale proste i kryterium wybuchu pochodnej}
+\label{sec:pde2-blowup}
+
+Rozważmy w jednym wymiarze równanie autonomiczne
+\begin{equation}\label{eq:pde2-simplewave}
+ u_t+a(u)u_x=0,\qquad u(0,x)=u_0(x),
+\end{equation}
+gdzie $a\in C^2(\R)$, $u_0\in C^2(\R)$.
+Wzdłuż charakterystyki wartość $u$ jest stała, więc
+\begin{equation}\label{eq:pde2-simplewave-map}
+ X(t;\xi)=\xi+t\,a(u_0(\xi)),\qquad
+ U(t;\xi)=u_0(\xi).
+\end{equation}
+Różniczkując względem $\xi$, dostajemy
+$X_\xi(t;\xi)=1+t\,a'(u_0(\xi))u_0'(\xi)$.
+
+\begin{twierdzenie}[Pierwsza osobliwość gradientu]
+\label{thm:pde2-breaking}
+Niech $a,u_0\in C^2(\R)$ i załóżmy, że
+$a\circ u_0$ jest ograniczona, a funkcja
+$q(\xi)=a'(u_0(\xi))u_0'(\xi)$ jest ograniczona z dołu.
+Jeżeli $m=\inf_{\xi\in\R}q(\xi)<0$, określmy
+$T_*=-1/m$. Wtedy dla każdego $0\leq t<T_*$
+odwzorowanie $X_t(\xi)=\xi+t a(u_0(\xi))$
+jest ściśle rosnącym dyfeomorfizmem $\R\to\R$ i
+\eqref{eq:pde2-simplewave-map} definiuje rozwiązanie
+klasy $C^1$ na $[0,T_*)\times\R$. Jego pochodna wynosi
+\begin{equation}\label{eq:pde2-gradient-formula}
+ u_x(t,X(t;\xi))=
+ \frac{u_0'(\xi)}{1+t a'(u_0(\xi))u_0'(\xi)}.
+\end{equation}
+Jeśli ponadto minimum $m$ jest osiągane w punkcie
+$\xi_*$, to $|u_x(t,X(t;\xi_*))|\to\infty$
+gdy $t\uparrow T_*$. Nie istnieje zatem przedłużenie
+rozwiązania jako funkcji $C^1$ na otoczenie
+$(T_*,X(T_*;\xi_*))$.
+\end{twierdzenie}
+\begin{proof}
+Dla $t<T_*$ mamy
+$X_\xi(t;\xi)=1+tq(\xi)\geq1+tm>0$.
+Odwzorowanie $X_t$ jest więc ściśle rosnące.
+Z ograniczoności $a\circ u_0$ wynika
+$X_t(\xi)-\xi=O(1)$ dla $\xi\to\pm\infty$,
+zatem $X_t$ jest na $\R$. Twierdzenie o funkcji
+odwrotnej daje odwrotność klasy $C^1$.
+Z równości $u(t,X(t;\xi))=u_0(\xi)$ otrzymujemy
+$u_x(t,X)X_\xi=u_0'(\xi)$, czyli
+\eqref{eq:pde2-gradient-formula}.
+
+Jeżeli $q(\xi_*)=m<0$, to
+$a'(u_0(\xi_*))u_0'(\xi_*)\ne0$; w szczególności
+$u_0'(\xi_*)\ne0$. Mianownik
+\eqref{eq:pde2-gradient-formula} przy $\xi_*$
+dąży do zera od strony dodatniej, a licznik jest niezerowy.
+Zatem moduł pochodnej dąży do nieskończoności,
+co wyklucza przedłużenie klasy $C^1$.
+\end{proof}
+
+\begin{przyklad}[Burgers: dokładny czas powstania osobliwości]
+\label{ex:pde2-burgers}
+Dla równania $u_t+u u_x=0$ mamy $a(u)=u$.
+Wybierzmy $u_0(x)=-\tanh x$. Wówczas
+$q(x)=u_0'(x)=-1/\cosh^2x$ osiąga minimum $-1$
+w $x=0$, zaś $a\circ u_0$ jest ograniczona.
+Twierdzenie \ref{thm:pde2-breaking} daje $T_*=1$,
+$X(t;\xi)=\xi-t\tanh\xi$ oraz
+$u_x(t,0)=-1/(1-t)$ dla $t<1$.
+Charakterystyki istnieją jako krzywe gładkie także
+później, ale nie mogą już wyznaczać globalnego
+klasycznego rozwiązania w tym samym schemacie.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=.86]
+ \draw[->] (-3.4,0)--(3.6,0) node[right] {$x$};
+ \draw[->] (-3.1,-.12)--(-3.1,3.75) node[above] {$t$};
+ \foreach \xi in {-2.4,-1.6,-.8,-.4,.4,.8,1.6,2.4} {
+  \pgfmathsetmacro{\dd}{-(exp(2*\xi)-1)/(exp(2*\xi)+1)}
+  \draw[blue!65!black,thick] (\xi,0)--({\xi+0.95*\dd},2.95);
+ }
+ \draw[densely dashed] (-3.1,3.1)--(3.35,3.1);
+ \node[anchor=west] at (3.55,3.08) {$t\approx T_*$};
+ \node[below] at (0,0) {$0$};
+ \node[align=left,anchor=west] at (3.6,1.45) {zbliżanie się\\charakterystyk};
+\end{tikzpicture}
+\par\smallskip\small
+Dla malejących danych Burgersa charakterystyki
+zbliżają się do siebie. Rysunek ma charakter schematyczny;
+czas i nachylenia przeskalowano niezależnie.
+\end{center}
+
+\begin{uwaga}[Eksperyment obliczeniowy]
+W rozdziale~\ref{chap:pde-code} zamieszczono kod Python,
+który dla przykładu Burgersa z danymi $u_0=-\tanh x$
+rysuje charakterystyki i profile rozwiązań dla
+$t\in\{0,0.5,0.9,0.99\}$. Program korzysta z odwracania
+monotonicznej mapy $\xi\mapsto X(t;\xi)$ przez
+interpolację. Porównanie z dokładnym wzorem
+\eqref{eq:pde2-gradient-formula} pozwala sprawdzić,
+że $u_x(t,0)=-1/(1-t)$, podczas gdy $|u(t,x)|\leq1$.
+Nie jest to algorytm kontynuacji rozwiązania przez szok:
+dla $t\geq1$ mapa etykiet nie jest już globalnie
+odwracalna w klasie $C^1$.
+\end{uwaga}
+
+\begin{uwaga}[Znaczenie czasu $T_*$]
+Twierdzenie \ref{thm:pde2-breaking} dotyczy dokładnie
+zadanego równania $u_t+a(u)u_x=0$, bez źródła,
+i wskazanej klasy danych. Nie jest ogólnym twierdzeniem
+o czasie istnienia dowolnych równań quasiliniowych.
+Gdy $q(\xi)\geq0$ dla wszystkich $\xi$, charakterystyki
+nie przecinają się dla $t\geq0$, o ile
+$a\circ u_0$ pozostaje ograniczona; w takim przypadku
+wzór daje globalne rozwiązanie klasy $C^1$.
+\end{uwaga}
+
+\section{Od przecinających się charakterystyk do fal uderzeniowych}
+\label{sec:pde2-shocks}
+
+Równanie $u_t+a(u)u_x=0$ można, gdy $a=f'$,
+zapisać w postaci prawa zachowania
+\begin{equation}\label{eq:pde2-conservation}
+ u_t+\partial_x f(u)=0.
+\end{equation}
+Po pojawieniu się nieciągłości wzór z pochodnymi
+klasycznymi przestaje mieć sens. Potrzebne jest
+sformułowanie całkowe, które później zinterpretujemy
+w języku dystrybucji.
+
+\begin{definicja}[Rozwiązanie słabe prawa zachowania]
+\label{def:pde2-weak}
+Niech $f\in C^1(\R)$, $u_0\in L^1_{\mathrm{loc}}(\R)$,
+a $u\in L^1_{\mathrm{loc}}([0,T)\times\R)$, przy czym
+$f(u)$ jest lokalnie całkowalna. Funkcję $u$ nazywamy
+\emph{rozwiązaniem słabym} zagadnienia
+\eqref{eq:pde2-conservation} z danymi $u_0$, jeżeli
+dla każdej $\varphi\in C_c^\infty([0,T)\times\R)$
+zachodzi
+\begin{equation}\label{eq:pde2-weak-form}
+ \int_0^T\!\int_\R
+ \bigl(u(t,x)\varphi_t(t,x)+f(u(t,x))\varphi_x(t,x)\bigr)
+ \,\mathrm d\lambda_1(x)\,\mathrm dt
+ +\int_\R u_0(x)\varphi(0,x)\,\mathrm d\lambda_1(x)=0.
+\end{equation}
+Przestrzeń $C_c^\infty([0,T)\times\R)$ oznacza
+restrykcje funkcji gładkich w pewnym otoczeniu
+$[0,T)\times\R$, których nośniki są zwarte i nie dochodzą
+do czasu $T$.
+\end{definicja}
+
+\begin{stwierdzenie}[Warunek Rankine'a--Hugoniota]
+\label{prop:pde2-rh}
+Niech $f\in C^1(\R)$ i $s\in C^1((0,T))$.
+Załóżmy, że $u$ jest klasy $C^1$ po obu stronach
+krzywej $x=s(t)$, z jednostronnymi przedłużeniami
+klasy $C^1$ do krzywej, i posiada ślady
+$u_L(t)$ i $u_R(t)$ na tej krzywej oraz spełnia
+\eqref{eq:pde2-conservation} klasycznie poza nią.
+Wówczas $u$ spełnia równanie słabo w otoczeniu
+krzywej wtedy i tylko wtedy, gdy
+\begin{equation}\label{eq:pde2-rh}
+ s'(t)\bigl(u_R(t)-u_L(t)\bigr)
+ =f(u_R(t))-f(u_L(t))
+\end{equation}
+dla każdego $t\in(0,T)$, przy ciągłości śladów.
+\end{stwierdzenie}
+\begin{proof}
+Wybierzmy funkcję testową $\varphi$ o nośniku
+w wąskim otoczeniu rozważanego fragmentu krzywej.
+Rozdzielmy całkę w słabym sformułowaniu na obszary
+$x<s(t)$ oraz $x>s(t)$. Całkowanie przez części
+w obu obszarach, z wykorzystaniem równania klasycznego,
+usuwa wyrazy objętościowe. Pozostają tylko wyrazy
+na krzywej. Ich suma wynosi
+\[
+ \int_0^T\bigl(s'(t)[u](t)-[f(u)](t)\bigr)
+ \varphi(t,s(t))\,\mathrm dt,
+\]
+gdzie $[u]=u_R-u_L$ oraz $[f(u)]=f(u_R)-f(u_L)$.
+Ślad funkcji testowej na krzywej można zadawać dowolnie
+bez zakładania gładkości samej krzywej ponad klasę $C^1$.
+Niech $\eta\in C_c^\infty((0,T))$ i niech
+$J\Subset(0,T)$ zawiera jej nośnik. Zwartość $s(J)$
+pozwala wybrać $\chi\in C_c^\infty(\R)$, równą $1$
+w otoczeniu $s(J)$. Wtedy
+$\varphi(t,x)=\eta(t)\chi(x)$ jest klasy $C_c^\infty$
+i spełnia $\varphi(t,s(t))=\eta(t)$ dla $t\in J$.
+Zatem dla ciągłej funkcji
+$b(t)=s'(t)[u](t)-[f(u)](t)$ zachodzi
+$\int_0^T b(t)\eta(t)\,\mathrm dt=0$ dla każdego takiego $\eta$.
+Gdyby $b(t_0)\ne0$, ciągłość dawałaby przedział, na którym
+$b$ ma stały, niezerowy znak; test nieujemny o nośniku w tym
+przedziale prowadziłby do sprzeczności. Stąd $b=0$
+w każdym punkcie $(0,T)$.
+Warunek rozstrzyga wyłącznie poprawność konserwatywną;
+do jednoznacznego wyboru skoku potrzebna jest jeszcze
+nierówność entropijna.
+\end{proof}
+
+\begin{przyklad}[Skok Burgersa]
+Dla $f(u)=u^2/2$ i stałych stanów po obu stronach
+fali $u_L\ne u_R$ warunek \eqref{eq:pde2-rh} daje
+$\sigma=s'=(u_L+u_R)/2$.
+Przy $u_L>u_R$ zachodzi $u_L>\sigma>u_R$:
+charakterystyki z obu stron wpadają w falę uderzeniową.
+Jeżeli $u_L<u_R$, taka nieciągłość spełnia wprawdzie
+warunek Rankine'a--Hugoniota, ale nie jest dopuszczalnym
+rozwiązaniem entropijnym.
+\end{przyklad}
+
+\begin{przyklad}[Fala rozrzedzenia]
+\label{ex:pde2-rarefaction}
+Dla równania Burgersa z danymi Riemanna
+$u_0(x)=u_L$ dla $x<0$ oraz $u_0(x)=u_R$ dla $x>0$,
+przy $u_L<u_R$, funkcja
+\[
+ u(t,x)=
+ \begin{cases}
+ u_L,&x\leq u_Lt,\\
+ x/t,&u_Lt<x<u_Rt,\\
+ u_R,&x\geq u_Rt
+ \end{cases}
+ \qquad(t>0)
+\]
+jest ciągła na każdym przekroju $t>0$ i spełnia
+równanie Burgersa klasycznie w każdym z trzech
+otwartych obszarów. Bezpośrednio sprawdzamy, że
+w środkowej części $u_t=-x/t^2$, $u_x=1/t$,
+zatem $u_t+uu_x=0$. Ciągłość na liniach
+$x=u_Lt$ i $x=u_Rt$ sprawia, że nie występują tam
+wkłady skokowe; dla testów zwartych w czasoprzestrzeni
+całkowanie przez części potwierdza
+\eqref{eq:pde2-weak-form}. W miarę $t\downarrow0$
+rozwiązanie przyjmuje dane $u_0$ w $L^1_{\mathrm{loc}}$.
+To rozwiązanie jest entropijne; precyzyjną definicję
+warunków entropijnych podamy w rozdziale o prawach zachowania.
+\end{przyklad}
+
+\begin{uwaga}[Dlaczego samo rozwiązanie słabe nie wystarcza?]
+Dla danych z przykładu \ref{ex:pde2-rarefaction}
+można też skonstruować skok poruszający się z prędkością
+$(u_L+u_R)/2$. Spełnia on ten sam całkowy warunek
+\eqref{eq:pde2-weak-form}, lecz narusza warunek entropijny.
+Dla tego samego zagadnienia mamy więc co najmniej
+dwa różne rozwiązania słabe. Selekcja rozwiązania
+fizycznego wymaga dodatkowej informacji.
+\end{uwaga}
+
+\section{Równania w pełni nieliniowe i układ Charpita}
+\label{sec:pde2-charpit}
+
+Dla ogólnego równania pierwszego rzędu
+\begin{equation}\label{eq:pde2-general-F}
+ F(x,u(x),\nabla u(x))=0,
+\end{equation}
+gdzie $x\in\Omega\subset\R^n$,
+$F\colon\Omega\times\R\times\R^n\to\R$,
+rozpatrujemy dodatkowe zmienne $p\in\R^n$
+reprezentujące gradient. Pojawia się
+\emph{układ charakterystyczny Charpita}:
+\begin{equation}\label{eq:pde2-charpit-system}
+ \dot X=F_p(X,U,P),\qquad
+ \dot U=P\cdot F_p(X,U,P),\qquad
+ \dot P=-F_x(X,U,P)-F_u(X,U,P)P.
+\end{equation}
+Tutaj $F_x,F_p$ są gradientami po odpowiednich
+zmiennych, a $F_u$ jest pochodną skalarną.
+
+\begin{lemat}[Zachowanie równania i warunku styczności]
+\label{lem:pde2-contact}
+Niech $F\in C^2$ i niech $(X,U,P)$ będzie rozwiązaniem
+\eqref{eq:pde2-charpit-system} na przedziale $I$.
+Wtedy $s\mapsto F(X(s),U(s),P(s))$ jest stała.
+Jeśli rozwiązania zależą klasy $C^1$ od parametru
+$y\in V\subset\R^{n-1}$ i $F(X,U,P)=0$, to
+\begin{equation}\label{eq:pde2-contact-ode}
+ \frac{\mathrm d}{\mathrm ds}
+ \bigl(U_{y_j}-P\cdot X_{y_j}\bigr)
+ =-F_u(X,U,P)\bigl(U_{y_j}-P\cdot X_{y_j}\bigr)
+\end{equation}
+dla każdego $j=1,\ldots,n-1$.
+\end{lemat}
+\begin{proof}
+Reguła łańcuchowa daje
+\[
+ \frac{\mathrm d}{\mathrm ds}F(X,U,P)
+ =F_x\cdot F_p+F_u(P\cdot F_p)
+ +F_p\cdot(-F_x-F_uP)=0.
+\]
+Różniczkując $R_j=U_{y_j}-P\cdot X_{y_j}$ po $s$,
+wykorzystując \eqref{eq:pde2-charpit-system}, otrzymujemy
+\[
+ \dot R_j=P_{y_j}\cdot F_p+(F_x+F_uP)\cdot X_{y_j}.
+\]
+Ponieważ $F(X,U,P)=0$ dla każdego $(s,y)$,
+mamy także
+$F_x\cdot X_{y_j}+F_u U_{y_j}+F_p\cdot P_{y_j}=0$.
+Po podstawieniu do wzoru na $\dot R_j$ dostajemy
+$\dot R_j=-F_u(U_{y_j}-P\cdot X_{y_j})$, czyli
+\eqref{eq:pde2-contact-ode}.
+\end{proof}
+
+\begin{twierdzenie}[Lokalna konstrukcja Charpita]
+\label{thm:pde2-charpit}
+Niech $n\geq2$, $\Omega\subset\R^n$ będzie otwarta,
+$F\in C^2(\Omega\times\R\times\R^n)$,
+$V\subset\R^{n-1}$ otwarty oraz
+$\gamma\in C^2(V;\Omega)$ regularną parametryzacją
+hiperpowierzchni. Niech $g\in C^2(V)$ i
+$p_0\in C^1(V;\R^n)$ spełniają dla wszystkich $y\in V$
+\begin{equation}\label{eq:pde2-charpit-initial}
+ F(\gamma(y),g(y),p_0(y))=0,\qquad
+ p_0(y)\cdot\partial_{y_j}\gamma(y)=\partial_{y_j}g(y)
+ \quad(j=1,\ldots,n-1).
+\end{equation}
+Jeżeli w $y_0\in V$ wektor
+$F_p(\gamma(y_0),g(y_0),p_0(y_0))$
+nie należy do $T_{\gamma(y_0)}\Sigma$,
+gdzie $\Sigma=\gamma(V)$ lokalnie, to istnieje
+otoczenie $U$ punktu $\gamma(y_0)$ i rozwiązanie
+$u\in C^2(U)$ równania \eqref{eq:pde2-general-F}
+przyjmujące dane $u(\gamma(y))=g(y)$ w pobliżu $y_0$.
+Jego gradient na powierzchni danych jest równy $p_0$.
+W klasie rozwiązań $C^2$, które realizują te same
+dane $g,p_0$, konstrukcja jest lokalnie jednoznaczna.
+\end{twierdzenie}
+\begin{proof}
+Rozwiążmy układ \eqref{eq:pde2-charpit-system}
+z danymi $(X,U,P)(0,y)=(\gamma(y),g(y),p_0(y))$.
+Zależność rozwiązań ODE od parametrów daje funkcje
+klasy $C^1$ względem $(s,y)$ w pobliżu $(0,y_0)$.
+Lemat \ref{lem:pde2-contact} i pierwszy warunek
+\eqref{eq:pde2-charpit-initial} pokazują, że
+$F(X,U,P)=0$; drugi warunek i równanie
+\eqref{eq:pde2-contact-ode} dają
+$U_{y_j}=P\cdot X_{y_j}$ przez jednoznaczność
+skalarnego równania liniowego. Ponadto z samego
+układu wynika $U_s=P\cdot X_s$.
+
+W punkcie $(0,y_0)$ kolumny macierzy $D_{(s,y)}X$
+są równe $F_p$ i $\partial_{y_j}\gamma$;
+warunek poprzeczności zapewnia, że macierz ta jest
+odwracalna. Z twierdzenia o funkcji odwrotnej $X$
+stanowi lokalny układ współrzędnych w $\Omega$.
+Definiujemy $u(X(s,y))=U(s,y)$. Wspomniane wcześniej
+równości są równoważne tożsamości
+$\mathrm dU=P\cdot\mathrm dX$, zatem
+$\nabla u(X(s,y))=P(s,y)$. Ponieważ $P$ i lokalna
+odwrotność $X^{-1}$ są klasy $C^1$, gradient $\nabla u$
+jest klasy $C^1$ na $U$, a więc $u\in C^2(U)$.
+Ponieważ $F(X,U,P)=0$, otrzymujemy równanie
+\eqref{eq:pde2-general-F}.
+
+Jeśli $u\in C^2$ jest innym rozwiązaniem z tym samym
+gradientem początkowym, to wzdłuż odpowiednich
+charakterystyk jego wartości i pochodne spełniają
+\eqref{eq:pde2-charpit-system}: wystarczy zróżniczkować
+$F(x,u,\nabla u)=0$ i skorzystać z symetrii hesjanu.
+Jednoznaczność ODE implikuje zgodność obu rozwiązań
+na wspólnym otoczeniu punktu początkowego.
+\end{proof}
+
+\begin{przyklad}[Eikonal i wybór gałęzi]
+Niech $F(x,u,p)=|p|^2-1$ w $\R^2$.
+Na prostej $\Sigma=\{(x,0):x\in\R\}$ zadamy
+$u(x,0)=0$. Zgodność gradientu stycznego wymusza
+$p_x=0$, a równanie wymusza $p_y=\pm1$.
+Są zatem dwie dopuszczalne gałęzie danych gradientu,
+które prowadzą do rozwiązań $u(x,y)=y$ i $u(x,y)=-y$.
+Oba są niecharakterystyczne dla odpowiedniego wektora
+$F_p=2p$. Samo zadanie wartości na prostej nie określa
+więc jednoznacznie rozwiązania w pełni nieliniowego.
+\end{przyklad}
+
+\section{Równanie Hamiltona--Jacobiego i charakterystyki Hamiltona}
+\label{sec:pde2-hj}
+
+Ważną szczególną postacią równania pierwszego rzędu jest
+\begin{equation}\label{eq:pde2-hj}
+ u_t+H(x,\nabla_xu)=0,
+ \qquad u(0,x)=u_0(x).
+\end{equation}
+W tej sekcji $H\in C^2(\R^d\times\R^d)$ nie zależy
+jawnie od czasu ani od wartości $u$.
+
+\begin{stwierdzenie}[Metoda charakterystyk Hamiltona]
+\label{prop:pde2-hamilton}
+Niech $u_0\in C^2(\R^d)$, $H\in C^2(\R^d\times\R^d)$
+i niech $\xi_0\in\R^d$. Rozwiążmy lokalnie układ
+\begin{equation}\label{eq:pde2-hamilton-odes}
+ \dot X=H_p(X,P),\qquad
+ \dot P=-H_x(X,P),\qquad
+ \dot U=P\cdot H_p(X,P)-H(X,P),
+\end{equation}
+z warunkami $X(0;\xi)=\xi$,
+$P(0;\xi)=\nabla u_0(\xi)$ i $U(0;\xi)=u_0(\xi)$.
+Dla dostatecznie małych $|t|$ i $\xi$ bliskich $\xi_0$
+mapa $\xi\mapsto X(t;\xi)$ jest lokalnie odwracalna.
+W tych współrzędnych
+$u(t,X(t;\xi))=U(t;\xi)$ definiuje rozwiązanie
+klasy $C^1$ równania \eqref{eq:pde2-hj}, a ponadto
+$\nabla_xu(t,X(t;\xi))=P(t;\xi)$.
+\end{stwierdzenie}
+\begin{proof}
+Istnienie ODE i lokalna odwracalność wynikają jak
+w twierdzeniu \ref{thm:pde2-quasilinear}, ponieważ
+$D_\xi X(0;\xi)=I$. Ustalmy współrzędną $\xi_j$
+i oznaczmy $R_j=U_{\xi_j}-P\cdot X_{\xi_j}$.
+Korzystając z \eqref{eq:pde2-hamilton-odes} oraz
+reguły łańcuchowej, obliczamy
+\begin{align*}
+ \dot R_j&=\partial_{\xi_j}(P\cdot H_p-H)
+ -\dot P\cdot X_{\xi_j}-P\cdot\partial_{\xi_j}H_p\\
+ &=P_{\xi_j}\cdot H_p-H_x\cdot X_{\xi_j}
+ -H_p\cdot P_{\xi_j}+H_x\cdot X_{\xi_j}=0.
+\end{align*}
+Początkowo
+$R_j(0,\xi)=\partial_{\xi_j}u_0-\nabla u_0\cdot e_j=0$,
+zatem $R_j=0$. Wynika stąd
+$\nabla_xu(t,X(t;\xi))=P(t;\xi)$. Z kolei pochodna
+$u(t,X(t;\xi))=U(t;\xi)$ po $t$ daje
+$u_t+\nabla_xu\cdot H_p=P\cdot H_p-H$, a więc
+$u_t+H=0$, jak należało wykazać.
+\end{proof}
+
+\begin{przyklad}[Hamiltonian kinetyczny i powstawanie kaustyki]
+\label{ex:pde2-hj-blowup}
+Niech $d=1$ i $H(p)=p^2/2$. Wtedy
+$\dot P=0$, $\dot X=P$ oraz $\dot U=P^2/2$.
+W konsekwencji
+\[
+ X(t;\xi)=\xi+t u_0'(\xi),\qquad
+ P(t;\xi)=u_0'(\xi),\qquad
+ U(t;\xi)=u_0(\xi)+\frac t2|u_0'(\xi)|^2.
+\]
+Dla $u_0(x)=-x^2/2$ otrzymujemy
+$X(t;\xi)=(1-t)\xi$. Jeśli $0\leq t<1$, to
+\[
+ u(t,x)=-\frac{x^2}{2(1-t)},\qquad
+ u_x(t,x)=-\frac{x}{1-t}.
+\]
+W chwili $t=1$ mapa $\xi\mapsto X(t;\xi)$ traci
+odwracalność, a dla ustalonego $x\ne0$ gradient
+rozwiązania staje się nieograniczony, gdy $t\uparrow1$.
+Zjawisko utraty odwracalności rzutu
+$(X,P)\mapsto X$ nazywa się w tym kontekście
+powstawaniem \emph{kaustyki}. Rozwiązania lepkościowe
+umożliwią później kontynuację odpowiednich zadań
+Hamiltona--Jacobiego poza pierwszą kaustyką.
+\end{przyklad}
+
+\section{Podsumowanie: kiedy metoda charakterystyk działa?}
+\label{sec:pde2-summary}
+
+Metoda charakterystyk wykorzystuje zależność
+\eqref{eq:pde2-chain}, ale jej wynik zależy od struktury
+równania:
+\begin{enumerate}
+\item Dla transportu liniowego z wystarczająco regularnym
+polem prędkości charakterystyki tworzą przepływ
+dyfeomorfizmów i zapewniają globalne rozwiązanie klasyczne
+na skończonym przedziale czasu.
+\item Dla równań quasiliniowych lokalne rozwiązanie istnieje,
+dopóki układ charakterystyczny daje odwracalną mapę
+początkowych etykiet $\xi$ na położenia $x$.
+\item Dla praw zachowania po utracie gładkości naturalne
+stają się rozwiązania słabe. Sama słaba postać równania
+nie wystarcza zwykle do jednoznaczności; potrzebne są
+warunki entropijne.
+\item Dla równań w pełni nieliniowych trzeba śledzić
+również gradient $p=\nabla u$. Warunek poprzeczności
+$F_p$ względem powierzchni danych jest kluczowy,
+a rozwiązanie może istnieć jedynie lokalnie nawet
+przy bardzo gładkich danych.
+\end{enumerate}
+
+W rozdziale następnym przejdziemy do równania Laplace'a,
+teorii funkcji harmonicznych i zagadnień Dirichleta.
+

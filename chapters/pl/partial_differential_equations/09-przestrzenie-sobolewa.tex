@@ -1,0 +1,811 @@
+\chapter[Przestrzenie Sobolewa]{Przestrzenie Sobolewa: słabe pochodne, aproksymacja i przedłużanie}
+\label{chap:pde-sobolev}
+
+Funkcja $u(x)=|x|$ nie jest różniczkowalna w zerze, lecz jej pochodna
+w sensie dystrybucji jest funkcją $\operatorname{sgn}x$. Z drugiej strony
+pochodna funkcji skokowej jest deltą Diraca, a nie funkcją lokalnie
+całkowalną. Ta różnica motywuje przestrzenie Sobolewa: dopuszczamy
+niegładkie funkcje, ale wymagamy, aby ich pochodne dystrybucyjne
+były reprezentowane przez funkcje z określonych klas całkowalności.
+
+Niech w całym rozdziale $d,k\in\N$, $\Omega\subset\R^d$ będzie
+niepustym zbiorem otwartym, $1\le p\le\infty$; chyba że wyraźnie
+zaznaczono inaczej, funkcje są rzeczywiste. Pochodne i równości funkcji
+rozumiemy prawie wszędzie. Wszystkie całki na $\Omega$ są liczone
+względem miary Lebesgue'a $\lambda_d$. Definicje dystrybucji i
+pochodnych słabych znajdują się w rozdziale~\ref{chap:pde-distributions},
+a przestrzenie $H^s(\R^d)$ w~\ref{sec:pde8-bessel}.
+
+\section{Definicje i pierwszy słownik}
+\label{sec:pde9-def}
+
+\begin{definicja}[Przestrzenie $W^{k,p}$]
+\label{def:pde9-Wkp}
+Dla $k\in\N_0$ i $1\le p\le\infty$ definiujemy
+\[
+ W^{k,p}(\Omega)=\{u\in L^p(\Omega):
+  \partial^\alpha u\in L^p(\Omega)
+  \text{ dla każdego }\alpha\in\N_0^d,\ |\alpha|\le k\},
+\]
+gdzie $\partial^\alpha u$ oznacza pochodną dystrybucyjną.
+Wyrażenie $\partial^\alpha u\in L^p$ oznacza, że dystrybucja ta jest
+reprezentowana przez funkcję z $L^p$. Normę określamy wzorami
+\begin{align*}
+ \|u\|_{W^{k,p}(\Omega)}
+  &=\left(\sum_{|\alpha|\le k}\|\partial^\alpha u\|_{L^p(\Omega)}^p
+    \right)^{1/p},&&1\le p<\infty,\\
+ \|u\|_{W^{k,\infty}(\Omega)}
+  &=\max_{|\alpha|\le k}\|\partial^\alpha u\|_{L^\infty(\Omega)}.
+\end{align*}
+Dla $k=0$ otrzymujemy $W^{0,p}=L^p$. Piszemy $H^k(\Omega)=W^{k,2}(\Omega)$,
+a w szczególności $H^1(\Omega)=W^{1,2}(\Omega)$.
+\end{definicja}
+
+\begin{definicja}[Przestrzeń lokalna i zerowy brzeg]
+\label{def:pde9-local-zero}
+Niech $k\in\N_0$, $1\le p\le\infty$.
+Funkcja $u$ należy do $W^{k,p}_{\mathrm{loc}}(\Omega)$, jeśli
+$u\in W^{k,p}(U)$ dla każdego otwartego $U$ takiego, że
+$\overline U\subset\Omega$ i $\overline U$ jest zwarta.
+Dla $1\le p<\infty$ definiujemy
+\[
+ W^{k,p}_0(\Omega)=\overline{C_c^\infty(\Omega)}^{\,W^{k,p}(\Omega)}.
+\]
+Indeks $0$ oznacza w tej chwili \emph{definicję przez domknięcie},
+a nie jeszcze twierdzenie o istnieniu śladu na brzegu.
+\end{definicja}
+
+\begin{uwaga}[Wybór normy]
+Dla skończenie wielu pochodnych różne zwyczajowe normy, np.
+$\sum_{|\alpha|\le k}\|\partial^\alpha u\|_p$, są równoważne.
+Przy $p=2$ norma $H^1(\Omega)$ spełnia
+$\|u\|_{H^1}^2=\|u\|_2^2+\|\nabla u\|_2^2$.
+Zgodnie z twierdzeniem~\ref{thm:pde8-Hs}, na całej $\R^d$
+przestrzenie $H^k$ zdefiniowane przez słabe pochodne pokrywają się
+z przestrzeniami Bessela z rozdziału~\ref{chap:pde-fourier-Rd};
+normy są równoważne, a dla $k=1$ są równe.
+\end{uwaga}
+
+\begin{przyklad}[Załamanie nie jest skokiem]
+Niech $I=(-1,1)$. Funkcja $u(x)=|x|$ należy do $W^{1,p}(I)$
+dla każdego $1\le p\le\infty$, ponieważ
+$u'=\operatorname{sgn}x$ prawie wszędzie i pochodna ta jest
+jednocześnie pochodną dystrybucyjną. Natomiast funkcja
+$H=\chi_{(0,1)}$ nie należy do $W^{1,p}(I)$ dla żadnego
+$p\ge1$: jej pochodna dystrybucyjna to $\delta_0$, która nie jest
+reprezentowana przez funkcję z $L^p(I)$.
+\end{przyklad}
+
+\begin{przyklad}[Osobliwość potęgowa]
+\label{ex:pde9-power}
+Niech $d\ge2$, $0<\alpha<d$, a $u(x)=\chi(x)|x|^{-\alpha}$,
+gdzie $\chi\in C_c^\infty(\R^d)$ jest równa $1$ w pewnym otoczeniu
+zera. Dla $1\le p<\infty$ zachodzi
+\[
+ u\in L^p(\R^d)\iff \alpha p<d,
+ \qquad u\in W^{1,p}(\R^d)\iff (\alpha+1)p<d.
+\]
+W drugim warunku zakładamy, że $\alpha>0$.
+W istocie w pobliżu zera $|\nabla u|\asymp |x|^{-\alpha-1}$.
+Jeśli $(\alpha+1)p<d$, całkowanie przez części poza kulą
+$B_\varepsilon$ daje po przejściu do granicy słabą pochodną:
+wyraz brzegowy jest $O(\varepsilon^{d-1-\alpha})$ i zanika,
+gdyż $\alpha<d-1$. Gdy warunek zawodzi, klasyczna pochodna
+na $\R^d\setminus\{0\}$ nie należy do $L^p$ w pobliżu zera,
+więc nie może istnieć pochodna słaba w $L^p$.
+\end{przyklad}
+
+\section{Zupełność i zamkniętość operatorów pochodnych}
+\label{sec:pde9-complete}
+
+\begin{twierdzenie}[Przestrzeń Sobolewa jest Banacha]
+\label{thm:pde9-banach}
+Dla każdego otwartego $\Omega\subset\R^d$, $k\in\N_0$ i
+$1\le p\le\infty$ przestrzeń $W^{k,p}(\Omega)$ jest przestrzenią
+Banacha. W szczególności $H^k(\Omega)$ jest przestrzenią Hilberta
+z iloczynem skalarnym
+$\langle u,v\rangle_{H^k}=\sum_{|\alpha|\le k}
+\int_\Omega\partial^\alpha u\,\overline{\partial^\alpha v}
+\,\mathrm d\lambda_d$.
+\end{twierdzenie}
+\begin{proof}
+Niech $(u_n)$ będzie ciągiem Cauchy'ego w $W^{k,p}(\Omega)$.
+Dla każdego wielowskaźnika $|\alpha|\le k$ ciąg
+$(\partial^\alpha u_n)$ jest Cauchy'ego w $L^p$, zatem istnieje
+$f_\alpha\in L^p(\Omega)$ takie, że
+$\partial^\alpha u_n\to f_\alpha$ w $L^p$. Oznaczmy $u=f_0$.
+Dla dowolnego $\varphi\in C_c^\infty(\Omega)$ mamy
+\[
+ \int_\Omega u_n\partial^\alpha\varphi\,\mathrm d\lambda_d
+ =(-1)^{|\alpha|}\int_\Omega
+ (\partial^\alpha u_n)\varphi\,\mathrm d\lambda_d.
+\]
+Obie całki przechodzą do granicy: dla $p<\infty$ wynika to z
+nierówności Höldera (dla $p=1$ funkcje testowe są ograniczone),
+a dla $p=\infty$ z faktu, że testy i ich pochodne są w $L^1$.
+Otrzymujemy $\partial^\alpha u=f_\alpha$ w $\mathcal D'(\Omega)$.
+A zatem $u\in W^{k,p}$, a zbieżność wszystkich pochodnych
+w $L^p$ daje $u_n\to u$ w normie Sobolewa.
+Dla $p=2$ wskazany iloczyn skalarny jest dodatnio określony,
+a uzyskana zupełność dowodzi własności Hilberta.
+\end{proof}
+
+\begin{wniosek}[Zamkniętość pochodnej]
+\label{cor:pde9-closed}
+Jeśli $u_n\to u$ w $L^p(\Omega)$ oraz
+$\partial^\alpha u_n\to g$ w $L^p(\Omega)$, gdzie
+$u_n\in W^{|\alpha|,p}(\Omega)$, to $\partial^\alpha u=g$
+w sensie dystrybucji. Nie zakładamy tu zbieżności pozostałych
+pochodnych tego samego rzędu.
+\end{wniosek}
+\begin{proof}
+Wystarczy przetestować definicję pochodnej dystrybucyjnej,
+jak w dowodzie twierdzenia~\ref{thm:pde9-banach}.
+\end{proof}
+
+\begin{uwaga}[Dlaczego nie należy oczekiwać podobnego wyniku w $C^0$?]
+Norma $L^p$ kontroluje funkcję jedynie w sensie całkowym;
+nic nie wymusza istnienia wartości punktowych.
+Dopiero twierdzenia o zanurzeniach Sobolewa, omówione w następnym
+rozdziale, wskażą warunki, w których klasy $W^{k,p}$ mają
+reprezentantów ciągłych.
+\end{uwaga}
+
+\section{Wymiar jeden: absolutna ciągłość}
+\label{sec:pde9-oneD}
+
+\begin{twierdzenie}[Charakterystyka $W^{1,p}(a,b)$]
+\label{thm:pde9-ac}
+Niech $-\infty<a<b<\infty$ i $1\le p\le\infty$.
+Klasa $u\in L^p(a,b)$ należy do $W^{1,p}(a,b)$ wtedy i tylko
+wtedy, gdy ma reprezentanta absolutnie ciągłego
+$\widetilde u:[a,b]\to\R$, którego pochodna klasyczna
+istnieje prawie wszędzie i należy do $L^p(a,b)$.
+Dla takiego reprezentanta
+\[
+ \widetilde u(y)-\widetilde u(x)
+ =\int_x^y u'(t)\,\mathrm d\lambda_1(t)
+ \qquad(a\le x\le y\le b).
+\]
+\end{twierdzenie}
+\begin{proof}
+Załóżmy $u\in W^{1,p}(a,b)$ i niech $g$ będzie jego
+słabą pochodną. Ponieważ $(a,b)$ jest ograniczony,
+$g\in L^1(a,b)$. Ustalmy $x_0\in(a,b)$ i zdefiniujmy
+$U(x)=\int_{x_0}^xg(t)\,\mathrm d\lambda_1(t)$.
+Funkcja $U$ jest absolutnie ciągła i $U'=g$ prawie wszędzie.
+Dystrybucyjna pochodna $u-U$ jest zerowa. Z twierdzenia
+o dystrybucjach o zerowej pochodnej
+(\ref{chap:pde-distributions}) wynika, że $u-U$ jest
+prawie wszędzie stała. Wobec tego $U+C$ jest żądanym
+reprezentantem. Odwrotnie, dla funkcji absolutnie ciągłej
+z pochodną w $L^p$ zwykłe całkowanie przez części przeciw
+funkcji testowej pokazuje, że pochodna klasyczna jest również
+pochodną słabą.
+\end{proof}
+
+\begin{wniosek}[Oszacowanie punktowe i ślady w jednym wymiarze]
+\label{cor:pde9-trace-oneD}
+Dla $I=(a,b)$, $L=b-a$ i $u\in W^{1,p}(I)$, $1\le p<\infty$,
+jedyny ciągły reprezentant spełnia
+\[
+ \|u\|_{L^\infty(I)}\le
+ L^{-1/p}\|u\|_{L^p(I)}+L^{1-1/p}\|u'\|_{L^p(I)}.
+\]
+Dla $p=\infty$ zachodzi $\|u\|_\infty\le\|u\|_{W^{1,\infty}}$.
+W szczególności odwzorowania $u\mapsto u(a)$ i $u\mapsto u(b)$
+są ciągłymi funkcjonałami liniowymi na $W^{1,p}(I)$.
+\end{wniosek}
+\begin{proof}
+Istnieje $x_0\in(a,b)$ takie, że
+$|u(x_0)|\le L^{-1/p}\|u\|_p$ (w przeciwnym przypadku
+całka z $|u|^p$ byłaby zbyt duża). Zastosowanie wzoru
+z twierdzenia~\ref{thm:pde9-ac} oraz nierówności Höldera
+daje dla wszystkich $x\in[a,b]$ podane oszacowanie.
+Przy $p=\infty$ jest ono oczywiste z definicji normy.
+\end{proof}
+
+\begin{przyklad}[Funkcja Cantora a pochodna słaba]
+Klasyczna funkcja Cantora jest ciągła, niemalejąca i ma
+pochodną klasyczną równą zeru prawie wszędzie, mimo że nie jest
+stała. Nie należy do $W^{1,1}(0,1)$, gdyż nie jest absolutnie
+ciągła: jej pochodna \emph{dystrybucyjna} jest niezerową
+miarą singularną. Zatem pochodna istniejąca prawie wszędzie
+nie musi być pochodną słabą.
+\end{przyklad}
+
+\section{Sploty i aproksymacja wewnętrzna}
+\label{sec:pde9-mollify}
+
+Wybierzmy nieujemną funkcję $\rho\in C_c^\infty(B_1(0))$,
+$\int_{\R^d}\rho\,\mathrm d\lambda_d=1$, i niech
+$\rho_\varepsilon(x)=\varepsilon^{-d}\rho(x/\varepsilon)$.
+Dla zwartego $K\subset\Omega$ zapisujemy
+$\operatorname{dist}(K,\partial\Omega)>0$; jeśli $\Omega=\R^d$,
+przyjmujemy, że odległość ta jest nieskończona.
+
+\begin{twierdzenie}[Lokalne wygładzanie Sobolewa]
+\label{thm:pde9-mollify}
+Niech $1\le p<\infty$, $k\in\N_0$ oraz $u\in W^{k,p}_{\mathrm{loc}}(\Omega)$.
+Jeżeli $K\subset\Omega$ jest zwarty, to dla dostatecznie
+małych $\varepsilon>0$ splot
+$u_\varepsilon=\rho_\varepsilon*u$ jest gładki w otoczeniu $K$
+i zachodzi
+\[
+ \|u_\varepsilon-u\|_{W^{k,p}(K)}\longrightarrow0
+ \qquad(\varepsilon\downarrow0),
+\]
+gdzie norma na $K$ oznacza sumę norm $L^p(K)$ pochodnych.
+Ponadto na $K$ obowiązuje
+$\partial^\alpha u_\varepsilon
+ =\rho_\varepsilon*(\partial^\alpha u)$ dla $|\alpha|\le k$.
+\end{twierdzenie}
+\begin{proof}
+Wybierzmy zbiory otwarte $K\subset U$, $\overline U\subset V$,
+$\overline V\subset\Omega$, przy czym $\overline V$ jest zwarta,
+oraz $\chi\in C_c^\infty(V)$ równą $1$ na $U$.
+Po przedłużeniu $\chi u$ przez zero poza $V$ dostajemy
+funkcję z $W^{k,p}(\R^d)$: reguła Leibniza wynika z
+rachunku dystrybucyjnego, ponieważ $\chi$ jest gładka.
+Gdy $\varepsilon$ jest mniejsze od odległości $K$ od
+$\Omega\setminus U$, sploty $\rho_\varepsilon*u$ i
+$\rho_\varepsilon*(\chi u)$ zgadzają się na $K$.
+Dla każdej pochodnej $|\alpha|\le k$ rachunek dystrybucyjny
+daje
+$\partial^\alpha(\rho_\varepsilon*(\chi u))
+ =\rho_\varepsilon*\partial^\alpha(\chi u)$.
+Przybliżone jedynki są zbieżne w $L^p(\R^d)$ dla
+$1\le p<\infty$ na mocy
+rozdziału~\ref{chap:pde-distributions}. Ograniczając normy do $K$
+i korzystając z $\chi=1$ w otoczeniu $K$, otrzymujemy tezę.
+\end{proof}
+
+\begin{uwaga}[Dlaczego nie $L^\infty$?]
+Konkluzja normowa na ogół zawodzi dla $p=\infty$:
+pochodna $u(x)=|x|$ na $(-1,1)$ jest funkcją znak, której
+ciągłe wygładzenia nie zbliżają się w normie $L^\infty$
+w otoczeniu zera. Nadal otrzymujemy lokalną zbieżność
+w $W^{k,q}$ dla każdego skończonego $q$ na zbiorach zwartych,
+gdy $u\in W^{k,\infty}_{\mathrm{loc}}$.
+\end{uwaga}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.92]
+ \draw[thick,rounded corners=12pt,fill=blue!5,draw=blue!55]
+  (-4.1,-1.45) -- (3.9,-1.45) -- (4.2,1.25) -- (-3.7,1.40) -- cycle;
+ \draw[thick,rounded corners=10pt,fill=green!9,draw=green!48!black]
+  (-2.55,-.85) rectangle (2.65,.85);
+ \draw[thick,rounded corners=9pt,fill=orange!11,draw=orange!75!black]
+  (-1.35,-.52) rectangle (1.25,.52);
+ \node at (-3.42,0.98) {$\Omega$};
+ \node at (2.1,.59) {$U$};
+ \node at (0,0) {$K$};
+ \draw[-{Stealth[length=2.3mm]},thick] (0.85,-.10)--(2.1,-.10)
+  node[midway,below] {$\varepsilon$};
+\end{tikzpicture}
+
+{\small\emph{Lokalność wygładzania.} Zwarty $K$ jest oddalony od
+brzegu obszaru; promień splotu wybieramy mniejszy od odległości
+do obszaru, na którym odcinamy funkcję.}
+\end{center}
+
+\section{Twierdzenie Meyersa--Serrina i gęstość funkcji gładkich}
+\label{sec:pde9-density}
+
+\begin{twierdzenie}[Meyers--Serrin]
+\label{thm:pde9-MeyersSerrin}
+Niech $\Omega\subset\R^d$ będzie otwarta, $k\in\N_0$
+i $1\le p<\infty$. Wówczas $C^\infty(\Omega)\cap W^{k,p}(\Omega)$
+jest gęsta w $W^{k,p}(\Omega)$.
+Nie zakłada się regularności brzegu $\partial\Omega$.
+\end{twierdzenie}
+\begin{proof}
+Wybierzmy lokalnie skończone pokrycie $\Omega$ otwartymi
+zbiorami $U_j$ o zwartych domknięciach wewnątrz $\Omega$ oraz
+gładki podział jedności $\{\psi_j\}$ z $\supp\psi_j\subset U_j$.
+Można wybrać dodatkowo lokalnie skończone zbiory otwarte
+$V_j$ takie, że $\supp\psi_j\subset V_j$, $\overline{V_j}\subset\Omega$.
+Dla $u\in W^{k,p}(\Omega)$ każda funkcja $u_j=\psi_j u$
+ma zwarty nośnik w $\Omega$ i należy do $W^{k,p}(\Omega)$.
+Z twierdzenia~\ref{thm:pde9-mollify} oraz argumentu o nośniku
+możemy wybrać $\varepsilon_j>0$ tak małe, by
+$g_j=\rho_{\varepsilon_j}*u_j$ należało do
+$C_c^\infty(V_j)$ i
+$\|g_j-u_j\|_{W^{k,p}(\Omega)}<\varepsilon2^{-j}$.
+Suma $g=\sum_{j=1}^\infty g_j$ jest lokalnie skończona,
+a więc należy do $C^\infty(\Omega)$. Ponadto szereg
+$\sum_j(g_j-u_j)$ jest bezwzględnie zbieżny w przestrzeni
+Banacha $W^{k,p}(\Omega)$. Ponieważ
+$\sum_j u_j=u$ w sensie dystrybucyjnym i punktowo
+prawie wszędzie, w tej przestrzeni mamy
+$g-u=\sum_j(g_j-u_j)$. Zatem
+$\|g-u\|_{W^{k,p}}\le\sum_j\varepsilon2^{-j}\le\varepsilon$.
+Użyliśmy jedynie standardowej konstrukcji lokalnie
+skończonego podziału jedności dla zbioru otwartego w $\R^d$,
+nie wymagającej żadnych założeń o jego brzegu.
+\end{proof}
+
+\begin{uwaga}[Gładkość nie oznacza zerowania na brzegu]
+Twierdzenie~\ref{thm:pde9-MeyersSerrin} \emph{nie} głosi,
+że $C_c^\infty(\Omega)$ jest gęsta w $W^{k,p}(\Omega)$.
+W przeciwieństwie do $C^\infty(\Omega)$ funkcje o zwartym
+nośniku wewnątrz obszaru muszą zanikać przy brzegu.
+\end{uwaga}
+
+\begin{przyklad}[Stała na przedziale nie należy do $W^{1,p}_0$]
+\label{ex:pde9-constant}
+Niech $\Omega=(0,1)$, $1\le p<\infty$, oraz $u\equiv1$.
+Funkcja $u\in W^{1,p}(0,1)$, ale
+$u\notin W^{1,p}_0(0,1)$. Gdyby istniał ciąg
+$\varphi_n\in C_c^\infty(0,1)$ zbieżny do $u$
+w $W^{1,p}$, to z oszacowania
+\ref{cor:pde9-trace-oneD} wynikałoby
+$\varphi_n(0)\to u(0)=1$. Jest to niemożliwe, bo
+$\varphi_n(0)=0$ dla wszystkich $n$.
+\end{przyklad}
+
+\section{Przestrzeń $W^{k,p}_0$ i przedłużenie przez zero}
+\label{sec:pde9-zero}
+
+\begin{twierdzenie}[Przedłużenie przez zero]
+\label{thm:pde9-zero-extension}
+Niech $\Omega\subset\R^d$ będzie otwarta, $k\in\N_0$,
+$1\le p<\infty$ i $u\in W^{k,p}_0(\Omega)$. Funkcja
+\[
+ \widetilde u(x)=\begin{cases}u(x),&x\in\Omega,\\0,&x\notin\Omega\end{cases}
+\]
+należy do $W^{k,p}(\R^d)$, a
+$\|\widetilde u\|_{W^{k,p}(\R^d)}=\|u\|_{W^{k,p}(\Omega)}$.
+Wszystkie pochodne słabe $\partial^\alpha\widetilde u$
+są przedłużeniami przez zero pochodnych $\partial^\alpha u$.
+\end{twierdzenie}
+\begin{proof}
+Z definicji $W^{k,p}_0$ istnieją
+$\varphi_n\in C_c^\infty(\Omega)$ z
+$\varphi_n\to u$ w $W^{k,p}(\Omega)$.
+Ich przedłużenia przez zero do $\R^d$ są gładkie i mają
+normy Sobolewa równe normom na $\Omega$.
+Tworzą zatem ciąg Cauchy'ego w $W^{k,p}(\R^d)$.
+Niech $v$ będzie jego granicą. Zbieżność w $L^p(\R^d)$
+pokazuje, że $v=u$ prawie wszędzie w $\Omega$ i $v=0$
+prawie wszędzie poza $\Omega$. Zbieżność pochodnych
+identyfikuje je z przedłużeniami przez zero pochodnych $u$.
+Równość norm wynika przez przejście do granicy.
+\end{proof}
+
+\begin{uwaga}[Nie każdą funkcję z przestrzeni Sobolewa można tak przedłużyć]
+Dla $u\equiv1$ na $(0,1)$ przedłużenie przez zero ma skoki
+w punktach $0,1$, więc jego pochodną dystrybucyjną
+jest $\delta_0-\delta_1$, a nie funkcja z $L^p(\R)$.
+Zatem założenia w twierdzeniu~\ref{thm:pde9-zero-extension}
+nie wolno zastępować samym $u\in W^{1,p}(\Omega)$.
+\end{uwaga}
+
+\section{Nierówność Poincarégo na kostce}
+\label{sec:pde9-poincare}
+
+\begin{twierdzenie}[Poincaré--Wirtinger na kostce]
+\label{thm:pde9-cube-Poincare}
+Niech $Q=\prod_{j=1}^d(a_j,a_j+L)$, $L>0$,
+$1\le p<\infty$. Dla $u\in W^{1,p}(Q)$ połóżmy
+$u_Q=\lambda_d(Q)^{-1}\int_Qu\,\mathrm d\lambda_d$.
+Wówczas
+\[
+ \|u-u_Q\|_{L^p(Q)}\le L\sum_{j=1}^d
+ \|\partial_j u\|_{L^p(Q)}.
+\]
+W szczególności prawa strona znika dokładnie wtedy,
+gdy $u$ jest prawie wszędzie stała na $Q$.
+\end{twierdzenie}
+\begin{proof}
+Najpierw niech $u$ będzie gładka w otoczeniu $\overline Q$.
+W jednym wymiarze dla $h\in C^1([a,a+L])$
+\[
+ \left|h(x)-\frac1L\int_a^{a+L}h(t)\,\mathrm d\lambda_1(t)\right|
+ \le\int_a^{a+L}|h'(t)|\,\mathrm d\lambda_1(t).
+\]
+Biorąc normę $L^p$ względem $x$ i stosując Höldera,
+otrzymujemy oszacowanie przez $L\|h'\|_{L^p(a,a+L)}$.
+Niech $A_j$ oznacza operator uśrednienia względem pierwszych
+$j$ współrzędnych, przy czym $A_0u=u$ oraz $A_du=u_Q$.
+Z nierówności jednowymiarowej i twierdzenia Fubiniego
+wynika $\|A_{j-1}u-A_ju\|_p\le L\|\partial_j A_{j-1}u\|_p$.
+Różniczkowanie w $x_j$ komutuje z $A_{j-1}$,
+a $A_{j-1}$ jest kontrakcją w $L^p(Q)$ na mocy Jensena.
+Zatem $\|A_{j-1}u-A_ju\|_p\le L\|\partial_j u\|_p$.
+Sumując po $j$ i stosując nierówność trójkąta,
+otrzymujemy tezę dla gładkich $u$.
+Dla ogólnego $u\in W^{1,p}(Q)$ rozważamy kostki wewnętrzne
+$Q_\delta=\prod_j(a_j+\delta,a_j+L-\delta)$, $0<\delta<L/2$.
+Na każdej $Q_\delta$ twierdzenie o lokalnych splotach
+pozwala przybliżyć $u$ w $W^{1,p}(Q_\delta)$ przez funkcje
+gładkie w otoczeniu $\overline{Q_\delta}$.
+Wynik stosujemy do $Q_\delta$ z długością krawędzi
+$L-2\delta$. Gdy $\delta\downarrow0$, całki i średnie
+po $Q_\delta$ zbiegają do odpowiednich wyrażeń po $Q$;
+ponieważ $u,\nabla u\in L^p(Q)$, zbieżność w normach $L^p$
+wynika z absolutnej ciągłości całki. Otrzymujemy tezę z
+nie większą stałą $L$.
+Jeśli $\nabla u=0$, to $u=u_Q$ prawie wszędzie.
+\end{proof}
+
+\begin{wniosek}[Wersja z zerowym brzegiem]
+\label{cor:pde9-Poincare-zero}
+Dla $u\in W^{1,p}_0(Q)$ na kostce z poprzedniego twierdzenia
+zachodzi $\|u\|_{L^p(Q)}\le L\|\partial_1u\|_{L^p(Q)}$.
+\end{wniosek}
+\begin{proof}
+Dla $u\in C_c^\infty(Q)$ ustalamy pozostałe współrzędne
+i korzystamy ze wzoru
+$u(x)=\int_{a_1}^{x_1}\partial_1u(t,x_2,\ldots,x_d)
+\,\mathrm d\lambda_1(t)$. Hölder i Fubini dają oszacowanie
+po scałkowaniu po $Q$. Przenosimy je na domknięcie
+$C_c^\infty(Q)$ w $W^{1,p}$.
+\end{proof}
+
+\section{Reguły rachunkowe w przestrzeniach Sobolewa}
+\label{sec:pde9-calculus}
+
+\begin{twierdzenie}[Mnożenie przez funkcję gładką i iloczyn]
+\label{thm:pde9-products}
+Niech $\Omega\subset\R^d$ będzie otwarta, $1\le p<\infty$
+i $u\in W^{1,p}(\Omega)$.
+Jeśli $\phi\in C^1(\Omega)$ oraz $\phi,\nabla\phi\in L^\infty(\Omega)$,
+to $\phi u\in W^{1,p}(\Omega)$ i
+$\partial_j(\phi u)=\phi\partial_j u+u\partial_j\phi$.
+Ponadto jeśli $u\in W^{1,p}(\Omega)$ oraz
+$v\in W^{1,q}(\Omega)$, gdzie $1/p+1/q=1$,
+to $uv\in W^{1,1}(\Omega)$ i
+$\partial_j(uv)=v\partial_j u+u\partial_j v$.
+\end{twierdzenie}
+\begin{proof}
+Pierwsza tożsamość wynika bezpośrednio z
+$\partial_j(\phi u)$ w sensie dystrybucyjnym; oba składniki
+prawej strony są w $L^p$.
+Dla iloczynu wybieramy lokalne wygładzenia $u_n,v_n$.
+Na każdym zwartym podzbiorze $\Omega$ odpowiednie
+pochodne są zbieżne w $L^p$ i $L^q$; nierówność Höldera
+zapewnia w $L^1$ zbieżność $u_nv_n\to uv$ i
+$v_n\partial_j u_n+u_n\partial_jv_n
+\to v\partial_j u+u\partial_jv$.
+Wzór dla gładkich funkcji przechodzi do granicy
+na testach o zwartym nośniku. Globalnie wszystkie
+wyrazy po prawej stronie oraz $uv$ należą do $L^1(\Omega)$
+na mocy Höldera. Dla $p=1,q=\infty$ stosujemy
+lokalne wygładzenia i lokalną zbieżność w $L^1$
+oraz jednostajne ograniczenie funkcji $v_n,\nabla v_n$;
+aby otrzymać zbieżność iloczynów wystarczy również
+zbieżność prawie wszędzie po przejściu do podciągu,
+a następnie zbieżność zdominowana na nośniku testu.
+\end{proof}
+
+\begin{twierdzenie}[Reguła łańcuchowa dla funkcji Lipschitzowskich]
+\label{thm:pde9-chain}
+Niech $1\le p<\infty$, $u\in W^{1,p}(\Omega)$ i
+$F\in C^1(\R)$ z $F(0)=0$ oraz $\|F'\|_\infty<\infty$.
+Wtedy $F\circ u\in W^{1,p}(\Omega)$ i
+\[
+ \partial_j(F(u))=F'(u)\,\partial_j u
+ \quad\text{prawie wszędzie w }\Omega.
+\]
+Jeżeli $\Omega$ ma skończoną miarę, warunek $F(0)=0$
+można pominąć.
+\end{twierdzenie}
+\begin{proof}
+Z nierówności $|F(t)-F(0)|\le\|F'\|_\infty|t|$
+wynika $F(u)\in L^p$.
+Weźmy lokalne wygładzenia $u_n\to u$ w $W^{1,p}$.
+Po przejściu do podciągu $u_n\to u$ i
+$\nabla u_n\to\nabla u$ prawie wszędzie.
+Wówczas $F(u_n)\to F(u)$ w $L^p$ z oszacowania
+Lipschitzowskiego. Dla pochodnych rozkładamy
+\[
+ F'(u_n)\partial_j u_n-F'(u)\partial_j u
+ =F'(u_n)(\partial_j u_n-\partial_j u)
+ +(F'(u_n)-F'(u))\partial_j u.
+\]
+Pierwszy składnik zbiega do zera w $L^p$ z ograniczoności
+$F'$, drugi z twierdzenia o zbieżności zdominowanej.
+Przechodząc do granicy dystrybucyjnie, uzyskujemy tezę.
+\end{proof}
+
+\begin{lemat}[Gradient znika na zbiorach poziomicowych]
+\label{lem:pde9-levelsets}
+Jeśli $u\in W^{1,p}(\Omega)$, $1\le p<\infty$,
+i $c\in\R$, to $\nabla u=0$ prawie wszędzie na
+$\{x\in\Omega:u(x)=c\}$.
+\end{lemat}
+\begin{proof}
+Wybierzmy ciąg funkcji $h_n\in C^\infty(\R)$ taki, że
+$0\le h_n\le1$, $h_n(t)=0$ dla $|t-c|\le1/n$
+oraz $h_n(t)=1$ dla $|t-c|\ge2/n$.
+Niech $F_n(t)=\int_0^t h_n(s)\,\mathrm d\lambda_1(s)$.
+Wtedy $F_n(0)=0$, $\|F_n'\|_\infty\le1$
+oraz $|F_n(t)-t|\le4/n$ dla każdego $t\in\R$.
+Ponadto $|F_n(t)|\le|t|$, więc z twierdzenia o
+zbieżności zdominowanej otrzymujemy
+$F_n(u)\to u$ w $L^p(\Omega)$, także gdy $\Omega$
+ma nieskończoną miarę. Reguła łańcuchowa daje
+$\nabla(F_n(u))=h_n(u)\nabla u$.
+Ponieważ $h_n(u)\to\chi_{\{u\ne c\}}$ punktowo,
+a $|h_n(u)\nabla u|\le|\nabla u|$, znów zbieżność
+zdominowana zapewnia zbieżność w $L^p$ do
+$\chi_{\{u\ne c\}}\nabla u$.
+Korzystając z zamkniętości pochodnej słabej
+(wniosek~\ref{cor:pde9-closed}), dostajemy
+$\nabla u=\chi_{\{u\ne c\}}\nabla u$,
+czyli tezę.
+\end{proof}
+
+\begin{wniosek}[Obcięcia i części dodatnie]
+\label{cor:pde9-truncation}
+Niech $u\in W^{1,p}(\Omega)$, $1\le p<\infty$.
+Wtedy $u^+=\max(u,0)$ i $u^-=\max(-u,0)$ należą do
+$W^{1,p}(\Omega)$, a prawie wszędzie
+\[
+ \nabla u^+=\chi_{\{u>0\}}\nabla u,
+ \qquad \nabla u^-=-\chi_{\{u<0\}}\nabla u.
+\]
+Dla $M>0$ obcięcie $T_M(u)=\max(-M,\min(u,M))$
+również należy do $W^{1,p}(\Omega)$.
+\end{wniosek}
+\begin{proof}
+Przybliżamy funkcję $t\mapsto t^+$ przez gładkie
+funkcje Lipschitzowskie $F_n$ z $F_n(0)=0$
+i $0\le F'_n\le1$, które zbiegają punktowo do
+typowej pochodnej części dodatniej poza $t=0$.
+Poprzednie twierdzenie daje regułę łańcuchową.
+Lemat~\ref{lem:pde9-levelsets} zapewnia, że
+$\nabla u=0$ prawie wszędzie na $\{u=0\}$.
+Pozwala to przejść do granicy również na zbiorze poziomicowym.
+Dla $u^-$ i $T_M$ postępujemy analogicznie.
+\end{proof}
+
+\section{Przedłużanie z półprzestrzeni i rola brzegu}
+\label{sec:pde9-extension}
+
+\begin{twierdzenie}[Odbicie Sobolewa, rząd pierwszy]
+\label{thm:pde9-reflection}
+Niech $\R^d_+=\{(x',t)\in\R^{d-1}\times\R:t>0\}$,
+$1\le p<\infty$. Istnieje liniowy, ograniczony operator
+$E:W^{1,p}(\R^d_+)\to W^{1,p}(\R^d)$ taki, że
+$(Eu)|_{\R^d_+}=u$. Można przyjąć
+\[
+ (Eu)(x',t)=\begin{cases}u(x',t),&t>0,\\
+ u(x',-t),&t<0.\end{cases}
+\]
+Wówczas $\|Eu\|_{W^{1,p}(\R^d)}=2^{1/p}
+\|u\|_{W^{1,p}(\R^d_+)}$.
+\end{twierdzenie}
+\begin{proof}
+Najpierw dla funkcji gładkich aż do brzegu i
+mających odpowiednio całkowalne pochodne zwykłe
+różniczkowanie odbicia daje
+$\partial_t Eu(x',t)=\operatorname{sgn}(t)
+(\partial_tu)(x',|t|)$, a pochodne styczne odbijają się
+bez zmiany znaku. Ponieważ wartości z dwóch stron
+$t=0$ są takie same, nie pojawia się składnik delta.
+W konsekwencji $\|Eu\|_{W^{1,p}}=2^{1/p}\|u\|_{W^{1,p}}$.
+
+Dla ogólnego $u\in W^{1,p}(\R^d_+)$ aproksymujemy
+funkcjami gładkimi do brzegu: przesuwamy najpierw $u$
+w kierunku dodatnim $t$, czyli $u_h(x',t)=u(x',t+h)$,
+$h>0$, co zbiega w $W^{1,p}(\R^d_+)$ przy $h\downarrow0$.
+Funkcja $u_h$ jest określona także dla $t>-h$;
+można ją więc wygładzić splotem z jądrem o promieniu
+mniejszym niż $h/2$, uzyskując gładkie aproksymacje
+do brzegu. Równość norm dla odbicia pokazuje, że ich
+przedłużenia tworzą ciąg Cauchy'ego w $W^{1,p}(\R^d)$.
+Jego granica jest przedłużeniem $u$, a równość norm
+przechodzi do granicy.
+\end{proof}
+
+\begin{stwierdzenie}[Odbicia wyższego rzędu na półprzestrzeni]
+\label{prop:pde9-highreflection}
+Niech $k\in\N$, $1\le p<\infty$. Istnieje ograniczony,
+liniowy operator $E_k:W^{k,p}(\R^d_+)\to W^{k,p}(\R^d)$,
+który jest prawym odwrotnym do ograniczenia na $\R^d_+$.
+\end{stwierdzenie}
+\begin{proof}
+Wybieramy liczby $a_1,\ldots,a_k$ spełniające
+$\sum_{j=1}^k a_j(-j)^m=1$ dla $m=0,\ldots,k-1$.
+Ten układ ma dokładnie jedno rozwiązanie, ponieważ jego
+macierz jest macierzą Vandermonde'a o różnych węzłach
+$-1,\ldots,-k$. Definiujemy $E_ku=u$ dla $t>0$, a dla $t<0$
+\[
+ (E_ku)(x',t)=\sum_{j=1}^k a_j u(x',-jt).
+\]
+Dla gładkiego $u$ ślady wszystkich pochodnych normalnych
+rzędu $m<k$ po obu stronach $t=0$ są zgodne właśnie dzięki
+układowi na $a_j$. Nie powstają więc dystrybucyjne
+składniki singularne w pochodnych rzędu co najwyżej $k$.
+Normy tych pochodnych po dolnej stronie granicy są
+ograniczone przez skończoną sumę wyrażeń
+$|a_j|j^{m-1/p}\|\partial_t^m\partial_{x'}^\beta u\|_p$,
+przy $m+|\beta|\le k$, po zmianie zmiennej $s=-jt$.
+Ponownie aproksymacja przez przesunięcie w głąb
+i wygładzanie pozwalają przenieść oszacowanie na wszystkie
+$u\in W^{k,p}(\R^d_+)$.
+\end{proof}
+
+\begin{uwaga}[Obszary Lipschitzowskie]
+Jeśli ograniczony obszar $\Omega$ ma brzeg lokalnie
+będący wykresem funkcji Lipschitzowskiej, można prostować
+brzeg dwulipschitzowskimi zmianami współrzędnych,
+zastosować odbicie pierwszego rzędu i skleić lokalne
+przedłużenia podziałem jedności. Otrzymujemy ograniczony
+operator $W^{1,p}(\Omega)\to W^{1,p}(\R^d)$.
+Przypadek $W^{k,p}$ dla $k>1$ na dowolnym obszarze Lipschitzowskim wymaga bardziej subtelnej konstrukcji:
+proste prostowanie Lipschitzowskie nie zachowuje ogólnie
+drugich pochodnych w $L^p$. Pełną teorię przedłużania
+i śladów rozwiniemy w następnym rozdziale.
+\end{uwaga}
+
+\begin{lemat}[Gęstość funkcji gładkich aż do płaskiego brzegu]
+\label{lem:pde9-density-halfspace-slab}
+Niech $1\le p<\infty$ oraz $d\ge1$. Dla
+$G=\R^{d-1}\times(0,\infty)$ albo
+$G=\R^{d-1}\times(0,1)$ każdą funkcję $u\in W^{1,p}(G)$
+można przybliżyć w normie $W^{1,p}(G)$ restrykcjami funkcji
+z $C^\infty(\R^d)$. Można przy tym wybrać przybliżenia
+z $C_c^\infty(\R^d)$.
+\end{lemat}
+\begin{proof}
+Dla półprzestrzeni używamy ograniczonego przedłużenia
+przez odbicie z twierdzenia~\ref{thm:pde9-reflection}.
+Dla warstwy przedłużamy najpierw przez odbicie w obu
+płaszczyznach brzegowych: na $-1<t<0$ przyjmujemy
+$u(x',-t)$, na $0<t<1$ funkcję $u(x',t)$, a na
+$1<t<2$ funkcję $u(x',2-t)$. Zastosowanie argumentu
+z dowodu twierdzenia~\ref{thm:pde9-reflection} osobno
+w pobliżu $t=0$ i $t=1$ pokazuje, że sklejenie
+należy do $W^{1,p}(\R^{d-1}\times(-1,2))$:
+na prawie każdym pionowym odcinku funkcja ma reprezentanta
+absolutnie ciągłego (twierdzenie~\ref{thm:pde9-ac}),
+więc wartości z obu stron płaszczyzn odbicia są zgodne
+i nie powstają dystrybucyjne składniki brzegowe.
+Normy funkcji i pochodnych na częściach odbitych
+równe odpowiednim normom na warstwie wyjściowej.
+Mnożymy otrzymaną funkcję przez gładkie odcięcie
+$\eta(t)$ równe $1$ na $[0,1]$ i o nośniku w $(-1,2)$,
+a następnie przedłużamy wynik przez zero do $\R^d$.
+Powstaje ograniczone liniowe przedłużenie
+$E:W^{1,p}(G)\to W^{1,p}(\R^d)$ również dla warstwy.
+
+Niech $v=Eu$. Najpierw mnożymy $v$ przez odcięcie
+$\chi_R\in C_c^\infty(\R^d)$, równe $1$ na $B_R$,
+o $|\nabla\chi_R|\le C/R$ i nośniku w $B_{2R}$.
+Z nierówności Leibniza i zbieżności ogonów całek $L^p$
+wynika $\chi_Rv\to v$ w $W^{1,p}(\R^d)$.
+Dla ustalonego $R$ splatamy $\chi_Rv$ z przybliżoną
+jedynką $\rho_\varepsilon$. Zbieżność splotów dla
+funkcji i ich słabych pochodnych w $L^p$ daje
+$\rho_\varepsilon*(\chi_Rv)\to\chi_Rv$
+w $W^{1,p}(\R^d)$. Otrzymane funkcje są w
+$C_c^\infty(\R^d)$, a ograniczenie ich do $G$
+nie zwiększa normy. Wybierając kolejno $R\to\infty$
+i $\varepsilon\downarrow0$, otrzymujemy tezę.
+\end{proof}
+
+
+\begin{uwaga}[Aproksymacja gładka nie oznacza zerowego śladu]
+\label{rem:pde-v42-density}
+Twierdzenie Meyersa--Serrina~\ref{thm:pde9-MeyersSerrin}
+nie orzeka, że $C_c^\infty(\Omega)$ jest gęste w całej
+przestrzeni $W^{1,p}(\Omega)$. Na przykład funkcja
+$u\equiv1$ na ograniczonym obszarze Lipschitzowskim
+należy do $W^{1,p}(\Omega)$, ale jej ślad jest równy $1$,
+a więc nie należy do $W_0^{1,p}(\Omega)$ na mocy
+twierdzenia~\ref{thm:pde10-trace-zero}.
+Są to trzy różne twierdzenia: aproksymacja wewnętrzna,
+gęstość gładkich restrykcji aż do brzegu oraz
+charakterystyka jądra śladu. Ten ostatni rezultat
+zostanie udowodniony w rozdziale~\ref{chap:pde-embeddings}.
+\end{uwaga}
+
+\section{Ślady na płaskim brzegu: pierwszy wynik}
+\label{sec:pde9-traces}
+
+\begin{twierdzenie}[Oszacowanie śladu na warstwie]
+\label{thm:pde9-trace-slab}
+Niech $S=\R^{d-1}\times(0,1)$ i $1\le p<\infty$.
+Istnieje stała $C_p>0$ i jednoznaczny ograniczony
+operator liniowy
+$\operatorname{Tr}_0:W^{1,p}(S)\to L^p(\R^{d-1})$
+taki, że dla $u\in C^\infty(\overline S)\cap W^{1,p}(S)$
+z regularnym śladem jest nim
+$\operatorname{Tr}_0u(x')=u(x',0)$. Zachodzi
+\[
+ \|\operatorname{Tr}_0u\|_{L^p(\R^{d-1})}
+ \le C_p\bigl(\|u\|_{L^p(S)}+\|\partial_tu\|_{L^p(S)}\bigr).
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla funkcji gładkiej $h:[0,1]\to\R$ i $s\in(0,1)$
+mamy $|h(0)|\le|h(s)|+\int_0^1|h'(t)|\,
+\mathrm d\lambda_1(t)$. Całkując po $s$ i używając Höldera,
+otrzymujemy $|h(0)|\le\|h\|_{L^p(0,1)}+
+\|h'\|_{L^p(0,1)}$, stąd
+$|h(0)|^p\le2^{p-1}(\|h\|_p^p+\|h'\|_p^p)$.
+Stosujemy to do $h(t)=u(x',t)$ i całkujemy po $x'$.
+Daje to tezę dla funkcji gładkich. Gęstość restrykcji funkcji gładkich aż do obu brzegów
+w $W^{1,p}(S)$ wynika z osobno udowodnionego
+lematu~\ref{lem:pde9-density-halfspace-slab}. Oszacowanie pozwala
+przedłużyć operator śladu przez ciągłość na całą
+przestrzeń. Jednoznaczność jest konsekwencją gęstości.
+\end{proof}
+
+\section{Perspektywa wariacyjna: pierwsze słabe rozwiązanie}
+\label{sec:pde9-weakPDE}
+
+\begin{przyklad}[Równanie Poissona na przedziale]
+\label{ex:pde9-dirichlet}
+Niech $f\in L^2(0,1)$ i rozważmy
+$-u''=f$ w $(0,1)$ z warunkami $u(0)=u(1)=0$.
+Jeśli $u$ jest gładkie, mnożymy równanie przez
+$\varphi\in C_c^\infty(0,1)$ i całkujemy przez części:
+\[
+ \int_0^1u'(x)\varphi'(x)\,\mathrm d\lambda_1(x)
+ =\int_0^1 f(x)\varphi(x)\,\mathrm d\lambda_1(x).
+\]
+Równanie to zachowuje sens również wtedy, gdy szukamy
+$u\in H_0^1(0,1)$: wystarcza żądać tożsamości dla każdego
+$\varphi\in H_0^1(0,1)$. Jest to \emph{słabe zagadnienie Dirichleta}.
+
+Dla $f\equiv1$ rozwiązaniem jest $u(x)=x(1-x)/2$.
+Dla dowolnego $f\in L^2(0,1)$ można też podać jawny wzór
+\[
+ u(x)=\int_0^1G(x,y)f(y)\,\mathrm d\lambda_1(y),\qquad
+ G(x,y)=\begin{cases}y(1-x),&y\le x,\\x(1-y),&x<y.\end{cases}
+\]
+Ponieważ $G(0,y)=G(1,y)=0$ i
+$-\partial_x^2G(\cdot,y)=\delta_y$ w $\mathcal D'(0,1)$,
+forma jest rozwiązaniem dystrybucyjnym.
+Dokładniej, dla każdego $f\in L^2$ można dwukrotnie
+całkować równanie w jednym wymiarze i uzyskać
+$u\in H^2(0,1)\cap H_0^1(0,1)$, a zatem także tożsamość słabą.
+Jeśli $f\equiv0$, wstawiając do niej $\varphi=u$,
+otrzymujemy $\int_0^1|u'|^2\,\mathrm d\lambda_1=0$.
+Twierdzenie~\ref{thm:pde9-ac} i zerowe wartości brzegowe
+pokazują $u=0$, co dowodzi jednoznaczności w klasie $H_0^1$.
+\end{przyklad}
+
+\section{Skalowanie, krytyczne wykładniki i zadania na przyszłość}
+\label{sec:pde9-scaling}
+
+Niech $\phi\in C_c^\infty(\R^d)$, $\phi\not\equiv0$,
+oraz dla $\varepsilon>0$ zdefiniujmy
+$u_\varepsilon(x)=\varepsilon^{-a}\phi(x/\varepsilon)$.
+Bezpośrednia zmiana zmiennych pokazuje
+\[
+ \|u_\varepsilon\|_{L^q}
+ =\varepsilon^{d/q-a}\|\phi\|_{L^q},\qquad
+ \|\nabla u_\varepsilon\|_{L^p}
+ =\varepsilon^{d/p-a-1}\|\nabla\phi\|_{L^p}
+\]
+dla $1\le p,q<\infty$. Jeżeli chcemy, aby nierówność
+$\|u\|_{L^q}\le C\|\nabla u\|_{L^p}$ na całej $\R^d$
+była niezmiennicza względem skalowania, musimy mieć
+$d/q=d/p-1$. Dla $1\le p<d$ dostajemy wykładnik
+\[
+ p^*=\frac{dp}{d-p}.
+\]
+Nie dowodzi to jeszcze zanurzenia Sobolewa
+$W^{1,p}\hookrightarrow L^{p^*}$, ale wyjaśnia,
+dlaczego dokładnie ten wykładnik pojawia się w twierdzeniu.
+Konstrukcje skupiające masę w małej kuli będą również
+źródłem kontrprzykładów dla zbyt silnych zanurzeń.
+
+\section{Podsumowanie i zależności logiczne}
+Wprowadziliśmy przestrzenie $W^{k,p}$ na dowolnych obszarach,
+wykazaliśmy ich zupełność, lokalne wygładzanie i
+teorię Meyersa--Serrina oraz przedłużenia z półprzestrzeni.
+Oddzieliliśmy $W^{k,p}(\Omega)$ od $W^{k,p}_0(\Omega)$,
+który koduje zerowy warunek brzegowy, a także udowodniliśmy
+proste nierówności Poincarégo i śladu. W rozdziale 10
+wykorzystamy te narzędzia do ogólnych twierdzeń o
+zanurzeniach, zwartości Rellicha--Kondrachova i
+pełniejszej teorii śladów na brzegach Lipschitzowskich.
+
+
+% Rozdział 10. Samodzielna część wykładu; włączana przed dodatkiem z kodem.
