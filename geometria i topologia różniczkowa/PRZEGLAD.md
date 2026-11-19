@@ -10068,3 +10068,50 @@ Ostatni przebieg zachował identyczny SHA-256 pliku AUX i nie zgłosił potrzeby
 
 Na prośbę autora zastąpiono powierzchnię torusa na Rysunku 23.2 modelem z Rysunku 22.3: skopiowano parametryzację, widok 25°/28°, próbkowanie, niebieską paletę i kierunkowe cieniowanie. Pominięto znaczniki punktów krytycznych oraz przekrój, które dotyczą funkcji Morse'a na Rysunku 22.3. Dopasowano rozmiar torusa do schematu chirurgii. Numer, etykieta i podpis pozostają zachowane.
 Kontrola: złożono tom III (110 stron), bez błędów TeX-a, brakujących odsyłaczy i przepełnień; obejrzano stronę 6 z Rysunkiem 23.2. Torus i strzałka są rozdzielone, podpisy czytelne. Zaktualizowano PDF tomu III.
+
+## 2026-11-19 — ponowny audyt dydaktyczny rozdziału 25
+
+Na prośbę autora sprawdzono wszystkie §§25.1–25.6: torsję Whiteheada i twierdzenie o s-kobordyzmie w tomie III. Źródłem jest `tex/rozdzialy/21-torsja-s-kobordyzm.tex`; historyczny prefiks nazwy nie jest numerem rozdziału w książce. Przegląd dotyczy obecnej wersji, po październikowym audycie. Praca rozpoczęła się 18 listopada, a kontrola składu przeszła na 19 listopada.
+
+### Rachunki i uzasadnienia
+
+- §25.1: sprawdzono konwencję prawych modułów, bazy podniesionych rdzeni i etykiety przecięć, również bez orientowalności kobordyzmu. Rozpisano współczynniki iloczynu w pierścieniu grupowym i przejście przez augmentację do zwykłych łańcuchów. Wyjaśniono, że w tym zastosowaniu dokładność po utworzeniu iloczynu tensorowego wynika z zachowania kontrakcji, a nie z ogólnej dokładności tego funktora. Poprawiono opis pętli Whitneya jako złożenia dwóch łuków.
+- §25.2: rozwinięto komutator macierzy elementarnych z zachowaniem kolejności współczynników, rozkład bloków trójkątnych i przejście od normalności do przemienności K1. W przykładzie C5 wyprowadzono wartość pierwiastka kwadratowego z równania dla pierwiastka jedności i wskazano homomorfizm wykrywający niezerową klasę.
+- §25.3: rozpisano kontrakcję w rozkładach na moduły brzegów, bez założenia ich wolności. Uzupełniono relacje między dwiema kontrakcjami, uzasadniające niezależność torsji. Sprawdzono stabilizowaną macierz ścinającą. Dla stożka wyprowadzono zerowanie kwadratu brzegu i opisano odwzorowanie łączące jako F_*.
+- §25.4: dodano wyprowadzenie znaku zmiany torsji przy zmianie baz: dla konwencji od stopni nieparzystych do parzystych wkład bazy C_i wynosi (-1)^(i+1)[U_i]. Sprawdzono indukcję w postaci normalnej, wymianę uchwytów, rozłączne rury, dopełnienia sfer, skrajne k=2 i k=m-3 oraz obramowania. Hipotezy geometryczne nie wymagały zmiany.
+- §25.5: sprawdzono stabilną redukcję zerowej klasy Whiteheada i jej realizację uchwytami. Rozpisano działanie elementarnych zmian baz po obu stronach A'=V^{-1}AU oraz tożsamość rozbijającą współczynnik na jednomiany. Równość macierzy z identycznością nadal oddzielono od geometrycznego usuwania przecięć i znoszenia uchwytów.
+- §25.6: poprawiono lukę w przykładzie zapowiadającym rozróżnienie trzech własności. Jednostka dla C5 oddziela acykliczność nad pierścieniem grupowym od zerowej torsji; dodatkowy rachunek z 2-t w Z[t,t^{-1}] oddziela zwykłą acykliczność od acykliczności nad tym pierścieniem. Niezerowość ilorazu uzasadniono przez podstawienie t=2 do Q; dla nieacyklicznego kompleksu nie przypisuje się torsji z przyjętej definicji. Rozpisano usuwanie bloku pozadiagonalnego w dowodzie addytywności i dokładne przeniesienie grup przez inkluzje brzegów, w tym niezależność od dróg bazowych. W realizacji torsji rozwinięto wzór Whitneya dla w2 i rachunek odwracania macierzy dualnej. Sprawdzono sklejanie w dowodzie jednoznaczności. W istniejącej uwadze podano konkretny dopuszczalny brzeg S5/C5 oraz uzasadnienie wolności działania.
+
+### Źródła i granice dowodu
+
+Porównano [Milnora, *Whitehead Torsion*, §§1, 9–11, w szczególności lemat 9.1, twierdzenie 9.3 i twierdzenia 11.1, 11.3](https://webhomes.maths.ed.ac.uk/~v1ranick/papers/milnorwh.pdf),
+[Milnora, *Lectures on the h-Cobordism Theorem*, twierdzenie 6.6 i lemat 6.7](https://webhomes.maths.ed.ac.uk/~v1ranick/surgery/hcobord.pdf),
+[Krecka–Lücka, *The Novikov Conjecture*, twierdzenie 6.15(1)](https://webhomes.maths.ed.ac.uk/~v1ranick/papers/owsem.pdf)
+oraz [Khana, *The s/h-Cobordism Theorem*, twierdzenia 7 i 9](https://qkhan.pages.iu.edu/research/SLIDES/Lecture02_KHAN.pdf).
+Zachowano własną jawną konwencję znaku torsji; nie przenoszono bez porównania znaków z innej konwencji. Obramowany lemat Whitneya, porównanie gładkich triangulacji i charakterystyka prostej homotopii pozostają wskazanymi wynikami zewnętrznymi. Audyt ich zastosowań nie jest deklaracją samodzielnego dowodu tych wyników.
+
+### Kontrola rachunkowa
+
+Przeszło osiem grup pomocniczych kontroli: komutator nad nieprzemiennym pierścieniem macierzy 2×2; faktoryzacje blokowe K1; stabilizowane ścinanie w niezależności kontrakcji; obustronne zmiany baz; splot współczynników jednostek C5 i wartość przy pierwiastku jedności; kontrakcja sklejonego kompleksu i usuwanie bloku; dualizacja oraz nierówności wymiarowe dla 6≤m≤30; zgodność etykiet i kolejności liczników z HEAD. Kontrole obliczeniowe uzupełniają lekturę wszystkich dowodów.
+
+Zachowano sześć sekcji, wszystkie etykiety i kolejność numerowanych wyników, wzorów oraz obu rysunków. Nie dodano zadań. W rozdziale nie ma całek.
+
+## 2026-11-19 — drugi audyt rozdziałów 23 i 24 po rozdziale 25
+
+Autor rozszerzył bieżący etap, polecając po rozdziale 25 ponownie sprawdzić dwa poprzedzające rozdziały. Przeczytano ponownie wszystkie §§23.1–23.7 oraz §§24.1–24.6 w obecnych źródłach, w tym treść wcześniejszych poprawek z 18 listopada. Nie jest to wyłącznie powtórzenie wcześniejszej deklaracji ukończenia.
+
+W rozdziale 23 ponownie sprawdzono funkcję Morse'a względną brzegu, puste końce, dualność i ślad chirurgii, filtrację kompleksu, znaki przecięć, rachunek Eulera, przestawianie przy ustalonym polu, obie zmiany macierzy przy przesunięciu oraz wszystkie kroki znoszenia pary. Uzupełniono sprawdzenie zgodności dyfeomorfizmu torusa z relacją sklejenia i podano jego odwrotność. W lokalnym dowodzie wskazano twierdzenie o funkcji odwrotnej dla normalnej zmiany współrzędnych, wykazano odwracalność dopełnienia Schura przez jego jądro, dodano jednostajne oszacowanie czasu wyjścia z rury oraz rozpisano normalizację całki funkcji mu. Rozróżnienie lokalnego wielomianu i zewnętrznego wyniku o narodzinach zachowano.
+
+W rozdziale 24 ponownie sprawdzono usuwanie indeksów skrajnych, wymianę 1→3 i jej obramowanie, wszystkie porównania grup fundamentalnych, dopełnienia w skrajnych indeksach, hipotezy obramowanego triku Whitneya dla całych rodzin, prostokątną redukcję samymi kolumnami oraz zachowanie pozostałych par podczas znoszenia. Sprawdzono przypadek graniczny m=6 i wykluczenie poziomicy czterowymiarowej. W przykładzie lokalnej pary 2,3 zapisano jawnie m≥6, a we wniosku o sferach uzupełniono ciągłość radialnego przedłużenia i jego odwrotności w środku dysku. Nie znaleziono potrzeby zmiany tezy Smale'a ani wcześniejszego rachunku homologii sfery z dwoma wyciętymi dyskami.
+
+Ponownie porównano [Morgana, wykład III, twierdzenie 1.1, wniosek 1.3 i stwierdzenie 3.3](https://www.math.columbia.edu/~jmorgan/Lecture_III_H-cobordism_Theorem.pdf), [wykład IIIA, twierdzenie 1.1, model 1.3 i kontrolę powrotów 1.5–1.7](https://www.math.columbia.edu/~jmorgan/Lecture_IIIA_hcobordism_Contd.pdf) oraz przytoczone wcześniej twierdzenie 6.6 i lematy 6.7, 6.13 Milnora. Głębokie wejścia zewnętrzne pozostają wskazane jako zewnętrzne.
+
+Kontrolę pomocniczą rozszerzono do 12 grup dla rozdziałów 23–25. Nowe sprawdzenia objęły faktoryzację Schura, całkowitą redukcję prostokątnej macierzy i generator jądra, równanie trajektorii oraz normalizację całki. Ponownie porównano z HEAD komplet etykiet i kolejność numerowanych środowisk w rozdziałach 23 i 24. Nie zmieniono ich numeracji ani ośmiu ilustracji; nie dodano zadań. Wszystkie nowe całki mają jawne granice.
+
+### Wspólna kontrola końcowa rozdziałów 23–25
+
+Po korektach złożono tylko tom III programami pdflatex i makeindex. Końcowy tom ma 112 stron A4. Ostatni przebieg zachował identyczny SHA-256 AUX i nie zgłosił potrzeby kolejnego przebiegu. Nie ma błędów TeX-a, nierozwiązanych odsyłaczy, brakujących znaków ani przepełnionych wierszy. Indeks przyjął 34 wpisy, bez odrzuceń i ostrzeżeń. Pozostają trzy komunikaty Underfull oraz wcześniejszy komunikat hyperref o dwóch kotwicach page.1, związany ze stroną tytułową i ponowną numeracją stron.
+
+Wyrenderowano i obejrzano wszystkie strony drukowane 3–40 (strony PDF 4–41): rozdziały 23, 24 i 25 oraz dziesięć ilustracji. Dopasowano odstępy strzałek w Rysunku 25.1; całe Stwierdzenie 25.1.3, tezę Twierdzenia 25.5.1 i uwagę o dualności objęto lokalną ochroną przed podziałem strony. Usunięto w ten sposób samotny początek stwierdzenia oraz rozdzielenie warunków tezy i wzoru inwolucji. Układ macierzy, normalnych obramowań, całek, przykładów i podpisów jest czytelny. Obrazy tych 38 stron z ostatniego przebiegu są identyczne bitowo z obejrzaną wersją przedostatnią.
+
+Kontrola adnotacji PDF potwierdziła 43 łącza do pozostałych tomów i istnienie wszystkich ich celów w odpowiednich PDF-ach; w rozdziale 25 sprawdzono również konkretne cele definicji torsji elementu, de Rhama, sklejania wiązek i obu wyników Whiteheada. Zaktualizowano `geometria_tom3.pdf`. Zakończono audyt rozdziału 25 i zlecony następnie drugi audyt rozdziałów 23 i 24; nie oznacza to ponownej kontroli pozostałych rozdziałów tomu.
