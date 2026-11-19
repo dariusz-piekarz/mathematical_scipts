@@ -47,3 +47,13 @@ audited; language-aware relocation alone is not a merge.
   the archive generated from the newly uploaded files retains their original bytes.
 - A complete second LaTeX pass was not finished for the large differential geometry
   and topology book; do not assume its references have all been resolved yet.
+
+## Measure theory and jets (Polish)
+
+- [Measure theory](books/pl/measure_theory.tex): 31 chapters in [chapters/pl/measure_theory](chapters/pl/measure_theory).
+- [Jets](chapters/pl/measure_theory/31-dzety-geometria-i-teoria-miary.tex): geometric and measure-theoretic jets; the Rademacher theorem is covered in chapter 28.
+- [Integration theory](books/pl/integration_theory.tex) remains a separate, unchanged book.
+- [Manifest](catalog/measure_theory_manifest.json) and [module documentation](docs/pl/measure_theory.md).
+- Build: `latexmk -cd -pdf books/pl/measure_theory.tex`.
+
+The source language is Polish; directory names are English. Any later merge with integration theory requires proof-by-proof review.

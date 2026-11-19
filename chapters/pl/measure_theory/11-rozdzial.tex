@@ -1,0 +1,497 @@
+% ROZDZIAŁ 11 — do włączenia w main.tex
+\chapter{Całki zależne od parametru}
+\label{ch:parametry-calki}
+
+\section{Problem i jego dokładne sformułowanie}
+
+Niech $(X,\mathcal F,\mu)$ będzie przestrzenią z miarą, $T$ przestrzenią
+parametrów, a $f:T\times X\to\mathbb C$ rodziną funkcji. Zajmujemy się
+funkcją $F:T\to\mathbb C$ określoną wzorem
+$F(t)=\int_X f(t,x)\,\mathrm d\mu(x)$, o ile $f(t,\cdot)$ jest całkowalna.
+Pytamy, kiedy własności funkcji $t\mapsto f(t,x)$ przechodzą na $F$:
+ciągłość, różniczkowalność, wyższa regularność i analityczność. Problem
+polega na tym, że własność zachodząca osobno dla każdego $x$ nie
+kontroluje automatycznie masy rozłożonej na całym $X$.
+
+\begin{przyklad}[Parametr uciekający do nieskończoności]
+\label{ex:params-escape-11}
+Na $X=(0,\infty)$ z miarą Lebesgue'a połóżmy dla $t>0$
+$f(t,x)=t\chi_{(0,1/t)}(x)$, a $f(0,x)=0$.
+Wówczas $f(t,x)\to0$ dla każdego $x>0$ przy $t\downarrow0$,
+ale $\int_X f(t,x)\,\mathrm d\lambda_1(x)=1$ dla każdego $t>0$.
+Zatem $F$ nie jest ciągła w zerze, mimo ciągłości $t\mapsto f(t,x)$
+w punkcie $0$ dla każdego $x$. Nie istnieje też jedna funkcja
+$g\in L^1(X)$ dominująca wszystkie $f(t,\cdot)$ dla dostatecznie
+małych $t>0$: w przeciwnym razie twierdzenie o zbieżności
+zdominowanej dawałoby sprzeczność.
+\end{przyklad}
+
+\begin{uwaga}[Zakres rozdziału]
+W rozdziale 8 udowodniono podstawowe twierdzenia o całkach z parametrem.
+Tutaj formułujemy ich wersje \emph{lokalne} i \emph{jednostajne},
+wyprowadzamy twierdzenia wyższego rzędu i badamy kilka użytecznych
+transformacji. Nie używamy twierdzenia Fubiniego, które zostanie
+udowodnione dopiero w rozdziale~\ref{ch:produkty-miary}.
+\end{uwaga}
+
+\section{Dominacja lokalna i ciągłość w parametrze}
+
+\begin{definicja}[Lokalna dominacja całkowalna]
+\label{def:local-majorant-11}
+Niech $(T,d)$ będzie przestrzenią metryczną, $t_0\in T$ oraz
+$f:T\times X\to\mathbb C$. Mówimy, że rodzina $f$ jest
+\emph{lokalnie zdominowana całkowalnie w $t_0$}, jeżeli istnieją
+otoczenie $U$ punktu $t_0$ w $T$ oraz mierzalna funkcja
+$g:X\to[0,\infty)$ z $\int_Xg\,\mathrm d\mu(x)<\infty$ takie, że
+istnieje $N\in\mathcal F$, $\mu(N)=0$, taki, że
+$|f(t,x)|\le g(x)$ dla wszystkich $t\in U$ i $x\in X\setminus N$.
+Warunek ten odróżniamy od słabszego wymagania, by dla każdego $t$
+istniał osobny zbiór zerowy $N_t$. W twierdzeniu o ciągłości
+słabszy wariant również wystarcza: dla ustalonego ciągu
+$t_n\to t_0$ zbiór $N_{t_0}\cup\bigcup_n N_{t_n}$
+pozostaje zerowy, toteż nadal można użyć twierdzenia
+o zbieżności zdominowanej. W pozostałych twierdzeniach
+sprawdzamy potrzebny wariant oddzielnie.
+\end{definicja}
+
+\begin{twierdzenie}[Lokalne kryterium ciągłości]
+\label{thm:local-continuity-11}
+Niech $(T,d)$ będzie przestrzenią metryczną, $t_0\in T$,
+a $f:T\times X\to\mathbb C$ spełnia następujące warunki:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item dla każdego $t\in T$ funkcja $x\mapsto f(t,x)$ jest mierzalna;
+\item dla $\mu$-prawie każdego $x$ odwzorowanie $t\mapsto f(t,x)$
+      jest ciągłe w $t_0$;
+\item istnieje całkowalna dominacja w pewnym otoczeniu $t_0$
+      w sensie definicji~\ref{def:local-majorant-11}.
+\end{enumerate}
+Wtedy $F(t)=\int_X f(t,x)\,\mathrm d\mu(x)$ jest określona
+w pewnym otoczeniu $t_0$ i ciągła w $t_0$.
+Jeśli warunki te zachodzą w każdym $t_0\in T$, to $F$ jest
+ciągła na $T$.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy otoczenie $U$ i funkcję $g$ z (iii). Dla $t\in U$
+mamy $\int_X|f(t,x)|\,\mathrm d\mu(x)\le\int_Xg\,\mathrm d\mu(x)$,
+więc $F(t)$ istnieje jako całka bezwzględnie zbieżna. Niech
+$t_n\to t_0$. Dla dużych $n$ mamy $t_n\in U$, a funkcje
+$f(t_n,\cdot)$ zbiegają do $f(t_0,\cdot)$ prawie wszędzie i
+są zdominowane przez $g$. Twierdzenie o zbieżności zdominowanej,
+zastosowane do części rzeczywistej i urojonej lub bezpośrednio
+do modułu różnicy, daje
+$\int_X |f(t_n,x)-f(t_0,x)|\,\mathrm d\mu(x)\to0$.
+W konsekwencji $|F(t_n)-F(t_0)|\to0$. Ciągowa charakteryzacja
+ciągłości w przestrzeni metrycznej kończy dowód.
+\end{proof}
+
+\begin{wniosek}[Ciągłość w normie $L^1$]
+\label{cor:l1-param-11}
+Przy założeniach twierdzenia~\ref{thm:local-continuity-11}
+zachodzi $\int_X|f(t,x)-f(t_0,x)|\,\mathrm d\mu(x)\to0$
+dla $t\to t_0$; w szczególności nie tylko wartości całek,
+lecz także całe funkcje podcałkowe zależą ciągle od parametru
+w normie $L^1$.
+\end{wniosek}
+
+\begin{przyklad}[Brak potrzeby globalnej dominacji]
+Niech $f(t,x)=e^{-tx}$ dla $x>0$ i $t>0$. Jeśli $t_0>0$,
+to dla $t\in(t_0/2,3t_0/2)$ zachodzi
+$0\le f(t,x)\le e^{-t_0x/2}$, a funkcja po prawej stronie
+jest całkowalna na $(0,\infty)$. Zatem
+$F(t)=\int_{(0,\infty)}e^{-tx}\,\mathrm d\lambda_1(x)=1/t$
+jest ciągła na $(0,\infty)$. Nie istnieje jednak całkowalna
+dominanta dla całej rodziny $\{f(t,\cdot):t>0\}$, gdyż
+$\sup_{t>0} e^{-tx}=1$ dla każdego $x>0$.
+\end{przyklad}
+
+\section{Jednostajność zbieżności całek w parametrze}
+
+\begin{twierdzenie}[Zbieżność jednostajna po scałkowaniu]
+\label{thm:uniform-parameter-11}
+Niech $T$ będzie niepustym zbiorem, $f_n,f:T\times X\to\mathbb C$,
+a dla każdego $t\in T$ funkcje $f_n(t,\cdot)$ i $f(t,\cdot)$
+niech będą mierzalne. Załóżmy, że istnieją mierzalne funkcje
+$h_n:X\to[0,\infty)$ i $g\in L^1(\mu)$ takie, że
+$|f_n(t,x)-f(t,x)|\le h_n(x)\le g(x)$
+dla wszystkich $t\in T$, wszystkich $n$ oraz prawie wszystkich
+$x$ poza wspólnym zbiorem zerowym, a także $h_n(x)\to0$
+prawie wszędzie. Załóżmy dodatkowo, że dla pewnego
+$t_*\in T$ funkcja $f(t_*,\cdot)$ jest całkowalna oraz że
+$|f(t,x)-f(t_*,x)|\le g_0(x)$ dla $t\in T$ i pewnego
+$g_0\in L^1(\mu)$, tak aby wszystkie występujące całki były
+określone. Wtedy
+\[
+\sup_{t\in T}\left|\int_X f_n(t,x)\,\mathrm d\mu(x)
+-\int_Xf(t,x)\,\mathrm d\mu(x)\right|\longrightarrow0.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla każdego $t\in T$ z nierówności dla całki wynika
+$|\int_X(f_n-f)(t,x)\,\mathrm d\mu(x)|\le\int_Xh_n\,\mathrm d\mu(x)$.
+Oszacowanie po prawej stronie nie zależy od $t$.
+Twierdzenie Lebesgue'a o zbieżności zdominowanej daje
+$\int_Xh_n\,\mathrm d\mu(x)\to0$. Przechodząc do supremum
+po $t$, otrzymujemy tezę.
+\end{proof}
+
+\begin{uwaga}[Mierzalność supremum nie jest automatyczna]
+Jeśli chciałoby się wybrać $h_n(x)=\sup_{t\in T}|f_n(t,x)-f(t,x)|$,
+trzeba najpierw sprawdzić mierzalność tej funkcji. Wystarcza
+na przykład, aby $T$ było separowalną przestrzenią metryczną,
+a odwzorowania $t\mapsto f_n(t,x)-f(t,x)$ były ciągłe dla
+wszystkich $x$: wtedy supremum po $T$ równa się supremum
+po ustalonym przeliczalnym podzbiorze gęstym. Jeśli nie
+mamy tego warunku, lepiej założyć istnienie mierzalnej
+majoranty $h_n$ bez odwoływania się do supremum.
+\end{uwaga}
+
+\section{Różniczkowanie pod znakiem całki}
+
+\begin{twierdzenie}[Pierwsza pochodna — wersja lokalna]
+\label{thm:local-differentiation-11}
+Niech $I\subseteq\mathbb R$ będzie przedziałem otwartym,
+$t_0\in I$, a $f:I\times X\to\mathbb C$. Załóżmy, że:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item dla każdego $t\in I$ przekrój $f(t,\cdot)$ jest mierzalny;
+\item dla prawie wszystkich $x$ funkcja $t\mapsto f(t,x)$ jest
+      różniczkowalna na $I$;
+\item istnieje $r>0$ z $[t_0-r,t_0+r]\subset I$ i funkcja
+      $g\in L^1(\mu)$, $g\ge0$, taka, że
+      $|\partial_t f(t,x)|\le g(x)$ dla wszystkich
+      $t\in[t_0-r,t_0+r]$ poza wspólnym zbiorem zerowym;
+\item funkcja $f(t_0,\cdot)$ jest całkowalna.
+\end{enumerate}
+Wówczas w otoczeniu $t_0$ funkcja
+$F(t)=\int_Xf(t,x)\,\mathrm d\mu(x)$ jest dobrze określona,
+różniczkowalna w $t_0$ i spełnia
+\begin{equation}\label{eq:diff-param-11}
+F'(t_0)=\int_X\partial_t f(t_0,x)\,\mathrm d\mu(x).
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Poza wspólnym zbiorem zerowym ustalmy $x$ oraz $t$
+i zastosujmy twierdzenie o wartości średniej do
+rzeczywistej funkcji
+$s\mapsto\operatorname{Re}(\overline{u}f(s,x))$,
+gdzie $u\in\mathbb C$, $|u|=1$. Jej pochodna
+ma moduł co najwyżej $g(x)$, zatem
+$|\operatorname{Re}(\overline{u}(f(t,x)-f(t_0,x)))|
+\le |t-t_0|g(x)$. Biorąc supremum po
+$|u|=1$, otrzymujemy dokładnie
+$|f(t,x)-f(t_0,x)|\le |t-t_0|g(x)$.
+Argument nie wymaga ciągłości pochodnej ani
+nieuzasadnionego zastosowania wzoru Newtona--Leibniza.
+Stąd $f(t,\cdot)$ jest całkowalna dla $|t-t_0|<r$.
+Dla $0<|h|<r$ iloraz
+$q_h(x)=(f(t_0+h,x)-f(t_0,x))/h$ jest mierzalny
+jako różnica funkcji mierzalnych; poza zbiorem zerowym
+$q_h(x)\to\partial_tf(t_0,x)$ przy $h\to0$,
+a $|q_h(x)|\le g(x)$. Pochodna $x\mapsto\partial_tf(t_0,x)$
+jest mierzalna jako granica ilorazów różnicowych, na przykład
+dla ciągu $h=1/n$ dostatecznie dużych $n$.
+Twierdzenie o zbieżności zdominowanej daje
+$\int_Xq_h(x)\,\mathrm d\mu(x)\to
+\int_X\partial_tf(t_0,x)\,\mathrm d\mu(x)$,
+gdy $h\to0$. Z liniowości całki
+$\int_Xq_h\,\mathrm d\mu(x)=(F(t_0+h)-F(t_0))/h$,
+co jest dokładnie definicją pochodnej $F$.
+\end{proof}
+
+\begin{uwaga}[Dlaczego samo istnienie pochodnej nie wystarcza]
+Dla $f(t,x)=t\chi_{(0,1/t)}(x)$ z pierwszego przykładu
+nie można nawet otrzymać ciągłości całki w $t=0$.
+Dominacja \emph{ilorazów różnicowych} lub lokalna dominacja
+pochodnej są niezależnymi, istotnymi warunkami.
+\end{uwaga}
+
+\begin{twierdzenie}[Pochodne wyższego rzędu]
+\label{thm:higher-differentiation-11}
+Niech $I\subseteq\mathbb R$ będzie otwartym przedziałem,
+$m\ge1$ liczbą naturalną, a $f:I\times X\to\mathbb C$.
+Załóżmy, że dla każdego $t\in I$ funkcja $f(t,\cdot)$ jest mierzalna,
+a dla prawie wszystkich $x$ odwzorowanie $t\mapsto f(t,x)$
+ma pochodne do rzędu $m$ włącznie, wszystkie ciągłe na $I$.
+Załóżmy ponadto, że dla każdego zwartego przedziału
+$J\subset I$ oraz każdego $1\le k\le m$
+istnieje $g_{J,k}\in L^1(\mu)$ taka, że
+$|\partial_t^k f(t,x)|\le g_{J,k}(x)$ dla $t\in J$
+poza wspólnym zbiorem zerowym, a $f(t_*,\cdot)$ jest
+całkowalna dla pewnego $t_*\in I$.
+Wtedy $F(t)=\int_Xf(t,x)\,\mathrm d\mu(x)$ należy
+do $C^m(I)$ oraz dla wszystkich $t\in I$ i $1\le k\le m$
+\begin{equation}\label{eq:higher-param-11}
+F^{(k)}(t)=\int_X\partial_t^k f(t,x)\,\mathrm d\mu(x).
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Dla $t\in I$ odcinek o końcach $t_*$ i $t$ jest zwarty
+i zawiera się w $I$. Oszacowanie pierwszej pochodnej
+zapewnia $|f(t,x)|\le|f(t_*,x)|+|t-t_*|g_{J,1}(x)$,
+więc $f(t,\cdot)$ jest całkowalna. Dla ustalonego
+$t\in I$ zastosujmy twierdzenie~\ref{thm:local-differentiation-11}
+w małym otoczeniu $t$: otrzymujemy istnienie $F'$ i wzór
+z $k=1$. Gdy $1\le k<m$, funkcja $\partial_t^kf(t,\cdot)$
+jest mierzalna jako punktowa granica ilorazów różnicowych.
+Dzięki majorantom $g_{J,k}$ jest całkowalna. Stosując
+twierdzenie~\ref{thm:local-differentiation-11} do
+$\partial_t^kf$, otrzymujemy pochodną $(k+1)$-szego rzędu.
+Ciągłość każdej funkcji $t\mapsto\int_X\partial_t^kf(t,x)\,\mathrm d\mu(x)$
+wynika z twierdzenia~\ref{thm:local-continuity-11},
+gdyż $\partial_t^kf(t,x)$ jest punktowo ciągła w $t$
+i lokalnie zdominowana. Zatem $F\in C^m(I)$.
+\end{proof}
+
+\begin{przyklad}[Całka Laplace'a i pochodne]
+\label{ex:laplace-11}
+Dla $t>0$ kładziemy $F(t)=\int_{(0,\infty)}e^{-tx}\,\mathrm d\lambda_1(x)$.
+Mamy $F(t)=1/t$. Ponieważ
+$\partial_t^k e^{-tx}=(-x)^k e^{-tx}$, dla
+$t$ w zwartym podprzedziale $(0,\infty)$ funkcja
+$x^k e^{-tx}$ jest zdominowana przez
+$x^ke^{-ax}$, gdzie $a>0$ zależy od podprzedziału.
+Ta ostatnia funkcja jest całkowalna, więc
+\[
+\int_{(0,\infty)}x^ke^{-tx}\,\mathrm d\lambda_1(x)
+=\frac{k!}{t^{k+1}}\qquad(k\in\mathbb N_0).
+\]
+W szczególności wzór na momenty rozkładu wykładniczego
+wynika z różniczkowania pod znakiem całki, a nie z
+wielokrotnego całkowania przez części.
+\end{przyklad}
+
+\section{Zbieżność według miary zamiast dominacji punktowej}
+
+\begin{twierdzenie}[Kryterium Vitaliego dla parametru]
+\label{thm:param-vitali-11}
+Niech $(X,\mathcal F,\mu)$ będzie przestrzenią z miarą
+skończoną, $(T,d)$ przestrzenią metryczną, $t_0\in T$,
+a $f:T\times X\to\mathbb C$ rodziną funkcji o mierzalnych
+przekrojach. Załóżmy, że istnieje otoczenie $U$ punktu
+$t_0$ takie, że rodzina modułów
+$\{|f(t,\cdot)|:t\in U\}$ jest jednostajnie całkowalna
+w sensie Definicji~\ref{def:uniform-integrability}
+oraz dla każdego $\varepsilon>0$ zachodzi
+\[
+\mu(\{x\in X:|f(t,x)-f(t_0,x)|>\varepsilon\})
+\longrightarrow0\qquad(t\to t_0).
+\]
+Jest to naturalne rozszerzenie zbieżności według miary
+z Definicji~\ref{def:convergence-measure} na funkcje
+zespolone. Wówczas
+$\|f(t,\cdot)-f(t_0,\cdot)\|_{L^1(\mu)}\to0$,
+a więc funkcja $t\mapsto\int_X f(t,x)\,\mathrm d\mu(x)$
+jest ciągła w $t_0$.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy przeciwnie, że granica norm nie jest zerem.
+Istnieją wówczas $\varepsilon>0$ i ciąg $t_n\to t_0$,
+$t_n\in U$, dla którego
+$\|f(t_n,\cdot)-f(t_0,\cdot)\|_1\ge\varepsilon$.
+Funkcje $f(t_n,\cdot)$ zbiegają według miary do
+$f(t_0,\cdot)$, a rodziny ich części rzeczywistych i urojonych
+są jednostajnie całkowalne. Twierdzenie Vitaliego
+z rozdziału~\ref{ch:twierdzenia-graniczne}
+(dowodzone osobno dla części rzeczywistych i urojonych)
+implikuje zbieżność w $L^1$, sprzeczną z wybraną
+nierównością. W szczególności wszystkie całki
+są określone i ich ciągłość wynika z nierówności
+$|\int_X(f(t,x)-f(t_0,x))\,\mathrm d\mu(x)|
+\le\|f(t,\cdot)-f(t_0,\cdot)\|_1$.
+\end{proof}
+
+\begin{uwaga}
+Jednostajna całkowalność nie wymaga wspólnej
+całkowalnej dominanty. W przeciwieństwie do twierdzenia
+o dominacji lokalnej założenie o zbieżności jest tutaj
+formułowane według miary, a nie punktowo. Dla $\mu(X)=\infty$
+potrzebna jest dodatkowa kontrola ogonów; sam warunek
+jednostajnej całkowalności na małych zbiorach nie wystarcza.
+\end{uwaga}
+
+\section{Zmienna dziedzina całkowania}
+
+\begin{twierdzenie}[Całkowanie po zależnej od parametru dziedzinie]
+\label{thm:moving-domains-11}
+Niech $(T,d)$ będzie przestrzenią metryczną, $t_0\in T$,
+a $A_t\in\mathcal F$ dla $t\in T$. Niech $u:T\times X\to\mathbb C$
+ma mierzalne przekroje $u(t,\cdot)$ i załóżmy, że dla prawie
+wszystkich $x$ zachodzi
+$\chi_{A_t}(x)u(t,x)\to\chi_{A_{t_0}}(x)u(t_0,x)$
+dla $t\to t_0$. Jeżeli w pewnym otoczeniu $U$ punktu $t_0$
+istnieje nieujemna funkcja $g\in L^1(\mu)$ taka, że
+\emph{dla każdego} $t\in U$ nierówność
+$|\chi_{A_t}(x)u(t,x)|\le g(x)$
+zachodzi dla $\mu$-prawie każdego $x$ (zbiór wyjątkowy
+może zależeć od $t$), to
+$t\mapsto\int_{A_t}u(t,x)\,\mathrm d\mu(x)$
+jest ciągła w $t_0$.
+\end{twierdzenie}
+\begin{proof}
+Definiujemy na całym $X$ funkcję
+$f(t,x)=u(t,x)$ dla $x\in A_t$ i $f(t,x)=0$
+dla $x\notin A_t$. Jest ona mierzalna w $x$ dla każdego $t$;
+wyrażenia $\chi_{A_t}u$ należy tak interpretować,
+aby uniknąć nieoznaczonych iloczynów $0\cdot\infty$.
+Ustalmy ciąg $t_n\to t_0$. Po pominięciu skończenie
+wielu wyrazów możemy założyć $t_n\in U$. Dla każdego
+$n\ge0$ wybierzmy zbiór zerowy $N_n$, poza którym
+$|f(t_n,x)|\le g(x)$; w tym zapisie $t_0$ odpowiada
+$n=0$. Zbiór $N=\bigcup_{n\ge0}N_n$ ma miarę zero.
+Poza $N$ oraz zbiorem wyjątkowym z założenia o zbieżności
+punktowej zachodzi jednocześnie $f(t_n,x)\to f(t_0,x)$
+i $|f(t_n,x)|\le g(x)$ dla wszystkich $n\ge0$.
+Twierdzenie Lebesgue'a o zbieżności zdominowanej
+zapewnia więc zbieżność całek wzdłuż każdego ciągu
+$t_n\to t_0$. Ciągowa charakteryzacja ciągłości
+w przestrzeni metrycznej kończy dowód. W ten sposób
+nie użyliśmy silniejszego, niewymaganego założenia
+o wspólnym zbiorze wyjątkowym dla całej rodziny parametrów.
+\end{proof}
+
+\begin{przyklad}[Przedziały ruchome i brak dominacji]
+Niech $u(t,x)=1$ na $(0,\infty)$ i $A_t=(0,t)$ dla $t>0$.
+Dla $t$ w otoczeniu $t_0>0$ wszystkie $A_t$ mieszczą się
+w $(0,2t_0)$; funkcja $g=\chi_{(0,2t_0)}$ jest
+całkowalną dominantą, a dla każdego $x\ne t_0$
+zachodzi $\chi_{A_t}(x)\to\chi_{A_{t_0}}(x)$.
+Stąd $\int_{A_t}1\,\mathrm d\lambda_1(x)=t$ zależy ciągle od $t$.
+Ten sam argument przestaje działać, jeśli dziedziny rozrastają
+się tak, że masa ucieka poza każdy zbiór skończonej miary.
+\end{przyklad}
+
+\section{Całki niewłaściwe i jednostajna kontrola ogonów}
+
+\begin{twierdzenie}[Kryterium jednostajnej kontroli ogonów]
+\label{thm:tails-11}
+Niech $t_0\in T$, gdzie $(T,d)$ jest przestrzenią metryczną,
+a $(X,\mathcal F,\mu)$ przestrzenią z miarą. Załóżmy, że
+istnieje wyczerpanie $X_1\subseteq X_2\subseteq\dots$,
+$\bigcup_{n\ge1}X_n=X$, zbiory $X_n\in\mathcal F$
+o skończonej mierze, oraz $f:T\times X\to\mathbb C$,
+dla której $f(t,\cdot)$ jest całkowalna na każdym $X_n$.
+Załóżmy ponadto, że $t\mapsto\int_{X_n}f(t,x)\,\mathrm d\mu(x)$
+jest ciągła w $t_0$ dla każdego $n$, oraz że istnieje
+otoczenie $U$ punktu $t_0$ takie, że
+\begin{equation}\label{eq:uniform-tails-11}
+\lim_{n\to\infty}\sup_{t\in U}
+\int_{X\setminus X_n}|f(t,x)|\,\mathrm d\mu(x)=0.
+\end{equation}
+Wtedy wszystkie $f(t,\cdot)$ dla $t\in U$ są całkowalne,
+a $t\mapsto\int_Xf(t,x)\,\mathrm d\mu(x)$ jest ciągła w $t_0$.
+\end{twierdzenie}
+\begin{proof}
+Warunek \eqref{eq:uniform-tails-11} gwarantuje, że dla
+pewnego $n$ i wszystkich $t\in U$ całki modułów po
+$X\setminus X_n$ są skończone; ich suma z całką po $X_n$
+jest więc skończona. Ustalmy $\varepsilon>0$ i wybierzmy
+$n$ tak duże, aby supremum w
+\eqref{eq:uniform-tails-11} było mniejsze niż $\varepsilon/3$.
+Dla $t\in U$ mamy
+\begin{align*}
+\left|\int_Xf(t,x)\,\mathrm d\mu(x)-\int_Xf(t_0,x)\,\mathrm d\mu(x)\right|
+&\le\left|\int_{X_n}(f(t,x)-f(t_0,x))\,\mathrm d\mu(x)\right|\\
+&\quad+\int_{X\setminus X_n}|f(t,x)|\,\mathrm d\mu(x)
++\int_{X\setminus X_n}|f(t_0,x)|\,\mathrm d\mu(x).
+\end{align*}
+Dwa ostatnie składniki są mniejsze niż $2\varepsilon/3$.
+Pierwszy jest mniejszy niż $\varepsilon/3$, gdy $t$
+jest dostatecznie blisko $t_0$ dzięki ciągłości
+całki na $X_n$. To kończy dowód.
+\end{proof}
+
+\begin{uwaga}[Ograniczenie kryterium]
+Warunek \eqref{eq:uniform-tails-11} jest wystarczający, lecz
+niekonieczny dla ciągłości całki: przy funkcjach zmieniających
+znak mogą występować znoszące się wkłady z ogona.
+Kryterium jest użyteczne zwłaszcza dla całek niewłaściwych,
+gdzie trudno znaleźć jedną majorantę całkowalną na całym $X$.
+\end{uwaga}
+
+\section{Transformata Laplace'a i funkcje holomorficzne}
+
+\begin{twierdzenie}[Holomorficzność transformaty Laplace'a]
+\label{thm:laplace-holo-11}
+Niech $a\in\mathbb R$ i niech $h:(0,\infty)\to\mathbb C$
+będzie mierzalna oraz
+$\int_{(0,\infty)}e^{-\sigma x}|h(x)|\,\mathrm d\lambda_1(x)<\infty$
+dla każdego $\sigma>a$. Dla $z\in\mathbb C$,
+$\operatorname{Re}z>a$, określmy
+$L_h(z)=\int_{(0,\infty)}e^{-zx}h(x)\,\mathrm d\lambda_1(x)$.
+Wtedy $L_h$ jest holomorficzna w półpłaszczyźnie
+$\{\operatorname{Re}z>a\}$ i dla każdego $k\in\mathbb N_0$
+\begin{equation}\label{eq:laplace-derivative-11}
+L_h^{(k)}(z)=\int_{(0,\infty)}(-x)^k e^{-zx}h(x)
+\,\mathrm d\lambda_1(x).
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $z_0$ z $\operatorname{Re}z_0>a$ i liczbę
+$\sigma$ spełniającą $a<\sigma<\operatorname{Re}z_0$.
+W pewnym otoczeniu $z_0$ zachodzi $\operatorname{Re}z>\sigma$.
+Dla $k\ge0$ istnieje $C_{k,\sigma,z_0}<\infty$ taka, że
+$x^k e^{-\operatorname{Re}z\,x}\le
+C_{k,\sigma,z_0}e^{-\sigma x}$ w nieco mniejszym
+otoczeniu $z_0$: wybieramy pośrednią liczbę
+$\sigma'>\sigma$ z $\operatorname{Re}z>\sigma'$
+i korzystamy z ograniczoności $x^ke^{-(\sigma'-\sigma)x}$.
+Zatem całki po prawej stronie
+\eqref{eq:laplace-derivative-11} są zbieżne bezwzględnie.
+
+Aby udowodnić różniczkowalność zespoloną, dla małego
+$w\in\mathbb C\setminus\{0\}$ rozważamy
+\[
+\frac{e^{-(z_0+w)x}-e^{-z_0x}}{w}
+=-x\int_{[0,1]}e^{-(z_0+sw)x}\,\mathrm d\lambda_1(s).
+\]
+Tożsamość z prawą stroną jest klasyczną
+całką po rzeczywistym odcinku $s\in[0,1]$,
+a nie zamianą kolejności dwóch całkowań.
+Moduł ilorazu jest ograniczony przez
+$x e^{-\sigma'x}$ dla odpowiednio małych $w$,
+co po pomnożeniu przez $|h(x)|$ jest zdominowane
+przez stałą razy $e^{-\sigma x}|h(x)|$.
+Dla każdego $x$ iloraz dąży do $-xe^{-z_0x}$.
+Twierdzenie o zbieżności zdominowanej daje
+$L_h'(z_0)=-\int_{(0,\infty)}xe^{-z_0x}h(x)
+\,\mathrm d\lambda_1(x)$. Powtarzając argument dla
+$(-x)^kh(x)$, otrzymujemy wszystkie pochodne.
+Ponieważ pochodna zespolona istnieje w każdym punkcie
+półpłaszczyzny, $L_h$ jest holomorficzna.
+\end{proof}
+
+\begin{przyklad}[Funkcja Gamma]
+\label{ex:gamma-param-11}
+Dla $s>0$ definiujemy
+$\Gamma(s)=\int_{(0,\infty)}x^{s-1}e^{-x}\,\mathrm d\lambda_1(x)$.
+Całka jest skończona: przy zerze $x^{s-1}$ jest
+całkowalne dla $s>0$, a w nieskończoności czynnik
+$e^{-x}$ dominuje każdą potęgę $x$.
+Dla każdego $s_0>0$ wybieramy $0<a<s_0<b$;
+na $s\in[a,b]$ pochodne rzędu $k$ funkcji podcałkowej
+wynoszą $x^{s-1}(\log x)^k e^{-x}$ i mają całkowalną
+majorantę
+\[
+\chi_{(0,1]}(x)x^{a-1}|\log x|^k
++\chi_{(1,\infty)}(x)x^{b-1}(1+\log x)^k e^{-x}.
+\]
+W konsekwencji $\Gamma\in C^\infty((0,\infty))$ i
+$\Gamma^{(k)}(s)=\int_{(0,\infty)}
+ x^{s-1}(\log x)^k e^{-x}\,\mathrm d\lambda_1(x)$.
+Całkując przez części na $[\varepsilon,R]$ i przechodząc
+do granic $\varepsilon\downarrow0$, $R\uparrow\infty$,
+dostajemy $\Gamma(s+1)=s\Gamma(s)$.
+Ponadto $\Gamma(1)=1$, więc $\Gamma(n+1)=n!$ dla $n\ge0$.
+\end{przyklad}
+
+\section{Podsumowanie}
+Dominacja lokalna pozwala przenosić ciągłość i
+różniczkowalność pod znak całki bez narzucania
+jednej globalnej majoranty. Jednostajna kontrola
+błędów oraz ogonów pozwala badać rodziny funkcji,
+dla których pojedyncza dominanta bywa niedostępna.
+Wersja zespolona prowadzi do holomorficzności
+transformaty Laplace'a i umożliwia obliczanie jej
+pochodnych. W kolejnym rozdziale skonstruujemy
+miary produktowe, dzięki którym można zamieniać
+kolejność całkowania względem dwóch niezależnych
+miar.

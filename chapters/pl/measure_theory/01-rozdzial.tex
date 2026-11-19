@@ -1,0 +1,501 @@
+% ROZDZIAŁ 1 — plik włączany przez main.tex
+\chapter{Rodziny zbiorów i przestrzenie mierzalne}
+% Konwencja obowiązująca w całym skrypcie: funkcję charakterystyczną zbioru A oznaczamy przez $\chi_A$.
+\label{ch:przestrzenie-mierzalne}
+
+\section{Dlaczego potrzebujemy \texorpdfstring{$\sigma$}{sigma}-algebr?}
+
+W teorii miary chcemy przypisywać rozmiar zbiorom, a następnie całkować funkcje.
+Aksjomaty teorii mają zapewniać zgodność tego rozmiaru z rozkładaniem zbioru
+na przeliczalnie wiele rozłącznych części. Nie wystarczy zatem umieć mierzyć
+pojedynczych zbiorów: potrzebujemy rodziny zbiorów zamkniętej na operacje,
+które pojawiają się w granicach ciągów i szeregach. Właśnie tę rolę pełnią
+$\sigma$-algebry. Istotne jest, że nie zakładamy mierzalności wszystkich
+podzbiorów rozważanej przestrzeni.
+
+W całym rozdziale $X$ i $Y$ oznaczają zbiory, $\mathcal P(X)$ --- zbiór
+wszystkich podzbiorów $X$, natomiast $A^c=X\setminus A$ oznacza dopełnienie
+zbioru $A\subseteq X$ względem ustalonej przestrzeni $X$. Symbol $\mathbb N$
+oznacza zbiór liczb naturalnych dodatnich. Rodziny zbiorów oznaczamy
+$\mathcal A,\mathcal F,\mathcal G,\mathcal M$.
+
+\begin{definicja}[Pierścień, algebra, $\sigma$-algebra]
+\label{def:algebry}
+Niech $X$ będzie zbiorem, a $\mathcal R\subseteq\mathcal P(X)$.
+\begin{enumerate}
+\item $\mathcal R$ nazywamy \emph{pierścieniem zbiorów}, jeżeli
+$\varnothing\in\mathcal R$ i dla dowolnych $A,B\in\mathcal R$ zachodzą
+$A\cup B\in\mathcal R$ oraz $A\setminus B\in\mathcal R$.
+\item $\mathcal R$ nazywamy \emph{algebrą zbiorów} na $X$, jeżeli jest
+pierścieniem i $X\in\mathcal R$.
+\item $\mathcal R$ nazywamy \emph{$\sigma$-algebrą} na $X$, jeżeli
+$X\in\mathcal R$, $A^c\in\mathcal R$ dla każdego $A\in\mathcal R$ oraz
+$\bigcup_{n=1}^{\infty}A_n\in\mathcal R$ dla każdego ciągu
+$(A_n)_{n\geq1}$ elementów $\mathcal R$.
+\end{enumerate}
+Parę $(X,\mathcal F)$, gdzie $\mathcal F$ jest $\sigma$-algebrą na $X$,
+nazywamy \emph{przestrzenią mierzalną}; jej elementy to \emph{zbiory
+mierzalne}.
+\end{definicja}
+
+\begin{uwaga}
+Algebra jest zamknięta na skończone sumy, przekroje i różnice zbiorów.
+$\sigma$-algebra jest ponadto zamknięta na przeliczalne przekroje, gdyż
+z praw de Morgana
+$\bigcap_{n\geq1}A_n=(\bigcup_{n\geq1}A_n^c)^c$.
+Każda $\sigma$-algebra jest algebrą, ale nie odwrotnie.
+\end{uwaga}
+
+\begin{przyklad}[Najmniejsza i największa $\sigma$-algebra]
+Dla dowolnego $X$ rodziny $\{\varnothing,X\}$ oraz $\mathcal P(X)$ są
+$\sigma$-algebrami. Pierwszą nazywamy \emph{trywialną}, drugą ---
+\emph{dyskretną}. Gdy $X=\varnothing$, są one równe.
+\end{przyklad}
+
+\begin{przyklad}[Zbiory skończone i kofinitywne]
+\label{ex:finite-cofinite}
+Niech $X$ będzie nieskończonym zbiorem. Rodzina
+\[
+\mathcal A=\{A\subseteq X:A\ \text{jest skończony lub }X\setminus A
+\ \text{jest skończony}\}
+\]
+jest algebrą. Jeśli $X=\mathbb N$, nie jest $\sigma$-algebrą:
+każdy singleton $\{2n\}$ należy do $\mathcal A$, lecz
+$\bigcup_{n\geq1}\{2n\}$ ani nie jest skończony, ani nie ma skończonego
+dopełnienia.
+\end{przyklad}
+
+\begin{przyklad}[Algebra przeliczalno-koprzeliczalna]
+\label{ex:countable-cocountable}
+Niech $X$ będzie dowolnym zbiorem. Rodzina
+\[
+\mathcal C_X=\{A\subseteq X:A\text{ jest przeliczalny lub }X\setminus A
+\text{ jest przeliczalny}\}
+\]
+jest $\sigma$-algebrą. Istotnie, dopełnienia zachowują podaną własność.
+Jeżeli w przeliczalnej rodzinie $(A_n)$ występuje zbiór o przeliczalnym
+dopełnieniu, to dopełnienie $\bigcup_nA_n$ jest przeliczalne; jeśli zaś
+wszystkie $A_n$ są przeliczalne, ich suma również jest przeliczalna.
+Jeżeli $X$ jest nieprzeliczalny, to $\mathcal C_X\subsetneq\mathcal P(X)$.
+Rzeczywiście, możemy wybrać dwa rozłączne nieprzeliczalne podzbiory
+$A,B$ o sumie $X$ (wybór takiego podziału jest możliwy w zwykłych
+założeniach teorii mnogości z aksjomatem wyboru). Wtedy ani $A$,
+ani $X\setminus A=B$ nie jest przeliczalny, więc
+$A\notin\mathcal C_X$.
+\end{przyklad}
+
+\begin{przyklad}[Zbiory określone przez podział]
+Niech $(E_i)_{i\in I}$ będzie rozbiciem zbioru $X$ na niepuste, parami
+rozłączne zbiory. Rodzina wszystkich sum $\bigcup_{i\in J}E_i$ dla
+$J\subseteq I$ jest $\sigma$-algebrą. W szczególności dla
+$X=\{a,b,c\}$ podział $\{\{a,b\},\{c\}\}$ wyznacza $\sigma$-algebrę
+$\{\varnothing,\{a,b\},\{c\},X\}$.
+\end{przyklad}
+
+\section{Generowanie \texorpdfstring{$\sigma$}{sigma}-algebr}
+
+\begin{twierdzenie}[Przekroje $\sigma$-algebr]
+\label{thm:intersection-sigma}
+Niech $X$ będzie zbiorem i niech $(\mathcal F_i)_{i\in I}$ będzie
+niepustą rodziną $\sigma$-algebr na $X$. Wówczas
+$\bigcap_{i\in I}\mathcal F_i$ jest $\sigma$-algebrą na $X$.
+\end{twierdzenie}
+\begin{proof}
+Wszystkie $\mathcal F_i$ zawierają $X$. Jeśli $A$ należy do każdego
+$\mathcal F_i$, to jego dopełnienie również należy do każdego z nich.
+Analogicznie, jeśli wszystkie $A_n$ należą do przekroju tych rodzin,
+to $\bigcup_nA_n$ należy do każdej $\mathcal F_i$, a więc do ich przekroju.
+\end{proof}
+
+\begin{definicja}[$\sigma$-algebra generowana]
+\label{def:sigma-generated}
+Dla zbioru $X$ i rodziny $\mathcal E\subseteq\mathcal P(X)$ definiujemy
+\[
+\sigma_X(\mathcal E)=\bigcap\{\mathcal F:\mathcal F\text{ jest
+$\sigma$-algebrą na }X\text{ i }\mathcal E\subseteq\mathcal F\}.
+\]
+Jest to \emph{$\sigma$-algebra generowana przez $\mathcal E$}.
+Jeśli przestrzeń $X$ jest ustalona, piszemy po prostu $\sigma(\mathcal E)$.
+\end{definicja}
+
+Rodzina pod przekrojem jest niepusta, ponieważ zawiera $\mathcal P(X)$.
+Z twierdzenia \ref{thm:intersection-sigma} wynika, że $\sigma(\mathcal E)$
+jest $\sigma$-algebrą. Ponadto jest najmniejszą $\sigma$-algebrą
+zawierającą $\mathcal E$, w sensie inkluzji.
+
+\begin{przyklad}
+Dla $E\subseteq X$ mamy
+$\sigma(\{E\})=\{\varnothing,E,E^c,X\}$, z ewentualnymi powtórzeniami,
+gdy $E=\varnothing$ lub $E=X$.
+\end{przyklad}
+
+\begin{uwaga}[Pułapka dotycząca sumy rodzin]
+Nawet rosnąca suma $\sigma$-algebr nie musi być $\sigma$-algebrą.
+Na $X=\mathbb N$ niech $\mathcal F_n$ oznacza $\sigma$-algebrę
+generowaną przez singletony $\{1\},\ldots,\{n\}$.
+Wówczas $\mathcal F_n\subseteq\mathcal F_{n+1}$, ale
+$\bigcup_n\mathcal F_n$ jest tylko algebrą zbiorów skończonych i
+kofinitywnych, znaną z przykładu \ref{ex:finite-cofinite}.
+\end{uwaga}
+
+\begin{definicja}[$\sigma$-algebra śladowa]\label{idx:01:definicja:04}
+
+Niech $(X,\mathcal F)$ będzie przestrzenią mierzalną i niech
+$E\subseteq X$ będzie dowolnym podzbiorem. Definiujemy
+$\mathcal F|_E=\{A\cap E:A\in\mathcal F\}$.
+Rodzina ta jest $\sigma$-algebrą na $E$, nazywaną \emph{śladem}
+$\mathcal F$ na $E$.
+\end{definicja}
+\begin{proof}[Uzasadnienie]
+Do rodziny należy $E=X\cap E$. Dopełnienie w $E$ zbioru $A\cap E$
+wynosi $A^c\cap E$, a przeliczalna suma zbiorów $A_n\cap E$ jest równa
+$(\bigcup_n A_n)\cap E$.
+\end{proof}
+
+\section{Układy \texorpdfstring{$\pi$}{pi} i układy Dynkina}
+
+\begin{definicja}[Układ $\pi$ i układ Dynkina]
+\label{def:pi-lambda}
+Niech $X$ będzie zbiorem. Rodzinę $\mathcal P\subseteq\mathcal P(X)$
+nazywamy \emph{układem $\pi$}, jeżeli jest niepusta i
+$A\cap B\in\mathcal P$ dla wszystkich $A,B\in\mathcal P$.
+Rodzinę $\mathcal D\subseteq\mathcal P(X)$ nazywamy \emph{układem
+Dynkina} (lub \emph{układem $\lambda$}), jeżeli:
+\begin{enumerate}
+\item $X\in\mathcal D$;
+\item jeśli $A,B\in\mathcal D$ i $A\subseteq B$, to $B\setminus A\in\mathcal D$;
+\item dla dowolnych parami rozłącznych $A_1,A_2,\ldots\in\mathcal D$
+zachodzi $\bigcup_nA_n\in\mathcal D$.
+\end{enumerate}
+\end{definicja}
+
+Każda $\sigma$-algebra jest układem Dynkina i układem $\pi$.
+Samo bycie układem Dynkina nie gwarantuje zamknięcia na przekroje.
+Przykładowo, jeśli $X=\{1,2,3,4\}$, to rodzina
+\[
+\mathcal D=\{\varnothing,X,\{1,2\},\{3,4\},\{1,3\},\{2,4\}\}
+\]
+jest układem Dynkina (jedynymi właściwymi, niepustymi zbiorami są tu
+zbiory dwuelementowe), ale nie jest $\sigma$-algebrą, gdyż
+$\{1,2\}\cap\{1,3\}=\{1\}\notin\mathcal D$.
+
+\begin{lemat}
+\label{lem:dynkin-intersection}
+Układ Dynkina $\mathcal D$ na zbiorze $X$ jest $\sigma$-algebrą wtedy
+i tylko wtedy, gdy jest zamknięty na skończone przekroje.
+\end{lemat}
+\begin{proof}
+Konieczność jest oczywista. Załóżmy, że $\mathcal D$ jest układem
+Dynkina zamkniętym na przekroje. Z warunku drugiego otrzymujemy
+$A^c=X\setminus A\in\mathcal D$. Dla $A,B\in\mathcal D$ zachodzi
+$B\setminus A=B\setminus(A\cap B)\in\mathcal D$, więc
+$A\cup B=A\,\dot\cup\,(B\setminus A)\in\mathcal D$; symbol
+$\dot\cup$ oznacza sumę rozłączną. Powtarzając ten krok, uzyskujemy
+zamknięcie na sumy skończone. Dla dowolnego ciągu $(A_n)$ elementów
+$\mathcal D$ zastępujemy $A_n$ przez
+$B_n=A_n\setminus\bigcup_{k<n}A_k$. Zbiory $B_n$ są mierzalne względem
+$\mathcal D$, rozłączne, a ich suma jest równa $\bigcup_nA_n$.
+Trzeci aksjomat układu Dynkina kończy dowód.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie $\pi$--$\lambda$ Dynkina]
+\label{thm:pi-lambda}
+Niech $X$ będzie zbiorem, $\mathcal P$ układem $\pi$ na $X$,
+a $\mathcal D$ układem Dynkina na $X$. Jeśli
+$\mathcal P\subseteq\mathcal D$, to
+$\sigma(\mathcal P)\subseteq\mathcal D$.
+\end{twierdzenie}
+\begin{proof}
+Przekrój dowolnej rodziny układów Dynkina na $X$ jest układem Dynkina.
+Niech $\mathcal L$ będzie najmniejszym układem Dynkina zawierającym
+$\mathcal P$. Wystarczy pokazać, że $\mathcal L$ jest $\sigma$-algebrą.
+
+Dla ustalonego $A\in\mathcal P$ definiujemy
+$\mathcal L_A=\{B\in\mathcal L:A\cap B\in\mathcal L\}$.
+Rodzina $\mathcal L_A$ jest układem Dynkina: należy do niej $X$, gdyż
+$A\cap X=A\in\mathcal L$; własność różnicy wynika z równości
+$A\cap(B\setminus C)=(A\cap B)\setminus(A\cap C)$ dla $C\subseteq B$;
+własność rozłącznych sum wynika z rozdzielności przekroju względem sumy.
+Ponieważ $\mathcal P$ jest układem $\pi$, mamy
+$\mathcal P\subseteq\mathcal L_A$. Z minimalności $\mathcal L$ wynika
+$\mathcal L_A=\mathcal L$. Oznacza to, że
+$A\cap B\in\mathcal L$ dla wszystkich $A\in\mathcal P$, $B\in\mathcal L$.
+
+Teraz dla ustalonego $B\in\mathcal L$ rozważamy
+$\mathcal K_B=\{A\in\mathcal L:A\cap B\in\mathcal L\}$.
+Ponownie jest to układ Dynkina. Wykazana własność daje
+$\mathcal P\subseteq\mathcal K_B$, skąd
+$\mathcal K_B=\mathcal L$. Zatem $\mathcal L$ jest zamknięty
+na skończone przekroje. Na mocy lematu \ref{lem:dynkin-intersection}
+jest $\sigma$-algebrą, a więc $\sigma(\mathcal P)\subseteq\mathcal L$.
+Odwrotna inkluzja wynika z minimalności $\mathcal L$, ponieważ
+$\sigma(\mathcal P)$ jest układem Dynkina zawierającym $\mathcal P$.
+Ostatecznie $\mathcal L=\sigma(\mathcal P)\subseteq\mathcal D$.
+\end{proof}
+
+\begin{uwaga}
+Twierdzenie $\pi$--$\lambda$ pozwala dowodzić własności wszystkich
+zbiorów w $\sigma(\mathcal P)$, badając je najpierw na układzie
+$\pi$. W rozdziale \ref{ch:miary-wlasnosci} zastosujemy je do
+jednoznaczności miar; później również do jednoznaczności miar produktowych.
+\end{uwaga}
+
+\section{Klasy monotoniczne}
+
+\begin{definicja}[Klasa monotoniczna]
+\label{def:monotone-class}
+Rodzinę $\mathcal M\subseteq\mathcal P(X)$ nazywamy \emph{klasą
+monotoniczną}, jeżeli jest zamknięta na granice monotoniczne zbiorów:
+\begin{align*}
+A_n\in\mathcal M,\ A_n\uparrow A
+&\Longrightarrow A\in\mathcal M,\\
+B_n\in\mathcal M,\ B_n\downarrow B
+&\Longrightarrow B\in\mathcal M.
+\end{align*}
+Zapis $A_n\uparrow A$ oznacza $A_n\subseteq A_{n+1}$ oraz
+$A=\bigcup_nA_n$, a $B_n\downarrow B$ oznacza
+$B_{n+1}\subseteq B_n$ oraz $B=\bigcap_nB_n$.
+\end{definicja}
+
+Przekrój klas monotonicznych jest klasą monotoniczną. Dlatego każda
+rodzina $\mathcal E\subseteq\mathcal P(X)$ wyznacza najmniejszą klasę
+monotoniczną $\mathcal M(\mathcal E)$, która ją zawiera.
+
+\begin{twierdzenie}[Twierdzenie o klasie monotonicznej]
+\label{thm:monotone-class}
+Niech $X$ będzie zbiorem, a $\mathcal A$ algebrą podzbiorów $X$.
+Wówczas $\mathcal M(\mathcal A)=\sigma(\mathcal A)$.
+\end{twierdzenie}
+\begin{proof}
+Każda $\sigma$-algebra jest klasą monotoniczną, stąd
+$\mathcal M(\mathcal A)\subseteq\sigma(\mathcal A)$.
+Niech $\mathcal M=\mathcal M(\mathcal A)$. Pokażemy, że $\mathcal M$
+jest $\sigma$-algebrą.
+
+Najpierw rozważmy rodzinę
+$\mathcal C=\{E\in\mathcal M:E^c\in\mathcal M\}$.
+Jest ona klasą monotoniczną: dopełnienie zamienia ciągi rosnące
+na malejące i odwrotnie. Ponieważ $\mathcal A$ jest algebrą,
+$\mathcal A\subseteq\mathcal C$. Z minimalności $\mathcal M$
+wynika $\mathcal C=\mathcal M$, czyli $\mathcal M$ jest zamknięta
+na dopełnienia.
+
+Ustalmy $A\in\mathcal A$ i połóżmy
+$\mathcal M_A=\{E\in\mathcal M:E\cup A\in\mathcal M\}$.
+Suma z ustalonym $A$ zachowuje granice monotoniczne, więc
+$\mathcal M_A$ jest klasą monotoniczną. Algebraiczność $\mathcal A$
+daje $\mathcal A\subseteq\mathcal M_A$, a zatem
+$\mathcal M_A=\mathcal M$. Otrzymaliśmy
+$E\cup A\in\mathcal M$ dla każdego $E\in\mathcal M$ i $A\in\mathcal A$.
+Dla ustalonego $E\in\mathcal M$ rodzina
+$\mathcal N_E=\{B\in\mathcal M:E\cup B\in\mathcal M\}$
+jest więc klasą monotoniczną zawierającą $\mathcal A$, zatem
+$\mathcal N_E=\mathcal M$. W konsekwencji $\mathcal M$ jest zamknięta
+na sumy skończone.
+
+Jeśli $E_1,E_2,\ldots\in\mathcal M$, to ich częściowe sumy
+$F_n=\bigcup_{k=1}^nE_k$ należą do $\mathcal M$ i tworzą ciąg
+rosnący. Stąd $\bigcup_nE_n\in\mathcal M$. Ponieważ
+$X\in\mathcal A\subseteq\mathcal M$, otrzymaliśmy $\sigma$-algebrę.
+Minimalność $\sigma(\mathcal A)$ daje drugą inkluzję.
+\end{proof}
+
+\begin{uwaga}[Dwa narzędzia rozszerzania własności]
+Twierdzenia \ref{thm:pi-lambda} i \ref{thm:monotone-class} są podobne,
+ale ich założenia nie są zamienne: twierdzenie Dynkina rozpoczyna się
+od układu $\pi$, a twierdzenie o klasie monotonicznej --- od algebry.
+Później użyjemy również wersji funkcyjnej twierdzenia o klasie
+monotonicznej, po wprowadzeniu całki.
+\end{uwaga}
+
+\section{Zbiory borelowskie}
+
+\begin{definicja}[$\sigma$-algebra borelowska]
+\label{def:borel}
+Niech $(X,\tau)$ będzie przestrzenią topologiczną, gdzie $\tau$
+stanowi rodzinę jej zbiorów otwartych. Definiujemy
+$\mathcal B(X)=\sigma_X(\tau)$.
+Jest to \emph{$\sigma$-algebra borelowska}; jej elementy nazywamy
+\emph{zbiorami borelowskimi}. Gdy $X=\mathbb R^d$, używamy standardowej
+topologii euklidesowej.
+\end{definicja}
+
+Każdy zbiór otwarty i domknięty jest borelowski, podobnie jak każdy
+przeliczalny przekrój zbiorów otwartych i przeliczalna suma zbiorów
+domkniętych. Zbiory tych ostatnich dwóch typów oznacza się odpowiednio
+$G_\delta$ i $F_\sigma$. Nie każdy zbiór borelowski ma jedną z tych
+dwóch postaci.
+
+\begin{twierdzenie}[Przeliczalne generatory na $\mathbb R$]
+\label{thm:borel-generators-R}
+Dla standardowej topologii na $\mathbb R$ zachodzą równości
+\[
+\mathcal B(\mathbb R)
+=\sigma\bigl(\{(a,b):a,b\in\mathbb Q,\ a<b\}\bigr)
+=\sigma\bigl(\{(-\infty,q):q\in\mathbb Q\}\bigr)
+=\sigma\bigl(\{(-\infty,q]:q\in\mathbb Q\}\bigr).
+\]
+\end{twierdzenie}
+\begin{proof}
+Wszystkie wymienione przedziały są borelowskie, więc każda z
+wygenerowanych rodzin jest zawarta w $\mathcal B(\mathbb R)$.
+Każdy otwarty $U\subseteq\mathbb R$ jest sumą tych przedziałów
+$(a,b)$ o końcach wymiernych, które zawierają się w $U$. Takich
+przedziałów jest przeliczalnie wiele; daje to pierwszą równość.
+
+Dalej, dla $a<b$ mamy $(a,b)=(-\infty,b)\setminus(-\infty,a]$ oraz
+$(-\infty,a]=\bigcap_{n\geq1}(-\infty,a+1/n)$.
+Wystarczy brać wymierne $a,b$ w pierwszym wzorze; w drugim
+$a+1/n$ jest wymierne dla wymiernego $a$. To dowodzi drugiej
+równości. Wreszcie dla $q\in\mathbb Q$ zachodzą
+$(-\infty,q]=\bigcap_{n\geq1}(-\infty,q+1/n)$ oraz
+$(-\infty,q)=\bigcup_{n\geq1}(-\infty,q-1/n]$,
+co daje trzecią równość.
+\end{proof}
+
+\begin{twierdzenie}[Borelowskie prostokąty]
+\label{thm:borel-Rd}
+Dla $d\in\mathbb N$ $\sigma$-algebra $\mathcal B(\mathbb R^d)$
+jest generowana przez otwarte prostokąty
+$\prod_{j=1}^d(a_j,b_j)$ o wymiernych końcach. Ponadto
+\[
+\mathcal B(\mathbb R^d)=\mathcal B(\mathbb R)^{\otimes d},
+\]
+gdzie prawa strona oznacza $\sigma$-algebrę generowaną przez
+prostokąty $B_1\times\cdots\times B_d$ z $B_j\in\mathcal B(\mathbb R)$.
+\end{twierdzenie}
+\begin{proof}
+Otwarte prostokąty o wymiernych końcach tworzą przeliczalną bazę
+topologii $\mathbb R^d$. Zatem dowolny zbiór otwarty jest sumą
+przeliczalnej podrodziny tej bazy, co daje pierwsze twierdzenie.
+Oznaczmy przez $\mathcal F$ prawą stronę deklarowanej równości.
+Każdy prostokąt bazowy należy do $\mathcal F$, skąd
+$\mathcal B(\mathbb R^d)\subseteq\mathcal F$.
+Z drugiej strony rzuty współrzędnych $p_j:\mathbb R^d\to\mathbb R$
+są ciągłe, więc $p_j^{-1}(B_j)$ jest borelowski dla
+$B_j\in\mathcal B(\mathbb R)$: rodzina zbiorów $B$ o tej
+własności jest $\sigma$-algebrą zawierającą otwarte podzbiory
+$\mathbb R$. Ponieważ
+$\prod_{j=1}^dB_j=\bigcap_{j=1}^dp_j^{-1}(B_j)$,
+każdy prostokąt borelowski należy do $\mathcal B(\mathbb R^d)$.
+Stąd $\mathcal F\subseteq\mathcal B(\mathbb R^d)$.
+\end{proof}
+
+Dla dowolnego zbioru $A\subseteq X$ przez $\chi_A$ oznaczamy
+funkcję charakterystyczną: $\chi_A(x)=1$ dla $x\in A$
+oraz $\chi_A(x)=0$ dla $x\notin A$.
+
+\begin{przyklad}[Racjonalne i irracjonalne]
+$\mathbb Q$ jest podzbiorem borelowskim $\mathbb R$, bo jest
+przeliczalną sumą singletonów, a singletony są domknięte.
+Zatem $\mathbb R\setminus\mathbb Q$ również jest borelowski.
+Jednak funkcja charakterystyczna $\chi_{\mathbb Q}$ jest nieciągła
+w każdym punkcie $\mathbb R$. Mierzalność nie jest więc bliska
+ciągłości w sensie punktowym.
+\end{przyklad}
+
+\section{Odwzorowania mierzalne i ich charakteryzacje}
+
+\begin{definicja}[Odwzorowanie mierzalne]
+\label{def:measurable-map}
+Niech $(X,\mathcal F)$ i $(Y,\mathcal G)$ będą przestrzeniami
+mierzalnymi. Odwzorowanie $f:X\to Y$ nazywamy
+\emph{$(\mathcal F,\mathcal G)$-mierzalnym}, jeżeli
+$f^{-1}(B)\in\mathcal F$ dla każdego $B\in\mathcal G$.
+Jeśli $Y$ jest przestrzenią topologiczną z
+$\mathcal G=\mathcal B(Y)$, mówimy krótko, że $f$ jest
+\emph{borelowsko mierzalne} względem $\mathcal F$.
+\end{definicja}
+
+\begin{twierdzenie}[Kryterium przez generatory]
+\label{thm:measurable-generator}
+Niech $(X,\mathcal F)$ będzie przestrzenią mierzalną, $Y$ zbiorem,
+$\mathcal E\subseteq\mathcal P(Y)$ rodziną zbiorów i
+$\mathcal G=\sigma_Y(\mathcal E)$. Wówczas odwzorowanie
+$f:X\to Y$ jest $(\mathcal F,\mathcal G)$-mierzalne wtedy i tylko
+wtedy, gdy $f^{-1}(E)\in\mathcal F$ dla wszystkich $E\in\mathcal E$.
+\end{twierdzenie}
+\begin{proof}
+Konieczność wynika z inkluzji $\mathcal E\subseteq\mathcal G$.
+Dla dostateczności niech
+$\mathcal H=\{B\subseteq Y:f^{-1}(B)\in\mathcal F\}$.
+To $\sigma$-algebra na $Y$, ponieważ obrazy odwrotne zachowują
+dopełnienia i przeliczalne sumy. Z założenia
+$\mathcal E\subseteq\mathcal H$, zatem
+$\mathcal G=\sigma_Y(\mathcal E)\subseteq\mathcal H$.
+\end{proof}
+
+\begin{twierdzenie}[Złożenia i funkcje ciągłe]
+\label{thm:composition-measurable}
+Niech $(X,\mathcal F)$, $(Y,\mathcal G)$ i $(Z,\mathcal H)$
+będą przestrzeniami mierzalnymi. Jeżeli $f:X\to Y$ jest
+$(\mathcal F,\mathcal G)$-mierzalne, a $g:Y\to Z$ jest
+$(\mathcal G,\mathcal H)$-mierzalne, to $g\circ f$ jest
+$(\mathcal F,\mathcal H)$-mierzalne.
+Ponadto każde odwzorowanie ciągłe $g:Y\to Z$ pomiędzy
+przestrzeniami topologicznymi jest
+$(\mathcal B(Y),\mathcal B(Z))$-mierzalne.
+\end{twierdzenie}
+\begin{proof}
+Dla $C\in\mathcal H$ mamy
+$(g\circ f)^{-1}(C)=f^{-1}(g^{-1}(C))\in\mathcal F$.
+Jeśli $g$ jest ciągłe, obrazy odwrotne zbiorów otwartych są otwarte;
+z kryterium \ref{thm:measurable-generator} wynika jego mierzalność
+borelowska.
+\end{proof}
+
+\begin{twierdzenie}[Funkcje rzeczywiste i działania]
+\label{thm:measurable-real}
+Niech $(X,\mathcal F)$ będzie przestrzenią mierzalną.
+Dla funkcji $f:X\to\mathbb R$ następujące warunki są równoważne:
+\begin{enumerate}
+\item $f$ jest $(\mathcal F,\mathcal B(\mathbb R))$-mierzalna;
+\item $\{x\in X:f(x)<q\}\in\mathcal F$ dla każdego $q\in\mathbb Q$;
+\item $\{x\in X:f(x)\leq q\}\in\mathcal F$ dla każdego $q\in\mathbb Q$.
+\end{enumerate}
+Jeżeli $f,g:X\to\mathbb R$ są mierzalne, to funkcje
+$f+g$, $fg$, $\max(f,g)$ i $\min(f,g)$ są mierzalne.
+\end{twierdzenie}
+\begin{proof}
+Równoważność trzech warunków wynika z twierdzeń
+\ref{thm:borel-generators-R} i \ref{thm:measurable-generator}.
+Odwzorowanie $x\mapsto(f(x),g(x))$ do $\mathbb R^2$ jest mierzalne:
+obrazy odwrotne prostokątów $B_1\times B_2$, gdzie
+$B_1,B_2\in\mathcal B(\mathbb R)$, są przekrojami
+$f^{-1}(B_1)\cap g^{-1}(B_2)$. Prostokąty te generują
+$\mathcal B(\mathbb R^2)$ na mocy twierdzenia
+\ref{thm:borel-Rd}. Funkcje na $\mathbb R^2$ określone przez
+$(u,v)\mapsto u+v$, $(u,v)\mapsto uv$,
+$(u,v)\mapsto\max(u,v)$ i $(u,v)\mapsto\min(u,v)$ są ciągłe.
+Teza wynika więc z twierdzenia \ref{thm:composition-measurable}.
+\end{proof}
+
+\begin{przyklad}[Funkcje charakterystyczne zbiorów]
+Dla $A\subseteq X$ definiujemy funkcję charakterystyczną
+$\chi_A:X\to\mathbb R$ wzorem
+$\chi_A(x)=1$ dla $x\in A$ i $\chi_A(x)=0$ dla $x\notin A$.
+Wtedy $\chi_A$ jest mierzalna względem $\mathcal F$
+dokładnie wtedy, gdy $A\in\mathcal F$.
+Dostateczność wynika z tego, że funkcja przyjmuje tylko dwie
+wartości; konieczność z równości
+$A=\chi_A^{-1}((1/2,\infty))$.
+\end{przyklad}
+
+\begin{przyklad}[Mierzalność nie implikuje regularności geometrycznej]
+Na $X=\mathbb R$ z $\mathcal F=\mathcal B(\mathbb R)$ funkcja
+$\chi_{\mathbb Q}$ jest mierzalna, choć nie jest ciągła
+w żadnym punkcie. Z drugiej strony, jeśli na nieprzeliczalnym
+zbiorze $X$ przyjmiemy $\mathcal F=\{\varnothing,X\}$, to
+każda mierzalna funkcja $X\to\mathbb R$ jest stała. Rzeczywiście,
+gdyby przyjmowała wartości $a<b$, to dla pewnej liczby wymiernej
+$q\in(a,b)$ zbiór $\{f<q\}$ byłby niepusty i różny od $X$.
+\end{przyklad}
+
+\begin{uwaga}[Co zostało, a co nie zostało wykazane]
+Wprowadziliśmy pojęcie mierzalności bez definiowania jakiejkolwiek
+miary. To rozróżnienie jest zasadnicze: przestrzeń mierzalna określa,
+\emph{którym} zbiorom wolno przypisać rozmiar; miara określa
+\emph{jaki} jest ten rozmiar. Miary pojawią się w rozdziale
+\ref{ch:miary-wlasnosci}, a mierzalność funkcji o wartościach
+w $[-\infty,\infty]$ omówimy szczegółowo przed zdefiniowaniem całki.
+\end{uwaga}

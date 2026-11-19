@@ -1,0 +1,440 @@
+% ROZDZIAŁ 25 — RÓŻNICZKOWANIE CAŁEK I MIAR
+\chapter{Różniczkowanie całek i miar}
+\label{ch:differentiation-25}
+
+\section{Dlaczego różniczkowanie jest twierdzeniem o średnich?}
+Niech $d\ge1$, a $\lambda_d$ oznacza miarę Lebesgue'a na
+$\mathbb R^d$. Dla $x\in\mathbb R^d$ i $r>0$ piszemy
+$B(x,r)=\{y:|y-x|<r\}$ oraz $v_d=\lambda_d(B(0,1))$.
+Jeżeli $f\in L^1_{\mathrm{loc}}(\mathbb R^d)$, to na pierwszy
+rzut oka naturalne jest oczekiwanie, że średnia $f$ po kuli
+malejącej do punktu $x$ dąży do $f(x)$. Nie zachodzi to
+we wszystkich punktach ani dla dowolnego przedstawiciela
+funkcji. Poniższa teoria precyzyjnie określa, w jakim
+sensie odtwarzamy funkcję z jej całek.
+
+\begin{definicja}[Wartość średnia i punkt Lebesgue'a]
+\label{def:lebesgue-point-25}
+Dla $f\in L^1_{\mathrm{loc}}(\mathbb R^d)$ definiujemy
+$A_rf(x)=\lambda_d(B(x,r))^{-1}\int_{B(x,r)}f(y)\,\mathrm d\lambda_d(y)$.
+Punkt $x$ nazywamy \emph{punktem Lebesgue'a} wybranego
+przedstawiciela $f$, jeżeli
+\begin{equation}\label{eq:lebesgue-point-25}
+ \lim_{r\downarrow0}\frac1{v_dr^d}
+ \int_{B(x,r)}|f(y)-f(x)|\,\mathrm d\lambda_d(y)=0.
+\end{equation}
+W szczególności $A_rf(x)\to f(x)$ w takim punkcie.
+Przypominamy, że wartości $f(x)$ na zbiorze miary zero
+można zmieniać bez zmiany klasy elementu $L^1_{\mathrm{loc}}$.
+\end{definicja}
+
+\begin{przyklad}[Nieciągłość w zbiorze zerowym]
+Jeżeli $f=\chi_{\mathbb Q^d}$, to $A_rf(x)=0$ dla
+wszystkich $x,r$, ponieważ $\lambda_d(\mathbb Q^d)=0$.
+Żaden punkt wymierny nie jest punktem Lebesgue'a tego
+konkretnego przedstawiciela, a każdy niewymierny jest.
+Równość prawie wszędzie nie może więc zostać zastąpiona
+równością w każdym punkcie.
+\end{przyklad}
+
+\section{Wzmocnienie nierówności maksymalnej}
+\begin{definicja}[Maksymalna funkcja miary]
+\label{def:max-measure-25}
+Jeżeli $\nu$ jest skończoną dodatnią miarą borelowską
+na $\mathbb R^d$, określamy
+$M\nu(x)=\sup_{r>0}\nu(B(x,r))/(v_dr^d)$.
+Dla miary ze znakiem bądź zespolonej podstawiamy jej
+wariację całkowitą $|\nu|$.
+\end{definicja}
+
+\begin{twierdzenie}[Oszacowanie słabego typu dla miar]
+\label{thm:weak-measure-25}
+Niech $\nu$ będzie skończoną dodatnią miarą borelowską
+na $\mathbb R^d$. Dla każdego $t>0$ zachodzi
+\begin{equation}\label{eq:weak-measure-25}
+ \lambda_d\bigl(\{x:M\nu(x)>t\}\bigr)
+ \le \frac{5^d}{t}\nu(\mathbb R^d).
+\end{equation}
+To samo oszacowanie obowiązuje z $\nu$ zastąpioną przez
+$|\nu|$, gdy $\nu$ jest miarą ze znakiem lub zespoloną.
+\end{twierdzenie}
+\begin{proof}
+Dla ustalonego $r>0$ funkcja $x\mapsto\nu(B(x,r))$
+jest półciągła z dołu: jeśli $x_n\to x$, to dla każdego
+$y\in B(x,r)$ ostatecznie $y\in B(x_n,r)$, zatem lemat
+Fatou zastosowany do miary $\nu$ daje
+$\nu(B(x,r))\le\liminf_n\nu(B(x_n,r))$. Stąd
+$\{M\nu>t\}$ jest otwarty. Niech $K$ będzie jego
+zwartym podzbiorem. Dla każdego $x\in K$ istnieje
+kula $B_x=B(x,r_x)$ taka, że
+$\nu(B_x)>tv_dr_x^d$. Ponieważ $\nu$ jest skończona,
+promienie są ograniczone z góry. Z lematu $5r$
+(twierdzenie~\ref{thm:5r-24}) wybieramy rozłączne
+kule $B_j$ o pokryciu $K\subseteq\bigcup_j5B_j$.
+Wtedy
+\[
+\lambda_d(K)\le5^d\sum_jv_dr_j^d
+ <\frac{5^d}{t}\sum_j\nu(B_j)
+ \le\frac{5^d}{t}\nu(\mathbb R^d).
+\]
+Korzystając z regularności miary Lebesgue'a na zbiorze
+otwartym $\{M\nu>t\}$, przechodzimy do supremum po
+jego zwartych podzbiorach. W przypadku miary zespolonej
+lub ze znakiem stosujemy otrzymany wynik do $|\nu|$.
+\end{proof}
+
+\begin{uwaga}[Nie mylić dwóch operatorów maksymalnych]
+Dla $f\in L^1(\mathbb R^d)$ miara
+$\nu_f(A)=\int_A|f(y)|\,\mathrm d\lambda_d(y)$ spełnia
+$M\nu_f=Mf$, gdzie $Mf$ zdefiniowano w
+\ref{def:HL-max-24}. Operator $M\nu$ pozwala jednak
+również badać miary osobliwe, nieposiadające gęstości.
+\end{uwaga}
+
+\section{Twierdzenie Lebesgue'a o różniczkowaniu całek}
+\begin{lemat}[Przybliżanie lokalne funkcją ciągłą]
+\label{lem:continuous-dense-25}
+Dla dowolnego $f\in L^1(\mathbb R^d)$ i
+$\varepsilon>0$ istnieje $\varphi\in C_c(\mathbb R^d)$
+taka, że $\|f-\varphi\|_1<\varepsilon$.
+\end{lemat}
+\begin{proof}
+Jest to szczególny przypadek twierdzenia o gęstości
+$C_c^\infty(\mathbb R^d)$ w $L^1$, dowiedzionego w
+rozdziale~\ref{ch:regularnosc-funkcji}. W szczególności nie
+zakładamy tutaj różniczkowania całek przy konstrukcji
+aproksymacji.
+\end{proof}
+
+\begin{twierdzenie}[Lebesgue'a o różniczkowaniu]
+\label{thm:lebesgue-diff-25}
+Jeżeli $f\in L^1_{\mathrm{loc}}(\mathbb R^d)$, to
+prawie każdy $x\in\mathbb R^d$ jest punktem Lebesgue'a
+$f$, tzn. spełnia \eqref{eq:lebesgue-point-25}.
+W szczególności
+$\lim_{r\downarrow0}A_rf(x)=f(x)$ dla prawie każdego $x$.
+\end{twierdzenie}
+\begin{proof}
+Najpierw załóżmy $f\in L^1(\mathbb R^d)$. Ustalmy
+$\varphi\in C_c(\mathbb R^d)$ i połóżmy $g=f-\varphi$.
+Dla każdego $x$, dla którego $f(x)$ jest określona,
+z nierówności trójkąta otrzymujemy
+\begin{align*}
+ \limsup_{r\downarrow0}\frac1{v_dr^d}
+ \int_{B(x,r)}|f(y)-f(x)|\,\mathrm d\lambda_d(y)
+ &\le Mg(x)+|g(x)|,
+\end{align*}
+gdzie $Mg=M(|g|\lambda_d)$. Składnik z funkcją
+$\varphi$ znika wskutek jej ciągłości w $x$.
+Niech $D_f(x)$ oznacza powyższy $\limsup$, a $t>0$.
+Dla każdego $\varphi$ zachodzi inkluzja
+$\{D_f>2t\}\subseteq\{Mg>t\}\cup\{|g|>t\}$.
+Nierówność słabego typu i nierówność Czebyszewa dają
+\[
+ \lambda_d(\{D_f>2t\})
+ \le\frac{5^d+1}{t}\|f-\varphi\|_1.
+\]
+Lemat~\ref{lem:continuous-dense-25} pozwala uczynić
+prawą stronę dowolnie małą. Zatem
+$\lambda_d(\{D_f>2t\})=0$ dla każdego $t>0$.
+Ponieważ $D_f\ge0$, otrzymujemy $D_f=0$ prawie
+wszędzie. (Mierzalność $D_f$ wynika z mierzalności
+średnich i z wyrażenia granicy górnej przy promieniach
+wymiernych, wykorzystując ciągłość całki względem
+promienia.)
+
+Jeżeli $f$ jest tylko lokalnie całkowalna, dla każdego
+$n\ge1$ rozważamy $f_n=f\chi_{B(0,n+2)}\in L^1$.
+Dla $x\in B(0,n)$ i $r<1$ średnie funkcji
+$f_n$ i $f$ są jednakowe, a wartości obu funkcji
+w $x$ są równe. Zastosowanie pierwszej części do
+wszystkich $n$ i przeliczalna suma zbiorów zerowych
+dają tezę.
+\end{proof}
+
+\begin{wniosek}[Wartość funkcji z otaczających ją średnich]
+\label{cor:diff-basis-25}
+Jeżeli $f\in L^1_{\mathrm{loc}}(\mathbb R^d)$,
+to istnieje zbiór $N$ o $\lambda_d(N)=0$, taki że
+$\lim_{r\downarrow0}A_rf(x)=f(x)$ dla wszystkich
+$x\in\mathbb R^d\setminus N$. Zbioru wyjątkowego
+nie można w ogólności usunąć.
+\end{wniosek}
+\begin{proof}
+Pierwsza część wynika z twierdzenia
+\ref{thm:lebesgue-diff-25}; druga z przykładu
+$f=\chi_{\mathbb Q^d}$.
+\end{proof}
+
+\begin{przyklad}[Przedstawiciel kanoniczny w punktach Lebesgue'a]
+Jeżeli $f\in L^1_{\mathrm{loc}}(\mathbb R^d)$, to
+na zbiorze punktów, w których istnieje skończona granica
+$\lim_{r\downarrow0}A_rf(x)$, można ją przyjąć za
+wartość przedstawiciela $\widetilde f(x)$. W pozostałych
+punktach przyjmujemy $0$. Otrzymujemy funkcję mierzalną
+$\widetilde f=f$ prawie wszędzie. Zmiana przedstawiciela
+$f$ na zbiorze zerowym nie zmienia wartości żadnej średniej,
+więc $\widetilde f$ nie zależy od tego wyboru.
+\end{przyklad}
+
+\section{Różniczkowanie miar: część absolutnie ciągła i osobliwa}
+\begin{lemat}[Zanik gęstości miary osobliwej]
+\label{lem:singular-density-25}
+Niech $\nu$ będzie skończoną dodatnią miarą borelowską
+na $\mathbb R^d$ i $\nu\perp\lambda_d$. Wówczas
+\begin{equation}\label{eq:singular-density-25}
+ \lim_{r\downarrow0}\frac{\nu(B(x,r))}{v_dr^d}=0
+ \quad\text{dla }\lambda_d\text{-prawie każdego }x.
+\end{equation}
+\end{lemat}
+\begin{proof}
+Wybierzmy borelowski $N$ taki, że $\lambda_d(N)=0$
+i $\nu(\mathbb R^d\setminus N)=0$. Regularność
+skończonej miary borelowskiej daje dla każdego
+$\varepsilon>0$ zwarty $K\subseteq N$ taki, że
+$\nu(\mathbb R^d\setminus K)<\varepsilon$.
+Oznaczmy $\nu_0=\nu|_K$, $\nu_1=\nu|_{\mathbb R^d\setminus K}$.
+Dla każdego $x\notin K$ odległość $\operatorname{dist}(x,K)$
+jest dodatnia, zatem $\nu_0(B(x,r))=0$ dla dostatecznie
+małych $r$. W konsekwencji, poza $K$,
+\[
+ \limsup_{r\downarrow0}\frac{\nu(B(x,r))}{v_dr^d}
+ \le M\nu_1(x).
+\]
+Niech $t>0$. Z twierdzenia~\ref{thm:weak-measure-25}
+i z $\lambda_d(K)=0$ otrzymujemy
+\[
+ \lambda_d\left(\left\{x:\limsup_{r\downarrow0}
+ \frac{\nu(B(x,r))}{v_dr^d}>t\right\}\right)
+ \le\frac{5^d\varepsilon}{t}.
+\]
+Ponieważ $\varepsilon$ jest dowolne, zbiór ten ma
+miarę zero. Dla $t=1/n$, $n\ge1$, dostajemy
+zerowanie granicy górnej prawie wszędzie. Ilorazy są
+nieujemne, więc istnieje granica równa zero.
+\end{proof}
+
+\begin{twierdzenie}[Różniczkowanie miary względem Lebesgue'a]
+\label{thm:measure-differentiation-25}
+Niech $\nu$ będzie dodatnią miarą Radona na
+$\mathbb R^d$. Jej rozkład Lebesgue'a względem
+$\lambda_d$ ma postać $\nu=f\lambda_d+\nu_s$,
+gdzie $f\ge0$ jest lokalnie całkowalna, a
+$\nu_s\perp\lambda_d$. Wtedy
+\begin{equation}\label{eq:measure-density-25}
+ \lim_{r\downarrow0}\frac{\nu(B(x,r))}{v_dr^d}
+ =f(x)\qquad\text{dla }\lambda_d\text{-prawie każdego }x.
+\end{equation}
+Dla lokalnie skończonych miar ze znakiem oraz miar
+zespolonych twierdzenie pozostaje prawdziwe, jeżeli
+$f$ jest odpowiednią pochodną Radona--Nikodyma.
+\end{twierdzenie}
+\begin{proof}
+Z rozkładu Lebesgue'a i twierdzenia Radona--Nikodyma
+(rozdziały~\ref{ch:ac-singular-17} i
+\ref{ch:radon-nikodym-18}) otrzymujemy
+$\nu(B)=\int_Bf(y)\,\mathrm d\lambda_d(y)+\nu_s(B)$.
+Pierwszy składnik po podzieleniu przez $v_dr^d$
+zmierza do $f(x)$ prawie wszędzie z twierdzenia
+\ref{thm:lebesgue-diff-25}. Dla składnika osobliwego
+lokalizujemy miarę na kulach $B(0,n)$ i stosujemy
+lemat~\ref{lem:singular-density-25}; przy
+$x\in B(0,n-1)$ obie miary mają takie same wartości
+na dostatecznie małych kulach. Przeliczalna suma
+zbiorów wyjątkowych jest zerowa. W przypadku miar ze
+znakiem i zespolonych stosujemy ten sam argument do
+części absolutnie ciągłej, a do wariacji części osobliwej
+stosujemy lemat~\ref{lem:singular-density-25}.
+\end{proof}
+
+\begin{uwaga}[Ważne rozróżnienie]
+Istnienie granicy w \eqref{eq:measure-density-25} dla
+$\lambda_d$-prawie wszystkich $x$ \emph{nie} oznacza,
+że $\nu_s=0$. Dla miary Cantora pochodna gęstości
+względem $\lambda_1$ jest zerowa prawie wszędzie,
+chociaż sama miara jest niezerowa.
+\end{uwaga}
+
+\begin{przyklad}[Miara Diraca]
+Niech $\nu=\delta_0$ na $\mathbb R^d$. Jeżeli $x\ne0$,
+to dla wszystkich dostatecznie małych $r$ zachodzi
+$\delta_0(B(x,r))=0$. Natomiast
+$\delta_0(B(0,r))/(v_dr^d)=1/(v_dr^d)\to+\infty$.
+Miara osobliwa może mieć więc nieskończoną gęstość
+w swoich punktach koncentracji.
+\end{przyklad}
+
+\section{Pochodna całki w jednym wymiarze}
+\begin{twierdzenie}[Podstawowe twierdzenie rachunku całkowego dla całki Lebesgue'a]
+\label{thm:FTC-lebesgue-25}
+Niech $a<b$ i $f\in L^1((a,b),\lambda_1)$. Funkcja
+$F:[a,b]\to\mathbb R$ określona wzorem
+$F(x)=\int_{(a,x)}f(t)\,\mathrm d\lambda_1(t)$
+jest absolutnie ciągła i spełnia
+$F'(x)=f(x)$ dla prawie każdego $x\in(a,b)$.
+\end{twierdzenie}
+\begin{proof}
+Dla skończonej rodziny parami rozłącznych przedziałów
+$(a_j,b_j)\subseteq[a,b]$ mamy
+$\sum_j|F(b_j)-F(a_j)|
+\le\int_{\cup_j(a_j,b_j)}|f|\,\mathrm d\lambda_1$.
+Bezwzględna ciągłość całki zapewnia, że dla danego
+$\varepsilon>0$ prawa strona jest mniejsza od
+$\varepsilon$, gdy suma długości przedziałów jest
+dostatecznie mała. Jest to definicja absolutnej
+ciągłości funkcji $F$.
+
+Niech $x\in(a,b)$ będzie punktem Lebesgue'a $f$.
+Dla $h>0$ tak małego, by $x+h<b$, zachodzi
+\[
+ \left|\frac{F(x+h)-F(x)}h-f(x)\right|
+ \le\frac1h\int_{(x,x+h)}|f(t)-f(x)|\,
+ \mathrm d\lambda_1(t)
+ \le\frac2{2h}\int_{(x-h,x+h)}|f(t)-f(x)|\,
+ \mathrm d\lambda_1(t).
+\]
+Ostatnia średnia zmierza do zera. Analogiczny argument
+obowiązuje dla $h<0$. Prawie wszystkie punkty są
+punktami Lebesgue'a na mocy twierdzenia
+\ref{thm:lebesgue-diff-25}, zatem $F'=f$ prawie
+wszędzie.
+\end{proof}
+
+\begin{przyklad}[Dlaczego sama pochodna prawie wszędzie nie wystarcza?]
+Klasyczna funkcja Cantora $C:[0,1]\to[0,1]$ jest
+ciągła i niemalejąca, a $C'=0$ prawie wszędzie, lecz
+$C(1)-C(0)=1$. Nie jest absolutnie ciągła.
+Dlatego z samej równości $F'=f$ prawie wszędzie nie
+wynika $F(b)-F(a)=\int_{(a,b)}f\,\mathrm d\lambda_1$.
+\end{przyklad}
+
+\begin{twierdzenie}[Funkcja rozkładu a absolutna ciągłość miary]
+\label{thm:cdf-derivative-25}
+Niech $\nu$ będzie skończoną dodatnią miarą borelowską
+na $\mathbb R$. Określmy $F:\mathbb R\to[0,\nu(\mathbb R)]$
+wzorem $F(x)=\nu(( -\infty,x])$.
+Jeśli $\nu=f\lambda_1+\nu_s$ jest rozkładem Lebesgue'a
+miary $\nu$ względem $\lambda_1$, to
+$F'(x)=f(x)$ dla $\lambda_1$-prawie każdego $x$.
+Ponadto następujące warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $\nu\ll\lambda_1$;
+\item $F$ jest absolutnie ciągła na każdym zwartym
+przedziale;
+\item dla wszystkich $a<b$ zachodzi
+$F(b)-F(a)=\int_{(a,b)}F'(t)\,\mathrm d\lambda_1(t)$.
+\end{enumerate}
+W (iii) pochodna istnieje prawie wszędzie.
+\end{twierdzenie}
+\begin{proof}
+Niech $x$ będzie punktem Lebesgue'a $f$, w którym
+$\nu_s(B(x,r))/(2r)\to0$ oraz $\nu(\{x\})=0$.
+Punkty takie tworzą zbiór pełnej miary Lebesgue'a:
+pierwsze dwie własności wynikają z twierdzenia
+\ref{thm:measure-differentiation-25}, a atomów dodatniej
+masy jest co najwyżej przeliczalnie wiele.
+Dla $h>0$ mamy
+\[
+ \frac{F(x+h)-F(x)}h
+ =\frac1h\int_{(x,x+h]}f(t)\,\mathrm d\lambda_1(t)
+ +\frac{\nu_s((x,x+h])}h.
+\]
+Pierwszy składnik dąży do $f(x)$, ponieważ średnia
+wartości $|f(t)-f(x)|$ po $(x,x+h)$ jest ograniczona
+przez dwa razy analogiczną średnią po $(x-h,x+h)$.
+Drugi składnik, dla $h>0$, jest ograniczony przez
+$\nu_s(B(x,2h))/h$ i zatem dąży do zera.
+Dla $h<0$ rozpatrujemy przedział $(x+h,x]$;
+ponieważ $\nu_s(\{x\})=0$, ten sam argument działa
+również z lewej. Dowodzi to $F'=f$ prawie wszędzie.
+
+Jeśli (i) zachodzi, to $\nu=f\lambda_1$ z
+$f\in L^1(\mathbb R)$, a więc
+$F(x)=\int_{(-\infty,x]}f(t)\,\mathrm d\lambda_1(t)$.
+Bezwzględna ciągłość całki na zbiorach o małej mierze
+daje (ii), zaś podstawowe twierdzenie rachunku
+całkowego (twierdzenie~\ref{thm:FTC-lebesgue-25})
+daje (iii).
+
+Załóżmy (ii) i wykażmy najpierw (i), bez powoływania
+się na twierdzenie o całkowaniu pochodnej dowolnej funkcji
+absolutnie ciągłej. Ustalmy $n\ge1$ i zbiór borelowski
+$E\subseteq[-n,n]$ z $\lambda_1(E)=0$. Funkcja $F$
+jest absolutnie ciągła na $[-n-1,n+1]$, więc dla
+każdego $\varepsilon>0$ istnieje $\delta>0$ takie,
+że dla każdej skończonej rodziny rozłącznych przedziałów
+zawartych w $[-n-1,n+1]$, o łącznej długości poniżej
+$\delta$, suma przyrostów $F$ jest mniejsza od
+$\varepsilon$. Pokryjmy $E$ otwartym zbiorem
+$O\subset(-n-1,n+1)$ o $\lambda_1(O)<\delta$.
+Składowymi $O$ są parami rozłączne przedziały otwarte
+$(a_j,b_j)$. Ponieważ $F$ jest ciągła,
+$\nu(\{x\})=F(x)-F(x^-)=0$ dla każdego $x$
+wewnątrz $[-n-1,n+1]$, a więc
+$\nu((a_j,b_j))=F(b_j)-F(a_j)$.
+Stosując nierówność absolutnej ciągłości do skończonych
+sum i przechodząc do granicy z przeliczalnej addytywności,
+dostajemy $\nu(E)\le\nu(O)\le\varepsilon$.
+Zatem $\nu(E)=0$. Ponieważ $n$ był dowolny,
+$\nu\ll\lambda_1$ na całej prostej. Wykazane już
+(i)$\Rightarrow$(iii) daje również (ii)$\Rightarrow$(iii).
+Załóżmy wreszcie (iii). Ponieważ
+$\nu((a,b])=F(b)-F(a)$, dla każdych $a<b$ mamy
+$\nu((a,b])=\int_{(a,b)}F'(t)\,\mathrm d\lambda_1(t)$;
+przy całce nie ma znaczenia wybór końców.
+Funkcja $F'\ge0$ prawie wszędzie i jest lokalnie
+całkowalna, gdyż z (iii) jej całki po przedziałach
+są skończone. Obie miary są skończone na zbiorach
+ograniczonych i zgadzają się na przedziałach $(a,b]$.
+Jednoznaczność miary na generującym $\pi$-układzie
+i przejście przez zbiory $(-n,n]$ pokazują
+$\nu(E)=\int_EF'(t)\,\mathrm d\lambda_1(t)$
+dla wszystkich $E\in\mathcal B(\mathbb R)$.
+To daje (i).
+\end{proof}
+
+\begin{przyklad}[Pochodna nie wykrywa składnika osobliwego]
+W przypadku miary Cantora funkcja rozkładu $F$ jest
+ciągła, niemalejąca i spełnia $F'=0$ prawie wszędzie,
+ale nie jest absolutnie ciągła. Twierdzenie
+\ref{thm:cdf-derivative-25} wyjaśnia przyczynę:
+pochodna odzyskuje wyłącznie część absolutnie ciągłą
+miary, a nie składnik osobliwy.
+\end{przyklad}
+
+\section{Przenoszenie różniczkowania na inne rodziny zbiorów}
+\begin{wniosek}[Średnie po kostkach]
+\label{cor:cubes-differentiation-25}
+Niech $f\in L^1_{\mathrm{loc}}(\mathbb R^d)$. Dla prawie
+każdego $x$ średnia $f$ po dowolnych kostkach osiowych
+$Q_r(x)=x+(-r,r)^d$ dąży do $f(x)$ przy $r\downarrow0$.
+Ponadto $\lambda_d(Q_r(x))^{-1}
+\int_{Q_r(x)}|f(y)-f(x)|\,\mathrm d\lambda_d(y)\to0$.
+\end{wniosek}
+\begin{proof}
+Mamy $Q_r(x)\subseteq B(x,\sqrt d\,r)$ oraz
+$\lambda_d(B(x,\sqrt d\,r))/\lambda_d(Q_r(x))
+=v_dd^{d/2}/2^d$, niezależnie od $r$. Dodatnia średnia
+po kostce jest więc ograniczona przez stałą razy
+średnia po większej kuli, która zmierza do zera
+w każdym punkcie Lebesgue'a.
+\end{proof}
+
+\begin{uwaga}[Przekroje i inne miary]
+Analogiczne różniczkowanie względem \emph{dowolnej}
+miary Radona $\mu$ na $\mathbb R^d$ można otrzymać
+z twierdzenia pokryciowego Besicovitcha:
+centrowany operator maksymalny względem $\mu$ spełnia
+odpowiednie oszacowanie słabego typu $(1,1)$, a dalszy
+argument opiera się na aproksymacji funkcji całkowalnych.
+Pełna, nieskończona wersja twierdzenia Besicovitcha
+\emph{została już udowodniona} w
+Twierdzeniu~\ref{thm:besicovitch-24}.
+Nie wyprowadzamy tutaj jednak osobno całego twierdzenia
+o różniczkowaniu względem arbitralnej miary Radona:
+wymaga ono dodatkowo sformułowania i przeprowadzenia
+argumentu maksymalnego z mianownikiem $\mu(B(x,r))$,
+z uwzględnieniem kul o zerowej mierze.
+W ten sposób rozróżniamy udowodnione narzędzie pokryciowe
+od niewypisanego w pełni wniosku o różniczkowaniu.
+\end{uwaga}
