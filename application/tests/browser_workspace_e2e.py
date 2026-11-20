@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import os
 import sys
+import socket
 from pathlib import Path
 import subprocess
 import tempfile
@@ -22,6 +23,10 @@ def main():
         drafts = Path(temp) / "drafts"
         saved = Path(temp) / "saved"
         env = dict(os.environ, MATLIB_DRAFTS_ROOT=str(drafts), MATLIB_SAVED_ROOT=str(saved))
+        with socket.socket() as probe:
+            probe.bind(("127.0.0.1", 0))
+            port = probe.getsockname()[1]
+        base_url = f"http://127.0.0.1:{port}"
         server = subprocess.Popen([sys.executable, "-m", "uvicorn", "backend.api:app", "--host", "127.0.0.1", "--port", "18767"],
                                   cwd=APP, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
         try:
