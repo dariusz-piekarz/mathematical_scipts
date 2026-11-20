@@ -148,13 +148,26 @@ function addCurrent(){
   else{state.selected.set(key,{id,kind:isEntity?"entity":"module",title:isEntity?(d.entity.title||d.entity.kind):d.module.title,module:state.currentModule});toast("Dodano do zestawu.");}
   renderReader();renderSelection();
 }
+function positionReferenceTip(anchor){
+  const r=anchor.getBoundingClientRect(), tip=$("referenceTip");
+  tip.classList.remove("hidden");
+  tip.style.left=Math.max(8,Math.min(window.innerWidth-448,r.left))+"px";
+  tip.style.top=Math.max(8,Math.min(window.innerHeight-tip.offsetHeight-12,r.bottom+8))+"px";
+}
 async function previewLabel(label,anchor){
   const request=++state.tooltipKey;
+  state.tooltipData=null;
+  // Do not leave a stale result on screen while the next request is pending.
+  const body=$("tipBody");body.replaceChildren();
+  body.append(node("p",{className:"tip-meta"},"Ładowanie etykiety: "+label));
+  $("tipOpen").disabled=true;
+  positionReferenceTip(anchor);
   try{
     const result=await api(`/api/labels/${encodeURIComponent(label)}`);
     if(request!==state.tooltipKey)return;
     state.tooltipData=result;
-    const body=$("tipBody");body.replaceChildren();
+    $("tipOpen").disabled=Boolean(result.ambiguous);
+    body.replaceChildren();
     if(result.ambiguous){
       body.append(node("h3",{},"Etykieta występuje w kilku rozdziałach"));
       body.append(node("p",{className:"tip-meta"},`${label} · wybierz właściwy rozdział`));
@@ -168,10 +181,17 @@ async function previewLabel(label,anchor){
       body.append(node("p",{className:"tip-meta"},`${label} · ${result.document_id} · wiersz ${result.line}`));
       body.append(node("div",{className:"tip-code"},crop(result.latex,1100)));
     }
-    const r=anchor.getBoundingClientRect();const tip=$("referenceTip");tip.classList.remove("hidden");
-    tip.style.left=Math.max(8,Math.min(window.innerWidth-448,r.left))+"px";
-    tip.style.top=Math.max(8,Math.min(window.innerHeight-tip.offsetHeight-12,r.bottom+8))+"px";
-  }catch(e){if(request===state.tooltipKey)toast(e.message);}
+    positionReferenceTip(anchor);
+  }catch(e){
+    if(request!==state.tooltipKey)return;
+    state.tooltipData=null;
+    $("tipOpen").disabled=true;
+    body.replaceChildren();
+    body.append(node("h3",{},"Nie znaleziono cytowanej etykiety"));
+    body.append(node("p",{className:"tip-meta"},label));
+    body.append(node("p",{},"Cel odsyłacza nie jest dostępny w indeksie. Wymaga audytu źródła LaTeX."));
+    positionReferenceTip(anchor);
+  }
 }
 function closeTip(){state.tooltipKey++;state.tooltipData=null;$("referenceTip").classList.add("hidden");}
 async function openLabel(label){
