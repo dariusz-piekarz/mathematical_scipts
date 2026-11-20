@@ -146,6 +146,7 @@ def audit() -> dict:
             },
             "chapter_count": sum(
                 file["path"].startswith(f"chapters/pl/{folder}/")
+                and (vol != "AT" or not file["path"].split("/")[-1].startswith("00-"))
                 for file in files
                 for folder in [{
                     "AT": "algebraic_topology",
