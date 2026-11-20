@@ -1,0 +1,95 @@
+name: Algebraic topology chapters 29-30 TeX audit
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "chapters/pl/algebraic_topology/29-*.tex"
+      - "chapters/pl/algebraic_topology/30-*.tex"
+      - "chapters/pl/differential_geometry_and_topology/01-*.tex"
+      - "chapters/pl/differential_geometry_and_topology/03-*.tex"
+      - "chapters/pl/differential_geometry_and_topology/15-*.tex"
+      - "chapters/pl/differential_geometry_and_topology/16-*.tex"
+      - "application/tests/test_topology_chapters_29_30.py"
+      - "shared/pl/slabe_twierdzenie_lefschetza.tex"
+      - "shared/pl/rozdmuchanie_punktu_normalna.tex"
+      - "shared/pl/rozdmuchanie_punktu_kohomologia.tex"
+      - ".github/workflows/algebraic-topology-audit-ch29-30.yml"
+  workflow_dispatch:
+
+jobs:
+  compile-reviewed-pair-with-prerequisite-chapters:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Mathematical and structural regression tests
+        run: python3 -m unittest discover -s application/tests -p 'test_topology_chapters_29_30.py' -v
+      - name: Install LaTeX and PDF inspection utilities
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-pictures texlive-lang-polish texlive-fonts-recommended lmodern poppler-utils
+      - name: Assemble thirty-chapter dependency-complete audit
+        working-directory: books/pl
+        run: |
+          sed '/^\\begin{document}/,$d' algebraic_topology.tex > audit_at_29_30.tex
+          cat >> audit_at_29_30.tex <<'TEX'
+          \begin{document}
+          \tableofcontents
+          \input{../../chapters/pl/algebraic_topology/01-jezyk-i-podstawowe-konstrukcje-topologiczne.tex}
+          \input{../../chapters/pl/algebraic_topology/02-podstawy-algebry-abstrakcyjnej-grupy-pierscienie-i-moduly.tex}
+          \input{../../chapters/pl/algebraic_topology/03-algebra-homologiczna-moduly-kompleksy-i-ko-homologie.tex}
+          \input{../../chapters/pl/algebraic_topology/04-homotopia-nakrycia-i-komorkowe-modele-przestrzeni.tex}
+          \input{../../chapters/pl/algebraic_topology/05-homologia-przestrzeni.tex}
+          \input{../../chapters/pl/algebraic_topology/06-wyzsze-grupy-homotopii-i-zwiazek-z-homologia.tex}
+          \input{../../chapters/pl/algebraic_topology/07-fibracje-i-dlugi-ciag-homotopii.tex}
+          \input{../../chapters/pl/algebraic_topology/08-kohomologia-singularna-i-iloczyn-kubkowy.tex}
+          \input{../../chapters/pl/algebraic_topology/09-formy-rozniczkowe-orientacja-i-kohomologia-de-rhama.tex}
+          \input{../../chapters/pl/algebraic_topology/10-homologia-i-kohomologia-c-echa-od-pokryc-do-granic-przestrzeni.tex}
+          \input{../../chapters/pl/algebraic_topology/11-przeciecia-dualnosc-i-klasy-charakterystyczne.tex}
+          \input{../../chapters/pl/algebraic_topology/12-ciagi-spektralne-od-filtracji-do-fibracji-serre-a.tex}
+          \input{../../chapters/pl/algebraic_topology/13-przestrzenie-klasyfikujace-i-teoria-przeszkod.tex}
+          \input{../../chapters/pl/algebraic_topology/14-wieze-postnikowa-iloczyny-whiteheada-i-operacje-steenroda.tex}
+          \input{../../chapters/pl/algebraic_topology/15-operacje-kohomologiczne-naturalnosc-iloczyny-i-relacje.tex}
+          \input{../../chapters/pl/algebraic_topology/16-zawieszenie-twierdzenie-freudenthala-i-homotopia-stabilna.tex}
+          \input{../../chapters/pl/algebraic_topology/17-konstrukcja-pontriagina-thoma-i-podstawy-teorii-kobordyzmow.tex}
+          \input{../../chapters/pl/algebraic_topology/18-homologia-morse-a-od-punktow-krytycznych-do-homologii-singular.tex}
+          \input{../../chapters/pl/algebraic_topology/19-stopien-indeks-punktu-stalego-i-twierdzenie-lefschetza.tex}
+          \input{../../chapters/pl/algebraic_topology/20-zwartosc-i-sklejanie-trajektorii-morse-a-podstawy-analityczne.tex}
+          \input{../../chapters/pl/algebraic_topology/21-indeks-pol-wektorowych-i-twierdzenie-poincarego-hopfa-z-brzegi.tex}
+          \input{../../chapters/pl/algebraic_topology/22-kohomologia-z-nosnikami-zwartymi-i-homologia-borel-moore-a.tex}
+          \input{../../chapters/pl/algebraic_topology/23-kohomologia-snopow-z-nosnikami-i-podstawy-dualnosci-verdiera.tex}
+          \input{../../chapters/pl/algebraic_topology/24-homologia-przeciec-snopy-perwersyjne-i-twierdzenie-o-rozkladzi.tex}
+          \input{../../chapters/pl/algebraic_topology/25-kategorie-pochodne-struktury-hodge-a-cykle-zanikajace-i-monodr.tex}
+          \input{../../chapters/pl/algebraic_topology/26-wariacje-struktur-hodge-a-koneksja-gaussa-manina-i-degeneracje.tex}
+          \input{../../chapters/pl/algebraic_topology/27-szesc-operacji-snopowych-dualnosc-verdiera-i-cykle-specjalizac.tex}
+          \input{../../chapters/pl/algebraic_topology/28-topologia-gladkich-zespolonych-odmian-projektowych-twierdzenia.tex}
+          \input{../../chapters/pl/algebraic_topology/29-dalsze-narzedzia-homotopii-granice-odwrotne-przeszkody-operacj.tex}
+          \input{../../chapters/pl/algebraic_topology/30-minimalne-przypomnienie-geometrii-rozniczkowej.tex}
+          \end{document}
+          TEX
+      - name: Twice compile LaTeX and fail on broken references or overfull boxes
+        working-directory: books/pl
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error audit_at_29_30.tex > audit_at_29_30_pass1.log
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error audit_at_29_30.tex > audit_at_29_30_pass2.log
+          test -s audit_at_29_30.pdf
+          if grep -Eq 'There were undefined references|LaTeX Warning: Reference .* undefined|undefined citations' audit_at_29_30_pass2.log; then
+            echo "Unresolved reference or citation"; exit 1
+          fi
+          if grep -E 'Overfull \\hbox' audit_at_29_30_pass2.log; then
+            echo "Overfull horizontal TeX box found"; exit 1
+          fi
+          pdfinfo audit_at_29_30.pdf | grep -E '^Pages:'
+      - name: Upload PDF and compilation logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: algebraic-topology-audit-ch29-30-pdf
+          path: |
+            books/pl/audit_at_29_30.pdf
+            books/pl/audit_at_29_30.log
+            books/pl/audit_at_29_30_pass1.log
+            books/pl/audit_at_29_30_pass2.log
+          if-no-files-found: warn
