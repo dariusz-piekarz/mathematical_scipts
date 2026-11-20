@@ -66,7 +66,7 @@ W twierdzeniu thm:mv-de-rham stosujemy s(α,β)=β|_(U∩V)−α|_(U∩V). AT-09
 Dowód DG ma analogiczną kontrolę, choć rozkłada ją na inne akapity. Po przyszłym scaleniu wystarczy jeden pełny dowód z zachowaniem obu istotnych wyjaśnień.
 
 ### Twierdzenie de Rhama
-Oba źródła mają długi argument oparty na gładkich łańcuchach singularnych, podziale małych łańcuchów, totalizacji tabel Čech, lokalnych homotopiach i podziałach jedności. Zgodność etykiety thm:de-rham nie zastępuje kontroli technicznych lematów, które należy jeszcze oddzielnie przeanalizować przed scalenieniem. Nie deklarujemy pełnej niezależnej rederywacji wszystkich narzędzi sklejania.
+Oba źródła mają długi argument oparty na gładkich łańcuchach singularnych, podziale małych łańcuchów, totalizacji tabel Čech, lokalnych homotopiach i podziałach jedności. Zgodność etykiety thm:de-rham nie zastępuje kontroli technicznych lematów, które należy jeszcze oddzielnie przeanalizować przed scaleniem. Nie deklarujemy pełnej niezależnej rederywacji wszystkich narzędzi sklejania.
 
 ### Unikalne źródłowe etykiety, których nie wolno utracić
 AT-09:
@@ -95,7 +95,7 @@ W przebiegu GitHub Actions 44827422851:
 - regresje porównawcze (wówczas 10 testów) — SUCCESS;
 - AT-01–30: 295 stron A4 po trzech przebiegach pdflatex, brak niezdefiniowanych referencji, nieustabilizowanych etykiet i poziomych przepełnień;
 - DG-01–10: 269 stron A4 po trzech przebiegach pdflatex i bez poziomych przepełnień. Pozostały wyłącznie cztery jawnie dopuszczone odsyłacze wybiegające poza zakres częściowej kompilacji: sec:kolnierz-15, sec:uchwyt-morse-17, thm:poincare-hopf-16, thm:holonomia-lokalny-produkt.
-Późniejsza regresja manifestu zwiększyła liczbę testów do 11. Pełny workflow aplikacji zaliczył je w przebiegu 44827579549. Weryfikacje wizualne wykonano na rzeczywistych plikach PDF, m.in. stronach AT 29 i 111 oraz DG 171 i 260.
+Późniejsza regresja manifestu zwiększyła liczbę testów do 11. Wszystkie 11/11 zaliczono także w osobnym zadaniu audytu AT w przebiegu 44827860688; pełny workflow aplikacji zaliczył je w przebiegu 44827579549. Weryfikacje wizualne wykonano na rzeczywistych plikach PDF, m.in. stronach AT 29 i 111 oraz DG 171 i 260.
 
 Ograniczenie: złożenie DG-01–10 jest osobnym kontrolnym wycinkiem 269 stron, nie kompletnym dokumentem wszystkich 36 docelowych rozdziałów DG. Nie ma automatycznej gwarancji pełnej poprawności pozostałych 13 niewyjaśnionych odsyłaczy w obecnym DG-01–20.
 
