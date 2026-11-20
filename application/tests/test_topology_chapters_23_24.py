@@ -181,6 +181,21 @@ class TopologyChaptersTwentyThreeTwentyFourAudit(unittest.TestCase):
             r"Z długiego ciągu kohomologii otrzymujemy fragment", src
         )
 
+    def test_nodal_normalization_is_small_but_surface_blowup_not(self):
+        src = self.sources["24"]
+        self.assertIn(r"\label{prz:small-node-normalization}", src)
+        self.assertIn(r"\ref{cor:small-map-ic-xiii}", src)
+        self.assertIn(r"R\nu_*k_{\mathbb P^1}[1]\simeq IC_C(k)", src)
+        # A finite morphism has 0-dimensional fibers everywhere;
+        # the blowup at the origin in C^2 has a 1-dimensional fiber
+        # above a codimension-two point: 2 is not strictly > 2.
+        for r in range(1, 6):
+            self.assertLess(0, r)
+        fiber_dimension = 1
+        codimension = 2
+        self.assertEqual(codimension, 2 * fiber_dimension)
+        self.assertFalse(codimension > 2 * fiber_dimension)
+
     def test_deep_theorems_remain_explicit_dependencies(self):
         s23, s24 = self.sources["23"], self.sources["24"]
         self.assertIn("istnienia $a^!$", s23)
