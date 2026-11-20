@@ -1,6 +1,6 @@
 # Aktualny plan i pokrycie przeglądem
 
-Stan: 19 listopada 2026. Gałąź: `review/rozdzialy-matematyka`.
+Stan: 20 listopada 2026. Gałąź: `review/rozdzialy-matematyka`.
 Książka ma **39 rozdziałów, pięć części i trzy dodatki**. Numery w nazwach
 plików są historyczne; numer w PDF ustala kolejność importów.
 Skład roboczy podzielono na cztery tomy: rozdziały 1–10, 11–22,
@@ -12,6 +12,18 @@ sprawdzania konkretnych wersji są w [PRZEGLAD.md](PRZEGLAD.md), a budowanie
 i organizacja plików w [README.md](README.md).
 
 ## Bieżący zakres i kolejność
+
+### Rozdział 34 — audyt dydaktyczny (19–20 listopada)
+
+Przejrzano §§34.1–34.4 o formach przecięcia i uchwytach.
+Uzupełniono parowanie modulo torsja, założenia TOP/PL/DIFF,
+kongruencję Schura dla E8, konwencję obramowania, geometryczny
+rachunek macierzy uchwytów i ciąg dokładny homologii brzegu.
+Zachowano etykiety, liczniki i trzy ilustracje, bez nowych zadań.
+Rachunki, skład tomu IV, odsyłacze i wszystkie strony rozdziału
+sprawdzono; szczegóły zapisano w `PRZEGLAD.md`.
+Na rozszerzone polecenie autora trwa kolejny etap: rozdziały 35 i 36,
+o uchwytach Cassona i klasyfikacji Freedmana, w tej kolejności.
 
 ### Rozdziały 32 i 33 — audyt dydaktyczny (19 listopada)
 
@@ -26,8 +38,7 @@ ostrogi; wyjaśniono też różnicę między cięciem JSJ a cięciem
 na części z geometrią o skończonej objętości.
 Zachowano numerację i etykiety, bez nowych zadań.
 Wyniki kontroli rachunków, składu tomu IV i źródeł zapisano
-w `PRZEGLAD.md`. Następny w kolejce jest rozdział 34
-o formach przecięcia w wymiarze cztery.
+w `PRZEGLAD.md`. Audyt rozdziału 34 opisano powyżej.
 
 ### Rozdziały 30 i 31 — audyt dydaktyczny (19 listopada)
 
