@@ -172,7 +172,9 @@ class AlgebraicTopologyTwentyNineThirtyAudit(unittest.TestCase):
             r"\label{prz:at30-transwersalnosc-prostych}", src
         )
         # At y=1, x=0 and both tangent lines are horizontal.
-        self.assertEqual(0, 0)
+        x0, y0 = 0, 1
+        det_at_tangency = (-y0) * 0 - x0 * 1
+        self.assertEqual(det_at_tangency, 0)
         for eps in (0.1, 0.3, 0.5):
             x = sqrt(2 * eps - eps * eps)
             y = 1 - eps
