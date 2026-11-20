@@ -90,6 +90,24 @@ Dodatki:
 
 Istniejące audyty pojedynczych par rozdziałów AT03/04 oraz AT05/06 również przebiegły bez błędów po modyfikacji odpowiednich plików. Pełna kompilacja dwóch par i oględziny PDF są oddzielnymi czynnościami, których wyniki należy zamknąć dopiero po uzyskaniu odpowiednich logów GitHub Actions — nigdy na podstawie samego istnienia workflow.
 
-## 5. Następny etap
+## 5. Weryfikacja wykonywalna i rzeczywiste oględziny PDF
+
+Przebieg GitHub Actions:
+https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44833006835
+zakończył się dwoma zielonymi zadaniami:
+- osiem testów nowej pary 8/8 OK;
+- kompilacja AT-01–30: **296 stron A4**, trzy przebiegi pdflatex, bez nieustalonych odsyłaczy i przepełnień hbox w końcowym przebiegu;
+- kompilacja DG-01–10: **270 stron A4**, trzy przebiegi pdflatex i brak przepełnień hbox; pozostałe cztery dopuszczone odsyłacze do DG-11–20 i dalszych rozdziałów: sec:kolnierz-15, sec:uchwyt-morse-17, thm:holonomia-lokalny-produkt, thm:poincare-hopf-16.
+Pełne testy aplikacji także przeszły w przebiegu 44833125664.
+
+Pobrano rzeczywiste pliki PDF i sprawdzono wizualnie:
+- AT, strona 65: pełen rachunek lokalnej homologii gwiazdy, bez uciętych wzorów ani nakładających się tekstów;
+- AT, strona 66: porównawczy rysunek gwiazd o 1, 2 i 4 ramionach, czytelne etykiety i podpis;
+- DG, strona 197: konstrukcja trzyarkuszowego nakrycia, poprawne przejście od monodromii do rangi grupy podstawowej;
+- DG, strona 198: argument o grupie transformacji i rysunek zorientowanych krawędzi.
+
+Oględziny ujawniły, że na pierwszej wersji rysunku DG-07 etykiety pętli b_1 i a_3 zbliżały się zbyt mocno do podpisów wierzchołków v_1 i v_3. Dlatego **dokonano rzeczywistej poprawki wizualnej**: zwiększono rozmiar łuków pętli i przeniesiono ich etykiety na zewnątrz (commit 13c7d23f00035955b6406d3957de3ae70148d306). Ostatni wariant podlega ponownej weryfikacji kompilacyjnej; nie należy utożsamiać starego sprawdzonego PDF z poprawionym PDF bez ponownego wykonania workflow.
+
+## 6. Następny etap
 
 Nie przeprowadzono destrukcyjnego scalania. Dalszy audyt porównawczy: AT-06 / DG-09 (wyższe grupy homotopii, Hurewicz), a potem analiza tych elementów DG, dla których brak równoległych rozdziałów AT. Po każdej parze: realny audyt hipotez, dowodów, konkretnych przykładów i rysunków; następnie testy i kontrola PDF; przy przyszłym łączeniu bez utraty żadnej niepowtarzalnej treści.
