@@ -148,9 +148,12 @@ class APITests(unittest.TestCase):
         self.assertEqual(self.client.get("/api/graph",params=params).status_code,400)
 
     def test_graph_path(self):
-        data=self.client.get("/api/graph/path",params=self._real_dependency_edge()).json()
+        params=self._real_dependency_edge()
+        response=self.client.get("/api/graph/path",params=params)
+        self.assertEqual(response.status_code,200,response.text)
+        data=response.json()
         self.assertTrue(data["found"])
-        self.assertEqual(data["modules"][0]["id"],"ALG-09")
+        self.assertEqual(data["modules"][0]["id"],params["source"])
 
     def test_plan(self):
         data=self.client.post("/api/selection/plan",json={"modules":["ALG-09"]}).json()
