@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import re
+import sqlite3
 import subprocess
 import sys
 import time
@@ -67,11 +68,46 @@ def main() -> None:
                 page.locator("#view-graph").wait_for(state="visible", timeout=15000)
                 assert page.locator("#graphLeft option").count() > 0
                 assert page.locator("#graphRight option").count() > 0
+                # Choose an existing, unambiguous reference actually displayed
+                # in the first 32,000 characters of a canonical chapter.
+                with sqlite3.connect(ROOT / "data" / "biblioteka.db") as db:
+                    reference = db.execute("""
+                        SELECT r.source_document, r.target_label
+                        FROM references_tex AS r
+                        WHERE r.status='resolved' AND r.target_document IS NOT NULL
+                          AND r.offset < 30000
+                          AND NOT EXISTS (
+                              SELECT 1 FROM label_conflicts AS c
+                              WHERE c.name=r.target_label
+                          )
+                          AND EXISTS (
+                              SELECT 1 FROM labels AS l
+                              WHERE l.name=r.target_label
+                          )
+                        ORDER BY r.source_document, r.offset
+                        LIMIT 1
+                    """).fetchone()
+                assert reference is not None, "No unambiguous visible reference"
+                source_id, target_label = reference
+                page.evaluate("(moduleId) => openModule(moduleId)", source_id)
+                source_ref = page.locator("#latexSource .ref-link").filter(
+                    has_text=target_label
+                ).first
+                source_ref.wait_for(state="visible", timeout=15000)
+                source_ref.hover()
+                tip = page.locator("#referenceTip")
+                tip.wait_for(state="visible", timeout=15000)
+                assert target_label in page.locator("#tipBody").inner_text()
+                assert page.locator("#tipBody .tip-code").inner_text().strip()
+                page.locator("#tipOpen").click()
+                page.locator("#docTitle").wait_for(state="visible", timeout=15000)
+                assert page.locator("#docTitle").inner_text().strip()
                 assert not errors, errors
                 print(json.dumps({
                     "result": "passed", "indexed_chapters": stats["documents"],
                     "rendered_chapters": displayed, "opened_title": chapter_title,
                     "graph_domains": page.locator("#graphLeft option").count(),
+                    "reference_preview": {"source": source_id, "label": target_label},
                     "javascript_errors": errors,
                 }, ensure_ascii=False))
             finally:
