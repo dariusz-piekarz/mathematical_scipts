@@ -102,12 +102,76 @@ def main() -> None:
                 page.locator("#tipOpen").click()
                 page.locator("#docTitle").wait_for(state="visible", timeout=15000)
                 assert page.locator("#docTitle").inner_text().strip()
+                # Negative paths: use actual ambiguity and missing-label evidence
+                # from the freshly built canonical index; never invent owners.
+                with sqlite3.connect(ROOT / "data" / "biblioteka.db") as db:
+                    ambiguous = db.execute("""
+                        SELECT name FROM label_conflicts
+                        GROUP BY name HAVING COUNT(DISTINCT document_id)>1
+                        ORDER BY name LIMIT 1
+                    """).fetchone()
+                    missing = db.execute("""
+                        SELECT r.target_label FROM references_tex AS r
+                        WHERE r.target_document IS NULL
+                          AND NOT EXISTS (SELECT 1 FROM labels l WHERE l.name=r.target_label)
+                          AND NOT EXISTS (SELECT 1 FROM label_conflicts c WHERE c.name=r.target_label)
+                        ORDER BY r.target_label LIMIT 1
+                    """).fetchone()
+                assert ambiguous is not None, "No ambiguous labels in indexed corpus"
+                assert missing is not None, "No missing labels in indexed corpus"
+                ambiguous_label, missing_label = ambiguous[0], missing[0]
+                anchor_id = "docTitle"
+                page.evaluate(
+                    "([label, anchorId]) => previewLabel(label, document.getElementById(anchorId))",
+                    [ambiguous_label, anchor_id],
+                )
+                page.locator("#tipBody .ref-choice").first.wait_for(state="visible",timeout=15000)
+                assert "Etykieta występuje w kilku rozdziałach" in page.locator("#tipBody").inner_text()
+                assert page.locator("#tipOpen").is_disabled()
+                assert page.locator("#tipBody .ref-choice").count() >= 2
+                selected_owner = page.locator("#tipBody .ref-choice").first.inner_text().split(": ",1)[0]
+                page.locator("#tipBody .ref-choice").first.click()
+                page.wait_for_function(
+                    "(id) => document.getElementById('docBreadcrumb').textContent.includes(id)",
+                    selected_owner, timeout=15000,
+                )
+                page.evaluate(
+                    "([label, anchorId]) => previewLabel(label, document.getElementById(anchorId))",
+                    [missing_label, anchor_id],
+                )
+                page.locator("#referenceTip").wait_for(state="visible")
+                assert "Nie znaleziono cytowanej etykiety" in page.locator("#tipBody").inner_text()
+                assert missing_label in page.locator("#tipBody").inner_text()
+                assert page.locator("#tipOpen").is_disabled()
+                # Hold the first successful fetch artificially; an immediate
+                # 404 must win and the late successful response must be ignored.
+                page.evaluate("""(slowLabel) => {
+                    const originalFetch = window.fetch.bind(window);
+                    window.fetch = async (...args) => {
+                        const response = await originalFetch(...args);
+                        if (String(args[0]).includes('/api/labels/' + encodeURIComponent(slowLabel))) {
+                            await new Promise(resolve => setTimeout(resolve, 400));
+                        }
+                        return response;
+                    };
+                }""", target_label)
+                page.evaluate("""async ([slow, fast]) => {
+                    const anchor = document.getElementById('docTitle');
+                    const first = previewLabel(slow, anchor);
+                    const second = previewLabel(fast, anchor);
+                    await Promise.allSettled([first, second]);
+                }""", [target_label, missing_label])
+                assert "Nie znaleziono cytowanej etykiety" in page.locator("#tipBody").inner_text()
+                assert missing_label in page.locator("#tipBody").inner_text()
+                assert target_label not in page.locator("#tipBody").inner_text()
                 assert not errors, errors
                 print(json.dumps({
                     "result": "passed", "indexed_chapters": stats["documents"],
                     "rendered_chapters": displayed, "opened_title": chapter_title,
                     "graph_domains": page.locator("#graphLeft option").count(),
                     "reference_preview": {"source": source_id, "label": target_label},
+                    "ambiguous_label": ambiguous_label, "missing_label": missing_label,
+                    "stale_response_suppressed": True,
                     "javascript_errors": errors,
                 }, ensure_ascii=False))
             finally:
