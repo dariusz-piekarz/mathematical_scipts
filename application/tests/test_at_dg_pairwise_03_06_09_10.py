@@ -83,8 +83,8 @@ class PairedProofAudit(unittest.TestCase):
                 r"\rho_V",
             ):
                 self.assertIn(term, block)
-            self.assertIn("podniesienia", block)
-            self.assertIn("reprezentanta", block)
+            self.assertIn("podniesieni", block)
+            self.assertIn(r"\gamma+\dd\theta", block)
             self.assertIn("dokładność", block.lower())
 
     def test_mayer_vietoris_boundary_on_circle_is_nonzero(self):
