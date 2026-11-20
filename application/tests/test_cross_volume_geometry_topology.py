@@ -10,7 +10,7 @@ import sys
 
 SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
 sys.path.insert(0, str(SCRIPTS))
-from audit_cross_volume_geometry_topology import audit, strip_tex_comments
+from audit_cross_volume_geometry_topology import audit, strip_tex_comments, read_sources, BOOKS
 
 
 class CrossVolumeAuditTest(unittest.TestCase):
@@ -55,6 +55,29 @@ class CrossVolumeAuditTest(unittest.TestCase):
             "tw:ga10-blowup", "thm:xvii-blowup",
         ):
             self.assertNotIn(protected, conflict_names)
+
+    def test_shared_proof_include_order_is_topologically_sound(self):
+        for vol in ("AG", "AT"):
+            names = [p["path"] for p in read_sources(BOOKS[vol])]
+            normal = "shared/pl/rozdmuchanie_punktu_normalna.tex"
+            cohom = "shared/pl/rozdmuchanie_punktu_kohomologia.tex"
+            lefschetz = "shared/pl/slabe_twierdzenie_lefschetza.tex"
+            self.assertIn(normal, names)
+            self.assertIn(cohom, names)
+            self.assertIn(lefschetz, names)
+            self.assertLess(names.index(normal), names.index(cohom))
+
+    def test_ambiguous_module_section_is_not_aliased_across_three_volumes(self):
+        conflicts = {
+            x["label"]: x for x in self.report["cross_volume_conflicts"]
+        }
+        triple = conflicts.get("sec:moduly")
+        if triple is not None:
+            self.assertEqual(set(triple["volume_owners"]), {"AT", "DG", "AG"})
+            self.assertEqual(
+                triple["status"], "requires_manual_mathematical_disambiguation"
+            )
+            self.assertEqual(len(triple["source_files"]), 3)
 
     def test_all_collisions_report_distinct_source_owners(self):
         for item in self.report["cross_volume_conflicts"]:
