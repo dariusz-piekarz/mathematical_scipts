@@ -27,10 +27,12 @@ from typing import Any
 
 try:
     from .label_registry import Owner, resolve
+    from .included_labels import included_labels_for_document
 except ImportError:  # python backend/latex_parser.py ...
     from label_registry import Owner, resolve
+    from included_labels import included_labels_for_document
 
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 SECTION_DEPTH = {
     "part": 0, "chapter": 1, "section": 2, "subsection": 3,
     "subsubsection": 4, "paragraph": 5, "subparagraph": 6,
@@ -438,6 +440,14 @@ CREATE TABLE label_occurrences (
 );
 CREATE INDEX idx_label_occurrences_name ON label_occurrences(name);
 CREATE INDEX idx_label_occurrences_doc ON label_occurrences(document_id);
+CREATE TABLE included_label_origins (
+  document_id TEXT NOT NULL REFERENCES documents(id),
+  name TEXT NOT NULL, origin_path TEXT NOT NULL,
+  origin_line INTEGER NOT NULL, origin_offset INTEGER NOT NULL,
+  excerpt TEXT NOT NULL,
+  PRIMARY KEY(document_id,name,origin_path,origin_line,origin_offset)
+);
+CREATE INDEX idx_included_label_origins_name ON included_label_origins(name);
 CREATE TABLE references_tex (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   source_document TEXT NOT NULL REFERENCES documents(id),
@@ -455,7 +465,7 @@ CREATE TABLE historical_aliases (
 );
 CREATE VIEW dependency_edges AS
 SELECT source_document, target_document, count(*) AS references_count
-FROM references_tex WHERE status IN ('resolved','external_resolved','alias_resolved') AND target_document IS NOT NULL
+FROM references_tex WHERE status IN ('resolved','external_resolved','alias_resolved','included_resolved') AND target_document IS NOT NULL
 GROUP BY source_document,target_document;
 """
 
@@ -602,19 +612,42 @@ def build_database(source_dir: Path, db_path: Path, alias_file: Path | None = No
             con.execute("INSERT INTO label_occurrences VALUES (?,?,?,?,?,?,NULL)",
                         (f"{document.id}::{label.name}", label.name, document.id,
                          label.entity_id, label.line, label.offset))
+    # Included labels retain their actual file path and line; they do
+    # not masquerade as native labels declared in the parent chapter.
+    include_owners: dict[tuple[str, str], list[Any]] = {}
+    repo_root = (source_dir.resolve().parents[1]
+                 if source_dir.name == "pl" and source_dir.parent.name == "chapters"
+                 else None)
+    if repo_root is not None:
+        for doc in all_documents:
+            for item in included_labels_for_document(
+                    doc.source, doc.id, repo_root=repo_root, masked_source=masked_source):
+                con.execute("INSERT OR IGNORE INTO included_label_origins VALUES (?,?,?,?,?,?)",
+                            (doc.id, item.name, item.relative_path, item.line,
+                             item.offset, item.excerpt))
+                include_owners.setdefault((doc.id, item.name), []).append(item)
     for doc in all_documents:
         for ref in doc.references:
             decision = resolve(doc.id, ref.target, all_owners, aliases=curated_aliases)
-            dst = decision.owner.document_id if decision.owner else None
-            resolved_id = decision.owner.entity_id if decision.owner else None
-            status = decision.status
+            imported = include_owners.get((doc.id, ref.target), [])
+            native_local = any(o.document_id == doc.id and o.label == ref.target
+                               for o in all_owners)
+            if imported and not native_local:
+                if len(imported) == 1:
+                    dst, resolved_id, status = doc.id, None, "included_resolved"
+                else:
+                    dst, resolved_id, status = None, None, "ambiguous"
+            else:
+                dst = decision.owner.document_id if decision.owner else None
+                resolved_id = decision.owner.entity_id if decision.owner else None
+                status = decision.status
             con.execute("INSERT INTO references_tex(source_document,source_entity,command,target_label,offset,line,target_document,target_entity,status) VALUES (?,?,?,?,?,?,?,?,?)",
                         (doc.id, ref.entity_id, ref.command, ref.target, ref.offset, ref.line,
                          dst, resolved_id, status))
             total["references"] += 1
             total[status + "_references"] += 1
     load_historical_aliases(con, alias_file)
-    for k in ("documents", "entities", "labels", "references", "resolved_references", "external_resolved_references", "alias_resolved_references", "ambiguous_references", "missing_references", "parse_warnings"):
+    for k in ("documents", "entities", "labels", "references", "resolved_references", "external_resolved_references", "alias_resolved_references", "included_resolved_references", "ambiguous_references", "missing_references", "parse_warnings"):
         total.setdefault(k, 0)
     total["duplicate_labels"] = len(duplicate_labels)
     total["cross_document_edges"] = con.execute("SELECT count(*) FROM dependency_edges WHERE source_document != target_document").fetchone()[0]
@@ -649,6 +682,8 @@ def get_stats(con: sqlite3.Connection) -> dict[str, int]:
         "references":"references_tex", "missing_references":"references_tex WHERE status='missing'",
         "cross_document_edges":"dependency_edges WHERE source_document != target_document"}.items()}
     result["label_occurrences"] = con.execute("SELECT count(*) FROM label_occurrences").fetchone()[0]
+    result["included_labels"] = con.execute("SELECT count(*) FROM included_label_origins").fetchone()[0]
+    result["included_resolved_references"] = con.execute("SELECT count(*) FROM references_tex WHERE status='included_resolved'").fetchone()[0]
     result["external_resolved_references"] = con.execute("SELECT count(*) FROM references_tex WHERE status='external_resolved'").fetchone()[0]
     result["alias_resolved_references"] = con.execute("SELECT count(*) FROM references_tex WHERE status='alias_resolved'").fetchone()[0]
     result["duplicate_labels"] = con.execute("SELECT count(DISTINCT name) FROM label_conflicts").fetchone()[0]
