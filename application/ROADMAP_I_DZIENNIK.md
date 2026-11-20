@@ -346,3 +346,18 @@ W topologii algebraicznej zweryfikowano i poprawiono kanoniczne `chapters/pl/alg
 **Retesty:** [aplikacja #44756027445](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44756027445) — SUCCESS (121 testów, 1 pominięty, Chromium zaliczone); [LaTeX #44756027439](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44756027439) — SUCCESS (2 przebiegi, 13 stron, brak niezdefiniowanych odsyłaczy i przepełnionych wierszy). Szczegółowy protokół: `application/docs/AUDYT_TOPOLOGIA_ALGEBRAICZNA_01_02_2026-11-20.md`. Rejestr: `application/data/AUDYT_ROZDZIALOW.csv` — AT-01 i AT-02 mają status `zaakceptowany`.
 
 **Następna partia AT:** rozdziały **03–04** (algebra homologiczna; homotopia, nakrycia i modele komórkowe), najpierw audyt poprzednio dodanych elementów w razie stwierdzenia regresji, potem szczegółowy audyt obu rozdziałów. Cała topologia algebraiczna nie jest jeszcze oznaczona jako audytowana.
+
+
+### Audyt szczegółowy AT — partia 2, rozdziały 03–04 (20.11.2026)
+
+Wykonano szczegółowy audyt dwóch kolejnych rozdziałów topologii algebraicznej, według standardu DG-01; poprawiono bezpośrednio kanoniczne pliki `03-algebra-homologiczna-moduly-kompleksy-i-ko-homologie.tex` oraz `04-homotopia-nakrycia-i-komorkowe-modele-przestrzeni.tex`. Nie tworzono nowej gałęzi i nie zmieniano `main`.
+
+**AT-03:** skorygowano niepoprawną nad pierścieniami nieprzemiennymi kolejność współczynników w dowodzie kasowania pary wolnych lewych modułów: `x'=x-a(x)u^{-1}e`; dodano kontrprzykład nad `M_2(Z/2Z)`, jawnie podano przemienność pierścienia w konstrukcji kompleksu dualnego `Hom_R(-,G)`, dowiedziono zamkniętości torsji na działania grupowe, uzupełniono obliczenia przejścia modulo 2 z odwzorowaniem łączącym i nowym diagramem. Ujednolicono terminologię iloczynu tensorowego.
+
+**AT-04:** rozwinięto lokalny dowód, że `z→z^m` jest `m`-krotnym nakryciem, oraz nowy przykład niemożności globalnego przekroju dla `m≥2` z użyciem `(q_m)_*(k)=mk`. Dodano rysunek, poprawiono opis postaci słowa zredukowanego w iloczynie wolnym (dopuszczalne słowa jednoelementowe). Zachowano wszystkie istniejące `\\label`, `\\ref` i warianty argumentacji.
+
+**Wynik:** [testy aplikacji/Chromium #44759080700](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44759080700) — SUCCESS, **130** testów Python (1 pominięty), indeks bez regresji; [kompilacja #44759080408](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44759080408) — SUCCESS, **44 strony**, dwukrotny `pdflatex` z AT-01/02 jako kontekstem odsyłaczy, bez niezdefiniowanych odsyłaczy i `Overfull \\hbox`. Sprawdzono wizualnie wszystkie 9 rysunków AT-03/04. Nowe testy: `application/tests/test_topology_chapters_03_04.py`; niezależna bramka PDF: `.github/workflows/algebraic-topology-audit-ch03-04.yml`. Szczegóły: `application/docs/AUDYT_TOPOLOGIA_ALGEBRAICZNA_03_04_2026-11-20.md`.
+
+Rejestr `application/data/AUDYT_ROZDZIALOW.csv`: **AT-03 i AT-04 zaakceptowane**, łącznie AT-01–AT-04. W aplikacji nadal 14 nierozwiązanych cytowań z niekompletnego importu DG; nie naprawiano ich przez fikcyjne aliasy.
+
+**Następna partia:** **AT-05 i AT-06**, odpowiednio homologia przestrzeni oraz wyższe grupy homotopii, ich związek z homologią. Powtórzyć cykl: szczegółowy audyt, poprawki matematyczne/redakcyjne, przegląd ilustracji, testy i commit.
