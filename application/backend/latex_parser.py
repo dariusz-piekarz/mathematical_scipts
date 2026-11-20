@@ -670,8 +670,12 @@ def search(con: sqlite3.Connection, query: str, limit: int = 20) -> list[dict[st
         return [dict(r) for r in rows]
 
 
-def show_label(con: sqlite3.Connection, label: str, max_chars: int = 1300) -> dict[str, Any] | None:
-    row = con.execute("SELECT l.name,l.document_id,l.line,l.offset,l.entity_id,d.title,d.content FROM labels l JOIN documents d ON d.id=l.document_id WHERE l.name=?",(label,)).fetchone()
+def show_label(con: sqlite3.Connection, label: str, max_chars: int = 1300, *,
+               document_id: str | None = None) -> dict[str, Any] | None:
+    if document_id is None:
+        row = con.execute("SELECT l.name,l.document_id,l.line,l.offset,l.entity_id,d.title,d.content FROM labels l JOIN documents d ON d.id=l.document_id WHERE l.name=?",(label,)).fetchone()
+    else:
+        row = con.execute("SELECT l.name,l.document_id,l.line,l.offset,l.entity_id,d.title,d.content FROM label_occurrences l JOIN documents d ON d.id=l.document_id WHERE l.name=? AND l.document_id=?",(label,document_id)).fetchone()
     if not row:
         return None
     result = {k: row[k] for k in ("name","document_id","line","offset","entity_id","title")}
