@@ -103,3 +103,14 @@ Następna rzeczywista iteracja powinna:
 1. porównać **tezy, hipotezy i dowody** dla kolizji w AT-09/DG-10 oraz AT-03/DG-06 i dopiero wtedy wyznaczyć kanoniczne właścicielstwo dowodów;
 2. odtworzyć cele 13 odsyłaczy DG po zaimportowaniu brakujących źródeł DG-21–36;
 3. wykonać tabelę znaczeń etykiet, zwłaszcza sec:moduly, i dopiero na końcu przeprowadzać scalanie bez utraty treści.
+
+
+## 7. Weryfikacja wykonawcza i wizualna po zamknięciu pierwszej części audytu
+
+**Dziesięć testów regresyjnych** z application/tests/test_cross_volume_geometry_topology.py zostało rzeczywiście uruchomionych i zaliczonych w GitHub Actions (przebieg 44825651868, zadanie audit-unmerged-volumes). Sprawdzono m.in. źródłową identyczność wspólnych dowodów, kolejność ich \input, brak kolizji wewnątrztomowych i katalog aktualnie brakujących etykiet DG.
+
+**Niezależna kompilacja pełnego tomu AG-00–10** zakończyła się sukcesem w GitHub Actions (przebieg 44825609216, zadanie compile-AG-book-with-canonical-shared-proofs). Otrzymano PDF o **180 stronach A4** po trzech przebiegach pdflatex, bez niezdefiniowanych odsyłaczy, przepełnień poziomych i niestabilnych etykiet w końcowym logu. Jest to rzeczywista kontrola wspólnego modułu w kontekście innego tomu niż AT.
+
+**Oględziny PDF AG:** pobrano artefakt GitHub Actions i obejrzano rzeczywiste strony PDF **128, 171, 173 i 174**. Są to miejsca z lematem o wiązce normalnej, słabym twierdzeniem Lefschetza i wzorem na kohomologię rozdmuchania. Na wskazanych stronach nie ma widocznych przesunięć i nałożeń podpisów, obciętych wzorów ani brakujących znaków. Oględziny kilku stron nie są automatycznym certyfikatem wszystkich 180 stron.
+
+**Status etapu I:** zakończony audyt strukturalny 61 rozdziałów źródłowych trzech tomów oraz audyt tematycznych nakładek 15 par. Zabezpieczono etykiety i wspólne źródła bez automatycznego scalania. 13 odsyłaczy DG pozostaje otwartą zależnością od niezaimportowanych rozdziałów 21–36. Następny etap musi być audytem porównawczym treści i dowodów konkretnych par, a nie ponownym automatycznym przeliczaniem tych samych etykiet.
