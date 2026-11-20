@@ -482,6 +482,27 @@ def load_historical_aliases(con: sqlite3.Connection, alias_file: Path | None) ->
     con.executemany("INSERT OR IGNORE INTO historical_aliases VALUES(?,?,?,?)", rows)
 
 
+def read_curated_aliases(alias_file: Path | None) -> dict[tuple[str, str], tuple[str, str]]:
+    """Explicit, versioned aliases. Never infer equivalence from matching names.
+
+    Optional JSON: {"label_aliases":[{"source_document":"TOP-05",
+      "original_label":"old", "target_document":"TOP-03",
+      "target_label":"thm:homotopia-homologia"}]}.
+    An alias must resolve to an actual indexed original label.
+    """
+    if alias_file is None or not alias_file.is_file():
+        return {}
+    data = json.loads(alias_file.read_text(encoding="utf-8-sig"))
+    result: dict[tuple[str, str], tuple[str, str]] = {}
+    for row in data.get("label_aliases", []):
+        key = (row["source_document"], row["original_label"])
+        target = (row["target_document"], row["target_label"])
+        if key in result and result[key] != target:
+            raise ValueError(f"Sprzeczne aliasy dla {key}")
+        result[key] = target
+    return result
+
+
 def build_database(source_dir: Path, db_path: Path, alias_file: Path | None = None, *, recursive: bool = False) -> dict[str, Any]:
     # Domyślnie tylko kanoniczne, bezpośrednie pliki w płaskim folderze rozdzialy/.
     # Inne podfoldery mogą być roboczymi projektami.
@@ -571,6 +592,7 @@ def build_database(source_dir: Path, db_path: Path, alias_file: Path | None = No
             con.execute("INSERT INTO labels VALUES (?,?,?,?,?,?)", (
                 label.name, label.document_id, label.entity_id, label.offset, label.line, label.excerpt))
             total["labels"] += 1
+    curated_aliases = read_curated_aliases(alias_file)
     # Separate every original occurrence from the legacy globally-unique index.
     # Entity identities stay distinct even when the LaTeX strings coincide.
     all_owners: list[Owner] = []
@@ -582,7 +604,7 @@ def build_database(source_dir: Path, db_path: Path, alias_file: Path | None = No
                          label.entity_id, label.line, label.offset))
     for doc in all_documents:
         for ref in doc.references:
-            decision = resolve(doc.id, ref.target, all_owners)
+            decision = resolve(doc.id, ref.target, all_owners, aliases=curated_aliases)
             dst = decision.owner.document_id if decision.owner else None
             resolved_id = decision.owner.entity_id if decision.owner else None
             status = decision.status
