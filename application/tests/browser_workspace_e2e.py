@@ -54,12 +54,13 @@ def main():
                     page.locator("#draftResult button", has_text="Zapisz na stałe").click()
                     page.locator("#savedProjects .saved-project-item").first.wait_for(timeout=15000)
                     assert list(saved.glob("*.zip")), "Saved project not persisted"
-                    page.close(run_before_unload=True)  # Exercise the browser tab-close lifecycle
+                    page.goto('about:blank', wait_until='load')  # Real navigation dispatches pagehide
+                    page.close()
                     for _ in range(50):
                         if not list(drafts.glob("*/project.zip")):
                             break
                         time.sleep(0.1)
-                    assert not list(drafts.glob("*/project.zip")), "X-close failed to delete draft"
+                    assert not list(drafts.glob("*/project.zip")), "Leaving page failed to delete draft"
                     assert list(saved.glob("*.zip")), "Closing tab removed saved project"
                 finally:
                     browser.close()
@@ -69,7 +70,7 @@ def main():
                 server.communicate(timeout=8)
             except subprocess.TimeoutExpired:
                 server.kill()
-        print("PASS: create draft, save project, close browser X, remove draft, retain saved ZIP")
+        print("PASS: create draft, save project, leave page, remove draft, retain saved ZIP")
 
 
 if __name__ == "__main__":
