@@ -274,7 +274,7 @@ def bipartite_graph(con: sqlite3.Connection, left: str, right: str,
     if left not in {r["domain"] for r in docs.values()} or right not in {r["domain"] for r in docs.values()}:
         raise HTTPException(status_code=400,detail="Nieznana dziedzina.")
     rows=con.execute("""SELECT source_document,source_entity,target_document,target_entity,target_label
-                        FROM references_tex WHERE status='resolved' AND target_document IS NOT NULL
+                        FROM references_tex WHERE status IN ('resolved','external_resolved','alias_resolved') AND target_document IS NOT NULL
                           AND source_document!=target_document""").fetchall()
     owners={}
     if granularity == "section":
