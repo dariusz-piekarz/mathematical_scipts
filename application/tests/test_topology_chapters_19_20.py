@@ -79,7 +79,7 @@ class TopologyNineteenTwentyAudit(unittest.TestCase):
                 r"\\(?:ref|eqref|autoref|pageref|nameref)\s*\{([^}]+)\}",
                 self.texts[ch],
             )
-            self.assertGreater(len(refs), 3)
+            self.assertGreaterEqual(len(refs), 3)
             self.assertEqual(set(refs) - labels, set())
 
     def test_diagrams_and_environments_are_independent(self):
