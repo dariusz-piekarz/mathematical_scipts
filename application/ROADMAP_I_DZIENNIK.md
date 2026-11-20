@@ -374,3 +374,17 @@ Zakończono pełną iterację kontrolną dokładnie dwóch rozdziałów topologi
 **Walidacja:** [CI aplikacji #44762101029](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44762101029) — SUCCESS, 139 testów Python (1 pominięty) i Chromium; [CI LaTeX #44762171825](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44762171825) — SUCCESS, 76 stron, dwukrotna kompilacja AT-01–06 z pełnymi odsyłaczami, bez `Overfull \hbox`. Zweryfikowano wizualnie wszystkie 9 rysunków AT-05–06. Raport: `application/docs/AUDYT_TOPOLOGIA_ALGEBRAICZNA_05_06_2026-11-20.md`; rejestr: `application/data/AUDYT_ROZDZIALOW.csv` — status `zaakceptowany`.
 
 **Zatwierdzony zakres:** AT-01–06. **Następna partia:** AT-07 (fibracje i długi ciąg homotopii) oraz AT-08 (kohomologia singularna i iloczyn kubkowy). Zachować dokładnie ten sam cykl audytu z poprawkami źródeł i testem PDF.
+
+### Audyt szczegółowy AT — partia 4, rozdziały 07–08 (20.11.2026)
+
+Wykonano dokładnie dwurozdziałowy audyt topologii algebraicznej zgodnie z normą szczegółowości DG-01. Poprawiono bezpośrednio źródła `chapters/pl/algebraic_topology/07-fibracje-i-dlugi-ciag-homotopii.tex` i `08-kohomologia-singularna-i-iloczyn-kubkowy.tex`. Zachowano wszystkie oryginalne `\label`, `\ref`, bez scalania skryptów i zmian `main`.
+
+**AT-07:** rozwinięto monodromię butelki Kleina (`m↦-m`, prezentacja grupy podstawowej), wyprowadzono lokalną funkcję przejścia Hopfa `conj(u)/|u|`, izomorfizm `π₂(S²)→π₁(S¹)` i dowód braku globalnego przekroju. Dodano dwa samodzielne rysunki TikZ oraz poprawiono terminologię.
+
+**AT-08:** poprawiono błędny opis kasowania wyrazów w dowodzie reguły Leibniza dla iloczynu kubkowego; obliczono go jawnie na dwóch trójkątach torusa, wyznaczono torsję `H₂,H₃` dla `RP²×RP²` oraz generator de Rhama na okręgu. Dodano rysunek triangulacji i uzupełniono przykłady.
+
+**Testy i kompilacja:** [aplikacja #44764782403](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44764782403) — SUCCESS, 148 testów Python (1 pominięty), testy Chromium zaliczone; [LaTeX #44764848131](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44764848131) — SUCCESS, PDF **90 stron**, dwa przebiegi bez niezdefiniowanych odsyłaczy i przepełnień. Sprawdzono nowe rysunki na stronach 79, 80 i 85. Testy regresyjne: `application/tests/test_topology_chapters_07_08.py`, workflow `.github/workflows/algebraic-topology-audit-ch07-08.yml`. Pełny protokół: `application/docs/AUDYT_TOPOLOGIA_ALGEBRAICZNA_07_08_2026-11-20.md`.
+
+Rejestr `application/data/AUDYT_ROZDZIALOW.csv`: **AT-07 i AT-08 zaakceptowane**; łącznie AT-01–08. Dowód twierdzenia de Rhama, zapowiedziany w AT-08, pozostaje merytorycznym zadaniem rozdziału AT-09, nie jest oznaczony jako zweryfikowany w tej iteracji.
+
+**Następna para:** AT-09 oraz AT-10, audyt matematyczno-redakcyjny i kompilacyjny w tym samym standardzie.
