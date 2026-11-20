@@ -418,3 +418,18 @@ Zakończono kolejny szczegółowy audyt dwóch kanonicznych rozdziałów topolog
 Rejestr `application/data/AUDYT_ROZDZIALOW.csv`: **AT-11 i AT-12 zaakceptowane; łącznie AT-01–12**. Pozostała otwarta część uogólnień ciągu spektralnego wymaga osobnego opracowania, nie została fikcyjnie uznana za udowodnioną.
 
 **Następna para:** AT-13 i AT-14, ten sam cykl: szczegółowy audyt, poprawki źródeł, ilustracje, testy i commit.
+
+
+### Audyt szczegółowy AT — partia 7, rozdziały 13–14 (20.11.2026)
+
+Przeprowadzono kolejną iterację szczegółowego matematyczno-redakcyjnego audytu **dwóch** rozdziałów topologii algebraicznej, w standardzie dowodów i przykładów DG-01. Wprowadzono poprawki bezpośrednio do `chapters/pl/algebraic_topology/13-przestrzenie-klasyfikujace-i-teoria-przeszkod.tex` oraz `14-wieze-postnikowa-iloczyny-whiteheada-i-operacje-steenroda.tex`, zachowując dotychczasowe `\label`, `\ref` i gałąź `main` bez zmian.
+
+**AT-13:** szczegółowy rachunek przestrzeni Moore’a `M(Z/m,n)`: `H^n(M;A)=A[m]`, `H^{n+1}(M;A)=A/mA`, relacja z `Hom` i `Ext` oraz warunek przedłużenia mapy do `K(A,n)`. Dodatkowo realne linie nad `S¹`, `BO(1)=RP∞`, klasyfikacja przez `H¹(-;Z/2)` i wiązka Möbiusa. Nowy diagram różniczki Moore’a. Korekta polskiej terminologii „odwzorowanie”, „ekwiwariantny”.
+
+**AT-14:** nowy przykład przeszkody `h²≠0` w podnoszeniu `CP²→P₂S²` do `P₃S²`, równoległy argument przez iloczyn kubkowy, przedłużenie składania `S²∨S²→S²` niemożliwe z `[ι₂,ι₂]=±2η` i `(x+y)²=2xy≠0`. Dodano diagram Whiteheada. Obliczono `Sq¹(t³)=t⁴` i `Sq²(t³)=t⁵` przy zerowym `(t³)²` w `RP⁵`; przykład relacji `Sq¹Sq¹=0`.
+
+**Potwierdzona walidacja:** wszystkie 9 standardowych odsyłaczy AT-13/14 rozwiązuje się w AT-01–14; brak zduplikowanych etykiet, brak zewnętrznych obrazów i plików kodu. [CI aplikacji #44777464928](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44777464928) — **SUCCESS**, 177 testów Python (1 pominięty) oraz Chromium; [CI LaTeX #44777464845](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44777464845) — **SUCCESS**, 172 strony, 2 przebiegi `pdflatex`, brak niezdefiniowanych odsyłaczy i przepełnień. Naprawiono rzeczywisty błąd TeX (`hook->` jako nieobsługiwany grot TikZ) i ponownie skompilowano całość. Sprawdzono wizualnie pięć rysunków na stronach 158, 160, 163, 165 i 168. Zestaw testów: `application/tests/test_topology_chapters_13_14.py`, workflow `.github/workflows/algebraic-topology-audit-ch13-14.yml`, pełny protokół `application/docs/AUDYT_TOPOLOGIA_ALGEBRAICZNA_13_14_2026-11-20.md`.
+
+**Status w rejestrze `application/data/AUDYT_ROZDZIALOW.csv`:** AT-13 `zaakceptowany`, AT-14 `zaakceptowany_z_zastrzezeniem`. Zastrzeżenie dotyczy `thm:steenrod-cartan-v7`: brak pełnych konstrukcyjnych dowodów wzoru Cartana i relacji Adema. Nie przedstawiamy ich jako udowodnionych. W kolejnej iteracji sprawdzić, czy **AT-15** (operacje kohomologiczne, naturalność, iloczyny i relacje) dostarcza wymagane pełne dowody; w przeciwnym wypadku uzupełnić je tam lub jawnie utrzymać zależność.
+
+**Następna para:** **AT-15** — operacje kohomologiczne, naturalność, iloczyny i relacje; **AT-16** — zawieszenie, twierdzenie Freudenthala i homotopia stabilna. Zachować rygor matematyczny, komentarze dowodowe, rysunki i kompletne testy CI; bez nieuzgodnionych zmian `main`.
