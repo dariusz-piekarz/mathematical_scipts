@@ -403,3 +403,18 @@ Wykonano kolejny cykl szczegółowego audytu dokładnie dwóch rozdziałów topo
 **Weryfikacja:** [GitHub Actions aplikacja #44769864949](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44769864949) — SUCCESS (ostatnia wersja źródeł, regresje i Chromium; 158 testów Python, 1 pominięty we wcześniejszym kontrolnym przebiegu); [GitHub Actions PDF #44769864938](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44769864938) — SUCCESS, 120 stron, 2 przebiegi `pdflatex`, brak niezdefiniowanych odsyłaczy i przepełnionych wierszy. Sprawdzono wizualnie wszystkie osiem rysunków AT-09–10, w tym poprawiony pierścień na stronie 103. Raport: `application/docs/AUDYT_TOPOLOGIA_ALGEBRAICZNA_09_10_2026-11-20.md`. Rejestr `application/data/AUDYT_ROZDZIALOW.csv`: **AT-09 i AT-10 zaakceptowane; łącznie AT-01–10**.
 
 **Następna para:** AT-11 i AT-12, ten sam zakres kontroli matematyczno-redakcyjnej, rysunkowej i technicznej.
+
+
+### Audyt szczegółowy AT — partia 6, rozdziały 11–12 (20.11.2026)
+
+Zakończono kolejny szczegółowy audyt dwóch kanonicznych rozdziałów topologii algebraicznej według standardu dowodów, przykładów i rysunków DG-01. Zmiany źródłowe są commitowane bezpośrednio na `biblioteka-matematyczna-iteracja-6`; `main` niezmieniony, oryginalne `\label/\ref` zachowane.
+
+**AT-11 — dualność, przecięcia i charakterystyczne klasy:** rozbudowano obliczenie `Q_{CP²}=(1)` z przecięcia dwóch transwersalnych linii rzutowych. Wykazano następnie, że `CP²#(-CP²)` i `S²×S²` mają wszystkie grupy homologii izomorficzne (także `H₂=Z²`), lecz nie są homotopijnie równoważne: forma `diag(1,-1)` jest nieparzysta, a `((0,1),(1,0))` parzysta. Dodano nowy czytelny diagram; poprawiono terminologię iloczynu tensorowego i „iniektywność”.
+
+**AT-12 — ciągi spektralne:** dodano rachunek pierwszej niezerowej różniczki `d³` filtrowanego kompleksu oraz dwa konkretne, dokładnie rozpisane kompleksy o identycznych wszystkich stronach `E^r`, ale z końcowymi grupami `H₁=Z/4` i `H₁=(Z/2)²`. Dodano diagram problemu rozszerzeń i usunięto nieprawdziwe stwierdzenie, że ogólna wersja ciągu Serre'a jest w całości nieudowodniona: przy hipotezach skończeniewymiarowej bazy CW i włókna typu CW jest już dowiedziona w `thm:serre-general-v6`. Poprawiono polską terminologię.
+
+**Kontrola:** 52/52 standardowych odsyłaczy audytowanej pary mają cele w AT-01–12; brak zduplikowanych etykiet i nowych zależności graficznych. [Aplikacja #44772572467](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44772572467) — **SUCCESS**, **167** testów Pythona (1 pominięty) oraz Chromium; [LaTeX #44772572609](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44772572609) — **SUCCESS**, **154 strony**, dwa przebiegi `pdflatex`, brak niezdefiniowanych odsyłaczy i `Overfull \hbox`. Sprawdzono wizualnie wszystkie siedem rysunków AT-11/12, w tym nowe na stronach 142 i 146. Dodatkowe regresje: `application/tests/test_topology_chapters_11_12.py`, workflow `.github/workflows/algebraic-topology-audit-ch11-12.yml`. Protokół: `application/docs/AUDYT_TOPOLOGIA_ALGEBRAICZNA_11_12_2026-11-20.md`.
+
+Rejestr `application/data/AUDYT_ROZDZIALOW.csv`: **AT-11 i AT-12 zaakceptowane; łącznie AT-01–12**. Pozostała otwarta część uogólnień ciągu spektralnego wymaga osobnego opracowania, nie została fikcyjnie uznana za udowodnioną.
+
+**Następna para:** AT-13 i AT-14, ten sam cykl: szczegółowy audyt, poprawki źródeł, ilustracje, testy i commit.
