@@ -361,3 +361,16 @@ Wykonano szczegółowy audyt dwóch kolejnych rozdziałów topologii algebraiczn
 Rejestr `application/data/AUDYT_ROZDZIALOW.csv`: **AT-03 i AT-04 zaakceptowane**, łącznie AT-01–AT-04. W aplikacji nadal 14 nierozwiązanych cytowań z niekompletnego importu DG; nie naprawiano ich przez fikcyjne aliasy.
 
 **Następna partia:** **AT-05 i AT-06**, odpowiednio homologia przestrzeni oraz wyższe grupy homotopii, ich związek z homologią. Powtórzyć cykl: szczegółowy audyt, poprawki matematyczne/redakcyjne, przegląd ilustracji, testy i commit.
+
+
+### Audyt szczegółowy AT — partia 3, rozdziały 05–06 (20.11.2026)
+
+Zakończono pełną iterację kontrolną dokładnie dwóch rozdziałów topologii algebraicznej, zgodną ze standardem szczegółowości DG-01. Poprawki zostały zapisane w kanonicznych źródłach `chapters/pl/algebraic_topology/05-homologia-przestrzeni.tex` i `06-wyzsze-grupy-homotopii-i-zwiazek-z-homologia.tex`. Nie zmieniono żadnej historycznej deklaracji `\label` ani gałęzi `main`.
+
+**AT-05:** dodano pełne wyjaśnienie działania odwzorowania łączącego Mayera–Vietorisa na fundamentalnej klasie `S²`; obliczono homologię butelki Kleina z `∂₂(1)=2b`, `H₁≅Z⊕Z/2Z`, `H₂=0` oraz zmianę po redukcji modulo `2`. Dodano rysunek kwadratu fundamentalnego, poprawiono terminologię iloczynu tensorowego.
+
+**AT-06:** dodano rachunek abelianizacji `π₁` butelki Kleina; skonstruowano CW z `S²` i dwiema `3`-komórkami o stopniach `2,3`, dla którego `∂₃(a,b)=2a+3b`, `π₂=0`, `π₃=Z`, a nawet `X≃S³` z kryterium Whiteheada. Dodano diagram i objaśnienie różnicy pomiędzy wyższą homotopią a homologią.
+
+**Walidacja:** [CI aplikacji #44762101029](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44762101029) — SUCCESS, 139 testów Python (1 pominięty) i Chromium; [CI LaTeX #44762171825](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44762171825) — SUCCESS, 76 stron, dwukrotna kompilacja AT-01–06 z pełnymi odsyłaczami, bez `Overfull \hbox`. Zweryfikowano wizualnie wszystkie 9 rysunków AT-05–06. Raport: `application/docs/AUDYT_TOPOLOGIA_ALGEBRAICZNA_05_06_2026-11-20.md`; rejestr: `application/data/AUDYT_ROZDZIALOW.csv` — status `zaakceptowany`.
+
+**Zatwierdzony zakres:** AT-01–06. **Następna partia:** AT-07 (fibracje i długi ciąg homotopii) oraz AT-08 (kohomologia singularna i iloczyn kubkowy). Zachować dokładnie ten sam cykl audytu z poprawkami źródeł i testem PDF.
