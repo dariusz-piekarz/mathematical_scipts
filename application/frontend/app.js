@@ -106,7 +106,7 @@ function showRefs(container,latex){
       const b=node("button",{className:"ref-link",title:"Podgląd etykiety: "+lab},lab);
       b.addEventListener("mouseenter",()=>previewLabel(lab,b));
       b.addEventListener("focus",()=>previewLabel(lab,b));
-      b.addEventListener("mouseleave",()=>{setTimeout(()=>{if(!$("referenceTip").matches(":hover"))closeTip();},240);});
+      b.addEventListener("mouseleave",()=>{const key=state.tooltipKey;setTimeout(()=>{if(key===state.tooltipKey && !$("referenceTip").matches(":hover"))closeTip();},240);});
       b.addEventListener("click",()=>openLabel(lab));container.append(b);
     });
     container.append(document.createTextNode("}"));last=regex.lastIndex;
