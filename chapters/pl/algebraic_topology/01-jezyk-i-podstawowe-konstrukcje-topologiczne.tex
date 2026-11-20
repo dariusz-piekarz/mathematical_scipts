@@ -36,15 +36,61 @@ ciągłą drogą $[0,1]\to X$.
 \end{definicja}
 
 \begin{stwierdzenie}
-Niech $X$ będzie łukowo spójna. Wówczas $X$ jest spójna.
+Niech $X$ będzie przestrzenią topologiczną. Jeżeli $X$ jest łukowo spójna, to jest spójna.
 \end{stwierdzenie}
 \begin{proof}
 Przypuśćmy, że $X=U\sqcup V$, gdzie $U,V$ są niepuste i otwarte.
 Wybierzmy $u\in U$ i $v\in V$ oraz drogę $\gamma$ od $u$ do $v$.
 Zbiory $\gamma^{-1}(U)$ oraz $\gamma^{-1}(V)$ byłyby rozłącznymi,
 niepustymi zbiorami otwartymi o sumie $[0,1]$. Przeczyłoby to spójności
-odcinka $[0,1]$.
+odcinka $[0,1]$: obraz ciągły przedziału nie może rozdzielać
+się na dwa rozłączne, niepuste zbiory otwarte.
 \end{proof}
+
+\begin{przyklad}[Przestrzeń spójna, która nie jest łukowo spójna]
+\label{prz:sinus-topologa-top-intro}
+Niech $G=\{(x,\sin(1/x)):0<x\leq1\}\subset\R^2$ i
+$T=\overline G$. Wówczas
+$T=G\cup(\{0\}\times[-1,1])$.
+Zbiór $G$ jest spójny jako ciągły obraz przedziału $(0,1]$,
+a domknięcie zbioru spójnego jest spójne. Uzasadnijmy
+ostatni fakt: gdyby $\overline G=U\sqcup V$ było rozdzieleniem
+na niepuste zbiory otwarte w $\overline G$, to spójność $G$
+wymuszałaby $G\subseteq U$ albo $G\subseteq V$.
+Ponieważ $G$ jest gęsty w $\overline G$, drugi zbiór
+otwarty nie mógłby być niepusty.
+
+Jednak $T$ nie jest łukowo spójna. Gdyby droga
+$\gamma(t)=(x(t),y(t))$ łączyła punkt osi $\{0\}\times[-1,1]$
+z punktem wykresu $G$, otwarty zbiór $\{t:x(t)>0\}$
+miałby składową przedziałową $(a,b)$, której lewy
+koniec $a$ spełnia $x(a)=0$. Na tym przedziale
+$y(t)=\sin(1/x(t))$, podczas gdy $x(t)\to0$
+przy $t\downarrow a$. Z twierdzenia o wartości pośredniej
+funkcja $x$ przyjmuje dowolnie blisko $a$ wszystkie
+dostatecznie małe wartości dodatnie. Stąd $y$ przyjmuje
+tam wartości $1$ i $-1$ dowolnie blisko $a$, co przeczy
+ciągłości $\gamma$ w $a$.
+\end{przyklad}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=6cm,y=1.1cm,>=Latex,font=\small]
+  \draw[->] (-0.035,0)--(1.10,0) node[right] {$x$};
+  \draw[->] (0,-1.30)--(0,1.35) node[above] {$y$};
+  \draw[manifoldblue,very thick] (0,-1)--(0,1);
+  \draw[manifoldred,thick,domain=0.025:1,samples=450,variable=\u]
+       plot (\u,{sin(deg(1/\u))});
+  \draw[densely dashed] (0,1)--(1.04,1);
+  \draw[densely dashed] (0,-1)--(1.04,-1);
+  \node[anchor=west] at (.50,1.19) {$G:\ y=\sin(1/x)$};
+  \node[anchor=west,manifoldblue] at (.04,-1.18)
+       {$\{0\}\times[-1,1]$};
+\end{tikzpicture}
+\caption{Domknięcie wykresu $\sin(1/x)$: spójność nie pociąga
+za sobą łukowej spójności. Odcinek pionowy należy do domknięcia.}
+\label{fig:sinus-topologa-top-intro}
+\end{figure}
 
 \section{Topologia ilorazowa i przestrzenie sklejone}
 
@@ -56,6 +102,25 @@ Zbiór $U\subseteq X/{\sim}$ nazywamy otwartym wtedy i tylko wtedy, gdy
 $q^{-1}(U)$ jest otwarty w $X$. Tak otrzymaną topologię nazywamy
 \emph{topologią ilorazową}.
 \end{definicja}
+
+\begin{lemat}[Ciągła bijekcja ze zwartej do Hausdorffa]
+\label{lem:zwarta-hausdorff-top-intro}
+Jeżeli $X$ jest zwartą przestrzenią topologiczną, $Y$ jest
+przestrzenią Hausdorffa, a $f:X\to Y$ jest ciągłą bijekcją,
+to $f$ jest homeomorfizmem.
+\end{lemat}
+\begin{proof}
+W przestrzeni Hausdorffa każdy zbiór zwarty jest domknięty.
+Istotnie, dla zwartego $K\subseteq Y$ i $y\notin K$
+wybieramy dla każdego $x\in K$ rozłączne otoczenia
+otwarte $U_x\ni x$ i $V_x\ni y$. Z pokrycia $(U_x)_{x\in K}$
+wybieramy skończone podpokrycie; przecięcie odpowiadających
+mu $V_x$ jest otoczeniem $y$ rozłącznym z $K$.
+Jeśli $F\subseteq X$ jest domknięty, to jest zwarty,
+więc $f(F)$ jest zwarty i dlatego domknięty w $Y$.
+Bijekcja $f$ jest zatem odwzorowaniem domkniętym, a jej
+odwrotność jest ciągła.
+\end{proof}
 
 \begin{twierdzenie}[Własność uniwersalna ilorazu]
 Niech $q:X\to X/{\sim}$ będzie odwzorowaniem ilorazowym i niech $Y$ będzie
@@ -74,27 +139,77 @@ przedstawiciela; ciągłość wynika z pierwszej części dowodu.
 \end{proof}
 
 \begin{przyklad}[Okrąg i torus]
-Iloraz $[0,1]/(0\sim1)$ jest homeomorficzny z $S^1$ przez
-$[t]\mapsto e^{2\pi it}$; ciągła bijekcja jest homeomorfizmem, ponieważ
-jej dziedzina jest zwarta, a przeciwdziedzina Hausdorffa.
-Podobnie $\R^2/\Z^2$, gdzie $(x,y)\sim(x+m,y+n)$ dla $m,n\in\Z$,
-jest torusem $T^2=S^1\times S^1$.
+\label{prz:iloraz-okragu-torusa-top-intro}
+Rozważmy $f:[0,1]\to S^1$, $f(t)=e^{2\pi it}$.
+Zachodzi $f(0)=f(1)$, a dla $s,t\in[0,1]$ równość
+$f(s)=f(t)$ jest równoważna $s-t\in\Z$.
+Jedynymi różnymi punktami odcinka utożsamianymi przez $f$
+są więc jego końce. Własność uniwersalna ilorazu
+daje ciągłą bijekcję
+$\bar f:[0,1]/(0\sim1)\to S^1$.
+Iloraz jest zwarty jako ciągły obraz zwartego odcinka,
+a $S^1$ jest Hausdorffa; z Lematu~\ref{lem:zwarta-hausdorff-top-intro}
+wynika, że $\bar f$ jest homeomorfizmem.
+
+Podobnie definiujemy $F:\R^2\to S^1\times S^1$ wzorem
+$F(x,y)=(e^{2\pi ix},e^{2\pi iy})$.
+Mamy $F(x,y)=F(x',y')$ wtedy i tylko wtedy, gdy
+$(x-x',y-y')\in\Z^2$, zatem otrzymujemy ciągłą
+bijekcję $\bar F:\R^2/\Z^2\to T^2$.
+Każda klasa ma przedstawiciela w $[0,1]^2$,
+więc $\R^2/\Z^2$ jest zwarty jako obraz tego
+kwadratu przez odwzorowanie ilorazowe.
+Ponieważ $T^2$ jest Hausdorffa, ponowne zastosowanie
+lematu dowodzi $\R^2/\Z^2\cong T^2$.
+Geometria sklejenia brzegów kwadratu
+jest przedstawiona na Rysunku~\ref{fig:torus-iloraz-top-intro}.
 \end{przyklad}
 
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Latex,font=\small,scale=1.15]
+  \draw[very thick] (0,0) rectangle (3.2,2.25);
+  \draw[->,manifoldblue,very thick] (.35,0)--(2.85,0);
+  \draw[->,manifoldblue,very thick] (.35,2.25)--(2.85,2.25);
+  \draw[->,manifoldred,very thick] (0,.35)--(0,1.90);
+  \draw[->,manifoldred,very thick] (3.2,.35)--(3.2,1.90);
+  \node at (1.6,-.30) {$a$};
+  \node at (1.6,2.55) {$a$};
+  \node at (-.30,1.13) {$b$};
+  \node at (3.50,1.13) {$b$};
+  \node[align=center] at (1.6,1.15)
+    {identyfikacja\\par przeciwległych boków};
+\end{tikzpicture}
+\caption{Kwadrat fundamentalny torusa: boki z tą samą literą
+i kierunkiem są identyfikowane; wszystkie cztery wierzchołki
+przechodzą w jeden punkt.}
+\label{fig:torus-iloraz-top-intro}
+\end{figure}
+
 \begin{definicja}
-Dla pary $(X,A)$ z $A\subseteq X$ przestrzeń $X/A$ powstaje przez
-utożsamienie wszystkich punktów $A$ w jeden punkt. Dla przestrzeni z
-punktami bazowymi $(X,x_0)$ i $(Y,y_0)$ \emph{suma klinowa}
-$X\vee Y$ jest ilorazem $X\sqcup Y$ przez relację $x_0\sim y_0$.
-Stożek, zawieszenie i produkt smash dla dobrze bazowanych
-przestrzeni zapisujemy odpowiednio jako
-$CX=X\times[0,1]/(X\times\{1\})$,
-$\Sigma X=(X\times[0,1])/(X\times\{0\},X\times\{1\})$,
-oraz $X\wedge Y=(X\times Y)/(X\vee Y)$,
-gdzie $X\vee Y$ utożsamiamy z
-$(X\times\{y_0\})\cup(\{x_0\}\times Y)$.
-W zawieszeniu obie końcowe kopie $X$ są sklejane do \emph{dwóch różnych}
-punktów.
+Niech $X$ będzie przestrzenią topologiczną i
+$\varnothing\ne A\subseteq X$. Przestrzeń $X/A$ powstaje przez
+utożsamienie punktów $A$ w jeden punkt, bez innych identyfikacji.
+Dla przestrzeni z wyróżnionymi punktami $(X,x_0)$ i $(Y,y_0)$
+\emph{suma klinowa} $X\vee Y$ jest ilorazem sumy rozłącznej
+$X\sqcup Y$ przez identyfikację $x_0\sim y_0$.
+
+Dla dowolnej przestrzeni $X$ \emph{stożek niezredukowany}
+$CX=(X\times[0,1])/(X\times\{1\})$ powstaje przez
+sklejenie całego górnego końca do jednego wierzchołka.
+\emph{Zawieszenie niezredukowane} $\Sigma X$ jest ilorazem
+$X\times[0,1]$ przez relację utożsamiającą wszystkie
+punkty $X\times\{0\}$ ze sobą i, niezależnie,
+wszystkie punkty $X\times\{1\}$ ze sobą.
+Nie identyfikujemy tych \emph{dwóch różnych} punktów
+(jednego na każdym końcu).
+
+Dla przestrzeni z wyróżnionymi punktami
+\emph{produkt smash} $X\wedge Y$ jest ilorazem
+$(X\times Y)/((X\times\{y_0\})\cup(\{x_0\}\times Y))$.
+W tym ostatnim wzorze podprzestrzeń zgniataną do punktu
+utożsamiamy z obrazem sumy klinowej $X\vee Y$
+w $X\times Y$.
 \end{definicja}
 
 \begin{uwaga}
@@ -105,8 +220,30 @@ mylić tych dwóch konstrukcji.
 \end{uwaga}
 
 \begin{przyklad}
-Zawieszenie $S^n$ jest homeomorficzne z $S^{n+1}$, a zawieszenie $S^0$
-z dwiema rozłącznymi kopiami punktów daje okrąg $S^1$.
+Dla każdego $n\geq0$ zawieszenie $S^n$ jest
+homeomorficzne z $S^{n+1}$.
+Istotnie, przyporządkowanie
+$\Phi(x,t)=(\sin(\pi t)x,\cos(\pi t))$ dla
+$(x,t)\in S^n\times[0,1]$
+jest ciągłe i stałe osobno na obu końcowych kopiach
+$S^n$. Indukuje więc ciągłe
+$\bar\Phi:\Sigma S^n\to S^{n+1}$.
+Poza biegunami ostatnia współrzędna jednoznacznie
+wyznacza $t\in(0,1)$, a pozostałe współrzędne
+wyznaczają $x$; na każdym biegunie jest tylko
+jedna klasa ilorazu. Otrzymujemy bijekcję,
+która jest homeomorfizmem na mocy
+Lematu~\ref{lem:zwarta-hausdorff-top-intro}.
+Dla $n=0$ zawieszenie dwóch punktów jest zatem okręgiem.
+
+Podobnie $D^n/\partial D^n\cong S^n$ dla $n\geq1$:
+odwzorowanie $D^n\to S^n$ dane przez
+$x\mapsto(\sin(\pi\|x\|)\,x/\|x\|,\cos(\pi\|x\|))$
+dla $x\ne0$, a przez $(0,1)$ w zerze,
+zgniata wyłącznie sferę brzegową do bieguna południowego.
+Ciągłość w zerze wynika z
+$\sin(\pi\|x\|)\to0$, a dowód homeomorfizmu
+przebiega tak samo jak dla zawieszenia.
 \end{przyklad}
 
 \section{Homotopie i deformacyjne retrakcje}
@@ -120,7 +257,9 @@ istnieje homotopia $H:\id_X\simeq i\circ r$, gdzie $r:X\to A$ jest
 retrakcją, $i:A\hookrightarrow X$ jest inkluzją oraz
 $H(a,t)=a$ dla wszystkich $a\in A$, $t\in[0,1]$.
 Przestrzeń jest ściągalna, gdy jej identyczność jest homotopijna z
-odwzorowaniem stałym.
+odwzorowaniem stałym. W definicji deformacyjnego retraktu
+warunek $H(a,t)=a$ oznacza, że homotopia punktowo unieruchamia $A$;
+nie wystarcza samo $A\simeq X$.
 \end{definicja}
 
 \begin{przyklad}[Dziurawa płaszczyzna]
@@ -129,8 +268,12 @@ Dla $x\ne0$ kładziemy
 $H(x,t)=\big((1-t)+t/\|x\|\big)x$.
 Współczynnik jest dodatni, więc homotopia nie przechodzi przez zero;
 $H(x,0)=x$, $H(x,1)=x/\|x\|$ i $H(a,t)=a$ dla $a\in S^1$.
-Ten rachunek tłumaczy, dlaczego oba zbiory mają takie same grupy homotopii
-i homologii, mimo że nie są homeomorficzne.
+Ten rachunek pokazuje, że obie przestrzenie mają ten sam
+typ homotopijny. Niezmienniczość grup homotopii i homologii
+względem równoważności homotopijnej wykażemy dalej,
+nie używamy jej tutaj jako części dowodu.
+Przestrzenie nie są homeomorficzne, ponieważ
+$\R^2\setminus\{0\}$ jest niezwarta, a $S^1$ zwarta.
 \end{przyklad}
 
 \begin{twierdzenie}
