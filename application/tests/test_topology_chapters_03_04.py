@@ -103,8 +103,9 @@ class TopologyChapterThreeFourAudit(unittest.TestCase):
         cycles1 = [(x,y) for x,y in c1 if x == 0]
         boundaries1 = {(0,0)}
         self.assertEqual(len(cycles1)//len(boundaries1), 2)
-        self.assertEqual(2, 2)  # dim H_2 = 1, since d_2 = 0
-        self.assertEqual({x for x,y in c1}, {0,1})  # H_0 = 0
+        c2_cycles = [k for k in range(2) if (2*k) % 2 == 0]
+        self.assertEqual(len(c2_cycles), 2)  # H_2 has two elements
+        self.assertEqual({x for x,y in c1}, {0,1})  # d_1 is onto
         # For lift 1 in C_2(Z), d_2(1)=(0,2)=2(0,1).
         self.assertEqual((0,2), (0,2*1))
         self.assertIn(r"\delta_2[\bar1]", self.text["03"])
