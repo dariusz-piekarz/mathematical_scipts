@@ -626,6 +626,7 @@ def build_database(source_dir: Path, db_path: Path, alias_file: Path | None = No
                             (doc.id, item.name, item.relative_path, item.line,
                              item.offset, item.excerpt))
                 include_owners.setdefault((doc.id, item.name), []).append(item)
+    total["included_labels"] = con.execute("SELECT count(*) FROM included_label_origins").fetchone()[0]
     for doc in all_documents:
         for ref in doc.references:
             decision = resolve(doc.id, ref.target, all_owners, aliases=curated_aliases)
