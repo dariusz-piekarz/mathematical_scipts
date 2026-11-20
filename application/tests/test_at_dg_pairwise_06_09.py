@@ -120,9 +120,7 @@ class HurewiczComparisonAudit(unittest.TestCase):
         meta = self.manifest
         self.assertFalse(meta["approved_to_merge"])
         self.assertTrue(meta["policy"]["preserve_original_labels"])
-        self.assertFalse(meta["policy"]["rename_labels_on_merge"] if
-                         "rename_labels_on_merge" in meta["policy"] else
-                         meta["policy"]["do_not_rename_source_labels"] is False)
+        self.assertTrue(meta["policy"]["do_not_rename_source_labels"])
         pair = meta["pair"]
         a, b = labels(self.source["AT06"]), labels(self.source["DG09"])
         self.assertEqual(pair["shared_label_names"], len(a & b))
