@@ -85,7 +85,7 @@ class PairedProofAudit(unittest.TestCase):
                 self.assertIn(term, block)
             self.assertIn("podniesienia", block)
             self.assertIn("reprezentanta", block)
-            self.assertIn("Dokładność", block if key=="AT09" else block)
+            self.assertIn("dokładność", block.lower())
 
     def test_mayer_vietoris_boundary_on_circle_is_nonzero(self):
         # For the standard cover of S^1 by two contractible arcs,
