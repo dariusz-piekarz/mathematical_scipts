@@ -172,7 +172,7 @@ class TopologyTwentyFiveTwentySixAudit(unittest.TestCase):
     def test_advanced_dependencies_do_not_become_false_proofs(self):
         a, b = self.src["25"], self.src["26"]
         self.assertIn("twierdzenia Milnora", a)
-        self.assertIn("nie ogólny dowód", a)
+        self.assertIn("nie jest unipotentny", a)
         self.assertIn("twierdzenia Schmida", b)
         self.assertIn("nie dowodem istnienia granicznej filtracji", b)
 
