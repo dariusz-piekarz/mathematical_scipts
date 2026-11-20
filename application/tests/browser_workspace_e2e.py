@@ -50,7 +50,7 @@ def main():
                     page.locator("#draftResult button", has_text="Zapisz na stałe").click()
                     page.locator("#savedProjects .saved-project-item").first.wait_for(timeout=15000)
                     assert list(saved.glob("*.zip")), "Saved project not persisted"
-                    page.close()  # X-close sends beacon
+                    page.close(run_before_unload=True)  # Exercise the browser tab-close lifecycle
                     for _ in range(50):
                         if not list(drafts.glob("*/project.zip")):
                             break
