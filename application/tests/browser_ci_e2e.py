@@ -53,8 +53,8 @@ def main() -> None:
                 page.on("pageerror", lambda err: errors.append(str(err)))
                 response = page.goto(URL, wait_until="networkidle", timeout=30000)
                 assert response is not None and response.status == 200
-                page.locator("#statPill").get_by_text(
-                    re.compile(r"^\\d+ rozdziałów$")
+                page.locator("#statPill").filter(
+                    has_text=re.compile(r"^\d+ rozdziałów$")
                 ).wait_for(timeout=20000)
                 displayed = page.locator("#statPill").inner_text()
                 assert displayed == f"{stats['documents']} rozdziałów", displayed
