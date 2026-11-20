@@ -433,3 +433,18 @@ Przeprowadzono kolejną iterację szczegółowego matematyczno-redakcyjnego audy
 **Status w rejestrze `application/data/AUDYT_ROZDZIALOW.csv`:** AT-13 `zaakceptowany`, AT-14 `zaakceptowany_z_zastrzezeniem`. Zastrzeżenie dotyczy `thm:steenrod-cartan-v7`: brak pełnych konstrukcyjnych dowodów wzoru Cartana i relacji Adema. Nie przedstawiamy ich jako udowodnionych. W kolejnej iteracji sprawdzić, czy **AT-15** (operacje kohomologiczne, naturalność, iloczyny i relacje) dostarcza wymagane pełne dowody; w przeciwnym wypadku uzupełnić je tam lub jawnie utrzymać zależność.
 
 **Następna para:** **AT-15** — operacje kohomologiczne, naturalność, iloczyny i relacje; **AT-16** — zawieszenie, twierdzenie Freudenthala i homotopia stabilna. Zachować rygor matematyczny, komentarze dowodowe, rysunki i kompletne testy CI; bez nieuzgodnionych zmian `main`.
+
+
+### Audyt szczegółowy AT — partia 8, rozdziały 15–16 (20.11.2026)
+
+Zakończono audyt dwóch kolejnych kanonicznych rozdziałów topologii algebraicznej według standardu DG-01. Wszystkie zmiany zapisano bezpośrednio na gałęzi `biblioteka-matematyczna-iteracja-6`, bez naruszenia `main` i historycznych `\label` ani istniejących `\ref`.
+
+**AT-15 — operacje kohomologiczne:** rozszerzono rachunek Bocksteina na komórkach `RP²`: `δ̃a(e²)=2 mod 4`, `β₂(t)=t²≠0`, a na `RP³` następny Bockstein znika. Nowy diagram różniczki/koróżniczki i redukcji modulo 2. Dokładnie wyliczono relację `Sq²Sq²=Sq³Sq¹` na `H*(RP∞;F₂)`; parzystość dwumianów uzasadniono elementarnymi tożsamościami `(1+z)²=1+z²` i `(1+z)⁴=1+z⁴` nad `F₂`, bez założenia nieobjaśnionego twierdzenia Lucasa. **Nie** wyciągnięto z tego fałszywego wniosku o dowodzie uniwersalnej relacji Adema. Poprawiono polskie terminy „odwzorowanie” i „homomorfizm”.
+
+**AT-16 — Freudenthal, stabilizacja:** w przypadku butelki Kleina wyprowadzono `π₁(K)_ab=Z⊕Z/2` i `π₂(ΣK)=Z⊕Z/2`; homomorfizm zawieszenia `E` utożsamiono z abelianizacją, której jądro zawiera niezerowy komutator `b⁻²`. Porównano to z torusem. Rozpisano stabilizację pierwszego dodatniego pnia: `π₃(S²)=Z → π₄(S³)=Z/2 → π₅(S⁴)=Z/2`, pierwsza strzałka jest redukcją modulo 2, a kolejne są izomorfizmami dzięki dokładnemu sprawdzeniu zakresu Freudenthala. Dodano diagram i poprawiono terminologię.
+
+**Weryfikacja:** 11/11 standardowych odsyłaczy AT-15/16 rozwiązuje się w AT-01–16, bez duplikatów etykiet i zewnętrznych plików graficznych. [CI aplikacji #44779319312](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44779319312) — **SUCCESS**, 187 testów Pythona (1 pominięty), Chromium zaliczone; [CI LaTeX #44779319260](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44779319260) — **SUCCESS**, 185 stron A4, 2 przebiegi `pdflatex`, brak niezdefiniowanych odsyłaczy i przepełnień. Sprawdzono wizualnie 3 diagramy AT-15/16, m.in. nowe na stronach PDF 175 i 183. Testy `application/tests/test_topology_chapters_15_16.py`; workflow `.github/workflows/algebraic-topology-audit-ch15-16.yml`. Protokół `application/docs/AUDYT_TOPOLOGIA_ALGEBRAICZNA_15_16_2026-11-20.md`.
+
+**Status rejestru:** AT-15 oraz AT-16 — `zaakceptowany_z_zastrzezeniem`. Otwarte zadania dowodowe: pełna konstrukcja zewnętrznych potęg/normalizacji/iterowanych diagonalnych zapewniająca `Cartan` i `Adem`; niezależny dowód ekscyzji homotopijnej Blakersa–Masseya; konstrukcyjna stabilność `Sq^i`. Nie uznano warunkowych dowodów za niezależne. Zaaudytowano pary AT-01–AT-16, ale różne statusy zastrzeżeń są zachowane, a nie nadpisane globalnym „wszystko udowodnione”.
+
+**Następna para:** AT-17 — konstrukcja Pontriagina–Thoma i podstawy teorii kobordyzmów; AT-18 — homologia Morse’a. Standard DG-01, po dwa rozdziały, poprawki źródeł, retesty i commity.
