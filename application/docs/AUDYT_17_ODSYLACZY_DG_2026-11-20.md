@@ -54,3 +54,19 @@ Wiersze `DG-14:4704` i `DG-16:1200` cytują tę samą brakującą etykietę, lec
 4. Po audycie brakujących rozdziałów: import bez zmiany `\label`/`\ref`, ponowne indeksowanie, pełne porównanie pochodzenia i rzeczywista kompilacja PDF.
 
 Nie utożsamiać powodzenia testów parsera, API ani przeglądarki z dowodem poprawności matematycznej.
+
+## Wykonane poprawki źródeł — kolejna iteracja, 20.11.2026
+
+Po przeglądzie matematycznym zrealizowano trzy korekty docelowej etykiety, **bez zmiany nazw deklaracji `\\label` i bez zmiany argumentacji dowodów**:
+
+| Plik / źródłowy wiersz przed poprawką | Poprzednia etykieta | Docelowa etykieta | Uzasadnienie |
+|---|---|---|---|
+| `DG-16:1200` | `thm:CGB-boundary-26` | `thm:chern-gauss-bonnet` | Liczba Eulera `TS^2`, zwarta sfera bez brzegu. |
+| `DG-17:1888` | `thm:CGB-boundary-26` | `thm:chern-gauss-bonnet` | `e(TS^2)` i jego wartość `2`, analogicznie. |
+| `DG-17:2182` | `thm:CGB-boundary-26` | `thm:chern-gauss-bonnet` | Samoprzecięcie przekątnej sprowadza się do `e(TS^2)`. |
+
+Zachowano `DG-14:4704 -> thm:CGB-boundary-26`, ponieważ omawia **rzeczywistą formułę z brzegiem**. Cel `thm:chern-gauss-bonnet` jest zadeklarowany w `DG-14` i zawiera hipotezę `bez brzegu`. Test zabezpieczający to `application/tests/test_dg_cgb_citations.py`.
+
+**Przewidywana zmiana indeksu** (do potwierdzenia w CI po wszystkich commitach): 17 → 14 nierozwiązanych wystąpień; niezmieniona liczba zaimportowanych rozdziałów `20/36`. Potwierdzoną liczbę należy brać z nowego `reference_provenance_audit.json`, nie z tego oczekiwania. Wiersze w powyższej tabeli odnoszą się do lokalizacji sprzed zmiany; pozostałe wystąpienia odsyłaczy są w tej samej okolicy.
+
+Oryginalne rozdziały `21`–`36` nadal nie są dostępne w `chapters/pl/differential_geometry_and_topology`; do ich audytu i importu potrzebna jest pełna zweryfikowana wersja źródłowa. Nie dopisano fikcyjnych etykiet, uzupełnień ani rozdziałów.
