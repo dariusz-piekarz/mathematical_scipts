@@ -122,10 +122,23 @@ class TopologyChapterElevenTwelveAudit(unittest.TestCase):
         ch = self.text["12"]
         self.assertIn(r"\label{prz:spectral-d3-cancel}", ch)
         self.assertIn(r"d^3:E^3_{3,0}", ch)
-        # C3 = Z, C2 = Z, d3 = identity:
-        self.assertEqual(1, 1)  # rank(d3) = 1
-        self.assertEqual(1 - 1, 0)  # H3
-        self.assertEqual(1 - 1, 0)  # H2
+        # C3 = Z*x -> C2 = Z*y by the identity, with
+        # filtration(x)=3 and filtration(y)=0. Therefore the
+        # leading drop is 3: d1=d2=0, d3 is the identity.
+        chain_boundary = lambda coefficient_x: coefficient_x
+        nonzero_positions = {(3, 0), (0, 2)}
+        for page in (1, 2):
+            self.assertNotIn((3 - page, page - 1), nonzero_positions)
+        self.assertEqual(chain_boundary(1), 1)
+        self.assertEqual(chain_boundary(-7), -7)
+        self.assertEqual(
+            [n for n in range(-12, 13) if chain_boundary(n) == 0],
+            [0],
+        )
+        self.assertEqual(
+            {chain_boundary(n) for n in range(-12, 13)},
+            set(range(-12, 13)),
+        )
         self.assertIn("Strona czwarta jest zerowa", ch)
 
     def test_extension_problem_distinguishes_actual_groups(self):
