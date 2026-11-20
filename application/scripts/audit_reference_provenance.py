@@ -45,7 +45,7 @@ def audit(con: sqlite3.Connection) -> dict[str, Any]:
                               ORDER BY source_document,line,offset,id"""):
         item = dict(row)
         status_counts[item["status"]] += 1
-        if item["status"] == "resolved":
+        if item["status"] in {"resolved", "external_resolved", "alias_resolved"}:
             continue
         item["source_path"] = documents[item["source_document"]]["path"]
         item["source_sha256"] = documents[item["source_document"]]["sha256"]
