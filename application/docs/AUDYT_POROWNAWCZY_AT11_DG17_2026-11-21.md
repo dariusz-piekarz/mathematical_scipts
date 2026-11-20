@@ -113,7 +113,25 @@ Testy obejmują:
 Dedykowany workflow buduje trzykrotnie pełny aktualny tom AT-01–30 oraz pełny aktualnie zaimportowany tom DG-01–20, a nie tylko wycinek DG-01–10.
 Znane odsyłacze DG do jeszcze niezaimportowanych rozdziałów 21–36 są kontrolowane według jawnej listy dopuszczonych etykiet. Nie są deklarowane jako naprawione bez importu źródeł. Nie wolno utożsamiać poprawnego składu PDF z globalną weryfikacją wszystkich twierdzeń.
 
-**Status kompilacji i liczby stron:** zostaną potwierdzone wynikami działania; nie zakładamy ich przed pobraniem logów i artefaktów.
+**Zweryfikowany wynik:** https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44838349123 —
+oba zadania GitHub Actions zakończone SUCCESS na najnowszej wersji czterech plików audytu:
+- **10/10 testów matematycznych — OK**;
+- **AT-01–30: 297 stron**; trzy przebiegi pdflatex, brak nieustabilizowanych odsyłaczy i przepełnień wierszy;
+- **DG-01–20: 488 stron**; trzy przebiegi pdflatex, brak niestabilnych odsyłaczy i przepełnień wierszy;
+- **12 różnych, jawnie dopuszczonych brakujących etykiet DG** (13 użyć, jedna nazwa powtórzona):
+  ch:chern-weil, ch:grafy-wezly-cztery, cor:bochner-vanishing, cor:hodge-de-rham,
+  lem:angular-form-26, prop:euler-identification-26, prz:hodge-dwie-sfery-18,
+  prz:thur-dop-nil-kontakt, sec:algebra-liego, sec:rownanie-diraca,
+  subsec:dirac-koneksja, thm:CGB-boundary-26.
+  Ich cele znajdują się w niezaimportowanych późniejszych rozdziałach,
+  a workflow odrzuca dodatkowe, niespodziewane nazwy.
+
+Pobrano z GitHub Actions dwa rzeczywiste dokumenty PDF z ostatniego przebiegu.
+Oględziny po wyrenderowaniu (bez OCR): AT strony 128, 129, 140 i 148,
+DG strony 437 i 438. Sprawdzono czytelność wszystkich kluczowych
+równości, podpisów, numerów twierdzeń, diagramu form przecięcia
+oraz podziału stron nowego przykładu wykresu. Nie zauważono nakładania
+się podpisów, obcięć ani zniekształceń czcionek.
 
 ## 5. Dalsze zadania
 
