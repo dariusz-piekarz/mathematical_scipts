@@ -35,8 +35,12 @@ Skontrolowano definicję zawieszenia zredukowanego, naturalność, warunki spój
 - Wszystkie **11** standardowych wywołań odsyłaczy w AT-15/16 mają etykiety docelowe w AT-01–16. Brak powielonych deklaracji etykiet w tych szesnastu rozdziałach; historycznych `\label` nie usuwano ani nie przemianowywano.
 - AT-15 ma **1**, AT-16 **2** rysunki TikZ po zmianach, bez zależności od zewnętrznych obrazów, bibliotek kodu czy danych.
 - Dodano `application/tests/test_topology_chapters_15_16.py`: testy integralności książki, odsyłaczy, historycznych etykiet, środowisk TeX, arytmetyki Bocksteina, sprawdzenia Adema, abelianizacji Kleina, zakresów Freudenthala i statusu zależności dowodowych.
-- Dodano `.github/workflows/algebraic-topology-audit-ch15-16.yml` z dwukrotną kompilacją AT-01–16 oraz kontrolą brakujących odsyłaczy i przepełnionych wierszy. **Wyniki CI i kontrolę rysunków należy dopisać wyłącznie po ich faktycznym potwierdzeniu**.
+- Dodano `.github/workflows/algebraic-topology-audit-ch15-16.yml` z dwukrotną kompilacją AT-01–16 oraz kontrolą brakujących odsyłaczy i przepełnionych wierszy.
+- **Potwierdzony test źródeł/aplikacji:** [GitHub Actions #44779319312](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44779319312) — **SUCCESS**, 187 testów Pythona (1 pominięty), testy Chromium zaliczone, indeks 355 rozdziałów.
+- **Potwierdzona kompilacja źródłowa:** [GitHub Actions #44779319260](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44779319260) — **SUCCESS**, 185 stron A4, 2 przebiegi `pdflatex`, bez niezdefiniowanych odsyłaczy i `Overfull \\hbox`. Zapisano artefakt `algebraic-topology-audit-ch15-16-pdf`, zawierający wynikowy PDF i logi.
+- **Oględziny wszystkich 3 ilustracji AT-15/16:** PDF s. 175 — nowy diagram Bocksteina; s. 181 — diagram kolejnych zawieszeń; s. 183 — nowy schemat stabilizacji mapy Hopfa. Rysunki są czytelne, bez nachodzących na siebie etykiet i obciętych elementów. Oględziny wykonano na rzeczywistym PDF z kompilacji, nie na kodzie TikZ.
+- **Status:** AT-15 — `zaakceptowany_z_zastrzezeniem` ze względu na przywołane, nieudowodnione konstrukcyjne twierdzenia Cartana/Adema; AT-16 — `zaakceptowany_z_zastrzezeniem` ze względu na brak samodzielnego dowodu ekscyzji Blakersa–Masseya oraz wykorzystywanie twierdzenia o stabilności kwadratów Steenroda. Wyniki i przykłady przy udokumentowanych założeniach sprawdzono. Otwarte zależności pozostają jawnie zapisane.
 
 ## Plan
 
-Po zakończeniu kontroli CI i PDF zarejestrować AT-15 i AT-16 z właściwymi zastrzeżeniami w `application/data/AUDYT_ROZDZIALOW.csv`. Następna para do audytu: **AT-17 i AT-18**. Nie wykonywano żadnego scalania ani zmian na `main`.
+Po zakończeniu kontroli CI i PDF AT-15 i AT-16 otrzymują status `zaakceptowany_z_zastrzezeniem`; szczegółowe otwarte zależności nie są uznane za pełne dowody. Następna para do audytu: **AT-17 i AT-18**. Nie wykonywano żadnego scalania ani zmian na `main`.
