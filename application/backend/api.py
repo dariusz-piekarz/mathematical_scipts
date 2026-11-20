@@ -172,10 +172,37 @@ def entity_detail(entity_id: str, full: bool = False):
 
 
 @app.get("/api/labels/{label:path}")
-def label_detail(label: str):
+def label_detail(label: str, source_document: str | None = None):
     if len(label)>300:
         raise HTTPException(status_code=400,detail="Zbyt długa etykieta.")
+    if source_document is not None and len(source_document)>100:
+        raise HTTPException(status_code=400,detail="Zbyt długi identyfikator źródła.")
     with db_connection() as con:
+        if source_document:
+            resolved = con.execute("""SELECT DISTINCT target_document,target_entity,status
+                FROM references_tex WHERE source_document=? AND target_label=?
+                  AND target_document IS NOT NULL
+                  AND status IN ('resolved','external_resolved','alias_resolved')""",
+                  (source_document,label)).fetchall()
+            targets = {(r["target_document"],r["target_entity"]) for r in resolved}
+            if len(targets) == 1:
+                target_document,target_entity = next(iter(targets))
+                actual = con.execute("""SELECT name FROM label_occurrences
+                    WHERE document_id=? AND (entity_id=? OR name=?)
+                    ORDER BY CASE WHEN name=? THEN 0 ELSE 1 END, line LIMIT 1""",
+                    (target_document,target_entity,label,label)).fetchone()
+                if actual:
+                    result = show_label(con,actual["name"],max_chars=1700,document_id=target_document)
+                    if result is not None:
+                        result["canonical_label"] = actual["name"]
+                        result["name"] = label
+                        result["source_document"] = source_document
+                        result["occurrence_id"] = f"{target_document}::{actual['name']}"
+                        result["resolution_status"] = resolved[0]["status"]
+                        result["incoming_references"] = con.execute(
+                            "SELECT count(*) FROM references_tex WHERE target_label=? AND source_document=?",
+                            (label,source_document)).fetchone()[0]
+                        return result
         options = con.execute("""SELECT c.document_id,c.line,c.entity_id,d.title,d.domain
              FROM label_conflicts c JOIN documents d ON d.id=c.document_id
              WHERE c.name=? ORDER BY c.document_id""", (label,)).fetchall()
