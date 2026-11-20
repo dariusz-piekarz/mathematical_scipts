@@ -120,6 +120,11 @@ def main() -> None:
                 assert ambiguous is not None, "No ambiguous labels in indexed corpus"
                 assert missing is not None, "No missing labels in indexed corpus"
                 ambiguous_label, missing_label = ambiguous[0], missing[0]
+                # Allow the previous clicked ref to finish navigation and
+                # consume its pending hover/leave events before the next preview.
+                page.mouse.move(0, 0)
+                page.wait_for_timeout(450)
+                page.evaluate("() => closeTip()")
                 anchor_id = "docTitle"
                 page.evaluate(
                     "([label, anchorId]) => previewLabel(label, document.getElementById(anchorId))",
