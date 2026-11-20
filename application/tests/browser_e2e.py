@@ -34,19 +34,4 @@ with subprocess.Popen([sys.executable,'-m','uvicorn','backend.api:app','--host',
                 assert not failures,failures
                 print(json.dumps({'status':'OK','module_selection':True,'project_generation':True,'filename':download.suggested_filename,'bytes':target.stat().st_size,'javascript_errors':failures},ensure_ascii=False))
             finally:browser.close()
-    finally:proc.terminate())).wait_for(timeout=20000)
-                page.locator('#openFirst').click()
-                page.locator('#addCurrent').click()
-                page.locator('button[data-tab="selection"]').click()
-                page.locator('#selectedCount').get_by_text('1 elementów').wait_for(timeout=10000)
-                page.locator('#checkSelection').click()
-                page.get_by_text('Weryfikacja generatora').wait_for(timeout=20000)
-                with page.expect_download(timeout=30000) as d:
-                    page.locator('#generateZip').click()
-                download=d.value
-                target=root/'samples'/'browser_generated.zip';download.save_as(target)
-                assert target.exists() and target.stat().st_size>1000
-                assert not failures,failures
-                print(json.dumps({'status':'OK','module_selection':True,'project_generation':True,'filename':download.suggested_filename,'bytes':target.stat().st_size,'javascript_errors':failures},ensure_ascii=False))
-            finally:browser.close()
     finally:proc.terminate()
