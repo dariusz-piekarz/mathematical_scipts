@@ -161,3 +161,9 @@ Dodano `application/tests/browser_ci_e2e.py` i kroki prawdziwego testu Chromium/
 ### Browser workspace CI — 20.11.2026
 
 Dostosowano Playwright do Chromium instalowanego przez CI, interpreter `sys.executable` i port dynamiczny. GitHub Actions [#44707579176](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44707579176) zakończył się sukcesem: testy Python, Explorer/czytnik/graf oraz draft/save/page-leave. W teście ostatnim po nawigacji do `about:blank` szkic jest usuwany, a zapisany ZIP pozostaje. **Nie jest to potwierdzenie X-close**: Playwright `page.close()` nie wyzwolił skutecznego czyszczenia; frontend otrzymał dodatkowy fallback `beforeunload`, nadal do niezależnego testu. Raport: `docs/RAPORT_ITERACJA_BROWSER_WORKSPACE_2026-11-20.md`. Źródła rozdziałów bez zmian.
+
+### Iteracja: podgląd cytowanych fragmentów w Chromium — 20.11.2026
+
+Rozszerzono `application/tests/browser_ci_e2e.py` o wybór rzeczywistej, rozwiązywalnej, jednoznacznej etykiety z indeksu SQLite, hover nad odsyłaczem w czytniku, sprawdzenie podglądu cytowanej treści oraz otwarcie fragmentu. GitHub Actions [#44707891398](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44707891398), commit `a9259c8675da574aac102950bf9c9ac22e28bfbf`: **success**; 85 testów Python (`OK (skipped=1)`), realne Chromium: 355 rozdziałów, 16 dziedzin, `ALG-00` → `tw:korzenie`, bez błędów JS. Test draft/save/page-leave również przeszedł. Raport `docs/RAPORT_PODGLAD_ODSYLACZY_2026-11-20.md`. Nie zmieniono rozdziałów matematycznych ani `main`.
+
+**Pozostałe ograniczenia:** brak pewnego usunięcia szkicu przy każdym X-close, brak testów dymka dla etykiet niejednoznacznych i brakujących, nierozwiązane odsyłacze w indeksie, pełne `xr-hyper` między dziedzinami nadal wymaga audytu. Następna iteracja: obsłużyć i przetestować negatywne przypadki dymka oraz raportować konflikty etykiet bez arbitralnego wybierania właściciela.
