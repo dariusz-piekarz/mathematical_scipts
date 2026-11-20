@@ -28,7 +28,12 @@ class APITests(unittest.TestCase):
         data=self.client.get("/api/stats").json()
         self.assertGreaterEqual(data["documents"],350)
         self.assertGreaterEqual(data["references"],4400)
-        self.assertGreater(data["ambiguous_references"],0)
+        self.assertGreaterEqual(data["ambiguous_references"],0)
+        with db_connection() as con:
+            count = con.execute("SELECT COUNT(*) FROM label_occurrences").fetchone()[0]
+            conflicts = con.execute("SELECT COUNT(DISTINCT name) FROM label_conflicts").fetchone()[0]
+        self.assertGreater(count,0)
+        self.assertGreater(conflicts,0)  # conflicts are preserved as provenance even when refs resolve
         self.assertGreaterEqual(data["missing_references"],0)
 
     def test_measure_theory_and_jets_available(self):
