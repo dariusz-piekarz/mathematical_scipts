@@ -242,9 +242,39 @@ def audit() -> dict:
             chapters[cid] = {"path": f["path"], "volume": vol}
     for a, b, subject in REVIEW_PAIRS:
         if a in chapters and b in chapters:
+            left_path, right_path = chapters[a]["path"], chapters[b]["path"]
+            ls = strip_tex_comments((ROOT / left_path).read_text(encoding="utf-8-sig"))
+            rs = strip_tex_comments((ROOT / right_path).read_text(encoding="utf-8-sig"))
+            left_labels = set(LABEL_RE.findall(ls))
+            right_labels = set(LABEL_RE.findall(rs))
+            # Textual equality is NOT mathematical equivalence.
+            def substantial_lines(value):
+                return set(
+                    " ".join(line.split())
+                    for line in value.splitlines()
+                    if len(" ".join(line.split())) > 20
+                )
+            line_a = substantial_lines(ls)
+            line_b = substantial_lines(rs)
+            common_lines = len(line_a & line_b)
+            union_lines = len(line_a | line_b)
             result["overlap_candidates"].append({
                 "left": a, "right": b, "subject": subject,
-                "sources": [chapters[a]["path"], chapters[b]["path"]],
+                "sources": [left_path, right_path],
+                "label_counts": {
+                    "shared_names": len(left_labels & right_labels),
+                    "left_only": len(left_labels - right_labels),
+                    "right_only": len(right_labels - left_labels),
+                },
+                "illustrative_unique_labels": {
+                    a: sorted(left_labels - right_labels)[:8],
+                    b: sorted(right_labels - left_labels)[:8],
+                },
+                "nontrivial_line_jaccard": (
+                    round(common_lines / union_lines, 3)
+                    if union_lines else 1.0
+                ),
+                "exact_source_match": ls == rs,
                 "decision": "review_and_preserve_union_of_unique_content",
             })
     result["summary"] = {
