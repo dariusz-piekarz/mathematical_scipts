@@ -1,7 +1,7 @@
 """End-to-end HTTP tests against the bundled library snapshot, no network required."""
 import unittest
 from fastapi.testclient import TestClient
-from backend.api import app
+from backend.api import app, db_connection
 
 
 class APITests(unittest.TestCase):
@@ -82,8 +82,45 @@ class APITests(unittest.TestCase):
         self.assertGreater(len(data["items"]),0)
         self.assertTrue(any(x["kind"] for x in data["items"]))
 
+    @classmethod
+    def _real_reference_domains(cls):
+        """Use a proven explicit cross-module TeX reference from the indexed corpus.
+
+        The old fixed pair stopped being related after chapter reorganization.
+        This keeps the HTTP graph contract tested without inventing links.
+        """
+        with db_connection() as con:
+            row = con.execute("""
+                SELECT s.domain AS left_domain, t.domain AS right_domain
+                FROM references_tex AS r
+                JOIN documents AS s ON s.id=r.source_document
+                JOIN documents AS t ON t.id=r.target_document
+                WHERE r.status='resolved' AND r.target_document IS NOT NULL
+                  AND r.source_document!=r.target_document
+                GROUP BY s.domain, t.domain
+                ORDER BY COUNT(*) DESC, s.domain, t.domain
+                LIMIT 1
+            """).fetchone()
+        if row is None:
+            raise AssertionError("Index has no resolved cross-module TeX references")
+        return {"left":row["left_domain"], "right":row["right_domain"]}
+
+    @classmethod
+    def _real_dependency_edge(cls):
+        with db_connection() as con:
+            row=con.execute("""
+                SELECT source_document, target_document
+                FROM dependency_edges
+                WHERE source_document!=target_document
+                ORDER BY references_count DESC, source_document, target_document
+                LIMIT 1
+            """).fetchone()
+        if row is None:
+            raise AssertionError("Index has no cross-module dependency edges")
+        return {"source":row["source_document"],"target":row["target_document"]}
+
     def test_graph_bipartite(self):
-        params={"left":"geometria algebraiczna","right":"geometria algebraiczna / topologia"}
+        params=self._real_reference_domains()
         data=self.client.get("/api/graph",params=params).json()
         self.assertTrue(data["bipartite"])
         self.assertGreater(len(data["edges"]),0)
@@ -92,12 +129,12 @@ class APITests(unittest.TestCase):
             self.assertEqual((groups[e["source"]],groups[e["target"]]),("left","right"))
 
     def test_graph_section(self):
-        params={"left":"geometria algebraiczna","right":"geometria algebraiczna / topologia","granularity":"section"}
+        params={**self._real_reference_domains(),"granularity":"section"}
         data=self.client.get("/api/graph",params=params).json()
         self.assertGreater(len(data["edges"]),0)
 
     def test_graph_entity(self):
-        params={"left":"geometria algebraiczna","right":"geometria algebraiczna / topologia","granularity":"entity"}
+        params={**self._real_reference_domains(),"granularity":"entity"}
         data=self.client.get("/api/graph",params=params).json()
         self.assertGreater(len(data["edges"]),0)
 
@@ -111,7 +148,7 @@ class APITests(unittest.TestCase):
         self.assertEqual(self.client.get("/api/graph",params=params).status_code,400)
 
     def test_graph_path(self):
-        data=self.client.get("/api/graph/path",params={"source":"ALG-09","target":"AT-10"}).json()
+        data=self.client.get("/api/graph/path",params=self._real_dependency_edge()).json()
         self.assertTrue(data["found"])
         self.assertEqual(data["modules"][0]["id"],"ALG-09")
 
