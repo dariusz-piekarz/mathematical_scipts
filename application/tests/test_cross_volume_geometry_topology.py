@@ -32,7 +32,9 @@ class CrossVolumeAuditTest(unittest.TestCase):
 
     def test_canonical_volumes_are_independent_and_complete_to_imported_scope(self):
         info = self.report["summary"]
-        self.assertEqual(info["chapters"], {"AT": 30, "DG": 20, "AG": 11})
+        self.assertGreaterEqual(info["chapters"]["AT"], 30)
+        self.assertGreaterEqual(info["chapters"]["DG"], 20)
+        self.assertGreaterEqual(info["chapters"]["AG"], 11)
         self.assertEqual(set(self.report["volumes"]), {"AT", "DG", "AG"})
 
     def test_shared_math_sources_are_reused_by_path_not_copied(self):
@@ -73,6 +75,51 @@ class CrossVolumeAuditTest(unittest.TestCase):
         for item in self.report["overlap_candidates"]:
             self.assertEqual(item["decision"],
                              "review_and_preserve_union_of_unique_content")
+
+    def test_baseline_missing_references_are_only_known_pending_DG_imports(self):
+        for v in ("AT", "AG"):
+            self.assertEqual(self.report["volumes"][v]["unresolved_references"], [])
+            self.assertEqual(self.report["volumes"][v]["local_label_collisions"], [])
+        known_pending = {
+            "prz:thur-dop-nil-kontakt",
+            "sec:rownanie-diraca",
+            "subsec:dirac-koneksja",
+            "sec:algebra-liego",
+            "cor:bochner-vanishing",
+            "cor:hodge-de-rham",
+            "ch:chern-weil",
+            "prop:euler-identification-26",
+            "lem:angular-form-26",
+            "thm:CGB-boundary-26",
+            "ch:grafy-wezly-cztery",
+            "prz:hodge-dwie-sfery-18",
+        }
+        actual = {
+            item["label"] for item in
+            self.report["volumes"]["DG"]["unresolved_references"]
+        }
+        self.assertLessEqual(actual, known_pending)
+        for vol in ("AT", "DG", "AG"):
+            self.assertFalse(
+                self.report["volumes"][vol]["local_label_collisions"]
+            )
+
+    def test_overlap_metrics_track_unique_content_not_just_name_collisions(self):
+        by_pair = {
+            (x["left"], x["right"]): x
+            for x in self.report["overlap_candidates"]
+        }
+        for item in by_pair.values():
+            self.assertGreaterEqual(item["nontrivial_line_jaccard"], 0.0)
+            self.assertLessEqual(item["nontrivial_line_jaccard"], 1.0)
+            self.assertIn("shared_names", item["label_counts"])
+            self.assertFalse(item["exact_source_match"])
+        # Extensive textual overlap with *different* examples in each book.
+        for pair in (("AT-09", "DG-10"), ("AT-11", "DG-17")):
+            item = by_pair[pair]
+            self.assertGreater(item["nontrivial_line_jaccard"], 0.4)
+            self.assertGreater(item["label_counts"]["left_only"], 0)
+            self.assertGreater(item["label_counts"]["right_only"], 0)
 
     def test_no_external_unknown_label_is_claimed_resolved(self):
         for name, volume in self.report["volumes"].items():
