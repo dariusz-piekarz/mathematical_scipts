@@ -158,6 +158,12 @@ def main() -> None:
                 assert "Nie znaleziono cytowanej etykiety" in page.locator("#tipBody").inner_text()
                 assert missing_label in page.locator("#tipBody").inner_text()
                 assert page.locator("#tipOpen").is_disabled()
+                # Isolate the out-of-order-response check from previous
+                # navigation/hover timers: use a fresh, fully loaded page.
+                page.goto(URL, wait_until="networkidle", timeout=30000)
+                page.locator("#statPill").filter(
+                    has_text=re.compile(r"^\\d+ rozdziałów$")
+                ).wait_for(timeout=15000)
                 # Hold the first successful fetch artificially; an immediate
                 # 404 must win and the late successful response must be ignored.
                 page.evaluate("""(slowLabel) => {
@@ -176,6 +182,10 @@ def main() -> None:
                     const second = previewLabel(fast, anchor);
                     await Promise.allSettled([first, second]);
                 }""", [target_label, missing_label])
+                page.wait_for_function(
+                    "(label) => document.getElementById('tipBody').textContent.includes('Nie znaleziono cytowanej etykiety') && document.getElementById('tipBody').textContent.includes(label)",
+                    arg=missing_label, timeout=5000,
+                )
                 assert "Nie znaleziono cytowanej etykiety" in page.locator("#tipBody").inner_text()
                 assert missing_label in page.locator("#tipBody").inner_text()
                 assert target_label not in page.locator("#tipBody").inner_text()
