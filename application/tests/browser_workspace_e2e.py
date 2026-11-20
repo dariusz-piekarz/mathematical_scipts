@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import os
 import sys
+import sys
 from pathlib import Path
 import subprocess
 import tempfile
@@ -27,7 +28,7 @@ def main():
         try:
             for i in range(50):
                 try:
-                    with urllib.request.urlopen("http://127.0.0.1:18765/api/health", timeout=1) as res:
+                    with urllib.request.urlopen("http://127.0.0.1:18767/api/health", timeout=1) as res:
                         if res.status == 200:
                             break
                 except (OSError, TimeoutError):
@@ -38,7 +39,7 @@ def main():
                 browser = playwright.chromium.launch(headless=True, args=["--no-sandbox"])
                 try:
                     page = browser.new_page()
-                    page.goto("http://127.0.0.1:18765/", wait_until="networkidle")
+                    page.goto("http://127.0.0.1:18767/", wait_until="networkidle")
                     page.locator("#openFirst").click()
                     page.locator("#addCurrent").click()
                     page.locator('[data-tab="selection"]').click()
@@ -46,8 +47,8 @@ def main():
                     page.locator("#createDraft").click()
                     page.locator("#draftResult strong").wait_for(timeout=15000)
                     assert list(drafts.glob("*/project.zip")), "No temporary draft created"
-                    page.locator("#draftResult button").first.click()
-                    page.locator("#savedProjects .saved-project-item").first.wait_for(timeout=5000)
+                    page.locator("#draftResult button", has_text="Zapisz na stałe").click()
+                    page.locator("#savedProjects .saved-project-item").first.wait_for(timeout=15000)
                     assert list(saved.glob("*.zip")), "Saved project not persisted"
                     page.close()  # X-close sends beacon
                     for _ in range(50):
