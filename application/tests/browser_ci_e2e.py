@@ -161,9 +161,12 @@ def main() -> None:
                 # Isolate the out-of-order-response check from previous
                 # navigation/hover timers: use a fresh, fully loaded page.
                 page.goto(URL, wait_until="networkidle", timeout=30000)
-                page.locator("#statPill").filter(
-                    has_text=re.compile(r"^\\d+ rozdziałów$")
-                ).wait_for(timeout=15000)
+                # This second load is only an isolation boundary for the
+                # race test; the chapter count was asserted on the first load.
+                page.wait_for_function(
+                    "() => typeof previewLabel === 'function' && document.getElementById('docTitle') !== null",
+                    timeout=15000,
+                )
                 # Hold the first successful fetch artificially; an immediate
                 # 404 must win and the late successful response must be ignored.
                 page.evaluate("""(slowLabel) => {
