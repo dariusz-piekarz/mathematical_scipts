@@ -48,6 +48,8 @@ jobs:
       - name: Audit all unresolved references and label provenance
         run: |
           python scripts/audit_reference_provenance.py --db data/biblioteka.db --out data/reference_provenance_audit
+      - name: Track complete 36-chapter geometry import coverage
+        run: python scripts/dg_import_coverage.py --db data/biblioteka.db --out data/dg_import_coverage.json
       - name: Upload complete reference/provenance audit
         if: always()
         uses: actions/upload-artifact@v4
@@ -56,6 +58,7 @@ jobs:
           path: |
             application/data/reference_provenance_audit.json
             application/data/reference_provenance_audit.md
+            application/data/dg_import_coverage.json
           if-no-files-found: warn
       - name: Run application regression tests
         run: python -W default -m unittest discover -s tests -q
