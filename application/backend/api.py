@@ -182,7 +182,7 @@ def label_detail(label: str, source_document: str | None = None):
             resolved = con.execute("""SELECT DISTINCT target_document,target_entity,status
                 FROM references_tex WHERE source_document=? AND target_label=?
                   AND target_document IS NOT NULL
-                  AND status IN ('resolved','external_resolved','alias_resolved')""",
+                  AND status IN ('resolved','external_resolved','alias_resolved','included_resolved')""",
                   (source_document,label)).fetchall()
             targets = {(r["target_document"],r["target_entity"]) for r in resolved}
             if len(targets) == 1:
@@ -191,6 +191,29 @@ def label_detail(label: str, source_document: str | None = None):
                     WHERE document_id=? AND (entity_id=? OR name=?)
                     ORDER BY CASE WHEN name=? THEN 0 ELSE 1 END, line LIMIT 1""",
                     (target_document,target_entity,label,label)).fetchone()
+                if not actual and resolved[0]["status"] == "included_resolved":
+                    provenance = con.execute("""SELECT origin_path,origin_line,origin_offset
+                        FROM included_label_origins WHERE document_id=? AND name=?
+                        ORDER BY origin_path,origin_line LIMIT 1""",
+                        (target_document,label)).fetchone()
+                    if provenance is not None:
+                        root = ROOT.parent.resolve()
+                        origin = (root / provenance["origin_path"]).resolve()
+                        if origin.is_relative_to(root) and origin.is_file():
+                            content = origin.read_text(encoding="utf-8-sig")
+                            position = provenance["origin_offset"]
+                            title = con.execute("SELECT title FROM documents WHERE id=?",
+                                                (target_document,)).fetchone()["title"]
+                            return {"name":label,"canonical_label":label,
+                                    "document_id":target_document,"entity_id":None,
+                                    "source_document":source_document,
+                                    "occurrence_id":f"{target_document}::included::{label}",
+                                    "resolution_status":"included_resolved",
+                                    "origin_path":provenance["origin_path"],
+                                    "origin_line":provenance["origin_line"],
+                                    "title":title,"line":provenance["origin_line"],
+                                    "latex":content[max(0,position-140):position+1560],
+                                    "incoming_references":len(resolved)}
                 if actual:
                     result = show_label(con,actual["name"],max_chars=1700,document_id=target_document)
                     if result is not None:
