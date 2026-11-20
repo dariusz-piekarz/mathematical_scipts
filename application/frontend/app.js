@@ -102,12 +102,12 @@ function showRefs(container,latex){
     const refs=match[2].split(",");
     refs.forEach((raw,i)=>{
       if(i)container.append(document.createTextNode(","));
-      const lab=raw.trim();if(!lab){container.append(document.createTextNode(raw));return;}
+      const lab=raw.trim(), sourceDocument=state.currentModule;if(!lab){container.append(document.createTextNode(raw));return;}
       const b=node("button",{className:"ref-link",title:"Podgląd etykiety: "+lab},lab);
-      b.addEventListener("mouseenter",()=>previewLabel(lab,b));
+      b.addEventListener("mouseenter",()=>previewLabel(lab,b,sourceDocument));
       b.addEventListener("focus",()=>previewLabel(lab,b));
       b.addEventListener("mouseleave",()=>{const key=state.tooltipKey;setTimeout(()=>{if(key===state.tooltipKey && state.tooltipAnchor===b && !$("referenceTip").matches(":hover"))closeTip();},240);});
-      b.addEventListener("click",()=>openLabel(lab));container.append(b);
+      b.addEventListener("click",()=>openLabel(lab,sourceDocument));container.append(b);
     });
     container.append(document.createTextNode("}"));last=regex.lastIndex;
   }
@@ -154,7 +154,7 @@ function positionReferenceTip(anchor){
   tip.style.left=Math.max(8,Math.min(window.innerWidth-448,r.left))+"px";
   tip.style.top=Math.max(8,Math.min(window.innerHeight-tip.offsetHeight-12,r.bottom+8))+"px";
 }
-async function previewLabel(label,anchor){
+async function previewLabel(label,anchor,sourceDocument=null){
   const request=++state.tooltipKey;
   state.tooltipAnchor=anchor;
   state.tooltipData=null;
@@ -164,7 +164,7 @@ async function previewLabel(label,anchor){
   $("tipOpen").disabled=true;
   positionReferenceTip(anchor);
   try{
-    const result=await api(`/api/labels/${encodeURIComponent(label)}`);
+    const result=await api(`/api/labels/${encodeURIComponent(label)}`+(sourceDocument?`?source_document=${encodeURIComponent(sourceDocument)}`:""));
     if(request!==state.tooltipKey)return;
     state.tooltipData=result;
     $("tipOpen").disabled=Boolean(result.ambiguous);
@@ -195,9 +195,9 @@ async function previewLabel(label,anchor){
   }
 }
 function closeTip(){state.tooltipKey++;state.tooltipData=null;state.tooltipAnchor=null;$("referenceTip").classList.add("hidden");}
-async function openLabel(label){
+async function openLabel(label,sourceDocument=null){
   try{
-    const result=state.tooltipData?.name===label?state.tooltipData:await api(`/api/labels/${encodeURIComponent(label)}`);
+    const result=state.tooltipData?.name===label && (!sourceDocument || state.tooltipData.source_document===sourceDocument)?state.tooltipData:await api(`/api/labels/${encodeURIComponent(label)}`+(sourceDocument?`?source_document=${encodeURIComponent(sourceDocument)}`:""));
     closeTip();if(result.ambiguous){toast("Etykieta jest niejednoznaczna. Wybierz rozdział w podglądzie odsyłacza.");return;}
     if(result.entity_id)await openEntity(result.entity_id);else await openModule(result.document_id);
   }catch(e){toast(e.message);}
@@ -409,7 +409,7 @@ function listeners(){
   $("togglePreview").addEventListener("click",()=>{state.simplified=!state.simplified;renderReader();});
   $("showFull").addEventListener("click",()=>{if(state.currentEntity)openEntity(state.currentEntity,true);else if(state.currentModule)openModule(state.currentModule,true);});
   $("closeTip").addEventListener("click",closeTip);
-  $("tipOpen").addEventListener("click",()=>{const x=state.tooltipData;if(x)openLabel(x.name);});
+  $("tipOpen").addEventListener("click",()=>{const x=state.tooltipData;if(x)openLabel(x.name,x.source_document||state.currentModule);});
   $("referenceTip").addEventListener("mouseleave",closeTip);
   document.addEventListener("keydown",e=>{if(e.key==="Escape")closeTip();});
   $("drawGraph").addEventListener("click",loadGraph);$("findPath").addEventListener("click",findPath);
