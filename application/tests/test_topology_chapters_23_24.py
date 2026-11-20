@@ -185,7 +185,7 @@ class TopologyChaptersTwentyThreeTwentyFourAudit(unittest.TestCase):
         s23, s24 = self.sources["23"], self.sources["24"]
         self.assertIn("istnienia $a^!$", s23)
         self.assertIn("Nie dowodzimy tu twierdzenia o rozkładzie", s24)
-        self.assertIn("jawnie przyjętymi", s24)
+        self.assertRegex(s24, r"\\emph\{jawnie\s+przyjętymi\}")
         self.assertIn("twierdzenia B Cartana", s23)
 
 
