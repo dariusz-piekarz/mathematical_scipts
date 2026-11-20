@@ -45,6 +45,18 @@ jobs:
           if [[ "$result" != 0 && "$result" != 2 ]]; then
             exit "$result"
           fi
+      - name: Audit all unresolved references and label provenance
+        run: |
+          python scripts/audit_reference_provenance.py --db data/biblioteka.db --out data/reference_provenance_audit
+      - name: Upload complete reference/provenance audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reference-provenance-audit
+          path: |
+            application/data/reference_provenance_audit.json
+            application/data/reference_provenance_audit.md
+          if-no-files-found: warn
       - name: Run application regression tests
         run: python -W default -m unittest discover -s tests -q
       - name: Compile-check browser smoke scripts
