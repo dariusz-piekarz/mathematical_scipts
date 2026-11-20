@@ -47,3 +47,14 @@ Porównano fragment z kanonicznym tomem Geometria i topologia różniczkowa: DG-
 ## Co dalej
 
 Po AT-30 zakończono pierwszy szczegółowy cykl przeglądu całych 30 rozdziałów źródłowych. Nadal wymagane są osobne kontrole **globalne**: przepływ założeń i terminologii między rozdziałami, mapa konfliktów etykiet z geometrią różniczkową i algebraiczną, identyfikacja duplikatów oraz powtórny audyt głębokich zewnętrznych wyników (np. Steenrod, Blakers–Massey, Verdier, Hodge, Schmid). W przyszłym scalaniu zachować sumę wszystkich niepowtarzalnych definicji, twierdzeń, istotnych dowodów, przykładów i rysunków.
+
+
+## Kontrola końcowa wykonana po raporcie źródłowym
+
+**GitHub Actions — kompilacja i matematyka:** https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44824292056 — SUCCESS. Uruchomiono 9 regresji AT-29/30: wszystkie zaliczone. Cały tom AT-01–30 skompilowano trzykrotnie; końcowy PDF ma **295 stron A4**. Po trzecim przebiegu brak niezdefiniowanych odsyłaczy, przepełnionych wierszy oraz komunikatu „Label(s) may have changed” / potrzeby ponownego uruchomienia dla etykiet. Pierwotna kompilacja dwukrotna pomimo wyniku SUCCESS wykazywała jeszcze ostrzeżenie o możliwej zmianie etykiet; dlatego poprawiono workflow, aby nie zaliczał niedostatecznie ustabilizowanego spisu i odsyłaczy.
+
+**Kontrola aplikacji:** https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44823985478 — SUCCESS. Zaliczone 266 testów Pythona oraz testy przeglądarkowe; 355 rozdziałów w indeksie. Globalny raport aplikacji wymienia 13 nierozstrzygniętych wystąpień odsyłaczy z aktualnie niekompletnego importu geometrii różniczkowej (20 spośród 36 źródłowych rozdziałów), a nie z AT-29/30. Konfliktów tych nie zamieniano automatycznie na pozorne odpowiedniki.
+
+**Kontrola wizualna rzeczywistego PDF:** pobrano ZIP z artefaktu GitHub Actions, wyodrębniono PDF i obejrzano strony 285, 286, 287, 294 i 295. Na stronie 287 rysunek zgodnych redukcji liczb 2-adycznych jest czytelny; strony 294–295 poprawnie prezentują otoczenie tubularne, wyprowadzenia transwersalności i nowy rysunek przecięcia. Brak obciętych formuł, widocznych nałożonych opisów i błędnych glifów na kontrolowanych stronach. Render tych stron po trzecim przebiegu pdflatex jest pikselowo identyczny z wcześniejszym, już sprawdzonym renderem.
+
+**Status:** AT-29 zaakceptowany z wyraźnie wskazanymi zewnętrznymi twierdzeniami i nieudowodnionym lematem Fredholmowskim; AT-30 zaakceptowany jako samodzielne krótkie przypomnienie i odesłanie do pełnego podręcznika DG, nie jako powtórzenie całego działu geometrii. Rozdziały AT-01–30 tworzą teraz skompilowany tom, lecz ten status nie oznacza automatycznego pełnego dowodu wszystkich głębokich twierdzeń zewnętrznych.
