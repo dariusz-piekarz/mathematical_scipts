@@ -56,12 +56,12 @@ class IntegratedIndexTests(unittest.TestCase):
         (folder/name).write_text(body,encoding="utf-8")
 
     def test_index_resolves_two_domains_and_external_volume(self):
-        self.add("algebraic_topology","03-chain.tex",r"\\chapter{T}\\label{ch:shared}")
-        self.add("algebraic_topology","05-homology.tex",r"\\chapter{T}\\ref{ch:shared}")
-        self.add("differential_geometry_and_topology","06-chain.tex",r"\\chapter{D}\\label{ch:shared}")
-        self.add("differential_geometry_and_topology","08-homology.tex",r"\\chapter{D}\\ref{ch:shared}")
-        self.add("probability_volume_i","02-probability.tex",r"\\chapter{I}\\label{ch:probability}")
-        self.add("probability_volume_iv","01-statistics.tex",r"\\chapter{IV}\\ref{I-ch:probability}")
+        self.add("algebraic_topology","03-chain.tex",r"\chapter{T}\label{ch:shared}")
+        self.add("algebraic_topology","05-homology.tex",r"\chapter{T}\ref{ch:shared}")
+        self.add("differential_geometry_and_topology","06-chain.tex",r"\chapter{D}\label{ch:shared}")
+        self.add("differential_geometry_and_topology","08-homology.tex",r"\chapter{D}\ref{ch:shared}")
+        self.add("probability_volume_i","02-probability.tex",r"\chapter{I}\label{ch:probability}")
+        self.add("probability_volume_iv","01-statistics.tex",r"\chapter{IV}\ref{I-ch:probability}")
         results=build_database(self.src,self.db,recursive=True)
         self.assertEqual(results["ambiguous_references"],0)
         self.assertEqual(results["missing_references"],0)
@@ -74,9 +74,9 @@ class IntegratedIndexTests(unittest.TestCase):
             self.assertEqual([x[0] for x in labels],["DG-06::ch:shared","TOP-03::ch:shared"])
 
     def test_cross_script_ambiguity_remains_visible(self):
-        self.add("algebraic_topology","03-chain.tex",r"\\label{ch:shared}")
-        self.add("differential_geometry_and_topology","06-chain.tex",r"\\label{ch:shared}")
-        self.add("functional_analysis","01-uses.tex",r"\\ref{ch:shared}")
+        self.add("algebraic_topology","03-chain.tex",r"\label{ch:shared}")
+        self.add("differential_geometry_and_topology","06-chain.tex",r"\label{ch:shared}")
+        self.add("functional_analysis","01-uses.tex",r"\ref{ch:shared}")
         results=build_database(self.src,self.db,recursive=True)
         self.assertEqual(results["ambiguous_references"],1)
         with connect(self.db) as con:
