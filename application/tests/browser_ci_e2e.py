@@ -125,7 +125,17 @@ def main() -> None:
                     "([label, anchorId]) => previewLabel(label, document.getElementById(anchorId))",
                     [ambiguous_label, anchor_id],
                 )
-                page.locator("#tipBody .ref-choice").first.wait_for(state="visible",timeout=15000)
+                page.wait_for_timeout(500)
+                debug = page.evaluate("""() => ({
+                    tip: document.getElementById('tipBody').textContent,
+                    hidden: document.getElementById('referenceTip').classList.contains('hidden'),
+                    candidates: document.querySelectorAll('#tipBody .ref-choice').length,
+                    openDisabled: document.getElementById('tipOpen').disabled,
+                    errors: [],
+                })""")
+                print(json.dumps({"ambiguous_label": ambiguous_label, "preview_debug": debug},ensure_ascii=False),flush=True)
+                assert debug["candidates"] >= 2, debug
+                page.locator("#tipBody .ref-choice").first.wait_for(state="visible",timeout=5000)
                 assert "Etykieta występuje w kilku rozdziałach" in page.locator("#tipBody").inner_text()
                 assert page.locator("#tipOpen").is_disabled()
                 assert page.locator("#tipBody .ref-choice").count() >= 2
