@@ -1,0 +1,32 @@
+# Biblioteka matematyczna — audyt odsyłaczy, partia 08 (wystąpienia 92–104)
+
+Data: 20 listopada 2026. Gałąź źródłowa: `biblioteka-matematyczna-iteracja-6`, commit wyjściowy `f692d154aa96a3ac00f9df0af13d111c859277fd`. Materiał: migawka indeksu 355 rozdziałów (`reference_provenance_audit_355.json`) i odczyt rzeczywistych plików `chapters/pl/` przez GitHub. **Nie zmieniono źródeł, deklaracji `\label`, wystąpień `\ref` ani dowodów.** Celem jest ocena poprawności odsyłaczy w niezależnych skryptach, nie ich scalenie.
+
+| Nr | Źródło | Etykieta | Status w indeksie i kandydaci | Ustalenie i ocena matematyczna |
+|---:|---|---|---|---|
+| 92 | DG-14:4108 | `thm:euler-homologia` | niejednoznaczny: DG-06:1917, TOP-03:1633 | **DG-06:1917**, algebraiczna charakterystyka Eulera skończonego kompleksu przestrzeni liniowych. Przy triangulacji skończonej powierzchni liczby V−E+F są wymiarami modułów łańcuchów po zmianie współczynników na ciało; rachunek jest prawidłowy. Dla triangulacji nieskończonej twierdzenie w tej postaci nie wystarcza. |
+| 93 | DG-14:4193 | `thm:stokes-formy` | niejednoznaczny: DG-10:972, TOP-09:848 | **DG-10:972**, twierdzenie Stokesa dla zorientowanej rozmaitości z gładkim brzegiem i formy zwartego nośnika. W DG-14 zastosowano je do brzegu z narożnikami i wskazano zaokrąglanie narożników — należy osobno dopilnować granicznego argumentu i orientacji. |
+| 94 | DG-14:4619 | `ch:chern-weil` | brak kandydata | Zapowiedź *nieistniejącego w indeksie* rozdziału z dowodem twierdzenia Cherna–Gaussa–Bonneta przez teorię Cherna–Weila. **Nie traktować zapowiedzi jako istniejącego dowodu.** Wymaga odnalezienia oryginału w Bibliotece albo dopracowania samodzielnego rozdziału przy rozbudowie materiału. |
+| 95 | DG-14:4622 | `prop:euler-identification-26` | brak kandydata | Brakuje stwierdzenia o identyfikacji znormalizowanego Pfaffianu z rzeczywistą klasą Eulera. Samo zamknięcie formy i niezależność klasy od koneksji nie identyfikuje klasy charakterystycznej. Istotna luka w zapowiedzianym uzasadnieniu. |
+| 96 | DG-14:4623 | `thm:euler-thom-16` | niejednoznaczny: DG-17:1897, TOP-11:1879 | **DG-17:1897** daje klasę Thoma i definicję klasy Eulera dla orientowanej rzeczywistej wiązki. To właściwy lokalny cel, ale sam wynik nie zastępuje brakującej identyfikacji różniczkowej z punktu 95. |
+| 97 | DG-14:4624 | `lem:angular-form-26` | brak kandydata | Nie ma lematu normalizującego formę kątową poprzez całkę 1 po włóknie sferycznym. Potrzebny jawny opis formy, orientacji włókna i poprawnego argumentu normalizacji. |
+| 98 | DG-14:4704 | `thm:CGB-boundary-26` | brak kandydata | Nie ma zadeklarowanego twierdzenia o poprawce brzegowej w formule Cherna–Gaussa–Bonneta dla zwartej parzystowymiarowej rozmaitości riemannowskiej z brzegiem. Wzór zapisany w DG-14 jest zapowiedzią, a nie dostępnym w skrypcie pełnym dowodem; konieczne rozpoznanie składnika transgresyjnego i orientacji. |
+| 99 | DG-15:538 | `sec:formy-orientacja` | niejednoznaczny: DG-10:547, TOP-09:454 | **DG-10:547** — lokalny blok o orientacji jest zgodny z planowanym liczeniem przecięć z uwzględnieniem znaków. Użycie ma charakter przygotowawczy, nie twierdzi jeszcze wzoru na liczbę przecięcia. |
+| 100 | DG-16:1138 | `ch:homologia-przestrzeni` | niejednoznaczny: DG-08:2, TOP-05:2 | **DG-08:2**, z wynikiem o niezmienniczości homotopijnej `thm:homotopia-singularna` DG-08:460. Retrakcja deformacyjna na podrozmaitość uzasadnia izomorfizm homologii. |
+| 101 | DG-16:1200 | `thm:CGB-boundary-26` | brak kandydata | Brakuje celu. **Dodatkowo dopasowanie twierdzenia jest wątpliwe matematycznie:** liczba Eulera `TS^2` i `\chi(S^2)=2` wymagają przypadku *zamkniętej sfery*, nie ogólnej formuły z brzegiem. W `DG-14:4603` istnieje `thm:chern-gauss-bonnet` dla zamkniętych rozmaitości parzystowymiarowych, ale zastąpienie cytowania wymaga świadomej, osobnej korekty, a nie automatycznego przemianowania oryginalnej etykiety. |
+| 102 | DG-16:1879 | `ch:grafy-wezly-cztery` | brak kandydata | Zapowiedź przykładu chirurgii wzdłuż węzła, korzystającego z wielomianu Aleksandra trójlistnika `t^{-1}-1+t`. W indeksie nie ma tak oznaczonego rozdziału. Należy poszukać źródła w istniejącej teorii węzłów/surgery w Bibliotece; bez weryfikacji nie ustalać właściciela. |
+| 103 | DG-17:37 | `ch:algebra-homologiczna` | niejednoznaczny: DG-06:2, TOP-03:2 | **DG-06:2**, naturalny wcześniejszy rozdział w tym samym skrypcie: kompleksy łańcuchowe i kochainowe potrzebne do zdefiniowania iloczynu kubkowego. |
+| 104 | DG-17:38 | `ch:homologia-przestrzeni` | niejednoznaczny: DG-08:2, TOP-05:2 | **DG-08:2**, właściwe lokalne źródło homologii przestrzeni i łańcuchów symplicjalnych. |
+
+## Bilans i matematyczne priorytety
+
+- **13** przejrzanych cytowań: **7 niejednoznacznych** z uzasadnionym kandydatem wewnątrz skryptu oraz **6 brakujących** bez deklaracji w aktualnym indeksie.
+- Pierwsze siedem partii obejmowało 91 wystąpień, niniejsza daje razem **104/257**; do audytu pozostaje **153**. Liczby oznaczają *kontrolę*, a nie naprawę indeksu.
+- **Priorytet I:** grupa zależności `ch:chern-weil`, `prop:euler-identification-26`, `lem:angular-form-26`, `thm:CGB-boundary-26` — wymaga skoordynowanego uzupełnienia teorii Cherna–Weila i poprawki brzegowej; nie tworzyć atrap twierdzeń lub etykiet.
+- **Priorytet II:** cytowanie `DG-16:1200` — przy charakterystyce Eulera `TS^2` chodzi o przypadek bez brzegu; istniejące twierdzenie `thm:chern-gauss-bonnet` w DG-14 jest tematycznie bliższe niż brakujące `thm:CGB-boundary-26`.
+- **Priorytet III:** `ch:grafy-wezly-cztery` — ustalić pochodzenie w skrypcie teorii węzłów albo geometrii czterowymiarowej, zanim zaplanuje się odsyłacz między skryptami.
+- Zastosowanie Stokesa do brzegu z narożnikami wymaga uzasadnienia przejścia granicznego; nie ukrywać go samym wskazaniem twierdzenia dla brzegu gładkiego.
+
+## Ograniczenia i zasady
+
+Nie modyfikowano `chapters/pl`, oryginalnych `\label`, `\ref` i `\eqref`, nie usuwano dowodów i nie scalano działów. Przy kopiowaniu z Biblioteki wszystkie istniejące etykiety i odsyłacze muszą być zachowane dokładnie. Wnioski z audytu oznaczają kandydatów lub nierozstrzygnięte braki; do ostatecznych poprawek trzeba przygotować kontrolę pochodzenia, test regresyjny i kompilację. Następna partia: **105–117**, w kolejności indeksu 355 rozdziałów.
