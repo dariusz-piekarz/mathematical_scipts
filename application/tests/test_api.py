@@ -103,6 +103,17 @@ class APITests(unittest.TestCase):
         self.assertEqual(item["canonical_label"],"ch:probability")
         self.assertEqual(item["resolution_status"],"external_resolved")
 
+    def test_shared_include_reference_preview(self):
+        result = self.client.get("/api/labels/tw:ga10-weak",
+                                 params={"source_document":"ALG-10"})
+        self.assertEqual(result.status_code,200)
+        data=result.json()
+        self.assertEqual(data["resolution_status"],"included_resolved")
+        self.assertEqual(data["document_id"],"ALG-10")
+        self.assertEqual(data["origin_path"],"shared/pl/slabe_twierdzenie_lefschetza.tex")
+        self.assertEqual(data["origin_line"],10)
+        self.assertIn("tw:ga10-weak",data["latex"])
+
     def test_search(self):
         data=self.client.get("/api/search",params={"q":"Lefschetza","limit":10}).json()
         self.assertGreater(len(data["items"]),0)
