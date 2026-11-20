@@ -6,7 +6,6 @@ from __future__ import annotations
 
 import os
 import sys
-import sys
 from pathlib import Path
 import subprocess
 import tempfile
@@ -23,16 +22,16 @@ def main():
         drafts = Path(temp) / "drafts"
         saved = Path(temp) / "saved"
         env = dict(os.environ, MATLIB_DRAFTS_ROOT=str(drafts), MATLIB_SAVED_ROOT=str(saved))
-        server = subprocess.Popen([sys.executable, "-m", "uvicorn", "backend.api:app", "--host", "127.0.0.1", "--port", "18765"],
+        server = subprocess.Popen([sys.executable, "-m", "uvicorn", "backend.api:app", "--host", "127.0.0.1", "--port", "18767"],
                                   cwd=APP, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
         try:
-            for i in range(50):
+            for i in range(100):
                 try:
                     with urllib.request.urlopen("http://127.0.0.1:18767/api/health", timeout=1) as res:
                         if res.status == 200:
                             break
                 except (OSError, TimeoutError):
-                    time.sleep(0.15)
+                    time.sleep(0.2)
             else:
                 raise RuntimeError("FastAPI failed to start")
             with sync_playwright() as playwright:
