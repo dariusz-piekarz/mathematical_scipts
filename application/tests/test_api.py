@@ -7,7 +7,12 @@ from backend.api import app
 class APITests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.client = TestClient(app)
+        cls._client_context = TestClient(app)
+        cls.client = cls._client_context.__enter__()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls._client_context.__exit__(None, None, None)
 
     def test_frontend(self):
         r=self.client.get("/")
