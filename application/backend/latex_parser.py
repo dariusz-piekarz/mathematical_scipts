@@ -25,7 +25,12 @@ import sqlite3
 import sys
 from typing import Any
 
-SCHEMA_VERSION = 2
+try:
+    from .label_registry import Owner, resolve
+except ImportError:  # python backend/latex_parser.py ...
+    from label_registry import Owner, resolve
+
+SCHEMA_VERSION = 3
 SECTION_DEPTH = {
     "part": 0, "chapter": 1, "section": 2, "subsection": 3,
     "subsubsection": 4, "paragraph": 5, "subparagraph": 6,
@@ -424,6 +429,15 @@ CREATE TABLE label_conflicts (
   PRIMARY KEY(name,document_id)
 );
 CREATE INDEX idx_label_conflicts_name ON label_conflicts(name);
+CREATE TABLE label_occurrences (
+  occurrence_id TEXT PRIMARY KEY, name TEXT NOT NULL,
+  document_id TEXT NOT NULL REFERENCES documents(id),
+  entity_id TEXT REFERENCES entities(id), line INTEGER NOT NULL,
+  offset INTEGER NOT NULL, concept_id TEXT,
+  UNIQUE (document_id,name,line,offset)
+);
+CREATE INDEX idx_label_occurrences_name ON label_occurrences(name);
+CREATE INDEX idx_label_occurrences_doc ON label_occurrences(document_id);
 CREATE TABLE references_tex (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   source_document TEXT NOT NULL REFERENCES documents(id),
@@ -441,7 +455,7 @@ CREATE TABLE historical_aliases (
 );
 CREATE VIEW dependency_edges AS
 SELECT source_document, target_document, count(*) AS references_count
-FROM references_tex WHERE status='resolved' AND target_document IS NOT NULL
+FROM references_tex WHERE status IN ('resolved','external_resolved','alias_resolved') AND target_document IS NOT NULL
 GROUP BY source_document,target_document;
 """
 
@@ -557,26 +571,28 @@ def build_database(source_dir: Path, db_path: Path, alias_file: Path | None = No
             con.execute("INSERT INTO labels VALUES (?,?,?,?,?,?)", (
                 label.name, label.document_id, label.entity_id, label.offset, label.line, label.excerpt))
             total["labels"] += 1
+    # Separate every original occurrence from the legacy globally-unique index.
+    # Entity identities stay distinct even when the LaTeX strings coincide.
+    all_owners: list[Owner] = []
+    for document in all_documents:
+        for label in document.labels:
+            all_owners.append(Owner(document.id, label.name, label.entity_id))
+            con.execute("INSERT INTO label_occurrences VALUES (?,?,?,?,?,?,NULL)",
+                        (f"{document.id}::{label.name}", label.name, document.id,
+                         label.entity_id, label.line, label.offset))
     for doc in all_documents:
         for ref in doc.references:
-            owner_candidates = label_locations.get(ref.target, {})
-            if not owner_candidates:
-                dst, resolved_id, status = None, None, "missing"
-            elif doc.id in owner_candidates:
-                # A local LaTeX reference always prefers its chapter's own label.
-                dst, resolved_id, status = doc.id, owner_candidates[doc.id].entity_id, "resolved"
-            elif len(owner_candidates) == 1:
-                dst, resolved_id, status = next(iter(owner_candidates)), next(iter(owner_candidates.values())).entity_id, "resolved"
-            else:
-                # Never silently point to the wrong theorem in another book.
-                dst, resolved_id, status = None, None, "ambiguous"
+            decision = resolve(doc.id, ref.target, all_owners)
+            dst = decision.owner.document_id if decision.owner else None
+            resolved_id = decision.owner.entity_id if decision.owner else None
+            status = decision.status
             con.execute("INSERT INTO references_tex(source_document,source_entity,command,target_label,offset,line,target_document,target_entity,status) VALUES (?,?,?,?,?,?,?,?,?)",
                         (doc.id, ref.entity_id, ref.command, ref.target, ref.offset, ref.line,
                          dst, resolved_id, status))
             total["references"] += 1
             total[status + "_references"] += 1
     load_historical_aliases(con, alias_file)
-    for k in ("documents", "entities", "labels", "references", "resolved_references", "ambiguous_references", "missing_references", "parse_warnings"):
+    for k in ("documents", "entities", "labels", "references", "resolved_references", "external_resolved_references", "alias_resolved_references", "ambiguous_references", "missing_references", "parse_warnings"):
         total.setdefault(k, 0)
     total["duplicate_labels"] = len(duplicate_labels)
     total["cross_document_edges"] = con.execute("SELECT count(*) FROM dependency_edges WHERE source_document != target_document").fetchone()[0]
