@@ -133,7 +133,7 @@ def main() -> None:
                 page.locator("#tipBody .ref-choice").first.click()
                 page.wait_for_function(
                     "(id) => document.getElementById('docBreadcrumb').textContent.includes(id)",
-                    selected_owner, timeout=15000,
+                    arg=selected_owner, timeout=15000,
                 )
                 page.evaluate(
                     "([label, anchorId]) => previewLabel(label, document.getElementById(anchorId))",
