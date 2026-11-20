@@ -394,6 +394,8 @@ function listeners(){
   $("drawGraph").addEventListener("click",loadGraph);$("findPath").addEventListener("click",findPath);
   $("checkSelection").addEventListener("click",checkSelection);$("generateZip").addEventListener("click",generateZip);$("createDraft").addEventListener("click",createDraft);$("saveManifest").addEventListener("click",downloadManifest);
   window.addEventListener("pagehide",event=>{if(!event.persisted)closeUnsavedDraft();});
+  // Some browsers do not dispatch pagehide when a tab is closed; keep an idempotent fallback.
+  window.addEventListener("beforeunload",closeUnsavedDraft);
   setInterval(()=>{if(state.draftSession)fetch("/api/drafts/"+encodeURIComponent(state.draftSession)+"/heartbeat",{method:"POST"}).catch(()=>{});},15*60*1000);
   $("clearSelection").addEventListener("click",()=>{state.selected.clear();renderSelection();if(state.currentData)renderReader();$("planResult").replaceChildren();});
   $("showExplorer").addEventListener("click",()=>$("explorer").classList.add("visible"));
