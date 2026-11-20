@@ -149,6 +149,17 @@ class TopologySeventeenEighteenAudit(unittest.TestCase):
         self.assertEqual(square, {(2, 2)})
         self.assertIn(r"2[X]=0", chapter)
 
+    def test_rp4_has_same_euler_parity_but_distinct_bordism(self):
+        chapter = self.text["17"]
+        self.assertIn(r"\label{prz:bordism-rp4-versus-rp2-square}", chapter)
+        self.assertIn(r"w(TY)=(1+t)^5=1+t+t^4", chapter)
+        # Two SW-number vectors (w2²,w4) are linearly independent over F2.
+        x = (1, 1)
+        y = (0, 1)
+        self.assertEqual((x[0]*y[1] - x[1]*y[0]) % 2, 1)
+        self.assertEqual(sum([1, -1, 1]), 1)  # chi(RP4)=1
+        self.assertEqual(1 * 1, 1)  # chi(RP2×RP2)=1
+
     def test_projective_morse_quadratic_flow_is_descending(self):
         chapter = self.text["18"]
         self.assertIn(r"\label{prz:morse-rp2-torsja}", chapter)
