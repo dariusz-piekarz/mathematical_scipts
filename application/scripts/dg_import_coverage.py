@@ -8,12 +8,10 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
-import re
 import sqlite3
 
 EXPECTED = 36
 EXPECTED_IDS = tuple(f"DG-{i:02d}" for i in range(1, EXPECTED + 1))
-ID_PATTERN = re.compile(r"^DG-(\\d+)$")
 RESOLVED = frozenset({"resolved", "external_resolved", "alias_resolved",
                       "included_resolved"})
 
