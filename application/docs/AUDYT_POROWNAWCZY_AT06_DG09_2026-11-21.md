@@ -87,7 +87,21 @@ Zmieniono rzeczywiste źródła AT-06 i DG-09 oraz dodano:
 - application/tests/test_at_dg_pairwise_06_09.py — osiem regresji, w tym sprawdzenie liczbowych par (a,b) z zakresu [-8,8]²\{(0,0)}, pierwotności generatora jądra, wartości operatora q na wierzchołkach Δ², jawnych danych n=2, historii etykiet i bilansu otoczeń TeX;
 - .github/workflows/paired-at-dg-higher-homotopy-hurewicz-audit.yml — trzy przebiegi kompilacji AT01–30 i DG01–10 w osobnych zadaniach, osobna walidacja kodu i stabilności odsyłaczy.
 
-Uruchomione pojedyncze kontrole AT05/06 i walidator aplikacji po części poprawek także wykazały SUCCESS. Końcowe wyniki dedykowanego workflow i rzeczywiste oględziny PDF trzeba dopisać po ich sprawdzeniu; nie należy deklarować jeszcze niepotwierdzonego sukcesu.
+Pojedyncze kontrole AT05/06 i walidator aplikacji po poprawkach także wykazały SUCCESS.
+
+**Końcowa walidacja wykonana**, GitHub Actions run:
+https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44836409596.
+Obydwa zadania są ukończone ze statusem SUCCESS:
+- matematyczne regresje 8/8 OK, w tym sprawdzenie 288 niezerowych par liczb całkowitych a,b w przedziale [-8,8];
+- kompletne AT-01–30 z oryginalnych źródeł: **296 stron A4**, trzy przebiegi pdflatex, brak niestabilnych etykiet, niezdefiniowanych odsyłaczy i poziomych przepełnień;
+- kontrolny podtom DG-01–10: **271 stron A4**, trzy przebiegi pdflatex, brak niestabilnych etykiet i poziomych przepełnień; cztery jawnie dopuszczone odsyłacze do dalszych rozdziałów (sec:kolnierz-15, sec:uchwyt-morse-17, thm:holonomia-lokalny-produkt, thm:poincare-hopf-16).
+
+Pobrano oba rzeczywiste PDF z artefaktów tego przebiegu GitHub Actions.
+Zrenderowano i wizualnie sprawdzono m.in. strony AT 74–76, 78–81 oraz DG 246–247;
+w nowym przykładzie DG wzory na gcd, całkowite jądro i dwa przypadki spójności
+są czytelne i prawidłowo złamane na stronie. W nowych fragmentach nie widać
+obciętych formuł, nałożeń ani przesuniętych podpisów.
+Oględziny wskazanych stron nie są deklaracją manualnego obejrzenia wszystkich 567 stron obu dokumentów.
 
 ## 4. Decyzja i dalsza kolejność
 
