@@ -19,7 +19,7 @@ with subprocess.Popen([sys.executable,'-m','uvicorn','backend.api:app','--host',
                 failures=[]
                 page.on('pageerror',lambda e:failures.append(str(e)))
                 page.goto('http://127.0.0.1:18765/',wait_until='networkidle')
-                page.get_by_text(re.compile(r'^\d+ rozdziałów
+                page.get_by_text(re.compile(r'^\d+ rozdziałów$')).wait_for(timeout=20000)
                 page.locator('#openFirst').click()
                 page.locator('#addCurrent').click()
                 page.locator('button[data-tab="selection"]').click()
