@@ -1,0 +1,46 @@
+name: AT-DG-AG cross-volume dependency and label audit
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "chapters/pl/algebraic_topology/**"
+      - "chapters/pl/differential_geometry_and_topology/**"
+      - "chapters/pl/algebraic_geometry/**"
+      - "shared/pl/**"
+      - "books/pl/algebraic_topology.tex"
+      - "books/pl/differential_geometry_and_topology.tex"
+      - "books/pl/algebraic_geometry.tex"
+      - "application/scripts/audit_cross_volume_geometry_topology.py"
+      - "application/tests/test_cross_volume_geometry_topology.py"
+      - ".github/workflows/global-geometry-topology-audit.yml"
+  workflow_dispatch:
+
+jobs:
+  audit-unmerged-volumes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify provenance and source-independent shared proof labels
+        run: python3 -m unittest discover -s application/tests -p 'test_cross_volume_geometry_topology.py' -v
+      - name: Compute deterministic three-book dependency and collision manifest
+        run: |
+          python3 application/scripts/audit_cross_volume_geometry_topology.py \
+            --out application/data/cross_volume_geometry_topology_audit.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          x = json.loads(Path("application/data/cross_volume_geometry_topology_audit.json").read_text(encoding="utf8"))
+          print("STRUCTURAL_SUMMARY:", json.dumps(x["summary"], ensure_ascii=False))
+          for a in x["cross_volume_conflicts"][:15]:
+              print("REVIEW_LABEL:", a["label"], a["source_files"])
+          PY
+      - name: Publish exact manifest for future reconciliation
+        uses: actions/upload-artifact@v4
+        with:
+          name: at-dg-ag-dependency-label-provenance
+          path: application/data/cross_volume_geometry_topology_audit.json
+          if-no-files-found: error
