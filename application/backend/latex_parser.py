@@ -648,6 +648,9 @@ def get_stats(con: sqlite3.Connection) -> dict[str, int]:
         "documents":"documents", "entities":"entities", "labels":"labels",
         "references":"references_tex", "missing_references":"references_tex WHERE status='missing'",
         "cross_document_edges":"dependency_edges WHERE source_document != target_document"}.items()}
+    result["label_occurrences"] = con.execute("SELECT count(*) FROM label_occurrences").fetchone()[0]
+    result["external_resolved_references"] = con.execute("SELECT count(*) FROM references_tex WHERE status='external_resolved'").fetchone()[0]
+    result["alias_resolved_references"] = con.execute("SELECT count(*) FROM references_tex WHERE status='alias_resolved'").fetchone()[0]
     result["duplicate_labels"] = con.execute("SELECT count(DISTINCT name) FROM label_conflicts").fetchone()[0]
     result["ambiguous_references"] = con.execute("SELECT count(*) FROM references_tex WHERE status='ambiguous'").fetchone()[0]
     result["theorems"] = con.execute("SELECT count(*) FROM entities WHERE kind='theorem'").fetchone()[0]
