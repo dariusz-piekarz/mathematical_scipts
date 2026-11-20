@@ -5,6 +5,7 @@ Requires playwright+Chromium. Run: python tests/browser_workspace_e2e.py
 from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
 import subprocess
 import tempfile
@@ -21,7 +22,7 @@ def main():
         drafts = Path(temp) / "drafts"
         saved = Path(temp) / "saved"
         env = dict(os.environ, MATLIB_DRAFTS_ROOT=str(drafts), MATLIB_SAVED_ROOT=str(saved))
-        server = subprocess.Popen(["python", "-m", "uvicorn", "backend.api:app", "--host", "127.0.0.1", "--port", "18765"],
+        server = subprocess.Popen([sys.executable, "-m", "uvicorn", "backend.api:app", "--host", "127.0.0.1", "--port", "18765"],
                                   cwd=APP, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
         try:
             for i in range(50):
@@ -34,7 +35,7 @@ def main():
             else:
                 raise RuntimeError("FastAPI failed to start")
             with sync_playwright() as playwright:
-                browser = playwright.chromium.launch(headless=True, executable_path="/usr/bin/chromium", args=["--no-sandbox"])
+                browser = playwright.chromium.launch(headless=True, args=["--no-sandbox"])
                 try:
                     page = browser.new_page()
                     page.goto("http://127.0.0.1:18765/", wait_until="networkidle")
