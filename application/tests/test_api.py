@@ -82,6 +82,27 @@ class APITests(unittest.TestCase):
         self.assertIn("incoming_references",item)
         self.assertEqual(self.client.get("/api/labels/not:existing").status_code,404)
 
+    def test_contextual_label_resolution(self):
+        # Duplicate label across TOP/DG: the source script is authoritative.
+        legacy = self.client.get("/api/labels/ch:algebra-homologiczna").json()
+        self.assertTrue(legacy["ambiguous"])
+        scoped = self.client.get("/api/labels/ch:algebra-homologiczna",
+                                 params={"source_document":"TOP-05"})
+        self.assertEqual(scoped.status_code,200)
+        value = scoped.json()
+        self.assertEqual(value["document_id"],"TOP-03")
+        self.assertEqual(value["occurrence_id"],"TOP-03::ch:algebra-homologiczna")
+        self.assertEqual(value["resolution_status"],"resolved")
+        # Source text retains the user-visible I- prefix, while xr-hyper
+        # points to the original ch:probability in volume I.
+        external = self.client.get("/api/labels/I-ch:probability",
+                                   params={"source_document":"P4-01"})
+        self.assertEqual(external.status_code,200)
+        item = external.json()
+        self.assertEqual(item["document_id"],"P1-02")
+        self.assertEqual(item["canonical_label"],"ch:probability")
+        self.assertEqual(item["resolution_status"],"external_resolved")
+
     def test_search(self):
         data=self.client.get("/api/search",params={"q":"Lefschetza","limit":10}).json()
         self.assertGreater(len(data["items"]),0)
