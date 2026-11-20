@@ -7,11 +7,11 @@
 
 ## AT-05 — homologia przestrzeni
 
-Przejrzano: orientacje i brzeg symplicjalny, tożsamość `∂²=0`, singularne grupy łańcuchów i operator pryzmatyczny, długi ciąg pary, homologię zredukowaną, lematu o małych łańcuchach i wycinanie, sekwencję Mayera–Vietorisa, homologię sfer, porównanie modeli symplicjalnych i singularnych, związek z homologią komórkową i stopniem map, przykłady torusa, przestrzeni rzutowej i homologię lokalną.
+Przejrzano: orientacje i brzeg symplicjalny, tożsamość `∂²=0`, singularne grupy łańcuchów i operator pryzmatyczny, długi ciąg pary, homologię zredukowaną, lemat o małych łańcuchach, twierdzenie o wycinaniu, ciąg Mayera–Vietorisa, homologię sfer, porównanie modeli symplicjalnych i singularnych, związek z homologią komórkową i stopniem map, przykłady torusa, przestrzeni rzutowej i homologię lokalną.
 
 ### Uzupełnienia i kontrola
 
-1. **Łączące odwzorowanie Mayera–Vietorisa bez przeskoku na poziomie klas.** W nowym przykładzie `prz:mv-sfera-dwie-polkul` rozłożono sferę na otwarte zbiory `U=S²\\{S}` i `V=S²\\{N}`. Zgodnie triangulowane półkule dają łańcuchy `a∈C₂(U)`, `b∈C₂(V)` i zorientowany cykl `γ∈C₁(U∩V)` z `∂a=γ=-∂b`. Obliczenie `δ[a+b]=[γ]` wykazuje jawnie, że generator `H₂(S²)` odpowiada generatorowi `H₁(S¹)` (ze znakiem zależnym od orientacji).
+1. **Odwzorowanie łączące w ciągu Mayera–Vietorisa, bez przeskoku na poziomie klas.** W nowym przykładzie `prz:mv-sfera-dwie-polkul` rozłożono sferę na otwarte zbiory `U=S²\\{S}` i `V=S²\\{N}`. Zgodnie triangulowane półkule dają łańcuchy `a∈C₂(U)`, `b∈C₂(V)` i zorientowany cykl `γ∈C₁(U∩V)` z `∂a=γ=-∂b`. Obliczenie `δ[a+b]=[γ]` wykazuje jawnie, że generator `H₂(S²)` odpowiada generatorowi `H₁(S¹)` (ze znakiem zależnym od orientacji).
 2. **Nowy nietrywialny przykład z torsją:** butelka Kleina `K`, `prz:homologia-butelka-kleina`. Objaśniono iloraz kwadratu i słowo dołączające `aba^{-1}b`. Mamy `C₂=Z`, `C₁=Za⊕Zb`, `C₀=Z` oraz `∂₂(1)=2b`, `∂₁=0`; stąd `H₀(K)=Z`, `H₁(K)=Z⊕Z/2Z`, `H₂(K)=0`. Kontrast z torusem: taka sama liczba komórek w każdym wymiarze i charakterystyka Eulera `0`, lecz inne grupy homologii. Po zmianie współczynników na `Z/2Z` powstaje klasa w `H₂(K;Z/2Z)`, niewidoczna nad `Z`.
 3. **Ilustracja geometryczna:** `fig:homologia-butelka-kleina`, samodzielny TikZ; strony kwadratu z dwoma przeciwległymi kierunkami pionowymi i zgodnymi kierunkami poziomymi. Zgodność kierunków i słowa `aba^{-1}b` sprawdzona matematycznie.
 4. **Terminologia:** usunięto formę niewłaściwego w polskim skrypcie terminu z opisu zmiany współczynników, zastępując ją precyzyjną nazwą funktora iloczynu tensorowego.
