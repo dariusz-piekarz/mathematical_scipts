@@ -1,0 +1,56 @@
+name: Mathematical library application checks
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "application/**"
+      - "chapters/pl/**"
+      - ".github/workflows/mathematical-library-app.yml"
+  workflow_dispatch:
+
+jobs:
+  index-and-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: application
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: application/requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt httpx
+      - name: Build SQLite index from canonical chapters
+        shell: bash
+        run: |
+          mkdir -p data
+          set +e
+          python backend/latex_parser.py index \
+            --source ../chapters/pl \
+            --recursive \
+            --db data/biblioteka.db \
+            --aliases config/ALIASY_PO_SCALENIACH.json \
+            --report data/ci_index_report.json
+          result=$?
+          set -e
+          # Exit 2 denotes reported unresolved/ambiguous references.
+          # The report is retained for investigation; unexpected failures fail CI.
+          if [[ "$result" != 0 && "$result" != 2 ]]; then
+            exit "$result"
+          fi
+      - name: Run application regression tests
+        run: python -W default -m unittest discover -s tests -q
+      - name: Upload parser report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: library-index-report
+          path: application/data/ci_index_report.json
+          if-no-files-found: ignore
