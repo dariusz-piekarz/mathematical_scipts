@@ -27,12 +27,12 @@ def main():
             probe.bind(("127.0.0.1", 0))
             port = probe.getsockname()[1]
         base_url = f"http://127.0.0.1:{port}"
-        server = subprocess.Popen([sys.executable, "-m", "uvicorn", "backend.api:app", "--host", "127.0.0.1", "--port", "18767"],
+        server = subprocess.Popen([sys.executable, "-m", "uvicorn", "backend.api:app", "--host", "127.0.0.1", "--port", str(port)],
                                   cwd=APP, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
         try:
             for i in range(100):
                 try:
-                    with urllib.request.urlopen("http://127.0.0.1:18767/api/health", timeout=1) as res:
+                    with urllib.request.urlopen(base_url + "/api/health", timeout=1) as res:
                         if res.status == 200:
                             break
                 except (OSError, TimeoutError):
@@ -43,7 +43,7 @@ def main():
                 browser = playwright.chromium.launch(headless=True, args=["--no-sandbox"])
                 try:
                     page = browser.new_page()
-                    page.goto("http://127.0.0.1:18767/", wait_until="networkidle")
+                    page.goto(base_url + "/", wait_until="networkidle")
                     page.locator("#openFirst").click()
                     page.locator("#addCurrent").click()
                     page.locator('[data-tab="selection"]').click()
