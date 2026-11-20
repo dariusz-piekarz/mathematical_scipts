@@ -22,8 +22,15 @@ rachunek macierzy uchwytów i ciąg dokładny homologii brzegu.
 Zachowano etykiety, liczniki i trzy ilustracje, bez nowych zadań.
 Rachunki, skład tomu IV, odsyłacze i wszystkie strony rozdziału
 sprawdzono; szczegóły zapisano w `PRZEGLAD.md`.
-Na rozszerzone polecenie autora trwa kolejny etap: rozdziały 35 i 36,
+Na rozszerzone polecenie autora przejrzano następnie rozdziały 35 i 36,
 o uchwytach Cassona i klasyfikacji Freedmana, w tej kolejności.
+Uzupełniono topologię sumy wieży, prezentację jej grup podstawowych,
+definicje liczb przecięcia i lokalnej płaskości, rolę obramowania
+oraz kategorię homotopii regularnej. W rozdziale 36 rozpisano krok
+współczynników uniwersalnych we wzorze Wu, objaśniono mikrowiązkę,
+ewaluację klasy Kirby'ego–Siebenmanna i amalgamację grup w chirurgii.
+Zachowano numerację i status głębokich twierdzeń zewnętrznych.
+Kolejnym rozdziałem w kolejności jest 37 (Donaldson).
 
 ### Rozdziały 32 i 33 — audyt dydaktyczny (19 listopada)
 
