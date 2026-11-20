@@ -106,7 +106,20 @@ Pobrano rzeczywiste pliki PDF i sprawdzono wizualnie:
 - DG, strona 197: konstrukcja trzyarkuszowego nakrycia, poprawne przejście od monodromii do rangi grupy podstawowej;
 - DG, strona 198: argument o grupie transformacji i rysunek zorientowanych krawędzi.
 
-Oględziny ujawniły, że na pierwszej wersji rysunku DG-07 etykiety pętli b_1 i a_3 zbliżały się zbyt mocno do podpisów wierzchołków v_1 i v_3. Dlatego **dokonano rzeczywistej poprawki wizualnej**: zwiększono rozmiar łuków pętli i przeniesiono ich etykiety na zewnątrz (commit 13c7d23f00035955b6406d3957de3ae70148d306). Ostatni wariant podlega ponownej weryfikacji kompilacyjnej; nie należy utożsamiać starego sprawdzonego PDF z poprawionym PDF bez ponownego wykonania workflow.
+Oględziny ujawniły, że na pierwszej wersji rysunku DG-07 etykiety pętli b_1 i a_3 zbliżały się zbyt mocno do podpisów wierzchołków v_1 i v_3. Dlatego **dokonano rzeczywistej poprawki wizualnej**: zwiększono rozmiar łuków pętli i przeniesiono ich etykiety na zewnątrz (commit 13c7d23f00035955b6406d3957de3ae70148d306). Ostateczny wariant został **ponownie skompilowany i sprawdzony** w przebiegu
+https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44833443136:
+8/8 testów regresyjnych OK; obydwa zadania GitHub Actions SUCCESS,
+trzy przebiegi LaTeX, **AT 296 stron i DG 270 stron**.
+Kontrola DG nadal dopuszcza wyłącznie cztery wskazane wyżej
+odsyłacze poza częściowym zakresem 01–10.
+Pobrano nowy artefakt DG (nie poprzednią wersję) i sprawdzono
+rzeczywisty PDF, stronę 198: obie pętle są teraz wyraźne,
+etykiety b_1 i a_3 zostały odsunięte od wierzchołków,
+nie nachodzą na napisy ani na krawędzie.
+Dla pewności osobno uruchomiono także minimalną kompilację TikZ
+poprawionego rysunku i obejrzano jej render.
+Pełne testy aplikacji na pierwszym zamkniętym przebiegu etapu
+zakończyły się sukcesem; żaden oryginalny \label nie został zmieniony.
 
 ## 6. Następny etap
 
