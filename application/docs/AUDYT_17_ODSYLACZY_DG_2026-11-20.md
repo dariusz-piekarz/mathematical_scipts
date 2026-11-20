@@ -70,3 +70,7 @@ Zachowano `DG-14:4704 -> thm:CGB-boundary-26`, ponieważ omawia **rzeczywistą f
 **Przewidywana zmiana indeksu** (do potwierdzenia w CI po wszystkich commitach): 17 → 14 nierozwiązanych wystąpień; niezmieniona liczba zaimportowanych rozdziałów `20/36`. Potwierdzoną liczbę należy brać z nowego `reference_provenance_audit.json`, nie z tego oczekiwania. Wiersze w powyższej tabeli odnoszą się do lokalizacji sprzed zmiany; pozostałe wystąpienia odsyłaczy są w tej samej okolicy.
 
 Oryginalne rozdziały `21`–`36` nadal nie są dostępne w `chapters/pl/differential_geometry_and_topology`; do ich audytu i importu potrzebna jest pełna zweryfikowana wersja źródłowa. Nie dopisano fikcyjnych etykiet, uzupełnień ani rozdziałów.
+
+## Retest po poprawkach — potwierdzony
+
+[GitHub Actions #44751913713](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44751913713), commit `7311ffe954203c698242999d865113326eadcfd7`: **success**. Indeks: **14** nierozwiązanych wystąpień (wcześniej 17); `resolved=4397` (wcześniej 4394), `included_resolved=2`, `external_resolved=72`, `ambiguous=0`. Nadal 13 nazw brakujących etykiet, ponieważ `thm:CGB-boundary-26` pozostaje prawidłowo cytowana z `DG-14`. Testy: **112**, `OK (skipped=1)`; Chromium i pozostałe kroki workflow zaliczone. Import DG: nadal `20/36`; brakujące dokładnie `DG-21`–`DG-36`. Raport przed i po zmianach zachowuje dane pochodzenia.
