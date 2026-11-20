@@ -30,7 +30,10 @@ Przejrzano definicje filtracji, stron `E⁰,E¹,E^r`, cykli i brzegów rzędu `r
 - AT-11 ma obecnie **5** figur TikZ, AT-12 **2**; rozdziały nie wprowadzają nowych zależności od zewnętrznych grafik, plików danych ani kodu.
 - Testy regresyjne: `application/tests/test_topology_chapters_11_12.py` sprawdzają wszystkie dwanaście kanonicznych rozdziałów w książce, historyczne etykiety, odsyłacze, bilans środowisk TeX, słownictwo, nieparzystą/parzystą formę przecięcia, filtrację z `d³`, problem rozszerzeń i zgodność deklarowanego zakresu dowodu Serre'a.
 - Workflow: `.github/workflows/algebraic-topology-audit-ch11-12.yml` dwukrotnie kompiluje książkę ograniczoną do AT-01–12. AT-01–10 służą jako kontekst dla definicji i odsyłaczy, **nie** są ponownie oznaczane jako zaaudytowane w tej iteracji.
-- Ostateczny status potwierdzenia kompilacji i oględzin PDF należy zapisać po zakończeniu GitHub Actions i inspekcji wszystkich siedmiu rysunków. Nie wolno deklarować sukcesu przed faktycznym retestem.
+- **Potwierdzone testy aplikacji:** [GitHub Actions #44772572467](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44772572467) — **SUCCESS**, **167 testów Pythona, 1 pominięty**; testy Chromium, indeksu i podglądu odsyłaczy zaliczone.
+- **Potwierdzona kompilacja:** [GitHub Actions #44772572609](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44772572609) — **SUCCESS**, **154 strony A4**, dwa przebiegi `pdflatex`, brak niezdefiniowanych odsyłaczy i brak przepełnionych wierszy. Artefakt `algebraic-topology-audit-ch11-12-pdf` zawiera PDF i logi.
+- **Kontrola wizualna:** obejrzano wszystkie **7** rysunków TikZ AT-11/12 (AT-11: pięć ilustracji na stronach PDF **125, 127, 133, 140, 142**; AT-12: diagramy na stronach **146 i 151**). Nowe schematy parzystości form i problemu rozszerzeń nie mają nachodzących etykiet ani obciętych elementów. Dodatkowo sprawdzono schemat strony drugiej dla fibracji Hopfa.
+- **Wynik końcowy:** oba audytowane rozdziały **zaakceptowane**; zapisano w `application/data/AUDYT_ROZDZIALOW.csv`. Audyt nie obejmuje deklarowanego wcześniej zakresu nieograniczonych filtracji.
 
 ## Zakres otwarty
 
