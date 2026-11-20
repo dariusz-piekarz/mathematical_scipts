@@ -198,3 +198,8 @@ Po zbudowaniu pełnej mapy pochodzenia przeprowadzono ręczną kontrolę konteks
 **Zatwierdzona kolejność długoterminowa:** ukończyć kolejne działy, poczynając od podstaw matematyki i rozwijając gałęzie; **dopiero po skompletowaniu** przeprowadzać scalenia, zachowując sumę treści i wszystkie warianty dowodów. Obecne czynności to odrębna kontrola spójności odsyłaczy w niezależnych skryptach.
 
 **Następny krok:** ręczny przegląd wystąpień 14–26 oraz oddzielna, kontrolowana poprawka wyłącznie zweryfikowanych odsyłaczy wewnątrz skryptów; następnie sprawdzić `xr-hyper`, kompilację oraz regresje. Standard `MATHEMATICAL_WRITING_GRANULARITY_STANDARD.md` nadal obowiązuje.
+
+
+### Iteracja audytu odsyłaczy, partia 02 (14–26) — 20.11.2026
+
+Po odczycie dziennika i partii 01 zbadano kontekst 13 kolejnych wystąpień (`DG-07`, `DG-08`) z raportu 355 rozdziałów. Wszystkie 13 były niejednoznaczne; dla 12 przygotowano propozycję celu w tym samym skrypcie, a dla `DG-08:26` (`thm:homologia-char-zero`) propozycję warunkową, ponieważ twierdzenie dotyczy współczynników `\Q`, `\R`, `\C`, a nie dowolnej zmiany współczynników. Łącznie przejrzano 26/257 wystąpień; 231 pozostaje. **Nie dokonano zmian w źródłach, etykietach ani dowodach; nie wykonywano testów kompilacji.** Raport: `application/docs/AUDYT_PARTIA_02_14_26_ODSYLACZY_2026-11-20.md` i odpowiadający mu plik w Bibliotece. Zachowano nadrzędną zasadę: najpierw kompletowanie niezależnych działów, a dopiero później scalanie od podstaw matematyki. Następny krok: wystąpienia 27–39, pogłębiona kontrola hipotez wskazanych twierdzeń i test `xr-hyper` przed ewentualnymi poprawkami.
