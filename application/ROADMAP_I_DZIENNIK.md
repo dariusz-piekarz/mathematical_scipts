@@ -448,3 +448,23 @@ Zakończono audyt dwóch kolejnych kanonicznych rozdziałów topologii algebraic
 **Status rejestru:** AT-15 oraz AT-16 — `zaakceptowany_z_zastrzezeniem`. Otwarte zadania dowodowe: pełna konstrukcja zewnętrznych potęg/normalizacji/iterowanych diagonalnych zapewniająca `Cartan` i `Adem`; niezależny dowód ekscyzji homotopijnej Blakersa–Masseya; konstrukcyjna stabilność `Sq^i`. Nie uznano warunkowych dowodów za niezależne. Zaaudytowano pary AT-01–AT-16, ale różne statusy zastrzeżeń są zachowane, a nie nadpisane globalnym „wszystko udowodnione”.
 
 **Następna para:** AT-17 — konstrukcja Pontriagina–Thoma i podstawy teorii kobordyzmów; AT-18 — homologia Morse’a. Standard DG-01, po dwa rozdziały, poprawki źródeł, retesty i commity.
+
+
+### Audyt szczegółowy AT — partia 9, rozdziały 17–18 (20.11.2026)
+
+Przeprowadzono kolejną iterację audytu **dokładnie dwóch** rozdziałów topologii algebraicznej, z poprawkami w kanonicznych źródłach:
+`chapters/pl/algebraic_topology/17-konstrukcja-pontriagina-thoma-i-podstawy-teorii-kobordyzmow.tex` oraz
+`chapters/pl/algebraic_topology/18-homologia-morse-a-od-punktow-krytycznych-do-homologii-singular.tex`.
+Nie modyfikowano gałęzi `main`, historycznych deklaracji `\label`, ani wcześniejszych rozdziałów.
+
+**Zgodność z geometrią różniczkową:** zgodnie z wyraźną decyzją użytkownika wykorzystano istniejący rozdział DG03 `03-algebra-tensorowa-i-zewnetrzna.tex` z etykietami `ch:algebra-tensorowa`, `sec:iloczyn-tensorowy`, `thm:tensor-hom`, `thm:tensor-istnienie`. W AT-17 przy `TRP^n` przywołano `Hom(ℓ,ℓ⊥)=ℓ*⊗ℓ⊥`, w AT-18 przy współczynnikach wymiernych wyjaśniono `CM_*(f,g)⊗_Z Q`, korzystając z płaskości lokalizacji `Q`. Dodano także odsyłacze do DG18 o teorii Morse’a (`ch:teoria-morsea`) oraz DG19 o rachunku uchwytów (`ch:rachunek-uchwytow`). Ponieważ tomy kompilują się oddzielnie, nowe odsyłacze międzytomowe są linkami `\href` do kanonicznych źródeł na GitHubie, a nie niezdefiniowanymi `\ref` w samodzielnym PDF. Oryginalne etykiety DG pozostają niezmienione; po scaleniu można je wykorzystać w systemie `xr-hyper`.
+
+**AT-17:** udowodniono w szczegółowym przykładzie, że `X=RP²×RP²` ma niezerowe `w₂(X)²` i `w₄(X)` (obie liczby Stiefela–Whitneya równe `1`) i reprezentuje element rzędu dokładnie `2` w `Ω₄^O`. Porównano `X` z `Y=RP⁴` — obie mają `χ=1`, lecz ich pary liczb `(w₂²,w₄)` to `(1,1)` i `(0,1)`, więc nie są kobordantne. Ich klasy generują podgrupę `(Z/2)²` w `Ω₄^O` (bez nieuzasadnionego roszczenia do pełnej klasyfikacji grupy). Dodano diagram klas charakterystycznych.
+
+**AT-18:** skonstruowano funkcję Morse’a na `RP²` przez iloraz formy kwadratowej z trzema różnymi wartościami własnymi; wyprowadzono jawny wzór przepływu gradientowego, krytyczne punkty indeksów `0,1,2` oraz niestabilne komórki `RP^k\\RP^{k-1}`. Zidentyfikowano mapę przyłączającą drugą komórkę jako dwukrotne nakrycie okręgu, stąd `∂₂=2` i `HM₁(RP²;Z)=Z/2`. Dodano diagram kompleksu i poprawiono polską terminologię, bez niepreferowanego określenia operacji tensorowej.
+
+**Walidacja:** 17/17 standardowych odsyłaczy z AT-17/18 rozwiązuje się w AT-01–18; brak zduplikowanych etykiet w tym zakresie i brak nowych zależności od zewnętrznych zasobów. [GitHub Actions — aplikacja #44782170923](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44782170923) — **SUCCESS**, **198** testów Python (1 pominięty) oraz Chromium. [GitHub Actions — PDF #44782979521](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44782979521) — **SUCCESS**, **203 strony**, dwa przebiegi, brak niezdefiniowanych odsyłaczy i przepełnień. Obejrzano w wynikowym PDF wszystkie cztery diagramy AT-17/18 (strony 187, 192 oraz dwie ilustracje na 203); poprawiono położenie etykiety „Whitney” na diagramie, ponownie skompilowano i sprawdzono. Szczegółowy protokół: `application/docs/AUDYT_TOPOLOGIA_ALGEBRAICZNA_17_18_2026-11-20.md`; nowe testy: `application/tests/test_topology_chapters_17_18.py`; workflow: `.github/workflows/algebraic-topology-audit-ch17-18.yml`.
+
+**Status:** AT-17 — `zaakceptowany`; AT-18 — `zaakceptowany_z_zastrzezeniem`: pełny analityczny dowód zwartości i sklejania trajektorii oraz związek orientacji/incydencji pozostają do szczegółowego audytu AT-20. Nie utożsamiać kompilacji z ich niezależnym dowodem.
+
+**Następna para:** AT-19 — stopień, indeks punktu stałego i twierdzenie Lefschetza; AT-20 — zwartość i sklejanie trajektorii Morse’a, podstawy analityczne. Przy AT-20 ponownie zweryfikować otwarte zastrzeżenie AT-18.
