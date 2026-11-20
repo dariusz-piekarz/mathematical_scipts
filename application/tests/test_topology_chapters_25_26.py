@@ -101,7 +101,7 @@ class TopologyTwentyFiveTwentySixAudit(unittest.TestCase):
         s = self.src["25"]
         self.assertIn(r"\label{prz:monodromy-zm-v14}", s)
         self.assertIn(r"\label{fig:monodromy-z3}", s)
-        self.assertIn(r"\frac{T^m-1}{T-1}", s)
+        self.assertIn(r"\frac{\xi^m-1}{\xi-1}", s)
         for m in range(2, 11):
             # Cyclic action on Q^m; augmentation kernel has dim m-1.
             vectors = [tuple(1 if j == i else -1 if j == m-1 else 0
