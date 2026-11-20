@@ -6,6 +6,7 @@ Never auto-merge or rename historically existing labels.
 from __future__ import annotations
 
 from collections import Counter
+import json
 from pathlib import Path
 import re
 import unittest
@@ -163,6 +164,22 @@ class PairedProofAudit(unittest.TestCase):
         # Over Z, multiplication by 2 is not a unit and H_0 = Z/2.
         self.assertNotEqual(2, 1)
         self.assertEqual({n % 2 for n in range(10)}, {0, 1})
+
+    def test_merge_manifest_protects_all_unique_labels(self):
+        source = ROOT / "application/config/KANDYDACI_SCALEN_AT_DG_ETAP_02.json"
+        data = json.loads(source.read_text(encoding="utf-8"))
+        self.assertEqual(len(data["pairs"]), 2)
+        self.assertFalse(data["policy"]["auto_rename_labels"])
+        self.assertFalse(data["policy"]["auto_identify_equal_theorems_by_label"])
+        for pair in data["pairs"]:
+            left, right = pair["left"].replace("-", ""), pair["right"].replace("-", "")
+            a, b = labels(self.s[left]), labels(self.s[right])
+            self.assertEqual(pair["shared_label_names"], len(a & b))
+            self.assertEqual(set(pair["left_only_labels"]), a - b)
+            self.assertEqual(set(pair["right_only_labels"]), b - a)
+            self.assertIsNone(pair["canonical_source"])
+            self.assertFalse(pair["approved_to_merge"])
+            self.assertTrue(pair["significant_shared_label_differences"])
 
     def test_current_book_inclusions_remain_unchanged(self):
         for vol, path in (
