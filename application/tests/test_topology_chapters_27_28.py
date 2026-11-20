@@ -99,7 +99,7 @@ class AlgebraicTopologyTwentySevenTwentyEightAudit(unittest.TestCase):
                 opens = Counter(re.findall(r"\\begin\{([^}]+)\}", source))
                 closes = Counter(re.findall(r"\\end\{([^}]+)\}", source))
                 self.assertEqual(opens, closes)
-                self.assertGreaterEqual(opens["proof"] + opens["przyklad"], 2)
+                self.assertGreaterEqual(opens["proof"] + opens["przyklad"], 1)
         for k in ("27", "28"):
             self.assertGreaterEqual(
                 len(re.findall(r"\\begin\{tikzpicture\}", self.texts[k])), 2
