@@ -46,11 +46,14 @@ Przejrzano definicję `H_c^k(X;G)=colim_K H^k(X,X\\K;G)`, funktorialność kontr
 - Historycznych `\label` ani `\ref` nie przemianowywano. AT-22 zawiera oryginalny `\ref{ch:snopy-verdier-v12}` do AT-23. Aby zachować ten odsyłacz w kontrolnej kompilacji, workflow ładuje AT-01–22 **oraz AT-23 wyłącznie jako kontekst**. Audyt matematyczny bieżącej pary \emph{nie} obejmuje AT-23.
 - Nowe regresje: `application/tests/test_topology_chapters_21_22.py` — historyczne etykiety, obecność poprzednich i przyszłego kontekstu, kompletność odsyłaczy AT-21/22, bilans środowisk LaTeX i brak zewnętrznych plików, stopień pola wewnętrznego, dodatniość składowych radialnych na obu brzegach pierścienia, rozróżnienie produktu i sumy prostej, właściwa mapa `R→R²`, hipotezy dualności.
 - Workflow: `.github/workflows/algebraic-topology-audit-ch21-22.yml`; dwa przebiegi `pdflatex`, kontrola niezdefiniowanych odsyłaczy, kontrola `Overfull \\\hbox`, artefakt PDF i logów.
-- [GitHub Actions aplikacji #44797203726](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44797203726) — **SUCCESS**, **228** testów Pythona (1 pominięty) i Chromium, 355 rozdziałów indeksu. **Wynik PDF i oględziny figur zostaną dopisane po faktycznym sprawdzeniu.**
+- [GitHub Actions aplikacji #44797203726](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44797203726) — **SUCCESS**, **228** testów Pythona (1 pominięty) i Chromium, 355 rozdziałów indeksu.
+- **Kompilacja LaTeX:** [GitHub Actions #44797286661](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44797286661) — **SUCCESS**, **236 stron**, dwa przebiegi `pdflatex`; w drugim przebiegu nie ma niezdefiniowanych odsyłaczy ani przepełnień `Overfull \hbox`. Artefakt `algebraic-topology-audit-ch21-22-pdf` zawiera PDF i logi.
+- **Wizualna weryfikacja PDF:** obejrzano rozdział AT-21 i wszystkie trzy rysunki pary AT-21/22: nowy diagram pola na pierścieniu na stronie 221, wcześniejszy lokalnie skończony łańcuch na stronie 224 oraz nową sumę rozłącznych prostych na stronie 227. Brak kolizji podpisów, obciętych linii lub błędnych znaków.
+
 
 ## Status audytu
 
-**AT-21:** oczekuje końcowego wyniku kompilacji i przeglądu nowego rysunku.  
-**AT-22:** oczekuje końcowego wyniku kompilacji i przeglądu nowego rysunku; zachować zastrzeżenie dotyczące pełnego niezależnego dowodu globalnych twierdzeń porównawczych.
+**AT-21:** `zaakceptowany` — dodatkowy wzór dla pola wewnętrznego został w pełni udowodniony na podstawie wcześniej ustalonego twierdzenia zewnętrznego; pole na pierścieniu zweryfikowane.  
+**AT-22:** `zaakceptowany_z_zastrzezeniem` — jawne nowe przykłady i wyjaśnienia produktu oraz sumy prostej są poprawne, natomiast pełne niezależne dowody globalnych twierdzeń porównawczych de Rhama i homologii lokalnie skończonej pozostają zależnościami od wcześniejszych narzędzi.
 
 **Następna para:** AT-23 i AT-24, z pełną kontrolą matematyczną, przykładami i grafiką. Załadowanie AT-23 w bieżącym kontekście kompilacji nie zastępuje jego przyszłego audytu.
