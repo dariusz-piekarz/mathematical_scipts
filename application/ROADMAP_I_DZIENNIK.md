@@ -388,3 +388,18 @@ Wykonano dokładnie dwurozdziałowy audyt topologii algebraicznej zgodnie z norm
 Rejestr `application/data/AUDYT_ROZDZIALOW.csv`: **AT-07 i AT-08 zaakceptowane**; łącznie AT-01–08. Dowód twierdzenia de Rhama, zapowiedziany w AT-08, pozostaje merytorycznym zadaniem rozdziału AT-09, nie jest oznaczony jako zweryfikowany w tej iteracji.
 
 **Następna para:** AT-09 oraz AT-10, audyt matematyczno-redakcyjny i kompilacyjny w tym samym standardzie.
+
+
+### Audyt szczegółowy AT — partia 5, rozdziały 09–10 (20.11.2026)
+
+Wykonano kolejny cykl szczegółowego audytu dokładnie dwóch rozdziałów topologii algebraicznej, według standardu DG-01: bezpośrednie poprawki kanonicznych źródeł, rozbudowane dowody, przykłady, kontrprzykłady, rysunki, kontrola LaTeX oraz testy aplikacji. Pracowano wyłącznie na gałęzi `biblioteka-matematyczna-iteracja-6`; nie zmieniano `main` ani historycznych `\label`.
+
+**AT-09:** rozbudowano kryterium `ω=df` przez znikanie wszystkich okresów zamkniętych pętli; dodano przykład zamkniętej, lecz niedokładnej formy kąta i pełny rachunek Stokesa dla pierścienia `1≤r≤2` z `4π-π=3π` i przeciwnymi orientacjami brzegu. Dodano diagram TikZ; w pierwszej wersji poprawiono nachodzące na siebie oznaczenia normalnej wewnętrznej i „dziura”, po czym skompilowano ponownie. Zachowano dotychczasowy obszerny dowód twierdzenia de Rhama.
+
+**AT-10:** dodano samodzielny lemat ciągłości (ko)homologii Čecha dla granic odwrotnych zwartych wielościanów z surjektywnymi wiązaniami. Uzasadniono model kolczyka hawajskiego jako granicę bukietów i różnicę `check H₁=∏Z`, `check H¹=⊕Z`; obliczono kontrprzykład z domkniętego wykresu `sin(1/x)` dla stopnia zero, odróżniono solenoidy 2-adyczny i 3-adyczny, wyprowadzono niedokładność granicy odwrotnej na układzie `0→2ⁿZ→Z→Z/2ⁿZ→0`. Dodano dwa diagramy TikZ, a słowo „mapa” poza kontekstem map współrzędnych zastąpiono „odwzorowanie”.
+
+**Sprawdzone źródła:** w AT-01–10 nie znaleziono duplikatów deklaracji etykiet; wszystkie 68 odsyłaczy z AT-09 i AT-10 mają zadeklarowane cele w tym zestawie. Brak zewnętrznych plików graficznych i kodowych w audytowanej parze.
+
+**Weryfikacja:** [GitHub Actions aplikacja #44769864949](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44769864949) — SUCCESS (ostatnia wersja źródeł, regresje i Chromium; 158 testów Python, 1 pominięty we wcześniejszym kontrolnym przebiegu); [GitHub Actions PDF #44769864938](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44769864938) — SUCCESS, 120 stron, 2 przebiegi `pdflatex`, brak niezdefiniowanych odsyłaczy i przepełnionych wierszy. Sprawdzono wizualnie wszystkie osiem rysunków AT-09–10, w tym poprawiony pierścień na stronie 103. Raport: `application/docs/AUDYT_TOPOLOGIA_ALGEBRAICZNA_09_10_2026-11-20.md`. Rejestr `application/data/AUDYT_ROZDZIALOW.csv`: **AT-09 i AT-10 zaakceptowane; łącznie AT-01–10**.
+
+**Następna para:** AT-11 i AT-12, ten sam zakres kontroli matematyczno-redakcyjnej, rysunkowej i technicznej.
