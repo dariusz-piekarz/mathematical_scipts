@@ -60,3 +60,13 @@ Wynik końcowy wymaga równocześnie:
 4. braku nieocenionych kolizji w nowo dodanych rysunkach.
 
 Nie twierdzimy, że dwurozdziałowy PDF dowodzi bezbłędności składu pełnych 31 rozdziałów. Nie przeprowadzono globalnej deduplikacji ani scalania skryptów.
+
+## 5. Retest i zatwierdzenie — wykonane
+
+**Wyniki dla commitu `c6e622cd72ef54bac5e774169cbb3033ad4ac09a`:**
+
+- [GitHub Actions — aplikacja #44756027445](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44756027445): **SUCCESS**, 121 testów Python, `OK (skipped=1)`; testy Chromium, podglądu etykiet i indeksowania zaliczone.
+- [GitHub Actions — kompilacja LaTeX #44756027439](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44756027439): **SUCCESS**, dwa przebiegi `pdflatex` z preambułą książki; 13 stron A4, brak niezdefiniowanych odsyłaczy, brak `Overfull \\hbox`. PDF i logi są artefaktami tego przebiegu.
+- Przegląd obrazów: obejrzano nowo dodane rysunki w osobnej próbie oraz ich umieszczenie w złożonym rozdziale (strony 3, 4 i 9). Po poprawkach nie stwierdzono nachodzenia etykiet na rysunki.
+- Audyt ma zakres **dwóch rozdziałów**, a nie całego skryptu topologii algebraicznej; kolejne w kolejce są AT-03 i AT-04.
+- Status każdego z AT-01 i AT-02: **`zaakceptowany`**, zapisany w `application/data/AUDYT_ROZDZIALOW.csv`.
