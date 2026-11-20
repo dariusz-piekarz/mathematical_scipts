@@ -73,6 +73,21 @@ class IntegratedIndexTests(unittest.TestCase):
             labels=con.execute("SELECT occurrence_id FROM label_occurrences WHERE name='ch:shared' ORDER BY occurrence_id").fetchall()
             self.assertEqual([x[0] for x in labels],["DG-06::ch:shared","TOP-03::ch:shared"])
 
+    def test_curated_alias_in_actual_index(self):
+        self.add("algebraic_topology","03-chain.tex",r"\chapter{T}\label{thm:actual}")
+        self.add("algebraic_topology","05-homology.tex",r"\chapter{T}\ref{thm:old}")
+        aliases=self.root/"aliases.json"
+        aliases.write_text('{"label_aliases":[{"source_document":"TOP-05",'
+                           '"original_label":"thm:old","target_document":"TOP-03",'
+                           '"target_label":"thm:actual"}]}',encoding="utf-8")
+        report=build_database(self.src,self.db,alias_file=aliases,recursive=True)
+        self.assertEqual(report["alias_resolved_references"],1)
+        with connect(self.db) as con:
+            ref=con.execute("SELECT target_label,target_document,status FROM references_tex").fetchone()
+            self.assertEqual((ref["target_label"],ref["target_document"],ref["status"]),
+                             ("thm:old","TOP-03","alias_resolved"))
+            self.assertEqual(con.execute("SELECT COUNT(*) FROM label_occurrences").fetchone()[0],1)
+
     def test_cross_script_ambiguity_remains_visible(self):
         self.add("algebraic_topology","03-chain.tex",r"\label{ch:shared}")
         self.add("differential_geometry_and_topology","06-chain.tex",r"\label{ch:shared}")
