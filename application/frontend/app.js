@@ -106,7 +106,7 @@ function showRefs(container,latex){
       const b=node("button",{className:"ref-link",title:"Podgląd etykiety: "+lab},lab);
       b.addEventListener("mouseenter",()=>previewLabel(lab,b));
       b.addEventListener("focus",()=>previewLabel(lab,b));
-      b.addEventListener("mouseleave",()=>{const key=state.tooltipKey;setTimeout(()=>{if(key===state.tooltipKey && !$("referenceTip").matches(":hover"))closeTip();},240);});
+      b.addEventListener("mouseleave",()=>{const key=state.tooltipKey;setTimeout(()=>{if(key===state.tooltipKey && state.tooltipAnchor===b && !$("referenceTip").matches(":hover"))closeTip();},240);});
       b.addEventListener("click",()=>openLabel(lab));container.append(b);
     });
     container.append(document.createTextNode("}"));last=regex.lastIndex;
@@ -156,6 +156,7 @@ function positionReferenceTip(anchor){
 }
 async function previewLabel(label,anchor){
   const request=++state.tooltipKey;
+  state.tooltipAnchor=anchor;
   state.tooltipData=null;
   // Do not leave a stale result on screen while the next request is pending.
   const body=$("tipBody");body.replaceChildren();
@@ -193,7 +194,7 @@ async function previewLabel(label,anchor){
     positionReferenceTip(anchor);
   }
 }
-function closeTip(){state.tooltipKey++;state.tooltipData=null;$("referenceTip").classList.add("hidden");}
+function closeTip(){state.tooltipKey++;state.tooltipData=null;state.tooltipAnchor=null;$("referenceTip").classList.add("hidden");}
 async function openLabel(label){
   try{
     const result=state.tooltipData?.name===label?state.tooltipData:await api(`/api/labels/${encodeURIComponent(label)}`);
