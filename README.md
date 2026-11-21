@@ -60,7 +60,7 @@ Poniższa lista pochodzi z `catalog/books.json`. Liczba rozdziałów oznacza poz
 | [Topologia ogólna](books/pl/general_topology.tex) | 2 |
 | [Teoria grafów i węzłów](books/pl/graph_and_knot_theory.tex) | 37 |
 | [Teoria całki](books/pl/integration_theory.tex) | 17 |
-| [Algebra liniowa](books/pl/linear_algebra.tex) | 16 (01–15 stabilne, 16 w audycie) |
+| [Algebra liniowa](books/pl/linear_algebra.tex) | 16 (01–16 stabilne po audytach) |
 | [Logika matematyczna i teoria mnogości](books/pl/logic_and_set_theory.tex) | 12 |
 | [Teoria miary](books/pl/measure_theory.tex) | 31 |
 | [Teoria modeli](books/pl/model_theory.tex) | 19 |
