@@ -144,6 +144,22 @@ jobs:
           name: linear-algebra-current-chapter
           path: books/pl/linear_algebra_aktualny_rozdzial.pdf
           if-no-files-found: error
+      - name: Export revised chapter 14 PDF
+        if: contains(github.event.head_commit.message, 'LA-14')
+        shell: bash
+        run: |
+          python tools/export_linear_algebra_chapter_pdf.py \
+            --input books/pl/linear_algebra.pdf \
+            --output books/pl/linear_algebra_rozdzial_14.pdf \
+            --chapter 14
+          test -s books/pl/linear_algebra_rozdzial_14.pdf
+      - name: Upload revised chapter 14 PDF
+        if: contains(github.event.head_commit.message, 'LA-14')
+        uses: actions/upload-artifact@v4
+        with:
+          name: linear-algebra-chapter-14
+          path: books/pl/linear_algebra_rozdzial_14.pdf
+          if-no-files-found: error
       - name: Store compiled linear algebra
         if: always()
         uses: actions/upload-artifact@v4
