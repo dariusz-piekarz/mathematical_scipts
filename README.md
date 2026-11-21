@@ -182,6 +182,9 @@ audits/                           Raporty iteracyjnych audytów
 
 ## Testy, CI i audyty
 
+**Terminologia:** workflow [Polish mathematical terminology](.github/workflows/mathematical-terminology.yml) kontroluje nazewnictwo w nowych i zmienianych źródłach LaTeX na gałęzi roboczej. Lokalnie: `python tools/check_terminology.py --changed-from HEAD~1`; pełny audyt historycznych źródeł: `python tools/check_terminology.py --all` (może wykryć jeszcze niepoprawione starsze pliki).
+
+
 Z katalogu głównego:
 
 ```bash
