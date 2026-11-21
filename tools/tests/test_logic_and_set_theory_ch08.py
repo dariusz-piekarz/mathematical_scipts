@@ -50,18 +50,18 @@ class TestLogicAndSetTheoryChapter08(unittest.TestCase):
                                                  image(f, s) & image(f, u))
                                 self.assertEqual(image(f, s - u),
                                                  image(f, s) - image(f, u))
-                            exact = all(not (
-                                image(f, s) & image(f, u)
-                                - image(f, s & u)
-                            ) for _ in [0])
-                            fibres = all(
-                                not (image(f, s) & image(f, u))
-                                or True for _ in [0]
+                            fibres = [
+                                frozenset(a for a in range(n) if f[a] == b)
+                                for b in range(m)
+                            ]
+                            fibre_condition = all(
+                                not (fibre & s and fibre & u)
+                                or bool(fibre & s & u)
+                                for fibre in fibres
                             )
                             self.assertEqual(
                                 image(f, s & u) == image(f, s) & image(f, u),
-                                all(b in image(f, s & u)
-                                    for b in image(f, s) & image(f, u)))
+                                fibre_condition)
                         for t in powerset(m):
                             self.assertEqual(
                                 image(f, s) <= t, s <= inverse(f, t))
