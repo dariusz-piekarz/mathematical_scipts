@@ -20,6 +20,8 @@ BEGIN = re.compile(r"\\begin\s*\{([^{}]+)\}")
 END = re.compile(r"\\end\s*\{([^{}]+)\}")
 TITLE = re.compile(r"\\begin\{(twierdzenie|lemat|stwierdzenie|wniosek)\}(?:\[([^\]]+)\])?")
 BAD_TERM = re.compile(r"\btensorowan\w*|\bsekwencj\w*|\bseskwilin\w*|\bdual\b", re.I | re.U)
+MAP_WORD = re.compile(r"(?<!\w)(?:mapa|mapy|mapę|mapą|mapie)(?!\w)", re.I | re.U)
+MAPPING_CHAPTERS = {"02", "12", "13", "14", "24", "27"}
 
 
 def mask_comments(raw: str) -> str:
@@ -89,7 +91,15 @@ def scan(root: Path = ROOT) -> dict:
         for m in REF.finditer(src):
             refs.append((m.group(1),rel,at(src,m.start())))
         for m in BAD_TERM.finditer(src):
-            warnings.append(f"Terminology {m.group(0)} {rel}:{at(src,m.start())}")
+            line = src.splitlines()[at(src,m.start())-1]
+            # Historical LaTeX label IDs are stable identifiers, not prose.
+            if r"\label{" not in line:
+                warnings.append(f"Terminology {m.group(0)} {rel}:{at(src,m.start())}")
+        if chapter in MAPPING_CHAPTERS:
+            for m in MAP_WORD.finditer(src):
+                line = src.splitlines()[at(src,m.start())-1]
+                if not any(x in line for x in (r"\label{",r"\ref{",r"\eqref{")):
+                    errors.append(f"Mapa used for an algebraic mapping {rel}:{at(src,m.start())}: {line.strip()}")
         events = sorted(
             [(m.start(),1,m.group(1)) for m in BEGIN.finditer(src)] +
             [(m.start(),-1,m.group(1)) for m in END.finditer(src)])
