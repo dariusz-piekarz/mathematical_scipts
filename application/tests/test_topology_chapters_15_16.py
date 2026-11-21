@@ -242,6 +242,54 @@ class TopologyChaptersFifteenSixteenAudit(unittest.TestCase):
                     self.assertLessEqual(len(admissible), len(word))
         self.assertEqual(checked, 775)
 
+    def test_freudenthal_stability_thresholds_and_bounded_maps(self):
+        ch = self.text["16"]
+        for expected in (
+            r"$r=j-1$",
+            r"$j>k+1$",
+            r"$n\ge k+2$",
+            r"$d+j<2j+1$",
+            r"$j\ge d+1$",
+            r"$N$-spójnym odwzorowaniem",
+        ):
+            self.assertIn(expected, ch)
+        # Suspension pi_(n+k)(S^n)->pi_(n+k+1)(S^(n+1))
+        # is in the guaranteed isomorphism range precisely
+        # when n+k < 2(n-1)+1, hence n >= k+2.
+        for k in range(20):
+            for n in range(1, 35):
+                self.assertEqual(
+                    n+k < 2*(n-1)+1,
+                    n >= k+2,
+                )
+        # Finite CW source W_j = Sigma^j X, dim X=d.
+        for d in range(21):
+            for j in range(1, 42):
+                self.assertEqual(d+j < 2*j+1, j >= d)
+
+    def test_stable_groups_and_Eilenberg_MacLane_structure_maps(self):
+        ch = self.text["16"]
+        for expected in (
+            r"\varinjlim_{j\ge\max(1,1-k)}",
+            r"$\pi_k(HA)=A$",
+            "odwzorowania sprzężone są słabymi równoważnościami",
+            "argumentem Eckmanna--Hiltona",
+        ):
+            with self.subTest(expected=expected):
+                self.assertIn(expected, ch)
+        # For pi_k^s(X), k+j >= 1 at the first chosen index.
+        for k in range(-40, 41):
+            j = max(1, 1-k)
+            self.assertGreaterEqual(k+j, 1)
+            # All subsequent levels are also positive-degree groups.
+            self.assertTrue(all(k+i>=1 for i in range(j, j+8)))
+        # K(A,n) has one nonzero positive-degree pi group at n.
+        for k in range(-9, 10):
+            groups_nonzero_at_levels = [
+                n for n in range(max(1, 1-k), 30) if n+k == n
+            ]
+            self.assertEqual(bool(groups_nonzero_at_levels), k == 0)
+
     def test_deep_dependencies_are_explicit_not_overclaimed(self):
         src = self.text["15"] + self.text["16"]
         self.assertIn("nie pełny niezależny dowód", src)
