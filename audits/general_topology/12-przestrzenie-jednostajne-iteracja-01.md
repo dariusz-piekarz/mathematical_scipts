@@ -15,8 +15,8 @@ Data: 2026-11-22. Gałąź: `biblioteka-matematyczna-iteracja-6`.
 | Ciągłość jednostajna i Heine--Cantor | sprawdzono |
 | Sieci, ciągi i filtry Cauchy'ego | sprawdzono |
 | Skończone modele struktur od relacji równoważności | **PASS: 24 modele, rozmiary 0--4** (nie dowodzi przypadków nieskończonych) |
-| Środowiska LaTeX i własne etykiety | **PASS: 32 etykiety przed dodaniem rysunku, bez duplikatów** |
-| Zależności między rozdziałami | **PASS: 450 etykiet, 119 odsyłaczy przed dodaniem rysunku, brak brakujących celów** |
+| Środowiska LaTeX i własne etykiety | **PASS: 33 etykiety po dodaniu rysunku, bez duplikatów** |
+| Zależności między rozdziałami | **PASS: 451 etykiet, 119 odsyłaczy po dodaniu rysunku, brak brakujących celów** |
 | Terminologia: uzwarcenie i zbieżność jednostajna na zbiorach zwartych | **PASS** w rozdziałach 01--12 |
 | Samodzielny punkt wejścia i katalog | utworzone i zaktualizowane |
 | Rysunek pasma wokół przekątnej | dodany; oględziny gotowego PDF **wymagane** |
