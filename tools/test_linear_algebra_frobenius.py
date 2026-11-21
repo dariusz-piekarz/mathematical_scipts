@@ -110,7 +110,7 @@ def evaluate(coeffs, a, n, p):
 def minimal_polynomial(a, n, p):
     for degree in range(n+1):
         for coeffs in product(range(p), repeat=degree):
-            candidate = list(coeffs)+(1,)
+            candidate = list(coeffs)+[1]
             if evaluate(candidate, a, n, p) == (0,)*(n*n):
                 return list(candidate)
     raise AssertionError("Cayley-Hamilton failed")
