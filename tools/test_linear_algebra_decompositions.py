@@ -145,7 +145,7 @@ def check_cholesky():
 
 
 def gs_qr(a):
-    """Thin QR for three rows and two independent columns."""
+    """Thin QR for m>=n, including linearly dependent columns."""
     m=len(a);n=len(a[0])
     basis=[]
     for j in range(n):
@@ -155,8 +155,22 @@ def gs_qr(a):
             vec=[x-c*y for x,y in zip(vec,q)]
         length=sqrt(norm2(vec))
         if length<EPS:
-            return None
-        basis.append(tuple(x/length for x in vec))
+            # Complete the current orthonormal system by an arbitrary
+            # direction. This is necessary for rank-deficient QR.
+            chosen=None
+            for k in range(m):
+                candidate=[complex(i==k) for i in range(m)]
+                for q in basis:
+                    c=vecdot(q,candidate)
+                    candidate=[x-c*y for x,y in zip(candidate,q)]
+                candidate_norm=sqrt(norm2(candidate))
+                if candidate_norm>EPS:
+                    chosen=tuple(x/candidate_norm for x in candidate)
+                    break
+            assert chosen is not None, "m>=n guarantees a complement"
+            basis.append(chosen)
+        else:
+            basis.append(tuple(x/length for x in vec))
     q=colmatrix(basis)
     r=mm(star(q),a)
     return q,r
@@ -169,17 +183,21 @@ def check_qr():
     for m,n in ((2,2),(3,2),(4,3)):
         for _ in range(180):
             a=[[rng.choice(choices) for j in range(n)] for i in range(m)]
-            qr=gs_qr(a)
-            if qr is None:
-                continue
-            q,r=qr
+            q,r=gs_qr(a)
             closem(mm(q,r),a)
             closem(mm(star(q),q),ident(n))
             for i in range(n):
-                assert near(r[i][i].imag,0) and r[i][i].real>0
+                assert near(r[i][i].imag,0) and r[i][i].real>=-EPS
                 for j in range(i):
                     assert near(r[i][j],0)
             count+=1
+    # Explicit complex rank-one matrix: col_2=i col_1.
+    a=[[1,1j],[1j,-1],[0,0]]
+    q,r=gs_qr(a)
+    closem(mm(q,r),a)
+    closem(mm(star(q),q),ident(2))
+    assert near(r[1][1],0)
+    count+=1
     return count
 
 
@@ -263,7 +281,7 @@ def main():
     print("Linear-algebra matrix-decomposition regressions OK:",
           a,"PLU incl singular;",
           b,"Hermitian Cholesky;",
-          c,"full-rank QR;",
+          c,"QR including rank-deficient;",
           d,"SVD/pseudoinverse/polar and Eckart-Young.")
 
 
