@@ -1,0 +1,567 @@
+% AA-20 | Algebra abstrakcyjna | Iteracja X
+\chapter{Rozszerzenia ciał i ciała rozkładu wielomianów}
+\label{aa:ch:field-extensions}
+
+\section{Rozszerzenie ciała jako przestrzeń wektorowa}
+Gdy rozważamy rozwiązania równań wielomianowych, nawet nad
+ciałem może zabraknąć pierwiastków. Przykładowo
+$X^2-2$ nie ma pierwiastka w $\mathbb Q$, choć ma go
+w większym ciele. Chcemy systematycznie konstruować
+większe ciała i mierzyć, ile nowych elementów trzeba dodać.
+
+\begin{definicja}[Rozszerzenie ciał i jego stopień]
+\label{aa:def:field-extension-degree}
+Niech $K,L$ będą ciałami, a $K\subseteq L$ podciałem.
+Mówimy, że $L/K$ jest \emph{rozszerzeniem ciał}.
+Mnożenie w $L$ ograniczone do $K\times L$ nadaje $L$
+strukturę przestrzeni wektorowej nad $K$.
+Jej wymiar oznaczamy $[L:K]$ i nazywamy
+\emph{stopniem rozszerzenia}. Rozszerzenie jest
+\emph{skończone}, jeśli $[L:K]<\infty$.
+W przypadku zanurzenia $K\hookrightarrow L$ utożsamiamy
+$K$ z jego obrazem, aby móc stosować ten sam zapis.
+\end{definicja}
+
+\begin{przyklad}[Stopień rozszerzenia $\mathbb C/\mathbb R$]
+\label{aa:prz:complex-degree}
+Z konstrukcji $\mathbb C\cong\mathbb R^2$ w
+Rozdziale~\ref{aa:ch:fields-fractions} wynika, że
+każdy $z\in\mathbb C$ ma jednoznacznie postać
+$z=a+bi$ z $a,b\in\mathbb R$. Wektory $1,i$
+tworzą więc bazę $\mathbb C$ nad $\mathbb R$, a zatem
+$[\mathbb C:\mathbb R]=2$. Ten fakt nie wymaga
+pełnej teorii funkcji holomorficznych ani konstruowania
+liczb rzeczywistych na nowo.
+\end{przyklad}
+
+\begin{twierdzenie}[Twierdzenie o wieży rozszerzeń]
+\label{aa:tw:field-tower}
+Niech $K\subseteq E\subseteq L$ będą ciałami.
+Jeśli $[E:K]=r<\infty$ i $[L:E]=s<\infty$,
+to $[L:K]=rs$. Ponadto, jeśli $[L:K]<\infty$,
+to oba stopnie po prawej stronie są skończone.
+\end{twierdzenie}
+\begin{proof}
+Wybierzmy bazę $u_1,\dots,u_r$ przestrzeni $E$ nad $K$
+oraz bazę $v_1,\dots,v_s$ przestrzeni $L$ nad $E$.
+Pokażemy, że $rs$ iloczynów $u_iv_j$ tworzy bazę $L$ nad $K$.
+
+\emph{Rozpinanie.} Dla $x\in L$ istnieją $b_j\in E$ takie,
+że $x=\sum_j b_jv_j$. Dla każdego $j$ istnieją $a_{ij}\in K$
+z $b_j=\sum_i a_{ij}u_i$. Wobec tego
+$x=\sum_{j=1}^s\sum_{i=1}^r a_{ij}(u_iv_j)$,
+czyli wskazane iloczyny rozpinają $L$.
+
+\emph{Niezależność.} Jeśli
+$\sum_{j=1}^s\sum_{i=1}^r a_{ij}u_iv_j=0$,
+to traktując $\sum_i a_{ij}u_i$ jako współczynnik w $E$
+i korzystając z niezależności $v_j$ nad $E$ dostajemy
+$\sum_i a_{ij}u_i=0$ dla każdego $j$.
+Niezależność $u_i$ nad $K$ daje wszystkie $a_{ij}=0$.
+Stąd $[L:K]=rs$.
+
+Jeśli natomiast $[L:K]=n<\infty$, to $E$ jest
+$K$-podprzestrzenią $L$, a zatem $[E:K]\le n$.
+Każda rodzina liniowo niezależna elementów $L$ nad $E$
+jest też niezależna nad $K$: każda relacja o współczynnikach
+w $K$ byłaby również relacją nad $E$. Stąd $[L:E]\le n$.
+Możemy więc zastosować udowodnioną pierwszą część.
+\end{proof}
+
+\begin{wniosek}[Podzielność stopni]
+\label{aa:wn:tower-divisibility}
+Jeśli $L/K$ jest rozszerzeniem skończonym i
+$K\subseteq E\subseteq L$, to $[E:K]$ dzieli $[L:K]$.
+\end{wniosek}
+\begin{proof}
+Równość $[L:K]=[L:E][E:K]$ przedstawia $[L:K]$
+jako iloczyn dwóch dodatnich liczb całkowitych.
+\end{proof}
+
+\section{Elementy algebraiczne i wielomiany minimalne}
+\begin{definicja}[Algebraiczność i przestępność]
+\label{aa:def:algebraic-element}
+Niech $L/K$ będzie rozszerzeniem ciał, a $\alpha\in L$.
+Element $\alpha$ jest \emph{algebraiczny nad $K$}, jeśli
+istnieje niezerowy wielomian $f\in K[X]$ z $f(\alpha)=0$.
+W przeciwnym przypadku jest \emph{przestępny nad $K$}.
+Przez $K[\alpha]$ oznaczamy najmniejszy podpierścień $L$
+zawierający $K$ i $\alpha$, a przez $K(\alpha)$
+najmniejsze podciało $L$ zawierające te elementy.
+\end{definicja}
+
+\begin{lemat}[Wielomian minimalny]
+\label{aa:lem:minimal-polynomial}
+Niech $L/K$ będzie rozszerzeniem ciał i niech
+$\alpha\in L$ będzie algebraiczny nad $K$. Wówczas istnieje
+jedyny wielomian unormowany $m_{\alpha,K}\in K[X]$
+o najmniejszym dodatnim stopniu spełniający
+$m_{\alpha,K}(\alpha)=0$. Wielomian ten jest
+nierozkładalny i dzieli każdy $f\in K[X]$
+taki, że $f(\alpha)=0$.
+\end{lemat}
+\begin{proof}
+Rozważmy ideał
+$I_\alpha=\{f\in K[X]:f(\alpha)=0\}$.
+Jest to jądro homomorfizmu podstawiania
+$\operatorname{ev}_\alpha:K[X]\to L$.
+Ponieważ $\alpha$ jest algebraiczny, ideał zawiera
+niezerowy wielomian. Nie zawiera jednak niezerowej
+stałej: dla $a\in K$ mamy $a(\alpha)=a$, a $K$ jest
+podciałem $L$. Wybierzmy w nim wielomian $m$
+o najmniejszym możliwym stopniu, a następnie podzielmy
+przez jego niezerowy współczynnik wiodący, aby był unormowany.
+
+Dla dowolnego $f\in I_\alpha$ dzielenie z resztą
+w $K[X]$ daje $f=qm+r$, gdzie $r=0$ albo
+$\deg r<\deg m$. Po podstawieniu $\alpha$
+otrzymujemy $r(\alpha)=f(\alpha)-q(\alpha)m(\alpha)=0$.
+Minimalność stopnia $m$ wymusza $r=0$, więc $m\mid f$.
+Jeżeli $m=uv$ dla wielomianów dodatniego stopnia,
+to $0=m(\alpha)=u(\alpha)v(\alpha)$.
+Ponieważ $L$ jest ciałem, jeden z tych dwóch czynników
+musi być zerowy. Byłby to wielomian mniejszego stopnia
+niż $m$, sprzecznie z jego wyborem. Wielomian $m$ jest
+zatem nierozkładalny.
+
+Jeżeli $m'$ jest innym unormowanym wielomianem o żądanych
+własnościach, to $m\mid m'$ i $m'\mid m$.
+Ich stopnie są równe, a unormowanie wymusza $m=m'$.
+\end{proof}
+
+\begin{twierdzenie}[Proste rozszerzenie algebraiczne]
+\label{aa:tw:simple-algebraic-extension}
+Niech $L/K$ będzie rozszerzeniem ciał i
+$\alpha\in L$ elementem algebraicznym nad $K$.
+Jeśli $d=\deg m_{\alpha,K}$, to
+\[
+K[\alpha]=K(\alpha)\cong K[X]/(m_{\alpha,K}),
+\qquad [K(\alpha):K]=d.
+\]
+Bazę $K(\alpha)$ nad $K$ stanowi rodzina
+$1,\alpha,\ldots,\alpha^{d-1}$.
+\end{twierdzenie}
+\begin{proof}
+Rozważmy homomorfizm
+$\operatorname{ev}_\alpha:K[X]\to L$ z
+$f\mapsto f(\alpha)$. Jego obrazem jest $K[\alpha]$,
+a jądro jest równe $(m_{\alpha,K})$ na mocy
+Lematu~\ref{aa:lem:minimal-polynomial}.
+Pierwsze twierdzenie o izomorfizmie pierścieni daje
+$K[X]/(m_{\alpha,K})\cong K[\alpha]$.
+
+Dlaczego iloraz jest ciałem? Jeśli $[f]\ne0$, to
+$m_{\alpha,K}\nmid f$. Nierozkładalność $m_{\alpha,K}$
+i algorytm Euklidesa w $K[X]$ dają
+$\gcd(f,m_{\alpha,K})=1$. Z tożsamości Bézouta
+istnieją $u,v\in K[X]$ z
+$uf+vm_{\alpha,K}=1$. W ilorazie mamy
+$[u][f]=[1]$, więc każda niezerowa klasa ma odwrotność.
+Stąd obraz $K[\alpha]$ jest już ciałem, a więc
+$K[\alpha]=K(\alpha)$.
+
+Dzielenie wielomianu przez $m_{\alpha,K}$ daje
+jedyny reprezentant stopnia mniejszego niż $d$.
+Dlatego każdy element ma postać
+$\sum_{j=0}^{d-1}a_j\alpha^j$ z $a_j\in K$.
+Jeśli taka suma jest zerowa, to odpowiedni wielomian
+leży w $(m_{\alpha,K})$ i ma stopień mniejszy niż $d$;
+musi więc być zerowy. Współczynniki są zerowe,
+a wskazana rodzina jest bazą.
+\end{proof}
+
+\begin{przyklad}[Rozszerzenie przez pierwiastek z dwóch]
+\label{aa:prz:sqrt-two-extension}
+Wielomian $X^2-2$ jest nierozkładalny nad
+$\mathbb Q$: gdyby miał wymierny pierwiastek $a/b$
+w postaci nieskracalnej, to z $a^2=2b^2$ wynikałoby,
+że $a$ jest parzyste, a potem także $b$, sprzecznie
+z nieskracalnością. Dlatego
+$[\mathbb Q(\sqrt2):\mathbb Q]=2$, a każdy element
+ma jednoznacznie postać $a+b\sqrt2$ z $a,b\in\mathbb Q$.
+Dla $a^2-2b^2\ne0$ odwrotność otrzymujemy przez
+pomnożenie przez sprzężenie:
+\[
+(a+b\sqrt2)^{-1}=\frac{a-b\sqrt2}{a^2-2b^2}.
+\]
+Mianownik nie może być zerem dla $a+b\sqrt2\ne0$,
+bo równość $a^2=2b^2$ przy $b\ne0$ dawałaby
+wymierny pierwiastek z dwóch.
+\end{przyklad}
+
+\begin{przyklad}[Rozszerzenie o dwa pierwiastki kwadratowe]
+\label{aa:prz:biquadratic-extension}
+Niech $E=\mathbb Q(\sqrt2,\sqrt3)\subseteq\mathbb R$.
+Wiemy, że $[\mathbb Q(\sqrt2):\mathbb Q]=2$.
+Sprawdźmy, że $\sqrt3\notin\mathbb Q(\sqrt2)$.
+Gdyby $\sqrt3=a+b\sqrt2$ z $a,b\in\mathbb Q$,
+to po podniesieniu do kwadratu mielibyśmy
+$3=a^2+2b^2+2ab\sqrt2$. Niewymierność $\sqrt2$
+wymusza $ab=0$. Jeśli $b=0$, mielibyśmy
+$3=a^2$ z $a\in\mathbb Q$, co jest niemożliwe:
+wykładnik liczby pierwszej $3$ w rozkładzie kwadratu
+liczby wymiernej jest parzysty, a w $3$ wynosi $1$.
+Jeśli $a=0$, mielibyśmy $3=2b^2$, czyli
+$b^2=3/2$, również niemożliwe, ponieważ
+wykładnik liczby pierwszej $2$ w rozkładzie
+kwadratu liczby wymiernej jest parzysty,
+a w $3/2$ jest nieparzysty.
+Wobec tego $X^2-3$ jest nierozkładalny nad
+$\mathbb Q(\sqrt2)$ i
+$[E:\mathbb Q(\sqrt2)]=2$.
+Twierdzenie o wieży daje $[E:\mathbb Q]=4$,
+a bazą jest $1,\sqrt2,\sqrt3,\sqrt6$.
+\end{przyklad}
+
+\begin{stwierdzenie}[Rozszerzenie skończone jest algebraiczne]
+\label{aa:st:finite-implies-algebraic}
+Niech $L/K$ będzie rozszerzeniem ciał stopnia
+$[L:K]=d<\infty$. Wówczas każdy element $\alpha\in L$
+jest algebraiczny nad $K$, a
+$\deg m_{\alpha,K}\le d$.
+\end{stwierdzenie}
+\begin{proof}
+Rodzina $1,\alpha,\ldots,\alpha^d$ ma $d+1$
+elementów w przestrzeni wektorowej wymiaru $d$,
+więc jest liniowo zależna. Istnieją
+$a_0,\dots,a_d\in K$, nie wszystkie zerowe,
+takie, że $\sum_{j=0}^d a_j\alpha^j=0$.
+Oznacza to, że $\alpha$ zeruje niezerowy wielomian
+stopnia co najwyżej $d$. Wielomian minimalny dzieli
+ten wielomian, więc jego stopień nie przekracza $d$.
+\end{proof}
+
+\begin{wniosek}[Dołączenie skończenie wielu elementów algebraicznych]
+\label{aa:wn:finite-algebraic-generators}
+Niech $L/K$ będzie rozszerzeniem ciał, $r\ge1$,
+a $\alpha_1,\ldots,\alpha_r\in L$ będą algebraiczne nad $K$.
+Wówczas
+$K(\alpha_1,\ldots,\alpha_r)/K$ jest rozszerzeniem
+skończonym. Nie oznacza to, że każde rozszerzenie
+algebraiczne ma skończony stopień.
+\end{wniosek}
+\begin{proof}
+Niech $K_0=K$, $K_j=K(\alpha_1,\ldots,\alpha_j)$.
+Wielomian o współczynnikach w $K$ zerujący
+$\alpha_j$ jest także wielomianem nad $K_{j-1}$.
+Zatem $\alpha_j$ jest algebraiczny nad $K_{j-1}$
+i $[K_j:K_{j-1}]$ jest skończony.
+Stosując kolejno twierdzenie o wieży dostajemy
+$[K_r:K]=\prod_{j=1}^r[K_j:K_{j-1}]<\infty$.
+Natomiast rozszerzenie
+$E=\mathbb Q(2^{1/n}:n\ge1)\subseteq\mathbb R$
+jest algebraiczne, lecz nieskończonego stopnia.
+Istotnie, każdy jego element należy do ciała
+$\mathbb Q(2^{1/n_1},\ldots,2^{1/n_k})$ dla
+pewnej skończonej rodziny indeksów i jest algebraiczny
+na mocy właśnie udowodnionego faktu. Z drugiej strony
+dla każdego $n\ge1$ wielomian $X^n-2$ jest
+nierozkładalny nad $\mathbb Q$ na mocy
+Twierdzenia~\ref{aa:tw:eisenstein} (kryterium Eisensteina)
+dla $p=2$: wszystkie współczynniki poza wiodącym
+są podzielne przez $2$, a wyraz wolny $-2$
+nie jest podzielny przez $4$. Stąd
+$[\mathbb Q(2^{1/n}):\mathbb Q]=n$.
+Gdyby $[E:\mathbb Q]$ było skończone, twierdzenie
+o wieży ograniczałoby wszystkie te stopnie przez
+$[E:\mathbb Q]$, co jest niemożliwe dla dowolnie
+dużych $n$.
+\end{proof}
+
+\begin{twierdzenie}[Konstrukcja przez dołączenie formalnego pierwiastka]
+\label{aa:tw:adjoin-root-abstract}
+Niech $K$ będzie ciałem, a $f\in K[X]$ wielomianem
+nierozkładalnym dodatniego stopnia. Wówczas
+$E=K[X]/(f)$ jest ciałem zawierającym kanoniczny obraz
+$K$, a $\alpha=[X]\in E$ spełnia $f(\alpha)=0$.
+Ponadto $[E:K]=\deg f$. Dla każdego rozszerzenia
+$L/K$ i pierwiastka $\beta\in L$ wielomianu $f$
+istnieje dokładnie jedno $K$-zanurzenie
+$E\to L$ wysyłające $\alpha$ na $\beta$.
+Przez $K$-zanurzenie rozumiemy różnowartościowy
+homomorfizm ciał, który na $K$ jest tożsamością.
+\end{twierdzenie}
+\begin{proof}
+Nierozkładalność $f$ i algorytm Euklidesa w $K[X]$
+pokazują, tak jak w dowodzie
+Twierdzenia~\ref{aa:tw:simple-algebraic-extension},
+że każdy niezerowy element ilorazu $K[X]/(f)$
+ma odwrotność. Włączenie wielomianów stałych
+$K\hookrightarrow K[X]/(f)$ jest różnowartościowe:
+żaden niezerowy wielomian stały nie jest wielokrotnością
+wielomianu dodatniego stopnia $f$.
+Z definicji ilorazu $[f(X)]=0$, więc $f([X])=0$.
+Jednoznaczność reszt stopnia mniejszego niż $\deg f$
+daje bazę $1,\alpha,\dots,\alpha^{\deg f-1}$.
+
+Jeżeli $f(\beta)=0$, to homomorfizm podstawiania
+$\operatorname{ev}_\beta:K[X]\to L$ zeruje $(f)$.
+Zatem przechodzi na homomorfizm
+$\overline{\operatorname{ev}}_\beta:K[X]/(f)\to L$,
+który wysyła $[X]$ na $\beta$ i pozostawia
+współczynniki z $K$ bez zmian. Jest różnowartościowy,
+ponieważ jego dziedzina jest ciałem, więc jądro jest
+ideałem równym $0$ albo całemu ciału; drugi przypadek
+wyklucza warunek $\overline{\operatorname{ev}}_\beta(1)=1$.
+Każdy homomorfizm
+o wskazanych wartościach musi wysyłać klasę
+$\sum_j a_j[X]^j$ na $\sum_j a_j\beta^j$,
+co daje jednoznaczność.
+\end{proof}
+
+\begin{przyklad}[Ciało czteroelementowe]
+\label{aa:prz:four-element-field}
+W $\mathbb F_2[X]$ wielomian $f=X^2+X+1$ nie ma
+pierwiastków, bo $f(0)=f(1)=1$; dla stopnia dwa
+oznacza to nierozkładalność. Definiujemy
+$\mathbb F_4=\mathbb F_2[X]/(f)$ i
+$\alpha=[X]$. Wtedy $\alpha^2=\alpha+1$,
+ponieważ w charakterystyce dwa mamy $-1=1$.
+Ciało zawiera dokładnie cztery elementy
+$0,1,\alpha,1+\alpha$, a mnożenie wyznacza
+relacja $\alpha^2=\alpha+1$.
+W szczególności
+$\alpha(\alpha+1)=\alpha^2+\alpha=1$,
+więc $\alpha^{-1}=\alpha+1$. Co więcej,
+$\alpha^3=\alpha(\alpha+1)=1$, zatem $\alpha$
+ma rząd trzy w grupie multiplikatywnej, ponieważ
+$\alpha\ne1$ i $3$ jest liczbą pierwszą.
+\end{przyklad}
+
+\section{Pierwiastki i ciała rozkładu}
+\begin{definicja}[Ciało rozkładu]
+\label{aa:def:splitting-field}
+Niech $K$ będzie ciałem, a $f\in K[X]$ niezerowym wielomianem
+dodatniego stopnia. Rozszerzenie $L/K$ nazywamy
+\emph{ciałem rozkładu wielomianu $f$}, jeśli
+$f$ rozkłada się w $L[X]$ na czynniki liniowe
+(z uwzględnieniem jego niezerowego współczynnika wiodącego)
+oraz $L$ jest generowane nad $K$ przez wszystkie
+pierwiastki $f$ w $L$.
+\end{definicja}
+
+\begin{twierdzenie}[Istnienie ciała rozkładu]
+\label{aa:tw:splitting-existence}
+Dla każdego ciała $K$ i każdego niezerowego
+$f\in K[X]$ dodatniego stopnia istnieje skończone
+rozszerzenie $L/K$ będące ciałem rozkładu $f$.
+\end{twierdzenie}
+\begin{proof}
+Przeprowadzimy indukcję po stopniu wielomianu.
+Jeśli $\deg f=1$, ma on pierwiastek w $K$,
+a jako ciało rozkładu możemy wziąć $L=K$.
+Załóżmy, że twierdzenie jest prawdziwe dla
+wszystkich wielomianów o stopniu mniejszym niż
+$n$ i niech $\deg f=n\ge2$.
+Wybierzmy nierozkładalny czynnik $g$ wielomianu $f$
+w $K[X]$; taki czynnik istnieje, gdyż przy każdym
+nietrywialnym rozkładzie stopnie czynników są mniejsze,
+więc kolejne rozkładanie musi się zakończyć. Następnie
+zbudujmy ciało
+$E=K[X]/(g)$ z pierwiastkiem $\alpha=[X]$.
+Twierdzenie~\ref{aa:tw:adjoin-root-abstract}
+pokazuje, że $[E:K]=\deg g<\infty$.
+W $E[X]$ możemy podzielić $f$ przez $X-\alpha$,
+ponieważ $f(\alpha)=0$. Otrzymujemy
+$f=(X-\alpha)h$ z $h\in E[X]$ i
+$\deg h=n-1$.
+Z założenia indukcyjnego istnieje skończone
+rozszerzenie $L/E$, w którym $h$ rozkłada się
+na czynniki liniowe i które jest generowane przez
+pierwiastki $h$. Wtedy w $L$ rozkłada się również
+$f$, a $L$ jest generowane nad $K$ przez
+$\alpha$ oraz pierwiastki $h$, czyli przez
+pierwiastki $f$. Na mocy twierdzenia o wieży
+rozszerzenie $L/K$ jest skończone.
+\end{proof}
+
+\begin{przyklad}[Ciało rozkładu wielomianu sześciennego]
+\label{aa:prz:cubic-splitting}
+Wielomian $f=X^3-2$ jest nierozkładalny nad
+$\mathbb Q$ na mocy Twierdzenia~\ref{aa:tw:eisenstein}
+(kryterium Eisensteina) dla $p=2$.
+Niech $\alpha=\sqrt[3]2\in\mathbb R$ i
+$\omega=(-1+\sqrt{-3})/2\in\mathbb C$.
+Bezpośredni rachunek daje $\omega^2+\omega+1=0$,
+a $\omega\ne1$; z tożsamości
+$(X-1)(X^2+X+1)=X^3-1$ wynika $\omega^3=1$.
+Pierwiastkami $f$ są
+$\alpha,\alpha\omega,\alpha\omega^2$.
+Ciało rozkładu ma postać
+$L=\mathbb Q(\alpha,\omega)$.
+Mamy $[\mathbb Q(\alpha):\mathbb Q]=3$.
+Wielomian $X^2+X+1$ nie ma pierwiastków rzeczywistych:
+gdyby $x\in\mathbb R$ był jego pierwiastkiem, to
+$(2x+1)^2=-3$, co jest niemożliwe. Ponieważ
+$\mathbb Q(\alpha)\subseteq\mathbb R$, wielomian ten
+nie ma pierwiastka również w $\mathbb Q(\alpha)$;
+ma stopień dwa, więc jest nad nim nierozkładalny.
+Stąd $[L:\mathbb Q(\alpha)]=2$, a twierdzenie
+o wieży daje $[L:\mathbb Q]=6$.
+Nie wystarcza samo dołączenie rzeczywistego
+pierwiastka: $\mathbb Q(\alpha)$ nie zawiera
+pozostałych dwóch pierwiastków.
+\end{przyklad}
+
+\section{Rozdzielczość wielomianów}
+\begin{definicja}[Pierwiastek wielokrotny i rozdzielczość]
+\label{aa:def:separable-polynomial}
+Niech $K$ będzie ciałem i $f\in K[X]$ niezerowym
+wielomianem dodatniego stopnia. Niech $r\ge1$ będzie
+liczbą całkowitą. Pierwiastek $\alpha$
+w pewnym rozszerzeniu $L/K$ ma \emph{krotność co najmniej
+$r$}, jeśli $(X-\alpha)^r\mid f$ w $L[X]$.
+Wielomian $f$ jest \emph{rozdzielczy}, jeśli ma
+$\deg f$ różnych pierwiastków w swoim ciele rozkładu.
+\end{definicja}
+
+\begin{twierdzenie}[Kryterium rozdzielczości przez pochodną]
+\label{aa:tw:separability-derivative}
+Niech $K$ będzie ciałem, a $f=\sum_{j=0}^n a_jX^j\in K[X]$
+niezerowym wielomianem stopnia $n\ge1$.
+Wtedy $f$ jest rozdzielczy dokładnie wtedy, gdy
+$\gcd(f,f')=1$ w $K[X]$, gdzie
+$f'=\sum_{j=1}^n ja_jX^{j-1}$ jest formalną
+pochodną wielomianu $f$.
+\end{twierdzenie}
+\begin{proof}
+Dla $\alpha$ w rozszerzeniu $L/K$ zapiszmy
+$f=(X-\alpha)q$. Reguła różniczkowania iloczynu
+w pierścieniu wielomianów daje
+$f'=q+(X-\alpha)q'$, więc $f'(\alpha)=q(\alpha)$.
+Ponieważ $X-\alpha$ dzieli $q$ dokładnie wtedy,
+gdy $q(\alpha)=0$, pierwiastek $\alpha$ ma krotność
+co najmniej dwa wtedy i tylko wtedy, gdy
+$f(\alpha)=f'(\alpha)=0$.
+
+Jeśli $d=\gcd(f,f')$ ma dodatni stopień,
+możemy wybrać jego nierozkładalny czynnik $h$.
+W ciele rozkładu $h$ ma pierwiastek $\alpha$;
+wtedy $f(\alpha)=f'(\alpha)=0$, więc $f$
+ma pierwiastek wielokrotny i nie jest rozdzielczy.
+Odwrotnie, jeśli $f$ ma pierwiastek wielokrotny
+$\alpha$ w ciele rozkładu $L$, to oba wielomiany
+$f,f'$ zerują $\alpha$. Wielomian minimalny
+$m_{\alpha,K}$ dzieli więc jednocześnie $f$ i $f'$
+na mocy Lematu~\ref{aa:lem:minimal-polynomial}.
+Stąd $\deg\gcd(f,f')\ge1$. Dowiedliśmy równoważności.
+\end{proof}
+
+\begin{wniosek}[Nierozkładalność w charakterystyce zero]
+\label{aa:wn:charzero-separable}
+Każdy nierozkładalny wielomian dodatniego stopnia
+nad ciałem charakterystyki zero jest rozdzielczy.
+\end{wniosek}
+\begin{proof}
+Dla $f\in K[X]$ nierozkładalnego mamy
+$f'\ne0$ w charakterystyce zero oraz
+$\deg f'<\deg f$. Jedyny wspólny dzielnik
+$f$ i $f'$ może być jednostką, bo każdy
+niejednostkowy dzielnik $f$ jest stowarzyszony z $f$.
+Zatem $\gcd(f,f')=1$ i poprzednie twierdzenie daje
+rozdzielczość.
+\end{proof}
+
+\begin{przyklad}[Rozszerzenie nierozdzielcze]
+\label{aa:prz:inseparable-example}
+Niech $K=\mathbb F_p(t)$ i $f=X^p-t\in K[X]$.
+Wielomian ten jest nierozkładalny nad $K$:
+w $\mathbb F_p[t][X]$ spełnia założenia
+Twierdzenia~\ref{aa:tw:eisenstein} (kryterium Eisensteina)
+dla elementu pierwszego $t$, ponieważ $t$
+dzieli współczynniki niewiodące, lecz $t^2\nmid -t$.
+Wspomniane kryterium stwierdza nierozkładalność
+właśnie nad ciałem ułamków $K$.
+Jednak formalna pochodna $f'=pX^{p-1}=0$,
+więc $\gcd(f,f')=f\ne1$. Wielomian jest
+nierozdzielczy. Jeśli $\alpha^p=t$ w pewnym
+rozszerzeniu, to w charakterystyce $p$ zachodzi
+$X^p-t=(X-\alpha)^p$. Wielomian ma tylko jeden
+różny pierwiastek w swoim ciele rozkładu,
+i występuje on z krotnością $p$.
+\end{przyklad}
+
+\section{Ciała skończone}
+\begin{twierdzenie}[Liczność ciała skończonego]
+\label{aa:tw:finite-field-cardinality}
+Każde ciało skończone $F$ ma $p^n$ elementów
+dla pewnej liczby pierwszej $p$ i pewnej liczby
+całkowitej $n\ge1$.
+\end{twierdzenie}
+\begin{proof}
+Ciało $F$ ma dodatnią charakterystykę $p$,
+ponieważ homomorfizm $\mathbb Z\to F$ nie może być
+różnowartościowy: $\mathbb Z$ jest nieskończony,
+a $F$ skończone. Z
+Twierdzenia~\ref{aa:tw:prime-subfield} wynika,
+że $F$ zawiera $\mathbb F_p$. Jako skończona
+przestrzeń wektorowa nad tym podciałem ma pewien
+wymiar $n\ge1$. Wybierając bazę, utożsamiamy
+każdy element z jednoznaczną $n$-ką współczynników
+z $\mathbb F_p$. Istnieje dokładnie $p^n$ takich
+$n$-ek, zatem $|F|=p^n$.
+\end{proof}
+
+\begin{twierdzenie}[Grupa multiplikatywna ciała skończonego]
+\label{aa:tw:finite-field-multiplicative-cyclic}
+Dla każdego skończonego ciała $F$ grupa
+$(F^\times,\cdot)$ jest cykliczna.
+\end{twierdzenie}
+\begin{proof}
+Grupa $G=F^\times$ jest skończona i abelowa.
+Jeśli $|G|=1$ (w szczególności dla $F=\mathbb F_2$),
+to $G=\{1\}$ jest cykliczna. Dalej załóżmy $|G|>1$.
+Na mocy Wniosku~\ref{aa:wn:abelian-fg-structure}
+o klasyfikacji skończenie generowanych grup abelowych
+jest sumą
+prostą skończenie wielu grup cyklicznych.
+Dla każdej liczby pierwszej $\ell$ dzielącej $|G|$
+wybierzmy składnik cykliczny o największym rzędzie
+$\ell^{a_\ell}$ w części $\ell$-pierwotnej
+i generator $g_\ell$ tego składnika. W części
+$\ell$-pierwotnej rząd każdego elementu dzieli
+$\ell^{a_\ell}$, gdyż każdy jej składnik cykliczny
+ma rząd dzielący $\ell^{a_\ell}$. Dlatego
+wykładnik grupy $G$ (najmniejsza dodatnia liczba $e$
+spełniająca $x^e=1$ dla wszystkich $x\in G$) jest
+równy $e=\prod_\ell\ell^{a_\ell}$: liczba ta
+anihiluje wszystkie składniki, a musi dzielić się
+przez rząd każdego $g_\ell$. Element
+$g=\prod_\ell g_\ell$ ma rząd równy $e$, gdyż
+rzędy jego czynników są parami względnie pierwsze:
+z $g^k=1$ wynika, po rzutowaniu na każdą część
+pierwotną, $g_\ell^k=1$, więc
+$\ell^{a_\ell}\mid k$ dla wszystkich $\ell$.
+Odwrotnie, $g^e=1$.
+
+Każdy element $G$ jest pierwiastkiem wielomianu
+$X^e-1\in F[X]$. Niezerowy wielomian stopnia $e$
+nad ciałem ma co najwyżej $e$ różnych pierwiastków,
+zatem $|G|\le e$. Z drugiej strony $e$ jest
+rzędem pewnego elementu $G$, więc z twierdzenia
+Lagrange'a wynika $e\le|G|$. Stąd $e=|G|$,
+a wybrany element rzędu $e$ generuje całe $G$.
+\end{proof}
+
+\begin{przyklad}[Dlaczego $\mathbb Z/4\mathbb Z$ nie jest ciałem]
+\label{aa:prz:not-field-four}
+Pierścień $\mathbb Z/4\mathbb Z$ ma cztery elementy,
+ale $[2]^2=[0]$ i $[2]\ne[0]$, więc ma dzielniki
+zera. Nie jest ciałem, mimo że istnieje
+czteroelementowe ciało $\mathbb F_4$ skonstruowane
+w Przykładzie~\ref{aa:prz:four-element-field}.
+Równa liczba elementów nie oznacza izomorfizmu
+struktur algebraicznych.
+\end{przyklad}
+
+\begin{uwaga}[Kolejna część: teoria Galois]
+\label{aa:uw:field-extensions-future}
+Skonstruowaliśmy rozszerzenia przez pierwiastki,
+ciała rozkładu i poznaliśmy rolę rozdzielczości.
+W następnych rozdziałach zbadamy przedłużanie
+zanurzeń, automorfizmy rozszerzeń, normalność
+oraz podstawowe twierdzenie teorii Galois.
+Do wyjaśnienia, które równania można rozwiązać
+przez pierwiastniki, potrzebne będą ponadto grupy
+rozwiązalne z wcześniejszej części skryptu.
+\end{uwaga}
