@@ -19,6 +19,7 @@ on:
       - "tools/test_linear_algebra_jordan.py"
       - "tools/test_linear_algebra_chevalley.py"
       - "tools/test_linear_algebra_frobenius.py"
+      - "tools/test_linear_algebra_elementary.py"
       - "tools/check_polynomial_terminology.py"
       - "tools/export_linear_algebra_chapter_pdf.py"
       - "books/pl/linear_algebra.tex"
@@ -45,7 +46,7 @@ jobs:
           assert item["entrypoint"] == "books/pl/linear_algebra.tex"
           assert book.is_file()
           book_text = book.read_text(encoding="utf-8")
-          assert len(item["chapters"]) >= 19, "Chapters 01-19 must be registered"
+          assert len(item["chapters"]) >= 20, "Chapters 01-20 must be registered"
           expected = [
               "chapters/pl/linear_algebra/01-przestrzenie-wektorowe.tex",
               "chapters/pl/linear_algebra/02-wymiar-sumy-proste-i-przestrzenie-ilorazowe.tex",
@@ -66,8 +67,9 @@ jobs:
               "chapters/pl/linear_algebra/17-postac-jordana.tex",
               "chapters/pl/linear_algebra/18-rozklad-jordana-chevalleya-i-funkcje-macierzy.tex",
               "chapters/pl/linear_algebra/19-postac-frobeniusa-i-czynniki-niezmiennicze.tex",
+              "chapters/pl/linear_algebra/20-dzielniki-elementarne-i-bloki-pierwotne.tex",
           ]
-          assert item["chapters"][:19] == expected, "Incorrect chapter order"
+          assert item["chapters"][:20] == expected, "Incorrect chapter order"
           labels, refs = [], []
           for path in item["chapters"]:
               chapter = root / path
@@ -128,6 +130,8 @@ jobs:
         run: python tools/test_linear_algebra_chevalley.py
       - name: Verify Smith normal form and Frobenius factors
         run: python tools/test_linear_algebra_frobenius.py
+      - name: Verify elementary divisors and primary-block kernel filtrations
+        run: python tools/test_linear_algebra_elementary.py
       - name: Report pre-existing global library validation issues
         shell: bash
         continue-on-error: true
@@ -188,7 +192,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: linear-algebra-ch01-ch19
+          name: linear-algebra-ch01-ch20
           path: |
             books/pl/linear_algebra.pdf
             books/pl/linear_algebra.log
