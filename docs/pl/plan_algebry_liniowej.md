@@ -7,7 +7,7 @@ Stan na 21 listopada 2026. Książka `books/pl/linear_algebra.tex`: rozdziały *
 | Nr roboczy | Temat | Pochodzenie i zależności | Status |
 |---|---|---|---|
 | 25 | Sterowalność, obserwowalność, stabilizowalność, wykrywalność; kryteria Kalmana i PBH, rozkład Kalmana | Kontynuacja LA-24; nowy rozdział z pełnymi dowodami, testami i PDF | Stabilny po 7 audytach |
-| 26 | Uogólnione twierdzenia CARE/DARE dla układów z niestabilną otwartą pętlą | Wymaga LA-25 i LA-24, w tym rozpoznania stabilizowalności i wykrywalności | Planowany |
+| 26 | Uogólnione twierdzenia CARE/DARE dla układów z niestabilną otwartą pętlą | Wykorzystuje LA-24 i LA-25; obejmuje półokreślony koszt i rozwiązania stabilizujące | W audycie |
 | 27 | Gramiany sterowalności i obserwowalności, realizacje minimalne, rozkład Kalmana w zastosowaniach | Uzupełnienie LA-25 (bez ponownego dowodzenia tych samych wyników) | Do rozważenia |
 | 28 | Układy liniowe z wymuszeniem, funkcje przejścia i realizacje | Po LA-25/27; można wydzielić do teorii sterowania | Opcjonalny |
 | 29 | Grassmanniany | **Przenieść i zaadaptować istniejący materiał DG-04**, bez ponownego opracowywania od zera | Zatwierdzony do planu |
