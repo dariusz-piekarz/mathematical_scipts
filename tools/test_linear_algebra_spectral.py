@@ -126,11 +126,65 @@ def counterexamples_and_commuting():
         assert all(close(x,(7,-3)[j]*y) for x,y in zip(matvec(b,e),e))
     return 8
 
+def dimension_three_cases():
+    """Verify spectral projectors also for repeated eigenvalues in C^3."""
+    checks=0
+    for eigenvalues in ((1,2,3),(2,2,-1),(0,0,0),
+                        (1j,1j,-2j),(1,1,1)):
+        for theta,phase in ((.3,.4),(.8,1.6),(1.2,2.4)):
+            v=unitary(theta,phase)
+            w=unitary(theta/2,phase+.7)
+            u12=[[v[0][0],v[0][1],0],
+                 [v[1][0],v[1][1],0],[0,0,1]]
+            u23=[[1,0,0],[0,w[0][0],w[0][1]],
+                 [0,w[1][0],w[1][1]]]
+            u=multiply(u12,u23)
+            equals(multiply(adjoint(u),u),eye(3))
+            a=multiply(multiply(u,diagonal(eigenvalues)),adjoint(u))
+            equals(multiply(adjoint(a),a),multiply(a,adjoint(a)))
+            distinct=tuple(dict.fromkeys(eigenvalues))
+            projections={}
+            for eig in distinct:
+                p=eye(3)
+                for other in distinct:
+                    if eig != other:
+                        p=multiply(p,scale(1/(eig-other),
+                                           add(a,scale(-other,eye(3)))))
+                equals(p,adjoint(p))
+                equals(multiply(p,p),p)
+                projections[eig]=p
+            total=[[0j]*3 for _ in range(3)]
+            rebuild=[[0j]*3 for _ in range(3)]
+            polynomial=[[0j]*3 for _ in range(3)]
+            for eig,p in projections.items():
+                total=add(total,p)
+                rebuild=add(rebuild,scale(eig,p))
+                polynomial=add(polynomial,scale((eig+1)**2,p))
+                for other,q in projections.items():
+                    if eig!=other:
+                        equals(multiply(p,q),[[0j]*3 for _ in range(3)])
+            equals(total,eye(3))
+            equals(rebuild,a)
+            equals(polynomial,add(add(multiply(a,a),scale(2,a)),eye(3)))
+            # Nontrivial eigenspace multiplicity is checked by every column
+            # of the unitary change-of-basis, including repeated eigenvalues.
+            for j,eig in enumerate(eigenvalues):
+                column=tuple(u[i][j] for i in range(3))
+                assert all(close(x,eig*y) for x,y in
+                           zip(matvec(a,column),column))
+                projected=matvec(projections[eig],column)
+                assert all(close(x,y) for x,y in zip(projected,column))
+            checks+=1
+    return checks
+
+
 if __name__=="__main__":
     a=normal_cases()
     b=hermitian_cases()
     c=counterexamples_and_commuting()
+    d=dimension_three_cases()
     print("Spectral regression tests OK:",
           a,"normal similarities and projectors;",
           b,"Hermitian Rayleigh tests;",
-          c,"commuting/defective checks.")
+          c,"commuting/defective checks;",
+          d,"3x3 normal and repeated-eigenvalue checks.")
