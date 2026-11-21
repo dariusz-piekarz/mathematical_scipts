@@ -1,0 +1,660 @@
+\chapter{Układy z wymuszeniem i funkcje przejścia}
+\label{ch:lin28-transfer}
+\index{funkcja przejścia}
+\index{odpowiedź impulsowa}
+\index{układ liniowy!wymuszenie}
+\index{realizacja!funkcji wymiernej}
+
+\noindent\textbf{Cel rozdziału.}
+W rozdziałach~\ref{ch:lin25-control} i~\ref{ch:lin27-realizations}
+opisaliśmy sterowalność, obserwowalność oraz minimalne realizacje
+za pomocą parametrów Markowa. Zbadamy teraz, jak macierze
+stanu wyznaczają odpowiedź na \emph{dowolne wymuszenie},
+oraz jak tę odpowiedź koduje \emph{macierzowa funkcja przejścia}.
+Pokażemy obie wersje czasowe, skonstruujemy realizację
+zadanej skalarnej funkcji wymiernej i wyjaśnimy, dlaczego
+stabilność odpowiedzi wejście--wyjście nie zawsze pociąga
+za sobą stabilność wszystkich zmiennych stanu.
+
+W całym rozdziale przyjmujemy
+\(n,m,p\ge1\), \(A\in\mathbb C^{n\times n}\),
+\(B\in\mathbb C^{n\times m}\),
+\(C\in\mathbb C^{p\times n}\) i
+\(D\in\mathbb C^{p\times m}\).
+W normach wektorowych stosujemy normę euklidesową,
+a w macierzowych odpowiadającą jej normę operatorową.
+Symbol \(I\) oznacza macierz jednostkową odpowiedniego rozmiaru.
+
+\section{Rozwiązanie z warunkiem początkowym}
+\label{sec:lin28-variation}
+
+\begin{twierdzenie}[Wzór wariacji stałych]
+\label{thm:lin28-variation}
+Niech \(T>0\), \(x_0\in\mathbb C^n\), a
+\(u\colon[0,T]\to\mathbb C^m\) będzie funkcją ciągłą.
+Zagadnienie
+\[
+ x'(t)=Ax(t)+Bu(t),\qquad x(0)=x_0
+\]
+ma dokładnie jedno rozwiązanie klasy \(C^1\).
+Dla każdego \(t\in[0,T]\) jest nim
+\[
+ x(t)=e^{tA}x_0+
+        \int_0^t e^{(t-\tau)A}Bu(\tau)\,\mathrm d\tau.
+ \tag{28.1}\label{eq:lin28-variation}
+\]
+Jeżeli \(y(t)=Cx(t)+Du(t)\), to
+\[
+ y(t)=Ce^{tA}x_0+Du(t)+
+       \int_0^t Ce^{(t-\tau)A}Bu(\tau)\,\mathrm d\tau.
+ \tag{28.2}\label{eq:lin28-output}
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla dowolnego rozwiązania połóżmy
+\(v(t)=e^{-tA}x(t)\).
+Macierze \(A\) i \(e^{-tA}\) komutują, ponieważ
+wykładnik jest granicą wielomianów w \(A\).
+Reguła różniczkowania iloczynu daje
+\[
+ v'(t)=-Ae^{-tA}x(t)+e^{-tA}(Ax(t)+Bu(t))
+      =e^{-tA}Bu(t).
+\]
+Po scałkowaniu od \(0\) do \(t\), skorzystaniu
+z \(v(0)=x_0\) i pomnożeniu przez \(e^{tA}\)
+otrzymujemy wzór~\eqref{eq:lin28-variation};
+zastosowaliśmy przy tym
+\(e^{tA}e^{-\tau A}=e^{(t-\tau)A}\).
+Zatem każde rozwiązanie musi mieć wskazaną postać.
+
+Odwrotnie, całkowana funkcja jest ciągła
+w obu zmiennych, więc prawą stronę
+\eqref{eq:lin28-variation} można różniczkować
+względem \(t\) na mocy reguły Leibniza.
+Pochodna całki jest równa
+\[
+ Bu(t)+\int_0^t Ae^{(t-\tau)A}Bu(\tau)\,\mathrm d\tau.
+\]
+Po dodaniu pochodnej \(e^{tA}x_0\)
+dostajemy \(x'=Ax+Bu\);
+dla \(t=0\) całka znika, zatem \(x(0)=x_0\).
+Istnienie i jednoznaczność zostały udowodnione.
+Wstawienie wzoru na \(x\) do \(y=Cx+Du\)
+daje~\eqref{eq:lin28-output}.
+\end{proof}
+
+\begin{uwaga}[Wymuszenia całkowalne]
+\label{rem:lin28-integrable}
+Jeśli \(u\in L^1([0,T];\mathbb C^m)\), całka
+w~\eqref{eq:lin28-variation} nadal istnieje.
+Wzór definiuje jedyne rozwiązanie absolutnie ciągłe,
+spełniające równanie stanu prawie wszędzie
+oraz warunek początkowy.
+Istotnie, funkcja \(v(t)=x_0+\int_0^t e^{-\tau A}Bu(\tau)
+\,\mathrm d\tau\) jest absolutnie ciągła;
+stosuje się do niej regułę iloczynu prawie wszędzie,
+a dowód jednoznaczności przebiega jak wyżej.
+Jest to użyteczne dla wymuszeń przedziałami stałych.
+\end{uwaga}
+
+\begin{twierdzenie}[Rozwiązanie rekurencji z wymuszeniem]
+\label{thm:lin28-discrete}
+Dla dowolnego \(x_0\in\mathbb C^n\)
+oraz dowolnego ciągu \(u_k\in\mathbb C^m\),
+\(k\ge0\), układ
+\(x_{k+1}=Ax_k+Bu_k\), \(y_k=Cx_k+Du_k\)
+ma dokładnie jedno rozwiązanie. Dla \(k\ge0\)
+zachodzi
+\[
+ \begin{aligned}
+ x_k&=A^kx_0+\sum_{j=0}^{k-1}A^{k-1-j}Bu_j,\\
+ y_k&=CA^kx_0+Du_k+
+       \sum_{j=0}^{k-1}CA^{k-1-j}Bu_j.
+ \end{aligned}
+ \tag{28.3}\label{eq:lin28-discrete}
+\]
+Suma z górnym indeksem \(k-1=-1\)
+jest z definicji pusta i równa zeru.
+\end{twierdzenie}
+\begin{proof}
+Dla \(k=0\) obie równości są natychmiastowe.
+Jeśli pierwsza zachodzi dla \(k\), to
+\[
+ x_{k+1}
+ =A^{k+1}x_0+
+   \sum_{j=0}^{k-1}A^{k-j}Bu_j+Bu_k
+ =A^{k+1}x_0+\sum_{j=0}^{k}A^{k-j}Bu_j.
+\]
+Otrzymujemy indukcyjnie pierwszą równość
+dla wszystkich \(k\). Druga wynika przez
+pomnożenie przez \(C\) i dodanie \(Du_k\).
+Rekurencja jednoznacznie wyznacza każdy kolejny stan.
+\end{proof}
+
+\section{Odpowiedź impulsowa i splot}
+\label{sec:lin28-impulse}
+
+\begin{definicja}[Jądro odpowiedzi i człon bezpośredni]
+\label{def:lin28-kernel}
+Dla układu ciągłego definiujemy
+\(h(t)=Ce^{tA}B\) dla \(t\ge0\).
+W układzie dyskretnym określamy
+\(h_0=D\) oraz \(h_k=CA^{k-1}B\) dla \(k\ge1\).
+Macierz \(D\) nazywamy
+\emph{członem bezpośrednim} (przeniesieniem bezpośrednim).
+\end{definicja}
+
+\begin{twierdzenie}[Odpowiedź przy zerowym stanie początkowym]
+\label{thm:lin28-convolution}
+Jeżeli \(x_0=0\), to dla ciągłego, ciągle wymuszanego
+układu i dla dyskretnego układu zachodzą odpowiednio
+\[
+ y(t)=Du(t)+\int_0^t h(t-\tau)u(\tau)\,\mathrm d\tau,
+ \qquad
+ y_k=\sum_{j=0}^{k}h_{k-j}u_j.
+ \tag{28.4}\label{eq:lin28-convolution}
+\]
+W szczególności przy wejściu dyskretnym
+\(u_0=w\in\mathbb C^m\), \(u_k=0\) dla \(k\ge1\),
+odpowiedź ma postać
+\(y_0=Dw\), \(y_k=CA^{k-1}Bw\) dla \(k\ge1\).
+\end{twierdzenie}
+\begin{proof}
+Pierwsza formuła to
+\eqref{eq:lin28-output} przy \(x_0=0\)
+po podstawieniu \(h(t)=Ce^{tA}B\).
+Z~\eqref{eq:lin28-discrete} dostajemy
+\(y_k=Du_k+\sum_{j=0}^{k-1}h_{k-j}u_j\),
+co jest drugą formułą, ponieważ \(h_0=D\).
+Dla wskazanego wejścia impulsowego
+w sumie pozostaje tylko składnik z \(j=0\).
+\end{proof}
+
+\begin{uwaga}[Impuls Diraca i skok wyjścia]
+\label{rem:lin28-dirac}
+Formalny zapis ciągłej odpowiedzi impulsowej
+to \(D\delta_0+h\), gdzie \(\delta_0\)
+jest deltą Diraca. Nie jest to zwykła funkcja,
+jeśli \(D\ne0\). Dokładne znaczenie podają
+wzory~\eqref{eq:lin28-convolution}:
+człon \(Du(t)\) działa natychmiastowo,
+a pozostała część jest całką splotową.
+Nie musimy definiować dystrybucji,
+aby posługiwać się tymi wzorami.
+\end{uwaga}
+
+\begin{przyklad}[Wymuszenie jednostkowe i stan początkowy]
+\label{prz:lin28-step}
+Niech \(n=m=p=1\), \(A=-2\), \(B=3\), \(C=1\),
+\(D=0\), \(x_0=4\), a \(u(t)=1\) dla \(t\ge0\).
+Wzór~\eqref{eq:lin28-output} daje
+\[
+ y(t)=4e^{-2t}+3\int_0^t e^{-2(t-\tau)}
+ \,\mathrm d\tau
+ =4e^{-2t}+\frac32(1-e^{-2t}).
+\]
+Całkę obliczyliśmy podstawiając \(s=t-\tau\):
+\(\int_0^t e^{-2s}\,\mathrm ds=(1-e^{-2t})/2\).
+Granica \(y(t)\to3/2\) wynika z \(e^{-2t}\to0\).
+Widać oddzielnie zanikającą odpowiedź od stanu
+początkowego i odpowiedź na wymuszenie.
+\end{przyklad}
+
+\section{Transmitancja ciągła i dyskretna}
+\label{sec:lin28-transfer}
+
+\begin{definicja}[Macierzowa funkcja przejścia]
+\label{def:lin28-transfer}
+Dla opisanej na początku rozdziału
+czwórki macierzy \((A,B,C,D)\)
+definiujemy funkcję wymierną
+\[
+ G(\zeta)=D+C(\zeta I-A)^{-1}B,
+ \qquad \zeta\in\mathbb C\setminus\sigma(A).
+ \tag{28.5}\label{eq:lin28-transfer}
+\]
+W kontekście ciągłym argument oznaczamy przez \(s\),
+a w dyskretnym przez \(z\).
+Wartości funkcji leżą w \(\mathbb C^{p\times m}\).
+W punktach \(\sigma(A)\) poszczególne elementy
+macierzy \(G\) mogą mieć przedłużenia holomorficzne;
+nie zakładamy, że każdy taki punkt jest biegunem \(G\).
+\end{definicja}
+
+\begin{twierdzenie}[Transformata Laplace'a odpowiedzi]
+\label{thm:lin28-laplace}
+Niech \(u\colon[0,\infty)\to\mathbb C^m\)
+będzie przedziałami ciągła i miała zwarty nośnik,
+a \(x_0=0\). Dla każdego \(s\in\mathbb C\)
+o dostatecznie dużej części rzeczywistej
+istnieją całki
+\[
+ U(s)=\int_0^\infty e^{-st}u(t)\,\mathrm dt,
+ \qquad
+ Y(s)=\int_0^\infty e^{-st}y(t)\,\mathrm dt,
+\]
+oraz zachodzi równość
+\[
+ Y(s)=G(s)U(s).
+ \tag{28.6}\label{eq:lin28-laplace}
+\]
+\end{twierdzenie}
+\begin{proof}
+Ponieważ macierz \(A\) jest skończona,
+z szeregu wykładniczego wynika oszacowanie
+\(\|e^{tA}\|\le e^{t\|A\|}\) dla \(t\ge0\).
+Wzór~\eqref{eq:lin28-variation} i zwartość nośnika
+\(u\) dają \(\|x(t)\|\le K e^{t\|A\|}\)
+dla pewnego \(K>0\). Zatem przy
+\(\operatorname{Re}s>\|A\|\) możemy zastosować
+transformatę Laplace'a i całkowanie przez części:
+\[
+ \int_0^\infty e^{-st}x'(t)\,\mathrm dt
+   =sX(s)-x(0)=sX(s).
+\]
+Wyraz brzegowy w nieskończoności zanika
+na mocy podanego oszacowania.
+Z równania stanu dostajemy
+\((sI-A)X(s)=BU(s)\).
+Macierz \(sI-A\) jest odwracalna,
+gdy \(\operatorname{Re}s>\|A\|\), gdyż
+wartości własne \(A\) mają moduł
+nie większy od \(\|A\|\).
+Stąd \(X(s)=(sI-A)^{-1}BU(s)\).
+Transformacja \(y=Cx+Du\) prowadzi do
+\(Y(s)=(C(sI-A)^{-1}B+D)U(s)\),
+co kończy dowód.
+\end{proof}
+
+\begin{twierdzenie}[Transformata \(Z\) odpowiedzi]
+\label{thm:lin28-z}
+Niech \(u_k\in\mathbb C^m\) ma nośnik skończony,
+a \(x_0=0\). Wówczas dla wszystkich zespolonych
+\(z\) o dostatecznie dużym module
+szeregi
+\[
+ U(z)=\sum_{k=0}^\infty u_kz^{-k},
+ \qquad
+ Y(z)=\sum_{k=0}^\infty y_kz^{-k}
+\]
+są zbieżne i zachodzi \(Y(z)=G(z)U(z)\).
+Ponadto dla \(|z|>\|A\|\)
+\[
+ G(z)=D+\sum_{j=0}^\infty CA^jB\,z^{-j-1}.
+ \tag{28.7}\label{eq:lin28-laurent}
+\]
+\end{twierdzenie}
+\begin{proof}
+Przy skończenie wielu niezerowych wejściach
+\eqref{eq:lin28-discrete} daje
+\(\|x_k\|\le K(1+\|A\|)^k\) z pewnym \(K>0\);
+stąd szeregi dla \(X(z)=\sum x_k z^{-k}\)
+i \(Y(z)\) są zbieżne przy dostatecznie dużym \(|z|\).
+Ponieważ \(x_0=0\), bezwzględna zbieżność
+umożliwia przesunięcie indeksu:
+\[
+ \sum_{k\ge0}x_{k+1}z^{-k}
+ =z\sum_{k\ge0}x_kz^{-k}=zX(z).
+\]
+Po transformacji rekurencji otrzymujemy
+\((zI-A)X(z)=BU(z)\) i
+\(Y(z)=CX(z)+DU(z)=G(z)U(z)\).
+
+Dla \(|z|>\|A\|\) szereg geometryczny macierzy
+\(\sum_{j\ge0}(A/z)^j\)
+jest bezwzględnie zbieżny i stanowi odwrotność
+\(I-A/z\): po pomnożeniu sumy częściowej
+przez \(I-A/z\) reszta wynosi \((A/z)^{N+1}\)
+i dąży do zera. Dlatego
+\((zI-A)^{-1}=\sum_{j\ge0} A^j z^{-j-1}\).
+Podstawienie do definicji \(G\)
+prowadzi do~\eqref{eq:lin28-laurent}.
+\end{proof}
+
+\begin{wniosek}[Parametry Markowa z transmitancji]
+\label{cor:lin28-markov}
+Dwie czwórki \((A_i,B_i,C_i,D_i)\), \(i=1,2\),
+o tych samych wymiarach wejścia i wyjścia
+mają jednakowe wymierne funkcje przejścia
+dokładnie wtedy, gdy \(D_1=D_2\) oraz
+\(C_1A_1^kB_1=C_2A_2^kB_2\)
+dla każdego całkowitego \(k\ge0\).
+Równoważnie ich odpowiedzi na wszystkie
+wejścia przy zerowym stanie początkowym
+są jednakowe, zarówno w modelu ciągłym,
+jak i dyskretnym.
+\end{wniosek}
+\begin{proof}
+Z równości funkcji wymiernych wynika równość
+ich rozwinięć Laurenta przy nieskończoności.
+Przez~\eqref{eq:lin28-laurent} mamy wtedy
+równość członów bezpośrednich i wszystkich
+parametrów Markowa. Odwrotnie, równość
+współczynników oznacza, że funkcje \(G_i\)
+są identyczne na wspólnym obszarze \(|z|>R\);
+jako funkcje wymierne są więc identyczne
+wszędzie, gdzie obie są określone.
+Równoważność z odpowiedziami czasowymi
+wynika z~\eqref{eq:lin28-convolution}
+i szeregu \(Ce^{tA}B=\sum_{k\ge0}t^kCA^kB/k!\).
+Dla odwrotnej implikacji wystarczy
+użyć dyskretnego wejścia impulsowego:
+jego kolejne wyjścia odczytują \(D\)
+oraz wszystkie \(CA^kB\).
+\end{proof}
+
+\section{Bieguny, wartości własne i realizacje}
+\label{sec:lin28-poles}
+
+\begin{stwierdzenie}[Wymierność i możliwe bieguny]
+\label{prop:lin28-rational}
+Każdy współczynnik macierzy \(G\)
+jest funkcją wymierną właściwą:
+jego granica przy \(|\zeta|\to\infty\)
+jest równa odpowiedniemu współczynnikowi \(D\).
+Każdy biegun elementu \(G\) jest
+wartością własną \(A\), ale odwrotna
+implikacja bez dodatkowych założeń jest fałszywa.
+\end{stwierdzenie}
+\begin{proof}
+Dla \(\det(\zeta I-A)\ne0\) stosujemy
+wzór na macierz odwrotną:
+\((\zeta I-A)^{-1}
+ =\operatorname{adj}(\zeta I-A)/
+  \det(\zeta I-A)\).
+Mianownik jest wielomianem monicznym
+stopnia \(n\), a elementy macierzy dołączonej
+są wielomianami stopnia co najwyżej \(n-1\).
+Po pomnożeniu przez stałe macierze \(B,C\)
+otrzymujemy funkcję ściśle właściwą;
+dodanie \(D\) daje funkcję właściwą
+z granicą \(D\). Bieguny mogą więc leżeć
+tylko wśród zer \(\det(\zeta I-A)\),
+czyli wartości własnych \(A\).
+Możliwość skrócenia wspólnego czynnika
+licznika i mianownika wykaże
+Przykład~\ref{prz:lin28-hidden-mode}.
+\end{proof}
+
+\begin{przyklad}[Niewidoczny niestabilny stan]
+\label{prz:lin28-hidden-mode}
+Niech
+\[
+ A=\begin{pmatrix}1&0\\0&-1\end{pmatrix},
+ \quad B=\begin{pmatrix}0\\1\end{pmatrix},
+ \quad C=\begin{pmatrix}0&1\end{pmatrix},\quad D=0.
+\]
+Dla \(\zeta\notin\{1,-1\}\)
+mamy \((\zeta I-A)^{-1}
+=\operatorname{diag}((\zeta-1)^{-1},(\zeta+1)^{-1})\).
+Stąd \(G(\zeta)=1/(\zeta+1)\):
+wartość własna \(1\) nie jest biegunem
+funkcji przejścia. Pierwszego stanu
+ani nie można osiągnąć z wejścia,
+ani nie widać go na wyjściu.
+Mimo że odpowiedź na każde ograniczone
+wymuszenie jest ograniczona,
+niezerowy początkowy pierwszy stan
+rośnie jak \(e^t\).
+Realizacja jednowymiarowa
+\(A_{\min}=-1\), \(B_{\min}=C_{\min}=1\), \(D=0\)
+daje tę samą funkcję przejścia.
+\end{przyklad}
+
+\begin{twierdzenie}[Realizacja skalarnej funkcji właściwej]
+\label{thm:lin28-companion}
+Niech \(n\ge1\) i niech
+\[
+ p(\zeta)=\zeta^n+a_{n-1}\zeta^{n-1}
+      +\cdots+a_1\zeta+a_0,\qquad
+ q(\zeta)=b_{n-1}\zeta^{n-1}
+      +\cdots+b_1\zeta+b_0
+\]
+będą wielomianami o współczynnikach zespolonych,
+przy czym \(p\) jest moniczny i \(\deg q<n\)
+(dopuszczamy \(q=0\)).
+Dla dowolnego \(d\in\mathbb C\)
+funkcja \(g(\zeta)=d+q(\zeta)/p(\zeta)\)
+posiada realizację wymiaru \(n\):
+\[
+ A=\begin{pmatrix}
+ 0&1&0&\cdots&0\\
+ 0&0&1&\ddots&\vdots\\
+ \vdots&&\ddots&\ddots&0\\
+ 0&\cdots&0&0&1\\
+ -a_0&-a_1&\cdots&-a_{n-2}&-a_{n-1}
+ \end{pmatrix},
+ \quad B=e_n,\quad
+ C=\begin{pmatrix}b_0&b_1&\cdots&b_{n-1}\end{pmatrix},
+ \quad D=d.
+ \tag{28.8}\label{eq:lin28-companion}
+\]
+Przy \(n=1\) należy rozumieć \(A=(-a_0)\).
+Para \((A,B)\) jest zawsze sterowalna.
+Realizacja jest minimalna dokładnie wtedy,
+gdy \(p\) i \(q\) nie mają wspólnego pierwiastka
+w \(\mathbb C\), czyli są względnie pierwsze.
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy \(v(\zeta)=(1,\zeta,\ldots,\zeta^{n-1})^T\).
+Bezpośrednie mnożenie macierzy w
+\eqref{eq:lin28-companion} daje
+\[
+ (\zeta I-A)v(\zeta)=p(\zeta)e_n:
+\]
+pierwsze \(n-1\) współrzędnych są zerowe,
+a ostatnia to
+\(a_0+a_1\zeta+\cdots+a_{n-1}\zeta^{n-1}+\zeta^n\).
+Jeżeli \(p(\zeta)\ne0\), to
+\((\zeta I-A)^{-1}B=v(\zeta)/p(\zeta)\),
+a zatem \(C(\zeta I-A)^{-1}B=q(\zeta)/p(\zeta)\).
+Daje to żądaną funkcję \(g\).
+
+Dalej, \(Ae_j=e_{j-1}-a_{j-1}e_n\)
+dla \(j=2,\ldots,n\). Stąd
+\(B,AB,\ldots,A^{n-1}B\),
+zapisane w odwrotnie uporządkowanej bazie
+\(e_n,e_{n-1},\ldots,e_1\),
+tworzą macierz trójkątną z jedynkami
+na przekątnej: w \(A^kB\) współczynnik
+przy \(e_{n-k}\) jest równy \(1\),
+a przy \(e_j\) dla \(j<n-k\) jest zerowy.
+Macierz sterowalności ma więc rangę \(n\).
+
+W celu sprawdzenia obserwowalności
+stosujemy kryterium PBH z
+Wniosku~\ref{cor:lin25-pbh-observe}.
+Każda wartość własna \(\lambda\) jest zerem
+\(p\), a wektor \(v(\lambda)\ne0\)
+spełnia \(Av(\lambda)=\lambda v(\lambda)\).
+Ponadto każde rozwiązanie
+\((A-\lambda I)w=0\) jest wielokrotnością
+\(v(\lambda)\): pierwsze \(n-1\) wierszy
+wymuszają \(w_{j+1}=\lambda w_j\).
+Warunek obserwowalności jest więc równoważny
+\(Cv(\lambda)=q(\lambda)\ne0\)
+dla każdego pierwiastka \(p\).
+Nad \(\mathbb C\) jest to równoważne
+względnej pierwszości \(p,q\).
+Ponieważ sterowalność już udowodniono,
+Twierdzenie~\ref{thm:lin27-hankel-rank}
+o minimalnym wymiarze realizacji
+kończy dowód.
+\end{proof}
+
+\begin{uwaga}[Funkcja stała i stopień minimalny]
+\label{rem:lin28-constant}
+Jeśli \(q=0\), wzór nadal daje realizację,
+lecz nie jest ona minimalna: funkcję
+stałą \(g=d\) realizuje układ bez stanów,
+z samym członem bezpośrednim \(D=d\).
+Jeżeli \(q/p\) skraca się do
+\(\widetilde q/\widetilde p\) z
+\(\gcd(\widetilde q,\widetilde p)=1\),
+to powyższa konstrukcja dla
+\(\widetilde p,\widetilde q\)
+daje minimalny wymiar
+\(\deg\widetilde p\); w stopniu \(0\)
+otrzymujemy realizację bez stanów.
+Wykazaliśmy to dla funkcji skalarnych;
+dla funkcji macierzowych samo zliczanie
+biegunów poszczególnych elementów nie
+zastępuje rangi macierzy Hankela
+z Twierdzenia~\ref{thm:lin27-hankel-rank}.
+\end{uwaga}
+
+\begin{przyklad}[Realizacja i odpowiedź impulsowa]
+\label{prz:lin28-companion}
+Niech \(g(s)=(2s+3)/(s^2+3s+2)\).
+Konstrukcja z
+Twierdzenia~\ref{thm:lin28-companion} daje
+\[
+ A=\begin{pmatrix}0&1\\-2&-3\end{pmatrix},
+ \qquad B=\begin{pmatrix}0\\1\end{pmatrix},
+ \qquad C=\begin{pmatrix}3&2\end{pmatrix},\qquad D=0.
+\]
+Istotnie, \((sI-A)^{-1}B
+=(1,s)^T/(s^2+3s+2)\).
+Ponieważ \(p(s)=(s+1)(s+2)\),
+a \(q(-1)=1\), \(q(-2)=-1\),
+realizacja jest minimalna.
+Rozkład na ułamki proste ma postać
+\[
+ \frac{2s+3}{(s+1)(s+2)}
+ =\frac1{s+1}+\frac1{s+2}.
+\]
+Jądro odpowiedzi impulsowej jest zatem
+\(h(t)=e^{-t}+e^{-2t}\) dla \(t\ge0\):
+potwierdza to jednoznaczność transformaty
+Laplace'a, można też bezpośrednio
+obliczyć \(Ce^{tA}B\).
+Dla wejścia \(u(t)=1\) i \(x_0=0\) otrzymujemy
+\[
+ y(t)=\int_0^t(e^{-(t-\tau)}+e^{-2(t-\tau)})
+ \,\mathrm d\tau
+ =\frac32-e^{-t}-\frac12e^{-2t}.
+\]
+W szczególności \(y(0)=0\)
+i \(y(t)\to3/2=g(0)\), zgodnie
+z bezpośrednim obliczeniem całki.
+\end{przyklad}
+
+\section{Oszacowania wejście--wyjście}
+\label{sec:lin28-bounds}
+
+\begin{twierdzenie}[Ograniczone wejście i stabilny układ ciągły]
+\label{thm:lin28-bibo}
+Niech każda wartość własna
+\(A\in\mathbb C^{n\times n}\) ma ujemną
+część rzeczywistą.
+Istnieją stałe \(M,\alpha>0\)
+takie, że dla wszystkich \(t\ge0\)
+\(\|e^{tA}\|\le Me^{-\alpha t}\).
+Dla dowolnego \(x_0\in\mathbb C^n\)
+i ograniczonej funkcji
+\(u\in L^\infty([0,\infty);\mathbb C^m)\)
+odpowiedź wyznaczona wzorem
+\eqref{eq:lin28-output} spełnia
+dla prawie wszystkich \(t\ge0\)
+\[
+ \|y(t)\|\le
+ M\|C\|e^{-\alpha t}\|x_0\|
+ +\left(\|D\|+\frac{M\|C\|\|B\|}{\alpha}\right)
+     \|u\|_{L^\infty}.
+ \tag{28.9}\label{eq:lin28-bibo}
+\]
+\end{twierdzenie}
+\begin{proof}
+Rozkład Jordana (Rozdział~\ref{ch:lin17-jordan})
+wyraża \(e^{tA}\), po zmianie bazy,
+jako sumę bloków zawierających
+\(e^{\lambda t}t^j/j!\)
+dla \(0\le j<n\). Jeżeli
+\(\beta=-\max_{\lambda\in\sigma(A)}
+\operatorname{Re}\lambda>0\),
+to dla \(\alpha=\beta/2\)
+wszystkie funkcje
+\(t^je^{-\beta t/2}\) są ograniczone
+na \([0,\infty)\).
+Po uwzględnieniu norm macierzy zmiany
+bazy dostajemy wspólne \(M>0\)
+takie, że \(\|e^{tA}\|\le Me^{-\alpha t}\).
+
+Dla całkowej części~\eqref{eq:lin28-output}
+nierówność trójkąta i podmultiplikatywność
+normy dają
+\[
+ \left\|\int_0^t Ce^{(t-\tau)A}Bu(\tau)
+ \,\mathrm d\tau\right\|
+ \le M\|C\|\|B\|\|u\|_{L^\infty}
+       \int_0^t e^{-\alpha(t-\tau)}\,\mathrm d\tau.
+\]
+Ostatnia całka jest równa
+\((1-e^{-\alpha t})/\alpha\le1/\alpha\).
+Pozostałe składniki odpowiedzi szacujemy
+przez \(M\|C\|e^{-\alpha t}\|x_0\|\)
+oraz \(\|D\|\|u\|_{L^\infty}\).
+Dodanie tych oszacowań dowodzi tezy.
+\end{proof}
+
+\begin{wniosek}[Dyskretne oszacowanie]
+\label{cor:lin28-discrete-bibo}
+Jeżeli \(\rho(A)<1\), to istnieją
+\(M>0\), \(r\in(0,1)\) takie, że
+\(\|A^k\|\le Mr^k\) dla wszystkich
+\(k\ge0\). Dla każdego ograniczonego
+ciągu wejść i każdego stanu początkowego
+zachodzi
+\[
+ \|y_k\|\le
+ M\|C\|r^k\|x_0\|+
+ \left(\|D\|+\frac{M\|C\|\|B\|}{1-r}\right)
+ \sup_{j\ge0}\|u_j\|.
+ \tag{28.10}\label{eq:lin28-discrete-bibo}
+\]
+\end{wniosek}
+\begin{proof}
+Dla każdego \(r\) z \(\rho(A)<r<1\)
+rozkład Jordana i ograniczoność
+\(k^j(\rho(A)/r)^k\) (dla niezerowych
+wartości własnych) dają oszacowanie
+\(\|A^k\|\le Mr^k\); bloki nilpotentne
+znikają dla dostatecznie dużych \(k\).
+Wstawiamy je do~\eqref{eq:lin28-discrete}
+i korzystamy z
+\(\sum_{j=0}^{k-1}r^{k-1-j}
+  =(1-r^k)/(1-r)\le1/(1-r)\).
+\end{proof}
+
+\begin{uwaga}[Zakres wniosków o stabilności]
+\label{rem:lin28-hidden-stability}
+Twierdzenie~\ref{thm:lin28-bibo} oraz
+Wniosek~\ref{cor:lin28-discrete-bibo}
+są kryteriami \emph{dostatecznymi}.
+Bez sterowalności i obserwowalności
+nie wolno wywodzić stabilności całej
+macierzy \(A\) ze stabilności transmitancji:
+Przykład~\ref{prz:lin28-hidden-mode}
+pokazuje przeciwną sytuację.
+W realizacji minimalnej ukryty tryb
+nie może wystąpić, co tłumaczy rolę
+kryteriów Kalmana i macierzy Hankela.
+\end{uwaga}
+
+\section{Podsumowanie i powiązania}
+\label{sec:lin28-summary}
+Dynamikę z warunkiem początkowym
+i wymuszeniem opisują dokładne wzory
+\eqref{eq:lin28-output} i
+\eqref{eq:lin28-discrete}. Dla zerowego
+stanu początkowego odpowiedzi są splotami,
+a ich transformaty są mnożeniem przez
+wymierną macierz \(G\).
+Parametry Markowa stanowią współczynniki
+rozwinięcia \(G\) przy nieskończoności;
+minimalny wymiar realizacji jest związany
+z rangą macierzy Hankela z
+Rozdziału~\ref{ch:lin27-realizations}.
+W kolejnym rozdziale wrócimy
+do geometrii podprzestrzeni,
+zaczynając od grassmannianów.
