@@ -61,3 +61,15 @@ Dla bloba `59af20ec5a267607674a6162d4f436adc9096c14` pobrano źródło z GitHuba
 **Stan CI w chwili rozpoczęcia końcowej kontroli:** wcześniejsze commity z audytu II–III przeszły kompilację TOP-01–14, testy aplikacji i audyt AT–DG–AG. Kontrole dla ostatniego pliku źródła i najnowszego zestawu testów były jeszcze w toku; ich ostateczny wynik należy dopisać osobno.
 
 **Decyzja tymczasowa:** merytoryczny audyt VI nie znalazł dalszych uchybień wymagających zmian; TOP-13 będzie formalnie stabilny po potwierdzeniu CI na aktualnych poprawkach.
+
+## Końcowe potwierdzenie GitHub Actions i zamknięcie TOP-13
+
+Wszystkie trzy końcowe workflowy uruchomione dla ostatniego commita źródła `138d20fc34cfcdfc865cb67f5cb12dcb2f1d124c` zakończyły się statusem **completed / success**:
+
+1. [Kompilacja TOP-01–14 oraz walidacja referencji/LaTeX](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44928439185) — **success**.
+2. [Testy aplikacji, w tym nowe regresje TOP-13/14](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44928439202) — **success**.
+3. [Kontrola AT–DG–AG między tomami](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44928439174) — **success**.
+
+Nowy plik testowy `test_topology_chapters_13_14.py` również ma wcześniejsze bezpośrednie zielone uruchomienia: [TOP-13/14](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44928387812) i [aplikacja](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44928387815), oba dla commita `929cbc30`.
+
+**Decyzja ostateczna: TOP-13 stabilny po audycie VI.** Zachowano wszystkie 10 historycznych etykiet, żadnych nowych twierdzeń ani lematów. Zmiany zapisano na istniejącej gałęzi `biblioteka-matematyczna-iteracja-6`, bez merge do `main`. Automatyzacje pozostają wyłączone. Następny rozdział do stabilizacji: **TOP-14 — wieże Postnikowa, iloczyny Whiteheada i operacje Steenroda.**
