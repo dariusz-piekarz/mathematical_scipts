@@ -100,6 +100,36 @@ class TopologyNineteenTwentyAudit(unittest.TestCase):
                     source, r"\\" + command + r"\s*\{"
                 )
 
+    def test_reference_closure_and_environment_nesting(self):
+        """Reject dangling refs and mismatched nested LaTeX environments."""
+        for ch in ("19", "20"):
+            src = self.texts[ch]
+            with self.subTest(chapter=ch):
+                starts = re.findall(
+                    r"\\(?:ref|eqref|autoref|pageref|nameref)\s*\{",
+                    src,
+                )
+                closed = re.findall(
+                    r"\\(?:ref|eqref|autoref|pageref|nameref)\s*\{[^{}\n]+\}",
+                    src,
+                )
+                self.assertEqual(len(starts), len(closed))
+                self.assertEqual(
+                    src.count(r"\begin{"),
+                    src.count(r"\end{"),
+                )
+                stack = []
+                for match in re.finditer(
+                    r"\\(begin|end)\{([^{}]+)\}", src
+                ):
+                    kind, name = match.groups()
+                    if kind == "begin":
+                        stack.append(name)
+                    else:
+                        self.assertTrue(stack, f"Closing {name} without open")
+                        self.assertEqual(stack.pop(), name)
+                self.assertFalse(stack, f"Unclosed environments: {stack}")
+
     def test_correct_polish_mathematical_terms(self):
         for ch in ("19", "20"):
             self.assertNotRegex(
