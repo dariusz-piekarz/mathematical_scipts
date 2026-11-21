@@ -126,7 +126,10 @@ function renderReader(){
   $("showFull").classList.toggle("hidden",!data.truncated);
   const firstLine=entity?data.entity.start_line:1;
   $("rangeStart").value=firstLine;
-  $("rangeEnd").value=firstLine+(data.latex.match(/\n/g)||[]).length;
+  // A terminal newline ends the last source line; it is not an extra line.
+  const lineCount=data.latex.length
+    ? data.latex.split("\n").length-(data.latex.endsWith("\n")?1:0) : 0;
+  $("rangeEnd").value=firstLine+Math.max(0,lineCount-1);
   $("addCurrent").textContent=state.selected.has((entity?"entity:":"module:")+(entity?data.entity.id:state.currentModule))?"✓ W zestawie":"+ Do zestawu";
   showRefs($("latexSource"),data.latex);
   renderSimplified(data.latex);

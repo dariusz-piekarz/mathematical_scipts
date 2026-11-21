@@ -22,6 +22,34 @@ class CustomScriptTests(unittest.TestCase):
     def build(self, items, **kwargs):
         return project_files(self.con, [], [], "Mój skrypt", items=items, **kwargs)
 
+
+    def test_closure_scopes_first_hop_to_chosen_source_lines(self):
+        # The first two lines have no references: other references in ALG-09
+        # must NOT pull unrelated chapters into the custom script.
+        files, manifest = self.build([
+            {"kind": "lines", "module": "ALG-09", "start_line": 1, "end_line": 2}
+        ], closure_depth=1)
+        self.assertEqual(manifest["modules"], ["ALG-09"])
+        self.assertEqual(manifest["references_external"], 0)
+        self.assertEqual(len(manifest["ordered_items"]), 1)
+        self.assertIn("rozdzialy/ALG-09-001.tex", files)
+
+    def test_closure_includes_actual_excerpt_reference(self):
+        target = self.con.execute("""
+            SELECT line,target_document FROM references_tex
+            WHERE source_document='ALG-09'
+              AND target_document IS NOT NULL AND target_document != 'ALG-09'
+            ORDER BY line LIMIT 1
+        """).fetchone()
+        self.assertIsNotNone(target)
+        files, manifest = self.build([
+            {"kind": "lines", "module": "ALG-09",
+             "start_line": target["line"], "end_line": target["line"]}
+        ], closure_depth=1)
+        self.assertIn(target["target_document"], manifest["whole_modules"])
+        self.assertIn(target["target_document"], manifest["modules"])
+        self.assertIn(f"rozdzialy/{target['target_document']}.tex", files)
+
     def test_exact_lines_and_source_provenance(self):
         original = self.con.execute(
             "SELECT content,sha256 FROM documents WHERE id='ALG-09'").fetchone()

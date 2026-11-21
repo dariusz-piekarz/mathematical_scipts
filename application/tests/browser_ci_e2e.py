@@ -64,6 +64,21 @@ def main() -> None:
                 chapter_title = page.locator("#docTitle").inner_text()
                 assert chapter_title.strip()
                 assert page.locator("#latexSource").inner_text().strip()
+                # Last-line selection must not offer an inexistent line after
+                # a canonical TeX file ending with a terminal newline.
+                page.evaluate("() => openModule('BT-00', true)")
+                page.wait_for_function(
+                    "() => state.currentModule === 'BT-00' && state.currentData && !state.currentData.truncated",
+                    timeout=15000,
+                )
+                line_count = page.evaluate("""() => {
+                    const text = state.currentData.latex;
+                    return text.split('\\n').length - (text.endsWith('\\n') ? 1 : 0);
+                }""")
+                assert int(page.locator("#rangeStart").input_value()) == 1
+                assert int(page.locator("#rangeEnd").input_value()) == line_count
+                page.locator("#addRange").click()
+                assert "Dodano wycinek" in page.locator("#toast").inner_text()
                 page.locator('[data-tab="graph"]').click()
                 page.locator("#view-graph").wait_for(state="visible", timeout=15000)
                 assert page.locator("#graphLeft option").count() > 0

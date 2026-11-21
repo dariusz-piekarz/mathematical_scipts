@@ -96,17 +96,32 @@ def selected_modules_and_fragments(con: sqlite3.Connection, modules: list[str], 
 
 
 def closure(con:sqlite3.Connection, chosen:dict[str,Any], known:dict[str,Any], depth:int):
-    """Optional transitive closure of external module references (bounded)."""
-    frontier=set(chosen)
+    """Bounded transitive reference closure, scoped to the actual selected spans.
+
+    Only the references inside a chosen excerpt may introduce a first-hop
+    dependency. Newly included chapters use their whole canonical source.
+    """
+    frontier={m:list(p['spans']) for m,p in chosen.items()}
     for _ in range(depth):
         if not frontier: break
         marks=','.join('?' for _ in frontier)
-        rows=con.execute(f'SELECT DISTINCT target_document FROM references_tex WHERE source_document IN ({marks}) AND target_document IS NOT NULL',tuple(sorted(frontier)))
-        new={r[0] for r in rows if r[0] not in chosen}
-        if len(chosen)+len(new)>MAX_PROJECT_MODULES: raise GenerationError('Domknięcie zależności przekracza limit 75 modułów.')
+        rows=con.execute(
+            f'SELECT source_document,target_document,offset FROM references_tex '
+            f'WHERE source_document IN ({marks}) AND target_document IS NOT NULL',
+            tuple(sorted(frontier)))
+        new={
+            r['target_document'] for r in rows
+            if r['target_document'] not in chosen
+            and any(start <= r['offset'] < end
+                    for start,end in frontier[r['source_document']])
+        }
+        if len(chosen)+len(new)>MAX_PROJECT_MODULES:
+            raise GenerationError('Domknięcie zależności przekracza limit 75 modułów.')
         for m in sorted(new):
-            row=known[m]; chosen[m]={'row':row,'content':row['content'],'fragments':[],'spans':[(0,len(row['content']))],'whole':True}
-        frontier=new
+            row=known[m]
+            chosen[m]={'row':row,'content':row['content'],'fragments':[],
+                       'spans':[(0,len(row['content']))],'whole':True}
+        frontier={m:chosen[m]['spans'] for m in sorted(new)}
 
 
 
