@@ -1,0 +1,546 @@
+\chapter[Algorytmy i obliczalność]{Algorytmy, obliczalność i nierozstrzygalność}
+\label{ch:computability-intro}
+
+\section{Pytanie inne niż prawdziwość}
+We wcześniejszych rozdziałach poznaliśmy zdania prawdziwe
+w strukturach i zdania posiadające formalne dowody.
+Teraz zadamy inne pytanie: czy istnieje \emph{jedna skończona procedura},
+która dla dowolnych danych rozstrzyga określoną własność?
+Możemy na przykład sprawdzić, czy dany napis jest poprawnie zbudowanym
+termem języka pierwszego rzędu, analizując go od lewej do prawej.
+To jest zadanie algorytmiczne. Tymczasem nie każde pytanie
+o obiektach matematycznych posiada algorytm rozstrzygający.
+
+Nie chcemy opierać się na niejasnym określeniu
+„zadanie da się wykonać mechanicznie”. Wprowadzimy więc prosty model
+maszyny wykonującej pojedyncze, jednoznacznie określone kroki.
+Pokażemy następnie za pomocą argumentu przekątniowego,
+że istnieje konkretne pytanie, na które nie odpowie
+żaden algorytm działający poprawnie dla wszystkich danych.
+
+\section{Napisy, kodowanie i problemy decyzyjne}
+\begin{definicja}[Skończony alfabet i zbiór słów]
+Niech $\Sigma$ będzie skończonym, niepustym zbiorem symboli.
+Przez $\Sigma^*$ oznaczamy zbiór wszystkich słów skończonych
+nad $\Sigma$, łącznie ze słowem pustym $\varepsilon$.
+Długość słowa $w$ oznaczamy przez $|w|$.
+\emph{Problemem decyzyjnym} nazywamy podzbiór $L\subseteq\Sigma^*$.
+Pytanie brzmi: dla podanego słowa $w$ ustalić, czy $w\in L$.
+\end{definicja}
+
+\begin{przyklad}[Prosty problem decyzyjny]
+Niech $\Sigma=\{0,1\}$, a $L$ składa się ze słów
+zawierających parzystą liczbę jedynek.
+Słowo $10101$ nie należy do $L$, bo ma trzy jedynki,
+a słowo $1010$ należy, bo ma ich dwie.
+Możemy rozstrzygnąć przynależność do $L$,
+przechodząc po słowie raz i zapamiętując tylko,
+czy dotychczas napotkaliśmy parzystą, czy nieparzystą liczbę jedynek.
+\end{przyklad}
+
+\begin{definicja}[Kodowanie par słów]
+Dla słów binarnych $u,v$ określmy
+\[
+\operatorname{code}(u,v):=0^{|u|}1uv.
+\]
+Zapis $0^{|u|}$ oznacza ciąg $|u|$ zer stojących obok siebie;
+nie jest potęgą liczby zero. Kod zaczyna się od tylu zer,
+ile bitów ma pierwszy składnik, po czym zapisujemy jedynkę,
+a następnie oba słowa.
+\end{definicja}
+
+\begin{przyklad}[Jak odczytać kod pary]
+Dla $u=10$ i $v=01$ otrzymujemy
+$\operatorname{code}(u,v)=0011001$.
+Dwie początkowe zera oznaczają, że pierwszy składnik
+ma długość dwa. Po pierwszej jedynce oddzielającej
+odczytujemy więc dwa następne bity $10$; pozostałe bity $01$
+tworzą drugi składnik. Kod daje się jednoznacznie odczytać.
+\end{przyklad}
+
+\begin{lemat}[Jednoznaczność kodowania par]\label{lem:computability-pair-code}
+Dla dowolnych słów $u,v,u',v'$ nad $\{0,1\}$ zachodzi
+\[
+\operatorname{code}(u,v)=\operatorname{code}(u',v')
+\quad\Longrightarrow\quad u=u'\ \text{oraz}\ v=v'.
+\]
+\end{lemat}
+\begin{proof}
+Każdy kod rozpoczyna się jednoznacznie określonym
+blokiem zer zakończonym pierwszą jedynką.
+Liczba tych zer jest długością pierwszego składnika.
+Jeżeli dwa kody są równe, mają taki sam początkowy blok,
+a więc $|u|=|u'|$. Kolejne $|u|$ bitów muszą być takie same,
+stąd $u=u'$. Pozostała część kodu to odpowiednio $v$ i $v'$, 
+więc również te słowa są równe. Opis ten daje zarazem algorytm
+odkodowania: liczymy początkowe zera do pierwszej jedynki,
+po czym odczytujemy tyle bitów pierwszego składnika.
+Brak jedynki rozdzielającej albo zbyt mało dalszych bitów
+oznacza, że napis nie jest kodem żadnej pary.
+\end{proof}
+
+\section{Maszyna Turinga: elementarne instrukcje}
+\begin{definicja}[Deterministyczna maszyna Turinga]\label{def:computability-tm}
+\emph{Deterministyczną maszyną Turinga} nazywamy skończony opis
+złożony z:
+\begin{enumerate}[label=(\roman*)]
+\item skończonego zbioru stanów $Q$, zawierającego
+stan początkowy $q_0$ oraz dwa różne stany końcowe
+$q_{\mathrm{tak}}$ i $q_{\mathrm{nie}}$, przy czym
+$q_0\notin\{q_{\mathrm{tak}},q_{\mathrm{nie}}\}$;
+\item skończonego alfabetu taśmy $\Omega$ z wyróżnionym
+symbolem pustym $\square$ oraz niepustym podzbiorem symboli wejściowych
+$\Sigma\subseteq\Omega\setminus\{\square\}$;
+\item funkcji przejścia
+\[
+\delta:(Q\setminus\{q_{\mathrm{tak}},q_{\mathrm{nie}}\})\times\Omega
+\longrightarrow Q\times\Omega\times\{L,P,S\},
+\]
+której wartość $\delta(q,a)=(q',b,d)$ ma następujący sens:
+„gdy maszyna jest w stanie $q$ i czyta $a$, zapisuje $b$,
+przechodzi do stanu $q'$ i przesuwa głowicę
+w lewo ($L$), prawo ($P$) albo pozostawia ją w miejscu ($S$)”.
+\end{enumerate}
+Maszyna ma taśmę o komórkach ponumerowanych liczbami
+całkowitymi. Na początku wejściowe słowo jest zapisane
+w kolejnych komórkach zaczynających się od komórki zero,
+a wszystkie pozostałe komórki zawierają $\square$.
+Głowica startuje nad komórką zero. Odczytanie stanu
+$q_{\mathrm{tak}}$ oznacza \emph{akceptację}, a
+$q_{\mathrm{nie}}$ \emph{odrzucenie}. W obu przypadkach
+maszyna zatrzymuje się. Jeżeli nie osiągnie żadnego
+ze stanów końcowych, wykonuje nieskończenie wiele kroków.
+\end{definicja}
+
+\begin{uwaga}[Ważne rozróżnienie: skończona maszyna i nieograniczony czas]
+Opis maszyny, a więc wykaz stanów oraz tabela przejść,
+jest skończony. Nie znaczy to jednak, że dla każdego wejścia
+liczba wykonanych kroków ma ustaloną wspólną granicę.
+Maszyna może poruszać się po dowolnie długich fragmentach
+taśmy, a dla niektórych wejść może w ogóle się nie zatrzymać.
+To właśnie możliwość nieograniczonego obliczania będzie istotna
+w problemie stopu.
+\end{uwaga}
+
+\begin{przyklad}[Sprawdzenie pierwszego symbolu]
+Niech alfabet wejściowy będzie równy $\{0,1\}$.
+Maszyna może w stanie $q_0$ odczytać pierwszy symbol
+wejściowego słowa. Jeśli jest to $1$, przechodzi
+bezpośrednio do $q_{\mathrm{tak}}$, a jeśli jest to $0$
+lub symbol pusty, przechodzi do $q_{\mathrm{nie}}$.
+Każde obliczenie kończy się po jednym kroku.
+Jest to prosty algorytm rozstrzygający własność
+„słowo zaczyna się od jedynki”.
+\end{przyklad}
+
+\section{Decydowanie i rozpoznawanie}
+\begin{definicja}[Zbiór rozstrzygalny i rozpoznawalny]\label{def:computability-decidable-c.e.}
+Niech $L\subseteq\Sigma^*$ będzie problemem decyzyjnym.
+\begin{enumerate}[label=(\roman*)]
+\item Zbiór $L$ nazywamy \emph{rozstrzygalnym}, jeśli istnieje
+maszyna Turinga, która zatrzymuje się dla \emph{każdego} wejścia $w$
+i akceptuje dokładnie wtedy, gdy $w\in L$.
+\item Zbiór $L$ nazywamy \emph{rozpoznawalnym}
+(lub \emph{rekurencyjnie przeliczalnym}), jeśli istnieje
+maszyna Turinga akceptująca dokładnie słowa z $L$.
+Dla słów spoza $L$ maszyna może je odrzucić albo
+nie zatrzymać się nigdy.
+\end{enumerate}
+\end{definicja}
+
+\begin{przyklad}[Różnica między dwiema obietnicami]
+Jeżeli algorytm \emph{rozstrzyga} własność,
+możemy uruchomić go na dowolnych danych i otrzymać
+po skończonym czasie odpowiedź „tak” lub „nie”.
+Jeżeli algorytm jedynie \emph{rozpoznaje} własność,
+to dla przypadku pozytywnego w końcu zobaczymy „tak”,
+ale dla negatywnego możemy nie otrzymać żadnej odpowiedzi.
+Z samego długiego oczekiwania nie wynika,
+że odpowiedź powinna być „nie”.
+\end{przyklad}
+
+\begin{lemat}[Zbiór rozstrzygalny jest rozpoznawalny]\label{lem:computability-decidable-recognizable}
+Każdy rozstrzygalny zbiór słów jest rozpoznawalny.
+\end{lemat}
+\begin{proof}
+Niech maszyna $M$ rozstrzyga $L$.
+Dla słowa należącego do $L$ maszyna zatrzymuje się
+i akceptuje. Dla słowa nienależącego zatrzymuje się
+i odrzuca. Są to dokładnie warunki wymagane
+od maszyny rozpoznającej $L$, która może, lecz nie musi,
+zatrzymywać się także na przypadkach negatywnych.
+Dlatego ta sama maszyna $M$ rozpoznaje $L$.
+\end{proof}
+
+\section{Program też można zapisać jako słowo}
+Każda maszyna Turinga ma skończenie wiele stanów,
+symboli i wpisów w tabeli przejść. Możemy więc
+zapisać jej cały opis jako skończone słowo binarne.
+Ustalamy numerację stanów i symboli, zapisujemy ich liczby
+oraz kolejne wpisy tabeli przejść, oddzielając pola kodami
+ich długości (na przykład przez prefiks długościowy,
+jak w Lemacie~\ref{lem:computability-pair-code}).
+Zapis obejmuje także stan początkowy, dwa stany końcowe,
+symbol pusty i alfabet wejściowy. Kodowanie to jest
+jednoznacznie odczytywalne; skończona procedura sprawdza,
+czy liczby symboli i stanów są poprawne, czy tabela jest
+zupełna i jednoznaczna dla par $(q,a)$ ze stanu niekońcowego
+oraz czy przejścia mają dozwolone kierunki.
+W ten sposób każdej maszynie przypisujemy pewien napis,
+który nazywamy \emph{kodem maszyny}. Przyjmujemy odtąd
+jedną ustaloną, efektywną metodę takiego kodowania.
+Nie każdy napis musi kodować poprawną maszynę;
+niepoprawny opis rozpoznajemy podczas sprawdzania kodu.
+
+W pozostałych rozważaniach o kodach maszyn ograniczamy się do
+maszyn o alfabecie wejściowym $\{0,1\}$; wszystkie programy
+konstruowane poniżej korzystają wyłącznie z takich wejść.
+To wystarcza do dowodu nierozstrzygalności problemu stopu.
+Zasadniczo można również kodować słowa nad innymi skończonymi
+alfabetami przez słowa binarne, ustalając uprzednio ich
+efektywnie odczytywalne kodowanie.
+
+\begin{twierdzenie}[Maszyna uniwersalna]\label{thm:computability-universal}
+Istnieje maszyna Turinga $U$ o binarnym alfabecie wejściowym
+taka, że dla każdego poprawnego kodu $e$ maszyny $M_e$
+o binarnym alfabecie wejściowym i każdego $w\in\{0,1\}^*$
+maszyna $U$ uruchomiona na kodzie pary $(e,w)$
+symuluje obliczenie $M_e$ na $w$ i zatrzymuje się
+z taką samą odpowiedzią wtedy i tylko wtedy, gdy $M_e$
+zatrzyma się na $w$.
+\end{twierdzenie}
+\begin{proof}
+Przedstawiamy konstrukcję symulatora i uzasadniamy, dlaczego
+wykonuje ją \emph{jedna} maszyna niezależna od $e$.
+Najpierw $U$ odkodowuje parę $(e,w)$ według
+Lematu~\ref{lem:computability-pair-code} i sprawdza poprawność
+kodu $e$. Jeśli kod pary lub maszyny jest błędny, $U$ może
+odrzucić wejście; te przypadki nie są objęte tezą twierdzenia.
+Dla poprawnego kodu zapisuje jego tabelę przejść
+oraz konfigurację początkową $M_e$ na $w$.
+
+Konfigurację przedstawiamy skończonym napisem: obejmuje
+stan, numer komórki pod głowicą (z zapisem znaku dla indeksów
+ujemnych) i listę par „numer odwiedzonej komórki -- zapisany
+symbol”. Indeksy zapisujemy w ustalonym kanonicznym kodzie binarnym
+ze znakiem, bez nieistotnych zer wiodących; symbole kodujemy
+binarnie, a kolejne pola jednoznacznie rozdzielamy.
+Poza tą listą na taśmie symulowanej maszyny stoją symbole
+puste. W każdej rundzie $U$ odczytuje symbol spod
+symulowanej głowicy (z listy albo jako symbol pusty),
+wyszukuje w zakodowanej tabeli odpowiedni wpis
+$\delta(q,a)=(q',b,d)$, zmienia zapis wskazanej komórki,
+stan i pozycję głowicy. Jeśli głowica wejdzie na nową
+komórkę, dodaje do listy jej numer i dotychczasowy symbol pusty.
+
+Każdą z tych czynności wykonuje się przez skończone
+przeszukiwanie i przepisywanie zakodowanych napisów.
+Są to operacje dostępne dla maszyny Turinga: skanowanie
+skończonej listy, porównywanie zakodowanych numerów,
+aktualizacja pola i obliczenie numeru sąsiedniej komórki
+przez dodanie lub odjęcie jedności. W szczególności
+porównanie dwóch skończonych zapisów binarnych wykonujemy
+przez porównanie znaków i długości, a następnie odpowiednich
+bitów, zaś dodanie lub odjęcie jedności -- przez skończony
+przebieg z przeniesieniem albo pożyczką. Usunięcie lub dopisanie
+pola do listy wymaga tylko przesunięcia skończonego fragmentu
+zapisu na taśmie symulatora. Wszystkie te czynności można
+złożyć w skończony zestaw podprogramów, niezależny od
+liczby symboli zapisanych w aktualnej konfiguracji.
+Kod $e$ jest \emph{danymi},
+a procedura realizująca te operacje ma stałą, skończoną
+tabelę instrukcji; nie zależy od konkretnej symulowanej maszyny.
+
+Indukcyjnie po liczbie rund zapis $U$ reprezentuje dokładnie
+konfigurację $M_e$ po tej samej liczbie kroków: początek
+jest poprawny, a opisany odczyt i aktualizacja realizują
+jedno przejście $\delta$. Jeśli $M_e$ wejdzie do stanu
+$q_{\mathrm{tak}}$ lub $q_{\mathrm{nie}}$, $U$ kończy pracę
+z tą samą odpowiedzią. Jeśli $M_e$ nie zatrzyma się, każda
+jej kolejna konfiguracja zostanie zasymulowana,
+więc także $U$ się nie zatrzyma.
+\end{proof}
+
+\begin{uwaga}[Co zostało tutaj pokazane?]
+Nie twierdzimy, że każdy program ma krótki kod ani że
+maszyna uniwersalna działa szybko. Istotna jest jedna
+własność logiczna: istnieje jeden skończony program
+potrafiący na podstawie zapisu innego programu naśladować
+jego zachowanie. W szczególności programy mogą przyjmować
+jako dane \emph{własne kody}.
+\end{uwaga}
+
+\section{Problem stopu}\label{sec:computability-halting}
+\begin{definicja}[Problem stopu]\label{def:computability-halting}
+W ustalonym binarnym kodowaniu definiujemy
+$H\subseteq\{0,1\}^*$ jako zbiór słów
+$\operatorname{code}(e,w)$, dla których $e$ jest poprawnym
+kodem maszyny $M_e$ i maszyna $M_e$ zatrzymuje się
+na wejściu $w$, niezależnie od tego, czy akceptuje,
+czy odrzuca. Napisy, które nie kodują pary lub mają
+niepoprawny kod maszyny, nie należą do $H$.
+Pytanie problemu stopu brzmi: mając zakodowaną parę
+$(e,w)$, czy możemy zawsze w skończonym czasie ustalić,
+czy $M_e$ zatrzyma się na $w$?
+\end{definicja}
+
+\begin{twierdzenie}[Nierozstrzygalność problemu stopu]\label{thm:computability-halting-undecidable}
+Nie istnieje maszyna Turinga rozstrzygająca zbiór $H$.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy przeciwnie, że istnieje maszyna $D$ rozstrzygająca
+$H$: na każdym słowie binarnym zatrzymuje się i poprawnie
+odpowiada, czy słowo to należy do $H$.
+W szczególności na wejściu $\operatorname{code}(e,w)$,
+gdzie $e$ jest poprawnym kodem maszyny, rozstrzyga,
+czy $M_e$ zatrzyma się na $w$.
+
+Zbudujmy program $K$ przyjmujący jako dane pojedynczy
+napis $x$. Jeśli $x$ nie jest poprawnym kodem maszyny,
+program $K$ może od razu zakończyć pracę.
+Jeśli $x$ jest poprawnym kodem, program $K$ uruchamia
+$D$ na $\operatorname{code}(x,x)$, aby ustalić,
+czy maszyna o kodzie $x$ zatrzymuje się na wejściu $x$.
+Następnie \emph{postępuje odwrotnie} do otrzymanej odpowiedzi:
+\begin{enumerate}[label=(\roman*)]
+\item jeśli $D$ przewiduje, że $M_x$ się zatrzyma,
+      program $K$ zaczyna nieskończoną pętlę;
+\item jeśli $D$ przewiduje, że $M_x$ się nie zatrzyma,
+      program $K$ natychmiast kończy pracę.
+\end{enumerate}
+Każdy z tych kroków da się opisać przez maszynę Turinga:
+wykonujemy obliczenie $D$ (które zawsze się kończy),
+a potem albo zatrzymujemy się, albo powtarzamy jeden krok bez końca.
+Zatem $K$ jest poprawnie opisanym programem i ma własny kod $k$.
+
+Uruchommy teraz $K$ na jego własnym kodzie $k$.
+Jeśli $D$ na wejściu $\operatorname{code}(k,k)$ odpowie,
+że $M_k=K$ zatrzyma się na $k$, to z definicji
+$K$ zapętli się i \emph{nie} zatrzyma.
+Jeśli $D$ odpowie, że $K$ \emph{nie} zatrzyma się na $k$,
+to $K$ natychmiast się zatrzyma.
+W obu przypadkach przewidywanie $D$ jest błędne.
+To przeczy założeniu, że $D$ zawsze udziela poprawnej odpowiedzi.
+Zatem taki program nie istnieje.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+  >=Stealth,
+  font=\small,
+  pytanie/.style={draw,rounded corners,align=center,minimum width=38mm,minimum height=9mm},
+  przypadek/.style={draw,rounded corners,align=center,text width=40mm,minimum height=16mm},
+  line width=.55pt]
+\node[pytanie] (d) {$D(\operatorname{code}(k,k))$};
+\node[przypadek,below left=11mm and 8mm of d] (tak)
+  {$D$ mówi: „zatrzyma się”\\ $K(k)$ nie zatrzymuje się};
+\node[przypadek,below right=11mm and 8mm of d] (nie)
+  {$D$ mówi: „nie zatrzyma się”\\ $K(k)$ zatrzymuje się};
+\draw[->] (d.south west) -- (tak.north east);
+\draw[->] (d.south east) -- (nie.north west);
+\end{tikzpicture}
+\caption{Argument przekątniowy: w obu możliwych przypadkach
+  odpowiedź $D$ jest sprzeczna z zachowaniem programu $K$.}
+\label{fig:computability-diagonal}
+\end{figure}
+
+\begin{uwaga}[Dlaczego to nie jest paradoks językowy?]
+W dowodzie nie zakładaliśmy, że jakiś program
+ma jednocześnie się zatrzymać i nie zatrzymać.
+Przypuściliśmy jedynie istnienie \emph{uniwersalnego
+rozstrzygającego} programu $D$. Na tej podstawie
+skonstruowaliśmy nowy program $K$, którego zachowanie
+przeczyłoby odpowiedzi $D$ dla jednego wybranego wejścia.
+Wniosek jest zatem taki, że \emph{nie istnieje} program
+$D$ działający poprawnie we wszystkich przypadkach.
+\end{uwaga}
+
+\section{Problem stopu jest mimo to rozpoznawalny}
+\begin{twierdzenie}[Rozpoznawalność problemu stopu]\label{thm:computability-halting-recognizable}
+Zbiór $H$ jest rozpoznawalny, ale nie jest rozstrzygalny.
+\end{twierdzenie}
+\begin{proof}
+Nierozstrzygalność udowodniliśmy w
+Twierdzeniu~\ref{thm:computability-halting-undecidable}.
+Aby rozpoznać $H$, bierzemy dowolne słowo binarne.
+Sprawdzamy, czy jest kodem pary $(e,w)$; jeśli nie,
+odrzucamy. Następnie sprawdzamy, czy $e$ opisuje
+poprawną maszynę; w przeciwnym razie także odrzucamy.
+Dla poprawnego kodu symulujemy działanie $M_e$ na $w$
+za pomocą maszyny uniwersalnej z
+Twierdzenia~\ref{thm:computability-universal}.
+Jeżeli symulowana maszyna zatrzyma się,
+rozpoznający akceptuje. Jeżeli się nie zatrzyma,
+symulacja trwa w nieskończoność, ale definicja
+rozpoznawalności na to pozwala.
+\end{proof}
+
+\begin{twierdzenie}[Rozstrzygalność przez dwa rozpoznawania]\label{thm:computability-two-recognizers}
+Dla dowolnego $L\subseteq\{0,1\}^*$ zbiór $L$
+jest rozstrzygalny wtedy i tylko wtedy, gdy zarówno
+$L$, jak i jego dopełnienie $\{0,1\}^*\setminus L$
+są rozpoznawalne.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $L$ jest rozstrzygalny, to rozpoznajemy $L$
+maszyną rozstrzygającą. Aby rozpoznać dopełnienie,
+wystarczy zamienić jej odpowiedzi „tak” i „nie”.
+
+Odwrotnie, niech $R_1$ rozpoznaje $L$, a $R_0$
+rozpoznaje jego dopełnienie. Dla zadanego słowa $w$
+nie uruchamiamy $R_1$ i nie oczekujemy bez końca,
+a dopiero potem $R_0$. Zamiast tego przeplatamy obliczenia:
+wykonujemy jeden krok $R_1$, jeden krok $R_0$,
+następny krok $R_1$, następny krok $R_0$ itd.
+Jeżeli któryś z programów zaakceptuje $w$,
+zatrzymujemy się i zwracamy odpowiadającą mu decyzję.
+Ewentualne odrzucenie przez jedną z maszyn ignorujemy:
+z punktu widzenia rozpoznawalności negatywny wynik
+nie jest świadectwem przynależności do jej zbioru.
+Zatrzymanej bez akceptacji symulacji nie wznawiamy,
+a drugą kontynuujemy.
+Każde $w$ należy albo do $L$, albo do jego dopełnienia,
+więc przynajmniej jeden rozpoznający musi je po skończonej
+liczbie kroków zaakceptować. Opisana procedura
+zawsze się zatem zatrzymuje i poprawnie rozstrzyga $L$.
+\end{proof}
+
+\begin{wniosek}[Dopełnienie problemu stopu nie jest rozpoznawalne]
+Zbiór $\{0,1\}^*\setminus H$ nie jest rozpoznawalny.
+\end{wniosek}
+\begin{proof}
+Gdyby dopełnienie $H$ było rozpoznawalne,
+to na mocy Twierdzenia~\ref{thm:computability-two-recognizers}
+zbiór $H$ byłby rozstrzygalny, ponieważ sam $H$
+jest rozpoznawalny. Przeczy to
+Twierdzeniu~\ref{thm:computability-halting-undecidable}.
+\end{proof}
+
+\section{Dowody formalne jako dane dla algorytmu}
+Zwróćmy uwagę na ważne powiązanie z rozdziałem~\ref{ch:natural-deduction}.
+Poprawność pojedynczego kroku dedukcji naturalnej
+jest sprawdzalna, ponieważ mamy skończony zapis reguły
+oraz jej warunków ubocznych. Przy ustalonym efektywnie
+opisanym, przeliczalnym języku i obliczalnym systemie aksjomatów
+możemy więc przeglądać kolejno skończone drzewa
+i sprawdzać, które są dowodami.
+
+\begin{twierdzenie}[Rozpoznawalność dowodliwości w efektywnym systemie]
+\label{thm:computability-proof-recognizable}
+Niech $\mathcal L$ będzie językiem pierwszego rzędu,
+w którym poprawność kodów symboli, ich rodzaje i arności
+można rozstrzygać algorytmicznie. Zakładamy, że termy,
+formuły oraz zdania języka $\mathcal L$ mają skończone
+kody binarne, których poprawność można sprawdzać
+algorytmicznie. Niech $T$ będzie rozstrzygalnym zbiorem zdań
+tego języka, a sprawdzanie wszystkich reguł dedukcji naturalnej
+(wraz z warunkami ubocznymi) niech będzie algorytmiczne.
+Wtedy zbiór kodów zdań $\sigma$ spełniających
+$T\vdash_{\mathrm{ND}}\sigma$ jest rozpoznawalny.
+\end{twierdzenie}
+\begin{proof}
+Na wejściu najpierw sprawdzamy, czy otrzymany napis
+jest kodem zdania $\sigma$; w przeciwnym razie go odrzucamy.
+Następnie wypisujemy kolejno wszystkie skończone słowa
+binarne, na przykład według długości i leksykograficznie.
+Każdy dowód formalny jest skończonym drzewem o skończonym
+kodzie binarnym, więc jego kod pojawi się w tym przeglądzie.
+Dla każdego słowa sprawdzamy,
+czy koduje poprawne drzewo: czy wszystkie węzły
+zawierają poprawne formuły, czy każdy krok używa
+jednej z dozwolonych reguł z zachowaniem warunków ubocznych
+i czy wszystkie pozostałe otwarte założenia należą do $T$.
+Ostatni warunek jest rozstrzygalny z założenia o $T$;
+pozostałe kontrole wynikają z jawnych założeń o składni
+i regułach.
+Jeżeli znajdziemy drzewo z wnioskiem $\sigma$, akceptujemy.
+Jeśli takie drzewo istnieje, będzie jednym ze skończonych
+napisów w naszym przeglądzie, więc w końcu je znajdziemy.
+Jeśli nie istnieje, przegląd może trwać bez końca;
+to dokładnie odpowiada definicji rozpoznawalności.
+\end{proof}
+
+\begin{przyklad}[Nie mylmy sprawdzenia dowodu ze znalezieniem dowodu]
+Gdy ktoś poda nam \emph{konkretne} drzewo dowodu,
+możemy krok po kroku skontrolować jego poprawność.
+Nie oznacza to jednak, że istnieje algorytm,
+który dla dowolnego zdania zawsze rozstrzygnie,
+czy \emph{jakieś} poprawne drzewo dowodu istnieje.
+Sprawdzanie gotowego certyfikatu i rozstrzyganie
+istnienia certyfikatu to dwa różne problemy.
+\end{przyklad}
+
+
+\section{Przejście od maszyn Turinga do rachunku na liczbach}
+W rozdziale~\ref{ch:arithmetization} wprowadzimy funkcje
+pierwotnie rekurencyjne. Są one szczególną klasą funkcji
+obliczalnych, ale nie należy utożsamiać tej klasy ze wszystkimi
+funkcjami obliczalnymi przez maszyny Turinga.
+W tym miejscu chodzi o mechanizm kodowania: liczby naturalne
+mogą reprezentować słowa i konfiguracje maszyny, a pojedynczy
+krok obliczenia daje się opisać działaniami arytmetycznymi.
+
+\begin{przyklad}[Dwa fragmenty taśmy jako dwie liczby]
+Niech alfabet taśmy ma $B\geqslant 2$ symboli oznaczonych
+liczbami $0,\ldots,B-1$, przy czym symbolowi pustemu
+przypisujemy numer $0$. Niepusty skończony napis
+$a_0a_1\cdots a_k$ przedstawiamy liczbą
+$A=a_0+a_1B+\cdots+a_kB^k$ i osobno zapisujemy jego
+długość $k+1$. Pusty napis reprezentujemy przez parę $(0,0)$.
+Dla napisu niepustego pierwszy symbol jest równy $A\bmod B$,
+a kod pozostałej części wynosi $\lfloor A/B\rfloor$.
+
+Zakodujmy tak dwa skończone fragmenty taśmy, leżące po lewej
+i po prawej stronie głowicy, w kolejności \emph{od komórek
+najbliższych głowicy}. Niech ich kody i długości będą równe
+$(L,\ell)$ i $(R,r)$, a $a$ oznacza symbol aktualnie czytany.
+Załóżmy, że funkcja przejścia nakazuje
+$\delta(q,a)=(q',c,d)$, a więc maszyna \emph{zapisuje symbol $c$}
+(w ogólności różny od $a$) i wykonuje ruch $d$.
+
+Jeśli $d=P$, to zapisany symbol $c$ staje się pierwszym
+symbolem po lewej stronie nowego położenia głowicy.
+Otrzymujemy $L'=c+BL$ i $\ell'=\ell+1$.
+Jeśli $r>0$, nowo odczytany symbol jest równy
+$a'=R\bmod B$, zaś $R'=\lfloor R/B\rfloor$ i $r'=r-1$.
+Jeśli $r=0$, otrzymujemy $a'=0$, $R'=0$ i $r'=0$.
+
+Analogicznie, jeśli $d=L$, to $R'=c+BR$ i $r'=r+1$.
+Dla $\ell>0$ otrzymujemy $a'=L\bmod B$,
+$L'=\lfloor L/B\rfloor$ i $\ell'=\ell-1$,
+a dla $\ell=0$ otrzymujemy $a'=0$, $L'=0$ i $\ell'=0$.
+Wreszcie jeśli $d=S$, głowica się nie przesuwa:
+$L'=L$, $\ell'=\ell$, $R'=R$, $r'=r$ oraz $a'=c$.
+We wszystkich trzech przypadkach nowy stan wynosi $q'$.
+
+Wzory te realizują zapis i ruch głowicy także wtedy,
+gdy głowica przechodzi na dotąd nieodwiedzoną komórkę.
+Oddzielne długości zapobiegają utracie końcowych zer
+w kodach fragmentów taśmy. W ten sposób \emph{cały krok}
+maszyny (zapis, przesunięcie i zmiana stanu) zostaje wyrażony
+przez elementarne operacje arytmetyczne.
+\end{przyklad}
+
+\begin{uwaga}[Znaczenie dla dalszych dowodów]
+Weryfikacja \emph{podanego} skończonego śladu maszyny
+różni się od wyszukiwania śladu zakończonego zatrzymaniem.
+W pierwszym przypadku wystarczy skończona liczba
+kontroli sąsiednich konfiguracji. W drugim liczba
+prób nie ma z góry ograniczenia. Właśnie ta różnica
+umożliwi w dalszej części jednoczesne kodowanie
+sprawdzalności dowodu i nierozstrzygalności dowodliwości.
+\end{uwaga}
+
+\section{Związek z twierdzeniami Gödla}
+Twierdzenie o pełności~\ref{thm:godel-completeness} utożsamia
+konsekwencję semantyczną z dowodliwością w logice pierwszego rzędu.
+Nie zapewnia jednak algorytmu, który dla każdej formuły
+rozstrzyga istnienie dowodu. Systematyczny przegląd dowodów
+wykrywa dowód, jeśli istnieje; w pozostałych przypadkach
+może nie zakończyć pracy.
+
+W dalszych rozdziałach zakodujemy formuły i dowody liczbami
+naturalnymi oraz wykorzystamy to w twierdzeniach Gödla
+o niezupełności. Przed włączeniem istniejącego opracowania
+sprawdzimy jego dowody i spójność notacji.
