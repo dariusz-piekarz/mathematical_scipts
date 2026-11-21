@@ -1,4 +1,4 @@
-name: Abstract algebra AA-01 to AA-17 validation
+name: Abstract algebra AA-01 to AA-18 validation
 
 on:
   push:
@@ -28,6 +28,7 @@ on:
       - "tools/tests/test_abstract_algebra_ch15.py"
       - "tools/tests/test_abstract_algebra_ch16.py"
       - "tools/tests/test_abstract_algebra_ch17.py"
+      - "tools/tests/test_abstract_algebra_ch18.py"
       - ".github/workflows/abstract-algebra-chapter.yml"
   workflow_dispatch:
 
@@ -77,13 +78,15 @@ jobs:
         run: python -m unittest tools.tests.test_abstract_algebra_ch16 -v
       - name: Run AA-17 mathematical regression tests
         run: python -m unittest tools.tests.test_abstract_algebra_ch17 -v
-      - name: Compile AA-01 to AA-17 book with latexmk
+      - name: Run AA-18 mathematical regression tests
+        run: python -m unittest tools.tests.test_abstract_algebra_ch18 -v
+      - name: Compile AA-01 to AA-18 book with latexmk
         uses: xu-cheng/latex-action@v3
         with:
           root_file: abstract_algebra.tex
           working_directory: books/pl
           args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
-      - name: Verify PDF and references (allow documented AA-18 forward ref only)
+      - name: Verify PDF and references (no undefined refs)
         shell: bash
         run: |
           test -s books/pl/abstract_algebra.pdf
@@ -95,25 +98,19 @@ jobs:
           unresolved = set(re.findall(
               r"LaTeX Warning: Reference `([^']+)' on page \d+ undefined", log
           ))
-          future = {
-              "aa:ch:module-tensor-product",
-          }
-          unexpected = unresolved - future
+          unexpected = unresolved
           if unexpected:
               raise SystemExit("Unexpected undefined references: " + repr(sorted(unexpected)))
           if "There were undefined references." in log and not unresolved:
               raise SystemExit("Unparsed undefined references in the LaTeX log")
           if re.search(r"LaTeX Warning: Citation .+ undefined", log):
               raise SystemExit("Undefined citation found")
-          if unresolved:
-              print("Documented forward reference to AA-18:", sorted(unresolved))
-              print("These links will resolve when the future chapters enter the stable book.")
           PY
       - name: Archive build output
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: abstract-algebra-aa01-aa17
+          name: abstract-algebra-aa01-aa18
           path: |
             books/pl/abstract_algebra.pdf
             books/pl/abstract_algebra.log
