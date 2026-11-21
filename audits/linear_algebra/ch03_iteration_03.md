@@ -55,7 +55,7 @@ Dla map o \(n\leq2\) zweryfikowano dodatkowo **459 przypadków** par \(T,U\), gd
 - Nie ma niepożądanych form „unia” ani „relacja liniowa” w prozie matematycznej.
 - Zachowano stabilne identyfikatory wszystkich twierdzeń i rysunków.
 - Nie dodano nowych plików graficznych ani zależności zewnętrznych.
-- GitHub Actions dla zmian: [44903957413](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44903957413) — wynik końcowy do uzupełnienia.
+- GitHub Actions dla zmian: [44903957413](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44903957413) — **success**. Wszystkie kroki walidacji źródeł, katalogu, importów, etykiet, terminologii i odsyłaczy oraz dwukrotna kompilacja LaTeX i eksport PDF zakończyły się poprawnie. Wynikowy PDF zawiera **37 stron A4**. Końcowy `linear_algebra.log` nie zawiera ostrzeżeń `LaTeX Warning`, `Overfull`, `Underfull`, `Missing character`, `Undefined control sequence` ani `Fatal error`. Wizualnie sprawdzono układ całego rozdziału 03 na stronach **28–37**, ze szczególną uwagą na diagram faktoryzacji na stronie **33** oraz końcowe podsumowanie; nie znaleziono kolizji, ucięć ani brakujących symboli. W nieblokującym etapie globalnego walidatora pozostałych książek repozytorium nadal występują **24 wcześniejsze zgłoszenia**, niezwiązane z rozdziałami algebry liniowej.
 
 ## Status
 
