@@ -1,0 +1,65 @@
+name: Concept graph backend and browser checks
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "application/backend/concept_graph.py"
+      - "application/backend/api.py"
+      - "application/frontend/**"
+      - "application/tests/test_concept_graph.py"
+      - "application/tests/test_api.py"
+      - "application/tests/browser_ci_e2e.py"
+      - ".github/workflows/concept-graph.yml"
+  workflow_dispatch:
+
+jobs:
+  verify-concept-graph:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: application
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: application/requirements.txt
+      - name: Install backend and test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt httpx
+      - name: Build read-only canonical index
+        shell: bash
+        run: |
+          mkdir -p data
+          set +e
+          python backend/latex_parser.py index \
+            --source ../chapters/pl \
+            --recursive \
+            --db data/biblioteka.db \
+            --aliases config/ALIASY_PO_SCALENIACH.json \
+            --report data/concept_index_report.json
+          result=$?
+          set -e
+          # Exit 2 is the parser's documented unresolved-reference report.
+          if [[ "$result" -ne 0 && "$result" -ne 2 ]]; then
+            exit "$result"
+          fi
+      - name: Test concept graph source grounding and relations
+        run: python -m unittest discover -s tests -p 'test_concept_graph.py' -v
+      - name: Test HTTP graph against actual indexed chapters
+        env:
+          PYTHONPATH: ".:tests"
+        run: |
+          python -m unittest \
+            test_api.APITests.test_concept_graph_zorn_uses_real_index \
+            test_api.APITests.test_concept_graph_unknown_and_validation -v
+      - name: Install Chromium
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Browser navigation and concept graph
+        run: python tests/browser_ci_e2e.py
