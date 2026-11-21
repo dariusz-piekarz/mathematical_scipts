@@ -196,6 +196,39 @@ class TopologyChaptersTwentyOneTwentyTwoAudit(unittest.TestCase):
                 if r == b:
                     self.assertGreater(sum(u*v for u,v in zip(x, er)), 0)
 
+    def test_at22_dual_cell_boundary_coboundary_grading(self):
+        """For sigma<tau, d sigma* has coefficient tau*, never sigma in d tau."""
+        src = self.src["22"]
+        for fragment in (
+            r"współczynnikiem $\tau^*$ w $\delta(\sigma^*)$",
+            r"współczynnikowi $\sigma$ w $\partial\tau$",
+            r"$\dim D(\tau)=n-k-1=\dim D(\sigma)-1$",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, src)
+        self.assertNotIn(r"współczynnikiem $\sigma$ w $\delta\tau$", src)
+        for face, expected in (((1, 2), 1), ((0, 2), -1), ((0, 1), 1)):
+            with self.subTest(face=face):
+                boundary = {(1, 2): 1, (0, 2): -1, (0, 1): 1}
+                self.assertEqual(boundary[face], expected)
+
+    def test_at22_explicit_coefficients_and_chart_mapping_rule(self):
+        src = self.src["22"]
+        for fragment in (
+            r"Niech $X,Y$ będą lokalnie zwartymi przestrzeniami Hausdorffa,",
+            r"$G$ grupą abelową, a $k\ge0$ liczbą całkowitą.",
+            r"$G$ grupą abelową, a $k\in\Z$.",
+            r"drugoprzeliczalnej rozmaitości $M$ bez brzegu",
+            r"homologia Borela--Moore'a",
+            r"odwzorowanie właściwe",
+            r"Porównanie odwzorowań łączących",
+            r"przy przejściu między mapami",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, src)
+        self.assertNotIn("homologia Borel--Moore'a", src)
+        self.assertNotIn("Mapa łańcuchowa", src)
+
     def test_disjoint_lines_product_and_direct_sum_distinction(self):
         src = self.src["22"]
         self.assertIn(r"\label{prz:BM-countable-lines}", src)
