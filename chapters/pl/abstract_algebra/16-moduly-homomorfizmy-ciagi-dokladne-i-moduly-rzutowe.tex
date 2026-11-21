@@ -1,0 +1,602 @@
+% AA-16 | Algebra abstrakcyjna | audyt II
+\setlength{\parskip}{3pt}
+\chapter{Moduły, homomorfizmy i ciągi dokładne}
+\label{aa:ch:modules-introduction}
+
+\section{Dlaczego po grupach i pierścieniach pojawiają się moduły?}
+Przestrzeń wektorowa nad ciałem $K$ jest grupą abelową,
+na której elementy $K$ działają jak skalary.
+Zastępując ciało pierścieniem z jedynką, otrzymujemy
+pojęcie modułu. Ta zmiana nie jest kosmetyczna: nawet
+najprostsze wyniki teorii przestrzeni wektorowych,
+takie jak istnienie bazy dla każdej przestrzeni, mogą
+przestać obowiązywać. Z drugiej strony jeden język
+obejmie grupy abelowe, przestrzenie wektorowe,
+ideały pierścieni, przedstawienia grup oraz układy
+równań liniowych o współczynnikach z pierścienia.
+
+W tym rozdziale $R$ jest pierścieniem z jedynką,
+niekoniecznie przemiennym. W definicjach lewego
+modułu zapisujemy działanie skalara z lewej strony.
+
+\begin{definicja}[Lewy i prawy moduł nad pierścieniem]
+\label{aa:def:modules-full}
+\emph{Lewym $R$-modułem} nazywamy grupę abelową
+$(M,+,0_M)$ wraz z działaniem $R\times M\to M$,
+$(r,m)\mapsto rm$, takim, że dla wszystkich
+$r,s\in R$ i $m,n\in M$:
+\begin{enumerate}[label=\textup{(M\arabic*)}]
+\item $(r+s)m=rm+sm$;
+\item $r(m+n)=rm+rn$;
+\item $(rs)m=r(sm)$;
+\item $1_Rm=m$.
+\end{enumerate}
+\emph{Prawym $R$-modułem} nazywamy grupę abelową $M$
+z działaniem $M\times R\to M$, $(m,r)\mapsto mr$,
+dla którego, dla dowolnych $m,n\in M$ i $r,s\in R$,
+zachodzą
+$(m+n)r=mr+nr$, $m(r+s)=mr+ms$,
+$(mr)s=m(rs)$ oraz $m1_R=m$.
+Jeśli $R$ jest przemienny, z każdego lewego
+$R$-modułu otrzymujemy prawy, kładąc $mr=rm$:
+warunek $(mr)s=m(rs)$ wynika wtedy z
+$(sr)m=s(rm)$ i przemienności skalarów.
+\end{definicja}
+
+\begin{stwierdzenie}[Pierwsze konsekwencje aksjomatów]
+\label{aa:st:modules-zero-laws}
+Niech $M$ będzie lewym $R$-modułem. Dla każdego
+$r\in R$ i $m\in M$ zachodzą
+$0_Rm=0_M$, $r0_M=0_M$,
+$(-r)m=-(rm)$ oraz $r(-m)=-(rm)$.
+\end{stwierdzenie}
+\begin{proof}
+Z $(0_R+0_R)m=0_Rm+0_Rm$ otrzymujemy
+$0_Rm=0_M$ po odjęciu $0_Rm$ w grupie addytywnej
+$M$. Analogicznie
+$r(0_M+0_M)=r0_M+r0_M$ daje $r0_M=0_M$.
+Ponieważ $0_Rm=(r+(-r))m=rm+(-r)m$, element
+$(-r)m$ jest przeciwny do $rm$. Ostatnia równość
+wynika tak samo z $r(m+(-m))=r0_M=0_M$.
+\end{proof}
+
+\begin{przyklad}[Cztery zasadniczo różne moduły]
+\label{aa:prz:modules-four}
+\begin{enumerate}[label=\textup{\arabic*)}]
+\item Każda grupa abelowa $A$ jest kanonicznie
+$\mathbb Z$-modułem, ponieważ $na$ oznacza
+$n$-krotną sumę elementu $a$. Homomorfizmy takich
+modułów są dokładnie homomorfizmami grup abelowych.
+\item Każda przestrzeń wektorowa nad ciałem $K$
+jest $K$-modułem. Dla $K$ wszystkie moduły mają bazy,
+co udowadnia standardowe twierdzenie o bazie
+przestrzeni wektorowej.
+\item Każdy ideał lewostronny $I\subseteq R$ jest
+lewym $R$-modułem z mnożeniem odziedziczonym z $R$.
+Przykładowo $2\mathbb Z$ jest $\mathbb Z$-modułem
+izomorficznym z $\mathbb Z$, mimo że jako podzbiór
+nie zawiera elementu $1$.
+\item Jeśli $R=\mathbb Z/4\mathbb Z$, to
+$M=2R=\{\bar0,\bar2\}$ jest $R$-modułem.
+Nie jest wolnym $R$-modułem: dla dowolnego
+niezerowego $m\in M$ zachodzi $\bar2m=0$,
+więc żaden niezerowy element $M$ nie może stanowić
+jednoelementowej bazy. Co więcej, każdy niezerowy
+moduł wolny nad $R$ zawiera kopię $R$: jeśli $e$
+należy do jego bazy, odwzorowanie $r\mapsto re$ jest
+różnowartościowe dzięki jednoznaczności współrzędnych.
+Taki moduł ma zatem co najmniej cztery elementy,
+podczas gdy $M$ ma tylko dwa.
+\end{enumerate}
+\end{przyklad}
+
+\begin{definicja}[Podmoduł i homomorfizm modułów]
+\label{aa:def:modules-sub-hom}
+Niech $M,N$ będą lewymi $R$-modułami.
+\emph{Podmoduł} $L\subseteq M$ to podgrupa addytywna
+zamknięta na działanie każdego $r\in R$.
+\emph{Homomorfizm $R$-modułów} to odwzorowanie
+$f:M\to N$ spełniające $f(m+m')=f(m)+f(m')$
+i $f(rm)=rf(m)$ dla wszystkich $m,m'\in M$, $r\in R$.
+Zbiór wszystkich takich homomorfizmów oznaczamy
+$\operatorname{Hom}_R(M,N)$. W szczególności każdy homomorfizm
+jest addytywny, więc $f(0_M)=0_N$ oraz $f(-m)=-f(m)$:
+pierwsza równość wynika z $f(0_M)=f(0_M)+f(0_M)$,
+a druga z $f(m)+f(-m)=f(0_M)$.
+\end{definicja}
+
+\begin{stwierdzenie}[Grupa homomorfizmów modułów]
+\label{aa:st:modules-hom-abelian}
+Dla lewych $R$-modułów $M,N$ zbiór
+$\operatorname{Hom}_R(M,N)$ jest grupą abelową przy
+punktowym dodawaniu $(f+g)(m)=f(m)+g(m)$.
+Jeśli $R$ jest przemienny, staje się dodatkowo
+$R$-modułem dla $(rf)(m)=r f(m)$.
+\end{stwierdzenie}
+\begin{proof}
+Dla homomorfizmów $f,g$ ich suma zachowuje dodawanie,
+ponieważ dla $m,m'\in M$ mamy
+$(f+g)(m+m')=f(m)+f(m')+g(m)+g(m')$
+$=(f+g)(m)+(f+g)(m')$; środkowa zamiana
+składników jest dopuszczalna, gdyż $N$ jest grupą abelową.
+Dla $r\in R$ oraz $m\in M$ mamy
+$(f+g)(rm)=f(rm)+g(rm)=rf(m)+rg(m)
+=r(f(m)+g(m))$, zatem $f+g$ jest $R$-liniowe.
+Odwzorowanie zerowe i odwzorowanie $-f$ są także
+$R$-liniowe. Łączność i przemienność dodawania
+pochodzą z grupy addytywnej $N$.
+Jeśli $R$ jest przemienny, to
+$(af)(rm)=a f(rm)=a(rf(m))=r(af(m))$;
+pozostałe aksjomaty modułu wynikają z aksjomatów $N$.
+Przemienność jest tu istotna: dla nieprzemiennego
+$R$ wzór $(af)(m)=af(m)$ może nie zachowywać
+$R$-liniowości, ponieważ $ar$ nie musi być równe $ra$.
+\end{proof}
+
+\begin{lemat}[Kryterium podmodułu]
+\label{aa:lem:modules-submodule-test}
+Niepusty podzbiór $L\subseteq M$ jest podmodułem
+lewego $R$-modułu $M$ wtedy i tylko wtedy, gdy
+$\ell+\ell'\in L$ i $r\ell\in L$ dla
+wszystkich $\ell,\ell'\in L$ i $r\in R$.
+\end{lemat}
+\begin{proof}
+Konieczność wynika z definicji. Przy założonej
+zamkniętości wybierzmy $\ell\in L$.
+Ponieważ $0_R\ell=0_M$, do $L$ należy zero.
+Dalej $-\ell=(-1_R)\ell$ należy do $L$.
+Zamkniętość na dodawanie i elementy przeciwne
+pokazuje, że $L$ jest podgrupą addytywną;
+zamkniętość na działanie $R$ już założyliśmy.
+\end{proof}
+
+\begin{twierdzenie}[Jądro, obraz i pierwszy izomorfizm modułów]
+\label{aa:tw:modules-first-isomorphism}
+Dla homomorfizmu lewych $R$-modułów $f:M\to N$
+zbiór $\ker f$ jest podmodułem $M$, a
+$\operatorname{im}f$ podmodułem $N$. Wzór
+$\bar f(m+\ker f)=f(m)$ wyznacza izomorfizm
+$R$-modułów $M/\ker f\cong\operatorname{im}f$.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $m,m'\in\ker f$ i $r\in R$, to
+$f(m+m')=f(m)+f(m')=0$ oraz $f(rm)=rf(m)=0$.
+Jądro zawiera $0_M$, gdyż $f(0_M)=0_N$.
+Jeśli $n=f(m)$ i $n'=f(m')$ należą do obrazu,
+to $n+n'=f(m+m')$ i $rn=f(rm)$ także do niego należą.
+Obraz jest niepusty, ponieważ zawiera $f(0_M)=0_N$.
+Lemat~\ref{aa:lem:modules-submodule-test} pozwala zatem
+zastosować kryterium podmodułu zarówno do jądra,
+jak i do obrazu.
+
+Grupa addytywna $M/\ker f$ jest ilorazem przez
+podgrupę; definiujemy działanie $r(m+\ker f)=rm+\ker f$.
+Jeśli $m'=m+k$ z $k\in\ker f$, to
+$rm'=rm+rk$ oraz $rk\in\ker f$, więc działanie
+nie zależy od reprezentanta. Aksjomaty modułu
+przechodzą z $M$ na iloraz. Ponieważ
+$f(m)=f(m')$ wtedy i tylko wtedy, gdy
+$m-m'\in\ker f$, odwzorowanie $\bar f$
+jest dobrze określone i różnowartościowe.
+Jest na obraz z definicji. Zachowuje dodawanie
+i skalary, ponieważ $f$ je zachowuje.
+\end{proof}
+
+\begin{twierdzenie}[Drugi i trzeci izomorfizm modułów]
+\label{aa:tw:modules-second-third}
+Niech $M$ będzie lewym $R$-modułem.
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item Dla podmodułów $A,B\subseteq M$ zachodzi
+$(A+B)/B\cong A/(A\cap B)$.
+\item Jeśli $A\subseteq B\subseteq M$ są podmodułami,
+to $(M/A)/(B/A)\cong M/B$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+W (i) suma $A+B=\{a+b:a\in A,\ b\in B\}$
+jest podmodułem $M$: suma dwóch takich elementów,
+ich elementy przeciwne i wszystkie wielokrotności
+przez $R$ znów należą do $A+B$.
+Rozważmy homomorfizm $A\to(A+B)/B$,
+$a\mapsto a+B$. Jest on na, ponieważ każda klasa
+$a+b+B$ jest równa $a+B$. Jego jądro to dokładnie
+$A\cap B$. Z pierwszego twierdzenia o izomorfizmie
+otrzymujemy $(i)$. W (ii) homomorfizm
+$M/A\to M/B$ dany przez $m+A\mapsto m+B$
+jest dobrze określony, bo $A\subseteq B$, i jest
+surjektywny. Jego jądro składa się dokładnie z
+klas $b+A$, $b\in B$, czyli jest równe $B/A$.
+Pierwsze twierdzenie o izomorfizmie daje (ii).
+\end{proof}
+
+\section{Moduły wolne i prezentacje}
+\begin{definicja}[Moduł wolny]
+\label{aa:def:modules-free}
+Rodzina $(e_s)_{s\in S}$ elementów lewego $R$-modułu
+$F$ jest \emph{bazą}, jeśli każdy $x\in F$ ma dokładnie
+jedno przedstawienie $x=\sum_{s\in S}r_se_s$,
+w którym tylko skończenie wiele współczynników
+$r_s\in R$ jest niezerowych. Moduł mający bazę
+nazywamy \emph{wolnym}. Symbol $R^{(S)}$ oznacza
+zbiór funkcji $S\to R$ o skończonym nośniku,
+z dodawaniem i lewym działaniem $R$ określonymi
+współrzędnie. Dla $s\in S$ niech $e_s$ przyjmuje
+wartość $1_R$ w punkcie $s$ i $0_R$ poza nim.
+Wówczas każdy $x\in R^{(S)}$ ma jednoznaczny zapis
+$x=\sum_{s\in S}x(s)e_s$; równość współrzędnych
+w punkcie $s$ dowodzi jednoznaczności. W szczególności
+$(e_s)_{s\in S}$ jest bazą, a dla $S=\varnothing$
+otrzymujemy moduł zerowy.
+\end{definicja}
+
+\begin{twierdzenie}[Własność uniwersalna modułu wolnego]
+\label{aa:tw:modules-free-universal}
+Niech $S$ będzie zbiorem, a $M$ lewym $R$-modułem.
+Dla każdej funkcji $u:S\to M$ istnieje dokładnie
+jeden homomorfizm $R$-modułów
+$\bar u:R^{(S)}\to M$, który wysyła standardowy
+wektor bazowy $e_s$ na $u(s)$ dla każdego $s\in S$.
+\end{twierdzenie}
+\begin{proof}
+Dla funkcji $x:S\to R$ o skończonym nośniku
+określamy $\bar u(x)=\sum_{s\in S}x(s)u(s)$.
+Suma zawiera tylko skończenie wiele niezerowych
+składników, więc jest dobrze określona.
+Jej addytywność wynika z rozdzielności działania,
+a $\bar u(rx)=r\bar u(x)$ z aksjomatu
+$(rs)m=r(sm)$: istotna jest tu kolejność
+mnożenia skalarów w nieprzemiennym $R$.
+Współrzędne $e_s$ dają $\bar u(e_s)=u(s)$.
+Jeżeli $v$ jest innym takim homomorfizmem,
+to dla $x=\sum_s x(s)e_s$ mamy
+$v(x)=\sum_s x(s)v(e_s)=\bar u(x)$.
+Stąd jednoznaczność.
+\end{proof}
+
+\begin{definicja}[Prezentacja modułu przez generatory i relacje]
+\label{aa:def:modules-presentation}
+\emph{Prezentacją} lewego $R$-modułu $M$ nazywamy
+ciąg homomorfizmów
+$R^{(T)}\xrightarrow{d}R^{(S)}\xrightarrow{p}M\to0$
+taki, że $p$ jest surjekcją i $\operatorname{im}d=\ker p$.
+Oznacza to, że elementy $p(e_s)$ generują $M$,
+a elementy $d(e_t)$ są relacjami generującymi
+wszystkie zależności między generatorami.
+\end{definicja}
+
+\begin{twierdzenie}[Każdy moduł ma prezentację wolną]
+\label{aa:tw:modules-presentation-exists}
+Dla każdego lewego $R$-modułu $M$ istnieją zbiory
+$S,T$ i prezentacja $R^{(T)}\to R^{(S)}\to M\to0$.
+\end{twierdzenie}
+\begin{proof}
+Weźmy $S=M$ jako zbiór i funkcję identycznościową
+$u:S\to M$. Własność uniwersalna daje homomorfizm
+$p:R^{(S)}\to M$ wysyłający $e_m$ na $m$.
+Jest on surjektywny, bo każdy $m\in M$ jest obrazem
+$e_m$. Niech $K=\ker p$ i weźmy $T=K$ jako zbiór.
+Własność uniwersalna modułu wolnego daje
+$d:R^{(T)}\to R^{(S)}$ określony na standardowych
+wektorach przez $d(e_k)=k$. Wtedy
+$\operatorname{im}d=K$; istotnie, obrazy należą do $K$,
+a każdy $k\in K$ jest obrazem $e_k$.
+Otrzymujemy wymaganą prezentację.
+\end{proof}
+
+\begin{przyklad}[Prezentacje modułów nad liczbami całkowitymi]
+\label{aa:prz:modules-presentations-z}
+Dla $n\ge2$ grupa cykliczna $\mathbb Z/n\mathbb Z$
+ma prezentację
+$\mathbb Z\xrightarrow{\cdot n}\mathbb Z\to\mathbb Z/n\mathbb Z\to0$.
+Generator to klasa liczby $1$, a jedyna relacja
+ma postać $n[1]=0$. Dla
+$\mathbb Z/6\mathbb Z\oplus\mathbb Z/10\mathbb Z$
+możemy użyć dwóch generatorów $u,v$ i relacji
+$6u=0$, $10v=0$: homomorfizm
+$\mathbb Z^2\to\mathbb Z^2$ o macierzy
+$\operatorname{diag}(6,10)$ opisuje wszystkie relacje:
+jej obraz wynosi $6\mathbb Z\oplus10\mathbb Z$,
+czyli jądro epimorfizmu
+$(a,b)\mapsto(a+6\mathbb Z,b+10\mathbb Z)$.
+Gdy przejdziemy do postaci Smitha, znajdziemy
+kanoniczny sposób upraszczania takich prezentacji.
+\end{przyklad}
+
+\begin{przyklad}[Moduł z jednym generatorem nie musi być wolny]
+\label{aa:prz:modules-cyclic-not-free}
+Niech $K$ będzie ciałem, a $R=K[t]/(t^2)$.
+Moduł $M=R/(t)$ jest generowany przez klasę $1$,
+ale $t\ne0$ w $R$ i $t\cdot(1+(t))=0$ w $M$.
+W pierścieniu $R$ klasa $t$ jest niezerowa,
+gdyż $t\notin(t^2)\subseteq K[t]$. Zeruje ona cały
+$M$, ponieważ $t\cdot(r+(t))=tr+(t)=0$
+dla dowolnego $r\in R$ (ideał $(t)$ jest dwustronny).
+Gdyby $M$ był wolnym $R$-modułem z niepustą bazą,
+to żaden niezerowy skalar nie mógłby zerować
+wszystkich elementów: dla elementu bazowego $e_s$
+równość $te_s=0$ przeczyłaby jednoznaczności
+współrzędnych. Zatem moduł nie jest wolny. Pokazuje to, że generator
+i element bazy to różne pojęcia.
+\end{przyklad}
+
+\section{Suma prosta, iloczyn prosty i ciągi dokładne}
+\begin{definicja}[Suma prosta i iloczyn prosty modułów]
+\label{aa:def:modules-direct-sum}
+Dla rodziny lewych $R$-modułów $(M_i)_{i\in I}$
+\emph{iloczyn prosty} $\prod_{i\in I}M_i$ składa się
+ze wszystkich rodzin elementów, z działaniem
+$R$ i dodawaniem określonymi współrzędnie.
+\emph{Suma prosta} $\bigoplus_{i\in I}M_i$ jest
+podmodułem tych rodzin, które mają skończony nośnik.
+Istotnie, nośnik sumy dwóch rodzin jest zawarty
+w sumie mnogościowej ich nośników, a nośnik
+rodziny pomnożonej przez skalar jest zawarty
+w nośniku wyjściowej rodziny. Oba pozostają więc
+skończone. Rodzina zerowa należy do sumy prostej,
+a element przeciwny nie zwiększa nośnika.
+Dla skończonego zbioru indeksów obie konstrukcje
+są równe, ale dla nieskończonego mogą się różnić.
+Na przykład dla $I=\mathbb N$ i $M_i=\mathbb Z$
+rodzina $(1,1,\ldots)$ należy do
+$\prod_{i\in\mathbb N}\mathbb Z$, ale nie do
+$\bigoplus_{i\in\mathbb N}\mathbb Z$, ponieważ
+ma nieskończony nośnik.
+\end{definicja}
+
+\begin{definicja}[Dokładność ciągu modułów]
+\label{aa:def:modules-exact}
+Ciąg $L\xrightarrow{f}M\xrightarrow{g}N$
+homomorfizmów lewych $R$-modułów jest \emph{dokładny
+w $M$}, jeśli $\operatorname{im}f=\ker g$.
+\emph{Krótki ciąg dokładny} ma postać
+\[
+0\longrightarrow A\xrightarrow{i}B
+ \xrightarrow{p}C\longrightarrow0,
+\]
+gdzie $i$ jest iniekcją, $p$ jest surjekcją oraz
+$\operatorname{im}i=\ker p$.
+\end{definicja}
+
+\begin{twierdzenie}[Kryteria rozszczepienia ciągu dokładnego]
+\label{aa:tw:modules-splitting}
+Dla krótkiego ciągu dokładnego lewych $R$-modułów
+$0\to A\xrightarrow{i}B\xrightarrow{p}C\to0$
+następujące warunki są równoważne:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item istnieje $R$-liniowe $s:C\to B$ takie, że
+$p\circ s=\operatorname{id}_C$;
+\item istnieje $R$-liniowe $r:B\to A$ takie, że
+$r\circ i=\operatorname{id}_A$;
+\item istnieje izomorfizm $B\cong A\oplus C$
+zgodny z danym ciągiem, to znaczy przeprowadzający
+$i(a)$ na $(a,0)$ i $p$ na rzut na drugą współrzędną.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Załóżmy (i). Dla $b\in B$ element
+$b-s(p(b))$ należy do $\ker p=\operatorname{im}i$.
+Ponieważ $i$ jest iniekcją, istnieje dokładnie
+jedno $a\in A$ takie, że
+$i(a)=b-s(p(b))$. Wzór
+$\Phi(a,c)=i(a)+s(c)$ określa $R$-liniowe
+odwzorowanie $A\oplus C\to B$. Jest ono na:
+dla $b\in B$ wybieramy wyżej opisane $a$ i
+$c=p(b)$. Jeśli $\Phi(a,c)=0$, po zastosowaniu
+$p$ dostajemy $c=0$, a następnie $i(a)=0$,
+więc $a=0$. Zatem $\Phi$ jest izomorfizmem.
+Jego odwrotność ma postać
+$\Phi^{-1}(b)=(i^{-1}(b-s(p(b))),p(b))$,
+gdzie $i^{-1}$ jest odwrotnością $i:A\to\operatorname{im}i$;
+argument pierwszej współrzędnej należy do
+$\operatorname{im}i$ na mocy dokładności ciągu.
+Ponadto $\Phi(a,0)=i(a)$ i $p\Phi(a,c)=c$.
+Dostaliśmy (iii).
+
+Z (iii) otrzymujemy (ii): jeśli
+$\Psi:B\to A\oplus C$ jest izomorfizmem zgodnym
+z ciągiem, to definiujemy $r=\operatorname{pr}_A\circ\Psi$.
+Wtedy $r(i(a))=\operatorname{pr}_A(a,0)=a$.
+
+Załóżmy teraz (ii). Dla $b\in B$ element
+$b-i(r(b))$ należy do $\ker r$. Dlatego
+każdy $b\in B$ zapisuje się jako
+$b=i(r(b))+(b-i(r(b)))$, przy czym drugi składnik
+leży w $\ker r$. Rozkład jest jednoznaczny:
+$\ker r\cap i(A)=0$, gdyż dla $i(a)\in\ker r$
+mamy $0=r(i(a))=a$. Zatem
+$B=i(A)\oplus\ker r$. Ograniczenie
+$p|_{\ker r}:\ker r\to C$ jest iniektywne,
+ponieważ jego jądro to
+$\ker r\cap\ker p=\ker r\cap\operatorname{im}i=0$.
+Jest też na: dla $c\in C$ wybieramy $b\in B$
+z $p(b)=c$ i mamy
+$p(b-i(r(b)))=c$. Niech
+$s$ będzie odwrotnością tego ograniczenia,
+po której stosujemy włączenie $\ker r\hookrightarrow B$.
+Odwrotność jest $R$-liniowa: jeśli $c_1=p(u_1)$,
+$c_2=p(u_2)$ dla $u_1,u_2\in\ker r$, to
+$p(u_1+u_2)=c_1+c_2$ oraz $p(tu_1)=tc_1$
+dla każdego $t\in R$. Jednoznaczność przeciwobrazów
+w $\ker r$ zapewnia zachowanie dodawania i skalarów.
+Wtedy $p\circ s=\operatorname{id}_C$, co daje (i).
+\end{proof}
+
+\begin{przyklad}[Krótki ciąg, który się nie rozszczepia]
+\label{aa:prz:modules-nonsplit-z}
+Rozważmy ciąg $\mathbb Z$-modułów
+\[
+0\longrightarrow\mathbb Z\xrightarrow{\cdot2}\mathbb Z
+ \xrightarrow{\pi}\mathbb Z/2\mathbb Z\longrightarrow0.
+\]
+Jest dokładny: mnożenie przez $2$ jest iniektywne,
+$\pi$ jest surjekcją, a $\ker\pi=2\mathbb Z$.
+Gdyby istniał przekrój liniowy
+$s:\mathbb Z/2\mathbb Z\to\mathbb Z$, to
+$\pi(s([1]))=[1]$, więc $s([1])$ byłby nieparzysty.
+Jednak $2s([1])=s(2[1])=s([0])=0$,
+co w $\mathbb Z$ wymusza $s([1])=0$.
+Sprzeczność dowodzi, że ciąg się nie rozszczepia.
+W szczególności nie każdy podmoduł jest
+składnikiem sumy prostej.
+\end{przyklad}
+
+\section{Moduły rzutowe}
+\begin{definicja}[Moduł rzutowy]
+\label{aa:def:modules-projective}
+Niech $R$ będzie pierścieniem z jedynką,
+niekoniecznie przemiennym. Lewy $R$-moduł $P$ jest
+\emph{modułem rzutowym}, jeśli dla dowolnych lewych
+$R$-modułów $E,N$, każdego surjektywnego homomorfizmu
+$R$-modułów $q:E\to N$ i każdego homomorfizmu
+$R$-modułów $f:P\to N$
+istnieje homomorfizm $\widetilde f:P\to E$
+spełniający $q\circ\widetilde f=f$.
+Mówimy, że $\widetilde f$ jest \emph{podniesieniem}
+$f$ względem $q$.
+\end{definicja}
+
+\begin{twierdzenie}[Charakterystyka modułów rzutowych]
+\label{aa:tw:modules-projective-summand}
+Niech $R$ będzie pierścieniem z jedynką,
+niekoniecznie przemiennym, a $P$ lewym $R$-modułem.
+Następujące warunki są równoważne:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item $P$ jest modułem rzutowym;
+\item każdy krótki ciąg dokładny
+$0\to A\to B\to P\to0$ rozszczepia się;
+\item $P$ jest izomorficzny ze składnikiem sumy prostej
+pewnego wolnego lewego $R$-modułu.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Załóżmy (i) i rozważmy krótki ciąg dokładny
+$0\to A\to B\xrightarrow{q}P\to0$.
+Stosując definicję modułu rzutowego, wybierzmy $f=\operatorname{id}_P$.
+Otrzymujemy $s:P\to B$ z $q\circ s=\operatorname{id}_P$.
+Twierdzenie~\ref{aa:tw:modules-splitting} daje rozszczepienie,
+a więc (ii).
+
+Załóżmy (ii). Z Twierdzenia~\ref{aa:tw:modules-presentation-exists}
+istnieje surjekcja $p:F\to P$ z wolnego modułu $F$.
+Krótki ciąg $0\to\ker p\to F\xrightarrow{p}P\to0$
+rozszczepia się, zatem $F\cong\ker p\oplus P$.
+Daje to (iii).
+
+Załóżmy (iii). Najpierw pokażemy, że wolny moduł
+$F=R^{(S)}$ jest modułem rzutowym. Dla surjekcji
+$q:E\to N$ i homomorfizmu $f:F\to N$ wybierzmy
+dla każdego $s\in S$ element $e_s'\in E$ taki, że
+$q(e_s')=f(e_s)$. Przy nieskończonym $S$ korzystamy
+tu z aksjomatu wyboru dla niepustych włókien surjekcji.
+Własność uniwersalna modułu
+wolnego daje $\widetilde f:F\to E$ z
+$\widetilde f(e_s)=e_s'$. Wtedy $q\widetilde f$
+i $f$ są równe na bazie $F$, więc są równe
+na całym $F$.
+
+Niech teraz $F=P\oplus Q$; przypadek modułu
+izomorficznego z $P$ rozpatrujemy po przeniesieniu
+struktury przez izomorfizm. Dla surjekcji $q:E\to N$
+i homomorfizmu $f:P\to N$ rozważmy
+$h:F\to N$, $h(p,q')=f(p)$. Wolność $F$
+pozwala podnieść $h$ do $\widetilde h:F\to E$.
+Ograniczając $\widetilde h$ do $P\oplus\{0\}$
+dostajemy podniesienie $f$. Zatem $P$ jest modułem rzutowym i zachodzi (i).
+\end{proof}
+
+\begin{przyklad}[Własność bycia modułem rzutowym zależy od pierścienia]
+\label{aa:prz:modules-projectivity-example}
+Każdy moduł nad ciałem $K$ jest wolny,
+a więc jest modułem rzutowym. Moduł $\mathbb Z/2\mathbb Z$
+nie jest modułem rzutowym nad $\mathbb Z$, ponieważ
+krótki ciąg dokładny z
+Przykładu~\ref{aa:prz:modules-nonsplit-z} nie rozszczepia
+się. Z drugiej strony dla pierścienia
+$R=K\times K$ moduł $P=K\times\{0\}$ jest
+rzutowy: $R=P\oplus(\{0\}\times K)$ jako
+moduł nad sobą. Nie jest on wolny jako $R$-moduł:
+$P\ne0$, a niezerowy element $(0,1)\in R$ zeruje
+wszystkie elementy $P$. Gdyby $P$ miał niepustą bazę,
+dla jej elementu $e$ mielibyśmy $(0,1)e\ne0$,
+gdyż współczynnik $(0,1)$ jest niezerowy i
+przedstawienie w bazie jest jednoznaczne.
+Otrzymujemy sprzeczność. Jest to konkretny
+przykład modułu rzutowego, który nie jest wolny.
+\end{przyklad}
+
+
+\begin{przyklad}[Rozszczepienie nie wynika z dokładności]
+\label{aa:prz:modules-split-versus-exact}
+Dla każdego pierścienia $R$ z jedynką i lewych $R$-modułów
+$A,C$ ciąg
+\[
+0\longrightarrow A\xrightarrow{i}A\oplus C
+\xrightarrow{p}C\longrightarrow0,
+\qquad i(a)=(a,0),\quad p(a,c)=c,
+\]
+jest dokładny i rozszczepiony: odwzorowanie $s(c)=(0,c)$
+spełnia $p\circ s=\operatorname{id}_C$. W przeciwieństwie
+do tego ciąg z Przykładu~\ref{aa:prz:modules-nonsplit-z}
+jest dokładny, ale nie ma takiego przekroju. Dokładność
+wymaga jedynie równości obrazu i jądra, nie istnienia
+uzupełniającego podmodułu.
+\end{przyklad}
+
+\begin{przyklad}[Dlaczego nie każdy homomorfizm można mnożyć przez skalar z lewej]
+\label{aa:prz:modules-hom-noncommutative}
+Niech $K$ będzie ciałem, $R=M_2(K)$, a $M=N={}_RR$.
+Identyczność $f=\operatorname{id}_R$ jest lewym
+$R$-liniowym endomorfizmem. Ustalmy $a=E_{12}$ i
+rozważmy odwzorowanie $h(x)=af(x)=ax$. Gdyby $h$
+było lewym $R$-liniowym homomorfizmem, to dla
+$r=E_{21}$ i $x=1_R$ mielibyśmy $h(rx)=rh(x)$.
+Tymczasem $h(E_{21})=E_{12}E_{21}=E_{11}$,
+natomiast $E_{21}h(1_R)=E_{21}E_{12}=E_{22}$.
+Ponieważ $E_{11}\ne E_{22}$, $h$ nie jest
+$R$-liniowe. Wyjaśnia to, dlaczego w
+Stwierdzeniu~\ref{aa:st:modules-hom-abelian}
+przemienność pierścienia jest założeniem, a nie
+jedynie wygodną konwencją.
+\end{przyklad}
+
+\section{Dlaczego strony modułu mają znaczenie?}
+\begin{stwierdzenie}[Endomorfizmy lewego modułu regularnego]
+\label{aa:st:modules-end-regular}
+Dla pierścienia $R$ z jedynką zachodzi izomorfizm
+pierścieni $\operatorname{End}_R({}_RR)\cong R^{\mathrm{op}}$,
+gdzie ${}_RR$ oznacza lewy $R$-moduł dany przez
+mnożenie w pierścieniu, a w pierścieniu endomorfizmów
+mnożeniem jest składanie odwzorowań.
+\end{stwierdzenie}
+\begin{proof}
+Jeśli $f:R\to R$ jest lewym $R$-liniowym endomorfizmem,
+to dla każdego $r\in R$ mamy
+$f(r)=f(r\cdot1_R)=rf(1_R)$. Zatem $f$
+jest jednoznacznie wyznaczony przez element
+$a=f(1_R)$ i ma postać $f_a(r)=ra$.
+Każdy taki wzór określa lewy $R$-liniowy endomorfizm,
+bo $f_a(sr)=(sr)a=s(ra)=sf_a(r)$.
+Dla $a,b\in R$ mamy
+$(f_a\circ f_b)(r)=f_a(rb)=(rb)a=r(ba)=f_{ba}(r)$.
+Zatem odwzorowanie $a\mapsto f_a$ zachowuje
+mnożenie w pierścieniu przeciwnym $R^{\mathrm{op}}$,
+a także dodawanie i jedynkę. Jest bijekcją,
+więc jest izomorfizmem pierścieni.
+\end{proof}
+
+\begin{uwaga}[Dalszy program teorii modułów]
+\label{aa:uw:modules-future}
+Zdefiniowaliśmy moduły, podmoduły, prezentacje,
+krótkie ciągi dokładne i moduły rzutowe, nie zakładając
+przemienności pierścienia. W dalszym ciągu kursu
+opracujemy klasyfikację modułów nad dziedzinami
+ideałów głównych oraz postać Smitha. Osobno
+rozwiniemy \emph{iloczyn tensorowy modułów}, który
+nie jest ani sumą prostą, ani iloczynem prostym.
+Dla nieprzemiennego pierścienia iloczyn tensorowy
+nad $R$ wymaga co do zasady prawego $R$-modułu
+i lewego $R$-modułu; przyjmiemy wtedy odpowiednią
+własność zbilansowania.
+\end{uwaga}
+
+\setlength{\parskip}{4pt}
