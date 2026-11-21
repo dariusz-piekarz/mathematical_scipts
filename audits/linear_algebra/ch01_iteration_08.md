@@ -45,7 +45,7 @@ W przykładzie podprzestrzeni ciągów Fibonacciego uzupełniono podsumowanie: p
 - Brak niedomkniętych lub niezgodnych środowisk `\\begin` / `\\end`.
 - Zachowano oba rysunki TikZ, bez wprowadzania zewnętrznych plików graficznych.
 - Poprzednie CI, audyt 7: [44892390182](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44892390182) — zaliczone.
-- CI bieżącej wersji: [44892908046](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44892908046) — wynik do aktualizacji po zakończeniu.
+- CI bieżącej wersji: [44892908046](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44892908046) — **success**. Zakończone pomyślnie: kontrola rozdziału i wpisu katalogowego, kompilacja LaTeX, sprawdzenie PDF i odsyłaczy, eksport artefaktu. W logu pierwszego przebiegu LaTeX występowały oczekiwane ostrzeżenia o nierozwiązanych odsyłaczach; kolejne przebiegi je wyeliminowały. Nie stwierdzono przepełnień składu.
 
 ## Zakres odpowiedzialności
 
