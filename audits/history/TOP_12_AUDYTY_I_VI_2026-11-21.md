@@ -49,3 +49,13 @@ Bezpośrednio z GitHub odczytano najnowszy rozdział i testy. Zbadano:
 - Matematycznie porównano argumenty twierdzeń z konstrukcją filtracyjną, obliczeniami Hopfa, butelki Kleina, klasy Thoma i Gysina; nie znaleziono kolejnych błędów wymagających patchowania.
 
 **Decyzja matematyczna:** audyt VI czysty, brak nowych poprawek źródła. **Status końcowy** zależy od zielonych workflowów GitHub Actions dla ostatniego commita źródła i testów. Nie oznaczamy rozdziału stabilnym przed zakończeniem właściwego CI. Automatyzacje pozostają wyłączone.
+
+## Ostateczne zakończenie CI i decyzja
+
+Po zakończeniu audytu VI potwierdzono na GitHubie wyniki najnowszych uruchomień odpowiadających aktualnemu źródłu TOP-12 (commit `52d9de3077361591badae9c418d02ce0ae877beb`) oraz ostatniemu zestawowi testów (commit `73077606b319c211116fce02adaa73e48953cfa2`):
+
+- [Algebraic topology chapters 11–12 TeX audit](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44927665533): **completed / success**. Kompilacja zależności TOP-01–12 i kontrola odsyłaczy/ramek.
+- [Mathematical library application checks](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44927665510): **completed / success**. Testy aplikacyjne i regresyjne.
+- [AT–DG–AG cross-volume dependency and label audit](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44927649218): **completed / success**. Kontrola odsyłaczy i zgodności między tomami.
+
+Ostatni niezależny audyt VI nie wykazał następnych błędów. **TOP-12 uznano za stabilny po audycie VI.** Plik pozostaje na istniejącej gałęzi `biblioteka-matematyczna-iteracja-6`, bez tworzenia nowej gałęzi i bez merge do `main`. Następnym rozdziałem do audytu stabilizacyjnego jest **TOP-13**.
