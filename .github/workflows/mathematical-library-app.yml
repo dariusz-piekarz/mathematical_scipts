@@ -52,6 +52,8 @@ jobs:
         run: python scripts/triage_unresolved_refs.py --db data/biblioteka.db --out data/unresolved_reference_triage
       - name: Track complete 36-chapter geometry import coverage
         run: python scripts/dg_import_coverage.py --db data/biblioteka.db --out data/dg_import_coverage.json
+      - name: Report coordinate chart terminology in all TeX sources
+        run: python scripts/audit_chart_terminology.py --root .. --report data/chart_terminology.json
       - name: Upload complete reference/provenance audit
         if: always()
         uses: actions/upload-artifact@v4
@@ -63,6 +65,7 @@ jobs:
             application/data/dg_import_coverage.json
             application/data/unresolved_reference_triage.json
             application/data/unresolved_reference_triage.md
+            application/data/chart_terminology.json
           if-no-files-found: warn
       - name: Run application regression tests
         run: python -W default -m unittest discover -s tests -q
