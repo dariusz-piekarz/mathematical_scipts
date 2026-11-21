@@ -132,7 +132,7 @@ class TopologyChaptersTwentyThreeTwentyFourAudit(unittest.TestCase):
             r"liniowego odwzorowania ograniczenia",
             r"Niech $a:X\to\{*\}$ będzie odwzorowaniem do punktu.",
             r"naturalne odwzorowanie",
-            r"przy przejściu między mapami",
+            r"w sąsiednich mapach różnią się znakiem stopnia",
             r"drugoprzeliczalną topologiczną $n$-rozmaitością",
             r"\section{Rezolucja de Rhama",
         ):
