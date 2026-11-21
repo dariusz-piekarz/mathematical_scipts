@@ -100,7 +100,36 @@ Dodano regresje `application/tests/test_at_dg_pairwise_17_19.py`:
 Workflow: `.github/workflows/paired-at-dg-pontryagin-thom-cobordism-audit.yml`.
 Uruchamia 12 testów i trzykrotną kompilację pełnych źródeł AT-01–30 oraz DG-01–20. Sprawdza nieustabilizowane odsyłacze i przepełnienia wierszy. W DG dopuszcza tylko wcześniej zidentyfikowaną listę 12 niezdefiniowanych referencji, których cele są w jeszcze niezaimportowanych DG-21–36.
 
-**Wynik końcowy, liczby stron, job IDs i wzrokowa kontrola PDF — do dopisania po rzeczywistym sprawdzeniu wyników GitHub Actions.** Nie kopiować wyniku poprzedniej iteracji bez sprawdzenia bieżących artefaktów.
+**Wynik końcowy sprawdzony 21.11.2026:**
+https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44846123751.
+Obydwa zadania GitHub Actions: **SUCCESS**, bez wyjątku.
+- **12/12 testów matematycznych — OK**; dokładny zapis: „Ran 12 tests in 0.005s; OK”.
+- **AT-01–30: 298 stron A4** po trzech przebiegach pdflatex; stabilne odsyłacze i brak nieoczekiwanych braków oraz przepełnionych wierszy.
+- **DG-01–20: 491 stron A4** po trzech przebiegach pdflatex; stabilne odsyłacze i brak przepełnionych wierszy.
+- **12 różnych znanych, nierozwiązanych etykiet DG** wskazuje części jeszcze niezaimportowane z DG-21–36:
+  ch:chern-weil, ch:grafy-wezly-cztery,
+  cor:bochner-vanishing, cor:hodge-de-rham,
+  lem:angular-form-26, prop:euler-identification-26,
+  prz:hodge-dwie-sfery-18, prz:thur-dop-nil-kontakt,
+  sec:algebra-liego, sec:rownanie-diraca,
+  subsec:dirac-koneksja, thm:CGB-boundary-26.
+  Workflow wymaga, aby zbiór braków był podzbiorem jawnej listy;
+  żaden nowy brak nie przeszedłby kontroli.
+
+**Rzeczywiste oględziny graficzne po pobraniu finalnych artefaktów:**
+otwarto finalny PDF AT (strona 196, przykład torusa i butelki Kleina)
+oraz finalny PDF DG (strony 470 i 473–474, obydwa nowe rysunki
+i przełamanie stron nowego przykładu torsji).
+Zbadano wyrenderowane bitmapy PyMuPDF w rozdzielczości ok. 1.35–1.45×.
+W sprawdzonych fragmentach brak nakładających się podpisów,
+przyciętych symboli, uszkodzeń krojów pisma i nadmiarowych wierszy.
+W rysunku dwóch pierścieni strzałki identyfikacji są rozdzielone,
+a na wykresie torusa widoczne są obydwa dodatnie punkty przecięcia.
+
+Szczególnie ważne: jawnie odróżniono poprawną kompilację
+od globalnej niezależnej weryfikacji wszystkich wyników całej Biblioteki.
+Zakończony jest niniejszy audyt dwóch źródłowych rozdziałów,
+nie usunięto natomiast 12 starszych odsyłaczy do brakujących tomów.
 
 ## 7. Ograniczenia i następny etap
 
