@@ -61,6 +61,8 @@ Poniższa lista pochodzi z `catalog/books.json`. Liczba rozdziałów oznacza poz
 | [Teoria grafów i węzłów](books/pl/graph_and_knot_theory.tex) | 37 |
 | [Teoria całki](books/pl/integration_theory.tex) | 17 |
 | [Algebra liniowa](books/pl/linear_algebra.tex) | 24 (01–24 stabilne) |
+
+**Dalszy plan algebry liniowej:** [rozdziały 25–30, w tym grassmanniany i algebry Clifforda na podstawie DG-04](docs/pl/plan_algebry_liniowej.md).
 | [Logika matematyczna i teoria mnogości](books/pl/logic_and_set_theory.tex) | 12 |
 | [Teoria miary](books/pl/measure_theory.tex) | 31 |
 | [Teoria modeli](books/pl/model_theory.tex) | 19 |
