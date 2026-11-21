@@ -33,3 +33,7 @@ Rozdział: `chapters/pl/general_topology/11-zupelnosc-i-twierdzenie-bairea.tex`.
 - Sformułowanie lematu o zwartym domknięciu wymaga założenia Hausdorffa i używa go jawnie.
 - Nie nadawać jeszcze rozdziałowi statusu „stabilny” bez zielonego wyniku PDF i kontroli wizualnej.
 - Reguła terminologiczna dla przyszłych rozdziałów: **uzwarcenie**, a nie **zwartościowanie**.
+
+## Kontrola po korekcie
+
+Doprecyzowano uzasadnienie, że zupełna metryzowalność jest niezmiennikiem topologicznym: dla homeomorfizmu $g$ przeniesienie metryki przez $g$ zachowuje jednocześnie topologię i zupełność. Przy skanowaniu rozdziałów 01–11 nie stwierdzono kolizji etykiet ani nierozwiązanych poleceń `\ref`, `\eqref` i `\pageref`.
