@@ -99,11 +99,11 @@ class TestChapter20(unittest.TestCase):
 
     def test_next_chapter_has_hbl_derivability_proofs(self):
         self.assertIn(r'\ref{ch:derivability-proof}', SOURCE)
-        target=FIXTURE/'21-formalized-proof-operations-and-derivability.tex'
-        if target.is_file():
-            text=target.read_text(encoding='utf8')
-            self.assertIn(r'\label{ch:derivability-proof}',text)
-            self.assertIn(r'\label{thm:xi-hbl-verified}',text)
+        target=FIXTURE/'21-operacje-na-dowodach-i-warunki-wyprowadzalnosci.tex'
+        self.assertTrue(target.is_file(), f"Missing chapter 21 source: {target}")
+        text=target.read_text(encoding='utf8')
+        self.assertIn(r'\label{ch:derivability-proof}',text)
+        self.assertIn(r'\label{thm:xi-hbl-verified}',text)
 
     def test_set_definability_has_quantifiers_and_standard_model(self):
         self.assertIn('podzbioru $A\\subseteq\\N$', SOURCE)
@@ -166,11 +166,11 @@ class TestChapter20(unittest.TestCase):
 
     def test_each_d2_d3_has_exact_future_proof(self):
         self.assertIn(r'\ref{ch:derivability-proof}',SOURCE)
-        target=FIXTURE/'21-formalized-proof-operations-and-derivability.tex'
-        if target.is_file():
-            nxt=target.read_text(encoding='utf8')
-            for label in ('thm:xi-hbl-verified','thm:xi-d2','lem:xi-formal-sigma1'):
-                self.assertIn(r'\label{'+label+'}',nxt)
+        target=FIXTURE/'21-operacje-na-dowodach-i-warunki-wyprowadzalnosci.tex'
+        self.assertTrue(target.is_file(), f"Missing chapter 21 source: {target}")
+        nxt=target.read_text(encoding='utf8')
+        for label in ('thm:xi-hbl-verified','thm:xi-d2','lem:xi-formal-sigma1'):
+            self.assertIn(r'\label{'+label+'}',nxt)
 
     def test_disjunction_for_repeated_codes(self):
         for value in (False,True):
