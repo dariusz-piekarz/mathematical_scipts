@@ -84,12 +84,33 @@ def matvec(a, v, p, n):
                  for i in range(n))
 
 
+
+def factor_linear(poly, p):
+    """Return linear factors with multiplicities, or None if not split."""
+    remainder = list(poly)
+    factors = {}
+    for value in range(p):
+        while len(remainder) > 1 and (
+            sum(coeff*pow(value, i, p) for i, coeff
+                in enumerate(remainder)) % p == 0
+        ):
+            quotient = [0] * (len(remainder)-1)
+            quotient[-1] = remainder[-1]
+            for i in range(len(quotient)-2, -1, -1):
+                quotient[i] = (remainder[i+1] +
+                               value*quotient[i+1]) % p
+            assert (remainder[0]+value*quotient[0]) % p == 0
+            factors[value] = factors.get(value, 0) + 1
+            remainder = quotient
+    return factors if len(remainder) == 1 else None
+
 def check_3(a, p):
     char = characteristic_3(a, p)
     assert evaluate(char, a, p, 3) == (0,) * 9
     minimal = minimal_polynomial(a, p, 3)
     assert divides(minimal, char, p), (a, p, minimal, char)
 
+    factors = factor_linear(minimal, p)
     roots = [value for value in range(p)
              if sum(minimal[i]*pow(value, i, p)
                     for i in range(len(minimal))) % p == 0]
@@ -99,10 +120,11 @@ def check_3(a, p):
                            tuple(value*x % p for x in v)
                            for value in range(p))]
     diagonalizable = rank_mod(eigenvectors, p) == 3
-    split_distinct = len(roots) == len(minimal)-1
+    split_distinct = factors is not None and all(
+        multiplicity == 1 for multiplicity in factors.values())
     assert diagonalizable == split_distinct, (a, p, minimal)
 
-    if split_distinct:
+    if factors is not None:
         dimensions = []
         for value in roots:
             shifted = tuple((a[3*i+j]-(value if i == j else 0)) % p
