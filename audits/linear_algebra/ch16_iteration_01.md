@@ -21,8 +21,8 @@
 - Rozdział 16 dodano do `books/pl/linear_algebra.tex`, `catalog/books.json` i do jawnego wykazu 16 plików w `.github/workflows/linear-algebra-chapter.yml`.
 - Dodano `tools/test_linear_algebra_invariant.py` do CI. Test wyczerpująco obejmuje wszystkie macierze `2x2` nad `F_2` i `F_3`: tożsamość Cayleya--Hamiltona, podzielność wielomianu charakterystycznego przez minimalny, kryterium diagonalizacji, niezmienniczość prostych własnych i wektory cykliczne.
 - W pierwszej kontroli stwierdzono **30 unikatowych etykiet, 17 odsyłaczy i 12 prawidłowo zamkniętych dowodów**. Zweryfikowano niesprzeczność nazw i poprawne odwołania do wcześniejszych rozdziałów.
-- Wstępny workflow po integracji oraz dołączeniu testów [GitHub Actions 44933803169](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44933803169) zakończył się sukcesem: testy, kompilacja pełnego tomu i eksport osobnego PDF. Ostateczny przebieg zawierający ostatnie doprecyzowanie o macierzy dołączonej: [44934049446](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44934049446); status tego przebiegu wymaga osobnej kontroli po ukończeniu.
-- Wstępny 8-stronicowy PDF rozdziału 16 poddano oględzinom stron i kontroli współrzędnych tekstu. Nie stwierdzono przycięcia tekstu ani kolizji; ostateczna wersja PDF wymaga ponownego oglądu po ostatniej poprawce.
+- Wstępny workflow po integracji oraz dołączeniu testów [GitHub Actions 44933803169](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44933803169) zakończył się sukcesem: testy, kompilacja pełnego tomu i eksport osobnego PDF. Ostateczny przebieg zawierający ostatnie doprecyzowanie o macierzy dołączonej: [44934049446](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44934049446); zakończył się sukcesem, włącznie z testami, dwiema kompilacjami i kontrolą odsyłaczy.
+- Ostateczny **8-stronicowy PDF rozdziału 16** z pomyślnego przebiegu 44934049446 poddano oględzinom stron i kontroli współrzędnych tekstu. Nie stwierdzono przycięcia tekstu, kolizji wzorów ani pustych stron; wszystkie osiem stron renderuje się poprawnie.
 
 ## Decyzja
 
