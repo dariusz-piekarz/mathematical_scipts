@@ -1,0 +1,497 @@
+\chapter{Rozkłady macierzy}
+\label{ch:lin15-rozklady-macierzy}
+\index{rozkład LU@Rozkład LU}
+\index{rozkład Choleskiego@Rozkład Choleskiego}
+\index{rozkład QR@Rozkład QR}
+\index{rozkład według wartości osobliwych@Rozkład według wartości osobliwych}
+\index{rozkład biegunowy@Rozkład biegunowy}
+
+\noindent\textbf{Cel rozdziału.}
+W rozdziałach~\ref{ch:lin13-ortogonalnosc-rzuty}
+i~\ref{ch:lin14-spektralne} otrzymaliśmy operatory
+sprzężone, rzuty ortogonalne oraz twierdzenie
+spektralne. Teraz wykorzystamy te wyniki do
+rozkładów macierzy stosowanych w rozwiązywaniu
+układów liniowych, aproksymacji i teorii operatorów.
+Każdy rozkład zostanie odróżniony od innych
+przez jawne założenia i zakres jednoznaczności.
+Część poświęcona eliminacji Gaussa działa nad
+dowolnym ciałem, natomiast rozkłady Choleskiego,
+QR, według wartości osobliwych oraz biegunowy
+wymagają rzeczywistego lub zespolonego
+iloczynu skalarnego.
+
+Przez \(K\) oznaczamy dowolne ciało do chwili,
+gdy jawnie ograniczymy je do
+\(\mathbb R\) lub \(\mathbb C\).
+Macierze mogą mieć rozmiar zerowy; dla
+pustych macierzy przyjmujemy standardowe
+umowy dotyczące wyznacznika i identyczności.
+Dla \(K=\mathbb R,\mathbb C\) symbol \(A^*\)
+oznacza sprzężenie transpozycję, a na
+\(K^n\) używamy standardowego iloczynu
+skalarnego, liniowego w drugim argumencie.
+
+\section{Rozkłady trójkątne i eliminacja Gaussa}
+\label{sec:lin15-lu}
+
+\begin{definicja}[Rozkłady LU i PLU]
+\label{def:lin15-lu}
+Niech \(A\in\operatorname{Mat}_{n\times n}(K)\).
+\emph{Rozkładem LU} macierzy \(A\) nazywamy
+równość
+\[
+ A=LU,
+\]
+gdzie \(L\) jest macierzą dolnotrójkątną
+o jedynkach na przekątnej, a \(U\) jest
+macierzą górnotrójkątną.
+\emph{Rozkładem PLU} nazywamy równość
+\[
+ PA=LU,
+\]
+gdzie \(P\) jest macierzą permutacji,
+a \(L,U\) spełniają te same warunki.
+Jedynki na przekątnej \(L\) służą
+ustaleniu normalizacji czynników.
+\end{definicja}
+
+\begin{twierdzenie}[Rozkład LU bez zamian wierszy]
+\label{thm:lin15-lu}
+Niech \(A\in\operatorname{Mat}_{n\times n}(K)\).
+Dla \(k=1,\ldots,n\) oznaczmy przez
+\(\Delta_k\) wyznacznik podmacierzy
+\(A\) złożonej z pierwszych \(k\)
+wierszy i pierwszych \(k\) kolumn;
+połóżmy \(\Delta_0=1_K\).
+Jeżeli
+\[
+ \Delta_k\ne0_K\qquad(1\le k\le n),
+\]
+to istnieje dokładnie jeden rozkład
+\(A=LU\) z dolnotrójkątną macierzą
+\(L\) o jedynkach na przekątnej
+i górnotrójkątną macierzą \(U\).
+Ponadto
+\[
+ U_{kk}=\frac{\Delta_k}{\Delta_{k-1}}
+ \qquad(1\le k\le n).
+\]
+Przy \(n=0\) obie macierze są puste,
+a teza pozostaje prawdziwa.
+\end{twierdzenie}
+\begin{proof}
+Wymiar \(n=0\) nie wymaga dowodu.
+Dla \(n=1\) jedynym rozkładem
+jest \(L=(1)\), \(U=A\);
+założenie mówi, że
+jedyny element \(A\) jest niezerowy.
+
+Załóżmy \(n\ge2\) i zapiszmy
+\[
+ A=\begin{pmatrix}a&b\\c&C\end{pmatrix},
+\]
+gdzie \(a\in K\), \(b\) jest
+wierszem, \(c\) kolumną,
+a \(C\) macierzą kwadratową
+stopnia \(n-1\). Z założenia
+\(a=\Delta_1\ne0\).
+Definiujemy \emph{dopełnienie Schura}
+\[
+ S=C-ca^{-1}b.
+\]
+Bezpośrednie mnożenie bloków daje
+\[
+ A=
+ \begin{pmatrix}1&0\\ca^{-1}&I_{n-1}\end{pmatrix}
+ \begin{pmatrix}a&b\\0&S\end{pmatrix}.
+\]
+Dla \(1\le j\le n-1\) taki sam
+rozkład blokowy można zastosować
+do pierwszych \(j+1\) wierszy
+i kolumn \(A\). Własności
+wyznacznika macierzy blokowo
+trójkątnej dają
+\[
+ \Delta_{j+1}
+ =a\det S_{[1:j,\,1:j]},
+\]
+gdzie \(S_{[1:j,\,1:j]}\)
+jest wiodącą podmacierzą \(S\)
+stopnia \(j\). Wobec niezerowości
+\(a\) i \(\Delta_{j+1}\)
+wszystkie wiodące wyznaczniki
+\(S\) są niezerowe.
+Z założenia indukcyjnego
+istnieje rozkład \(S=L_SU_S\).
+Wówczas
+\[
+ L=\begin{pmatrix}1&0\\ca^{-1}&L_S\end{pmatrix},
+ \qquad
+ U=\begin{pmatrix}a&b\\0&U_S\end{pmatrix}
+\]
+spełniają żądane warunki
+i \(LU=A\).
+
+Pokażemy jednoznaczność.
+W każdym takim rozkładzie
+pierwszy wiersz \(U\) jest
+pierwszym wierszem \(A\),
+ponieważ pierwszy wiersz \(L\)
+to \((1,0,\ldots,0)\).
+W szczególności \(U_{11}=a\).
+Pierwsza kolumna \(L\)
+jest wówczas jednoznacznie
+wyznaczona przez pierwszą
+kolumnę \(A\):
+\(L_{i1}=A_{i1}a^{-1}\) dla \(i>1\).
+Pozostałe bloki \(L_S,U_S\)
+muszą spełniać \(S=L_SU_S\)
+i są jednoznaczne przez indukcję.
+
+Wreszcie wiodąca podmacierz
+\(A\) stopnia \(k\) jest
+iloczynem wiodących podmacierzy
+\(L,U\) stopnia \(k\).
+Ponieważ pierwsza ma
+wyznacznik równy \(1_K\),
+otrzymujemy
+\(\Delta_k=\prod_{j=1}^{k}U_{jj}\).
+Dzieląc tę równość przez
+analogiczną dla \(k-1\),
+uzyskujemy wzór z tezy.
+\end{proof}
+
+\begin{wniosek}[Rozkład LDU]
+\label{cor:lin15-ldu}
+Jeśli \(A\in\operatorname{Mat}_{n\times n}(K)\)
+spełnia założenia
+Twierdzenia~\ref{thm:lin15-lu},
+to istnieją jednoznaczne macierze
+\(L,D,R\) takie, że
+\[
+ A=LDR,
+\]
+gdzie \(L\) jest dolnotrójkątna
+z jedynkami na przekątnej,
+\(D\) diagonalna i odwracalna,
+a \(R\) górnotrójkątna
+z jedynkami na przekątnej.
+Elementy diagonalne \(D\)
+są równe
+\(D_{kk}=\Delta_k/\Delta_{k-1}\).
+\end{wniosek}
+\begin{proof}
+Niech \(A=LU\) będzie jedynym
+rozkładem z poprzedniego twierdzenia.
+Wszystkie \(U_{kk}\) są niezerowe.
+Kładziemy
+\(D=\operatorname{diag}(U_{11},\ldots,U_{nn})\)
+oraz \(R=D^{-1}U\).
+Wówczas \(R\) jest górnotrójkątna
+i ma jedynki na przekątnej,
+a \(LDR=LU=A\).
+Jeśli \(A=L'D'R'\) jest innym
+takim rozkładem, to
+\(A=L'(D'R')\) jest rozkładem LU
+z tą samą normalizacją.
+Jednoznaczność LU daje
+\(L'=L\) oraz \(D'R'=U\).
+Porównanie przekątnych
+wyznacza \(D'=D\), a potem
+\(R'=D^{-1}U=R\).
+\end{proof}
+
+\begin{przyklad}[Eliminacja bez zamiany wierszy]
+\label{prz:lin15-lu}
+Dla macierzy
+\[
+ A=\begin{pmatrix}2&1\\4&3\end{pmatrix}
+\]
+wiodące wyznaczniki wynoszą
+\(\Delta_1=2\) i \(\Delta_2=2\).
+Wobec tego rozkład LU
+istnieje i jest jednoznaczny:
+\[
+ L=\begin{pmatrix}1&0\\2&1\end{pmatrix},
+ \qquad
+ U=\begin{pmatrix}2&1\\0&1\end{pmatrix}.
+\]
+Równość \(A=LU\)
+sprawdzamy przez wymnożenie.
+Elementy diagonalne \(U\)
+są dokładnie ilorazami
+\(\Delta_1/\Delta_0=2\)
+i \(\Delta_2/\Delta_1=1\).
+\end{przyklad}
+
+\begin{twierdzenie}[Istnienie rozkładu PLU]
+\label{thm:lin15-plu}
+Dla każdej macierzy kwadratowej
+\(A\in\operatorname{Mat}_{n\times n}(K)\)
+nad dowolnym ciałem \(K\),
+również dla macierzy osobliwej,
+istnieje macierz permutacji \(P\),
+dolnotrójkątna \(L\) z jedynkami
+na przekątnej oraz górnotrójkątna \(U\)
+takie, że \(PA=LU\).
+Nie twierdzimy, że taki
+rozkład jest jednoznaczny.
+\end{twierdzenie}
+\begin{proof}
+Prowadzimy indukcję względem \(n\).
+Dla \(n=0\) stosujemy macierze puste.
+Niech \(n\ge1\).
+Jeżeli pierwsza kolumna \(A\)
+jest zerowa, zapiszmy
+\[
+ A=\begin{pmatrix}0&b\\0&C\end{pmatrix}.
+\]
+Z indukcji istnieją
+\(P',L',U'\) dla \(C\), przy czym
+\(P'C=L'U'\).
+Połóżmy
+\[
+ P=\begin{pmatrix}1&0\\0&P'\end{pmatrix},
+ \quad
+ L=\begin{pmatrix}1&0\\0&L'\end{pmatrix},
+ \quad
+ U=\begin{pmatrix}0&b\\0&U'\end{pmatrix}.
+\]
+Wtedy \(PA=LU\),
+\(P\) jest permutacją,
+a \(L,U\) mają wymagane
+kształty.
+
+Jeśli pierwsza kolumna
+nie jest zerowa, wybierzmy
+permutację wierszy \(P_0\),
+która przenosi niezerowy
+element tej kolumny
+na pierwszą pozycję.
+Zapiszmy
+\[
+ P_0A=\begin{pmatrix}a&b\\c&C\end{pmatrix},
+ \qquad a\ne0.
+\]
+Niech
+\(S=C-ca^{-1}b\).
+Z założenia indukcyjnego
+istnieje
+\(P'S=L'U'\).
+Definiujemy
+\[
+ \begin{split}
+ P&=\begin{pmatrix}1&0\\0&P'\end{pmatrix}P_0,\\
+ L&=\begin{pmatrix}1&0\\P'ca^{-1}&L'\end{pmatrix},
+ \qquad
+ U=\begin{pmatrix}a&b\\0&U'\end{pmatrix}.
+ \end{split}
+\]
+Macierz \(P\) jest permutacją,
+\(L\) jest dolnotrójkątna
+z jedynkami na przekątnej,
+a \(U\) jest górnotrójkątna.
+Bezpośrednie mnożenie daje
+\[
+ LU=
+ \begin{pmatrix}
+ a&b\\P'c&P'ca^{-1}b+L'U'
+ \end{pmatrix}
+ =
+ \begin{pmatrix}
+ a&b\\P'c&P'C
+ \end{pmatrix}
+ =PA,
+\]
+ponieważ
+\(L'U'=P'S=P'C-P'ca^{-1}b\).
+W obu przypadkach indukcja
+jest zamknięta.
+\end{proof}
+
+\begin{przyklad}[Konieczność zamiany wierszy]
+\label{prz:lin15-pivot}
+Niech
+\[
+ A=\begin{pmatrix}0&2\\1&3\end{pmatrix}.
+\]
+Nie istnieje jej rozkład LU
+z jedynkami na przekątnej \(L\).
+Istotnie, z pierwszego wiersza
+otrzymalibyśmy
+\(U_{11}=0\), \(U_{12}=2\),
+a pierwszy element drugiego
+wiersza iloczynu \(LU\)
+wynosiłby \(L_{21}U_{11}=0\),
+chociaż \(A_{21}=1\).
+Po zamianie wierszy
+\[
+ P=\begin{pmatrix}0&1\\1&0\end{pmatrix},
+ \qquad
+ PA=\begin{pmatrix}1&3\\0&2\end{pmatrix}
+ =I_2\begin{pmatrix}1&3\\0&2\end{pmatrix}.
+\]
+To poprawny rozkład PLU.
+\end{przyklad}
+
+\begin{uwaga}[Rozwiązywanie układów trójkątnych]
+\label{rem:lin15-triangular}
+Dla odwracalnej macierzy \(A\)
+o rozkładzie \(PA=LU\)
+układ \(Ax=b\) jest równoważny
+dwóm układom
+\(Ly=Pb\) i \(Ux=y\).
+Pierwszy rozwiązujemy
+przez podstawianie w przód,
+drugi przez podstawianie wstecz.
+Nie jest do tego potrzebne
+obliczanie macierzy \(A^{-1}\).
+W rachunku numerycznym o skończonej
+precyzji wybór elementu głównego
+ma dodatkowo znaczenie dla stabilności
+obliczeń; algebraiczne twierdzenie
+o istnieniu PLU samo nie daje
+oszacowania błędu zaokrągleń.
+\end{uwaga}
+
+\section{Rozkład Choleskiego}
+\label{sec:lin15-cholesky}
+
+\begin{twierdzenie}[Rozkład Choleskiego]
+\label{thm:lin15-cholesky}
+Niech \(K=\mathbb R\) lub \(\mathbb C\),
+a \(H\in\operatorname{Mat}_{n\times n}(K)\)
+będzie macierzą hermitowską
+i dodatnio określoną:
+\(H^*=H\) oraz
+\(x^*Hx>0\) dla każdego \(x\ne0\).
+Istnieje dokładnie jedna
+macierz dolnotrójkątna
+\(L\in\operatorname{Mat}_{n\times n}(K)\)
+o dodatnich rzeczywistych
+elementach diagonalnych taka, że
+\[
+ H=LL^*.
+\]
+Dla \(n=0\) jest to równość
+macierzy pustych.
+\end{twierdzenie}
+\begin{proof}
+Stosujemy indukcję względem \(n\).
+Dla \(n=0\) teza jest oczywista.
+Dla \(n\ge1\) zapiszmy
+\[
+ H=\begin{pmatrix}a&b^*\\b&C\end{pmatrix},
+\]
+gdzie \(a\in\mathbb R\),
+\(b\in K^{n-1}\),
+a \(C=C^*\).
+Dodatnia określoność zastosowana
+do pierwszego wektora bazowego
+daje \(a>0\).
+Tworzymy dopełnienie Schura
+\[
+ S=C-\frac1a bb^*.
+\]
+Pokażemy, że \(S\)
+jest hermitowska i dodatnio określona.
+Hermitowskość wynika z
+\(C^*=C\) i \((bb^*)^*=bb^*\).
+Dla \(z\in K^{n-1}\setminus\{0\}\)
+weźmy
+\(x=(-a^{-1}b^*z,z)^{\mathsf T}\).
+Wektor \(x\) jest niezerowy,
+a mnożenie blokowe daje
+\[
+ x^*Hx=z^*Sz.
+\]
+Lewa strona jest dodatnia;
+zatem \(z^*Sz>0\).
+Na mocy założenia indukcyjnego
+istnieje jedyna dolnotrójkątna
+macierz \(L_S\) o dodatniej
+przekątnej taka, że
+\(S=L_SL_S^*\).
+Definiujemy
+\[
+ L=\begin{pmatrix}
+ \sqrt a&0\\
+ b/\sqrt a&L_S
+ \end{pmatrix}.
+\]
+Wtedy
+\[
+ LL^*=
+ \begin{pmatrix}
+ a&b^*\\b&bb^*/a+L_SL_S^*
+ \end{pmatrix}
+ =H,
+\]
+a elementy diagonalne \(L\)
+są dodatnie.
+
+Dla jednoznaczności rozważmy
+dowolną dolnotrójkątną
+\(\widetilde L\) z dodatnią
+rzeczywistą przekątną
+spełniającą
+\(H=\widetilde L\widetilde L^*\).
+Jej pierwszy element diagonalny
+spełnia \(\widetilde L_{11}^2=a\),
+więc \(\widetilde L_{11}=\sqrt a\).
+Porównanie pierwszej kolumny
+poza przekątną daje dokładnie
+\(b/\sqrt a\). Pozostały blok
+musi zatem spełniać
+\(S=\widetilde L_S\widetilde L_S^*\).
+Jednoznaczność indukcyjna
+daje \(\widetilde L_S=L_S\).
+\end{proof}
+
+\begin{przyklad}[Rozkład Choleskiego nad \(\mathbb C\)]
+\label{prz:lin15-cholesky}
+Niech
+\[
+ H=\begin{pmatrix}4&2i\\-2i&5\end{pmatrix}.
+\]
+Wtedy \(H^*=H\), a
+\[
+ z^*Hz=
+ 4\left|z_1+\frac i2z_2\right|^2
+ +4|z_2|^2>0
+ \qquad(z\ne0).
+\]
+Macierz
+\[
+ L=\begin{pmatrix}2&0\\-i&2\end{pmatrix}
+\]
+ma dodatnią przekątną i
+\[
+ LL^*=
+ \begin{pmatrix}2&0\\-i&2\end{pmatrix}
+ \begin{pmatrix}2&i\\0&2\end{pmatrix}
+ =\begin{pmatrix}4&2i\\-2i&5\end{pmatrix}=H.
+\]
+Zastosowanie zwykłej transpozycji
+zamiast sprzężonej dałoby
+w przypadku zespolonym
+niepoprawny rozkład.
+\end{przyklad}
+
+\begin{uwaga}[Znaczenie dodatniej określoności]
+\label{rem:lin15-cholesky-psd}
+Dodatnia półokreśloność nie wystarcza
+do twierdzenia o jedynym czynniku
+trójkątnym z \emph{dodatnią}
+przekątną. Na przykład
+macierz \(\operatorname{diag}(1,0)\)
+jest dodatnio półokreślona,
+ale każdy rozkład \(LL^*\)
+ma ostatni element diagonalny
+równy zeru, nie dodatni.
+Ogólne rozkłady dla macierzy
+półokreślonych wymagają odrębnego
+sformułowania i nie są
+używane bez założeń.
+\end{uwaga}
