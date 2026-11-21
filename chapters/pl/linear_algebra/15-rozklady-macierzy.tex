@@ -1042,3 +1042,740 @@ wartościami własnymi samej \(A\),
 ponieważ \(A\) nie jest
 nawet macierzą kwadratową.
 \end{przyklad}
+
+
+\section{Najlepsze przybliżenie macierzy małego rzędu}
+\label{sec:lin15-eckart-young}
+
+\begin{twierdzenie}[Twierdzenie Eckarta--Younga]
+\label{thm:lin15-eckart-young}
+Niech \(K=\mathbb R\) lub \(\mathbb C\),
+\(A\in\operatorname{Mat}_{m\times n}(K)\),
+\(p=\min(m,n)\) i \(r=\operatorname{rk}A\).
+Niech
+\(A=U\Sigma V^*\)
+będzie rozkładem SVD,
+a \(\sigma_1\ge\cdots\ge\sigma_r>0\)
+jego dodatnimi wartościami osobliwymi.
+Dla \(k\in\{0,\ldots,p\}\)
+określmy
+\[
+ A_k=\sum_{j=1}^{\min(k,r)}
+                   \sigma_j u_jv_j^*.
+\]
+Wtedy \(\operatorname{rk}A_k=\min(k,r)\)
+i dla każdej macierzy
+\(B\in\operatorname{Mat}_{m\times n}(K)\)
+o \(\operatorname{rk}B\le k\)
+zachodzą nierówności
+\[
+ \begin{aligned}
+ \|A-B\|_{\mathrm{op}}
+    &\ge\|A-A_k\|_{\mathrm{op}},\\
+ \|A-B\|_F
+    &\ge\|A-A_k\|_F.
+ \end{aligned}
+\]
+Dokładne wartości minimów wynoszą
+\[
+ \begin{aligned}
+ \min_{\operatorname{rk}B\le k}
+               \|A-B\|_{\mathrm{op}}
+ &=
+ \begin{cases}
+ \sigma_{k+1},&k<r,\\
+ 0,&k\ge r,
+ \end{cases}\\
+ \min_{\operatorname{rk}B\le k}
+               \|A-B\|_F
+ &=\left(\sum_{j=k+1}^{p}\sigma_j^2\right)^{1/2}.
+ \end{aligned}
+\]
+Przy \(k\ge r\) obie wartości
+są równe zero.
+Nie twierdzimy, że najlepsza
+macierz \(B\) jest zawsze jednoznaczna.
+\end{twierdzenie}
+\begin{proof}
+Każdy operator
+\(u_jv_j^*\) wysyła
+\(x\in K^n\) na
+\(h(v_j,x)u_j\).
+Jego obraz leży
+w prostej rozpiętej przez \(u_j\).
+Ponieważ wektory \(u_1,\ldots,u_r\)
+oraz \(v_1,\ldots,v_r\)
+są ortonormalne,
+\(A_kv_j=\sigma_j u_j\)
+dla \(j\le\min(k,r)\),
+a \(A_kv_j=0\) dla pozostałych \(j\).
+Stąd
+\(\operatorname{rk}A_k=\min(k,r)\).
+Dla różnicy
+\[
+ A-A_k=\sum_{j=k+1}^{r}\sigma_j u_jv_j^*
+\]
+Stwierdzenie~\ref{prop:lin15-svd-rank}
+daje
+\(\|A-A_k\|_{\mathrm{op}}=\sigma_{k+1}\)
+dla \(k<r\), a dla \(k\ge r\)
+różnica jest zerowa.
+Analogicznie
+\(\|A-A_k\|_F^2=
+\sum_{j=k+1}^p\sigma_j^2\).
+
+Niech teraz \(\operatorname{rk}B\le k\).
+Jeśli \(k\ge r\), obie tezy
+wynikają z nieujemności norm,
+a \(B=A\) osiąga zero.
+Niech zatem \(k<r\).
+Rozważmy podprzestrzeń
+\[
+ E=\operatorname{span}\{v_1,\ldots,v_{k+1}\}
+ \subseteq K^n.
+\]
+Ma wymiar \(k+1\).
+Z twierdzenia o wymiarach
+\(\dim\ker B\ge n-k\).
+Dlatego
+\[
+ \dim(E\cap\ker B)
+ \ge (k+1)+(n-k)-n=1.
+\]
+Istnieje więc niezerowy
+\(x\in E\cap\ker B\),
+który normalizujemy do \(\|x\|=1\).
+Wtedy \(Bx=0\),
+a zapis \(x=\sum_{j=1}^{k+1}c_jv_j\)
+i ortonormalność \(u_j\) dają
+\[
+ \begin{aligned}
+ \|(A-B)x\|^2
+ &=\|Ax\|^2
+ =\sum_{j=1}^{k+1}\sigma_j^2|c_j|^2\\
+ &\ge\sigma_{k+1}^2\sum_{j=1}^{k+1}|c_j|^2
+ =\sigma_{k+1}^2.
+ \end{aligned}
+\]
+Zatem
+\(\|A-B\|_{\mathrm{op}}\ge\sigma_{k+1}\).
+
+Dla normy Frobeniusa
+niech \(W=\operatorname{im}B\),
+a \(P_W\) będzie rzutem
+ortogonalnym na \(W\).
+Dla każdego \(v_j\)
+wektor \(Bv_j\) należy do \(W\);
+z twierdzenia o najlepszym
+przybliżeniu otrzymujemy
+\[
+ \|(A-B)v_j\|^2
+ \ge\|(I-P_W)Av_j\|^2.
+\]
+Suma po ortonormalnej bazie
+\((v_1,\ldots,v_n)\)
+jest kwadratem normy Frobeniusa:
+wynika to ze wzoru Parsevala
+zastosowanego osobno do
+wszystkich wierszy \(A-B\).
+Stąd
+\[
+ \begin{aligned}
+ \|A-B\|_F^2
+ &\ge\sum_{j=1}^n\|(I-P_W)Av_j\|^2\\
+ &=\sum_{j=1}^r
+    \sigma_j^2\|(I-P_W)u_j\|^2\\
+ &=\sum_{j=1}^r\sigma_j^2(1-a_j),
+ \end{aligned}
+\]
+gdzie
+\(a_j:=\|P_Wu_j\|^2\in[0,1]\).
+Ponadto
+\(\sum_{j=1}^r a_j\le\dim W\le k\):
+wybierając ortonormalną bazę
+\((w_1,\ldots,w_s)\) przestrzeni \(W\),
+otrzymujemy
+\[
+ \sum_{j=1}^r a_j
+ =\sum_{\ell=1}^s\sum_{j=1}^r
+        |h(w_\ell,u_j)|^2
+ \le\sum_{\ell=1}^s\|w_\ell\|^2=s.
+\]
+Ostatnia nierówność jest
+nierównością Bessela.
+
+Jeśli \(k=0\), to \(B=0\)
+i teza jest natychmiastowa.
+Jeśli \(1\le k<r\),
+monotoniczność \(\sigma_j\)
+oraz \(\sum_j a_j\le k\)
+dają
+\[
+ \begin{aligned}
+ \sum_{j=1}^r\sigma_j^2 a_j
+ &\le\sum_{j=1}^k\sigma_j^2a_j+
+       \sigma_k^2\sum_{j=k+1}^ra_j\\
+ &\le\sum_{j=1}^k
+       \bigl(\sigma_j^2a_j+
+             \sigma_k^2(1-a_j)\bigr)\\
+ &\le\sum_{j=1}^k\sigma_j^2,
+ \end{aligned}
+\]
+bo \(0\le a_j\le1\)
+i \(\sigma_j^2\ge\sigma_k^2\).
+Dlatego
+\[
+ \|A-B\|_F^2
+ \ge\sum_{j=1}^r\sigma_j^2-
+      \sum_{j=1}^k\sigma_j^2
+ =\sum_{j=k+1}^p\sigma_j^2.
+\]
+Obie dolne granice
+są osiągane przez \(A_k\),
+co kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Aproksymacja macierzy rzędu jeden]
+\label{prz:lin15-rank-one}
+Dla macierzy
+\[
+ A=\begin{pmatrix}3&0\\0&2\end{pmatrix}
+\]
+wartości osobliwe wynoszą
+\(\sigma_1=3\), \(\sigma_2=2\).
+Najlepsza w normie
+Frobeniusa aproksymacja
+rzędu co najwyżej jeden
+może być wybrana jako
+\[
+ A_1=\begin{pmatrix}3&0\\0&0\end{pmatrix}.
+\]
+Mamy
+\(\|A-A_1\|_{\mathrm{op}}=2\)
+i \(\|A-A_1\|_F=2\).
+Twierdzenie
+\ref{thm:lin15-eckart-young}
+pokazuje, że żadna inna
+macierz rzędu co najwyżej jeden
+nie daje mniejszego błędu
+w żadnej z tych dwóch norm.
+\end{przyklad}
+
+\section{Pseudoodwrotność Moore'a--Penrose'a}
+\label{sec:lin15-pseudoinverse}
+
+\begin{definicja}[Pseudoodwrotność]
+\label{def:lin15-pseudoinverse}
+Niech \(K=\mathbb R\) lub \(\mathbb C\)
+oraz \(A\in\operatorname{Mat}_{m\times n}(K)\).
+Dla rozkładu SVD
+\(A=U\Sigma V^*\) definiujemy
+\[
+ A^+:=V\Sigma^+U^*
+ \in\operatorname{Mat}_{n\times m}(K),
+\]
+gdzie
+\(\Sigma^+\in\operatorname{Mat}_{n\times m}(K)\)
+ma na przekątnej elementy
+\[
+ (\Sigma^+)_{ii}=
+ \begin{cases}
+ 1/\sigma_i,&1\le i\le r,\\
+ 0,&i>r,
+ \end{cases}
+ \qquad r=\operatorname{rk}A,
+\]
+a wszystkie pozostałe elementy
+są zerowe.
+Macierz \(A^+\) nazywamy
+\emph{pseudoodwrotnością
+Moore'a--Penrose'a}.
+\end{definicja}
+
+\begin{twierdzenie}[Pseudoodwrotność i najmniejsze kwadraty]
+\label{thm:lin15-pseudoinverse}
+Niech \(A\in\operatorname{Mat}_{m\times n}(K)\)
+dla \(K=\mathbb R\) lub \(\mathbb C\).
+Wówczas macierz \(A^+\)
+jest niezależna od wyboru
+rozkładu SVD i spełnia
+cztery tożsamości
+\[
+ \begin{gathered}
+ AA^+A=A,\qquad A^+AA^+=A^+,\\
+ (AA^+)^*=AA^+,\qquad
+ (A^+A)^*=A^+A.
+ \end{gathered}
+\]
+Co więcej, te cztery
+tożsamości jednoznacznie
+charakteryzują \(A^+\).
+Mamy
+\[
+ AA^+=P_{\operatorname{im}A},
+ \qquad
+ A^+A=P_{(\ker A)^\perp}.
+\]
+Dla każdego \(y\in K^m\)
+wektor \(x_{\min}=A^+y\)
+jest jedynym rozwiązaniem
+zadania najmniejszych kwadratów
+o najmniejszej normie.
+Wszystkie rozwiązania
+najmniejszych kwadratów to
+\[
+ A^+y+\ker A.
+\]
+\end{twierdzenie}
+\begin{proof}
+Niech \(A=U\Sigma V^*\) będzie
+rozkładem SVD z rzędem \(r\).
+Mnożenie macierzy diagonalnych
+o odpowiednich wymiarach daje
+\[
+ \begin{aligned}
+ AA^+&=U(\Sigma\Sigma^+)U^*
+       =\sum_{i=1}^r u_i u_i^*,\\
+ A^+A&=V(\Sigma^+\Sigma)V^*
+       =\sum_{i=1}^r v_i v_i^*.
+ \end{aligned}
+\]
+Z
+Twierdzenia~\ref{thm:lin15-svd}
+wynika, że pierwsza
+macierz jest rzutem ortogonalnym
+na \(\operatorname{im}A\),
+a druga na \((\ker A)^\perp\).
+Stąd obie są samosprzężone;
+ponadto
+\[
+ AA^+A=A,\qquad
+ A^+AA^+=A^+
+\]
+wynika z równości
+\(\Sigma\Sigma^+\Sigma=\Sigma\)
+oraz
+\(\Sigma^+\Sigma\Sigma^+=\Sigma^+\).
+
+Pokażemy jednoznaczność
+macierzy \(X\in\operatorname{Mat}_{n\times m}(K)\)
+spełniającej te cztery tożsamości
+z \(X\) w miejsce \(A^+\).
+Z \(AXA=A\) i \((AX)^*=AX\)
+wynika, że \(AX\) jest
+samosprzężoną idempotencją:
+\[
+ (AX)^2=AXAX=AX,
+\]
+ponieważ \(AXA=A\).
+Jej obraz to \(\operatorname{im}A\):
+z jednej strony obraz \(AX\)
+jest podprzestrzenią
+\(\operatorname{im}A\),
+a z drugiej dla \(Av\)
+mamy \(AX(Av)=Av\).
+Z
+Twierdzenia~\ref{thm:lin13-projection-characterization}
+dostajemy
+\(AX=P_{\operatorname{im}A}\).
+Podobnie z \(XAX=X\)
+i \((XA)^*=XA\)
+wynika, że \(XA\)
+jest rzutem ortogonalnym
+na swój obraz. Z
+\(AXA=A\) wynika
+\(\ker(XA)=\ker A\):
+gdy \(XA v=0\), mamy
+\(Av=AXAv=0\), a odwrotna
+implikacja jest oczywista.
+Dlatego
+\(\operatorname{im}(XA)
+=(\ker XA)^\perp=(\ker A)^\perp\)
+i
+\(XA=P_{(\ker A)^\perp}\).
+
+Dla danego \(y\in K^m\)
+z tożsamości \(XAX=X\)
+otrzymujemy
+\(Xy=XAXy\), więc
+\(Xy\in\operatorname{im}(XA)
+=(\ker A)^\perp\).
+Jednocześnie
+\(AXy=P_{\operatorname{im}A}y\).
+Na mocy
+Twierdzenia~\ref{thm:lin13-ls-minnorm}
+istnieje dokładnie jeden
+wektor w \((\ker A)^\perp\)
+o takim obrazie,
+będący rozwiązaniem
+najmniejszych kwadratów
+o najmniejszej normie.
+Zatem \(Xy=A^+y\)
+dla każdego \(y\),
+co daje \(X=A^+\).
+W szczególności
+definicja przez SVD
+nie zależy od wyboru
+baz ortonormalnych.
+Ostatnie dwie tezy
+wynikają z
+Twierdzenia~\ref{thm:lin13-normal-equations}
+oraz
+Twierdzenia~\ref{thm:lin13-ls-minnorm}.
+\end{proof}
+
+\begin{przyklad}[Pseudoodwrotność macierzy osobliwej]
+\label{prz:lin15-pseudoinverse}
+Dla macierzy
+\[
+ A=\begin{pmatrix}1&1\\2&2\end{pmatrix}
+\]
+mamy \(r=1\) oraz
+\[
+ A^+=\frac1{10}
+ \begin{pmatrix}1&2\\1&2\end{pmatrix}.
+\]
+Istotnie \(A=ab^{\mathsf T}\)
+dla \(a=(1,2)^{\mathsf T}\)
+i \(b=(1,1)^{\mathsf T}\).
+Jedyna dodatnia wartość
+osobliwa wynosi
+\(\|a\|\|b\|=\sqrt{10}\),
+a z rozkładu SVD otrzymujemy
+\(A^+=ba^{\mathsf T}/10\).
+Dla \(y=(1,0)^{\mathsf T}\)
+dostajemy
+\[
+ A^+y=(1/10,1/10)^{\mathsf T},
+\]
+czyli dokładnie rozwiązanie
+o najmniejszej normie
+wyznaczone w
+Przykładzie~\ref{prz:lin13-rank-deficient}.
+\end{przyklad}
+
+\section{Rozkład biegunowy}
+\label{sec:lin15-polar}
+
+\begin{definicja}[Dodatni pierwiastek macierzy]
+\label{def:lin15-positive-square-root}
+Niech \(K=\mathbb R\) lub \(\mathbb C\),
+a \(H\in\operatorname{Mat}_{n\times n}(K)\)
+będzie hermitowska
+i dodatnio półokreślona.
+Jeśli
+\(H=V\operatorname{diag}(\lambda_1,\ldots,
+\lambda_n)V^*\) z \(\lambda_i\ge0\),
+definiujemy
+\[
+ H^{1/2}
+ :=V\operatorname{diag}(\sqrt{\lambda_1},
+ \ldots,\sqrt{\lambda_n})V^*.
+\]
+Macierz \(H^{1/2}\)
+jest dodatnio półokreślona,
+hermitowska i spełnia
+\((H^{1/2})^2=H\).
+\end{definicja}
+
+\begin{stwierdzenie}[Jednoznaczność dodatniego pierwiastka]
+\label{prop:lin15-positive-root}
+Dla każdej hermitowskiej
+dodatnio półokreślonej macierzy
+\(H\in\operatorname{Mat}_{n\times n}(K)\)
+istnieje dokładnie jedna
+hermitowska dodatnio półokreślona
+macierz \(S\) spełniająca \(S^2=H\).
+Jest nią \(H^{1/2}\)
+z
+Definicji~\ref{def:lin15-positive-square-root}.
+\end{stwierdzenie}
+\begin{proof}
+Istnienie wynika wprost
+z rzeczywistego lub zespolonego
+twierdzenia spektralnego
+i definicji.
+Dla jednoznaczności niech
+\(S=S^*\) będzie dodatnio
+półokreślona i \(S^2=H\).
+Operator \(S\) przemienia się z \(H\),
+ponieważ \(SH=S^3=HS\).
+Obie macierze są samosprzężone,
+więc na mocy
+Twierdzenia~\ref{thm:lin14-simultaneous}
+mają wspólną ortonormalną bazę własną.
+Na wektorze tej bazy
+o wartości własnej
+\(s\ge0\) dla \(S\)
+macierz \(H=S^2\)
+ma wartość własną \(s^2\).
+Z nieujemności \(s\)
+wynika jednoznacznie
+\(s=\sqrt{s^2}\).
+Zatem w tej bazie działanie
+\(S\) jest dokładnie
+działaniem zdefiniowanej
+macierzy \(H^{1/2}\).
+Wobec tego \(S=H^{1/2}\).
+\end{proof}
+
+\begin{twierdzenie}[Kanoniczny rozkład biegunowy]
+\label{thm:lin15-polar}
+Niech \(K=\mathbb R\) lub \(\mathbb C\),
+a \(A\in\operatorname{Mat}_{m\times n}(K)\).
+Niech
+\[
+ |A|:=(A^*A)^{1/2}
+ \in\operatorname{Mat}_{n\times n}(K).
+\]
+Istnieje dokładnie jedna macierz
+\(W\in\operatorname{Mat}_{m\times n}(K)\)
+taka, że
+\[
+ A=W|A|,\qquad
+ \ker W=\ker A,\qquad
+ W^*W=P_{(\ker A)^\perp}.
+\]
+Ponadto
+\[
+ WW^*=P_{\operatorname{im}A}.
+\]
+Macierz \(W\) jest
+\emph{izometrią częściową}:
+zachowuje normy wektorów
+z \((\ker A)^\perp\)
+i zeruje \(\ker A\).
+Dla macierzy kwadratowej
+i odwracalnej \(A\)
+macierz \(W\) jest unitarna
+(ortogonalna nad \(\mathbb R\)).
+\end{twierdzenie}
+\begin{proof}
+Wybierzmy SVD
+\(A=U\Sigma V^*\)
+o rzędzie \(r\).
+Z definicji dodatniego
+pierwiastka
+\[
+ |A|=V(\Sigma^*\Sigma)^{1/2}V^*
+ =V\operatorname{diag}
+  (\sigma_1,\ldots,\sigma_r,0,\ldots,0)V^*.
+\]
+Niech \(E\in\operatorname{Mat}_{m\times n}(K)\)
+ma na przekątnej jedynki
+dla \(i\le r\) i zera
+w pozostałych miejscach.
+Kładziemy
+\[
+ W=UEV^*.
+\]
+Wówczas
+\[
+ W|A|
+ =UEV^*V(\Sigma^*\Sigma)^{1/2}V^*
+ =U\Sigma V^*=A.
+\]
+Macierz \(W\) działa
+na ortonormalnych wektorach
+\(v_i\) następująco:
+\(Wv_i=u_i\) dla \(i\le r\)
+oraz \(Wv_i=0\) dla \(i>r\).
+Stąd
+\(\ker W=\operatorname{span}\{v_{r+1},\ldots,v_n\}
+=\ker A\).
+Dalej
+\[
+ W^*W
+ =V(E^*E)V^*
+ =\sum_{i=1}^r v_iv_i^*
+ =P_{(\ker A)^\perp}
+\]
+oraz analogicznie
+\[
+ WW^*=U(EE^*)U^*
+ =\sum_{i=1}^r u_iu_i^*
+ =P_{\operatorname{im}A}.
+\]
+Jeśli \(v\in(\ker A)^\perp\),
+to
+\(\|Wv\|^2=h(v,W^*Wv)=\|v\|^2\).
+
+Pokażemy jednoznaczność.
+Niech \(X\) będzie inną
+macierzą z własnościami
+\(A=X|A|\) i
+\(\ker X=\ker A\).
+Ponieważ
+\(\operatorname{im}|A|
+=(\ker A)^\perp\),
+co wynika wprost z
+diagonalizacji \(|A|\)
+w bazie \(v_i\), dla
+każdego \(z\in(\ker A)^\perp\)
+istnieje \(y\) takie, że
+\(z=|A|y\).
+Wtedy
+\[
+ Xz=X|A|y=Ay=W|A|y=Wz.
+\]
+Na \(\ker A\) obie macierze
+zerują wektory.
+Z rozkładu ortogonalnego
+\(K^n=(\ker A)^\perp\oplus\ker A\)
+wynika \(X=W\).
+Jeśli \(A\) jest kwadratowa
+i odwracalna, ma \(r=n=m\);
+wtedy \(W^*W=WW^*=I_n\),
+czyli \(W\) jest unitarna.
+\end{proof}
+
+\begin{uwaga}[Odwracalność i niejednoznaczność innych wersji]
+\label{rem:lin15-polar-unitary}
+Dla odwracalnej macierzy
+kwadratowej mamy
+\(W=A(A^*A)^{-1/2}\).
+Jeżeli natomiast \(A\)
+jest kwadratowa i osobliwa,
+częściową izometrię \(W\)
+można rozszerzyć do macierzy
+unitarnej \(Q\) i uzyskać
+również \(A=Q|A|\).
+Takie rozszerzenie
+nie musi być jednoznaczne,
+ponieważ na \(\ker A\)
+można wybrać różne izometrie
+na \((\operatorname{im}A)^\perp\).
+Warunek \(\ker W=\ker A\)
+wyróżnia kanoniczną
+częściową izometrię.
+\end{uwaga}
+
+\section{Porównanie rozkładów i dobór założeń}
+\label{sec:lin15-porownanie}
+
+\begin{stwierdzenie}[Rząd i odwracalność w różnych rozkładach]
+\label{prop:lin15-summary}
+Niech \(A\in\operatorname{Mat}_{n\times n}(K)\).
+\begin{enumerate}[label=(\roman*)]
+\item Dla dowolnego ciała \(K\)
+      istnieje rozkład PLU;
+      jeśli \(A\) jest odwracalna,
+      czynniki \(L,U\) są odwracalne.
+\item Jeśli \(K=\mathbb R\) lub \(\mathbb C\)
+      i \(A\) jest hermitowska,
+      dodatnio określona, to
+      istnieje jednoznaczny
+      rozkład \(A=LL^*\)
+      z dodatnią przekątną \(L\).
+\item Jeśli \(K=\mathbb R\) lub \(\mathbb C\),
+      to istnieje rozkład SVD,
+      również przy \(A\) osobliwej.
+      Macierz \(A\) jest odwracalna
+      dokładnie wtedy, gdy wszystkie
+      jej \(n\) wartości osobliwych
+      są dodatnie.
+\end{enumerate}
+\end{stwierdzenie}
+\begin{proof}
+Pierwsza teza o istnieniu
+wynika z
+Twierdzenia~\ref{thm:lin15-plu}.
+Jeśli \(A\) jest odwracalna,
+to \(U=L^{-1}PA\)
+jest iloczynem macierzy
+odwracalnych, ponieważ
+\(L\) ma jedynki na przekątnej,
+a \(P\) jest permutacją.
+Druga teza jest
+Twierdzeniem~\ref{thm:lin15-cholesky}.
+Trzecia wynika z
+Twierdzenia~\ref{thm:lin15-svd}:
+\(\operatorname{rk}A\)
+jest dokładnie liczbą dodatnich
+wartości osobliwych.
+Dla macierzy kwadratowej
+rząd \(n\) jest równoważny
+odwracalności.
+\end{proof}
+
+\begin{uwaga}[Wybór rozkładu w praktyce]
+\label{rem:lin15-which}
+Rozkład PLU nadaje się
+do rozwiązywania układów
+z odwracalną macierzą kwadratową.
+Przy dodatnio określonej
+macierzy hermitowskiej
+rozkład Choleskiego wykorzystuje
+jej szczególną strukturę.
+Rozkład QR pozwala rozwiązywać
+zadania najmniejszych kwadratów
+bez formowania macierzy \(A^*A\),
+która może pogarszać uwarunkowanie
+numeryczne. Rozkład SVD
+uwidacznia rząd, jądro,
+wartości osobliwe oraz
+najlepszą aproksymację
+małego rzędu;
+pseudoodwrotność daje
+jednoznaczne rozwiązanie
+najmniejszych kwadratów
+o najmniejszej normie.
+Rozkład biegunowy oddziela
+dodatnio półokreśloną część
+\(|A|\) od częściowej izometrii.
+Stwierdzenia te dotyczą
+zastosowań matematycznych;
+pełne porównanie kosztów
+i stabilności algorytmów
+wymaga oddzielnej analizy
+numerycznej.
+\end{uwaga}
+
+\section{Podsumowanie}
+\label{sec:lin15-podsumowanie}
+
+Dla macierzy kwadratowej
+nad dowolnym ciałem rozkład
+PLU istnieje zawsze,
+a przy niezerowych wszystkich
+wiodących minorach istnieje
+jednoznaczny rozkład LU
+z ustaloną normalizacją.
+Macierz hermitowska
+dodatnio określona ma
+jednoznaczny rozkład Choleskiego.
+Dla macierzy rzeczywistych
+i zespolonych o liczbie
+wierszy co najmniej równej
+liczbie kolumn istnieje
+rozkład QR z ortonormalnymi
+kolumnami \(Q\);
+przy niezależnych kolumnach
+i dodatniej przekątnej \(R\)
+jest on jednoznaczny.
+Bez ograniczeń na kształt
+i rząd macierzy istnieje
+rozkład według wartości
+osobliwych \(A=U\Sigma V^*\).
+Wartości osobliwe wyznaczają
+rząd, normy operatorową
+i Frobeniusa, a obcięcie SVD
+daje najlepsze przybliżenie
+macierzą rzędu co najwyżej \(k\).
+Pseudoodwrotność
+Moore'a--Penrose'a opisuje
+najmniejszą normę rozwiązania
+najmniejszych kwadratów.
+Rozkład biegunowy
+\(A=W|A|\) oddziela
+dodatni pierwiastek
+\(A^*A\) od kanonicznej
+częściowej izometrii.
+Wszystkie twierdzenia
+zostały sformułowane
+z uwzględnieniem wymiaru,
+rzędu, rodzaju ciała
+i wymaganej określoności,
+tak aby nie stosować
+rozkładów poza zakresem
+ich założeń.
