@@ -1,4 +1,4 @@
-name: Abstract algebra AA-01 validation
+name: Abstract algebra AA-01 and AA-02 validation
 
 on:
   push:
@@ -12,6 +12,7 @@ on:
       - "application/backend/generator.py"
       - "application/config/preambles/AA.tex"
       - "tools/tests/test_abstract_algebra_ch01.py"
+      - "tools/tests/test_abstract_algebra_ch02.py"
       - ".github/workflows/abstract-algebra-chapter.yml"
   workflow_dispatch:
 
@@ -29,7 +30,9 @@ jobs:
         run: python -m unittest discover -s tools/tests -v
       - name: Run abstract-algebra regression tests
         run: python -m unittest tools.tests.test_abstract_algebra_ch01 -v
-      - name: Compile AA-01 book with latexmk
+      - name: Run AA-02 regression tests
+        run: python -m unittest tools.tests.test_abstract_algebra_ch02 -v
+      - name: Compile AA-01 and AA-02 book with latexmk
         uses: xu-cheng/latex-action@v3
         with:
           root_file: abstract_algebra.tex
@@ -47,7 +50,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: abstract-algebra-aa01
+          name: abstract-algebra-aa01-aa02
           path: |
             books/pl/abstract_algebra.pdf
             books/pl/abstract_algebra.log
