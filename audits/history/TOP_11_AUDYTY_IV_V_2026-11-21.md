@@ -39,3 +39,14 @@ Dla commita AT-11 `c2db9f9a`, przed synchronizacją DG-17, cztery kontrole miał
 Kontrole porównawcze i aplikacyjne po zmianie DG-17 oraz nowym teście na commitach `50cbd1327` i `58d5bd6e` pozostawały w toku w chwili ostatniego sprawdzenia. Nie deklarujemy jeszcze ich wyniku.
 
 **Decyzja:** zakończono merytoryczne audyty I–V TOP-11. Stabilność końcową wolno potwierdzić po zaliczeniu CI dla aktualnej pary AT-11/DG-17. Do tego czasu nie należy rozpoczynać TOP-12. Automatyzacje pozostają wyłączone.
+
+## Uzupełnienie: sprawdzone zakończenie porównania AT–DG
+
+Po opracowaniu raportu zakończyły się dodatkowe uruchomienia:
+- [AT11–DG17 comparative audit, commit `58d5bd6e`](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44926606563) — **completed/success**. Obejmuje nowe testy zgodności konwencji w obu tomach i pełną kompilację porównawczą.
+- [AT21–DG17 relative Euler and boundary Poincaré–Hopf, commit `50cbd132`](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44926585115) — **completed/success**.
+- [AT–DG–AG, commit `50cbd132`](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44926585140) — **completed/success**.
+
+Wspólny workflow aplikacji ujawnił osobną regresję w równolegle rozwijanym LST-10: dwa odsyłacze do jeszcze nieistniejących etykiet. Nie wyciszono walidatora: poprawiono źródło LST-10 w `1f452b86`, a następnie zawężono listę dokumentowanych odsyłaczy przyszłych z trzech do jednego w `8f21df29`. Nowe uruchomienia aplikacji i LST pozostawały w toku podczas tej aktualizacji.
+
+**Stan rozdziału:** audyty merytoryczne I–V są czyste; kompilacje TOP-01–12 i porównawcze AT–DG są zielone. Pełne zamknięcie formalne czeka wyłącznie na potwierdzenie wspólnej walidacji po poprawce niezależnego LST-10.
