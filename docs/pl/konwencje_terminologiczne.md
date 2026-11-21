@@ -9,8 +9,7 @@ rozdziału.
 ## Topologia
 
 - **Uzwarcenie**, nie **zwartościowanie**. W szczególności:
-  **uzwarcenie Čecha–Stone’a** (w uzasadnionym kontekście dopuszczalna
-  kolejność nazwisk Stone’a–Čecha) i **uzwarcenie Aleksandrowa**.
+  **uzwarcenie Čecha–Stone’a** i **uzwarcenie Aleksandrowa**.
   Liczba mnoga: **uzwarcenia**; poprawne są „teoria uzwarceń”,
   „własność uniwersalna uzwarcenia”, „odwzorowanie uzwarcenia”.
 - **Topologia zbieżności jednostajnej na zbiorach zwartych**
