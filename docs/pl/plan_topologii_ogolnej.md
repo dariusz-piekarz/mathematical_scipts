@@ -22,8 +22,8 @@ Stan: 22 listopada 2026. Źródłem prawdy dla rozdziałów włączonych do ksi�
 | 14 | Zwartość lokalna, przestrzenie o przeliczalnej bazie w nieskończoności | plan |
 | 15 | Parazwartość, metryzowalność i podziały jedności | plan |
 | 16 | Przestrzenie całkowicie regularne i wprowadzenie do uzwarceń | plan |
-| 17 | Uzwarcenie Aleksandrowa oraz uzwarcenie Stone'a–Čecha | plan |
-| 18 | Przestrzenie odwzorowań, topologia zbieżności zwartej | plan |
+| 17 | Uzwarcenie Aleksandrowa oraz uzwarcenie Čecha–Stone’a | plan |
+| 18 | Przestrzenie odwzorowań, topologia zbieżności jednostajnej na zbiorach zwartych | plan |
 | 19 | Przestrzenie polskie i hierarchia zbiorów borelowskich | plan |
 | 20 | Podstawy opisowej teorii mnogości i jej związki z topologią | plan |
 
@@ -35,7 +35,8 @@ Dla każdego nowego rozdziału: (1) przygotowanie samodzielnego tekstu z motywac
 
 ## Konwencje terminologiczne
 
-- Używamy **uzwarcenie**, nie **zwartościowanie** (również: uzwarcenie Aleksandrowa i uzwarcenie Stone'a–Čecha).
+- Używamy **uzwarcenie**, nie **zwartościowanie** (również: uzwarcenie Aleksandrowa i uzwarcenie Čecha–Stone’a).
+- Używamy **topologia zbieżności jednostajnej na zbiorach zwartych**, nie skrótu „topologia zbieżności zwartej”.
 - Przestrzeń **spełnia pierwszy/drugi aksjomat przeliczalności**, nie jest „pierwszo-/drugoprzeliczalna”.
 - Angielskie *chart* tłumaczymy jako **mapa**, *sequence* jako **ciąg**; *net* jako **sieć**.
 - Wymagamy precyzyjnie sformułowanych twierdzeń i uzasadnionych nietrywialnych przejść (w tym wskazania właściwego wcześniejszego wyniku, jeśli jest użyty).
