@@ -7,7 +7,7 @@
 
 ## Zakres, motywacja i zależności
 
-Rozdział 14 „Wartości własne, diagonalizacja i twierdzenie spektralne” jest kontynuacją rozdziałów 12–13 (iloczyny skalarne, bazy ortonormalne, adjoint, rzuty), ale wprowadza wartości własne od podstaw, bez zakładania wcześniejszej teorii spektralnej. Wykorzystuje już zaudytowane twierdzenia `thm:lin12-gram-schmidt`, `thm:lin12-zmiana-ortonormalna` (w tekście poprawne rzeczywiste oznaczenie `prop:lin12-zmiana-ortonormalna`), `thm:lin13-adjoint`, `prop:lin13-adjoint-kalkul`, `thm:lin13-rzut-wlasnosci`. Przedstawienie rzeczywistych form symetrycznych jest zgodne z rozdziałem 09, ale nie powtarza tamtego dowodu prawa bezwładności.
+Rozdział 14 „Wartości własne, diagonalizacja i twierdzenie spektralne” jest kontynuacją rozdziałów 12–13 (iloczyny skalarne, bazy ortonormalne, adjoint, rzuty), ale wprowadza wartości własne od podstaw, bez zakładania wcześniejszej teorii spektralnej. Wykorzystuje już zaudytowane twierdzenia `thm:lin12-gram-schmidt`, `prop:lin12-zmiana-ortonormalna`, `thm:lin13-adjoint`, `prop:lin13-adjoint-kalkul`, `thm:lin13-rzut-wlasnosci`. Przedstawienie rzeczywistych form symetrycznych jest zgodne z rozdziałem 09, ale nie powtarza tamtego dowodu prawa bezwładności.
 
 Rozdział zawiera: wartości i przestrzenie własne, wielomian charakterystyczny, krotności algebraiczne i geometryczne, niezależność przestrzeni własnych, diagonalizację algebraiczną, twierdzenie Schura, operator normalny, twierdzenie spektralne nad `C`, rzeczywisty wariant dla operatorów symetrycznych, rzuty spektralne i wielomiany operatorów, iloraz Rayleigha, określoność form, normę operatora normalnego i jednoczesną diagonalizację przemiennych operatorów samosprzężonych.
 
