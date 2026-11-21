@@ -44,7 +44,7 @@ Przykład \(\mathbb C\) jako przestrzeni nad \(\mathbb C\) i \(\mathbb R\) forma
 - Środowiska `\\begin` / `\\end` są zrównoważone.
 - Nie zmieniano dwóch rysunków TikZ ani nie dodano zależności od zewnętrznych plików.
 - CI dla poprzedniej wersji (audyt 8): [44892908046](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44892908046) — sukces.
-- CI dla bieżącej wersji: [44893173506](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44893173506) — status do uzupełnienia po zakończeniu.
+- CI dla bieżącej wersji: [44893173506](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44893173506) — **success**. Zakończono pomyślnie wszystkie kroki sprawdzające rozdział, pełną kompilację LaTeX, odsyłacze i eksport PDF. Aktualna książka liczy **16 stron**. Końcowy `linear_algebra.log` nie zawiera `LaTeX Warning`, `Overfull`, `Underfull`, `Undefined control sequence` ani `Missing character`. Wizualnie sprawdzono strony **3, 5 i 13** nowego PDF (w tym poprawiony lemat i rysunek): nie stwierdzono kolizji tekstu ani błędów składu.
 
 Odrębne 24 niezgodności globalnej walidacji Biblioteki (importy i niezgodne kopie plików innych skryptów) nie zostały tu rozwiązane. Nie deklarujemy ich naprawienia.
 
