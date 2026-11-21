@@ -368,9 +368,19 @@ class TopologySeventeenEighteenAudit(unittest.TestCase):
         ):
             with self.subTest(fragment=fragment):
                 self.assertIn(fragment, chapter)
+        # A chart (coordinate map) is "mapa"; a general mapping is
+        # "odwzorowanie". Do not prohibit correctly used "mapa".
+        for chart_phrase in (
+            "w mapie wokół $p_i$",
+            "W mapie $x_2",
+            "w tej mapie",
+            "W mapie $x_1",
+        ):
+            with self.subTest(chart_phrase=chart_phrase):
+                self.assertIn(chart_phrase, chapter)
         self.assertNotRegex(
             chapter,
-            r"\bmapa\b|\bmapy\b|\bmapą\b|\bmapę\b"
+            r"\b(?:karta|karty|karcie|kartę|kartą|kart|kartami|kartach)\b"
             r"|\bsekwencj\w*|\btensorowan\w*",
         )
         self.assertNotIn("Iteracja X, rozdział XIX", chapter)
