@@ -110,9 +110,12 @@ class ATDG11_17Audit(unittest.TestCase):
     def test_historical_unique_content_and_labels_preserved(self):
         manifest = self.manifest
         la, ld = labels(self.at), labels(self.dg)
-        self.assertEqual(len(la & ld), manifest["common_label_names"])
-        self.assertEqual(la-ld, set(manifest["at_only_labels"]))
-        self.assertEqual(ld-la, set(manifest["dg_only_labels"]))
+        # Stage V is a historical provenance snapshot. Subsequent verified
+        # audits may ADD labels to DG-17 (or AT-11), but must not silently
+        # remove labels that were historically unique or common.
+        self.assertGreaterEqual(len(la & ld), manifest["common_label_names"])
+        self.assertTrue(set(manifest["at_only_labels"]).issubset(la-ld))
+        self.assertTrue(set(manifest["dg_only_labels"]).issubset(ld-la))
         self.assertEqual(manifest["common_label_names"], 42)
         self.assertFalse(manifest["policy"]["automatic_merge"])
         self.assertFalse(manifest["policy"]["merge_approved"])
