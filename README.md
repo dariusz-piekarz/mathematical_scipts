@@ -25,14 +25,14 @@ Projekt jest **aktywnie rozwijany i audytowany**. Działające funkcje aplikacji
 
 ## Status
 
-**Migawka na 21 listopada 2026 r., gałąź `biblioteka-matematyczna-iteracja-6`.** Aktualny stan odczytuje się z [`catalog/books.json`](catalog/books.json) i [GitHub Actions](https://github.com/dariusz-piekarz/mathematical_scipts/actions).
+**Migawka na 22 listopada 2026 r., gałąź `biblioteka-matematyczna-iteracja-6`.** Aktualny stan odczytuje się z [`catalog/books.json`](catalog/books.json) i [GitHub Actions](https://github.com/dariusz-piekarz/mathematical_scipts/actions).
 
 | Obszar | Stan |
 | --- | --- |
 | Książki w katalogu | **20** |
-| Zarejestrowane rozdziały | **391** |
+| Zarejestrowane rozdziały | **439** |
 | Suplementy | **2** |
-| Źródła `.tex` w `chapters/pl/` | **393** (rozdziały i suplementy) |
+| Źródła `.tex` w `chapters/pl/` | **441** (rozdziały i suplementy) |
 | Explorer, wyszukiwanie i czytnik | **Działają** |
 | Graf odsyłaczy i graf pojęć | **Działają** (patrz ograniczenia interpretacji krawędzi) |
 | Generator własnych projektów | **Działa**: rozdziały, obiekty, wycinki wierszy, ZIP i manifest |
@@ -57,7 +57,7 @@ Poniższa lista pochodzi z `catalog/books.json`. Liczba rozdziałów oznacza poz
 | [Geometria i topologia różniczkowa](books/pl/differential_geometry_and_topology.tex) | 20 |
 | [Analiza funkcjonalna](books/pl/functional_analysis.tex) | 35 |
 | [Teoria Galois](books/pl/galois_theory.tex) | 10 |
-| [Topologia ogólna](books/pl/general_topology.tex) | 10 |
+| [Topologia ogólna](books/pl/general_topology.tex) | 11 (11 w audycie) |
 | [Teoria grafów i węzłów](books/pl/graph_and_knot_theory.tex) | 37 |
 | [Teoria całki](books/pl/integration_theory.tex) | 17 |
 | [Algebra liniowa](books/pl/linear_algebra.tex) | 27 (01–27 stabilne) |
@@ -216,8 +216,8 @@ Rejestr `application/config/pending_reference_baseline.json` dokumentuje odsyła
 
 **Priorytet nowych skryptów (ustalona kolejność):**
 
-1. **Topologia ogólna** — od aksjomatów i podstaw przez zwartość, metryzowalność, sieci, filtry i uniformizacje.
-   - **Zaplanowane do części o zwartości (decyzja z 21 listopada 2026):** twierdzenie o zanurzaniu przestrzeni Tychonoffa w kostkę \([0,1]^I\), z konstrukcją zanurzenia i pełnym dowodem. Nie włączać do rozdziału 05 o aksjomatach oddzielania.
+1. **Topologia ogólna** — od aksjomatów i podstaw przez zwartość, metryzowalność, sieci, filtry i przestrzenie jednostajne. [Szczegółowy plan rozdziałów 11–20 i statusów audytu](docs/pl/plan_topologii_ogolnej.md).
+   - Twierdzenie o zanurzaniu przestrzeni Tychonoffa w kostkę \([0,1]^I\) jest umieszczone w rozdziale 07. Twierdzenie Baire'a i zupełność znajdują się w rozdziale 11. W rozdziałach 16–17 obowiązuje termin **uzwarcenie** (nie „zwartościowanie”).
 2. **Analiza matematyczna** — uporządkowany, samodzielny kurs od fundamentów do analizy wielu zmiennych.
 3. **Analiza zespolona** — jedna i wiele zmiennych, pseudowypukłość, geometria zespolona i interpolacja.
 4. **Teoria liczb i arytmetyka** — podejście elementarne, algebraiczne, analityczne i geometryczne.
