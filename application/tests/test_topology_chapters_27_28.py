@@ -283,11 +283,23 @@ class AlgebraicTopologyTwentySevenTwentyEightAudit(unittest.TestCase):
                         self.assertTrue(0 <= target_r <= length)
 
     def test_at28_intersection_signatures_and_elliptic_blowup(self):
-        # P2: Q=(1). P1xP1: Q=[[0,1],[1,0]].
-        # The blowup at a point adds one negative eigenvalue.
-        signatures = {"P2": (1,0), "P1xP1": (1,1)}
-        for plus, minus in signatures.values():
-            self.assertEqual((plus, minus+1)[1], minus+1)
+        # P2 has positive pairing (1), its blowup has diag(1,-1).
+        H = (1, 0)
+        E = (0, 1)
+        q_blowup = ((1, 0), (0, -1))
+        def pairing(matrix, u, v):
+            return sum(u[i] * matrix[i][j] * v[j]
+                       for i in range(len(u)) for j in range(len(v)))
+        self.assertEqual(pairing(q_blowup, H, H), 1)
+        self.assertEqual(pairing(q_blowup, E, E), -1)
+        self.assertEqual(pairing(q_blowup, H, E), 0)
+        # P1xP1 has hyperbolic form Q=[[0,1],[1,0]]:
+        # (1,1) and (1,-1) are orthogonal with signs +,-.
+        hyperbolic = ((0, 1), (1, 0))
+        u, v = (1, 1), (1, -1)
+        self.assertGreater(pairing(hyperbolic, u, u), 0)
+        self.assertLess(pairing(hyperbolic, v, v), 0)
+        self.assertEqual(pairing(hyperbolic, u, v), 0)
         for g in range(0, 8):
             b = [1, 0, 2, 2*g, 2, 0, 1]
             euler = sum((-1)**j * bj for j,bj in enumerate(b))
