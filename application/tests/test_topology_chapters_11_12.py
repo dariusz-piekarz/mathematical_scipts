@@ -1,7 +1,9 @@
 """AT-11/12 audit regression tests: duality, intersection forms and spectral pages."""
 from __future__ import annotations
 
-from collections import Counter
+from collections import Counter, defaultdict
+from itertools import combinations
+from random import Random
 from pathlib import Path
 import re
 import unittest
@@ -100,6 +102,67 @@ class TopologyChapterElevenTwelveAudit(unittest.TestCase):
                 r"\btensorowan\w*|\btensorowali\w*"
                 r"|\bsekwencj\w*|\binjekc\w*",
             )
+
+    def test_cap_boundary_signs_on_integer_simplices(self):
+        """Check boundary(c cap a)=(-1)^k[(boundary c) cap a-c cap da]."""
+        ch = self.text["11"]
+        self.assertIn(
+            r"\partial(c\frown\alpha)=(-1)^k", ch
+        )
+
+        def boundary(chain):
+            result = defaultdict(int)
+            for sigma, coefficient in chain.items():
+                if len(sigma) <= 1:
+                    continue  # unreduced C_0 -> C_{-1}=0
+                for j in range(len(sigma)):
+                    face = sigma[:j] + sigma[j + 1:]
+                    result[face] += (-1)**j * coefficient
+            return {f: v for f, v in result.items() if v}
+
+        def cap(chain, cochain, degree):
+            result = defaultdict(int)
+            for sigma, coefficient in chain.items():
+                if len(sigma) - 1 >= degree:
+                    result[sigma[degree:]] += (
+                        coefficient * cochain.get(sigma[:degree + 1], 0)
+                    )
+            return {f: v for f, v in result.items() if v}
+
+        def coboundary(cochain, faces):
+            return {
+                face: sum(
+                    (-1)**j * cochain.get(face[:j] + face[j + 1:], 0)
+                    for j in range(len(face))
+                )
+                for face in faces
+            }
+
+        rng = Random(168)
+        for m in range(1, 8):
+            simplex = tuple(range(m + 1))
+            chain = {simplex: 1}
+            for k in range(m + 1):
+                for _ in range(12):
+                    alpha = {
+                        face: rng.randint(-5, 5)
+                        for face in combinations(simplex, k + 1)
+                    }
+                    lhs = boundary(cap(chain, alpha, k))
+                    da = coboundary(
+                        alpha, combinations(simplex, k + 2)
+                    )
+                    first = cap(boundary(chain), alpha, k)
+                    second = cap(chain, da, k + 1)
+                    rhs = {
+                        face: (-1)**k * (
+                            first.get(face, 0) - second.get(face, 0)
+                        )
+                        for face in set(first) | set(second)
+                        if first.get(face, 0) != second.get(face, 0)
+                    }
+                    with self.subTest(simplex_dim=m, cap_degree=k):
+                        self.assertEqual(lhs, rhs)
 
     def test_cp2_connected_sum_parity_obstructs_homotopy(self):
         ch = self.text["11"]
