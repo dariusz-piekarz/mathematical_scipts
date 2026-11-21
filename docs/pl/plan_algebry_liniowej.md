@@ -1,6 +1,6 @@
 # Plan dalszych rozdziałów — algebra liniowa
 
-Stan na 21 listopada 2026. Książka `books/pl/linear_algebra.tex`: rozdziały **01–26 stabilne**. Dla LA-25 kompletny przebieg GitHub Actions [44949428707](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44949428707) zakończył się sukcesem, a samodzielny PDF ma 15 zweryfikowanych stron.
+Stan na 21 listopada 2026. Książka `books/pl/linear_algebra.tex`: rozdziały **01–27 stabilne**. Dla LA-25 kompletny przebieg GitHub Actions [44949428707](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44949428707) zakończył się sukcesem, a samodzielny PDF ma 15 zweryfikowanych stron.
 
 ## Plan kolejnych rozdziałów
 
@@ -8,14 +8,14 @@ Stan na 21 listopada 2026. Książka `books/pl/linear_algebra.tex`: rozdziały *
 |---|---|---|---|
 | 25 | Sterowalność, obserwowalność, stabilizowalność, wykrywalność; kryteria Kalmana i PBH, rozkład Kalmana | Kontynuacja LA-24; nowy rozdział z pełnymi dowodami, testami i PDF | Stabilny po 7 audytach |
 | 26 | Uogólnione twierdzenia CARE/DARE dla układów z niestabilną otwartą pętlą | Wykorzystuje LA-24 i LA-25; obejmuje półokreślony koszt i rozwiązania stabilizujące | Stabilny po 3 audytach |
-| 27 | Gramiany obserwowalności, realizacje minimalne, macierze Hankela, redukcja układów | Kontynuacja LA-25; nowe dowody, bez powielania kryteriów Kalmana | W audycie |
+| 27 | Gramiany obserwowalności, realizacje minimalne, macierze Hankela, redukcja układów | Kontynuacja LA-25; nowe dowody, bez powielania kryteriów Kalmana | Stabilny po 8 audytach |
 | 28 | Układy liniowe z wymuszeniem, funkcje przejścia i realizacje | Po LA-25/27; można wydzielić do teorii sterowania | Opcjonalny |
 | 29 | Grassmanniany | **Przenieść i zaadaptować istniejący materiał DG-04**, bez ponownego opracowywania od zera | Zatwierdzony do planu |
 | 30 | Algebry Clifforda | **Przenieść i zaadaptować istniejący materiał DG-04**, z powiązaniem z LA-09 i LA-11 | Zatwierdzony do planu |
 | 31 | **Grupy Pin i Spin, spinory oraz struktury spinowe** | **Przenieść i zaadaptować z DG-04** sekcje o odbiciach, grupach Pin/Spin, modułach Clifforda, spinorach i wiązkach spinorowych; powiązać z LA-30 | **Zatwierdzony do planu** |
 | 32 | **Twistory i podstawy geometrii twistorowej** | **Nowy materiał, nieobecny w DG-04**; opracować od podstaw po LA-29–31, bez kopiowania z DG | **Zatwierdzony do planu** |
 
-Numery 27–32 są **robocze** i mogą zostać przestawione przy końcowym porządkowaniu książki, bez zmiany numerów stabilnych rozdziałów 01–26.
+Numery 27–32 są **robocze** i mogą zostać przestawione przy końcowym porządkowaniu książki, bez zmiany numerów stabilnych rozdziałów 01–27.
 
 ## Materiał źródłowy z geometrii różniczkowej
 
