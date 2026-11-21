@@ -22,6 +22,30 @@ REFERENCE = re.compile(
 )
 
 
+# Reviewed legitimate meanings: real playing cards in probability examples.
+# Any new chart-like use in other TeX files is a terminology regression.
+# Caps intentionally prevent silently growing the exceptions.
+CARD_GAME_EXCEPTIONS = {
+    "chapters/pl/probability_volume_i/01-kombinatoryka-i-modele-skonczone.tex": 17,
+    "chapters/pl/probability_volume_i/04-zmienne-losowe-i-rozklady-prawdopodobienstwa.tex": 2,
+    "sources/pl/rachunek_prawdopodobienstwa_tom_I.tex": 19,
+}
+
+
+def unexpected_matches(
+    findings: list[dict[str, object]],
+) -> list[dict[str, object]]:
+    """Classify occurrences outside the reviewed playing-card examples."""
+    grouped: dict[str, list[dict[str, object]]] = {}
+    for item in findings:
+        grouped.setdefault(str(item["path"]), []).append(item)
+    result: list[dict[str, object]] = []
+    for path, items in grouped.items():
+        allowance = CARD_GAME_EXCEPTIONS.get(path, 0)
+        result.extend(items[allowance:])
+    return result
+
+
 def scan(root: Path) -> list[dict[str, object]]:
     findings: list[dict[str, object]] = []
     for path in sorted(root.rglob("*.tex")):
@@ -50,16 +74,20 @@ def main() -> int:
                         default=Path(__file__).resolve().parents[2])
     parser.add_argument("--report", type=Path)
     parser.add_argument("--strict", action="store_true",
-                        help="fail if any occurrence remains (including legitimate non-chart meanings)")
+                        help="fail if unreviewed occurrences remain outside playing-card examples")
     args = parser.parse_args()
     root = args.root.resolve()
     findings = scan(root)
+    unexpected = unexpected_matches(findings)
     report = {
         "scope": "all repository TeX sources",
         "rule": "coordinate chart = mapa; mapping = odwzorowanie",
         "total_occurrences": len(findings),
         "files": len({entry["path"] for entry in findings}),
+        "reviewed_non_chart_occurrences": len(findings) - len(unexpected),
+        "unexpected_occurrences": len(unexpected),
         "findings": findings,
+        "unexpected": unexpected,
     }
     if args.report:
         out = args.report.resolve()
@@ -67,11 +95,13 @@ def main() -> int:
         out.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n",
                        encoding="utf-8")
     print(f"Polish chart terminology scan: {report['total_occurrences']} "
-          f"candidate occurrences in {report['files']} TeX files")
-    for entry in findings:
-        print(f"{entry['path']}:{entry['line']}: "
+          f"literal occurrences in {report['files']} TeX files; "
+          f"{len(unexpected)} unexpected, "
+          f"{report['reviewed_non_chart_occurrences']} playing-card usages.")
+    for entry in unexpected:
+        print(f"UNEXPECTED {entry['path']}:{entry['line']}: "
               f"{entry['word']}: {entry['context']}")
-    return 1 if findings and args.strict else 0
+    return 1 if unexpected and args.strict else 0
 
 
 if __name__ == "__main__":
