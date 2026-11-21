@@ -43,7 +43,7 @@ class BordismHandlesAudit(unittest.TestCase):
         reflected_angles = [(-t) % 360 for t in range(0, 360, 30)]
         self.assertEqual(reflected_angles[:4], [0, 330, 300, 270])
         self.assertIn(r"r(z)=\overline z", self.at)
-        self.assertIn(r"\partial V_-=K", self.at)
+        self.assertIn(r"\partial V_-=(S^1\times[0,1])", self.at)
         self.assertIn(r"\deg h=-1", self.dg)
         self.assertIn(r"\label{fig:skrecony-uchwyt-klein-24}", self.dg)
 
