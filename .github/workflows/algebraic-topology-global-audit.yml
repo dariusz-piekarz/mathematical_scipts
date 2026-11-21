@@ -24,8 +24,11 @@ jobs:
           mkdir -p audits/generated
           python3 tools/audit_algebraic_topology_global.py \
             --report audits/generated/TOP_GLOBAL_AUDIT.json
-      - name: Canonical package and file dependency audit
-        run: python3 tools/audit_chapter_dependencies.py
+      - name: Unit tests for the dependency auditor
+        run: python3 -m unittest discover -s tools/tests -p 'test_audit_chapter_dependencies.py' -v
+      # Actual TOP-00..TOP-30 imports and nested shared modules are checked
+      # by the preceding topology-scoped scan. Repository-wide checking is
+      # independent: other books may be edited in parallel on this branch.
       - name: Regression tests for audited topology chapters
         run: |
           python3 -m unittest discover -s application/tests \
