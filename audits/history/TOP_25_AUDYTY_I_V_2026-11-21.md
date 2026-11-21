@@ -42,6 +42,6 @@ Uzupełniono dziewięć istniejących stwierdzeń i definicji o jawne dane, w sz
 - [AT-25/26 LaTeX — success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44944162229) dla źródła `df6bcbd0`.
 - [AT–DG–AG dependency / label audit — success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44944162249) dla tego samego źródła.
 - [Aplikacja biblioteki — failure](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44944162227): odsyłacz `ch:arithmetization` w **LST-16 wiersz 476**, niezwiązany z TOP-25. Weryfikację ogólnego CI należy traktować jako nieukończoną niezależnie od poprawnego audytu TOP-25.
-- Dodatkowy przebieg z testami samodzielnych sformułowań po commicie `a3cef48b` był w trakcie przygotowywania raportu; wynik wymaga osobnego potwierdzenia.
+- [Najnowszy przebieg AT-25/26 z testami samodzielnych sformułowań — success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44944339880), commit `a3cef48b`. [Kontrola aplikacji — failure](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44944339911) z powodu tego samego niezależnego brakującego odsyłacza LST-16.
 
 **Decyzja:** TOP-25 stabilny merytorycznie i redakcyjnie po pięciu audytach; nie dodano nowych twierdzeń ani przykładów. Zatwierdzone poprawki są na aktualnej gałęzi. Kolejny rozdział w procedurze: TOP-26.
