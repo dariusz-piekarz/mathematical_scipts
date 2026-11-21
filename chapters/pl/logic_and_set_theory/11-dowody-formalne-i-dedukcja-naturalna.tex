@@ -1,0 +1,723 @@
+\chapter{Dowody formalne i dedukcja naturalna}\label{ch:natural-deduction}
+
+\section{Od dowodu pisanego słowami do obiektu matematycznego}
+W rozdziale~\ref{ch:quantifiers} poznaliśmy typowe techniki dowodzenia,
+a w rozdziałach~\ref{ch:syntax-fol} i~\ref{ch:semantics-fol}
+oddzieliliśmy formuły od ich interpretacji. Teraz uczynimy
+samą procedurę dowodzenia przedmiotem definicji.
+Potrzebujemy skończonego obiektu, którego każdy krok da się sprawdzić
+bez zgadywania, co autor „miał na myśli”. Taką rolę spełnia
+\emph{formalna dedukcja}: drzewo formuł budowane z założeń
+za pomocą jawnie wypisanych reguł wnioskowania.
+
+Wybierzemy \emph{dedukcję naturalną}, ponieważ jej reguły
+odpowiadają znanym metodom argumentowania. Inne systemy,
+na przykład systemy Hilberta i rachunek sekwentów, omówimy
+porównawczo w dalszej części.
+
+\section{Jak czytać zapis reguły wnioskowania?}\label{sec:nd-how-to-read}
+Zanim wypiszemy formalne reguły, nauczymy się czytać ich zapis.
+To ważne: pozioma kreska, którą za chwilę zobaczymy, \emph{nie jest kreską ułamkową}
+i nie oznacza dzielenia liczb. Oznacza przejście od podanych zdań do nowego zdania.
+
+\begin{definicja}[Schemat reguły wnioskowania]\label{def:nd-rule-scheme}
+\emph{Reguła wnioskowania} jest umową określającą, kiedy z już uzyskanych
+formuł wolno zapisać kolejną formułę. Jej ogólny schemat ma postać
+\[
+ \frac{\text{przesłanka 1}\quad\cdots\quad\text{przesłanka }n}
+      {\text{wniosek}}\;\text{(nazwa reguły)}.
+\]
+To, co zapisano \emph{nad kreską}, jest wymagane przed zastosowaniem reguły;
+to, co zapisano \emph{pod kreską}, jest otrzymanym wnioskiem.
+Przez \emph{przesłankę} rozumiemy tutaj formułę wcześniej uzyskaną w dowodzie
+lub przyjętą jako założenie. Reguła może mieć jedną przesłankę, kilka przesłanek,
+a czasem żadnej. Schemat opisuje wszystkie dopuszczalne użycia jednej reguły,
+nie tylko jeden konkretny dowód.
+\end{definicja}
+
+\begin{przyklad}[Dwie przesłanki nad kreską]
+Jeśli umiemy uzasadnić zdanie $A$ oraz zdanie $B$, to mamy prawo
+wywnioskować ich koniunkcję $A\land B$. Zapis
+\[
+\frac{A\qquad B}{A\land B}\;(\land I)
+\]
+czytamy słownie: „\emph{z A oraz B wyprowadzamy A i B}”.
+Wcześniej moglibyśmy np. ustalić, że liczba $6$ jest parzysta i że jest
+dodatnia. Wtedy z tych dwóch ustaleń otrzymujemy zdanie
+„liczba $6$ jest parzysta i dodatnia”. Nie sprawdzamy w tym kroku
+na nowo obu faktów: korzystamy z tego, że zostały już uzasadnione.
+Puste miejsce między $A$ i $B$ nad kreską oznacza tylko odstęp
+w drzewie: \emph{obie} przesłanki są wymagane, to nie jest symbol
+alternatywy. Gdybyśmy mieli tylko jedną przesłankę, tej reguły
+zastosować nie wolno.
+\end{przyklad}
+
+\begin{uwaga}[Co oznaczają litery i skróty przy regułach?]
+Litery $A,B,P,Q$ lub greckie $\varphi,\psi,\theta$ występujące w schematach
+są \emph{metazmiennymi}: symbolizują dowolne formuły.
+Nie należy ich utożsamiać ze zmiennymi $x,y$ występującymi wewnątrz formuł.
+W nazwie $(\land I)$ litera $I$ pochodzi od angielskiego
+\emph{introduction} („wprowadzenie” spójnika do wniosku),
+a $E$ w $(\land E)$ od \emph{elimination} („eliminacja” spójnika).
+Indeks $1$ lub $2$ przy $E$ mówi, którą część koniunkcji wybieramy:
+$\land E_1$ daje pierwszy człon, $\land E_2$ drugi.
+Analogicznie $\lor I_1$ i $\lor I_2$ wprowadzają alternatywę,
+odwołując się odpowiednio do jej pierwszego lub drugiego członu.
+\end{uwaga}
+
+\begin{przyklad}[Reguła z jedną przesłanką]
+Jeśli mamy już dowód formuły $A\land B$, to zapis
+\[
+\frac{A\land B}{A}\;(\land E_1)
+\]
+pozwala nam uzyskać $A$. To nie jest równoważność obu formuł:
+mając $A$, nie możemy tą samą regułą uzyskać $A\land B$,
+bo nie wiemy nic o $B$. Kreskę czytamy od góry do dołu,
+a nie dowolnie w obu kierunkach. Na przykład z „$6$ jest liczbą
+parzystą i dodatnią” można wywnioskować „$6$ jest liczbą parzystą”,
+ale z samej parzystości rozważanej liczby nie wynika jej
+dodatniość: na przykład $-6$ jest parzyste i ujemne.
+Odwrotne przejście byłoby nieuprawnione.
+\end{przyklad}
+
+\begin{uwaga}[Drzewo dowodu]
+Kilka reguł można zestawić w \emph{drzewo dowodu}.
+Liście drzewa są u góry, a ostateczny wniosek na dole.
+Kiedy jedna reguła kończy się na formule $A$, tę formułę można
+wykorzystać niżej jako przesłankę innej reguły.
+Symbol $\vdots$ (pionowe kropki) oznacza w schematach
+pewien \emph{ciąg dalszych kroków}, które na razie pomijamy na rysunku;
+nie jest osobną regułą ani formułą.
+Nawiasy kwadratowe $[A]^i$ oznaczają założenie tymczasowe
+o \emph{etykiecie} $i$. Nie orzekają, że $A$ jest prawdziwe.
+Reguła z tym samym indeksem na dole może \emph{rozładować}
+wybrane wystąpienia założenia, czyli sprawić, że końcowy wniosek
+nie będzie już od niego zależał jako od otwartego założenia.
+Wyjaśnimy to bezpośrednio na przykładach poniżej.
+\end{uwaga}
+
+
+\section{Co kryją trzy pionowe kropki?}\label{sec:nd-vertical-dots}
+Najbardziej tajemniczym elementem drzewa dowodu może być symbol
+$\vdots$. Przypomina trzy pionowo ustawione kropki i jest
+\emph{skrótem graficznym}, a nie nowym spójnikiem, kwantyfikatorem,
+regułą wnioskowania ani twierdzeniem. Informuje, że pomiędzy
+wypisanymi formułami znajduje się fragment formalnego dowodu,
+którego kolejnych kroków nie pokazano.
+
+\begin{definicja}[Znaczenie symbolu $\vdots$ w drzewie dowodu]
+Jeżeli zapisujemy fragment
+\[
+\begin{array}{c}
+\mathcal D\\[-2pt]
+\vdots\\[-2pt]
+\varphi
+\end{array}
+\]
+to symbol $\mathcal D$ oznacza wcześniej rozpoczętą dedukcję,
+a $\vdots$ zastępuje skończone drzewo poprawnych zastosowań
+reguł prowadzące do formuły $\varphi$.
+Skrót jest dopuszczalny tylko wtedy, gdy takie drzewo
+rzeczywiście istnieje, a jego założenia i warunki użycia
+reguł są zgodne z otaczającą częścią dowodu.
+Nie istnieje reguła pozwalająca z dowolnej formuły $\psi$
+przejść za pomocą samych kropek do dowolnej formuły $\varphi$.
+\end{definicja}
+
+\begin{przyklad}[Od skrótu do wszystkich kroków]
+Weźmy formułę $A\land B$. Jeżeli zamierzamy wyprowadzić
+$B\land A$, możemy skrótowo napisać
+\[
+\begin{array}{c}
+[A\land B]^1\\
+\vdots\\
+B\land A
+\end{array}
+\]
+Jednak czytelnik ma prawo zapytać, \emph{jakimi regułami}
+doszliśmy do ostatniej formuły. Rozwinięty fragment wygląda tak:
+\[
+\frac{
+  \displaystyle\frac{[A\land B]^1}{B}\;(\land E_2)
+  \qquad
+  \displaystyle\frac{[A\land B]^1}{A}\;(\land E_1)
+}{B\land A}\;(\land I).
+\]
+Zatem trzy kropki w pierwszym zapisie zastępowały
+trzy konkretne kroki: uzyskanie $B$, uzyskanie $A$
+i ich połączenie w $B\land A$.
+\emph{W żadnym miejscu nie założyliśmy dodatkowo $B\land A$}.
+Aby otrzymać dowód bez otwartych założeń,
+można dopiero teraz rozładować $[A\land B]^1$
+regułą $(\to I)_1$, otrzymując $(A\land B)\to(B\land A)$.
+\end{przyklad}
+
+\begin{uwaga}[Kropki nie zmieniają statusu założenia]
+Na każdym etapie pominiętego fragmentu trzeba odróżnić
+\emph{wnioski wyprowadzone} od \emph{założeń nadal otwartych}.
+Jeżeli we fragmencie powyższego przykładu wykorzystaliśmy
+$[A\land B]^1$, to otrzymane $B\land A$ wciąż zależy
+od tego założenia. Sam symbol $\vdots$ go nie rozładowuje.
+Rozładowanie następuje dopiero przez regułę z wyraźnym
+oznaczeniem indeksu, taką jak $(\to I)_1$.
+\end{uwaga}
+
+\begin{przyklad}[Czego kropki \emph{nie} usprawiedliwiają]
+Gdybyśmy bez dodatkowych założeń napisali
+\[
+\begin{array}{c}
+A\\
+\vdots\\
+B
+\end{array}
+\]
+nie wynikałoby z tego, że $A\vdash_{\mathrm{ND}}B$.
+Na przykład z samego „$2$ jest liczbą parzystą”
+nie da się w logice wyprowadzić dowolnego zdania
+„$3$ jest liczbą parzystą”. Aby uznać taki zapis
+za rzeczywisty dowód, trzeba podać pominięte kroki
+lub odesłać do \emph{wcześniej udowodnionego} twierdzenia.
+W szczególności $\vdots$ nie jest odpowiednikiem
+przyzwolenia „tu dzieje się coś oczywistego”.
+\end{przyklad}
+
+\begin{przyklad}[Kropki w dwóch niezależnych gałęziach]
+W regule eliminacji alternatywy pojawiają się dwa
+poddowody, na ogół o \emph{różnej} liczbie kroków:
+\[
+\frac{A\lor B\qquad
+  \begin{array}{c}[A]^i\\\vdots\\ C\end{array}
+  \qquad
+  \begin{array}{c}[B]^j\\\vdots\\ C\end{array}
+}{C}\;(\lor E)_{i,j}.
+\]
+Pierwsza para kropek zastępuje dowód $C$ przy założeniu $A$,
+a druga --- dowód tego samego $C$ przy założeniu $B$.
+Nie zakładamy, że oba fragmenty są identyczne.
+Na końcu rozładowujemy odpowiednio $A$ i $B$;
+pozostałe założenia z obu gałęzi nadal pozostają otwarte.
+Warunkiem stosowania reguły jest istnienie \emph{obu}
+fragmentów, nie tylko jednej gałęzi.
+Dlaczego? Z $A\lor B$ nie wiemy, który przypadek zachodzi.
+Jeżeli tylko z $A$ udowodniliśmy $C$, rzeczywisty przypadek
+może być $B$ i wówczas $C$ nie musi zachodzić.
+Przykładowo przy wartościach $A=1$, $B=0$, $C=0$
+alternatywa $A\lor B$ jest prawdziwa, ale z samego
+warunkowego rozumowania „gdyby $B$, to $C$”
+nie można otrzymać $C$. Oba poddowody są potrzebne.
+Natomiast nie zakładamy, że \emph{równocześnie} zachodzą $A$ i $B$:
+to są dwa oddzielne, warunkowe rozumowania.
+\end{przyklad}
+
+\begin{uwaga}[Trzy różne rodzaje wielokropków]
+Warto rozróżniać $\vdots$ (pionowe kropki, oznaczające
+pominięty fragment \emph{dedukcji}), $\cdots$ (poziomy
+wielokropek, np. między kilkoma przesłankami lub elementami
+ciągu) oraz $\ddots$ (kropki ukośne, używane np.
+w macierzach). To tylko konwencje \emph{rysowania};
+żaden z tych symboli nie zastępuje logicznej reguły.
+\end{uwaga}
+
+\section{Założenia, wnioski i rozładowywanie założeń}
+\begin{definicja}[Dedukcja i dowodliwość]\label{def:nd-derivation}
+Ustalmy język pierwszego rzędu $\mathcal L$.
+\emph{Dedukcją} formuły $\varphi$ z założeń $\Gamma$ nazywamy
+skończone drzewo formuł, którego liście są dozwolonymi
+założeniami (z $\Gamma$ albo tymczasowymi) lub instancjami
+reguł bez przesłanek, a każda pozostała formuła wynika
+z formuł bezpośrednio ponad nią na mocy jednej z reguł
+podanych poniżej. Tymczasowe założenia mogą być
+\emph{rozładowane} przez odpowiednią regułę: od tej chwili
+nie należą do otwartych założeń dedukcji.
+
+Zapis $\Gamma\vdash_{\mathrm{ND}}\varphi$ oznacza, że istnieje
+taka dedukcja z wnioskiem $\varphi$, której wszystkie
+\emph{nierozładowane} założenia należą do $\Gamma$.
+Dla $\Gamma=\varnothing$ piszemy $\vdash_{\mathrm{ND}}\varphi$.
+\end{definicja}
+
+\begin{przyklad}[Co oznacza rozładowanie założenia?]\label{ex:nd-discharge-explained}
+Załóżmy, że chcemy udowodnić implikację „jeśli $A$, to $A$”.
+Wewnątrz dowodu możemy na próbę założyć $A$. Skoro założyliśmy $A$,
+mamy już $A$ jako wniosek tego krótkiego poddowodu. Teraz kończymy
+okres obowiązywania założenia i zapisujemy implikację $A\to A$:
+\[
+\frac{[A]^1}{A\to A}\;(\to I)_1.
+\]
+Liczba $1$ przy nawiasie i przy nazwie reguły wiąże te dwa miejsca.
+Nie znaczy ona, że formuła $A$ została udowodniona bez założeń.
+Bez założeń otrzymaliśmy dopiero \emph{implikację} $A\to A$.
+W dłuższym dowodzie wewnątrz rozładowywanego fragmentu
+mogą znajdować się inne kroki i kilka użyć tego samego założenia.
+\end{przyklad}
+
+
+\subsection{Co oznacza nawias przy założeniu?}\label{sec:nd-assumption-scope}
+\begin{uwaga}[Założenie nie jest stwierdzeniem prawdziwości]\label{rem:nd-assumption-not-truth}
+Napis $[A]^i$ czytamy: „\emph{na potrzeby tego poddowodu zakładamy $A$;
+założenie oznaczamy numerem $i$}”. Nawias kwadratowy nie jest spójnikiem
+logicznym, a $i$ nie jest wykładnikiem potęgi. To tylko oznaczenie
+\emph{zależności dowodu od przyjętego założenia}.
+
+Nie twierdzimy, że $A$ jest prawdziwe „wewnątrz nawiasu” ani że
+staje się fałszywe po wyjściu z nawiasu. W ogóle nie ustalamy tutaj
+wartości logicznej $A$. W poddowodzie \emph{wolno posługiwać się $A$}
+bez wcześniejszego uzasadnienia; po jego rozładowaniu nie wolno
+powoływać się na \emph{to konkretne tymczasowe założenie}.
+Jeżeli jednak $A$ zostało niezależnie dowiedzione albo pozostaje
+jednym z trwałych założeń $\Gamma$, to możemy nadal z niego korzystać.
+\end{uwaga}
+
+\begin{przyklad}[Założenie może być nawet fałszywe]\label{ex:nd-false-assumption}
+Niech $A$ oznacza zdanie „liczba $2$ jest nieparzysta”.
+Wiemy, że $A$ jest fałszywe, ale nadal wolno rozważyć
+\emph{hipotetyczny} dowód rozpoczynający się od $[A]^3$.
+Z tego założenia otrzymujemy samo $A$; rozładowanie daje
+\[
+\frac{[A]^3}{A\to A}\;(\to I)_3.
+\]
+Nie udowodniliśmy w ten sposób, że $2$ jest nieparzyste.
+Udowodniliśmy jedynie zdanie „\emph{jeśli $2$ jest nieparzyste,
+to $2$ jest nieparzyste}”, czyli implikację $A\to A$.
+Jest ona prawdziwa również wtedy, gdy $A$ jest fałszywe.
+Właśnie dlatego rozładowanie założenia nie może oznaczać
+zmiany jego wartości logicznej.
+\end{przyklad}
+
+\begin{przyklad}[Jak zmienia się zbiór otwartych założeń]\label{ex:nd-open-assumptions}
+Ustalmy dowolne formuły $A$ i $B$.
+Zademonstrujemy kolejno dwa zagnieżdżone poddowody:
+\[
+\frac{
+ \displaystyle\frac{
+   \displaystyle\frac{[A]^1\qquad[B]^2}{A\land B}\;(\land I)
+ }{B\to(A\land B)}\;(\to I)_2
+}{A\to\bigl(B\to(A\land B)\bigr)}\;(\to I)_1.
+\]
+Odczytujemy drzewo \emph{od góry do dołu}.
+Na początku założyliśmy jednocześnie $A$ (etykieta $1$)
+i $B$ (etykieta $2$), dlatego wolno nam utworzyć $A\land B$.
+W tym momencie wniosek zależy od \emph{obu} tymczasowych założeń.
+
+Teraz stosujemy $(\to I)_2$. Zamykamy założenie oznaczone $2$,
+więc otrzymujemy $B\to(A\land B)$, ale nadal korzystamy z $[A]^1$:
+\emph{otwarte pozostaje tylko założenie $A$}.
+Dopiero zastosowanie $(\to I)_1$ zamyka także założenie $A$.
+Końcowa formuła $A\to(B\to(A\land B))$ nie zależy już
+od żadnego otwartego założenia, czyli
+$\vdash_{\mathrm{ND}}A\to(B\to(A\land B))$.
+
+Nie otrzymujemy natomiast ani $\vdash_{\mathrm{ND}}A$,
+ani $\vdash_{\mathrm{ND}}B$. Po zakończeniu poddowodu
+nie wolno po prostu „wyciągnąć” $A$ albo $B$ jako wniosku
+niezależnego od założeń.
+\end{przyklad}
+
+\begin{uwaga}[Rozładowanie przy dowodzie nie wprost]
+Podobnie działa reguła wprowadzania negacji:
+\[
+\frac{[A]^i\quad\vdots\quad\bot}{\neg A}\;(\neg I)_i.
+\]
+Jeżeli przyjęcie $A$ prowadzi do sprzeczności, to po
+zamknięciu tego założenia możemy wnioskować $\neg A$.
+To kolejny argument, że zapis $[A]^i$ \emph{nie ogłasza
+prawdziwości $A$}: wewnątrz hipotetycznego poddowodu
+możemy dojść właśnie do wniosku, że $A$ jest niemożliwe
+(przy pozostałych otwartych założeniach).
+\end{uwaga}
+
+Przejście od poddowodu do implikacji streszcza zatem schemat
+\[
+\Gamma\cup\{A\}\vdash_{\mathrm{ND}}B
+\quad\Longrightarrow\quad
+\Gamma\vdash_{\mathrm{ND}}A\to B,
+\]
+gdzie $\Gamma$ oznacza zbiór pozostałych, dostępnych założeń.
+Jego pełne uzasadnienie podamy w
+Twierdzeniu~\ref{thm:nd-deduction}.
+
+Ściśle rzecz biorąc, w drzewie trzeba odnotować, które
+wystąpienia założeń zostają rozładowane. Będziemy używać indeksów
+$[\varphi]^i$ oraz zapisu „rozładowujemy $i$”.
+
+Dla wygody symbol $\bot$ będzie oznaczał ustaloną zamkniętą
+formułę fałszywą w każdej strukturze, na przykład
+$\neg\forall v_0\,(v_0=v_0)$.
+Nie dodajemy więc nowego symbolu do języka: $\bot$ jest skrótem.
+Znaczenie tego skrótu jest uzasadnione
+Definicją~\ref{def:sem-satisfaction} i zwykłą własnością równości.
+
+\section{Reguły dla koniunkcji i implikacji}
+\begin{definicja}[Reguły $\land$ oraz $\to$]\label{def:nd-rules-conj-imp}
+W dedukcji naturalnej dopuszczamy następujące schematy:
+\[
+\frac{\varphi\qquad\psi}{\varphi\land\psi}\;(\land I),
+\qquad
+\frac{\varphi\land\psi}{\varphi}\;(\land E_1),
+\qquad
+\frac{\varphi\land\psi}{\psi}\;(\land E_2),
+\]
+\[
+\frac{[\varphi]^i\quad\vdots\quad\psi}
+     {\varphi\to\psi}\;(\to I)_i,
+\qquad
+\frac{\varphi\to\psi\qquad\varphi}{\psi}\;(\to E).
+\]
+Reguła $(\to I)_i$ rozładowuje oznaczone wystąpienia
+założenia $\varphi$ użyte w poddedukcji $\psi$.
+\end{definicja}
+\begin{przyklad}[Pierwszy formalny dowód]\label{ex:nd-conj-swap}
+Udowodnimy $\vdash_{\mathrm{ND}}(P\land Q)\to(Q\land P)$.
+Rozpoczynamy od tymczasowego założenia $P\land Q$.
+Reguła $\land E_2$ daje $Q$, a reguła $\land E_1$ daje $P$.
+Reguła $\land I$ pozwala połączyć te dwa wnioski w $Q\land P$.
+Następnie $\to I$ rozładowuje początkowe założenie,
+pozostawiając bezzałożeniowy dowód implikacji.
+Pełne drzewo (a nie tylko jego fragment) ma postać
+\[
+\frac{\displaystyle
+ \frac{
+ \frac{[P\land Q]^1}{Q}\;(\land E_2)
+ \qquad
+ \frac{[P\land Q]^1}{P}\;(\land E_1)
+ }{Q\land P}\;(\land I)
+}{(P\land Q)\to(Q\land P)}\;(\to I)_1.
+\]
+Sprawdzamy je od góry: dwa górne liście mają tę samą postać $P\land Q$.
+Z lewego odczytujemy $Q$, z prawego $P$. Łączymy je w $Q\land P$.
+Na końcu zamykamy tymczasowe założenie o numerze $1$,
+co pozwala wprowadzić implikację. Pod kreską końcową nie ma
+już żadnego nierozładowanego założenia, stąd znak $\vdash_{\mathrm{ND}}$.
+\end{przyklad}
+
+\begin{twierdzenie}[Twierdzenie o dedukcji dla dedukcji naturalnej]
+\label{thm:nd-deduction}
+Dla dowolnego zbioru formuł $\Gamma$ i dowolnych formuł
+$\varphi,\psi$ zachodzi
+\[
+\Gamma\cup\{\varphi\}\vdash_{\mathrm{ND}}\psi
+\quad\Longleftrightarrow\quad
+\Gamma\vdash_{\mathrm{ND}}\varphi\to\psi.
+\]
+\end{twierdzenie}
+\begin{proof}
+Załóżmy najpierw, że istnieje dedukcja $\psi$,
+której wszystkie otwarte założenia należą do
+$\Gamma\cup\{\varphi\}$. Jeśli niektóre otwarte liście
+są wystąpieniami $\varphi$, oznaczamy je wspólnym indeksem
+$i$. Zastosowanie reguły $\to I_i$ do całej dedukcji
+rozładowuje te wystąpienia i daje $\varphi\to\psi$.
+Pozostałe otwarte założenia pochodzą z $\Gamma$.
+Nawet jeśli w poddedukcji nie było otwartego wystąpienia
+$\varphi$, reguła $\to I$ jest dozwolona:
+implikacja z dodatkowym, nieużytym założeniem też ma dowód.
+
+W przeciwną stronę załóżmy, że
+$\Gamma\vdash_{\mathrm{ND}}\varphi\to\psi$.
+Do otrzymanego drzewa dopisujemy dodatkowy liść
+$\varphi$ i stosujemy $\to E$. Wniosek to $\psi$,
+a otwarte założenia należą do $\Gamma\cup\{\varphi\}$.
+\end{proof}
+
+\section{Alternatywa, równoważność i negacja}
+\begin{definicja}[Pozostałe reguły zdaniowe]\label{def:nd-rules-prop}
+Dla alternatywy przyjmujemy
+\[
+\frac{\varphi}{\varphi\lor\psi}\;(\lor I_1),
+\quad
+\frac{\psi}{\varphi\lor\psi}\;(\lor I_2),
+\quad
+\frac{\varphi\lor\psi\qquad
+[\varphi]^i\;\vdots\;\theta\qquad
+[\psi]^j\;\vdots\;\theta}{\theta}\;(\lor E)_{i,j}.
+\]
+Ostatnia reguła rozładowuje założenie $\varphi$
+w pierwszej poddedukcji oraz założenie $\psi$
+w drugiej. Jej sens jest następujący: rozpatrujemy oba
+możliwe przypadki i dochodzimy do tego samego wniosku.
+
+Dla negacji i sprzeczności przyjmujemy
+\[
+\frac{\varphi\qquad\neg\varphi}{\bot}\;(\neg E),
+\quad
+\frac{[\varphi]^i\;\vdots\;\bot}{\neg\varphi}\;(\neg I)_i,
+\quad
+\frac{\bot}{\theta}\;(\bot E).
+\]
+Ponieważ używamy logiki klasycznej, dodajemy regułę
+\emph{dowodu nie wprost}:
+\[
+\frac{[\neg\varphi]^i\;\vdots\;\bot}{\varphi}\;(\mathrm{RAA})_i.
+\]
+Dla równoważności reguły zapisujemy jawnie:
+\[
+\frac{\varphi\to\psi\qquad\psi\to\varphi}
+     {\varphi\leftrightarrow\psi}\;(\leftrightarrow I),
+\quad
+\frac{\varphi\leftrightarrow\psi}{\varphi\to\psi}\;(\leftrightarrow E_1),
+\quad
+\frac{\varphi\leftrightarrow\psi}{\psi\to\varphi}\;(\leftrightarrow E_2).
+\]
+Pierwsza reguła wymaga obu implikacji, druga i trzecia wydobywają
+z równoważności odpowiednio pierwszy lub drugi kierunek.
+\end{definicja}
+\begin{uwaga}[Klasyczność ma znaczenie]
+Reguła $\mathrm{RAA}$ nie jest regułą intuicjonistycznej
+dedukcji naturalnej. Odłożenie jej prowadzi do słabszego
+pojęcia wyprowadzalności. Nie będziemy zamieniać tych
+dwóch rachunków bez wyraźnego zaznaczenia zmiany założeń.
+\end{uwaga}
+
+\begin{twierdzenie}[Prawo wyłączonego środka]
+\label{thm:nd-lem}
+Dla każdej formuły $\varphi$ zachodzi
+$\vdash_{\mathrm{ND}}\varphi\lor\neg\varphi$.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy tymczasowo $\neg(\varphi\lor\neg\varphi)$.
+Jeśli dodatkowo założymy $\varphi$, to przez $\lor I_1$
+otrzymamy $\varphi\lor\neg\varphi$.
+Razem z pierwszym założeniem daje to $\bot$ przez $\neg E$.
+Rozładowując założenie $\varphi$ regułą $\neg I$,
+otrzymujemy $\neg\varphi$.
+Stosując teraz $\lor I_2$, otrzymujemy ponownie
+$\varphi\lor\neg\varphi$, sprzeczne z pierwszym założeniem.
+Zatem z $\neg(\varphi\lor\neg\varphi)$ wyprowadziliśmy $\bot$.
+Reguła $\mathrm{RAA}$ rozładowuje to założenie
+i daje $\varphi\lor\neg\varphi$ bez żadnych otwartych założeń.
+\end{proof}
+
+\section{Kwantyfikatory i warunki na zmienne}
+Na tym etapie ujawnia się ważna różnica między rachunkiem zdań
+a logiką pierwszego rzędu. Nie każda zmienna może być
+uogólniana, a podstawienie nie może przechwytywać zmiennych.
+Zlekceważenie tych warunków prowadziłoby do fałszywych twierdzeń.
+
+\begin{definicja}[Reguły kwantyfikatorów]\label{def:nd-rules-quant}
+Niech $t$ będzie termem dopuszczalnym do podstawienia
+za $x$ w $\varphi$ (Definicja~\ref{def:syntax-free-for}).
+Stosujemy reguły
+\[
+\frac{\forall x\,\varphi}{\varphi[x:=t]}\;(\forall E),
+\qquad
+\frac{\varphi}{\forall x\,\varphi}\;(\forall I),
+\]
+\[
+\frac{\varphi[x:=t]}{\exists x\,\varphi}\;(\exists I).
+\]
+Reguła $\forall I$ jest dozwolona tylko wtedy, gdy $x$
+nie występuje wolno w \emph{żadnym otwartym założeniu}
+poddedukcji kończącej się na $\varphi$.
+
+W regule eliminacji kwantyfikatora egzystencjalnego
+stosujemy zmienną $y$, niewystępującą w ogóle
+w $\varphi$ ani w końcowym wniosku $\theta$,
+a ponadto niewystępującą wolno w żadnym innym
+otwartym założeniu rzeczywiście użytym w obu
+gałęziach dowodu (poza rozładowywanym założeniem
+$[\varphi[x:=y]]^i$):
+\[
+\frac{\exists x\,\varphi\qquad
+[\varphi[x:=y]]^i\;\vdots\;\theta}
+{\theta}\;(\exists E)_i.
+\]
+Reguła rozładowuje tymczasowe założenie
+$\varphi[x:=y]$. Warunek świeżości dotyczy obu gałęzi:
+$y$ nie może występować wolno ani w pozostałych otwartych
+założeniach poddedukcji, ani w otwartych założeniach dowodu
+przesłanki $\exists x\,\varphi$.
+Nie wymagamy natomiast, aby $y$ nie występowała w żadnej
+formule całego zbioru $\Gamma$: zbiór ten może być nieskończony,
+a konkretna dedukcja korzysta tylko ze skończenie wielu
+otwartych założeń. W przeciwnym razie połączenie obu gałęzi
+mogłoby przenieść informację o konkretnym $y$ do wniosku,
+chociaż świadek kwantyfikatora egzystencjalnego nie musi
+być wartością $y$. Przed zastosowaniem reguły w razie
+potrzeby zmieniamy nazwy zmiennych związanych,
+aby podstawienie było dopuszczalne.
+\end{definicja}
+
+\begin{przyklad}[Jak czytać reguły kwantyfikatorów]
+Jeżeli znamy $\forall x\,P(x)$, wolno wstawić np. term $0$ za $x$
+i otrzymać $P(0)$; taki krok nosi nazwę $(\forall E)$.
+Jeżeli natomiast ustaliliśmy $P(0)$, otrzymujemy przez $(\exists I)$
+formułę $\exists x\,P(x)$: liczba oznaczona przez term $0$ jest
+konkretnym świadkiem istnienia. Te kroki pokazuje zapis
+\[
+\frac{\forall x\,P(x)}{P(0)}\;(\forall E),
+\qquad
+\frac{P(0)}{\exists x\,P(x)}\;(\exists I).
+\]
+Nie wolno jednak odwrócić pierwszej kreski: z jednego przypadku
+$P(0)$ nie wynika twierdzenie o wszystkich elementach.
+\end{przyklad}
+
+\begin{przyklad}[Co znaczą kropki w eliminacji egzystencjalnej]
+Załóżmy, że wiadomo tylko $\exists x\,P(x)$ i chcemy pokazać
+zdanie $\theta$ niezawierające zmiennej $y$.
+Tymczasowo przyjmujemy $P(y)$, gdzie $y$ jest nową nazwą,
+nieobecną w innych otwartych założeniach i we wniosku $\theta$.
+Jeżeli z tego założenia potrafimy wykonać jakieś kroki i dojść
+do $\theta$, w schemacie oznaczamy je pionowymi kropkami:
+\[
+\frac{\exists x\,P(x)\qquad [P(y)]^2\;\vdots\;\theta}
+{\theta}\;(\exists E)_2.
+\]
+Kropki nie pozwalają dowolnie przeskakiwać kroków: w rzeczywistym dowodzie
+muszą odpowiadać konkretnemu, sprawdzalnemu drzewu
+(zob. sekcję~\ref{sec:nd-vertical-dots}). Indeks $2$ wskazuje,
+że założenie $P(y)$ po użyciu reguły nie pozostaje otwarte.
+\end{przyklad}
+
+\begin{przyklad}[Dlaczego ograniczenie dla $\forall I$ jest konieczne]
+Z założenia $P(x)$ nie wolno wywnioskować $\forall x\,P(x)$.
+W strukturze o uniwersum $\{0,1\}$ niech $P$ oznacza zbiór $\{0\}$.
+Przy wartościowaniu $s(x)=0$ założenie $P(x)$ jest prawdziwe,
+a $\forall x\,P(x)$ jest fałszywe. Niepoprawny krok
+polegałby na zastosowaniu $\forall I$ do zmiennej wolnej
+w otwartym założeniu $P(x)$.
+\end{przyklad}
+
+\begin{przyklad}[Dlaczego świadek egzystencjalny jest lokalny]
+Z $\exists x\,P(x)$ nie możemy po prostu wyprowadzić
+$P(y)$, jeśli $y$ jest ustaloną wcześniej zmienną.
+W strukturze o dwóch elementach, przy $P$ prawdziwym
+tylko dla jednego z nich, poprzednik jest prawdziwy,
+a $P(y)$ może być fałszywe dla wartościowania przypisującego
+$y$ drugi element. Reguła $\exists E$ pozwala użyć
+świeżej zmiennej \emph{wewnątrz poddedukcji}, ale nie
+pozwala jej przemycić do końcowego wniosku.
+\end{przyklad}
+
+\begin{twierdzenie}[Przykład dowodzenia z kwantyfikatorami]
+\label{thm:nd-univ-chain}
+Dla formuł jednoargumentowych $P(x)$ i $Q(x)$ zachodzi
+\[
+\bigl\{\forall x\,(P(x)\to Q(x)),\ \forall x\,P(x)\bigr\}
+\vdash_{\mathrm{ND}}\forall x\,Q(x).
+\]
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy oba założenia odpowiednio przez $H_1$ i $H_2$.
+Zastosujmy $\forall E$, podstawiając za $x$ samą
+zmienną $x$. Takie podstawienie jest zawsze dopuszczalne,
+nawet gdy $P(x)$ lub $Q(x)$ zawierają wewnętrzne
+kwantyfikatory wiążące inne wystąpienia zmiennych.
+Z $H_1$ otrzymujemy $P(x)\to Q(x)$,
+a z $H_2$ otrzymujemy $P(x)$.
+Reguła $\to E$ daje $Q(x)$.
+W żadnym z otwartych założeń $H_1,H_2$ zmienna $x$
+nie występuje wolno: wszystkie jej wystąpienia
+w tych zdaniach są związane przez zewnętrzne kwantyfikatory.
+Możemy zatem zastosować $\forall I$ i otrzymać
+bezpośrednio $\forall x\,Q(x)$.
+\end{proof}
+
+\begin{twierdzenie}[Od istnienia przypadku do istnienia własności]
+\label{thm:nd-exists-projection}
+Niech $P(x)$ i $Q(x)$ będą formułami o jedynej zmiennej wolnej $x$.
+Wtedy
+\[
+\exists x\,(P(x)\land Q(x))
+\vdash_{\mathrm{ND}}\exists x\,P(x).
+\]
+\end{twierdzenie}
+\begin{proof}
+Przyjmijmy założenie $H:=\exists x\,(P(x)\land Q(x))$.
+Wybierzmy nową zmienną $y$, niewystępującą w $H$ ani
+we wniosku. W poddedukcji przyjmijmy tymczasowo
+$P(y)\land Q(y)$. Reguła $\land E_1$ daje $P(y)$,
+a następnie $\exists I$ daje $\exists x\,P(x)$.
+Zastosowanie $\exists E$ rozładowuje założenie
+$P(y)\land Q(y)$; wniosek nie zawiera wolnego $y$,
+więc jest dozwolony. Jedynym pozostałym założeniem jest $H$.
+\end{proof}
+
+\begin{przyklad}[Dlaczego świeżość obejmuje także przesłankę główną]
+\label{ex:nd-exists-major-premise-fresh-46}
+Najpierw rozważmy błędne użycie zmiennej występującej wolno
+w \emph{innym otwartym założeniu}. Niech $P$ będzie
+predykatem jednoargumentowym, a $R$ skrótem zdania
+$\forall z\,P(z)$. Z założeń
+$\exists x\,P(x)$ oraz $P(y)\to R$ nie wolno
+wywnioskować $R$ przez poddedukcję od $[P(y)]^i$:
+chociaż z $P(y)$ i drugiego założenia otrzymujemy $R$,
+zmienna $y$ pozostaje wolna w $P(y)\to R$.
+
+W uniwersum $\{0,1\}$ z $P^{\mathfrak A}=\{0\}$
+oraz $s(y)=1$ obydwa założenia są spełnione,
+lecz $R=\forall z\,P(z)$ jest fałszywe.
+To kontrmodel dla takiego niepoprawnego wnioskowania.
+
+Osobno sprawdźmy konieczność świeżości względem
+\emph{przesłanki głównej}. Niech teraz
+$H:=\exists x\,\neg(x=y)$, a jako żądany wniosek
+weźmy fałszywe zdanie
+$\theta:=\forall z\,\neg(z=z)$.
+Gdyby wolno było użyć $y$ jako zmiennej świadka,
+otrzymalibyśmy tymczasowe założenie
+$[\neg(y=y)]^i$. Reguła $=I$ daje $y=y$,
+więc $\neg E$ daje $\bot$, a następnie $\bot E$
+pozwala wyprowadzić $\theta$.
+Taki schemat jest \emph{niedozwolony}, ponieważ $y$
+występuje wolno w $H$.
+W dwuelementowym uniwersum $H$ jest prawdziwe
+przy każdym wartościowaniu $y$ (istnieje inny element),
+lecz $\theta$ jest fałszywe.
+Oba kontrprzykłady pokazują, że świeżość
+jest konieczna do zachowania prawdy.
+\end{przyklad}
+
+\section{Równość i podstawianie równych obiektów}
+\begin{definicja}[Reguły równości]\label{def:nd-equality}
+Dopuszczamy regułę $=I$: dla dowolnego termu $t$
+można bez założeń wyprowadzić $t=t$. Zapisujemy ją jako
+$\frac{}{t=t}\;(=I)$. Puste miejsce nad kreską znaczy,
+że ta reguła nie wymaga żadnej wcześniejszej przesłanki.
+Reguła $=E$ ma postać: z $t=u$ i
+$\theta[x:=t]$ wolno wyprowadzić $\theta[x:=u]$,
+o ile obydwa podstawienia są dopuszczalne.
+\end{definicja}
+\begin{przyklad}[Symetria równości]
+Z założenia $t=u$ chcemy wyprowadzić $u=t$.
+Najpierw przez $=I$ otrzymujemy $t=t$.
+Weźmy formułę $\theta(x)$ postaci $x=t$.
+Jej instancją $\theta[x:=t]$ jest $t=t$,
+a instancją $\theta[x:=u]$ jest $u=t$.
+Z przesłanek $t=u$ i $t=t$ reguła $=E$ daje $u=t$.
+\end{przyklad}
+\begin{przyklad}[Niesprzeczność wynika z prawdziwości równości]
+Dla każdego termu $t$ mamy bezzałożeniowy dowód $t=t$.
+Gdyby z jakichś założeń uzyskano $\neg(t=t)$,
+reguła $\neg E$ po połączeniu z $t=t$ dawałaby $\bot$.
+Jest to prosty przykład konfliktu formalnego z podstawowym
+prawem logiki z równością.
+\end{przyklad}
+
+\section{Własność skończonego użycia założeń}
+\begin{twierdzenie}[Skończona liczba użytych przesłanek]
+\label{thm:nd-finite-support}
+Jeżeli $\Gamma\vdash_{\mathrm{ND}}\varphi$, to istnieje
+skończony zbiór $\Gamma_0\subseteq\Gamma$ taki, że
+$\Gamma_0\vdash_{\mathrm{ND}}\varphi$.
+\end{twierdzenie}
+\begin{proof}
+Dowód formalny jest z definicji skończonym drzewem.
+Ma więc tylko skończenie wiele liści. Wybierzmy spośród
+nich te, które pozostają otwartymi założeniami, i zbierzmy
+występujące w nich formuły do zbioru $\Gamma_0$.
+Zbiór ten jest skończony i zawiera się w $\Gamma$.
+To samo drzewo, z tymi samymi regułami i rozładowaniami,
+jest dedukcją $\varphi$ z $\Gamma_0$.
+\end{proof}
+
+\begin{uwaga}[Czego jeszcze nie dowiedliśmy?]
+Sam fakt, że zapisaliśmy reguły, nie rozstrzyga,
+czy zawsze prowadzą one od zdań prawdziwych do prawdziwych.
+Tę własność — \emph{poprawność} rachunku dowodowego —
+udowodnimy w następnym rozdziale.
+Nie udowodniliśmy także, że z każdej konsekwencji
+semantycznej można otrzymać formalny dowód.
+Taką tezę nazywamy \emph{pełnością} i będzie ona przedmiotem
+osobnego, znacznie trudniejszego argumentu.
+\end{uwaga}
