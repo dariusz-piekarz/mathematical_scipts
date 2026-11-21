@@ -417,10 +417,19 @@ def graph_path(source: str, target: str):
                 "relation":"undirected_explicit_references","direction_ignored":True}
 
 # Generator API: no canonical .tex or SQLite writes, no shell execution.
+class CustomItem(BaseModel):
+    kind: Literal["module", "entity", "lines"]
+    id: str | None = Field(default=None, max_length=300)
+    module: str | None = Field(default=None, max_length=100)
+    start_line: int | None = None
+    end_line: int | None = None
+
+
 class GenerateRequest(BaseModel):
     title: str = Field(default='Mój skrypt matematyczny',min_length=1,max_length=160)
     modules: list[str] = Field(default_factory=list,max_length=75)
     entities: list[str] = Field(default_factory=list,max_length=300)
+    items: list[CustomItem] = Field(default_factory=list,max_length=300)
     closure_depth: int = Field(default=0,ge=0,le=3)
 
 
@@ -430,7 +439,8 @@ def generate_project_endpoint(selection: GenerateRequest):
     from backend.generator import GenerationError, project_files, zip_project
     try:
         with db_connection() as con:
-            files,manifest=project_files(con,selection.modules,selection.entities,selection.title,selection.closure_depth)
+            files,manifest=project_files(con,selection.modules,selection.entities,selection.title,selection.closure_depth,
+                                     items=[item.model_dump(exclude_none=True) for item in selection.items])
         archive=zip_project(files)
     except GenerationError as exc:
         raise HTTPException(status_code=422,detail=str(exc)) from exc
@@ -445,7 +455,8 @@ def generate_manifest_endpoint(selection: GenerateRequest):
     from backend.generator import GenerationError, project_files
     try:
         with db_connection() as con:
-            _,manifest=project_files(con,selection.modules,selection.entities,selection.title,selection.closure_depth)
+            _,manifest=project_files(con,selection.modules,selection.entities,selection.title,selection.closure_depth,
+                                     items=[item.model_dump(exclude_none=True) for item in selection.items])
         return manifest
     except GenerationError as exc:
         raise HTTPException(status_code=422,detail=str(exc)) from exc
@@ -457,7 +468,8 @@ def create_draft(selection: GenerateRequest, session_id: str | None = None):
     from backend.generator import GenerationError, project_files, zip_project
     try:
         with db_connection() as con:
-            files, manifest = project_files(con, selection.modules, selection.entities, selection.title, selection.closure_depth)
+            files, manifest = project_files(con, selection.modules, selection.entities, selection.title, selection.closure_depth,
+                                            items=[item.model_dump(exclude_none=True) for item in selection.items])
         return workspaces.stage_project(zip_project(files), manifest, session_id)
     except (GenerationError, workspaces.WorkspaceError) as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc

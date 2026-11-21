@@ -37,8 +37,8 @@ Następnie otwórz **http://127.0.0.1:8765/** w przeglądarce. Możesz też uruc
 2. **Wyszukiwarka:** tytuły i fragmenty obiektów oraz pełna treść modułów indeksowana przez SQLite FTS5; wyniki otwierają dokładne obiekty lub rozdziały.
 3. **Czytnik:** wierny tekst źródłowy TeX; wariant uproszczony nie jest pełnym rendererem TeX-a; `\\ref`, `\\eqref`, `\\cref`, `\\autoref` itd. są klikalne i pokazują dymek z rzeczywistym cytowanym fragmentem.
 4. **Graf dwudzielny:** wybór dwóch dziedzin i poziomu (moduły, sekcje, obiekty); krawędzie reprezentują *wyłącznie jawne odsyłacze LaTeX*. Kliknięcie węzła otwiera odpowiedni moduł albo obiekt. Istnieje też wyszukiwanie najkrótszej ścieżki odsyłaczy między modułami (dla ścieżki ignorowany jest kierunek).
-5. **Kreator zestawu:** można zbierać całe rozdziały lub obiekty, eksportować manifest JSON, sprawdzać odsyłacze wewnętrzne i brakujące moduły jako plan przyszłego `xr-hyper`.
-6. **Generator projektu:** tworzy ZIP z `main.tex`, fragmentami, dokumentami referencyjnymi `aux/*.tex`, skryptami kompilacji i manifestem. API nie wykonuje TeX-a.
+5. **Kreator własnego skryptu:** można zbierać całe rozdziały, sekcje i obiekty albo wybrać dokładne wiersze tekstu LaTeX. Wybrane pozycje można przestawiać strzałkami, eksportować manifest JSON oraz kontrolować odsyłacze. Wycinanie obejmuje całe wskazane wiersze.
+6. **Generator projektu:** tworzy ZIP z `main.tex`, fragmentami we wskazanej kolejności, dokumentami referencyjnymi `aux/*.tex`, skryptami kompilacji i manifestem. W `ordered_items` zapisane są źródła, zakresy i pliki wynikowe. API nie wykonuje TeX-a.
 7. **API tylko do odczytu:** żadna akcja z poziomu interfejsu nie nadpisuje plików `.tex` ani bazy danych.
 
 ### Najważniejsze punkty API
@@ -66,6 +66,30 @@ http://127.0.0.1:8765/api/modules/ALG-09/outline
 http://127.0.0.1:8765/api/labels/ch:pierscienie
 http://127.0.0.1:8765/api/graph/path?source=ALG-09&target=AT-10
 ```
+
+## Tworzenie własnego skryptu z dokładnych fragmentów
+
+1. Wybierz rozdział albo obiekt z Explorera. W Czytniku zaznacz tekst LaTeX i kliknij **+ Zaznaczenie**. Dodawane są wszystkie pełne wiersze obejmujące zaznaczenie. Alternatywnie wpisz numery **Od/Do** i kliknij **+ Wiersze**.
+2. W **Kreatorze zestawu** połącz wycinki z różnych rozdziałów, zmieniaj ich kolejność strzałkami ↑/↓ i sprawdź odsyłacze.
+3. Nadaj tytuł, wybierz domykanie zależności, pobierz ZIP albo utwórz szkic i zapisz go jawnie. Źródłowe .tex oraz SQLite nie są modyfikowane.
+
+Nowy format dla `POST /api/generate`, `POST /api/generate/manifest` i `POST /api/drafts`:
+
+```json
+{
+  "title": "Mój skrypt",
+  "closure_depth": 0,
+  "items": [
+    {"kind": "entity", "id": "ALG-09/proof/0004"},
+    {"kind": "lines", "module": "BT-00", "start_line": 10, "end_line": 20},
+    {"kind": "module", "id": "ALG-09"}
+  ]
+}
+```
+
+Pole `items` określa kolejność skryptu, również gdy kolejne fragmenty pochodzą z tego samego rozdziału. Wybór całego rozdziału ma pierwszeństwo przed wycinkami. Duplikaty i fragmenty zawarte w większych są pomijane, a częściowe przecięcia odrzucane. Nie łącz `items` z polami `modules` i `entities` w jednym żądaniu; stary format nadal działa.
+
+**Ograniczenie TeX:** arbitralny wycinek może pomijać założenia, definicje lub początek i koniec środowiska. Generator zachowuje źródło i analizuje odsyłacze, ale nie gwarantuje matematycznej samowystarczalności ani kompilowalności. Nie rozszerza automatycznie wycinków o kontekst.
 
 ## Ponowna indeksacja po zmianach w Bibliotece
 

@@ -314,11 +314,28 @@ def theorem_environment_audit(templates:dict[str,str], chosen:list[str], content
 
 
 def project_files(con:sqlite3.Connection, modules:list[str], entities:list[str], title:str,
-                  closure_depth:int=0) -> tuple[dict[str,bytes],dict[str,Any]]:
+                  closure_depth:int=0, items:list[dict[str,Any]]|None=None) -> tuple[dict[str,bytes],dict[str,Any]]:
     if closure_depth not in (0,1,2,3): raise GenerationError('closure_depth musi należeć do {0,1,2,3}.')
     if not title.strip() or len(title)>160: raise GenerationError('Tytuł musi mieć od 1 do 160 znaków.')
-    parts,known=selected_modules_and_fragments(con,modules,entities)
-    if closure_depth: closure(con,parts,known,closure_depth)
+    ordered_items = None
+    if items:
+        if modules or entities:
+            raise GenerationError("Nie łącz pola items z modules/entities.")
+        from .fragment_selection import select_ordered_items
+        parts, known, ordered_items = select_ordered_items(con, items)
+    else:
+        parts, known = selected_modules_and_fragments(con, modules, entities)
+    if closure_depth:
+        closure(con, parts, known, closure_depth)
+        if ordered_items is not None:
+            included = {row["module"] for row in ordered_items}
+            for module in parts:
+                if module not in included:
+                    content = known[module]["content"]
+                    ordered_items.append({
+                        "kind": "module", "module": module, "id": module,
+                        "start": 0, "end": len(content),
+                        "start_line": 1, "end_line": content.count("\n") + 1})
     output_labels={}
     for m,p in parts.items():
         # Capture labels only in the included TeX spans. Other labels in same document are external.
@@ -352,14 +369,35 @@ def project_files(con:sqlite3.Connection, modules:list[str], entities:list[str],
         return REF_RE.sub(sub,content)
     files:dict[str,bytes]={}
     ordered=list(parts)
-    for m,p in parts.items():
-        if p['whole']:
-            body=p['content']
-        else:
-            body=(f'\\chapter*{{{tex_text(p["row"]["title"])}}}\n'
-                  f'\\addcontentsline{{toc}}{{chapter}}{{{tex_text(p["row"]["title"])}}}\n'
-                  f'% Fragmenty obiektów: {", ".join(p["fragments"])}\n\n'+p['content'])
-        files[f'rozdzialy/{m}.tex']=rewrite_tex_refs(body).encode('utf-8')
+    ordered_outputs=[]
+    if ordered_items is not None:
+        counters=defaultdict(int)
+        for item in ordered_items:
+            m=item["module"]
+            if item["kind"]=="module":
+                path=f"rozdzialy/{m}.tex"
+                body=known[m]["content"]
+            else:
+                counters[m]+=1
+                path=f"rozdzialy/{m}-{counters[m]:03d}.tex"
+                title_part=tex_text(known[m]["title"])
+                excerpt=known[m]["content"][item["start"]:item["end"]]
+                body=(f"\\chapter*{{{title_part}}}\n"
+                      f"\\addcontentsline{{toc}}{{chapter}}{{{title_part}}}\n"
+                      f"% Źródło: {m}, wiersze {item['start_line']}–{item['end_line']}; {item['id']}\n\n"
+                      +excerpt)
+            files[path]=rewrite_tex_refs(body).encode("utf-8")
+            ordered_outputs.append({**{k:item[k] for k in ("kind","module","id","start_line","end_line")},
+                                    "output_file":path})
+    else:
+        for m,p in parts.items():
+            if p['whole']:
+                body=p['content']
+            else:
+                body=(f'\\chapter*{{{tex_text(p["row"]["title"])}}}\n'
+                      f'\\addcontentsline{{toc}}{{chapter}}{{{tex_text(p["row"]["title"])}}}\n'
+                      f'% Fragmenty obiektów: {", ".join(p["fragments"])}\n\n'+p['content'])
+            files[f'rozdzialy/{m}.tex']=rewrite_tex_refs(body).encode('utf-8')
     # Source preambles saved as templates from the original manuscripts.
     prefix_to_source={'ALG':'ALG','AT':'ALG','TOP':'TOP','GW':'GW','GA':'GA','KAT':'KAT','MOD':'MOD','CAL':'CAL','BT':'BT',
                       'P1':'P1','P2':'P2','P3':'P3','P4':'P4','AA':'AA'}
@@ -394,7 +432,7 @@ def project_files(con:sqlite3.Connection, modules:list[str], entities:list[str],
     for addition in theorem_audit["additions"]:
         head += "\n\\theoremstyle{"+addition["style"]+"}\n"+addition["declaration"]+"\n"
     imports='\n'.join(f'\\externaldocument[ext-{m}-]{{aux/{m}}}' for m in sorted(external))
-    body='\n'.join(f'\\input{{rozdzialy/{m}.tex}}' for m in ordered)
+    body='\n'.join('\\input{'+row['output_file']+'}' for row in ordered_outputs) if ordered_items is not None else '\n'.join(f'\\input{{rozdzialy/{m}.tex}}' for m in ordered)
     main=(head+'\n'+imports+'\n'+r'\title{'+tex_text(title)+'}\n'+r'\author{}'+'\n'+r'\date{}'+'\n'
           +r'\begin{document}'+'\n'+r'\maketitle'+'\n'+r'\tableofcontents'+'\n'+r'\clearpage'+'\n'+body+'\n'+r'\end{document}'+'\n')
     files['main.tex']=main.encode('utf-8')
@@ -433,6 +471,7 @@ pdflatex -interaction=nonstopmode -halt-on-error main.tex
               'external_targets':{m:sorted(v) for m,v in sorted(external.items())},
               'source_sha256':{m:p['row']['sha256'] for m,p in parts.items()},
               'closure_depth':closure_depth,
+              'ordered_items':ordered_outputs,
               'preamble':ordered[0].split('-')[0],
               'preamble_warning':compatibility['warning'],
               'preamble_compatibility':compatibility,

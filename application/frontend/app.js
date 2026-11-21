@@ -124,6 +124,9 @@ function renderReader(){
   $("readerKind").textContent=entity?"Fragment · "+data.entity.kind:"Źródło LaTeX — rozdział";
   $("readSize").textContent=(data.full_length||0).toLocaleString("pl-PL")+" znaków";
   $("showFull").classList.toggle("hidden",!data.truncated);
+  const firstLine=entity?data.entity.start_line:1;
+  $("rangeStart").value=firstLine;
+  $("rangeEnd").value=firstLine+(data.latex.match(/\n/g)||[]).length;
   $("addCurrent").textContent=state.selected.has((entity?"entity:":"module:")+(entity?data.entity.id:state.currentModule))?"✓ W zestawie":"+ Do zestawu";
   showRefs($("latexSource"),data.latex);
   renderSimplified(data.latex);
@@ -148,6 +151,44 @@ function addCurrent(){
   if(state.selected.has(key)){state.selected.delete(key);toast("Usunięto z zestawu.");}
   else{state.selected.set(key,{id,kind:isEntity?"entity":"module",title:isEntity?(d.entity.title||d.entity.kind):d.module.title,module:state.currentModule});toast("Dodano do zestawu.");}
   renderReader();renderSelection();
+}
+function addLineRange(startLine,endLine){
+  const module=state.currentModule;
+  if(!module||!Number.isSafeInteger(startLine)||!Number.isSafeInteger(endLine)||
+     startLine<1||endLine<startLine){toast("Podaj poprawny zakres wierszy.");return;}
+  const key="lines:"+module+":"+startLine+"-"+endLine;
+  if(state.selected.has(key)){toast("Ten wycinek jest już w zestawie.");return;}
+  state.selected.set(key,{
+    id:key,kind:"lines",module,start_line:startLine,end_line:endLine,
+    title:"Wiersze "+startLine+"–"+endLine+" · "+module
+  });
+  renderSelection();toast("Dodano wycinek do zestawu.");
+}
+function addExcerpt(){
+  const data=state.currentData,source=$("latexSource"),sel=window.getSelection();
+  if(!data||state.simplified||!sel||sel.isCollapsed||!sel.rangeCount){
+    toast("Zaznacz fragment tekstu w widoku źródła LaTeX.");return;
+  }
+  const range=sel.getRangeAt(0);
+  if(!source.contains(range.startContainer)||!source.contains(range.endContainer)){
+    toast("Zaznaczenie musi mieścić się w źródle LaTeX.");return;
+  }
+  const prefix=range.cloneRange();
+  prefix.selectNodeContents(source);
+  prefix.setEnd(range.startContainer,range.startOffset);
+  const start=prefix.toString().length,end=start+range.toString().length;
+  if(end<=start||end>data.latex.length){
+    toast("Nie można wyznaczyć wierszy zaznaczenia.");return;
+  }
+  const first=data.entity?data.entity.start_line:1;
+  const countNewlines=text=>(text.match(/\n/g)||[]).length;
+  const startLine=first+countNewlines(data.latex.slice(0,start));
+  const endLine=first+countNewlines(data.latex.slice(0,end-1));
+  addLineRange(startLine,endLine);
+  sel.removeAllRanges();
+}
+function addRange(){
+  addLineRange(Number($("rangeStart").value),Number($("rangeEnd").value));
 }
 function positionReferenceTip(anchor){
   const r=anchor.getBoundingClientRect(), tip=$("referenceTip");
@@ -226,35 +267,72 @@ async function performSearch(q){
     list.classList.remove("hidden");
   }catch(e){toast(e.message);}
 }
+function moveSelected(key,step){
+  const entries=[...state.selected.entries()];
+  const index=entries.findIndex(([k])=>k===key),next=index+step;
+  if(index<0||next<0||next>=entries.length)return;
+  [entries[index],entries[next]]=[entries[next],entries[index]];
+  state.selected=new Map(entries);renderSelection();
+}
 function renderSelection(){
   const list=$("selectionList");list.replaceChildren();
   $("selectedCount").textContent=state.selected.size+" elementów";
-  if(!state.selected.size){list.append(node("div",{className:"empty-sub"},"Zestaw jest pusty. Wybierz moduły lub fragmenty z Czytnika."));return;}
-  for(const [key,x] of state.selected){
+  if(!state.selected.size){
+    list.append(node("div",{className:"empty-sub"},"Zestaw jest pusty. Wybierz rozdział, obiekt lub zaznacz wiersze LaTeX w Czytniku."));
+    return;
+  }
+  const keys=[...state.selected.keys()];
+  for(const [index,key] of keys.entries()){
+    const x=state.selected.get(key);
     const line=node("div",{className:"selection-item"});const info=node("div");
-    info.append(node("strong",{},x.title),node("small",{},`${x.kind==="module"?"Rozdział":"Fragment"} · ${x.module} · ${x.id}`));
-    const del=node("button",{title:"Usuń z zestawu"},"×");del.addEventListener("click",()=>{state.selected.delete(key);renderSelection();if(state.currentData)renderReader();});
-    line.append(info,del);list.append(line);
+    const kind=x.kind==="module"?"Rozdział":x.kind==="lines"?"Wycinek wierszy":"Obiekt";
+    const ref=x.kind==="lines"?("wiersze "+x.start_line+"–"+x.end_line):x.id;
+    info.append(node("strong",{},x.title),node("small",{},kind+" · "+x.module+" · "+ref));
+    const controls=node("div",{className:"selection-controls"});
+    const up=node("button",{title:"Przesuń wyżej","aria-label":"Przesuń wyżej"},"↑");
+    up.disabled=index===0;up.addEventListener("click",()=>moveSelected(key,-1));
+    const down=node("button",{title:"Przesuń niżej","aria-label":"Przesuń niżej"},"↓");
+    down.disabled=index===keys.length-1;down.addEventListener("click",()=>moveSelected(key,1));
+    const del=node("button",{title:"Usuń z zestawu","aria-label":"Usuń z zestawu"},"×");
+    del.addEventListener("click",()=>{state.selected.delete(key);renderSelection();if(state.currentData)renderReader();});
+    controls.append(up,down,del);line.append(info,controls);list.append(line);
   }
 }
-function selectedManifest(){return {format:"matlib-selection-v1",modules:[...state.selected.values()].filter(x=>x.kind==="module").map(x=>x.id),entities:[...state.selected.values()].filter(x=>x.kind==="entity").map(x=>x.id)};}
+function selectedManifest(){
+  const selected=[...state.selected.values()];
+  return {
+    format:"matlib-selection-v2",
+    items:selected.map(x=>x.kind==="lines"?
+      {kind:"lines",module:x.module,start_line:x.start_line,end_line:x.end_line}:
+      {kind:x.kind,id:x.id}),
+    modules:selected.filter(x=>x.kind==="module").map(x=>x.id),
+    entities:selected.filter(x=>x.kind==="entity").map(x=>x.id)
+  };
+}
 function downloadManifest(){
-  const blob=new Blob([JSON.stringify(selectedManifest(),null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);
-  const a=node("a",{download:"biblioteka_zestaw.json",href:url});document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  const manifest={...selectedManifest(),title:$("generatorTitle").value.trim(),
+                  closure_depth:Number($("generatorClosure").value)};
+  const blob=new Blob([JSON.stringify(manifest,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=node("a",{download:"biblioteka_zestaw.json",href:url});
+  document.body.append(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function generationPayload(){
-  return {...selectedManifest(),title:$('generatorTitle').value.trim() || 'Mój skrypt matematyczny',closure_depth:Number($('generatorClosure').value)};
+  const {modules,entities,...selection}=selectedManifest();
+  return {...selection,title:$("generatorTitle").value.trim()||"Mój skrypt matematyczny",
+          closure_depth:Number($("generatorClosure").value)};
 }
 async function checkSelection(){
   const payload=generationPayload();
-  if(!payload.modules.length&&!payload.entities.length){toast('Wybierz rozdział lub obiekt.');return;}
+  if(!payload.items.length){toast('Wybierz rozdział lub obiekt.');return;}
   try{
     const result=await api('/api/generate/manifest',{method:'POST',body:JSON.stringify(payload)});
     const root=$('planResult');root.replaceChildren();const card=node('div',{className:'plan-card'});
     card.append(node('h3',{},'Weryfikacja generatora'));
     card.append(node('p',{},`${result.modules.length} modułów · ${result.references_internal} odsyłaczy wewnętrznych · ${result.references_external} odsyłaczy przez xr-hyper · ${Object.keys(result.external_targets).length} plików referencyjnych.`));
     if(result.preamble_warning)card.append(node('p',{},result.preamble_warning));
-    if(Object.keys(result.fragments).length)card.append(node('p',{},'Fragmenty: sprawdzono odsyłacze tylko w wybranych obiektach. Semantyczna samowystarczalność wymaga audytu.'));
+    if(Object.keys(result.fragments).length)card.append(node('p',{},'Fragmenty: sprawdzono odsyłacze wewnątrz wybranych zakresów. Kontekst matematyczny i kompletność środowisk LaTeX wymagają weryfikacji.'));
     if(Object.keys(result.external_targets).length){
       const ul=node('ul');for(const [mod,labels] of Object.entries(result.external_targets))ul.append(node('li',{},`${mod}: ${labels.join(', ')}`));
       card.append(node('strong',{},'Dokumenty referencyjne:'),ul);
@@ -265,7 +343,7 @@ async function checkSelection(){
 }
 async function generateZip(){
   const payload=generationPayload();
-  if(!payload.modules.length&&!payload.entities.length){toast('Wybierz rozdział lub obiekt.');return;}
+  if(!payload.items.length){toast('Wybierz rozdział lub obiekt.');return;}
   const button=$('generateZip');button.disabled=true;button.textContent='Generowanie…';
   try{
     const response=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
@@ -278,7 +356,7 @@ async function generateZip(){
 
 async function createDraft(){
   const payload=generationPayload();
-  if(!payload.modules.length&&!payload.entities.length){toast('Wybierz rozdział lub obiekt.');return;}
+  if(!payload.items.length){toast('Wybierz rozdział lub obiekt.');return;}
   const button=$('createDraft');button.disabled=true;button.textContent='Tworzenie szkicu…';
   try{
     const url='/api/drafts'+(state.draftSession?'?session_id='+encodeURIComponent(state.draftSession):'');
@@ -562,6 +640,8 @@ function listeners(){
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>activateTab(b.dataset.tab)));
   $("granularity").addEventListener("change",e=>{state.granularity=e.target.value;renderTree();});
   $("addCurrent").addEventListener("click",addCurrent);
+  $("addExcerpt").addEventListener("click",addExcerpt);
+  $("addRange").addEventListener("click",addRange);
   $("openFirst").addEventListener("click",()=>{if(state.modules.length)openModule(state.modules[0].id);});
   $("openGraphQuick").addEventListener("click",()=>activateTab("graph"));
   $("togglePreview").addEventListener("click",()=>{state.simplified=!state.simplified;renderReader();});
