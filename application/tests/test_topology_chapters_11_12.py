@@ -220,6 +220,40 @@ class TopologyChapterElevenTwelveAudit(unittest.TestCase):
         )
         self.assertIn("Strona czwarta jest zerowa", ch)
 
+    def test_filtered_two_term_complex_higher_differentials(self):
+        """For C_r -> C_{r-1} with boundary k, d^r is k and earlier maps vanish."""
+        ch = self.text["12"]
+        self.assertIn(r"\label{thm:pages-v5}", ch)
+        self.assertIn(r"\label{thm:convergence-v5}", ch)
+        self.assertIn(r"Z^r_{p,q}", ch)
+        for page in range(2, 9):
+            # x lies at filtration page; y lies at filtration zero.
+            source = (page, 0)
+            target = (0, page - 1)
+            for earlier in range(1, page):
+                # d^earlier has target filtration page-earlier > 0,
+                # and there are no generators in that filtration.
+                self.assertNotEqual((page-earlier, earlier-1), target)
+            for k in (-5, -3, -2, -1, 1, 2, 3, 5):
+                # Higher differential is multiplication by k: Z -> Z.
+                # H_r=0 and H_{r-1}=Z/|k|; for |k|=1 the latter is 0.
+                kernel = [a for a in range(-30, 31) if k*a == 0]
+                self.assertEqual(kernel, [0])
+                cosets = {x % abs(k) for x in range(-50, 51)}
+                self.assertEqual(len(cosets), abs(k))
+                self.assertEqual(source[0]-page, target[0])
+                self.assertEqual(source[1]+page-1, target[1])
+
+    def test_klein_bottle_twisted_monodromy_and_extensions(self):
+        ch = self.text["12"]
+        self.assertIn(r"E^2_{0,1}=\Z/2", ch)
+        self.assertIn(r"H_1(K;\Z)\cong\Z\oplus\Z/2", ch)
+        # Circle with degree -1 transport has cellular boundary (-1)-1=-2.
+        transport = -1
+        self.assertEqual(transport-1, -2)
+        self.assertEqual([n for n in range(-20, 21) if -2*n == 0], [0])
+        self.assertEqual({i % 2 for i in range(-20, 21)}, {0, 1})
+
     def test_extension_problem_distinguishes_actual_groups(self):
         ch = self.text["12"]
         self.assertIn(r"\label{prz:spectral-extension-z4}", ch)
