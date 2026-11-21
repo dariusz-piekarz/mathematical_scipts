@@ -304,6 +304,21 @@ class TopologyChaptersFifteenSixteenAudit(unittest.TestCase):
             ]
             self.assertEqual(bool(groups_nonzero_at_levels), k == 0)
 
+    def test_HA_zero_level_and_polish_suspension_terminology(self):
+        ch = self.text["16"]
+        for expected in (
+            r"$K(A,n)\simeq\Omega K(A,n+1)$",
+            r"$\Omega K(A,1)$",
+            r"$\pi_1(K(A,1))\cong A$",
+            "słabo równoważna dyskretnej przestrzeni",
+            r"\section{Spójność przestrzeni i ekscyzja homotopijna}",
+        ):
+            with self.subTest(fragment=expected):
+                self.assertIn(expected, ch)
+        self.assertNotRegex(
+            ch, r"\bmapa\b|\bmapą\b|\bmapę\b|\bmapy\b"
+        )
+
     def test_deep_dependencies_are_explicit_not_overclaimed(self):
         src = self.text["15"] + self.text["16"]
         self.assertIn("nie pełny niezależny dowód", src)
