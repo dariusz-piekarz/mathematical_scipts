@@ -285,5 +285,25 @@ class TopologyChaptersTwentyThreeTwentyFourAudit(unittest.TestCase):
         self.assertNotIn("pochodny obraz\nwłaściwy", src)
 
 
+    def test_at24_all_named_objects_in_key_statements_are_declared(self):
+        src = self.sources["24"]
+        for fragment in (
+            "Niech $X$ będzie $n$-wymiarową warstwową",
+            r"a $\bar p$ klasyczną perwersyjnością na $X$.",
+            r"$k$ ciałem, a $i_x:\{x\}\hookrightarrow X$",
+            "wymiaru zespolonego $d$, $k$ ciałem, a $L$",
+            "Niech $X$ będzie zespoloną odmianą algebraiczną,",
+            r"$k$ ciałem, a $j:U=X_{\mathrm{reg}}\hookrightarrow X$",
+            r"$\nu:\widetilde X\to X$ normalizacją.",
+            r"zachodzi $\operatorname{codim}_\C X_r>2r$ dla każdego",
+            r"Niech $f:\widetilde{\C^2}\to\C^2$ będzie rozdmuchaniem",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, src)
+        self.assertNotIn("Dla $X$ powyżej i dowolnego ciała $k$", src)
+        self.assertNotIn("Definicji powyżej. Wówczas", src)
+
+
+
 if __name__ == "__main__":
     unittest.main()
