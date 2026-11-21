@@ -41,3 +41,7 @@ Na istniejącej gałęzi `biblioteka-matematyczna-iteracja-6` zaktualizowano:
 AA-01–AA-16: **5, 3, 3, 2, 3, 2, 2, 5, 4, 3, 3, 3, 3, 4, 3, 3**, razem **51 audytów**, 16 rozdziałów stabilnych matematycznie.
 
 Następny w kolejności: AA-17 — moduły nad dziedzinami ideałów głównych i postać Smitha.
+
+## Dodatkowa kontrola regresyjna na aktualnym źródle
+
+Na zakończenie wykonano także **wszystkie 62 testy na identycznym źródle AA-16 po audycie III**: skopiowano 30 testów z audytu I i 18 z audytu II, kierując je na źródło III, oraz uruchomiono 14 nowych testów. Jedyna konieczna adaptacja starszych asercji polegała na zwiększeniu oczekiwanej liczby odsyłaczy z 5 do 6; nie zmieniano rachunków matematycznych. Wynik: **30/30 + 18/18 + 14/14 PASS**.
