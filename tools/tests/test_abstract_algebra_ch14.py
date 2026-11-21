@@ -94,7 +94,7 @@ class AA14Regression(unittest.TestCase):
 
     def test_16_comaximal_powers(self):
         self.assertEqual(math.gcd(4, 9), 1)
-        self.assertEqual(ideal(12, 4) & ideal(12, 9), {0})
+        self.assertEqual(ideal(12, 4) & ideal(12, 3), {0})
 
     def test_17_jacobson_unit_criterion_z12(self):
         for a in range(12):
