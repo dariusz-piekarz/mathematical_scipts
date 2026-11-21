@@ -1,0 +1,567 @@
+% Wersja źródłowa: audyt II, jednostka 06
+\setcounter{section}{5}
+\section{Twierdzenie Hahna--Banacha i ciągły dual}\label{sec:hahn-banach}
+
+\subsection{Dlaczego potrzebujemy twierdzenia o przedłużaniu?}
+
+W skończonym wymiarze każdy funkcjonał liniowy jest ciągły, a jego
+przedłużenie z podprzestrzeni można skonstruować, uzupełniając bazę.
+W ogólnej przestrzeni liniowo-topologicznej postępowanie takie daje
+jedynie funkcjonał \emph{algebraiczny}: jego ciągłość nie jest
+zagwarantowana. Twierdzenie Hahna--Banacha pozwala zachować
+oszacowanie wyrażone przez funkcję podliniową, a w przestrzeniach
+lokalnie wypukłych --- także ciągłość funkcjonału.
+
+W całym rozdziale $\K\in\{\R,\C\}$. Przestrzeń liniowa nad $\K$
+nie musi być wyposażona w topologię, dopóki nie zaznaczymy tego
+jawnie. Nie przyjmujemy bez dodatkowego założenia, że przestrzeń
+liniowo-topologiczna jest Hausdorffa.
+
+\begin{definicja}[Dual algebraiczny i topologiczny]\label{def:dual-topological}
+Niech $X$ będzie przestrzenią liniową nad $\K$. Przez $X^*$
+oznaczamy przestrzeń wszystkich $\K$-liniowych funkcjonałów
+$f:X\to\K$ (\emph{dual algebraiczny}). Jeśli $X$ jest TVS,
+przez $X'$ oznaczamy przestrzeń funkcjonałów liniowych ciągłych
+(\emph{dual topologiczny}). Wtedy $X'\subseteq X^*$.
+\end{definicja}
+
+\begin{stwierdzenie}[Elementarne kryterium ciągłości]
+\label{prop:dual-continuity}
+Niech $X$ będzie TVS nad $\K$ i $f:X\to\K$ funkcjonałem
+liniowym. Wtedy $f$ jest ciągły wtedy i tylko wtedy, gdy
+istnieje otoczenie $U$ zera w $X$ takie, że $|f(x)|<1$
+dla każdego $x\in U$.
+\end{stwierdzenie}
+\begin{proof}
+Ciągłość w zerze zapewnia istnienie otoczenia
+$U=f^{-1}(\{z\in\K:|z|<1\})$ z wymaganą własnością.
+W drugą stronę, dla $\varepsilon>0$ zbiór
+$\varepsilon U$ jest otoczeniem zera i dla $x\in\varepsilon U$
+mamy $|f(x)|<\varepsilon$. To dowodzi ciągłości w zerze.
+Liniowość daje następnie ciągłość w każdym punkcie.
+\end{proof}
+
+\begin{przyklad}[Algebraiczny dual może być znacznie większy]
+\label{ex:discontinuous-functional}
+Niech $X$ będzie nieskończenie wymiarową przestrzenią
+unormowaną. Wybierzmy liniowo niezależne wektory $(e_n)_{n\ge1}$
+z $\|e_n\|=1$. Na ich rozpiętości określmy
+$f(\sum_{j=1}^m a_je_j)=\sum_{j=1}^m j a_j$.
+Po uzupełnieniu tej rodziny do bazy Hamela przestrzeni $X$
+przedłużamy $f$ liniowo na całe $X$. Wtedy $f\in X^*$,
+ale $f\notin X'$, ponieważ $|f(e_n)|=n\to\infty$,
+podczas gdy $\|e_n\|=1$. Konstrukcja bazy Hamela
+wykorzystuje aksjomat wyboru.
+\end{przyklad}
+
+\subsection{Wersja rzeczywista: funkcje podliniowe}
+
+\begin{definicja}[Funkcja podliniowa]\label{def:sublinear}
+Niech $E$ będzie przestrzenią liniową nad $\R$.
+Funkcję $p:E\to\R$ nazywamy \emph{podliniową}, jeśli
+$p(x+y)\le p(x)+p(y)$ dla wszystkich $x,y\in E$ oraz
+$p(tx)=tp(x)$ dla wszystkich $x\in E$ i $t\ge0$.
+Nie wymagamy symetrii $p(-x)=p(x)$ ani nieujemności $p(x)$.
+Z definicji wynika $p(0)=0$.
+\end{definicja}
+
+\begin{lemat}[Przedłużenie o jeden wymiar]
+\label{lem:hb-one-step}
+Niech $E$ będzie rzeczywistą przestrzenią liniową,
+$p:E\to\R$ funkcją podliniową, $M\subseteq E$ podprzestrzenią,
+a $f:M\to\R$ funkcjonałem liniowym spełniającym
+$f(m)\le p(m)$ dla każdego $m\in M$. Dla każdego
+$x_0\in E\setminus M$ istnieje funkcjonał liniowy
+$g:M+\R x_0\to\R$, który przedłuża $f$ i spełnia
+$g(x)\le p(x)$ dla każdego $x\in M+\R x_0$.
+\end{lemat}
+\begin{proof}
+Każdy $x\in M+\R x_0$ ma jednoznaczny zapis $x=m+tx_0$.
+Szukamy liczby $a\in\R$ takiej, by wzór
+$g(m+tx_0)=f(m)+ta$ spełniał $g\le p$.
+Dla $t>0$ warunek ten, po podzieleniu przez $t$,
+jest równoważny $a\le p(z+x_0)-f(z)$ dla każdego $z\in M$.
+Dla $t<0$ analogicznie otrzymujemy
+$a\ge f(y)-p(y-x_0)$ dla każdego $y\in M$.
+Zdefiniujmy więc
+\[
+ L=\sup_{y\in M}\bigl(f(y)-p(y-x_0)\bigr),\qquad
+ R=\inf_{z\in M}\bigl(p(z+x_0)-f(z)\bigr).
+\]
+Dla dowolnych $y,z\in M$, z liniowości $f$ oraz
+podaddytywności $p$ mamy
+\[
+ f(y)+f(z)=f(y+z)\le p(y+z)
+ \le p(y-x_0)+p(z+x_0).
+\]
+Stąd $L\le R$. Ponieważ $0\in M$, mamy też
+$L\ge-p(-x_0)$ i $R\le p(x_0)$, zatem oba krańce
+są skończone. Wybierzmy dowolne $a\in[L,R]$.
+Wówczas wyprowadzone nierówności dają $g(m+tx_0)\le
+p(m+tx_0)$, odpowiednio dla $t>0$ i $t<0$.
+Dla $t=0$ korzystamy z założenia $f\le p$.
+\end{proof}
+
+\begin{twierdzenie}[Hahn--Banach, wersja rzeczywista]
+\label{thm:hb-real}
+Niech $E$ będzie przestrzenią liniową nad $\R$,
+$p:E\to\R$ funkcją podliniową, $M\subseteq E$ podprzestrzenią,
+a $f:M\to\R$ funkcjonałem liniowym takim, że
+$f(m)\le p(m)$ dla każdego $m\in M$.
+Wtedy istnieje liniowy $F:E\to\R$ spełniający
+$F|_M=f$ oraz $F(x)\le p(x)$ dla każdego $x\in E$.
+\end{twierdzenie}
+\begin{proof}
+Rozważmy zbiór par $(N,g)$, gdzie $N$ jest podprzestrzenią
+$E$ zawierającą $M$, a $g:N\to\R$ jest liniowy, przedłuża
+$f$ i spełnia $g\le p$ na $N$. Jest on niepusty, ponieważ
+zawiera $(M,f)$. Porządkujemy pary przez przedłużanie:
+$(N_1,g_1)\preceq(N_2,g_2)$, gdy $N_1\subseteq N_2$
+i $g_2|_{N_1}=g_1$.
+
+Jeżeli $\mathcal C$ jest łańcuchem, to $N_\mathcal C=
+\bigcup_{(N,g)\in\mathcal C}N$ jest podprzestrzenią:
+dwa dowolne jej elementy należą do jednego z dwóch
+porównywalnych członów łańcucha. Funkcjonały z łańcucha
+zgadzają się na przecięciach, więc określają wspólny
+funkcjonał $g_\mathcal C$ na $N_\mathcal C$.
+Jest on liniowy, przedłuża $f$ i nadal spełnia
+$g_\mathcal C\le p$. Zatem każdy łańcuch ma ograniczenie
+górne. Lemat Kuratowskiego--Zorna daje element maksymalny
+$(N_0,g_0)$. Gdyby $N_0\ne E$, lemat
+\ref{lem:hb-one-step} przedłużyłby $g_0$ do
+$N_0+\R x_0$ dla $x_0\notin N_0$, co przeczyłoby
+maksymalności. Wobec tego $N_0=E$ i $F=g_0$.
+\end{proof}
+
+\begin{uwaga}[O roli aksjomatu wyboru]
+Dowód odwołuje się do lematu Kuratowskiego--Zorna,
+który w zwykłej teorii mnogości ZFC wynika z aksjomatu
+wyboru. Przy konstrukcji przedłużeń w skończonym wymiarze
+wystarcza skończona iteracja Lematu~\ref{lem:hb-one-step}.
+\end{uwaga}
+
+\subsection{Wersja zespolona i dominacja przez seminormę}
+
+W przypadku zespolonym nie porównujemy liczb zespolonych
+nierównością $F(x)\le p(x)$. Zamiast tego wymagamy
+$|F(x)|\le p(x)$, gdzie $p$ jest seminormą.
+
+\begin{lemat}[Odtworzenie funkcjonału zespolonego]
+\label{lem:complex-real-part}
+Niech $E$ będzie przestrzenią zespoloną traktowaną także
+jako przestrzeń rzeczywista. Każdemu funkcjonałowi
+rzeczywiście liniowemu $u:E\to\R$ odpowiada dokładnie
+jeden zespolono-liniowy funkcjonał $G:E\to\C$ spełniający
+$\operatorname{Re}G=u$. Jest on dany wzorem
+$G(x)=u(x)-i\,u(ix)$.
+\end{lemat}
+\begin{proof}
+Z liniowości rzeczywistej $u$ wynika
+$G(ix)=u(ix)-i u(-x)=iG(x)$ oraz
+$G(ax+by)=aG(x)+bG(y)$ dla $a,b\in\R$.
+Każdy skalar zespolony ma postać $a+ib$, więc $G$ jest
+zespolono-liniowy. Ponadto $\operatorname{Re}G(x)=u(x)$.
+Jeśli $H$ jest innym funkcjonałem zespolono-liniowym
+o tej samej części rzeczywistej, to
+$\operatorname{Im}H(x)=-\operatorname{Re}H(ix)=-u(ix)$;
+stąd $H(x)=G(x)$.
+\end{proof}
+
+\begin{twierdzenie}[Hahn--Banach, dominacja przez seminormę]
+\label{thm:hb-complex-seminorm}
+Niech $E$ będzie przestrzenią liniową nad
+$\K\in\{\R,\C\}$, $p:E\to[0,\infty)$ seminormą,
+$M\subseteq E$ podprzestrzenią liniową, a
+$f:M\to\K$ funkcjonałem $\K$-liniowym spełniającym
+$|f(m)|\le p(m)$ dla każdego $m\in M$.
+Wtedy istnieje $\K$-liniowy $F:E\to\K$ taki, że
+$F|_M=f$ i $|F(x)|\le p(x)$ dla każdego $x\in E$.
+\end{twierdzenie}
+\begin{proof}
+Dla $\K=\R$ stosujemy Twierdzenie~\ref{thm:hb-real}
+do $p$ i $f$; dominacja $F(x)\le p(x)$ zastosowana
+również do $-x$ daje $|F(x)|\le p(x)$.
+
+Niech $\K=\C$. Na przestrzeni rzeczywistej
+$E_{\R}$ funkcja $u=\operatorname{Re}f$ jest liniowa
+na $M_{\R}$ i spełnia $u(m)\le p(m)$.
+Twierdzenie~\ref{thm:hb-real} zapewnia przedłużenie
+rzeczywiście liniowe $v:E_{\R}\to\R$ z $v\le p$.
+Z Lematu~\ref{lem:complex-real-part} otrzymujemy
+$F(x)=v(x)-iv(ix)$. Na $M$ funkcjonały $F$ i $f$
+mają tę samą część rzeczywistą, zatem są równe.
+
+Pozostaje sprawdzić \emph{moduł} oszacowania. Dla
+$x\in E$ z $F(x)\ne0$ wybierzmy $\alpha\in\C$,
+$|\alpha|=1$, w taki sposób, aby
+$\alpha F(x)=|F(x)|$. Wówczas
+\[
+ |F(x)|=\operatorname{Re}F(\alpha x)
+ =v(\alpha x)\le p(\alpha x)=p(x).
+\]
+Gdy $F(x)=0$, nierówność jest oczywista.
+\end{proof}
+
+\begin{uwaga}[Co zostaje zachowane przy przedłużaniu?]
+Przedłużenie zachowuje dominację przez \emph{tę samą}
+seminormę, bez dodatkowego współczynnika. Samo twierdzenie
+jest algebraiczne: $E$ nie musi być przestrzenią topologiczną.
+Dopiero ciągłość $p$ daje automatycznie ciągłość $F$.
+\end{uwaga}
+
+\subsection{Hahn--Banach w przestrzeniach lokalnie wypukłych}
+
+\begin{stwierdzenie}[Ciągłość funkcjonału a seminorma]
+\label{prop:dual-seminorm-criterion}
+Niech $X$ będzie lokalnie wypukłą TVS nad $\K$,
+a $f:X\to\K$ funkcjonałem liniowym. Wtedy
+$f\in X'$ dokładnie wtedy, gdy istnieje ciągła
+seminorma $p$ na $X$ taka, że
+$|f(x)|\le p(x)$ dla każdego $x\in X$.
+\end{stwierdzenie}
+\begin{proof}
+Jeśli $f$ jest ciągły, to $p(x)=|f(x)|$ jest
+ciągłą seminormą i $|f|\le p$. Odwrotnie, gdy
+$|f|\le p$ i $p$ jest ciągła, to
+$f^{-1}(\{z:|z|<\varepsilon\})$ zawiera otwarte
+otoczenie $\{x:p(x)<\varepsilon\}$ dla każdego
+$\varepsilon>0$. Wynika stąd ciągłość $f$.
+\end{proof}
+
+\begin{twierdzenie}[Topologiczny Hahn--Banach]\label{thm:hb-topological}
+Niech $X$ będzie lokalnie wypukłą przestrzenią
+liniowo-topologiczną nad $\K\in\{\R,\C\}$,
+$M\subseteq X$ podprzestrzenią liniową z topologią
+indukowaną z $X$, a $f:M\to\K$ ciągłym funkcjonałem
+liniowym. Istnieje $F\in X'$ takie, że $F|_M=f$.
+Nie trzeba zakładać, że $M$ jest domknięta, a $X$
+jest Hausdorffa lub zupełna.
+\end{twierdzenie}
+\begin{proof}
+Ciągłość $f$ w zerze oznacza, że istnieje otoczenie
+$W$ zera w $X$ takie, iż $|f(m)|<1$ dla wszystkich
+$m\in M\cap W$. Korzystając z lokalnej wypukłości,
+wybieramy otwarte absolutnie wypukłe otoczenie
+$U\subseteq W$. Jego funkcjonał Minkowskiego $p_U$
+jest ciągłą seminormą na $X$ na mocy
+twierdzenia o funkcjonale Minkowskiego z \hyperref[sec:lokalnie-wypukle]{rozdziału 5}.
+
+Jeżeli $m\in M$ i $t>p_U(m)$, to $m\in tU$,
+zatem $m/t\in M\cap U$ i $|f(m)|<t$.
+Ponieważ jest to prawdą dla każdego $t>p_U(m)$,
+uzyskujemy $|f(m)|\le p_U(m)$.
+Stosując Twierdzenie~\ref{thm:hb-complex-seminorm}
+do $p_U$ i podprzestrzeni $M$, otrzymujemy funkcjonał
+$F:X\to\K$ z $F|_M=f$ i $|F|\le p_U$.
+Ciągłość $p_U$ implikuje ciągłość $F$.
+\end{proof}
+
+\begin{wniosek}[Przedłużanie z podprzestrzeni gęstej]
+\label{cor:dense-extension}
+Jeśli w założeniach Twierdzenia~\ref{thm:hb-topological}
+podprzestrzeń $M$ jest gęsta w $X$, to ciągłe
+przedłużenie $f$ jest jednoznaczne.
+\end{wniosek}
+\begin{proof}
+Istnienie wynika z twierdzenia. Jeśli $F_1,F_2\in X'$
+przedłużają $f$, to ciągły funkcjonał $F_1-F_2$
+zeruje się na gęstym zbiorze $M$. Jego zbiór zerowy
+jest domknięty (bo $\K$ jest Hausdorffa), więc
+$F_1=F_2$ na całym $X$.
+\end{proof}
+
+\begin{przyklad}[Sumowanie w $\ell^1$ i jednoznaczność]
+Niech $X=\ell^1(\N)$ z normą
+$\|x\|_1=\sum_{n\ge1}|x_n|$, a $M=c_{00}\subseteq X$
+niech oznacza przestrzeń ciągów o skończonym nośniku.
+Przez $e_n$ oznaczamy ciąg mający $1$ na miejscu $n$
+i zera na pozostałych miejscach. Funkcjonał $f(x)=\sum_{n\ge1}x_n$ jest dobrze określony
+na $M$ i ma normę $1$, bo $|f(x)|\le\|x\|_1$
+i $f(e_1)=\|e_1\|_1=1$. Podprzestrzeń $M$ jest gęsta
+w $X$: obcięcia $x^{(N)}=(x_1,\ldots,x_N,0,\ldots)$
+spełniają $\|x^{(N)}-x\|_1\to0$. Jedynym ciągłym
+przedłużeniem $f$ jest więc
+$F(x)=\sum_{n=1}^\infty x_n$ na $\ell^1$.
+Dla porównania, ten sam wzór na $c_{00}$ z normą
+supremum nie jest ciągły: dla
+$x^{(N)}=\sum_{n=1}^N e_n$ zachodzi
+$\|x^{(N)}\|_\infty=1$ oraz $f(x^{(N)})=N$.
+\end{przyklad}
+
+\begin{przyklad}[Funkcjonały na przestrzeni funkcji gładkich]
+Niech $X=C^\infty([0,1])$ z topologią seminorm
+$p_m$ z \hyperref[sec:lokalnie-wypukle]{rozdziału 5}. Dla $t_0\in[0,1]$ i
+$j\in\N\cup\{0\}$ funkcjonał
+$f\mapsto f^{(j)}(t_0)$ jest ciągły, gdyż
+$|f^{(j)}(t_0)|\le p_j(f)$. Każdy taki funkcjonał
+będzie później przykładem dystrybucji na odpowiedniej
+przestrzeni funkcji testowych.
+\end{przyklad}
+
+\subsection{Przestrzenie unormowane: zachowanie normy}
+
+\begin{twierdzenie}[Hahn--Banach dla przestrzeni unormowanych]
+\label{thm:hb-normed}
+Niech $X$ będzie przestrzenią unormowaną nad $\K$,
+$M\subseteq X$ podprzestrzenią liniową, a
+$f:M\to\K$ ograniczonym funkcjonałem liniowym
+(względem normy odziedziczonej z $X$).
+Istnieje funkcjonał ograniczony $F:X\to\K$ taki, że
+$F|_M=f$ i $\|F\|=\|f\|$, gdzie
+$\|f\|=\sup\{|f(m)|:\|m\|\le1,\ m\in M\}$.
+\end{twierdzenie}
+\begin{proof}
+W Twierdzeniu~\ref{thm:hb-complex-seminorm}
+weźmy $p(x)=\|f\|\,\|x\|$. Otrzymujemy $F$
+z oszacowaniem $|F(x)|\le\|f\|\,\|x\|$,
+czyli $\|F\|\le\|f\|$. Ponieważ $F|_M=f$,
+mamy także $\|F\|\ge\|f\|$. Zatem normy są równe.
+Nie wymagamy zupełności $X$ ani domkniętości $M$.
+\end{proof}
+
+\begin{wniosek}[Funkcjonał normujący wektor]\label{cor:norming}
+Niech $X$ będzie przestrzenią unormowaną nad $\K$,
+a $x_0\in X\setminus\{0\}$. Istnieje $f\in X'$
+taki, że $\|f\|=1$ i $f(x_0)=\|x_0\|$.
+W szczególności, dla każdego $x\in X$ zachodzi
+\[
+ \|x\|=\sup\bigl\{|f(x)|:f\in X',\ \|f\|\le1\bigr\}.
+\]
+\end{wniosek}
+\begin{proof}
+Na $M=\K x_0$ określmy
+$f_0(\lambda x_0)=\lambda\|x_0\|$.
+Wówczas $\|f_0\|=1$ i z
+Twierdzenia~\ref{thm:hb-normed} otrzymujemy przedłużenie
+$f$ o normie $1$ i wartości $f(x_0)=\|x_0\|$.
+Dla dowolnego $x$ nierówność $|g(x)|\le\|x\|$
+dla $\|g\|\le1$ wynika z definicji normy operatorowej,
+a dla $x\ne0$ równość zostaje osiągnięta przez
+skonstruowany funkcjonał. Dla $x=0$ obie strony są zerowe.
+\end{proof}
+
+\begin{przyklad}[Przedłużenie nie musi być jednoznaczne]
+Niech $X=\R^2$ z normą $\|(x,y)\|_\infty
+=\max(|x|,|y|)$, $M=\{(t,t):t\in\R\}$, a
+$f(t,t)=t$. Wtedy $\|f\|=1$. Dla każdego
+$a\in[0,1]$ wzór
+$F_a(x,y)=a x+(1-a)y$ określa przedłużenie $f$
+spełniające $\|F_a\|=|a|+|1-a|=1$.
+Twierdzenie Hahna--Banacha nie daje zatem
+jednoznaczności bez dodatkowych założeń.
+\end{przyklad}
+
+\subsection{Separacja punktów, podprzestrzeni i rola lokalnej wypukłości}
+
+\begin{twierdzenie}[Seminorma jako supremum funkcjonałów]
+\label{thm:seminorm-as-sup}
+Niech $X$ będzie lokalnie wypukłą TVS nad $\K$,
+$p$ ciągłą seminormą na $X$, a $x_0\in X$.
+Wtedy
+\[
+ p(x_0)=\sup\bigl\{|f(x_0)|:f\in X',\quad
+ |f(x)|\le p(x)\ \text{dla wszystkich }x\in X\bigr\}.
+\]
+Ponadto istnieje $f\in X'$ spełniający $|f|\le p$
+i $f(x_0)=p(x_0)$.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $p(x_0)=0$, wybieramy funkcjonał zerowy.
+Gdy $p(x_0)>0$, na $M=\K x_0$ określamy
+$f_0(\lambda x_0)=\lambda p(x_0)$.
+Z jednorodności seminormy wynika
+$|f_0(\lambda x_0)|=p(\lambda x_0)$.
+Twierdzenie~\ref{thm:hb-complex-seminorm} daje
+przedłużenie $f$ z $|f|\le p$, a ciągłość $p$
+gwarantuje $f\in X'$. Żaden funkcjonał w podanym
+supremum nie może mieć wartości większej niż $p(x_0)$,
+a skonstruowany osiąga tę wartość.
+\end{proof}
+
+\begin{wniosek}[Dual rozdziela punkty]\label{cor:dual-separates}
+Niech $X$ będzie lokalnie wypukłą TVS Hausdorffa
+nad $\K$. Dla każdych różnych $x,y\in X$ istnieje
+$f\in X'$ takie, że $f(x)\ne f(y)$.
+\end{wniosek}
+\begin{proof}
+Dla $z=x-y\ne0$ istnieje ciągła seminorma $p$
+z $p(z)>0$, ponieważ seminormy generujące topologię
+rozdzielają punkty (twierdzenie o topologii seminorm z \hyperref[sec:lokalnie-wypukle]{rozdziału 5}).
+Twierdzenie~\ref{thm:seminorm-as-sup} daje $f\in X'$
+z $f(z)=p(z)>0$, co kończy dowód.
+\end{proof}
+
+\begin{twierdzenie}[Oddzielanie punktu od domkniętej podprzestrzeni]
+\label{thm:point-closed-subspace}
+Niech $X$ będzie lokalnie wypukłą TVS nad $\K$,
+$M\subseteq X$ domkniętą podprzestrzenią liniową,
+a $x_0\in X\setminus M$. Istnieje $f\in X'$
+takie, że $f|_M=0$ i $f(x_0)=1$.
+Nie jest potrzebne założenie Hausdorffa całej przestrzeni $X$.
+\end{twierdzenie}
+\begin{proof}
+Ponieważ $M$ jest domknięta, istnieje otoczenie
+$W$ zera takie, że $(x_0+W)\cap M=\varnothing$.
+Wybierzmy otwarte absolutnie wypukłe otoczenie
+$U\subseteq W$ i oznaczmy jego ciągłą seminormę
+Minkowskiego przez $p=p_U$.
+Dla każdego $m\in M$ mamy $x_0-m\notin U$,
+a więc $p(x_0-m)\ge1$, bo $U=\{x:p(x)<1\}$.
+Na podprzestrzeni $M+\K x_0$ określmy
+$g(m+\lambda x_0)=\lambda$. Dla $\lambda\ne0$,
+jednorodność $p$ oraz $-m/\lambda\in M$ dają
+\[
+ p(m+\lambda x_0)=|\lambda|\,
+ p\bigl(x_0+m/\lambda\bigr)\ge|\lambda|
+ =|g(m+\lambda x_0)|.
+\]
+Dla $\lambda=0$ nierówność też zachodzi.
+Z Twierdzenia~\ref{thm:hb-complex-seminorm} otrzymujemy
+przedłużenie $f$ z $|f|\le p$. Jest ono ciągłe,
+zeruje się na $M$ i spełnia $f(x_0)=1$.
+\end{proof}
+
+\begin{wniosek}[Charakteryzacja domkniętych podprzestrzeni]
+\label{cor:closed-as-annihilator}
+Niech $X$ będzie lokalnie wypukłą TVS nad $\K$,
+a $M\subseteq X$ podprzestrzenią liniową. Wtedy
+\[
+ \overline M=\bigcap\{\ker f:f\in X',\ f|_M=0\}.
+\]
+W szczególności $M$ jest domknięta dokładnie wtedy,
+gdy stanowi przecięcie jąder pewnej rodziny ciągłych
+funkcjonałów liniowych.
+\end{wniosek}
+\begin{proof}
+Dla każdego $f\in X'$ zerującego się na $M$
+jego domknięte jądro zawiera $\overline M$.
+Jeśli $x_0\notin\overline M$, zastosujmy
+Twierdzenie~\ref{thm:point-closed-subspace}
+do domkniętej podprzestrzeni $\overline M$.
+Otrzymujemy funkcjonał z $f(x_0)=1$, który
+wyklucza $x_0$ z podanego przecięcia.
+\end{proof}
+
+\begin{przyklad}[Dlaczego nie możemy pominąć lokalnej wypukłości?]
+Niech $X=L^p([0,1])$, $0<p<1$, z topologią metryki
+$d(f,g)=\int_{[0,1]}|f(t)-g(t)|^p\,\mathrm d\lambda(t)$.
+Z \hyperref[sec:tvs]{rozdziału 1} wiemy, że $X'=\{0\}$.
+Tymczasem $M=\K\mathbf 1$ jest jednowymiarową
+podprzestrzenią, a funkcjonał $f(c\mathbf1)=c$
+jest na niej ciągły: $d(c\mathbf1,0)=|c|^p$.
+Nie istnieje ciągłe przedłużenie $f$ na $X$.
+To pokazuje, że topologiczna wersja Hahna--Banacha
+wymaga dodatkowych założeń; lokalna wypukłość jest
+wystarczającym, lecz nie zawsze koniecznym warunkiem.
+\end{przyklad}
+
+\begin{stwierdzenie}[Dual topologiczny przestrzeni produktowej]
+\label{prop:product-dual}
+Niech $I$ będzie dowolnym zbiorem, a $X=\K^I$
+przestrzenią liniowo-topologiczną z topologią produktową.
+Każdy funkcjonał $f\in X'$ ma postać
+$f(x)=\sum_{i\in I_0}a_i x_i$, gdzie $I_0\subseteq I$
+jest skończony, a $a_i\in\K$. Odwrotnie, każdy taki
+funkcjonał jest ciągły.
+\end{stwierdzenie}
+\begin{proof}
+Niech $f\in X'$. Z ciągłości w zerze istnieje
+podstawowe otoczenie produktowe $U$ zera, na którym
+$|f(x)|<1$. Możemy wybrać je tak, aby ograniczało
+współrzędne tylko dla indeksów z pewnego skończonego
+$I_0\subseteq I$. Jeśli $x_i=0$ dla $i\in I_0$,
+to $tx\in U$ dla każdego $t\in\K$, zatem
+$|t f(x)|<1$ dla wszystkich $t$; koniecznie $f(x)=0$.
+Niech $e_i\in\K^I$ oznacza wektor o współrzędnej
+$1$ na pozycji $i$ i zerach na pozostałych pozycjach.
+Każde $x\in X$ jest sumą wektora
+$\sum_{i\in I_0}x_i e_i$ i wektora o zerowych
+współrzędnych w $I_0$. Stąd
+$f(x)=\sum_{i\in I_0}x_i f(e_i)$.
+W drugą stronę, rzuty współrzędnych $x\mapsto x_i$
+są ciągłe z definicji topologii produktowej;
+skończona kombinacja liniowa też jest ciągła.
+\end{proof}
+
+\begin{uwaga}[Jak silne jest to ograniczenie?]
+Gdy $I=\N$, na przestrzeni wszystkich ciągów
+$\K^\N$ z topologią produktową żaden ciągły funkcjonał
+nie może zależeć istotnie od nieskończenie wielu wyrazów.
+Inaczej jest na $\ell^1$: funkcjonał sumowania z
+poprzedniego przykładu jest ciągły.
+Różnica pochodzi z topologii, nie z samej liniowości.
+\end{uwaga}
+
+\subsection{Norma odległości i anihilatory}
+
+\begin{definicja}[Anihilator]\label{def:annihilator}
+Niech $X$ będzie TVS nad $\K$, a $M\subseteq X$
+podprzestrzenią liniową. Jej \emph{anihilatorem}
+w dualu topologicznym nazywamy
+$M^\perp=\{f\in X':f(m)=0\ \text{dla wszystkich }m\in M\}$.
+Zapis $M^\perp$ nie wymaga iloczynu skalarnego.
+\end{definicja}
+
+\begin{stwierdzenie}[Dual ilorazu]\label{prop:quotient-dual}
+Niech $X$ będzie TVS nad $\K$, a $M\subseteq X$
+podprzestrzenią liniową. Niech $q:X\to X/M$
+będzie rzutowaniem z topologią ilorazową.
+Odwzorowanie $q^*:(X/M)'\to X'$ określone przez
+$q^*(\varphi)=\varphi\circ q$ jest liniową bijekcją
+z $(X/M)'$ na $M^\perp$.
+\end{stwierdzenie}
+\begin{proof}
+Jeśli $\varphi$ jest ciągłym funkcjonałem na ilorazie,
+to $\varphi\circ q$ jest ciągły i zeruje się na $M$.
+Odwzorowanie $q^*$ jest różnowartościowe, bo $q$
+jest surjekcją. Jeżeli $f\in M^\perp$, to wzór
+$\varphi(x+M)=f(x)$ jest dobrze określony, liniowy
+i spełnia $\varphi\circ q=f$.
+Z własności topologii ilorazowej (\hyperref[sec:konstrukcje]{rozdział 2})
+wynika ciągłość $\varphi$, gdyż $f$ jest ciągły.
+\end{proof}
+
+\begin{twierdzenie}[Odległość od podprzestrzeni i dual]\label{thm:distance-dual}
+Niech $X$ będzie przestrzenią unormowaną nad $\K$,
+$M\subseteq X$ domkniętą podprzestrzenią liniową,
+a $x_0\in X$. Wtedy
+\[
+ \operatorname{dist}(x_0,M):=\inf_{m\in M}\|x_0-m\|
+ =\sup\{|f(x_0)|:f\in M^\perp,\ \|f\|\le1\}.
+\]
+Jeśli $x_0\notin M$, istnieje $f\in M^\perp$
+o normie $1$, dla którego $f(x_0)=\operatorname{dist}(x_0,M)$.
+\end{twierdzenie}
+\begin{proof}
+Niech $d=\operatorname{dist}(x_0,M)$.
+Dla $f\in M^\perp$ z $\|f\|\le1$ i $m\in M$
+mamy $|f(x_0)|=|f(x_0-m)|\le\|x_0-m\|$.
+Po wzięciu infimum po $m$ otrzymujemy $|f(x_0)|\le d$.
+Jeśli $x_0\in M$, to $d=0$ i funkcjonał zerowy
+wystarcza do równości.
+
+Załóżmy $x_0\notin M$. Ponieważ $M$ jest domknięta,
+$d>0$. Na $M+\K x_0$ określmy
+$g(m+\lambda x_0)=\lambda d$.
+Dla $\lambda\ne0$ mamy
+$\|m+\lambda x_0\|=|\lambda|\,
+\|x_0+m/\lambda\|\ge|\lambda|d=|g(m+\lambda x_0)|$;
+dla $\lambda=0$ jest to oczywiste.
+Z Twierdzenia~\ref{thm:hb-normed} otrzymujemy
+przedłużenie $f$ z $\|f\|\le1$, $f|_M=0$ i
+$f(x_0)=d$. Równość $\|f\|=1$ wynika z faktu, że
+$\|g\|=1$: dla $\lambda=1$ i $m\in M$ ilorazy
+$|g(x_0-m)|/\|x_0-m\|=d/\|x_0-m\|$
+mają supremum $1$ z definicji $d$.
+\end{proof}
+
+\begin{uwaga}[Następne rozdziały]
+Rozdzielanie \emph{ogólnych zbiorów wypukłych}, twierdzenie
+bipolarne i topologie słabe wymagają dodatkowych konstrukcji.
+Omówimy je osobno, opierając się na udowodnionych
+wersjach twierdzenia Hahna--Banacha. W części o przestrzeniach
+dystrybucji ciągły dual $\mathcal D(\Omega)'$ otrzyma
+kanoniczną interpretację jako przestrzeń dystrybucji
+$\mathcal D'(\Omega)$.
+\end{uwaga}

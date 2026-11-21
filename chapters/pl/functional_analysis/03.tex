@@ -1,0 +1,650 @@
+% Wersja źródłowa: audyt II, jednostka 03
+\bigskip
+\setcounter{section}{2}
+\section{Sieci, struktura jednostajna i zupełność przestrzeni liniowo-topologicznych}\label{sec:zupelnosc}
+
+\subsection{Dlaczego ciągi nie wystarczają?}
+
+W przestrzeni metrycznej ciągi wystarczają do charakteryzowania domknięcia,
+ciągłości i zupełności. W dowolnej przestrzeni topologicznej jest inaczej:
+zbiór może zawierać granice wszystkich swoich zbieżnych ciągów, a mimo to
+nie być domknięty. Dlatego zamiast samych ciągów będziemy posługiwać się
+\emph{sieciami}. Później pojęcie sieci Cauchy'ego pozwoli określić
+zupełność bez wybierania normy czy metryki.
+
+Dla wygody przypomnijmy: $U\subseteq X$ jest otoczeniem
+zera, jeżeli zawiera otwarty zbiór zawierający zero;
+jest zrównoważony, gdy $\lambda U\subseteq U$
+dla $|\lambda|\leq1$.
+W tym rozdziale $\K\in\{\R,\C\}$, a TVS jest, jeśli nie zaznaczono
+inaczej, przestrzenią liniowo-topologiczną Hausdorffa. Otoczenie punktu
+nie musi być otwarte. Gdy piszemy $U\in\mathcal N_X(0)$, mamy na myśli
+otoczenie zera w $X$.
+
+\begin{definicja}[Zbiór skierowany i sieć]\label{def:net}
+\emph{Zbiorem skierowanym} nazywamy niepusty zbiór $D$ z relacją
+refleksyjną i przechodnią $\preceq$, w którym dla dowolnych $d,e\in D$
+istnieje $f\in D$ takie, że $d\preceq f$ i $e\preceq f$.
+\emph{Sieć} w zbiorze $X$ to odwzorowanie $D\to X$,
+$d\mapsto x_d$, gdzie $D$ jest zbiorem skierowanym.
+Jeżeli $X$ jest przestrzenią topologiczną, mówimy, że $x_d\to x\in X$,
+gdy dla każdego otoczenia $U$ punktu $x$ istnieje $d_0\in D$ takie,
+że $x_d\in U$ dla wszystkich $d\succeq d_0$.
+\end{definicja}
+
+Każdy ciąg jest siecią, w której $D=\N$ z naturalnym porządkiem.
+Innym przykładem jest rodzina $\mathcal F(I)$ wszystkich skończonych
+podzbiorów ustalonego zbioru $I$, skierowana przez inkluzję.
+Jeśli $X$ jest przestrzenią topologiczną i $x\in X$, to rodzina
+otwartych otoczeń $x$, skierowana przez \emph{odwrotną} inkluzję,
+również jest zbiorem skierowanym: wspólnym późniejszym indeksem
+jest przecięcie dwóch otoczeń.
+
+\begin{twierdzenie}[Domknięcie i ciągłość przez sieci]\label{thm:nets-topology}
+Niech $X,Y$ będą przestrzeniami topologicznymi, $A\subseteq X$,
+$x\in X$ oraz $f:X\to Y$. Wtedy:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item $x\in\overline A$ dokładnie wtedy, gdy istnieje sieć
+      $(a_d)_{d\in D}$ elementów $A$ zbieżna do $x$;
+\item $f$ jest ciągłe w $x$ dokładnie wtedy, gdy dla każdej sieci
+      $x_d\to x$ zachodzi $f(x_d)\to f(x)$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Jeśli $a_d\in A$ i $a_d\to x$, każde otoczenie $x$ zawiera element $A$,
+zatem $x\in\overline A$. Odwrotnie, niech $x\in\overline A$.
+Skierujmy rodzinę otwartych otoczeń $x$ przez odwrotną inkluzję,
+a dla każdego takiego otoczenia $U$ wybierzmy $a_U\in A\cap U$.
+Dla danego otoczenia $V$ wszystkie indeksy $U\subseteq V$
+spełniają $a_U\in V$. Stąd $a_U\to x$.
+
+Jeśli $f$ jest ciągłe w $x$, zachowuje granice sieci zbieżnych do $x$.
+Gdyby $f$ nie było ciągłe w $x$, istniałoby otwarte otoczenie $W$
+punktu $f(x)$, dla którego w każdym otwartym otoczeniu $U$ punktu $x$
+można wybrać $x_U\in U$ z $f(x_U)\notin W$. Wówczas $x_U\to x$,
+ale $f(x_U)$ nie zbiega do $f(x)$, co daje sprzeczność.
+\end{proof}
+
+\begin{przyklad}[Domknięcie niewykrywalne przez ciągi]\label{ex:sigma-net}
+Niech $I$ będzie zbiorem nieprzeliczalnym, a
+$X=\K^I$ z topologią produktową. Oznaczmy przez
+\[
+ \Sigma(I)=\{x\in\K^I:\supp x=\{i\in I:x_i\ne0\}
+                 \text{ jest przeliczalny}\}.
+\]
+Jest to podprzestrzeń liniowa, bo suma dwóch zbiorów przeliczalnych
+jest przeliczalna. Jest gęsta w $X$: dla $x\in X$ sieć
+$x_F=\sum_{i\in F}x_i e_i$, gdzie $F$ przebiega skończone podzbiory
+$I$ uporządkowane przez inkluzję, zbiega współrzędnie do $x$.
+Nie jest jednak równa $X$: wektor $\mathbf1=(1)_{i\in I}$
+ma nieprzeliczalny nośnik.
+
+Co istotne, $\Sigma(I)$ jest \emph{ciągowo domknięta} w $X$.
+Jeśli $x_n\in\Sigma(I)$, to zbiór $J=\bigcup_n\supp x_n$
+jest przeliczalny. Jeżeli $x_n\to x$ współrzędnie, to $x_i=0$
+dla $i\notin J$, a więc $x\in\Sigma(I)$. Zatem żaden ciąg
+z $\Sigma(I)$ nie może zbiegać do $\mathbf1$, choć pewna sieć może.
+\end{przyklad}
+
+\subsection{Filtry i ich zbieżność}
+
+Filtry są alternatywnym językiem opisu zbieżności, szczególnie
+wygodnym w konstrukcji uzupełnień.
+
+\begin{definicja}[Filtr]\label{def:filter}
+\emph{Filtrem} na niepustym zbiorze $X$ nazywamy niepustą rodzinę
+$\mathcal F$ podzbiorów $X$ taką, że:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item $\varnothing\notin\mathcal F$;
+\item $A,B\in\mathcal F$ pociąga $A\cap B\in\mathcal F$;
+\item $A\in\mathcal F$ i $A\subseteq B\subseteq X$ pociąga
+      $B\in\mathcal F$.
+\end{enumerate}
+Filtr $\mathcal F$ \emph{zbiega} do $x$ w przestrzeni topologicznej $X$,
+gdy $\mathcal N_X(x)\subseteq\mathcal F$.
+\end{definicja}
+
+Z każdej sieci $(x_d)_{d\in D}$ powstaje filtr jej \emph{ogonów}:
+jest to rodzina wszystkich zbiorów zawierających pewien ogon
+$\{x_d:d\succeq d_0\}$. Sieć zbiega do $x$ dokładnie wtedy,
+gdy filtr ogonów zbiega do $x$. Jeśli filtr $\mathcal F$ jest zadany,
+można w drugą stronę utworzyć sieć: indeksami są pary $(A,a)$,
+gdzie $A\in\mathcal F$ i $a\in A$, a
+$(A,a)\preceq(B,b)$, gdy $B\subseteq A$.
+Wartością sieci w $(A,a)$ jest $a$. Przecięcie dwóch elementów filtra
+jest niepuste, więc podana relacja jest skierowana. Ta sieć zbiega
+do $x$ dokładnie wtedy, gdy $\mathcal F$ zbiega do $x$.
+
+\subsection{Kanoniczna struktura jednostajna TVS}
+
+W przestrzeni metrycznej stwierdzenie, że $x$ i $y$ są blisko,
+wyrażamy nierównością $d(x,y)<\varepsilon$. W TVS rolę tej nierówności
+pełni warunek $x-y\in U$, gdzie $U$ jest otoczeniem zera.
+
+\begin{definicja}[Otoczenie przekątnej i struktura jednostajna]
+Niech $X$ będzie przestrzenią liniowo-topologiczną. Dla otoczenia
+$U$ zera określamy
+\[
+ E_U=\{(x,y)\in X\times X:x-y\in U\}.
+\]
+Rodzinę zbiorów $W\subseteq X\times X$ zawierających przynajmniej
+jeden $E_U$ nazywamy \emph{kanoniczną strukturą jednostajną} $X$.
+Jej elementy to \emph{otoczenia przekątnej} (ang. \emph{entourages}).
+\end{definicja}
+
+\begin{twierdzenie}[Własności kanonicznej struktury jednostajnej]
+\label{thm:uniform-tvs}
+Niech $X$ będzie TVS. Rodzina $\{E_U:U\in\mathcal N_X(0)\}$
+spełnia następujące warunki:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item każde $E_U$ zawiera przekątną $\Delta_X=\{(x,x):x\in X\}$;
+\item dla otoczeń $U,V$ zachodzi $E_{U\cap V}=E_U\cap E_V$;
+\item dla każdego $U$ istnieje $V$ takie, że $E_V^{-1}\subseteq E_U$;
+\item dla każdego $U$ istnieje $V$ takie, że
+      $E_V\circ E_V\subseteq E_U$, gdzie
+      $E\circ F=\{(x,z):\exists y\ ((x,y)\in E,(y,z)\in F)\}$.
+\end{enumerate}
+Topologia wyznaczona przez tę strukturę jednostajną jest oryginalną
+topologią $X$: przekrój $E_U[x]=\{y:(x,y)\in E_U\}$
+tworzy wraz z $U$ bazę otoczeń $x$.
+\end{twierdzenie}
+\begin{proof}
+Własności (i) i (ii) są bezpośrednie. Do (iii) wybieramy symetryczne
+otoczenie $V\subseteq U$; wtedy $(x,y)\in E_V^{-1}$ oznacza
+$y-x\in V$, zatem $x-y\in-V=V\subseteq U$.
+Dla (iv) wybieramy $V$ z $V+V\subseteq U$. Jeżeli
+$x-y\in V$ i $y-z\in V$, to $x-z\in U$.
+Wreszcie $E_U[x]=x-U$, a symetryczne otoczenia zera tworzą bazę,
+więc otrzymujemy dokładnie topologię $X$.
+\end{proof}
+
+\begin{uwaga}
+Struktura jednostajna pozwala definiować \emph{jednostajną
+ciągłość} również bez metryki: odwzorowanie $f:X\to Y$
+między przestrzeniami z ustalonymi strukturami jednostajnymi
+jest jednostajnie ciągłe, gdy dla każdego otoczenia przekątnej
+$W$ w $Y$ istnieje otoczenie przekątnej $V$ w $X$ takie,
+że $(x,y)\in V$ pociąga $(f(x),f(y))\in W$.
+Przestrzenie liniowo-topologiczne mają kanoniczne struktury
+jednostajne; dowolna przestrzeń topologiczna nie musi ich posiadać.
+\end{uwaga}
+
+\begin{twierdzenie}[Ciągłość liniowa implikuje jednostajną]
+\label{thm:linear-uniform}
+Jeśli $X,Y$ są TVS, a $T:X\to Y$ jest liniowe i ciągłe,
+to $T$ jest jednostajnie ciągłe względem kanonicznych
+struktur jednostajnych.
+\end{twierdzenie}
+\begin{proof}
+Niech $W$ będzie otoczeniem zera w $Y$. Z ciągłości $T$ w zerze
+wybieramy otoczenie $U$ zera w $X$ takie, że $T(U)\subseteq W$.
+Jeśli $x-y\in U$, to $T(x)-T(y)=T(x-y)\in W$, co jest
+żądaną jednostajną ciągłością.
+\end{proof}
+
+\subsection{Sieci Cauchy'ego i zupełność}
+
+\begin{definicja}[Sieć Cauchy'ego, filtr Cauchy'ego i zupełność]
+\label{def:tvs-complete}
+Niech $X$ będzie TVS. Sieć $(x_d)_{d\in D}$ w $X$ nazywamy
+\emph{siecią Cauchy'ego}, jeżeli dla każdego $U\in\mathcal N_X(0)$
+istnieje $d_0\in D$ takie, że
+$ x_d-x_e\in U $ dla wszystkich $d,e\succeq d_0$.
+Filtr $\mathcal F$ na $X$ nazywamy \emph{filtrem Cauchy'ego},
+jeżeli dla każdego $U\in\mathcal N_X(0)$ istnieje
+$A\in\mathcal F$ takie, że $A-A\subseteq U$.
+Przestrzeń $X$ jest \emph{zupełna}, jeżeli każda sieć Cauchy'ego
+w $X$ ma granicę w $X$. Jest \emph{ciągowo zupełna},
+jeżeli każdy jej ciąg Cauchy'ego ma granicę w $X$.
+\end{definicja}
+
+\begin{twierdzenie}[Równoważność opisu sieciowego i filtrowego]
+\label{thm:filter-cauchy}
+Niech $X$ będzie TVS. Sieć jest siecią Cauchy'ego dokładnie wtedy,
+gdy jej filtr ogonów jest filtrem Cauchy'ego. Ponadto $X$ jest
+zupełna dokładnie wtedy, gdy każdy filtr Cauchy'ego na $X$
+jest zbieżny.
+\end{twierdzenie}
+\begin{proof}
+Jeśli sieć jest Cauchy'ego, to dla otoczenia $U$ wybieramy
+ogon $A$, w którym różnice dowolnych dwóch wyrazów należą do $U$;
+wtedy $A-A\subseteq U$ i $A$ należy do filtra ogonów.
+W drugą stronę, jeśli filtr ogonów jest Cauchy'ego, wybieramy
+$A$ z $A-A\subseteq U$ oraz ogon zawarty w $A$. Różnice
+wyrazów tego ogona należą do $U$.
+
+Załóżmy, że $X$ jest zupełna, i niech $\mathcal F$ będzie filtrem
+Cauchy'ego. Rozważmy związaną z nim sieć indeksowaną parami
+$(A,a)$, opisaną po definicji~\ref{def:filter}. Dla otoczenia
+$U$ wybieramy $A\in\mathcal F$ z $A-A\subseteq U$.
+Wszystkie wyrazy sieci o indeksach późniejszych niż $(A,a)$
+należą do $A$, więc sieć jest Cauchy'ego. Niech $x$ będzie jej
+granicą. Dla dowolnego otoczenia $V$ punktu $x$ istnieje
+$(A,a)$ takie, że wszystkie późniejsze wyrazy należą do $V$.
+W szczególności wszystkie punkty $b\in A$ (otrzymane
+z indeksów $(A,b)$) należą do $V$. Stąd $A\subseteq V$,
+a więc $V\in\mathcal F$, co oznacza zbieżność filtra.
+Odwrotna implikacja wynika z zastosowania założenia o filtrach
+do filtra ogonów dowolnej sieci Cauchy'ego.
+\end{proof}
+
+\begin{stwierdzenie}[Granice i jednoznaczność]
+\label{prop:complete-basic}
+Niech $X$ będzie TVS. Każda sieć zbieżna w $X$ jest Cauchy'ego.
+Każda sieć Cauchy'ego ma co najwyżej jedną granicę.
+Jeżeli sieć Cauchy'ego ma podsieć zbieżną do $x\in X$, to sama
+zbiega do $x$.
+\end{stwierdzenie}
+\begin{proof}
+Jeśli $x_d\to x$ i $U$ jest otoczeniem zera, wybieramy
+symetryczne otoczenie $V$ z $V+V\subseteq U$.
+Dla późnych indeksów $x_d-x\in V$, a zatem
+$x_d-x_e\in V-V\subseteq U$. Jednoznaczność granicy
+wynika z własności Hausdorffa.
+
+Załóżmy, że sieć jest Cauchy'ego, a jej podsieć zbiega do $x$.
+Dla otoczenia $U$ wybieramy symetryczne $V$ z $V+V\subseteq U$.
+Istnieje $d_0$ takie, że $x_d-x_e\in V$ dla $d,e\succeq d_0$.
+Zbieżna podsieć ma wyraz $x_{e}$ o indeksie $e\succeq d_0$
+i z $x_e-x\in V$. Wówczas dla każdego $d\succeq d_0$
+mamy $x_d-x\in V+V\subseteq U$.
+\end{proof}
+
+\begin{uwaga}[Podsieć]
+Podsieć sieci $(x_d)_{d\in D}$ rozumiemy jako sieć
+$(x_{\phi(e)})_{e\in E}$, gdzie $E$ jest skierowany,
+a $\phi:E\to D$ ma własność: dla każdego $d_0\in D$
+istnieje $e_0\in E$ takie, że $\phi(e)\succeq d_0$
+dla wszystkich $e\succeq e_0$. Ta własność, zwana
+\emph{współkońcowością}, zapewnia przenoszenie warunków
+prawdziwych od pewnego indeksu na podsieć.
+\end{uwaga}
+
+\begin{twierdzenie}[Zupełność ciągowa w przestrzeniach metryzowalnych]
+\label{thm:metric-complete}
+Niech $X$ będzie metryzowalną przestrzenią liniowo-topologiczną
+Hausdorffa. Wtedy $X$ jest zupełna dokładnie wtedy,
+gdy jest ciągowo zupełna.
+\end{twierdzenie}
+\begin{proof}
+Jedna implikacja jest oczywista. W drugą stronę załóżmy,
+że wszystkie ciągi Cauchy'ego są zbieżne. Niech $(x_d)$
+będzie dowolną siecią Cauchy'ego. Wybierzmy malejącą
+przeliczalną bazę symetrycznych otoczeń zera $(U_n)$
+taką, że $U_{n+1}+U_{n+1}\subseteq U_n$.
+Dla każdego $n$ istnieje $d_n$ takie, że
+$x_d-x_e\in U_n$ dla $d,e\succeq d_n$.
+Rekurencyjnie wybierzmy indeksy $e_n$ spełniające
+$e_n\succeq d_1,\ldots,d_n,e_{n-1}$.
+Wówczas $(x_{e_n})$ jest ciągiem Cauchy'ego: dla
+$m,n\geq N$ oba indeksy są późniejsze od $d_N$,
+więc $x_{e_n}-x_{e_m}\in U_N$.
+Niech $x_{e_n}\to x$. Dla zadanego otoczenia $W$ zera
+wybierzmy $N$ tak duże, że $U_N+U_N\subseteq W$.
+Dla każdego $d\succeq d_N$ i $n\geq N$ mamy
+$x_d-x_{e_n}\in U_N$. Wybierając $n$ dostatecznie duże,
+aby $x_{e_n}-x\in U_N$, otrzymujemy $x_d-x\in W$.
+Zatem oryginalna sieć zbiega do $x$.
+\end{proof}
+
+\subsection{Operacje na przestrzeniach zupełnych}
+
+\begin{twierdzenie}[Podprzestrzenie i produkty zupełne]
+\label{thm:closed-complete}
+Niech $X$ będzie TVS Hausdorffa.
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item Jeśli $X$ jest zupełna, to każda domknięta
+      podprzestrzeń liniowa $M\subseteq X$ jest zupełna.
+\item Jeśli $M\subseteq X$ jest podprzestrzenią liniową zupełną
+      w topologii indukowanej, to $M$ jest domknięta w $X$.
+\item Dla rodziny TVS Hausdorffa $(X_i)_{i\in I}$ produkt
+      $\prod_{i\in I}X_i$ jest zupełny wtedy i tylko wtedy,
+      gdy wszystkie $X_i$ są zupełne.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Sieć Cauchy'ego w $M$ jest Cauchy'ego w $X$.
+Jeżeli $X$ jest zupełna, ma ona granicę w $X$; domkniętość
+$M$ zapewnia, że granica należy do $M$. To daje (i).
+Jeśli $x\in\overline M$, twierdzenie~\ref{thm:nets-topology}
+daje sieć w $M$ zbieżną do $x$ w $X$. Jest ona Cauchy'ego
+w $M$, więc z założenia ma granicę $m\in M$.
+Jednoznaczność granicy w $X$ daje $x=m$, co dowodzi (ii).
+
+Niech teraz wszystkie $X_i$ będą zupełne, a $(x_d)$
+siecią Cauchy'ego w produkcie. Dla każdego $i$ sieć
+$(\pi_i x_d)$ jest Cauchy'ego w $X_i$, gdyż rzuty
+są ciągłe i liniowe, zatem jednostajnie ciągłe.
+Istnieją więc $x_i\in X_i$ takie, że $\pi_i x_d\to x_i$.
+Z uniwersalnej własności produktu $x_d\to(x_i)_{i\in I}$.
+W drugą stronę, dla każdego $j\in I$ kopia $X_j$
+złożona z wektorów o zerowych współrzędnych poza $j$
+jest domkniętą podprzestrzenią produktu (pozostałe czynniki
+są Hausdorffa). Jeśli produkt jest zupełny, część (i)
+pokazuje zupełność $X_j$.
+\end{proof}
+
+\begin{przyklad}[Sekwencyjnie zupełna, ale niezupełna TVS]
+\label{ex:seq-not-complete}
+Niech $I$ będzie nieprzeliczalny, $X=\K^I$ z topologią
+produktową, a $M=\Sigma(I)$ z przykładu~\ref{ex:sigma-net}.
+Produkt $X$ jest zupełny, ponieważ $\K$ jest zupełne.
+Każdy ciąg Cauchy'ego $(x_n)$ w $M$ jest Cauchy'ego w $X$,
+więc zbiega tam do pewnego $x\in X$. Nośnik $x$ zawiera
+się w przeliczalnej sumie $\bigcup_n\supp x_n$, toteż $x\in M$.
+Zatem $M$ jest ciągowo zupełna. Nie jest zupełna,
+ponieważ jest gęstą właściwą podprzestrzenią zupełnej
+przestrzeni $X$ i nie jest w niej domknięta; do
+niezupełności wystarcza też część (ii) twierdzenia
+\ref{thm:closed-complete}.
+
+Konkretnym świadkiem jest sieć $x_F=\sum_{i\in F}e_i$,
+$F\in\mathcal F(I)$: jest Cauchy'ego w $M$, gdyż
+zbiega do $\mathbf1$ w $X$, lecz nie zbiega w $M$.
+\end{przyklad}
+
+\subsection{Uzupełnienie TVS: konstrukcja bez normy}
+
+Chcemy skonstruować przestrzeń zupełną $\widehat X$
+i ciągłe liniowe zanurzenie $j:X\to\widehat X$ o gęstym obrazie,
+bez zakładania lokalnej wypukłości czy metryzowalności.
+Poniższy dowód jest konstrukcją opartą na sieciach Cauchy'ego.
+
+\begin{twierdzenie}[Istnienie i własność uniwersalna uzupełnienia]
+\label{thm:tvs-completion}
+Niech $X$ będzie przestrzenią liniowo-topologiczną Hausdorffa
+nad $\K$. Istnieją zupełna przestrzeń liniowo-topologiczna
+Hausdorffa $\widehat X$ oraz liniowe zanurzenie topologiczne
+$j:X\to\widehat X$ o gęstym obrazie. Dla każdej zupełnej
+przestrzeni liniowo-topologicznej Hausdorffa $Y$ oraz każdego
+ciągłego liniowego $T:X\to Y$ istnieje dokładnie jedno
+ciągłe liniowe $\widehat T:\widehat X\to Y$ takie,
+że $\widehat T\circ j=T$. Para $(\widehat X,j)$ jest
+jednoznaczna z dokładnością do jedynego izomorfizmu
+liniowo-topologicznego zachowującego osadzenie $X$.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: klasy sieci Cauchy'ego.}
+Aby otrzymać rzeczywisty zbiór klas, a nie klasę właściwą,
+ustalmy rodzinę $\mathcal U$ wszystkich otwartych zrównoważonych
+otoczeń zera w $X$ oraz zbiór skierowany
+$D_*=\mathcal F(\mathcal U)$ jej skończonych podzbiorów,
+uporządkowany przez inkluzję. Każda sieć Cauchy'ego $(x_d)_{d\in D}$
+ma równoważną sieć indeksowaną przez $D_*$: dla każdego
+$U\in\mathcal U$ wybierzmy $d_U$ takie, że
+$x_d-x_e\in U$ dla $d,e\succeq d_U$; dla skończonego
+$F\subseteq\mathcal U$ wybierzmy $d_F$ późniejszy od wszystkich
+$d_U$ z $U\in F$. Pokażemy, że sieć $(x_{d_F})_{F\in D_*}$
+jest Cauchy'ego i równoważna pierwotnej. Dla otoczenia
+$W$ zera wybierzmy $U\in\mathcal U$ z $U\subseteq W$.
+Gdy $F,G\supseteq\{U\}$, mamy $d_F,d_G\succeq d_U$,
+a więc $x_{d_F}-x_{d_G}\in U\subseteq W$.
+Podobnie dla $F\supseteq\{U\}$ i $d\succeq d_U$
+zachodzi $x_{d_F}-x_d\in W$; jest to dokładnie
+wymagana równoważność dwóch sieci. Nie wymagamy,
+aby wybór $F\mapsto d_F$ był monotoniczny: podane
+oszacowanie zapewnia wszystkie potrzebne własności.
+W konstrukcji $\widehat X$ wystarczy zatem uwzględniać
+sieci o ustalonym zbiorze indeksów $D_*$. Tworzą one
+zbiór, co usuwa problem klas właściwych.
+
+Dwie sieci Cauchy'ego $(x_d)_{d\in D}$ i $(y_e)_{e\in E}$
+nazwiemy równoważnymi, gdy dla każdego otoczenia $U$ zera
+istnieją $d_0,e_0$ takie, że
+$x_d-y_e\in U$ dla $d\succeq d_0$ i $e\succeq e_0$.
+Relacja ta jest zwrotna, ponieważ sieci są Cauchy'ego,
+symetryczna dzięki symetrycznym otoczeniom i przechodnia:
+dla danego $U$ wybieramy symetryczne $V$ z $V+V\subseteq U$
+i łączymy dwa oszacowania przez wspólny późny wyraz
+sieci pośredniej. Relację ograniczamy formalnie do zbioru sieci indeksowanych
+przez $D_*$, a przez $[x_d]$ oznaczamy klasę
+równoważności; $\widehat X$ jest zbiorem tych klas.
+Dzięki powyższemu przeindeksowaniu zapis $[x_d]$
+pozostaje jednoznaczny również dla sieci o innym zbiorze
+indeksów. Algebraicznie sumujemy klasy, przechodząc do sieci
+$(x_d+y_e)_{(d,e)\in D\times E}$, a następnie w razie potrzeby
+do równoważnego przedstawiciela na $D_*$;
+mnożenie przez ustalony skalar określamy przez
+$\lambda[x_d]=[\lambda x_d]$. Liniowość działań w $X$
+i ich ciągłość w zerze zapewniają, że są to działania
+dobrze określone na klasach sieci Cauchy'ego.
+Definiujemy $j(x)$ jako klasę stałej sieci o wartości $x$.
+
+\emph{Krok 2: topologia.}
+Wybierzmy otwarte zrównoważone otoczenie $U$ zera w $X$.
+Niech $\widehat U$ oznacza zbiór klas $[x_d]$, dla których
+istnieje otwarte otoczenie $V$ zera oraz indeks $d_0$ takie, że
+\[
+       x_d+V\subseteq U\qquad(d\succeq d_0).
+\]
+Definicja nie zależy od przedstawiciela: jeśli $(y_e)$
+jest równoważna $(x_d)$, wybieramy otoczenie $W$ z
+$W+W\subseteq V$. Dla dostatecznie późnych $d,e$
+mamy $y_e-x_d\in W$, a więc
+$y_e+W\subseteq x_d+(W+W)\subseteq x_d+V\subseteq U$.
+
+Rodzina $\{\widehat U\}$ jest bazą otoczeń zera w
+$\widehat X$. Istotnie, dla $V+V\subseteq U$ zachodzi
+$\widehat V+\widehat V\subseteq\widehat U$,
+a dla $U_1,U_2$ można wybrać otwarte zrównoważone
+$V\subseteq U_1\cap U_2$. Wyjaśnijmy dokładnie, dlaczego przesunięcia tych zbiorów
+określają topologię grupy addytywnej. Jeśli
+$z=[x_d]\in\widehat U$ i $x_d+W\subseteq U$ dla późnych $d$,
+wybierzmy otwarte zrównoważone $V\subseteq W$.
+Dla $w=[y_e]\in\widehat V$ mamy
+$y_e+W_e\subseteq V$ przy dostatecznie późnych $e$
+i pewnym otwartym otoczeniu $W_0$ zera (niezależnym od $e$).
+Wówczas dla późnych $d,e$ zachodzi
+$x_d+y_e+W_0\subseteq x_d+V\subseteq U$,
+a zatem $z+\widehat V\subseteq\widehat U$.
+Tak więc każda klasa należąca do $\widehat U$ ma
+otoczenie będące przesunięciem pewnego $\widehat V$
+i mieszczące się w $\widehat U$; w połączeniu z
+$\widehat V+\widehat V\subseteq\widehat U$ oraz
+stabilnością na skończone przecięcia uzasadnia to
+bazę otoczeń i ciągłość dodawania.
+Zbiory $\widehat U$ są zrównoważone, gdyż dla
+$0<|\lambda|\leq1$ mnożenie przez $\lambda$
+przenosi $x_d+V\subseteq U$ w
+$\lambda x_d+\lambda V\subseteq\lambda U\subseteq U$,
+a przypadek $\lambda=0$ jest oczywisty.
+Dlatego dodawanie i zmiana znaku są ciągłe. Ciągłość
+mnożenia przez skalar uzasadnimy po wykazaniu gęstości $j(X)$.
+
+Odwzorowanie $j$ jest liniowe, a z definicji
+$j^{-1}(\widehat U)=U$: jeśli $x\in U$, to
+$x+V\subseteq U$ dla pewnego otwartego otoczenia $V$ zera,
+a implikacja odwrotna jest natychmiastowa.
+Stąd $j$ jest zanurzeniem topologicznym. Co więcej,
+$\widehat X$ jest Hausdorffa. Jeśli
+$z=[x_d]\in\bigcap_U\widehat U$, to dla każdego otoczenia
+$U$ można wybrać otwarte zrównoważone $V\subseteq U$
+i $z\in\widehat V$, skąd ostatecznie $x_d\in V\subseteq U$.
+Zatem $x_d\to0$ i $z=0$.
+
+\emph{Krok 3: gęstość oraz granice sieci z $X$.}
+Jeżeli $z=[x_d]$ i $U$ jest otoczeniem zera, wybieramy
+otwarte zrównoważone $V,W$ z $V+W\subseteq U$.
+Z warunku Cauchy'ego dla $(x_d)$ istnieje $d_0$ takie, że
+$x_d-x_e\in V$ dla $d,e\succeq d_0$.
+Dla każdego $e\succeq d_0$ sieć $(x_d-x_e)_d$ jest
+ostatecznie zawarta w $V$, a wraz z $W$ mieści się w $U$.
+Stąd $z-j(x_e)\in\widehat U$. Dowodzi to zarówno
+gęstości $j(X)$, jak i zbieżności $j(x_d)\to z$.
+
+Teraz domykamy dowód ciągłości mnożenia przez skalar.
+Dla ustalonego $z_0\in\widehat X$ i zrównoważonego
+$\widehat U$ wybierzmy zrównoważone $\widehat V$
+takie, że $\widehat V+\widehat V\subseteq\widehat U$.
+Z gęstości istnieje $x\in X$ takie, że
+$z_0-j(x)\in\widehat V$. Dla $|\mu|\leq1$ mamy
+$\mu(z_0-j(x))\in\widehat V$, natomiast
+$\mu j(x)=j(\mu x)\to0$ przy $\mu\to0$.
+Zatem $\mu z_0\to0$. W dowolnym punkcie
+$(\lambda_0,z_0)$ korzystamy z tożsamości
+$\lambda z-\lambda_0z_0=\lambda(z-z_0)+
+(\lambda-\lambda_0)z_0$. Dla $|\lambda|\leq M$
+i otwartego zrównoważonego $\widehat W$ z
+$M\widehat W\subseteq\widehat V$ pierwszy składnik
+należy do $\widehat V$, gdy $z-z_0\in\widehat W$,
+a drugi przy $\lambda\to\lambda_0$ również należy
+do $\widehat V$. To daje ciągłość łączną.
+
+\emph{Krok 4: zupełność $\widehat X$.}
+Niech $(z_\alpha)_{\alpha\in A}$ będzie siecią Cauchy'ego
+w $\widehat X$. Niech $\mathcal U$ będzie rodziną otwartych,
+zrównoważonych otoczeń zera w $X$, skierowaną przez odwrotną
+inkluzję. Z gęstości dla każdej pary $(\alpha,U)$ wybieramy
+$x_{\alpha,U}\in X$ tak, aby
+$z_\alpha-j(x_{\alpha,U})\in\widehat U$.
+Indeksami nowej sieci są pary $(\alpha,U)$, uporządkowane
+wzrostem $\alpha$ i malejącym $U$.
+Ta sieć w $X$ jest Cauchy'ego. Dla danego otwartego
+zrównoważonego $V$ wybieramy otwarte zrównoważone $W$
+z $W+W+W\subseteq V$. Dla dostatecznie późnych
+$\alpha,\beta$ mamy $z_\alpha-z_\beta\in\widehat W$,
+a dla $U_1,U_2\subseteq W$ zachodzi
+\[
+ j(x_{\alpha,U_1}-x_{\beta,U_2})
+ \in\widehat W+\widehat W+\widehat W
+ \subseteq\widehat V.
+\]
+Ponieważ $j^{-1}(\widehat V)=V$, różnica wyrazów należy do $V$.
+Oznaczmy klasę tej sieci przez $z\in\widehat X$.
+Na mocy kroku 3 zachodzi $j(x_{\alpha,U})\to z$.
+Pokażemy, że $z_\alpha\to z$. Ustalmy otoczenie
+$V$ zera w $X$ i wybierzmy $W$ z $W+W+W\subseteq V$.
+Dla $\alpha,\beta$ dostatecznie późnych
+$z_\alpha-z_\beta\in\widehat W$.
+Wybieramy parę $(\beta,U)$ z późnym $\beta$ i $U\subseteq W$
+na tyle późną, aby ponadto
+$j(x_{\beta,U})-z\in\widehat W$. Ponieważ
+$z_\beta-j(x_{\beta,U})\in\widehat U\subseteq\widehat W$,
+dla wszystkich odpowiednio późnych $\alpha$ zachodzi
+\[
+ z_\alpha-z=(z_\alpha-z_\beta)
+ +(z_\beta-j(x_{\beta,U}))+(j(x_{\beta,U})-z)
+ \in\widehat V.
+\]
+Przestrzeń $\widehat X$ jest więc zupełna.
+
+\emph{Krok 5: przedłużanie i jednoznaczność.}
+Niech $T:X\to Y$ będzie jak w tezie. Jednostajna ciągłość
+$T$ zapewnia, że dla każdej sieci Cauchy'ego $(x_d)$
+sieć $(Tx_d)$ jest Cauchy'ego w $Y$, a więc zbiega.
+Definiujemy
+$\widehat T([x_d])=\lim_d Tx_d$.
+Równoważne sieci mają tę samą granicę, gdyż ich różnice
+na produkcie indeksów zbiegają do zera; liniowość jest
+natychmiastowa. Aby wykazać ciągłość, niech $W$ będzie
+otwartym otoczeniem zera w $Y$. Wybierzmy otwarte
+symetryczne $V$ z $V+V\subseteq W$. Wówczas
+$\overline V\subseteq V+V\subseteq W$: dla $y\in\overline V$
+zbiór $y+V$ spotyka $V$, więc $y\in V-V$.
+Z ciągłości $T$ istnieje otwarte zrównoważone otoczenie
+$U$ zera w $X$ takie, że $T(U)\subseteq V$.
+Dla $[x_d]\in\widehat U$ wyrazy $x_d$ o późnych indeksach
+należą do $U$, a więc
+$\widehat T([x_d])=\lim_d Tx_d\in\overline V\subseteq W$.
+Otrzymujemy ciągłość $\widehat T$ w zerze, a z liniowości
+wszędzie. Ponieważ $j(X)$ jest gęsta, przedłużenie jest
+jedyne: dwa ciągłe odwzorowania do przestrzeni Hausdorffa
+zgodne na zbiorze gęstym są równe. Jeśli
+$(\widehat X',j')$ jest drugą parą o podanych własnościach,
+przedłużamy $j'$ do $\widehat X\to\widehat X'$ oraz $j$
+do $\widehat X'\to\widehat X$. Z jednoznaczności ich
+złożenia są identycznościami, a więc otrzymujemy żądany
+izomorfizm.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex, every node/.style={font=\small}]
+  \node (X) at (0,1.3) {$X$};
+  \node (H) at (5.0,1.3) {$\widehat X$};
+  \node (Y) at (5.0,-0.45) {$Y$};
+  \draw[->,thick] (X)--node[above] {$j$ (gęsty obraz)} (H);
+  \draw[->,thick] (X)--node[below left] {$T$} (Y);
+  \draw[->,thick] (H)--node[right] {$\widehat T$} (Y);
+\end{tikzpicture}
+
+{\small Rysunek 3.1. Każdy ciągły operator liniowy $T$ z $X$
+do zupełnej TVS Hausdorffa $Y$ przedłuża się jednoznacznie
+na uzupełnienie $\widehat X$.}
+\end{center}
+
+\begin{uwaga}[Dlaczego w konstrukcji pojawia się dodatkowe $V$?]
+Nie wystarczyłoby zdefiniować $\widehat U$ przez wymaganie,
+aby reprezentująca sieć \emph{ostatecznie należała} do $U$.
+W $\R$ sieci $1-1/n$ i $1+1/n$ reprezentują tę samą klasę,
+ale tylko pierwsza jest ostatecznie zawarta w $(-1,1)$.
+Warunek $x_d+V\subseteq U$ wymaga odpowiedniego zapasu
+do brzegu $U$ i nie zależy od reprezentanta.
+\end{uwaga}
+
+\subsection{Jak rozpoznawać uzupełnienie w praktyce?}
+
+\begin{stwierdzenie}[Kryterium uzupełnienia]\label{prop:completion-criterion}
+Niech $X$ będzie TVS Hausdorffa, $Y$ zupełną TVS Hausdorffa,
+a $T:X\to Y$ liniowym zanurzeniem topologicznym o gęstym obrazie.
+Wtedy $Y$, razem z $T$, jest uzupełnieniem $X$ w sensie
+twierdzenia~\ref{thm:tvs-completion}.
+\end{stwierdzenie}
+\begin{proof}
+Niech $(\widehat X,j)$ będzie uzupełnieniem z poprzedniego
+twierdzenia. Z jego własności uniwersalnej otrzymujemy ciągłe
+liniowe $S:\widehat X\to Y$ takie, że $S\circ j=T$.
+Zbudujemy odwrotność. Odwzorowanie
+$R_0:T(X)\to\widehat X$, $R_0(Tx)=j(x)$, jest liniowe,
+ciągłe i jednostajnie ciągłe, ponieważ $T$ jest zanurzeniem
+topologicznym. Dla $y\in Y$ wybierzmy sieć
+$(y_d)$ punktów $T(X)$ zbieżną do $y$ (istnieje dzięki
+gęstości). Jest to sieć Cauchy'ego, zatem $(R_0y_d)$
+jest Cauchy'ego w zupełnej $\widehat X$. Definiujemy
+$R(y)=\lim_d R_0(y_d)$.
+Jeżeli dwie sieci z $T(X)$ zbiegają do tego samego $y$,
+to ich różnice na produkcie indeksów zbiegają do zera.
+Z jednostajnej ciągłości $R_0$ wynika równość granic;
+zatem definicja nie zależy od wyboru sieci. Z tego samego
+powodu $R$ jest liniowe.
+
+Sprawdzimy ciągłość $R$ w zerze. Niech $U$ będzie otwartym
+otoczeniem zera w $\widehat X$. Wybierzmy otwarte
+symetryczne otoczenie $V$ z $V+V\subseteq U$;
+wówczas $\overline V\subseteq U$, co wynika z argumentu
+użytego w kroku 5 poprzedniego dowodu. Z ciągłości $R_0$
+istnieje otwarte otoczenie $W$ zera w $Y$ takie, że
+$R_0(W\cap T(X))\subseteq V$.
+Dla $y\in W$ możemy dobrać sieć punktów z $W\cap T(X)$
+zbieżną do $y$ (otwartość $W$ i gęstość $T(X)$).
+Wtedy $R(y)\in\overline V\subseteq U$, zatem $R$
+jest ciągłe. Na gęstym zbiorze $T(X)$ zachodzi
+$S\circ R=\mathrm{id}_Y$, a na gęstym $j(X)$ zachodzi
+$R\circ S=\mathrm{id}_{\widehat X}$. Z ciągłości obie
+równości rozciągają się na całe dziedziny. Wobec tego
+$S$ jest izomorfizmem liniowo-topologicznym.
+\end{proof}
+
+\begin{przyklad}[Trzy klasyczne uzupełnienia]
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item Przestrzeń $c_{00}$ z normą $\ell^p$, $1\leq p<\infty$,
+      ma uzupełnienie $\ell^p$: obcięcia ciągów do pierwszych
+      $n$ współrzędnych są zbieżne w normie $\ell^p$.
+\item Przestrzeń $C([0,1],\K)$ z normą
+      $\|f\|_1=\int_{[0,1]}|f(t)|\,\mathrm d\lambda(t)$
+      ma uzupełnienie $L^1([0,1],\lambda)$: funkcje ciągłe
+      są gęste w $L^1$, a $L^1$ jest zupełna.
+\item Przestrzeń $c_{00}$ z topologią odziedziczoną
+      z produktu $\K^{\N}$ ma uzupełnienie $\K^{\N}$.
+      W tym przypadku nie używa się jednej normy.
+\end{enumerate}
+\end{przyklad}
+
+\subsection{Co wykorzystamy w dalszej części skryptu?}
+
+Zupełność nie jest własnością wyłącznie przestrzeni Banacha.
+Przykładowo $\K^{\N}$ z topologią produktową jest zupełna,
+ale nie ma ograniczonego otoczenia zera i nie jest normowalna.
+Następnie przejdziemy do własności rodzin operatorów, warunków
+metryzowalności i lokalnej wypukłości. To przygotuje narzędzia
+do badania przestrzeni $C^\infty(\Omega)$ oraz $\mathcal D(\Omega)$,
+a docelowo ich dualnych przestrzeni dystrybucji.

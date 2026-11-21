@@ -1,0 +1,634 @@
+% Wersja źródłowa: audyt II, jednostka 13
+\setcounter{section}{12}
+\section{Przestrzenie Hilberta: geometria, reprezentacja Riesza i formy półtoraliniowe}
+\label{sec:hilbert13}
+
+\subsection{Iloczyn skalarny i zupełność}
+
+\begin{definicja}[Iloczyn skalarny i przestrzeń Hilberta]
+\label{def:iloczyn-skalarny13}
+Niech $H$ będzie przestrzenią wektorową nad $\K\in\{\R,\C\}$.
+\emph{Iloczynem skalarnym} na $H$ nazywamy odwzorowanie
+$\langle\cdot,\cdot\rangle:H\times H\to\K$ spełniające, dla
+$x,y,z\in H$ i $\alpha,\beta\in\K$:
+$\langle\alpha x+\beta y,z\rangle=\alpha\langle x,z\rangle+
+\beta\langle y,z\rangle$,
+$\langle x,y\rangle=\overline{\langle y,x\rangle}$ oraz
+$\langle x,x\rangle>0$ dla $x\ne0$.
+\emph{W całym rozdziale iloczyn skalarny jest liniowy w pierwszym
+argumencie} i antyliniowy w drugim. Przestrzenią Hilberta nazywamy
+przestrzeń z iloczynem skalarnym zupełną w normie
+$\|x\|=\sqrt{\langle x,x\rangle}$.
+\end{definicja}
+
+\begin{lemat}[Nierówność Cauchy'ego--Schwarza]
+\label{lem:cs13}
+Dla dowolnych $x,y$ w przestrzeni z iloczynem skalarnym zachodzi
+$|\langle x,y\rangle|\le\|x\|\|y\|$.
+Równość dla $y\ne0$ zachodzi dokładnie wtedy, gdy $x$ jest
+wielokrotnością $y$.
+\end{lemat}
+\begin{proof}
+Dla $y\ne0$ przyjmijmy $\alpha=\langle x,y\rangle/\|y\|^2$.
+Wówczas $\langle x-\alpha y,y\rangle=0$ oraz
+$0\le\|x-\alpha y\|^2=\|x\|^2-|\langle x,y\rangle|^2/\|y\|^2$.
+Równość oznacza $x=\alpha y$. Dla $y=0$ teza jest oczywista.
+Nierówność trójkąta dla normy wynika teraz z rozwinięcia
+$\|x+y\|^2$ i nierówności Cauchy'ego--Schwarza.
+\end{proof}
+
+\begin{stwierdzenie}[Tożsamość równoległoboku i polaryzacja]
+\label{prop:parallelogram13}
+W każdej przestrzeni z iloczynem skalarnym zachodzi
+$\|x+y\|^2+\|x-y\|^2=2\|x\|^2+2\|y\|^2$.
+Dla $\K=\C$ iloczyn skalarny jest odtworzony z normy wzorem
+\[
+\langle x,y\rangle=\frac14\bigl(\|x+y\|^2-\|x-y\|^2
++i\|x+iy\|^2-i\|x-iy\|^2\bigr).
+\]
+Dla $\K=\R$ wystarczą pierwsze dwa wyrazy.
+\end{stwierdzenie}
+\begin{proof}
+Rozwijamy kwadraty norm. Przy naszej konwencji
+$\|x+iy\|^2-\|x-iy\|^2=4\operatorname{Im}\langle x,y\rangle$;
+różnica dla $x\pm y$ to $4\operatorname{Re}\langle x,y\rangle$.
+\end{proof}
+
+\begin{przyklad}[Przestrzenie $\ell^2$ i $L^2$]
+\label{ex:hilbert-l2-13}
+Na $\ell^2$ przyjmujemy $\langle x,y\rangle=\sum_{n\ge1}x_n\overline{y_n}$.
+Na $L^2(\Omega,\mu)$ przyjmujemy
+$\langle f,g\rangle=\int_\Omega f(x)\overline{g(x)}\,\mathrm d\mu(x)$.
+Nierówność Cauchy'ego--Schwarza zapewnia zbieżność i ciągłość tych
+wyrażeń, zaś zupełność wynika z
+twierdzeń o zupełności przestrzeni $\ell^2$ i $L^2$
+(drugi przykład przy założeniach o mierze z \hyperref[sec:klasyczne-banach12]{rozdziału~12}).
+Przestrzeń $C([0,1])$ z normą supremum nie jest przestrzenią Hilberta w tej normie:
+dla $f(t)=1$ i $g(t)=t$ mamy
+$\|f+g\|_\infty^2+\|f-g\|_\infty^2=5$,
+podczas gdy $2\|f\|_\infty^2+2\|g\|_\infty^2=4$.
+\end{przyklad}
+
+\subsection{Rzut na zbiór wypukły i ortogonalność}
+
+\begin{twierdzenie}[Twierdzenie o rzucie metrycznym]
+\label{thm:projection-convex13}
+Niech $H$ będzie rzeczywistą lub zespoloną przestrzenią Hilberta,
+a $C\subseteq H$ niepustym, domkniętym i wypukłym zbiorem.
+Dla każdego $x\in H$ istnieje dokładnie jeden punkt $p=P_Cx\in C$
+spełniający $\|x-p\|=\inf_{z\in C}\|x-z\|$.
+Punkt $p\in C$ jest tym minimizatorem wtedy i tylko wtedy, gdy
+\[
+\operatorname{Re}\langle x-p,z-p\rangle\le0\qquad(z\in C).
+\]
+Ponadto odwzorowanie $P_C:H\to C$ jest $1$-lipschitzowskie.
+\end{twierdzenie}
+\begin{proof}
+Niech $d=\inf_{z\in C}\|x-z\|$ i wybierzmy $z_n\in C$ z
+$\|x-z_n\|^2\to d^2$. Ponieważ $(z_n+z_m)/2\in C$,
+tożsamość równoległoboku zastosowana do $x-z_n$ i $x-z_m$ daje
+\[
+\|z_n-z_m\|^2
+=2\|x-z_n\|^2+2\|x-z_m\|^2
+-4\left\|x-\frac{z_n+z_m}{2}\right\|^2
+\le2\|x-z_n\|^2+2\|x-z_m\|^2-4d^2\longrightarrow0.
+\]
+Zatem $(z_n)$ jest ciągiem Cauchy'ego. Zupełność $H$ i domkniętość
+$C$ dają granicę $p\in C$, a ciągłość normy daje $\|x-p\|=d$.
+Jeśli $p,q$ są minimizatorami, ten sam wzór daje $p=q$.
+
+Niech $z\in C$ i $t\in[0,1]$. Minimalność $p$ oznacza
+$\|x-p\|^2\le\|x-(p+t(z-p))\|^2$,
+a więc
+$0\le-2t\operatorname{Re}\langle x-p,z-p\rangle+t^2\|z-p\|^2$.
+Dzieląc przez $t>0$ i przechodząc z $t$ do zera otrzymujemy
+warunek wariacyjny. Odwrotnie, warunek ten i rozwinięcie
+$\|x-z\|^2=\|x-p\|^2+\|z-p\|^2-
+2\operatorname{Re}\langle x-p,z-p\rangle$ implikują minimalność.
+
+Dla $p=P_Cx$, $q=P_Cy$ zastosujmy warunek kolejno z $z=q$
+i $z=p$. Otrzymujemy
+$\operatorname{Re}\langle x-p,q-p\rangle\le0$ oraz
+$\operatorname{Re}\langle y-q,p-q\rangle\le0$. Po dodaniu
+$\|p-q\|^2\le\operatorname{Re}\langle x-y,p-q\rangle
+\le\|x-y\|\|p-q\|$, skąd $\|p-q\|\le\|x-y\|$.
+\end{proof}
+
+\begin{definicja}[Dopełnienie ortogonalne]
+\label{def:orth-complement13}
+Dla $M\subseteq H$ definiujemy
+$M^\perp=\{x\in H:\langle x,m\rangle=0\text{ dla wszystkich }m\in M\}$.
+Jest to domknięta podprzestrzeń liniowa $H$; istotnie, to
+przecięcie jąder ciągłych funkcjonałów $x\mapsto\langle x,m\rangle$.
+\end{definicja}
+
+\begin{twierdzenie}[Rozkład ortogonalny]
+\label{thm:orth-decomposition13}
+Niech $H$ będzie przestrzenią Hilberta, a $M\subseteq H$ domkniętą
+podprzestrzenią liniową. Wówczas dla każdego $x\in H$ istnieje
+jedyny rozkład $x=m+n$, $m\in M$, $n\in M^\perp$.
+Odwzorowanie $P_Mx=m$ jest liniowym operatorem o normie co najwyżej
+$1$, spełnia $P_M^2=P_M=P_M^*$ oraz
+$\|x\|^2=\|P_Mx\|^2+\|x-P_Mx\|^2$.
+Ponadto $M^{\perp\perp}=M$.
+Jeśli $M\ne\{0\}$, to $\|P_M\|=1$.
+\end{twierdzenie}
+\begin{proof}
+Z Twierdzenia~\ref{thm:projection-convex13} istnieje $m=P_Mx$.
+Warunek wariacyjny zastosowany do $m+tv$ dla każdego $v\in M$
+i $t\in\R$, a dla przestrzeni zespolonej także do $m+itv$,
+daje $\langle x-m,v\rangle=0$. Stąd $n=x-m\in M^\perp$.
+Jeśli $x=m_1+n_1=m_2+n_2$, to $m_1-m_2=n_2-n_1$ należy
+do $M\cap M^\perp=\{0\}$. Jednoznaczność rozkładu zapewnia
+liniowość $P_M$; twierdzenie Pitagorasa daje jego ograniczoność.
+
+Dla $x=m+n$ i $y=u+v$ mamy
+$\langle P_Mx,y\rangle=\langle m,u\rangle
+=\langle x,P_My\rangle$; to oznacza $P_M=P_M^*$,
+przy czym istnienie operatora sprzężonego wykażemy formalnie
+w Twierdzeniu~\ref{thm:adjoint13} poniżej.
+Z rozkładu $H=M\oplus M^\perp$ wynika, że
+$M^{\perp\perp}=M$. Dla $m\in M\setminus\{0\}$ zachodzi
+$P_Mm=m$, zatem norma operatorowa nie może być mniejsza niż $1$.
+\end{proof}
+
+\begin{przyklad}[Rzut na funkcje stałe]
+\label{ex:projection-mean13}
+W przestrzeni $H=L^2([0,1],\lambda)$ niech
+$M=\{\text{klasy funkcji stałych}\}$. Wtedy
+$P_Mf=(\int_{[0,1]}f(t)\,\mathrm d\lambda(t))\chi_{[0,1]}$.
+Rzeczywiście, $\langle f-P_Mf,\chi_{[0,1]}\rangle=0$.
+Ogólniej, rzut na linię $\K u$, $u\ne0$, ma wzór
+$P_{\K u}x=\langle x,u\rangle u/\|u\|^2$.
+\end{przyklad}
+
+\subsection{Twierdzenie Riesza o reprezentacji funkcjonałów}
+
+\begin{twierdzenie}[Twierdzenie Riesza dla przestrzeni Hilberta]
+\label{thm:riesz-hilbert13}
+Niech $H$ będzie przestrzenią Hilberta nad $\K\in\{\R,\C\}$.
+Dla każdego ciągłego $\K$-liniowego funkcjonału $F:H\to\K$
+istnieje dokładnie jeden $y\in H$ taki, że
+$F(x)=\langle x,y\rangle$ dla wszystkich $x\in H$.
+Ponadto $\|F\|_{H'}=\|y\|$.
+Odwzorowanie $J:H\to H'$, $J(y)(x)=\langle x,y\rangle$,
+jest izometrycznym izomorfizmem \emph{antyliniowym} dla $\K=\C$
+i liniowym dla $\K=\R$.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $F=0$, wybieramy $y=0$. Załóżmy $F\ne0$.
+Podprzestrzeń $M=\ker F$ jest domknięta, a $M^\perp\ne\{0\}$:
+gdyby $M^\perp=\{0\}$, to z Twierdzenia~\ref{thm:orth-decomposition13}
+wynikałoby $M=H$.
+Niech $z\in M^\perp$, $z\ne0$. Wtedy $F(z)\ne0$, gdyż
+$z\in M\cap M^\perp$ implikowałoby $z=0$.
+Dla dowolnego $x\in H$ mamy
+$x-F(x)z/F(z)\in M$, więc
+\[
+0=\left\langle x-\frac{F(x)}{F(z)}z,z\right\rangle
+=\langle x,z\rangle-\frac{F(x)}{F(z)}\|z\|^2.
+\]
+Zatem $F(x)=F(z)\langle x,z\rangle/\|z\|^2$.
+Przy naszej konwencji należy wziąć
+$y=\overline{F(z)}z/\|z\|^2$, ponieważ
+$\langle x,cy\rangle=\overline c\langle x,y\rangle$.
+Nierówność Cauchy'ego--Schwarza daje $\|F\|\le\|y\|$,
+a podstawienie $x=y/\|y\|$ dla $y\ne0$ daje równość.
+Jeśli $\langle x,y_1-y_2\rangle=0$ dla wszystkich $x$, to
+$x=y_1-y_2$ zapewnia $y_1=y_2$. Antyliniowość $J$
+wynika bezpośrednio z $J(\alpha y+\beta z)
+=\overline\alpha J(y)+\overline\beta J(z)$, ponieważ
+iloczyn skalarny jest antyliniowy w drugim argumencie.
+\end{proof}
+
+\begin{uwaga}[Dwa różne twierdzenia Riesza]
+\label{rem:two-riesz13}
+Twierdzenie~\ref{thm:riesz-hilbert13} utożsamia przestrzeń dualną
+przestrzeni Hilberta z nią samą (antyliniowo w przypadku zespolonym).
+Natomiast twierdzenie Riesza--Markowa z teorii przestrzeni $C(K)$ identyfikuje
+przestrzeń dualną $C(K)$ z przestrzenią miar. Nie są to
+odmienne wersje tej samej reprezentacji w sensie konstrukcyjnym.
+\end{uwaga}
+
+\subsection{Rodziny ortonormalne i bazy przestrzeni Hilberta}
+
+\begin{definicja}[Rodzina ortonormalna i baza przestrzeni Hilberta]
+\label{def:on-basis13}
+Niech $H$ będzie przestrzenią Hilberta, a $I$ zbiorem indeksów.
+Rodzina $(e_i)_{i\in I}\subseteq H$ jest \emph{ortonormalna}, jeśli
+$\langle e_i,e_j\rangle=\delta_{ij}$.
+Nazywamy ją \emph{bazą ortonormalną przestrzeni Hilberta}, jeśli
+$\overline{\lin\{e_i:i\in I\}}=H$.
+Nie należy utożsamiać bazy ortonormalnej przestrzeni Hilberta z algebraiczną bazą Hamela.
+\end{definicja}
+
+\begin{lemat}[Bessel i ortogonalne sumy skończone]
+\label{lem:bessel13}
+Niech $H$ będzie przestrzenią Hilberta, $(e_i)_{i\in I}$ rodziną
+ortonormalną, a $x\in H$. Dla każdego skończonego $A\subseteq I$
+zachodzi
+\[
+\left\|x-\sum_{i\in A}\langle x,e_i\rangle e_i\right\|^2
+=\|x\|^2-\sum_{i\in A}|\langle x,e_i\rangle|^2.
+\]
+W szczególności $\sum_{i\in A}|\langle x,e_i\rangle|^2\le\|x\|^2$
+dla każdego takiego $A$ (nierówność Bessela).
+\end{lemat}
+\begin{proof}
+Wektor $x-\sum_{i\in A}\langle x,e_i\rangle e_i$ jest
+prostopadły do każdego $e_j$, $j\in A$. Z twierdzenia Pitagorasa
+dla jego rozkładu z sumą ortogonalną wynika wzór.
+\end{proof}
+
+
+\begin{twierdzenie}[Przeliczalność nośnika współczynników Fouriera]
+\label{thm:countable-fourier-support13}
+Niech $H$ będzie przestrzenią Hilberta nad $\K\in\{\R,\C\}$,
+$(e_i)_{i\in I}$ dowolną rodziną ortonormalną (zbiór indeksów $I$
+może być nieprzeliczalny), a $x\in H$. Wówczas zbiór
+$ I_x:=\{i\in I:\langle x,e_i\rangle\ne0\}$
+jest co najwyżej przeliczalny. Dokładniej, dla każdego $n\in\N$,
+$n\ge1$, zbiór
+$ I_{x,n}:=\{i\in I:|\langle x,e_i\rangle|\ge1/n\}$
+jest skończony i ma co najwyżej $n^2\|x\|^2$ elementów.
+\end{twierdzenie}
+\begin{proof}
+Niech $F\subseteq I_{x,n}$ będzie zbiorem skończonym.
+Z nierówności Bessela (Lemat~\ref{lem:bessel13}) otrzymujemy
+$|F|/n^2\le\sum_{i\in F}|\langle x,e_i\rangle|^2\le\|x\|^2$.
+Gdyby $I_{x,n}$ miał więcej niż $n^2\|x\|^2$ elementów,
+można byłoby wybrać skończony podzbiór o liczności
+przekraczającej tę liczbę, co przeczyłoby otrzymanemu oszacowaniu.
+Każdy $I_{x,n}$ jest zatem skończony. Dla każdego
+$i\in I_x$ liczba $|\langle x,e_i\rangle|$ jest dodatnia, więc
+przekracza $1/n$ dla pewnego $n\ge1$. Stąd
+$I_x=\bigcup_{n\ge1}I_{x,n}$ jest sumą przeliczalnej rodziny
+zbiorów skończonych.
+\end{proof}
+
+\begin{uwaga}[Dlaczego warunek jest silniejszy od samego Bessela?]
+\label{rem:fourier-countability13}
+Nie zakładaliśmy ośrodkowości $H$ ani przeliczalności $I$.
+Twierdzenie dotyczy \emph{każdego pojedynczego wektora}:
+przy nieprzeliczalnej bazie ortonormalnej różne wektory mogą
+mieć różne przeliczalne nośniki współczynników. Nie wynika
+stąd, że całą bazę można ponumerować jednym ciągiem.
+\end{uwaga}
+
+\begin{twierdzenie}[Rozwinięcie Fouriera, tożsamość Parsevala i zbieżność bezwarunkowa]
+\label{thm:parseval13}
+\label{cor:fourier-enumeration13}
+Niech $H$ będzie przestrzenią Hilberta nad $\K\in\{\R,\C\}$,
+$(e_i)_{i\in I}$ rodziną ortonormalną, a
+$M=\overline{\lin\{e_i:i\in I\}}$. Dla każdego $x\in H$
+sieć sum $s_A(x)=\sum_{i\in A}\langle x,e_i\rangle e_i$,
+indeksowana skończonymi podzbiorami $A\subseteq I$ uporządkowanymi
+przez inkluzję, zbiega w normie do $P_Mx$. Ponadto
+\[
+ \|P_Mx\|^2=\sum_{i\in I}|\langle x,e_i\rangle|^2,
+ \qquad
+ \|x\|^2=\|x-P_Mx\|^2+
+               \sum_{i\in I}|\langle x,e_i\rangle|^2,
+\]
+gdzie suma po dowolnym zbiorze indeksów oznacza supremum
+sum skończonych. Rodzina $(e_i)_{i\in I}$ jest bazą ortonormalną
+przestrzeni Hilberta wtedy i tylko wtedy, gdy dla każdego $x\in H$
+zachodzi tożsamość Parsevala $\|x\|^2=\sum_{i\in I}
+|\langle x,e_i\rangle|^2$; równoważnie, gdy
+$M^\perp=\{0\}$.
+
+Jeśli $(e_i)_{i\in I}$ jest bazą ortonormalną, to zbiór
+$I_x=\{i:\langle x,e_i\rangle\ne0\}$ jest co najwyżej
+przeliczalny. Gdy $I_x$ jest nieskończony, dla każdej bijekcji
+$\nu:\N\to I_x$ zachodzi
+\[
+ x=\sum_{n=1}^{\infty}\langle x,e_{\nu(n)}\rangle e_{\nu(n)}
+ \quad\text{w normie $H$},\qquad
+ \|x\|^2=\sum_{n=1}^{\infty}|\langle x,e_{\nu(n)}\rangle|^2.
+\]
+Suma nie zależy od numeracji $I_x$ (zbieżność bezwarunkowa).
+Jeśli $I_x$ jest skończony, obowiązuje analogiczna suma skończona.
+Dla każdego skończonego $A\subseteq I$ mamy dokładny wzór na błąd
+\[
+ \left\|x-\sum_{i\in A}\langle x,e_i\rangle e_i\right\|^2
+ =\sum_{i\in I\setminus A}|\langle x,e_i\rangle|^2.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla skończonych $A\subseteq B\subseteq I$ ortonormalność daje
+$\|s_B-s_A\|^2=\sum_{i\in B\setminus A}|\langle x,e_i\rangle|^2$.
+Niech $S=\sup_A\sum_{i\in A}|\langle x,e_i\rangle|^2
+\le\|x\|^2$ (nierówność Bessela). Dla $\varepsilon>0$ wybieramy
+$A_0$ o sumie większej niż $S-\varepsilon^2$.
+Dla $A,B\supseteq A_0$ porównanie z $A\cup B$ daje
+$\|s_A-s_B\|<2\varepsilon$, zatem $(s_A)$ jest siecią
+Cauchy'ego. Z zupełności $H$ wynika jej zbieżność do pewnego
+$s\in M$. Dla każdego $j\in I$ od chwili, gdy $j\in A$,
+$\langle x-s_A,e_j\rangle=0$. Po przejściu do granicy
+$x-s\in M^\perp$, więc $s=P_Mx$. Przejście do granicy
+w $\|s_A\|^2=\sum_{i\in A}|\langle x,e_i\rangle|^2$
+oraz twierdzenie Pitagorasa dają obie równości.
+Charakterystyka bazy wynika z równoważności $M^\perp=\{0\}$
+i $M=H$.
+
+Przeliczalność $I_x$ została już niezależnie udowodniona
+w Twierdzeniu~\ref{thm:countable-fourier-support13}.
+Jeśli $I_x$ jest nieskończony, to zbiory
+$A_N=\{\nu(1),\ldots,\nu(N)\}$ są współkońcowe w rodzinie
+skończonych podzbiorów $I_x$: każdy skończony
+$A\subseteq I_x$ zawiera się w pewnym $A_N$. Współczynniki
+spoza $I_x$ są zerowe, więc sieć sum po podzbiorach $I$ i
+sieć sum po podzbiorach $I_x$ mają tę samą granicę.
+Stąd $s_{A_N}\to x$ (dla bazy $M=H$), niezależnie od $\nu$.
+Suma kwadratów wynika z Parsevala. Wreszcie wektor
+$x-s_A(x)$ jest prostopadły do $s_A(x)$, więc
+$\|x-s_A(x)\|^2=\|x\|^2-\sum_{i\in A}|\langle x,e_i\rangle|^2$;
+ponowne użycie Parsevala daje wzór na błąd.
+\end{proof}
+
+\begin{przyklad}[Różnica między rozpięciem algebraicznym i domkniętym]
+\label{ex:hilbert-series-not-hamel13}
+Niech $(e_n)_{n\ge1}$ będzie ciągiem ortonormalnym w $H$.
+Szereg $x=\sum_{n\ge1}2^{-n}e_n$ zbiega w $H$, ponieważ
+$\sum_{n\ge1}4^{-n}<\infty$. Dla każdego $n$ mamy
+$\langle x,e_n\rangle=2^{-n}\ne0$, więc
+$x\notin\lin\{e_n:n\ge1\}$, choć należy do domknięcia
+tej podprzestrzeni. Baza ortonormalna przestrzeni Hilberta pozwala zatem na rozwinięcia
+\emph{normowo zbieżne}, a baza Hamela dopuszcza wyłącznie
+\emph{skończone} kombinacje liniowe.
+\end{przyklad}
+
+\begin{twierdzenie}[Istnienie baz ortonormalnych]
+\label{thm:hilbert-basis13}
+Każda przestrzeń Hilberta ma bazę ortonormalną (dopuszczając pustą
+bazę dla $H=\{0\}$). Przestrzeń Hilberta jest ośrodkowa wtedy i tylko
+wtedy, gdy posiada bazę ortonormalną co najwyżej przeliczalną.
+\end{twierdzenie}
+\begin{proof}
+W zbiorze rodzin ortonormalnych, uporządkowanym przez rozszerzenie,
+każdy łańcuch ma ograniczenie górne dane sumą rodzin.
+Lemat Zorna zapewnia rodzinę maksymalną $(e_i)_{i\in I}$.
+Jeśli $x\perp e_i$ dla każdego $i$ i $x\ne0$, można ją powiększyć
+o $x/\|x\|$, sprzeczność. Zatem jest bazą.
+
+Jeśli $H$ ma przeliczalną bazę, skończone kombinacje liniowe z
+współczynnikami w $\mathbb Q$ (dla $\R$) lub
+$\mathbb Q+i\mathbb Q$ (dla $\C$) tworzą zbiór przeliczalny i gęsty.
+Odwrotnie, jeśli $H$ jest ośrodkowa, nie może zawierać
+nieprzeliczalnej rodziny ortonormalnej: kule
+$B(e_i,1/3)$ są rozłączne, a każdy taki otwarty zbiór zawiera
+punkt ustalonego przeliczalnego zbioru gęstego.
+\end{proof}
+
+
+\begin{twierdzenie}[Nieskończenie wymiarowe przestrzenie Hilberta a wymiar Hamela]
+\label{thm:hilbert-hamel-uncountable13}
+Niech $H$ będzie nieskończenie wymiarową przestrzenią Hilberta
+nad $\K\in\{\R,\C\}$. Wtedy każda baza Hamela przestrzeni $H$
+jest nieprzeliczalna. Co więcej, $H$ zawiera liniowo niezależną
+rodzinę mocy continuum, zatem
+$\dim_{\mathrm{Hamel}}H\ge 2^{\aleph_0}$.
+W szczególności twierdzenie dotyczy również ośrodkowych,
+nieskończenie wymiarowych przestrzeni Hilberta, które mają
+przeliczalne bazy ortonormalne.
+\end{twierdzenie}
+\begin{proof}
+Wybierzmy nieskończony ciąg ortonormalny $(e_n)_{n\ge1}$
+w $H$; istnieje on, ponieważ $H$ jest nieskończenie wymiarowa
+(ewentualnie wybieramy go z bazy ortonormalnej otrzymanej
+w Twierdzeniu~\ref{thm:hilbert-basis13}). Dla $t\in(0,1)$
+określmy
+\[
+ v_t:=\sum_{n=1}^{\infty}t^{n-1}e_n.
+\]
+Szereg ten zbiega w normie dzięki twierdzeniu Pitagorasa i
+$\sum_{n\ge1}t^{2(n-1)}=(1-t^2)^{-1}<\infty$.
+Pokażemy, że rodzina $(v_t)_{t\in(0,1)}$ jest liniowo niezależna.
+Niech $t_1,\ldots,t_m\in(0,1)$ będą parami różne, a
+$\sum_{j=1}^m a_jv_{t_j}=0$. Biorąc iloczyn skalarny tej
+równości z $e_n$ dla $n=1,\ldots,m$, dostajemy
+$\sum_{j=1}^m a_jt_j^{n-1}=0$. Współczynniki $a_j$
+spełniają jednorodny układ o macierzy Vandermonde'a
+$(t_j^{n-1})_{1\le n,j\le m}$. Jej wyznacznik
+$\prod_{1\le j<k\le m}(t_k-t_j)$ jest niezerowy, więc
+$a_1=\cdots=a_m=0$. Rodzina $(v_t)_{t\in(0,1)}$ ma moc
+$2^{\aleph_0}$ i jest liniowo niezależna. Każda baza Hamela
+musi mieć moc co najmniej tak dużą.
+\end{proof}
+
+\begin{uwaga}[Drugi argument: twierdzenie Baire'a]
+\label{rem:hilbert-hamel-baire13}
+Sama nieprzeliczalność bazy Hamela wynika nawet dla każdej
+nieskończenie wymiarowej przestrzeni \emph{Banacha} $X$.
+Gdyby $X$ miała przeliczalną bazę Hamela $(h_n)_{n\ge1}$,
+to $X=\bigcup_{n\ge1}F_n$, gdzie
+$F_n=\lin\{h_1,\ldots,h_n\}$. Każda skończenie wymiarowa
+podprzestrzeń $F_n$ jest domknięta (w przestrzeni unormowanej)
+i ma puste wnętrze: podprzestrzeń liniowa o niepustym wnętrzu
+jest całą przestrzenią, a $X$ nie jest skończenie wymiarowa.
+Twierdzenie Baire'a wyklucza pokrycie zupełnej przestrzeni
+metrycznej przeliczalną sumą takich zbiorów.
+Argument ten dowodzi nieprzeliczalności, natomiast poprzednia
+konstrukcja daje również dolne oszacowanie mocy bazy Hamela.
+\end{uwaga}
+
+\begin{uwaga}[Dwie wielkości, których nie należy mylić]
+\label{rem:hamel-vs-hilbert13}
+\emph{Wymiar hilbertowski} to moc bazy ortonormalnej,
+a \emph{wymiar Hamela} to moc bazy algebraicznej.
+Dla $H=\ell^2(\N)$ pierwszy jest przeliczalny, drugi
+co najmniej continuum. Jeśli baza ortonormalna jest
+nieprzeliczalna, każdy $x\in H$ nadal ma najwyżej
+przeliczalnie wiele niezerowych współczynników.
+\end{uwaga}
+
+\begin{stwierdzenie}[Izometryczne współrzędne w $\ell^2(I)$]
+\label{prop:hilbert-l2I13}
+Niech $(e_i)_{i\in I}$ będzie bazą ortonormalną przestrzeni
+Hilberta $H$. Wówczas $U:H\to\ell^2(I)$,
+$Ux=(\langle x,e_i\rangle)_{i\in I}$, jest izometrycznym
+izomorfizmem liniowym, gdzie
+$\ell^2(I)=\{a:I\to\K:\sup_{A\subseteq I\text{ skończony}}
+\sum_{i\in A}|a_i|^2<\infty\}$.
+\end{stwierdzenie}
+\begin{proof}
+Liniowość i izometria wynikają z Parsevala. Dla dowolnego
+$a\in\ell^2(I)$ sieć $\sum_{i\in A}a_ie_i$ jest Cauchy'ego:
+tak jak w dowodzie Twierdzenia~\ref{thm:parseval13},
+odrzucenie dostatecznie dużego skończonego zbioru współrzędnych
+daje dowolnie mały ogon sumy kwadratów. Niech $x$ będzie granicą;
+wtedy $\langle x,e_j\rangle=a_j$ dla każdego $j\in I$.
+To dowodzi surjektywności.
+\end{proof}
+
+\begin{przyklad}[Gram--Schmidt i szeregi Fouriera]
+\label{ex:gram-schmidt13}
+Dla liniowo niezależnych $v_1,\ldots,v_n\in H$ konstrukcja
+$u_k=v_k-\sum_{j<k}\langle v_k,e_j\rangle e_j$,
+$e_k=u_k/\|u_k\|$, tworzy rodzinę ortonormalną o tym samym
+rozpięciu liniowym. Dla nieskończonego ciągu liniowo niezależnego
+ortogonalizujemy kolejne wyrazy i otrzymujemy bazę ortonormalną domkniętego rozpięcia tych wektorów. Dla $H=L^2([0,2\pi],\lambda)$
+układ $e_n(t)=(2\pi)^{-1/2}e^{int}$, $n\in\mathbb Z$, jest
+ortonormalny; jego zupełność wymaga dodatkowego twierdzenia
+o gęstości wielomianów trygonometrycznych, które zostanie
+omówione przy transformacji Fouriera. Nie używamy tej zupełności
+bez dowodu.
+\end{przyklad}
+
+\subsection{Operatory sprzężone i reprezentacja form}
+
+\begin{twierdzenie}[Operator sprzężony w przestrzeni Hilberta]
+\label{thm:adjoint13}
+Niech $H,G$ będą przestrzeniami Hilberta nad tym samym ciałem $\K$,
+a $T\in\mathcal L(H,G)$. Istnieje dokładnie jeden operator
+$T^*\in\mathcal L(G,H)$ taki, że
+$\langle Tx,y\rangle_G=\langle x,T^*y\rangle_H$
+dla wszystkich $x\in H$, $y\in G$.
+Ponadto $\|T^*\|=\|T\|$, $(T^*)^*=T$ i
+$(ST)^*=T^*S^*$ dla każdego $S\in\mathcal L(G,W)$,
+gdzie $W$ jest kolejną przestrzenią Hilberta.
+\end{twierdzenie}
+\begin{proof}
+Dla ustalonego $y\in G$ funkcja $x\mapsto\langle Tx,y\rangle_G$
+jest ciągłym liniowym funkcjonałem na $H$. Z
+Twierdzenia~\ref{thm:riesz-hilbert13} istnieje jedyny $z_y\in H$
+z $\langle Tx,y\rangle_G=\langle x,z_y\rangle_H$.
+Definiujemy $T^*y=z_y$. Z antyliniowości w drugim argumencie
+po obu stronach, z uwzględnieniem sprzężenia skalarów, wynika
+$T^*(\alpha y_1+\beta y_2)=\alpha T^*y_1+\beta T^*y_2$.
+Równość norm funkcjonałów reprezentujących daje
+$\|T^*y\|\le\|T\|\|y\|$, więc $T^*$ jest ograniczony.
+Tożsamość dla $(T^*)^*$ wynika z hermitowskości iloczynu
+skalarnego i jednoznaczności operatora sprzężonego.
+Stąd $\|T\|=\|(T^*)^*\|\le\|T^*\|\le\|T\|$.
+Wreszcie
+$\langle STx,w\rangle=\langle Tx,S^*w\rangle
+=\langle x,T^*S^*w\rangle$, co daje wzór dla iloczynu.
+\end{proof}
+
+\begin{definicja}[Formy półtoraliniowe]
+\label{def:sesquilinear13}
+Dla przestrzeni Hilberta $H$ nad $\K\in\{\R,\C\}$
+\emph{formą półtoraliniową} nazywamy odwzorowanie
+$a:H\times H\to\K$ liniowe w pierwszym i antyliniowe
+w drugim argumencie. W przypadku rzeczywistym są to formy
+dwuliniowe. Dla $\K=\C$ warunek antyliniowości oznacza
+$a(x,\alpha y+\beta z)=\overline\alpha a(x,y)+\overline\beta a(x,z)$. Forma jest \emph{ograniczona}, jeśli
+$|a(x,y)|\le M\|x\|\|y\|$ dla pewnego $M\ge0$ i wszystkich
+$x,y\in H$. Najmniejsze takie $M$ oznaczamy $\|a\|$.
+Formę nazywamy \emph{koercywną}, jeśli istnieje $\alpha>0$
+spełniające $\operatorname{Re}a(x,x)\ge\alpha\|x\|^2$
+dla wszystkich $x\in H$.
+\end{definicja}
+
+\begin{twierdzenie}[Reprezentacja ograniczonych form]
+\label{thm:form-repr13}
+Niech $H$ będzie przestrzenią Hilberta nad $\K$,
+a $a:H\times H\to\K$ formą półtoraliniową ograniczoną.
+Wówczas istnieje dokładnie jeden $A\in\mathcal L(H)$ taki, że
+$a(x,y)=\langle Ax,y\rangle$ dla wszystkich $x,y\in H$.
+Ponadto $\|A\|=\|a\|$.
+Forma jest hermitowska ($a(x,y)=\overline{a(y,x)}$) wtedy
+i tylko wtedy, gdy $A=A^*$.
+\end{twierdzenie}
+\begin{proof}
+Dla ustalonego $x\in H$ funkcja
+$y\mapsto\overline{a(x,y)}$ jest ciągłym liniowym funkcjonałem,
+zatem istnieje dokładnie jeden $Ax\in H$ spełniający
+$\overline{a(x,y)}=\langle y,Ax\rangle$ dla każdego $y$.
+Po sprzężeniu otrzymujemy $a(x,y)=\langle Ax,y\rangle$.
+Jednoznaczność daje liniowość $x\mapsto Ax$.
+Równość $\|Ax\|=\sup_{\|y\|\le1}|a(x,y)|\le\|a\|\|x\|$
+dowodzi ograniczoności i $\|A\|\le\|a\|$.
+Z drugiej strony
+$|a(x,y)|=|\langle Ax,y\rangle|\le\|A\|\|x\|\|y\|$,
+stąd równość norm. Równoważność hermitowskości i $A=A^*$
+wynika bezpośrednio z definicji operatora sprzężonego.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie Laxa--Milgrama]
+\label{thm:lax-milgram13}
+Niech $H$ będzie przestrzenią Hilberta nad $\K\in\{\R,\C\}$,
+a $a:H\times H\to\K$ formą półtoraliniową ograniczoną
+i koercywną ze stałą $\alpha>0$. Dla każdego ciągłego
+\emph{antyliniowego} funkcjonału $\Lambda:H\to\K$ istnieje
+dokładnie jeden $u\in H$ taki, że
+$a(u,v)=\Lambda(v)$ dla wszystkich $v\in H$.
+Ponadto $\|u\|\le\|\Lambda\|/\alpha$, gdzie
+$\|\Lambda\|=\sup_{\|v\|\le1}|\Lambda(v)|$.
+\end{twierdzenie}
+\begin{proof}
+Niech $A\in\mathcal L(H)$ reprezentuje $a$ jak w
+Twierdzeniu~\ref{thm:form-repr13}. Z koercywności i nierówności
+Cauchy'ego--Schwarza mamy
+$\alpha\|x\|^2\le\operatorname{Re}\langle Ax,x\rangle
+\le\|Ax\|\|x\|$, zatem $\|Ax\|\ge\alpha\|x\|$.
+Stąd $A$ jest injektywny i ma domknięty obraz:
+$Ax_n\to y$ implikuje, że $x_n$ jest ciągiem Cauchy'ego,
+a więc $x_n\to x$ i $Ax=y$.
+
+Jeżeli $y\perp\operatorname{ran}A$, to $A^*y=0$.
+Wtedy
+$\alpha\|y\|^2\le\operatorname{Re}\langle Ay,y\rangle
+=\operatorname{Re}\langle y,A^*y\rangle=0$,
+więc $y=0$. Zatem obraz $A$ jest gęsty i jednocześnie
+domknięty, czyli $\operatorname{ran}A=H$.
+Ponieważ $\Lambda$ jest antyliniowy, funkcja
+$v\mapsto\overline{\Lambda(v)}$ jest ciągłym liniowym
+funkcjonałem. Twierdzenie~\ref{thm:riesz-hilbert13} daje
+jedyny $f\in H$ spełniający $\Lambda(v)=\langle f,v\rangle$.
+Bierzemy $u=A^{-1}f$; wtedy $a(u,v)=\langle Au,v\rangle
+=\Lambda(v)$. Jednoznaczność wynika z injektywności $A$,
+a oszacowanie z nierówności $\|Au\|\ge\alpha\|u\|$
+i $\|f\|=\|\Lambda\|$.
+\end{proof}
+
+\begin{przyklad}[Jednowymiarowy problem brzegowy]
+\label{ex:weak-poisson13}
+Niech $H=\{u:[0,1]\to\C:\ u\text{ jest absolutnie ciągła},
+u(0)=u(1)=0,\ u'\in L^2([0,1],\lambda)\}$,
+przy czym pochodną rozumiemy prawie wszędzie.
+Definiujemy $\langle u,v\rangle_H=
+\int_{[0,1]}u'(t)\overline{v'(t)}\,\mathrm d\lambda(t)$.
+Warunki brzegowe zapewniają dodatnią określoność. Przestrzeń $H$
+jest zupełna: odwzorowanie $u\mapsto u'$ jest izometryczną bijekcją
+$H\to L^2_0:=\{g\in L^2([0,1],\lambda):
+\int_{[0,1]}g(t)\,\mathrm d\lambda(t)=0\}$,
+którego obraz jest domknięty. Odwrotność ma wzór
+$g\mapsto(x\mapsto\int_{[0,x]}g(t)\,\mathrm d\lambda(t))$.
+Dla $u\in H$ nierówność Cauchy'ego--Schwarza daje
+$|u(x)|\le\sqrt{x}\,\|u'\|_2$, a więc
+$\|u\|_2\le\|u'\|_2/\sqrt2$.
+
+Dla $f\in L^2([0,1],\lambda)$ forma
+$a(u,v)=\int_{[0,1]}u'(t)\overline{v'(t)}\,\mathrm d\lambda(t)$
+jest ograniczona i koercywna ze stałą $1$, zaś
+$\Lambda(v)=\int_{[0,1]}f(t)\overline{v(t)}\,\mathrm d\lambda(t)$
+jest ciągła i antyliniowa na $H$.
+Twierdzenie~\ref{thm:lax-milgram13} daje jedyne $u\in H$
+spełniające $a(u,v)=\Lambda(v)$ dla wszystkich $v\in H$.
+Jest to słaba postać zagadnienia $-u''=f$, $u(0)=u(1)=0$;
+konkretnie $u'(t)=c-\int_{[0,t]}f(s)\,\mathrm d\lambda(s)$,
+gdzie $c=\int_{[0,1]}(1-s)f(s)\,\mathrm d\lambda(s)$.
+Weryfikacja przez całkowanie przez części jest bezpośrednia
+najpierw dla gładkich funkcji $v$ o zerowych wartościach na brzegu,
+a następnie przez gęstość w $H$. Istotnie, dla $g=v'\in L^2_0$
+wybieramy $g_n\in C^\infty([0,1])$ z $g_n\to g$ w $L^2$
+i kładziemy $\widetilde g_n=g_n-\int_{[0,1]}g_n(t)\,\mathrm d\lambda(t)$.
+Wówczas $\widetilde g_n\to g$ w $L^2_0$, zaś funkcje
+pierwotne $\widetilde g_n$ $v_n(x)=\int_{[0,x]}\widetilde g_n(t)\,\mathrm d\lambda(t)$
+należą do $C^\infty([0,1])$, znikają na brzegu i zbiegają do $v$
+w normie $H$.
+\end{przyklad}
+
+\begin{uwaga}[Droga do pochodnych Gâteaux i Frécheta]
+\label{rem:gateaux-bridge13}
+Jeśli $H$ jest rzeczywistą przestrzenią Hilberta, to funkcjonał
+$\Phi(x)=\frac12\|x\|^2$ ma pochodną Frécheta
+$D\Phi(x)h=\langle h,x\rangle$. Formalnie wynika to z
+$\Phi(x+h)-\Phi(x)-\langle h,x\rangle=\frac12\|h\|^2$.
+Definicję pochodnej Frécheta i jej relację do pochodnej Gâteaux
+wprowadzimy w następnym rozdziale. W przestrzeni zespolonej
+$\Phi$ jest funkcją rzeczywistą i rozważamy jej pochodną
+\emph{rzeczywistą}, równą $h\mapsto\operatorname{Re}\langle h,x\rangle$.
+\end{uwaga}
