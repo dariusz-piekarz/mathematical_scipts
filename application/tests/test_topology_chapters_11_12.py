@@ -280,6 +280,18 @@ class TopologyChapterElevenTwelveAudit(unittest.TestCase):
             [cochain(i) for i in range(9)], [1, 0, 0, 1, 0, 0, 1, 0, 0]
         )
 
+    def test_transgression_starts_at_positive_degree(self):
+        ch = self.text["12"]
+        self.assertIn(r"Niech $q\ge1$ i niech $u\in E_2^{0,q}$", ch)
+        self.assertIn(r"$d_2,\ldots,d_q$", ch)
+        self.assertIn(r"$d_{q+1}u\in E_{q+1}^{q+1,0}$", ch)
+        for q in range(1, 10):
+            # Transgression d_{q+1} has cohomological bidegree
+            # (q+1,1-(q+1)), hence (0,q) -> (q+1,0).
+            self.assertEqual((0+(q+1), q+1-(q+1)), (q+1, 0))
+        # q=0 would make the putative "page q+1" equal to E_1,
+        # preceding E_2; it is intentionally excluded.
+
     def test_extension_problem_distinguishes_actual_groups(self):
         ch = self.text["12"]
         self.assertIn(r"\label{prz:spectral-extension-z4}", ch)
