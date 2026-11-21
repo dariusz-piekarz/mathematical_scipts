@@ -160,12 +160,17 @@ class TopologyChapterThirteenFourteenAudit(unittest.TestCase):
                     (comb(degree, 1) * comb(degree + 1, 1)) % 2,
                     0,
                 )
-        self.assertIn("nie zastępuje ogólnego dowodu relacji Adema", chapter)
+        # The complete derivation now explicitly relies on a deep construction lemma.
+        self.assertIn("lemat o potęgach", chapter)
+        self.assertIn(r"\operatorname{Sq}^2\operatorname{Sq}^2", chapter)
 
     def test_cartan_and_adem_proofs_not_overclaimed(self):
         chapter = self.texts["14"]
-        self.assertIn("nie deklarujemy pełnego dowodu Cartana ani", chapter)
-        self.assertIn("Adema", chapter)
+        # The coherently equivariant power construction is an explicit dependency;
+        # the chapter does not claim an independent chain-level construction.
+        self.assertIn("Zakres geometrycznego lematu wejściowego", chapter)
+        self.assertIn("jego pełne udowodnienie", chapter)
+        self.assertIn("relacji Adema", chapter)
 
 
 if __name__ == "__main__":

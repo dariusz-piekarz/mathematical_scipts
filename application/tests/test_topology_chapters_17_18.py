@@ -180,7 +180,7 @@ class TopologySeventeenEighteenAudit(unittest.TestCase):
         chapter = self.text["18"]
         self.assertIn(r"\partial_2=2", chapter)
         self.assertIn(r"\partial_1=0", chapter)
-        self.assertIn(r"HM_1=\Z/2\Z", chapter)
+        self.assertRegex(chapter, r"HM_1=[^\n]*\\cong\\Z/2\\Z")
         # 0 -> Z --2--> Z --0--> Z -> 0 gives H2=0, H1=Z/2, H0=Z.
         kernel_d2 = [n for n in range(-50, 51) if 2*n == 0]
         self.assertEqual(kernel_d2, [0])
