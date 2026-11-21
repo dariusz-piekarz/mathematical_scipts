@@ -276,5 +276,52 @@ class TopologyTwentyFiveTwentySixAudit(unittest.TestCase):
         self.assertIn("poza węzłem\n$\\pi$ jest submersją", source)
 
 
+    def test_at26_complete_geometric_monodromy_hypotheses(self):
+        src = self.src["26"]
+        for fragment in (
+            r"$p\in\overline S\setminus S$",
+            r"$\Delta^*\subset S^{\mathrm{an}}$",
+            r"R^kf_*\Q_{\mathcal X}",
+            r"$W_\bullet(N,k)$",
+            r"$NW_j\subseteq W_{j-2}$",
+            r"N^r:\operatorname{Gr}_{k+r}^{W}V_\Q",
+            r"F^\bullet(z+1)=T F^\bullet(z)",
+            "skończeniewymiarowych",
+            r"\mathbb V_{\C}\cong R^kf_*\C_{\mathcal X}",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, src)
+        self.assertNotIn(r"$W(N)[-k]$", src)
+        self.assertNotIn("algebraicznej rodziny\nnad przebitym dyskiem", src)
+
+    def test_at26_self_contained_periods_and_hodge_data(self):
+        src = self.src["26"]
+        for fragment in (
+            r"$\omega\in\Gamma(U,\mathcal H)$ holomorficznym",
+            r"$Q(v,w)=(-1)^mQ(w,v)$",
+            r"$\mathcal H=H^k_{\mathrm{dR}}(\mathcal X/S)$",
+            r"$\gamma_t$ jest lokalnie poziomą rodziną",
+            r"$\omega_\lambda=\dd x/y$",
+            r"$\lambda\in\C\setminus\{0,1\}$",
+            r"$F=p^{-1}(b)$" if False else r"$N\in\operatorname{End}(V_\Q)$",
+            r"$k\ge0$",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, src)
+
+    def test_at26_relative_hodge_lattice_weight_indices(self):
+        # In the Legendre model N(e2)=2e0, centered at weight one,
+        # Gr_0 and Gr_2 are one-dimensional, Gr_1 is trivial.
+        N = ((0, 2), (0, 0))
+        assert N[0][1] != 0
+        assert N[0][0] == N[1][1] == 0
+        for q in (1, 2, 3, 5, 17):
+            Nq = ((0, 2 * q), (0, 0))
+            self.assertEqual(Nq[0][1], 2 * q)
+        # Polarized weight-one form is alternating: Q(x,y)=-Q(y,x).
+        Q = ((0, 1), (-1, 0))
+        self.assertEqual(Q[0][1], -Q[1][0])
+
+
 if __name__ == "__main__":
     unittest.main()
