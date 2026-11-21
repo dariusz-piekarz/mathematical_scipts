@@ -178,13 +178,42 @@ def dimension_three_cases():
     return checks
 
 
+def commuting_schur_cases():
+    """A common unitary triangularizes two commuting defective matrices."""
+    n=[[0j,1+0j],[0j,0j]]
+    gs=add(eye(2),n)
+    gt=add(scale(2,eye(2)),scale(3,n))
+    assert gs[0][1]!=0 and gt[0][1]!=0
+    count=0
+    for theta,phase in ((0.,0.),(.2,.3),(.7,1.1),(1.2,2.0)):
+        q=unitary(theta,phase)
+        u=adjoint(q)
+        equals(multiply(u,q),eye(2))
+        s=multiply(multiply(q,gs),u)
+        t=multiply(multiply(q,gt),u)
+        equals(multiply(s,t),multiply(t,s))
+        equals(multiply(multiply(u,s),adjoint(u)),gs)
+        equals(multiply(multiply(u,t),adjoint(u)),gt)
+        equals(multiply(multiply(adjoint(u),gs),u),s)
+        equals(multiply(multiply(adjoint(u),gt),u),t)
+        nonnormal=any(not close(x,y)
+                      for row1,row2 in zip(multiply(s,adjoint(s)),
+                                           multiply(adjoint(s),s))
+                      for x,y in zip(row1,row2))
+        assert nonnormal
+        count+=1
+    return count
+
+
 if __name__=="__main__":
     a=normal_cases()
     b=hermitian_cases()
     c=counterexamples_and_commuting()
     d=dimension_three_cases()
+    e=commuting_schur_cases()
     print("Spectral regression tests OK:",
           a,"normal similarities and projectors;",
           b,"Hermitian Rayleigh tests;",
           c,"commuting/defective checks;",
-          d,"3x3 normal and repeated-eigenvalue checks.")
+          d,"3x3 normal and repeated-eigenvalue checks;",
+           e,"commuting Schur tests.")
