@@ -25,3 +25,10 @@ Zasady przyjęte 21 listopada 2026 r. Obowiązują przy opracowywaniu **wszystki
 ## Audyty
 
 W każdym audycie sprawdzamy konsekwentnie te terminy w treści, twierdzeniach, przykładach, podpisach rysunków i komentarzach LaTeX, bez naruszania historycznych etykiet odsyłaczy. Terminologia nie może zmieniać poprawnego znaczenia matematycznego.
+
+## 4. „Wielomian rozkłada się na czynniki”, nie „rozszczepia się”
+
+- O wielomianie piszemy **„rozkłada się nad \(K\) na czynniki liniowe”**, **„rozkłada się na czynniki nierozkładalne”**, **„daje się rozłożyć na czynniki liniowe nad \(K\)”** itd. Nie używamy określeń „wielomian rozszczepia się”, „wielomian rozszczepiony” ani „rozszczepienie wielomianu”.
+- Zamiast „warunek rozszczepienia \(m_T\)” piszemy **„warunek rozkładu \(m_T\) na czynniki liniowe”**. Zamiast „bez rozszczepienia” — „gdy wielomian nie rozkłada się na czynniki liniowe nad danym ciałem”.
+- Rozróżniamy **rozkład na czynniki liniowe nad ustalonym ciałem** od ogólnego **rozkładu na czynniki nierozkładalne**. Sama separowalność ani brak powtórzeń nie oznaczają rozkładu na czynniki liniowe nad tym ciałem.
+- Właściwe zastosowania pojęcia **rozszczepienia** w innych kontekstach (np. rozszczepiona dokładna sekwencja, rozszczepienie krótkiego ciągu dokładnego, rozszczepienie morfizmu) nie podlegają tej zamianie. Nie naruszamy nazw stabilnych etykiet LaTeX.
