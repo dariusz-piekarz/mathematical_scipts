@@ -1,4 +1,4 @@
-name: Logic and set theory chapters 01-22 validation
+name: Logic and set theory chapters 01-24 validation
 
 on:
   push:
@@ -34,6 +34,8 @@ on:
       - "tools/tests/test_logic_and_set_theory_ch20.py"
       - "tools/tests/test_logic_and_set_theory_ch21.py"
       - "tools/tests/test_logic_and_set_theory_ch22.py"
+      - "tools/tests/test_logic_and_set_theory_ch23.py"
+      - "tools/tests/test_logic_and_set_theory_ch24.py"
       - "tools/tests/test_logic_and_set_theory_ch11.py"
       - "tools/tests/test_logic_and_set_theory_ch10.py"
       - "tools/tests/test_logic_and_set_theory_ch09.py"
@@ -58,7 +60,7 @@ jobs:
           catalog = json.loads(Path("catalog/books.json").read_text(encoding="utf-8"))
           book = next(item for item in catalog["books"] if item["id"] == "logic_and_set_theory")
           chapters = book["chapters"]
-          assert len(chapters) >= 22, chapters
+          assert len(chapters) >= 24, chapters
           expected_names = [
               "01-zdania-i-spojniki-logiczne.tex",
               "02-kwantyfikatory-i-podstawowe-metody-dowodzenia.tex",
@@ -82,12 +84,14 @@ jobs:
               "20-prawda-arytmetyczna-i-twierdzenie-tarskiego.tex",
               "21-operacje-na-dowodach-i-warunki-wyprowadzalnosci.tex",
               "22-drugie-twierdzenie-godla-i-twierdzenie-loba.tex",
+              "23-dolne-twierdzenie-lowenheima-skolema-i-domkniecia-skolema.tex",
+              "24-gorne-twierdzenie-lowenheima-skolema-i-paradoks-skolema.tex",
           ]
-          assert [Path(path).name for path in chapters[:22]] == expected_names
+          assert [Path(path).name for path in chapters[:24]] == expected_names
           entry = Path(book["entrypoint"])
           text = entry.read_text(encoding="utf-8")
           sources = []
-          for path in chapters[:22]:
+          for path in chapters[:24]:
               chapter = Path(path)
               assert chapter.is_file(), path
               assert "\\input{../../" + path + "}" in text, path
@@ -95,10 +99,9 @@ jobs:
           labels = [name for source in sources for name in re.findall(r"\\label\{([^}]+)\}", source)]
           refs = [name for source in sources for name in re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", source)]
           assert len(labels) == len(set(labels)), "Duplicate LaTeX labels"
-          assert len(labels) == 484, f"Unexpected labels: {len(labels)}"
-          assert len(refs) == 333, f"Unexpected references: {len(refs)}"
-          forward = {"ch:zf-axioms",
-                     "ch:downward-ls", "ch:upward-ls"}
+          assert len(labels) == 514, f"Unexpected labels: {len(labels)}"
+          assert len(refs) == 353, f"Unexpected references: {len(refs)}"
+          forward = {"ch:zf-axioms"}
           assert set(refs) - set(labels) == forward, "Unexpected unresolved targets in partial book"
           inventories = [
               (sources[5], {"twierdzenie": 15, "wniosek": 1, "proof": 16,
@@ -152,6 +155,12 @@ jobs:
               (sources[21], {"twierdzenie": 3, "lemat": 2, "wniosek": 1,
                              "proof": 6, "definicja": 1,
                              "przyklad": 2, "uwaga": 5}),
+              (sources[22], {"twierdzenie": 1, "lemat": 2, "wniosek": 1,
+                             "proof": 4, "definicja": 3,
+                             "przyklad": 2, "uwaga": 3}),
+              (sources[23], {"twierdzenie": 4, "lemat": 2, "wniosek": 1,
+                             "proof": 7, "definicja": 2,
+                             "przyklad": 2, "uwaga": 6}),
           ]
           for source, inventory in inventories:
               for env, expected in inventory.items():
@@ -198,6 +207,10 @@ jobs:
         run: python -m unittest tools.tests.test_logic_and_set_theory_ch21 -v
       - name: Run chapter 22 Godel II and Lob theorem regression tests
         run: python -m unittest tools.tests.test_logic_and_set_theory_ch22 -v
+      - name: Run chapter 23 downward Lowenheim-Skolem regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch23 -v
+      - name: Run chapter 24 upward Lowenheim-Skolem regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch24 -v
       - name: Compile logic and set theory PDF
         uses: xu-cheng/latex-action@v3
         with:
@@ -214,8 +227,7 @@ jobs:
 
           log = Path("books/pl/logic_and_set_theory.log").read_text(errors="replace")
           refs = set(re.findall(r"LaTeX Warning: Reference `([^']+)' on page \d+ undefined", log))
-          allowed = {"ch:zf-axioms",
-                     "ch:downward-ls", "ch:upward-ls"}
+          allowed = {"ch:zf-axioms"}
           assert refs <= allowed, f"Unexpected undefined references: {sorted(refs - allowed)}"
           assert not re.search(r"Overfull \\hbox", log), "Overfull TeX boxes"
           assert not re.search(r"LaTeX Warning: Citation .+ undefined", log), "Undefined citation"
@@ -227,7 +239,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: logic-and-set-theory-ch01-ch22
+          name: logic-and-set-theory-ch01-ch24
           path: |
             books/pl/logic_and_set_theory.pdf
             books/pl/logic_and_set_theory.log
