@@ -62,7 +62,7 @@ Poniższa lista pochodzi z `catalog/books.json`. Liczba rozdziałów oznacza poz
 | [Teoria całki](books/pl/integration_theory.tex) | 17 |
 | [Algebra liniowa](books/pl/linear_algebra.tex) | 26 (01–26 stabilne) |
 
-**Dalszy plan algebry liniowej:** [rozdziały 27–30, w tym grassmanniany i algebry Clifforda na podstawie DG-04](docs/pl/plan_algebry_liniowej.md).
+**Dalszy plan algebry liniowej:** [rozdziały 27–32: realizacje minimalne, grassmanniany, algebry Clifforda, grupy Pin/Spin, spinory i twistory](docs/pl/plan_algebry_liniowej.md). Materiał o Pin/Spin i spinorach przenosimy z DG-04, natomiast twistory opracujemy od podstaw.
 | [Logika matematyczna i teoria mnogości](books/pl/logic_and_set_theory.tex) | 12 |
 | [Teoria miary](books/pl/measure_theory.tex) | 31 |
 | [Teoria modeli](books/pl/model_theory.tex) | 19 |
