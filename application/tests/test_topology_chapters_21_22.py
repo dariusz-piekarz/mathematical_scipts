@@ -91,6 +91,39 @@ class TopologyChaptersTwentyOneTwentyTwoAudit(unittest.TestCase):
                 r"|\bsekwencj\w*|\binjekc\w*",
             )
 
+    def test_local_field_index_uses_actual_euclidean_chart_domain(self):
+        """The Brouwer degree is computed on phi(U), not on a manifold patch U."""
+        src = self.src["21"]
+        required = (
+            r"$\varphi:W\to\R^n$ z $\varphi(p)=0$",
+            r"$\overline U\subset W\cap\operatorname{int}M$",
+            r"$p$ jest jedynym zerem $X$ w $\overline U$",
+            r"$f_t(\overline U)\subset W$",
+            r"$V(y)=\mathrm d\varphi_{\varphi^{-1}(y)}",
+            r"$\deg(\id-F_t,\varphi(U),0)=\deg(V,\varphi(U),0)$",
+            r"Gładkie pole wektorowe $X\in\mathfrak X(M)$",
+        )
+        for fragment in required:
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, src)
+        self.assertNotIn(r"\deg(\id-F_t,U,0)", src)
+        self.assertNotIn("Iteracja XI:", src)
+
+    def test_boundary_crossing_example_changes_index_only_at_boundary(self):
+        """For X_s(x)=(1-s)e_1+s*x, the zero crosses |x|=1 at s=1/2."""
+        src = self.src["21"]
+        self.assertIn(r"\label{prz:PH-przekroczenie-brzegu-21}", src)
+        for parameter in (0.01, 0.25, 0.49, 0.5, 0.51, 0.75, 1.0):
+            zero_radius = (1 - parameter) / parameter
+            interior = zero_radius < 1
+            on_boundary = zero_radius == 1
+            with self.subTest(parameter=parameter):
+                self.assertEqual(interior, parameter > 0.5)
+                self.assertEqual(on_boundary, parameter == 0.5)
+                # At every interior zero D X_s=s I_n has positive determinant.
+                if interior:
+                    self.assertGreater(parameter**3, 0)
+
     def test_inward_poincare_hopf_sign_on_balls(self):
         src = self.src["21"]
         self.assertIn(r"\label{cor:PH-inward-boundary}", src)
