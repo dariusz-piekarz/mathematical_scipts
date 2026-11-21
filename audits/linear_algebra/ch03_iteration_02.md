@@ -3,7 +3,7 @@
 **Data:** 21 listopada 2026  
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`  
 **Rozdział:** `chapters/pl/linear_algebra/03-odwzorowania-liniowe-jadro-i-obraz.tex`  
-**Commit poprawki rozdziału:** `e62db494e00e90dc07f1e16c54bc9a2fb2d87115`  
+**Commity poprawek rozdziału:** `e62db494e00e90dc07f1e16c54bc9a2fb2d87115` (zgodność typów), `4812d34f41196f77b8ff1b5246b52c0b4262cee1` (podpis rysunku po kontroli składu)  
 **Status:** audyt zakończony z jedną poprawką merytoryczną; rozdział nadal otwarty.
 
 ## Zakres
@@ -29,7 +29,7 @@ Równości zapisano teraz bez niezgodności typów:
  \widehat T=\widetilde T\circ\pi_{\ker T},
  \qquad T=\iota\circ\widehat T.
 \]
-Dostosowano odpowiednio etykietę górnej strzałki w diagramie TikZ i jego podpis. Etykieta stabilna `fig:lin3-izo` pozostała niezmieniona. Sama teza pierwszego twierdzenia o izomorfizmie i jej dowód były poprawne i nie wymagały ingerencji.
+Dostosowano odpowiednio etykietę górnej strzałki w diagramie TikZ i jego podpis. Po sprawdzeniu wyrenderowanej strony 33 skrócono podpis, aby usunąć pojedynczy wyraz przechodzący do osobnego wiersza; wyjaśnienie roli włożenia `\(\iota\)` pozostawiono w akapicie przed rysunkiem. Etykieta stabilna `fig:lin3-izo` pozostała niezmieniona. Sama teza pierwszego twierdzenia o izomorfizmie i jej dowód były poprawne i nie wymagały ingerencji.
 
 ## Powtórna weryfikacja matematyczna
 
@@ -77,7 +77,7 @@ Wynik: **0 rozbieżności**. Spośród 81 endomorfizmów wykryto **14 projekcji*
 - Rysunek nadal pozostaje wewnętrznym diagramem TikZ, bez nowych zależności od obrazów zewnętrznych.
 - Wpisy katalogu i kolejność `\\input` pozostają prawidłowe.
 
-**GitHub Actions dla poprawki:** [44903404379](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44903404379), wynik końcowy do potwierdzenia. Poprzednia pełna kompilacja rozdziałów 01–03 była udana. Wcześniejsze zgłoszenia globalnego walidatora innych skryptów są rozpatrywane osobno.
+**GitHub Actions:** [44903404379](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44903404379) — **success**: poprawka typowania diagramu przeszła wszystkie etapy. Końcowe CI po skróceniu podpisu: [44903653747](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44903653747) — wynik do potwierdzenia. Wcześniejsze zgłoszenia globalnego walidatora innych skryptów są rozpatrywane osobno.
 
 ## Decyzja
 
