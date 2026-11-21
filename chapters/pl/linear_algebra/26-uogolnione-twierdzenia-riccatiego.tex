@@ -278,3 +278,396 @@ z równania Riccatiego
 o prawostronnej macierzy
 jedynie nieujemnie określonej.
 \end{uwaga}
+
+\section{DARE dla układów stabilizowalnych}
+\label{sec:lin26-dare}
+
+\begin{definicja}[Rozwiązanie stabilizujące DARE]
+\label{def:lin26-dare}
+Dla macierzy \(A,B,Q,R\)
+spełniających założenia rozdziału
+\emph{dyskretnym algebraicznym
+równaniem Riccatiego} jest
+\[
+ P=Q+A^*PA
+   -A^*PB(R+B^*PB)^{-1}B^*PA.
+\]
+Szukamy hermitowskich macierzy
+\(P\), dla których
+\(M(P)=R+B^*PB\) jest odwracalna.
+Dla takiego rozwiązania
+określamy sprzężenie
+\[
+ K(P)=M(P)^{-1}B^*PA.
+\]
+Rozwiązanie jest
+\emph{stabilizujące}, gdy
+\(\rho(A-BK(P))<1\).
+Nie wymagamy w tej definicji,
+aby \(P\ge0\) albo \(M(P)>0\).
+\end{definicja}
+
+\begin{lemat}[Rekurencja skończonego horyzontu]
+\label{lem:lin26-dare-recursion}
+Niech \(N\ge0\) będzie
+liczbą całkowitą.
+Dla układu
+\(x_{k+1}=Ax_k+Bu_k\)
+o ustalonym stanie \(x_0=x\)
+zdefiniujmy koszt
+\[
+ J_N(x;u)=\sum_{k=0}^{N-1}
+   (x_k^*Qx_k+u_k^*Ru_k).
+\]
+Istnieją hermitowskie
+macierze \(P_N\ge0\)
+takie, że
+\[
+ \min_{u_0,\ldots,u_{N-1}}J_N(x;u)
+ =x^*P_Nx.
+\]
+Są one wyznaczone rekurencją
+\[
+ \begin{aligned}
+ P_0&=0,\\
+ P_{N+1}&=Q+A^*P_NA\\
+ &\quad-A^*P_NB(R+B^*P_NB)^{-1}B^*P_NA.
+ \end{aligned}
+\]
+Ponadto \(P_N\le P_{N+1}\).
+Jeśli \((A,B)\) jest
+stabilizowalna w czasie
+dyskretnym, to
+\(P_N\le W_{\mathrm d}\),
+gdzie \(W_{\mathrm d}\)
+pochodzi z
+Lematu~\ref{lem:lin26-feedback-bound}.
+\end{lemat}
+\begin{proof}
+Dla \(N=0\) suma jest
+pusta, zatem \(P_0=0\).
+Załóżmy, że dla danego \(N\)
+wartość minimalna jest
+równa \(z^*P_Nz\)
+z \(P_N\ge0\).
+Na pierwszym kroku horyzontu
+\(N+1\) wybieramy \(u\),
+a kolejne \(N\) kroków
+zaczynają się od \(Ax+Bu\).
+Zatem koszt optymalny wynosi
+minimum po \(u\in\mathbb C^m\)
+wyrażenia
+\[
+ x^*Qx+u^*Ru+
+         (Ax+Bu)^*P_N(Ax+Bu).
+\]
+Po rozwinięciu otrzymujemy
+postać kwadratową
+\[
+ \begin{aligned}
+ &x^*(Q+A^*P_NA)x\\
+ &\quad+
+ u^*(R+B^*P_NB)u
+ +2\operatorname{Re}(u^*B^*P_NAx).
+ \end{aligned}
+\]
+Ponieważ \(R>0\)
+i \(P_N\ge0\),
+macierz \(M_N=R+B^*P_NB\)
+jest dodatnio określona.
+Z
+Lematu~\ref{lem:lin24-square}
+minimum jest osiągane
+w jedynym punkcie
+\(u=-M_N^{-1}B^*P_NAx\).
+Jego wartością jest
+\(x^*P_{N+1}x\),
+gdzie \(P_{N+1}\)
+ma postać z tezy.
+Macierz jest hermitowska,
+a nieujemna określoność
+wynika z nieujemności
+wszystkich składników
+pierwotnego kosztu.
+To kończy indukcję.
+
+Dla każdego sterowania
+o horyzoncie \(N+1\)
+koszt jego pierwszych \(N\)
+kroków jest nie większy
+od całego kosztu,
+ponieważ ostatni etap
+jest nieujemny.
+Po wzięciu minimów
+otrzymujemy
+\(x^*P_Nx\le x^*P_{N+1}x\)
+dla każdego \(x\), a więc
+\(P_N\le P_{N+1}\).
+
+Jeśli para jest stabilizowalna,
+wybierzmy sprzężenie
+\(u_k=-K_0x_k\)
+z
+Lematu~\ref{lem:lin26-feedback-bound}.
+Koszt jego pierwszych \(N\)
+kroków nie przekracza
+\(x^*W_{\mathrm d}x\).
+Minimum po wszystkich
+sterowaniach jest nie większe,
+stąd
+\(x^*P_Nx\le x^*W_{\mathrm d}x\)
+dla każdego \(x\),
+czyli \(P_N\le W_{\mathrm d}\).
+\end{proof}
+
+\begin{twierdzenie}[Uogólnione twierdzenie dyskretne]
+\label{thm:lin26-dare}
+Załóżmy, że
+\(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\),
+\(B\in\operatorname{Mat}_{n\times m}(\mathbb C)\),
+\(Q=Q^*\ge0\), \(R=R^*>0\),
+para \((A,B)\) jest
+stabilizowalna w czasie
+dyskretnym i para
+\((C,A)\) jest wykrywalna
+w czasie dyskretnym
+dla macierzy \(C\)
+spełniającej \(C^*C=Q\).
+Wówczas:
+\begin{enumerate}[label=\textup{(\roman*)}]
+ \item ciąg \(P_N\)
+ z Lematu~\ref{lem:lin26-dare-recursion}
+ ma granicę \(P=P^*\ge0\);
+ \item macierz \(P\)
+ spełnia DARE;
+ \item macierz
+ \[
+ K=(R+B^*PB)^{-1}B^*PA
+ \]
+ stabilizuje układ:
+ \(\rho(A-BK)<1\);
+ \item \(P\) jest jedynym
+ hermitowskim, nieujemnie
+ określonym rozwiązaniem DARE,
+ a także jedynym
+ hermitowskim rozwiązaniem
+ stabilizującym.
+\end{enumerate}
+Żadne z tych stwierdzeń
+nie wymaga \(\rho(A)<1\)
+ani dodatniej określoności \(Q\).
+\end{twierdzenie}
+\begin{proof}
+Z Lematu~\ref{lem:lin26-dare-recursion}
+oraz
+Lematu~\ref{lem:lin26-feedback-bound}
+otrzymujemy
+\[
+ 0=P_0\le P_1\le\cdots
+     \le W_{\mathrm d}.
+\]
+Dla każdego \(x\in\mathbb C^n\)
+ciąg rzeczywistych liczb
+\(x^*P_Nx\) jest zatem
+niemalejący i ograniczony.
+Dzięki tożsamościom
+polaryzacyjnym dla
+\(x=e_j\), \(e_i+e_j\)
+oraz \(e_i+ie_j\)
+wnioskujemy kolejno
+o zbieżności przekątnych,
+części rzeczywistych
+i części urojonych
+wszystkich współczynników
+macierzy \(P_N\).
+Otrzymujemy hermitowską
+granicę \(P\), spełniającą
+\(0\le P\le W_{\mathrm d}\).
+To dowodzi (i).
+
+Macierze
+\(M_N=R+B^*P_NB\)
+spełniają \(M_N\ge R>0\).
+W granicy
+\(M_N\to M=R+B^*PB\ge R>0\).
+W szczególności
+\(M\) jest odwracalna
+oraz \(M_N^{-1}\to M^{-1}\).
+Ostatnia zbieżność
+wynika z tożsamości
+\[
+ M_N^{-1}-M^{-1}
+ =M_N^{-1}(M-M_N)M^{-1}
+\]
+i jednostajnego ograniczenia
+\(\|M_N^{-1}\|
+ \le1/\lambda_{\min}(R)\)
+w normie operatorowej,
+wynikającego z
+\(M_N\ge R\).
+Przejście do granicy
+w rekurencji daje
+\[
+ P=Q+A^*PA-A^*PBM^{-1}B^*PA,
+\]
+a więc (ii).
+
+Połóżmy
+\(K=M^{-1}B^*PA\)
+i \(D=A-BK\).
+Równości \(MK=B^*PA\)
+oraz \(K^*M=A^*PB\)
+dają po rozwinięciu
+\[
+ \begin{aligned}
+ D^*PD+K^*RK
+ &=A^*PA-A^*PBK-K^*B^*PA\\
+ &\quad+K^*(B^*PB+R)K\\
+ &=A^*PA-K^*MK.
+ \end{aligned}
+\]
+Ponieważ
+\(A^*PBK=K^*MK\),
+równanie DARE
+przyjmuje postać
+\[
+ P-D^*PD=Q+K^*RK.
+ \tag{26.1}\label{eq:lin26-dare-energy}
+\]
+Prawa strona jest
+nieujemnie określona.
+
+Wykażemy stabilność \(D\)
+bez zakładania \(P>0\).
+Gdyby \(\rho(D)\ge1\),
+to istniałyby
+\(\lambda\in\sigma(D)\),
+\(|\lambda|\ge1\),
+i \(v\ne0\) z \(Dv=\lambda v\).
+Po pomnożeniu
+\eqref{eq:lin26-dare-energy}
+przez \(v^*\) i \(v\)
+otrzymujemy
+\[
+ (1-|\lambda|^2)v^*Pv
+ =\|Cv\|_2^2
+   +(Kv)^*R(Kv).
+\]
+Lewa strona jest nie większa
+od zera, ponieważ \(P\ge0\);
+prawa jest nieujemna.
+Obie strony muszą więc
+być zerowe. Dodatnia
+określoność \(R\) daje
+\(Kv=0\), a drugi składnik
+daje \(Cv=0\).
+Wobec tego
+\[
+ Av=Dv+BKv=\lambda v,
+ \qquad Cv=0.
+\]
+Otrzymaliśmy niezerowy
+wektor własny \(A\)
+o niestabilnej wartości własnej,
+zerowany przez \(C\).
+Jest to sprzeczne z
+kryterium wykrywalności PBH
+w
+Twierdzeniu~\ref{thm:lin25-detectability}.
+Stąd \(\rho(D)<1\),
+co dowodzi (iii).
+
+Pozostaje jednoznaczność.
+Niech \(P_1=P\) i
+\(P_2=P_2^*\)
+będą dwoma
+hermitowskimi rozwiązaniami
+DARE, dla których
+\(M_i=R+B^*P_iB\)
+są odwracalne
+i macierze
+\(D_i=A-BK_i\),
+\(K_i=M_i^{-1}B^*P_iA\),
+są macierzami Schura.
+Nie zakładamy dodatniej
+określoności \(P_2\)
+ani \(M_2\).
+Połóżmy \(E=P_1-P_2\).
+Odjęcie równań DARE
+i podstawienie
+\(M_iK_i=B^*P_iA\),
+\(K_i^*M_i=A^*P_iB\)
+prowadzi do tożsamości
+\[
+ E=D_1^*ED_2.
+ \tag{26.2}\label{eq:lin26-dare-difference}
+\]
+Dla pełności sprawdźmy
+przekształcenie.
+Z różnicy równań
+otrzymujemy
+\(E=A^*EA-K_1^*M_1K_1+
+K_2^*M_2K_2\).
+Z kolei po rozwinięciu
+\(D_1^*ED_2\)
+i wykorzystaniu
+\[
+ \begin{aligned}
+ B^*EA&=M_1K_1-M_2K_2,\\
+ A^*EB&=K_1^*M_1-K_2^*M_2,\\
+ B^*EB&=M_1-M_2
+ \end{aligned}
+\]
+wszystkie pozostałe
+składniki skracają się,
+pozostawiając tę samą
+prawą stronę.
+Indukcja w
+\eqref{eq:lin26-dare-difference}
+daje
+\(E=(D_1^*)^kED_2^k\).
+Z
+Lematu~\ref{lem:lin23-powers}
+obie potęgi dążą do zera,
+więc \(E=0\).
+Zatem rozwiązanie
+stabilizujące jest jedyne.
+
+Jeżeli \(P_2=P_2^*\ge0\)
+jest dowolnym rozwiązaniem
+DARE, to
+\(M_2=R+B^*P_2B>0\).
+Z jego równania otrzymujemy
+\[
+ P_2-D_2^*P_2D_2
+ =Q+K_2^*RK_2.
+\]
+Ten sam argument z wektorem
+własnym i wykrywalnością
+co powyżej pokazuje,
+że \(\rho(D_2)<1\).
+Rozwiązanie \(P_2\)
+jest więc stabilizujące,
+a udowodniona jednoznaczność
+daje \(P_2=P\).
+Otrzymujemy (iv).
+\end{proof}
+
+\begin{uwaga}[Wynik rzeczywisty]
+\label{rem:lin26-dare-real}
+Jeżeli \(A,B,Q,R\)
+są rzeczywiste,
+to każdy \(P_N\)
+jest rzeczywista i symetryczna.
+Jej granica \(P\)
+też jest rzeczywista
+i symetryczna.
+Sprzężenie \(K\)
+wyznaczone z \(P\)
+jest więc rzeczywiste.
+Stabilizowalność i wykrywalność
+sprawdza się jednak
+z uwzględnieniem
+wszystkich \emph{zespolonych}
+wartości własnych \(A\).
+\end{uwaga}
