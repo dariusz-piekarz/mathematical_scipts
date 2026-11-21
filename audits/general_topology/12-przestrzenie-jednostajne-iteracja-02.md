@@ -27,10 +27,13 @@ z katalogiem oraz workflow.
 5. **Filtry ogonów.** Wymagany jest niepusty zbiór
    skierowany; przyjęto go jawnie w definicji sieci.
    W obu implikacjach wyraźnie wskazano ogon.
-6. **Heine--Cantor.** Poprawnie powołano się na
-   zwartość ciągową zwartej przestrzeni metrycznej
-   z rozdziału 07, a następnie na ciągłość w punkcie
-   granicznym.
+6. **Heine--Cantor.** Wykryto niedostatecznie uzasadnione
+   odwołanie do zwartości ciągowej: rozdział 07 nie formułował
+   użytego wyniku dla przestrzeni metrycznych. Dodano lemat
+   \`lem:topog-jednostajne-zwarta-ciagowa\` z konstrukcją
+   podciągu przez domknięte ogony i kryterium skończonych
+   przecięć z rozdziału 07. Dowód Heinego--Cantora wskazuje
+   teraz konkretny lemat.
 7. **Rysunek.** Podczas powtórnej kontroli
    dopisano pełny opis relacji
    $E_\varepsilon=\{(x,y):|x-y|<\varepsilon\}$,
@@ -45,8 +48,8 @@ z katalogiem oraz workflow.
 | Nierówności trójkąta w skończonych pseudometrykach | PASS — 441 |
 | Skończone porównania produktu dwuelementowej i trzyelementowej przestrzeni dyskretnej | PASS — 36 |
 | Import rozdziału 12, katalog i punkt wejścia | PASS — kontrola zawartości repozytorium |
-| Liczba etykiet we wszystkich rozdziałach topologii ogólnej | PASS — 451, bez powtórzeń |
-| Odsyłacze w tych rozdziałach | PASS — 119, bez brakujących celów |
+| Liczba etykiet we wszystkich rozdziałach topologii ogólnej | PASS — 452, bez powtórzeń |
+| Odsyłacze w tych rozdziałach | PASS — 121, bez brakujących celów |
 | Terminologia planu i wszystkich rozdziałów 01--12 | PASS — kontrola statyczna |
 | Testy `tools/tests/test_general_topology_ch12.py` w CI | NIEPOTWIERDZONE |
 | Samodzielny i pełny PDF | NIEPOTWIERDZONE |
