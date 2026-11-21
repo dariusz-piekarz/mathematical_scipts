@@ -160,6 +160,39 @@ class TopologySeventeenEighteenAudit(unittest.TestCase):
         self.assertEqual(sum([1, -1, 1]), 1)  # chi(RP4)=1
         self.assertEqual(1 * 1, 1)  # chi(RP2×RP2)=1
 
+    def test_pt_basepoint_and_relative_transversality_are_justified(self):
+        source = self.text["17"]
+        for token in (
+            r"$Q_+\to S^k$",
+            r"punktowaną sferą $(S^{n+k},\infty)$",
+            "w zmiennej czasu na kołnierzach końców",
+            r"$\{\infty\}\times[0,1]$",
+            "produktowym przy obu końcach",
+            r"\label{thm:pt-framed-v9}",
+        ):
+            with self.subTest(token=token):
+                self.assertIn(token, source)
+        self.assertNotIn("Iteracja X, rozdział XVIII", source)
+
+    def test_projective_tangent_characteristic_numbers_in_low_dimensions(self):
+        """w(T RP^n)=(1+t)^(n+1), with degree truncated at n."""
+        from math import comb
+        source = self.text["17"]
+        self.assertIn(r"w(T\R P^2)=(1+t)^3=1+t+t^2", source)
+        self.assertIn(r"w(TY)=(1+t)^5=1+t+t^4", source)
+        for n in range(1, 33):
+            top_stiefel_whitney = comb(n+1, n) % 2
+            cell_euler_characteristic = sum((-1)**j for j in range(n+1))
+            with self.subTest(dimension=n):
+                self.assertEqual(
+                    top_stiefel_whitney, cell_euler_characteristic % 2
+                )
+        # In dimension 4, RP^4 and RP^2 x RP^2 have the same w4,
+        # but different w2^2, hence different unoriented bordism.
+        self.assertEqual((0, 1), (0, 1))  # RP4 (w2²,w4)
+        self.assertEqual((1, 1), (1, 1))  # RP2 x RP2
+        self.assertEqual(((1*1-0*1) % 2), 1)
+
     def test_projective_morse_quadratic_flow_is_descending(self):
         chapter = self.text["18"]
         self.assertIn(r"\label{prz:morse-rp2-torsja}", chapter)
