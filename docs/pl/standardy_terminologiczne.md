@@ -16,6 +16,12 @@ Zasady przyjęte 21 listopada 2026 r. Obowiązują przy opracowywaniu **wszystki
 - Dokładnie zaznaczamy, co implikuje niezależność: z równości \(\sum_{j=1}^m a_jv_j=0\) dla **parami różnych** wektorów albo różnych indeksów wynika zerowanie wszystkich współczynników. Jeśli istnieje równość z niezerowym współczynnikiem, to mamy świadectwo zależności.
 - Określenie „relacja” zachowuje swoje normalne znaczenie przy **relacjach teoriomnogościowych**, relacjach równoważności, porządkach itd.; niniejsza zasada dotyczy tylko języka liniowej niezależności.
 
+## 3. „Przestrzeń dualna”, nie samodzielne angielskie „dual”
+
+- W polskich tekstach matematycznych nie używamy samodzielnego angielskiego rzeczownika „dual”, w szczególności w tytułach twierdzeń i sekcji. Stosujemy „przestrzeń dualna”, „przestrzeń sprzężona” lub „przestrzeń funkcjonałów liniowych”.
+- Dopuszczalne są polskie formy przymiotnikowe: „dualny”, „dualna”, „dualne”, np. „odwzorowanie dualne”, „baza dualna”, „przestrzeń dualna”; również „odwzorowanie sprzężone”, gdy odpowiada znaczeniu.
+- Zalecane sformułowania: „przestrzeń dualna do ilorazu” i „przestrzeń dualna do sumy prostej”. Nie zmieniamy z tego powodu istniejących etykiet \verb|\label| i odsyłaczy \verb|\ref|.
+
 ## Audyty
 
 W każdym audycie sprawdzamy konsekwentnie te terminy w treści, twierdzeniach, przykładach, podpisach rysunków i komentarzach LaTeX, bez naruszania historycznych etykiet odsyłaczy. Terminologia nie może zmieniać poprawnego znaczenia matematycznego.
