@@ -9,7 +9,7 @@ Commit treści po audycie 6: `f6a7d8b5fb8a4a32b6ca58adeb12218a4b9dada5`
 
 Szósty audyt dotyczył wyłącznie rozdziału 01. Ponownie sprawdzono warunki w definicji przestrzeni i podprzestrzeni, przypadki skalarów z ciał o charakterystyce dodatniej, funkcje i wielomiany jako przestrzenie wektorowe, domknięcia na działaniach, zależność i rozpinanie rodzin dowolnej mocy, konstrukcję baz skończonych i dowody Steinitza oraz dwie wersje twierdzenia o istnieniu bazy wykorzystujące lemat Zorna.
 
-Oddzielnie sprawdzono wersję po audycie 5: przebieg CI [44891689186](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44891689186) zakończył się sukcesem. Zweryfikowano, że nie wystąpiły nierozwiązane odsyłacze w finalnym logu PDF. Na poprzednim PDF zweryfikowano także skład dwóch rysunków.
+Oddzielnie sprawdzono wersję po audycie 5: przebieg CI [44891689186](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44891689186) zakończył się sukcesem. Zweryfikowano, że nie wystąpiły nierozwiązane odsyłacze w finalnym logu PDF. Sprawdzono także skład poprzedniego PDF oraz wyrenderowano strony 4, 5 i 8 aktualnego PDF: oba rysunki, podpisy i nowe fragmenty nie mają widocznych kolizji.
 
 ## Usterki i uzupełnienia
 
@@ -42,8 +42,8 @@ Rozszerzono przykład \(K[X]_{\leq d}\): po zadeklarowaniu, że zbiór jest domk
 - **66 unikalnych etykiet `\\label`**, brak duplikatów lokalnych.
 - Wszystkie odsyłacze `\\ref`, `\\eqref` posiadają lokalne cele.
 - Brak niezrównoważonych `\\begin` i `\\end`.
-- Liczba ilustracji TikZ nie zmieniła się (dwie); brak nowych zewnętrznych plików ilustracji.
-- Zaplanowane walidacje aktualnego commita: [GitHub Actions run 44892015946](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44892015946). Wynik do uzupełnienia po zakończeniu.
+- Liczba ilustracji TikZ nie zmieniła się (dwie); brak nowych zewnętrznych plików ilustracji. PDF po audycie 6 obejmuje 15 stron; wyrenderowane strony z nowymi przykładami i twierdzeniem o skończonym charakterze zostały zweryfikowane wizualnie.
+- Zaplanowane walidacje aktualnego commita: [GitHub Actions run 44892015946](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44892015946). **Wynik: success.** Wszystkie kroki poświęcone algebrze liniowej, w tym pełna kompilacja LaTeX, kontrola odsyłaczy i eksport PDF, zakończyły się sukcesem. Końcowy plik `linear_algebra.log` nie zawiera `Overfull`, `Underfull`, `LaTeX Warning`, `Missing character` ani błędów środowisk. PDF zawiera **15 stron**. Pierwszy przebieg LaTeX miał przejściowe ostrzeżenia o odsyłaczach; po kolejnych przebiegach zniknęły z końcowego logu.
 
 ## Uwaga o testach globalnych
 
