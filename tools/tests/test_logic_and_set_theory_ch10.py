@@ -229,6 +229,7 @@ class TestLogicAndSetTheoryChapter10(unittest.TestCase):
                     "10-struktury-wartosciowania-i-prawda.tex"
                  ).read_text(encoding="utf-8")
         self.assertIn(r"s(X^{(n)})\in\mathcal S_n", source)
+        self.assertIn(r"D_n\in\mathcal S_n", source)
         self.assertIn(r"\mathcal S_n\subseteq\mathcal P(A^n)", source)
 
 
