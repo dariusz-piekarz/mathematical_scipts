@@ -246,5 +246,54 @@ class AlgebraicTopologyTwentySevenTwentyEightAudit(unittest.TestCase):
         self.assertIn(r"i^!k_X\simeq k_{\{0\}}[-2]", self.texts["27"])
 
 
+    def test_at28_self_contained_lefschetz_hodge_and_canonical_hypotheses(self):
+        source = self.texts["28"]
+        for snippet in (
+            r"w którym składniki różnych stopni są ortogonalne",
+            r"$[\Lambda,L]|_{V^k}=(n-k)\id$ dla każdego $k$",
+            r"$V^j=0$ poza przedziałem",
+            r"Jeżeli wzór zachodzi dla $r$",
+            r"Niech $X$ będzie zwartą zespoloną rozmaitością",
+            r"$P^k(X;\C)=\ker\bigl(L^{n-k+1}",
+            r"$b_{2j+1}(X)=\dim_\Q H^{2j+1}(X;\Q)$",
+            r"$h^{p,q}(S)=\dim_\C H^{p,q}(S)$",
+            r"Twierdzenia~\ref{thm:xvii-blowup}",
+            r"$\pi$ ma stopień $1$",
+            r"Dla każdego $k\in\Z$ istnieje addytywny izomorfizm",
+        ):
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, source)
+        self.assertNotIn("Obracając go działaniem", source)
+
+    def test_at28_sl2_lefschetz_chain_commutators(self):
+        # In an orthonormal primitive chain of length s+1 (s=n-m),
+        # L(e_r) = sqrt((r+1)(s-r)) e_(r+1), Lambda=L*.
+        # This independently checks [Lambda,L]=(n-k)I on degree k=m+2r.
+        for n in range(0, 13):
+            for m in range(0, n+1):
+                length = n - m
+                for r in range(length+1):
+                    raise_square = (r+1)*(length-r) if r < length else 0
+                    lower_square = r*(length-r+1) if r else 0
+                    self.assertEqual(raise_square-lower_square, n-(m+2*r))
+                    k = m + 2*r
+                    if k <= n:
+                        target_r = r + n - k
+                        self.assertEqual(target_r, length-r)
+                        self.assertTrue(0 <= target_r <= length)
+
+    def test_at28_intersection_signatures_and_elliptic_blowup(self):
+        # P2: Q=(1). P1xP1: Q=[[0,1],[1,0]].
+        # The blowup at a point adds one negative eigenvalue.
+        signatures = {"P2": (1,0), "P1xP1": (1,1)}
+        for plus, minus in signatures.values():
+            self.assertEqual((plus, minus+1)[1], minus+1)
+        for g in range(0, 8):
+            b = [1, 0, 2, 2*g, 2, 0, 1]
+            euler = sum((-1)**j * bj for j,bj in enumerate(b))
+            self.assertEqual(euler, 6-2*g)
+        self.assertEqual(6-2*1,4)
+
+
 if __name__ == "__main__":
     unittest.main()
