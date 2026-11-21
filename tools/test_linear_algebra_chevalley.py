@@ -126,7 +126,8 @@ def check_case(a, p, n):
     # Fp if and only if S^p = S (since t^p-t has distinct roots).
     assert power(semisimple, p, p, n) == semisimple
 
-    for polynomial in ((1, 2, 1), (0, 1), (2, 0, 1, 1), (1,)):
+    for polynomial in ((), (0,), (1,), (0, 1), (1, 2, 1),
+                       (2, 0, 1, 1), (1, 0, 0, 0, 1)):
         direct = eval_poly(polynomial, a, p, n)
         via_projectors = zero(n)
         for lam, a_lam in factors.items():
@@ -179,7 +180,11 @@ def check_exponential():
 def run():
     rng = Random(18018)
     stats = []
+    for p in (2, 3):
+        assert check_case((), p, 0)  # The zero-dimensional endomorphism.
     for p, n, cases in (
+        (2, 1, [(0,), (1,)]),
+        (3, 1, [(0,), (1,), (2,)]),
         (2, 2, list(product(range(2), repeat=4))),
         (3, 2, list(product(range(3), repeat=4))),
         (2, 3, list(product(range(2), repeat=9))),
