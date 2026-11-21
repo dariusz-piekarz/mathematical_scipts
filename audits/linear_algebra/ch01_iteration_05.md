@@ -43,7 +43,7 @@ Po poprawkach w aktualnym pliku:
 - Zgodne i domknięte środowiska `\\begin`/`\\end`.
 - Dwa rysunki TikZ; brak nowych zależności od zewnętrznych obrazów.
 - Kontrola CI przed audytem 5: [44891361530](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44891361530) — zaliczona.
-- CI dla końcowej wersji audytu 5: [44891689186](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44891689186). Aktualny wynik należy sprawdzić w przebiegu; nie deklaruje się zakończenia przed potwierdzeniem statusu.
+- CI dla końcowej wersji audytu 5: [44891689186](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44891689186) — **zaliczone (success)**. Wszystkie kroki dotyczące rozdziału, kompilacji LaTeX, weryfikacji PDF i eksportu artefaktu zakończyły się pomyślnie. W końcowym pliku `linear_algebra.log` nie znaleziono `Overfull`, `Underfull`, `LaTeX Warning`, `Undefined control sequence` ani `Missing character`. Ostrzeżenia o niezdefiniowanych odsyłaczach widoczne w zbiorczym logu zadania pochodziły z pierwszego przebiegu LaTeX i zostały rozwiązane w kolejnych przebiegach.
 
 Wcześniejsze błędy całej Biblioteki (globalne kopie źródłowe, importy w innych skryptach) pozostają osobne od niniejszego audytu. Samo zaliczenie CI algebry liniowej nie oznacza ich naprawienia.
 
