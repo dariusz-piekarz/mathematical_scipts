@@ -178,6 +178,8 @@ audits/                           Raporty iteracyjnych audytów
 
 **Zasada deduplikacji:** jeden temat powinien docelowo mieć jedno źródło kanoniczne, ale dopiero po porównaniu merytorycznym. Zachowujemy wszystkie istotnie różne definicje, twierdzenia, warianty dowodów, przykłady, rysunki i kod. Utrzymujemy poprawne odsyłacze i aliasy. Kandydaci do scalenia są opisani w [`catalog/topic_registry.json`](catalog/topic_registry.json); oznaczenie „pending” nie znaczy, że merge został wykonany.
 
+**Wspólne konwencje terminologiczne:** [rejestr terminów](docs/pl/konwencje_terminologiczne.md) obowiązuje we wszystkich polskojęzycznych skryptach. W szczególności stosujemy „uzwarcenie Čecha–Stone’a”, „uzwarcenie Aleksandrowa” oraz „topologia zbieżności jednostajnej na zbiorach zwartych”.
+
 ## Testy, CI i audyty
 
 Z katalogu głównego:
