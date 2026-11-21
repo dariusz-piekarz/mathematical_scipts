@@ -51,6 +51,6 @@ Commit `909824266588cc0464702d1d13e5780a09d0f786`.
 - [AT–DG–AG odsyłacze — success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44945029690).
 - [Audyt TOP-27/28 — success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44945029695).
 - [Ogólna kontrola aplikacji — failure](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44945029710). Z logu wynika **niezaklasyfikowany brakujący odsyłacz `ch:representability-diagonal` w LST-17, wiersz 335**. Nie jest związany z TOP-26. Nie należy nazywać całego CI zielonym.
-- Wynik uruchomienia po dodaniu samej regresji `77031a68` należy sprawdzić niezależnie; matematyka oraz końcowy blob źródła nie zmieniły się.
+- [Końcowa kontrola AT-25/26 — completed / success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44945137693) dla commitu `77031a68`, po wprowadzeniu ostatniej regresji. [Końcowa kontrola aplikacji — completed / failure](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44945137689), nadal z powodu brakującego odsyłacza `ch:representability-diagonal` w LST-17, wiersz 335. Matematyka i końcowy blob źródła TOP-26 nie zmieniły się.
 
 **Wynik:** TOP-26 po pięciu audytach stabilny matematycznie i redakcyjnie; nie dodano nowych twierdzeń, lematów ani przykładów. Następny w kolejności TOP-27.
