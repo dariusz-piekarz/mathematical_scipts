@@ -259,5 +259,22 @@ class TopologyTwentyFiveTwentySixAudit(unittest.TestCase):
         self.assertEqual(det, -2j)
 
 
+    def test_at25_self_contained_statements_and_ehresmann_fiber(self):
+        source = self.src["25"]
+        for fragment in (
+            r"Niech $\mathcal A$ będzie kategorią abelową,",
+            "Niech $V_{\\Q}$ będzie skończeniewymiarową",
+            r"$b_j(M)=\dim_{\Q}H^j(M;\Q)$",
+            r"E_1^{p,q}=H^q(X,\Omega_X^p)",
+            r"Niech $x\in C$ oznacza węzeł.",
+            r"$F=p^{-1}(b)$",
+            r"$C_t=\pi^{-1}(t)$",
+            r"$X_0=f^{-1}(0)$, a $P\in\operatorname{Perv}(X;\Q)$.",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, source)
+        self.assertIn("poza węzłem\n$\\pi$ jest submersją", source)
+
+
 if __name__ == "__main__":
     unittest.main()
