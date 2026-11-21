@@ -3,7 +3,7 @@
 Data: 21 listopada 2026  
 Gałąź: `biblioteka-matematyczna-iteracja-6`  
 Rozdział: `chapters/pl/linear_algebra/02-wymiar-sumy-proste-i-przestrzenie-ilorazowe.tex`  
-Wersja treści po pierwszym audycie: commit `b80a8e731ab883fd336992e0372b30b297005457`
+Wersja treści po pierwszym audycie: commit `c962f1abcd20d6c64cf0c509dcd9f3520077d51a`
 
 ## Zakres nowego rozdziału
 
@@ -66,6 +66,18 @@ Dodano m.in. przykłady w \(\mathbb R^2\), \(\mathbb R^3\),
 - Dla ilorazu wielomianów przez wielomiany stałe
   doprecyzowano przypadek pustej sumy \(d=0\).
 
+### 5. Uzasadnienie działania produktu i zachowania wymiaru przez izomorfizm
+
+W dowodzie twierdzenia o sumie zewnętrznej dopisano uzasadnienie,
+że produkt \(\prod_i U_i\) jest przestrzenią wektorową
+z działaniami współrzędnymi, a suma zewnętrzna jest podprzestrzenią.
+
+W dowodzie wzoru na wymiar przestrzeni ilorazowej
+wykazano explicite, że liniowa bijekcja \(\Theta:W\to V/U\)
+przenosi bazę Hamela \(W\) na bazę Hamela \(V/U\).
+Dopiero stąd wyprowadzono równość wymiarów
+\(\dim_K W=\dim_K(V/U)\).
+
 ## Globalna terminologia
 
 W tej samej iteracji użytkownik wprowadził dwie wiążące
@@ -102,7 +114,9 @@ a ponowny przebieg zakończył się sukcesem.
   — **success**.
 - CI po poprawkach audytu 1:
   [44894419432](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44894419432)
-  — wynik końcowy do potwierdzenia.
+  — wcześniejsza wersja poprawek, oraz
+  [44894493853](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44894493853)
+  — ostateczny commit po dodatkowych wyjaśnieniach dowodowych, wynik do potwierdzenia.
 - Starsze 24 błędy globalnej walidacji pozostałych
   materiałów w repozytorium są raportowane osobno
   i nie zostały objęte tą iteracją.
