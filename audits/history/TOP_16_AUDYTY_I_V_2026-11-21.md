@@ -60,6 +60,13 @@ Po naprawie odsyłacza dla commita `8646da10`:
 - [Aplikacja](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44931001424): **success**.
 - [AT–DG–AG](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44931001356): **success**.
 
-Dalsze poprawki obejmują doprecyzowanie przypadku K(A,0), język i osobne regresje. **Końcowy wynik CI dla najnowszej wersji należy uzupełnić przed formalną decyzją o stabilności.**
+Końcowa wersja źródła (commit `7dc20c58b53b7a32f9930be725d581a1b08a484b`) przeszła:
+- [TeX TOP-01–16](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44931114083) — **completed / success**.
+- [Aplikacja i testy](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44931114005) — **completed / success**.
+- [Kontrola AT–DG–AG](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44931113923) — **completed / success**.
 
-**Status na tym etapie:** audyt V matematycznie i strukturalnie czysty, oczekiwanie na aktualne CI. Następny rozdział po domknięciu: TOP-17.
+Dodatkowy commit `227064b76071a0f495f105e68b7a13b6326c6d69` zmienił wyłącznie regresje testowe, nie źródło rozdziału. Oba nowe zadania również przeszły:
+- [TeX TOP-01–16 po dodaniu regresji](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44931145716) — **success**.
+- [Testy aplikacji po dodaniu regresji](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44931145693) — **success**.
+
+**Decyzja końcowa:** **TOP-16 stabilny po audycie V**. W trakcie audytu błąd składni odsyłacza został wykryty w CI, naprawiony i objęty nowym testem zapobiegawczym. Zachowano wszystkie 11 etykiet, 2 diagramy oraz dotychczasowy zakres materiału. Następny rozdział w cyklu stabilizacyjnym: TOP-17. Automatyzacje pozostają wyłączone.
