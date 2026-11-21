@@ -50,3 +50,13 @@ Po opracowaniu raportu zakończyły się dodatkowe uruchomienia:
 Wspólny workflow aplikacji ujawnił osobną regresję w równolegle rozwijanym LST-10: dwa odsyłacze do jeszcze nieistniejących etykiet. Nie wyciszono walidatora: poprawiono źródło LST-10 w `1f452b86`, a następnie zawężono listę dokumentowanych odsyłaczy przyszłych z trzech do jednego w `8f21df29`. Nowe uruchomienia aplikacji i LST pozostawały w toku podczas tej aktualizacji.
 
 **Stan rozdziału:** audyty merytoryczne I–V są czyste; kompilacje TOP-01–12 i porównawcze AT–DG są zielone. Pełne zamknięcie formalne czeka wyłącznie na potwierdzenie wspólnej walidacji po poprawce niezależnego LST-10.
+
+## Domknięcie audytu TOP-11
+
+Ostateczne potwierdzenie: [Mathematical library application checks — commit `1f452b86`](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44926765108) zakończył się `completed/success` po usunięciu dwóch błędnych odsyłaczy LST-10. Potwierdzono również sukces:
+- [TOP-11–12 TeX — `c2db9f9a`](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44926456075),
+- [AT11–DG17 — `58d5bd6e`](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44926606563),
+- [AT21–DG17 — `50cbd132`](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44926585115),
+- [AT–DG–AG — `50cbd132`](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44926585140).
+
+**Decyzja matematyczna i techniczna dla TOP-11: stabilny po audycie V.** Jego źródło pozostaje na istniejącej gałęzi. Osobny workflow `Logic and set theory chapters 01-10 validation` po zawężeniu docelowej listy przyszłych etykiet był jeszcze w trakcie kompilacji pełnego skryptu LST-01–10 i nie wpływa na to, że wszystkie kontrole dotyczące TOP-11 zakończyły się sukcesem. Do audytu TOP-12 przechodzimy dopiero po domknięciu bieżącej iteracji.
