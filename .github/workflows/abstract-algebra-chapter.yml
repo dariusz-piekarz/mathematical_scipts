@@ -1,4 +1,4 @@
-name: Abstract algebra AA-01 to AA-07 validation
+name: Abstract algebra AA-01 to AA-08 validation
 
 on:
   push:
@@ -18,6 +18,7 @@ on:
       - "tools/tests/test_abstract_algebra_ch05.py"
       - "tools/tests/test_abstract_algebra_ch06.py"
       - "tools/tests/test_abstract_algebra_ch07.py"
+      - "tools/tests/test_abstract_algebra_ch08.py"
       - ".github/workflows/abstract-algebra-chapter.yml"
   workflow_dispatch:
 
@@ -47,13 +48,15 @@ jobs:
         run: python -m unittest tools.tests.test_abstract_algebra_ch06 -v
       - name: Run AA-07 regression tests
         run: python -m unittest tools.tests.test_abstract_algebra_ch07 -v
-      - name: Compile AA-01 to AA-07 book with latexmk
+      - name: Run AA-08 mathematical regression tests
+        run: python -m unittest tools.tests.test_abstract_algebra_ch08 -v
+      - name: Compile AA-01 to AA-08 book with latexmk
         uses: xu-cheng/latex-action@v3
         with:
           root_file: abstract_algebra.tex
           working_directory: books/pl
           args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
-      - name: Verify PDF and references (allow documented AA-08/AA-18 forward refs only)
+      - name: Verify PDF and references (allow documented AA-18 forward ref only)
         shell: bash
         run: |
           test -s books/pl/abstract_algebra.pdf
@@ -66,8 +69,6 @@ jobs:
               r"LaTeX Warning: Reference `([^']+)' on page \d+ undefined", log
           ))
           future = {
-              "aa:ch:grupy-abelowe",
-              "aa:tw:abelian-tensor-cyclic",
               "aa:ch:module-tensor-product",
           }
           unexpected = unresolved - future
@@ -78,14 +79,14 @@ jobs:
           if re.search(r"LaTeX Warning: Citation .+ undefined", log):
               raise SystemExit("Undefined citation found")
           if unresolved:
-              print("Documented forward references to AA-08/AA-18:", sorted(unresolved))
+              print("Documented forward reference to AA-18:", sorted(unresolved))
               print("These links will resolve when the future chapters enter the stable book.")
           PY
       - name: Archive build output
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: abstract-algebra-aa01-aa07
+          name: abstract-algebra-aa01-aa08
           path: |
             books/pl/abstract_algebra.pdf
             books/pl/abstract_algebra.log
