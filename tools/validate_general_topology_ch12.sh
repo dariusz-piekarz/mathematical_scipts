@@ -6,7 +6,7 @@ for n in 01 02 03 04 05 06 07 08 09 10 11 12; do
 done
 (
   cd books/pl
-  latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error general_topology_ch12.tex > ../../build_ch11.log 2>&1
+  latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error general_topology_ch12.tex > ../../build_ch12.log 2>&1
   latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error general_topology.tex > ../../build_book.log 2>&1
   for name in general_topology_ch12 general_topology; do
     test -s "${name}.pdf"
