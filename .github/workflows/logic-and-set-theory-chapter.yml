@@ -1,4 +1,4 @@
-name: Logic and set theory chapters 01-07 validation
+name: Logic and set theory chapters 01-08 validation
 
 on:
   push:
@@ -9,6 +9,8 @@ on:
       - "books/pl/logic_and_set_theory.tex"
       - "catalog/books.json"
       - "audits/logic_and_set_theory_ch07_audit_*.md"
+      - "audits/logic_and_set_theory_ch08_audit_*.md"
+      - "tools/tests/test_logic_and_set_theory_ch08.py"
       - "tools/tests/test_logic_and_set_theory_ch07.py"
       - ".github/workflows/logic-and-set-theory-chapter.yml"
   workflow_dispatch:
@@ -29,7 +31,7 @@ jobs:
           catalog = json.loads(Path("catalog/books.json").read_text(encoding="utf-8"))
           book = next(item for item in catalog["books"] if item["id"] == "logic_and_set_theory")
           chapters = book["chapters"]
-          assert len(chapters) >= 7, chapters
+          assert len(chapters) >= 8, chapters
           expected_names = [
               "01-zdania-i-spojniki-logiczne.tex",
               "02-kwantyfikatory-i-podstawowe-metody-dowodzenia.tex",
@@ -38,12 +40,13 @@ jobs:
               "05-relacje-rownowaznosci-i-zbiory-ilorazowe.tex",
               "06-relacje-porzadku-od-porownywania-do-kresow.tex",
               "07-funkcje-i-odwzorowania.tex",
+              "08-obrazy-przeciwobrazy-i-dzialania-na-funkcjach.tex",
           ]
-          assert [Path(path).name for path in chapters[:7]] == expected_names
+          assert [Path(path).name for path in chapters[:8]] == expected_names
           entry = Path(book["entrypoint"])
           text = entry.read_text(encoding="utf-8")
           sources = []
-          for path in chapters[:7]:
+          for path in chapters[:8]:
               chapter = Path(path)
               assert chapter.is_file(), path
               assert "\\input{../../" + path + "}" in text, path
@@ -51,14 +54,16 @@ jobs:
           labels = [name for source in sources for name in re.findall(r"\\label\{([^}]+)\}", source)]
           refs = [name for source in sources for name in re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", source)]
           assert len(labels) == len(set(labels)), "Duplicate LaTeX labels"
-          assert len(labels) == 223, f"Unexpected labels: {len(labels)}"
-          forward = {"ch:function-operations", "ch:syntax-fol", "ch:semantics-fol", "ch:zf-axioms"}
+          assert len(labels) == 250, f"Unexpected labels: {len(labels)}"
+          forward = {"ch:syntax-fol", "ch:semantics-fol", "ch:zf-axioms"}
           assert set(refs) - set(labels) == forward, "Unexpected unresolved targets in partial book"
           inventories = [
               (sources[5], {"twierdzenie": 15, "wniosek": 1, "proof": 16,
                             "definicja": 12, "przyklad": 21, "uwaga": 7}),
               (sources[6], {"twierdzenie": 11, "wniosek": 0, "proof": 11,
                             "definicja": 5, "przyklad": 10, "uwaga": 9}),
+              (sources[7], {"twierdzenie": 20, "wniosek": 0, "proof": 20,
+                            "definicja": 6, "przyklad": 16, "uwaga": 1}),
           ]
           for source, inventory in inventories:
               for env, expected in inventory.items():
@@ -71,10 +76,12 @@ jobs:
                   else:
                       assert stack and stack.pop() == env, ("Unbalanced environment", env)
               assert not stack, ("Unclosed environments", stack)
-          print("PASS: imports, chapter order, 223 labels, 86 references, four documented forward references, inventories and TeX environments")
+          print("PASS: imports, chapter order, 250 labels, 91 references, three documented forward references, inventories and TeX environments")
           PY
       - name: Run chapter 07 finite-model regression tests
         run: python -m unittest tools.tests.test_logic_and_set_theory_ch07 -v
+      - name: Run chapter 08 finite-model regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch08 -v
       - name: Compile logic and set theory PDF
         uses: xu-cheng/latex-action@v3
         with:
@@ -91,7 +98,7 @@ jobs:
 
           log = Path("books/pl/logic_and_set_theory.log").read_text(errors="replace")
           refs = set(re.findall(r"LaTeX Warning: Reference `([^']+)' on page \d+ undefined", log))
-          allowed = {"ch:function-operations", "ch:syntax-fol", "ch:semantics-fol", "ch:zf-axioms"}
+          allowed = {"ch:syntax-fol", "ch:semantics-fol", "ch:zf-axioms"}
           assert refs <= allowed, f"Unexpected undefined references: {sorted(refs - allowed)}"
           assert not re.search(r"Overfull \\hbox", log), "Overfull TeX boxes"
           assert not re.search(r"LaTeX Warning: Citation .+ undefined", log), "Undefined citation"
@@ -103,7 +110,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: logic-and-set-theory-ch01-ch07
+          name: logic-and-set-theory-ch01-ch08
           path: |
             books/pl/logic_and_set_theory.pdf
             books/pl/logic_and_set_theory.log
