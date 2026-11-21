@@ -1,0 +1,483 @@
+\chapter{Sterowalność, obserwowalność i stabilizowalność}
+\label{ch:lin25-control}
+\index{sterowalność@Sterowalność}
+\index{obserwowalność@Obserwowalność}
+\index{kryterium Kalmana@Kryterium Kalmana}
+\index{kryterium PBH@Kryterium PBH}
+\index{stabilizowalność@Stabilizowalność}
+\index{wykrywalność@Wykrywalność}
+
+\noindent\textbf{Cel rozdziału.}
+W Rozdziale~\ref{ch:lin24-riccati}
+dowiedliśmy stabilności optymalnych sprzężeń
+przy założeniu, że macierz otwartej pętli
+jest już stabilna. Chcemy wiedzieć,
+kiedy sterowanie może ustabilizować
+układ początkowo niestabilny
+i kiedy jego stan można odtworzyć
+z obserwowanego wyjścia.
+Prowadzi to do sterowalności,
+obserwowalności, ich kryteriów
+macierzowych i rozkładu Kalmana.
+Udowodnimy również spektralne
+kryteria stabilizowalności
+i wykrywalności, nie zakładając
+bez dowodu twierdzeń o rozmieszczaniu
+biegunów sprzężenia zwrotnego.
+
+Pracujemy nad ciałem \(\mathbb C\);
+rzeczywiste odpowiedniki zostaną
+wskazane w osobnej uwadze.
+Ustalamy liczby całkowite
+\(n,m,p\ge1\) oraz macierze
+\(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\),
+\(B\in\operatorname{Mat}_{n\times m}(\mathbb C)\),
+\(C\in\operatorname{Mat}_{p\times n}(\mathbb C)\).
+Stan to \(x\in\mathbb C^n\),
+sterowanie to \(u\in\mathbb C^m\),
+a obserwacja to \(y=Cx\in\mathbb C^p\).
+Przez \(\operatorname{im}T\)
+i \(\ker T\) oznaczamy odpowiednio
+obraz i jądro odwzorowania liniowego \(T\).
+
+\section{Sterowalność w czasie dyskretnym}
+\label{sec:lin25-reach}
+
+\begin{definicja}[Macierz i przestrzeń sterowalności]
+\label{def:lin25-kalman}
+Dla pary \((A,B)\) definiujemy
+\emph{macierz sterowalności Kalmana}
+oraz \emph{przestrzeń osiągalną}
+wzorami
+\[
+ \mathcal K(A,B)=
+ \begin{bmatrix}
+ B&AB&A^2B&\cdots&A^{n-1}B
+ \end{bmatrix},
+ \qquad
+ \mathcal R(A,B)=\operatorname{im}\mathcal K(A,B).
+\]
+Parę \((A,B)\) nazywamy
+\emph{sterowalną}, jeśli
+\(\mathcal R(A,B)=\mathbb C^n\),
+równoważnie
+\(\operatorname{rank}\mathcal K(A,B)=n\).
+\end{definicja}
+
+\begin{lemat}[Niezmienniczość przestrzeni osiągalnej]
+\label{lem:lin25-invariant}
+Dla każdej pary \((A,B)\)
+przestrzeń \(\mathcal R(A,B)\)
+zawiera \(\operatorname{im}B\),
+jest niezmiennicza względem \(A\)
+i spełnia
+\[
+ \mathcal R(A,B)
+ =\sum_{k=0}^{\infty}\operatorname{im}A^kB.
+\]
+Jest ona najmniejszą
+\(A\)-niezmienniczą podprzestrzenią
+zawierającą \(\operatorname{im}B\).
+\end{lemat}
+\begin{proof}
+Z definicji
+\(\operatorname{im}B\subseteq\mathcal R(A,B)\).
+Dla \(0\le k<n-1\)
+mamy
+\(A(\operatorname{im}A^kB)
+ =\operatorname{im}A^{k+1}B
+ \subseteq\mathcal R(A,B)\).
+Pozostaje sprawdzić \(k=n-1\).
+Z twierdzenia Cayleya--Hamiltona,
+udowodnionego w
+Rozdziale~\ref{ch:lin16-invariant},
+istnieją współczynniki
+\(c_0,\ldots,c_{n-1}\in\mathbb C\)
+takie, że
+\[
+ A^n=-\sum_{j=0}^{n-1}c_jA^j.
+\]
+Po pomnożeniu przez \(B\)
+otrzymujemy
+\(\operatorname{im}A^nB
+ \subseteq\mathcal R(A,B)\).
+Wobec tego \(\mathcal R(A,B)\)
+jest \(A\)-niezmiennicza,
+a więc zawiera obrazy
+\(A^kB\) dla wszystkich \(k\ge0\).
+Odwrotne zawieranie
+wynika bezpośrednio z definicji.
+Każda \(A\)-niezmiennicza
+podprzestrzeń zawierająca
+\(\operatorname{im}B\)
+musi zawierać także wszystkie
+\(\operatorname{im}A^kB\);
+stąd minimalność.
+\end{proof}
+
+\begin{twierdzenie}[Kryterium Kalmana w czasie dyskretnym]
+\label{thm:lin25-kalman}
+Niech dla każdego
+całkowitego \(k\ge0\)
+stan układu spełnia
+\(x_{k+1}=Ax_k+Bu_k\),
+gdzie \(u_k\in\mathbb C^m\).
+Dla ustalonego \(N\ge1\)
+zbiór stanów osiągalnych
+w chwili \(N\) ze stanu \(x_0=0\)
+jest równy
+\[
+ \operatorname{im}
+ \begin{bmatrix}
+ B&AB&\cdots&A^{N-1}B
+ \end{bmatrix}.
+\]
+Następujące warunki
+są równoważne:
+\begin{enumerate}[label=\textup{(\roman*)}]
+ \item para \((A,B)\) jest sterowalna;
+ \item każdy \(z\in\mathbb C^n\)
+ można osiągnąć ze stanu \(0\)
+ w dokładnie \(n\) krokach;
+ \item istnieje \(N\ge1\),
+ dla którego każdy
+ \(z\in\mathbb C^n\)
+ można osiągnąć z \(0\)
+ w dokładnie \(N\) krokach;
+ \item dla każdych \(x,z\in\mathbb C^n\)
+ istnieje ciąg sterowań,
+ który przeprowadza \(x\)
+ w \(z\) w dokładnie \(n\) krokach.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Iterując równanie stanu
+otrzymujemy kolejno
+\(x_1=Ax_0+Bu_0\),
+\(x_2=A^2x_0+ABu_0+Bu_1\).
+Indukcja daje dla każdego \(N\ge1\)
+\[
+ x_N=A^Nx_0+
+      \sum_{j=0}^{N-1}A^{N-1-j}Bu_j.
+\]
+Po podstawieniu \(x_0=0\)
+i odwróceniu kolejności
+wektorów \(u_j\)
+otrzymujemy dokładnie obraz
+macierzy podanej w tezie.
+Dla \(N=n\) jest to
+\(\mathcal R(A,B)\),
+więc (i) i (ii) są równoważne,
+a (ii) implikuje (iii).
+
+Jeśli zachodzi (iii),
+to obraz wskazanej macierzy
+jest całą \(\mathbb C^n\);
+na mocy
+Lematu~\ref{lem:lin25-invariant}
+jest jednak zawarty
+w \(\mathcal R(A,B)\).
+Zatem (i).
+
+Załóżmy (i).
+Dla dowolnych \(x,z\)
+połóżmy \(w=z-A^nx\).
+Z (ii) można w \(n\) krokach
+otrzymać ze stanu zerowego
+dowolny wektor \(w\).
+Wybierając te same sterowania
+dla stanu początkowego \(x\),
+otrzymujemy
+\(x_n=A^nx+w=z\).
+To daje (iv).
+Z (iv) wynika (ii)
+po przyjęciu \(x=0\).
+\end{proof}
+
+\begin{przyklad}[Łańcuch dwóch stanów]
+\label{prz:lin25-chain}
+Dla
+\[
+ A=\begin{pmatrix}0&1\\0&0\end{pmatrix},
+ \qquad
+ B=\begin{pmatrix}0\\1\end{pmatrix}
+\]
+mamy
+\(AB=(1,0)^{\mathsf T}\),
+więc
+\[
+ \mathcal K(A,B)
+ =\begin{pmatrix}0&1\\1&0\end{pmatrix},
+ \qquad
+ \det\mathcal K(A,B)=-1.
+\]
+Para jest sterowalna.
+Zerowy stan przechodzi
+po dwóch krokach w
+\[
+ x_2=ABu_0+Bu_1
+     =\begin{pmatrix}u_0\\u_1\end{pmatrix}.
+\]
+Aby osiągnąć \(z=(a,b)^{\mathsf T}\),
+wystarczy więc przyjąć
+\(u_0=a\), \(u_1=b\).
+W pierwszym kroku,
+gdy \(x_0=0\),
+osiągalne są jedynie
+wektory postaci \((0,b)^{\mathsf T}\);
+nie należy zatem zastępować
+warunku „w \(n\) krokach”
+warunkiem „w jednym kroku”.
+\end{przyklad}
+
+\section{Sterowalność w czasie ciągłym}
+\label{sec:lin25-reach-cont}
+
+\begin{definicja}[Ciągły układ sterowany]
+\label{def:lin25-cont-system}
+Niech \(T>0\).
+Rozpatrujemy równanie
+\[
+ x'(t)=Ax(t)+Bu(t),\qquad
+ x(0)=x_0,\qquad 0\le t\le T,
+\]
+dla przedziałami ciągłego
+sterowania
+\(u\colon[0,T]\to\mathbb C^m\).
+Parę \((A,B)\)
+nazywamy \emph{sterowalną
+w czasie ciągłym}, jeśli
+dla każdej liczby \(T>0\)
+oraz dowolnych \(x_0,z\in\mathbb C^n\)
+istnieje takie sterowanie,
+że rozwiązanie spełnia \(x(T)=z\).
+\end{definicja}
+
+\begin{lemat}[Wzór na rozwiązanie z wymuszeniem]
+\label{lem:lin25-variation}
+Dla macierzy \(A,B\)
+i przedziałami ciągłego sterowania
+\(u\colon[0,T]\to\mathbb C^m\)
+jedyne ciągłe,
+przedziałami różniczkowalne
+rozwiązanie równania
+z Definicji~\ref{def:lin25-cont-system}
+ma postać
+\[
+ x(t)=e^{tA}x_0+
+      \int_0^t e^{(t-s)A}Bu(s)
+      \,\mathrm ds,\qquad 0\le t\le T.
+\]
+\end{lemat}
+\begin{proof}
+Jeśli \(x\) jest rozwiązaniem,
+pomnóżmy równanie
+przez \(e^{-tA}\).
+Z reguły iloczynu
+i równości
+\(\frac{\mathrm d}{\mathrm dt}e^{-tA}
+ =-Ae^{-tA}\),
+udowodnionej w
+Rozdziale~\ref{ch:lin18-jordan-chevalley},
+otrzymujemy na każdym przedziale
+ciągłości \(u\)
+\[
+ \frac{\mathrm d}{\mathrm dt}
+    (e^{-tA}x(t))
+ =-Ae^{-tA}x(t)+e^{-tA}(Ax(t)+Bu(t))
+ =e^{-tA}Bu(t).
+\]
+Całkując kawałkami od \(0\) do \(t\)
+i mnożąc przez \(e^{tA}\),
+otrzymujemy wzór z tezy.
+Odwrotnie, różniczkując
+podany wzór na przedziałach,
+gdzie \(u\) jest ciągłe,
+otrzymujemy równanie stanu
+i \(x(0)=x_0\).
+Dla dwóch rozwiązań
+ich różnica \(v\)
+spełnia \(v'=Av\) i \(v(0)=0\),
+więc \(v(t)=e^{tA}v(0)=0\).
+To zapewnia jednoznaczność.
+\end{proof}
+
+\begin{definicja}[Gramian sterowalności]
+\label{def:lin25-gramian}
+Dla każdej \(T>0\)
+\emph{gramianem sterowalności}
+nazywamy macierz hermitowską
+\[
+ W_T=\int_0^T
+      e^{tA}BB^*e^{tA^*}
+      \,\mathrm dt.
+\]
+\end{definicja}
+
+\begin{twierdzenie}[Gramian i kryterium sterowalności ciągłej]
+\label{thm:lin25-gramian}
+Dla każdej pary macierzy
+\(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\),
+\(B\in\operatorname{Mat}_{n\times m}(\mathbb C)\)
+następujące warunki
+są równoważne:
+\begin{enumerate}[label=\textup{(\roman*)}]
+ \item \(\operatorname{rank}\mathcal K(A,B)=n\);
+ \item dla każdego \(T>0\)
+ gramian \(W_T\) jest dodatnio
+ określony;
+ \item istnieje \(T>0\),
+ dla którego \(W_T\) jest
+ dodatnio określony;
+ \item para \((A,B)\)
+ jest sterowalna w czasie ciągłym.
+\end{enumerate}
+Jeśli \(W_T>0\), to
+dla dowolnych \(x_0,z\in\mathbb C^n\)
+sterowanie
+\[
+ u(s)=B^*e^{(T-s)A^*}W_T^{-1}
+             (z-e^{TA}x_0),\quad0\le s\le T,
+\]
+przenosi stan \(x_0\)
+w stan \(z\) w chwili \(T\).
+\end{twierdzenie}
+\begin{proof}
+Dla każdego \(v\in\mathbb C^n\)
+mamy
+\[
+ v^*W_Tv
+ =\int_0^T
+      \bigl\|B^*e^{tA^*}v\bigr\|_2^2
+      \,\mathrm dt\ge0.
+\]
+Ciągłość funkcji podcałkowej
+pokazuje, że \(v^*W_Tv=0\)
+dokładnie wtedy, gdy
+\(B^*e^{tA^*}v=0\)
+dla wszystkich \(t\in[0,T]\).
+
+Jeżeli ta funkcja znika,
+to po zróżniczkowaniu
+jej szeregu wykładniczego
+w punkcie \(t=0\) mamy
+\(B^*(A^*)^kv=0\)
+dla wszystkich całkowitych \(k\ge0\).
+W szczególności dla
+\(k=0,\ldots,n-1\)
+otrzymujemy
+\(\mathcal K(A,B)^*v=0\).
+Odwrotnie, jeśli
+\(\mathcal K(A,B)^*v=0\),
+to \(B^*(A^*)^kv=0\)
+dla \(0\le k<n\).
+Z twierdzenia Cayleya--Hamiltona,
+zastosowanego do \(A^*\),
+wynika indukcyjnie
+zerowanie także dla wszystkich
+\(k\ge n\).
+Szereg
+\(B^*e^{tA^*}v
+ =\sum_{k=0}^\infty
+      \frac{t^k}{k!}B^*(A^*)^kv\)
+jest więc tożsamościowo zerowy.
+Dowiedliśmy, że
+\[
+ \ker W_T=\ker\mathcal K(A,B)^*.
+\]
+Równość obowiązuje dla
+każdego \(T>0\).
+Ponieważ \(W_T\ge0\),
+dodatnia określoność
+jest równoważna
+\(\ker W_T=\{0\}\).
+Stąd równoważność
+(i), (ii) i (iii).
+
+Załóżmy (ii) i wybierzmy
+dowolne \(x_0,z,T\).
+Niech \(d=z-e^{TA}x_0\)
+i zdefiniujmy \(u\)
+wzorem z tezy.
+Z
+Lematu~\ref{lem:lin25-variation}
+otrzymujemy
+\[
+ \begin{aligned}
+ x(T)-e^{TA}x_0
+ &=\int_0^T e^{(T-s)A}BB^*
+        e^{(T-s)A^*}W_T^{-1}d
+       \,\mathrm ds\\
+ &=W_TW_T^{-1}d=d,
+ \end{aligned}
+\]
+bo podstawienie \(t=T-s\)
+zmienia całkę w \(W_T\).
+Zatem \(x(T)=z\);
+otrzymaliśmy (iv).
+
+Załóżmy (iv).
+Dla dowolnego \(T>0\)
+i każdego \(d\in\mathbb C^n\)
+można ze stanu \(0\) osiągnąć
+\(d\) w chwili \(T\).
+Gdyby \(W_T\) nie był
+dodatnio określony,
+to z jego nieujemnej
+określoności istniałby
+\(v\ne0\) taki, że
+\(B^*e^{tA^*}v=0\)
+dla wszystkich \(0\le t\le T\).
+Wówczas dla każdej trajektorii
+startującej od zera
+\[
+ v^*x(T)=\int_0^T
+          v^*e^{(T-s)A}Bu(s)
+          \,\mathrm ds=0.
+\]
+Nie można by osiągnąć
+na przykład \(d=v\),
+gdyż \(v^*v>0\).
+Sprzeczność dowodzi (ii).
+\end{proof}
+
+\begin{przyklad}[Gramian ciągły w wymiarze dwa]
+\label{prz:lin25-gramian}
+Niech \(A,B\) będą macierzami
+z Przykładu~\ref{prz:lin25-chain}.
+Ponieważ \(A^2=0\),
+mamy \(e^{tA}=I+tA\),
+a więc
+\(e^{tA}B=(t,1)^{\mathsf T}\).
+Dla dowolnego \(T>0\)
+otrzymujemy
+\[
+ \begin{aligned}
+ W_T&=\int_0^T
+ \begin{pmatrix}t^2&t\\t&1\end{pmatrix}
+ \,\mathrm dt\\
+ &=\begin{pmatrix}
+       T^3/3&T^2/2\\
+       T^2/2&T
+   \end{pmatrix}.
+ \end{aligned}
+\]
+Macierz jest dodatnio określona:
+jej lewy górny element
+jest dodatni, a wyznacznik
+wynosi
+\[
+ \det W_T=\frac{T^4}{3}
+                -\frac{T^4}{4}
+          =\frac{T^4}{12}>0.
+\]
+Stąd sterowalność obowiązuje
+dla każdego, również bardzo
+małego, dodatniego czasu \(T\).
+Nie oznacza to,
+że koszt energii potrzebnej
+do sterowania pozostaje
+ograniczony, gdy \(T\to0\):
+wzór na \(W_T^{-1}\)
+zawiera rosnące potęgi \(T^{-1}\).
+\end{przyklad}
