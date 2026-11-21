@@ -20,8 +20,8 @@
 
 - Dodano plik rozdziału 17 do `books/pl/linear_algebra.tex`, `catalog/books.json` i listy kontrolnej workflow; README wskazuje rozdziały 01–16 jako stabilne, rozdział 17 jako „w audycie”.
 - Wprowadzono `tools/test_linear_algebra_jordan.py` i krok workflow testujący bloki rozmiarów 1–4 nad `F2,F3`, losowe odwracalne podobieństwa, wymiary jąder potęg i jednoznaczność rozmiarów bloków.
-- Nowy test Jordana przeszedł w [GitHub Actions 44935451202](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44935451202). Wynik końcowy kompilacji i eksportu PDF tego przebiegu należy sprawdzić osobno.
-- Zweryfikowano wstępny 6-stronicowy PDF z wcześniejszego pomyślnego przebiegu [44935307611](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44935307611): brak bloków poza stroną, wszystkie strony mają tekst, bez wizualnych kolizji.
+- Nowy test Jordana przeszedł w [GitHub Actions 44935451202](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44935451202). Cały przebieg zakończył się sukcesem, w tym ponowna kompilacja całego tomu, kontrola ostrzeżeń i odsyłaczy oraz eksport PDF rozdziału 17.
+- Zweryfikowano zarówno wstępny 6-stronicowy PDF z [44935307611](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44935307611), jak i ostateczny PDF z przebiegu 44935451202 po ostatniej poprawce. Wszystkie sześć stron zostało wyrenderowanych i sprawdzonych wizualnie; żadna strona nie jest pusta, nie wykryto elementów poza obszarem strony ani kolizji tekstu. Porównano oba renderowania i potwierdzono, że zmiana dotyczy jedynie jawnej konwencji dla wymiaru zero.
 - Rozdział ma 21 różnych etykiet, 8 odsyłaczy i 7 zakończonych środowisk dowodu.
 
 ## Decyzja
