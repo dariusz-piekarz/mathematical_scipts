@@ -61,6 +61,11 @@ Dla commita `832cad4c`:
 Dla późniejszego commita źródła `779b5e11`:
 - [Zależności AT–DG–AG](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44932926473) — **success**.
 
-**Pozostaje potwierdzić wyniki końcowe** kompilacji TOP-01–18, testów aplikacji po nowym teście ochronnym oraz osobnego audytu porównawczego TOP-18 ↔ DG-18 (w tym pełnej kompilacji DG). Nie oznaczać rozdziału jako formalnie stabilnego przed weryfikacją końcowego CI.
+**Końcowa weryfikacja najnowszej wersji:**
+- [Kompilacja TOP-01–18, dwa przebiegi LaTeX](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44933012278) — **completed / success**, commit `c75d0618`.
+- [Testy aplikacji i wszystkie regresje po ostatniej poprawce](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44933012261) — **completed / success**, commit `c75d0618`.
+- [Kontrola zależności AT–DG–AG](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44932926473) — **completed / success**, commit `779b5e11` (ostatni commit **źródła** TOP-18).
+- [Specjalny audyt TOP-18 ↔ DG-18: porównanie dowodów, kontrola zależności i kompilacje obu skryptów](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44932926474) — **completed / success** w obu zadaniach; pełny kontekst AT-01–30 i DG-01–20 skompilowany. Commit `779b5e11` (aktualne źródło).
+- W niezależnej symulacji arytmetycznej: **117 poziomów regularnych**, **234 sprawdzenia znaków przecięć**, **3 przykłady wielomianowych nierówności Morse'a**; brak niezgodności.
 
-**Wstępny status:** pięć przebiegów audytu matematycznego zakończonych, ostatni czysty; formalne zamknięcie zależy od najnowszych CI. Następny rozdział: TOP-19.
+**Decyzja końcowa:** **TOP-18 STABILNY PO AUDYCIE V.** Pięć audytów, ostatnia kontrola matematyczna i strukturalna czysta, zachowane 13 etykiet i dwa diagramy, wszystkie kontrole CI zakończone sukcesem. Nie dodano nowych twierdzeń ani lematów. Następny rozdział w cyklu: **TOP-19**. Nie włączono automatyzacji.
