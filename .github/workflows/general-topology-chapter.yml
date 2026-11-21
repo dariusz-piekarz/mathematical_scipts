@@ -19,6 +19,7 @@ on:
       - 'tools/tests/test_general_topology_ch08.py'
       - 'tools/tests/test_general_topology_ch09.py'
       - 'tools/tests/test_general_topology_ch10.py'
+      - 'tools/tests/test_general_topology_ch11.py'
       - 'tools/validate_general_topology_ch10.sh'
       - 'tools/validate_general_topology_ch09.sh'
       - 'tools/validate_general_topology_ch08.sh'
@@ -36,6 +37,7 @@ on:
       - 'books/pl/general_topology_ch08.tex'
       - 'books/pl/general_topology_ch09.tex'
       - 'books/pl/general_topology_ch10.tex'
+      - 'books/pl/general_topology_ch11.tex'
       - 'audits/general_topology/**'
       - '.github/workflows/general-topology-chapter.yml'
   workflow_dispatch:
@@ -59,7 +61,7 @@ jobs:
           assert len(items) == 1
           book = items[0]
           assert book['entrypoint'] == 'books/pl/general_topology.tex'
-          assert book['chapters'] == ['chapters/pl/general_topology/01-przestrzenie-topologiczne.tex', 'chapters/pl/general_topology/02-operacje-topologiczne-na-zbiorach.tex', 'chapters/pl/general_topology/03-odwzorowania-ciagle.tex', 'chapters/pl/general_topology/04-konstrukcje-przestrzeni-topologicznych.tex', 'chapters/pl/general_topology/05-aksjomaty-oddzielania.tex', 'chapters/pl/general_topology/06-zbieznosc-topologiczna.tex', 'chapters/pl/general_topology/07-zwartosc.tex', 'chapters/pl/general_topology/08-spojnosc.tex', 'chapters/pl/general_topology/09-aksjomaty-przeliczalnosci.tex', 'chapters/pl/general_topology/10-metryzowalnosc.tex']
+          assert book['chapters'] == ['chapters/pl/general_topology/01-przestrzenie-topologiczne.tex', 'chapters/pl/general_topology/02-operacje-topologiczne-na-zbiorach.tex', 'chapters/pl/general_topology/03-odwzorowania-ciagle.tex', 'chapters/pl/general_topology/04-konstrukcje-przestrzeni-topologicznych.tex', 'chapters/pl/general_topology/05-aksjomaty-oddzielania.tex', 'chapters/pl/general_topology/06-zbieznosc-topologiczna.tex', 'chapters/pl/general_topology/07-zwartosc.tex', 'chapters/pl/general_topology/08-spojnosc.tex', 'chapters/pl/general_topology/09-aksjomaty-przeliczalnosci.tex', 'chapters/pl/general_topology/10-metryzowalnosc.tex', 'chapters/pl/general_topology/11-zupelnosc-i-twierdzenie-bairea.tex']
           source = (root/book['entrypoint']).read_text(encoding='utf-8')
           for chapter in book['chapters']:
               assert r'\input{../../' + chapter + '}' in source
@@ -89,6 +91,8 @@ jobs:
         run: python tools/tests/test_general_topology_ch09.py
       - name: Verify Chapter 10 metrizability and metric products
         run: python tools/tests/test_general_topology_ch10.py
+      - name: Verify Chapter 11 Baire theorem and completeness examples
+        run: python tools/tests/test_general_topology_ch11.py
       - name: Build complete book PDF
         uses: xu-cheng/latex-action@v3
         with:
@@ -149,6 +153,12 @@ jobs:
           root_file: general_topology_ch10.tex
           working_directory: books/pl
           args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 11 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch11.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
       - name: Check PDF and LaTeX log
         run: |
           test -s books/pl/general_topology.pdf
@@ -161,7 +171,8 @@ jobs:
           test -s books/pl/general_topology_ch08.pdf
           test -s books/pl/general_topology_ch09.pdf
           test -s books/pl/general_topology_ch10.pdf
-          for log in books/pl/general_topology.log books/pl/general_topology_ch02.log books/pl/general_topology_ch03.log books/pl/general_topology_ch04.log books/pl/general_topology_ch05.log books/pl/general_topology_ch06.log books/pl/general_topology_ch07.log books/pl/general_topology_ch08.log books/pl/general_topology_ch09.log books/pl/general_topology_ch10.log; do
+          test -s books/pl/general_topology_ch11.pdf
+          for log in books/pl/general_topology.log books/pl/general_topology_ch02.log books/pl/general_topology_ch03.log books/pl/general_topology_ch04.log books/pl/general_topology_ch05.log books/pl/general_topology_ch06.log books/pl/general_topology_ch07.log books/pl/general_topology_ch08.log books/pl/general_topology_ch09.log books/pl/general_topology_ch10.log books/pl/general_topology_ch11.log; do
             if grep -qE 'Overfull|Underfull|Missing character|LaTeX Warning|Undefined control sequence|Fatal error' "$log"; then
               grep -nE 'Overfull|Underfull|Missing character|LaTeX Warning|Undefined control sequence|Fatal error' "$log"
               exit 1
@@ -171,7 +182,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: general-topology-ch01-ch10
+          name: general-topology-ch01-ch11
           path: |
             books/pl/general_topology.pdf
             books/pl/general_topology.log
@@ -193,4 +204,6 @@ jobs:
             books/pl/general_topology_ch09.log
             books/pl/general_topology_ch10.pdf
             books/pl/general_topology_ch10.log
+            books/pl/general_topology_ch11.pdf
+            books/pl/general_topology_ch11.log
           if-no-files-found: warn
