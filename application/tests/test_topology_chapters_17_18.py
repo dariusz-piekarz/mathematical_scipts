@@ -128,6 +128,23 @@ class TopologySeventeenEighteenAudit(unittest.TestCase):
                 r"|\bsekwencj\w*|\binjekcj\w*|\bseskwilini\w*",
             )
 
+    def test_pontriagin_thom_mapping_grammar_regressions(self):
+        """Prevent malformed inflections caused by replacing 'mapa' with 'odwzorowanie'."""
+        source = self.text["17"]
+        for forbidden in (
+            r"odwzorowań[ęą]",
+            r"\bmapami\b",
+            r"otrzymana odwzorowanie",
+            r"przybliżona odwzorowanie",
+            r"odwzorowanie pozostaje zatem niezmieniona",
+            r"odwzorowanie .* jest homotopijna",
+        ):
+            with self.subTest(pattern=forbidden):
+                self.assertNotRegex(source, forbidden)
+        self.assertIn("ciągłym (a nawet gładkim) odwzorowaniem", source)
+        self.assertIn("przestrzenią docelową jest", source)
+        self.assertIn("homotopijne z odwzorowaniem stałym", source)
+
     def test_product_of_projective_planes_is_nonneutral_in_bordism(self):
         chapter = self.text["17"]
         self.assertIn(r"\label{prz:bordism-rp2-product}", chapter)
