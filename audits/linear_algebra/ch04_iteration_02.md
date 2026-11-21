@@ -67,9 +67,9 @@ Dla wszystkich **64512** trójek \((A,P,Q)\), a następnie wszystkich wektorów 
 - Wszystkie `\\begin`/`\\end` są prawidłowo zagnieżdżone; brak niedomkniętych środowisk.
 - Nie wprowadzono niedozwolonych określeń „unia” oraz „relacja liniowa”.
 - Zachowano diagramy TikZ, katalog rozdziałów i importy w kolejności 01–04; brak nowych zewnętrznych grafik.
-- CI dla ostatniej zmiany treści: [44906175706](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44906175706) — **wynik końcowy do potwierdzenia**.
+- CI dla ostatniej zmiany treści: [44906175706](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44906175706) — **success**. Wszystkie kroki walidacji rozdziałów 01–04, importów, katalogu, terminologii, kompilacji dwukrotnej i weryfikacji odsyłaczy oraz zapis artefaktu zakończyły się sukcesem. Końcowy PDF ma **49 stron A4**. W końcowym `linear_algebra.log` nie występują `LaTeX Warning`, `Overfull`, `Underfull`, `Missing character`, `Undefined control sequence`, `Fatal error` ani `There were undefined references`. Wyrenderowano i wizualnie obejrzano strony **38, 40, 41, 44, 46 i 49**, obejmujące zmienione definicje, twierdzenia, diagram współrzędnych i podsumowanie. Nie wykryto ucięć, nakładania napisów ani uszkodzonych symboli.
 - Poprzedni przebieg po pierwszej partii poprawek: [44906054316](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44906054316) — **success**.
-- W nieblokującym, globalnym walidatorze innych skryptów utrzymują się wcześniejsze problemy, niezwiązane z algebrą liniową; nie deklarujemy ich naprawy.
+- W nieblokującym, globalnym walidatorze innych skryptów utrzymują się **24 wcześniejsze problemy** (potwierdzone w logu tego przebiegu), niezwiązane z algebrą liniową; nie deklarujemy ich naprawy.
 
 ## Status
 
