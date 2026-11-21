@@ -256,6 +256,76 @@ class TopologySeventeenEighteenAudit(unittest.TestCase):
         self.assertLess(value(0), value(-0.5))
         self.assertIn(r"\lambda(p_i)=i", chapter)
 
+    def test_morse_compactification_quantifiers_and_handle_extremes(self):
+        chapter = self.text["18"]
+        for fragment in (
+            r"$p,q,r\in\operatorname{Crit}(f)$",
+            r"$\lambda(a)-\lambda(b)-1\ge0$",
+            "dokładnie jeden punkt pośredni",
+            r"$D^0=\{*\}$ i $S^{-1}=\varnothing$",
+            r"Dla $k=0$ dołącza się więc nową składową",
+            r"o wymiarze $n\ge0$",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, chapter)
+        for total_index_drop in (1, 2):
+            middle = [
+                index for index in range(11)
+                if 10 > index > 10-total_index_drop
+            ]
+            self.assertEqual(
+                middle, [] if total_index_drop == 1 else [9]
+            )
+
+    def test_morse_projective_trajectory_orientation_at_two_intersections(self):
+        """Independent signs at both intersections with f=c in RP^2."""
+        import math
+        chapter = self.text["18"]
+        self.assertIn(r"n(p_2,p_1)=-2", chapter)
+        self.assertIn(r"n(p_1,p_0)=0", chapter)
+        for eigenvalues in ((-1.0, 0.0, 3.0), (1.0, 5.0, 9.0),
+                            (-8.0, -3.0, -1.0)):
+            l0,l1,l2 = eigenvalues
+            for step in range(1, 40):
+                c = l1 + (l2-l1)*step/40
+                radius = math.sqrt((l2-c)/(c-l1))
+                signs = []
+                for v in (-radius, radius):
+                    # Flow increases v when u=0: v_dot > 0 for v>0.
+                    # Positive transversal for orientation
+                    # (flow, transversal) on W^u(p2) is -sgn(v) du.
+                    transverse_u = -1 if v > 0 else 1
+                    # The oriented normal to W^s(p1) is da=du/v.
+                    orientation = transverse_u / v
+                    signs.append(-1 if orientation < 0 else 1)
+                self.assertEqual(signs, [-1,-1])
+                self.assertEqual(sum(signs), -2)
+
+    def test_morse_rational_inequality_polynomials(self):
+        """m(t)-b(t) = (1+t)Q(t) for three concrete chain complexes."""
+        # S^2 height: C0=Z, C1=0, C2=Z; all boundaries zero.
+        # RP^2:    C0=C1=C2=Z; d2=2, d1=0 (rational rank 1).
+        # S^1 with four critical points: C0=C1=Z^2, rank d1=1.
+        examples = [
+            ((1,0,1), (1,0,1), (0,0,0)),
+            ((1,1,1), (1,0,0), (0,1,0)),
+            ((2,2,0), (1,1,0), (1,0,0)),
+        ]
+        for m,b,quotient in examples:
+            with self.subTest(m=m):
+                reconstructed = [
+                    quotient[k] + (quotient[k-1] if k else 0)
+                    for k in range(len(m))
+                ]
+                self.assertEqual(
+                    list(map(lambda ab: ab[0]-ab[1], zip(m,b))),
+                    reconstructed,
+                )
+                self.assertEqual(
+                    sum((-1)**k*m[k] for k in range(len(m))),
+                    sum((-1)**k*b[k] for k in range(len(b))),
+                )
+
     def test_morse_rp2_integral_torsion_calculation(self):
         chapter = self.text["18"]
         self.assertIn(r"\partial_2=2", chapter)
