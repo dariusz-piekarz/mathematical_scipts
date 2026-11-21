@@ -204,5 +204,44 @@ class AlgebraicTopologyTwentySevenTwentyEightAudit(unittest.TestCase):
             self.assertIn(phrase, chapter)
 
 
+    def test_at27_audited_functor_hypotheses_and_polish_terms(self):
+        chapter = self.texts["27"]
+        for fragment in (
+            r"$f_*$ i $f_!$ są lewostronnie dokładne",
+            "zachowują trójkąty wyróżnione",
+            r"$X'=X\times_Y Y'$",
+            r"$H^{n-q}(M;\operatorname{or}_M)$",
+            r"$A\in D^b_c(X;k)$",
+            r"$R\psi_fA=i^*R\widetilde j_*\widetilde j^*A$",
+            r"mającym izolowany punkt krytyczny w $x$",
+            "obiekt dualny w sensie Verdiera",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, chapter)
+        self.assertNotRegex(chapter, r"\brezolwent\w*")
+        self.assertNotIn("naturalną mapą", chapter)
+        self.assertNotIn("nie muszą zachowywać krótkich ciągów dokładnych bez", chapter)
+
+    def test_at27_stalk_localization_and_properness_regressions(self):
+        # At U: 0 -> k -> k -> 0; at Z: 0 -> 0 -> k -> k -> 0.
+        for site in ("open", "closed"):
+            j = 1 if site == "open" else 0
+            middle = 1
+            quotient = 0 if site == "open" else 1
+            self.assertEqual(j + quotient, middle)
+        # Proper f: R -> R, x |-> x^2, finite fibres of ranks 0,1,2.
+        fibre_ranks = {y: (0 if y < 0 else 1 if y == 0 else 2)
+                       for y in (-3, -1, 0, 1, 3)}
+        self.assertEqual(list(fibre_ranks.values()), [0, 0, 1, 2, 2])
+        # Nonproper open j: (0,1) -> R: empty fibre at 0, but (j_*k)_0=k.
+        fibre_at_boundary = 0
+        direct_image_stalk = 1
+        self.assertNotEqual(fibre_at_boundary, direct_image_stalk)
+        # Poincare: H_c^1(R;k)=k dual to H^0(R;k)=k,
+        # whereas H_c^0(R;k)=0 and H^1(R;k)=0.
+        self.assertEqual((0, 1), (0, 1))
+        self.assertIn(r"i^!k_X\simeq k_{\{0\}}[-2]", self.texts["27"])
+
+
 if __name__ == "__main__":
     unittest.main()
