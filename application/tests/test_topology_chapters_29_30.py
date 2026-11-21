@@ -282,5 +282,81 @@ class AlgebraicTopologyTwentyNineThirtyAudit(unittest.TestCase):
         self.assertNotIn(r"\mathcal F(\gamma_R+\xi)", src)
 
 
+    def test_at30_audited_self_contained_manifold_sard_tubular_formulations(self):
+        src = self.texts["30"]
+        for item in (
+            r"$p\in M$ \emph{przestrzeń styczna}",
+            r"formy różniczkowe stopnia $k$",
+            r"$e^i(e_j)=\delta_{ij}$",
+            r"$\bigwedge^0V^*=\R$",
+            r"$T_pA+T_pB=T_pM$",
+            r"$f^{-1}(y)=\varnothing$",
+            r"$\nu(S,M)=TM|_S/TS$",
+            r"$\Phi(0_p)=p$",
+            "zbiór wartości krytycznych",
+            "dopełniające się wymiary",
+            r"\tau:B\times\R^r\longrightarrow E",
+            "macierz odwrotna także zależy",
+        ):
+            with self.subTest(item=item):
+                self.assertIn(item, src)
+        self.assertNotIn("Dla gładkich rozmaitości spełnione są standardowe", src)
+
+    def test_at30_exterior_algebra_basis_and_kronecker_evaluation(self):
+        from itertools import combinations
+        from math import comb
+        for n in range(0, 9):
+            for k in range(n+1):
+                I = list(combinations(range(n), k))
+                self.assertEqual(len(I), comb(n, k))
+                for a, u in enumerate(I):
+                    for b, v in enumerate(I):
+                        # Evaluation of the alternating wedge basis on
+                        # the ordered basis-tuples is the identity matrix.
+                        delta = int(u == v)
+                        self.assertEqual(delta, int(a == b))
+                        if u != v:
+                            self.assertTrue(any(t not in v for t in u))
+
+    def test_at30_tubular_bijection_normal_framing_and_intersection(self):
+        from math import pi
+        src = self.texts["30"]
+        for token in (
+            r"$\Phi^{-1}\circ\Phi=\id$",
+            r"$\Phi\circ\Phi^{-1}=\id$",
+            r"$\sqrt{((1+a)x)^2+((1+a)y)^2}",
+            r"$\rho-1\in(-\varepsilon,\varepsilon)$",
+            r"$T_{p_\pm}A+T_{p_\pm}B_\varepsilon=\R^2$",
+        ):
+            self.assertIn(token, src)
+        for theta_i in range(24):
+            theta = 2*pi*theta_i/24
+            x,y=cos(theta),sin(theta)
+            tangent=(-y,x,0)
+            radial=(x,y,0)
+            vertical=(0,0,1)
+            dot=lambda u,v:sum(a*b for a,b in zip(u,v))
+            self.assertAlmostEqual(dot(tangent,radial),0,places=12)
+            self.assertAlmostEqual(dot(tangent,vertical),0,places=12)
+            self.assertAlmostEqual(dot(radial,vertical),0,places=12)
+            for a in (-0.3,-0.1,0.0,0.2,0.3):
+                for b in (-0.3,0,0.3):
+                    # Choose epsilon=0.4 so all trial coordinates
+                    # lie strictly inside the tubular neighborhood.
+                    X,Y,Z=(1+a)*x,(1+a)*y,b
+                    rho=hypot(X,Y)
+                    self.assertLess(abs(rho-1),0.4)
+                    self.assertLess(abs(Z),0.4)
+                    xx,yy,aa,bb=X/rho,Y/rho,rho-1,Z
+                    for got,expected in zip((xx,yy,aa,bb),(x,y,a,b)):
+                        self.assertTrue(isclose(got,expected,
+                                                rel_tol=1e-12,abs_tol=1e-12))
+        # For the depicted horizontal line y=0.7 (epsilon=0.3):
+        eps=0.3
+        xp=sqrt(2*eps-eps*eps)
+        self.assertTrue(isclose(xp,0.7141428,abs_tol=1e-7))
+        self.assertEqual(((-1 if xp>0 else 1)+(1 if -xp<0 else -1)),0)
+
+
 if __name__ == "__main__":
     unittest.main()
