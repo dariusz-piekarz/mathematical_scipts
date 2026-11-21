@@ -9,6 +9,8 @@ Refer to [the Polish terminology standard](docs/pl/standardy_terminologiczne.md)
 1. For set-theoretic union \(A\cup B\), write **„suma zbiorów”** or, when distinguishing it from an algebraic sum, **„suma mnogościowa”**. Do **not** write „unia” in Polish mathematical prose. Distinguish \(A\cup B\) from the algebraic sum \(U+W=\{u+w:u\in U,w\in W\}\).
 2. For the equality \(\sum_{i=1}^{m} a_i v_i=0\) used to test linear independence, write **„warunek niezależności liniowej wektorów”**, **„równość z warunku niezależności liniowej”** or **„równość świadcząca o zależności”**. Do **not** call this a „relacja liniowa”. The ordinary mathematical word „relacja” remains valid for set-theoretic relations, equivalence relations and orders.
 
+3. In Polish mathematical text, avoid the standalone English noun **„dual”**, including in section and theorem titles. Use **„przestrzeń dualna”**, **„przestrzeń sprzężona”** or **„przestrzeń funkcjonałów liniowych”**, as appropriate. Polish adjectives **„dualny/dualna/dualne”** are allowed, e.g. **„odwzorowanie dualne”**. Preserve stable LaTeX labels and references.
+
 ## Preserve references and rigor
 
 - Preserve existing stable `\label` names and corresponding `\ref` targets even if they contain an older word. Text, theorem titles, captions and prose should follow the current terminology.
