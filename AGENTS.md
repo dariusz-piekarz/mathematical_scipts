@@ -22,3 +22,9 @@ Refer to [the Polish terminology standard](docs/pl/standardy_terminologiczne.md)
 - State all assumptions and quantify all objects explicitly. Justify every substantive proof step and special case.
 - Do not broaden an approved chapter's topical coverage merely to add material: focus audits on mathematical correctness, missing justifications, precise examples, language, reference integrity and build quality.
 - For LaTeX chapters under `chapters/pl/`, keep chapter files independent of external graphics or code when self-contained TikZ can be used.
+
+## Suggested additions during audits
+
+- When auditing any mathematical manuscript, if a potentially valuable missing theorem, lemma, example, counterexample, explanation, drawing or connection is identified, **flag it separately as a proposal for the user to decide**. State why it would help and where it would fit; distinguish an essential omission from an optional enrichment.
+- **Do not insert suggested new content into an audited, previously approved chapter without the user's explicit approval.** Suggestions alone do not reset the count of clean audits. A genuine mathematical mistake, unsupported argument, missing required hypothesis, or necessary correction does count as an audit finding and must be fixed.
+- This rule applies to every manuscript in the repository and to subsequent writing and review work. Continue the planned audit after presenting such suggestions.
