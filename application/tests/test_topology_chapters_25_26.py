@@ -323,5 +323,23 @@ class TopologyTwentyFiveTwentySixAudit(unittest.TestCase):
         self.assertEqual(Q[0][1], -Q[1][0])
 
 
+    def test_at26_audit_iv_explicit_period_basis_and_beta_recurrence(self):
+        src = self.src["26"]
+        for fragment in (
+            r"$V_\Q=\mathbb V_{\Z,t_0}\otimes_{\Z}\Q$",
+            r"$H_1(E_\lambda;\C)$ ma wymiar dwa",
+            "liniowo niezależne, zatem tworzą jej bazę",
+            r"$I_n=(2n-1)I_{n-1}/(2n)$",
+            r"$I_0=\pi/2$",
+            "Niech $S$ będzie gładką zespoloną krzywą algebraiczną,",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, src)
+        for n in range(1, 61):
+            I_n = pi / 2 * comb(2*n, n) / 4**n
+            I_prev = pi / 2 * comb(2*(n-1), n-1) / 4**(n-1)
+            self.assertAlmostEqual(I_n, (2*n-1) * I_prev / (2*n), places=13)
+
+
 if __name__ == "__main__":
     unittest.main()
