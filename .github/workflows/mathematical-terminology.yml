@@ -1,0 +1,30 @@
+name: Polish mathematical terminology
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - 'chapters/pl/**'
+      - 'books/pl/**'
+      - 'tools/check_terminology.py'
+      - '.github/workflows/mathematical-terminology.yml'
+  workflow_dispatch:
+
+jobs:
+  changed-latex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out sources with history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Enforce terminology in changed mathematical sources
+        env:
+          BASE_SHA: ${{ github.event.before }}
+        run: |
+          python tools/check_terminology.py --changed-from "$BASE_SHA"
