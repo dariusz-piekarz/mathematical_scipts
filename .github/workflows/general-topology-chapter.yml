@@ -9,6 +9,9 @@ on:
       - 'books/pl/general_topology.tex'
       - 'catalog/books.json'
       - 'tools/tests/test_general_topology_integration.py'
+      - 'tools/tests/test_general_topology_ch02.py'
+      - 'books/pl/general_topology_ch02.tex'
+      - 'audits/general_topology/**'
       - '.github/workflows/general-topology-chapter.yml'
   workflow_dispatch:
 
@@ -31,7 +34,7 @@ jobs:
           assert len(items) == 1
           book = items[0]
           assert book['entrypoint'] == 'books/pl/general_topology.tex'
-          assert book['chapters'] == ['chapters/pl/general_topology/01-przestrzenie-topologiczne.tex']
+          assert book['chapters'] == ['chapters/pl/general_topology/01-przestrzenie-topologiczne.tex', 'chapters/pl/general_topology/02-operacje-topologiczne-na-zbiorach.tex']
           source = (root/book['entrypoint']).read_text(encoding='utf-8')
           assert r'\input{../../chapters/pl/general_topology/01-przestrzenie-topologiczne.tex}' in source
           for chapter in book['chapters']:
@@ -40,25 +43,38 @@ jobs:
           PY
       - name: Independently test chapter finite models and references
         run: python tools/tests/test_general_topology_integration.py
-      - name: Build chapter PDF
+      - name: Verify Chapter 02 finite topological models
+        run: python tools/tests/test_general_topology_ch02.py
+      - name: Build complete book PDF
         uses: xu-cheng/latex-action@v3
         with:
           root_file: general_topology.tex
           working_directory: books/pl
           args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 02 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch02.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
       - name: Check PDF and LaTeX log
         run: |
           test -s books/pl/general_topology.pdf
-          if grep -qE 'Overfull|Underfull|Missing character|LaTeX Warning|Undefined control sequence|Fatal error' books/pl/general_topology.log; then
-            grep -nE 'Overfull|Underfull|Missing character|LaTeX Warning|Undefined control sequence|Fatal error' books/pl/general_topology.log
-            exit 1
-          fi
+          test -s books/pl/general_topology_ch02.pdf
+          for log in books/pl/general_topology.log books/pl/general_topology_ch02.log; do
+            if grep -qE 'Overfull|Underfull|Missing character|LaTeX Warning|Undefined control sequence|Fatal error' "$log"; then
+              grep -nE 'Overfull|Underfull|Missing character|LaTeX Warning|Undefined control sequence|Fatal error' "$log"
+              exit 1
+            fi
+          done
       - name: Upload compiled chapter PDF
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: general-topology-ch01
+          name: general-topology-ch01-ch02
           path: |
             books/pl/general_topology.pdf
             books/pl/general_topology.log
+            books/pl/general_topology_ch02.pdf
+            books/pl/general_topology_ch02.log
           if-no-files-found: warn
