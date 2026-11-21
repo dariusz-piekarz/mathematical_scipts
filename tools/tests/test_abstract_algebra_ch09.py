@@ -304,7 +304,6 @@ class AA09AuditIVExtra(unittest.TestCase):
         for n in range(2,19):
             for I,J in product(ideals_mod(n),repeat=2):
                 if len({(a+b)%n for a in I for b in J})!=n:continue
-                self.assertEqual(set(I&J),{x for x in range(n) if x%gcd(n,len(I)*len(J))==0} if False else set(I&J))
                 products={a*b%n for a in I for b in J}
                 generated={0}
                 while True:
