@@ -1,0 +1,53 @@
+name: Abstract algebra AA-01 validation
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "chapters/pl/abstract_algebra/**"
+      - "books/pl/abstract_algebra.tex"
+      - "catalog/books.json"
+      - "application/backend/latex_parser.py"
+      - "application/backend/generator.py"
+      - "application/config/preambles/AA.tex"
+      - "tools/tests/test_abstract_algebra_ch01.py"
+      - ".github/workflows/abstract-algebra-chapter.yml"
+  workflow_dispatch:
+
+jobs:
+  validate-cli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate chapter dependencies
+        run: python tools/audit_chapter_dependencies.py
+      - name: Validate repository catalog and imports
+        run: python tools/validate_repository.py
+      - name: Run repository tool tests
+        run: python -m unittest discover -s tools/tests -v
+      - name: Run abstract-algebra regression tests
+        run: python -m unittest tools.tests.test_abstract_algebra_ch01 -v
+      - name: Compile AA-01 book with latexmk
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: abstract_algebra.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Verify PDF and references
+        shell: bash
+        run: |
+          test -s books/pl/abstract_algebra.pdf
+          if grep -qE '(LaTeX Warning: Reference .* undefined|There were undefined references)' books/pl/abstract_algebra.log; then
+            echo "Unresolved references in abstract algebra PDF"
+            exit 1
+          fi
+      - name: Archive build output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: abstract-algebra-aa01
+          path: |
+            books/pl/abstract_algebra.pdf
+            books/pl/abstract_algebra.log
+          if-no-files-found: warn

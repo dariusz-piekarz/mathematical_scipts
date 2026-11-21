@@ -362,7 +362,7 @@ def project_files(con:sqlite3.Connection, modules:list[str], entities:list[str],
         files[f'rozdzialy/{m}.tex']=rewrite_tex_refs(body).encode('utf-8')
     # Source preambles saved as templates from the original manuscripts.
     prefix_to_source={'ALG':'ALG','AT':'ALG','TOP':'TOP','GW':'GW','GA':'GA','KAT':'KAT','MOD':'MOD','CAL':'CAL','BT':'BT',
-                      'P1':'P1','P2':'P2','P3':'P3','P4':'P4'}
+                      'P1':'P1','P2':'P2','P3':'P3','P4':'P4','AA':'AA'}
     template_root=Path(__file__).resolve().parents[1]/'config'/'preambles'
     templates={}
     for m in set(ordered)|set(external):
