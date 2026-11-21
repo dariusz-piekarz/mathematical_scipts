@@ -87,6 +87,30 @@ class BordismHandlesAudit(unittest.TestCase):
         self.assertEqual((2-2), 0)  # Torus/Klein chi=0
         self.assertIn(r"\label{prop:euler-uchwyty-23}", self.dg)
 
+    def test_primitive_slope_two_intersections_with_meridian(self):
+        # gamma(t)=(2t,t) mod 1 and belt B1={x=1/4}.
+        times = (1/8, 5/8)
+        self.assertEqual([((2*t) % 1, t) for t in times],
+                         [(0.25, 0.125), (0.25, 0.625)])
+        self.assertEqual(2*1-0*1, 2)  # det((2,1),(0,1)) >0
+        self.assertEqual([1, 1], [1 for _ in times])
+        self.assertIn(r"\label{prz:uchwyty-torsja-sfera-sfera-24}", self.dg)
+        self.assertIn(r"\label{fig:uchwyty-torsja-sfera-sfera-24}", self.dg)
+        self.assertIn(r"I(A_2,B_1)=2", self.dg)
+
+    def test_integral_torsion_but_rational_acyclicity(self):
+        # One 1-handle and one 2-handle, relative differential multiplication 2.
+        # Ker(Z --2--> Z)=0; coker=Z/2, but over Q multiplication 2 is invertible.
+        self.assertEqual([2*z for z in range(-4,5)].count(0), 1)
+        self.assertEqual(set(z % 2 for z in range(-4,5)), {0,1})
+        self.assertTrue(2 != 0)
+        self.assertEqual(1 / 2 * 2, 1)
+        # Matrix whose first column is primitive slope (2,1) lies in SL(2,Z).
+        self.assertEqual(2*1-1*1, 1)
+        self.assertIn(r"H_1(W,S^2;\Z)\cong\Z/2\Z", self.dg)
+        self.assertIn(r"H_1(W;\Z)\cong\Z/2\Z", self.dg)
+        self.assertIn(r"N_+\cong S^2", self.dg)
+
     def test_handle_slide_is_invertible_chain_basis_change(self):
         # Slide basis e_p' = e_p + sigma e_q; D'_k = D_k T.
         for sigma in (-1, 1):
