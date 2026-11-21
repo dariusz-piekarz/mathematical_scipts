@@ -20,7 +20,7 @@ Po sześciu wcześniejszych audytach zakończonych poprawkami audyt 7 jest pierw
 2. **Sumy algebraiczne podprzestrzeni.** Zweryfikowano definicję przez skończone sumy wektorów, przypadek pustego indeksu, własność najmniejszej podprzestrzeni i podstawowe działania. Sprawdzono wzór dla \(\dim_K(U+W)\) z argumentem poprzez bazy \(C\), \(C\cup A\), \(C\cup D\); jest poprawny także dla nieskończonych wymiarów przy AC, bez odejmowania liczb kardynalnych. Dowód przypadku skończonego nie korzysta z AC.
 3. **Wewnętrzna i zewnętrzna suma prosta.** Zweryfikowano trzy równoważne kryteria prostości, w tym rodziny puste, zerowe i skończenie indeksowane. Sprawdzono sumowanie po skończonym nośniku, jądro kanonicznego odwzorowania \(\Sigma\), jego surjektywność i izomorfizm przy prostości. Rodziny baz składników dają bazę sumy prostej z odpowiednią sumą kardynalną.
 4. **Przestrzenie ilorazowe.** Ponownie sprawdzono kryterium równości warstw i ich rozłączność, dobrą określoność działań, liniowość/surjektywność \(\pi_U\) oraz warunek na jądro. Własność uniwersalna jest wykazana przez konstrukcję indukowanego odwzorowania. Przypadki \(U=\{0_V\}\), \(U=V\) i przykład \(\mathbb R^2/U\cong\mathbb R\) są spójne.
-5. **Dopełnienia algebraiczne.** Sprawdzono konstrukcję dopełnienia przez rozszerzenie bazy, dowód isomorfizmu \(W\cong V/U\), wzór kardynalny \(\dim_K V=\dim_K U+\dim_K(V/U)\) oraz jego niezależną, skończenie wymiarową wersję bez AC. Wykazano jedynie niejednoznaczność dopełnienia (bez niewykazanego silniejszego twierdzenia o naturalności).
+5. **Dopełnienia algebraiczne.** Sprawdzono konstrukcję dopełnienia przez rozszerzenie bazy, dowód izomorfizmu \(W\cong V/U\), wzór kardynalny \(\dim_K V=\dim_K U+\dim_K(V/U)\) oraz jego niezależną, skończenie wymiarową wersję bez AC. Wykazano jedynie niejednoznaczność dopełnienia (bez niewykazanego silniejszego twierdzenia o naturalności).
 6. **Twierdzenie o ilorazie sumy.** Konstrukcja \(U/(U\cap W)\to(U+W)/W\), jej niezależność od reprezentanta, liniowość, iniektywność i surjektywność zostały sprawdzone; nie wykryto luk.
 
 Zweryfikowano też definicje, kwantyfikatory, ciała skalarów, powiązania z twierdzeniami rozdziału 01 i konsekwentną terminologię. Przykłady nie przypisują stopnia wielomianowi zerowemu; uwzględniają zerowy i nieskończony wymiar.
@@ -51,10 +51,10 @@ Ponownie pobrano artefakt z CI 44898808095. Jest to **27-stronicowy** PDF dla do
 W `books/pl/linear_algebra.tex` poprawiono wyłącznie **nieaktualny komentarz metadanych** „02 w pierwszym cyklu audytowym” na informację o stabilizacji rozdziałów 01–02; **treść matematyczna obu rozdziałów pozostała bez zmian**.
 
 CI dla aktualnego pliku głównego po tej aktualizacji:
-[44899784148](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44899784148) — **wynik do potwierdzenia**.
+[44899784148](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44899784148) — **success**. Wszystkie kroki ukończone pomyślnie: weryfikacja importów i terminologii, kontrola etykiet i odsyłaczy, kompilacja oraz publikacja artefaktu. Ponownie pobrano wynik: **27 stron A4, końcowy log LaTeX bez ostrzeżeń i brak brakujących odsyłaczy**. W niezależnym nieblokującym kroku globalnego walidatora zgłoszono ponownie 24 wcześniejsze problemy pozostałych materiałów.
 
 Wcześniejsze **24 problemy globalnego, nieblokującego walidatora innych skryptów** nie są częścią tego audytu i pozostają osobnym zadaniem.
 
 ## Stan końcowy
 
-**Rozdział 02 matematycznie stabilny: po audycie 7 bez zmian w jego treści.** Formalne zamknięcie po ostatnim CI. Następny rozdział należy rozpocząć **dopiero w kolejnej iteracji na prośbę użytkownika**, zgodnie z regułą „rozdział po rozdziale”.
+**Rozdział 02 jest stabilny i zostaje zamknięty po audycie 7 bez zmian w jego treści oraz po pomyślnym końcowym CI 44899784148.** Nie stwierdzono istotnych błędów ani luk obecnego materiału. W kolejnej iteracji można przejść do rozdziału 03, nie zmieniając wcześniej zatwierdzonych treści rozdziału 02 bez uzasadnionej potrzeby.
