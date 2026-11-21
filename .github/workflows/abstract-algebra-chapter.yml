@@ -1,4 +1,4 @@
-name: Abstract algebra AA-01 to AA-19 validation
+name: Abstract algebra AA-01 to AA-20 validation
 
 on:
   push:
@@ -30,6 +30,8 @@ on:
       - "tools/tests/test_abstract_algebra_ch17.py"
       - "tools/tests/test_abstract_algebra_ch18.py"
       - "tools/tests/test_abstract_algebra_ch19.py"
+      - "tools/tests/test_abstract_algebra_ch20.py"
+      - "tools/tests/test_abstract_algebra_ch20_extra.py"
       - ".github/workflows/abstract-algebra-chapter.yml"
   workflow_dispatch:
 
@@ -38,6 +40,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install mathematical regression dependencies
+        run: python -m pip install sympy
       - name: Validate chapter dependencies
         run: python tools/audit_chapter_dependencies.py
       - name: Report pre-existing global repository validation findings
@@ -83,7 +90,11 @@ jobs:
         run: python -m unittest tools.tests.test_abstract_algebra_ch18 -v
       - name: Run AA-19 mathematical regression tests
         run: python -m unittest tools.tests.test_abstract_algebra_ch19 -v
-      - name: Compile AA-01 to AA-19 book with latexmk
+      - name: Run AA-20 mathematical regression tests
+        run: |
+          python -m unittest tools.tests.test_abstract_algebra_ch20 -v
+          python -m unittest tools.tests.test_abstract_algebra_ch20_extra -v
+      - name: Compile AA-01 to AA-20 book with latexmk
         uses: xu-cheng/latex-action@v3
         with:
           root_file: abstract_algebra.tex
@@ -113,7 +124,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: abstract-algebra-aa01-aa19
+          name: abstract-algebra-aa01-aa20
           path: |
             books/pl/abstract_algebra.pdf
             books/pl/abstract_algebra.log
