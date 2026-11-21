@@ -38,7 +38,7 @@ Porównanie współczynników na generatorze [S^{n−1}] daje stopień brzegowy 
 
 **Rozróżnienie:** twierdzenie nie utożsamia tej sumy z χ(U) dla dowolnego nieznikającego pola na brzegu. Taki wniosek wymaga dodatkowego warunku zewnętrzności lub innej hipotezy.
 
-### Przykłady pr z:PH-stopien-dysk-trzy-pola-21 i prz:PH-stopien-pierscien-21
+### Przykłady prz:PH-stopien-dysk-trzy-pola-21 i prz:PH-stopien-pierscien-21
 
 Na D^n (n≥2) pola: stałe e_1, radialne x oraz dośrodkowe −x.
 Stopnie normalizacji brzegowej wynoszą odpowiednio 0, +1 i (−1)^n.
@@ -122,7 +122,10 @@ Wymaganie było sprzeczne z rozwojem rozdziałów:
 prawidłowe dodawanie kolejnych twierdzeń daje nowe, odrębne etykiety.
 Poprawka nie usuwa żadnego wymagania o zachowaniu historycznych
 etykiet: historyczne, udokumentowane zbiory mają być **podzbiorami**
-aktualnych zbiorów, a liczba pierwotnie wspólnych etykiet nie może maleć.
+aktualnych zbiorów. Dodatkowo manifest etapu V zachowuje teraz
+**dokładną listę 42 historycznie wspólnych etykiet**, a regresja
+sprawdza zachowanie każdej ich nazwy w obu źródłach, nie tylko
+ich całkowitej liczby.
 Manifest etapu V pozostaje **migawką historyczną**, nie jest
 przepisywany po każdej zmianie materiału.
 
