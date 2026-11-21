@@ -326,6 +326,23 @@ class TopologySeventeenEighteenAudit(unittest.TestCase):
                     sum((-1)**k*b[k] for k in range(len(b))),
                 )
 
+    def test_morse_orientations_are_in_definition_and_terms_are_standard(self):
+        chapter = self.text["18"]
+        for fragment in (
+            r"orientację $W^u(p)$",
+            r"Dla $k\in\Z$ niech $CM_k(f,g)$",
+            "pustą grupą dla indeksów niewystępujących",
+            "dla wszystkich $k\in\Z$",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, chapter)
+        self.assertNotRegex(
+            chapter,
+            r"\bmapa\b|\bmapy\b|\bmapą\b|\bmapę\b"
+            r"|\bsekwencj\w*|\btensorowan\w*",
+        )
+        self.assertNotIn("Iteracja X, rozdział XIX", chapter)
+
     def test_morse_rp2_integral_torsion_calculation(self):
         chapter = self.text["18"]
         self.assertIn(r"\partial_2=2", chapter)
