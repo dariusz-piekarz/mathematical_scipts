@@ -171,6 +171,8 @@ class TopologyChaptersTwentyThreeTwentyFourAudit(unittest.TestCase):
         src = self.sources["23"]
         self.assertIn(r"\label{prz:p1-serre-residue}", src)
         self.assertIn(r"\label{fig:p1-serre-residue}", src)
+        self.assertIn(r"\node at (3.0,0) {$\langle\cdot,\cdot\rangle$};", src)
+        self.assertNotIn(r"\draw[->,thick] (a)--(b)", src)
         self.assertIn(r"\operatorname{Res}_{z=0}", src)
         for m in range(-12, -1):
             N = -m - 2
