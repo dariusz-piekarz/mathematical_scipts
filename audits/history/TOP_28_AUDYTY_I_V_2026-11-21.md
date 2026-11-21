@@ -61,13 +61,13 @@ Commity źródła `4c58d2c431d6999840a0a49d4eb02be98d462d46`, `a90304a84f0e63f97
 
 - Rozdział TOP-28 oraz trzy moduły współdzielone: **16 unikatowych etykiet**, 11 odwołań `\ref`; wszystkie cele są lokalne lub rozwiązywane przez poprzednie rozdziały. W tych czterech plikach 8 twierdzeń, 2 lematy, 1 wniosek, 4 definicje, 9 przykładów, 11 dowodów; liczniki `begin/end` zgodne.
 - Dwa diagramy TikZ: geometria dzielnika wyjątkowego i przesunięcia Gysina. Wszystkie strony (w tym rysunki i podpisy) obejrzano wizualnie; bez nakładających się napisów.
-- Cała książka (28 rozdziałów) w zweryfikowanym przebiegu pdfLaTeX — **309 stron A4**; TOP-28 to strony 300–309, wyodrębnione do **10-stronicowego PDF**. Po ostatnich poprawkach terminologicznych i projektywności należy pobrać ponownie artefakt z właściwego przebiegu, aby zachować zgodność PDF z końcowym blobem.
+- Cała książka (28 rozdziałów) w zweryfikowanym przebiegu pdfLaTeX — **309 stron A4**; TOP-28 to strony 300–309, wyodrębnione do **10-stronicowego PDF**. **Końcowy artefakt pobrano z przebiegu #44947025662**, odpowiadającego końcowemu blobowi źródła `b0dbd26f8414a39d021bebfb2dfc98b8bdbb60fb`. Wydzielony PDF ma 10 stron, został ponownie wyrenderowany i obejrzany; diagramy na stronach 7 i 10 są czytelne, nie kolidują z podpisami. Dwa przebiegi pdfLaTeX: 0 niezdefiniowanych odsyłaczy, 0 ostrzeżeń `Overfull \\hbox`, 0 niezdefiniowanych cytowań.
 
-## GitHub Actions — status wymagający potwierdzenia
+## GitHub Actions — potwierdzone wyniki końcowe
 
 - [TOP-27/28: sukces kompilacji](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44946746180) dla źródła przed wyłącznie końcowymi poprawkami.
-- [TOP-27/28: końcowy przebieg po poprawkach źródła i testów](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44947025662) — wynik do odczytania.
-- [Ogólne kontrole aplikacji po końcowych testach](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44947025671) — wynik do odczytania.
-- [Międzytomowy audyt po zmianie wzmianki o względnym Lefschetzu](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44947010738) — wynik do odczytania.
+- [TOP-27/28: końcowy przebieg po poprawkach źródła i testów — **SUCCESS**](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44947025662).
+- [Ogólne kontrole aplikacji po końcowych testach — **SUCCESS**](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44947025671).
+- [Międzytomowy audyt po zmianie wzmianki o względnym Lefschetzu — **SUCCESS**](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44947010738).
 
-**Status redakcyjno-matematyczny:** TOP-28 po audytach I–V stabilny; formalne zamknięcie wymaga potwierdzenia końcowego CI, a PDF powinien pochodzić z tego samego końcowego bloba źródła. Następny w kolejności TOP-29.
+**Status końcowy:** TOP-28 **stabilny po audytach I–V**. Ogólne CI, regresje TOP-27/28 i audyt zależności międzytomowych są zielone. Wyrenderowany 10-stronicowy PDF odpowiada końcowemu blobowi źródła. Następny w kolejności TOP-29.
