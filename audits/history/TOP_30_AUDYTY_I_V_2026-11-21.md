@@ -54,10 +54,14 @@ Commity `c69f9e9b6e2478a3d20baa33aec76741ff12ab61`, `c36f7f7971df3a76ca113693313
 
 Commit `a886f3b46dee91c13370e9d2ed947ad4471824c8`.
 
-## Wynik CI i PDF — do potwierdzenia po zakończeniu trwających przebiegów
+## Końcowe CI i kontrola PDF
 
-- [TOP-29/30, kompilacja całego tomu i regresje](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44948439855).
-- [Ogólne CI aplikacji](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44948439753).
-- [Międzytomowe AT–DG–AG](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44948439803).
+Wszystkie trzy workflowy uruchomione na commicie źródła `a886f3b46dee91c13370e9d2ed947ad4471824c8` ukończyły się statusem **SUCCESS**:
 
-**Stan audytu matematycznego:** Pięć iteracji wykonano, rozdział bez znanych otwartych luk w jego własnych obliczeniach. Wyniki głębokie wskazane jako przyjmowane. Formalne zamknięcie: po potwierdzeniu końcowych przebiegów CI i wizualnej kontroli PDF wydzielonego z tej samej wersji źródła. Następnym etapem jest **globalny audyt TOP-00–TOP-30**, a nie tworzenie TOP-31 bez zatwierdzonego planu.
+- [TOP-29/30 — testy regresyjne, 30 rozdziałów i trzykrotna kompilacja LaTeX: SUCCESS](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44948439855).
+- [Ogólne CI aplikacji — indeksowanie, testy i przeglądarka: SUCCESS](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44948439753).
+- [Kontrola międzytomowa AT–DG–AG: SUCCESS](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44948439803).
+
+Pobrano oryginalny artefakt `algebraic-topology-audit-ch29-30-pdf`, GitHub Actions **#44948439855** (artefakt **14725000561**). Zawiera 322-stronicowy PDF całej książki. **TOP-30 zajmuje strony 319–322, tj. 4 strony A4**. Wydzielono je do pliku `Topologia_algebraiczna_TOP30_po_audytach.pdf`, wyrenderowano w 180 DPI, przejrzano wszystkie cztery strony i osobno ilustrację przecięć transwersalnych. Zweryfikowano brak przepełnionych wierszy, niezdefiniowanych odsyłaczy, kolizji rysunku i podpisu, obcięć i brakujących glifów. Zgodność z końcowym blobem TOP-30: `fd7c66d943ca8d518882cc0c918de2804822641f`.
+
+**Wynik końcowy:** TOP-30 **STABILNY po audytach I–V**. Wyniki głębokie pozostają jawnie przyjęte z wcześniejszego tomu, nie są przedstawiane jako samodzielnie dowiedzione. Wszystkie kontrole końcowe zielone. Następny uzgodniony etap: **globalny audyt TOP-00–TOP-30**, w tym deduplikacja odsyłaczy, czytelność całego woluminu i kontrola pliku głównego z TOP-00; nie dodajemy TOP-31 bez osobnego planu.
