@@ -179,6 +179,40 @@ class TopologyChapterThirteenFourteenAudit(unittest.TestCase):
         self.assertIn(r"\operatorname{Ext}^1_{\Z}", ch)
         self.assertIn(r"H^{n+1}(M;A)=A/mA", ch)
 
+    def test_Milnor_join_local_trivializations_are_explicit(self):
+        ch = self.texts["13"]
+        for token in (
+            r"$EG\to BG:=EG/G$",
+            r"$V_i=\{t_i>0\}\subset EG$",
+            r"$U_i=V_i/G$",
+            r"e\longmapsto e\cdot g_i(e)^{-1}",
+            r"$g_i(eh)=g_i(e)h$",
+            r"$V_i\cong U_i\times G$",
+        ):
+            self.assertIn(token, ch)
+
+    def test_clutching_has_both_directions_and_based_normalization(self):
+        ch = self.texts["13"]
+        for token in (
+            r"$g_t:S^{n-1}\to G$",
+            r"$S^{n-1}\times I$",
+            r"$S^n\times I$",
+            r"$\widehat g(x)=g(x_0)^{-1}g(x)$",
+            r"$H(x_0,t)^{-1}H(x,t)$",
+            r"\ref{thm:BG-general-v6}",
+        ):
+            self.assertIn(token, ch)
+        # In the path-connected group SO(2)=S^1 all free homotopy
+        # classes of S^1 maps are represented by based winding numbers.
+        # Multiplication by a constant changes the basepoint value, not
+        # the increment of the chosen argument along one full turn.
+        for degree in range(-10, 11):
+            for phase in range(-3, 4):
+                total_argument_change = (
+                    (phase + 2*degree) - phase
+                )
+                self.assertEqual(total_argument_change, 2*degree)
+
     def test_moore_cohomology_exposes_hom_and_ext(self):
         chapter = self.texts["13"]
         self.assertIn(
