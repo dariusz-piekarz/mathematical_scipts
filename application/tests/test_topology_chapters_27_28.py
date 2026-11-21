@@ -239,7 +239,10 @@ class AlgebraicTopologyTwentySevenTwentyEightAudit(unittest.TestCase):
         self.assertNotEqual(fibre_at_boundary, direct_image_stalk)
         # Poincare: H_c^1(R;k)=k dual to H^0(R;k)=k,
         # whereas H_c^0(R;k)=0 and H^1(R;k)=0.
-        self.assertEqual((0, 1), (0, 1))
+        compact_support = {0: 0, 1: 1}
+        ordinary = {0: 1, 1: 0}
+        for q in (0, 1):
+            self.assertEqual(compact_support[q], ordinary[1-q])
         self.assertIn(r"i^!k_X\simeq k_{\{0\}}[-2]", self.texts["27"])
 
 
