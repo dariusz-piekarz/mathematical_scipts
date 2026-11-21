@@ -154,6 +154,51 @@ class TopologyChaptersFifteenSixteenAudit(unittest.TestCase):
                 self.assertEqual(n+1 < 2*(n-1)+1, n>2)
         self.assertIn(r"\ker E=2\Z", src)
 
+    def test_rank_zero_thom_and_whitney_formula(self):
+        """Rank-zero Thom unit and universal Whitney polynomial identities."""
+        chapter = self.text["15"]
+        for token in (
+            r"$D^0=\{*\}$",
+            r"$S^{-1}=\varnothing$",
+            r"$U=1_B\in H^0(B;\F_2)$",
+            r"$\operatorname{Sq}^i(1_B)=0$",
+            r"$w(\xi\oplus\eta)$",
+            r"U_{\xi\oplus\eta}",
+            "Różnowartościowość izomorfizmu Thoma",
+        ):
+            with self.subTest(token=token):
+                self.assertIn(token, chapter)
+
+        # For a sum of r+s tautological real lines over RP^infty,
+        # (1+t)^r * (1+t)^s = (1+t)^(r+s), including ranks zero.
+        for rank_one in range(17):
+            for rank_two in range(17):
+                for k in range(rank_one + rank_two + 1):
+                    coeff = sum(
+                        comb(rank_one, j)*comb(rank_two, k-j)
+                        for j in range(k+1)
+                        if j <= rank_one and k-j <= rank_two
+                    )
+                    with self.subTest(r=rank_one,s=rank_two,k=k):
+                        self.assertEqual(
+                            coeff % 2, comb(rank_one+rank_two,k) % 2
+                        )
+        self.assertEqual(comb(0, 0), 1)
+
+    def test_cellular_bockstein_matches_Sq1_on_RP(self):
+        """Bockstein from Z/4 cellular lifts is Sq^1 on RP^N."""
+        chapter = self.text["15"]
+        self.assertIn(r"\beta_2(t)=t^2\ne0", chapter)
+        # On RP^N, integral cellular boundary C_(m+1)->C_m
+        # is 2 for m+1 even and 0 for m+1 odd.
+        for N in range(1, 24):
+            for m in range(N+1):
+                boundary = 2 if (m+1) % 2 == 0 and m+1 <= N else 0
+                bockstein_coeff = (boundary // 2) % 2
+                sq1_coeff = m % 2 if m+1 <= N else 0
+                with self.subTest(N=N, m=m):
+                    self.assertEqual(bockstein_coeff, sq1_coeff)
+
     def test_deep_dependencies_are_explicit_not_overclaimed(self):
         src = self.text["15"] + self.text["16"]
         self.assertIn("nie pełny niezależny dowód", src)
