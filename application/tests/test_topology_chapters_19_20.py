@@ -202,6 +202,33 @@ class TopologyNineteenTwentyAudit(unittest.TestCase):
             r"\bdla map między\b|\bbędzie mapą\b",
         )
 
+    def test_morse_gluing_statements_are_self_contained(self):
+        """All key assertions explicitly quantify their objects and flow data."""
+        source = self.texts["20"]
+        for fragment in (
+            r"$X=-\operatorname{grad}_g f$",
+            r"$a,b\in\R$ z $a<b$",
+            r"$U\subseteq M$",
+            r"$\operatorname{Crit}(f)$ oraz $K=M\setminus U$",
+            r"$p,q\in\operatorname{Crit}(f)$",
+            r"$\ell\ge1$",
+            r"$\mathcal M(p,q)=(W^u(p)\cap W^s(q))/\R$",
+            r"niesparametryzowanych trajektorii",
+            r"$p,q,r\in\operatorname{Crit}(f)$",
+            r"którego wartości zbiegają do danej trajektorii łamanej",
+            r"związanego z długością szyjki",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, source)
+        self.assertNotRegex(
+            source.lower(),
+            r"\bmapa\b|\bmapy\b|\bmapę\b|\bmapą\b"
+            r"|\bsekwencj\w*|\btensorowan\w*",
+        )
+        self.assertNotIn(
+            "Rozdział do wstawienia do głównego skryptu", source
+        )
+
     def test_scalar_hyperbolic_green_inverse_is_uniform(self):
         ch = self.texts["20"]
         self.assertIn(r"\label{lem:morse-scalar-green}", ch)
