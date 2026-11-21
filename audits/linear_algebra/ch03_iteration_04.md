@@ -61,7 +61,7 @@ Przetestowano **131072 przypadki**, w tym **512 przypadków \(A=\varnothing\)**.
 - Wszystkie trzy rozdziały pozostają w katalogu i w pliku głównym we właściwej kolejności.
 - Rozdziały nie wymagają zewnętrznych plików graficznych.
 
-**CI dla poprawki:** [44904330466](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44904330466) — wynik do uzupełnienia po zakończeniu. Poprzedni przebieg dla tej samej książki przed poprawką był pomyślny.
+**CI dla poprawki:** [44904330466](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44904330466) — **success**. Wszystkie kroki walidacji rozdziałów 01–03, importów, katalogu, terminologii, odsyłaczy, dwukrotnej kompilacji i publikacji artefaktu zakończyły się powodzeniem. Powstał **37-stronicowy PDF A4**. W końcowym pliku `linear_algebra.log` nie ma ostrzeżeń `LaTeX Warning`, `Overfull`, `Underfull`, `Missing character`, `Undefined control sequence` ani `Fatal error`. Wyrenderowano i wizualnie skontrolowano **strony 30–31** z poprawionym dowodem, a także rozkład stron końcowych; zapis współczynników i wektorów jest czytelny, bez ucięć i kolizji. W nieblokującej globalnej walidacji innych skryptów nadal zgłaszane są **24 wcześniejsze problemy** niezwiązane z rozdziałem.
 
 ## Status
 
