@@ -265,6 +265,60 @@ class TopologyChapterThirteenFourteenAudit(unittest.TestCase):
         self.assertIn("lemat o potęgach", chapter)
         self.assertIn(r"\operatorname{Sq}^2\operatorname{Sq}^2", chapter)
 
+    def test_adem_two_generator_polynomial_regression(self):
+        """Independent calculation in H*(RPinf x RPinf; F2)=F2[t,s]."""
+        chapter = self.texts["14"]
+        self.assertIn(r"\label{eq:adem-master-revision}", chapter)
+
+        def binomial_parity(m, j):
+            return comb(m, j) & 1 if 0 <= j <= m else 0
+
+        def square(poly, degree):
+            terms = {}
+            for (m, n), coeff in poly.items():
+                if not coeff:
+                    continue
+                for j in range(degree+1):
+                    if (binomial_parity(m, j)
+                            and binomial_parity(n, degree-j)):
+                        monomial = (m+j, n+degree-j)
+                        terms[monomial] = terms.get(monomial, 0) ^ 1
+            return {key: value for key, value in terms.items() if value}
+
+        count = 0
+        for m in range(13):
+            for n in range(13):
+                x = {(m, n): 1}
+                for b in range(1, 8):
+                    for a in range(1, 2*b):
+                        lhs = square(square(x, b), a)
+                        rhs = {}
+                        for j in range(a//2+1):
+                            coeff = binomial_parity(b-j-1, a-2*j)
+                            if not coeff:
+                                continue
+                            piece = square(square(x, j), a+b-j)
+                            for monomial in piece:
+                                rhs[monomial] = rhs.get(monomial, 0) ^ 1
+                        rhs = {k:v for k,v in rhs.items() if v}
+                        self.assertEqual(
+                            lhs, rhs, (m, n, a, b)
+                        )
+                        count += 1
+        self.assertEqual(count, 13*13*49)
+
+    def test_adem_proof_scope_and_external_input_are_explicit(self):
+        chapter = self.texts["14"]
+        for text in (
+            "spójności potęg poczwórnych",
+            r"\eqref{eq:adem-master-revision}",
+            r"$|\operatorname{Sing}X|\to X$",
+            r"$\operatorname{Sq}^i(\Sigma z)=",
+            "stopień $0$",
+        ):
+            self.assertIn(text, chapter)
+        self.assertNotIn("Iteracja VIII, rozdział główny 15", chapter)
+
     def test_cartan_and_adem_proofs_not_overclaimed(self):
         chapter = self.texts["14"]
         # The coherently equivariant power construction is an explicit dependency;
