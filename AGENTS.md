@@ -11,7 +11,7 @@ Refer to [the Polish terminology standard](docs/pl/standardy_terminologiczne.md)
 
 ## Preserve references and rigor
 
-- Preserve existing stable \`\\label\` names and corresponding \`\\ref\` targets even if they contain an older word. Text, theorem titles, captions and prose should follow the current terminology.
+- Preserve existing stable `\label` names and corresponding `\ref` targets even if they contain an older word. Text, theorem titles, captions and prose should follow the current terminology.
 - State all assumptions and quantify all objects explicitly. Justify every substantive proof step and special case.
 - Do not broaden an approved chapter's topical coverage merely to add material: focus audits on mathematical correctness, missing justifications, precise examples, language, reference integrity and build quality.
-- For LaTeX chapters under \`chapters/pl/\`, keep chapter files independent of external graphics or code when self-contained TikZ can be used.
+- For LaTeX chapters under `chapters/pl/`, keep chapter files independent of external graphics or code when self-contained TikZ can be used.
