@@ -205,15 +205,52 @@ def commuting_schur_cases():
     return count
 
 
+
+def commuting_diagonalizable_cases():
+    """Commuting matrices with a common (possibly nonorthogonal) eigenbasis."""
+    cases = (
+        ([[1, 1], [0, 1]], [[1, -1], [0, 1]],
+         (1, 2), (3, 5)),
+        ([[1, 1, 0], [0, 1, 1], [0, 0, 1]],
+         [[1, -1, 1], [0, 1, -1], [0, 0, 1]],
+         (1, 1, 2), (3, 4, 5)),
+    )
+    count = 0
+    for p, pinv, eig_s, eig_t in cases:
+        n = len(p)
+        equals(multiply(p, pinv), eye(n))
+        equals(multiply(pinv, p), eye(n))
+        ds, dt = diagonal(eig_s), diagonal(eig_t)
+        s = multiply(multiply(p, ds), pinv)
+        t = multiply(multiply(p, dt), pinv)
+        equals(multiply(s, t), multiply(t, s))
+        equals(multiply(multiply(pinv, s), p), ds)
+        equals(multiply(multiply(pinv, t), p), dt)
+        for j in range(n):
+            v = tuple(p[i][j] for i in range(n))
+            assert all(close(x, eig_s[j] * y)
+                       for x, y in zip(matvec(s, v), v))
+            assert all(close(x, eig_t[j] * y)
+                       for x, y in zip(matvec(t, v), v))
+            count += 1
+        assert any(
+            not close(s[i][j], adjoint(s)[i][j])
+            for i in range(n) for j in range(n)
+        )
+    return count
+
+
 if __name__=="__main__":
     a=normal_cases()
     b=hermitian_cases()
     c=counterexamples_and_commuting()
     d=dimension_three_cases()
     e=commuting_schur_cases()
+    f=commuting_diagonalizable_cases()
     print("Spectral regression tests OK:",
           a,"normal similarities and projectors;",
           b,"Hermitian Rayleigh tests;",
           c,"commuting/defective checks;",
           d,"3x3 normal and repeated-eigenvalue checks;",
-           e,"commuting Schur tests.")
+           e,"commuting Schur tests;",
+          f,"simultaneous diagonalization checks.")
