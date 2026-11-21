@@ -254,6 +254,32 @@ class TopologyChapterElevenTwelveAudit(unittest.TestCase):
         self.assertEqual([n for n in range(-20, 21) if -2*n == 0], [0])
         self.assertEqual({i % 2 for i in range(-20, 21)}, {0, 1})
 
+    def test_spectral_cochain_filtration_and_exact_couple_grading(self):
+        ch = self.text["12"]
+        for target in (
+            r"i:D^1_{p-1,q+1}\to D^1_{p,q}",
+            r"k:E^1_{p,q}\to D^1_{p-1,q}",
+            r"F^pC^n(E;\Z)=",
+            r"F^pC^*(E)/F^{p+1}C^*(E)",
+            r"C^*(E_p,E_{p-1};\Z)",
+            r"E_1^{p,q}=H^{p+q}(E_p,E_{p-1};\Z)",
+            r"$S^{-1}=\varnothing$",
+        ):
+            with self.subTest(expression=target):
+                self.assertIn(target, ch)
+        self.assertIn(
+            "występuje \emph{produkt}", ch
+        )
+        # In a non-finite cellular CW complex, infinite-support
+        # cochains are allowed; direct sums would discard such data.
+        cochain = lambda cell_index: 1 if cell_index % 3 == 0 else 0
+        self.assertEqual(
+            sum(cochain(i) for i in range(3000)), 1000
+        )
+        self.assertEqual(
+            [cochain(i) for i in range(9)], [1, 0, 0, 1, 0, 0, 1, 0, 0]
+        )
+
     def test_extension_problem_distinguishes_actual_groups(self):
         ch = self.text["12"]
         self.assertIn(r"\label{prz:spectral-extension-z4}", ch)
