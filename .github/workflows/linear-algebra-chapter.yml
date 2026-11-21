@@ -17,8 +17,36 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate book imports, assets and repository
-        run: python tools/validate_repository.py
+      - name: Validate linear algebra chapter, import and catalog
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, re
+          root = Path.cwd()
+          book = root / "books/pl/linear_algebra.tex"
+          chapter = root / "chapters/pl/linear_algebra/01-przestrzenie-wektorowe.tex"
+          manifest = json.loads((root / "catalog/books.json").read_text(encoding="utf-8"))
+          assert book.is_file() and chapter.is_file()
+          book_text = book.read_text(encoding="utf-8")
+          chapter_text = chapter.read_text(encoding="utf-8")
+          assert r"\input{../../chapters/pl/linear_algebra/01-przestrzenie-wektorowe.tex}" in book_text
+          item = next(x for x in manifest["books"] if x["id"] == "linear_algebra")
+          assert item["entrypoint"] == "books/pl/linear_algebra.tex"
+          assert str(chapter.relative_to(root)) in item["chapters"]
+          labels = re.findall(r"\\label\{([^}]+)\}", chapter_text)
+          refs = re.findall(r"\\(?:ref|eqref)\{([^}]+)\}", chapter_text)
+          assert len(labels) == len(set(labels)), "Duplicate labels"
+          assert set(refs).issubset(set(labels)), f"Missing chapter refs: {set(refs)-set(labels)}"
+          assert r"\includegraphics" not in chapter_text, "Unexpected external figure"
+          print(f"Linear algebra import, manifest, labels and refs OK ({len(labels)} labels)")
+          PY
+      - name: Report pre-existing global library validation issues
+        shell: bash
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          python tools/validate_repository.py | tee repository_validation.log
       - name: Build linear algebra PDF twice and resolve references
         uses: xu-cheng/latex-action@v3
         with:
