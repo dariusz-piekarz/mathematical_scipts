@@ -10,6 +10,7 @@ on:
       - "tools/test_linear_algebra_tensors.py"
       - "tools/test_linear_algebra_exterior.py"
       - "tools/test_linear_algebra_quadratic_forms.py"
+      - "tools/test_linear_algebra_unitary.py"
       - "books/pl/linear_algebra.tex"
       - "catalog/books.json"
       - "application/backend/latex_parser.py"
@@ -34,7 +35,7 @@ jobs:
           assert item["entrypoint"] == "books/pl/linear_algebra.tex"
           assert book.is_file()
           book_text = book.read_text(encoding="utf-8")
-          assert len(item["chapters"]) >= 11, "Chapters 01-11 must be registered"
+          assert len(item["chapters"]) >= 12, "Chapters 01-12 must be registered"
           expected = [
               "chapters/pl/linear_algebra/01-przestrzenie-wektorowe.tex",
               "chapters/pl/linear_algebra/02-wymiar-sumy-proste-i-przestrzenie-ilorazowe.tex",
@@ -47,8 +48,9 @@ jobs:
               "chapters/pl/linear_algebra/09-formy-dwuliniowe-i-kwadratowe.tex",
               "chapters/pl/linear_algebra/10-iloczyny-tensorowe.tex",
               "chapters/pl/linear_algebra/11-algebry-tensorowa-symetryczna-i-zewnetrzna.tex",
+              "chapters/pl/linear_algebra/12-przestrzenie-euklidesowe-i-unitarne.tex",
           ]
-          assert item["chapters"][:11] == expected, "Incorrect chapter order"
+          assert item["chapters"][:12] == expected, "Incorrect chapter order"
           labels, refs = [], []
           for path in item["chapters"]:
               chapter = root / path
@@ -79,6 +81,10 @@ jobs:
         shell: bash
         run: |
           python tools/test_linear_algebra_quadratic_forms.py
+      - name: Verify Euclidean and unitary spaces
+        shell: bash
+        run: |
+          python tools/test_linear_algebra_unitary.py
       - name: Report pre-existing global library validation issues
         shell: bash
         continue-on-error: true
@@ -108,7 +114,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: linear-algebra-ch01-ch11
+          name: linear-algebra-ch01-ch12
           path: |
             books/pl/linear_algebra.pdf
             books/pl/linear_algebra.log
