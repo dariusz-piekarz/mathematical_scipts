@@ -90,7 +90,7 @@ mamy
 Pozostaje sprawdzić \(k=n-1\).
 Z twierdzenia Cayleya--Hamiltona,
 udowodnionego w
-Rozdziale~\ref{ch:lin16-invariant},
+Rozdziale~\ref{ch:lin16-niezmiennicze},
 istnieją współczynniki
 \(c_0,\ldots,c_{n-1}\in\mathbb C\)
 takie, że
@@ -1856,3 +1856,307 @@ otrzymujemy
 \(e_k=(A-LC)^ke_0\to0\)
 i oszacowanie geometryczne.
 \end{proof}
+
+\section{Energia sterowania i gramian dyskretny}
+\label{sec:lin25-discrete-gramian}
+
+\begin{stwierdzenie}[Gramian na skończonym horyzoncie]
+\label{prop:lin25-discrete-gramian}
+Niech \(N\ge1\) będzie
+liczbą całkowitą.
+Dla pary \((A,B)\)
+określmy
+\[
+ W_N^{\mathrm d}=
+ \sum_{j=0}^{N-1}A^jBB^*(A^*)^j.
+\]
+Jest to macierz hermitowska
+i nieujemnie określona.
+Dla każdego \(N\)
+zachodzi
+\[
+ W_N^{\mathrm d}=
+ \mathcal K_N\mathcal K_N^*,
+ \qquad
+ \mathcal K_N=[B,AB,\ldots,A^{N-1}B].
+\]
+W szczególności
+\(W_n^{\mathrm d}>0\)
+dokładnie wtedy, gdy
+para \((A,B)\) jest sterowalna.
+
+Jeśli \(W_N^{\mathrm d}>0\),
+to dla dowolnych
+\(x_0,z\in\mathbb C^n\)
+najmniejsza suma energii sterowania
+\(\sum_{j=0}^{N-1}\|u_j\|_2^2\)
+wśród ciągów
+przeprowadzających
+\(x_0\) w \(z\)
+po \(N\) krokach
+jest równa
+\[
+ (z-A^Nx_0)^*
+ (W_N^{\mathrm d})^{-1}
+ (z-A^Nx_0).
+\]
+Minimum jest osiągane
+przez dokładnie jeden
+ciąg sterowań.
+\end{stwierdzenie}
+\begin{proof}
+Każdy składnik
+\(A^jBB^*(A^*)^j\)
+jest hermitowski
+i ma nieujemną formę
+kwadratową, gdyż
+\[
+ v^*A^jBB^*(A^*)^jv
+ =\|B^*(A^*)^jv\|_2^2.
+\]
+Zatem ich suma
+jest hermitowska
+i nieujemnie określona.
+Ponieważ
+\(\mathcal K_N\)
+jest złożona kolejno
+z bloków \(A^jB\),
+mnożenie przez
+\(\mathcal K_N^*\)
+daje dokładnie wskazaną sumę.
+Dla dowolnej macierzy \(M\)
+zachodzi
+\(\ker(MM^*)=\ker M^*\):
+jedna inkluzja jest oczywista,
+a z \(MM^*v=0\) wynika
+\(0=v^*MM^*v=\|M^*v\|_2^2\).
+Stąd \(MM^*>0\)
+dokładnie wtedy, gdy
+\(M\) ma pełną rangę wierszową.
+Dla \(N=n\) daje to
+kryterium sterowalności.
+
+Przejdźmy do kosztu.
+Po odwróceniu kolejności
+sterowań z
+Twierdzenia~\ref{thm:lin25-kalman}
+otrzymujemy
+\[
+ x_N=A^Nx_0+\mathcal K_Nw,
+ \qquad
+ w=\begin{pmatrix}
+      u_{N-1}\\u_{N-2}\\\vdots\\u_0
+    \end{pmatrix}.
+\]
+Niech \(d=z-A^Nx_0\).
+Warunek osiągnięcia celu
+ma postać \(\mathcal K_Nw=d\).
+Jeśli \(W_N^{\mathrm d}>0\),
+to definiujemy
+\[
+ w_0=\mathcal K_N^*
+          (W_N^{\mathrm d})^{-1}d.
+\]
+Wtedy
+\(\mathcal K_Nw_0
+ =W_N^{\mathrm d}
+    (W_N^{\mathrm d})^{-1}d=d\),
+więc \(w_0\) jest dopuszczalny.
+Każdy inny dopuszczalny
+\(w\) ma postać \(w=w_0+h\)
+z \(h\in\ker\mathcal K_N\).
+Wektory \(w_0\) i \(h\)
+są ortogonalne, gdyż
+\[
+ w_0^*h
+ =d^*(W_N^{\mathrm d})^{-1}
+    \mathcal K_Nh=0.
+\]
+Z twierdzenia Pitagorasa
+wynika
+\(\|w\|_2^2
+ =\|w_0\|_2^2+\|h\|_2^2\),
+a równość z wartością
+minimalną zachodzi
+tylko dla \(h=0\).
+Wreszcie
+\[
+ \|w_0\|_2^2
+ =d^*(W_N^{\mathrm d})^{-1}
+    \mathcal K_N\mathcal K_N^*
+    (W_N^{\mathrm d})^{-1}d
+ =d^*(W_N^{\mathrm d})^{-1}d.
+\]
+To dowodzi wszystkich tez.
+\end{proof}
+
+\begin{przyklad}[Energia potrzebna do osiągnięcia celu]
+\label{prz:lin25-energy}
+Dla pary
+\[
+ A=\begin{pmatrix}0&1\\0&0\end{pmatrix},
+ \qquad B=e_2
+\]
+mamy
+\[
+ W_2^{\mathrm d}
+ =BB^*+ABB^*A^*
+ =\begin{pmatrix}0&0\\0&1\end{pmatrix}
+  +\begin{pmatrix}1&0\\0&0\end{pmatrix}
+ =I_2.
+\]
+Jeśli \(x_0=0\)
+i chcemy osiągnąć
+\(z=(a,b)^{\mathsf T}\)
+w dwóch krokach,
+to optymalny ciąg sterowań
+wynosi \(u_0=a\), \(u_1=b\),
+a minimalna energia
+\(|a|^2+|b|^2=\|z\|_2^2\).
+Wynika to bezpośrednio
+z ogólnego wzoru,
+ale także z jawnej trajektorii
+w Przykładzie~\ref{prz:lin25-chain}.
+\end{przyklad}
+
+\section{Przypadek rzeczywisty i granice twierdzeń}
+\label{sec:lin25-real}
+
+\begin{uwaga}[Macierze rzeczywiste]
+\label{rem:lin25-real}
+Definicje sterowalności
+i obserwowalności
+oraz kryteria rangowe
+pozostają ważne dla macierzy
+rzeczywistych.
+W kryterium PBH
+należy jednak testować
+\emph{wszystkie zespolone}
+wartości własne
+rzeczywistej macierzy \(A\),
+nie tylko rzeczywiste.
+
+Wykażmy, że także
+w twierdzeniu o stabilizowalności
+można dla rzeczywistych \(A,B\)
+wybrać \emph{rzeczywistą}
+macierz \(K\).
+W
+Lemacie~\ref{lem:lin25-feedback-placement}
+dla stabilizacji ciągłej
+wystarczy wybierać
+\(\mu_j\) z przedziału
+\((-\infty,0)\) poza
+skończonym widmem.
+Dla dyskretnej
+wystarczy przedział \((-1,1)\).
+Argument w lemacie
+używał zerowania funkcji
+wymiernej na zbiorze
+z nieskończenie wieloma punktami
+skupienia, a więc działa
+również na każdym z tych
+rzeczywistych przedziałów.
+W wybieranej kolejno
+rzeczywistej bazie
+można używać rzeczywistych
+wektorów \(u_j\),
+ponieważ macierze
+\((H-\mu_jI)^{-1}D\)
+są rzeczywiste.
+Powstałe \(v_j\)
+są wtedy rzeczywiste,
+a odwzorowanie określone
+przez \(Kv_j=u_j\)
+ma rzeczywistą macierz.
+W ten sposób
+otrzymujemy rzeczywiste
+sprzężenie stabilizujące,
+bez wyprowadzania go
+ze sprzężenia zespolonego.
+Analogiczne rozumowanie
+dla pary sprzężonej
+daje rzeczywiste
+wzmocnienie obserwatora \(L\).
+\end{uwaga}
+
+\begin{uwaga}[Przejście do ogólnych twierdzeń Riccatiego]
+\label{rem:lin25-riccati}
+Stabilizowalność nie oznacza
+pełnej sterowalności:
+nieosiągalne kierunki
+mogą pozostać obecne,
+o ile są stabilne.
+Podobnie wykrywalność
+dopuszcza stabilne kierunki
+nieobserwowalne.
+To właśnie te dwa
+pojęcia występują
+w ogólnych twierdzeniach
+o stabilizujących rozwiązaniach
+równań Riccatiego,
+które rozszerzają
+Rozdział~\ref{ch:lin24-riccati}
+na niestabilną otwartą pętlę.
+Ich szczegółowe sformułowania
+i dowody pozostawiamy
+kolejnemu rozdziałowi,
+aby nie korzystać z nich
+przed wprowadzeniem
+koniecznych hipotez.
+\end{uwaga}
+
+\section{Podsumowanie}
+\label{sec:lin25-summary}
+
+Sterowalność określa,
+czy sterowanie \(Bu\)
+może wygenerować dowolny stan,
+a obserwowalność, czy
+obserwacja \(Cx\)
+pozwala rozróżnić
+wszystkie stany początkowe.
+W czasie dyskretnym
+charakteryzują je rangi
+macierzy Kalmana
+\[
+ \mathcal K(A,B)=
+ [B,AB,\ldots,A^{n-1}B],
+ \qquad
+ \mathcal O(C,A)=
+ \begin{bmatrix}
+ C\\CA\\\vdots\\CA^{n-1}
+ \end{bmatrix}.
+\]
+W czasie ciągłym
+te same kryteria wynikają
+z szeregu wykładniczego;
+dodatnia określoność
+gramianu sterowalności
+pozwala nawet podać
+jawne sterowanie prowadzące
+do dowolnego stanu.
+
+Kryterium PBH zastępuje
+duże macierze Kalmana
+warunkiem rangi przy
+wartościach własnych \(A\).
+Rozkład Kalmana oddziela
+kierunki osiągalne
+od nieosiągalnych oraz
+obserwowalne od nieobserwowalnych.
+Macierz sprzężenia zwrotnego
+może przesuwać wartości własne
+części osiągalnej,
+ale nie zmienia widma operatora
+na ilorazie przez
+przestrzeń osiągalną.
+Dlatego stabilizowalność
+wymaga dokładnie,
+aby nieosiągalne wartości własne
+były już stabilne.
+Po zastosowaniu
+związku dualnego
+uzyskujemy analogiczne
+kryterium wykrywalności
+i zbieżność obserwatora.
