@@ -69,7 +69,7 @@ Po zmianach:
 - brak niedozwolonych sformułowań „unia” i „relacja liniowa” poza stabilnymi historycznymi identyfikatorami etykiet;
 - żadnych nowych zależności od zewnętrznych plików graficznych;
 - wcześniejszy CI po pierwszym audycie: [44894556217](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44894556217) — **success**;
-- CI aktualnego tekstu: [44895315252](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44895315252) — status do uzupełnienia po zakończeniu.
+- CI aktualnego tekstu: [44895315252](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44895315252) — **success**. Wszystkie etapy kontroli źródeł, kompilacji LaTeX, sprawdzenia odsyłaczy i eksportu PDF zakończyły się powodzeniem. Końcowy PDF zawiera **27 stron**. W końcowym pliku `linear_algebra.log` nie znaleziono `LaTeX Warning`, `Overfull`, `Underfull`, `Missing character` ani `Undefined control sequence`. W logu zadania występują przejściowe ostrzeżenia z pierwszego przebiegu LaTeX, które zniknęły po kolejnych przebiegach. Wizualnie sprawdzono strony **19, 20, 24, 25 i 26**: nowo rozszerzone dowody oraz rysunek warstw nie wykazują kolizji ani ucięcia tekstu.
 
 Nadal występują wcześniejsze problemy globalnej walidacji innych skryptów, raportowane oddzielnie. Nie uznajemy ich za naprawione.
 
