@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate linear algebra chapter, import and catalog
+      - name: Validate linear algebra chapters, imports, catalog and terminology
         shell: bash
         run: |
           python - <<'PY'
@@ -25,21 +25,34 @@ jobs:
           import json, re
           root = Path.cwd()
           book = root / "books/pl/linear_algebra.tex"
-          chapter = root / "chapters/pl/linear_algebra/01-przestrzenie-wektorowe.tex"
           manifest = json.loads((root / "catalog/books.json").read_text(encoding="utf-8"))
-          assert book.is_file() and chapter.is_file()
-          book_text = book.read_text(encoding="utf-8")
-          chapter_text = chapter.read_text(encoding="utf-8")
-          assert r"\input{../../chapters/pl/linear_algebra/01-przestrzenie-wektorowe.tex}" in book_text
           item = next(x for x in manifest["books"] if x["id"] == "linear_algebra")
           assert item["entrypoint"] == "books/pl/linear_algebra.tex"
-          assert str(chapter.relative_to(root)) in item["chapters"]
-          labels = re.findall(r"\\label\{([^}]+)\}", chapter_text)
-          refs = re.findall(r"\\(?:ref|eqref)\{([^}]+)\}", chapter_text)
-          assert len(labels) == len(set(labels)), "Duplicate labels"
-          assert set(refs).issubset(set(labels)), f"Missing chapter refs: {set(refs)-set(labels)}"
-          assert r"\includegraphics" not in chapter_text, "Unexpected external figure"
-          print(f"Linear algebra import, manifest, labels and refs OK ({len(labels)} labels)")
+          assert book.is_file()
+          book_text = book.read_text(encoding="utf-8")
+          assert len(item["chapters"]) >= 2, "Both chapters must be registered"
+          expected = [
+              "chapters/pl/linear_algebra/01-przestrzenie-wektorowe.tex",
+              "chapters/pl/linear_algebra/02-wymiar-sumy-proste-i-przestrzenie-ilorazowe.tex",
+          ]
+          assert item["chapters"][:2] == expected, "Incorrect chapter order"
+          labels, refs = [], []
+          for path in item["chapters"]:
+              chapter = root / path
+              assert chapter.is_file(), f"Missing chapter: {path}"
+              chapter_text = chapter.read_text(encoding="utf-8")
+              assert r"\input{../../" + path + "}" in book_text, f"Missing book import: {path}"
+              assert r"\includegraphics" not in chapter_text, f"Unexpected external graphic: {path}"
+              labels += re.findall(r"\\label\{([^}]+)\}", chapter_text)
+              refs += re.findall(r"\\(?:ref|eqref)\{([^}]+)\}", chapter_text)
+              for lineno, line in enumerate(chapter_text.splitlines(), 1):
+                  if r"\label{" in line or r"\ref{" in line or line.strip().startswith("%"):
+                      continue
+                  assert not re.search(r"\bunia\b|\bunii\b|\bunię\b|\bunią\b", line, flags=re.I), (path, lineno, "Use suma zbiorow")
+                  assert not re.search(r"\brelacja\b|\brelacji\b|\brelację\b", line, flags=re.I), (path, lineno, "Use warunek niezaleznosci liniowej")
+          assert len(labels) == len(set(labels)), "Duplicated labels across LA chapters"
+          assert set(refs).issubset(set(labels)), f"Unresolved LA refs: {set(refs)-set(labels)}"
+          print(f"Linear algebra chapters, order, terminology and references OK ({len(labels)} labels)")
           PY
       - name: Report pre-existing global library validation issues
         shell: bash
@@ -65,7 +78,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: linear-algebra-ch01
+          name: linear-algebra-ch01-ch02
           path: |
             books/pl/linear_algebra.pdf
             books/pl/linear_algebra.log
