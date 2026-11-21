@@ -57,6 +57,10 @@ Przebiegi wcześniejszego commita źródłowego `438bcd4a`:
 - [Testy aplikacji i regresji](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44932018840) — **success**.
 - [Kontrola międzytomowa AT–DG–AG](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44932018875) — **success**.
 
-Trwało uruchomienie ostatecznej wersji źródła (`340e7b5a`) i końcowych dodatkowych testów (`95a1cf38`), a także odrębnej, dłuższej kontroli wspólnego materiału TOP-17 i DG-19. **Ostateczną decyzję o stabilizacji należy dopisać po sprawdzeniu aktualnego CI.**
+Końcowe przebiegi po zmianach źródła (`340e7b5a`) i dodatkowych regresjach (`95a1cf38`):
+- [Kompilacja TOP-01–18 z nowymi regresjami](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44932121133) — **completed / success**, commit `95a1cf38` (źródło niezmienione od `340e7b5a`).
+- [Testy aplikacji i nowa regresja TOP-17](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44932120969) — **completed / success**, commit `95a1cf38`.
+- [Audyt zależności AT–DG–AG](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44932089693) — **completed / success**, commit źródłowy `340e7b5a`.
+- [Specjalny audyt TOP-17 ↔ DG-19, porównanie dowodów i kompilacja obu książek](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44932089662) — **completed / success** w obu zadaniach: pełny kontekst AT-01–30 i DG-01–20. Commit źródłowy `340e7b5a`.
 
-**Wstępny status:** matematyczny audyt IV i kontrola strukturalna bez nowych usterek; oczekiwanie na aktualne wyniki CI. Następny rozdział w cyklu: TOP-18. Automatyzacji nie włączano.
+**Decyzja końcowa:** **TOP-17 stabilny po audycie IV**, bez nowych twierdzeń czy lematów, 18 etykiet i dwa diagramy bez naruszeń, wszystkie istotne CI zakończone sukcesem. Następnym rozdziałem do stabilizacji jest TOP-18. Nie włączono automatyzacji.
