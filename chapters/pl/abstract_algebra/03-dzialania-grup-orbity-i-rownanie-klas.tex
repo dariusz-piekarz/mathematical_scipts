@@ -1,0 +1,611 @@
+% AA-03 | Algebra abstrakcyjna | kanoniczny rozdzial: dzialania grup
+% Zachowano istniejace etykiety, twierdzenia, dowody i przyklady.
+\chapter{Działania grup, orbity i równanie klas}
+\label{aa:ch:dzialania}
+
+\section{Dlaczego grupy działają na zbiorach?}
+Grupa koduje działania odwracalne, lecz sama informacja o jej mnożeniu
+nie mówi jeszcze, \emph{na czym} wykonujemy te operacje. Grupa
+permutacji przestawia elementy zbioru, obroty przesuwają punkty sfery,
+a macierze odwracalne przekształcają wektory. Wspólną definicję
+otrzymamy, gdy narzucimy zgodność kolejnych operacji z mnożeniem w grupie.
+
+\begin{definicja}[Lewe działanie grupy]
+\label{aa:def:dzialanie}
+Niech $G$ będzie grupą z elementem neutralnym $e$, a $X$ zbiorem.
+\emph{Lewym działaniem} $G$ na $X$ nazywamy odwzorowanie
+$G\times X\to X$, $(g,x)\mapsto g\cdot x$, spełniające
+$e\cdot x=x$ i $(gh)\cdot x=g\cdot(h\cdot x)$
+dla wszystkich $g,h\in G$ i $x\in X$.
+Zbiór $X$ z takim działaniem nazywamy \emph{$G$-zbiorem}.
+Punkt $x\in X$ jest \emph{stały} dla działania całej grupy,
+jeżeli $g\cdot x=x$ dla wszystkich $g\in G$.
+\end{definicja}
+
+\begin{lemat}[Działanie to homomorfizm do grupy permutacji]
+\label{aa:lem:akcja-hom}
+Dane jest lewe działanie grupy $G$ na zbiorze $X$.
+Przez $\operatorname{Sym}(X)$ oznaczamy grupę wszystkich bijekcji
+$X\to X$ z działaniem składania odwzorowań. Dla każdego
+$g\in G$ odwzorowanie $T_g:X\to X$, $T_g(x)=g\cdot x$,
+jest bijekcją, a funkcja
+$\rho:G\to\operatorname{Sym}(X)$, $\rho(g)=T_g$,
+jest homomorfizmem grup.
+Odwrotnie, każdy homomorfizm $\rho:G\to\operatorname{Sym}(X)$
+wyznacza lewe działanie przez $g\cdot x=\rho(g)(x)$.
+\end{lemat}
+\begin{proof}
+Z aksjomatu działania $T_e(x)=e\cdot x=x$, więc $T_e=\operatorname{id}_X$.
+Ponadto $T_g(T_{g^{-1}}(x))=(gg^{-1})\cdot x=x$;
+po zamianie $g$ z $g^{-1}$ dostajemy także
+$T_{g^{-1}}(T_g(x))=x$. Stąd $T_g^{-1}=T_{g^{-1}}$,
+a więc $T_g$ jest bijekcją.
+Dla wszystkich $g,h,x$ mamy
+$T_{gh}(x)=(gh)\cdot x=g\cdot(h\cdot x)=(T_g\circ T_h)(x)$.
+Równość dla każdego $x$ dowodzi $\rho(gh)=\rho(g)\rho(h)$.
+W drugą stronę homomorfizm zachowuje element neutralny,
+więc $\rho(e)=\operatorname{id}_X$, a równość
+$\rho(gh)=\rho(g)\circ\rho(h)$ daje oba aksjomaty działania.
+\end{proof}
+
+\begin{definicja}[Działanie wierne i przechodnie]
+Niech grupa $G$ działa na zbiorze $X$, a
+$\rho:G\to\operatorname{Sym}(X)$ będzie homomorfizmem
+odpowiadającym temu działaniu. Działanie jest \emph{wierne}, jeżeli
+$\rho$ jest różnowartościowy;
+jest \emph{przechodnie}, jeżeli dla wszystkich $x,y\in X$
+istnieje $g\in G$ z $g\cdot x=y$.
+Jądro działania to $\ker\rho$.
+\end{definicja}
+
+\begin{przyklad}[Trzy działania jednej grupy]
+\label{aa:prz:trzy-akcje}
+Niech $G=S_3$.
+\begin{enumerate}
+\item $S_3$ działa na $\{1,2,3\}$ przez $\sigma\cdot i=\sigma(i)$.
+Jest to działanie wierne i przechodnie: każdą liczbę można
+przenieść na dowolną inną, a permutacja ustalająca wszystkie
+trzy liczby jest identycznością.
+\item $S_3$ działa na zbiorze własnych elementów przez mnożenie
+z lewej: $\sigma\cdot\tau=\sigma\tau$. To także działanie wierne
+i przechodnie: aby przenieść $\tau$ na $\eta$, bierzemy
+$\sigma=\eta\tau^{-1}$. Działanie to ma sześciopunktową,
+a nie trzypunktową przestrzeń.
+\item $S_3$ działa na sobie przez sprzężenie
+$\sigma\cdot\tau=\sigma\tau\sigma^{-1}$.
+Nie jest przechodnie: element neutralny przechodzi tylko na siebie.
+Każda permutacja w centrum działa trywialnie; pokażemy,
+że właśnie centrum stanowi jądro tego działania.
+\end{enumerate}
+To, że grupy są te same, nie oznacza, że ich działania są takie same.
+\end{przyklad}
+
+\begin{przyklad}[Działanie przechodnie nie musi być wierne]
+\label{aa:prz:akcja-c4-dwa-punkty}
+Niech $G=\mathbb Z/4\mathbb Z$, a $X=\{u,v\}$.
+Dla klasy $[k]\in G$ określamy $[k]\cdot u=u$ i
+$[k]\cdot v=v$, jeśli $k$ jest parzyste, oraz
+$[k]\cdot u=v$, $[k]\cdot v=u$, jeśli $k$ jest nieparzyste.
+Parzystość nie zależy od reprezentanta klasy modulo $4$.
+Zgodność działania z dodawaniem wynika stąd, że złożenie
+zamiany punktów ze sobą daje identyczność, a parzystość sumy
+jest sumą parzystości modulo $2$.
+Zatem $[0]$ działa identycznościowo, a
+$([k]+[\ell])\cdot x=[k]\cdot([\ell]\cdot x)$ dla
+$k,\ell\in\mathbb Z$ i $x\in X$.
+Działanie jest przechodnie: $[1]\cdot u=v$ i $[1]\cdot v=u$,
+a $[0]$ ustala oba punkty.
+Nie jest wierne: $[2]\ne[0]$ ustala oba punkty,
+a dokładnie klasy parzyste działają trywialnie,
+więc $\ker\rho=\{[0],[2]\}$.
+Dokładnie dwie klasy $[0]$ i $[2]$ ustalają punkt $u$,
+a jego możliwymi obrazami są oba punkty $u,v$.
+Zależność $2\cdot2=4$ wyjaśnimy ogólnie w twierdzeniu
+o orbicie i stabilizatorze. Przykład pokazuje, że
+przechodniość nie pociąga wierności.
+
+\begin{center}
+\begin{tikzpicture}[>=Latex,baseline=(current bounding box.center)]
+\node[draw,circle,minimum size=9mm] (u) at (0,0) {$u$};
+\node[draw,circle,minimum size=9mm] (v) at (3,0) {$v$};
+\draw[->,bend left=24] (u) to node[above] {$[1]$} (v);
+\draw[->,bend left=24] (v) to node[below] {$[1]$} (u);
+\node[align=center] at (1.5,-1.55) {$[2]$ ustala oba punkty};
+\end{tikzpicture}
+\end{center}
+\end{przyklad}
+
+\section{Orbity i stabilizatory}
+\begin{definicja}[Orbita i stabilizator]
+\label{aa:def:orbita-stabilizator}
+Niech $G\curvearrowright X$ będzie działaniem, a $x\in X$.
+\emph{Orbitą} punktu $x$ nazywamy zbiór
+$G\cdot x=\{g\cdot x:g\in G\}$.
+\emph{Stabilizatorem} punktu $x$ nazywamy
+$G_x=\{g\in G:g\cdot x=x\}$.
+\end{definicja}
+
+\begin{lemat}[Stabilizator jest podgrupą, orbity rozkładają zbiór]
+\label{aa:lem:orbity-podzial}
+Niech $G$ działa na zbiorze $X$.
+Dla każdego $x\in X$ zbiór $G_x$ jest podgrupą $G$.
+Relacja $x\sim y\iff y\in G\cdot x$ jest relacją równoważności,
+a jej klasy to dokładnie orbity działania.
+\end{lemat}
+\begin{proof}
+Neutralny element $e$ ustala $x$, więc $e\in G_x$.
+Jeżeli $g,h\in G_x$, to
+$(gh^{-1})\cdot x=g\cdot(h^{-1}\cdot x)=g\cdot x=x$:
+istotnie, skoro $h\cdot x=x$, zastosowanie $h^{-1}$
+po obu stronach daje $h^{-1}\cdot x=x$.
+Kryterium podgrupy z Rozdziału~\ref{aa:ch:grupy} daje $G_x\le G$.
+
+Relacja jest zwrotna, bo $x=e\cdot x$.
+Jeśli $y=g\cdot x$, to $x=g^{-1}\cdot y$, zatem jest symetryczna.
+Jeśli ponadto $z=h\cdot y$, to $z=(hg)\cdot x$, zatem
+jest przechodnia. Jej klasą równoważności punktu $x$
+jest zbiór wszystkich $g\cdot x$, czyli $G\cdot x$.
+Klasy równoważności są albo równe, albo rozłączne
+i pokrywają $X$.
+\end{proof}
+
+\begin{twierdzenie}[Orbita i stabilizator]
+\label{aa:tw:orbita-stabilizator}
+Niech grupa $G$ działa na zbiorze $X$, a $x\in X$.
+Odwzorowanie
+$\Theta_x:G/G_x\to G\cdot x$, $\Theta_x(gG_x)=g\cdot x$,
+jest dobrze określoną bijekcją zbiorów. W szczególności,
+gdy $G$ jest skończona, zachodzi
+\[
+ |G\cdot x|=[G:G_x]=\frac{|G|}{|G_x|}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Najpierw porównajmy dwa reprezentanty warstwy:
+$gG_x=hG_x$ dokładnie wtedy, gdy $h^{-1}g\in G_x$,
+czyli $(h^{-1}g)\cdot x=x$.
+Z aksjomatów działania ostatnia równość jest równoważna
+$g\cdot x=h\cdot x$: zastosowanie $h$ daje implikację
+w prawo, a zastosowanie $h^{-1}$ daje odwrotną.
+Wykazaliśmy jednocześnie, że wartość $\Theta_x$
+nie zależy od reprezentanta warstwy i że równe obrazy
+pochodzą tylko z równych warstw; jest więc różnowartościowa.
+Każdy element orbity ma postać $g\cdot x$ i jest obrazem
+warstwy $gG_x$, zatem $\Theta_x$ jest surjektywna.
+Dla skończonego $G$ stosujemy twierdzenie Lagrange'a
+(\ref{aa:tw:lagrange}) do $G_x\le G$.
+\end{proof}
+
+\begin{przyklad}[Naturalne działanie $S_4$]
+Niech $S_4$ działa na $\{1,2,3,4\}$ w zwykły sposób.
+Orbita punktu $1$ to cały zbiór czteroelementowy:
+permutacją można wysłać $1$ na dowolną liczbę $i$.
+Stabilizator $1$ składa się z permutacji pozostałych trzech
+liczb i ma $3!=6$ elementów. Twierdzenie daje
+$|S_4\cdot1|=|S_4|/|(S_4)_1|=24/6=4$.
+Widać, co dzieje się w dowodzie: sześć permutacji
+wysyłających $1$ na określoną liczbę tworzy jedną warstwę
+stabilizatora; cztery możliwe obrazy to cztery takie warstwy.
+\end{przyklad}
+
+\begin{przyklad}[Nieskończona grupa z orbitą skończoną]
+\label{aa:prz:z-dziala-na-zn}
+Niech $n\ge2$ będzie liczbą naturalną.
+Grupa $(\mathbb Z,+)$ działa na $X=\mathbb Z/n\mathbb Z$
+przez $k\cdot[a]=[a+k]$.
+Jeśli $[a]=[b]$, to $n$ dzieli $a-b$, a zatem dzieli
+$(a+k)-(b+k)$, więc działanie jest dobrze określone.
+Ponadto $0\cdot[a]=[a]$ i
+$(k+\ell)\cdot[a]=[a+k+\ell]=k\cdot(\ell\cdot[a])$.
+Jest przechodnie: aby przenieść $[a]$ na $[b]$, wystarczy
+wybrać $k=b-a$.
+Stabilizator $[0]$ to $n\mathbb Z$, gdyż
+$k\cdot[0]=[0]$ dokładnie wtedy, gdy $n\mid k$.
+Warstwy $\mathbb Z/n\mathbb Z$ grupy addytywnej
+$\mathbb Z$ względem $n\mathbb Z$ są dokładnie $n$
+klasami reszt, więc
+$|\mathbb Z\cdot[0]|=[\mathbb Z:n\mathbb Z]=n$.
+Nie stosujemy tutaj ilorazu $|\mathbb Z|/|n\mathbb Z|$:
+oba zbiory są nieskończone, natomiast ich indeks jest skończony.
+\end{przyklad}
+
+\begin{przyklad}[Działanie na klasach warstw]
+\label{aa:prz:akcja-kosety}
+Niech $H\le G$. Grupa $G$ działa na zbiorze $G/H$
+przez $g\cdot(aH)=(ga)H$.
+Wzór jest dobrze określony: jeśli $aH=bH$, to
+$b^{-1}a\in H$, a więc
+$(gb)^{-1}(ga)=b^{-1}a\in H$, czyli $(ga)H=(gb)H$.
+Aksjomaty działania wynikają z
+$e\cdot(aH)=aH$ oraz
+$(gh)\cdot(aH)=((gh)a)H=g\cdot((ha)H)
+=g\cdot(h\cdot(aH))$.
+Jest to działanie przechodnie, ponieważ
+$(ba^{-1})\cdot(aH)=bH$.
+Stabilizator warstwy $H$ to dokładnie $H$, gdyż
+$gH=H\iff g\in H$.
+Stabilizator warstwy $aH$ wynosi $aHa^{-1}$:
+$g\cdot aH=aH$ wtedy i tylko wtedy, gdy
+$a^{-1}ga\in H$.
+To ważny model wszystkich działań przechodnich.
+\end{przyklad}
+
+\begin{wniosek}[Każdy przechodni $G$-zbiór jest przestrzenią warstw]
+\label{aa:wn:przechodnie-warstwy}
+Niech grupa $G$ działa przechodnio na niepustym zbiorze $X$.
+Dla dowolnego $x\in X$ istnieje bijekcja
+$G/G_x\to X$, $gG_x\mapsto g\cdot x$,
+która jest zgodna z działaniem $G$ po obu stronach.
+\end{wniosek}
+\begin{proof}
+Z przechodniości $G\cdot x=X$, więc bijekcja wynika
+z twierdzenia o orbicie i stabilizatorze.
+Dla $a,g\in G$ zgodność działania oznacza
+$\Theta_x(a\cdot(gG_x))=\Theta_x((ag)G_x)
+=(ag)\cdot x=a\cdot(g\cdot x)=a\cdot\Theta_x(gG_x)$.
+\end{proof}
+
+\section{Jądro działania i normalność}
+\begin{twierdzenie}[Jądro i efektywne działanie]
+\label{aa:tw:jadro-akcji}
+Jeżeli grupa $G$ działa na zbiorze $X$ przez homomorfizm
+$\rho:G\to\operatorname{Sym}(X)$, to
+\[
+ \ker\rho=\{g\in G:g\cdot x=x\text{ dla każdego }x\in X\}
+ =\bigcap_{x\in X}G_x.
+\]
+Zbiór ten jest podgrupą normalną, a działanie jest wierne
+dokładnie wtedy, gdy to jądro jest trywialne.
+Działanie przechodzi na wierne działanie $G/\ker\rho$
+na tym samym zbiorze $X$.
+\end{twierdzenie}
+\begin{proof}
+Z definicji $g\in\ker\rho$ oznacza
+$\rho(g)=\operatorname{id}_X$, czyli
+$\rho(g)(x)=x$ dla każdego $x\in X$.
+To jest równoważne przynależności do wszystkich stabilizatorów.
+Jądro homomorfizmu jest normalne, a homomorfizm jest
+różnowartościowy dokładnie wtedy, gdy jego jądro jest trywialne
+(Rozdział~\ref{aa:ch:lagrange-ilorazy}).
+Niech $N=\ker\rho$. Definiujemy
+$(gN)\cdot x=g\cdot x$.
+Jeśli $gN=hN$, to $h^{-1}g\in N$;
+więc $(h^{-1}g)\cdot x=x$, co po zastosowaniu $h$
+daje $g\cdot x=h\cdot x$. Działanie jest dobrze określone. Ponadto
+$(eN)\cdot x=e\cdot x=x$ oraz
+$((gN)(hN))\cdot x=(gh)\cdot x
+=g\cdot(h\cdot x)=(gN)\cdot((hN)\cdot x)$.
+Jeśli warstwa $gN$ ustala wszystkie $x$, to $g\in N$
+i $gN=N$, więc nowe działanie jest wierne.
+\end{proof}
+
+\begin{przyklad}[Działanie na warstwach i rdzeń podgrupy]
+Niech $H\le G$ i rozważmy działanie na $G/H$.
+Element $g$ działa trywialnie wtedy i tylko wtedy, gdy
+$g$ ustala wszystkie warstwy $aH$.
+Stabilizator $aH$ to $aHa^{-1}$, stąd jądro działania
+wynosi $\bigcap_{a\in G}aHa^{-1}$.
+Jest to \emph{rdzeń normalny} podgrupy $H$, czyli
+największa normalna podgrupa $G$ zawarta w $H$.
+Rzeczywiście jest normalna jako jądro i zawiera się
+w $H$ (bierzemy $a=e$).
+Jeżeli $N\trianglelefteq G$ oraz $N\subseteq H$, to
+$aNa^{-1}=N\subseteq aHa^{-1}$ dla każdego $a$,
+a więc $N$ zawiera się w tym przecięciu.
+\end{przyklad}
+
+\begin{przyklad}[Wierne działanie na warstwach nie wymaga normalności]
+\label{aa:prz:s3-core}
+W $G=S_3$ niech $H=\langle(2\,3)\rangle$, czyli
+stabilizator punktu $1$ w naturalnym działaniu na
+$\{1,2,3\}$. Zbiór warstw $G/H$ ma trzy elementy.
+Odwzorowanie $gH\mapsto g(1)$ jest bijekcją zgodną
+z działaniem $G$; wynika to z Twierdzenia~\ref{aa:tw:orbita-stabilizator}.
+Jądro działania na trzech warstwach jest trywialne, bo
+permutacja ustalająca jednocześnie punkty $1,2,3$
+jest identycznością. Zatem rdzeń normalny $H$ jest
+równy $\{e\}$. Sama $H$ nie jest jednak normalna:
+$(1\,2)(2\,3)(1\,2)=(1\,3)\notin H$.
+W szczególności zbiór $G/H$ ma naturalne działanie $G$,
+lecz nie ma dobrze określonego mnożenia warstw
+$(gH)(hH)=(gh)H$, które tworzyłoby grupę ilorazową.
+Rozróżnienie to wykorzystamy w następnym rozdziale,
+w dowodzie drugiego twierdzenia Sylowa.
+\end{przyklad}
+
+\section{Sprzężenia, centralizatory i normalizatory}
+\begin{definicja}[Centralizator i normalizator]
+\label{aa:def:centralizator-normalizator}
+Niech $G$ będzie grupą, $x\in G$, $H\le G$.
+\emph{Centralizator} $x$ to
+$C_G(x)=\{g\in G:gx=xg\}$, a \emph{normalizator} $H$ to
+$N_G(H)=\{g\in G:gHg^{-1}=H\}$.
+\emph{Klasa sprzężoności} $x$ to
+$\operatorname{Cl}_G(x)=\{gxg^{-1}:g\in G\}$.
+\end{definicja}
+
+\begin{lemat}[Centralizatory i normalizatory jako stabilizatory]
+\label{aa:lem:centralizator-normalizator}
+Dla dowolnej grupy $G$, elementu $x\in G$ i podgrupy $H\le G$
+zbiory $C_G(x)$ i $N_G(H)$ są podgrupami $G$.
+Ponadto $H\trianglelefteq N_G(H)$ oraz
+\[
+ |\operatorname{Cl}_G(x)|=[G:C_G(x)]
+\]
+przy skończonym $G$.
+\end{lemat}
+\begin{proof}
+Rozważmy działanie $G$ na sobie przez sprzężenie:
+$g\cdot x=gxg^{-1}$.
+Aksjomaty działania wynikają z
+$e x e^{-1}=x$ oraz
+$(gh)x(gh)^{-1}=g(hxh^{-1})g^{-1}$.
+Stabilizatorem $x$ jest zbiór tych $g$, dla których
+$gxg^{-1}=x$, czyli $gx=xg$.
+Zatem $C_G(x)=G_x$ i jest podgrupą, a formuła
+na liczebność klasy sprzężoności wynika z twierdzenia
+o orbicie i stabilizatorze.
+
+Grupa $G$ działa również na zbiorze wszystkich podgrup $G$
+przez $g\cdot K=gKg^{-1}$.
+Aksjomaty działania sprawdza się jak wyżej,
+a sprzężona podgrupa jest podgrupą dzięki zachowaniu
+mnożenia i odwrotności przez sprzężenie.
+Stabilizatorem podgrupy $H$ jest $N_G(H)$, stąd jest podgrupą.
+Dla każdego $h\in H$ zachodzi $hHh^{-1}=H$,
+więc $H\le N_G(H)$. Ponadto każdy element $N_G(H)$
+sprzęga $H$ na $H$, czyli $H\trianglelefteq N_G(H)$.
+\end{proof}
+
+\begin{przyklad}[Klasy sprzężoności w $S_3$]
+W $S_3$ są: identyczność, trzy transpozycje i dwa $3$-cykle.
+Przez sprzężenie permutacje zachowują strukturę cykli:
+dla bijekcji $g$ zachodzi
+$g(a_1\,\ldots\,a_k)g^{-1}=(g(a_1)\,\ldots\,g(a_k))$,
+co sprawdzamy, stosując obie strony do $g(a_i)$;
+poza punktami $g(a_1),\ldots,g(a_k)$ obie strony
+ustalają pozostałe punkty. Dla dowolnych dwóch cykli
+tej samej długości możemy wybrać permutację $g$, która
+przenosi kolejne elementy pierwszego cyklu na kolejne
+elementy drugiego. Stąd trzy transpozycje są sprzężone,
+a dwa $3$-cykle również są sprzężone.
+Centralizator transpozycji $(1\,2)$ zawiera tylko
+$e$ i $(1\,2)$: jeśli $g(1\,2)g^{-1}=(1\,2)$,
+to $g$ musi zachować dwuelementowy zbiór $\{1,2\}$,
+co pozostawia dwa wybory. Ma więc rząd $2$ i klasa
+ma $6/2=3$ elementy.
+Centralizator $(1\,2\,3)$ to jego trzy potęgi:
+możemy wysłać $1$ na jeden z trzech punktów,
+a komutowanie z cyklem wymusza obrazy $2$ i $3$.
+Zatem klasa $3$-cykli ma $6/3=2$ elementy.
+Ostatecznie klasy sprzężoności mają rozmiary $1,3,2$.
+\end{przyklad}
+
+\begin{przyklad}[Jądro działania przez sprzężenie]
+Dla dowolnej grupy $G$ jądro działania przez sprzężenie
+składa się z elementów $g$ spełniających
+$gxg^{-1}=x$ dla wszystkich $x\in G$, czyli z $Z(G)$.
+Zatem $G/Z(G)$ działa wiernie na $G$ przez sprzężenie.
+Przez $\operatorname{Aut}(G)$ oznaczamy grupę
+wszystkich automorfizmów $G$ ze składaniem odwzorowań.
+Otrzymujemy przy tym homomorfizm
+$G/Z(G)\to\operatorname{Aut}(G)$ dany wzorem
+$gZ(G)\mapsto(x\mapsto gxg^{-1})$. Jest on dobrze określony
+na mocy opisu jądra działania. Sprzężenie przez $g$
+zachowuje mnożenie, a jego odwrotnością jest sprzężenie
+przez $g^{-1}$, więc rzeczywiście jest automorfizmem $G$.
+Zgodność z mnożeniem warstw wynika ze wzoru
+$(gh)x(gh)^{-1}=g(hxh^{-1})g^{-1}$.
+\end{przyklad}
+
+\section{Równanie klas i zastosowania do \texorpdfstring{$p$}{p}-grup}
+\begin{twierdzenie}[Równanie klas]
+\label{aa:tw:rownanie-klas}
+Niech $G$ będzie grupą skończoną.
+Wybierzmy reprezentantów $x_1,\ldots,x_r$ wszystkich
+klas sprzężoności niezawartych w centrum $Z(G)$.
+Wówczas
+\[
+ |G|=|Z(G)|+\sum_{i=1}^{r}[G:C_G(x_i)].
+\]
+Każdy indeks w występującej sumie jest liczbą całkowitą
+nie mniejszą niż $2$.
+\end{twierdzenie}
+\begin{proof}
+Orbity działania przez sprzężenie tworzą rozkład $G$.
+Orbita $\operatorname{Cl}_G(x)$ ma jeden element wtedy i tylko wtedy,
+gdy $gxg^{-1}=x$ dla wszystkich $g$, co jest równoważne
+$x\in Z(G)$. Orbity jednoelementowe składają się zatem
+z dokładnie $|Z(G)|$ elementów.
+Pozostałe orbity są parami rozłączne i mają rozmiary
+$[G:C_G(x_i)]$, ponieważ centralizator jest stabilizatorem.
+Sumując liczby elementów wszystkich orbit, otrzymujemy wzór.
+Jeśli $x_i\notin Z(G)$, to jego orbita ma więcej niż jeden element.
+\end{proof}
+
+\begin{definicja}[Grupa o rzędzie będącym potęgą liczby pierwszej]
+Niech $p$ będzie liczbą pierwszą, a $a\ge0$ liczbą całkowitą.
+Grupę o rzędzie $p^a$ nazywamy \emph{$p$-grupą}.
+Jeżeli $a=0$, jest to grupa trywialna, ponieważ ma tylko
+jeden element. W dalszych twierdzeniach o nietrywialnym
+centrum zakładamy $a\ge1$.
+\end{definicja}
+
+\begin{twierdzenie}[Centrum niebanalnej skończonej $p$-grupy]
+\label{aa:tw:centrum-pgrupy}
+Jeżeli $G$ jest grupą rzędu $p^a$, gdzie $p$ jest liczbą pierwszą
+i $a\ge1$, to $|Z(G)|$ jest podzielne przez $p$.
+W szczególności centrum zawiera element różny od $e$.
+\end{twierdzenie}
+\begin{proof}
+Dla każdego $x\in G$ centralizator $C_G(x)$ jest podgrupą,
+więc jego rząd jest potęgą $p$ na mocy twierdzenia Lagrange'a.
+Jeśli $x\notin Z(G)$, to $C_G(x)$ jest właściwą podgrupą:
+rzeczywiście gdyby $C_G(x)=G$, element $x$ komutowałby
+ze wszystkimi elementami grupy i należałby do centrum.
+A zatem indeks $[G:C_G(x)]$ jest dodatnią potęgą $p$,
+i wynosi co najmniej $p$.
+Równanie klas daje
+$|G|=|Z(G)|+\sum_i [G:C_G(x_i)]$.
+Obie liczby $|G|=p^a$ i każdy składnik sumy są podzielne
+przez $p$, więc ich różnica $|Z(G)|$ również.
+Ponieważ $e\in Z(G)$, centrum nie jest puste;
+jeśli jego liczebność jest dodatnią wielokrotnością $p$,
+to wynosi co najmniej $p\ge2$.
+\end{proof}
+
+\begin{lemat}[Cykliczny iloraz przez centrum wymusza przemienność]
+\label{aa:lem:cykliczny-centrum}
+Jeśli $G$ jest grupą i $G/Z(G)$ jest cykliczna,
+to $G$ jest abelowa.
+\end{lemat}
+\begin{proof}
+Niech $gZ(G)$ generuje $G/Z(G)$.
+Dla dowolnych $x,y\in G$ istnieją liczby całkowite $m,n$
+i elementy $z,w\in Z(G)$ z $x=g^m z$, $y=g^n w$.
+Korzystając z tego, że $z,w$ komutują ze wszystkimi
+elementami $G$, otrzymujemy
+$xy=g^{m+n}zw=g^{n+m}wz=yx$.
+Ponieważ $x,y$ były dowolne, grupa jest abelowa.
+\end{proof}
+
+\begin{twierdzenie}[Grupy rzędu $p^2$ są abelowe]
+\label{aa:tw:p2-abelowa}
+Niech $p$ będzie liczbą pierwszą, a $G$ grupą rzędu $p^2$.
+Wtedy $G$ jest abelowa.
+\end{twierdzenie}
+\begin{proof}
+Poprzednie twierdzenie daje $p\mid |Z(G)|$,
+a twierdzenie Lagrange'a daje $|Z(G)|\mid p^2$.
+Stąd $|Z(G)|$ wynosi $p$ albo $p^2$.
+Jeśli $|Z(G)|=p^2$, to $Z(G)=G$ i grupa jest abelowa.
+Jeśli $|Z(G)|=p$, to iloraz $G/Z(G)$ ma rząd $p$,
+a więc jest cykliczny. Poprzedni lemat ponownie daje
+przemienność $G$.
+\end{proof}
+
+\begin{przyklad}[Dwie grupy abelowe rzędu cztery]
+Grupa $\mathbb Z/4\mathbb Z$ ma element $[1]$ rzędu $4$,
+natomiast $(\mathbb Z/2\mathbb Z)^2$ ma trzy niezerowe
+elementy, z których każdy ma rząd $2$.
+Obie grupy mają rząd $4$ i są abelowe,
+lecz nie są izomorficzne: izomorfizm zachowuje rzędy elementów.
+Z samej abelowości nie wynika więc cykliczność.
+\end{przyklad}
+
+\section{Lemat Burnside'a o orbitach}
+\begin{definicja}[Zbiór punktów stałych elementu grupy]
+Niech grupa $G$ działa na zbiorze $X$.
+Dla $g\in G$ definiujemy
+$X^g=\{x\in X:g\cdot x=x\}$.
+Nie mylimy $X^g$ ze zbiorem punktów stałych całego działania,
+który jest przecięciem wszystkich $X^g$.
+\end{definicja}
+
+\begin{twierdzenie}[Lemat Burnside'a]
+\label{aa:tw:burnside}
+Niech skończona grupa $G$ działa na skończonym zbiorze $X$.
+Niech $X/G=\{G\cdot x:x\in X\}$ oznacza zbiór orbit.
+Wtedy liczba orbit $|X/G|$ spełnia
+\[
+ |X/G|=\frac{1}{|G|}\sum_{g\in G}|X^g|.
+\]
+\end{twierdzenie}
+\begin{proof}
+Policzymy na dwa sposoby zbiór par
+$P=\{(g,x)\in G\times X:g\cdot x=x\}$.
+Ustalając najpierw $g$, otrzymujemy
+$|P|=\sum_{g\in G}|X^g|$.
+Ustalając natomiast $x$, widzimy, że odpowiadające mu
+pierwsze współrzędne tworzą stabilizator $G_x$,
+a więc $|P|=\sum_{x\in X}|G_x|$.
+
+Podzielmy teraz $X$ na orbity. Jeżeli $O=G\cdot x$
+jest jedną z nich, to wszystkie stabilizatory punktów z $O$
+mają ten sam rząd: dla $y=h\cdot x$ mamy
+$G_y=hG_xh^{-1}$, co wynika z rachunku
+$g\cdot(h\cdot x)=h\cdot x\iff
+(h^{-1}gh)\cdot x=x$.
+Dlatego
+$\sum_{y\in O}|G_y|=|O|\,|G_x|$.
+Twierdzenie o orbicie i stabilizatorze daje
+$|O|\,|G_x|=|G|$.
+Każda orbita wnosi zatem dokładnie $|G|$ do sumy
+$\sum_{x\in X}|G_x|$.
+Jeśli orbit jest $k$, to $|P|=k|G|$.
+Porównując oba sposoby liczenia $P$ i dzieląc przez $|G|$,
+otrzymujemy żądany wzór.
+\end{proof}
+
+\begin{przyklad}[Kolorowanie wierzchołków kwadratu dwoma kolorami]
+\label{aa:prz:burnside-kwadrat}
+Ustalmy cztery wierzchołki kwadratu i dwa kolory: czarny i biały.
+Kolorowanie to funkcja ze zbioru czterech wierzchołków
+do zbioru dwuelementowego, więc jest ich $2^4=16$.
+Dwa kolorowania uznajemy za to samo, gdy jedno można otrzymać
+z drugiego przez symetrię kwadratu. Działa grupa $D_4$
+o ośmiu elementach. Jeśli $V$ oznacza zbiór wierzchołków,
+a $C=\{\text{czarny},\text{biały}\}$ zbiór kolorów,
+to przestrzenią kolorowań jest zbiór funkcji $C^V$.
+Dla symetrii $g\in D_4$, kolorowania $c:V\to C$ oraz $v\in V$
+definiujemy $(g\cdot c)(v)=c(g^{-1}v)$.
+To jest działanie: $e\cdot c=c$, zaś
+$((gh)\cdot c)(v)=c(h^{-1}g^{-1}v)
+=(g\cdot(h\cdot c))(v)$.
+Kolorowanie $c$ jest ustalane przez $g$ wtedy i tylko wtedy,
+gdy jest stałe na każdym cyklu permutacji wierzchołków
+wyznaczonej przez $g$. Jeżeli cykli jest $k$, można
+wybrać jeden z dwóch kolorów niezależnie dla każdego cyklu;
+zatem $| (C^V)^g |=2^k$.
+Obliczmy dokładnie liczby kolorowań zachowanych przez symetrie.
+\begin{enumerate}
+\item Identyczność ustala wszystkie $16$ kolorowań.
+\item Każdy z dwóch obrotów o $90^\circ$ i $270^\circ$
+cyklicznie permutuje wszystkie cztery wierzchołki,
+więc kolorowanie jest stałe na całym kwadracie:
+każdy z tych obrotów ustala $2$ kolorowania.
+\item Obrót o $180^\circ$ wymienia dwie pary wierzchołków,
+więc można niezależnie wybrać kolor każdej pary:
+ustala $2^2=4$ kolorowania.
+\item Każde z dwóch odbić względem przekątnych ustala
+dwa wierzchołki i zamienia pozostałe dwa.
+Wymaga to jednego wspólnego koloru dla zamienianej pary,
+a kolory dwóch ustalanych wierzchołków można wybrać swobodnie:
+każde takie odbicie ustala $2^3=8$ kolorowań.
+\item Każde z dwóch odbić względem osi przechodzących przez
+środki przeciwległych boków zamienia dwie pary wierzchołków.
+Ustala $2^2=4$ kolorowania.
+\end{enumerate}
+W każdym przypadku liczba kolorowań jest potęgą $2$
+o wykładniku równym liczbie cykli odpowiedniej permutacji.
+Łączna liczba punktów stałych wynosi
+$16+2+2+4+8+8+4+4=48$.
+Na mocy lematu Burnside'a liczba różnych kolorowań z dokładnością
+do symetrii wynosi $48/8=6$.
+Można to sprawdzić, klasyfikując kolorowania według liczby czarnych
+wierzchołków: $0$ i $4$ dają po jednej klasie, $1$ i $3$ także
+po jednej, a dla dokładnie dwóch czarnych wierzchołków
+są dwa rodzaje (sąsiednie lub przeciwległe). Razem sześć.
+\end{przyklad}
+
+\begin{uwaga}[Konkretni reprezentanci sześciu orbit]
+W obliczonym przykładzie sześć orbit można reprezentować przez
+kolorowania z odpowiednio: zerem czarnych wierzchołków,
+jednym czarnym, dwoma sąsiednimi czarnymi,
+dwoma naprzeciwległymi czarnymi, trzema czarnymi i czterema
+czarnymi wierzchołkami. Odbicia i obroty nie zmieniają
+liczby czarnych wierzchołków, a w przypadku dokładnie dwóch
+czarnych wierzchołków zachowują również ich sąsiedztwo.
+Dlatego sześć wymienionych przypadków jest parami nierównoważnych.
+Z drugiej strony symetrie kwadratu przeprowadzają dowolne
+kolorowanie danego rodzaju na wybranego reprezentanta,
+co daje niezależną kontrolę wyniku lematu Burnside'a.
+\end{uwaga}
+
+\begin{uwaga}[Kolejny krok: twierdzenia Sylowa]
+W całym rozdziale wykorzystaliśmy działania grup na punktach,
+warstwach, podgrupach i samych grupach.
+W następnym rozdziale zastosujemy je do podgrup o rzędach
+będących potęgami liczb pierwszych. W ten sposób wyprowadzimy
+klasyczne twierdzenia Cauchy'ego i Sylowa.
+\end{uwaga}
