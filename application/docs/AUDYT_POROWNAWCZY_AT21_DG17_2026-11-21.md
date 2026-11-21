@@ -136,7 +136,7 @@ application/tests/test_at_dg_pairwise_21_17.py.
 
 **Pełne testy aplikacji:** 348 testów, wszystkie zaliczone,
 1 pominięty. GitHub Actions:
-https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44885235290
+https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44885526438
 
 **Pełna kompilacja TeX:** obydwa zadania workflow zakończone statusem
 **SUCCESS**, trzy przebiegi pdflatex dla każdego tomu:
@@ -144,7 +144,7 @@ https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44885235290
 - DG-01–20: **492 strony**.
 
 Workflow:
-https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44885098954
+https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44885526477
 
 Kontrola braku nowych niezdefiniowanych odsyłaczy i przepełnionych
 wierszy zaliczona. W DG nadal występuje **12 znanych nazw**
@@ -158,6 +158,14 @@ z nowymi dowodami, notacją, przykładami i podpisami.
 Sprawdzono brak obcięcia wzorów, niechcianego nakładania tekstu,
 sprzecznych znaków i problemów z akapitami.
 W tych miejscach nie stwierdzono problemów ze składem.
+Po ostatnim ujednoznacznieniu notacji przedłużeń $\sigma_0,\sigma_1$
+pobrano ponownie końcowy artefakt DG i wyrenderowano stronę 439;
+nowa wersja też jest poprawnie złożona.
+Weryfikacja starszego audytu AT11/DG17 oraz kontroli
+zależności AT–DG–AG również zakończyła się sukcesem:
+https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44885526444
+oraz
+https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44885526452.
 
 ## 8. Stan i dalszy zakres
 
