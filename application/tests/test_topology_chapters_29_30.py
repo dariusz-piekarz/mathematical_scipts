@@ -100,6 +100,44 @@ class AlgebraicTopologyTwentyNineThirtyAudit(unittest.TestCase):
                     r"\btensorowan\w*|\bsekwencj\w*|\bseskwilini\w*",
                 )
 
+    def test_ci_workflow_tracks_reviewed_pair_and_canonical_book(self):
+        workflow = (
+            ROOT / ".github" / "workflows" /
+            "algebraic-topology-audit-ch29-30.yml"
+        ).read_text(encoding="utf-8")
+        for n in ("29", "30"):
+            self.assertIn(
+                '"chapters/pl/algebraic_topology/' + n + '-*.tex"',
+                workflow,
+            )
+        self.assertIn('"books/pl/algebraic_topology.tex"', workflow)
+
+    def test_explicit_padic_congruences_and_morse_representatives(self):
+        chapter = self.texts["29"]
+        self.assertIn(r"3\sum_{m=0}^M4^m=4^{M+1}-1", chapter)
+        self.assertIn("sparametryzowanymi przedstawicielami", chapter)
+        self.assertIn(r"\nabla_g f(\gamma_R)", chapter)
+        self.assertNotIn("konciągu", chapter)
+        for precision in range(1, 60):
+            terms = (precision + 1) // 2
+            partial = sum(4 ** m for m in range(terms))
+            self.assertEqual((3 * partial + 1) % (2 ** precision), 0)
+
+    def test_transverse_intersection_local_signs_cancel(self):
+        chapter = self.texts["30"]
+        self.assertIn(
+            r"\operatorname{sgn}\det((-y,x),(1,0))",
+            chapter,
+        )
+        for i in range(1, 40):
+            eps = i / 40
+            positive_x = sqrt(2 * eps - eps * eps)
+            self.assertGreater(positive_x, 0)
+            self.assertEqual(
+                (1 if -positive_x > 0 else -1)
+                + (1 if positive_x > 0 else -1), 0
+            )
+
     def test_mittag_leffler_counterexample_is_explicit(self):
         src = self.texts["29"]
         self.assertIn(r"\label{prz:xviii-lim1-2adic-audit}", src)
