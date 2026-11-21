@@ -60,8 +60,8 @@ Nie zidentyfikowano nowego kontrprzykładu ani fałszywego twierdzenia; wykryta 
 - Środowiska `\\begin` i `\\end` są prawidłowo zagnieżdżone.
 - Brak zakazanych wystąpień „unia” i „relacja liniowa” w treści; zachowano historyczne nazwy stabilnych etykiet.
 - Nie dodano zewnętrznych grafik ani zależności do rozdziałów.
-- CI dla wersji po korektach: [44898808095](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44898808095) — wynik końcowy do uzupełnienia.
-- Istniejące błędy globalnej walidacji innych skryptów pozostają poza zakresem tego audytu.
+- CI dla wersji po korektach: [44898808095](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44898808095) — **success**. Wszystkie kroki dotyczące algebry liniowej zakończyły się powodzeniem, w tym walidacja obu rozdziałów, kontrola odsyłaczy, pełna kompilacja LaTeX i eksport artefaktu. Końcowy PDF ma **27 stron**. W finalnym pliku `linear_algebra.log` nie znaleziono `LaTeX Warning`, `Overfull`, `Underfull`, `Missing character`, `Undefined control sequence` ani `Fatal error`. Wizualnie sprawdzono strony **20, 21, 22 i 26**, obejmujące poprawione twierdzenia i dowody; bez ucięć lub kolizji tekstu.
+- Istniejące błędy globalnej walidacji innych skryptów pozostają poza zakresem tego audytu. W nieblokującym kroku walidacji globalnej CI nadal zgłasza **24 wcześniejsze problemy**.
 
 ## Status
 
