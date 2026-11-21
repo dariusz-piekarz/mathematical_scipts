@@ -3,7 +3,7 @@
 **Data:** 21 listopada 2026  
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`  
 **Źródło:** `chapters/pl/linear_algebra/19-postac-frobeniusa-i-czynniki-niezmiennicze.tex`  
-**Blob rozdziału:** `64ca6fc464c80d76a4adc002668366b6720b6dd6`  
+**Blob rozdziału po korekcie składni LaTeX:** `8d740d46073c85ef5f804a5b60e32fb56d808b4f`  
 **Poprzedni etap:** rozdziały 01–18 stabilne, raport `ch18_iteration_03.md`.
 
 ## Weryfikacja matematyczna
@@ -22,7 +22,9 @@
 - Rozdział dodano do `books/pl/linear_algebra.tex`, `catalog/books.json`, `README.md` oraz `.github/workflows/linear-algebra-chapter.yml`.
 - Dodano `tools/test_linear_algebra_frobenius.py`: obliczenie monicznych wyznacznikowych dzielników `Δ_k`, czynników Smitha i wielomianów minimalnych dla wszystkich `2×2` nad `F2,F3`, wszystkich `3×3` nad `F2` i 500 deterministycznie wybranych `3×3` nad `F3`, oraz sprawdzenie niezmienniczości względem sprzężenia i odtworzonej postaci Frobeniusa.
 - Pierwszy przebieg CI po integracji, [44940345350](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44940345350), wykrył **techniczną usterkę testu**, polegającą na dodaniu listy do krotki w Pythonie. Poprawiono `list(coeffs)+(1,)` na `list(coeffs)+[1]` (commit `ee1ce17b741e18a255806d0afd5da107f581f1ef`).
-- Regresja w [44940416454](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44940416454) po tej poprawce zakończyła się sukcesem. Wynik pełnej kompilacji i PDF należy potwierdzić po zakończeniu przebiegu.
+- Testy regresyjne w [44940416454](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44940416454) przeszły, ale kompilacja wykazała błąd LaTeX: znak `]` w zapisie `K[t]` przerwał opcjonalny argument tytułu definicji. Poprawiono ten tytuł przez grupowanie oraz dostosowano tytuły sekcji zawierające matematykę do zakładek PDF za pomocą `\texorpdfstring` (commit `b0746b46ee8aab25a37ddfab895a97b032dbce29`).
+- [GitHub Actions 44940666968](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44940666968) zakończył się **success**: test globalnej terminologii, test Smitha/Frobeniusa, wszystkie wcześniejsze regresje, pełna kompilacja LaTeX, kontrola odsyłaczy i eksport osobnego PDF rozdziału 19.
+- Samodzielny PDF rozdziału 19 ma **6 stron**, wszystkie niepuste. Sprawdzono wszystkie strony na zestawieniu renderów i współrzędne tekstu za pomocą PyMuPDF: **0 bloków poza obszarem strony**, bez wizualnych kolizji lub ucięć.
 - Źródło rozdziału ma **20 unikatowych etykiet**, **13 poprawnych odsyłaczy**, **7 par środowiska `proof`** i około 664 linie.
 
 ## Decyzja
