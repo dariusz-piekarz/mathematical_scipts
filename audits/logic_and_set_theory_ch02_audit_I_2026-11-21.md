@@ -12,7 +12,9 @@ Data: 21 listopada 2026. Źródło: najnowsza wersja z Biblioteki matematycznej 
 6. Usunięto błędne dopasowanie rodzaju w „$D$ jest pusty” i we fragmencie o parzystości liczb `n` i `n+2`.
 7. W dowodzie rozwinięcia `\exists!` poprawiono określenie miejsca, w którym występuje koniunkcja: jest w zakresie **kwantyfikatora egzystencjalnego**.
 8. W introdukcji do indukcji uściślono, że **skończony** dowód nie może polegać na sprawdzeniu każdego z nieskończenie wielu przypadków oddzielnie.
-9. Drobne ujednolicenie sformułowania początku dowodu jednoznacznego istnienia.
+9. Zmieniono zbyt bezwzględny zakaz używania nazwy zmiennej już obecnej pod innym kwantyfikatorem na właściwe kryterium: **brak przechwycenia**.
+10. Sprostowano zdanie, że każde twierdzenie ma jawne założenia: niektóre twierdzenia mają tylko tezę.
+11. Drobne ujednolicenie sformułowania początku dowodu jednoznacznego istnienia.
 
 ## II. Kontrola matematyczna
 
