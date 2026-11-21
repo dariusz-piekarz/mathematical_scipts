@@ -7,7 +7,8 @@ compilation is a separate CI requirement.
 from __future__ import annotations
 
 from collections import Counter
-from math import comb
+from math import comb, gcd
+from itertools import permutations
 from pathlib import Path
 import re
 import unittest
@@ -111,6 +112,72 @@ class TopologyChapterThirteenFourteenAudit(unittest.TestCase):
                 r"\btensorowan\w*|\btensorowali\w*"
                 r"|\bsekwencj\w*|\binjekc\w*|\bekwawariant\w*",
             )
+
+    def test_KAn_uniqueness_realizes_cocycle_before_extending(self):
+        ch = self.texts["13"]
+        proof = ch.split(r"\label{thm:KGn-existence-v6}", 1)[1].split(
+            r"\section{Kohomologia jako zbiór klas homotopii}", 1
+        )[0]
+        for token in (
+            r"H^n(K;A)\cong\operatorname{Hom}(H_n(K;\Z),A)",
+            r"c\in C^n(K;A)",
+            r"wartością $\delta c$",
+            r"$\pi_j(L)=0$ dla $j>n$",
+            r"twierdzenie Whiteheada",
+        ):
+            self.assertIn(token, proof)
+        # The existence proof cannot assume the representation theorem
+        # from the following section; instead it constructs the map.
+        self.assertNotIn(r"\ref{thm:rep-coho-v6}", proof)
+
+    def test_discrete_bar_model_respects_right_principal_action(self):
+        ch = self.texts["13"]
+        self.assertIn(
+            r"(h^{-1}g_0,\ldots,h^{-1}g_k)", ch
+        )
+        self.assertIn("wolne prawe działanie", ch)
+        perms = list(permutations(range(3)))
+
+        def product(a, b):
+            return tuple(a[b[i]] for i in range(3))
+
+        def inverse(p):
+            return tuple(p.index(i) for i in range(3))
+
+        def act(x, h):
+            return product(inverse(h), x)
+
+        for x in perms:
+            for h in perms:
+                for k in perms:
+                    # (x . h) . k = x . (h*k) for a right action.
+                    self.assertEqual(
+                        act(act(x, h), k), act(x, product(h, k))
+                    )
+            # A permutation can be fixed by right translation only
+            # if that translating element is the identity.
+            self.assertEqual(
+                [h for h in perms if act(x, h) == x],
+                [(0, 1, 2)],
+            )
+
+    def test_moore_Hom_Ext_cyclic_coefficient_arithmetic(self):
+        ch = self.texts["13"]
+        for m in range(2, 12):
+            for modulus in range(2, 12):
+                # For A=Z/modulus, ker(m:A->A) and coker both
+                # have exactly gcd(m,modulus) elements.
+                annihilator = {
+                    x for x in range(modulus)
+                    if (m*x) % modulus == 0
+                }
+                image = {
+                    (m*x) % modulus for x in range(modulus)
+                }
+                self.assertEqual(len(annihilator), gcd(m, modulus))
+                self.assertEqual(modulus // len(image), gcd(m, modulus))
+        self.assertIn(r"\operatorname{Ext}^1_{\Z}", ch)
+        self.assertIn(r"H^{n+1}(M;A)=A/mA", ch)
 
     def test_moore_cohomology_exposes_hom_and_ext(self):
         chapter = self.texts["13"]
