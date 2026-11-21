@@ -148,6 +148,16 @@ class TopologyChapterNineTenTests(unittest.TestCase):
         self.assertNotRegex(source, r"(?<!\\)\bpi_[ij]\b")
         self.assertNotIn(r"\sqcuppi", source)
 
+    def test_cech_neighborhood_proof_controls_all_intersections(self):
+        source = self.texts["10"]
+        self.assertIn(r"K_i\subset U_i", source)
+        self.assertIn(r"\bigcap_{i\in I}V_i=\varnothing", source)
+        self.assertIn(r"\varinjlim_{N\supset A}\check H^k(N;G)", source)
+        self.assertIn(r"\mathcal V|_A", source)
+        self.assertNotIn(
+            "regularne otoczenie\n$N$ zbioru $A$", source
+        )
+
     def test_solenoids_p2_p3_and_nonexact_inverse_limit(self):
         source = self.texts["10"]
         for label in (
