@@ -802,3 +802,501 @@ W szczególności
 i \(\|v-P_Uv\|^2=\tfrac12\),
 zgodnie ze wzorem Pitagorasa.
 \end{przyklad}
+
+
+\section{Równania normalne i metoda najmniejszych kwadratów}
+\label{sec:lin13-least-squares}
+
+\begin{definicja}[Zadanie najmniejszych kwadratów]
+\label{def:lin13-ls}
+Niech \(m,n\in\mathbb N_0\),
+\(A\in\operatorname{Mat}_{m\times n}(K)\)
+oraz \(y\in K^m\).
+\emph{Zadaniem najmniejszych kwadratów}
+jest znalezienie wszystkich \(x\in K^n\),
+dla których wartość
+\[
+ \|Ax-y\|^2
+ =\sum_{j=1}^m |(Ax)_j-y_j|^2
+\]
+jest najmniejsza.
+Wektor \(Ax\) nazywamy
+\emph{wektorem dopasowanym},
+a \(r=y-Ax\) \emph{resztą}.
+Nie zakładamy, że równanie
+\(Ax=y\) jest rozwiązywalne.
+\end{definicja}
+
+\begin{twierdzenie}[Równania normalne]
+\label{thm:lin13-normal-equations}
+Niech \(A\in\operatorname{Mat}_{m\times n}(K)\)
+oraz \(y\in K^m\), gdzie
+\(m,n\in\mathbb N_0\).
+Wtedy zadanie
+\[
+ \min_{x\in K^n}\|Ax-y\|^2
+\]
+ma przynajmniej jedno rozwiązanie.
+Dla \(x_0\in K^n\)
+następujące warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+ \item \(x_0\) minimalizuje
+       \(\|Ax-y\|^2\);
+ \item reszta \(y-Ax_0\)
+       należy do \((\operatorname{im}A)^\perp\);
+ \item \(A^*(Ax_0-y)=0\);
+ \item \(A^*Ax_0=A^*y\).
+\end{enumerate}
+Układ z (iv) nazywamy
+\emph{układem równań normalnych}.
+Wszystkie jego rozwiązania
+mają ten sam wektor dopasowany:
+\[
+ Ax_0=P_{\operatorname{im}A}y.
+\]
+Jeśli \(x_0\) jest jednym rozwiązaniem,
+to zbiorem wszystkich rozwiązań jest
+\(x_0+\ker A\). W szczególności
+rozwiązanie \(x_0\) jest jednoznaczne
+dokładnie wtedy, gdy \(\ker A=\{0\}\).
+\end{twierdzenie}
+\begin{proof}
+Obraz macierzy \(A\)
+jest podprzestrzenią
+skończonego wymiaru \(K^m\).
+Z
+Twierdzenia~\ref{thm:lin13-najlepsze}
+wektor \(p=P_{\operatorname{im}A}y\)
+jest jedynym wektorem w obrazie
+minimalizującym \(\|p-y\|\).
+Z definicji obrazu istnieje
+\(x_0\in K^n\) takie, że
+\(Ax_0=p\). To dowodzi
+istnienia rozwiązania (i).
+
+Dla dowolnego \(x\) mamy
+\(Ax\in\operatorname{im}A\),
+a na mocy wspomnianego
+twierdzenia najlepsze
+przybliżenie spośród takich
+wektorów jest dokładnie \(p\).
+Stąd (i) zachodzi wtedy i
+tylko wtedy, gdy \(Ax_0=p\),
+czyli reszta
+\(y-Ax_0=y-p\)
+jest ortogonalna do obrazu:
+(i)\(\iff\)(ii).
+Z
+Twierdzenia~\ref{thm:lin13-kernel-image}
+wynika
+\((\operatorname{im}A)^\perp=\ker A^*\),
+więc (ii)\(\iff\)(iii).
+Równoważność (iii)\(\iff\)(iv)
+wynika z liniowości operatora
+sprzężonego.
+
+Jeżeli \(x,x_0\) są rozwiązaniami,
+to \(Ax=Ax_0=p\), więc
+\(A(x-x_0)=0\) i
+\(x-x_0\in\ker A\).
+Odwrotnie, dodanie dowolnego
+wektora z jądra do \(x_0\)
+nie zmienia \(Ax_0\), więc
+nie zmienia też reszty i
+wartości minimalizowanej funkcji.
+Rozwiązanie jest zatem
+jednoznaczne wtedy i tylko wtedy,
+gdy jądro jest trywialne.
+Dla \(m=0\) obraz \(A\)
+jest zerowy i wszystkie \(x\)
+są rozwiązaniami; dla \(n=0\)
+istnieje jedyny kandydat \(x=0\).
+Dowód obejmuje oba przypadki.
+\end{proof}
+
+\begin{wniosek}[Przypadek kolumn niezależnych]
+\label{cor:lin13-ls-full-rank}
+Niech \(A\in\operatorname{Mat}_{m\times n}(K)\)
+ma liniowo niezależne kolumny.
+Wtedy układ równań normalnych
+ma dokładnie jedno rozwiązanie,
+dane wzorem
+\[
+ x_0=(A^*A)^{-1}A^*y.
+\]
+Wektor dopasowany i reszta
+spełniają
+\[
+ Ax_0=A(A^*A)^{-1}A^*y,\qquad
+ A^*(y-Ax_0)=0.
+\]
+\end{wniosek}
+\begin{proof}
+Niezależność kolumn oznacza
+\(\ker A=\{0\}\).
+Macierz \(A^*A\) jest
+dodatnio określona:
+dla każdego \(c\ne0\)
+\[
+ c^*A^*Ac=\|Ac\|^2>0.
+\]
+W szczególności jest odwracalna,
+więc równania normalne mają
+jedno rozwiązanie wyrażone
+pierwszym wzorem.
+Wstawiając je do \(Ax_0\)
+otrzymujemy drugi wzór,
+a trzeci to równania normalne.
+Wszystkie te równości
+pozostają prawdziwe dla \(n=0\)
+przy standardowej konwencji
+pustych macierzy.
+\end{proof}
+
+\begin{twierdzenie}[Rozwiązanie o najmniejszej normie]
+\label{thm:lin13-ls-minnorm}
+Niech \(A\in\operatorname{Mat}_{m\times n}(K)\),
+\(y\in K^m\), gdzie \(m,n\ge0\).
+Nawet gdy kolumny \(A\) są
+liniowo zależne, istnieje
+\emph{dokładnie jedno}
+rozwiązanie najmniejszych kwadratów
+\(x_{\min}\) o najmniejszej
+normie euklidesowej.
+Jest ono scharakteryzowane
+dwoma warunkami
+\[
+ A^*(Ax_{\min}-y)=0,\qquad
+ x_{\min}\in(\ker A)^\perp.
+\]
+Jeśli \(x_0\) jest dowolnym
+rozwiązaniem najmniejszych kwadratów,
+to
+\[
+ x_{\min}
+ =P_{(\ker A)^\perp}x_0.
+\]
+\end{twierdzenie}
+\begin{proof}
+Na mocy
+Twierdzenia~\ref{thm:lin13-normal-equations}
+istnieje rozwiązanie \(x_0\);
+wszystkie rozwiązania
+stanowią zbiór \(x_0+\ker A\).
+Przestrzeń \(K^n\) rozkłada się
+ortogonalnie:
+\[
+ K^n=\ker A\oplus(\ker A)^\perp.
+\]
+Piszemy więc jednoznacznie
+\(x_0=k_0+u_0\),
+gdzie \(k_0\in\ker A\)
+i \(u_0\in(\ker A)^\perp\).
+Wektor \(u_0=x_0-k_0\)
+również rozwiązuje zadanie,
+bo \(Au_0=Ax_0\).
+Każde inne rozwiązanie
+ma postać \(u_0+k\)
+dla pewnego \(k\in\ker A\).
+Z ortogonalności
+\[
+ \|u_0+k\|^2=\|u_0\|^2+\|k\|^2.
+\]
+Norma jest zatem najmniejsza
+dokładnie dla \(k=0\).
+Wektor \(u_0\) jest jedynym
+rozwiązaniem minimalnej normy
+i należy do \((\ker A)^\perp\).
+Pierwszy z warunków w tezie
+jest równaniem normalnym,
+a wzór na \(u_0\) wynika z
+rzutu ortogonalnego na
+\((\ker A)^\perp\).
+\end{proof}
+
+\begin{przyklad}[Dopasowanie prostej do trzech pomiarów]
+\label{prz:lin13-regression}
+Rozważmy rzeczywiste dane
+\[
+ (t_1,y_1)=(0,1),\qquad
+ (t_2,y_2)=(1,2),\qquad
+ (t_3,y_3)=(2,2).
+\]
+Szukamy współczynników \(a,b\)
+prostej \(y=a+bt\),
+minimalizując sumę
+\(\sum_{j=1}^3(a+bt_j-y_j)^2\).
+Dane odpowiadają macierzy i wektorowi
+\[
+ A=\begin{pmatrix}
+ 1&0\\1&1\\1&2
+ \end{pmatrix},
+ \qquad
+ y=\begin{pmatrix}1\\2\\2\end{pmatrix}.
+\]
+Równania normalne to
+\[
+ \begin{pmatrix}3&3\\3&5\end{pmatrix}
+ \begin{pmatrix}a\\b\end{pmatrix}
+ =\begin{pmatrix}5\\6\end{pmatrix}.
+\]
+Wyznacznik macierzy
+jest równy \(15-9=6>0\),
+a jej odwrotność wynosi
+\(\frac16\begin{pmatrix}5&-3\\-3&3\end{pmatrix}\).
+Stąd
+\[
+ a=\frac76,\qquad b=\frac12.
+\]
+Wektor dopasowany i reszta to
+\[
+ Ax_0=
+ \begin{pmatrix}7/6\\5/3\\13/6\end{pmatrix},
+ \qquad
+ r=y-Ax_0=
+ \begin{pmatrix}-1/6\\1/3\\-1/6\end{pmatrix}.
+\]
+Bezpośrednio sprawdzamy
+\[
+ A^{\mathsf T}r
+ =\begin{pmatrix}
+ -1/6+1/3-1/6\\
+ 0+1/3-2/6
+ \end{pmatrix}
+ =\begin{pmatrix}0\\0\end{pmatrix}.
+\]
+Reszta jest więc ortogonalna
+do każdej kolumny \(A\).
+Minimalna suma kwadratów
+błędów wynosi
+\[
+ \|r\|^2
+ =\frac1{36}+\frac19+\frac1{36}
+ =\frac16.
+\]
+W tym przykładzie
+układ \(Ax=y\) nie ma
+rozwiązania dokładnego,
+mimo że zadanie najmniejszych
+kwadratów ma jednoznaczne
+rozwiązanie \(x_0\).
+\end{przyklad}
+
+\begin{przyklad}[Macierz niepełnego rzędu]
+\label{prz:lin13-rank-deficient}
+Niech
+\[
+ A=\begin{pmatrix}1&1\\2&2\end{pmatrix},
+ \qquad
+ y=\begin{pmatrix}1\\0\end{pmatrix}.
+\]
+Obraz \(A\) to prosta
+rozpięta przez \(a=(1,2)^{\mathsf T}\).
+Rzut \(y\) na tę prostą wynosi
+\[
+ P_{\operatorname{im}A}y
+ =\frac{a^{\mathsf T}y}{a^{\mathsf T}a}\,a
+ =\frac15\begin{pmatrix}1\\2\end{pmatrix}.
+\]
+Wszystkie rozwiązania
+najmniejszych kwadratów
+spełniają więc warunek
+\(x_1+x_2=1/5\).
+Macierz \(A^{\mathsf T}A
+=\begin{pmatrix}5&5\\5&5\end{pmatrix}\)
+jest osobliwa, toteż nie wolno
+stosować do niej wzoru
+z odwrotnością.
+Spośród rozwiązań
+\(x=(t,\frac15-t)\)
+najmniejszą normę ma
+\[
+ x_{\min}=\begin{pmatrix}1/10\\1/10\end{pmatrix},
+\]
+gdyż jest prostopadły do
+\(\ker A=\operatorname{span}\{(1,-1)\}\).
+Zgadza się to z
+Twierdzeniem~\ref{thm:lin13-ls-minnorm}.
+\end{przyklad}
+
+\section{Złożenia rzutów ortogonalnych}
+\label{sec:lin13-rzuty-zlozenia}
+
+\begin{twierdzenie}[Kiedy iloczyn rzutów jest rzutem ortogonalnym]
+\label{thm:lin13-commuting-projections}
+Niech \((V,h)\) będzie skończenie
+wymiarową przestrzenią
+euklidesową lub unitarną,
+a \(P=P_U\), \(Q=P_W\)
+rzutami ortogonalnymi na
+podprzestrzenie \(U,W\subseteq V\).
+Następujące warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+ \item \(PQ=QP\);
+ \item \(PQ\) jest operatorem
+       sprzężonym do samego siebie;
+ \item \(PQ\) jest rzutem
+       ortogonalnym.
+\end{enumerate}
+Jeśli te warunki zachodzą, to
+\[
+ PQ=P_{U\cap W}.
+\]
+Nie zakładamy, że \(U\) i \(W\)
+są do siebie ortogonalne.
+\end{twierdzenie}
+\begin{proof}
+Ponieważ \(P^*=P\) i
+\(Q^*=Q\), z
+Stwierdzenia~\ref{prop:lin13-adjoint-kalkul}
+wynika
+\[
+ (PQ)^*=Q^*P^*=QP.
+\]
+Zatem (i)\(\iff\)(ii).
+Jeśli \(P,Q\) przemieniają się,
+to
+\[
+ (PQ)^2=PQPQ=P^2Q^2=PQ
+\]
+i \((PQ)^*=PQ\).
+Na mocy
+Twierdzenia~\ref{thm:lin13-projection-characterization}
+operator \(PQ\) jest więc
+rzutem ortogonalnym,
+co dowodzi (i)\(\Rightarrow\)(iii).
+Z kolei każdy rzut ortogonalny
+jest sprzężony do samego
+siebie, więc (iii)\(\Rightarrow\)(ii).
+
+Przy przemienności \(PQ=QP\)
+obraz \(PQ\) leży w \(U\),
+gdyż \(P(PQv)=P^2Qv=PQv\).
+Leży też w \(W\), bo
+\(Q(PQv)=P Q^2v=PQv\).
+Zatem
+\(\operatorname{im}(PQ)\subseteq U\cap W\).
+Jeśli \(x\in U\cap W\), to
+\(Px=Qx=x\), więc \(PQx=x\).
+Stąd \(U\cap W\subseteq
+\operatorname{im}(PQ)\).
+Obraz \(PQ\) jest dokładnie
+przecięciem, więc \(PQ=P_{U\cap W}\).
+\end{proof}
+
+\begin{przyklad}[Dwa rzuty, które nie przemieniają się]
+\label{prz:lin13-noncommuting}
+W \(\mathbb R^2\) rozważmy
+\[
+ U=\operatorname{span}\{(1,0)\},
+ \qquad
+ W=\operatorname{span}\{(1,1)\}.
+\]
+Ich rzuty ortogonalne mają macierze
+\[
+ P=\begin{pmatrix}1&0\\0&0\end{pmatrix},
+ \qquad
+ Q=\frac12\begin{pmatrix}1&1\\1&1\end{pmatrix}.
+\]
+Bezpośrednie mnożenie daje
+\[
+ PQ=\frac12\begin{pmatrix}1&1\\0&0\end{pmatrix},
+ \qquad
+ QP=\frac12\begin{pmatrix}1&0\\1&0\end{pmatrix}.
+\]
+Zatem \(PQ\ne QP\).
+Ponieważ \(PQ\) nie jest
+macierzą symetryczną,
+nie jest też rzutem
+ortogonalnym.
+W tym przypadku
+\(U\cap W=\{0\}\),
+a więc \(P_{U\cap W}=0\ne PQ\).
+\end{przyklad}
+
+\begin{stwierdzenie}[Dopełnienie przecięcia w skończonym wymiarze]
+\label{prop:lin13-perp-intersection}
+Niech \((V,h)\) będzie
+skończenie wymiarową przestrzenią
+euklidesową lub unitarną,
+a \(U,W\subseteq V\)
+podprzestrzeniami.
+Wtedy
+\[
+ (U\cap W)^\perp=U^\perp+W^\perp.
+\]
+Równość jest rozumiana jako
+algebraiczna suma podprzestrzeni.
+\end{stwierdzenie}
+\begin{proof}
+Z
+Stwierdzenia~\ref{prop:lin13-dopelnienia}
+mamy
+\[
+ (U^\perp+W^\perp)^\perp
+ =(U^\perp)^\perp\cap(W^\perp)^\perp.
+\]
+W skończonym wymiarze
+Twierdzenie~\ref{thm:lin13-rozklad}
+daje
+\((U^\perp)^\perp=U\)
+oraz
+\((W^\perp)^\perp=W\).
+Wynika stąd
+\((U^\perp+W^\perp)^\perp=U\cap W\).
+Ponowne dopełnienie
+ortogonalne, zastosowane
+do lewej i prawej strony,
+daje tezę, ponieważ w tej
+przestrzeni każda podprzestrzeń
+jest równa swojemu
+podwójnemu dopełnieniu.
+\end{proof}
+
+\section{Podsumowanie}
+\label{sec:lin13-podsumowanie}
+
+Dla skończenie wymiarowej
+podprzestrzeni \(U\)
+w dowolnej przestrzeni
+euklidesowej lub unitarnej
+istnieje jednoznaczny
+rozkład \(V=U\oplus U^\perp\).
+Rzut \(P_U\) wybiera pierwszy
+składnik tego rozkładu,
+jest idempotentny i zachowuje
+właściwą symetrię iloczynu
+skalarnego. Rzut jest
+najlepszym przybliżeniem
+wektora przez elementy \(U\),
+a reszta jest do \(U\)
+ortogonalna.
+W skończonym wymiarze
+operator sprzężony \(A^*\)
+wyznacza związki między
+obrazem a jądrem:
+\((\operatorname{im}A)^\perp=\ker A^*\).
+Rzut ortogonalny jest dokładnie
+operatorem \(P\), dla którego
+\(P^2=P=P^*\).
+Dla przestrzeni rozpiętej przez
+niezależne kolumny macierzy \(B\)
+otrzymujemy obliczalną
+postać \(P=B(B^*B)^{-1}B^*\).
+Równania normalne
+\(A^*Ax=A^*y\) charakteryzują
+wszystkie rozwiązania
+najmniejszych kwadratów;
+nawet dla macierzy niepełnego
+rzędu istnieje jednoznaczne
+rozwiązanie o najmniejszej
+normie, choć sam układ
+może mieć wiele rozwiązań.
+Iloczyn dwóch rzutów
+ortogonalnych jest rzutem
+ortogonalnym dokładnie wtedy,
+gdy rzuty się przemieniają.
+Te wyniki stanowią podstawę
+dalszej teorii operatorów,
+rozkładów macierzy i metod
+numerycznych.
