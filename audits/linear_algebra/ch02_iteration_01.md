@@ -3,7 +3,7 @@
 Data: 21 listopada 2026  
 Gałąź: `biblioteka-matematyczna-iteracja-6`  
 Rozdział: `chapters/pl/linear_algebra/02-wymiar-sumy-proste-i-przestrzenie-ilorazowe.tex`  
-Wersja treści po pierwszym audycie: commit `c962f1abcd20d6c64cf0c509dcd9f3520077d51a`
+Wersja treści po pierwszym audycie: commit `75447f468eb921422a2fd340337212dcf4c98868`
 
 ## Zakres nowego rozdziału
 
@@ -78,6 +78,16 @@ przenosi bazę Hamela \(W\) na bazę Hamela \(V/U\).
 Dopiero stąd wyprowadzono równość wymiarów
 \(\dim_K W=\dim_K(V/U)\).
 
+### 6. Przypadek skończenie wymiarowy bez aksjomatu wyboru
+
+Uzupełniono dowód wzoru wymiarowego ilorazu:
+w przypadku skończonego wymiaru wystarczy wybrać skończone
+bazy podprzestrzeni \(U\) i jej dopełnienia \(W\), co można
+zrobić bez aksjomatu wyboru. Ich połączenie jest bazą
+\(V=U\oplus W\), więc wzór
+\(\dim(V/U)=\dim V-\dim U\)
+wynika z rachunku liczb naturalnych.
+
 ## Globalna terminologia
 
 W tej samej iteracji użytkownik wprowadził dwie wiążące
@@ -116,7 +126,9 @@ a ponowny przebieg zakończył się sukcesem.
   [44894419432](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44894419432)
   — wcześniejsza wersja poprawek, oraz
   [44894493853](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44894493853)
-  — ostateczny commit po dodatkowych wyjaśnieniach dowodowych, wynik do potwierdzenia.
+  — po dodatkowych wyjaśnieniach, oraz
+  [44894556217](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44894556217)
+  — ostatni commit z dowodem przypadku skończonego bez aksjomatu wyboru; wynik do potwierdzenia.
 - Starsze 24 błędy globalnej walidacji pozostałych
   materiałów w repozytorium są raportowane osobno
   i nie zostały objęte tą iteracją.
