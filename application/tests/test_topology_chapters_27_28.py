@@ -260,10 +260,13 @@ class AlgebraicTopologyTwentySevenTwentyEightAudit(unittest.TestCase):
             r"Twierdzenia~\ref{thm:xvii-blowup}",
             r"$\pi$ ma stopień $1$",
             r"Dla każdego $k\in\Z$ istnieje addytywny izomorfizm",
+            "dla morfizmów",
+            "projektowych jest twierdzeniem o perwersyjnych",
         ):
             with self.subTest(snippet=snippet):
                 self.assertIn(snippet, source)
         self.assertNotIn("Obracając go działaniem", source)
+        self.assertNotIn("dla właściwych map algebraicznych", source)
 
     def test_at28_sl2_lefschetz_chain_commutators(self):
         # In an orthonormal primitive chain of length s+1 (s=n-m),
