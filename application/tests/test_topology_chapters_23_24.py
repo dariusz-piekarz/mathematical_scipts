@@ -264,5 +264,26 @@ class TopologyChaptersTwentyThreeTwentyFourAudit(unittest.TestCase):
         self.assertIn("twierdzenia B Cartana", s23)
 
 
+    def test_at24_audit_i_hypotheses_semismall_proof_and_diagram(self):
+        src = self.sources["24"]
+        for fragment in (
+            "na przestrzeniach niezwartych",
+            r"$\mathbb D_XIC_X(k)\simeq IC_X(k)$",
+            "dla $k=\\Q$",
+            "kryterium półmałości:",
+            r"$H^0(i_0^*P)\cong H^2(\mathbb P^1;\Q)\cong\Q$",
+            "Zatem $m=1$",
+            r"\fill[manifoldred] (-3.18,0)",
+            r"\fill[manifoldred] (-2.92,0)",
+            r"{$p_+$}",
+            r"{$p_-$}",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, src)
+        self.assertNotIn("nielokalnie skończonej", src)
+        self.assertNotIn("k^\\vee", src)
+        self.assertNotIn("pochodny obraz\nwłaściwy", src)
+
+
 if __name__ == "__main__":
     unittest.main()
