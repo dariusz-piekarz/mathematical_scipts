@@ -2,6 +2,7 @@
 
 [![Aplikacja i indeks](https://github.com/dariusz-piekarz/mathematical_scipts/actions/workflows/mathematical-library-app.yml/badge.svg?branch=biblioteka-matematyczna-iteracja-6)](https://github.com/dariusz-piekarz/mathematical_scipts/actions/workflows/mathematical-library-app.yml)
 [![Algebra liniowa](https://github.com/dariusz-piekarz/mathematical_scipts/actions/workflows/linear-algebra-chapter.yml/badge.svg?branch=biblioteka-matematyczna-iteracja-6)](https://github.com/dariusz-piekarz/mathematical_scipts/actions/workflows/linear-algebra-chapter.yml)
+[![Topologia ogólna](https://github.com/dariusz-piekarz/mathematical_scipts/actions/workflows/general-topology-chapter.yml/badge.svg?branch=biblioteka-matematyczna-iteracja-6)](https://github.com/dariusz-piekarz/mathematical_scipts/actions/workflows/general-topology-chapter.yml)
 
 **Biblioteka matematyczna** jest rozwijanym zbiorem polskojęzycznych, modułowych książek matematycznych w LaTeX-u. Do repozytorium należy również **Atlas matematyczny** — lokalna aplikacja internetowa służąca do przeszukiwania rozdziałów, czytania źródeł, eksplorowania odsyłaczy i pojęć oraz budowania własnych skryptów z konkretnych fragmentów.
 
@@ -28,10 +29,10 @@ Projekt jest **aktywnie rozwijany i audytowany**. Działające funkcje aplikacji
 
 | Obszar | Stan |
 | --- | --- |
-| Książki w katalogu | **19** |
-| Zarejestrowane rozdziały | **381** |
+| Książki w katalogu | **20** |
+| Zarejestrowane rozdziały | **391** |
 | Suplementy | **2** |
-| Źródła `.tex` w `chapters/pl/` | **383** (rozdziały i suplementy) |
+| Źródła `.tex` w `chapters/pl/` | **393** (rozdziały i suplementy) |
 | Explorer, wyszukiwanie i czytnik | **Działają** |
 | Graf odsyłaczy i graf pojęć | **Działają** (patrz ograniczenia interpretacji krawędzi) |
 | Generator własnych projektów | **Działa**: rozdziały, obiekty, wycinki wierszy, ZIP i manifest |
@@ -48,7 +49,7 @@ Poniższa lista pochodzi z `catalog/books.json`. Liczba rozdziałów oznacza poz
 
 | Książka / punkt wejścia | Rozdziały |
 | --- | ---: |
-| [Algebra abstrakcyjna](books/pl/abstract_algebra.tex) | 7 |
+| [Algebra abstrakcyjna](books/pl/abstract_algebra.tex) | 8 |
 | [Geometria algebraiczna](books/pl/algebraic_geometry.tex) | 11 |
 | [Topologia algebraiczna](books/pl/algebraic_topology.tex) | 31 |
 | [Twierdzenie Banacha–Tarskiego](books/pl/banach_tarski.tex) | 11 |
@@ -56,10 +57,11 @@ Poniższa lista pochodzi z `catalog/books.json`. Liczba rozdziałów oznacza poz
 | [Geometria i topologia różniczkowa](books/pl/differential_geometry_and_topology.tex) | 20 |
 | [Analiza funkcjonalna](books/pl/functional_analysis.tex) | 35 |
 | [Teoria Galois](books/pl/galois_theory.tex) | 10 |
+| [Topologia ogólna](books/pl/general_topology.tex) | 1 |
 | [Teoria grafów i węzłów](books/pl/graph_and_knot_theory.tex) | 37 |
 | [Teoria całki](books/pl/integration_theory.tex) | 17 |
-| [Algebra liniowa](books/pl/linear_algebra.tex) | 11 |
-| [Logika matematyczna i teoria mnogości](books/pl/logic_and_set_theory.tex) | 8 |
+| [Algebra liniowa](books/pl/linear_algebra.tex) | 15 |
+| [Logika matematyczna i teoria mnogości](books/pl/logic_and_set_theory.tex) | 12 |
 | [Teoria miary](books/pl/measure_theory.tex) | 31 |
 | [Teoria modeli](books/pl/model_theory.tex) | 19 |
 | [Równania różniczkowe cząstkowe](books/pl/partial_differential_equations.tex) | 33 |
