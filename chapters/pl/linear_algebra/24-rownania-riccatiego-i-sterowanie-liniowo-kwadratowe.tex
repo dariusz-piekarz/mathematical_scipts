@@ -1,0 +1,282 @@
+\chapter{Równania Riccatiego i sterowanie liniowo-kwadratowe}
+\label{ch:lin24-riccati}
+\index{równanie Riccatiego@Równanie Riccatiego}
+\index{sterowanie liniowo-kwadratowe@Sterowanie liniowo-kwadratowe}
+\index{równanie Riccatiego!algebraiczne}
+\index{sprzężenie zwrotne@Sprzężenie zwrotne}
+
+\noindent\textbf{Cel rozdziału.}
+Twierdzenia Lapunowa z
+Rozdziałów~\ref{ch:lin22-sylvester}
+i~\ref{ch:lin23-discrete-lyapunov}
+rozpoznają stabilność ustalonej macierzy.
+Równania Riccatiego pozwalają
+równocześnie \emph{wybrać} operator
+sprzężenia zwrotnego i uzasadnić
+jego optymalność.
+Wyprowadzimy je z problemów
+minimalizacji całkowitego kosztu
+kwadratowego, najpierw w czasie
+dyskretnym, potem ciągłym.
+Następnie udowodnimy istnienie,
+dodatnią określoność i jednoznaczność
+rozwiązań stabilizujących
+przy jawnych, wystarczających
+założeniach. Nie będziemy
+zakładać ogólnych twierdzeń
+o sterowalności ani wykrywalności,
+które należą do odrębnej teorii.
+
+W całym rozdziale \(n,m\ge1\).
+Macierze \(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\),
+\(B\in\operatorname{Mat}_{n\times m}(\mathbb C)\),
+\(Q\in\operatorname{Mat}_{n\times n}(\mathbb C)\)
+oraz \(R\in\operatorname{Mat}_{m\times m}(\mathbb C)\)
+są ustalone, przy czym
+\(Q=Q^*>0\) i \(R=R^*>0\).
+Przez \(x^*\) oznaczamy
+sprzężenie hermitowskie.
+Dla macierzy hermitowskich
+\(P_1\le P_2\) oznacza,
+że \(P_2-P_1\) jest
+nieujemnie określona.
+Wszystkie twierdzenia pozostają
+ważne nad \(\mathbb R\)
+po zastąpieniu sprzężenia
+transpozycją.
+
+\section{Minimalizacja formy kwadratowej}
+\label{sec:lin24-square}
+
+\begin{lemat}[Uzupełnianie kwadratu]
+\label{lem:lin24-square}
+Niech \(M=M^*>0\)
+będzie macierzą stopnia \(m\)
+nad \(\mathbb C\),
+\(c\in\mathbb C^m\)
+i \(d\in\mathbb R\).
+Dla każdego \(u\in\mathbb C^m\)
+zachodzi
+\[
+ u^*Mu+2\operatorname{Re}(u^*c)+d
+ =(u+M^{-1}c)^*M(u+M^{-1}c)
+    +d-c^*M^{-1}c.
+\]
+Wyrażenie z lewej strony
+ma jedyne minimum
+\(d-c^*M^{-1}c\)
+osiągane w \(u=-M^{-1}c\).
+\end{lemat}
+\begin{proof}
+Dodatnia określoność \(M\)
+implikuje jej odwracalność
+i hermitowskość \(M^{-1}\).
+Po wymnożeniu prawej strony
+otrzymujemy
+\(u^*Mu+u^*c+c^*u
+ +c^*M^{-1}c+d-c^*M^{-1}c\).
+Ponieważ \(c^*u=\overline{u^*c}\),
+środkowe składniki
+dają \(2\operatorname{Re}(u^*c)\).
+Pierwszy składnik po prawej
+w sformułowaniu twierdzenia
+jest nieujemny i znika dokładnie,
+gdy \(u+M^{-1}c=0\).
+To daje wartość i jednoznaczność
+minimum.
+\end{proof}
+
+\begin{uwaga}[Rola założeń]
+\label{rem:lin24-hypotheses}
+W dalszych twierdzeniach
+dodatnia określoność \(R\)
+zapewnia ściśle wypukłą
+minimalizację po sterowaniu.
+Dodatnia określoność \(Q\)
+posłuży do wykazania
+stabilności zamkniętej pętli.
+Założenia te są silniejsze
+niż konieczne w ogólnej teorii
+sterowania, ale pozwalają
+przedstawić kompletne dowody
+bez odwołań do nieomówionych
+kryteriów sterowalności.
+\end{uwaga}
+
+\section{Czas dyskretny: problem o skończonym horyzoncie}
+\label{sec:lin24-discrete-finite}
+
+\begin{definicja}[Dyskretny problem LQR]
+\label{def:lin24-discrete-cost}
+Dla całkowitego \(N\ge0\)
+i \(x_0\in\mathbb C^n\)
+rozważmy trajektorię
+\[
+ x_{k+1}=Ax_k+Bu_k,\qquad 0\le k<N,
+\]
+przy dowolnych sterowaniach
+\(u_0,\ldots,u_{N-1}\in\mathbb C^m\).
+Koszt określamy wzorem
+\[
+ J_N(x_0;u_0,\ldots,u_{N-1})
+  =\sum_{k=0}^{N-1}
+         (x_k^*Qx_k+u_k^*Ru_k).
+\]
+Przy \(N=0\) sumę uznajemy
+za zerową. \emph{Wartością optymalną}
+nazywamy
+\(V_N(x_0)=\inf J_N\),
+gdzie infimum przebiega
+wszystkie dopuszczalne ciągi
+sterowań.
+\end{definicja}
+
+\begin{twierdzenie}[Dyskretne równanie Riccatiego]
+\label{thm:lin24-dare-recursion}
+Dla macierzy \(A,B,Q,R\)
+spełniających założenia rozdziału
+zdefiniujmy ciąg macierzy
+\(P_N\in\operatorname{Mat}_{n\times n}(\mathbb C)\)
+rekurencją \(P_0=0\) oraz
+\[
+ P_{N+1}
+ =Q+A^*P_NA
+  -A^*P_NB(R+B^*P_NB)^{-1}B^*P_NA.
+\]
+Dla każdego \(N\ge0\)
+macierz \(P_N\) jest hermitowska
+i nieujemnie określona,
+a \(R+B^*P_NB>0\).
+Ponadto
+\[
+ V_N(x)=x^*P_Nx
+ \qquad(x\in\mathbb C^n),
+\]
+zaś infimum w definicji
+\(V_N\) jest osiągane.
+Na pierwszym kroku problemu
+o horyzoncie \(N+1\)
+optymalny wybór sterowania
+jest jednoznaczny i wynosi
+\[
+ u_0=-K_Nx_0,\qquad
+ K_N=(R+B^*P_NB)^{-1}B^*P_NA.
+\]
+\end{twierdzenie}
+\begin{proof}
+Przeprowadzimy indukcję
+względem \(N\).
+Dla \(N=0\) koszt wynosi zero
+i \(V_0(x)=0=x^*P_0x\).
+Załóżmy, że teza zachodzi
+dla pewnego \(N\ge0\).
+W problemie o horyzoncie \(N+1\)
+pierwszy koszt wynosi
+\(x^*Qx+u^*Ru\),
+a kolejny stan to \(Ax+Bu\).
+Z założenia indukcyjnego
+najmniejszy koszt pozostałych
+\(N\) kroków jest równy
+\((Ax+Bu)^*P_N(Ax+Bu)\).
+Dlatego
+\[
+ V_{N+1}(x)
+ =\min_{u\in\mathbb C^m}
+ \bigl[x^*Qx+u^*Ru+
+       (Ax+Bu)^*P_N(Ax+Bu)\bigr].
+\]
+W tym kroku zapisaliśmy
+minimum, a nie tylko infimum:
+za chwilę skonstruujemy
+jego jedyny punkt osiągnięcia.
+
+Po rozwinięciu nawiasu
+wyrażenie zależne od \(u\)
+ma postać
+\[
+ u^*M_Nu+
+  2\operatorname{Re}(u^*B^*P_NAx)
+  +x^*(Q+A^*P_NA)x,
+\quad M_N=R+B^*P_NB.
+\]
+Ponieważ \(P_N\ge0\)
+i \(R>0\), mamy \(M_N>0\).
+Lemat~\ref{lem:lin24-square}
+daje jedyne minimum
+przy \(u=-M_N^{-1}B^*P_NAx\),
+a jego wartość jest równa
+\(x^*P_{N+1}x\)
+z macierzą określoną w tezie.
+Tym samym \(P_{N+1}\)
+jest hermitowska
+jako suma i różnica
+macierzy hermitowskich.
+Ponieważ każdy składnik
+pierwotnego kosztu jest
+nieujemny, otrzymana wartość
+optymalna jest nieujemna:
+\(x^*P_{N+1}x\ge0\)
+dla każdego \(x\).
+Zatem \(P_{N+1}\ge0\).
+Łącząc wybrane pierwsze
+sterowanie z osiągającymi
+minimum sterowaniami pozostałego
+horyzontu, otrzymujemy
+osiągnięcie infimum.
+Indukcja jest zakończona.
+\end{proof}
+
+\begin{stwierdzenie}[Monotoniczność wartości optymalnych]
+\label{prop:lin24-discrete-mono}
+Przy założeniach
+Twierdzenia~\ref{thm:lin24-dare-recursion}
+dla każdego \(N\ge0\)
+zachodzi \(P_N\le P_{N+1}\).
+Jeżeli dodatkowo \(A\)
+jest macierzą Schura
+w sensie
+Definicji~\ref{def:lin23-schur},
+to istnieje macierz \(W=W^*>0\)
+taka, że \(P_N\le W\)
+dla wszystkich \(N\ge0\).
+\end{stwierdzenie}
+\begin{proof}
+Dla dowolnego sterowania
+w problemie o horyzoncie \(N+1\)
+jego pierwsze \(N\) kroków
+tworzy dopuszczalne sterowanie
+dla horyzontu \(N\).
+Wszystkie koszty etapowe
+są nieujemne, więc koszt
+o dłuższym horyzoncie
+nie może być mniejszy
+od wartości optymalnej
+dla krótszego horyzontu.
+Biorąc infimum, otrzymujemy
+\(V_{N+1}(x)\ge V_N(x)\)
+dla każdego \(x\).
+Z wyrażenia
+\(V_N(x)=x^*P_Nx\)
+wynika \(P_N\le P_{N+1}\).
+
+Załóżmy teraz \(\rho(A)<1\).
+Z dyskretnego twierdzenia
+Lapunowa
+\ref{thm:lin23-lyapunov}
+istnieje dodatnio określona
+macierz
+\[
+ W=\sum_{k=0}^{\infty}(A^*)^kQA^k.
+\]
+Wybierając sterowanie
+\(u_k=0\) dla każdego \(k\),
+otrzymujemy trajektorię
+\(x_k=A^kx\) i koszt
+\(\sum_{k=0}^{N-1}x^*(A^*)^kQA^kx
+ \le x^*Wx\).
+Ponieważ \(V_N(x)\)
+jest minimum kosztu,
+\(x^*P_Nx\le x^*Wx\)
+dla każdego \(x\),
+czyli \(P_N\le W\).
+\end{proof}
