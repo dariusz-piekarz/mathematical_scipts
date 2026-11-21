@@ -213,7 +213,7 @@ class AlgebraicTopologyTwentySevenTwentyEightAudit(unittest.TestCase):
             r"$H^{n-q}(M;\operatorname{or}_M)$",
             r"$A\in D^b_c(X;k)$",
             r"$R\psi_fA=i^*R\widetilde j_*\widetilde j^*A$",
-            r"mającym izolowany punkt krytyczny w $x$",
+            r"i w którym $f$ ma izolowany punkt krytyczny.",
             "obiekt dualny w sensie Verdiera",
         ):
             with self.subTest(fragment=fragment):
