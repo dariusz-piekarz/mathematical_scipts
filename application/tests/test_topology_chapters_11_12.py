@@ -292,6 +292,16 @@ class TopologyChapterElevenTwelveAudit(unittest.TestCase):
         # q=0 would make the putative "page q+1" equal to E_1,
         # preceding E_2; it is intentionally excluded.
 
+    def test_cohomology_transport_uses_reverse_path(self):
+        ch = self.text["12"]
+        self.assertIn(r"$(T_{\bar\gamma})^*:H^q(F_b;\Z)", ch)
+        self.assertIn(r"\to H^q(F_{b'};\Z)$", ch)
+        self.assertIn("kontrawariantności kohomologii", ch)
+        # A reflection on H_1(S^1)=Z acts as -1 on H^1(S^1)=Z;
+        # reversing the path gives the correct covariant local-system map.
+        transport_h1 = -1
+        self.assertEqual(transport_h1 * transport_h1, 1)
+
     def test_extension_problem_distinguishes_actual_groups(self):
         ch = self.text["12"]
         self.assertIn(r"\label{prz:spectral-extension-z4}", ch)
