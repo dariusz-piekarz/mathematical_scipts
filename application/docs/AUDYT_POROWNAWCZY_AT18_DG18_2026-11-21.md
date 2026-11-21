@@ -85,7 +85,20 @@ https://github.com/dariusz-piekarz/mathematical_scipts/actions/workflows/paired-
 
 Workflow uruchamia trzy przebiegi pdflatex dla pełnego tomu AT-01–30 i bieżącego DG-01–20, sprawdza stabilność odsyłaczy i przepełnione wiersze oraz blokuje nieoczekiwane niezdefiniowane etykiety (dla DG zachowuje znaną listę odwołań do niezaimportowanych części 21–36).
 
-**Status testów, liczby stron i oględzin PDF:** do uzupełnienia wyłącznie na podstawie rzeczywistego wyniku uruchomienia. Poprzednich wyników AT/DG nie należy przepisywać jako testów obecnego etapu.
+**Końcowa kontrola wykonana:** https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44843191037.
+Obydwa zadania GitHub Actions zakończyły się statusem **SUCCESS**.
+- Testy matematyczne: **10/10 OK** (unittest).
+- AT-01–30: **298 stron**, trzy przebiegi pdflatex, brak nowo niezdefiniowanych lub niestabilnych odsyłaczy oraz przepełnionych wierszy (końcowy przebieg).
+- DG-01–20: **489 stron**, trzy przebiegi pdflatex, brak niestabilnych odsyłaczy i przepełnień wierszy.
+- **12 różnych, wcześniej znanych brakujących etykiet DG** wskazuje nadal niezaimportowane rozdziały 21–36: ch:chern-weil, ch:grafy-wezly-cztery, cor:bochner-vanishing, cor:hodge-de-rham, lem:angular-form-26, prop:euler-identification-26, prz:hodge-dwie-sfery-18, prz:thur-dop-nil-kontakt, sec:algebra-liego, sec:rownanie-diraca, subsec:dirac-koneksja, thm:CGB-boundary-26. Kontrola odrzuca każdą nieznaną brakującą etykietę.
+
+**Druga krytyczna lektura i oględziny PDF:** po wprowadzeniu przykładu DG sprawdzono, że jego rozpoznanie podpoziomicy jako wstęgi Möbiusa wymaga uzasadnienia, dlaczego istnieją tylko dwa typy dołączenia pojedynczego uchwytu do dysku. Dopisano ten argument (commit 2c05c2e1de6fe109078c64053490b022ac15cf1d), po czym ponowiono pełną kontrolę.
+Pobrano rzeczywiste PDF-y z ostatecznego przebiegu i wyrenderowano strony
+AT 203, 208–209 oraz DG 453. W AT równania dopełnienia Schura i znaków dwóch trajektorii są czytelne, bez obcięć. W DG rysunek trzech wierzchołków grafu Reeba ma osobne napisy, nie nachodzi na sąsiednie wzory, a dopisany argument o rodzajach przyklejenia jest w całości widoczny.
+Nie zaobserwowano przy tych oględzinach nakładania się podpisów, obcinania formuł ani błędnych znaków.
+
+Przy wszystkich poprawkach historyczne \label pozostały nienaruszone.
+Jedna para rozdziałów nie jest globalnym audytem całej Biblioteki; 12 wskazanych zależności DG pozostaje zadaniem późniejszego importu.
 
 ## 7. Następne pary
 
