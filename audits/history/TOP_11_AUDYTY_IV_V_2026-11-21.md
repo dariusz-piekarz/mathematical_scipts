@@ -60,3 +60,7 @@ Ostateczne potwierdzenie: [Mathematical library application checks — commit `1
 - [AT–DG–AG — `50cbd132`](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44926585140).
 
 **Decyzja matematyczna i techniczna dla TOP-11: stabilny po audycie V.** Jego źródło pozostaje na istniejącej gałęzi. Osobny workflow `Logic and set theory chapters 01-10 validation` po zawężeniu docelowej listy przyszłych etykiet był jeszcze w trakcie kompilacji pełnego skryptu LST-01–10 i nie wpływa na to, że wszystkie kontrole dotyczące TOP-11 zakończyły się sukcesem. Do audytu TOP-12 przechodzimy dopiero po domknięciu bieżącej iteracji.
+
+## Ostateczne potwierdzenie usunięcia niezależnej regresji CI
+
+Po aktualizacji LST-10 i zawężeniu listy dopuszczonych odsyłaczy do rzeczywiście udokumentowanego `ch:zf-axioms`, workflow [Logic and set theory chapters 01–10 validation](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44926838764), uruchomiony dla `8f21df29118ced8dc4b237cc5f1e5170894a6164`, zakończył się wynikiem **completed/success**. Tym samym także ostatni niezależny problem CI opisany wyżej został usunięty; nie wyłączono walidacji i nie dopisano fikcyjnych etykiet. Status TOP-11 pozostaje **stabilny po audycie V**.
