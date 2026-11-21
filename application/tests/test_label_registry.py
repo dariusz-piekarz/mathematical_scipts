@@ -1,5 +1,6 @@
 """Deterministic provenance and alias tests; no canonical LaTeX edits."""
 import sqlite3
+from contextlib import closing
 import sys
 import tempfile
 import unittest
@@ -66,7 +67,7 @@ class IntegratedIndexTests(unittest.TestCase):
         self.assertEqual(results["ambiguous_references"],0)
         self.assertEqual(results["missing_references"],0)
         self.assertEqual(results["external_resolved_references"],1)
-        with connect(self.db) as con:
+        with closing(connect(self.db)) as con:
             r=con.execute("SELECT source_document,target_label,target_document,status FROM references_tex ORDER BY source_document").fetchall()
             self.assertEqual([(x["source_document"],x["target_document"],x["status"]) for x in r],
                              [("DG-08","DG-06","resolved"),("P4-01","P1-02","external_resolved"),("TOP-05","TOP-03","resolved")])
@@ -82,7 +83,7 @@ class IntegratedIndexTests(unittest.TestCase):
                            '"target_label":"thm:actual"}]}',encoding="utf-8")
         report=build_database(self.src,self.db,alias_file=aliases,recursive=True)
         self.assertEqual(report["alias_resolved_references"],1)
-        with connect(self.db) as con:
+        with closing(connect(self.db)) as con:
             ref=con.execute("SELECT target_label,target_document,status FROM references_tex").fetchone()
             self.assertEqual((ref["target_label"],ref["target_document"],ref["status"]),
                              ("thm:old","TOP-03","alias_resolved"))
@@ -94,7 +95,7 @@ class IntegratedIndexTests(unittest.TestCase):
         self.add("functional_analysis","01-uses.tex",r"\ref{ch:shared}")
         results=build_database(self.src,self.db,recursive=True)
         self.assertEqual(results["ambiguous_references"],1)
-        with connect(self.db) as con:
+        with closing(connect(self.db)) as con:
             ref=con.execute("SELECT status,target_document FROM references_tex").fetchone()
             self.assertEqual(ref["status"],"ambiguous")
             self.assertIsNone(ref["target_document"])

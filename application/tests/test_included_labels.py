@@ -1,6 +1,7 @@
-"""Regressions for \input labels without canonical-source rewrites."""
+r"""Regressions for \input labels without canonical-source rewrites."""
 import json
 import sqlite3
+from contextlib import closing
 import sys
 import tempfile
 import unittest
@@ -35,7 +36,7 @@ class IncludedLabelTests(unittest.TestCase):
         self.assertEqual(stats["missing_references"],0)
         self.assertEqual(stats["included_labels"],2)
         self.assertEqual(file.read_text(encoding="utf-8"),original)
-        with connect(self.db) as con:
+        with closing(connect(self.db)) as con:
             r=con.execute("SELECT target_document,target_entity,status FROM references_tex").fetchall()
             self.assertEqual([(x[0],x[1],x[2]) for x in r],
                              [("ALG-10",None,"included_resolved")]*2)

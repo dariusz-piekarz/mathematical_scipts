@@ -9,13 +9,14 @@ import argparse
 import json
 from pathlib import Path
 import sqlite3
+from contextlib import closing
 
 RESOLVED = frozenset({"resolved", "external_resolved",
                       "alias_resolved", "included_resolved"})
 
 
 def triage(db: Path) -> dict:
-    with sqlite3.connect(f"file:{db.resolve()}?mode=ro", uri=True) as con:
+    with closing(sqlite3.connect(f"file:{db.resolve()}?mode=ro", uri=True)) as con:
         con.row_factory = sqlite3.Row
         ids = {r["id"] for r in con.execute("SELECT id FROM documents")}
         records = [dict(r) for r in con.execute("""

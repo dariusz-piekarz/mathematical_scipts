@@ -1,5 +1,6 @@
 """Identity and reference-status regression tests for DG import coverage."""
 import sqlite3
+from contextlib import closing
 import sys
 import tempfile
 import unittest
@@ -13,7 +14,7 @@ class DgImportCoverageTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.db = Path(self.tmp.name) / "dg.db"
-        with sqlite3.connect(self.db) as con:
+        with closing(sqlite3.connect(self.db)) as con, con:
             con.executescript("""
                 CREATE TABLE documents (id TEXT);
                 CREATE TABLE references_tex (
@@ -26,7 +27,7 @@ class DgImportCoverageTests(unittest.TestCase):
         self.tmp.cleanup()
 
     def add_docs(self, names):
-        with sqlite3.connect(self.db) as con:
+        with closing(sqlite3.connect(self.db)) as con, con:
             con.executemany("INSERT INTO documents (id) VALUES (?)",
                             [(name,) for name in names])
 
@@ -56,7 +57,7 @@ class DgImportCoverageTests(unittest.TestCase):
 
     def test_unknown_and_ambiguous_reference_statuses_are_unresolved(self):
         self.add_docs(["DG-01"])
-        with sqlite3.connect(self.db) as con:
+        with closing(sqlite3.connect(self.db)) as con, con:
             con.executemany("""
                 INSERT INTO references_tex
                 (source_document, target_label, command, status, line, offset)

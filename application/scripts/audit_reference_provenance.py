@@ -12,6 +12,7 @@ from collections import Counter
 import json
 from pathlib import Path
 import sqlite3
+from contextlib import closing
 from typing import Any
 
 
@@ -152,7 +153,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if not args.db.is_file():
         parser.error(f"No SQLite database: {args.db}")
-    with sqlite3.connect(f"file:{args.db.resolve()}?mode=ro", uri=True) as con:
+    with closing(sqlite3.connect(f"file:{args.db.resolve()}?mode=ro", uri=True)) as con:
         con.row_factory = sqlite3.Row
         result = audit(con)
     args.out.parent.mkdir(parents=True, exist_ok=True)

@@ -9,6 +9,7 @@ import argparse
 import json
 from pathlib import Path
 import sqlite3
+from contextlib import closing
 
 EXPECTED = 36
 EXPECTED_IDS = tuple(f"DG-{i:02d}" for i in range(1, EXPECTED + 1))
@@ -17,7 +18,7 @@ RESOLVED = frozenset({"resolved", "external_resolved", "alias_resolved",
 
 
 def coverage(db: Path) -> dict:
-    with sqlite3.connect(f"file:{db.resolve()}?mode=ro", uri=True) as con:
+    with closing(sqlite3.connect(f"file:{db.resolve()}?mode=ro", uri=True)) as con:
         con.row_factory = sqlite3.Row
         imported = [r["id"] for r in con.execute(
             "SELECT id FROM documents WHERE id LIKE 'DG-%' ORDER BY id"

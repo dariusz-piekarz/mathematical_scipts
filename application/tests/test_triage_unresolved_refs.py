@@ -1,5 +1,6 @@
 """Regression tests for read-only missing-reference triage."""
 import sqlite3
+from contextlib import closing
 import sys
 import tempfile
 import unittest
@@ -13,7 +14,7 @@ class TriageTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.db = Path(self.tmp.name) / "references.db"
-        with sqlite3.connect(self.db) as con:
+        with closing(sqlite3.connect(self.db)) as con, con:
             con.executescript("""
                 CREATE TABLE documents(id TEXT PRIMARY KEY, path TEXT);
                 CREATE TABLE references_tex(
