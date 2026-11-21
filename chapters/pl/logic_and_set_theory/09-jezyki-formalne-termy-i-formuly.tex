@@ -1,0 +1,538 @@
+\chapter{Języki formalne, termy i formuły}\label{ch:syntax-fol}
+
+\section{Dlaczego odróżniamy napis od jego znaczenia?}
+Zdanie „dla każdej liczby istnieje większa” jest zrozumiałe, lecz pozostawia wiele
+rzeczy domyślnych: z jakiego zbioru pochodzą liczby, co znaczy „większa” i jaki
+jest zakres kwantyfikatorów. W dowodzie zwykle radzimy sobie z tymi kwestiami,
+ale gdy przedmiotem badań staje się \emph{sam dowód}, potrzebujemy języka,
+którego poprawne wyrażenia można rozpoznawać według jednoznacznych reguł.
+Pytanie, czy wyrażenie zostało dobrze zapisane, należy do \emph{składni};
+pytanie, czy jest prawdziwe, należy do \emph{semantyki}.
+
+Warto pamiętać o dwóch poziomach wypowiedzi. Pisząc „$\varphi$ jest formułą”,
+mówimy \emph{o} pewnym napisie, czyli używamy metajęzyka. Pisząc symbol $\forall$
+wewnątrz $\varphi$, tworzymy wyrażenie samego języka formalnego. W dalszych
+rozdziałach rozróżnienie to okaże się niezbędne do sformułowania twierdzeń Gödla.
+
+\section{Alfabety, słowa i sygnatury}
+\begin{definicja}[Alfabet i słowo]\label{def:syntax-alphabet}
+\emph{Alfabetem} nazywamy zbiór symboli $\Sigma$. \emph{Słowem} nad $\Sigma$
+nazywamy skończony ciąg $(s_1,\ldots,s_n)$ symboli $s_i\in\Sigma$.
+Dopuszczamy $n=0$: otrzymujemy wtedy \emph{słowo puste}, oznaczane $\varepsilon$.
+Zbiór wszystkich słów nad $\Sigma$ oznaczamy przez $\Sigma^*$.
+\emph{Konkatenacją} słów $u$ i $v$ jest słowo $uv$, otrzymane przez dopisanie
+symboli $v$ za symbolami $u$.
+\end{definicja}
+\begin{przyklad}
+Dla $\Sigma=\{a,b\}$ słowa $ab$, $aab$ i $\varepsilon$ należą do $\Sigma^*$.
+Mamy $a\varepsilon=\varepsilon a=a$, natomiast $ab\ne ba$.
+Słowo samo przez się nie ma jeszcze znaczenia matematycznego.
+\end{przyklad}
+\begin{stwierdzenie}[Łączność konkatenacji]\label{prop:syntax-concat}
+Niech $\Sigma$ będzie alfabetem. Dla dowolnych słów $u,v,w\in\Sigma^*$ zachodzi $(uv)w=u(vw)$.
+\end{stwierdzenie}
+\begin{proof}
+Niech $u=(u_1,\ldots,u_k)$, $v=(v_1,\ldots,v_\ell)$ i
+$w=(w_1,\ldots,w_m)$. W obu sposobach łączenia otrzymujemy ciąg długości
+$k+\ell+m$, którego pierwsze $k$ pozycji zajmują symbole $u_i$, następne
+$\ell$ pozycji symbole $v_j$, a ostatnie $m$ pozycji symbole $w_r$.
+Dwa skończone ciągi o jednakowej długości i jednakowych symbolach na każdej
+pozycji są równe, co kończy dowód.
+\end{proof}
+
+\begin{twierdzenie}[Słowa tworzą monoid wolny]\label{thm:syntax-free-monoid-xlv}
+Dla dowolnego alfabetu $\Sigma$ konkatenacja jest działaniem
+łącznym na $\Sigma^*$, a słowo puste $\varepsilon$ jest jej
+obustronnym elementem neutralnym. Ponadto funkcja długości
+$|\cdot|:\Sigma^*\to\N$ spełnia $|uv|=|u|+|v|$.
+Dla każdego monoidu $(M,\cdot,e)$ i każdej funkcji
+$j:\Sigma\to M$ istnieje dokładnie jeden homomorfizm monoidów
+$\overline j:\Sigma^*\to M$ taki, że
+$\overline j((a))=j(a)$ dla każdej litery $a\in\Sigma$.
+\end{twierdzenie}
+\begin{proof}
+Łączność wykazano w Stwierdzeniu~\ref{prop:syntax-concat}.
+Jeżeli $u=(u_1,\ldots,u_k)$, to dopisanie na końcu zera symboli
+nie zmienia żadnej spośród $k$ pozycji, stąd $u\varepsilon=u$.
+Dopisanie zera symboli przed pierwszą pozycją daje
+$\varepsilon u=u$; twierdzenie obejmuje też $k=0$.
+Z definicji konkatenacji $uv$ zawiera najpierw $|u|$ symboli,
+a następnie $|v|$ symboli. Te dwa kolejne bloki nie
+nakładają się, więc łączna długość jest ich sumą.
+
+Niech teraz $(M,\cdot,e)$ będzie dowolnym monoidem, a
+$j:\Sigma\to M$ funkcją. Definiujemy
+$\overline j(\varepsilon)=e$ oraz
+$\overline j((a_1,\ldots,a_n))=
+ j(a_1)\cdot\ldots\cdot j(a_n)$ dla $n\geq1$.
+Łączność działania w $M$ zapewnia niezależność wyniku
+od ustawienia nawiasów. Dla słów $u,v$ ich konkatenacja
+polega na dopisaniu listy liter $v$ do listy liter $u$,
+więc przez łączność i własność elementu neutralnego
+$\overline j(uv)=\overline j(u)\cdot\overline j(v)$,
+także gdy jedno ze słów jest puste.
+Otrzymaliśmy homomorfizm, który na słowach jednoliterowych
+zgadza się z $j$.
+Jeżeli $h$ jest innym takim homomorfizmem, to
+$h(\varepsilon)=e$, a dla każdego niepustego słowa
+$w=(a_1)\cdots(a_n)$ mamy
+$h(w)=h((a_1))\cdots h((a_n))
+=j(a_1)\cdots j(a_n)=\overline j(w)$.
+Zatem homomorfizm jest jednoznaczny, co uzasadnia
+określenie \emph{monoid wolny na alfabecie $\Sigma$}.
+\end{proof}
+\begin{przyklad}[Czy kolejność dopisywania ma znaczenie?]
+Dla $\Sigma=\{a,b\}$, $u=ab$, $v=b$ i $w=a$ otrzymujemy
+$(uv)w=abba=u(vw)$, a $|uv|=3=2+1$.
+Nie zachodzi natomiast przemienność: $uv=abb$, podczas
+gdy $vu=bab$. Słowo $\varepsilon$ nie jest literą alfabetu,
+lecz ciągiem o długości zero.
+\end{przyklad}
+
+\begin{definicja}[Sygnatura języka pierwszego rzędu]\label{def:syntax-signature}
+\emph{Sygnaturą} $\mathcal L$ nazywamy zbiór symboli pozalogicznych
+z podziałem na symbole stałych $\operatorname{Const}(\mathcal L)$,
+funkcyjne $\operatorname{Fun}(\mathcal L)$ i relacyjne
+$\operatorname{Rel}(\mathcal L)$. Każdemu symbolowi funkcyjnemu i relacyjnemu
+przypisujemy dodatnią liczbę naturalną, zwaną \emph{arnością};
+symbole stałych mają arność $0$.
+Symbole należące do różnych kategorii są odrębne, nawet jeśli w zapisie
+nieformalnym używamy dla nich tych samych liter.
+\end{definicja}
+Wybieramy ponadto nieskończony ciąg zmiennych $v_0,v_1,\ldots$ oraz znaki
+$=,\neg,\land,\lor,\to,\leftrightarrow,\forall,\exists$ i symbole pomocnicze
+(nawiasy, przecinki). Znak równości traktujemy jako symbol logiczny.
+\emph{Językiem pierwszego rzędu o sygnaturze $\mathcal L$} nazywamy te
+symbole wraz z opisanymi poniżej regułami tworzenia termów i formuł.
+
+\begin{przyklad}[Trzy sygnatury]\label{ex:syntax-signatures}
+W języku arytmetyki mamy stałą $0$, symbol następstwa $S$ arności $1$,
+symbole $+$, $\cdot$ arności $2$ i symbol relacyjny $<$ arności $2$.
+Język grafów może zawierać tylko relację $E$ arności $2$.
+W języku grup używamy stałej $e$, działania $\ast$ arności $2$
+i symbolu $\iota$ arności $1$ dla operacji odwracania.
+Żaden z tych symboli nie ma jeszcze przypisanej interpretacji.
+\end{przyklad}
+
+
+\begin{uwaga}[Dlaczego pojawia się teraz symbol $\to$?]
+W początkowych rozdziałach zapis $p\Rightarrow q$ oznaczał
+implikację między zdaniami. W ścisłym języku formalnym używamy
+symbolu $\to$ jako \emph{znaku budującego formułę}.
+Gdy zaś w zwykłym tekście matematycznym napiszemy
+„z $A$ wynika $B$”, jest to wypowiedź o związku między formułami,
+a niekoniecznie kolejna formuła wewnątrz języka.
+Rozróżnienie symbolu wewnątrz języka i wypowiedzi o języku
+będzie szczególnie ważne w twierdzeniu o pełności.
+\end{uwaga}
+
+\section{Termy: napisy nazywające obiekty}
+\begin{definicja}[Term]\label{def:syntax-term}
+Zbiór termów $\operatorname{Term}(\mathcal L)$ jest najmniejszym zbiorem
+napisów spełniającym następujące warunki:
+\begin{enumerate}[label=(\roman*)]
+\item każda zmienna $v_i$ jest termem;
+\item każdy symbol stałej jest termem;
+\item jeśli $f$ ma arność $n$ i $t_1,\ldots,t_n$ są termami,
+      to $f(t_1,\ldots,t_n)$ jest termem.
+\end{enumerate}
+Innych termów nie ma. \emph{Term domknięty} to term bez wystąpień zmiennych.
+W zapisie formalnym symbole działań występują przed argumentami; zapis
+$+(t_1,t_2)$ zwyczajowo skracamy do $t_1+t_2$.
+\end{definicja}
+\begin{przyklad}[Co jest, a co nie jest termem?]
+Dla sygnatury arytmetyki termami są $S(0)$, $+(v_2,S(0))$
+i $\cdot(+(v_0,0),v_3)$. Napisy $S(v_0,v_1)$ i $+(,v_0)$
+nie są termami: pierwszy zawiera za dużo argumentów, drugi nie zawiera
+pierwszego argumentu. Napis $v_0<v_1$ nie jest termem, lecz formułą atomową.
+\end{przyklad}
+
+\begin{lemat}[Jednoznaczne odczytywanie termów]\label{lem:syntax-unique-terms}
+Niech $\mathcal L$ będzie sygnaturą. Każdy term języka $\mathcal L$ jest dokładnie jednego z trzech rodzajów:
+zmienną, stałą lub napisem $f(t_1,\ldots,t_n)$.
+W trzecim przypadku symbol $f$ i wszystkie termy $t_1,\ldots,t_n$
+są jednoznacznie wyznaczone.
+\end{lemat}
+\begin{proof}
+Trzy rodzaje rozpoczynają się różnymi rodzajami symboli, więc nie można
+pomieszać zmiennej, stałej i zastosowania symbolu funkcyjnego.
+Jeśli jeden napis da się zapisać jako $f(t_1,\ldots,t_n)$ i
+$g(s_1,\ldots,s_m)$, to porównanie jego pierwszych symboli daje $f=g$,
+a przypisana arność wymusza $n=m$.
+Przecinki rozdzielające argumenty znajdują się na poziomie pierwszej pary
+nawiasów po $f$. Przecinków należących do termów zagnieżdżonych nie należy
+brać pod uwagę: występują one przy dodatniej głębokości zagnieżdżenia.
+Zatem miejsce zakończenia każdego argumentu jest jednoznaczne.
+Porównując odpowiadające im fragmenty obu identycznych napisów, otrzymujemy
+$t_i=s_i$ dla każdego $i$. Formalne uzasadnienie można prowadzić
+indukcyjnie po długości termu.
+\end{proof}
+
+\begin{przyklad}[Jednoznaczny rozkład termu]
+W sygnaturze z dwuargumentowym $f$, jednoargumentowym $g$
+i stałą $c$ rozważmy $t=f(g(v_0),f(c,v_1))$.
+Zewnętrzny symbol $f$ ma dwa argumenty. Pierwszy to
+$g(v_0)$, drugi to $f(c,v_1)$; przecinek wewnątrz
+drugiego argumentu znajduje się na wyższym poziomie
+zagnieżdżenia i nie rozdziela argumentów zewnętrznego $f$.
+Drzewo konstrukcji ma liście $v_0,c,v_1$, a jego korzeń
+ma etykietę $f$. Jest więc jeden sposób odczytania termu
+zgodny z arnościami ustalonej sygnatury.
+\end{przyklad}
+
+\section{Formuły: napisy wyrażające własności}
+\begin{definicja}[Formuła atomowa i formuła]\label{def:syntax-formula}
+\emph{Formułą atomową} jest napis $t_1=t_2$ albo $R(t_1,\ldots,t_n)$,
+gdzie $t_i$ są termami, a $R$ symbolem relacyjnym arności $n$.
+Zbiór formuł jest najmniejszym zbiorem zawierającym wszystkie formuły atomowe
+i zamkniętym na operacje
+\[
+\varphi\longmapsto\neg\varphi,
+\qquad
+(\varphi,\psi)\longmapsto
+(\varphi\circ\psi),\quad
+\circ\in\{\land,\lor,\to,\leftrightarrow\},
+\]
+oraz na tworzenie $\forall v_i\,\varphi$ i $\exists v_i\,\varphi$
+dla dowolnego $i\in\N$. Nic innego nie jest formułą.
+Dla jednoznaczności parsowania formuły z głównym spójnikiem binarnym
+w pełnym zapisie są objęte nawiasami. W przykładach używamy również
+nawiasów grupujących dla czytelności, na przykład zapis
+$\forall v_0\,(v_0=v_0)$ oznacza ściśle tę samą formułę
+co $\forall v_0\,v_0=v_0$. Nadmiarowe nawiasy grupujące
+nie stanowią dodatkowej reguły tworzenia formuł i nie są
+częścią napisu w ścisłej gramatyce. Tak rozumiane skróty
+nie wpływają na jednoznaczność jego odczytywania.
+\end{definicja}
+\begin{przyklad}
+W języku arytmetyki napis $\forall v_0\,(v_0=v_0)$ jest zdaniem
+w sensie zdefiniowanym poniżej, natomiast
+$\exists v_1\,(+(v_1,v_1)=v_0)$ jest formułą z wolną zmienną $v_0$.
+Napisy $\forall(v_0=v_0)$ oraz $\exists v_1\,+(v_1,v_1)$ nie są formułami.
+\end{przyklad}
+
+\begin{lemat}[Jednoznaczność budowy formuły]\label{lem:syntax-unique-formulas}
+Niech $\mathcal L$ będzie sygnaturą. Dla każdej formuły języka $\mathcal L$ $\varphi$ można jednoznacznie odtworzyć jej ostatni
+krok konstrukcji, a następnie wszystkie bezpośrednie podformuły.
+\end{lemat}
+\begin{proof}
+Jeśli napis zaczyna się od symbolu relacyjnego, jego arność i nawiasy
+określają argumenty. Jeśli zaczyna się od termu, to po jego końcu
+w formule atomowej musi wystąpić znak równości i drugi term; jednoznaczność
+termów zapewnia Lemat~\ref{lem:syntax-unique-terms}.
+Jeśli napis zaczyna się od $\neg$, usunięcie pierwszego symbolu daje
+jedyną podformułę. Jeśli zaczyna się od kwantyfikatora, następny symbol
+wskazuje związaną zmienną, a pozostały napis jest podformułą.
+Pozostają nawiasowane formuły binarne. Czytając je od lewej do prawej
+i zliczając poziom otwarcia nawiasów, znajdujemy dokładnie jeden
+spójnik na zewnętrznym poziomie. Dzieli on napis na lewą i prawą
+podformułę. Nie może być ich dwóch: wewnętrzne spójniki znajdują
+się w zagnieżdżonych nawiasach, a formuła musi być zbudowana według
+podanej gramatyki. Powtarzanie procedury dla podformuł kończy się,
+ponieważ są one krótsze od formuły wyjściowej.
+\end{proof}
+
+\begin{przyklad}[Drzewo budowy formuły]\label{ex:syntax-formula-tree-xlv}
+Dla relacji dwuargumentowej $R$ i symbolu funkcyjnego
+jednoargumentowego $f$ rozważmy
+$\theta=\forall v_0\,(R(v_0,f(v_1))\to v_0=v_1)$.
+Ostatnią operacją jest kwantyfikacja po $v_0$; pod nią
+znajduje się implikacja z dwiema podformułami atomowymi.
+Drzewo odzwierciedla kolejność konstrukcji, nie jest
+rysunkiem wartościowania ani modelem relacji $R$.
+\end{przyklad}
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Latex, every node/.style={draw,rounded corners=2pt,inner sep=4pt,font=\small}]
+  \node (q) at (0,1.9) {$\forall v_0$};
+  \node (imp) at (0,0.95) {$\to$};
+  \node (rel) at (-2.45,0) {$R(v_0,f(v_1))$};
+  \node (eq) at (2.15,0) {$v_0=v_1$};
+  \draw[->] (q)--(imp);
+  \draw[->] (imp)--(rel);
+  \draw[->] (imp)--(eq);
+\end{tikzpicture}
+\caption{Drzewo składniowe formuły $\theta$. Strzałki prowadzą
+od konstrukcji do jej bezpośrednich podformuł.}
+\label{fig:syntax-tree-xlv}
+\end{figure}
+
+\section{Zmienne wolne, związane i zakres kwantyfikatora}
+\begin{definicja}[Zmienne wolne]\label{def:syntax-free-vars}
+Zbiór $\operatorname{FV}(t)$ zmiennych termu definiujemy przez
+$\operatorname{FV}(v_i)=\{v_i\}$, $\operatorname{FV}(c)=\varnothing$
+i
+$\operatorname{FV}(f(t_1,\ldots,t_n))=\bigcup_{j=1}^{n}\operatorname{FV}(t_j)$.
+Dla formuł definiujemy
+\begin{align*}
+\operatorname{FV}(t_1=t_2)
+  &=\operatorname{FV}(t_1)\cup\operatorname{FV}(t_2),\\
+\operatorname{FV}(R(t_1,\ldots,t_n))
+  &=\bigcup_{j=1}^{n}\operatorname{FV}(t_j),\\
+\operatorname{FV}(\neg\varphi)&=\operatorname{FV}(\varphi),\\
+\operatorname{FV}(\varphi\circ\psi)
+  &=\operatorname{FV}(\varphi)\cup\operatorname{FV}(\psi),\\
+\operatorname{FV}(\forall v_i\,\varphi)
+  &=\operatorname{FV}(\varphi)\setminus\{v_i\},\\
+\operatorname{FV}(\exists v_i\,\varphi)
+  &=\operatorname{FV}(\varphi)\setminus\{v_i\}.
+\end{align*}
+W tych wzorach $\circ$ oznacza dowolny spójnik binarny.
+Formułę bez zmiennych wolnych nazywamy \emph{zdaniem}.
+\end{definicja}
+\begin{przyklad}[To samo oznaczenie może wystąpić wolno i związanie]
+W formule $(\exists v_1\,(v_0=v_1))\land(v_1=v_2)$
+pierwsze wystąpienie $v_1$ po kwantyfikatorze jest związane, ale
+w drugim członie $v_1$ występuje wolno. Zatem
+$\operatorname{FV}(\varphi)=\{v_0,v_1,v_2\}$.
+Kwantyfikator nie oddziałuje na wyrażenie znajdujące się poza
+zakresem swojej podformuły.
+\end{przyklad}
+
+\begin{przyklad}[Obliczanie zmiennych wolnych etapami]
+Niech
+$\rho=(\exists v_1\,R(v_0,v_1))\land
+ (\forall v_0\,(R(v_0,v_2)\lor R(v_1,v_0)))$,
+gdzie $R$ jest symbolem relacyjnym arności $2$.
+Pierwszy człon ma zmienne wolne $\{v_0\}$: $v_1$ zostało
+związane. Podformuły atomowe drugiego członu mają
+zbiory zmiennych odpowiednio $\{v_0,v_2\}$ i
+$\{v_1,v_0\}$, więc ich alternatywa ma zbiór
+$\{v_0,v_1,v_2\}$. Kwantyfikator $\forall v_0$
+usuwa z niego $v_0$ i pozostawia $\{v_1,v_2\}$.
+Ostatecznie $\operatorname{FV}(\rho)=\{v_0,v_1,v_2\}$.
+Wystąpienie zmiennej $v_1$ jest związane w pierwszym
+członie, lecz wolne w drugim; podobnie $v_0$ jest wolne
+w pierwszym członie, ale związane w drugim.
+\end{przyklad}
+
+\section{Podstawianie bez przechwytywania zmiennych}
+Chcemy wstawić do formuły term opisujący konkretny obiekt.
+Nie wystarczy jednak zastąpić każdego wystąpienia danej litery:
+kwantyfikator może przez przypadek związać zmienną podstawianego termu.
+
+\begin{definicja}[Podstawienie termu w termie]\label{def:syntax-term-substitution-xlv}
+Dla termów $u,t$ języka $\mathcal L$ i zmiennej $x$
+term $t[x:=u]$ definiujemy rekurencyjnie:
+\begin{enumerate}[label=(\roman*)]
+\item $x[x:=u]=u$, a $y[x:=u]=y$ dla każdej zmiennej $y\ne x$;
+\item $c[x:=u]=c$ dla każdego symbolu stałej $c$;
+\item $f(t_1,\ldots,t_n)[x:=u]
+ =f(t_1[x:=u],\ldots,t_n[x:=u])$.
+\end{enumerate}
+Termy nie zawierają kwantyfikatorów, więc żadna zmienna
+podstawianego termu nie może zostać w ten sposób związana.
+\end{definicja}
+\begin{lemat}[Zmienne termu po podstawieniu]
+\label{lem:syntax-term-fv-subst-xlv}
+Niech $\mathcal L$ będzie sygnaturą. Dla dowolnych termów
+$t,u$ języka $\mathcal L$ i zmiennej $x$ zachodzi
+\[
+\operatorname{FV}(t[x:=u])=
+\begin{cases}
+(\operatorname{FV}(t)\setminus\{x\})\cup\operatorname{FV}(u),
+ &x\in\operatorname{FV}(t),\\
+\operatorname{FV}(t),&x\notin\operatorname{FV}(t).
+\end{cases}
+\]
+\end{lemat}
+\begin{proof}
+W przypadku $t=x$ wynikiem jest $u$, a po prawej
+otrzymujemy $\operatorname{FV}(u)$, więc równość zachodzi.
+Dla $t=y\ne x$ nie zmieniamy termu ani jego jedynej
+zmiennej. Dla stałej oba zbiory zmiennych są puste.
+Przy $t=f(t_1,\ldots,t_n)$ podstawienie wykonuje się
+oddzielnie w każdym argumencie. Jeżeli $x$ nie występuje
+w żadnym $t_i$, nie zmienia się żaden argument.
+W przeciwnym razie dla argumentów zawierających $x$
+założenie indukcyjne usuwa tę zmienną i dodaje cały zbiór
+$\operatorname{FV}(u)$, a pozostałe argumenty zachowują swoje
+zmienne. Po zsumowaniu zbiorów zmiennych wszystkich
+argumentów otrzymujemy dokładnie pierwszy przypadek wzoru.
+\end{proof}
+\begin{przyklad}[Podstawienie w zagnieżdżonym termie]
+Niech $t=f(x,g(x,y))$ i $u=h(y)$ dla symboli funkcyjnych
+$f$ arności $2$, $g$ arności $2$ i $h$ arności $1$.
+Wtedy $t[x:=u]=f(h(y),g(h(y),y))$.
+Obie początkowe kopie $x$ są zastąpione; nowy term ma
+zbiór zmiennych $\{y\}$, zgodnie z lematem.
+\end{przyklad}
+
+\begin{definicja}[Dopuszczalne podstawienie]\label{def:syntax-free-for}
+Niech $x$ będzie zmienną, $t$ termem, a $\varphi$ formułą.
+Mówimy, że $t$ jest \emph{dopuszczalny do podstawienia za $x$ w $\varphi$},
+jeśli żadne wolne wystąpienie $x$ nie znajduje się w zakresie
+kwantyfikatora wiążącego zmienną z $\operatorname{FV}(t)$.
+Wtedy $\varphi[x:=t]$ oznacza formułę powstałą przez zastąpienie
+\emph{wolnych} wystąpień $x$ termem $t$. Formalnie:
+na atomach podstawiamy term w każdym jego argumencie,
+a dla negacji i spójników binarnych wykonujemy operację
+w bezpośrednich podformułach. Przy $Qy\,\psi$, gdzie
+$Q\in\{\forall,\exists\}$, jeżeli $y=x$, pozostawiamy
+całą formułę bez zmian. Jeżeli $y\ne x$, podstawiamy
+rekurencyjnie w $\psi$ i zachowujemy kwantyfikator $Qy$.
+Ta ostatnia reguła jest dozwolona tylko przy spełnieniu
+powyższego warunku braku przechwycenia; w przeciwnym razie
+najpierw trzeba poprawnie przemianować odpowiednią
+zmienną związaną. Jeżeli $x\notin\operatorname{FV}(\varphi)$,
+podstawienie nie zmienia formuły.
+\end{definicja}
+\begin{przyklad}[Przechwycenie zmiennej]
+Rozważmy $\varphi=\forall v_1\,(v_0=v_1)$ i term $t=v_1$.
+Bezpośrednia zamiana $v_0$ na $v_1$ dałaby
+$\forall v_1\,(v_1=v_1)$, w którym nowe wystąpienie $v_1$
+stało się związane. Podstawienie nie jest dopuszczalne.
+Możemy jednak najpierw zmienić nazwę zmiennej związanej na świeżą
+zmienną $v_2$, otrzymując $\forall v_2\,(v_0=v_2)$, a następnie
+wykonać dopuszczalne podstawienie i otrzymać
+$\forall v_2\,(v_1=v_2)$.
+\end{przyklad}
+\begin{lemat}[Zmienne wolne po podstawieniu]\label{lem:syntax-fv-subst}
+Niech $\mathcal L$ będzie sygnaturą, $x$ zmienną,
+$t$ termem języka $\mathcal L$, a $\varphi$ formułą tego języka.
+Załóżmy, że $t$ jest dopuszczalny do podstawienia za $x$ w $\varphi$.
+Jeśli $x\in\operatorname{FV}(\varphi)$, to
+\[
+\operatorname{FV}(\varphi[x:=t])
+=(\operatorname{FV}(\varphi)\setminus\{x\})
+\cup\operatorname{FV}(t).
+\]
+Jeśli $x\notin\operatorname{FV}(\varphi)$, podstawienie nie zmienia
+formuły ani zbioru jej zmiennych wolnych.
+\end{lemat}
+\begin{proof}
+Dowodzimy tezy indukcją po budowie $\varphi$.
+Dla atomów równościowych i relacyjnych operacja dotyczy
+wyłącznie termów. Wzór wynika wtedy z
+Lematu~\ref{lem:syntax-term-fv-subst-xlv} po wzięciu sumy
+zbiorów zmiennych argumentów. W przypadku negacji
+$\operatorname{FV}(\neg\psi)=\operatorname{FV}(\psi)$,
+więc teza jest dokładnie założeniem indukcyjnym.
+Dla spójnika binarnego stosujemy to założenie osobno
+w dwóch podformułach i sumujemy otrzymane zbiory.
+Jeżeli w całej formule $x$ nie jest wolna, definicja
+podstawienia nie zmienia żadnego wolnego wystąpienia $x$;
+formuła pozostaje ta sama.
+
+Rozważmy przypadek $\varphi=Qy\,\psi$, gdzie
+$Q\in\{\forall,\exists\}$ i $x$ jest wolna w $\varphi$.
+Wówczas $x\ne y$ oraz $x\in\operatorname{FV}(\psi)$.
+Dopuszczalność podstawienia daje
+$y\notin\operatorname{FV}(t)$: każde wolne wystąpienie $x$
+w podformule $\psi$ jest bowiem w zakresie kwantyfikatora
+$Qy$. Zatem, korzystając kolejno z definicji wolnych
+zmiennych, założenia indukcyjnego i $y\notin\operatorname{FV}(t)$,
+otrzymujemy
+\begin{align*}
+\operatorname{FV}((Qy\,\psi)[x:=t])
+ &=\operatorname{FV}(\psi[x:=t])\setminus\{y\}\\
+ &=((\operatorname{FV}(\psi)\setminus\{x\})
+    \cup\operatorname{FV}(t))\setminus\{y\}\\
+ &=(\operatorname{FV}(\varphi)\setminus\{x\})
+    \cup\operatorname{FV}(t).
+\end{align*}
+To zamyka również oba przypadki kwantyfikatorów.
+\end{proof}
+
+\begin{uwaga}[Nazwy zmiennych związanych]
+Zmiana nazwy zmiennej związanej na nową, niewystępującą
+w rozważanej formule, nie powinna zmieniać jej znaczenia.
+Takie formuły nazywa się \emph{$\alpha$-równoważnymi}.
+W następnym rozdziale uzasadnimy to na podstawie definicji spełniania,
+a w rozdziale o rachunku dowodowym będziemy korzystać wyłącznie
+z podstawień dopuszczalnych albo wcześniej zmienimy nazwę zmiennej związanej.
+\end{uwaga}
+
+\begin{uwaga}[Dlaczego warunek dopuszczalności jest konieczny?]
+Formuła $\forall y\,(x=y)$ ma wolną zmienną $x$.
+Próba wstawienia termu $y$ bez przemianowania zmieniłaby
+ją w $\forall y\,(y=y)$, czyli w zdanie. Pierwsza formuła
+jest fałszywa przy dowolnym wartościowaniu w strukturze
+co najmniej dwuelementowej; druga jest w tej strukturze
+prawdziwa. Problem nie jest więc tylko notacyjny.
+\end{uwaga}
+
+\begin{lemat}[Podstawienie i kwantyfikator zasłaniający]\label{lem:syntax-shadowing-lxvii}
+Niech $x,y$ będą zmiennymi, $t$ termem, a $\psi$ formułą.
+Jeżeli $x=y$, to $(Qx\,\psi)[x:=t]=Qx\,\psi$ dla
+$Q\in\{\forall,\exists\}$. Jeżeli $x\ne y$ i
+$x\notin\operatorname{FV}(\psi)$, to również
+$(Qy\,\psi)[x:=t]=Qy\,\psi$, niezależnie od zmiennych termu $t$.
+Jeżeli $x\ne y$ i $x\in\operatorname{FV}(\psi)$, to
+$t$ jest dopuszczalny do podstawienia za $x$ w $Qy\,\psi$
+wtedy i tylko wtedy, gdy jest dopuszczalny w $\psi$
+oraz $y\notin\operatorname{FV}(t)$.
+\end{lemat}
+\begin{proof}
+W pierwszym przypadku zewnętrzny kwantyfikator wiąże
+wszystkie wystąpienia $x$ w swoim zakresie, które mogłyby
+być wolne w $\psi$; reguła podstawiania pozostawia całą
+formułę bez zmian. W drugim przypadku w $\psi$ nie ma
+wolnych wystąpień $x$, więc nie ma czego zastępować.
+W trzecim przypadku każde wolne wystąpienie $x$ w $\psi$
+leży w zakresie nowego kwantyfikatora $Qy$.
+Dopuszczalność w $Qy\,\psi$ wymaga zatem, po pierwsze,
+aby żaden kwantyfikator wewnątrz $\psi$ nie przechwytywał
+zmiennej z $\operatorname{FV}(t)$, czyli dopuszczalności
+w $\psi$, a po drugie, aby $y$ nie była wolna w $t$.
+Oba warunki razem wykluczają wszystkie możliwe
+przechwycenia i są wystarczające.
+\end{proof}
+\begin{przyklad}[Wystąpienie wolne i zasłonięte]
+Niech $\psi=(x=z)\land\forall x\,(x=y)$, a $t=f(y)$.
+W formule $\psi$ wolne wystąpienie $x$ znajduje się tylko
+w pierwszym członie. Podstawienie daje
+$\psi[x:=t]=(f(y)=z)\land\forall x\,(x=y)$;
+wystąpienie $x$ pod wewnętrznym kwantyfikatorem pozostaje
+nietknięte. Natomiast w $\forall y\,\psi$ to samo
+podstawienie nie jest dopuszczalne, ponieważ $y$ z termu
+$f(y)$ zostałaby przechwycona przez zewnętrzny kwantyfikator.
+W $\forall x\,\psi$ podstawienie nie zmienia niczego.
+\end{przyklad}
+
+\section{Indukcja po budowie formuły}
+Definicje termów i formuł podają również sposób prowadzenia dowodów.
+Aby wykazać własność wszystkich formuł, wystarczy udowodnić ją
+najpierw dla formuł atomowych, a potem sprawdzić, że przechodzi
+przez każdy spójnik i oba kwantyfikatory. Nie jest to nowe
+założenie logiczne, lecz zastosowanie zasady indukcji do skończonych
+drzew konstrukcji napisów.
+
+\begin{twierdzenie}[Zasada indukcji strukturalnej]
+\label{thm:syntax-structural-induction-xlv}
+Niech $P$ będzie własnością termów języka $\mathcal L$.
+Jeśli $P$ zachodzi dla każdej zmiennej i każdej stałej,
+a z $P(t_1),\ldots,P(t_n)$ wynika $P(f(t_1,\ldots,t_n))$
+dla każdego symbolu funkcyjnego $f$ arności $n$, to
+$P$ zachodzi dla wszystkich termów.
+Analogicznie niech $Q$ będzie własnością formuł.
+Jeśli $Q$ zachodzi dla wszystkich atomów oraz zachowuje się
+przy negacji, czterech spójnikach binarnych i obu
+kwantyfikatorach, to $Q$ zachodzi dla wszystkich formuł.
+\end{twierdzenie}
+\begin{proof}
+Każda formuła i każdy term powstają w skończenie wielu
+krokach, ponieważ zbiory z Definicji~\ref{def:syntax-term}
+i Definicji~\ref{def:syntax-formula} są najmniejszymi
+zbiorami zamkniętymi na wskazane konstrukcje.
+Niech $T_P$ oznacza zbiór termów spełniających $P$.
+Na mocy pierwszych dwóch założeń zawiera on wszystkie
+zmienne i stałe, a na mocy ostatniego jest zamknięty
+na tworzenie termów $f(\vec t)$. Minimalność zbioru
+wszystkich termów daje $T_P=\operatorname{Term}(\mathcal L)$.
+Dla formuł zbiór $F_Q$ formuł spełniających $Q$
+zawiera wszystkie atomy i jest zamknięty na wszystkie
+operacje z ich definicji; przez tę samą minimalność
+jest więc zbiorem wszystkich formuł.
+Tak otrzymujemy zasadę indukcji bez zakładania z góry
+rozstrzygalności dowolnej własności $P$ lub $Q$.
+\end{proof}
+
+\begin{przyklad}[Liczba wolnych zmiennych jest skończona]
+Każdy term i każda formuła zawierają skończenie wiele symboli,
+zatem mają skończenie wiele wystąpień zmiennych.
+Zbiór różnych zmiennych wolnych jest podzbiorem zbioru wszystkich
+wystąpień zmiennych, a więc jest skończony. Wynika stąd, że
+zawsze możemy wybrać \emph{świeżą} zmienną spośród
+$v_0,v_1,\ldots$, niewystępującą w danym skończonym napisie.
+\end{przyklad}
