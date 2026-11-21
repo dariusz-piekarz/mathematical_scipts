@@ -12,6 +12,8 @@ import json
 import re
 import sys
 
+from audit_chapter_dependencies import audit as audit_dependencies
+
 ROOT = Path(__file__).resolve().parents[1]
 INPUT_RE = re.compile(r"\\input\{([^}]+)\}")
 
@@ -72,13 +74,13 @@ def validate_attachments() -> list[str]:
 
 def main() -> int:
     """Print a concise validation report; return a failing exit code on error."""
-    errors = validate_books() + validate_attachments()
+    errors = validate_books() + validate_attachments() + audit_dependencies(ROOT)['errors']
     for error in errors:
         print("ERROR:", error)
     if errors:
         print(f"Validation failed: {len(errors)} issues")
         return 1
-    print("Validation passed: book imports and 20 normalized source copies")
+    print("Validation passed: imports, 20 normalized source copies, chapter assets and catalog")
     return 0
 
 

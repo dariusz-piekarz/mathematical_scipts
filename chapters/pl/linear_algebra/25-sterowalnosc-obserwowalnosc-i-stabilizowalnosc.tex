@@ -1,0 +1,2162 @@
+\chapter{Sterowalność, obserwowalność i stabilizowalność}
+\label{ch:lin25-control}
+\index{sterowalność@Sterowalność}
+\index{obserwowalność@Obserwowalność}
+\index{kryterium Kalmana@Kryterium Kalmana}
+\index{kryterium PBH@Kryterium PBH}
+\index{stabilizowalność@Stabilizowalność}
+\index{wykrywalność@Wykrywalność}
+
+\noindent\textbf{Cel rozdziału.}
+W Rozdziale~\ref{ch:lin24-riccati}
+dowiedliśmy stabilności optymalnych sprzężeń
+przy założeniu, że macierz otwartej pętli
+jest już stabilna. Chcemy wiedzieć,
+kiedy sterowanie może ustabilizować
+układ początkowo niestabilny
+i kiedy jego stan można odtworzyć
+z obserwowanego wyjścia.
+Prowadzi to do sterowalności,
+obserwowalności, ich kryteriów
+macierzowych i rozkładu Kalmana.
+Udowodnimy również spektralne
+kryteria stabilizowalności
+i wykrywalności, nie zakładając
+bez dowodu twierdzeń o rozmieszczaniu
+biegunów sprzężenia zwrotnego.
+
+Pracujemy nad ciałem \(\mathbb C\);
+rzeczywiste odpowiedniki zostaną
+wskazane w osobnej uwadze.
+Ustalamy liczby całkowite
+\(n,m,p\ge1\) oraz macierze
+\(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\),
+\(B\in\operatorname{Mat}_{n\times m}(\mathbb C)\),
+\(C\in\operatorname{Mat}_{p\times n}(\mathbb C)\).
+Stan to \(x\in\mathbb C^n\),
+sterowanie to \(u\in\mathbb C^m\),
+a obserwacja to \(y=Cx\in\mathbb C^p\).
+Przez \(\operatorname{im}T\)
+i \(\ker T\) oznaczamy odpowiednio
+obraz i jądro odwzorowania liniowego \(T\).
+
+\section{Sterowalność w czasie dyskretnym}
+\label{sec:lin25-reach}
+
+\begin{definicja}[Macierz i przestrzeń sterowalności]
+\label{def:lin25-kalman}
+Dla pary \((A,B)\) definiujemy
+\emph{macierz sterowalności Kalmana}
+oraz \emph{przestrzeń osiągalną}
+wzorami
+\[
+ \mathcal K(A,B)=
+ \begin{bmatrix}
+ B&AB&A^2B&\cdots&A^{n-1}B
+ \end{bmatrix},
+ \qquad
+ \mathcal R(A,B)=\operatorname{im}\mathcal K(A,B).
+\]
+Parę \((A,B)\) nazywamy
+\emph{sterowalną}, jeśli
+\(\mathcal R(A,B)=\mathbb C^n\),
+równoważnie
+\(\operatorname{rank}\mathcal K(A,B)=n\).
+\end{definicja}
+
+\begin{lemat}[Niezmienniczość przestrzeni osiągalnej]
+\label{lem:lin25-invariant}
+Dla każdej pary \((A,B)\)
+przestrzeń \(\mathcal R(A,B)\)
+zawiera \(\operatorname{im}B\),
+jest niezmiennicza względem \(A\)
+i spełnia
+\[
+ \mathcal R(A,B)
+ =\sum_{k=0}^{\infty}\operatorname{im}A^kB.
+\]
+Jest ona najmniejszą
+\(A\)-niezmienniczą podprzestrzenią
+zawierającą \(\operatorname{im}B\).
+\end{lemat}
+\begin{proof}
+Z definicji
+\(\operatorname{im}B\subseteq\mathcal R(A,B)\).
+Dla \(0\le k<n-1\)
+mamy
+\(A(\operatorname{im}A^kB)
+ =\operatorname{im}A^{k+1}B
+ \subseteq\mathcal R(A,B)\).
+Pozostaje sprawdzić \(k=n-1\).
+Z twierdzenia Cayleya--Hamiltona,
+udowodnionego w
+Rozdziale~\ref{ch:lin16-niezmiennicze},
+istnieją współczynniki
+\(c_0,\ldots,c_{n-1}\in\mathbb C\)
+takie, że
+\[
+ A^n=-\sum_{j=0}^{n-1}c_jA^j.
+\]
+Po pomnożeniu przez \(B\)
+otrzymujemy
+\(\operatorname{im}A^nB
+ \subseteq\mathcal R(A,B)\).
+Wobec tego \(\mathcal R(A,B)\)
+jest \(A\)-niezmiennicza,
+a więc zawiera obrazy
+\(A^kB\) dla wszystkich \(k\ge0\).
+Odwrotne zawieranie
+wynika bezpośrednio z definicji.
+Każda \(A\)-niezmiennicza
+podprzestrzeń zawierająca
+\(\operatorname{im}B\)
+musi zawierać także wszystkie
+\(\operatorname{im}A^kB\);
+stąd minimalność.
+\end{proof}
+
+\begin{twierdzenie}[Kryterium Kalmana w czasie dyskretnym]
+\label{thm:lin25-kalman}
+Niech dla każdego
+całkowitego \(k\ge0\)
+stan układu spełnia
+\(x_{k+1}=Ax_k+Bu_k\),
+gdzie \(u_k\in\mathbb C^m\).
+Dla ustalonego \(N\ge1\)
+zbiór stanów osiągalnych
+w chwili \(N\) ze stanu \(x_0=0\)
+jest równy
+\[
+ \operatorname{im}
+ \begin{bmatrix}
+ B&AB&\cdots&A^{N-1}B
+ \end{bmatrix}.
+\]
+Następujące warunki
+są równoważne:
+\begin{enumerate}[label=\textup{(\roman*)}]
+ \item para \((A,B)\) jest sterowalna;
+ \item każdy \(z\in\mathbb C^n\)
+ można osiągnąć ze stanu \(0\)
+ w dokładnie \(n\) krokach;
+ \item istnieje \(N\ge1\),
+ dla którego każdy
+ \(z\in\mathbb C^n\)
+ można osiągnąć z \(0\)
+ w dokładnie \(N\) krokach;
+ \item dla każdych \(x,z\in\mathbb C^n\)
+ istnieje ciąg sterowań,
+ który przeprowadza \(x\)
+ w \(z\) w dokładnie \(n\) krokach.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Iterując równanie stanu
+otrzymujemy kolejno
+\(x_1=Ax_0+Bu_0\),
+\(x_2=A^2x_0+ABu_0+Bu_1\).
+Indukcja daje dla każdego \(N\ge1\)
+\[
+ x_N=A^Nx_0+
+      \sum_{j=0}^{N-1}A^{N-1-j}Bu_j.
+\]
+Po podstawieniu \(x_0=0\)
+i odwróceniu kolejności
+wektorów \(u_j\)
+otrzymujemy dokładnie obraz
+macierzy podanej w tezie.
+Dla \(N=n\) jest to
+\(\mathcal R(A,B)\),
+więc (i) i (ii) są równoważne,
+a (ii) implikuje (iii).
+
+Jeśli zachodzi (iii),
+to obraz wskazanej macierzy
+jest całą \(\mathbb C^n\);
+na mocy
+Lematu~\ref{lem:lin25-invariant}
+jest jednak zawarty
+w \(\mathcal R(A,B)\).
+Zatem (i).
+
+Załóżmy (i).
+Dla dowolnych \(x,z\)
+połóżmy \(w=z-A^nx\).
+Z (ii) można w \(n\) krokach
+otrzymać ze stanu zerowego
+dowolny wektor \(w\).
+Wybierając te same sterowania
+dla stanu początkowego \(x\),
+otrzymujemy
+\(x_n=A^nx+w=z\).
+To daje (iv).
+Z (iv) wynika (ii)
+po przyjęciu \(x=0\).
+\end{proof}
+
+\begin{przyklad}[Łańcuch dwóch stanów]
+\label{prz:lin25-chain}
+Dla
+\[
+ A=\begin{pmatrix}0&1\\0&0\end{pmatrix},
+ \qquad
+ B=\begin{pmatrix}0\\1\end{pmatrix}
+\]
+mamy
+\(AB=(1,0)^{\mathsf T}\),
+więc
+\[
+ \mathcal K(A,B)
+ =\begin{pmatrix}0&1\\1&0\end{pmatrix},
+ \qquad
+ \det\mathcal K(A,B)=-1.
+\]
+Para jest sterowalna.
+Zerowy stan przechodzi
+po dwóch krokach w
+\[
+ x_2=ABu_0+Bu_1
+     =\begin{pmatrix}u_0\\u_1\end{pmatrix}.
+\]
+Aby osiągnąć \(z=(a,b)^{\mathsf T}\),
+wystarczy więc przyjąć
+\(u_0=a\), \(u_1=b\).
+W pierwszym kroku,
+gdy \(x_0=0\),
+osiągalne są jedynie
+wektory postaci \((0,b)^{\mathsf T}\);
+nie należy zatem zastępować
+warunku „w \(n\) krokach”
+warunkiem „w jednym kroku”.
+\end{przyklad}
+
+\section{Sterowalność w czasie ciągłym}
+\label{sec:lin25-reach-cont}
+
+\begin{definicja}[Ciągły układ sterowany]
+\label{def:lin25-cont-system}
+Niech \(T>0\).
+Rozpatrujemy równanie
+\[
+ x'(t)=Ax(t)+Bu(t),\qquad
+ x(0)=x_0,\qquad 0\le t\le T,
+\]
+dla przedziałami ciągłego
+sterowania
+\(u\colon[0,T]\to\mathbb C^m\).
+Parę \((A,B)\)
+nazywamy \emph{sterowalną
+w czasie ciągłym}, jeśli
+dla każdej liczby \(T>0\)
+oraz dowolnych \(x_0,z\in\mathbb C^n\)
+istnieje takie sterowanie,
+że rozwiązanie spełnia \(x(T)=z\).
+\end{definicja}
+
+\begin{lemat}[Wzór na rozwiązanie z wymuszeniem]
+\label{lem:lin25-variation}
+Dla macierzy \(A,B\)
+i przedziałami ciągłego sterowania
+\(u\colon[0,T]\to\mathbb C^m\)
+jedyne ciągłe,
+przedziałami różniczkowalne
+rozwiązanie równania
+z Definicji~\ref{def:lin25-cont-system}
+ma postać
+\[
+ x(t)=e^{tA}x_0+
+      \int_0^t e^{(t-s)A}Bu(s)
+      \,\mathrm ds,\qquad 0\le t\le T.
+\]
+\end{lemat}
+\begin{proof}
+Jeśli \(x\) jest rozwiązaniem,
+pomnóżmy równanie
+przez \(e^{-tA}\).
+Z reguły iloczynu
+i równości
+\(\frac{\mathrm d}{\mathrm dt}e^{-tA}
+ =-Ae^{-tA}\),
+udowodnionej w
+Rozdziale~\ref{ch:lin18-jordan-chevalley},
+otrzymujemy na każdym przedziale
+ciągłości \(u\)
+\[
+ \frac{\mathrm d}{\mathrm dt}
+    (e^{-tA}x(t))
+ =-Ae^{-tA}x(t)+e^{-tA}(Ax(t)+Bu(t))
+ =e^{-tA}Bu(t).
+\]
+Całkując kawałkami od \(0\) do \(t\)
+i mnożąc przez \(e^{tA}\),
+otrzymujemy wzór z tezy.
+Odwrotnie, różniczkując
+podany wzór na przedziałach,
+gdzie \(u\) jest ciągłe,
+otrzymujemy równanie stanu
+i \(x(0)=x_0\).
+Dla dwóch rozwiązań
+ich różnica \(v\)
+spełnia \(v'=Av\) i \(v(0)=0\),
+więc \(v(t)=e^{tA}v(0)=0\).
+To zapewnia jednoznaczność.
+\end{proof}
+
+\begin{definicja}[Gramian sterowalności]
+\label{def:lin25-gramian}
+Dla każdej \(T>0\)
+\emph{gramianem sterowalności}
+nazywamy macierz hermitowską
+\[
+ W_T=\int_0^T
+      e^{tA}BB^*e^{tA^*}
+      \,\mathrm dt.
+\]
+\end{definicja}
+
+\begin{twierdzenie}[Gramian i kryterium sterowalności ciągłej]
+\label{thm:lin25-gramian}
+Dla każdej pary macierzy
+\(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\),
+\(B\in\operatorname{Mat}_{n\times m}(\mathbb C)\)
+następujące warunki
+są równoważne:
+\begin{enumerate}[label=\textup{(\roman*)}]
+ \item \(\operatorname{rank}\mathcal K(A,B)=n\);
+ \item dla każdego \(T>0\)
+ gramian \(W_T\) jest dodatnio
+ określony;
+ \item istnieje \(T>0\),
+ dla którego \(W_T\) jest
+ dodatnio określony;
+ \item para \((A,B)\)
+ jest sterowalna w czasie ciągłym.
+\end{enumerate}
+Jeśli \(W_T>0\), to
+dla dowolnych \(x_0,z\in\mathbb C^n\)
+sterowanie
+\[
+ u(s)=B^*e^{(T-s)A^*}W_T^{-1}
+             (z-e^{TA}x_0),\quad0\le s\le T,
+\]
+przenosi stan \(x_0\)
+w stan \(z\) w chwili \(T\).
+\end{twierdzenie}
+\begin{proof}
+Dla każdego \(v\in\mathbb C^n\)
+mamy
+\[
+ v^*W_Tv
+ =\int_0^T
+      \bigl\|B^*e^{tA^*}v\bigr\|_2^2
+      \,\mathrm dt\ge0.
+\]
+Ciągłość funkcji podcałkowej
+pokazuje, że \(v^*W_Tv=0\)
+dokładnie wtedy, gdy
+\(B^*e^{tA^*}v=0\)
+dla wszystkich \(t\in[0,T]\).
+
+Jeżeli ta funkcja znika,
+to po zróżniczkowaniu
+jej szeregu wykładniczego
+w punkcie \(t=0\) mamy
+\(B^*(A^*)^kv=0\)
+dla wszystkich całkowitych \(k\ge0\).
+W szczególności dla
+\(k=0,\ldots,n-1\)
+otrzymujemy
+\(\mathcal K(A,B)^*v=0\).
+Odwrotnie, jeśli
+\(\mathcal K(A,B)^*v=0\),
+to \(B^*(A^*)^kv=0\)
+dla \(0\le k<n\).
+Z twierdzenia Cayleya--Hamiltona,
+zastosowanego do \(A^*\),
+wynika indukcyjnie
+zerowanie także dla wszystkich
+\(k\ge n\).
+Szereg
+\(B^*e^{tA^*}v
+ =\sum_{k=0}^\infty
+      \frac{t^k}{k!}B^*(A^*)^kv\)
+jest więc tożsamościowo zerowy.
+Dowiedliśmy, że
+\[
+ \ker W_T=\ker\mathcal K(A,B)^*.
+\]
+Równość obowiązuje dla
+każdego \(T>0\).
+Ponieważ \(W_T\ge0\),
+dodatnia określoność
+jest równoważna
+\(\ker W_T=\{0\}\).
+Stąd równoważność
+(i), (ii) i (iii).
+
+Załóżmy (ii) i wybierzmy
+dowolne \(x_0,z,T\).
+Niech \(d=z-e^{TA}x_0\)
+i zdefiniujmy \(u\)
+wzorem z tezy.
+Z
+Lematu~\ref{lem:lin25-variation}
+otrzymujemy
+\[
+ \begin{aligned}
+ x(T)-e^{TA}x_0
+ &=\int_0^T e^{(T-s)A}BB^*
+        e^{(T-s)A^*}W_T^{-1}d
+       \,\mathrm ds\\
+ &=W_TW_T^{-1}d=d,
+ \end{aligned}
+\]
+bo podstawienie \(t=T-s\)
+zmienia całkę w \(W_T\).
+Zatem \(x(T)=z\);
+otrzymaliśmy (iv).
+
+Załóżmy (iv).
+Dla dowolnego \(T>0\)
+i każdego \(d\in\mathbb C^n\)
+można ze stanu \(0\) osiągnąć
+\(d\) w chwili \(T\).
+Gdyby \(W_T\) nie był
+dodatnio określony,
+to z jego nieujemnej
+określoności istniałby
+\(v\ne0\) taki, że
+\(B^*e^{tA^*}v=0\)
+dla wszystkich \(0\le t\le T\).
+Wówczas dla każdej trajektorii
+startującej od zera
+\[
+ v^*x(T)=\int_0^T
+          v^*e^{(T-s)A}Bu(s)
+          \,\mathrm ds=0.
+\]
+Nie można by osiągnąć
+na przykład \(d=v\),
+gdyż \(v^*v>0\).
+Sprzeczność dowodzi (ii).
+\end{proof}
+
+\begin{przyklad}[Gramian ciągły w wymiarze dwa]
+\label{prz:lin25-gramian}
+Niech \(A,B\) będą macierzami
+z Przykładu~\ref{prz:lin25-chain}.
+Ponieważ \(A^2=0\),
+mamy \(e^{tA}=I+tA\),
+a więc
+\(e^{tA}B=(t,1)^{\mathsf T}\).
+Dla dowolnego \(T>0\)
+otrzymujemy
+\[
+ \begin{aligned}
+ W_T&=\int_0^T
+ \begin{pmatrix}t^2&t\\t&1\end{pmatrix}
+ \,\mathrm dt\\
+ &=\begin{pmatrix}
+       T^3/3&T^2/2\\
+       T^2/2&T
+   \end{pmatrix}.
+ \end{aligned}
+\]
+Macierz jest dodatnio określona:
+jej lewy górny element
+jest dodatni, a wyznacznik
+wynosi
+\[
+ \det W_T=\frac{T^4}{3}
+                -\frac{T^4}{4}
+          =\frac{T^4}{12}>0.
+\]
+Stąd sterowalność obowiązuje
+dla każdego, również bardzo
+małego, dodatniego czasu \(T\).
+Nie oznacza to,
+że koszt energii potrzebnej
+do sterowania pozostaje
+ograniczony, gdy \(T\to0\):
+wzór na \(W_T^{-1}\)
+zawiera rosnące potęgi \(T^{-1}\).
+\end{przyklad}
+
+\section{Obserwowalność i jej związek ze sterowalnością}
+\label{sec:lin25-observe}
+
+\begin{definicja}[Macierz obserwowalności]
+\label{def:lin25-observable}
+Dla pary \((C,A)\)
+definiujemy \emph{macierz
+obserwowalności Kalmana}
+oraz \emph{podprzestrzeń
+nieobserwowalną}:
+\[
+ \mathcal O(C,A)=
+ \begin{bmatrix}
+ C\\CA\\CA^2\\\vdots\\CA^{n-1}
+ \end{bmatrix},
+ \qquad
+ \mathcal N(C,A)=\ker\mathcal O(C,A).
+\]
+Parę \((C,A)\)
+nazywamy \emph{obserwowalną},
+jeśli \(\mathcal N(C,A)=\{0\}\),
+równoważnie
+\(\operatorname{rank}\mathcal O(C,A)=n\).
+\end{definicja}
+
+\begin{twierdzenie}[Kryterium obserwowalności dyskretnej]
+\label{thm:lin25-observability}
+Niech \(x_{k+1}=Ax_k\)
+i \(y_k=Cx_k\)
+dla wszystkich \(k\ge0\).
+Następujące warunki
+są równoważne:
+\begin{enumerate}[label=\textup{(\roman*)}]
+ \item para \((C,A)\) jest obserwowalna;
+ \item wektor \(x_0\)
+ jest jednoznacznie wyznaczony
+ przez obserwacje
+ \(y_0,y_1,\ldots,y_{n-1}\);
+ \item jeżeli wszystkie
+ \(y_0,\ldots,y_{n-1}\)
+ są zerowe, to \(x_0=0\);
+ \item jedyny wektor \(x_0\),
+ dla którego \(y_k=0\)
+ dla wszystkich \(k\ge0\),
+ to wektor zerowy.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Z równania stanu wynika
+\(x_k=A^kx_0\),
+a więc
+\(y_k=CA^kx_0\).
+Po ułożeniu pierwszych \(n\)
+wektorów obserwacji
+w jedną kolumnę dostajemy
+\[
+ \begin{bmatrix}
+ y_0\\y_1\\\vdots\\y_{n-1}
+ \end{bmatrix}
+ =\mathcal O(C,A)x_0.
+\]
+Odwzorowanie
+\(x_0\mapsto\mathcal O(C,A)x_0\)
+jest iniektywne dokładnie wtedy,
+gdy jego jądro jest zerowe.
+To dowodzi równoważności
+(i), (ii) i (iii).
+Jeśli (i) zachodzi
+i wszystkie \(y_k\) są zerowe,
+to w szczególności
+pierwszych \(n\) jest zerowych;
+stąd \(x_0=0\) i otrzymujemy (iv).
+Odwrotnie, jeśli
+\(x_0\in\mathcal N(C,A)\),
+to \(CA^kx_0=0\)
+dla \(0\le k<n\).
+Z twierdzenia Cayleya--Hamiltona
+wynika ta sama równość
+dla każdego \(k\ge n\),
+gdyż \(A^k\) jest kombinacją
+potęg \(I,A,\ldots,A^{n-1}\).
+Zatem wszystkie obserwacje
+tego stanu są zerowe.
+Warunek (iv) wymusza
+\(x_0=0\), a więc (i).
+\end{proof}
+
+\begin{lemat}[Niezmienniczość przestrzeni nieobserwowalnej]
+\label{lem:lin25-unobservable-invariant}
+Dla każdej pary \((C,A)\)
+podprzestrzeń \(\mathcal N(C,A)\)
+jest \(A\)-niezmiennicza
+i jest największą
+\(A\)-niezmienniczą podprzestrzenią
+zawartą w \(\ker C\).
+\end{lemat}
+\begin{proof}
+Jeżeli \(x\in\mathcal N(C,A)\),
+to \(CA^kx=0\)
+dla \(k=0,\ldots,n-1\).
+Dla \(Ax\)
+mamy \(CA^k(Ax)=CA^{k+1}x=0\)
+dla \(0\le k<n-1\).
+Także dla \(k=n-1\)
+wyrażenie jest zerowe
+na mocy twierdzenia
+Cayleya--Hamiltona,
+bo \(CA^nx\) jest kombinacją
+\(CA^jx\) dla \(j<n\).
+Zatem \(Ax\in\mathcal N(C,A)\).
+
+Z definicji
+\(\mathcal N(C,A)\subseteq\ker C\).
+Jeśli \(L\subseteq\ker C\)
+jest dowolną \(A\)-niezmienniczą
+podprzestrzenią,
+to dla każdego \(x\in L\)
+wszystkie \(A^kx\)
+należą do \(L\subseteq\ker C\).
+Stąd \(CA^kx=0\)
+dla wszystkich \(k\ge0\),
+czyli \(x\in\mathcal N(C,A)\).
+Otrzymujemy \(L\subseteq\mathcal N(C,A)\).
+\end{proof}
+
+\begin{twierdzenie}[Związek dualny z kryterium Kalmana]
+\label{thm:lin25-duality}
+Dla \(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\)
+i \(C\in\operatorname{Mat}_{p\times n}(\mathbb C)\)
+para \((C,A)\) jest obserwowalna
+dokładnie wtedy, gdy
+para \((A^*,C^*)\)
+jest sterowalna.
+\end{twierdzenie}
+\begin{proof}
+Macierz sterowalności
+pary \((A^*,C^*)\) ma postać
+\[
+ \begin{aligned}
+ \mathcal K(A^*,C^*)
+ &=
+ \begin{bmatrix}
+ C^*&A^*C^*&\cdots&(A^*)^{n-1}C^*
+ \end{bmatrix}\\
+ &=\mathcal O(C,A)^*,
+ \end{aligned}
+\]
+ponieważ
+\((CA^k)^*=(A^*)^kC^*\).
+Macierz i jej sprzężenie
+hermitowskie mają tę samą rangę.
+Dlatego
+\(\operatorname{rank}\mathcal K(A^*,C^*)=n\)
+jest równoważne
+\(\operatorname{rank}\mathcal O(C,A)=n\).
+\end{proof}
+
+\begin{twierdzenie}[Obserwowalność w czasie ciągłym]
+\label{thm:lin25-cont-observe}
+Dla układu
+\(x'(t)=Ax(t)\),
+\(y(t)=Cx(t)\),
+gdzie \(x(0)=x_0\),
+następujące warunki
+są równoważne:
+\begin{enumerate}[label=\textup{(\roman*)}]
+ \item \(\operatorname{rank}\mathcal O(C,A)=n\);
+ \item dla każdego \(T>0\)
+ odwzorowanie
+ \(x_0\mapsto(y(t))_{0\le t\le T}\)
+ jest iniektywne;
+ \item istnieje \(T>0\),
+ dla którego to odwzorowanie
+ jest iniektywne.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Mamy \(y(t)=Ce^{tA}x_0\).
+Jeśli obserwacje dwóch stanów
+początkowych są jednakowe
+na \([0,T]\),
+to dla ich różnicy \(v\)
+zachodzi \(Ce^{tA}v=0\).
+Różniczkując w \(t=0\)
+dla \(k=0,\ldots,n-1\),
+otrzymujemy
+\(CA^kv=0\), czyli
+\(\mathcal O(C,A)v=0\).
+Jeśli (i) zachodzi,
+to \(v=0\);
+dowodzi to (ii).
+Implikacja (ii) \(\Rightarrow\) (iii)
+jest oczywista.
+
+Załóżmy (iii).
+Jeżeli
+\(v\in\mathcal N(C,A)\),
+to z twierdzenia
+Cayleya--Hamiltona
+\(CA^kv=0\)
+dla wszystkich \(k\ge0\).
+Stąd przez szereg wykładniczy
+\(Ce^{tA}v=0\)
+dla każdego \(t\ge0\).
+Iniektywność dla pewnego \(T\)
+wymusza \(v=0\).
+Zatem \(\mathcal N(C,A)=\{0\}\),
+co jest (i).
+\end{proof}
+
+\begin{przyklad}[Sterowalność i obserwowalność to różne własności]
+\label{prz:lin25-dual-examples}
+Niech
+\[
+ A=\begin{pmatrix}0&1\\0&0\end{pmatrix}.
+\]
+Dla \(B=e_2\)
+para \((A,B)\) jest sterowalna,
+bo \(\mathcal K(A,e_2)\)
+ma kolumny \(e_2,e_1\).
+Jednocześnie dla \(C=e_2^{\mathsf T}\)
+mamy
+\(CA=(0,0)\),
+więc
+\[
+ \mathcal O(e_2^{\mathsf T},A)
+ =\begin{pmatrix}0&1\\0&0\end{pmatrix}
+\]
+ma rangę \(1\):
+druga para nie jest obserwowalna.
+
+Z drugiej strony
+dla \(B=e_1\)
+mamy \(AB=0\),
+czyli rangę sterowalności \(1\).
+Dla \(C=e_1^{\mathsf T}\)
+otrzymujemy
+\[
+ \mathcal O(e_1^{\mathsf T},A)
+ =\begin{pmatrix}1&0\\0&1\end{pmatrix},
+\]
+więc para \((e_1^{\mathsf T},A)\)
+jest obserwowalna.
+\end{przyklad}
+
+\section{Spektralne kryterium PBH}
+\label{sec:lin25-pbh}
+
+\begin{twierdzenie}[Kryterium Popowa--Belevitcha--Hautusa]
+\label{thm:lin25-pbh}
+Niech \(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\)
+i \(B\in\operatorname{Mat}_{n\times m}(\mathbb C)\).
+Para \((A,B)\)
+jest sterowalna dokładnie wtedy,
+gdy dla każdego
+\(\lambda\in\mathbb C\)
+zachodzi
+\[
+ \operatorname{rank}
+ \begin{bmatrix}\lambda I_n-A&B\end{bmatrix}=n.
+\]
+Wystarczy sprawdzać wartości
+\(\lambda\in\sigma(A)\).
+Równoważnie nie istnieją
+\(\lambda\in\mathbb C\)
+i niezerowy wiersz
+\(\varphi\in(\mathbb C^n)^*\)
+takie, że
+\[
+ \varphi A=\lambda\varphi,
+ \qquad \varphi B=0.
+\]
+\end{twierdzenie}
+\begin{proof}
+Macierz o \(n\) wierszach
+ma rangę mniejszą od \(n\)
+dokładnie wtedy, gdy istnieje
+niezerowy wiersz \(\varphi\)
+zerujący iloczyn z nią.
+Dla macierzy
+\([\lambda I_n-A\ \ B]\)
+warunki te mają postać
+\(\varphi A=\lambda\varphi\)
+i \(\varphi B=0\).
+Pierwszy z nich oznacza,
+że \(\lambda\) jest wartością
+własną \(A\), bo macierze
+\(A\) i \(A^{\mathsf T}\)
+mają ten sam wielomian
+charakterystyczny.
+Dlatego wystarczy
+sprawdzać \(\sigma(A)\).
+
+Jeśli istnieje taka para
+\((\lambda,\varphi)\),
+to dla każdego \(k\ge0\)
+\[
+ \varphi A^kB
+ =\lambda^k\varphi B=0.
+\]
+Wobec tego
+\(\varphi\mathcal K(A,B)=0\),
+a ponieważ \(\varphi\ne0\),
+ranga \(\mathcal K(A,B)\)
+jest mniejsza od \(n\).
+Para nie jest sterowalna.
+
+Odwrotnie, jeśli
+\(\mathcal R(A,B)\ne\mathbb C^n\),
+to jej anihilator
+\[
+ \mathcal R(A,B)^\circ
+ =\{\varphi\in(\mathbb C^n)^*:
+        \varphi r=0\text{ dla }r\in\mathcal R(A,B)\}
+\]
+jest niezerową przestrzenią
+skończenie wymiarową.
+Z Lematu~\ref{lem:lin25-invariant}
+wynika, że \(\mathcal R(A,B)\)
+jest \(A\)-niezmiennicza.
+Dlatego
+\(\varphi\mapsto\varphi A\)
+zachowuje anihilator:
+dla \(r\in\mathcal R(A,B)\)
+mamy
+\((\varphi A)r=\varphi(Ar)=0\).
+Każdy endomorfizm niezerowej
+przestrzeni zespolonej
+ma wektor własny.
+Istnieją zatem
+\(\varphi\ne0\) w anihilatorze
+i \(\lambda\in\mathbb C\)
+takie, że
+\(\varphi A=\lambda\varphi\).
+Ponieważ \(\operatorname{im}B
+ \subseteq\mathcal R(A,B)\),
+mamy też \(\varphi B=0\).
+Otrzymaliśmy awarię
+warunku rangowego PBH,
+co dowodzi twierdzenia.
+\end{proof}
+
+\begin{wniosek}[PBH dla obserwowalności]
+\label{cor:lin25-pbh-observe}
+Dla
+\(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\)
+i
+\(C\in\operatorname{Mat}_{p\times n}(\mathbb C)\)
+para \((C,A)\)
+jest obserwowalna dokładnie wtedy,
+gdy dla każdego
+\(\lambda\in\sigma(A)\)
+zachodzi
+\[
+ \operatorname{rank}
+ \begin{bmatrix}
+ \lambda I_n-A\\C
+ \end{bmatrix}=n.
+\]
+Równoważnie nie istnieje
+niezerowy \(v\in\mathbb C^n\)
+spełniający
+\(Av=\lambda v\)
+i \(Cv=0\).
+\end{wniosek}
+\begin{proof}
+Macierz z tezy ma jądro
+\(\ker(\lambda I_n-A)\cap\ker C\).
+Jej ranga wynosi \(n\)
+dokładnie wtedy, gdy
+przecięcie jest zerowe.
+Załóżmy, że istnieje
+niezerowy \(v\)
+z \(Av=\lambda v\) i \(Cv=0\).
+Wtedy \(CA^kv=\lambda^kCv=0\)
+dla każdego \(k\),
+więc \(v\in\mathcal N(C,A)\);
+para nie jest obserwowalna.
+
+Odwrotnie, jeśli
+\(\mathcal N(C,A)\ne\{0\}\),
+to z
+Lematu~\ref{lem:lin25-unobservable-invariant}
+jest ona niezerową
+\(A\)-niezmienniczą
+podprzestrzenią.
+Ograniczenie \(A|_{\mathcal N}\)
+ma wektor własny \(v\ne0\).
+Ponieważ
+\(\mathcal N(C,A)\subseteq\ker C\),
+otrzymujemy \(Cv=0\),
+a zatem brak wymaganego
+warunku rangi.
+\end{proof}
+
+\begin{przyklad}[Zawodność testu opartego tylko na wyznaczniku \(A\)]
+\label{prz:lin25-pbh}
+Niech
+\[
+ A=\operatorname{diag}(1,2),
+ \qquad B=\begin{pmatrix}1\\0\end{pmatrix}.
+\]
+Macierz \(A\) jest odwracalna,
+ale
+\[
+ \mathcal K(A,B)
+ =\begin{pmatrix}1&1\\0&0\end{pmatrix}
+\]
+ma rangę \(1\).
+Dla \(\lambda=2\)
+wiersz \(\varphi=e_2^{\mathsf T}\)
+spełnia
+\(\varphi A=2\varphi\)
+i \(\varphi B=0\).
+Zatem kryterium PBH nie jest
+spełnione. Odwracalność \(A\)
+nie implikuje sterowalności,
+bo sterowanie nie działa
+na drugi kierunek własny.
+\end{przyklad}
+
+\section{Rozkład Kalmana}
+\label{sec:lin25-kalman-decomposition}
+
+\begin{twierdzenie}[Rozkład na część osiągalną i nieosiągalną]
+\label{thm:lin25-reachable-split}
+Niech
+\(\mathcal R=\mathcal R(A,B)\)
+i \(r=\dim_{\mathbb C}\mathcal R\).
+Istnieje baza przestrzeni
+\(\mathbb C^n\), której pierwsze
+\(r\) wektorów tworzy bazę
+\(\mathcal R\), i w której
+macierze układu mają postać
+\[
+ A=\begin{pmatrix}
+ A_{\mathrm r}&D\\0&A_{\mathrm u}
+ \end{pmatrix},
+ \qquad
+ B=\begin{pmatrix}B_{\mathrm r}\\0\end{pmatrix}.
+\]
+Występujące bloki mają wymiary
+\(r\times r\), \(r\times(n-r)\),
+\((n-r)\times(n-r)\)
+oraz \(r\times m\).
+Para \((A_{\mathrm r},B_{\mathrm r})\)
+jest sterowalna
+w przestrzeni \(\mathbb C^r\).
+Operator \(A_{\mathrm u}\)
+jest macierzą endomorfizmu
+indukowanego przez \(A\)
+na ilorazie
+\(\mathbb C^n/\mathcal R\);
+jego podobieństwa, a więc
+i wartości własne, nie zależą
+od wyboru dopełnienia.
+
+Jeżeli w układzie
+\(x'=Ax+Bu\) albo
+\(x_{k+1}=Ax_k+Bu_k\)
+zastosujemy liniowe
+sprzężenie \(u=-Kx\),
+to indukowany operator
+zamkniętej pętli na ilorazie
+\(\mathbb C^n/\mathcal R\)
+nadal jest równy
+operatorowi indukowanemu
+przez \(A\).
+\end{twierdzenie}
+\begin{proof}
+Z
+Lematu~\ref{lem:lin25-invariant}
+\(\mathcal R\) jest
+\(A\)-niezmiennicza
+i zawiera \(\operatorname{im}B\).
+Wybierzmy bazę \(\mathcal R\)
+i rozszerzmy ją do bazy
+całej przestrzeni.
+Niezmienniczość
+oznacza, że obrazy pierwszych
+\(r\) wektorów bazowych
+nie mają współrzędnych
+w ostatnich \(n-r\) kierunkach,
+co daje lewy dolny blok
+zerowy w macierzy \(A\).
+Warunek
+\(\operatorname{im}B\subseteq\mathcal R\)
+daje dolny blok zerowy macierzy \(B\).
+
+Dla każdego \(k\ge0\)
+wektory \(A^kBu\) należą
+do \(\mathcal R\) i mają
+w wybranej bazie współrzędne
+\(((A_{\mathrm r})^kB_{\mathrm r}u,0)\).
+Ponieważ ich suma liniowa
+generuje \(\mathcal R\),
+pierwsze \(r\) współrzędnych
+generują \(\mathbb C^r\).
+Stąd
+\(\operatorname{rank}
+ \mathcal K(A_{\mathrm r},B_{\mathrm r})=r\)
+na mocy
+Lematu~\ref{lem:lin25-invariant}
+zastosowanego w wymiarze \(r\).
+
+Na ilorazie
+\(\mathbb C^n/\mathcal R\)
+odwzorowanie
+\([x]\mapsto[Ax]\)
+jest dobrze określone,
+bo \(\mathcal R\)
+jest \(A\)-niezmiennicza.
+W wybranej bazie
+jego macierzą jest
+\(A_{\mathrm u}\).
+Inne dopełnienie zmienia
+jedynie bazę ilorazu,
+stąd podobieństwo.
+
+Jeśli \(u=-Kx\),
+nową macierzą stanu
+jest \(A-BK\).
+Ponieważ \(\operatorname{im}BK
+ \subseteq\operatorname{im}B
+ \subseteq\mathcal R\),
+dla dowolnego \(x\)
+mamy
+\([(A-BK)x]=[Ax]\)
+w ilorazie.
+Wynik jest jednakowy
+dla czasu ciągłego
+i dyskretnego.
+Przypadki \(r=0\) i \(r=n\)
+rozumiemy przez pominięcie
+pustych bloków.
+\end{proof}
+
+\begin{twierdzenie}[Rozkład przestrzeni według sterowalności i obserwowalności]
+\label{thm:lin25-kalman-decomposition}
+Niech
+\(\mathcal R=\mathcal R(A,B)\)
+i \(\mathcal N=\mathcal N(C,A)\).
+Istnieją podprzestrzenie
+\(U,R_0,N_0,W\subseteq\mathbb C^n\)
+takie, że
+\[
+ \begin{gathered}
+ U=\mathcal R\cap\mathcal N,\qquad
+ \mathcal R=U\oplus R_0,\qquad
+ \mathcal N=U\oplus N_0,\\
+ \mathbb C^n
+ =U\oplus R_0\oplus N_0\oplus W,
+ \end{gathered}
+\]
+oraz w bazie dostosowanej
+do tego rozkładu
+macierze mają postać
+\[
+ A=\begin{pmatrix}
+ A_U&*&*&*\\
+ 0&A_{R_0}&0&*\\
+ 0&0&A_{N_0}&*\\
+ 0&0&0&A_W
+ \end{pmatrix},
+ \quad
+ B=\begin{pmatrix}B_U\\B_{R_0}\\0\\0\end{pmatrix},
+ \quad
+ C=\begin{pmatrix}0&C_{R_0}&0&C_W\end{pmatrix}.
+\]
+Każda gwiazdka oznacza
+blok odpowiedniego rozmiaru,
+który nie musi być zerowy.
+Składniki odpowiadają
+kolejno części osiągalnej
+nieobserwowalnej,
+osiągalnej obserwowalnej,
+nieosiągalnej nieobserwowalnej
+i nieosiągalnej obserwowalnej,
+z interpretacją odpowiednich
+podilorazów.
+\end{twierdzenie}
+\begin{proof}
+Z Lematu~\ref{lem:lin25-invariant}
+\(\mathcal R\) jest
+\(A\)-niezmiennicza.
+Z
+Lematu~\ref{lem:lin25-unobservable-invariant}
+to samo zachodzi dla
+\(\mathcal N\).
+Stąd ich przecięcie
+\(U\) i suma
+\(\mathcal R+\mathcal N\)
+również są \(A\)-niezmiennicze.
+
+Wybierzmy bazę \(U\).
+Rozszerzmy ją osobno
+do bazy \(\mathcal R\)
+oraz do bazy \(\mathcal N\).
+Niech \(R_0\) i \(N_0\)
+będą przestrzeniami
+generowanymi przez dodane
+wektory. Z faktu
+\(\mathcal R\cap\mathcal N=U\)
+wynika, że
+\(U\oplus R_0\oplus N_0
+ =\mathcal R+\mathcal N\)
+jest sumą prostą.
+Uzupełnijmy jej bazę
+do bazy całej przestrzeni,
+otrzymując \(W\).
+
+Rozpatrzmy kolumny
+macierzy \(A\)
+w kolejności
+\(U,R_0,N_0,W\).
+Ponieważ \(A(U)\subseteq U\),
+pierwszy blok kolumn
+ma niezerowe współczynniki
+wyłącznie w pierwszym
+bloku wierszy.
+Z \(A(\mathcal R)\subseteq\mathcal R\)
+wynika, że kolumny
+odpowiadające \(R_0\)
+mogą mieć niezerowe składowe
+wyłącznie w \(U\) i \(R_0\).
+Podobnie kolumny \(N_0\)
+mogą mieć niezerowe składowe
+wyłącznie w \(U\) i \(N_0\).
+Dla \(W\) nie ma ograniczenia.
+Daje to wskazaną postać \(A\).
+
+Obraz \(B\) leży w \(\mathcal R\),
+więc jego współrzędne
+w \(N_0,W\) są zerowe.
+Natomiast \(C\) znika
+na całej \(\mathcal N\),
+a więc na \(U\) i \(N_0\);
+pozostałe bloki nie muszą
+się zerować. Otrzymujemy
+podane postacie \(B,C\).
+
+Nazwy czterech części
+należy rozumieć przez
+ich rolę w filtracji
+\[
+ 0\subseteq U
+ \subseteq\mathcal R,\mathcal N
+ \subseteq\mathcal R+\mathcal N
+ \subseteq\mathbb C^n;
+\]
+wybrane dopełnienia
+nie muszą same być
+\(A\)-niezmiennicze.
+Na przykład obserwowalna
+część osiągalna jest
+reprezentowana przez
+\(\mathcal R/U\),
+nie przez wyróżnioną
+kanonicznie podprzestrzeń \(R_0\).
+\end{proof}
+
+\begin{przyklad}[Rozkład z niesterowalnym, stabilnym kierunkiem]
+\label{prz:lin25-reachable-split}
+Niech
+\[
+ A=\begin{pmatrix}1&0\\0&-2\end{pmatrix},
+ \qquad B=\begin{pmatrix}1\\0\end{pmatrix},
+ \qquad C=\begin{pmatrix}1&0\end{pmatrix}.
+\]
+Mamy
+\(\mathcal R=\operatorname{span}(e_1)\)
+oraz
+\(\mathcal N=\operatorname{span}(e_2)\).
+Rozkład Kalmana ma zatem
+dwa niezerowe składniki:
+\(R_0=\operatorname{span}(e_1)\)
+i \(N_0=\operatorname{span}(e_2)\).
+Sterowanie działa wyłącznie
+na pierwszą współrzędną,
+a obserwacja nie widzi drugiej.
+Stan w drugim kierunku
+zanika jednak samoczynnie
+w czasie ciągłym, gdyż
+\(x_2'(t)=-2x_2(t)\).
+Później zobaczymy, że
+ta para jest stabilizowalna
+i wykrywalna, mimo braku
+pełnej sterowalności
+i obserwowalności.
+\end{przyklad}
+
+\section{Rozmieszczanie stabilnych wartości własnych}
+\label{sec:lin25-feedback}
+
+\begin{lemat}[Konstrukcja stabilizującego sprzężenia dla pary sterowalnej]
+\label{lem:lin25-feedback-placement}
+Niech
+\(H\in\operatorname{Mat}_{r\times r}(\mathbb C)\)
+i \(D\in\operatorname{Mat}_{r\times m}(\mathbb C)\),
+gdzie \(r,m\ge1\),
+a para \((H,D)\)
+jest sterowalna.
+Niech \(\Omega\subseteq\mathbb C\)
+będzie niepustym zbiorem
+otwartym.
+Wówczas istnieją
+\emph{różne} punkty
+\(\mu_1,\ldots,\mu_r
+ \in\Omega\setminus\sigma(H)\)
+i macierz
+\(F\in\operatorname{Mat}_{m\times r}(\mathbb C)\)
+takie, że wartościami własnymi
+macierzy \(H-DF\)
+są dokładnie
+\(\mu_1,\ldots,\mu_r\).
+\end{lemat}
+\begin{proof}
+Dla
+\(\mu\notin\sigma(H)\)
+oznaczmy
+\[
+ E_\mu=\operatorname{im}(H-\mu I_r)^{-1}D
+ \subseteq\mathbb C^r.
+\]
+Wykażemy, że dla
+\emph{każdej} właściwej
+podprzestrzeni
+\(W\subsetneq\mathbb C^r\)
+oraz dowolnego skończonego
+zbioru \(S\subseteq\mathbb C\)
+można wybrać
+\(\mu\in\Omega\setminus
+ (\sigma(H)\cup S)\)
+takie, że
+\(E_\mu\not\subseteq W\).
+
+Gdyby tak nie było,
+to wszystkie \(E_\mu\)
+dla \(\mu\) z niepustego
+otwartego zbioru
+\(\Omega\setminus(\sigma(H)\cup S)\)
+leżałyby w \(W\).
+Wybierzmy niezerowy
+funkcjonał liniowy
+\(\varphi\in(\mathbb C^r)^*\)
+zerujący \(W\);
+istnieje on, bo \(W\)
+jest właściwa.
+Dla każdego takiego \(\mu\)
+otrzymalibyśmy
+\[
+ \varphi(H-\mu I_r)^{-1}D=0.
+\]
+Każda współrzędna tego
+wiersza jest funkcją wymierną
+zmiennej \(\mu\), gdyż
+\[
+ (H-\mu I_r)^{-1}
+ =\frac{\operatorname{adj}(H-\mu I_r)}
+         {\det(H-\mu I_r)}.
+\]
+Funkcja wymierna znikająca
+na niepustym otwartym zbiorze
+jest tożsamościowo zerowa:
+jej licznik jest wielomianem
+o nieskończenie wielu zerach.
+Dla dostatecznie dużych
+\(|\mu|\) możemy rozwinąć
+odwrotność w szereg geometryczny:
+\[
+ (H-\mu I_r)^{-1}
+ =-\sum_{k=0}^{\infty}
+      \mu^{-k-1}H^k.
+\]
+Z równości
+\(\varphi(H-\mu I_r)^{-1}D=0\)
+wynika przez jednoznaczność
+współczynników zbieżnego
+szeregu potęgowego
+w \(1/\mu\),
+że \(\varphi H^kD=0\)
+dla wszystkich \(k\ge0\).
+W szczególności
+\(\varphi\mathcal K(H,D)=0\),
+co przeczy sterowalności
+pary \((H,D)\).
+Zatem wskazany wybór
+\(\mu\) istnieje.
+
+Zaczynamy od \(W_0=\{0\}\).
+Stosując powyższą własność
+indukcyjnie, wybieramy
+różne
+\(\mu_1,\ldots,\mu_r\)
+z \(\Omega\setminus\sigma(H)\)
+oraz wektory
+\(u_j\in\mathbb C^m\)
+takie, że
+\[
+ v_j=(H-\mu_j I_r)^{-1}Du_j
+ \notin\operatorname{span}
+       (v_1,\ldots,v_{j-1})
+ \quad(1\le j\le r).
+\]
+Dla \(j=1\) prawa strona
+oznacza \(\{0\}\).
+Wektory \(v_1,\ldots,v_r\)
+są liniowo niezależne,
+a więc tworzą bazę
+\(\mathbb C^r\).
+Określmy odwzorowanie
+liniowe \(F\)
+jednoznacznie przez
+\(Fv_j=u_j\).
+Z definicji \(v_j\)
+wynika
+\[
+ Hv_j-\mu_jv_j=Du_j,
+ \qquad
+ (H-DF)v_j=\mu_jv_j.
+\]
+Zatem w bazie
+\(v_1,\ldots,v_r\)
+macierz \(H-DF\)
+jest diagonalna
+z elementami
+\(\mu_1,\ldots,\mu_r\).
+To kończy dowód.
+\end{proof}
+
+\begin{uwaga}[Co zostało rzeczywiście wykazane]
+\label{rem:lin25-poles}
+Lemat~\ref{lem:lin25-feedback-placement}
+pozwala \emph{wybrać}
+różne wartości własne
+sprzężenia w dowolnym
+otwartym obszarze \(\Omega\).
+Nie stwierdza,
+że dowolny z góry zadany
+ciąg wartości własnych
+można uzyskać
+przez to samo sprzężenie:
+pełne twierdzenie
+o rozmieszczaniu biegunów
+jest silniejszym wynikiem.
+Do udowodnienia
+stabilizowalności
+wystarczy podana konstrukcja.
+\end{uwaga}
+
+\section{Stabilizowalność}
+\label{sec:lin25-stabilizability}
+
+\begin{definicja}[Stabilizowalność w obu rodzajach czasu]
+\label{def:lin25-stabilizability}
+Parę \((A,B)\)
+nazywamy \emph{stabilizowalną
+w czasie ciągłym},
+jeżeli istnieje
+\(K\in\operatorname{Mat}_{m\times n}(\mathbb C)\)
+takie, że każda wartość własna
+\(A-BK\) ma ujemną część
+rzeczywistą.
+Nazywamy ją
+\emph{stabilizowalną
+w czasie dyskretnym},
+jeżeli istnieje taka macierz \(K\),
+dla której
+\(\rho(A-BK)<1\).
+W obu definicjach \(K\)
+jest stałym sprzężeniem
+zwrotnym od stanu:
+\(u=-Kx\).
+\end{definicja}
+
+\begin{twierdzenie}[Kryterium stabilizowalności]
+\label{thm:lin25-stabilizability}
+Dla dowolnej pary
+\(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\),
+\(B\in\operatorname{Mat}_{n\times m}(\mathbb C)\)
+następujące warunki
+są równoważne:
+\begin{enumerate}[label=\textup{(\roman*)}]
+ \item \((A,B)\)
+ jest stabilizowalna
+ w czasie ciągłym;
+ \item dla każdej wartości własnej
+ \(\lambda\in\sigma(A)\)
+ z \(\operatorname{Re}\lambda\ge0\)
+ zachodzi
+ \[
+  \operatorname{rank}
+  \begin{bmatrix}\lambda I_n-A&B\end{bmatrix}=n;
+ \]
+ \item w rozkładzie
+ z Twierdzenia~\ref{thm:lin25-reachable-split}
+ wszystkie wartości własne
+ \(A_{\mathrm u}\)
+ mają ujemną część rzeczywistą.
+\end{enumerate}
+Analogicznie następujące
+warunki są równoważne:
+\begin{enumerate}[label=\textup{(\roman*)},
+                  start=4]
+ \item \((A,B)\)
+ jest stabilizowalna
+ w czasie dyskretnym;
+ \item warunek rangi
+ \[
+  \operatorname{rank}
+  \begin{bmatrix}\lambda I_n-A&B\end{bmatrix}=n
+ \]
+ zachodzi dla każdego
+ \(\lambda\in\sigma(A)\)
+ z \(|\lambda|\ge1\);
+ \item w rozkładzie
+ z Twierdzenia~\ref{thm:lin25-reachable-split}
+ wszystkie wartości własne
+ \(A_{\mathrm u}\)
+ mają moduł mniejszy niż \(1\).
+\end{enumerate}
+Jeśli \((A,B)\) jest sterowalna,
+to jest stabilizowalna
+w obu rodzajach czasu.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy rozkład z
+Twierdzenia~\ref{thm:lin25-reachable-split}:
+\[
+ A=\begin{pmatrix}A_{\mathrm r}&D\\0&A_{\mathrm u}\end{pmatrix},
+ \qquad
+ B=\begin{pmatrix}B_{\mathrm r}\\0\end{pmatrix}.
+\]
+Wykazaliśmy tam, że
+\((A_{\mathrm r},B_{\mathrm r})\)
+jest sterowalna.
+Pokażemy najpierw,
+że dla każdej
+\(\lambda\in\mathbb C\)
+\[
+ \operatorname{rank}
+ \begin{bmatrix}\lambda I_n-A&B\end{bmatrix}<n
+ \quad\Longleftrightarrow\quad
+ \lambda\in\sigma(A_{\mathrm u}).
+\]
+Jeśli ranga po lewej
+jest mniejsza od \(n\),
+to na mocy
+Twierdzenia~\ref{thm:lin25-pbh}
+istnieje niezerowy wiersz
+\(\varphi=(\varphi_{\mathrm r},
+\varphi_{\mathrm u})\)
+taki, że
+\(\varphi A=\lambda\varphi\)
+i \(\varphi B=0\).
+Porównując pierwsze
+\(r\) kolumn, otrzymujemy
+\[
+ \varphi_{\mathrm r}A_{\mathrm r}
+  =\lambda\varphi_{\mathrm r},
+ \qquad
+ \varphi_{\mathrm r}B_{\mathrm r}=0.
+\]
+Sterowalność części osiągalnej
+i kryterium PBH wymuszają
+\(\varphi_{\mathrm r}=0\).
+Ponieważ \(\varphi\ne0\),
+otrzymujemy
+\(\varphi_{\mathrm u}\ne0\).
+Porównanie pozostałych kolumn
+daje
+\(\varphi_{\mathrm u}A_{\mathrm u}
+ =\lambda\varphi_{\mathrm u}\),
+czyli \(\lambda\in\sigma(A_{\mathrm u})\).
+
+Odwrotnie, jeśli
+\(\lambda\) jest wartością własną
+\(A_{\mathrm u}\),
+to istnieje niezerowy
+lewy wektor własny
+\(\psi A_{\mathrm u}
+ =\lambda\psi\).
+Wiersz \(\varphi=(0,\psi)\)
+spełnia
+\(\varphi A=\lambda\varphi\)
+oraz \(\varphi B=0\);
+a więc ranga jest
+mniejsza od \(n\).
+Dowiedliśmy równoważności.
+W przypadkach \(r=0\) i \(r=n\)
+rozumowanie dotyczy
+odpowiednio pełnego operatora
+lub pustego widma ilorazu.
+
+Jeżeli istnieje sprzężenie
+\(K\), dla którego \(A-BK\)
+jest stabilna w odpowiednim
+rodzaju czasu, to
+z
+Twierdzenia~\ref{thm:lin25-reachable-split}
+operator indukowany
+przez \(A-BK\) na ilorazie
+\(\mathbb C^n/\mathcal R\)
+jest równy operatorowi
+indukowanemu przez \(A\).
+W odpowiedniej bazie
+macierz zamkniętej pętli
+ma postać górnotrójkątną
+z diagonalnym blokiem
+\(A_{\mathrm u}\).
+Jej wielomian
+charakterystyczny jest
+iloczynem wielomianów
+bloków diagonalnych,
+więc każde
+\(\lambda\in\sigma(A_{\mathrm u})\)
+musi należeć do
+obszaru stabilności.
+Dowodzi to (i) \(\Rightarrow\) (iii)
+oraz (iv) \(\Rightarrow\) (vi).
+
+Załóżmy (iii).
+Jeśli \(r>0\),
+zastosujmy
+Lemat~\ref{lem:lin25-feedback-placement}
+do sterowalnej pary
+\((A_{\mathrm r},B_{\mathrm r})\)
+oraz otwartego obszaru
+\(\Omega_{\mathrm c}
+ =\{\mu\in\mathbb C:
+           \operatorname{Re}\mu<0\}\).
+Otrzymujemy macierz \(F\)
+taką, że wszystkie wartości
+własne \(A_{\mathrm r}-B_{\mathrm r}F\)
+mają ujemne części rzeczywiste.
+Jeśli \(r=0\), ten krok pomijamy.
+W bazie rozkładu Kalmana
+wybierzmy sprzężenie
+\(K=(F\;\;0)\).
+Wówczas
+\[
+ A-BK=
+ \begin{pmatrix}
+ A_{\mathrm r}-B_{\mathrm r}F&D\\
+ 0&A_{\mathrm u}
+ \end{pmatrix}.
+\]
+Każda wartość własna
+obu bloków diagonalnych
+ma ujemną część rzeczywistą,
+więc \(A-BK\) jest stabilna
+w czasie ciągłym.
+Dowodzi to (iii) \(\Rightarrow\) (i).
+
+Analogicznie,
+jeśli zachodzi (vi),
+zastosujmy ten sam lemat
+z obszarem
+\(\Omega_{\mathrm d}
+ =\{\mu\in\mathbb C:|\mu|<1\}\).
+Otrzymamy
+\(\rho(A_{\mathrm r}-B_{\mathrm r}F)<1\)
+i dzięki górnotrójkątnej
+postaci zamkniętej pętli
+\(\rho(A-BK)<1\).
+Zatem (vi) \(\Rightarrow\) (iv).
+
+Wykazana na początku dowodu
+równoważność awarii PBH
+i \(\lambda\in\sigma(A_{\mathrm u})\)
+daje jednocześnie
+(ii) \(\Leftrightarrow\) (iii)
+i (v) \(\Leftrightarrow\) (vi).
+Jeśli para jest sterowalna,
+to \(\mathcal R=\mathbb C^n\);
+operator na zerowym ilorazie
+nie ma wartości własnych,
+więc (iii) i (vi)
+są spełnione automatycznie.
+\end{proof}
+
+\begin{przyklad}[Stabilizowalność bez sterowalności]
+\label{prz:lin25-stabilizable}
+Niech
+\[
+ A=\begin{pmatrix}1&0\\0&-2\end{pmatrix},
+ \qquad B=\begin{pmatrix}1\\0\end{pmatrix}.
+\]
+W Przykładzie~\ref{prz:lin25-reachable-split}
+wykazaliśmy, że
+\(\mathcal R=\operatorname{span}(e_1)\).
+Macierz na nieosiągalnym
+ilorazie jest skalarna
+\(A_{\mathrm u}=(-2)\),
+więc para jest stabilizowalna
+w czasie ciągłym.
+Rzeczywiście wybór
+\(K=(3\;\;0)\)
+daje
+\[
+ A-BK=\operatorname{diag}(-2,-2),
+\]
+której obie wartości własne
+mają ujemne części rzeczywiste.
+
+Nie jest to jednak
+stabilizowalność w czasie
+dyskretnym przy tym samym \(A\):
+nieosiągalna wartość własna
+\(-2\) ma moduł \(2>1\).
+Żadna macierz \(K\)
+nie może przenieść tej
+wartości własnej do dysku
+jednostkowego.
+Różnica między stabilnością
+ciągłą a dyskretną
+jest tu istotna.
+\end{przyklad}
+
+\begin{przyklad}[Jednoczesna porażka obu kryteriów]
+\label{prz:lin25-not-stabilizable}
+Dla
+\[
+ A=\operatorname{diag}(1,2),
+ \qquad B=e_1
+\]
+nieosiągalny kierunek \(e_2\)
+ma wartość własną \(2\).
+Dla dowolnego
+\(K=(k_1\;\;k_2)\)
+macierz
+\[
+ A-BK=
+ \begin{pmatrix}1-k_1&-k_2\\0&2\end{pmatrix}
+\]
+ma nadal wartość własną \(2\).
+Zatem para nie jest
+stabilizowalna ani w czasie
+ciągłym, ani w dyskretnym.
+Nie pomaga nawet pełna
+swoboda doboru obu
+współczynników \(K\):
+sterowanie nie zmienia
+dynamiki ilorazu.
+\end{przyklad}
+
+\section{Wykrywalność}
+\label{sec:lin25-detectability}
+
+\begin{definicja}[Wykrywalność]
+\label{def:lin25-detectability}
+Dla pary \((C,A)\)
+mówimy o \emph{wykrywalności
+w czasie ciągłym},
+jeśli istnieje
+\(L\in\operatorname{Mat}_{n\times p}(\mathbb C)\)
+takie, że
+\(A-LC\) ma wszystkie
+wartości własne
+o ujemnych częściach rzeczywistych.
+Para jest \emph{wykrywalna
+w czasie dyskretnym},
+jeśli istnieje takie \(L\),
+dla którego \(\rho(A-LC)<1\).
+Macierz \(L\) nazywamy
+\emph{wzmocnieniem obserwatora}.
+\end{definicja}
+
+\begin{twierdzenie}[Spektralne kryteria wykrywalności]
+\label{thm:lin25-detectability}
+Para
+\(C\in\operatorname{Mat}_{p\times n}(\mathbb C)\),
+\(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\)
+jest wykrywalna w czasie ciągłym
+dokładnie wtedy, gdy
+dla każdej wartości własnej
+\(\lambda\in\sigma(A)\)
+z \(\operatorname{Re}\lambda\ge0\)
+zachodzi
+\[
+ \operatorname{rank}
+ \begin{bmatrix}\lambda I_n-A\\C\end{bmatrix}=n.
+\]
+Jest wykrywalna
+w czasie dyskretnym
+dokładnie wtedy, gdy
+ten sam warunek zachodzi
+dla wszystkich
+\(\lambda\in\sigma(A)\)
+z \(|\lambda|\ge1\).
+Każda para obserwowalna
+jest wykrywalna
+w obu rodzajach czasu.
+\end{twierdzenie}
+\begin{proof}
+Z
+Twierdzenia~\ref{thm:lin25-duality}
+para \((C,A)\)
+jest obserwowalna
+dokładnie wtedy, gdy
+para \((A^*,C^*)\)
+jest sterowalna.
+Tę samą operację sprzężenia
+zastosujemy do stabilizowalności.
+Dla dowolnego
+\(L\in\operatorname{Mat}_{n\times p}(\mathbb C)\)
+mamy
+\[
+ (A-LC)^*=A^*-C^*L^*.
+\]
+Wartości własne
+macierzy sprzężonej
+są sprzężeniami zespolonymi
+wartości własnych
+macierzy wyjściowej.
+Dlatego \(A-LC\)
+jest stabilna w czasie
+ciągłym lub dyskretnym
+dokładnie wtedy, gdy
+odpowiednio stabilna
+jest \(A^*-C^*L^*\).
+Wobec tego wykrywalność
+\((C,A)\) jest równoważna
+stabilizowalności
+\((A^*,C^*)\).
+
+Z
+Twierdzenia~\ref{thm:lin25-stabilizability}
+warunkiem tej ostatniej
+jest pełna ranga
+\[
+ \begin{bmatrix}
+ \overline{\lambda}I_n-A^*&C^*
+ \end{bmatrix}
+\]
+dla każdej wartości własnej
+\(\overline{\lambda}\in\sigma(A^*)\),
+której część rzeczywista
+jest nieujemna
+lub której moduł
+jest co najmniej \(1\).
+Po sprzężeniu całej macierzy
+otrzymujemy pionową
+macierz
+\(\left[\begin{smallmatrix}
+ \lambda I_n-A\\C
+ \end{smallmatrix}\right]\).
+Macierz i jej sprzężenie
+hermitowskie mają tę samą rangę,
+więc otrzymujemy dokładnie
+warunki z tezy.
+Na koniec z
+Wniosku~\ref{cor:lin25-pbh-observe}
+para obserwowalna
+spełnia warunek rangowy
+dla wszystkich
+wartości własnych,
+w szczególności
+dla niestabilnych.
+\end{proof}
+
+\begin{przyklad}[Niewidoczny, ale stabilny stan]
+\label{prz:lin25-detectable}
+Dla
+\[
+ A=\operatorname{diag}(1,-2),
+ \qquad C=\begin{pmatrix}1&0\end{pmatrix}
+\]
+podprzestrzeń nieobserwowalna
+jest równa
+\(\operatorname{span}(e_2)\),
+bo \(\mathcal O(C,A)\)
+ma rangę \(1\).
+Nieobserwowalna wartość
+własna \(-2\)
+jest stabilna w czasie ciągłym.
+Zatem para jest wykrywalna
+w czasie ciągłym.
+Na przykład dla
+\(L=(3,0)^{\mathsf T}\)
+otrzymujemy
+\(A-LC=\operatorname{diag}(-2,-2)\).
+
+W czasie dyskretnym
+wartość własna \(-2\)
+jest niestabilna.
+Żadne \(L\)
+nie może jej przesunąć:
+\[
+ A-LC=
+ \begin{pmatrix}1-l_1&0\\-l_2&-2\end{pmatrix}
+\]
+zawsze ma wartość własną \(-2\).
+Wykrywalność nie zachodzi
+w tym rodzaju czasu.
+\end{przyklad}
+
+\begin{stwierdzenie}[Dynamika błędu obserwatora]
+\label{prop:lin25-observer}
+Niech \(u(t)\)
+będzie ustalonym
+przedziałami ciągłym
+sterowaniem, a stan
+układu ciągłego
+niech spełnia
+\(x'=Ax+Bu\), \(y=Cx\).
+Dla dowolnej macierzy
+\(L\in\operatorname{Mat}_{n\times p}(\mathbb C)\)
+rozważmy obserwator
+\[
+ \widehat x'
+ =A\widehat x+Bu
+  +L(y-C\widehat x).
+\]
+Błąd \(e=x-\widehat x\)
+spełnia równanie
+\(e'=(A-LC)e\).
+Jeżeli \(A-LC\)
+jest spektralnie stabilna
+w czasie ciągłym,
+to \(e(t)\to0\)
+wykładniczo dla każdego
+początkowego błędu.
+
+W czasie dyskretnym,
+przy \(x_{k+1}=Ax_k+Bu_k\),
+\(y_k=Cx_k\) oraz
+\[
+ \widehat x_{k+1}
+ =A\widehat x_k+Bu_k
+  +L(y_k-C\widehat x_k),
+\]
+otrzymujemy
+\(e_{k+1}=(A-LC)e_k\);
+jeżeli \(\rho(A-LC)<1\),
+to \(e_k\to0\) geometrycznie.
+\end{stwierdzenie}
+\begin{proof}
+Odejmując równanie obserwatora
+od równania stanu,
+otrzymujemy
+\[
+ \begin{aligned}
+ e'
+ &=Ax+Bu-
+    (A\widehat x+Bu+LCx-LC\widehat x)\\
+ &=(A-LC)(x-\widehat x)
+ =(A-LC)e.
+ \end{aligned}
+\]
+Z
+Rozdziału~\ref{ch:lin22-sylvester}
+wynika, że jeśli każda wartość
+własna \(A-LC\) ma ujemną
+część rzeczywistą, to macierz
+\(e^{t(A-LC)}\)
+zanika wykładniczo;
+a więc
+\(e(t)=e^{t(A-LC)}e(0)\to0\).
+W czasie dyskretnym
+tę samą operację odejmowania
+wykonujemy bez pochodnych:
+\[
+ e_{k+1}
+ =Ax_k+Bu_k-
+ (A\widehat x_k+Bu_k+LCx_k-LC\widehat x_k)
+ =(A-LC)e_k.
+\]
+Z
+Lematu~\ref{lem:lin23-powers}
+otrzymujemy
+\(e_k=(A-LC)^ke_0\to0\)
+i oszacowanie geometryczne.
+\end{proof}
+
+\section{Energia sterowania i gramian dyskretny}
+\label{sec:lin25-discrete-gramian}
+
+\begin{stwierdzenie}[Gramian na skończonym horyzoncie]
+\label{prop:lin25-discrete-gramian}
+Niech \(N\ge1\) będzie
+liczbą całkowitą.
+Dla pary \((A,B)\)
+określmy
+\[
+ W_N^{\mathrm d}=
+ \sum_{j=0}^{N-1}A^jBB^*(A^*)^j.
+\]
+Jest to macierz hermitowska
+i nieujemnie określona.
+Dla każdego \(N\)
+zachodzi
+\[
+ W_N^{\mathrm d}=
+ \mathcal K_N\mathcal K_N^*,
+ \qquad
+ \mathcal K_N=[B,AB,\ldots,A^{N-1}B].
+\]
+W szczególności
+\(W_n^{\mathrm d}>0\)
+dokładnie wtedy, gdy
+para \((A,B)\) jest sterowalna.
+
+Jeśli \(W_N^{\mathrm d}>0\),
+to dla dowolnych
+\(x_0,z\in\mathbb C^n\)
+najmniejsza suma energii sterowania
+\(\sum_{j=0}^{N-1}\|u_j\|_2^2\)
+wśród ciągów
+przeprowadzających
+\(x_0\) w \(z\)
+po \(N\) krokach
+jest równa
+\[
+ (z-A^Nx_0)^*
+ (W_N^{\mathrm d})^{-1}
+ (z-A^Nx_0).
+\]
+Minimum jest osiągane
+przez dokładnie jeden
+ciąg sterowań.
+\end{stwierdzenie}
+\begin{proof}
+Każdy składnik
+\(A^jBB^*(A^*)^j\)
+jest hermitowski
+i ma nieujemną formę
+kwadratową, gdyż
+\[
+ v^*A^jBB^*(A^*)^jv
+ =\|B^*(A^*)^jv\|_2^2.
+\]
+Zatem ich suma
+jest hermitowska
+i nieujemnie określona.
+Ponieważ
+\(\mathcal K_N\)
+jest złożona kolejno
+z bloków \(A^jB\),
+mnożenie przez
+\(\mathcal K_N^*\)
+daje dokładnie wskazaną sumę.
+Dla dowolnej macierzy \(M\)
+zachodzi
+\(\ker(MM^*)=\ker M^*\):
+jedna inkluzja jest oczywista,
+a z \(MM^*v=0\) wynika
+\(0=v^*MM^*v=\|M^*v\|_2^2\).
+Stąd \(MM^*>0\)
+dokładnie wtedy, gdy
+\(M\) ma pełną rangę wierszową.
+Dla \(N=n\) daje to
+kryterium sterowalności.
+
+Przejdźmy do kosztu.
+Po odwróceniu kolejności
+sterowań z
+Twierdzenia~\ref{thm:lin25-kalman}
+otrzymujemy
+\[
+ x_N=A^Nx_0+\mathcal K_Nw,
+ \qquad
+ w=\begin{pmatrix}
+      u_{N-1}\\u_{N-2}\\\vdots\\u_0
+    \end{pmatrix}.
+\]
+Niech \(d=z-A^Nx_0\).
+Warunek osiągnięcia celu
+ma postać \(\mathcal K_Nw=d\).
+Jeśli \(W_N^{\mathrm d}>0\),
+to definiujemy
+\[
+ w_0=\mathcal K_N^*
+          (W_N^{\mathrm d})^{-1}d.
+\]
+Wtedy
+\(\mathcal K_Nw_0
+ =W_N^{\mathrm d}
+    (W_N^{\mathrm d})^{-1}d=d\),
+więc \(w_0\) jest dopuszczalny.
+Każdy inny dopuszczalny
+\(w\) ma postać \(w=w_0+h\)
+z \(h\in\ker\mathcal K_N\).
+Wektory \(w_0\) i \(h\)
+są ortogonalne, gdyż
+\[
+ w_0^*h
+ =d^*(W_N^{\mathrm d})^{-1}
+    \mathcal K_Nh=0.
+\]
+Z twierdzenia Pitagorasa
+wynika
+\(\|w\|_2^2
+ =\|w_0\|_2^2+\|h\|_2^2\),
+a równość z wartością
+minimalną zachodzi
+tylko dla \(h=0\).
+Wreszcie
+\[
+ \|w_0\|_2^2
+ =d^*(W_N^{\mathrm d})^{-1}
+    \mathcal K_N\mathcal K_N^*
+    (W_N^{\mathrm d})^{-1}d
+ =d^*(W_N^{\mathrm d})^{-1}d.
+\]
+To dowodzi wszystkich tez.
+\end{proof}
+
+\begin{przyklad}[Energia potrzebna do osiągnięcia celu]
+\label{prz:lin25-energy}
+Dla pary
+\[
+ A=\begin{pmatrix}0&1\\0&0\end{pmatrix},
+ \qquad B=e_2
+\]
+mamy
+\[
+ W_2^{\mathrm d}
+ =BB^*+ABB^*A^*
+ =\begin{pmatrix}0&0\\0&1\end{pmatrix}
+  +\begin{pmatrix}1&0\\0&0\end{pmatrix}
+ =I_2.
+\]
+Jeśli \(x_0=0\)
+i chcemy osiągnąć
+\(z=(a,b)^{\mathsf T}\)
+w dwóch krokach,
+to optymalny ciąg sterowań
+wynosi \(u_0=a\), \(u_1=b\),
+a minimalna energia
+\(|a|^2+|b|^2=\|z\|_2^2\).
+Wynika to bezpośrednio
+z ogólnego wzoru,
+ale także z jawnej trajektorii
+w Przykładzie~\ref{prz:lin25-chain}.
+\end{przyklad}
+
+\section{Przypadek rzeczywisty i granice twierdzeń}
+\label{sec:lin25-real}
+
+\begin{uwaga}[Macierze rzeczywiste]
+\label{rem:lin25-real}
+Definicje sterowalności
+i obserwowalności
+oraz kryteria rangowe
+pozostają ważne dla macierzy
+rzeczywistych.
+W kryterium PBH
+należy jednak testować
+\emph{wszystkie zespolone}
+wartości własne
+rzeczywistej macierzy \(A\),
+nie tylko rzeczywiste.
+
+Wykażmy, że także
+w twierdzeniu o stabilizowalności
+można dla rzeczywistych \(A,B\)
+wybrać \emph{rzeczywistą}
+macierz \(K\).
+W
+Lemacie~\ref{lem:lin25-feedback-placement}
+dla stabilizacji ciągłej
+wystarczy wybierać
+\(\mu_j\) z przedziału
+\((-\infty,0)\) poza
+skończonym widmem.
+Dla dyskretnej
+wystarczy przedział \((-1,1)\).
+Argument w lemacie
+używał zerowania funkcji
+wymiernej na zbiorze
+z nieskończenie wieloma punktami
+skupienia, a więc działa
+również na każdym z tych
+rzeczywistych przedziałów.
+W wybieranej kolejno
+rzeczywistej bazie
+można używać rzeczywistych
+wektorów \(u_j\),
+ponieważ macierze
+\((H-\mu_jI)^{-1}D\)
+są rzeczywiste.
+Powstałe \(v_j\)
+są wtedy rzeczywiste,
+a odwzorowanie określone
+przez \(Kv_j=u_j\)
+ma rzeczywistą macierz.
+W ten sposób
+otrzymujemy rzeczywiste
+sprzężenie stabilizujące,
+bez wyprowadzania go
+ze sprzężenia zespolonego.
+Analogiczne rozumowanie
+dla pary sprzężonej
+daje rzeczywiste
+wzmocnienie obserwatora \(L\).
+\end{uwaga}
+
+\begin{uwaga}[Przejście do ogólnych twierdzeń Riccatiego]
+\label{rem:lin25-riccati}
+Stabilizowalność nie oznacza
+pełnej sterowalności:
+nieosiągalne kierunki
+mogą pozostać obecne,
+o ile są stabilne.
+Podobnie wykrywalność
+dopuszcza stabilne kierunki
+nieobserwowalne.
+To właśnie te dwa
+pojęcia występują
+w ogólnych twierdzeniach
+o stabilizujących rozwiązaniach
+równań Riccatiego,
+które rozszerzają
+Rozdział~\ref{ch:lin24-riccati}
+na niestabilną otwartą pętlę.
+Ich szczegółowe sformułowania
+i dowody pozostawiamy
+kolejnemu rozdziałowi,
+aby nie korzystać z nich
+przed wprowadzeniem
+koniecznych hipotez.
+\end{uwaga}
+
+\section{Podsumowanie}
+\label{sec:lin25-summary}
+
+Sterowalność określa,
+czy sterowanie \(Bu\)
+może wygenerować dowolny stan,
+a obserwowalność, czy
+obserwacja \(Cx\)
+pozwala rozróżnić
+wszystkie stany początkowe.
+W czasie dyskretnym
+charakteryzują je rangi
+macierzy Kalmana
+\[
+ \mathcal K(A,B)=
+ [B,AB,\ldots,A^{n-1}B],
+ \qquad
+ \mathcal O(C,A)=
+ \begin{bmatrix}
+ C\\CA\\\vdots\\CA^{n-1}
+ \end{bmatrix}.
+\]
+W czasie ciągłym
+te same kryteria wynikają
+z szeregu wykładniczego;
+dodatnia określoność
+gramianu sterowalności
+pozwala nawet podać
+jawne sterowanie prowadzące
+do dowolnego stanu.
+
+Kryterium PBH zastępuje
+duże macierze Kalmana
+warunkiem rangi przy
+wartościach własnych \(A\).
+Rozkład Kalmana oddziela
+kierunki osiągalne
+od nieosiągalnych oraz
+obserwowalne od nieobserwowalnych.
+Macierz sprzężenia zwrotnego
+może przesuwać wartości własne
+części osiągalnej,
+ale nie zmienia widma operatora
+na ilorazie przez
+przestrzeń osiągalną.
+Dlatego stabilizowalność
+wymaga dokładnie,
+aby nieosiągalne wartości własne
+były już stabilne.
+Po zastosowaniu
+związku dualnego
+uzyskujemy analogiczne
+kryterium wykrywalności
+i zbieżność obserwatora.

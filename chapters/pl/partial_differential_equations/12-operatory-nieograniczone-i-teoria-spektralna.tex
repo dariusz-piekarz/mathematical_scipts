@@ -1,0 +1,980 @@
+\chapter[Operatory nieograniczone i teoria spektralna]{Operatory nieograniczone, samosprzężoność, spektrum i półgrupy}
+\label{chap:pde12}
+
+W rozdziale~\ref{chap:pde-variational} zagadnienie Dirichleta rozwiązaliśmy
+w przestrzeni energetycznej $H_0^1(\Omega)$. Teraz zapytamy, kiedy
+formalny operator $-\Delta$ jest operatorem samosprzężonym w
+$L^2(\Omega)$, jak wyglądają jego wartości własne i dlaczego
+jego widmo steruje ewolucją cieplną i falową. Dalsze rachunki
+zostaną zapisane najpierw dla rzeczywistych przestrzeni Hilberta.
+W argumentach z operatorami unitarnymi i widmem zespolonym
+korzystamy z ich zespolenia. W zespolonej przestrzeni Hilberta
+iloczyn skalarny przyjmujemy liniowy w pierwszym argumencie.
+
+\section{Dziedzina jest częścią operatora}
+\label{sec:pde12-domain}
+
+\begin{definicja}[Operator liniowy, domknięty i domykalny]
+\label{def:pde12-operator}
+Niech $H$ będzie przestrzenią Hilberta. Operatorem liniowym
+$T$ w $H$ nazywamy parę składającą się z podprzestrzeni
+$D(T)\subset H$, zwanej \emph{dziedziną}, oraz odwzorowania
+liniowego $T:D(T)\to H$. Wykresem $T$ nazywamy
+$\mathcal G(T)=\{(u,Tu):u\in D(T)\}\subset H\times H$.
+Operator $T$ jest \emph{domknięty}, jeżeli $\mathcal G(T)$ jest
+domknięty w $H\times H$. Jest \emph{domykalny}, jeżeli
+domknięcie $\mathcal G(T)$ jest wykresem pewnego operatora;
+operator ten oznaczamy przez $\overline T$.
+\end{definicja}
+
+\begin{lemat}[Kryterium domkniętości i norma grafowa]
+\label{lem:pde12-graph}
+Dla operatora liniowego $T:D(T)\subset H\to H$
+następujące warunki są równoważne:
+(i) $T$ jest domknięty; (ii) ilekroć $u_n\in D(T)$,
+$u_n\to u$ i $Tu_n\to v$ w $H$, to $u\in D(T)$ oraz $Tu=v$;
+(iii) przestrzeń $D(T)$ z normą
+$\|u\|_{D(T)}=(\|u\|_H^2+\|Tu\|_H^2)^{1/2}$ jest zupełna.
+\end{lemat}
+\begin{proof}
+Zbieżność $(u_n,Tu_n)\to(u,v)$ w iloczynie $H\times H$
+jest równoważna dwóm zbieżnościom z (ii), więc (i) i (ii)
+są równoważne. Odwzorowanie $u\mapsto(u,Tu)$ jest izometrią
+$D(T)$ z normą grafową na $\mathcal G(T)$ z normą iloczynową.
+Domknięta podprzestrzeń przestrzeni zupełnej jest zupełna.
+Odwrotnie, podprzestrzeń zupełna w przestrzeni metrycznej jest
+domknięta: granica ciągu jej elementów jest granicą ciągu
+Cauchy'ego w tej podprzestrzeni. To daje (i)$\Leftrightarrow$(iii).
+\end{proof}
+
+\begin{przyklad}[Pochodna i dwie różne dziedziny]
+\label{ex:pde12-derivative}
+W $H=L^2(0,1;\C)$ rozważmy operator $D_0u=-iu'$ z dziedziną
+$D(D_0)=H_0^1(0,1;\C)$. Jest on domknięty, bo norma grafowa
+jest równoważna normie $H^1$ na $H_0^1$. Jest też symetryczny:
+całkowanie przez części i zerowe ślady dają
+$(D_0u,v)=(u,D_0v)$ dla $u,v\in D(D_0)$.
+Nie jest jednak samosprzężony. W istocie
+$D(D_0^*)=H^1(0,1;\C)$ i $D_0^*v=-iv'$.
+Aby wykazać to ostatnie, dla $v\in D(D_0^*)$ podstawiamy
+najpierw $u\in C_c^\infty(0,1)$: istnienie $g\in L^2$
+takiego, że $\int_0^1(-iu')\overline v\,\mathrm d\lambda_1
+=\int_0^1u\overline g\,\mathrm d\lambda_1$ oznacza
+$v'\in L^2$ dystrybucyjnie, zatem $v\in H^1$ i $g=-iv'$.
+Odwrotnie, dla każdego $v\in H^1$ przybliżamy
+$u\in H_0^1$ funkcjami testowymi i całkujemy przez części:
+wyraz brzegowy znika. W szczególności stała funkcja $1$
+należy do $D(D_0^*)$, ale nie do $D(D_0)$.
+\end{przyklad}
+
+\begin{definicja}[Operator sprzężony i samosprzężoność]
+\label{def:pde12-adjoint}
+Niech $T:D(T)\subset H\to H$ ma gęstą dziedzinę.
+Element $v\in H$ należy do $D(T^*)$ wtedy i tylko wtedy,
+gdy istnieje $g\in H$ takie, że
+$(Tu,v)_H=(u,g)_H$ dla wszystkich $u\in D(T)$.
+Wówczas $T^*v=g$; gęstość $D(T)$ zapewnia
+jednoznaczność $g$. Operator jest \emph{symetryczny}, gdy
+$(Tu,v)=(u,Tv)$ dla wszystkich $u,v\in D(T)$,
+czyli $T\subset T^*$. Jest \emph{samosprzężony}, gdy
+$T=T^*$, łącznie z równością dziedzin.
+\end{definicja}
+
+\begin{uwaga}
+Symetria nie gwarantuje samosprzężoności; przykład
+\ref{ex:pde12-derivative} pokazuje to nawet dla zamkniętego
+operatora różniczkowego pierwszego rzędu. Warunki brzegowe
+mogą radykalnie zmienić dziedzinę operatora sprzężonego,
+a więc także jego widmo i ewolucję.
+\end{uwaga}
+
+\section{Konstrukcja laplasjanu Dirichleta przez twierdzenie Laxa--Milgrama}
+\label{sec:pde12-dirichlet}
+
+Od tej chwili, aż do końca sekcji~\ref{sec:pde12-compact-spectrum},
+niech $\Omega\subset\R^d$ będzie obszarem ograniczonym Lipschitzowskim, $H=L^2(\Omega;\R)$,
+$V=H_0^1(\Omega;\R)$, a $V$ niech będzie wyposażone w normę
+$\|u\|_V^2=\|\nabla u\|_2^2+\|u\|_2^2$.
+Rozważmy formę $b(u,v)=\int_\Omega(\nabla u\cdot\nabla v+uv)
+\,\mathrm d\lambda_d(x)$.
+
+\begin{twierdzenie}[Rezolwenta z twierdzenia Laxa--Milgrama]
+\label{thm:pde12-resolvent}
+Dla każdego $f\in H$ istnieje dokładnie jedno $u=Bf\in V$
+takie, że $b(u,v)=(f,v)_H$ dla wszystkich $v\in V$.
+Operator $B:H\to H$ jest liniowy, ograniczony, zwarty,
+samosprzężony, dodatni i różnowartościowy. Ponadto
+$\|B\|_{H\to H}\le1$ oraz $\overline{\operatorname{Ran}B}=H$.
+\end{twierdzenie}
+\begin{proof}
+\textbf{Istnienie i oszacowanie.} Forma $b$ jest
+iloczynem skalarnym na $V$, a więc jest ciągła i koercywna
+ze stałą $1$. Funkcjonał $v\mapsto(f,v)_H$ jest ciągły na $V$:
+$|(f,v)_H|\le\|f\|_2\|v\|_V$. Z twierdzenia
+Laxa--Milgrama~\ref{thm:pde11-LM} otrzymujemy jedyne $u$.
+Przy $v=u$ mamy
+$\|u\|_V^2=(f,u)_H\le\|f\|_2\|u\|_2\le\|f\|_2\|u\|_V$.
+Stąd $\|u\|_V\le\|f\|_2$, a tym bardziej
+$\|Bf\|_2\le\|f\|_2$. Liniowość $B$ wynika z
+jednoznaczności rozwiązania.
+
+\textbf{Zwarty charakter.} Jeśli $(f_n)$ jest ograniczony w $H$,
+to $(Bf_n)$ jest ograniczony w $V$. Twierdzenie
+Rellicha--Kondrachova~\ref{thm:pde10-Rellich-p} (w postaci
+zanurzenia $H_0^1(\Omega)\hookrightarrow L^2(\Omega)$)
+dostarcza podciągu zbieżnego w $H$. To znaczy, że $B$
+jest zwarty.
+
+\textbf{Samosprzężoność i dodatniość.} Dla $u=Bf$, $w=Bg$
+możemy wybrać odpowiednio $v=w$ i $v=u$ w równaniach
+wariacyjnych. Symetria $b$ daje
+$(Bf,g)_H=b(u,w)=(f,Bg)_H$, zatem $B=B^*$.
+Dalej $(Bf,f)_H=b(Bf,Bf)=\|Bf\|_V^2\ge0$.
+
+\textbf{Jądro i gęstość obrazu.} Gdy $Bf=0$, jego równanie
+wariacyjne daje $(f,v)_H=0$ dla wszystkich $v\in V$.
+Ponieważ $C_c^\infty(\Omega)\subset V$ jest gęste w $H$,
+to $f=0$. Wreszcie
+$(\operatorname{Ran}B)^\perp=\ker B^*=\ker B=\{0\}$,
+a zatem obraz $B$ jest gęsty.
+\end{proof}
+
+
+\begin{uwaga}[Z czego wynika zwartość rezolwenty?]
+\label{rem:pde-v42-compact-chain}
+Zależność logiczna w poprzednim dowodzie jest istotna:
+koercywność formy i twierdzenie Laxa--Milgrama
+(\ref{thm:pde11-LM}) zapewniają oszacowanie
+$B:L^2(\Omega)\to H_0^1(\Omega)$, a dopiero
+zwartość zanurzenia Rellicha--Kondrachova
+(\ref{thm:pde10-Rellich-p}) zapewnia zwartość
+$B:L^2(\Omega)\to L^2(\Omega)$. Samo istnienie
+ograniczonej rezolwenty nie daje zwartości.
+W szczególności ograniczoność obszaru i warunki brzegowe
+odgrywają rolę przy późniejszym rozkładzie spektralnym.
+\end{uwaga}
+
+\begin{definicja}[Laplasjan Dirichleta w $L^2$]
+\label{def:pde12-laplacian}
+Operatorem Dirichleta $A=-\Delta_D$ nazywamy operator w $H$
+o dziedzinie
+\[
+D(A)=\big\{u\in V:\ \exists g\in H\quad
+\int_\Omega\nabla u\cdot\nabla v\,\mathrm d\lambda_d(x)
+=(g,v)_H\ \text{dla każdego }v\in V\big\},
+\]
+przy czym $Au=g$. Element $g$ jest wyznaczony
+jednoznacznie dzięki gęstości $V$ w $H$.
+Na funkcjach testowych $Au=-\Delta u$ w sensie dystrybucji;
+warunek $u\in H_0^1(\Omega)$ narzuca zerowy ślad.
+\end{definicja}
+
+\begin{twierdzenie}[Samosprzężoność laplasjanu Dirichleta]
+\label{thm:pde12-A-selfadjoint}
+Operator $A$ z definicji~\ref{def:pde12-laplacian} jest
+gęsto określony, nieujemny i samosprzężony.
+Ponadto $D(A)=\operatorname{Ran}B$, a na tej dziedzinie
+$A=B^{-1}-I$, więc $(A+I)^{-1}=B$.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $u=Bf$, to
+$\int_\Omega\nabla u\cdot\nabla v\,\mathrm d\lambda_d(x)
+=(f-u,v)_H$, czyli $u\in D(A)$ i $Au=f-u$.
+Odwrotnie, jeśli $u\in D(A)$ i $Au=g$, to
+$b(u,v)=(g+u,v)_H$, a z jednoznaczności równania
+dla $B$ wynika $u=B(g+u)$. Tak otrzymujemy
+dziedzinę, wzór na $A$ i gęstość dziedziny.
+Wybór $v=u$ w definicji daje
+$(Au,u)_H=\|\nabla u\|_2^2\ge0$.
+
+Aby wykazać samosprzężoność bez ukrywania dziedziny,
+zauważmy, że $A$ jest symetryczny:
+$(Au,v)_H=(u,Av)_H$ dla $u,v\in D(A)$
+przez symetrię całki z gradientów. Jeśli $w\in D(A^*)$,
+to dla każdego $u=Bf\in D(A)$ mamy
+$(Au,w)_H=(u,A^*w)_H$, a więc
+$(f-Bf,w)_H=(Bf,A^*w)_H=(f,BA^*w)_H$.
+Samosprzężoność $B$ daje
+$(f,w)_H=(f,Bw+BA^*w)_H$ dla wszystkich $f\in H$.
+Zatem $w=B(w+A^*w)\in\operatorname{Ran}B=D(A)$.
+Otrzymaliśmy $D(A^*)\subset D(A)$; inkluzja przeciwna
+wynika z symetrii. Tym samym $A=A^*$.
+\end{proof}
+
+\begin{uwaga}[Dziedzina nie zawsze jest $H^2\cap H_0^1$]
+\label{rem:pde12-corners}
+Jeśli brzeg $\partial\Omega$ jest klasy $C^{1,1}$, klasyczna
+regularność eliptyczna daje $D(A)=H^2(\Omega)\cap H_0^1(\Omega)$.
+Dla ogólnego obszaru Lipschitzowskiego równość może zawieść.
+Na przykład w płaskim wycinku o kącie wklęsłym
+$\omega\in(\pi,2\pi)$,
+funkcja $r^{\pi/\omega}\sin(\pi\theta/\omega)$ jest
+harmoniczna poza wierzchołkiem, należy lokalnie do $H^1$,
+ale nie do $H^2$. Mnożąc ją przez gładkie obcięcie radialne
+równe $1$ przy wierzchołku i $0$ przy zewnętrznym łuku,
+dostajemy $u\in D(A)$, lecz $u\notin H^2(\Omega)$:
+$\Delta u$ ma nośnik z dala od wierzchołka i należy do $L^2$,
+a drugie pochodne nie są całkowalne z kwadratem w pobliżu
+wierzchołka. Dlatego nie wolno identyfikować operatora
+z samym wyrażeniem $-\Delta$.
+\end{uwaga}
+
+\section{Twierdzenie spektralne dla zwartego operatora dodatniego}
+\label{sec:pde12-compact-spectrum}
+
+\begin{twierdzenie}[Rozkład spektralny zwartego operatora dodatniego]
+\label{thm:pde12-compact-spectral}
+Niech $H$ będzie nieskończeniewymiarową, rzeczywistą lub
+zespoloną, separowalną przestrzenią Hilberta, a $K:H\to H$
+operatorem zwartym, samosprzężonym i nieujemnym.
+Wówczas istnieje ortonormalny układ wektorów własnych
+$(e_j)$ odpowiadających dodatnim wartościom własnym
+$\mu_j$, uporządkowanym nierosnąco i z uwzględnieniem
+krotności. Jeśli wartości własnych jest nieskończenie wiele,
+to $\mu_j\to0$. Ponadto
+$H=\ker K\oplus\overline{\operatorname{span}}\{e_j\}$,
+a dla $x\in H$ zachodzi
+$Kx=\sum_j\mu_j(x,e_j)e_j$ zbieżnie w $H$.
+Jeżeli $K$ jest różnowartościowy, $(e_j)$ jest bazą
+ortonormalną całego $H$.
+\end{twierdzenie}
+\begin{proof}
+\textbf{Krok 1: maksimum ilorazu Rayleigha.}
+Dla $K\ne0$ mamy $m=\sup_{\|x\|=1}(Kx,x)=\|K\|>0$.
+Aby uzasadnić tę równość, połóżmy
+$m_0=\sup_{\|x\|=1}(Kx,x)\le\|K\|$.
+Dodatniość daje nierówność Cauchy'ego--Schwarza
+dla formy $(Kx,y)$:
+$|(Kx,y)|^2\le(Kx,x)(Ky,y)$.
+Dla wektorów jednostkowych $x,y$ otrzymujemy
+$|(Kx,y)|\le m_0$; biorąc supremum po $y$,
+dostajemy $\|Kx\|\le m_0$, a następnie
+$\|K\|\le m_0$. Zatem $m=m_0=\|K\|$.
+Wybierzmy $\|x_n\|=1$ z $(Kx_n,x_n)\to m$.
+Z ograniczoności i słabej zwartości kul w przestrzeni Hilberta
+możemy przejść do podciągu $x_n\rightharpoonup x$.
+Zwarty operator przenosi zbieżność słabą ciągu w zbieżność
+silną: każda podgranica $Kx_{n_k}$ równa się $Kx$,
+gdyż $(Kx_{n_k},y)=(x_{n_k},Ky)\to(x,Ky)$.
+Stąd $Kx_n\to Kx$ i $(Kx_n,x_n)\to(Kx,x)=m$.
+Ponieważ $(Kx,x)\le m\|x\|^2$ i $\|x\|\le1$,
+otrzymujemy $\|x\|=1$.
+
+\textbf{Krok 2: maksimum daje wektor własny.}
+Dla $y\perp x$ rozpatrujemy
+$\varphi(t)=\frac{(K(x+ty),x+ty)}{\|x+ty\|^2}$.
+Funkcja osiąga maksimum przy $t=0$, więc
+$0=\varphi'(0)=2\operatorname{Re}(Kx,y)$.
+W przypadku zespolonym powtarzamy argument dla $iy$
+i otrzymujemy również $\operatorname{Im}(Kx,y)=0$.
+Wynika stąd, że $Kx$ jest
+wielokrotnością $x$, a z $(Kx,x)=m$ dostajemy $Kx=mx$.
+
+\textbf{Krok 3: iteracja na ortogonalnym dopełnieniu.}
+Przestrzeń $x^\perp$ jest niezmiennicza względem $K$,
+bo $(Ky,x)=(y,Kx)=m(y,x)=0$. Ograniczenie $K$ do niej
+pozostaje zwarte, samosprzężone i dodatnie. Powtarzamy
+konstrukcję, dopóki ograniczenie nie stanie się zerowe.
+Powstają ortonormalne $e_j$ i dodatnie nierosnące $\mu_j$.
+Jeśli $\mu_j$ nie dążyłyby do zera, istniałoby $c>0$
+i nieskończenie wiele indeksów z $\|Ke_j\|=\mu_j\ge c$.
+Ponieważ wektory $Ke_j=\mu_je_j$ są parami ortogonalne,
+nie mają podciągu Cauchy'ego, co przeczy zwartości $K$.
+
+\textbf{Krok 4: zupełność na $(\ker K)^\perp$.}
+Jeżeli $z\perp e_j$ dla wszystkich $j$, to $z$
+należy do kolejnych ortogonalnych dopełnień, na których
+norma ograniczenia $K$ jest co najwyżej $\mu_{j+1}$.
+Zatem $\|Kz\|\le\mu_{j+1}\|z\|\to0$;
+gdy konstrukcja skończyła się po skończonej liczbie kroków,
+operator na ostatnim dopełnieniu jest z definicji zerowy.
+W obu przypadkach $Kz=0$. To daje rozkład ortogonalny.
+Dla skończonych sum częściowych wzór na $K$ wynika
+z liniowości; przejście do granicy jest dozwolone
+z ograniczoności $K$. Przy $\ker K=\{0\}$ układ
+jest więc bazą całego $H$.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie spektralne dla zwartego operatora samosprzężonego]
+\label{thm:pde12-compact-general-spectral}
+Niech $H$ będzie rzeczywistą lub zespoloną separowalną
+przestrzenią Hilberta, a $K\in\mathcal L(H)$ operatorem
+zwartym i samosprzężonym, niekoniecznie dodatnim.
+Wówczas $H$ jest domkniętą sumą ortogonalną $\ker K$ oraz
+podprzestrzeni własnych odpowiadających niezerowym
+rzeczywistym wartościom własnym $\kappa_j$.
+Każda niezerowa wartość własna ma skończoną krotność,
+a jeśli jest ich nieskończenie wiele (licząc z krotnościami),
+to $|\kappa_j|\to0$. Istnieje ortonormalny układ
+$(e_j)$ tych wektorów własnych taki, że
+\[
+ Kx=\sum_j\kappa_j(x,e_j)_He_j\quad(x\in H),
+\]
+gdzie szereg jest zbieżny w $H$; jeżeli $\ker K=\{0\}$,
+to $(e_j)$ jest bazą ortonormalną całego $H$.
+\end{twierdzenie}
+\begin{proof}
+Operator $K^2$ jest zwarty, samosprzężony i nieujemny:
+$K^2$ jest zwarty jako złożenie operatora zwartego
+i ograniczonego, a $(K^2x,x)=\|Kx\|^2\ge0$.
+Ponadto $\ker K^2=\ker K$. Twierdzenie
+\ref{thm:pde12-compact-spectral} zastosowane do $K^2$
+(dla przestrzeni skończeniewymiarowej używamy zwykłego
+twierdzenia o diagonalizacji macierzy samosprzężonej)
+daje rozkład ortogonalny
+$H=\ker K\oplus\overline{\bigoplus_{\mu>0}E_\mu}$,
+gdzie $E_\mu=\ker(K^2-\mu I)$, $\mu>0$.
+Każde $E_\mu$ jest skończeniewymiarowe, gdyż nieskończony
+układ ortonormalny w $E_\mu$ miałby obrazy przez $K^2$
+bez podciągu zbieżnego, co przeczyłoby zwartości.
+
+Ponieważ $K$ komutuje z $K^2$, każda przestrzeń $E_\mu$
+jest niezmiennicza względem $K$. Ograniczenie
+$K|_{E_\mu}$ jest macierzą samosprzężoną, można je więc
+zdiagonalizować w bazie ortonormalnej $E_\mu$.
+Jeżeli $Ke=\kappa e$ i $e\in E_\mu\setminus\{0\}$,
+to $K^2e=\kappa^2e=\mu e$, zatem
+$\kappa=\pm\sqrt\mu$; w przypadku zespolonym
+$\kappa$ jest rzeczywista dzięki samosprzężoności.
+Bazy wszystkich $E_\mu$ tworzą wraz z bazą jądra
+ortogonalny rozkład $H$ na wektory własne $K$.
+Niezerowe wartości własne $K^2$ mogą gromadzić się
+tylko przy zerze, więc to samo dotyczy $|\kappa|$.
+Dla sum skończonych podany wzór na $K$ wynika
+z diagonalizacji. Dla dowolnego $x\in H$ przechodzimy
+do granicy, ponieważ rzuty na skończone sumy podprzestrzeni
+własnych zbiegają silnie do rzutu na $(\ker K)^\perp$,
+a $K$ jest ograniczony i znika na swoim jądrze.
+\end{proof}
+
+\begin{wniosek}[Dyskretne widmo laplasjanu Dirichleta]
+\label{cor:pde12-eigen}
+Dla obszaru ograniczonego Lipschitzowskiego $\Omega$ operator
+$A=-\Delta_D$ ma bazę ortonormalną $(\phi_j)_{j\ge1}$ w
+$L^2(\Omega)$ złożoną z wektorów własnych:
+$A\phi_j=\lambda_j\phi_j$, gdzie
+$0<\lambda_1\le\lambda_2\le\cdots$, $\lambda_j\to\infty$.
+Każda wartość własna ma skończoną krotność,
+a w sensie słabym
+$\int_\Omega\nabla\phi_j\cdot\nabla v\,\mathrm d\lambda_d(x)
+=\lambda_j\int_\Omega\phi_jv\,\mathrm d\lambda_d(x)$
+dla wszystkich $v\in H_0^1(\Omega)$.
+\end{wniosek}
+\begin{proof}
+Dla operatora $B=(A+I)^{-1}$ z
+\ref{thm:pde12-resolvent} jądro jest zerowe,
+więc poprzednie twierdzenie daje bazę $(\phi_j)$
+i liczby $\mu_j>0$ z $B\phi_j=\mu_j\phi_j$.
+Ponieważ $B$ działa na nieskończeniewymiarowym $L^2$
+i jest różnowartościowy, wartości tych jest nieskończenie
+wiele, a $\mu_j\downarrow0$. Z równości
+$A=B^{-1}-I$ otrzymujemy
+$\lambda_j=\mu_j^{-1}-1$. Nieujemność $A$ daje
+$\lambda_j\ge0$. Gdyby $\lambda_j=0$, to
+$\|\nabla\phi_j\|_2^2=(A\phi_j,\phi_j)=0$.
+Nierówność Poincar\'ego w $H_0^1(\Omega)$ daje
+$\phi_j=0$, sprzeczność z normalizacją.
+Zatem $\lambda_j>0$. Każdy niezerowy punkt widma
+zwartego operatora ma skończoną krotność; w powyższym
+dowodzie wynika to z niemożliwości istnienia nieskończonej
+rodziny ortonormalnej o tym samym niezerowym obrazie normowym.
+Tożsamość słaba wynika z definicji $A$.
+\end{proof}
+
+\section{Obszar formowa, zasada min--max i oszacowania widma}
+\label{sec:pde12-minmax}
+
+\begin{twierdzenie}[Rozwinięcie spektralne formy energii]
+\label{thm:pde12-formdomain}
+Niech $(\lambda_j,\phi_j)$ będą wartościami i funkcjami
+własnymi z wniosku~\ref{cor:pde12-eigen}. Dla $u\in L^2(\Omega)$
+niech $c_j=(u,\phi_j)_{L^2}$. Wówczas
+\begin{align*}
+u\in H_0^1(\Omega)
+&\quad\Longleftrightarrow\quad
+\sum_{j=1}^\infty\lambda_j|c_j|^2<\infty,\\
+u\in D(A)
+&\quad\Longleftrightarrow\quad
+\sum_{j=1}^\infty\lambda_j^2|c_j|^2<\infty.
+\end{align*}
+Dla $u\in H_0^1(\Omega)$ zachodzi
+$\|\nabla u\|_2^2=\sum_j\lambda_j|c_j|^2$,
+a dla $u\in D(A)$ zachodzi
+$Au=\sum_j\lambda_jc_j\phi_j$ zbieżnie w $L^2$.
+\end{twierdzenie}
+\begin{proof}
+Ponieważ $\phi_j=\mu_j^{-1}B\phi_j$, mamy
+$\phi_j\in H_0^1(\Omega)$. Z równania słabego
+$b(\phi_i,\phi_j)=\mu_i^{-1}(\phi_i,\phi_j)_{L^2}$
+wynika, że wektory $\sqrt{\mu_j}\phi_j$ tworzą
+układ ortonormalny w przestrzeni $V=H_0^1(\Omega)$
+z iloczynem skalarnym $b$. Układ ten jest zupełny w $V$:
+jeśli $v\in V$ jest do niego ortogonalny, to
+$0=b(v,\phi_j)=\mu_j^{-1}(v,\phi_j)_{L^2}$
+dla wszystkich $j$; zupełność $(\phi_j)$ w $L^2$ daje $v=0$.
+Z twierdzenia Parsevala w $V$ dostajemy
+\[
+\|v\|_V^2=\sum_j|b(v,\sqrt{\mu_j}\phi_j)|^2
+=\sum_j\mu_j^{-1}|(v,\phi_j)_{L^2}|^2
+=\sum_j(1+\lambda_j)|c_j|^2.
+\]
+Dla ogólnego $u\in L^2$ warunek po prawej gwarantuje,
+że sumy częściowe $u_N=\sum_{j\le N}c_j\phi_j$
+są ciągiem Cauchy'ego w $V$. Ich granica $v\in V$
+równa się $u$, gdyż zbieżność w $V$ implikuje zbieżność
+w $L^2$, a w $L^2$ mamy $u_N\to u$ z Parsevala.
+Tak wykazaliśmy równoważność dla $H_0^1$ i równość energii
+przez odjęcie $\|u\|_2^2$.
+
+Jeśli $u\in D(A)$, to $Au\in L^2$, a dla każdego $j$
+$(Au,\phi_j)=(u,A\phi_j)=\lambda_jc_j$.
+Parseval daje sumowalność $\lambda_j^2|c_j|^2$ i wzór
+na $Au$. Odwrotnie, jeśli ta suma jest skończona,
+to $u\in H_0^1$ z pierwszej części twierdzenia.
+Niech $g=\sum_j\lambda_jc_j\phi_j\in L^2$.
+Dla skończonych sum funkcji własnych $v$ mamy
+$\int_\Omega\nabla u\cdot\nabla v\,\mathrm d\lambda_d
+=(g,v)_{L^2}$. Takie sumy są gęste w $V$ na mocy
+poprzedniego akapitu; przez ciągłość obu stron otrzymujemy
+równość dla wszystkich $v\in V$, więc $u\in D(A)$ i $Au=g$.
+\end{proof}
+
+\begin{twierdzenie}[Zasada Couranta--Fischera]
+\label{thm:pde12-minmax}
+Dla każdej liczby całkowitej $k\ge1$
+\[
+\lambda_k=
+\min_{\substack{E\subset H_0^1(\Omega)\\\dim E=k}}
+\ \max_{\substack{u\in E\\u\ne0}}
+\frac{\displaystyle\int_\Omega|\nabla u|^2\,\mathrm d\lambda_d(x)}
+{\displaystyle\int_\Omega|u|^2\,\mathrm d\lambda_d(x)}.
+\]
+Minimum jest osiągane dla $E=\operatorname{span}
+\{\phi_1,\ldots,\phi_k\}$.
+\end{twierdzenie}
+\begin{proof}
+Dla wskazanego $E$ i $u=\sum_{j\le k}c_j\phi_j$
+twierdzenie~\ref{thm:pde12-formdomain} daje
+$\|\nabla u\|_2^2=\sum_{j\le k}\lambda_j|c_j|^2
+\le\lambda_k\sum_{j\le k}|c_j|^2=\lambda_k\|u\|_2^2$.
+Wektor $u=\phi_k$ daje równość, więc maksimum na tym $E$
+wynosi $\lambda_k$. Z drugiej strony weźmy dowolne
+$k$-wymiarowe $E\subset H_0^1$. Układ $k-1$ równań
+liniowych $(u,\phi_j)=0$, $j<k$, ma niezerowe rozwiązanie
+$u\in E$ (wymiar jądra jest co najmniej $1$).
+Dla takiego $u$ w rozwinięciu $L^2$ znikają wszystkie
+współczynniki o indeksach mniejszych od $k$, wobec czego
+$\|\nabla u\|_2^2=\sum_{j\ge k}\lambda_j|c_j|^2
+\ge\lambda_k\sum_{j\ge k}|c_j|^2=\lambda_k\|u\|_2^2$.
+Maksimum na dowolnym $E$ jest zatem co najmniej $\lambda_k$.
+Łącząc oba oszacowania, otrzymujemy wzór.
+\end{proof}
+
+\begin{wniosek}[Pierwsza wartość własna, Poincaré i monotoniczność]
+\label{cor:pde12-first}
+Jeśli $\Omega\subset\R^d$ jest obszarem ograniczonym Lipschitzowskim, to
+$\lambda_1=\inf_{u\in H_0^1(\Omega)\setminus\{0\}}
+\|\nabla u\|_2^2/\|u\|_2^2$.
+Najlepsza stała $C_P$ w nierówności
+$\|u\|_2\le C_P\|\nabla u\|_2$ wynosi
+$C_P=\lambda_1^{-1/2}$. Ponadto jeżeli
+$\Omega_1\subset\Omega_2$ są ograniczonymi obszarami
+Lipschitzowskimi, to
+$\lambda_k(\Omega_2)\le\lambda_k(\Omega_1)$ dla każdego $k$.
+\end{wniosek}
+\begin{proof}
+Pierwsze dwa stwierdzenia wynikają z
+\ref{thm:pde12-minmax} dla $k=1$.
+Dla drugiego rozważmy przedłużenie przez zero
+$H_0^1(\Omega_1)\hookrightarrow H_0^1(\Omega_2)$;
+na mocy twierdzenia o przedłużaniu przez zero przedłużenia
+funkcji testowych, a następnie granic w $H^1$, zachowują
+zarówno normę $L^2$, jak i normę gradientu.
+Każda $k$-wymiarowa podprzestrzeń pierwszej przestrzeni
+staje się więc dopuszczalną podprzestrzenią drugiej,
+z tym samym maksimum ilorazu Rayleigha. Przyjmując minima
+otrzymujemy podaną nierówność.
+\end{proof}
+
+\begin{przyklad}[Odcinek i prostokąt]
+Na odcinku $(0,L)$ rozwiązania problemu
+$-u''=\lambda u$, $u(0)=u(L)=0$ mają postać
+$\phi_n(x)=\sqrt{2/L}\sin(n\pi x/L)$ oraz
+$\lambda_n=(n\pi/L)^2$, $n\ge1$.
+W prostokącie $(0,L_1)\times(0,L_2)$ funkcje własne są
+iloczynami sinusów, z wartościami
+$\lambda_{m,n}=\pi^2(m^2/L_1^2+n^2/L_2^2)$.
+Wartości te należy uporządkować rosnąco z krotnościami;
+na kwadracie występują wielokrotności wskutek symetrii
+$\lambda_{m,n}=\lambda_{n,m}$.
+\end{przyklad}
+
+\section{Widmo, rezolwenta i alternatywa Fredholma}
+\label{sec:pde12-fredholm}
+
+\begin{definicja}[Zbiór rezolwenty i widmo]
+\label{def:pde12-spectrum}
+Dla domkniętego gęsto określonego operatora $T$ w
+zespolonej przestrzeni Hilberta jego \emph{zbiorem rezolwenty}
+$\rho(T)$ nazywamy zbiór liczb $z\in\C$, dla których
+$T-zI:D(T)\to H$ jest bijekcją, a odwrotność
+$(T-zI)^{-1}:H\to H$ jest ograniczona.
+\emph{Widmo} to $\sigma(T)=\C\setminus\rho(T)$.
+Liczba $z$ jest wartością własną, jeżeli
+$0\ne u\in D(T)$ spełnia $Tu=zu$.
+\end{definicja}
+
+\begin{twierdzenie}[Alternatywa Fredholma dla laplasjanu]
+\label{thm:pde12-fredholm}
+Niech $A=-\Delta_D$ będzie operatorem na obszarze ograniczonym Lipschitzowskim $\Omega$, a $\zeta\in\C$.
+Jeżeli $\zeta\notin\{\lambda_j:j\ge1\}$, to dla
+każdego $f\in L^2(\Omega;\C)$ istnieje dokładnie jedno
+$u\in D(A)$ spełniające $(A-\zeta I)u=f$, i
+\[
+\|u\|_2\le\frac{\|f\|_2}
+{\operatorname{dist}(\zeta,\{\lambda_j\})}.
+\]
+Jeżeli $\zeta$ jest wartością własną, to równanie
+$(A-\zeta I)u=f$ jest rozwiązywalne wtedy i tylko wtedy,
+gdy $f\perp\ker(A-\zeta I)$; rozwiązanie jest wówczas
+jednoznaczne z dokładnością do dodania elementu jądra.
+Rezolwenta $(A-\zeta I)^{-1}$ w każdym punkcie
+$\zeta\in\rho(A)$ jest zwarta, a
+$\sigma(A)=\{\lambda_j:j\ge1\}$ jako zbiór (bez krotności).
+\end{twierdzenie}
+\begin{proof}
+Po zespoleniu bazy własnej piszemy
+$f=\sum_jf_j\phi_j$, a dla potencjalnego rozwiązania
+$u=\sum_ju_j\phi_j$. Równanie po sparowaniu z
+$\phi_j$ wymaga $(\lambda_j-\zeta)u_j=f_j$.
+Jeżeli $\zeta$ nie jest wartością własną, to odległość
+$\delta=\inf_j|\lambda_j-\zeta|$ jest dodatnia:
+$\lambda_j\to\infty$, więc jedynie skończenie wiele
+wartości własnych może leżeć w ustalonym otoczeniu
+$\zeta$. Definiujemy $u_j=f_j/(\lambda_j-\zeta)$.
+Z Parsevala
+$\|u\|_2^2=\sum_j|f_j|^2/|\lambda_j-\zeta|^2
+\le\delta^{-2}\|f\|_2^2$.
+Dodatkowo liczby $\lambda_j/|\lambda_j-\zeta|$
+są jednostajnie ograniczone: dla dużych $j$
+wyrażenie dąży do $1$, a pierwszych wyrazów jest
+skończenie wiele. Stąd $\sum\lambda_j^2|u_j|^2<\infty$,
+więc $u\in D(A)$ na mocy~\ref{thm:pde12-formdomain},
+i rzeczywiście rozwiązuje równanie. Każde inne rozwiązanie
+ma te same współczynniki, co dowodzi jednoznaczności.
+
+Jeśli $\zeta$ jest wartością własną, to dla indeksów
+$J=\{j:\lambda_j=\zeta\}$ równanie daje warunek
+$f_j=0$. Jest on dokładnie ortogonalnością do jądra.
+Dla $j\notin J$ możemy określić
+$u_j=f_j/(\lambda_j-\zeta)$, a współczynniki $u_j$
+z $j\in J$ pozostają dowolne. Są tylko skończenie liczne;
+pozostała część daje element $D(A)$ jak wyżej.
+
+Na koniec na podprzestrzeni rozpiętej przez
+$\phi_1,\ldots,\phi_N$ rezolwenta jest operatorem rzędu
+skończonego. Różnica między nią a pełną rezolwentą
+ma normę nie większą niż
+$\sup_{j>N}|\lambda_j-\zeta|^{-1}\to0$.
+Granica w normie operatorowej operatorów zwartych jest
+zwarta. Pokazuje to zwartość rezolwenty i identyfikację widma.
+\end{proof}
+
+\begin{twierdzenie}[Alternatywa Fredholma dla operatorów zwartych]
+\label{thm:pde12-general-fredholm}
+Niech $H$ będzie zespoloną przestrzenią Hilberta,
+a $K:H\to H$ operatorem zwartym. Wówczas
+$T=I-K$ ma domknięty obraz oraz skończeniewymiarowe
+jądra $\ker T$ i $\ker T^*$. Zachodzi
+$\dim\ker T=\dim\ker T^*$, a dla $f\in H$
+równanie $(I-K)u=f$ ma rozwiązanie wtedy i tylko wtedy,
+gdy $f\perp\ker(I-K^*)$. Rozwiązanie jest jednoznaczne
+z dokładnością do dodania elementu $\ker(I-K)$.
+\end{twierdzenie}
+\begin{proof}
+\textbf{Krok 1: skończony wymiar jądra.}
+Jeśli $\ker T$ byłoby nieskończeniewymiarowe,
+wybralibyśmy w nim nieskończony układ ortonormalny
+$(e_n)$. Równość $Te_n=0$ oznacza $Ke_n=e_n$.
+Ponieważ $(e_n)$ nie ma podciągu zbieżnego, byłoby
+to sprzeczne ze zwartością $K$. Skończoną wymiarowość
+$\ker T^*$ otrzymamy w kroku 4.
+
+\textbf{Krok 2: domkniętość obrazu.} Niech
+$N=\ker T$ i $M=N^\perp$. Pokażemy, że istnieje $c>0$
+takie, że $\|Tx\|\ge c\|x\|$ dla wszystkich $x\in M$.
+W przeciwnym razie można wybrać $x_n\in M$,
+$\|x_n\|=1$, $Tx_n\to0$. Zwarty operator $K$
+daje podciąg $(Kx_{n_k})$ zbieżny w $H$.
+Ponieważ $x_{n_k}=Tx_{n_k}+Kx_{n_k}$,
+ten sam podciąg $x_{n_k}$ zbiega do pewnego $x\in M$
+o normie $1$. Ciągłość $T$ daje $Tx=0$,
+czyli $x\in M\cap N=\{0\}$; sprzeczność.
+Teraz niech $Tx_n\to y$ w $H$.
+Zastępując $x_n$ przez jego rzut na $M$, nie zmieniamy
+$Tx_n$. Uzyskane $x_n\in M$ są Cauchy'ego,
+bo $\|x_n-x_m\|\le c^{-1}\|Tx_n-Tx_m\|$.
+Zatem $x_n\to x\in M$ i $Tx=y$, dowodząc domkniętości
+$\operatorname{Ran}T$.
+
+\textbf{Krok 3: równość wymiarów jąder.}
+Pokażemy najpierw, że $K$ można aproksymować
+w normie operatorowej operatorami skończonego rzędu.
+Dla $0<\varepsilon<1$ zbiór $K(B_H)$ jest względnie
+zwarty, więc można znaleźć skończony zbiór
+$y_1,\dots,y_m$ w $H$ taki, że każdy $Kx$, $\|x\|\le1$,
+leży w odległości mniejszej niż $\varepsilon$ od
+jednego z $y_j$. Jeśli $W=\operatorname{span}\{y_j\}$,
+a $P_W$ oznacza rzut ortogonalny na $W$, to
+$F=P_WK$ jest skończonego rzędu i
+$\|K-F\|\le\varepsilon$.
+Zapiszmy $K=F+E$, gdzie $\|E\|<1$.
+Szereg Neumanna dowodzi, że $I-E$ jest odwracalny,
+a faktoryzacja
+\[
+I-K=(I-E)(I-G),\qquad G=(I-E)^{-1}F
+\]
+przedstawia $T$ jako iloczyn operatora odwracalnego
+i operatora $I-G$ z $G$ skończonego rzędu.
+Niech $W'=\operatorname{Ran}G$ (przestrzeń skończeniewymiarowa).
+W rozkładzie $H=W'\oplus(W')^\perp$ operator $I-G$
+ma postać blokową
+\[
+(I-G)(w,z)=((I-G|_{W'})w-Gz,\ z).
+\]
+Jego jądro to $\ker(I-G|_{W'})\oplus\{0\}$.
+Obraz ma skończony kowymiar równy
+$\dim W'-\dim\operatorname{Ran}(I-G|_{W'})$:
+rzutowanie obrazu na $(W')^\perp$ jest surjekcją,
+a przy ustalonym $z$ dopuszczalne pierwsze składowe
+różnią się o element $\operatorname{Ran}(I-G|_{W'})$.
+Z twierdzenia o wymiarze jądra i obrazu w $W'$
+ten kowymiar równa się $\dim\ker(I-G|_{W'})$.
+Mnożenie z lewej przez odwracalny $I-E$ nie zmienia
+wymiaru jądra ani kowymiaru obrazu. Otrzymujemy
+$\dim\ker T=\operatorname{codim}\operatorname{Ran}T$.
+
+\textbf{Krok 4: warunek rozwiązywalności.}
+Dla dowolnego ograniczonego operatora w Hilbercie
+$(\operatorname{Ran}T)^\perp=\ker T^*$,
+gdyż $(Tu,v)=0$ dla wszystkich $u$ jest dokładnie
+warunkiem $T^*v=0$. Obraz $T$ jest domknięty
+z kroku 2, stąd
+$\operatorname{Ran}T=(\ker T^*)^\perp$.
+To dowodzi warunku na $f$ i jednocześnie
+$\dim\ker T=\dim\ker T^*$ z kroku 3.
+Każde dwa rozwiązania różnią się o element jądra.
+\end{proof}
+
+\begin{uwaga}
+W odróżnieniu od twierdzenia~\ref{thm:pde12-fredholm},
+nie założyliśmy tutaj samosprzężoności $K$.
+Dlatego w warunku rozwiązywalności pojawia się
+$\ker(I-K^*)$, a niekoniecznie $\ker(I-K)$.
+W terminologii teorii operatorów wynik stwierdza,
+że $I-K$ jest operatorem Fredholma o indeksie $0$.
+\end{uwaga}
+
+
+\begin{kontrprzyklad}[Brak zwartości na całej przestrzeni]
+\label{ex:pde12-unbounded-domain}
+W $L^2(\R^d)$ operator $A=-\Delta$ ze standardową
+dziedziną $H^2(\R^d)$ jest samosprzężony,
+lecz $(A+I)^{-1}$ nie jest zwarty. Wystarczy wziąć
+$0\ne f\in C_c^\infty(\R^d)$, przesunięcia
+$f_n(x)=f(x-nLe_1)$ o rozłącznych nośnikach
+(i odpowiednio duże $L$). Ciąg $(f_n)$ jest ograniczony
+w $L^2$ i nie ma podciągu zbieżnego. Gdyby
+$(A+I)^{-1}$ był zwarty, obrazy $u_n=(A+I)^{-1}f_n$
+miałyby podciąg zbieżny w $L^2$; lecz $u_n$ są
+przesunięciami ustalonej niezerowej funkcji $u$.
+Przesunięcia $u$ dążą słabo do $0$, zachowując normę
+$L^2$, i dlatego nie posiadają podciągu silnie zbieżnego.
+Istotnie, słabą zbieżność najpierw sprawdzamy dla
+funkcji testowych o zwartym nośniku, a potem korzystamy
+z ich gęstości w $L^2$.
+Na mocy transformaty Fouriera $A$ jest równoważny
+operatorowi mnożenia przez $|\xi|^2$; jego widmo jest
+ciągłe i równe $[0,\infty)$. Nie należy więc oczekiwać
+sumowania dyskretnego po funkcjach własnych jak na
+obszarze ograniczonym.
+\end{kontrprzyklad}
+
+\section{Półgrupa cieplna zbudowana z widma}
+\label{sec:pde12-heat}
+
+\begin{definicja}[Silnie ciągła półgrupa]
+Niech $H$ będzie przestrzenią Banacha. Rodzinę
+$S(t)\in\mathcal L(H)$, $t\ge0$, nazywamy
+\emph{silnie ciągłą półgrupą}, gdy $S(0)=I$,
+$S(t+s)=S(t)S(s)$ dla wszystkich $s,t\ge0$, a dla
+każdego $u\in H$ zachodzi $\|S(t)u-u\|_H\to0$
+przy $t\downarrow0$. Jej \emph{generator} $G$ jest
+dany przez $Gu=\lim_{t\downarrow0}(S(t)u-u)/t$
+na dziedzinie tych $u$, dla których granica istnieje w $H$.
+\end{definicja}
+
+\begin{twierdzenie}[Półgrupa generowana przez $-A$]
+\label{thm:pde12-heat}
+Niech $A=-\Delta_D$ dla obszaru ograniczonego Lipschitzowskiego $\Omega$, a $H=L^2(\Omega)$.
+Dla $t\ge0$ określmy
+\[
+S(t)u=\sum_{j=1}^\infty e^{-\lambda_jt}(u,\phi_j)_H\phi_j.
+\]
+Wtedy $(S(t))_{t\ge0}$ jest silnie ciągłą półgrupą na $H$
+o generatorze dokładnie $-A$ i
+$\|S(t)\|_{H\to H}=e^{-\lambda_1t}$.
+Dla $t>0$, $m\in\N$ i $u\in H$ zachodzi
+$S(t)u\in D(A^m)$ oraz
+\[
+\|A^mS(t)u\|_H
+\le\bigg(\frac{m}{e t}\bigg)^m\|u\|_H.
+\]
+Dla $u_0\in D(A)$ funkcja $u(t)=S(t)u_0$
+należy do $C^1([0,\infty);H)\cap C([0,\infty);D(A))$
+i spełnia $u'(t)+Au(t)=0$, $u(0)=u_0$.
+Dla dowolnego $u_0\in H$ to samo równanie zachodzi dla
+$t>0$, a $u(t)\to u_0$ w $H$ przy $t\downarrow0$.
+\end{twierdzenie}
+\begin{proof}
+\textbf{Definicja i własność półgrupy.} Z Parsevala
+$\|S(t)u\|_H^2=\sum_je^{-2\lambda_jt}|(u,\phi_j)|^2
+\le e^{-2\lambda_1t}\|u\|_H^2$, więc szereg
+określa ograniczony operator. Dla $u=\phi_1$ mamy
+równość, co daje dokładną normę. Mnożenie współczynników
+$e^{-\lambda_js}e^{-\lambda_jt}=e^{-\lambda_j(s+t)}$
+pokazuje $S(t)S(s)=S(t+s)$, a $S(0)=I$.
+
+\textbf{Ciągłość silna.} Dla $u\in H$ mamy
+$\|S(t)u-u\|_H^2=\sum_j|e^{-\lambda_jt}-1|^2|u_j|^2$.
+Dla każdego $j$ czynnik w module dąży do zera,
+a jest ograniczony przez $1$. Ponieważ
+$\sum_j|u_j|^2<\infty$, z twierdzenia o zbieżności
+zdominowanej dla szeregu otrzymujemy zbieżność do zera.
+Ciągłość w każdym $t\ge0$ wynika z półgrupy i oszacowania
+$\|S(t)\|\le1$ (dla przyrostu dodatniego i ujemnego
+stosujemy odpowiednią faktoryzację).
+
+\textbf{Wygładzanie.} Dla $m\in\N$ i $t>0$
+$\sup_{x\ge0}x^me^{-tx}=(m/(et))^m$;
+pochodna funkcji $x\mapsto x^me^{-tx}$ znika przy $x=m/t$.
+Wobec tego
+$\sum_j\lambda_j^{2m}e^{-2\lambda_jt}|u_j|^2
+\le(m/(et))^{2m}\|u\|_H^2$.
+Z charakterystyki dziedzin potęg operatora (otrzymywanej
+indukcyjnie z~\ref{thm:pde12-formdomain}) wynika
+$S(t)u\in D(A^m)$ i podane oszacowanie.
+
+\textbf{Generator.} Dla $u\in D(A)$ iloraz
+$(e^{-\lambda_jt}-1)/t$ dąży do $-\lambda_j$, a
+$|(e^{-\lambda_jt}-1)/t|\le\lambda_j$.
+Sumowalność $\sum\lambda_j^2|u_j|^2$ pozwala
+ponownie zastosować zbieżność zdominowaną i otrzymać
+$\lim_{t\downarrow0}(S(t)u-u)/t=-Au$ w $H$.
+Odwrotnie, gdy granica ilorazu istnieje w $H$ i równa się
+$g$, jej $j$-ty współczynnik musi równać się
+$-\lambda_ju_j$. Stąd z Parsevala
+$\sum_j\lambda_j^2|u_j|^2=\|g\|_H^2<\infty$,
+a więc $u\in D(A)$. To dowodzi równości dziedzin generatora.
+Ciągłość $u(t)$ z wartościami w $D(A)$ dla $u_0\in D(A)$
+wynika z rozpisania normy grafowej na współczynniki
+$u_j$ i $\lambda_ju_j$. Dla $t>0$ różniczkowalność
+wynika z wygładzania i własności półgrupy.
+\end{proof}
+
+\begin{twierdzenie}[Wzór Duhamela w $L^2$]
+\label{thm:pde12-duhamel}
+Niech $T>0$, $u_0\in H=L^2(\Omega)$ i
+$f\in C([0,T];H)$. Funkcja
+\[
+u(t)=S(t)u_0+\int_0^tS(t-s)f(s)\,\mathrm ds,
+\qquad 0\le t\le T,
+\]
+gdzie całkę rozumiemy w sensie Bochnera, jest ciągła
+z wartościami w $H$ i spełnia oszacowanie
+$\|u(t)\|_H\le e^{-\lambda_1t}\|u_0\|_H
++\int_0^te^{-\lambda_1(t-s)}\|f(s)\|_H\,\mathrm ds$.
+Jest jedynym rozwiązaniem \emph{łagodnym} zagadnienia
+$u'(t)+Au(t)=f(t)$, $u(0)=u_0$, zdefiniowanym
+przez powyższy wzór całkowy. Jeśli dodatkowo
+$u_0\in D(A)$ i $f\in C^1([0,T];H)$, to
+$u\in C^1([0,T];H)\cap C([0,T];D(A))$
+i równanie zachodzi w $H$ dla każdego $t\in[0,T]$.
+\end{twierdzenie}
+\begin{proof}
+Mapowanie $(t,s)\mapsto S(t-s)f(s)$ jest silnie ciągłe
+na trójkącie $0\le s\le t\le T$, ponieważ $f$ i $S$
+są silnie ciągłe, a $\|S\|\le1$. Całka Bochnera
+istnieje; jej normę szacujemy przez całkę norm.
+Ciągłość $u$ wynika przez rozdzielenie różnicy całek
+na część o wspólnym przedziale całkowania i krótki odcinek,
+a następnie przez zbieżność zdominowaną.
+
+Dla silniejszych danych, po zmianie zmiennej $r=t-s$,
+możemy pisać $F(t)=\int_0^tS(r)f(t-r)\,\mathrm dr$.
+Różniczkowanie w $H$ pod całką, dozwolone przez ciągłość
+$f'$, daje
+$F'(t)=S(t)f(0)+\int_0^tS(r)f'(t-r)\,\mathrm dr$.
+Z drugiej strony korzystamy z formuły
+$A S(r)=-(\mathrm d/\mathrm dr)S(r)$ dla $r>0$
+i po całkowaniu przez części w zmiennej $r$, najpierw
+na $[\varepsilon,t]$, a następnie przechodząc z
+$\varepsilon\downarrow0$, otrzymujemy
+$AF(t)=f(t)-S(t)f(0)-\int_0^tS(r)f'(t-r)\,\mathrm dr$.
+Uzasadnienie przejścia do granicy w grafie $A$ jest
+następujące: całki po odcinku $[\varepsilon,t]$ należą
+do $D(A)$, ich obrazy przez $A$ zbiegają w $H$ do
+prawej strony, a same całki zbiegają w $H$ do $F(t)$.
+Domkniętość $A$ daje $F(t)\in D(A)$ i powyższą równość.
+Dla $S(t)u_0$ mamy $\frac{\mathrm d}{\mathrm dt}S(t)u_0
+=-AS(t)u_0$ z poprzedniego twierdzenia.
+Zsumowanie obu rachunków daje $u'+Au=f$.
+
+Dla dowolnego $u_0\in H$ i ciągłego $f$ wynik definiuje
+rozwiązanie łagodne. Jednoznaczność w tej klasie wynika
+bezpośrednio z wymogu spełniania wzoru całkowego.
+Jeśli rozwiązanie jest klasyczne, podstawienie
+$\frac{\mathrm d}{\mathrm ds}[S(t-s)u(s)]
+=S(t-s)f(s)$ dla $0<s<t$, z domkniętością i
+ciągłością, prowadzi do wzoru Duhamela; zatem rozwiązanie
+łagodne zgadza się z klasycznym, ilekroć drugie istnieje.
+\end{proof}
+
+\begin{uwaga}[Regularność w czasie i na brzegu]
+Oszacowanie $\|A^mS(t)\|\lesssim t^{-m}$ jest
+oszacowaniem operatorowym. Nie daje automatycznie
+$C^\infty(\overline\Omega)$ na dowolnym obszarze Lipschitzowskim: w narożach może zabraknąć regularności
+brzegowej. Dla $t>0$ rozwiązanie jest jednak gładkie
+wewnątrz $\Omega$ na mocy lokalnej regularności eliptycznej
+i równania ciepła, przy odpowiedniej iteracji oszacowań.
+\end{uwaga}
+
+\section{Równanie falowe: propagacja i zachowanie energii}
+\label{sec:pde12-wave}
+
+\begin{twierdzenie}[Spektralne rozwiązanie równania falowego]
+\label{thm:pde12-wave}
+Niech $A=-\Delta_D$ jak wyżej, $c>0$,
+$u_0\in H_0^1(\Omega)$ i $u_1\in L^2(\Omega)$.
+Oznaczmy $a_j=(u_0,\phi_j)$, $b_j=(u_1,\phi_j)$.
+Wtedy szereg
+\[
+u(t)=\sum_{j=1}^\infty
+\left(a_j\cos(c\sqrt{\lambda_j}t)
++\frac{b_j}{c\sqrt{\lambda_j}}\sin(c\sqrt{\lambda_j}t)\right)\phi_j
+\]
+wyznacza jedyne rozwiązanie energetyczne równania
+$u_{tt}+c^2Au=0$ z danymi $u(0)=u_0$, $u_t(0)=u_1$,
+przy czym
+$u\in C(\R;H_0^1(\Omega))\cap C^1(\R;L^2(\Omega))$.
+Energia
+\[
+E(t)=\frac12\|u_t(t)\|_2^2+
+\frac{c^2}{2}\|\nabla u(t)\|_2^2
+\]
+jest stała i równa $E(0)$.
+\end{twierdzenie}
+\begin{proof}
+Z twierdzenia~\ref{thm:pde12-formdomain} mamy
+$\sum_j\lambda_j|a_j|^2<\infty$ i
+$\sum_j|b_j|^2<\infty$. Dla współczynnika
+$u_j(t)=a_j\cos(c\sqrt{\lambda_j}t)
++b_j\sin(c\sqrt{\lambda_j}t)/(c\sqrt{\lambda_j})$
+zachodzi
+\[
+|u_j'(t)|^2+c^2\lambda_j|u_j(t)|^2
+=|b_j|^2+c^2\lambda_j|a_j|^2.
+\]
+To tożsamość Pitagorasa dla obrotu wektora
+$(c\sqrt{\lambda_j}a_j,b_j)$ w płaszczyźnie.
+Sumując po $j$, otrzymujemy równość energii dla sum
+częściowych i jednolite w $t$ oszacowanie ogonów
+w $H_0^1\times L^2$. Wynika z tego zbieżność
+sum częściowych w
+$C([-T,T];H_0^1)\times C([-T,T];L^2)$
+dla każdego $T>0$. Funkcje częściowe spełniają równanie
+drugiego rzędu. Przejście do granicy w słabym równaniu
+odbywa się przez testowanie funkcjami $v\in H_0^1$
+oraz funkcjami testowymi czasu:
+$u_{tt}+c^2Au=0$ rozumiemy w $H^{-1}(\Omega)$.
+Rzeczywiście, forma $\int_\Omega\nabla u(x)\cdot\nabla v(x)\,\mathrm d\lambda_d(x)$ jest
+ciągła na $H_0^1$, więc równanie dla sum częściowych
+przechodzi do granicy w $H^{-1}$.
+
+Dla jednoznaczności niech $w$ będzie różnicą dwóch
+rozwiązań energetycznych z zerowymi danymi. Standardowe
+uśrednienie w czasie albo projekcja na $\phi_j$ redukuje
+równanie do $w_j''+c^2\lambda_jw_j=0$ z zerowymi
+danymi, a więc $w_j=0$ dla każdego $j$. Zupełność bazy
+daje $w=0$. Równość energii dla limitu wynika z
+silnej zbieżności obu jej składników.
+\end{proof}
+
+\begin{uwaga}[Czego analiza spektralna nie zastępuje?]
+Rozwinięcie w funkcje własne pokazuje istnienie i
+zachowanie globalnej energii, ale nie ujawnia bezpośrednio
+geometrii stożków charakterystycznych. Skończona prędkość
+propagacji, uzyskana w rozdziale~5 metodą energii lokalnej,
+pozostaje niezależną, silniejszą lokalnie informacją.
+\end{uwaga}
+
+\section{Przepływ Schrödingera i związek z operatorem unitarnym}
+\label{sec:pde12-schroedinger}
+
+\begin{twierdzenie}[Ewolucja unitarna dla samosprzężonego $A$]
+\label{thm:pde12-unitary}
+Na zespoleniu $L^2(\Omega;\C)$ zdefiniujmy
+$U(t)u=\sum_je^{-it\lambda_j}(u,\phi_j)\phi_j$,
+$t\in\R$. Wtedy $(U(t))_{t\in\R}$ jest silnie
+ciągłą grupą unitarną z generatorem $-iA$.
+Dla $u_0\in D(A)$ funkcja $u(t)=U(t)u_0$
+spełnia $iu_t=Au$ i $\|u(t)\|_2=\|u_0\|_2$.
+\end{twierdzenie}
+\begin{proof}
+Z Parsevala i $|e^{-it\lambda_j}|=1$ otrzymujemy
+$\|U(t)u\|_2=\|u\|_2$. Ponadto
+$U(t)U(s)=U(t+s)$ oraz $U(t)^{-1}=U(-t)$,
+więc operatory są unitarne. Silna ciągłość wynika z
+$\sum_j|e^{-it\lambda_j}-1|^2|u_j|^2\to0$
+przez zbieżność zdominowaną. Dla $u\in D(A)$ ilorazy
+$\frac{e^{-it\lambda_j}-1}{t}$ są zdominowane przez
+$\lambda_j$, więc różniczkowanie w $L^2$ daje
+$\frac{\mathrm d}{\mathrm dt}U(t)u=-iAU(t)u$.
+Odwrotnie, istnienie granicy ilorazu w $L^2$ wymusza
+$\sum_j\lambda_j^2|u_j|^2<\infty$ z Parsevala,
+a więc dziedziną generatora jest dokładnie $D(A)$.
+\end{proof}
+
+\begin{uwaga}
+Dla ogólnego operatora samosprzężonego, niekoniecznie
+zwartego rezolwentnie, odpowiednie twierdzenia o
+półgrupach i grupach unitarnych otrzymuje się przez
+rachunek spektralny. Twierdzenie Stone'a identyfikuje
+generator każdej silnie ciągłej grupy unitarnej jako
+operator postaci $-iA$ dla pewnego samosprzężonego $A$.
+W tym rozdziale dowiedliśmy konstrukcji dla laplasjanu
+z czysto punktowym widmem; pełna ogólność Stone'a
+wymaga twierdzenia spektralnego dla operatorów
+samosprzężonych, również o widmie ciągłym.
+\end{uwaga}
+
+\section{Podsumowanie: co wynika z założeń, a co nie?}
+\label{sec:pde12-summary}
+
+Na obszarze ograniczonym Lipschitzowskim
+słaba forma Dirichleta definiuje samosprzężony
+operator $A=-\Delta_D$. Zwarty charakter zanurzenia
+$H_0^1\hookrightarrow L^2$ jest dokładnym powodem
+zwartej rezolwenty, dyskretnego widma i ortonormalnej
+bazy funkcji własnych. Stąd otrzymujemy alternatywę
+Fredholma, rozwinięcia dla równania ciepła i falowego
+oraz przepływ unitarny równania Schrödingera.
+
+Nie dowiedliśmy tu ogólnego twierdzenia spektralnego dla
+nieograniczonych operatorów samosprzężonych ani
+pełnego twierdzenia Hille'a--Yosidy. W kolejnych rozdziałach
+wykorzystamy jednak już udowodnione przypadki oraz
+wyraźnie oddzielimy twierdzenia w pełnej ogólności od
+wyników obowiązujących dla zwartej rezolwenty.
+
+% Rozdział 13. Tekst przeznaczony do włączenia przed \appendix.

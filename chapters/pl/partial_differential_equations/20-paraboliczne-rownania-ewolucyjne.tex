@@ -1,0 +1,640 @@
+\chapter[Paraboliczne równania ewolucyjne]{Paraboliczne równania ewolucyjne: rozwiązania słabe, metoda Galerkina i regularność}
+\label{chap:pde20}
+
+\section{Od równania ciepła do współczynników mierzalnych}
+W rozdziale~4 rozwiązywaliśmy równanie ciepła w przestrzeni całej
+przy użyciu jądra Gaussa. Obecnie rozważymy znacznie ogólniejsze
+zagadnienie na ograniczonym obszarze $\Omega\subset\R^d$:
+\begin{equation}\label{eq:pde20-eq}
+ \partial_t u-\operatorname{div}(A(t,x)\nabla u)=f
+ \quad\text{w }(0,T)\times\Omega,\qquad
+ u|_{\partial\Omega}=0,\qquad u(0)=u_0.
+\end{equation}
+Macierz $A$ może być tylko mierzalna zarówno w czasie, jak i w przestrzeni.
+W takich warunkach nie należy oczekiwać klasycznych pochodnych drugiego
+rzędu. W przeciwieństwie do zagadnienia eliptycznego rozwiązanie zależy
+od czasu, ale nie zakładamy istnienia pochodnej $u_t$ o wartościach w $L^2(\Omega)$.
+
+\begin{definicja}[Dane i eliptyczność paraboliczna]\label{def:pde20-data}
+Niech $\Omega\subset\R^d$ będzie ograniczonym obszarem Lipschitzowskim,
+$0<T<\infty$, $H=L^2(\Omega)$, $V=H_0^1(\Omega)$, $V^*=H^{-1}(\Omega)$.
+Rozpatrujemy rzeczywistą macierz $A=(a_{ij})\in
+L^\infty((0,T)\times\Omega;\R^{d\times d})$ taką, że dla pewnych
+$0<\lambda\le\Lambda<\infty$, dla prawie wszystkich $(t,x)$ i każdego
+$\xi\in\R^d$ zachodzi
+\[
+ \lambda|\xi|^2\le A(t,x)\xi\cdot\xi,
+ \qquad |A(t,x)\xi|\le\Lambda|\xi|.
+\]
+Nie wymagamy symetrii macierzy $A$. Dla $v,w\in V$ określamy
+$a(t;v,w)=\int_\Omega A(t,x)\nabla v(x)\cdot\nabla w(x)
+\,\mathrm d\lambda_d(x)$. Przyjmujemy $u_0\in H$ oraz
+$f\in L^2(0,T;V^*)$; dualność $V^*,V$ oznaczamy przez
+$\langle\cdot,\cdot\rangle$.
+\end{definicja}
+
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9,>=Latex]
+  \fill[blue!4] (0,0) rectangle (6,3.4);
+  \draw[very thick,blue!45!black] (0,0) -- (0,3.4) -- (6,3.4) -- (6,0);
+  \draw[very thick,teal!65!black] (0,0)--(6,0);
+  \draw[->] (-0.4,0)--(6.8,0) node[right] {$x$};
+  \draw[->] (0,-0.25)--(0,4.1) node[above] {$t$};
+  \node[below] at (3,-0.07) {$u(0,x)=u_0(x)$};
+  \node[rotate=90,above] at (0,1.8) {$u(t,0)=0$};
+  \node[rotate=90,below] at (6,1.8) {$u(t,1)=0$};
+  \node[above] at (3,3.4) {$t=T$ (wartość nie jest zadawana)};
+  \node at (3,1.75) {$Q_T=(0,T)\times(0,1)$};
+  \node[below] at (0,-0.4) {$0$};
+  \node[below] at (6,-0.4) {$1$};
+\end{tikzpicture}
+
+\small Rysunek: jednowymiarowy przykład ($\Omega=(0,1)$). Podstawa i brzeg boczny walca parabolicznego.
+Dane początkowe i warunek Dirichleta określa się na różnych częściach brzegu.
+\end{center}
+
+Normę w $V$ ustalamy jako $\|v\|_V=\|\nabla v\|_{L^2(\Omega)}$.
+Dzięki nierówności Poincarégo jest ona równoważna zwykłej normie $H^1$.
+Mamy ciągłe, gęste zanurzenia $V\hookrightarrow H\cong H^*\hookrightarrow V^*$.
+W szczególności $\|h\|_{V^*}\le C_P\|h\|_H$ dla $h\in H$.
+
+\begin{uwaga}[Trzy odrębne narzędzia: forma, baza i zwartość]
+\label{rem:pde-v43-parabolic-basis}
+W dowodzie istnienia wykorzystamy koercywność formy
+(znaną z rozdziału~\ref{chap:pde-variational}), bazę własną
+pomocniczego $-\Delta_D$ z rozdziału~\ref{chap:pde18}
+oraz zwarte zanurzenie z rozdziału~\ref{chap:pde-embeddings}.
+Baza laplasjanu nie diagonalizuje na ogół macierzy
+$A(t,x)$; służy do zbudowania stabilnych rzutów
+$P_n$ w $V$, $H$ i $V^*$. Dlatego ani niesymetryczność,
+ani mierzalna zależność $A$ od czasu nie podważają
+przedstawionej konstrukcji. Własności samosprzężonej
+półgrupy $e^{-tL}$ w dalszej części rozdziału
+odnoszą się natomiast do wyraźnie wskazanego przypadku
+$L=-\Delta_D$ (lub innego stałego operatora dodatniego
+samosprzężonego), nie do ogólnego $A(t,x)$.
+\end{uwaga}
+
+\begin{definicja}[Rozwiązanie słabe w przestrzeni energii]
+\label{def:pde20-weak}
+Rozwiązaniem słabym zagadnienia~\eqref{eq:pde20-eq} nazywamy funkcję
+\[
+ u\in L^2(0,T;V),\qquad u'\in L^2(0,T;V^*),
+\]
+której pochodną rozumiemy dystrybucyjnie w czasie oraz która spełnia
+$\langle u'(t),v\rangle+a(t;u(t),v)=\langle f(t),v\rangle$
+dla każdego $v\in V$ i prawie każdego $t\in(0,T)$, przy czym zbiór
+wyjątkowy można wybrać niezależnie od $v$.
+Warunek $u(0)=u_0$ dotyczy ciągłego reprezentanta $H$-wartościowego,
+którego istnienie wykażemy poniżej.
+\end{definicja}
+
+\section{Ciągłość czasowa i tożsamość energii}
+\begin{lemat}[Tożsamość energii w trójce Gelfanda]\label{lem:pde20-energy}
+Niech $V=H_0^1(\Omega)$, $H=L^2(\Omega)$, a
+$u\in L^2(0,T;V)$ ma pochodną $u'\in L^2(0,T;V^*)$.
+Wówczas $u$ ma jednoznacznego reprezentanta należącego do
+$C([0,T];H)$ i dla wszystkich $0\le s\le t\le T$ zachodzi
+\begin{equation}\label{eq:pde20-energy-identity}
+ \frac12\|u(t)\|_H^2-\frac12\|u(s)\|_H^2
+ =\int_s^t\langle u'(r),u(r)\rangle\,\mathrm dr.
+\end{equation}
+\end{lemat}
+\begin{proof}
+Niech $\{e_j\}_{j\ge1}$ będzie ortonormalną bazą $H$ złożoną
+z funkcji własnych dodatniego laplasjanu Dirichleta,
+$-\Delta_D e_j=\mu_j e_j$, $\mu_j>0$.
+Z twierdzenia spektralnego dla jego formy wynika, że
+$\|v\|_V^2=\sum_{j\ge1}\mu_j|(v,e_j)_H|^2$ dla $v\in V$.
+Rzut $P_n$ na $\operatorname{span}\{e_1,\ldots,e_n\}$ ma normę
+co najwyżej $1$ zarówno w $V$, jak i w $V^*$ (w drugiej przestrzeni
+stosujemy rozwinięcie z wagami $\mu_j^{-1}$).
+Co więcej, $P_nu\to u$ w $L^2(0,T;V)$ i
+$P_nu'\to u'$ w $L^2(0,T;V^*)$.
+
+Współczynniki $t\mapsto (u(t),e_j)_H$ należą do $H^1(0,T)$,
+ponieważ ich pochodnymi są $\langle u'(t),e_j\rangle$.
+Dla skończonego $n$ zwykła reguła różniczkowania daje
+\[
+ \|P_nu(t)\|_H^2-\|P_nu(s)\|_H^2
+ =2\int_s^t\langle P_nu'(r),P_nu(r)\rangle\,\mathrm dr.
+\]
+Wykażemy najpierw zbieżność $P_nu$ w $C([0,T];H)$.
+Dla $w=P_nu-P_mu$ wybieramy punkt $s\in[0,T]$ taki, że
+$\|w(s)\|_H^2\le T^{-1}\|w\|_{L^2(0,T;H)}^2$;
+istnieje on, gdyż średnia nie może być mniejsza od wszystkich wartości.
+Stosując poprzednią tożsamość na przedziale o końcach $s,t$
+i nierówność Cauchy'ego--Schwarza, otrzymujemy
+\begin{equation}\label{eq:pde20-cont-est}
+ \sup_{0\le t\le T}\|w(t)\|_H^2
+ \le T^{-1}\|w\|_{L^2(0,T;H)}^2
+ +2\|w'\|_{L^2(0,T;V^*)}\|w\|_{L^2(0,T;V)}.
+\end{equation}
+Oba składniki po prawej dążą do zera dla $m,n\to\infty$.
+Granica jest więc $H$-wartościowo ciągła i równa $u$
+prawie wszędzie. Przechodząc do granicy w skończeniewymiarowej
+tożsamości energii, korzystamy z jednostajnej zbieżności
+wartości końcowych oraz zbieżności obu czynników w przestrzeniach
+$L^2(V^*)$ i $L^2(V)$. To daje~\eqref{eq:pde20-energy-identity}.
+Jednoznaczność reprezentanta wynika z ciągłości w $H$.
+\end{proof}
+
+\section{Istnienie i jednoznaczność: pełna konstrukcja Galerkina}
+\begin{twierdzenie}[Paraboliczne zagadnienie Dirichleta]\label{thm:pde20-existence}
+Niech $\Omega,T,A,f,u_0$ spełniają założenia
+Definicji~\ref{def:pde20-data}. Wtedy istnieje dokładnie jedno rozwiązanie
+słabe zagadnienia~\eqref{eq:pde20-eq} w sensie
+Definicji~\ref{def:pde20-weak}. Spełnia ono oszacowanie
+\begin{equation}\label{eq:pde20-apriori}
+ \sup_{0\le t\le T}\|u(t)\|_H^2
+ +\lambda\int_0^T\|u(t)\|_V^2\,\mathrm dt
+ \le 2\|u_0\|_H^2
+ +2\lambda^{-1}\int_0^T\|f(t)\|_{V^*}^2\,\mathrm dt.
+\end{equation}
+Stała w nierówności nie zależy od gładkości współczynników.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: równanie skończeniewymiarowe.}
+Niech $V_n=\operatorname{span}\{e_1,\ldots,e_n\}$, gdzie $e_j$ są
+funkcjami własnymi użytymi w Lemacie~\ref{lem:pde20-energy}.
+Szukamy $u_n(t)=\sum_{j=1}^n c_j(t)e_j$, które spełnia
+\[
+ (u_n'(t),e_i)_H+a(t;u_n(t),e_i)
+ =\langle f(t),e_i\rangle,\quad i=1,\ldots,n,
+ \qquad u_n(0)=P_nu_0.
+\]
+Jest to liniowy układ $c'(t)+B_n(t)c(t)=F_n(t)$,
+gdzie $B_n$ jest mierzalna i ograniczona na $[0,T]$, a
+$F_n\in L^2(0,T;\R^n)$. Równanie całkowe
+$c(t)=c(0)+\int_0^t(F_n(r)-B_n(r)c(r))\,\mathrm dr$
+ma jednoznaczne absolutnie ciągłe rozwiązanie: na krótkim przedziale
+operator po prawej jest kontrakcją w normie supremum, a skończoną
+liczbę takich przedziałów sklejamy. Otrzymujemy rozwiązanie na $[0,T]$.
+
+\emph{Krok 2: energia.}
+Mnożymy $i$-te równanie przez $c_i(t)$ i sumujemy po $i$.
+Otrzymujemy dla prawie każdego $t$
+\[
+ \frac12\frac{\mathrm d}{\mathrm dt}\|u_n\|_H^2
+ +\lambda\|u_n\|_V^2
+ \le\|f\|_{V^*}\|u_n\|_V
+ \le\frac{\lambda}{2}\|u_n\|_V^2
+ +\frac1{2\lambda}\|f\|_{V^*}^2.
+\]
+Całkując od $0$ do $t$ i korzystając z
+$\|P_nu_0\|_H\le\|u_0\|_H$, dostajemy
+\begin{equation}\label{eq:pde20-energy-n}
+ \|u_n(t)\|_H^2+\lambda\int_0^t\|u_n(r)\|_V^2\,\mathrm dr
+ \le\|u_0\|_H^2+\lambda^{-1}\|f\|_{L^2(0,T;V^*)}^2.
+\end{equation}
+To jednocześnie zapobiega utracie kontroli nad rozwiązaniami przy $n\to\infty$.
+
+\emph{Krok 3: kontrola pochodnej czasowej.}
+Dla każdego $v\in V$ zachodzi
+$\langle u_n',v\rangle=\langle f,P_nv\rangle-a(t;u_n,P_nv)$,
+ponieważ $u_n'\in V_n$ i $P_n$ jest ortogonalny w $H$.
+Korzystamy z $\|P_nv\|_V\le\|v\|_V$ oraz ograniczoności formy:
+\[
+ \|u_n'(t)\|_{V^*}\le\|f(t)\|_{V^*}+\Lambda\|u_n(t)\|_V.
+\]
+Zatem $\{u_n'\}$ jest ograniczony w $L^2(0,T;V^*)$.
+
+\emph{Krok 4: granica.}
+Po wybraniu podciągu, dzięki refleksywności przestrzeni Hilberta,
+$u_n\rightharpoonup u$ w $L^2(0,T;V)$,
+$u_n'\rightharpoonup g$ w $L^2(0,T;V^*)$.
+Ponadto $u_n$ jest ograniczony w $L^\infty(0,T;H)$.
+Dla dowolnego $v\in V$ i $\eta\in C_c^\infty(0,T)$ mamy
+\[
+ \int_0^T\langle u_n'(t),v\rangle\eta(t)\,\mathrm dt
+ =-\int_0^T(u_n(t),v)_H\eta'(t)\,\mathrm dt.
+\]
+Przechodząc do granicy, stwierdzamy, że $g=u'$.
+Ustalmy $v=e_j$. Dla $n\ge j$ równanie Galerkina można
+pomnożyć przez $\eta\in L^2(0,T)$; liniowość i ograniczoność
+formy $w\mapsto a(t;w,e_j)$ pozwalają przejść do granicy
+w całce po czasie. Otrzymujemy równanie słabe dla każdego $e_j$.
+Przez gęstość ich rozpiętości w $V$ i ciągłość obu stron
+równość rozszerza się na dowolny $v\in V$.
+
+\emph{Krok 5: warunek początkowy.}
+Dla $v\in V_n$, po scałkowaniu równania Galerkina od $0$ do $T$
+i całkowaniu przez części z dowolną $\eta\in C^1([0,T])$,
+$\eta(T)=0$, otrzymujemy
+\[
+ -\int_0^T(u_n(t),v)_H\eta'(t)\,\mathrm dt
+ +\int_0^T a(t;u_n(t),v)\eta(t)\,\mathrm dt
+ =\int_0^T\langle f(t),v\rangle\eta(t)\,\mathrm dt
+ +(P_nu_0,v)_H\eta(0).
+\]
+Dla każdego ustalonego $v=e_j$ przechodzimy do granicy jak wyżej.
+Odpowiadające równanie dla $u$ otrzymujemy z różniczkowania
+jego ciągłego reprezentanta (Lemat~\ref{lem:pde20-energy});
+porównanie wyrazów w czasie $0$ daje
+$(u(0),e_j)_H=(u_0,e_j)_H$ dla każdego $j$.
+Zatem $u(0)=u_0$ w $H$.
+
+\emph{Krok 6: oszacowanie i jednoznaczność.}
+Wstawiamy $v=u(t)$ do równania słabego (jest to dopuszczalne
+w równości w $V^*$ dla prawie każdego $t$) i używamy
+Lematu~\ref{lem:pde20-energy}. Dostajemy oszacowanie
+\eqref{eq:pde20-apriori} dokładnie tak jak w Kroku 2.
+Jeżeli $u,w$ są rozwiązaniami z tymi samymi danymi,
+to $z=u-w$ spełnia równanie z zerową prawą stroną
+i zerową wartością początkową. Tożsamość energii daje
+$\|z(t)\|_H^2+2\lambda\int_0^t\|z\|_V^2\,\mathrm dr\le0$.
+Stąd $z=0$.
+\end{proof}
+
+\begin{uwaga}[Zmienne w czasie współczynniki i brak symetrii]
+W dowodzie nie różniczkowaliśmy $A$ względem czasu
+ani nie odwoływaliśmy się do symetrii $a(t;\cdot,\cdot)$.
+Jest to istotna przewaga słabego sformułowania nad próbami
+obliczania $\Delta u$ punkt po punkcie.
+\end{uwaga}
+
+\section{Zależność od danych i paraboliczna zasada maksimum}
+\begin{wniosek}[Stabilność rozwiązania]\label{cor:pde20-stability}
+Jeżeli $u_i$ odpowiadają danym $(u_{0,i},f_i)$, $i=1,2$,
+przy tej samej macierzy $A$, to dla $z=u_1-u_2$ mamy
+\[
+ \sup_{t\in[0,T]}\|z(t)\|_H^2
+ +\lambda\|z\|_{L^2(0,T;V)}^2
+ \le2\|u_{0,1}-u_{0,2}\|_H^2
+ +2\lambda^{-1}\|f_1-f_2\|_{L^2(0,T;V^*)}^2.
+\]
+\end{wniosek}
+\begin{proof}
+Równanie na $z$ ma tę samą formę i odpowiadającą jej prawą
+stronę $f_1-f_2$. Stosujemy Twierdzenie~\ref{thm:pde20-existence}.
+\end{proof}
+
+\begin{lemat}[Reguła obcięcia w czasie]\label{lem:pde20-trunc}
+Jeżeli $u\in L^2(0,T;V)$ i $u'\in L^2(0,T;V^*)$, to
+$u^-:=\max\{-u,0\}\in L^2(0,T;V)$ i funkcja
+$t\mapsto\|u^-(t)\|_H^2$ jest absolutnie ciągła, przy czym
+\[
+ \frac12\frac{\mathrm d}{\mathrm dt}\|u^-(t)\|_H^2
+ =-\langle u'(t),u^-(t)\rangle
+ \quad\text{dla prawie wszystkich }t.
+\]
+\end{lemat}
+\begin{proof}
+Aby uniknąć nieuprawnionego różniczkowania funkcji ujemnej,
+wybieramy funkcje wypukłe $\Phi_\eps\in C^2(\R)$ z
+$\Phi_\eps(0)=\Phi_\eps'(0)=0$, tak że
+$\Phi_\eps(s)\to(s^-)^2/2$,
+$\Phi_\eps'(s)\to-s^-$, oraz $|\Phi_\eps'(s)|\le |s|$,
+$|\Phi_\eps''(s)|\le C$.
+Dla wygładzonych w czasie aproksymacji o wartościach w $V$
+i dla funkcjonału $\int_\Omega\Phi_\eps(u)\,\mathrm d\lambda_d(x)$
+reguła łańcuchowa daje
+$\mathrm d/\mathrm dt\int_\Omega\Phi_\eps(u(t,x))\,\mathrm d\lambda_d(x)=
+\langle u',\Phi_\eps'(u)\rangle$.
+Ponieważ $\Phi_\eps'(0)=0$ i $|\Phi_\eps''|\le C$,
+reguła łańcuchowa w przestrzeni Sobolewa daje
+$\Phi_\eps'(v)\in V$ oraz
+$\|\Phi_\eps'(v)\|_V\le C\|v\|_V$.
+Uzasadnijmy jawnie ciągłość tej operacji w $V$:
+przy $v_n\to v$ w $H_0^1$, po przejściu do podciągu
+$v_n\to v$ i $\nabla v_n\to\nabla v$ prawie wszędzie.
+Wtedy
+$\nabla\Phi_\eps'(v_n)=\Phi_\eps''(v_n)\nabla v_n$
+zbiega do $\Phi_\eps''(v)\nabla v$ w $L^2$,
+bo pierwszy składnik różnicy kontroluje
+$C\|\nabla v_n-\nabla v\|_2$, a w drugim
+stosujemy zbieżność zdominowaną przy ustalonym
+$\nabla v$.
+To samo rozumowanie, najpierw na podciągu i następnie
+dla całego ciągu, daje silną zbieżność po
+wygładzeniu czasowym w $L^2(0,T;V)$.
+Otrzymujemy więc regułę łańcuchową dla ustalonego
+$\eps$ przez granicę w dualności $L^2(V^*)$--$L^2(V)$.
+Przy $\eps\downarrow0$ zachodzi
+$\Phi_\eps'(u)\to-u^-$ w $L^2(0,T;V)$:
+poza poziomicą $\{u=0\}$ wynika to z reguły
+łańcuchowej, a na $\{u=0\}$ mamy $\nabla u=0$
+prawie wszędzie. Ponownie stosujemy zbieżność
+zdominowaną i otrzymujemy żądaną tożsamość.
+Otrzymujemy wskazaną tożsamość w sensie rozkładów w czasie,
+a obie strony są całkowalne, więc w sensie funkcji
+absolutnie ciągłych. (Jest to standardowy argument
+reguły łańcuchowej dla Lipschitzowskiego obcięcia.)
+\end{proof}
+
+\begin{twierdzenie}[Zachowanie dodatniości]\label{thm:pde20-positivity}
+Niech $u$ będzie rozwiązaniem z Twierdzenia~\ref{thm:pde20-existence}.
+Jeżeli $u_0\ge0$ prawie wszędzie i $\langle f(t),v\rangle\ge0$
+dla każdej nieujemnej $v\in V$ i prawie każdego $t$, to
+$u(t,x)\ge0$ dla prawie każdego $x\in\Omega$ i każdego $t\in[0,T]$.
+\end{twierdzenie}
+\begin{proof}
+Testujemy równanie przez $u^-(t)$. Z reguły łańcuchowej
+$\langle u',u^-\rangle=-\frac12\mathrm d\|u^-\|_H^2/\mathrm dt$.
+Na zbiorze $\{u<0\}$ mamy $\nabla u=-\nabla u^-$,
+a na dopełnieniu $\nabla u^-=0$ prawie wszędzie. Zatem
+$a(t;u,u^-)=-a(t;u^-,u^-)\le-\lambda\|u^-\|_V^2$.
+W rezultacie
+\[
+ \frac12\frac{\mathrm d}{\mathrm dt}\|u^-(t)\|_H^2
+ +\lambda\|u^-(t)\|_V^2\le0.
+\]
+Ponieważ $u^-(0)=0$, lewa strona po scałkowaniu daje
+$\|u^-(t)\|_H^2=0$ dla każdego $t$.
+\end{proof}
+
+\begin{wniosek}[Zasada porównania]
+Dla tej samej macierzy $A$ niech rozwiązania $u,v$ mają
+odpowiednio dane $(u_0,f)$ i $(v_0,g)$.
+Jeżeli $u_0\le v_0$ prawie wszędzie i
+$\langle g(t)-f(t),\phi\rangle\ge0$ dla wszystkich
+nieujemnych $\phi\in V$ i prawie wszystkich $t$,
+to $u(t)\le v(t)$ prawie wszędzie dla każdego $t$.
+\end{wniosek}
+\begin{proof}
+Stosujemy Twierdzenie~\ref{thm:pde20-positivity}
+do różnicy $v-u$.
+\end{proof}
+
+\section{Wygładzanie i zanik energii dla laplasjanu Dirichleta}
+Niech $L=-\Delta_D$ będzie dodatnim laplasjanem Dirichleta
+w $H$. Jego wartości własne oznaczamy przez $\mu_j>0$, a funkcje
+własne przez $e_j$. W tym podrozdziale zakładamy
+$A=I$ i $f=0$, chyba że wyraźnie zaznaczymy inaczej.
+
+\begin{twierdzenie}[Półgrupa cieplna i wygładzanie]\label{thm:pde20-semigroup}
+Dla każdego $u_0\in H$ funkcja
+$u(t)=e^{-tL}u_0=\sum_{j\ge1}e^{-\mu_jt}(u_0,e_j)_He_j$
+jest jedynym rozwiązaniem słabym zagadnienia jednorodnego.
+Dla każdego $s\ge0$ i $t>0$ zachodzi
+\[
+ \|L^se^{-tL}u_0\|_H
+ \le C_s t^{-s}\|u_0\|_H,
+ \qquad C_s=(s/\mathrm e)^s\ (s>0),\quad C_0=1.
+\]
+Ponadto $\|u(t)\|_H\le e^{-\mu_1t}\|u_0\|_H$.
+\end{twierdzenie}
+\begin{proof}
+Dla skończonych sum własnych obliczamy
+$u'(t)+Lu(t)=0$, a tożsamość energii jest bezpośrednia.
+Dla ogólnego $u_0$ szereg zbiega w $H$ jednostajnie na
+zwartych przedziałach czasu dzięki $|e^{-\mu_jt}|\le1$.
+Mamy też
+\[
+ \int_0^T\|L^{1/2}e^{-tL}u_0\|_H^2\,\mathrm dt
+ =\sum_j\mu_j|(u_0,e_j)_H|^2
+ \int_0^T e^{-2\mu_jt}\,\mathrm dt
+ \le\tfrac12\|u_0\|_H^2.
+\]
+Analogicznie $u'=-Lu$ należy do $L^2(0,T;V^*)$,
+ponieważ $\|Lu\|_{V^*}=\|L^{1/2}u\|_H$.
+Granica spełnia więc definicję rozwiązania słabego;
+jednoznaczność wynika z Twierdzenia~\ref{thm:pde20-existence}.
+Dla $s>0$ supremum funkcji $y\mapsto y^se^{-ty}$ na
+$[0,\infty)$ wynosi $(s/(\mathrm et))^s$.
+Przykładając to oszacowanie do każdego współczynnika szeregu,
+dostajemy nierówność wygładzającą. Ponieważ $\mu_j\ge\mu_1$,
+otrzymujemy także zanik wykładniczy.
+\end{proof}
+
+
+\begin{twierdzenie}[Wzór Duhamela dla wymuszenia w $L^2(H)$]
+\label{thm:pde20-duhamel}
+Niech $\Omega\subset\R^d$ będzie ograniczonym obszarem
+Lipschitzowskim, $H=L^2(\Omega)$, $L=-\Delta_D$,
+$u_0\in H$, $f\in L^2(0,T;H)$.
+Jedynym rozwiązaniem słabym zagadnienia $u'+Lu=f$,
+$u(0)=u_0$, jest funkcja
+\[
+ u(t)=e^{-tL}u_0+\int_0^t e^{-(t-s)L}f(s)\,\mathrm ds,
+ \qquad 0\le t\le T,
+\]
+gdzie całka jest całką Bochnera w $H$.
+\end{twierdzenie}
+\begin{proof}
+Operator $e^{-tL}$ jest kontrakcją w $H$. Dla niemal
+każdego $t$ całka Bochnera istnieje, ponieważ
+$\int_0^T\|f(s)\|_H\,\mathrm ds\le
+\sqrt T\|f\|_{L^2(0,T;H)}$.
+Ciągłość składnika całkowego w $H$ wynika z silnej
+ciągłości półgrupy i zbieżności zdominowanej.
+
+Niech $e_j$ będzie bazą funkcji własnych, $Le_j=\mu_je_j$.
+Dla $u_n=P_nu$ i $f_n=P_nf$ wzór redukuje się do
+$r_j'(t)+\mu_jr_j(t)=(f(t),e_j)_H$,
+$r_j(0)=(u_0,e_j)_H$, którego rozwiązanie ma dokładnie
+podaną postać. Dla różnic dwóch skończonych przybliżeń
+stosujemy oszacowanie energii z
+Twierdzenia~\ref{thm:pde20-existence}:
+\[
+ \sup_{0\le t\le T}\|u_n(t)-u_m(t)\|_H^2
+ +\int_0^T\|u_n-u_m\|_V^2\,\mathrm dt
+ \le C\bigl(\|P_nu_0-P_mu_0\|_H^2
+ +\|P_nf-P_mf\|_{L^2(0,T;H)}^2\bigr),
+\]
+przy czym w prawej stronie korzystamy z ciągłego
+zanurzenia $H\hookrightarrow V^*$. Prawa strona dąży do
+zera. Jednocześnie z kontraktywności półgrupy wynika
+jednostajna zbieżność wzoru całkowego w $H$.
+Granica jest rozwiązaniem słabym, a jednoznaczność
+daje Twierdzenie~\ref{thm:pde20-existence}.
+\end{proof}
+
+\begin{twierdzenie}[Wyższa regularność energii]\label{thm:pde20-max-reg}
+Niech $L=-\Delta_D$, $u_0\in V=D(L^{1/2})$,
+$f\in L^2(0,T;H)$. Wtedy rozwiązanie słabe równania
+$u'+Lu=f$ spełnia
+$u\in H^1(0,T;H)\cap L^2(0,T;D(L))$ oraz
+\[
+ \int_0^T\|u'(t)\|_H^2\,\mathrm dt
+ +\sup_{t\in[0,T]}\|L^{1/2}u(t)\|_H^2
+ \le2\|L^{1/2}u_0\|_H^2
+ +2\int_0^T\|f(t)\|_H^2\,\mathrm dt.
+\]
+Dla obszarów klasy $C^{1,1}$ można ponadto utożsamić
+$D(L)=H^2(\Omega)\cap H_0^1(\Omega)$; bez regularności brzegu
+takiego utożsamienia nie zakładamy.
+\end{twierdzenie}
+\begin{proof}
+Dla projekcji $P_n$ korzystamy z równania
+$u_n'+Lu_n=P_nf$ z początkową daną $P_nu_0$.
+Iloczyn skalarny z $u_n'$ daje
+$\|u_n'\|_H^2+\frac12\frac{\mathrm d}{\mathrm dt}
+\|L^{1/2}u_n\|_H^2=(P_nf,u_n')_H$.
+Stosujemy nierówność
+$|(P_nf,u_n')|\le(\|f\|_H^2+\|u_n'\|_H^2)/2$,
+po czym całkujemy i otrzymujemy oszacowanie niezależne od $n$.
+Ponieważ $Lu_n=P_nf-u_n'$, także $\{Lu_n\}$ jest ograniczone
+w $L^2(0,T;H)$. Przechodzimy do słabej granicy i używamy
+domkniętości operatora $L$ w przestrzeni Bochnera:
+$u\in L^2(0,T;D(L))$, $Lu=f-u'$. Dolna półciągłość norm
+oraz ciągłość czasowa $V$-wartościowego reprezentanta,
+uzyskana tą samą argumentacją spektralną co w
+Lemacie~\ref{lem:pde20-energy}, kończą dowód.
+\end{proof}
+
+\section{Zwartość czasowo-przestrzenna: lemat Aubina--Lionsa w naszym modelu}
+\begin{twierdzenie}[Zwartość dla parabolicznych ciągów Galerkina]\label{thm:pde20-compact}
+Niech $\Omega\subset\R^d$ będzie ograniczonym obszarem
+Lipschitzowskim. Jeżeli ciąg $\{u_n\}$ jest ograniczony
+w $L^2(0,T;V)$ i ciąg $\{u_n'\}$ jest ograniczony
+w $L^2(0,T;V^*)$, to $\{u_n\}$ jest względnie zwarty
+w $L^2(0,T;H)$.
+\end{twierdzenie}
+\begin{proof}
+Niech $P_N$ oznacza stały rzut na pierwsze $N$ funkcji
+własnych laplasjanu Dirichleta. Z rozwinięcia w bazie
+$\{e_j\}$ dostajemy dla prawie każdego $t$
+\[
+ \|(I-P_N)u_n(t)\|_H^2
+ \le\mu_{N+1}^{-1}\|u_n(t)\|_V^2.
+\]
+Całkowanie po czasie i wspólne ograniczenie norm $V$ dają
+\begin{equation}\label{eq:pde20-tail}
+ \sup_n\|(I-P_N)u_n\|_{L^2(0,T;H)}^2
+ \le C\mu_{N+1}^{-1}\xrightarrow[N\to\infty]{}0.
+\end{equation}
+Dla ustalonego $N$ współczynniki
+$c_{n,j}(t)=(u_n(t),e_j)_H$, $j\le N$, są ograniczone
+w $L^2(0,T)$, a ich pochodne spełniają
+$|c_{n,j}'(t)|=|\langle u_n'(t),e_j\rangle|
+\le\|u_n'(t)\|_{V^*}\|e_j\|_V$.
+Zatem dla każdego $j\le N$ ciąg $\{c_{n,j}\}_n$ jest
+ograniczony w $H^1(0,T)$, a więc względnie zwarty
+w $C([0,T])$: wynika to z oszacowania
+$|c(t)-c(s)|\le\|c'\|_{L^2}|t-s|^{1/2}$
+i z twierdzenia Arzelà--Ascoliego.
+Przez wybór podciągu mamy zbieżność $P_Nu_n$
+w $L^2(0,T;H)$ dla każdego $N$.
+Wybór przekątny względem $N$, a potem oszacowanie
+ogonów~\eqref{eq:pde20-tail}, pokazują, że wybrany podciąg
+$\{u_{n_k}\}$ jest Cauchy'ego w $L^2(0,T;H)$.
+\end{proof}
+
+
+\begin{wniosek}[Szacunek przesunięć czasowych w normie $H$]
+\label{cor:pde20-translations}
+Niech $\Omega\subset\R^d$ będzie ograniczonym obszarem
+Lipschitzowskim, $V=H_0^1(\Omega)$, $H=L^2(\Omega)$,
+a $u\in L^2(0,T;V)$, $u'\in L^2(0,T;V^*)$.
+Dla $0<h<T$ zachodzi
+\[
+ \int_0^{T-h}\|u(t+h)-u(t)\|_H^2\,\mathrm dt
+ \le 2h\,\|u\|_{L^2(0,T;V)}
+ \|u'\|_{L^2(0,T;V^*)}.
+\]
+W szczególności rodzina funkcji o jednostajnie
+ograniczonych obu normach ma jednostajny moduł ciągłości
+względem translacji czasu w $L^2(H)$.
+\end{wniosek}
+\begin{proof}
+Z twierdzenia o ciągłości w trójce Gelfanda wynika
+w $V^*$ równość
+$u(t+h)-u(t)=\int_t^{t+h}u'(s)\,\mathrm ds$.
+Dzięki nierówności Minkowskiego dla przesunięć oraz
+przedłużeniu $u'$ przez zero poza $(0,T)$ mamy
+\[
+ \|u(\cdot+h)-u\|_{L^2(0,T-h;V^*)}
+ \le h\|u'\|_{L^2(0,T;V^*)}.
+\]
+Z drugiej strony nierówność trójkąta daje
+$\|u(\cdot+h)-u\|_{L^2(0,T-h;V)}
+\le2\|u\|_{L^2(0,T;V)}$.
+Z osadzeń $V\hookrightarrow H\hookrightarrow V^*$,
+przy identyfikacji $H=H^*$, otrzymujemy
+$\|w\|_H^2\le\|w\|_V\|w\|_{V^*}$.
+Całkujemy tę nierówność dla $w(t)=u(t+h)-u(t)$,
+a następnie stosujemy Cauchy'ego--Schwarza w czasie.
+\end{proof}
+
+\begin{uwaga}[Zastosowanie do nieliniowości]
+Zbieżność słaba w $L^2(0,T;V)$ na ogół nie pozwala
+przechodzić do granicy w wyrażeniu nieliniowym $F(u_n)$.
+Zbieżność silna w $L^2(0,T;H)$ otrzymana powyżej
+jest często brakującym elementem dowodów istnienia
+w nieliniowych PDE. Ogólne twierdzenie Aubina--Lionsa
+obejmuje więcej par przestrzeni i inne wykładniki;
+tutaj udowodniliśmy samodzielnie wystarczający przypadek.
+\end{uwaga}
+
+\section{Nieliniowy kontrast: możliwość eksplozji}
+\begin{twierdzenie}[Warunkowa eksplozja dla równania reakcji--dyfuzji]
+\label{thm:pde20-blowup}
+Niech $p>1$, $\Omega\subset\R^d$ będzie ograniczonym,
+gładkim obszarem, a $\phi_1>0$ wewnątrz $\Omega$
+będzie pierwszą funkcją własną laplasjanu Dirichleta,
+$-\Delta\phi_1=\mu_1\phi_1$, z normalizacją
+$\int_\Omega\phi_1\,\mathrm d\lambda_d(x)=1$.
+Niech $u\ge0$ będzie dostatecznie regularnym rozwiązaniem
+$u_t-\Delta u=u^p$ na $[0,T_*)\times\Omega$
+z jednorodnym warunkiem Dirichleta. Jeżeli
+$F(0):=\int_\Omega u(0,x)\phi_1(x)\,\mathrm d\lambda_d(x)
+>\mu_1^{1/(p-1)}$, to nie istnieje globalne, nieujemne rozwiązanie klasyczne
+na $[0,\infty)$ z funkcjonałem $F(t)$ skończonym w każdej chwili.
+Dokładniej, jeśli $T_y<\infty$ jest czasem eksplozji rozwiązania
+$y'=-\mu_1y+y^p$, $y(0)=F(0)$, to rozwiązanie $u$ nie może
+pozostawać klasyczne na żadnym przedziale $[0,T]$ z $T\ge T_y$.
+Jeśli istnieje aż do $T_y$, wówczas $F(t)\to\infty$ przy $t\uparrow T_y$.
+\end{twierdzenie}
+\begin{proof}
+Mnożąc równanie przez $\phi_1$ i całkując po $\Omega$,
+a następnie korzystając z całkowania przez części
+i z warunków Dirichleta, otrzymujemy
+\[
+ F'(t)=-\mu_1F(t)+\int_\Omega u(t,x)^p\phi_1(x)
+ \,\mathrm d\lambda_d(x).
+\]
+Miara $\phi_1(x)\,\mathrm d\lambda_d(x)$ jest probabilistyczna,
+więc nierówność Jensena daje
+$\int_\Omega u^p\phi_1\,\mathrm d\lambda_d\ge F(t)^p$.
+Stąd $F'\ge-\mu_1F+F^p$.
+Dla $F(0)>\mu_1^{1/(p-1)}$ rozwiązanie skalarnego ODE
+$y'=-\mu_1y+y^p$ rośnie i osiąga nieskończoność
+w skończonym czasie, ponieważ dla dużych $y$
+mamy $y^p-\mu_1y\ge y^p/2$, a
+$\int_{y_0}^\infty 2s^{-p}\,\mathrm ds<\infty$.
+Z zasady porównania dla skalarnych ODE
+$F(t)\ge y(t)$, dopóki oba wyrażenia są skończone.
+To wyklucza globalne ograniczone rozwiązanie wskazanego typu.
+\end{proof}
+
+\section{Stabilność wstecznego Eulera i rozdzielenie czasu od przestrzeni}
+Dla dyskretyzacji laplasjanu Dirichleta na siatce jednowymiarowej
+niech $L_h$ będzie symetryczną dodatnio określoną macierzą
+różnicową. Przy kroku czasowym $\tau>0$ schemat
+wstecznego Eulera ma postać
+\begin{equation}\label{eq:pde20-implicit}
+ \frac{U^{m+1}-U^m}{\tau}+L_hU^{m+1}=F^{m+1}.
+\end{equation}
+\begin{stwierdzenie}[Bezwarunkowa stabilność energetyczna]
+\label{prop:pde20-be}
+Jeżeli $F^{m+1}=0$ dla wszystkich $m$, to rozwiązanie
+schematu~\eqref{eq:pde20-implicit} spełnia
+$\|U^{m+1}\|_h\le\|U^m\|_h$ niezależnie od $\tau/h^2$,
+gdzie $\|U\|_h^2=h\sum_j|U_j|^2$.
+\end{stwierdzenie}
+\begin{proof}
+Bierzemy dyskretny iloczyn skalarny równania przez $U^{m+1}$.
+Tożsamość $2(a-b,a)=\|a\|^2-\|b\|^2+\|a-b\|^2$
+daje
+\[
+ \|U^{m+1}\|_h^2-\|U^m\|_h^2
+ +\|U^{m+1}-U^m\|_h^2
+ +2\tau(L_hU^{m+1},U^{m+1})_h=0.
+\]
+Ostatnie dwa składniki są nieujemne; stąd teza.
+Jest to twierdzenie o stabilności, nie samoistny dowód
+zbieżności: potrzebna jest jeszcze kontrola błędu aproksymacji.
+\end{proof}
+
+\begin{uwaga}[Granice bieżącego rozdziału]
+Dla współczynników zmiennych w czasie udowodniliśmy
+istnienie i jednoznaczność rozwiązania w naturalnej klasie
+$L^2(V)\cap H^1(V^*)$ bez gładkości $A$. Nie dowodziliśmy
+tu pełnej parabolicznej teorii De Giorgiego--Nasha--Mosera,
+teorii oszacowań Schaudera ani maksymalnej regularności
+w klasach $L^p$ dla dowolnych operatorów niesymetrycznych.
+Odpowiednie zagadnienia wymagają odrębnych założeń i metod.
+\end{uwaga}
+

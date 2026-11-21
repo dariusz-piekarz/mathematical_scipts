@@ -1,0 +1,482 @@
+\chapter[Izomorfizmy i elementarność struktur]{Homomorfizmy, izomorfizmy i elementarność struktur}
+\label{ch:model-morphisms}
+
+\section{Dlaczego porównujemy struktury, a nie tylko ich uniwersa?}
+W rozdziale~\ref{ch:semantics-fol} zdefiniowaliśmy strukturę jako zbiór
+razem z interpretacjami symboli stałych, funkcyjnych i relacyjnych.
+Dwa zbiory mogą mieć tyle samo elementów, a jednak pełnić zupełnie inne
+role jako struktury. Na przykład na tym samym zbiorze $\{0,1\}$
+można interpretować jednoargumentowy symbol relacyjny $R$
+jako relację pustą albo jako relację pełną. Będą to różne struktury, mimo że ich uniwersa są identyczne.
+
+Chcemy rozróżnić cztery pytania. Czy funkcja między uniwersami
+zachowuje podstawowe działania? Czy zachowuje także relacje?
+Czy pozwala odtworzyć strukturę bez utraty informacji?
+Czy nawet wszystkie formuły pierwszego rzędu mają takie samo znaczenie?
+Odpowiedzi prowadzą do homomorfizmów, izomorfizmów i odwzorowań elementarnych.
+
+\section{Homomorfizm i zanurzenie struktury}
+\begin{uwaga}[Jak czytamy $h:\mathfrak A\to\mathfrak B$?]
+Zapis $h:\mathfrak A\to\mathfrak B$ jest skrótem oznaczającym
+funkcję $h:A\to B$ między \emph{uniwersami} struktur, która zachowuje
+wymagane interpretacje symboli. Nie oznacza, że struktury są argumentami
+funkcji $h$. To skrócenie będzie używane w dalszych twierdzeniach.
+\end{uwaga}
+
+\begin{definicja}[Homomorfizm struktur]\label{def:model-homomorphism}
+Niech $\mathcal L$ będzie ustalonym językiem pierwszego rzędu,
+a $\mathfrak A,\mathfrak B$ strukturami dla $\mathcal L$
+o uniwersach odpowiednio $A,B$. Funkcję $h:A\to B$ nazywamy
+\emph{homomorfizmem struktur}, jeśli spełnia następujące warunki:
+\begin{enumerate}[label=(\roman*)]
+\item dla każdego symbolu stałej $c$ zachodzi $h(c^{\mathfrak A})=c^{\mathfrak B}$;
+\item dla każdego $n$-argumentowego symbolu funkcyjnego $f$ i wszystkich
+$a_1,\ldots,a_n\in A$ zachodzi
+\[
+h(f^{\mathfrak A}(a_1,\ldots,a_n))
+=f^{\mathfrak B}(h(a_1),\ldots,h(a_n));
+\]
+\item dla każdego $n$-argumentowego symbolu relacyjnego $R$
+i wszystkich $a_1,\ldots,a_n\in A$ zachodzi implikacja
+\[
+(a_1,\ldots,a_n)\in R^{\mathfrak A}
+\quad\Longrightarrow\quad
+(h(a_1),\ldots,h(a_n))\in R^{\mathfrak B}.
+\]
+\end{enumerate}
+Homomorfizm nazywamy \emph{zanurzeniem}, jeśli ponadto jest iniekcją
+i w ostatnim warunku zachodzi równoważność zamiast samej implikacji.
+\end{definicja}
+
+\begin{uwaga}[Dlaczego relacje traktujemy inaczej niż funkcje?]
+Warunek dla funkcji jest równością wartości: obie kolejności
+„najpierw działanie, potem $h$” oraz „najpierw $h$, potem działanie”
+prowadzą do tego samego wyniku. Dla relacji homomorfizm zapewnia
+jedynie zachowanie faktu, że pewna relacja zachodzi. Sam homomorfizm
+nie musi zachowywać niezachodzenia relacji. Dlatego zanurzenie
+wymaga także implikacji w drugą stronę.
+\end{uwaga}
+
+\begin{przyklad}[Zachowanie dodawania]
+Rozważmy język z symbolem $+$ arności dwa i stałą $0$.
+Funkcja $h:\Z\to\Z$, $h(n)=2n$, jest homomorfizmem
+struktur $(\Z,+,0)$ do $(\Z,+,0)$, ponieważ
+$h(m+n)=2(m+n)=2m+2n=h(m)+h(n)$ i $h(0)=0$.
+Jest ona iniekcją, więc w tym języku, pozbawionym
+symboli relacyjnych poza równością, jest zanurzeniem.
+Nie jest izomorfizmem na całe $\Z$, gdyż liczba $1$
+nie jest obrazem żadnego argumentu.
+\end{przyklad}
+
+\begin{przyklad}[Homomorfizm może gubić informację]
+W języku z jednym dwuargumentowym symbolem relacyjnym $R$ niech
+$A=\{a,b\}$, $B=\{c\}$ i niech w obu strukturach
+$R$ oznacza relację pełną. Stała funkcja $h(a)=h(b)=c$
+jest homomorfizmem: każdy fakt $R(x,y)$ prawdziwy
+w pierwszej strukturze pozostaje prawdziwy po zastosowaniu $h$.
+Nie jest jednak zanurzeniem, ponieważ nie jest iniekcją:
+dwa różne obiekty zostały utożsamione.
+\end{przyklad}
+
+\begin{lemat}[Zachowanie wartości termów]\label{lem:model-homo-terms}
+Niech $\mathcal L$ będzie językiem pierwszego rzędu,
+$h:\mathfrak A\to\mathfrak B$ homomorfizmem struktur języka
+$\mathcal L$, $s$ wartościowaniem w $\mathfrak A$,
+a $t$ termem języka $\mathcal L$.
+Niech $h\circ s$ oznacza wartościowanie $x\mapsto h(s(x))$ w $\mathfrak B$.
+Wtedy
+\[
+h\bigl(t^{\mathfrak A}[s]\bigr)=t^{\mathfrak B}[h\circ s].
+\]
+\end{lemat}
+\begin{proof}
+Stosujemy indukcję po budowie termu. Jeśli $t=x$ jest zmienną,
+lewa strona wynosi $h(s(x))$, co jest definicją prawej strony.
+Jeśli $t=c$ jest stałą, równość wynika z pierwszego warunku
+homomorfizmu. Niech teraz $t=f(t_1,\ldots,t_n)$.
+Wartość lewej strony można zapisać jako
+\[
+h\bigl(f^{\mathfrak A}(t_1^{\mathfrak A}[s],\ldots,
+ t_n^{\mathfrak A}[s])\bigr).
+\]
+Drugi warunek homomorfizmu pozwala przenieść $h$ do każdego argumentu.
+Z założenia indukcyjnego argumenty te są równe
+$t_i^{\mathfrak B}[h\circ s]$, więc otrzymujemy
+$f^{\mathfrak B}(t_1^{\mathfrak B}[h\circ s],\ldots,t_n^{\mathfrak B}[h\circ s])$.
+To dokładnie wartość termu $t$ po prawej stronie tezy.
+\end{proof}
+
+
+\section{Dokładnie co zachowuje homomorfizm?}
+\begin{definicja}[Formuła dodatnia egzystencjalna]\label{def:model-positive-existential}
+Niech $\mathcal L$ będzie językiem pierwszego rzędu.
+Formułę języka $\mathcal L$ nazywamy \emph{dodatnią egzystencjalną},
+jeśli otrzymano ją z formuł atomowych tego języka przez skończone
+stosowanie wyłącznie koniunkcji $\land$, alternatywy $\lor$
+i kwantyfikatora egzystencjalnego $\exists$.
+Nie używamy negacji, implikacji ani kwantyfikatora ogólnego.
+Na przykład $\exists y\,(R(x,y)\land S(y))$ jest taką formułą,
+ale $\neg R(x,x)$ już nie.
+\end{definicja}
+\begin{twierdzenie}[Zachowanie formuł dodatnich egzystencjalnych]\label{thm:model-homo-positive}
+Niech $h:\mathfrak A\to\mathfrak B$ będzie homomorfizmem struktur
+tego samego języka. Jeśli $\varphi$ jest formułą dodatnią
+egzystencjalną i $s$ wartościowaniem w $\mathfrak A$, to
+\[
+\mathfrak A\models\varphi[s]\quad\Longrightarrow\quad
+\mathfrak B\models\varphi[h\circ s].
+\]
+Nie twierdzimy, że implikacja odwrotna zachodzi.
+\end{twierdzenie}
+\begin{proof}
+Dla atomu $t=u$ używamy Lematu~\ref{lem:model-homo-terms}:
+z równości wartości w $A$ wynika równość ich obrazów w $B$.
+Dla atomu $R(t_1,\ldots,t_n)$ otrzymujemy obrazy wartości termów,
+a warunek (iii) w definicji homomorfizmu zapewnia zachowanie relacji.
+Jeżeli formuła ma postać $\psi\land\theta$, to obie formuły składowe
+zachodzą w $\mathfrak A$; z założenia indukcyjnego obie zachodzą
+w $\mathfrak B$. Przy $\psi\lor\theta$ wystarczy zastosować
+założenie indukcyjne do jednego spełnionego składnika.
+Wreszcie niech $\varphi=\exists x\,\psi$ i niech $a\in A$
+będzie świadkiem. Otrzymujemy
+$\mathfrak A\models\psi[s[x\mapsto a]]$.
+Założenie indukcyjne daje
+$\mathfrak B\models\psi[(h\circ s)[x\mapsto h(a)]]$;
+a więc $h(a)\in B$ jest świadkiem dla formuły egzystencjalnej
+w $\mathfrak B$. To wyczerpuje wszystkie dopuszczalne konstrukcje.
+\end{proof}
+\begin{przyklad}[Dlaczego nie wolno dopisać negacji]
+W języku z jednoargumentową relacją $R$ weźmy
+$A=\{a\}$, $B=\{b\}$, $R^{\mathfrak A}=\varnothing$
+oraz $R^{\mathfrak B}=\{b\}$. Funkcja $h(a)=b$ jest
+homomorfizmem: w $A$ nie zachodzi żaden atom $R(a)$,
+więc nie ma faktu relacyjnego, który trzeba by zachować.
+Wybierzmy zmienną $x$ i wartościowanie $s$ w $\mathfrak A$
+spełniające $s(x)=a$. Wówczas
+$\mathfrak A,s\models\neg R(x)$, ponieważ $a\notin R^{\mathfrak A}$,
+ale $\mathfrak B,h\circ s\not\models\neg R(x)$,
+ponieważ $h(a)=b\in R^{\mathfrak B}$.
+Homomorfizm nie musi więc zachowywać negacji.
+\end{przyklad}
+\begin{przyklad}[Dlaczego nie wolno dopisać $\forall$]
+Niech język zawiera jedną jednoargumentową relację $R$.
+Weźmy $A=\{a\}$, $B=\{a,b\}$ oraz
+$R^{\mathfrak A}=\{a\}$, $R^{\mathfrak B}=\{a\}$.
+Włączenie $A\hookrightarrow B$ jest homomorfizmem,
+a nawet zanurzeniem. W mniejszej strukturze zachodzi
+$\forall x\,R(x)$, a w większej nie, gdyż $b\notin R^{\mathfrak B}$.
+Wniosek: sama iniekcyjność homomorfizmu nie zastępuje
+surjektywności ani elementarności.
+\end{przyklad}
+
+\section{Izomorfizmy i przenoszenie prawdziwości}
+\begin{definicja}[Izomorfizm]\label{def:model-isomorphism}
+Niech $\mathfrak A$ i $\mathfrak B$ będą strukturami tego samego
+języka o uniwersach odpowiednio $A$ i $B$.
+Izomorfizmem tych struktur nazywamy bijektywne zanurzenie $h:A\to B$. Piszemy wtedy
+$\mathfrak A\cong\mathfrak B$. Struktury izomorficzne różnią się
+jedynie nazwami elementów, nie zaś wynikami działań i relacjami.
+\end{definicja}
+
+\begin{przyklad}[Dwie nazwy tych samych obiektów]
+Niech w języku z jedną dwuargumentową relacją $R$
+struktura $\mathfrak A$ ma uniwersum $\{1,2\}$
+i relację $R^{\mathfrak A}=\{(1,2)\}$, natomiast
+$\mathfrak B$ ma uniwersum $\{a,b\}$ i
+$R^{\mathfrak B}=\{(a,b)\}$. Funkcja $h(1)=a$,
+$h(2)=b$ jest izomorfizmem. Przenosi jedyną parę
+pozostającą w relacji na jedyną taką parę w drugiej strukturze.
+Nie zmienia się żadna własność, którą można wyrazić formułą
+rozważanego języka.
+\end{przyklad}
+
+\begin{twierdzenie}[Izomorfizm zachowuje wszystkie formuły]\label{thm:model-iso-invariance}
+Niech $h:\mathfrak A\to\mathfrak B$ będzie izomorfizmem
+struktur języka $\mathcal L$, a $\varphi$ dowolną formułą
+tego języka. Dla każdego wartościowania $s$ w $\mathfrak A$ zachodzi
+\[
+\mathfrak A\models\varphi[s]
+\quad\Longleftrightarrow\quad
+\mathfrak B\models\varphi[h\circ s].
+\]
+W szczególności dla każdego zdania $\sigma$ zachodzi
+$\mathfrak A\models\sigma\iff\mathfrak B\models\sigma$.
+\end{twierdzenie}
+\begin{proof}
+Przeprowadzimy indukcję po budowie formuły.
+Dla atomu $t=u$ z Lematu~\ref{lem:model-homo-terms} otrzymujemy
+$h(t^{\mathfrak A}[s])=t^{\mathfrak B}[h\circ s]$
+i analogiczną równość dla $u$. Ponieważ $h$ jest iniekcją,
+dwie wartości w $A$ są równe wtedy i tylko wtedy, gdy ich obrazy
+przez $h$ są równe. To daje tezę dla atomu z równością.
+Dla atomu relacyjnego $R(t_1,\ldots,t_n)$ korzystamy
+z Lematu~\ref{lem:model-homo-terms} oraz z faktu,
+że zanurzenie zarówno zachowuje, jak i odzwierciedla relacje.
+
+Negacja działa w obu strukturach tak samo: $\neg\psi$ jest
+spełniona dokładnie wtedy, gdy $\psi$ nie jest spełniona.
+Stosując założenie indukcyjne do $\psi$, otrzymujemy tezę
+dla $\neg\psi$. Dla każdego spójnika dwuargumentowego
+($\land$, $\lor$, $\to$, $\leftrightarrow$) jego tabela prawdy
+zależy wyłącznie od wartości logicznych składników,
+więc założenie indukcyjne daje identyczny wynik po obu stronach.
+
+Niech $\varphi=\exists x\,\psi$. Jeśli
+$\mathfrak A\models(\exists x\,\psi)[s]$,
+istnieje $a\in A$ z $\mathfrak A\models\psi[s[x\mapsto a]]$.
+Na mocy założenia indukcyjnego otrzymujemy
+$\mathfrak B\models\psi[(h\circ s)[x\mapsto h(a)]]$,
+a więc $\mathfrak B\models(\exists x\,\psi)[h\circ s]$.
+Odwrotnie, jeśli istnienie jest spełnione w $\mathfrak B$,
+możemy wybrać tam świadka $b\in B$. Surjekcja $h$ daje
+$a\in A$ z $h(a)=b$, więc przez założenie indukcyjne
+otrzymujemy świadka również w $\mathfrak A$.
+Kwantyfikator ogólny można rozpatrzyć analogicznie,
+korzystając z tego, że bijekcja $h$ przebiega wszystkie elementy
+$B$ dokładnie raz; albo użyć równoważności
+$\forall x\,\psi\iff\neg\exists x\,\neg\psi$.
+Wszystkie formy budowy formuły zostały sprawdzone.
+\end{proof}
+
+\section{Podstruktury i to, czego nie zachowują}\label{sec:model-substructure}
+\begin{definicja}[Podstruktura]\label{def:model-substructure}
+Niech $\mathcal L$ będzie językiem pierwszego rzędu,
+a $\mathfrak A,\mathfrak B$ strukturami tego języka
+o niepustych uniwersach $A\subseteq B$.
+Mówimy, że $\mathfrak A$ jest
+\emph{podstrukturą} $\mathfrak B$ i piszemy
+$\mathfrak A\subseteq\mathfrak B$, gdy dla każdego symbolu
+stałej $c$ zachodzi $c^{\mathfrak A}=c^{\mathfrak B}\in A$,
+dla każdego $n$-argumentowego symbolu funkcyjnego $f$
+zbiór $A$ jest zamknięty na $f^{\mathfrak B}$ oraz
+$f^{\mathfrak A}=f^{\mathfrak B}|_{A^n}$,
+a dla każdego $n$-argumentowego symbolu relacyjnego $R$
+zachodzi $R^{\mathfrak A}=R^{\mathfrak B}\cap A^n$.
+\end{definicja}
+
+\begin{przyklad}[Podstruktura, która nie zachowuje zdania]
+W języku z jednoargumentowym symbolem funkcyjnym $S$
+rozważmy $\mathfrak A=(\N,S)$ i $\mathfrak B=(\Z,S)$,
+gdzie $S(n)=n+1$ w obu strukturach. Zbiór $\N$
+jest zamknięty na działanie $S$, więc
+$\mathfrak A\subseteq\mathfrak B$.
+W $\mathfrak B$ prawdziwe jest zdanie
+$\forall x\,\exists y\,(S(y)=x)$: każdy $x\in\Z$
+ma poprzednik $y=x-1$. W $\mathfrak A$ zdanie jest fałszywe,
+gdyż element $0$ nie ma poprzednika w $\N$.
+Bycie podstrukturą nie gwarantuje więc zachowania
+wszystkich zdań z kwantyfikatorem egzystencjalnym.
+\end{przyklad}
+
+\begin{definicja}[Zdanie uniwersalne o macierzy bez kwantyfikatorów]
+Niech $\mathcal L$ będzie językiem pierwszego rzędu.
+Zdaniem \emph{uniwersalnym o macierzy bez kwantyfikatorów}
+nazywamy zdanie języka $\mathcal L$ postaci
+$\forall x_1\cdots\forall x_n\,\psi(x_1,\ldots,x_n)$,
+gdzie $n\geq 0$, zmienne $x_1,\ldots,x_n$ są parami różne,
+wszystkie zmienne wolne formuły $\psi$ należą do tej listy,
+a $\psi$ nie zawiera kwantyfikatorów. Gdy $n=0$,
+formuła $\psi$ jest zdaniem bez kwantyfikatorów.
+\end{definicja}
+
+\begin{twierdzenie}[Zachowanie zdań uniwersalnych]\label{thm:model-universal-substructure}
+Niech $\mathfrak A\subseteq\mathfrak B$ będą strukturami
+tego samego języka $\mathcal L$, a $\sigma$ zdaniem
+uniwersalnym o macierzy bez kwantyfikatorów tego języka.
+Jeśli $\mathfrak B\models\sigma$, to $\mathfrak A\models\sigma$.
+\end{twierdzenie}
+\begin{proof}
+Niech $\sigma=\forall x_1\cdots\forall x_n\,\psi$.
+Wybierzmy dowolne $a_1,\ldots,a_n\in A$.
+Ponieważ $A\subseteq B$, można w $\mathfrak B$
+przypisać zmiennym te same wartości. Z założenia
+$\mathfrak B\models\sigma$ wynika, że
+$\psi$ jest spełniona w $\mathfrak B$ dla tych wartości.
+Dla termów interpretacje w $\mathfrak A$ i $\mathfrak B$
+są identyczne, gdy wszystkie argumenty leżą w $A$:
+dowodzi się tego indukcją po budowie termu, używając
+definicji podstruktury. Dlatego formuły atomowe
+zachowują identyczną wartość logiczną w obu strukturach;
+jeśli $R$ jest symbolem relacyjnym arności $k$,
+korzystamy z równości
+$R^{\mathfrak A}=R^{\mathfrak B}\cap A^k$.
+Indukcja po budowie kwantyfikatorowo wolnej $\psi$
+przenosi tę zgodność przez negację i wszystkie spójniki.
+Zatem $\psi$ jest spełniona w $\mathfrak A$
+przy dowolnych $a_1,\ldots,a_n\in A$,
+czyli $\mathfrak A\models\sigma$.
+Jeśli $n=0$, rozumowanie sprowadza się do zgodności
+prawdziwości zamkniętej formuły bez kwantyfikatorów;
+nie trzeba wtedy wybierać żadnych parametrów.
+\end{proof}
+
+\section{Podstruktura elementarna i kryterium Tarskiego--Vaughta}
+\begin{definicja}[Podstruktura elementarna]\label{def:model-elementary-substructure}
+Niech $\mathfrak A\subseteq\mathfrak B$ będą strukturami
+tego samego języka $\mathcal L$ o uniwersach $A\subseteq B$.
+Podstrukturę $\mathfrak A$ nazywamy \emph{elementarną}
+w $\mathfrak B$ i piszemy $\mathfrak A\preccurlyeq\mathfrak B$,
+jeżeli dla każdego $n\ge0$, każdej formuły języka $\mathcal L$
+o wszystkich zmiennych wolnych wśród parami różnych
+$x_1,\ldots,x_n$ oraz wszystkich $a_1,\ldots,a_n\in A$
+zachodzi
+\[
+\mathfrak A\models\varphi[a_1,\ldots,a_n]
+\quad\Longleftrightarrow\quad
+\mathfrak B\models\varphi[a_1,\ldots,a_n].
+\]
+Zapis $\mathfrak A\models\varphi[a_1,\ldots,a_n]$
+oznacza spełnianie przy dowolnym wartościowaniu przypisującym
+$x_i$ wartość $a_i$. Wynik nie zależy od wartości pozostałych
+zmiennych, bo nie występują one wolno w $\varphi$
+(Twierdzenie~\ref{thm:sem-coincidence}).
+Dla $n=0$ chodzi o prawdziwość zdań.
+\end{definicja}
+
+\begin{uwaga}[Jak interpretować elementarność?]
+Podstruktura zachowuje działania i relacje dotyczące swoich
+elementów. Podstruktura \emph{elementarna} zachowuje ponadto
+prawdziwość dowolnych formuł z parametrami z $A$.
+Jeśli w większej strukturze istnieje element spełniający
+formułę z tymi parametrami, w mniejszej strukturze musi
+również istnieć odpowiedni świadek. Może to być inny element,
+ale musi należeć do $A$.
+\end{uwaga}
+
+\begin{twierdzenie}[Kryterium Tarskiego--Vaughta]\label{thm:model-tarski-vaught}
+Niech $\mathfrak A\subseteq\mathfrak B$ będą strukturami
+tego samego języka $\mathcal L$ o uniwersach $A\subseteq B$.
+Następujące warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $\mathfrak A\preccurlyeq\mathfrak B$;
+\item dla każdej formuły $\psi(x,\bar y)$ języka $\mathcal L$,
+której wszystkie zmienne wolne należą do listy
+$x,\bar y$ parami różnych zmiennych, oraz dla każdej krotki
+$\bar a$ elementów $A$ odpowiedniej długości,
+jeśli istnieje $b\in B$ takie, że
+$\mathfrak B\models\psi[b,\bar a]$,
+to istnieje $a\in A$ takie, że
+$\mathfrak B\models\psi[a,\bar a]$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Załóżmy (i). Jeżeli $\mathfrak B\models\psi[b,\bar a]$
+dla pewnego $b\in B$, to przy wartościach $\bar a\in A$
+w $\mathfrak B$ spełniona jest formuła
+$\exists x\,\psi(x,\bar y)$. Jej zmienne wolne należą do
+listy $\bar y$, a zatem elementarność daje spełnianie
+tej samej formuły w $\mathfrak A$ przy $\bar a$.
+Istnieje więc $a\in A$ z
+$\mathfrak A\models\psi[a,\bar a]$.
+Ponowne użycie elementarności, teraz do $\psi$ i
+parametrów $(a,\bar a)$, daje
+$\mathfrak B\models\psi[a,\bar a]$.
+
+Załóżmy (ii). Indukcyjnie po budowie formuły $\varphi$
+udowodnimy, że dla każdego wartościowania $s$ w
+$\mathfrak A$, traktowanego również jako wartościowanie
+w $\mathfrak B$, zachodzi
+$\mathfrak A,s\models\varphi\iff\mathfrak B,s\models\varphi$.
+Wystarczy porównywać wartości zmiennych wolnych, ponieważ
+spełnianie nie zależy od pozostałych wartości
+(Twierdzenie~\ref{thm:sem-coincidence}).
+Dla termów zgodność interpretacji wynika indukcyjnie z
+definicji podstruktury, a dla atomów relacyjnych z
+$R^{\mathfrak A}=R^{\mathfrak B}\cap A^k$,
+gdzie $k$ jest arnością symbolu $R$.
+Otrzymujemy zatem równoważność dla atomów równościowych
+i relacyjnych. Negacja i spójniki dwuargumentowe
+zachowują ją na mocy założenia indukcyjnego.
+
+Niech $\varphi=\exists x\,\psi$. Wybieramy listę
+$\bar y$ wszystkich pozostałych zmiennych wolnych
+formuły $\psi$. Zmienna $x$ jest różna od zmiennych
+z $\bar y$; w razie potrzeby dopuszczalnie przemianowujemy
+zmienną związaną, korzystając z
+Twierdzenia~\ref{thm:sem-alpha-renaming-xlv}.
+Ustalmy $\bar a\in A^{|\bar y|}$.
+Jeśli $\mathfrak A\models(\exists x\,\psi)[\bar a]$,
+to istnieje $a\in A$ takie, że
+$\mathfrak A\models\psi[a,\bar a]$.
+Hipoteza indukcyjna daje
+$\mathfrak B\models\psi[a,\bar a]$,
+a zatem $\mathfrak B\models(\exists x\,\psi)[\bar a]$.
+Odwrotnie, jeżeli $\mathfrak B\models(\exists x\,\psi)[\bar a]$,
+to z (ii) otrzymujemy $a\in A$ spełniające
+$\mathfrak B\models\psi[a,\bar a]$.
+Hipoteza indukcyjna przenosi to na $\mathfrak A$,
+więc $\mathfrak A\models(\exists x\,\psi)[\bar a]$.
+Dla kwantyfikatora ogólnego korzystamy z semantycznej
+równoważności
+$\forall x\,\psi\iff\neg\exists x\,\neg\psi$:
+przypadki negacji i kwantyfikatora egzystencjalnego
+zostały już sprawdzone. Indukcja jest zakończona,
+co daje (i).
+\end{proof}
+
+\begin{przyklad}[Dlaczego zwykła podstruktura nie musi być elementarna]
+Wróćmy do $\mathfrak A=(\N,S)$ i $\mathfrak B=(\Z,S)$.
+Zbiór $\N$ jest podstrukturą $\Z$, lecz nie jest
+podstrukturą elementarną. Dla parametru $a=0\in\N$
+w większej strukturze zachodzi $\exists x\,(S(x)=a)$,
+ale nie ma takiego świadka w $\N$.
+Właśnie tutaj zawodzi warunek Tarskiego--Vaughta.
+\end{przyklad}
+
+\section{Teoria struktury i równoważność elementarna}
+\begin{definicja}[Równoważność elementarna]\label{def:model-elementary-equivalence}
+Niech $\mathfrak A,\mathfrak B$ będą strukturami tego samego
+języka pierwszego rzędu $\mathcal L$.
+Dla dowolnej struktury $\mathfrak C$ języka $\mathcal L$ przez
+$\operatorname{Th}(\mathfrak C)$ rozumiemy zbiór wszystkich zdań
+języka $\mathcal L$ prawdziwych w $\mathfrak C$;
+w Definicji~\ref{def:compactness-theory-n} rozważaliśmy
+szczególny przypadek $\operatorname{Th}(\mathfrak N)$.
+Mówimy, że $\mathfrak A$ i $\mathfrak B$ są
+\emph{elementarnie równoważne}, i piszemy
+$\mathfrak A\equiv\mathfrak B$, jeśli każde zdanie języka
+$\mathcal L$ jest prawdziwe w $\mathfrak A$ dokładnie wtedy,
+gdy jest prawdziwe w $\mathfrak B$, czyli
+$\operatorname{Th}(\mathfrak A)=\operatorname{Th}(\mathfrak B)$.
+\end{definicja}
+
+\begin{twierdzenie}[Izomorfizm i równoważność elementarna]\label{thm:model-iso-elementary}
+Niech $\mathfrak A$ i $\mathfrak B$ będą strukturami tego
+samego języka pierwszego rzędu $\mathcal L$.
+Jeżeli $\mathfrak A\cong\mathfrak B$, to
+$\mathfrak A\equiv\mathfrak B$.
+Istnieją jednak elementarnie równoważne struktury
+pierwszego rzędu, które nie są izomorficzne.
+\end{twierdzenie}
+\begin{proof}
+Pierwsze stwierdzenie wynika z
+Twierdzenia~\ref{thm:model-iso-invariance} zastosowanego do zdań.
+Dla drugiego wykorzystajmy Twierdzenie~\ref{thm:compactness-nonstandard}.
+Niech $\mathfrak M^+$ oznacza otrzymany tam model języka
+$\mathcal L_{\mathrm{ar}}\cup\{c\}$, a
+$\mathfrak M=\mathfrak M^+\upharpoonright\mathcal L_{\mathrm{ar}}$
+jego redukt. Z $\mathfrak M\models\operatorname{Th}(\mathfrak N)$
+wynika $\mathfrak M\equiv\mathfrak N$: jeśli
+$\mathfrak N\not\models\sigma$, to
+$\mathfrak N\models\neg\sigma$, a więc i
+$\mathfrak M\models\neg\sigma$.
+
+Gdyby istniał izomorfizm $h:\mathfrak M\to\mathfrak N$,
+obraz elementu $a:=c^{\mathfrak M^+}$ byłby równy
+$m=h(a)\in\N$. Chociaż $c$ nie jest symbolem języka reduktu,
+$a$ pozostaje elementem jego uniwersum.
+Z Twierdzenia~\ref{thm:compactness-nonstandard} mamy
+$\overline m^{\mathfrak M}<^{\mathfrak M}a$.
+Izomorfizm zachowuje $0$, $S$ i $<$, toteż przenosi tę
+nierówność na $m<m$ w $\mathfrak N$, co jest sprzecznością.
+\end{proof}
+
+\begin{uwaga}[Trzy poziomy podobieństwa]
+Relacja $\mathfrak A\subseteq\mathfrak B$ wymaga zgodności
+interpretacji symboli na $A$.
+Warunek $\mathfrak A\preccurlyeq\mathfrak B$ zapewnia ponadto
+zachowanie wszystkich formuł z parametrami z $A$.
+Natomiast $\mathfrak A\equiv\mathfrak B$ oznacza zgodność
+prawdziwości zdań i nie wymaga ani zawierania uniwersów,
+ani istnienia odwzorowania między strukturami.
+\end{uwaga}

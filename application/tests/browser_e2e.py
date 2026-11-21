@@ -1,3 +1,4 @@
+import re
 """Manual local smoke test; starts API, opens UI, generates first project ZIP."""
 from pathlib import Path
 import subprocess,sys,time,urllib.request,json
@@ -18,7 +19,7 @@ with subprocess.Popen([sys.executable,'-m','uvicorn','backend.api:app','--host',
                 failures=[]
                 page.on('pageerror',lambda e:failures.append(str(e)))
                 page.goto('http://127.0.0.1:18765/',wait_until='networkidle')
-                page.get_by_text('233 rozdziałów').wait_for(timeout=20000)
+                page.get_by_text(re.compile(r'^\d+ rozdziałów$')).wait_for(timeout=20000)
                 page.locator('#openFirst').click()
                 page.locator('#addCurrent').click()
                 page.locator('button[data-tab="selection"]').click()

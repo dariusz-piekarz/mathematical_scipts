@@ -1,0 +1,94 @@
+name: Mathematical library application checks
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "application/**"
+      - "chapters/pl/**"
+      - ".github/workflows/mathematical-library-app.yml"
+  workflow_dispatch:
+
+jobs:
+  index-and-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: application
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: application/requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt httpx
+      - name: Build SQLite index from canonical chapters
+        shell: bash
+        run: |
+          mkdir -p data
+          set +e
+          python backend/latex_parser.py index \
+            --source ../chapters/pl \
+            --recursive \
+            --db data/biblioteka.db \
+            --aliases config/ALIASY_PO_SCALENIACH.json \
+            --report data/ci_index_report.json
+          result=$?
+          set -e
+          # Exit 2 denotes reported unresolved/ambiguous references.
+          # The report is retained for investigation; unexpected failures fail CI.
+          if [[ "$result" != 0 && "$result" != 2 ]]; then
+            exit "$result"
+          fi
+      - name: Audit all unresolved references and label provenance
+        run: |
+          python scripts/audit_reference_provenance.py --db data/biblioteka.db --out data/reference_provenance_audit
+      - name: List unresolved references for mathematical review
+        run: python scripts/triage_unresolved_refs.py --db data/biblioteka.db --out data/unresolved_reference_triage
+      - name: Track complete 36-chapter geometry import coverage
+        run: python scripts/dg_import_coverage.py --db data/biblioteka.db --out data/dg_import_coverage.json
+      - name: Report coordinate chart terminology in all TeX sources
+        run: python scripts/audit_chart_terminology.py --root .. --report data/chart_terminology.json --strict
+      - name: Upload complete reference/provenance audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reference-provenance-audit
+          path: |
+            application/data/reference_provenance_audit.json
+            application/data/reference_provenance_audit.md
+            application/data/dg_import_coverage.json
+            application/data/unresolved_reference_triage.json
+            application/data/unresolved_reference_triage.md
+            application/data/chart_terminology.json
+          if-no-files-found: warn
+      - name: Run application regression tests
+        run: python -W default -m unittest discover -s tests -q
+      - name: Compile-check browser smoke scripts
+        run: python -m py_compile tests/browser_ci_e2e.py tests/browser_e2e.py tests/browser_workspace_e2e.py
+      - name: Install Chromium for browser smoke test
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Test real browser Explorer, reader and graph
+        run: python tests/browser_ci_e2e.py
+      - name: Test browser draft save and page-leave cleanup
+        run: python tests/browser_workspace_e2e.py
+      - name: Reject newly broken references outside the reviewed pending baseline
+        run: |
+          python scripts/triage_unresolved_refs.py \
+            --db data/biblioteka.db \
+            --out data/unresolved_reference_triage \
+            --fail-on-unclassified
+      - name: Upload parser report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: library-index-report
+          path: application/data/ci_index_report.json
+          if-no-files-found: ignore

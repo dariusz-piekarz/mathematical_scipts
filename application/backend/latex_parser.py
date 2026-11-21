@@ -25,7 +25,14 @@ import sqlite3
 import sys
 from typing import Any
 
-SCHEMA_VERSION = 2
+try:
+    from .label_registry import Owner, resolve
+    from .included_labels import included_labels_for_document
+except ImportError:  # python backend/latex_parser.py ...
+    from label_registry import Owner, resolve
+    from included_labels import included_labels_for_document
+
+SCHEMA_VERSION = 4
 SECTION_DEPTH = {
     "part": 0, "chapter": 1, "section": 2, "subsection": 3,
     "subsubsection": 4, "paragraph": 5, "subparagraph": 6,
@@ -45,6 +52,7 @@ CODE_ENVS = {"lstlisting", "minted", "verbatim", "Verbatim"}
 VERBATIM_ENVS = CODE_ENVS | {"comment", "filecontents", "filecontents*"}
 REF_COMMANDS = {"ref", "eqref", "pageref", "autoref", "nameref", "cref", "Cref", "vref", "Vref"}
 PREFIX_DOMAINS = {
+    "AA": "algebra abstrakcyjna",
     "ALG": "geometria algebraiczna", "AT": "geometria algebraiczna / topologia",
     "TOP": "topologia algebraiczna", "GW": "teoria grafów i węzłów",
     "GA": "teoria Galois", "KAT": "teoria kategorii", "MOD": "teoria modeli",
@@ -52,6 +60,12 @@ PREFIX_DOMAINS = {
     "P1": "rachunek prawdopodobieństwa I", "P2": "procesy stochastyczne",
     "P3": "analiza stochastyczna", "P4": "statystyka matematyczna",
     "ME": "teoria miary",
+    "DG": "geometria i topologia różniczkowa",
+    "FA": "analiza funkcjonalna",
+    "PDE": "równania różniczkowe cząstkowe",
+    "LA": "algebra liniowa",
+    "LST": "logika i teoria mnogości",
+    "GT": "topologia ogólna",
 }
 COMMAND = re.compile(r"\\([A-Za-z@]+|.)")
 RE_WS = re.compile(r"\s+")
@@ -226,7 +240,34 @@ def plain_excerpt(source: str, limit: int = 360) -> str:
     return RE_WS.sub(" ", source).strip()[:limit]
 
 
+REPOSITORY_CATEGORIES = {
+    "abstract_algebra": "AA",
+    "differential_geometry_and_topology": "DG",
+    "functional_analysis": "FA",
+    "measure_theory": "ME",
+    "partial_differential_equations": "PDE",
+    "linear_algebra": "LA",
+    "logic_and_set_theory": "LST",
+    "algebraic_geometry": "ALG", "algebraic_topology": "TOP",
+    "banach_tarski": "BT", "category_theory": "KAT",
+    "galois_theory": "GA", "general_topology": "GT", "graph_and_knot_theory": "GW",
+    "integration_theory": "CAL", "model_theory": "MOD",
+    "probability_volume_i": "P1", "probability_volume_ii": "P2",
+    "probability_volume_iii": "P3", "probability_volume_iv": "P4",
+}
+
+
 def module_id(path: Path) -> str:
+    """Provide stable IDs for both flat app snapshots and nested repository chapters."""
+    parts = path.parts
+    if "pl" in parts:
+        pos = parts.index("pl")
+        if pos + 1 < len(parts):
+            prefix = REPOSITORY_CATEGORIES.get(parts[pos + 1])
+            if prefix:
+                found = re.match(r"(\d{2}[AB]?)-", path.name)
+                if found:
+                    return f"{prefix}-{found.group(1)}"
     base = path.name
     if "--" in base:
         return base.split("--", 1)[0]
@@ -390,6 +431,30 @@ CREATE TABLE labels (
   line INTEGER NOT NULL, excerpt TEXT NOT NULL
 );
 CREATE INDEX idx_labels_document ON labels(document_id);
+CREATE TABLE label_conflicts (
+  name TEXT NOT NULL, document_id TEXT NOT NULL REFERENCES documents(id),
+  entity_id TEXT REFERENCES entities(id), offset INTEGER NOT NULL,
+  line INTEGER NOT NULL, excerpt TEXT NOT NULL,
+  PRIMARY KEY(name,document_id)
+);
+CREATE INDEX idx_label_conflicts_name ON label_conflicts(name);
+CREATE TABLE label_occurrences (
+  occurrence_id TEXT PRIMARY KEY, name TEXT NOT NULL,
+  document_id TEXT NOT NULL REFERENCES documents(id),
+  entity_id TEXT REFERENCES entities(id), line INTEGER NOT NULL,
+  offset INTEGER NOT NULL, concept_id TEXT,
+  UNIQUE (document_id,name,line,offset)
+);
+CREATE INDEX idx_label_occurrences_name ON label_occurrences(name);
+CREATE INDEX idx_label_occurrences_doc ON label_occurrences(document_id);
+CREATE TABLE included_label_origins (
+  document_id TEXT NOT NULL REFERENCES documents(id),
+  name TEXT NOT NULL, origin_path TEXT NOT NULL,
+  origin_line INTEGER NOT NULL, origin_offset INTEGER NOT NULL,
+  excerpt TEXT NOT NULL,
+  PRIMARY KEY(document_id,name,origin_path,origin_line,origin_offset)
+);
+CREATE INDEX idx_included_label_origins_name ON included_label_origins(name);
 CREATE TABLE references_tex (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   source_document TEXT NOT NULL REFERENCES documents(id),
@@ -407,7 +472,7 @@ CREATE TABLE historical_aliases (
 );
 CREATE VIEW dependency_edges AS
 SELECT source_document, target_document, count(*) AS references_count
-FROM references_tex WHERE status='resolved' AND target_document IS NOT NULL
+FROM references_tex WHERE status IN ('resolved','external_resolved','alias_resolved','included_resolved') AND target_document IS NOT NULL
 GROUP BY source_document,target_document;
 """
 
@@ -434,10 +499,33 @@ def load_historical_aliases(con: sqlite3.Connection, alias_file: Path | None) ->
     con.executemany("INSERT OR IGNORE INTO historical_aliases VALUES(?,?,?,?)", rows)
 
 
+def read_curated_aliases(alias_file: Path | None) -> dict[tuple[str, str], tuple[str, str]]:
+    """Explicit, versioned aliases. Never infer equivalence from matching names.
+
+    Optional JSON: {"label_aliases":[{"source_document":"TOP-05",
+      "original_label":"old", "target_document":"TOP-03",
+      "target_label":"thm:homotopia-homologia"}]}.
+    An alias must resolve to an actual indexed original label.
+    """
+    if alias_file is None or not alias_file.is_file():
+        return {}
+    data = json.loads(alias_file.read_text(encoding="utf-8-sig"))
+    result: dict[tuple[str, str], tuple[str, str]] = {}
+    for row in data.get("label_aliases", []):
+        key = (row["source_document"], row["original_label"])
+        target = (row["target_document"], row["target_label"])
+        if key in result and result[key] != target:
+            raise ValueError(f"Sprzeczne aliasy dla {key}")
+        result[key] = target
+    return result
+
+
 def build_database(source_dir: Path, db_path: Path, alias_file: Path | None = None, *, recursive: bool = False) -> dict[str, Any]:
     # Domyślnie tylko kanoniczne, bezpośrednie pliki w płaskim folderze rozdzialy/.
     # Inne podfoldery mogą być roboczymi projektami.
     files = sorted(source_dir.rglob("*.tex") if recursive else source_dir.glob("*.tex"))
+    if recursive:
+        files = [f for f in files if "supplements" not in f.relative_to(source_dir).parts]
     if not files:
         raise ValueError(f"Brak plików .tex w katalogu {source_dir}")
     db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -457,6 +545,7 @@ def build_database(source_dir: Path, db_path: Path, alias_file: Path | None = No
     total = Counter()
     all_documents: list[Document] = []
     seen_ids: set[str] = set()
+    seen_entity_ids: set[str] = set()
     for file in files:
         path = file.relative_to(source_dir.parent).as_posix()
         doc = parse_document(file.read_text(encoding="utf-8-sig"), path)
@@ -464,6 +553,27 @@ def build_database(source_dir: Path, db_path: Path, alias_file: Path | None = No
             con.close(); tmp.unlink(missing_ok=True)
             raise ValueError(f"Powielony identyfikator modułu {doc.id} w pliku {path}")
         seen_ids.add(doc.id)
+        # Multiple books can intentionally reuse mathematical labels. Entity IDs
+        # are storage IDs, not LaTeX labels, so disambiguate without rewriting TeX.
+        changed: dict[str, str] = {}
+        for e in doc.entities:
+            if e.id in seen_entity_ids:
+                candidate = f"{doc.id}::{e.id}"
+                if candidate in seen_entity_ids:
+                    raise ValueError(f"Duplicate entity in one chapter: {candidate}")
+                changed[e.id] = candidate
+                e.id = candidate
+            seen_entity_ids.add(e.id)
+        if changed:
+            for e in doc.entities:
+                if e.parent_id in changed:
+                    e.parent_id = changed[e.parent_id]
+            for label in doc.labels:
+                if label.entity_id in changed:
+                    label.entity_id = changed[label.entity_id]
+            for ref in doc.references:
+                if ref.entity_id in changed:
+                    ref.entity_id = changed[ref.entity_id]
         all_documents.append(doc)
         con.execute("INSERT INTO documents VALUES (?,?,?,?,?,?,?,?)", (
             doc.id, doc.path, doc.domain, doc.title, doc.digest, doc.source,
@@ -481,29 +591,71 @@ def build_database(source_dir: Path, db_path: Path, alias_file: Path | None = No
         total["parse_warnings"] += len(doc.warnings)
     duplicate_labels: list[dict[str, Any]] = []
     label_owners: dict[str, str] = {}
+    label_locations: dict[str, dict[str, Label]] = {}
+    for document in all_documents:
+        for label in document.labels:
+            label_locations.setdefault(label.name, {})[document.id] = label
     for doc in all_documents:
         for label in doc.labels:
             if label.name in label_owners:
                 duplicate_labels.append({"label": label.name, "first": label_owners[label.name], "other": doc.id})
+                con.execute("INSERT OR IGNORE INTO label_conflicts VALUES (?,?,?,?,?,?)", (
+                    label.name,label.document_id,label.entity_id,label.offset,label.line,label.excerpt))
+                first = label_locations[label.name][label_owners[label.name]]
+                con.execute("INSERT OR IGNORE INTO label_conflicts VALUES (?,?,?,?,?,?)", (
+                    first.name,first.document_id,first.entity_id,first.offset,first.line,first.excerpt))
                 continue
             label_owners[label.name] = doc.id
             con.execute("INSERT INTO labels VALUES (?,?,?,?,?,?)", (
                 label.name, label.document_id, label.entity_id, label.offset, label.line, label.excerpt))
             total["labels"] += 1
+    curated_aliases = read_curated_aliases(alias_file)
+    # Separate every original occurrence from the legacy globally-unique index.
+    # Entity identities stay distinct even when the LaTeX strings coincide.
+    all_owners: list[Owner] = []
+    for document in all_documents:
+        for label in document.labels:
+            all_owners.append(Owner(document.id, label.name, label.entity_id))
+            con.execute("INSERT INTO label_occurrences VALUES (?,?,?,?,?,?,NULL)",
+                        (f"{document.id}::{label.name}", label.name, document.id,
+                         label.entity_id, label.line, label.offset))
+    # Included labels retain their actual file path and line; they do
+    # not masquerade as native labels declared in the parent chapter.
+    include_owners: dict[tuple[str, str], list[Any]] = {}
+    repo_root = (source_dir.resolve().parents[1]
+                 if source_dir.name == "pl" and source_dir.parent.name == "chapters"
+                 else None)
+    if repo_root is not None:
+        for doc in all_documents:
+            for item in included_labels_for_document(
+                    doc.source, doc.id, repo_root=repo_root, masked_source=masked_source):
+                con.execute("INSERT OR IGNORE INTO included_label_origins VALUES (?,?,?,?,?,?)",
+                            (doc.id, item.name, item.relative_path, item.line,
+                             item.offset, item.excerpt))
+                include_owners.setdefault((doc.id, item.name), []).append(item)
+    total["included_labels"] = con.execute("SELECT count(*) FROM included_label_origins").fetchone()[0]
     for doc in all_documents:
         for ref in doc.references:
-            dst = label_owners.get(ref.target)
-            resolved_id = None
-            if dst:
-                row = con.execute("SELECT entity_id FROM labels WHERE name=?", (ref.target,)).fetchone()
-                resolved_id = row[0] if row else None
+            decision = resolve(doc.id, ref.target, all_owners, aliases=curated_aliases)
+            imported = include_owners.get((doc.id, ref.target), [])
+            native_local = any(o.document_id == doc.id and o.label == ref.target
+                               for o in all_owners)
+            if imported and not native_local:
+                if len(imported) == 1:
+                    dst, resolved_id, status = doc.id, None, "included_resolved"
+                else:
+                    dst, resolved_id, status = None, None, "ambiguous"
+            else:
+                dst = decision.owner.document_id if decision.owner else None
+                resolved_id = decision.owner.entity_id if decision.owner else None
+                status = decision.status
             con.execute("INSERT INTO references_tex(source_document,source_entity,command,target_label,offset,line,target_document,target_entity,status) VALUES (?,?,?,?,?,?,?,?,?)",
                         (doc.id, ref.entity_id, ref.command, ref.target, ref.offset, ref.line,
-                         dst, resolved_id, "resolved" if dst else "missing"))
+                         dst, resolved_id, status))
             total["references"] += 1
-            total["resolved_references" if dst else "missing_references"] += 1
+            total[status + "_references"] += 1
     load_historical_aliases(con, alias_file)
-    for k in ("documents", "entities", "labels", "references", "resolved_references", "missing_references", "parse_warnings"):
+    for k in ("documents", "entities", "labels", "references", "resolved_references", "external_resolved_references", "alias_resolved_references", "included_resolved_references", "ambiguous_references", "missing_references", "parse_warnings"):
         total.setdefault(k, 0)
     total["duplicate_labels"] = len(duplicate_labels)
     total["cross_document_edges"] = con.execute("SELECT count(*) FROM dependency_edges WHERE source_document != target_document").fetchone()[0]
@@ -523,7 +675,7 @@ def build_database(source_dir: Path, db_path: Path, alias_file: Path | None = No
 
 def default_source() -> Path:
     root = Path(__file__).resolve().parents[1]
-    for candidate in (root / "rozdzialy", root.parent / "rozdzialy"):
+    for candidate in (root.parent / "chapters" / "pl", root / "rozdzialy", root.parent / "rozdzialy"):
         if candidate.is_dir(): return candidate
     return root.parent / "rozdzialy"
 
@@ -537,7 +689,13 @@ def get_stats(con: sqlite3.Connection) -> dict[str, int]:
         "documents":"documents", "entities":"entities", "labels":"labels",
         "references":"references_tex", "missing_references":"references_tex WHERE status='missing'",
         "cross_document_edges":"dependency_edges WHERE source_document != target_document"}.items()}
-    result["duplicate_labels"] = 0  # Duplicates are rejected from the labels PK, see index report.
+    result["label_occurrences"] = con.execute("SELECT count(*) FROM label_occurrences").fetchone()[0]
+    result["included_labels"] = con.execute("SELECT count(*) FROM included_label_origins").fetchone()[0]
+    result["included_resolved_references"] = con.execute("SELECT count(*) FROM references_tex WHERE status='included_resolved'").fetchone()[0]
+    result["external_resolved_references"] = con.execute("SELECT count(*) FROM references_tex WHERE status='external_resolved'").fetchone()[0]
+    result["alias_resolved_references"] = con.execute("SELECT count(*) FROM references_tex WHERE status='alias_resolved'").fetchone()[0]
+    result["duplicate_labels"] = con.execute("SELECT count(DISTINCT name) FROM label_conflicts").fetchone()[0]
+    result["ambiguous_references"] = con.execute("SELECT count(*) FROM references_tex WHERE status='ambiguous'").fetchone()[0]
     result["theorems"] = con.execute("SELECT count(*) FROM entities WHERE kind='theorem'").fetchone()[0]
     result["definitions"] = con.execute("SELECT count(*) FROM entities WHERE kind='definition'").fetchone()[0]
     result["proofs"] = con.execute("SELECT count(*) FROM entities WHERE kind='proof'").fetchone()[0]
@@ -555,8 +713,12 @@ def search(con: sqlite3.Connection, query: str, limit: int = 20) -> list[dict[st
         return [dict(r) for r in rows]
 
 
-def show_label(con: sqlite3.Connection, label: str, max_chars: int = 1300) -> dict[str, Any] | None:
-    row = con.execute("SELECT l.name,l.document_id,l.line,l.offset,l.entity_id,d.title,d.content FROM labels l JOIN documents d ON d.id=l.document_id WHERE l.name=?",(label,)).fetchone()
+def show_label(con: sqlite3.Connection, label: str, max_chars: int = 1300, *,
+               document_id: str | None = None) -> dict[str, Any] | None:
+    if document_id is None:
+        row = con.execute("SELECT l.name,l.document_id,l.line,l.offset,l.entity_id,d.title,d.content FROM labels l JOIN documents d ON d.id=l.document_id WHERE l.name=?",(label,)).fetchone()
+    else:
+        row = con.execute("SELECT l.name,l.document_id,l.line,l.offset,l.entity_id,d.title,d.content FROM label_occurrences l JOIN documents d ON d.id=l.document_id WHERE l.name=? AND l.document_id=?",(label,document_id)).fetchone()
     if not row:
         return None
     result = {k: row[k] for k in ("name","document_id","line","offset","entity_id","title")}

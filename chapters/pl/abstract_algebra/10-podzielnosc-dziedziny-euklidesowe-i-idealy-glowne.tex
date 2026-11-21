@@ -1,0 +1,534 @@
+% AA-10 | Algebra abstrakcyjna | Iteracja V
+\chapter[Podzielność i dziedziny ideałów głównych]{Podzielność, dziedziny euklidesowe i dziedziny ideałów głównych}
+\label{aa:ch:podzielnosc}
+\setlength{\parskip}{2.8pt}
+
+\section{Od dzielenia liczb do struktury ideałów}
+W pierścieniu $\mathbb Z$ możemy dzielić z resztą, wyznaczać
+największy wspólny dzielnik, rozkładać liczby na czynniki
+pierwsze i rozwiązywać równania liniowe z całkowitymi
+współczynnikami. Okazuje się, że za tymi zjawiskami stoją
+\emph{różne poziomy założeń}. Dzielenie z resztą jest
+silniejszą własnością niż samo istnienie największych wspólnych
+dzielników; z kolei jednoznaczność rozkładu na czynniki
+nie wystarcza, aby każdy ideał był generowany przez jeden element.
+Rozdział wyjaśnia, które wnioski otrzymujemy na każdym poziomie.
+
+W całym rozdziale, jeśli nie wskazano inaczej, $R$ jest
+dziedziną całkowitości z jedynką, czyli niezerowym pierścieniem
+przemiennym bez dzielników zera. Założenie to jest ważne:
+pozwala skracać niezerowe czynniki i porównywać dzielniki.
+
+\begin{definicja}[Podzielność i elementy stowarzyszone]
+\label{aa:def:divides-associates}
+Niech $R$ będzie dziedziną całkowitości z jedynką.
+Dla $a,b\in R$ zapis $a\mid b$ oznacza, że istnieje
+$c\in R$ z $b=ac$. Elementy $a,b$ są \emph{stowarzyszone},
+jeśli $a=ub$ dla pewnej jednostki $u\in R^\times$.
+Dla $a,b\in R$ \emph{największym wspólnym dzielnikiem}
+nazywamy element $d\in R$ taki, że $d\mid a$, $d\mid b$
+oraz każdy wspólny dzielnik $a,b$ dzieli $d$.
+Jeżeli taki element istnieje, oznaczamy go przez
+$\gcd(a,b)$, pamiętając, że jest wyznaczony tylko
+z dokładnością do stowarzyszenia.
+\end{definicja}
+\begin{lemat}[Stowarzyszenie i jednoznaczność największego wspólnego dzielnika]
+\label{aa:lem:gcd-unique}
+Niech $R$ będzie dziedziną całkowitości. Elementy
+$a,b\in R\setminus\{0\}$ są stowarzyszone wtedy i tylko
+wtedy, gdy $a\mid b$ oraz $b\mid a$.
+Dla dowolnych $a,b\in R$, jeżeli $d,d'\in R$ są największymi
+wspólnymi dzielnikami pary $a,b$, to są stowarzyszone.
+\end{lemat}
+\begin{proof}
+Z $a=ub$ i odwracalności $u$ natychmiast wynika
+$a\mid b$ i $b\mid a$. W drugą stronę, jeśli $a=bc$
+i $b=ad$, to $a=acd$. Ponieważ $a\ne0$, skracanie
+daje $cd=1_R$, a więc $c$ i $d$ są jednostkami.
+Dla dwóch największych wspólnych dzielników $d,d'$
+warunek ich maksymalności w sensie podzielności
+daje $d\mid d'$ i $d'\mid d$. Jeśli $a=b=0$, to każdy element dzieli zarówno $a$, jak i $b$.
+W szczególności $0$ jest wspólnym dzielnikiem, więc z definicji
+największego wspólnego dzielnika każdy taki element $d$ musi
+spełniać $0\mid d$, czyli $d=0$. Element $0$ sam spełnia
+warunek największego wspólnego dzielnika, ponieważ każdy element
+dzieli $0$. Zatem $\gcd(0,0)=0$ także w sensie definicji.
+W pozostałych przypadkach $d,d'$ są niezerowe i stosujemy
+pierwszą część.
+\end{proof}
+
+\begin{przyklad}[Jednostki decydują o jednoznaczności]
+\label{aa:prz:units-gcd}
+W $\mathbb Z$ elementy stowarzyszone z $6$ to $6$ oraz $-6$;
+wybieramy dodatni największy wspólny dzielnik.
+W pierścieniu $\mathbb Q[x]$ elementy $x^2-1$ oraz
+$7(x^2-1)$ są stowarzyszone, ponieważ $7$ jest jednostką.
+Największy wspólny dzielnik wielomianów zwykle wybiera się
+\emph{unormowany}, to znaczy o najwyższym współczynniku
+równym $1$, jeśli wielomian nie jest zerowy.
+\end{przyklad}
+
+\begin{definicja}[Element nierozkładalny i element pierwszy]
+\label{aa:def:irreducible-prime}
+Niech $R$ będzie dziedziną całkowitości z jedynką i niech
+$p\in R$ będzie niezerowy i nie będzie jednostką.
+Element $p$ jest \emph{nierozkładalny}, jeśli z $p=ab$
+wynika, że $a$ lub $b$ jest jednostką.
+Element $p$ jest \emph{pierwszy}, jeśli dla wszystkich
+$a,b\in R$ z $p\mid ab$ wynika $p\mid a$ lub $p\mid b$.
+\end{definicja}
+\begin{lemat}[Pierwszość implikuje nierozkładalność]
+\label{aa:lem:prime-irred}
+Niech $R$ będzie dziedziną całkowitości z jedynką.
+Każdy element pierwszy $p\in R$ jest nierozkładalny.
+\end{lemat}
+\begin{proof}
+Niech $p=ab$. Wtedy $p\mid ab$, a pierwszość
+pozwala przyjąć, po ewentualnej zamianie $a,b$, że $p\mid a$.
+Istnieje $c$ z $a=pc$, zatem $p=pcb$.
+Skracając $p\ne0$, otrzymujemy $1_R=cb$.
+Element $b$ jest jednostką. To dokładnie definicja nierozkładalności.
+\end{proof}
+
+\section{Dziedziny euklidesowe}
+\begin{definicja}[Dziedzina euklidesowa]
+\label{aa:def:euclidean-domain}
+\emph{Dziedziną euklidesową} nazywamy dziedzinę całkowitości
+$R$, dla której istnieje funkcja
+$\delta:R\setminus\{0\}\to\mathbb N_0$ taka, że dla
+każdych $a\in R$ i $b\in R\setminus\{0\}$ istnieją
+$q,r\in R$ spełniające $a=bq+r$ oraz
+$r=0$ albo $\delta(r)<\delta(b)$.
+Funkcję $\delta$ nazywamy \emph{funkcją euklidesową}.
+Nie zakładamy jednoznaczności $q,r$.
+\end{definicja}
+
+\begin{przyklad}[Liczby całkowite i dzielenie z resztą]
+\label{aa:prz:integer-division}
+Dla $R=\mathbb Z$ funkcja $\delta(b)=|b|$, określona dla
+$b\in\mathbb Z\setminus\{0\}$, jest euklidesowa.
+Jeżeli $b>0$, dzielenie z resztą daje jednoznaczne
+$a=bq+r$ przy $0\le r<b$.
+Gdy $b<0$, przechodzimy do $|b|$ i zmieniamy znak ilorazu.
+Dla $a=-17$, $b=5$ otrzymujemy
+$-17=5(-4)+3$, a $0\le3<5$. Wybór $q=-3$ dałby resztę
+$-2$, która też spełnia $|{-2}|<5$, ale nie standardowy
+warunek $0\le r<5$. Dlatego funkcja euklidesowa nie narzuca
+jednoznaczności dzielenia, jeżeli nie ustalimy dodatkowej
+konwencji dla reszt.
+\end{przyklad}
+
+\begin{przyklad}[Wielomiany jednej zmiennej]
+\label{aa:prz:polynomial-division}
+Niech $K$ będzie ciałem. W $K[x]$ funkcja $\delta(f)=\deg f$
+dla $f\ne0$ jest euklidesowa.
+Wyjaśnijmy mechanizm. Jeśli $f=0$ lub $\deg f<\deg g$, wystarczy wziąć
+$q=0$ i $r=f$. W pozostałym przypadku $f\ne0$ oraz $\deg f\ge\deg g$.
+Niech $a,b\in K^\times$ będą najwyższymi współczynnikami
+odpowiednio $f$ i $g$. Odejmujemy od $f$ wielomian
+$(a/b)x^{\deg f-\deg g}g$.
+Najwyższy wyraz znika; nowy wielomian ma mniejszy stopień.
+Powtarzanie kroku kończy się po skończonej liczbie operacji,
+bo stopnie nie mogą maleć w nieskończoność.
+Dostajemy $f=gq+r$, gdzie $r=0$ lub $\deg r<\deg g$.
+Na przykład nad $\mathbb Q$:
+\[
+x^3+2x+1=(x+1)(x^2-x+3)-2.
+\]
+Rachunek można sprawdzić przez wymnożenie:
+$(x+1)(x^2-x+3)=x^3+2x+3$.
+Stała reszta $-2$ ma stopień $0<1$, więc spełnia wymóg.
+\end{przyklad}
+
+\begin{przyklad}[Liczby całkowite Gaussa]
+\label{aa:prz:gaussian-euclidean}
+Pierścień $\mathbb Z[i]=\{a+bi:a,b\in\mathbb Z\}$
+jest dziedziną euklidesową względem funkcji euklidesowej
+$\delta(z)=N(z)$ dla $z\ne0$, gdzie
+$N(a+bi)=a^2+b^2$ jest określona dla wszystkich
+$a+bi\in\mathbb Z[i]$, w tym dla zera.
+Jeśli $\alpha,\beta\in\mathbb Z[i]$ i $\beta\ne0$,
+zapiszmy $\alpha/\beta=x+iy$ z $x,y\in\mathbb R$.
+Wybierzmy liczby całkowite $m,n$ najbliższe odpowiednio
+$x,y$; wtedy $|x-m|\le\tfrac12$ i $|y-n|\le\tfrac12$.
+Dla $q=m+in$ oraz $r=\alpha-\beta q$ zachodzi
+$\alpha=\beta q+r$ i
+\[
+N(r)=N(\beta)\,N(\alpha/\beta-q)
+\le N(\beta)(1/4+1/4)=N(\beta)/2<N(\beta).
+\]
+Ponieważ $r\in\mathbb Z[i]$, uzyskaliśmy wymagane dzielenie
+z resztą. Własność multiplikatywną normy można sprawdzić
+bez odwołania do analizy: dla $z=a+bi$, $w=c+di$
+mamy $zw=(ac-bd)+(ad+bc)i$, a zatem
+\[
+N(zw)=(ac-bd)^2+(ad+bc)^2
+=(a^2+b^2)(c^2+d^2)=N(z)N(w).
+\]
+Tutaj $i^2=-1$; konstrukcję ciała liczb zespolonych
+z danej struktury ciała liczb rzeczywistych podamy
+w dalszym rozdziale o konstrukcjach algebraicznych.
+\end{przyklad}
+
+\section{Algorytm Euklidesa i tożsamość Bézouta}
+\begin{twierdzenie}[Algorytm Euklidesa]
+\label{aa:tw:euclidean-algorithm}
+Niech $R$ będzie dziedziną euklidesową z funkcją euklidesową
+$\delta$ i niech $a,b\in R$, $b\ne0$. Połóżmy
+$r_{-1}=a$ oraz $r_0=b$. Istnieje liczba całkowita $k\ge0$ i istnieją elementy
+$q_0,\ldots,q_k,r_1,\ldots,r_{k+1}\in R$
+takie, że
+\[
+r_{j-1}=r_jq_j+r_{j+1}\quad(0\le j\le k),
+\qquad r_{k+1}=0,
+\]
+$r_j\ne0$ dla $0\le j\le k$ oraz
+$\delta(r_{j+1})<\delta(r_j)$ dla $0\le j<k$.
+Ostatni niezerowy element $r_k$ jest największym wspólnym
+dzielnikiem $a$ i $b$. W szczególności, gdy już pierwsza
+reszta jest zerem, mamy $k=0$ i $r_k=b$.
+Co więcej, istnieją $u,v\in R$ takie, że
+$ua+vb=\gcd(a,b)$, z dokładnością do wyboru elementu
+stowarzyszonego z największym wspólnym dzielnikiem.
+\end{twierdzenie}
+\begin{proof}
+Dzieląc kolejne pary elementów, w każdym kroku otrzymujemy
+resztę równą zeru albo o mniejszej wartości $\delta$.
+Wartości $\delta$ należą do $\mathbb N_0$, więc nie istnieje
+nieskończony ściśle malejący ciąg wartości. Algorytm się kończy.
+Z równości $a=bq_0+r_1$ wynika, że element $d$ dzieli
+jednocześnie $a,b$ wtedy i tylko wtedy, gdy dzieli $b,r_1$:
+jeśli $d\mid a,b$, to $d\mid a-bq_0=r_1$;
+jeśli $d\mid b,r_1$, to $d\mid bq_0+r_1=a$.
+Taką samą równoważność stosujemy na każdym kolejnym kroku.
+Jeżeli pierwsza reszta jest zerem, ostatnim niezerowym
+elementem jest $b$, którego dzielniki są wspólnymi dzielnikami
+$a$ i $b$. W przeciwnym razie wspólni dzielnicy $a,b$ są
+dokładnie dzielnikami ostatniej niezerowej reszty $r_k$: dzielnik $r_k$
+dzieli także poprzednią resztę $r_{k-1}=r_k q_k$,
+a wszystkie wcześniejsze na podstawie odwróconych równości.
+To dowodzi charakterystyki największego wspólnego dzielnika.
+
+Aby uzyskać tożsamość Bézouta, wykonujemy podstawienia wsteczne.
+Pierwsza reszta ma postać $r_1=a-bq_0$,
+następna $r_2=b-r_1q_1$, a więc też jest kombinacją
+$R$-liniową $a,b$. Indukcyjnie każda kolejna reszta
+jest kombinacją liniową tych samych dwóch elementów.
+W przypadku zerowej pierwszej reszty mamy $b=0a+1b$.
+W przeciwnym razie $r_k=ua+vb$ dla pewnych $u,v\in R$.
+\end{proof}
+
+\begin{przyklad}[Rozszerzony algorytm Euklidesa dla $252$ i $198$]
+\label{aa:prz:extended-euclid}
+W $\mathbb Z$ wykonujemy dzielenie:
+\[
+252=1\cdot198+54,\qquad
+198=3\cdot54+36,\qquad
+54=1\cdot36+18,\qquad36=2\cdot18.
+\]
+Ostatnia niezerowa reszta wynosi $18$.
+Podstawiamy od końca:
+\[
+\begin{aligned}
+18&=54-36=54-(198-3\cdot54)\\
+  &=4\cdot54-198=4(252-198)-198\\
+  &=4\cdot252-5\cdot198.
+\end{aligned}
+\]
+Otrzymujemy nie tylko $\gcd(252,198)=18$, lecz także
+konkretne współczynniki Bézouta. Ponieważ $18$ jest
+największym wspólnym dzielnikiem, równanie
+$252x+198y=18$ ma rozwiązanie całkowite $(x,y)=(4,-5)$.
+\end{przyklad}
+
+\begin{wniosek}[Lemat Euklidesa w dziedzinie euklidesowej]
+\label{aa:wn:euclid-lemma}
+Niech $a,b,c$ należą do dziedziny euklidesowej $R$.
+Jeżeli $\gcd(a,b)$ jest jednostką oraz $a\mid bc$, to $a\mid c$.
+\end{wniosek}
+\begin{proof}
+Tożsamość Bézouta daje $ua+vb=1_R$ dla pewnych $u,v\in R$
+(po pomnożeniu przez odwrotność największego wspólnego dzielnika).
+Mnożąc przez $c$, otrzymujemy $c=uac+vbc$.
+Pierwszy składnik jest podzielny przez $a$ z definicji,
+a drugi na mocy $a\mid bc$. Zatem $a\mid c$.
+\end{proof}
+
+\begin{przyklad}[Największy wspólny dzielnik wielomianów]
+\label{aa:prz:poly-gcd}
+W $\mathbb Q[x]$ rozważmy $f=x^3-1$ i $g=x^2-1$.
+Mamy $f=(x-1)(x^2+x+1)$ oraz $g=(x-1)(x+1)$.
+Dzielenie $x^2+x+1$ przez $x+1$ daje resztę $1$,
+bo podstawienie $x=-1$ daje $1$. Zatem oba czynniki
+$x^2+x+1$ i $x+1$ są względnie pierwsze.
+Tożsamość Bézouta dla tych dwóch wielomianów daje
+$u(x)(x^2+x+1)+v(x)(x+1)=1$ dla pewnych $u,v\in\mathbb Q[x]$.
+Po pomnożeniu przez $x-1$ otrzymujemy
+$u(x)f(x)+v(x)g(x)=x-1$. Każdy wspólny dzielnik
+$f$ i $g$ dzieli więc $x-1$, który sam dzieli oba wielomiany.
+Otrzymujemy unormowany największy wspólny dzielnik
+$\gcd(f,g)=x-1$.
+\end{przyklad}
+
+\section{Dziedziny ideałów głównych}
+\begin{definicja}[Dziedzina ideałów głównych]
+\label{aa:def:pid}
+Dziedzinę całkowitości $R$, w której każdy ideał ma postać
+$(d)=\{rd:r\in R\}$ dla pewnego $d\in R$, nazywamy
+\emph{dziedziną ideałów głównych}. Oznacza to, że nawet
+ideał generowany przez wiele elementów można wygenerować
+jednym elementem. Nie znaczy to, że wszystkie elementy
+pierścienia są wzajemnie podzielne.
+\end{definicja}
+\begin{twierdzenie}[Każda dziedzina euklidesowa jest dziedziną ideałów głównych]
+\label{aa:tw:euclidean-pid}
+Jeżeli $R$ jest dziedziną euklidesową, to każdy ideał
+$R$ jest główny.
+\end{twierdzenie}
+\begin{proof}
+Niech $I$ będzie ideałem $R$. Jeśli $I=\{0\}$,
+to $I=(0)$. W przeciwnym razie rozważmy niepusty zbiór
+$\{\delta(a):a\in I,\ a\ne0\}\subseteq\mathbb N_0$.
+Ma on element najmniejszy. Wybierzmy niezerowy $d\in I$
+o minimalnej wartości $\delta(d)$. Dla dowolnego $a\in I$
+wykonajmy dzielenie $a=dq+r$, gdzie $r=0$
+lub $\delta(r)<\delta(d)$. Ponieważ $a,d\in I$
+oraz $I$ jest ideałem, $r=a-dq\in I$.
+Gdyby $r\ne0$, przeczyłoby to minimalności $\delta(d)$.
+Zatem $r=0$, czyli $a=dq\in(d)$. Udowodniliśmy $I\subseteq(d)$.
+Odwrotna inkluzja zachodzi, bo $d\in I$ i $I$ jest ideałem.
+Stąd $I=(d)$.
+\end{proof}
+
+\begin{twierdzenie}[Największy wspólny dzielnik w dziedzinie ideałów głównych]
+\label{aa:tw:pid-bezout}
+Jeżeli $R$ jest dziedziną ideałów głównych, to dla
+każdych $a,b\in R$, z których co najmniej jeden jest niezerowy,
+ideał $(a,b)$ ma postać $(d)$, gdzie $d$ jest największym
+wspólnym dzielnikiem $a,b$. Istnieją $u,v\in R$ z
+$d=ua+vb$.
+\end{twierdzenie}
+\begin{proof}
+Z definicji dziedziny ideałów głównych istnieje $d\in R$
+z $(a,b)=(d)$. Ponieważ $a,b\in(d)$, mamy $d\mid a$
+i $d\mid b$. Z drugiej strony $d\in(a,b)$, więc
+dla pewnych $u,v\in R$ zachodzi $d=ua+vb$.
+Jeśli $c$ jest wspólnym dzielnikiem $a,b$, to dzieli każdą
+ich kombinację liniową, a zatem dzieli $d$.
+W ten sposób wykazaliśmy zarówno własność największego
+wspólnego dzielnika, jak i tożsamość Bézouta.
+\end{proof}
+
+\begin{wniosek}[Pierwszość elementu nierozkładalnego w dziedzinie ideałów głównych]
+\label{aa:wn:irred-is-prime-pid}
+Niech $R$ będzie dziedziną ideałów głównych i niech
+$p\in R$ będzie elementem nierozkładalnym. Wtedy $p$ jest pierwszy.
+\end{wniosek}
+\begin{proof}
+Niech $p$ będzie nierozkładalny i niech $p\mid ab$.
+Jeśli $p\nmid a$, to największy wspólny dzielnik $p,a$
+musi być jednostką: dzieli $p$, a nierozkładalność $p$
+oznacza, że każdy jego dzielnik jest jednostką albo jest
+stowarzyszony z $p$; druga możliwość wymuszałaby $p\mid a$.
+Tożsamość Bézouta daje $up+va=1_R$.
+Mnożąc przez $b$, otrzymujemy $b=upb+vab$;
+oba składniki są podzielne przez $p$. A zatem $p\mid b$.
+\end{proof}
+
+\section{Dlaczego rozkład na czynniki musi się kończyć?}
+\begin{definicja}[Dziedzina z jednoznacznym rozkładem]
+\label{aa:def:ufd}
+Dziedzinę całkowitości $R$ nazywamy
+\emph{dziedziną z jednoznacznym rozkładem na czynniki},
+jeśli każdy niezerowy element niebędący jednostką można
+zapisać jako skończony iloczyn elementów nierozkładalnych,
+a dwa takie zapisy różnią się co najwyżej kolejnością
+czynników i zastąpieniem każdego czynnika elementem stowarzyszonym.
+\end{definicja}
+
+\begin{lemat}[Warunek stabilizacji wstępujących ciągów ideałów]
+\label{aa:lem:pid-ascending-chain}
+Niech $R$ będzie dziedziną ideałów głównych.
+Każdy wstępujący ciąg ideałów $R$,
+$I_1\subseteq I_2\subseteq\cdots$, staje się stały.
+\end{lemat}
+\begin{proof}
+Suma zbiorów $I=\bigcup_{n\ge1}I_n$ jest ideałem:
+jeżeli $a\in I_j$ i $b\in I_k$, to obydwa należą
+do $I_{\max(j,k)}$, więc $a-b$ należy do tego ideału;
+to samo dotyczy mnożenia przez dowolny element pierścienia.
+Ponieważ $R$ jest dziedziną ideałów głównych, $I=(d)$.
+Generator $d$ należy do $I_N$ dla pewnego $N$,
+zatem $(d)\subseteq I_N$. Z drugiej strony $I_N\subseteq I$.
+Wynika stąd $I_N=I$, a dla $n\ge N$ mamy $I_n=I$.
+\end{proof}
+
+\begin{twierdzenie}[Dziedziny ideałów głównych mają jednoznaczny rozkład na czynniki]
+\label{aa:tw:pid-ufd}
+Niech $R$ będzie dziedziną ideałów głównych.
+Wówczas $R$ jest dziedziną z jednoznacznym rozkładem
+na czynniki.
+\end{twierdzenie}
+\begin{proof}
+Najpierw udowodnimy istnienie rozkładu.
+Przypuśćmy przeciwnie, że istnieje niezerowy nieodwracalny
+element $a_0$, którego nie można przedstawić jako skończonego
+iloczynu elementów nierozkładalnych. Nie jest on nierozkładalny,
+bo wtedy iloczyn złożony z jednego czynnika byłby odpowiednim
+rozkładem. Istnieją więc nieodwracalne $a_1,b_1$ z
+$a_0=a_1b_1$. Co najmniej jeden z czynników nie ma rozkładu
+na nierozkładalne: gdyby oba miały, ich rozkłady po pomnożeniu
+dałyby rozkład $a_0$. Oznaczmy ten czynnik przez $a_1$
+(po ewentualnej zamianie czynników).
+Powtarzając argument, otrzymujemy ciąg
+$a_0=a_1b_1$, $a_1=a_2b_2$, itd.,
+gdzie każde $b_i$ nie jest jednostką. Stąd
+$(a_0)\subseteq(a_1)\subseteq(a_2)\subseteq\cdots$.
+Każde zawieranie jest ścisłe: gdyby $(a_{j-1})=(a_j)$,
+to dla pewnego $d\in R$ mielibyśmy $a_j=a_{j-1}d$.
+Z równości $a_{j-1}=a_jb_j$ wynikałoby wtedy
+$a_j=a_jb_jd$. Ponieważ $a_j\ne0$, skracanie daje
+$b_jd=1_R$, czyli $b_j$ jest jednostką, wbrew konstrukcji.
+Otrzymujemy nieskończony ściśle rosnący ciąg ideałów,
+sprzeczny z poprzednim lematem. Zatem rozkład istnieje.
+
+Teraz udowodnimy jednoznaczność. Każdy element nierozkładalny
+jest pierwszy na mocy Wniosku~\ref{aa:wn:irred-is-prime-pid}.
+Jeżeli $p_1\cdots p_r=q_1\cdots q_s$ są dwoma rozkładami,
+to $p_1$ dzieli iloczyn po prawej. Wielokrotne zastosowanie
+pierwszości daje, że $p_1\mid q_j$ dla pewnego $j$.
+Ponieważ $q_j$ jest nierozkładalny, $p_1$ i $q_j$
+są stowarzyszone. Po przestawieniu czynników możemy
+założyć $j=1$ i zapisać $q_1=up_1$ dla jednostki $u$.
+Skracając niezerowe $p_1$, otrzymujemy równość iloczynu
+pozostałych $p_i$ z iloczynem pozostałych $q_j$ pomnożonym
+przez jednostkę $u$. Jeżeli po obu stronach są jeszcze czynniki,
+wchłaniamy $u$ w jeden z nich; nie zmienia to nierozkładalności.
+Przypadek, gdy po obu stronach nie pozostał żaden czynnik,
+kończy indukcję. Gdy po skróceniu pozostałyby
+po jednej stronie czynniki nierozkładalne, a po drugiej
+jednostka, powstałaby sprzeczność: iloczyn niejednostek
+w dziedzinie całkowitości nie może być jednostką.
+Indukcja daje $r=s$ oraz stowarzyszenie odpowiadających sobie
+czynników. Gdy jeden z rozkładów jest pusty, obie strony
+są jednostkami i nie mogą jednocześnie zawierać czynników
+nierozkładalnych. To kończy dowód.
+\end{proof}
+
+\begin{uwaga}[Łańcuch implikacji i pytania odwrotne]
+\label{aa:uw:euclidean-pid-ufd}
+Udowodniliśmy implikacje
+\[
+\begin{gathered}
+\text{dziedzina euklidesowa}\ \Longrightarrow\
+\text{dziedzina ideałów głównych}\\
+\Longrightarrow\ \text{dziedzina z jednoznacznym rozkładem na czynniki}.
+\end{gathered}
+\]
+Odwrotne implikacje nie wynikają z powyższych dowodów.
+Nie każdy pierścień z jednoznacznym rozkładem na czynniki
+ma wszystkie ideały główne. Przykład taki uzyskamy przy
+pierścieniu $K[x,y]$, gdy udowodnimy jego własność
+jednoznacznego rozkładu w następnym rozdziale.
+Istnieją również dziedziny ideałów głównych, które nie są
+euklidesowe, lecz ich konstrukcja i dowód tego faktu
+wykraczają poza obecny rozdział.
+\end{uwaga}
+
+\begin{przyklad}[Dlaczego pierścień wielomianów dwóch zmiennych nie jest dziedziną ideałów głównych]
+\label{aa:prz:two-polynomials-not-pid}
+Niech $K$ będzie dowolnym ciałem. W pierścieniu $K[x,y]$
+rozważmy ideał $I=(x,y)$. Załóżmy, że $I=(f)$.
+Wtedy $f$ dzieli jednocześnie $x$ i $y$.
+Ponieważ $K$ jest ciałem, pierścień $K[x,y]$ jest
+dziedziną całkowitości. Rzeczywiście, traktując niezerowe wielomiany $f,g$ jako
+wielomiany zmiennej $y$ o współczynnikach w $K[x]$,
+ich najwyższe współczynniki względem $y$ są niezerowymi
+wielomianami w $x$. Ich iloczyn jest niezerowy, gdyż
+iloczyn dwóch niezerowych wielomianów jednej zmiennej
+nad ciałem ma niezerowy najwyższy współczynnik.
+To dowodzi, że $K[x,y]$ nie ma dzielników zera.
+Ponadto stopień całkowity niezerowego iloczynu
+jest sumą stopni całkowitych: jeśli $f_d$ i $g_e$
+są niezerowymi częściami jednorodnymi najwyższych
+stopni całkowitych $d$ i $e$, to częścią jednorodną
+stopnia $d+e$ iloczynu jest $f_dg_e$, która jest
+niezerowa na mocy właśnie wykazanej własności. Z podzielności $f\mid x$ wynika,
+że $f$ ma stopień najwyżej $1$. Jeśli ma stopień $1$,
+to musi być stowarzyszony z $x$; analogicznie z $f\mid y$
+wynikałoby stowarzyszenie z $y$. Nie jest to możliwe, bo jednostkami
+$K[x,y]$ są niezerowe stałe, a równość $x=cy$ z
+$c\in K^\times$ obala podstawienie $y=0$.
+Zatem $f$ ma stopień $0$, jest niezerową stałą i jest jednostką.
+Wtedy $I=K[x,y]$, czyli $1\in(x,y)$, ale to sprzeczne
+z podstawieniem $x=y=0$ do równości $1=xf_1+yf_2$.
+Wniosek: ideał $(x,y)$ nie jest główny.
+\end{przyklad}
+
+\section{Gdy zawodzi jednoznaczny rozkład}
+\begin{przyklad}[Dwa różne rozkłady liczby $6$]
+\label{aa:prz:zsqrtminus5}
+Rozważmy dziedzinę całkowitości
+$R=\mathbb Z[\sqrt{-5}]=\{a+b\sqrt{-5}:a,b\in\mathbb Z\}$.
+Jest ona podpierścieniem $\mathbb C$, więc nie ma dzielników
+zera. Norma $N(a+b\sqrt{-5})=a^2+5b^2$ ma wartości w
+$\mathbb N_0$ i jest multiplikatywna:
+$N(zw)=N(z)N(w)$. Rzeczywiście, dla sprzężenia
+$\overline{a+b\sqrt{-5}}=a-b\sqrt{-5}$ mamy
+$N(z)=z\overline z$, a więc
+$N(zw)=zw\overline z\,\overline w=N(z)N(w)$. W tej dziedzinie
+\[
+6=2\cdot3=(1+\sqrt{-5})(1-\sqrt{-5}).
+\]
+Wykażemy, że wszystkie cztery czynniki są nierozkładalne.
+Najpierw wyznaczmy wszystkie jednostki. Jeśli $u$ ma
+odwrotność w $R$, to $N(u)N(u^{-1})=1$. Obie normy są
+dodatnimi liczbami całkowitymi, więc $N(u)=1$.
+Równanie $a^2+5b^2=1$ wymusza $b=0$ i $a=\pm1$.
+Odwrotnie, $1$ oraz $-1$ są jednostkami, bo są swoimi
+własnymi odwrotnościami. Są to zatem wszystkie jednostki.
+Nie istnieją elementy o normie $2$ ani $3$:
+przy $b\ne0$ norma jest co najmniej $5$, a przy $b=0$
+musiałaby być kwadratem liczby całkowitej.
+Jeśli $2=ab$ z nieodwracalnymi $a,b$, to
+$4=N(2)=N(a)N(b)$, a oba czynniki normowe byłyby
+większe od $1$; jedyna możliwość to $2$ i $2$, niemożliwa.
+Tak samo $N(3)=9$ wymagałoby dla rozkładu na niejednostki
+norm $3$ i $3$, których nie ma. Dla
+$1\pm\sqrt{-5}$ norma wynosi $6$, więc rozkład
+na niejednostki wymagałby norm $2$ i $3$, również niemożliwych.
+Wreszcie elementy $2,3,1+\sqrt{-5},1-\sqrt{-5}$
+nie są parami stowarzyszone: mają różne normy, z wyjątkiem
+ostatniej pary, ale $1+\sqrt{-5}\ne\pm(1-\sqrt{-5})$.
+Otrzymaliśmy dwa rozkłady na nierozkładalne, które nie
+różnią się jedynie kolejnością i jednostkami.
+Pierścień $\mathbb Z[\sqrt{-5}]$ nie jest więc dziedziną
+z jednoznacznym rozkładem na czynniki.
+\end{przyklad}
+
+\begin{przyklad}[Element nierozkładalny, który nie jest pierwszy]
+\label{aa:prz:irred-not-prime}
+W powyższym pierścieniu liczba $2$ jest nierozkładalna,
+ale nie jest elementem pierwszym. Mamy
+$2\mid (1+\sqrt{-5})(1-\sqrt{-5})$, ponieważ iloczyn
+wynosi $6=2\cdot3$. Tymczasem $2$ nie dzieli żadnego
+z czynników: równości
+$1\pm\sqrt{-5}=2(a+b\sqrt{-5})$ dla $a,b\in\mathbb Z$
+wymagałyby $2a=1$, co nie ma rozwiązania całkowitego.
+Widać dokładnie, dlaczego implikacja
+„nierozkładalny $\Rightarrow$ pierwszy” wymaga dodatkowych
+założeń o pierścieniu.
+\end{przyklad}
+
+\begin{uwaga}[Związek z modułami i algebrą liniową]
+\label{aa:uw:pid-module-link}
+Dziedzina ideałów głównych umożliwia nie tylko jednoznaczny
+rozkład elementów. Jej głębszą cechą jest to, że podmoduły
+modułów wolnych skończonej rangi również są wolne i mają
+kontrolowaną postać. Z tego wyprowadzimy klasyfikację
+skończenie generowanych modułów nad dziedziną ideałów
+głównych oraz klasyfikację skończenie generowanych grup
+abelowych. Następny rozdział rozwinie pierścienie wielomianów
+i kryteria nierozkładalności, potrzebne również w teorii Galois.
+\end{uwaga}
+\setlength{\parskip}{4pt}

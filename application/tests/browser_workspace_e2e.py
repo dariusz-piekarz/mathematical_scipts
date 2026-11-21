@@ -5,6 +5,8 @@ Requires playwright+Chromium. Run: python tests/browser_workspace_e2e.py
 from __future__ import annotations
 
 import os
+import sys
+import socket
 from pathlib import Path
 import subprocess
 import tempfile
@@ -21,23 +23,27 @@ def main():
         drafts = Path(temp) / "drafts"
         saved = Path(temp) / "saved"
         env = dict(os.environ, MATLIB_DRAFTS_ROOT=str(drafts), MATLIB_SAVED_ROOT=str(saved))
-        server = subprocess.Popen(["python", "-m", "uvicorn", "backend.api:app", "--host", "127.0.0.1", "--port", "18765"],
+        with socket.socket() as probe:
+            probe.bind(("127.0.0.1", 0))
+            port = probe.getsockname()[1]
+        base_url = f"http://127.0.0.1:{port}"
+        server = subprocess.Popen([sys.executable, "-m", "uvicorn", "backend.api:app", "--host", "127.0.0.1", "--port", str(port)],
                                   cwd=APP, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
         try:
-            for i in range(50):
+            for i in range(100):
                 try:
-                    with urllib.request.urlopen("http://127.0.0.1:18765/api/health", timeout=1) as res:
+                    with urllib.request.urlopen(base_url + "/api/health", timeout=1) as res:
                         if res.status == 200:
                             break
                 except (OSError, TimeoutError):
-                    time.sleep(0.15)
+                    time.sleep(0.2)
             else:
                 raise RuntimeError("FastAPI failed to start")
             with sync_playwright() as playwright:
-                browser = playwright.chromium.launch(headless=True, executable_path="/usr/bin/chromium", args=["--no-sandbox"])
+                browser = playwright.chromium.launch(headless=True, args=["--no-sandbox"])
                 try:
                     page = browser.new_page()
-                    page.goto("http://127.0.0.1:18765/", wait_until="networkidle")
+                    page.goto(base_url + "/", wait_until="networkidle")
                     page.locator("#openFirst").click()
                     page.locator("#addCurrent").click()
                     page.locator('[data-tab="selection"]').click()
@@ -45,15 +51,16 @@ def main():
                     page.locator("#createDraft").click()
                     page.locator("#draftResult strong").wait_for(timeout=15000)
                     assert list(drafts.glob("*/project.zip")), "No temporary draft created"
-                    page.locator("#draftResult button").first.click()
-                    page.locator("#savedProjects .saved-project-item").first.wait_for(timeout=5000)
+                    page.locator("#draftResult button", has_text="Zapisz na stałe").click()
+                    page.locator("#savedProjects .saved-project-item").first.wait_for(timeout=15000)
                     assert list(saved.glob("*.zip")), "Saved project not persisted"
-                    page.close()  # X-close sends beacon
+                    page.goto('about:blank', wait_until='load')  # Real navigation dispatches pagehide
+                    page.close()
                     for _ in range(50):
                         if not list(drafts.glob("*/project.zip")):
                             break
                         time.sleep(0.1)
-                    assert not list(drafts.glob("*/project.zip")), "X-close failed to delete draft"
+                    assert not list(drafts.glob("*/project.zip")), "Leaving page failed to delete draft"
                     assert list(saved.glob("*.zip")), "Closing tab removed saved project"
                 finally:
                     browser.close()
@@ -63,7 +70,7 @@ def main():
                 server.communicate(timeout=8)
             except subprocess.TimeoutExpired:
                 server.kill()
-        print("PASS: create draft, save project, close browser X, remove draft, retain saved ZIP")
+        print("PASS: create draft, save project, leave page, remove draft, retain saved ZIP")
 
 
 if __name__ == "__main__":

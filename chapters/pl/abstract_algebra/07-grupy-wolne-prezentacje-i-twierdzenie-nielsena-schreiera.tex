@@ -1,0 +1,621 @@
+% AA-07 | Algebra abstrakcyjna | Iteracja IV
+% Reinterpretacja i integracja dowodu z BT-01; bez cwiczen.
+\chapter[Grupy wolne i twierdzenie Nielsena--Schreiera]{Grupy wolne, prezentacje i twierdzenie Nielsena--Schreiera}
+\label{aa:ch:grupy-wolne}
+
+\section{Dlaczego grupy wolne są obiektem uniwersalnym?}
+W grupie cyklicznej jeden generator może spełniać relację $a^m=e$.
+W grupie abelowej dwa generatory zawsze komutują. Pytamy, co otrzymamy,
+jeżeli wskażemy pewien zbiór generatorów, ale \emph{nie narzucimy im żadnych
+relacji poza aksjomatami grupy}. Odpowiedź prowadzi do grup wolnych.
+Są one przydatne do opisu grup za pomocą generatorów i relacji, grup
+podstawowych przestrzeni topologicznych oraz konstrukcji paradoksalnych.
+Ostatnie zastosowanie wykorzystamy przy dowodzie twierdzenia
+Banacha--Tarskiego.
+
+\begin{definicja}[Własność uniwersalna grupy wolnej]
+\label{aa:def:free-universal}
+Niech $S$ będzie zbiorem. Para $(F,\iota)$, gdzie $F$ jest grupą,
+a $\iota:S\to F$ jest funkcją, nazywa się \emph{grupą wolną na $S$},
+gdy dla każdej grupy $G$ i każdej funkcji $f:S\to G$ istnieje
+\emph{dokładnie jeden} homomorfizm $\widetilde f:F\to G$ taki, że
+$\widetilde f\circ\iota=f$. Grupę taką oznaczamy przez $F(S)$.
+\end{definicja}
+
+Warunek dotyczy dowolnej funkcji $f$: obrazy generatorów mogą mieć
+jakiekolwiek rzędy i nie muszą generować całego $G$. Jeśli $S$ ma
+dwa elementy $a,b$, to w $F(S)$ wyrazy $ab$ i $ba$ będą różne.
+W grupie $G$ ich obrazy mogą się natomiast pokrywać; oznacza to
+jedynie, że $\widetilde f$ ma nietrywialne jądro.
+
+\begin{lemat}[Jednoznaczność z dokładnością do izomorfizmu]
+\label{aa:lem:free-unique}
+Jeśli $(F,\iota)$ i $(F',\iota')$ spełniają powyższą własność
+uniwersalną dla tego samego zbioru $S$, to istnieje dokładnie jeden
+izomorfizm $u:F\to F'$ spełniający $u\circ\iota=\iota'$.
+\end{lemat}
+\begin{proof}
+Własność uniwersalna grupy $F$ zastosowana do $\iota':S\to F'$ daje
+homomorfizm $u:F\to F'$, a własność uniwersalna grupy $F'$ zastosowana
+do $\iota:S\to F$ daje $v:F'\to F$.
+Złożenie $vu:F\to F$ spełnia $(vu)\iota=\iota$,
+tak samo jak identyczność $\operatorname{id}_F$. Jednoznaczność
+z definicji daje $vu=\operatorname{id}_F$.
+Analogicznie $uv=\operatorname{id}_{F'}$.
+Zatem $u$ jest izomorfizmem o odwrotności $v$;
+jego jednoznaczność była już częścią konstrukcji.
+\end{proof}
+
+\section{Słowa zredukowane: budowa grupy bez ukrytych założeń}
+Niech $S^{-1}$ będzie rozłączną kopią $S$; dla $s\in S$ zapisujemy
+odpowiadający mu symbol przez $s^{-1}$. Formalny alfabet to
+$\mathcal A=S\sqcup S^{-1}$. Przyporządkowanie liter odwrotnych
+jest inwolucją: $(s^{-1})^{-1}=s$; na tym etapie nie jest to jeszcze
+operacja w grupie.
+
+\begin{definicja}[Słowo, redukcja]
+\label{aa:def:free-word}
+\emph{Słowo} to skończony ciąg liter $w=s_1\cdots s_n$ z $\mathcal A$;
+dopuszczamy słowo puste $e$. \emph{Elementarna redukcja} usuwa
+sąsiednią parę $ss^{-1}$ albo $s^{-1}s$.
+Słowo jest \emph{zredukowane}, gdy nie zawiera takiej pary.
+\end{definicja}
+
+\begin{przyklad}[Co wolno skreślić, a czego nie]
+\label{aa:prz:free-reduction}
+Dla $S=\{a,b\}$ słowo $a a^{-1} b b^{-1} b a$ redukuje się
+do $ba$. Słowo $aba^{-1}b^{-1}$ jest już zredukowane i nie jest
+słowem pustym. Nie wolno przestawiać liter, aby usunąć $aa^{-1}$:
+możliwość przestawiania liter oznaczałaby dodatkową relację
+przemienności, której w grupie wolnej nie wprowadzamy.
+\end{przyklad}
+
+\begin{definicja}[Algorytm stosu]
+\label{aa:def:free-stack}
+Czytamy słowo od lewej do prawej, przechowując jego aktualnie
+zredukowany prefiks $r$. Początkowo $r=e$.
+Po przeczytaniu litery $s$ usuwamy ostatnią literę $r$, jeżeli jest
+ona równa $s^{-1}$; w przeciwnym razie dopisujemy $s$ na końcu.
+Wynik oznaczamy $\operatorname{red}(w)$.
+\end{definicja}
+
+\begin{lemat}[Wstawienie pary odwrotnej nie zmienia stosu]
+\label{aa:lem:free-stack-pair}
+Niech przed przeczytaniem dwóch kolejnych liter $s,s^{-1}$
+na stosie leży słowo zredukowane $r$. Po przeczytaniu obu liter
+na stosie ponownie leży $r$.
+\end{lemat}
+\begin{proof}
+Jeśli $r$ nie kończy się literą $s^{-1}$, pierwsze czytanie
+dopisuje $s$, a drugie natychmiast kasuje dopisaną literę.
+Jeśli $r=us^{-1}$, pierwsze czytanie usuwa końcową literę
+$s^{-1}$ i pozostawia $u$. Ponieważ $r$ było zredukowane,
+$u$ nie kończy się literą $s$; wobec tego drugie czytanie
+dopisuje $s^{-1}$, odtwarzając $r=us^{-1}$.
+Przypadek pustego $u$ jest taki sam.
+\end{proof}
+
+\begin{twierdzenie}[Jednoznaczność redukcji]
+\label{aa:tw:free-reduction}
+Każde słowo $w$ można doprowadzić przez elementarne redukcje
+do dokładnie jednego słowa zredukowanego. Jest nim
+$\operatorname{red}(w)$ otrzymane algorytmem stosu.
+\end{twierdzenie}
+\begin{proof}
+Każda elementarna redukcja zmniejsza długość o dwa, więc każdy
+ciąg redukcji musi się zakończyć. Algorytm stosu również można
+zrealizować za pomocą elementarnych redukcji: po redukcji prefiksu
+dopisujemy następną literę i ewentualnie kasujemy jedną parę na końcu.
+Indukcja po długości przeczytanego prefiksu pokazuje, że otrzymujemy
+osiągalne słowo zredukowane.
+
+Pozostaje wykazać niezależność od wybranej kolejności skreśleń.
+Jeśli $w=pss^{-1}q$, to algorytm stosu dla $w$ i dla $pq$
+daje ten sam wynik: po prefiksie $p$ stan jest jednakowy,
+a dwie kolejne litery $s,s^{-1}$ go nie zmieniają na mocy
+Lematu~\ref{aa:lem:free-stack-pair}; sufiks $q$ jest następnie
+taki sam. Zatem każda elementarna redukcja zachowuje
+$\operatorname{red}(w)$. Jeśli dowolny ciąg redukcji kończy się
+słowem zredukowanym $z$, to
+$\operatorname{red}(w)=\operatorname{red}(z)=z$.
+Wszystkie możliwe wyniki końcowe są więc identyczne.
+\end{proof}
+
+\begin{wniosek}[Redukcja nie zależy od wcześniejszych skreśleń]
+\label{aa:wn:free-concat}
+Dla dowolnych słów $u,v$ zachodzą równości
+$\operatorname{red}(\operatorname{red}(u)v)=\operatorname{red}(uv)$
+oraz $\operatorname{red}(u\operatorname{red}(v))=\operatorname{red}(uv)$.
+\end{wniosek}
+\begin{proof}
+W słowie $uv$ możemy najpierw wykonać redukcje
+w całym fragmencie $u$ (albo $v$), a dopiero później w pozostałej
+części. Jednoznaczność końcowego wyniku dowodzi równości.
+\end{proof}
+
+\begin{twierdzenie}[Istnienie grupy wolnej]
+\label{aa:tw:free-exists}
+Zbiór wszystkich słów zredukowanych w alfabecie
+$S\sqcup S^{-1}$ jest grupą przy mnożeniu
+$u\cdot v=\operatorname{red}(uv)$.
+Ta grupa wraz z funkcją $\iota(s)=s$ spełnia własność
+uniwersalną z Definicji~\ref{aa:def:free-universal}.
+\end{twierdzenie}
+\begin{proof}
+Wynik redukcji jest słowem zredukowanym, więc działanie
+jest wewnętrzne. Na mocy
+Wniosku~\ref{aa:wn:free-concat} mamy
+$(u\cdot v)\cdot w=\operatorname{red}(uvw)
+=u\cdot(v\cdot w)$, czyli łączność.
+Słowo puste jest jedynką. Dla $u=s_1\cdots s_n$ słowo
+$u^{-1}=s_n^{-1}\cdots s_1^{-1}$ jest zredukowane;
+redukcja $uu^{-1}$ i $u^{-1}u$ od środka prowadzi do $e$.
+Są to więc odwrotności obustronne.
+
+Niech teraz $f:S\to G$ będzie dowolna funkcja do grupy $G$.
+Dla zredukowanego słowa $s_1\cdots s_n$ definiujemy
+$\widetilde f(s_1\cdots s_n)$ jako iloczyn obrazów liter,
+przy czym obrazem formalnego $s^{-1}$ jest $f(s)^{-1}$.
+Elementarna redukcja nie zmienia tego iloczynu, bo usuwa
+czynniki wzajemnie odwrotne. Wobec tego
+$\widetilde f(u\cdot v)=\widetilde f(u)\widetilde f(v)$.
+Jest to homomorfizm przedłużający $f$.
+Każdy taki homomorfizm musi działać w ten sposób na słowach,
+ponieważ zachowuje mnożenie i odwrotności; zatem jest jedyny.
+\end{proof}
+
+\begin{przyklad}[Grupa wolna rangi zero, jeden i dwa]
+\label{aa:prz:free-ranks}
+Dla $S=\varnothing$ jedynym słowem jest słowo puste, więc
+$F(\varnothing)=\{e\}$. Dla $S=\{a\}$ zredukowane słowa mają
+postać $a^n$, $n\in\mathbb Z$, a mnożenie odpowiada dodawaniu
+wykładników, więc $F(\{a\})\cong\mathbb Z$.
+Dla $S=\{a,b\}$ słowa $ab$ i $ba$ są różne, ponieważ są
+różnymi słowami zredukowanymi. Zatem $F(\{a,b\})$ nie jest
+abelowa. Słowo $aba^{-1}b^{-1}\ne e$ jest jej nietrywialnym
+komutatorem.
+\end{przyklad}
+
+\begin{stwierdzenie}[Liczba słów o danej długości]
+\label{aa:st:free-count}
+Dla liczb całkowitych $r\ge2$ i $n\ge1$ grupa wolna
+$F_r=F(\{s_1,\ldots,s_r\})$ ma dokładnie
+$2r(2r-1)^{n-1}$ słów zredukowanych długości $n$.
+Jest przeliczalnie nieskończona.
+\end{stwierdzenie}
+\begin{proof}
+Pierwszą literę można wybrać na $2r$ sposobów;
+każda następna ma $2r-1$ możliwości, bo zabroniona jest
+jedynie odwrotność poprzedniej. Dla każdego $n$ liczba jest
+skończona, a zliczalna suma zbiorów skończonych jest przeliczalna.
+Nieskończoność wynika z różności słów $s_1^n$ dla $n\ge0$.
+\end{proof}
+
+
+\begin{przyklad}[Dwa rodzaje zależności między generatorami]
+\label{aa:prz:free-nonfree-pairs}
+Grupa abelowa $\mathbb Z^2$ jest generowana przez
+$(1,0)$ i $(0,1)$, ale nie jest grupą wolną na tych dwóch
+generatorach: komutator dwóch generatorów jest w niej elementem neutralnym,
+podczas gdy odpowiadające mu słowo $aba^{-1}b^{-1}$
+w $F(a,b)$ jest zredukowane i niepuste.
+Z drugiej strony sama nieprzemienność również nie wystarcza,
+aby para elementów była parą wolnych generatorów.
+W $S_3$ transpozycje $(1\,2)$ i $(2\,3)$ nie komutują,
+ale spełniają relację $(1\,2)^2=e$.
+Homomorfizm $F(a,b)\to S_3$ wysyłający $a$ na $(1\,2)$,
+a $b$ na $(2\,3)$ ma więc w jądrze nietrywialne słowo $a^2$.
+W dowodzie paradoksu Banacha--Tarskiego trzeba będzie
+wykluczyć nie tylko przemienność lub relacje torsyjne,
+lecz każdą możliwą nietrywialną relację.
+\end{przyklad}
+
+\section{Generatory, relacje i ilorazy grup wolnych}
+\begin{definicja}[Prezentacja grupy]
+\label{aa:def:presentation}
+Dla zbioru generatorów $S$ i zbioru słów $R\subseteq F(S)$
+niech $\langle\!\langle R\rangle\!\rangle$ oznacza
+\emph{domknięcie normalne} $R$, czyli najmniejszą
+podgrupę normalną $F(S)$ zawierającą $R$.
+Definiujemy
+\[
+\langle S\mid R\rangle
+ =F(S)/\langle\!\langle R\rangle\!\rangle.
+\]
+Przy $R=\varnothing$ otrzymujemy $F(S)$.
+\end{definicja}
+
+\begin{lemat}[Co oznacza domknięcie normalne]
+\label{aa:lem:normal-closure}
+Dla grupy $G$ i podzbioru $R\subseteq G$ domknięcie normalne
+$\langle\!\langle R\rangle\!\rangle$ jest podgrupą generowaną
+przez wszystkie elementy $grg^{-1}$, gdzie $g\in G$, $r\in R$.
+\end{lemat}
+\begin{proof}
+Niech $N$ będzie podgrupą generowaną przez wskazane sprzężenia.
+Jest normalna, bo sprzężenie $grg^{-1}$ przez $h\in G$
+ma postać $(hg)r(hg)^{-1}$, a sprzężenie iloczynu jest iloczynem
+sprzężeń. Zawiera $R$, biorąc $g=e$.
+Każda inna podgrupa normalna zawierająca $R$ musi zawierać
+wszystkie jego sprzężenia, a więc zawiera $N$. Jest więc
+$N$ najmniejszą taką podgrupą.
+\end{proof}
+
+\begin{twierdzenie}[Własność uniwersalna prezentacji]
+\label{aa:tw:presentation-universal}
+Niech $S$ będzie zbiorem, $R\subseteq F(S)$ zbiorem słów,
+$G$ grupą, a $f:S\to G$ dowolną funkcją.
+Istnieje homomorfizm $\langle S\mid R\rangle\to G$
+przypisujący klasie generatora $s$ element $f(s)$ wtedy
+i tylko wtedy, gdy homomorfizm $\widetilde f:F(S)\to G$
+indukowany przez $f$ spełnia $\widetilde f(r)=e_G$
+dla każdego $r\in R$. Takie przedłużenie jest jedyne.
+\end{twierdzenie}
+\begin{proof}
+Jeśli istnieje zadany homomorfizm z ilorazu, każda relacja
+$r\in R$ jest w nim równa jedynce; w szczególności
+$\widetilde f(r)=e_G$.
+Odwrotnie, jeśli $\widetilde f$ zeruje wszystkie relacje,
+to normalność $\ker\widetilde f$ oznacza, że zawiera ich
+domknięcie normalne. Definiujemy więc na ilorazie odwzorowanie
+$w\langle\!\langle R\rangle\!\rangle\mapsto\widetilde f(w)$.
+Jest ono dobrze określone: równość dwóch warstw oznacza,
+że różnica ich reprezentantów (w sensie iloczynu z odwrotnością)
+należy do domknięcia normalnego, a więc do jądra $\widetilde f$.
+Zachowywanie mnożenia wynika z tego, że $\widetilde f$ jest
+homomorfizmem.
+Jednoznaczność bierze się z faktu, że klasy generatorów
+generują cały iloraz.
+\end{proof}
+
+\begin{przyklad}[Najważniejsze prezentacje elementarne]
+\label{aa:prz:presentations-basic}
+Dla każdej liczby całkowitej $n\ge1$ grupa cykliczna $C_n$
+ma prezentację $\langle a\mid a^n\rangle$, ponieważ słowa na jednym generatorze
+są potęgami $a$, a relacja $a^n=e$ utożsamia wykładniki
+różniące się o wielokrotność $n$.
+Grupa $\mathbb Z^2$ ma prezentację
+$\langle a,b\mid aba^{-1}b^{-1}\rangle$:
+relacja wymusza $ab=ba$, więc każde słowo daje $a^m b^n$;
+jednoznaczność pary $(m,n)$ wynika z homomorfizmu do
+$\mathbb Z^2$ przypisującego $a\mapsto(1,0)$ i
+$b\mapsto(0,1)$.
+Grupa diedralna $D_{2n}$ ma prezentację
+$\langle r,s\mid r^n,s^2,srs^{-1}r\rangle$ dla $n\ge3$.
+Z relacji $sr=r^{-1}s$ każde słowo można sprowadzić do jednej
+z postaci $r^i$ albo $r^is$, $0\le i<n$.
+Daje to co najwyżej $2n$ elementów; rzeczywista grupa
+symetrii foremnego $n$-kąta ma dokładnie $2n$ elementów,
+i spełnia relację, więc homomorfizm z prezentacji na tę grupę
+jest bijekcją.
+\end{przyklad}
+
+\begin{twierdzenie}[Abelianizacja grupy wolnej]
+\label{aa:tw:free-abelianization}
+Dla dowolnego zbioru $S$ grupa abelowa $F(S)_{\mathrm{ab}}=
+F(S)/[F(S),F(S)]$ jest naturalnie izomorficzna z grupą
+$\mathbb Z^{(S)}$ skończonych kombinacji formalnych
+$\sum_{s\in S}n_s e_s$, $n_s\in\mathbb Z$.
+\end{twierdzenie}
+\begin{proof}
+Niech $u:F(S)\to\mathbb Z^{(S)}$ wysyła generator $s$ na
+$e_s$. Istnieje i jest jedyny na mocy uniwersalności grupy
+wolnej; jest surjektywny, bo obrazy generatorów generują
+$\mathbb Z^{(S)}$. Ponieważ grupa docelowa jest abelowa,
+$[F(S),F(S)]\subseteq\ker u$, więc $u$ indukuje surjekcję
+$\bar u:F(S)_{\mathrm{ab}}\to\mathbb Z^{(S)}$.
+Odwrotnie, przyporządkowanie $e_s\mapsto[s]$ można
+rozszerzyć do homomorfizmu z $\mathbb Z^{(S)}$ do
+$F(S)_{\mathrm{ab}}$, ponieważ ten ostatni iloraz jest abelowy.
+Oba złożenia zachowują generatory $e_s$ i $[s]$, a więc
+są identycznościami. Zatem $\bar u$ jest izomorfizmem.
+\end{proof}
+
+
+\begin{stwierdzenie}[Niezmienniczość skończonej rangi grupy wolnej]
+\label{aa:st:free-rank-invariant}
+Jeśli $F_r\cong F_s$ dla liczb całkowitych $r,s\ge0$,
+to $r=s$.
+\end{stwierdzenie}
+\begin{proof}
+Niech $C_2$ będzie dwuelementową grupą cykliczną.
+Każdy homomorfizm $F_r\to C_2$ jest jednoznacznie wyznaczony
+przez niezależny wybór obrazów $r$ wolnych generatorów,
+a każdy taki wybór daje homomorfizm na mocy własności
+uniwersalnej. Istnieje więc dokładnie $2^r$ takich homomorfizmów.
+Izomorfizm $F_r\cong F_s$ przez złożenie w jedną stronę
+ustanawia bijekcję pomiędzy zbiorami homomorfizmów
+$F_r\to C_2$ oraz $F_s\to C_2$.
+Zatem $2^r=2^s$, skąd $r=s$.
+\end{proof}
+
+\section{Graf warstw: geometria ukryta w podgrupie grupy wolnej}
+Niech $F=F(S)$, $H\le F$ będzie dowolną podgrupą.
+Zbudujemy graf, który pozwala rozpoznać elementy $H$ jako
+zamknięte ścieżki oraz znaleźć dla $H$ nowe wolne generatory.
+Nie zakładamy, że $H$ ma skończony indeks.
+
+\begin{definicja}[Graf Schreiera]
+\label{aa:def:schreier-graph}
+\emph{Grafem Schreiera} podgrupy $H\le F(S)$ nazywamy graf
+skierowany $\Gamma(H\backslash F,S)$, którego wierzchołki
+to prawe warstwy $Hg$, $g\in F$. Dla każdego $v=Hg$ i $s\in S$
+umieszczamy krawędź $e(v,s)$ od $v$ do $v s=Hgs$
+o etykiecie $s$; dopuszczamy pętle i krawędzie wielokrotne.
+Krawędź wolno przejść także w przeciwnym kierunku, z etykietą $s^{-1}$.
+Wierzchołek $H$ nazywamy \emph{bazowym}.
+Przy rozpatrywaniu drzew rozpinających zapominamy o orientacji,
+ale zachowujemy rozróżnienie poszczególnych krawędzi:
+przeciwne skierowanie dwóch różnych krawędzi z etykietą $s$
+nie utożsamia ich ze sobą. Odwrotne przejście danej krawędzi
+nie jest natomiast nową krawędzią grafu.
+\end{definicja}
+
+\begin{lemat}[Słowa, drogi i pętle]
+\label{aa:lem:schreier-path}
+Dla dowolnego słowa $w\in F(S)$ istnieje dokładnie jedna droga
+w grafie Schreiera wychodząca z każdego wskazanego wierzchołka
+i mająca kolejno etykiety liter zredukowanego słowa $w$.
+Droga rozpoczęta w $Hg$ kończy się w $Hgw$.
+W szczególności droga z bazowego $H$ jest zamknięta wtedy
+i tylko wtedy, gdy $w\in H$.
+Ponadto redukcja dwóch kolejnych, przeciwnie skierowanych przejść
+tej samej krawędzi odpowiada skreśleniu sąsiednich liter odwrotnych.
+\end{lemat}
+\begin{proof}
+Z każdego wierzchołka wychodzi dokładnie jedna krawędź
+z każdą dodatnią etykietą $s$, a dokładnie jedna odwrotność
+krawędzi kończącej się w danym wierzchołku ma etykietę $s^{-1}$:
+jest to odwrotność $e(Hgs^{-1},s)$.
+Indukcja po kolejnych literach pokazuje, że od wierzchołka
+$Hg$ przechodzimy do $Hgs_1$, potem do $Hgs_1s_2$ itd.,
+ostatecznie do $Hgw$. Jeśli $g=e$, koniec jest równy $H$
+dokładnie wtedy, gdy $Hw=H$, czyli $w\in H$.
+Przejście krawędzi i natychmiastowy powrót to dokładnie
+przejście litery i jej odwrotności.
+\end{proof}
+
+Dla dowolnego zbioru generatorów $S$, również nieskończonego,
+pojęcie grafu uwzględnia krawędzie wielokrotne i pętle.
+Ważne jest to, że warstwy $Hg$ są jedynie elementami zbioru
+$H\backslash F$; bez normalności $H$ nie ma on struktury grupy
+ilorazowej pochodzącej z $F$.
+
+Graf Schreiera jest spójny: każdy wierzchołek $Hg$ można
+osiągnąć z $H$ drogą oznaczoną dowolnym słowem reprezentującym $g$.
+Uzasadnimy teraz, dlaczego można wybrać w nim drzewo rozpinające.
+W przypadku skończonego grafu wystarczy kolejno dodawać krawędzie,
+które docierają do jeszcze nieodwiedzonego wierzchołka.
+Dla dowolnego $S$ można dobrze uporządkować alfabet
+$S\sqcup S^{-1}$ (korzystając z aksjomatu wyboru).
+Słowa porządkujemy najpierw według długości,
+a słowa tej samej długości leksykograficznie.
+Jest to dobre uporządkowanie słów skończonych. Dla każdej
+warstwy wybieramy pierwsze w tym porządku słowo, które
+do niej prowadzi. Każdy prefiks wybranego słowa jest wybranym
+słowem dla swojego wierzchołka: zastąpienie prefiksu słowem
+krótszym albo leksykograficznie wcześniejszym dałoby
+wcześniejsze słowo prowadzące do tej samej warstwy.
+Wybrane słowa są zredukowane, gdyż skreślenie sąsiednich
+liter odwrotnych prowadziłoby do krótszego słowa.
+Łączymy każdy niebazowy wierzchołek z jego poprzednikiem
+na wybranej drodze. Długość wybranego słowa maleje o jeden
+przy przejściu do poprzednika, więc otrzymane krawędzie
+nie tworzą cyklu i prowadzą każdy wierzchołek do $H$.
+Tworzą zatem drzewo rozpinające $T$.
+
+\begin{lemat}[Pętle związane z krawędziami spoza drzewa]
+\label{aa:lem:tree-paths}
+Niech $\Gamma$ będzie spojnym grafem z wyróżnionym
+wierzchołkiem $v_0$ i drzewem rozpinającym $T$.
+Dla każdego wierzchołka $v$ niech $t_v$ będzie jedyną
+zredukowaną drogą w $T$ od $v_0$ do $v$.
+Dla każdej zorientowanej krawędzi $e:v\to w$ nieleżącej
+w $T$ definiujemy pętlę $b_e=t_v e t_w^{-1}$.
+Wybieramy dokładnie jedną orientację każdej krawędzi
+spoza $T$. Wtedy każda zamknięta droga od $v_0$ jest,
+z dokładnością do usuwania natychmiastowych powrotów,
+iloczynem pętli $b_e$ i ich odwrotności.
+\end{lemat}
+\begin{proof}
+Przejdźmy po kolei krawędzie zamkniętej drogi
+$v_0=v_0',v_1',\dots,v_m'=v_0$.
+Dla krawędzi $e_i:v_{i-1}'\to v_i'$ wstawmy
+między kolejne kroki drogi ścieżki $t_{v_i'}^{-1}t_{v_i'}$.
+Otrzymamy iloczyn pętli
+$(t_{v_0'}e_1t_{v_1'}^{-1})\cdots
+ (t_{v_{m-1}'}e_mt_{v_m'}^{-1})$.
+Jeśli $e_i$ należy do drzewa, pętlą
+$t_{v_{i-1}'}e_it_{v_i'}^{-1}$ redukuje się do drogi pustej,
+ponieważ w drzewie pomiędzy dwiema końcówkami istnieje
+jedyna zredukowana droga.
+Jeśli $e_i$ nie należy do drzewa, dostajemy
+$b_{e_i}$ albo $b_{e_i}^{-1}$, w zależności od kierunku przejścia.
+Po usunięciu pustych pętli pozostaje zadany iloczyn.
+\end{proof}
+
+\begin{lemat}[Brak dodatkowych relacji między pętlami]
+\label{aa:lem:tree-free}
+Niech $\Gamma$ będzie spójnym grafem z wierzchołkiem
+bazowym $v_0$, $T$ jego drzewem rozpinającym, a $b_e$
+pętlami przypisanymi po jednej do każdej krawędzi spoza $T$
+przy wybranych orientacjach, jak w Lemacie~\ref{aa:lem:tree-paths}.
+Wtedy żadne niepuste, zredukowane słowo w symbolach
+$b_e^{\pm1}$ nie jest równoważne pustej drodze
+po usuwaniu natychmiastowych powrotów.
+\end{lemat}
+\begin{proof}
+Rozważmy zredukowane słowo
+$b_{e_1}^{\varepsilon_1}\cdots b_{e_k}^{\varepsilon_k}$, $k\ge1$,
+$\varepsilon_i\in\{1,-1\}$.
+Po zastąpieniu każdego czynnika jego drogą
+$t_v e_i^{\varepsilon_i}t_w^{-1}$ oraz skreśleniu
+sąsiednich krawędzi drzewa pozostają \emph{kolejno}
+$k$ krawędzi spoza drzewa, zorientowanych jak
+$e_i^{\varepsilon_i}$; żadna z nich nie może zniknąć
+w wyniku redukcji wewnątrz drogi leżącej w drzewie.
+Jedyny sposób usunięcia pierwszej krawędzi spoza drzewa
+w dalszej redukcji wymagałby, aby kolejna krawędź
+spoza drzewa była dokładnie tą samą krawędzią przebieganą
+w przeciwnym kierunku oraz aby łącząca je droga w $T$
+zredukowała się do drogi pustej.
+Ponieważ drzewo ma jednoznaczne zredukowane drogi,
+zdarza się to tylko wtedy, gdy sąsiednie symbole
+$b_{e_i}^{\varepsilon_i}$ i $b_{e_{i+1}}^{\varepsilon_{i+1}}$
+są wzajemnie odwrotne. Przeczy to zredukowaniu
+rozpatrywanego słowa. Zatem co najmniej jedna
+krawędź spoza drzewa pozostaje; droga nie może
+zredukować się do pustej.
+\end{proof}
+
+\begin{twierdzenie}[Nielsena--Schreiera]
+\label{aa:tw:nielsen-schreier}
+Niech $S$ będzie dowolnym zbiorem, $F(S)$ grupą wolną na $S$,
+a $H\le F(S)$ dowolną podgrupą. Wtedy $H$ jest grupą wolną.
+Dokładniej, dla wybranego drzewa rozpinającego $T$
+w grafie Schreiera $\Gamma(H\backslash F(S),S)$ elementy
+$h_e\in H$ odpowiadające słowom etykiet pętli $t_v e t_w^{-1}$,
+po jednym dla każdej krawędzi poza $T$ i po wybraniu jej orientacji,
+tworzą wolną bazę $H$.
+\end{twierdzenie}
+\begin{proof}
+Dla krawędzi $e:v\to w$ o etykiecie $s$ zapiszmy
+przez $u_v\in F(S)$ element reprezentowany przez słowo
+etykiet drogi $t_v$. Ponieważ $t_v$ kończy się w warstwie $v$,
+mamy $v=Hu_v$; analogicznie $w=Hu_w$.
+Relacja $w=vs$ daje $Hu_v s=Hu_w$, a więc
+$h_e=u_v s u_w^{-1}\in H$. Dla krawędzi drzewa
+odpowiednia droga zamknięta redukuje się do pustej,
+więc $h_e=e$. Dla krawędzi poza drzewem zachowujemy $h_e$.
+
+Niech $h\in H$ będzie reprezentowany przez zredukowane
+słowo $w\in F(S)$. Z Lematu~\ref{aa:lem:schreier-path}
+ścieżka o etykiecie $w$ jest pętlą w bazowym wierzchołku.
+Lemat~\ref{aa:lem:tree-paths} rozkłada ją na
+pętle $b_e^{\pm1}$, zatem $h$ jest iloczynem elementów
+$h_e^{\pm1}$. Elementy $h_e$ generują $H$.
+
+Wolna grupa na formalnych symbolach krawędzi spoza $T$
+ma więc naturalny surjektywny homomorfizm na $H$.
+Gdyby jego jądro było nietrywialne, istniałoby niepuste
+zredukowane słowo w symbolach $h_e^{\pm1}$ reprezentujące
+jedynkę $F(S)$. Rozwinięcie tego słowa daje drogę zamkniętą
+w grafie Schreiera. Słowo etykiet jest równe jedynce w
+$F(S)$, więc na mocy jednoznaczności redukcji
+(Twierdzenie~\ref{aa:tw:free-reduction}) można usuwać
+kolejne sąsiednie pary liter odwrotnych aż do słowa pustego.
+W grafie Schreiera każde takie skreślenie odpowiada
+przejściu daną krawędzią i natychmiastowemu powrotowi
+tą samą krawędzią: dla ustalonego wierzchołka i litery
+istnieje dokładnie jedno możliwe przejście.
+Zatem również droga zredukowałaby się przez usuwanie
+powrotów do drogi pustej.
+Ale Lemat~\ref{aa:lem:tree-free} wyklucza taką redukcję.
+Sprzeczność dowodzi różnowartościowości homomorfizmu.
+Skoro jest on także surjektywny, jest izomorfizmem.
+\end{proof}
+
+\begin{uwaga}[Co w dowodzie jest istotne]
+Dowód nie zakłada, że $H$ jest normalna w $F(S)$ ani że
+$H$ jest skończonego indeksu. Kluczowa jest swoboda
+skreślania liter, a nie rachunek rzędów.
+Drzewo rozpinające eliminuje wszystkie relacje pochodzące
+z kroków „w obie strony” i pozostawia niezależne generatory
+odpowiadające pozostałym krawędziom.
+\end{uwaga}
+
+\section{Podgrupy skończonego indeksu i wzór Schreiera}
+\begin{twierdzenie}[Wzór Schreiera na rangę]
+\label{aa:tw:schreier-index}
+Niech $F_r$ będzie grupą wolną o skończonej randze $r\ge1$,
+a $H\le F_r$ podgrupą o skończonym indeksie
+$d=[F_r:H]\ge1$. Wtedy $H$ jest wolna rangi
+$1+d(r-1)$.
+\end{twierdzenie}
+\begin{proof}
+Graf Schreiera ma dokładnie $d$ wierzchołków (po jednym
+na prawą warstwę). Dla każdego z $r$ generatorów z każdego
+wierzchołka wychodzi dokładnie jedna dodatnio zorientowana
+krawędź. Mamy więc $dr$ różnych krawędzi (każda ma wybraną
+dodatnią orientację), liczonych z krotnościami, również
+wtedy, gdy mają te same końce. Przejście wstecz po danej
+krawędzi nie jest doliczane jako nowa krawędź.
+Dowolne drzewo rozpinające ma dokładnie $d-1$ krawędzi:
+można to wykazać indukcją po liczbie wierzchołków, usuwając
+liść i jego jedyną krawędź; przypadek $d=1$ jest pusty.
+Z Twierdzenia~\ref{aa:tw:nielsen-schreier} pozostałe
+$dr-(d-1)=1+d(r-1)$ krawędzie dają wolną bazę $H$.
+\end{proof}
+
+\begin{przyklad}[Jądro homomorfizmu $F(a,b)\to C_2$]
+\label{aa:prz:schreier-index-two}
+Niech $\varepsilon:F(a,b)\to C_2$ wysyła $a$ na $1$,
+a $b$ na $0$ (zapisujemy $C_2$ addytywnie).
+Dla $H=\ker\varepsilon$ graf Schreiera ma dwa wierzchołki
+$H$ oraz $Ha$. Krawędzie o etykiecie $a$ łączą
+obie warstwy w obie strony (są to dwie różne krawędzie,
+a nie dwa przejścia tej samej krawędzi), zaś przy każdym
+wierzchołku istnieje pętla
+z etykietą $b$. Jeśli za drzewo wybierzemy pierwszą
+krawędź $a:H\to Ha$, to trzy krawędzie poza drzewem
+dają odpowiednio elementy $b$, $a^2$ oraz $aba^{-1}$.
+Zatem
+\[
+H=\langle b,a^2,aba^{-1}\rangle
+\quad\text{jest grupą wolną rangi }3.
+\]
+Tego wyniku nie należy mylić z twierdzeniem, że same
+$a^2,b$ generują $H$: bez trzeciego generatora ta
+konkretna podgrupa jest mniejsza: z udowodnionej wolności
+bazy wynika, że trzeci generator nie należy do podgrupy
+generowanej przez dwa pozostałe.
+\end{przyklad}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[>=Latex, every node/.style={font=\small}]
+  \node[draw,circle,minimum size=10mm] (v0) at (0,0) {$H$};
+  \node[draw,circle,minimum size=10mm] (v1) at (4.3,0) {$Ha$};
+  \draw[->,thick] (v0) to[bend left=21] node[above] {$a$} (v1);
+  \draw[->,thick] (v1) to[bend left=21] node[below] {$a$} (v0);
+  \draw[->,thick] (v0) to[loop left,looseness=9] node[left] {$b$} (v0);
+  \draw[->,thick] (v1) to[loop right,looseness=9] node[right] {$b$} (v1);
+\end{tikzpicture}
+\caption{Graf Schreiera jądra $F(a,b)\to C_2$: obie krawędzie oznaczone $a$
+są różnymi krawędziami, a pętle $b$ odpowiadają dwóm różnym generatorom podgrupy.}
+\label{aa:fig:schreier-two}
+\end{figure}
+
+\begin{przyklad}[Podgrupa wolna nieskończonej rangi w $F_2$]
+\label{aa:prz:infinite-rank-subgroup}
+Niech $\psi:F(a,b)\to\mathbb Z$ będzie homomorfizmem
+zadanym przez $\psi(a)=1$, $\psi(b)=0$.
+Dla $K=\ker\psi$ wierzchołkami grafu Schreiera są liczby
+całkowite $n$, odpowiadające warstwom $Ka^n$.
+Krawędź $a$ łączy $n$ z $n+1$, a przy każdym $n$
+znajduje się pętla o etykiecie $b$.
+Wszystkie krawędzie $a$ tworzą drzewo rozpinające (dwustronną
+nieskończoną ścieżkę), a pętle $b$ są poza nim.
+Droga w drzewie od $0$ do $n$ ma etykietę $a^n$;
+odpowiadający jej generator to $a^nba^{-n}$.
+Dostajemy więc wolną bazę
+$\{a^nba^{-n}:n\in\mathbb Z\}$ grupy $K$.
+Pokazuje to, że podgrupa grupy wolnej rangi dwa może mieć
+nieskończoną rangę. Nie przeczy to wzorowi Schreiera,
+ponieważ $[F(a,b):K]=\infty$.
+\end{przyklad}
+
+\section{Jak grupy wolne prowadzą do paradoksu Banacha--Tarskiego}
+\begin{uwaga}[Mapa zależności do dalszego materiału]
+W części dotyczącej rozkładów paradoksalnych użyjemy
+$F_2=\langle a,b\rangle$, w której każdy element ma
+jednoznaczne słowo zredukowane. To właśnie pozwala
+wydzielać zbiory słów zaczynających się od odpowiednich
+liter i przesuwać je przez mnożenie z lewej strony.
+Z kolei same \emph{niekomutujące} obroty nie wystarczą,
+aby uzyskać podgrupę wolną: trzeba sprawdzić brak
+\emph{każdej} nietrywialnej relacji. Konkretny wybór obrotów
+oraz punkty stałe ich działania na sferze są osobnym
+etapem dowodu paradoksu Banacha--Tarskiego; nie zakładamy
+ich tutaj bez uzasadnienia.
+\end{uwaga}

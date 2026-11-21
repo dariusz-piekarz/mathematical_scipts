@@ -20,9 +20,18 @@ from typing import Any
 
 REF_RE = re.compile(r'\\(ref|eqref|pageref|autoref|nameref|cref|Cref|vref|Vref)\s*\{([^{}]+)\}')
 LABEL_RE = re.compile(r'\\label\s*\{([^{}]+)\}')
-MODULE_ID = re.compile(r'^[A-Za-z][A-Za-z0-9]*-[0-9]{2}$')
+MODULE_ID = re.compile(r'^[A-Za-z][A-Za-z0-9]*-[0-9]{2}[AB]?$')
+PROJECT_TEMPLATE_KEYS = {
+    'ALG': 'ALG', 'AT': 'ALG', 'TOP': 'TOP', 'GW': 'GW',
+    'GA': 'GA', 'KAT': 'KAT', 'MOD': 'MOD', 'CAL': 'CAL',
+    'BT': 'BT', 'P1': 'P1', 'P2': 'P2', 'P3': 'P3', 'P4': 'P4',
+    'AA': 'AA', 'DG': 'DG', 'FA': 'FA', 'ME': 'ME',
+    'PDE': 'PDE', 'LA': 'LA', 'LST': 'LST', 'GT': 'GT',
+}
 MAX_PROJECT_MODULES = 75
 MAX_EXTERNAL_MODULES = 75
+MAX_ARCHIVE_FILES = 512
+MAX_ARCHIVE_UNCOMPRESSED_BYTES = 64 * 1024 * 1024
 
 
 class GenerationError(ValueError):
@@ -87,17 +96,32 @@ def selected_modules_and_fragments(con: sqlite3.Connection, modules: list[str], 
 
 
 def closure(con:sqlite3.Connection, chosen:dict[str,Any], known:dict[str,Any], depth:int):
-    """Optional transitive closure of external module references (bounded)."""
-    frontier=set(chosen)
+    """Bounded transitive reference closure, scoped to the actual selected spans.
+
+    Only the references inside a chosen excerpt may introduce a first-hop
+    dependency. Newly included chapters use their whole canonical source.
+    """
+    frontier={m:list(p['spans']) for m,p in chosen.items()}
     for _ in range(depth):
         if not frontier: break
         marks=','.join('?' for _ in frontier)
-        rows=con.execute(f'SELECT DISTINCT target_document FROM references_tex WHERE source_document IN ({marks}) AND target_document IS NOT NULL',tuple(sorted(frontier)))
-        new={r[0] for r in rows if r[0] not in chosen}
-        if len(chosen)+len(new)>MAX_PROJECT_MODULES: raise GenerationError('Domknięcie zależności przekracza limit 75 modułów.')
+        rows=con.execute(
+            f'SELECT source_document,target_document,offset FROM references_tex '
+            f'WHERE source_document IN ({marks}) AND target_document IS NOT NULL',
+            tuple(sorted(frontier)))
+        new={
+            r['target_document'] for r in rows
+            if r['target_document'] not in chosen
+            and any(start <= r['offset'] < end
+                    for start,end in frontier[r['source_document']])
+        }
+        if len(chosen)+len(new)>MAX_PROJECT_MODULES:
+            raise GenerationError('Domknięcie zależności przekracza limit 75 modułów.')
         for m in sorted(new):
-            row=known[m]; chosen[m]={'row':row,'content':row['content'],'fragments':[],'spans':[(0,len(row['content']))],'whole':True}
-        frontier=new
+            row=known[m]
+            chosen[m]={'row':row,'content':row['content'],'fragments':[],
+                       'spans':[(0,len(row['content']))],'whole':True}
+        frontier={m:chosen[m]['spans'] for m in sorted(new)}
 
 
 
@@ -207,12 +231,133 @@ def macro_usage_audit(templates:dict[str,str], chosen:list[str], contents:dict[s
             'limitations':'Analiza leksykalna: pomija komentarze i typowe bloki dosłowne, ale nie rozwija makr, nie modeluje zasięgu grup, catcode, pakietów ani warunkowego TeX.'}
 
 
+# Theorem registry: a declaration is transferable only if its counter and
+# displayed name are unambiguous. No automatic renaming or counter changes.
+THEOREM_DECL = re.compile(r'\\newtheorem\*?\s*\{([^{}]+)\}(?:\[([^]]+)\])?\s*\{([^{}]+)\}(?:\[([^]]+)\])?')
+THEOREM_STYLE = re.compile(r'\\theoremstyle\s*\{([^{}]+)\}')
+BEGIN_ENV = re.compile(r'\\begin\s*\{([^{}]+)\}')
+
+def theorem_registry(source:str)->dict[str,dict[str,str]]:
+    clean=scan_tex_code(source)
+    result={}
+    for m in THEOREM_DECL.finditer(clean):
+        preceding=list(THEOREM_STYLE.finditer(clean,0,m.start()))
+        style=preceding[-1].group(1) if preceding else 'plain'
+        name,shared,caption,within=m.groups()
+        result[name]={'declaration':m.group(0),'shared':shared or '',
+                      'within':within or '', 'caption':caption,'style':style}
+    return result
+
+def theorem_declaration_occurrences(source: str) -> list[dict[str, Any]]:
+    """Retain every declaration, including duplicates lost by dict registries.
+
+    Brace depth is a conservative lexical signal, not TeX scope evaluation.
+    """
+    clean = scan_tex_code(source)
+    occurrences = []
+    for match in THEOREM_DECL.finditer(clean):
+        prefix = clean[:match.start()]
+        depth = 0
+        for ch in prefix:
+            if ch == '{': depth += 1
+            elif ch == '}': depth = max(0, depth - 1)
+        occurrences.append({'environment': match.group(1),
+                            'declaration': match.group(0),
+                            'offset': match.start(), 'brace_depth': depth,
+                            'line': clean.count('\n', 0, match.start()) + 1})
+    return occurrences
+
+
+def theorem_environment_audit(templates:dict[str,str], chosen:list[str], contents:dict[str,str]):
+    """Conservative audit of theorem environments in preambles AND selected bodies.
+
+    Body-local declarations are never silently moved to the preamble: scope,
+    counter order and repeated declarations must be checked by a TeX engine.
+    """
+    primary=chosen[0]
+    registries={m:theorem_registry(templates[m]) for m in chosen}
+    primary_registry=registries[primary]
+    body_registries={m:theorem_registry(contents.get(m, "")) for m in chosen}
+    requested=set()
+    for content in contents.values():
+        requested.update(BEGIN_ENV.findall(scan_tex_code(content)))
+    additions=[];conflicts=[];unresolved=[];local_declarations=[]
+    # A dict-based registry silently overwrites repeated declarations. Keep
+    # their occurrences, since even identical \newtheorem calls can fail TeX.
+    for module in chosen:
+        for origin,source in (('preamble', templates[module]), ('body', contents.get(module, ''))):
+            occurrences=theorem_declaration_occurrences(source)
+            by_name=defaultdict(list)
+            for item in occurrences:
+                by_name[item['environment']].append(item)
+                if origin == 'body' and item['brace_depth']:
+                    unresolved.append({'environment':item['environment'], 'module':module,
+                                       'reason':'declaration_inside_brace_group',
+                                       'line':item['line'], 'brace_depth':item['brace_depth']})
+            for name,items in by_name.items():
+                if len(items)>1:
+                    unresolved.append({'environment':name,'module':module,
+                                       'reason':'repeated_declaration_within_source',
+                                       'origin':origin,'lines':[item['line'] for item in items]})
+    for module,reg in body_registries.items():
+        for name,decl in reg.items():
+            local_declarations.append({'module':module,'environment':name,'declaration':decl['declaration']})
+            providers=[(m,r[name]) for m,r in registries.items() if name in r]
+            providers += [(m,r[name]) for m,r in body_registries.items() if name in r]
+            signatures={(r['caption'],r['shared'],r['within'],r['style']) for _,r in providers}
+            if len(signatures)>1:
+                conflicts.append({'environment':name,'providers':sorted(set(m for m,_ in providers)),
+                                  'reason':'body_preamble_definition_mismatch'})
+            elif len(providers)>1:
+                unresolved.append({'environment':name,'reason':'repeated_declaration_across_sources',
+                                   'providers':[m for m,_ in providers]})
+    for name in sorted(requested):
+        if name in primary_registry: continue
+        if any(name in reg for reg in body_registries.values()):
+            # Never import a duplicate preamble declaration if a body defines it.
+            continue
+        providers=[(m,reg[name]) for m,reg in registries.items() if name in reg]
+        if not providers:continue
+        signatures={(r['caption'],r['shared'],r['within'],r['style']) for _,r in providers}
+        if len(signatures)>1:
+            conflicts.append({'environment':name,'providers':[m for m,_ in providers], 'reason':'different_definitions'})
+            continue
+        declaration=providers[0][1]
+        if declaration['shared'] and declaration['shared'] not in primary_registry:
+            unresolved.append({'environment':name,'reason':'missing_shared_counter', 'counter':declaration['shared']})
+            continue
+        if declaration['within'] and declaration['within'] not in ('chapter','section','subsection') and declaration['within'] not in primary_registry:
+            unresolved.append({'environment':name,'reason':'unknown_parent_counter','counter':declaration['within']})
+            continue
+        additions.append({'environment':name,'declaration':declaration['declaration'], 'style':declaration['style'], 'providers':[m for m,_ in providers]})
+    return {'primary':primary,'additions':additions,'conflicts':conflicts,'unresolved':unresolved,
+            'body_declarations':local_declarations,
+            'limitations':'Lexical scan only: nested scopes, catcodes, conditional declarations and custom factories are not evaluated.'}
+
+
 def project_files(con:sqlite3.Connection, modules:list[str], entities:list[str], title:str,
-                  closure_depth:int=0) -> tuple[dict[str,bytes],dict[str,Any]]:
+                  closure_depth:int=0, items:list[dict[str,Any]]|None=None) -> tuple[dict[str,bytes],dict[str,Any]]:
     if closure_depth not in (0,1,2,3): raise GenerationError('closure_depth musi należeć do {0,1,2,3}.')
     if not title.strip() or len(title)>160: raise GenerationError('Tytuł musi mieć od 1 do 160 znaków.')
-    parts,known=selected_modules_and_fragments(con,modules,entities)
-    if closure_depth: closure(con,parts,known,closure_depth)
+    ordered_items = None
+    if items is not None:
+        if modules or entities:
+            raise GenerationError("Nie łącz pola items z modules/entities.")
+        from .fragment_selection import select_ordered_items
+        parts, known, ordered_items = select_ordered_items(con, items)
+    else:
+        parts, known = selected_modules_and_fragments(con, modules, entities)
+    if closure_depth:
+        closure(con, parts, known, closure_depth)
+        if ordered_items is not None:
+            included = {row["module"] for row in ordered_items}
+            for module in parts:
+                if module not in included:
+                    content = known[module]["content"]
+                    ordered_items.append({
+                        "kind": "module", "module": module, "id": module,
+                        "start": 0, "end": len(content),
+                        "start_line": 1, "end_line": len(content.splitlines()) or 1})
     output_labels={}
     for m,p in parts.items():
         # Capture labels only in the included TeX spans. Other labels in same document are external.
@@ -246,38 +391,68 @@ def project_files(con:sqlite3.Connection, modules:list[str], entities:list[str],
         return REF_RE.sub(sub,content)
     files:dict[str,bytes]={}
     ordered=list(parts)
-    for m,p in parts.items():
-        if p['whole']:
-            body=p['content']
-        else:
-            body=(f'\\chapter*{{{tex_text(p["row"]["title"])}}}\n'
-                  f'\\addcontentsline{{toc}}{{chapter}}{{{tex_text(p["row"]["title"])}}}\n'
-                  f'% Fragmenty obiektów: {", ".join(p["fragments"])}\n\n'+p['content'])
-        files[f'rozdzialy/{m}.tex']=rewrite_tex_refs(body).encode('utf-8')
+    ordered_outputs=[]
+    if ordered_items is not None:
+        counters=defaultdict(int)
+        for item in ordered_items:
+            m=item["module"]
+            if item["kind"]=="module":
+                path=f"rozdzialy/{m}.tex"
+                body=known[m]["content"]
+            else:
+                counters[m]+=1
+                path=f"rozdzialy/{m}-{counters[m]:03d}.tex"
+                title_part=tex_text(known[m]["title"])
+                excerpt=known[m]["content"][item["start"]:item["end"]]
+                body=(f"\\chapter*{{{title_part}}}\n"
+                      f"\\addcontentsline{{toc}}{{chapter}}{{{title_part}}}\n"
+                      f"% Źródło: {m}, wiersze {item['start_line']}–{item['end_line']}; {item['id']}\n\n"
+                      +excerpt)
+            files[path]=rewrite_tex_refs(body).encode("utf-8")
+            ordered_outputs.append({**{k:item[k] for k in ("kind","module","id","start_line","end_line")},
+                                    "output_file":path})
+    else:
+        for m,p in parts.items():
+            if p['whole']:
+                body=p['content']
+            else:
+                body=(f'\\chapter*{{{tex_text(p["row"]["title"])}}}\n'
+                      f'\\addcontentsline{{toc}}{{chapter}}{{{tex_text(p["row"]["title"])}}}\n'
+                      f'% Fragmenty obiektów: {", ".join(p["fragments"])}\n\n'+p['content'])
+            files[f'rozdzialy/{m}.tex']=rewrite_tex_refs(body).encode('utf-8')
     # Source preambles saved as templates from the original manuscripts.
-    prefix_to_source={'ALG':'ALG','AT':'ALG','TOP':'TOP','GW':'GW','GA':'GA','KAT':'KAT','MOD':'MOD','CAL':'CAL','BT':'BT',
-                      'P1':'P1','P2':'P2','P3':'P3','P4':'P4'}
     template_root=Path(__file__).resolve().parents[1]/'config'/'preambles'
     templates={}
     for m in set(ordered)|set(external):
-        key=prefix_to_source.get(m.split('-')[0]); t=template_root/f'{key}.tex'
+        key=PROJECT_TEMPLATE_KEYS.get(m.split('-')[0]); t=template_root/f'{key}.tex'
         if not key or not t.is_file():raise GenerationError(f'Brakuje preambuły dla {m}.')
         templates[m]=t.read_text('utf-8')
     compatibility=preamble_compatibility(templates,ordered)
     macro_audit=macro_usage_audit(templates,ordered,{m:parts[m]["content"] for m in ordered})
+    theorem_audit=theorem_environment_audit(templates,ordered,{m:parts[m]["content"] for m in ordered})
     main_template=templates[ordered[0]]
     def prepare_header(template:str)->str:
         if r'\begin{document}' in template: template=template.split(r'\begin{document}')[0]
+        # Source-book externaldocuments are not part of this generated project.
+        # Only explicit, validated ext-MODULE- imports are inserted below.
+        template=re.sub(r'(?m)^\s*\\externaldocument(?:\[[^]\n]*\])?\{[^}\n]+\}(?:\[[^]\n]*\])?[^\n]*$', '', template)
         template=re.sub(r'\\documentclass(?:\[[^\]]*\])?\{[^}]+\}',r'\\documentclass[11pt,a4paper,openany]{report}',template,count=1)
         # Some preambles contain hyperref already; insert xr-hyper before it.
         if r'\usepackage{xr-hyper}' not in template:
             m=re.search(r'\\usepackage(?:\[[^\]]*\])?\{hyperref\}',template)
             if m:template=template[:m.start()]+r'\usepackage{xr-hyper}'+'\n'+template[m.start():]
             else:template+='\n'+r'\usepackage{xr-hyper}'+'\n'+r'\usepackage[unicode]{hyperref}'+'\n'
+        # Array column modifiers (>{...}p{...}) require array.sty, even when
+        # the originating preamble omitted the explicit package.
+        for package in ("array", "booktabs"):
+            if not re.search(r"\\usepackage(?:\[[^\]]*\])?\{[^}]*\b" + package + r"\b[^}]*\}", template):
+                template += "\n\\usepackage{" + package + "}\n"
         return template
     head=prepare_header(main_template)
+    for addition in theorem_audit["additions"]:
+        head += "\n\\theoremstyle{"+addition["style"]+"}\n"+addition["declaration"]+"\n"
     imports='\n'.join(f'\\externaldocument[ext-{m}-]{{aux/{m}}}' for m in sorted(external))
-    body='\n'.join(f'\\input{{rozdzialy/{m}.tex}}' for m in ordered)
+    body='\n'.join('\\input{'+row['output_file']+'}' for row in ordered_outputs) if ordered_items is not None else '\n'.join(f'\\input{{rozdzialy/{m}.tex}}' for m in ordered)
     main=(head+'\n'+imports+'\n'+r'\title{'+tex_text(title)+'}\n'+r'\author{}'+'\n'+r'\date{}'+'\n'
           +r'\begin{document}'+'\n'+r'\maketitle'+'\n'+r'\tableofcontents'+'\n'+r'\clearpage'+'\n'+body+'\n'+r'\end{document}'+'\n')
     files['main.tex']=main.encode('utf-8')
@@ -316,12 +491,15 @@ pdflatex -interaction=nonstopmode -halt-on-error main.tex
               'external_targets':{m:sorted(v) for m,v in sorted(external.items())},
               'source_sha256':{m:p['row']['sha256'] for m,p in parts.items()},
               'closure_depth':closure_depth,
+              'ordered_items':ordered_outputs,
               'preamble':ordered[0].split('-')[0],
               'preamble_warning':compatibility['warning'],
               'preamble_compatibility':compatibility,
               'macro_usage_audit':macro_audit,
+              'theorem_environment_audit':theorem_audit,
               'compilation_performed':False,
               'build_instructions':'Uruchom ./build.ps1 lub bash build.sh; referencyjne aux/*.aux muszą powstać przed main.tex.'}
+    files['theorem_environment_audit.json']=(json.dumps(theorem_audit,ensure_ascii=False,indent=2)+'\n').encode('utf-8')
     files['macro_usage_audit.json']=(json.dumps(macro_audit,ensure_ascii=False,indent=2)+'\n').encode('utf-8')
     files['preamble_audit.json']=(json.dumps(compatibility,ensure_ascii=False,indent=2)+'\n').encode('utf-8')
     files['manifest.json']=(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n').encode('utf-8')
@@ -339,10 +517,28 @@ Uwaga: poprawność odsyłaczy sprawdza baza, natomiast kompilowalność dowolne
 
 
 def zip_project(files:dict[str,bytes]) -> bytes:
+    # Validate and budget the entire archive before writing any bytes.
+    if len(files) > MAX_ARCHIVE_FILES:
+        raise GenerationError('Zbyt wiele plików w archiwum.')
+    total = 0
+    for name, data in files.items():
+        if not isinstance(data, bytes):
+            raise GenerationError('Zawartość archiwum musi być typu bytes.')
+        total += len(data)
+        if total > MAX_ARCHIVE_UNCOMPRESSED_BYTES:
+            raise GenerationError('Przekroczono limit rozmiaru archiwum.')
     buf=io.BytesIO()
     with zipfile.ZipFile(buf,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=7) as archive:
         for name,data in sorted(files.items()):
-            if name.startswith('/') or '..' in Path(name).parts: raise GenerationError('Niebezpieczna ścieżka w archiwum.')
+            # ZIP names always use POSIX separators, including on Windows.
+            # Reject ambiguous or platform-specific paths before serialization.
+            if (not isinstance(name, str) or not name or "\\" in name
+                    or name.startswith("/") or "\x00" in name
+                    or any(part in ("", ".", "..") for part in name.split("/"))
+                    or ":" in name.split("/")[0]):
+                raise GenerationError('Niebezpieczna ścieżka w archiwum.')
+            if not isinstance(data, bytes):
+                raise GenerationError('Zawartość archiwum musi być typu bytes.')
             archive.writestr(name,data)
     return buf.getvalue()
 

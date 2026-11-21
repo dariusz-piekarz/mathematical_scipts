@@ -13,11 +13,13 @@ class GeneratorTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.con=sqlite3.connect(ROOT/'data'/'biblioteka.db');cls.con.row_factory=sqlite3.Row
-        cls.client=TestClient(app)
+        cls._client_context=TestClient(app)
+        cls.client=cls._client_context.__enter__()
 
     @classmethod
     def tearDownClass(cls):
         cls.con.close()
+        cls._client_context.__exit__(None,None,None)
 
     def test_module_keeps_exact_source(self):
         files,report=project_files(self.con,['ALG-09'],[],'Analiza zesp.')
@@ -75,6 +77,24 @@ class GeneratorTests(unittest.TestCase):
             self.assertTrue(z.testzip() is None)
             self.assertEqual(z.read('main.tex'),b'hello')
         with self.assertRaises(GenerationError):zip_project({'../bad.tex':b'123'})
+        for bad in ('..\\bad.tex', 'rozdzialy\\..\\bad.tex',
+                    'C:/evil.tex', '/absolute.tex', 'a//b.tex',
+                    'a/./b.tex', 'a/../b.tex', 'a\x00b.tex'):
+            with self.subTest(path=bad), self.assertRaises(GenerationError):
+                zip_project({bad:b'bad'})
+        with self.assertRaises(GenerationError):
+            zip_project({'valid.tex':'not bytes'})
+
+    def test_zip_resource_budgets(self):
+        from backend.generator import MAX_ARCHIVE_FILES, MAX_ARCHIVE_UNCOMPRESSED_BYTES
+        with self.assertRaisesRegex(GenerationError, 'Zbyt wiele plików'):
+            zip_project({f'f{i}.tex': b'x' for i in range(MAX_ARCHIVE_FILES + 1)})
+        with self.assertRaisesRegex(GenerationError, 'rozmiaru archiwum'):
+            zip_project({'large.tex': b'x' * (MAX_ARCHIVE_UNCOMPRESSED_BYTES + 1)})
+        # At the exact limit, the payload is accepted.
+        data = zip_project({'ok.tex': b'x' * MAX_ARCHIVE_UNCOMPRESSED_BYTES})
+        with zipfile.ZipFile(io.BytesIO(data)) as archive:
+            self.assertEqual(archive.getinfo('ok.tex').file_size, MAX_ARCHIVE_UNCOMPRESSED_BYTES)
 
     def test_http_zip_and_manifest(self):
         request={'title':'Test','modules':['BT-00'],'entities':[],'closure_depth':0}

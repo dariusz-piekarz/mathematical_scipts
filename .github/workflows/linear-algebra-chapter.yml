@@ -1,0 +1,223 @@
+name: Linear algebra chapter validation
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "chapters/pl/linear_algebra/**"
+      - "audits/linear_algebra/**"
+      - "tools/test_linear_algebra_tensors.py"
+      - "tools/test_linear_algebra_exterior.py"
+      - "tools/test_linear_algebra_quadratic_forms.py"
+      - "tools/test_linear_algebra_unitary.py"
+      - "tools/test_linear_algebra_projections.py"
+      - "tools/test_linear_algebra_spectral.py"
+      - "tools/test_linear_algebra_decompositions.py"
+      - "tools/test_linear_algebra_invariant.py"
+      - "tools/test_linear_algebra_invariant_3x3.py"
+      - "tools/test_linear_algebra_jordan.py"
+      - "tools/test_linear_algebra_chevalley.py"
+      - "tools/test_linear_algebra_frobenius.py"
+      - "tools/test_linear_algebra_elementary.py"
+      - "tools/test_linear_algebra_commutants.py"
+      - "tools/test_linear_algebra_sylvester.py"
+      - "tools/test_linear_algebra_discrete_lyapunov.py"
+      - "tools/test_linear_algebra_riccati.py"
+      - "tools/test_linear_algebra_control.py"
+      - "tools/test_linear_algebra_general_riccati.py"
+      - "tools/check_polynomial_terminology.py"
+      - "tools/export_linear_algebra_chapter_pdf.py"
+      - "books/pl/linear_algebra.tex"
+      - "catalog/books.json"
+      - "application/backend/latex_parser.py"
+      - ".github/workflows/linear-algebra-chapter.yml"
+  workflow_dispatch:
+
+jobs:
+  compile-and-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate linear algebra chapters, imports, catalog and terminology
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, re
+          root = Path.cwd()
+          book = root / "books/pl/linear_algebra.tex"
+          manifest = json.loads((root / "catalog/books.json").read_text(encoding="utf-8"))
+          item = next(x for x in manifest["books"] if x["id"] == "linear_algebra")
+          assert item["entrypoint"] == "books/pl/linear_algebra.tex"
+          assert book.is_file()
+          book_text = book.read_text(encoding="utf-8")
+          assert len(item["chapters"]) >= 26, "Chapters 01-26 must be registered"
+          expected = [
+              "chapters/pl/linear_algebra/01-przestrzenie-wektorowe.tex",
+              "chapters/pl/linear_algebra/02-wymiar-sumy-proste-i-przestrzenie-ilorazowe.tex",
+              "chapters/pl/linear_algebra/03-odwzorowania-liniowe-jadro-i-obraz.tex",
+              "chapters/pl/linear_algebra/04-macierze-odwzorowan-liniowych-i-zmiana-bazy.tex",
+              "chapters/pl/linear_algebra/05-eliminacja-gaussa-i-uklady-liniowe.tex",
+              "chapters/pl/linear_algebra/06-wyznaczniki-macierzy.tex",
+              "chapters/pl/linear_algebra/07-przestrzen-dualna-i-odwzorowania-dualne.tex",
+              "chapters/pl/linear_algebra/08-odwzorowania-wieloliniowe.tex",
+              "chapters/pl/linear_algebra/09-formy-dwuliniowe-i-kwadratowe.tex",
+              "chapters/pl/linear_algebra/10-iloczyny-tensorowe.tex",
+              "chapters/pl/linear_algebra/11-algebry-tensorowa-symetryczna-i-zewnetrzna.tex",
+              "chapters/pl/linear_algebra/12-przestrzenie-euklidesowe-i-unitarne.tex",
+              "chapters/pl/linear_algebra/13-ortogonalnosc-i-rzuty.tex",
+              "chapters/pl/linear_algebra/14-wartosci-wlasne-diagonalizacja-i-twierdzenie-spektralne.tex",
+              "chapters/pl/linear_algebra/15-rozklady-macierzy.tex",
+              "chapters/pl/linear_algebra/16-podprzestrzenie-niezmiennicze-i-wielomian-minimalny.tex",
+              "chapters/pl/linear_algebra/17-postac-jordana.tex",
+              "chapters/pl/linear_algebra/18-rozklad-jordana-chevalleya-i-funkcje-macierzy.tex",
+              "chapters/pl/linear_algebra/19-postac-frobeniusa-i-czynniki-niezmiennicze.tex",
+              "chapters/pl/linear_algebra/20-dzielniki-elementarne-i-bloki-pierwotne.tex",
+              "chapters/pl/linear_algebra/21-komutant-operatora-i-centralizatory-macierzy.tex",
+              "chapters/pl/linear_algebra/22-rownania-sylvestera-i-lapunowa.tex",
+              "chapters/pl/linear_algebra/23-dyskretne-rownanie-lapunowa-i-stabilnosc-schura.tex",
+              "chapters/pl/linear_algebra/24-rownania-riccatiego-i-sterowanie-liniowo-kwadratowe.tex",
+              "chapters/pl/linear_algebra/25-sterowalnosc-obserwowalnosc-i-stabilizowalnosc.tex",
+              "chapters/pl/linear_algebra/26-uogolnione-twierdzenia-riccatiego.tex",
+          ]
+          assert item["chapters"][:26] == expected, "Incorrect chapter order"
+          labels, refs = [], []
+          for path in item["chapters"]:
+              chapter = root / path
+              assert chapter.is_file(), f"Missing chapter: {path}"
+              chapter_text = chapter.read_text(encoding="utf-8")
+              assert r"\input{../../" + path + "}" in book_text, f"Missing book import: {path}"
+              assert r"\includegraphics" not in chapter_text, f"Unexpected external graphic: {path}"
+              labels += re.findall(r"\\label\{([^}]+)\}", chapter_text)
+              refs += re.findall(r"\\(?:ref|eqref)\{([^}]+)\}", chapter_text)
+              for lineno, line in enumerate(chapter_text.splitlines(), 1):
+                  if r"\label{" in line or r"\ref{" in line or line.strip().startswith("%"):
+                      continue
+                  assert not re.search(r"\bunia\b|\bunii\b|\bunię\b|\bunią\b", line, flags=re.I), (path, lineno, "Use suma zbiorow")
+                  assert not re.search(r"\brelacja\b|\brelacji\b|\brelację\b", line, flags=re.I), (path, lineno, "Use warunek niezaleznosci liniowej")
+          assert len(labels) == len(set(labels)), "Duplicated labels across LA chapters"
+          assert set(refs).issubset(set(labels)), f"Unresolved LA refs: {set(refs)-set(labels)}"
+          print(f"Linear algebra chapters, order, terminology and references OK ({len(labels)} labels)")
+          PY
+      - name: Verify global terminology for polynomial factorization
+        run: python tools/check_polynomial_terminology.py
+      - name: Verify tensor products over finite fields
+        shell: bash
+        run: |
+          python tools/test_linear_algebra_tensors.py
+      - name: Verify exterior algebras over finite fields
+        shell: bash
+        run: |
+          python tools/test_linear_algebra_exterior.py
+      - name: Verify quadratic forms over finite fields
+        shell: bash
+        run: |
+          python tools/test_linear_algebra_quadratic_forms.py
+      - name: Verify Euclidean and unitary spaces
+        shell: bash
+        run: |
+          python tools/test_linear_algebra_unitary.py
+      - name: Verify orthogonality and least squares
+        shell: bash
+        run: |
+          python tools/test_linear_algebra_projections.py
+      - name: Verify spectral theorem and diagonalization
+        shell: bash
+        run: |
+          python tools/test_linear_algebra_spectral.py
+      - name: Verify matrix decompositions and pseudoinverse
+        shell: bash
+        run: |
+          python tools/test_linear_algebra_decompositions.py
+      - name: Verify invariant subspaces and minimal polynomials
+        shell: bash
+        run: |
+          python tools/test_linear_algebra_invariant.py
+      - name: Verify 3x3 minimal polynomials and cyclic companion matrices
+        run: python tools/test_linear_algebra_invariant_3x3.py
+      - name: Verify Jordan forms and kernel filtrations
+        run: python tools/test_linear_algebra_jordan.py
+      - name: Verify Jordan--Chevalley decomposition and matrix functions
+        run: python tools/test_linear_algebra_chevalley.py
+      - name: Verify Smith normal form and Frobenius factors
+        run: python tools/test_linear_algebra_frobenius.py
+      - name: Verify elementary divisors and primary-block kernel filtrations
+        run: python tools/test_linear_algebra_elementary.py
+      - name: Verify commutants and centralizers over finite fields
+        run: python tools/test_linear_algebra_commutants.py
+      - name: Verify Sylvester solution dimensions and Lyapunov identities
+        run: python tools/test_linear_algebra_sylvester.py
+      - name: Verify discrete Lyapunov and Stein spectral criterion
+        run: python tools/test_linear_algebra_discrete_lyapunov.py
+      - name: Verify continuous/discrete Riccati equations and optimality identities
+        run: python tools/test_linear_algebra_riccati.py
+      - name: Verify Kalman reachability, PBH, Gramians and stabilizing feedback
+        run: python tools/test_linear_algebra_control.py
+      - name: Verify generalized Riccati, detectability and optimality
+        run: python tools/test_linear_algebra_general_riccati.py
+      - name: Report pre-existing global library validation issues
+        shell: bash
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          python tools/validate_repository.py | tee repository_validation.log
+      - name: Build linear algebra PDF twice and resolve references
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: linear_algebra.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Verify compilation artifact and unresolved references
+        shell: bash
+        run: |
+          test -s books/pl/linear_algebra.pdf
+          if grep -qE '(LaTeX Warning: Reference .* undefined|There were undefined references)' books/pl/linear_algebra.log; then
+            echo "Unresolved references in linear algebra PDF"
+            exit 1
+          fi
+          if grep -qE '(Overfull|Underfull|Missing character|LaTeX Warning|Undefined control sequence|Fatal error)' books/pl/linear_algebra.log; then
+            echo "Final LaTeX log contains layout or compilation warnings"
+            grep -nE '(Overfull|Underfull|Missing character|LaTeX Warning|Undefined control sequence|Fatal error)' books/pl/linear_algebra.log || true
+            exit 1
+          fi
+      - name: Export latest audited chapter as a standalone PDF
+        shell: bash
+        run: |
+          python -m pip install --quiet pypdf==5.9.0
+          python tools/export_linear_algebra_chapter_pdf.py \
+            --input books/pl/linear_algebra.pdf \
+            --output books/pl/linear_algebra_aktualny_rozdzial.pdf \
+            --latest
+          test -s books/pl/linear_algebra_aktualny_rozdzial.pdf
+      - name: Upload standalone current chapter PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: linear-algebra-current-chapter
+          path: books/pl/linear_algebra_aktualny_rozdzial.pdf
+          if-no-files-found: error
+      - name: Export revised chapter 14 PDF
+        if: contains(github.event.head_commit.message, 'LA-14')
+        shell: bash
+        run: |
+          python tools/export_linear_algebra_chapter_pdf.py \
+            --input books/pl/linear_algebra.pdf \
+            --output books/pl/linear_algebra_rozdzial_14.pdf \
+            --chapter 14
+          test -s books/pl/linear_algebra_rozdzial_14.pdf
+      - name: Upload revised chapter 14 PDF
+        if: contains(github.event.head_commit.message, 'LA-14')
+        uses: actions/upload-artifact@v4
+        with:
+          name: linear-algebra-chapter-14
+          path: books/pl/linear_algebra_rozdzial_14.pdf
+          if-no-files-found: error
+      - name: Store compiled linear algebra
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: linear-algebra-ch01-ch26
+          path: |
+            books/pl/linear_algebra.pdf
+            books/pl/linear_algebra.log
+          if-no-files-found: warn

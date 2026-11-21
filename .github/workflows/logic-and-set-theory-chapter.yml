@@ -1,0 +1,209 @@
+name: Logic and set theory chapters 01-19 validation
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "chapters/pl/logic_and_set_theory/**"
+      - "books/pl/logic_and_set_theory.tex"
+      - "catalog/books.json"
+      - "audits/logic_and_set_theory_ch07_audit_*.md"
+      - "audits/logic_and_set_theory_ch08_audit_*.md"
+      - "audits/logic_and_set_theory_ch09_audit_*.md"
+      - "audits/logic_and_set_theory_ch10_audit_*.md"
+      - "audits/logic_and_set_theory_ch11_audit_*.md"
+      - "audits/logic_and_set_theory_ch12_audit_*.md"
+      - "audits/logic_and_set_theory_ch13_audit_*.md"
+      - "audits/logic_and_set_theory_ch14_audit_*.md"
+      - "audits/logic_and_set_theory_ch15_audit_*.md"
+      - "audits/logic_and_set_theory_ch16_audit_*.md"
+      - "audits/logic_and_set_theory_ch17_audit_*.md"
+      - "audits/logic_and_set_theory_ch18_audit_*.md"
+      - "audits/logic_and_set_theory_ch19_audit_*.md"
+      - "tools/tests/test_logic_and_set_theory_ch12.py"
+      - "tools/tests/test_logic_and_set_theory_ch13.py"
+      - "tools/tests/test_logic_and_set_theory_ch14.py"
+      - "tools/tests/test_logic_and_set_theory_ch15.py"
+      - "tools/tests/test_logic_and_set_theory_ch16.py"
+      - "tools/tests/test_logic_and_set_theory_ch17.py"
+      - "tools/tests/test_logic_and_set_theory_ch18.py"
+      - "tools/tests/test_logic_and_set_theory_ch19.py"
+      - "tools/tests/test_logic_and_set_theory_ch11.py"
+      - "tools/tests/test_logic_and_set_theory_ch10.py"
+      - "tools/tests/test_logic_and_set_theory_ch09.py"
+      - "tools/tests/test_logic_and_set_theory_ch08.py"
+      - "tools/tests/test_logic_and_set_theory_ch07.py"
+      - ".github/workflows/logic-and-set-theory-chapter.yml"
+  workflow_dispatch:
+
+jobs:
+  validate-chapters:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check CLI imports, theorem inventory and chapter references
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          catalog = json.loads(Path("catalog/books.json").read_text(encoding="utf-8"))
+          book = next(item for item in catalog["books"] if item["id"] == "logic_and_set_theory")
+          chapters = book["chapters"]
+          assert len(chapters) >= 19, chapters
+          expected_names = [
+              "01-zdania-i-spojniki-logiczne.tex",
+              "02-kwantyfikatory-i-podstawowe-metody-dowodzenia.tex",
+              "03-zbiory-i-operacje-na-zbiorach.tex",
+              "04-pary-uporzadkowane-i-relacje.tex",
+              "05-relacje-rownowaznosci-i-zbiory-ilorazowe.tex",
+              "06-relacje-porzadku-od-porownywania-do-kresow.tex",
+              "07-funkcje-i-odwzorowania.tex",
+              "08-obrazy-przeciwobrazy-i-dzialania-na-funkcjach.tex",
+              "09-jezyki-formalne-termy-i-formuly.tex",
+              "10-struktury-wartosciowania-i-prawda.tex",
+              "11-dowody-formalne-i-dedukcja-naturalna.tex",
+              "12-poprawnosc-logiki-pierwszego-rzedu.tex",
+              "13-twierdzenie-godla-o-pelnosci-i-konstrukcja-henkina.tex",
+              "14-twierdzenie-o-zwartosci-i-jego-zastosowania.tex",
+              "15-homomorfizmy-izomorfizmy-i-elementarnosc-struktur.tex",
+              "16-algorytmy-obliczalnosc-i-nierozstrzygalnosc.tex",
+              "17-arytmetyka-formalna-i-kodowanie-skladni.tex",
+              "18-reprezentowalnosc-i-diagonalizacja.tex",
+              "19-pierwsze-twierdzenie-godla-o-niezupelnosci.tex",
+          ]
+          assert [Path(path).name for path in chapters[:19]] == expected_names
+          entry = Path(book["entrypoint"])
+          text = entry.read_text(encoding="utf-8")
+          sources = []
+          for path in chapters[:19]:
+              chapter = Path(path)
+              assert chapter.is_file(), path
+              assert "\\input{../../" + path + "}" in text, path
+              sources.append(chapter.read_text(encoding="utf-8"))
+          labels = [name for source in sources for name in re.findall(r"\\label\{([^}]+)\}", source)]
+          refs = [name for source in sources for name in re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", source)]
+          assert len(labels) == len(set(labels)), "Duplicate LaTeX labels"
+          assert len(labels) == 455, f"Unexpected labels: {len(labels)}"
+          assert len(refs) == 275, f"Unexpected references: {len(refs)}"
+          forward = {"ch:zf-axioms"}
+          assert set(refs) - set(labels) == forward, "Unexpected unresolved targets in partial book"
+          inventories = [
+              (sources[5], {"twierdzenie": 15, "wniosek": 1, "proof": 16,
+                            "definicja": 12, "przyklad": 21, "uwaga": 7}),
+              (sources[6], {"twierdzenie": 11, "wniosek": 0, "proof": 11,
+                            "definicja": 5, "przyklad": 10, "uwaga": 9}),
+              (sources[7], {"twierdzenie": 20, "wniosek": 0, "proof": 20,
+                            "definicja": 6, "przyklad": 16, "uwaga": 1}),
+              (sources[8], {"twierdzenie": 2, "stwierdzenie": 1,
+                            "lemat": 5, "proof": 8,
+                            "definicja": 7, "przyklad": 13, "uwaga": 3}),
+              (sources[9], {"twierdzenie": 5, "stwierdzenie": 1,
+                            "lemat": 2, "wniosek": 1, "proof": 9,
+                            "definicja": 8, "przyklad": 16, "uwaga": 3}),
+              (sources[10], {"twierdzenie": 5, "stwierdzenie": 0,
+                             "lemat": 0, "wniosek": 0, "proof": 5,
+                             "definicja": 7, "przyklad": 16, "uwaga": 8}),
+              (sources[11], {"twierdzenie": 3, "lemat": 3,
+                             "wniosek": 2, "proof": 8,
+                             "definicja": 1, "przyklad": 4, "uwaga": 3}),
+              (sources[12], {"twierdzenie": 5, "lemat": 11,
+                             "wniosek": 0, "stwierdzenie": 0,
+                             "proof": 16, "definicja": 6,
+                             "przyklad": 6, "uwaga": 4, "figure": 1}),
+              (sources[13], {"twierdzenie": 7, "lemat": 0,
+                             "wniosek": 1, "proof": 8,
+                             "definicja": 5, "przyklad": 3, "uwaga": 5}),
+              (sources[14], {"twierdzenie": 5, "lemat": 1,
+                             "wniosek": 0, "proof": 6,
+                             "definicja": 7, "przyklad": 7, "uwaga": 4}),
+              (sources[15], {"twierdzenie": 5, "lemat": 2,
+                             "wniosek": 1, "proof": 8,
+                             "definicja": 5, "przyklad": 6,
+                             "uwaga": 4, "figure": 1}),
+              (sources[16], {"twierdzenie": 0, "lemat": 5,
+                             "wniosek": 0, "proof": 5,
+                             "definicja": 10, "przyklad": 5, "uwaga": 11,
+                             "figure": 0}),
+              (sources[17], {"twierdzenie": 2, "lemat": 5, "wniosek": 0,
+                             "proof": 7, "definicja": 3,
+                             "przyklad": 4, "uwaga": 3}),
+              (sources[18], {"twierdzenie": 2, "lemat": 2, "wniosek": 2,
+                             "proof": 6, "definicja": 3,
+                             "przyklad": 3, "uwaga": 6}),
+          ]
+          for source, inventory in inventories:
+              for env, expected in inventory.items():
+                  actual = source.count("\\begin{" + env + "}")
+                  assert actual == expected, (env, actual, expected)
+              stack = []
+              for kind, env in re.findall(r"\\(begin|end)\{([^}]+)\}", source):
+                  if kind == "begin":
+                      stack.append(env)
+                  else:
+                      assert stack and stack.pop() == env, ("Unbalanced environment", env)
+              assert not stack, ("Unclosed environments", stack)
+          print(f"PASS: imports, chapter order, {len(labels)} labels, {len(refs)} references, {len(forward)} documented forward reference(s), inventories and TeX environments")
+          PY
+      - name: Run chapter 07 finite-model regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch07 -v
+      - name: Run chapter 08 finite-model regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch08 -v
+      - name: Run chapter 09 syntax regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch09 -v
+      - name: Run chapter 10 semantics regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch10 -v
+      - name: Run chapter 11 natural deduction regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch11 -v
+      - name: Run chapter 12 soundness regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch12 -v
+      - name: Run chapter 13 Henkin/completeness regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch13 -v
+      - name: Run chapter 14 compactness regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch14 -v
+      - name: Run chapter 15 elementary structure regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch15 -v
+      - name: Run chapter 16 computability regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch16 -v
+      - name: Run chapter 17 formal arithmetic and Godel coding regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch17 -v
+      - name: Run chapter 18 representability and diagonalization regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch18 -v
+      - name: Run chapter 19 Godel Rosser regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch19 -v
+      - name: Compile logic and set theory PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: logic_and_set_theory.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Check compiled PDF and log
+        shell: bash
+        run: |
+          test -s books/pl/logic_and_set_theory.pdf
+          python - <<'PY'
+          import re
+          from pathlib import Path
+
+          log = Path("books/pl/logic_and_set_theory.log").read_text(errors="replace")
+          refs = set(re.findall(r"LaTeX Warning: Reference `([^']+)' on page \d+ undefined", log))
+          allowed = {"ch:zf-axioms"}
+          assert refs <= allowed, f"Unexpected undefined references: {sorted(refs - allowed)}"
+          assert not re.search(r"Overfull \\hbox", log), "Overfull TeX boxes"
+          assert not re.search(r"LaTeX Warning: Citation .+ undefined", log), "Undefined citation"
+          print("PASS: PDF present; no unexpected references, missing citations or overfull boxes")
+          if refs:
+              print("Documented forward references (not yet imported):", sorted(refs))
+          PY
+      - name: Archive logic and set theory PDF and log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logic-and-set-theory-ch01-ch19
+          path: |
+            books/pl/logic_and_set_theory.pdf
+            books/pl/logic_and_set_theory.log
+          if-no-files-found: warn

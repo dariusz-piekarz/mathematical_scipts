@@ -22,7 +22,9 @@ class WorkspaceTests(unittest.TestCase):
             "MATLIB_SAVED_ROOT": str(Path(self.tmp.name) / "saved")})
         self.env.start()
         self.addCleanup(self.env.stop)
-        self.client = TestClient(app)
+        self._client_context = TestClient(app)
+        self.client = self._client_context.__enter__()
+        self.addCleanup(self._client_context.__exit__, None, None, None)
         self.archive = b"test-zip-content"
         self.manifest = {"title": "Test project", "modules": ["BT-00"]}
 

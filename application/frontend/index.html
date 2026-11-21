@@ -29,6 +29,7 @@
           <button id="showExplorer" class="mobile-explorer-btn" aria-label="Pokaż Explorer">☰</button>
           <button class="tab active" data-tab="reader">Czytnik</button>
           <button class="tab" data-tab="graph">Graf zależności</button>
+          <button class="tab" data-tab="concepts">Graf pojęć</button>
           <button class="tab" data-tab="selection">Kreator zestawu</button>
           <span class="tab-spacer"></span><span class="tab-help" id="contextHelp">Odsyłacze można otwierać i podglądać.</span>
         </nav>
@@ -37,6 +38,13 @@
           <section id="readerContent" class="hidden">
             <div class="doc-header"><div><div id="docBreadcrumb" class="breadcrumb"></div><h1 id="docTitle"></h1><p id="docMeta" class="doc-meta"></p></div><button id="addCurrent" class="primary-btn">+ Do zestawu</button></div>
             <div class="reader-toolbar"><span class="small-heading" id="readerKind">Źródło LaTeX</span><div class="toolbar-right"><span id="readSize"></span><button id="togglePreview" class="ghost-btn">Podgląd uproszczony</button><button id="showFull" class="ghost-btn hidden">Pokaż cały fragment</button></div></div>
+            <div class="fragment-toolbar" aria-label="Dodawanie dokładnego fragmentu">
+              <span>Zaznacz tekst LaTeX, aby dodać obejmujące go pełne wiersze, lub wpisz zakres wierszy źródłowego rozdziału.</span>
+              <button id="addExcerpt" class="secondary-btn">+ Zaznaczenie</button>
+              <label>Od <input id="rangeStart" type="number" min="1" step="1" aria-label="Pierwszy wiersz"></label>
+              <label>Do <input id="rangeEnd" type="number" min="1" step="1" aria-label="Ostatni wiersz"></label>
+              <button id="addRange" class="secondary-btn">+ Wiersze</button>
+            </div>
             <div id="latexSource" class="latex-source" tabindex="0"></div>
             <div id="simplified" class="simplified hidden"></div>
             <div class="reader-note"><span>ⓘ</span><span>Widok tekstowy nie wykonuje makr LaTeX. Pełną wierność składu uzyskamy dopiero po kompilacji dokumentu.</span></div>
@@ -48,8 +56,22 @@
           <div class="graph-summary" id="graphSummary">Wybierz dwie dziedziny.</div><div id="graphCanvas" class="graph-canvas"></div>
           <details class="path-finder"><summary>Znajdź ścieżkę między rozdziałami (ignorując kierunek odsyłaczy)</summary><div class="path-controls"><label>Moduł początkowy<input id="pathFrom" placeholder="np. ALG-09"></label><label>Moduł końcowy<input id="pathTo" placeholder="np. AT-10"></label><button id="findPath" class="secondary-btn">Znajdź ścieżkę</button></div><div id="pathResult" class="path-result"></div></details>
         </main>
+        <main id="view-concepts" class="tab-view hidden">
+          <div class="section-intro"><span class="eyebrow">MAPA POJĘĆ I WYSTĄPIEŃ</span><h1>Graf pojęć matematycznych</h1><p>Wpisz termin, np. „Zorn”. Graf pokazuje wystąpienia w rozdziałach oraz jawnie opisane relacje matematyczne (równoważność, implikację lub użycie w dowodzie). Kliknij wystąpienie, aby otworzyć jego źródło w czytniku.</p></div>
+          <div class="concept-controls">
+            <label for="conceptSearch">Pojęcie<input id="conceptSearch" type="search" value="Zorn" minlength="2" maxlength="100" placeholder="np. Zorn, baza Hamela, zwartość"></label>
+            <label for="conceptLimit">Maks. wystąpień<select id="conceptLimit"><option value="18">18</option><option value="36" selected>36</option><option value="60">60</option><option value="80">80</option></select></label>
+            <button id="drawConceptGraph" class="primary-btn">Utwórz graf</button>
+          </div>
+          <p id="conceptSummary" class="graph-summary" role="status" aria-live="polite">Wpisz pojęcie i utwórz graf.</p>
+          <div id="conceptCanvas" class="graph-canvas concept-canvas" role="img" aria-label="Interaktywny graf pojęć i ich wystąpień"></div>
+          <p class="concept-legend">Linia ciągła: zależność matematyczna z katalogu. Linia przerywana: wystąpienie pojęcia w źródle LaTeX. Same wystąpienia nie dowodzą żadnej implikacji.</p>
+          <div id="conceptRelations" class="concept-relations"></div>
+          <h2 class="small-heading concept-evidence-heading">Źródła i wystąpienia</h2>
+          <div id="conceptEvidence" class="concept-evidence"></div>
+        </main>
         <main id="view-selection" class="tab-view hidden">
-          <div class="section-intro"><span class="eyebrow">GENERATOR SKRYPTÓW</span><h1>Wybrane klocki</h1><p>Dodawaj rozdziały lub pojedyncze fragmenty z Explorera, a następnie pobierz gotowy projekt LaTeX z <code>main.tex</code> i skryptami do przygotowania <code>xr-hyper</code>. Kompilacja PDF odbywa się lokalnie.</p></div>
+          <div class="section-intro"><span class="eyebrow">GENERATOR SKRYPTÓW</span><h1>Wybrane klocki</h1><p>Dodawaj całe rozdziały, obiekty oraz dokładne wycinki wierszy z Czytnika. Ustal kolejność strzałkami, a następnie pobierz gotowy projekt LaTeX z <code>main.tex</code> i skryptami do przygotowania <code>xr-hyper</code>. Kompilacja PDF odbywa się lokalnie.</p></div>
           <div class="generator-config"><label>Tytuł skryptu <input id="generatorTitle" type="text" maxlength="160" value="Mój skrypt matematyczny"></label><label>Zależności <select id="generatorClosure"><option value="0">Zewnętrzne przez xr-hyper</option><option value="1">Dołącz jeden poziom</option><option value="2">Dołącz dwa poziomy</option><option value="3">Dołącz trzy poziomy</option></select></label></div><div class="selection-toolbar"><span id="selectedCount">0 elementów</span><div><button id="clearSelection" class="ghost-btn">Wyczyść</button><button id="saveManifest" class="secondary-btn">Eksport JSON</button><button id="checkSelection" class="secondary-btn">Sprawdź zależności</button><button id="createDraft" class="secondary-btn">Utwórz szkic</button><button id="generateZip" class="primary-btn">Pobierz ZIP</button></div></div><div id="selectionList" class="selection-list"></div><div id="draftResult" class="draft-result" aria-live="polite"></div><div id="savedProjects" class="saved-projects"></div><div id="planResult" class="plan-result"></div>
         </main>
       </div>

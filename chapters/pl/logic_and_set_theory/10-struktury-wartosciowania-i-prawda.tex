@@ -1,0 +1,730 @@
+\chapter{Struktury, wartościowania i prawda}\label{ch:semantics-fol}
+
+\section{Co oznacza nadanie znaczenia napisowi?}
+Ten sam napis $R(v_0,v_1)$ może oznaczać „$v_0$ jest mniejszy od $v_1$”,
+„$v_0$ i $v_1$ są sąsiadami w grafie” lub zupełnie inną relację.
+Składnia z rozdziału~\ref{ch:syntax-fol} nie rozstrzyga, która z interpretacji
+jest właściwa. Znaczenie przypisujemy dopiero przez wskazanie zbioru obiektów
+i interpretacji symboli pozalogicznych. Następnie definiujemy, kiedy
+konkretna formuła jest spełniona. Ta druga definicja jest indukcyjna:
+wartości formuł złożonych zależą od wartości ich części.
+
+\section{Struktury i ich uniwersa}
+\begin{definicja}[Struktura dla sygnatury]\label{def:sem-structure}
+Niech $\mathcal L$ będzie sygnaturą z Definicji~\ref{def:syntax-signature}.
+\emph{Strukturą} $\mathfrak A$ dla $\mathcal L$ nazywamy niepusty zbiór $A$,
+zwany jej \emph{uniwersum}, razem z następującymi danymi:
+\begin{enumerate}[label=(\roman*)]
+\item dla każdego $c\in\operatorname{Const}(\mathcal L)$ element
+      $c^{\mathfrak A}\in A$;
+\item dla każdego symbolu funkcyjnego $f$ arności $n$ funkcja
+      $f^{\mathfrak A}:A^n\to A$;
+\item dla każdego symbolu relacyjnego $R$ arności $n$ relacja
+      $R^{\mathfrak A}\subseteq A^n$.
+\end{enumerate}
+Symbol równości $=$ jest zawsze interpretowany jako rzeczywista równość
+w $A$; nie jest elementem sygnatury pozalogicznej.
+\end{definicja}
+W tym skrypcie przyjmujemy standardową konwencję, że uniwersum jest
+niepuste. Nie ogranicza to rozważań o pustych zbiorach jako obiektach:
+na przykład uniwersum modelu teorii mnogości może zawierać zbiór pusty,
+ale samo uniwersum modelu nie jest puste.
+
+\begin{przyklad}[Dwie interpretacje tej samej sygnatury]
+Weźmy język z jednym binarnym symbolem $R$.
+Niech $\mathfrak A$ ma uniwersum $\{0,1\}$ i interpretację
+$R^{\mathfrak A}=\{(0,1)\}$.
+Niech $\mathfrak B$ ma to samo uniwersum, lecz
+$R^{\mathfrak B}=\{(0,0),(1,1)\}$.
+Wówczas zdanie $\exists v_0\,R(v_0,v_0)$ jest fałszywe
+w $\mathfrak A$, a prawdziwe w $\mathfrak B$.
+Mamy tę samą składnię, ale różne interpretacje.
+\end{przyklad}
+\begin{przyklad}[Liczby naturalne i grafy]
+W języku arytmetyki standardową strukturą jest
+$\mathfrak N=(\N,0,S,+,\cdot,<)$, gdzie $S(n)=n+1$.
+W języku grafów struktura ma postać $(V,E)$, gdzie $V\ne\varnothing$
+i $E\subseteq V\times V$. Formuła $\forall v_0\,\neg E(v_0,v_0)$
+wyraża brak pętli: żaden wierzchołek nie jest połączony ze sobą.
+\end{przyklad}
+
+
+\begin{uwaga}[Stałe, funkcje i relacje pełnią inne role]
+W strukturze arytmetycznej symbol $0$ wskazuje pojedynczy element,
+$S$ i $+$ wskazują funkcje przypisujące wyniki argumentom,
+a $<$ wskazuje relację, której pary mogą być prawdziwe albo fałszywe.
+Dlatego napis $S(0)$ jest termem (oznacza obiekt), lecz $0<S(0)$
+jest formułą (wyraża własność dwóch obiektów).
+Gdy w następnym kroku przypiszemy zmiennej $v_0$ wartość $2$,
+term $S(v_0)$ będzie oznaczał $3$, a formuła $v_0<S(v_0)$
+będzie prawdziwa. Są to dwa różne rodzaje obliczeń.
+\end{uwaga}
+
+\section{Wartościowania i interpretacja termów}
+\begin{definicja}[Wartościowanie]\label{def:sem-assignment}
+Niech $\mathfrak A$ będzie strukturą o uniwersum $A$.
+\emph{Wartościowaniem zmiennych} nazywamy funkcję
+$s:\{v_0,v_1,\ldots\}\to A$.
+Dla $a\in A$ i zmiennej $x$ symbol $s[x\mapsto a]$
+oznacza wartościowanie przypisujące $x$ wartość $a$ i zgadzające
+się z $s$ na wszystkich pozostałych zmiennych.
+\end{definicja}
+\begin{uwaga}[Dlaczego wartościowania istnieją?]
+Przyjmujemy $A\ne\varnothing$. Po wybraniu jednego
+elementu $a_0\in A$ możemy przypisać każdej zmiennej
+wartość $a_0$; otrzymujemy wartościowanie stałe.
+Nie wymaga to wyboru nieskończonej rodziny elementów:
+jedno ustalone $a_0$ wystarcza dla wszystkich zmiennych.
+Przy pustym uniwersum takiego wartościowania dla
+nieskończonego zbioru zmiennych nie byłoby.
+\end{uwaga}
+
+\begin{definicja}[Wartość termu]\label{def:sem-term-value}
+Wartość termu $t$ w strukturze $\mathfrak A$ względem wartościowania $s$
+oznaczamy przez $t^{\mathfrak A}[s]$ i określamy indukcyjnie:
+\begin{enumerate}[label=(\roman*)]
+\item $x^{\mathfrak A}[s]=s(x)$ dla zmiennej $x$;
+\item $c^{\mathfrak A}[s]=c^{\mathfrak A}$ dla stałej $c$;
+\item jeśli $t=f(t_1,\ldots,t_n)$, to
+      $t^{\mathfrak A}[s]=f^{\mathfrak A}(t_1^{\mathfrak A}[s],\ldots,t_n^{\mathfrak A}[s])$.
+\end{enumerate}
+\end{definicja}
+\begin{przyklad}
+Przy $s(v_0)=3$, $s(v_1)=5$ w $\mathfrak N$ term
+$t=+(S(v_0),v_1)$ ma wartość
+$t^{\mathfrak N}[s]=S^{\mathfrak N}(3)+5=9$.
+Term domknięty $S(S(0))$ ma wartość $2$ niezależnie od $s$.
+\end{przyklad}
+
+\begin{lemat}[Zależność wartości termu od jego zmiennych]\label{lem:sem-term-coincidence}
+Niech $t$ będzie termem, a $s,r$ wartościowaniami w tej samej
+strukturze $\mathfrak A$. Jeżeli $s(x)=r(x)$ dla każdej zmiennej
+$x\in\operatorname{FV}(t)$, to
+$t^{\mathfrak A}[s]=t^{\mathfrak A}[r]$.
+W szczególności wartość termu domkniętego nie zależy od wartościowania.
+\end{lemat}
+\begin{proof}
+Przeprowadzimy indukcję po konstrukcji termu. Jeśli $t=x$,
+założenie daje $s(x)=r(x)$, a więc równość wartości. Jeśli $t=c$
+jest stałą, obie wartości są równe $c^{\mathfrak A}$.
+Jeśli $t=f(t_1,\ldots,t_n)$, to z definicji zbioru zmiennych
+wolnych $\operatorname{FV}(t_i)\subseteq\operatorname{FV}(t)$.
+Zatem $s$ i $r$ zgadzają się na zmiennych każdego $t_i$.
+Z założenia indukcyjnego dostajemy
+$t_i^{\mathfrak A}[s]=t_i^{\mathfrak A}[r]$ dla $i=1,\ldots,n$.
+Przyłożenie tej samej funkcji $f^{\mathfrak A}$ do identycznych
+$n$-tek daje równość wartości $t$.
+Jeśli $t$ jest domknięty, zbiór $\operatorname{FV}(t)$ jest pusty,
+więc warunek zgodności wartościowań jest spełniony automatycznie.
+\end{proof}
+
+\section{Relacja spełniania: definicja rekurencyjna}
+\begin{definicja}[Spełnianie formuły]\label{def:sem-satisfaction}
+Niech $\mathcal L$ będzie sygnaturą, $\mathfrak A$ strukturą
+języka $\mathcal L$ o uniwersum $A$, a $s$ wartościowaniem.
+Dla każdej formuły $\varphi$ języka $\mathcal L$ napis
+$\mathfrak A,s\models\varphi$ oznacza, że $\mathfrak A$ spełnia
+formułę $\varphi$ przy $s$. Definiujemy tę relację indukcyjnie:
+\begin{enumerate}[label=(\roman*)]
+\item $\mathfrak A,s\models t_1=t_2$ wtedy i tylko wtedy, gdy
+      $t_1^{\mathfrak A}[s]=t_2^{\mathfrak A}[s]$;
+\item $\mathfrak A,s\models R(t_1,\ldots,t_n)$ wtedy i tylko wtedy, gdy
+      $(t_1^{\mathfrak A}[s],\ldots,t_n^{\mathfrak A}[s])\in R^{\mathfrak A}$;
+\item $\mathfrak A,s\models\neg\varphi$ wtedy i tylko wtedy, gdy
+      nie zachodzi $\mathfrak A,s\models\varphi$;
+\item $\mathfrak A,s\models\varphi\land\psi$ wtedy i tylko wtedy,
+      gdy spełnione są obie formuły; dla $\lor$, $\to$ i $\leftrightarrow$
+      używamy tablic prawdy z rozdziału~\ref{ch:propositional};
+\item $\mathfrak A,s\models\forall x\,\varphi$ wtedy i tylko wtedy,
+      gdy dla każdego $a\in A$ zachodzi
+      $\mathfrak A,s[x\mapsto a]\models\varphi$;
+\item $\mathfrak A,s\models\exists x\,\varphi$ wtedy i tylko wtedy,
+      gdy dla pewnego $a\in A$ zachodzi
+      $\mathfrak A,s[x\mapsto a]\models\varphi$.
+\end{enumerate}
+\end{definicja}
+W szczególności formuła $\varphi\to\psi$ jest fałszywa dokładnie wtedy,
+gdy $\varphi$ jest prawdziwa i $\psi$ fałszywa przy tym samym wartościowaniu.
+Dla kwantyfikatorów zmieniamy wartość wyłącznie związanej zmiennej.
+
+\begin{stwierdzenie}[Jednoznaczność spełniania]
+\label{prop:sem-uniqueness-xlv}
+Dla każdej sygnatury $\mathcal L$, struktury $\mathfrak A$
+o niepustym uniwersum i wartościowania $s$ reguły
+Definicji~\ref{def:sem-satisfaction} wyznaczają jednoznacznie,
+które formuły $\mathcal L$ są spełnione przy $s$.
+\end{stwierdzenie}
+\begin{proof}
+Najpierw Lematu~\ref{lem:syntax-unique-terms} używamy
+rekurencyjnie do wyznaczenia wartości wszystkich termów:
+zmienne i stałe mają jedną wskazaną wartość, a wartość
+aplikacji $f$ jest zadana przez funkcję $f^{\mathfrak A}$.
+Z Lematu~\ref{lem:syntax-unique-formulas} wynika, że
+każda formuła ma jeden z określonych kroków końcowych.
+Dla atomu reguły równości albo przynależności do relacji
+wyznaczają wartość logiczną. Dla negacji i spójników
+binarnych wartość wynika jednoznacznie z wartości
+podformuł. Dla kwantyfikatora $\forall x$ rozstrzygamy,
+czy wskazana podformuła jest spełniona przy
+$s[x\mapsto a]$ dla wszystkich $a\in A$; dla $\exists x$
+sprawdzamy, czy zachodzi to dla pewnego $a\in A$.
+Indukcja po skończonej budowie formuły dowodzi zatem,
+że żaden jej krok nie dopuszcza dwóch różnych ocen.
+\end{proof}
+
+\begin{przyklad}[Parzystość jako formuła]
+Niech $\varphi(v_0)$ będzie formułą
+$\exists v_1\,(+(v_1,v_1)=v_0)$.
+W modelu $\mathfrak N$ przy wartościowaniu z $s(v_0)=8$
+formuła jest spełniona: wybieramy wartość $4$ dla $v_1$.
+Przy wartościowaniu $r(v_0)=7$ nie jest spełniona,
+bo $n+n=7$ nie ma rozwiązania w $\N$.
+Nie pytamy tu o „prawdę formuły bez kontekstu”: wynik zależy
+od wartości zmiennej wolnej $v_0$.
+\end{przyklad}
+
+\begin{przyklad}[Kolejność kwantyfikatorów]
+W języku z relacją $R$ rozważmy strukturę z uniwersum $\N$,
+w której $R^{\mathfrak A}$ oznacza zwykły porządek $<$.
+Wtedy $\forall x\,\exists y\,R(x,y)$ jest prawdziwe:
+dla danego $n$ wystarczy wziąć $n+1$.
+Natomiast $\exists y\,\forall x\,R(x,y)$ jest fałszywe:
+dla dowolnego kandydata $m$ można wziąć $x=m$ i otrzymać
+fałszywe $m<m$. Te dwa napisy różnią się kolejnością kwantyfikatorów
+— i naprawdę wyrażają odmienne twierdzenia.
+\end{przyklad}
+
+\begin{przyklad}[Obliczenie spełniania w skończonej strukturze]
+Niech $A=\{0,1\}$, a $R^{\mathfrak A}=\{(0,0),(1,1)\}$.
+Dla każdego $a\in A$ istnieje dokładnie jeden $b\in A$
+z własnością $(a,b)\in R^{\mathfrak A}$: jest nim $b=a$.
+Stąd $\mathfrak A\models\forall x\,\exists y\,R(x,y)$.
+Nie istnieje jednak jeden element $b\in A$, dla którego
+jednocześnie $(0,b)$ i $(1,b)$ należałyby do tej relacji.
+Zatem $\mathfrak A\not\models\exists y\,\forall x\,R(x,y)$.
+Rozpisując świadków, dla $x=0$ wybieramy $y=0$,
+a dla $x=1$ wybieramy $y=1$. W drugim zdaniu $y$ musiałoby
+być wybrane \emph{przed} $x$, więc te dwa wybory nie wystarczą.
+\end{przyklad}
+
+
+\begin{twierdzenie}[Prawa kwantyfikatorów w semantyce pierwszego rzędu]
+\label{thm:sem-quantifier-laws-xlv}
+Niech $\mathcal L$ będzie sygnaturą, $\mathfrak A$ jej
+strukturą o niepustym uniwersum $A$, $s$ wartościowaniem,
+$\varphi$ formułą, a $x,y$ zmiennymi. Wtedy:
+\begin{align*}
+\mathfrak A,s\models\neg\forall x\,\varphi
+ &\iff\mathfrak A,s\models\exists x\,\neg\varphi,\\
+\mathfrak A,s\models\neg\exists x\,\varphi
+ &\iff\mathfrak A,s\models\forall x\,\neg\varphi,\\
+\mathfrak A,s\models\forall x\,\forall y\,\varphi
+ &\iff\mathfrak A,s\models\forall y\,\forall x\,\varphi,\\
+\mathfrak A,s\models\exists x\,\exists y\,\varphi
+ &\iff\mathfrak A,s\models\exists y\,\exists x\,\varphi.
+\end{align*}
+Nie twierdzimy, że można dowolnie zamieniać
+kwantyfikator ogólny z egzystencjalnym.
+\end{twierdzenie}
+\begin{proof}
+Pierwsza formuła po lewej oznacza, że nie jest prawdą,
+iż dla każdego $a\in A$ zachodzi
+$\mathfrak A,s[x\mapsto a]\models\varphi$.
+Ponieważ negujemy kwantyfikator ogólny, istnieje
+$a\in A$ takie, że
+$\mathfrak A,s[x\mapsto a]\not\models\varphi$.
+Z definicji negacji jest to dokładnie warunek
+$\mathfrak A,s[x\mapsto a]\models\neg\varphi$,
+czyli prawdziwość $\exists x\,\neg\varphi$ przy $s$.
+Odwrotny kierunek czytamy w tej samej równoważności
+od końca do początku.
+
+Podobnie zaprzeczenie $\exists x\,\varphi$ oznacza,
+że dla żadnego $a\in A$ formuła $\varphi$ nie jest
+spełniona przy $s[x\mapsto a]$. To znaczy, że
+$\neg\varphi$ jest spełniona przy każdym takim
+wartościowaniu, co jest definicją $\forall x\,\neg\varphi$.
+
+Rozpiszmy trzecią równoważność: lewa strona wymaga,
+aby dla każdego $a\in A$ i każdego $b\in A$ zachodziło
+$\mathfrak A,s[x\mapsto a][y\mapsto b]\models\varphi$.
+Gdy $x\ne y$, operacje przypisania wartości różnym
+zmiennym komutują, więc otrzymujemy dokładnie warunek
+po prawej, z $b$ wybranym przed $a$. Gdy $x=y$,
+obydwa zdania są identyczne i równoważność jest oczywista.
+Dla dwóch kwantyfikatorów egzystencjalnych zamiast
+warunku dla wszystkich par $(a,b)$ otrzymujemy istnienie
+przynajmniej jednej pary; kolejność jej współrzędnych
+nie wpływa na istnienie świadka. Tak samo obsługujemy
+przypadek $x=y$.
+\end{proof}
+\begin{przyklad}[Zakres prawa de Morgana dla kwantyfikatorów]
+Niech $A=\{0,1\}$, a $P^{\mathfrak A}=\{0\}$ dla
+jednoargumentowego symbolu relacyjnego $P$.
+Zdanie $\forall x\,P(x)$ jest fałszywe, gdyż
+$1\notin P^{\mathfrak A}$. Jego negacja jest więc
+prawdziwa. Zarazem $1$ świadczy o prawdziwości
+$\exists x\,\neg P(x)$.
+Nie wynika natomiast równoważność
+$\forall x\,\exists y\,R(x,y)$ i
+$\exists y\,\forall x\,R(x,y)$; kontrprzykład
+ze skończonej struktury podano bezpośrednio wyżej.
+\end{przyklad}
+
+\section{Lemat o zgodności wartościowań}
+\begin{twierdzenie}[Spełnienie zależy tylko od zmiennych wolnych]
+\label{thm:sem-coincidence}
+Niech $\mathcal L$ będzie sygnaturą, $\varphi$ formułą
+języka $\mathcal L$, $\mathfrak A$ strukturą tego języka
+o niepustym uniwersum $A$, a $s,r$ jej wartościowaniami
+zgadzającymi się na
+$\operatorname{FV}(\varphi)$. Wtedy
+\[
+\mathfrak A,s\models\varphi
+\quad\Longleftrightarrow\quad
+\mathfrak A,r\models\varphi.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dowód przeprowadzamy indukcją po budowie $\varphi$.
+Dla formuł atomowych wystąpienia zmiennych wolnych pochodzą
+z termów. Zgodność wartościowań na tych zmiennych oraz
+Lemat~\ref{lem:sem-term-coincidence} dają identyczne wartości
+wszystkich termów. Stąd równoważność spełniania obu typów atomów.
+
+Dla negacji teza przechodzi natychmiast: jeśli $\psi$ jest
+prawdziwa przy obu wartościowaniach albo fałszywa przy obu,
+to tak samo jest z $\neg\psi$. Dla każdego spójnika binarnego
+stosujemy założenie indukcyjne do obu podformuł, ponieważ
+ich zmienne wolne należą do $\operatorname{FV}(\varphi)$;
+tablica prawdy daje ten sam wynik.
+
+Pozostał przypadek $\varphi=\forall x\,\psi$.
+Załóżmy, że $s$ i $r$ zgadzają się na
+$\operatorname{FV}(\psi)\setminus\{x\}$.
+Dla dowolnego $a\in A$ wartościowania
+$s[x\mapsto a]$ i $r[x\mapsto a]$ zgadzają się na
+wszystkich zmiennych wolnych $\psi$: na $x$ mają tę samą
+wartość $a$, a na pozostałych wymaganą zgodność zapewnia założenie.
+Z założenia indukcyjnego wynika więc
+\[
+\mathfrak A,s[x\mapsto a]\models\psi
+\quad\Longleftrightarrow\quad
+\mathfrak A,r[x\mapsto a]\models\psi.
+\]
+Ponieważ zachodzi to dla \emph{każdego} $a\in A$,
+definicja $\forall$ daje tezę. W przypadku
+$\exists x\,\psi$ ten sam argument stosujemy do istnienia
+odpowiedniej wartości $a$, zamiast do wszystkich $a$.
+\end{proof}
+
+\begin{wniosek}[Prawda zdania jest niezależna od wartościowania]
+\label{cor:sem-sentence}
+Jeżeli $\sigma$ jest zdaniem i $\mathfrak A$ strukturą,
+to albo $\mathfrak A,s\models\sigma$ dla wszystkich wartościowań $s$,
+albo dla żadnego. Możemy więc pisać $\mathfrak A\models\sigma$.
+\end{wniosek}
+\begin{proof}
+Zdanie nie ma zmiennych wolnych, zatem każde dwa wartościowania
+spełniają założenie Twierdzenia~\ref{thm:sem-coincidence}.
+\end{proof}
+
+\section{Podstawienie termu a jego wartość}
+Lemat z tego paragrafu tłumaczy, dlaczego reguły podstawiania w dowodach
+muszą zabraniać przechwytywania zmiennych. Bez tego formuła
+po podstawieniu mogłaby wyrażać coś innego niż zamierzona instancja.
+
+W zapisie $t[x:=u]$ stosujemy
+Definicję~\ref{def:syntax-term-substitution-xlv}; w szczególności
+podstawienie termu nie wymaga warunku unikania przechwycenia,
+bo termy nie zawierają kwantyfikatorów.
+
+\begin{lemat}[Podstawienie w termie]\label{lem:sem-term-subst}
+Niech $u,t$ będą termami, $x$ zmienną, $\mathfrak A$ strukturą
+i $s$ wartościowaniem. Wówczas
+\[
+(t[x:=u])^{\mathfrak A}[s]
+=t^{\mathfrak A}[s[x\mapsto u^{\mathfrak A}[s]]].
+\]
+\end{lemat}
+\begin{proof}
+Prowadzimy indukcję po $t$. Jeżeli $t=x$, lewa strona jest
+$u^{\mathfrak A}[s]$, a prawa wartością $x$ przy wartościowaniu
+przypisującym $x$ dokładnie ten sam element uniwersum $A$.
+Dla innej zmiennej $y$ podstawienie niczego nie zmienia,
+a oba wartościowania przypisują $y$ tę samą wartość.
+Dla stałej obie strony są jej interpretacją.
+Jeżeli $t=f(t_1,\ldots,t_n)$, stosujemy założenie indukcyjne
+do każdego $t_i$, a następnie do obu otrzymanych $n$-tek
+przykładamy funkcję $f^{\mathfrak A}$.
+\end{proof}
+
+\begin{twierdzenie}[Lemat o podstawieniu]\label{thm:sem-substitution}
+Niech $\varphi$ będzie formułą, $x$ zmienną, a $t$ termem
+dopuszczalnym do podstawienia za $x$ w $\varphi$.
+Dla każdej struktury $\mathfrak A$ i wartościowania $s$ zachodzi
+\[
+\mathfrak A,s\models\varphi[x:=t]
+\quad\Longleftrightarrow\quad
+\mathfrak A,s[x\mapsto t^{\mathfrak A}[s]]\models\varphi.
+\]
+\end{twierdzenie}
+\begin{proof}
+Prowadzimy indukcję po budowie $\varphi$. Najpierw
+rozpatrzmy atom równościowy $u_1=u_2$. Po lewej
+podstawiamy term $t$ do obu argumentów, więc zgodnie
+z Lematem~\ref{lem:sem-term-subst} ich wartości przy $s$
+równe są wartościom $u_1,u_2$ przy
+$s[x\mapsto t^{\mathfrak A}[s]]$. Definicja równości
+atomowej daje żądaną równoważność. Dla atomu relacyjnego
+wszystkie argumenty mają odpowiednio te same wartości,
+więc należą lub nie należą do tej samej relacji
+$R^{\mathfrak A}$. Dla negacji i każdego spójnika
+binarnego stosujemy założenie indukcyjne do odpowiednich
+podformuł i reguły spełniania z
+Definicji~\ref{def:sem-satisfaction}.
+
+Pozostały kwantyfikatory. Niech $\varphi=Qy\,\psi$,
+gdzie $Q\in\{\forall,\exists\}$. Rozważamy trzy przypadki.
+\begin{enumerate}[label=(\roman*)]
+\item Gdy $y=x$, kwantyfikator wiąże wszystkie wystąpienia
+$x$ wolne w $\psi$. Stąd $x\notin\operatorname{FV}(\varphi)$,
+a $\varphi[x:=t]=\varphi$. Wartościowania
+$s$ i $s[x\mapsto t^{\mathfrak A}[s]]$ zgadzają się
+na zmiennych wolnych $\varphi$; zgodnie z
+Twierdzeniem~\ref{thm:sem-coincidence} spełniają ją
+jednocześnie albo oba nie spełniają.
+\item Gdy $y\ne x$, lecz $x\notin\operatorname{FV}(\psi)$,
+podstawienie nic nie zmienia. Ponieważ wtedy również
+$x\notin\operatorname{FV}(\varphi)$, tezę ponownie
+daje twierdzenie o zgodności wartościowań.
+\item Gdy $y\ne x$ oraz $x\in\operatorname{FV}(\psi)$,
+każde wolne wystąpienie $x$ w $\psi$ pozostaje w zakresie
+$Qy$. Dopuszczalność podstawienia implikuje więc
+$y\notin\operatorname{FV}(t)$. Dla dowolnego $a\in A$
+założenie indukcyjne zastosowane do $\psi$ i
+$s[y\mapsto a]$ daje
+\[
+\mathfrak A,s[y\mapsto a]\models\psi[x:=t]
+\iff
+\mathfrak A,s[y\mapsto a]
+  [x\mapsto t^{\mathfrak A}[s[y\mapsto a]]]
+  \models\psi.
+\]
+Lemat~\ref{lem:sem-term-coincidence} pozwala zastąpić
+$t^{\mathfrak A}[s[y\mapsto a]]$ przez
+$t^{\mathfrak A}[s]$, gdyż $y$ nie jest zmienną termu $t$.
+Dla różnych zmiennych $x,y$ operacje aktualizacji
+wartościowania komutują, zatem ostatnie wartościowanie to
+$s[x\mapsto t^{\mathfrak A}[s]][y\mapsto a]$.
+Równoważność zachodzi dla każdego $a\in A$.
+Jeśli $Q=\forall$, zastosowanie warunku \emph{dla wszystkich}
+$a$ daje tezę; jeśli $Q=\exists$, warunku
+\emph{dla pewnego} $a$.
+\end{enumerate}
+Każdy przypadek tworzenia formuł został rozpatrzony.
+\end{proof}
+\begin{przyklad}[Zmiana nazwy zmiennej związanej]
+Formuły $\forall v_0\,(v_0=v_1)$ i
+$\forall v_2\,(v_2=v_1)$ mają takie samo znaczenie w każdej
+strukturze przy każdym wartościowaniu: w obu przypadkach
+sprawdzamy równość wszystkich elementów uniwersum z wartością $v_1$.
+Nie wolno natomiast dowolnie przemianowywać zmiennych tak,
+aby zmienić zakres kwantyfikatora lub przechwycić wolne wystąpienie.
+\end{przyklad}
+
+\begin{przyklad}[Dlaczego lemat o podstawieniu wymaga dopuszczalności]
+Niech $A=\{0,1\}$, $\varphi=\forall y\,(x=y)$,
+$t=y$ oraz $s(x)=0$, $s(y)=1$. Naiwna zamiana wolnego
+$x$ na $y$ daje $\forall y\,(y=y)$, prawdziwą w $A$.
+Natomiast po prawej stronie wzoru z
+Twierdzenia~\ref{thm:sem-substitution} występuje
+$\varphi$ przy $s[x\mapsto t^{\mathfrak A}[s]]$,
+czyli przy $x=1$. Formuła $\forall y\,(1=y)$ jest
+fałszywa, ponieważ dla $y=0$ otrzymujemy $1\ne0$.
+Wobec tego równoważność z lematu o podstawieniu bez
+warunku dopuszczalności jest fałszywa. Po przemianowaniu
+zmiennej związanej na świeżą $z$ otrzymujemy poprawne
+$\forall z\,(y=z)$, fałszywe przy $s(y)=1$.
+\end{przyklad}
+
+\begin{twierdzenie}[Poprawność przemianowania zmiennej związanej]
+\label{thm:sem-alpha-renaming-xlv}
+Niech $\mathfrak A$ będzie strukturą języka $\mathcal L$,
+$\psi$ formułą tego języka, a $x,y$ dwiema różnymi
+zmiennymi. Załóżmy, że $y$ \emph{nie występuje w ogóle}
+w napisie $\psi$ (ani wolno, ani związanie).
+Wtedy dla każdego wartościowania $s$ oraz
+$Q\in\{\forall,\exists\}$ zachodzi
+\[
+\mathfrak A,s\models Qx\,\psi
+\quad\Longleftrightarrow\quad
+\mathfrak A,s\models Qy\,\psi[x:=y].
+\]
+Podstawienie po prawej jest dopuszczalne.
+\end{twierdzenie}
+\begin{proof}
+Ponieważ $y$ nie występuje w $\psi$, żaden kwantyfikator
+w jej wnętrzu nie może przechwycić $y$ podstawianego za $x$.
+Dla dowolnego $a\in A$ stosujemy
+Twierdzenie~\ref{thm:sem-substitution} do formuły $\psi$,
+termu $y$ i wartościowania $s[y\mapsto a]$:
+\[
+\mathfrak A,s[y\mapsto a]\models\psi[x:=y]
+\iff
+\mathfrak A,s[y\mapsto a][x\mapsto a]\models\psi.
+\]
+Wartościowania po prawej oraz $s[x\mapsto a]$ różnią się
+co najwyżej na zmiennej $y$. Ponieważ
+$y\notin\operatorname{FV}(\psi)$, twierdzenie o zgodności
+wartościowań daje
+\[
+\mathfrak A,s[y\mapsto a]\models\psi[x:=y]
+\iff
+\mathfrak A,s[x\mapsto a]\models\psi.
+\]
+Dla $Q=\forall$ wymagamy tej równoważności dla każdego
+$a\in A$, a dla $Q=\exists$ wystarczy odpowiedni
+świadek $a$. Otrzymujemy oba kierunki w każdym przypadku.
+\end{proof}
+\begin{przyklad}[Kiedy przemianowanie jest błędne?]
+Niech $\psi$ ma postać $x=y$. Wtedy $y$ nie jest świeża.
+Nie wolno zastąpić $\forall x\,(x=y)$ przez
+$\forall y\,(y=y)$: w strukturze
+$A=\{0,1\}$ pierwsza formuła jest fałszywa przy każdym
+wartościowaniu, natomiast druga jest prawdziwa.
+Jeżeli zamiast $y$ weźmiemy świeżą zmienną $z$,
+formuła $\forall z\,(z=y)$ jest równoważna wyjściowej
+przy każdym wartościowaniu, zgodnie z twierdzeniem.
+\end{przyklad}
+
+\section{Modele, kontrmodele i konsekwencja semantyczna}
+\begin{definicja}[Model i konsekwencja semantyczna]\label{def:sem-entailment}
+Niech $\mathcal L$ będzie sygnaturą; wszystkie rozważane
+zdania i struktury należą do tego samego języka $\mathcal L$.
+Jeżeli $\sigma$ jest zdaniem, to $\mathfrak A\models\sigma$
+oznacza jego prawdziwość w $\mathfrak A$.
+Dla zbioru zdań $\Gamma$ piszemy $\mathfrak A\models\Gamma$,
+jeśli $\mathfrak A$ spełnia każde zdanie z $\Gamma$;
+wówczas $\mathfrak A$ nazywamy \emph{modelem} $\Gamma$.
+Dla zdania $\sigma$ zapis $\Gamma\models\sigma$ oznacza, że
+każdy model $\Gamma$ jest również modelem $\sigma$.
+Jeżeli $\Gamma=\varnothing$, piszemy $\models\sigma$
+i nazywamy $\sigma$ \emph{logicznie prawdziwym} (ważnym).
+\emph{Kontrmodel} dla $\Gamma\models\sigma$ to struktura,
+która spełnia $\Gamma$, lecz nie spełnia $\sigma$.
+\end{definicja}
+W tym rozdziale wystarczają zbiory \emph{zdań}. W dalszej części
+skryptu rozszerzymy tę relację na formuły ze zmiennymi
+wolnymi, zachowując zgodność z powyższą definicją.
+
+\begin{przyklad}[Kontrmodel dla błędnej zmiany kwantyfikatorów]
+Rozważmy formułę, której głównym spójnikiem jest implikacja
+\[
+\bigl(\forall x\,\exists y\,R(x,y)\bigr)
+\to\bigl(\exists y\,\forall x\,R(x,y)\bigr).
+\]
+Nie jest ona logicznie prawdziwa. W strukturze o uniwersum $\N$,
+w której $R$ oznacza $<$, poprzednik jest prawdziwy (można wziąć $y=x+1$),
+a następnik fałszywy (dla dowolnego $y$ wybieramy $x=y$).
+Jedna taka struktura wystarcza, aby obalić powszechną ważność implikacji.
+\end{przyklad}
+\begin{przyklad}[Ważność a prawdziwość w jednym modelu]
+Zdanie $\forall x\,(x=x)$ jest logicznie prawdziwe:
+każdy element jest równy samemu sobie, niezależnie od struktury.
+Zdanie $\exists x\,\exists y\,\neg(x=y)$ jest prawdziwe
+w strukturze o co najmniej dwóch elementach, ale fałszywe
+w strukturze jednoelementowej. Nie jest więc logicznie prawdziwe.
+\end{przyklad}
+
+\begin{twierdzenie}[Monotoniczność konsekwencji]
+\label{thm:sem-entailment-monotone-xlv}
+Dla dowolnych zbiorów zdań $\Gamma\subseteq\Delta$
+tej samej sygnatury i dowolnego zdania $\sigma$ zachodzi:
+$\Gamma\models\sigma$ pociąga $\Delta\models\sigma$.
+Jeżeli $\Gamma$ nie ma modelu, to $\Gamma\models\sigma$
+dla każdego zdania $\sigma$ tej sygnatury.
+\end{twierdzenie}
+\begin{proof}
+Niech $\mathfrak A$ będzie dowolnym modelem $\Delta$.
+Ponieważ każdy element $\Gamma$ należy do $\Delta$,
+struktura $\mathfrak A$ spełnia wszystkie zdania $\Gamma$.
+Z $\Gamma\models\sigma$ otrzymujemy
+$\mathfrak A\models\sigma$. Wybór modelu $\Delta$
+był dowolny, więc $\Delta\models\sigma$.
+Jeżeli $\Gamma$ nie ma modeli, nie istnieje kontrmodel:
+żadna struktura nie spełnia wszystkich przesłanek
+$\Gamma$ i jednocześnie nie spełnia $\sigma$.
+Warunek definiujący $\Gamma\models\sigma$ zachodzi
+wówczas dla każdego $\sigma$.
+\end{proof}
+\begin{przyklad}[Konsekwencja z niespełnialnych przesłanek]
+Niech $\Gamma=\{\forall x\,\neg(x=x)\}$.
+Każde uniwersum jest niepuste, więc wybieramy $a\in A$.
+Atom $a=a$ jest prawdziwy, stąd
+$\forall x\,\neg(x=x)$ jest fałszywe w każdej strukturze.
+Zatem $\Gamma$ nie ma modelu i
+$\Gamma\models\exists x\,\neg(x=x)$, chociaż zdanie
+$\exists x\,\neg(x=x)$ nie jest logicznie prawdziwe.
+Nie należy mylić \emph{wynikania z przesłanek}
+z \emph{ważnością bez przesłanek}.
+\end{przyklad}
+
+\section{Rozszerzenie języka: logika drugiego rzędu}\label{sec:second-order-introduction}
+\subsection{Jakie pytania są niedostępne w pierwszym rzędzie?}
+W logice pierwszego rzędu formuła $\forall x\,\varphi(x)$ mówi o
+\emph{wszystkich elementach} uniwersum $A$. Nawet jeśli dla dowolnie
+wybranego podzbioru $D\subseteq A$ potrafimy opisać, że pewne zdanie
+dotyczy $D$, sam kwantyfikator $\forall x$ nie obejmuje zbiorów $D$.
+Aby móc powiedzieć na przykład „każdy zbiór zawierający zero
+i zamknięty na następnik zawiera wszystkie liczby”, potrzebujemy
+zmiennych, których wartościami są \emph{zbiory elementów}, a nie pojedyncze
+elementy. Jest to główna motywacja logiki drugiego rzędu.
+
+\begin{definicja}[Zmienne i formuły drugiego rzędu]\label{def:second-order-syntax}
+Ustalmy język pierwszego rzędu $\mathcal L$ i jego zmienne
+indywidualne $x,y,z,\ldots$. Rozszerzamy alfabet o nieskończenie
+wiele \emph{zmiennych relacyjnych} $X^{(n)},Y^{(n)},\ldots$ dla
+każdej dodatniej liczby naturalnej $n$ (jej \emph{arności}).
+Jeśli $X^{(n)}$ ma arność $n$, a $t_1,\ldots,t_n$ są termami, to
+$X^{(n)}(t_1,\ldots,t_n)$ jest formułą atomową. Oprócz spójników
+i kwantyfikatorów pierwszego rzędu dopuszczamy
+$\forall X^{(n)}\,\varphi$ i $\exists X^{(n)}\,\varphi$.
+Formuły otrzymujemy przez skończone iterowanie tych konstrukcji;
+nic innego nie uznajemy za formułę. Zmienną relacyjną nazywamy
+\emph{wolną}, jeśli jej wystąpienie nie pozostaje w zasięgu
+wiążącego ją kwantyfikatora.
+Dla czytelności zmienną jednoargumentową zapisujemy często po
+prostu jako $X$, a $X(x)$ odczytujemy „$x$ należy do zbioru $X$”.
+\end{definicja}
+
+\begin{przyklad}[Relacja a zbiór]
+Napis $X(x)$ nie jest tym samym co $x=X$: pierwszy jest formułą
+mówiącą, że element $x$ należy do zbioru reprezentowanego przez $X$;
+drugi nie jest w opisanej składni poprawnym atomem, bo $x$ i $X$
+są zmiennymi różnych rodzajów. Zapis $\exists X\,\forall x\,X(x)$
+mówi, że istnieje zbiór zawierający każdy element uniwersum.
+\end{przyklad}
+
+\subsection{Semantyka pełna i semantyka Henkina}
+\begin{definicja}[Spełnianie w pełnej semantyce drugiego rzędu]
+\label{def:second-order-full-semantics}
+Niech $\mathfrak A$ będzie strukturą pierwszego rzędu o
+niepustym uniwersum $A$. Wartościowanie $s$ przypisuje zmiennym
+indywidualnym elementy $A$, a zmiennej relacyjnej $X^{(n)}$
+relację $s(X^{(n)})\subseteq A^n$. Dla atomu przyjmujemy
+\[
+ \mathfrak A,s\models X^{(n)}(t_1,\ldots,t_n)
+ \quad\Longleftrightarrow\quad
+ (t_1^{\mathfrak A}[s],\ldots,t_n^{\mathfrak A}[s])
+ \in s(X^{(n)}).
+\]
+Pozostałe atomy, spójniki i kwantyfikatory indywidualne
+interpretujemy jak w Definicji~\ref{def:sem-satisfaction}.
+Dla kwantyfikatorów nowego rodzaju określamy:
+\[
+\begin{aligned}
+\mathfrak A,s\models\forall X^{(n)}\,\varphi
+ &\iff \text{dla każdego }D\subseteq A^n\text{ zachodzi }
+ \mathfrak A,s[X^{(n)}\mapsto D]\models\varphi,\\
+\mathfrak A,s\models\exists X^{(n)}\,\varphi
+ &\iff \text{dla pewnego }D\subseteq A^n\text{ zachodzi }
+ \mathfrak A,s[X^{(n)}\mapsto D]\models\varphi.
+\end{aligned}
+\]
+Ta interpretacja jest \emph{pełną semantyką drugiego rzędu}:
+zmienne relacyjne obejmują \emph{wszystkie} relacje odpowiedniej
+arności na $A$.
+\end{definicja}
+
+\begin{definicja}[Semantyka Henkina]\label{def:second-order-henkin-semantics}
+Niech $\mathfrak A$ będzie strukturą pierwszego rzędu
+o niepustym uniwersum $A$. W \emph{semantyce Henkina} ustalamy
+niepustą rodzinę $\mathcal S_n\subseteq\mathcal P(A^n)$ dla
+każdej rozważanej arności $n$. Wartościowanie zmiennych
+indywidualnych przyjmuje wartości w $A$, natomiast
+wartościowanie każdej zmiennej relacyjnej $X^{(n)}$
+musi spełniać $s(X^{(n)})\in\mathcal S_n$,
+również gdy $X^{(n)}$ jest zmienną wolną.
+Kwantyfikatory $\forall X^{(n)}$ i $\exists X^{(n)}$
+przebiegają wówczas tylko po $D\in\mathcal S_n$.
+Atom $X^{(n)}(\vec t)$ ma tę samą interpretację co powyżej.
+Jeżeli jednocześnie rozważamy nieskończenie wiele arności
+bez przyjmowania aksjomatu wyboru, do danych modelu
+dołączamy jedną rodzinę $(D_n)$, indeksowaną rozważanymi
+arnościami, taką że $D_n\in\mathcal S_n$ dla każdego $n$.
+Wtedy istnieje wartościowanie wszystkich zmiennych relacyjnych:
+każdej zmiennej arności $n$ możemy przypisać $D_n$.
+Sama niepustość każdej z rodzin $\mathcal S_n$ nie zapewnia
+w ZF istnienia takiego jednoczesnego wyboru.
+Nie zakładamy, że
+$\mathcal S_n=\mathcal P(A^n)$; ewentualne dodatkowe warunki
+na rodziny $\mathcal S_n$ (na przykład aksjomaty
+\emph{rozumienia}) należy wysłowić oddzielnie.
+\end{definicja}
+
+\begin{przyklad}[Jedno zdanie, różne zakresy kwantyfikatora]
+Niech $A=\N$ i $S(n)=n+1$. Formuła
+\[
+\forall X\,\Bigl(\bigl(X(0)\land
+\forall x\,(X(x)\to X(S(x)))\bigr)
+\to\forall x\,X(x)\Bigr)
+\tag{$\mathrm{Ind}_2$}
+\]
+wyraża indukcję \emph{dla każdego zbioru} $X$.
+Przy pełnej semantyce $X$ przebiega cały zbiór potęgowy
+$\mathcal P(\N)$: założenie oznacza, że $X$ zawiera zero
+i jest zamknięty na następnik, a wniosek, że $X=\N$.
+W semantyce Henkina $X$ przebiega tylko rodzinę
+$\mathcal S_1$. Wówczas formuła może być spełniona,
+nawet jeżeli istnieją inne zewnętrzne podzbiory $A$
+niedostępne dla kwantyfikatora.
+\end{przyklad}
+
+\begin{przyklad}[Model, w którym dwa odczytania indukcji się różnią]
+Niech $A=\Z$, $0^{\mathfrak A}=0$ i
+$S^{\mathfrak A}(z)=z+1$. Przy pełnej semantyce rozważmy
+podzbiór $D=\{z\in\Z:z\geq0\}$. Zawiera on $0$
+i jest zamknięty na funkcję $S^{\mathfrak A}$,
+lecz nie zawiera $-1$. Podstawiając $D$ za $X$,
+sprawdzamy, że poprzednik implikacji $\mathrm{Ind}_2$
+jest prawdziwy, a jej następnik fałszywy.
+Tak więc $\mathfrak A\not\models\mathrm{Ind}_2$
+w pełnej semantyce.
+
+Ustalmy teraz semantykę Henkina z
+$\mathcal S_1=\{\Z\}$ (a dla pozostałych arności
+niepustymi rodzinami, np. $\mathcal S_n=\{\Z^n\}$).
+Jedyną wartością zmiennej jednoargumentowej $X$
+jest wtedy całe $\Z$. Dla $X=\Z$ implikacja
+$\mathrm{Ind}_2$ jest prawdziwa: spełniony jest zarówno
+jej poprzednik, jak i następnik.
+Zatem zdanie indukcji drugiego rzędu jest spełnione
+w tej strukturze Henkina. Model nie spełnia jednak
+odpowiedniego warunku pełnej semantyki.
+Ten przykład nie twierdzi, że otrzymana struktura
+spełnia wszystkie pozostałe aksjomaty arytmetyki Peana;
+ilustruje wyłącznie rolę \emph{zakresu kwantyfikatora $X$}.
+\end{przyklad}
+
+\begin{uwaga}[Dlaczego to rozróżnienie jest ważne?]
+Twierdzenia Gödla o pełności oraz Löwenheima--Skolema
+w naszych dalszych rozdziałach dotyczą \emph{logiki pierwszego
+rzędu}. Nie wolno przenosić ich bez dodatkowych założeń
+na pełną semantykę drugiego rzędu. W
+późniejszym twierdzeniu o kategoryczności arytmetyki Peana
+zastosujemy właśnie formułę $\mathrm{Ind}_2$ i wykażemy, dlaczego
+pełna semantyka zapewnia kategoryczność arytmetyki Peana
+(nie ma niestandardowych modeli spełniających pełną indukcję
+drugiego rzędu). Kategoryczność oznacza tu, że każde dwa modele
+są izomorficzne, a nie że istnieje algorytm rozstrzygający
+wszystkie zdania teorii.
+\end{uwaga}
+
+\section{Dlaczego pełność nie wynika z samej definicji?}
+Zdefiniowaliśmy prawdziwość w strukturze. Nie rozstrzyga to,
+czy każde zdanie prawdziwe we wszystkich modelach ma formalny dowód.
+W kolejnym rozdziale określimy reguły dowodzenia, a następnie
+wykażemy ich \emph{poprawność}: dowód formalny gwarantuje
+wynikanie semantyczne. Odwrotność, czyli \emph{pełność Gödla},
+wymaga odrębnej konstrukcji.

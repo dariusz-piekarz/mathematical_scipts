@@ -1,0 +1,337 @@
+\chapter{Arytmetyka formalna i kodowanie składni}\label{ch:arithmetization}
+
+\section{Od maszyn i zdań do rachunku arytmetycznego}
+W rozdziale~\ref{ch:computability-intro} zobaczyliśmy, że program
+i dowód mają skończony opis. Chcemy wykonać jeszcze jeden krok:
+zamienić opis na liczbę naturalną, a następnie wyrazić
+\emph{samym językiem arytmetyki} własność
+„ta liczba koduje poprawny dowód”.
+Wtedy o napisach i obliczeniach będziemy mogli mówić wewnątrz
+teorii liczb. Jest to podstawa metody Gödla; samego twierdzenia
+o niezupełności nie będziemy jeszcze dowodzić.
+
+\begin{definicja}[Język arytmetyki i numerały]\label{def:arith-language}
+Niech $\mathcal L_{\mathrm{ar}}=\{0,S,+,\cdot,<\}$
+oznacza język pierwszego rzędu, w którym $0$ jest stałą,
+$S$ symbolem funkcji jednoargumentowej, $+$ i $\cdot$
+symbolami funkcji dwuargumentowych, zaś $<$ symbolem relacji
+dwuargumentowej. W modelu standardowym jego uniwersum to
+$\N=\{0,1,2,\ldots\}$, a wymienione znaki mają zwykłe znaczenie.
+Dla $n\in\N$ \emph{numerał} $\overline n$ jest termem
+domkniętym definiowanym przez
+$\overline0:=0$ oraz $\overline{n+1}:=S(\overline n)$.
+Zatem $\overline3$ to napis $S(S(S(0)))$, a nie cyfra „3”.
+\end{definicja}
+
+\begin{uwaga}[Jak czytać notację metamatematyczną?]\label{rem:arith-meta}
+Piszemy $T\vdash\varphi$, jeśli istnieje skończony formalny
+dowód $\varphi$ z aksjomatów teorii $T$.
+Piszemy $\mathfrak N\models\varphi$, gdy zdanie jest prawdziwe
+w zwykłej strukturze liczb naturalnych.
+Symbol $\mathfrak N$ oznacza strukturę liczb naturalnych, a $\N$ jej uniwersum.
+Teoria $Q$ poniżej to arytmetyka Robinsona; nie należy jej mylić ze zbiorem $\Q$ liczb wymiernych.
+Równość $3=3$ jest wypowiedzią metamatematyczną
+o liczbach; równość $\overline3=\overline3$ jest natomiast
+zdaniem języka formalnego. Oba poziomy należy odróżniać.
+\end{uwaga}
+
+\section{Arytmetyka Peana i Robinsona}\label{sec:arytmetyka-peana-robinsona}
+Zanim podamy aksjomaty, wyjaśnijmy, po co one są. Chcemy zapisać w języku $\mathcal L_{\mathrm{ar}}$ (Definicji~\ref{def:arith-language}) na tyle dużo prawd o liczbach naturalnych, by teoria potrafiła „liczyć” --- a jednocześnie zrobić to skończoną, mechanicznie sprawdzalną listą reguł. Arytmetyka Robinsona $Q$ to taki możliwie minimalny zestaw: opisuje tylko podstawowe własności zera, następnika, dodawania, mnożenia i porządku.
+
+\begin{definicja}[Arytmetyka Robinsona $Q$]\label{res:4:1}
+\emph{Arytmetyką Robinsona} $Q$ nazywamy teorię o następujących ośmiu aksjomatach. Nazwy (Q1)--(Q8) są stałe, niezależne od numeracji wzorów:
+\begin{align*}
+\forall x\ S(x)\ne0, &\tag{Q1}\\
+\forall x\,\forall y\,(S(x)=S(y)\to x=y), &\tag{Q2}\\
+\forall x\,(x\ne0\to\exists y\ x=S(y)), &\tag{Q3}\\
+\forall x\ x+0=x, &\tag{Q4}\\
+\forall x\,\forall y\ x+S(y)=S(x+y), &\tag{Q5}\\
+\forall x\ x\cdot0=0, &\tag{Q6}\\
+\forall x\,\forall y\ x\cdot S(y)=x\cdot y+x, &\tag{Q7}\\
+\forall x\,\forall y\ (x<y\leftrightarrow\exists z\,(z+S(x)=y)). &\tag{Q8}
+\end{align*}
+Przyjmujemy $x\le y$ jako skrót $x<y\lor x=y$. Kolejność składników w (Q8) ma znaczenie: w obliczeniach z aksjomatów $Q$ nie wolno bez osobnego uzasadnienia przestawiać składników dodawania. W Lemacie~\ref{res:4:4} wyprowadzimy z podanych aksjomatów opis odcinka poniżej każdego ustalonego standardowego numerału.
+\end{definicja}
+
+\begin{uwaga}[Intuicyjne znaczenie aksjomatów]\label{res:4:2}
+Czytajmy $S(x)$ jako „$x+1$”, a $0$ jako zero. Wtedy:
+\begin{itemize}
+\item \textup{(Q1)} $S(x)\ne0$: \emph{zero nie jest niczyim następnikiem} --- żadna liczba $+1$ nie daje $0$. To odróżnia $\mathbb N$ od np. liczb modulo, gdzie „zawinięcie” pozwoliłoby wrócić do zera.
+\item \textup{(Q2)} $S(x)=S(y)\to x=y$: \emph{następnik jest różnowartościowy} --- jeśli $x+1=y+1$, to $x=y$. Gwarantuje, że kolejne liczby się nie „sklejają”.
+\item \textup{(Q3)} $x\ne0\to\exists y\ x=S(y)$: \emph{każda niezerowa liczba ma poprzednik} --- nie ma „dziur” ani dziwnych elementów bez $-1$.
+\item \textup{(Q4)} $x+0=x$: dodanie zera nic nie zmienia (baza rekurencji dodawania).
+\item \textup{(Q5)} $x+S(y)=S(x+y)$: \emph{definiuje dodawanie przez rekurencję} --- dodać $y+1$ to dodać $y$ i potem $+1$. Aksjomaty (Q4)--(Q5) wspólnie mówią, jak liczyć $x+y$ krok po kroku.
+\item \textup{(Q6)} $x\cdot0=0$: mnożenie przez zero daje zero (baza).
+\item \textup{(Q7)} $x\cdot S(y)=x\cdot y+x$: \emph{definiuje mnożenie przez rekurencję} --- pomnożyć przez $y+1$ to pomnożyć przez $y$ i dodać $x$.
+\item \textup{(Q8)} $x<y\leftrightarrow\exists z\,(z+S(x)=y)$: w modelu standardowym mówi, że do $x+1$ można dodać nieujemną liczbę i otrzymać $y$. Nie zakłada ogólnych praw porządku, których $Q$ mogłaby nie dowodzić.
+\end{itemize}
+\end{uwaga}
+
+\begin{przyklad}[$Q$ liczy konkretne przykłady]\label{res:4:3}
+Z aksjomatów (Q4)--(Q5) $Q$ dowodzi np. $\overline2+\overline1=\overline3$: istotnie $\overline2+S(0)=S(\overline2+0)=S(\overline2)=\overline3$. Ogólnie $Q$ poprawnie dowodzi każdej prawdziwej równości i nierówności między \emph{konkretnymi} numerałami. To wystarczy do reprezentowalności (Tw.~\ref{res:7:6}).
+\end{przyklad}
+
+\begin{lemat}[Skończone odcinki i rachunek na numerałach]\label{res:4:4}
+Dla każdego ustalonego standardowego $n$ teoria $Q$ dowodzi
+\begin{align}
+\forall x\,(x<\overline n\leftrightarrow(x=\overline0\lor\cdots\lor x=\overline{n-1})),\label{eq:4:1}\\
+\forall x\,(x<\overline n\lor x=\overline n\lor\overline n<x).\label{eq:4:2}
+\end{align}
+Dla $n=0$ alternatywa po prawej w~\eqref{eq:4:1} oznacza fałsz. Ponadto $Q$ rozstrzyga równości i nierówności między termami domkniętymi.
+\end{lemat}
+
+\begin{proof}
+Z (Q4)--(Q7) obliczamy każdy term domknięty, rozwijając dodawanie i mnożenie skończenie wiele razy, zawsze względem drugiego argumentu. Dla dwóch różnych numerałów $\overline i,\overline j$ z $i<j$, równość $\overline i=\overline j$ po $i$ zastosowaniach (Q2) prowadzi do $0=S^{j-i}(0)$, wbrew (Q1). Przez podstawianie równych termów rozstrzygamy więc dowolną równość między termami domkniętymi.
+
+Z (Q3) i prawa wyłączonego środka otrzymujemy $x=0\lor\exists u\ x=S(u)$. W drugiej gałęzi stosujemy ten sam podział do $u$: albo $u=0$ i $x=\overline1$, albo $u=S(v)$ i $x=S^2(v)$. Powtarzamy to dokładnie $n+1$ razy, otrzymując w $Q$
+\[
+x=\overline0\lor x=\overline1\lor\cdots\lor x=\overline n\lor\exists u\ x=S^{n+1}(u).
+\]
+Zapis $S^k(u)$ oznacza $k$ kolejnych zastosowań następnika. Jeśli $x=S^{n+1}(u)$, to $z+S(x)=S^{n+2}(z+u)\ne\overline n$ na mocy (Q1)--(Q2) i (Q5): domniemana równość po $n$ skróceniach następnika dawałaby $S^2(z+u)=0$. Zatem $x\not<\overline n$. Dla $x=\overline j$ z $j\le n$ zachodzi $z+S(\overline j)=S^{j+1}(z)$. Przy $j<n$ świadkiem równości z $\overline n$ jest $z=\overline{n-j-1}$. Przy $j=n$ taka równość po $n$ skróceniach dawałaby $S(z)=0$, więc jest niemożliwa. To dowodzi obu kierunków~\eqref{eq:4:1}. W ostatnim członie alternatywy $u+S(\overline n)=S^{n+1}(u)=x$, więc $\overline n<x$; pozostałe gałęzie dają~\eqref{eq:4:2}. Jest to indukcja w metateorii budująca osobny skończony dowód dla każdego $n$, a nie zastosowanie nieistniejącego w $Q$ schematu indukcji.
+\end{proof}
+
+\begin{uwaga}[Jak połączyć skończenie wiele sprawdzeń]\label{res:4:5}
+Niech $n$ będzie ustaloną liczbą standardową, a $\theta(x)$ dowolną formułą. Jeśli $Q$ dowodzi wszystkich $\theta(\overline0),\ldots,\theta(\overline{n-1})$, to dowodzi też $\forall x<\overline n\,\theta(x)$. Ten ostatni zapis jest skrótem $\forall x(x<\overline n\to\theta(x))$. Istotnie, z $x=\overline j$ oraz $\theta(\overline j)$ otrzymujemy $\theta(x)$ przez podstawienie równych termów. Łączymy skończenie wiele takich implikacji przez alternatywę i stosujemy~\eqref{eq:4:1}. Następnie generalizujemy $x$. Dla $n=0$ teza wynika z $\forall x\,\neg(x<0)$. Tak powstaje \emph{jeden skończony dowód dla ustalonej granicy} $n$, a nie dowód $\forall x\,\theta(x)$. Tego kroku użyjemy między innymi w dowodzie Rossera.
+\end{uwaga}
+
+\begin{definicja}[Formuły ograniczone i $\Sigma_1$]\label{res:4:6}
+Formuła $\Delta_0$ powstaje z formuł atomowych przez spójniki oraz kwantyfikatory $\exists x<t$, $\forall x<t$, gdzie $t$ nie zawiera $x$. Są to skróty $\exists x(x<t\land\cdots)$ i $\forall x(x<t\to\cdots)$. Kwantyfikatory z $x\le t$ również są ograniczone: oznaczają odpowiednio $(\exists x<t\,\varphi(x))\lor\varphi(t)$ oraz $(\forall x<t\,\varphi(x))\land\varphi(t)$, po podstawieniu bez przechwytywania zmiennych. Nie potrzeba tu żadnych ogólnych praw porządku. Formuła $\Sigma_1$ ma postać $\exists u_1\cdots\exists u_r\,\delta$, gdzie $\delta$ jest $\Delta_0$; dopuszczamy $r=0$.
+\end{definicja}
+
+\begin{lemat}[$\Sigma_1$-zupełność $Q$]\label{res:4:7}
+$Q$ dowodzi każdego prawdziwego zdania $\Sigma_1$ oraz negacji każdego fałszywego zdania $\Delta_0$.
+\end{lemat}
+\begin{proof}
+Dla każdego termu domkniętego $t$ Lemat~\ref{res:4:4} daje numerał $\overline n$ taki, że $Q\vdash t=\overline n$. Indukcję po budowie zamkniętej formuły $\Delta_0$ rozpoczynamy od atomów (równość i $<$): $Q$ dowodzi ich wartości logicznej dla obliczonych numerałów. Spójniki rozpatrujemy klasycznie. W przypadku $\exists x<t\,\psi(x)$, po ustaleniu $Q\vdash t=\overline n$, równoważność~\eqref{eq:4:1} i podstawianie równych termów sprowadzają kwantyfikator do skończonej alternatywy $\psi(\overline0)\lor\cdots\lor\psi(\overline{n-1})$; analogicznie $\forall x<t$ sprowadza się do skończonej koniunkcji. Stosujemy założenie indukcyjne do każdej zamkniętej instancji $\psi(\overline j)$, również gdy w jej wnętrzu pozostają dalsze kwantyfikatory ograniczone. W ten sposób $Q$ dowodzi prawdziwej zamkniętej formuły $\Delta_0$ i negacji fałszywej. Jeśli zdanie $\exists\vec u\,\delta(\vec u)$ klasy $\Sigma_1$ jest prawdziwe, wybieramy standardowe wartości świadków $\vec m$, dowodzimy w $Q$ zdania $\delta(\overline{m_1},\ldots,\overline{m_r})$, a następnie wprowadzamy kolejno kwantyfikatory egzystencjalne. Przy $r=0$ korzystamy z przypadku $\Delta_0$. Nie wynika stąd rozstrzygalność fałszywych zdań $\Sigma_1$.
+\end{proof}
+
+\begin{uwaga}[Czego nie wolno zakładać w $Q$]\label{res:4:8}
+Teoria $Q$ nie zawiera schematu indukcji. Z samych równań
+$x+0=x$ i $x+S(y)=S(x+y)$ możemy wyliczyć $x+\overline n$
+dla \emph{ustalonego numerału} $\overline n$, lecz nie uzyskujemy
+przez to automatycznie dowodu $\forall y\,(0+y=y)$ ani
+przemienności dodawania. Aby otrzymać twierdzenie o \emph{każdym}
+$y$, trzeba podać osobny argument; nie należy go zastępować
+nieuprawnionym użyciem indukcji. Brak aksjomatu nie jest jednak
+sam w sobie dowodem niezależności takiego twierdzenia od $Q$.
+W dalszej części konsekwentnie używamy jedynie rachunku na
+\emph{konkretnych} numerałach i skończonych odcinkach.
+\end{uwaga}
+
+\begin{definicja}[Arytmetyka Peana PA]\label{res:4:9}
+\emph{Arytmetyką Peana} $\mathrm{PA}$ nazywamy teorię w języku $\mathcal L_{\mathrm{ar}}$ zawierającą aksjomaty (Q1)--(Q8) oraz \emph{schemat indukcji}. Aksjomat (Q8) można równoważnie traktować jako definicję symbolu $<$ przez pozostałe symbole. Dla każdej formuły $\varphi(x,\vec y)$, gdzie $\vec y=(y_1,\ldots,y_m)$ jest skończoną listą różnych zmiennych innych niż $x$, a wszystkie zmienne wolne formuły należą do $\{x,y_1,\ldots,y_m\}$, przyjmujemy zdanie (zapis $\forall\vec y$ skraca kolejne kwantyfikatory po $y_1,\ldots,y_m$)
+\[
+\forall\vec y\,\Bigl[\bigl(\varphi(0,\vec y)\land\forall x\,(\varphi(x,\vec y)\to\varphi(S(x),\vec y))\bigr)\to\forall x\,\varphi(x,\vec y)\Bigr].
+\]
+\end{definicja}
+
+\begin{uwaga}[Co mówi schemat indukcji]\label{res:4:10}
+To formalna wersja „zasady domina”: jeśli własność $\varphi$ zachodzi dla $0$ (\emph{baza}) i z jej zachodzenia dla $x$ wynika zachodzenie dla $x+1$ (\emph{krok}), to zachodzi dla \emph{wszystkich} liczb. Słowo „schemat” oznacza, że jest to \emph{nieskończenie wiele} aksjomatów --- po jednym dla każdej formuły $\varphi$. Mimo nieskończoności zbiór ten jest \emph{rozstrzygalny} (można mechanicznie sprawdzić, czy dane zdanie ma kształt aksjomatu indukcji), więc PA pozostaje efektywnie aksjomatyzowalna --- co jest niezbędne dla twierdzeń Gödla.
+\end{uwaga}
+
+\begin{uwaga}\label{res:4:11}
+$Q$ jest bardzo słaba: nie dowodzi nawet przemienności dodawania. Aby tę ostatnią niedowodliwość uzasadnić, skonstruujmy model. Do $\N$ dołączmy dwa różne elementy $a,b$, niech $S(a)=a$, $S(b)=b$, a na $\N$ następnik pozostanie standardowy. Dodawanie na $\N$ jest zwykłe; dla $c\in\{a,b\}$ i $n\in\N$ ustalmy $c+n=c$, natomiast dla dowolnego $z$ i $c\in\{a,b\}$ połóżmy $z+c=c$. Dla mnożenia zachowujemy zwykłe działanie na $\N$, przyjmujemy $c\cdot0=0$, $c\cdot n=c$ dla $n\ge1$, a gdy $d\in\{a,b\}$, ustalamy $n\cdot d=d$ dla $n\in\N$ i $c\cdot d=c$ dla $c\in\{a,b\}$. Relację $<$ interpretujemy dokładnie przez prawą stronę (Q8). Sprawdźmy zwłaszcza kroki rekurencyjne. Dla $y=n\in\N$ równania (Q5) i (Q7) są standardowe, gdy $x\in\N$; dla $x=c\in\{a,b\}$ mamy $c+S(n)=c=S(c+n)$, a $c\cdot S(0)=c=0+c$ oraz, dla $n\ge1$, $c\cdot S(n)=c=c+c$. Dla $y=d\in\{a,b\}$ zachodzi $S(d)=d$: po obu stronach (Q5) otrzymujemy $d$, natomiast w (Q7) otrzymujemy $d$ przy $x\in\N$ i $x$ przy $x\in\{a,b\}$. Równania (Q4) i (Q6) są spełnione na mocy definicji działań; (Q1)--(Q3) wynikają z opisanej funkcji $S$, a (Q8) zachodzi z definicji $<$. Mamy jednak $a+b=b\ne a=b+a$. Poprawność rachunku dowodowego wyklucza więc dowód ogólnej przemienności z $Q$. Mimo tej słabości $Q$ wystarcza do reprezentowania funkcji obliczalnych na ustalonych numerałach (Tw.~\ref{res:7:6}). Pierwsze twierdzenie Gödla w wersji Rossera obejmuje każde niesprzeczne efektywnie aksjomatyzowalne rozszerzenie $Q$. Drugie twierdzenie dowodzimy dalej dla rozszerzeń PA; sama reprezentowalność nie zastępuje warunków wyprowadzalności.
+\end{uwaga}
+
+% Rozdziały 5--6, strony 9--13.
+\section{Funkcje i zbiory rekurencyjne}\label{sec:funkcje-rekurencyjne}
+\begin{definicja}[Funkcje pierwotnie rekurencyjne]\label{res:5:1}
+Przyjmujemy, że $\N^0$ jest zbiorem jednoelementowym, więc funkcja $\N^0\to\N$ oznacza stałą zeroargumentową. Klasa \emph{funkcji pierwotnie rekurencyjnych} (p.r.) to najmniejsza klasa funkcji totalnych $f:\mathbb N^k\to\mathbb N$ dla wszystkich arności $k\ge0$, zawierająca:
+\begin{enumerate}[label=(\roman*)]
+\item funkcje zerowe $Z^k(x_1,\ldots,x_k)=0$ dla każdego $k\ge0$ (w tym stałą $Z^0=0$);
+\item następnik $S(x)=x+1$;
+\item rzutowania $P_i^k(x_1,\ldots,x_k)=x_i$ dla $k\ge1$ i $1\le i\le k$;
+\end{enumerate}
+i zamknięta ze względu na:
+\begin{enumerate}[label=(\alph*)]
+\item \emph{złożenie}: jeśli $g:\mathbb N^m\to\mathbb N$ oraz $h_1,\ldots,h_m:\mathbb N^k\to\mathbb N$ są p.r. ($k,m\ge0$), to $f(\vec x)=g(h_1(\vec x),\ldots,h_m(\vec x))$ jest p.r.; dla $m=0$ wynik jest stały;
+\item \emph{rekursję prostą}: jeśli $g:\N^k\to\N$ i $h:\N^{k+2}\to\N$ są p.r. ($k\ge0$), to funkcja $f:\N^{k+1}\to\N$ określona przez
+\[
+f(\vec x,0)=g(\vec x),\qquad f(\vec x,S(y))=h(\vec x,y,f(\vec x,y))
+\]
+jest p.r.
+\end{enumerate}
+Przypadek $k=0$ nie jest pomijany: pozwala stosować rekursję prostą do funkcji jednej zmiennej bez dodatkowych parametrów, np. do poprzednika. Wszystkie wartości pozostają liczbami naturalnymi.
+\end{definicja}
+
+\begin{definicja}[Funkcja charakterystyczna zbioru]\label{res:5:2}
+\emph{Funkcją charakterystyczną} zbioru (relacji) $R\subseteq\mathbb N^k$ nazywamy funkcję $\chi_R:\mathbb N^k\to\mathbb N$ zdefiniowaną wzorem
+\[
+\chi_R(\vec x)=\begin{cases}1,&\vec x\in R\quad(\text{„warunek zachodzi”}),\\0,&\vec x\notin R\quad(\text{„warunek nie zachodzi”}).\end{cases}
+\]
+Innymi słowy $\chi_R$ zamienia \emph{pytanie} „czy $\vec x$ należy do $R$?” na \emph{liczbę} ($1$ = tak, $0$ = nie). Dzięki temu „rozstrzyganie”, czy coś zachodzi, staje się po prostu obliczaniem wartości funkcji --- a o funkcjach umiemy już mówić, że są (lub nie są) rekurencyjne.
+\end{definicja}
+
+\begin{uwaga}[Po co funkcja charakterystyczna?]\label{res:5:3}
+Cała teoria obliczalności mówi wprost tylko o funkcjach $\mathbb N^k\to\mathbb N$. Zbiory i relacje (np. „$x$ jest liczbą pierwszą”, „$p$ jest dowodem formuły $f$”) to obiekty innego rodzaju --- to warunki prawda/fałsz. Funkcja charakterystyczna jest mostem: pozwala przełożyć „rozstrzygalność zbioru” na „obliczalność funkcji”. Mówimy, że zbiór jest \emph{rozstrzygalny z definicji} wtedy i tylko wtedy, gdy istnieje mechaniczna procedura licząca jego $\chi_R$.
+\end{uwaga}
+
+\begin{przyklad}[Funkcje charakterystyczne konkretnych zbiorów]\label{res:5:4}
+Przyjmijmy $\operatorname{sgn}(0)=0$ i $\operatorname{sgn}(S(n))=1$ dla $n\in\N$.
+Funkcja $\operatorname{sgn}$ jest p.r. przez rekursję prostą; w poniższych wzorach
+jej wartością jest zawsze $0$ albo $1$.
+\begin{itemize}
+\item Zbiór liczb parzystych: $\chi_{\mathrm{parz}}(x)=1$ dla $x\in\{0,2,4,\ldots\}$, w przeciwnym razie $0$. Jest pierwotnie rekurencyjna, bo $\chi_{\mathrm{parz}}(x)=1-(x\bmod 2)$, a reszta z dzielenia jest p.r. (Lemat~\ref{res:5:8}).
+\item Relacja równości $E=\{(x,y):x=y\}$: $\chi_E(x,y)=1-\operatorname{sgn}((x\dotminus y)+(y\dotminus x))$; wynik jest $1$ dokładnie wtedy, gdy obie obcięte różnice są zerowe, czyli gdy $x=y$.
+\item Relacja $\le$: $\chi_{\le}(x,y)=1-\operatorname{sgn}(x\dotminus y)$, bo $x\dotminus y=0$ dokładnie wtedy, gdy $x\le y$.
+\item Zbiór liczb pierwszych: $\chi_{\mathrm{pr}}(x)=1$, gdy $x>1$ i żadna liczba $2\le d<x$ nie dzieli $x$; warunek wyrażalny ograniczonym kwantyfikatorem $\forall d<x$, więc też p.r.
+\end{itemize}
+Widać wspólny wzorzec: „tak/nie” kodujemy jako $1/0$, a logiczne spójniki odwzorowujemy na operacje arytmetyczne ($\land$ odpowiada mnożeniu, $\neg$ odpowiada $1-(\cdot)$).
+\end{przyklad}
+
+\begin{definicja}[Funkcje częściowo rekurencyjne i rekurencyjne]\label{res:5:5}
+Funkcja częściowa $f:\mathbb N^k\rightharpoonup\mathbb N$ może nie mieć wartości dla niektórych argumentów. Piszemy $f(\vec n)\downarrow=m$, gdy wartość istnieje i wynosi $m$, oraz $f(\vec n)\uparrow$, gdy nie istnieje.
+
+Klasa funkcji \emph{częściowo rekurencyjnych} powstaje z funkcji bazowych z Definicji~\ref{res:5:1} przez złożenie, rekursję prostą i \emph{minimalizację}:
+\[
+(\mu g)(\vec x)\downarrow=y\quad\Longleftrightarrow\quad
+g(\vec x,y)\downarrow=0\ \text{oraz}\ (\forall z<y)\ g(\vec x,z)\downarrow\ne0.
+\]
+Przy złożeniu i rekursji wynik istnieje tylko wtedy, gdy istnieją wszystkie wartości potrzebne do jego obliczenia. Funkcję częściowo rekurencyjną określoną dla wszystkich argumentów nazywamy \emph{rekurencyjną} (\emph{totalną obliczalną}).
+
+Zbiór $R\subseteq\mathbb N^k$ jest \emph{rekurencyjny} (\emph{rozstrzygalny}), gdy $\chi_R$ jest funkcją totalną rekurencyjną. Jest \emph{rekurencyjnie przeliczalny} (\emph{efektywnie wyliczalny}), gdy stanowi dziedzinę funkcji częściowo rekurencyjnej.
+\end{definicja}
+
+\begin{uwaga}[Czym $\mu g$ różni się od $\min\{\cdots\}$]\label{res:5:6}
+Jeśli $\mu y\,[g(\vec x,y)=0]$ jest określone, jego wartość równa się $\min\{y\in\mathbb N:g(\vec x,y)=0\}$ --- to faktycznie najmniejszy argument zerujący $g$. Dla częściowego $g$ samo istnienie tego minimum nie gwarantuje jednak określoności $\mu g$. Znaczenie ma również sposób wyznaczania wyniku:
+\begin{itemize}
+\item Zwykłe $\min\{\cdots\}$ to statyczny zapis teoriomnogościowy: „weź najmniejszy element tego zbioru”. Milczy o tym, jak ów element znaleźć, i ma sens także wtedy, gdy zbioru nie da się efektywnie przeszukać.
+\item Operator $\mu$ to przepis obliczeniowy (procedura): $y\gets0$; dopóki $g(\vec x,y)\ne0$, wykonuj $y\gets y+1$; zwróć $y$. Sprawdzamy kolejno $y=0,1,2,\ldots$ i zatrzymujemy się na pierwszym trafieniu. Dlatego $\mu$ zachowuje obliczalność.
+\end{itemize}
+\emph{Totalność a ograniczoność przeszukiwania.} Gdy $g$ jest totalna, pętla kończy się na danym wejściu dokładnie wtedy, gdy istnieje zero. Gdy $g$ jest częściowa, może utknąć już przy obliczaniu wcześniejszej wartości $g(\vec x,z)$, nawet jeśli późniejsze $g(\vec x,y)$ wynosi zero. Na przykład przy $g(\vec x,0)\uparrow$ i $g(\vec x,1)=0$ zbiór zer ma minimum $1$, ale procedura $\mu g$ utknie już na argumencie $0$.
+
+Jeśli test jest totalny i zero istnieje na każdym wejściu, otrzymana funkcja jest totalna obliczalna. Samo zakończenie każdego obliczenia nie gwarantuje pierwotnej rekurencyjności. Jeśli test i z góry znane ograniczenie przeszukiwania są p.r., ograniczona minimalizacja również jest p.r. (Lemat~\ref{res:5:8}). Nieograniczona minimalizacja pozwala wyjść poza klasę p.r., także wtedy, gdy wynikowa funkcja jest totalna. Brak zakończenia nie jest jedyną różnicą między tymi klasami.
+
+\emph{Umowa notacyjna:} gdy piszemy $\mu y\,[W(y)]$ dla warunku $W$, rozumiemy przez to $\mu y\,[\chi_{\neg W}(y)=0]$, tj. najmniejsze $y$ spełniające $W$ (funkcja charakterystyczna, Def.~\ref{res:5:2}, tłumaczy „warunek” na „zerowanie funkcji”).
+\end{uwaga}
+
+\begin{przyklad}[Operator $\mu$ w działaniu]\label{res:5:7}
+Funkcja „część całkowita pierwiastka” $\lfloor\sqrt x\rfloor$ to $\mu y\,[(y+1)^2>x]$, czyli najmniejsze $y$, dla którego $(y+1)^2$ przekracza $x$. Dla $x=10$ dostajemy $y=3$ (bo $4^2=16>10$, a $3^2=9\le10$). Ten przykład pokazuje typową rolę $\mu$: „szukaj najmniejszego świadka spełniającego warunek”. Tutaj można ograniczyć przeszukiwanie przez $y\le x$, bo $(x+1)^2>x$. Test i ograniczenie są p.r., więc funkcja jest p.r. Nie wystarczyłoby samo stwierdzenie, że dla każdego wejścia przeszukiwanie kiedyś się kończy.
+\end{przyklad}
+
+\begin{lemat}[Zamkniętość p.r.]\label{res:5:8}
+Klasa funkcji pierwotnie rekurencyjnych zawiera dodawanie, mnożenie, potęgowanie, funkcję poprzednika, obciętą różnicę $\dotminus$, oraz jest zamknięta ze względu na definicje przez przypadki z warunkami p.r., ograniczone kwantyfikatory oraz ograniczoną minimalizację relacji p.r.
+\end{lemat}
+\begin{proof}
+Dodawanie definiują $x+0=x$, $x+S(y)=S(x+y)$; mnożenie --- $x\cdot0=0$, $x\cdot S(y)=x\cdot y+x$; potęgowanie --- $x^0=1$, $x^{S(y)}=x^y\cdot x$. Są to kolejne zastosowania rekursji prostej. Poprzednik jest przykładem rekursji prostej z $k=0$: $\operatorname{pd}(0)=Z^0=0$ i $\operatorname{pd}(S(y))=P_1^2(y,\operatorname{pd}(y))=y$. Stała $1$ jest złożeniem $S\circ Z^0$. Obcięta różnica $x\dotminus0=x$, $x\dotminus S(y)=\operatorname{pd}(x\dotminus y)$.
+
+Niech $r(\vec x,y)\in\{0,1\}$ będzie p.r. funkcją charakterystyczną relacji $R$. Ograniczone sumy i iloczyny są p.r. przez rekursję po liczbie składników. Stąd
+\[
+\chi_{\forall y<n\,R(\vec x,y)}=\prod_{y<n}r(\vec x,y),\qquad
+\chi_{\exists y<n\,R(\vec x,y)}=1-\prod_{y<n}(1-r(\vec x,y)).
+\]
+Iloczyn pusty wynosi $1$. Definicję przez dwa przypadki zapisujemy jako $\chi_R f+(1-\chi_R)g$. Najmniejsze $y\le n$ spełniające $R$, z wartością zastępczą $n+1$ przy braku świadka, jest równe
+\[
+\sum_{j=0}^{n}\prod_{i=0}^{j}(1-r(\vec x,i)).
+\]
+Jeśli pierwszym trafieniem jest $y$, dokładnie pierwszych $y$ iloczynów wynosi $1$; jeśli trafienia nie ma, wszystkie $n+1$ iloczynów wynoszą $1$. To daje ograniczoną minimalizację bez użycia nieograniczonego $\mu$.
+
+Dla $d>0$ relacja $d\mid x$ ma postać $\exists q\le x\,(dq=x)$, a iloraz i resztę znajdujemy przez ograniczone przeszukiwanie; dla $d=0$ ustalamy wartość zastępczą $0$. Własność bycia liczbą pierwszą jest zatem p.r. Również $i$-ta liczba pierwsza jest p.r. dla $i\ge1$: zaczynamy od $p_1=2$, a $p_{i+1}$ wyznaczamy jako najmniejszą liczbę pierwszą w przedziale od $p_i+1$ do $p_i!+1$. Ten przedział zawiera liczbę pierwszą, ponieważ każdy dzielnik pierwszy $p_i!+1$ jest większy od $p_i$ i nie przekracza $p_i!+1$. Test pierwszości i ograniczone przeszukiwanie są p.r., a silnia jest p.r. jako ograniczony iloczyn. Zatem rekursja wyznaczająca $p_{i+1}$ jest pierwotna rekurencyjna.
+\end{proof}
+
+\section{Numeracja Gödla}\label{sec:numeracja-godla}
+\begin{definicja}[Kod Gödla]\label{res:6:1}
+Ustalamy skończony alfabet symboli innych niż zmienne (dla języka $\mathcal L_{\mathrm{ar}}$) i efektywne, różnowartościowe kodowanie: tym symbolom przypisujemy kody $1,\ldots,b-1$, gdzie $b\ge2$, a zmiennej $v_i$ kod $b+i$ dla $i\in\N$. Dzięki temu test poprawności kodu pojedynczego symbolu, rozpoznawanie jego rodzaju i odzyskiwanie indeksu zmiennej są p.r. Ciągowi symboli $s_1\ldots s_k$ przypisujemy liczbę
+\[
+\ulcorner s_1\ldots s_k\urcorner=\prod_{i=1}^k p_i^{\operatorname{kod}(s_i)+1},
+\]
+gdzie $p_i$ jest $i$-tą liczbą pierwszą. Kod pustego napisu wynosi $1$, a $0$ nie jest kodem napisu. Poprawny kod ma dodatnie wykładniki dokładnie przy początkowym odcinku liczb pierwszych, bez luk. Dowolny ciąg liczb kodujemy przez
+\[
+\langle a_1,\ldots,a_k\rangle=\prod_{i=1}^k p_i^{a_i+1}.
+\]
+Przesunięcie o $1$ pozwala kodować także zera. Te konstrukcje iterujemy dla ciągów wierszy dowodu i konfiguracji obliczenia. Operacje na niepoprawnych kodach mają ustalone wartości zastępcze, np. $0$, dzięki czemu są funkcjami totalnymi.
+\end{definicja}
+
+\begin{definicja}[Skończone obliczenie rejestrowe]\label{res:6:2}
+Program używa ustalonej skończonej liczby $d\ge1$ rejestrów $r_0,\ldots,r_{d-1}$ z liczbami naturalnymi i niepustej, skończonej listy numerowanych instrukcji. Wskazujemy instrukcję początkową; wszystkie numery rejestrów i adresy skoków muszą należeć do odpowiednich zakresów. Dopuszczamy:
+\begin{itemize}
+\item $\operatorname{Inc}(i,j)$: zwiększ $r_i$ o $1$ i przejdź do instrukcji $j$;
+\item $\operatorname{Dec}(i,j,k)$: jeśli $r_i=0$, przejdź do $j$; w przeciwnym razie zmniejsz $r_i$ o $1$ i przejdź do $k$;
+\item $\operatorname{Halt}$: zakończ, zwracając zawartość $r_0$.
+\end{itemize}
+Konfiguracja to numer bieżącej instrukcji i zawartości wszystkich $d$ rejestrów. Po zatrzymaniu umownie konfiguracja pozostaje niezmieniona. Na wejściu $\vec x\in\N^k$, gdzie $k\le d$, rejestry $r_0,\ldots,r_{k-1}$ zawierają odpowiednie argumenty, a pozostałe zawierają $0$. Ślad obliczenia to skończony ciąg konfiguracji zaczynający się od tej konfiguracji początkowej, w którym każda następna wynika z poprzedniej zgodnie z programem. Ślad zakończonego obliczenia kończy się w stanie $\operatorname{Halt}$. Zapis listy instrukcji i konfiguracji kodujemy liczbami naturalnymi jak w Definicji~\ref{res:6:1}.
+\end{definicja}
+
+\begin{lemat}[Programy i funkcje częściowo rekurencyjne]\label{res:6:3}
+Funkcje obliczane przez powyższe programy są dokładnie funkcjami częściowo rekurencyjnymi. Weryfikacja podanego skończonego śladu jest p.r.
+\end{lemat}
+\begin{proof}
+\emph{Od definicji rekurencyjnej do programu.} Wyzerowanie rejestru wykonujemy przez pętlę zmniejszania. Zawartość rejestru kopiujemy, przenosząc ją do dwóch rejestrów pomocniczych i odtwarzając oryginał z jednego z nich. Daje to funkcje bazowe. Złożenie wykonujemy przez kolejne wywołania programów dla argumentów, z rozłącznymi rejestrami roboczymi, a następnie programu funkcji zewnętrznej. Przy rekursji prostej najpierw obliczamy $g(\vec x)$, potem wykonujemy pętlę z licznikiem $i=0,\ldots,y-1$, zastępując bieżący wynik $z$ przez $h(\vec x,i,z)$. W minimalizacji wywołujemy kolejno program $g(\vec x,0),g(\vec x,1),\ldots$ i kończymy na pierwszym zerze. Jeśli wywołanie nie kończy się, nie przechodzimy do następnego argumentu. To dokładnie konwencja z Definicji~\ref{res:5:5}.
+
+\emph{Od programu do funkcji rekurencyjnej.} Jednokrokowe przejście zakodowanej konfiguracji jest p.r.: najpierw odczytujemy numer instrukcji i zawartość wskazanego rejestru, wykonujemy jeden ze skończenie wielu rodzajów operacji, a następnie ponownie kodujemy konfigurację. Dla ustalonego programu jest to złożenie funkcji p.r.; wersję jednostajną, w której kod programu jest dodatkowym argumentem, otrzymujemy przez odczyt instrukcji z jej kodu. Konfigurację po $t$ krokach definiujemy rekursją prostą po $t$. Minimalizacja wybiera pierwszy moment zatrzymania, a odczyt $r_0$ zwraca wynik. Gdy zatrzymania nie ma, funkcja pozostaje nieokreślona. Weryfikacja podanego śladu sprawdza kod programu, konfigurację początkową, każdą parę kolejnych konfiguracji i końcowy stan; liczba sprawdzeń jest ograniczona długością zakodowanego śladu. Uzasadnijmy p.r. charakter kodowania niezależnie od późniejszego Lematu~\ref{res:6:5}: dla kodu $n>0$ wykładnik $p_i$ w $n$ znajdujemy przez ograniczone sprawdzenie podzielności $p_i^k\mid n$ dla $k\le n$; liczbę składników ciągu i poprawność kodu również rozpoznajemy przez ograniczone przeszukiwanie $i\le n$ i odtworzenie iloczynu. Liczby pierwsze $p_i$, ograniczone iloczyny i test podzielności są p.r. na mocy Lematu~\ref{res:5:8}. Zmiana jednego rejestru, wybór następnej instrukcji i zapis zmienionej krotki sprowadzają się zatem do skończonych złożeń tych funkcji. Sprawdzanie kolejnych pozycji śladu jest ograniczonym iloczynem wartości odpowiedniego testu. Dzięki temu nie korzystamy z Lematu~\ref{res:6:5} jako przesłanki dowodu równoważności programów i funkcji częściowo rekurencyjnych; ten późniejszy lemat rozwija niezależnie kontrolę składni i gotowych dowodów. Nie poszukujemy tutaj czasu zatrzymania.
+\end{proof}
+
+\begin{uwaga}[Wyliczanie a półrozstrzyganie]\label{res:6:4}
+Jeżeli $A$ jest dziedziną programu, symulujemy etapami program na wszystkich wejściach: w etapie $s$ wykonujemy $s$ kroków na wejściach $0,\ldots,s$ i wypisujemy te, na których nastąpiło zatrzymanie. Każdy element $A$ pojawi się po skończonym czasie. Odwrotnie, program na wejściu $n$ może czekać, aż wyliczenie wypisze $n$. Zatrzyma się dokładnie dla $n\in A$. Dla krotek używamy kodowania ciągów. To uzasadnia równoważność dwóch opisów zbioru rekurencyjnie przeliczalnego, także gdy zbiór jest pusty.
+\end{uwaga}
+
+\begin{lemat}[Rekurencyjność składni]\label{res:6:5}
+Następujące zbiory i funkcje są pierwotnie rekurencyjne:
+\begin{enumerate}[label=(\alph*)]
+\item zbiór liczb Gödla poprawnych termów;
+\item zbiór liczb Gödla poprawnych formuł;
+\item totalna funkcja $\operatorname{sub}(f,x,n)$ zwracająca kod formuły powstałej z poprawnej formuły o kodzie $f$ przez zastąpienie wolnych wystąpień zmiennej o poprawnym kodzie $x$ numerałem $\overline n$; dla niepoprawnych danych jej wartością jest $0$;
+\item dla efektywnie aksjomatyzowalnej teorii $T$ relacja $\operatorname{Prov}_T(p,f)$: „$p$ koduje poprawny dowód formuły o kodzie $f$ wraz ze świadectwami pochodzenia użytych aksjomatów”.
+\end{enumerate}
+\end{lemat}
+\begin{proof}
+\emph{Odczyt i sklejanie.} Dla $n>0$ wykładnik $p_i$ w $n$ jest najmniejszym $k\le n$, dla którego $p_i^{k+1}\nmid n$. Dla poprawnego kodu długość otrzymujemy jako liczbę kolejnych początkowych liczb pierwszych dzielących $n$. Dla dowolnego $n$ sprawdzamy dodatkowo, czy iloczyn potęg odtworzony z odczytanych wykładników jest równy $n$; wyklucza to luki i nieoczekiwane dalsze czynniki. Wyszukiwanie wykładników i długości ograniczamy przez $n$ (dla $n=1$ otrzymujemy kod pustego ciągu), natomiast dla $n=0$ stosujemy wartość zastępczą. Wszystkie te operacje są p.r. na mocy Lematu~\ref{res:5:8}. Konkatenacja kodów $m,n$ to odpowiednie przesunięcie indeksów liczb pierwszych w rozkładzie $n$, możliwe przez ograniczone iloczyny. Podciąg, dołączenie elementu i odczyt wiersza dowodu mają ten sam charakter.
+
+\emph{Rozpoznawanie gramatyki.} Dla napisu długości $\ell$ tworzymy tablicę wszystkich jego podnapisów. Przechodzimy kolejno po długościach $1,\ldots,\ell$. Dla danego podnapisu sprawdzamy skończenie wiele podziałów na bezpośrednie składniki z Definicji~\ref{def:syntax-term} lub~\ref{def:syntax-formula}, korzystając wyłącznie z wcześniej obliczonych wpisów tablicy. Jest co najwyżej $\ell^2$ podnapisów, a liczba podziałów jest ograniczona funkcją p.r. od $\ell$. Kod tablicy aktualizujemy rekursją prostą. To ważne uzupełnienie: sama rekurencyjna definicja „podformuły są formułami” nie dowodzi jeszcze pierwotnej rekurencyjności testu poprawności.
+
+\emph{Podstawienie.} Korzystając z drzewa rozbioru, przechodzimy po pozycjach napisu i zaznaczamy zasięgi kwantyfikatorów wiążących daną zmienną. Wolne wystąpienia zastępujemy napisem $S^n(0)$, inne pozostawiamy. Numerał jest domknięty, więc nie grozi przechwycenie jego zmiennych. Długość wyniku jest ograniczona przez $\ell(3n+1)$ przy zapisie $S(\cdot)$ z nawiasami; każda czynność i sklejenie kodów są p.r. Tak samo otrzymujemy funkcje $\operatorname{neg}(f)$ i $\operatorname{imp}(f,g)$.
+
+\emph{Dowody z certyfikatami.} Wyliczenie aksjomatów zastępujemy programem, który na wejściu $a$ czeka, aż pojawi się aksjomat o kodzie $a$, i wtedy zwraca $1$ (Uwaga~\ref{res:6:4}). Przez \emph{efektywnie aksjomatyzowalną} rozumiemy tutaj teorię o rekurencyjnie przeliczalnym zbiorze aksjomatów pozalogicznych, przy ustalonym, efektywnym systemie reguł logiki pierwszego rzędu. Jest to program częściowo rekurencyjny, więc może mieć postać rejestrową z Definicji~\ref{res:6:2}. Wiersz dowodu zawiera kod formuły, rodzaj uzasadnienia i odpowiednie dane: instancję schematu logicznego, numery wcześniejszych przesłanek albo skończony ślad akceptacji aksjomatu pozalogicznego przez ten program. Nie rozstrzygamy, czy program kiedyś się zatrzyma: sprawdzamy już podany ślad. To jest nasze „świadectwo pochodzenia z wyliczenia”. Ślady, modus ponens, generalizacja i warunki dotyczące zmiennych wymagają wyłącznie ograniczonych testów na zakodowanym drzewie lub liście dowodu, łącznie ze sprawdzeniem zakresów rozładowanych założeń, jeśli używamy dedukcji naturalnej. Liczba wierszy oraz długości dołączonych świadectw nie przekraczają danych odczytanych z całego kodu $p$. Testy mają ograniczenia i funkcje aktualizacji p.r.; dlatego $\operatorname{Prov}_T(p,f)$ jest p.r. dla przyjętego kodu dowodu.
+
+Każdy zwykły dowód można uzupełnić o certyfikaty: występuje w nim tylko skończenie wiele aksjomatów, a każdy zostaje kiedyś wypisany. Usunięcie certyfikatów daje zwykły dowód. Mamy więc dokładnie
+\[
+T\vdash\varphi\quad\Longleftrightarrow\quad\exists p\in\mathbb N\ \operatorname{Prov}_T(p,\ulcorner\varphi\urcorner).
+\]
+Bez certyfikatów rozstrzygalne, lecz nie p.r. sprawdzanie aksjomatów dawałoby jedynie rekurencyjność relacji dowodu. Ograniczone kwantyfikatory nie zmieniają funkcji rekurencyjnej w funkcję p.r.
+\end{proof}
+
+\begin{uwaga}[Dlaczego świadectwo akceptacji jest częścią kodu?]
+Dla teorii z rozstrzygalnym zbiorem aksjomatów można po prostu
+sprawdzić, czy dany wiersz jest aksjomatem. Dla teorii o aksjomatach
+\emph{jedynie wyliczalnych} taki test mógłby nie kończyć się na
+napisie, który aksjomatem nie jest. Dlatego do \emph{gotowego dowodu}
+dołączamy skończony zapis obliczenia potwierdzający, że aksjomat
+został wypisany. Weryfikator nie uruchamia wtedy nieograniczonego
+poszukiwania: sprawdza konkretne przejścia skończonego śladu.
+W szczególności zapis „relacja dowodu jest pierwotnie rekurencyjna”
+dotyczy przyjętego \emph{pełnego kodu dowodu}, zawierającego te
+certyfikaty, a nie dowolnie ustalonego surowego zapisu wierszy.
+\end{uwaga}
+
+\begin{przyklad}[Sprawdzenie dowodu a poszukiwanie dowodu]\label{res:6:6}
+Sprawdzenie $\operatorname{Prov}_T(p,f)$ jest jak sprawdzanie gotowego rozwiązania: mając na papierze cały dowód (kod $p$), mechanicznie weryfikujemy linijka po linijce, że każdy krok jest dozwolony --- to skończona, ograniczona robota, stąd rekurencyjność. Natomiast pytanie $\exists p\,\operatorname{Prov}_T(p,f)$ każe znaleźć dowód wśród nieskończenie wielu kandydatów $p$. Nieograniczony kwantyfikator egzystencjalny nie zachowuje w ogólności rozstrzygalności: gdy dowód istnieje, przeszukiwanie kiedyś go znajdzie (stąd rekurencyjna przeliczalność), ale gdy nie istnieje --- szukanie może trwać w nieskończoność. To rozróżnienie „ograniczone a nieograniczone przeszukiwanie” jest sednem różnicy między zbiorem rekurencyjnym a rekurencyjnie przeliczalnym.
+\end{przyklad}
+
+\begin{definicja}[Predykat dowodliwości]\label{res:6:7}
+Niech $T$ będzie efektywnie aksjomatyzowalną teorią w języku arytmetyki. Definiujemy $\operatorname{Bew}_T(x):=\exists p\,\operatorname{Prf}_T(p,x)$, gdzie $\operatorname{Prf}_T$ jest formułą arytmetyczną reprezentującą relację $\operatorname{Prov}_T$; jej standardowy wybór skonstruujemy po dowodzie reprezentowalności (Lemat~\ref{res:7:7}). Odróżniamy zatem relację na rzeczywistych liczbach $\operatorname{Prov}_T$ od formuły $\operatorname{Prf}_T$, którą można umieścić pod znakiem $T\vdash$. Obie wersje zgadzają się w $\mathfrak N$. Zbiór kodów zdań dowodliwych jest rekurencyjnie przeliczalny, jako rzut relacji rekurencyjnej; nierozstrzygalność w rozpatrywanych niesprzecznych rozszerzeniach $Q$ uzasadnimy osobno w dalszym rozdziale o niezupełności.
+\end{definicja}
+
+% Rozdział 7, strony 14--17.
+
+
+\section{Jak odróżnić kod napisu od samego napisu?}
+\begin{przyklad}[Pełny rachunek kodu dla trzech znaków]
+Niech $a,b$ będą dwoma różnymi symbolami o kodach odpowiednio $1,2$,
+zgodnie z Definicją~\ref{res:6:1}. Wówczas napis $aba$ otrzymuje kod
+\[
+\ulcorner aba\urcorner=2^{1+1}\cdot3^{2+1}\cdot5^{1+1}=2700.
+\]
+Z rozkładu $2700=2^2\cdot3^3\cdot5^2$ odzyskujemy
+kolejno wykładniki $2,3,2$; odejmując od każdego $1$,
+otrzymujemy kody znaków $1,2,1$. Jest to więc
+operacja jednoznaczna, a nie nadanie napisowi znaczenia
+arytmetycznego: liczba $2700$ nie \emph{jest} napisem $aba$,
+lecz ustalonym kodem, z którego napis można odtworzyć.
+\end{przyklad}
+\begin{uwaga}[Przejście do rozdziału następnego]
+W tym rozdziale skonstruowaliśmy arytmetyczne kody
+formuł i dowodów oraz pokazaliśmy, w jakim sensie
+kontrola gotowego kodu jest algorytmiczna. W dalszej
+części skryptu pokażemy, jak umieszczać te kontrole
+wewnątrz formuł arytmetycznych.
+\end{uwaga}

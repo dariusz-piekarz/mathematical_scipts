@@ -1,0 +1,964 @@
+\chapter{Dyskretne równanie Lapunowa i stabilność Schura}
+\label{ch:lin23-discrete-lyapunov}
+\index{równanie Steina@Równanie Steina}
+\index{równanie Lapunowa!dyskretne}
+\index{stabilność Schura@Stabilność Schura}
+\index{promień spektralny@Promień spektralny}
+
+\noindent\textbf{Cel rozdziału.}
+W Rozdziale~\ref{ch:lin22-sylvester}
+badaliśmy równanie ciągłe
+\(H^*P+PH=-Q\) i układ \(x'=Hx\).
+Dla układu dyskretnego
+\(x_{k+1}=Ax_k\) odpowiada mu
+inne równanie macierzowe:
+\(A^*PA-P=-Q\).
+Wykażemy, kiedy ma ono
+jednoznaczne rozwiązanie,
+jak wyrazić je za pomocą szeregu
+i dlaczego dodatnia określoność
+rozwiązania charakteryzuje stabilność.
+Porównamy dyskretyzację dokładną
+i metodę Eulera z dynamiką ciągłą.
+
+W całym rozdziale
+\(n\ge1\) jest liczbą całkowitą,
+a \(A,Q,P\) są macierzami stopnia \(n\)
+nad \(\mathbb C\), chyba że
+wyraźnie zaznaczono inne ciało.
+Symbol \(A^*\) oznacza
+macierz sprzężoną i transponowaną.
+Macierz hermitowska \(R=R^*\)
+jest \emph{dodatnio określona}, jeśli
+\(z^*Rz>0\) dla każdego
+\(z\in\mathbb C^n\setminus\{0\}\).
+Dla macierzy rzeczywistych
+\(A^*=A^{\mathsf T}\).
+
+\section{Promień spektralny i zanik potęg}
+\label{sec:lin23-schur}
+
+\begin{definicja}[Stabilność Schura]
+\label{def:lin23-schur}
+Niech \(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\).
+Przez \(\sigma(A)\) oznaczamy
+zbiór jej wartości własnych.
+Liczbę
+\[
+ \rho(A)=\max_{\lambda\in\sigma(A)}|\lambda|
+\]
+nazywamy \emph{promieniem spektralnym}.
+Macierz \(A\) nazywamy
+\emph{macierzą Schura},
+czyli \emph{spektralnie stabilną
+w czasie dyskretnym}, gdy
+\(\rho(A)<1\).
+\end{definicja}
+
+\begin{lemat}[Zanik potęg macierzy]
+\label{lem:lin23-powers}
+Dla każdej macierzy
+\(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\)
+następujące warunki są równoważne:
+\begin{enumerate}[label=\textup{(\roman*)}]
+ \item \(\rho(A)<1\);
+ \item \(A^k\to0\) dla \(k\to\infty\);
+ \item istnieją \(M>0\) i \(r\in(0,1)\)
+ takie, że
+ \(\|A^k\|\le Mr^k\) dla każdego
+ całkowitego \(k\ge0\),
+ gdzie \(\|\cdot\|\) jest normą
+ operatorową na \(\mathbb C^n\).
+\end{enumerate}
+Jeśli \(\rho(A)<1\), to
+w \textup{(iii)} można wybrać
+każde \(r\) spełniające
+\(\rho(A)<r<1\).
+\end{lemat}
+\begin{proof}
+Niech \(\rho(A)<1\).
+Z twierdzenia o postaci Jordana
+z Rozdziału~\ref{ch:lin17-jordan}
+otrzymujemy \(A=SJS^{-1}\),
+gdzie \(S\) jest odwracalna,
+a \(J\) stanowi sumę bloków
+\(J_d(\lambda)=\lambda I_d+N\)
+z \(N^d=0\).
+Ponieważ \(\lambda I_d\) i \(N\)
+przemieniają się, wzór dwumianowy
+daje dla każdego \(k\ge0\)
+\[
+ J_d(\lambda)^k
+ =\sum_{j=0}^{\min(k,d-1)}
+ {k\choose j}\lambda^{k-j}N^j.
+\]
+Jeśli \(\lambda=0\),
+z rozwinięcia dwumianowego wynika,
+że jedyny ewentualnie niezerowy
+składnik odpowiada \(j=k\).
+Czynnik \(\lambda^0\) oznacza
+wówczas \(1\), również dla
+\(\lambda=0\), zgodnie z
+konwencją \((\lambda I)^0=I\).
+Dlatego \(J_d(0)^k=N^k\),
+a dla \(k\ge d\) potęga znika.
+
+Wybierzmy liczby rzeczywiste
+\(\rho(A)<\delta<r<1\)
+z \(\delta>0\).
+Ponieważ \(j\le d-1\),
+dla każdego składnika sumy mamy
+\[
+ {k\choose j}|\lambda|^{k-j}
+ \le(1+k)^{d-1}\delta^{k-j}
+ \le\delta^{-(d-1)}
+       (1+k)^{d-1}\delta^k.
+\]
+Ciąg
+\((1+k)^{d-1}(\delta/r)^k\)
+jest ograniczony: iloraz kolejnych
+wyrazów dąży do \(\delta/r<1\),
+więc ciąg jest ostatecznie malejący.
+Stąd istnieje \(M_d>0\),
+dla którego
+\(\|J_d(\lambda)^k\|\le M_dr^k\).
+Bloków jest skończenie wiele;
+dla \(A^k=SJ^kS^{-1}\)
+otrzymujemy po powiększeniu
+stałej \(M\) oszacowanie (iii).
+
+Implikacja (iii) \(\Rightarrow\) (ii)
+wynika z \(r^k\to0\).
+Jeśli natomiast \(A^k\to0\)
+i \(Av=\lambda v\) dla \(v\ne0\),
+to \(\lambda^kv=A^kv\to0\).
+Wobec tego \(|\lambda|<1\).
+Dla wszystkich wartości własnych
+otrzymujemy (i).
+\end{proof}
+
+\begin{przyklad}[Niediagonalizowalny blok stabilny]
+\label{prz:lin23-jordan}
+Dla
+\[
+ A=\begin{pmatrix}a&1\\0&a\end{pmatrix},
+ \qquad a\in\mathbb C,
+\]
+zapis \(A=aI+N\), \(N^2=0\),
+daje dla \(k\ge1\)
+\[
+ A^k=\begin{pmatrix}
+ a^k&ka^{k-1}\\0&a^k
+ \end{pmatrix}.
+\]
+Gdy \(a=0\), element nadprzekątny
+jest równy \(1\) dla \(k=1\)
+oraz \(0\) dla \(k\ge2\).
+Jeżeli \(|a|<1\), oba niezerowe
+typy elementów dążą do zera.
+Macierz jest więc stabilna,
+mimo że nie jest diagonalizowalna.
+Dla \(|a|\ge1\)
+wektor \((1,0)^{\mathsf T}\)
+nie jest asymptotycznie tłumiony.
+\end{przyklad}
+
+\section{Równanie Steina i jego rozwiązanie}
+\label{sec:lin23-stein}
+
+\begin{definicja}[Dyskretne równanie Lapunowa]
+\label{def:lin23-stein}
+Dla macierzy
+\(A,Q\in\operatorname{Mat}_{n\times n}(\mathbb C)\)
+równanie
+\[
+ A^*PA-P=-Q
+\]
+o niewiadomej
+\(P\in\operatorname{Mat}_{n\times n}(\mathbb C)\)
+nazywamy \emph{dyskretnym
+równaniem Lapunowa}
+albo \emph{równaniem Steina}.
+Wprowadzamy endomorfizm przestrzeni
+macierzy
+\(\mathcal T_A(X)=A^*XA\)
+oraz \(\mathcal L_A=I-\mathcal T_A\).
+Równanie Steina jest równoważne
+równości \(\mathcal L_A(P)=Q\).
+\end{definicja}
+
+\begin{twierdzenie}[Twierdzenie Lapunowa w czasie dyskretnym]
+\label{thm:lin23-lyapunov}
+Dla każdej macierzy
+\(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\),
+gdzie \(n\ge1\),
+następujące warunki są równoważne:
+\begin{enumerate}[label=\textup{(\roman*)}]
+ \item \(\rho(A)<1\);
+ \item dla każdej hermitowskiej,
+ dodatnio określonej macierzy
+ \(Q\in\operatorname{Mat}_{n\times n}(\mathbb C)\)
+ równanie \(A^*PA-P=-Q\)
+ ma dokładnie jedno rozwiązanie
+ w całej przestrzeni macierzy
+ zespolonych, przy czym
+ rozwiązanie jest hermitowskie
+ i dodatnio określone;
+ \item istnieją hermitowskie,
+ dodatnio określone macierze
+ \(P,Q\in\operatorname{Mat}_{n\times n}(\mathbb C)\)
+ spełniające \(A^*PA-P=-Q\).
+\end{enumerate}
+Przy tych założeniach
+dla każdego \(Q\) z \textup{(ii)}
+jedyne rozwiązanie określa
+bezwzględnie zbieżny szereg
+\[
+ P=\sum_{k=0}^{\infty}(A^*)^kQA^k.
+\]
+\end{twierdzenie}
+\begin{proof}
+\emph{Implikacja (i) \(\Rightarrow\) (ii).}
+Załóżmy \(\rho(A)<1\)
+i wybierzmy dowolną hermitowską
+dodatnio określoną \(Q\).
+Z Lematu~\ref{lem:lin23-powers}
+otrzymujemy \(\|A^k\|\le Mr^k\)
+dla pewnych \(M>0\), \(0<r<1\).
+Ponieważ
+\(\|(A^*)^k\|=\|A^k\|\),
+mamy
+\[
+ \|(A^*)^kQA^k\|
+ \le M^2\|Q\|r^{2k}.
+\]
+Szereg geometryczny
+\(\sum_{k\ge0}r^{2k}\)
+jest zbieżny, a więc
+szereg macierzowy z tezy
+jest bezwzględnie zbieżny.
+Oznaczmy jego sumę przez \(P\).
+
+Każdy składnik jest hermitowski,
+gdyż
+\(((A^*)^kQA^k)^*
+ =(A^*)^kQ^*A^k\).
+Zatem \(P=P^*\).
+Dla każdego \(z\ne0\)
+\[
+ z^*Pz=\sum_{k=0}^{\infty}
+       (A^kz)^*Q(A^kz)
+ \ge z^*Qz>0.
+\]
+Nierówność jest ścisła dzięki
+wyrazowi \(k=0\);
+pozostałe wyrazy są nieujemne.
+Dowodzi to \(P>0\),
+niezależnie od odwracalności \(A\).
+
+Zbieżność bezwzględna pozwala
+pomnożyć szereg przez \(A^*\)
+i \(A\) oraz przesunąć indeks:
+\[
+ A^*PA=\sum_{k=1}^{\infty}
+       (A^*)^kQA^k=P-Q.
+\]
+Tak skonstruowane \(P\)
+spełnia równanie Steina.
+
+Niech \(P_1,P_2\) będą
+dowolnymi rozwiązaniami,
+niekoniecznie hermitowskimi.
+Ich różnica \(D=P_1-P_2\)
+spełnia \(A^*DA=D\).
+Indukcja daje
+\(D=(A^*)^kDA^k\);
+przez normowanie otrzymujemy
+\[
+ \|D\|\le M^2r^{2k}\|D\|.
+\]
+Przechodząc do granicy
+\(k\to\infty\), mamy
+\(\|D\|=0\), czyli \(D=0\).
+Stąd (ii).
+
+Implikacja (ii) \(\Rightarrow\) (iii)
+wynika z wyboru \(Q=I_n\).
+
+\emph{Implikacja (iii) \(\Rightarrow\) (i).}
+Niech \(P,Q\) będą dodatnio
+określone oraz
+\(A^*PA-P=-Q\).
+Dla dowolnej wartości własnej
+\(\lambda\in\sigma(A)\)
+wybierzmy \(v\ne0\)
+takie, że \(Av=\lambda v\).
+Wtedy
+\[
+ (|\lambda|^2-1)v^*Pv
+ =v^*(A^*PA-P)v
+ =-v^*Qv<0.
+\]
+Ponieważ \(v^*Pv>0\),
+wynika stąd \(|\lambda|<1\).
+Dotyczy to każdej wartości własnej,
+a zatem \(\rho(A)<1\).
+\end{proof}
+
+\begin{uwaga}[Singularne macierze stabilne]
+\label{rem:lin23-singular}
+Wyraz początkowy szeregu
+równa się \(Q\), toteż
+\(P\ge Q>0\) w porządku
+macierzy hermitowskich.
+Nie jest potrzebne założenie
+\(\det A\ne0\).
+Dotyczy to zwłaszcza
+macierzy nilpotentnych.
+\end{uwaga}
+
+\begin{przyklad}[Macierz nilpotentna]
+\label{prz:lin23-nilpotent}
+Dla
+\[
+ A=\begin{pmatrix}0&1\\0&0\end{pmatrix},
+ \qquad Q=I_2,
+\]
+mamy \(A^2=0\),
+a więc \(\rho(A)=0\).
+Szereg z
+Twierdzenia~\ref{thm:lin23-lyapunov}
+ma tylko dwa niezerowe składniki:
+\[
+ P=I_2+A^{\mathsf T}A
+ =\begin{pmatrix}1&0\\0&2\end{pmatrix}.
+\]
+Rzeczywiście,
+\(A^{\mathsf T}PA
+=\operatorname{diag}(0,1)\),
+więc \(A^{\mathsf T}PA-P=-I_2\).
+Jest to jedyne rozwiązanie.
+Dla \(x_0=(a,b)^{\mathsf T}\)
+otrzymujemy \(x_1=(b,0)^{\mathsf T}\),
+a następnie \(x_2=0\).
+\end{przyklad}
+
+\section{Spadek energii i tempo zbieżności}
+\label{sec:lin23-energy}
+
+\begin{twierdzenie}[Energia układu dyskretnego]
+\label{thm:lin23-energy}
+Niech \(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\)
+będzie macierzą Schura.
+Niech \(P,Q\) będą hermitowskimi,
+dodatnio określonymi macierzami,
+dla których \(A^*PA-P=-Q\).
+Dla dowolnego \(x_0\in\mathbb C^n\)
+i liczb całkowitych \(k\ge0\)
+zdefiniujmy
+\(x_k=A^kx_0\)
+oraz \(E_k=x_k^*Px_k\).
+Wtedy
+\[
+ E_{k+1}-E_k=-x_k^*Qx_k.
+\]
+Jeżeli \(x_k\ne0\),
+to \(E_{k+1}<E_k\).
+Jeżeli \(x_k=0\), to
+\(E_{k+1}=E_k=0\).
+Ponadto istnieje liczba
+\(\gamma\in[0,1)\),
+niezależna od \(x_0\),
+taka, że
+\[
+ 0\le E_k\le\gamma^kE_0
+ \qquad(k\ge0).
+\]
+W szczególności
+\(x_k\to0\) dla \(k\to\infty\).
+\end{twierdzenie}
+\begin{proof}
+Ponieważ \(x_{k+1}=Ax_k\),
+mamy
+\[
+ E_{k+1}-E_k
+ =x_k^*(A^*PA-P)x_k
+ =-x_k^*Qx_k.
+\]
+Dodatnia określoność \(Q\)
+daje ścisłą nierówność,
+gdy \(x_k\ne0\).
+Jeśli \(x_k=0\), to
+także \(x_{k+1}=0\)
+i obie energie znikają.
+
+Uzasadnimy oszacowanie
+geometryczne bez założenia
+odwracalności \(A\).
+Z twierdzenia spektralnego
+dla macierzy hermitowskich
+z Rozdziału~\ref{ch:lin14-spektralne}
+wynikają stałe
+\(q_{\min},p_{\min},p_{\max}>0\)
+takie, że
+\[
+ q_{\min}\|z\|_2^2\le z^*Qz,
+ \qquad
+ p_{\min}\|z\|_2^2
+ \le z^*Pz\le p_{\max}\|z\|_2^2
+\]
+dla każdego \(z\in\mathbb C^n\).
+Stąd
+\(z^*Qz\ge
+(q_{\min}/p_{\max})z^*Pz\).
+Połóżmy
+\(\eta=q_{\min}/p_{\max}>0\).
+Z równania Steina mamy
+\(P-Q=A^*PA\),
+a prawa strona jest
+nieujemnie określona,
+czyli \(z^*Qz\le z^*Pz\).
+Z połączenia tych nierówności
+dla dowolnego niezerowego \(z\)
+wynika \(0<\eta\le1\).
+Dlatego
+\(\gamma=1-\eta\in[0,1)\)
+i
+\[
+ E_{k+1}
+ =E_k-x_k^*Qx_k
+ \le(1-\eta)E_k=\gamma E_k.
+\]
+Indukcja prowadzi do
+\(E_k\le\gamma^kE_0\).
+Ponieważ
+\(p_{\min}\|x_k\|_2^2\le E_k\),
+dostajemy \(x_k\to0\).
+\end{proof}
+
+\begin{wniosek}[Suma rozpraszanej energii]
+\label{cor:lin23-energy-sum}
+Przy założeniach
+Twierdzenia~\ref{thm:lin23-energy}
+dla każdego \(x_0\in\mathbb C^n\)
+mamy
+\[
+ \sum_{k=0}^{\infty}x_k^*Qx_k
+ =x_0^*Px_0.
+\]
+\end{wniosek}
+\begin{proof}
+Sumując równości
+\(E_{k+1}-E_k=-x_k^*Qx_k\)
+dla \(k=0,\ldots,N\),
+otrzymujemy
+\[
+ \sum_{k=0}^{N}x_k^*Qx_k
+ =E_0-E_{N+1}.
+\]
+Ponieważ \(E_{N+1}\to0\)
+na mocy
+Twierdzenia~\ref{thm:lin23-energy},
+przejście do granicy
+daje tezę.
+\end{proof}
+
+\section{Jednoznaczność bez stabilności Schura}
+\label{sec:lin23-invertibility}
+
+\begin{twierdzenie}[Widmo operatora Steina]
+\label{thm:lin23-stein-spectrum}
+Niech
+\(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\)
+ma wartości własne
+\(\lambda_1,\ldots,\lambda_n\),
+z uwzględnieniem ich krotności
+algebraicznych.
+Niech
+\(\mathcal T_A(X)=A^*XA\)
+dla wszystkich
+\(X\in\operatorname{Mat}_{n\times n}(\mathbb C)\).
+Wielomian charakterystyczny
+tego endomorfizmu
+\(n^2\)-wymiarowej przestrzeni
+jest równy
+\[
+ \chi_{\mathcal T_A}(t)=
+ \prod_{i=1}^n\prod_{j=1}^n
+           (t-\overline{\lambda_i}\lambda_j).
+\]
+Następujące warunki są równoważne:
+\begin{enumerate}[label=\textup{(\roman*)}]
+ \item dla każdej macierzy \(Q\)
+ równanie \(A^*PA-P=-Q\)
+ ma dokładnie jedno rozwiązanie \(P\);
+ \item \(I-\mathcal T_A\)
+ jest odwracalnym endomorfizmem
+ przestrzeni macierzy;
+ \item dla wszystkich
+ \(i,j\in\{1,\ldots,n\}\)
+ zachodzi
+ \(\overline{\lambda_i}\lambda_j\ne1\).
+\end{enumerate}
+Warunki te nie implikują
+stabilności Schura ani
+dodatniej określoności
+rozwiązania dla \(Q>0\).
+\end{twierdzenie}
+\begin{proof}
+Z twierdzenia Schura z
+Rozdziału~\ref{ch:lin14-spektralne}
+istnieją macierz unitarna \(U\)
+i górnotrójkątna \(T\),
+dla których \(A=UTU^*\).
+Elementami diagonalnymi \(T\)
+są wartości własne
+\(\lambda_1,\ldots,\lambda_n\).
+Jeżeli \(X=UYU^*\), to
+\[
+ A^*XA=UT^*YT\,U^*.
+\]
+Izomorfizm
+\(X\mapsto U^*XU\)
+sprzęga zatem \(\mathcal T_A\)
+z operatorem
+\(\mathcal T_T(Y)=T^*YT\).
+
+Niech \(E_{ij}\)
+będzie jednostką macierzową.
+Z górnotrójkątności \(T\)
+wynika wzór
+\[
+ T^*E_{ij}T
+ =\sum_{p=i}^{n}\sum_{q=j}^{n}
+           \overline{T_{ip}}T_{jq}E_{pq}.
+\]
+Aby go uzasadnić, zauważmy,
+że współczynnik \((p,q)\)
+po lewej stronie jest równy
+\((T^*)_{pi}T_{jq}
+ =\overline{T_{ip}}T_{jq}\).
+Może być niezerowy tylko
+wtedy, gdy \(p\ge i\) i \(q\ge j\).
+Przy uporządkowaniu bazy
+\((E_{11},E_{12},\ldots,E_{nn})\)
+leksykograficznie względem par
+\((i,j)\), macierz \(\mathcal T_T\)
+jest trójkątna.
+Współczynnik diagonalny
+dla \(E_{ij}\) jest równy
+\(\overline{T_{ii}}T_{jj}
+ =\overline{\lambda_i}\lambda_j\).
+Wyznacznik macierzy trójkątnej
+jest iloczynem jej elementów
+diagonalnych; otrzymujemy
+podany wzór na wielomian
+charakterystyczny.
+
+Równanie Steina ma postać
+\((I-\mathcal T_A)(P)=Q\).
+Endomorfizm skończenie
+wymiarowej przestrzeni jest
+odwracalny dokładnie wtedy,
+gdy dla każdego \(Q\)
+ma dokładnie jeden przeciwobraz;
+to daje (i) \(\Leftrightarrow\) (ii).
+Z kolei (ii) oznacza,
+że \(1\) nie jest wartością
+własną \(\mathcal T_A\).
+Obliczony wielomian
+charakterystyczny daje
+równoważność z (iii).
+\end{proof}
+
+\begin{przyklad}[Jednoznaczność bez stabilności]
+\label{prz:lin23-unique-unstable}
+Niech
+\[
+ A=\operatorname{diag}(2,1/3),
+ \qquad Q=I_2.
+\]
+Iloczyny
+\(\overline{\lambda_i}\lambda_j\)
+są równe \(4\), \(2/3\),
+\(2/3\) oraz \(1/9\).
+Żaden nie jest równy \(1\).
+Z Twierdzenia~\ref{thm:lin23-stein-spectrum}
+równanie Steina ma dokładnie
+jedno rozwiązanie dla każdego \(Q\).
+Dla wybranego \(Q=I_2\)
+rozwiązanie ma postać
+\[
+ P=\operatorname{diag}(-1/3,9/8),
+\]
+gdyż jego elementy diagonalne
+spełniają
+\(3p_{11}=-1\)
+i \((-8/9)p_{22}=-1\);
+elementy pozadiagonalne
+muszą być zerowe, ponieważ
+\(2/3-1\ne0\).
+Macierz \(P\) nie jest
+dodatnio określona,
+bo \(e_1^*Pe_1=-1/3\).
+\end{przyklad}
+
+\begin{przyklad}[Rezonans i wiele rozwiązań]
+\label{prz:lin23-resonance}
+Niech
+\(A=\operatorname{diag}(2,1/2)\)
+i \(Q=I_2\).
+Ponieważ \(2\cdot(1/2)=1\),
+operator Steina nie jest
+odwracalny. Dla dowolnej
+macierzy \(P=(p_{ij})\)
+równanie daje
+\[
+ 3p_{11}=-1,\quad
+ 0p_{12}=0,\quad
+ 0p_{21}=0,\quad
+ -\tfrac34p_{22}=-1.
+\]
+Zatem wszystkie rozwiązania
+to macierze
+\[
+ P=\begin{pmatrix}
+ -1/3&u\\v&4/3
+ \end{pmatrix},\qquad u,v\in\mathbb C.
+\]
+W podrodzinie hermitowskiej
+\(v=\overline u\).
+Żadne rozwiązanie nie jest
+dodatnio określone,
+ponieważ \(p_{11}<0\).
+\end{przyklad}
+
+\section{Przykład z macierzą niebędącą normalną}
+\label{sec:lin23-example}
+
+\begin{przyklad}[Pełne rozwiązanie nad ciałem rzeczywistym]
+\label{prz:lin23-nonnormal}
+Niech \(K=\mathbb R\)
+oraz
+\[
+ A=\begin{pmatrix}
+ \frac12&\frac12\\
+ 0&\frac14
+ \end{pmatrix},\qquad Q=I_2.
+\]
+Macierz \(A\) jest górnotrójkątna.
+Jej wartości własne to
+\(1/2\) i \(1/4\),
+więc \(\rho(A)=1/2<1\).
+Nie jest ona normalna:
+element \((1,1)\) macierzy
+\(AA^{\mathsf T}\)
+wynosi \(1/2\), zaś
+element \((1,1)\)
+macierzy \(A^{\mathsf T}A\)
+wynosi \(1/4\).
+
+Szukamy symetrycznego
+rozwiązania w postaci
+\[
+ P=\begin{pmatrix}u&v\\v&w\end{pmatrix}.
+\]
+Po mnożeniu macierzy dostajemy
+\[
+ A^{\mathsf T}PA
+ =\begin{pmatrix}
+ \frac14u&
+ \frac14u+\frac18v\\
+ \frac14u+\frac18v&
+ \frac14u+\frac14v+\frac1{16}w
+ \end{pmatrix}.
+\]
+Równanie \(P-A^{\mathsf T}PA=I_2\)
+jest zatem równoważne układowi
+\[
+ \frac34u=1,\qquad
+ \frac78v=\frac14u,\qquad
+ \frac{15}{16}w
+ =1+\frac14u+\frac14v.
+\]
+Najpierw \(u=4/3\).
+Następnie
+\(v=\frac27u=8/21\).
+W końcu
+\[
+ w=\frac{16}{15}
+       \left(1+\frac13+\frac2{21}\right)
+   =\frac{32}{21}.
+\]
+Otrzymaliśmy macierz
+\[
+ P=\begin{pmatrix}
+ \frac43&\frac8{21}\\
+ \frac8{21}&\frac{32}{21}
+ \end{pmatrix}.
+\]
+Została ona wyznaczona
+w klasie macierzy symetrycznych;
+jej jednoznaczność w całej
+przestrzeni macierzy wynika
+z Twierdzenia~\ref{thm:lin23-lyapunov}.
+
+Sprawdzimy dodatnią określoność
+również nad \(\mathbb C\),
+nie tylko na wektorach
+o rzeczywistych współrzędnych.
+Dla \(z=(x,y)^{\mathsf T}\)
+mamy
+\[
+ z^*Pz
+ =\frac43\left|x+\frac27y\right|^2
+  +\frac{208}{147}|y|^2.
+\]
+Po rozwinięciu wyrazów
+modułów kwadratów
+współczynniki przy
+\(|x|^2\),
+\(\overline{x}y+\overline{y}x\)
+oraz \(|y|^2\) wynoszą
+odpowiednio
+\(4/3\), \(8/21\)
+oraz \(32/21\).
+Prawa strona jest dodatnia
+dla \(z\ne0\):
+z wyzerowania obu składników
+wynikałoby \(y=0\),
+a następnie \(x=0\).
+Dodatkowo
+\(\det P=832/441>0\),
+co jest zgodne z wynikiem.
+\end{przyklad}
+
+\section{Związek z czasem ciągłym}
+\label{sec:lin23-continuous}
+
+\begin{twierdzenie}[Dokładne próbkowanie]
+\label{thm:lin23-sampling}
+Niech
+\(H\in\operatorname{Mat}_{n\times n}(\mathbb C)\)
+i \(h>0\).
+Zdefiniujmy \(A_h=e^{hH}\).
+Równoważne są warunki:
+\begin{enumerate}[label=\textup{(\roman*)}]
+ \item
+ \(\operatorname{Re}\lambda<0\)
+ dla każdej \(\lambda\in\sigma(H)\);
+ \item \(A_h\) jest macierzą Schura
+ dla pewnego \(h>0\);
+ \item \(A_h\) jest macierzą Schura
+ dla każdego \(h>0\).
+\end{enumerate}
+Ponadto dla rozwiązania
+\(x'(t)=Hx(t)\) o początku
+\(x(0)=x_0\) zachodzi
+\[
+ x(kh)=A_h^kx_0\qquad(k\ge0).
+\]
+\end{twierdzenie}
+\begin{proof}
+Z postaci Jordana
+\(H=SJS^{-1}\) i własności
+wykładniczej macierzy
+z Rozdziału~\ref{ch:lin18-jordan-chevalley}
+otrzymujemy
+\(e^{hH}=Se^{hJ}S^{-1}\).
+Na bloku
+\(J_d(\lambda)=\lambda I+N\)
+z \(N^d=0\)
+mamy
+\[
+ e^{hJ_d(\lambda)}
+ =e^{h\lambda}
+   \sum_{j=0}^{d-1}\frac{h^j}{j!}N^j.
+\]
+Suma po prawej stronie
+jest górnotrójkątna
+z jedynkami na przekątnej,
+ponieważ \(N\) jest ściśle
+górnotrójkątna.
+Wartości własne
+\(e^{hJ_d(\lambda)}\)
+są więc wszystkie
+równe \(e^{h\lambda}\).
+Po złożeniu wszystkich bloków
+i podobieństwie przez \(S\)
+widzimy, że wartości własne \(A_h\)
+są dokładnie liczbami
+\(e^{h\lambda}\),
+z krotnościami algebraicznymi.
+
+Dla dowolnej
+\(\lambda\in\mathbb C\) i \(h>0\)
+zachodzi
+\(|e^{h\lambda}|
+ =e^{h\operatorname{Re}\lambda}\).
+Nierówność
+\(|e^{h\lambda}|<1\)
+jest równoważna
+\(\operatorname{Re}\lambda<0\)
+i nie zależy od wyboru
+dodatniego \(h\).
+To dowodzi równoważności
+(i)--(iii).
+
+Rozwiązaniem równania
+\(x'=Hx\) z początkiem \(x_0\)
+jest \(x(t)=e^{tH}x_0\).
+Ponieważ
+\(e^{khH}=(e^{hH})^k\),
+otrzymujemy
+\(x(kh)=A_h^kx_0\),
+co kończy dowód.
+\end{proof}
+
+\begin{stwierdzenie}[Stabilność jawnej metody Eulera]
+\label{prop:lin23-euler}
+Niech
+\(H\in\operatorname{Mat}_{n\times n}(\mathbb C)\)
+i \(h>0\).
+Macierz \(E_h=I_n+hH\)
+jest macierzą Schura
+dokładnie wtedy, gdy
+dla każdej
+\(\lambda\in\sigma(H)\)
+zachodzi
+\[
+ |1+h\lambda|<1,
+ \qquad\text{czyli}\qquad
+ 2\operatorname{Re}\lambda+h|\lambda|^2<0.
+\]
+Jeśli \(H\) jest spektralnie
+stabilna w czasie ciągłym,
+to \(E_h\) jest macierzą Schura
+dla wszystkich
+\[
+ 0<h<
+ \min_{\lambda\in\sigma(H)}
+     \frac{-2\operatorname{Re}\lambda}{|\lambda|^2}.
+\]
+Minimum to jest
+dodatnią liczbą rzeczywistą.
+\end{stwierdzenie}
+\begin{proof}
+Jeżeli \(Hv=\lambda v\)
+dla \(v\ne0\), to
+\((I_n+hH)v=(1+h\lambda)v\).
+Odwrotnie, z tożsamości
+\[
+ \det(zI_n-E_h)
+ =h^n\det\!\left(
+       \frac{z-1}{h}I_n-H\right)
+\]
+wynika, że każda wartość
+własna \(E_h\) powstaje
+z wartości własnej \(H\)
+w powyższy sposób.
+Z Definicji~\ref{def:lin23-schur}
+otrzymujemy pierwsze kryterium.
+
+Ponadto
+\[
+ |1+h\lambda|^2
+ =1+2h\operatorname{Re}\lambda
+     +h^2|\lambda|^2.
+\]
+Zatem \(|1+h\lambda|<1\)
+jest równoważne
+\(2h\operatorname{Re}\lambda
+ +h^2|\lambda|^2<0\).
+Dzieląc przez \(h>0\),
+dostajemy drugi warunek.
+
+Jeśli wszystkie części
+rzeczywiste wartości własnych
+\(H\) są ujemne, to żadna
+wartość własna nie jest zerem,
+a każda liczba
+\(-2\operatorname{Re}\lambda/|\lambda|^2\)
+jest ściśle dodatnia.
+Ponieważ zbiór wartości własnych
+jest skończony, jego minimum
+również jest dodatnie.
+Daje to ostatni wzór.
+\end{proof}
+
+\begin{przyklad}[Dokładny krok a jawny Euler]
+\label{prz:lin23-euler}
+Rozważmy równanie
+\(x'(t)=-2x(t)\),
+którego rozwiązaniem jest
+\(x(t)=e^{-2t}x_0\).
+Dokładne próbkowanie
+z dowolnym \(h>0\)
+prowadzi do mnożnika
+\(A_h=e^{-2h}\in(0,1)\).
+Układ dyskretny
+\(x_{k+1}=A_hx_k\)
+jest zatem stabilny
+dla każdego dodatniego kroku.
+
+Jawna metoda Eulera daje
+\(x_{k+1}=(1-2h)x_k\).
+Warunek \(|1-2h|<1\)
+jest równoważny \(0<h<1\).
+Dla \(h=1/2\) wektor
+zostaje wyzerowany
+po jednym kroku;
+dla \(h=1\) mnożnik
+wynosi \(-1\), więc
+trajektoria nie zanika;
+dla \(h=3/2\) mnożnik
+wynosi \(-2\) i moduł trajektorii
+rośnie geometrycznie.
+Stabilność ciągła nie zapewnia
+zatem stabilności dowolnego
+kroku jawnej metody Eulera.
+\end{przyklad}
+
+\begin{uwaga}[Nie mylić równań Lapunowa]
+\label{rem:lin23-compare}
+Dla dynamiki ciągłej
+\(x'=Hx\) właściwe jest
+równanie \(H^*P+PH=-Q\).
+Dla dynamiki dyskretnej
+\(x_{k+1}=Ax_k\)
+otrzymujemy \(A^*PA-P=-Q\).
+Pierwsze charakteryzuje
+\(\operatorname{Re}\sigma(H)<0\),
+drugie \(\rho(A)<1\).
+Suma \(H^*P+PH\) nie jest
+w tych zastosowaniach
+zamienna z iloczynem \(A^*PA\).
+\end{uwaga}
+
+\section{Podsumowanie}
+\label{sec:lin23-summary}
+
+Stabilność dyskretnego układu
+\(x_{k+1}=Ax_k\) jest równoważna
+\(\rho(A)<1\) oraz zanikowi \(A^k\).
+W tej sytuacji dyskretne
+równanie Lapunowa ma
+dla każdego \(Q=Q^*>0\)
+dokładnie jedno rozwiązanie
+\(P=P^*>0\), dane szeregiem
+\[
+ P=\sum_{k=0}^\infty(A^*)^kQA^k.
+\]
+Powiązana funkcja energii
+maleje wzdłuż niezerowych stanów
+i zapewnia zbieżność geometryczną.
+Jednoznaczność równania
+bez wymagania \(P>0\)
+ma słabsze kryterium:
+\(\overline{\lambda_i}\lambda_j\ne1\)
+dla każdej pary wartości własnych.
+Dokładne próbkowanie
+stabilnego układu ciągłego
+zachowuje stabilność,
+natomiast jawna metoda Eulera
+wymaga odpowiednio małego kroku.

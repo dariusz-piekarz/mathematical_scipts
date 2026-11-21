@@ -1,0 +1,117 @@
+name: Abstract algebra AA-01 to AA-16 validation
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "chapters/pl/abstract_algebra/**"
+      - "books/pl/abstract_algebra.tex"
+      - "catalog/books.json"
+      - "application/backend/latex_parser.py"
+      - "application/backend/generator.py"
+      - "application/config/preambles/AA.tex"
+      - "tools/tests/test_abstract_algebra_ch01.py"
+      - "tools/tests/test_abstract_algebra_ch02.py"
+      - "tools/tests/test_abstract_algebra_ch03.py"
+      - "tools/tests/test_abstract_algebra_ch04.py"
+      - "tools/tests/test_abstract_algebra_ch05.py"
+      - "tools/tests/test_abstract_algebra_ch06.py"
+      - "tools/tests/test_abstract_algebra_ch07.py"
+      - "tools/tests/test_abstract_algebra_ch08.py"
+      - "tools/tests/test_abstract_algebra_ch09.py"
+      - "tools/tests/test_abstract_algebra_ch10.py"
+      - "tools/tests/test_abstract_algebra_ch11.py"
+      - "tools/tests/test_abstract_algebra_ch12.py"
+      - "tools/tests/test_abstract_algebra_ch13.py"
+      - "tools/tests/test_abstract_algebra_ch14.py"
+      - "tools/tests/test_abstract_algebra_ch15.py"
+      - "tools/tests/test_abstract_algebra_ch16.py"
+      - ".github/workflows/abstract-algebra-chapter.yml"
+  workflow_dispatch:
+
+jobs:
+  validate-cli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate chapter dependencies
+        run: python tools/audit_chapter_dependencies.py
+      - name: Report pre-existing global repository validation findings
+        continue-on-error: true
+        run: python tools/validate_repository.py
+      - name: Run repository tool tests
+        run: python -m unittest discover -s tools/tests -v
+      - name: Run abstract-algebra regression tests
+        run: python -m unittest tools.tests.test_abstract_algebra_ch01 -v
+      - name: Run AA-02 regression tests
+        run: python -m unittest tools.tests.test_abstract_algebra_ch02 -v
+      - name: Run AA-03 regression tests
+        run: python -m unittest tools.tests.test_abstract_algebra_ch03 -v
+      - name: Run AA-04 mathematical regression tests
+        run: python -m unittest tools.tests.test_abstract_algebra_ch04 -v
+      - name: Run AA-05 regression tests
+        run: python -m unittest tools.tests.test_abstract_algebra_ch05 -v
+      - name: Run AA-06 mathematical regression tests
+        run: python -m unittest tools.tests.test_abstract_algebra_ch06 -v
+      - name: Run AA-07 regression tests
+        run: python -m unittest tools.tests.test_abstract_algebra_ch07 -v
+      - name: Run AA-08 mathematical regression tests
+        run: python -m unittest tools.tests.test_abstract_algebra_ch08 -v
+      - name: Run AA-09 regression tests
+        run: python -m unittest tools.tests.test_abstract_algebra_ch09 -v
+      - name: Run AA-10 mathematical regression tests
+        run: python -m unittest tools.tests.test_abstract_algebra_ch10 -v
+      - name: Run AA-11 mathematical regression tests
+        run: python -m unittest tools.tests.test_abstract_algebra_ch11 -v
+      - name: Run AA-12 mathematical regression tests
+        run: python -m unittest tools.tests.test_abstract_algebra_ch12 -v
+      - name: Run AA-13 mathematical regression tests
+        run: python -m unittest tools.tests.test_abstract_algebra_ch13 -v
+      - name: Run AA-14 mathematical regression tests
+        run: python -m unittest tools.tests.test_abstract_algebra_ch14 -v
+      - name: Run AA-15 mathematical regression tests
+        run: python -m unittest tools.tests.test_abstract_algebra_ch15 -v
+      - name: Run AA-16 mathematical regression tests
+        run: python -m unittest tools.tests.test_abstract_algebra_ch16 -v
+      - name: Compile AA-01 to AA-16 book with latexmk
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: abstract_algebra.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Verify PDF and references (allow documented AA-18 forward ref only)
+        shell: bash
+        run: |
+          test -s books/pl/abstract_algebra.pdf
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          log = Path("books/pl/abstract_algebra.log").read_text(errors="replace")
+          unresolved = set(re.findall(
+              r"LaTeX Warning: Reference `([^']+)' on page \d+ undefined", log
+          ))
+          future = {
+              "aa:ch:module-tensor-product",
+          }
+          unexpected = unresolved - future
+          if unexpected:
+              raise SystemExit("Unexpected undefined references: " + repr(sorted(unexpected)))
+          if "There were undefined references." in log and not unresolved:
+              raise SystemExit("Unparsed undefined references in the LaTeX log")
+          if re.search(r"LaTeX Warning: Citation .+ undefined", log):
+              raise SystemExit("Undefined citation found")
+          if unresolved:
+              print("Documented forward reference to AA-18:", sorted(unresolved))
+              print("These links will resolve when the future chapters enter the stable book.")
+          PY
+      - name: Archive build output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: abstract-algebra-aa01-aa16
+          path: |
+            books/pl/abstract_algebra.pdf
+            books/pl/abstract_algebra.log
+          if-no-files-found: warn

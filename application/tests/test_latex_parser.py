@@ -1,5 +1,6 @@
 """Testy funkcjonalne parsera i bazy. Uruchom: python -m unittest discover -s tests -v"""
 from pathlib import Path
+from contextlib import closing
 import sys
 import tempfile
 import unittest
@@ -94,14 +95,14 @@ class DatabaseTests(unittest.TestCase):
         self.assertEqual(report["references"],1)
         self.assertEqual(report["missing_references"],0)
         self.assertEqual(report["cross_document_edges"],1)
-        with connect(self.path) as c:
+        with closing(connect(self.path)) as c:
             self.assertEqual(graph_edges(c)[0]["source_document"], "TOP-00")
             self.assertIn("Własność", show_label(c,"tw:alg")["latex"])
             self.assertTrue(search(c,"Algebra"))
 
     def test_plan_external_reference(self):
         build_database(self.folder, self.path)
-        with connect(self.path) as c:
+        with closing(connect(self.path)) as c:
             plan = analyze_selection(c,["TOP-00"])
             self.assertEqual(plan["external_references"],1)
             self.assertEqual(plan["internal_references"],0)

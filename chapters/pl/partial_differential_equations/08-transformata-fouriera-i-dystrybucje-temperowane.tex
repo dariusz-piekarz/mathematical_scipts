@@ -1,0 +1,691 @@
+\chapter[Transformata Fouriera i dystrybucje temperowane]{Transformata Fouriera, przestrzeń Schwartza i dystrybucje temperowane}
+\label{chap:pde-fourier-Rd}
+
+Rozdział~\ref{chap:pde-distributions} pozwolił różniczkować funkcje
+niegładkie i rozwiązywać równania o stałych współczynnikach za pomocą
+rozwiązań fundamentalnych. Transformata Fouriera realizuje komplementarny
+pomysł: zamienia pochodne na mnożenie przez wielomiany. Na całej
+$\R^d$ nie możemy jednak bez zastrzeżeń używać klasycznej transformaty
+całkowej dla wszystkich dystrybucji. Potrzebujemy więc przestrzeni
+Schwartza $\mathcal S(\R^d)$ i jej przestrzeni dualnej $\mathcal S'(\R^d)$.
+
+W całym rozdziale $d\ge1$, całki na $\R^d$ są liczone względem
+miary Lebesgue'a $\lambda_d$, a wielowskaźniki należą do $\N_0^d$.
+Przyjmujemy \emph{nieunitarną} konwencję
+\begin{equation}\label{eq:pde8-convention}
+ \widehat f(\xi)=\mathcal F f(\xi)
+ =\int_{\R^d}e^{-ix\cdot\xi}f(x)\,\mathrm d\lambda_d(x),\qquad
+ \mathcal F^{-1}g(x)=(2\pi)^{-d}
+ \int_{\R^d}e^{ix\cdot\xi}g(\xi)\,\mathrm d\lambda_d(\xi).
+\end{equation}
+Współczynniki $(2\pi)^{-d}$ zależą od konwencji i nie będą
+pomijane. W szczególności nie będziemy bez przeliczenia używać
+wzorów wyprowadzonych dla transformaty unitarnej.
+Nie należy też utożsamiać tej transformaty całkowej na $\R^d$
+z dyskretnymi współczynnikami szeregów Fouriera z
+rozdziału~\ref{chap:pde-fourier}: te ostatnie są uśredniane
+przez czynnik $(2\pi)^{-d}$.
+
+\section{Przestrzeń Schwartza: po co wymagać szybkiego zaniku?}
+\label{sec:pde8-schwartz}
+
+\begin{definicja}[Przestrzeń Schwartza]
+\label{def:pde8-schwartz}
+Przestrzenią Schwartza na $\R^d$ nazywamy
+\[
+ \mathcal S(\R^d)=\bigl\{f\in C^\infty(\R^d;\C):
+ p_{\alpha,\beta}(f):=\sup_{x\in\R^d}
+ |x^\alpha\partial^\beta f(x)|<\infty
+ \ \text{dla wszystkich }\alpha,\beta\in\N_0^d\bigr\}.
+\]
+Wyposażamy ją w topologię wyznaczoną przez przeliczalną rodzinę
+półnorm $p_{\alpha,\beta}$. Zbieżność $f_n\to f$ w $\mathcal S$
+oznacza zbieżność do zera wszystkich półnorm $p_{\alpha,\beta}(f_n-f)$.
+\end{definicja}
+
+Warunek ten mówi, że funkcja i wszystkie jej pochodne zanikają szybciej
+niż dowolna odwrotność wielomianu. Funkcja $e^{-|x|^2}$ należy do
+$\mathcal S$, podobnie każda funkcja z $C_c^\infty$; natomiast
+$(1+|x|^2)^{-1}$ na ogół nie należy do $\mathcal S$.
+
+\begin{lemat}[Równoważne półnormy i operacje]
+\label{lem:pde8-seminorms}
+Dla $N,m\in\N_0$ połóżmy
+$q_{N,m}(f)=\max_{|\beta|\le m}\sup_x(1+|x|)^N|\partial^\beta f(x)|$.
+Rodzina $q_{N,m}$ określa tę samą topologię co $p_{\alpha,\beta}$.
+Operator $f\mapsto x_jf$ oraz $f\mapsto\partial_j f$ jest ciągły
+$\mathcal S\to\mathcal S$. Ponadto $\mathcal S(\R^d)\subset L^1\cap L^2$.
+\end{lemat}
+\begin{proof}
+Każdy monomian $|x^\alpha|$ jest nie większy niż
+$(1+|x|)^{|\alpha|}$, a $(1+|x|)^N$ można oszacować sumą
+skończonej liczby $|x^\alpha|$ dla $|\alpha|\le N$, z odpowiednią
+stałą zależną od $N,d$. Stąd równoważność rodzin półnorm.
+Reguła Leibniza pokazuje, że półnorma pochodnej $x_jf$ jest
+kontrolowana przez skończoną sumę półnorm $f$; dla pochodnej
+$\partial_jf$ jest to natychmiastowe. Wybierając $N>d$, mamy
+$|f(x)|\le q_{N,0}(f)(1+|x|)^{-N}$, co daje całkowalność.
+Dla $L^2$ wystarcza $2N>d$.
+\end{proof}
+
+\begin{twierdzenie}[Gęstość funkcji o zwartym nośniku]
+\label{thm:pde8-density}
+Przestrzeń $C_c^\infty(\R^d)$ jest gęsta w $\mathcal S(\R^d)$.
+Jest też gęsta w $L^p(\R^d)$ dla $1\le p<\infty$.
+\end{twierdzenie}
+\begin{proof}
+Weźmy $\chi\in C_c^\infty(\R^d)$ taką, że
+$\chi=1$ na $B_1(0)$ i $\chi=0$ poza $B_2(0)$.
+Dla $f\in\mathcal S$ definiujemy $f_R(x)=\chi(x/R)f(x)$.
+Różniczkując $(1-\chi(x/R))f(x)$, dostajemy wyrazy
+zawierające $R^{-|\gamma|}\partial^\gamma\chi(x/R)
+\partial^{\beta-\gamma}f(x)$, o nośnikach w $|x|\ge R$.
+Każdy taki wyraz, pomnożony przez $x^\alpha$, ma supremum
+dążące do zera: wybieramy półnormę $f$ z potęgą
+$(1+|x|)^{|\alpha|+1}$ (lub większą) i korzystamy z
+$|x|\ge R$. Zatem $f_R\to f$ w $\mathcal S$.
+Gęstość w $L^p$ uzyskujemy najpierw przez obcinanie funkcji
+$L^p$, potem wygładzanie przybliżoną jedynką z
+rozdziału~\ref{chap:pde-distributions}; obie aproksymacje
+są zbieżne w normie $L^p$.
+\end{proof}
+
+\section{Transformata Fouriera na przestrzeni Schwartza}
+\label{sec:pde8-transform}
+
+\begin{twierdzenie}[Różniczkowanie i mnożenie]
+\label{thm:pde8-rules}
+Jeżeli $f\in\mathcal S(\R^d)$, to $\widehat f\in\mathcal S(\R^d)$
+oraz dla każdego $\alpha\in\N_0^d$
+\begin{equation}\label{eq:pde8-rules}
+ \mathcal F(\partial^\alpha f)(\xi)=(i\xi)^\alpha\widehat f(\xi),
+ \qquad \mathcal F(x^\alpha f)(\xi)=i^{|\alpha|}
+ \partial_\xi^\alpha\widehat f(\xi).
+\end{equation}
+Ponadto $\mathcal F:\mathcal S\to\mathcal S$ jest ciągła.
+\end{twierdzenie}
+\begin{proof}
+Ponieważ $f$ wraz z pochodnymi zanika szybko, całkowanie przez
+części nie wytwarza składników brzegowych. Dla pierwszej tożsamości:
+$\widehat{\partial_jf}=i\xi_j\widehat f$.
+Drugą otrzymujemy przez różniczkowanie pod całką:
+$\partial_{\xi_j}\widehat f=\int_{\R^d}(-ix_j)e^{-ix\cdot\xi}f(x)
+\,\mathrm d\lambda_d(x)$.
+Powtarzając te operacje otrzymujemy
+$\xi^\alpha\partial_\xi^\beta\widehat f$
+jako kombinację transformat pochodnych funkcji
+$x^\beta f$. Każdą taką transformatę szacujemy przez
+normę $L^1$ odpowiedniej funkcji, a tę przez skończoną sumę
+półnorm Schwartza za pomocą lematu~\ref{lem:pde8-seminorms}.
+Daje to jednocześnie szybki zanik $\widehat f$ i ciągłość
+odwzorowania $\mathcal F$ w topologii $\mathcal S$.
+\end{proof}
+
+\begin{stwierdzenie}[Lemat Riemanna--Lebesgue'a]
+\label{prop:pde8-RL}
+Jeśli $f\in L^1(\R^d)$, to $\widehat f$ jest ograniczona,
+ciągła i $\widehat f(\xi)\to0$ przy $|\xi|\to\infty$.
+\end{stwierdzenie}
+\begin{proof}
+Oszacowanie $|\widehat f(\xi)|\le\|f\|_{L^1}$ jest natychmiastowe.
+Ciągłość wynika ze zbieżności zdominowanej. Dla
+$g\in C_c^\infty$ poprzednie twierdzenie daje zanik
+$\widehat g$. Ponieważ $C_c^\infty$ jest gęsta w $L^1$,
+a $\|\widehat f-\widehat g\|_\infty\le\|f-g\|_1$,
+przenosimy zanik na $f$.
+\end{proof}
+
+\section{Transformata funkcji Gaussa i wzór odwrócenia}
+\label{sec:pde8-inversion}
+
+\begin{lemat}[Transformata funkcji Gaussa]
+\label{lem:pde8-gauss}
+Dla $a>0$ i $x,\xi\in\R^d$ zachodzi
+\begin{equation}\label{eq:pde8-gauss}
+ \mathcal F(e^{-a|x|^2})(\xi)
+ =\left(\frac\pi a\right)^{d/2}e^{-|\xi|^2/(4a)}.
+\end{equation}
+\end{lemat}
+\begin{proof}
+W wymiarze jeden funkcja
+$I(\xi)=\int_\R e^{-ax^2}e^{-ix\xi}\,\mathrm d\lambda_1(x)$
+spełnia po różniczkowaniu pod całką i całkowaniu przez części
+$I'(\xi)=-\xi I(\xi)/(2a)$.
+Ponieważ $I(0)=\sqrt{\pi/a}$ (klasyczna całka Gaussa),
+otrzymujemy $I(\xi)=\sqrt{\pi/a}\,e^{-\xi^2/(4a)}$.
+W $d$ wymiarach stosujemy twierdzenie Fubiniego.
+\end{proof}
+
+\begin{twierdzenie}[Odwrócenie transformaty]
+\label{thm:pde8-inversion}
+Dla $f\in\mathcal S(\R^d)$ zachodzi
+\[
+ f(x)=(2\pi)^{-d}\int_{\R^d}e^{ix\cdot\xi}
+ \widehat f(\xi)\,\mathrm d\lambda_d(\xi),\qquad x\in\R^d.
+\]
+Zatem $\mathcal F$ jest topologicznym automorfizmem
+$\mathcal S(\R^d)$, którego odwrotność podano w
+\eqref{eq:pde8-convention}.
+\end{twierdzenie}
+\begin{proof}
+Niech $\varepsilon>0$. Rozważmy funkcję
+\[
+ I_\varepsilon(x)=(2\pi)^{-d}\int_{\R^d}
+ e^{ix\cdot\xi}e^{-\varepsilon|\xi|^2/2}
+ \widehat f(\xi)\,\mathrm d\lambda_d(\xi).
+\]
+Funkcja podcałkowa jest całkowalna, więc wolno podstawić
+wzór na $\widehat f$ i zamienić kolejność całkowania.
+Na mocy lematu~\ref{lem:pde8-gauss} dostajemy
+$I_\varepsilon=f*G_\varepsilon$, gdzie
+$G_\varepsilon(z)=(2\pi\varepsilon)^{-d/2}
+ e^{-|z|^2/(2\varepsilon)}$.
+Ponieważ $G_\varepsilon$ jest przybliżoną jedynką,
+$f*G_\varepsilon(x)\to f(x)$ (dla każdej ustalonej $x$,
+a nawet jednostajnie w $x$, dzięki jednostajnej ciągłości $f$).
+Z drugiej strony $\widehat f\in L^1$, zatem zdominowana
+zbieżność przy $\varepsilon\downarrow0$ daje
+$I_\varepsilon(x)\to(2\pi)^{-d}
+\int_{\R^d}e^{ix\cdot\xi}\widehat f(\xi)\,\mathrm d\lambda_d(\xi)$.
+To dowodzi wzoru. Równoważne wzory dla transformaty
+odwrotnej wynikają przez podstawienie $\xi\mapsto-\xi$.
+Ciągłość obu operatorów w $\mathcal S$ wynika z
+oszacowań dowodu twierdzenia~\ref{thm:pde8-rules}.
+\end{proof}
+
+\begin{wniosek}[Wzory na splot i iloczyn]
+\label{cor:pde8-convolution}
+Dla $f,g\in\mathcal S(\R^d)$ mamy
+\[
+ \widehat{f*g}=\widehat f\,\widehat g,\qquad
+ \widehat{fg}=(2\pi)^{-d}(\widehat f*\widehat g).
+\]
+\end{wniosek}
+\begin{proof}
+Pierwsza równość wynika z podstawienia $z=x-y$ oraz Fubiniego.
+Druga: wstawiamy wzór odwrócenia dla $g$ do całki
+definiującej $\widehat{fg}$, a następnie stosujemy Fubiniego.
+Wszystkie użyte funkcje i ich transformaty należą do $L^1$.
+\end{proof}
+
+\section[Twierdzenie Plancherela i przestrzeń L2]{Twierdzenie Plancherela i przestrzeń $L^2$}
+\label{sec:pde8-plancherel}
+
+\begin{twierdzenie}[Tożsamość Parsevala--Plancherela]
+\label{thm:pde8-plancherel}
+Dla $f,g\in\mathcal S(\R^d)$ zachodzi
+\begin{equation}\label{eq:pde8-parseval}
+ \int_{\R^d}f(x)\overline{g(x)}\,\mathrm d\lambda_d(x)
+ =(2\pi)^{-d}\int_{\R^d}\widehat f(\xi)
+ \overline{\widehat g(\xi)}\,\mathrm d\lambda_d(\xi).
+\end{equation}
+Transformata Fouriera przedłuża się w sposób jednoznaczny do
+przekształcenia ciągłego $\mathcal F:L^2(\R^d)\to L^2(\R^d)$,
+dla którego $\|\widehat f\|_2=(2\pi)^{d/2}\|f\|_2$.
+Przekształcenie $(2\pi)^{-d/2}\mathcal F$ jest unitarne
+na $L^2(\R^d)$.
+\end{twierdzenie}
+\begin{proof}
+Ze wzoru odwrócenia dla $g$ mamy
+$\overline{g(x)}=(2\pi)^{-d}\int_{\R^d}e^{-ix\cdot\xi}
+\overline{\widehat g(\xi)}\,\mathrm d\lambda_d(\xi)$.
+Mnożymy przez $f(x)$, całkujemy po $x$ i stosujemy
+Fubiniego (iloczyn norm $L^1$ jest skończony), co daje
+\eqref{eq:pde8-parseval}. Dla $f=g$ otrzymujemy równość norm.
+Gęstość $\mathcal S$ w $L^2$ pozwala przedłużyć
+$(2\pi)^{-d/2}\mathcal F$ do izometrii na całym $L^2$.
+Jej obraz jest domknięty, ponieważ $L^2$ jest zupełna;
+zarazem zawiera $\mathcal F(\mathcal S)=\mathcal S$, zbiór gęsty.
+Zatem obraz jest całym $L^2$, czyli przedłużenie jest unitarne.
+\end{proof}
+
+\begin{uwaga}[Właściwe znaczenie całki dla $L^2$]
+Jeśli $f\in L^2\setminus L^1$, zapis $\widehat f$ oznacza
+powyższe przedłużenie operatora, a nie automatycznie
+zbieżną całkę z \eqref{eq:pde8-convention}.
+Na przykład funkcja $f(x)=(1+|x|)^{-3/4}$ na $\R$ należy
+do $L^2$, lecz nie do $L^1$.
+\end{uwaga}
+
+\section[Dystrybucje temperowane]{Dystrybucje temperowane: przestrzeń dualna do $\mathcal S$}
+\label{sec:pde8-tempered}
+
+\begin{definicja}[Dystrybucja temperowana]
+\label{def:pde8-tempered}
+Przestrzenią dystrybucji temperowanych $\mathcal S'(\R^d)$
+nazywamy przestrzeń dualną, złożoną ze wszystkich ciągłych
+funkcjonałów liniowych $T:\mathcal S(\R^d)\to\C$.
+Zbieżność $T_n\to T$ w sensie dystrybucji temperowanych
+oznacza zbieżność $\langle T_n,\varphi\rangle\to
+\langle T,\varphi\rangle$ dla każdej $\varphi\in\mathcal S$.
+\end{definicja}
+
+\begin{twierdzenie}[Globalne oszacowanie dystrybucji temperowanej]
+\label{thm:pde8-growth}
+Funkcjonał liniowy $T$ na $\mathcal S(\R^d)$ jest ciągły
+dokładnie wtedy, gdy istnieją $C>0$ i $N,m\in\N_0$ takie, że
+\begin{equation}\label{eq:pde8-growth}
+ |\langle T,\varphi\rangle|\le C\,q_{N,m}(\varphi)
+ \qquad(\varphi\in\mathcal S(\R^d)).
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Ciągłość w zerze oznacza ograniczenie $|T(\varphi)|<1$
+na pewnym otoczeniu zdefiniowanym przez skończenie wiele
+półnorm $q_{N_j,m_j}$. Ponieważ rodzina $q_{N,m}$ jest
+monotoniczna względem obu indeksów, jedno $q_{N,m}$
+kontroluje je wszystkie. Skalowanie daje żądane oszacowanie.
+Odwrotna implikacja jest bezpośrednia z definicji topologii.
+\end{proof}
+
+\begin{przyklad}[Obiekty temperowane i nietemperowane]
+\begin{enumerate}
+\item Każda funkcja $f$ spełniająca $|f(x)|\le C(1+|x|)^M$
+(nawet tylko lokalnie całkowalna, z oszacowaniem p.w.)
+określa element $\mathcal S'$ przez całkowanie. Należą tu
+wielomiany, stałe i funkcje ograniczone.
+\item Każda delta $\delta_a$ i jej pochodne należą do $\mathcal S'$.
+\item Każda dystrybucja o zwartym nośniku należy do $\mathcal S'$:
+po odcięciu testu funkcją równą $1$ w otoczeniu nośnika
+lokalne oszacowanie z rozdziału~\ref{chap:pde-distributions}
+przechodzi w globalne oszacowanie \eqref{eq:pde8-growth}.
+\item Dystrybucja regularna wyznaczona przez $e^{|x|^2}$
+na $\R^d$ \emph{nie} jest temperowana. Gdyby przedłużała
+się do ciągłego funkcjonału na $\mathcal S$, testy
+$\chi(x/R)e^{-|x|^2/2}$ dążyłyby w $\mathcal S$ do
+$e^{-|x|^2/2}$, ale ich wartości na tym funkcjonale
+rosłyby do $+\infty$. Sprzeczność z ciągłością.
+\end{enumerate}
+\end{przyklad}
+
+\begin{uwaga}[Relacja między $\mathcal D'$ a $\mathcal S'$]
+Ograniczenie funkcjonału z $\mathcal S'$ do
+$C_c^\infty(\R^d)$ jest dystrybucją. Jest to odwzorowanie
+iniektywne, bo $C_c^\infty$ jest gęsta w $\mathcal S$.
+Nie każda dystrybucja na $\R^d$ jest temperowana.
+W szczególności zapis $\mathcal F T$ dla dowolnego
+$T\in\mathcal D'$ wymaga dodatkowych założeń i
+nie ma automatycznie sensu w opisanym rachunku.
+\end{uwaga}
+
+\section{Transformata Fouriera dystrybucji temperowanych}
+\label{sec:pde8-fourier-distributions}
+
+\begin{definicja}[Transformata na $\mathcal S'$]
+\label{def:pde8-distFT}
+Dla $T\in\mathcal S'(\R^d)$ definiujemy $\widehat T\in\mathcal S'(\R^d)$
+przez \emph{transpozycję} operatora $\mathcal F$:
+\[
+ \langle\widehat T,\varphi\rangle
+ =\langle T,\widehat\varphi\rangle,
+ \qquad\varphi\in\mathcal S(\R^d).
+\]
+Analogicznie definiujemy $\mathcal F^{-1}T$ przez
+$\langle\mathcal F^{-1}T,\varphi\rangle
+=\langle T,\mathcal F^{-1}\varphi\rangle$.
+\end{definicja}
+
+\begin{twierdzenie}[Rachunek na $\mathcal S'$]
+\label{thm:pde8-dist-rules}
+Transformata $\mathcal F:\mathcal S'\to\mathcal S'$ jest
+liniowym automorfizmem, którego odwrotnością jest
+$\mathcal F^{-1}$. Dla $T\in\mathcal S'(\R^d)$ i
+$\alpha\in\N_0^d$ zachodzi
+\[
+ \mathcal F(\partial^\alpha T)=(i\xi)^\alpha\widehat T,
+ \qquad \mathcal F(x^\alpha T)=i^{|\alpha|}
+ \partial_\xi^\alpha\widehat T.
+\]
+\end{twierdzenie}
+\begin{proof}
+Ciągłość $\mathcal F:\mathcal S\to\mathcal S$ oraz
+jej odwrotności zapewnia, że transpozycje działają na
+przestrzeni dualnej. Kompozycja transpozycji odpowiada
+odwróceniu kolejności operatorów, więc
+$\mathcal F^{-1}\mathcal F T=T$ i $\mathcal F\mathcal F^{-1}T=T$.
+Dla pierwszej równości i testu $\varphi$ liczymy
+\[
+ \langle\widehat{\partial_jT},\varphi\rangle
+ =-\langle T,\partial_j\widehat\varphi\rangle
+ =\langle T,\widehat{i\xi_j\varphi}\rangle
+ =\langle i\xi_j\widehat T,\varphi\rangle.
+\]
+Dla drugiej korzystamy z $\widehat{\partial_{\xi_j}\varphi}
+=ix_j\widehat\varphi$ (w nazwach zmiennych odpowiednich
+obszarów) i z definicji pochodnej dystrybucyjnej;
+pozostałe przypadki otrzymujemy przez iterację.
+\end{proof}
+
+\begin{przyklad}[Cztery transformaty podstawowe]
+\label{ex:pde8-four}
+W $\mathcal S'(\R^d)$ zachodzą wzory
+\[
+ \widehat{\delta_0}=1,\quad
+ \widehat 1=(2\pi)^d\delta_0,\quad
+ \widehat{\delta_a}(\xi)=e^{-ia\cdot\xi},\quad
+ \mathcal F(e^{ia\cdot x})=(2\pi)^d\delta_a.
+\]
+Na przykład $\langle\widehat{\delta_0},\varphi\rangle
+=\widehat\varphi(0)=\int_{\R^d}\varphi(x)\,\mathrm d\lambda_d(x)$,
+a $\widehat1=(2\pi)^d\delta_0$ wynika z odwrócenia
+transformaty i symetrii przestrzeni Schwartza.
+Równości po prawej należy rozumieć \emph{dystrybucyjnie},
+a nie jako zwykłe całki bezwzględnie zbieżne.
+\end{przyklad}
+
+\begin{twierdzenie}[Splot dystrybucji temperowanej z funkcją Schwartza]
+\label{thm:pde8-convol-temp}
+Niech $T\in\mathcal S'(\R^d)$ i $\varphi\in\mathcal S(\R^d)$.
+Funkcja $(T*\varphi)(x):=\langle T(y),\varphi(x-y)\rangle$
+jest gładka, ma wzrost co najwyżej wielomianowy
+(wraz z każdą ustaloną pochodną) i wyznacza dystrybucję
+temperowaną. Ponadto
+$\mathcal F(T*\varphi)=\widehat T\,\widehat\varphi$ w $\mathcal S'$.
+\end{twierdzenie}
+\begin{proof}
+Dla $x\in\R^d$ funkcja $y\mapsto\varphi(x-y)$ należy do
+$\mathcal S$. Różniczkowanie względem $x$ odbywa się
+w topologii $\mathcal S$, a więc jest dozwolone po
+zastosowaniu $T$. Z \eqref{eq:pde8-growth} oraz nierówności
+$(1+|y|)^N\le(1+|x|)^N(1+|x-y|)^N$ wynika
+$|\partial_x^\alpha(T*\varphi)(x)|\le C_\alpha(1+|x|)^N$.
+Dla dowodu tożsamości Fouriera ustalmy
+$\psi\in\mathcal S(\R^d)$. Z definicji transformaty
+dystrybucyjnej i splotu otrzymujemy
+\[
+ \langle\mathcal F(T*\varphi),\psi\rangle
+ =\left\langle T(y),\int_{\R^d}
+ \varphi(x-y)\widehat\psi(x)\,\mathrm d\lambda_d(x)
+ \right\rangle.
+\]
+Całka wewnętrzna jest funkcją Schwartza zmiennej $y$.
+Istotnie, przed całkowaniem jej półnormy Schwartza
+szacujemy za pomocą skończonej sumy półnorm $\varphi$
+pomnożonych przez potęgi $(1+|x|)$, całkowalne
+przeciwko $|\widehat\psi(x)|\,\mathrm d\lambda_d(x)$.
+Uzasadnia to zamianę całkowania z działaniem ciągłego
+funkcjonału $T$, np. przez przybliżenie całki sumami
+Riemanna w topologii $\mathcal S$.
+Po podstawieniu $z=x-y$ i użyciu wzoru
+$\widehat\psi(x)=\int_{\R^d}e^{-ix\cdot\xi}\psi(\xi)
+\,\mathrm d\lambda_d(\xi)$ liczymy, stosując Fubiniego,
+\[
+ \int_{\R^d}\varphi(x-y)\widehat\psi(x)
+ \,\mathrm d\lambda_d(x)
+ =\int_{\R^d}e^{-iy\cdot\xi}\widehat\varphi(\xi)
+ \psi(\xi)\,\mathrm d\lambda_d(\xi)
+ =\mathcal F(\widehat\varphi\,\psi)(y).
+\]
+Stąd $\langle\mathcal F(T*\varphi),\psi\rangle
+=\langle T,\mathcal F(\widehat\varphi\psi)\rangle
+=\langle\widehat T,\widehat\varphi\psi\rangle$,
+czyli $\mathcal F(T*\varphi)=\widehat T\,\widehat\varphi$.
+W szczególności nie pojawia się dodatkowy czynnik
+$(2\pi)^{-d}$: w naszej konwencji dotyczy on
+transformaty \emph{iloczynu} funkcji, a nie splotu.
+\end{proof}
+
+\section{Mnożniki Fouriera: kiedy operator jest ograniczony?}
+\label{sec:pde8-multipliers}
+
+\begin{twierdzenie}[Mnożnik w $L^2$]
+\label{thm:pde8-multiplier}
+Niech $m:\R^d\to\C$ będzie funkcją mierzalną i
+istotnie ograniczoną. Dla $f\in L^2(\R^d)$ istnieje dokładnie
+jedna funkcja $T_mf\in L^2(\R^d)$ spełniająca
+$\widehat{T_mf}=m\widehat f$ w sensie $L^2$.
+Operator $T_m$ jest liniowy i ograniczony oraz
+$\|T_m\|_{L^2\to L^2}=\|m\|_{L^\infty}$.
+\end{twierdzenie}
+\begin{proof}
+Mnożenie przez $m$ jest ograniczone na $L^2$, a transformata
+Fouriera jest unitarnym operatorem z dokładnością do
+stałego czynnika, co daje istnienie, jednoznaczność i
+oszacowanie z góry. Dla dolnego oszacowania bierzemy
+$\widehat f$ proporcjonalną do funkcji charakterystycznej
+zbioru dodatniej i skończonej miary, na którym
+$|m|>\|m\|_\infty-\varepsilon$. Taki zbiór istnieje
+(po przecięciu z dostatecznie dużą kulą), a po
+$\varepsilon\downarrow0$ otrzymujemy równość norm.
+\end{proof}
+
+\begin{przyklad}[Transformata Riesza w $L^2$]
+Dla $1\le j\le d$ połóżmy
+$m_j(\xi)=-i\xi_j/|\xi|$ dla $\xi\ne0$ i $m_j(0)=0$.
+Poprzednie twierdzenie definiuje ograniczony operator
+$R_j=T_{m_j}:L^2\to L^2$, tzw. transformatę Riesza,
+z $\|R_j\|\le1$. Wartość mnożnika w pojedynczym punkcie
+nie zmienia operatora $L^2$. Ograniczoność w $L^p$ dla
+$p\ne2$ jest istotnie trudniejszym rezultatem teorii
+Calderóna--Zygmunda i nie wynika z samego warunku
+$m_j\in L^\infty$.
+\end{przyklad}
+
+\section{Zastosowanie I: równanie ciepła i równanie falowe}
+\label{sec:pde8-evolution}
+
+\begin{twierdzenie}[Rozwiązania ewolucyjne poprzez transformatę]
+\label{thm:pde8-evolution}
+Niech $\kappa,c>0$ i $f,g\in\mathcal S(\R^d)$.
+Wtedy funkcje
+\begin{align*}
+ u(t,x)&=\mathcal F^{-1}
+ \bigl(e^{-\kappa t|\xi|^2}\widehat f(\xi)\bigr)(x),&&t\ge0,\\
+ v(t,x)&=\mathcal F^{-1}\biggl(
+ \cos(ct|\xi|)\widehat f(\xi)
+ +\frac{\sin(ct|\xi|)}{c|\xi|}\widehat g(\xi)
+ \biggr)(x),&&t\in\R,
+\end{align*}
+gdzie iloraz w $\xi=0$ definiujemy przez wartość graniczną $t$,
+są gładkimi rozwiązaniami odpowiednio zagadnień
+$u_t-\kappa\Delta u=0$, $u(0,\cdot)=f$ oraz
+$v_{tt}-c^2\Delta v=0$, $v(0,\cdot)=f$, $v_t(0,\cdot)=g$.
+W każdym ustalonym czasie funkcje przestrzenne należą do $\mathcal S$.
+\end{twierdzenie}
+\begin{proof}
+Z reguły różniczkowania otrzymujemy po transformacji
+$\partial_t\widehat u=-\kappa|\xi|^2\widehat u$ oraz
+$\partial_{tt}\widehat v=-c^2|\xi|^2\widehat v$.
+Są to dla każdego $\xi$ zwyczajne równania różniczkowe
+z wskazanymi danymi początkowymi. Ich rozwiązania mają
+właśnie zapis z tezy. Mnożniki są gładkie w $\xi$:
+zwłaszcza $\sin(ct|\xi|)/(c|\xi|)$ ma rozwinięcie w szereg
+potęg $|\xi|^2$ w otoczeniu zera.
+Dla $t$ w dowolnym ograniczonym przedziale ich
+pochodne po $t$ i $\xi$ mają co najwyżej wielomianowy wzrost,
+stąd mnożą $\mathcal S$ w siebie. Uzasadnia to wszystkie
+różniczkowania i stosowanie odwrotnej transformaty.
+Wartości początkowe otrzymujemy przez podstawienie $t=0$.
+\end{proof}
+
+\begin{uwaga}[Dwie różne skale propagacji]
+Równanie ciepła działa w częstotliwościach przez
+$m_t(\xi)=e^{-\kappa t|\xi|^2}$: dla $t>0$ tłumi wysokie
+częstotliwości bardzo szybko. Równanie falowe używa
+$\cos(ct|\xi|)$ i $\sin(ct|\xi|)/(c|\xi|)$; nie ma
+analogicznego wygładzania wszystkich wysokich częstotliwości.
+To jest spektralna wersja zjawisk z rozdziałów
+\ref{chap:pde-heat} i~\ref{chap:pde-wave}.
+\end{uwaga}
+
+\section[Potencjały Bessela i przestrzenie Sobolewa]{Potencjały Bessela i pierwsze przestrzenie $H^s$}
+\label{sec:pde8-bessel}
+
+\begin{definicja}[Przestrzeń Sobolewa typu Bessela]
+\label{def:pde8-Hs}
+Dla dowolnego $s\in\R$ definiujemy
+\[
+ H^s(\R^d)=\bigl\{u\in\mathcal S'(\R^d):
+ (1+|\xi|^2)^{s/2}\widehat u\in L^2(\R^d)\bigr\}.
+\]
+Zapis przynależności do $L^2$ oznacza tutaj, że odpowiednia
+dystrybucja jest reprezentowana przez funkcję kwadratowalną.
+Normę tej przestrzeni definiujemy wzorem
+$\|u\|_{H^s}^2=(2\pi)^{-d}\int_{\R^d}
+(1+|\xi|^2)^s|\widehat u(\xi)|^2\,\mathrm d\lambda_d(\xi)$.
+W tym wzorze $\widehat u$ jest reprezentowana przez funkcję
+lokalnie $L^2$: otrzymujemy ją mnożąc funkcję $L^2$
+przez $(1+|\xi|^2)^{-s/2}$.
+Operator $J^s=(I-\Delta)^{s/2}$ określamy na $\mathcal S'$
+przez mnożnik $(1+|\xi|^2)^{s/2}$.
+Dla ujemnego $s$ element $H^s$ może być autentyczną
+dystrybucją, a nie funkcją lokalnie całkowalną;
+wymóg $L^2$ odnosi się do ważonej transformaty,
+nie do samej dystrybucji $u$.
+\end{definicja}
+
+Dla $m\in\N_0$ zapis $W^{m,2}(\R^d)$ oznacza przestrzeń
+funkcji $u\in L^2(\R^d)$, których wszystkie pochodne słabe
+$\partial^\alpha u$, $|\alpha|\le m$, należą do $L^2$.
+
+\begin{uwaga}[Szeregi Fouriera na torusie a transformata Fouriera na $\R^d$]
+Rozdział~\ref{chap:pde-fourier} pracował na torusie lub
+na odcinku po okresowym przedłużeniu i korzystał z rozwinięć
+w szeregi Fouriera, czyli dyskretnego spektrum częstości.
+Tutaj pracujemy na całej przestrzeni $\R^d$, więc częstość
+$\xi$ zmienia się ciągle i pojawia się całka po $\R^d$.
+Obie teorie są zgodne pojęciowo, ale różnią się nośnikiem,
+normalizacją oraz tym, że w części okresowej integrujemy na
+$\T^d$ względem ustalonej miary, a tutaj na $\R^d$ względem
+miary Lebesgue'a.
+\end{uwaga}
+
+\begin{twierdzenie}[Podstawowe własności $H^s$]
+\label{thm:pde8-Hs}
+Dla wszystkich $s,t\in\R$, $s\ge t$, zachodzą:
+\begin{enumerate}
+\item $H^s(\R^d)$ jest przestrzenią Hilberta, a
+ $J^s:H^s\to L^2$ jest izometrią na całą przestrzeń $L^2$.
+\item $H^s\hookrightarrow H^t$ ciągle i
+ $\|u\|_{H^t}\le\|u\|_{H^s}$.
+\item Dla $\alpha\in\N_0^d$, $\partial^\alpha:H^s\to
+ H^{s-|\alpha|}$ jest ograniczony.
+\item Dla $m\in\N_0$ zachodzi $H^m(\R^d)=W^{m,2}(\R^d)$
+ ze wzajemnie równoważnymi normami.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Pierwsza teza wynika z utożsamienia $H^s$ poprzez
+$J^s$ z $L^2$ i odwracalności mnożnika
+$(1+|\xi|^2)^{s/2}$ na $\mathcal S'$. Pozostałe
+oszacowania opierają się na nierównościach
+$(1+|\xi|^2)^t\le(1+|\xi|^2)^s$ i
+$|\xi^\alpha|^2\le(1+|\xi|^2)^{|\alpha|}$.
+Gdy $m$ jest całkowite nieujemne, wielomian
+$(1+|\xi|^2)^m$ jest równoważny
+$\sum_{|\alpha|\le m}|\xi^\alpha|^2$,
+ze stałymi zależnymi tylko od $m,d$. Dzięki
+Plancherelowi warunek $u\in H^m$ jest równoważny
+istnieniu wszystkich pochodnych dystrybucyjnych
+$\partial^\alpha u\in L^2$ dla $|\alpha|\le m$.
+W przypadku $m=0$ warunek ten mówi po prostu $u\in L^2$.
+\end{proof}
+
+\begin{wniosek}[Kiedy delta należy do ujemnej przestrzeni Sobolewa?]
+\label{cor:pde8-delta-Hs}
+Dla $s\in\R$ zachodzi
+\[
+ \delta_0\in H^s(\R^d)\quad\Longleftrightarrow\quad
+ s<-\frac d2.
+\]
+\end{wniosek}
+\begin{proof}
+Ponieważ $\widehat{\delta_0}=1$, warunkiem jest
+$\int_{\R^d}(1+|\xi|^2)^s\,\mathrm d\lambda_d(\xi)<\infty$.
+Całka po kuli jednostkowej jest skończona. Poza nią,
+przechodząc do współrzędnych biegunowych, porównujemy
+całkę z $\int_1^\infty r^{2s+d-1}\,\mathrm d\lambda_1(r)$,
+która jest skończona dokładnie wtedy, gdy $2s+d<0$.
+\end{proof}
+
+\section{Zastosowanie II: eliptyczne równanie z parametrem}
+\label{sec:pde8-elliptic}
+
+\begin{twierdzenie}[Równanie Yukawy--Helmholtza]
+\label{thm:pde8-helmholtz}
+Niech $a>0$ i $f\in L^2(\R^d)$. Istnieje dokładnie jedno
+$u\in H^2(\R^d)$ takie, że $(-\Delta+a^2)u=f$
+w sensie dystrybucji. Zachodzi
+\[
+ \widehat u(\xi)=\frac{\widehat f(\xi)}{|\xi|^2+a^2},
+ \qquad \|u\|_{H^2}\le C_a\|f\|_{L^2},
+\]
+gdzie $H^2$ zdefiniowano w~\ref{def:pde8-Hs},
+a $C_a=\max\{1,a^{-2}\}$ dla przyjętej tam normy.
+\end{twierdzenie}
+\begin{proof}
+Funkcja $(|\xi|^2+a^2)^{-1}$ jest ograniczona.
+Ponadto $(1+|\xi|^2)/(|\xi|^2+a^2)\le\max\{1,a^{-2}\}$.
+Zatem zadany wzór wyznacza $u\in H^2$ i podane
+oszacowanie przez twierdzenie Plancherela. Po
+pomnożeniu przez $|\xi|^2+a^2$ otrzymujemy równanie.
+Jeżeli $(-\Delta+a^2)u=0$ dla $u\in H^2$, to
+$(|\xi|^2+a^2)\widehat u=0$ prawie wszędzie,
+a więc $u=0$. To daje jednoznaczność.
+\end{proof}
+
+\begin{uwaga}[Dlaczego przypadek $a=0$ jest inny?]
+Dla czystego równania Poissona mnożnik formalny
+$|\xi|^{-2}$ ma osobliwość w zerze. Nie można więc
+bez dodatkowej analizy definiować dla dowolnego
+$f\in L^2$ rozwiązania $u\in H^2$ przez ten wzór.
+Dokładniej, dla $1\le d\le4$ i $f\in\mathcal S(\R^d)$
+z $\widehat f(0)\ne0$ iloraz
+$|\xi|^{-2}\widehat f(\xi)$ nie jest funkcją $L^2$
+w pobliżu zera, gdyż jego kwadrat daje po przejściu
+do współrzędnych biegunowych całkę porównywalną z
+$\int_0^1r^{d-5}\,\mathrm d\lambda_1(r)=\infty$.
+W wymiarach $d\ge5$ ta konkretna przeszkoda
+niskoczęstotliwościowa znika dla takiego gładkiego $f$;
+nie zmienia to faktu, że dzielenie przez $|\xi|^2$
+nie jest ograniczonym mnożnikiem $L^2\to H^2$
+bez dodatkowych warunków na dane. Dodatkowo funkcje harmoniczne tworzą jądro
+operatora $-\Delta$ w szerszych klasach rozwiązań.
+Nie oznacza to braku rozwiązań dystrybucyjnych;
+rozdział~\ref{chap:pde-distributions} konstruuje je
+z użyciem funkcji fundamentalnej.
+\end{uwaga}
+
+\section{Zasada nieoznaczoności jako konsekwencja Plancherela}
+\label{sec:pde8-uncertainty}
+
+\begin{twierdzenie}[Nierówność Heisenberga w jednej współrzędnej]
+\label{thm:pde8-uncertainty}
+Jeśli $0\ne f\in\mathcal S(\R^d)$ i $1\le j\le d$, to
+\[
+ \|x_jf\|_{L^2}\,\|\xi_j\widehat f\|_{L^2}
+ \ge\frac12\,\|f\|_{L^2}\,\|\widehat f\|_{L^2}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Całkując pochodną $\partial_j(x_j|f|^2)$ i używając
+zaniku funkcji Schwartza, dostajemy
+$\|f\|_2^2=-2\operatorname{Re}\int_{\R^d}x_j\overline f\,
+\partial_jf\,\mathrm d\lambda_d(x)$.
+Nierówność Cauchy'ego--Schwarza daje
+$\|x_jf\|_2\|\partial_jf\|_2\ge\tfrac12\|f\|_2^2$.
+Z twierdzenia Plancherela i
+$\widehat{\partial_jf}=i\xi_j\widehat f$ wynika
+$\|\partial_jf\|_2=(2\pi)^{-d/2}\|\xi_j\widehat f\|_2$
+oraz $\|f\|_2=(2\pi)^{-d/2}\|\widehat f\|_2$.
+Po podstawieniu otrzymujemy tezę.
+\end{proof}
+
+\section{Podsumowanie i zakres dalszych zagadnień}
+Transformata Fouriera jest automorfizmem przestrzeni Schwartza i
+jej przestrzeni dualnej. Jest podstawowym narzędziem badania wielu
+liniowych PDE o stałych współczynnikach, lecz sama nie zapewnia
+rozwiązywalności ani jednoznaczności w dowolnej klasie funkcji;
+nie rozwiązuje też automatycznie problemów brzegowych ani równań
+ze zmiennymi współczynnikami. Mnożniki ograniczone działają na $L^2$,
+lecz dla $L^p$ z $p\ne2$ potrzebna jest głębsza teoria.
+W następnych rozdziałach zbudujemy systematycznie
+przestrzenie Sobolewa na obszarach i ich twierdzenia o zanurzeniach.
+W ten sposób domkniemy łańcuch pojęciowy rozpoczęty w
+rozdziale~\ref{chap:pde-distributions}: od słabych pochodnych,
+przez narzędzia Fouriera na całej przestrzeni, do funkcjonałowej
+teorii $W^{k,p}(\Omega)$ potrzebnej dla metod wariacyjnych i
+zagadnień brzegowych.
+
+
+

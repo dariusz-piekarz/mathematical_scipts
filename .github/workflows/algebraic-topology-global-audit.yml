@@ -1,0 +1,78 @@
+name: Algebraic topology GLOBAL audit TOP-00..TOP-30
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "books/pl/algebraic_topology.tex"
+      - "chapters/pl/algebraic_topology/**"
+      - "shared/pl/**"
+      - "catalog/books.json"
+      - "tools/audit_algebraic_topology_global.py"
+      - "application/tests/test_topology*.py"
+      - ".github/workflows/algebraic-topology-global-audit.yml"
+  workflow_dispatch:
+
+jobs:
+  validate-complete-book:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Source-wide structural, label, duplication and terminology audit
+        run: |
+          mkdir -p audits/generated
+          python3 tools/audit_algebraic_topology_global.py \
+            --report audits/generated/TOP_GLOBAL_AUDIT.json
+      - name: Unit tests for the dependency auditor
+        run: python3 -m unittest discover -s tools/tests -p 'test_audit_chapter_dependencies.py' -v
+      # Actual TOP-00..TOP-30 imports and nested shared modules are checked
+      # by the preceding topology-scoped scan. Repository-wide checking is
+      # independent: other books may be edited in parallel on this branch.
+      - name: Regression tests for audited topology chapters
+        run: |
+          python3 -m unittest discover -s application/tests \
+            -p 'test_topology*.py' -v
+      - name: Install TeX and PDF inspection utilities
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-pictures texlive-lang-polish texlive-fonts-recommended lmodern \
+            poppler-utils
+      - name: Triple-compile the ACTUAL full book with TOP-00
+        working-directory: books/pl
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error algebraic_topology.tex \
+            > algebraic_topology_global_pass1.log
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error algebraic_topology.tex \
+            > algebraic_topology_global_pass2.log
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error algebraic_topology.tex \
+            > algebraic_topology_global_pass3.log
+          test -s algebraic_topology.pdf
+          if grep -Eq 'There were undefined references|LaTeX Warning: Reference .* undefined|undefined citations' algebraic_topology_global_pass3.log; then
+            echo "Global book: undefined reference"; exit 1
+          fi
+          if grep -E 'Overfull \\hbox' algebraic_topology_global_pass3.log; then
+            echo "Global book: overfull horizontal box"; exit 1
+          fi
+          if grep -Eq 'LaTeX Warning: Label\(s\) may have changed|Rerun to get cross-references right' algebraic_topology_global_pass3.log; then
+            echo "Global book: labels still unstable after pass 3"; exit 1
+          fi
+          pdfinfo algebraic_topology.pdf | grep -E '^(Pages|Page size|File size):'
+          pdftotext -layout algebraic_topology.pdf algebraic_topology_global_text.txt
+          grep -q 'Wprowadzenie i zakres' algebraic_topology_global_text.txt
+          grep -q 'Minimalne przypomnienie geometrii' algebraic_topology_global_text.txt
+      - name: Upload canonical book, inspection text, logs and structural report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: algebraic-topology-global-book-pdf-and-audit
+          path: |
+            books/pl/algebraic_topology.pdf
+            books/pl/algebraic_topology_global_text.txt
+            books/pl/algebraic_topology_global_pass1.log
+            books/pl/algebraic_topology_global_pass2.log
+            books/pl/algebraic_topology_global_pass3.log
+            audits/generated/TOP_GLOBAL_AUDIT.json
+          if-no-files-found: warn

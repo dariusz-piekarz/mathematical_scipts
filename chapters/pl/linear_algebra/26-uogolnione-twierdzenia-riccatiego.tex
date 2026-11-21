@@ -1,0 +1,1923 @@
+\chapter{Uogólnione twierdzenia Riccatiego}
+\label{ch:lin26-general-riccati}
+\index{równanie Riccatiego!stabilizowalność}
+\index{wykrywalność!równanie Riccatiego}
+\index{sterowanie optymalne!koszt półokreślony}
+
+\noindent\textbf{Cel rozdziału.}
+W Rozdziale~\ref{ch:lin24-riccati}
+udowodniliśmy twierdzenia Riccatiego
+przy stabilności macierzy \(A\)
+i dodatniej określoności \(Q\).
+W wielu układach macierz otwartej
+pętli jest jednak niestabilna,
+a koszt nie karze każdej współrzędnej
+stanu. Wykażemy, że wystarczają
+\emph{stabilizowalność} pary \((A,B)\)
+i \emph{wykrywalność} pary
+obserwacyjnej, które zostały
+zdefiniowane i scharakteryzowane
+w Rozdziale~\ref{ch:lin25-control}.
+Przedstawimy pełny dowód
+istnienia i jednoznaczności
+rozwiązania stabilizującego,
+wzór na wartość optymalną,
+przykłady z niestabilną otwartą
+pętlą i kontrprzykłady
+wyjaśniające rolę założeń.
+
+Niech \(n,m\ge1\).
+W całym rozdziale
+\(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\),
+\(B\in\operatorname{Mat}_{n\times m}(\mathbb C)\),
+\(Q=Q^*\ge0\) i
+\(R=R^*>0\) są macierzami
+odpowiednich rozmiarów \(n\times n\)
+i \(m\times m\).
+Przez \(P\ge0\)
+oznaczamy nieujemną określoność
+hermitowskiej macierzy \(P\).
+Symbol \(\sigma(T)\) oznacza
+zbiór wartości własnych \(T\),
+a \(\rho(T)\) jego promień spektralny.
+Przez \(u=-Kx\)
+oznaczamy sprzężenie zwrotne,
+które wprowadza macierz
+zamkniętej pętli \(A-BK\).
+
+\section{Założenia i koszt półokreślony}
+\label{sec:lin26-hypotheses}
+
+\begin{lemat}[Rozkład macierzy kosztu]
+\label{lem:lin26-factor}
+Dla każdej hermitowskiej
+\(Q\in\operatorname{Mat}_{n\times n}(\mathbb C)\),
+\(Q\ge0\), istnieje
+hermitowska macierz \(C\ge0\)
+taka, że \(C^*C=Q\).
+Ponadto dla każdego
+\(x\in\mathbb C^n\) mamy
+\[
+ x^*Qx=\|Cx\|_2^2,\qquad
+ \ker C=\ker Q.
+\]
+Jeżeli \(C_1^*C_1=C_2^*C_2=Q\)
+dla macierzy o dowolnej liczbie
+wierszy, to pary
+\((C_1,A)\) i \((C_2,A)\)
+są wykrywalne w danym rodzaju czasu
+jednocześnie albo żadna z nich
+nie jest wykrywalna.
+\end{lemat}
+\begin{proof}
+Z twierdzenia spektralnego
+z Rozdziału~\ref{ch:lin14-spektralne}
+istnieje unitarna \(U\)
+i liczby \(q_j\ge0\)
+takie, że
+\(Q=U\operatorname{diag}(q_1,\ldots,q_n)U^*\).
+Połóżmy
+\(C=U\operatorname{diag}(\sqrt{q_1},
+\ldots,\sqrt{q_n})U^*\).
+Jest to macierz hermitowska,
+nieujemnie określona, a
+\(C^*C=C^2=Q\).
+Równość
+\(x^*Qx=(Cx)^*(Cx)\)
+daje wzór na koszt.
+
+Jeśli \(Cx=0\), to
+\(Qx=C^*Cx=0\).
+Jeśli \(Qx=0\),
+to \(\|Cx\|_2^2=x^*Qx=0\),
+więc \(Cx=0\).
+To dowodzi równości jąder.
+Analogicznie
+\(\ker C_1=\ker Q=\ker C_2\).
+Na mocy kryterium PBH
+z Twierdzenia~\ref{thm:lin25-detectability}
+wykrywalność zależy tylko od
+tego, czy dla każdej niestabilnej
+wartości własnej \(\lambda\)
+istnieje niezerowy
+\(v\in\ker(\lambda I-A)\cap\ker C_i\).
+Równość jąder oznacza,
+że oba warunki są identyczne.
+\end{proof}
+
+\begin{definicja}[Warunki dla ogólnego LQR]
+\label{def:lin26-assumptions}
+Niech \(C\) będzie dowolną
+macierzą spełniającą
+\(C^*C=Q\).
+Przyjmujemy dwa warunki:
+\begin{enumerate}[label=\textup{(\roman*)}]
+ \item para \((A,B)\) jest
+ \emph{stabilizowalna}
+ w rozważanym rodzaju czasu;
+ \item para \((C,A)\) jest
+ \emph{wykrywalna}
+ w tym samym rodzaju czasu.
+\end{enumerate}
+W pierwszym przypadku
+istnieje \(K_0\)
+stabilizujące \(A-BK_0\).
+W drugim niestabilne
+wartości własne \(A\)
+nie mają niezerowych
+wektorów własnych w \(\ker Q\).
+Z
+Lematu~\ref{lem:lin26-factor}
+warunek (ii) nie zależy
+od wyboru rozkładu
+\(Q=C^*C\).
+\end{definicja}
+
+\begin{uwaga}[Dlaczego nie wymagamy \(Q>0\)]
+\label{rem:lin26-weak-q}
+Jeśli \(Q>0\), to \(C\)
+jest odwracalna, zatem
+para \((C,A)\) jest obserwowalna,
+a w szczególności wykrywalna.
+Warunek wykrywalności
+jest więc istotnie słabszy.
+Pozwala on nie karać
+stabilnych kierunków, których
+obserwacja nie rozróżnia.
+Nie będziemy jednak wnioskować,
+że rozwiązanie Riccatiego
+musi być dodatnio określone:
+w ogólnym przypadku otrzymamy
+tylko \(P\ge0\).
+\end{uwaga}
+
+\section{Dwa oszacowania stabilnego sprzężenia}
+\label{sec:lin26-feedback-bound}
+
+\begin{lemat}[Koszt stabilizującego sterowania]
+\label{lem:lin26-feedback-bound}
+Załóżmy, że para \((A,B)\)
+jest stabilizowalna.
+Wybierzmy macierz \(K_0\)
+taką, aby \(D=A-BK_0\)
+była stabilna w odpowiednim
+rodzaju czasu i połóżmy
+\(H=Q+K_0^*RK_0\ge0\).
+
+W czasie dyskretnym szereg
+\[
+ W_{\mathrm d}
+ =\sum_{k=0}^{\infty}(D^*)^kHD^k
+\]
+jest bezwzględnie zbieżny,
+daje macierz hermitowską
+\(W_{\mathrm d}\ge0\)
+i spełnia
+\[
+ W_{\mathrm d}-D^*W_{\mathrm d}D=H.
+\]
+Dla trajektorii
+\(x_{k+1}=Dx_k\)
+koszt sterowania \(u_k=-K_0x_k\)
+na nieskończonym horyzoncie
+wynosi \(x_0^*W_{\mathrm d}x_0\).
+
+W czasie ciągłym całka
+\[
+ W_{\mathrm c}
+ =\int_0^\infty e^{tD^*}He^{tD}\,\mathrm dt
+\]
+jest bezwzględnie zbieżna,
+daje \(W_{\mathrm c}=W_{\mathrm c}^*\ge0\)
+i spełnia
+\[
+ D^*W_{\mathrm c}+W_{\mathrm c}D=-H.
+\]
+Dla trajektorii \(x'=Dx\)
+koszt sterowania \(u=-K_0x\)
+jest równy \(x_0^*W_{\mathrm c}x_0\).
+\end{lemat}
+\begin{proof}
+W czasie dyskretnym
+\(\rho(D)<1\), więc
+z Lematu~\ref{lem:lin23-powers}
+mamy \(\|D^k\|\le Mr^k\)
+dla pewnych \(M>0\), \(0<r<1\).
+Wobec tego
+\[
+ \|(D^*)^kHD^k\|
+ \le M^2\|H\|r^{2k},
+\]
+co zapewnia zbieżność.
+Każdy składnik jest
+hermitowski i nieujemnie
+określony, dlatego
+\(W_{\mathrm d}\ge0\).
+Odjęcie od szeregu
+tego samego szeregu
+z indeksem przesuniętym
+daje równanie dla \(W_{\mathrm d}\).
+Ponieważ
+\(u_k^*Ru_k+x_k^*Qx_k=x_k^*Hx_k\),
+sumowanie kosztów
+daje wskazaną formę kwadratową.
+
+W czasie ciągłym
+wszystkie wartości własne \(D\)
+mają ujemne części rzeczywiste.
+Z postaci Jordana lub
+ciągłego twierdzenia Lapunowa
+z Rozdziału~\ref{ch:lin22-sylvester}
+wynika oszacowanie
+\(\|e^{tD}\|\le Me^{-\alpha t}\)
+dla \(t\ge0\)
+i pewnych \(M,\alpha>0\).
+Zatem
+\(\|e^{tD^*}He^{tD}\|
+ \le M^2\|H\|e^{-2\alpha t}\),
+więc całka jest zbieżna
+i definiuje macierz
+nieujemnie określoną.
+Różniczkując macierz
+\(e^{tD^*}He^{tD}\)
+i całkując jej pochodną,
+otrzymujemy
+\[
+ \begin{aligned}
+ D^*W_{\mathrm c}+W_{\mathrm c}D
+ &=\int_0^\infty
+     \frac{\mathrm d}{\mathrm dt}
+       (e^{tD^*}He^{tD})\,\mathrm dt\\
+ &=\lim_{t\to\infty}
+       e^{tD^*}He^{tD}-H=-H.
+ \end{aligned}
+\]
+Koszt ma postać
+\(\int_0^\infty x_0^*e^{tD^*}
+He^{tD}x_0\,\mathrm dt\);
+przesunięcie stałych
+wektorów poza całkę
+daje \(x_0^*W_{\mathrm c}x_0\).
+\end{proof}
+
+\begin{uwaga}[Granica dodatnia nie musi być ściśle dodatnia]
+\label{rem:lin26-feedback-semi}
+W poprzednim lemacie
+\(H\) może mieć niezerowe
+jądro. Nie można więc
+stosować twierdzeń Lapunowa
+w wersji wymagającej \(H>0\)
+do wniosku o stabilności:
+stabilność macierzy \(D\)
+była tu \emph{założeniem},
+a nie wynikiem.
+Dopiero wykrywalność
+umożliwi wyprowadzenie
+stabilności nowego sprzężenia
+z równania Riccatiego
+o prawostronnej macierzy
+jedynie nieujemnie określonej.
+\end{uwaga}
+
+\section{DARE dla układów stabilizowalnych}
+\label{sec:lin26-dare}
+
+\begin{definicja}[Rozwiązanie stabilizujące DARE]
+\label{def:lin26-dare}
+Dla macierzy \(A,B,Q,R\)
+spełniających założenia rozdziału
+\emph{dyskretnym algebraicznym
+równaniem Riccatiego} jest
+\[
+ P=Q+A^*PA
+   -A^*PB(R+B^*PB)^{-1}B^*PA.
+\]
+Szukamy hermitowskich macierzy
+\(P\), dla których
+\(M(P)=R+B^*PB\) jest odwracalna.
+Dla takiego rozwiązania
+określamy sprzężenie
+\[
+ K(P)=M(P)^{-1}B^*PA.
+\]
+Rozwiązanie jest
+\emph{stabilizujące}, gdy
+\(\rho(A-BK(P))<1\).
+Nie wymagamy w tej definicji,
+aby \(P\ge0\) albo \(M(P)>0\).
+\end{definicja}
+
+\begin{lemat}[Rekurencja skończonego horyzontu]
+\label{lem:lin26-dare-recursion}
+Niech \(N\ge0\) będzie
+liczbą całkowitą.
+Dla układu
+\(x_{k+1}=Ax_k+Bu_k\)
+o ustalonym stanie \(x_0=x\)
+zdefiniujmy koszt
+\[
+ J_N(x;u)=\sum_{k=0}^{N-1}
+   (x_k^*Qx_k+u_k^*Ru_k).
+\]
+Istnieją hermitowskie
+macierze \(P_N\ge0\)
+takie, że
+\[
+ \min_{u_0,\ldots,u_{N-1}}J_N(x;u)
+ =x^*P_Nx.
+\]
+Są one wyznaczone rekurencją
+\[
+ \begin{aligned}
+ P_0&=0,\\
+ P_{N+1}&=Q+A^*P_NA\\
+ &\quad-A^*P_NB(R+B^*P_NB)^{-1}B^*P_NA.
+ \end{aligned}
+\]
+Ponadto \(P_N\le P_{N+1}\).
+Jeśli \((A,B)\) jest
+stabilizowalna w czasie
+dyskretnym, to
+\(P_N\le W_{\mathrm d}\),
+gdzie \(W_{\mathrm d}\)
+pochodzi z
+Lematu~\ref{lem:lin26-feedback-bound}.
+\end{lemat}
+\begin{proof}
+Dla \(N=0\) suma jest
+pusta, zatem \(P_0=0\).
+Załóżmy, że dla danego \(N\)
+wartość minimalna jest
+równa \(z^*P_Nz\)
+z \(P_N\ge0\).
+Na pierwszym kroku horyzontu
+\(N+1\) wybieramy \(u\),
+a kolejne \(N\) kroków
+zaczynają się od \(Ax+Bu\).
+Zatem koszt optymalny wynosi
+minimum po \(u\in\mathbb C^m\)
+wyrażenia
+\[
+ x^*Qx+u^*Ru+
+         (Ax+Bu)^*P_N(Ax+Bu).
+\]
+Po rozwinięciu otrzymujemy
+postać kwadratową
+\[
+ \begin{aligned}
+ &x^*(Q+A^*P_NA)x\\
+ &\quad+
+ u^*(R+B^*P_NB)u
+ +2\operatorname{Re}(u^*B^*P_NAx).
+ \end{aligned}
+\]
+Ponieważ \(R>0\)
+i \(P_N\ge0\),
+macierz \(M_N=R+B^*P_NB\)
+jest dodatnio określona.
+Z
+Lematu~\ref{lem:lin24-square}
+minimum jest osiągane
+w jedynym punkcie
+\(u=-M_N^{-1}B^*P_NAx\).
+Jego wartością jest
+\(x^*P_{N+1}x\),
+gdzie \(P_{N+1}\)
+ma postać z tezy.
+Macierz jest hermitowska,
+a nieujemna określoność
+wynika z nieujemności
+wszystkich składników
+pierwotnego kosztu.
+To kończy indukcję.
+
+Dla każdego sterowania
+o horyzoncie \(N+1\)
+koszt jego pierwszych \(N\)
+kroków jest nie większy
+od całego kosztu,
+ponieważ ostatni etap
+jest nieujemny.
+Po wzięciu minimów
+otrzymujemy
+\(x^*P_Nx\le x^*P_{N+1}x\)
+dla każdego \(x\), a więc
+\(P_N\le P_{N+1}\).
+
+Jeśli para jest stabilizowalna,
+wybierzmy sprzężenie
+\(u_k=-K_0x_k\)
+z
+Lematu~\ref{lem:lin26-feedback-bound}.
+Koszt jego pierwszych \(N\)
+kroków nie przekracza
+\(x^*W_{\mathrm d}x\).
+Minimum po wszystkich
+sterowaniach jest nie większe,
+stąd
+\(x^*P_Nx\le x^*W_{\mathrm d}x\)
+dla każdego \(x\),
+czyli \(P_N\le W_{\mathrm d}\).
+\end{proof}
+
+\begin{twierdzenie}[Uogólnione twierdzenie dyskretne]
+\label{thm:lin26-dare}
+Załóżmy, że
+\(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\),
+\(B\in\operatorname{Mat}_{n\times m}(\mathbb C)\),
+\(Q=Q^*\ge0\), \(R=R^*>0\),
+para \((A,B)\) jest
+stabilizowalna w czasie
+dyskretnym i para
+\((C,A)\) jest wykrywalna
+w czasie dyskretnym
+dla macierzy \(C\)
+spełniającej \(C^*C=Q\).
+Wówczas:
+\begin{enumerate}[label=\textup{(\roman*)}]
+ \item ciąg \(P_N\)
+ z Lematu~\ref{lem:lin26-dare-recursion}
+ ma granicę \(P=P^*\ge0\);
+ \item macierz \(P\)
+ spełnia DARE;
+ \item macierz
+ \[
+ K=(R+B^*PB)^{-1}B^*PA
+ \]
+ stabilizuje układ:
+ \(\rho(A-BK)<1\);
+ \item \(P\) jest jedynym
+ hermitowskim, nieujemnie
+ określonym rozwiązaniem DARE,
+ a także jedynym
+ hermitowskim rozwiązaniem
+ stabilizującym.
+\end{enumerate}
+Żadne z tych stwierdzeń
+nie wymaga \(\rho(A)<1\)
+ani dodatniej określoności \(Q\).
+\end{twierdzenie}
+\begin{proof}
+Z Lematu~\ref{lem:lin26-dare-recursion}
+oraz
+Lematu~\ref{lem:lin26-feedback-bound}
+otrzymujemy
+\[
+ 0=P_0\le P_1\le\cdots
+     \le W_{\mathrm d}.
+\]
+Dla każdego \(x\in\mathbb C^n\)
+ciąg rzeczywistych liczb
+\(x^*P_Nx\) jest zatem
+niemalejący i ograniczony.
+Dzięki tożsamościom
+polaryzacyjnym dla
+\(x=e_j\), \(e_i+e_j\)
+oraz \(e_i+ie_j\)
+wnioskujemy kolejno
+o zbieżności przekątnych,
+części rzeczywistych
+i części urojonych
+wszystkich współczynników
+macierzy \(P_N\).
+Otrzymujemy hermitowską
+granicę \(P\), spełniającą
+\(0\le P\le W_{\mathrm d}\).
+To dowodzi (i).
+
+Macierze
+\(M_N=R+B^*P_NB\)
+spełniają \(M_N\ge R>0\).
+W granicy
+\(M_N\to M=R+B^*PB\ge R>0\).
+W szczególności
+\(M\) jest odwracalna
+oraz \(M_N^{-1}\to M^{-1}\).
+Ostatnia zbieżność
+wynika z tożsamości
+\[
+ M_N^{-1}-M^{-1}
+ =M_N^{-1}(M-M_N)M^{-1}
+\]
+i jednostajnego ograniczenia
+\(\|M_N^{-1}\|
+ \le1/\lambda_{\min}(R)\)
+w normie operatorowej,
+wynikającego z
+\(M_N\ge R\).
+Przejście do granicy
+w rekurencji daje
+\[
+ P=Q+A^*PA-A^*PBM^{-1}B^*PA,
+\]
+a więc (ii).
+
+Połóżmy
+\(K=M^{-1}B^*PA\)
+i \(D=A-BK\).
+Równości \(MK=B^*PA\)
+oraz \(K^*M=A^*PB\)
+dają po rozwinięciu
+\[
+ \begin{aligned}
+ D^*PD+K^*RK
+ &=A^*PA-A^*PBK-K^*B^*PA\\
+ &\quad+K^*(B^*PB+R)K\\
+ &=A^*PA-K^*MK.
+ \end{aligned}
+\]
+Ponieważ
+\(A^*PBK=K^*MK\),
+równanie DARE
+przyjmuje postać
+\[
+ P-D^*PD=Q+K^*RK.
+ \tag{26.1}\label{eq:lin26-dare-energy}
+\]
+Prawa strona jest
+nieujemnie określona.
+
+Wykażemy stabilność \(D\)
+bez zakładania \(P>0\).
+Gdyby \(\rho(D)\ge1\),
+to istniałyby
+\(\lambda\in\sigma(D)\),
+\(|\lambda|\ge1\),
+i \(v\ne0\) z \(Dv=\lambda v\).
+Po pomnożeniu
+\eqref{eq:lin26-dare-energy}
+przez \(v^*\) i \(v\)
+otrzymujemy
+\[
+ (1-|\lambda|^2)v^*Pv
+ =\|Cv\|_2^2
+   +(Kv)^*R(Kv).
+\]
+Lewa strona jest nie większa
+od zera, ponieważ \(P\ge0\);
+prawa jest nieujemna.
+Obie strony muszą więc
+być zerowe. Dodatnia
+określoność \(R\) daje
+\(Kv=0\), a drugi składnik
+daje \(Cv=0\).
+Wobec tego
+\[
+ Av=Dv+BKv=\lambda v,
+ \qquad Cv=0.
+\]
+Otrzymaliśmy niezerowy
+wektor własny \(A\)
+o niestabilnej wartości własnej,
+zerowany przez \(C\).
+Jest to sprzeczne z
+kryterium wykrywalności PBH
+w
+Twierdzeniu~\ref{thm:lin25-detectability}.
+Stąd \(\rho(D)<1\),
+co dowodzi (iii).
+
+Pozostaje jednoznaczność.
+Niech \(P_1=P\) i
+\(P_2=P_2^*\)
+będą dwoma
+hermitowskimi rozwiązaniami
+DARE, dla których
+\(M_i=R+B^*P_iB\)
+są odwracalne
+i macierze
+\(D_i=A-BK_i\),
+\(K_i=M_i^{-1}B^*P_iA\),
+są macierzami Schura.
+Nie zakładamy dodatniej
+określoności \(P_2\)
+ani \(M_2\).
+Połóżmy \(E=P_1-P_2\).
+Odjęcie równań DARE
+i podstawienie
+\(M_iK_i=B^*P_iA\),
+\(K_i^*M_i=A^*P_iB\)
+prowadzi do tożsamości
+\[
+ E=D_1^*ED_2.
+ \tag{26.2}\label{eq:lin26-dare-difference}
+\]
+Dla pełności sprawdźmy
+przekształcenie.
+Z różnicy równań
+otrzymujemy
+\(E=A^*EA-K_1^*M_1K_1+
+K_2^*M_2K_2\).
+Z kolei po rozwinięciu
+\(D_1^*ED_2\)
+i wykorzystaniu
+\[
+ \begin{aligned}
+ B^*EA&=M_1K_1-M_2K_2,\\
+ A^*EB&=K_1^*M_1-K_2^*M_2,\\
+ B^*EB&=M_1-M_2
+ \end{aligned}
+\]
+wszystkie pozostałe
+składniki skracają się,
+pozostawiając tę samą
+prawą stronę.
+Indukcja w
+\eqref{eq:lin26-dare-difference}
+daje
+\(E=(D_1^*)^kED_2^k\).
+Z
+Lematu~\ref{lem:lin23-powers}
+obie potęgi dążą do zera,
+więc \(E=0\).
+Zatem rozwiązanie
+stabilizujące jest jedyne.
+
+Jeżeli \(P_2=P_2^*\ge0\)
+jest dowolnym rozwiązaniem
+DARE, to
+\(M_2=R+B^*P_2B>0\).
+Z jego równania otrzymujemy
+\[
+ P_2-D_2^*P_2D_2
+ =Q+K_2^*RK_2.
+\]
+Ten sam argument z wektorem
+własnym i wykrywalnością
+co powyżej pokazuje,
+że \(\rho(D_2)<1\).
+Rozwiązanie \(P_2\)
+jest więc stabilizujące,
+a udowodniona jednoznaczność
+daje \(P_2=P\).
+Otrzymujemy (iv).
+\end{proof}
+
+\begin{uwaga}[Wynik rzeczywisty]
+\label{rem:lin26-dare-real}
+Jeżeli \(A,B,Q,R\)
+są rzeczywiste,
+to każdy \(P_N\)
+jest rzeczywista i symetryczna.
+Jej granica \(P\)
+też jest rzeczywista
+i symetryczna.
+Sprzężenie \(K\)
+wyznaczone z \(P\)
+jest więc rzeczywiste.
+Stabilizowalność i wykrywalność
+sprawdza się jednak
+z uwzględnieniem
+wszystkich \emph{zespolonych}
+wartości własnych \(A\).
+\end{uwaga}
+
+\section{CARE dla układów stabilizowalnych}
+\label{sec:lin26-care}
+
+\begin{definicja}[Rozwiązanie stabilizujące CARE]
+\label{def:lin26-care}
+\emph{Ciągłym algebraicznym
+równaniem Riccatiego}
+dla macierzy z początku
+rozdziału nazywamy
+\[
+ A^*P+PA-PBR^{-1}B^*P+Q=0,\quad P=P^*.
+\]
+Rozwiązanie nazywamy
+\emph{stabilizującym},
+jeśli wszystkie wartości
+własne macierzy
+\(A-BR^{-1}B^*P\)
+mają ujemne części rzeczywiste.
+Nie zakładamy w definicji \(P\ge0\).
+\end{definicja}
+
+\begin{lemat}[Ciągły koszt skończonego horyzontu]
+\label{lem:lin26-care-finite}
+Niech \(Q=Q^*\ge0\)
+i \(R=R^*>0\).
+Dla każdego \(T>0\)
+i \(x_0\in\mathbb C^n\)
+rozpatrzmy układ
+\(x'=Ax+Bu\), \(x(0)=x_0\),
+dla przedziałami ciągłych
+sterowań \(u\colon[0,T]\to\mathbb C^m\)
+i koszt
+\[
+ J_T(x_0;u)=\int_0^T
+ (x(t)^*Qx(t)+u(t)^*Ru(t))
+ \,\mathrm dt.
+\]
+Istnieje dokładnie jedno
+globalne rozwiązanie klasy \(C^1\)
+macierzowego równania
+\[
+ \begin{aligned}
+ S'(t)&=A^*S(t)+S(t)A
+      -S(t)BR^{-1}B^*S(t)+Q,\\
+ S(0)&=0
+ \end{aligned}
+ \tag{26.3}\label{eq:lin26-dre}
+\]
+na \([0,\infty)\).
+Macierze \(S(T)\)
+są hermitowskie i
+nieujemnie określone.
+Dla każdego \(T>0\)
+minimalny koszt wynosi
+\[
+ \min_u J_T(x_0;u)=x_0^*S(T)x_0,
+\]
+a sterowanie optymalne ma
+ciągłego reprezentanta
+\[
+ u_*(t)=-R^{-1}B^*S(T-t)x_*(t)
+ \quad(0\le t\le T).
+\]
+Jest ono jedyne
+z dokładnością do równości
+prawie wszędzie.
+Ponadto \(S(T_1)\le S(T_2)\)
+dla \(0\le T_1\le T_2\).
+Jeśli para \((A,B)\)
+jest stabilizowalna
+w czasie ciągłym,
+to \(S(T)\le W_{\mathrm c}\)
+z
+Lematu~\ref{lem:lin26-feedback-bound}
+dla wszystkich \(T\ge0\).
+\end{lemat}
+\begin{proof}
+Prawa strona równania
+\eqref{eq:lin26-dre}
+jest wielomianowa
+w współczynnikach \(S\),
+więc lokalnie lipschitzowska.
+Istnieje zatem jedno
+rozwiązanie lokalne.
+Równanie z warunkiem \(S(0)=0\)
+pozostaje niezmienione
+przy sprzężeniu hermitowskim,
+bo \(Q=Q^*\),
+\(R^{-1}=(R^{-1})^*\).
+Z jednoznaczności wynika
+\(S(t)=S(t)^*\).
+
+Ustalmy \(T\) z przedziału
+istnienia rozwiązania.
+Dla dowolnego sterowania \(u\)
+i jego trajektorii \(x\)
+zróżniczkujmy
+\(E(t)=x(t)^*S(T-t)x(t)\).
+Na przedziałach ciągłości \(u\)
+otrzymujemy
+\[
+ \begin{aligned}
+ E'(t)
+ &=x^*(A^*S+SA-S')x
+      +2\operatorname{Re}(u^*B^*Sx)\\
+ &=-x^*Qx+x^*SBR^{-1}B^*Sx
+      +2\operatorname{Re}(u^*B^*Sx),
+ \end{aligned}
+\]
+gdzie \(S=S(T-t)\).
+Po dodaniu \(x^*Qx+u^*Ru\)
+prawa strona staje się
+kwadratem
+\((u+R^{-1}B^*Sx)^*
+ R(u+R^{-1}B^*Sx)\).
+Całkując, używając \(S(0)=0\),
+otrzymujemy
+\[
+ \begin{aligned}
+ J_T(x_0;u)
+ &=x_0^*S(T)x_0\\
+ &\quad+\int_0^T
+  (u(t)+R^{-1}B^*S(T-t)x(t))^*
+  R\\
+ &\hspace{29mm}\cdot
+  (u(t)+R^{-1}B^*S(T-t)x(t))
+  \,\mathrm dt.
+ \end{aligned}
+ \tag{26.4}\label{eq:lin26-finite-square}
+\]
+Całka jest nieujemna.
+Wybór sterowania
+\(u_*=-R^{-1}B^*S(T-t)x_*\)
+prowadzi do liniowego ODE
+\[
+ x_*'=(A-BR^{-1}B^*S(T-t))x_*,
+ \quad x_*(0)=x_0.
+\]
+Ma ono jedno rozwiązanie
+na całym \([0,T]\),
+bo współczynniki są ciągłe.
+Powstałe sterowanie
+jest ciągłe i zeruje
+dodatkową całkę.
+Wobec tego minimum
+jest osiągane i wynosi
+\(x_0^*S(T)x_0\).
+Jeśli inne sterowanie
+osiągałoby minimum,
+to nieujemna całka
+kwadratu musiałaby być
+zerowa, czyli
+\(u=-R^{-1}B^*S(T-t)x\)
+prawie wszędzie.
+Jednoznaczność liniowego ODE
+daje ten sam stan
+i sterowanie prawie wszędzie.
+W szczególności
+\(x_0^*S(T)x_0\ge0\)
+dla każdego \(x_0\),
+więc \(S(T)\ge0\).
+
+Ograniczoność na skończonym
+przedziale uzasadniamy
+przez porównanie z
+zerowym sterowaniem.
+Dla ustalonego \(T_0>0\)
+i \(0\le T\le T_0\)
+w przedziale istnienia mamy
+\[
+ 0\le x^*S(T)x
+ \le\int_0^{T_0}
+    x^*e^{tA^*}Qe^{tA}x
+    \,\mathrm dt
+ \le c_{T_0}\|x\|_2^2,
+\]
+gdzie
+\(c_{T_0}=\int_0^{T_0}
+  \|e^{tA^*}Qe^{tA}\|
+  \,\mathrm dt<\infty\).
+Wobec tego
+\(0\le S(T)\le c_{T_0}I_n\).
+Rozwiązanie lokalnie
+lipschitzowskiego ODE
+w skończenie wymiarowej
+przestrzeni nie może
+zakończyć się w skończonym
+czasie, jeżeli pozostaje
+ograniczone: ograniczenie
+pola na odpowiednim zwartym
+zbiorze umożliwia
+przedłużenie rozwiązania.
+Otrzymujemy globalność.
+
+Jeśli \(T_2\ge T_1\),
+to każde sterowanie
+na \([0,T_2]\)
+ma koszt co najmniej
+taki jak jego ograniczenie
+do \([0,T_1]\), ponieważ
+koszt etapowy jest nieujemny.
+Po wzięciu infimum
+otrzymujemy
+\(x^*S(T_2)x\ge x^*S(T_1)x\)
+dla wszystkich \(x\),
+czyli \(S(T_1)\le S(T_2)\).
+
+Jeśli \((A,B)\)
+jest stabilizowalna,
+wybieramy stałe sterowanie
+\(u=-K_0x\)
+z
+Lematu~\ref{lem:lin26-feedback-bound}.
+Jego koszt na \([0,T]\)
+jest nie większy od
+całego kosztu
+\(x^*W_{\mathrm c}x\).
+Koszt optymalny
+jest nie większy od
+kosztu tego sterowania,
+więc \(S(T)\le W_{\mathrm c}\).
+\end{proof}
+
+\begin{twierdzenie}[Uogólnione twierdzenie ciągłe]
+\label{thm:lin26-care}
+Niech
+\(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\),
+\(B\in\operatorname{Mat}_{n\times m}(\mathbb C)\),
+\(Q=Q^*\ge0\) i \(R=R^*>0\).
+Załóżmy, że para \((A,B)\)
+jest stabilizowalna
+w czasie ciągłym,
+a para \((C,A)\),
+gdzie \(C^*C=Q\),
+jest wykrywalna
+w czasie ciągłym.
+Wtedy:
+\begin{enumerate}[label=\textup{(\roman*)}]
+ \item rozwiązanie \(S(T)\)
+ z Lematu~\ref{lem:lin26-care-finite}
+ ma granicę \(P=P^*\ge0\)
+ dla \(T\to\infty\);
+ \item \(P\) spełnia CARE:
+ \[
+ A^*P+PA-PBR^{-1}B^*P+Q=0;
+ \]
+ \item sprzężenie
+ \(K=R^{-1}B^*P\)
+ stabilizuje układ,
+ czyli każda wartość własna
+ \(D=A-BK\) ma ściśle
+ ujemną część rzeczywistą;
+ \item \(P\) jest jedynym
+ hermitowskim rozwiązaniem
+ CARE w klasie
+ macierzy nieujemnie
+ określonych, a także
+ jedynym hermitowskim
+ rozwiązaniem stabilizującym.
+\end{enumerate}
+Nie zakładamy
+stabilności \(A\)
+ani \(Q>0\).
+\end{twierdzenie}
+\begin{proof}
+Z
+Lematu~\ref{lem:lin26-care-finite}
+i
+Lematu~\ref{lem:lin26-feedback-bound}
+mamy
+\[
+ 0\le S(T_1)\le S(T_2)
+           \le W_{\mathrm c}
+ \qquad(0\le T_1\le T_2).
+\]
+Dla każdego \(x\)
+liczba \(x^*S(T)x\)
+ma więc skończoną granicę.
+Tak jak w dowodzie
+Twierdzenia~\ref{thm:lin26-dare},
+polaryzacja przez
+\(e_i\), \(e_i+e_j\),
+\(e_i+ie_j\)
+daje zbieżność
+wszystkich współczynników.
+Oznaczmy granicę
+przez \(P\). Jest ona
+hermitowska i spełnia
+\(0\le P\le W_{\mathrm c}\).
+To daje (i).
+
+Niech
+\[
+ F(X)=A^*X+XA-XBR^{-1}B^*X+Q.
+\]
+Funkcja \(F\)
+jest wielomianowa,
+a więc ciągła.
+Z \(S'(T)=F(S(T))\)
+i \(S(T)\to P\)
+otrzymujemy
+\(S'(T)\to F(P)\).
+Pokażemy, że \(F(P)=0\).
+Jeśli jakakolwiek rzeczywista
+lub urojona składowa
+macierzy \(F(P)\)
+byłaby niezerowa,
+to odpowiednia składowa
+\(S'(T)\) od pewnego czasu
+miałaby stały znak
+i moduł ograniczony z dołu.
+Całkując tę pochodną,
+otrzymalibyśmy
+nieograniczoną zmianę
+odpowiedniej składowej
+\(S(T)\), w sprzeczności
+z jej zbieżnością.
+Zatem \(F(P)=0\),
+co jest (ii).
+
+Niech \(K=R^{-1}B^*P\)
+i \(D=A-BK\).
+Rozwinięcie obu iloczynów
+oraz CARE dają
+\[
+ D^*P+PD=-(Q+K^*RK).
+ \tag{26.5}\label{eq:lin26-care-energy}
+\]
+Istotnie,
+\(K^*RK=PBR^{-1}B^*P\),
+a
+\(D^*P+PD=A^*P+PA
+ -2PBR^{-1}B^*P\).
+Po wykorzystaniu CARE
+otrzymujemy żądaną równość.
+
+Gdyby \(D\) nie była
+spektralnie stabilna,
+to istniałyby
+\(\lambda\in\sigma(D)\)
+z \(\operatorname{Re}\lambda\ge0\)
+oraz \(v\ne0\) takie, że
+\(Dv=\lambda v\).
+Mnożąc
+\eqref{eq:lin26-care-energy}
+przez \(v^*\) i \(v\),
+otrzymalibyśmy
+\[
+ 2\operatorname{Re}\lambda\,
+        v^*Pv
+ =-\|Cv\|_2^2-(Kv)^*R(Kv).
+\]
+Lewa strona jest nieujemna,
+bo \(P\ge0\);
+prawa nie jest dodatnia.
+Obie strony są równe zeru,
+a \(R>0\) daje
+\(Kv=0\) i \(Cv=0\).
+Ponadto
+\(Av=Dv+BKv=\lambda v\).
+Byłby to niestabilny
+wektor własny \(A\),
+należący do \(\ker C\),
+wbrew kryterium wykrywalności
+z
+Twierdzenia~\ref{thm:lin25-detectability}.
+Zatem \(D\) jest stabilna
+w czasie ciągłym;
+to dowodzi (iii).
+
+Dla jednoznaczności
+niech \(P_1=P\)
+i \(P_2=P_2^*\)
+będą dowolnymi
+hermitowskimi
+rozwiązaniami CARE,
+dla których
+\(D_i=A-BK_i\),
+\(K_i=R^{-1}B^*P_i\),
+są spektralnie stabilne.
+Dla każdej trajektorii
+\(x'=Ax+Bu\)
+równanie CARE dla \(P_i\)
+daje po uzupełnieniu
+kwadratu
+\[
+ x^*Qx+u^*Ru+
+    \frac{\mathrm d}{\mathrm dt}(x^*P_ix)
+ =(u+K_ix)^*R(u+K_ix).
+ \tag{26.6}\label{eq:lin26-care-cost-identity}
+\]
+Równość pozostaje prawdziwa
+dla macierzy \(P_i\)
+o dowolnym znaku.
+Wybierzmy \(u=-K_1x\).
+Stabilność \(D_1\)
+daje wykładniczy zanik
+\(x(t)=e^{tD_1}x_0\),
+więc \(J_\infty(x_0;u)\)
+jest skończony.
+Po scałkowaniu
+\eqref{eq:lin26-care-cost-identity}
+dla \(P_1\)
+i przejściu \(T\to\infty\)
+otrzymujemy
+\(J_\infty(x_0;-K_1x)=x_0^*P_1x_0\).
+Ta sama tożsamość dla \(P_2\)
+i tego samego sterowania daje
+\[
+ \begin{aligned}
+ x_0^*P_1x_0
+ &=x_0^*P_2x_0\\
+ &\quad+\int_0^\infty
+      ((K_2-K_1)x(t))^*
+      R((K_2-K_1)x(t))
+      \,\mathrm dt\\
+ &\ge x_0^*P_2x_0.
+ \end{aligned}
+\]
+Ostatnia całka jest zbieżna
+dzięki wykładniczemu
+zanikowi \(x(t)\).
+Wynika stąd \(P_1\ge P_2\).
+Po zamianie ról
+i wybraniu \(u=-K_2x\)
+otrzymujemy \(P_2\ge P_1\).
+Zatem \(P_1=P_2\);
+rozwiązanie stabilizujące
+jest jedyne.
+
+Jeśli zaś
+\(P_2=P_2^*\ge0\)
+jest dowolnym rozwiązaniem CARE,
+to również spełnia
+\[
+ D_2^*P_2+P_2D_2
+  =-(Q+K_2^*RK_2).
+\]
+Ten sam argument
+z niestabilnym
+wektorem własnym \(D_2\)
+i wykrywalnością \((C,A)\)
+pokazuje, że \(D_2\)
+jest stabilna.
+A więc każde
+nieujemnie określone
+rozwiązanie jest stabilizujące,
+a wcześniej wykazana
+jednoznaczność daje
+\(P_2=P\).
+To dowodzi (iv).
+\end{proof}
+
+\section{Zanik stanu przy skończonym koszcie}
+\label{sec:lin26-decay}
+
+\begin{lemat}[Wykrywalność i wymuszenie zanikające w średniej]
+\label{lem:lin26-detectability-decay}
+Niech \(C^*C=Q\ge0\).
+\begin{enumerate}[label=\textup{(\roman*)}]
+ \item Jeżeli para \((C,A)\)
+ jest wykrywalna w czasie
+ dyskretnym oraz
+ \(x_{k+1}=Ax_k+Bu_k\)
+ dla \(k\ge0\), to warunki
+ \[
+ \sum_{k=0}^{\infty}
+   \bigl(\|Cx_k\|_2^2+\|u_k\|_2^2\bigr)
+ <\infty
+ \]
+ implikują \(x_k\to0\).
+ \item Jeżeli para \((C,A)\)
+ jest wykrywalna w czasie
+ ciągłym oraz
+ \(x'=Ax+Bu\) na \([0,\infty)\)
+ dla lokalnie przedziałami
+ ciągłego sterowania \(u\),
+ to warunki
+ \[
+ \int_0^\infty
+   \bigl(\|Cx(t)\|_2^2+\|u(t)\|_2^2\bigr)
+   \,\mathrm dt<\infty
+ \]
+ implikują \(x(t)\to0\)
+ dla \(t\to\infty\).
+\end{enumerate}
+\end{lemat}
+\begin{proof}
+\emph{Przypadek dyskretny.}
+Z wykrywalności i
+Twierdzenia~\ref{thm:lin25-detectability}
+istnieje \(L\)
+takie, że
+\(D=A-LC\) jest
+macierzą Schura.
+Równanie stanu można
+przepisać jako
+\[
+ x_{k+1}=Dx_k+w_k,
+ \qquad
+ w_k=Bu_k+LCx_k.
+\]
+Założone sumy kwadratów
+są zbieżne, a
+\(\|w_k\|_2\le
+ \|B\|\|u_k\|_2+
+ \|L\|\|Cx_k\|_2\).
+Zatem
+\(\sum_{k\ge0}\|w_k\|_2^2<\infty\).
+Iterując równanie dostajemy
+\[
+ x_k=D^kx_0+
+      \sum_{j=0}^{k-1}
+         D^{k-1-j}w_j.
+\]
+Z
+Lematu~\ref{lem:lin23-powers}
+istnieją \(M>0\), \(0<r<1\)
+takie, że
+\(\|D^k\|\le Mr^k\).
+Pierwszy składnik
+dąży do zera.
+
+Ustalmy \(N_0\ge0\)
+i rozdzielmy sumę
+na \(j<N_0\)
+oraz \(j\ge N_0\).
+Dla każdego
+z pierwszych skończenie
+wielu wyrazów mamy
+\(D^{k-1-j}w_j\to0\),
+gdy \(k\to\infty\).
+Dla części drugiej,
+z nierówności
+Cauchy'ego--Schwarza
+otrzymujemy
+\[
+ \begin{aligned}
+ &\left\|
+ \sum_{j=N_0}^{k-1}
+      D^{k-1-j}w_j\right\|_2\\
+ &\ \le
+ M\left(\sum_{j=N_0}^{k-1}
+      r^{2(k-1-j)}\right)^{1/2}
+  \left(\sum_{j=N_0}^{k-1}
+      \|w_j\|_2^2\right)^{1/2}\\
+ &\ \le
+ \frac{M}{\sqrt{1-r^2}}
+ \left(\sum_{j=N_0}^{\infty}
+       \|w_j\|_2^2\right)^{1/2}.
+ \end{aligned}
+\]
+Ostatnie wyrażenie
+można uczynić dowolnie
+małym, wybierając
+dostatecznie duże \(N_0\).
+Najpierw dobieramy
+\(N_0\), a następnie
+przechodzimy z \(k\)
+do nieskończoności
+w części skończonej.
+Otrzymujemy \(x_k\to0\).
+
+\emph{Przypadek ciągły.}
+Z wykrywalności istnieje
+macierz \(L\)
+taka, że wszystkie
+wartości własne
+\(D=A-LC\)
+mają ujemne części rzeczywiste.
+Przepisujemy równanie na
+\[
+ x'=Dx+w(t),\qquad
+ w(t)=Bu(t)+LCx(t).
+\]
+Z założeń
+\(w\in L^2(0,\infty;\mathbb C^n)\).
+Wzór wariacji stałych
+z
+Lematu~\ref{lem:lin25-variation}
+daje
+\[
+ x(t)=e^{tD}x_0+
+       \int_0^t e^{(t-s)D}w(s)\,\mathrm ds.
+\]
+Stabilność \(D\) zapewnia
+\(\|e^{tD}\|\le Me^{-\alpha t}\)
+dla \(t\ge0\)
+i pewnych \(M,\alpha>0\).
+Zatem pierwszy składnik
+dąży do zera.
+
+Ustalmy \(T_0>0\).
+Część całki po
+\([0,T_0]\) dla \(t>T_0\)
+spełnia
+\[
+ \left\|\int_0^{T_0}
+ e^{(t-s)D}w(s)\,\mathrm ds\right\|_2
+ \le Me^{-\alpha(t-T_0)}
+      \int_0^{T_0}\|w(s)\|_2\,\mathrm ds.
+\]
+Całka po prawej
+jest skończona dzięki
+nierówności Cauchy'ego--Schwarza
+na przedziale skończonym,
+a czynnik wykładniczy
+dąży do zera.
+Z kolei ogon spełnia
+\[
+ \begin{aligned}
+ &\left\|\int_{T_0}^{t}
+    e^{(t-s)D}w(s)\,\mathrm ds\right\|_2\\
+ &\quad\le
+ M\left(\int_{T_0}^{t}
+          e^{-2\alpha(t-s)}
+       \,\mathrm ds\right)^{1/2}
+  \left(\int_{T_0}^{t}
+          \|w(s)\|_2^2\,\mathrm ds
+       \right)^{1/2}\\
+ &\quad\le
+ \frac{M}{\sqrt{2\alpha}}
+ \left(\int_{T_0}^{\infty}
+       \|w(s)\|_2^2\,\mathrm ds\right)^{1/2}.
+ \end{aligned}
+\]
+Prawa strona dąży do zera
+przy \(T_0\to\infty\),
+ponieważ \(w\in L^2\).
+Najpierw wybieramy \(T_0\),
+a potem \(t\to\infty\).
+Wynika stąd \(x(t)\to0\).
+\end{proof}
+
+\begin{uwaga}[Dlaczego potrzebna jest wykrywalność]
+\label{rem:lin26-decay-role}
+W Lemacie~\ref{lem:lin26-detectability-decay}
+nie zakładaliśmy,
+że trajektoria pochodzi
+od sprzężenia stabilizującego.
+Zanik wynika jedynie
+ze skończoności kosztu
+oraz wykrywalności.
+Przy \(Q>0\)
+można byłoby wnioskować
+o zaniku prościej,
+bez wprowadzania obserwatora.
+Dla \(Q\ge0\)
+sam warunek
+\(\sum x_k^*Qx_k<\infty\)
+lub jego ciągły odpowiednik
+nie kontroluje
+nieobserwowalnych składowych.
+\end{uwaga}
+
+\section{Optymalność na nieskończonym horyzoncie}
+\label{sec:lin26-infinite}
+
+\begin{twierdzenie}[Koszt w czasie dyskretnym]
+\label{thm:lin26-dare-optimal}
+Przy założeniach
+Twierdzenia~\ref{thm:lin26-dare}
+niech \(P\ge0\)
+będzie stabilizującym
+rozwiązaniem DARE,
+\(M=R+B^*PB>0\),
+\(K=M^{-1}B^*PA\).
+Dla każdego stanu
+\(x_0\in\mathbb C^n\)
+i każdego ciągu sterowań
+\((u_k)_{k\ge0}\)
+o skończonym koszcie
+\[
+ J_\infty(x_0;u)
+ =\sum_{k=0}^{\infty}
+   (x_k^*Qx_k+u_k^*Ru_k),
+ \quad x_{k+1}=Ax_k+Bu_k,
+\]
+zachodzi tożsamość
+\[
+ J_\infty(x_0;u)
+ =x_0^*Px_0+
+  \sum_{k=0}^{\infty}
+       (u_k+Kx_k)^*
+       M(u_k+Kx_k).
+ \tag{26.7}\label{eq:lin26-discrete-cost}
+\]
+W konsekwencji
+minimalny koszt jest równy
+\(x_0^*Px_0\),
+a jedynym sterowaniem
+optymalnym jest
+\(u_k=-Kx_k\)
+dla każdego \(k\ge0\).
+\end{twierdzenie}
+\begin{proof}
+Z uzupełnienia kwadratu
+w
+Lemacie~\ref{lem:lin26-dare-recursion}
+lub przez bezpośrednie
+rozwinięcie DARE
+otrzymujemy dla dowolnych
+\(x\in\mathbb C^n\),
+\(u\in\mathbb C^m\)
+tożsamość
+\[
+ \begin{aligned}
+ &x^*Qx+u^*Ru
+ +(Ax+Bu)^*P(Ax+Bu)-x^*Px\\
+ &\hspace{12mm}=(u+Kx)^*M(u+Kx).
+ \end{aligned}
+\]
+Równość można sprawdzić,
+wykorzystując
+\(MK=B^*PA\)
+i definicję \(M\).
+Po podstawieniu
+\(x=x_k\), \(u=u_k\)
+i zsumowaniu dla \(k<N\)
+otrzymujemy
+\[
+ \begin{aligned}
+ &\sum_{k=0}^{N-1}
+       (x_k^*Qx_k+u_k^*Ru_k)\\
+ &=x_0^*Px_0-x_N^*Px_N
+   +\sum_{k=0}^{N-1}
+       (u_k+Kx_k)^*M(u_k+Kx_k).
+ \end{aligned}
+\]
+Załóżmy, że całkowity
+koszt jest skończony.
+Z \(R>0\) i \(Q=C^*C\)
+wynika
+\[
+ \sum_{k\ge0}\|u_k\|_2^2<\infty,
+ \qquad
+ \sum_{k\ge0}\|Cx_k\|_2^2<\infty.
+\]
+Z
+Lematu~\ref{lem:lin26-detectability-decay}
+mamy \(x_k\to0\),
+więc \(x_N^*Px_N\to0\).
+Przejście \(N\to\infty\)
+daje
+\eqref{eq:lin26-discrete-cost}.
+
+Ponieważ \(M>0\),
+każdy dodatkowy składnik
+jest nieujemny
+i znika dokładnie,
+gdy \(u_k=-Kx_k\).
+Takie sprzężenie jest
+dopuszczalne i ma
+skończony koszt:
+z
+Twierdzenia~\ref{thm:lin26-dare}
+macierz \(D=A-BK\)
+jest macierzą Schura,
+więc \(\|D^kx_0\|\)
+maleje geometrycznie.
+Dla tego sterowania
+cała suma dodatkowych
+kwadratów znika,
+a koszt wynosi \(x_0^*Px_0\).
+Równość dla innego
+sterowania wymagałaby
+zerowania każdego z
+nieujemnych składników,
+więc daje ten sam
+ciąg sterowań i stanów.
+\end{proof}
+
+\begin{twierdzenie}[Koszt w czasie ciągłym]
+\label{thm:lin26-care-optimal}
+Przy założeniach
+Twierdzenia~\ref{thm:lin26-care}
+niech \(P=P^*\ge0\)
+będzie stabilizującym
+rozwiązaniem CARE,
+a \(K=R^{-1}B^*P\).
+Dla \(x_0\in\mathbb C^n\)
+i dowolnego lokalnie
+przedziałami ciągłego
+sterowania \(u\)
+o skończonym koszcie
+\[
+ J_\infty(x_0;u)=
+ \int_0^\infty
+  (x(t)^*Qx(t)+u(t)^*Ru(t))
+ \,\mathrm dt
+\]
+trajektorii \(x'=Ax+Bu\),
+\(x(0)=x_0\),
+zachodzi tożsamość
+\[
+ J_\infty(x_0;u)
+ =x_0^*Px_0+
+  \int_0^\infty
+        (u(t)+Kx(t))^*R
+        (u(t)+Kx(t))
+    \,\mathrm dt.
+ \tag{26.8}\label{eq:lin26-continuous-cost}
+\]
+Wartość optymalna wynosi
+\(x_0^*Px_0\);
+osiąga ją sprzężenie
+\(u(t)=-Kx(t)\),
+jedyne prawie wszędzie.
+\end{twierdzenie}
+\begin{proof}
+Tożsamość
+\eqref{eq:lin26-care-cost-identity}
+dla macierzy \(P\)
+po całkowaniu od \(0\)
+do \(T\) daje
+\[
+ \begin{aligned}
+ \int_0^T(x^*Qx+u^*Ru)\,\mathrm dt
+ &=x_0^*Px_0-x(T)^*Px(T)\\
+ &\quad+\int_0^T
+       (u+Kx)^*R(u+Kx)\,\mathrm dt.
+ \end{aligned}
+\]
+Jeśli całkowity koszt
+jest skończony,
+to z \(Q=C^*C\)
+i dodatniej określoności
+\(R\) otrzymujemy
+\(Cx,u\in L^2(0,\infty)\).
+Z
+Lematu~\ref{lem:lin26-detectability-decay}
+wynika \(x(T)\to0\),
+a więc
+\(x(T)^*Px(T)\to0\).
+Po przejściu do granicy
+otrzymujemy
+\eqref{eq:lin26-continuous-cost}.
+
+Całka dodatkowego
+kwadratu jest nieujemna.
+Dla sterowania
+\(u=-Kx\) mamy
+\(x(t)=e^{t(A-BK)}x_0\).
+Na mocy
+Twierdzenia~\ref{thm:lin26-care}
+zamknięta pętla
+jest spektralnie stabilna,
+więc stan i sterowanie
+zanikają wykładniczo,
+a ich koszt jest skończony.
+Dodatkowa całka
+jest wtedy zerowa,
+więc koszt wynosi
+\(x_0^*Px_0\).
+Jeśli dowolne inne
+sterowanie ma ten sam koszt,
+to \(u+Kx=0\)
+prawie wszędzie,
+bo \(R>0\).
+Jednoznaczność rozwiązania
+liniowego równania stanu
+wymusza tę samą trajektorię
+i sterowanie prawie wszędzie.
+\end{proof}
+
+\section{Przykłady i kontrprzykłady}
+\label{sec:lin26-examples}
+
+\begin{przyklad}[Niestabilna otwarta pętla: DARE]
+\label{prz:lin26-unstable-dare}
+Weźmy skalarny układ
+dyskretny z parametrami
+\[
+ A=2,\quad B=1,\quad
+ Q=\frac45,\quad R=1.
+\]
+Macierz \(A\) nie jest
+macierzą Schura,
+ponieważ \(\rho(A)=2\).
+Para \((A,B)\)
+jest sterowalna, gdyż \(B\ne0\).
+Macierz \(C=\sqrt{4/5}\)
+jest odwracalna,
+więc para \((C,A)\)
+jest obserwowalna,
+a w szczególności wykrywalna.
+
+DARE ma postać
+\[
+ p=\frac45+\frac{4p}{1+p},
+ \qquad p\ne-1.
+\]
+Po pomnożeniu przez \(5(1+p)\)
+otrzymujemy
+\[
+ 5p^2-19p-4=0,
+ \qquad
+ p\in\left\{4,-\frac15\right\}.
+\]
+Dla \(p=4\) mamy
+\[
+ M=1+p=5,\quad
+ K=\frac{2p}{1+p}=\frac85,\quad
+ A-BK=\frac25.
+\]
+Otrzymujemy więc
+rozwiązanie dodatnio określone
+i stabilizujące.
+Dla drugiego pierwiastka
+\(p=-1/5\) mamy
+\[
+ M=\frac45,\quad
+ K=-\frac12,\quad
+ A-BK=\frac52.
+\]
+To rozwiązanie jest
+niedodatnie i niestabilizujące.
+Widać na nim, dlaczego
+nie należy mówić
+o jednoznaczności
+\emph{wszystkich}
+algebraicznych rozwiązań
+równania Riccatiego.
+Jednoznaczne jest rozwiązanie
+stabilizujące.
+Dla dowolnego \(x_0\)
+sterowanie optymalne
+\(u_k=-\frac85x_k\)
+zapewnia
+\(x_k=(2/5)^kx_0\)
+i koszt \(4|x_0|^2\).
+\end{przyklad}
+
+\begin{przyklad}[Niestabilna otwarta pętla: CARE]
+\label{prz:lin26-unstable-care}
+Rozważmy skalarny układ
+ciągły z
+\[
+ A=1,\quad B=1,\quad
+ Q=3,\quad R=1.
+\]
+Macierz \(A\)
+nie jest stabilna
+w czasie ciągłym.
+Jednak pary \((A,B)\)
+oraz \((C,A)\), \(C=\sqrt3\),
+są odpowiednio sterowalne
+i obserwowalne.
+CARE redukuje się do
+\[
+ 2p-p^2+3=0
+ \quad\Longleftrightarrow\quad
+ (p-3)(p+1)=0.
+\]
+Dla \(p=3\)
+sprzężenie ma wartość
+\(K=3\),
+a dynamika zamknięta to
+\(x'=-2x\).
+Rozwiązanie jest
+stabilizujące i dodatnie,
+a wartość optymalna
+wynosi \(3|x_0|^2\).
+Drugi pierwiastek \(p=-1\)
+daje \(K=-1\)
+i dynamikę \(x'=2x\).
+Nie jest on stabilizujący.
+
+Można prześledzić
+również horyzont skończony.
+Równanie z
+Lematu~\ref{lem:lin26-care-finite}
+ma postać
+\[
+ s'(t)=2s(t)-s(t)^2+3
+       =(3-s(t))(1+s(t)),
+ \quad s(0)=0.
+\]
+Bezpośrednie różniczkowanie
+daje rozwiązanie
+\[
+ s(t)=\frac{3(1-e^{-4t})}
+            {1+3e^{-4t}}.
+\]
+Sprawdźmy warunek początkowy:
+\(s(0)=0\).
+Jeżeli \(z=e^{-4t}\),
+to pochodna prawej strony
+wynosi
+\(48z/(1+3z)^2\).
+Z kolei
+\((3-s)(1+s)
+ =[12z/(1+3z)]
+  [4/(1+3z)]\),
+czyli tę samą funkcję.
+Ponadto \(s(t)\uparrow3\)
+dla \(t\to\infty\).
+Otrzymujemy granicę
+algebraiczną bez
+zakładania stabilności
+otwartej pętli.
+\end{przyklad}
+
+\begin{przyklad}[Koszt półokreślony i rozwiązanie osobliwe]
+\label{prz:lin26-singular}
+Niech w czasie dyskretnym
+\[
+ A=\begin{pmatrix}2&0\\0&1/2\end{pmatrix},
+ \quad
+ B=\begin{pmatrix}1\\0\end{pmatrix},
+ \quad
+ Q=\begin{pmatrix}4/5&0\\0&0\end{pmatrix},
+ \quad R=1.
+\]
+Pierwszy kierunek
+jest osiągalny,
+drugi nieosiągalny,
+ale jego wartość własna
+\(1/2\) należy
+do dysku jednostkowego.
+Z
+Twierdzenia~\ref{thm:lin25-stabilizability}
+para \((A,B)\)
+jest stabilizowalna.
+Możemy wybrać
+\(C=\operatorname{diag}(2/\sqrt5,0)\).
+Jego jądro jest generowane
+przez \(e_2\),
+a odpowiadająca
+wartość własna \(A\)
+jest stabilna.
+Z
+Twierdzenia~\ref{thm:lin25-detectability}
+para \((C,A)\)
+jest wykrywalna,
+mimo że nie jest obserwowalna.
+
+Macierz
+\[
+ P=\begin{pmatrix}4&0\\0&0\end{pmatrix}
+\]
+spełnia DARE.
+Istotnie,
+\(M=1+B^*PB=5\),
+\(K=M^{-1}B^*PA=(8/5,\;0)\),
+a bezpośredni rachunek daje
+\[
+ \begin{aligned}
+ &Q+A^*PA-A^*PBM^{-1}B^*PA\\
+ &\qquad
+ =\begin{pmatrix}4/5&0\\0&0\end{pmatrix}
+  +\begin{pmatrix}16&0\\0&0\end{pmatrix}
+  -\begin{pmatrix}64/5&0\\0&0\end{pmatrix}
+ =P.
+ \end{aligned}
+\]
+Sprzężenie zamknięte ma
+macierz
+\(A-BK=\operatorname{diag}(2/5,1/2)\),
+a więc jest stabilne.
+Jednak \(P\) ma
+niezerowe jądro,
+więc nie jest
+dodatnio określona.
+
+Analogiczny przykład ciągły
+otrzymujemy dla
+\[
+ A_{\mathrm c}=\operatorname{diag}(1,-2),
+ \quad B_{\mathrm c}=e_1,\quad
+ Q_{\mathrm c}=\operatorname{diag}(3,0),
+ \quad R_{\mathrm c}=1.
+\]
+Macierz
+\(P_{\mathrm c}=\operatorname{diag}(3,0)\)
+spełnia
+\[
+ A_{\mathrm c}^*P_{\mathrm c}
+ +P_{\mathrm c}A_{\mathrm c}
+ -P_{\mathrm c}B_{\mathrm c}
+     B_{\mathrm c}^*P_{\mathrm c}
+ +Q_{\mathrm c}
+ =\operatorname{diag}(6,0)
+  -\operatorname{diag}(9,0)
+  +\operatorname{diag}(3,0)=0.
+\]
+Sprzężenie \(K_{\mathrm c}=(3,0)\)
+daje
+\(A_{\mathrm c}-B_{\mathrm c}K_{\mathrm c}
+ =\operatorname{diag}(-2,-2)\).
+W obu rodzajach czasu
+optymalny koszt zależy
+wyłącznie od pierwszej
+współrzędnej początkowej.
+\end{przyklad}
+
+\begin{przyklad}[Brak wykrywalności]
+\label{prz:lin26-no-detectability}
+Niech w czasie dyskretnym
+\(A=2\), \(B=1\),
+\(Q=0\), \(R=1\).
+Para \((A,B)\)
+jest sterowalna,
+a więc stabilizowalna.
+Jednak \(C=0\),
+a wartość własna \(2\)
+jest niewykrywalna.
+
+Dla dowolnego
+skończonego horyzontu
+koszt wynosi tylko
+\(\sum_k|u_k|^2\).
+Sterowanie \(u_k=0\)
+daje koszt zerowy,
+więc w rekurencji Riccatiego
+\(P_N=0\) dla każdego \(N\).
+Granica \(P=0\)
+spełnia DARE,
+ale sprzężenie \(K=0\)
+nie stabilizuje \(A=2\).
+
+Co więcej, to samo DARE
+ma również rozwiązanie \(p=3\):
+przy \(Q=0\) jest ono
+równoważne
+\(p=4p/(1+p)\),
+czyli \(p=0\) lub \(p=3\).
+Rozwiązanie \(p=3\)
+daje \(K=3/2\)
+i zamkniętą wartość własną
+\(1/2\), zatem jest
+stabilizujące,
+ale nie jest granicą
+optymalizacji
+bez kary za stan.
+Wykrywalność jest
+niezbędna do
+przedstawionego twierdzenia
+o stabilizującym
+charakterze granicy.
+
+Ciągły odpowiednik
+ma \(A=B=R=1\), \(Q=0\).
+CARE sprowadza się do
+\(2p-p^2=0\),
+więc \(p=0\)
+jest rozwiązaniem
+niestabilizującym,
+a \(p=2\)
+rozwiązaniem stabilizującym.
+Różniczkowe równanie
+z początkiem \(S(0)=0\)
+ma jednak jedyne
+rozwiązanie \(S(t)=0\).
+Ponownie granica
+skończonych horyzontów
+nie stabilizuje układu.
+\end{przyklad}
+
+\begin{przyklad}[Brak stabilizowalności]
+\label{prz:lin26-no-stabilizability}
+Niech \(A=2\), \(B=0\),
+\(Q=R=1\) w czasie dyskretnym.
+Para \((C,A)\) z \(C=1\)
+jest obserwowalna,
+lecz sterowanie
+nie wpływa na stan.
+DARE redukuje się
+do \(p=1+4p\),
+czyli \(p=-1/3\).
+Nie ma rozwiązania
+nieujemnie określonego,
+a zamknięta pętla
+pozostaje równa \(A=2\).
+Również koszt zerowego
+sterowania na nieskończonym
+horyzoncie rozbiega się
+dla każdego \(x_0\ne0\).
+
+W czasie ciągłym
+analogiczny układ
+\(A=1\), \(B=0\),
+\(Q=R=1\)
+daje CARE \(2p+1=0\),
+więc \(p=-1/2\),
+i nie istnieje
+stabilizujące sprzężenie.
+Jest to odrębna przeszkoda
+niż brak wykrywalności
+z poprzedniego przykładu.
+\end{przyklad}
+
+\section{Podsumowanie}
+\label{sec:lin26-summary}
+
+Niech \(Q=C^*C\ge0\)
+oraz \(R>0\).
+Jeżeli para \((A,B)\)
+jest stabilizowalna,
+a para \((C,A)\)
+wykrywalna w odpowiednim
+rodzaju czasu, to skończone
+horyzonty LQR wyznaczają
+niemalejące i ograniczone
+rodziny macierzy Riccatiego.
+Ich granice są
+nieujemnie określonymi
+rozwiązaniami algebraicznymi.
+Wykrywalność wyklucza
+niestabilne wektory własne
+zamkniętej pętli,
+które nie wnoszą kosztu.
+Otrzymujemy jednoznaczne
+rozwiązania stabilizujące
+CARE i DARE.
+
+Dodatkowo
+wykrywalność pozwala
+wywnioskować z dowolnego
+skończonego kosztu
+zanik całego stanu.
+Dopiero to uzasadnia
+pominięcie warunku
+brzegowego na nieskończonym
+horyzoncie i dokładne
+tożsamości kosztowe.
+W obu przypadkach
+minimalny koszt ma postać
+\(x_0^*Px_0\),
+a optymalne sterowanie
+jest liniowym sprzężeniem
+\(u=-Kx\).
+
+Gdy \(Q>0\)
+wykrywalność jest automatyczna,
+a przy stabilnym \(A\)
+stabilizowalność jest
+automatyczna.
+Twierdzenia z tego rozdziału
+rozszerzają zatem
+wyniki
+Rozdziału~\ref{ch:lin24-riccati}.
+Przykłady pokazują,
+że ani dodatnia
+określoność \(P\),
+ani jednoznaczność
+wszystkich algebraicznych
+pierwiastków Riccatiego
+nie muszą zachodzić.

@@ -1,0 +1,164 @@
+% !TeX program = pdflatex
+% Wykład (rozdziały 1--32) + ramkowany kod numeryczny.
+% Zadania i audyty znajdują się w oddzielnych plikach TEX/PDF.
+% Kompilacja: latexmk -cd -pdf books/pl/partial_differential_equations.tex
+\pdfobjcompresslevel=0
+\documentclass[11pt,a4paper,oneside]{book}
+
+% Wspólna preambuła skryptu „Równania różniczkowe cząstkowe”.
+% Preambula włączona bezpośrednio do jednego pliku.
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[polish]{babel}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{esint}
+\usepackage{microtype}
+\usepackage[a4paper,margin=2.7cm]{geometry}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\lstdefinestyle{pythonpde}{
+ language=Python,
+ basicstyle=\ttfamily\scriptsize,
+ keywordstyle=\color{blue!55!black},
+ commentstyle=\color{green!30!black},
+ stringstyle=\color{red!55!black},
+ numbers=left, numberstyle=\tiny\color{black!55},
+ numbersep=9pt, frame=single, framerule=.55pt,
+ rulecolor=\color{black!45}, backgroundcolor=\color{black!2},
+ breaklines=true, breakatwhitespace=true, columns=fullflexible,
+ keepspaces=true, showstringspaces=false, tabsize=4,
+ captionpos=b, xleftmargin=8pt,xrightmargin=3pt,framexleftmargin=3pt,
+ aboveskip=10pt,belowskip=8pt}
+\usepackage{graphicx}
+\graphicspath{{../../assets/pl/partial_differential_equations/}}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,positioning}
+\usepackage[unicode,colorlinks=true,linkcolor=blue!45!black,urlcolor=blue!45!black]{hyperref}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setlength{\emergencystretch}{2em}
+\setlist[enumerate]{topsep=4pt,itemsep=2pt,leftmargin=*}
+\setlist[itemize]{topsep=4pt,itemsep=2pt,leftmargin=*}
+\numberwithin{equation}{chapter}
+\renewcommand{\lstlistingname}{Kod}
+
+\theoremstyle{plain}
+\newtheorem{twierdzenie}{Twierdzenie}[chapter]
+\newtheorem{stwierdzenie}[twierdzenie]{Stwierdzenie}
+\newtheorem{lemat}[twierdzenie]{Lemat}
+\newtheorem{wniosek}[twierdzenie]{Wniosek}
+\theoremstyle{definition}
+\newtheorem{definicja}[twierdzenie]{Definicja}
+\newtheorem{przyklad}[twierdzenie]{Przykład}
+\newtheorem{kontrprzyklad}[twierdzenie]{Kontrprzykład}
+\theoremstyle{remark}
+\newtheorem{uwaga}[twierdzenie]{Uwaga}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\T}{\mathbb{T}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\pd}{\partial}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\diver}{div}
+
+\title{Równania różniczkowe cząstkowe\\\large Tom I. Podstawy teorii PDE i rozwiązań słabych}
+\author{}
+\date{19 listopada 2026}
+\begin{document}
+\frontmatter
+\hypersetup{pageanchor=false}
+\maketitle
+\hypersetup{pageanchor=true}
+\tableofcontents
+\chapter*{Od redakcji}
+\addcontentsline{toc}{chapter}{Od redakcji}
+Tom I zawiera ciągły wykład z teorii PDE: od podstaw i metody
+charakterystyk, przez równania Laplace'a i Poissona oraz
+równanie ciepła, po równanie falowe, metody Fouriera, teorię dystrybucji, przestrzenie Sobolewa, metody wariacyjne, teorię spektralną i eliptyczne zagadnienia brzegowe. Zachowano wspólną
+numerację i odsyłacze. Zbiór zadań do rozdziałów 1--32
+oraz szczegółowy audyt matematyczno-redakcyjny są
+przygotowane jako osobne dokumenty, niezależne od wykładu.
+W tekście przez \emph{obszar} rozumiemy niepusty otwarty
+spójny podzbiór przestrzeni euklidesowej. Określenie
+\emph{dziedzina} rezerwujemy dla dziedziny funkcji lub operatora;
+angielskie \emph{field} w algebrze oznacza \emph{ciało},
+a \emph{vector field} w geometrii — \emph{pole wektorowe}.
+W nazwach matematycznych stosujemy poprawną odmianę nazwisk:
+równanie Hamiltona--Jacobiego, nierówność Harnacka,
+twierdzenie Laxa--Milgrama, oszacowanie Schaudera,
+metoda Galerkina. Używamy \emph{iloczynu tensorowego},
+a nie sztucznej nazwy odczasownikowej.
+Każda całka oznaczona zawiera obszar całkowania i różniczkę
+miary, na przykład $\int_\Omega f(x)\,\mathrm d\lambda_d(x)$;
+na torusie $\T^d$ używamy miary Lebesgue'a o ustalonej
+normalizacji, określanej przy pierwszym użyciu.
+Kod numeryczny jest zapisany bezpośrednio w obramowanych
+listingach tego skryptu; do kompilacji książki nie potrzeba
+osobnych plików Python ani wcześniej wydawanych archiwów.
+Aby uruchomić przykład, można przenieść dany listing do pliku
+źródłowego w Pythonie i zainstalować biblioteki wskazane w kodzie.
+W przykładach wizualizacji korzystamy z Plotly;
+interaktywne wykresy można następnie zapisać jako HTML.
+Rysunki wiru Taylora--Greena wykonano bezpośrednio w TikZ.
+
+\subsection*{Jak czytać rozdziały w porządku logicznym}
+Pierwsze przykłady PDE i charakterystyki można czytać niezależnie,
+ale zaawansowana część teorii ma świadomy porządek zależności.
+Szeregi Fouriera na torusie przedstawiamy przed teorią dystrybucji;
+następnie wprowadzamy dystrybucje, transformatę Fouriera na
+$\R^d$, przestrzenie Sobolewa i ich zanurzenia. Dopiero po nich
+budujemy metody wariacyjne, operatory nieograniczone oraz
+słabą teorię eliptyczną i ewolucyjną.
+
+Nie każde odwołanie do dalszego twierdzenia oznacza cykl w dowodzie:
+czasem jest to jawna zapowiedź późniejszego, niezależnie
+udowodnionego wyniku. W szczególności wykład o funkcjach
+harmonicznych odwołuje się do ich analityczności dowiedzionej
+później w tym samym rozdziale. Rozdziały o operatorach
+pseudoróżniczkowych korzystają z nieunitarnej konwencji
+transformaty Fouriera już zdefiniowanej w części podstawowej.
+Jawne odsyłacze i zależności między rozdziałami indeksuje
+aplikacja Biblioteki matematycznej, niezależnie od kompilacji skryptu.
+\mainmatter
+
+% Rozdział 1.
+\input{../../chapters/pl/partial_differential_equations/01-wprowadzenie-do-pde.tex}
+\input{../../chapters/pl/partial_differential_equations/02-charakterystyki-i-pde-pierwszego-rzedu.tex}
+\input{../../chapters/pl/partial_differential_equations/03-rownania-laplace-a-i-poissona.tex}
+\input{../../chapters/pl/partial_differential_equations/04-rownanie-ciepla.tex}
+\input{../../chapters/pl/partial_differential_equations/05-rownanie-falowe.tex}
+\input{../../chapters/pl/partial_differential_equations/06-metody-fouriera-i-rozdzielenie-zmiennych.tex}
+\input{../../chapters/pl/partial_differential_equations/07-dystrybucje-i-slabe-pochodne.tex}
+\input{../../chapters/pl/partial_differential_equations/08-transformata-fouriera-i-dystrybucje-temperowane.tex}
+\input{../../chapters/pl/partial_differential_equations/09-przestrzenie-sobolewa.tex}
+\input{../../chapters/pl/partial_differential_equations/10-zanurzenia-i-zwartosc-sobolewa.tex}
+\input{../../chapters/pl/partial_differential_equations/11-metody-wariacyjne-i-twierdzenie-laxa-milgrama.tex}
+\input{../../chapters/pl/partial_differential_equations/12-operatory-nieograniczone-i-teoria-spektralna.tex}
+\input{../../chapters/pl/partial_differential_equations/13-eliptyczne-zagadnienia-brzegowe.tex}
+\input{../../chapters/pl/partial_differential_equations/14-zasady-maksimum-i-teoria-potencjalu.tex}
+\input{../../chapters/pl/partial_differential_equations/15-regularnosc-sobolewa-rozwiazan-eliptycznych.tex}
+\input{../../chapters/pl/partial_differential_equations/16-oszacowania-calderona-zygmunda-i-schaudera.tex}
+\input{../../chapters/pl/partial_differential_equations/17-regularnosc-de-giorgiego-nasha-mosera.tex}
+\input{../../chapters/pl/partial_differential_equations/18-widmo-operatorow-eliptycznych.tex}
+\input{../../chapters/pl/partial_differential_equations/19-pojemnosc-sobolewa-i-osobliwosci.tex}
+\input{../../chapters/pl/partial_differential_equations/20-paraboliczne-rownania-ewolucyjne.tex}
+\input{../../chapters/pl/partial_differential_equations/21-uklady-hiperboliczne-i-propagacja.tex}
+\input{../../chapters/pl/partial_differential_equations/22-rownanie-schrodingera.tex}
+\input{../../chapters/pl/partial_differential_equations/23-rownania-hamiltona-jacobiego.tex}
+\input{../../chapters/pl/partial_differential_equations/24-skalarne-prawa-zachowania.tex}
+\input{../../chapters/pl/partial_differential_equations/25-rownania-polliniowe-i-eksplozja.tex}
+\input{../../chapters/pl/partial_differential_equations/26-operatory-monotoniczne-i-p-laplasjan.tex}
+\input{../../chapters/pl/partial_differential_equations/27-reakcja-dyfuzja-i-fale-biegnace.tex}
+\input{../../chapters/pl/partial_differential_equations/28-rownania-naviera-stokesa.tex}
+\input{../../chapters/pl/partial_differential_equations/29-nierownosci-wariacyjne-i-przeszkoda.tex}
+\input{../../chapters/pl/partial_differential_equations/30-homogenizacja-okresowa-rownan-eliptycznych.tex}
+\input{../../chapters/pl/partial_differential_equations/31-analiza-mikrolokalna.tex}
+\input{../../chapters/pl/partial_differential_equations/32-problemy-odwrotne-i-sterowanie-pde.tex}
+\input{../../chapters/pl/partial_differential_equations/33-eksperymenty-numeryczne-do-rozdzialow-2-32.tex}
+\end{document}

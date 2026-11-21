@@ -1,0 +1,1447 @@
+\chapter{Równania Riccatiego i sterowanie liniowo-kwadratowe}
+\label{ch:lin24-riccati}
+\index{równanie Riccatiego@Równanie Riccatiego}
+\index{sterowanie liniowo-kwadratowe@Sterowanie liniowo-kwadratowe}
+\index{równanie Riccatiego!algebraiczne}
+\index{sprzężenie zwrotne@Sprzężenie zwrotne}
+
+\noindent\textbf{Cel rozdziału.}
+Twierdzenia Lapunowa z
+Rozdziałów~\ref{ch:lin22-sylvester}
+i~\ref{ch:lin23-discrete-lyapunov}
+rozpoznają stabilność ustalonej macierzy.
+Równania Riccatiego pozwalają
+równocześnie \emph{wybrać} operator
+sprzężenia zwrotnego i uzasadnić
+jego optymalność.
+Wyprowadzimy je z problemów
+minimalizacji całkowitego kosztu
+kwadratowego, najpierw w czasie
+dyskretnym, potem ciągłym.
+Następnie udowodnimy istnienie,
+dodatnią określoność i jednoznaczność
+rozwiązań stabilizujących
+przy jawnych, wystarczających
+założeniach. Nie będziemy
+zakładać ogólnych twierdzeń
+o sterowalności ani wykrywalności,
+które należą do odrębnej teorii.
+
+W całym rozdziale \(n,m\ge1\).
+Macierze \(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\),
+\(B\in\operatorname{Mat}_{n\times m}(\mathbb C)\),
+\(Q\in\operatorname{Mat}_{n\times n}(\mathbb C)\)
+oraz \(R\in\operatorname{Mat}_{m\times m}(\mathbb C)\)
+są ustalone, przy czym
+\(Q=Q^*>0\) i \(R=R^*>0\).
+Przez \(x^*\) oznaczamy
+sprzężenie hermitowskie.
+Dla macierzy hermitowskich
+\(P_1\le P_2\) oznacza,
+że \(P_2-P_1\) jest
+nieujemnie określona.
+Wszystkie twierdzenia pozostają
+ważne nad \(\mathbb R\)
+po zastąpieniu sprzężenia
+transpozycją.
+
+\section{Minimalizacja formy kwadratowej}
+\label{sec:lin24-square}
+
+\begin{lemat}[Uzupełnianie kwadratu]
+\label{lem:lin24-square}
+Niech \(M=M^*>0\)
+będzie macierzą stopnia \(m\)
+nad \(\mathbb C\),
+\(c\in\mathbb C^m\)
+i \(d\in\mathbb R\).
+Dla każdego \(u\in\mathbb C^m\)
+zachodzi
+\[
+ u^*Mu+2\operatorname{Re}(u^*c)+d
+ =(u+M^{-1}c)^*M(u+M^{-1}c)
+    +d-c^*M^{-1}c.
+\]
+Wyrażenie z lewej strony
+ma jedyne minimum
+\(d-c^*M^{-1}c\)
+osiągane w \(u=-M^{-1}c\).
+\end{lemat}
+\begin{proof}
+Dodatnia określoność \(M\)
+implikuje jej odwracalność
+i hermitowskość \(M^{-1}\).
+Po wymnożeniu prawej strony
+otrzymujemy
+\(u^*Mu+u^*c+c^*u
+ +c^*M^{-1}c+d-c^*M^{-1}c\).
+Ponieważ \(c^*u=\overline{u^*c}\),
+środkowe składniki
+dają \(2\operatorname{Re}(u^*c)\).
+Pierwszy składnik po prawej
+w sformułowaniu twierdzenia
+jest nieujemny i znika dokładnie,
+gdy \(u+M^{-1}c=0\).
+To daje wartość i jednoznaczność
+minimum.
+\end{proof}
+
+\begin{uwaga}[Rola założeń]
+\label{rem:lin24-hypotheses}
+W dalszych twierdzeniach
+dodatnia określoność \(R\)
+zapewnia ściśle wypukłą
+minimalizację po sterowaniu.
+Dodatnia określoność \(Q\)
+posłuży do wykazania
+stabilności zamkniętej pętli.
+Założenia te są silniejsze
+niż konieczne w ogólnej teorii
+sterowania, ale pozwalają
+przedstawić kompletne dowody
+bez odwołań do nieomówionych
+kryteriów sterowalności.
+\end{uwaga}
+
+\section{Czas dyskretny: problem o skończonym horyzoncie}
+\label{sec:lin24-discrete-finite}
+
+\begin{definicja}[Dyskretny problem LQR]
+\label{def:lin24-discrete-cost}
+Dla całkowitego \(N\ge0\)
+i \(x_0\in\mathbb C^n\)
+rozważmy trajektorię
+\[
+ x_{k+1}=Ax_k+Bu_k,\qquad 0\le k<N,
+\]
+przy dowolnych sterowaniach
+\(u_0,\ldots,u_{N-1}\in\mathbb C^m\).
+Koszt określamy wzorem
+\[
+ J_N(x_0;u_0,\ldots,u_{N-1})
+  =\sum_{k=0}^{N-1}
+         (x_k^*Qx_k+u_k^*Ru_k).
+\]
+Przy \(N=0\) sumę uznajemy
+za zerową. \emph{Wartością optymalną}
+nazywamy
+\(V_N(x_0)=\inf J_N\),
+gdzie infimum przebiega
+wszystkie dopuszczalne ciągi
+sterowań.
+\end{definicja}
+
+\begin{twierdzenie}[Dyskretne równanie Riccatiego]
+\label{thm:lin24-dare-recursion}
+Dla macierzy \(A,B,Q,R\)
+spełniających założenia rozdziału
+zdefiniujmy ciąg macierzy
+\(P_N\in\operatorname{Mat}_{n\times n}(\mathbb C)\)
+rekurencją \(P_0=0\) oraz
+\[
+ P_{N+1}
+ =Q+A^*P_NA
+  -A^*P_NB(R+B^*P_NB)^{-1}B^*P_NA.
+\]
+Dla każdego \(N\ge0\)
+macierz \(P_N\) jest hermitowska
+i nieujemnie określona,
+a \(R+B^*P_NB>0\).
+Ponadto
+\[
+ V_N(x)=x^*P_Nx
+ \qquad(x\in\mathbb C^n),
+\]
+zaś infimum w definicji
+\(V_N\) jest osiągane.
+Na pierwszym kroku problemu
+o horyzoncie \(N+1\)
+optymalny wybór sterowania
+jest jednoznaczny i wynosi
+\[
+ u_0=-K_Nx_0,\qquad
+ K_N=(R+B^*P_NB)^{-1}B^*P_NA.
+\]
+\end{twierdzenie}
+\begin{proof}
+Przeprowadzimy indukcję
+względem \(N\).
+Dla \(N=0\) koszt wynosi zero
+i \(V_0(x)=0=x^*P_0x\).
+Załóżmy, że teza zachodzi
+dla pewnego \(N\ge0\).
+W problemie o horyzoncie \(N+1\)
+pierwszy koszt wynosi
+\(x^*Qx+u^*Ru\),
+a kolejny stan to \(Ax+Bu\).
+Z założenia indukcyjnego
+najmniejszy koszt pozostałych
+\(N\) kroków jest równy
+\((Ax+Bu)^*P_N(Ax+Bu)\).
+Dlatego
+\[
+ V_{N+1}(x)
+ =\min_{u\in\mathbb C^m}
+ \bigl[x^*Qx+u^*Ru+
+       (Ax+Bu)^*P_N(Ax+Bu)\bigr].
+\]
+W tym kroku zapisaliśmy
+minimum, a nie tylko infimum:
+za chwilę skonstruujemy
+jego jedyny punkt osiągnięcia.
+
+Po rozwinięciu nawiasu
+wyrażenie zależne od \(u\)
+ma postać
+\[
+ u^*M_Nu+
+  2\operatorname{Re}(u^*B^*P_NAx)
+  +x^*(Q+A^*P_NA)x,
+\quad M_N=R+B^*P_NB.
+\]
+Ponieważ \(P_N\ge0\)
+i \(R>0\), mamy \(M_N>0\).
+Lemat~\ref{lem:lin24-square}
+daje jedyne minimum
+przy \(u=-M_N^{-1}B^*P_NAx\),
+a jego wartość jest równa
+\(x^*P_{N+1}x\)
+z macierzą określoną w tezie.
+Tym samym \(P_{N+1}\)
+jest hermitowska
+jako suma i różnica
+macierzy hermitowskich.
+Ponieważ każdy składnik
+pierwotnego kosztu jest
+nieujemny, otrzymana wartość
+optymalna jest nieujemna:
+\(x^*P_{N+1}x\ge0\)
+dla każdego \(x\).
+Zatem \(P_{N+1}\ge0\).
+Łącząc wybrane pierwsze
+sterowanie z osiągającymi
+minimum sterowaniami pozostałego
+horyzontu, otrzymujemy
+osiągnięcie infimum.
+Indukcja jest zakończona.
+\end{proof}
+
+\begin{stwierdzenie}[Monotoniczność wartości optymalnych]
+\label{prop:lin24-discrete-mono}
+Przy założeniach
+Twierdzenia~\ref{thm:lin24-dare-recursion}
+dla każdego \(N\ge0\)
+zachodzi \(P_N\le P_{N+1}\).
+Jeżeli dodatkowo \(A\)
+jest macierzą Schura
+w sensie
+Definicji~\ref{def:lin23-schur},
+to istnieje macierz \(W=W^*>0\)
+taka, że \(P_N\le W\)
+dla wszystkich \(N\ge0\).
+\end{stwierdzenie}
+\begin{proof}
+Dla dowolnego sterowania
+w problemie o horyzoncie \(N+1\)
+jego pierwsze \(N\) kroków
+tworzy dopuszczalne sterowanie
+dla horyzontu \(N\).
+Wszystkie koszty etapowe
+są nieujemne, więc koszt
+o dłuższym horyzoncie
+nie może być mniejszy
+od wartości optymalnej
+dla krótszego horyzontu.
+Biorąc infimum, otrzymujemy
+\(V_{N+1}(x)\ge V_N(x)\)
+dla każdego \(x\).
+Z wyrażenia
+\(V_N(x)=x^*P_Nx\)
+wynika \(P_N\le P_{N+1}\).
+
+Załóżmy teraz \(\rho(A)<1\).
+Z dyskretnego twierdzenia
+Lapunowa
+\ref{thm:lin23-lyapunov}
+istnieje dodatnio określona
+macierz
+\[
+ W=\sum_{k=0}^{\infty}(A^*)^kQA^k.
+\]
+Wybierając sterowanie
+\(u_k=0\) dla każdego \(k\),
+otrzymujemy trajektorię
+\(x_k=A^kx\) i koszt
+\(\sum_{k=0}^{N-1}x^*(A^*)^kQA^kx
+ \le x^*Wx\).
+Ponieważ \(V_N(x)\)
+jest minimum kosztu,
+\(x^*P_Nx\le x^*Wx\)
+dla każdego \(x\),
+czyli \(P_N\le W\).
+\end{proof}
+
+\section{Algebraiczne równanie Riccatiego w czasie dyskretnym}
+\label{sec:lin24-dare}
+
+\begin{definicja}[Dyskretne algebraiczne równanie Riccatiego]
+\label{def:lin24-dare}
+Dla \(A,B,Q,R\) jak na początku
+rozdziału \emph{dyskretnym
+algebraicznym równaniem Riccatiego}
+(DARE) nazywamy
+\[
+ P=Q+A^*PA-
+ A^*PB(R+B^*PB)^{-1}B^*PA,
+\]
+gdzie szukana jest macierz
+hermitowska \(P\),
+dla której \(R+B^*PB\)
+jest odwracalna.
+Gdy \(P\ge0\), macierz ta
+jest automatycznie
+dodatnio określona.
+Dla takiego rozwiązania
+definiujemy
+\[
+ K=(R+B^*PB)^{-1}B^*PA,
+ \qquad A_{\mathrm{cl}}=A-BK.
+\]
+Rozwiązanie nazywamy
+\emph{stabilizującym},
+jeżeli \(A_{\mathrm{cl}}\)
+jest macierzą Schura.
+\end{definicja}
+
+\begin{twierdzenie}[Istnienie i jednoznaczność stabilizującego DARE]
+\label{thm:lin24-dare-existence}
+Niech \(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\)
+będzie macierzą Schura,
+\(B\in\operatorname{Mat}_{n\times m}(\mathbb C)\)
+dowolną macierzą,
+a \(Q=Q^*>0\) i \(R=R^*>0\).
+Wówczas ciąg \(P_N\)
+z Twierdzenia~\ref{thm:lin24-dare-recursion}
+ma granicę \(P=P^*>0\).
+Macierz \(P\) spełnia DARE,
+a sprzężenie zwrotne
+\(K=(R+B^*PB)^{-1}B^*PA\)
+czyni \(A-BK\) macierzą Schura.
+
+Wśród wszystkich
+hermitowskich, nieujemnie
+określonych rozwiązań DARE
+macierz \(P\) jest jedyna.
+Jest ona także jedynym
+\emph{hermitowskim rozwiązaniem
+stabilizującym}, nawet jeżeli
+nie zakłada się z góry jego
+nieujemnej określoności.
+\end{twierdzenie}
+\begin{proof}
+Z
+Twierdzenia~\ref{thm:lin24-dare-recursion}
+i Stwierdzenia~\ref{prop:lin24-discrete-mono}
+wynika
+\(0=P_0\le P_1\le\cdots\le W\),
+gdzie \(W=W^*>0\)
+nie zależy od \(N\).
+Dla każdego ustalonego
+\(z\in\mathbb C^n\)
+ciąg \(z^*P_Nz\) jest zatem
+niemalejący i ograniczony,
+więc ma granicę.
+W szczególności zbieżne są
+wszystkie elementy diagonalne
+\(e_i^*P_Ne_i\).
+Wybierając kolejno
+\(z=e_i+e_j\) i
+\(z=e_i+ie_j\),
+odtwarzamy z granic
+części rzeczywiste i urojone
+elementów pozadiagonalnych
+dzięki hermitowskości \(P_N\).
+Zatem wszystkie współczynniki
+\(P_N\) są zbieżne.
+Ich granica \(P\)
+jest hermitowska i spełnia
+\(0\le P\le W\).
+Ponieważ \(P_1=Q>0\)
+i \(P_N\) jest niemalejący,
+mamy nawet \(P\ge Q>0\).
+
+Dla wszystkich \(N\)
+macierz \(M_N=R+B^*P_NB\)
+spełnia \(M_N\ge R>0\).
+Jej granica
+\(M=R+B^*PB>0\)
+jest odwracalna.
+Odwracanie macierzy
+jest ciągłe na zbiorze
+macierzy odwracalnych:
+można to sprawdzić
+z tożsamości
+\(M_N^{-1}-M^{-1}
+ =M_N^{-1}(M-M_N)M^{-1}\),
+przy czym odwrotności \(M_N^{-1}\)
+mają jednostajnie ograniczone
+normy z nierówności \(M_N\ge R\).
+Przechodząc do granicy
+w rekurencji dla \(P_N\),
+otrzymujemy DARE.
+
+Oznaczmy
+\(K=M^{-1}B^*PA\).
+Uzupełnienie kwadratu
+z Lematu~\ref{lem:lin24-square},
+wstawione do równania DARE,
+daje tożsamość
+\[
+ P=Q+K^*RK+(A-BK)^*P(A-BK).
+\]
+Dla sprawdzenia wystarczy
+rozwinąć prawą stronę
+i użyć \(MK=B^*PA\)
+oraz \(K^*M=A^*PB\).
+Stąd
+\[
+ A_{\mathrm{cl}}^*PA_{\mathrm{cl}}-P
+ =-(Q+K^*RK),
+ \qquad A_{\mathrm{cl}}=A-BK.
+\]
+Macierze \(P\) i
+\(Q+K^*RK\) są dodatnio
+określone, dlatego
+dyskretne twierdzenie Lapunowa
+\ref{thm:lin23-lyapunov}
+implikuje \(\rho(A_{\mathrm{cl}})<1\).
+
+Zbadamy jednoznaczność
+bez dodatkowego założenia
+dodatniej określoności
+dla drugiego rozwiązania.
+Niech \(\widetilde P=\widetilde P^*\)
+będzie innym rozwiązaniem
+DARE, dla którego
+\(\widetilde M=R+B^*\widetilde PB\)
+jest odwracalna i
+\(\widetilde A_{\mathrm{cl}}
+ =A-B\widetilde K\),
+\(\widetilde K=\widetilde M^{-1}B^*\widetilde PA\),
+jest macierzą Schura.
+Nie zakładamy, że
+\(\widetilde M>0\).
+
+Oznaczmy
+\(P_1=P\), \(P_2=\widetilde P\),
+\(D=P_1-P_2\),
+\(M_i=R+B^*P_iB\),
+\(K_i=M_i^{-1}B^*P_iA\)
+oraz \(A_i=A-BK_i\).
+Dla \(i=1,2\)
+z definicji \(K_i\)
+i hermitowskości \(P_i,M_i\)
+wynika
+\[
+ M_iK_i=B^*P_iA,\qquad
+ K_i^*M_i=A^*P_iB.
+\]
+Odejmując oba równania DARE,
+dostajemy
+\[
+ D=A^*DA
+    -A^*P_1BK_1+A^*P_2BK_2.
+\]
+Używając powyższych
+równości, sprawdzimy
+bezpośrednio, że
+\[
+ D=A_1^*DA_2.
+\]
+Rzeczywiście, po
+rozwinięciu prawej strony
+otrzymujemy
+\[
+ A^*DA-K_1^*B^*DA
+ -A^*DBK_2+K_1^*B^*DBK_2.
+\]
+Podstawiając kolejno
+\[
+ \begin{aligned}
+ B^*DA&=M_1K_1-M_2K_2,\\
+ A^*DB&=K_1^*M_1-K_2^*M_2,\\
+ B^*DB&=M_1-M_2,
+ \end{aligned}
+\]
+wszystkie wyrazy poza
+\(A^*DA-K_1^*M_1K_1+
+K_2^*M_2K_2\)
+skracają się.
+Jest to dokładnie wyraz
+otrzymany z różnicy
+równań DARE.
+Tak więc \(D=A_1^*DA_2\).
+
+Indukcja daje
+\(D=(A_1^*)^kDA_2^k\)
+dla każdego całkowitego \(k\ge0\).
+Ponieważ obie macierze
+\(A_1,A_2\) są macierzami Schura,
+z Lematu~\ref{lem:lin23-powers}
+wynika \(\|A_i^k\|\to0\).
+Prawa strona równości
+dąży zatem do zera.
+Wobec tego \(D=0\),
+a więc \(P=\widetilde P\).
+
+Jeśli natomiast
+\(\widetilde P\ge0\)
+jest dowolnym hermitowskim
+rozwiązaniem DARE,
+to \(\widetilde M>0\).
+Ta sama tożsamość
+\[
+ \widetilde P
+ =Q+\widetilde K^*R\widetilde K+
+   \widetilde A_{\mathrm{cl}}^*
+      \widetilde P\widetilde A_{\mathrm{cl}}
+\]
+daje \(\widetilde P\ge Q>0\).
+Twierdzenie~\ref{thm:lin23-lyapunov}
+pokazuje, że
+\(\widetilde A_{\mathrm{cl}}\)
+jest macierzą Schura.
+Taka macierz \(\widetilde P\)
+jest więc rozwiązaniem
+stabilizującym i z już
+udowodnionej jednoznaczności
+wynika \(\widetilde P=P\).
+\end{proof}
+
+\begin{wniosek}[Sterowanie optymalne]
+\label{cor:lin24-discrete-opt}
+Przy założeniach
+Twierdzenia~\ref{thm:lin24-dare-existence}
+niech \(P\) i \(K\)
+będą opisanymi w nim macierzami.
+Dla każdego \(x_0\in\mathbb C^n\)
+wśród wszystkich ciągów sterowań
+\((u_k)_{k\ge0}\)
+o skończonym koszcie
+\[
+ J_\infty(x_0;u)
+ =\sum_{k=0}^\infty
+      (x_k^*Qx_k+u_k^*Ru_k)
+\]
+jedyny ciąg minimalizujący
+spełnia \(u_k=-Kx_k\),
+\(x_{k+1}=(A-BK)x_k\),
+i ma koszt
+\(J_\infty(x_0;u)=x_0^*Px_0\).
+\end{wniosek}
+\begin{proof}
+Dla rozwiązania DARE
+rachunek z dowodu
+Twierdzenia~\ref{thm:lin24-dare-existence}
+daje, dla każdego \(x,u\),
+\[
+ x^*Qx+u^*Ru+
+ (Ax+Bu)^*P(Ax+Bu)-x^*Px
+ =(u+Kx)^*M(u+Kx),
+\]
+gdzie \(M=R+B^*PB>0\).
+Zsumowanie tej tożsamości
+dla \(k=0,\ldots,N-1\)
+daje
+\[
+ \sum_{k=0}^{N-1}
+       (x_k^*Qx_k+u_k^*Ru_k)
+ =x_0^*Px_0-x_N^*Px_N+
+   \sum_{k=0}^{N-1}
+       (u_k+Kx_k)^*M(u_k+Kx_k).
+\]
+Jeżeli \(J_\infty(x_0;u)<\infty\),
+to dodatnia określoność \(Q\)
+implikuje \(\sum_k\|x_k\|_2^2<\infty\),
+a zatem \(\|x_N\|_2\to0\).
+Nie potrzebujemy tu osobnego
+twierdzenia o stabilnym splocie:
+każdy z wyrazów nieujemnego
+zbieżnego szeregu \(\|x_k\|_2^2\)
+musi dążyć do zera.
+Dlatego po przejściu do granicy
+otrzymujemy
+\[
+ J_\infty(x_0;u)
+ =x_0^*Px_0+
+   \sum_{k=0}^\infty
+       (u_k+Kx_k)^*M(u_k+Kx_k)
+ \ge x_0^*Px_0.
+\]
+Nierówność jest ostra, jeśli
+choć jedno \(u_k+Kx_k\ne0\),
+z dodatniej określoności \(M\).
+Dla sprzężenia \(u_k=-Kx_k\)
+zamknięta macierz \(A-BK\)
+jest stabilna,
+więc \(\|x_k\|\) i \(\|u_k\|\)
+maleją geometrycznie.
+Jego koszt jest skończony
+i wszystkie dodatkowe wyrazy
+kwadratowe znikają.
+Jest ono zatem jedynym
+ciągiem minimalizującym.
+\end{proof}
+
+\begin{przyklad}[Skalarne DARE, dwa rozwiązania]
+\label{prz:lin24-dare-scalar}
+Niech \(n=m=1\),
+\(A=1/2\), \(B=1\),
+\(Q=7/8\) i \(R=1\).
+Macierz \(A\) jest stabilna.
+Rekurencja z
+Twierdzenia~\ref{thm:lin24-dare-recursion}
+ma w tym przypadku postać
+\[
+ p_0=0,\qquad
+ p_{N+1}=\frac78+
+         \frac{p_N}{4(1+p_N)}.
+\]
+W szczególności
+\(p_1=7/8\) oraz
+\(p_2=7/8+7/60=119/120\).
+Algebraiczne równanie
+Riccatiego sprowadza się do
+\[
+ p=\frac78+\frac{p}{4(1+p)},
+ \qquad
+ 8p^2-p-7=0.
+\]
+Ma dwa pierwiastki:
+\(p=1\) i \(p=-7/8\).
+Pierwszy daje
+\(K=(1+p)^{-1}pa=1/4\)
+i \(A_{\mathrm{cl}}=1/4\),
+więc jest stabilizujący.
+Drugi jest ujemny,
+a dla niego
+\(R+B^*PB=1/8\),
+\(K=(-7/8)(1/2)/(1/8)=-7/2\)
+oraz \(A_{\mathrm{cl}}=4\).
+Nie jest więc stabilizujący.
+Zbieżność rekurencji i
+jednoznaczność stabilizującego
+pierwiastka są zgodne
+z Twierdzeniem~\ref{thm:lin24-dare-existence}.
+\end{przyklad}
+
+\section{Czas ciągły i różniczkowe równanie Riccatiego}
+\label{sec:lin24-care-finite}
+
+\begin{definicja}[Ciągły problem LQR]
+\label{def:lin24-continuous-cost}
+Dla \(T>0\) i \(x_0\in\mathbb C^n\)
+rozważmy układ
+\[
+ x'(t)=Ax(t)+Bu(t),\qquad x(0)=x_0,
+ \quad 0\le t\le T,
+\]
+gdzie \(u\colon[0,T]\to\mathbb C^m\)
+jest dowolnym sterowaniem
+przedziałami ciągłym.
+Związany z nim koszt
+definiujemy wzorem
+\[
+ J_T(x_0;u)=\int_0^T
+       \bigl(x(t)^*Qx(t)+u(t)^*Ru(t)\bigr)
+       \,\mathrm dt.
+\]
+Rozwiązanie \(x\) jest
+ciągłe i przedziałami
+różniczkowalne; na każdym
+przedziale ciągłości \(u\)
+spełnia podane równanie.
+Przez \(V_T(x_0)\)
+oznaczamy infimum kosztu
+po wszystkich takich sterowaniach.
+\end{definicja}
+
+\begin{twierdzenie}[Różniczkowe równanie Riccatiego]
+\label{thm:lin24-dre}
+Dla macierzy \(A,B,Q,R\)
+spełniających założenia rozdziału
+istnieje dokładnie jedno
+odwzorowanie klasy \(C^1\)
+\[
+ S\colon[0,\infty)\longrightarrow
+           \operatorname{Mat}_{n\times n}(\mathbb C)
+\]
+spełniające
+\[
+ S'(t)=A^*S(t)+S(t)A
+        -S(t)BR^{-1}B^*S(t)+Q,
+ \qquad S(0)=0.
+\]
+Dla każdego \(t\ge0\)
+macierz \(S(t)\) jest
+hermitowska i nieujemnie
+określona, a
+dla każdego \(T>0\)
+i \(x_0\in\mathbb C^n\) mamy
+\[
+ V_T(x_0)=x_0^*S(T)x_0.
+\]
+Infimum jest osiągane przez
+sterowanie optymalne,
+jednoznaczne prawie wszędzie,
+które na \([0,T]\) ma postać
+\[
+ u_*(s)=-R^{-1}B^*S(T-s)x_*(s),
+ \qquad
+ x_*'(s)=Ax_*(s)+Bu_*(s),
+ \quad x_*(0)=x_0.
+\]
+\end{twierdzenie}
+\begin{proof}
+Prawa strona równania
+różniczkowego dla \(S\)
+jest wielomianowym
+odwzorowaniem współczynników
+macierzy \(S\), a więc jest
+lokalnie lipschitzowska
+na skończenie wymiarowej
+przestrzeni rzeczywistej
+macierzy zespolonych.
+Z twierdzenia o istnieniu
+i jednoznaczności dla
+równań różniczkowych
+otrzymujemy jedyne
+rozwiązanie lokalne.
+Jeżeli \(S(t)\)
+jest rozwiązaniem,
+to \(S(t)^*\) jest również
+rozwiązaniem tego samego
+równania z tą samą
+wartością początkową:
+wystarczy użyć \(Q^*=Q\),
+\(R^{-1}=(R^{-1})^*\)
+i sprzężenia każdego wyrazu.
+Z jednoznaczności wynika
+\(S(t)^*=S(t)\).
+
+Ustalmy \(T>0\),
+dla którego rozwiązanie \(S\)
+jest określone na \([0,T]\).
+Dla dowolnego dopuszczalnego
+sterowania \(u\) i
+jego trajektorii \(x\)
+połóżmy
+\(D(s)=x(s)^*S(T-s)x(s)\).
+Tam, gdzie pochodne istnieją,
+reguła różniczkowania iloczynu
+i równanie dla \(S\) dają
+\[
+ \begin{aligned}
+ D'(s)
+ &=x(s)^*\bigl(A^*S+SA-S'\bigr)x(s)\\
+ &\quad+2\operatorname{Re}
+          \bigl(u(s)^*B^*Sx(s)\bigr)\\
+ &=-x(s)^*Qx(s)
+    +x(s)^*SBR^{-1}B^*Sx(s)\\
+ &\quad+2\operatorname{Re}
+          \bigl(u(s)^*B^*Sx(s)\bigr),
+ \end{aligned}
+\]
+gdzie we wszystkich wyrazach
+po prawej stronie
+\(S=S(T-s)\).
+Dodając
+\(x(s)^*Qx(s)+u(s)^*Ru(s)\),
+otrzymujemy z
+Lematu~\ref{lem:lin24-square}
+\[
+ x^*Qx+u^*Ru+D'
+ =(u+R^{-1}B^*Sx)^*
+   R(u+R^{-1}B^*Sx).
+\]
+Całkując tę równość
+na kolejnych przedziałach
+ciągłości \(u\), sumując
+i korzystając z ciągłości
+trajektorii oraz \(S\),
+otrzymujemy
+\[
+ J_T(x_0;u)=x_0^*S(T)x_0+
+ \int_0^T
+  (u(s)+R^{-1}B^*S(T-s)x(s))^*
+  R(u(s)+R^{-1}B^*S(T-s)x(s))
+  \,\mathrm ds.
+\]
+Wykorzystaliśmy
+\(D(T)=x(T)^*S(0)x(T)=0\)
+oraz \(D(0)=x_0^*S(T)x_0\).
+
+Drugi wyraz po prawej
+jest nieujemny.
+Jest równy zeru
+dla sterowania
+\(u_*(s)=-R^{-1}B^*S(T-s)x_*(s)\).
+Odpowiadający mu stan
+spełnia liniowe równanie
+o ciągłych współczynnikach
+\(x_*'=(A-BR^{-1}B^*S(T-s))x_*\).
+Równanie ma dokładnie jedno
+rozwiązanie na \([0,T]\),
+ponieważ współczynniki
+są ciągłe na przedziale
+zwartym. Wybór ten daje
+dopuszczalne ciągłe sterowanie
+i zeruje całą całkę kwadratu.
+Dowodzi to
+\(V_T(x_0)=x_0^*S(T)x_0\)
+oraz osiągalności minimum.
+Jeśli inne dopuszczalne
+sterowanie osiągałoby minimum,
+to ciągła funkcja
+\(u+R^{-1}B^*Sx\)
+musi znikać na każdym
+przedziale jego ciągłości
+(poza ewentualnymi
+pojedynczymi punktami
+nieciągłości, które nie
+wpływają na trajektorię
+ani koszt). Jednoznaczność
+rozwiązania równania dla
+stanu daje to samo sterowanie
+prawie wszędzie; przy
+utożsamianiu sterowań
+różniących się tylko
+na skończonym zbiorze
+punktów rozwiązanie
+optymalne jest jednoznaczne.
+
+W szczególności
+\(x^*S(T)x=V_T(x)\ge0\)
+dla każdego \(x\).
+Zatem \(S(T)\ge0\)
+na całym przedziale
+istnienia rozwiązania.
+Wykażemy, że rozwiązanie
+istnieje dla wszystkich
+\(T\ge0\).
+Wybierając sterowanie zerowe,
+otrzymujemy \(x(s)=e^{sA}x_0\)
+i z poprzedniej nierówności
+\[
+ 0\le x_0^*S(T)x_0
+ \le\int_0^T
+        x_0^*e^{sA^*}Qe^{sA}x_0
+       \,\mathrm ds.
+\]
+Dla każdego ustalonego
+\(T_0>0\) i \(0\le T\le T_0\)
+prawa strona jest ograniczona
+przez \(C_{T_0}\|x_0\|_2^2\),
+gdzie można wziąć
+\(C_{T_0}=\int_0^{T_0}
+ \|e^{sA^*}Qe^{sA}\|\,\mathrm ds\).
+Macierz hermitowska \(S(T)\)
+jest więc jednostajnie
+ograniczona na każdym
+skończonym przedziale
+istnienia rozwiązania.
+Dla lokalnie lipschitzowskiego
+pola wektorowego w przestrzeni
+skończenie wymiarowej
+rozwiązanie maksymalne
+może zakończyć się w skończonym
+czasie wyłącznie wtedy,
+gdy jego norma staje się
+nieograniczona.
+Ponieważ taka sytuacja
+jest wykluczona,
+rozwiązanie \(S\)
+przedłuża się na
+cały przedział \([0,\infty)\).
+\end{proof}
+
+\begin{uwaga}[Jednoznaczność sterowań a punkty nieciągłości]
+\label{rem:lin24-ae}
+Jeżeli sterowania traktujemy
+jako dosłowne funkcje
+przedziałami ciągłe,
+to ich wartości w pojedynczych
+punktach nie mają wpływu
+na całkę kosztu ani na
+rozwiązanie równania dla stanu.
+Dlatego jednoznaczność
+optymalnego sterowania
+oznacza jednoznaczność
+\emph{prawie wszędzie}.
+Można zamiast tego
+pracować z klasami
+sterowań całkowalnych
+z kwadratem. Optymalne
+sprzężenie z
+Twierdzenia~\ref{thm:lin24-dre}
+ma reprezentanta ciągłego.
+\end{uwaga}
+
+\section{Algebraiczne równanie Riccatiego w czasie ciągłym}
+\label{sec:lin24-care}
+
+\begin{definicja}[Ciągłe algebraiczne równanie Riccatiego]
+\label{def:lin24-care}
+Dla macierzy
+\(A,B,Q,R\)
+spełniających założenia rozdziału
+\emph{ciągłym algebraicznym
+równaniem Riccatiego} (CARE)
+nazywamy
+\[
+ A^*P+PA-PBR^{-1}B^*P+Q=0,
+ \qquad P=P^*.
+\]
+Dla rozwiązania \(P\)
+definiujemy
+\[
+ K=R^{-1}B^*P,
+ \qquad A_{\mathrm{cl}}=A-BK.
+\]
+Rozwiązanie \(P\)
+nazywamy \emph{stabilizującym},
+jeśli każda wartość własna
+\(A_{\mathrm{cl}}\) ma
+ściśle ujemną część rzeczywistą.
+\end{definicja}
+
+\begin{twierdzenie}[Istnienie i jednoznaczność stabilizującego CARE]
+\label{thm:lin24-care-existence}
+Niech
+\(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\)
+będzie macierzą spektralnie
+stabilną w czasie ciągłym
+w sensie
+Definicji~\ref{def:lin22-hurwitz}.
+Niech \(B\) będzie dowolną
+macierzą stopnia \(n\times m\),
+a \(Q=Q^*>0\) i \(R=R^*>0\).
+Wówczas rozwiązanie \(S(t)\)
+z Twierdzenia~\ref{thm:lin24-dre}
+jest niemalejące
+w porządku hermitowskim
+i ma granicę
+\(P=P^*>0\) dla \(t\to\infty\).
+Macierz \(P\) spełnia CARE,
+a \(A-BR^{-1}B^*P\)
+jest spektralnie stabilna
+w czasie ciągłym.
+
+Macierz \(P\) jest
+jedynym hermitowskim,
+nieujemnie określonym
+rozwiązaniem CARE.
+Jest również jedynym
+hermitowskim rozwiązaniem
+stabilizującym,
+bez dodatkowego
+założenia \(P\ge0\).
+\end{twierdzenie}
+\begin{proof}
+Niech \(S(t)\) będzie
+rozwiązaniem
+Twierdzenia~\ref{thm:lin24-dre}.
+Ponieważ koszt każdej trajektorii
+jest nieujemny,
+wydłużenie horyzontu
+z \(T_1\) do \(T_2>T_1\)
+nie może zmniejszyć
+minimalnego kosztu:
+dla dowolnego sterowania
+na \([0,T_2]\)
+jego ograniczenie do
+\([0,T_1]\) jest dopuszczalne,
+a koszt dodatkowego odcinka
+jest nieujemny.
+Stąd \(V_{T_2}(x)\ge V_{T_1}(x)\).
+Z reprezentacji
+\(V_T(x)=x^*S(T)x\)
+otrzymujemy
+\(S(T_1)\le S(T_2)\).
+
+Założenie o stabilności \(A\)
+i ciągłe twierdzenie Lapunowa
+\ref{thm:lin22-lyapunov}
+dają zbieżną całkę
+\[
+ W=\int_0^\infty e^{sA^*}Qe^{sA}\,\mathrm ds,
+ \qquad W=W^*>0.
+\]
+Zerowe sterowanie
+jest dopuszczalne,
+więc z dowodu
+Twierdzenia~\ref{thm:lin24-dre}
+mamy \(0\le S(T)\le W\)
+dla wszystkich \(T\ge0\).
+Wobec monotoniczności
+i ograniczenia
+każdy skalarny wyraz
+\(x^*S(T)x\) ma granicę
+dla \(T\to\infty\).
+Biorąc kolejno
+\(x=e_i\), \(e_i+e_j\)
+oraz \(e_i+ie_j\),
+otrzymujemy za pomocą
+polaryzacji zbieżność
+wszystkich współczynników
+macierzy. Oznaczmy jej
+hermitowską granicę przez \(P\);
+mamy \(0\le P\le W\).
+
+Pokażemy, że \(P>0\).
+Dla każdego ustalonego
+\(x_0\ne0\)
+optymalne sterowanie
+na horyzoncie \(T=1\)
+jest osiągane przez
+ciągłą funkcję \(u_*\),
+a odpowiadająca mu trajektoria
+\(x_*\) jest ciągła
+i \(x_*(0)=x_0\).
+Jeżeli
+\(V_1(x_0)=0\),
+to nieujemna ciągła
+funkcja
+\(x_*^*Qx_*+u_*^*Ru_*\)
+musi być zerowa na
+całym przedziale.
+W szczególności w chwili
+\(0\) musiałoby być
+\(x_0^*Qx_0=0\),
+co przeczy \(Q>0\).
+Zatem
+\(x_0^*S(1)x_0=V_1(x_0)>0\).
+Otrzymujemy \(S(1)>0\),
+a ponieważ \(P\ge S(1)\),
+również \(P>0\).
+
+Niech
+\(F(X)=A^*X+XA-XBR^{-1}B^*X+Q\).
+Z równania różniczkowego
+\(S'(t)=F(S(t))\)
+i zbieżności \(S(t)\to P\)
+wynika, dzięki ciągłości \(F\),
+że \(S'(t)\to F(P)\).
+Ponieważ \(S(t)\)
+ma skończoną granicę,
+jego pochodna nie może
+mieć granicy różnej od zera:
+gdyby niezerowy współczynnik
+macierzy \(F(P)\)
+miał niezerową część
+rzeczywistą lub urojoną,
+odpowiednia składowa
+\(S'(t)\) miałaby od pewnego
+momentu stały znak i moduł
+ograniczony z dołu,
+co przeczyłoby zbieżności
+tej składowej \(S(t)\).
+Dlatego \(F(P)=0\),
+czyli \(P\) spełnia CARE.
+
+Niech \(K=R^{-1}B^*P\).
+Rozwijając iloczyny
+i korzystając z CARE
+otrzymujemy
+\[
+ (A-BK)^*P+P(A-BK)
+ =-(Q+K^*RK).
+\]
+Istotnie,
+\(K^*RK=PBR^{-1}B^*P\),
+a przeniesienie
+tego wyrazu w CARE
+daje podaną równość.
+Macierze \(P\) i
+\(Q+K^*RK\) są dodatnio
+określone.
+Twierdzenie~\ref{thm:lin22-lyapunov}
+implikuje zatem, że
+\(A-BK\) jest spektralnie
+stabilna w czasie ciągłym.
+
+Dla jednoznaczności
+niech \(\widetilde P=\widetilde P^*\)
+będzie dowolnym innym
+rozwiązaniem CARE,
+dla którego
+\(\widetilde A_{\mathrm{cl}}
+ =A-B\widetilde K\),
+\(\widetilde K=R^{-1}B^*\widetilde P\),
+jest stabilna.
+Uzupełnienie kwadratu
+w CARE daje dla
+każdego \(x\in\mathbb C^n\),
+\(u\in\mathbb C^m\)
+i trajektorii \(x'=Ax+Bu\)
+tożsamość
+\[
+ x^*Qx+u^*Ru+
+ \frac{\mathrm d}{\mathrm dt}
+      (x^*\widetilde Px)
+ =(u+\widetilde Kx)^*R
+       (u+\widetilde Kx).
+\]
+Wybierzmy
+\(u=-Kx\), \(x(0)=x_0\).
+Ponieważ \(A-BK\) jest stabilna,
+stan zanika wykładniczo,
+a koszt
+\(J_\infty(x_0;-Kx)\)
+jest skończony.
+Całkując i przechodząc do
+nieskończonego horyzontu,
+otrzymujemy
+\[
+ J_\infty(x_0;-Kx)
+ =x_0^*\widetilde Px_0+
+  \int_0^\infty
+       ((\widetilde K-K)x(t))^*
+       R((\widetilde K-K)x(t))
+    \,\mathrm dt
+ \ge x_0^*\widetilde Px_0.
+\]
+Dla rozwiązania \(P\)
+zamiast \(\widetilde P\)
+ostatnia całka jest zerowa,
+więc ten sam koszt wynosi
+\(x_0^*Px_0\).
+Wobec tego
+\(P\ge\widetilde P\).
+Zamiana ról obu
+stabilizujących rozwiązań
+daje przeciwną nierówność,
+a stąd \(P=\widetilde P\).
+
+Jeżeli natomiast
+\(\widetilde P\ge0\)
+jest jakimkolwiek hermitowskim
+rozwiązaniem CARE,
+to spełnia
+\[
+ \widetilde A_{\mathrm{cl}}^*
+       \widetilde P+
+ \widetilde P\,\widetilde A_{\mathrm{cl}}
+ =-(Q+\widetilde K^*R\widetilde K)<0.
+\]
+Z tej równości wynika
+\(\widetilde P>0\).
+Rzeczywiście, gdyby
+\(\widetilde Pv=0\)
+dla pewnego niezerowego \(v\),
+to po pomnożeniu równości
+przez \(v^*\) i \(v\)
+lewa strona byłaby zerowa,
+a prawa ściśle ujemna,
+co jest sprzecznością.
+Następnie
+Twierdzenie~\ref{thm:lin22-lyapunov}
+pokazuje stabilność
+\(\widetilde A_{\mathrm{cl}}\).
+Wykazana jednoznaczność
+stabilizujących rozwiązań
+daje więc \(\widetilde P=P\).
+\end{proof}
+
+\begin{wniosek}[Optymalność nieskończonego horyzontu ciągłego]
+\label{cor:lin24-cont-opt}
+Przy założeniach
+Twierdzenia~\ref{thm:lin24-care-existence}
+niech \(P\) będzie
+stabilizującym rozwiązaniem CARE,
+a \(K=R^{-1}B^*P\).
+Dla każdego \(x_0\in\mathbb C^n\)
+wśród wszystkich lokalnie
+przedziałami ciągłych
+sterowań \(u\colon[0,\infty)\to\mathbb C^m\)
+o skończonym koszcie
+\[
+ J_\infty(x_0;u)
+ =\int_0^\infty
+     (x(t)^*Qx(t)+u(t)^*Ru(t))
+     \,\mathrm dt,
+ \qquad x'=Ax+Bu,\quad x(0)=x_0,
+\]
+jedynym (z dokładnością do
+równości prawie wszędzie)
+sterowaniem minimalizującym
+jest \(u_*(t)=-Kx_*(t)\),
+gdzie \(x_*'=(A-BK)x_*\).
+Koszt minimalny wynosi
+\(x_0^*Px_0\).
+\end{wniosek}
+\begin{proof}
+Dla dowolnej trajektorii
+\(x'=Ax+Bu\)
+tożsamość uzupełnienia
+kwadratu wyprowadzona
+w dowodzie
+Twierdzenia~\ref{thm:lin24-care-existence}
+daje po całkowaniu
+\[
+ \begin{aligned}
+ \int_0^T(x^*Qx+u^*Ru)\,\mathrm dt
+ &=x_0^*Px_0-x(T)^*Px(T)\\
+ &\quad+\int_0^T
+          (u+Kx)^*R(u+Kx)\,\mathrm dt.
+ \end{aligned}
+\]
+Jeżeli koszt na nieskończonym
+horyzoncie jest skończony,
+to z dodatniej określoności
+\(Q\) i \(R\) wynikają
+\(x,u\in L^2(0,\infty)\).
+Z równania \(x'=Ax+Bu\)
+dostajemy również
+\(x'\in L^2(0,\infty)\).
+Uzasadnijmy, że \(x(t)\to0\).
+Ponieważ \(x\in L^2\),
+istnieje ciąg \(T_j\to\infty\)
+taki, że \(x(T_j)\to0\).
+Dla ustalonego \(t\ge0\)
+i \(T_j>t\)
+całkowanie pochodnej
+\(\|x(s)\|_2^2\)
+na przedziałach ciągłości
+daje
+\[
+ \|x(t)\|_2^2-\|x(T_j)\|_2^2
+ =-2\operatorname{Re}
+     \int_t^{T_j}x(s)^*x'(s)\,\mathrm ds.
+\]
+Po nierówności Cauchy'ego--Schwarza
+i przejściu do granicy
+\(j\to\infty\) otrzymujemy
+\[
+ \|x(t)\|_2^2
+ \le2\left(\int_t^\infty\|x(s)\|_2^2
+       \,\mathrm ds\right)^{1/2}
+       \left(\int_t^\infty\|x'(s)\|_2^2
+       \,\mathrm ds\right)^{1/2}.
+\]
+Obie całki po prawej
+są ogonami zbieżnych całek,
+więc dążą do zera.
+To daje \(x(t)\to0\),
+a w szczególności
+\(x(T)^*Px(T)\to0\).
+
+Przechodząc do granicy
+w tożsamości kosztu,
+mamy
+\[
+ J_\infty(x_0;u)
+ =x_0^*Px_0+
+    \int_0^\infty
+       (u(t)+Kx(t))^*R(u(t)+Kx(t))
+      \,\mathrm dt
+ \ge x_0^*Px_0.
+\]
+Z dodatniej określoności \(R\)
+równość zachodzi dokładnie wtedy,
+gdy \(u=-Kx\) prawie wszędzie.
+Takie sprzężenie daje
+\(x_*(t)=e^{t(A-BK)}x_0\).
+Macierz \(A-BK\)
+jest spektralnie stabilna,
+więc trajektoria
+zanika wykładniczo,
+a jej koszt jest skończony.
+Dla tego sterowania
+ostatnia całka jest zerowa.
+Jednoznaczność trajektorii
+układu liniowego daje
+jednoznaczność optymalnego
+sterowania prawie wszędzie.
+\end{proof}
+
+\section{Przykłady obu równań}
+\label{sec:lin24-examples}
+
+\begin{przyklad}[Ciągłe CARE: dwa rozwiązania]
+\label{prz:lin24-care-scalar}
+Niech \(n=m=1\),
+\(A=-1\), \(B=1\),
+\(Q=3\), \(R=1\).
+Układ niekontrolowany
+\(x'=-x\) jest stabilny.
+CARE przyjmuje postać
+\[
+ -2p-p^2+3=0,
+ \qquad
+ (p-1)(p+3)=0.
+\]
+Dopuszcza dwa rozwiązania:
+\(p=1\) oraz \(p=-3\).
+Dla \(p=1\) otrzymujemy
+\(K=1\), \(A-BK=-2<0\).
+Jest to rozwiązanie
+stabilizujące,
+które daje optymalne
+sterowanie \(u=-x\)
+i koszt \(V_\infty(x_0)=|x_0|^2\).
+Drugi pierwiastek
+\(p=-3\) daje
+\(K=-3\), \(A-BK=2>0\).
+Nie jest stabilizujący
+ani dodatnio określony.
+
+Różniczkowe równanie
+z Twierdzenia~\ref{thm:lin24-dre}
+ma w tym przypadku postać
+\[
+ s'(t)=3-2s(t)-s(t)^2,
+ \qquad s(0)=0.
+\]
+Bezpośrednie zróżniczkowanie
+pokazuje, że jego rozwiązaniem jest
+\[
+ s(t)=
+ \frac{3(1-e^{-4t})}{3+e^{-4t}}.
+\]
+Rzeczywiście \(s(0)=0\),
+a po podstawieniu otrzymujemy
+\(s'=(1-s)(s+3)\).
+Dodatkowo \(0\le s(t)<1\)
+dla każdego skończonego \(t\ge0\)
+i \(s(t)\to1\) dla \(t\to\infty\).
+Widzimy więc na dokładnym
+przykładzie przejście
+od rozwiązania o skończonym
+horyzoncie do
+stabilizującego CARE.
+\end{przyklad}
+
+\begin{przyklad}[Równanie Riccatiego dla dwóch stanów]
+\label{prz:lin24-two-states}
+Przyjmijmy \(n=m=2\),
+\[
+ A=\begin{pmatrix}-1&0\\0&-2\end{pmatrix},
+ \quad B=I_2,\quad
+ R=I_2,\quad
+ Q=\begin{pmatrix}3&0\\0&5\end{pmatrix}.
+\]
+Macierz \(A\) jest stabilna
+w czasie ciągłym,
+a \(Q,R\) są dodatnio określone.
+Podstawienie \(P=I_2\)
+do CARE daje
+\[
+ A^{\mathsf T}P+PA
+ -PBR^{-1}B^{\mathsf T}P+Q
+ =\begin{pmatrix}-2&0\\0&-4\end{pmatrix}
+   -I_2+
+  \begin{pmatrix}3&0\\0&5\end{pmatrix}
+ =0.
+\]
+Sprzężenie \(K=R^{-1}B^{\mathsf T}P=I_2\)
+prowadzi do
+\(A-BK=\operatorname{diag}(-2,-3)\).
+Dlatego \(P=I_2\)
+jest jedynym stabilizującym
+rozwiązaniem i wartość
+optymalna wynosi
+\(\|x_0\|_2^2\).
+
+Dla tego samego wymiaru
+rozważmy przypadek dyskretny:
+\[
+ A_d=\begin{pmatrix}1/2&0\\0&1/3\end{pmatrix},
+ \quad B_d=I_2,\quad R_d=I_2,
+ \quad Q_d=\begin{pmatrix}7/8&0\\0&17/18\end{pmatrix}.
+\]
+Wstawienie \(P_d=I_2\)
+do DARE daje
+\(R_d+B_d^*P_dB_d=2I_2\),
+więc
+\[
+ Q_d+A_d^*A_d
+ -A_d^*(2I_2)^{-1}A_d
+ =Q_d+\tfrac12A_d^*A_d=I_2.
+\]
+Zatem \(P_d=I_2\)
+jest rozwiązaniem.
+Sprzężenie wynosi
+\(K_d=\tfrac12 A_d\),
+a macierz zamknięta
+\(A_d-B_dK_d=\tfrac12A_d\)
+ma wartości własne \(1/4\) i \(1/6\).
+Jest więc macierzą Schura.
+To potwierdza stabilizujący
+charakter rozwiązania
+w obu rodzajach czasu.
+\end{przyklad}
+
+\begin{uwaga}[Zakres twierdzeń i możliwe uogólnienia]
+\label{rem:lin24-limits}
+Założyliśmy stabilność
+otwartej pętli \(A\),
+aby otrzymać prosty dowód
+ograniczoności kosztu
+przez sterowanie zerowe.
+Nie jest to warunek konieczny
+istnienia rozwiązania Riccatiego:
+sterowanie może stabilizować
+również układ początkowo niestabilny.
+Ogólne kryteria opisuje się
+za pomocą \emph{stabilizowalności}
+pary \((A,B)\)
+i \emph{wykrywalności}
+odpowiednio dobranej pary
+związanej z macierzą \(Q\).
+W tym rozdziale nie używamy
+tych kryteriów bez dowodu,
+ponieważ należą do dalszej
+teorii sterowania liniowego.
+\end{uwaga}
+
+\section{Podsumowanie}
+\label{sec:lin24-summary}
+
+W czasie dyskretnym
+rekurencja Riccatiego
+opisuje minimalny koszt
+skończonego horyzontu,
+a przy \(A\) będącej macierzą Schura
+jej rosnące rozwiązania
+mają granicę \(P>0\),
+spełniającą DARE.
+W czasie ciągłym
+analogiczną rolę odgrywa
+różniczkowe równanie Riccatiego,
+którego rozwiązanie dla
+rosnącego horyzontu
+dąży do stabilizującego CARE,
+gdy \(A\) jest spektralnie stabilna.
+Obie konstrukcje są
+oparte na uzupełnianiu
+kwadratu i prowadzą do
+sprzężenia liniowego
+\(u=-Kx\).
+
+Dla obu przypadków
+udowodniliśmy stabilność
+zamkniętej pętli,
+jednoznaczność
+stabilizującego rozwiązania
+oraz równość
+wartości optymalnej
+nieskończonego horyzontu
+z \(x_0^*Px_0\).
+Równania Lapunowa
+z Rozdziałów~\ref{ch:lin22-sylvester}
+i~\ref{ch:lin23-discrete-lyapunov}
+stanowią tu narzędzie
+do rozpoznawania
+stabilności po zastosowaniu
+optymalnego sprzężenia.

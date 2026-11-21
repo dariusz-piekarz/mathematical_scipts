@@ -1,0 +1,855 @@
+\chapter{Zbieżność topologiczna}
+\label{ch:topog-zbieznosc}
+
+\noindent\textbf{Cel rozdziału.}
+Zbieżność opisuje, w jaki sposób punkty przestrzeni mogą zbliżać się
+w sensie jej topologii. W przestrzeniach metrycznych zwykle posługujemy
+się ciągami, ale w dowolnej przestrzeni topologicznej same ciągi
+nie muszą wykrywać domknięcia ani ciągłości. Zaczniemy od zbieżności
+ciągów i jej związku z pierwszą przeliczalnością. Następnie wprowadzimy
+sieci (nazywane też ciągami uogólnionymi), które przywracają
+pełne kryteria domknięcia i ciągłości, a na końcu filtry,
+będące równoważnym językiem opisu granic.
+W każdym wyniku jawnie zaznaczymy konieczne założenia.
+
+\section{Zbieżność ciągów i jej podstawowe własności}
+\label{sec:topog-zbieznosc-ciagi}
+
+\begin{definicja}[Granica ciągu]
+\label{def:topog-granica-ciagu}
+Niech $(X,\tau)$ będzie przestrzenią topologiczną, a
+$(x_n)_{n\ge1}$ ciągiem punktów $X$. Mówimy, że
+\emph{ciąg $(x_n)$ jest zbieżny do $x\in X$}, i zapisujemy
+$x_n\to x$, jeżeli dla każdego otoczenia $U$ punktu $x$
+istnieje $N\ge1$ takie, że $x_n\in U$ dla wszystkich $n\ge N$.
+Wystarczy sprawdzać otoczenia otwarte, ponieważ każde otoczenie
+zawiera otwarte otoczenie punktu $x$.
+\end{definicja}
+
+\begin{stwierdzenie}[Zależność od bazy otoczeń]
+\label{prop:topog-ciag-baza}
+Niech $\mathcal B_x$ będzie bazą otoczeń punktu $x$ w przestrzeni
+$(X,\tau)$. Ciąg $(x_n)$ jest zbieżny do $x$ wtedy i tylko wtedy,
+gdy dla każdego $B\in\mathcal B_x$ wszystkie wyrazy $(x_n)$,
+poza skończoną liczbą, należą do $B$.
+\end{stwierdzenie}
+\begin{proof}
+Konieczność wynika bezpośrednio z definicji granicy. Odwrotnie,
+niech $U$ będzie otoczeniem $x$. Z definicji bazy istnieje
+$B\in\mathcal B_x$ zawarty w $U$. Od pewnego indeksu
+$x_n\in B\subseteq U$, co dowodzi zbieżności.
+\end{proof}
+
+\begin{stwierdzenie}[Kryterium metryczne]
+\label{prop:topog-ciag-metryka}
+Jeżeli topologia przestrzeni $X$ pochodzi od metryki $d$,
+to $x_n\to x$ jest równoważne warunkowi:
+\[
+\forall\varepsilon>0\ \exists N\ge1\ \forall n\ge N:
+\quad d(x_n,x)<\varepsilon.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Kule $B_d(x,\varepsilon)$, $\varepsilon>0$, tworzą bazę otoczeń
+$x$. Zastosowanie stwierdzenia \ref{prop:topog-ciag-baza}
+daje dokładnie zapisany warunek.
+\end{proof}
+
+\begin{przyklad}[Ciąg liczb odwrotnych]
+\label{ex:topog-ciag-odwrotnosci}
+W prostej euklidesowej $x_n=1/n$ jest zbieżny do $0$.
+Istotnie, dla $\varepsilon>0$ wybieramy liczbę naturalną
+$N>1/\varepsilon$. Wówczas dla $n\ge N$ zachodzi
+$|1/n-0|=1/n\le1/N<\varepsilon$.
+Zauważmy, że żaden wyraz ciągu nie jest równy granicy.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=1.3cm,y=1cm,>=Stealth]
+  \fill[blue!9] (-1.20,-.48) rectangle (1.20,.48);
+  \draw[blue!70!black,dashed] (-1.20,-.62)--(-1.20,.65);
+  \draw[blue!70!black,dashed] (1.20,-.62)--(1.20,.65);
+  \draw[->,thick] (-2,0)--(3.4,0);
+  \node[below] at (-1.20,-.58) {$-\varepsilon$};
+  \node[below] at (1.20,-.58) {$\varepsilon$};
+  \fill (0,0) circle (2pt) node[below left] {$0$};
+  \fill[orange!85!black] (3,0) circle (2.5pt) node[above] {$x_1$};
+  \fill[orange!85!black] (1.5,0) circle (2.5pt) node[above right] {$x_2$};
+  \fill[blue!70!black] (1,0) circle (2.5pt) node[above] {$x_3$};
+  \fill[blue!70!black] (.60,0) circle (2.5pt) node[above] {$x_5$};
+  \fill[blue!70!black] (.30,0) circle (2.5pt);
+  \fill[blue!70!black] (.15,0) circle (2.5pt);
+  \node[above,blue!70!black] at (0,.62) {$B(0,\varepsilon)$};
+  \node[below] at (.75,-.58) {wyrazy dalsze};
+\end{tikzpicture}
+\caption{Schemat zbieżności $x_n=1/n$ do $0$: dla ustalonej
+kuli wokół granicy wszystkie dostatecznie późne wyrazy
+znajdują się wewnątrz. Na rysunku wybrano
+$\varepsilon=2/5$ po przeskalowaniu poziomej osi.}
+\label{fig:topog-ciag-kula}
+\end{figure}
+
+\begin{stwierdzenie}[Podciągi i obrazy ciągłe]
+\label{prop:topog-ciag-podciag-ciaglosc}
+Niech $(X,\tau_X)$ i $(Y,\tau_Y)$ będą przestrzeniami topologicznymi.
+\begin{enumerate}[label=(\roman*)]
+\item Jeżeli $x_n\to x$, a $n_1<n_2<\cdots$,
+      to $x_{n_k}\to x$.
+\item Jeżeli odwzorowanie $f\colon X\to Y$ jest ciągłe w $x$
+      oraz $x_n\to x$, to $f(x_n)\to f(x)$.
+\end{enumerate}
+\end{stwierdzenie}
+\begin{proof}
+(i) Każde otoczenie $U$ punktu $x$ zawiera wszystkie $x_n$
+dla $n\ge N$. Ponieważ $n_k\ge k$, mamy $n_k\ge N$
+dla $k\ge N$, a więc $x_{n_k}\in U$.
+(ii) Niech $V$ będzie otwartym otoczeniem $f(x)$. Z ciągłości
+w $x$ istnieje otwarte $U\ni x$ takie, że $f(U)\subseteq V$.
+Od pewnego indeksu $x_n\in U$, zatem $f(x_n)\in V$.
+\end{proof}
+
+\begin{twierdzenie}[Jednoznaczność granicy w przestrzeniach Hausdorffa]
+\label{thm:topog-ciag-hausdorff}
+Jeżeli $X$ jest przestrzenią Hausdorffa, to każdy ciąg w $X$
+ma co najwyżej jedną granicę.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy, że $x_n\to x$ oraz $x_n\to y$, gdzie $x\ne y$.
+Istnieją rozłączne otwarte otoczenia $U$ punktu $x$ i $V$
+punktu $y$. Dla dostatecznie dużego $n$ wyraz $x_n$ należy
+jednocześnie do $U$ i $V$, co przeczy $U\cap V=\varnothing$.
+\end{proof}
+
+\begin{przyklad}[Brak jednoznaczności]
+\label{ex:topog-ciag-wiele-granic}
+W dwupunktowej przestrzeni antydyskretnej
+$X=\{a,b\}$ jedynym otwartym otoczeniem dowolnego punktu
+jest $X$. Dlatego każdy ciąg, w tym ciąg stały $x_n=a$,
+zbiega zarówno do $a$, jak i do $b$. Nie można więc
+opuszczać aksjomatu Hausdorffa w
+ twierdzeniu \ref{thm:topog-ciag-hausdorff}.
+\end{przyklad}
+
+\section{Co mogą, a czego nie mogą wykryć ciągi}
+\label{sec:topog-ciagi-ograniczenia}
+
+\begin{definicja}[Domknięcie ciągowe]
+\label{def:topog-domkniecie-ciagowe}
+Dla podzbioru $A\subseteq X$ definiujemy
+\emph{zbiór granic ciągów o wyrazach w $A$}:
+\[
+\operatorname{scl}(A)=
+\{x\in X:\ \exists(x_n)_{n\ge1}\in A^{\mathbb N},\ x_n\to x\}.
+\]
+Zbiór $A$ nazywamy \emph{ciągowo domkniętym}, gdy
+$\operatorname{scl}(A)=A$.
+\end{definicja}
+
+\begin{stwierdzenie}[Relacja z domknięciem]
+\label{prop:topog-ciagi-domkniecie}
+Dla każdego $A\subseteq X$ zachodzi
+$A\subseteq\operatorname{scl}(A)\subseteq\overline A$.
+W szczególności każdy zbiór domknięty jest ciągowo domknięty.
+\end{stwierdzenie}
+\begin{proof}
+Jeżeli $a\in A$, to ciąg stały $x_n=a$ zbiega do $a$,
+stąd pierwsze zawieranie. Jeżeli $x_n\in A$ i $x_n\to x$,
+to każde otoczenie $U$ punktu $x$ zawiera pewne $x_n$,
+a więc $U\cap A\ne\varnothing$. Z kryterium domknięcia
+wynika $x\in\overline A$. Jeśli $A$ jest domknięty,
+$\overline A=A$, więc oba zawierania stają się równościami.
+\end{proof}
+
+\begin{definicja}[Pierwsza przeliczalność]
+\label{def:topog-pierwsza-przeliczalnosc}
+Przestrzeń topologiczną $X$ nazywamy
+\emph{pierwszo przeliczalną}, gdy każdy punkt $x\in X$
+ma co najwyżej przeliczalną bazę otoczeń.
+Warunek jest automatycznie spełniony dla $X=\varnothing$.
+\end{definicja}
+
+\begin{przyklad}[Przestrzenie metryczne]
+\label{ex:topog-metryczna-pierwsza-przeliczalnosc}
+W każdej przestrzeni metrycznej baza
+$\{B_d(x,1/n):n\ge1\}$ jest przeliczalna.
+Jeżeli $U$ jest otwartym otoczeniem $x$, istnieje $r>0$
+z $B_d(x,r)\subseteq U$; wybór $n$ takiego, że $1/n<r$,
+daje $B_d(x,1/n)\subseteq U$. Każda przestrzeń metryczna
+jest więc pierwszo przeliczalna.
+\end{przyklad}
+
+\begin{twierdzenie}[Ciągi wykrywają domknięcie przy pierwszej przeliczalności]
+\label{thm:topog-pierwsza-przeliczalnosc-domkniecie}
+Niech $X$ będzie pierwszo przeliczalną przestrzenią topologiczną,
+a $A\subseteq X$. Wówczas
+\[
+ x\in\overline A
+ \quad\Longleftrightarrow\quad
+ \text{istnieje ciąg }(a_n)_{n\ge1}\text{ w }A
+ \text{ taki, że }a_n\to x.
+\]
+W szczególności $A$ jest domknięty wtedy i tylko wtedy,
+gdy jest ciągowo domknięty.
+\end{twierdzenie}
+\begin{proof}
+Implikację od prawej do lewej wykazaliśmy w
+stwierdzeniu \ref{prop:topog-ciagi-domkniecie}.
+Niech teraz $x\in\overline A$ i niech
+$\{B_n:n\ge1\}$ będzie bazą otoczeń $x$
+(w przypadku bazy skończonej numerujemy jej elementy
+z powtórzeniami). Zastępując $B_n$ przez $W_n=B_1\cap\cdots\cap B_n$,
+otrzymujemy malejącą bazę otoczeń punktu $x$.
+Każdy $W_n$ jest otoczeniem $x$ i przecina $A$,
+ponieważ $x\in\overline A$.
+Wybieramy $a_n\in A\cap W_n$. Dla dowolnego otoczenia
+$U$ punktu $x$ istnieje $k$ z $B_k\subseteq U$.
+Gdy $n\ge k$, mamy $a_n\in W_n\subseteq B_k\subseteq U$.
+Zatem $a_n\to x$.
+Wreszcie, zbiór $A$ jest domknięty dokładnie wtedy,
+gdy $\overline A=A$, a na mocy dowiedzionej równoważności
+$\overline A=\operatorname{scl}(A)$.
+\end{proof}
+
+\begin{twierdzenie}[Ciągowe kryterium ciągłości]
+\label{thm:topog-ciagowe-kryterium-ciaglosci}
+Niech $X$ będzie pierwszo przeliczalną przestrzenią,
+$Y$ dowolną przestrzenią topologiczną, $f\colon X\to Y$
+i $x\in X$. Odwzorowanie $f$ jest ciągłe w $x$
+wtedy i tylko wtedy, gdy dla każdego ciągu $x_n\to x$
+zachodzi $f(x_n)\to f(x)$.
+\end{twierdzenie}
+\begin{proof}
+Implikacja wprost wynika ze stwierdzenia
+\ref{prop:topog-ciag-podciag-ciaglosc}.
+Załóżmy warunek ciągowy i przypuśćmy, że $f$
+nie jest ciągłe w $x$. Istnieje otwarte otoczenie
+$V$ punktu $f(x)$ takie, że żadne otoczenie $U$
+punktu $x$ nie jest zawarte w $f^{-1}(V)$.
+Niech $W_n$ będą malejącą bazą otoczeń $x$,
+jak w dowodzie twierdzenia
+\ref{thm:topog-pierwsza-przeliczalnosc-domkniecie}.
+Dla każdego $n$ możemy wybrać
+$x_n\in W_n\setminus f^{-1}(V)$.
+Wówczas $x_n\to x$, lecz wszystkie $f(x_n)$ leżą poza
+$V$, zatem $f(x_n)$ nie może zbiegać do $f(x)$.
+Sprzeczność dowodzi ciągłości $f$ w $x$.
+\end{proof}
+
+\begin{przyklad}[Topologia koprzeliczalna: ciągi nie wystarczają]
+\label{ex:topog-ciagi-koprzeliczalna}
+Niech $X=\R$ z topologią koprzeliczalną:
+zbiór jest otwarty wtedy i tylko wtedy, gdy jest pusty
+lub jego dopełnienie jest co najwyżej przeliczalne.
+\begin{enumerate}[label=(\roman*)]
+\item Jeżeli $x_n\to x$, to $(x_n)$ jest od pewnego miejsca
+stały, równy $x$. Istotnie, zbiór
+$C=\{x_n:n\ge1,\ x_n\ne x\}$ jest przeliczalny i nie
+zawiera $x$. Otoczenie otwarte $X\setminus C$ punktu $x$
+musi zawierać wszystkie wyrazy dostatecznie późne,
+a jedyną możliwą ich wartością jest $x$.
+Odwrotnie, każdy ciąg ostatecznie stały równy $x$
+zbiega do $x$.
+\item Każdy podzbiór $A\subseteq X$ jest ciągowo domknięty:
+każdy ciąg o wyrazach w $A$ i granicy $x$ jest ostatecznie
+stały równy $x\in A$.
+Jednak nie każdy podzbiór jest domknięty. Dla przykładu
+$A=(0,\infty)$ ma domknięcie $X$, ponieważ przecina
+każdy niepusty zbiór otwarty (ten ma przeliczalne dopełnienie,
+a $A$ jest nieprzeliczalny).
+\item Identyczność $f\colon(X,\tau_{\mathrm{koprz}})
+\to(X,\tau_{\mathrm{dysk}})$ zachowuje granice wszystkich
+ciągów, bo są one ostatecznie stałe. Nie jest jednak
+ciągła: przeciwobraz jednoelementowego zbioru otwartego
+w topologii dyskretnej nie jest otwarty w topologii
+koprzeliczalnej.
+\item Granica dowolnego zbieżnego ciągu jest jednoznaczna,
+chociaż $X$ nie jest przestrzenią Hausdorffa:
+dwa niepuste zbiory otwarte zawsze się przecinają,
+gdyż suma dwóch zbiorów przeliczalnych nie wyczerpuje $X$.
+\end{enumerate}
+Przestrzeń ta nie jest pierwszo przeliczalna:
+gdyby była, z twierdzenia
+\ref{thm:topog-pierwsza-przeliczalnosc-domkniecie}
+wynikałoby, że ciągowo domknięty zbiór $A$ jest domknięty,
+wbrew punktowi (ii).
+Przykład pokazuje więc, że bez pierwszej przeliczalności
+ciągi nie dają ogólnego kryterium domknięcia ani ciągłości.
+\end{przyklad}
+
+\section{Sieci i zbieżność Moore'a--Smitha}
+\label{sec:topog-sieci}
+
+\begin{definicja}[Zbiór skierowany]
+\label{def:topog-zbior-skierowany}
+\emph{Zbiorem skierowanym} nazywamy niepusty zbiór $D$
+wyposażony w relację $\preceq$ zwrotną, przechodnią
+i spełniającą warunek: dla każdych $d,e\in D$ istnieje
+$c\in D$ takie, że $d\preceq c$ oraz $e\preceq c$.
+Nie wymagamy antysymetrii relacji.
+\end{definicja}
+
+\begin{definicja}[Sieć i jej granica]
+\label{def:topog-siec-granica}
+Niech $(D,\preceq)$ będzie zbiorem skierowanym,
+a $X$ przestrzenią topologiczną. \emph{Siecią w $X$}, czyli \emph{ciągiem uogólnionym},
+nazywamy rodzinę $(x_d)_{d\in D}$ punktów $X$.
+Sieć jest \emph{zbieżna do $x\in X$}, gdy dla każdego
+otoczenia $U$ punktu $x$ istnieje $d_0\in D$ takie,
+że $x_d\in U$ dla wszystkich $d\succeq d_0$.
+Zapisujemy wtedy $x_d\to x$.
+\end{definicja}
+
+\begin{przyklad}[Ciąg jako szczególna sieć]
+\label{ex:topog-ciag-jako-siec}
+Zbiór $\mathbb N=\{1,2,\ldots\}$ z naturalnym porządkiem
+jest skierowany. Definicja granicy sieci o indeksach
+w $\mathbb N$ jest dokładnie definicją granicy ciągu.
+\end{przyklad}
+
+\begin{przyklad}[Indeksowanie skończonymi zbiorami]
+\label{ex:topog-siec-skonczone}
+Niech $I$ będzie dowolnym niepustym zbiorem.
+Rodzina $\mathcal D=\{F\subseteq I:F\text{ jest skończony}\}$
+z porządkiem przez zawieranie $\subseteq$ jest skierowana:
+dla $F,G$ wspólnym ograniczeniem górnym jest $F\cup G$.
+Dzięki temu sieci można indeksować skończonymi
+zbiorami nawet wtedy, gdy $I$ jest nieprzeliczalny.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth, node distance=1.3cm,
+  every node/.style={draw,rounded corners=2pt,fill=blue!5,inner sep=5pt}]
+  \node (empty) at (0,0) {$\varnothing$};
+  \node (a) at (-2,1.25) {$\{a\}$};
+  \node (b) at (2,1.25) {$\{b\}$};
+  \node (ab) at (0,2.6) {$\{a,b\}$};
+  \node (abc) at (0,3.9) {$\{a,b,c\}$};
+  \draw[->] (empty)--(a);
+  \draw[->] (empty)--(b);
+  \draw[->] (a)--(ab);
+  \draw[->] (b)--(ab);
+  \draw[->] (ab)--(abc);
+\end{tikzpicture}
+\caption{Fragment zbioru skierowanego skończonych podzbiorów
+$I$: dwa indeksy $\{a\}$ i $\{b\}$ mają wspólne ograniczenie
+górne $\{a,b\}$. Nie przedstawiono wszystkich indeksów
+ani wszystkich strzałek relacji zawierania.}
+\label{fig:topog-skierowanie}
+\end{figure}
+
+\begin{stwierdzenie}[Obraz sieci zbieżnej]
+\label{prop:topog-siec-ciaglosc-jeden-kierunek}
+Jeżeli $f\colon X\to Y$ jest ciągłe w $x\in X$
+oraz sieć $(x_d)_{d\in D}$ zbiega do $x$, to
+$f(x_d)\to f(x)$ w $Y$.
+\end{stwierdzenie}
+\begin{proof}
+Dla dowolnego otoczenia $V$ punktu $f(x)$
+z ciągłości $f$ w $x$ wynika, że $f^{-1}(V)$ jest
+otoczeniem $x$. Stąd istnieje $d_0$ takie, że
+dla $d\succeq d_0$ zachodzi
+$x_d\in f^{-1}(V)$, czyli $f(x_d)\in V$.
+\end{proof}
+
+\begin{twierdzenie}[Domknięcie jest wykrywane przez sieci]
+\label{thm:topog-siec-domkniecie}
+Niech $X$ będzie dowolną przestrzenią topologiczną,
+$A\subseteq X$, $x\in X$. Wtedy
+\[
+ x\in\overline A
+ \quad\Longleftrightarrow\quad
+ \text{istnieje sieć $(a_d)_{d\in D}$ o wyrazach w $A$,
+ zbieżna do $x$}.
+\]
+W szczególności $A$ jest domknięty wtedy i tylko wtedy,
+gdy granica każdej zbieżnej sieci o wyrazach w $A$
+należy do $A$.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli sieć $(a_d)$ o wyrazach w $A$ zbiega do $x$,
+to każde otoczenie $U$ punktu $x$ zawiera jakiś
+$a_d\in A$, więc $x\in\overline A$.
+
+Odwrotnie, załóżmy $x\in\overline A$. Utwórzmy
+\[
+ D=\{(U,a):\ U\text{ jest otwartym otoczeniem }x,
+                         \ a\in U\cap A\}.
+\]
+Zbiór $D$ jest niepusty: $X$ jest otwartym otoczeniem
+$x$ i $A\ne\varnothing$ (ponieważ $x\in\overline A$).
+Określamy $(U,a)\preceq(V,b)$, gdy $V\subseteq U$.
+Relacja jest zwrotna i przechodnia. Jeśli
+$(U,a),(V,b)\in D$, to otoczenie $U\cap V$ przecina $A$;
+wybieramy $c\in U\cap V\cap A$ i otrzymujemy
+$(U\cap V,c)$, które jest ograniczeniem górnym obu indeksów.
+Zatem $D$ jest skierowany.
+Sieć $a_{(U,a)}=a$ ma wartości w $A$.
+Dla dowolnego otwartego otoczenia $W$ punktu $x$
+wybieramy $a\in W\cap A$ i indeks $d_0=(W,a)$.
+Gdy $(V,b)\succeq d_0$, mamy $V\subseteq W$
+i $a_{(V,b)}=b\in V\subseteq W$. Sieć zbiega do $x$.
+
+Ostatnia równoważność wynika z wykazanej charakterystyki:
+$A$ jest domknięty dokładnie wtedy, gdy
+$\overline A=A$.
+\end{proof}
+
+\begin{uwaga}[Unikanie niejawnego wyboru]
+\label{rem:topog-siec-bez-wyboru}
+Indeksy $(U,a)$ obejmują \emph{wszystkie} dopuszczalne
+pary, dlatego do skonstruowania sieci nie musimy
+jednocześnie wybrać po jednym punkcie z każdej rodziny
+$U\cap A$. Podobne indeksowanie wykorzystamy w dowodzie
+jednoznaczności granic.
+\end{uwaga}
+
+\begin{twierdzenie}[Ciągłość przez zachowanie granic sieci]
+\label{thm:topog-siec-kryterium-ciaglosci}
+Niech $X,Y$ będą dowolnymi przestrzeniami topologicznymi,
+$f\colon X\to Y$ oraz $x\in X$. Wtedy $f$ jest ciągłe w $x$
+dokładnie wtedy, gdy dla każdej sieci $(x_d)$ zbieżnej
+do $x$ sieć $(f(x_d))$ zbiega do $f(x)$.
+\end{twierdzenie}
+\begin{proof}
+Konieczność wynika ze stwierdzenia
+\ref{prop:topog-siec-ciaglosc-jeden-kierunek}.
+Jeśli $f$ nie jest ciągłe w $x$, istnieje otwarty
+zbiór $V\ni f(x)$ taki, że $f^{-1}(V)$ nie jest
+otoczeniem $x$. Wtedy każde otwarte otoczenie $U$
+punktu $x$ przecina zbiór
+$A=X\setminus f^{-1}(V)$, czyli $x\in\overline A$.
+Z twierdzenia \ref{thm:topog-siec-domkniecie} istnieje
+sieć $(a_d)$ o wyrazach w $A$ zbieżna do $x$.
+Jednak $f(a_d)\notin V$ dla każdego $d$, więc sieć
+$f(a_d)$ nie zbiega do $f(x)$: przeczy temu otoczenie $V$.
+Dowodzi to implikacji odwrotnej.
+\end{proof}
+
+\begin{twierdzenie}[Jednoznaczność granic sieci i aksjomat Hausdorffa]
+\label{thm:topog-sieci-hausdorff}
+Dla przestrzeni topologicznej $X$ równoważne są:
+\begin{enumerate}[label=(\roman*)]
+\item $X$ jest przestrzenią Hausdorffa;
+\item każda sieć w $X$ ma co najwyżej jedną granicę.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Załóżmy (i) i niech $(x_d)$ zbiega do różnych
+punktów $x,y\in X$. Wybieramy rozłączne otwarte
+otoczenia $U\ni x$ i $V\ni y$. Istnieją indeksy
+$d_U,d_V$ takie, że odpowiednie ogony sieci są
+zawarte w $U$ i $V$. Z kierunkowości istnieje
+$d_0\succeq d_U,d_V$, a wtedy $x_{d_0}\in U\cap V$,
+co jest sprzeczne z rozłącznością.
+
+Niech teraz $X$ nie będzie Hausdorffa. Istnieją różne
+$x,y\in X$ takie, że każde otwarte otoczenia
+$U\ni x$ i $V\ni y$ przecinają się.
+Rozważmy wszystkie trójki
+\[
+ D=\{(U,V,z):\ U\ni x,\ V\ni y\text{ są otwarte},
+                                 \ z\in U\cap V\}.
+\]
+Porządek określamy przez
+$(U,V,z)\preceq(U',V',z')$, jeśli
+$U'\subseteq U$ i $V'\subseteq V$.
+Indeksy mają wspólne ograniczenia górne: dla dwóch
+trójek bierzemy otoczenia $U\cap U'$ i $V\cap V'$
+oraz dowolny punkt ich niepustego przecięcia.
+Sieć $z_{(U,V,z)}=z$ zbiega zarówno do $x$, jak i $y$.
+Istotnie, dla otwartego otoczenia $W\ni x$
+możemy rozpocząć od trójki $(W,X,z)$,
+a wszystkie jej późniejsze indeksy mają pierwszą
+współrzędną zawartą w $W$, więc odpowiadające im
+punkty należą do $W$. Analogicznie dla $y$,
+zaczynając od $(X,W',z)$.
+Zatem (ii) nie zachodzi, co kończy dowód.
+\end{proof}
+
+\begin{uwaga}
+W przeciwieństwie do sieci, jednoznaczność granic
+\emph{samych ciągów} nie charakteryzuje aksjomatu
+Hausdorffa: kontrprzykład daje topologia koprzeliczalna
+z przykładu \ref{ex:topog-ciagi-koprzeliczalna}.
+\end{uwaga}
+
+\pagebreak[4]
+\begin{przyklad}[Sieć zbieżna, której nie można zastąpić ciągiem]
+\label{ex:topog-siec-koprzeliczalna-bez-ciagu}
+Rozważmy $X=\R$ z topologią koprzeliczalną,
+$A=(0,\infty)$ i punkt $0\notin A$.
+Jak pokazaliśmy w przykładzie
+\ref{ex:topog-ciagi-koprzeliczalna},
+$0\in\overline A$, lecz żaden ciąg o wyrazach w $A$
+nie zbiega do $0$: każdy ciąg zbieżny do $0$ musiałby
+być od pewnego miejsca stale równy $0$.
+Skonstruujemy natomiast konkretną sieć w $A$ zbieżną do $0$.
+
+Niech $D$ będzie zbiorem wszystkich par $(C,a)$, w których
+$C\subseteq A$ jest co najwyżej przeliczalny,
+a $a\in A\setminus C$. Określamy
+$(C,a)\preceq(E,b)$, gdy $C\subseteq E$.
+Zbiór $D$ jest niepusty, gdyż $(\varnothing,a)\in D$
+dla każdego $a\in A$. Relacja jest zwrotna i przechodnia.
+Dla dowolnych $(C,a),(E,b)\in D$ suma $C\cup E$
+jest przeliczalna, a $A$ jest nieprzeliczalny,
+więc istnieje $c\in A\setminus(C\cup E)$.
+Wówczas $(C\cup E,c)$ jest wspólnym ograniczeniem
+górnym tych indeksów. Zatem $D$ jest skierowany.
+Nie wymagamy tu antysymetrii relacji (zob.
+definicję \ref{def:topog-zbior-skierowany}).
+
+Niech $x_{(C,a)}=a$. Zbiór wartości tej sieci jest
+dokładnie równy $A$, gdyż $(\varnothing,a)\in D$ dla
+każdego $a\in A$. Dla dowolnego otwartego otoczenia
+$U$ punktu $0$ zbiór $C=A\setminus U$ jest co najwyżej
+przeliczalny. Wybieramy $a\in A\setminus C$
+i indeks $d_0=(C,a)$. Gdy $(E,b)\succeq d_0$,
+to $C\subseteq E$, zatem
+$x_{(E,b)}=b\in A\setminus E\subseteq A\setminus C\subseteq U$.
+To dowodzi $x_d\to0$, mimo że żadna z wartości sieci
+nie jest równa $0$ i żaden ciąg w $A$ nie zbiega do $0$.
+Konstrukcja nie wymaga wyboru jednego punktu dla każdego
+zbioru $C$: wszystkie dopuszczalne pary stanowią indeksy.
+\end{przyklad}
+
+\section{Podsieci, punkty skupienia sieci i iloczyny}
+\label{sec:topog-podsieci}
+
+\begin{definicja}[Podsieć]
+\label{def:topog-podsiec}
+Niech $(x_d)_{d\in D}$ będzie siecią, a $E$ innym
+zbiorem skierowanym. Sieć $(x_{\phi(e)})_{e\in E}$
+nazywamy \emph{podsiecią} $(x_d)$, jeśli
+$\phi\colon E\to D$ spełnia warunek:
+dla każdego $d_0\in D$ istnieje $e_0\in E$ takie,
+że $\phi(e)\succeq d_0$ dla wszystkich $e\succeq e_0$.
+Nie wymagamy, aby $\phi$ była iniekcją ani
+monotoniczna; wymagamy jedynie wskazanej ostatecznej
+współkońcowości.
+\end{definicja}
+
+\begin{stwierdzenie}[Granice podsieci]
+\label{prop:topog-podsiec-granica}
+Każda podsieć sieci zbieżnej do $x$ jest zbieżna do $x$.
+\end{stwierdzenie}
+\begin{proof}
+Niech $U$ będzie otoczeniem $x$ i niech
+$x_d\in U$ dla wszystkich $d\succeq d_0$.
+Z warunku na $\phi$ istnieje $e_0$ takie,
+że $\phi(e)\succeq d_0$ dla wszystkich $e\succeq e_0$.
+Stąd $x_{\phi(e)}\in U$ dla wszystkich $e\succeq e_0$.
+\end{proof}
+
+\begin{definicja}[Punkt skupienia sieci]
+\label{def:topog-punkt-skupienia-sieci}
+Punkt $x\in X$ nazywamy \emph{punktem skupienia sieci}
+$(x_d)_{d\in D}$, jeśli dla każdego otoczenia $U$
+punktu $x$ i każdego $d_0\in D$ istnieje
+$d\succeq d_0$ takie, że $x_d\in U$.
+\end{definicja}
+
+\begin{twierdzenie}[Punkt skupienia a zbieżna podsieć]
+\label{thm:topog-punkt-skupienia-podsiec}
+Niech $(x_d)_{d\in D}$ będzie siecią w przestrzeni
+$X$, a $x\in X$. Wtedy $x$ jest punktem skupienia
+sieci dokładnie wtedy, gdy istnieje jej podsieć
+zbieżna do $x$.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli podsieć $(x_{\phi(e)})$ zbiega do $x$,
+to dla otoczenia $U$ istnieje indeks $e_U$,
+od którego wszystkie jej wyrazy leżą w $U$.
+Dla zadanego $d_0\in D$ istnieje też $e_d$,
+od którego $\phi(e)\succeq d_0$.
+Wybierając wspólne ograniczenie górne dla $e_U,e_d$,
+otrzymujemy $d=\phi(e)\succeq d_0$ z $x_d\in U$.
+
+Przypuśćmy odwrotnie, że $x$ jest punktem skupienia.
+Niech
+\[
+ E=\{(d,U):d\in D,\ U\text{ jest otwartym otoczeniem }x,
+                                        \ x_d\in U\}.
+\]
+Zbiór $E$ jest niepusty, gdyż dla $U=X$
+i dowolnego $d\in D$ mamy $(d,X)\in E$.
+Określmy $(d,U)\preceq(e,V)$, gdy $d\preceq e$
+oraz $V\subseteq U$. Jest to relacja zwrotna i przechodnia.
+Dla $(d,U),(e,V)\in E$ bierzemy $d_0\succeq d,e$.
+Z własności punktu skupienia istnieje $c\succeq d_0$
+takie, że $x_c\in U\cap V$.
+Indeks $(c,U\cap V)$ jest wspólnym ograniczeniem górnym,
+a więc $E$ jest skierowany.
+Definiujemy $\phi(d,U)=d$. Dla każdego $d_0\in D$
+wybieramy $c\succeq d_0$ i zauważamy, że
+$(c,X)\in E$. Dla wszystkich późniejszych
+$(d,U)\in E$ zachodzi $d\succeq c\succeq d_0$.
+Zatem $\phi$ spełnia warunek podsieci.
+Wreszcie, dla otwartego otoczenia $W\ni x$
+wybieramy $d$ z $x_d\in W$ (istnieje z własności
+punktu skupienia) i indeks $(d,W)\in E$.
+Dla każdego późniejszego $(e,V)$ mamy $V\subseteq W$,
+a ponieważ $x_e\in V$, zachodzi $x_e\in W$.
+Podsieć $(x_{\phi(d,U)})$ zbiega do $x$.
+\end{proof}
+
+\begin{twierdzenie}[Zbieżność w iloczynie]
+\label{thm:topog-siec-iloczyn}
+Niech $\{X_i:i\in I\}$ będzie rodziną przestrzeni
+topologicznych, a $X=\prod_{i\in I}X_i$ jej iloczynem
+z topologią produktową. Niech $(x_d)_{d\in D}$
+będzie siecią w $X$, a $x\in X$. Wówczas
+\[
+ x_d\to x\text{ w }X
+ \quad\Longleftrightarrow\quad
+ \pi_i(x_d)\to\pi_i(x)\text{ w }X_i
+ \text{ dla każdego }i\in I.
+\]
+\end{twierdzenie}
+\begin{proof}
+Implikacja wprost wynika z ciągłości rzutowań
+$\pi_i\colon X\to X_i$, wykazanej przy konstrukcji
+ topologii produktowej.
+Odwrotnie, niech wszystkie sieci współrzędnych
+zbiegają do właściwych granic. Wystarczy sprawdzić
+zbieżność na bazie otoczeń punktu $x$.
+Jej elementami są zbiory postaci
+$B=\bigcap_{i\in F}\pi_i^{-1}(U_i)$,
+gdzie $F\subseteq I$ jest skończony, a $U_i$
+jest otwartym otoczeniem $\pi_i(x)$.
+Dla każdego $i\in F$ istnieje $d_i\in D$ takie,
+że $\pi_i(x_d)\in U_i$ dla wszystkich $d\succeq d_i$.
+Z kierunkowości $D$ i skończoności $F$ istnieje
+wspólne ograniczenie górne $d_0$ tych indeksów
+(dla $F=\varnothing$ wystarczy dowolny $d_0\in D$).
+Wtedy dla $d\succeq d_0$ zachodzi
+$x_d\in B$. To dowodzi zbieżności w iloczynie.
+\end{proof}
+
+\section{Filtry i ich zbieżność}
+\label{sec:topog-filtry}
+
+\begin{definicja}[Filtr właściwy]
+\label{def:topog-filtr}
+Niech $X$ będzie zbiorem. \emph{Filtrem (właściwym)}
+na $X$ nazywamy rodzinę $\mathcal F\subseteq\mathcal P(X)$
+spełniającą następujące warunki:
+\begin{enumerate}[label=(\roman*)]
+\item $X\in\mathcal F$ i $\varnothing\notin\mathcal F$;
+\item jeżeli $F,G\in\mathcal F$, to $F\cap G\in\mathcal F$;
+\item jeśli $F\in\mathcal F$ i $F\subseteq B\subseteq X$,
+      to $B\in\mathcal F$.
+\end{enumerate}
+\emph{Bazą filtru} nazywamy niepustą rodzinę
+$\mathcal B\subseteq\mathcal P(X)\setminus\{\varnothing\}$
+taką, że dla $B,C\in\mathcal B$ istnieje
+$D\in\mathcal B$ z $D\subseteq B\cap C$.
+Generuje ona filtr $\mathcal F_{\mathcal B}$ wszystkich
+zbiorów zawierających co najmniej jeden element
+$\mathcal B$.
+\end{definicja}
+
+\begin{proof}[Uzasadnienie konstrukcji filtru z bazy]
+Rodzina $\mathcal F_{\mathcal B}$ zawiera $X$,
+a nie zawiera $\varnothing$, ponieważ elementy bazy
+są niepuste. Jeśli $F$ zawiera $B\in\mathcal B$, a $G$
+zawiera $C\in\mathcal B$, to $F\cap G$ zawiera
+odpowiedni $D\subseteq B\cap C$, więc należy
+do $\mathcal F_{\mathcal B}$. Własność rozszerzania
+zbiorów jest wprost wpisana w definicję.
+\end{proof}
+
+\begin{definicja}[Granica filtru]
+\label{def:topog-filtr-granica}
+Niech $X$ będzie przestrzenią topologiczną,
+$\mathcal F$ filtrem na $X$ i $x\in X$.
+Mówimy, że $\mathcal F$ \emph{zbiega do $x$}, gdy
+każde otoczenie punktu $x$ należy do $\mathcal F$.
+Zapisujemy $\mathcal F\to x$.
+\end{definicja}
+
+\begin{przyklad}[Filtr otoczeń]
+\label{ex:topog-filtr-otoczen}
+Dla każdego $x\in X$ rodzina wszystkich otoczeń
+punktu $x$ jest filtrem na $X$: jest niepusta,
+nie zawiera $\varnothing$, jest zamknięta na skończone
+przecięcia i na rozszerzanie zbiorów.
+Filtr ten zbiega do $x$ z samej definicji.
+\end{przyklad}
+
+\begin{twierdzenie}[Domknięcie przez filtry]
+\label{thm:topog-filtr-domkniecie}
+Dla dowolnej przestrzeni topologicznej $X$,
+zbioru $A\subseteq X$ i punktu $x\in X$ warunek
+$x\in\overline A$ jest równoważny istnieniu
+filtru $\mathcal F$ na $X$ takiego, że
+$A\in\mathcal F$ i $\mathcal F\to x$.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy $x\in\overline A$. Niech $\mathcal B$
+będzie rodziną zbiorów $A\cap U$, gdzie $U$
+przebiega wszystkie otwarte otoczenia $x$.
+Każdy element $\mathcal B$ jest niepusty z
+charakterystyki domknięcia. Dla $A\cap U$ i $A\cap V$
+element $A\cap(U\cap V)$ należy do $\mathcal B$
+i jest ich przecięciem. Zatem $\mathcal B$ jest bazą
+filtru $\mathcal F$. Ponieważ $A=A\cap X\in\mathcal B$,
+mamy $A\in\mathcal F$. Każde otwarte otoczenie
+$U$ zawiera $A\cap U\in\mathcal B$, więc należy
+do $\mathcal F$; dowolne otoczenie $x$ zawiera
+otwarte otoczenie, zatem również należy do filtru.
+
+Odwrotnie, jeżeli $A\in\mathcal F$ i
+$\mathcal F\to x$, to dla każdego otwartego
+otoczenia $U$ punktu $x$ mamy $U\in\mathcal F$.
+Stąd $A\cap U\in\mathcal F$, a ponieważ filtr
+jest właściwy, $A\cap U\ne\varnothing$.
+Oznacza to $x\in\overline A$.
+\end{proof}
+
+\begin{twierdzenie}[Sieci i filtry opisują tę samą zbieżność]
+\label{thm:topog-sieci-filtry}
+Niech $X$ będzie przestrzenią topologiczną.
+\begin{enumerate}[label=(\roman*)]
+\item Dla każdej sieci $(x_d)_{d\in D}$ w $X$
+rodzina wszystkich zbiorów zawierających
+pewien ogon $\{x_d:d\succeq d_0\}$
+jest filtrem $\mathcal F_{(x_d)}$.
+Sieć zbiega do $x$ wtedy i tylko wtedy,
+gdy $\mathcal F_{(x_d)}\to x$.
+\item Dla każdego filtru $\mathcal F$ na $X$
+istnieje sieć $(x_d)_{d\in D}$ taka, że dla każdego
+$x\in X$ zachodzi
+$\mathcal F\to x\iff x_d\to x$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+(i) Ogony są niepuste, bo dla każdego $d_0$
+zawierają $x_{d_0}$. Przecięcie dwóch ogonów
+zawiera ogon o indeksie będącym wspólnym
+ograniczeniem górnym ich indeksów początkowych.
+Stanowią zatem bazę filtru. Otoczenie $U$ należy
+do generowanego filtru dokładnie wtedy, gdy zawiera
+pewien ogon sieci. Jest to definicja zbieżności sieci.
+
+(ii) Niech
+\[
+ D=\{(F,a):F\in\mathcal F,\ a\in F\}.
+\]
+Rodzina $D$ jest niepusta, ponieważ $X\in\mathcal F$
+i $X\ne\varnothing$ (właściwy filtr na zbiorze pustym
+nie istnieje). Porządkujemy ją przez
+$(F,a)\preceq(G,b)\iff G\subseteq F$.
+Dla dwóch indeksów wybieramy dowolny punkt
+$c\in F\cap G$, który istnieje, gdyż
+$F\cap G\in\mathcal F$. Wtedy $(F\cap G,c)$
+jest wspólnym ograniczeniem górnym.
+Definiujemy sieć $x_{(F,a)}=a$.
+
+Jeśli $\mathcal F\to x$, to dla każdego otwartego
+otoczenia $U$ punktu $x$ mamy $U\in\mathcal F$.
+Wybieramy $a\in U$ i indeks $(U,a)$. Każdy późniejszy
+$(G,b)$ spełnia $G\subseteq U$, więc $x_{(G,b)}=b\in U$.
+Zatem sieć zbiega do $x$.
+
+Na odwrót, niech $(x_{(F,a)})$ zbiega do $x$.
+Dla każdego otwartego otoczenia $U$ punktu $x$
+istnieje $(F,a)$ takie, że
+$x_{(G,b)}\in U$ dla wszystkich $(G,b)\succeq(F,a)$.
+Dla dowolnego $b\in F$ indeks $(F,b)$ należy do $D$
+i spełnia $(F,b)\succeq(F,a)$, zatem $b\in U$.
+Wynika stąd $F\subseteq U$, a więc $U\in\mathcal F$
+przez własność rozszerzania zbiorów. Każde inne
+otoczenie punktu $x$ zawiera otwarte, więc również
+należy do filtru. Otrzymujemy $\mathcal F\to x$.
+\end{proof}
+
+\begin{wniosek}[Ciągłość i jednoznaczność granic filtrów]
+\label{cor:topog-filtr-ciaglosc-hausdorff}
+Niech $X,Y$ będą przestrzeniami topologicznymi.
+\begin{enumerate}[label=(\roman*)]
+\item Odwzorowanie $f\colon X\to Y$ jest ciągłe
+w $x\in X$ dokładnie wtedy, gdy dla każdego filtru
+$\mathcal F\to x$ filtr generowany przez zbiory
+$f(F)$, $F\in\mathcal F$, zbiega do $f(x)$.
+\item Przestrzeń $X$ jest Hausdorffa dokładnie wtedy,
+gdy każdy filtr na $X$ ma co najwyżej jedną granicę.
+\end{enumerate}
+\end{wniosek}
+\begin{proof}
+Dla (i) najpierw sprawdźmy, że rodzina
+$\{f(F):F\in\mathcal F\}$ jest bazą filtru na $Y$.
+Każdy jej element jest niepusty, ponieważ
+$\varnothing\notin\mathcal F$. Jeśli $F,G\in\mathcal F$,
+to $F\cap G\in\mathcal F$ oraz
+$f(F\cap G)\subseteq f(F)\cap f(G)$.
+Spełnione są więc warunki bazy filtru z
+ definicji \ref{def:topog-filtr}.
+Ponadto $V\subseteq Y$ należy do filtru obrazowego
+dokładnie wtedy, gdy
+$f^{-1}(V)\in\mathcal F$: jeśli $f(F)\subseteq V$
+dla pewnego $F\in\mathcal F$, to
+$F\subseteq f^{-1}(V)$ i filtr zawiera przeciwobraz;
+odwrotnie z $f^{-1}(V)\in\mathcal F$ wynika
+$f(f^{-1}(V))\subseteq V$.
+Jeżeli $f$ jest ciągłe w $x$ i $\mathcal F\to x$,
+to dla każdego otwartego otoczenia $V$ punktu $f(x)$
+zbiór $f^{-1}(V)$ jest otoczeniem $x$, zatem należy
+do $\mathcal F$. Z wykazanej równoważności
+$V$ należy do filtru obrazowego, co dowodzi jego
+zbieżności do $f(x)$.
+
+Odwrotnie, przypuśćmy, że $f$ zachowuje granice
+wszystkich filtrów, ale nie jest ciągłe w $x$.
+Z twierdzenia \ref{thm:topog-siec-kryterium-ciaglosci}
+istnieje sieć $(x_d)$ zbieżna do $x$, której obraz
+$(f(x_d))$ nie zbiega do $f(x)$. Filtr ogonów
+$\mathcal F_{(x_d)}$ zbiega do $x$ na mocy
+twierdzenia \ref{thm:topog-sieci-filtry}(i).
+Ponieważ ogony sieci obrazowej są dokładnie
+obrazami ogonów sieci wyjściowej, ich filtr
+jest filtrem obrazowym $f_*(\mathcal F_{(x_d)})$.
+Nie zbiega on do $f(x)$, co przeczy założeniu.
+
+Dla (ii) jeśli $X$ jest Hausdorffa, dwa różne punkty
+$x,y$ mają rozłączne otwarte otoczenia $U,V$.
+Filtr zbieżny do obu musiałby zawierać
+$U\cap V=\varnothing$, co jest niemożliwe.
+Jeśli $X$ nie jest Hausdorffa, to z dowodu
+twierdzenia \ref{thm:topog-sieci-hausdorff}
+istnieje sieć zbieżna do dwóch różnych punktów.
+Jej filtr ogonów z punktu (i) twierdzenia
+\ref{thm:topog-sieci-filtry} ma te same granice.
+\end{proof}
+
+\section{Podsumowanie: trzy języki zbieżności}
+\label{sec:topog-zbieznosc-zestawienie}
+
+\begin{center}
+\begin{tabular}{@{}p{.22\textwidth}p{.31\textwidth}p{.34\textwidth}@{}}
+\hline
+\textbf{Narzędzie} & \textbf{Co wykrywa zawsze} &
+\textbf{Kiedy wystarcza}\ \\ \hline
+Ciągi & Granice i konieczny warunek ciągłości &
+Dla domknięcia i ciągłości, jeśli przestrzeń jest
+pierwszo przeliczalna.\\
+Sieci & Domknięcie, ciągłość, aksjomat Hausdorffa &
+W każdej przestrzeni topologicznej.\\
+Filtry & Domknięcie, ciągłość, aksjomat Hausdorffa &
+W każdej przestrzeni topologicznej.\\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{uwaga}[Powiązania z dalszymi rozdziałami]
+\label{rem:topog-zbieznosc-dalsze}
+Sieci i filtry pozwolą później sformułować
+charakterystyki zwartości oraz zbadać dokładniej
+przestrzenie bez przeliczalnej bazy otoczeń.
+Warunki przeliczalności i aksjomaty metryzowalności
+będą analizowane odrębnie; w szczególności
+pierwsza przeliczalność nie została tu utożsamiona
+z metryzowalnością.
+\end{uwaga}

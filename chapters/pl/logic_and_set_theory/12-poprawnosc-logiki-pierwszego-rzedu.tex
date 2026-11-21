@@ -1,0 +1,466 @@
+\chapter[Poprawność rachunku pierwszego rzędu]{Poprawność rachunku dowodowego i konsekwencja logiczna}
+\label{ch:soundness-fol}
+
+\section{Dwa rodzaje wynikania}
+Zapis $\Gamma\vdash_{\mathrm{ND}}\varphi$ z
+rozdziału~\ref{ch:natural-deduction} oznacza istnienie
+skończonego, formalnego dowodu. Zapis $\Gamma\models\varphi$
+z rozdziału~\ref{ch:semantics-fol} mówi natomiast o
+prawdziwości formuły we wszystkich interpretacjach spełniających założenia.
+Są to pojęcia zbudowane odmiennymi metodami.
+Pierwsze dotyczy skończonych napisów i reguł, drugie
+— wszystkich struktur i ich wartościowań.
+
+\begin{definicja}[Konsekwencja semantyczna dla formuł]
+\label{def:soundness-entailment-formulas}
+Niech $\mathcal L$ będzie językiem pierwszego rzędu,
+$\Gamma$ zbiorem formuł języka $\mathcal L$,
+a $\varphi$ formułą tego samego języka.
+Piszemy $\Gamma\models\varphi$, jeżeli dla każdej
+struktury $\mathfrak A$ języka $\mathcal L$
+o niepustym uniwersum $A$ i każdego wartościowania $s$ zmiennych języka
+$\mathcal L$ w zbiorze $A$ zachodzi implikacja
+\[
+\bigl(\forall\gamma\in\Gamma\ \mathfrak A,s\models\gamma\bigr)
+\quad\Longrightarrow\quad
+\mathfrak A,s\models\varphi.
+\]
+Gdy $\Gamma=\varnothing$, piszemy $\models\varphi$.
+\end{definicja}
+Jeżeli $\Gamma$ składa się ze zdań, a $\varphi$ jest zdaniem,
+to dzięki Wnioskowi~\ref{cor:sem-sentence}
+powyższa definicja zgadza się z
+Definicją~\ref{def:sem-entailment}.
+Nie można jednak pominąć wartościowania, gdy w formułach występują
+zmienne wolne. Przykładowo $P(x)$ nie wynika semantycznie
+z samego istnienia elementu spełniającego $P$.
+
+\begin{przyklad}[Różnica między pojedynczym modelem a wszystkimi modelami]
+W strukturze $(\N,<)$ zdanie $\forall x\,\exists y\,(x<y)$
+jest prawdziwe. Nie oznacza to, że jest prawdziwe
+w każdej strukturze z binarnym symbolem relacyjnym $<$.
+Jeśli za uniwersum przyjmiemy $\{a\}$, a relację $<$
+za pustą, to zdanie jest fałszywe. Dla wynikania
+semantycznego potrzebna jest kwantyfikacja po \emph{wszystkich}
+strukturach rozważanego języka.
+\end{przyklad}
+
+
+\begin{przyklad}[Semantyczna wersja prostego kroku dowodowego]
+Sprawdzając semantyczną poprawność reguły, nie twierdzimy,
+że jej przesłanki są prawdziwe w każdej strukturze.
+Pytamy jedynie: \emph{jeżeli} w ustalonej strukturze
+przesłanki są spełnione, czy musi być spełniony wniosek?
+To pozwala zrozumieć, dlaczego nad kreską zapisujemy
+kilka wymaganych przesłanek, nie utożsamiając ich
+z dodatkowymi aksjomatami całej teorii.
+
+Niech $P$ i $Q$ oznaczają dowolne formuły tego samego języka.
+Mamy $\{P\land Q\}\models P$: w dowolnej strukturze i przy
+dowolnym wartościowaniu, w którym $P\land Q$ jest prawdziwa,
+prawdziwe jest także $P$. To jest fakt o \emph{znaczeniu}
+spójnika $\land$. W rozdziale~\ref{ch:natural-deduction}
+ten sam krok zapisaliśmy formalną regułą $(\land E_1)$.
+Twierdzenie o poprawności pokaże, że tak wygląda każdy
+legalny krok systemu dowodowego: nie może zamienić
+prawdziwych przesłanek na fałszywy wniosek.
+\end{przyklad}
+
+\section{Trzy pomocnicze fakty semantyczne}
+Dwa pierwsze fakty udowodniliśmy już w rozdziale 10,
+ale przytoczymy je w dokładnej postaci potrzebnej poniżej.
+
+\begin{lemat}[Zmiana jednej nieistotnej zmiennej]
+\label{lem:soundness-fresh}
+Niech $\mathcal L$ będzie językiem pierwszego rzędu,
+$\mathfrak A$ dowolną strukturą tego języka o uniwersum $A$,
+$\varphi$ formułą tego języka, a $y$ zmienną niewystępującą wolno
+w $\varphi$. Dla każdego wartościowania $s$ i $a\in A$ zachodzi
+\[
+\mathfrak A,s\models\varphi
+\quad\Longleftrightarrow\quad
+\mathfrak A,s[y\mapsto a]\models\varphi.
+\]
+\end{lemat}
+\begin{proof}
+Wartościowania $s$ i $s[y\mapsto a]$ różnią się
+co najwyżej na zmiennej $y$. Ponieważ $y$ nie jest
+wolną zmienną $\varphi$, zgadzają się na
+$\operatorname{FV}(\varphi)$. Teza wynika z
+Twierdzenia~\ref{thm:sem-coincidence}.
+\end{proof}
+
+\begin{lemat}[Interpretacja podstawienia]\label{lem:soundness-subst}
+Niech $\mathcal L$ będzie językiem pierwszego rzędu,
+$\mathfrak A$ jego strukturą o uniwersum $A$,
+$\varphi$ formułą języka $\mathcal L$, $x$ zmienną,
+$t$ termem tego języka dopuszczalnym do podstawienia
+za $x$ w $\varphi$, a $s$ wartościowaniem.
+Wówczas
+\[
+\mathfrak A,s\models\varphi[x:=t]
+\quad\Longleftrightarrow\quad
+\mathfrak A,s[x\mapsto t^{\mathfrak A}[s]]\models\varphi.
+\]
+\end{lemat}
+\begin{proof}
+To Twierdzenie~\ref{thm:sem-substitution},
+którego dowód indukcyjny obejmował wszystkie rodzaje formuł,
+w szczególności przypadki obu kwantyfikatorów.
+\end{proof}
+
+\begin{lemat}[Zastępowanie równych termów]
+\label{lem:soundness-equality}
+Niech $\mathcal L$ będzie językiem pierwszego rzędu
+z równością, $\mathfrak A$ strukturą języka $\mathcal L$
+o niepustym uniwersum $A$, $s$ wartościowaniem,
+$x$ zmienną, $t,u$ termami języka $\mathcal L$,
+a $\theta$ formułą tego języka.
+Załóżmy, że $t$ i $u$ są dopuszczalne do podstawienia
+za zmienną $x$ w $\theta$.
+Jeżeli zachodzą $\mathfrak A,s\models t=u$ oraz
+$\mathfrak A,s\models\theta[x:=t]$, to
+$\mathfrak A,s\models\theta[x:=u]$.
+\end{lemat}
+\begin{proof}
+Z prawdziwości atomu $t=u$ otrzymujemy
+$t^{\mathfrak A}[s]=u^{\mathfrak A}[s]=a$
+dla pewnego $a\in A$.
+Lemat~\ref{lem:soundness-subst} przekształca przesłankę
+$\mathfrak A,s\models\theta[x:=t]$ w
+$\mathfrak A,s[x\mapsto a]\models\theta$.
+Ponieważ $u^{\mathfrak A}[s]=a$, ponowne zastosowanie
+tego lematu daje
+$\mathfrak A,s\models\theta[x:=u]$.
+\end{proof}
+
+\section{Twierdzenie o poprawności}
+\begin{twierdzenie}[Poprawność dedukcji naturalnej]
+\label{thm:soundness}
+Niech $\mathcal L$ będzie dowolnym językiem pierwszego rzędu
+z równością, $\Gamma$ zbiorem formuł tego języka,
+a $\varphi$ formułą języka $\mathcal L$. Jeśli
+\[
+\Gamma\vdash_{\mathrm{ND}}\varphi,
+\]
+to
+\[
+\Gamma\models\varphi.
+\]
+\end{twierdzenie}
+\begin{proof}
+Ustalmy dowolną strukturę $\mathfrak A$ języka $\mathcal L$
+i dowolne wartościowanie $s$ spełniające wszystkie
+formuły z $\Gamma$. Pokażemy, że spełniona jest także $\varphi$.
+Dowód prowadzimy indukcją po strukturze skończonego drzewa dedukcji.
+Hipoteza indukcyjna mówi dokładniej, że każda poddedukcja
+jest semantycznie poprawna względem swoich \emph{otwartych}
+założeń. Rozładowane założenia rozpatrujemy tylko na czas
+odpowiedniego kroku.
+
+\smallskip
+\emph{1. Liście i reguły bez przesłanek.}
+Jeśli liść jest otwartym założeniem $\gamma$
+danej poddedukcji, to każde wartościowanie
+spełniające wszystkie jej otwarte założenia spełnia też
+$\gamma$. Dotyczy to również założeń tymczasowych,
+które będą rozładowane w dalszych krokach.
+Dla całego dowodu jego otwarte założenia należą do $\Gamma$.
+Reguła $=I$ kończąca się na $t=t$ jest poprawna,
+ponieważ $t^{\mathfrak A}[s]=t^{\mathfrak A}[s]$.
+
+\smallskip
+\emph{2. Koniunkcja i implikacja.}
+Jeżeli obie przesłanki reguły $\land I$ są spełnione,
+to prawdziwa jest ich koniunkcja; jeśli spełniona jest
+koniunkcja, każdy jej człon jest spełniony, co uzasadnia
+$\land E_1$ i $\land E_2$.
+Dla $\to E$ spełnianie $\alpha\to\beta$ oraz $\alpha$
+wymusza spełnianie $\beta$ zgodnie z tablicą implikacji.
+Dla $\to I$ mamy poddedukcję $\beta$ z dodatkowym,
+tymczasowym założeniem $\alpha$. Rozważmy dowolną
+strukturę i wartościowanie spełniające pozostałe otwarte
+założenia. Jeśli $\alpha$ jest fałszywa, implikacja
+$\alpha\to\beta$ jest prawdziwa niezależnie od $\beta$.
+Jeśli $\alpha$ jest prawdziwa, hipoteza indukcyjna
+zastosowana do poddedukcji daje $\beta$.
+W obu przypadkach implikacja jest prawdziwa.
+
+\smallskip
+\emph{3. Alternatywa, równoważność i negacja.}
+Reguły $\lor I_1$ i $\lor I_2$ są poprawne, bo
+spełnianie jednego członu wystarcza dla alternatywy.
+W $\lor E$ prawdziwa alternatywa oznacza prawdziwość
+co najmniej jednego członu. W pierwszym przypadku
+hipoteza indukcyjna dla pierwszej poddedukcji daje $\theta$;
+w drugim przypadku daje ją druga poddedukcja.
+Reguły równoważności są poprawne, ponieważ
+$\alpha\leftrightarrow\beta$ jest prawdziwa dokładnie wtedy,
+gdy prawdziwe są obie implikacje wzajemne.
+
+Jeśli prawdziwe byłyby zarazem $\alpha$ i $\neg\alpha$,
+otrzymalibyśmy sprzeczność z definicją negacji.
+Dlatego reguła $\neg E$ może prowadzić do $\bot$
+jedynie z przesłanek, których nie można jednocześnie spełnić.
+Jeśli z dodatkowego założenia $\alpha$ otrzymano $\bot$,
+to przy spełnieniu pozostałych założeń $\alpha$ nie może być
+prawdziwa: inaczej otrzymalibyśmy spełnianie $\bot$.
+Zatem $\neg\alpha$ jest prawdziwa, co uzasadnia $\neg I$.
+Reguła $\bot E$ jest poprawna, ponieważ $\bot$ nie jest
+spełniona przy żadnym wartościowaniu; zatem nie istnieje
+wartościowanie, dla którego jej przesłanka byłaby prawdziwa,
+a wniosek fałszywy. Wreszcie reguła klasycznego dowodu
+nie wprost $\mathrm{RAA}$ jest poprawna: jeśli założenie
+$\neg\alpha$ prowadziłoby do sprzeczności, nie może być
+prawdziwe, a klasyczna semantyka dwuwartościowa
+zapewnia prawdziwość $\alpha$.
+
+\smallskip
+\emph{4. Eliminacja kwantyfikatora ogólnego.}
+Przypuśćmy, że $\mathfrak A,s\models\forall x\,\alpha$.
+Niech $a=t^{\mathfrak A}[s]$. Definicja spełniania
+kwantyfikatora daje
+$\mathfrak A,s[x\mapsto a]\models\alpha$.
+Lemat~\ref{lem:soundness-subst} zamienia ten warunek
+na $\mathfrak A,s\models\alpha[x:=t]$.
+To dokładnie wniosek reguły $\forall E$.
+
+\smallskip
+\emph{5. Wprowadzanie kwantyfikatora ogólnego.}
+Niech poddedukcja z otwartymi założeniami $\Delta$
+kończy się na $\alpha$, a zmienna $x$ nie występuje
+wolno w żadnej formule z $\Delta$.
+Załóżmy, że $\mathfrak A,s$ spełnia $\Delta$.
+Dla dowolnego $a\in A$ Lemat~\ref{lem:soundness-fresh}
+zastosowany oddzielnie do każdego elementu $\Delta$
+pokazuje, że $\mathfrak A,s[x\mapsto a]$ również spełnia
+wszystkie otwarte założenia. Hipoteza indukcyjna daje więc
+$\mathfrak A,s[x\mapsto a]\models\alpha$.
+Ponieważ $a$ było dowolne, definicja $\forall$ daje
+$\mathfrak A,s\models\forall x\,\alpha$.
+W tym właśnie miejscu konieczny jest warunek o niewystępowaniu
+$x$ w otwartych założeniach.
+
+\smallskip
+\emph{6. Wprowadzanie kwantyfikatora egzystencjalnego.}
+Jeśli $\mathfrak A,s\models\alpha[x:=t]$,
+to dla $a=t^{\mathfrak A}[s]$ Lemat~\ref{lem:soundness-subst}
+daje $\mathfrak A,s[x\mapsto a]\models\alpha$.
+Wartość $a$ jest świadkiem spełniania $\exists x\,\alpha$.
+
+\smallskip
+\emph{7. Eliminacja kwantyfikatora egzystencjalnego.}
+Załóżmy, że ostatnia reguła ma przesłanki
+$\exists x\,\alpha$ oraz poddedukcję $\theta$ z dodatkowego
+założenia $\alpha[x:=y]$, gdzie $y$ jest świeżą zmienną
+nieobecną w $\alpha$ i we wniosku $\theta$ oraz niewystępującą
+wolno w żadnym otwartym założeniu obu gałęzi poza
+rozładowywanym $\alpha[x:=y]$. Przez $\Delta$ oznaczmy
+sumę tych pozostałych otwartych założeń; w szczególności
+obejmuje ona założenia potrzebne do wyprowadzenia
+przesłanki głównej $\exists x\,\alpha$.
+Niech $\mathfrak A,s$ spełnia $\Delta$.
+Hipoteza indukcyjna zastosowana do dowodu przesłanki głównej
+zapewnia $\mathfrak A,s\models\exists x\,\alpha$.
+Z tego wynika istnienie
+$a\in A$ takiego, że
+$\mathfrak A,s[x\mapsto a]\models\alpha$.
+Połóżmy $r=s[y\mapsto a]$.
+Ponieważ $y$ nie występuje wolno w $\alpha$,
+wartościowania $r[x\mapsto a]$ i $s[x\mapsto a]$
+zgadzają się na wszystkich jej zmiennych wolnych.
+Stąd na mocy Twierdzenia~\ref{thm:sem-coincidence}
+mamy $\mathfrak A,r[x\mapsto a]\models\alpha$.
+Z Lematu~\ref{lem:soundness-subst} dla termu $y$ wynika
+$\mathfrak A,r\models\alpha[x:=y]$.
+Świeżość $y$ oraz Lemat~\ref{lem:soundness-fresh}
+zapewniają też, że $\mathfrak A,r$ spełnia $\Delta$.
+Hipoteza indukcyjna dla poddedukcji daje zatem
+$\mathfrak A,r\models\theta$. Zmienna $y$ nie występuje
+wolno w $\theta$, więc ponowne użycie lematu o świeżej
+zmiennej daje $\mathfrak A,s\models\theta$.
+Reguła $\exists E$ jest więc poprawna.
+
+\smallskip
+\emph{8. Eliminacja równości.}
+Jest to dokładnie treść Lematu~\ref{lem:soundness-equality}.
+
+Wyczerpaliśmy wszystkie reguły z
+Definicji~\ref{def:nd-rules-conj-imp},
+Definicji~\ref{def:nd-rules-prop},
+Definicji~\ref{def:nd-rules-quant} i
+Definicji~\ref{def:nd-equality}.
+Indukcja po drzewie dowodu jest zakończona.
+Dla korzenia drzewa otwarte założenia zawierają się w $\Gamma$,
+więc przyjęte na początku $\mathfrak A,s$ spełnia także wniosek
+$\varphi$. Ponieważ $\mathfrak A$ i $s$ były dowolne,
+wynika $\Gamma\models\varphi$.
+\end{proof}
+
+
+\section{Jak poprawność działa przy pominiętych krokach?}
+Dla czytelnika przyzwyczajonego do zapisu $\vdots$
+warto oddzielić trzy poziomy rozumowania.
+
+\begin{przyklad}[Pełne uzasadnienie krótkiego drzewa]
+Rozważmy udowodnioną w rozdziale 11 implikację
+$(P\land Q)\to(Q\land P)$. Jeżeli w dowolnej strukturze
+przy danym wartościowaniu prawdziwa jest formuła $P\land Q$,
+to na mocy definicji koniunkcji prawdziwe są osobno $P$ i $Q$.
+Wobec tego prawdziwa jest $Q\land P$. Gdy $P\land Q$
+nie jest prawdziwa, implikacja jest prawdziwa ze względu na
+swoją tabelę prawdy. Oznacza to, że cała implikacja jest
+prawdziwa przy każdym wartościowaniu i w każdej strukturze.
+
+W drzewie formalnym pomiędzy $[P\land Q]^1$ i $Q\land P$
+można było użyć skrótu $\vdots$, ale jego poprawność
+weryfikujemy przez sprawdzenie trzech konkretnych zastosowań
+reguł: $(\land E_2)$, $(\land E_1)$ i $(\land I)$.
+Twierdzenie~\ref{thm:soundness} mówi, że taka weryfikacja
+może być przeprowadzona dla \emph{każdego} skończonego drzewa.
+\end{przyklad}
+
+\begin{uwaga}[Poprawność nie mówi, że założenia są prawdziwe]
+Jeżeli $\Gamma\vdash_{\mathrm{ND}}\varphi$, poprawność orzeka:
+\emph{w każdej interpretacji, w której spełnione są wszystkie
+formuły z $\Gamma$, spełniona jest także $\varphi$}.
+Jeżeli $\Gamma$ ma jakieś fałszywe założenie w danej
+interpretacji, twierdzenie nie daje w tej interpretacji
+informacji o wartości $\varphi$. Otwieranie i rozładowywanie
+założeń regułą $(\to I)$ ma więc sens \emph{warunkowy},
+nie zmienia wartości logicznych formuł.
+\end{uwaga}
+
+\section{Konsekwencje poprawności}
+\begin{wniosek}[Kontrmodel wyklucza formalny dowód formuły]
+\label{cor:soundness-countermodel}
+Niech $\mathcal L$ będzie językiem pierwszego rzędu,
+$\Gamma$ zbiorem jego formuł, a $\varphi$ formułą
+tego języka. Jeśli istnieją struktura $\mathfrak A$
+języka $\mathcal L$ i wartościowanie $s$
+spełniające wszystkie formuły z $\Gamma$, ale niespełniające
+$\varphi$, to $\Gamma\nvdash_{\mathrm{ND}}\varphi$.
+\end{wniosek}
+\begin{proof}
+Gdyby $\Gamma\vdash_{\mathrm{ND}}\varphi$,
+Twierdzenie~\ref{thm:soundness} dawałoby
+$\Gamma\models\varphi$. To przeczyłoby istnieniu
+opisanego kontrmodelu.
+\end{proof}
+\begin{przyklad}[Dlaczego $\forall x\,P(x)$ nie wynika z $P(y)$]
+Niech uniwersum struktury wynosi $\{0,1\}$,
+a $P^{\mathfrak A}=\{0\}$. Przy wartościowaniu
+$s(y)=0$ spełniona jest formuła $P(y)$,
+ale nie jest spełnione $\forall x\,P(x)$.
+Z Wniosku~\ref{cor:soundness-countermodel} otrzymujemy
+$\{P(y)\}\nvdash_{\mathrm{ND}}\forall x\,P(x)$.
+To samo można było zauważyć bezpośrednio na poziomie
+reguł: warunek dla $\forall I$ jest naruszony, jeśli
+uogólniamy zmienną wolną w nieusuniętym założeniu.
+\end{przyklad}
+
+\begin{wniosek}[Model wyklucza dowód sprzeczności]
+\label{cor:soundness-consistency}
+Niech $\mathcal L$ będzie językiem pierwszego rzędu,
+a $\Gamma$ zbiorem formuł tego języka.
+Jeśli istnieją struktura $\mathfrak A$ języka $\mathcal L$
+i wartościowanie $s$ spełniające wszystkie
+formuły z $\Gamma$, to
+$\Gamma\nvdash_{\mathrm{ND}}\bot$.
+\end{wniosek}
+\begin{proof}
+Formuła $\bot$ jest fałszywa w każdej strukturze.
+Model $\Gamma$ jest więc kontrmodelem dla
+$\Gamma\models\bot$. Z poprzedniego wniosku otrzymujemy
+$\Gamma\nvdash_{\mathrm{ND}}\bot$.
+\end{proof}
+
+\begin{uwaga}[Ostrożnie z odwracaniem implikacji]
+Udowodniliśmy: istnienie modelu daje brak formalnego dowodu
+sprzeczności. Odwrotność — że każdy niesprzeczny zbiór zdań
+ma model — nie wynika z samej poprawności.
+Wymaga twierdzenia o pełności, a dla nieskończonych zbiorów zdań
+stanowi jego ważną postać.
+\end{uwaga}
+
+\section{Twierdzenia o dedukcji: syntaktyczne i semantyczne}
+\begin{twierdzenie}[Semantyczne twierdzenie o dedukcji]
+\label{thm:soundness-semantic-deduction}
+Niech $\mathcal L$ będzie językiem pierwszego rzędu,
+$\Gamma$ zbiorem formuł tego języka, a $\alpha,\beta$
+formułami języka $\mathcal L$. Wtedy
+\[
+\Gamma\cup\{\alpha\}\models\beta
+\quad\Longleftrightarrow\quad
+\Gamma\models\alpha\to\beta.
+\]
+\end{twierdzenie}
+\begin{proof}
+Załóżmy, że $\Gamma\cup\{\alpha\}\models\beta$.
+Ustalmy strukturę $\mathfrak A$ i wartościowanie $s$
+spełniające $\Gamma$. Jeśli nie spełniają $\alpha$,
+implikacja $\alpha\to\beta$ jest prawdziwa.
+Jeśli spełniają $\alpha$, to spełniają wszystkie założenia
+z $\Gamma\cup\{\alpha\}$, a więc także $\beta$.
+Implikacja jest znów prawdziwa. Zatem
+$\Gamma\models\alpha\to\beta$.
+
+W drugą stronę załóżmy
+$\Gamma\models\alpha\to\beta$.
+Niech $\mathfrak A,s$ spełnia wszystkie formuły z
+$\Gamma\cup\{\alpha\}$. Spełnia więc $\Gamma$
+i $\alpha$. Z założenia wynika spełnianie implikacji
+$\alpha\to\beta$. Ponieważ jej poprzednik jest prawdziwy,
+na mocy tablicy implikacji prawdziwy jest następnik $\beta$.
+To dowodzi $\Gamma\cup\{\alpha\}\models\beta$.
+\end{proof}
+
+Zestawmy to z Twierdzeniem~\ref{thm:nd-deduction},
+które dotyczyło dowodliwości syntaktycznej. Obie równoważności
+mają podobną postać, ale zostały udowodnione na podstawie
+zupełnie różnych definicji: jedna za pomocą reguł drzewa dowodu,
+druga przez rozważenie dowolnej struktury i wartościowania.
+
+\section{Skończoność formalnych dowodów a zwartość semantyczna}
+\begin{twierdzenie}[Syntaktyczna zwartość wyprowadzalności]
+\label{thm:soundness-syntactic-finitary}
+Niech $\mathcal L$ będzie językiem pierwszego rzędu,
+$\Gamma$ zbiorem formuł tego języka, a $\varphi$
+formułą języka $\mathcal L$.
+Jeżeli $\Gamma\vdash_{\mathrm{ND}}\varphi$, to istnieje
+skończony zbiór $\Gamma_0\subseteq\Gamma$ taki, że
+$\Gamma_0\vdash_{\mathrm{ND}}\varphi$.
+\end{twierdzenie}
+\begin{proof}
+Twierdzenie~\ref{thm:nd-finite-support} dowiodło tej tezy
+bez odwoływania się do semantyki. Powodem jest skończoność
+liczby liści drzewa formalnego dowodu.
+\end{proof}
+
+\begin{uwaga}[Czego \emph{nie} wolno z tego wywnioskować]
+Z samej powyższej własności i poprawności nie możemy jeszcze
+stwierdzić, że jeśli $\Gamma\models\varphi$, to istnieje
+skończony $\Gamma_0\subseteq\Gamma$ z
+$\Gamma_0\models\varphi$.
+Do takiego przejścia trzeba mieć także twierdzenie,
+że konsekwencja semantyczna jest zawsze dowodliwa
+(pełność pierwszego rzędu).
+Nie należy więc utożsamiać \emph{syntaktycznej skończoności
+dowodów} z \emph{semantycznym twierdzeniem o zwartości}.
+\end{uwaga}
+
+\section{Co dalej?}
+Dysponujemy teraz jednym kierunkiem pomostu między składnią
+a semantyką:
+\[
+\Gamma\vdash_{\mathrm{ND}}\varphi
+\quad\Longrightarrow\quad
+\Gamma\models\varphi.
+\]
+Przed nami kierunek odwrotny. Jego dowód wymaga skonstruowania
+modelu dla każdego odpowiednio niesprzecznego zbioru zdań.
+W późniejszych rozdziałach wprowadzimy rozszerzenia teorii
+o stałe świadczące o istnieniu, zbudujemy model termowy
+i przeprowadzimy szczegółowy dowód twierdzenia Gödla o pełności.
+Dopiero potem wyprowadzimy semantyczne twierdzenie o zwartości
+i dalej rozwiniemy teorię modeli.

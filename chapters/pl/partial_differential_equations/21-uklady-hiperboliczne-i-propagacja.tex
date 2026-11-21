@@ -1,0 +1,653 @@
+\chapter[Układy hiperboliczne i propagacja]{Równania hiperboliczne: układy symetryczno-hiperboliczne, energia i propagacja informacji}
+\label{chap:pde21}
+
+\section{Dlaczego potrzebujemy układów pierwszego rzędu?}
+Rozdział~5 dotyczył klasycznego równania falowego, przede wszystkim
+jego jawnych formuł. Obecnie rozważamy układy o zmiennych współczynnikach,
+bez dostępnej formuły rozwiązania. Ich centralną własnością będzie możliwość
+kontrolowania energii bez tracenia pochodnych. Pozwoli to oddzielić
+\emph{hiperboliczność symbolu} od \emph{poprawności zagadnienia Cauchy'ego}.
+
+\begin{uwaga}[Dwie zasady energetyczne: dyfuzja i propagacja]
+\label{rem:pde-v43-energy-types}
+Oszacowanie paraboliczne z
+Twierdzenia~\ref{thm:pde20-existence} kontroluje także
+całkę w czasie z normy przestrzennej $H_0^1$ dzięki
+koercywności operatora dyfuzji. W układzie
+symetryczno-hiperbolicznym energia kontroluje przede
+wszystkim normę $L^2$ w chwili $t$, natomiast jej
+lokalny bilans daje stożki zależności. Nie wolno
+wywnioskować wygładzania przestrzennego z samej
+nierówności energetycznej dla układu hiperbolicznego.
+\end{uwaga}
+
+Niech $d,m\ge1$ i $T>0$. Dla kolumny $u=(u_1,\ldots,u_m)^\mathsf T$
+rozważmy na $[0,T]\times\R^d$ równanie
+\begin{equation}\label{eq:pde21-main}
+ \partial_tu+\sum_{j=1}^d A_j(t,x)\partial_{x_j}u+B(t,x)u=f(t,x),
+ \qquad u(0,x)=u_0(x).
+\end{equation}
+Macierze $A_j,B$ mają rozmiar $m\times m$ i rzeczywiste współczynniki.
+Dla funkcji wektorowych przyjmujemy $\|u\|_2^2=\int_{\R^d}|u(x)|^2\,\mathrm d\lambda_d(x)$.
+
+\begin{definicja}[Układ symetryczno-hiperboliczny]\label{def:pde21-sym}
+Układ~\eqref{eq:pde21-main} nazywamy \emph{symetryczno-hiperbolicznym},
+jeżeli $A_j(t,x)=A_j(t,x)^\mathsf T$ dla wszystkich $j$ i wszystkich
+$(t,x)$ (lub prawie wszędzie, gdy pracujemy ze współczynnikami mierzalnymi).
+Jego symbolem głównym jest $P(t,x;\tau,\xi)=\tau I_m+\sum_j\xi_jA_j(t,x)$.
+Kowektor $(\tau,\xi)\ne0$ jest charakterystyczny, jeżeli
+$\det P(t,x;\tau,\xi)=0$.
+\end{definicja}
+
+\begin{stwierdzenie}[Rzeczywiste prędkości charakterystyczne]
+\label{prop:pde21-real}
+Jeżeli $A_j=A_j^\mathsf T$, to dla każdego $(t,x)$ oraz
+$\xi\in\R^d\setminus\{0\}$ wszystkie pierwiastki wielomianu
+$\tau\mapsto\det(\tau I_m+\sum_j\xi_jA_j)$ są rzeczywiste.
+Płaszczyzna $t=\mathrm{const}$ jest niecharakterystyczna.
+\end{stwierdzenie}
+\begin{proof}
+Macierz $A(\xi)=\sum_j\xi_jA_j$ jest rzeczywista i symetryczna.
+Z twierdzenia spektralnego istnieje baza ortonormalna jej wektorów
+własnych i rzeczywiste liczby $\lambda_1(\xi),\ldots,\lambda_m(\xi)$.
+W tej bazie $\det(\tau I_m+A(\xi))=\prod_k(\tau+\lambda_k(\xi))$.
+Dla konormalnej do płaszczyzny $t=\mathrm{const}$ mamy $(\tau,\xi)=(1,0)$,
+a zatem $P=I_m$ jest odwracalna.
+\end{proof}
+
+\begin{uwaga}
+Symetryczna hiperboliczność nie wymaga, aby wartości własne symbolu były
+różne. Nie należy jej utożsamiać ze ścisłą hiperbolicznością. Co więcej,
+sama rzeczywistość pierwiastków wielomianu charakterystycznego nie
+zapewnia oszacowania energetycznego; zobaczymy to w
+Kontrprzykładzie~\ref{ex:pde21-jordan}.
+\end{uwaga}
+
+\section{Tożsamość energii i zależność od danych}
+\begin{lemat}[Lokalny bilans energii]\label{lem:pde21-local}
+Niech $A_j\in C^1([0,T]\times\R^d;\R^{m\times m})$ będą symetryczne,
+$B$ ciągła, a $u\in C^1([0,T]\times\R^d;\R^m)$ rozwiązuje
+\eqref{eq:pde21-main}. Wówczas punktowo zachodzi
+\begin{equation}\label{eq:pde21-flux}
+ \partial_t|u|^2+\sum_{j=1}^d\partial_{x_j}(u^\mathsf TA_ju)
+ =u^\mathsf T\!\left(\sum_{j=1}^d\partial_{x_j}A_j-B-B^\mathsf T\right)u
+ +2u^\mathsf Tf.
+\end{equation}
+\end{lemat}
+\begin{proof}
+Mnożymy równanie przez $2u^\mathsf T$. Otrzymujemy
+$2u^\mathsf Tu_t+2\sum_j u^\mathsf TA_ju_{x_j}+2u^\mathsf TBu=2u^\mathsf Tf$.
+Pierwszy składnik jest $\partial_t|u|^2$. Symetria $A_j$ daje
+$\partial_{x_j}(u^\mathsf TA_ju)=2u^\mathsf TA_ju_{x_j}
++u^\mathsf T(\partial_{x_j}A_j)u$.
+Wreszcie $2u^\mathsf TBu=u^\mathsf T(B+B^\mathsf T)u$.
+Przenosząc odpowiednie wyrazy, otrzymujemy~\eqref{eq:pde21-flux}.
+\end{proof}
+
+\begin{twierdzenie}[Oszacowanie energii na całej przestrzeni]\label{thm:pde21-energy}
+Niech $A_j\in W^{1,\infty}((0,T)\times\R^d)$ będą symetryczne,
+$B\in L^\infty((0,T)\times\R^d)$, a $u$ będzie gładkim rozwiązaniem
+\eqref{eq:pde21-main} o dostatecznym zaniku przy $|x|\to\infty$.
+Niech $M=\|\sum_j\partial_{x_j}A_j-B-B^\mathsf T\|_{L^\infty_{t,x};\mathrm{op}}$.
+Wtedy dla każdego $t\in[0,T]$
+\begin{equation}\label{eq:pde21-L2}
+ \|u(t)\|_2\le e^{Mt/2}\left(\|u_0\|_2+
+ \int_0^t\|f(r)\|_2\,\mathrm dr\right).
+\end{equation}
+To samo oszacowanie zachodzi dla różnicy dwóch rozwiązań, z prawą
+stroną równą różnicy wymuszeń.
+\end{twierdzenie}
+\begin{proof}
+Całkujemy~\eqref{eq:pde21-flux} względem $x$.
+Wyraz dywergencji znika dla rozwiązań o zwartym nośniku; przy
+założonym zaniku otrzymujemy to samo, stosując funkcję odcinającą
+$\chi_R$ i przechodząc z $R\to\infty$.
+Po oznaczeniu $E(t)=\|u(t)\|_2^2$ mamy
+$E'(t)\le ME(t)+2\sqrt{E(t)}\|f(t)\|_2$.
+Aby nie dzielić przez zero, definiujemy $y_\eps(t)=\sqrt{E(t)+\eps^2}$.
+Wówczas $y_\eps'\le(M/2)y_\eps+\|f\|_2$ prawie wszędzie.
+Mnożymy przez $e^{-Mt/2}$, całkujemy od $0$ do $t$, a potem
+przechodzimy z $\eps\downarrow0$. Otrzymujemy~\eqref{eq:pde21-L2}.
+Dla różnicy dwóch rozwiązań powtarzamy identyczny rachunek.
+\end{proof}
+
+\begin{wniosek}[Jednoznaczność]
+W klasie rozwiązań spełniających oszacowanie energii~\eqref{eq:pde21-L2}
+zagadnienie Cauchy'ego dla~\eqref{eq:pde21-main} ma co najwyżej jedno rozwiązanie.
+\end{wniosek}
+\begin{proof}
+Dla różnicy dwóch rozwiązań z tymi samymi danymi mamy zerowe
+dane początkowe i zerową prawą stronę. Stosujemy~\eqref{eq:pde21-L2}.
+\end{proof}
+
+\section{Stożki zależności i skończona prędkość propagacji}
+\begin{definicja}[Maksymalna prędkość symbolu]
+Dla symetrycznych $A_j$ definiujemy
+$c_*:=\operatorname*{ess\,sup}_{(t,x)\in(0,T)\times\R^d}
+\sup_{|\nu|=1}\|\sum_j\nu_jA_j(t,x)\|_{\mathrm{op}}$.
+W dalszych rozważaniach zakładamy $c_*<\infty$.
+\end{definicja}
+
+\begin{twierdzenie}[Stożkowa zasada zależności]\label{thm:pde21-cone}
+Niech $A_j\in C^1_b([0,T]\times\R^d)$ będą symetryczne,
+$B\in C_b([0,T]\times\R^d)$ i niech $u$ będzie klasycznym
+rozwiązaniem~\eqref{eq:pde21-main}. Ustalmy $x_0\in\R^d$,
+$t_0\in(0,T]$, $R\ge0$ i $c\ge c_*$. Jeśli
+$u(0,x)=0$ dla $|x-x_0|\le R+ct_0$ oraz
+$f(t,x)=0$ dla $0\le t\le t_0$, $|x-x_0|\le R+c(t_0-t)$,
+to $u(t_0,x)=0$ dla $|x-x_0|\le R$.
+Dla $R=0$ wniosek dotyczy punktu $x_0$.
+\end{twierdzenie}
+\begin{proof}
+Najpierw załóżmy $R>0$. Niech $r(t)=R+c(t_0-t)$
+i $D(t)=B_{r(t)}(x_0)$. Funkcja
+$E_D(t)=\int_{D(t)}|u(t,x)|^2\,\mathrm d\lambda_d(x)$
+jest różniczkowalna. Wzór Reynoldsa dla poruszającej się kuli
+daje
+\[
+ E_D'(t)=\int_{D(t)}\partial_t|u|^2\,\mathrm d\lambda_d
+ +r'(t)\int_{\partial D(t)}|u|^2\,\mathrm d\mathcal H^{d-1}.
+\]
+Wstawiamy~\eqref{eq:pde21-flux} i twierdzenie Gaussa.
+Na brzegu pojawia się wyraz
+$-u^\mathsf TA_\nu u-c|u|^2$, gdzie
+$A_\nu=\sum_j\nu_jA_j$ i $\nu$ jest normalną zewnętrzną.
+Ponieważ $|u^\mathsf TA_\nu u|\le\|A_\nu\|_{\mathrm{op}}|u|^2$
+oraz $c\ge c_*$, całka brzegowa jest niedodatnia.
+Wnętrze daje oszacowanie $E_D'(t)\le M E_D(t)$, ponieważ
+$f=0$ w rozważanym stożku. Z warunku $E_D(0)=0$
+i lematu Gronwalla wynika $E_D(t)=0$ dla $0\le t\le t_0$.
+Ciągłość $u$ pozwala przejść od zerowania prawie wszędzie
+do zerowania punktowego. Dla $R=0$ i $c>0$ przeprowadzamy ten sam rachunek na $[0,t_0)$:
+promień $r(t)=c(t_0-t)$ jest tam dodatni, a zerowa energia daje
+$u(t,x_0)=0$ dla wszystkich $t<t_0$. Ciągłość w czasie pozwala
+przejść do $t=t_0$. Jeżeli $c=0$, to również $c_*=0$, a więc
+$A_j=0$ i równanie w każdym punkcie jest zwykłym równaniem
+różniczkowym; wniosek wynika wprost z jednoznaczności ODE.
+\end{proof}
+
+
+
+\begin{center}
+\begin{tikzpicture}[scale=.88,>=Latex]
+\fill[blue!8] (0.8,0) -- (6.0,0) -- (3.4,3.55) -- cycle;
+\draw[->] (0,0) -- (6.8,0) node[right] {$x$};
+\draw[->] (0,0) -- (0,4.2) node[above] {$t$};
+\draw[thick,blue!65!black] (.8,0)--(3.4,3.55)--(6,0);
+\draw[dashed] (1.7,1.2)--(5.1,1.2);
+\node[left] at (0,3.55) {$t_0$};
+\node[below] at (3.4,0) {$x_0$};
+\node[above right] at (3.4,3.55) {$(t_0,x_0)$};
+\node at (3.4,.5) {dane i wymuszenie w stożku};
+\node[right] at (5.1,1.2) {$t=t_1$};
+\end{tikzpicture}
+
+\small Rysunek: wsteczny stożek zależności w jednym wymiarze.
+Gdy $R=0$, podstawa ma promień $ct_0$.
+\end{center}
+
+\section{Równanie falowe jako układ symetryczny}
+Niech $c>0$ i $u_{tt}-c^2u_{xx}=0$. Określamy $v=u_t$,
+$w=cu_x$ i $U=(v,w)^\mathsf T$. Wówczas
+\begin{equation}\label{eq:pde21-wavefirst}
+ U_t+\begin{pmatrix}0&-c\\-c&0\end{pmatrix}U_x=0,
+ \qquad |U|^2=u_t^2+c^2u_x^2.
+\end{equation}
+Macierz główna jest symetryczna, z wartościami własnymi $\pm c$.
+Są to prędkości przenoszenia dwóch niezależnych modów.
+
+\begin{stwierdzenie}[Rozkład na fale podróżujące]
+Niech $v,w$ będą gładkimi funkcjami rozwiązującymi
+\eqref{eq:pde21-wavefirst} na $[0,T]\times\R$. Funkcje
+$r_+=v-w$ i $r_-=v+w$ spełniają odpowiednio
+$(\partial_t+c\partial_x)r_+=0$ oraz
+$(\partial_t-c\partial_x)r_-=0$.
+W konsekwencji $r_+(t,x)=r_+(0,x-ct)$ i
+$r_-(t,x)=r_-(0,x+ct)$.
+\end{stwierdzenie}
+\begin{proof}
+Równania składowych to $v_t=cw_x$ i $w_t=cv_x$.
+Po odjęciu otrzymujemy $(v-w)_t=-c(v-w)_x$,
+a po dodaniu $(v+w)_t=c(v+w)_x$. Pozostały wniosek jest
+rozwiązaniem liniowego równania transportu wzdłuż charakterystyk.
+\end{proof}
+
+\section{Oszacowania wyższych pochodnych bez ich utraty}
+\begin{lemat}[Komutator z pochodną wielokrotną]\label{lem:pde21-comm}
+Niech $s\ge1$ będzie liczbą całkowitą,
+$A\in W^{s,\infty}(\R^d;\R^{m\times m})$ oraz
+$u\in H^s(\R^d;\R^m)$. Dla każdego wielowskaźnika
+$\alpha$ z $|\alpha|\le s$ zachodzi
+\[
+ \|[\partial^\alpha,A]\partial_j u\|_2
+ \le C_{d,s}\|A\|_{W^{s,\infty}}\|u\|_{H^s},
+\]
+gdzie komutator oznacza
+$[\partial^\alpha,A]v=\partial^\alpha(Av)-A\partial^\alpha v$.
+\end{lemat}
+\begin{proof}
+Dla gładkich funkcji reguła Leibniza daje
+$[\partial^\alpha,A]\partial_ju=
+\sum_{0<\beta\le\alpha}\binom{\alpha}{\beta}
+(\partial^\beta A)\partial_j\partial^{\alpha-\beta}u$.
+Dla każdego składnika mamy
+$1+|\alpha|-|\beta|\le|\alpha|\le s$,
+ponieważ $|\beta|\ge1$. Stosując oszacowanie
+$\|Cv\|_2\le\|C\|_\infty\|v\|_2$, sumując skończoną
+liczbę składników i następnie aproksymując dane funkcjami
+gładkimi, otrzymujemy tezę.
+\end{proof}
+
+\begin{twierdzenie}[Energia w $H^s$]\label{thm:pde21-Hs}
+Niech $s\ge1$ będzie liczbą całkowitą,
+$A_j\in C([0,T];W^{s,\infty}(\R^d))$ będą symetryczne,
+$B\in C([0,T];W^{s,\infty}(\R^d))$, a ponadto
+$\partial_{x_j}A_j\in L^\infty$.
+Jeżeli $u$ jest gładkim rozwiązaniem~\eqref{eq:pde21-main}, to
+\begin{equation}\label{eq:pde21-Hs}
+ \|u(t)\|_{H^s}\le e^{Ct}
+ \left(\|u_0\|_{H^s}+\int_0^t\|f(r)\|_{H^s}\,\mathrm dr\right),
+\end{equation}
+gdzie $C$ zależy od $d,m,s$ i jednostajnych norm
+$W^{s,\infty}$ współczynników, nie zaś od $u$ i $f$.
+\end{twierdzenie}
+\begin{proof}
+Niech $|\alpha|\le s$. Po zastosowaniu $\partial^\alpha$
+do~\eqref{eq:pde21-main} otrzymujemy
+\[
+ \partial_t(\partial^\alpha u)+\sum_jA_j\partial_j(\partial^\alpha u)
+ +B\partial^\alpha u
+ =\partial^\alpha f-\sum_j[\partial^\alpha,A_j]\partial_ju
+ -[\partial^\alpha,B]u.
+\]
+Dla każdego $\alpha$ stosujemy oszacowanie
+\eqref{eq:pde21-L2} (lub bezpośrednio różniczkową nierówność
+na kwadrat normy), a komutatory ograniczamy Lematem~\ref{lem:pde21-comm}
+i regułą Leibniza dla $B$. Sumując względem $|\alpha|\le s$,
+dostajemy dla $E_s=\sum_{|\alpha|\le s}\|\partial^\alpha u\|_2^2$
+nierówność $E_s'\le C_1 E_s+2\sqrt{E_s}\,\|f\|_{H^s}$.
+Argument z $\sqrt{E_s+\eps^2}$ i Gronwallem, opisany w dowodzie
+Twierdzenia~\ref{thm:pde21-energy}, prowadzi do~\eqref{eq:pde21-Hs}.
+\end{proof}
+
+
+\begin{lemat}[Przedłużenie tożsamości energii na rozwiązania słabe]
+\label{lem:pde21-friedrichs-comm}
+Niech $A_j\in W^{1,\infty}(\R^d;\R^{m\times m})$ będą symetryczne,
+$B\in L^\infty$, wszystkie współczynniki będą mierzalne w czasie
+z jednostajnymi podanymi ograniczeniami. Jeżeli
+$v\in L^\infty(0,T;L^2)$ rozwiązuje dystrybucyjnie
+$v_t+\sum_j A_j\partial_jv+Bv=F$ z $F\in L^1(0,T;L^2)$,
+to ma reprezentanta z $C([0,T];L^2)$ i zachodzi dla niego
+energetyczna tożsamość otrzymana przez scałkowanie
+\eqref{eq:pde21-flux}. W szczególności spełnia
+oszacowanie~\eqref{eq:pde21-L2} z dowolnej chwili początkowej.
+\end{lemat}
+\begin{proof}
+Niech $J_\eps v=\rho_\eps*v$ będzie splotem tylko względem $x$,
+$\rho\in C_c^\infty(\R^d)$, $\int_{\R^d}\rho(x)\,\mathrm d\lambda_d(x)=1$. Wygładzona funkcja
+$v_\eps=J_\eps v$ spełnia równanie z prawą stroną
+$J_\eps F+R_\eps$, gdzie $R_\eps$ jest sumą komutatorów
+$[A_j,J_\eps]\partial_jv$ i $[B,J_\eps]v$.
+Dla każdego ustalonego $t$ (pomijamy go w zapisie)
+\begin{align*}
+ [J_\eps,A]\partial_jv(x)
+ &=\int_{\R^d}\partial_j\rho_\eps(z)
+  (A(x-z)-A(x))(v(x-z)-v(x))\,\mathrm d\lambda_d(z)\\
+ &\quad+\int_{\R^d}\rho_\eps(z)
+ (\partial_j A)(x-z)(v(x)-v(x-z))\,\mathrm d\lambda_d(z).
+\end{align*}
+Wzór otrzymujemy dwukrotnie całkując przez części w sensie dystrybucji;
+wyrazy z $v(x)$ w drugiej całce znoszą część pierwszej.
+Ponieważ $|A(x-z)-A(x)|\le\|\nabla A\|_\infty|z|$,
+norma $L^2$ prawej strony jest ograniczona przez
+\[
+ C\|\nabla A\|_\infty
+ \sup_{|z|\le\eps R_\rho}\|v(\cdot-z)-v\|_2,
+\]
+gdzie $R_\rho$ jest promieniem nośnika $\rho$. Wyrażenie to
+zbiega do zera dla każdej funkcji $v\in L^2$, na mocy
+ciągłości translacji w $L^2$. Jest również zdominowane przez
+$C\|v\|_2$, co pozwala zastosować zbieżność zdominowaną
+w czasie. Podobnie $[B,J_\eps]v\to0$ w $L^1_tL^2_x$
+(bez potrzeby różniczkowania $B$).
+Dla ustalonego $\eps$ równanie wygładzone ma wszystkie wyrazy
+w $L^1_tL^2_x$, zatem $v_\eps\in W^{1,1}(0,T;L^2)$
+i można zastosować klasyczną tożsamość energii.
+Po przejściu z $\eps\downarrow0$ komutatory znikają,
+a pozostałe całki zbiegają dla prawie wszystkich końców przedziału.
+Otrzymana absolutnie ciągła funkcja normy $\|v(t)\|_2^2$
+ma ciągłe przedłużenie na cały przedział.
+Ponieważ samo równanie zapewnia słabą ciągłość $v$ w $L^2$
+(testujemy przeciw gładkim, gęstym funkcjom przestrzennym),
+a ciągłość normy i słaba ciągłość w przestrzeni Hilberta
+implikują ciągłość silną, dostajemy $v\in C([0,T];L^2)$.
+Powtórzenie rachunku z $v_\eps$ oraz użycie Gronwalla
+daje również oszacowanie energii.
+\end{proof}
+
+\section{Istnienie przez regularizację Friedricha}
+Warto odróżnić metodę zastosowaną poniżej od rozdziału~20:
+w równaniach parabolicznych otrzymywaliśmy zwartość z całki po czasie
+normy $H^1$. Tutaj podstawowym narzędziem jest kontrola \emph{wszystkich}
+pochodnych przestrzennych dzięki symetrii macierzy głównych.
+
+\begin{twierdzenie}[Zagadnienie Cauchy'ego dla gładkich współczynników]
+\label{thm:pde21-existence}
+Niech $s>d/2+2$ będzie liczbą całkowitą. Załóżmy, że
+$A_j=A_j^\mathsf T$ oraz
+$A_j,B\in C([0,T];W^{s+1,\infty}(\R^d;\R^{m\times m}))$,
+zaś $u_0\in H^s(\R^d;\R^m)$ i
+$f\in C([0,T];H^s(\R^d;\R^m))$.
+Wtedy istnieje dokładnie jedno rozwiązanie zagadnienia
+\eqref{eq:pde21-main}, dla którego
+\[
+ u\in C([0,T];H^s(\R^d;\R^m))\cap
+ C^1([0,T];H^{s-1}(\R^d;\R^m)).
+\]
+Spełnia ono~\eqref{eq:pde21-Hs}.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: regularizacja.}
+Niech $P_N$ będzie ortogonalnym rzutem Fouriera na częstotliwości
+$|\xi|\le N$. Operator $P_N$ jest kontrakcją w każdym $H^k$
+i komutuje z pochodnymi. Szukamy rozwiązania
+\begin{equation}\label{eq:pde21-friedrichs}
+ u_N'+P_N\left(\sum_j A_j\partial_j u_N+Bu_N\right)=P_Nf,
+ \quad u_N(0)=P_Nu_0,
+ \quad P_Nu_N=u_N.
+\end{equation}
+Na podprzestrzeni $P_NH^s$ operator
+$v\mapsto P_N(A_j\partial_jv+Bv)$ jest ograniczony, ponieważ
+$\|\partial_jv\|_{H^s}\le N\|v\|_{H^s}$.
+Równanie~\eqref{eq:pde21-friedrichs} jest więc zwykłym
+liniowym równaniem różniczkowym w przestrzeni Banacha, o ciągłych
+w czasie współczynnikach; metoda kolejnych przybliżeń daje
+rozwiązanie na krótkim przedziale, a liniowość pozwala je
+przedłużyć do $T$.
+
+\emph{Krok 2: jednostajne oszacowania.}
+Ponieważ $P_N$ jest samosprzężony i $P_N\partial^\alpha u_N=\partial^\alpha u_N$,
+rachunek energii po zastosowaniu $\partial^\alpha$ wygląda tak
+samo jak w dowodzie~\eqref{eq:pde21-Hs}. Istotnie
+$\langle\partial^\alpha u_N,P_N(A_j\partial_j\partial^\alpha u_N)\rangle
+=\langle\partial^\alpha u_N,A_j\partial_j\partial^\alpha u_N\rangle$.
+Komutatory są oszacowane przez Lemat~\ref{lem:pde21-comm}.
+Stąd $\sup_{N,t}\|u_N(t)\|_{H^s}\le C$.
+Z~\eqref{eq:pde21-friedrichs} i ograniczoności mnożenia
+przez $W^{s,\infty}$ dostajemy także
+$\sup_{N,t}\|u_N'(t)\|_{H^{s-1}}\le C$.
+
+\emph{Krok 3: zwartość lokalna.}
+Na każdej kuli $B_R$ zanurzenie $H^s(B_R)\hookrightarrow
+H^{s-1}(B_R)$ jest zwarte. Ponadto
+$\|u_N(t)-u_N(r)\|_{H^{s-1}(B_R)}\le C|t-r|$.
+Z twierdzenia Arzelà--Ascoliego w metrycznej przestrzeni
+$H^{s-1}(B_R)$ otrzymujemy podciąg zbieżny w
+$C([0,T];H^{s-1}(B_R))$. Wybierając podciąg przekątny dla
+$R=1,2,\ldots$, dostajemy funkcję $u$, która jest granicą lokalną
+oraz słabą-* granicą w $L^\infty(0,T;H^s(\R^d))$.
+
+\emph{Krok 4: równanie i dane.}
+Dla $\varphi\in C_c^\infty((0,T)\times\R^d;\R^m)$
+mnożymy~\eqref{eq:pde21-friedrichs} przez $\varphi$
+i całkujemy. Przenosimy $P_N$ na funkcję testową
+$P_N\varphi$; ponieważ $P_N\varphi\to\varphi$ w każdym
+$H^k$, przechodzimy do granicy w wyrazach liniowych,
+korzystając z lokalnej silnej zbieżności oraz jednostajnych
+oszacowań na całej przestrzeni. Otrzymujemy~\eqref{eq:pde21-main}
+w sensie dystrybucyjnym. Zbieżność
+$u_N(0)=P_Nu_0\to u_0$ w $H^{s-1}$ i lokalna ciągłość implikują
+$u(0)=u_0$ jako element $H^{s-1}(\R^d)$.
+
+\emph{Krok 5: energia, jednoznaczność i ciągłość silna.}
+Dla każdego wielowskaźnika $|\alpha|\le s$ funkcja
+$v=\partial^\alpha u$ należy do $L^\infty(0,T;L^2)$.
+Po zróżniczkowaniu równania jej prawa strona jest sumą
+$\partial^\alpha f$ i komutatorów z
+Lematu~\ref{lem:pde21-comm}, a więc należy do $L^1(0,T;L^2)$.
+Lemat~\ref{lem:pde21-friedrichs-comm} stosuje się zatem
+osobno do wszystkich $v=\partial^\alpha u$; daje
+$v\in C([0,T];L^2)$ i po zsumowaniu oszacowanie
+~\eqref{eq:pde21-Hs}. Dzięki temu $u\in C([0,T];H^s)$
+bez konieczności zakładania z góry ciągłości najwyższych pochodnych.
+Równanie ma prawą stronę ciągłą z wartościami w $H^{s-1}$,
+ponieważ mnożenie przez przyjęte współczynniki jest ciągłe
+na $H^{s-1}$, zatem $u_t\in C([0,T];H^{s-1})$.
+Ostatecznie $u\in C^1([0,T];H^{s-1})$.
+Jednoznaczność wynika z Twierdzenia~\ref{thm:pde21-energy}
+zastosowanego do różnicy dwóch rozwiązań.
+\end{proof}
+
+\begin{uwaga}[Wersja o mniejszej regularności]
+Następnie można przez aproksymację danych w $L^2$
+i oszacowanie~\eqref{eq:pde21-L2} otrzymać rozwiązania energetyczne
+z ciągłością $C([0,T];L^2)$, ale wymaga to osobnego uzasadnienia
+reguły energii dla granicznych rozwiązań. Twierdzenie powyżej
+celowo sformułowaliśmy z mocniejszymi założeniami i bez ukrytej
+utraty pochodnych.
+\end{uwaga}
+
+\section{Symetryzatory: gdy macierze nie są symetryczne}
+\begin{definicja}[Układ symetryzowalny]\label{def:pde21-symmetrizer}
+Niech $A_j$ będą rzeczywistymi macierzami $m\times m$.
+Mówimy, że układ~\eqref{eq:pde21-main} ma \emph{symetryzator} $S(t,x)$,
+jeżeli $S=S^\mathsf T$, istnieją stałe $0<\sigma\le\Sigma$ takie,
+że $\sigma I_m\le S\le\Sigma I_m$, a macierze $SA_j$ są symetryczne.
+Dla oszacowań energii zakładamy dodatkowo
+$S\in W^{1,\infty}$ i $A_j,B\in W^{1,\infty}$.
+\end{definicja}
+
+\begin{twierdzenie}[Energia ważona symetryzatorem]
+\label{thm:pde21-symmetrizer}
+Niech założenia Definicji~\ref{def:pde21-symmetrizer} zachodzą
+na $[0,T]\times\R^d$, a $u$ jest gładkim, zanikającym
+w nieskończoności rozwiązaniem~\eqref{eq:pde21-main}.
+Wówczas dla $E_S(t)=\int_{\R^d}u^\mathsf TS u\,\mathrm d\lambda_d$
+ istnieje stała $C$, zależna tylko od
+$\sigma,\Sigma$ i norm odpowiednich współczynników,
+taka że
+\[
+ \sqrt{E_S(t)}\le e^{Ct}\left(\sqrt{E_S(0)}+
+ \sqrt\Sigma\int_0^t\|f(r)\|_2\,\mathrm dr\right).
+\]
+\end{twierdzenie}
+\begin{proof}
+Różniczkując, otrzymujemy
+$\partial_t(u^\mathsf TS u)=2u^\mathsf TS u_t+u^\mathsf TS_tu$.
+Po wstawieniu równania i użyciu symetrii $SA_j$:
+\[
+ \partial_t(u^\mathsf TS u)+\sum_j\partial_j(u^\mathsf TSA_ju)
+ =u^\mathsf T\Bigl(S_t+\sum_j\partial_j(SA_j)-SB-B^\mathsf TS\Bigr)u
+ +2u^\mathsf TSf.
+\]
+Całkujemy po przestrzeni. Z $E_S\ge\sigma\|u\|_2^2$
+wynika ograniczenie wyrazu kwadratowego przez $C E_S$,
+a z nierówności Cauchy'ego--Schwarza w iloczynie skalarnym
+wyznaczonym przez $S$ dostajemy
+$\left|\int_{\R^d}u(t,x)^\mathsf TS(t,x)f(t,x)\,\mathrm d\lambda_d(x)\right|\le\sqrt{E_S(t)}\sqrt\Sigma\|f(t)\|_2$.
+Argument z $\sqrt{E_S+\eps^2}$ i Gronwallem kończy dowód.
+\end{proof}
+
+\begin{kontrprzyklad}[Rzeczywiste charakterystyki bez stabilności]\label{ex:pde21-jordan}
+Niech $U=(u,v)^\mathsf T$ i rozważmy na
+$[0,T]\times\R$ układ $u_t=v_x$, $v_t=0$.
+Macierz główna w zapisie $U_t+AU_x=0$ jest równa
+$A=\begin{pmatrix}0&-1\\0&0\end{pmatrix}$.
+Jej jedyną wartością własną jest $0$, lecz nie ma bazy
+wektorów własnych. Wybierzmy niezerową funkcję
+$\phi\in C_c^\infty(\R)$ i dane
+$u(0,x)=0$, $v(0,x)=n^{-1}\phi(x)\sin(nx)$.
+Równanie ma jawne rozwiązanie
+\[
+ v(t,x)=n^{-1}\phi(x)\sin(nx),\qquad
+ u(t,x)=t\bigl(\phi(x)\cos(nx)+n^{-1}\phi'(x)\sin(nx)\bigr).
+\]
+Norma początkowa $\|(u(0),v(0))\|_{L^2(\R;\R^2)}$
+nie przekracza $n^{-1}\|\phi\|_2$ i dąży do zera.
+Z kolei dla każdego ustalonego $t>0$,
+na mocy lematu Riemanna--Lebesgue'a,
+$\|u(t)\|_2^2\to t^2\|\phi\|_2^2/2>0$:
+całka $\int_{\R}|\phi(x)|^2\cos^2(nx)\,
+\mathrm d\lambda_1(x)$ dąży do $\|\phi\|_2^2/2$,
+a składniki z $n^{-1}\phi'$ znikają w $L^2$.
+Nie istnieje zatem ograniczony operator ewolucji
+$L^2(\R;\R^2)\to L^2(\R;\R^2)$ w żadnej chwili $t>0$.
+Przykład na torusie powstaje prościej, biorąc $\phi\equiv1$,
+lecz funkcji okresowych nie wolno traktować jako elementów
+$L^2(\R)$.
+\end{kontrprzyklad}
+
+\section{Zmiennowspółczynnikowe równanie falowe}
+Niech $G(x)=G(x)^\mathsf T$ będzie macierzą $d\times d$,
+$G\in W^{1,\infty}(\R^d)$ oraz
+$\lambda|\xi|^2\le\xi^\mathsf TG(x)\xi\le\Lambda|\xi|^2$.
+Rozważamy
+\begin{equation}\label{eq:pde21-wavevariable}
+ u_{tt}-\operatorname{div}(G(x)\nabla u)=f.
+\end{equation}
+\begin{twierdzenie}[Energia równania falowego]\label{thm:pde21-wave-energy}
+Dla dostatecznie gładkiego rozwiązania~\eqref{eq:pde21-wavevariable},
+które wraz z pochodnymi dostatecznie szybko zanika, energia
+\[
+ \mathcal E(t)=\frac12\int_{\R^d}
+ (|u_t|^2+\nabla u^\mathsf TG\nabla u)\,\mathrm d\lambda_d
+\]
+spełnia $\mathcal E'(t)=\int_{\R^d}f u_t\,\mathrm d\lambda_d$.
+Jeżeli $f=0$, energia jest stała. Jeśli $f$ znika we wstecznym
+stożku o prędkości $c\ge\sqrt\Lambda$, a dane $u_0,u_1$ znikają
+na jego podstawie, to $u$ znika w całym wnętrzu stożka.
+\end{twierdzenie}
+\begin{proof}
+Mnożymy równanie przez $u_t$ i całkujemy.
+Ponieważ $G$ jest niezależna od $t$, całkowanie przez części daje
+$\int_{\R^d}u_{tt}u_t\,\mathrm d\lambda_d(x)
+=\frac12\frac{\mathrm d}{\mathrm dt}\|u_t\|_2^2$
+oraz
+\[
+-\int_{\R^d}\operatorname{div}(G\nabla u)u_t\,\mathrm d\lambda_d(x)
+=\int_{\R^d}G\nabla u\cdot\nabla u_t\,\mathrm d\lambda_d(x)
+=\frac12\frac{\mathrm d}{\mathrm dt}
+\int_{\R^d}\nabla u^\mathsf TG\nabla u\,\mathrm d\lambda_d(x).
+\]
+To daje tożsamość energii.
+
+Dla skończonej prędkości propagacji używamy lokalnej gęstości
+$e=(|u_t|^2+\nabla u^\mathsf TG\nabla u)/2$
+i strumienia $J=-u_tG\nabla u$. Z równania otrzymujemy
+$\partial_te+\operatorname{div}J=f u_t$.
+Na brzegu ruchomej kuli mamy
+$|J\cdot\nu|\le |u_t|\,|G\nabla u\cdot\nu|
+\le\sqrt\Lambda |u_t|\sqrt{\nabla u^\mathsf TG\nabla u}
+\le\sqrt\Lambda\,e$.
+Zatem przy ruchu brzegu z szybkością $-c$ całka energii
+w malejącej kuli jest nierosnąca, jeśli $f=0$ wewnątrz.
+Zerowe dane $u_1$ i $\nabla u_0$ oznaczają zerową energię
+na podstawie. Stąd $u_t=\nabla u=0$ we wnętrzu stożka;
+ponieważ $u_0=0$ na podstawie, otrzymujemy tam $u=0$.
+\end{proof}
+
+\section{Warunki brzegowe: dlaczego nie można narzucić dowolnych danych?}
+Na obszarze ograniczonym energia układu symetrycznego spełnia
+prawo~\eqref{eq:pde21-flux}, ale po całkowaniu pojawia się
+strumień przez brzeg $\partial\Omega$:
+$-\int_{\partial\Omega}u^\mathsf TA_\nu u\,\mathrm d\mathcal H^{d-1}$.
+W szczególności dla zagadnienia Cauchy'ego na półprostej
+$x>0$ z macierzą diagonalną $A=\operatorname{diag}(a_1,\ldots,a_m)$
+warunki brzegowe podaje się tylko na składowych z $a_k>0$,
+które wchodzą do obszaru przez $x=0$; dla $a_k<0$
+wartości brzegowe są wyznaczane przez wnętrze.
+
+\begin{przyklad}[Dwa kierunki transportu na półprostej]
+Dla $a>0$ rozwiązanie $u_t+au_x=0$ na $x>0$ wymaga
+jednej wartości brzegowej $u(t,0)=g(t)$: charakterystyki
+wychodzące z brzegu wchodzą do obszaru. Natomiast dla $a<0$
+charakterystyki biegną ku brzegowi i wartość $u(t,0)$
+wynika już z danej początkowej. Dodatkowe narzucenie
+niezależnego $g$ może prowadzić do braku rozwiązania.
+\end{przyklad}
+
+
+\begin{twierdzenie}[Dysypatywne dane brzegowe na półprostej]
+\label{thm:pde21-halfline-energy}
+Niech $A=A^{\mathsf T}\in\R^{m\times m}$ będzie macierzą stałą,
+$T>0$, $U\in C^1([0,T]\times[0,\infty);\R^m)$ i
+$F\in C([0,T]\times[0,\infty);\R^m)$ spełniają
+$U_t+A U_x=F$ na $(0,T)\times(0,\infty)$.
+Załóżmy, że $U$, $F$ i ich pochodne mają zanik pozwalający
+na całkowanie przez części przy $x\to\infty$ oraz że
+$U(t,\cdot),F(t,\cdot)\in L^2(0,\infty)$.
+Niech $P_+$ będzie rzutem ortogonalnym na sumę przestrzeni
+własnych $A$ odpowiadających dodatnim wartościom własnym,
+a $\lambda_+=\max(0,\lambda_{\max}(A))$. Jeżeli
+$P_+U(t,0)=g(t)\in\operatorname{Ran}P_+$, to
+\[
+ \|U(t)\|_{L^2(0,\infty)}\le
+ \|U(0)\|_{L^2(0,\infty)}+
+ \sqrt{\lambda_+}\,\|g\|_{L^2(0,t)}+
+ \int_0^t\|F(r)\|_{L^2(0,\infty)}\,\mathrm dr.
+\]
+W szczególności dla $g=F=0$ energia nie rośnie.
+Nie narzuca się niezależnych danych na ujemnej podprzestrzeni
+spektralnej $A$; warunek dla zerowej wartości własnej
+wynika z równania zwyczajnego w każdym punkcie przestrzeni.
+\end{twierdzenie}
+\begin{proof}
+Tożsamość lokalna dla macierzy stałej ma postać
+$\partial_t|U|^2+\partial_x(U^{\mathsf T}AU)=2U^{\mathsf T}F$.
+Po scałkowaniu po półprostej otrzymujemy
+\[
+ \frac{\mathrm d}{\mathrm dt}\|U(t)\|_2^2
+ =U(t,0)^{\mathsf T}AU(t,0)+
+ 2\langle U(t),F(t)\rangle.
+\]
+Rozkład spektralny $A=A_+-A_-$, gdzie $A_\pm\ge0$
+i ich nośniki spektralne są ortogonalne, daje
+$U^{\mathsf T}AU\le\lambda_+|P_+U|^2
+=\lambda_+|g|^2$ na $x=0$. Oznaczmy
+$E(t)=\|U(t)\|_2^2$, $b(t)=\|F(t)\|_2$ oraz
+\[
+ a(t)=E(0)+\lambda_+\int_0^t|g(r)|^2\,\mathrm dr.
+\]
+Z nierówności Cauchy'ego--Schwarza dostajemy
+$E'(t)\le a'(t)+2\sqrt{E(t)}\,b(t)$.
+Dla $\delta>0$ wprowadzamy
+\[
+ z_\delta(t)=\left(a(t)+\delta^2+
+ 2\int_0^t\sqrt{E(r)}b(r)\,\mathrm dr\right)^{1/2}.
+\]
+Wtedy $\sqrt{E(t)}\le z_\delta(t)$ i
+$z_\delta(t)\ge\sqrt{a(t)+\delta^2}$. Dlatego
+\[
+ z_\delta'(t)=\frac{a'(t)+2\sqrt{E(t)}b(t)}
+ {2z_\delta(t)}
+ \le\frac{a'(t)}{2\sqrt{a(t)+\delta^2}}+b(t).
+\]
+Całkując od zera do $t$, wykorzystujemy tożsamość
+$\frac{\mathrm d}{\mathrm dt}\sqrt{a(t)+\delta^2}
+=a'(t)/(2\sqrt{a(t)+\delta^2})$.
+Otrzymujemy
+$\sqrt{E(t)}\le\sqrt{a(t)+\delta^2}+
+\int_0^t b(r)\,\mathrm dr$. Granica $\delta\downarrow0$
+oraz nierówność $\sqrt{r+s}\le\sqrt r+\sqrt s$
+kończą dowód. Wartości własne dodatnie odpowiadają
+charakterystykom wchodzącym do $x>0$ przez $x=0$,
+a ujemne --- wychodzącym, na których nie można niezależnie
+zadawać śladu. Dla zerowej wartości własnej projekcja
+równania ma postać $(P_0U)_t=P_0F$.
+\end{proof}
+
+
+\section{Podsumowanie}
+Symetria części głównej daje tożsamość energii, z której wynikają
+jednoznaczność, stabilność i skończona prędkość propagacji.
+Po zróżniczkowaniu równania komutatory nie zawierają pochodnych
+wyższego rzędu niż $s$; dzięki temu otrzymujemy poprawność
+w $H^s$ bez utraty pochodnych. Nie każda macierz o rzeczywistych
+wartościach własnych ma te własności; pokazuje to blok Jordana.
+W następnym rozdziale porównamy tę metodę z innym
+mechanizmem ewolucji: unitarnością dla równania Schrödingera.
+Nie jest ono ogólnym układem symetryczno-hiperbolicznym
+pierwszego rzędu w przestrzeni, toteż stożkowa zasada
+propagacji nie przechodzi na nie bezpośrednio.
+

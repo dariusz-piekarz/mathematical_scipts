@@ -6,7 +6,7 @@ const state = {
   domains:[], modules:[], outlines:new Map(), expandedDomains:new Set(), expandedModules:new Set(),
   currentModule:null, currentEntity:null, currentData:null, selected:new Map(),
   tab:"reader", granularity:"module", simplified:false, tooltipData:null,
-  tooltipKey:0, graph:null, renderEpoch:0, draftSession:null,
+  tooltipKey:0, graph:null, conceptGraph:null, conceptEpoch:0, renderEpoch:0, draftSession:null,
 };
 const titleOr = item => item.title || item.subtype || item.kind || item.id;
 const tr = s => String(s ?? "");
@@ -23,9 +23,10 @@ async function api(path, options={}) {
 function activateTab(name){
   state.tab=name;
   document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
-  for(const k of ["reader","graph","selection"])$("view-"+k).classList.toggle("hidden",k!==name);
+  for(const k of ["reader","graph","concepts","selection"])$("view-"+k).classList.toggle("hidden",k!==name);
   if(name==="selection")renderSelection();
   if(name==="graph" && !state.graph)loadGraph();
+  if(name==="concepts" && !state.conceptGraph)loadConceptGraph();
   closeTip();
 }
 function toggleDomain(domain){state.expandedDomains.has(domain)?state.expandedDomains.delete(domain):state.expandedDomains.add(domain);renderTree();}
@@ -102,12 +103,12 @@ function showRefs(container,latex){
     const refs=match[2].split(",");
     refs.forEach((raw,i)=>{
       if(i)container.append(document.createTextNode(","));
-      const lab=raw.trim();if(!lab){container.append(document.createTextNode(raw));return;}
+      const lab=raw.trim(), sourceDocument=state.currentModule;if(!lab){container.append(document.createTextNode(raw));return;}
       const b=node("button",{className:"ref-link",title:"Podgląd etykiety: "+lab},lab);
-      b.addEventListener("mouseenter",()=>previewLabel(lab,b));
+      b.addEventListener("mouseenter",()=>previewLabel(lab,b,sourceDocument));
       b.addEventListener("focus",()=>previewLabel(lab,b));
-      b.addEventListener("mouseleave",()=>{setTimeout(()=>{if(!$("referenceTip").matches(":hover"))closeTip();},240);});
-      b.addEventListener("click",()=>openLabel(lab));container.append(b);
+      b.addEventListener("mouseleave",()=>{const key=state.tooltipKey;setTimeout(()=>{if(key===state.tooltipKey && state.tooltipAnchor===b && !$("referenceTip").matches(":hover"))closeTip();},240);});
+      b.addEventListener("click",()=>openLabel(lab,sourceDocument));container.append(b);
     });
     container.append(document.createTextNode("}"));last=regex.lastIndex;
   }
@@ -123,6 +124,12 @@ function renderReader(){
   $("readerKind").textContent=entity?"Fragment · "+data.entity.kind:"Źródło LaTeX — rozdział";
   $("readSize").textContent=(data.full_length||0).toLocaleString("pl-PL")+" znaków";
   $("showFull").classList.toggle("hidden",!data.truncated);
+  const firstLine=entity?data.entity.start_line:1;
+  $("rangeStart").value=firstLine;
+  // A terminal newline ends the last source line; it is not an extra line.
+  const lineCount=data.latex.length
+    ? data.latex.split("\n").length-(data.latex.endsWith("\n")?1:0) : 0;
+  $("rangeEnd").value=firstLine+Math.max(0,lineCount-1);
   $("addCurrent").textContent=state.selected.has((entity?"entity:":"module:")+(entity?data.entity.id:state.currentModule))?"✓ W zestawie":"+ Do zestawu";
   showRefs($("latexSource"),data.latex);
   renderSimplified(data.latex);
@@ -148,26 +155,96 @@ function addCurrent(){
   else{state.selected.set(key,{id,kind:isEntity?"entity":"module",title:isEntity?(d.entity.title||d.entity.kind):d.module.title,module:state.currentModule});toast("Dodano do zestawu.");}
   renderReader();renderSelection();
 }
-async function previewLabel(label,anchor){
+function addLineRange(startLine,endLine){
+  const module=state.currentModule;
+  if(!module||!Number.isSafeInteger(startLine)||!Number.isSafeInteger(endLine)||
+     startLine<1||endLine<startLine){toast("Podaj poprawny zakres wierszy.");return;}
+  const key="lines:"+module+":"+startLine+"-"+endLine;
+  if(state.selected.has(key)){toast("Ten wycinek jest już w zestawie.");return;}
+  state.selected.set(key,{
+    id:key,kind:"lines",module,start_line:startLine,end_line:endLine,
+    title:"Wiersze "+startLine+"–"+endLine+" · "+module
+  });
+  renderSelection();toast("Dodano wycinek do zestawu.");
+}
+function addExcerpt(){
+  const data=state.currentData,source=$("latexSource"),sel=window.getSelection();
+  if(!data||state.simplified||!sel||sel.isCollapsed||!sel.rangeCount){
+    toast("Zaznacz fragment tekstu w widoku źródła LaTeX.");return;
+  }
+  const range=sel.getRangeAt(0);
+  if(!source.contains(range.startContainer)||!source.contains(range.endContainer)){
+    toast("Zaznaczenie musi mieścić się w źródle LaTeX.");return;
+  }
+  const prefix=range.cloneRange();
+  prefix.selectNodeContents(source);
+  prefix.setEnd(range.startContainer,range.startOffset);
+  const start=prefix.toString().length,end=start+range.toString().length;
+  if(end<=start||end>data.latex.length){
+    toast("Nie można wyznaczyć wierszy zaznaczenia.");return;
+  }
+  const first=data.entity?data.entity.start_line:1;
+  const countNewlines=text=>(text.match(/\n/g)||[]).length;
+  const startLine=first+countNewlines(data.latex.slice(0,start));
+  const endLine=first+countNewlines(data.latex.slice(0,end-1));
+  addLineRange(startLine,endLine);
+  sel.removeAllRanges();
+}
+function addRange(){
+  addLineRange(Number($("rangeStart").value),Number($("rangeEnd").value));
+}
+function positionReferenceTip(anchor){
+  const r=anchor.getBoundingClientRect(), tip=$("referenceTip");
+  tip.classList.remove("hidden");
+  tip.style.left=Math.max(8,Math.min(window.innerWidth-448,r.left))+"px";
+  tip.style.top=Math.max(8,Math.min(window.innerHeight-tip.offsetHeight-12,r.bottom+8))+"px";
+}
+async function previewLabel(label,anchor,sourceDocument=null){
   const request=++state.tooltipKey;
+  state.tooltipAnchor=anchor;
+  state.tooltipData=null;
+  // Do not leave a stale result on screen while the next request is pending.
+  const body=$("tipBody");body.replaceChildren();
+  body.append(node("p",{className:"tip-meta"},"Ładowanie etykiety: "+label));
+  $("tipOpen").disabled=true;
+  positionReferenceTip(anchor);
   try{
-    const result=await api(`/api/labels/${encodeURIComponent(label)}`);
+    const result=await api(`/api/labels/${encodeURIComponent(label)}`+(sourceDocument?`?source_document=${encodeURIComponent(sourceDocument)}`:""));
     if(request!==state.tooltipKey)return;
     state.tooltipData=result;
-    const body=$("tipBody");body.replaceChildren();
-    body.append(node("h3",{},result.entity_title || result.title || label));
-    body.append(node("p",{className:"tip-meta"},`${label} · ${result.document_id} · wiersz ${result.line}`));
-    body.append(node("div",{className:"tip-code"},crop(result.latex,1100)));
-    const r=anchor.getBoundingClientRect();const tip=$("referenceTip");tip.classList.remove("hidden");
-    tip.style.left=Math.max(8,Math.min(window.innerWidth-448,r.left))+"px";
-    tip.style.top=Math.max(8,Math.min(window.innerHeight-tip.offsetHeight-12,r.bottom+8))+"px";
-  }catch(e){if(request===state.tooltipKey)toast(e.message);}
+    $("tipOpen").disabled=Boolean(result.ambiguous);
+    body.replaceChildren();
+    if(result.ambiguous){
+      body.append(node("h3",{},"Etykieta występuje w kilku rozdziałach"));
+      body.append(node("p",{className:"tip-meta"},`${label} · wybierz właściwy rozdział`));
+      for(const choice of result.candidates){
+        const target=node("button",{className:"ref-choice"},`${choice.document_id}: ${choice.title} (wiersz ${choice.line})`);
+        target.addEventListener("click",()=>{closeTip();openModule(choice.document_id);});
+        body.append(target);
+      }
+    }else{
+      body.append(node("h3",{},result.entity_title || result.title || label));
+      body.append(node("p",{className:"tip-meta"},`${label} · ${result.document_id} · wiersz ${result.line}`));
+      body.append(node("div",{className:"tip-code"},crop(result.latex,1100)));
+    }
+    positionReferenceTip(anchor);
+  }catch(e){
+    if(request!==state.tooltipKey)return;
+    state.tooltipData=null;
+    $("tipOpen").disabled=true;
+    body.replaceChildren();
+    body.append(node("h3",{},"Nie znaleziono cytowanej etykiety"));
+    body.append(node("p",{className:"tip-meta"},label));
+    body.append(node("p",{},"Cel odsyłacza nie jest dostępny w indeksie. Wymaga audytu źródła LaTeX."));
+    positionReferenceTip(anchor);
+  }
 }
-function closeTip(){state.tooltipKey++;state.tooltipData=null;$("referenceTip").classList.add("hidden");}
-async function openLabel(label){
+function closeTip(){state.tooltipKey++;state.tooltipData=null;state.tooltipAnchor=null;$("referenceTip").classList.add("hidden");}
+async function openLabel(label,sourceDocument=null){
   try{
-    const result=state.tooltipData?.name===label?state.tooltipData:await api(`/api/labels/${encodeURIComponent(label)}`);
-    closeTip();if(result.entity_id)await openEntity(result.entity_id);else await openModule(result.document_id);
+    const result=state.tooltipData?.name===label && (!sourceDocument || state.tooltipData.source_document===sourceDocument)?state.tooltipData:await api(`/api/labels/${encodeURIComponent(label)}`+(sourceDocument?`?source_document=${encodeURIComponent(sourceDocument)}`:""));
+    closeTip();if(result.ambiguous){toast("Etykieta jest niejednoznaczna. Wybierz rozdział w podglądzie odsyłacza.");return;}
+    if(result.entity_id)await openEntity(result.entity_id);else await openModule(result.document_id);
   }catch(e){toast(e.message);}
 }
 function setupSearch(){
@@ -182,6 +259,9 @@ async function performSearch(q){
     const result=await api(`/api/search?q=${encodeURIComponent(q)}&limit=25`);
     if($("searchInput").value.trim()!==q)return;
     const list=$("searchResults");list.replaceChildren();
+    const graphButton=node("button",{className:"search-hit search-concept-action"},"Zbuduj graf pojęcia: "+q);
+    graphButton.addEventListener("click",()=>{list.classList.add("hidden");openConceptSearch(q);});
+    list.append(graphButton);
     if(!result.items.length)list.append(node("p",{className:"empty-sub"},"Nie znaleziono dopasowań."));
     for(const e of result.items){
       const b=node("button",{className:"search-hit"});b.append(node("strong",{},crop(e.title||e.excerpt,95)),node("small",{},`${e.document_id} · ${e.kind} · wiersz ${e.start_line}`));
@@ -190,35 +270,72 @@ async function performSearch(q){
     list.classList.remove("hidden");
   }catch(e){toast(e.message);}
 }
+function moveSelected(key,step){
+  const entries=[...state.selected.entries()];
+  const index=entries.findIndex(([k])=>k===key),next=index+step;
+  if(index<0||next<0||next>=entries.length)return;
+  [entries[index],entries[next]]=[entries[next],entries[index]];
+  state.selected=new Map(entries);renderSelection();
+}
 function renderSelection(){
   const list=$("selectionList");list.replaceChildren();
   $("selectedCount").textContent=state.selected.size+" elementów";
-  if(!state.selected.size){list.append(node("div",{className:"empty-sub"},"Zestaw jest pusty. Wybierz moduły lub fragmenty z Czytnika."));return;}
-  for(const [key,x] of state.selected){
+  if(!state.selected.size){
+    list.append(node("div",{className:"empty-sub"},"Zestaw jest pusty. Wybierz rozdział, obiekt lub zaznacz wiersze LaTeX w Czytniku."));
+    return;
+  }
+  const keys=[...state.selected.keys()];
+  for(const [index,key] of keys.entries()){
+    const x=state.selected.get(key);
     const line=node("div",{className:"selection-item"});const info=node("div");
-    info.append(node("strong",{},x.title),node("small",{},`${x.kind==="module"?"Rozdział":"Fragment"} · ${x.module} · ${x.id}`));
-    const del=node("button",{title:"Usuń z zestawu"},"×");del.addEventListener("click",()=>{state.selected.delete(key);renderSelection();if(state.currentData)renderReader();});
-    line.append(info,del);list.append(line);
+    const kind=x.kind==="module"?"Rozdział":x.kind==="lines"?"Wycinek wierszy":"Obiekt";
+    const ref=x.kind==="lines"?("wiersze "+x.start_line+"–"+x.end_line):x.id;
+    info.append(node("strong",{},x.title),node("small",{},kind+" · "+x.module+" · "+ref));
+    const controls=node("div",{className:"selection-controls"});
+    const up=node("button",{title:"Przesuń wyżej","aria-label":"Przesuń wyżej"},"↑");
+    up.disabled=index===0;up.addEventListener("click",()=>moveSelected(key,-1));
+    const down=node("button",{title:"Przesuń niżej","aria-label":"Przesuń niżej"},"↓");
+    down.disabled=index===keys.length-1;down.addEventListener("click",()=>moveSelected(key,1));
+    const del=node("button",{title:"Usuń z zestawu","aria-label":"Usuń z zestawu"},"×");
+    del.addEventListener("click",()=>{state.selected.delete(key);renderSelection();if(state.currentData)renderReader();});
+    controls.append(up,down,del);line.append(info,controls);list.append(line);
   }
 }
-function selectedManifest(){return {format:"matlib-selection-v1",modules:[...state.selected.values()].filter(x=>x.kind==="module").map(x=>x.id),entities:[...state.selected.values()].filter(x=>x.kind==="entity").map(x=>x.id)};}
+function selectedManifest(){
+  const selected=[...state.selected.values()];
+  return {
+    format:"matlib-selection-v2",
+    items:selected.map(x=>x.kind==="lines"?
+      {kind:"lines",module:x.module,start_line:x.start_line,end_line:x.end_line}:
+      {kind:x.kind,id:x.id}),
+    modules:selected.filter(x=>x.kind==="module").map(x=>x.id),
+    entities:selected.filter(x=>x.kind==="entity").map(x=>x.id)
+  };
+}
 function downloadManifest(){
-  const blob=new Blob([JSON.stringify(selectedManifest(),null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);
-  const a=node("a",{download:"biblioteka_zestaw.json",href:url});document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  const manifest={...selectedManifest(),title:$("generatorTitle").value.trim(),
+                  closure_depth:Number($("generatorClosure").value)};
+  const blob=new Blob([JSON.stringify(manifest,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=node("a",{download:"biblioteka_zestaw.json",href:url});
+  document.body.append(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function generationPayload(){
-  return {...selectedManifest(),title:$('generatorTitle').value.trim() || 'Mój skrypt matematyczny',closure_depth:Number($('generatorClosure').value)};
+  const {modules,entities,...selection}=selectedManifest();
+  return {...selection,title:$("generatorTitle").value.trim()||"Mój skrypt matematyczny",
+          closure_depth:Number($("generatorClosure").value)};
 }
 async function checkSelection(){
   const payload=generationPayload();
-  if(!payload.modules.length&&!payload.entities.length){toast('Wybierz rozdział lub obiekt.');return;}
+  if(!payload.items.length){toast('Wybierz rozdział lub obiekt.');return;}
   try{
     const result=await api('/api/generate/manifest',{method:'POST',body:JSON.stringify(payload)});
     const root=$('planResult');root.replaceChildren();const card=node('div',{className:'plan-card'});
     card.append(node('h3',{},'Weryfikacja generatora'));
     card.append(node('p',{},`${result.modules.length} modułów · ${result.references_internal} odsyłaczy wewnętrznych · ${result.references_external} odsyłaczy przez xr-hyper · ${Object.keys(result.external_targets).length} plików referencyjnych.`));
     if(result.preamble_warning)card.append(node('p',{},result.preamble_warning));
-    if(Object.keys(result.fragments).length)card.append(node('p',{},'Fragmenty: sprawdzono odsyłacze tylko w wybranych obiektach. Semantyczna samowystarczalność wymaga audytu.'));
+    if(Object.keys(result.fragments).length)card.append(node('p',{},'Fragmenty: sprawdzono odsyłacze wewnątrz wybranych zakresów. Kontekst matematyczny i kompletność środowisk LaTeX wymagają weryfikacji.'));
     if(Object.keys(result.external_targets).length){
       const ul=node('ul');for(const [mod,labels] of Object.entries(result.external_targets))ul.append(node('li',{},`${mod}: ${labels.join(', ')}`));
       card.append(node('strong',{},'Dokumenty referencyjne:'),ul);
@@ -229,7 +346,7 @@ async function checkSelection(){
 }
 async function generateZip(){
   const payload=generationPayload();
-  if(!payload.modules.length&&!payload.entities.length){toast('Wybierz rozdział lub obiekt.');return;}
+  if(!payload.items.length){toast('Wybierz rozdział lub obiekt.');return;}
   const button=$('generateZip');button.disabled=true;button.textContent='Generowanie…';
   try{
     const response=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
@@ -242,7 +359,7 @@ async function generateZip(){
 
 async function createDraft(){
   const payload=generationPayload();
-  if(!payload.modules.length&&!payload.entities.length){toast('Wybierz rozdział lub obiekt.');return;}
+  if(!payload.items.length){toast('Wybierz rozdział lub obiekt.');return;}
   const button=$('createDraft');button.disabled=true;button.textContent='Tworzenie szkicu…';
   try{
     const url='/api/drafts'+(state.draftSession?'?session_id='+encodeURIComponent(state.draftSession):'');
@@ -355,6 +472,160 @@ async function findPath(){
     data.modules.forEach((m,i)=>{if(i)box.append(document.createTextNode(" → "));const btn=node("button",{title:m.title},m.id);btn.addEventListener("click",()=>openModule(m.id));box.append(btn);});
   }catch(e){toast(e.message);}
 }
+
+function openConceptSearch(term){
+  $("conceptSearch").value=term;
+  activateTab("concepts");
+  loadConceptGraph();
+}
+async function loadConceptGraph(){
+  const q=$("conceptSearch").value.trim();
+  if(q.length<2){toast("Wpisz co najmniej dwa znaki.");return;}
+  const epoch=++state.conceptEpoch;
+  $("conceptSummary").textContent="Wyszukiwanie wystąpień pojęcia: "+q+"…";
+  try{
+    const count=Number($("conceptLimit").value);
+    const data=await api("/api/concepts/graph?q="+encodeURIComponent(q)+"&max_occurrences="+count);
+    if(epoch!==state.conceptEpoch || $("conceptSearch").value.trim()!==q)return;
+    state.conceptGraph=data;
+    $("conceptSummary").textContent=data.matches_total+" dopasowań tekstowych · "+
+      data.occurrences_shown+" widocznych wystąpień · "+
+      data.relationships+" zweryfikowanych relacji katalogowych"+
+      (data.truncated?" · ograniczono liczbę wyników":"");
+    renderConceptGraph(data);
+    renderConceptEvidence(data);
+  }catch(e){
+    if(epoch!==state.conceptEpoch)return;
+    $("conceptSummary").textContent="Nie można zbudować grafu.";
+    toast(e.message);
+  }
+}
+function openConceptNode(n){
+  if(n.type==="concept"){
+    $("conceptSearch").value=n.term;
+    loadConceptGraph();
+  }else if(n.entity_id){
+    openEntity(n.entity_id);
+  }else if(n.module){
+    openModule(n.module);
+  }
+}
+function renderConceptGraph(data){
+  const host=$("conceptCanvas");host.replaceChildren();
+  const concepts=data.nodes.filter(n=>n.type==="concept");
+  const occurrences=data.nodes.filter(n=>n.type==="occurrence");
+  const root=concepts.find(c=>c.id===data.root);
+  if(!root)return;
+  const ordered=[root,...concepts.filter(c=>c.id!==data.root)];
+  const positions={};positions[root.id]={x:35,y:70};
+  let y=70;
+  const groups=[];
+  for(const concept of ordered){
+    const entries=occurrences.filter(o=>o.concept===concept.id);
+    const height=Math.max(75,entries.length*54);
+    const center=y+(height-54)/2;
+    if(concept.id!==root.id)positions[concept.id]={x:330,y:center};
+    entries.forEach((o,i)=>positions[o.id]={x:690,y:y+i*54});
+    groups.push({concept,entries,start:y,height});
+    y+=height+35;
+  }
+  const totalHeight=Math.max(410,y+20),W=1120,NS="http://www.w3.org/2000/svg";
+  const svgEl=(tag,attrs={},content)=>{
+    const el=document.createElementNS(NS,tag);
+    for(const [key,value] of Object.entries(attrs))el.setAttribute(key,String(value));
+    if(content!==undefined)el.textContent=String(content);
+    return el;
+  };
+  const svg=svgEl("svg",{viewBox:"0 0 "+W+" "+totalHeight,
+    height:totalHeight,role:"group","aria-label":"Graf pojęć: "+data.query});
+  const defs=svgEl("defs");
+  const marker=svgEl("marker",{id:"concept-arrow",viewBox:"0 0 10 10",refX:"9",refY:"5",
+    markerWidth:"6",markerHeight:"6",orient:"auto-start-reverse"});
+  marker.append(svgEl("path",{d:"M 0 0 L 10 5 L 0 10 z",fill:"#278397"}));
+  defs.append(marker);svg.append(defs);
+  for(const group of groups){
+    if(group.concept.id===data.root)continue;
+    const separator=svgEl("line",{x1:298,y1:group.start-18,x2:1090,
+      y2:group.start-18,stroke:"#e8edf2","stroke-width":1});
+    svg.append(separator);
+  }
+  for(const edge of data.edges){
+    const a=positions[edge.source],b=positions[edge.target];
+    if(!a||!b)continue;
+    const isOccurrence=edge.type==="occurrence";
+    const aWidth=a.x===690?392:244;
+    const bWidth=b.x===690?392:244;
+    const x1=a.x+aWidth,x2=b.x,y1=a.y,y2=b.y;
+    const mid=(x1+x2)/2;
+    const path=svgEl("path",{d:"M "+x1+" "+y1+" C "+mid+" "+y1+", "+mid+" "+y2+", "+x2+" "+y2,
+      fill:"none",stroke:isOccurrence?"#a6b4c7":"#278397",
+      "stroke-width":isOccurrence?1.5:2.2,"stroke-dasharray":isOccurrence?"5 5":"none",
+      opacity:isOccurrence?".65":".85"});
+    if(!isOccurrence)path.setAttribute("marker-end","url(#concept-arrow)");
+    path.append(svgEl("title",{},edge.label+(edge.explanation?": "+edge.explanation:"")));
+    svg.append(path);
+  }
+  for(const n of data.nodes){
+    const pos=positions[n.id];if(!pos)continue;
+    const concept=n.type==="concept",isRoot=n.id===data.root,w=concept?244:392;
+    const group=svgEl("g",{class:"concept-svg-node",tabindex:"0",role:"button",
+      "aria-label":concept?n.label+" — pokaż powiązania":n.module+", "+n.label+", wiersz "+n.line});
+    group.append(svgEl("rect",{x:pos.x,y:pos.y-21,width:w,height:42,rx:9,
+      fill:isRoot?"#d5edf0":concept?"#e7eafb":"#ffffff",
+      stroke:isRoot?"#157b8b":concept?"#a9b3dc":"#b7cad7","stroke-width":isRoot?2:1.2}));
+    group.append(svgEl("text",{x:pos.x+11,y:pos.y+(concept?4:-3),fill:"#29475d",
+      "font-size":concept?13:12,"font-weight":concept?"700":"600"},
+      crop(concept?n.label:(n.module+" · "+n.label),concept?32:48)));
+    if(!concept)group.append(svgEl("text",{x:pos.x+11,y:pos.y+13,
+      fill:"#8192a3","font-size":10},
+      "Wiersz "+n.line+" · "+crop(n.matched,31)));
+    if(concept)group.append(svgEl("title",{},n.label+" · "+n.modules_total+" rozdziałów"));
+    else group.append(svgEl("title",{},n.snippet));
+    group.addEventListener("click",()=>openConceptNode(n));
+    group.addEventListener("keydown",e=>{
+      if(e.key==="Enter"||e.key===" "){e.preventDefault();openConceptNode(n);}
+    });
+    svg.append(group);
+  }
+  host.append(svg);
+  if(!occurrences.length)host.append(node("p",{className:"empty-sub"},
+    "Nie znaleziono tekstowych wystąpień w zaindeksowanych rozdziałach. Relacje katalogowe nie oznaczają obecności w tekście."));
+}
+function renderConceptEvidence(data){
+  const relations=$("conceptRelations");relations.replaceChildren();
+  const evidence=$("conceptEvidence");evidence.replaceChildren();
+  const all=new Map(data.nodes.filter(n=>n.type==="concept").map(n=>[n.id,n]));
+  const relationEdges=data.edges.filter(e=>e.type!=="occurrence");
+  if(relationEdges.length){
+    const heading=node("h2",{className:"small-heading"},"Relacje matematyczne");
+    relations.append(heading);
+    for(const edge of relationEdges){
+      const a=all.get(edge.source),b=all.get(edge.target);
+      const line=node("div",{className:"concept-relation"});
+      line.append(node("strong",{},(a?a.label:edge.source)+" "+
+        (edge.type==="equivalent"?"⇔":"⇒")+" "+(b?b.label:edge.target)));
+      line.append(node("small",{},edge.label+" · "+edge.explanation));
+      relations.append(line);
+    }
+  }
+  for(const concept of data.nodes.filter(n=>n.type==="concept")){
+    const entries=data.nodes.filter(n=>n.type==="occurrence"&&n.concept===concept.id);
+    const section=node("section",{className:"concept-group"});
+    section.append(node("h3",{},concept.label+" · "+concept.modules_total+
+      " rozdziałów · "+concept.matches_total+" dopasowań"));
+    if(!entries.length)section.append(node("p",{className:"concept-empty"},"Brak poświadczonych wystąpień w aktualnym indeksie."));
+    for(const item of entries){
+      const button=node("button",{className:"concept-occurrence"});
+      button.append(node("strong",{},item.module+" · "+(item.label||item.module_title)));
+      button.append(node("small",{},item.domain+" · wiersz "+item.line+" · „"+item.matched+"”"));
+      button.append(node("span",{},item.snippet));
+      button.addEventListener("click",()=>openConceptNode(item));
+      section.append(button);
+    }
+    evidence.append(section);
+  }
+}
+
 async function init(){
   try{
     const [domains,mods,stats]=await Promise.all([api("/api/domains"),api("/api/modules?limit=500"),api("/api/stats")]);
@@ -372,17 +643,24 @@ function listeners(){
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>activateTab(b.dataset.tab)));
   $("granularity").addEventListener("change",e=>{state.granularity=e.target.value;renderTree();});
   $("addCurrent").addEventListener("click",addCurrent);
+  $("addExcerpt").addEventListener("click",addExcerpt);
+  $("addRange").addEventListener("click",addRange);
   $("openFirst").addEventListener("click",()=>{if(state.modules.length)openModule(state.modules[0].id);});
   $("openGraphQuick").addEventListener("click",()=>activateTab("graph"));
   $("togglePreview").addEventListener("click",()=>{state.simplified=!state.simplified;renderReader();});
   $("showFull").addEventListener("click",()=>{if(state.currentEntity)openEntity(state.currentEntity,true);else if(state.currentModule)openModule(state.currentModule,true);});
   $("closeTip").addEventListener("click",closeTip);
-  $("tipOpen").addEventListener("click",()=>{const x=state.tooltipData;if(x)openLabel(x.name);});
+  $("tipOpen").addEventListener("click",()=>{const x=state.tooltipData;if(x)openLabel(x.name,x.source_document||state.currentModule);});
   $("referenceTip").addEventListener("mouseleave",closeTip);
   document.addEventListener("keydown",e=>{if(e.key==="Escape")closeTip();});
   $("drawGraph").addEventListener("click",loadGraph);$("findPath").addEventListener("click",findPath);
+  $("drawConceptGraph").addEventListener("click",loadConceptGraph);
+  $("conceptSearch").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();loadConceptGraph();}});
+  $("conceptLimit").addEventListener("change",()=>{if(state.tab==="concepts")loadConceptGraph();});
   $("checkSelection").addEventListener("click",checkSelection);$("generateZip").addEventListener("click",generateZip);$("createDraft").addEventListener("click",createDraft);$("saveManifest").addEventListener("click",downloadManifest);
   window.addEventListener("pagehide",event=>{if(!event.persisted)closeUnsavedDraft();});
+  // Some browsers do not dispatch pagehide when a tab is closed; keep an idempotent fallback.
+  window.addEventListener("beforeunload",closeUnsavedDraft);
   setInterval(()=>{if(state.draftSession)fetch("/api/drafts/"+encodeURIComponent(state.draftSession)+"/heartbeat",{method:"POST"}).catch(()=>{});},15*60*1000);
   $("clearSelection").addEventListener("click",()=>{state.selected.clear();renderSelection();if(state.currentData)renderReader();$("planResult").replaceChildren();});
   $("showExplorer").addEventListener("click",()=>$("explorer").classList.add("visible"));
@@ -390,4 +668,3 @@ function listeners(){
   setupSearch();
 }
 listeners();init();
-

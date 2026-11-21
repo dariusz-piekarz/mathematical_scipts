@@ -1,0 +1,750 @@
+\chapter{Eliminacja Gaussa i układy równań liniowych}
+\label{ch:lin5-eliminacja-gaussa}
+\index{eliminacja Gaussa@Eliminacja Gaussa}
+\index{operacje elementarne@Operacje elementarne na wierszach}
+\index{postac schodkowa@Postać schodkowa macierzy}
+
+\noindent\textbf{Cel rozdziału.}
+W Rozdziale~\ref{ch:lin4-macierze-zmiana-bazy}
+opisaliśmy układy liniowe przez równania \(Ax=b\),
+ich rozwiązania i rząd macierzy.
+Obecnie przedstawimy skończony algorytm, który
+pozwala obliczać rząd, rozstrzygać rozwiązalność,
+wyznaczać wszystkie rozwiązania oraz znajdować
+bazy jądra i obrazu. Wyprowadzimy go z operacji
+na wierszach i udowodnimy poprawność, zamiast
+traktować przekształcenia macierzy jako przepisy
+rachunkowe bez uzasadnienia.
+
+W całym rozdziale \(K\) jest ciałem z \(0_K\ne1_K\).
+Wszystkie macierze i przestrzenie są nad \(K\),
+a \(m,n\in\mathbb N_0\), o ile nie wskazano inaczej.
+Nie zakładamy uporządkowania ciała ani możliwości
+dzielenia przez zero. Przypadki pustych macierzy
+interpretujemy zgodnie z
+Definicją~\ref{def:lin4-macierz}.
+
+\section{Elementarne operacje na wierszach}
+\label{sec:lin5-operacje-wierszowe}
+
+\begin{definicja}[Trzy typy operacji elementarnych]
+\label{def:lin5-operacje}
+Niech \(m,n\in\mathbb N_0\) i
+\(A\in\operatorname{Mat}_{m\times n}(K)\).
+\emph{Elementarną operacją na wierszach} nazywamy
+jedno z następujących przekształceń:
+\begin{enumerate}[label=(\roman*)]
+\item zamianę miejscami dwóch różnych wierszy
+\(R_i\leftrightarrow R_j\), \(i\ne j\);
+\item pomnożenie wiersza \(R_i\) przez skalar
+\(\lambda\in K\setminus\{0_K\}\),
+czyli \(R_i\leftarrow\lambda R_i\);
+\item dodanie do \(R_i\) wielokrotności innego wiersza,
+czyli \(R_i\leftarrow R_i+\lambda R_j\), gdzie
+\(i\ne j\) i \(\lambda\in K\).
+\end{enumerate}
+W każdym przypadku indeksy wierszy należą do
+\(\{1,\ldots,m\}\). Dla \(m=0\) nie ma
+żadnej operacji do wykonania.
+Dwie macierze tego samego rozmiaru nazywamy
+\emph{wierszowo równoważnymi}, gdy jedną można
+otrzymać z drugiej przez skończony ciąg
+operacji elementarnych, także ciąg pusty.
+\end{definicja}
+
+\begin{stwierdzenie}[Odwracalność operacji elementarnych]
+\label{prop:lin5-odwracalne-operacje}
+Niech \(m,n\in\mathbb N_0\) i
+\(A\in\operatorname{Mat}_{m\times n}(K)\).
+Każda operacja elementarna ma operację odwrotną
+tego samego typu. Istnieje ponadto
+odwracalna macierz \(E\in\operatorname{Mat}_{m\times m}(K)\)
+taka, że wynik operacji na \(A\) jest równy \(EA\).
+Dla dowolnych wierszowo równoważnych macierzy
+\(A,B\in\operatorname{Mat}_{m\times n}(K)\)
+istnieje odwracalna macierz
+\(P\in\operatorname{Mat}_{m\times m}(K)\)
+spełniająca \(B=PA\).
+\end{stwierdzenie}
+\begin{proof}
+Zamiana wierszy odwraca się przez tę samą zamianę.
+Mnożenie przez \(\lambda\ne0_K\) odwraca się
+mnożeniem przez \(\lambda^{-1}\), a dodanie
+\(\lambda R_j\) do \(R_i\) odwraca się dodaniem
+\(-\lambda R_j\). Warunek \(i\ne j\) zapewnia,
+że w ostatnim przypadku wiersz \(R_j\)
+pozostaje niezmieniony.
+
+Niech \(E\) powstaje z \(I_m\) przez tę
+samą operację. Z definicji mnożenia macierzy
+\(i\)-ty wiersz \(EA\) jest kombinacją wierszy
+\(A\) o współczynnikach z \(i\)-tego wiersza \(E\).
+Dlatego \(EA\) jest wynikiem żądanej operacji.
+Macierz odpowiadająca operacji odwrotnej
+jest dwustronną odwrotnością \(E\), gdyż
+obie operacje zastosowane kolejno do \(I_m\)
+dają \(I_m\). Zatem \(E\) jest odwracalna
+na mocy Definicji~\ref{def:lin4-odwracalna}.
+
+Dla ciągu operacji odpowiadających macierzom
+\(E_1,\ldots,E_s\) otrzymujemy
+\(B=E_s\cdots E_1 A\).
+Iloczyn \(P=E_s\cdots E_1\) jest odwracalny
+na mocy Stwierdzenia~\ref{prop:lin4-iloczyn-odwrotnych}.
+Przy pustym ciągu bierzemy \(P=I_m\).
+Rachunek działa również dla pustych rozmiarów.
+\end{proof}
+
+\begin{wniosek}[Równoważne układy liniowe]
+\label{cor:lin5-rownowazne-uklady}
+Niech \(A\in\operatorname{Mat}_{m\times n}(K)\),
+\(b\in K^m\), a \(P\) będzie odwracalną
+macierzą rozmiaru \(m\times m\).
+Wtedy układy \(Ax=b\) i \(PAx=Pb\)
+mają dokładnie ten sam zbiór rozwiązań.
+W szczególności można wykonywać te same
+operacje elementarne na wierszach macierzy
+\(A\) i odpowiednich wyrazach kolumny \(b\).
+\end{wniosek}
+\begin{proof}
+Dla każdego \(x\in K^n\) z \(Ax=b\)
+po pomnożeniu przez \(P\) otrzymujemy
+\(PAx=Pb\). Odwrotnie, pomnożenie
+\(PAx=Pb\) przez \(P^{-1}\) daje \(Ax=b\).
+Taką samą operację na \(A\) i \(b\)
+realizuje mnożenie \([A\mid b]\) przez
+macierz elementarną z lewej strony.
+\end{proof}
+
+\begin{uwaga}[Czego nie zachowują operacje wierszowe?]
+\label{rem:lin5-obraz-wiersze}
+Jeżeli \(B=PA\) i \(P\) jest odwracalna,
+to \(\ker B=\ker A\), a
+\(\operatorname{im}B=P(\operatorname{im}A)\).
+W szczególności \(\operatorname{rk}B=\operatorname{rk}A\),
+ale obrazy \(A\) i \(B\) nie muszą być
+identycznymi podprzestrzeniami \(K^m\).
+Na przykład dla
+\(A=(1,0)^{\mathsf T}\) i \(B=(0,1)^{\mathsf T}\)
+zamiana wierszy zachowuje rząd \(1\),
+lecz zmienia obraz.
+\end{uwaga}
+
+\section{Postać schodkowa i algorytm eliminacji}
+\label{sec:lin5-postac-schodkowa}
+
+\begin{definicja}[Postać schodkowa]
+\label{def:lin5-schodkowa}
+Niech \(R\in\operatorname{Mat}_{m\times n}(K)\).
+\emph{Pierwszym niezerowym wyrazem}
+niezerowego wiersza nazywamy jego wyraz
+o najmniejszym indeksie kolumny, w której
+występuje skalar różny od \(0_K\).
+Macierz \(R\) jest w \emph{postaci schodkowej},
+gdy:
+\begin{enumerate}[label=(\roman*)]
+\item wszystkie wiersze zerowe leżą poniżej niezerowych;
+\item indeksy kolumn pierwszych niezerowych wyrazów
+kolejnych niezerowych wierszy ściśle rosną.
+\end{enumerate}
+Pierwsze niezerowe wyrazy nazywamy
+\emph{elementami wiodącymi}, a ich kolumny
+\emph{kolumnami bazowymi} (kolumnami z pivotem).
+Postać schodkowa jest \emph{zredukowana},
+gdy dodatkowo każdy element wiodący jest
+równy \(1_K\) i stanowi jedyny niezerowy wyraz
+w swojej kolumnie.
+Dla \(m=0\) lub \(n=0\) jedyna macierz
+ma postać schodkową zredukowaną.
+\end{definicja}
+
+\begin{twierdzenie}[Istnienie postaci schodkowej i zredukowanej]
+\label{thm:lin5-gauss}
+Dla dowolnych \(m,n\in\mathbb N_0\)
+i \(A\in\operatorname{Mat}_{m\times n}(K)\)
+istnieją wierszowo równoważne z \(A\)
+macierze \(U,R\) tego samego rozmiaru,
+z których \(U\) jest schodkowa,
+a \(R\) schodkowa zredukowana.
+Można je otrzymać skończoną liczbą
+elementarnych operacji na wierszach.
+\end{twierdzenie}
+\begin{proof}
+Podamy algorytm wraz z uzasadnieniem.
+Ustawiamy numer aktualnego wiersza \(r=1\)
+i przeglądamy kolumny \(j=1,\ldots,n\)
+w rosnącej kolejności. Jeżeli \(r>m\),
+kończymy; dalsze kolumny nie mogą
+dostarczyć nowych wierszy niezerowych.
+
+W rozpatrywanej kolumnie \(j\) szukamy
+wiersza \(k\geq r\) z niezerowym wyrazem
+w tej kolumnie. Gdy takiego wiersza nie ma,
+przechodzimy do następnej kolumny.
+Gdy istnieje, zamieniamy wiersze \(k\) i \(r\)
+(jeżeli \(k=r\), zamiana nie jest potrzebna).
+Element \(a_{rj}\) jest teraz niezerowy,
+więc wolno pomnożyć wiersz \(r\)
+przez \(a_{rj}^{-1}\), uzyskując jedynkę.
+Od każdego wiersza \(i>r\) odejmujemy
+\(a_{ij}\) razy nowy wiersz \(r\);
+zerujemy zatem wszystkie wyrazy pod pivotem.
+Zwiększamy \(r\) o \(1\).
+
+Po wybraniu pivotu w kolumnie \(j\)
+wszystkie wiersze poniżej \(r\) mają zera
+w kolumnach wcześniej wybranych:
+były tam wyzerowane podczas poprzednich
+etapów, a kombinacje tych wierszy
+nie wprowadzają nowych niezerowych wyrazów.
+Jeżeli pewną kolumnę pominięto z powodu
+samych zer pod aktualnym wierszem,
+kolejne operacje na tych niższych wierszach
+również zachowują w tej kolumnie zera.
+Stąd kolejne wybrane pivoty występują
+w ściśle rosnących kolumnach,
+a wiersze niewybrane, jeśli pozostały,
+są zerowe. Otrzymana macierz \(U\)
+ma postać schodkową. Algorytm przegląda
+dokładnie \(n\) kolumn i wybiera nie więcej
+niż \(\min\{m,n\}\) pivotów, zatem się kończy.
+
+Aby uzyskać postać zredukowaną, przechodzimy
+po pivotach od ostatniego ku pierwszemu.
+W każdym wierszu wiodący wyraz wynosi już \(1_K\).
+Za jego pomocą odejmujemy odpowiednie
+wielokrotności tego wiersza od wszystkich
+wierszy położonych wyżej, zerując wyrazy
+nad pivotem. Ponieważ wiersz z późniejszym
+pivotem ma zera we wszystkich wcześniejszych
+kolumnach bazowych, operacje te nie niszczą
+zer uzyskanych w poprzednich krokach
+ani samych jedynek wiodących.
+Po zakończeniu każda kolumna bazowa ma
+jedną jedynkę i same zera. Powstała
+macierz \(R\) jest schodkowa zredukowana
+i wierszowo równoważna z \(A\).
+
+Jeżeli jeden z rozmiarów jest zerowy,
+nie wykonujemy żadnego kroku;
+jedyna macierz już jest zredukowana.
+\end{proof}
+
+\begin{przyklad}[Dwa etapy eliminacji]
+\label{prz:lin5-pierwsza-eliminacja}
+Nad \(\mathbb R\) niech
+\[
+ A=\begin{pmatrix}
+ 1&2&1&0\\
+ 2&4&3&1\\
+ 1&2&2&1
+ \end{pmatrix}.
+\]
+Odejmujemy dwukrotność pierwszego wiersza
+od drugiego i pierwszy wiersz od trzeciego:
+\[
+ A\ \sim\
+ \begin{pmatrix}
+ 1&2&1&0\\
+ 0&0&1&1\\
+ 0&0&1&1
+ \end{pmatrix}
+ \ \sim\
+ U=\begin{pmatrix}
+ 1&2&1&0\\
+ 0&0&1&1\\
+ 0&0&0&0
+ \end{pmatrix}.
+\]
+Elementy wiodące są w kolumnach \(1\) i \(3\).
+Odejmując drugi wiersz od pierwszego,
+otrzymujemy postać zredukowaną
+\[
+ R=\begin{pmatrix}
+ 1&2&0&-1\\
+ 0&0&1&1\\
+ 0&0&0&0
+ \end{pmatrix}.
+\]
+Każda strzałka jest ciągiem odwracalnych
+operacji; nie wykonywaliśmy operacji
+na kolumnach.
+\end{przyklad}
+
+\section{Liczba pivotów i rząd macierzy}
+\label{sec:lin5-rzad}
+
+\begin{twierdzenie}[Rząd macierzy schodkowej]
+\label{thm:lin5-rzad-pivoty}
+Niech \(m,n\in\mathbb N_0\),
+\(A\in\operatorname{Mat}_{m\times n}(K)\),
+a \(U\) będzie dowolną postacią schodkową
+wierszowo równoważną z \(A\).
+Jeżeli \(U\) ma \(r\) niezerowych wierszy,
+to
+\[
+ \operatorname{rk}A=r,\qquad
+ \dim_K\ker A=n-r.
+\]
+W szczególności liczba pivotów nie zależy
+od wyborów wykonanych w algorytmie.
+\end{twierdzenie}
+\begin{proof}
+Niech \(p_1<\cdots<p_r\) będą indeksami
+kolumn elementów wiodących.
+W układzie jednorodnym \(Ux=0\)
+pozostałe \(n-r\) współrzędnych, tj.
+\(x_j\) dla \(j\notin\{p_1,\ldots,p_r\}\),
+można wybrać dowolnie. Rzeczywiście,
+zaczynając od ostatniego niezerowego wiersza,
+wyznaczamy jednoznacznie \(x_{p_r}\),
+następnie \(x_{p_{r-1}}\), aż do \(x_{p_1}\).
+Jest to możliwe, ponieważ każdy
+element wiodący jest niezerowy
+i ma odwrotność w ciele \(K\).
+
+Rzut z \(\ker U\) na kolumnę \(n-r\)
+współrzędnych swobodnych jest liniową
+bijekcją na \(K^{n-r}\):
+istnienie i jednoznaczność wynika
+z opisanego podstawiania wstecz,
+a liniowość z liniowości rzutu.
+Zatem \(\dim_K\ker U=n-r\).
+Operacje wierszowe nie zmieniają jądra,
+więc \(\ker A=\ker U\).
+Twierdzenie~\ref{thm:lin4-rzad-kolumn}
+daje
+\(n=\dim_K\ker A+\operatorname{rk}A\),
+skąd \(\operatorname{rk}A=r\).
+Gdy \(r=0\) albo \(n=0\), argument
+oznacza po prostu wybór wszystkich
+współrzędnych jako swobodnych lub
+pusty układ współrzędnych.
+\end{proof}
+
+\begin{wniosek}[Kryteria liczby pivotów]
+\label{cor:lin5-pivoty-odwracalnosc}
+Niech \(A\in\operatorname{Mat}_{m\times n}(K)\),
+gdzie \(m,n\in\mathbb N_0\).
+Macierz \(A\) wyznacza iniektywne
+\(L_A\colon K^n\to K^m\) wtedy i tylko wtedy,
+gdy każda kolumna jest bazowa w jej postaci
+schodkowej. Wyznacza surjekcję wtedy i tylko
+wtedy, gdy liczba pivotów wynosi \(m\).
+Jeżeli \(m=n\), jest odwracalna wtedy i
+tylko wtedy, gdy jej postacią schodkową
+zredukowaną jest \(I_n\).
+\end{wniosek}
+\begin{proof}
+Iniektywność jest równoważna
+\(\dim\ker A=0\), czyli \(r=n\).
+Surjektywność jest równoważna
+\(\operatorname{rk}A=m\), czyli \(r=m\).
+Gdy \(m=n\), odwracalność jest
+równoważna \(r=n\) na mocy
+Twierdzenia~\ref{thm:lin4-odwracalnosc-kryteria}.
+Zredukowana macierz kwadratowa z \(n\)
+pivotami musi mieć pivot w każdej
+kolumnie i wierszu, a więc być równa \(I_n\).
+Implikacja odwrotna wynika z liczby pivotów.
+\end{proof}
+
+\section{Rozwiązywanie układów i kryterium zgodności}
+\label{sec:lin5-uklady}
+
+\begin{definicja}[Macierz rozszerzona]
+\label{def:lin5-rozszerzona}
+Dla \(A\in\operatorname{Mat}_{m\times n}(K)\)
+i \(b\in K^m\) przez \([A\mid b]\)
+oznaczamy macierz rozmiaru \(m\times(n+1)\),
+której pierwsze \(n\) kolumn tworzą \(A\),
+a ostatnią kolumną jest \(b\).
+Operacje wierszowe wykonujemy na całej
+macierzy \([A\mid b]\), a nie jedynie na \(A\).
+\end{definicja}
+
+\begin{twierdzenie}[Kryterium zgodności układu]
+\label{thm:lin5-zgodnosc}
+Niech \(m,n\in\mathbb N_0\),
+\(A\in\operatorname{Mat}_{m\times n}(K)\)
+oraz \(b\in K^m\).
+Następujące warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item układ \(Ax=b\) ma rozwiązanie;
+\item \(b\in\operatorname{im}A\);
+\item \(\operatorname{rk}A=\operatorname{rk}[A\mid b]\);
+\item po sprowadzeniu \([A\mid b]\) do postaci
+schodkowej nie występuje wiersz
+\((0,\ldots,0\mid\beta)\) z \(\beta\ne0_K\).
+\end{enumerate}
+Jeżeli układ jest zgodny i
+\(r=\operatorname{rk}A\), to jego zbiór rozwiązań
+jest warstwą podprzestrzeni wymiaru \(n-r\).
+\end{twierdzenie}
+\begin{proof}
+Równoważność (i) i (ii) jest
+Twierdzeniem~\ref{thm:lin4-zbior-rozwiazan}.
+Obraz macierzy \([A\mid b]\) jest
+przestrzenią rozpiętą przez wszystkie
+kolumny \(A\) i dodatkową kolumnę \(b\).
+Ma ten sam wymiar co obraz \(A\)
+dokładnie wtedy, gdy \(b\) już należy
+do przestrzeni rozpiętej przez kolumny \(A\):
+jeśli nie należy, dołączenie \(b\)
+zwiększa wymiar o jeden.
+To dowodzi równoważności (ii) i (iii).
+
+Operacje wierszowe na \([A\mid b]\)
+nie zmieniają zbioru rozwiązań
+na mocy Wniosku~\ref{cor:lin5-rownowazne-uklady}.
+Wiersz \((0,\ldots,0\mid\beta)\),
+\(\beta\ne0_K\), oznacza równanie
+\(0_K=\beta\), którego żaden wektor
+nie spełnia. Jeśli takiego wiersza
+nie ma w postaci schodkowej, ostatnia
+kolumna nie jest kolumną nowego pivotu,
+a podstawianie wstecz, z dowolnym wyborem
+zmiennych swobodnych, wyznacza rozwiązanie.
+Równoważne są więc (i) i (iv).
+
+Dla zgodnego układu rozwiązania mają
+postać \(x_0+\ker A\) na mocy
+Twierdzenia~\ref{thm:lin4-zbior-rozwiazan},
+a wymiar \(\ker A\) wynosi \(n-r\)
+na mocy Twierdzenia~\ref{thm:lin5-rzad-pivoty}.
+Warstwa nie jest na ogół podprzestrzenią,
+jeżeli \(b\ne0_{K^m}\).
+\end{proof}
+
+\begin{przyklad}[Układ zgodny i niezgodny]
+\label{prz:lin5-uklad-rozszerzony}
+Rozpatrzmy macierz \(A\) z
+Przykładu~\ref{prz:lin5-pierwsza-eliminacja}
+i \(b=(3,7,4)^{\mathsf T}\in\mathbb R^3\).
+Wykonując kolejno
+\(R_2\leftarrow R_2-2R_1\),
+\(R_3\leftarrow R_3-R_1\),
+\(R_3\leftarrow R_3-R_2\),
+\(R_1\leftarrow R_1-R_2\), otrzymujemy
+\[
+ [A\mid b]\ \sim\
+ \left(\begin{array}{rrrr|r}
+ 1&2&0&-1&2\\
+ 0&0&1& 1&1\\
+ 0&0&0& 0&0
+ \end{array}\right).
+\]
+Zmienne \(x_2=s\), \(x_4=t\) są swobodne,
+a równania wiodące dają
+\(x_1=2-2s+t\), \(x_3=1-t\).
+Stąd wszystkie rozwiązania mają postać
+\[
+ x=\begin{pmatrix}2\\0\\1\\0\end{pmatrix}
+ +s\begin{pmatrix}-2\\1\\0\\0\end{pmatrix}
+ +t\begin{pmatrix}1\\0\\-1\\1\end{pmatrix},
+ \qquad s,t\in\mathbb R.
+\]
+Liczba zmiennych swobodnych jest równa
+\(4-\operatorname{rk}A=2\).
+Jeśli zamiast \(b\) weźmiemy
+\(b'=(3,7,5)^{\mathsf T}\),
+te same pierwsze trzy operacje wytwarzają
+wiersz \((0,0,0,0\mid1)\).
+Układ \(Ax=b'\) nie ma rozwiązania;
+jego brak jest matematycznie różny
+od nieskończenie wielu rozwiązań układu
+z prawą stroną \(b\).
+\end{przyklad}
+
+\section{Bazy jądra i obrazu wyznaczane przez eliminację}
+\label{sec:lin5-bazy}
+
+\begin{twierdzenie}[Baza jądra z postaci zredukowanej]
+\label{thm:lin5-baza-jadra}
+Niech \(m,n\in\mathbb N_0\) i
+\(A\in\operatorname{Mat}_{m\times n}(K)\).
+Niech \(R\) będzie postacią schodkową
+zredukowaną \(A\), a
+\(p_1<\cdots<p_r\) jej kolumnami bazowymi.
+Dla każdej kolumny swobodnej
+\(f\notin\{p_1,\ldots,p_r\}\)
+definiujemy \(v^{(f)}\in K^n\) przez warunki
+\[
+\begin{aligned}
+ v^{(f)}_f&=1_K,\\
+ v^{(f)}_{p_i}&=-R_{if}\quad(1\leq i\leq r),\\
+ v^{(f)}_g&=0_K
+ \quad\text{dla każdej swobodnej }g\ne f.
+\end{aligned}
+\]
+Wówczas rodzina \(\bigl(v^{(f)}\bigr)_f\)
+stanowi bazę \(\ker A\).
+\end{twierdzenie}
+\begin{proof}
+Wiersz \(i\) macierzy \(R\) daje równanie
+\[
+ x_{p_i}+
+ \sum_{f\ \text{swobodna}}R_{if}x_f=0_K,
+\]
+ponieważ w pozostałych kolumnach bazowych
+ma same zera. Wektor \(v^{(f)}\)
+spełnia każde z tych równań,
+zatem należy do \(\ker R=\ker A\).
+
+Dla dowolnego \(x\in\ker A\)
+porównanie wszystkich współrzędnych
+swobodnych i powyższe równania dają
+\(x=\sum_f x_fv^{(f)}\),
+czyli rodzina rozpina jądro.
+Jeśli \(\sum_f\lambda_fv^{(f)}=0\),
+to współrzędna swobodna o indeksie \(f\)
+wynosi \(\lambda_f\), więc wszystkie
+współczynniki są zerowe. Rodzina jest
+liniowo niezależna. Jeśli nie ma
+kolumn swobodnych, jest pusta i
+\(\ker A=\{0_{K^n}\}\).
+\end{proof}
+
+\begin{twierdzenie}[Baza obrazu z kolumn oryginalnej macierzy]
+\label{thm:lin5-baza-obrazu}
+Niech \(A\in\operatorname{Mat}_{m\times n}(K)\),
+gdzie \(m,n\in\mathbb N_0\), i niech
+\(R\) będzie jej postacią schodkową
+zredukowaną, z kolumnami bazowymi
+o indeksach \(p_1<\cdots<p_r\).
+Wówczas kolumny macierzy \emph{oryginalnej}
+\(A\) o indeksach \(p_1,\ldots,p_r\)
+tworzą bazę \(\operatorname{im}A\).
+Nie należy zastępować ich odpowiadającymi
+kolumnami \(R\), gdy szukamy bazy
+obrazu \(A\) jako podprzestrzeni \(K^m\).
+\end{twierdzenie}
+\begin{proof}
+Z odwracalności operacji elementarnych
+istnieje odwracalna macierz \(P\)
+taka, że \(R=PA\).
+Kolumny \(R\) o indeksach \(p_i\)
+są odpowiednio wektorami
+\(e_i\in K^m\), \(1\leq i\leq r\).
+Są więc liniowo niezależne.
+
+Każda inna kolumna \(R\) ma niezerowe
+współrzędne co najwyżej w pierwszych
+\(r\) wierszach i jest kombinacją
+tych kolumn bazowych:
+\(R_{\bullet j}=\sum_{i=1}^r R_{ij}R_{\bullet p_i}\).
+Po zastosowaniu \(P^{-1}\) otrzymujemy
+\(A_{\bullet j}=\sum_{i=1}^r R_{ij}A_{\bullet p_i}\).
+Odwracalność \(P\) zachowuje także
+niezależność liniową wybranych kolumn.
+Zatem wybrane kolumny \(A\) są bazą
+przestrzeni rozpiętej przez wszystkie
+kolumny, która jest równa
+\(\operatorname{im}A\) na mocy
+Twierdzenia~\ref{thm:lin4-rzad-kolumn}.
+W przypadku \(r=0\) rodzina jest pusta
+i obraz jest zerowy.
+\end{proof}
+
+\begin{przyklad}[Jądro i obraz z jednego rachunku]
+\label{prz:lin5-bazy}
+Dla macierzy \(A\) z
+Przykładu~\ref{prz:lin5-pierwsza-eliminacja}
+postać zredukowana ma kolumny bazowe
+\(1,3\), a kolumny swobodne \(2,4\).
+Wstawiając kolejno \((x_2,x_4)=(1,0)\)
+oraz \((0,1)\), otrzymujemy bazę jądra
+\[
+ \left\{
+ \begin{pmatrix}-2\\1\\0\\0\end{pmatrix},
+ \begin{pmatrix}1\\0\\-1\\1\end{pmatrix}
+ \right\}.
+\]
+Bazę obrazu tworzą \emph{pierwsza i trzecia
+kolumna pierwotnej macierzy}:
+\[
+ \left\{
+ \begin{pmatrix}1\\2\\1\end{pmatrix},
+ \begin{pmatrix}1\\3\\2\end{pmatrix}
+ \right\}.
+\]
+Są one niezależne, bo równanie
+\(\alpha(1,2,1)+\beta(1,3,2)=0\)
+daje z pierwszej współrzędnej
+\(\alpha=-\beta\), a z drugiej
+\(\beta=0\); zatem także \(\alpha=0\).
+Wymiar jądra jest równy \(2\),
+wymiar obrazu też jest równy \(2\),
+a suma wynosi \(4=\dim\mathbb R^4\).
+\end{przyklad}
+
+\section{Jednoznaczność postaci zredukowanej}
+\label{sec:lin5-jednoznacznosc}
+
+\begin{twierdzenie}[Jednoznaczność postaci schodkowej zredukowanej]
+\label{thm:lin5-jednoznacznosc-rref}
+Niech \(m,n\in\mathbb N_0\).
+Każda macierz \(A\in\operatorname{Mat}_{m\times n}(K)\)
+ma dokładnie jedną postać schodkową
+zredukowaną w swojej klasie
+wierszowej równoważności.
+W szczególności dwie macierze tego samego
+rozmiaru są wierszowo równoważne wtedy
+i tylko wtedy, gdy mają tę samą
+postać schodkową zredukowaną.
+\end{twierdzenie}
+\begin{proof}
+Istnienie wynika z
+Twierdzenia~\ref{thm:lin5-gauss}.
+Niech \(R,S\) będą dwiema zredukowanymi
+postaciami macierzy \(A\).
+Operacje wierszowe nie zmieniają
+przestrzeni rozpiętej przez wiersze:
+każdy nowy wiersz jest kombinacją starych,
+a odwracalność operacji daje również
+odwrotne zawieranie. Zatem \(R\) i \(S\)
+mają tę samą przestrzeń wierszy \(H\subseteq K^n\).
+
+Załóżmy, że niezerowe wiersze \(R\)
+mają pierwsze niezerowe wyrazy w kolumnach
+\(p_1<\cdots<p_r\). Dla niezerowej
+kombinacji wierszy \(R\) pierwszy
+niezerowy wyraz leży w jednej z kolumn
+\(p_i\). Rzeczywiście, wybieramy
+najmniejszy indeks \(i\), przy którym
+współczynnik wiersza jest niezerowy.
+W kolumnach wcześniejszych niż \(p_i\)
+wszystkie użyte wiersze mają zera,
+a wyraz w kolumnie \(p_i\) jest równy
+temu współczynnikowi i jest niezerowy.
+Z drugiej strony każda kolumna \(p_i\)
+jest pierwszą niezerową kolumną
+odpowiedniego wiersza, a zatem wszystkie
+te pozycje występują w przestrzeni \(H\).
+Zbiór pozycji pierwszego niezerowego wyrazu
+w niezerowych wektorach \(H\) jest więc
+dokładnie \(\{p_1,\ldots,p_r\}\).
+Jest on określony samą przestrzenią \(H\),
+dlatego macierz \(S\) ma te same
+indeksy kolumn bazowych.
+
+Niech \(u_i\) będzie \(i\)-tym niezerowym
+wierszem \(R\), a \(v_i\) takim wierszem \(S\).
+Ponieważ obie macierze są zredukowane,
+\((u_i)_{p_j}=(v_i)_{p_j}\)
+wynosi \(1_K\) dla \(j=i\)
+i \(0_K\) dla \(j\ne i\).
+Wektor \(v_i\in H\) jest pewną kombinacją
+wierszy \(u_1,\ldots,u_r\).
+Porównanie współrzędnych w kolumnach
+\(p_j\) pokazuje, że współczynniki
+tej kombinacji wynoszą odpowiednio
+\(0_K,\ldots,1_K,\ldots,0_K\).
+Zatem \(v_i=u_i\) dla każdego \(i\);
+pozostałe wiersze w obu macierzach
+są zerowe. Otrzymujemy \(R=S\).
+
+Gdy \(H=\{0\}\), obie macierze są
+zerowe i rozumowanie pozostaje prawdziwe.
+Jeżeli dwie macierze są wierszowo
+równoważne, ich postaci zredukowane
+są równe z wykazanej jednoznaczności.
+Odwrotnie, gdy ich postacie są równe,
+odwracalność każdego kroku eliminacji
+pozwala przejść od pierwszej macierzy
+do drugiej przez skończony ciąg operacji.
+\end{proof}
+
+\section{Obliczanie macierzy odwrotnej}
+\label{sec:lin5-odwracanie}
+
+\begin{twierdzenie}[Metoda Gaussa--Jordana]
+\label{thm:lin5-gauss-jordan-odwrotnosc}
+Niech \(n\in\mathbb N_0\) i
+\(A\in\operatorname{Mat}_{n\times n}(K)\).
+Wykonujmy te same elementarne operacje
+na obu blokach macierzy \([A\mid I_n]\),
+tak aby lewy blok uzyskał postać
+schodkową zredukowaną \(R\).
+Wówczas \(R=I_n\) dokładnie wtedy,
+gdy \(A\) jest odwracalna; w tym przypadku
+prawy blok końcowej macierzy jest równy
+\(A^{-1}\).
+\end{twierdzenie}
+\begin{proof}
+Łącznie wszystkie operacje odpowiadają
+mnożeniu z lewej strony przez pewną
+odwracalną macierz \(P\).
+Wynikiem jest więc \([PA\mid P]\),
+gdzie \(R=PA\).
+Jeśli \(A\) jest odwracalna,
+Twierdzenie~\ref{thm:lin5-rzad-pivoty}
+daje \(\operatorname{rk}R=n\);
+zredukowana macierz kwadratowa rzędu \(n\)
+jest równa \(I_n\).
+Wtedy \(PA=I_n\) i po pomnożeniu przez
+\(A^{-1}\) otrzymujemy \(P=A^{-1}\).
+Odwrotnie, jeśli \(R=I_n\),
+to \(PA=I_n\). Ponieważ \(P\) jest odwracalna,
+mamy \(A=P^{-1}\), a więc \(A\) jest
+odwracalna i \(P=A^{-1}\).
+Przy \(n=0\) obie strony są pustymi
+macierzami jednostkowymi i wniosek
+jest nadal prawdziwy.
+\end{proof}
+
+\begin{przyklad}[Odwrotność metodą eliminacji]
+\label{prz:lin5-odwrotnosc}
+Niech
+\[
+ A=\begin{pmatrix}2&1\\1&1\end{pmatrix}
+ \in\operatorname{Mat}_{2\times2}(\mathbb R).
+\]
+Rozszerzamy ją o \(I_2\), następnie
+zamieniamy wiersze, eliminujemy,
+normalizujemy pivot i zerujemy wyraz nad nim:
+\[
+\begin{aligned}
+\left(\begin{array}{rr|rr}2&1&1&0\\1&1&0&1\end{array}\right)
+&\sim
+\left(\begin{array}{rr|rr}1&1&0&1\\2&1&1&0\end{array}\right)\\
+&\sim
+\left(\begin{array}{rr|rr}1&1&0&1\\0&-1&1&-2\end{array}\right)\\
+&\sim
+\left(\begin{array}{rr|rr}1&1&0&1\\0&1&-1&2\end{array}\right)\\
+&\sim
+\left(\begin{array}{rr|rr}1&0&1&-1\\0&1&-1&2\end{array}\right).
+\end{aligned}
+\]
+Zatem
+\[
+ A^{-1}=\begin{pmatrix}1&-1\\-1&2\end{pmatrix}.
+\]
+Wynik zgadza się z
+Przykładem~\ref{prz:lin4-odwrotnosc-2}.
+Nie wyznaczaliśmy odwrotności
+przez zgadywanie ani przez wyznacznik.
+\end{przyklad}
+
+\section{Podsumowanie}
+\label{sec:lin5-podsumowanie}
+
+Operacje elementarne na wierszach są
+odwracalne i odpowiadają mnożeniu
+z lewej strony przez macierze odwracalne.
+Eliminacja Gaussa przekształca każdą macierz
+w postać schodkową, a eliminacja
+Gaussa--Jordana w jednoznacznie wyznaczoną
+postać schodkową zredukowaną.
+Liczba pivotów jest rzędem macierzy,
+a liczba zmiennych swobodnych
+w układzie jednorodnym wynosi
+\(n-\operatorname{rk}A\).
+Układ \(Ax=b\) jest zgodny dokładnie wtedy,
+gdy \(\operatorname{rk}A=\operatorname{rk}[A\mid b]\).
+Z postaci zredukowanej można obliczyć
+bazę jądra oraz wskazać indeksy kolumn
+pierwotnej macierzy tworzących bazę obrazu.
+W przypadku macierzy kwadratowej
+redukcja \([A\mid I_n]\) pozwala
+rozstrzygnąć odwracalność i znaleźć \(A^{-1}\).

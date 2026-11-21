@@ -1,0 +1,157 @@
+name: AT21-DG17 relative Euler class and boundary Poincare-Hopf comparative audit
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "chapters/pl/algebraic_topology/21-*.tex"
+      - "chapters/pl/differential_geometry_and_topology/17-*.tex"
+      - "application/tests/test_at_dg_pairwise_21_17.py"
+      - "application/config/KANDYDACI_SCALEN_AT_DG_ETAP_08.json"
+      - ".github/workflows/paired-at-dg-euler-index-boundary-audit.yml"
+  workflow_dispatch:
+
+jobs:
+  compile-reviewed-pair-with-prerequisite-chapters:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: AT-DG comparative proof and source preservation regressions
+        run: python3 -m unittest discover -s application/tests -p 'test_at_dg_pairwise_21_17.py' -v
+      - name: Install LaTeX and PDF inspection utilities
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-pictures texlive-lang-polish texlive-fonts-recommended lmodern poppler-utils
+      - name: Assemble thirty-chapter dependency-complete AT comparison context
+        working-directory: books/pl
+        run: |
+          sed '/^\\begin{document}/,$d' algebraic_topology.tex > audit_at_21_dg17.tex
+          cat >> audit_at_21_dg17.tex <<'TEX'
+          \begin{document}
+          \tableofcontents
+          \input{../../chapters/pl/algebraic_topology/01-jezyk-i-podstawowe-konstrukcje-topologiczne.tex}
+          \input{../../chapters/pl/algebraic_topology/02-podstawy-algebry-abstrakcyjnej-grupy-pierscienie-i-moduly.tex}
+          \input{../../chapters/pl/algebraic_topology/03-algebra-homologiczna-moduly-kompleksy-i-ko-homologie.tex}
+          \input{../../chapters/pl/algebraic_topology/04-homotopia-nakrycia-i-komorkowe-modele-przestrzeni.tex}
+          \input{../../chapters/pl/algebraic_topology/05-homologia-przestrzeni.tex}
+          \input{../../chapters/pl/algebraic_topology/06-wyzsze-grupy-homotopii-i-zwiazek-z-homologia.tex}
+          \input{../../chapters/pl/algebraic_topology/07-fibracje-i-dlugi-ciag-homotopii.tex}
+          \input{../../chapters/pl/algebraic_topology/08-kohomologia-singularna-i-iloczyn-kubkowy.tex}
+          \input{../../chapters/pl/algebraic_topology/09-formy-rozniczkowe-orientacja-i-kohomologia-de-rhama.tex}
+          \input{../../chapters/pl/algebraic_topology/10-homologia-i-kohomologia-c-echa-od-pokryc-do-granic-przestrzeni.tex}
+          \input{../../chapters/pl/algebraic_topology/11-przeciecia-dualnosc-i-klasy-charakterystyczne.tex}
+          \input{../../chapters/pl/algebraic_topology/12-ciagi-spektralne-od-filtracji-do-fibracji-serre-a.tex}
+          \input{../../chapters/pl/algebraic_topology/13-przestrzenie-klasyfikujace-i-teoria-przeszkod.tex}
+          \input{../../chapters/pl/algebraic_topology/14-wieze-postnikowa-iloczyny-whiteheada-i-operacje-steenroda.tex}
+          \input{../../chapters/pl/algebraic_topology/15-operacje-kohomologiczne-naturalnosc-iloczyny-i-relacje.tex}
+          \input{../../chapters/pl/algebraic_topology/16-zawieszenie-twierdzenie-freudenthala-i-homotopia-stabilna.tex}
+          \input{../../chapters/pl/algebraic_topology/17-konstrukcja-pontriagina-thoma-i-podstawy-teorii-kobordyzmow.tex}
+          \input{../../chapters/pl/algebraic_topology/18-homologia-morse-a-od-punktow-krytycznych-do-homologii-singular.tex}
+          \input{../../chapters/pl/algebraic_topology/19-stopien-indeks-punktu-stalego-i-twierdzenie-lefschetza.tex}
+          \input{../../chapters/pl/algebraic_topology/20-zwartosc-i-sklejanie-trajektorii-morse-a-podstawy-analityczne.tex}
+          \input{../../chapters/pl/algebraic_topology/21-indeks-pol-wektorowych-i-twierdzenie-poincarego-hopfa-z-brzegi.tex}
+          \input{../../chapters/pl/algebraic_topology/22-kohomologia-z-nosnikami-zwartymi-i-homologia-borel-moore-a.tex}
+          \input{../../chapters/pl/algebraic_topology/23-kohomologia-snopow-z-nosnikami-i-podstawy-dualnosci-verdiera.tex}
+          \input{../../chapters/pl/algebraic_topology/24-homologia-przeciec-snopy-perwersyjne-i-twierdzenie-o-rozkladzi.tex}
+          \input{../../chapters/pl/algebraic_topology/25-kategorie-pochodne-struktury-hodge-a-cykle-zanikajace-i-monodr.tex}
+          \input{../../chapters/pl/algebraic_topology/26-wariacje-struktur-hodge-a-koneksja-gaussa-manina-i-degeneracje.tex}
+          \input{../../chapters/pl/algebraic_topology/27-szesc-operacji-snopowych-dualnosc-verdiera-i-cykle-specjalizac.tex}
+          \input{../../chapters/pl/algebraic_topology/28-topologia-gladkich-zespolonych-odmian-projektowych-twierdzenia.tex}
+          \input{../../chapters/pl/algebraic_topology/29-dalsze-narzedzia-homotopii-granice-odwrotne-przeszkody-operacj.tex}
+          \input{../../chapters/pl/algebraic_topology/30-minimalne-przypomnienie-geometrii-rozniczkowej.tex}
+          \end{document}
+          TEX
+      - name: Triple-compile LaTeX and require stable, resolved references
+        working-directory: books/pl
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error audit_at_21_dg17.tex > audit_at_21_dg17_pass1.log
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error audit_at_21_dg17.tex > audit_at_21_dg17_pass2.log
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error audit_at_21_dg17.tex > audit_at_21_dg17_pass3.log
+          test -s audit_at_21_dg17.pdf
+          if grep -Eq 'There were undefined references|LaTeX Warning: Reference .* undefined|undefined citations' audit_at_21_dg17_pass3.log; then
+            echo "Unresolved reference or citation"; exit 1
+          fi
+          if grep -E 'Overfull \\hbox' audit_at_21_dg17_pass3.log; then
+            echo "Overfull horizontal TeX box found"; exit 1
+          fi
+          if grep -Eq 'LaTeX Warning: Label\(s\) may have changed|Rerun to get cross-references right' audit_at_21_dg17_pass3.log; then
+            echo "Cross-references still unstable after three passes"; exit 1
+          fi
+          pdfinfo audit_at_21_dg17.pdf | grep -E '^Pages:'
+      - name: Upload PDF and compilation logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: at21-dg17-euler-boundary-full-book-pdf
+          path: |
+            books/pl/audit_at_21_dg17.pdf
+            books/pl/audit_at_21_dg17.log
+            books/pl/audit_at_21_dg17_pass1.log
+            books/pl/audit_at_21_dg17_pass2.log
+            books/pl/audit_at_21_dg17_pass3.log
+          if-no-files-found: warn
+
+  compile-DG-01-20-source-book:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install TeX toolchain
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-pictures texlive-lang-polish texlive-fonts-recommended lmodern poppler-utils
+      - name: Compile full current DG-01–20 three times
+        working-directory: books/pl
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error -jobname=audit_dg_17_at21 differential_geometry_and_topology.tex > dg_euler_pass1.log
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error -jobname=audit_dg_17_at21 differential_geometry_and_topology.tex > dg_euler_pass2.log
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error -jobname=audit_dg_17_at21 differential_geometry_and_topology.tex > dg_euler_pass3.log
+          test -s audit_dg_17_at21.pdf
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          log = Path("dg_euler_pass3.log").read_text(encoding="utf8", errors="replace")
+          missing = set(re.findall(r"Reference \W([^']+)' on page", log))
+          # Known forward DG references: 21–36 have not yet been imported
+          # in this GitHub branch. Reject anything outside this grounded list.
+          allowed = {
+              "prz:thur-dop-nil-kontakt",
+              "sec:rownanie-diraca",
+              "subsec:dirac-koneksja",
+              "sec:algebra-liego",
+              "cor:bochner-vanishing",
+              "cor:hodge-de-rham",
+              "ch:chern-weil",
+              "prop:euler-identification-26",
+              "lem:angular-form-26",
+              "thm:CGB-boundary-26",
+              "ch:grafy-wezly-cztery",
+              "prz:hodge-dwie-sfery-18",
+          }
+          unexpected = missing - allowed
+          if unexpected:
+              raise SystemExit(f"Unexpected unresolved DG references: {sorted(unexpected)}")
+          print(f"DG imported 01-20: {len(missing)} distinct unresolved references, "
+                f"each from known missing future chapters:", sorted(missing))
+          if re.search(r"Label\(s\) may have changed|Rerun to get cross-references right", log):
+              raise SystemExit("DG cross-references not stable after three passes")
+          PY
+          if grep -E 'Overfull \\hbox' dg_euler_pass3.log; then
+            echo "Overfull horizontal TeX box in DG-01–20"; exit 1
+          fi
+          pdfinfo audit_dg_17_at21.pdf | grep -E '^Pages:'
+      - name: Upload full DG compilation PDF, AUX and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dg17-euler-boundary-full-book-pdf
+          path: |
+            books/pl/audit_dg_17_at21.pdf
+            books/pl/audit_dg_17_at21.log
+            books/pl/dg_euler_pass1.log
+            books/pl/dg_euler_pass2.log
+            books/pl/dg_euler_pass3.log
+          if-no-files-found: warn

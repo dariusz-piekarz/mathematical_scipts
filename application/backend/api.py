@@ -24,6 +24,7 @@ from pydantic import BaseModel, Field
 
 from backend.latex_parser import analyze_selection, get_stats, show_label
 from backend import workspaces
+from backend.concept_graph import build_concept_graph
 
 ROOT = Path(__file__).resolve().parents[1]
 FRONTEND = ROOT / "frontend"
@@ -172,10 +173,67 @@ def entity_detail(entity_id: str, full: bool = False):
 
 
 @app.get("/api/labels/{label:path}")
-def label_detail(label: str):
+def label_detail(label: str, source_document: str | None = None):
     if len(label)>300:
         raise HTTPException(status_code=400,detail="Zbyt długa etykieta.")
+    if source_document is not None and len(source_document)>100:
+        raise HTTPException(status_code=400,detail="Zbyt długi identyfikator źródła.")
     with db_connection() as con:
+        if source_document:
+            resolved = con.execute("""SELECT DISTINCT target_document,target_entity,status
+                FROM references_tex WHERE source_document=? AND target_label=?
+                  AND target_document IS NOT NULL
+                  AND status IN ('resolved','external_resolved','alias_resolved','included_resolved')""",
+                  (source_document,label)).fetchall()
+            targets = {(r["target_document"],r["target_entity"]) for r in resolved}
+            if len(targets) == 1:
+                target_document,target_entity = next(iter(targets))
+                actual = con.execute("""SELECT name FROM label_occurrences
+                    WHERE document_id=? AND (entity_id=? OR name=?)
+                    ORDER BY CASE WHEN name=? THEN 0 ELSE 1 END, line LIMIT 1""",
+                    (target_document,target_entity,label,label)).fetchone()
+                if not actual and resolved[0]["status"] == "included_resolved":
+                    provenance = con.execute("""SELECT origin_path,origin_line,origin_offset
+                        FROM included_label_origins WHERE document_id=? AND name=?
+                        ORDER BY origin_path,origin_line LIMIT 1""",
+                        (target_document,label)).fetchone()
+                    if provenance is not None:
+                        root = ROOT.parent.resolve()
+                        origin = (root / provenance["origin_path"]).resolve()
+                        if origin.is_relative_to(root) and origin.is_file():
+                            content = origin.read_text(encoding="utf-8-sig")
+                            position = provenance["origin_offset"]
+                            title = con.execute("SELECT title FROM documents WHERE id=?",
+                                                (target_document,)).fetchone()["title"]
+                            return {"name":label,"canonical_label":label,
+                                    "document_id":target_document,"entity_id":None,
+                                    "source_document":source_document,
+                                    "occurrence_id":f"{target_document}::included::{label}",
+                                    "resolution_status":"included_resolved",
+                                    "origin_path":provenance["origin_path"],
+                                    "origin_line":provenance["origin_line"],
+                                    "title":title,"line":provenance["origin_line"],
+                                    "latex":content[max(0,position-140):position+1560],
+                                    "incoming_references":len(resolved)}
+                if actual:
+                    result = show_label(con,actual["name"],max_chars=1700,document_id=target_document)
+                    if result is not None:
+                        result["canonical_label"] = actual["name"]
+                        result["name"] = label
+                        result["source_document"] = source_document
+                        result["occurrence_id"] = f"{target_document}::{actual['name']}"
+                        result["resolution_status"] = resolved[0]["status"]
+                        result["incoming_references"] = con.execute(
+                            "SELECT count(*) FROM references_tex WHERE target_label=? AND source_document=?",
+                            (label,source_document)).fetchone()[0]
+                        return result
+        options = con.execute("""SELECT c.document_id,c.line,c.entity_id,d.title,d.domain
+             FROM label_conflicts c JOIN documents d ON d.id=c.document_id
+             WHERE c.name=? ORDER BY c.document_id""", (label,)).fetchall()
+        if options:
+            count = con.execute("SELECT count(*) FROM references_tex WHERE target_label=?", (label,)).fetchone()[0]
+            return {"name":label,"ambiguous":True,"candidates":[dict(x) for x in options],
+                    "incoming_references":count}
         result = show_label(con,label,max_chars=1700)
         if not result:
             raise HTTPException(status_code=404,detail="Etykieta nie istnieje.")
@@ -267,7 +325,7 @@ def bipartite_graph(con: sqlite3.Connection, left: str, right: str,
     if left not in {r["domain"] for r in docs.values()} or right not in {r["domain"] for r in docs.values()}:
         raise HTTPException(status_code=400,detail="Nieznana dziedzina.")
     rows=con.execute("""SELECT source_document,source_entity,target_document,target_entity,target_label
-                        FROM references_tex WHERE status='resolved' AND target_document IS NOT NULL
+                        FROM references_tex WHERE status IN ('resolved','external_resolved','alias_resolved') AND target_document IS NOT NULL
                           AND source_document!=target_document""").fetchall()
     owners={}
     if granularity == "section":
@@ -322,6 +380,16 @@ def bipartite_graph(con: sqlite3.Connection, left: str, right: str,
             "available_edges":len(ordered)}
 
 
+@app.get("/api/concepts/graph")
+def concept_occurrence_graph(
+    q: Annotated[str, Query(min_length=2, max_length=100)],
+    max_occurrences: Annotated[int, Query(ge=1, le=80)] = 36,
+):
+    """Grounded concept graph: actual TeX occurrences plus curated relations."""
+    with db_connection() as con:
+        return build_concept_graph(con, q, max_occurrences)
+
+
 @app.get("/api/graph")
 def graph(left: str, right: str, granularity: Literal["module","section","entity"]="module",
           min_weight:Annotated[int,Query(ge=1,le=100)]=1,
@@ -349,10 +417,19 @@ def graph_path(source: str, target: str):
                 "relation":"undirected_explicit_references","direction_ignored":True}
 
 # Generator API: no canonical .tex or SQLite writes, no shell execution.
+class CustomItem(BaseModel):
+    kind: Literal["module", "entity", "lines"]
+    id: str | None = Field(default=None, max_length=300)
+    module: str | None = Field(default=None, max_length=100)
+    start_line: int | None = None
+    end_line: int | None = None
+
+
 class GenerateRequest(BaseModel):
     title: str = Field(default='Mój skrypt matematyczny',min_length=1,max_length=160)
     modules: list[str] = Field(default_factory=list,max_length=75)
     entities: list[str] = Field(default_factory=list,max_length=300)
+    items: list[CustomItem] | None = Field(default=None,max_length=300)
     closure_depth: int = Field(default=0,ge=0,le=3)
 
 
@@ -362,7 +439,8 @@ def generate_project_endpoint(selection: GenerateRequest):
     from backend.generator import GenerationError, project_files, zip_project
     try:
         with db_connection() as con:
-            files,manifest=project_files(con,selection.modules,selection.entities,selection.title,selection.closure_depth)
+            files,manifest=project_files(con,selection.modules,selection.entities,selection.title,selection.closure_depth,
+                                     items=([item.model_dump(exclude_none=True) for item in selection.items] if selection.items is not None else None))
         archive=zip_project(files)
     except GenerationError as exc:
         raise HTTPException(status_code=422,detail=str(exc)) from exc
@@ -377,7 +455,8 @@ def generate_manifest_endpoint(selection: GenerateRequest):
     from backend.generator import GenerationError, project_files
     try:
         with db_connection() as con:
-            _,manifest=project_files(con,selection.modules,selection.entities,selection.title,selection.closure_depth)
+            _,manifest=project_files(con,selection.modules,selection.entities,selection.title,selection.closure_depth,
+                                     items=([item.model_dump(exclude_none=True) for item in selection.items] if selection.items is not None else None))
         return manifest
     except GenerationError as exc:
         raise HTTPException(status_code=422,detail=str(exc)) from exc
@@ -389,7 +468,8 @@ def create_draft(selection: GenerateRequest, session_id: str | None = None):
     from backend.generator import GenerationError, project_files, zip_project
     try:
         with db_connection() as con:
-            files, manifest = project_files(con, selection.modules, selection.entities, selection.title, selection.closure_depth)
+            files, manifest = project_files(con, selection.modules, selection.entities, selection.title, selection.closure_depth,
+                                            items=([item.model_dump(exclude_none=True) for item in selection.items] if selection.items is not None else None))
         return workspaces.stage_project(zip_project(files), manifest, session_id)
     except (GenerationError, workspaces.WorkspaceError) as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc

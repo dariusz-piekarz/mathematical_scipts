@@ -1,0 +1,965 @@
+\chapter[Metody wariacyjne i twierdzenie Laxa--Milgrama]{Metody wariacyjne: słabe rozwiązania, twierdzenie Laxa--Milgrama i minimalizacja energii}
+\label{chap:pde-variational}
+
+Równania eliptyczne rzadko dają się rozwiązać za pomocą jawnych wzorów.
+Wcześniej nauczyliśmy się jednak kontrolować słabe pochodne,
+operator śladu i normy przestrzeni Sobolewa. Teraz pokażemy, że
+te narzędzia pozwalają udowadniać istnienie oraz jednoznaczność
+rozwiązań bez konstruowania ich punkt po punkcie.
+
+Kluczowe będą dwa podejścia. Pierwsze polega na rozwiązywaniu
+równania liniowego w przestrzeni Hilberta; jego podstawą jest
+twierdzenie Laxa--Milgrama. Drugie polega na minimalizacji energii,
+czasem również nieliniowej. Będziemy wyraźnie odróżniać
+\emph{formę dwuliniową} od \emph{funkcjonału energii}: jeśli forma nie
+jest symetryczna, to zwykły funkcjonał kwadratowy nie daje
+na ogół wyjściowego równania.
+
+W całym rozdziale przestrzenie Hilberta oraz formy dwuliniowe są
+rzeczywiste. Całkujemy względem miary Lebesgue'a
+$\lambda_d$ na $\Omega\subset\R^d$, zaś na brzegu Lipschitzowskim
+względem $\mathcal H^{d-1}$. Zapisy $\int_\Omega f\,\mathrm d\lambda_d(x)$
+i $\int_{\partial\Omega}g\,\mathrm d\mathcal H^{d-1}(x)$
+określają za każdym razem także miarę całkowania.
+
+\section{Przestrzeń energetyczna i sformułowanie słabe}
+\label{sec:pde11-weak}
+
+Niech $\Omega\subset\R^d$ będzie obszarem ograniczonym Lipschitzowskim. Kładziemy $V=H_0^1(\Omega)=W_0^{1,2}(\Omega)$.
+Z nierówności Poincar\'ego (wniosek~\ref{cor:pde10-Poincare}) wynika, że
+\[ (u,v)_V=\int_\Omega\nabla u\cdot\nabla v\,\mathrm d\lambda_d(x) \]
+wyznacza iloczyn skalarny, którego norma jest równoważna normie
+$H^1(\Omega)$. W istocie $\|u\|_{H^1}^2=\|u\|_2^2+
+\|\nabla u\|_2^2\le(1+C_P^2)\|\nabla u\|_2^2$,
+a odwrotna nierówność jest bezpośrednia. Ponieważ $H_0^1$ jest
+domkniętą podprzestrzenią $H^1$, przestrzeń $(V,(\cdot,\cdot)_V)$
+jest przestrzenią Hilberta.
+
+\begin{definicja}[Przestrzeń dualna i słabe rozwiązanie]
+\label{def:pde11-dual}
+Niech $V$ będzie rzeczywistą przestrzenią Hilberta.
+Jej \emph{przestrzenią dualną} $V^*$ nazywamy przestrzeń wszystkich
+ciągłych funkcjonałów liniowych $F:V\to\R$, wyposażoną w normę
+$\|F\|_{V^*}=\sup_{\|v\|_V\le1}|F(v)|$.
+Jeżeli $a:V\times V\to\R$ jest formą dwuliniową i $F\in V^*$,
+to \emph{słabym rozwiązaniem zagadnienia} jest element $u\in V$
+spełniający $a(u,v)=F(v)$ dla każdego $v\in V$.
+Dla $V=H_0^1(\Omega)$ oznaczamy też $V^*=H^{-1}(\Omega)$;
+w tej notacji $H^{-1}(\Omega)$ oznacza przestrzeń dualną do
+$H_0^1(\Omega)$, a nie przestrzeń wszystkich dystrybucji
+z ujemną regularnością na całej $\R^d$.
+\end{definicja}
+
+\begin{przyklad}[Od równania Poissona do formy słabej]
+\label{ex:pde11-poisson-weak}
+Załóżmy chwilowo, że $u\in C^2(\overline\Omega)$,
+$u|_{\partial\Omega}=0$, $f\in L^2(\Omega)$ oraz $-\Delta u=f$.
+Dla $v\in C_c^\infty(\Omega)$ całkowanie przez części daje
+$\int_\Omega\nabla u\cdot\nabla v\,\mathrm d\lambda_d(x)
+=\int_\Omega fv\,\mathrm d\lambda_d(x)$.
+Lewa strona jest ciągła względem $v$ w normie $H_0^1$,
+ponieważ ogranicza ją $\|\nabla u\|_2\|\nabla v\|_2$.
+Prawa strona również jest ciągła:
+$|\int_\Omega fv\,\mathrm d\lambda_d|
+\le C_P\|f\|_2\|\nabla v\|_2$.
+Gęstość $C_c^\infty(\Omega)$ w $H_0^1(\Omega)$
+pozwala rozszerzyć tożsamość na wszystkie $v\in V$.
+\end{przyklad}
+
+W odwrotną stronę słaba tożsamość daje równość
+$-\Delta u=f$ w sensie dystrybucji, bo wolno wstawić
+każdą funkcję testową $v\in C_c^\infty(\Omega)$.
+Warunek $u|_{\partial\Omega}=0$ jest zakodowany w wyborze $V$;
+na obszarze Lipschitzowskim jest równoważny
+$\operatorname{Tr}u=0$ (twierdzenie~\ref{thm:pde10-trace-zero}).
+Nie wynika stąd jeszcze, że $u\in H^2$ lub $u\in C^2$.
+\emph{Istnienie słabe i regularność klasyczna to dwa osobne twierdzenia.}
+
+\section{Dwa lematy o przestrzeniach Hilberta}
+\label{sec:pde11-hilbert}
+
+Najpierw udowodnimy fakty, od których zależy twierdzenie Laxa--Milgrama.
+Nie zakładamy z góry, że każdy funkcjonał można zapisać
+w postaci iloczynu skalarnego.
+
+\begin{lemat}[Rzut na domknięty zbiór wypukły]
+\label{lem:pde11-projection}
+Niech $H$ będzie rzeczywistą przestrzenią Hilberta,
+$K\subset H$ zbiorem niepustym, domkniętym i wypukłym,
+a $x\in H$. Istnieje dokładnie jeden $y\in K$ taki, że
+$\|x-y\|=\inf_{z\in K}\|x-z\|$. Ponadto
+\[ (x-y,z-y)_H\le0\qquad\text{dla każdego }z\in K. \]
+\end{lemat}
+\begin{proof}
+Oznaczmy $r=\inf_{z\in K}\|x-z\|$ i wybierzmy $y_n\in K$ z
+$\|x-y_n\|\to r$. Ponieważ $K$ jest wypukły,
+$(y_n+y_m)/2\in K$. Tożsamość równoległoboku daje
+\begin{align*}
+\|y_n-y_m\|^2
+&=2\|x-y_n\|^2+2\|x-y_m\|^2
+ -4\left\|x-\frac{y_n+y_m}{2}\right\|^2\\
+&\le 2\|x-y_n\|^2+2\|x-y_m\|^2-4r^2\longrightarrow0.
+\end{align*}
+Zatem $(y_n)$ jest ciągiem Cauchy'ego. Zupełność i domkniętość
+zapewniają $y\in K$ oraz $\|x-y\|=r$.
+Gdyby $y'\in K$ było drugim minimizatorem, ten sam rachunek
+z $y_n=y$, $y_m=y'$ dałby $\|y-y'\|=0$.
+
+Dla dowolnego $z\in K$ i $0\le t\le1$ mamy
+$y+t(z-y)\in K$. Z minimalności $y$ wynika
+$\|x-y-t(z-y)\|^2\ge\|x-y\|^2$.
+Rozwijając kwadrat, dzieląc przez $t>0$ i przechodząc
+do granicy $t\downarrow0$, otrzymujemy
+$-2(x-y,z-y)_H\ge0$, czyli tezę.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie Riesza o reprezentacji]
+\label{thm:pde11-riesz}
+Niech $H$ będzie rzeczywistą przestrzenią Hilberta.
+Dla każdego $F\in H^*$ istnieje dokładnie jeden $w_F\in H$ taki, że
+$F(v)=(w_F,v)_H$ dla wszystkich $v\in H$.
+Ponadto $\|w_F\|_H=\|F\|_{H^*}$.
+\end{twierdzenie}
+\begin{proof}
+Dla $F=0$ wystarczy $w_F=0$.
+Jeżeli $F\ne0$, to $K=\ker F$ jest domkniętą
+podprzestrzenią właściwą. Wybierzmy $x\notin K$.
+Z lematu~\ref{lem:pde11-projection} otrzymujemy rzut
+$y\in K$ punktu $x$ i kładziemy $e=x-y\ne0$.
+Z charakterystyki rzutu, podstawiając $z=y\pm k$,
+$k\in K$, dostajemy $(e,k)_H=0$.
+Dla dowolnego $v\in H$ element
+$k=v-[F(v)/F(e)]e$ należy do $K$, ponieważ
+$F(e)=F(x)\ne0$. Stąd
+$0=(e,k)_H=(e,v)_H-[F(v)/F(e)]\|e\|_H^2$.
+Otrzymujemy $F(v)=(w_F,v)_H$ dla
+$w_F=F(e)e/\|e\|_H^2$.
+Jeżeli dwa wektory reprezentują $F$, podstawienie ich różnicy
+jako argumentu daje ich równość. Nierówność Cauchy'ego--Schwarza
+daje $\|F\|\le\|w_F\|$; biorąc
+$v=w_F/\|w_F\|$ w przypadku $w_F\ne0$,
+uzyskujemy nierówność odwrotną.
+\end{proof}
+
+\section{Twierdzenie Laxa--Milgrama z pełnym dowodem}
+\label{sec:pde11-lax}
+
+\begin{definicja}[Ograniczoność i koercywność]
+\label{def:pde11-coercivity}
+Niech $H$ będzie rzeczywistą przestrzenią Hilberta.
+Formę dwuliniową $a:H\times H\to\R$ nazywamy
+\emph{ograniczoną}, jeżeli istnieje $M\ge0$ takie, że
+$|a(u,v)|\le M\|u\|_H\|v\|_H$ dla wszystkich $u,v\in H$.
+Nazywamy ją \emph{koercywną}, jeżeli istnieje $\alpha>0$,
+dla którego $a(v,v)\ge\alpha\|v\|_H^2$ dla każdego $v\in H$.
+Koercywność nie jest tym samym co symetria: forma
+może być koercywna i jednocześnie niesymetryczna.
+\end{definicja}
+
+\begin{twierdzenie}[Twierdzenie Laxa--Milgrama]
+\label{thm:pde11-LM}
+Niech $H$ będzie rzeczywistą przestrzenią Hilberta,
+$a:H\times H\to\R$ ograniczoną formą dwuliniową
+ze stałą $M>0$, koercywną ze stałą $\alpha>0$,
+a $F\in H^*$. Wtedy istnieje dokładnie jeden element $u\in H$
+spełniający
+\[ a(u,v)=F(v)\qquad\text{dla każdego }v\in H. \]
+Ponadto $\|u\|_H\le\alpha^{-1}\|F\|_{H^*}$.
+Nie wymaga się symetrii formy $a$.
+\end{twierdzenie}
+\begin{proof}
+\textbf{Krok 1: operator reprezentujący formę.}
+Dla ustalonego $u\in H$ odwzorowanie $v\mapsto a(u,v)$
+jest funkcjonałem liniowym i ograniczonym o normie
+co najwyżej $M\|u\|_H$. Z twierdzenia Riesza
+(\ref{thm:pde11-riesz}) istnieje dokładnie jeden
+$Tu\in H$ spełniający
+$(Tu,v)_H=a(u,v)$ dla każdego $v\in H$.
+Liniowość $a$ w pierwszej zmiennej i jednoznaczność
+reprezentanta implikują liniowość $T$.
+Równość norm w twierdzeniu Riesza daje
+$\|Tu\|_H\le M\|u\|_H$, a zatem $T$ jest ograniczony.
+Koercywność oznacza $(Tu,u)_H\ge\alpha\|u\|_H^2$.
+Z kolei $F(v)=(f,v)_H$ dla jednoznacznie wyznaczonego $f\in H$.
+Wystarczy zatem rozwiązać równanie $Tu=f$.
+
+\textbf{Krok 2: konstrukcja kontrakcji.}
+Dla parametru $t>0$ zdefiniujmy
+$S_t(u)=u-t(Tu-f)$. Dla $u,w\in H$, oznaczając $z=u-w$,
+obliczamy dokładnie
+\begin{align*}
+\|S_t(u)-S_t(w)\|_H^2
+&=\|z-tTz\|_H^2\\
+&=\|z\|_H^2-2t(Tz,z)_H+t^2\|Tz\|_H^2\\
+&\le (1-2t\alpha+t^2M^2)\|z\|_H^2.
+\end{align*}
+Wybierzmy $0<t<2\alpha/M^2$.
+Ponieważ $\alpha\le M$ (z ograniczoności i koercywności),
+liczba $q=\sqrt{1-2t\alpha+t^2M^2}$
+należy do $[0,1)$. Odwzorowanie $S_t$ jest więc kontrakcją.
+
+\textbf{Krok 3: punkt stały bez pomijania granicy.}
+Ustalmy dowolne $u_0\in H$ i zdefiniujmy
+$u_{n+1}=S_t(u_n)$. Z kontrakcji wynika
+$\|u_{n+1}-u_n\|_H\le q^n\|u_1-u_0\|_H$.
+Dla $m>n$ nierówność trójkąta daje
+$\|u_m-u_n\|_H\le q^n(1-q)^{-1}\|u_1-u_0\|_H$,
+więc $(u_n)$ jest ciągiem Cauchy'ego.
+Niech $u=\lim_nu_n$. Ciągłość $S_t$ zapewnia
+$u=S_t(u)$, a więc $Tu=f$.
+Jeżeli $Tu=f=Tw$, to z koercywności
+$\alpha\|u-w\|_H^2\le(T(u-w),u-w)_H=0$;
+stąd $u=w$.
+
+\textbf{Krok 4: oszacowanie rozwiązania.}
+Podstawiając $v=u$ w tożsamości słabej, otrzymujemy
+$\alpha\|u\|_H^2\le a(u,u)=F(u)
+\le\|F\|_{H^*}\|u\|_H$.
+Dla $u\ne0$ dzielimy przez $\|u\|_H$;
+dla $u=0$ oszacowanie jest oczywiste.
+\end{proof}
+
+\begin{wniosek}[Stabilność względem prawej strony]
+\label{cor:pde11-stability}
+Przy założeniach twierdzenia~\ref{thm:pde11-LM},
+niech $u_i\in H$ będą rozwiązaniami odpowiadającymi
+$F_i\in H^*$, $i=1,2$. Wówczas
+$\|u_1-u_2\|_H\le\alpha^{-1}\|F_1-F_2\|_{H^*}$.
+\end{wniosek}
+\begin{proof}
+Odejmujemy słabe równania: $a(u_1-u_2,v)=(F_1-F_2)(v)$.
+Wybór $v=u_1-u_2$ i oszacowanie z końca dowodu
+Laxa--Milgrama dają tezę. To właśnie ilościowa stabilność
+w sensie Hadamarda.
+\end{proof}
+
+\begin{uwaga}[Metoda iteracyjna a dowód istnienia]
+Punkt stały w dowodzie dostarcza jednocześnie algorytmu:
+$u_{n+1}=u_n-t(Tu_n-f)$, o zbieżności geometrycznej
+przy podanym wyborze $t$. Sam operator $T$ zależy jednak
+od wybranego iloczynu skalarnego w $H$, toteż bez
+skończeniewymiarowej reprezentacji nie jest to automatycznie
+praktyczna metoda numeryczna.
+\end{uwaga}
+
+\section{Równanie eliptyczne z mierzalnymi współczynnikami}
+\label{sec:pde11-elliptic}
+
+\begin{twierdzenie}[Zagadnienie Dirichleta w postaci dywergencyjnej]
+\label{thm:pde11-elliptic}
+Niech $\Omega\subset\R^d$ będzie obszarem ograniczonym Lipschitzowskim. Załóżmy, że $A:\Omega\to\R^{d\times d}$
+ma mierzalne, istotnie ograniczone współczynniki,
+a $c\in L^\infty(\Omega)$ jest nieujemna prawie wszędzie.
+Załóżmy ponadto, że dla pewnego $\nu>0$ oraz
+prawie wszystkich $x\in\Omega$ zachodzi
+$\xi^TA(x)\xi\ge\nu|\xi|^2$ dla każdego $\xi\in\R^d$.
+Wówczas dla każdego $F\in H^{-1}(\Omega)$ istnieje
+jednoznaczne $u\in H_0^1(\Omega)$ spełniające
+\[
+\int_\Omega\big(A\nabla u\cdot\nabla v+cuv\big)
+\,\mathrm d\lambda_d(x)=F(v)
+\quad\text{dla wszystkich }v\in H_0^1(\Omega).
+\]
+Przy normie $\|v\|_V=\|\nabla v\|_2$ zachodzi
+$\|u\|_V\le\nu^{-1}\|F\|_{V^*}$.
+Nie zakłada się symetrii macierzy $A(x)$.
+\end{twierdzenie}
+\begin{proof}
+Na $V=H_0^1(\Omega)$ zdefiniujmy
+$a(u,v)=\int_\Omega(A\nabla u\cdot\nabla v+cuv)
+\,\mathrm d\lambda_d(x)$.
+Oznaczmy $K=\operatorname*{ess\,sup}_{x\in\Omega}
+\|A(x)\|_{\mathrm{op}}$ oraz $C=\|c\|_\infty$.
+Z Cauchy'ego--Schwarza i nierówności Poincar\'ego
+otrzymujemy
+\begin{align*}
+|a(u,v)|
+&\le K\|\nabla u\|_2\|\nabla v\|_2
++C\|u\|_2\|v\|_2\\
+&\le(K+CC_P^2)\|u\|_V\|v\|_V.
+\end{align*}
+Tak więc $a$ jest formą ograniczoną.
+Ponieważ $c\ge0$, eliptyczność zapewnia
+$a(v,v)\ge\nu\int_\Omega|\nabla v|^2
+\,\mathrm d\lambda_d=\nu\|v\|_V^2$.
+Wszystkie założenia twierdzenia~\ref{thm:pde11-LM} są spełnione,
+więc otrzymujemy istnienie, jednoznaczność i oszacowanie.
+\end{proof}
+
+\begin{uwaga}[Znaczenie sformułowania dystrybucyjnego]
+Dla $F_f(v)=\int_\Omega fv\,\mathrm d\lambda_d(x)$,
+$f\in L^2(\Omega)$, zachodzi
+$\|F_f\|_{V^*}\le C_P\|f\|_2$.
+W tym przypadku rozwiązanie spełnia w $\mathcal D'(\Omega)$
+$-\operatorname{div}(A\nabla u)+cu=f$.
+Nie ma tu obowiązku definiowania klasycznej dywergencji
+$A\nabla u$: przy mierzalnych współczynnikach produkt
+$A\nabla u$ może nie mieć słabych pochodnych w $L^2$,
+ale ma sens jako wektor z $L^2$, którego dywergencja
+jest dystrybucją.
+\end{uwaga}
+
+\begin{przyklad}[Jawne rozwiązanie w jednym wymiarze]
+\label{ex:pde11-1d}
+Dla $\Omega=(0,1)$, $A=1$, $c=0$ i $f=1$
+szukamy $u\in H_0^1(0,1)$ spełniającego
+$\int_0^1u'(x)v'(x)\,\mathrm d\lambda_1(x)
+=\int_0^1v(x)\,\mathrm d\lambda_1(x)$.
+Funkcja $u(x)=x(1-x)/2$ spełnia $-u''=1$ i zerowe
+warunki brzegowe; całkowanie przez części dowodzi
+słabej tożsamości. Twierdzenie~\ref{thm:pde11-elliptic}
+wykazuje, że nie istnieje żadne inne rozwiązanie w $H_0^1$.
+\end{przyklad}
+
+\begin{twierdzenie}[Koercywność przy wyrazach niższego rzędu]
+\label{thm:pde11-lower-order}
+Niech $\Omega\subset\R^d$ będzie ograniczonym obszarem
+Lipschitzowskim, a $V=H_0^1(\Omega)$ z normą
+$\|u\|_V=\|\nabla u\|_{L^2(\Omega)}$. Niech
+$A\in L^\infty(\Omega;\R^{d\times d})$ spełnia
+$\xi^TA(x)\xi\ge\nu|\xi|^2$ dla pewnego $\nu>0$,
+wszystkich $\xi\in\R^d$ i prawie wszystkich $x\in\Omega$.
+Niech $b\in L^\infty(\Omega;\R^d)$ i
+$c\in L^\infty(\Omega;\R)$; oznaczmy
+$c_-(x)=\max\{-c(x),0\}$ i przez $C_P$ dowolną
+stałą w nierówności $\|u\|_2\le C_P\|\nabla u\|_2$
+dla $u\in V$. Jeśli
+\[
+\alpha:=\nu-C_P\|b\|_\infty-C_P^2\|c_-\|_\infty>0,
+\]
+to forma
+\[
+ a(u,v)=\int_\Omega\bigl(A\nabla u\cdot\nabla v
+ +(b\cdot\nabla u)v+cuv\bigr)\,\mathrm d\lambda_d(x)
+\]
+jest ograniczona i koercywna na $V$ ze stałą co
+najmniej $\alpha$. Dla każdego $F\in V^*$ równanie
+$a(u,v)=F(v)$, $v\in V$, ma dokładnie jedno rozwiązanie
+i zachodzi $\|u\|_V\le\alpha^{-1}\|F\|_{V^*}$.
+\end{twierdzenie}
+\begin{proof}
+Z nierówności Cauchy'ego--Schwarza, H\"oldera i
+Poincar\'ego otrzymujemy
+\[
+ |a(u,v)|\le
+ (\|A\|_\infty+C_P\|b\|_\infty
+ +C_P^2\|c\|_\infty)\|u\|_V\|v\|_V.
+\]
+Z kolei dla $u\in V$ dodatnia część $c$ nie może
+obniżać wartości $a(u,u)$, a pozostałe wyrazy dają
+\begin{align*}
+ a(u,u)&\ge\nu\|\nabla u\|_2^2
+ -\|b\|_\infty\|\nabla u\|_2\|u\|_2
+ -\|c_-\|_\infty\|u\|_2^2\\
+ &\ge\alpha\|u\|_V^2.
+\end{align*}
+Twierdzenie Laxa--Milgrama~\ref{thm:pde11-LM}
+kończy dowód. Warunek ma charakter wystarczający;
+ujemna część potencjału lub dryft mogą być większe,
+jeżeli znamy dodatkową strukturę formy.
+\end{proof}
+
+\begin{przyklad}[Dryft bez ograniczenia małości]
+\label{ex:pde11-divfree-drift}
+Niech $b\in W^{1,\infty}(\Omega;\R^d)$ spełnia
+$\operatorname{div}b=0$ prawie wszędzie oraz
+$A=I$, $c=0$. Dla każdego $u\in C_c^\infty(\Omega)$
+całkowanie przez części daje
+$\int_\Omega(b\cdot\nabla u)u\,\mathrm d\lambda_d
+=\frac12\int_\Omega b\cdot\nabla(u^2)\,\mathrm d\lambda_d=0$.
+Ograniczoność $b$ i gęstość funkcji testowych w
+$H_0^1(\Omega)$ przenoszą tę tożsamość na dowolne
+$u\in H_0^1(\Omega)$. Dlatego
+$a(u,u)=\|\nabla u\|_2^2$ i forma jest koercywna
+ze stałą $1$ bez założenia, że $\|b\|_\infty$ jest mała.
+Sam dryft nie jest więc przeszkodą: znaczenie ma również
+jego struktura i warunki brzegowe.
+\end{przyklad}
+
+\section{Niezerowe dane brzegowe: metoda podnoszenia}
+\label{sec:pde11-lifting}
+
+\begin{twierdzenie}[Warunek Dirichleta z danymi brzegowymi]
+\label{thm:pde11-lifting}
+Niech $\Omega,A,c,\nu$ spełniają założenia
+twierdzenia~\ref{thm:pde11-elliptic}. Niech
+$f\in H^{-1}(\Omega)$ oraz $g\in H^1(\Omega)$.
+Istnieje dokładnie jedna funkcja $u\in H^1(\Omega)$
+taka, że $u-g\in H_0^1(\Omega)$ oraz
+\[
+\int_\Omega(A\nabla u\cdot\nabla v+cuv)
+\,\mathrm d\lambda_d(x)=f(v)
+\quad(v\in H_0^1(\Omega)).
+\]
+Jej ślad jest równy $\operatorname{Tr}g$.
+Istnieje stała $C$, zależna wyłącznie od
+$\Omega,\nu,\|A\|_\infty,\|c\|_\infty$, taka, że
+$\|u\|_{H^1}\le C(\|f\|_{H^{-1}}+\|g\|_{H^1})$.
+\end{twierdzenie}
+\begin{proof}
+Podstawiamy $u=w+g$. Żądany warunek brzegowy jest równoważny
+$w\in V=H_0^1(\Omega)$, a równanie przyjmuje postać
+$a(w,v)=G(v)$, gdzie $G(v)=f(v)-a(g,v)$.
+Ograniczoność współczynników, Cauchy--Schwarz i
+Poincar\'e dla $v\in V$ zapewniają
+$|a(g,v)|\le C_0\|g\|_{H^1}\|v\|_V$.
+Wobec tego $G\in V^*$ i
+$\|G\|_{V^*}\le\|f\|_{V^*}+C_0\|g\|_{H^1}$.
+Twierdzenie Laxa--Milgrama daje jednoznaczne $w\in V$ oraz
+$\|w\|_V\le\nu^{-1}\|G\|_{V^*}$.
+Ponieważ $\|w\|_{H^1}\le(1+C_P^2)^{1/2}\|w\|_V$,
+uzyskujemy żądane oszacowanie dla $u=w+g$.
+Równość śladów wynika z
+$\operatorname{Tr}(u-g)=0$ i twierdzenia
+\ref{thm:pde10-trace-zero}.
+\end{proof}
+
+\begin{uwaga}[Dane na samym brzegu]
+Dane $\varphi$ na $\partial\Omega$ można podać niezależnie,
+ale nie każde $\varphi\in L^2(\partial\Omega)$ jest śladem
+funkcji z $H^1(\Omega)$. W twierdzeniu zakładamy explicite
+istnienie podniesienia $g\in H^1(\Omega)$.
+Przestrzeń danych brzegowych $H^{1/2}(\partial\Omega)$
+z normą ilorazową i jej liniowe podnoszenie zdefiniowano
+już w~\ref{def:pde10-halftrace} i
+\ref{lem:pde10-halftrace-rightinverse}. Równoważność tej
+normy z normą Gagliarda pozostaje oddzielnym twierdzeniem.
+\end{uwaga}
+
+
+\begin{uwaga}[Wersja z danymi zadanymi na brzegu]
+Twierdzenie~\ref{thm:pde11-lifting} sformułowano
+z wybranym podniesieniem $g\in H^1(\Omega)$.
+Z lematu~\ref{lem:pde10-halftrace-rightinverse} można
+bez nowych argumentów otrzymać dane
+$\varphi\in H^{1/2}(\partial\Omega)$ i oszacowanie
+przez ich normę śladową. Uogólnienie to, także
+z wyrazami niższego rzędu, zostaje jawnie sformułowane
+w twierdzeniu~\ref{thm:pde13-nonhom}; nie powielamy
+tutaj jego dowodu.
+\end{uwaga}
+
+\section{Zagadnienie Neumanna i warunek zgodności}
+\label{sec:pde11-neumann}
+
+Dla laplasjanu z warunkiem Neumanna nie można oczekiwać
+jednoznaczności: dodanie stałej do rozwiązania nie zmienia
+gradientu ani pochodnej normalnej. Warunek całkowy
+pojawia się natomiast już w sformułowaniu słabym.
+
+\begin{twierdzenie}[Słabe zagadnienie Neumanna]
+\label{thm:pde11-neumann}
+Niech $\Omega\subset\R^d$ będzie obszarem ograniczonym Lipschitzowskim, $f\in L^2(\Omega)$ oraz
+$h\in L^2(\partial\Omega)$.
+Rozważmy równanie słabe
+\[
+\int_\Omega\nabla u\cdot\nabla v\,\mathrm d\lambda_d(x)
+=\int_\Omega fv\,\mathrm d\lambda_d(x)
++\int_{\partial\Omega}h\operatorname{Tr}v
+\,\mathrm d\mathcal H^{d-1}(x)
+\quad(v\in H^1(\Omega)).
+\]
+Istnieje rozwiązanie $u\in H^1(\Omega)$ wtedy i tylko wtedy, gdy
+\[
+\int_\Omega f\,\mathrm d\lambda_d(x)
++\int_{\partial\Omega}h\,\mathrm d\mathcal H^{d-1}(x)=0.
+\]
+Gdy ono istnieje, wszystkie rozwiązania różnią się o stałą.
+Po narzuceniu normalizacji $\int_\Omega u\,\mathrm d\lambda_d=0$
+rozwiązanie jest jednoznaczne.
+\end{twierdzenie}
+\begin{proof}
+\textbf{Konieczność.} Funkcja $v\equiv1$ należy do $H^1(\Omega)$
+i ma zerowy gradient, więc jej podstawienie daje warunek całkowy.
+
+\textbf{Wystarczalność.} Niech
+$V_\circ=\{v\in H^1(\Omega):\int_\Omega v\,\mathrm d\lambda_d=0\}$.
+Jest to domknięta podprzestrzeń $H^1$, więc przestrzeń Hilberta.
+Nierówność Poincar\'ego z odjęciem średniej
+(wniosek~\ref{cor:pde10-Poincare}) pokazuje, że
+$\|v\|_{V_\circ}=\|\nabla v\|_2$ jest na niej normą
+równoważną normie $H^1$.
+Forma $a(u,v)=\int_\Omega\nabla u\cdot\nabla v\,
+\mathrm d\lambda_d$ jest ograniczona i koercywna w tej normie.
+Prawa strona $F(v)$ jest liniowa i ciągła na $H^1(\Omega)$:
+$|\int_\Omega fv|\le\|f\|_2\|v\|_2$,
+a twierdzenie o śladzie~\ref{thm:pde10-trace} daje
+$|\int_{\partial\Omega}h\operatorname{Tr}v|
+\le C\|h\|_{L^2(\partial\Omega)}\|v\|_{H^1}$.
+Z twierdzenia Laxa--Milgrama istnieje jednoznaczne $u\in V_\circ$
+z $a(u,v)=F(v)$ dla wszystkich $v\in V_\circ$.
+Dla dowolnego $v\in H^1(\Omega)$ rozkładamy
+$v=(v-v_\Omega)+v_\Omega$.
+Pierwszy składnik należy do $V_\circ$; dla stałej
+$v_\Omega$ obie strony równania są równe zeru dzięki
+warunkowi zgodności. Dostajemy równość dla każdego $v\in H^1$.
+
+\textbf{Jednoznaczność modulo stałe.} Jeśli $u_1,u_2$
+są rozwiązaniami, różnica $w=u_1-u_2$ spełnia
+$\int_\Omega|\nabla w|^2\,\mathrm d\lambda_d=0$
+po podstawieniu $v=w$. Wobec tego $\nabla w=0$ prawie wszędzie,
+a spójność $\Omega$ implikuje, że $w$ jest stała prawie wszędzie.
+\end{proof}
+
+\section{Metoda bezpośrednia rachunku wariacyjnego}
+\label{sec:pde11-direct}
+
+Założenie, że rozwiązanie jest punktem minimum odpowiedniej energii,
+pozwala badać również równania nieliniowe.
+Do tego potrzebujemy precyzyjnego rozróżnienia zbieżności
+silnej i słabej.
+
+\begin{definicja}[Zbieżność słaba]
+\label{def:pde11-weakconv}
+W przestrzeni Hilberta $H$ piszemy $u_n\rightharpoonup u$,
+jeżeli $(u_n,v)_H\to(u,v)_H$ dla każdego $v\in H$.
+W przestrzeni Banacha $X$ oznacza to warunek
+$F(u_n)\to F(u)$ dla każdego $F\in X^*$.
+Funkcjonał $J:X\to(-\infty,+\infty]$ jest
+\emph{słabo półciągły z dołu w sensie ciągów}, jeżeli
+$u_n\rightharpoonup u$ implikuje
+$J(u)\le\liminf_n J(u_n)$.
+Jest \emph{koercywny}, jeżeli $J(u)\to+\infty$,
+gdy $\|u\|_X\to\infty$.
+\end{definicja}
+
+\begin{lemat}[Słaba zwartość ograniczonych ciągów w Hilbercie]
+\label{lem:pde11-weakcompact}
+Każdy ciąg ograniczony w rzeczywistej przestrzeni Hilberta
+$H$ zawiera podciąg słabo zbieżny.
+\end{lemat}
+\begin{proof}
+Niech $(u_n)$ będzie ciągiem ograniczonym przez $C$.
+Jego domknięta otoczka liniowa
+$H_0=\overline{\operatorname{span}\{u_n:n\ge1\}}$
+jest separowalną przestrzenią Hilberta.
+Jeżeli $H_0$ jest nieskończeniewymiarowa,
+wybieramy przeliczalną bazę ortonormalną $(e_j)$.
+Każdy ciąg liczb $((u_n,e_j))_n$ jest ograniczony;
+argument przekątniowy daje podciąg $(u_{n_k})$ taki, że
+$(u_{n_k},e_j)\to a_j$ dla każdego $j$.
+Z nierówności Bessela
+$\sum_{j=1}^N|a_j|^2
+=\lim_{k\to\infty}\sum_{j=1}^N|(u_{n_k},e_j)|^2\le C^2$
+dla każdego $N$. Zatem $\sum_j|a_j|^2\le C^2$,
+więc istnieje $u\in H_0$ o współrzędnych $(a_j)$.
+Dla skończonych kombinacji wektorów $e_j$ zachodzi
+$(u_{n_k},v)\to(u,v)$.
+Dla ogólnego $v\in H_0$ przybliżamy go takimi kombinacjami:
+$|(u_{n_k}-u,v-v_N)|\le 2C\|v-v_N\|$,
+co pozwala najpierw przejść $k\to\infty$, a potem $N\to\infty$.
+Dla $v\in H$ rozkład $v=P_{H_0}v+(v-P_{H_0}v)$
+redukuje twierdzenie do $H_0$, bo $u_n,u\in H_0$.
+W przypadku skończeniewymiarowym zwykła zwartość
+ograniczonego zbioru dostarcza nawet zbieżności silnej.
+\end{proof}
+
+\begin{lemat}[Słaba półciągłość normy]
+\label{lem:pde11-weaklsc}
+Niech $H$ będzie rzeczywistą przestrzenią Hilberta.
+Jeżeli $u_n\rightharpoonup u$ w $H$, to
+$\|u\|_H\le\liminf_n\|u_n\|_H$.
+Ponadto dla każdego $F\in H^*$ mamy $F(u_n)\to F(u)$.
+\end{lemat}
+\begin{proof}
+Jeżeli $u=0$, nierówność jest oczywista.
+W przeciwnym razie słaba zbieżność daje
+$\|u\|_H^2=\lim_n(u_n,u)_H
+\le(\liminf_n\|u_n\|_H)\|u\|_H$,
+po czym dzielimy przez $\|u\|_H$.
+Druga własność wynika z definicji i twierdzenia Riesza.
+\end{proof}
+
+\begin{twierdzenie}[Metoda bezpośrednia w przestrzeni Hilberta]
+\label{thm:pde11-direct}
+Niech $H$ będzie rzeczywistą przestrzenią Hilberta,
+a $J:H\to\R$ funkcjonałem ograniczonym z dołu,
+koercywnym i słabo półciągłym z dołu w sensie ciągów.
+Wówczas istnieje $u\in H$ taki, że
+$J(u)=\inf_{v\in H}J(v)$.
+Jeżeli $J$ jest ponadto ściśle wypukły,
+to minimizator jest jedyny.
+\end{twierdzenie}
+\begin{proof}
+Niech $m=\inf_HJ\in\R$ i wybierzmy $u_n\in H$ z
+$m\le J(u_n)<m+1/n$. Koercywność zapewnia
+ograniczoność $(u_n)$: gdyby istniał podciąg
+o normach dążących do nieskończoności,
+to jego energie dążyłyby do $+\infty$, w sprzeczności z
+$J(u_n)\to m$.
+Na mocy lematu~\ref{lem:pde11-weakcompact}
+istnieje podciąg $u_{n_k}\rightharpoonup u$.
+Słaba półciągłość z dołu daje
+$J(u)\le\liminf_kJ(u_{n_k})=m$.
+Z definicji infimum również $m\le J(u)$;
+zatem $J(u)=m$.
+Jeśli istniałyby dwa różne minimizatory $u,w$,
+ścisła wypukłość zapewniłaby
+$J((u+w)/2)<(J(u)+J(w))/2=m$, sprzeczność.
+\end{proof}
+
+\begin{uwaga}[Dlaczego słaba półciągłość jest niezbędna?]
+Sama koercywność nie wystarcza. Przykładowo na $H=\R$
+zdefiniujmy $J(0)=1$, $J(x)=x^2$ dla $x\ne0$.
+Funkcjonał jest ograniczony z dołu i koercywny,
+lecz jego infimum wynosi $0$ i nie jest osiągane.
+Nie jest też półciągły z dołu w punkcie $0$.
+\end{uwaga}
+
+\section{Energia kwadratowa i konieczność symetrii}
+\label{sec:pde11-energy}
+
+\begin{twierdzenie}[Zasada Dirichleta dla formy symetrycznej]
+\label{thm:pde11-dirichlet}
+Niech $H$ będzie rzeczywistą przestrzenią Hilberta,
+$a:H\times H\to\R$ ograniczoną, \emph{symetryczną}
+i koercywną formą dwuliniową, $F\in H^*$.
+Zdefiniujmy $J:H\to\R$ wzorem
+$J(v)=\frac12 a(v,v)-F(v)$.
+Wtedy $J$ ma dokładnie jeden minimizator $u$, który jest
+jednocześnie jedynym rozwiązaniem słabym
+$a(u,v)=F(v)$ dla wszystkich $v\in H$.
+Dla każdego $w\in H$ zachodzi tożsamość
+\[ J(w)-J(u)=\frac12a(w-u,w-u)
+\ge\frac\alpha2\|w-u\|_H^2. \]
+\end{twierdzenie}
+\begin{proof}
+\textbf{Koercywność funkcjonału.} Z założeń otrzymujemy
+\[ J(v)\ge\frac\alpha2\|v\|_H^2
+ -\|F\|_{H^*}\|v\|_H\longrightarrow+\infty
+ \quad\text{gdy }\|v\|_H\to\infty. \]
+
+\textbf{Półciągłość z dołu.} Koercywna forma symetryczna
+$a$ definiuje iloczyn skalarny $(v,w)_a=a(v,w)$.
+Ograniczoność i koercywność dają równoważność norm:
+$\sqrt\alpha\|v\|_H\le\|v\|_a\le\sqrt M\|v\|_H$.
+Z twierdzenia Riesza w $(H,(\cdot,\cdot)_a)$ i
+równoważności norm wynika, że zbieżność słaba w $H$
+jest taka sama jak zbieżność słaba w nowym iloczynie.
+Lemat~\ref{lem:pde11-weaklsc} daje więc
+$\|v\|_a^2\le\liminf_n\|v_n\|_a^2$
+dla $v_n\rightharpoonup v$; składnik $F(v_n)$ zbiega do $F(v)$.
+Stąd $J$ jest słabo półciągły z dołu.
+Twierdzenie~\ref{thm:pde11-direct} daje minimizator.
+
+\textbf{Równanie Eulera.} Dla dowolnych $u,v\in H$
+i $t\in\R$ wykorzystujemy symetrię:
+$J(u+tv)=J(u)+t[a(u,v)-F(v)]+\frac{t^2}{2}a(v,v)$.
+Jeżeli $u$ minimalizuje $J$, wielomian po prawej ma
+minimum w $t=0$, więc jego współczynnik liniowy znika:
+$a(u,v)=F(v)$. Odwrotnie, jeśli $u$ spełnia tę równość,
+to po rozwinięciu $J(u+(w-u))$ otrzymujemy
+$J(w)-J(u)=\frac12a(w-u,w-u)\ge0$.
+Koercywność czyni nierówność ostrą dla $w\ne u$,
+dając jednoznaczność. Ostatnia nierówność daje również
+ilościową kontrolę błędu energetycznego.
+\end{proof}
+
+\begin{kontrprzyklad}[Dlaczego symetrii nie wolno pominąć]
+\label{ex:pde11-nonsymmetric}
+Na $H=\R^2$ przyjmijmy
+$B=\begin{pmatrix}1&-1\\1&1\end{pmatrix}$,
+$a(u,v)=(Bu)\cdot v$ oraz $F(v)=(1,0)\cdot v$.
+Wtedy $a(u,u)=|u|^2$, więc $a$ jest koercywna i ograniczona.
+Minimizer funkcjonału $J(u)=|u|^2/2-(1,0)\cdot u$
+wynosi $u_J=(1,0)$. Tymczasem równanie
+$a(u,v)=F(v)$ dla wszystkich $v$ jest równoważne
+$Bu=(1,0)$ i ma rozwiązanie $u_*=\frac12(1,-1)$.
+Zatem $u_J\ne u_*$. Część antysymetryczna formy znika
+w $a(v,v)$, ale nie znika z samego równania słabego.
+\end{kontrprzyklad}
+
+\section[Operator p-Laplace'a]{Pierwszy problem nieliniowy: operator $p$-Laplace'a}
+\label{sec:pde11-plaplace}
+
+W części nieliniowej musimy użyć faktu, że dla
+$1<p<\infty$ przestrzeń $W_0^{1,p}(\Omega)$ jest refleksywna.
+Jest ona domkniętą podprzestrzenią produktu skończonej liczby
+przestrzeni $L^p$, a przestrzenie $L^p$ są refleksywne w tym zakresie.
+Będziemy korzystać ze standardowego twierdzenia, że każdy ciąg
+ograniczony w przestrzeni refleksywnej ma słabo zbieżny podciąg
+(twierdzenie Eberleina--\v Smuliana); dowód tego ogólnego wyniku
+należy do analizy funkcjonalnej, nie do konstrukcji samego PDE.
+
+\begin{twierdzenie}[Istnienie i jednoznaczność dla $p$-laplasjanu]
+\label{thm:pde11-plaplace}
+Niech $\Omega\subset\R^d$ będzie obszarem ograniczonym Lipschitzowskim, $1<p<\infty$, $p'=p/(p-1)$,
+a $f\in L^{p'}(\Omega)$. Istnieje dokładnie jeden
+$u\in W_0^{1,p}(\Omega)$ taki, że
+\[
+\int_\Omega |\nabla u|^{p-2}\nabla u\cdot\nabla v
+\,\mathrm d\lambda_d(x)
+=\int_\Omega fv\,\mathrm d\lambda_d(x)
+\quad\text{dla każdego }v\in W_0^{1,p}(\Omega).
+\]
+W szczególności $u$ jest rozwiązaniem dystrybucyjnym
+$-\operatorname{div}(|\nabla u|^{p-2}\nabla u)=f$.
+Ponadto
+$\|\nabla u\|_p^{p-1}\le C_P\|f\|_{p'}$.
+\end{twierdzenie}
+\begin{proof}
+\textbf{Krok 1: energia i ograniczenie z dołu.}
+Na $X=W_0^{1,p}(\Omega)$ przyjmijmy
+$\|v\|_X=\|\nabla v\|_p$, co jest normą równoważną
+$W^{1,p}$ dzięki nierówności Poincar\'ego.
+Definiujemy
+\[ J_p(v)=\frac1p\int_\Omega|\nabla v|^p
+\,\mathrm d\lambda_d(x)-\int_\Omega fv
+\,\mathrm d\lambda_d(x). \]
+H\"older i Poincar\'e dają
+$|\int_\Omega fv|\le\|f\|_{p'}\|v\|_p
+\le C_P\|f\|_{p'}\|\nabla v\|_p$.
+Zatem
+$J_p(v)\ge\frac1p\|v\|_X^p-C_P\|f\|_{p'}\|v\|_X$,
+co implikuje koercywność i ograniczenie z dołu,
+ponieważ $p>1$.
+
+\textbf{Krok 2: minimalizator.}
+Niech $(v_n)$ będzie ciągiem minimalizującym.
+Koercywność zapewnia ograniczoność w $X$,
+a refleksywność pozwala wybrać podciąg
+$v_{n_k}\rightharpoonup u$ w $X$.
+Operator gradientu jest ograniczony z $X$ do $L^p(\Omega)^d$,
+więc $\nabla v_{n_k}\rightharpoonup\nabla u$ w $L^p$.
+Norma w przestrzeni Banacha jest słabo półciągła z dołu:
+$\|z\|=\sup_{\|\ell\|_{X^*}\le1}\ell(z)$,
+a przy zbieżności słabej każdy składnik supremum
+przechodzi do granicy; stąd
+$\|\nabla u\|_p^p\le\liminf_k\|\nabla v_{n_k}\|_p^p$.
+Ponieważ funkcjonał $v\mapsto\int_\Omega fv$ jest
+ciągły i liniowy na $X$, jego wartości na $v_{n_k}$
+zbiegają do wartości na $u$. Zatem
+$J_p(u)\le\liminf_kJ_p(v_{n_k})=\inf_XJ_p$.
+Odwrotna nierówność wynika z definicji infimum,
+więc $u$ minimalizuje $J_p$.
+
+\textbf{Krok 3: wyprowadzenie słabego równania.}
+Dla $u,v\in X$ rozważamy $\psi(t)=J_p(u+tv)$.
+Funkcja $\xi\mapsto|\xi|^p/p$ jest klasy $C^1$ na $\R^d$
+dla każdego $p>1$ i ma gradient
+$|\xi|^{p-2}\xi$ (w zerze przyjmujemy wartość $0$).
+W celu uzasadnienia zamiany granicy z całkowaniem
+ustalmy $|t|\le1$. Twierdzenie o wartości średniej daje
+\[
+\left|\frac{|\nabla u+t\nabla v|^p-|\nabla u|^p}{pt}\right|
+\le C_p\big(|\nabla u|^{p-1}|\nabla v|+|\nabla v|^p\big).
+\]
+Funkcja po prawej jest całkowalna: pierwszy składnik
+należy do $L^1$ dzięki H\"olderowi z wykładnikami
+$p'$ i $p$, a drugi dzięki $v\in W^{1,p}$.
+Twierdzenie o zbieżności zdominowanej daje
+\[ \psi'(0)=\int_\Omega |\nabla u|^{p-2}\nabla u
+\cdot\nabla v\,\mathrm d\lambda_d(x)
+-\int_\Omega fv\,\mathrm d\lambda_d(x). \]
+Ponieważ $u$ jest minimizatorem, $\psi'(0)=0$
+dla każdego $v\in X$, co daje słabe równanie.
+
+\textbf{Krok 4: jednoznaczność.}
+Funkcja $\xi\mapsto|\xi|^p/p$ jest ściśle wypukła dla
+$p>1$. Jej gradient jest zatem ściśle monotoniczny:
+$(|\xi|^{p-2}\xi-|\eta|^{p-2}\eta)\cdot(\xi-\eta)>0$
+dla $\xi\ne\eta$. Jeśli $u_1,u_2$ są rozwiązaniami,
+testujemy różnicę ich równań funkcją $v=u_1-u_2$.
+Wtedy całka z nieujemnej funkcji jest równa $0$,
+więc $\nabla u_1=\nabla u_2$ prawie wszędzie.
+Nierówność Poincar\'ego na $X$ daje $u_1=u_2$.
+
+\textbf{Krok 5: oszacowanie.}
+W słabym równaniu podstawiamy $v=u$.
+Dostajemy $\|\nabla u\|_p^p=\int_\Omega fu
+\,\mathrm d\lambda_d\le C_P\|f\|_{p'}\|\nabla u\|_p$.
+Dla $\|\nabla u\|_p>0$ dzielimy przez tę normę;
+przypadek zerowy jest oczywisty.
+\end{proof}
+
+\begin{uwaga}[Dlaczego pominięto przypadek $p=1$?]
+Przy $p=1$ energia $\int_\Omega|\nabla u|\,\mathrm d\lambda_d(x)$ nie jest ściśle wypukła,
+a $W_0^{1,1}$ nie jest refleksywna. Nie można zatem
+bezkrytycznie powtórzyć dowodu; pojawiają się przestrzenie
+funkcji o ograniczonej wariacji ($BV$) oraz inna postać
+równań Eulera--Lagrange'a.
+\end{uwaga}
+
+\section{Metoda Galerkina i pierwsze oszacowanie błędu}
+\label{sec:pde11-galerkin}
+
+\begin{twierdzenie}[Lemat C\'ei]
+\label{thm:pde11-cea}
+Niech $H$ będzie rzeczywistą przestrzenią Hilberta,
+$a:H\times H\to\R$ formą ograniczoną ze stałą $M$
+i koercywną ze stałą $\alpha>0$, a $F\in H^*$.
+Niech $H_h\subset H$ będzie skończeniewymiarową
+podprzestrzenią. Jeśli $u\in H$ spełnia
+$a(u,v)=F(v)$ dla wszystkich $v\in H$, a $u_h\in H_h$
+spełnia $a(u_h,v_h)=F(v_h)$ dla wszystkich $v_h\in H_h$,
+to $u_h$ istnieje i jest jednoznaczne oraz
+\[
+\|u-u_h\|_H\le\frac M\alpha
+\inf_{w_h\in H_h}\|u-w_h\|_H.
+\]
+Gdy $a$ jest symetryczna, $u_h$ jest rzutem ortogonalnym
+$u$ na $H_h$ w iloczynie skalarnym $a$, a więc
+$\|u-u_h\|_a=\inf_{w_h\in H_h}\|u-w_h\|_a$.
+\end{twierdzenie}
+\begin{proof}
+Ograniczenie formy $a$ do $H_h\times H_h$ zachowuje
+ograniczoność i koercywność. Z twierdzenia Laxa--Milgrama
+na $H_h$ otrzymujemy dokładnie jedno $u_h$.
+Odejmując równania, dostajemy \emph{ortogonalność Galerkina}:
+$a(u-u_h,v_h)=0$ dla wszystkich $v_h\in H_h$.
+Niech $e=u-u_h$ i $w_h\in H_h$ będzie dowolny.
+Ponieważ $w_h-u_h\in H_h$, mamy
+\begin{align*}
+\alpha\|e\|_H^2
+&\le a(e,e)=a(e,u-w_h)+a(e,w_h-u_h)\\
+&=a(e,u-w_h)\le M\|e\|_H\|u-w_h\|_H.
+\end{align*}
+Po podzieleniu przez $\alpha\|e\|_H$ i wzięciu infimum
+po $w_h$ otrzymujemy tezę; dla $e=0$ jest oczywista.
+Przy symetrii $a$ jest iloczynem skalarnym.
+Ortogonalność Galerkina staje się
+$(u-u_h,v_h)_a=0$, więc twierdzenie Pitagorasa
+daje $\|u-w_h\|_a^2=\|u-u_h\|_a^2+
+\|u_h-w_h\|_a^2$ dla wszystkich $w_h\in H_h$,
+z czego wynika minimalność błędu.
+\end{proof}
+
+\begin{wniosek}[Zbieżność przy zagęszczaniu przestrzeni]
+\label{cor:pde11-galerkin-density}
+Przy założeniach twierdzenia~\ref{thm:pde11-cea},
+niech $H_n\subset H$ będą skończeniewymiarowymi
+podprzestrzeniami takimi, że
+$\inf_{w\in H_n}\|u-w\|_H\to0$ dla rozważanego rozwiązania $u$.
+Wówczas $\|u-u_n\|_H\to0$, gdzie $u_n$ jest rozwiązaniem otrzymanym metodą Galerkina
+w $H_n$.
+\end{wniosek}
+\begin{proof}
+Prawa strona oszacowania C\'ei dąży do zera.
+Nie jest potrzebne założenie, że $H_n\subset H_{n+1}$,
+lecz sama gęstość \emph{sumy} podprzestrzeni bez
+kontroli dla kolejnych $n$ nie wystarczyłaby.
+\end{proof}
+
+\section{Metoda elementów skończonych na odcinku}
+\label{sec:pde11-fem}
+
+Pokażemy, że teoria wariacyjna prowadzi do konkretnego układu
+macierzowego. Wróćmy do $-u''=1$ na $(0,1)$ z
+warunkami $u(0)=u(1)=0$. Dzielimy $[0,1]$ na
+$N\ge2$ równych pododcinków długości $h=1/N$,
+a węzły oznaczamy $x_i=ih$, $i=0,\ldots,N$.
+
+Niech $V_h\subset H_0^1(0,1)$ będzie przestrzenią funkcji
+ciągłych, odcinkami afinicznych, zerujących się na końcach.
+Funkcje bazowe $\phi_i$, $i=1,\ldots,N-1$, spełniają
+$\phi_i(x_j)=\delta_{ij}$. Przyjmując
+$u_h=\sum_{i=1}^{N-1}U_i\phi_i$,
+otrzymujemy układ $KU=b$, gdzie
+\[
+K_{ij}=\int_0^1\phi_i'\phi_j'\,\mathrm d\lambda_1,
+\qquad b_i=\int_0^1\phi_i\,\mathrm d\lambda_1.
+\]
+Rachunek na dwóch przedziałach, na których każda
+$\phi_i$ jest niezerowa, daje
+$K_{ii}=2/h$, $K_{i,i+1}=K_{i+1,i}=-1/h$,
+$K_{ij}=0$ dla $|i-j|>1$ oraz $b_i=h$.
+
+\begin{stwierdzenie}[Rozwiązanie i dokładne błędy na siatce]
+\label{prop:pde11-fem-errors}
+Przy powyższych definicjach rozwiązaniem macierzowym jest
+$U_i=u(x_i)=x_i(1-x_i)/2$, $i=1,\ldots,N-1$.
+Jeśli $u_h$ jest funkcją odcinkami afiniczną o tych wartościach,
+to
+\[
+\|u'-u_h'\|_{L^2(0,1)}=\frac h{\sqrt{12}},
+\qquad
+\|u-u_h\|_{L^2(0,1)}=\frac{h^2}{\sqrt{120}}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Niech $U_0=U_N=0$ oraz
+$U_i=(ih)(1-ih)/2$. Ponieważ $U_i$ jest
+kwadratowym wielomianem w $i$, mamy
+$-U_{i-1}+2U_i-U_{i+1}=h^2$.
+Po pomnożeniu przez $1/h$ dostajemy
+$-U_{i-1}/h+2U_i/h-U_{i+1}/h=h=b_i$,
+więc wektor $U$ rozwiązuje układ. Dodatnia określoność
+macierzy $K$ wynika z
+$U^TKU=\int_0^1|\sum_iU_i\phi_i'|^2\,
+\mathrm d\lambda_1>0$ dla $U\ne0$;
+zatem rozwiązanie jest jednoznaczne.
+
+Na komórce $I_i=[x_i,x_{i+1}]$ wielomian $u$
+ma pochodną $u'(x)=1/2-x$, a pochodna interpolantu
+$u_h'$ jest stała i równa $u'(m_i)$,
+gdzie $m_i=(x_i+x_{i+1})/2$.
+W konsekwencji
+\[
+\int_{I_i}|u'-u_h'|^2\,\mathrm d\lambda_1(x)
+=\int_{-h/2}^{h/2}s^2\,\mathrm d\lambda_1(s)=h^3/12.
+\]
+Ponieważ jest $N=1/h$ komórek, kwadrat całkowitego błędu
+jest równy $h^2/12$.
+Dalej na $I_i$ zachodzi dokładnie
+$u(x)-u_h(x)=(x-x_i)(x_{i+1}-x)/2$.
+Dlatego
+\[
+\int_{I_i}|u-u_h|^2\,\mathrm d\lambda_1(x)
+=\frac14\int_0^h s^2(h-s)^2\,\mathrm d\lambda_1(s)
+=\frac{h^5}{120}.
+\]
+Po zsumowaniu $N$ identycznych wkładów otrzymujemy
+$\|u-u_h\|_2^2=h^4/120$, jak w tezie.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[x=9cm,y=7cm,>=Stealth]
+ \draw[->] (-.02,0)--(1.04,0) node[right] {$x$};
+ \draw[->] (0,-.01)--(0,.17) node[above] {$u$};
+ \draw[thick,blue,domain=0:1,samples=80] plot (\x,{\x*(1-\x)/2});
+ \draw[orange!85!black,thick] (0,0)--(.25,.09375)--(.5,.125)--(.75,.09375)--(1,0);
+ \foreach \x in {0,.25,.5,.75,1}{\fill[orange!85!black] (\x,{\x*(1-\x)/2}) circle[radius=.5pt];}
+ \draw[blue,thick] (.13,-.033)--(.22,-.033);
+ \node[black,anchor=west,font=\footnotesize] at (.23,-.033) {dokładne};
+ \draw[orange!85!black,thick] (.56,-.033)--(.65,-.033);
+ \node[black,anchor=west,font=\footnotesize] at (.66,-.033) {Galerkin};
+\end{tikzpicture}
+
+{\small\emph{Rysunek:} Dokładne rozwiązanie $-u''=1$ oraz
+rozwiązanie Galerkina dla czterech elementów liniowych.}
+\end{center}
+
+\section{Zakres zastosowań i granice metody}
+\label{sec:pde11-limits}
+
+\begin{uwaga}[Koercywność jest warunkiem wystarczającym]
+Twierdzenie Laxa--Milgrama nie obejmuje każdej formy eliptycznej.
+Na przykład forma $a(u,v)=\int_\Omega\nabla u\cdot\nabla v
+-\lambda\int_\Omega uv$ może przestać być koercywna
+przy dużym $\lambda$. Nie oznacza to automatycznie braku
+rozwiązania: zagadnienie wymaga analizy widma lub
+alternatywy Fredholma. Zbadamy to w rozdziale 12.
+\end{uwaga}
+
+\begin{uwaga}[Od istnienia do regularności]
+W dowodzie słabego zagadnienia Dirichleta nie założyliśmy
+gładkości współczynników $A$ ani brzegu wyższej niż
+Lipschitzowska. To wystarcza do istnienia rozwiązania
+w $H_0^1$, ale nie gwarantuje jego regularności $H^2$.
+W rozdziałach o regularności eliptycznej będziemy analizować,
+które dodatkowe założenia pozwalają odzyskać drugie
+pochodne i oszacowania wyższych rzędów.
+\end{uwaga}
+
+\begin{uwaga}[Co zostanie rozwinięte dalej]
+Założenie $c\ge0$ i brak wyrazów pierwszego rzędu
+upraszczają dowód. Dla członów dryftu potrzebne bywają
+oszacowania perturbacyjne lub warunki dodatkowe.
+W następnym rozdziale przejdziemy do operatorów nieograniczonych,
+teorii spektralnej i półgrup; wcześniej otrzymane twierdzenia
+pozwolą m.in. skonstruować odwrotność laplasjanu Dirichleta.
+\end{uwaga}
+
+% ==============================================================
+% ROZDZIAŁ 12. OPERATORY NIEOGRANICZONE I METODY SPEKTRALNE
+% ==============================================================

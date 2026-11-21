@@ -1,0 +1,725 @@
+\chapter{Zdania i spójniki logiczne}\label{ch:propositional}
+
+\section{Po co matematyce logika?}\label{sec:logic-motivation}
+Wyobraźmy sobie rozumowanie: „Jeżeli liczba jest podzielna przez $4$,
+to jest parzysta. Liczba $12$ jest podzielna przez $4$, a zatem jest
+parzysta”. Nie trzeba jeszcze znać żadnej zaawansowanej teorii, aby
+zauważyć, że wniosek wynika z podanych przesłanek. Logika bada
+\emph{formę} takich wnioskowań: co sprawia, że przejście od przesłanek
+do wniosku jest poprawne, niezależnie od tego, czy rozmawiamy o
+liczbach, figurach czy programach komputerowych.
+
+Od początku oddzielamy dwa zagadnienia. \emph{Prawdziwość zdania}
+dotyczy jego wartości logicznej w ustalonej interpretacji. \emph{Poprawność wnioskowania} dotyczy tego, czy
+możliwa jest sytuacja, w której wszystkie przesłanki są prawdziwe,
+ale wniosek fałszywy. Zobaczymy, że nie są to te same pytania.
+
+\begin{przyklad}[Prawdziwa implikacja z fałszywym poprzednikiem]
+„Jeżeli $2$ jest liczbą nieparzystą, to $2+2=4$”. Cała wypowiedź
+jest prawdziwa w logice klasycznej, mimo że jej poprzednik jest
+fałszywy. Znaczenie tego pozornie dziwnego faktu wyjaśnimy przy
+implikacji, zamiast przyjmować go bez komentarza.
+\end{przyklad}
+
+\section{Zdania, pytania i wypowiedzi ze zmiennymi}\label{sec:statements}
+\begin{definicja}[Zdanie w sensie logiki klasycznej]\label{def:statement}
+\emph{Zdaniem} nazywamy wypowiedź oznajmującą, której w ustalonej
+interpretacji można przypisać dokładnie jedną z dwóch wartości:
+\emph{prawdę} (oznaczaną $1$) albo \emph{fałsz} (oznaczany $0$).
+W tym rozdziale posługujemy się klasyczną logiką dwuwartościową.
+\end{definicja}
+
+\begin{uwaga}[Granice wstępnej definicji zdania]\label{rem:statement-scope-xli}
+Samo oznajmujące brzmienie wypowiedzi nie gwarantuje, że jest
+ona zdaniem o jednoznacznej wartości logicznej. W szczególności
+samoodnosząca się wypowiedź „To zdanie jest fałszywe” prowadzi
+przy naiwnym zastosowaniu reguły dwuwartościowości do sprzeczności:
+jeżeli jest prawdziwe, to --- zgodnie ze swą treścią --- jest
+fałszywe, a jeżeli jest fałszywe, to jego treść jest prawdziwa.
+Dlatego w ścisłym rachunku logicznym ustalamy \emph{język}
+i jego \emph{interpretację}; nie przyznajemy automatycznie wartości
+logicznych wszystkim napisom języka naturalnego. Składnię
+rachunku zdań zdefiniujemy niżej, a składnię logiki pierwszego
+rzędu --- w rozdziale~\ref{ch:syntax-fol}.
+\end{uwaga}
+
+\begin{przyklad}[Zdania i wypowiedzi niebędące zdaniami]
+Wypowiedzi „$2+3=5$” oraz „$7<4$” są zdaniami: pierwsze jest
+prawdziwe, drugie fałszywe. Pytanie „Ile wynosi $2+3$?” i polecenie
+„Oblicz tę sumę” nie są zdaniami w powyższym sensie. Napis „$x>4$”
+nie jest jeszcze zdaniem o ustalonej wartości logicznej: jego
+prawdziwość zależy od wartości $x$. Po podstawieniu $x=7$ otrzymujemy
+zdanie prawdziwe, a po podstawieniu $x=2$ --- fałszywe.
+\end{przyklad}
+
+\begin{uwaga}[Zdanie a umiejętność rozstrzygnięcia prawdy]
+Definicja nie wymaga, abyśmy potrafili rozpoznać, czy dane zdanie
+jest prawdziwe. Matematyczne twierdzenie może pozostawać nierozstrzygnięte
+przez wiele lat, a mimo to w ustalonej interpretacji klasycznej
+jest zdaniem. Nie wolno utożsamiać „nie znam odpowiedzi” z
+„wypowiedź nie ma wartości logicznej”.
+\end{uwaga}
+
+\begin{definicja}[Zdania proste i złożone]
+Litery zdaniowe $p,q,r,\ldots$ są symbolami, które po ustaleniu
+interpretacji mogą reprezentować całe zdania (na przykład „$6$ jest
+parzyste”), a nie liczby. Za ich pomocą i przy użyciu spójników
+budujemy \emph{formuły zdaniowe}. W rachunku zdań litery traktujemy
+jako symbole formalne: w różnych wartościowaniach ta sama litera
+może otrzymać różną wartość logiczną. Po zastąpieniu liter
+konkretnymi zdaniami o ustalonych wartościach logicznych
+otrzymujemy zdanie; jest ono złożone, jeżeli użyliśmy
+spójników. Nawiasy określają budowę formuły.
+\end{definicja}
+
+\begin{definicja}[Skończona budowa formuł rachunku zdań]
+\label{def:propositional-grammar-xli}
+Wybierzmy litery zdaniowe $p_1,p_2,\ldots$.
+\emph{Formuły rachunku zdań} powstają według następujących reguł:
+\begin{enumerate}[label=(\roman*)]
+\item każda litera zdaniowa jest formułą;
+\item jeżeli $\alpha$ jest formułą, to $\neg\alpha$ jest formułą;
+\item jeżeli $\alpha,\beta$ są formułami, to
+      $(\alpha\land\beta)$, $(\alpha\lor\beta)$,
+      $(\alpha\Rightarrow\beta)$ i
+      $(\alpha\Leftrightarrow\beta)$ są formułami;
+\item formułami są tylko napisy otrzymane przez skończoną liczbę
+      zastosowań reguł (i)--(iii).
+\end{enumerate}
+Jest to \emph{definicja indukcyjna składni}: mówimy, z jakich
+prostych napisów buduje się poprawne napisy, jeszcze bez pytania
+o ich prawdziwość. Umowy dotyczące opuszczania nawiasów
+podamy w sekcji~\ref{sec:biconditional}.
+\end{definicja}
+
+\begin{przyklad}[Jednoznaczny rozbiór nawiasów]\label{ex:parse-tree-xli}
+Napis $p\Rightarrow(\neg q\lor r)$ ma w pełnym zapisie postać
+$(p\Rightarrow(\neg q\lor r))$. Najpierw powstają
+formuły $p,q,r$; następnie $\neg q$ i
+$(\neg q\lor r)$, a na końcu cała implikacja.
+Inny napis $((p\Rightarrow\neg q)\land r)$ ma inną budowę.
+Gdy $p=0$, $q=1$, $r=0$, pierwszy ma wartość $1$
+(fałszywy poprzednik implikacji), a drugi $0$
+(jeden z członów koniunkcji jest fałszywy). Nie wolno więc
+usuwać nawiasów w sposób zmieniający budowę formuły.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[
+  level distance=11mm,
+  level 1/.style={sibling distance=36mm},
+  level 2/.style={sibling distance=24mm},
+  every node/.style={draw,rounded corners=2pt,inner sep=3pt,font=\small}]
+\node {$\Rightarrow$}
+ child {node {$p$}}
+ child {node {$\lor$}
+   child {node {$\neg$} child {node {$q$}}}
+   child {node {$r$}}};
+\end{tikzpicture}
+\par\smallskip
+\small Schemat budowy formuły
+$p\Rightarrow(\neg q\lor r)$: liście są literami, węzły spójnikami.
+\end{center}
+
+\section{Negacja, koniunkcja i alternatywa}\label{sec:connectives-first}
+\begin{definicja}[Trzy podstawowe spójniki]\label{def:not-and-or}
+Niech $p,q$ oznaczają zdania.
+\begin{itemize}
+\item \emph{Negacja} $\neg p$ (czytamy: „nie $p$”) jest prawdziwa
+      dokładnie wtedy, gdy $p$ jest fałszywe.
+\item \emph{Koniunkcja} $p\land q$ („$p$ i $q$”) jest prawdziwa
+      dokładnie wtedy, gdy \emph{oba} zdania są prawdziwe.
+\item \emph{Alternatywa} $p\lor q$ („$p$ lub $q$”) jest prawdziwa
+      dokładnie wtedy, gdy \emph{co najmniej jedno} z dwóch zdań
+      jest prawdziwe. W szczególności oba mogą być prawdziwe.
+\end{itemize}
+Reguły te wyraża następująca tablica prawdy:
+\[
+\begin{array}{c c|c c c}
+p&q&\neg p&p\land q&p\lor q\\\hline
+1&1&0&1&1\\
+1&0&0&0&1\\
+0&1&1&0&1\\
+0&0&1&0&0
+\end{array}
+\]
+\end{definicja}
+
+\begin{przyklad}[„Lub” w języku naturalnym]
+Niech $p$ oznacza „$6$ jest parzyste”, a $q$ „$6$ jest
+podzielne przez $3$”. Oba zdania są prawdziwe, a więc także
+$p\lor q$ jest prawdziwe. Jest to \emph{lub niewykluczające}.
+W języku codziennym „albo herbata, albo kawa” może wykluczać
+jednoczesne wystąpienie obu zdarzeń. W logice matematycznej
+\emph{wyłączność} trzeba wyrazić osobno: $(p\lor q)\land\neg(p\land q)$.
+\end{przyklad}
+
+\begin{przyklad}[Negacja zdania złożonego]
+Ustalmy liczbę całkowitą $n$. Niech $p$ oznacza zdanie „$n$ jest
+liczbą dodatnią”, a $q$ zdanie „$n$ jest liczbą parzystą”. Negacja
+zdania „$n$ jest liczbą dodatnią i parzystą” nie brzmi „$n$ jest
+liczbą niedodatnią i nieparzystą”. Wystarczy, że zawiedzie
+\emph{jeden} z dwóch warunków: $n$ nie jest liczbą dodatnią
+\emph{lub} nie jest liczbą parzystą. Za chwilę uzasadnimy to formalnie.
+\end{przyklad}
+
+
+\begin{uwaga}[Jak czytać nawiasy w zapisie logicznym?]
+Jeżeli $p$ oznacza „pada deszcz”, a $q$ „wieje wiatr”, to
+$\neg(p\land q)$ oznacza zaprzeczenie całego zdania „pada i wieje”.
+Natomiast $(\neg p\land q)$ oznacza „nie pada, ale wieje”.
+To nie są te same wypowiedzi: gdy pada deszcz, lecz nie wieje,
+pierwsza jest prawdziwa, a druga fałszywa. Dlatego w tym skrypcie
+nawiasy nie są ozdobą: wskazują dokładnie, do jakiej części
+wypowiedzi należy dany spójnik.
+\end{uwaga}
+
+\section{Implikacja: kiedy „jeżeli..., to...” jest prawdziwe?}
+\label{sec:implication}
+\begin{definicja}[Implikacja materialna]\label{def:implication}
+Dla zdań $p,q$ \emph{implikacją} $p\Rightarrow q$ nazywamy
+zdanie fałszywe dokładnie wtedy, gdy $p$ jest prawdziwe, a $q$
+fałszywe. Zdanie $p$ to \emph{poprzednik} (założenie), a $q$ to
+\emph{następnik} (konkluzja) implikacji.
+\[
+\begin{array}{c c|c}
+p&q&p\Rightarrow q\\\hline
+1&1&1\\
+1&0&0\\
+0&1&1\\
+0&0&1
+\end{array}
+\]
+\end{definicja}
+
+\paragraph{Dlaczego dokładnie taka tablica?}
+Warunek „jeżeli $p$, to $q$” ma wykluczać sytuację, gdy $p$
+zachodzi, a $q$ nie zachodzi. Właśnie taka sytuacja jest
+\emph{kontrprzykładem} do implikacji. Gdy $p$ nie zachodzi,
+obietnica nie została naruszona, niezależnie od wartości $q$.
+Tak rozumiana implikacja jest regułą o wartości logicznej, a nie
+stwierdzeniem związku przyczynowego między dwiema wypowiedziami.
+
+\begin{przyklad}[Fałszywy poprzednik nie daje kontrprzykładu]
+Zdanie „jeżeli $3$ jest parzyste, to $5$ jest większe od $2$”
+jest prawdziwe. Prawdziwe jest także zdanie „jeżeli $3$ jest
+parzyste, to $5$ jest mniejsze od $2$”. W obu przypadkach
+poprzednik jest fałszywy, a zatem nie występuje układ
+„prawdziwy poprzednik --- fałszywy następnik”.
+\end{przyklad}
+
+\begin{definicja}[Warunek konieczny i wystarczający]
+Niech $p,q$ będą formułami zdaniowymi i niech zostanie ustalony
+zbiór dopuszczalnych wartościowań ich liter. Jeżeli
+$p\Rightarrow q$ jest prawdziwa przy każdym z tych wartościowań,
+to $p$ nazywamy \emph{warunkiem wystarczającym} dla $q$,
+a $q$ --- \emph{warunkiem koniecznym} dla $p$.
+Przy braku dodatkowych ograniczeń rozważamy wszystkie
+wartościowania. Nie wystarcza sprawdzenie prawdziwości
+implikacji tylko przy jednym wartościowaniu, na przykład takim,
+w którym $p$ jest fałszywe. Jeżeli przy każdym dopuszczalnym
+wartościowaniu prawdziwe są obie implikacje $p\Rightarrow q$
+i $q\Rightarrow p$, to $p$ jest dla $q$ warunkiem zarówno
+koniecznym, jak i wystarczającym. Są to sposoby opisu
+zależności logicznych, a nie osobne twierdzenia.
+\end{definicja}
+
+\begin{przyklad}[Konieczny nie znaczy wystarczający]
+Rozpatrujemy liczby całkowite $n$ oraz zdania „$4\mid n$” i „$2\mid n$”.
+Dopuszczalne są tutaj tylko te pary wartości logicznych, które
+pochodzą od tej samej liczby $n$, a nie wszystkie niezależne
+przypisania wartości dwóm literom zdaniowym. Jeżeli $4\mid n$,
+to $n=4k=2(2k)$ dla pewnego $k\in\mathbb Z$, zatem $2\mid n$.
+Podzielność przez $4$ jest więc warunkiem wystarczającym
+parzystości, a parzystość --- koniecznym warunkiem podzielności
+przez $4$. Nie jest jednak warunkiem wystarczającym: liczba $6$
+jest parzysta, ale nie jest podzielna przez $4$. Nie oznacza to,
+że sama formuła $p\Rightarrow q$ jest tautologią, gdy $p$ i $q$
+traktujemy jako niezależne litery zdaniowe.
+\end{przyklad}
+
+\begin{definicja}[Implikacja odwrotna, przeciwna i przeciwstawna]
+Dla $p\Rightarrow q$ rozważamy:
+\begin{itemize}
+\item \emph{implikację odwrotną} $q\Rightarrow p$;
+\item \emph{implikację przeciwną} $\neg p\Rightarrow\neg q$;
+\item \emph{implikację przeciwstawną} $\neg q\Rightarrow\neg p$.
+\end{itemize}
+W dalszym ciągu udowodnimy, że implikacja jest logicznie
+równoważna swojej implikacji przeciwstawnej. Implikacje odwrotna
+i przeciwna na ogół nie są z nią logicznie równoważne.
+\end{definicja}
+
+\begin{przyklad}[Dlaczego nie wystarczy odwrócić strzałki?]
+„Jeżeli liczba jest podzielna przez $4$, to jest parzysta”
+jest prawdziwe. Zdanie odwrotne „jeżeli liczba jest parzysta,
+to jest podzielna przez $4$” jest fałszywe: kontrprzykładem
+jest $6$. Zdanie przeciwstawne „jeżeli liczba nie jest
+parzysta, to nie jest podzielna przez $4$” jest prawdziwe.
+\end{przyklad}
+
+\section{Równoważność i inne użyteczne skróty}\label{sec:biconditional}
+\begin{definicja}[Równoważność]\label{def:biconditional}
+Dla zdań $p,q$ formuła $p\Leftrightarrow q$
+(czytamy: „$p$ wtedy i tylko wtedy, gdy $q$”)
+jest prawdziwa dokładnie wtedy, gdy $p$ i $q$ mają tę samą
+wartość logiczną. Odpowiada koniunkcji obu implikacji:
+$(p\Rightarrow q)\land(q\Rightarrow p)$.
+\[
+\begin{array}{c c|c}
+p&q&p\Leftrightarrow q\\\hline
+1&1&1\\
+1&0&0\\
+0&1&0\\
+0&0&1
+\end{array}
+\]
+\end{definicja}
+
+\begin{przyklad}[Dowód równoważności wymaga dwóch kierunków]
+Zdanie „liczba całkowita $n$ jest parzysta wtedy i tylko wtedy,
+gdy $n$ da się zapisać jako $2k$ dla pewnej liczby całkowitej $k$”
+to w istocie definicja parzystości. Aby udowodnić \emph{inną}
+równoważność, często trzeba odrębnie przeprowadzić dowody
+$p\Rightarrow q$ oraz $q\Rightarrow p$.
+\end{przyklad}
+
+\begin{uwaga}[Umowa dotycząca nawiasów]
+Najwyższy priorytet ma negacja $\neg$, potem koniunkcja
+$\land$, następnie alternatywa $\lor$, implikacja $\Rightarrow$
+i równoważność $\Leftrightarrow$. Jeżeli jakiekolwiek wątpliwości
+są możliwe, zapisujemy nawiasy. Dla przykładu
+$\neg p\land q$ oznacza $(\neg p\land q)$, a nie
+$\neg(p\land q)$. Ciągi spójników dwuargumentowych tego samego
+priorytetu również zapisujemy z nawiasami: nie posługujemy się
+niejednoznacznym zapisem $p\Rightarrow q\Rightarrow r$.
+Skrót $\varphi_1\land\cdots\land\varphi_n$ ($n\ge1$)
+oznacza natomiast koniunkcję grupowaną od lewej: jest to
+$C_n$, gdzie $C_1=\varphi_1$ oraz
+$C_{k+1}=(C_k\land\varphi_{k+1})$ dla $1\le k<n$.
+To jedynie konwencja zapisu, nie nowy spójnik.
+\end{uwaga}
+
+\section{Jak badać formuły? Wartościowania i tablice prawdy}
+\label{sec:valuations}
+\begin{definicja}[Wartościowanie]\label{def:valuation}
+\emph{Wartościowaniem} dla rozważanej formuły nazywamy
+przypisanie każdej występującej w niej literze zdaniowej
+wartości $0$ lub $1$. Wartość całej formuły obliczamy od
+najbardziej wewnętrznych jej części, korzystając z tablic
+spójników logicznych. Ponieważ każde wystąpienie spójnika ma
+argumenty będące krótszymi formułami, takie obliczanie kończy
+się po skończonej liczbie kroków. Dwa wystąpienia tej samej litery
+mają w jednym wartościowaniu tę samą wartość. Rozszerzoną
+w ten sposób wartość formuły $\varphi$ oznaczamy $v(\varphi)$.
+\end{definicja}
+
+\begin{twierdzenie}[Jednoznaczność wartości formuły]
+\label{thm:valuation-well-defined-xli}
+Niech $\varphi$ będzie formułą zbudowaną zgodnie
+z definicją~\ref{def:propositional-grammar-xli} i niech
+$v$ przypisuje każdej literze występującej w $\varphi$
+wartość $0$ albo $1$. Wówczas z tablic spójników można
+wyznaczyć \emph{dokładnie jedną} wartość $v(\varphi)$.
+\end{twierdzenie}
+\begin{proof}
+Rozpatrujemy kolejne etapy budowy formuły. W etapie
+początkowym formuła jest pojedynczą literą; ma wartość
+przyznaną jej przez $v$. Załóżmy, że wartości wszystkich
+formuł powstałych w pierwszych $m$ etapach są jednoznaczne.
+Jeśli w kolejnym etapie utworzono negację $\neg\alpha$,
+to wartość $\alpha$ jest już znana, a tabela negacji
+wskazuje dokładnie jedną wartość nowej formuły.
+Jeżeli utworzono $(\alpha\circ\beta)$, gdzie $\circ$
+jest jednym z czterech spójników dwuargumentowych,
+to obie wartości $v(\alpha),v(\beta)$ są znane;
+odpowiednia tabela wskazuje dokładnie jedną wartość wyniku.
+Budowa $\varphi$ jest skończona, więc po skończonej
+liczbie takich kroków otrzymamy jej wartość.
+W pełnym zapisie pojedyncza litera jest rozpoznawana
+jednoznacznie. Każda inna formuła zaczyna się od $\neg$
+albo od nawiasu otwierającego. W pierwszym przypadku reszta
+napisu stanowi argument negacji. W drugim spójnik dwuargumentowy
+znajduje się wewnątrz zewnętrznej pary nawiasów, poza wszystkimi
+wewnętrznymi parami; położenie tego spójnika wyznacza obie
+podformuły. Stąd rozbiór formuły jest jednoznaczny.
+Powtarzając to rozumowanie dla podformuł, widzimy, że żaden
+krok obliczania wartości nie pozostawia dowolności.
+\end{proof}
+
+\begin{przyklad}[Obliczenie od wewnątrz]
+Rozważmy $\varphi=(p\Rightarrow q)\land\neg q$.
+Gdy $p=0$ i $q=0$, otrzymujemy kolejno:
+$p\Rightarrow q=1$, $\neg q=1$, a zatem $\varphi=1$.
+Gdy $p=1$ i $q=0$, mamy $p\Rightarrow q=0$ i
+$\neg q=1$, więc $\varphi=0$. Zmiana jednego zdania
+prostego może zmienić wartość całej formuły.
+\end{przyklad}
+
+\begin{definicja}[Tautologia, sprzeczność, spełnialność]\label{def:tautology}
+Formułę nazywamy \emph{tautologią}, gdy przy \emph{każdym}
+wartościowaniu jest prawdziwa. Jest \emph{sprzeczna}, gdy
+przy każdym wartościowaniu jest fałszywa.
+Jest \emph{spełnialna}, gdy istnieje \emph{przynajmniej jedno}
+wartościowanie, w którym jest prawdziwa. Formuły
+$\varphi$ i $\psi$ są \emph{logicznie równoważne},
+gdy przy każdym wspólnym wartościowaniu mają taką samą
+wartość logiczną; zapisujemy $\varphi\equiv\psi$.
+Symbol $\equiv$ opisuje relację między formułami;
+nie jest kolejnym spójnikiem tworzącym zdanie złożone.
+Przy porównywaniu dwóch formuł wartościowanie obejmuje
+\emph{wszystkie} litery występujące w którejkolwiek z nich,
+także jeśli część liter występuje tylko w jednej formule.
+\end{definicja}
+
+\begin{przyklad}[Trzy różne sytuacje]
+$p\lor\neg p$ jest tautologią, gdyż niezależnie od wartości
+$p$ co najmniej jedno ze zdań $p,\neg p$ jest prawdziwe.
+$p\land\neg p$ jest sprzecznością, gdyż nigdy nie mogą
+być prawdziwe równocześnie. Formuła $p\land q$ jest
+spełnialna (weźmy $p=q=1$), ale nie jest tautologią
+(weźmy $p=1,q=0$).
+\end{przyklad}
+
+\begin{twierdzenie}[Test równoważności]\label{thm:equiv-test}
+Dla dowolnych formuł zdaniowych $\varphi,\psi$ zachodzi:
+$\varphi\equiv\psi$ wtedy i tylko wtedy, gdy
+$\varphi\Leftrightarrow\psi$ jest tautologią.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy dowolne wartościowanie występujących w formułach
+liter zdaniowych. Z definicji równoważności spójnikowej
+$\varphi\Leftrightarrow\psi$ jest w tym wartościowaniu
+prawdziwe dokładnie wtedy, gdy obie formuły mają tę samą
+wartość. Zatem żądanie, aby działo się tak dla wszystkich
+wartościowań, jest jednocześnie definicją tautologii
+$\varphi\Leftrightarrow\psi$ i definicją relacji
+$\varphi\equiv\psi$. Dowiedliśmy obu kierunków.
+\end{proof}
+
+\begin{twierdzenie}[Skończony test tablicowy]\label{thm:truth-table-decision-xli}
+Jeżeli formuła $\varphi$ zawiera dokładnie $m$ różnych
+liter zdaniowych, gdzie $m\ge1$, to ma dokładnie $2^m$
+wartościowań. Zbadanie wszystkich tych wartościowań
+pozwala rozstrzygnąć, czy $\varphi$ jest tautologią,
+sprzecznością albo formułą spełnialną.
+\end{twierdzenie}
+\begin{proof}
+Pierwszej literze możemy przypisać dwie wartości.
+Po ustaleniu wartości pierwszych $k$ liter dla
+następnej są znów dwa niezależne wybory. Zatem
+liczba pełnych przypisań wynosi $2\cdot\ldots\cdot2=2^m$.
+Każde przypisanie określa wartość $\varphi$ na mocy
+twierdzenia~\ref{thm:valuation-well-defined-xli}.
+Jeżeli każda z $2^m$ wartości jest równa $1$, definicja
+daje tautologię. Jeśli każda jest równa $0$, otrzymujemy
+sprzeczność. W pozostałym przypadku pojawia się co
+najmniej jedna wartość $1$ i co najmniej jedna wartość $0$:
+formuła jest spełnialna, ale nie jest tautologią.
+\end{proof}
+
+\begin{przyklad}[Trzy litery, lecz tylko osiem przypadków]
+Rozważmy $(p\land q)\Rightarrow r$. Litery $p,q,r$
+są trzy, więc wartościowań jest $2^3=8$. Implikacja
+ma wartość $0$ tylko przy $p=q=1$, $r=0$;
+w każdym z siedmiu pozostałych wierszy ma wartość $1$.
+Jest zatem spełnialna, ale nie jest tautologią.
+Powtórzone wystąpienia tej samej litery nie są
+nowymi niezależnymi wyborami, np. $p\land p$
+ma tylko dwa wartościowania, a nie cztery.
+\end{przyklad}
+
+\section{Podstawowe prawa rachunku zdań z dowodami}\label{sec:propositional-laws}
+\begin{twierdzenie}[Prawa de Morgana]\label{thm:de-morgan-logic}
+Dla dowolnych formuł $p,q$ zachodzą równoważności logiczne
+\[
+\neg(p\land q)\equiv(\neg p\lor\neg q),\qquad
+\neg(p\lor q)\equiv(\neg p\land\neg q).
+\]
+\end{twierdzenie}
+\begin{proof}
+Pokażemy wszystkie cztery możliwe pary wartości formuł
+$p$ i $q$. Jeżeli formuły mają wspólne litery, nie każda
+para musi wystąpić przy pewnym wartościowaniu. Wystarcza jednak
+sprawdzenie wszystkich czterech możliwości, bo każde
+wartościowanie daje jedną z nich.
+\[
+\begin{array}{cc|cc|cc}
+p&q&\neg(p\land q)&\neg p\lor\neg q&
+\neg(p\lor q)&\neg p\land\neg q\\\hline
+1&1&0&0&0&0\\
+1&0&1&1&0&0\\
+0&1&1&1&0&0\\
+0&0&1&1&1&1
+\end{array}
+\]
+Dwie kolumny opisujące pierwszą parę formuł są identyczne
+w każdym wierszu; to samo dotyczy drugiej pary.
+Z definicji równoważności logicznej otrzymujemy obie tezy.
+\end{proof}
+
+\begin{twierdzenie}[Rozwinięcie i przeciwstawienie implikacji]
+\label{thm:implication-laws}
+Dla dowolnych formuł $p,q$ zachodzą
+\[
+(p\Rightarrow q)\equiv(\neg p\lor q),\qquad
+(p\Rightarrow q)\equiv(\neg q\Rightarrow\neg p).
+\]
+W szczególności $(p\Rightarrow q)\land p\Rightarrow q$
+jest tautologią (\emph{modus ponens}).
+\end{twierdzenie}
+\begin{proof}
+Rozpatrzmy cztery możliwe pary wartości formuł $p,q$;
+nie wymagamy, aby każda z nich była realizowana przy pewnym
+wspólnym wartościowaniu:
+\[
+\begin{array}{cc|ccc}
+p&q&p\Rightarrow q&\neg p\lor q&\neg q\Rightarrow\neg p\\\hline
+1&1&1&1&1\\
+1&0&0&0&0\\
+0&1&1&1&1\\
+0&0&1&1&1
+\end{array}
+\]
+W każdym wierszu trzy ostatnie wartości są równe, co
+dowodzi obu równoważności. Aby sprawdzić ostatnią tezę,
+rozpatrzmy dowolne wartościowanie. Jeśli koniunkcja
+$(p\Rightarrow q)\land p$ jest fałszywa, całe zdanie
+warunkowe jest prawdziwe z definicji implikacji.
+Jeśli koniunkcja jest prawdziwa, to $p$ jest prawdziwe,
+a ponieważ $p\Rightarrow q$ też jest prawdziwe, $q$
+nie może być fałszywe: w przeciwnym razie implikacja
+byłaby fałszywa. Zatem $q$ jest prawdziwe, więc
+cała rozpatrywana implikacja jest prawdziwa również
+i w tym przypadku.
+\end{proof}
+
+\begin{twierdzenie}[Negacja implikacji]\label{thm:negated-implication-xli}
+Dla dowolnych formuł $p,q$ zachodzi
+$\neg(p\Rightarrow q)\equiv p\land\neg q$.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy wartościowanie. Na mocy definicji implikacji
+$p\Rightarrow q$ jest fałszywe wtedy i tylko wtedy,
+gdy jednocześnie $p=1$ i $q=0$. Jego negacja jest
+więc prawdziwa dokładnie przy $p=1$ i $q=0$.
+Z drugiej strony $p\land\neg q$ jest prawdziwe
+dokładnie wtedy, gdy $p=1$ oraz $\neg q=1$,
+czyli $p=1$ i $q=0$. W obu przypadkach zbiór
+wartościowań dających wartość $1$ jest taki sam,
+a pozostałe wartościowania dają $0$. Otrzymaliśmy zatem
+żądaną równoważność logiczną.
+\end{proof}
+
+\begin{przyklad}[Obliczenie kontrprzykładu do implikacji]
+Niech $p$ oznacza „$12$ jest podzielne przez $4$”,
+a $q$ --- „$12$ jest liczbą nieparzystą”. Wtedy
+$p=1$, $q=0$, więc $p\Rightarrow q=0$ oraz
+$p\land\neg q=1$. Zmienienie poprzednika na
+zdanie fałszywe usunęłoby kontrprzykład do implikacji.
+\end{przyklad}
+
+\begin{twierdzenie}[Podwójna negacja i rozdzielność]
+\label{thm:logic-distributivity}
+Dla dowolnych formuł $p,q,r$ zachodzą
+\begin{align*}
+\neg\neg p&\equiv p,\\
+p\land(q\lor r)&\equiv(p\land q)\lor(p\land r),\\
+p\lor(q\land r)&\equiv(p\lor q)\land(p\lor r).
+\end{align*}
+\end{twierdzenie}
+\begin{proof}
+Dla podwójnej negacji wystarczy zauważyć, że przy
+$p=1$ mamy $\neg p=0$ i $\neg\neg p=1$, zaś przy
+$p=0$ mamy $\neg p=1$ i $\neg\neg p=0$.
+
+Wykażmy pierwszą rozdzielność, analizując dwa przypadki.
+Jeśli $p=0$, to lewa strona jest fałszywa, a prawa
+również: oba składniki jej alternatywy zawierają
+fałszywy czynnik $p$. Jeśli $p=1$, to lewa strona
+przyjmuje dokładnie wartość $q\lor r$, a prawa strona
+jest $(1\land q)\lor(1\land r)$, która także
+przyjmuje wartość $q\lor r$. Oba przypadki wyczerpują
+wszystkie wartościowania, ponieważ $p$ musi mieć wartość
+$0$ lub $1$, niezależnie od wartości $q,r$.
+
+Podobnie przy $p=1$ obie strony drugiej rozdzielności
+są prawdziwe, a przy $p=0$ obie sprowadzają się do
+$q\land r$. Stąd także druga równoważność.
+\end{proof}
+
+\begin{uwaga}[Dlaczego przykład liczbowy nie zastępuje dowodu?]
+Sprawdzenie prawa logicznego na jednym przykładzie potwierdza
+jedynie jedno wartościowanie. Aby wykazać tautologię,
+trzeba zbadać \emph{wszystkie} wartościowania albo podać
+ogólny argument obejmujący każdą możliwość. Z kolei do
+\emph{obalenia} zdania głoszącego równoważność wystarczy
+\emph{jedno} wartościowanie, przy którym formuły są różne.
+\end{uwaga}
+
+\section{Przesłanki, wnioski i kontrprzykłady}\label{sec:logical-consequence}
+\begin{definicja}[Poprawność wnioskowania zdaniowego]
+\label{def:consequence}
+Mówimy, że formuła $\psi$ \emph{wynika logicznie}
+z przesłanek $\varphi_1,\ldots,\varphi_n$, gdy nie istnieje
+\emph{wspólne} wartościowanie wszystkich liter występujących
+w przesłankach lub we wniosku, przy którym wszystkie przesłanki
+są prawdziwe, a $\psi$ jest fałszywa. Zapisujemy
+$\varphi_1,\ldots,\varphi_n\models\psi$.
+Przy braku przesłanek $\models\psi$ oznacza, że
+$\psi$ jest tautologią.
+\end{definicja}
+
+\begin{twierdzenie}[Kryterium poprawności wnioskowania]
+\label{thm:inference-test}
+Niech $\varphi_1,\ldots,\varphi_n,\psi$ będą formułami
+zdaniowymi, gdzie $n\ge1$. Następujące warunki są
+równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $\varphi_1,\ldots,\varphi_n\models\psi$;
+\item $((\varphi_1\land\cdots\land\varphi_n)\Rightarrow\psi)$
+      jest tautologią.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Ustalmy dowolne wartościowanie. Implikacja z punktu
+(ii) jest fałszywa dokładnie wtedy, gdy jej
+poprzednik jest prawdziwy, a następnik fałszywy.
+Poprzednik jest koniunkcją wszystkich przesłanek,
+więc jest prawdziwy dokładnie wtedy, gdy wszystkie
+przesłanki są prawdziwe. Zatem istnienie
+wartościowania obalającego tautologiczność w (ii)
+jest równoważne istnieniu wartościowania obalającego
+poprawność w (i). Zaprzeczenie obu tych stwierdzeń
+daje żądaną równoważność.
+\end{proof}
+
+\begin{twierdzenie}[Jednolite kryterium wynikania dla skończonej listy przesłanek]
+\label{thm:empty-premises-consequence-lxiii}
+Niech $n\in\{0,1,2,\ldots\}$, niech $\varphi_1,\ldots,\varphi_n$ będą formułami
+rachunku zdań, a $\psi$ dowolną formułą. Dla $n=0$ przyjmijmy, że
+koniunkcja pustej listy ma stałą wartość logiczną $1$ (oznaczamy ją
+metajęzykowo przez $\top$). Wówczas
+\[
+\varphi_1,\ldots,\varphi_n\models\psi
+\quad\Longleftrightarrow\quad
+\models\bigl((\varphi_1\land\cdots\land\varphi_n)\Rightarrow\psi\bigr),
+\]
+gdzie przy $n=0$ prawą stronę rozumiemy jako $\models(\top\Rightarrow\psi)$.
+Symbol $\top$ jest tutaj skrótem semantycznym, a nie dodatkową
+literą w gramatyce z definicji~\ref{def:propositional-grammar-xli}.
+\end{twierdzenie}
+\begin{proof}
+Dla $n\ge1$ jest to twierdzenie~\ref{thm:inference-test}.
+Dla $n=0$ definicja~\ref{def:consequence} mówi, że
+$\models\psi$ wtedy i tylko wtedy, gdy każde wartościowanie
+nadaje $\psi$ wartość $1$. Ponieważ $\top$ ma zawsze wartość $1$,
+implikacja $\top\Rightarrow\psi$ ma przy każdym wartościowaniu
+dokładnie tę samą wartość co $\psi$. Stąd równoważność również
+dla pustej listy. Nie trzeba wybierać żadnego wartościowania
+spełniającego przesłanki: przesłanek po prostu nie ma.
+\end{proof}
+\begin{przyklad}[Pusta lista nie jest listą sprzeczną]
+Dla $\psi=p\lor\neg p$ zarówno $\psi$, jak i
+$\top\Rightarrow\psi$ mają wartość $1$ przy $p=0$
+i przy $p=1$. Dlatego oba stwierdzenia w kryterium są
+prawdziwe. Dla $\psi=p$ oba stwierdzenia o wszystkich
+wartościowaniach są fałszywe: $p=0$ daje kontrprzykład.
+Natomiast dla listy $(p,\neg p)$
+wynikanie dowolnej formuły jest prawdziwe z innego powodu:
+żadne wartościowanie nie spełnia wszystkich przesłanek.
+\end{przyklad}
+
+\begin{uwaga}[Przesłanki sprzeczne i brak przesłanek]
+\label{rem:explosion-semantic-xli}
+Nie należy mylić prawdziwości przesłanek
+z poprawnością reguły wnioskowania. Dla dowolnych formuł
+$p,q$ zachodzi $p,\neg p\models q$. Rzeczywiście,
+żadne wartościowanie nie czyni obu przesłanek prawdziwymi:
+jeżeli $p=1$, to $\neg p=0$, a jeżeli $p=0$, to pierwsza
+przesłanka jest fałszywa. Nie istnieje więc wartościowanie
+z prawdziwymi wszystkimi przesłankami i fałszywym wnioskiem.
+Jest to semantyczna postać \emph{zasady eksplozji}; nie znaczy,
+że dowolne zdanie $q$ jest prawdziwe. Podobnie
+$\models p\lor\neg p$, lecz nie zachodzi
+$\models p$ dla samej litery $p$, bo wartościowanie
+$p=0$ jest kontrprzykładem.
+\end{uwaga}
+
+\begin{przyklad}[Niepoprawne wnioskowanie: potwierdzanie następnika]
+Rozumowanie „$p\Rightarrow q$; $q$; zatem $p$” jest
+niepoprawne. Wystarczy przyjąć $p=0$, $q=1$:
+wtedy obie przesłanki są prawdziwe, ale wniosek
+$p$ jest fałszywy. Konkretny przykład: „jeżeli
+liczba jest podzielna przez $4$, to jest parzysta;
+liczba $6$ jest parzysta; zatem jest podzielna przez $4$”.
+\end{przyklad}
+
+\begin{przyklad}[Niepoprawne wnioskowanie: zaprzeczanie poprzednikowi]
+Z $p\Rightarrow q$ oraz $\neg p$ nie wynika $\neg q$.
+Przyjmując $p=0$, $q=1$, otrzymujemy prawdziwe
+przesłanki i fałszywy wniosek. Jest to ten sam
+błąd co twierdzenie, że liczba niepodzielna przez $4$
+nie może być parzysta.
+\end{przyklad}
+
+\begin{twierdzenie}[Trzy poprawne reguły wnioskowania]
+\label{thm:valid-arguments}
+Dla dowolnych formuł $p,q,r$ zachodzą
+\begin{align*}
+p\Rightarrow q,\quad\neg q&\models\neg p&&\text{(modus tollens)},\\
+p\Rightarrow q,\quad q\Rightarrow r&\models p\Rightarrow r
+   &&\text{(przechodniość implikacji)},\\
+p\lor q,\quad\neg p&\models q&&\text{(sylogizm rozłączny)}.
+\end{align*}
+\end{twierdzenie}
+\begin{proof}
+W pierwszym przypadku przyjmijmy, że obie przesłanki
+są prawdziwe. Ponieważ $\neg q$ jest prawdziwe,
+$q$ jest fałszywe. Gdyby $p$ było prawdziwe,
+$p\Rightarrow q$ byłoby fałszywe, sprzecznie z
+założeniem. Zatem $p$ jest fałszywe, czyli
+$\neg p$ jest prawdziwe.
+
+W drugim przypadku załóżmy prawdziwość obu implikacji.
+Chcemy uzasadnić $p\Rightarrow r$. Gdy $p$ jest
+fałszywe, implikacja ta jest prawdziwa z definicji.
+Gdy $p$ jest prawdziwe, pierwsza przesłanka wymusza
+prawdziwość $q$, a druga prawdziwość $r$.
+Wtedy również $p\Rightarrow r$ jest prawdziwa.
+
+W trzecim przypadku $p\lor q$ jest prawdziwe, więc
+co najmniej jedna z wartości $p,q$ wynosi $1$.
+Jednocześnie $\neg p$ jest prawdziwe, a więc $p=0$.
+Pozostaje $q=1$, co jest dokładnie tezą.
+\end{proof}
+
+\begin{przyklad}[Jak odczytywać wzory, aby nie mylić spójnika z wnioskowaniem]
+Zapis $(p\Rightarrow q)$ jest \emph{formułą}: można obliczyć
+jego wartość z tablicy prawdy. Natomiast zapis
+$p\models q$ \emph{nie jest formułą rachunku zdań}, lecz
+metamatematycznym stwierdzeniem, że nie istnieje wartościowanie
+z $p=1$ i $q=0$. W przypadku jednej przesłanki zachodzi
+$p\models q$ wtedy i tylko wtedy, gdy $p\Rightarrow q$ jest
+tautologią. Podobnie $p\equiv q$ opisuje zgodność wartości
+formuł przy wszystkich wartościowaniach, a
+$p\Leftrightarrow q$ jest formułą, której wartość badamy.
+\end{przyklad}
+
+\section{Czego jeszcze nie potrafi rachunek zdań?}\label{sec:why-quantifiers}
+Niech $P(x)$ oznacza wypowiedź „liczba $x$ jest parzysta”.
+Możemy sprawdzić $P(2)$ albo $P(3)$, ale sama logika zdań
+nie ma jeszcze symbolu pozwalającego zbudować wypowiedź
+„każda liczba ma pewną własność” lub „istnieje liczba
+o tej własności”. Nie odróżnia też jednoznacznie wypowiedzi
+„każdy ma swojego przyjaciela” od „istnieje ktoś,
+kto jest przyjacielem wszystkich”. Do tego potrzebujemy
+\emph{kwantyfikatorów}; wprowadzimy je w następnym rozdziale.
+
+\begin{uwaga}[Pierwsze trzy rozróżnienia, które należy zapamiętać]
+\emph{Zdanie prawdziwe} nie musi być \emph{tautologią}.
+\emph{Implikacja} na ogół nie jest logicznie równoważna
+swojej implikacji odwrotnej.
+\emph{Poprawne wnioskowanie} nie zakłada samo przez się,
+że jego przesłanki są faktycznie prawdziwe.
+\end{uwaga}

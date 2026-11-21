@@ -1,0 +1,921 @@
+\chapter{Zwartość i jej charakterystyki}
+\label{ch:topog-zwartosc}
+
+\noindent\textbf{Cel rozdziału.}
+Zwartość jest własnością pozwalającą zastąpić dowolne pokrycie
+otwarte pokryciem skończonym. Jej siła ujawnia się w badaniu
+odwzorowań ciągłych (w szczególności osiągania kresów
+przez funkcje rzeczywiste), rozdzielania zbiorów
+i dowolnych iloczynów.
+Po definicji i podstawowych przykładach wyprowadzimy równoważne
+kryteria przez rodziny zbiorów domkniętych, sieci i ultrafiltry.
+Udowodnimy twierdzenie Tychonoffa o zwartości iloczynów oraz
+uzgodnione wcześniej twierdzenie o zanurzaniu przestrzeni
+Tychonoffa w kostkę $[0,1]^I$. Tam, gdzie wykorzystamy
+aksjomat wyboru, zaznaczymy to jawnie.
+
+\section{Definicja zwartości i pierwsze przykłady}
+\label{sec:topog-zwartosc-definicja}
+
+\begin{definicja}[Pokrycie otwarte i zwartość]
+\label{def:topog-zwartosc}
+Niech $(X,\tau)$ będzie przestrzenią topologiczną.
+\emph{Pokryciem otwartym} $X$ nazywamy rodzinę
+$(U_i)_{i\in I}$ zbiorów z $\tau$ taką, że
+$X=\bigcup_{i\in I}U_i$.
+\emph{Podpokryciem skończonym} tej rodziny jest
+podrodzina $(U_i)_{i\in J}$, gdzie $J\subseteq I$ jest
+skończony i $X=\bigcup_{i\in J}U_i$.
+Przestrzeń $X$ jest \emph{zwarta}, jeżeli każde jej
+pokrycie otwarte ma podpokrycie skończone.
+Podzbiór $K\subseteq X$ jest \emph{zwarty w $X$}, gdy
+przestrzeń $K$ z topologią podprzestrzeni jest zwarta.
+Nie zakładamy żadnego aksjomatu oddzielania.
+\end{definicja}
+
+\begin{stwierdzenie}[Zwartość podzbioru w języku przestrzeni otaczającej]
+\label{prop:topog-zwartosc-wzgledna}
+Niech $K\subseteq X$. Wówczas $K$ jest zwarty dokładnie
+wtedy, gdy dla każdej rodziny $(U_i)_{i\in I}$ zbiorów
+otwartych w $X$ takiej, że $K\subseteq\bigcup_{i\in I}U_i$,
+istnieje skończony $J\subseteq I$ spełniający
+$K\subseteq\bigcup_{i\in J}U_i$.
+\end{stwierdzenie}
+\begin{proof}
+Jeśli $K$ jest zwarty, rodzina $(K\cap U_i)$ pokrywa
+$K$ zbiorami otwartymi w podprzestrzeni, więc ma
+podpokrycie skończone. Odwrotnie, każde pokrycie $K$
+zbiorami otwartymi w $K$ ma postać $(K\cap U_i)$
+z pewnymi $U_i$ otwartymi w $X$, zgodnie z definicją
+topologii podprzestrzeni (rozdział~04). Zastosowanie
+warunku dla $U_i$ daje skończone podpokrycie w $K$.
+\end{proof}
+
+\begin{przyklad}[Zbiory skończone i przestrzeń pusta]
+\label{ex:topog-zwartosc-skonczone}
+Każda przestrzeń topologiczna o skończonym zbiorze
+punktów jest zwarta. Z dowolnego pokrycia wybieramy
+po jednym zbiorze zawierającym każdy punkt; otrzymana
+rodzina ma co najwyżej tyle elementów, ile punktów
+przestrzeni. Dla $X=\varnothing$ pokrycie puste
+ma puste podpokrycie skończone, które pokrywa $X$.
+Także każdy skończony podzbiór dowolnej przestrzeni
+jest zwarty, niezależnie od jej topologii.
+\end{przyklad}
+
+\begin{przyklad}[Niezwartość prostej i przedziału otwartego]
+\label{ex:topog-zwartosc-przeciwwklady}
+Prosta $\R$ z topologią euklidesową nie jest zwarta:
+rodzina $\{(-n,n):n\ge1\}$ pokrywa $\R$, lecz żadna
+jej podrodzina skończona tego nie robi, ponieważ
+zawiera się w $(-N,N)$ dla największego wybranego $N$.
+Podobnie pokrycie $\{(1/n,1):n\ge2\}$ przedziału
+$(0,1)$ nie ma podpokrycia skończonego: skończona
+rodzina nie pokrywa punktów dostatecznie bliskich $0$.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=9cm,y=.72cm,>=Stealth]
+  \draw[->,thick] (-.04,0)--(1.11,0);
+  \draw[gray,dashed] (0,-.2)--(0,4.1);
+  \draw[gray,dashed] (1,-.2)--(1,4.1);
+  \node[below] at (0,-.05) {$0$};
+  \node[below] at (1,-.05) {$1$};
+  \foreach \a/\y/\n in {.5/1/2,.3333/1.75/3,.25/2.5/4,.1667/3.25/6} {
+    \draw[blue!75!black,line width=1.1pt] (\a,\y)--(1,\y);
+    \draw[blue!75!black,fill=white,line width=.8pt] (\a,\y) circle (.035cm);
+    \draw[blue!75!black,fill=white,line width=.8pt] (1,\y) circle (.035cm);
+    \node[anchor=east] at (.015,\y) {$U_{\n}$};
+  }
+  \node[align=center,blue!55!black,font=\small] at (.61,4.05)
+    {Coraz większe zbiory pokrywają $(0,1)$,\\ ale żaden skończony wybór nie wystarcza};
+\end{tikzpicture}
+\caption{Pierwsze zbiory z pokrycia $U_n=(1/n,1)$, $n\ge2$.
+W każdej skończonej podrodzinie pozostaje niepokryty
+przedział przy punkcie $0$. Puste końce oznaczają
+brak krańców przedziałów w $U_n$.}
+\label{fig:topog-zwartosc-pokrycie-otwarte}
+\end{figure}
+
+\begin{twierdzenie}[Zwartość przedziału domkniętego]
+\label{thm:topog-zwartosc-odcinek}
+Dla każdych $a,b\in\R$ z $a\le b$ przedział $[a,b]$
+jest zwarty w topologii euklidesowej.
+\end{twierdzenie}
+\begin{proof}
+Przy $a=b$ stosujemy przykład
+\ref{ex:topog-zwartosc-skonczone}. Niech $a<b$
+i niech $(U_i)_{i\in I}$ będzie pokryciem
+otwartym przedziału $[a,b]$ zbiorami otwartymi
+w $\R$ (wystarczy dzięki stwierdzeniu
+\ref{prop:topog-zwartosc-wzgledna}).
+Niech $S$ oznacza zbiór $t\in[a,b]$, dla których
+$[a,t]$ pokrywa skończona liczba zbiorów $U_i$.
+Zbiór $S$ jest niepusty, ponieważ istnieje $i$
+z $a\in U_i$, a wtedy $a\in S$.
+Jest też ograniczony z góry przez $b$; niech $c=\sup S$.
+
+Wybierzmy $i_0$ z $c\in U_{i_0}$. Ponieważ $U_{i_0}$
+jest otwarty, istnieje $\delta>0$ takie, że
+$(c-\delta,c+\delta)\subseteq U_{i_0}$.
+Z definicji supremum istnieje $t\in S$ z
+$t>c-\delta/2$ (gdy $c=a$, możemy wziąć $t=a$).
+Wtedy $[a,t]$ ma pokrycie skończone, a dodanie
+$U_{i_0}$ pokrywa także odcinek
+$[t,\min\{b,c+\delta/2\}]$.
+Gdyby $c<b$, punkt $\min\{b,c+\delta/2\}$
+byłby większy od $c$ i należał do $S$, wbrew
+definicji supremum. Stąd $c=b$. Ponownie,
+ponieważ $t> b-\delta/2$ i $t\in S$, dołączenie
+$U_{i_0}$ do skończonego pokrycia $[a,t]$
+pokrywa całe $[a,b]$. Dowód jest zakończony.
+\end{proof}
+
+\section{Zbiory domknięte, obrazy ciągłe i oddzielanie}
+\label{sec:topog-zwartosc-podstawowe-wlasnosci}
+
+\begin{twierdzenie}[Kryterium skończonych przecięć]
+\label{thm:topog-zwartosc-fip}
+Przestrzeń topologiczna $X$ jest zwarta wtedy i tylko
+wtedy, gdy każda \emph{niepusta} rodzina $(F_i)_{i\in I}$
+zbiorów domkniętych w $X$, dla której każde
+przecięcie skończenie wielu jej elementów jest
+niepuste, spełnia $\bigcap_{i\in I}F_i\ne\varnothing$.
+Warunek dotyczący skończonych przecięć nazywamy
+\emph{własnością skończonych przecięć}.
+\end{twierdzenie}
+\begin{proof}
+Niech $X$ będzie zwarta i załóżmy, że
+$\bigcap_i F_i=\varnothing$. Dopełnienia $X\setminus F_i$
+tworzą pokrycie otwarte $X$. Istnieje skończona
+podrodzina pokrywająca $X$, a z praw de Morgana
+przecięcie odpowiednich $F_i$ jest puste,
+sprzecznie z założeniem.
+
+Odwrotnie, załóżmy kryterium i niech $(U_i)_{i\in I}$
+będzie pokryciem otwartym bez podpokrycia skończonego.
+Jeśli $I$ byłby pusty, to $X=\varnothing$, a pusta
+podrodzina stanowiłaby podpokrycie skończone.
+Zatem $I\ne\varnothing$. Dla $F_i=X\setminus U_i$
+każde skończone przecięcie jest niepuste,
+gdyż żadne skończenie wiele $U_i$ nie pokrywa $X$.
+Z założenia $\bigcap_i F_i\ne\varnothing$, co przeczy
+temu, że $(U_i)$ pokrywa $X$.
+\end{proof}
+
+\begin{twierdzenie}[Trwałość zwartości]
+\label{thm:topog-zwartosc-trwalosc}
+Niech $X,Y$ będą przestrzeniami topologicznymi.
+\begin{enumerate}[label=(\roman*)]
+\item Jeśli $X$ jest zwarta i $F\subseteq X$ jest
+domknięty, to $F$ jest zwarty.
+\item Jeśli $K\subseteq X$ jest zwarty i
+$f\colon X\to Y$ jest ciągłe, to $f(K)$ jest zwarty.
+W szczególności ciągły obraz przestrzeni zwartej
+jest zwarty.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Dla (i) niech $(V_i)$ będzie otwartym pokryciem
+$F$ w topologii względnej; zapiszmy
+$V_i=F\cap U_i$, gdzie $U_i$ są otwarte w $X$.
+Rodzina $(U_i)$ uzupełniona o otwarty zbiór
+$X\setminus F$ pokrywa $X$. Skończone podpokrycie
+$X$ po ograniczeniu do $F$ daje skończone
+podpokrycie $(V_i)$ zbioru $F$.
+
+Dla (ii) niech $(W_i)$ będzie otwartym pokryciem
+$f(K)$ w $Y$. Ciągłość odwzorowania $f|_K$
+sprawia, że $(K\cap f^{-1}(W_i))$ jest otwartym
+pokryciem $K$. Wybór skończonego podpokrycia
+przenosi się przez $f$ na skończone pokrycie $f(K)$.
+\end{proof}
+
+\begin{twierdzenie}[Zwarte podzbiory przestrzeni Hausdorffa]
+\label{thm:topog-zwartosc-hausdorff-domkniete}
+Jeśli $X$ jest przestrzenią Hausdorffa, to każdy
+zwarty podzbiór $K\subseteq X$ jest domknięty w $X$.
+\end{twierdzenie}
+\begin{proof}
+Dla $K=\varnothing$ teza jest oczywista.
+Niech $x\in X\setminus K$. Rozważmy wszystkie pary
+$(U,V)$ rozłącznych zbiorów otwartych w $X$,
+dla których $x\in U$. Zbiory $V$ występujące
+w tych parach pokrywają $K$: dla każdego $y\in K$
+aksjomat Hausdorffa zapewnia taką parę z $y\in V$.
+Ze zwartości $K$ wybieramy skończenie wiele par
+$(U_1,V_1),\ldots,(U_m,V_m)$, dla których
+$K\subseteq V_1\cup\cdots\cup V_m$.
+Zbiór $U=U_1\cap\cdots\cap U_m$ jest
+otwartym otoczeniem $x$ i nie przecina $K$:
+każdy punkt $K$ należy do pewnego $V_j$,
+rozłącznego z $U\subseteq U_j$.
+Oznacza to, że $X\setminus K$ jest otwarty,
+a więc $K$ domknięty. Konstrukcja nie wymaga
+jednoczesnego wyboru otoczeń dla wszystkich $y\in K$.
+\end{proof}
+
+\begin{przyklad}[Dlaczego założenie Hausdorffa jest potrzebne]
+\label{ex:topog-zwartosc-niedomkniety}
+W przestrzeni Sierpińskiego
+$X=\{0,1\}$ z topologią
+$\{\varnothing,\{1\},X\}$ podzbiór $\{1\}$
+jest zwarty, ponieważ jest skończony,
+lecz nie jest domknięty: jego dopełnienie $\{0\}$
+nie jest otwarte. Nie można więc bez założenia
+Hausdorffa wnioskować o domkniętości zbioru zwartego.
+\end{przyklad}
+
+\begin{twierdzenie}[Twierdzenie Weierstrassa o osiąganiu kresów]
+\label{thm:topog-weierstrass-kresy}
+Niech $K$ będzie \emph{niepustą} zwartą przestrzenią
+topologiczną, a $f\colon K\to\R$ funkcją ciągłą.
+Wówczas $f$ jest ograniczona oraz istnieją punkty
+$x_{\min},x_{\max}\in K$ takie, że
+\[
+ f(x_{\min})=\inf_{x\in K} f(x),\qquad
+ f(x_{\max})=\sup_{x\in K} f(x).
+\]
+W szczególności funkcja $f$ osiąga minimum i maksimum.
+Nie zakładamy, że $K$ jest przestrzenią Hausdorffa.
+\end{twierdzenie}
+\begin{proof}
+Na mocy twierdzenia \ref{thm:topog-zwartosc-trwalosc}(ii)
+zbiór $A=f(K)$ jest zwarty w $\R$; jest niepusty,
+ponieważ $K\ne\varnothing$. Rodzina przedziałów
+$((-n,n))_{n\ge1}$ jest otwartym pokryciem $\R$,
+a więc również $A$. Ze zwartości $A$ istnieje
+$n\ge1$ takie, że $A\subseteq(-n,n)$: jeśli wybrano
+skończenie wiele przedziałów, wystarczy wziąć
+największy z ich indeksów. Funkcja $f$ jest zatem
+ograniczona.
+
+Z zupełności porządku liczb rzeczywistych istnieją
+skończone liczby $m=\inf A$ oraz $M=\sup A$.
+Ponieważ $\R$ jest przestrzenią Hausdorffa, zbiór
+$A$ jest domknięty na mocy twierdzenia
+\ref{thm:topog-zwartosc-hausdorff-domkniete}.
+Wykażemy, że $M\in A$. Dla każdego $\varepsilon>0$
+z definicji supremum istnieje $a\in A$ spełniające
+$M-\varepsilon<a\le M$. Stąd każde otwarte otoczenie
+$M$ przecina $A$, czyli $M\in\overline A=A$.
+Analogicznie dla każdego $\varepsilon>0$ istnieje
+$a\in A$ takie, że $m\le a<m+\varepsilon$,
+więc $m\in\overline A=A$. Z definicji obrazu
+istnieją $x_{\min},x_{\max}\in K$ z
+$f(x_{\min})=m$ i $f(x_{\max})=M$.
+\end{proof}
+
+\begin{przyklad}[Rola zwartości i ciągłości w twierdzeniu Weierstrassa]
+\label{ex:topog-weierstrass-zalozenia}
+Funkcja $f\colon(0,1)\to\R$, $f(x)=x$, jest ciągła
+i ograniczona, lecz nie osiąga ani swojego infimum $0$,
+ani supremum $1$. Jej dziedzina nie jest zwarta.
+
+Z kolei funkcja $g\colon[0,1]\to\R$ określona przez
+$g(x)=x$ dla $x<1$ oraz $g(1)=0$ nie jest ciągła
+w punkcie $1$. Mimo że $[0,1]$ jest zwarty,
+$\sup g([0,1])=1$ nie jest wartością funkcji $g$.
+Oba przykłady pokazują, że założeń twierdzenia
+nie można po prostu pominąć.
+\end{przyklad}
+
+\begin{twierdzenie}[Zwartość i normalność]
+\label{thm:topog-zwartosc-hausdorff-normalna}
+Każda zwarta przestrzeń Hausdorffa jest $T_4$,
+a więc spełnia aksjomat Tychonoffa.
+\end{twierdzenie}
+\begin{proof}
+Przestrzeń Hausdorffa jest $T_1$ (rozdział~05).
+Wystarczy dowieść normalności. Niech $F,G\subseteq X$
+będą rozłącznymi zbiorami domkniętymi.
+Na mocy twierdzenia \ref{thm:topog-zwartosc-trwalosc}
+oba są zwarte. Jeśli któryś z nich jest pusty,
+możemy użyć $\varnothing$ i $X$ jako rozłącznych
+otwartych otoczeń $F$ i $G$. W dalszej części
+zakładamy więc, że $F\ne\varnothing$ i $G\ne\varnothing$.
+
+Ustalmy $x\in F$ i rozważmy wszystkie pary
+$(U,V)$ rozłącznych zbiorów otwartych takich,
+że $x\in U$. Z aksjomatu Hausdorffa ich drugie
+składowe $V$ tworzą pokrycie otwarte $G$.
+Ze zwartości $G$ wybieramy skończenie wiele par
+$(U_1,V_1),\ldots,(U_m,V_m)$, dla których
+$G\subseteq V_1\cup\cdots\cup V_m$.
+Zbiory $U_x=\bigcap_{j=1}^m U_j$ oraz
+$V_x=\bigcup_{j=1}^m V_j$ są otwarte i rozłączne,
+$x\in U_x$ oraz $G\subseteq V_x$.
+
+Zatem dla każdego $x\in F$ istnieje para
+rozłącznych zbiorów otwartych $(U,V)$ spełniająca
+$x\in U$ i $G\subseteq V$. Rozważmy rodzinę
+\emph{wszystkich} takich par: ich pierwsze składowe
+pokrywają $F$. Zwartość $F$ daje skończenie wiele
+par $(U'_1,V'_1),\ldots,(U'_n,V'_n)$ takich,
+że $F\subseteq\bigcup_{k=1}^n U'_k$.
+Wtedy $U=\bigcup_{k=1}^n U'_k$ i
+$V=\bigcap_{k=1}^n V'_k$ są rozłącznymi
+otwartymi zbiorami zawierającymi odpowiednio $F,G$.
+Otrzymaliśmy normalność; połączenie z $T_1$ daje $T_4$.
+Dzięki rozważaniu wszystkich dopuszczalnych par
+nie wybieraliśmy jednocześnie otoczeń z nieskończonych
+rodzin.
+Implikację $T_4\Rightarrow T_{3\frac12}$
+udowodniono w rozdziale~05.
+\end{proof}
+
+\begin{wniosek}[Ciągła bijekcja z przestrzeni zwartej]
+\label{cor:topog-zwartosc-bijekcja-homeomorfizm}
+Niech $X$ będzie przestrzenią zwartą, $Y$ przestrzenią
+Hausdorffa, a $f\colon X\to Y$ ciągłą bijekcją.
+Wówczas $f$ jest homeomorfizmem.
+\end{wniosek}
+\begin{proof}
+Każdy domknięty $F\subseteq X$ jest zwarty na mocy
+twierdzenia \ref{thm:topog-zwartosc-trwalosc}.
+Jego obraz $f(F)$ jest zwarty jako obraz ciągły,
+a więc domknięty w $Y$ na mocy twierdzenia
+\ref{thm:topog-zwartosc-hausdorff-domkniete}.
+Zatem $f$ jest odwzorowaniem domkniętym.
+Bijektywność sprawia, że dla dowolnego domkniętego
+$F\subseteq X$ zachodzi $(f^{-1})^{-1}(F)=f(F)$;
+stąd odwrotność jest ciągła, więc $f$ jest
+homeomorfizmem.
+\end{proof}
+
+\section{Zwartość przez sieci i filtry}
+\label{sec:topog-zwartosc-zbieznosc}
+
+\begin{definicja}[Punkt skupienia sieci i filtru]
+\label{def:topog-zwartosc-punkt-skupienia}
+Niech $(x_d)_{d\in D}$ będzie siecią w $X$.
+Punkt $x\in X$ nazywamy \emph{punktem skupienia sieci},
+jeżeli dla każdego otwartego otoczenia $U$ punktu $x$
+i każdego $d_0\in D$ istnieje $d\succeq d_0$
+z $x_d\in U$.
+Jeśli $\mathcal F$ jest filtrem na $X$, punkt $x$
+jest \emph{punktem skupienia filtru}, gdy
+$F\cap U\ne\varnothing$ dla każdego
+$F\in\mathcal F$ i każdego otwartego otoczenia $U$
+punktu $x$. Jest to równoważne
+$x\in\bigcap_{F\in\mathcal F}\overline F$,
+ponieważ $x\in\overline F$ dokładnie wtedy,
+gdy każde otoczenie $x$ przecina $F$.
+\end{definicja}
+
+\begin{stwierdzenie}[Punkt skupienia i podsieć zbieżna]
+\label{prop:topog-zwartosc-podsiec}
+Punkt $x$ jest punktem skupienia sieci $(x_d)_{d\in D}$
+wtedy i tylko wtedy, gdy istnieje podsieć $(x_{\varphi(e)})_{e\in E}$
+zbieżna do $x$. Przyjmujemy definicję podsieci
+z rozdziału~06: odwzorowanie indeksów
+$\varphi\colon E\to D$ spełnia warunek ostatecznej
+współkońcowości (nie wymagamy jego monotoniczności).
+\end{stwierdzenie}
+\begin{proof}
+Jeżeli podsieć jest zbieżna do $x$, to dla danego
+otwartego otoczenia $U$ punktu $x$ od pewnego
+$e_0$ mamy $x_{\varphi(e)}\in U$ dla wszystkich
+$e\succeq e_0$. Dla dowolnego $d_0\in D$
+na mocy kofinalności ogonowej istnieje $e_1$,
+po którym $\varphi(e)\succeq d_0$.
+Wspólne ograniczenie górne $e_0,e_1$ daje
+$e$ z $\varphi(e)\succeq d_0$ i
+$x_{\varphi(e)}\in U$, więc $x$ jest punktem skupienia.
+
+Odwrotnie, niech $x$ będzie punktem skupienia.
+Oznaczmy przez $\mathcal N_x^o$ rodzinę otwartych
+otoczeń $x$ i zbudujmy zbiór
+\[
+E=\{(d,U,t):d,t\in D,\ d\preceq t,\
+U\in\mathcal N_x^o,\ x_t\in U\}.
+\]
+Z warunku skupienia wynika, że $E\ne\varnothing$.
+Definiujemy
+$(d,U,t)\preceq_E(d',U',t')$ wtedy i tylko wtedy,
+gdy $d\preceq d'$, $U'\subseteq U$ oraz $t\preceq t'$.
+Relacja jest zwrotna i przechodnia. Dla dwóch
+indeksów wybierzmy $d'$ większy od ich pierwszych
+i trzecich współrzędnych; ze skupienia wybierzmy
+$t'\succeq d'$ z $x_{t'}\in U_1\cap U_2$.
+Indeks $(d',U_1\cap U_2,t')$ jest wtedy wspólnym
+ograniczeniem górnym, więc $E$ jest skierowany.
+
+Niech $\varphi(d,U,t)=t$. Monotoniczność wynika
+z definicji $\preceq_E$. Dla dowolnego $d_0\in D$
+wybierzmy $t_0\succeq d_0$ z
+$x_{t_0}\in X$ (możemy wziąć $t_0=d_0$);
+indeks $(d_0,X,t_0)\in E$ ma tę własność,
+że powyżej niego $\varphi(d,U,t)=t\succeq t_0\succeq d_0$.
+Zatem $\varphi$ jest kofinalne w sensie ogonów.
+Wreszcie dla otwartego otoczenia $V$ punktu $x$
+wybierzmy indeks $(d,V,t)\in E$ ze skupienia.
+Wszystkie późniejsze indeksy $(d',U',t')$
+spełniają $U'\subseteq V$, zatem
+$x_{\varphi(d',U',t')}=x_{t'}\in U'\subseteq V$.
+Podsieć zbiega do $x$.
+\end{proof}
+
+\begin{twierdzenie}[Kryterium zwartości przez sieci]
+\label{thm:topog-zwartosc-sieci}
+Przestrzeń topologiczna $X$ jest zwarta wtedy i tylko
+wtedy, gdy każda sieć w $X$ ma punkt skupienia.
+Równoważnie: każda sieć ma podsieć zbieżną.
+\end{twierdzenie}
+\begin{proof}
+Niech $X$ będzie zwarta i $(x_d)_{d\in D}$
+niech będzie siecią w $X$. Przypuśćmy, że nie ma
+punktu skupienia. Wówczas rodzina
+\[
+\mathcal V=\{U\subseteq X:\ U\text{ otwarty oraz }\
+\exists d_U\in D\ \forall d\succeq d_U:\ x_d\notin U\}
+\]
+pokrywa $X$: dla każdego punktu z negacji warunku
+skupienia otrzymujemy pewien zbiór należący do
+$\mathcal V$, który ten punkt zawiera.
+Zwartość daje skończenie wiele
+$U_1,\ldots,U_n\in\mathcal V$ pokrywających $X$.
+Dla każdego $j$ istnieje $d_j$, po którym sieć
+omija $U_j$. Z kierowalności $D$ wybieramy
+$d_0\succeq d_1,\ldots,d_n$.
+Wtedy $x_{d_0}$ nie należy do żadnego $U_j$,
+wbrew temu, że zbiory te pokrywają $X$.
+Dla $X=\varnothing$ nie ma żadnych sieci;
+implikacja jest wtedy spełniona automatycznie.
+
+Odwrotnie, niech $(U_i)_{i\in I}$ będzie pokryciem
+otwartym bez podpokrycia skończonego.
+Zamiast wybierać jednocześnie punkty z wielu
+niepustych zbiorów, zbudujemy sieć bez użycia
+aksjomatu wyboru. Niech
+\[
+D=\{(J,x):J\subseteq I\text{ skończony},\
+ x\in X\setminus\bigcup_{i\in J}U_i\}.
+\]
+Zbiór $D$ jest niepusty, ponieważ para
+$(\varnothing,x)$ istnieje dla pewnego $x\in X$;
+gdyby $X=\varnothing$, pokrycie puste byłoby
+podpokryciem skończonym.
+Ustalmy $(J,x)\preceq(K,y)$ dokładnie wtedy,
+gdy $J\subseteq K$. Jest to relacja zwrotna
+i przechodnia. Dwie pary mają wspólne ograniczenie
+górne: skończona suma $J\cup K$ nie pokrywa
+$X$, więc istnieje $z\in X\setminus
+\bigcup_{i\in J\cup K}U_i$ i można wziąć
+$(J\cup K,z)$. Tak więc $D$ jest skierowany.
+Zdefiniujmy sieć $x_{(J,x)}=x$.
+Dla dowolnego $z\in X$ wybierzmy $i\in I$
+z $z\in U_i$. Ponieważ żadne skończone
+zbiory $U_i$ nie pokrywają $X$, istnieje
+$(\{i\},x)\in D$. Powyżej tego indeksu
+wszystkie wyrazy sieci leżą poza $U_i$;
+zatem $z$ nie jest punktem skupienia.
+Otrzymujemy sprzeczność i wnioskujemy zwartość.
+Równoważność z podsieciami wynika ze stwierdzenia
+\ref{prop:topog-zwartosc-podsiec}.
+\end{proof}
+
+\begin{definicja}[Ultrafiltr]
+\label{def:topog-zwartosc-ultrafiltr}
+\emph{Ultrafiltrem} na $X$ nazywamy filtr właściwy
+$\mathcal U$, maksymalny względem zawierania wśród
+wszystkich filtrów właściwych na $X$.
+Filtr właściwy rozumiemy zgodnie z definicją filtru
+z rozdziału~06 (w szczególności nie zawiera zbioru pustego). Na zbiorze pustym filtr właściwy
+nie istnieje.
+\end{definicja}
+
+\begin{lemat}[Kryterium ultrafiltru]
+\label{lem:topog-zwartosc-ultrafiltr-alternatywa}
+Filtr właściwy $\mathcal U$ na zbiorze $X$ jest
+ultrafiltrem wtedy i tylko wtedy, gdy dla każdego
+$B\subseteq X$ dokładnie jeden ze zbiorów
+$B$ i $X\setminus B$ należy do $\mathcal U$.
+\end{lemat}
+\begin{proof}
+Oba zbiory nie mogą należeć do właściwego filtru,
+bo ich przecięcie jest puste. Jeśli $\mathcal U$
+jest maksymalny i $B\notin\mathcal U$, to
+musi istnieć $F\in\mathcal U$ z $F\cap B=\varnothing$.
+W przeciwnym razie rodzina $\mathcal U\cup\{B\}$
+miałaby własność skończonych przecięć i generowałaby
+filtr właściwy ściśle większy od $\mathcal U$,
+co przeczyłoby maksymalności.
+Wtedy $F\subseteq X\setminus B$, zatem
+$X\setminus B\in\mathcal U$ z domknięcia filtru
+na nadzbiory.
+
+Odwrotnie, jeśli filtr wybiera dla każdego $B$
+jedną ze stron podziału $X=B\cup(X\setminus B)$,
+to żaden większy właściwy filtr nie może zawierać
+$B\notin\mathcal U$, bo zawierałby też
+$X\setminus B\in\mathcal U$ i stąd zbiór pusty.
+To dowodzi maksymalności.
+\end{proof}
+
+\begin{lemat}[Przedłużenie filtru do ultrafiltru]
+\label{lem:topog-zwartosc-ultrafiltr-zorn}
+Każdy filtr właściwy na zbiorze $X$ jest zawarty
+w pewnym ultrafiltrze na $X$. W dowodzie korzystamy
+z lematu Zorna, a zatem z zasady wyboru.
+\end{lemat}
+\begin{proof}
+Rozważmy uporządkowaną przez zawieranie rodzinę
+wszystkich filtrów właściwych zawierających ustalony
+filtr $\mathcal F$. Jest niepusta, gdyż zawiera
+$\mathcal F$. Jeśli $\mathcal C$ jest łańcuchem,
+to suma rodzin $\mathcal G=\bigcup_{\mathcal H\in\mathcal C}
+\mathcal H$ jest filtrem właściwym: dla dwóch zbiorów
+należących do $\mathcal G$ ich filtry z łańcucha
+są porównywalne, zatem większy z nich zawiera oba
+i ich przecięcie; domknięcie na nadzbiory
+jest równie bezpośrednie, a $\varnothing$ nie należy
+do żadnego z filtrów. Dla pustego łańcucha
+górnym ograniczeniem jest $\mathcal F$.
+Lemat Zorna daje element maksymalny, czyli ultrafiltr.
+\end{proof}
+
+\begin{twierdzenie}[Ultrafiltry charakteryzują zwartość]
+\label{thm:topog-zwartosc-ultrafiltry}
+Przestrzeń topologiczna $X$ jest zwarta wtedy i tylko
+wtedy, gdy każdy ultrafiltr na $X$ jest zbieżny
+do przynajmniej jednego punktu $X$.
+\end{twierdzenie}
+\begin{proof}
+Niech $X$ będzie zwarta i $\mathcal U$
+ultrafiltrem na $X$. Rodzina
+$(\overline F)_{F\in\mathcal U}$ jest niepusta
+i ma własność skończonych przecięć:
+$F_1\cap\cdots\cap F_n\in\mathcal U$ jest
+niepusty i zawiera się w każdym $\overline{F_j}$.
+Na mocy twierdzenia \ref{thm:topog-zwartosc-fip}
+istnieje $x\in\bigcap_{F\in\mathcal U}\overline F$.
+Jeżeli otwarte otoczenie $V$ punktu $x$ nie należałoby
+do $\mathcal U$, to z lematu
+\ref{lem:topog-zwartosc-ultrafiltr-alternatywa}
+$X\setminus V\in\mathcal U$.
+Mielibyśmy wtedy $x\in\overline{X\setminus V}$,
+co jest niemożliwe, ponieważ otwarty zbiór $V$
+nie przecina $X\setminus V$.
+Zatem każde otwarte otoczenie $x$ należy do
+$\mathcal U$, czyli $\mathcal U\to x$.
+
+Odwrotnie, załóżmy, że $X$ nie jest zwarta.
+Istnieje pokrycie otwarte $(U_i)_{i\in I}$
+bez podpokrycia skończonego. Dopełnienia
+$F_i=X\setminus U_i$ mają własność skończonych
+przecięć, więc generują filtr właściwy:
+jego elementami są nadzbiory niepustych skończonych
+przecięć $F_i$. Lemat
+\ref{lem:topog-zwartosc-ultrafiltr-zorn}
+daje ultrafiltr $\mathcal U$ zawierający każdy $F_i$.
+Gdyby $\mathcal U\to x$, wybralibyśmy $i$ z
+$x\in U_i$; wtedy również $U_i\in\mathcal U$,
+a $F_i=X\setminus U_i\in\mathcal U$, sprzeczność.
+Zatem pewien ultrafiltr nie zbiega, co kończy dowód.
+\end{proof}
+
+\begin{uwaga}[Punkt skupienia filtru i granica ultrafiltru]
+\label{rem:topog-zwartosc-filtr-zbieznosc}
+Każdy filtr na przestrzeni zwartej ma punkt skupienia:
+rodzina $(\overline F)_{F\in\mathcal F}$ ma własność
+skończonych przecięć, bo przecięcie skończonej liczby
+elementów filtru jest niepuste. Po zastosowaniu
+kryterium \ref{thm:topog-zwartosc-fip} uzyskujemy
+$x\in\bigcap_{F\in\mathcal F}\overline F$.
+Nie musi to być granica całego filtru; dla ultrafiltru
+punkt skupienia jest jednak granicą na mocy dowodu
+poprzedniego twierdzenia. W przestrzeni Hausdorffa
+każdy filtr ma co najwyżej jedną granicę, jak
+udowodniono w rozdziale~06.
+\end{uwaga}
+
+\section{Zwartość iloczynów — twierdzenie Tychonoffa}
+\label{sec:topog-zwartosc-iloczyny}
+
+\begin{twierdzenie}[Twierdzenie Tychonoffa o iloczynach]
+\label{thm:topog-tychonoff-iloczyny}
+Niech $I$ będzie dowolnym zbiorem, a
+$((X_i,\tau_i))_{i\in I}$ rodziną przestrzeni
+zwartych. Wówczas iloczyn
+$X=\prod_{i\in I}X_i$ z topologią produktową
+jest zwarty. W dowodzie dla dowolnej rodziny
+wykorzystujemy aksjomat wyboru.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $I=\varnothing$, iloczyn jest przestrzenią
+jednopunktową i jest zwarty. Jeśli któryś czynnik
+jest pusty, iloczyn też jest pusty i jest zwarty.
+Rozważmy więc rodzinę niepustych przestrzeni.
+Aksjomat wyboru zapewnia, że iloczyn $X$ jest
+niepusty.
+
+Niech $\mathcal U$ będzie dowolnym ultrafiltrem
+na $X$ i $p_i\colon X\to X_i$ rzutowaniem.
+Definiujemy filtr obrazowy
+\[
+\mathcal U_i=\{B\subseteq X_i:
+ p_i^{-1}(B)\in\mathcal U\}.
+\]
+Jest on ultrafiltrem: dla każdego $B\subseteq X_i$
+przeciwobrazy $B$ oraz $X_i\setminus B$ są
+wzajemnymi dopełnieniami w $X$, więc na mocy lematu
+\ref{lem:topog-zwartosc-ultrafiltr-alternatywa}
+dokładnie jeden z nich należy do $\mathcal U$.
+Pozostałe własności filtru wynikają z własności
+przeciwobrazów i tego, że $p_i^{-1}(X_i)=X$.
+
+Zwartość $X_i$ i twierdzenie
+\ref{thm:topog-zwartosc-ultrafiltry} dają punkt
+$x_i\in X_i$, do którego zbiega $\mathcal U_i$.
+Wybierzmy jednocześnie takie punkty dla wszystkich
+$i\in I$ (korzystamy tu z aksjomatu wyboru).
+Otrzymujemy $x=(x_i)_{i\in I}\in X$.
+Dla bazowego otoczenia $x$ w topologii produktowej
+\[
+W=\bigcap_{j\in J}p_j^{-1}(V_j),\qquad J\subseteq I
+\text{ skończony},\quad x_j\in V_j\in\tau_j,
+\]
+każdy $V_j$ należy do $\mathcal U_j$, a zatem
+$p_j^{-1}(V_j)\in\mathcal U$.
+Filtr jest domknięty na skończone przecięcia,
+więc $W\in\mathcal U$.
+Ponieważ zbiory $W$ tworzą bazę otoczeń $x$,
+ultrafiltr $\mathcal U$ zbiega do $x$.
+Na mocy twierdzenia \ref{thm:topog-zwartosc-ultrafiltry}
+iloczyn $X$ jest zwarty.
+\end{proof}
+
+\begin{stwierdzenie}[Przypadek skończonego iloczynu]
+\label{prop:topog-zwartosc-iloczyn-skonczony}
+Dla $n\ge1$ iloczyn przestrzeni zwartych
+$X_1\times\cdots\times X_n$ jest zwarty.
+Jeżeli ponadto wszystkie te przestrzenie są
+Hausdorffa, ich iloczyn jest Hausdorffa.
+\end{stwierdzenie}
+\begin{proof}
+Zwartość wynika z twierdzenia
+\ref{thm:topog-tychonoff-iloczyny}.
+Jeśli dwa punkty iloczynu są różne, różnią się
+w pewnej współrzędnej $i$. Dla tej współrzędnej
+wybieramy rozłączne otwarte otoczenia odpowiednich
+punktów w $X_i$. Ich przeciwobrazy przez $p_i$
+są rozłącznymi otwartymi otoczeniami punktów
+w iloczynie, co dowodzi aksjomatu Hausdorffa.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie Heinego--Borela]
+\label{thm:topog-heine-borel}
+Dla każdego $n\ge1$ podzbiór $K\subseteq\R^n$
+z topologią euklidesową jest zwarty wtedy i tylko
+wtedy, gdy jest domknięty i ograniczony.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy, że $K$ jest zwarty.
+Przestrzeń $\R^n$ jest Hausdorffa, więc
+$K$ jest domknięty na mocy twierdzenia
+\ref{thm:topog-zwartosc-hausdorff-domkniete}.
+Zbiory $(-m,m)^n$, $m\ge1$, stanowią pokrycie
+$\R^n$, więc pewien z nich zawiera $K$:
+z każdego skończonego podpokrycia możemy wybrać
+największe $m$. To znaczy, że $K$ jest ograniczony.
+
+Odwrotnie, niech $K$ będzie domknięty i ograniczony.
+Istnieje $M>0$ z $K\subseteq[-M,M]^n$.
+Każdy przedział $[-M,M]$ jest zwarty na mocy
+\ref{thm:topog-zwartosc-odcinek}, a jego
+$n$-krotny iloczyn jest zwarty na mocy
+\ref{prop:topog-zwartosc-iloczyn-skonczony}.
+W topologii euklidesowej $\R^n$ topologia
+produktowa współrzędnych jest tą samą topologią:
+dla metryki maksimum $d_\infty$ i euklidesowej
+$d_2$ zachodzi $d_\infty(x,y)\le d_2(x,y)
+\le\sqrt n\,d_\infty(x,y)$, a zatem kule
+obu metryk są wzajemnie porównywalne i wyznaczają
+tę samą rodzinę zbiorów otwartych. Kule metryki
+maksimum są właśnie produktami otwartych
+przedziałów o wspólnym promieniu.
+Zbiór $K$ jest domknięty w $[-M,M]^n$, zatem
+jest zwarty na mocy
+\ref{thm:topog-zwartosc-trwalosc}(i).
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=.87,>=Stealth]
+\begin{scope}[shift={(0,0)}]
+ \fill[blue!10] (0,0) rectangle (3.15,2.5);
+ \draw[blue!70!black,thick] (0,0) rectangle (3.15,2.5);
+ \foreach \x in {.63,1.26,1.89,2.52} {
+   \draw[blue!32] (\x,0)--(\x,2.5);
+ }
+ \foreach \y in {.5,1,1.5,2} {
+   \draw[blue!32] (0,\y)--(3.15,\y);
+ }
+ \node[fill=white,inner sep=2pt,font=\small] at (1.57,1.25)
+   {$[-M,M]\times[-M,M]$};
+ \node[font=\small,align=center] at (1.57,-.48)
+   {iloczyn dwóch\\zwartych odcinków};
+\end{scope}
+\begin{scope}[shift={(5,0)}]
+ \fill[blue!10] (0,0) rectangle (3.15,2.5);
+ \draw[blue!70!black,thick] (0,0) rectangle (3.15,2.5);
+ \filldraw[orange!30,draw=orange!85!black,thick]
+   (1.52,1.25) ellipse (0.92 and .73);
+ \node[font=\small] at (1.52,1.25) {$K$};
+ \node[font=\small,blue!70!black] at (2.32,2.23) {$[-M,M]^2$};
+ \node[font=\small,align=center] at (1.57,-.48)
+   {domknięty podzbiór\\zwartego prostokąta};
+\end{scope}
+\end{tikzpicture}
+\caption{Dwa kroki dowodu twierdzenia Heinego--Borela:
+zwartość prostokąta jako iloczynu zwartych odcinków
+oraz trwałość zwartości po przejściu do zbioru domkniętego.
+Rysunek ma charakter schematyczny.}
+\label{fig:topog-heine-borel}
+\end{figure}
+\FloatBarrier
+
+\section{Zanurzanie przestrzeni Tychonoffa w kostkę}
+\label{sec:topog-zwartosc-kostka}
+
+\begin{twierdzenie}[Zanurzanie w kostkę Tychonoffa]
+\label{thm:topog-zwartosc-zanurzenie-kostka}
+Dla przestrzeni topologicznej $X$ następujące
+warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $X$ spełnia aksjomat Tychonoffa, czyli jest
+całkowicie regularna i $T_1$;
+\item istnieje zbiór indeksów $I$ oraz zanurzenie
+topologiczne $e\colon X\to[0,1]^I$.
+\end{enumerate}
+Można wziąć $I=C(X,[0,1])$, zbiór wszystkich
+ciągłych funkcji $X\to[0,1]$, oraz
+$e(x)=(f(x))_{f\in I}$.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy (i). Zbiór $I=C(X,[0,1])$ jest zbiorem,
+ponieważ jest podzbiorem zbioru wszystkich funkcji
+$[0,1]^X$. Definiujemy
+$e(x)=(f(x))_{f\in I}$.
+Każda współrzędna $p_f\circ e=f$ jest ciągła,
+więc $e$ jest ciągłe na mocy własności uniwersalnej
+topologii produktowej z rozdziału~04.
+
+Jeżeli $x\ne y$, to $\{y\}$ jest domknięty,
+ponieważ $X$ spełnia $T_1$. Całkowita regularność
+daje $f\in I$ z $f(x)=0$ i $f(y)=1$.
+Zatem $e(x)\ne e(y)$, czyli $e$ jest różnowartościowe.
+
+Pokażemy, że $e^{-1}\colon e(X)\to X$ jest ciągłe.
+Niech $U\subseteq X$ będzie otwarty, a $x\in U$.
+Zbiór $F=X\setminus U$ jest domknięty i nie zawiera
+$x$, więc całkowita regularność daje $f_x\in I$
+z $f_x(x)=0$ i $f_x(F)=\{1\}$, o ile $F\ne\varnothing$;
+jeśli $F=\varnothing$, wybieramy po prostu funkcję
+stałą równą $0$, co wystarcza w poniższym argumencie.
+Zbiór
+\[
+W_x=p_{f_x}^{-1}([0,1/2))\cap e(X)
+\]
+jest otwarty w $e(X)$, ponieważ $[0,1/2)$ jest otwarty
+w $[0,1]$ i rzutowanie $p_{f_x}$ jest ciągłe.
+Zawiera $e(x)$ i spełnia $W_x\subseteq e(U)$:
+dla $y\in F$ mamy
+$f_x(y)=1$, więc $e(y)\notin W_x$.
+Ponieważ $x\in U$ było dowolne, każdy punkt
+$e(U)$ ma otwarte w $e(X)$ otoczenie zawarte
+w $e(U)$. Stąd $e(U)$ jest otwarty w $e(X)$.
+To oznacza ciągłość odwrotności i dowodzi,
+że $e$ jest zanurzeniem topologicznym.
+
+Odwrotnie, załóżmy (ii). Przestrzeń $[0,1]$ jest
+Hausdorffa i całkowicie regularna: dla punktu
+$t$ oraz domkniętego $F\subseteq[0,1]$ z $t\notin F$
+można, gdy $F\ne\varnothing$, użyć funkcji
+$g(s)=|s-t|/(|s-t|+d(s,F))$, gdzie
+$d(s,F)=\inf_{z\in F}|s-z|$.
+Funkcja $s\mapsto d(s,F)$ jest ciągła:
+dla każdego $z\in F$ nierówność trójkąta daje
+$|s-z|\le |s-u|+|u-z|$. Biorąc infimum po
+$z\in F$ i zamieniając $s$ z $u$, otrzymujemy
+$|d(s,F)-d(u,F)|\le |s-u|$.
+Mianownik jest dodatni dla $s\ne t$ przez
+$|s-t|>0$, a dla $s=t$ przez $d(t,F)>0$,
+ponieważ $F$ jest domknięty i $t\notin F$.
+Zatem $g$ jest ciągła, $g(t)=0$ i $g|_F=1$.
+Dla $F=\varnothing$ wystarczy $g\equiv0$.
+
+Pokażmy bez powoływania się na nieudowodnioną
+regułę o iloczynach, że kostka $Q=[0,1]^I$
+jest całkowicie regularna. Niech $q\in Q$ i
+$F\subseteq Q$ będzie domknięty, $q\notin F$.
+Istnieje bazowe otoczenie
+$B=\bigcap_{j\in J}p_j^{-1}(V_j)$ punktu $q$
+zawarte w $Q\setminus F$, gdzie $J\subseteq I$
+jest skończony, a $V_j\subseteq[0,1]$ są otwarte
+i zawierają $q_j$.
+Dla każdego $j\in J$ wybierzmy ciągłe
+$g_j\colon[0,1]\to[0,1]$ z $g_j(q_j)=0$
+oraz $g_j=1$ na $[0,1]\setminus V_j$.
+Istnienie wynika z całkowitej regularności odcinka;
+przy $V_j=[0,1]$ wystarczy $g_j\equiv0$.
+Jeśli $J\ne\varnothing$, zdefiniujmy
+$G(z)=\max_{j\in J}g_j(z_j)$.
+Każda funkcja $g_j\circ p_j$ jest ciągła,
+a maksimum dwóch funkcji ciągłych jest ciągłe
+na mocy tożsamości
+$\max\{a,b\}=(a+b+|a-b|)/2$.
+Przez indukcję otrzymujemy ciągłość $G$.
+Ponadto $G(q)=0$ oraz $G|_F=1$,
+gdyż każdy punkt poza $B$ narusza przynajmniej
+jeden z warunków $z_j\in V_j$.
+Jeśli $J=\varnothing$, to $B=Q$ oraz
+$F=\varnothing$; wówczas weźmy $G\equiv0$.
+Ponadto $Q$ jest $T_1$: dla $q\ne r$ istnieje
+współrzędna $i$ z $q_i\ne r_i$, a rozłączne
+otoczenia w $[0,1]$ dają rozłączne otoczenia
+w $Q$. Zatem $Q$ jest Tychonoffa.
+Z twierdzenia o dziedziczeniu z rozdziału~05
+każda podprzestrzeń $Q$, w szczególności $e(X)$,
+jest Tychonoffa. Homeomorfizm
+$X\cong e(X)$ przenosi tę własność na $X$.
+\end{proof}
+
+\begin{wniosek}[Zwartość i kostkowe uzwarcenie]
+\label{cor:topog-zwartosc-uzwarcenie}
+Niech $X$ będzie przestrzenią Tychonoffa i niech
+$e\colon X\to Q=[0,1]^I$ będzie zanurzeniem
+z poprzedniego twierdzenia. Wówczas
+$K=\overline{e(X)}^{\,Q}$ jest zwartą przestrzenią
+Hausdorffa, a $e(X)$ jest gęsty w $K$.
+Jeśli ponadto $X$ jest zwarta, to $e(X)$ jest
+domknięty w $Q$ i $K=e(X)$.
+\end{wniosek}
+\begin{proof}
+Na mocy twierdzenia \ref{thm:topog-tychonoff-iloczyny}
+kostka $Q$ jest zwarta. Jest Hausdorffa,
+jak wykazano w dowodzie twierdzenia
+\ref{thm:topog-zwartosc-zanurzenie-kostka}.
+Zbiór $K$ jest domknięty w $Q$, więc zwarty
+na mocy twierdzenia \ref{thm:topog-zwartosc-trwalosc}.
+Jako podprzestrzeń $Q$ jest Hausdorffa.
+Gęstość $e(X)$ w $K$ wynika z definicji domknięcia.
+Jeśli $X$ jest zwarta, obraz $e(X)$ jest zwarty
+jako obraz ciągły, a więc domknięty w
+przestrzeni Hausdorffa $Q$. Stąd $K=e(X)$.
+\end{proof}
+
+\begin{przyklad}[Prosty model zanurzenia i domknięcia]
+\label{ex:topog-zwartosc-uzwarcenie-odcinka}
+Funkcja $e\colon\R\to(0,1)$ dana wzorem
+$e(t)=\tfrac12+\tfrac{1}{\pi}\arctan t$
+jest homeomorfizmem $\R$ na $(0,1)$:
+jest ciągła i ściśle rosnąca, jej granice przy
+$t\to\pm\infty$ są równe odpowiednio $0$ i $1$,
+a odwrotność $t=\tan(\pi(s-1/2))$ jest ciągła
+na $(0,1)$. Jako odwzorowanie $\R\to[0,1]$ funkcja $e$ jest
+więc zanurzeniem o niedomkniętym obrazie $(0,1)$.
+Jego domknięcie $[0,1]$ jest zwarte,
+mimo że $\R$ nie jest zwarta.
+\end{przyklad}
+
+\section{Podsumowanie i uwagi o założeniach}
+\label{sec:topog-zwartosc-podsumowanie}
+
+\begin{center}
+\begin{tabular}{@{}p{.33\textwidth}p{.51\textwidth}@{}}
+\hline
+\textbf{Charakterystyka} & \textbf{Zakres obowiązywania} \\ \hline
+Pokrycia otwarte i przecięcia zbiorów domkniętych &
+Wszystkie przestrzenie topologiczne.\\
+Punkt skupienia każdej sieci; zbieżna podsieć &
+Wszystkie przestrzenie topologiczne.\\
+Zbieżność każdego ultrafiltru &
+Wszystkie przestrzenie topologiczne; dowód przedłużania
+filtru używa lematu Zorna.\\
+Osiąganie kresów (Weierstrass) &
+Każda ciągła funkcja rzeczywista na niepustej
+przestrzeni zwartej (bez aksjomatów oddzielania).\\
+Zwartość dowolnego iloczynu &
+Dla topologii produktowej; w ogólnym przypadku
+stosujemy aksjomat wyboru.\\
+Domkniętość każdego zwartego podzbioru &
+Jeśli przestrzeń otaczająca jest Hausdorffa.\\
+Zanurzenie w $[0,1]^I$ &
+Dokładnie dla przestrzeni Tychonoffa ($T_{3\frac12}$).\\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{uwaga}[Granice kryteriów ciągowych]
+\label{rem:topog-zwartosc-ciagowe}
+W ogólnej przestrzeni topologicznej nie zastępujemy
+w definicji zwartości sieci dowolnymi ciągami.
+Charakterystyka przez sieci i ultrafiltry jest
+bezwarunkowa co do aksjomatów oddzielania,
+podczas gdy równoważność zwartości ze zwartością
+ciągową wymaga dodatkowych hipotez i zostanie
+omówiona w odpowiednim późniejszym rozdziale.
+\end{uwaga}

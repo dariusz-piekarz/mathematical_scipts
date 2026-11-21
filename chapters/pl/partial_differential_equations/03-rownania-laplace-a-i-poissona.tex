@@ -1,0 +1,930 @@
+\chapter[Równania Laplace'a i Poissona]{Równania Laplace'a i Poissona: funkcje harmoniczne i potencjał}
+\label{chap:pde-laplace}
+
+W tym rozdziale badamy dwa równania na zbiorze otwartym $\Omega\subset\R^n$:
+$\Delta u=0$ oraz $-\Delta u=f$. Pierwsze opisuje między innymi
+stacjonarną temperaturę i potencjały bez źródeł; drugie uwzględnia
+źródła. W przeciwieństwie do równania transportu nie wystarcza
+znajomość danych na dowolnej hiperpowierzchni. Naturalnym zadaniem
+jest zwykle problem Dirichleta na \emph{całym} brzegu.
+
+Przez $\lambda_n$ oznaczamy miarę Lebesgue'a w $\R^n$, przez
+$\sigma$ miarę powierzchniową na gładkiej hiperpowierzchni,
+a przez $\omega_n=\sigma(S^{n-1})$ pole jednostkowej sfery.
+W szczególności $\lambda_n(B_r(0))=\omega_n r^n/n$.
+Znak laplasjanu ustalamy jako $\Delta=\sum_{j=1}^n\partial_{x_j}^2$;
+rozwiązanie fundamentalne będziemy normalizować przez $-\Delta\Phi=\delta_0$.
+
+\section{Własność wartości średniej}
+\label{sec:pde3-mean}
+
+\begin{definicja}[Funkcja harmoniczna]
+Niech $\Omega\subset\R^n$ będzie niepustym zbiorem otwartym.
+Funkcję rzeczywistą $u\in C^2(\Omega)$ nazywamy \emph{harmoniczną}
+na $\Omega$, jeśli $\Delta u=0$ w każdym punkcie $\Omega$.
+Funkcję $u\in C^2(\Omega)$ nazywamy \emph{subharmoniczną},
+gdy $\Delta u\geq0$, oraz \emph{superharmoniczną},
+gdy $\Delta u\leq0$. Później rozszerzymy te pojęcia
+na funkcje bez klasycznych drugich pochodnych.
+\end{definicja}
+
+Dla $x_0\in\Omega$ i $0<r<\operatorname{dist}(x_0,\partial\Omega)$
+zapisujemy średnią sferyczną
+\begin{equation}\label{eq:pde3-sphere-mean}
+ M_u(x_0,r)=\frac{1}{\omega_n r^{n-1}}
+ \int_{\partial B_r(x_0)}u(y)\,\mathrm d\sigma(y)
+ =\frac1{\omega_n}\int_{S^{n-1}}u(x_0+r\theta)\,
+ \mathrm d\sigma(\theta).
+\end{equation}
+Jeśli $\Omega=\R^n$, przyjmujemy $\operatorname{dist}(x_0,\partial\Omega)=+\infty$.
+
+\begin{twierdzenie}[Własność wartości średniej]
+\label{thm:pde3-mean}
+Niech $n\geq2$, $\Omega\subset\R^n$ będzie otwarta,
+$u\in C^2(\Omega)$ i $\Delta u=0$ w $\Omega$.
+Dla każdego $x_0\in\Omega$ oraz $r>0$ takich, że
+$\overline{B_r(x_0)}\subset\Omega$, zachodzi
+\begin{equation}\label{eq:pde3-both-means}
+ u(x_0)=\frac{1}{\omega_n r^{n-1}}
+ \int_{\partial B_r(x_0)}u(y)\,\mathrm d\sigma(y)
+ =\frac{1}{\lambda_n(B_r(x_0))}
+ \int_{B_r(x_0)}u(y)\,\mathrm d\lambda_n(y).
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Rozważmy $M(r)=M_u(x_0,r)$. Różniczkując drugą
+postać we wzorze~\eqref{eq:pde3-sphere-mean} i używając
+wzoru Gaussa, otrzymujemy
+\[
+ M'(r)=\frac{1}{\omega_n r^{n-1}}
+ \int_{\partial B_r(x_0)}\partial_\nu u(y)\,
+ \mathrm d\sigma(y)
+ =\frac{1}{\omega_n r^{n-1}}
+ \int_{B_r(x_0)}\Delta u(y)\,\mathrm d\lambda_n(y)=0.
+\]
+Zatem $M$ jest stała. Z ciągłości $u$ mamy
+$\lim_{r\downarrow0}M(r)=u(x_0)$, co daje średnią sferyczną.
+Całkując tę tożsamość w zmiennej promieniowej z wagą
+$\omega_n s^{n-1}$ od $0$ do $r$ i korzystając ze
+współrzędnych biegunowych, otrzymujemy średnią po kuli.
+\end{proof}
+
+\begin{stwierdzenie}[Odwrotność własności średniej]
+\label{prop:pde3-converse}
+Niech $n\geq2$, $\Omega\subset\R^n$ będzie otwarta,
+a $u\in C^2(\Omega)$. Jeśli dla każdego $x\in\Omega$
+i wszystkich dostatecznie małych $r>0$ spełniona jest
+pierwsza równość w~\eqref{eq:pde3-both-means}, to
+$\Delta u=0$ w $\Omega$. Ten sam wniosek zachodzi przy
+założeniu własności średniej po kulach.
+\end{stwierdzenie}
+\begin{proof}
+Wzór Taylora w punkcie $x$ daje jednostajnie względem
+$\theta\in S^{n-1}$:
+$u(x+r\theta)=u(x)+r\nabla u(x)\cdot\theta+
+\frac{r^2}{2}\theta^{\mathsf T}D^2u(x)\theta+o(r^2)$.
+Przez symetrię sfery całki z $\theta_i$ znikają,
+a $\omega_n^{-1}\int_{S^{n-1}}\theta_i\theta_j\,
+\mathrm d\sigma(\theta)=\delta_{ij}/n$.
+Stąd $M_u(x,r)=u(x)+\frac{r^2}{2n}\Delta u(x)+o(r^2)$.
+Jeśli $M_u(x,r)=u(x)$, dzielimy przez $r^2$ i przechodzimy
+do granicy. Wersja dla kul daje współczynnik
+$r^2/(2(n+2))$ zamiast $r^2/(2n)$, a argument jest taki sam.
+\end{proof}
+
+\begin{uwaga}[Dlaczego średnia po kulach nie jest przypadkowa?]
+Wartość funkcji harmonicznej w środku jest dokładnie
+równowagą jej wartości wokół środka. Dla funkcji
+subharmonicznej o klasie $C^2$ rachunek z dowodu pokazuje,
+że $M_u(x,r)$ jest niemalejąca jako funkcja $r$, więc
+$u(x)\leq M_u(x,r)$. Dla funkcji superharmonicznej
+nierówność ma kierunek przeciwny.
+\end{uwaga}
+
+\begin{twierdzenie}[Własność wartości średniej bez założenia $C^2$]
+\label{thm:pde-v31-continuous-mean}
+Niech $n\ge2$, $\Omega\subset\R^n$ będzie otwarta,
+a $u\in C(\Omega)$. Załóżmy, że dla każdego
+$x\in\Omega$ i każdego $r>0$ z
+$\overline{B_r(x)}\subset\Omega$ zachodzi
+\[
+ u(x)=\frac1{\omega_nr^{n-1}}
+ \int_{\partial B_r(x)}u(y)\,\mathrm d\sigma(y).
+\]
+Wówczas $u\in C^\infty(\Omega)$ i $\Delta u=0$ w $\Omega$.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy kulę $\overline{B_{2R}(x_0)}\subset\Omega$.
+Wybierzmy nieujemną gładką funkcję $\rho$ o nośniku
+w $B_1(0)$ i całce $\int_{\R^n}\rho(z)\,
+\mathrm d\lambda_n(z)=1$. Dla $0<\eps<R/2$ definiujemy
+lokalnie
+$u_\eps(x)=\int_{\R^n}\rho_\eps(z)u(x-z)\,
+\mathrm d\lambda_n(z)$ na $B_{3R/2}(x_0)$,
+gdzie $\rho_\eps(z)=\eps^{-n}\rho(z/\eps)$.
+Funkcja $u_\eps$ jest gładka. Dla $x\in B_R(x_0)$
+i dostatecznie małego $r>0$ zamiana kolejności całek
+i założona własność średniej dla punktów $x-z$
+prowadzą do
+\[
+ \frac1{\omega_nr^{n-1}}
+ \int_{\partial B_r(x)}u_\eps(y)\,\mathrm d\sigma(y)
+ =\int_{\R^n}\rho_\eps(z)u(x-z)\,
+ \mathrm d\lambda_n(z)=u_\eps(x).
+\]
+Użycie twierdzenia Fubiniego jest dopuszczalne,
+ponieważ całkujemy funkcję ciągłą po zbiorach zwartych.
+Z odwrotności własności średniej dla funkcji klasy $C^2$
+(stwierdzenie~\ref{prop:pde3-converse}) wynika
+$\Delta u_\eps=0$ na $B_R(x_0)$.
+
+Z ciągłości $u$ wynika $u_\eps\to u$ jednostajnie na
+$\overline{B_R(x_0)}$. Stosujemy wzór Poissona
+(twierdzenie~\ref{thm:pde3-poisson}) do każdej funkcji
+$u_\eps$ na kuli $B_R(x_0)$:
+\[
+ u_\eps(x)=\int_{\partial B_R(x_0)}P_R(x-x_0,\zeta-x_0)
+ u_\eps(\zeta)\,\mathrm d\sigma(\zeta),
+ \qquad x\in B_R(x_0).
+\]
+Dodatniość i normalizacja jądra umożliwiają przejście
+do granicy w powyższej całce. W konsekwencji $u$ jest
+dokładnie rozwiązaniem Poissona z ciągłymi danymi
+$u|_{\partial B_R(x_0)}$, a więc jest harmoniczna
+i gładka na $B_R(x_0)$. Dowolność $x_0$ kończy dowód.
+\end{proof}
+
+\begin{uwaga}
+Kluczowe jest, że własność średniej zakładamy dla
+\emph{wszystkich} kul o domknięciu zawartym w $\Omega$.
+Nie należy bez dodatkowego argumentu zastępować tego
+warunku wymaganiem dotyczącym jednego promienia
+zależnego od środka kuli.
+\end{uwaga}
+
+\section{Mocna zasada maksimum, jednoznaczność i twierdzenie Liouville'a}
+\label{sec:pde3-max}
+
+Słabą zasadę maksimum udowodniliśmy już w twierdzeniu
+\ref{thm:laplace-max}. Własność wartości średniej daje
+twierdzenie silniejsze, które nie wymaga ograniczoności obszaru.
+
+\begin{twierdzenie}[Mocna zasada maksimum dla funkcji harmonicznych]
+\label{thm:pde3-strong-max}
+Niech $\Omega\subset\R^n$ będzie obszarem, $n\geq2$,
+a $u\in C^2(\Omega)$ funkcją harmoniczną. Jeśli
+$u$ osiąga maksimum lokalne albo minimum lokalne w pewnym
+punkcie $x_0\in\Omega$, to jest stała na $\Omega$.
+\end{twierdzenie}
+\begin{proof}
+Niech $M=u(x_0)$ będzie maksimum lokalnym. Dla pewnego
+$r_0>0$ funkcja $u$ nie przekracza $M$ na $B_{r_0}(x_0)$.
+Dla każdego $0<r<r_0$ jej średnia po sferze
+$\partial B_r(x_0)$ równa się $M$. Ponieważ $u$ jest
+ciągła i nie przekracza $M$, musi być równa $M$ na
+każdej z tych sfer, a więc na całej kuli $B_{r_0}(x_0)$.
+
+Aby rozciągnąć stałość na cały obszar,
+korzystamy z twierdzenia o analityczności funkcji
+harmonicznych (twierdzenie~\ref{thm:pde3-analytic}),
+udowodnionego niżej niezależnie od obecnego wyniku.
+Dla rzeczywiście analitycznej funkcji na spójnym zbiorze
+otwartym równość z funkcją stałą na niepustym otwartym
+podzbiorze wymusza taką samą równość wszędzie:
+można to wykazać, przechodząc wzdłuż drogi przez
+skończenie wiele nakładających się kul, na których
+zbieżne szeregi Taylora wyznaczają funkcję jednoznacznie.
+Dokładniej, jeśli analityczna funkcja jest zerowa na
+niepustej części pierwszej kuli, wszystkie jej pochodne
+w punktach tej części są zerowe, a jej szereg Taylora
+przedstawia funkcję zerową w otoczeniu takiego punktu.
+Przenosząc ten argument po nakładających się kulach,
+uzyskujemy zerowanie się na całym spójnym obszarze.
+Wskazane późniejsze twierdzenie o analityczności
+korzysta tylko z reprezentacji Poissona i nie odwołuje
+się do mocnej zasady maksimum.
+Zatem $u\equiv M$ na $\Omega$. Przypadek minimum
+sprowadza się do maksimum funkcji $-u$.
+\end{proof}
+
+\begin{stwierdzenie}[Oszacowanie pochodnych w środku kuli]
+\label{prop:pde3-gradient}
+Niech $n\geq2$, $R>0$, $x_0\in\R^n$,
+a $u\in C^2(B_R(x_0))\cap C(\overline{B_R(x_0)})$
+będzie harmoniczna. Wówczas dla każdego
+$j=1,\dots,n$ zachodzi
+\begin{equation}\label{eq:pde3-derivative-bound}
+ |\partial_{x_j}u(x_0)|\leq \frac nR
+ \sup_{y\in B_R(x_0)}|u(y)|.
+\end{equation}
+\end{stwierdzenie}
+\begin{proof}
+Pochodna $\partial_{x_j}u$ jest harmoniczna, gdy
+$u$ ma trzecie pochodne, których jeszcze nie wiemy.
+Dlatego nie zakładamy tego: różniczkujemy zamiast tego
+średnią objętościową z ruchomym środkiem
+$u(x)=\lambda_n(B_R)^{-1}\int_{B_R(0)}u(x+z)\,
+\mathrm d\lambda_n(z)$, początkowo dla $x$ bliskich $x_0$
+i promienia trochę mniejszego od $R$. Zatem
+$\partial_{x_j}u(x_0)=\lambda_n(B_\rho)^{-1}
+\int_{B_\rho(x_0)}\partial_{x_j}u(y)\,
+\mathrm d\lambda_n(y)$ dla każdego $\rho<R$.
+Twierdzenie Gaussa daje
+\[
+ \partial_{x_j}u(x_0)=\frac{1}{\lambda_n(B_\rho)}
+ \int_{\partial B_\rho(x_0)}u(y)\nu_j(y)\,
+ \mathrm d\sigma(y).
+\]
+Z $|\nu_j|\leq1$ i
+$\sigma(\partial B_\rho)/\lambda_n(B_\rho)=n/\rho$
+wynika oszacowanie z $\rho$ w mianowniku.
+Przechodząc do granicy $\rho\uparrow R$ dostajemy
+\eqref{eq:pde3-derivative-bound}.
+\end{proof}
+
+\begin{wniosek}[Twierdzenie Liouville'a]
+\label{cor:pde3-liouville}
+Niech $n\geq2$ i $u\in C^2(\R^n)$ będzie harmoniczna
+oraz ograniczona. Wtedy $u$ jest stała.
+\end{wniosek}
+\begin{proof}
+Dla każdego $x_0\in\R^n$ i $R>0$ stosujemy
+\eqref{eq:pde3-derivative-bound}. Ograniczoność $u$
+pozwala przejść z $R$ do nieskończoności, więc
+$\nabla u(x_0)=0$. Ponieważ $x_0$ był dowolny,
+a $\R^n$ jest spójna, funkcja $u$ jest stała.
+\end{proof}
+
+\begin{kontrprzyklad}[Dlaczego ograniczoność jest ważna?]
+Funkcja $u(x)=x_1$ jest harmoniczna na $\R^n$,
+lecz nie jest stała. Twierdzenie Liouville'a nie
+obowiązuje bez ograniczoności (ani analogicznej
+kontroli wzrostu).
+\end{kontrprzyklad}
+
+\section{Rozwiązanie fundamentalne laplasjanu}
+\label{sec:pde3-fundamental}
+
+Rozwiązaniem fundamentalnym operatora nazywa się funkcję lub dystrybucję,
+która reaguje na punktowe źródło. Wprowadzimy ją najpierw
+bez formalnej teorii dystrybucji: zapis
+$-\Delta\Phi=\delta_0$ będzie oznaczał precyzyjną
+tożsamość całkową, gdzie $\delta_0$ jest funkcjonałem
+$\varphi\mapsto\varphi(0)$ na funkcjach testowych.
+Tutaj $C_c^\infty(\R^n)$ oznacza przestrzeń funkcji
+nieskończenie różniczkowalnych o zwartym nośniku, a
+$L^1_{\mathrm{loc}}(\R^n)$ klasę funkcji całkowalnych
+na każdym zwartym podzbiorze $\R^n$.
+
+\begin{twierdzenie}[Rozwiązanie fundamentalne $-\Delta$]
+\label{thm:pde3-phi}
+Niech $n\geq2$ i $\omega_n=\sigma(S^{n-1})$. Dla
+$x\in\R^n\setminus\{0\}$ połóżmy
+\begin{equation}\label{eq:pde3-fundamental}
+ \Phi_n(x)=
+ \begin{cases}
+ \displaystyle\frac{1}{(n-2)\omega_n}|x|^{2-n},&n\geq3,\\[4pt]
+ \displaystyle-\frac1{2\pi}\log|x|,&n=2.
+ \end{cases}
+\end{equation}
+Wówczas $\Phi_n\in L^1_{\mathrm{loc}}(\R^n)$,
+$\Delta\Phi_n=0$ na $\R^n\setminus\{0\}$ oraz
+\begin{equation}\label{eq:pde3-distdelta}
+ \int_{\R^n}\Phi_n(x)(-\Delta\varphi(x))\,
+ \mathrm d\lambda_n(x)=\varphi(0)
+ \quad\text{dla każdej }\varphi\in C_c^\infty(\R^n).
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Dla radialnej funkcji $w(x)=h(|x|)$ i $x\ne0$
+obliczamy $\Delta w=h''(r)+(n-1)h'(r)/r$.
+Rozwiązanie $h''+(n-1)h'/r=0$ daje $h'(r)=Cr^{1-n}$,
+co prowadzi do potęg $r^{2-n}$ albo logarytmu.
+Wybór stałej w~\eqref{eq:pde3-fundamental} zapewnia
+$\partial_r\Phi_n(r)=-1/(\omega_n r^{n-1})$
+($\omega_2=2\pi$). Osobliwość jest całkowalna lokalnie,
+gdyż iloczyn $|\Phi_n(r)|r^{n-1}$ jest całkowalny w zerze.
+
+Niech $\varphi$ ma nośnik w $B_R(0)$ i $0<\eps<R$.
+Stosujemy drugą tożsamość Greena na pierścieniu
+$A_{\eps,R}=B_R(0)\setminus\overline{B_\eps(0)}$.
+Na zewnętrznym brzegu wszystkie składniki zawierające
+$\varphi$ znikają. Na wewnętrznym brzegu normalna
+zewnętrzna dla pierścienia jest skierowana do środka,
+a zatem $\partial_\nu\Phi_n=1/(\omega_n\eps^{n-1})$.
+Otrzymujemy
+\[
+ \int_{A_{\eps,R}}\Phi_n(y)(-\Delta\varphi(y))\,
+ \mathrm d\lambda_n(y)
+ =\int_{\partial B_\eps(0)}
+ \bigl(\varphi(y)\,\partial_\nu\Phi_n(y)
+       -\Phi_n(y)\,\partial_\nu\varphi(y)\bigr)\,\mathrm d\sigma(y).
+\]
+Pierwszy wyraz dąży do $\varphi(0)$; drugi znika,
+ponieważ $\eps^{n-1}|\Phi_n(\eps)|\to0$.
+Lokalna całkowalność pozwala przejść do granicy
+również po lewej stronie. Otrzymujemy~\eqref{eq:pde3-distdelta}.
+\end{proof}
+
+\begin{uwaga}[Wymiar jeden]
+Dla $n=1$ odpowiednikiem rozwiązania fundamentalnego
+jest $\Phi_1(x)=-|x|/2$, ponieważ druga pochodna
+$|x|$ w sensie dystrybucyjnym jest równa $2\delta_0$.
+Przypadek jednowymiarowy jest w istocie teorią ODE,
+dlatego w dalszych konstrukcjach potencjału przyjmujemy $n\geq2$.
+\end{uwaga}
+
+\begin{twierdzenie}[Potencjał Newtona i równanie Poissona]
+\label{thm:pde3-newton}
+Niech $n\geq2$ i $f\in C_c^\infty(\R^n)$. Określmy
+\begin{equation}\label{eq:pde3-newton}
+ (\Phi_n*f)(x)=\int_{\R^n}\Phi_n(x-y)f(y)\,
+ \mathrm d\lambda_n(y).
+\end{equation}
+Wówczas $u=\Phi_n*f\in C^\infty(\R^n)$ i
+$-\Delta u=f$ na $\R^n$.
+\end{twierdzenie}
+\begin{proof}
+Po podstawieniu $z=x-y$ możemy zapisać
+$u(x)=\int_{\R^n}\Phi_n(z)f(x-z)\,\mathrm d\lambda_n(z)$.
+Dla $x$ z ustalonego zbioru zwartego funkcje
+$z\mapsto f(x-z)$ mają nośniki zawarte we wspólnym
+zbiorze zwartym. Dzięki lokalnej całkowalności
+$\Phi_n$ można różniczkować całkę dowolnie wiele razy
+przenosząc pochodne na $f$. Stąd $u\in C^\infty$.
+Dla ustalonego $x$ wzór~\eqref{eq:pde3-distdelta}
+zastosowany do funkcji testowej $z\mapsto f(x-z)$ daje
+$\int_{\R^n}\Phi_n(z)(-\Delta f)(x-z)\,\mathrm d\lambda_n(z)=f(x)$,
+czyli $-\Delta u(x)=f(x)$.
+\end{proof}
+
+\begin{uwaga}[Rozwiązanie szczególne a niejednoznaczność]
+Jeżeli $u$ i $v$ są rozwiązaniami $-\Delta u=f$
+na $\R^n$, ich różnica jest harmoniczna. Zatem potencjał
+Newtona jest rozwiązaniem szczególnym; warunki wzrostu
+w nieskończoności są potrzebne do rozstrzygnięcia
+jednoznaczności. Przykładowo $u+x_1$ jest innym rozwiązaniem.
+\end{uwaga}
+
+\section{Funkcje Greena i tożsamości Greena}
+\label{sec:pde3-green}
+
+\begin{stwierdzenie}[Dwie tożsamości Greena]
+\label{prop:pde3-green-identities}
+Niech $\Omega\subset\R^n$ będzie obszarem ograniczonym
+o brzegu klasy $C^1$ i niech $u,v\in C^2(\overline\Omega)$.
+Wtedy
+\begin{align}
+ \int_\Omega u(x)\Delta v(x)\,\mathrm d\lambda_n(x)
+ &=-\int_\Omega\nabla u(x)\cdot\nabla v(x)\,\mathrm d\lambda_n(x)
+ +\int_{\partial\Omega}u(x)\,\partial_\nu v(x)\,\mathrm d\sigma(x),
+ \label{eq:pde3-green1}\\
+ \int_\Omega(u(x)\Delta v(x)-v(x)\Delta u(x))\,\mathrm d\lambda_n(x)
+ &=\int_{\partial\Omega}(u(x)\partial_\nu v(x)-v(x)\partial_\nu u(x))
+ \,\mathrm d\sigma(x).\label{eq:pde3-green2}
+\end{align}
+\end{stwierdzenie}
+\begin{proof}
+Dla pierwszej tożsamości stosujemy wzór Gaussa do
+pola wektorowego $u\nabla v$ i korzystamy z
+$\diver(u\nabla v)=\nabla u\cdot\nabla v+u\Delta v$.
+Drugą otrzymujemy odejmując pierwszą tożsamość
+z parami $(u,v)$ i $(v,u)$.
+\end{proof}
+
+\begin{definicja}[Funkcja Greena dla $-\Delta$]
+\label{def:pde3-green}
+Niech $\Omega\subset\R^n$ będzie obszarem ograniczonym,
+$n\geq2$. Dla ustalonego $x\in\Omega$ funkcją Greena
+(z warunkiem Dirichleta) nazywamy funkcję
+$G_\Omega(x,\cdot)$ taką, że:
+\begin{enumerate}
+\item jest lokalnie całkowalna w $\Omega$ i klasy
+$C^2$ na $\Omega\setminus\{x\}$;
+\item $-\Delta_yG_\Omega(x,y)=\delta_x$ w sensie
+równości całkowej~\eqref{eq:pde3-distdelta}, odpowiednio
+przesuniętej do punktu $x$;
+\item $G_\Omega(x,y)=0$ dla $y\in\partial\Omega$,
+przy założeniu ciągłego przedłużenia z dala od $x$.
+\end{enumerate}
+W zastosowaniach do całek brzegowych wymagamy również
+odpowiedniej gładkości funkcji Greena względem $y$ aż do brzegu.
+\end{definicja}
+
+\begin{twierdzenie}[Wzór reprezentacyjny Greena]
+\label{thm:pde3-representation}
+Niech $n\geq2$, $\Omega\subset\R^n$ będzie obszarem ograniczonym o brzegu klasy $C^2$, $f\in C(\overline\Omega)$
+i $u\in C^2(\overline\Omega)$ spełnia $-\Delta u=f$
+w $\Omega$. Załóżmy, że dla każdego $x\in\Omega$
+istnieje funkcja Greena $G_\Omega(x,y)=\Phi_n(x-y)-h_x(y)$,
+gdzie $h_x$ jest harmoniczna i klasy $C^2$ na pewnym
+otoczeniu $\overline\Omega$ (w zmiennej $y$).
+Wówczas dla $x\in\Omega$
+\begin{equation}\label{eq:pde3-green-representation}
+ u(x)=\int_\Omega G_\Omega(x,y)f(y)\,\mathrm d\lambda_n(y)
+ -\int_{\partial\Omega}u(y)\partial_{\nu_y}G_\Omega(x,y)
+ \,\mathrm d\sigma(y).
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $x\in\Omega$ i wybierzmy
+$\eps<\operatorname{dist}(x,\partial\Omega)$.
+Druga tożsamość Greena dla $u$ i $G_\Omega(x,\cdot)$
+na $\Omega_\eps=\Omega\setminus\overline{B_\eps(x)}$
+daje, ponieważ $\Delta G_\Omega=0$ poza $x$,
+\[
+ \int_{\Omega_\eps}G_\Omega(x,y)f(y)\,\mathrm d\lambda_n(y)
+ =\int_{\partial\Omega_\eps}
+ \bigl(u(y)\partial_{\nu_y}G_\Omega(x,y)
+ -G_\Omega(x,y)\partial_{\nu_y}u(y)\bigr)
+ \,\mathrm d\sigma(y).
+\]
+Na zewnętrznym brzegu $G_\Omega=0$. Na wewnętrznym
+brzegu część pochodząca od $h_x$ znika w granicy,
+a dla $\Phi_n(x-y)$ pierwszy składnik dąży do $u(x)$,
+podczas gdy drugi dąży do zera, jak w dowodzie
+twierdzenia~\ref{thm:pde3-phi}. Po przejściu z
+$\eps\downarrow0$ otrzymujemy
+$\int_\Omega G_\Omega f=\int_{\partial\Omega}
+u\,\partial_\nu G_\Omega+u(x)$,
+co po przeniesieniu składnika brzegowego daje
+\eqref{eq:pde3-green-representation}.
+\end{proof}
+
+\section{Jawne jądro Poissona i zagadnienie Dirichleta na kuli}
+\label{sec:pde3-poisson-kernel}
+
+W tym podrozdziale $n\geq2$, $R>0$,
+$B_R=B_R(0)$ i $\zeta\in\partial B_R$.
+Dla $y\in B_R\setminus\{0\}$ wprowadzamy punkt odwrócony
+$y^*=R^2y/|y|^2$, leżący poza kulą. Zachodzi tożsamość
+\begin{equation}\label{eq:pde3-kelvin-identity}
+ |z-y^*|=\frac R{|y|}|z-y| \qquad (|z|=R).
+\end{equation}
+
+\begin{stwierdzenie}[Funkcja Greena dla kuli]
+\label{prop:pde3-ball-green}
+Dla $n\geq3$ i $x,y\in B_R$, $x\ne y$, $y\ne0$, funkcja
+\begin{equation}\label{eq:pde3-ball-green}
+ G_R(x,y)=\Phi_n(x-y)-\Bigl(\frac R{|y|}\Bigr)^{n-2}
+ \Phi_n(x-y^*)
+\end{equation}
+jest funkcją Greena dla kuli w zmiennej $x$.
+Dla $n=2$ odpowiednia funkcja ma postać
+\[
+ G_R(x,y)=\frac1{2\pi}\log\frac{|y|\,|x-y^*|}{R\,|x-y|}.
+\]
+W obu przypadkach formuły przedłużają się w punkcie $y=0$
+przez granicę (dla $n\geq3$:
+$G_R(x,0)=\Phi_n(x)-\Phi_n(R)$; dla $n=2$:
+$G_R(x,0)=(2\pi)^{-1}\log(R/|x|)$).
+Ponadto $G_R(x,y)=G_R(y,x)$.
+\end{stwierdzenie}
+\begin{proof}
+Przy ustalonym $y$ pierwszy składnik jest rozwiązaniem
+fundamentalnym o biegunie $y$, a drugi jest harmoniczny
+w $x\in B_R$, bo jego biegun $y^*$ leży poza
+$\overline{B_R}$. Na brzegu $|x|=R$ składniki znoszą
+się na mocy~\eqref{eq:pde3-kelvin-identity};
+dla $n=2$ zachodzi analogiczne znoszenie logarytmów.
+Granice dla $y\to0$ wynikają z asymptotyki
+$|x-y^*|\sim R^2/|y|$.
+
+Dla symetrii można bezpośrednio przekształcić odległości:
+\[
+ |y|^2|x-y^*|^2=R^4-2R^2 x\cdot y+|x|^2|y|^2
+ =|x|^2|y-x^*|^2.
+\]
+W połączeniu z symetrią $\Phi_n(x-y)$ i odpowiednimi
+potęgami lub logarytmami daje to $G_R(x,y)=G_R(y,x)$.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[scale=.87,>=Stealth]
+ \fill[blue!5] (0,0) circle (2);
+ \draw[thick] (0,0) circle (2);
+ \draw[densely dashed,gray!65] (0,0)--(4.25,0);
+ \fill (0,0) circle (1.6pt);
+ \node[below left] at (0,0) {$0$};
+ \fill[blue!75!black] (1.1,0) circle (2.5pt);
+ \node[above] at (1.1,0) {$y$};
+ \fill[red!75!black] (3.63,0) circle (2.5pt);
+ \node[above] at (3.63,0) {$y^*$};
+ \draw[<->,thin] (0,-.3)--(2,-.3);
+ \node[below] at (1,-.3) {$R$};
+ \node[align=left,anchor=west] at (4.2,1.0) {$|y|\,|y^*|=R^2$\\punkt odwrócony leży poza kulą};
+\end{tikzpicture}
+\par\smallskip\small
+Inwersja w sferze $\partial B_R$: punkt $y$ wewnątrz
+odpowiada punktowi $y^*$ na zewnątrz. Pozwala to
+zbudować harmoniczną poprawkę rozwiązania fundamentalnego.
+\end{center}
+
+\begin{twierdzenie}[Jądro Poissona dla kuli]
+\label{thm:pde3-poisson}
+Niech $n\geq2$, $R>0$ i $g\in C(\partial B_R)$.
+Dla $x\in B_R$ zdefiniujmy
+\begin{equation}\label{eq:pde3-poisson}
+ P_R(x,\zeta)=\frac{R^2-|x|^2}{\omega_n R|x-\zeta|^n},
+ \qquad
+ u(x)=\int_{\partial B_R}P_R(x,\zeta)g(\zeta)
+ \,\mathrm d\sigma(\zeta).
+\end{equation}
+Wówczas $u\in C^\infty(B_R)\cap C(\overline{B_R})$,
+$\Delta u=0$ w $B_R$ i $u|_{\partial B_R}=g$.
+Jest to jedyne rozwiązanie z klasy
+$C^2(B_R)\cap C(\overline{B_R})$ tego problemu Dirichleta.
+Ponadto $P_R(x,\zeta)>0$ oraz
+$\int_{\partial B_R}P_R(x,\zeta)\,\mathrm d\sigma(\zeta)=1$.
+\end{twierdzenie}
+\begin{proof}
+Najpierw wykażemy związek z normalną pochodną funkcji
+Greena. Dla $y\in B_R\setminus\{0\}$ i $|\zeta|=R$
+korzystamy z relacji
+$|\zeta-y^*|=(R/|y|)|\zeta-y|$.
+Ponieważ $\nabla\Phi_n(z)=-z/(\omega_n|z|^n)$
+(dla wszystkich $n\geq2$), dla $n\geq3$ otrzymujemy
+\[
+\begin{aligned}
+-\partial_{\nu_\zeta}G_R(\zeta,y)
+&=\frac{(\zeta-y)\cdot\zeta}{\omega_nR|\zeta-y|^n}
+ -\Bigl(\frac R{|y|}\Bigr)^{n-2}
+ \frac{(\zeta-y^*)\cdot\zeta}{\omega_nR|\zeta-y^*|^n}\\
+&=\frac{(\zeta-y)\cdot\zeta-
+ (|y|/R)^2(\zeta-y^*)\cdot\zeta}
+ {\omega_nR|\zeta-y|^n}
+ =\frac{R^2-|y|^2}{\omega_nR|\zeta-y|^n}.
+\end{aligned}
+\]
+W przypadku $n=2$ różniczkujemy analogicznie
+logarytmiczną postać $G_R$, otrzymując ten sam wzór.
+W punkcie $y=0$ tożsamość wynika przez ciągłość.
+Korzystając z symetrii $G_R(x,y)=G_R(y,x)$,
+uzyskujemy więc
+$P_R(x,\zeta)=-\partial_{\nu_\zeta}G_R(x,\zeta)$.
+Uzasadnienie harmoniczności wymaga zachowania kolejności
+operacji. Ustalmy zwarty zbiór $K\Subset B_R$ oraz punkt
+$\zeta\in\partial B_R$. Dla $y$ w dostatecznie małym
+otoczeniu $\zeta$ po wewnętrznej stronie brzegu,
+oddzielonym od $K$, funkcja $x\mapsto G_R(x,y)$ jest
+harmoniczna na otoczeniu $K$. Jawny wzór
+\eqref{eq:pde3-ball-green} jest gładki względem
+parametru $y$ w takim otoczeniu i pozwala najpierw
+zróżniczkować po $y$ w kierunku normalnym, a dopiero
+potem przejść do $y\to\zeta$ od wewnątrz.
+Ponieważ pochodne względem $x$ i $y$ komutują,
+otrzymujemy
+$\Delta_xP_R(x,\zeta)=-\partial_{\nu_y}
+\Delta_xG_R(x,y)|_{y=\zeta}=0$ dla $x\in K$.
+Tu zapis wartości na brzegu oznacza granicę
+\emph{pochodnej}, a nie pochodną funkcji
+$G_R(x,\zeta)\equiv0$. Z nierówności
+$|x-\zeta|\geq R-|x|>0$ wynika, że pochodne
+względem $x$ można przenosić pod całkę na zwartych
+podzbiorach kuli. Stąd $u$ jest gładka i harmoniczna.
+
+Uzasadnijmy normalizację jądra bez powoływania się na
+istnienie szukanego rozwiązania Dirichleta. Stosujemy
+wzór reprezentacyjny~\eqref{eq:pde3-green-representation}
+do funkcji stałej $1$, dla której $-\Delta1=0$.
+Poprawka harmoniczna w funkcji Greena dla kuli
+jest gładka na otoczeniu domkniętej kuli przy ustalonym
+biegunie $x$, więc założenia wzoru są spełnione.
+Wynika stąd $1=\int_{\partial B_R}P_R(x,\zeta)\,
+\mathrm d\sigma(\zeta)$. Dodatniość jest jawna.
+
+Ustalmy $\zeta_0\in\partial B_R$ i $\eps>0$.
+Z jednostajnej ciągłości $g$ wybierzmy $\delta>0$
+tak, że $|g(\zeta)-g(\zeta_0)|<\eps$, gdy
+$|\zeta-\zeta_0|<\delta$. Posługując się dodatniością
+i normalizacją $P_R$ dostajemy
+\[
+ |u(x)-g(\zeta_0)|\leq\eps+
+ 2\|g\|_\infty
+ \int_{\substack{\zeta\in\partial B_R\\
+ |\zeta-\zeta_0|\geq\delta}}P_R(x,\zeta)\,
+ \mathrm d\sigma(\zeta).
+\]
+Gdy $x\to\zeta_0$ od wewnątrz, na zbiorze
+całkowania mamy $|x-\zeta|\geq\delta/2$ dla
+$x$ dostatecznie bliskich $\zeta_0$, podczas gdy
+$R^2-|x|^2\to0$. Druga całka dąży więc do zera.
+Otrzymujemy $u(x)\to g(\zeta_0)$, co daje ciągłe
+przedłużenie na całą domkniętą kulę.
+Jednoznaczność wynika z zasady maksimum
+(twierdzenie~\ref{thm:laplace-max}).
+\end{proof}
+
+\begin{przyklad}[Równanie Dirichleta na dysku]
+Niech $n=2$, $R=1$, a $g(\cos\theta,\sin\theta)=\cos(3\theta)$.
+Funkcja $u(r\cos\theta,r\sin\theta)=r^3\cos(3\theta)$
+ma $\Delta u=0$ i przyjmuje dane $g$ na brzegu.
+Z jednoznaczności we wcześniejszym twierdzeniu jest
+ona dokładnie całką Poissona z tych danych.
+\end{przyklad}
+
+\begin{stwierdzenie}[Nierówność Harnacka w kuli]
+\label{prop:pde3-harnack}
+Niech $n\geq2$, $R>0$, $u\in C^2(B_R)\cap C(\overline{B_R})$
+będzie harmoniczna i nieujemna. Dla każdego $0\leq r<R$
+i $|x|\leq r$ zachodzi
+\begin{equation}\label{eq:pde3-harnack}
+ \frac{R^{n-2}(R-r)}{(R+r)^{n-1}}u(0)
+ \leq u(x)\leq
+ \frac{R^{n-2}(R+r)}{(R-r)^{n-1}}u(0).
+\end{equation}
+\end{stwierdzenie}
+\begin{proof}
+Na podstawie~\eqref{eq:pde3-poisson} i $u|_{\partial B_R}\geq0$
+możemy porównać jądro w punkcie $x$ i w punkcie $0$.
+Ponieważ $P_R(0,\zeta)=1/(\omega_n R^{n-1})$,
+\[
+ \frac{P_R(x,\zeta)}{P_R(0,\zeta)}
+ =\frac{R^{n-2}(R^2-|x|^2)}{|x-\zeta|^n}.
+\]
+Używając $R-|x|\leq|x-\zeta|\leq R+|x|$,
+otrzymujemy
+\[
+ \frac{R^{n-2}(R-|x|)}{(R+|x|)^{n-1}}
+ \leq\frac{P_R(x,\zeta)}{P_R(0,\zeta)}
+ \leq\frac{R^{n-2}(R+|x|)}{(R-|x|)^{n-1}}.
+\]
+Obie funkcje graniczne są odpowiednio malejąca i
+rosnąca względem $|x|$. Podstawiamy $|x|\leq r$,
+mnożymy nierówności przez nieujemne $P_R(0,\zeta)u(\zeta)$
+i całkujemy po $\partial B_R$. Otrzymujemy
+\eqref{eq:pde3-harnack}.
+\end{proof}
+
+\begin{uwaga}[Nierówność Harnacka dla kul wewnętrznych]
+Dla dodatniej funkcji harmonicznej na dowolnym obszarze
+nierówność Harnacka obowiązuje na każdej kuli, której
+domknięcie zawiera się w obszarze (po translacji).
+Łącząc skończenie wiele takich kul, otrzymujemy
+oszacowania na dowolnym zwartym podzbiorze spójnego obszaru. Nie zakłada się przy tym istnienia
+ciągłego przedłużenia aż do \emph{brzegu całego obszaru}.
+\end{uwaga}
+
+\section{Problem Poissona i bariery porównawcze}
+\label{sec:pde3-poisson-equation}
+
+\begin{twierdzenie}[Problem Poissona na kuli]
+\label{thm:pde3-ball-poisson}
+Niech $n\geq2$, $R>0$, $f\in C_c^\infty(B_R)$,
+a $g\in C(\partial B_R)$. Istnieje dokładnie jedno
+$u\in C^2(B_R)\cap C(\overline{B_R})$ takie, że
+$-\Delta u=f$ w $B_R$ i $u=g$ na $\partial B_R$.
+Ma ono postać
+\begin{equation}\label{eq:pde3-poisson-solution}
+ u(x)=\int_{B_R}G_R(x,y)f(y)\,\mathrm d\lambda_n(y)
+ +\int_{\partial B_R}P_R(x,\zeta)g(\zeta)
+ \,\mathrm d\sigma(\zeta).
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Przedłużmy $f$ przez zero poza $B_R$ i połóżmy
+$w=\Phi_n*f$. Na mocy twierdzenia~\ref{thm:pde3-newton}
+$w$ jest gładka i spełnia $-\Delta w=f$ w $\R^n$.
+Wzór Poissona zastosowany do danych $g-w|_{\partial B_R}$
+wyznacza harmoniczną funkcję $h$, ciągłą na domkniętej
+kuli. Funkcja $u=w+h$ spełnia równanie i zadany
+warunek brzegowy; jednoznaczność wynika z zasady maksimum.
+
+Niech $H_R(x,y)=\Phi_n(x-y)-G_R(x,y)$.
+Dla $y$ w zwartym nośniku $f$ funkcja $H_R(\cdot,y)$
+jest harmoniczna w kuli, gładka aż do jej brzegu.
+Zatem
+$h_f(x)=\int_{B_R}H_R(x,y)f(y)\,\mathrm d\lambda_n(y)$
+jest harmoniczna i ciągła na domkniętej kuli.
+Wobec tego $v=w-h_f=\int_{B_R}G_R(x,y)f(y)\,
+\mathrm d\lambda_n(y)$ spełnia $-\Delta v=f$.
+Ponieważ $G_R(x,y)=0$ dla $x\in\partial B_R$,
+a $y$ przebiega tylko zwarty nośnik $f\Subset B_R$,
+mamy $v|_{\partial B_R}=0$. Stąd $v$ oraz całka
+Poissona z danych $g$ dają rozwiązanie o zadanym
+brzegu. Jego jednoznaczność dowodzi
+\eqref{eq:pde3-poisson-solution}.
+\end{proof}
+
+\begin{stwierdzenie}[Oszacowanie przez barierę kwadratową]
+\label{prop:pde3-barrier}
+Niech $\Omega\subset B_R(0)$ będzie obszarem ograniczonym,
+$n\geq2$, $u\in C^2(\Omega)\cap C(\overline\Omega)$
+rozwiązaniem $-\Delta u=f$ w $\Omega$,
+gdzie $f\in C(\Omega)$ jest ograniczona. Wówczas
+\begin{equation}\label{eq:pde3-barrier}
+ \sup_{x\in\Omega}|u(x)|\leq
+ \sup_{x\in\partial\Omega}|u(x)|+
+ \frac{R^2}{2n}\sup_{x\in\Omega}|f(x)|.
+\end{equation}
+\end{stwierdzenie}
+\begin{proof}
+Niech $M=\sup_\Omega|f|$ i
+$b(x)=(R^2-|x|^2)/(2n)$. Mamy $b\geq0$ na $\Omega$
+oraz $-\Delta b=1$. Stąd
+$\Delta(u-Mb)=M-f\geq0$. Słaba zasada maksimum
+daje $u-Mb\leq\sup_{\partial\Omega}u$, czyli
+$u\leq\sup_{\partial\Omega}|u|+Mb$.
+Ten sam argument zastosowany do $-u$ prowadzi do
+$-u\leq\sup_{\partial\Omega}|u|+Mb$.
+Ponieważ $0\leq b\leq R^2/(2n)$, otrzymujemy tezę.
+\end{proof}
+
+\begin{przyklad}[Wymuszenie stałe]
+Niech $f\equiv1$ w $B_R(0)$, a dane Dirichleta będą równe $0$.
+Wtedy $u(x)=(R^2-|x|^2)/(2n)$ jest dokładnym
+rozwiązaniem $-\Delta u=1$. Oszacowanie
+\eqref{eq:pde3-barrier} jest w tym przykładzie ostre.
+\end{przyklad}
+
+\section{Harmoniczność, analityczność i funkcje holomorficzne}
+\label{sec:pde3-analytic}
+
+\begin{twierdzenie}[Analityczność funkcji harmonicznych]
+\label{thm:pde3-analytic}
+Niech $n\geq2$, $\Omega\subset\R^n$ będzie otwarta,
+a $u\in C^2(\Omega)$ harmoniczna. Wtedy $u$ jest
+rzeczywiście analityczna w $\Omega$, czyli w otoczeniu
+każdego punktu jest sumą zbieżnego szeregu potęgowego.
+W szczególności $u\in C^\infty(\Omega)$.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $x_0\in\Omega$ i kulę
+$\overline{B_R(x_0)}\subset\Omega$. Z twierdzenia
+\ref{thm:pde3-poisson} mamy w $B_R(x_0)$
+\[
+ u(x)=\int_{\partial B_R(x_0)}
+ \frac{R^2-|x-x_0|^2}{\omega_n R|x-\zeta|^n}
+ u(\zeta)\,\mathrm d\sigma(\zeta).
+\]
+Dla $x$ w dostatecznie małej kuli wokół $x_0$
+wyrażenie $|x-\zeta|^{-n}$ jest rzeczywiście
+analityczne w $x$: to funkcja analityczna dodatniego
+wielomianu $|x-\zeta|^2$, którego wartość jest
+jednostajnie oddzielona od zera, złożona z funkcją
+$s\mapsto s^{-n/2}$. Szeregi potęgowe otrzymane
+przez rozwinięcie dwumianowe mają wspólny dodatni
+promień zbieżności i zbiegają jednostajnie względem
+$\zeta\in\partial B_R(x_0)$ na mniejszej kuli.
+Można więc całkować je wyraz po wyrazie. Otrzymany
+szereg potęgowy przedstawia $u$ w otoczeniu $x_0$.
+\end{proof}
+
+\begin{stwierdzenie}[Harmoniczna sprzężona w wymiarze dwa]
+\label{prop:pde3-conjugate}
+Niech $\Omega\subset\R^2$ będzie obszarem jednospójnym, a $u\in C^2(\Omega)$
+harmoniczna. Istnieje $v\in C^2(\Omega)$, jednoznaczna
+z dokładnością do stałej addytywnej, taka, że
+$F(x+iy)=u(x,y)+iv(x,y)$ jest holomorficzna w $\Omega$
+traktowanej jako podzbiór $\C$.
+\end{stwierdzenie}
+\begin{proof}
+Rozważmy formę $\alpha=-u_y\,\mathrm dx+u_x\,\mathrm dy$.
+Ponieważ $u\in C^2$, zachodzi
+$\mathrm d\alpha=(u_{xx}+u_{yy})\,\mathrm dx\wedge\mathrm dy=0$.
+Na obszarze jednospójnym każda zamknięta forma
+$1$ stopnia jest dokładna, zatem istnieje $v$ o
+$\mathrm dv=\alpha$. Oznacza to $v_x=-u_y$ i $v_y=u_x$,
+czyli równania Cauchy'ego--Riemanna. Ich spełnienie przy
+regularności $C^1$ zapewnia holomorficzność $F$.
+Jeśli $v_1,v_2$ mają te same pochodne, ich różnica
+jest stała na obszarze.
+\end{proof}
+
+\begin{kontrprzyklad}[Przeszkoda topologiczna dla sprzężenia]
+Na pierścieniu $\Omega=\{z\in\C:1<|z|<2\}$
+funkcja $u(z)=\log|z|$ jest harmoniczna. Formalne
+równania Cauchy'ego--Riemanna wymuszałyby
+$\mathrm dv=-y\,(x^2+y^2)^{-1}\mathrm dx+
+x\,(x^2+y^2)^{-1}\mathrm dy$. Całka tej formy po okręgu
+$|z|=3/2$ wynosi $2\pi$, zatem forma nie jest dokładna.
+Nie istnieje globalna jednowartościowa harmoniczna
+sprzężona do $u$ na całym pierścieniu, choć istnieją
+lokalne sprzężenia.
+\end{kontrprzyklad}
+
+\section{Wygładzanie harmoniczne na dysku: rozwiązanie przez szeregi Fouriera}
+\label{sec:pde3-fourier-disk}
+
+Jawna postać jądra Poissona ma szczególnie przejrzystą
+interpretację na jednostkowym dysku. Niech $g\in C^2(S^1)$,
+a jego rzeczywisty szereg Fouriera ma postać
+$g(e^{i\theta})=a_0+\sum_{k=1}^\infty
+(a_k\cos k\theta+b_k\sin k\theta)$.
+Ponieważ $g\in C^2$, dwukrotne całkowanie przez części
+we wzorze na współczynniki Fouriera daje
+$|a_k|+|b_k|\leq C_g/k^2$. Szereg jest więc
+bezwzględnie i jednostajnie zbieżny.
+
+\begin{stwierdzenie}[Rozwinięcie harmoniczne na dysku]
+\label{prop:pde3-fourier-disk}
+Dla opisanych danych $g$ jedynym rozwiązaniem
+$\Delta u=0$ w $B_1(0)\subset\R^2$,
+$u|_{S^1}=g$, klasy $C^2(B_1)\cap C(\overline{B_1})$,
+jest funkcja
+\begin{equation}\label{eq:pde3-fourier-disk}
+ u(r\cos\theta,r\sin\theta)=a_0+
+ \sum_{k=1}^\infty r^k
+ (a_k\cos k\theta+b_k\sin k\theta),\quad 0\leq r<1.
+\end{equation}
+\end{stwierdzenie}
+\begin{proof}
+W biegunowych współrzędnych na przebitym dysku
+$\Delta=\partial_{rr}+r^{-1}\partial_r+r^{-2}\partial_{\theta\theta}$.
+Dla każdego $k\geq1$ bezpośrednio sprawdzamy, że
+$r^k\cos k\theta$ i $r^k\sin k\theta$ są harmoniczne.
+Na każdym zwartym podzbiorze dysku szereg w
+\eqref{eq:pde3-fourier-disk} można różniczkować
+dowolnie wiele razy, dzięki czynnikowi $r^k$.
+W zerze regularność wynika z tego, że
+$r^k\cos k\theta=\operatorname{Re}(x+iy)^k$
+(i analogicznie dla części urojonej).
+Zbieżność jednostajna na domkniętym dysku wynika
+z oszacowania $\sum_k(|a_k|+|b_k|)<\infty$.
+Dlatego funkcja przedłuża się ciągle do brzegu,
+gdzie przyjmuje wartości $g$. Jednoznaczność
+wynika z zasady maksimum.
+\end{proof}
+
+Współczynnik wysokiej częstości $k$ zostaje wewnątrz
+dysku pomnożony przez $r^k$. Dla każdego ustalonego
+$r<1$ czynnik ten maleje wykładniczo wraz z $k$.
+Mamy więc bardzo mocne \emph{wygładzanie w głąb obszaru}.
+Odwrotna operacja, polegająca na odtwarzaniu danych
+brzegowych z profilu na okręgu $|z|=r$, musi
+dzielić współczynniki przez $r^k$ i jest niestabilna.
+To geometryczny krewny kontrprzykładu Hadamarda
+z rozdziału~\ref{chap:pde-intro}.
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=1]
+  \draw[->] (0,0)--(5.6,0) node[right] {$k$};
+  \draw[->] (0,0)--(0,3.3) node[above] {$r^k$};
+  \draw[densely dotted] (0,2.9)--(5.25,2.9);
+  \node[left] at (0,2.9) {$1$};
+  \draw[blue!70!black,thick,domain=0:5.1,samples=100]
+    plot (\x,{2.9*exp(-.25*\x)});
+  \draw[red!70!black,thick,domain=0:5.1,samples=100]
+    plot (\x,{2.9*exp(-.9*\x)});
+  \node[blue!70!black,anchor=west] at (3.5,1.5) {$r=e^{-1/4}$};
+  \node[red!70!black,anchor=west] at (3.05,.70) {$r=e^{-9/10}$};
+  \node[below] at (2.8,0) {częstość $k$};
+\end{tikzpicture}
+\par\smallskip\small
+Tłumienie modów Fouriera w rozwiązaniu harmonicznym
+na dysku: im dalej od brzegu, tym szybsze zanikanie
+wysokich częstości.
+\end{center}
+
+\section{Zagadnienia brzegowe na bardziej ogólnych obszarach}
+\label{sec:pde3-general-domain}
+
+Jawny wzór Poissona jest szczególnym przywilejem kuli.
+Dla ogólnego obszaru funkcja Greena może nie mieć
+prostej postaci, a istnienie ciągłego rozwiązania Dirichleta
+zależy od geometrii brzegu. Aby rozdzielić twierdzenia
+udowodnione od materiału wymagającego późniejszych narzędzi,
+formułujemy poniższy wynik jako zapowiedź bez dowodu.
+
+\begin{uwaga}[Zapowiedź twierdzenia o ogólnych obszarach]
+\label{prop:pde3-future}
+Niech $n\geq2$ i niech $\Omega\subset\R^n$ będzie obszarem ograniczonym o brzegu klasy $C^2$.
+Wtedy dla każdego $g\in C(\partial\Omega)$ istnieje
+dokładnie jedna funkcja
+$u\in C^2(\Omega)\cap C(\overline\Omega)$ spełniająca
+$\Delta u=0$ w $\Omega$ i $u|_{\partial\Omega}=g$.
+Jest to klasyczny wynik teorii potencjału. Nie traktujemy go
+tu jako wyniku udowodnionego: dowód wymaga metody Perrona
+i barier brzegowych lub odpowiednich twierdzeń o regularności
+eliptycznej, które wprowadzimy w dalszej części skryptu.
+\end{uwaga}
+
+Warto odróżnić dwie kwestie. \emph{Jednoznaczność}
+na każdym obszarze ograniczonym wynika z zasady maksimum,
+niezależnie od regularności jej brzegu. Natomiast
+\emph{istnienie} dla wszystkich ciągłych danych brzegowych
+nie jest prawdziwe na każdym obszarze: punkt brzegowy
+może być nieregularny w sensie teorii potencjału.
+To zapowiedź kryterium Wienera i pojęcia pojemności,
+które pojawi się w dalszej części skryptu.
+
+\section{Podsumowanie i mapa dalszych związków}
+\label{sec:pde3-summary}
+
+Poznaliśmy dwa wzajemnie uzupełniające się spojrzenia
+na równanie Laplace'a. Własność wartości średniej,
+zasady maksimum, nierówność Harnacka i analityczność
+ujawniają \emph{sztywność} funkcji harmonicznych.
+Z kolei rozwiązanie fundamentalne, potencjał Newtona,
+funkcja Greena i jądro Poissona dają \emph{konstrukcje}
+rozwiązań, a nie tylko ich jakościowe własności.
+
+Zasadnicze pytanie pozostaje otwarte w pełnej ogólności:
+jak rozwiązywać $-\Delta u=f$ na obszarze, dla której
+nie znamy jawnego jądra? Odpowiedź dadzą później
+przestrzenie Sobolewa, metoda wariacyjna i teoria
+regularności eliptycznej. W następnym rozdziale
+porównamy te własności z równaniem ciepła i jego
+charakterystycznym mechanizmem wygładzania.
+
+% Rozdział 4: równanie ciepła.
