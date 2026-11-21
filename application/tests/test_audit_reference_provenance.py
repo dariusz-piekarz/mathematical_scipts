@@ -53,6 +53,53 @@ class ReferenceProvenanceAuditTests(unittest.TestCase):
         self.assertIn("C:9",markdown(result))
         self.assertIn("topology/01.tex",markdown(result))
 
+    def test_collision_priority_is_source_aware_and_preserves_provenance(self):
+        # The same text in two scripts is not evidence of a single theorem.
+        self.db.execute(
+            "INSERT INTO documents VALUES (?,?,?,?,?)",
+            ("A-02", "chapters/pl/algebra/02.tex", "algebra",
+             "Algebra 2", "hash-a2")
+        )
+        self.db.execute(
+            "INSERT INTO label_conflicts VALUES (?,?,?,?,?,?)",
+            ("tw:y", "A-02", "t4", 53, 15, "different statement")
+        )
+        self.db.execute(
+            "INSERT INTO references_tex VALUES (?,?,?,?,?,?,?,?,?,?)",
+            (5, "A-02", None, "ref", "tw:y", 20, 120, "A", "t2", "resolved")
+        )
+        result = audit(self.db)
+        by_name = {r["label"]: r for r in result["label_conflicts"]}
+        self.assertEqual(result["counts"]["conflicting_label_names"], 2)
+        self.assertEqual(result["counts"]["same_script_collision_names"], 1)
+        self.assertEqual(result["counts"]["cross_script_only_collision_names"], 1)
+        self.assertEqual(result["counts"]["referenced_collision_names"], 2)
+        self.assertEqual(result["counts"]["ambiguous_colliding_reference_occurrences"], 1)
+        self.assertEqual(by_name["tw:y"]["risk_class"], "referenced_same_script_collision")
+        self.assertEqual(by_name["tw:y"]["owner_scripts"], ["A"])
+        self.assertEqual(by_name["tw:y"]["all_reference_count"], 2)
+        self.assertEqual(by_name["tw:y"]["resolved_reference_count"], 2)
+        self.assertEqual(by_name["tw:x"]["risk_class"], "ambiguous_reference")
+        self.assertEqual(by_name["tw:x"]["owner_scripts"], ["A", "B"])
+        self.assertEqual(result["collision_priority_queue"][0]["label"], "tw:x")
+        self.assertEqual(result["collision_priority_queue"][1]["label"], "tw:y")
+        self.assertIn("Kolejka audytu", markdown(result))
+        self.assertEqual(
+            {(o["document_id"], o["sha256"]) for o in by_name["tw:y"]["owners"]},
+            {("A", "hash-a"), ("A-02", "hash-a2")}
+        )
+
+    def test_unused_cross_script_collision_is_lower_priority(self):
+        self.db.execute(
+            "INSERT INTO label_conflicts VALUES (?,?,?,?,?,?)",
+            ("tw:y", "C", "t5", 90, 22, "a third chapter")
+        )
+        result = audit(self.db)
+        label = next(x for x in result["label_conflicts"] if x["label"] == "tw:y")
+        self.assertEqual(label["risk_class"], "referenced_cross_script_shared_name")
+        self.assertFalse(label["same_script_collision"])
+        self.assertEqual(label["all_reference_count"], 1)
+
     def test_read_only_and_no_fake_owner(self):
         before = self.db.execute("SELECT count(*) FROM references_tex").fetchone()[0]
         result = audit(self.db)
