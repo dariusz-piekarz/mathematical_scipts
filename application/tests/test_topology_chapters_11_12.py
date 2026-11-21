@@ -268,7 +268,7 @@ class TopologyChapterElevenTwelveAudit(unittest.TestCase):
             with self.subTest(expression=target):
                 self.assertIn(target, ch)
         self.assertIn(
-            "występuje \emph{produkt}", ch
+            r"występuje \emph{produkt}", ch
         )
         # In a non-finite cellular CW complex, infinite-support
         # cochains are allowed; direct sums would discard such data.
