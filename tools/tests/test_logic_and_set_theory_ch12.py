@@ -185,6 +185,8 @@ class TestLogicAndSetTheoryChapter12(unittest.TestCase):
         self.assertIn(r"\Gamma\nvdash_{\mathrm{ND}}\bot", source)
         self.assertEqual(source.count(r"\begin{twierdzenie}"), 3)
         self.assertIn(r"\label{thm:soundness}", source)
+        self.assertIn("Kontrmodel wyklucza formalny dowód formuły", source)
+        self.assertNotIn("Brak formalnego dowodu zdania fałszywego", source)
 
 
 if __name__ == "__main__":
