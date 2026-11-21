@@ -109,6 +109,61 @@ class TopologyChaptersTwentyThreeTwentyFourAudit(unittest.TestCase):
             )
             self.assertNotIn(r"\\emph{", src)
 
+    def test_at23_derived_open_extension_is_not_inferred_from_exactness(self):
+        """Derived compact support needs a comparison theorem, not just exact j!."""
+        src = self.sources["23"]
+        for fragment in (
+            r"R\Gamma_c(X,j_!\mathcal G)\simeq R\Gamma_c(U,\mathcal G)",
+            r"sama dokładność $j_!$ nie dowodzi",
+            r"rezolucjach acyklicznych względem nośników zwartych",
+            r"R\Gamma_c(X,j_!{-})\simeq",
+            r"który jest dokładny i zachowuje snopy iniektywne",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, src)
+        self.assertNotIn("przez dokładność $j_!$", src)
+
+    def test_at23_standalone_hypotheses_and_polish_chart_mapping_rule(self):
+        src = self.sources["23"]
+        for fragment in (
+            r"Niech $k$ będzie ciałem, a $X$ przestrzenią topologiczną.",
+            r"$\check H^0(\mathcal U,\mathcal F)\cong\mathcal F(X)$",
+            r"a $\mathcal U=(U_i)_{i\in I}$ uporządkowanym pokryciem otwartym",
+            r"liniowego odwzorowania ograniczenia",
+            r"Niech $a:X\to\{*\}$ będzie odwzorowaniem do punktu.",
+            r"naturalne odwzorowanie",
+            r"przy przejściu między mapami",
+            r"drugoprzeliczalną topologiczną $n$-rozmaitością",
+            r"\section{Rezolucja de Rhama",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, src)
+        self.assertNotIn("Właściwość mapy", src)
+        self.assertNotIn("rezolwent", src)
+        self.assertNotRegex(
+            src, r"\b(?:karta|karty|karcie|kartę|kartą|kart)\b"
+                 r"|\bsekwencj\w*|\btensorowan\w*"
+        )
+
+    def test_at23_nested_latex_environments_and_closed_refs(self):
+        src = self.sources["23"]
+        starts = re.findall(
+            r"\\(?:ref|eqref|autoref|nameref|pageref)\s*\{", src
+        )
+        full = re.findall(
+            r"\\(?:ref|eqref|autoref|nameref|pageref)\s*\{[^{}\n]+\}", src
+        )
+        self.assertEqual(len(starts), len(full))
+        stack = []
+        for m in re.finditer(r"\\(begin|end)\{([^{}]+)\}", src):
+            kind, env = m.groups()
+            if kind == "begin":
+                stack.append(env)
+            else:
+                self.assertTrue(stack, f"Unexpected end of {env}")
+                self.assertEqual(stack.pop(), env)
+        self.assertFalse(stack, f"Unclosed TeX environments: {stack}")
+
     def test_residue_pairing_has_dual_bases_for_all_negative_m(self):
         src = self.sources["23"]
         self.assertIn(r"\label{prz:p1-serre-residue}", src)
