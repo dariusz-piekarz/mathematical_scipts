@@ -49,7 +49,7 @@ W przykładzie `prz:lin2-warstwy-r2` jawnie wykazano, że warstwy ((a,b)+U) i ((
 - Oba rozdziały zawierają łącznie **108 unikalnych etykiet**; nie wykryto duplikatów ani brakujących odsyłaczy `\\ref` i `\\eqref`.
 - Zachowano poprawne domknięcie środowisk LaTeX.
 - Sprawdzono standard językowy: „suma zbiorów” i „warunek niezależności liniowej” (zachowano historyczne identyfikatory etykiet).
-- CI dla tekstu po poprawkach: [44896948139](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44896948139) — **weryfikacja końcowego wyniku w toku**.
+- CI dla tekstu po poprawkach: [44896948139](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44896948139) — **success**. Wszystkie kroki walidacji źródeł, sprawdzenia odsyłaczy, kompilacji LaTeX, kontroli PDF i eksportu artefaktu zakończyły się powodzeniem. Po aktualizacji książka liczy **27 stron A4**. W końcowym pliku `linear_algebra.log` nie znaleziono ostrzeżeń `LaTeX Warning`, `Overfull`, `Underfull`, `Missing character`, `Undefined control sequence` ani `Fatal error`. Wizualnie sprawdzono strony **22, 24, 25 i 26**, w tym zmienione sformułowania twierdzeń, rozpisany przykład ilorazu i rysunek warstw; bez widocznych kolizji i ucięć. GitHub Actions raportuje nadal **24 wcześniejsze błędy globalnego walidatora innych skryptów** w kroku `continue-on-error`, niezwiązane z walidacją dwóch rozdziałów algebry liniowej.
 - Globalne problemy walidacji innych skryptów nie są częścią tego audytu.
 
 ## Status
