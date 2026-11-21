@@ -76,6 +76,12 @@ jobs:
         run: python tests/browser_ci_e2e.py
       - name: Test browser draft save and page-leave cleanup
         run: python tests/browser_workspace_e2e.py
+      - name: Reject newly broken references outside the reviewed pending baseline
+        run: |
+          python scripts/triage_unresolved_refs.py \
+            --db data/biblioteka.db \
+            --out data/unresolved_reference_triage \
+            --fail-on-unclassified
       - name: Upload parser report
         if: always()
         uses: actions/upload-artifact@v4
