@@ -71,8 +71,8 @@ Dla zwartej zorientowanej gładkiej n-rozmaitości M z brzegiem,
 zorientowanej wiązki rzeczywistej E→M rzędu n i zadanego
 nigdzie nieznikającego przekroju s_∂ na ∂M,
 przedłużenie s daje mapę par
-  s:(M,∂M)→(E,E\0).
-W modelu całkowitej klasy Thoma u_E∈H^n(E,E\0;Z) definiujemy
+  s:(M,∂M)→(E,E\setminus 0).
+W modelu całkowitej klasy Thoma u_E∈H^n(E,E\setminus 0;Z) definiujemy
   e(E,s_∂)=s^*u_E ∈ H^n(M,∂M;Z).
 
 Definicja jest precyzyjnie względna. W odróżnieniu od bezwzględnej
@@ -103,18 +103,18 @@ To precyzyjnie wypełnia lukę pomiędzy rozdziałami.
 
 ## 5. Audyt wcześniejszych twierdzeń i zgodność z nimi
 
-- DG-17 \`thm:euler-thom-16\`: zorientowana klasa Thoma w (E,E\0), naturalność i mnożenie przy sumie wiązek; poprawnie rozróżniamy wersję względną od bezwzględnej.
-- DG-17 \`thm:euler-zeros-16\`: dla zer przekroju zamkniętej zorientowanej rozmaitości n-wymiarowej ocena na klasie fundamentalnej jest sumą znaków pionowej pochodnej. Nowy dowód powtarza niezbędny rachunek w **parze (M,∂M)**, zamiast kopiować bezwzględną tezę bez zmiany warunków.
-- DG-17 \`thm:poincare-hopf-16\`: dla zamkniętych zorientowanych rozmaitości sumę indeksów identyfikuje z e(TM) i χ(M). AT-21 przez Lefschetza daje tę samą liczbę, a rozdział z brzegiem nie musi zakładać globalnej orientacji dla samego indeksu.
-- AT-21 \`lem:field-fixed-v11\`: dla f_t(x)=exp_x(−tX(x)) mamy ind_p(f_t)=ind_p(X); przy zerach nieosobliwych wynika to także z I−Df_t=t DX_p. Nie zmieniono tego dowodu.
-- AT-21 \`cor:PH-inward-boundary\`: antpodalne na S^{n−1} ma stopień (−1)^n. Wzór inward=(−1)^n χ(M) pozostaje poprawny także bez orientowalności.
+- DG-17 `thm:euler-thom-16`: zorientowana klasa Thoma w (E,E\setminus 0), naturalność i mnożenie przy sumie wiązek; poprawnie rozróżniamy wersję względną od bezwzględnej.
+- DG-17 `thm:euler-zeros-16`: dla zer przekroju zamkniętej zorientowanej rozmaitości n-wymiarowej ocena na klasie fundamentalnej jest sumą znaków pionowej pochodnej. Nowy dowód powtarza niezbędny rachunek w **parze (M,∂M)**, zamiast kopiować bezwzględną tezę bez zmiany warunków.
+- DG-17 `thm:poincare-hopf-16`: dla zamkniętych zorientowanych rozmaitości sumę indeksów identyfikuje z e(TM) i χ(M). AT-21 przez Lefschetza daje tę samą liczbę, a rozdział z brzegiem nie musi zakładać globalnej orientacji dla samego indeksu.
+- AT-21 `lem:field-fixed-v11`: dla f_t(x)=exp_x(−tX(x)) mamy ind_p(f_t)=ind_p(X); przy zerach nieosobliwych wynika to także z I−Df_t=t DX_p. Nie zmieniono tego dowodu.
+- AT-21 `cor:PH-inward-boundary`: antpodalne na S^{n−1} ma stopień (−1)^n. Wzór inward=(−1)^n χ(M) pozostaje poprawny także bez orientowalności.
 - Pozostałe unikatowe części DG-17 (dualność Poincarégo, klasy Stiefela–Whitneya, samoprzecięcia, forma przecięcia, rysunki) i AT-21 (pola w pierścieniu i ustalona wersja przez Lefschetza) zostały zachowane bez utraty.
 
 ## 6. Korekta infrastruktury: historyczny test etapu V
 
 Podczas dodawania nowych etykiet DG-17 starszy test
 application/tests/test_at_dg_pairwise_11_17.py
-\`test_historical_unique_content_and_labels_preserved\` zaczął błędnie wymagać
+`test_historical_unique_content_and_labels_preserved` zaczął błędnie wymagać
 dokładnego zrównania bieżącego zbioru etykiet z **historycznym**
 manifestem etapu V.
 
