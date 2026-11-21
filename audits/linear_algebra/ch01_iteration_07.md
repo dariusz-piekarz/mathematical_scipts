@@ -60,7 +60,7 @@ Po zmianach:
 - środowiska `\\begin`/`\\end` są zrównoważone;
 - liczba figur TikZ nadal wynosi 2; nowych plików zewnętrznych nie dodano;
 - CI poprzedniej iteracji: [44892015946](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44892015946) — zaliczone;
-- CI aktualnego tekstu: [44892390182](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44892390182) — **weryfikacja wyniku do uzupełnienia**.
+- CI aktualnego tekstu: [44892390182](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44892390182) — **success**: struktura i katalog, dwukrotna kompilacja LaTeX, końcowa walidacja PDF i odsyłaczy oraz archiwizacja artefaktu. PDF ma **16 stron**. Końcowy plik `linear_algebra.log` nie zawiera ostrzeżeń `Overfull`, `Underfull`, `LaTeX Warning`, `Undefined control sequence` ani `Missing character`; przejściowe ostrzeżenia z pierwszego przebiegu kompilatora zniknęły. Wyrenderowano strony 13–16 i skontrolowano wizualnie układ nowego twierdzenia, dowodu, przykładów i podsumowania: nie wykryto kolizji napisów ani przepełnień.
 
 Kontrola globalna Biblioteki nadal raportuje wcześniejsze niepowiązane błędy importów i kopii skryptów. Nie są one liczone jako błędy rozdziału 01 i nie zostały w tej iteracji poprawione.
 
