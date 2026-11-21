@@ -128,7 +128,7 @@ a ponowny przebieg zakończył się sukcesem.
   [44894493853](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44894493853)
   — po dodatkowych wyjaśnieniach, oraz
   [44894556217](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44894556217)
-  — ostatni commit z dowodem przypadku skończonego bez aksjomatu wyboru; wynik do potwierdzenia.
+  — **success**. Wszystkie kroki walidacji, kompilacji, kontroli odsyłaczy i publikacji PDF zakończyły się pomyślnie. Finalny PDF ma **26 stron**. Ostateczny log LaTeX nie zawiera `Overfull`, `Underfull`, `LaTeX Warning`, `Undefined control sequence` ani `Missing character`. Wizualnie sprawdzono stronę z rysunkiem warstw oraz stronę z dowodem wymiaru ilorazu; nie wykryto kolizji.
 - Starsze 24 błędy globalnej walidacji pozostałych
   materiałów w repozytorium są raportowane osobno
   i nie zostały objęte tą iteracją.
