@@ -21,8 +21,8 @@
 ## Testy i kontrola CI
 
 - Wzmocniono `tools/test_linear_algebra_chevalley.py` o przypadki `n=0`, `n=1`, wielomian zerowy w dwóch reprezentacjach, wyższe stopnie i charakterystykę dodatnią. Zachowano testy `2×2` i `3×3` nad `F_2,F_3` oraz test wykładniczej.
-- Dwa oddzielne przebiegi CI: [po korekcie rozdziału](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44938050412) oraz [po rozszerzeniu regresji](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44938099131). Ich status i eksport PDF trzeba potwierdzić po zakończeniu; nie deklarujemy sukcesu przed wynikiem.
-- PDF z poprzedniej wersji audytu I: 7 stron, 0 bloków poza stroną. Aktualny PDF musi zostać pobrany z najnowszego pomyślnego przebiegu i obejrzany oddzielnie.
+- Dwa oddzielne przebiegi CI: [po korekcie rozdziału](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44938050412) oraz [po rozszerzeniu regresji](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44938099131). Oba zakończyły się wynikiem **success**. W drugim sprawdzono rozszerzone testy Jordana–Chevalleya, dwukrotną kompilację pełnej książki, kontrolę odsyłaczy i eksport bieżącego rozdziału.
+- PDF z CI 44938099131: artefakt `linear-algebra-current-chapter`, identyfikator 14721030771. Pobrany PDF zawiera **8 stron** (po szczegółowym rozpisaniu wzoru na wykładniczą), wszystkie niepuste. Kontrola wszystkich bloków tekstu za pomocą PyMuPDF: **0 elementów poza granicami stron**. W przeglądzie wizualnym wszystkich ośmiu stron nie zauważono uciętych wzorów ani kolizji. Ostatnia strona jest krótka, ponieważ zawiera zakończenie podsumowania; podsumowanie zaczyna się już na stronie siódmej z całym pierwszym akapitem. Jest to cecha paginacji, a nie błąd składu.
 
 ## Decyzja
 
