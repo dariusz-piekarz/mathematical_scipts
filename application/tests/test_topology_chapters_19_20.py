@@ -150,6 +150,28 @@ class TopologyNineteenTwentyAudit(unittest.TestCase):
         )
         self.assertEqual(sum([-1, -1]), det_I_minus_A)
 
+    def test_lefschetz_index_chart_and_self_contained_statements(self):
+        """Guard local-index definition, its coordinate domain and proper wording."""
+        src = self.texts["19"]
+        for fragment in (
+            r"Niech $X$ będzie skończonym kompleksem CW.",
+            r"$\varphi(p)=0$",
+            r"$B=B(0,\varepsilon)$",
+            r"$f(\varphi^{-1}(\overline B))\subset U$",
+            r"$p$ był jedynym punktem stałym",
+            r"$F=\varphi\circ f\circ\varphi^{-1}$",
+            r"Niech $M$ będzie gładką rozmaitością bez brzegu",
+            r"$\operatorname{ind}_p(f)$ jest niezależny",
+            r"będzie odwzorowaniem $[x]\mapsto[Ax]$",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, src)
+        self.assertNotIn("Iteracja XI:", src)
+        self.assertNotRegex(
+            src,
+            r"\bdla map między\b|\bbędzie mapą\b",
+        )
+
     def test_scalar_hyperbolic_green_inverse_is_uniform(self):
         ch = self.texts["20"]
         self.assertIn(r"\label{lem:morse-scalar-green}", ch)
