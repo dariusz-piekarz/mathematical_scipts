@@ -1,4 +1,4 @@
-name: Logic and set theory chapters 01-09 validation
+name: Logic and set theory chapters 01-10 validation
 
 on:
   push:
@@ -11,6 +11,8 @@ on:
       - "audits/logic_and_set_theory_ch07_audit_*.md"
       - "audits/logic_and_set_theory_ch08_audit_*.md"
       - "audits/logic_and_set_theory_ch09_audit_*.md"
+      - "audits/logic_and_set_theory_ch10_audit_*.md"
+      - "tools/tests/test_logic_and_set_theory_ch10.py"
       - "tools/tests/test_logic_and_set_theory_ch09.py"
       - "tools/tests/test_logic_and_set_theory_ch08.py"
       - "tools/tests/test_logic_and_set_theory_ch07.py"
@@ -33,7 +35,7 @@ jobs:
           catalog = json.loads(Path("catalog/books.json").read_text(encoding="utf-8"))
           book = next(item for item in catalog["books"] if item["id"] == "logic_and_set_theory")
           chapters = book["chapters"]
-          assert len(chapters) >= 9, chapters
+          assert len(chapters) >= 10, chapters
           expected_names = [
               "01-zdania-i-spojniki-logiczne.tex",
               "02-kwantyfikatory-i-podstawowe-metody-dowodzenia.tex",
@@ -44,12 +46,13 @@ jobs:
               "07-funkcje-i-odwzorowania.tex",
               "08-obrazy-przeciwobrazy-i-dzialania-na-funkcjach.tex",
               "09-jezyki-formalne-termy-i-formuly.tex",
+              "10-struktury-wartosciowania-i-prawda.tex",
           ]
-          assert [Path(path).name for path in chapters[:9]] == expected_names
+          assert [Path(path).name for path in chapters[:10]] == expected_names
           entry = Path(book["entrypoint"])
           text = entry.read_text(encoding="utf-8")
           sources = []
-          for path in chapters[:9]:
+          for path in chapters[:10]:
               chapter = Path(path)
               assert chapter.is_file(), path
               assert "\\input{../../" + path + "}" in text, path
@@ -57,8 +60,8 @@ jobs:
           labels = [name for source in sources for name in re.findall(r"\\label\{([^}]+)\}", source)]
           refs = [name for source in sources for name in re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", source)]
           assert len(labels) == len(set(labels)), "Duplicate LaTeX labels"
-          assert len(labels) == 269, f"Unexpected labels: {len(labels)}"
-          forward = {"ch:semantics-fol", "ch:zf-axioms"}
+          assert len(labels) == 288, f"Unexpected labels: {len(labels)}"
+          forward = {"ch:zf-axioms", "ch:soundness-fol", "thm:ls-second-order-categorical"}
           assert set(refs) - set(labels) == forward, "Unexpected unresolved targets in partial book"
           inventories = [
               (sources[5], {"twierdzenie": 15, "wniosek": 1, "proof": 16,
@@ -70,6 +73,9 @@ jobs:
               (sources[8], {"twierdzenie": 2, "stwierdzenie": 1,
                             "lemat": 5, "proof": 8,
                             "definicja": 7, "przyklad": 13, "uwaga": 3}),
+              (sources[9], {"twierdzenie": 5, "stwierdzenie": 1,
+                            "lemat": 2, "wniosek": 1, "proof": 9,
+                            "definicja": 8, "przyklad": 16, "uwaga": 3}),
           ]
           for source, inventory in inventories:
               for env, expected in inventory.items():
@@ -82,7 +88,7 @@ jobs:
                   else:
                       assert stack and stack.pop() == env, ("Unbalanced environment", env)
               assert not stack, ("Unclosed environments", stack)
-          print("PASS: imports, chapter order, 269 labels, 96 references, two documented forward references, inventories and TeX environments")
+          print("PASS: imports, chapter order, 288 labels, 114 references, three documented forward references, inventories and TeX environments")
           PY
       - name: Run chapter 07 finite-model regression tests
         run: python -m unittest tools.tests.test_logic_and_set_theory_ch07 -v
@@ -90,6 +96,8 @@ jobs:
         run: python -m unittest tools.tests.test_logic_and_set_theory_ch08 -v
       - name: Run chapter 09 syntax regression tests
         run: python -m unittest tools.tests.test_logic_and_set_theory_ch09 -v
+      - name: Run chapter 10 semantics regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch10 -v
       - name: Compile logic and set theory PDF
         uses: xu-cheng/latex-action@v3
         with:
@@ -106,7 +114,7 @@ jobs:
 
           log = Path("books/pl/logic_and_set_theory.log").read_text(errors="replace")
           refs = set(re.findall(r"LaTeX Warning: Reference `([^']+)' on page \d+ undefined", log))
-          allowed = {"ch:semantics-fol", "ch:zf-axioms"}
+          allowed = {"ch:zf-axioms", "ch:soundness-fol", "thm:ls-second-order-categorical"}
           assert refs <= allowed, f"Unexpected undefined references: {sorted(refs - allowed)}"
           assert not re.search(r"Overfull \\hbox", log), "Overfull TeX boxes"
           assert not re.search(r"LaTeX Warning: Citation .+ undefined", log), "Undefined citation"
@@ -118,7 +126,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: logic-and-set-theory-ch01-ch09
+          name: logic-and-set-theory-ch01-ch10
           path: |
             books/pl/logic_and_set_theory.pdf
             books/pl/logic_and_set_theory.log
