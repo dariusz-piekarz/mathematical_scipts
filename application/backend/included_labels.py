@@ -1,4 +1,4 @@
-"""Static, read-only provenance for labels imported with TeX \input.
+r"""Static, read-only provenance for labels imported with TeX \input.
 
 This does not execute TeX conditionals: an imported label denotes a
 possible definition in a physically included file, not proof that a
@@ -32,7 +32,7 @@ def included_labels_for_document(
     repo_root: Path,
     masked_source,
 ) -> list[IncludedLabel]:
-    """Scan literal \input with compilation-root-relative paths.
+    r"""Scan literal \input with compilation-root-relative paths.
 
     Only existing files inside repo_root may contribute. The project
     compiles books from books/pl; a literal \input path in a chapter is

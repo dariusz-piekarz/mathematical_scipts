@@ -129,7 +129,7 @@ class TopologyChapterThirteenFourteenAudit(unittest.TestCase):
         self.assertEqual(annihilator, [0, 2])
         self.assertEqual(image, {0, 2})
         self.assertEqual(modulus // len(image), 2)
-        self.assertIn(r"\operatorname{Ext}^1_\Z", chapter)
+        self.assertRegex(chapter, r"\\operatorname\{Ext\}\^1_(?:\\Z|\{\\Z\})")
 
     def test_obstruction_cp2_nontrivial_square(self):
         chapter = self.texts["14"]
