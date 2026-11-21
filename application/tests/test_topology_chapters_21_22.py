@@ -124,6 +124,45 @@ class TopologyChaptersTwentyOneTwentyTwoAudit(unittest.TestCase):
                 if interior:
                     self.assertGreater(parameter**3, 0)
 
+    def test_double_smoothing_preserves_fixed_points_and_lefschetz(self):
+        """Relative smoothing on the double is homotopic and fixed-point safe."""
+        src = self.src["21"]
+        for fragment in (
+            r"$\widetilde F:DM\to DM$",
+            r"homotopijne z $F$",
+            r"równe mu w mniejszych otoczeniach",
+            r"nie tworzy nowych punktów stałych",
+            r"$L(\widetilde F)=L(F)$",
+            r"twierdzenie o gładkiej aproksymacji",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, src)
+
+    def test_all_environment_nesting_and_reference_closure(self):
+        """Environment count alone misses mis-nesting; audit structure sequentially."""
+        for ch in ("21", "22"):
+            src = self.src[ch]
+            with self.subTest(chapter=ch):
+                starts = re.findall(
+                    r"\\(?:ref|eqref|pageref|autoref|nameref)\s*\{", src
+                )
+                complete = re.findall(
+                    r"\\(?:ref|eqref|pageref|autoref|nameref)\s*\{[^{}\n]+\}",
+                    src,
+                )
+                self.assertEqual(len(starts), len(complete))
+                stack = []
+                for item in re.finditer(
+                    r"\\(begin|end)\{([^{}]+)\}", src
+                ):
+                    kind, env = item.groups()
+                    if kind == "begin":
+                        stack.append(env)
+                    else:
+                        self.assertTrue(stack, f"Unexpected end of {env}")
+                        self.assertEqual(stack.pop(), env)
+                self.assertFalse(stack, f"Unclosed environments: {stack}")
+
     def test_inward_poincare_hopf_sign_on_balls(self):
         src = self.src["21"]
         self.assertIn(r"\label{cor:PH-inward-boundary}", src)
