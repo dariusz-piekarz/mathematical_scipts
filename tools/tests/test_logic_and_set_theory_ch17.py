@@ -143,6 +143,6 @@ class TestChapter17(unittest.TestCase):
         labs=set(re.findall(r'\\label\{([^{}]+)\}',s))
         self.assertEqual(refs-labs,{
             'ch:computability-intro','def:syntax-term','def:syntax-formula',
-            'ch:representability-diagonal','res:7:6','res:7:7'})
+            'res:7:6','res:7:7'})
 
 if __name__=='__main__':unittest.main()
