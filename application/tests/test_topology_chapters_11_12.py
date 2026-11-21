@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from collections import Counter, defaultdict
-from itertools import combinations
+from itertools import combinations, product
 from random import Random
 from pathlib import Path
 import re
@@ -163,6 +163,22 @@ class TopologyChapterElevenTwelveAudit(unittest.TestCase):
                     }
                     with self.subTest(simplex_dim=m, cap_degree=k):
                         self.assertEqual(lhs, rhs)
+
+    def test_zero_dimensional_euler_orientation_signs(self):
+        """Orientation signs cancel in <e(TM), [M]> in dimension zero."""
+        ch = self.text["11"]
+        self.assertIn(r"$u_E=e(E)=\varepsilon\in H^0(M;\Z)$", ch)
+        self.assertIn(r"\sum_x\varepsilon_x^2=\#M=\chi(M)", ch)
+        for count in range(0, 7):
+            for orientations in product((-1, 1), repeat=count):
+                fundamental_coefficients = orientations
+                euler_values = orientations
+                pairing = sum(
+                    a * b for a, b in
+                    zip(fundamental_coefficients, euler_values)
+                )
+                with self.subTest(points=count, signs=orientations):
+                    self.assertEqual(pairing, count)
 
     def test_cp2_connected_sum_parity_obstructs_homotopy(self):
         ch = self.text["11"]
