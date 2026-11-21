@@ -92,8 +92,8 @@ Ponadto dla wszystkich **689** macierzy nad \(\mathbb F_2\) o rozmiarach \(m\tim
 - Zachowano globalne zasady „suma zbiorów” i „warunek niezależności liniowej”; brak niedozwolonego słownictwa w treści.
 - W rozdziale 04 nie użyto zewnętrznych grafik ani kodu; diagram jest wewnętrznym TikZ.
 - Rozdział 04 wpisano do `books/pl/linear_algebra.tex`, `catalog/books.json` i `.github/workflows/linear-algebra-chapter.yml` z zachowaniem kolejności 01–04.
-- CI po pierwszym audycie: [44905548745](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44905548745) — **wynik do uzupełnienia**.
-- W całym repozytorium wcześniej występowały 24 zgłoszenia nieblokującego globalnego walidatora innych skryptów; nie są one traktowane jako rozstrzygnięte.
+- CI po pierwszym audycie: [44905548745](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44905548745) — **success**. Wszystkie kroki GitHub Actions zakończyły się pomyślnie: kontrola czterech rozdziałów, katalogu, importów, etykiet i terminologii, dwukrotna kompilacja LaTeX, weryfikacja odsyłaczy oraz eksport artefaktu. Wynikowy PDF ma **49 stron A4**, a końcowy plik `linear_algebra.log` nie zawiera `LaTeX Warning`, `Overfull`, `Underfull`, `Missing character`, `Undefined control sequence` ani `Fatal error`. Wizualnie zbadano **strony 38–49**, w tym diagram na stronie **41** i końcowe wzory zmiany bazy: brak nakładania się napisów, uciętych symboli i nieczytelnych rysunków. Strona 49 zawiera jedynie krótkie podsumowanie; nie jest to błąd merytoryczny ani składu. Nie skracano dowodów, by usuwać tę stronę.
+- W całym repozytorium nadal występują **24 wcześniejsze zgłoszenia** nieblokującego globalnego walidatora innych skryptów (potwierdzone w logu tego przebiegu CI); nie są one traktowane jako rozstrzygnięte i pozostają poza zakresem audytu algebry liniowej.
 
 ## Stan i kolejny krok
 
