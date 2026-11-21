@@ -133,5 +133,66 @@ class TestLogicAndSetTheoryChapter11(unittest.TestCase):
         self.assertIn(r"$H:=\exists x\,\neg(x=y)$", text)
 
 
+    def test_equality_symmetry_requires_fresh_placeholder(self):
+        # A correct substitution for the symmetry proof must not modify
+        # the fixed term on the right-hand side of z=t.
+        def var(i):
+            return ("v", i)
+
+        def fv(term):
+            if term[0] == "v":
+                return {term[1]}
+            if term[0] == "c":
+                return set()
+            if term[0] == "f":
+                return fv(term[1])
+            return fv(term[1]) | fv(term[2])
+
+        def substitute(term, variable, replacement):
+            if term[0] == "v":
+                return replacement if term[1] == variable else term
+            if term[0] == "c":
+                return term
+            if term[0] == "f":
+                return ("f", substitute(term[1], variable, replacement))
+            return ("g", substitute(term[1], variable, replacement),
+                    substitute(term[2], variable, replacement))
+
+        base = [var(0), var(1), var(2), ("c",)]
+        terms = (base
+                 + [("f", t) for t in base]
+                 + [("g", a, b) for a in base for b in base]
+                 + [("f", ("f", var(0))),
+                    ("g", ("f", var(0)), var(1))])
+        self.assertEqual(len(terms), 26)
+        checks = 0
+        for t, u in product(terms, repeat=2):
+            z = 3
+            self.assertNotIn(z, fv(t) | fv(u))
+            # theta(z) := (z=t). Substitution acts on *both* sides.
+            theta = (var(z), t)
+            self.assertEqual(tuple(substitute(e, z, t) for e in theta),
+                             (t, t))
+            self.assertEqual(tuple(substitute(e, z, u) for e in theta),
+                             (u, t))
+            checks += 1
+        self.assertEqual(checks, 676)
+
+        # Why the original theta(x) := x=t was invalid for arbitrary t:
+        x, t, u = var(0), ("f", var(0)), ("c",)
+        theta = (x, t)
+        self.assertNotEqual(
+            tuple(substitute(e, 0, t) for e in theta), (t, t))
+        self.assertNotEqual(
+            tuple(substitute(e, 0, u) for e in theta), (u, t))
+
+        chapter = (Path(__file__).resolve().parents[2]
+                   / "chapters/pl/logic_and_set_theory/"
+                     "11-dowody-formalne-i-dedukcja-naturalna.tex"
+                   ).read_text(encoding="utf-8")
+        self.assertIn("nie występuje ani w $t$", chapter)
+        self.assertIn(r"$\theta[z:=t]$", chapter)
+
+
 if __name__ == "__main__":
     unittest.main()
