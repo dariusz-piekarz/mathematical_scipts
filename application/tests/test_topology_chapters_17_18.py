@@ -294,6 +294,21 @@ class TopologySeventeenEighteenAudit(unittest.TestCase):
                 middle, [] if total_index_drop == 1 else [9]
             )
 
+    def test_morse_theorem_hypotheses_are_self_contained(self):
+        """Critical points, dimensions and flow parameters are explicit in statements."""
+        chapter = self.text["18"]
+        for fragment in (
+            r"o wymiarze $n\ge0$",
+            r"$\lambda\in\{0,\ldots,n\}$",
+            r"$\Phi$ przepływem",
+            r"Dla każdego $p\in\operatorname{Crit}(f)$",
+            r"Jeśli $p,q\in\operatorname{Crit}(f)$",
+            r"Dla różnych $p,q\in\operatorname{Crit}(f)$",
+            r"$\mathcal M(p,q)=(W^u(p)\cap W^s(q))/\R$",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, chapter)
+
     def test_morse_projective_trajectory_orientation_at_two_intersections(self):
         """Independent signs at both intersections with f=c in RP^2."""
         import math
