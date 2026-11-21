@@ -63,6 +63,7 @@ PREFIX_DOMAINS = {
     "FA": "analiza funkcjonalna",
     "PDE": "równania różniczkowe cząstkowe",
     "LA": "algebra liniowa",
+    "LST": "logika i teoria mnogości",
 }
 COMMAND = re.compile(r"\\([A-Za-z@]+|.)")
 RE_WS = re.compile(r"\s+")
@@ -243,6 +244,7 @@ REPOSITORY_CATEGORIES = {
     "measure_theory": "ME",
     "partial_differential_equations": "PDE",
     "linear_algebra": "LA",
+    "logic_and_set_theory": "LST",
     "algebraic_geometry": "ALG", "algebraic_topology": "TOP",
     "banach_tarski": "BT", "category_theory": "KAT",
     "galois_theory": "GA", "graph_and_knot_theory": "GW",
