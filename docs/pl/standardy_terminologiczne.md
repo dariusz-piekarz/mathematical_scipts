@@ -32,3 +32,11 @@ W każdym audycie sprawdzamy konsekwentnie te terminy w treści, twierdzeniach, 
 - Zamiast „warunek rozszczepienia \(m_T\)” piszemy **„warunek rozkładu \(m_T\) na czynniki liniowe”**. Zamiast „bez rozszczepienia” — „gdy wielomian nie rozkłada się na czynniki liniowe nad danym ciałem”.
 - Rozróżniamy **rozkład na czynniki liniowe nad ustalonym ciałem** od ogólnego **rozkładu na czynniki nierozkładalne**. Sama separowalność ani brak powtórzeń nie oznaczają rozkładu na czynniki liniowe nad tym ciałem.
 - Właściwe zastosowania pojęcia **rozszczepienia** w innych kontekstach (np. rozszczepiona dokładna sekwencja, rozszczepienie krótkiego ciągu dokładnego, rozszczepienie morfizmu) nie podlegają tej zamianie. Nie naruszamy nazw stabilnych etykiet LaTeX.
+
+## 5. Angielskie „chart” to „mapa”, nie „karta”
+
+- **Chart (coordinate chart)** na rozmaitości tłumaczymy jako **mapa**, np. „mapa współrzędnych”, „mapa lokalna”, „mapa \((U,\varphi)\)”, „dziedzina mapy”, „odwzorowanie zmiany map”, „atlas map”. Stosujemy poprawne formy odmiany: „mapy”, „mapie”, „mapę”, „mapą”, „map”, „mapami”, „mapach”.
+- W znaczeniu *chart* **nie stosujemy** „karta”, „karty”, „karcie”, „kartę”, „kartą”, „kart”, „kartami”, „kartach” itd. Jedynie zwykłe znaczenia niezwiązane z mapą współrzędnych (np. karty do gry) pozostają bez zmian.
+- Angielskie **mapping** oraz **map** w znaczeniu funkcji między przestrzeniami tłumaczymy jako **odwzorowanie**. Wyraz „mapa” jest zarezerwowany dla *chart*, a nie używany jako ogólny synonim odwzorowania.
+- Zmiany przeprowadzamy kontekstowo, z zachowaniem polskiej gramatyki, definicji matematycznych oraz historycznych etykiet LaTeX; w szczególności nie zmieniamy mechanicznie każdej sylaby „kart” ani nazw \(\backslash\mathrm{label}\) i \(\backslash\mathrm{ref}\).
+- Zasada jest **globalna**, dotyczy wszystkich polskojęzycznych skryptów Biblioteki oraz każdego kolejnego audytu i uzupełnienia.
