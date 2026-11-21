@@ -14,6 +14,8 @@ Refer to [the Polish terminology standard](docs/pl/standardy_terminologiczne.md)
 
 4. For polynomials, write **„wielomian rozkłada się nad \(K\) na czynniki liniowe”** or **„rozkłada się na czynniki nierozkładalne”**. Do not write **„wielomian rozszczepia się”**, **„rozszczepiony wielomian”** or **„rozszczepienie wielomianu”**. Reserve „rozszczepienie” for mathematically distinct contexts (e.g. split exact sequences), and do not rename historical LaTeX labels.
 
+5. In Polish-language mathematical manuscripts, translate **chart** (a local coordinate chart on a manifold) as **„mapa”**, not **„karta”**. Write **„mapa współrzędnych”**, **„mapa lokalna”**, **„mapy atlasu”**, **„dziedzina mapy”**, **„zmiana map”**, with grammatically correct Polish inflections. Translate **mapping/map** (a function between spaces) as **„odwzorowanie”**, not „mapa”, unless the object truly is a coordinate chart. This rule applies to all Polish scripts, proofs, examples, headings, captions and audits. Preserve stable LaTeX labels and references; never perform blind substitutions that corrupt inflections or mathematical meaning.
+
 ## Preserve references and rigor
 
 - Preserve existing stable `\label` names and corresponding `\ref` targets even if they contain an older word. Text, theorem titles, captions and prose should follow the current terminology.
