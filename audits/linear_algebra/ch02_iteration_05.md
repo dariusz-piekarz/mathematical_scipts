@@ -47,7 +47,7 @@ W dowodzie `thm:lin2-wzor-wymiarowy` zastąpiono skrócone symbole \(\dim U\), \
 - Nie znaleziono niezgodnych lub niedomkniętych środowisk `\\begin` / `\\end`.
 - W treści nie występują zakazane „unia” ani „relacja liniowa”; zachowano stabilne historyczne nazwy etykiet.
 - Rozdziały nie zależą od zewnętrznych plików ilustracji.
-- CI dla zmian: [44897797316](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44897797316) — status końcowy do potwierdzenia.
+- CI dla zmian: [44897797316](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44897797316) — **success**. Wszystkie etapy walidacji źródeł, kontroli importów, terminologii i odsyłaczy, kompilacji LaTeX oraz eksportu PDF zakończyły się pomyślnie. Wynikowy PDF ma **27 stron A4**. Końcowy `linear_algebra.log` nie zawiera `LaTeX Warning`, `Overfull`, `Underfull`, `Undefined control sequence`, `Missing character` ani `Fatal error`. Wizualnie sprawdzono strony **20, 23, 25, 26 i 27** zawierające m.in. wzory wymiarowe, rozkład wielomianów, ilorazy i rysunek warstw; nie stwierdzono ucięć ani kolizji tekstu. W osobnej, nieblokującej walidacji globalnej innych książek nadal wystąpiły **24 uprzednio znane problemy**.
 - Problemy globalnego walidatora innych książek Biblioteki są monitorowane oddzielnie i nie stanowią dowodu poprawności ani niepoprawności rozdziału 02.
 
 ## Status
