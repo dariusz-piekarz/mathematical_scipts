@@ -1,0 +1,280 @@
+\chapter{Uogólnione twierdzenia Riccatiego}
+\label{ch:lin26-general-riccati}
+\index{równanie Riccatiego!stabilizowalność}
+\index{wykrywalność!równanie Riccatiego}
+\index{sterowanie optymalne!koszt półokreślony}
+
+\noindent\textbf{Cel rozdziału.}
+W Rozdziale~\ref{ch:lin24-riccati}
+udowodniliśmy twierdzenia Riccatiego
+przy stabilności macierzy \(A\)
+i dodatniej określoności \(Q\).
+W wielu układach macierz otwartej
+pętli jest jednak niestabilna,
+a koszt nie karze każdej współrzędnej
+stanu. Wykażemy, że wystarczają
+\emph{stabilizowalność} pary \((A,B)\)
+i \emph{wykrywalność} pary
+obserwacyjnej, które zostały
+zdefiniowane i scharakteryzowane
+w Rozdziale~\ref{ch:lin25-control}.
+Przedstawimy pełny dowód
+istnienia i jednoznaczności
+rozwiązania stabilizującego,
+wzór na wartość optymalną,
+przykłady z niestabilną otwartą
+pętlą i kontrprzykłady
+wyjaśniające rolę założeń.
+
+Niech \(n,m\ge1\).
+W całym rozdziale
+\(A\in\operatorname{Mat}_{n\times n}(\mathbb C)\),
+\(B\in\operatorname{Mat}_{n\times m}(\mathbb C)\),
+\(Q=Q^*\ge0\) i
+\(R=R^*>0\) są macierzami
+odpowiednich rozmiarów \(n\times n\)
+i \(m\times m\).
+Przez \(P\ge0\)
+oznaczamy nieujemną określoność
+hermitowskiej macierzy \(P\).
+Symbol \(\sigma(T)\) oznacza
+zbiór wartości własnych \(T\),
+a \(\rho(T)\) jego promień spektralny.
+Przez \(u=-Kx\)
+oznaczamy sprzężenie zwrotne,
+które wprowadza macierz
+zamkniętej pętli \(A-BK\).
+
+\section{Założenia i koszt półokreślony}
+\label{sec:lin26-hypotheses}
+
+\begin{lemat}[Rozkład macierzy kosztu]
+\label{lem:lin26-factor}
+Dla każdej hermitowskiej
+\(Q\in\operatorname{Mat}_{n\times n}(\mathbb C)\),
+\(Q\ge0\), istnieje
+hermitowska macierz \(C\ge0\)
+taka, że \(C^*C=Q\).
+Ponadto dla każdego
+\(x\in\mathbb C^n\) mamy
+\[
+ x^*Qx=\|Cx\|_2^2,\qquad
+ \ker C=\ker Q.
+\]
+Jeżeli \(C_1^*C_1=C_2^*C_2=Q\)
+dla macierzy o dowolnej liczbie
+wierszy, to pary
+\((C_1,A)\) i \((C_2,A)\)
+są wykrywalne w danym rodzaju czasu
+jednocześnie albo żadna z nich
+nie jest wykrywalna.
+\end{lemat}
+\begin{proof}
+Z twierdzenia spektralnego
+z Rozdziału~\ref{ch:lin14-spektralne}
+istnieje unitarna \(U\)
+i liczby \(q_j\ge0\)
+takie, że
+\(Q=U\operatorname{diag}(q_1,\ldots,q_n)U^*\).
+Połóżmy
+\(C=U\operatorname{diag}(\sqrt{q_1},
+\ldots,\sqrt{q_n})U^*\).
+Jest to macierz hermitowska,
+nieujemnie określona, a
+\(C^*C=C^2=Q\).
+Równość
+\(x^*Qx=(Cx)^*(Cx)\)
+daje wzór na koszt.
+
+Jeśli \(Cx=0\), to
+\(Qx=C^*Cx=0\).
+Jeśli \(Qx=0\),
+to \(\|Cx\|_2^2=x^*Qx=0\),
+więc \(Cx=0\).
+To dowodzi równości jąder.
+Analogicznie
+\(\ker C_1=\ker Q=\ker C_2\).
+Na mocy kryterium PBH
+z Twierdzenia~\ref{thm:lin25-detectability}
+wykrywalność zależy tylko od
+tego, czy dla każdej niestabilnej
+wartości własnej \(\lambda\)
+istnieje niezerowy
+\(v\in\ker(\lambda I-A)\cap\ker C_i\).
+Równość jąder oznacza,
+że oba warunki są identyczne.
+\end{proof}
+
+\begin{definicja}[Warunki dla ogólnego LQR]
+\label{def:lin26-assumptions}
+Niech \(C\) będzie dowolną
+macierzą spełniającą
+\(C^*C=Q\).
+Przyjmujemy dwa warunki:
+\begin{enumerate}[label=\textup{(\roman*)}]
+ \item para \((A,B)\) jest
+ \emph{stabilizowalna}
+ w rozważanym rodzaju czasu;
+ \item para \((C,A)\) jest
+ \emph{wykrywalna}
+ w tym samym rodzaju czasu.
+\end{enumerate}
+W pierwszym przypadku
+istnieje \(K_0\)
+stabilizujące \(A-BK_0\).
+W drugim niestabilne
+wartości własne \(A\)
+nie mają niezerowych
+wektorów własnych w \(\ker Q\).
+Z
+Lematu~\ref{lem:lin26-factor}
+warunek (ii) nie zależy
+od wyboru rozkładu
+\(Q=C^*C\).
+\end{definicja}
+
+\begin{uwaga}[Dlaczego nie wymagamy \(Q>0\)]
+\label{rem:lin26-weak-q}
+Jeśli \(Q>0\), to \(C\)
+jest odwracalna, zatem
+para \((C,A)\) jest obserwowalna,
+a w szczególności wykrywalna.
+Warunek wykrywalności
+jest więc istotnie słabszy.
+Pozwala on nie karać
+stabilnych kierunków, których
+obserwacja nie rozróżnia.
+Nie będziemy jednak wnioskować,
+że rozwiązanie Riccatiego
+musi być dodatnio określone:
+w ogólnym przypadku otrzymamy
+tylko \(P\ge0\).
+\end{uwaga}
+
+\section{Dwa oszacowania stabilnego sprzężenia}
+\label{sec:lin26-feedback-bound}
+
+\begin{lemat}[Koszt stabilizującego sterowania]
+\label{lem:lin26-feedback-bound}
+Załóżmy, że para \((A,B)\)
+jest stabilizowalna.
+Wybierzmy macierz \(K_0\)
+taką, aby \(D=A-BK_0\)
+była stabilna w odpowiednim
+rodzaju czasu i połóżmy
+\(H=Q+K_0^*RK_0\ge0\).
+
+W czasie dyskretnym szereg
+\[
+ W_{\mathrm d}
+ =\sum_{k=0}^{\infty}(D^*)^kHD^k
+\]
+jest bezwzględnie zbieżny,
+daje macierz hermitowską
+\(W_{\mathrm d}\ge0\)
+i spełnia
+\[
+ W_{\mathrm d}-D^*W_{\mathrm d}D=H.
+\]
+Dla trajektorii
+\(x_{k+1}=Dx_k\)
+koszt sterowania \(u_k=-K_0x_k\)
+na nieskończonym horyzoncie
+wynosi \(x_0^*W_{\mathrm d}x_0\).
+
+W czasie ciągłym całka
+\[
+ W_{\mathrm c}
+ =\int_0^\infty e^{tD^*}He^{tD}\,\mathrm dt
+\]
+jest bezwzględnie zbieżna,
+daje \(W_{\mathrm c}=W_{\mathrm c}^*\ge0\)
+i spełnia
+\[
+ D^*W_{\mathrm c}+W_{\mathrm c}D=-H.
+\]
+Dla trajektorii \(x'=Dx\)
+koszt sterowania \(u=-K_0x\)
+jest równy \(x_0^*W_{\mathrm c}x_0\).
+\end{lemat}
+\begin{proof}
+W czasie dyskretnym
+\(\rho(D)<1\), więc
+z Lematu~\ref{lem:lin23-powers}
+mamy \(\|D^k\|\le Mr^k\)
+dla pewnych \(M>0\), \(0<r<1\).
+Wobec tego
+\[
+ \|(D^*)^kHD^k\|
+ \le M^2\|H\|r^{2k},
+\]
+co zapewnia zbieżność.
+Każdy składnik jest
+hermitowski i nieujemnie
+określony, dlatego
+\(W_{\mathrm d}\ge0\).
+Odjęcie od szeregu
+tego samego szeregu
+z indeksem przesuniętym
+daje równanie dla \(W_{\mathrm d}\).
+Ponieważ
+\(u_k^*Ru_k+x_k^*Qx_k=x_k^*Hx_k\),
+sumowanie kosztów
+daje wskazaną formę kwadratową.
+
+W czasie ciągłym
+wszystkie wartości własne \(D\)
+mają ujemne części rzeczywiste.
+Z postaci Jordana lub
+ciągłego twierdzenia Lapunowa
+z Rozdziału~\ref{ch:lin22-sylvester}
+wynika oszacowanie
+\(\|e^{tD}\|\le Me^{-\alpha t}\)
+dla \(t\ge0\)
+i pewnych \(M,\alpha>0\).
+Zatem
+\(\|e^{tD^*}He^{tD}\|
+ \le M^2\|H\|e^{-2\alpha t}\),
+więc całka jest zbieżna
+i definiuje macierz
+nieujemnie określoną.
+Różniczkując macierz
+\(e^{tD^*}He^{tD}\)
+i całkując jej pochodną,
+otrzymujemy
+\[
+ \begin{aligned}
+ D^*W_{\mathrm c}+W_{\mathrm c}D
+ &=\int_0^\infty
+     \frac{\mathrm d}{\mathrm dt}
+       (e^{tD^*}He^{tD})\,\mathrm dt\\
+ &=\lim_{t\to\infty}
+       e^{tD^*}He^{tD}-H=-H.
+ \end{aligned}
+\]
+Koszt ma postać
+\(\int_0^\infty x_0^*e^{tD^*}
+He^{tD}x_0\,\mathrm dt\);
+przesunięcie stałych
+wektorów poza całkę
+daje \(x_0^*W_{\mathrm c}x_0\).
+\end{proof}
+
+\begin{uwaga}[Granica dodatnia nie musi być ściśle dodatnia]
+\label{rem:lin26-feedback-semi}
+W poprzednim lemacie
+\(H\) może mieć niezerowe
+jądro. Nie można więc
+stosować twierdzeń Lapunowa
+w wersji wymagającej \(H>0\)
+do wniosku o stabilności:
+stabilność macierzy \(D\)
+była tu \emph{założeniem},
+a nie wynikiem.
+Dopiero wykrywalność
+umożliwi wyprowadzenie
+stabilności nowego sprzężenia
+z równania Riccatiego
+o prawostronnej macierzy
+jedynie nieujemnie określonej.
+\end{uwaga}
