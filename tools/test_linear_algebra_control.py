@@ -90,7 +90,7 @@ def exhaustive_finite_fields():
             assert is_ctrl==pbh_full_row_rank_for_all_eigenvalues(a,b,p), (p,a,b)
             controllable+=is_ctrl
             # Invariance: rank [K | A K] agrees with rank(K).
-            ak=[[sum(a[i][k]*k[k][j] for k in range(2))%p
+            ak=[[sum(a[i][h]*k[h][j] for h in range(2))%p
                  for j in range(2)] for i in range(2)]
             assert rank([k[i]+ak[i] for i in range(2)],p)==r
 
