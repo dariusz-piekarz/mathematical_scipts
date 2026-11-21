@@ -83,7 +83,7 @@ class TestLogicChapter24(unittest.TestCase):
         self.assertIn(r"\ref{cor:downward-countable}",p)
 
     def test_internal_vs_external_and_second_order(self):
-        for z in ("E_r", "zewnętrzne wyliczenie", "wewnętrznym",
+        for z in ("E_r", "Zewnętrzne wyliczenie", "wewnętrznym",
                   r"\ref{sec:second-order-introduction}",
                   r"\ref{cor:downward-countable}",
                   "semantyce Henkina"):
