@@ -24,6 +24,7 @@ from pydantic import BaseModel, Field
 
 from backend.latex_parser import analyze_selection, get_stats, show_label
 from backend import workspaces
+from backend.concept_graph import build_concept_graph
 
 ROOT = Path(__file__).resolve().parents[1]
 FRONTEND = ROOT / "frontend"
@@ -377,6 +378,16 @@ def bipartite_graph(con: sqlite3.Connection, left: str, right: str,
     return {"bipartite":True,"evidence":"explicit_tex_references","granularity":granularity,
             "left":left,"right":right,"nodes":final_nodes,"edges":edges,"truncated":truncated,
             "available_edges":len(ordered)}
+
+
+@app.get("/api/concepts/graph")
+def concept_occurrence_graph(
+    q: Annotated[str, Query(min_length=2, max_length=100)],
+    max_occurrences: Annotated[int, Query(ge=1, le=80)] = 36,
+):
+    """Grounded concept graph: actual TeX occurrences plus curated relations."""
+    with db_connection() as con:
+        return build_concept_graph(con, q, max_occurrences)
 
 
 @app.get("/api/graph")

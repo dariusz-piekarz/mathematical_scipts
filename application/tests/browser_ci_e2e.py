@@ -68,6 +68,24 @@ def main() -> None:
                 page.locator("#view-graph").wait_for(state="visible", timeout=15000)
                 assert page.locator("#graphLeft option").count() > 0
                 assert page.locator("#graphRight option").count() > 0
+                # Concept graph must work in real Chromium without a graph CDN.
+                # Reuse the global search as a shortcut into the new graph view.
+                page.locator("#searchInput").fill("Zorn")
+                page.locator("#searchResults .search-concept-action").wait_for(
+                    state="visible", timeout=15000
+                )
+                page.locator("#searchResults .search-concept-action").click()
+                page.locator("#view-concepts").wait_for(state="visible", timeout=15000)
+                page.locator("#drawConceptGraph").click()
+                page.locator("#conceptEvidence .concept-occurrence").first.wait_for(
+                    state="visible", timeout=20000
+                )
+                assert "Lemat Zorna" in page.locator("#conceptEvidence").inner_text()
+                assert "Równoważne nad ZF" in page.locator("#conceptRelations").inner_text()
+                assert page.locator("#conceptCanvas svg").count() == 1
+                page.locator("#conceptEvidence .concept-occurrence").first.click()
+                page.locator("#view-reader").wait_for(state="visible", timeout=15000)
+                assert page.locator("#docTitle").inner_text().strip()
                 # Choose an existing, unambiguous reference actually displayed
                 # in the first 32,000 characters of a canonical chapter.
                 with sqlite3.connect(ROOT / "data" / "biblioteka.db") as db:

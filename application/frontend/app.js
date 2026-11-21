@@ -6,7 +6,7 @@ const state = {
   domains:[], modules:[], outlines:new Map(), expandedDomains:new Set(), expandedModules:new Set(),
   currentModule:null, currentEntity:null, currentData:null, selected:new Map(),
   tab:"reader", granularity:"module", simplified:false, tooltipData:null,
-  tooltipKey:0, graph:null, renderEpoch:0, draftSession:null,
+  tooltipKey:0, graph:null, conceptGraph:null, conceptEpoch:0, renderEpoch:0, draftSession:null,
 };
 const titleOr = item => item.title || item.subtype || item.kind || item.id;
 const tr = s => String(s ?? "");
@@ -23,9 +23,10 @@ async function api(path, options={}) {
 function activateTab(name){
   state.tab=name;
   document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
-  for(const k of ["reader","graph","selection"])$("view-"+k).classList.toggle("hidden",k!==name);
+  for(const k of ["reader","graph","concepts","selection"])$("view-"+k).classList.toggle("hidden",k!==name);
   if(name==="selection")renderSelection();
   if(name==="graph" && !state.graph)loadGraph();
+  if(name==="concepts" && !state.conceptGraph)loadConceptGraph();
   closeTip();
 }
 function toggleDomain(domain){state.expandedDomains.has(domain)?state.expandedDomains.delete(domain):state.expandedDomains.add(domain);renderTree();}
@@ -214,6 +215,9 @@ async function performSearch(q){
     const result=await api(`/api/search?q=${encodeURIComponent(q)}&limit=25`);
     if($("searchInput").value.trim()!==q)return;
     const list=$("searchResults");list.replaceChildren();
+    const graphButton=node("button",{className:"search-hit search-concept-action"},"Zbuduj graf pojęcia: "+q);
+    graphButton.addEventListener("click",()=>{list.classList.add("hidden");openConceptSearch(q);});
+    list.append(graphButton);
     if(!result.items.length)list.append(node("p",{className:"empty-sub"},"Nie znaleziono dopasowań."));
     for(const e of result.items){
       const b=node("button",{className:"search-hit"});b.append(node("strong",{},crop(e.title||e.excerpt,95)),node("small",{},`${e.document_id} · ${e.kind} · wiersz ${e.start_line}`));
@@ -387,6 +391,160 @@ async function findPath(){
     data.modules.forEach((m,i)=>{if(i)box.append(document.createTextNode(" → "));const btn=node("button",{title:m.title},m.id);btn.addEventListener("click",()=>openModule(m.id));box.append(btn);});
   }catch(e){toast(e.message);}
 }
+
+function openConceptSearch(term){
+  $("conceptSearch").value=term;
+  activateTab("concepts");
+  loadConceptGraph();
+}
+async function loadConceptGraph(){
+  const q=$("conceptSearch").value.trim();
+  if(q.length<2){toast("Wpisz co najmniej dwa znaki.");return;}
+  const epoch=++state.conceptEpoch;
+  $("conceptSummary").textContent="Wyszukiwanie wystąpień pojęcia: "+q+"…";
+  try{
+    const count=Number($("conceptLimit").value);
+    const data=await api("/api/concepts/graph?q="+encodeURIComponent(q)+"&max_occurrences="+count);
+    if(epoch!==state.conceptEpoch || $("conceptSearch").value.trim()!==q)return;
+    state.conceptGraph=data;
+    $("conceptSummary").textContent=data.matches_total+" dopasowań tekstowych · "+
+      data.occurrences_shown+" widocznych wystąpień · "+
+      data.relationships+" zweryfikowanych relacji katalogowych"+
+      (data.truncated?" · ograniczono liczbę wyników":"");
+    renderConceptGraph(data);
+    renderConceptEvidence(data);
+  }catch(e){
+    if(epoch!==state.conceptEpoch)return;
+    $("conceptSummary").textContent="Nie można zbudować grafu.";
+    toast(e.message);
+  }
+}
+function openConceptNode(n){
+  if(n.type==="concept"){
+    $("conceptSearch").value=n.term;
+    loadConceptGraph();
+  }else if(n.entity_id){
+    openEntity(n.entity_id);
+  }else if(n.module){
+    openModule(n.module);
+  }
+}
+function renderConceptGraph(data){
+  const host=$("conceptCanvas");host.replaceChildren();
+  const concepts=data.nodes.filter(n=>n.type==="concept");
+  const occurrences=data.nodes.filter(n=>n.type==="occurrence");
+  const root=concepts.find(c=>c.id===data.root);
+  if(!root)return;
+  const ordered=[root,...concepts.filter(c=>c.id!==data.root)];
+  const positions={};positions[root.id]={x:35,y:70};
+  let y=70;
+  const groups=[];
+  for(const concept of ordered){
+    const entries=occurrences.filter(o=>o.concept===concept.id);
+    const height=Math.max(75,entries.length*54);
+    const center=y+(height-54)/2;
+    if(concept.id!==root.id)positions[concept.id]={x:330,y:center};
+    entries.forEach((o,i)=>positions[o.id]={x:690,y:y+i*54});
+    groups.push({concept,entries,start:y,height});
+    y+=height+35;
+  }
+  const totalHeight=Math.max(410,y+20),W=1120,NS="http://www.w3.org/2000/svg";
+  const svgEl=(tag,attrs={},content)=>{
+    const el=document.createElementNS(NS,tag);
+    for(const [key,value] of Object.entries(attrs))el.setAttribute(key,String(value));
+    if(content!==undefined)el.textContent=String(content);
+    return el;
+  };
+  const svg=svgEl("svg",{viewBox:"0 0 "+W+" "+totalHeight,
+    height:totalHeight,role:"group","aria-label":"Graf pojęć: "+data.query});
+  const defs=svgEl("defs");
+  const marker=svgEl("marker",{id:"concept-arrow",viewBox:"0 0 10 10",refX:"9",refY:"5",
+    markerWidth:"6",markerHeight:"6",orient:"auto-start-reverse"});
+  marker.append(svgEl("path",{d:"M 0 0 L 10 5 L 0 10 z",fill:"#278397"}));
+  defs.append(marker);svg.append(defs);
+  for(const group of groups){
+    if(group.concept.id===data.root)continue;
+    const separator=svgEl("line",{x1:298,y1:group.start-18,x2:1090,
+      y2:group.start-18,stroke:"#e8edf2","stroke-width":1});
+    svg.append(separator);
+  }
+  for(const edge of data.edges){
+    const a=positions[edge.source],b=positions[edge.target];
+    if(!a||!b)continue;
+    const isOccurrence=edge.type==="occurrence";
+    const aWidth=a.x===690?392:244;
+    const bWidth=b.x===690?392:244;
+    const x1=a.x+aWidth,x2=b.x,y1=a.y,y2=b.y;
+    const mid=(x1+x2)/2;
+    const path=svgEl("path",{d:"M "+x1+" "+y1+" C "+mid+" "+y1+", "+mid+" "+y2+", "+x2+" "+y2,
+      fill:"none",stroke:isOccurrence?"#a6b4c7":"#278397",
+      "stroke-width":isOccurrence?1.5:2.2,"stroke-dasharray":isOccurrence?"5 5":"none",
+      opacity:isOccurrence?".65":".85"});
+    if(!isOccurrence)path.setAttribute("marker-end","url(#concept-arrow)");
+    path.append(svgEl("title",{},edge.label+(edge.explanation?": "+edge.explanation:"")));
+    svg.append(path);
+  }
+  for(const n of data.nodes){
+    const pos=positions[n.id];if(!pos)continue;
+    const concept=n.type==="concept",isRoot=n.id===data.root,w=concept?244:392;
+    const group=svgEl("g",{class:"concept-svg-node",tabindex:"0",role:"button",
+      "aria-label":concept?n.label+" — pokaż powiązania":n.module+", "+n.label+", wiersz "+n.line});
+    group.append(svgEl("rect",{x:pos.x,y:pos.y-21,width:w,height:42,rx:9,
+      fill:isRoot?"#d5edf0":concept?"#e7eafb":"#ffffff",
+      stroke:isRoot?"#157b8b":concept?"#a9b3dc":"#b7cad7","stroke-width":isRoot?2:1.2}));
+    group.append(svgEl("text",{x:pos.x+11,y:pos.y+(concept?4:-3),fill:"#29475d",
+      "font-size":concept?13:12,"font-weight":concept?"700":"600"},
+      crop(concept?n.label:(n.module+" · "+n.label),concept?32:48)));
+    if(!concept)group.append(svgEl("text",{x:pos.x+11,y:pos.y+13,
+      fill:"#8192a3","font-size":10},
+      "Wiersz "+n.line+" · "+crop(n.matched,31)));
+    if(concept)group.append(svgEl("title",{},n.label+" · "+n.modules_total+" rozdziałów"));
+    else group.append(svgEl("title",{},n.snippet));
+    group.addEventListener("click",()=>openConceptNode(n));
+    group.addEventListener("keydown",e=>{
+      if(e.key==="Enter"||e.key===" "){e.preventDefault();openConceptNode(n);}
+    });
+    svg.append(group);
+  }
+  host.append(svg);
+  if(!occurrences.length)host.append(node("p",{className:"empty-sub"},
+    "Nie znaleziono tekstowych wystąpień w zaindeksowanych rozdziałach. Relacje katalogowe nie oznaczają obecności w tekście."));
+}
+function renderConceptEvidence(data){
+  const relations=$("conceptRelations");relations.replaceChildren();
+  const evidence=$("conceptEvidence");evidence.replaceChildren();
+  const all=new Map(data.nodes.filter(n=>n.type==="concept").map(n=>[n.id,n]));
+  const relationEdges=data.edges.filter(e=>e.type!=="occurrence");
+  if(relationEdges.length){
+    const heading=node("h2",{className:"small-heading"},"Relacje matematyczne");
+    relations.append(heading);
+    for(const edge of relationEdges){
+      const a=all.get(edge.source),b=all.get(edge.target);
+      const line=node("div",{className:"concept-relation"});
+      line.append(node("strong",{},(a?a.label:edge.source)+" "+
+        (edge.type==="equivalent"?"⇔":"⇒")+" "+(b?b.label:edge.target)));
+      line.append(node("small",{},edge.label+" · "+edge.explanation));
+      relations.append(line);
+    }
+  }
+  for(const concept of data.nodes.filter(n=>n.type==="concept")){
+    const entries=data.nodes.filter(n=>n.type==="occurrence"&&n.concept===concept.id);
+    const section=node("section",{className:"concept-group"});
+    section.append(node("h3",{},concept.label+" · "+concept.modules_total+
+      " rozdziałów · "+concept.matches_total+" dopasowań"));
+    if(!entries.length)section.append(node("p",{className:"concept-empty"},"Brak poświadczonych wystąpień w aktualnym indeksie."));
+    for(const item of entries){
+      const button=node("button",{className:"concept-occurrence"});
+      button.append(node("strong",{},item.module+" · "+(item.label||item.module_title)));
+      button.append(node("small",{},item.domain+" · wiersz "+item.line+" · „"+item.matched+"”"));
+      button.append(node("span",{},item.snippet));
+      button.addEventListener("click",()=>openConceptNode(item));
+      section.append(button);
+    }
+    evidence.append(section);
+  }
+}
+
 async function init(){
   try{
     const [domains,mods,stats]=await Promise.all([api("/api/domains"),api("/api/modules?limit=500"),api("/api/stats")]);
@@ -413,6 +571,9 @@ function listeners(){
   $("referenceTip").addEventListener("mouseleave",closeTip);
   document.addEventListener("keydown",e=>{if(e.key==="Escape")closeTip();});
   $("drawGraph").addEventListener("click",loadGraph);$("findPath").addEventListener("click",findPath);
+  $("drawConceptGraph").addEventListener("click",loadConceptGraph);
+  $("conceptSearch").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();loadConceptGraph();}});
+  $("conceptLimit").addEventListener("change",()=>{if(state.tab==="concepts")loadConceptGraph();});
   $("checkSelection").addEventListener("click",checkSelection);$("generateZip").addEventListener("click",generateZip);$("createDraft").addEventListener("click",createDraft);$("saveManifest").addEventListener("click",downloadManifest);
   window.addEventListener("pagehide",event=>{if(!event.persisted)closeUnsavedDraft();});
   // Some browsers do not dispatch pagehide when a tab is closed; keep an idempotent fallback.

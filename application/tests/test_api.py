@@ -119,6 +119,30 @@ class APITests(unittest.TestCase):
         self.assertGreater(len(data["items"]),0)
         self.assertTrue(any(x["kind"] for x in data["items"]))
 
+    def test_concept_graph_zorn_uses_real_index(self):
+        response = self.client.get("/api/concepts/graph", params={"q":"Zorn", "max_occurrences":36})
+        self.assertEqual(response.status_code, 200, response.text)
+        data = response.json()
+        self.assertEqual(data["root"], "zorn")
+        self.assertGreater(data["matches_total"], 0)
+        self.assertGreater(data["occurrences_shown"], 0)
+        concepts = {n["id"] for n in data["nodes"] if n["type"] == "concept"}
+        self.assertIn("hamel", concepts)
+        self.assertIn("choice", concepts)
+        self.assertTrue(any(e["type"] == "occurrence" and
+                            e["evidence"] == "indexed_tex_source" for e in data["edges"]))
+        self.assertTrue(any(n["module"] and n["line"] >= 1 and n["snippet"]
+                            for n in data["nodes"] if n["type"] == "occurrence"))
+
+    def test_concept_graph_unknown_and_validation(self):
+        response = self.client.get("/api/concepts/graph", params={"q":"term-nieistniejacy-xyz"})
+        self.assertEqual(response.status_code, 200, response.text)
+        data = response.json()
+        self.assertEqual(data["relationships"], 0)
+        self.assertEqual(data["occurrences_shown"], 0)
+        self.assertEqual(self.client.get("/api/concepts/graph",params={"q":"Zorn","max_occurrences":81}).status_code, 422)
+        self.assertEqual(self.client.get("/api/concepts/graph",params={"q":"a"}).status_code, 422)
+
     @classmethod
     def _real_reference_domains(cls):
         """Use a proven explicit cross-module TeX reference from the indexed corpus.
