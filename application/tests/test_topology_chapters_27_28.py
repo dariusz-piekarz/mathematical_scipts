@@ -109,6 +109,43 @@ class AlgebraicTopologyTwentySevenTwentyEightAudit(unittest.TestCase):
                     self.texts[k], r"\\" + command + r"\s*\{"
                 )
 
+    def test_ci_workflow_triggers_on_actual_chapters(self):
+        """A paired audit must execute after either reviewed chapter changes."""
+        workflow = (
+            ROOT / ".github" / "workflows" /
+            "algebraic-topology-audit-ch27-28.yml"
+        ).read_text(encoding="utf-8")
+        for number in ("27", "28"):
+            with self.subTest(chapter=number):
+                self.assertIn(
+                    '"chapters/pl/algebraic_topology/' + number + '-*.tex"',
+                    workflow,
+                )
+        self.assertIn('"books/pl/algebraic_topology.tex"', workflow)
+        for shared_file in SHARED_FILES:
+            self.assertIn('"shared/pl/' + shared_file + '"', workflow)
+
+    def test_derived_nearby_cycles_are_notated_as_cohomology_sheaves(self):
+        """Rpsi is a derived functor, not a sheaf to derive again."""
+        source = self.texts["27"]
+        self.assertIn(r"(\mathcal H^q(R\psi_fk_X))_x", source)
+        for obsolete in (
+            r"R^q\psi_f", r"R^0\psi_f", r"R^1\psi_f",
+            r"R^0\phi_f", r"R^1\phi_f",
+        ):
+            self.assertNotIn(obsolete, source)
+
+    def test_polish_compound_words_are_preserved(self):
+        """A global terminology replacement must not corrupt 'konsekwencje'."""
+        self.assertIn("konsekwencje elementarnych rachunków",
+                      self.texts["27"])
+        self.assertIn("konsekwencje dołączania komórek",
+                      self.texts["28"])
+        for chapter in ("27", "28"):
+            self.assertNotIn("konciągi", self.texts[chapter])
+            self.assertNotRegex(self.texts[chapter].lower(),
+                                r"\binjektywn\w*")
+
     def test_fixed_math_commands_and_approved_polish(self):
         for k in ("27", "28"):
             src = self.texts[k]
