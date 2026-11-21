@@ -135,6 +135,19 @@ class TopologyChapterNineTenTests(unittest.TestCase):
         self.assertIn(r"H_0^{\mathrm{sing}}(T;\Z)\cong\Z^2", source)
         self.assertIn(r"\check H_0(T;\Z)\cong\Z", source)
 
+    def test_cech_inverse_image_construction_and_solenoid_tex(self):
+        source = self.texts["10"]
+        self.assertIn(r"V'_x=f_{j_x,m}^{-1}(V_x)", source)
+        self.assertIn(
+            r"\pi_m^{-1}(V'_x)=\pi_{j_x}^{-1}(V_x)", source
+        )
+        self.assertIn(r"$\Sigma_p=C\sqcup D$", source)
+        self.assertIn(r"$S^1=\pi_j(C)\sqcup\pi_j(D)$", source)
+        # Catch dropped backslashes in mathematical notation.
+        self.assertNotRegex(source, r"(?<!\\)\bSigma_p\b")
+        self.assertNotRegex(source, r"(?<!\\)\bpi_[ij]\b")
+        self.assertNotIn(r"\sqcuppi", source)
+
     def test_solenoids_p2_p3_and_nonexact_inverse_limit(self):
         source = self.texts["10"]
         for label in (
