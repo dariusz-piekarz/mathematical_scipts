@@ -11,6 +11,9 @@ Refer to [the Polish terminology standard](docs/pl/standardy_terminologiczne.md)
 
 3. In Polish mathematical text, avoid the standalone English noun **„dual”**, including in section and theorem titles. Use **„przestrzeń dualna”**, **„przestrzeń sprzężona”** or **„przestrzeń funkcjonałów liniowych”**, as appropriate. Polish adjectives **„dualny/dualna/dualne”** are allowed, e.g. **„odwzorowanie dualne”**. Preserve stable LaTeX labels and references.
 
+
+4. For polynomials, write **„wielomian rozkłada się nad \(K\) na czynniki liniowe”** or **„rozkłada się na czynniki nierozkładalne”**. Do not write **„wielomian rozszczepia się”**, **„rozszczepiony wielomian”** or **„rozszczepienie wielomianu”**. Reserve „rozszczepienie” for mathematically distinct contexts (e.g. split exact sequences), and do not rename historical LaTeX labels.
+
 ## Preserve references and rigor
 
 - Preserve existing stable `\label` names and corresponding `\ref` targets even if they contain an older word. Text, theorem titles, captions and prose should follow the current terminology.
