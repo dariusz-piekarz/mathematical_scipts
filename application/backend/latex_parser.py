@@ -65,6 +65,7 @@ PREFIX_DOMAINS = {
     "PDE": "równania różniczkowe cząstkowe",
     "LA": "algebra liniowa",
     "LST": "logika i teoria mnogości",
+    "GT": "topologia ogólna",
 }
 COMMAND = re.compile(r"\\([A-Za-z@]+|.)")
 RE_WS = re.compile(r"\s+")
@@ -249,7 +250,7 @@ REPOSITORY_CATEGORIES = {
     "logic_and_set_theory": "LST",
     "algebraic_geometry": "ALG", "algebraic_topology": "TOP",
     "banach_tarski": "BT", "category_theory": "KAT",
-    "galois_theory": "GA", "graph_and_knot_theory": "GW",
+    "galois_theory": "GA", "general_topology": "GT", "graph_and_knot_theory": "GW",
     "integration_theory": "CAL", "model_theory": "MOD",
     "probability_volume_i": "P1", "probability_volume_ii": "P2",
     "probability_volume_iii": "P3", "probability_volume_iv": "P4",
