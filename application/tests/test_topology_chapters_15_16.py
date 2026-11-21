@@ -81,6 +81,20 @@ class TopologyChaptersFifteenSixteenAudit(unittest.TestCase):
             self.assertGreater(len(refs), 0)
             self.assertEqual(set(refs) - all_labels, set())
 
+    def test_all_reference_commands_have_one_line_braced_label(self):
+        """Detect a missing closing } before a reference consumes whole sections."""
+        for chapter in ("15", "16"):
+            source = self.text[chapter]
+            names = r"(?:ref|eqref|autoref|pageref|nameref)"
+            starts = re.findall(r"\\" + names + r"\s*\{", source)
+            matches = re.findall(
+                r"\\" + names + r"\s*\{[^{}\n]+\}", source
+            )
+            self.assertEqual(
+                len(starts), len(matches),
+                f"Unclosed or multiline reference in TOP-{chapter}",
+            )
+
     def test_no_external_assets_and_balanced_latex_environments(self):
         for chapter, minimum_figures in (("15", 1), ("16", 2)):
             src = self.text[chapter]
