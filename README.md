@@ -60,7 +60,7 @@ Poniższa lista pochodzi z `catalog/books.json`. Liczba rozdziałów oznacza poz
 | [Topologia ogólna](books/pl/general_topology.tex) | 7 |
 | [Teoria grafów i węzłów](books/pl/graph_and_knot_theory.tex) | 37 |
 | [Teoria całki](books/pl/integration_theory.tex) | 17 |
-| [Algebra liniowa](books/pl/linear_algebra.tex) | 26 (01–26 stabilne) |
+| [Algebra liniowa](books/pl/linear_algebra.tex) | 27 (01–26 stabilne, 27 w audycie) |
 
 **Dalszy plan algebry liniowej:** [rozdziały 27–32: realizacje minimalne, grassmanniany, algebry Clifforda, grupy Pin/Spin, spinory i twistory](docs/pl/plan_algebry_liniowej.md). Materiał o Pin/Spin i spinorach przenosimy z DG-04, natomiast twistory opracujemy od podstaw.
 | [Logika matematyczna i teoria mnogości](books/pl/logic_and_set_theory.tex) | 12 |
