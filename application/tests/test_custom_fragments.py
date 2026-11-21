@@ -111,6 +111,45 @@ class CustomScriptTests(unittest.TestCase):
         with self.assertRaises(GenerationError):
             project_files(self.con, ["BT-00"], [], "Bad", items=[{"kind": "module", "id": "BT-00"}])
 
+
+    def test_every_indexed_subject_has_generator_preamble(self):
+        from backend.generator import PROJECT_TEMPLATE_KEYS
+        prefixes = {r[0].split("-", 1)[0] for r in self.con.execute("SELECT id FROM documents")}
+        self.assertTrue({"LA", "LST", "FA", "DG", "PDE", "ME"} <= prefixes)
+        for prefix in prefixes:
+            with self.subTest(prefix=prefix):
+                self.assertIn(prefix, PROJECT_TEMPLATE_KEYS)
+                name = PROJECT_TEMPLATE_KEYS[prefix]
+                self.assertTrue((ROOT / "config" / "preambles" / f"{name}.tex").is_file())
+
+    def test_new_subject_excerpts_and_lettered_chapter(self):
+        for prefix in ("LA", "LST", "FA", "DG", "PDE", "ME"):
+            row = self.con.execute(
+                "SELECT id FROM documents WHERE id LIKE ? ORDER BY id LIMIT 1",
+                (prefix + "-%",)
+            ).fetchone()
+            self.assertIsNotNone(row, prefix)
+            with self.subTest(module=row[0]):
+                files, manifest = self.build([
+                    {"kind": "lines", "module": row[0], "start_line": 1, "end_line": 1}
+                ])
+                self.assertEqual(manifest["modules"], [row[0]])
+                self.assertIn(f"rozdzialy/{row[0]}-001.tex", files)
+        files, manifest = self.build([
+            {"kind": "lines", "module": "FA-15A", "start_line": 1, "end_line": 1}
+        ])
+        self.assertEqual(manifest["modules"], ["FA-15A"])
+        self.assertIn("rozdzialy/FA-15A-001.tex", files)
+
+    def test_explicit_empty_items_and_legacy_selection(self):
+        with self.assertRaisesRegex(GenerationError, "Wybierz od 1"):
+            self.build([])
+        with self.assertRaisesRegex(GenerationError, "Nie łącz"):
+            project_files(self.con, ["BT-00"], [], "Zestaw", items=[])
+        files, manifest = project_files(self.con, ["BT-00"], [], "Dawny klient")
+        self.assertEqual(manifest["modules"], ["BT-00"])
+        self.assertIn("rozdzialy/BT-00.tex", files)
+
     def test_http_manifest_zip_and_draft_accept_custom_items(self):
         request = {"title": "Wybór fragmentu", "items": [
             {"kind": "lines", "module": "BT-00", "start_line": 1, "end_line": 2},
@@ -128,6 +167,10 @@ class CustomScriptTests(unittest.TestCase):
             invalid = client.post("/api/generate", json={
                 **request, "modules": ["BT-00"]})
             self.assertEqual(invalid.status_code, 422)
+            legacy = client.post("/api/generate/manifest", json={"modules": ["BT-00"]})
+            self.assertEqual(legacy.status_code, 200, legacy.text)
+            empty = client.post("/api/generate/manifest", json={"items": [], "modules": ["BT-00"]})
+            self.assertEqual(empty.status_code, 422)
 
 
 if __name__ == "__main__":

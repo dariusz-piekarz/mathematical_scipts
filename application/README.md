@@ -89,6 +89,8 @@ Nowy format dla `POST /api/generate`, `POST /api/generate/manifest` i `POST /api
 
 Pole `items` określa kolejność skryptu, również gdy kolejne fragmenty pochodzą z tego samego rozdziału. Wybór całego rozdziału ma pierwszeństwo przed wycinkami. Duplikaty i fragmenty zawarte w większych są pomijane, a częściowe przecięcia odrzucane. Nie łącz `items` z polami `modules` i `entities` w jednym żądaniu; stary format nadal działa.
 
+Preambuły generatora obejmują wszystkie indeksowane dziedziny, m.in. LA, LST, FA, DG, ME i PDE, oraz rozdziały z przyrostkiem literowym (np. FA-15A). Pominięte pole `items` zachowuje zgodność ze starszym API; jawnie puste `items` nie uruchamia trybu `modules`.
+
 **Ograniczenie TeX:** arbitralny wycinek może pomijać założenia, definicje lub początek i koniec środowiska. Generator zachowuje źródło i analizuje odsyłacze, ale nie gwarantuje matematycznej samowystarczalności ani kompilowalności. Nie rozszerza automatycznie wycinków o kontekst.
 
 ## Ponowna indeksacja po zmianach w Bibliotece

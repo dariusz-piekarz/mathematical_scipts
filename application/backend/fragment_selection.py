@@ -10,7 +10,7 @@ from typing import Any
 import re
 import sqlite3
 
-MODULE_ID = re.compile(r"^[A-Za-z][A-Za-z0-9]*-[0-9]{2}$")
+MODULE_ID = re.compile(r"^[A-Za-z][A-Za-z0-9]*-[0-9]{2}[AB]?$")
 MAX_ITEMS = 300
 MAX_MODULES = 75
 
@@ -51,7 +51,7 @@ def select_ordered_items(con: sqlite3.Connection, items: list[dict[str, Any]]):
         if kind == "module":
             start, end = 0, len(source)
             identifier = module
-            start_line, end_line = 1, source.count("\n") + 1
+            start_line, end_line = 1, len(source.splitlines()) or 1
         elif kind == "entity":
             start, end = entity["start_offset"], entity["end_offset"]
             identifier = eid
