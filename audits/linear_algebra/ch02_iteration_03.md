@@ -57,7 +57,7 @@ W Twierdzeniu `thm:lin2-iloraz-dopelnienie` zastąpiono nieprecyzyjny zwrot „w
 - Zachowano poprawne parowanie środowisk LaTeX.
 - Nie ma niedozwolonych wystąpień „unia” i „relacja liniowa” w treści (poza historycznymi nazwami etykiet).
 - Nie dodano plików graficznych ani zależności zewnętrznych.
-- Ostatnia poprawiona wersja: CI [44896266670](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44896266670), wynik do wpisania po zakończeniu.
+- Ostatnia poprawiona wersja: CI [44896266670](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44896266670), **success**. Wszystkie etapy: walidacja obu rozdziałów, sprawdzenie terminologii i odsyłaczy, pełna kompilacja LaTeX, kontrola końcowego PDF oraz eksport artefaktu — zakończone powodzeniem. Końcowy PDF ma **27 stron**. W finalnym `linear_algebra.log` nie ma `LaTeX Warning`, `Overfull`, `Underfull`, `Undefined control sequence` ani `Missing character`. Wizualnie sprawdzono strony **20, 22, 25 i 26**, w tym fragmenty poprawionych dowodów i tytuł przykładu; nie stwierdzono kolizji lub ucięć tekstu.
 - Dawne niepowiązane błędy globalnej walidacji pozostałych skryptów są nadal raportowane osobno, poza zakresem audytu rozdziału 02.
 
 ## Status
