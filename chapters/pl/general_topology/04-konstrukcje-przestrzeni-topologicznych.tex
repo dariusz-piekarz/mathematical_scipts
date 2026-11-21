@@ -1,0 +1,666 @@
+\chapter{Konstrukcje przestrzeni topologicznych}
+\label{ch:topog-konstrukcje}
+
+\noindent\textbf{Cel rozdziału.}
+Dotychczas rozpatrywaliśmy gotowe przestrzenie topologiczne i odwzorowania
+między nimi. Teraz pokażemy, jak z danych przestrzeni otrzymywać nowe.
+Konstrukcje będą określane przez wymaganie ciągłości naturalnych odwzorowań.
+Najpierw wprowadzimy topologię podprzestrzeni, następnie iloczynu i sumy
+rozłącznej, a na końcu topologie początkowe i końcowe, w szczególności
+topologię ilorazową. Wyprowadzimy jawne kryteria otwartości i własności
+uniwersalne, nie zakładając metryzowalności ani aksjomatów oddzielania.
+
+\section{Topologia podprzestrzeni}
+\label{sec:topog-podprzestrzen}
+
+\begin{definicja}[Topologia podprzestrzeni]
+\label{def:topog-podprzestrzen}
+Niech $(X,\tau)$ będzie przestrzenią topologiczną i niech $A\subseteq X$.
+\emph{Topologią podprzestrzeni} na $A$ nazywamy rodzinę
+\[
+\tau|_A=\{A\cap U:U\in\tau\}.
+\]
+Elementy $\tau|_A$ nazywamy zbiorami otwartymi \emph{w $A$}.
+Dotyczy to również $A=\varnothing$.
+\end{definicja}
+
+\begin{stwierdzenie}[Aksjomaty topologii podprzestrzeni]
+\label{prop:topog-podprzestrzen-topologia}
+Dla każdej przestrzeni topologicznej $(X,\tau)$ i każdego $A\subseteq X$
+rodzina $\tau|_A$ jest topologią na $A$.
+\end{stwierdzenie}
+\begin{proof}
+Z równości $A\cap\varnothing=\varnothing$ i $A\cap X=A$
+wynika obecność $\varnothing$ i $A$. Dla dowolnej rodziny $(U_i)_{i\in I}$
+zbiorów otwartych w $X$ mamy
+\[
+\bigcup_{i\in I}(A\cap U_i)=A\cap\bigcup_{i\in I}U_i,
+\]
+a dla $U,V\in\tau$ zachodzi
+$(A\cap U)\cap(A\cap V)=A\cap(U\cap V)$.
+Prawa strona każdej równości należy do $\tau|_A$, ponieważ $\tau$
+jest topologią. Argument działa także dla pustej rodziny.
+\end{proof}
+
+\begin{przyklad}[Otwarty względnie, lecz nie w całej przestrzeni]
+\label{ex:topog-otwarty-wzglednie}
+Niech $X=\mathbb R$ z topologią euklidesową i $A=[0,2]$.
+Zbiór $[0,1)$ jest otwarty w $A$, ponieważ
+$[0,1)=A\cap(-1,1)$, ale nie jest otwarty w $\mathbb R$.
+Podobnie $\{0\}$ jest otwarty w podprzestrzeni
+$\{0\}\cup[2,3]$, chociaż nie jest otwarty w $\mathbb R$.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=1]
+ \draw[->] (-2.25,0)--(4.15,0) node[right] {$\mathbb R$};
+ \foreach \x in {-2,-1,0,1,2,3} \draw (\x,.08)--(\x,-.08);
+ \draw[line width=2.8pt,blue!55] (0,0)--(2,0);
+ \fill[blue!70!black] (0,0) circle (2.3pt);
+ \fill[blue!70!black] (2,0) circle (2.3pt);
+ \draw[line width=2.3pt,red!75!black] (0,.34)--(1,.34);
+ \fill[red!75!black] (0,.34) circle (2.7pt);
+ \draw[fill=white,draw=red!75!black,thick] (1,.34) circle (2.7pt);
+ \node[blue!65!black,above] at (2.35,.05) {$A=[0,2]$};
+ \node[red!75!black,above] at (.48,.42) {$A\cap(-1,1)=[0,1)$};
+ \node[below] at (0,-.11) {$0$};
+ \node[below] at (1,-.11) {$1$};
+ \node[below] at (2,-.11) {$2$};
+\end{tikzpicture}
+\caption{Zbiór $[0,1)$ jest otwarty w $A=[0,2]$, a nie w $\mathbb R$.}
+\label{fig:topog-podprzestrzen-przedzial}
+\end{figure}
+
+\begin{stwierdzenie}[Domkniętość i domknięcie względne]
+\label{prop:topog-podprzestrzen-domkniecie}
+Niech $A\subseteq X$, gdzie $X$ jest przestrzenią topologiczną.
+Dla każdego $B\subseteq A$ zachodzą równoważność i równość:
+\begin{enumerate}[label=(\roman*)]
+ \item $B$ jest domknięty w $A$ wtedy i tylko wtedy, gdy
+       $B=A\cap F$ dla pewnego zbioru domkniętego $F\subseteq X$;
+ \item $\overline B^{\,A}=A\cap\overline B^{\,X}$.
+\end{enumerate}
+\end{stwierdzenie}
+\begin{proof}
+Zbiór $B$ jest domknięty w $A$ dokładnie wtedy, gdy
+$A\setminus B=A\cap U$ dla pewnego otwartego $U\subseteq X$.
+Biorąc dopełnienia w $A$, otrzymujemy
+$B=A\cap(X\setminus U)$, co dowodzi (i).
+
+Niech $C=A\cap\overline B^{\,X}$. Jest on domknięty
+w $A$ i zawiera $B$, więc $\overline B^{\,A}\subseteq C$.
+Jeśli $D\subseteq A$ jest dowolnym domkniętym podzbiorem $A$
+zawierającym $B$, to na mocy (i) istnieje domknięty $F\subseteq X$
+taki, że $D=A\cap F$. Z $B\subseteq F$ wynika
+$\overline B^{\,X}\subseteq F$, a więc $C\subseteq D$.
+Stąd $C$ jest najmniejszym domkniętym podzbiorem $A$
+zawierającym $B$, co dowodzi (ii).
+\end{proof}
+
+\begin{stwierdzenie}[Wnętrze i brzeg względny]
+\label{prop:topog-podprzestrzen-wnetrze}
+Dla przestrzeni topologicznej $X$ oraz zbiorów $B\subseteq A\subseteq X$
+mamy
+\begin{align*}
+ \operatorname{int}_A B
+ &=A\setminus\overline{A\setminus B}^{\,X},\\
+ \partial_A B
+ &=A\cap\overline B^{\,X}\cap\overline{A\setminus B}^{\,X}.
+\end{align*}
+\end{stwierdzenie}
+\begin{proof}
+W dowolnej przestrzeni wnętrze zbioru jest dopełnieniem
+domknięcia jego dopełnienia. Stosując tę własność w $A$ oraz
+wzór na domknięcie względne, dostajemy
+\[
+\operatorname{int}_A B
+ =A\setminus\overline{A\setminus B}^{\,A}
+ =A\setminus(A\cap\overline{A\setminus B}^{\,X})
+ =A\setminus\overline{A\setminus B}^{\,X}.
+\]
+Brzeg jest przecięciem domknięć zbioru i jego dopełnienia
+w rozważanej przestrzeni; zastosowanie poprzedniego
+stwierdzenia dwukrotnie daje drugą równość.
+\end{proof}
+
+\begin{uwaga}[Wnętrze względne nie jest przecięciem wnętrz]
+W ogólności $\operatorname{int}_A B$ nie musi równać się
+$A\cap\operatorname{int}_X B$. Dla $X=\mathbb R$,
+$A=B=[0,1]$ mamy $\operatorname{int}_A B=A$, podczas gdy
+$A\cap\operatorname{int}_{\mathbb R}B=(0,1)$.
+\end{uwaga}
+
+\begin{stwierdzenie}[Dziedziczenie topologii i włożenie]
+\label{prop:topog-podprzestrzen-przechodniosc}
+Niech $B\subseteq A\subseteq X$, gdzie $X$ jest przestrzenią
+topologiczną. Topologia na $B$ odziedziczona najpierw z $X$
+przez $A$, a następnie z $A$, jest równa topologii
+odziedziczonej bezpośrednio z $X$. Ponadto kanoniczne
+włożenie $\iota\colon A\to X$, $\iota(a)=a$, jest ciągłe.
+\end{stwierdzenie}
+\begin{proof}
+Zbiór otwarty w $B$ otrzymany dwuetapowo ma postać
+$B\cap(A\cap U)=B\cap U$, gdzie $U$ jest otwarty w $X$;
+są to dokładnie zbiory topologii odziedziczonej bezpośrednio.
+Dla otwartego $U\subseteq X$ przeciwobraz
+$\iota^{-1}(U)=A\cap U$ jest otwarty w $A$, zatem
+$\iota$ jest ciągłe.
+\end{proof}
+
+\begin{twierdzenie}[Ciągłość odwzorowania do podprzestrzeni]
+\label{thm:topog-do-podprzestrzeni}
+Niech $X,Y$ będą przestrzeniami topologicznymi,
+$A\subseteq Y$, a $f\colon X\to A$ dowolnym odwzorowaniem.
+Jest ono ciągłe do $A$ z topologią podprzestrzeni wtedy
+i tylko wtedy, gdy złożenie $\iota\circ f\colon X\to Y$
+z kanonicznym włożeniem $\iota\colon A\to Y$ jest ciągłe.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $f$ jest ciągłe, złożenie z ciągłym włożeniem
+jest ciągłe. Odwrotnie, każdy otwarty $W\subseteq A$
+ma postać $A\cap V$ dla otwartego $V\subseteq Y$.
+Ponieważ wartości $f$ należą do $A$, zachodzi
+$f^{-1}(W)=(\iota\circ f)^{-1}(V)$, a zatem
+przeciwobraz $W$ jest otwarty.
+\end{proof}
+
+\section{Topologia iloczynu}
+\label{sec:topog-iloczyn}
+
+\begin{definicja}[Iloczyn przestrzeni topologicznych]
+\label{def:topog-iloczyn}
+Niech $I$ będzie zbiorem indeksów, a $(X_i,\tau_i)_{i\in I}$
+rodziną przestrzeni topologicznych. Na zbiorze iloczynowym
+$P=\prod_{i\in I}X_i$ rozważamy odwzorowania
+$\pi_i\colon P\to X_i$, $\pi_i((x_j)_{j\in I})=x_i$.
+\emph{Topologią iloczynu} na $P$ nazywamy topologię
+generowaną przez rodzinę
+\[
+\mathcal S=\{\pi_i^{-1}(U):i\in I,\ U\in\tau_i\}.
+\]
+Jest ona zatem najmniejszą topologią, w której wszystkie
+rzutowania $\pi_i$ są ciągłe. Dla $I=\varnothing$
+przyjmujemy $P=\{()\}$, a topologia iloczynu jest
+jedyną topologią na zbiorze jednoelementowym.
+\end{definicja}
+
+\begin{twierdzenie}[Baza topologii iloczynu]
+\label{thm:topog-iloczyn-baza}
+Niech $(X_i)_{i\in I}$ będzie rodziną przestrzeni
+topologicznych, a $P=\prod_{i\in I}X_i$.
+Bazę topologii iloczynu stanowią wszystkie zbiory
+\[
+\prod_{i\in I}U_i,\qquad
+U_i\subseteq X_i\text{ otwarty},\qquad
+U_i=X_i\text{ dla wszystkich poza skończenie wieloma }i.
+\]
+Dla $I=\varnothing$ zbiór bazowy jest równy $P$.
+\end{twierdzenie}
+\begin{proof}
+Z definicji topologii generowanej przez podbazę jej
+bazą są skończone przecięcia elementów $\mathcal S$,
+włącznie z przecięciem pustym, które wynosi $P$.
+Dla skończonego zbioru indeksów $F\subseteq I$ oraz
+otwartych $U_i\subseteq X_i$ mamy
+\[
+\bigcap_{i\in F}\pi_i^{-1}(U_i)=
+\prod_{i\in I}V_i,\qquad
+V_i=\begin{cases}U_i,&i\in F,\\X_i,&i\notin F.\end{cases}
+\]
+Gdy ten sam indeks pojawia się kilkakrotnie, należy
+zastąpić odpowiadające mu zbiory otwarte ich skończonym
+przecięciem. Odwrotnie, każdy iloczyn z tezy jest takim
+skończonym przecięciem przeciwobrazów.
+\end{proof}
+
+\begin{przyklad}[Prostokąty w $\mathbb R^2$]
+\label{ex:topog-iloczyn-prostokaty}
+Dla $X_1=X_2=\mathbb R$ z topologią euklidesową bazą
+topologii iloczynu na $\mathbb R^2$ są prostokąty otwarte
+$(a,b)\times(c,d)$. Topologia ta pokrywa się z topologią
+metryki euklidesowej. Każdy punkt prostokąta ma kulę
+euklidesową w nim zawartą, a każda kula euklidesowa
+wokół danego punktu zawiera prostokąt otwarty zawierający
+ten punkt. W pierwszą stronę wybieramy promień mniejszy
+od odległości obu współrzędnych punktu do brzegów
+odpowiednich przedziałów; w drugą wystarcza prostokąt
+o półbokach $\varepsilon/3$ dla kuli o promieniu
+$\varepsilon$, ponieważ odległość punktów w takim
+prostokącie nie przekracza $\sqrt 2\,\varepsilon/3$.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=.85]
+ \draw[->] (-.3,0)--(5.3,0) node[right] {$X_1=\mathbb R$};
+ \draw[->] (0,-.3)--(0,3.65) node[above] {$X_2=\mathbb R$};
+ \fill[blue!13] (1.1,.7) rectangle (4.0,2.7);
+ \draw[blue!70!black,thick,dashed] (1.1,.7) rectangle (4.0,2.7);
+ \fill (2.6,1.75) circle (2.2pt);
+ \node[above right] at (2.6,1.75) {$(x_1,x_2)$};
+ \node[below] at (2.5,.7) {$U_1\times U_2$};
+ \draw[blue!70!black,thick] (1.1,-.14)--(4,-.14);
+ \draw[blue!70!black,thick] (-.14,.7)--(-.14,2.7);
+ \node[below] at (1.1,-.14) {$a$};
+ \node[below] at (4,-.14) {$b$};
+ \node[left] at (-.14,.7) {$c$};
+ \node[left] at (-.14,2.7) {$d$};
+\end{tikzpicture}
+\caption{Bazowe otoczenie punktu w topologii iloczynu dwóch prostych.}
+\label{fig:topog-iloczyn-prostokat}
+\end{figure}
+
+\begin{twierdzenie}[Własność uniwersalna iloczynu]
+\label{thm:topog-iloczyn-uniwersalnosc}
+Niech $(X_i)_{i\in I}$ będzie rodziną przestrzeni
+topologicznych, $P=\prod_{i\in I}X_i$ z topologią
+iloczynu, a $Z$ dowolną przestrzenią topologiczną.
+Odwzorowanie $f\colon Z\to P$ jest ciągłe wtedy i tylko
+wtedy, gdy dla każdego $i\in I$ odwzorowanie
+$\pi_i\circ f\colon Z\to X_i$ jest ciągłe.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $f$ jest ciągłe, to każde złożenie z ciągłym
+rzutowaniem jest ciągłe. Odwrotnie, niech wszystkie
+$\pi_i\circ f$ będą ciągłe. Dla dowolnego elementu
+podbazy $\pi_i^{-1}(U)$ mamy
+\[
+f^{-1}(\pi_i^{-1}(U))=(\pi_i\circ f)^{-1}(U),
+\]
+a prawa strona jest otwarta w $Z$. Z kryterium ciągłości
+przez podbazę wynika ciągłość $f$. Dotyczy to również
+pustej rodziny indeksów, gdy $P$ jest jednoelementowe.
+\end{proof}
+
+\begin{stwierdzenie}[Rzutowania są odwzorowaniami otwartymi]
+\label{prop:topog-rzutowania-otwarte}
+Niech $P=\prod_{i\in I}X_i$ będzie iloczynem przestrzeni
+topologicznych. Dla każdego $j\in I$ rzutowanie
+$\pi_j\colon P\to X_j$ jest odwzorowaniem otwartym.
+\end{stwierdzenie}
+\begin{proof}
+Niech $W=\prod_{i\in I}U_i$ będzie bazowym zbiorem
+otwartym, z $U_i=X_i$ poza skończonym zbiorem indeksów.
+Jeśli $W=\varnothing$, to $\pi_j(W)=\varnothing$ jest
+otwarty. W przeciwnym przypadku istnieje punkt
+$(x_i)_{i\in I}\in W$. Dla dowolnego $y\in U_j$
+rodzina, która ma współrzędną $y$ w miejscu $j$, a
+pozostałe współrzędne $x_i$, należy do $W$. Zatem
+$\pi_j(W)=U_j$, zbiór otwarty. Każdy zbiór otwarty
+w $P$ jest sumą takich zbiorów bazowych, a obraz
+zachowuje dowolne sumy. Stąd rzutowanie jest otwarte.
+\end{proof}
+
+\begin{stwierdzenie}[Domknięcie prostokąta]
+\label{prop:topog-iloczyn-domkniecie}
+Niech $X,Y$ będą przestrzeniami topologicznymi oraz
+$A\subseteq X$, $B\subseteq Y$. W topologii iloczynu
+na $X\times Y$ zachodzi
+\[
+\overline{A\times B}^{\,X\times Y}
+ =\overline A^{\,X}\times\overline B^{\,Y}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Jeśli $A=\varnothing$ lub $B=\varnothing$, obie strony
+są puste. W przeciwnym przypadku punkt $(x,y)$ należy
+do domknięcia $A\times B$ wtedy i tylko wtedy, gdy każdy
+bazowy prostokąt $U\times V$ zawierający $(x,y)$ przecina
+$A\times B$. To jest równoważne temu, że każde otwarte
+otoczenie $U$ punktu $x$ przecina $A$ i każde otwarte
+otoczenie $V$ punktu $y$ przecina $B$.
+Z definicji domknięcia dostajemy
+$x\in\overline A^{\,X}$ i $y\in\overline B^{\,Y}$.
+\end{proof}
+
+\begin{uwaga}[Dlaczego skończenie wiele współrzędnych?]
+\label{rem:topog-iloczyn-skrzynkowa}
+Przy nieskończonym zbiorze indeksów żądanie, aby
+\emph{wszystkie} iloczyny $\prod_i U_i$ z otwartymi
+$U_i\subseteq X_i$ były otwarte, może dać inną,
+\emph{topologię skrzynkową}. Dla $X_n=\mathbb R$ i
+$I=\mathbb N$ zbiór $\prod_{n\ge1}(-1/n,1/n)$ jest
+otwarty w topologii skrzynkowej, lecz nie w topologii
+iloczynu: każde bazowe otoczenie punktu zerowego
+pozostawia wszystkie poza skończenie wieloma współrzędne
+bez ograniczeń, więc nie może zawierać się w podanym
+zbiorze. Dla skończonej liczby czynników obie topologie
+są równe.
+\end{uwaga}
+
+\section{Suma rozłączna przestrzeni}
+\label{sec:topog-suma-rozlaczna}
+
+\begin{definicja}[Suma rozłączna]
+\label{def:topog-suma-rozlaczna}
+Niech $(X_i,\tau_i)_{i\in I}$ będzie rodziną przestrzeni
+topologicznych. \emph{Sumą rozłączną} jest zbiór
+$S=\coprod_{i\in I}X_i=\{(i,x):i\in I,\ x\in X_i\}$
+z topologią określoną następująco: $W\subseteq S$ jest
+otwarty wtedy i tylko wtedy, gdy dla każdego $i\in I$
+zbiór $W_i=\{x\in X_i:(i,x)\in W\}$ jest otwarty
+w $X_i$. Naturalne włożenia oznaczamy przez
+$\jmath_i\colon X_i\to S$, $\jmath_i(x)=(i,x)$.
+Dla $I=\varnothing$ otrzymujemy pustą przestrzeń.
+\end{definicja}
+
+\begin{stwierdzenie}[Topologia i składniki sumy rozłącznej]
+\label{prop:topog-suma-rozlaczna-topologia}
+Definicja \ref{def:topog-suma-rozlaczna} wyznacza topologię
+na $S$. Dla każdego $i\in I$ odwzorowanie $\jmath_i$
+jest zanurzeniem topologicznym, a jego obraz
+$\jmath_i(X_i)$ jest zarówno otwarty, jak i domknięty w $S$.
+\end{stwierdzenie}
+\begin{proof}
+Przekroje zbiorów pustego i całego $S$ są odpowiednio
+puste i równe $X_i$. Ponadto przekrój sumy dowolnej
+rodziny zbiorów jest sumą ich przekrojów, a przekrój
+przecięcia dwóch zbiorów jest przecięciem ich przekrojów.
+Aksjomaty topologii wynikają z aksjomatów w każdym $X_i$.
+
+Zbiór $\jmath_i(X_i)$ jest otwarty, ponieważ jego przekrój
+w składniku $i$ jest całym $X_i$, a w każdym innym jest
+pusty. Jego dopełnienie także jest otwarte, zatem obraz
+jest domknięty. Jeśli $U\subseteq X_i$ jest otwarty,
+to $\jmath_i(U)$ jest otwarty w $S$, gdyż tylko przekrój
+w składniku $i$ jest równy $U$, a pozostałe są puste.
+Dla otwartego $W\subseteq S$ przeciwobraz
+$\jmath_i^{-1}(W)=W_i$ jest otwarty w $X_i$.
+Odwzorowanie $\jmath_i\colon X_i\to\jmath_i(X_i)$
+jest więc ciągłą i otwartą bijekcją, czyli homeomorfizmem.
+\end{proof}
+
+\begin{twierdzenie}[Własność uniwersalna sumy rozłącznej]
+\label{thm:topog-suma-uniwersalnosc}
+Niech $S=\coprod_{i\in I}X_i$ będzie sumą rozłączną
+przestrzeni topologicznych, $Y$ przestrzenią topologiczną,
+a $f\colon S\to Y$ dowolnym odwzorowaniem. Wtedy $f$
+jest ciągłe wtedy i tylko wtedy, gdy dla każdego $i\in I$
+odwzorowanie $f\circ\jmath_i\colon X_i\to Y$ jest ciągłe.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $f$ jest ciągłe, to wszystkie złożenia z ciągłymi
+$\jmath_i$ są ciągłe. Odwrotnie, niech wszystkie złożenia
+będą ciągłe. Dla otwartego $V\subseteq Y$ oraz każdego
+$i\in I$ mamy
+$\jmath_i^{-1}(f^{-1}(V))=(f\circ\jmath_i)^{-1}(V)$,
+zatem wszystkie przekroje $f^{-1}(V)$ są otwarte.
+Z definicji topologii na $S$ zbiór $f^{-1}(V)$ jest otwarty.
+\end{proof}
+
+\begin{przyklad}[Dwie kopie tej samej przestrzeni]
+\label{ex:topog-dwie-kopie}
+Przestrzeń $\mathbb R\coprod\mathbb R$ składa się z dwóch
+rozłącznych kopii prostej. Każda kopia jest otwarta i
+domknięta. Nie jest to zwykła suma zbiorów
+$\mathbb R\cup\mathbb R=\mathbb R$: znaczniki składników
+odróżniają punkty o tej samej współrzędnej.
+Nie oznacza to, że suma rozłączna nie może być homeomorficzna
+z pewną podprzestrzenią prostej; chodzi o różnicę
+między samymi konstrukcjami zbiorów.
+Rozłączność początkowych zbiorów $X_i$ nie jest wymagana.
+\end{przyklad}
+
+\section{Topologie początkowe i końcowe}
+\label{sec:topog-topologie-poczatkowe-koncowe}
+
+\begin{definicja}[Topologia początkowa]
+\label{def:topog-topologia-poczatkowa}
+Niech $X$ będzie zbiorem, $(Y_i,\tau_i)_{i\in I}$ rodziną
+przestrzeni topologicznych, a $f_i\colon X\to Y_i$
+odwzorowaniami. \emph{Topologia początkowa} wyznaczona
+przez rodzinę $(f_i)_{i\in I}$ jest topologią na $X$
+generowaną przez podbazę
+\[
+\mathcal S=\{f_i^{-1}(U):i\in I,\ U\in\tau_i\}.
+\]
+Jest to najmniejsza topologia na $X$, dla której wszystkie
+$f_i$ są ciągłe. Jeśli $I=\varnothing$, jest to
+topologia antydyskretna $\{\varnothing,X\}$,
+rozumiana jako jednoelementowa, gdy $X=\varnothing$.
+\end{definicja}
+
+\begin{twierdzenie}[Własność uniwersalna topologii początkowej]
+\label{thm:topog-poczatkowa-uniwersalnosc}
+Niech $X$ ma topologię początkową wyznaczoną przez
+$f_i\colon X\to Y_i$, $i\in I$, a $Z$ będzie dowolną
+przestrzenią topologiczną. Odwzorowanie $g\colon Z\to X$
+jest ciągłe wtedy i tylko wtedy, gdy wszystkie złożenia
+$f_i\circ g\colon Z\to Y_i$ są ciągłe.
+\end{twierdzenie}
+\begin{proof}
+Jeden kierunek wynika ze składania odwzorowań ciągłych.
+Jeśli wszystkie złożenia są ciągłe, to dla $i\in I$
+i otwartego $U\subseteq Y_i$ zachodzi
+$g^{-1}(f_i^{-1}(U))=(f_i\circ g)^{-1}(U)$,
+a prawa strona jest otwarta w $Z$.
+Ciągłość $g$ wynika z kryterium przez podbazę.
+\end{proof}
+
+\begin{uwaga}[Podprzestrzeń i iloczyn jako konstrukcje początkowe]
+Topologia podprzestrzeni na $A\subseteq X$ jest początkowa
+względem włożenia $\iota\colon A\to X$. Topologia iloczynu
+na $\prod_i X_i$ jest początkowa względem rzutowań $\pi_i$.
+Oba przypadki wynikają bezpośrednio z definicji rodzin
+podbazowych. Ich własności uniwersalne są więc
+szczególnymi przypadkami twierdzenia
+\ref{thm:topog-poczatkowa-uniwersalnosc}.
+\end{uwaga}
+
+\begin{definicja}[Topologia końcowa]
+\label{def:topog-topologia-koncowa}
+Niech $(X_i,\tau_i)_{i\in I}$ będzie rodziną przestrzeni
+topologicznych, $Y$ zbiorem oraz
+$f_i\colon X_i\to Y$ odwzorowaniami. \emph{Topologią końcową}
+wyznaczoną przez rodzinę $(f_i)_{i\in I}$ nazywamy
+\[
+\tau_{\mathrm k}=\{V\subseteq Y:
+ f_i^{-1}(V)\in\tau_i\text{ dla każdego }i\in I\}.
+\]
+Jest to największa topologia na $Y$, dla której wszystkie
+$f_i$ są ciągłe. Jeśli $I=\varnothing$, otrzymujemy
+topologię dyskretną $\mathcal P(Y)$.
+\end{definicja}
+
+\begin{stwierdzenie}[Poprawność definicji topologii końcowej]
+\label{prop:topog-koncowa-topologia}
+Rodzina $\tau_{\mathrm k}$ z definicji
+\ref{def:topog-topologia-koncowa} jest topologią.
+Każda topologia na $Y$, dla której wszystkie $f_i$
+są ciągłe, jest zawarta w $\tau_{\mathrm k}$.
+\end{stwierdzenie}
+\begin{proof}
+Przeciwobrazy $\varnothing$ i $Y$ są odpowiednio
+$\varnothing$ i $X_i$, a więc są otwarte.
+Przeciwobrazy zachowują dowolne sumy i skończone
+przecięcia zbiorów, co dowodzi aksjomatów topologii.
+Jeśli w pewnej topologii na $Y$ wszystkie $f_i$
+są ciągłe, każdy jej zbiór otwarty ma otwarte
+przeciwobrazy przy wszystkich $f_i$, należy więc
+do $\tau_{\mathrm k}$.
+\end{proof}
+
+\begin{twierdzenie}[Własność uniwersalna topologii końcowej]
+\label{thm:topog-koncowa-uniwersalnosc}
+Niech na zbiorze $Y$ zadana będzie topologia końcowa
+względem $f_i\colon X_i\to Y$, $i\in I$, i niech
+$Z$ będzie przestrzenią topologiczną. Odwzorowanie
+$h\colon Y\to Z$ jest ciągłe wtedy i tylko wtedy, gdy
+wszystkie złożenia $h\circ f_i\colon X_i\to Z$
+są ciągłe.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $h$ jest ciągłe, ciągłość złożeń wynika z ciągłości
+$f_i$. Jeśli wszystkie złożenia są ciągłe, to dla dowolnego
+otwartego $W\subseteq Z$ wszystkie zbiory
+\[
+f_i^{-1}(h^{-1}(W))=(h\circ f_i)^{-1}(W)
+\]
+są otwarte. Na mocy definicji topologii końcowej
+$h^{-1}(W)$ jest otwarty w $Y$.
+\end{proof}
+
+\begin{uwaga}[Suma rozłączna jako konstrukcja końcowa]
+Topologia na $\coprod_i X_i$ jest końcowa względem
+włożeń $\jmath_i$. W istocie warunek otwartości
+$\jmath_i^{-1}(W)$ jest dokładnie warunkiem otwartości
+odpowiedniego przekroju $W_i$ z definicji sumy rozłącznej.
+\end{uwaga}
+
+\section{Topologia ilorazowa}
+\label{sec:topog-iloraz}
+
+\begin{definicja}[Przestrzeń ilorazowa]
+\label{def:topog-przestrzen-ilorazowa}
+Niech $(X,\tau)$ będzie przestrzenią topologiczną,
+a $\sim$ relacją równoważności na $X$. Niech $X/{\sim}$
+oznacza zbiór klas równoważności, a
+$q\colon X\to X/{\sim}$, $q(x)=[x]$, kanoniczną surjekcję.
+\emph{Topologią ilorazową} jest rodzina
+\[
+\tau_{/{\sim}}=\{V\subseteq X/{\sim}:q^{-1}(V)\in\tau\}.
+\]
+Przestrzeń $(X/{\sim},\tau_{/{\sim}})$ nazywamy
+\emph{przestrzenią ilorazową}. Topologia ilorazowa jest
+topologią końcową względem $q$; w szczególności $q$ jest ciągłe.
+\end{definicja}
+
+\begin{definicja}[Odwzorowanie ilorazowe i zbiory nasycone]
+\label{def:topog-odwzorowanie-ilorazowe}
+Niech $q\colon X\to Y$ będzie ciągłą surjekcją
+przestrzeni topologicznych. Nazywamy ją
+\emph{odwzorowaniem ilorazowym}, jeśli
+$V\subseteq Y$ jest otwarty dokładnie wtedy, gdy
+$q^{-1}(V)$ jest otwarty w $X$.
+Zbiór $A\subseteq X$ nazywamy \emph{nasyconym względem $q$},
+jeśli $q^{-1}(q(A))=A$. Jest to równoważne temu,
+że $A$ jest sumą włókien $q^{-1}(y)$.
+\end{definicja}
+
+\begin{stwierdzenie}[Zbiory nasycone i otwartość w ilorazie]
+\label{prop:topog-iloraz-nasycone}
+Niech $q\colon X\to Y$ będzie odwzorowaniem ilorazowym.
+Dla dowolnego zbioru $A\subseteq X$ zachodzi:
+\begin{enumerate}[label=(\roman*)]
+\item $q(A)$ jest otwarty w $Y$ wtedy i tylko wtedy, gdy
+      $q^{-1}(q(A))$ jest otwarty w $X$;
+\item $q(A)$ jest domknięty w $Y$ wtedy i tylko wtedy, gdy
+      $q^{-1}(q(A))$ jest domknięty w $X$.
+\end{enumerate}
+Jeśli $A$ jest nasycony, warunki po prawej stronach
+sprowadzają się do otwartości lub domkniętości $A$.
+\end{stwierdzenie}
+\begin{proof}
+Pierwsza równoważność jest definicją odwzorowania
+ilorazowego zastosowaną do zbioru $q(A)$.
+Dla drugiej stosujemy tę samą definicję do dopełnienia
+$Y\setminus q(A)$ i używamy równości
+$q^{-1}(Y\setminus q(A))=X\setminus q^{-1}(q(A))$.
+Ostatnie zdanie wynika z definicji nasycenia.
+\end{proof}
+
+\begin{twierdzenie}[Własność uniwersalna ilorazu]
+\label{thm:topog-iloraz-uniwersalnosc}
+Niech $q\colon X\to Y$ będzie odwzorowaniem ilorazowym,
+$Z$ dowolną przestrzenią topologiczną, a $h\colon Y\to Z$
+odwzorowaniem. Wtedy $h$ jest ciągłe wtedy i tylko wtedy,
+gdy $h\circ q\colon X\to Z$ jest ciągłe.
+Ponadto jeśli $g\colon X\to Z$ jest stałe na każdym
+włóknie $q$, istnieje dokładnie jedno odwzorowanie
+$h\colon Y\to Z$ z $g=h\circ q$, a $h$ jest ciągłe
+dokładnie wtedy, gdy $g$ jest ciągłe.
+\end{twierdzenie}
+\begin{proof}
+Pierwsza równoważność jest własnością uniwersalną
+topologii końcowej względem jednego odwzorowania.
+Jeśli $g$ ma stałą wartość na każdym włóknie, określamy
+$h(y)=g(x)$, gdzie $x$ jest dowolnym punktem z
+$q^{-1}(y)$. Włókno jest niepuste z surjektywności,
+a stałość $g$ zapewnia niezależność od wyboru $x$.
+Wówczas $h(q(x))=g(x)$ dla wszystkich $x\in X$.
+Surjektywność $q$ gwarantuje jednoznaczność $h$.
+Równoważność ciągłości wynika z pierwszej części.
+\end{proof}
+
+\begin{stwierdzenie}[Wystarczające kryterium ilorazowości]
+\label{prop:topog-otwarta-surjekcja-iloraz}
+Każda ciągła surjekcja $q\colon X\to Y$, która jest
+odwzorowaniem otwartym lub odwzorowaniem domkniętym,
+jest odwzorowaniem ilorazowym.
+\end{stwierdzenie}
+\begin{proof}
+Ciągłość daje: dla każdego otwartego $V\subseteq Y$
+przeciwobraz $q^{-1}(V)$ jest otwarty w $X$.
+Jeśli $q$ jest otwarte i $q^{-1}(V)$ jest otwarty,
+to $V=q(q^{-1}(V))$ jest otwarty dzięki surjektywności.
+Jeśli $q$ jest domknięte i $q^{-1}(V)$ jest otwarty,
+to $q^{-1}(Y\setminus V)=X\setminus q^{-1}(V)$
+jest domknięty; zatem $Y\setminus V$ jest domknięty
+jako obraz zbioru domkniętego. W obu przypadkach
+otrzymujemy równoważność definiującą ilorazowość.
+\end{proof}
+
+\begin{przyklad}[Sklejenie dwóch punktów prostej]
+\label{ex:topog-iloraz-dwa-punkty}
+W $\mathbb R$ z topologią euklidesową przyjmijmy
+$x\sim y$ wtedy i tylko wtedy, gdy $x=y$ albo
+$\{x,y\}=\{0,1\}$. Iloraz otrzymujemy, utożsamiając
+$0$ i $1$, a pozostałe punkty pozostają rozróżnione.
+Dla $U=(-1/2,1/2)$ zbiór nasycony jest równy
+$q^{-1}(q(U))=U\cup\{1\}$, który nie jest otwarty
+w $\mathbb R$. Wobec tego $q(U)$ nie jest otwarty
+w ilorazie, mimo że $U$ jest otwarty w $\mathbb R$.
+Zatem odwzorowanie ilorazowe nie musi być otwarte.
+\end{przyklad}
+
+\begin{przyklad}[Iloraz nie musi być odwzorowaniem domkniętym]
+\label{ex:topog-iloraz-niedomkniety}
+Na $\mathbb R$ utożsammy ze sobą wszystkie punkty
+przedziału $(0,1)$, nie utożsamiając żadnych innych.
+Niech $q$ będzie odwzorowaniem do ilorazu.
+Zbiór $F=\{1/2\}$ jest domknięty w $\mathbb R$,
+lecz $q^{-1}(q(F))=(0,1)$ nie jest domknięty.
+Z kryterium zbiorów nasyconych wynika, że $q(F)$
+nie jest domknięty. Odwzorowanie ilorazowe nie musi
+więc być domknięte.
+\end{przyklad}
+
+\begin{przyklad}[Ciągła surjekcja, która nie jest ilorazowa]
+\label{ex:topog-surjekcja-nieilorazowa}
+Niech $S=\{0,1\}$ i rozważmy odwzorowanie
+identycznościowe
+\[
+\operatorname{id}\colon(S,\mathcal P(S))\longrightarrow
+       (S,\{\varnothing,S\}).
+\]
+Jest ono ciągłą surjekcją, ponieważ przeciwdziedzina
+ma topologię antydyskretną. Nie jest ilorazowe:
+przeciwobraz $\{0\}$ jest otwarty w dyskretnej dziedzinie,
+ale $\{0\}$ nie jest otwarty w przeciwdziedzinie.
+\end{przyklad}
+
+\section{Zestawienie własności uniwersalnych}
+\label{sec:topog-konstrukcje-podsumowanie}
+
+Wszystkie konstrukcje rozdziału powstają z tego samego
+pytania: jakie zbiory uznać za otwarte, aby wskazane
+odwzorowania były ciągłe?
+Dla topologii początkowej wymagamy ciągłości odwzorowań
+\emph{do} danych przestrzeni i wybieramy najmniejszą
+taką topologię. Dla topologii końcowej wymagamy ciągłości
+odwzorowań \emph{z} danych przestrzeni i wybieramy
+największą taką topologię. Iloczyny i podprzestrzenie
+są szczególnymi przypadkami pierwszej konstrukcji;
+sumy rozłączne i ilorazy --- drugiej.
+
+\begin{uwaga}[Kierunek sprawdzania ciągłości]
+W topologii podprzestrzeni i iloczynu sprawdzamy ciągłość
+odwzorowań $g\colon Z\to X$ na podstawie ich złożeń
+z włożeniami lub rzutowaniami \emph{wychodzącymi z $X$}.
+W sumie rozłącznej i topologii ilorazowej sprawdzamy
+ciągłość odwzorowań $h\colon Y\to Z$ na podstawie
+złożeń z naturalnymi odwzorowaniami \emph{wchodzącymi do $Y$}.
+Rozróżnienie to będzie wykorzystywane przy konstrukcjach
+bardziej złożonych przestrzeni i badaniu ich niezmienników.
+\end{uwaga}

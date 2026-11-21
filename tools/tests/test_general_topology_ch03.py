@@ -150,7 +150,7 @@ def lint():
         refs.extend(re.findall(r'\\(?:ref|eqref|pageref)\{([^}]+)\}',t))
     assert len(labels)==len(set(labels)), 'duplicate labels'
     assert set(refs).issubset(set(labels)), set(refs)-set(labels)
-    chapter=paths[-1].read_text(encoding='utf8')
+    chapter=(CP/'03-odwzorowania-ciagle.tex').read_text(encoding='utf8')
     assert chapter.startswith(r'\chapter{Odwzorowania ciągłe}')
     assert not re.search(r'\b(kofinita|unia|tensorowanie)\b',chapter,re.I)
     assert r'\includegraphics' not in chapter
