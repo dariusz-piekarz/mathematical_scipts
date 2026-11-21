@@ -77,6 +77,11 @@ jobs:
             echo "Unresolved references in linear algebra PDF"
             exit 1
           fi
+          if grep -qE '(Overfull|Underfull|Missing character|LaTeX Warning|Undefined control sequence|Fatal error)' books/pl/linear_algebra.log; then
+            echo "Final LaTeX log contains layout or compilation warnings"
+            grep -nE '(Overfull|Underfull|Missing character|LaTeX Warning|Undefined control sequence|Fatal error)' books/pl/linear_algebra.log || true
+            exit 1
+          fi
       - name: Store compiled linear algebra
         if: always()
         uses: actions/upload-artifact@v4
