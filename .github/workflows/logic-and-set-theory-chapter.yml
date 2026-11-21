@@ -61,7 +61,7 @@ jobs:
           refs = [name for source in sources for name in re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", source)]
           assert len(labels) == len(set(labels)), "Duplicate LaTeX labels"
           assert len(labels) == 288, f"Unexpected labels: {len(labels)}"
-          forward = {"ch:zf-axioms", "ch:soundness-fol", "thm:ls-second-order-categorical"}
+          forward = {"ch:zf-axioms"}
           assert set(refs) - set(labels) == forward, "Unexpected unresolved targets in partial book"
           inventories = [
               (sources[5], {"twierdzenie": 15, "wniosek": 1, "proof": 16,
@@ -88,7 +88,7 @@ jobs:
                   else:
                       assert stack and stack.pop() == env, ("Unbalanced environment", env)
               assert not stack, ("Unclosed environments", stack)
-          print("PASS: imports, chapter order, 288 labels, 114 references, three documented forward references, inventories and TeX environments")
+          print(f"PASS: imports, chapter order, {len(labels)} labels, {len(refs)} references, {len(forward)} documented forward reference(s), inventories and TeX environments")
           PY
       - name: Run chapter 07 finite-model regression tests
         run: python -m unittest tools.tests.test_logic_and_set_theory_ch07 -v
@@ -114,7 +114,7 @@ jobs:
 
           log = Path("books/pl/logic_and_set_theory.log").read_text(errors="replace")
           refs = set(re.findall(r"LaTeX Warning: Reference `([^']+)' on page \d+ undefined", log))
-          allowed = {"ch:zf-axioms", "ch:soundness-fol", "thm:ls-second-order-categorical"}
+          allowed = {"ch:zf-axioms"}
           assert refs <= allowed, f"Unexpected undefined references: {sorted(refs - allowed)}"
           assert not re.search(r"Overfull \\hbox", log), "Overfull TeX boxes"
           assert not re.search(r"LaTeX Warning: Citation .+ undefined", log), "Undefined citation"
