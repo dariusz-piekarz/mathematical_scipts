@@ -91,7 +91,7 @@ Dla wszystkich **512 endomorfizmów** \(\mathbb F_2^3\) sprawdzono równoważno�
 - Rozdział 03 nie wymaga zewnętrznych plików z rysunkami: diagram powstał bezpośrednio w TikZ.
 - Plik główny i katalog zawierają rozdziały 01–03 w poprawnej kolejności.
 - Przebieg CI dla integracji: [44902170079](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44902170079) — **success**; wstępny PDF: 37 stron i końcowy log LaTeX bez ostrzeżeń.
-- Ostateczny przebieg CI dla poprawionej treści: do uzupełnienia po zakończeniu.
+- Końcowy przebieg CI dla poprawionej treści: [44902522099](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44902522099) — **success**. Wszystkie etapy kontroli trzech rozdziałów, importów, etykiet, terminologii, kompilacji i eksportu zakończone powodzeniem. Finalny PDF liczy **37 stron A4** i nie zawiera ostrzeżeń w pliku `linear_algebra.log` (`LaTeX Warning`, `Overfull`, `Underfull`, `Missing character`, `Undefined control sequence`, `Fatal error`). Dokonano przeglądu stron 28, 30–37 i diagramu na stronie 33; bez nakładających się elementów. Uwaga redakcyjna: strona 37 zawiera jedynie krótkie podsumowanie rozdziału. Skrócenie podsumowania nie wyeliminowało dodatkowej strony; można ocenić układ w kolejnym audycie, bez obniżania poziomu szczegółowości dowodów.
 
 W nieblokującym globalnym walidatorze repozytorium wciąż występują wcześniejsze problemy z innych skryptów; nie traktujemy ich jako usuniętych.
 
