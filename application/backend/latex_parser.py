@@ -62,6 +62,7 @@ PREFIX_DOMAINS = {
     "DG": "geometria i topologia różniczkowa",
     "FA": "analiza funkcjonalna",
     "PDE": "równania różniczkowe cząstkowe",
+    "LA": "algebra liniowa",
 }
 COMMAND = re.compile(r"\\([A-Za-z@]+|.)")
 RE_WS = re.compile(r"\s+")
@@ -241,6 +242,7 @@ REPOSITORY_CATEGORIES = {
     "functional_analysis": "FA",
     "measure_theory": "ME",
     "partial_differential_equations": "PDE",
+    "linear_algebra": "LA",
     "algebraic_geometry": "ALG", "algebraic_topology": "TOP",
     "banach_tarski": "BT", "category_theory": "KAT",
     "galois_theory": "GA", "graph_and_knot_theory": "GW",
