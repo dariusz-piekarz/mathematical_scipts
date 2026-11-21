@@ -145,7 +145,7 @@ def lint():
     assert 'Spójne obszary euklidesowe' not in src
     assert 'Dla ustalonej skończonego ciągu cyfr' not in src
     assert 'krzyw' in src.lower() and 'sin(1/x)' in src
-    assert 'pierwszo przeliczalnych z rozdziału~06' in src
+    assert 'przestrzenie metryczne spełniają pierwszy aksjomat' in src
     assert 'z ciągłości funkcji' in src and r'$\overline G=T$' in src
     all_files=sorted((ROOT/'chapters/pl/general_topology').glob('*.tex'))
     labels=[];refs=[]

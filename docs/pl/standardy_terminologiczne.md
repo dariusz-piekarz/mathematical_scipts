@@ -40,3 +40,9 @@ W każdym audycie sprawdzamy konsekwentnie te terminy w treści, twierdzeniach, 
 - Angielskie **mapping** oraz **map** w znaczeniu funkcji między przestrzeniami tłumaczymy jako **odwzorowanie**. Wyraz „mapa” jest zarezerwowany dla *chart*, a nie używany jako ogólny synonim odwzorowania.
 - Zmiany przeprowadzamy kontekstowo, z zachowaniem polskiej gramatyki, definicji matematycznych oraz historycznych etykiet LaTeX; w szczególności nie zmieniamy mechanicznie każdej sylaby „kart” ani nazw \(\backslash\mathrm{label}\) i \(\backslash\mathrm{ref}\).
 - Zasada jest **globalna**, dotyczy wszystkich polskojęzycznych skryptów Biblioteki oraz każdego kolejnego audytu i uzupełnienia.
+
+## 6. Pierwszy i drugi aksjomat przeliczalności
+
+- Dla przestrzeni topologicznej \(X\) piszemy **„\(X\) spełnia pierwszy aksjomat przeliczalności”** lub **„\(X\) spełnia drugi aksjomat przeliczalności”**. Dopuszczalne są również odmiany typu „przestrzeń spełniająca drugi aksjomat przeliczalności” i „niespełnianie pierwszego aksjomatu przeliczalności”.
+- **Nie używamy** form „pierwszoprzeliczalna”, „pierwszo przeliczalna”, „drugoprzeliczalna”, „drugo przeliczalna” ani analogicznych odmian. W nagłówkach, treści twierdzeń, dowodach i podpisach stosujemy nazwy **„pierwszy aksjomat przeliczalności”** oraz **„drugi aksjomat przeliczalności”**, zamiast określeń „pierwsza/druga przeliczalność”.
+- Reguła obowiązuje **globalnie we wszystkich polskojęzycznych skryptach matematycznych**. Zachowujemy stabilne etykiety LaTeX i odsyłacze nawet wtedy, gdy zawierają starsze słownictwo.

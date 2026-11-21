@@ -16,6 +16,8 @@ Refer to [the Polish terminology standard](docs/pl/standardy_terminologiczne.md)
 
 5. In Polish-language mathematical manuscripts, translate **chart** (a local coordinate chart on a manifold) as **„mapa”**, not **„karta”**. Write **„mapa współrzędnych”**, **„mapa lokalna”**, **„mapy atlasu”**, **„dziedzina mapy”**, **„zmiana map”**, with grammatically correct Polish inflections. Translate **mapping/map** (a function between spaces) as **„odwzorowanie”**, not „mapa”, unless the object truly is a coordinate chart. This rule applies to all Polish scripts, proofs, examples, headings, captions and audits. Preserve stable LaTeX labels and references; never perform blind substitutions that corrupt inflections or mathematical meaning.
 
+6. For topological countability properties, use **„spełnia pierwszy aksjomat przeliczalności”** and **„spełnia drugi aksjomat przeliczalności”** (with appropriate inflections), not adjectival formulations **„pierwszoprzeliczalna / pierwszo przeliczalna”** or **„drugoprzeliczalna / drugo przeliczalna”**. Prefer the noun phrases **„pierwszy aksjomat przeliczalności”** and **„drugi aksjomat przeliczalności”** in headings, propositions, explanations and figures. Applies globally to all Polish math scripts. Preserve existing stable LaTeX labels and references.
+
 ## Preserve references and rigor
 
 - Preserve existing stable `\label` names and corresponding `\ref` targets even if they contain an older word. Text, theorem titles, captions and prose should follow the current terminology.
