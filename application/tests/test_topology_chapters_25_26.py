@@ -216,5 +216,48 @@ class TopologyTwentyFiveTwentySixAudit(unittest.TestCase):
                                 ((1, 0), (0, 1)))
 
 
+    def test_at25_lefschetz_requires_unramified_nodal_model(self):
+        """A ramified base change transforms a single Dehn twist into its m-th power."""
+        src = self.src["25"]
+        for fragment in (
+            r"$\pi(z,w)=zw$",
+            r"$zw=s^m$",
+            "submersją na pewnym otoczeniu włókna",
+            "wzór na pojedynczą transwekcję",
+            r"\langle\gamma,\delta\rangle\,\delta",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, src)
+        self.assertNotIn("posiada\njedną zwyczajną osobliwość węzłową.", src)
+        for m in range(1, 12):
+            # T(a) = a and T(b) = b+a on genus-one homology.
+            Tm = ((1, m), (0, 1))
+            self.assertEqual(Tm[0][1], m)
+            if m > 1:
+                self.assertNotEqual(Tm, ((1, 1), (0, 1)))
+
+    def test_at25_hodge_opposed_filtrations_and_mhs_dependency(self):
+        src = self.src["25"]
+        for fragment in (
+            r"$G_p=\overline{F^{m-p}V_{\C}}$",
+            r"$w=v-u\in F^p$",
+            r"F^pV_{\C}=F^{p+1}V_{\C}",
+            r"$V_{\C}=\bigoplus_p(F^pV_{\C}\cap G_p)$",
+            r"F^p(\operatorname{Gr}_m^WV)_{\C}",
+            "długiego ciągu",
+            r"\emph{mieszanych struktur Hodge'a}",
+            r"\mathcal H^q(Rf_*K)",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, src)
+        self.assertNotRegex(src, r"\brezolwent\w*")
+        # Pure weight-one example: F^1=< (1,i) >, conjugate F^1=< (1,-i) >
+        v = (1, 1j)
+        conjugate = (1, -1j)
+        det = v[0]*conjugate[1] - v[1]*conjugate[0]
+        self.assertNotEqual(det, 0)
+        self.assertEqual(det, -2j)
+
+
 if __name__ == "__main__":
     unittest.main()
