@@ -32,7 +32,7 @@ class TestLogicChapter22(unittest.TestCase):
     def test_inventory_preserved_from_existing_chapter(self):
         expected = {
             "definicja": 1, "przyklad": 2, "lemat": 2, "proof": 6,
-            "uwaga": 4, "twierdzenie": 3, "wniosek": 1
+            "uwaga": 5, "twierdzenie": 3, "wniosek": 1
         }
         for env, count in expected.items():
             with self.subTest(env=env):
