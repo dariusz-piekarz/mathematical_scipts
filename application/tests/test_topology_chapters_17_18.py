@@ -187,11 +187,30 @@ class TopologySeventeenEighteenAudit(unittest.TestCase):
                 self.assertEqual(
                     top_stiefel_whitney, cell_euler_characteristic % 2
                 )
-        # In dimension 4, RP^4 and RP^2 x RP^2 have the same w4,
-        # but different w2^2, hence different unoriented bordism.
-        self.assertEqual((0, 1), (0, 1))  # RP4 (w2²,w4)
-        self.assertEqual((1, 1), (1, 1))  # RP2 x RP2
-        self.assertEqual(((1*1-0*1) % 2), 1)
+        # In RP^4, compute w2 and w4 from (1+t)^5.
+        w_rp4 = [comb(5, i) % 2 for i in range(5)]
+        rp4 = (w_rp4[2] ** 2 % 2, w_rp4[4])
+        self.assertEqual(rp4, (0, 1))
+
+        # In RP^2 x RP^2, compute the homogeneous w2 and w4
+        # from (1+a)^3(1+b)^3 modulo (a^3,b^3).
+        def poly_degree(d):
+            return {
+                (i, d-i): (comb(3, i) * comb(3, d-i)) % 2
+                for i in range(3) if 0 <= d-i <= 2
+            }
+        w2 = poly_degree(2)
+        w4 = poly_degree(4)
+        square = 0
+        for (i,j), first in w2.items():
+            for (u,v), second in w2.items():
+                if i+u == 2 and j+v == 2:
+                    square ^= first * second
+        product = (square, w4[(2,2)])
+        self.assertEqual(product, (1, 1))
+        self.assertEqual(
+            (product[0]*rp4[1] - product[1]*rp4[0]) % 2, 1
+        )
 
     def test_projective_morse_quadratic_flow_is_descending(self):
         chapter = self.text["18"]
