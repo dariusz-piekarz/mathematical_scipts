@@ -273,7 +273,7 @@ class AlgebraicTopologyTwentyNineThirtyAudit(unittest.TestCase):
             r"$\exp_{\gamma_R}(\xi)$",
             r"$D_RQ_R=\id_{\mathcal Y_\delta}$",
             r"$Q_RD_R=\id$",
-            r"$\mathcal F_R(\xi)=e_R+D_R\xi+N_R(\xi)$",
+            r"\mathcal F_R(\xi)=e_R+D_R\xi+N_R(\xi),",
             "Przenosząc resztę równania równolegle",
             "jednowymiarowe oszacowanie Sobolewa",
         ):
