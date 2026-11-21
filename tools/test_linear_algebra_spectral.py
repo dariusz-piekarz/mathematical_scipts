@@ -240,6 +240,55 @@ def commuting_diagonalizable_cases():
     return count
 
 
+
+def finite_field_simultaneous_diagonalization_cases():
+    """Exhaustive 2x2 test over F2 and F3, including repeated eigenvalues."""
+    from itertools import product
+
+    def matvec_mod(a, v, p):
+        return ((a[0]*v[0]+a[1]*v[1]) % p,
+                (a[2]*v[0]+a[3]*v[1]) % p)
+
+    def mul_mod(a, b, p):
+        return tuple(
+            sum(a[2*i+k]*b[2*k+j] for k in range(2)) % p
+            for i in range(2) for j in range(2)
+        )
+
+    def eigenvector(a, v, p):
+        w=matvec_mod(a, v, p)
+        return any(w==tuple(lam*x % p for x in v)
+                   for lam in range(p))
+
+    def independent(v, w, p):
+        return (v[0]*w[1]-v[1]*w[0]) % p != 0
+
+    results={}
+    for p in (2, 3):
+        matrices=list(product(range(p), repeat=4))
+        vectors=[v for v in product(range(p), repeat=2) if v != (0, 0)]
+        eigen={a:{v for v in vectors if eigenvector(a, v, p)}
+               for a in matrices}
+        diagonalizable=[
+            a for a in matrices
+            if any(independent(v, w, p) for v in eigen[a]
+                   for w in eigen[a])
+        ]
+        count=0
+        for s in diagonalizable:
+            for t in diagonalizable:
+                if mul_mod(s, t, p) != mul_mod(t, s, p):
+                    continue
+                count += 1
+                shared = eigen[s] & eigen[t]
+                assert any(independent(v, w, p) for v in shared
+                           for w in shared), (p,s,t)
+        results[p]=count
+    assert results == {2: 40, 3: 441}, results
+    return sum(results.values())
+
+
+
 if __name__=="__main__":
     a=normal_cases()
     b=hermitian_cases()
@@ -247,10 +296,12 @@ if __name__=="__main__":
     d=dimension_three_cases()
     e=commuting_schur_cases()
     f=commuting_diagonalizable_cases()
+    g=finite_field_simultaneous_diagonalization_cases()
     print("Spectral regression tests OK:",
           a,"normal similarities and projectors;",
           b,"Hermitian Rayleigh tests;",
           c,"commuting/defective checks;",
           d,"3x3 normal and repeated-eigenvalue checks;",
            e,"commuting Schur tests;",
-          f,"simultaneous diagonalization checks.")
+          f,"simultaneous diagonalization checks;",
+          g,"finite-field commuting diagonalization checks.")
