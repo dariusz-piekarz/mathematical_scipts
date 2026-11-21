@@ -149,6 +149,8 @@ def lint() -> tuple[int, int]:
     assert r"\label{thm:topog-jednostajne-hausdorff}" in source
     assert r"\label{thm:topog-jednostajne-iloczyn}" in source
     assert r"\label{thm:topog-jednostajne-ogony}" in source
+    assert r"\label{lem:topog-jednostajne-zwarta-ciagowa}" in source
+    assert r"\ref{thm:topog-zwartosc-fip}" in source
     assert r"\label{thm:topog-jednostajne-heine-cantor}" in source
     return len(all_labels), len(all_refs)
 
