@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from collections import Counter
 from math import comb
+from functools import lru_cache
+from itertools import product
 from pathlib import Path
 import re
 import unittest
@@ -198,6 +200,47 @@ class TopologyChaptersFifteenSixteenAudit(unittest.TestCase):
                 sq1_coeff = m % 2 if m+1 <= N else 0
                 with self.subTest(N=N, m=m):
                     self.assertEqual(bockstein_coeff, sq1_coeff)
+
+    def test_adem_reduction_produces_admissible_words(self):
+        """Reduce 775 Steenrod monomials, checking termination and total degree."""
+        source = self.text["15"]
+        self.assertIn("sumy końcowe", source)
+        self.assertIn("leksykograficznie", source)
+
+        @lru_cache(None)
+        def reduce_word(word):
+            for i in range(len(word)-1):
+                a, b = word[i:i+2]
+                if a < 2*b:
+                    output = set()
+                    for j in range(a//2+1):
+                        if comb(b-j-1, a-2*j) % 2:
+                            replacement = (
+                                (a+b,) if j == 0 else (a+b-j, j)
+                            )
+                            new_word = (
+                                word[:i] + replacement + word[i+2:]
+                            )
+                            output.symmetric_difference_update(
+                                reduce_word(new_word)
+                            )
+                    return frozenset(output)
+            return frozenset((word,))
+
+        checked = 0
+        for length in (2, 3, 4):
+            for word in product(range(1, 6), repeat=length):
+                result = reduce_word(word)
+                checked += 1
+                for admissible in result:
+                    self.assertTrue(
+                        all(admissible[i] >= 2*admissible[i+1]
+                            for i in range(len(admissible)-1)),
+                        (word, admissible),
+                    )
+                    self.assertEqual(sum(word), sum(admissible))
+                    self.assertLessEqual(len(admissible), len(word))
+        self.assertEqual(checked, 775)
 
     def test_deep_dependencies_are_explicit_not_overclaimed(self):
         src = self.text["15"] + self.text["16"]
