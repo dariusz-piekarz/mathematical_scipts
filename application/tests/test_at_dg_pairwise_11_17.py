@@ -113,7 +113,9 @@ class ATDG11_17Audit(unittest.TestCase):
         # Stage V is a historical provenance snapshot. Subsequent verified
         # audits may ADD labels to DG-17 (or AT-11), but must not silently
         # remove labels that were historically unique or common.
-        self.assertGreaterEqual(len(la & ld), manifest["common_label_names"])
+        historic_common = set(manifest["historical_common_labels"])
+        self.assertEqual(len(historic_common), manifest["common_label_names"])
+        self.assertTrue(historic_common.issubset(la & ld))
         self.assertTrue(set(manifest["at_only_labels"]).issubset(la-ld))
         self.assertTrue(set(manifest["dg_only_labels"]).issubset(ld-la))
         self.assertEqual(manifest["common_label_names"], 42)
