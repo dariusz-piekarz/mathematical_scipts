@@ -223,5 +223,64 @@ class AlgebraicTopologyTwentyNineThirtyAudit(unittest.TestCase):
                 self.assertNotEqual(-xx, 0)
 
 
+    def test_at29_actual_inverse_chain_system_homology_counterexample(self):
+        source = self.texts["29"]
+        for fragment in (
+            r"C^{(j)}_1=\Z\xrightarrow{\ \times p^j\ }",
+            r"$u_j:C^{(j+1)}_*\to C^{(j)}_*$",
+            r"$(\times p^j)\circ(\times p)",
+            r"$H_0(\varprojlim_j C^{(j)}_*)\cong\Z$",
+            r"$\varprojlim_j H_0(C^{(j)}_*)\cong\Z_p$",
+            r"$-1/3\in\Z_2\setminus\Z$",
+            r"Twierdzenia~\ref{thm:xviii-milnor}",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, source)
+        # Chain map: d_j u_{j,1} = u_{j,0} d_{j+1}.
+        for j in range(25):
+            for x in (-7, -1, 0, 1, 5):
+                self.assertEqual((2**j)*(2*x), 2**(j+1)*x)
+                # Maps on H_0 are reductions modulo 2**j.
+                self.assertEqual(x % (2**(j+1)) % (2**j),
+                                 x % (2**j))
+        # The element -1/3 has compatible finite reductions but
+        # is not an integer, since 3q = -1 has no integer solution.
+        for precision in range(1, 48):
+            mod = 2**precision
+            x = (-pow(3, -1, mod)) % mod
+            self.assertEqual((3*x+1) % mod, 0)
+
+    def test_at29_obstruction_and_adem_hypotheses_are_localized(self):
+        src = self.texts["29"]
+        for fragment in (
+            r"$\underline{\pi_q(F)}$ oznacza lokalny system",
+            r"$s_q:B^{(q)}\to E$",
+            r"Niech $a,b$ będą liczbami całkowitymi,",
+            r"w ciele $\F_2$, dla wszystkich przestrzeni",
+        ):
+            self.assertIn(fragment, src)
+        # Adem relation (Sq^2)^2=(Sq^3)(Sq^1) on t^m:
+        # Sq^i(t^m) = comb(m,i)*t^(m+i), mod 2.
+        from math import comb
+        for m in range(0, 100):
+            left = (comb(m, 2) * comb(m+2, 2)) % 2
+            right = (comb(m, 1) * comb(m+1, 3)) % 2
+            self.assertEqual(left, right, f"m={m}")
+
+    def test_at29_morse_nonlinear_chart_and_right_inverse_are_explicit(self):
+        src = self.texts["29"]
+        for fragment in (
+            r"$\exp_{\gamma_R}(\xi)$",
+            r"$D_RQ_R=\id_{\mathcal Y_\delta}$",
+            r"$Q_RD_R=\id$",
+            r"$\mathcal F_R(\xi)=e_R+D_R\xi+N_R(\xi)$",
+            "Przenosząc resztę równania równolegle",
+            "jednowymiarowe oszacowanie Sobolewa",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, src)
+        self.assertNotIn(r"\mathcal F(\gamma_R+\xi)", src)
+
+
 if __name__ == "__main__":
     unittest.main()
