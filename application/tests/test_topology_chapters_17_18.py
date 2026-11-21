@@ -212,6 +212,34 @@ class TopologySeventeenEighteenAudit(unittest.TestCase):
             (product[0]*rp4[1] - product[1]*rp4[0]) % 2, 1
         )
 
+    def test_pt_euler_zeros_dimensions_and_exact_references(self):
+        source = self.text["17"]
+        for fragment in (
+            r"Niech $m\ge1$ i $1\le k\le m$.",
+            r"Dla $k>m$ zbiór $Z(s)$ jest pusty",
+            r"$e(\xi)=0$ w $H^k(Q;\Z)$",
+            r"$n\ge0$, $k\ge1$",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, source)
+        self.assertNotRegex(
+            source,
+            r"\bmapa\b|\bmapy\b|\bmapę\b|\bmapą\b",
+        )
+        for chapter in ("17", "18"):
+            src = self.text[chapter]
+            starts = re.findall(
+                r"\\(?:ref|eqref|pageref|autoref|nameref)\s*\{", src
+            )
+            closed = re.findall(
+                r"\\(?:ref|eqref|pageref|autoref|nameref)\s*\{[^{}\n]+\}",
+                src,
+            )
+            self.assertEqual(
+                len(starts), len(closed),
+                f"Malformed reference in TOP-{chapter}",
+            )
+
     def test_projective_morse_quadratic_flow_is_descending(self):
         chapter = self.text["18"]
         self.assertIn(r"\label{prz:morse-rp2-torsja}", chapter)
