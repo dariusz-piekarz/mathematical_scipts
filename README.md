@@ -197,6 +197,8 @@ python backend/latex_parser.py audit --db data/biblioteka.db
 
 **Standard audytu rozdziału:** poprawność matematyczna, wszystkie założenia i kwantyfikatory, szczegółowość dowodów, przykłady i kontrprzykłady, język, zgodność terminologii, wykresy i TikZ, odsyłacze, kompilacja oraz testy CLI. Powtarzamy kontrolę do stabilizacji rozdziału, potem wypychamy go na **istniejącą gałąź**, bez tworzenia równoległych wersji.
 
+**Obowiązkowe uzasadnianie wzorów w dowodach:** jeśli dowód zawiera wzór (w szczególności równość, nierówność, tożsamość lub implikację), którego poprawność nie wynika wprost z poprzednich kroków, należy jawnie go uzasadnić. Dopuszczalne są: (1) pełne wyprowadzenie lub dowód w bieżącym tekście albo (2) precyzyjny odsyłacz do wcześniej udowodnionego wyniku, wraz ze sprawdzeniem jego założeń w danym zastosowaniu. Samo stwierdzenie „wiadomo, że”, odsyłacz do niewskazanego faktu lub powołanie się na wynik bez kontroli hipotez nie spełnia standardu. Audyt ma wykrywać i uzupełniać takie luki, zachowując poziom szczegółowości rozdziału 01 „Geometrii różniczkowej” jako wzorzec.
+
 Rejestr `application/config/pending_reference_baseline.json` dokumentuje odsyłacze wyprzedzające lub wymagające przeglądu; **nie oznacza ich jako rozwiązanych**. Niepełne importy, kolizje etykiet i brakujące cele pozostają jawną kolejką audytową. Przykład: książka geometrii i topologii różniczkowej ma aktualnie 20 zarejestrowanych rozdziałów, a pełna weryfikacja planowanego zakresu 36 rozdziałów jest nadal otwarta.
 
 ## Ograniczenia
