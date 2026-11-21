@@ -22,7 +22,8 @@
 - Dodano plik do `books/pl/linear_algebra.tex`, `catalog/books.json`, kontroli 18 rozdziałów w `.github/workflows/linear-algebra-chapter.yml` oraz README.
 - Dodano `tools/test_linear_algebra_chevalley.py`, który sprawdza przypadki `2×2` i `3×3` nad `F_2,F_3` (w tym powtarzające się pierwiastki minimalnego wielomianu), rzuty projekcyjne, nilpotentność `N`, diagonalizowalność `S`, wzory na potęgi i odwrotność oraz wykładniczą `J_3(2)`.
 - W kontroli strukturalnej stwierdzono **21 różnych etykiet**, **13 odsyłaczy** do poprawnie zadeklarowanych etykiet i **6 sparowanych środowisk `proof`**. Nie stwierdzono niedozwolonych terminów.
-- CI: [GitHub Actions](https://github.com/dariusz-piekarz/mathematical_scipts/actions/workflows/linear-algebra-chapter.yml). Przebieg końcowy po poprawkach oraz ostatni samodzielny PDF będą wymagały osobnego odnotowania po pomyślnym zakończeniu.
+- [GitHub Actions 44937404338](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44937404338) — **success** po poprawkach rozdziału i uruchomieniu nowych testów. Zakończono pomyślnie kontrolę katalogu, regresje Jordana–Chevalleya i funkcji macierzy, dwukrotną kompilację tomu, kontrolę odsyłaczy oraz eksport osobnego PDF rozdziału 18.
+- Artefakt `linear-algebra-current-chapter` z tego przebiegu ma **7 stron formatu A4**. Wszystkie zawierają tekst; kontrola PyMuPDF wykazała **0 bloków tekstowych wychodzących poza granice stron**. Siedem stron wyrenderowano i sprawdzono wizualnie; nie wykryto kolizji podpisów i wzorów ani przycięć.
 
 ## Decyzja
 
