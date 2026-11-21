@@ -13,6 +13,7 @@ on:
       - "tools/test_linear_algebra_unitary.py"
       - "tools/test_linear_algebra_projections.py"
       - "tools/test_linear_algebra_spectral.py"
+      - "tools/export_linear_algebra_chapter_pdf.py"
       - "books/pl/linear_algebra.tex"
       - "catalog/books.json"
       - "application/backend/latex_parser.py"
@@ -122,6 +123,21 @@ jobs:
             grep -nE '(Overfull|Underfull|Missing character|LaTeX Warning|Undefined control sequence|Fatal error)' books/pl/linear_algebra.log || true
             exit 1
           fi
+      - name: Export latest audited chapter as a standalone PDF
+        shell: bash
+        run: |
+          python -m pip install --quiet pypdf==5.9.0
+          python tools/export_linear_algebra_chapter_pdf.py \
+            --input books/pl/linear_algebra.pdf \
+            --output books/pl/linear_algebra_aktualny_rozdzial.pdf \
+            --latest
+          test -s books/pl/linear_algebra_aktualny_rozdzial.pdf
+      - name: Upload standalone current chapter PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: linear-algebra-current-chapter
+          path: books/pl/linear_algebra_aktualny_rozdzial.pdf
+          if-no-files-found: error
       - name: Store compiled linear algebra
         if: always()
         uses: actions/upload-artifact@v4
