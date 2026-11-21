@@ -21,6 +21,8 @@ BANNED = {
         r"\bzwartościowani\w*\b", flags=re.IGNORECASE),
     "zbieżność zwarta (use zbieżność jednostajna na zbiorach zwartych)": re.compile(
         r"\bzbieżnoś\w*\s+zwarte\w*\b", flags=re.IGNORECASE),
+    "nazwa uzwarcenia (use uzwarcenie Čecha–Stone’a)": re.compile(
+        r"Stone[’\x27]a\s*[-–—]\s*Čecha", flags=re.IGNORECASE),
 }
 
 
