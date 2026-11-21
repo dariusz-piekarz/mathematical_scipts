@@ -57,7 +57,7 @@ Poniższa lista pochodzi z `catalog/books.json`. Liczba rozdziałów oznacza poz
 | [Geometria i topologia różniczkowa](books/pl/differential_geometry_and_topology.tex) | 20 |
 | [Analiza funkcjonalna](books/pl/functional_analysis.tex) | 35 |
 | [Teoria Galois](books/pl/galois_theory.tex) | 10 |
-| [Topologia ogólna](books/pl/general_topology.tex) | 2 |
+| [Topologia ogólna](books/pl/general_topology.tex) | 3 |
 | [Teoria grafów i węzłów](books/pl/graph_and_knot_theory.tex) | 37 |
 | [Teoria całki](books/pl/integration_theory.tex) | 17 |
 | [Algebra liniowa](books/pl/linear_algebra.tex) | 17 (01–16 stabilne, 17 w audycie) |
