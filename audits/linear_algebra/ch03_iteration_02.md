@@ -77,7 +77,7 @@ Wynik: **0 rozbieżności**. Spośród 81 endomorfizmów wykryto **14 projekcji*
 - Rysunek nadal pozostaje wewnętrznym diagramem TikZ, bez nowych zależności od obrazów zewnętrznych.
 - Wpisy katalogu i kolejność `\\input` pozostają prawidłowe.
 
-**GitHub Actions:** [44903404379](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44903404379) — **success**: poprawka typowania diagramu przeszła wszystkie etapy. Końcowe CI po skróceniu podpisu: [44903653747](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44903653747) — wynik do potwierdzenia. Wcześniejsze zgłoszenia globalnego walidatora innych skryptów są rozpatrywane osobno.
+**GitHub Actions:** [44903404379](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44903404379) — **success**: poprawka typowania diagramu przeszła wszystkie etapy. Końcowe CI po skróceniu podpisu: [44903653747](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44903653747) — **success**. Wszystkie kroki: walidacja rozdziałów, katalogu, importów, terminologii, kompilacja LaTeX i kontrola odsyłaczy — zakończone pomyślnie. Wynikowy PDF ma **37 stron A4**. Końcowy `linear_algebra.log` nie zawiera `LaTeX Warning`, `Overfull`, `Underfull`, `Missing character`, `Undefined control sequence` ani `Fatal error`. Ponownie wyrenderowano i sprawdzono stronę **33**: diagram i skrócony podpis są czytelne, bez ucięć i samotnego końcowego wyrazu. Dodatkowo zweryfikowano strony **34 i 37**; nie wykryto kolizji. Wcześniejsze zgłoszenia globalnego walidatora innych skryptów są rozpatrywane osobno. W nieblokującym etapie ostatniego CI pozostają **24 wcześniejsze problemy** innych materiałów.
 
 ## Decyzja
 
