@@ -67,10 +67,10 @@ Niezależnie wyliczono wszystkie \(81\) liniowych endomorfizmów \(\mathbb F_3^2
 - Kolejność `\\input` i katalog książki są poprawne.
 - Plik rozdziału 03 jest bajtowo identyczny z wersją, dla której CI [44904330466](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44904330466) zakończyło się sukcesem. Ten przebieg wygenerował poprawny **37-stronicowy PDF**; w audycie 4 sprawdzono wizualnie poprawiony dowód i brak problemów ze składem.
 
-W `books/pl/linear_algebra.tex` zaktualizowano wyłącznie nieaktualny komentarz statusu rozdziałów 01–03, bez zmian w treści ani układzie książki. Nowy przebieg CI po tej aktualizacji: [44904794591](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44904794591) — **wynik końcowy do potwierdzenia**.
+W `books/pl/linear_algebra.tex` zaktualizowano wyłącznie nieaktualny komentarz statusu rozdziałów 01–03, bez zmian w treści ani układzie książki. Nowy przebieg CI po tej aktualizacji: [44904794591](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44904794591) — **success**. Wszystkie kroki CI dla rozdziałów 01–03 zaliczone: weryfikacja katalogu i importów, spójność etykiet i terminologii, kompilacja PDF oraz kontrola odsyłaczy i zapis artefaktu. Pobraną końcową wersję PDF zweryfikowano: **37 stron A4**, brak ostrzeżeń `LaTeX Warning`, `Overfull`, `Underfull`, `Missing character`, `Undefined control sequence`, `Fatal error` i `There were undefined references` w końcowym pliku `linear_algebra.log`. Wizualnie sprawdzono **strony 30, 31, 33 i 37**, w tym poprawiony wcześniej dowód przestrzeni rozpiętej i diagram pierwszego twierdzenia o izomorfizmie; bez ucięć, nieczytelnych symboli ani kolizji. Ostatnia strona zawiera krótkie podsumowanie, bez potrzeby skracania dowodów.
 
 W nieblokującym walidatorze globalnym istnieje **24 wcześniejszych zgłoszeń** innych skryptów; nie utożsamia się ich z problemami w algebrze liniowej.
 
 ## Status
 
-**Rozdział 03 matematycznie stabilny po audycie 5 bez poprawek. Formalne zamknięcie nastąpi po pomyślnym ostatnim CI.** Po zamknięciu można przejść do rozdziału 04 w kolejnej iteracji użytkownika.
+**Rozdział 03 jest stabilny i zostaje zamknięty po audycie 5 bez zmian merytorycznych oraz po pomyślnym końcowym CI 44904794591.** Kolejny audyt rozdziału 03 nie jest wymagany w obecnym cyklu. Na prośbę użytkownika można rozpocząć rozdział 04, bez ponownego rozszerzania zatwierdzonych rozdziałów 01–03.
