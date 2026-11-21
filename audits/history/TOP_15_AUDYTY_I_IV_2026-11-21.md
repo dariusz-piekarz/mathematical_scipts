@@ -47,4 +47,9 @@ Ponownie pobrano najnowsze źródło i plik testów bez korzystania z tekstu akt
 
 Wcześniejsze przebiegi po źródłowym commicie `dfbb56d87399518b1c236e5c9df82a866e7fbe7c` przeszły wszystkie trzy kontrole. Po ostatnich zmianach (usunięcie komentarza i dołożenie testów) końcowy zestaw CI dla commita `7166ac69a589f9090bcf35be429cb46d88d10365` jest weryfikowany. Po uzyskaniu wyników należy dopisać ostateczne adresy przebiegów i status rozdziału.
 
-**Wniosek matematyczny:** audyt IV czysty. Status formalny: **oczekuje na potwierdzenie ostatniego CI**, po którym możliwe jest zamknięcie TOP-15 jako stabilnego. Następny w kolejności jest TOP-16. Automatyzacje nadal są wyłączone.
+**Końcowe wyniki GitHub Actions:**
+- [Algebraic topology chapters 15–16 TeX audit — pełna kompilacja TOP-01–16](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44929889390) — **completed / success**, commit `7166ac69`, obejmujący nowe testy i aktualne źródło.
+- [Mathematical library application checks — aplikacja i regresje](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44929889326) — **completed / success**, ten sam commit `7166ac69`.
+- [AT–DG–AG cross-volume dependency and label audit](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/44929854516) — **completed / success**, commit źródła `e4b06e8a`. Późniejszy commit zmienił tylko plik testów, nie matematyczne źródło, więc wynik dotyczy aktualnego TOP-15.
+
+**Decyzja końcowa:** audyt IV matematycznie czysty i wymagane CI zielone; **TOP-15 STABILNY PO AUDYCIE IV**. Wcześniejsze etykiety i rysunek zachowane, bez nowych twierdzeń, lematów ani tematów. Następnym rozdziałem do stabilizacji jest TOP-16. Automatyzacje pozostają wyłączone.
