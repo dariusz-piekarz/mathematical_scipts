@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from collections import Counter
-from itertools import permutations
+from itertools import permutations, product
 import json
 from pathlib import Path
 import re
@@ -37,6 +37,21 @@ class ATDG11_17Audit(unittest.TestCase):
         cls.at = AT_PATH.read_text(encoding="utf8")
         cls.dg = DG_PATH.read_text(encoding="utf8")
         cls.manifest = json.loads(MANIFEST.read_text(encoding="utf8"))
+
+    def test_oriented_rank_zero_euler_and_index_agree_in_both_books(self):
+        for source in (self.at, self.dg):
+            self.assertIn(r"$u_E=e(E)=\varepsilon\in H^0(M;\Z)$", source)
+            self.assertIn(r"\sum_x\varepsilon_x^2=\#M=\chi(M)", source)
+            self.assertIn(r"$X\in\Gamma(TM)$", source)
+            self.assertIn(r"\hookrightarrow\operatorname{int}M", source)
+            self.assertNotIn(
+                r"Dla rzędu zero przyjmujemy $S(E)=\varnothing$", source
+            )
+        for n in range(7):
+            for signs in product((-1, 1), repeat=n):
+                # Fundamental coefficients and the Euler class have equal
+                # signs, so their evaluation is orientation-independent.
+                self.assertEqual(sum(a*a for a in signs), n)
 
     def test_graph_of_degree_d_has_even_self_intersection(self):
         # Q_{S2 x S2} is the hyperbolic intersection form.
