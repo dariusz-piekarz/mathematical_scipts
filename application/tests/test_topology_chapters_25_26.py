@@ -177,5 +177,44 @@ class TopologyTwentyFiveTwentySixAudit(unittest.TestCase):
         self.assertIn("nie dowodem istnienia granicznej filtracji", b)
 
 
+    def test_integral_cyclic_monodromy_and_derived_obstruction(self):
+        # For f(z)=z^m the reduced integral homology has rank m-1,
+        # and det(I-T)=m.  The cokernel is cyclic of order m.
+        source = self.src["25"]
+        self.assertIn(r"\det(I-T|_{\widetilde H_0", source)
+        self.assertIn(r"\Z/m\Z", source)
+        self.assertIn(r"\mathbb H^3(S^2,K_e)", source)
+        for m in range(2, 16):
+            n = m - 1
+            # On b_j=e_j-e_{j+1}, T(b_j)=b_{j+1} (j<n-1)
+            # and T(b_{n-1})=-sum_j b_j.
+            matrix = [[(1 if i == j else 0) -
+                       (-1 if j == n-1 else 1 if i == j+1 else 0)
+                       for j in range(n)] for i in range(n)]
+            # Fraction-free Bareiss elimination computes det over Z.
+            prev = 1
+            for k in range(n-1):
+                pivot = matrix[k][k]
+                self.assertNotEqual(pivot, 0)
+                for i in range(k+1, n):
+                    for j in range(k+1, n):
+                        value = (matrix[i][j]*pivot -
+                                 matrix[i][k]*matrix[k][j])
+                        self.assertEqual(value % prev, 0)
+                        matrix[i][j] = value // prev
+                for i in range(k+1, n):
+                    matrix[i][k] = 0
+                prev = pivot
+            self.assertEqual(matrix[n-1][n-1], m)
+
+    def test_legendre_unipotent_not_finite_order(self):
+        # Base change multiplies N rather than killing it for N != 0.
+        source = self.src["26"]
+        self.assertIn(r"T^q=I+qN\ne I", source)
+        for q in range(1, 24):
+            self.assertNotEqual(((1, 2*q), (0, 1)),
+                                ((1, 0), (0, 1)))
+
+
 if __name__ == "__main__":
     unittest.main()
