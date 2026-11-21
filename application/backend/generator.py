@@ -20,7 +20,7 @@ from typing import Any
 
 REF_RE = re.compile(r'\\(ref|eqref|pageref|autoref|nameref|cref|Cref|vref|Vref)\s*\{([^{}]+)\}')
 LABEL_RE = re.compile(r'\\label\s*\{([^{}]+)\}')
-MODULE_ID = re.compile(r'^[A-Za-z][A-Za-z0-9]*-[0-9]{2}[AB]?
+MODULE_ID = re.compile(r'^[A-Za-z][A-Za-z0-9]*-[0-9]{2}[AB]?$')
 PROJECT_TEMPLATE_KEYS = {
     'ALG': 'ALG', 'AT': 'ALG', 'TOP': 'TOP', 'GW': 'GW',
     'GA': 'GA', 'KAT': 'KAT', 'MOD': 'MOD', 'CAL': 'CAL',
