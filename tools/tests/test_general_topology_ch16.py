@@ -40,9 +40,14 @@ def test_sources():
         "def:topog-uzwarcenia-rownowaznosc",
         "prop:topog-uzwarcenia-homeomorfizm-jednoznaczny",
         "prop:topog-uzwarcenia-zwarta",
+        "def:topog-uzwarcenia-porzadek",
+        "prop:topog-uzwarcenia-porzadek-klasy",
         "ex:topog-uzwarcenia-dwa-przedzialu",
     ):
         assert r"\label{"+name+"}" in text, name
+    assert r"p\circ e_1=e_2" in text
+    assert r"q\circ p=\mathrm{id}_{K_1}" in text
+    assert r"(S^1,e_2)\preccurlyeq([0,1],e_1)" in text
     for env in ("definicja","twierdzenie","stwierdzenie","przyklad","uwaga","proof","enumerate"):
         assert text.count(r"\begin{"+env+"}") == text.count(r"\end{"+env+"}")
     books = json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))["books"]
