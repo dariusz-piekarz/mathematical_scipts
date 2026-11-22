@@ -72,6 +72,8 @@ class ParsingTests(unittest.TestCase):
         code = inspection.make_instrumentation(["theorem_x"], TOKEN, classified=True)
         self.assertIn("info.type.getUsedConstantsAsSet.toList", code)
         self.assertIn("info.value? true", code)
+        self.assertIn("let valueConstants : List Name", code)
+        self.assertIn("toString valueConstants.length", code)
         self.assertIn(f"{TOKEN} TYPE_BEGIN theorem_x", code)
         self.assertIn(f"{TOKEN} VALUE_BEGIN theorem_x", code)
 
