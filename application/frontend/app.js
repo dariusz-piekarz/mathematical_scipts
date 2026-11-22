@@ -668,8 +668,12 @@ async function loadLeanFragment(query){
 }
 function renderLeanFragment(result){
   $("leanEmpty").classList.add("hidden");$("leanResult").classList.remove("hidden");
+  const scopeNote=result.source_linkage==="proof_of_adjacent_theorem"?
+    " · Kod dotyczy twierdzenia poprzedzającego ten dowód, nie automatycznej transkrypcji rozumowania.":
+    result.source_linkage==="contains_theorem"?
+    " · Kod dotyczy twierdzenia zawartego w zaznaczeniu.":"";
   $("leanSourceInfo").textContent=result.source_module+" · wiersze "+result.start_line+
-    "–"+result.end_line+(result.source_labels.length?" · "+result.source_labels.join(", "):"");
+    "–"+result.end_line+(result.source_labels.length?" · "+result.source_labels.join(", "):"")+scopeNote;
   $("leanLatex").textContent=result.source_latex;
   $("leanCode").textContent=result.lean_code||"Brak powiązanej formalizacji Lean dla tego fragmentu.";
   const statuses=$("leanStatuses");statuses.replaceChildren();
