@@ -1,6 +1,6 @@
 # Globalny audyt algebry liniowej — status rozdziałów
 
-**Stan po iteracji 08/09**, 22 listopada 2026.
+**Stan po iteracji 09/09 (częściowa weryfikacja)**, 22 listopada 2026.
 
 | Rozdział | Status |
 |---|---|
@@ -37,4 +37,8 @@
 | 31 | 08: zweryfikowano nakrycia Pin/Spin, chiralość, warunki przejścia i klasę w2; CI i wizualny PDF do kontroli |
 | 32 | 08: dopisano rachunek w mapie przy nieskończoności i sprawdzono incydencję oraz Plückera; CI i wizualny PDF do kontroli |
 
-Iteracje 01–08 wykonane; iteracja 09 oczekuje. W iteracji 08 uzupełniono dowód Hausdorffowości przestrzeni rzutowej w LA29 oraz gładkości stereografii w punkcie nieskończonym w LA32. Weryfikacja PDF/CI dla zmian iteracji 08 i niezależna inspekcja rysunków pozostają otwarte. Dotychczasowe otwarte kontrole wizualne nie są uznane za zamknięte.
+Iteracje 01–08 mają raporty; iteracja 09 wykonała kontrolę struktury 32 plików, próbkę 8 rozdziałów oraz weryfikację CI dla iteracji 08. Globalny audyt matematyczny i wizualny PDF nadal NIE są zamknięte.
+
+
+## Wynik iteracji 09
+Raport: `iteration_09.md`. Zgodność 32 plików i 32 instrukcji `\\input` potwierdzona; źródła 8 rozdziałów próbkowane; CI dla commitu iteracji 08 SUCCESS. Pełny przegląd wszystkich odsyłaczy, dowodów i renderowanych rysunków nie został wykonany. Żaden rozdział nie uzyskał nowego statusu „ostatecznie czysty” wyłącznie na tej podstawie.
