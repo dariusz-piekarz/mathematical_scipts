@@ -629,7 +629,7 @@ function renderConceptEvidence(data){
 
 /* Lean 4: exact indexed source -> registered formalization. No client code execution. */
 const leanStatementLabels={
-  unreviewed:"Nieprzejrzana",needs_review:"Wymaga przeglądu",approved:"Zatwierdzona"
+  unreviewed:"Nieprzejrzana",needs_review:"Wymaga przeglądu",approved:"Zatwierdzona dla wskazanej wersji źródła"
 };
 const leanFormalizationLabels={
   missing:"Brak formalizacji",draft:"Szkic (bez SHA źródła)",
@@ -673,7 +673,9 @@ function renderLeanFragment(result){
     result.source_linkage==="contains_theorem"?
     " · Kod dotyczy twierdzenia zawartego w zaznaczeniu.":"";
   $("leanSourceInfo").textContent=result.source_module+" · wiersze "+result.start_line+
-    "–"+result.end_line+(result.source_labels.length?" · "+result.source_labels.join(", "):"")+scopeNote;
+    "–"+result.end_line+(result.source_labels.length?" · "+result.source_labels.join(", "):"")+scopeNote+
+    (result.lean_theorems?.length?" · Twierdzenia Lean: "+result.lean_theorems.join(", "):"")+
+    (result.source_document_sha256?" · SHA256 źródła: "+result.source_document_sha256.slice(0,12)+"…":"");
   $("leanLatex").textContent=result.source_latex;
   $("leanCode").textContent=result.lean_code||"Brak powiązanej formalizacji Lean dla tego fragmentu.";
   const statuses=$("leanStatuses");statuses.replaceChildren();
