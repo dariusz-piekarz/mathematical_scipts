@@ -123,7 +123,7 @@ def test_source():
     assert r"\input{../../" + CH + "}" in entry
     assert r"\input{../../" + CH + "}" in book
     assert r"\setcounter{chapter}{23}" in entry
-    assert "rozdziały 01–23 stabilne; rozdział 24 w audycie" in book
+    assert "Wersja 1.24 — rozdziały 01–24 stabilne" in book
     labels = re.findall(r"\\label\{([^}]+)\}", chapter)
     refs = re.findall(r"\\(?:ref|eqref|pageref)\{([^}]+)\}", chapter)
     assert len(labels) == len(set(labels)) and len(labels) >= 30
