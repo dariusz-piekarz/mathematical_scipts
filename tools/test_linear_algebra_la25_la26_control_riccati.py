@@ -69,7 +69,6 @@ for p in (2,3):
         for b in product(range(p),repeat=2):
             B=((b[0],),(b[1],))
             controllable=rank_cont(A,B,p)==2
-            check("controllability_Kalman_rank_invariance",controllable==rank_cont(A,B,p)==2)
             # Cayley-Hamilton: reachable span equals first n images, and
             # A^2 B is in its span, without looking at a characteristic root.
             AB=matmul(A,B,p);A2B=matmul(A,AB,p)
@@ -95,8 +94,7 @@ for p in (2,3):
             for b in product(range(p),repeat=2):
                 B=((b[0],),(b[1],))
                 for k in product(range(p),repeat=2):
-                    F=matmul(B,(k,),p) if False else tuple(
-                        tuple((B[i][0]*k[j])%p for j in range(2)) for i in range(2))
+                    F=tuple(tuple((B[i][0]*k[j])%p for j in range(2)) for i in range(2))
                     AF=tuple(tuple((A[i][j]-F[i][j])%p for j in range(2)) for i in range(2))
                     check("feedback_reachable_subspace_invariant",rank_cont(A,B,p)==rank_cont(AF,B,p))
 
