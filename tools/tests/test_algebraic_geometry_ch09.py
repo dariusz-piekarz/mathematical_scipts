@@ -129,6 +129,28 @@ class ALG09Regressions(unittest.TestCase):
             r"\end{twierdzenie}", 1)[0]
         self.assertIn(r"$n\ge1$ będzie liczbą całkowitą", fs)
 
+    def test_kodaira_positive_chern_curvature_normalization(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        statement = src.split(r"\label{tw:ga9-kodaira}", 1)[1].split(
+            r"\end{twierdzenie}", 1)[0]
+        self.assertIn(r"c_1(L,h)=\frac{i}{2\pi}F_{\nabla_h}", statement)
+        self.assertIn("dodatnio", statement)
+        self.assertIn("połączenie Cherna", statement)
+
+    def test_analytic_graph_argument_includes_reduced_structure(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        proof = src.split(r"\label{wn:ga9-hol-map}", 1)[1].split(
+            r"\end{proof}", 1)[0]
+        self.assertIn("zamkniętym zredukowanym podzbiorem analitycznym", proof)
+        self.assertIn(r"\Gamma\subseteq X\times Y", proof)
+        self.assertIn("lokalnym zanurzeniu", proof)
+
+    def test_polish_chart_and_nonconstant_map_usage(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        self.assertIn("Na dowolnej mapie rzutowej", src)
+        self.assertIn("niestałych odwzorowań holomorficznych", src)
+        self.assertNotIn("Na dowolnym mapie rzutowym", src)
+
     def test_tikz_and_environment_balance(self):
         src = SOURCE.read_text(encoding="utf-8")
         self.assertEqual(src.count(r"\begin{tikzpicture}"), 2)
