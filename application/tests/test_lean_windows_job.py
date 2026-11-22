@@ -8,6 +8,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from unittest.mock import MagicMock, patch
 
@@ -190,6 +191,30 @@ class LeanWindowsJobTests(unittest.TestCase):
                 lean_process.execute_registered(
                     ["lake"], Path.cwd(), timeout=10, total_memory_mb=1024)
         job.kill_and_close.assert_called_once()
+
+    @unittest.skipUnless(sys.platform == "win32", "Native Windows Job Objects test")
+    def test_native_windows_timeout_terminates_descendants(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            destination = Path(tmp) / "survived"
+            started = Path(tmp) / "started"
+            child = (
+                "import time,pathlib;time.sleep(2);"
+                f"pathlib.Path({str(destination)!r}).write_text('survived')"
+            )
+            parent = (
+                "import subprocess,sys,pathlib,time;"
+                f"subprocess.Popen([sys.executable,'-c',{child!r}]);"
+                f"pathlib.Path({str(started)!r}).write_text('spawned');"
+                "time.sleep(60)"
+            )
+            code, log, timed_out = lean_process.execute_registered(
+                [sys.executable, "-c", parent], Path(tmp),
+                timeout=0.9, total_memory_mb=512)
+            self.assertTrue(started.exists(), log)
+            self.assertTrue(timed_out)
+            self.assertIsNone(code)
+            time.sleep(2.4)
+            self.assertFalse(destination.exists())
 
     @unittest.skipUnless(sys.platform == "win32", "Native Windows Job Objects test")
     def test_native_windows_job_memory_restriction(self):
