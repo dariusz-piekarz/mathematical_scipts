@@ -1,13 +1,13 @@
 # Geometria algebraiczna — rejestr statusów audytów
 
-**Ostatnia aktualizacja:** 2026-11-22, audyt ALG-01 nr 1.
+**Ostatnia aktualizacja:** 2026-11-22, audyt ALG-01 nr 2.
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`.
-**Następny przebieg:** **ALG-01, audyt nr 2** — kontynuować iteracje aż do osobnego audytu bez nowych usterek; ALG-00 pozostaje stabilny.
+**Następny przebieg:** **ALG-01, audyt nr 3** — kontynuować iteracje do niezależnego audytu bez nowych usterek; ALG-00 pozostaje stabilny.
 
 | ID | Rozdział | Iteracja zakończona | Status | Raport / czynność |
 | --- | --- | ---: | --- | --- |
 | ALG-00 | Teoria pierścieni — od arytmetyki do geometrii równań | **15** | **STABILNY / ZAMKNIĘTY** | [Audyt 15](2026-11-22-ALG-00-iteration-15.md) — brak nowych usterek, PDF i CI PASS |
-| ALG-01 | Geometria afiniczna — równania, ideały i twierdzenie Hilberta o zerach | **1** | **OTWARTY** | [Audyt 1](2026-11-22-ALG-01-iteration-01.md) — poprawki matematyczne, 10 testów, nowy workflow i przegląd PDF; następnie audyt 2 |
+| ALG-01 | Geometria afiniczna — równania, ideały i twierdzenie Hilberta o zerach | **2** | **OTWARTY** | [Audyt 2](2026-11-22-ALG-01-iteration-02.md) — terminologia sumy zbiorów, uzasadnienie przykładu krzywej z ostrzem; następnie audyt 3 |
 | ALG-02 | Geometria rzutowa | 0 | Oczekuje | Po ALG-01 |
 | ALG-03 | Punkty osobliwe i geometria lokalna krzywych | 0 | Oczekuje | Po ALG-02 |
 | ALG-04 | Algebra przemienna, snopy i krzywe algebraiczne | 0 | Oczekuje | Po ALG-03 |
@@ -22,4 +22,4 @@
 
 Audyt pojedynczego rozdziału powtarzać do osobnej, sceptycznej iteracji bez nowych usterek. Oprócz matematyki i języka należy sprawdzić dowody, odsyłacze, testy, kompilację LaTeX co najmniej dwukrotnie, CI oraz skład PDF i rysunki. Używać zweryfikowanych fragmentów stabilnych AA-09–AA-12 jako bazy, bez ponawiania ich pełnych audytów. Nie usuwać unikalnych przykładów, dowodów i etykiet. Aktualne wpisy w tej tabeli mają odzwierciedlać *faktycznie wykonane* audyty, nie planowane działania.
 
-Stabilne ALG-00: blob `ef3bb9cec13784d3bef6ae47de69d3a5bfd09d8b`, źródłowy commit `8fcdb668a81fc575c6b9ae11367ea93be39cade2`. 25 etykiet, 15 odsyłaczy, 6/6 regresji, 22-stronicowy PDF, 4/4 workflows PASS na tym commicie. Osobna stabilizacyjna iteracja 15 nie wprowadzała zmian w źródle.
+Stabilne matematycznie ALG-00: ostatni bezusterkowy audyt 15; po globalnej korekcie terminologicznej w audycie ALG-01/2 aktualny blob `b1550456f2f29144e11041c65b92c0525701687c` (commit `0b2302e41e9137dd777c65600084208b71657b07`). Wcześniejszy blob z audytu 15: `ef3bb9cec13784d3bef6ae47de69d3a5bfd09d8b`, źródłowy commit `8fcdb668a81fc575c6b9ae11367ea93be39cade2`. 25 etykiet, 15 odsyłaczy, 6/6 regresji, 22-stronicowy PDF, 4/4 workflows PASS na tym commicie. Osobna stabilizacyjna iteracja 15 nie wprowadzała zmian w źródle.
