@@ -208,6 +208,63 @@ class TestContinuumForcingChapter34(unittest.TestCase):
         self.assertIn("maksymalność", TEXT)
         self.assertIn("Zastosowanie aksjomatu wyboru", TEXT)
 
+    def test_exhaustive_maximal_antichains_in_finite_tree(self):
+        # The key ccc proof implication is tested for *every* dense
+        # subset D below p and every maximal antichain A contained in D,
+        # not just an illustrative chosen antichain.
+        P = ((), (0,), (1,), (0, 0), (0, 1), (1, 0), (1, 1))
+
+        def below(q, p):
+            return q[:len(p)] == p
+
+        def compatible(q, p):
+            return any(below(r, q) and below(r, p) for r in P)
+
+        def subfamilies(items):
+            return (
+                frozenset(x)
+                for k in range(len(items) + 1)
+                for x in combinations(items, k)
+            )
+
+        dense_count = 0
+        maximal_count = 0
+        for p in P:
+            cone = tuple(q for q in P if below(q, p))
+            for D in subfamilies(cone):
+                if not all(any(below(d, q) for d in D) for q in cone):
+                    continue
+                dense_count += 1
+                for A in subfamilies(tuple(D)):
+                    if any(compatible(a, b) for a, b in combinations(A, 2)):
+                        continue
+                    if any(
+                        not any(compatible(d, a) for a in A) for d in D
+                    ):
+                        continue
+                    maximal_count += 1
+                    # Maximality within D gives predensity below p.
+                    self.assertTrue(all(
+                        any(compatible(q, a) for a in A) for q in cone
+                    ))
+                    # Local predensity gives a globally dense E.
+                    E = {
+                        q for q in P
+                        if any(below(q, a) for a in A)
+                        or not compatible(q, p)
+                    }
+                    self.assertTrue(all(
+                        any(below(s, q) for s in E) for q in P
+                    ))
+                    # Every generic branch containing p meets A
+                    # in exactly one condition.
+                    for leaf in P[-4:]:
+                        G = {q for q in P if below(leaf, q)}
+                        if p in G:
+                            self.assertEqual(len(A & G), 1)
+        self.assertEqual(dense_count, 16)
+        self.assertEqual(maximal_count, 32)
+
     def test_countable_closure_proof_restarts_below_every_condition(self):
         # Finite analogue of the corrected density argument:
         # every initial partial condition has a common strengthening
