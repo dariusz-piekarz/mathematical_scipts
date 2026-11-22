@@ -55,7 +55,7 @@ class TestContinuumForcingChapter34(unittest.TestCase):
                 r"\\label\{([^}]+)\}", source.read_text("utf8")
             ))
         refs = re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", TEXT)
-        self.assertEqual(len(refs), 22)
+        self.assertEqual(len(refs), 23)
         self.assertFalse(set(refs) - all_labels, set(refs) - all_labels)
         self.assertIn("ch:constructible", refs)
         self.assertIn("thm:forcing33-zfc", refs)
@@ -164,6 +164,76 @@ class TestContinuumForcingChapter34(unittest.TestCase):
                                         for p in (a, b, c)
                                         for k, v in p.items()))
         self.assertIn(r"\label{lem:forcing34-closed-no-sequences}", TEXT)
+
+    def test_maximal_antichain_predensity_for_deciding_values(self):
+        # Finite counterpart of the ccc proof: the two conditions fixing
+        # one bit form a maximal antichain of the dense decision set.
+        conditions = [
+            {i: x for i, x in enumerate(bits) if x is not None}
+            for bits in product((None, 0, 1), repeat=3)
+        ]
+
+        def strengthens(q, p):
+            return all(q.get(i) == x for i, x in p.items())
+
+        def compatible(p, q):
+            return all(p[i] == q[i] for i in p.keys() & q.keys())
+
+        checked = 0
+        for coordinate in range(3):
+            D = [p for p in conditions if coordinate in p]
+            antichain = [{coordinate: 0}, {coordinate: 1}]
+            self.assertTrue(all(p in D for p in antichain))
+            self.assertFalse(compatible(*antichain))
+            for r in conditions:
+                self.assertTrue(any(strengthens(d, r) for d in D))
+                self.assertTrue(any(compatible(r, a) for a in antichain))
+                self.assertTrue(
+                    any(
+                        strengthens(q, r) and
+                        any(strengthens(q, a) for a in antichain)
+                        for q in conditions
+                    )
+                )
+                checked += 1
+            for bits in product((0, 1), repeat=3):
+                G = [
+                    p for p in conditions
+                    if all(bits[i] == v for i, v in p.items())
+                ]
+                meeting = [a for a in antichain if a in G]
+                self.assertEqual(len(meeting), 1)
+                self.assertEqual(meeting[0][coordinate], bits[coordinate])
+        self.assertEqual(checked, 81)
+        self.assertIn("maksymalność", TEXT)
+        self.assertIn("Zastosowanie aksjomatu wyboru", TEXT)
+
+    def test_countable_closure_proof_restarts_below_every_condition(self):
+        # Finite analogue of the corrected density argument:
+        # every initial partial condition has a common strengthening
+        # deciding all four coordinates, not merely the top condition.
+        cases = 0
+        for bits in product((None, 0, 1), repeat=4):
+            initial = {
+                n: value for n, value in enumerate(bits)
+                if value is not None
+            }
+            chain = [initial]
+            for n in range(4):
+                next_condition = dict(chain[-1])
+                next_condition.setdefault(n, 0)
+                chain.append(next_condition)
+            lower_bound = chain[-1]
+            self.assertEqual(set(lower_bound), set(range(4)))
+            for previous in chain:
+                self.assertTrue(all(
+                    lower_bound[n] == v for n, v in previous.items()
+                ))
+            cases += 1
+        self.assertEqual(cases, 81)
+        self.assertIn(r"\emph{dowolny}", TEXT)
+        self.assertIn(r"q\Vdash\dot f=\check g", TEXT)
+        self.assertIn("gęsty poniżej $p$", TEXT)
 
     def test_collapse_dense_value_and_coordinate_sets(self):
         # Finite analogue of extending a countable domain inside omega_1:
