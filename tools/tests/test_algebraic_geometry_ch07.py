@@ -32,7 +32,7 @@ class ALG07Regressions(unittest.TestCase):
                 points_d = {
                     (x, y) for x in range(p) for y in range(p)
                     if (x, y) != (0, 0)
-                    and (y if m == 1 else -pow(x, m, p)) % p == 0
+                    and ((y-x) if m == 1 else -pow(x, m, p)) % p == 0
                 }
                 self.assertFalse(any((x, y) in points_d for x, y in points_c))
                 if m == 1:
