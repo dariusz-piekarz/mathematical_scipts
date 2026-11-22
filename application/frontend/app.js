@@ -877,9 +877,12 @@ function renderLeanInspection(result){
     }
     target.append(group);
   }
+  const snapshot=result.inspection_snapshot_sha256;
   target.append(node("p",{className:"doc-meta"},
     "Metoda: "+result.extraction_method+" · "+
     (result.type_constants?"Referencje bezpośrednie z typu i wartości, bez domknięcia przechodniego · ":"")+
+    (typeof snapshot==="string"&&/^[0-9a-f]{64}$/.test(snapshot)?
+      "Identyfikator migawki danych: "+snapshot.slice(0,16)+" (nie jest certyfikatem) · ":"")+
     "certyfikat: NIE."));
 }
 async function inspectLeanConstants(){
