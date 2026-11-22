@@ -241,6 +241,134 @@ class TestBooleanModelsChapter35(unittest.TestCase):
         self.assertEqual(count, {2: 4, 3: 29, 4: 355})
         self.assertIn(r"\operatorname{RO}(\mathbb P)", TEXT)
 
+    def test_atomic_forcing_truth_for_all_small_preorders(self):
+        # Check the original order-theoretic clauses from chapter 33
+        # against the Boolean recursion, without assuming separativity.
+        from itertools import product
+
+        count, identities = {}, 0
+        for n in (2, 3):
+            off = [(i, j) for i in range(n)
+                   for j in range(n) if i != j]
+            count[n] = 0
+            for bits in product((0, 1), repeat=len(off)):
+                order = {(i, i) for i in range(n)}
+                order.update(pair for pair, bit in zip(off, bits) if bit)
+                if any((a, c) not in order
+                       for a, b in order
+                       for b2, c in order if b == b2):
+                    continue
+                count[n] += 1
+                P = range(n)
+                down = {p: frozenset(q for q in P if (q, p) in order)
+                        for p in P}
+
+                def closure(s):
+                    return frozenset(p for p in P if down[p] & s)
+
+                def interior(s):
+                    return frozenset(p for p in P if down[p] <= s)
+
+                def ro(s):
+                    return interior(closure(s))
+
+                def join(*args):
+                    return ro(frozenset().union(*args))
+
+                def neg(s):
+                    return interior(set(P) - closure(s))
+
+                def implies(a, b):
+                    return join(neg(a), b)
+
+                embed = {p: ro(down[p]) for p in P}
+                zero = frozenset()
+
+                @lru_cache(None)
+                def translated(name):
+                    co = {}
+                    for child, p in name:
+                        key = translated(child)
+                        co[key] = join(co.get(key, zero), embed[p])
+                    return frozenset(co.items())
+
+                @lru_cache(None)
+                def boolean_member(a, b):
+                    return join(*(coef & boolean_equal(a, child)
+                                  for child, coef in b))
+
+                @lru_cache(None)
+                def boolean_equal(a, b):
+                    value = frozenset(P)
+                    for child, coef in a:
+                        value &= implies(coef, boolean_member(child, b))
+                    for child, coef in b:
+                        value &= implies(coef, boolean_member(child, a))
+                    return value
+
+                @lru_cache(None)
+                def order_member(p, a, b):
+                    return all(
+                        any((r, q) in order and (r, s) in order
+                            and order_equal(r, a, child)
+                            for r in P for child, s in b)
+                        for q in P if (q, p) in order
+                    )
+
+                @lru_cache(None)
+                def order_equal(p, a, b):
+                    return (
+                        all(
+                            any((r, q) in order
+                                and order_member(r, child, b)
+                                for r in P)
+                            for child, s in a
+                            for q in P
+                            if (q, p) in order and (q, s) in order
+                        )
+                        and all(
+                            any((r, q) in order
+                                and order_member(r, child, a)
+                                for r in P)
+                            for child, s in b
+                            for q in P
+                            if (q, p) in order and (q, s) in order
+                        )
+                    )
+
+                empty = frozenset()
+                first = [
+                    frozenset((empty, p) for p in P if mask & (1 << p))
+                    for mask in range(1 << n)
+                ]
+                second = [
+                    frozenset({(first[j], p)})
+                    for j in range(min(3, len(first))) for p in P
+                ]
+                second.append(frozenset({
+                    (first[1], 0), (first[2], min(1, n - 1))
+                }))
+                names = list(dict.fromkeys(first + second))
+                for a in names:
+                    for b in names:
+                        for p in P:
+                            with self.subTest(n=n, p=p, a=a, b=b):
+                                self.assertEqual(
+                                    order_member(p, a, b),
+                                    embed[p] <= boolean_member(
+                                        translated(a), translated(b)
+                                    )
+                                )
+                                self.assertEqual(
+                                    order_equal(p, a, b),
+                                    embed[p] <= boolean_equal(
+                                        translated(a), translated(b)
+                                    )
+                                )
+                            identities += 2
+        self.assertEqual(count, {2: 4, 3: 29})
+        self.assertEqual(identities, 40446)
+
     def test_exhaustive_four_valued_atomic_truth(self):
         # B=P({0,1}) encoded as bitmasks 0,1,2,3.
         # Truth at the principal ultrafilter on atom 1/2 must coincide
