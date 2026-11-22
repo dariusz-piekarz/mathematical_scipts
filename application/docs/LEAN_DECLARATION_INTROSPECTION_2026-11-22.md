@@ -19,6 +19,7 @@ Metoda Lean zwraca stałe syntaktycznie występujące w rozbudowanym wyrażeniu 
 
 - Testy jednostkowe symulują proces narzędzia i kontrolują obsługę niekompletnego, fałszywego lub uciętego strumienia; **nie są dowodem rzeczywistej kompilacji poleceń MetaM w Lean 4.26.0**.
 - Kiedy Lean/Lake jest niedostępny, interfejs zwraca `toolchain_unavailable` albo `blocked`; **nie deklarować `complete` bez rzeczywistego uruchomienia**.
+- Dodano `application/tests/test_lean_introspection_real.py`, który uruchamia rzeczywisty `lake env lean` i weryfikuje kompletny raport dla `lst01_de_morgan_and`, **jeśli** na hoście istnieją Lake i lokalnie pobrana Mathlib. Bez tych warunków test jest oznaczany jako `skipped`, nigdy `PASS` rzeczywistego Lean. Polecenie: `cd application && python -m unittest tests.test_lean_introspection_real -v`.
 - Potrzebny jest osobny smoke test kompilacji wygenerowanej części `run_meta` w przypiętym Lean 4.26.0 / Mathlib. Do czasu udanego testu kompatybilność konkretnego wyrażenia metaprogramistycznego pozostaje niepotwierdzona.
 - Brak sandboxu dla kodu nieufnego, ryzyko TOCTOU i niepełne pokrycie przechodnich zależności pozostają otwarte; używać tylko na lokalnym, zaufanym serwerze.
 
