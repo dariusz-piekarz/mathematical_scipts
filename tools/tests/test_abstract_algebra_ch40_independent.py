@@ -8,7 +8,8 @@ from pathlib import Path
 import sympy as sp
 
 x=sp.Symbol('x')
-SOURCE=Path(os.environ.get('AA40_SOURCE','/mnt/data/AA-40-audyt-II-zrodlo.tex'))
+REPO_SOURCE=Path(__file__).resolve().parents[2] / 'chapters/pl/abstract_algebra/40-calokowitosc-i-twierdzenia-o-idealach-pierwszych.tex'
+SOURCE=Path(os.environ.get('AA40_SOURCE',str(REPO_SOURCE if REPO_SOURCE.exists() else '/mnt/data/AA-40-audyt-II-zrodlo.tex')))
 
 def tex(): return SOURCE.read_text(encoding='utf8')
 
