@@ -274,7 +274,7 @@ class TestChapter33(unittest.TestCase):
         self.assertIn(r"\mathbb P\times N_{\gamma+1}^M", TEXT)
         self.assertIn("zastępowania", TEXT)
         self.assertIn("aksjomatu wyboru w $M$", TEXT)
-        self.assertIn("ze zbioru $J$", TEXT)
+        self.assertIn(r"\emph{zbioru} $J$", TEXT)
 
     def test_finite_names_singleton_pair_ordered_pair(self):
         top = "T"
