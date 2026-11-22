@@ -157,5 +157,8 @@ bez kolizji elementów, ostrzeżeń LaTeX i osieroconego akapitu.
 Raporty: [02](../../audits/general_topology/22-zbieznosc-zbiorow-iteracja-02.md),
 [03](../../audits/general_topology/22-zbieznosc-zbiorow-iteracja-03.md),
 [04](../../audits/general_topology/22-zbieznosc-zbiorow-iteracja-04.md).
-Po aktualizacji strony tytułowej należy sprawdzić jeszcze
-jej końcowe CI przed deklaracją integralności całej książki.
+Końcowa walidacja 45047835224 (https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45047835224)
+zakończyła się completed/success po aktualizacji strony tytułowej
+i testów regresyjnych. Pobraną pełną książkę 1.22
+(156 stron A4) sprawdzono pod kątem zgodności tytułu,
+paginacji końcowego rozdziału i poprawności PDF.
