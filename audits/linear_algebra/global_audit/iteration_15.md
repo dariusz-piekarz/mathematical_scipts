@@ -53,10 +53,10 @@ W tej iteracji odczytano wszystkie cztery rozdziały, a szczegółowo analizowan
 Uruchomiono skrypt **/mnt/data/la_global15_crosscheck.py**, 235 wierszy, seed 20261122, SHA256 **b079bc2ef5ec36025e07d79453170f27e1a75167fc49a64c298e82dcffa3955b**.
 
 - **94 093/94 093 PASS**, 0 FAIL. Szczegóły asercji i liczby w pliku /mnt/data/la_global15_crosscheck.log.
-- LA29: testy różnych wymiarów i map, projekcji oraz ich pochodnych; rekonstrukcja parametrów z minorów i relacja Plückera. Łącznie **11 725** asercji.
+- LA29: testy różnych wymiarów i map, projekcji oraz ich pochodnych; rekonstrukcja parametrów z minorów i relacja Plückera. Łącznie **12 670** asercji.
 - LA30: dokładna łączność iloczynu bazowego algebry Clifforda (m.in. wszystkie 32³ trójki w n=5), relacje spolaryzowane i reprezentacja na Λ(V). **38 747** asercji.
 - LA31: losowe odbicia Pin/Spin w R², R³, R⁴, sprawdzenie chiralności w C⁴ i reprezentacji Blocha. **9 637** asercji.
-- LA32: relacje Segrego/Kleina, incydencja, symboliczny wzór Penrose'a, J²=−I, niezmienniczość rzutowa i stereografia HP¹. **33 984** asercje.
+- LA32: relacje Segrego/Kleina, incydencja, symboliczny wzór Penrose'a, J²=−I, niezmienniczość rzutowa i stereografia HP¹. **33 039** asercji.
 - Obliczenia oparte na liczbach zmiennoprzecinkowych mają tolerancję numeryczną; część algebraiczna Clifforda używa całkowitych współczynników i pełnej enumeracji wybranych wymiarów, a część Penrose'a symboliczną arytmetykę SymPy. Żadna skończona liczba testów nie jest formalnym dowodem wszystkich twierdzeń.
 
 ## 4. Nowy rejestr wszystkich dowodów
