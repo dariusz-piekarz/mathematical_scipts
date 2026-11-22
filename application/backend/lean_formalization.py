@@ -80,7 +80,21 @@ def _find_source(con: sqlite3.Connection, *, entity_id: str | None,
         content = d["content"][e["start_offset"]:e["end_offset"]]
         labels = [row[0] for row in con.execute(
             "SELECT name FROM labels WHERE entity_id=? ORDER BY offset", (entity_id,))]
-        return d, content, labels, e["start_line"], e["end_line"], entity_id
+        linkage = "exact_entity"
+        # In a conventional TeX source, a proof immediately follows its theorem.
+        # Never link a proof to an unrelated earlier theorem across other text.
+        if e["kind"] == "proof" and not labels:
+            previous = con.execute(
+                "SELECT id,end_offset FROM entities WHERE document_id=? AND kind='theorem' "
+                "AND end_offset<=? ORDER BY end_offset DESC LIMIT 1",
+                (d["id"], e["start_offset"])).fetchone()
+            if previous and not d["content"][previous["end_offset"]:e["start_offset"]].strip():
+                labels = [row[0] for row in con.execute(
+                    "SELECT name FROM labels WHERE entity_id=? ORDER BY offset",
+                    (previous["id"],))]
+                if labels:
+                    linkage = "proof_of_adjacent_theorem"
+        return d, content, labels, e["start_line"], e["end_line"], entity_id, linkage
     if not module_id or start_line is None or end_line is None:
         raise HTTPException(400, "Podaj entity_id albo module_id wraz z start_line i end_line.")
     if not (1 <= start_line <= end_line and end_line - start_line <= 300):
@@ -103,7 +117,7 @@ def _find_source(con: sqlite3.Connection, *, entity_id: str | None,
     for eid in ids:
         labels.extend(row[0] for row in con.execute(
             "SELECT name FROM labels WHERE entity_id=? ORDER BY offset", (eid,)))
-    return d, content, labels, start_line, end_line, None
+    return d, content, labels, start_line, end_line, None, "contains_theorem"
 
 
 def _matches(item: dict[str, Any], d: sqlite3.Row, labels: list[str]) -> bool:
@@ -113,7 +127,7 @@ def _matches(item: dict[str, Any], d: sqlite3.Row, labels: list[str]) -> bool:
 def fragment(con: sqlite3.Connection, *, entity_id: str | None = None,
              module_id: str | None = None, start_line: int | None = None,
              end_line: int | None = None, lean_root: Path = LEAN_ROOT) -> dict[str, Any]:
-    d, content, labels, first, last, eid = _find_source(
+    d, content, labels, first, last, eid, linkage = _find_source(
         con, entity_id=entity_id, module_id=module_id,
         start_line=start_line, end_line=end_line)
     if len(content) > MAX_SOURCE_CHARS:
@@ -121,7 +135,7 @@ def fragment(con: sqlite3.Connection, *, entity_id: str | None = None,
     matches = [r for r in _registry(lean_root) if _matches(r, d, labels)]
     if len(matches) > 1:
         raise HTTPException(409, "Wiele formalizacji pasuje do tego fragmentu; wymagane rozstrzygnięcie.")
-    base = {"source_module": d["id"], "source_entity": eid,
+    base = {"source_module": d["id"], "source_entity": eid, "source_linkage": linkage,
             "source_labels": labels, "start_line": first, "end_line": last,
             "source_latex": content, "source_sha256": hashlib.sha256(content.encode("utf-8")).hexdigest(),
             "formalization_status": "missing", "statement_status": "unreviewed",
