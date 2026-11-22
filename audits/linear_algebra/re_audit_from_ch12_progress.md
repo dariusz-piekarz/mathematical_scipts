@@ -8,10 +8,10 @@
 
 ## Stan wykonania
 
-- Bieżący rozdział: **19**.
-- Ostatni zamknięty blob (rozdział 18): **ef815633cf3a1f795d912c510fbc8575f21e464d**.
-- Liczba kolejnych czystych audytów (bieżący rozdział 19): **1**.
-- Kolejne działanie: **wykonać audyt 04 rozdziału 19** na niezmienionym blobie `dd289d5c86452910a89d60ddfbcc558ef6d5be85`. Audyt 03 czysty; licznik czystych audytów po ostatniej zmianie: 1/2. Dedykowane CI success (run 45020307205).
+- Bieżący rozdział: **20**.
+- Ostatni zamknięty blob (rozdział 19): **dd289d5c86452910a89d60ddfbcc558ef6d5be85**.
+- Liczba kolejnych czystych audytów (bieżący rozdział 20): **0**.
+- Kolejne działanie: **wykonać ponowny audyt 01 rozdziału 20**. Rozdział 19 zamknięty po dwóch kolejnych czystych audytach 03–04 bloba `dd289d5c86452910a89d60ddfbcc558ef6d5be85` i dedykowanym CI success (run 45020307205).
 - Historyczne audyty, w tym ręczne audyty rozdziałów 13–15 z 22 listopada, pozostają ważnymi źródłami, ale **nie są automatycznie liczone** jako wykonanie nowego przebiegu.
 
 ## Tabela statusów
@@ -25,8 +25,8 @@
 | 16 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `4f8da3c4b87b87ee8f8e6f7c7504637485c6e09a` |
 | 17 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `05b93309d0e444f1c3fcbe3489cfd98a0f02846f` |
 | 18 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `ef815633cf3a1f795d912c510fbc8575f21e464d` |
-| 19 | OTWARTY; audyt 03 czysty po poprawkach audytu 02, dedykowane CI success | 1 | `dd289d5c86452910a89d60ddfbcc558ef6d5be85` |
-| 20 | W kolejce | 0 | — |
+| 19 | STABILNY; audyty 03 i 04 czyste, CI success | 2 | `dd289d5c86452910a89d60ddfbcc558ef6d5be85` |
+| 20 | BIEŻĄCY; ponowny audyt 01 do wykonania | 0 | — |
 | 21 | W kolejce | 0 | — |
 | 22 | W kolejce | 0 | — |
 | 23 | W kolejce | 0 | — |
@@ -179,3 +179,10 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - Raport: [19_iteration_03_2026-11-22.md](re_audit_from_ch12/19_iteration_03_2026-11-22.md), [commit c6b1450](https://github.com/dariusz-piekarz/mathematical_scipts/commit/c6b1450433a735a79b4d0516a7f599cc830ba39d).
 - Dedykowane CI: [run 45020307205](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45020307205), completed/success na commicie `b52330c2ca5497b4612cf320f49f1898e527729b` z identycznym blobem.
 - Następny: rozdział **19**, audyt 04; jeśli czysty na niezmienionym blobie, zamknąć jako stabilny i przejść do 20.
+
+## Ostatnia rzeczywista iteracja — 2026-11-22 (rozdział 19, audyt 04)
+
+- Rozdział **19: STABILNY (2/2)**, niezmieniony blob `dd289d5c86452910a89d60ddfbcc558ef6d5be85`. Audyty 03 i 04 czyste na tym samym źródle po ostatniej poprawce.
+- Raport: [19_iteration_04_2026-11-22.md](re_audit_from_ch12/19_iteration_04_2026-11-22.md); 1730 lokalnych przypadków PASS, w tym niezależne operacje unimodularne i bloki stopnia 4; 20 etykiet bez duplikatów, 14 poprawnych odsyłaczy. Nie edytowano źródła w audytach 03–04.
+- Dedykowane [CI 45020307205](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45020307205) completed/success dla commitu `b52330c2ca5497b4612cf320f49f1898e527729b`, ten sam blob rozdziału 19; 43 kroki joba, dwa warunkowo pominięte.
+- Następny: rozdział **20**, audyt 01.
