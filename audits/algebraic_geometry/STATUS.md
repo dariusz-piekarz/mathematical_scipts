@@ -1,11 +1,11 @@
 # Geometria algebraiczna — rejestr statusów audytów
 
-> **Aktualizacja 2026-11-22 — po ALG-10/VII i audycie globalnym I:** ALG-00–09 pozostają STABILNE. W ALG-10/VII wykryto i poprawiono nieścisłość definicji grupy Picarda oraz niespójny termin „ample”; źródło kanoniczne po korektach: blob `5b231c9b40ad7f547ccfb3050e3712b7be7a75b0`. Rozdział ALG-10 jest **OTWARTY** do nowych czystych reaudytów VIII i IX na tym blobie. Audyt globalny I naprawił starsze wersje ALG-00–04 w monolicie. Globalny workflow [45068819648](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45068819648) miał SUCCESS na poprzednim blobie ALG-10; najnowszy [45069448058](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45069448058) wymaga osobnego odbioru po korektach VII. Żadna pomyślna kompilacja poprzedniej wersji nie zastępuje kontroli nowej.
+> **Aktualizacja 2026-11-22 — ALG-10/IX, audyt globalny I:** Wszystkie ALG-00–ALG-10 są **STABILNE / ZAMKNIĘTE** według raportów końcowych, w tym ALG-10 po naprawczym VII oraz dwóch bezusterkowych przebiegach VIII i IX na niezmienionym blobie `5b231c9b40ad7f547ccfb3050e3712b7be7a75b0`. [Globalny CI 45069448058](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45069448058): SUCCESS, 187 testów PASS, dwa PDF po 184 strony, odsyłacze i logi PASS. **GLOBALNY AUDYT CAŁEJ KSIĄŻKI POZOSTAJE OTWARTY** mimo synchronizacji monolitu: wymaga kolejnych niezależnych kontroli przekrojowych, w tym kontroli spójności terminologicznej. Następny przebieg: globalny II; nie ALG-11.
 
 
-**Ostatnia aktualizacja:** 2026-11-22; audyt ALG-10/VII z poprawkami, audyt globalny I z naprawą monolitu.
+**Ostatnia aktualizacja:** 2026-11-22; ALG-10/IX stabilny na blobie `5b231c9b...`; globalna integracja do następnego audytu.
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`.
-**Następny przebieg:** odebrać CI/PDF bieżącego bloba ALG-10, wykonać bezusterkowy reaudyt VIII i dodatkowy audyt IX dla pewności; równolegle globalny II i III. Nie rozpoczynać ALG-11.
+**Następny przebieg:** globalny audyt II ALG-00–10 (spójność pojęć, odsyłaczy, matematyki, rysunków i dwóch PDF), następnie dodatkowa globalna kontrola; nie tworzyć ALG-11 bez odrębnej decyzji.
 
 | ID | Rozdział | Iteracja zakończona | Status | Raport / czynność |
 | --- | --- | ---: | --- | --- |
@@ -19,11 +19,11 @@
 | ALG-07 | Teoria przecięć, grupy Chowa i klasy Cherna | **9** | **STABILNY / ZAMKNIĘTY** | [Audyt IX](2026-11-22-ALG-07-iteration-09.md) — końcowa kontrola bez nowych usterek |
 | ALG-08 | Geometria biwymierna i modele minimalne | **5** | **STABILNY / ZAMKNIĘTY** | [Audyt V](2026-11-22-ALG-08-iteration-05.md) — kontrola niezależna |
 | ALG-09 | Geometria algebraiczna a analiza zespolona | **5** | **STABILNY / ZAMKNIĘTY** | [Audyt V](2026-11-22-ALG-09-iteration-05.md) — kontrola niezależna |
-| ALG-10 | Geometria algebraiczna a topologia | **7** | **OTWARTY** | [Audyt VII](2026-11-22-ALG-10-iteration-07.md) — naprawa definicji grupy Picarda i terminologii; oczekuje na dwa czyste reaudty VIII i IX tego samego bloba |
+| ALG-10 | Geometria algebraiczna a topologia | **9** | **STABILNY / ZAMKNIĘTY** | [Audyt VII](2026-11-22-ALG-10-iteration-07.md) — poprawki; [audyt VIII](2026-11-22-ALG-10-iteration-08.md) — czysty PASS; [audyt IX](2026-11-22-ALG-10-iteration-09.md) — niezależny czysty PASS (ten sam blob); globalny CI 187 PASS, 184 str. PDF |
 
 ## Audyt globalny ALG-00–10
 
-[Audyt globalny I](2026-11-22-ALG-GLOBAL-iteration-01.md): wykryto i naprawiono nieaktualne fragmenty monolitu ALG-00–04, dodano regresję zgodności i osobny workflow dla obu PDF. **Audyt globalny OTWARTY**, a ALG-10 po osobnej korekcie językowej również wymaga ponownej stabilizacji. Nie przypisywać obecnemu źródłu wcześniejszych wyników CI.
+[Audyt globalny I](2026-11-22-ALG-GLOBAL-iteration-01.md): wykryto i naprawiono nieaktualne fragmenty monolitu ALG-00–04, dodano regresję zgodności i osobny workflow dla obu PDF. **Audyt globalny OTWARTY**, ALG-10 po audytach VIII i IX jest już stabilny; audyt przekrojowy pozostaje niezależnym etapem. Nie przypisywać obecnemu źródłu wcześniejszych wyników CI.
 
 ## Metodologia
 
