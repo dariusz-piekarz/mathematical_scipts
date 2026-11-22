@@ -7,6 +7,8 @@ on:
     paths:
       - "application/lean/**"
       - "application/scripts/lean_ci_audit.py"
+      - "application/scripts/benchmark_lean_fingerprint.py"
+      - "application/tests/test_lean_fingerprint_benchmark.py"
       - "application/tests/test_lean_ci_audit.py"
       - "application/backend/lean_introspection.py"
       - "application/backend/lean_inspection_snapshot.py"
@@ -47,6 +49,7 @@ jobs:
         run: |
           python -m unittest \
             tests.test_lean_ci_audit \
+            tests.test_lean_fingerprint_benchmark \
             tests.test_lean_inspection_snapshot -v
 
       - name: Initialize pinned Lake manifest on a fresh checkout
@@ -118,6 +121,12 @@ jobs:
           LEAN_NUM_THREADS: "1"
         run: python -m unittest tests.test_lean_introspection_real -v
 
+      - name: Measure three genuine full fingerprint calls on pinned Mathlib checkout
+        working-directory: application
+        run: |
+          python scripts/benchmark_lean_fingerprint.py \
+            --samples 3 --output lean/ci_fingerprint_benchmark.json
+
       - name: Upload Lean compilation and axiom evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -127,4 +136,5 @@ jobs:
             application/lean/ci_lean_logs/*.log
             application/lean/ci_lean_report.json
             application/lean/ci_lean_files.txt
+            application/lean/ci_fingerprint_benchmark.json
           if-no-files-found: warn
