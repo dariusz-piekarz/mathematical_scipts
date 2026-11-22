@@ -130,7 +130,7 @@ class SourceProvenanceTests(unittest.TestCase):
                          ("ok", "one"))
         for field, invalid in (
                 ("document_id", "LST-02"), ("entity_id", "wrong"),
-                ("offset", self.offset + 1)):
+                ("offset", self.offset + 1), ("line", 2)):
             with self.subTest(field=field):
                 self.con.execute(f"UPDATE label_occurrences SET {field}=?",
                                  (invalid,))
@@ -139,11 +139,34 @@ class SourceProvenanceTests(unittest.TestCase):
                     ("invalid_label_binding", None))
                 self.con.execute(f"UPDATE label_occurrences SET {field}=?",
                                  ({"document_id":"LST-01", "entity_id":"one",
-                                   "offset":self.offset}[field],))
+                                   "offset":self.offset, "line":1}[field],))
         self.con.execute("INSERT INTO label_occurrences VALUES(?,?,?,?,?,?,?)",
                          ("other", LABEL, "LST-02", "other", 1, self.offset, None))
         self.assertEqual(provenance.owner_status(self.con, "LST-01", LABEL, SOURCE),
                          ("ambiguous_label", None))
+
+    def test_canonical_label_document_and_line_must_match_live_tex(self):
+        self.con.execute("ALTER TABLE labels ADD COLUMN document_id TEXT")
+        self.con.execute("ALTER TABLE labels ADD COLUMN line INTEGER")
+        self.con.execute("UPDATE labels SET document_id='LST-01', line=1")
+        self.assertEqual(provenance.owner_status(self.con, "LST-01", LABEL, SOURCE),
+                         ("ok", "one"))
+        for field, bad, good in (
+                ("document_id", "LST-02", "LST-01"),
+                ("line", 2, 1), ("line", None, 1)):
+            with self.subTest(field=field, bad=bad):
+                self.con.execute(f"UPDATE labels SET {field}=?", (bad,))
+                self.assertEqual(
+                    provenance.owner_status(self.con, "LST-01", LABEL, SOURCE),
+                    ("invalid_label_binding", None))
+                self.con.execute(f"UPDATE labels SET {field}=?", (good,))
+
+    def test_entire_label_command_must_fit_inside_theorem_span(self):
+        self.con.execute(
+            "UPDATE entities SET end_offset=?, end_line=1 WHERE id='one'",
+            (self.offset + len("\\label{thm:"),))
+        self.assertEqual(provenance.owner_status(self.con, "LST-01", LABEL, SOURCE),
+                         ("invalid_label_binding", None))
 
     def test_same_offset_distinct_conflict_owners_are_ambiguous(self):
         self.con.execute("INSERT INTO label_conflicts VALUES(?,?,?,?,?,?)", (
