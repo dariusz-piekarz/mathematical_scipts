@@ -17,7 +17,7 @@ import sqlite3
 
 from fastapi import HTTPException
 
-from backend import lean_cgroup, lean_results, lean_process, lean_run_lock, lean_windows_job
+from backend import lean_cgroup, lean_results, lean_process, lean_run_lock, lean_source_provenance, lean_windows_job
 
 LEAN_ROOT = Path(__file__).resolve().parents[1] / "lean"
 MAX_SOURCE_CHARS = 30000
@@ -216,6 +216,13 @@ def fragment(con: sqlite3.Connection, *, entity_id: str | None = None,
     if not matches:
         return base
     item = matches[0]
+    index_status, linked_entity = lean_source_provenance.owner_status(
+        con, item["source_module"], item["source_label"], d["content"])
+    if index_status != "ok":
+        raise HTTPException(409, "Niepoprawne powiązanie etykiety z obiektem: " + index_status)
+    # Exact objects must not inherit the label of a different indexed entity.
+    if linkage == "exact_entity" and linked_entity != eid:
+        raise HTTPException(409, "Etykieta należy do innego obiektu matematycznego.")
     sha_ok = item.get("source_document_sha256") == d["sha256"] if item.get("source_document_sha256") else None
     if sha_ok is not False and not _source_file_current(item, d["sha256"], lean_root):
         sha_ok = False
@@ -299,6 +306,12 @@ def run(con: sqlite3.Connection, formalization_id: str,
             hashlib.sha256(d["content"].encode("utf-8")).hexdigest() != d["sha256"]):
         return {"formalization_id": formalization_id, "proof_status": "blocked",
                 "detail": "Niezgodność treści rozdziału z SHA256 w indeksie.",
+                "certificate": False}
+    index_status, _ = lean_source_provenance.owner_status(
+        con, item["source_module"], item["source_label"], d["content"])
+    if index_status != "ok":
+        return {"formalization_id": formalization_id, "proof_status": "blocked",
+                "detail": "Niepoprawne powiązanie źródła: " + index_status,
                 "certificate": False}
     if ((item.get("source_document_sha256") and item["source_document_sha256"] != d["sha256"])
             or not _source_file_current(item, d["sha256"], lean_root)):
