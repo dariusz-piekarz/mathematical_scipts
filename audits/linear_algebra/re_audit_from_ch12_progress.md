@@ -18,7 +18,7 @@ last_source_edit_commit: f629b926d93d76f7d09018feeb0c4c06c847f928
 closure_reason: null
 next_step: audit_ch30_corrected_source_and_verify_ci
 ci_run_id: 45039090215
-ci_status_last_checked: in_progress
+ci_status_last_checked: completed_success
 -->
 
 ## Stan wykonania
@@ -51,7 +51,7 @@ ci_status_last_checked: in_progress
 | 27 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `a91dfa108d4a6ef4221b9ba24a98c87772c75d4a` |
 | 28 | STABILNY po dodatkowym audycie; 04 korekta, 05–06 czyste, CI success | 2 | `b9507aa2db7eda554446248996e7c0ae241d4e73` |
 | 29 | STABILNY; audyty 01 i 02 czyste oraz dodatkowy końcowy 03 czysty, CI success i PDF obejrzany | 3 (2+1) | `55fc55e2ff1b95838e0b2ca1c4ec0a6018af64dd` |
-| 30 | OTWARTY; audyty 01–02 na starym blobie; audyt korekcyjny 03, reset; CI nowego bloba niepotwierdzone | 0 | `6d90013dd6c66d347e5ae2ac78b4c1a194aa979e` |
+| 30 | OTWARTY; audyty 01–02 na starym blobie; audyt korekcyjny 03, reset; CI nowego bloba success, PDF sprawdzony | 0 | `6d90013dd6c66d347e5ae2ac78b4c1a194aa979e` |
 | 31 | W kolejce | 0 | — |
 | 32 | W kolejce | 0 | — |
 
@@ -312,3 +312,10 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - Niezależne testy 43 921/43 921 PASS; 11 etykiet bez kolizji, 11 odsyłaczy, 14 par środowisk. PDF bloba wejściowego: strony 293–295 obejrzane; poprawiony sam rysunek skompilowany lokalnie i obejrzany; pełny PDF **po edycji niezweryfikowany**.
 - [CI 45039090215](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45039090215), commit źródłowy `f629b926…`: **in_progress** w chwili ostatniego sprawdzenia. To **nie** jest zielony wynik. Nie zamykać rozdziału ani nie przechodzić do 31.
 - **Następny etap:** jedna nowa, sceptyczna pełna kontrola poprawionego bloba, ponowne testy, CI i gdy możliwe wizualny PDF poprawionej wersji; zamknięcie dopiero 2 kolejne czyste kontrole + oddzielna końcowa + zielony CI.
+
+
+## Potwierdzenie CI i PDF po korekcie LA-30 — 2026-11-22
+
+- [CI 45039090215](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45039090215): **completed/success**, commit `f629b926d93d76f7d09018feeb0c4c06c847f928`, potwierdzony blob LA-30 **`6d90013dd6c66d347e5ae2ac78b4c1a194aa979e`**. Dedykowany krok Clifford, testy, terminologia, dwukrotna kompilacja książki i kontrola odsyłaczy zakończyły się sukcesem.
+- Artefakt aktualnego CI pełnej książki pobrano; LA-30 to strony fizyczne **293–295**, wyodrębniono 3-stronicowy PDF i wizualnie obejrzano wszystkie strony po zmianie. Rysunek nie ma już kolizji.
+- Uzupełniono [raport audytu korekcyjnego 03](re_audit_from_ch12/30_iteration_03_corrective_2026-11-22_1636.md), [commit f570d6e](https://github.com/dariusz-piekarz/mathematical_scipts/commit/f570d6e19c7a1243ea0b37fc07574b5438edf373). **Status pozostaje OTWARTY, 0/2 czystych audytów po zmianie + niewykonany dodatkowy audyt końcowy.** Następny etap: nowy audyt całego poprawionego rozdziału 30; nie przechodzić do 31.
