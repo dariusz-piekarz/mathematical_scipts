@@ -1,6 +1,6 @@
 # Globalny audyt algebry liniowej — status rozdziałów
 
-**Stan po iteracji globalnej 28 (363/382 dowodów, trwa stabilizacja LA29 po korekcie; 1/2 czystych kontroli)**, 22 listopada 2026.  
+**Stan po iteracji globalnej 30 (363/382 dowodów; LA29 stabilny po osobnym audycie 2+1)**, 22 listopada 2026.  
 **Aktualizacja:** rozdziały 01–05 zostały ponownie ustabilizowane. W rozdziale 05 poprawiono argument o braku podprzestrzeni dla zgodnego układu z niezerową prawą stroną, następnie wykonano dwa kolejne czyste audyty III–IV na identycznym SHA. Nowy PDF (7 stron) i CI dla poprawionego źródła [45006722306](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45006722306) zweryfikowane — SUCCESS. CI uruchomione wyłącznie zapisem końcowego statusu wymaga osobnej kontroli.
 
 | Rozdział | Status |
@@ -33,7 +33,7 @@
 | 26 | STABILNY; audyty 02 i 03 czyste po poprawce, CI success; kontrole 2, SHA `80032eef1e0e5de817821d97de96aaf86c960e03`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
 | 27 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success; kontrole 2, SHA `a91dfa108d4a6ef4221b9ba24a98c87772c75d4a`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
 | 28 | STABILNY po dodatkowym audycie; 04 korekta, 05–06 czyste, CI success; kontrole 2, SHA `b9507aa2db7eda554446248996e7c0ae241d4e73`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
-| 29 | HISTORYCZNIE STABILNY, ale globalna korekta iteracji 27 otworzyła nowy cykl: **2/2 czystych audytów** po zmianie, osobny sceptyczny audyt końcowy +1 oczekuje; **CI 45079917894 SUCCESS** i aktualny PDF 8/8 stron obejrzany; SHA `01213689fb5d2477db25f9ff713608b0171a00c8`. Szczegóły: globalne iteracje 27–29 |
+| 29 | **STABILNY po globalnym audycie 30**: poprawka w iteracji 27, dwa czyste pełne audyty 28–29 (2/2), osobny sceptyczny audyt końcowy 30 (+1) czysty. Blob `01213689fb5d2477db25f9ff713608b0171a00c8` bez zmian. CI 45079917894, 45081081248, 45081121567 completed/success, dwukrotna kompilacja i PDF 8/8 stron (287–294) skontrolowane. Dodatkowe 1872/1872 niezależnych testów dokładnych PASS. Następny etap globalny LA30 |
 | 30 | STABILNY; po korekcie czyste audyty 03–04 + sceptyczny 05, CI success i PDF obejrzany; kontrole 3 (2+1), SHA `6d90013dd6c66d347e5ae2ac78b4c1a194aa979e`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
 | 31 | STABILNY; audyty 01–02 czyste + dodatkowy sceptyczny 03 czysty, CI success; kontrole 3 (2+1), SHA `6c1d09b9eaf4083c9ebaa361dbf46fc350eae147`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
 | 32 | STABILNY; zatwierdzony dodatek Penrose’a, audyt 01 korekcyjny, czyste 02–03 + końcowy 04, CI success; kontrole 3 (2+1), SHA `8aea8bd8db02ca8677fb0547f770c9166fdaef88`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
@@ -244,3 +244,8 @@ Raport: `iteration_09.md`. Zgodność 32 plików i 32 instrukcji `\\input` potwi
 ## Iteracja globalna 29 — 23 listopada 2026: LA-29 (drugi czysty audyt)
 
 [Raport audytu 29](iteration_29.md) i [rejestr 6 dowodów](iteration_29_proof_review_29.csv): wszystkie sześć dowodów, sześć przykładów i dwa rysunki LA-29 ponownie skontrolowano na **niezmienionym blobie** `01213689fb5d2477db25f9ff713608b0171a00c8`. **1225/1225** niezależnych testów dokładnych PASS. Potwierdzone CI: [45079917894](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45079917894) (dwukrotny skład, success), kolejne [45081081248](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45081081248) i [45081121567](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45081121567) (oba success). Z rzeczywistego PDF: 320 stron książki, LA-29 strony 287–294, 8/8 bez obcięcia i widocznych kolizji; rysunki 288/291 sprawdzono w powiększeniu. **Czyste audyty po ostatniej korekcie: 2/2. Wymagany osobny sceptyczny końcowy audyt +1: NIE WYKONANO, etap pozostaje otwarty.** Następna iteracja wyłącznie LA-29; po jej czystym zamknięciu dopiero LA-30. Globalny licznik pozostaje 363/382.
+
+
+## Iteracja globalna 30 — 23 listopada 2026: osobny końcowy audyt LA29 (+1)
+
+[Raport iteracji 30](iteration_30.md) i [rejestr sześciu dowodów](iteration_30_proof_review_29.csv): pełna krytyczna, niezależna kontrola po poprzednich dwóch czystych audytach 28–29. Brak nowej usterki, źródło LA29 **niezmienione**: `01213689fb5d2477db25f9ff713608b0171a00c8`. Niezależne obliczenia dokładne SymPy **1872/1872 PASS**. Potwierdzono [CI 45079917894](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45079917894), [45081081248](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45081081248) i [45081121567](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45081121567): completed/success, 2 przebiegi LaTeX i kontrola odsyłaczy. Rzeczywisty PDF 320 stron: LA29 strony 287–294 obejrzane (8/8), oba rysunki w powiększeniu; brak widocznych kolizji i ostrzeżeń LaTeX. **LA29 STABILNY (2+1)**. Globalnie skontrolowano **363/382** dowodów; zostało 19 (LA30: 3, LA31: 6, LA32: 10), po czym dodatkowy przekrojowy audyt końcowy całej książki. Następna iteracja: LA30.
