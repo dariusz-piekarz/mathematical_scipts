@@ -1,0 +1,93 @@
+name: Lean 4 - kernel and axiom audit
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "application/lean/**"
+      - "application/scripts/lean_ci_audit.py"
+      - "application/tests/test_lean_ci_audit.py"
+      - ".github/workflows/lean-formalization.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lean-formalization-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lean-pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout canonical repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python for evidence checks
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Test axiom audit and manifest validation
+        working-directory: application
+        run: python -m unittest tests.test_lean_ci_audit -v
+
+      - name: Install Lean 4 and fetch pinned Mathlib cache
+        # leanprover/lean-action v1.7.1 pinned by immutable commit
+        uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee
+        with:
+          lake-package-directory: application/lean
+          auto-config: "false"
+          use-mathlib-cache: "true"
+          use-github-cache: "true"
+        env:
+          LEAN_NUM_THREADS: "1"
+
+      - name: Check exact Lean and Mathlib revisions
+        working-directory: application/lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(cat lean-toolchain)" = "leanprover/lean4:v4.26.0"
+          grep -Fq 'rev = "2df2f0150c275ad53cb3c90f7c98ec15a56a1a67"' lakefile.toml
+          mathlib_sha="$(git -C .lake/packages/mathlib rev-parse HEAD)"
+          test "$mathlib_sha" = "2df2f0150c275ad53cb3c90f7c98ec15a56a1a67"
+          lake env lean --version
+          echo "Mathlib revision: $mathlib_sha"
+
+      - name: Compile registered Lean files and check axioms
+        working-directory: application/lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p ci_lean_logs
+          python ../scripts/lean_ci_audit.py \
+            --manifest manifest.json --lean-root . --list-files > ci_lean_files.txt
+          test -s ci_lean_files.txt
+          while IFS= read -r file; do
+            echo "Compiling registered file: $file"
+            log="ci_lean_logs/${file//\//_}.log"
+            if ! lake env lean "$file" > "$log" 2>&1; then
+              cat "$log"
+              echo "::error::Lean compilation failed for $file"
+              exit 1
+            fi
+            cat "$log"
+          done < ci_lean_files.txt
+          python ../scripts/lean_ci_audit.py \
+            --manifest manifest.json --lean-root . \
+            --logs-dir ci_lean_logs --report ci_lean_report.json
+
+      - name: Upload Lean compilation and axiom evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-kernel-axiom-evidence
+          path: |
+            application/lean/ci_lean_logs/*.log
+            application/lean/ci_lean_report.json
+            application/lean/ci_lean_files.txt
+          if-no-files-found: warn
