@@ -125,6 +125,11 @@ class TestChapter27(unittest.TestCase):
                     self.assertEqual(set(h.values()),B)
                     self.assertEqual(len(set(h.values())),n)
 
+    def test_diagonal_family_is_zf_set_by_replacement(self):
+        self.assertIn(r"schemat zastępowania zapewnia więc istnienie",SOURCE)
+        self.assertIn(r"n\mapsto S_n",SOURCE)
+        self.assertIn(r"D:=\{n\in\N:n\notin S_n\}",SOURCE)
+
     def test_explicit_interval_bijections(self):
         def f(x):
             return (1+x/(1+abs(x)))/2
