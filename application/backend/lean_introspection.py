@@ -166,6 +166,19 @@ def inspect(con: sqlite3.Connection, identifier: str, *,
             except (OSError, ValueError) as exc:
                 return _empty(identifier, "blocked",
                               "Niekompletny wynik lub zmiana zależności: " + str(exc)[:160])
+            # The SQLite index may be rebuilt by another process while Lean is
+            # running. Re-read the current row instead of trusting the old
+            # sqlite3.Row object captured before execution.
+            current_doc = con.execute(
+                "SELECT sha256,content FROM documents WHERE id=?",
+                (item["source_module"],)).fetchone()
+            if (current_doc is None or
+                    current_doc["sha256"] != doc["sha256"] or
+                    not isinstance(current_doc["content"], str) or
+                    hashlib.sha256(current_doc["content"].encode("utf-8")).hexdigest()
+                    != doc["sha256"]):
+                return _empty(identifier, "blocked",
+                              "Indeks rozdziału zmienił się podczas inspekcji.")
             if (before != after or
                     not lean._source_file_current(item, doc["sha256"], lean_root)):
                 return _empty(identifier, "blocked", "Źródło zmieniło się podczas pracy.")
