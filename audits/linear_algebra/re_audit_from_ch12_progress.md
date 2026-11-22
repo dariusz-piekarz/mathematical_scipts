@@ -10,8 +10,8 @@
 
 - Bieżący rozdział: **29**.
 - Ostatni zamknięty blob (rozdział 28): **a2afdd2b20b2694d70bdbee6ad6a0f8c42b9aea8**.
-- Liczba kolejnych czystych audytów (bieżący rozdział 29): **1/2** (plus wymagany oddzielny audyt końcowy po stabilizacji).
-- Kolejne działanie: **wykonać niezależny audyt 02 rozdziału 29 (grassmanniany)**; po dwóch czystych i CI wykonać jeszcze osobny pełny audyt końcowy tego samego bloba. Rozdział 28 zamknięto po koniecznej korekcie (audyt 01), dwóch kolejnych czystych audytach 02–03 bloba `a2afdd2b20b2694d70bdbee6ad6a0f8c42b9aea8` i dedykowanym CI completed/success (run 45023213569). Zatwierdzone przez użytkownika rozszerzenie LA-32 o transformatę Penrose’a: [plan](la32_penrose_extension_plan.md); dodać przy dojściu do rozdziału 32.
+- Liczba kolejnych czystych audytów (bieżący rozdział 29): **2/2** (wymagany oddzielny audyt końcowy 03 jeszcze niewykonany).
+- Kolejne działanie: **wykonać osobny, pełny, sceptyczny audyt końcowy 03 rozdziału 29 (grassmanniany)**; audyty 01–02 są czyste i CI dla tego samego bloba jest zielone, lecz etap nie jest zamknięty bez audytu końcowego. Rozdział 28 zamknięto po koniecznej korekcie (audyt 01), dwóch kolejnych czystych audytach 02–03 bloba `a2afdd2b20b2694d70bdbee6ad6a0f8c42b9aea8` i dedykowanym CI completed/success (run 45023213569). Zatwierdzone przez użytkownika rozszerzenie LA-32 o transformatę Penrose’a: [plan](la32_penrose_extension_plan.md); dodać przy dojściu do rozdziału 32.
 - Historyczne audyty, w tym ręczne audyty rozdziałów 13–15 z 22 listopada, pozostają ważnymi źródłami, ale **nie są automatycznie liczone** jako wykonanie nowego przebiegu.
 
 ## Tabela statusów
@@ -35,7 +35,7 @@
 | 26 | STABILNY; audyty 02 i 03 czyste po poprawce, CI success | 2 | `80032eef1e0e5de817821d97de96aaf86c960e03` |
 | 27 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `a91dfa108d4a6ef4221b9ba24a98c87772c75d4a` |
 | 28 | STABILNY; audyt 01 korekta, 02 i 03 czyste, CI success | 2 | `a2afdd2b20b2694d70bdbee6ad6a0f8c42b9aea8` |
-| 29 | OTWARTY; audyt 01 czysty, 02 do wykonania, następnie dodatkowy audyt końcowy | 1 | `55fc55e2ff1b95838e0b2ca1c4ec0a6018af64dd` |
+| 29 | OTWARTY; audyty 01 i 02 czyste, dodatkowy audyt końcowy 03 do wykonania | 2 | `55fc55e2ff1b95838e0b2ca1c4ec0a6018af64dd` |
 | 30 | W kolejce | 0 | — |
 | 31 | W kolejce | 0 | — |
 | 32 | W kolejce | 0 | — |
@@ -262,3 +262,13 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - SHA źródła: `55fc55e2ff1b95838e0b2ca1c4ec0a6018af64dd` (bez edycji). Raport: [29_iteration_01_2026-11-22.md](re_audit_from_ch12/29_iteration_01_2026-11-22.md); [commit 993e4e1](https://github.com/dariusz-piekarz/mathematical_scipts/commit/993e4e1238bbdd21297bfc00d254e3729a38f0e1).
 - [CI 45023597804](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45023597804): **completed/success**, SHA commit `edcd2f934d724636816d14b15aa8280e3273cdaf`, zweryfikowany identyczny blob LA-29. Nie przeprowadzono osobnego renderingu PDF LA-29: dostępny artefakt „current chapter” dotyczył LA-32. Nie wykonano nowych testów obliczeniowych.
 - Następny krok: **LA-29 audyt 02**, bez przechodzenia do LA-30. Zasada z 22.11.2026 wymaga po spełnieniu 2/2 i CI jeszcze osobnego czystego audytu kontrolnego tego samego etapu.
+
+## Ostatnia rzeczywista iteracja — 2026-11-22 (rozdział 29, audyt 02)
+
+- Bieżący rozdział: **29**, status **OTWARTY**, czyste kontrole od ostatniej poprawki: **2/2**, oddzielny audyt końcowy: **NIE**.
+- Sprawdzony blob: `55fc55e2ff1b95838e0b2ca1c4ec0a6018af64dd` (743 wiersze), bez zmiany źródła.
+- Raport: [29_iteration_02_2026-11-22.md](re_audit_from_ch12/29_iteration_02_2026-11-22.md), commit [6f9e36f](https://github.com/dariusz-piekarz/mathematical_scipts/commit/6f9e36f623b2e6465f81634f53c7ecbb8fdcc473).
+- Rzeczywiście wykonano **6561** kontroli tożsamości Plückera w deterministycznym modelu całkowitoliczbowym: **0 naruszeń**; 19 etykiet, 20 poprawnie rozpoznanych odsyłaczy, brak błędów struktury środowisk i delimiterów.
+- [CI 45023597804](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45023597804) **completed/success**, bezpośrednio zweryfikowano identyczny blob rozdziału w commicie CI `edcd2f934d724636816d14b15aa8280e3273cdaf`.
+- Nie wykonano nowego renderingu PDF 29; układ rysunków nie ma niezależnej walidacji wizualnej.
+- **Uzasadnienie braku zamknięcia:** nadrzędny wymóg oddzielnego pełnego audytu końcowego po osiągnięciu 2/2. **Następny etap: rozdział 29, audyt 03 końcowy**, a nie 30.
