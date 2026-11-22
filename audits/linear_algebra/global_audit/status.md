@@ -1,6 +1,6 @@
 # Globalny audyt algebry liniowej — status rozdziałów
 
-**Stan po iteracji 04/09**, 22 listopada 2026.
+**Stan po iteracji 05/09**, 22 listopada 2026.
 
 | Rozdział | Status |
 |---|---|
@@ -20,10 +20,10 @@
 | 14 | 04: sprawdzono Schura, twierdzenie spektralne i jednoczesną triangularizację; doprecyzowano n=0; PDF/CI otwarte |
 | 15 | 04: sprawdzono LU/PLU, Eckarta--Younga i rozkład biegunowy; zdefiniowano zerowe wartości osobliwe i uzupełniono dwa kroki dowodów; PDF/CI otwarte |
 | 16 | 04: sprawdzono Cayleya--Hamiltona, rozkład pierwotny i wielomian minimalny; źródło bez zmian; PDF/CI otwarte |
-| 17 | oczekuje na globalny audyt |
-| 18 | oczekuje na globalny audyt |
-| 19 | oczekuje na globalny audyt |
-| 20 | oczekuje na globalny audyt |
+| 17 | 05: 7 dowodów; łańcuchy Jordana, stabilizacja jąder, jednoznaczność bloków; PDF/CI otwarte |
+| 18 | 05: 6 dowodów; rzuty CRT, rozkład Jordana--Chevalleya, funkcje holomorficzne i wykładnicza; PDF/CI otwarte |
+| 19 | 05: 7 dowodów; uściślono krok algorytmu Smitha i uzasadnienie spadku stopnia; PDF/CI otwarte |
+| 20 | 05: 7 dowodów; CRT, bloki pierwotne, wymiary jąder i przypadki nad ciałem skończonym; PDF/CI otwarte |
 | 21 | oczekuje na globalny audyt |
 | 22 | oczekuje na globalny audyt |
 | 23 | oczekuje na globalny audyt |
@@ -37,4 +37,4 @@
 | 31 | oczekuje na globalny audyt |
 | 32 | oczekuje na globalny audyt |
 
-Iteracja 04 wykonana; iteracje 05–09 nie zostały jeszcze wykonane. Nie utożsamiać audytu źródła z pomyślną kompilacją ani audytem wizualnym.
+Iteracje 01–05 wykonane; iteracje 06–09 oczekują. Iteracja 05 ma otwarte kontrole PDF/CI. Nie utożsamiać audytu źródła z pomyślną kompilacją ani audytem wizualnym.
