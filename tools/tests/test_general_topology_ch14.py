@@ -39,6 +39,7 @@ def test_relocation():
     assert r"\label{def:topog-lokalna-przeliczalnosc-nieskonczonosc}" in c14
     assert r"\label{def:topog-lokalna-sigma-zwarta}" in c14
     assert "nieprzeliczalnym" in c14
+    assert r"\label{ex:topog-lokalna-q-sigma-nieskonczonosc}" in c14
     assert c11.index(r"\label{thm:topog-baire-metryczne}") < c11.index(r"\section{Konsekwencje")
     assert r"\setcounter{chapter}{13}" in standalone
     expected = r"\input{../../chapters/pl/general_topology/14-zwartosc-lokalna.tex}"
