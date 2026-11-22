@@ -87,3 +87,17 @@ W commicie fc11bf4dcf5123e510c376feb31a2df6fb17ac67 nowy plik podłączono do .g
 ## 8. Werdykt
 
 **Audyt merytoryczny i strukturalny czysty w skontrolowanym zakresie.** Źródła 32–36 zachowują status wcześniejszej stabilności. Dodatkowa kontrola zależności zostanie uznana za zakończoną po zielonym CI na commicie integrującym nową regresję. Nie dodano niezatwierdzonego materiału.
+
+
+## 9. Uzupełnienie — zamknięcie iteracji w rzeczywistym CI
+
+[GitHub Actions 45084816549 — SUCCESS](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45084816549), commit fc11bf4dcf5123e510c376feb31a2df6fb17ac67, job 137400914937.
+
+- Nowa regresja przekrojowa: **5/5 metod PASS** (zalogowano: „Ran 5 tests in 0.008s”).
+- Testy rozdziałów 32–36: wszystkie **SUCCESS**.
+- Testy pozostałych rozdziałów, kompilacja książki i walidacja PDF/logu, archiwizacja wyników: **SUCCESS**.
+- Ostateczny PDF: **337 stron**.
+- Bezpośrednia inspekcja pełnego logu: **0** ostrzeżeń o zdublowanych kotwicach PDF; **0** ostrzeżeń o niepoprawnych tokenach zakładek; **0** błędów LaTeX i **0** przepełnionych wierszy.
+- Regresja strukturalna jest włączona do workflow, nie wymaga ręcznego uruchamiania przy kolejnych zmianach źródeł/testu/workflow.
+
+**Werdykt końcowy: AUDYT PRZEKROJOWY 04 — ZAMKNIĘTY I CZYSTY.** Rozdziały 32–36 pozostają matematycznie niezmienione i zachowują wcześniej potwierdzony status stabilny. Testy i PDF nie są formalizacją twierdzeń w Lean.
