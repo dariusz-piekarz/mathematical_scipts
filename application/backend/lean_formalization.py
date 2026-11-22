@@ -64,6 +64,11 @@ def _registry(lean_root: Path = LEAN_ROOT) -> list[dict[str, Any]]:
             raise HTTPException(503, "Zatwierdzone powiązanie wymaga przypiętego SHA256 źródła.")
         if item.get("statement_status") not in {"unreviewed", "needs_review", "approved"}:
             raise HTTPException(503, "Niepoprawny status zgodności stwierdzenia.")
+        source_path = item.get("source_document_path")
+        if source_path is not None and (
+                not isinstance(source_path, str) or not source_path.startswith("chapters/pl/")
+                or not source_path.endswith(".tex")):
+            raise HTTPException(503, "Niepoprawna ścieżka kanonicznego źródła LaTeX.")
         digest = item.get("source_document_sha256")
         if digest is not None and not re.fullmatch(r"[0-9a-f]{64}", str(digest)):
             raise HTTPException(503, "Niepoprawny SHA256 źródła LaTeX.")
@@ -129,6 +134,22 @@ def _find_source(con: sqlite3.Connection, *, entity_id: str | None,
     return d, content, labels, start_line, end_line, None, "contains_theorem"
 
 
+def _source_file_current(item: dict[str, Any], digest: str, lean_root: Path) -> bool:
+    """Recheck checked-out canonical TeX, even when the SQLite index was not rebuilt."""
+    rel = item.get("source_document_path")
+    if rel is None:
+        return True  # Legacy unpinned test manifests; CI requires path for approved entries.
+    repo = lean_root.resolve().parents[1]
+    allowed = (repo / "chapters" / "pl").resolve()
+    path = (repo / rel).resolve()
+    if not path.is_relative_to(allowed) or not path.is_file():
+        return False
+    try:
+        return hashlib.sha256(path.read_bytes()).hexdigest() == digest
+    except OSError:
+        return False
+
+
 def _matches(item: dict[str, Any], d: sqlite3.Row, labels: list[str]) -> bool:
     return item["source_module"] == d["id"] and item["source_label"] in labels
 
@@ -166,6 +187,8 @@ def fragment(con: sqlite3.Connection, *, entity_id: str | None = None,
         return base
     item = matches[0]
     sha_ok = item.get("source_document_sha256") == d["sha256"] if item.get("source_document_sha256") else None
+    if sha_ok is not False and not _source_file_current(item, d["sha256"], lean_root):
+        sha_ok = False
     content_lean = item["_file"].read_text(encoding="utf-8")
     if len(content_lean) > MAX_LEAN_CHARS:
         raise HTTPException(413, "Zarejestrowany plik Lean jest zbyt duży.")
@@ -221,7 +244,8 @@ def run(con: sqlite3.Connection, formalization_id: str,
         return {"formalization_id": formalization_id, "proof_status": "blocked",
                 "detail": "Niezgodność treści rozdziału z SHA256 w indeksie.",
                 "certificate": False}
-    if item.get("source_document_sha256") and item["source_document_sha256"] != d["sha256"]:
+    if ((item.get("source_document_sha256") and item["source_document_sha256"] != d["sha256"])
+            or not _source_file_current(item, d["sha256"], lean_root)):
         return {"formalization_id": formalization_id, "proof_status": "blocked",
                 "detail": "Źródło LaTeX zmieniło się od czasu powiązania formalizacji.",
                 "certificate": False}
@@ -245,7 +269,7 @@ def run(con: sqlite3.Connection, formalization_id: str,
                   "certificate": False}
         try:
             after = lean_results.fingerprint(d["sha256"], item["_file"], lean_root)
-            if after != fingerprint:
+            if after != fingerprint or not _source_file_current(item, d["sha256"], lean_root):
                 return {**result, "proof_status": "blocked",
                         "detail": "Zmiana plików formalizacji podczas pracy Lean; wynik unieważniony."}
             saved = lean_results.save_run(
