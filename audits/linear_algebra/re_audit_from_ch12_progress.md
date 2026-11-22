@@ -342,3 +342,10 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - Rozdział **31: STABILNY** na źródle `6c1d09b9eaf4083c9ebaa361dbf46fc350eae147`, bez zmian pliku: [audyt 01](re_audit_from_ch12/31_iteration_01_2026-11-22.md) i [audyt 02](re_audit_from_ch12/31_iteration_02_2026-11-22.md) czyste (2/2); [audyt 03](re_audit_from_ch12/31_iteration_03_2026-11-22.md) dodatkowy sceptyczny czysty. **5292+844+6840=12976** niezależnych testów PASS. LaTeX: 33 unikalne etykiety, 27 poprawnych odsyłaczy, 58 par środowisk. Historyczny przegląd 14 stron PDF na tym samym blobie; bez nowej inspekcji całości.
 - [CI 45039588413](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45039588413) completed/success; zweryfikowano plik rozdziału 31 w przetestowanym commicie z tym samym SHA.
 - Aktywne **LA-32 Twistory**, zgodnie z wolą użytkownika dopisać przed audytami lokalną skalarną transformatę Penrose’a: [plan](la32_penrose_extension_plan.md).
+
+
+## Dodatkowy audyt równoległy rozpoczęty przed zamknięciem LA-31 — 2026-11-22
+
+- Niezależnie przeczytano cały LA-31 (1496 wierszy), wykonano **94 639** dodatkowych dokładnych i numerycznych testów (wszystkie PASS), statyczną kontrolę 33 etykiet, 27 odsyłaczy, 58 par środowisk i 4 diagramów oraz obejrzano wszystkich 14 stron rozdziału 31 w rzeczywistym artefakcie [CI 45039588413](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45039588413). Źródło LA-31 pozostało niezmienione: `6c1d09b9eaf4083c9ebaa361dbf46fc350eae147`.
+- Raport [31_additional_independent_audit_2026-11-22.md](re_audit_from_ch12/31_additional_independent_audit_2026-11-22.md), [commit 5a407d7](https://github.com/dariusz-piekarz/mathematical_scipts/commit/5a407d7ba279d7960c20741bda7a5a9f3243dec5). Praca rozpoczęła się przed równoległym zamknięciem LA-31; nie przypisujemy sobie cudzych audytów 02/03 i **nie zwiększamy oficjalnego licznika 2+1**.
+- **LA-31 nadal zamknięty, bieżący etap LA-32**, bez cofania kolejki. Następny krok z rejestru: zatwierdzony dodatek transformacji Penrose’a do LA-32 i jego nowe audyty.
