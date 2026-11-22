@@ -223,6 +223,12 @@ def fragment(con: sqlite3.Connection, *, entity_id: str | None = None,
     # Exact objects must not inherit the label of a different indexed entity.
     if linkage == "exact_entity" and linked_entity != eid:
         raise HTTPException(409, "Etykieta należy do innego obiektu matematycznego.")
+    binding = lean_source_provenance.indexed_binding(
+        con, item["source_module"], item["source_label"], linked_entity)
+    if binding is None:
+        raise HTTPException(409, "Powiązanie etykiety zmieniło się podczas odczytu.")
+    binding_sha256 = lean_source_provenance.binding_sha256(
+        item["source_module"], item["source_label"], binding)
     sha_ok = item.get("source_document_sha256") == d["sha256"] if item.get("source_document_sha256") else None
     if sha_ok is not False and not _source_file_current(item, d["sha256"], lean_root):
         sha_ok = False
@@ -240,7 +246,8 @@ def fragment(con: sqlite3.Connection, *, entity_id: str | None = None,
     if sha_ok is False:
         return base
     try:
-        fingerprint = lean_results.fingerprint(d["sha256"], item["_file"], lean_root)
+        fingerprint = lean_results.fingerprint(
+            d["sha256"], item["_file"], lean_root, binding_sha256)
         run_info = lean_results.last_run(
             item["id"], fingerprint,
             results_root=_results_override(lean_root, results_root))
@@ -315,6 +322,12 @@ def run(con: sqlite3.Connection, formalization_id: str,
                 "certificate": False}
     binding_before = lean_source_provenance.indexed_binding(
         con, item["source_module"], item["source_label"], owner_id)
+    if binding_before is None:
+        return {"formalization_id": formalization_id, "proof_status": "blocked",
+                "detail": "Powiązanie źródła zmieniło się podczas odczytu.",
+                "certificate": False}
+    binding_sha256 = lean_source_provenance.binding_sha256(
+        item["source_module"], item["source_label"], binding_before)
     if ((item.get("source_document_sha256") and item["source_document_sha256"] != d["sha256"])
             or not _source_file_current(item, d["sha256"], lean_root)):
         return {"formalization_id": formalization_id, "proof_status": "blocked",
@@ -349,7 +362,8 @@ def run(con: sqlite3.Connection, formalization_id: str,
     # A registered path is trusted only if local repository authors have reviewed it.
     # This is NOT a security boundary against a malicious .lean file.
     try:
-        fingerprint = lean_results.fingerprint(d["sha256"], item["_file"], lean_root)
+        fingerprint = lean_results.fingerprint(
+            d["sha256"], item["_file"], lean_root, binding_sha256)
     except ValueError as exc:
         return {"formalization_id": formalization_id, "proof_status": "blocked",
                 "detail": "Nie można zweryfikować zależności Lean: " + str(exc)[:250],
@@ -381,7 +395,8 @@ def run(con: sqlite3.Connection, formalization_id: str,
                     "detail": "Powiązanie twierdzenia zmieniło się podczas uruchomienia Lean.",
                     "run_record_saved": False}
         try:
-            after = lean_results.fingerprint(d["sha256"], item["_file"], lean_root)
+            after = lean_results.fingerprint(
+                d["sha256"], item["_file"], lean_root, binding_sha256)
             if after != fingerprint or not _source_file_current(item, d["sha256"], lean_root):
                 return {**result, "proof_status": "blocked",
                         "detail": "Zmiana plików formalizacji podczas pracy Lean; wynik unieważniony.",
