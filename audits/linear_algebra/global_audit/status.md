@@ -1,6 +1,6 @@
 # Globalny audyt algebry liniowej — status rozdziałów
 
-**Stan po iteracji 06/09**, 22 listopada 2026.
+**Stan po iteracji 07/09**, 22 listopada 2026.
 
 | Rozdział | Status |
 |---|---|
@@ -28,13 +28,13 @@
 | 22 | 06: sprawdzono kryterium Sylvestera, wzór wielomianowy, twierdzenie Lapunowa i przykłady; bez korekt źródła; PDF/CI otwarte |
 | 23 | 06: sprawdzono stabilność Schura, operator Steina, próbkowanie; poprawiono kwantyfikację h; PDF/CI otwarte |
 | 24 | 06: sprawdzono rekurencję DARE, tożsamości CARE i DRE; poprawiono argument ciągłości dla sterowań przedziałami ciągłych; PDF/CI otwarte |
-| 25 | oczekuje na globalny audyt |
-| 26 | oczekuje na globalny audyt |
-| 27 | oczekuje na globalny audyt |
-| 28 | oczekuje na globalny audyt |
+| 25 | 07: skontrolowano kryteria Kalmana/PBH, gramiany, stabilizowalność i argument rozmieszczania biegunów; testy CI PASS, wizualny PDF otwarty |
+| 26 | 07: sprawdzono założenia i kluczowe tożsamości DARE/CARE, granice i przypadek Q≥0; testy CI PASS, wizualny PDF otwarty |
+| 27 | 07: sprawdzono faktoryzację Hankela, minimalność, podobieństwo i równoważenie gramianów; testy CI PASS, wizualny PDF otwarty |
+| 28 | 07: sprawdzono transformaty, realizację towarzyszącą i oszacowania BIBO; testy CI PASS, wizualny PDF otwarty |
 | 29 | oczekuje na globalny audyt |
 | 30 | oczekuje na globalny audyt |
 | 31 | oczekuje na globalny audyt |
 | 32 | oczekuje na globalny audyt |
 
-Iteracje 01–06 wykonane; iteracje 07–09 oczekują. Iteracja 06: matematyczna i redakcyjna kontrola źródła zakończona z dwiema korektami; niezależny PDF/CI niepotwierdzony. Iteracja 05 ma otwarte kontrole PDF/CI. Nie utożsamiać audytu źródła z pomyślną kompilacją ani audytem wizualnym.
+Iteracje 01–07 wykonane; iteracje 08–09 oczekują. Iteracja 07: audyt kluczowych argumentów i przegląd struktury 46 dowodów w rozdziałach 25–28; bez zmian merytorycznych. Workflow 44987751791 dla wejściowego HEAD fd4e4a7 zakończył się SUCCESS, w tym testy LA25–LA28 i pełny PDF. Wizualna kontrola stron PDF pozostaje niepotwierdzona; nie deklarować pełnej czystości. Wcześniejsze otwarte kontrole wizualne pozostają. Nie utożsamiać audytu źródła z pomyślną kompilacją ani audytem wizualnym.
