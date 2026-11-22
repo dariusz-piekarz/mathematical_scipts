@@ -58,9 +58,9 @@ def describe(identifier: str, names: list[str], *,
     if (not isinstance(identifier, str) or not IDENTIFIER.fullmatch(identifier)
             or not isinstance(names, list)
             or not 1 <= len(names) <= MAX_THEOREMS
-            or len(set(names)) != len(names)
             or any(not isinstance(name, str) or not NAME.fullmatch(name)
                    for name in names)
+            or len(set(names)) != len(names)
             or type(classified) is not bool):
         raise ValueError("Invalid inspection identity")
     if (not isinstance(fingerprint, dict)
