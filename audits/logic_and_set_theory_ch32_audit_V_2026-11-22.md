@@ -48,9 +48,13 @@ Obliczenia zweryfikowano niezależnym lokalnym przeglądem skończonych przypadk
 - Źródło matematyczne rozdziału **bez zmian** w audycie V.
 - Inwentarz bez zmian: **8 sekcji, 11 definicji, 7 lematów, 4 twierdzenia, 1 wniosek, 4 przykłady, 4 uwagi, 12 dowodów, 1 rysunek TikZ, 33 etykiety i 11 odsyłaczy**.
 - Testów regresyjnych rozdziału 32 jest obecnie **15**.
-- [GitHub Actions — testy V](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45017853388). **Wynik zostanie odnotowany po zakończeniu kompilacji.**
-- Ponieważ plik LaTeX rozdziału nie uległ zmianie, inspekcja siedmiu stron PDF po audycie IV pozostaje aktualna dla treści rozdziału 32. Nowa kompilacja całej książki jest dodatkową kontrolą po rozszerzeniu zestawu testów.
+- [GitHub Actions #45017853388](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45017853388): **SUCCESS** — 15 testów regresyjnych rozdziału 32, w tym wyczerpujące sprawdzenie małych preporządków, oraz pozostałe testy książki, kontrola inwentarza i odsyłaczy, kompilacja PDF i kontrola logu.
+- [GitHub Actions #45017895126](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45017895126): **SUCCESS** również po zapisaniu w repozytorium raportu audytu V.
+- **PDF po audycie V:** 280 stron; rozdział 32 na stronach PDF **274–280**. Wszystkie siedem stron wyrenderowano i sprawdzono wizualnie w aktualnym artefakcie. Rysunek, podpisy, wzory, tekst i odsyłacze są czytelne; nie stwierdzono kolizji ani ucięć.
+- **Log LaTeX:** **0 błędów**, **0 niezdefiniowanych odsyłaczy**, **0 ostrzeżeń o niezdefiniowanych cytowaniach**, **0 przepełnionych wierszy**; 1 ostrzeżenie o niedopełnionym wierszu w całej książce.
 
-## Werdykt warunkowy
+## Werdykt ostateczny audytu V
 
-**Audyt matematyczny V: bez nowych usterek.** Po potwierdzeniu pomyślnego CI rozdział 32 może otrzymać status **STABILNY PO V AUDYTACH**; dalszym planowym zadaniem będzie nowy rozdział 33 (relacja wymuszania, lemat definiowalności, lemat prawdy i twierdzenie o wymuszaniu), którego nie należy mylić z brakami rozdziału 32.
+**STABILNY PO V AUDYTACH.** W piątym, niezależnym audycie nie wykryto nowego błędu matematycznego i nie zmieniono treści rozdziału. Przeszły wszystkie testy regresyjne, kompilacja książki i przegląd wizualny. Rozdział 32 można zatem uznać za stabilny zgodnie z przyjętym kryterium powtarzanych audytów, z zastrzeżeniem, że stabilność redakcyjna i CI nie oznaczają formalnej weryfikacji w Lean.
+
+**Następny krok:** opracowanie rozdziału 33 o relacji wymuszania, lemacie definiowalności, lemacie prawdy i twierdzeniu o wymuszaniu, a następnie jego niezależne audyty.
