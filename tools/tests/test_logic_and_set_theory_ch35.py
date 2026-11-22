@@ -373,6 +373,39 @@ class TestBooleanModelsChapter35(unittest.TestCase):
             value |= item
         return value
 
+    def test_every_fork_boolean_coefficient_has_poset_pullback(self):
+        # RO of the three-node fork: the two leaves are atoms.
+        # Every Boolean name coefficient must be a join of
+        # images of conditions, or the existential translation fails.
+        cone = {"top": 3, "left": 1, "right": 2}
+        for b in range(4):
+            images_below = [
+                val for val in cone.values() if (val & b) == val
+            ]
+            self.assertEqual(self.join(images_below), b)
+
+        checked = 0
+        for a in range(4):
+            for b in range(4):
+                original = {"empty": a, "one": b}
+                poset_name = {
+                    (rho, p)
+                    for rho, coeff in original.items()
+                    for p, val in cone.items()
+                    if (val & coeff) == val
+                }
+                reconstructed = {
+                    rho: self.join(
+                        cone[p] for name, p in poset_name
+                        if name == rho
+                    ) for rho in original
+                }
+                self.assertEqual(reconstructed, original)
+                checked += 1
+        self.assertEqual(checked, 16)
+        self.assertIn(r"\tau^{\mathbb P}=", TEXT)
+        self.assertIn(r"(\tau^{\mathbb P})^{\mathbb B}", TEXT)
+
     def test_choice_via_least_preimage_on_both_atoms(self):
         # A finite Boolean analogue of the ZF construction:
         # ordinal-indexed surjection -> least representatives -> well order.
