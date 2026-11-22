@@ -185,6 +185,97 @@ class TestChapter33(unittest.TestCase):
             any(leq(s, q) for s in E) for q in P
         ))
 
+    def test_union_name_on_branching_finite_forcing(self):
+        P = ((), (0,), (1,))
+        top, left, right = P
+        leq = lambda q, p: q[:len(p)] == p
+
+        def val(name, G):
+            return frozenset(val(sigma, G) for sigma, p in name if p in G)
+
+        empty = frozenset()
+        singleton_empty = frozenset({(empty, top)})
+        outer = frozenset({(singleton_empty, left)})
+        u = frozenset(
+            (sigma, p)
+            for pi, q in outer
+            for sigma, r in pi
+            for p in P if leq(p, q) and leq(p, r)
+        )
+        for G in ({top, left}, {top, right}):
+            interpreted_union = frozenset(
+                element for part in val(outer, G) for element in part
+            )
+            self.assertEqual(val(u, G), interpreted_union)
+        self.assertIn(r"B_\tau", TEXT)
+        self.assertIn(r"B_\tau\times\mathbb P", TEXT)
+
+    def test_power_set_name_bounded_search_on_small_forcing(self):
+        # Check the canonical restricted-name construction for each
+        # possible 1-step name rho in a finite forcing notion.
+        from itertools import combinations
+        P = ((), (0,), (1,))
+        top, left, right = P
+        leq = lambda q, p: q[:len(p)] == p
+        empty = frozenset()
+        tau = frozenset({(empty, top)})
+        A = {sigma for sigma, p in tau}
+
+        def value(name, G):
+            return frozenset(value(sigma, G) for sigma, p in name if p in G)
+
+        def force_mem(p, sigma, target):
+            return all(
+                any(
+                    leq(r, q) and leq(r, s) and force_eq(r, sigma, pi)
+                    for r in P for pi, s in target
+                )
+                for q in P if leq(q, p)
+            )
+
+        def force_eq(p, sigma, target):
+            return (
+                all(
+                    any(leq(r, q) and force_mem(r, pi, target) for r in P)
+                    for pi, s in sigma for q in P
+                    if leq(q, p) and leq(q, s)
+                )
+                and all(
+                    any(leq(r, q) and force_mem(r, pi, sigma) for r in P)
+                    for pi, s in target for q in P
+                    if leq(q, p) and leq(q, s)
+                )
+            )
+
+        options = [(empty, p) for p in P]
+        checked = 0
+        for k in range(len(options) + 1):
+            for pairs in combinations(options, k):
+                rho = frozenset(pairs)
+                theta_rho = frozenset(
+                    (sigma, p) for sigma in A for p in P
+                    if force_mem(p, sigma, tau)
+                    and force_mem(p, sigma, rho)
+                )
+                self.assertTrue(all(
+                    force_mem(p, sigma, tau) for sigma, p in theta_rho
+                ))
+                for G in ({top, left}, {top, right}):
+                    a, b = value(tau, G), value(rho, G)
+                    self.assertTrue(b <= a)
+                    self.assertEqual(value(theta_rho, G), b)
+                    checked += 1
+        self.assertEqual(checked, 16)
+        self.assertIn(r"\mathcal S_\tau", TEXT)
+        self.assertIn(r"\theta_\rho", TEXT)
+
+    def test_minimum_rank_class_choice_has_set_bound(self):
+        self.assertIn(r"\alpha_{\sigma,t}", TEXT)
+        self.assertIn(r"\mathbb P\times N_{\gamma+1}^M", TEXT)
+        self.assertIn("zastępowania", TEXT)
+        self.assertIn("aksjomatu wyboru w $M$", TEXT)
+        self.assertIn("ze zbioru $J$", TEXT)
+
     def test_finite_names_singleton_pair_ordered_pair(self):
         top = "T"
         G = {top}
