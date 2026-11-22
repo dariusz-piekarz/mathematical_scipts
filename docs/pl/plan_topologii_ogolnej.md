@@ -219,3 +219,26 @@ obejrzano wszystkie 9 stron osobnego PDF, w tym rysunek i końcowe
 podsumowanie. Brak ostrzeżeń LaTeX oraz osieroconej strony.
 Po aktualizacji oznaczenia książki i regresji należy wykonać
 jeszcze kontrolę CI dla tej integracyjnej zmiany.
+
+## Przekrojowy audyt globalny 01–22 — pierwsza seria
+
+Wykonano pierwszą serię pięciu audytów tematycznych
+obejmujących wszystkie rozdziały 01–22:
+[01 — struktura i zależności](../../audits/general_topology/00-globalny-audyt-01.md),
+[02 — podstawy 01–06](../../audits/general_topology/00-globalny-audyt-02-blok-01-06.md),
+[03 — zwartość, metryzowalność, Baire 07–11](../../audits/general_topology/00-globalny-audyt-03-blok-07-11.md),
+[04 — struktury jednostajne i uzwarcenia 12–17](../../audits/general_topology/00-globalny-audyt-04-blok-12-17.md),
+[05 — przestrzenie odwzorowań i zbieżność zbiorów 18–22](../../audits/general_topology/00-globalny-audyt-05-blok-18-22.md).
+
+Test globalny skryptów sprawdza na każdej walidacji
+zgodność importów z katalogiem, unikatowość wszystkich etykiet,
+rozwiązanie odsyłaczy, bilans środowisk i konwencje terminologiczne.
+**Granice audytu:** przeanalizowano wybrane centralne dowody
+we wszystkich blokach, ale nie dokonano jeszcze indywidualnego,
+w pełni niezależnego przeglądu wszystkich 261 środowisk dowodów
+w 01–22, jak również wszystkich ilustracji w kompletnej książce.
+Nie przedstawiać tej serii jako ukończonego
+całościowego audytu matematycznego.
+Przed zamknięciem fazy globalnego audytu
+kontynuować kontrolę rozdział po rozdziale
+i porównania z innymi skryptami.
