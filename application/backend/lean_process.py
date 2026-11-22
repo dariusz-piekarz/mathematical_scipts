@@ -98,7 +98,7 @@ def execute_registered(
         _stop_process_group(process)
         reader.join(timeout=2)
         if reader.is_alive():
-            raise OSError("Lean stdout pipe was left open by a child process.")
+            raise RuntimeError("Lean stdout pipe was left open by a child process.")
     if read_errors:
-        raise OSError("Could not capture Lean output.") from read_errors[0]
+        raise RuntimeError("Could not capture Lean output.") from read_errors[0]
     return process.returncode if not timed_out else None, tail.decode("utf-8", "replace"), timed_out
