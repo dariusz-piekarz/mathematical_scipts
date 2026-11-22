@@ -19,6 +19,31 @@ class LeanHttpTests(unittest.TestCase):
     def tearDownClass(cls):
         cls.context.__exit__(None, None, None)
 
+    def test_dependency_graph_real_lean_source(self):
+        response = self.client.get("/api/lean/dependencies",
+                                   params={"formalization_id": "lst01-de-morgan"})
+        self.assertEqual(response.status_code, 200, response.text)
+        data = response.json()
+        self.assertEqual(data["source_module"], "LST-01")
+        self.assertEqual(data["source_label"], "thm:de-morgan-logic")
+        self.assertEqual(data["formalization_status"], "ready")
+        self.assertEqual(data["declared_imports"], ["Mathlib"])
+        self.assertEqual(len([
+            n for n in data["nodes"] if n["kind"] == "registered_declaration"
+        ]), 2)
+        self.assertTrue(data["source_entity_id"])
+        self.assertTrue(any(e["kind"] == "declared_import" for e in data["edges"]))
+        self.assertNotIn("proof_status", data)
+        self.assertFalse(data["certificate"])
+
+    def test_dependency_graph_rejects_unknown_id(self):
+        response = self.client.get("/api/lean/dependencies",
+                                   params={"formalization_id": "unlisted"})
+        self.assertEqual(response.status_code, 404)
+        response = self.client.get("/api/lean/dependencies",
+                                   params={"formalization_id": "../../file"})
+        self.assertEqual(response.status_code, 400)
+
     def test_catalog_lists_navigable_real_formalizations(self):
         response = self.client.get("/api/lean/catalog")
         self.assertEqual(response.status_code, 200, response.text)
