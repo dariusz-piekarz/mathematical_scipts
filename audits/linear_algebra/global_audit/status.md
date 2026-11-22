@@ -1,6 +1,6 @@
 # Globalny audyt algebry liniowej — status rozdziałów
 
-**Stan po iteracji 14 (LA21–28 skontrolowane, globalna kontrola wszystkich dowodów nadal trwa)**, 22 listopada 2026.  
+**Stan po iteracji 15 (LA29–32 skontrolowane; utworzono rejestr 382 dowodów; pełny audyt matematyczny trwa)**, 22 listopada 2026.  
 **Aktualizacja:** rozdziały 01–05 zostały ponownie ustabilizowane. W rozdziale 05 poprawiono argument o braku podprzestrzeni dla zgodnego układu z niezerową prawą stroną, następnie wykonano dwa kolejne czyste audyty III–IV na identycznym SHA. Nowy PDF (7 stron) i CI dla poprawionego źródła [45006722306](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45006722306) zweryfikowane — SUCCESS. CI uruchomione wyłącznie zapisem końcowego statusu wymaga osobnej kontroli.
 
 | Rozdział | Status |
@@ -95,3 +95,18 @@ Raport: `iteration_09.md`. Zgodność 32 plików i 32 instrukcji `\\input` potwi
 - **LaTeX:** w LA21–28 razem 254 etykiety i 243 sprawdzone odsyłacze, zero duplikatów wewnątrz zakresu, zero niezdefiniowanych celów w porównaniu z kompletem etykiet 32 rozdziałów, zero niezamkniętych środowisk i naruszeń sprawdzanej terminologii.
 - **CI poświadczające identyczną wersję źródeł:** [run 45047971276](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45047971276), completed/success. Zweryfikowano SHA wszystkich ośmiu plików z commitu przetestowanego przez CI i z bieżącej gałęzi; wszystkie są identyczne. Nie pobierano nowego PDF w iteracji 14.
 - **Globalna kontrola wszystkich dowodów nadal OTWARTA.** Kolejna iteracja: spójność końcowa LA29–32 i powiązania z podstawowymi rozdziałami oraz identyfikacja dowodów wymagających pełnej niezależnej lektury, bez resetu wcześniejszej stabilizacji.
+
+## Iteracja 15 — 2026-11-22: Grassmanniany, Clifford, Spin, twistory i 382-dowodowy rejestr
+
+**[Raport globalny 15](iteration_15.md)** — nowa niezależna lektura kluczowych dowodów LA29–32 (3465 wierszy, 25 środowisk proof), ich spójności z LA10–11 i geometrią spinową, oraz osobna regresja rachunkowa: **94 093/94 093 PASS**. W badanym zakresie **nie stwierdzono koniecznej korekty źródeł**.
+
+- **Rzeczywiście wykonany test:** /mnt/data/la_global15_crosscheck.py, 235 wierszy, seed 20261122, SHA256 b079bc2ef5ec36025e07d79453170f27e1a75167fc49a64c298e82dcffa3955b. Grupy LA29: 12 670 PASS; LA30: 38 747 PASS; LA31: 9637 PASS; LA32: 33 039 PASS. Pokrycie: minory i przestrzeń styczna grassmannianu, łączność mnożenia Clifforda (do 32³ trójek bazowych słów), Pin/Spin, chiralność, Segre/Klein, Penrose oraz kwaternionowa fibracja. Testy rachunkowe nie są formalnym dowodem ogólnych twierdzeń.
+- **CI i zamrożenie:** [CI 45047971276](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45047971276) — completed/success. SHA wszystkich czterech źródeł LA29–32 na przetestowanym commicie dokładnie odpowiadają SHA bieżącej gałęzi. Nie uruchomiono nowego PDF ani nie zmieniono plików źródłowych.
+- **NOWY rejestr wszystkich 382 środowisk dowodów**, z rozdziałem, SHA, zakresem wierszy, tytułem stwierdzenia i statusem indywidualnej kontroli:
+  [LA01–08](iteration_15_proof_ledger_01_08.csv) — 127;
+  [LA09–16](iteration_15_proof_ledger_09_16.csv) — 123;
+  [LA17–24](iteration_15_proof_ledger_17_24.csv) — 61;
+  [LA25–32](iteration_15_proof_ledger_25_32.csv) — 71.
+  Kolumna individual_formal_certification=NIE oznacza **brak osobnego per-dowodowego certyfikatu krok po kroku w tym rejestrze**, a nie brak wcześniejszych audytów ani twierdzenie o nieweryfikowaniu kodu przez odrębny proces Lean.
+- **Kontrola spójności źródeł:** 32 rozdziały, 1083 etykiety, 660 prostych odsyłaczy. Od inwentarza iteracji 10 zmienił się tylko LA08 (korekta z iteracji 11), bez zmiany etykiet; nowy, dodatkowy odsyłacz wskazuje istniejący cel. Nie stwierdzono brakujących odsyłaczy ani zduplikowanych etykiet.
+- **Dalszy audyt globalny OTWARTY.** Następnie krokowa analiza fundamentów LA01–05 i niezależny blok LA12–13, a później sceptyczna kontrola przekrojowa. Nie resetować zamkniętych rozdziałowych audytów LA12–32 bez konkretnej nowej usterki. Nie utożsamiać licznika PASS/CI z formalizacją wszystkich 382 dowodów.
