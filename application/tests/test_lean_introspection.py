@@ -278,8 +278,14 @@ class InspectionExecutionTests(unittest.TestCase):
                     "memory_limit_mb":None,"total_memory_limit_mb":None}
         self.original=self.leanfile.read_bytes()
         self.fingerprint={"source_document_sha256":self.digest,
+                          "source_binding_sha256":"d"*64,
                           "lean_sha256":hashlib.sha256(self.original).hexdigest(),
-                          "toolchain_sha256":"c"*64}
+                          "project_sources_sha256":"e"*64,
+                          "external_packages_sha256":"f"*64,
+                          "compiled_artifacts_sha256":"a"*64,
+                          "executable_toolchain_sha256":"b"*64,
+                          "toolchain_sha256":"c"*64,
+                          "declared_toolchain":"leanprover/lean4:v4.26.0"}
 
     def execute(self, *args, result=(0,transcript(),False), fingerprint=None, ready=None, process=None, classified=False):
         with patch.dict(os.environ,{"MATLIB_LEAN_RUN":"1"}), \
@@ -296,6 +302,9 @@ class InspectionExecutionTests(unittest.TestCase):
         outcome,spawn=self.execute()
         self.assertEqual(outcome["inspection_status"],"complete")
         self.assertEqual(outcome["constants"],{"theorem_x":["Eq","Nat.zero"]})
+        self.assertEqual(outcome["inspection_schema_version"], 1)
+        self.assertRegex(outcome["inspection_snapshot_sha256"], r"^[0-9a-f]{64}$")
+        self.assertEqual(outcome["inspection_provenance"], self.fingerprint)
         self.assertFalse(outcome["certificate"])
         command,root=spawn.call_args.args[:2]
         self.assertEqual(command[:3],["lake","env","lean"])
@@ -314,6 +323,8 @@ class InspectionExecutionTests(unittest.TestCase):
         self.assertEqual(response["type_constants"], {"theorem_x": ["Eq"]})
         self.assertEqual(response["value_constants"], {"theorem_x": ["Nat.zero"]})
         self.assertEqual(len(response["reference_edges"]), 2)
+        self.assertEqual(response["inspection_schema_version"], 1)
+        self.assertRegex(response["inspection_snapshot_sha256"], r"^[0-9a-f]{64}$")
         self.assertFalse(response["certificate"])
         self.assertNotIn("proof_status", response)
 
