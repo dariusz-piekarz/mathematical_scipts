@@ -837,8 +837,15 @@ function renderLeanInspection(result){
     const group=node("section",{className:"lean-constant-group"});
     const values=result.constants[name];
     group.append(node("h3",{},name+" · "+values.length+" stałych"));
-    const list=node("ul");
-    for(const value of values){
+    const categorized=result.type_constants&&result.value_constants;
+    const buckets=categorized?[
+      ["Typ / założenia",result.type_constants[name]||[]],
+      ["Wartość / dowód",result.value_constants[name]||[]]
+    ]:[["Wszystkie referencje",values]];
+    for(const [label,refs] of buckets){
+      if(categorized)group.append(node("h4",{},label+" · "+refs.length));
+      const list=node("ul");
+      for(const value of refs){
       const li=node("li",{},value);
       // A constant name can be navigated only when exactly one current catalog
       // registration declares it. This is a UI association, not proof equivalence.
@@ -854,13 +861,16 @@ function renderLeanInspection(result){
         link.addEventListener("click",()=>loadLeanFragment({entity_id:match.source_entity_id}));
         li.replaceChildren(link);
       }
-      list.append(li);
+        list.append(li);
+      }
+      group.append(list);
     }
-    group.append(list);
     target.append(group);
   }
   target.append(node("p",{className:"doc-meta"},
-    "Metoda: "+result.extraction_method+" · certyfikat: NIE."));
+    "Metoda: "+result.extraction_method+" · "+
+    (result.type_constants?"Referencje bezpośrednie z typu i wartości, bez domknięcia przechodniego · ":"")+
+    "certyfikat: NIE."));
 }
 async function inspectLeanConstants(){
   const item=state.leanFragment,epoch=state.leanEpoch,runner=state.leanRunner;
@@ -870,7 +880,7 @@ async function inspectLeanConstants(){
   $("leanInspection").textContent="Trwa lokalna inspekcja wyrażeń Lean…";
   try{
     const result=await api("/api/lean/dependencies/inspect",{
-      method:"POST",body:JSON.stringify({formalization_id:item.formalization_id})});
+      method:"POST",body:JSON.stringify({formalization_id:item.formalization_id,classify_references:true})});
     if(!isCurrentLeanRun(epoch,item))return;
     renderLeanInspection(result);
   }catch(err){
