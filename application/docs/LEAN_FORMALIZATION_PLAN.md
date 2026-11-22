@@ -93,3 +93,9 @@ Do wyświetlenia certyfikatu **Zweryfikowane matematycznie** wymagane są jednoc
 - Analiza przekładu w `application/docs/LEAN_PILOT_LST01_2026-11-22.md`; wszystkie wpisy mają `statement_status=needs_review`, bo `Prop` reprezentuje wartości zdań, a nie indukcyjną składnię formuł i funkcję wartościowania. Nie przypisano certyfikatów.
 - Nowe pliki są testowane przez [CI 45011246156](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45011246156). **Nie wpisywać nowym twierdzeniom statusu skompilowane, dopóki przebieg nie przejdzie.**
 - Następnie: pełna semantyka formuł/wartościowań albo kolejne mapowania LST-02; zachować odrębność audytu semantycznego i kompilacji.
+
+### Strumień A — integralność indeksu przed runnerem (22.11.2026)
+- `backend/lean_formalization.py::run` sprawdza teraz, czy SHA256 rzeczywistych bajtów `documents.content` odpowiada `documents.sha256`; niezgodność lub brak tekstu daje `blocked` i `certificate=false` bez uruchamiania Lean.
+- Dodano dwie regresje `test_runner_blocks_inconsistent_index_before_subprocess` i `test_runner_rejects_nontext_index_content` z asercją braku uruchomienia subprocess.
+- Raport: `application/docs/LEAN_RUNNER_INDEX_INTEGRITY_2026-11-22.md`. Pełny test CI: [45011756997](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45011756997) (wynik do sprawdzenia). Wcześniejszy pełny CI [45011702386](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45011702386) miał błąd w niezależnym teście `test_lean_ci_audit`, nie w runnerze.
+- Następny krok: zweryfikować końcowy CI i poprawić limity zasobów i wyjścia runnera. Sukces procesu nadal oznacza `compiled`, nigdy automatycznie `verified`.
