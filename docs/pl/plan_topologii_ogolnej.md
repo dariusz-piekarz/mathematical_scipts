@@ -514,3 +514,37 @@ pozostaje otwarty. Częściowe kontrole
 konkretnych argumentów nie zastępują
 niezależnego sprawdzenia każdego
 środowiska dowodowego.
+
+
+## Globalny audyt 09–10 — wybrane dowody rozdziałów 12–18
+
+- [Audyt 09](../../audits/general_topology/00-globalny-audyt-09-blok-12-18-kontrole-niezalezne.md):
+  produkty przestrzeni jednostajnych (12),
+  lokalna zwartość dowolnych iloczynów
+  i wyczerpanie zwarte (14),
+  przedłużanie właściwych odwzorowań
+  i minimalność uzwarcenia Aleksandrowa (17),
+  prawo wykładnicze i ciągłość ewaluacji,
+  metryzacja i zupełność przestrzeni
+  \(C_k(X,Y)\) (18).
+  Raporty 07 i 08 obejmują odpowiednio
+  uzupełnienia jednostajne (13)
+  i twierdzenie Nagaty--Smirnowa (15).
+- [Audyt 10](../../audits/general_topology/00-globalny-audyt-10-rozdzial-16-uzwarcenia-funkcyjne.md):
+  funkcjonalna charakterystyka
+  całkowitej regularności T1 (16),
+  istnienie uzwarcenia Hausdorffa,
+  jednoznaczność rozszerzeń
+  i porządek na klasach
+  równoważności uzwarceń.
+
+Zatwierdzone źródła 12–18 pozostawiono
+bez zmian. W indywidualnie sprawdzonych
+dowodach nie wykryto błędów wymagających
+korekty. **Globalny audyt całej książki
+pozostaje otwarty**; wymaga jeszcze
+systematycznej kontroli wszystkich
+pozostałych dowodów i inspekcji
+rysunków całego 190-stronicowego
+wydania. Testy strukturalne i CI
+nie zastępują tych kontroli.
