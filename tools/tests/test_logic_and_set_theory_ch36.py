@@ -158,5 +158,54 @@ class TestSymmetricChoiceChapter36(unittest.TestCase):
         self.assertIn("Klasy i relacja są \\emph{zbiorami zewnętrznymi}", TEXT)
 
 
+    def test_atomic_row_membership_equivariance_and_dense_splitting(self):
+        # A separate finite check of both bit values under S_3.
+        # This does not prove genericity on the infinite Cohen forcing.
+        coords = [(row, bit) for row in range(3) for bit in range(2)]
+        conditions = [
+            {
+                cell: v for cell, v in zip(coords, assignment)
+                if v != 2
+            }
+            for assignment in itertools.product((0, 1, 2), repeat=6)
+        ]
+        checked = 0
+        for perm in itertools.permutations(range(3)):
+            pi = dict(enumerate(perm))
+            for p in conditions:
+                q = apply_perm(p, pi)
+                for row, k in coords:
+                    self.assertEqual(
+                        p.get((row, k)) == 1,
+                        q.get((pi[row], k)) == 1,
+                    )
+                    self.assertEqual(
+                        p.get((row, k)) == 0,
+                        q.get((pi[row], k)) == 0,
+                    )
+                    checked += 2
+        self.assertEqual(checked, 52488)
+
+        split_checks = 0
+        for p in conditions:
+            for row in range(3):
+                for other in range(row + 1, 3):
+                    k = max(
+                        (n for (r, n) in p if r in (row, other)),
+                        default=-1,
+                    ) + 1
+                    q = dict(p)
+                    q[(row, k)] = 0
+                    q[(other, k)] = 1
+                    self.assertTrue(compatible(p, q))
+                    self.assertTrue(
+                        set(q.items()).issuperset(set(p.items()))
+                    )
+                    self.assertNotEqual(q[(row, k)], q[(other, k)])
+                    split_checks += 1
+        self.assertEqual(split_checks, 2187)
+
+
+
 if __name__ == "__main__":
     unittest.main()
