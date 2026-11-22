@@ -28,10 +28,10 @@ class LeanIntrospectionRealSmokeTests(unittest.TestCase):
                 self.fail("Mandatory real Lean smoke test: Lake or Mathlib unavailable")
             self.skipTest("Lake/Mathlib unavailable; no real Lean execution")
         source = (LEAN_ROOT / "src" / "LST01_DeMorgan.lean").read_bytes()
-        theorem = "lst01_de_morgan_and"
+        theorems = ["lst01_de_morgan_and", "lst01_de_morgan_or"]
         token = secrets.token_hex(16)
         instrumented = (source + b"\n" +
-                        inspect.make_instrumentation([theorem], token).encode("utf-8"))
+                        inspect.make_instrumentation(theorems, token).encode("utf-8"))
         with tempfile.TemporaryDirectory(prefix="atlas-lean-inspection-") as directory:
             target = Path(directory) / "Inspect.lean"
             target.write_bytes(instrumented)
@@ -44,9 +44,11 @@ class LeanIntrospectionRealSmokeTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout[-1800:] +
                          "\n" + result.stderr[-1800:])
         output = result.stdout + "\n" + result.stderr
-        constants = inspect.parse_inspection(output, token, [theorem])
-        self.assertIn(theorem, constants)
-        self.assertGreater(len(constants[theorem]), 0)
+        constants = inspect.parse_inspection(output, token, theorems)
+        self.assertEqual(set(constants), set(theorems))
+        for theorem in theorems:
+            self.assertGreater(len(constants[theorem]), 0)
+            self.assertEqual(len(constants[theorem]), len(set(constants[theorem])))
 
 
 if __name__ == "__main__":
