@@ -74,10 +74,14 @@ def owner_status(con: sqlite3.Connection, module: str, label: str,
             "SELECT DISTINCT offset, entity_id FROM label_conflicts "
             "WHERE name=? AND document_id=? LIMIT 2", (label, module)
         ).fetchall()
-        if len(conflict_rows) > 1:
+        if (len(conflict_rows) > 1 or
+                (conflict_rows and conflict_rows[0][1] != rows[0][0])):
             return "ambiguous_label", None
     entity_id = rows[0][0]
     binding = indexed_binding(con, module, label, entity_id)
+    if (conflicts_table is not None and conflict_rows and binding is not None
+            and conflict_rows[0][0] != binding[7]):
+        return "ambiguous_label", None
     if binding is None or not valid_binding(binding, source, label):
         return "invalid_label_binding", None
     return "ok", entity_id
