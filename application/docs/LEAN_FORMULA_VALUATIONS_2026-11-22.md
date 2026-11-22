@@ -1,5 +1,8 @@
 # Lean 4 — składnia i semantyka rachunku zdań (LST-01)
 
+> **Aktualizacja po audycie semantycznym:** opis poniżej dokumentuje wcześniejszy stan pilotażu. Nowszy [audyt LST-01](LEAN_SEMANTIC_AUDIT_LST01_2026-11-22.md) potwierdził realną kompilację 14 deklaracji, zatwierdził zgodność sześciu tez z trzema etykietami (`statement_status=approved`) wyłącznie dla SHA256 `9b5cbe26dee8ed5bc437cb3a0d19638eafc5d9ae178a3caa545b8bcf5842b8d0` i wprowadził automatyczne unieważnianie zatwierdzenia przy zmianie kanonicznego źródła. `certificate=false` pozostaje obowiązujące.
+
+
 **Data:** 22 listopada 2026 r.  
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`.  
 **Źródło kanoniczne:** `chapters/pl/logic_and_set_theory/01-zdania-i-spojniki-logiczne.tex`. Bez zmian w LaTeX-u.
