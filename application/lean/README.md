@@ -3,12 +3,17 @@
 Pierwszy etap rozwijany niezależnie od audytów LaTeX. Źródła matematyczne są tylko do odczytu; kod Lean ma odrębny rejestr w `manifest.json`.
 
 ## Zakres pilotażu
-Do ręcznego mapowania źródła `LST-01` służą trzy wpisy w `manifest.json`:
-- `thm:de-morgan-logic` — dwa prawa de Morgana (`LST01_DeMorgan.lean`), skompilowane w rzeczywistym CI.
-- `thm:implication-laws` — obie równoważności implikacji oraz modus ponens (`LST01_ImplicationLaws.lean`).
-- `thm:negated-implication-xli` — równoważność negacji implikacji (`LST01_NegatedImplication.lean`).
 
-Dwa ostatnie pliki wymagają osobnego przebiegu CI po dodaniu. Wszystkie trzy powiązania mają status `needs_review`: `Prop` formalizuje wartości logiczne, a nie wprost składnię formuł i wszystkie funkcje wartościujące; nie wolno mylić tych dwóch poziomów.
+Trzy wpisy `manifest.json` powiązane są z dokładnymi etykietami LaTeX z `LST-01`. Głównym źródłem pokazywanym w panelu jest teraz `src/LST01_SyntaxValuations.lean`: definiuje **indukcyjną składnię formuł** (litera, negacja, koniunkcja, alternatywa, implikacja, równoważność), funkcję `eval` dla wartościowania `Nat → Bool`, równoważność formuł przez wszystkie wartościowania oraz tautologię.
+
+- `thm:de-morgan-logic` — oba prawa de Morgana dla formuł.
+- `thm:implication-laws` — rozwinięcie implikacji, przeciwstawienie i modus ponens.
+- `thm:negated-implication-xli` — negacja implikacji.
+- Ponadto w tym pliku: formalna tablica prawdy dla równoważności oraz poprawne traktowanie dwóch wystąpień tej samej litery.
+
+Pliki `LST01_DeMorgan.lean`, `LST01_ImplicationLaws.lean` i `LST01_NegatedImplication.lean` pozostają jako krótkie opracowania na poziomie `Prop`. Nowy CI kompiluje **każdy** plik `.lean` z `src/` i kontroluje raporty `#print axioms` dla wszystkich ich twierdzeń, także gdy dany plik nie jest głównym mapowaniem w panelu.
+
+Mapowanie `Prop` to tylko semantyka pojedynczego wartościowania, natomiast nowe mapowanie `Formula` oddaje budowę formuły i kwantyfikację po wszystkich wartościowaniach. Status `needs_review` pozostaje do odrębnego audytu matematycznego. Wczytanie pliku Lean w panelu nie jest certyfikatem wierności.
 
 ## Co jest dostępne w aplikacji
 1. Otwórz obiekt matematyczny w Explorerze; w Czytniku kliknij **Zobacz w Lean**.
