@@ -76,6 +76,24 @@ def _registry(lean_root: Path = LEAN_ROOT) -> list[dict[str, Any]]:
     return results
 
 
+
+def _checked_entity_span(source: str, entity: sqlite3.Row) -> tuple[int, int]:
+    """Fail closed when indexed entity offsets and line numbers disagree.
+
+    A valid whole-document digest is not sufficient to authenticate a selected
+    fragment: corrupt entity metadata can otherwise attach the correct theorem
+    label to an unrelated slice of that document.
+    """
+    start, end = entity["start_offset"], entity["end_offset"]
+    first, last = entity["start_line"], entity["end_line"]
+    if (type(start) is not int or type(end) is not int
+            or type(first) is not int or type(last) is not int
+            or not (0 <= start < end <= len(source))
+            or first != source.count("\n", 0, start) + 1
+            or last != source.count("\n", 0, end - 1) + 1):
+        raise HTTPException(409, "Niespójne przesunięcia lub numery wierszy obiektu w indeksie.")
+    return start, end
+
 def _find_source(con: sqlite3.Connection, *, entity_id: str | None,
                  module_id: str | None, start_line: int | None, end_line: int | None):
     if entity_id:
@@ -93,7 +111,8 @@ def _find_source(con: sqlite3.Connection, *, entity_id: str | None,
             raise HTTPException(404, "Nie znaleziono rozdziału.")
         if not isinstance(d["content"], str):
             raise HTTPException(409, "Brak tekstowej treści rozdziału w indeksie.")
-        content = d["content"][e["start_offset"]:e["end_offset"]]
+        begin, finish = _checked_entity_span(d["content"], e)
+        content = d["content"][begin:finish]
         labels = [row[0] for row in con.execute(
             "SELECT name FROM labels WHERE entity_id=? ORDER BY offset", (entity_id,))]
         linkage = "exact_entity"
@@ -101,10 +120,13 @@ def _find_source(con: sqlite3.Connection, *, entity_id: str | None,
         # Never link a proof to an unrelated earlier theorem across other text.
         if e["kind"] == "proof" and not labels:
             previous = con.execute(
-                "SELECT id,end_offset FROM entities WHERE document_id=? AND kind='theorem' "
+                "SELECT id,start_offset,end_offset,start_line,end_line FROM entities "
+                "WHERE document_id=? AND kind='theorem' "
                 "AND end_offset<=? ORDER BY end_offset DESC LIMIT 1",
-                (d["id"], e["start_offset"])).fetchone()
-            if previous and not d["content"][previous["end_offset"]:e["start_offset"]].strip():
+                (d["id"], begin)).fetchone()
+            if previous:
+                _checked_entity_span(d["content"], previous)
+            if previous and not d["content"][previous["end_offset"]:begin].strip():
                 labels = [row[0] for row in con.execute(
                     "SELECT name FROM labels WHERE entity_id=? ORDER BY offset",
                     (previous["id"],))]
@@ -113,7 +135,8 @@ def _find_source(con: sqlite3.Connection, *, entity_id: str | None,
         return d, content, labels, e["start_line"], e["end_line"], entity_id, linkage
     if not module_id or start_line is None or end_line is None:
         raise HTTPException(400, "Podaj entity_id albo module_id wraz z start_line i end_line.")
-    if not (1 <= start_line <= end_line and end_line - start_line <= 300):
+    if (type(start_line) is not int or type(end_line) is not int
+            or not (1 <= start_line <= end_line and end_line - start_line <= 300)):
         raise HTTPException(400, "Zakres musi zawierać od 1 do 301 pełnych wierszy.")
     d = con.execute("SELECT id,title,sha256,content FROM documents WHERE id=?",
                     (module_id,)).fetchone()
