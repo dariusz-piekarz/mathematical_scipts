@@ -3,9 +3,9 @@
 > **Aktualizacja 2026-11-22 — po audytach ALG-07/IX, ALG-08/V, ALG-09/V, ALG-10/VI oraz kontroli po zamknięciu:** ALG-00–09 są zamknięte według raportów końcowych. ALG-10 został zamknięty w audycie VI na blobie `348d3762fa6cb197e0f4578504170e0fc7f107c9`, lecz w późniejszej kontroli wykryto i poprawiono błąd językowy w przykładzie normalizacji. Aktualny blob ALG-10: `a1b568aeff8e4d5a70731c4799e479c19475b56e`. **ALG-10 ponownie OTWARTY do regresji nowego źródła; 0 pełnych czystych kontroli od poprawki, dodatkowy audyt nowej wersji niewykonany.** Następny przebieg: ALG-10, nie ALG-11. Zob. [raport kontrolny](2026-11-22-ALG-10-global-control-01.md). Historyczna tabela poniżej jest migawką z audytu ALG-07/II i nie odzwierciedla późniejszych raportów.
 
 
-**Ostatnia aktualizacja:** 2026-11-22, audyt ALG-07 nr 2.
+**Ostatnia aktualizacja:** 2026-11-22; ALG-00–09 stabilne, ALG-10 ponownie otwarty po korekcie, audyt globalny I z poprawką monolitu.
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`.
-**Następny przebieg:** **ALG-07, audyt nr 3** — niezależna kontrola bloba po doprecyzowaniu związków między dzielnikami i klasami Chowa oraz definicji przez normalizację; kontynuować do stabilności plus osobny audyt dla pewności. ALG-00–06 pozostają zamknięte.
+**Następny przebieg:** pełny reaudyt ALG-10 na nowym blobie i odbiór nowego CI/PDF; niezależnie audyt globalny II po synchronizacji całej książki. Nie rozpoczynać ALG-11.
 
 | ID | Rozdział | Iteracja zakończona | Status | Raport / czynność |
 | --- | --- | ---: | --- | --- |
@@ -16,10 +16,14 @@
 | ALG-04 | Algebra przemienna, snopy i krzywe algebraiczne | **4** | **STABILNY / ZAMKNIĘTY** | [Audyt 4](2026-11-22-ALG-04-iteration-04.md) — niezależny bezusterkowy reaudyt całego rozdziału, 14/14 regresji PASS, CI SUCCESS na identycznym źródle, 43-stronicowy PDF i 10 rysunków PASS |
 | ALG-05 | Rozdmuchania i rozwiązywanie osobliwości | **10** | **STABILNY / ZAMKNIĘTY** | [Audyt IX](2026-11-22-ALG-05-iteration-09.md) i [audyt X](2026-11-22-ALG-05-iteration-10.md) — dwa niezależne bezusterkowe przeglądy, 18/18 regresji, dwie udane kompilacje źródła, PDF 124 strony, 4 rysunki skontrolowane |
 | ALG-06 | Powierzchnie algebraiczne | **5** | **STABILNY / ZAMKNIĘTY** | [Audyt IV](2026-11-22-ALG-06-iteration-04.md) oraz [audyt V](2026-11-22-ALG-06-iteration-05.md) — dwa niezależne bezusterkowe przeglądy, 21/21 regresji, dwie udane kompilacje, PDF 136 stron i 3 rysunki PASS |
-| ALG-07 | Teoria przecięć, grupy Chowa i klasy Cherna | **2** | **OTWARTY** | [Audyt II](2026-11-22-ALG-07-iteration-02.md) — odróżniono dzielnik od klasy Chowa w RR, poprawiono obraz prosty przez normalizację i przykład węzła; 27/27 regresji, CI SUCCESS, PDF 149 stron i 2 rysunki sprawdzone |
-| ALG-08 | Geometria biwymierna i modele minimalne | 0 | Oczekuje | Po ALG-07 |
-| ALG-09 | Geometria algebraiczna a analiza zespolona | 0 | Oczekuje | Po ALG-08 |
-| ALG-10 | Geometria algebraiczna a topologia | 0 | Oczekuje | Po ALG-09 |
+| ALG-07 | Teoria przecięć, grupy Chowa i klasy Cherna | **9** | **STABILNY / ZAMKNIĘTY** | [Audyt IX](2026-11-22-ALG-07-iteration-09.md) — końcowa kontrola bez nowych usterek |
+| ALG-08 | Geometria biwymierna i modele minimalne | **5** | **STABILNY / ZAMKNIĘTY** | [Audyt V](2026-11-22-ALG-08-iteration-05.md) — kontrola niezależna |
+| ALG-09 | Geometria algebraiczna a analiza zespolona | **5** | **STABILNY / ZAMKNIĘTY** | [Audyt V](2026-11-22-ALG-09-iteration-05.md) — kontrola niezależna |
+| ALG-10 | Geometria algebraiczna a topologia | **6 + korekta** | **OTWARTY** | [Audyt VI](2026-11-22-ALG-10-iteration-06.md) dotyczył poprzedniego bloba; [kontrola po zamknięciu](2026-11-22-ALG-10-global-control-01.md) zmieniła tekst, potrzebna ponowna stabilizacja |
+
+## Audyt globalny ALG-00–10
+
+[Audyt globalny I](2026-11-22-ALG-GLOBAL-iteration-01.md): wykryto i naprawiono nieaktualne fragmenty monolitu ALG-00–04, dodano regresję zgodności i osobny workflow dla obu PDF. **Audyt globalny OTWARTY**, a ALG-10 po osobnej korekcie językowej również wymaga ponownej stabilizacji. Nie przypisywać obecnemu źródłu wcześniejszych wyników CI.
 
 ## Metodologia
 
