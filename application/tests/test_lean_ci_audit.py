@@ -78,6 +78,22 @@ class LeanAuditTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             registered_files(self.manifest, self.root)
 
+    def test_unregistered_auxiliary_lean_source_is_also_audited(self):
+        auxiliary = self.root / "src" / "Extra.lean"
+        auxiliary.write_text("theorem extra : True := by trivial\\n"
+                             "#print axioms extra\\n", encoding="utf-8")
+        entries = registered_files(self.manifest, self.root)
+        self.assertIn("src/Extra.lean", entries)
+        self.assertEqual(entries["src/Extra.lean"], [])
+        with self.assertRaisesRegex(ValueError, "Missing or oversized"):
+            audit(self.manifest, self.root, self.logs)
+        (self.logs / "src_Extra.lean.log").write_text(
+            "'extra' does not depend on any axioms\\n", encoding="utf-8")
+        result = audit(self.manifest, self.root, self.logs)
+        self.assertEqual(result["files_checked"], 2)
+        self.assertEqual(result["theorems_checked"], 3)
+        self.assertFalse(result["certificate"])
+
     def test_cli_nonzero_for_missing_real_log(self):
         self.log.unlink()
         result = main(["--manifest", str(self.manifest), "--lean-root", str(self.root),
