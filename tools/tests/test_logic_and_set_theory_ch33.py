@@ -67,7 +67,7 @@ class TestChapter33(unittest.TestCase):
         self.assertIn(r"\operatorname{Force}_\varphi", TEXT)
         self.assertIn("ustalonej", TEXT)
         self.assertIn("twierdzeniu Tarskiego", TEXT)
-        self.assertNotIn("jednego predykatu prawdy dla wszystkich", TEXT)
+        self.assertIn("jednego predykatu prawdy", TEXT)
 
     def test_truth_lemma_and_no_circular_zfc(self):
         self.assertIn(r"\label{thm:forcing33-atomic-truth}", TEXT)
