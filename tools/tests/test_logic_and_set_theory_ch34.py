@@ -278,6 +278,83 @@ class TestContinuumForcingChapter34(unittest.TestCase):
         self.assertEqual(dense_count, 16)
         self.assertEqual(maximal_count, 32)
 
+    def test_predensity_over_all_three_element_preorders(self):
+        # The text permits preorders, not only antisymmetric partial orders.
+        # Enumerate every reflexive/transitive relation on three points.
+        # For those admitting a greatest condition, check all locally dense
+        # subsets and their maximal incompatible antichains.
+        P = (0, 1, 2)
+        off = [(a, b) for a in P for b in P if a != b]
+
+        def subfamilies(items):
+            return (
+                frozenset(x)
+                for n in range(len(items) + 1)
+                for x in combinations(items, n)
+            )
+
+        relations = 0
+        top_relations = 0
+        dense_cases = 0
+        maximal_cases = 0
+        for mask in range(1 << len(off)):
+            R = {(a, a) for a in P} | {
+                pair for i, pair in enumerate(off) if mask & (1 << i)
+            }
+            if any(
+                (a, b) in R and (b, c) in R and (a, c) not in R
+                for a in P for b in P for c in P
+            ):
+                continue
+            relations += 1
+            if not any(all((q, t) in R for q in P) for t in P):
+                continue
+            top_relations += 1
+
+            def below(q, p):
+                return (q, p) in R
+
+            def compatible(q, p):
+                return any(below(r, q) and below(r, p) for r in P)
+
+            for p in P:
+                cone = [q for q in P if below(q, p)]
+                for D in subfamilies(cone):
+                    if not all(
+                        any(below(d, q) for d in D) for q in cone
+                    ):
+                        continue
+                    dense_cases += 1
+                    for A in subfamilies(tuple(D)):
+                        if any(
+                            compatible(a, b)
+                            for a, b in combinations(A, 2)
+                        ):
+                            continue
+                        if any(
+                            not any(compatible(d, a) for a in A)
+                            for d in D
+                        ):
+                            continue
+                        maximal_cases += 1
+                        self.assertTrue(all(
+                            any(compatible(q, a) for a in A)
+                            for q in cone
+                        ))
+                        E = {
+                            q for q in P
+                            if any(below(q, a) for a in A)
+                            or not compatible(q, p)
+                        }
+                        self.assertTrue(all(
+                            any(below(s, q) for s in E)
+                            for q in P
+                        ))
+        self.assertEqual(relations, 29)
+        self.assertEqual(top_relations, 16)
+        self.assertEqual(dense_cases, 138)
+        self.assertEqual(maximal_cases, 231)
+
     def test_countable_closure_proof_restarts_below_every_condition(self):
         # Finite analogue of the corrected density argument:
         # every initial partial condition has a common strengthening
