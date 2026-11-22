@@ -74,7 +74,7 @@ def sources() -> tuple[int, int]:
         assert src.count(r"\begin{"+env+"}") == src.count(r"\end{"+env+"}"), env
     data=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     chapters=next(b["chapters"] for b in data["books"] if b["id"]=="general_topology")
-    assert len(chapters)==17 and chapters[16]==CH
+    assert len(chapters)>=17 and chapters[16]==CH
     joined="\n".join((ROOT/c).read_text(encoding="utf-8") for c in chapters)
     labels=re.findall(r"\\label\{([^}]+)\}",joined)
     refs=re.findall(r"\\(?:ref|eqref|pageref)\{([^}]+)\}",joined)
