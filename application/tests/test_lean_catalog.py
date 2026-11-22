@@ -45,7 +45,7 @@ class LeanCatalogTests(unittest.TestCase):
                          ("LST-01", "Test", self.digest, SOURCE))
         self.con.execute("INSERT INTO entities VALUES(?,?,?,?,?,?,?,?)",
                          ("theorem-one", "LST-01", "theorem", "Test", 1, 3, 0, len(SOURCE)))
-        self.con.execute("INSERT INTO labels VALUES(?,?,?)", ("t:x", "theorem-one", 1))
+        self.con.execute("INSERT INTO labels VALUES(?,?,?)", ("t:x", "theorem-one", SOURCE.index("\\label{")))
         self.con.commit()
 
     def save_manifest(self):
