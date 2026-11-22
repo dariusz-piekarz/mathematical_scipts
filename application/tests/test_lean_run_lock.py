@@ -70,6 +70,19 @@ class LeanRunLockTests(unittest.TestCase):
                 process.kill()
                 process.communicate(timeout=5)
 
+    @unittest.skipUnless(os.name == "posix" and hasattr(os, "O_NOFOLLOW"),
+                         "POSIX O_NOFOLLOW requirement")
+    def test_symlinked_lock_file_fails_closed(self):
+        path = self.root.parent / "data" / "lean_runs"
+        path.mkdir(parents=True)
+        target = Path(self.tmp.name) / "untouched"
+        target.write_text("protected", encoding="utf-8")
+        (path / ".runner.lock").symlink_to(target)
+        with self.assertRaises(lean_run_lock.RunnerLockUnavailable):
+            with lean_run_lock.exclusive(self.root):
+                self.fail("symlink must not be followed")
+        self.assertEqual(target.read_text(encoding="utf-8"), "protected")
+
     def test_killed_owner_releases_os_lock_without_deleting_lockfile(self):
         child_code = (
             "from pathlib import Path;"
