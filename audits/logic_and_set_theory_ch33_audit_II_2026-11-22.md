@@ -37,10 +37,13 @@ Następna część oryginalnego dowodu: gęstość wybranych warunków poniżej 
 ## Regresje i kompilacja
 
 - Rozdział zachowuje **25 etykiet, 26 odsyłaczy, 4 definicje, 6 lematów, 6 twierdzeń, 3 przykłady, 5 uwag i 12 dowodów**.
-- Testy regresyjne w `tools/tests/test_logic_and_set_theory_ch33.py` rozszerzono z **11 do 14**: dodano sprawdzanie wartości nazwy sumy na dwóch gałęziach skończonego wymuszania, konstrukcję $\theta_\rho$ dla wszystkich ośmiu nazw poziomu 1 w prostym modelu i kontrolę argumentu ograniczania rang w schemacie zastępowania.
+- Testy regresyjne w `tools/tests/test_logic_and_set_theory_ch33.py` rozszerzono z **11 do 14**: dodano sprawdzanie wartości nazwy sumy na dwóch gałęziach skończonego wymuszania, konstrukcję $\theta_\rho$ dla wszystkich ośmiu nazw zbudowanych z nazwy pustej i trzech warunków w prostym modelu i kontrolę argumentu ograniczania rang w schemacie zastępowania.
 - Pierwsze dwie próby CI po korekcie dowodu nie powiodły się **wyłącznie z powodu nieaktualnej asercji tekstowej w teście** (`najmniejszą rangę` zamiast `\emph{najmniejsza ranga}`). Dostosowano asercję do poprawionego dowodu; nowa wersja nie usuwa matematycznych kontroli.
-- [Przebieg CI nowej wersji](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45020300332). Status końcowy testów, kompilacji oraz liczby stron zostanie odnotowany po zakończeniu tego przebiegu.
+- [GitHub Actions #45020300332](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45020300332): **SUCCESS**, po poprawkach matematycznych i aktualizacji testów. Wszystkie 14 testów rozdziału 33 oraz pozostałe testy rozdziałów 1–32 przeszły. Struktura i inwentarz: **828 etykiet i 616 odsyłaczy**, bez nierozwiązanych odsyłaczy.
+- [GitHub Actions #45020385031](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45020385031): **SUCCESS**, dodatkowo po zapisaniu niniejszego raportu audytu II.
+- **Kontrola PDF:** pełna książka liczy **288 stron**; rozdział 33 zajmuje strony PDF **281–288** (drukowane strony 272–279). Wszystkie osiem stron wyrenderowano i obejrzano; równości, wzory, nagłówki, odstępy i przyporządkowanie tekstu są czytelne. Nie stwierdzono nachodzenia napisów na wzory ani uciętego tekstu.
+- **Log LaTeX:** 0 błędów, 0 niezdefiniowanych odsyłaczy, 0 ostrzeżeń o niezdefiniowanych cytowaniach, 0 `Overfull \\hbox`; 1 `Underfull \\hbox` w całej książce.
 
-## Werdykt wstępny
+## Werdykt po audycie II
 
-**Audyt II znalazł istotną lukę uzasadnienia zbiorowego w dowodzie zastępowania i dwie inne nieścisłości argumentacyjne; poprawiono wszystkie trzy.** Z tego powodu rozdziału 33 nie uznajemy jeszcze za stabilny matematycznie. Po pozytywnej walidacji CI należy wykonać niezależny **audyt III**, przy szczególnej uwadze na rangę nazw i schematy aksjomatów ZFC. Testy Python i kompilacja LaTeX nie zastępują formalnej weryfikacji matematycznej.
+**Audyt II znalazł istotną lukę uzasadnienia zbiorowego w dowodzie zastępowania i dwie inne nieścisłości argumentacyjne; poprawiono wszystkie trzy.** Wersja po poprawkach ma **PASS** testów regresyjnych, pełnej kompilacji CI i wizualnego audytu ośmiu stron PDF. Z tego powodu rozdział pozostaje **poprawiony po audycie II, lecz jeszcze nie ostatecznie stabilny matematycznie**. Kolejny krok to niezależny **audyt III**, przy szczególnej uwadze na rangę nazw i schematy aksjomatów ZFC. Testy Python i kompilacja LaTeX nie zastępują formalnej weryfikacji matematycznej.
