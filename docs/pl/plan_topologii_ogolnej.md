@@ -27,6 +27,7 @@ Stan: 22 listopada 2026. Źródłem prawdy dla rozdziałów włączonych do ksi�
 | **19** | **Przestrzenie polskie, podprzestrzenie G-delta, zbiory borelowskie i hierarchia indeksowana przeliczalnymi liczbami porządkowymi** | **stabilny — audyt 03; CI/PDF PASS; 590 unikatowych etykiet i 138 poprawnych odsyłaczy w książce** |
 | **20** | **Zbiory analityczne, rzuty zbiorów domkniętych, operacja Suslina, zbiór nieborelowski analityczny** | **stabilny — audyty 05–07 (2/2 + 1); kodowanie drzewa 1/2 poprawione; CI/PDF PASS** |
 | **21** | **Topologie na rodzinach podzbiorów: Vietoris, metryka Hausdorffa, zupełność, zwartość, Fell, zbieżność i porównanie** | **stabilny — audyty 03–05 (2/2 + 1); CI/PDF PASS** |
+| **22** | **Zbieżność Kuratowskiego, topologia Wijsmana i topologia Attoucha–Wetsa; związek z Fellem, właściwość przestrzeni, kontrprzykłady** | **stabilny — audyty 02–04 (2/2 + 1); CI/PDF PASS** |
 
 Zakresy 12–13 oraz 16–17 są rozdzielone według tematyki, żeby unikać powtarzania dowodów. Zgodnie z zasadą projektu nowe rozdziały nie oznaczają automatycznie ich stabilności.
 
@@ -134,3 +135,27 @@ a8e0c4dbcf3c3100bf6b3c9e067b6fce0ddaa73b.
 ukończone sukcesem, zbudowano całą książkę i osobny PDF rozdziału 21.
 Sprawdzono wizualnie wszystkie siedem stron, w tym rysunek
 oraz dowód zwartości Fella. Status książki 1.21: rozdziały 01–21 stabilne.
+
+
+## Zamknięcie rozdziału 22 (2026-11-22)
+
+Rozdział 22 zawiera dowody wszystkich głównych relacji
+między zbieżnością Kuratowskiego, topologiami Fella, Wijsmana
+i Attoucha–Wetsa, z precyzyjnym rozróżnieniem założeń
+lokalnej zwartości i właściwości przestrzeni metrycznej.
+W audycie 01 dodano ogólny dowód zawierania
+topologii Fella w topologii Wijsmana na niepustych
+zbiorach domkniętych i doprecyzowano niepuste
+ograniczone zbiory w definicji zbieżności AW.
+Następne audyty 02, 03 i dodatkowy 04 są czyste
+dla niezmienionego bloba
+`33765c2bb1b3065f4ad32596795c3d1981b48dda`.
+Zielona [walidacja 45047289481](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45047289481)
+zbudowała całą książkę oraz samodzielny rozdział 22.
+Pobrano i wizualnie sprawdzono wszystkie 7 stron PDF
+bez kolizji elementów, ostrzeżeń LaTeX i osieroconego akapitu.
+Raporty: [02](../../audits/general_topology/22-zbieznosc-zbiorow-iteracja-02.md),
+[03](../../audits/general_topology/22-zbieznosc-zbiorow-iteracja-03.md),
+[04](../../audits/general_topology/22-zbieznosc-zbiorow-iteracja-04.md).
+Po aktualizacji strony tytułowej należy sprawdzić jeszcze
+jej końcowe CI przed deklaracją integralności całej książki.
