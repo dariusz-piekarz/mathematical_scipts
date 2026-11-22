@@ -1,8 +1,8 @@
 # Geometria algebraiczna — rejestr statusów audytów
 
-**Ostatnia aktualizacja:** 2026-11-22, audyt ALG-05 nr 8.
+**Ostatnia aktualizacja:** 2026-11-22, audyt ALG-05 nr 10 (zamknięcie po IX+X).
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`.
-**Następny przebieg:** **ALG-05, audyt nr 9** — niezależne sprawdzenie po dodaniu założenia dodatniego kowymiaru; po bezusterkowym IX wymagany dodatkowy audyt stabilizacyjny X. ALG-00–04 pozostają stabilne.
+**Następny przebieg:** **ALG-06, audyt nr 1** — szczegółowy audyt powierzchni algebraicznych. ALG-00–05 są stabilne po wymaganych niezależnych audytach, testach, kompilacjach i kontroli PDF.
 
 | ID | Rozdział | Iteracja zakończona | Status | Raport / czynność |
 | --- | --- | ---: | --- | --- |
@@ -11,8 +11,8 @@
 | ALG-02 | Geometria rzutowa | **6** | **STABILNY / ZAMKNIĘTY** | [Audyt 6](2026-11-22-ALG-02-iteration-06.md) — niezależny, bezusterkowy reaudyt całego rozdziału; 15/15 testów, kontrola 11-stronicowego PDF i CI PASS, brak zmian źródła |
 | ALG-03 | Punkty osobliwe i geometria lokalna krzywych | **2** | **STABILNY / ZAMKNIĘTY** | [Audyt 2](2026-11-22-ALG-03-iteration-02.md) — niezależny bezusterkowy reaudyt, dodatkowe rachunki, 8/8 regresji PASS, CI SUCCESS, 8-stronicowy PDF PASS; bez zmian w źródle |
 | ALG-04 | Algebra przemienna, snopy i krzywe algebraiczne | **4** | **STABILNY / ZAMKNIĘTY** | [Audyt 4](2026-11-22-ALG-04-iteration-04.md) — niezależny bezusterkowy reaudyt całego rozdziału, 14/14 regresji PASS, CI SUCCESS na identycznym źródle, 43-stronicowy PDF i 10 rysunków PASS |
-| ALG-05 | Rozdmuchania i rozwiązywanie osobliwości | **8** | **OTWARTY** | [Audyt 8](2026-11-22-ALG-05-iteration-08.md) — dodano wymagany dodatni kowymiar $c\ge1$ do wzoru włókna rozdmuchania; CI SUCCESS, 18/18 regresji, 124-stronicowy PDF i rysunki sprawdzone |
-| ALG-06 | Powierzchnie algebraiczne | 0 | Oczekuje | Po ALG-05 |
+| ALG-05 | Rozdmuchania i rozwiązywanie osobliwości | **10** | **STABILNY / ZAMKNIĘTY** | [Audyt IX](2026-11-22-ALG-05-iteration-09.md) i [audyt X](2026-11-22-ALG-05-iteration-10.md) — dwa niezależne bezusterkowe przeglądy, 18/18 regresji, dwie udane kompilacje źródła, PDF 124 strony, 4 rysunki skontrolowane |
+| ALG-06 | Powierzchnie algebraiczne | 0 | **DO AUDYTU** | Następny: ALG-06/1 — dopiero po faktycznej kontroli zmienić status |
 | ALG-07 | Teoria przecięć, grupy Chowa i klasy Cherna | 0 | Oczekuje | Po ALG-06 |
 | ALG-08 | Geometria biwymierna i modele minimalne | 0 | Oczekuje | Po ALG-07 |
 | ALG-09 | Geometria algebraiczna a analiza zespolona | 0 | Oczekuje | Po ALG-08 |
@@ -79,3 +79,6 @@ ALG-05 po audycie 7: [raport](2026-11-22-ALG-05-iteration-07.md), **OTWARTY**. W
 
 
 ALG-05 po audycie 8: [raport](2026-11-22-ALG-05-iteration-08.md), **OTWARTY**. Ujawniono brzegowy przypadek kowymiaru 0: jeśli Z=X, algebra Reesa ideału zerowego ma tylko stopień 0, jej Proj jest pusta, więc bez przyjętej konwencji nie należy formułować włókna P^{c-1}. Dodano jawny warunek `c≥1` w uwadze i wniosku (blob `ce875493dd73898840eb57dc061b92b5919b6790`, [commit cc53bc5](https://github.com/dariusz-piekarz/mathematical_scipts/commit/cc53bc5a68efceb74794904b09436881d1cfc970)). Dodano test [554f4c4](https://github.com/dariusz-piekarz/mathematical_scipts/commit/554f4c4371f79aba9e82925a5ec3f8a8e3fe1c61); zsynchronizowano monolit [5c11c59](https://github.com/dariusz-piekarz/mathematical_scipts/commit/5c11c595327f1fa1a9489a0e6fd74d88fa052096). Dedykowany [CI 45041560523](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45041560523) **SUCCESS**, 18/18 testów regresyjnych, LaTeX i odsyłacze PASS. Artefakt `14762145763` przejrzano: PDF 124 strony, ALG-05 strony 109–124, 0 LaTeX Warning/Overfull/Underfull, 0 bloków poza stronami, podpisy 4 rysunków na właściwych stronach. 43 unikalne etykiety, 6 poprawnych lokalnych odsyłaczy, 18 środowisk dowodów i 4 rysunki TikZ. **Następny ALG-05/IX**, a po bezusterkowym IX jeszcze obowiązkowy audyt X dla pewności; ALG-06 nie rozpoczęto.
+
+
+ALG-05 po audytach IX i X: **STABILNY / ZAMKNIĘTY**. [IX](2026-11-22-ALG-05-iteration-09.md) ukończono pełnym niezależnym odczytem 1503/1503 wierszy, 50/50 kontrolami dokładnymi i ponownym odbiorem wszystkich 16 stron ALG-05. [X](2026-11-22-ALG-05-iteration-10.md) był osobnym sceptycznym audytem (19 bloków wyników, 18 dowodów i zewnętrzne twierdzenie Hironaki; 393/393 parametryzowanych kontroli geometrycznych, SNC/NC i przypadków brzegowych) bez zmian źródła. W obu identyczny blob `ce875493dd73898840eb57dc061b92b5919b6790`, zsynchronizowany z `sources/pl/geometria_algebraiczna(1).tex`; testy 18 metod blob `9f398a98d0dca6fd91817754342b3c6bbbc22fc0`. **Dwa niezależne udane przebiegi kompilacji LaTeX i sprawdzania odsyłaczy** na tym samym źródle: [CI 45041544226](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45041544226) oraz [CI 45041560523](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45041560523), oba SUCCESS; ostatni 18/18 regresji PASS. W odbiorze PDF: 124 strony książki, ALG-05 strony 109–124, 0 ostrzeżeń LaTeX, wszystkie 4 podpisy przy rysunkach, 0 bloków poza granicami strony. Kontrola przekrojowa ALG-00–05: 220 etykiet unikalnych, 111/111 odsyłaczy, 0 niesparowanych środowisk. **Następny ALG-06/1.**
