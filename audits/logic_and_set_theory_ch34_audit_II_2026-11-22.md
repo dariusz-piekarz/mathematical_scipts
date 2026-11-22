@@ -55,6 +55,9 @@ Te testy są ograniczonymi przypadkami obliczeniowymi, nie zastępują dowodów 
 
 ## CI, skład i werdykt
 
-[GitHub Actions — aktualizacja audytu II](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45023245896). **Status końcowy i kontrola PDF zostaną uzupełnione po zakończeniu tego przebiegu.**
+- [GitHub Actions #45023245896](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45023245896): **SUCCESS** — 13 testów rozdziału 34, regresje pozostałych rozdziałów, kontrola katalogu i inwentarza, kompilacja oraz analiza logu.
+- [GitHub Actions #45023370260](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45023370260): **SUCCESS** również po zapisaniu niniejszego raportu; nie modyfikowano źródła matematycznego między tymi przebiegami.
+- **PDF całej książki:** **295 stron**; rozdział 34 na stronach PDF **289–295** (drukowane **280–286**). Wszystkie **7 stron** wyrenderowano i sprawdzono wizualnie, zwracając uwagę na rozszerzony dowód przeliczalnej domkniętości, aksjomat ccc, rozkład wzorów i ostatnią stronę. Nie stwierdzono ucięć, kolizji ani uszkodzonych glifów.
+- **Log LaTeX:** **0 błędów, 0 niezdefiniowanych odsyłaczy, 0 brakujących cytowań, 0 przepełnionych wierszy**; **1 ostrzeżenie o niedopełnionym wierszu** w całej książce. Inwentarz: 851 etykiet i 639 odsyłaczy.
 
 **Werdykt matematyczny:** audyt II wykrył rzeczywistą lukę w dowodzie lokalnej gęstości oraz dwa miejsca wymagające jawnych uzasadnień w dowodzie zachowania liczb kardynalnych. Wszystkie trzy poprawiono w źródle. Rozdział **pozostaje w audycie i nie uzyskuje statusu stabilnego**, ponieważ druga iteracja wymagała korekt. Następny etap: audyt III, zwłaszcza ponowna kontrola nowego argumentu przeliczalnej domkniętości.
