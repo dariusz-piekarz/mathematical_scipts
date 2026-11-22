@@ -26,6 +26,7 @@ from backend.latex_parser import analyze_selection, get_stats, show_label
 from backend import workspaces
 from backend.concept_graph import build_concept_graph
 from backend import lean_catalog
+from backend import lean_dependencies
 from backend import lean_formalization
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -186,6 +187,13 @@ def lean_catalog_index():
     """Browse registered mappings, independently of compilation status."""
     with db_connection() as con:
         return lean_catalog.list_formalizations(con)
+
+
+@app.get("/api/lean/dependencies")
+def lean_dependencies_graph(formalization_id: str):
+    """Read manifest links and literal imports; not proof-level dependencies."""
+    with db_connection() as con:
+        return lean_dependencies.graph(con, formalization_id)
 
 
 @app.get("/api/lean/fragment")
