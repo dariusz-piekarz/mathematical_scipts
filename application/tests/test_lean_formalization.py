@@ -390,6 +390,45 @@ class LeanFormalizationTests(unittest.TestCase):
         self.assertFalse(reopened["certificate"])
         self.assertIn("ok", reopened["last_run_log"])
 
+    def test_editing_other_local_module_revokes_saved_compilation(self):
+        sibling = self.root / "src" / "ImportedHelper.lean"
+        sibling.write_text("def helper : Nat := 1\n", encoding="utf-8")
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_process.execute_registered",
+                   return_value=(0, "compiled", False)):
+            result = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(result["proof_status"], "compiled")
+        cached = lean.fragment(self.con, entity_id="LST-01/theorem/0001",
+                               lean_root=self.root)
+        self.assertTrue(cached["run_cached"])
+        sibling.write_text("def helper : Nat := 2\n", encoding="utf-8")
+        outdated = lean.fragment(self.con, entity_id="LST-01/theorem/0001",
+                                 lean_root=self.root)
+        self.assertEqual(outdated["proof_status"], "not_run")
+        self.assertTrue(outdated["previous_run_outdated"])
+        self.assertFalse(outdated["certificate"])
+
+    def test_editing_other_module_during_execution_blocks_result_persistence(self):
+        sibling = self.root / "src" / "ImportedHelper.lean"
+        sibling.write_text("def helper : Nat := 1\n", encoding="utf-8")
+
+        def edit_during_run(*args, **kwargs):
+            sibling.write_text("def helper : Nat := 2\n", encoding="utf-8")
+            return (0, "stale compilation", False)
+
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_process.execute_registered",
+                   side_effect=edit_during_run):
+            result = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(result["proof_status"], "blocked")
+        self.assertFalse(result["certificate"])
+        reopened = lean.fragment(self.con, entity_id="LST-01/theorem/0001",
+                                 lean_root=self.root)
+        self.assertEqual(reopened["proof_status"], "not_run")
+        self.assertFalse(reopened["run_cached"])
+
     def test_provenance_change_unsets_saved_success(self):
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
              patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
