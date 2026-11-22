@@ -43,6 +43,7 @@ def test_sources():
         "def:topog-uzwarcenia-porzadek",
         "prop:topog-uzwarcenia-porzadek-klasy",
         "ex:topog-uzwarcenia-dwa-przedzialu",
+        "ex:topog-uzwarcenia-ciag-zbiezny",
     ):
         assert r"\label{"+name+"}" in text, name
     assert r"p\circ e_1=e_2" in text
