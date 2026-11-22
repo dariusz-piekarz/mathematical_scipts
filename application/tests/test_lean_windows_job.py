@@ -70,6 +70,29 @@ class LeanWindowsJobTests(unittest.TestCase):
         self.assertTrue(job.kill_and_close())
         self.assertEqual(kernel.CloseHandle.call_args_list[-1].args, (421,))
 
+    def test_failed_assignment_never_sends_start_token_and_closes_process_handle(self):
+        kernel = MagicMock()
+        kernel.OpenProcess.return_value = 422
+        kernel.AssignProcessToJobObject.return_value = 0
+        kernel.CloseHandle.return_value = 1
+        job = lean_windows_job.ProcessJob(421, kernel)
+        stream = MagicMock()
+        process = MagicMock(pid=555, stdin=stream)
+        with self.assertRaisesRegex(
+            lean_windows_job.JobUnavailable, "AssignProcessToJobObject"
+        ):
+            job.start(process)
+        stream.write.assert_not_called()
+        stream.flush.assert_not_called()
+        kernel.CloseHandle.assert_called_once_with(422)
+
+    def test_invalid_limit_rejected_before_any_windows_api_call(self):
+        with patch("backend.lean_windows_job._kernel") as kernel:
+            for value in (0, 511, 65537, True, "1024", None):
+                with self.subTest(value=value), self.assertRaises(ValueError):
+                    lean_windows_job.ProcessJob.create(value)
+            kernel.assert_not_called()
+
     def test_job_setup_failure_closes_handle_without_starting_lake(self):
         kernel = MagicMock()
         kernel.CreateJobObjectW.return_value = 421
