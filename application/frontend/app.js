@@ -699,6 +699,8 @@ function renderLeanCatalog(){
 }
 async function loadLeanFragment(query){
   const epoch=++state.leanEpoch;activateTab("lean");
+  $("leanDependencies").classList.add("hidden");
+  $("leanDependencyGraph").replaceChildren();
   $("leanResult").classList.add("hidden");$("leanEmpty").classList.remove("hidden");
   $("leanEmpty").textContent="Odczytywanie źródła i formalizacji…";
   try {
@@ -706,6 +708,7 @@ async function loadLeanFragment(query){
     if(epoch!==state.leanEpoch)return;
     state.leanFragment=result;state.leanRunner=null;
     renderLeanFragment(result);
+    if(result.formalization_id)loadLeanDependencies(result,epoch);
     try{
       const available=await api("/api/lean/status");
       if(epoch!==state.leanEpoch)return;
@@ -764,6 +767,57 @@ function renderLeanFragment(result){
     $("leanLog").textContent="Nie uruchomiono. Kompilacja Lean i zgodność tłumaczenia są oceniane oddzielnie.";
   }
   $("leanRun").disabled=true;
+}
+
+function renderLeanDependencies(data){
+  const graph=$("leanDependencyGraph");
+  graph.replaceChildren();
+  const groups=[
+    ["Źródło LaTeX",data.nodes.filter(n=>n.kind==="latex_statement")],
+    ["Deklaracje z rejestru",data.nodes.filter(n=>n.kind==="registered_declaration")],
+    ["Plik Lean",data.nodes.filter(n=>n.kind==="lean_file")],
+    ["Jawne importy",data.nodes.filter(n=>n.kind==="imported_module")]
+  ];
+  groups.forEach(([title,entries],i)=>{
+    if(i)graph.append(node("span",{className:"lean-dep-arrow","aria-hidden":"true"},"→"));
+    const layer=node("div",{className:"lean-dep-column"});
+    layer.append(node("h3",{},title));
+    if(!entries.length)layer.append(node("span",{className:"lean-dep-node"},"Brak jawnych importów."));
+    for(const entry of entries){
+      const navigable=i===0 && data.source_entity_id && data.index_status==="ok";
+      const el=node(navigable?"button":"span",{className:"lean-dep-node"},entry.label);
+      if(navigable){
+        el.type="button";
+        el.title="Otwórz źródłowe twierdzenie w Czytniku";
+        el.addEventListener("click",()=>openEntity(data.source_entity_id));
+      }
+      layer.append(el);
+    }
+    graph.append(layer);
+  });
+  $("leanDependencyStatus").textContent=
+    data.nodes.length+" węzłów · "+data.edges.length+
+    " zadeklarowanych połączeń · stan źródła: "+
+    (leanFormalizationLabels[data.formalization_status]||data.formalization_status)+".";
+  $("leanDependencyLimitations").textContent=data.limitations;
+}
+async function loadLeanDependencies(item,epoch){
+  const panel=$("leanDependencies");
+  panel.classList.remove("hidden");
+  $("leanDependencyStatus").textContent="Odczytywanie zadeklarowanych powiązań…";
+  $("leanDependencyLimitations").textContent="";
+  try{
+    const result=await api("/api/lean/dependencies?"+
+      new URLSearchParams({formalization_id:item.formalization_id}));
+    if(!isCurrentLeanRun(epoch,item))return;
+    renderLeanDependencies(result);
+  }catch(err){
+    if(!isCurrentLeanRun(epoch,item))return;
+    $("leanDependencyStatus").textContent="Nie można wczytać grafu: "+err.message;
+    $("leanDependencyGraph").replaceChildren();
+    $("leanDependencyLimitations").textContent=
+      "Brak grafu nie stanowi oceny poprawności matematycznej.";
+  }
 }
 function openLeanCurrent(){
   if(!state.currentData){toast("Najpierw wybierz obiekt w Czytniku.");return;}
