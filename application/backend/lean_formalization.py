@@ -150,9 +150,12 @@ def _find_source(con: sqlite3.Connection, *, entity_id: str | None,
     content = "".join(lines[start_line-1:end_line])
     # Link only if the selected range contains the COMPLETE source theorem.
     entities = con.execute(
-        "SELECT id FROM entities WHERE document_id=? AND kind='theorem' "
+        "SELECT id,start_offset,end_offset,start_line,end_line FROM entities "
+        "WHERE document_id=? AND kind='theorem' "
         "AND start_line>=? AND end_line<=?",
         (module_id, start_line, end_line)).fetchall()
+    for entity in entities:
+        _checked_entity_span(d["content"], entity)
     ids = [row["id"] for row in entities]
     labels = []
     for eid in ids:
