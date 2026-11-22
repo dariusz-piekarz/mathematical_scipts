@@ -58,6 +58,12 @@ class TestChapter26(unittest.TestCase):
         self.assertIn(r"f(y)<f(x)",proof)
         self.assertNotIn("nieskończony ściśle malejący ciąg",proof)
 
+    def test_hartogs_order_transitivity_and_maximality(self):
+        self.assertIn("Przechodniość wynika ze składania izomorfizmów",TEXT)
+        self.assertIn("Stąd $<$ jest ścisłym porządkiem liniowym",TEXT)
+        self.assertIn(r"$v\notin C$",TEXT)
+        self.assertIn("ponieważ $u$ jest ograniczeniem górnym $C$",TEXT)
+
     def test_finite_choice_induction_has_defined_indices(self):
         section=TEXT.split(r"\begin{twierdzenie}[Wybór ze skończonej rodziny w ZF]",1)[1].split(r"\end{proof}",1)[0]
         self.assertNotIn(r"A_{e(n)}",section)
