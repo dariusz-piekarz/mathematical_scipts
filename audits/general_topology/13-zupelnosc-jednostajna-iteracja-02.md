@@ -26,7 +26,7 @@ Poprawka źródła: commit `b0cc7537d950d50138c6d39696f2b9100d1e3035`.
 Workflow dla konkretnego commita poprawki:
 https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45005970148
 
-W chwili tworzenia raportu testy matematyczne i integracyjne zostały zakończone pomyślnie; pełna kompilacja PDF nadal trwa. **Nie przyznawać statusu PASS całemu CI ani nowemu PDF przed zakończeniem przebiegu i odczytaniem wyniku.**
+**Wynik końcowy: completed / success, bez nieudanych kroków.** Pobrano artefakt nr `14748265560`, zawierający samodzielny 6-stronicowy `general_topology_ch13.pdf`. Sprawdzono `general_topology_ch13.log`: brak `Overfull`, `Underfull`, `Missing character`, `LaTeX Warning`, `Undefined control sequence`, `Fatal error`. Wyrenderowano i skontrolowano strony 4 i 5 zawierające kluczowe poprawione dowody; tekst i wzory są czytelne, nie występują ucięcia ani kolizje. Artefakt: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45005970148/artifacts/14748265560
 
 ## Status audytu
 
@@ -36,8 +36,8 @@ W chwili tworzenia raportu testy matematyczne i integracyjne zostały zakończon
 | Pozostałe twierdzenia / przykłady | PASS (ponowna kontrola) |
 | Kod źródłowy na GitHubie | Zapisany |
 | Testy Python | PASS w trwającym workflow |
-| Pełne CI / kompilacja najnowszego PDF | OCZEKUJE NA WYNIK |
-| Audyt wizualny PDF po poprawce | OTWARTY |
+| Pełne CI / kompilacja najnowszego PDF | PASS — run 45005970148 |
+| Audyt wizualny PDF po poprawce | PASS — skontrolowano strony 4–5 zawierające korektę |
 | Stabilizacja rozdziału 13 | W TOKU |
 
-Kolejna iteracja powinna odczytać końcowy wynik CI dla commita `b0cc753`, pobrać i obejrzeć PDF oraz ponownie skontrolować argument zbieżności filtrów przed zamknięciem rozdziału.
+Kolejna iteracja powinna ponownie, niezależnie skontrolować matematyczną poprawność konstrukcji filtrów minimalnych i własności uniwersalnej; rozdział pozostaje w audycie do uzyskania stabilności.
