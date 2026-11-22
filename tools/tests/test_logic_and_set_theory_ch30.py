@@ -84,7 +84,7 @@ class TestChapter30(unittest.TestCase):
         self.assertIn(r"\theta:\omega^\omega\to D\subseteq2^\omega",TEXT)
         self.assertIn(r"0^{n_0}1",TEXT)
         self.assertIn(r"f[2^\omega]",TEXT)
-        self.assertIn("przestrzeń $2^\\omega$ jest zwarta".replace("$2^\\omega$","$2^\\omega$"),TEXT.lower())
+        self.assertIn(r"przestrzeń $2^\omega$ jest zwarta",TEXT.lower())
         # Przy dowolnym binarnym prefiksie u znajdują się dwa różne przedłużenia.
         for length in range(6):
             for prefix in itertools.product((0,1),repeat=length):
