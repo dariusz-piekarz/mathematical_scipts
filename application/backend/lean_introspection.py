@@ -15,7 +15,7 @@ import tempfile
 
 from fastapi import HTTPException
 from backend import (lean_catalog, lean_cgroup, lean_formalization as lean,
-                     lean_process, lean_results, lean_run_lock, lean_windows_job)
+                     lean_process, lean_results, lean_run_lock, lean_source_provenance, lean_windows_job)
 
 MAX_THEOREMS = 16
 MAX_CONSTANTS = 160
@@ -155,40 +155,10 @@ def parse_classified_inspection(log: str, token: str,
             "value_constants": values, "reference_edges": edges}
 
 
-def _indexed_binding(con: sqlite3.Connection, module: str, label: str,
-                     entity_id: str) -> tuple | None:
-    """Snapshot label position and indexed entity boundaries, not only its ID.
-
-    A rebuild may preserve the source SHA and entity ID while moving an
-    entity's offsets/kind or label position. Duplicate label rows also fail.
-    """
-    rows = con.execute(
-        "SELECT e.id,e.kind,e.title,e.start_line,e.end_line,"
-        "e.start_offset,e.end_offset,l.offset "
-        "FROM labels AS l JOIN entities AS e ON e.id=l.entity_id "
-        "WHERE e.document_id=? AND e.id=? AND l.name=? "
-        "ORDER BY l.offset LIMIT 2",
-        (module, entity_id, label)).fetchall()
-    return tuple(rows[0]) if len(rows) == 1 else None
-
-
-def _valid_indexed_binding(binding: tuple, content: str, label: str) -> bool:
-    """Reject pre-existing invalid entity bounds and incorrectly placed labels.
-
-    All offsets use Python character positions, like the LaTeX indexer.
-    """
-    _, kind, title, first, last, start, end, offset = binding
-    if (not isinstance(kind, str) or not kind or not isinstance(title, str)
-            or not all(type(n) is int for n in (first, last, start, end, offset))
-            or not (1 <= first <= last)
-            or not (0 <= start <= offset < end <= len(content))
-            or first != 1 + content.count("\n", 0, start + 1)
-            or last != 1 + content.count("\n", 0, end)):
-        return False
-    # A stable but corrupted index can point at an arbitrary position inside
-    # the same entity. Require that it actually starts the registered label.
-    pattern = r"\\label\s*\{\s*" + re.escape(label) + r"\s*\}"
-    return re.match(pattern, content[offset:]) is not None
+# Backward-compatible names; the catalog, runner and inspector now share
+# exactly one verifier for indexed label owners and TeX command locations.
+_indexed_binding = lean_source_provenance.indexed_binding
+_valid_indexed_binding = lean_source_provenance.valid_binding
 
 
 def _empty(identifier: str, status: str, detail: str) -> dict:
