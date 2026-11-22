@@ -108,7 +108,9 @@ def _kernel():
 
 
 def _error(phase: str) -> JobUnavailable:
-    return JobUnavailable(f"{phase}: Windows error {ctypes.get_last_error()}.")
+    # The function is also exercised with simulated Win32 APIs on Linux CI.
+    code = ctypes.get_last_error() if hasattr(ctypes, "get_last_error") else 0
+    return JobUnavailable(f"{phase}: Windows error {code}.")
 
 
 class ProcessJob:
