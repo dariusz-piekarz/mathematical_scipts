@@ -28,6 +28,22 @@ def transcript(*, token=TOKEN, name="theorem_x", constants=("Nat.zero", "Eq")):
     return "Inspect.lean:45:0: info: " + ("\nInspect.lean:45:0: info: ".join(lines))
 
 
+def classified_transcript():
+    events = [
+        f"{TOKEN} BEGIN theorem_x 2",
+        f"{TOKEN} CONST theorem_x Nat.zero",
+        f"{TOKEN} CONST theorem_x Eq",
+        f"{TOKEN} END theorem_x",
+        f"{TOKEN} TYPE_BEGIN theorem_x 1",
+        f"{TOKEN} TYPE_CONST theorem_x Eq",
+        f"{TOKEN} TYPE_END theorem_x",
+        f"{TOKEN} VALUE_BEGIN theorem_x 1",
+        f"{TOKEN} VALUE_CONST theorem_x Nat.zero",
+        f"{TOKEN} VALUE_END theorem_x",
+    ]
+    return "\n".join("Inspect.lean:15:0: info: " + e for e in events)
+
+
 class ParsingTests(unittest.TestCase):
     def test_fixed_commands_include_actual_metaprogram_introspection(self):
         code = inspection.make_instrumentation(["theorem_x"], TOKEN)
@@ -51,6 +67,38 @@ class ParsingTests(unittest.TestCase):
                 inspection.parse_inspection("", TOKEN, names)
         with self.assertRaises(ValueError):
             inspection.parse_inspection(transcript(), TOKEN, [])
+
+    def test_classified_instrumentation_uses_actual_type_and_value_expressions(self):
+        code = inspection.make_instrumentation(["theorem_x"], TOKEN, classified=True)
+        self.assertIn("info.type.getUsedConstantsAsSet.toList", code)
+        self.assertIn("info.value? true", code)
+        self.assertIn(f"{TOKEN} TYPE_BEGIN theorem_x", code)
+        self.assertIn(f"{TOKEN} VALUE_BEGIN theorem_x", code)
+
+    def test_classified_parser_requires_complete_consistent_origin_protocol(self):
+        valid = classified_transcript()
+        result = inspection.parse_classified_inspection(valid, TOKEN, ["theorem_x"])
+        self.assertEqual(result["constants"], {"theorem_x": ["Eq", "Nat.zero"]})
+        self.assertEqual(result["type_constants"], {"theorem_x": ["Eq"]})
+        self.assertEqual(result["value_constants"], {"theorem_x": ["Nat.zero"]})
+        self.assertEqual(result["reference_edges"], [
+            {"declaration": "theorem_x", "constant": "Eq", "origin": "type"},
+            {"declaration": "theorem_x", "constant": "Nat.zero", "origin": "value"},
+        ])
+        for broken in (
+            valid.replace(f"{TOKEN} TYPE_END theorem_x", ""),
+            valid.replace(f"{TOKEN} VALUE_END theorem_x", ""),
+            valid.replace(f"{TOKEN} TYPE_BEGIN theorem_x 1",
+                          f"{TOKEN} TYPE_BEGIN theorem_x 3"),
+            valid.replace(f"{TOKEN} VALUE_CONST theorem_x Nat.zero",
+                          f"{TOKEN} VALUE_CONST theorem_x Nat.succ"),
+            valid + f"\n{TOKEN} VALUE_END theorem_x",
+            valid + f"\n{TOKEN} OTHER theorem_x 0",
+            valid + f"\n{TOKEN} TYPE_BEGIN foreign 0",
+            valid.replace(f"{TOKEN} CONST theorem_x Nat.zero", ""),
+        ):
+            with self.subTest(log=broken[-100:]), self.assertRaises(ValueError):
+                inspection.parse_classified_inspection(broken, TOKEN, ["theorem_x"])
 
     def test_complete_output_is_sorted_and_bound_to_declaration(self):
         result = inspection.parse_inspection(transcript(), TOKEN, ["theorem_x"])
@@ -164,7 +212,7 @@ class InspectionExecutionTests(unittest.TestCase):
                           "lean_sha256":hashlib.sha256(self.original).hexdigest(),
                           "toolchain_sha256":"c"*64}
 
-    def execute(self, *args, result=(0,transcript(),False), fingerprint=None, ready=None, process=None):
+    def execute(self, *args, result=(0,transcript(),False), fingerprint=None, ready=None, process=None, classified=False):
         with patch.dict(os.environ,{"MATLIB_LEAN_RUN":"1"}), \
              patch.object(inspection.lean,"availability",return_value=ready or self.ready), \
              patch.object(inspection.lean_results,"fingerprint",
@@ -172,7 +220,7 @@ class InspectionExecutionTests(unittest.TestCase):
              patch.object(inspection.secrets,"token_hex",return_value=TOKEN), \
              patch.object(inspection.lean_process,"execute_registered",
                           return_value=result, side_effect=process) as spawn:
-            output=inspection.inspect(self.con,"mapping",lean_root=self.root)
+            output=inspection.inspect(self.con,"mapping",lean_root=self.root,classified=classified)
         return output,spawn
 
     def test_success_requires_real_subprocess_interface_but_never_certificate(self):
@@ -187,6 +235,18 @@ class InspectionExecutionTests(unittest.TestCase):
         self.assertFalse(Path(command[3]).exists())
         self.assertEqual(self.leanfile.read_bytes(),self.original)
         self.assertNotIn("proof_status",outcome)
+
+    def test_classified_inspection_preserves_total_and_never_certifies(self):
+        response, spawned = self.execute(
+            result=(0, classified_transcript(), False), classified=True)
+        spawned.assert_called_once()
+        self.assertEqual(response["inspection_status"], "complete")
+        self.assertEqual(response["constants"], {"theorem_x": ["Eq", "Nat.zero"]})
+        self.assertEqual(response["type_constants"], {"theorem_x": ["Eq"]})
+        self.assertEqual(response["value_constants"], {"theorem_x": ["Nat.zero"]})
+        self.assertEqual(len(response["reference_edges"]), 2)
+        self.assertFalse(response["certificate"])
+        self.assertNotIn("proof_status", response)
 
     def test_disabled_and_stale_sources_never_launch(self):
         with patch.dict(os.environ,{"MATLIB_LEAN_RUN":"0"}), \
