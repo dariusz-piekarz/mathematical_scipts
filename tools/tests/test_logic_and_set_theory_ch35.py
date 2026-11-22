@@ -56,7 +56,7 @@ class TestBooleanModelsChapter35(unittest.TestCase):
                 r"\\label\{([^}]+)\}", source.read_text("utf8")
             ))
         refs = re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", TEXT)
-        self.assertEqual(len(refs), 31)
+        self.assertEqual(len(refs), 32)
         self.assertEqual(set(refs) - all_labels, set())
         self.assertIn("ch:forcing-continuum", refs)
         self.assertIn("thm:boolean35-zfc", refs)
