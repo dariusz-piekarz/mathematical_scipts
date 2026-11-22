@@ -1,0 +1,43 @@
+# Topologia ogólna — rozdział 14: audyt iteracja 01 (rozbudowa)
+
+Data: 2026-11-22. Źródło: `chapters/pl/general_topology/14-zwartosc-lokalna.tex`.
+
+## Zakres
+
+Zachowano bez zmian oryginalne trzy główne elementy przeniesione z rozdziału 11: definicję lokalnej zwartości, lemat o zwartym domknięciu otoczenia i lokalnie zwartą wersję twierdzenia Baire'a. Dopisano:
+
+- dziedziczenie zwartości lokalnej przez otwarte i domknięte podprzestrzenie lokalnie zwartej przestrzeni Hausdorffa (dowody obu kierunków);
+- skończone iloczyny lokalnie zwartych przestrzeni Hausdorffa;
+- przykłady przestrzeni dyskretnych oraz przestrzeni euklidesowych;
+- definicje przeliczalności w nieskończoności i `σ`-zwartości, z rozróżnieniem kwantyfikatorów;
+- twierdzenie o równoważności `σ`-zwartości, przeliczalności w nieskończoności i istnienia wyczerpania `K_n⊂int K_(n+1)` w klasie lokalnie zwartych przestrzeni Hausdorffa;
+- implikację od spełniania drugiego aksjomatu przeliczalności do `σ`-zwartości dla przestrzeni lokalnie zwartych Hausdorffa;
+- kontrprzykład nieprzeliczalnej przestrzeni dyskretnej (lokalnie zwarta, ale nie `σ`-zwarta);
+- kontrprzykład `Q` (`σ`-zwarta, lecz nieprzeliczalna w nieskończoności), pokazujący niezbędność lokalnej zwartości dla równoważności;
+- wyczerpanie `R` przez przedziały `[-n,n]`.
+
+## Matematyczny audyt kroków
+
+1. W dowodzie dziedziczenia przez otwarte podprzestrzenie wykorzystano lemat o zwartym domknięciu zawartym w zadanym otwartym podzbiorze, zaś dla domkniętych przecięcie zbioru zwartego z domkniętym.
+2. W dowodzie produktu iloczyn zwartych otoczeń ma niepuste otwarte otoczenie punktu; zwartość wynika z twierdzenia dla skończonych iloczynów z rozdziału 7.
+3. W wyczerpaniu: każde zwarte `C` ma zwarty zbiór `K` z `C⊂int K` (skończone podpokrycie otoczeń o zwartym domknięciu). Następnie rekurencja stosowana do `K_n∪C_(n+1)` daje ścisłe zawieranie w kolejnych wnętrzach. Odwrotnie, rosnące otwarte pokrycie zwartego `C` daje jego zawieranie w jednym `K_N`.
+4. Wnioski z drugiego aksjomatu przeliczalności opierają się na wcześniejszej własności Lindelöfa, bez użycia późniejszej parazwartości.
+5. Przykład `Q`: każdy zwarty `K⊂Q` jest domknięty w `R` i nie może zawierać niepustego względnie otwartego przedziału; z każdej rzekomo współkońcowej rodziny `K_n` dobierany jest `q_n→q` poza `K_n`; zbiór granicy wraz z ciągiem jest zwarty, a nie mieści się w żadnym `K_n`.
+6. Zachowano zasadę zależności: wszystkie wyniki potrzebne w rozdziale 14 pochodzą z rozdziałów 4, 5, 7, 9 i 11; nie korzysta się z rozdziałów 15–17 ani z teorii uzwarceń.
+
+## Walidacja i stan
+
+Test `tools/tests/test_general_topology_ch14.py` rozszerzono o kontrolę nowych etykiet i zachowania materiału z rozdziału 11.
+
+W chwili powstawania raportu uruchomiona jest kompilacja w GitHub Actions, obejmująca książkę oraz samodzielny PDF rozdziału 14. **Nie uznawać wyniku CI ani kontroli graficznej za pozytywny przed rzeczywistym sprawdzeniem.**
+
+| Warstwa | Status |
+| --- | --- |
+| Matematyka, dowody i zależności | Kontrola wstępna PASS |
+| Szczegółowość przykładów i kontrprzykładów | Kontrola wstępna PASS |
+| Terminologia i odsyłacze | Weryfikacja źródła wykonana |
+| Testy CI, kompilacja samodzielna i całej książki | W toku |
+| Render i kontrola PDF | Do wykonania |
+| Stabilizacja rozdziału | **W AUDYCIE — ITERACJA 01** |
+
+Następny krok: audyt niezależny po sprawdzeniu pełnego CI, w szczególności wyrównanie stron, ewentualne błędy dzielenia wyrazów i kompletność dowodów.
