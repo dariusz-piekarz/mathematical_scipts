@@ -191,9 +191,15 @@ def _olean_tree(root: Path, *, label: str, budget: list[int],
             with artifact.open("rb") as stream:
                 for chunk in iter(lambda: stream.read(128 * 1024), b""):
                     digest.update(chunk)
-                after = os.fstat(stream.fileno())
-            if (info.st_size != after.st_size or info.st_mtime_ns != after.st_mtime_ns
-                    or info.st_ctime_ns != after.st_ctime_ns):
+                open_size = os.fstat(stream.fileno()).st_size
+            # On Windows, stat(path) and fstat(fd) can expose different
+            # creation-time semantics. Compare path metadata using the same
+            # API before and after the read, retaining a handle size check.
+            after = artifact.stat()
+            if (info.st_size != open_size or info.st_size != after.st_size
+                    or info.st_mtime_ns != after.st_mtime_ns
+                    or info.st_ctime_ns != after.st_ctime_ns
+                    or info.st_ino != after.st_ino):
                 raise ValueError("Lake .olean artifact changed while fingerprinting")
             entry["sha256"] = digest.hexdigest()
             budget[0] -= info.st_size
