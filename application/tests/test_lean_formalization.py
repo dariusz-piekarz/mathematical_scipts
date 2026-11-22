@@ -559,6 +559,10 @@ class LeanFrontEndContractTests(unittest.TestCase):
         self.assertIn('"/api/lean/run"', js)
         self.assertIn('"/api/lean/catalog"', js)
         self.assertIn('"/api/lean/dependencies?"', js)
+        self.assertIn('"/api/lean/dependencies/inspect"', js)
+        self.assertIn("renderLeanInspection(result)", js)
+        for key in ("leanInspect", "leanInspection"):
+            self.assertIn('id="' + key + '"', page)
         self.assertIn("loadLeanDependencies(result,epoch);", js)
         for key in ("leanDependencies", "leanDependencyGraph", "leanDependencyStatus",
                     "leanDependencyLimitations"):
