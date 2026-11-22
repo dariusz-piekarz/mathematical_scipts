@@ -99,6 +99,21 @@ class ALG01GeometryRegressions(unittest.TestCase):
         self.assertTrue(in_ideal((3, 0)))    # x^3 in I
         self.assertTrue(in_ideal((2, 1)))    # x^2 y in I
 
+    def test_point_ideal_vs_squared_generators(self):
+        # V(x^2, y^2)={(0,0)}, but (x^2,y^2) != (x,y).
+        for p in PRIMES:
+            zeros = vanishing_points(
+                p, [lambda x, y: x*x, lambda x, y: y*y])
+            self.assertEqual(zeros, {(0, 0)})
+        generators = ((2, 0), (0, 2))
+        def monomial_in_ideal(i, j):
+            return any(i >= a and j >= b for a, b in generators)
+        self.assertFalse(monomial_in_ideal(1, 0))
+        self.assertFalse(monomial_in_ideal(0, 1))
+        self.assertTrue(monomial_in_ideal(2, 0))
+        self.assertTrue(monomial_in_ideal(0, 2))
+        self.assertFalse(monomial_in_ideal(1, 1))
+
     def test_finite_field_affine_point_sets_are_discrete(self):
         # Polynomials x-a and y-b cut out exactly one F_p-point.
         for p in PRIMES:
