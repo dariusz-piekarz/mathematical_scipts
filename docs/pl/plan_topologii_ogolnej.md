@@ -31,7 +31,7 @@ Stan: 22 listopada 2026. Źródłem prawdy dla rozdziałów włączonych do ksi�
 | **23** | **Wymiar topologiczny: wymiar pokryciowy Lebesgue’a, wymiary ind/Ind, charakterystyka wymiaru 0, wymiar odcinka i sześcianu, nerwy pokryć** | **stabilny — audyty 04–06 (2/2 + 1), CI 45051754287 PASS, osobny PDF 9 stron** |
 | **24** | **Grupy topologiczne, otoczenia elementu neutralnego, podgrupy, przestrzenie warstw i grupy ilorazowe, składowa neutralna, struktury jednostajne, twierdzenie Birkhoffa–Kakutaniego** | **stabilny — audyty 02–04 (2/2 + 1), CI 45053429106 i końcowy 45053945600 PASS, PDF 10 stron** |
 | **25** | **Continua i podcontinua, nieprzywiedlność, granice odwrotne, nierozkładalne continuum Knastera, solenoid dyadyczny, surjekcje Peana** | **stabilny — audyty 02–04 (2/2 + 1), CI 45056802863 i końcowy 45057529499 PASS, PDF 8 stron** |
-| **26** | **Twierdzenie Hahna–Mazurkiewicza: jednostajna lokalna spójność, konstrukcja małych dróg, poprawki przez pętle, surjekcja odcinka, konieczność metryzowalności i spójności lokalnej** | **w audycie — rozdział i testy utworzone, CI/PDF w weryfikacji; 0/2** |
+| **26** | **Twierdzenie Hahna–Mazurkiewicza: jednostajna lokalna spójność, małe drogi, surjekcja odcinka przez pętle, metryzowalność i lokalna spójność obrazów odcinka** | **stabilny — audyty 07–09 (2/2 + 1), CI 45062871304 PASS, osobny PDF 6 stron** |
 
 Zakresy 12–13 oraz 16–17 są rozdzielone według tematyki, żeby unikać powtarzania dowodów. Zgodnie z zasadą projektu nowe rozdziały nie oznaczają automatycznie ich stabilności.
 
@@ -341,3 +341,66 @@ po kontroli pokrycia z innymi skryptami
 oraz zbieżność Mosco i epigraficzna
 w analizie funkcjonalnej, a nie jako
 duplikat topologii ogólnej.
+
+
+## Zamknięcie rozdziału 26 (2026-11-22)
+
+Kanoniczny plik
+`chapters/pl/general_topology/26-twierdzenie-hahna-mazurkiewicza.tex`,
+stabilny blob `161d04d779ae86554f81c11bb24daa842c8dd363`.
+Rozdział daje pełny, samodzielny dowód obu kierunków
+twierdzenia Hahna–Mazurkiewicza dla niepustych
+przestrzeni Hausdorffa: ciągły obraz [0,1]
+to dokładnie przestrzeń zwarta, spójna,
+lokalnie spójna i metryzowalna.
+
+Dodatkowe lematy z pełnymi dowodami:
+jednostajna lokalna spójność kompaktów metrycznych,
+istnienie δ-łańcuchów w zbiorach spójnych,
+konstrukcja małych dróg przez coraz drobniejsze
+podziały, uzupełnienie obrazu drogi skończonymi
+zbiorami przez pętle oraz dowód
+surjektywności granicy jednostajnej.
+Kierunek konieczny wykorzystuje
+skończone sumy zbiorów bazowych odcinka,
+zwartość włókien i twierdzenie Urysohna
+z rozdziału 10; lokalną spójność wykazano
+osobno przez spójne obrazy przedziałów.
+
+Audyty korekcyjne:
+[01](../../audits/general_topology/26-hahn-mazurkiewicz-iteracja-01.md),
+[03](../../audits/general_topology/26-hahn-mazurkiewicz-iteracja-03.md),
+[06](../../audits/general_topology/26-hahn-mazurkiewicz-iteracja-06.md).
+Kolejne audyty:
+[07](../../audits/general_topology/26-hahn-mazurkiewicz-iteracja-07.md),
+[08](../../audits/general_topology/26-hahn-mazurkiewicz-iteracja-08.md),
+[09](../../audits/general_topology/26-hahn-mazurkiewicz-iteracja-09.md)
+są czyste na **identycznym, niezmienionym blobie**
+(2/2 + 1). Skorygowano początkowy błąd
+o lokalnej spójności zbioru Cantora,
+następnie usunięto przykład grafów i sześcianów
+powielający rozdział 25 oraz skorygowano skład
+ostatniej strony.
+
+[CI 45062871304](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45062871304)
+zakończyło się sukcesem; wszystkie 63 kroki PASS.
+Pobrano artefakt 14769903315,
+obejrzano wyrenderowane **wszystkie 6 stron**
+osobnego PDF (z rysunkiem pętli na stronie 4
+i pełnym podsumowaniem na stronie 6).
+Cała książka liczy 190 stron.
+W logach brak Overfull/Underfull,
+Missing character i LaTeX Warning.
+Osierocona strona 7 została usunięta.
+Po zmianie statusu i testów wersji 1.26
+pozostaje do wykonania finalne CI
+integracyjne, które nie zmienia
+matematycznego bloba rozdziału 26.
+
+**Dalszy plan:** przekrojowy i szczegółowy audyt
+wcześniejszych rozdziałów, w szczególności
+dowodów nieuwzględnionych jeszcze w
+pierwszej serii globalnej 01–22.
+Dalsze prace wariacyjne (zbieżność Mosco
+i epigraficzna) prowadzić w analizie
+funkcjonalnej, bez powielania topologii ogólnej.
