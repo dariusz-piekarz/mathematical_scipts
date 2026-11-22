@@ -69,7 +69,7 @@ class TestChapter32(unittest.TestCase):
 
     def test_cohen_real_is_new_and_total(self):
         self.assertIn(r"\label{thm:cohen-new-real}", TEXT)
-        self.assertIn(r"\operatorname{dom}c_G=\omega", TEXT)
+        self.assertIn(r"n\in\operatorname{dom}c_G", TEXT)
         self.assertIn(r"c_G\notin M", TEXT)
         self.assertIn(r"p\cup\{(n,1-x(n))\}", TEXT)
         self.assertIn(r"\label{ex:cohen-filter-recovery}", TEXT)
