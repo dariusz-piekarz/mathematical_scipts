@@ -72,3 +72,15 @@ Pobrano oba pliki PDF z rzeczywistych przebiegów GitHub Actions i przeanalizowa
 Kontrola wszystkich 337 stron przez ekstrakcję tekstu z `get_text(sort=True)`: **328 identycznych stron**, **9 różnych stron materiału wstępnego (2–10)**, różnice związane z porządkową/arabską numeracją spisu treści. Porównanie pikselowe stron PDF 10–337 przy 72 DPI: **327/328 stron identycznych**, strona 10 różni się wizualnie w wyniku reorganizacji numeracji materiału wstępnego. Zatem **wszystkie strony PDF 11–337 są identyczne pikselowo**, mimo poprawek nagłówków i zakładek.
 
 Odczyt faktycznej struktury zakładek PDF przez `get_toc()` wykazał **338 wpisów przed i 338 po** zmianie. Wszystkie sześć wcześniej błędnie serializowanych wpisów ma teraz poprawną postać tekstową: `omega`, `N`, `R` i `L` zachowano jako czytelne oznaczenia tekstowe. Żadnego wpisu nie usunięto. Pozwala to stwierdzić poprawność zarówno nawigacji, jak i wyglądu książki po zmianach.
+
+## 7. Ostateczny wynik CI z nowymi asercjami
+
+[GitHub Actions 45083709897 — SUCCESS](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45083709897), commit `53ef10c651ec5c54d7944916e5a221d51edefbf6`, job `137397400335`:
+
+- Wszystkie regresje rozdziałów, kompilacja książki PDF, kontrola logu oraz zapis artefaktu: **SUCCESS**.
+- Nowe dwie asercje sprawdzające brak zduplikowanych kotwic i błędnych tokenów zakładek: **PASS**.
+- W rzeczywistym logu: **0 ostrzeżeń `pdfTeX warning ... destination with the same identifier`** i **0 ostrzeżeń `Package hyperref Warning: Token not allowed in a PDF string`**; wystąpienia tych fraz w komendzie testowej nie są ostrzeżeniami kompilatora.
+- Końcowy PDF: **337 stron**.
+- Dodatkowo sprawdzono strukturę obydwu rzeczywistych PDF: **338 zakładek** w każdym; **wszystkie cele prowadzą do prawidłowych stron**; tylko jeden wpis zmienia swój tekst: `Twierdzenie o rekursji na  w ZF` otrzymuje prawidłowe `Twierdzenie o rekursji na omega w ZF`. W pozostałych pięciu tytułach tekst zakładki był już czytelny, a korekta usuwała ostrzeżenia związane z kodowaniem matematyki.
+
+**Ostateczny werdykt: obie usterki techniczne PDF usunięte i potwierdzone; testy regresyjne włączone do CI.** Stabilność matematycznych źródeł rozdziałów 37–39 pozostaje nienaruszona. Dalszy audyt matematyczny kolejnych rozdziałów stanowi osobną iterację.
