@@ -4,7 +4,7 @@
 **Gałąź:** biblioteka-matematyczna-iteracja-6.  
 **Rozdział:** chapters/pl/logic_and_set_theory/36-modele-symetryczne-i-niezaleznosc-aksjomatu-wyboru.tex.  
 **Blob źródłowy:** 6891b26609ccf77a0aaddc28653bb872f05a1701 — identyczny od audytu I.  
-**Wynik matematyczno-redakcyjny:** czysty; brak nowego koniecznego uzupełnienia dowodu. Zakończenie dodatkowego audytu wymaga potwierdzenia końcowego CI i artefaktu PDF.
+**Werdykt końcowy: AUDYT IV CZYSTY — ROZDZIAŁ 36 STABILNY (2/2+1).** Wszystkie trzy niezależne kontrole II, III i IV nie wymagały poprawki źródła. Pełne CI, kontrola logów i rzeczywisty PDF ostatniego audytu zakończyły się sukcesem.
 
 ## 1. Odwrócony przegląd dowodu głównego
 
@@ -32,6 +32,15 @@ Nie znaleziono miejsca, w którym potrzebna byłaby poprawka tekstu. W szczegól
 
 Referencyjny pełny przebieg GitHub Actions **[45064877027](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45064877027): SUCCESS**, artefakt 14770024176. PDF całej książki ma 320 stron A4, rozdział 36 obejmuje strony 313–320. Wszystkie te strony były wyrenderowane i obejrzane; nie stwierdzono obciętych równań ani nakładających się elementów.
 
-## 4. Warunek ostatecznej stabilizacji
+## 4. Pełne CI audytów II–IV i kontrola PDF
 
-Audyty II i III nie wymagały zmian w źródle; audyt IV jest dodatkową, czystą kontrolą merytoryczną. Do formalnego uznania rozdziału 36 za **stabilny (2/2+1)** należy potwierdzić ukończenie pełnych przebiegów CI dla poprawionych testów i raportu IV, wraz z kontrolą PDF. Dopóki te warunki nie są potwierdzone, licznik pozostaje warunkowy. Samo zielone CI nie oznacza weryfikacji przez jądro Lean.
+- Audyt II: **[GitHub Actions 45065287866 — SUCCESS](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45065287866)**.
+- Rozszerzenie regresji przed audytem III: **[GitHub Actions 45065423451 — SUCCESS](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45065423451)**, osiem metod testowych rozdziału.
+- Audyt III: **[GitHub Actions 45065479992 — SUCCESS](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45065479992)**.
+- Audyt IV: **[GitHub Actions 45065614711 — SUCCESS](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45065614711)**, commit 7bfc914cca524889a94be8beb4482778afac8d48; pobrano jego rzeczywisty artefakt **14770234971**.
+
+Dokument po audycie IV ma **320 stron A4**. Strony PDF **313–320** obejmują cały rozdział 36. Wyrenderowano je ponownie przy macierzy skalowania 1 i porównano bajty bitmap z niezależną kompilacją po rozszerzeniu testów: **8/8 stron jest identycznych wizualnie**. Log kompilacji: 0 błędów LaTeX, 0 przepełnionych wierszy, 0 brakujących znaków i 0 niezdefiniowanych odsyłaczy; jedno ostrzeżenie underfull w całej książce, bez stwierdzonego problemu wizualnego.
+
+## 5. Werdykt końcowy
+
+**Audyt I — nieczysty (konieczne poprawki). Audyt II — czysty (1/2). Audyt III — czysty (2/2). Audyt IV — czysty (+1 potwierdzający). ROZDZIAŁ 36 STABILNY.** Wszystkie trzy ostatnie audyty dotyczyły tego samego bloba źródła **6891b26609ccf77a0aaddc28653bb872f05a1701**. Rozdział jest zarejestrowany w katalogu, zaimportowany do pliku głównego, objęty testami i pełnym CI. Brak podstaw do wprowadzania kolejnych, niezatwierdzonych rozszerzeń. Samo zielone CI nie oznacza sprawdzenia dowodu przez jądro Lean.
