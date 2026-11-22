@@ -48,7 +48,7 @@ class LeanDependencyGraphTests(unittest.TestCase):
                          ("LST-01", "Logic", self.sha, SOURCE))
         self.con.execute("INSERT INTO entities VALUES(?,?,?,?,?,?,?,?)",
                          ("e1", "LST-01", "theorem", "Test", 1, 3, 0, len(SOURCE)))
-        self.con.execute("INSERT INTO labels VALUES(?,?,?)", ("t:x", "e1", 5))
+        self.con.execute("INSERT INTO labels VALUES(?,?,?)", ("t:x", "e1", SOURCE.index("\\label{")))
         self.con.commit()
 
     def save_manifest(self):
