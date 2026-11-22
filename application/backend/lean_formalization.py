@@ -55,6 +55,13 @@ def _registry(lean_root: Path = LEAN_ROOT) -> list[dict[str, Any]]:
             raise HTTPException(503, "Brak identyfikatora źródła LaTeX.")
         if not VALID_THEOREM.fullmatch(str(item.get("lean_theorem", ""))):
             raise HTTPException(503, "Niepoprawna nazwa twierdzenia Lean.")
+        members = item.get("lean_theorems", [item["lean_theorem"]])
+        if (not isinstance(members, list) or not members
+                or not all(isinstance(n, str) and VALID_THEOREM.fullmatch(n) for n in members)
+                or len(members) != len(set(members)) or item["lean_theorem"] not in members):
+            raise HTTPException(503, "Niepoprawna lista twierdzeń składających się na formalizację.")
+        if item.get("statement_status") == "approved" and item.get("source_document_sha256") is None:
+            raise HTTPException(503, "Zatwierdzone powiązanie wymaga przypiętego SHA256 źródła.")
         if item.get("statement_status") not in {"unreviewed", "needs_review", "approved"}:
             raise HTTPException(503, "Niepoprawny status zgodności stwierdzenia.")
         digest = item.get("source_document_sha256")
@@ -159,7 +166,10 @@ def fragment(con: sqlite3.Connection, *, entity_id: str | None = None,
     if len(content_lean) > MAX_LEAN_CHARS:
         raise HTTPException(413, "Zarejestrowany plik Lean jest zbyt duży.")
     base.update({"formalization_id": item["id"], "lean_theorem": item["lean_theorem"],
-                 "lean_code": content_lean, "statement_status": item["statement_status"],
+                 "lean_theorems": item.get("lean_theorems", [item["lean_theorem"]]),
+                 "source_document_sha256": item.get("source_document_sha256"),
+                 "lean_code": content_lean,
+                 "statement_status": "needs_review" if sha_ok is False else item["statement_status"],
                  "formalization_status": "stale" if sha_ok is False else "ready" if sha_ok else "draft",
                  "source_pinned": sha_ok is not None,
                  "lean_file": item["lean_file"]})
