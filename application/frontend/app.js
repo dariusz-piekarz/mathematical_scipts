@@ -724,8 +724,13 @@ function openLeanSelection(){
   sel.removeAllRanges();
   loadLeanFragment({module_id:state.currentModule,start_line:startLine,end_line:endLine});
 }
+// Guard asynchronous Lean results by both selection epoch and exact fragment.
+function isCurrentLeanRun(epoch,item){
+  return epoch===state.leanEpoch && state.leanFragment===item;
+}
 async function runLeanFormalization(){
   const item=state.leanFragment;
+  const epoch=state.leanEpoch;
   if(!item?.formalization_id||!state.leanRunner?.ready)return;
   const button=$("leanRun");
   button.disabled=true;button.textContent="Sprawdzanie…";
@@ -733,6 +738,7 @@ async function runLeanFormalization(){
   try{
     const r=await api("/api/lean/run",{
       method:"POST",body:JSON.stringify({formalization_id:item.formalization_id})});
+    if(!isCurrentLeanRun(epoch,item))return;
     item.proof_status=r.proof_status;
     renderLeanFragment(item);
     $("leanLog").textContent=(r.detail||"")+"\n"+(r.log||"");
@@ -740,10 +746,13 @@ async function runLeanFormalization(){
     if(r.proof_status==="compiled"&&!r.certificate){
       $("leanRunnerInfo").textContent+=" Brak certyfikatu matematycznej zgodności.";
     }
-  }catch(e){$("leanLog").textContent="Błąd sprawdzania: "+e.message;}
-  finally{
-    button.textContent="Uruchom Lean";
-    button.disabled=!state.leanRunner?.ready||item.formalization_status==="stale";
+  }catch(e){
+    if(isCurrentLeanRun(epoch,item))$("leanLog").textContent="Błąd sprawdzania: "+e.message;
+  }finally{
+    if(isCurrentLeanRun(epoch,item)){
+      button.textContent="Uruchom Lean";
+      button.disabled=!state.leanRunner?.ready||item.formalization_status==="stale";
+    }
   }
 }
 
