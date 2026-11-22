@@ -1,0 +1,70 @@
+name: Algebraic geometry ALG-00 proof and PDF validation
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - 'chapters/pl/algebraic_geometry/00-*'
+      - 'books/pl/algebraic_geometry.tex'
+      - '.github/workflows/algebraic-geometry-ch00.yml'
+  workflow_dispatch:
+
+jobs:
+  compile-alg-00:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create chapter-only entry point without touching sources
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          main = Path("books/pl/algebraic_geometry.tex")
+          text = main.read_text(encoding="utf-8")
+          entries = re.findall(r'(?m)^\\input\{../../chapters/pl/algebraic_geometry/[^}]+\.tex\}\s*$', text)
+          assert len(entries) >= 11, f"Unexpected chapter manifest: {len(entries)}"
+          filtered = []
+          for line in text.splitlines():
+              if re.fullmatch(r'\\input\{../../chapters/pl/algebraic_geometry/(?!00-)[^}]+\.tex\}', line.strip()):
+                  continue
+              filtered.append(line)
+          result = "\n".join(filtered) + "\n"
+          assert result.count(r'\input{../../chapters/pl/algebraic_geometry/00-') == 1
+          assert result.count(r'\input{../../chapters/pl/algebraic_geometry/') == 1
+          Path("books/pl/algebraic_geometry_ch00_audit.tex").write_text(result, encoding="utf-8")
+          PY
+      - name: Compile chapter with all required LaTeX passes
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: algebraic_geometry_ch00_audit.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Verify final PDF and resolved references
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          pdf = Path("books/pl/algebraic_geometry_ch00_audit.pdf")
+          log = Path("books/pl/algebraic_geometry_ch00_audit.log")
+          assert pdf.exists() and pdf.stat().st_size > 10000, "PDF missing or empty"
+          assert log.exists(), "Build log missing"
+          s = log.read_text(encoding="utf-8", errors="replace")
+          assert "There were undefined references" not in s
+          assert not re.search(r"LaTeX Warning: Reference .* undefined", s)
+          assert not re.search(r"LaTeX Warning: Citation .* undefined", s)
+          assert not re.search(r"(?m)^! ", s), "LaTeX error present"
+          assert "Rerun to get cross-references right" not in s
+          print(f"ALG-00 PDF verified ({pdf.stat().st_size} bytes)")
+          PY
+      - name: Upload chapter PDF and build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: algebraic-geometry-alg-00-pdf
+          path: |
+            books/pl/algebraic_geometry_ch00_audit.pdf
+            books/pl/algebraic_geometry_ch00_audit.log
+          if-no-files-found: warn
