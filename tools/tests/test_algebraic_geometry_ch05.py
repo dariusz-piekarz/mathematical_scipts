@@ -141,6 +141,7 @@ class ALG05Regressions(unittest.TestCase):
         self.assertNotIn("przedsnop", no_refs.lower())
         self.assertIn("po zastosowaniu iloczynu tensorowego z $B$", src)
         self.assertIn("schematu testowego do przypadku afinicznego", src)
+        self.assertIn("jest analogiczna do pierwszej mapy", src)
 
     def test_tikz_and_stable_crossrefs(self):
         src = SOURCE.read_text(encoding="utf-8")
