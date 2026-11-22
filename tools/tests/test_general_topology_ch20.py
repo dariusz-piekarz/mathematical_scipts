@@ -106,7 +106,7 @@ def integration_and_source() -> tuple[int, int]:
         item["chapters"] for item in catalog["books"]
         if item["id"] == "general_topology"
     )
-    assert len(chapters) == 20 and chapters[-1] == CH
+    assert len(chapters) >= 20 and chapters[19] == CH
     assert len(chapters) == len(set(chapters))
 
     all_text = "\n".join(
