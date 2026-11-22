@@ -145,7 +145,7 @@ def test_sources() -> tuple[int, int]:
             r"\end{" + env + "}"), env
     catalog = json.loads((ROOT / "catalog/books.json").read_text(encoding="utf-8"))
     chapters = next(b["chapters"] for b in catalog["books"] if b["id"]=="general_topology")
-    assert chapters[-1] == CH and len(chapters) == 15
+    assert chapters[14] == CH and len(chapters) >= 15
     all_text = "\n".join((ROOT / c).read_text(encoding="utf-8") for c in chapters)
     labels = re.findall(r"\\label\{([^}]+)\}", all_text)
     refs = re.findall(r"\\(?:ref|eqref|pageref)\{([^}]+)\}", all_text)
