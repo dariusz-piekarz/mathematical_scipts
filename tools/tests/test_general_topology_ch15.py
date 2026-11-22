@@ -129,13 +129,13 @@ def test_sources() -> tuple[int, int]:
     assert r"2r_M<\rho" in text
     assert r"d(y,z)\ge3r_i" in text
     for formula in (
-        r"\\mathcal B=\\bigcup_{n\\ge1}\\mathcal B_n",
-        r"\\overline{P_n}^{\\,X}",
+        r"\mathcal B=\bigcup_{n\ge1}\mathcal B_n",
+        r"\overline{P_n}^{\,X}",
         r"F_n(G)=",
         r"f_{n,B}=2^{-n}g_B",
-        r"F:X\\to\\ell^\\infty(J)",
-        r"\\|F(y)-F(x)\\|_\\infty",
-        r"\\label{thm:topog-parazwartosc-nagata-smirnow}",
+        r"F:X\to\ell^\infty(J)",
+        r"\|F(y)-F(x)\|_\infty",
+        r"\label{thm:topog-parazwartosc-nagata-smirnow}",
     ):
         assert formula in text, formula
 
