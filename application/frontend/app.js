@@ -839,28 +839,28 @@ function renderLeanInspection(result){
     group.append(node("h3",{},name+" · "+values.length+" stałych"));
     const categorized=result.type_constants&&result.value_constants;
     const buckets=categorized?[
-      ["Typ / założenia",result.type_constants[name]||[]],
+      ["Typ (założenia i teza)",result.type_constants[name]||[]],
       ["Wartość / dowód",result.value_constants[name]||[]]
     ]:[["Wszystkie referencje",values]];
     for(const [label,refs] of buckets){
       if(categorized)group.append(node("h4",{},label+" · "+refs.length));
       const list=node("ul");
       for(const value of refs){
-      const li=node("li",{},value);
-      // A constant name can be navigated only when exactly one current catalog
-      // registration declares it. This is a UI association, not proof equivalence.
-      const candidates=(state.leanCatalog?.items||[]).filter(entry=>
-        entry.index_status==="ok"&&entry.formalization_status!=="stale"&&
-        entry.source_entity_id&&
-        (entry.lean_theorems||[entry.lean_theorem]).includes(value));
-      if(candidates.length===1){
-        const match=candidates[0];
-        const link=node("button",{className:"lean-dep-constant-link"},value);
-        link.type="button";
-        link.title="Otwórz powiązaną formalizację: "+match.source_module+" · "+match.source_label;
-        link.addEventListener("click",()=>loadLeanFragment({entity_id:match.source_entity_id}));
-        li.replaceChildren(link);
-      }
+        const li=node("li",{},value);
+        // A constant name can be navigated only when exactly one current catalog
+        // registration declares it. This is a UI association, not proof equivalence.
+        const candidates=(state.leanCatalog?.items||[]).filter(entry=>
+          entry.index_status==="ok"&&entry.formalization_status!=="stale"&&
+          entry.source_entity_id&&
+          (entry.lean_theorems||[entry.lean_theorem]).includes(value));
+        if(candidates.length===1){
+          const match=candidates[0];
+          const link=node("button",{className:"lean-dep-constant-link"},value);
+          link.type="button";
+          link.title="Otwórz powiązaną formalizację: "+match.source_module+" · "+match.source_label;
+          link.addEventListener("click",()=>loadLeanFragment({entity_id:match.source_entity_id}));
+          li.replaceChildren(link);
+        }
         list.append(li);
       }
       group.append(list);
