@@ -199,13 +199,16 @@ def lean_dependencies_graph(formalization_id: str):
 
 class LeanInspectionRequest(BaseModel):
     formalization_id: str = Field(min_length=1, max_length=100)
+    classify_references: bool = False
 
 
 @app.post("/api/lean/dependencies/inspect")
 def inspect_lean_declaration_constants(request: LeanInspectionRequest):
     """Opt-in local Lean process: actual expression references, no certificate."""
     with db_connection() as con:
-        return lean_introspection.inspect(con, request.formalization_id)
+        return lean_introspection.inspect(
+            con, request.formalization_id,
+            classified=request.classify_references)
 
 
 @app.get("/api/lean/fragment")
