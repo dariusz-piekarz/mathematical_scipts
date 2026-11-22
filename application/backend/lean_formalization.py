@@ -307,12 +307,14 @@ def run(con: sqlite3.Connection, formalization_id: str,
         return {"formalization_id": formalization_id, "proof_status": "blocked",
                 "detail": "Niezgodność treści rozdziału z SHA256 w indeksie.",
                 "certificate": False}
-    index_status, _ = lean_source_provenance.owner_status(
+    index_status, owner_id = lean_source_provenance.owner_status(
         con, item["source_module"], item["source_label"], d["content"])
     if index_status != "ok":
         return {"formalization_id": formalization_id, "proof_status": "blocked",
                 "detail": "Niepoprawne powiązanie źródła: " + index_status,
                 "certificate": False}
+    binding_before = lean_source_provenance.indexed_binding(
+        con, item["source_module"], item["source_label"], owner_id)
     if ((item.get("source_document_sha256") and item["source_document_sha256"] != d["sha256"])
             or not _source_file_current(item, d["sha256"], lean_root)):
         return {"formalization_id": formalization_id, "proof_status": "blocked",
@@ -359,6 +361,25 @@ def run(con: sqlite3.Connection, formalization_id: str,
         result = {"formalization_id": formalization_id, "proof_status": status,
                   "detail": detail, "log": log, "statement_status": item["statement_status"],
                   "certificate": False}
+        # A rebuild may change labels or entity spans without modifying the
+        # canonical document hash. Refuse a result from that index generation.
+        latest = con.execute(
+            "SELECT sha256,content FROM documents WHERE id=?", (item["source_module"],)
+        ).fetchone()
+        if (latest is None or latest["sha256"] != d["sha256"]
+                or latest["content"] != d["content"]):
+            return {**result, "proof_status": "blocked",
+                    "detail": "Indeks rozdziału zmienił się podczas uruchomienia Lean.",
+                    "run_record_saved": False}
+        current_status, current_owner = lean_source_provenance.owner_status(
+            con, item["source_module"], item["source_label"], latest["content"])
+        if (current_status != "ok" or current_owner != owner_id
+                or lean_source_provenance.indexed_binding(
+                    con, item["source_module"], item["source_label"], current_owner
+                ) != binding_before):
+            return {**result, "proof_status": "blocked",
+                    "detail": "Powiązanie twierdzenia zmieniło się podczas uruchomienia Lean.",
+                    "run_record_saved": False}
         try:
             after = lean_results.fingerprint(d["sha256"], item["_file"], lean_root)
             if after != fingerprint or not _source_file_current(item, d["sha256"], lean_root):
