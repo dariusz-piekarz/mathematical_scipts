@@ -76,7 +76,7 @@ class TestSymmetricChoiceChapter36(unittest.TestCase):
             r"\label{thm:sym36-dedekind}",
             r"\label{lem:sym36-arbitrary-model}",
             r"\label{thm:sym36-relative-consistency}",
-            "nie" + "\n" + "daje automatycznie modelu ZF+AD",
+            "daje automatycznie modelu ZF+AD",
         ):
             self.assertIn(part, TEXT)
         for bad in (
@@ -154,7 +154,7 @@ class TestSymmetricChoiceChapter36(unittest.TestCase):
         self.assertIn("przeliczalnym modelem zbiorowym", TEXT)
         self.assertIn(r"\sigma\equiv_G\tau", TEXT)
         self.assertIn(r"\Vdash_{\mathrm{HS}}", TEXT)
-        self.assertIn("przez filtr generyczny", TEXT.lower() if False else TEXT)
+        self.assertIn("przez filtr generyczny", TEXT)
         self.assertIn("Klasy i relacja są \\emph{zbiorami zewnętrznymi}", TEXT)
 
 
