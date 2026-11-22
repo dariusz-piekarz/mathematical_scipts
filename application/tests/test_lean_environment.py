@@ -145,6 +145,64 @@ class LeanEnvironmentTests(unittest.TestCase):
             advertised_only = lean_environment.executable_toolchain_sha256(self.root)
         self.assertEqual(absent, advertised_only)
 
+    def test_real_olean_content_change_invalidates_artifact_hash(self):
+        build = self.root / ".lake" / "build" / "lib" / "lean" / "Local"
+        build.mkdir(parents=True)
+        file = build / "Example.olean"
+        file.write_bytes(b"compiled version 1")
+        original = lean_environment.compiled_artifacts_sha256(self.root)
+        file.write_bytes(b"compiled version 2")
+        self.assertNotEqual(original,
+                            lean_environment.compiled_artifacts_sha256(self.root))
+
+    def test_package_artifacts_and_build_tree_creation_change_snapshot(self):
+        empty = lean_environment.compiled_artifacts_sha256(self.root)
+        root = self.root / ".lake" / "packages" / "mathlib" / ".lake" / "build" / "lib" / "lean"
+        root.mkdir(parents=True)
+        built = lean_environment.compiled_artifacts_sha256(self.root)
+        self.assertNotEqual(empty, built)
+        package = root / "Mathlib" / "Data"
+        package.mkdir(parents=True)
+        artifact = package / "Nat.olean"
+        artifact.write_bytes(b"compiled mathlib")
+        self.assertNotEqual(built, lean_environment.compiled_artifacts_sha256(self.root))
+        artifact.unlink()
+        self.assertEqual(built, lean_environment.compiled_artifacts_sha256(self.root))
+
+    def test_olean_budget_is_explicit_and_metadata_changes_are_detected(self):
+        root = self.root / ".lake" / "build" / "lib" / "lean"
+        root.mkdir(parents=True)
+        artifact = root / "Large.olean"
+        artifact.write_bytes(b"a" * 1024)
+        with patch("backend.lean_environment.MAX_OLEAN_HASH_BYTES", 1):
+            budget = [1]
+            before = lean_environment._olean_tree(root, label="project", budget=budget)
+            self.assertEqual(before["coverage"], "metadata_only")
+            self.assertEqual(before["artifacts"][0]["content"], "metadata_only")
+            first = lean_environment.compiled_artifacts_sha256(self.root)
+            artifact.write_bytes(b"b" * 2048)
+            second = lean_environment.compiled_artifacts_sha256(self.root)
+            self.assertNotEqual(first, second)
+
+    def test_olean_tree_rejects_symlink_and_too_many_files(self):
+        root = self.root / ".lake" / "build" / "lib" / "lean"
+        root.mkdir(parents=True)
+        target = self.root / "external"
+        target.write_bytes(b"compiled")
+        link = root / "External.olean"
+        try:
+            link.symlink_to(target)
+        except (OSError, NotImplementedError):
+            self.skipTest("Symbolic links are unavailable")
+        with self.assertRaisesRegex(ValueError, "Symlinked"):
+            lean_environment.compiled_artifacts_sha256(self.root)
+        link.unlink()
+        (root / "One.olean").write_bytes(b"1")
+        (root / "Two.olean").write_bytes(b"2")
+        with patch("backend.lean_environment.MAX_OLEAN_FILES", 1):
+            with self.assertRaisesRegex(ValueError, "Too many"):
+                lean_environment.compiled_artifacts_sha256(self.root)
+
     def test_unresolved_path_is_recorded_not_verified(self):
         fake = self.root / "missing"
         value = lean_environment._binary_identity(str(fake))
