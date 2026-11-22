@@ -43,10 +43,19 @@ def registered_files(manifest: Path, lean_root: Path) -> dict[str, list[str]]:
             raise ValueError("Invalid registered Lean path")
         if not isinstance(name, str) or not IDENTIFIER.fullmatch(name):
             raise ValueError("Invalid registered Lean theorem")
+        names = item.get("lean_theorems", [name])
+        if (not isinstance(names, list) or not names
+                or not all(isinstance(n, str) and IDENTIFIER.fullmatch(n) for n in names)
+                or len(names) != len(set(names)) or name not in names):
+            raise ValueError("Malformed theorem group for " + name)
+        digest = item.get("source_document_sha256")
+        if item.get("statement_status") == "approved":
+            if not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
+                raise ValueError("Approved formalization lacks pinned source digest")
         resolved = (lean_root / rel).resolve()
         if not resolved.is_relative_to(root) or not resolved.is_file():
             raise ValueError("Untrusted or missing Lean file: " + rel)
-        output.setdefault(rel, []).append(name)
+        output.setdefault(rel, []).extend(names)
     # All Lean files in the trusted source tree are compiled and axiom-audited,
     # including pedagogical Prop-level companions not shown as the primary UI mapping.
     for source in sorted(root.rglob("*.lean")):
