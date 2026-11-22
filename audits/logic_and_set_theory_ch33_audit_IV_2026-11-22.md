@@ -36,6 +36,9 @@ Jest to kontrola regresji i skończonych modeli, **a nie formalny dowód lematu 
 
 ## Walidacja i decyzja
 
-[GitHub Actions — przebieg #45021551172](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45021551172). **Pełny wynik kompilacji i kontroli PDF pozostaje do dopisania po zamknięciu przebiegu.**
+- [GitHub Actions #45021551172](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45021551172): **SUCCESS** na wszystkich źródłach i testach audytu IV. **17 testów rozdziału 33**, łącznie z 25 600 głębszymi porównaniami semantycznymi, oraz regresje rozdziałów 01–32: PASS. Kontrola źródeł, 828 etykiet i 616 odsyłaczy: PASS. Kompilacja książki i kontrola PDF/logu: PASS.
+- [GitHub Actions #45021652958](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45021652958): **SUCCESS** także po dopisaniu niniejszego raportu.
+- **Aktualny artefakt PDF** ma **288 stron**; rozdział 33 zajmuje strony PDF **281–288** (drukowane numery 272–279). Wyrenderowano i obejrzano każdą z ośmiu stron. Nie ma nałożeń tekstu na wzory, uciętych formuł ani uszkodzonych znaków. Ostatnia strona jest częściowo niezapełniona, lecz nie wymaga zabiegów typograficznych kosztem tekstu.
+- **Log LaTeX:** 0 błędów, 0 niezdefiniowanych odsyłaczy, 0 ostrzeżeń o brakujących cytowaniach, 0 `Overfull \hbox`; pojedyncze `Underfull \hbox` w całej książce.
 
-**Werdykt matematyczny audytu IV:** nie znaleziono nowych usterek i nie zmieniono tekstu rozdziału 33. Jeżeli bieżąca kontrola CI przejdzie, rozdział można uznać za **stabilny po IV audytach**, zgodnie z przyjętym kryterium czystej iteracji, przy zachowaniu rozróżnienia między stabilnością redakcyjną a formalną weryfikacją dowodów.
+**WERDYKT KOŃCOWY: STABILNY PO IV AUDYTACH.** W czwartym, niezależnym audycie nie wykryto nowych błędów matematycznych i nie zmieniono tekstu LaTeX rozdziału 33. Wzmocniony zestaw testów oraz pełna kompilacja i przegląd PDF zakończyły się pomyślnie. Rozdział można więc uznać za stabilny według przyjętej procedury; nie utożsamiamy jednak takiej oceny z formalną weryfikacją matematyczną w Lean. Po rozdziale 33 następnym etapem jest planowanie dalszego zakresu teorii wymuszania i jego zastosowań.
