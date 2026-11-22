@@ -6,7 +6,7 @@ import sqlite3
 from pathlib import Path
 
 from fastapi import HTTPException
-from backend import lean_formalization as lean
+from backend import lean_formalization as lean, lean_source_provenance
 
 MAX_ENTRIES = 250
 
@@ -32,15 +32,8 @@ def list_formalizations(con: sqlite3.Connection, *,
               hashlib.sha256(doc["content"].encode("utf-8")).hexdigest() != doc["sha256"]):
             index_status = "corrupt_document"
         else:
-            matches = con.execute(
-                "SELECT DISTINCT e.id FROM labels l JOIN entities e ON e.id=l.entity_id "
-                "WHERE e.document_id=? AND l.name=? ORDER BY e.id LIMIT 2",
-                (module, label)
-            ).fetchall()
-            index_status = "ok" if len(matches) == 1 else (
-                "ambiguous_label" if matches else "unlinked_label")
-            if len(matches) == 1:
-                entity_id = matches[0]["id"]
+            index_status, entity_id = lean_source_provenance.owner_status(
+                con, module, label, doc["content"])
         pinned = item.get("source_document_sha256")
         current = bool(index_status == "ok" and
                        (not pinned or pinned == doc["sha256"]) and
