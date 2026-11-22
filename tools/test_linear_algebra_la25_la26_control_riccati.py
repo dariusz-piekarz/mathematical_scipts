@@ -80,8 +80,8 @@ for p in (2,3):
             for c in product(range(p),repeat=2):
                 C=((c[0],c[1]),)
                 observable=rank_observe(C,A,p)==2
-                check("observability_dual_Kalman",observable==rank_cont(
-                    tuple(zip(*A)),tuple(zip(*C)),p)==2)
+                check("observability_dual_Kalman",observable==(
+                    rank_cont(tuple(zip(*A)),tuple(zip(*C)),p)==2))
                 AC=matmul(C,A,p);A2C=matmul(AC,A,p)
                 check("finite_unobservable_Cayley_Hamilton",
                       rank((C[0],AC[0]),p)==rank((C[0],AC[0],A2C[0]),p))
