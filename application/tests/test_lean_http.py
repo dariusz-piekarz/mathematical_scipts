@@ -46,6 +46,32 @@ class LeanHttpTests(unittest.TestCase):
         self.assertEqual(data["statement_status"], "needs_review")
         self.assertFalse(data["certificate"])
 
+    def test_all_lST01_source_labels_show_syntax_and_valuation_proofs(self):
+        outline = self.client.get("/api/modules/LST-01/outline")
+        self.assertEqual(outline.status_code, 200)
+        expected = {
+            "thm:de-morgan-logic": ("lst01-de-morgan", "lst01_syntax_de_morgan_and"),
+            "thm:implication-laws": ("lst01-implication-laws",
+                                      "lst01_syntax_implication_as_disjunction"),
+            "thm:negated-implication-xli": ("lst01-negated-implication",
+                                           "lst01_syntax_negated_implication"),
+        }
+        entities = outline.json()["entities"]
+        for label, (formal_id, theorem) in expected.items():
+            with self.subTest(label=label):
+                entity = next(e for e in entities if label in e.get("labels", []))
+                reply = self.client.get("/api/lean/fragment",
+                                        params={"entity_id": entity["id"]})
+                self.assertEqual(reply.status_code, 200, reply.text)
+                data = reply.json()
+                self.assertEqual(data["formalization_id"], formal_id)
+                self.assertEqual(data["lean_theorem"], theorem)
+                self.assertIn("inductive Formula", data["lean_code"])
+                self.assertIn("def equivalent", data["lean_code"])
+                self.assertIn("∀ ν : Valuation", data["lean_code"])
+                self.assertEqual(data["statement_status"], "needs_review")
+                self.assertFalse(data["certificate"])
+
     def test_execution_disabled_by_default(self):
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "0"}):
             result = self.client.post("/api/lean/run", json={
