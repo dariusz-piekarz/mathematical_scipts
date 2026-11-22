@@ -62,7 +62,7 @@ class LeanProcessTests(unittest.TestCase):
             memory_limit_mb=512)
         self.assertFalse(timed_out)
         self.assertNotEqual(returncode, 0)
-        self.assertNotIn("allocated", log)
+        self.assertIn("MemoryError", log)
 
     @unittest.skipUnless(os.name == "posix", "POSIX process group behavior")
     def test_timeout_kills_descendant_not_just_parent(self):
