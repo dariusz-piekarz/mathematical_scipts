@@ -46,3 +46,21 @@ Nie stwierdzono błędnych twierdzeń, nieuzasadnionych istotnych wzorów ani us
 Rozdział kwalifikuje się do publikacji na istniejącej gałęzi `biblioteka-matematyczna-iteracja-6` w repozytorium `dariusz-piekarz/mathematical_scipts`. Publikacja obejmuje kanoniczny plik rozdziału, pięć zestawów testowych, książkę `books/pl/abstract_algebra.tex`, `catalog/books.json`, README oraz workflow CI. Status zdalnego workflow należy potwierdzić odrębnie — uruchomienie testów lokalnych nie jest równoważne sukcesowi GitHub Actions.
 
 **Stan po stabilizacji:** AA-01–AA-22 są stabilne matematycznie; 74 iteracje audytowe liczone w bieżącej serii. Następny: AA-23, audyt I. Automatyzacja cogodzinna od 12:00 czasu Europe/Warsaw kontynuuje kolejne rozdziały, zawsze pojedynczo i do stabilności.
+
+## Potwierdzona publikacja na GitHubie
+
+Publikację wykonano na istniejącej gałęzi `biblioteka-matematyczna-iteracja-6` (bez tworzenia nowej gałęzi). Następnie ponownie odczytano z GitHuba wszystkie pliki:
+
+- `chapters/pl/abstract_algebra/22-twierdzenie-artina-i-odpowiedniosc-galois.tex`: Git blob SHA `f85f71d7121b986b610558db164c2ee0816e200e`, zgodny z lokalnie sprawdzonym źródłem;
+- pięć zestawów `tools/tests/test_abstract_algebra_ch22*.py`: wszystkie pięć Git blob SHA zgodne z pięcioma lokalnymi plikami przechodzącymi łącznie 137 testów;
+- `books/pl/abstract_algebra.tex`: zawiera AA-22;
+- `catalog/books.json`: 22 rozdziały;
+- `README.md`: 01–22 stabilne;
+- `.github/workflows/abstract-algebra-chapter.yml`: pięć poleceń testowych AA-22 i build książki do AA-22;
+- `audits/abstract_algebra/ch22_iteration_05.md`: raport opublikowany.
+
+Statycznie sprawdzono etykiety wszystkich 21 wcześniejszych rozdziałów: żadna z 12 etykiet AA-22 nie koliduje ze starszymi. Wszystkie 11 zewnętrznych celów odsyłaczy zostało odnalezionych.
+
+**Uwaga o CI:** odczyt statusów commitów nie zwrócił wyników potwierdzających GitHub Actions. Dostępne narzędzie listujące workflow filtruje runy do uruchomień na pull requestach, nie pozwala więc stwierdzić wyniku uruchomienia wywołanego przez push. Zdalny CI **nie jest potwierdzony**; pełna kompilacja książki z 22 rozdziałami nie była osobno wykonywana lokalnie w tej iteracji.
+
+Uruchomiono również osobną automatyzację audytów rozdziałów `Automation_953de4ee16b08191bd7bb0c8d9ea01ee`, od **22 listopada 2026 r. godz. 12:00 Europe/Warsaw**, co godzinę, po jednym rozdziale i jednej iteracji, z przejściem do następnego rozdziału dopiero po stabilizacji.
