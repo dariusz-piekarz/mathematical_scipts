@@ -40,7 +40,7 @@ class TestChapter29(unittest.TestCase):
         for f in DIR.glob("*.tex"):
             labels.update(re.findall(r"\\label\{([^}]+)\}",f.read_text("utf8")))
         refs=re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}",TEXT)
-        self.assertEqual(len(refs),10)
+        self.assertEqual(len(refs),11)
         self.assertFalse(set(refs)-labels)
 
     def test_all_full_book_sections_retained(self):
@@ -94,6 +94,14 @@ class TestChapter29(unittest.TestCase):
             prefixes=next_prefixes
         self.assertEqual(len(prefixes),8)
         self.assertTrue(all(p[k] in A[k] for p in prefixes for k in range(3)))
+
+    def test_tychonoff_uses_canonical_tagged_points(self):
+        self.assertIn(r"\widehat A_i:=A_i\times\{0\}",TEXT)
+        self.assertIn(r"\infty_i:=(i,1)",TEXT)
+        self.assertIn(r"\ref{thm:choice-finite-family}",TEXT)
+        self.assertIn(r"\pi_i",TEXT)
+        self.assertIn(r"i\mapsto a_i",TEXT)
+        self.assertIn("przez zastępowanie",TEXT)
 
     def test_tukey_finite_character_on_partial_choice(self):
         E={(i,v) for i in range(3) for v in (0,1)}
