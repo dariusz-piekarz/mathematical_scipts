@@ -56,7 +56,7 @@ class TestBooleanModelsChapter35(unittest.TestCase):
                 r"\\label\{([^}]+)\}", source.read_text("utf8")
             ))
         refs = re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", TEXT)
-        self.assertEqual(len(refs), 33)
+        self.assertEqual(len(refs), 34)
         self.assertEqual(set(refs) - all_labels, set())
         self.assertIn("ch:forcing-continuum", refs)
         self.assertIn("thm:boolean35-zfc", refs)
@@ -83,6 +83,60 @@ class TestBooleanModelsChapter35(unittest.TestCase):
         self.assertIn("najmniejszą rangę", TEXT)
         self.assertIn("klasą właściwą", TEXT)
         self.assertIn("zastępowanie", TEXT)
+
+    def test_canonical_names_preserve_atomic_truth_and_successor(self):
+        # Independent finite Boolean semantics of ground-model check names.
+        # Checks equality, membership, pairing, and ordinal successors.
+        naturals = [frozenset()]
+        for _ in range(1, 7):
+            naturals.append(frozenset(naturals))
+        ground = list(dict.fromkeys(naturals + [
+            frozenset({naturals[2]}),
+            frozenset({naturals[1], naturals[3]}),
+        ]))
+
+        @lru_cache(None)
+        def check(a):
+            return frozenset((check(y), 7) for y in a)
+
+        @lru_cache(None)
+        def membership(a, b):
+            result = 0
+            for child, coef in b:
+                result |= coef & equality(a, child)
+            return result
+
+        @lru_cache(None)
+        def equality(a, b):
+            result = 7
+            for child, coef in a:
+                result &= (7 ^ coef) | membership(child, b)
+            for child, coef in b:
+                result &= (7 ^ coef) | membership(child, a)
+            return result
+
+        for a in ground:
+            for b in ground:
+                self.assertEqual(equality(check(a), check(b)), 7 if a == b else 0)
+                self.assertEqual(
+                    membership(check(a), check(b)), 7 if a in b else 0,
+                )
+                pair = frozenset({(check(a), 7), (check(b), 7)})
+                for eta in ground:
+                    self.assertEqual(
+                        membership(check(eta), pair),
+                        7 if eta == a or eta == b else 0,
+                    )
+        for n in range(6):
+            self.assertEqual(
+                naturals[n] | {naturals[n]}, naturals[n + 1],
+            )
+            self.assertEqual(
+                membership(check(naturals[n + 1]), check(naturals[6])),
+                7 if n + 1 < 6 else 0,
+            )
+        self.assertIn(r"\llbracket\check a\in\check b\rrbracket", TEXT)
+        self.assertIn(r"\llbracket\check 0\in", TEXT)
 
     def test_zfc_axioms_addressed_explicitly(self):
         for name in (
