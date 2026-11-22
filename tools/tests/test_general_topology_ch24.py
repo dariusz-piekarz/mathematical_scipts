@@ -32,9 +32,10 @@ def model_s3():
     assert all(op(x, op(y, inv(x))) in even for x in g for y in even)
     assert any(op(x, op(y, inv(x))) not in h for x in g for y in h)
     # The induced left action on cosets is transitive; stabilizer of H is H.
-    assert all(any(coset_eq == frozenset(op(x, z) for z in h)
-                   for x in g)
-               for coset_eq in {frozenset(op(x, z) for z in h) for x in g})
+    for x, y in product(g, repeat=2):
+        mover = op(y, inv(x))
+        assert frozenset(op(op(mover, x), z) for z in h) == (
+            frozenset(op(y, z) for z in h))
     assert {x for x in g if frozenset(op(x, z) for z in h) == h} == set(h)
 
     def coset(x, subgroup):
