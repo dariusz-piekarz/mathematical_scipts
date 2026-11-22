@@ -275,6 +275,38 @@ class ALG07Regressions(unittest.TestCase):
                     r"\end{", 1)[0]
                 self.assertIn(required, block)
 
+    def test_self_contained_cycle_and_bundle_hypotheses(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        cases = {
+            "def:ga7-cycles": "Niech $k$ będzie ciałem",
+            "def:ga7-rational-divisor": "$X$ schematem skończonego typu",
+            "def:ga7-chow": "Niech $k$ będzie ciałem",
+            "def:ga7-proper-intersection": "nad $k$",
+            "def:ga7-c1": "Niech $k$ będzie ciałem",
+            "st:ga7-c1-add": "Niech $k$ będzie ciałem",
+            "tw:ga7-projective-bundle": "$X$ gładką quasi-rzutową rozmaitością nad $k$",
+            "def:ga7-c-classes": "Niech $k$ będzie ciałem",
+            "tw:ga7-chern-axioms": "Dla wiązki wektorowej",
+            "def:ga7-chi": "$S$ gładką rzutową powierzchnią nad $k$",
+            "def:ga7-ch-td": "Niech $k$ będzie ciałem charakterystyki zero",
+        }
+        for label, expected in cases.items():
+            with self.subTest(label=label):
+                marker = r"\label{" + label + "}"
+                self.assertIn(marker, src)
+                statement = src.split(marker, 1)[1].split(r"\end{", 1)[0]
+                self.assertIn(expected, statement)
+
+    def test_rational_divisor_title_matches_all_dimensions(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        self.assertIn(
+            r"\begin{definicja}[Dzielnik funkcji wymiernej na podschemacie całkowitym]",
+            src)
+        definition = src.split(r"\label{def:ga7-rational-divisor}", 1)[1].split(
+            r"\end{definicja}", 1)[0]
+        self.assertIn(r"$r\ge0$", definition)
+        self.assertIn(r"wymiaru $r+1$", definition)
+
     def test_bezout_example_rejects_zero_polynomial(self):
         src = SOURCE.read_text(encoding="utf-8")
         bezout = src.split(r"\label{prz:ga7-bezout}", 1)[1].split(
