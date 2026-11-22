@@ -24,3 +24,9 @@ Metoda Lean zwraca stałe syntaktycznie występujące w rozbudowanym wyrażeniu 
 - Brak sandboxu dla kodu nieufnego, ryzyko TOCTOU i niepełne pokrycie przechodnich zależności pozostają otwarte; używać tylko na lokalnym, zaufanym serwerze.
 
 Nie zmieniono kanonicznych `.tex`, `application/lean/src` ani `application/lean/manifest.json`.
+
+## Jednoznaczna nawigacja po stałych i wymuszenie rzeczywistego testu
+
+- Po udanej inspekcji aplikacja próbuje dopasować każdą nazwę stałej do listy zarejestrowanych twierdzeń w `/api/lean/catalog`. Tylko **jednoznaczne i aktualne** powiązanie daje odsyłacz do Czytnika; nie jest to formalne poświadczenie zależności semantycznej.
+- Test Node `test_lean_inspection_browser.py` sprawdza nawigowanie do jedynego dopasowania, odmowę dla niejednoznacznych i nieaktualnych wpisów oraz nieuruchamianie kodu w wynikach tekstowych.
+- Workflow `.github/workflows/lean-formalization.yml` uruchamia `test_lean_introspection_real.py` po zainstalowaniu przypiętych Lean 4.26.0 i Mathlib; `MATLIB_REQUIRE_REAL_LEAN_TEST=1` wymusza błąd, jeśli test nie może rozpocząć rzeczywistej inspekcji. Wynik należy odczytać z zakończonego GitHub Actions, a nie z samego commitu.
