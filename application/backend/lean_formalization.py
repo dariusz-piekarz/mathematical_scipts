@@ -423,6 +423,44 @@ def run(con: sqlite3.Connection, formalization_id: str,
         # Lock spans execution and persistence. Multiple workers in one checkout
         # must not start overlapping memory-intensive compilers or race on results.
         with lean_run_lock.exclusive(lean_root):
+            # The initial checks happened before acquiring the OS runner lock.
+            # Revalidate live source ownership, manifest/toolchain and Lean
+            # bytes immediately before launch; do not execute a file that was
+            # swapped while this request waited for another compilation.
+            latest = con.execute(
+                "SELECT sha256,content FROM documents WHERE id=?",
+                (item["source_module"],)
+            ).fetchone()
+            if (latest is None or latest["sha256"] != d["sha256"]
+                    or latest["content"] != d["content"]):
+                return {"formalization_id": formalization_id,
+                        "proof_status": "blocked",
+                        "detail": "Indeks rozdziału zmienił się przed uruchomieniem Lean.",
+                        "certificate": False}
+            current_status, current_owner = lean_source_provenance.owner_status(
+                con, item["source_module"], item["source_label"], latest["content"])
+            if (current_status != "ok" or current_owner != owner_id or
+                    lean_source_provenance.indexed_binding(
+                        con, item["source_module"], item["source_label"], current_owner
+                    ) != binding_before):
+                return {"formalization_id": formalization_id,
+                        "proof_status": "blocked",
+                        "detail": "Powiązanie twierdzenia zmieniło się przed uruchomieniem Lean.",
+                        "certificate": False}
+            try:
+                locked_fingerprint = lean_results.fingerprint(
+                    d["sha256"], item["_file"], lean_root, binding_sha256)
+                if (locked_fingerprint != fingerprint or
+                        not _source_file_current(item, d["sha256"], lean_root)):
+                    return {"formalization_id": formalization_id,
+                            "proof_status": "blocked",
+                            "detail": "Pliki Lean lub zależności zmieniły się przed uruchomieniem.",
+                            "certificate": False}
+            except (OSError, ValueError):
+                return {"formalization_id": formalization_id,
+                        "proof_status": "blocked",
+                        "detail": "Nie można ponownie zweryfikować środowiska Lean.",
+                        "certificate": False}
             try:
                 returncode, log, timed_out = lean_process.execute_registered(
                     command, lean_root, timeout=TIMEOUT_SECONDS,
