@@ -36,7 +36,7 @@ Nowy tools/tests/test_general_topology_ch19.py kontroluje 29 topologii na trzyel
 
 ## Walidacja techniczna
 
-Workflow [45018362870](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45018362870) dla źródła i testów rozdziału 19 uruchomiono; przy pierwszym zapisie raportu wynik był jeszcze w toku. Kompilacja i wizualny audyt PDF zostaną odnotowane po zweryfikowaniu rzeczywistego przebiegu.
+Workflow [45018362870](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45018362870), obejmujący aktualne źródło i testy rozdziału 19, zakończył się **completed/success**, bez nieudanych kroków. Oddzielnie potwierdzono zielony test rozdziału 19, kompilację pełnej książki, samodzielnego rozdziału 19 i kontrolę logów. Artefakt \`14753160560\` pobrano do \`/mnt/data/topologia19_audyt01\`. Plik \`general_topology_ch19.pdf\` ma **6 stron A4**. Wyrenderowano i obejrzano wszystkie sześć stron, w tym wszystkie wzory w dowodzie twierdzenia o G-delta oraz hierarchii borelowskiej. Brak nachodzącego tekstu, uciętych wzorów lub problemów z numeracją. Strona końcowa ma mniej tekstu, ale nie zawiera usterek typograficznych. Dwa logi — \`general_topology_ch19.log\` i \`general_topology.log\` — nie zawierają \`Overfull\`, \`Underfull\`, \`LaTeX Warning\`, \`Missing character\`, \`Undefined control sequence\` ani \`Fatal error\`.
 
 | Obszar | Stan |
 | --- | --- |
@@ -44,7 +44,7 @@ Workflow [45018362870](https://github.com/dariusz-piekarz/mathematical_scipts/ac
 | Twierdzenie o podprzestrzeniach G_delta | PASS w audycie 01 |
 | Borel, ślady, generatory i odwzorowania | PASS w audycie 01 |
 | Skończona i pozaskończona hierarchia | PASS po korekcie hipotez |
-| Kompilacja, testy i PDF | Weryfikacja |
+| Kompilacja, testy i PDF | **PASS — run 45018362870, 6 stron A4** |
 | Stabilizacja | W AUDYCIE — wymaga kolejnych niezależnych iteracji |
 
 Źródła dodatkowej weryfikacji: David Marker, Descriptive Set Theory, twierdzenie o polskich podprzestrzeniach G_delta; Alexander S. Kechris, Classical Descriptive Set Theory, §3; standardowa definicja hierarchii borelowskiej dla przeliczalnych liczb porządkowych. Dowody w rozdziale zapisano od podstaw, nie są kopiami wskazanych opracowań.
