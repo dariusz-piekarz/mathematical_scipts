@@ -475,3 +475,42 @@ Nie zmieniono stabilnego źródła rozdziału.
 Globalny audyt całej książki pozostaje otwarty:
 nie wszystkie pozostałe dowody
 przeszły niezależny audyt dowód po dowodzie.
+
+
+## Globalne audyty 09–11 — dowody 12–18 i rysunki
+
+- [Audyt globalny 09](../../audits/general_topology/00-globalny-audyt-09-blok-12-18.md):
+  niezależna kontrola trudniejszych dowodów z 12, 14,
+  16, 17 i 18 (struktury jednostajne produktu,
+  zwartość lokalna nieskończonego iloczynu,
+  funkcyjna charakteryzacja całkowitej regularności,
+  własności uzwarceń i topologie przestrzeni odwzorowań).
+  W skontrolowanych wynikach nie znaleziono
+  nowych błędów matematycznych.
+- [Audyt globalny 10](../../audits/general_topology/00-globalny-audyt-10-rysunki-i-sklad.md):
+  przegląd rzeczywistego artefaktu 190-stronicowego
+  wydania. **27 rysunków w 17 rozdziałach**.
+  Początkowa inwentaryzacja 25/16
+  została poprawiona po odnalezieniu
+  dwóch rysunków rozdziału 01 w pełnym PDF.
+  W CI dodano
+  `tools/tests/test_general_topology_figure_sources.py`
+  wymuszający jeden podpis i unikatową
+  etykietę dla każdego rysunku.
+- [Audyt globalny 11](../../audits/general_topology/00-globalny-audyt-11-korekta-skladu-03-04.md):
+  rzeczywista kontrola ostatnich stron
+  ujawniła nadmiernie puste strony końcowe
+  w samodzielnych PDF-ach 03 i 04.
+  Wprowadzono wyłącznie redakcyjne
+  scalenia powtórzeń w obu źródłach.
+  Wszystkie etykiety i odpowiednio 15
+  oraz 17 dowodów zachowano.
+  **Korekta jest w rewalidacji**:
+  wymaga świeżych PDF i audytów 2/2+1
+  na nowych blobach.
+
+Globalny audyt wszystkich dowodów 01–26
+pozostaje otwarty. Częściowe kontrole
+konkretnych argumentów nie zastępują
+niezależnego sprawdzenia każdego
+środowiska dowodowego.
