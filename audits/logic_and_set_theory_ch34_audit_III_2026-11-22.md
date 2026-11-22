@@ -123,7 +123,15 @@ Dodano dwa testy do
   zapisano warunek regresyjny zabraniający
   traktowania obu obiektów jako dosłownie równych.
 
-**Zestaw regresji rozdziału 34:** 15 testów.
+Dodatkowo w nowym teście wyliczono **wszystkie 29 preordery**
+na trzech elementach; 16 z nich ma warunek największy.
+Dla tych preorderów, również nieantysymetrycznych,
+zweryfikowano 138 konfiguracji zbiorów gęstych
+i 231 maksymalnych antyłańcuchów.
+W każdym przypadku potwierdzono przedgęstość
+oraz globalną gęstość odpowiadającego zbioru $E$.
+
+**Zestaw regresji rozdziału 34:** 16 testów.
 **Inwentarz rozdziału:** 5 definicji, 7 lematów,
 5 twierdzeń, 2 przykłady, 3 uwagi, 12 dowodów,
 23 etykiety i **24 odsyłacze**.
@@ -132,10 +140,14 @@ Dodano dwa testy do
 
 ## Walidacja techniczna i decyzja
 
-GitHub Actions: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45038983380
+**GitHub Actions:** [przebieg #45038983380](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45038983380) — **SUCCESS** (testy, inwentarz, kompilacja LaTeX i kontrola logu).
+[Przebieg #45039214151](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45039214151) — **SUCCESS** również po rozszerzeniu zestawu do **16 testów**.
 
-Wynik końcowy CI i przeglądu PDF zostanie dopisany
-po rzeczywistym zakończeniu kompilacji.
+**Kontrola PDF:** książka ma **295 stron**, rozdział 34 zajmuje strony PDF **289–295** (drukowane **280–286**). Wyrenderowano i obejrzano **wszystkie siedem stron** po zmianach źródła. Wzory, paragrafy i nagłówki są czytelne, nie stwierdzono kolizji ani ucięć.
+
+**Log LaTeX:** 0 błędów, 0 niezdefiniowanych odsyłaczy, 0 brakujących cytowań, 0 ostrzeżeń o przepełnionych wierszach. W całej książce występuje 1 ostrzeżenie o niedopełnionym wierszu.
+
+**WYNIK KOŃCOWY AUDYTU III:** poprawki matematyczne, językowe i regresyjne zostały zapisane i zweryfikowane przez CI oraz oględziny PDF. Weryfikacja testami Python nie jest formalizacją w Lean.
 
 **Werdykt matematyczny:** wykryto i poprawiono
 dwa miejsca wymagające zmian, dlatego audyt III
