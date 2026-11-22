@@ -111,6 +111,23 @@ def _indexed_binding(con: sqlite3.Connection, module: str, label: str,
     return tuple(rows[0]) if len(rows) == 1 else None
 
 
+def _valid_indexed_binding(binding: tuple, content: str, label: str) -> bool:
+    """Reject pre-existing invalid entity bounds and incorrectly placed labels.
+
+    All offsets use Python character positions, like the LaTeX indexer.
+    """
+    _, kind, title, first, last, start, end, offset = binding
+    if (not isinstance(kind, str) or not kind or not isinstance(title, str)
+            or not all(type(n) is int for n in (first, last, start, end, offset))
+            or not (1 <= first <= last)
+            or not (0 <= start <= offset < end <= len(content))):
+        return False
+    # A stable but corrupted index can point at an arbitrary position inside
+    # the same entity. Require that it actually starts the registered label.
+    pattern = r"\\label\s*\{\s*" + re.escape(label) + r"\s*\}"
+    return re.match(pattern, content[offset:]) is not None
+
+
 def _empty(identifier: str, status: str, detail: str) -> dict:
     return {"formalization_id": identifier, "inspection_status": status,
             "detail": detail, "constants": {}, "certificate": False}
@@ -160,6 +177,10 @@ def inspect(con: sqlite3.Connection, identifier: str, *,
                     or hashlib.sha256(doc["content"].encode("utf-8")).hexdigest() != doc["sha256"]
                     or not lean._source_file_current(item, doc["sha256"], lean_root)):
                 return _empty(identifier, "blocked", "Źródło LaTeX nie jest spójne.")
+            if not _valid_indexed_binding(
+                    binding_before, doc["content"], item["source_label"]):
+                return _empty(identifier, "blocked",
+                              "Błędne granice twierdzenia lub położenie etykiety w indeksie.")
             try:
                 before = lean_results.fingerprint(doc["sha256"], item["_file"], lean_root)
                 original = item["_file"].read_bytes()
