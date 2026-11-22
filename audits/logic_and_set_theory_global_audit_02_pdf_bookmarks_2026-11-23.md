@@ -61,3 +61,14 @@ Pobrano i odczytano log CI [45083552034 — SUCCESS](https://github.com/dariusz-
 Ostateczny PDF ma **337 stron A4**, a kroki kompilacji, kontroli logu i archiwizacji artefaktu zakończyły się sukcesem. Źródła matematyczne poza sześcioma nagłówkami pozostają niezmienione.
 
 Dodatkowo commit `53ef10c651ec5c54d7944916e5a221d51edefbf6` rozszerzył `.github/workflows/logic-and-set-theory-chapter.yml` o twarde asercje na **brak obu rodzajów ostrzeżeń**. Dla tego commitu uruchomiono osobną walidację [45083709897](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45083709897); jej wynik trzeba zatwierdzić osobno. Za udowodniony należy uważać zanik ostrzeżeń w CI 45083552034, nie automatycznie sukces nowej asercji przed zakończeniem jej przebiegu.
+
+## 6. Bezpośrednie porównanie artefaktów PDF
+
+Pobrano oba pliki PDF z rzeczywistych przebiegów GitHub Actions i przeanalizowano je lokalnie przy użyciu PyMuPDF:
+
+- **Przed korektą**: [CI 45081007565](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45081007565), artefakt `14776969101`, PDF 337 stron;
+- **Po korekcie**: [CI 45083552034](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45083552034), artefakt `14777719963`, PDF 337 stron.
+
+Kontrola wszystkich 337 stron przez ekstrakcję tekstu z `get_text(sort=True)`: **328 identycznych stron**, **9 różnych stron materiału wstępnego (2–10)**, różnice związane z porządkową/arabską numeracją spisu treści. Porównanie pikselowe stron PDF 10–337 przy 72 DPI: **327/328 stron identycznych**, strona 10 różni się wizualnie w wyniku reorganizacji numeracji materiału wstępnego. Zatem **wszystkie strony PDF 11–337 są identyczne pikselowo**, mimo poprawek nagłówków i zakładek.
+
+Odczyt faktycznej struktury zakładek PDF przez `get_toc()` wykazał **338 wpisów przed i 338 po** zmianie. Wszystkie sześć wcześniej błędnie serializowanych wpisów ma teraz poprawną postać tekstową: `omega`, `N`, `R` i `L` zachowano jako czytelne oznaczenia tekstowe. Żadnego wpisu nie usunięto. Pozwala to stwierdzić poprawność zarówno nawigacji, jak i wyglądu książki po zmianach.
