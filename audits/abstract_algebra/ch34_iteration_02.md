@@ -43,8 +43,8 @@ Opublikowano i sprawdzono przez ponowny odczyt:
 - `catalog/books.json` (34 rozdziały algebry abstrakcyjnej);
 - `.github/workflows/abstract-algebra-chapter.yml` (oba zestawy testów AA-34 i kompilacja AA-01–AA-34).
 
-W przebiegu GitHub Actions [45039812764](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45039812764) krok **„Run AA-34 quartic resolvent and Galois regression tests” zakończył się sukcesem**, co potwierdza oba zestawy testów AA-34 w zdalnym CI. W chwili ostatniego sprawdzenia **kompilacja pełnej książki AA-01–AA-34 nadal trwała**, a kontrola końcowego PDF i odsyłaczy nie była jeszcze wykonana. Lokalna walidacja, publikacja źródeł i zdalne testy AA-34 są potwierdzone, sukces całego workflow — **jeszcze nie**.
+Przebieg GitHub Actions [45039812764](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45039812764) **zakończył się wynikiem `success`**. Potwierdzono pomyślne zakończenie wszystkich trzech etapów: **„Run AA-34 quartic resolvent and Galois regression tests”**, **„Compile AA-01 to AA-34 book with latexmk”** oraz **„Verify PDF and references (no undefined refs)”**. Oznacza to potwierdzenie zarówno obu zestawów testów AA-34 w zdalnym CI, jak i pełnej kompilacji książki oraz kontroli końcowego PDF/odsyłaczy. Wynik sprawdzono na poziomie kroków zadania `validate-cli`, a nie wywnioskowano z samej konfiguracji workflow.
 
 ## Decyzja
 
-**AA-34 STABILNY po audycie II.** Rozdział zintegrowano z katalogiem oraz plikiem głównym książki. **Następny etap:** AA-35 („Redukcja modulo p i cykle Frobeniusa”), audyt I. Należy kontrolować wynik GitHub Actions dla AA-34, nie przedstawiając procesu w toku jako sukcesu.
+**AA-34 STABILNY po audycie II.** Rozdział zintegrowano z katalogiem oraz plikiem głównym książki. **Następny etap:** AA-35 („Redukcja modulo p i cykle Frobeniusa”), audyt I. Pełny przebieg GitHub Actions AA-34 potwierdzono jako zakończony sukcesem.
