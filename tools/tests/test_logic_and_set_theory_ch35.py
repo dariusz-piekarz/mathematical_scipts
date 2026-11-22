@@ -373,6 +373,50 @@ class TestBooleanModelsChapter35(unittest.TestCase):
             value |= item
         return value
 
+    def test_choice_via_least_preimage_on_both_atoms(self):
+        # A finite Boolean analogue of the ZF construction:
+        # ordinal-indexed surjection -> least representatives -> well order.
+        from itertools import product
+
+        empty = frozenset()
+        one = frozenset({(empty, 3)})
+        two = frozenset({(one, 3)})
+        domain = (empty, one, two)
+
+        @lru_cache(None)
+        def value(name, atom):
+            return frozenset(
+                value(pi, atom) for pi, coefficient in name
+                if coefficient & atom
+            )
+
+        checks = 0
+        for coefficients in product(range(4), repeat=len(domain)):
+            sigma = frozenset(zip(domain, coefficients))
+            for atom in (1, 2):
+                interpreted = value(sigma, atom)
+                K = [
+                    i for i, coefficient in enumerate(coefficients)
+                    if coefficient & atom
+                ]
+                F = {i: value(domain[i], atom) for i in K}
+                self.assertEqual(set(F.values()), set(interpreted))
+                K0 = [
+                    i for i in K
+                    if not any(j < i and F[j] == F[i] for j in K)
+                ]
+                self.assertEqual(len(K0), len(interpreted))
+                self.assertEqual(
+                    {F[i] for i in K0}, set(interpreted)
+                )
+                self.assertEqual(len(set(F[i] for i in K0)), len(K0))
+                checks += 1
+        self.assertEqual(checks, 128)
+        self.assertIn(r"\check\kappa", TEXT)
+        self.assertIn(r"F|_{K_0}", TEXT)
+        self.assertIn(r"\sigma(e(\xi))", TEXT)
+        self.assertIn(r"\dot a(\check\varnothing)=\{0\}", TEXT)
+
     def test_ultrafilter_quotient_soundness_on_boolean_propositions(self):
         B = range(4)
         U0, U1 = {1, 3}, {2, 3}
