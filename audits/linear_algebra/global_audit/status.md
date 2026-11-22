@@ -1,6 +1,6 @@
 # Globalny audyt algebry liniowej — status rozdziałów
 
-**Stan po iteracji 13 (LA14–20 skontrolowane, pełny audyt matematyczny trwa)**, 22 listopada 2026.  
+**Stan po iteracji 14 (LA21–28 skontrolowane, globalna kontrola wszystkich dowodów nadal trwa)**, 22 listopada 2026.  
 **Aktualizacja:** rozdziały 01–05 zostały ponownie ustabilizowane. W rozdziale 05 poprawiono argument o braku podprzestrzeni dla zgodnego układu z niezerową prawą stroną, następnie wykonano dwa kolejne czyste audyty III–IV na identycznym SHA. Nowy PDF (7 stron) i CI dla poprawionego źródła [45006722306](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45006722306) zweryfikowane — SUCCESS. CI uruchomione wyłącznie zapisem końcowego statusu wymaga osobnej kontroli.
 
 | Rozdział | Status |
@@ -85,3 +85,13 @@ Raport: `iteration_09.md`. Zgodność 32 plików i 32 instrukcji `\\input` potwi
 - **52 517/52 517 PASS**, 0 FAIL — nowa niezależna regresja /mnt/data/la_global13_spectral_tests.py (seed 20261122, 219 wierszy), obejmująca dokładne testy nad F2/F3/F5 i Q[t], oraz obliczenia numeryczne Schura/SVD/QR/Eckarta–Younga/rozkładu biegunowego. Test ostrości wielomianu minimalnego sprawdza również m_T/(t−λ), a nie tylko m_T(T)=0. Liczby oznaczają przypadki rachunkowe, nie formalną liczbę dowodów.
 - **[CI 45047971276](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45047971276) completed/success**; odczyt siedmiu plików w SHA commitu 3078c9ca833f69d908bddbb616086646898e64e6 potwierdził bloby identyczne z aktualną gałęzią. Źródeł LaTeX nie zmieniono, w tej iteracji nie oglądano ponownie pełnego PDF.
 - **Globalna kontrola matematyczna nadal OTWARTA.** Następny etap: LA21–28 (komutant, Sylvester/Lapunow, Riccati, sterowalność, obserwowalność, gramiany i realizacje). Nie wznawiać zakończonej kolejki stabilizacji 12–32 bez rzeczywistego nowego błędu.
+
+## Iteracja 14 — 2026-11-22: komutant, Sylvester, Riccati, sterowalność i realizacje (LA21–28)
+
+**[Raport globalny 14](iteration_14.md)**: przeprowadzono niezależną kontrolę kluczowych dowodów i zależności w ośmiu rozdziałach LA21–28 (łącznie 10 671 wierszy, 80 środowisk proof). Objęto m.in. wzory wymiarowe komutanta i Sylvestera nad dowolnym ciałem, równania Lapunowa i Steina oraz rezonans widmowy, różniczkowe i algebraiczne równania Riccatiego, warunki stabilizowalności i wykrywalności w obu rodzajach czasu, ilorazową realizację minimalną, faktoryzację macierzy Hankela, równoważenie gramianów oraz postać towarzyszącą i transmitancje.
+
+- **Wynik: czysto w badanym zakresie**, brak nowych zmian matematycznych w źródłach. Liczba środowisk proof oznacza objętość materiału, a nie certyfikację każdego wiersza dowodu.
+- **Testy wykonane:** /mnt/data/la_global14_tests.py, seed 20261122, SHA256 d53176dae2c6d624e5215cc489018e07998adf575a0ca077916ee8e2637b6e15: **12 754/12 754 PASS**. Sprawdzono również nierozkładalne wielomiany stopnia 2 nad F2, F3, F5; test porównywania widm macierzy podobnych poprawiono przez sortowanie, aby nie traktować permutacji wartości własnych jako niezgodności.
+- **LaTeX:** w LA21–28 razem 254 etykiety i 243 sprawdzone odsyłacze, zero duplikatów wewnątrz zakresu, zero niezdefiniowanych celów w porównaniu z kompletem etykiet 32 rozdziałów, zero niezamkniętych środowisk i naruszeń sprawdzanej terminologii.
+- **CI poświadczające identyczną wersję źródeł:** [run 45047971276](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45047971276), completed/success. Zweryfikowano SHA wszystkich ośmiu plików z commitu przetestowanego przez CI i z bieżącej gałęzi; wszystkie są identyczne. Nie pobierano nowego PDF w iteracji 14.
+- **Globalna kontrola wszystkich dowodów nadal OTWARTA.** Kolejna iteracja: spójność końcowa LA29–32 i powiązania z podstawowymi rozdziałami oraz identyfikacja dowodów wymagających pełnej niezależnej lektury, bez resetu wcześniejszej stabilizacji.
