@@ -80,7 +80,9 @@ def _binary_identity(executable: str | None) -> dict[str, str]:
         return {"state": "missing"}
     path = Path(executable).expanduser().resolve()
     if not path.is_file():
-        raise ValueError("Resolved Lean tool executable is missing")
+        # A PATH advertisement is not a verified executable. Record that
+        # uncertainty in the digest rather than pretending its bytes were read.
+        return {"state": "unresolved", "path": str(path)}
     size = path.stat().st_size
     if size > MAX_BINARY_BYTES:
         raise ValueError("Unusually large Lean tool executable")
