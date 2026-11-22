@@ -11,8 +11,13 @@ on:
       - "application/backend/lean_catalog.py"
       - "application/backend/lean_formalization.py"
       - "application/backend/lean_results.py"
+      - "application/backend/lean_run_lock.py"
+      - "application/backend/lean_windows_job.py"
+      - "application/backend/lean_process.py"
       - "application/tests/test_lean_introspection.py"
       - "application/tests/test_lean_formalization.py"
+      - "application/tests/test_lean_run_lock.py"
+      - "application/tests/test_lean_windows_job.py"
       - "application/tests/test_lean_inspection_snapshot.py"
       - "application/tests/test_lean_source_provenance.py"
       - "application/tests/test_lean_inspection_browser.py"
@@ -54,6 +59,8 @@ jobs:
           python -m unittest \
             tests.test_lean_introspection \
             tests.test_lean_formalization \
+            tests.test_lean_run_lock \
+            tests.test_lean_windows_job \
             tests.test_lean_inspection_snapshot \
             tests.test_lean_source_provenance \
             tests.test_lean_inspection_browser -v
@@ -62,3 +69,27 @@ jobs:
         run: |
           echo "These tests use mocked Lean subprocess results."
           echo "The separate Lean 4 - kernel and axiom audit workflow is mandatory for real Lean verification."
+
+  windows-native-runner:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout current revision
+        uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Verify native Windows OS lock and Job Object subprocess isolation
+        working-directory: application
+        shell: pwsh
+        run: python -m unittest tests.test_lean_run_lock tests.test_lean_windows_job -v
+
+      - name: Bound Windows result scope
+        shell: pwsh
+        run: |
+          Write-Output "Tests native Windows file locks and Job Objects with Python processes."
+          Write-Output "It does not compile any Lean source or certify LaTeX equivalence."
+
