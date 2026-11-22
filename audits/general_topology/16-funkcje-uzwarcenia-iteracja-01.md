@@ -42,3 +42,9 @@ Następna iteracja: ponowna niezależna kontrola wszystkich dowodów i wyników 
 ## Kontrola CI po uzupełnieniu
 
 Pierwsza kompletna wersja bez porządku uzwarceń przeszła GitHub Actions: [run 45011766280](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45011766280), `completed/success`. Pobrano PDF samodzielnego rozdziału 16: trzy strony A4, logi bez ostrzeżeń i widocznych problemów składu. Następnie dodano porządek uzwarceń (commit `2008dcb8026223b4cd64e4ad4013540eb6a29b04`) i zastosowanie do przedziału/okręgu (`2dc06a8ba5398795bcabaf5570b828aa2ea48763`), a test rozszerzono (`03187105b922fe0b3b22efbfc10cd1aff6418b4a`). Ostatni przebieg dla tej wersji: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45012081743 . Weryfikację nowego PDF i logu należy odnotować po zakończeniu.
+
+## Uzupełnienie po pierwszej kontroli PDF
+
+Workflow `45012081743` (porządek uzwarceń i ilorazowe porównanie przedziału z okręgiem) zakończył się `completed/success`. PDF miał cztery strony A4 i bezbłędny log, ale strona czwarta zawierała niemal tylko zakończenie przykładu. Dla poprawy zakresu merytorycznego i składu dodano przykład `ex:topog-uzwarcenia-ciag-zbiezny`: uzwarcenie dyskretnego `N` przez `K={0}∪{1/n}`, wraz z dowodem kryterium `f:N→[0,1]` przedłuża się ciągle do `K` wtedy i tylko wtedy, gdy `f(n)` jest zbieżny. Zawarto również kontrprzykład z funkcją naprzemienną. Przykład przygotowuje motywację do własności uniwersalnej uzwarcenia Čecha–Stone’a, nie antycypując jej twierdzenia.
+
+Źródło z nowym przykładem: commit `29f686fdb189806236cd7a305244de234c3bd19d`; test etykiety: `d204adee3952c2c99adabd357372702bd53e5081`. Ostatni workflow dla tej wersji: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45012354172 . Po zakończeniu trzeba skontrolować PDF i log nowej wersji.
