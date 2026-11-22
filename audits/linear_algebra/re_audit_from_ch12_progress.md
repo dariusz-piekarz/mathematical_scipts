@@ -8,10 +8,10 @@
 
 ## Stan wykonania
 
-- Bieżący rozdział: **13**.
-- Ostatni sprawdzony blob (rozdział 13, po poprawce): **cc5d09ff605ccf8bb7572ec56d4cc1f690edf3af**.
-- Liczba kolejnych czystych audytów od ostatniej poprawki (bieżący rozdział 13): **1**.
-- Kolejne działanie: **wykonać audyt 03 rozdziału 13 na tym samym blobie**. Iteracja 02 była czysta; licznik wynosi 1/2.
+- Bieżący rozdział: **14**.
+- Ostatni zamknięty blob (rozdział 13): **cc5d09ff605ccf8bb7572ec56d4cc1f690edf3af**.
+- Liczba kolejnych czystych audytów (bieżący rozdział 14): **0**.
+- Kolejne działanie: **wykonać audyt 01 rozdziału 14**. Rozdział 13 zamknięto po dwóch czystych kontrolach i zielonym CI.
 - Historyczne audyty, w tym ręczne audyty rozdziałów 13–15 z 22 listopada, pozostają ważnymi źródłami, ale **nie są automatycznie liczone** jako wykonanie nowego przebiegu.
 
 ## Tabela statusów
@@ -19,8 +19,8 @@
 | Rozdział | Stan nowej sekwencji | Czyste kontrole po ostatniej zmianie | Ostatni SHA |
 |---|---|---:|---|
 | 12 | STABILNY; iteracje 01 i 02 czyste, CI success | 2 | `ded0c69dc298d00842d4009073e2444e1037952a` |
-| 13 | OTWARTY; iteracja 02 czysta, CI success dla bloba; wymagany audyt 03 | 1 | `cc5d09ff605ccf8bb7572ec56d4cc1f690edf3af` |
-| 14 | W kolejce | 0 | — |
+| 13 | STABILNY; iteracje 02 i 03 czyste, CI success | 2 | `cc5d09ff605ccf8bb7572ec56d4cc1f690edf3af` |
+| 14 | BIEŻĄCY; audyt 01 do wykonania | 0 | — |
 | 15 | W kolejce | 0 | — |
 | 16 | W kolejce | 0 | — |
 | 17 | W kolejce | 0 | — |
@@ -73,3 +73,10 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - Raport: [13_iteration_02_2026-11-22.md](re_audit_from_ch12/13_iteration_02_2026-11-22.md), commit [53a273aa](https://github.com/dariusz-piekarz/mathematical_scipts/commit/53a273aa3fdae171de0e8e435bb4909a9208cc95).
 - [CI 45015993405](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45015993405): success dla commitu `b709ed3b18b9add604ddfbe404d4ca6379088224`, zawierającego ten sam blob.
 - Następny krok: audyt 03 rozdziału 13. Nie deklarowano nowej kompilacji PDF ani testów numerycznych.
+
+## Ostatnia rzeczywista iteracja — 2026-11-22 (rozdział 13, audyt 03)
+
+- Rozdział 13: **STABILNY, 2/2**, ten sam blob `cc5d09ff605ccf8bb7572ec56d4cc1f690edf3af` co w audycie 02, bez zmian źródła.
+- Raport: [13_iteration_03_2026-11-22.md](re_audit_from_ch12/13_iteration_03_2026-11-22.md), commit [4a254b69](https://github.com/dariusz-piekarz/mathematical_scipts/commit/4a254b6960b70dee1e02c3681d42950bd9f76b16).
+- [CI 45015993405](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45015993405): completed/success dla commitu z tym samym blobem.
+- Bez nowej kompilacji PDF i testów numerycznych w audycie 03. Następny: rozdział **14**, audyt 01.
