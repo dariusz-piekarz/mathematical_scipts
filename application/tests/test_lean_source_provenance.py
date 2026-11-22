@@ -91,6 +91,15 @@ class SourceProvenanceTests(unittest.TestCase):
                     self.con, "LST-01", LABEL, "one")
                 self.assertFalse(provenance.valid_binding(binding, candidate, LABEL))
 
+    def test_same_offset_distinct_conflict_owners_are_ambiguous(self):
+        self.con.execute("INSERT INTO label_conflicts VALUES(?,?,?,?,?,?)", (
+            LABEL, "LST-01", "one", self.offset, 1, ""))
+        self.con.execute("INSERT INTO label_conflicts VALUES(?,?,?,?,?,?)", (
+            LABEL, "LST-01", "other-entity", self.offset, 1, ""))
+        self.assertEqual(
+            provenance.owner_status(self.con, "LST-01", LABEL, SOURCE),
+            ("ambiguous_label", None))
+
     def test_missing_and_duplicate_owners_are_not_navigable(self):
         self.con.execute("DELETE FROM labels")
         self.assertEqual(
