@@ -6,6 +6,7 @@ It audits only theorems in the explicitly registered Lean source files.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -52,6 +53,19 @@ def registered_files(manifest: Path, lean_root: Path) -> dict[str, list[str]]:
         if item.get("statement_status") == "approved":
             if not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
                 raise ValueError("Approved formalization lacks pinned source digest")
+            source_path = item.get("source_document_path")
+            if (not isinstance(source_path, str)
+                    or not source_path.startswith("chapters/pl/")
+                    or not source_path.endswith(".tex")):
+                raise ValueError("Approved formalization lacks canonical TeX source path")
+            repository_root = lean_root.resolve().parents[1]
+            canonical_chapters = (repository_root / "chapters" / "pl").resolve()
+            source_file = (repository_root / source_path).resolve()
+            if not source_file.is_relative_to(canonical_chapters) or not source_file.is_file():
+                raise ValueError("Missing or untrusted canonical LaTeX source: " + source_path)
+            actual_sha = hashlib.sha256(source_file.read_bytes()).hexdigest()
+            if actual_sha != digest:
+                raise ValueError("Approved LaTeX source digest is outdated: " + source_path)
         resolved = (lean_root / rel).resolve()
         if not resolved.is_relative_to(root) or not resolved.is_file():
             raise ValueError("Untrusted or missing Lean file: " + rel)
