@@ -31,7 +31,8 @@ class ParsingTests(unittest.TestCase):
     def test_fixed_commands_include_actual_metaprogram_introspection(self):
         code = inspection.make_instrumentation(["theorem_x"], TOKEN)
         self.assertIn("run_meta do", code)
-        self.assertIn("Lean.Meta.getConstInfo "+chr(96)+"theorem_x", code)
+        self.assertIn("open Lean Meta", code)
+        self.assertIn("getConstInfo "+chr(96)+"theorem_x", code)
         self.assertIn("getUsedConstantsAsSet", code)
         self.assertIn(TOKEN+" BEGIN theorem_x", code)
         with self.assertRaises(ValueError):
