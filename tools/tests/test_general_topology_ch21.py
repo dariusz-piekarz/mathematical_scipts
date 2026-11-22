@@ -80,8 +80,8 @@ def escaping_sets() -> None:
         moving = frozenset({0, n})
         assert hdist(moving, fixed) == n
         if n > 10:
-            # A compact interval [-10,10] disjoint from {0}
-            # is eventually missed by the moving point n.
+            # Every fixed compact interval [-10,10] is eventually
+            # missed by the escaping singleton {n}.
             assert n not in range(-10, 11)
 
 
