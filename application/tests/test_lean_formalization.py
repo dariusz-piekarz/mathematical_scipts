@@ -614,6 +614,43 @@ class LeanFormalizationTests(unittest.TestCase):
         self.assertFalse(result["certificate"])
         spawn.assert_not_called()
 
+    def test_index_document_change_during_lock_acquisition_blocks_spawn(self):
+        from contextlib import contextmanager
+
+        @contextmanager
+        def mutate_while_waiting(root):
+            revised = SOURCE + "% reindexed while another runner holds the lock\\n"
+            self.con.execute(
+                "UPDATE documents SET content=?, sha256=? WHERE id='LST-01'",
+                (revised, hashlib.sha256(revised.encode("utf-8")).hexdigest()))
+            self.con.commit()
+            yield
+
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which",
+                   return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_run_lock.exclusive",
+                   side_effect=mutate_while_waiting), \
+             patch("backend.lean_formalization.lean_process.execute_registered") as spawn:
+            result = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(result["proof_status"], "blocked")
+        self.assertIn("Indeks rozdziału", result["detail"])
+        self.assertFalse(result["certificate"])
+        spawn.assert_not_called()
+
+    def test_external_dependency_change_during_lock_acquisition_blocks_spawn(self):
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which",
+                   return_value="/fake/lake"), \
+             patch("backend.lean_environment.external_packages_sha256",
+                   side_effect=["a" * 64, "b" * 64]), \
+             patch("backend.lean_formalization.lean_process.execute_registered") as spawn:
+            result = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(result["proof_status"], "blocked")
+        self.assertIn("Pliki Lean", result["detail"])
+        self.assertFalse(result["certificate"])
+        spawn.assert_not_called()
+
     def test_registered_lean_file_change_during_lock_acquisition_blocks_spawn(self):
         from contextlib import contextmanager
         file = self.root / "src" / "Example.lean"
