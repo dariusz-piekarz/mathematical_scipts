@@ -15,7 +15,8 @@ import tempfile
 
 from fastapi import HTTPException
 from backend import (lean_catalog, lean_cgroup, lean_formalization as lean,
-                     lean_process, lean_results, lean_run_lock, lean_source_provenance, lean_windows_job)
+                     lean_inspection_snapshot, lean_process, lean_results, lean_run_lock,
+                     lean_source_provenance, lean_windows_job)
 
 MAX_THEOREMS = 16
 MAX_CONSTANTS = 160
@@ -288,7 +289,17 @@ def inspect(con: sqlite3.Connection, identifier: str, *,
             if (before != after or
                     not lean._source_file_current(item, doc["sha256"], lean_root)):
                 return _empty(identifier, "blocked", "Źródło zmieniło się podczas pracy.")
+            try:
+                snapshot = lean_inspection_snapshot.describe(
+                    identifier, names, classified=classified, fingerprint=before,
+                    constants=constants,
+                    type_constants=sections["type_constants"] if sections else None,
+                    value_constants=sections["value_constants"] if sections else None)
+            except ValueError as exc:
+                return _empty(identifier, "blocked",
+                              "Niekompletne metadane wyniku Lean: " + str(exc)[:180])
             return {
+                **snapshot,
                 **(sections or {}),
                 "formalization_id": identifier, "inspection_status": "complete",
                 "detail": ("Stałe z typów i wartości deklaracji z rzeczywistego procesu Lean. "
