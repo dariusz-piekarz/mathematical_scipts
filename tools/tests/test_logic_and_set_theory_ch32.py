@@ -192,6 +192,94 @@ class TestChapter32(unittest.TestCase):
         self.assertIn(r"G\subseteq\mathbb P_{\mathrm C}", example)
         self.assertIn(r"c_G", example)
 
+    def test_exhaustive_preorders_generic_decision_and_dense_transfer(self):
+        # Exhaustive finite counterexample search, not a formal proof:
+        # all preorders on 1--3 labeled points, including non-antisymmetric
+        # ones and preorders without a greatest condition.
+        from itertools import product
+        counts = {"preorders": 0, "filters": 0, "generics": 0,
+                  "dense_suborders": 0, "generic_transfers": 0}
+        for n in (1, 2, 3):
+            universe = set(range(n))
+            optional = [(p, q) for p in universe for q in universe if p != q]
+            subsets = [
+                {p for p in universe if mask & (1 << p)}
+                for mask in range(1 << n)
+            ]
+            for bits in product((0, 1), repeat=len(optional)):
+                relation = {(p, p) for p in universe}
+                relation.update(
+                    pair for bit, pair in zip(bits, optional) if bit
+                )
+                leq = lambda p, q: (p, q) in relation
+                if not all(
+                    not (leq(p, q) and leq(q, r)) or leq(p, r)
+                    for p in universe for q in universe for r in universe
+                ):
+                    continue
+                counts["preorders"] += 1
+
+                def is_filter(G, P):
+                    return (
+                        bool(G)
+                        and all(
+                            not (leq(p, q) and q not in G)
+                            for p in G for q in P
+                        )
+                        and all(
+                            any(leq(r, p) and leq(r, q) for r in G)
+                            for p in G for q in G
+                        )
+                    )
+
+                def is_dense(D, P):
+                    return all(
+                        any(leq(q, p) for q in D) for p in P
+                    )
+
+                dense_in_P = [D for D in subsets if is_dense(D, universe)]
+                for G in subsets:
+                    if not is_filter(G, universe):
+                        continue
+                    counts["filters"] += 1
+                    if not all(G & D for D in dense_in_P):
+                        continue
+                    counts["generics"] += 1
+                    for p in universe:
+                        incompatible_witness = any(
+                            not any(
+                                leq(r, p) and leq(r, q) for r in universe
+                            )
+                            for q in G
+                        )
+                        # Exactly one of the generic-decision alternatives.
+                        self.assertNotEqual(p in G, incompatible_witness)
+
+                for Q in subsets:
+                    if not Q or not is_dense(Q, universe):
+                        continue
+                    counts["dense_suborders"] += 1
+                    dense_in_Q = [
+                        D for D in subsets
+                        if D <= Q and is_dense(D, Q)
+                    ]
+                    for H in subsets:
+                        if not H <= Q or not is_filter(H, Q):
+                            continue
+                        if not all(H & D for D in dense_in_Q):
+                            continue
+                        G = {
+                            p for p in universe
+                            if any(leq(q, p) for q in H)
+                        }
+                        counts["generic_transfers"] += 1
+                        self.assertTrue(is_filter(G, universe))
+                        self.assertTrue(all(G & D for D in dense_in_P))
+        self.assertEqual(counts, {
+            "preorders": 34, "filters": 84, "generics": 49,
+            "dense_suborders": 110, "generic_transfers": 140,
+        })
+
     def test_no_unproved_forcing_theorem(self):
         self.assertNotIn(r"\begin{twierdzenie}[M[G] spełnia ZFC]", TEXT)
         self.assertIn(r"p\Vdash\varphi", TEXT)
