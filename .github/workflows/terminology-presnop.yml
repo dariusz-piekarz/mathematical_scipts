@@ -1,0 +1,52 @@
+name: Global Polish mathematical terminology — presnop
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - '.github/workflows/terminology-presnop.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  normalize-current-sources:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out target branch
+        uses: actions/checkout@v4
+        with:
+          ref: biblioteka-matematyczna-iteracja-6
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Fix all active Polish TeX and documentation sources
+        shell: bash
+        run: |
+          python3 tools/normalize_polish_terminology.py --fix | tee /tmp/presnop-migration.txt
+          python3 tools/normalize_polish_terminology.py --check
+          echo "## Polish terminology: presnop" >> "$GITHUB_STEP_SUMMARY"
+          cat /tmp/presnop-migration.txt >> "$GITHUB_STEP_SUMMARY"
+      - name: Commit mechanical terminology edits
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -u
+          if git diff --cached --quiet; then
+            echo "All active sources were already normalized." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git diff --cached --stat
+          git commit -m "style(pl): globally normalize presnop terminology"
+          for attempt in 1 2 3; do
+            git pull --rebase origin biblioteka-matematyczna-iteracja-6
+            if git push origin HEAD:biblioteka-matematyczna-iteracja-6; then
+              echo "Committed canonical terminology changes." >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            echo "Concurrent update; retrying push ($attempt)."
+          done
+          echo "Could not push after retries" >&2
+          exit 1
