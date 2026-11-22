@@ -17,7 +17,7 @@ DEFAULT_RESULTS_DIR = Path(__file__).resolve().parents[1] / "data" / "lean_runs"
 ID_PATTERN = re.compile(r"[A-Za-z0-9_-]{1,100}\Z")
 HEX_DIGEST = re.compile(r"[0-9a-f]{64}\Z")
 STORED_STATUSES = {"compiled", "failed", "timeout"}
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 MAX_STORED_LOG = 16000
 MAX_RECORD_BYTES = 30000
 
@@ -28,13 +28,60 @@ def result_dir(override: Path | None = None) -> Path:
     return Path(os.environ.get("MATLIB_LEAN_RESULTS_DIR", str(DEFAULT_RESULTS_DIR))).expanduser()
 
 
+def _project_sources_sha256(lean_root: Path) -> str:
+    """Digest every local Lean source, not only the selected source's direct imports.
+
+    This is deliberately a conservative superset of local imports. The file
+    names and their bytes are both hashed, so adding/removing/renaming a module
+    also invalidates stored results. External Mathlib sources and binaries are
+    NOT covered; see the security audit.
+    """
+    root = lean_root / "src"
+    if not root.is_dir() or root.is_symlink():
+        raise ValueError("Missing or symlinked Lean src root")
+    sources: list[Path] = []
+    for directory, dirs, files in os.walk(root, followlinks=False):
+        base = Path(directory)
+        if any((base / name).is_symlink() for name in dirs):
+            raise ValueError("Symlinked Lean source directory")
+        for name in files:
+            file = base / name
+            if file.is_symlink():
+                raise ValueError("Symlinked Lean source file")
+            if file.suffix == ".lean":
+                sources.append(file)
+    if not sources:
+        raise ValueError("No local Lean sources")
+    if len(sources) > 4096:
+        raise ValueError("Too many local Lean sources to fingerprint")
+    digest = hashlib.sha256()
+    # Separate names and contents with explicit length prefixes.
+    for file in sorted(sources, key=lambda f: f.relative_to(root).as_posix()):
+        rel = file.relative_to(root).as_posix().encode("utf-8")
+        digest.update(len(rel).to_bytes(4, "big"))
+        digest.update(rel)
+        try:
+            size = file.stat().st_size
+            if size > 64 * 1024 * 1024:
+                raise ValueError("Oversized local Lean module")
+            digest.update(size.to_bytes(8, "big"))
+            with file.open("rb") as inp:
+                for chunk in iter(lambda: inp.read(64 * 1024), b""):
+                    digest.update(chunk)
+        except OSError:
+            raise
+    return digest.hexdigest()
+
+
 def fingerprint(source_sha256: str, lean_file: Path, lean_root: Path) -> dict[str, str]:
-    """Bind a result to the indexed source, Lean bytes, and declared toolchain/Mathlib lock."""
+    """Bind a run to its indexed source, local source tree and declared toolchain."""
     if not HEX_DIGEST.fullmatch(source_sha256):
         raise ValueError("Invalid indexed document SHA256")
     lean_sha256 = hashlib.sha256(lean_file.read_bytes()).hexdigest()
+    project_sources_sha256 = _project_sources_sha256(lean_root)
     inputs: dict[str, str | None] = {}
-    for name in ("lean-toolchain", "lakefile.toml", "lake-manifest.json"):
+    for name in ("lean-toolchain", "lakefile.toml", "lakefile.lean",
+                 "lake-manifest.json", "manifest.json"):
         path = lean_root / name
         inputs[name] = hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
     toolchain_sha256 = hashlib.sha256(
@@ -44,6 +91,7 @@ def fingerprint(source_sha256: str, lean_file: Path, lean_root: Path) -> dict[st
         if (lean_root / "lean-toolchain").is_file() else "unavailable"
     return {"source_document_sha256": source_sha256,
             "lean_sha256": lean_sha256,
+            "project_sources_sha256": project_sources_sha256,
             "toolchain_sha256": toolchain_sha256,
             "declared_toolchain": declared_toolchain[:160]}
 
@@ -89,10 +137,12 @@ def save_run(identifier: str, expected: dict[str, str], *, proof_status: str,
     if proof_status not in STORED_STATUSES:
         raise ValueError("Not an actual Lean process outcome")
     if set(expected) != {"source_document_sha256", "lean_sha256",
-                         "toolchain_sha256", "declared_toolchain"}:
+                         "project_sources_sha256", "toolchain_sha256",
+                         "declared_toolchain"}:
         raise ValueError("Incomplete run fingerprint")
     if (not all(isinstance(expected[key], str) and HEX_DIGEST.fullmatch(expected[key])
-                for key in ("source_document_sha256", "lean_sha256", "toolchain_sha256"))
+                for key in ("source_document_sha256", "lean_sha256",
+                            "project_sources_sha256", "toolchain_sha256"))
             or not isinstance(expected["declared_toolchain"], str)
             or len(expected["declared_toolchain"]) > 160):
         raise ValueError("Invalid run fingerprint")
