@@ -148,7 +148,7 @@ class TestChapter30(unittest.TestCase):
             r"$\mathrm{ZF}+\mathrm{DC}+\mathrm{AD}$", TEXT
         )
         self.assertIn("Nie jest samodzielnym dowodem tego wyniku", TEXT)
-        self.assertIn("nie jest tutaj przedstawiany jako udowodniony", TEXT)
+        self.assertIn("nie jest tutaj przedstawiany jako udowodniony", " ".join(TEXT.split()))
         self.assertIn(r"\label{rem:ad-analytic-input}", TEXT)
         self.assertIn(r"$A\setminus U$ jest projektywny", TEXT)
         self.assertIn("z AC, a nie z PD stosowanego", TEXT)
