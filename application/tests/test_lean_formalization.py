@@ -352,6 +352,27 @@ class LeanFormalizationTests(unittest.TestCase):
         self.assertIn("AssignProcessToJobObject", result["detail"])
         self.assertFalse(result["certificate"])
 
+    def test_busy_runner_does_not_spawn_or_replace_previous_success(self):
+        from backend import lean_run_lock
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_process.execute_registered",
+                   return_value=(0, "first run", False)) as spawn:
+            first = lean.run(self.con, "sample", lean_root=self.root)
+            self.assertEqual(first["proof_status"], "compiled")
+            self.assertEqual(spawn.call_count, 1)
+            with lean_run_lock.exclusive(self.root):
+                second = lean.run(self.con, "sample", lean_root=self.root)
+            self.assertEqual(spawn.call_count, 1)
+        self.assertEqual(second["proof_status"], "blocked")
+        self.assertFalse(second["certificate"])
+        self.assertIn("Inny proces", second["detail"])
+        cached = lean.fragment(self.con, entity_id="LST-01/theorem/0001",
+                               lean_root=self.root)
+        self.assertEqual(cached["proof_status"], "compiled")
+        self.assertIn("first run", cached["last_run_log"])
+        self.assertFalse(cached["certificate"])
+
     def test_compilation_success_is_not_semantic_certificate(self):
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
              patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
