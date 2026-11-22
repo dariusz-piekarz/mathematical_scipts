@@ -55,7 +55,7 @@ class TestContinuumForcingChapter34(unittest.TestCase):
                 r"\\label\{([^}]+)\}", source.read_text("utf8")
             ))
         refs = re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", TEXT)
-        self.assertEqual(len(refs), 23)
+        self.assertEqual(len(refs), 24)
         self.assertFalse(set(refs) - all_labels, set(refs) - all_labels)
         self.assertIn("ch:constructible", refs)
         self.assertIn("thm:forcing33-zfc", refs)
