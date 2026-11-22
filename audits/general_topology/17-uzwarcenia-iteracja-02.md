@@ -27,7 +27,7 @@ Zbadano wszystkie konstrukcje, założenia twierdzeń, dowody i przykłady rozdz
 
 ## Walidacja
 
-Przed korektą źródło przeszło workflow [45013696240](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45013696240): `completed/success`, samodzielny PDF 5 stron A4, bez ostrzeżeń i przepełnień. Po korektach należy potwierdzić nowy CI i skontrolować ponownie końcowy PDF. Nie wolno przenosić bez weryfikacji sukcesu CI z poprzedniej wersji.
+Przed korektą źródło przeszło workflow [45013696240](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45013696240): `completed/success`, samodzielny PDF 5 stron A4, bez ostrzeżeń i przepełnień. Po korektach uruchomiono [workflow 45014196221](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45014196221) (commit `072227ab784baa46f64a5b6fcfaa86ccf8473254`), który zakończył się **completed/success**, bez nieudanych kroków. Pobrano artefakt `14751178008` zawierający aktualny samodzielny `general_topology_ch17.pdf` (**5 stron A4**) i logi. Skontrolowano `general_topology_ch17.log` oraz `general_topology.log`: brak `Overfull`, `Underfull`, `Missing character`, `LaTeX Warning`, `Undefined control sequence` i `Fatal error`. Wyrenderowano i obejrzano wszystkie pięć stron PDF; brak ucięć, kolizji wzorów oraz nieczytelnych fragmentów. Ostatnia strona jest krótsza, co nie stanowi usterki składu.
 
 | Warstwa | Status |
 | --- | --- |
@@ -35,5 +35,5 @@ Przed korektą źródło przeszło workflow [45013696240](https://github.com/dar
 | Własności uniwersalne i porządek uzwarceń | PASS po doprecyzowaniach |
 | Przykłady, przypadki brzegowe | PASS po doprecyzowaniach |
 | Język, etykiety i odsyłacze | PASS |
-| CI i PDF dla poprawionego źródła | Weryfikacja |
-| Stabilizacja | **W AUDYCIE** — po poprawkach wymagana niezależna iteracja 03 |
+| CI i PDF dla poprawionego źródła | **PASS — run 45014196221, 5 stron A4** |
+| Stabilizacja | **W AUDYCIE** — audyt 02 zakończony, po poprawkach wymagana niezależna czysta iteracja 03 |
