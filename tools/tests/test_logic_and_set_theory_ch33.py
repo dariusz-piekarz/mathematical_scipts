@@ -276,6 +276,90 @@ class TestChapter33(unittest.TestCase):
         self.assertIn("aksjomatu wyboru w $M$", TEXT)
         self.assertIn(r"\emph{zbioru} $J$", TEXT)
 
+    def test_forcing_depends_on_order_not_just_underlying_set(self):
+        # Same P and same top, two different orders. The membership
+        # relation changes: this guards against omitting <= from Force_phi.
+        P = ("top", "left", "right")
+        fork = {("top", "top"), ("left", "left"), ("right", "right"),
+                ("left", "top"), ("right", "top")}
+        chain = fork | {("left", "right")}
+        empty = frozenset()
+        target = frozenset({(empty, "left")})
+
+        def forces_member_below_right(relation):
+            def leq(q, p):
+                return (q, p) in relation
+
+            return all(
+                any(leq(r, q) and leq(r, s) for _, s in target for r in P)
+                for q in P if leq(q, "right")
+            )
+
+        self.assertFalse(forces_member_below_right(fork))
+        self.assertTrue(forces_member_below_right(chain))
+        self.assertIn(r"\operatorname{Force}_\varphi", TEXT)
+        self.assertIn(r"(p,\tau_1,\ldots,\tau_n,\mathbb P,\leq)", TEXT)
+
+    def test_exhaustive_rank_one_atomic_truth_lemma(self):
+        # Exhaustively test 8 rank-one names and all their ordered pairs
+        # against the atomic forcing relation for both generic branches.
+        from functools import lru_cache
+        from itertools import combinations
+
+        P = ((), (0,), (1,))
+        top, left, right = P
+        leq = lambda q, p: q[:len(p)] == p
+        empty = frozenset()
+        names = tuple(
+            frozenset((empty, p) for p in support)
+            for k in range(len(P) + 1)
+            for support in combinations(P, k)
+        )
+        self.assertEqual(len(names), 8)
+
+        @lru_cache(None)
+        def force_mem(p, sigma, tau):
+            return all(
+                any(
+                    leq(r, q) and leq(r, s)
+                    and force_eq(r, sigma, pi)
+                    for r in P for pi, s in tau
+                )
+                for q in P if leq(q, p)
+            )
+
+        @lru_cache(None)
+        def force_eq(p, sigma, tau):
+            return (
+                all(
+                    any(leq(r, q) and force_mem(r, pi, tau) for r in P)
+                    for pi, s in sigma for q in P
+                    if leq(q, p) and leq(q, s)
+                )
+                and all(
+                    any(leq(r, q) and force_mem(r, pi, sigma) for r in P)
+                    for pi, s in tau for q in P
+                    if leq(q, p) and leq(q, s)
+                )
+            )
+
+        def value(name, G):
+            return frozenset(value(pi, G) for pi, p in name if p in G)
+
+        checked = 0
+        for sigma in names:
+            for tau in names:
+                for G in ({top, left}, {top, right}):
+                    x, y = value(sigma, G), value(tau, G)
+                    self.assertEqual(
+                        x in y, any(force_mem(p, sigma, tau) for p in G)
+                    )
+                    self.assertEqual(
+                        x == y, any(force_eq(p, sigma, tau) for p in G)
+                    )
+                    checked += 2
+        self.assertEqual(checked, 256)
+
     def test_finite_names_singleton_pair_ordered_pair(self):
         top = "T"
         G = {top}
