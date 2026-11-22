@@ -21,7 +21,7 @@ Rozszerzono `tools/tests/test_general_topology_ch15.py` o kontrolę nowych etyki
 
 ## Stan techniczny
 
-Oczekiwana kompilacja samodzielnego PDF i całej książki na aktualnym źródle. Nie oznaczać rozdziału jako stabilny przed zielonym CI, oględzinami PDF i niezależnym, czystym reaudytem.
+Końcowy workflow GitHub Actions dla komitu testów i źródła: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45011132217 — **completed/success**, bez nieudanych kroków. Artefakt `14749962442` dostarczył samodzielny PDF rozdziału 15 (6 stron A4) i logi. Sprawdzono w logu brak `Overfull`, `Underfull`, `LaTeX Warning`, `Missing character`, `Undefined control sequence` i `Fatal error`. Wyrenderowano i obejrzano strony 4–6, ze szczególną kontrolą dowodu Nagaty–Smirnowa na stronach 5–6 — brak ucięć lub kolizji. Wcześniejsze testy Stone'a i podziałów jedności pozostają zielone.
 
 | Kryterium | Status |
 | --- | --- |
@@ -29,5 +29,5 @@ Oczekiwana kompilacja samodzielnego PDF i całej książki na aktualnym źródle
 | Normalność, funkcje dodatnie, zanurzenie do ℓ∞ | PASS — kontrola dowodu |
 | Zależności od Stone'a/Urysohna | PASS |
 | Reorganizacja i testy | Wdrożone |
-| Kompilacja CI / wizualizacja PDF | Weryfikacja trwa |
-| Rozdział 15 | **OTWARTY — audyt 05** |
+| Kompilacja CI / wizualizacja PDF | **PASS — run 45011132217, PDF 6 stron** |
+| Rozdział 15 | **OTWARTY — audyt 05 zakończony; nowy dowód wymaga niezależnego audytu 06** |
