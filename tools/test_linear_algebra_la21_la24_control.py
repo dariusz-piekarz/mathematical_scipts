@@ -182,9 +182,19 @@ for n in (1,2,3):
         # Stein-operator eigenvalues: products of conjugate eigenvalues.
         E=np.linalg.eigvals(D)
         stein=np.kron(D.T,D.conj().T)
-        expected=sorted((np.conj(x)*y for x in E for y in E),key=lambda z:(z.real,z.imag))
-        actual=sorted(np.linalg.eigvals(stein),key=lambda z:(z.real,z.imag))
-        check("Stein_operator_spectrum",close(actual,expected))
+        expected=[np.conj(x)*y for x in E for y in E]
+        actual=np.linalg.eigvals(stein)
+        # Complex eigenvalue sorting is numerically unstable for conjugate
+        # products whose real parts agree up to roundoff; match the multiset.
+        pool=list(expected)
+        multiset_ok=True
+        for z in actual:
+            j=min(range(len(pool)),key=lambda k:abs(pool[k]-z))
+            if abs(pool[j]-z)>1e-7:
+                multiset_ok=False
+                break
+            pool.pop(j)
+        check("Stein_operator_spectrum",multiset_ok and not pool)
 
 # Scalar DARE: fixed point and stabilizing branch, with B=R=1, Q>0, |A|<1.
 for a in (-0.85,-0.5,0,0.5,0.85):
