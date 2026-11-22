@@ -8,7 +8,7 @@
 
 ## 1. Próby znalezienia kontrprzykładu do twierdzeń
 
-**Zbiór nieograniczony, lecz niestacjonarny.** Rozważono następniki poniżej ω_1. Są nieograniczone, lecz rozłączne z klubem niezerowych ordynałów granicznych. Definicja kardynału Mahla nie utożsamia więc nieograniczoności z warunkiem stacjonarności; przykład w rozdziale stanowi odpowiedni test pojęć.
+**Zbiór nieograniczony, lecz niestacjonarny.** Rozważono następniki poniżej ω_1. Są nieograniczone, lecz rozłączne z klubem niezerowych ordynałów granicznych. Definicja liczby kardynalnej Mahla nie utożsamia więc nieograniczoności z warunkiem stacjonarności; przykład w rozdziale stanowi odpowiedni test pojęć.
 
 **Przecięcie klubu z samym sobą i z <κ wieloma klubami.** W lemacie o przecięciach nie użyto fałszywego twierdzenia, że przecięcie κ dowolnych klubów pozostaje klubowe. Zamiast tego przy rodzinie rozmiaru μ<κ rekurencja długości ω daje wspólny punkt, zaś dla rodziny rozmiaru κ stosuje się *przecięcie diagonalne* z warunkiem ξ<α. Rozdzielono te dwa rodzaje przecięć, co usuwa częsty błąd kwantyfikacji.
 
