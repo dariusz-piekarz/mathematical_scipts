@@ -217,6 +217,50 @@ class LeanFormalizationTests(unittest.TestCase):
             result = lean.run(self.con, "sample", lean_root=self.root)
         self.assertEqual(result["proof_status"], "toolchain_unavailable")
 
+    def test_invalid_memory_limit_blocks_before_toolchain_process(self):
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1",
+                                     "MATLIB_LEAN_MEMORY_MB": "invalid"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_process.execute_registered") as spawn:
+            result = lean.run(self.con, "sample", lean_root=self.root)
+            state = lean.availability(lean_root=self.root)
+        self.assertEqual(result["proof_status"], "blocked")
+        self.assertFalse(result["certificate"])
+        self.assertFalse(state["ready"])
+        self.assertIsNotNone(state["memory_limit_error"])
+        spawn.assert_not_called()
+
+    def test_unsupported_memory_limit_blocks_instead_of_running_unbounded(self):
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1",
+                                     "MATLIB_LEAN_MEMORY_MB": "4096"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_process.memory_limit_supported",
+                   return_value=False), \
+             patch("backend.lean_formalization.lean_process.execute_registered") as spawn:
+            result = lean.run(self.con, "sample", lean_root=self.root)
+            state = lean.availability(lean_root=self.root)
+        self.assertEqual(result["proof_status"], "blocked")
+        self.assertFalse(result["certificate"])
+        self.assertFalse(state["ready"])
+        self.assertFalse(state["memory_limit_enforced"])
+        spawn.assert_not_called()
+
+    def test_configured_memory_limit_is_forwarded_to_executor(self):
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1",
+                                     "MATLIB_LEAN_MEMORY_MB": "4096"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_process.memory_limit_supported",
+                   return_value=True), \
+             patch("backend.lean_formalization.lean_process.execute_registered",
+                   return_value=(0, "ok", False)) as spawn:
+            result = lean.run(self.con, "sample", lean_root=self.root)
+            state = lean.availability(lean_root=self.root)
+        self.assertEqual(result["proof_status"], "compiled")
+        self.assertFalse(result["certificate"])
+        self.assertTrue(state["memory_limit_enforced"])
+        self.assertEqual(state["memory_limit_mb"], 4096)
+        self.assertEqual(spawn.call_args.kwargs["memory_limit_mb"], 4096)
+
     def test_compilation_success_is_not_semantic_certificate(self):
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
              patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
