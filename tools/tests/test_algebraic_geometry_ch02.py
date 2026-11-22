@@ -80,6 +80,26 @@ class ALG02ProjectiveRegressions(unittest.TestCase):
                      image[0]*image[1]), p)
                 self.assertEqual(image_again, normalize((x, y, 1), p))
 
+    def test_homogeneous_ideal_generators_and_cremona_line_images(self):
+        # Homogeneous generating sets (X,Y) and (X,X+Y)
+        # define the same locus in P^2 over each F_p.
+        # These line images illustrate the obstruction at [1:0:0];
+        # nonextension as a morphism is a separate geometric argument.
+        for p in PRIMES:
+            pts = projective_points(p, 2)
+            locus_a = {v for v in pts if v[0] == 0 and v[1] == 0}
+            locus_b = {v for v in pts
+                       if v[0] == 0 and (v[0]+v[1]) % p == 0}
+            self.assertEqual(locus_a, locus_b)
+            for t in range(1, p):
+                x_line = (1, t, 0)
+                y_line = (1, 0, t)
+                def cremona(v):
+                    X, Y, Z = v
+                    return normalize((Y*Z, X*Z, X*Y), p)
+                self.assertEqual(cremona(x_line), (0, 0, 1))
+                self.assertEqual(cremona(y_line), (0, 1, 0))
+
     def test_projective_conic_parametrization(self):
         for p in PRIMES:
             parametrized = {
