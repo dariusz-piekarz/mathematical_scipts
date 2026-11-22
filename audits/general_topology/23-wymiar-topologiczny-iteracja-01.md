@@ -107,3 +107,45 @@ oraz przeglądem rzeczywiście wyrenderowanego PDF.
 
 **Status: OTWARTY (0/2)** — kolejne czyste audyty muszą
 odnosić się do niezmienionego bloba 26d93484... .
+
+
+## Dodane następnie: pełny wymiar sześcianu
+
+Po pierwszym audycie użytkownikowy zatwierdzony zakres
+teorii wymiaru rozszerzono o pełne dolne oszacowanie
+\(\dim[0,1]^n\ge n\), a więc o równość
+\(\dim[0,1]^n=n\) dla każdego \(n\ge1\).
+
+- Z twierdzenia Brouwera (dowód istnieje w AT-19)
+  wyprowadzono wprost własność Poincarégo--Mirandy,
+  konstruując odwzorowanie \(T(x)=P_Q(x-f(x))\)
+  i analizując każdy przypadek graniczny.
+- Udowodniono lemat wyboru skończenie wielu
+  wektorów w zadanych otwartych ortantach
+  w położeniu liniowo ogólnym:
+  każda podrodzina co najwyżej n wektorów
+  jest liniowo niezależna.
+- Gdyby \(\dim Q\le n-1\), rozdrobnienie
+  skończonego pokrycia przez \(2^n\) otwartych
+  obszarów znakowych dostarczyłoby
+  (za pomocą funkcji barycentrycznych)
+  ciągłego odwzorowania \(f:Q\to\mathbb R^n\)
+  bez zera, którego składowe mają przeciwne
+  znaki na przeciwległych ścianach.
+  Jest to sprzeczne z własnością Poincarégo--Mirandy.
+- Przez jawny radialny homeomorfizm
+  \([-1,1]^n\simeq D^n\) uzasadniono
+  przejście od twierdzenia Brouwera
+  w wersji dla domkniętej kuli do sześcianu.
+- Dodano testy modelu brzegowego Poincarégo--Mirandy
+  i radialnego homeomorfizmu kostka--kula.
+
+Późniejszy blob źródła: `c666640268a1a14b813b4e0a1e7744e342cf9fe8`.
+Zmiany unieważniają licznik kontroli wcześniejszego bloba:
+**aktualny stan pozostaje 0/2** do czasu audytów
+na tym konkretnym, niezmienionym źródle.
+
+Odnotowano, że wcześniejszy CI na pierwszym dodaniu
+twierdzenia o sześcianie nie przeszedł testu regresyjnego
+zawierającego stary warunek „brak dowodu dolnego oszacowania”.
+Test uaktualniono wraz z dodaniem nowego dowodu.
