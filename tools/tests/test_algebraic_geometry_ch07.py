@@ -162,6 +162,25 @@ class ALG07Regressions(unittest.TestCase):
         self.assertIn(r"\nu^*(\mathcal O_S(D)|_C)", src)
         self.assertIn(r"\label{st:ga7-divisor-degree}", src)
 
+    def test_hilbert_polynomial_from_rr_and_exact_sequence(self):
+        # On a smooth degree-d surface in P^3, compare surface RR
+        # with chi(O_P3(m))-chi(O_P3(m-d)) for all integer m.
+        def choose3_polynomial(t):
+            return t*(t-1)*(t-2)//6
+
+        for d in range(1, 13):
+            for m in range(-16, 17):
+                chi_O = d*(d*d-6*d+11)//6
+                chi_RR = chi_O + d*m*(m+4-d)//2
+                chi_sequence = (choose3_polynomial(m+3)
+                                - choose3_polynomial(m-d+3))
+                self.assertEqual(chi_RR, chi_sequence)
+        self.assertEqual(1 + 3*1*(1+4-3)//2, 4)
+        self.assertEqual(2 + 4*1*(1+4-4)//2, 4)
+        src = SOURCE.read_text(encoding="utf-8")
+        self.assertIn(r"\label{prz:ga7-hilbert-polynomial}", src)
+        self.assertIn(r"\binom{m+3}{3}-\binom{m-d+3}{3}", src)
+
     def test_source_terminology_and_crossrefs(self):
         src = SOURCE.read_text(encoding="utf-8")
         stripped = re.sub(
