@@ -108,6 +108,30 @@ class LeanFormalizationTests(unittest.TestCase):
             result = lean.run(self.con, "sample", lean_root=self.root)
         self.assertEqual(result["proof_status"], "blocked")
 
+    def test_runner_blocks_inconsistent_index_before_subprocess(self):
+        # Simulate a stale SQLite SHA while the source bytes remain unchanged.
+        self.con.execute("UPDATE documents SET sha256=? WHERE id='LST-01'",
+                         ("0" * 64,))
+        self.con.commit()
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \\
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \\
+             patch("backend.lean_formalization.subprocess.run") as spawn:
+            result = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(result["proof_status"], "blocked")
+        self.assertFalse(result["certificate"])
+        self.assertIn("SHA256", result["detail"])
+        spawn.assert_not_called()
+
+    def test_runner_rejects_nontext_index_content(self):
+        self.con.execute("UPDATE documents SET content=NULL WHERE id='LST-01'")
+        self.con.commit()
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \\
+             patch("backend.lean_formalization.subprocess.run") as spawn:
+            result = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(result["proof_status"], "blocked")
+        self.assertFalse(result["certificate"])
+        spawn.assert_not_called()
+
     def test_rejects_arbitrary_path(self):
         self.entry["lean_file"] = "../../backend/api.py"
         self.save_manifest()
