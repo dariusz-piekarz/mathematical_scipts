@@ -86,7 +86,7 @@ def owner_status(con: sqlite3.Connection, module: str, label: str,
     label_columns = {
         row[1] for row in con.execute("PRAGMA table_info(labels)").fetchall()
     }
-    expected_line = source.count("\\n", 0, binding[7]) + 1
+    expected_line = source.count("\n", 0, binding[7]) + 1
     if {"document_id", "line"} <= label_columns:
         label_record = con.execute(
             "SELECT document_id,line FROM labels WHERE name=?", (label,)
