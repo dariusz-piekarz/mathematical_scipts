@@ -104,6 +104,15 @@ class LeanEnvironmentTests(unittest.TestCase):
             executable.write_bytes(b"real lean binary updated")
             self.assertNotEqual(original, lean_environment.executable_toolchain_sha256(self.root))
 
+    def test_unverifiable_fake_path_matches_absent_toolchain_snapshot(self):
+        with patch("backend.lean_environment.shutil.which",
+                   return_value=None):
+            absent = lean_environment.executable_toolchain_sha256(self.root)
+        with patch("backend.lean_environment.shutil.which",
+                   return_value=str(self.root / "fake-lake-executable")):
+            advertised_only = lean_environment.executable_toolchain_sha256(self.root)
+        self.assertEqual(absent, advertised_only)
+
     def test_unresolved_path_is_recorded_not_verified(self):
         fake = self.root / "missing"
         value = lean_environment._binary_identity(str(fake))
