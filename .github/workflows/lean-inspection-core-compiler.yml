@@ -1,0 +1,58 @@
+name: Lean inspection - pinned compiler smoke
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "application/backend/lean_introspection.py"
+      - "application/tests/test_lean_introspection_core_real.py"
+      - "application/requirements.txt"
+      - ".github/workflows/lean-inspection-core-compiler.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lean-core-compiler-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  core-meta-compiler:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install application dependencies
+        working-directory: application
+        run: python -m pip install -r requirements.txt
+
+      - name: Install pinned Lean 4.26.0 without Mathlib
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --show-error --silent --location \
+            https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            | sh -s -- -y --default-toolchain none --no-modify-path
+          "$HOME/.elan/bin/elan" default leanprover/lean4:v4.26.0
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+
+      - name: Compile and inspect two self-contained declarations with real Lean
+        working-directory: application
+        env:
+          MATLIB_REQUIRE_CORE_LEAN_TEST: "1"
+        run: python -m unittest tests.test_lean_introspection_core_real -v
+
+      - name: Delimit result scope
+        run: |
+          echo "Only validates Lean 4 compiler MetaM instrumentation."
+          echo "Full pinned Mathlib/kernel/axiom CI and LaTeX correspondence checks remain separate."
