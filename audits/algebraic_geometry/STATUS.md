@@ -1,8 +1,8 @@
 # Geometria algebraiczna — rejestr statusów audytów
 
-**Ostatnia aktualizacja:** 2026-11-22, audyt ALG-05 nr 5.
+**Ostatnia aktualizacja:** 2026-11-22, audyt ALG-05 nr 6.
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`.
-**Następny przebieg:** **ALG-05, audyt nr 6** — niezależna kontrola po poprawieniu ciała reszt w opisie włókna rozdmuchania oraz po nowej regresji; następnie dodatkowy audyt stabilizacyjny. ALG-00–04 pozostają stabilne.
+**Następny przebieg:** **ALG-05, audyt nr 7** — niezależna kontrola po doprecyzowaniu SNC i projektywizacji wiązki normalnej; po jej wyniku dodatkowy audyt stabilizacyjny. ALG-00–04 pozostają stabilne.
 
 | ID | Rozdział | Iteracja zakończona | Status | Raport / czynność |
 | --- | --- | ---: | --- | --- |
@@ -11,7 +11,7 @@
 | ALG-02 | Geometria rzutowa | **6** | **STABILNY / ZAMKNIĘTY** | [Audyt 6](2026-11-22-ALG-02-iteration-06.md) — niezależny, bezusterkowy reaudyt całego rozdziału; 15/15 testów, kontrola 11-stronicowego PDF i CI PASS, brak zmian źródła |
 | ALG-03 | Punkty osobliwe i geometria lokalna krzywych | **2** | **STABILNY / ZAMKNIĘTY** | [Audyt 2](2026-11-22-ALG-03-iteration-02.md) — niezależny bezusterkowy reaudyt, dodatkowe rachunki, 8/8 regresji PASS, CI SUCCESS, 8-stronicowy PDF PASS; bez zmian w źródle |
 | ALG-04 | Algebra przemienna, snopy i krzywe algebraiczne | **4** | **STABILNY / ZAMKNIĘTY** | [Audyt 4](2026-11-22-ALG-04-iteration-04.md) — niezależny bezusterkowy reaudyt całego rozdziału, 14/14 regresji PASS, CI SUCCESS na identycznym źródle, 43-stronicowy PDF i 10 rysunków PASS |
-| ALG-05 | Rozdmuchania i rozwiązywanie osobliwości | **5** | **OTWARTY** | [Audyt 5](2026-11-22-ALG-05-iteration-05.md) — poprawiono włókno nad nie-k-wymiernym punktem, gramatykę i terminologię; 17/17 regresji, końcowy CI SUCCESS, 16-stronicowy PDF i 4 rysunki sprawdzone |
+| ALG-05 | Rozdmuchania i rozwiązywanie osobliwości | **6** | **OTWARTY** | [Audyt 6](2026-11-22-ALG-05-iteration-06.md) — poprawiono nieprecyzyjne sformułowanie SNC i nagłówek o projektywizacji wiązki normalnej; 9/9 tożsamości symbolicznych; końcowy CI wymaga potwierdzenia |
 | ALG-06 | Powierzchnie algebraiczne | 0 | Oczekuje | Po ALG-05 |
 | ALG-07 | Teoria przecięć, grupy Chowa i klasy Cherna | 0 | Oczekuje | Po ALG-06 |
 | ALG-08 | Geometria biwymierna i modele minimalne | 0 | Oczekuje | Po ALG-07 |
@@ -70,3 +70,6 @@ ALG-05 po audycie 1: **OTWARTY**. [Raport](2026-11-22-ALG-05-iteration-01.md). �
 
 
 ALG-05 po audycie 5: [raport](2026-11-22-ALG-05-iteration-05.md), status **OTWARTY**. W aktualnym źródle uściślono włókno nad dowolnym punktem `z` centrum jako `P^{c-1}_{κ(z)}`; poprzednie `P^{c-1}_k` obowiązuje tylko dla punktów `k`-wymiernych. Poprawiono pozostałe błędne odmiany „mapa” i „dywizor” → „dzielnik”. Źródło po poprawkach: blob `2a3347cbf728519b3aa12bca57b2e1c7f49e7eb8` ([commit 988cc6ea](https://github.com/dariusz-piekarz/mathematical_scipts/commit/988cc6eae465e9fa66b0a7c69b5b4e2f307313e2)); testy: końcowy blob `06b8b6664d155b78a2e9c38d739d780b158248bb` ([commit 860a3ba](https://github.com/dariusz-piekarz/mathematical_scipts/commit/860a3bae93082060c9c478796ff0931fbba95202)). 43 unikalne etykiety, 6 poprawnych odsyłaczy, 18 dowodów, 4 rysunki TikZ, 17 metod regresyjnych. Końcowy [CI 45039076845](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45039076845) **SUCCESS**, 17/17 regresji; PDF ALG-00–05: 124 strony, ALG-05: 16 stron, 4 rysunki sprawdzone wizualnie na artefakcie identycznego bloba źródła. Zbiorczy plik `sources/pl/geometria_algebraiczna(1).tex` zsynchronizowany w [commicie 8d83a4e](https://github.com/dariusz-piekarz/mathematical_scipts/commit/8d83a4e4c52fd40a09b84176a9950403ce20ece3). **Następny ALG-05/6, bezusterkowa kontrola + po niej dodatkowy audyt stabilizacyjny.**
+
+
+ALG-05 po audycie 6: [raport](2026-11-22-ALG-05-iteration-06.md), **OTWARTY**. Poprawiono istotną niejednoznaczność zdania o dopuszczalności trzech przecinających się krzywych na gładkiej powierzchni: nie wyklucza się samej konfiguracji, lecz jej status jako SNC. Skorygowano nagłówek o projektywizacji wiązki normalnej. Źródło blob `7293eba30014530db3d3e734c86ae398d1be05cf` ([commit e5658f5](https://github.com/dariusz-piekarz/mathematical_scipts/commit/e5658f511e930270ecf373aa819183acc6006866)); synchronizacja pliku monolitycznego [a2dae0e](https://github.com/dariusz-piekarz/mathematical_scipts/commit/a2dae0e96e00043ebad63d3c43e577c077dafdd6). Bazowe CI przed bieżącymi zmianami [45039761079](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45039761079) SUCCESS (17 regresji, 124 strony, log bez ostrzeżeń); nowy run [45040219508](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45040219508) wymaga odbioru. **Następny ALG-05/7**, potem osobny audyt dla pewności.
