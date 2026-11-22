@@ -8,7 +8,7 @@
 
 ## 1. Kontrola przypadków granicznych i kwantyfikatorów
 
-1. **Kardynały małe.** ω jest regularny i silnie graniczny, lecz nie jest objęty definicją dużego kardynału, gdyż jawnie zakładamy nieprzeliczalność. Wniosek silnie nieosiągalny ⇒ graniczny kardynał wymaga nierówności λ^+≤2^λ; nie wystarczy stwierdzenie 2^λ>λ.
+1. **Małe liczby kardynalne.** ω jest regularną i silnie graniczną liczbą kardynalną, lecz nie jest objęty definicją dużej liczby kardynalnej, gdyż jawnie zakładamy nieprzeliczalność. Wniosek: silnie nieosiągalna liczba kardynalna jest graniczną liczbą kardynalną wymaga nierówności λ^+≤2^λ; nie wystarczy stwierdzenie 2^λ>λ.
 2. **Poziomy hierarchii.** Dla α=0 nie występuje żadna trudność w indukcji; przy następniku wystarcza silna graniczność, przy limicie potrzebna jest regularność. W dowodzie ZFC w V_κ wszystkie parametry i świadkowie formuł są elementami zbiorowej struktury, więc nie używa się niedefiniowalnej globalnej prawdy uniwersum. Zbiór wszystkich wartości funkcji z dziedziny a jest mały, bo |a|<κ; tylko to pozwala umieścić go w jednym poziomie V_β dla β<κ.
 3. **Filtr właściwy a ultrafiltr.** Przecięcie mniej niż κ elementów miary należy do miary, a dopełnienia singletonów są duże. Sama zwykła skończona zupełność na ω nie dowodzi mierzalności. Kontrprzykład z ogonami A_n⊆ω ma wszystkie A_n w niegłównym ultrafiltrze i puste przecięcie.
 4. **Niekanoniczni reprezentanci ultraproduktu.** Definicja równoważności modulo U pozwala zmieniać funkcję na zbiorze indeksów o dopełnieniu dużym. Zbiór wartości funkcji f może być pusty, dlatego w ograniczeniu zakresów g uwzględniono także zbiór pusty. Kodowanie reprezentantami Scotta obejmuje klasowy charakter ultraproduktu i nie zakłada istnienia klasy wszystkich funkcji jako zbioru.
@@ -19,7 +19,7 @@
 
 ## 2. Niezależna ponowna ocena kompozycji
 
-Rozdział prowadzi od pojęć dostępnych w rozdziałach 25–28 do konstrukcji opartej na ZFC, a następnie do ultraproduktów, zanurzeń i miar normalnych. Nie powiela pełnej konstrukcji modeli wymuszania z rozdziałów 32–36. Terminologia „suma zbiorów”, „zbiór pusty”, „przecięcie diagonalne” i polskie formy nazw są zgodne ze standardem. W tekście nie ma nieuprawnionego postulatu istnienia mierzalnego kardynału.
+Rozdział prowadzi od pojęć dostępnych w rozdziałach 25–28 do konstrukcji opartej na ZFC, a następnie do ultraproduktów, zanurzeń i miar normalnych. Nie powiela pełnej konstrukcji modeli wymuszania z rozdziałów 32–36. Terminologia „suma zbiorów”, „zbiór pusty”, „przecięcie diagonalne” i polskie formy nazw są zgodne ze standardem. W tekście nie ma nieuprawnionego postulatu istnienia mierzalnej liczby kardynalnej.
 
 Inwentarz źródła bez zmian: **775 wierszy; 26 etykiet; 18 odsyłaczy; 7 definicji; 4 lematy; 7 twierdzeń; 1 wniosek; 5 uwag; 1 przykład; 12 dowodów.** Zachowano nazwy etykiet i odpowiedni odczyt \ref w książce. Rzeczywisty PDF z przebiegu 45066748548: **326 stron A4**, rozdział 37 na stronach **321–326**. Wszystkie sześć stron obejrzano w montażu; brak zaobserwowanych błędów składu; log 0 overfull, 0 unresolved reference, 1 underfull.
 
