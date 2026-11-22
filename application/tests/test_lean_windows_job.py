@@ -20,6 +20,9 @@ class LeanWindowsJobTests(unittest.TestCase):
         flags = (lean_windows_job.JOB_OBJECT_LIMIT_JOB_MEMORY |
                  lean_windows_job.JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE)
         self.assertEqual(flags, 0x2200)
+        # Win32 class 8 expects a larger BasicAndIoAccounting structure;
+        # the BasicAccountingInformation structure requires class 1.
+        self.assertEqual(lean_windows_job.JOB_OBJECT_BASIC_ACCOUNTING_INFORMATION, 1)
         self.assertGreater(
             lean_windows_job.ExtendedLimitInformation.JobMemoryLimit.offset,
             lean_windows_job.ExtendedLimitInformation.BasicLimitInformation.offset)
