@@ -85,7 +85,7 @@ class TestChapter28(unittest.TestCase):
         self.assertIn("Nie zakładamy istnienia wspólnego",TEXT)
 
     def test_wellorder_representation_no_hidden_choice(self):
-        self.assertIn("To jedyne miejsce w konstrukcji",TEXT)
+        self.assertIn("Jest to jedyne miejsce w konstrukcji",TEXT)
         self.assertIn(r"\mathcal F_w:=\{f_v:v\prec w\}",TEXT)
         self.assertIn(r"f_w:=u\cup\{(w,u[W_{<w}])\}",TEXT)
         self.assertIn(r"r[W]",TEXT)
