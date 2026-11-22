@@ -1,6 +1,6 @@
 # Globalny audyt algebry liniowej — status rozdziałów
 
-**Stan po iteracji 01/09**, 22 listopada 2026.
+**Stan po iteracji 02/09**, 22 listopada 2026.
 
 | Rozdział | Status |
 |---|---|
@@ -8,10 +8,10 @@
 | 02 | 01: poprawiono dowód; PDF/CI oczekują |
 | 03 | 01: bez korekt; PDF/CI oczekują |
 | 04 | 01: uzupełniono rachunki; PDF/CI oczekują |
-| 05 | oczekuje na globalny audyt |
-| 06 | oczekuje na globalny audyt |
-| 07 | oczekuje na globalny audyt |
-| 08 | oczekuje na globalny audyt |
+| 05 | 02: sprawdzono dowody eliminacji, RREF, rzędu i przykłady; PDF/CI do potwierdzenia |
+| 06 | 02: sprawdzono znak permutacji, wyznacznik, Laplace'a i Cramera; PDF/CI do potwierdzenia |
+| 07 | 02: sprawdzono bazę dualną, anihilatory, zmianę bazy, ślad; PDF/CI do potwierdzenia |
+| 08 | 02: naprawiono parowanie permutacji w dowodzie alternowania i odsyłacz do rozdz. 10; PDF/CI do potwierdzenia |
 | 09 | oczekuje na globalny audyt |
 | 10 | oczekuje na globalny audyt |
 | 11 | oczekuje na globalny audyt |
@@ -37,4 +37,4 @@
 | 31 | oczekuje na globalny audyt |
 | 32 | oczekuje na globalny audyt |
 
-Iteracje 02–09 nie zostały jeszcze wykonane. Nie utożsamiać audytu źródła z pomyślną kompilacją ani audytem wizualnym.
+Iteracje 03–09 nie zostały jeszcze wykonane. Nie utożsamiać audytu źródła z pomyślną kompilacją ani audytem wizualnym.
