@@ -34,7 +34,7 @@ class TestChapter25(unittest.TestCase):
                 self.assertEqual(TEXT.count(r"\begin{"+env+"}"),count)
                 self.assertEqual(TEXT.count(r"\end{"+env+"}"),count)
         self.assertEqual(len(re.findall(r"\\label\{([^}]+)\}",TEXT)),46)
-        self.assertEqual(len(re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}",TEXT)),23)
+        self.assertEqual(len(re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}",TEXT)),25)
 
     def test_labels_resolved_with_all_chapters(self):
         all_text = "\n".join(p.read_text(encoding="utf8") for p in sorted(DIR.glob("*.tex")))
@@ -72,6 +72,26 @@ class TestChapter25(unittest.TestCase):
         self.assertEqual(len(set(omega)),7)
         for i in range(7):
             self.assertFalse(omega[i] in omega[i])
+
+    def test_recursion_proof_honors_zero_and_replacement(self):
+        # Ochrona uzasadnień w dowodzie: nie wolno używać f(0)
+        # bez stwierdzenia, że 0 należy do dziedziny przybliżenia.
+        self.assertIn(r"0\in S(n)$ dla każdego $n\in\omega",TEXT)
+        self.assertIn(r"n\in S(n)$ zgodnie z definicją następnika",TEXT)
+        self.assertIn(r"\mathcal P(S(n)\times B)",TEXT)
+        self.assertIn("Schemat zastępowania, zastosowany do jednoznacznego",TEXT)
+        self.assertIn(r"f_n(n)",TEXT)
+
+    def test_division_proof_explains_strict_descent(self):
+        section=TEXT.split(r"\begin{twierdzenie}[Dzielenie z resztą]",1)[1]
+        self.assertIn(r"$0\le b$",section)
+        self.assertIn(r"$0<b$",section)
+        self.assertIn(r"\ref{lem:zf-natural-monotone}",section)
+        self.assertIn(r"$bq+b\le a$",section)
+
+    def test_internal_induction_scope_explicit(self):
+        self.assertIn("zewnętrzne podzbiory",TEXT)
+        self.assertIn("Podzbiór oznacza tu zbiór w sensie ZF",TEXT)
 
     def test_recursive_arithmetic_on_small_range(self):
         # Potwierdza zgodność definicji rekurencyjnych z działaniami na N.
