@@ -50,6 +50,41 @@ def finite_suslin_models() -> int:
     return len(samples)
 
 
+def universal_tree_coding_models() -> int:
+    """Finite-prefix model of the universal closed-set coding in the chapter.
+
+    Natural-number code entries 1 and 2 represent membership and
+    nonmembership. All these entries are positive, so the old '> 0'
+    predicate would incorrectly accept every branch, even for F=empty.
+    """
+    rng = Random(20261122)
+    words = list(product((0, 1), repeat=3))
+    pairs = list(product(words, repeat=2))
+    samples = [set(), set(pairs)]
+    samples += [
+        {item for item in pairs if rng.getrandbits(1)}
+        for _ in range(128)
+    ]
+    for relation in samples:
+        code = {}
+        for n in range(1, 4):
+            for s in product((0, 1), repeat=n):
+                for t in product((0, 1), repeat=n):
+                    code[(s, t)] = (
+                        1 if any(
+                            x[:n] == s and y[:n] == t
+                            for x, y in relation
+                        ) else 2
+                    )
+        assert set(code.values()) <= {1, 2}
+        decoded = {
+            (x, y) for x, y in pairs
+            if all(code[(x[:n], y[:n])] == 1 for n in range(1, 4))
+        }
+        assert decoded == relation, (decoded, relation)
+    return len(samples)
+
+
 def projection_not_closed_model() -> None:
     """Sample points (x,1/x) lie in the closed hyperbola, projection excludes 0."""
     for x in (-2.0, -0.5, 0.1, 0.25, 1.0, 3.0):
@@ -116,12 +151,18 @@ def integration_and_source() -> tuple[int, int]:
     assert "jest pusty\nalbo jest ciągłym obrazem" in text
     # Non-strict inclusion for countable discrete Polish spaces.
     assert "w przeliczalnej przestrzeni\ndyskretnej" in text
+    # Universal-family tree code must distinguish two *positive* naturals.
+    assert r"\(c_{e(s,t)}=1\)" in text
+    assert r"c_{e(x|n,y|n)}=1" in text
+    assert r"\(c_{e(s,t)}=2\)" in text
+    assert not re.search(r"c_\{e\([^}]+\)\}>0", text)
     return len(labels), len(refs)
 
 
 if __name__ == "__main__":
     models = finite_suslin_models()
+    coded = universal_tree_coding_models()
     projection_not_closed_model()
     labels, refs = integration_and_source()
     print(f"PASS general topology ch20: {models} finite Suslin relations, "
-          f"projection example, {labels} labels, {refs} refs")
+          f"{coded} tree codes, projection example, {labels} labels, {refs} refs")
