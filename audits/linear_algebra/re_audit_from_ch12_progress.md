@@ -7,26 +7,29 @@
 **Zasada stabilności:** dwie następujące po sobie czyste kontrole tego samego bloba po ostatniej zmianie oraz zielona walidacja CI.
 
 <!-- CURRENT_RE_AUDIT_STATE
-chapter: 30
-iteration_last_reported: 3
-stage_status: OPEN_AFTER_CORRECTION
+chapter: 31
+iteration_last_reported: 0
+stage_status: OPEN_AUDIT_NOT_STARTED
 clean_checks_since_last_source_edit: 0
 clean_checks_required: 2
 additional_sceptical_final_audit: NOT_DONE
-last_checked_blob_sha: 6d90013dd6c66d347e5ae2ac78b4c1a194aa979e
-last_source_edit_commit: f629b926d93d76f7d09018feeb0c4c06c847f928
-closure_reason: null
-next_step: audit_ch30_corrected_source_and_verify_ci
-ci_run_id: 45039090215
-ci_status_last_checked: completed_success
+last_checked_blob_sha: null
+last_completed_chapter: 30
+last_completed_blob_sha: 6d90013dd6c66d347e5ae2ac78b4c1a194aa979e
+last_completed_clean_audits: 2
+last_completed_extra_final_audit: DONE_CLEAN
+last_completed_ci_run_id: 45039107786
+last_completed_ci_status: completed_success
+closure_reason: ch30_clean_audits_03_04_plus_final_05_and_matching_green_ci
+next_step: audit_ch31_initial
 -->
 
 ## Stan wykonania
 
-- Bieżący rozdział: **30**.
-- Ostatni zamknięty blob (rozdział 29): **55fc55e2ff1b95838e0b2ca1c4ec0a6018af64dd**.
-- Liczba czystych audytów bieżącego rozdziału 30: **0/2**; oddzielny końcowy audyt: **niewykonany**. Rozdział 29 zakończony: 2/2 oraz dodatkowy czysty audyt końcowy 03.
-- Kolejne działanie: **rozdział 30 — pełny audyt powtórny poprawionego bloba**, po korekcie w audycie 03 niezależnym; zresetowano czyste kontrole do 0/2, oddzielny audyt końcowy niewykonany. Rozdziały 28 i 29 pozostają zamknięte. Rozszerzenie LA-32 o transformatę Penrose’a pozostaje w planie.
+- Bieżący rozdział: **31**.
+- Ostatni zamknięty blob (rozdział 30): **6d90013dd6c66d347e5ae2ac78b4c1a194aa979e**.
+- Liczba czystych audytów bieżącego rozdziału 31: **0/2**; oddzielny końcowy audyt: **niewykonany**. Rozdział 30 zakończony: czyste 03–04 oraz dodatkowy sceptyczny 05.
+- Kolejne działanie: **rozdział 31 — pierwszy pełny audyt nowej sekwencji**. Rozdział 30 zamknięty na blobie `6d90013dd6c66d347e5ae2ac78b4c1a194aa979e` po czystych raportach 03–04 i dodatkowym końcowym 05, z CI completed/success i obejrzanym poprawionym PDF. Rozdziały 28–29 pozostają zamknięte. LA-32 — zatwierdzony dodatek Penrose’a pozostaje w planie.
 - Historyczne audyty, w tym ręczne audyty rozdziałów 13–15 z 22 listopada, pozostają ważnymi źródłami, ale **nie są automatycznie liczone** jako wykonanie nowego przebiegu.
 
 ## Tabela statusów
@@ -51,8 +54,8 @@ ci_status_last_checked: completed_success
 | 27 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `a91dfa108d4a6ef4221b9ba24a98c87772c75d4a` |
 | 28 | STABILNY po dodatkowym audycie; 04 korekta, 05–06 czyste, CI success | 2 | `b9507aa2db7eda554446248996e7c0ae241d4e73` |
 | 29 | STABILNY; audyty 01 i 02 czyste oraz dodatkowy końcowy 03 czysty, CI success i PDF obejrzany | 3 (2+1) | `55fc55e2ff1b95838e0b2ca1c4ec0a6018af64dd` |
-| 30 | OTWARTY; audyty 01–02 na starym blobie; audyt korekcyjny 03, reset; CI nowego bloba success, PDF sprawdzony | 0 | `6d90013dd6c66d347e5ae2ac78b4c1a194aa979e` |
-| 31 | W kolejce | 0 | — |
+| 30 | STABILNY; po korekcie czyste audyty 03–04 + sceptyczny 05, CI success i PDF obejrzany | 3 (2+1) | `6d90013dd6c66d347e5ae2ac78b4c1a194aa979e` |
+| 31 | OTWARTY; audyt 01 do wykonania | 0 | — |
 | 32 | W kolejce | 0 | — |
 
 ## Instrukcja dla każdej iteracji
@@ -319,3 +322,11 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - [CI 45039090215](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45039090215): **completed/success**, commit `f629b926d93d76f7d09018feeb0c4c06c847f928`, potwierdzony blob LA-30 **`6d90013dd6c66d347e5ae2ac78b4c1a194aa979e`**. Dedykowany krok Clifford, testy, terminologia, dwukrotna kompilacja książki i kontrola odsyłaczy zakończyły się sukcesem.
 - Artefakt aktualnego CI pełnej książki pobrano; LA-30 to strony fizyczne **293–295**, wyodrębniono 3-stronicowy PDF i wizualnie obejrzano wszystkie strony po zmianie. Rysunek nie ma już kolizji.
 - Uzupełniono [raport audytu korekcyjnego 03](re_audit_from_ch12/30_iteration_03_corrective_2026-11-22_1636.md), [commit f570d6e](https://github.com/dariusz-piekarz/mathematical_scipts/commit/f570d6e19c7a1243ea0b37fc07574b5438edf373). **Status pozostaje OTWARTY, 0/2 czystych audytów po zmianie + niewykonany dodatkowy audyt końcowy.** Następny etap: nowy audyt całego poprawionego rozdziału 30; nie przechodzić do 31.
+
+
+## Uzgodnienie po równoległych kontrolach LA-30 — 2026-11-22
+
+- Po korekcie w [commicie f629b926](https://github.com/dariusz-piekarz/mathematical_scipts/commit/f629b926d93d76f7d09018feeb0c4c06c847f928) pojawiły się **trzy odrębne raporty** tego samego nowego bloba `6d90013dd6c66d347e5ae2ac78b4c1a194aa979e`: [audyt 03](re_audit_from_ch12/30_iteration_03_2026-11-22.md) — czysty 1/2 ([commit 9a1afa5](https://github.com/dariusz-piekarz/mathematical_scipts/commit/9a1afa5e707b4e8fc3494661bb33fc312e0c90e1)), [audyt 04](re_audit_from_ch12/30_iteration_04_2026-11-22.md) — czysty 2/2 ([commit 7bb325a](https://github.com/dariusz-piekarz/mathematical_scipts/commit/7bb325a6194f3a44c5e964e9dbd1ee66ddb82032)) i [oddzielny końcowy audyt 05](re_audit_from_ch12/30_iteration_05_2026-11-22.md) — czysty ([commit 59efc9b](https://github.com/dariusz-piekarz/mathematical_scipts/commit/59efc9bab0ebe0213e839ad0111dde66badc876d)). Są to raporty innych równoległych przebiegów; nie przypisuje się ich wykonania do audytu korekcyjnego.
+- [Zielone CI 45039107786](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45039107786) jest **completed/success** dla commitu zawierającego dokładnie nowy blob. Również [CI 45039090215](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45039090215) completed/success dla commitu źródłowego.
+- W niezależnym audycie korekcyjnym z tej rozmowy pobrano artefakt pełnej książki już po zmianie, wyodrębniono LA-30 (strony 293–295), obejrzano wszystkie trzy strony i potwierdzono brak kolizji TikZ i zgłoszonych przepełnień LaTeX. Raport [30_iteration_03_corrective_2026-11-22_1636.md](re_audit_from_ch12/30_iteration_03_corrective_2026-11-22_1636.md), [commit uzupełnienia f570d6e](https://github.com/dariusz-piekarz/mathematical_scipts/commit/f570d6e19c7a1243ea0b37fc07574b5438edf373).
+- **Rozdział 30 STABILNY I ZAMKNIĘTY**, czyste 03–04 po ostatniej korekcie + oddzielny sceptyczny 05 + zielone CI zgodne z blobem. Raporty 01–02 starego bloba nie zaliczają się do nowej stabilizacji. **Następny etap: rozdział 31 — audyt 01; nie przechodzić dalej, dopóki 31 nie ustabilizuje się analogicznie.**
