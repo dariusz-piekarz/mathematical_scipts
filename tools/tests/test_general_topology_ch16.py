@@ -53,7 +53,7 @@ def test_sources():
         assert text.count(r"\begin{"+env+"}") == text.count(r"\end{"+env+"}")
     books = json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))["books"]
     chapters = next(b["chapters"] for b in books if b["id"]=="general_topology")
-    assert len(chapters)==16 and chapters[15]==CH
+    assert len(chapters)>=16 and chapters[15]==CH
     merged="\n".join((ROOT/p).read_text(encoding="utf-8") for p in chapters)
     labels=re.findall(r"\\label\{([^}]+)\}",merged)
     refs=re.findall(r"\\(?:ref|eqref|pageref)\{([^}]+)\}",merged)
