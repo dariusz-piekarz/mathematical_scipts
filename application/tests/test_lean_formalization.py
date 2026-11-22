@@ -52,7 +52,7 @@ class LeanFormalizationTests(unittest.TestCase):
                          ("LST-01/theorem/0001", "LST-01", "theorem", "De Morgan",
                           1, 3, 0, len(SOURCE)))
         self.con.execute("INSERT INTO labels VALUES(?,?,?)",
-                         (LABEL, "LST-01/theorem/0001", 18))
+                         (LABEL, "LST-01/theorem/0001", SOURCE.index("\\label{")))
         self.con.commit()
         self.digest = digest
 
