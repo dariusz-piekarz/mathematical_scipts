@@ -1,0 +1,960 @@
+\chapter{Aksjomaty ZF, ZFC i konstrukcje zbiorowe}\label{ch:zf-axioms}
+
+\section{Dlaczego nie każdy opis wyznacza zbiór?}
+We wcześniejszych rozdziałach pracowaliśmy ze zbiorami w elementarnym
+języku matematyki. Teraz pytamy, co dokładnie wolno w tym języku
+\emph{przyjąć} i jakie zbiory możemy \emph{skonstruować} z aksjomatów.
+Naiwna zasada „każda własność wyznacza zbiór wszystkich obiektów,
+które ją mają” prowadzi do sprzeczności. Gdyby istniał zbiór
+$R=\{x:x\notin x\}$, mielibyśmy
+$R\in R\iff R\notin R$. Nie jest to problem z prawami logiki;
+problemem jest nieograniczone tworzenie zbiorów.
+
+\begin{definicja}[Język teorii mnogości]\label{def:zf-language}
+Językiem teorii Zermela--Fraenkla jest \emph{język pierwszego rzędu}
+z jednym dwuargumentowym symbolem relacyjnym $\in$ i równością.
+Jego zmienne $x,y,z,\ldots$ przebiegają wyłącznie po \emph{zbiorach}.
+Zdanie $x\in y$ oznacza, że zbiór $x$ jest elementem zbioru $y$.
+Teoria $\mathrm{ZF}$ składa się z opisanych niżej aksjomatów
+i schematów aksjomatów. Teoria $\mathrm{ZFC}$ to $\mathrm{ZF}$
+wraz z \emph{aksjomatem wyboru}, który wprowadzimy i omówimy
+w rozdziale~\ref{ch:axiom-choice}.
+\end{definicja}
+
+
+\section{Jak czytać aksjomaty: znaczenie zmiennych i skrótów}\label{sec:zf-reading-notation}
+
+\emph{Najważniejsza różnica względem zwykłych podręczników z analizy:}
+w formalnym języku ZF nie ma osobnej kategorii „elementów”
+i osobnej kategorii „zbiorów”. \emph{Wszystkie zmienne przebiegają po zbiorach}.
+Litery $x,a,b,p,u$ nie oznaczają innych rodzajów obiektów
+niż wielkie litery $A,B,X$. Zmienne pisane małą literą
+są tylko \emph{konwencją redakcyjną}. Dlatego
+\[
+             x\in a
+\]
+znaczy dokładnie: „zbiór oznaczony przez $x$ jest elementem
+zbioru oznaczonego przez $a$”. Nie oznacza to, że
+$x$ jest małym obiektem, a $a$ małym zbiorem.
+Zamiast $x\in a$ moglibyśmy napisać $x\in A$,
+$u\in B$ albo $A\in B$, gdyby symbole były odpowiednio
+zdefiniowane i związane kwantyfikatorami. Wielkość liter
+nie wpływa na prawdziwość zdania.
+
+\begin{przyklad}[Element sam jest zbiorem]
+Niech $a=\{\varnothing,\{\varnothing\}\}$
+i $x=\{\varnothing\}$. Wtedy $x\in a$, ponieważ
+$x$ jest jednym z dwóch elementów zbioru $a$.
+Jednocześnie $x$ \emph{też jest zbiorem}, a jego
+jedynym elementem jest $\varnothing$.
+Mamy więc $\varnothing\in x$ oraz $x\in a$,
+również $x\subseteq a$, ponieważ $\varnothing\in a$; jednak
+te dwa fakty wynikają z osobnych sprawdzeń. W ogólności
+$x\in a$ nie implikuje $x\subseteq a$.
+Dla kontrprzykładu do implikacji $x\in a\Rightarrow x\subseteq a$
+weźmy $a=\{\{\{\varnothing\}\}\}$ i $x=\{\{\varnothing\}\}$.
+Wtedy $x\in a$, ale $\{\varnothing\}\in x$ oraz
+$\{\varnothing\}\notin a$, więc $x\not\subseteq a$.
+\end{przyklad}
+
+\begin{definicja}[Słownik notacji aksjomatów]\label{def:zf-notation-conventions}
+W całym rozdziale używamy następujących skrótów:
+\begin{enumerate}[label=(\roman*)]
+\item $\forall x\,\psi(x)$ oznacza: „dla każdego zbioru $x$
+      zachodzi $\psi(x)$”; $\exists x\,\psi(x)$: „istnieje zbiór $x$”.
+\item $\forall x\in a\;\psi(x)$ jest skrótem formuły
+      $\forall x\,(x\in a\to\psi(x))$.
+      Analogicznie $\exists x\in a\;\psi(x)$ oznacza
+      $\exists x\,(x\in a\land\psi(x))$.
+\item $x\subseteq a$ oznacza
+      $\forall t\,(t\in x\to t\in a)$; nie jest osobnym
+      symbolem pierwotnego języka ZF.
+\item $\exists!y\,\psi(y)$ oznacza „istnieje dokładnie
+      jeden $y$ spełniający $\psi$”, czyli
+      $\exists y\,[\psi(y)\land\forall z\,(\psi(z)\to z=y)]$.
+\item $\vec p=(p_1,\ldots,p_n)$ oznacza skończony ciąg
+      \emph{parametrów}, które występują w rozważanej formule;
+      $\varphi(x,\vec p)$ nie jest dodatkowym spójnikiem,
+      lecz sposobem pokazania, od jakich zmiennych zależy formuła.
+\item $\{x\in a:\varphi(x)\}$, $\bigcup a$, $\mathcal P(a)$
+      oraz $\varnothing$ są nazwami \emph{skonstruowanych zbiorów}.
+      W pierwotnym języku mającym jedynie $\in$ i równość
+      trzeba je rozwinąć do formuł określających ich elementy.
+\end{enumerate}
+\end{definicja}
+
+\begin{przyklad}[Czytanie kwantyfikatorów od lewej do prawej]
+Rozważmy formułę
+\[
+\forall a\,\forall b\,\exists p\,\forall x\;
+\bigl(x\in p\leftrightarrow(x=a\lor x=b)\bigr).
+\]
+Przeczytajmy każdy fragment. „Dla \emph{dowolnego} zbioru $a$
+i dla \emph{dowolnego} zbioru $b$ istnieje zbiór $p$,
+taki że dla \emph{każdego} zbioru $x$ zachodzi:
+$x$ jest elementem $p$ dokładnie wtedy, gdy $x=a$ lub $x=b$”.
+W szczególności $p=\{a,b\}$. Warto zwrócić uwagę, że
+$\forall x$ jest objęte zakresem $\exists p$: po ustaleniu
+$a,b$ wybieramy \emph{jeden} zbiór $p$ działający dla
+wszystkich $x$, a nie osobne $p$ dla każdego $x$.
+\end{przyklad}
+
+\begin{przyklad}[Zamiana liter nie zmienia aksjomatu]
+Zapis $\forall x\,\forall y\,\forall z\;\Theta(x,y,z)$
+i zapis $\forall a\,\forall b\,\forall t\;\Theta(a,b,t)$
+wyrażają to samo zdanie, jeżeli w drugim zapisie
+w całej formule jednocześnie i konsekwentnie zmienimy
+nazwy \emph{związanych} zmiennych. To jest zmiana nazw
+zmiennych związanych, a nie zmiana treści twierdzenia.
+Dlatego w części formalnej zwykle stosujemy małe litery,
+a wielkie litery pozostawiamy na intuicyjne nazwy
+ustalonych zbiorów w przykładach.
+\end{przyklad}
+
+\begin{uwaga}[Zbiory w teorii a uniwersum modelu]
+W modelu $\mathfrak M=(M,E)$ teorii mnogości relacja $E$ interpretuje
+symbol $\in$. Elementy $M$ są obiektami nazywanymi „zbiorami”
+\emph{wewnątrz modelu}; nie należy automatycznie utożsamiać $E$
+z zewnętrzną relacją przynależności używaną w metateorii.
+Tę różnicę zilustrowaliśmy w Twierdzeniu~\ref{thm:ls-skolem-paradox}.
+\end{uwaga}
+
+\section{Ekstensjonalność, pustka i pary}
+\begin{definicja}[Aksjomat ekstensjonalności]\label{def:zf-extensionality}
+Postulujemy zdanie
+\[
+\forall x\,\forall y\Bigl(\bigl(\forall z\,(z\in x\leftrightarrow z\in y)\bigr)
+\to x=y\Bigr).
+\]
+Dwa zbiory o tych samych elementach są więc równe.
+\end{definicja}
+
+\begin{definicja}[Aksjomat istnienia zbioru pustego]\label{def:zf-empty}
+Postulujemy $\exists e\,\forall x\,(x\notin e)$.
+Taki zbiór jest jedyny na mocy ekstensjonalności;
+oznaczamy go $\varnothing$.
+\end{definicja}
+
+\begin{definicja}[Aksjomat pary]\label{def:zf-pairing}
+Dla dowolnych zbiorów $a,b$ istnieje zbiór $p$ taki, że
+\[
+\forall x\bigl(x\in p\leftrightarrow(x=a\lor x=b)\bigr).
+\]
+Jedyny taki zbiór zapisujemy $\{a,b\}$. W szczególności
+$\{a\}:=\{a,a\}$ oznacza singleton.
+\end{definicja}
+
+
+\begin{przyklad}[Rozwinięcie aksjomatu ekstensjonalności]
+Aksjomat~\ref{def:zf-extensionality} ma budowę:
+\[
+\forall x\,\forall y\;
+\underbrace{\Bigl(\forall z\,(z\in x\leftrightarrow z\in y)\Bigr)}_{\text{te same elementy}}
+\to\underbrace{(x=y)}_{\text{równe zbiory}}.
+\]
+Najpierw ustalamy dwa dowolne zbiory $x$ i $y$.
+Następnie rozpatrujemy \emph{warunek}: każdy obiekt $z$
+należy do $x$ dokładnie wtedy, gdy należy do $y$.
+Dopiero z tego warunku wnioskujemy, że $x=y$.
+Implikacja nie głosi, że dowolne dwa zbiory są równe.
+Przykładowo $x=\{\varnothing\}$ i $y=\varnothing$
+nie spełniają poprzednika, bo $\varnothing\in x$, lecz
+$\varnothing\notin y$.
+\end{przyklad}
+
+\begin{przyklad}[Nieuporządkowana para a para uporządkowana]
+Zbiór $\{a,b\}$ nie rozróżnia kolejności, bo $\{a,b\}=\{b,a\}$.
+Natomiast para Kuratowskiego
+$(a,b):=\{\{a\},\{a,b\}\}$ rozróżnia współrzędne:
+jak wykazaliśmy w rozdziale~\ref{ch:relations},
+$(a,b)=(c,d)$ implikuje $a=c$ i $b=d$.
+Aksjomat pary zapewnia, że oba zbiory występujące w tym zapisie
+rzeczywiście istnieją.
+\end{przyklad}
+
+
+\begin{przyklad}[Aksjomat pary, krok po kroku]
+Ustalmy $a=\varnothing$ i $b=\{\varnothing\}$.
+Aksjomat pary gwarantuje istnienie $p$ spełniającego
+\[
+\forall x\quad(x\in p\leftrightarrow
+  (x=\varnothing\lor x=\{\varnothing\})).
+\]
+Sprawdźmy, co to oznacza:
+\begin{enumerate}[label=(\roman*)]
+\item biorąc $x=\varnothing$, widzimy, że $x\in p$;
+\item biorąc $x=\{\varnothing\}$, także otrzymujemy $x\in p$;
+\item jeżeli $x$ nie jest żadnym z tych dwóch zbiorów,
+      prawa strona równoważności jest fałszywa,
+      więc $x\notin p$.
+\end{enumerate}
+Zatem $p=\{\varnothing,\{\varnothing\}\}$.
+Aksjomat nie wymaga, aby $a\ne b$; dla $a=b$
+daje zbiór jednoelementowy $\{a\}$.
+\end{przyklad}
+
+\section{Suma zbioru, zbiór potęgowy i separacja}
+\begin{definicja}[Aksjomat sumy]\label{def:zf-union}
+Dla każdego zbioru $a$ istnieje zbiór $u$ spełniający
+\[
+\forall x\bigl(x\in u\leftrightarrow
+\exists b\,(b\in a\land x\in b)\bigr).
+\]
+Piszemy $u=\bigcup a$. Dla $a=\{A,B\}$ otrzymujemy
+zwykłą sumę dwóch zbiorów $A\cup B$.
+\end{definicja}
+
+\begin{definicja}[Aksjomat zbioru potęgowego]\label{def:zf-power}
+Dla każdego zbioru $a$ istnieje zbiór $p$ taki, że
+\[
+\forall x\bigl(x\in p\leftrightarrow x\subseteq a\bigr),\qquad
+x\subseteq a\ \Longleftrightarrow\ \forall t\,(t\in x\to t\in a).
+\]
+Oznaczamy go $\mathcal P(a)$; zawiera wszystkie \emph{zbiory}
+będące podzbiorami $a$.
+\end{definicja}
+
+
+\begin{przyklad}[Aksjomat sumy na konkretnym zbiorze]
+Niech $a=\{\{\varnothing\},\{\{\varnothing\}\}\}$.
+Jego elementami są dwa zbiory:
+$b_1=\{\varnothing\}$ i $b_2=\{\{\varnothing\}\}$.
+Aksjomat sumy mówi, że
+\[
+\bigcup a=\{x:\exists b\in a\ (x\in b)\}.
+\]
+Jedyny element $b_1$ to $\varnothing$, a jedyny
+element $b_2$ to $\{\varnothing\}$. Zatem
+$\bigcup a=\{\varnothing,\{\varnothing\}\}$.
+Nie chodzi o sumowanie liczb: symbol $\bigcup$ oznacza
+zebranie \emph{wszystkich elementów zbiorów należących do $a$}.
+\end{przyklad}
+
+\begin{definicja}[Schemat wyróżniania (separacji)]\label{def:zf-separation}
+Niech $\varphi(x,\vec p)$ będzie dowolną formułą języka teorii
+mnogości, której parametry $\vec p$ są ustalonymi zbiorami.
+Dla każdego zbioru $a$ istnieje zbiór $b$ o własności
+\[
+\forall x\bigl(x\in b\leftrightarrow
+(x\in a\land\varphi(x,\vec p))\bigr).
+\]
+Oznaczamy go $\{x\in a:\varphi(x,\vec p)\}$.
+Jedno \emph{wystąpienie schematu} powstaje po ustaleniu jednej
+formuły $\varphi$; mówimy o schemacie, a nie pojedynczym
+zdaniu, ponieważ takich formuł jest nieskończenie wiele.
+\end{definicja}
+
+\begin{przyklad}[Dlaczego paradoks Russella już nie powstaje?]
+Dla dowolnego \emph{wcześniej danego} zbioru $a$ wolno zbudować
+$R_a:=\{x\in a:x\notin x\}$. Gdyby $R_a\in a$,
+to z definicji otrzymalibyśmy
+$R_a\in R_a\iff R_a\notin R_a$, sprzeczność.
+Wniosek jest więc inny: $R_a\notin a$. Tym samym
+nie może istnieć zbiór uniwersalny $V$ zawierający wszystkie
+zbiory, bo musiałby zawierać $R_V$. Separacja nie pozwala
+wskazać „zbioru wszystkich”, zanim nie dostaliśmy zbioru
+ograniczającego $a$.
+\end{przyklad}
+
+\begin{twierdzenie}[Przecięcie i różnica są zbiorami]\label{thm:zf-intersections}
+Dla każdych zbiorów $A,B$ istnieją zbiory $A\cap B$ i
+$A\setminus B$. Dla każdej niepustej rodziny $\mathcal F$
+będącej zbiorem istnieje $\bigcap\mathcal F$.
+\end{twierdzenie}
+\begin{proof}
+Z separacji dla formuły $x\in B$ otrzymujemy
+$A\cap B=\{x\in A:x\in B\}$. Dla formuły $x\notin B$
+otrzymujemy $A\setminus B=\{x\in A:x\notin B\}$.
+Jeżeli $\mathcal F\ne\varnothing$, wybieramy jeden element
+$F_0\in\mathcal F$. Wówczas zbiór
+$\{x\in F_0:\forall F\in\mathcal F\ (x\in F)\}$
+istnieje dzięki separacji i jest równy przecięciu rodziny.
+Nie potrzebujemy aksjomatu wyboru: wybieramy jeden element
+z jednego niepustego zbioru.
+\end{proof}
+
+\begin{twierdzenie}[Iloczyn kartezjański jest zbiorem]\label{thm:zf-product}
+Dla dowolnych zbiorów $A,B$ istnieje zbiór
+$A\times B=\{(a,b):a\in A,\ b\in B\}$.
+\end{twierdzenie}
+\begin{proof}
+Dla $(a,b)=\{\{a\},\{a,b\}\}$ i $a\in A$, $b\in B$
+wszystkie elementy tej pary należą do $\mathcal P(A\cup B)$.
+Stąd $(a,b)\in\mathcal P(\mathcal P(A\cup B))$.
+Korzystając dwukrotnie z aksjomatu zbioru potęgowego,
+a następnie z separacji dla formuły
+$\exists a\in A\,\exists b\in B\ (z=(a,b))$,
+wyodrębniamy wszystkie i tylko takie pary.
+\end{proof}
+
+
+\begin{przyklad}[Schemat wyróżniania jest ograniczony zbiorem]
+Niech $a=\{\varnothing,\{\varnothing\},\{\{\varnothing\}\}\}$
+i niech $\varphi(x)$ oznacza formułę „$\varnothing\in x$”.
+Wówczas separacja tworzy zbiór
+\[
+ b=\{x\in a:\varnothing\in x\}=\{\{\varnothing\}\}.
+\]
+Sprawdźmy kolejno trzy elementy $a$:
+$\varnothing$ nie ma elementów, więc odpada;
+$\{\varnothing\}$ zawiera $\varnothing$, więc zostaje;
+$\{\{\varnothing\}\}$ zawiera wyłącznie $\{\varnothing\}$,
+więc również odpada. Widzimy, że \emph{najpierw istnieje}
+zbiór $a$, a dopiero potem wolno wyodrębnić jego elementy.
+\end{przyklad}
+
+\section{Zastępowanie i nieskończoność}
+\begin{definicja}[Schemat zastępowania]\label{def:zf-replacement}
+Dla każdej formuły $\varphi(x,y,\vec p)$ zachodzi następujący
+aksjomat: jeśli dla każdego $x\in a$ istnieje dokładnie jeden
+$y$ taki, że $\varphi(x,y,\vec p)$, to istnieje zbiór
+\[
+ b=\{y:\exists x\in a\ \varphi(x,y,\vec p)\}.
+\]
+Ściśle: dla każdej formuły $\varphi$ schemat zawiera domknięcie ogólne
+implikacji $[\forall x\in a\;\exists!y\,\varphi(x,y,\vec p)]\Rightarrow
+[\exists b\;\forall y\,(y\in b\leftrightarrow\exists x\in a\;\varphi(x,y,\vec p))]$.
+Formuła może używać parametrów, ale musi wyznaczać
+\emph{jednoznaczną} wartość na każdym elemencie $a$.
+\end{definicja}
+
+\begin{przyklad}[Obraz zbioru przez funkcję]
+Jeśli $f:A\to B$ jest funkcją i $C\subseteq A$, to
+$f[C]=\{f(x):x\in C\}$ istnieje dzięki zastępowaniu,
+bo przyporządkowanie $x\mapsto f(x)$ jest jednoznaczne.
+W tym prostym przypadku można też użyć separacji w $B$:
+$f[C]=\{y\in B:\exists x\in C\ (f(x)=y)\}$.
+Schemat zastępowania jest szczególnie użyteczny wtedy,
+gdy nie znamy z góry zbioru obejmującego wszystkie wyniki.
+\end{przyklad}
+
+\begin{definicja}[Aksjomat nieskończoności]\label{def:zf-infinity}
+Istnieje zbiór $I$ taki, że $\varnothing\in I$ i dla
+każdego $x\in I$ zachodzi $x\cup\{x\}\in I$.
+Zapis $S(x):=x\cup\{x\}$ nazywamy tu \emph{następnikiem zbioru}.
+Zbiór spełniający te dwa warunki nazywamy \emph{indukcyjnym}.
+\end{definicja}
+
+\begin{twierdzenie}[Istnienie najmniejszego zbioru indukcyjnego]
+\label{thm:zf-omega}
+W ZF istnieje zbiór $\omega$ zawierający $\varnothing$
+i zamknięty na $S$, zawarty w każdym zbiorze indukcyjnym.
+Ponadto zachodzi zasada indukcji: jeśli $X\subseteq\omega$
+zawiera $\varnothing$ i jest zamknięty na $S$, to $X=\omega$.
+\end{twierdzenie}
+\begin{proof}
+Niech $I$ będzie zbiorem indukcyjnym danym aksjomatem
+nieskończoności. Zbiór wszystkich indukcyjnych podzbiorów
+$I$ istnieje przez separację w $\mathcal P(I)$:
+\[
+ \mathcal D=\{J\subseteq I:\varnothing\in J\land
+ \forall x\in J\ (S(x)\in J)\}.
+\]
+Rodzina $\mathcal D$ nie jest pusta, bo $I\in\mathcal D$.
+Przez Twierdzenie~\ref{thm:zf-intersections} istnieje
+$\omega:=\bigcap\mathcal D$. Ponieważ wszystkie elementy
+$\mathcal D$ zawierają $\varnothing$ i są zamknięte na $S$,
+również ich przecięcie ma obie własności. Jeżeli $J$ jest
+dowolnym zbiorem indukcyjnym, to $J\cap I\in\mathcal D$,
+a więc $\omega\subseteq J\cap I\subseteq J$.
+Wreszcie każdy indukcyjny podzbiór $X$ zbioru $\omega$
+jest również indukcyjnym zbiorem, więc z minimalności
+$\omega\subseteq X$. Ponieważ $X\subseteq\omega$, mamy równość.
+\end{proof}
+
+\begin{uwaga}[Liczby naturalne jako zbiory]
+Definiując $0:=\varnothing$, $1:=S(0)=\{0\}$,
+$2:=S(1)=\{0,1\}$ itd., otrzymujemy standardową
+konstrukcję von Neumanna. W tym sensie zwykła $\N$
+z poprzednich rozdziałów może być reprezentowana przez $\omega$.
+Nie jest to nowy aksjomat, lecz konstrukcja oparta na ZF.
+\end{uwaga}
+
+\section{Fundowanie i twierdzenie Cantora}
+\begin{definicja}[Aksjomat ufundowania (regularności)]
+\label{def:zf-foundation}
+Każdy niepusty zbiór $a$ ma element $b$, który nie ma
+żadnego wspólnego elementu z $a$:
+\[
+ \forall a\bigl(a\ne\varnothing\to
+ \exists b\in a\ (a\cap b=\varnothing)\bigr).
+\]
+Jest to aksjomat ufundowania. W szczególności wyklucza
+$x\in x$: w przeciwnym razie zbiór $\{x\}$
+nie miałby elementu rozłącznego z $\{x\}$.
+\end{definicja}
+
+\begin{twierdzenie}[Twierdzenie Cantora]\label{thm:zf-cantor}
+Dla każdego zbioru $A$ nie istnieje surjekcja
+$f:A\to\mathcal P(A)$. Jednocześnie istnieje iniekcja
+$\iota:A\to\mathcal P(A)$ zadana przez $\iota(a)=\{a\}$.
+\end{twierdzenie}
+\begin{proof}
+Przypuśćmy, że $f:A\to\mathcal P(A)$ jest surjekcją.
+Z separacji istnieje zbiór
+\[
+ D=\{a\in A:a\notin f(a)\}\subseteq A.
+\]
+Ponieważ $D\in\mathcal P(A)$, z surjektywności istnieje
+$d\in A$ z $f(d)=D$. Wtedy
+$ d\in D\iff d\notin f(d)=D$, sprzeczność.
+Dla iniekcji zauważmy, że jeśli $\{a\}=\{b\}$,
+to z definicji singletonu $a=b$. Aksjomat pary
+zapewnia istnienie singletonów. Zastępowanie zastosowane do
+jednoznacznej formuły $y=\{x\}$ gwarantuje istnienie
+zbioru $\{\{a\}:a\in A\}$, będącego obrazem tej iniekcji.
+Dowód obejmuje także $A=\varnothing$: surjekcja
+$\varnothing\to\mathcal P(\varnothing)=\{\varnothing\}$
+nie istnieje, zaś pusta funkcja jest iniekcją.
+\end{proof}
+
+
+\section{Liczby naturalne von Neumanna: konstrukcja i aksjomaty Peana}
+
+Samo istnienie zbioru $\omega$ z Twierdzenia~\ref{thm:zf-omega}
+nie daje jeszcze definicji arytmetycznych działań.
+Skonstruujemy je w ZF, używając indukcji i zastępowania,
+bez aksjomatu wyboru.
+
+\begin{definicja}[Liczby naturalne von Neumanna]
+\label{def:zf-vn-natural}
+Liczbami naturalnymi nazywamy elementy $\omega$.
+Przyjmujemy $0:=\varnothing$, $1:=S(0)$, $2:=S(1)$
+oraz $3:=S(2)$, gdzie $S(n):=n\cup\{n\}$. Stąd
+$0=\varnothing$, $1=\{0\}$, $2=\{0,1\}$ i $3=\{0,1,2\}$.
+\end{definicja}
+
+\begin{lemat}[Własności następnika]\label{lem:zf-vn-successor}
+Dla wszystkich $m,n\in\omega$:
+\begin{enumerate}[label=(\roman*)]
+\item zbiór $n$ jest przechodni, tj. $x\in y\in n$
+      implikuje $x\in n$; ponadto $n\subseteq\omega$ i $n\notin n$;
+\item $S(n)\ne0$, zaś $S(m)=S(n)$ implikuje $m=n$;
+\item każdy $n\in\omega$ jest zerem albo ma postać $S(k)$,
+      gdzie $k\in\omega$;
+\item zbiór $\omega$ jest przechodni.
+\end{enumerate}
+\end{lemat}
+\begin{proof}
+Przechodniość $n$ dowodzimy indukcją po $n$.
+Zbiór $0$ jest przechodni. Jeśli $n$ jest przechodni,
+a $x\in y\in S(n)$, to albo $y=n$,
+albo $y\in n$. W pierwszym przypadku $x\in n\subseteq S(n)$,
+a w drugim z przechodniości $n$ także $x\in n\subseteq S(n)$.
+Ufundowanie daje $n\notin n$: w przeciwnym razie
+jedyny element zbioru $\{n\}$ przecinałby $\{n\}$.
+
+Ponieważ $n\in S(n)$, zbiór $S(n)$ jest niepusty.
+Jeśli $S(m)=S(n)$ i $m\ne n$, to
+$m\in S(n)$ i $n\in S(m)$ prowadzą do
+$m\in n$ oraz $n\in m$.
+Żaden z elementów zbioru $\{m,n\}$ nie byłby
+z nim rozłączny, wbrew aksjomatowi ufundowania.
+
+Dla (iii) schemat zastępowania daje zbiór $S[\omega]$.
+Zbiór $J:=\{0\}\cup S[\omega]$ zawiera $0$
+i jest zamknięty na $S$: jeżeli $k\in J\subseteq\omega$,
+to $S(k)\in S[\omega]\subseteq J$.
+Z minimalności $\omega$ wynika $J=\omega$.
+
+Wreszcie przez indukcję wykażemy $n\subseteq\omega$
+dla wszystkich $n\in\omega$. Dla $n=0$ jest to jasne;
+jeśli $n\subseteq\omega$, to
+$S(n)=n\cup\{n\}\subseteq\omega$, ponieważ $n\in\omega$.
+Jest to również przechodniość całego $\omega$.
+\end{proof}
+
+\begin{wniosek}[Aksjomaty Peana dla $(\omega,0,S)$]
+\label{cor:zf-peano}
+W strukturze $(\omega,0,S)$ zachodzą:
+$0\in\omega$, $S[\omega]\subseteq\omega$,
+$0\notin S[\omega]$, $S$ jest iniekcją,
+a każdy podzbiór $X\subseteq\omega$ zawierający
+$0$ i zamknięty na $S$ jest równy $\omega$.
+\end{wniosek}
+\begin{proof}
+Pierwsze dwa warunki daje konstrukcja
+zbioru indukcyjnego. Dwa następne
+wynikają z Lematu~\ref{lem:zf-vn-successor}(ii),
+a ostatni z Twierdzenia~\ref{thm:zf-omega}.
+\end{proof}
+
+\begin{przyklad}[Pierwsze następniki]
+\label{ex:zf-vn-steps}
+Z definicji mamy $S(2)=2\cup\{2\}=\{0,1,2\}=3$.
+Zachodzi $2\in3$ i $2\subseteq3$,
+natomiast $3\notin3$ na mocy ufundowania.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+$\displaystyle
+0=\varnothing\ \xrightarrow{\ S\ }\ 
+1=\{0\}\ \xrightarrow{\ S\ }\ 
+2=\{0,1\}\ \xrightarrow{\ S\ }\ 
+3=\{0,1,2\}.
+$
+\caption{Pierwsze liczby naturalne von Neumanna i operacja następnika.}
+\label{fig:zf-vn-successor}
+\end{figure}
+
+\section{Twierdzenie o rekursji na $\omega$ w ZF}
+
+\begin{twierdzenie}[Rekursja na liczbach naturalnych]
+\label{thm:zf-omega-recursion}
+Niech $B$ będzie niepustym zbiorem,
+$b\in B$ oraz $G:\omega\times B\to B$ funkcją.
+Istnieje dokładnie jedna funkcja $F:\omega\to B$
+taka, że dla każdego $n\in\omega$
+\[
+F(0)=b,\qquad F(S(n))=G(n,F(n)).
+\]
+Twierdzenie jest dowodliwe w ZF, bez AC.
+\end{twierdzenie}
+\begin{proof}
+Dla $n\in\omega$ nazwijmy \emph{$n$-przybliżeniem}
+funkcję $f:S(n)\to B$ spełniającą $f(0)=b$
+oraz, dla każdego $k\in S(n)$, warunek
+$S(k)\in S(n)\Longrightarrow
+f(S(k))=G(k,f(k))$.
+Ponieważ $S(n)\times B$ jest zbiorem,
+wszystkie takie funkcje tworzą zbiór
+przez separację w $\mathcal P(S(n)\times B)$.
+
+Indukcyjnie po $n$ dowodzimy, że istnieje dokładnie
+jedno $n$-przybliżenie $f_n$.
+Dla $n=0$ jest nim $\{(0,b)\}$.
+Jeśli istnieje dokładnie jedno $f_n$, dołączamy
+parę $(S(n),G(n,f_n(n)))$.
+Nowy argument nie należał do $S(n)$,
+gdyż $S(n)\notin S(n)$,
+a $S(S(n))=S(n)\cup\{S(n)\}$.
+Powstaje $(S(n))$-przybliżenie $f_{S(n)}$.
+Dowolne inne przybliżenie na $S(S(n))$
+po ograniczeniu do $S(n)$ musi równać się $f_n$;
+jego jedyna nowa wartość jest wyznaczona równaniem
+rekurencyjnym, więc również jest jedyna.
+
+Jednoznacznie określona wartość $f_n(n)$
+jest definiowalna formułą teorii mnogości
+z parametrami $B,b,G$. Schemat zastępowania
+daje zbiór par
+$F:=\{(n,f_n(n)):n\in\omega\}$.
+To funkcja $\omega\to B$, przy czym
+$F(0)=b$ oraz
+$F(S(n))=f_{S(n)}(S(n))=G(n,f_n(n))=G(n,F(n))$.
+Jeżeli $F,H$ spełniają oba równania,
+to zbiór $\{n\in\omega:F(n)=H(n)\}$
+istnieje przez separację, zawiera $0$
+i jest zamknięty na $S$. Indukcja w $\omega$
+daje $F=H$.
+\end{proof}
+
+\begin{uwaga}[Rekursja nie wymaga wyboru]
+\label{rem:zf-recursion-not-choice}
+Każda wartość przybliżenia jest jednoznacznie
+wyznaczona, a schemat zastępowania tworzy
+jeden zbiór wszystkich par. Nie wybieramy
+dowolnie elementów z rodziny niepustych zbiorów.
+\end{uwaga}
+
+\section{Dodawanie: definicja i wyprowadzenie praw}
+
+\begin{definicja}[Dodawanie w $\omega$]\label{def:zf-addition}
+Dla każdego $a\in\omega$ zastosujmy
+Twierdzenie~\ref{thm:zf-omega-recursion}
+z $B=\omega$, wartością początkową $a$
+i funkcją $G(n,z)=S(z)$.
+Definiujemy $a+n$ przez
+\begin{equation}\label{eq:zf-add}
+a+0=a,\qquad a+S(n)=S(a+n).
+\end{equation}
+Schemat zastępowania zapewnia,
+że wykres funkcji $+:\omega\times\omega\to\omega$
+jest zbiorem.
+\end{definicja}
+
+\begin{lemat}[Zero i następnik w dodawaniu]
+\label{lem:zf-add-basic}
+Dla wszystkich $a,n\in\omega$:
+$0+n=n$ oraz $S(a)+n=S(a+n)$.
+\end{lemat}
+\begin{proof}
+Pierwszą tożsamość dowodzimy indukcją po $n$.
+Dla $n=0$ jest jasna; z $0+n=n$
+wynika $0+S(n)=S(0+n)=S(n)$.
+Druga tożsamość dla $n=0$ ma postać
+$S(a)=S(a+0)$.
+Jeśli $S(a)+n=S(a+n)$, to
+\[
+S(a)+S(n)=S(S(a)+n)=S(S(a+n))=S(a+S(n)).
+\]
+Każde przejście wynika z definicji dodawania
+albo z hipotezy indukcyjnej.
+\end{proof}
+
+\begin{twierdzenie}[Łączność i przemienność dodawania]
+\label{thm:zf-add-assoc-comm}
+Dla wszystkich $a,b,c\in\omega$:
+$(a+b)+c=a+(b+c)$ oraz $a+b=b+a$.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $a,b$ i indukujmy po $c$.
+Dla $c=0$ obie strony pierwszej równości
+to $a+b$. W kroku indukcyjnym:
+\[
+(a+b)+S(c)=S((a+b)+c)=S(a+(b+c))
+=a+S(b+c)=a+(b+S(c)).
+\]
+Przemienność dowodzimy indukcją po $b$ przy
+ustalonym $a$. Dla $b=0$ korzystamy z
+$a+0=a=0+a$. Jeśli $a+b=b+a$, to
+\[
+a+S(b)=S(a+b)=S(b+a)=S(b)+a,
+\]
+gdzie ostatnia równość pochodzi
+z Lematu~\ref{lem:zf-add-basic}.
+\end{proof}
+
+\begin{lemat}[Suma zerowa i skracanie]
+\label{lem:zf-add-cancel}
+Dla $a,b,c\in\omega$:
+\begin{enumerate}[label=(\roman*)]
+\item $a+b=0$ wtedy i tylko wtedy, gdy $a=b=0$;
+\item $a+c=b+c$ implikuje $a=b$.
+\end{enumerate}
+\end{lemat}
+\begin{proof}
+Jeśli $b\ne0$, to z Lematu~\ref{lem:zf-vn-successor}(iii)
+mamy $b=S(k)$, a wtedy
+$a+b=S(a+k)\ne0$. Gdy $b=0$,
+równość $a+b=0$ oznacza $a=0$.
+Kierunek odwrotny jest oczywisty.
+Dla skracania indukujemy po $c$.
+Przy $c=0$ teza jest bezpośrednia.
+Jeśli $a+S(c)=b+S(c)$, to
+$S(a+c)=S(b+c)$, więc
+iniekcyjność $S$ daje $a+c=b+c$,
+a hipoteza indukcyjna --- $a=b$.
+\end{proof}
+
+\section{Mnożenie, rozdzielność i potęgowanie}
+
+\begin{definicja}[Mnożenie w $\omega$]\label{def:zf-multiplication}
+Dla każdego $a\in\omega$ z
+Twierdzenia~\ref{thm:zf-omega-recursion},
+przy $B=\omega$, $b=0$ i $G(n,z)=z+a$,
+otrzymujemy jednoznaczną funkcję spełniającą
+\begin{equation}\label{eq:zf-mult}
+a\cdot0=0,\qquad a\cdot S(n)=a\cdot n+a.
+\end{equation}
+Jej dwuzmienny wykres istnieje przez zastępowanie.
+\end{definicja}
+
+\begin{lemat}[Zero i jedynka w mnożeniu]
+\label{lem:zf-mult-basic}
+Dla każdego $a\in\omega$ mamy
+$a\cdot0=0$, $0\cdot a=0$,
+$a\cdot1=a$ i $1\cdot a=a$.
+\end{lemat}
+\begin{proof}
+Pierwsza równość jest definicją,
+drugą uzyskujemy przez indukcję po $a$:
+$0\cdot S(a)=0\cdot a+0=0$.
+Dalej
+$a\cdot1=a\cdot S(0)=0+a=a$.
+Dla ostatniej równości indukujemy po $a$:
+$1\cdot0=0$, a z $1\cdot a=a$ dostajemy
+$1\cdot S(a)=1\cdot a+1=a+S(0)=S(a)$.
+\end{proof}
+
+\begin{twierdzenie}[Rozdzielność mnożenia względem dodawania]
+\label{thm:zf-distributivity}
+Dla wszystkich $a,b,c\in\omega$:
+$a(b+c)=ab+ac$ i $(a+b)c=ac+bc$.
+\end{twierdzenie}
+\begin{proof}
+W obu przypadkach indukujemy po $c$.
+Dla $c=0$ stosujemy równości zerowe.
+Jeśli $a(b+c)=ab+ac$, to
+\[
+a(b+S(c))=aS(b+c)=a(b+c)+a
+=(ab+ac)+a=ab+(ac+a)=ab+aS(c).
+\]
+Druga tożsamość w kroku indukcyjnym
+wynika z równości
+\[
+(a+b)S(c)=(a+b)c+(a+b)
+=(ac+bc)+(a+b)=(ac+a)+(bc+b)=aS(c)+bS(c).
+\]
+W przestawianiu składników używamy
+Twierdzenia~\ref{thm:zf-add-assoc-comm}.
+\end{proof}
+
+\begin{twierdzenie}[Przemienność i łączność mnożenia]
+\label{thm:zf-mult-assoc-comm}
+Dla wszystkich $a,b,c\in\omega$:
+$ab=ba$ oraz $(ab)c=a(bc)$.
+\end{twierdzenie}
+\begin{proof}
+Dla przemienności ustalmy $a$ i indukujmy po $b$.
+Baza to $a0=0=0a$. W kroku:
+\[
+aS(b)=ab+a=ba+1a=(b+1)a=S(b)a,
+\]
+przy czym korzystamy z rozdzielności
+i Lematu~\ref{lem:zf-mult-basic}.
+Dla łączności ustalmy $a,b$
+i indukujmy po $c$. Baza jest zerowa,
+a krok ma postać
+\[
+(ab)S(c)=(ab)c+ab=a(bc)+ab
+=a(bc+b)=a(bS(c)).
+\]
+Użyliśmy wyłącznie już wykazanej rozdzielności.
+\end{proof}
+
+\begin{definicja}[Potęgowanie]
+\label{def:zf-exponentiation}
+Dla $a\in\omega$ rekurencja z
+Twierdzenia~\ref{thm:zf-omega-recursion},
+przy $B=\omega$, $b=1$ i $G(n,z)=z\cdot a$,
+wyznacza $a^n$ przez
+$a^0=1$ i $a^{S(n)}=a^n\cdot a$.
+W szczególności $0^0=1$ jest konwencją
+tej konstrukcji.
+\end{definicja}
+
+\begin{twierdzenie}[Prawo wykładników]
+\label{thm:zf-exponent-add}
+Dla każdego $a,m,n\in\omega$
+zachodzi $a^{m+n}=a^m\cdot a^n$.
+\end{twierdzenie}
+\begin{proof}
+Indukujemy po $n$. Dla $n=0$
+obie strony wynoszą $a^m$,
+gdyż $a^0=1$.
+Z hipotezy indukcyjnej:
+\[
+a^{m+S(n)}=a^{S(m+n)}=a^{m+n}\cdot a
+=(a^m a^n)a=a^m(a^n a)=a^m a^{S(n)}.
+\]
+Łączność mnożenia pochodzi z
+Twierdzenia~\ref{thm:zf-mult-assoc-comm}.
+\end{proof}
+
+\begin{przyklad}[Obliczanie z definicji]
+\label{ex:zf-arithmetic}
+Mamy $2+1=2+S(0)=S(2)=3$,
+a $2\cdot2=2\cdot S(1)=2\cdot1+2=2+2=4$.
+Kolejno $2^0=1$, $2^1=2$, $2^2=4$, $2^3=8$.
+Ostatnie symbole oznaczają odpowiednie
+iteracje następnika, nie nowe obiekty pierwotne.
+\end{przyklad}
+
+\section{Porządek naturalny, minimum i indukcja silna}
+
+\begin{definicja}[Porządek arytmetyczny]
+\label{def:zf-natural-order}
+Dla $m,n\in\omega$ definiujemy
+$m\le n$ wtedy i tylko wtedy, gdy
+istnieje $k\in\omega$ z $m+k=n$.
+Piszemy $m<n$, gdy $m\le n$ i $m\ne n$.
+Relacji tej nie utożsamiamy z $\in$
+bez osobnego dowodu.
+\end{definicja}
+
+\begin{lemat}[Odcinki początkowe $\omega$]
+\label{lem:zf-initial-segments}
+Dla każdego $n\in\omega$ zachodzi
+$\{m\in\omega:m\le n\}=S(n)=n\cup\{n\}$.
+W szczególności $m<n$ wtedy i tylko wtedy,
+gdy $m\in n$.
+\end{lemat}
+\begin{proof}
+Indukujemy po $n$. Przy $n=0$ równość
+$m+k=0$ wymusza $m=k=0$
+(Lemat~\ref{lem:zf-add-cancel}),
+zatem jedynym $m\le0$ jest $0$.
+Jeśli teza zachodzi dla $n$,
+a $m+k=S(n)$, to przy $k=0$
+mamy $m=S(n)$. Przy $k\ne0$
+zapisujemy $k=S(t)$, zatem
+$S(m+t)=S(n)$. Iniekcyjność
+następnika daje $m+t=n$,
+czyli $m\le n$ i na mocy
+hipotezy indukcyjnej $m\in S(n)$.
+W obu sytuacjach $m\in S(S(n))$.
+Odwrotnie, jeśli $m\in S(S(n))$,
+to albo $m=S(n)$, i wtedy
+$m+0=S(n)$, albo $m\in S(n)$.
+W drugim przypadku istnieje $t$
+z $m+t=n$, więc $m+S(t)=S(n)$.
+To daje $m\le S(n)$.
+Ostatnią równoważność otrzymujemy,
+usuwając z $S(n)$ jego element $n$.
+\end{proof}
+
+\begin{twierdzenie}[Dobry porządek $\omega$]
+\label{thm:zf-wellordered-omega}
+Relacja $\le$ z Definicji~\ref{def:zf-natural-order}
+jest dobrym porządkiem $\omega$:
+każdy niepusty podzbiór $\omega$
+ma element najmniejszy.
+\end{twierdzenie}
+\begin{proof}
+Zwrotność wynika z $m+0=m$,
+a przechodniość z łączności dodawania.
+Jeśli $m+k=n$ i $n+t=m$,
+to $m+(k+t)=m+0$, zatem
+z prawa skracania $k+t=0$.
+Stąd $k=t=0$ i $m=n$:
+porządek jest antysymetryczny.
+
+Liniowość dowodzimy indukcją po $n$
+dla własności $\forall m\in\omega\,
+(m\le n\lor n\le m)$.
+Przy $n=0$ mamy $0+m=m$.
+Jeżeli $m\le n$, to
+$m+k=n$ daje $m+S(k)=S(n)$,
+zatem $m\le S(n)$. Jeśli $n\le m$,
+mamy $m=n+k$. Przy $k=0$
+otrzymujemy $m=n\le S(n)$,
+a przy $k=S(t)$:
+$m=n+S(t)=S(n)+t$, więc $S(n)\le m$.
+
+Niech $A\subseteq\omega$ będzie niepusty.
+Z aksjomatu ufundowania wybieramy $m\in A$
+z $m\cap A=\varnothing$. Dla każdego $n\in A$
+liniowość daje $m\le n$ lub $n\le m$.
+Druga możliwość z $n\ne m$
+oznacza $n\in m$ na mocy
+Lematu~\ref{lem:zf-initial-segments},
+sprzecznie z $m\cap A=\varnothing$.
+Wobec tego $m\le n$ dla wszystkich $n\in A$.
+\end{proof}
+
+\begin{wniosek}[Indukcja silna]\label{cor:zf-strong-induction}
+Niech $P(n)$ będzie dowolną formułą ZF
+z parametrami i wyróżnioną zmienną $n$.
+Jeżeli dla każdego $n\in\omega$
+z założenia $\forall k\in n\,P(k)$
+wynika $P(n)$, to $P(n)$ zachodzi
+dla wszystkich $n\in\omega$.
+\end{wniosek}
+\begin{proof}
+Gdyby zbiór $C:=\{n\in\omega:\neg P(n)\}$
+był niepusty, miałby najmniejszy element $n_0$.
+Wtedy $P(k)$ dla każdego $k\in n_0$,
+co na mocy założenia daje $P(n_0)$,
+wbrew $n_0\in C$.
+Zbiór $C$ istnieje przez separację.
+\end{proof}
+
+\begin{przyklad}[Brak największej liczby naturalnej]
+\label{ex:zf-no-largest}
+Każde $n\in\omega$ ma następnik
+$S(n)\in\omega$, a
+$n\in S(n)$ oznacza na mocy
+Lematu~\ref{lem:zf-initial-segments},
+że $n<S(n)$. Zatem żadne $n$
+nie jest największym elementem $\omega$.
+\end{przyklad}
+
+\begin{lemat}[Zgodność porządku z działaniami]
+\label{lem:zf-natural-monotone}
+Dla $a,b,c\in\omega$:
+\begin{enumerate}[label=(\roman*)]
+\item $a<b$ implikuje $a+c<b+c$;
+\item $a<b$ i $c\ne0$ implikują $ac<bc$;
+\item $ab=0$ implikuje $a=0$ lub $b=0$;
+\item $c\ne0$ i $ac=bc$ implikują $a=b$.
+\end{enumerate}
+\end{lemat}
+\begin{proof}
+Jeśli $a<b$, to $b=a+d$ dla pewnego $d\ne0$.
+Stąd $b+c=(a+c)+d$, a prawo skracania
+wyklucza $b+c=a+c$, co daje (i).
+Dla (iii), jeśli $a,b\ne0$,
+to $b=S(t)$ i $a=S(k)$,
+więc $ab=at+a=at+S(k)=S(at+k)\ne0$.
+Dla (ii) z $b=a+d$ mamy
+$bc=ac+dc$, gdzie $d\ne0$.
+Z (iii) i $c\ne0$ wynika $dc\ne0$,
+zatem $ac<bc$.
+Dla (iv) liniowość porządku
+daje $a=b$, $a<b$ albo $b<a$.
+Dwa ostatnie przypadki przeczą (ii)
+i równości $ac=bc$.
+\end{proof}
+
+\begin{twierdzenie}[Dzielenie z resztą]
+\label{thm:zf-division}
+Dla wszystkich $a\in\omega$ i
+$b\in\omega\setminus\{0\}$
+istnieje dokładnie jedna para
+$(q,r)\in\omega\times\omega$
+taka, że $a=bq+r$ oraz $r<b$.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $b\ne0$ i zastosujmy indukcję silną
+po $a$. Jeśli $a<b$, kładziemy
+$q=0$ i $r=a$. Wtedy $a=b\cdot0+a$.
+Jeśli $b\le a$, istnieje $t\in\omega$
+z $a=b+t$. Ponieważ $b\ne0$,
+mamy $t<t+b=a$.
+Hipoteza indukcyjna daje
+$t=bq+r$, gdzie $r<b$,
+a wtedy
+$a=b+(bq+r)=bS(q)+r$.
+Istnienie zostało udowodnione.
+
+Dla jednoznaczności niech
+$bq+r=bq'+r'$ i $r,r'<b$.
+Jeśli $q=q'$, skracanie dodawania
+daje $r=r'$. Przy $q<q'$
+możemy zapisać $q'=q+d$
+dla $d\ne0$; wtedy $d=S(k)$ i
+\[
+bq'=bq+bd=bq+(bk+b)\ge bq+b.
+\]
+Ponieważ $r'<b$ implikuje $0\le r'$,
+otrzymujemy
+$bq+b\le bq'+r'=a$.
+Z drugiej strony $r<b$ i
+Lemat~\ref{lem:zf-natural-monotone}(i)
+dają $a=bq+r<bq+b$, sprzeczność.
+Przypadek $q'<q$ jest symetryczny.
+\end{proof}
+
+\begin{przyklad}[Dzielenie $17$ przez $5$]
+\label{ex:zf-division}
+Dla liczb von Neumanna $17$ i $5$
+mamy $17=5\cdot3+2$ i $2<5$,
+ponieważ $2+3=5$.
+Twierdzenie~\ref{thm:zf-division}
+gwarantuje jednoznaczność $(q,r)=(3,2)$.
+\end{przyklad}
+
+\begin{uwaga}[Zakres konstrukcji arytmetyki]
+\label{rem:zf-arithmetic-scope}
+Dodawanie, mnożenie, potęgowanie
+i porządek na $\omega$ zostały skonstruowane
+za pomocą aksjomatów ZF, a ich wykresy
+są zbiorami. Ani aksjomaty Peana dla
+$(\omega,0,S)$, ani twierdzenie o rekursji
+nie wymagają aksjomatu wyboru.
+Ogólniejszą rekursję pozaskończoną
+omówimy przy liczbach porządkowych.
+\end{uwaga}
+
+\begin{uwaga}[Czego jeszcze nie przyjęliśmy?]
+Żaden z dotychczas wymienionych aksjomatów nie orzeka,
+że dla \emph{dowolnej} rodziny niepustych zbiorów można
+jednocześnie wybrać po jednym elemencie z każdego z nich.
+To będzie osobny aksjomat. Rozdział~\ref{ch:axiom-choice}
+wykaże jego równoważność z twierdzeniem o dobrym uporządkowaniu
+i z lematem Kuratowskiego--Zorna. Zaznaczmy też, że
+mówimy tu o \emph{ZF} (z aksjomatem ufundowania), a nie
+o teorii z klasami właściwymi jako osobnymi obiektami.
+\end{uwaga}
