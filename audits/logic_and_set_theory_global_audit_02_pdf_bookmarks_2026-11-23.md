@@ -44,3 +44,20 @@ Przejrzano nagłówki `\\chapter`, `\\section`, `\\subsection`, `\\subsubsection
 ## 4. Werdykt etapowy
 
 Naprawa zduplikowanych kotwic stron została potwierdzona pełnym CI. Naprawa zakładek zawiera sześć minimalnych korekt w trzech rozdziałach i oczekuje na weryfikację kompilacją oraz odczytem logu. Zmiany są wyłącznie redakcyjno-techniczne; twierdzenia, dowody i etykiety pozostają nienaruszone. Sukces CI i PDF nie stanowi formalizacji Lean.
+
+## 5. Walidacja po naprawie nagłówków — rzeczywisty sukces
+
+Pobrano i odczytano log CI [45083552034 — SUCCESS](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45083552034) z jobu `137396930795`, uruchomionego na ostatniej z trzech poprawek nagłówków, commit `d1d01db3ba9b777c0ed2b2b2f2311aa9c01efd20`.
+
+**Rzeczywiste pomiary po korektach** (cały tekst logu, obejmujący kolejne przebiegi pdflatex):
+
+- 0 × `destination with the same identifier` (duplikaty kotwic);
+- 0 × `Token not allowed in a PDF string` (niepoprawne tokeny zakładek; wcześniej 45);
+- 0 × `Overfull \\hbox`;
+- 0 × `Missing character`;
+- 0 × `LaTeX Error:`;
+- 3 × `Underfull \\hbox` w trzech przebiegach kompilatora dla tego samego akapitu, bez przerwania budowania.
+
+Ostateczny PDF ma **337 stron A4**, a kroki kompilacji, kontroli logu i archiwizacji artefaktu zakończyły się sukcesem. Źródła matematyczne poza sześcioma nagłówkami pozostają niezmienione.
+
+Dodatkowo commit `53ef10c651ec5c54d7944916e5a221d51edefbf6` rozszerzył `.github/workflows/logic-and-set-theory-chapter.yml` o twarde asercje na **brak obu rodzajów ostrzeżeń**. Dla tego commitu uruchomiono osobną walidację [45083709897](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45083709897); jej wynik trzeba zatwierdzić osobno. Za udowodniony należy uważać zanik ostrzeżeń w CI 45083552034, nie automatycznie sukces nowej asercji przed zakończeniem jej przebiegu.
