@@ -120,7 +120,9 @@ def _valid_indexed_binding(binding: tuple, content: str, label: str) -> bool:
     if (not isinstance(kind, str) or not kind or not isinstance(title, str)
             or not all(type(n) is int for n in (first, last, start, end, offset))
             or not (1 <= first <= last)
-            or not (0 <= start <= offset < end <= len(content))):
+            or not (0 <= start <= offset < end <= len(content))
+            or first != 1 + content.count("\n", 0, start + 1)
+            or last != 1 + content.count("\n", 0, end)):
         return False
     # A stable but corrupted index can point at an arbitrary position inside
     # the same entity. Require that it actually starts the registered label.
