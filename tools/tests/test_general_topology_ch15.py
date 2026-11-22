@@ -117,6 +117,9 @@ def test_sources() -> tuple[int, int]:
         "cor:topog-parazwartosc-klasy",
         "ex:topog-parazwartosc-prosta",
         "thm:topog-parazwartosc-stone",
+        "def:topog-parazwartosc-sigma-lokalnie-skonczona-baza",
+        "thm:topog-parazwartosc-nagata-smirnow",
+        "rem:topog-parazwartosc-nagata-urysohn",
     ):
         assert rf"\label{{{needle}}}" in text, needle
     assert r"\prod_{j=1}^{n-1}(1-f_j)" in text
@@ -125,6 +128,17 @@ def test_sources() -> tuple[int, int]:
     assert r"V_{\alpha,n}" in text
     assert r"2r_M<\rho" in text
     assert r"d(y,z)\ge3r_i" in text
+    for formula in (
+        r"\\mathcal B=\\bigcup_{n\\ge1}\\mathcal B_n",
+        r"\\overline{P_n}^{\\,X}",
+        r"F_n(G)=",
+        r"f_{n,B}=2^{-n}g_B",
+        r"F:X\\to\\ell^\\infty(J)",
+        r"\\|F(y)-F(x)\\|_\\infty",
+        r"\\label{thm:topog-parazwartosc-nagata-smirnow}",
+    ):
+        assert formula in text, formula
+
     for env in ("twierdzenie", "lemat", "stwierdzenie", "wniosek",
                 "definicja", "przyklad", "uwaga", "proof", "enumerate"):
         assert text.count(r"\begin{" + env + "}") == text.count(
