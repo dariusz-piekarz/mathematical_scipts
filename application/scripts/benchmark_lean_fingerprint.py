@@ -114,6 +114,22 @@ def _profile_olean_substeps(original, *args, **kwargs) -> tuple[str, dict]:
     raw_walk = os.walk
     raw_fstat = os.fstat
     raw_stat, raw_lstat, raw_open = Path.stat, Path.lstat, Path.open
+    metadata_depth = 0
+
+    def timed_metadata(original, counter_key, *call_args, **call_kwargs):
+        # In CPython 3.13 Path.lstat delegates to Path.stat. Count both API
+        # calls, but charge wall-clock time only to the outermost operation.
+        nonlocal metadata_depth
+        started = time.perf_counter()
+        metadata_depth += 1
+        try:
+            return original(*call_args, **call_kwargs)
+        finally:
+            elapsed = time.perf_counter() - started
+            metadata_depth -= 1
+            if metadata_depth == 0:
+                timings["metadata"] += elapsed
+            counters[counter_key] += 1
 
     def observed_walk(*walk_args, **walk_kwargs):
         source = raw_walk(*walk_args, **walk_kwargs)
@@ -136,28 +152,13 @@ def _profile_olean_substeps(original, *args, **kwargs) -> tuple[str, dict]:
         return advance()
 
     def observed_stat(path, *stat_args, **stat_kwargs):
-        started = time.perf_counter()
-        try:
-            return raw_stat(path, *stat_args, **stat_kwargs)
-        finally:
-            timings["metadata"] += time.perf_counter() - started
-            counters["stat_calls"] += 1
+        return timed_metadata(raw_stat, "stat_calls", path, *stat_args, **stat_kwargs)
 
     def observed_lstat(path, *stat_args, **stat_kwargs):
-        started = time.perf_counter()
-        try:
-            return raw_lstat(path, *stat_args, **stat_kwargs)
-        finally:
-            timings["metadata"] += time.perf_counter() - started
-            counters["lstat_calls"] += 1
+        return timed_metadata(raw_lstat, "lstat_calls", path, *stat_args, **stat_kwargs)
 
     def observed_fstat(*stat_args, **stat_kwargs):
-        started = time.perf_counter()
-        try:
-            return raw_fstat(*stat_args, **stat_kwargs)
-        finally:
-            timings["metadata"] += time.perf_counter() - started
-            counters["fstat_calls"] += 1
+        return timed_metadata(raw_fstat, "fstat_calls", *stat_args, **stat_kwargs)
 
     def observed_open(path, *open_args, **open_kwargs):
         mode = open_args[0] if open_args else open_kwargs.get("mode", "r")
