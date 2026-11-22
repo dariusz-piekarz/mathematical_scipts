@@ -14,7 +14,7 @@
 | LA20 — dzielniki elementarne | `8d585c7f4c208990ad5f82222cc47f586144c138` | 727 | **7/7** | 22 | 23 | 6 | 0 |
 | **Razem** | | **2898** | **27/27** | **84** | **58** | **18** | **0** |
 
-[Indywidualny rejestr 27 sprawdzonych twierdzeń](iteration_23_proof_review_17_20.csv) zawiera dla każdej pozycji: poprawnie odczytany tytuł ze źródła, etykietę, wersję blob SHA, zakres wierszy tezy i dowodu, spersonalizowaną kontrolę matematyczną i informację o braku sprawdzenia formalnego w Lean. Przy migracji z wcześniejszego rejestru naprawiono odczyt tytułu LA20 o `K[t]`, gdyż w pliku bazowym występuje niezacytowany przecinek/znak nawiasu, przez który jego pole tytułu było ucięte. Nowy rejestr zawiera poprawnie cytowane pola CSV.
+[Indywidualny rejestr 27 sprawdzonych twierdzeń](iteration_23_proof_review_17_20.csv) zawiera dla każdej pozycji: poprawnie odczytany tytuł ze źródła, etykietę, wersję blob SHA, zakres wierszy tezy i dowodu, spersonalizowaną kontrolę matematyczną i informację o braku sprawdzenia formalnego w Lean. W starszym rejestrze zbiorczym tytuł pierwszego twierdzenia LA20 dotyczącego `K[t]` był ucięty przez sposób parsowania tekstu źródłowego. W nowym rejestrze tytuły pobrano bezpośrednio z pełnych nagłówków twierdzeń i poprawnie zapisano pola CSV.
 
 ## 2. LA17 — konstrukcja i jednoznaczność postaci Jordana
 
