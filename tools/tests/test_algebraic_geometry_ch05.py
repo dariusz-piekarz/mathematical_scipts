@@ -115,8 +115,8 @@ class ALG05Regressions(unittest.TestCase):
         self.assertEqual(9 + 1, 10)
         self.assertNotEqual(9 + 1, 3 + 1)
         src = SOURCE.read_text(encoding="utf-8")
-        self.assertIn(r"\\PP^{c-1}_{\\kappa(z)}", src)
-        self.assertIn(r"\\widetilde X\\times_X\\Spec\\kappa(z)", src)
+        self.assertIn(r"\PP^{c-1}_{\kappa(z)}", src)
+        self.assertIn(r"\widetilde X\times_X\Spec\kappa(z)", src)
 
     def test_projective_chart_transition(self):
         for p in (3, 5, 7, 11):
