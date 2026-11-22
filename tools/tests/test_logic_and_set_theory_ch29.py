@@ -97,6 +97,8 @@ class TestChapter29(unittest.TestCase):
                                 if a&b in I)
             U=set(all_subsets)-I
             ultra=(S in U and frozenset() not in U
+                   and all(a&b in U for a in U for b in U)
+                   and all(b in U for a in U for b in all_subsets if a<=b)
                    and all((a in U) != ((S-a) in U) for a in all_subsets))
             self.assertEqual(prime,ultra)
         self.assertIn("Ideałem właściwym",TEXT)
