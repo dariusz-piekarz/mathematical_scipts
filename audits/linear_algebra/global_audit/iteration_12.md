@@ -34,8 +34,8 @@
 
 1. **Konstrukcja i własność uniwersalna:** `V⊗W=K^{(V×W)}/N`, gdzie `N` narzuca cztery relacje dwuliniowości. Dobre określenie faktoryzacji przez `N` jest jawnie uzasadnione; jednoznaczność realizacji wynika z dwóch wzajemnie odwrotnych odwzorowań indukowanych przez własność uniwersalną.
 2. **Baza i rząd tensora:** rodzina `v_i⊗w_j` jest liniowo niezależna dzięki funkcjonałom `v^p⊗w^q`; minimalna liczba tensorów prostych równa się rzędowi macierzy współczynników. Wymiar `0` jest objęty twierdzeniami.
-3. **Odzworowania i Kronecker:** macierz `S⊗T` w leksykograficznych bazach jest `A⊗B`. Rząd wynosi `rk A × rk B`, również dla macierzy prostokątnych i zerowych wymiarów.
-4. **Naturalne izomorfizmy:** zamiana i łączność czynników oraz rozdzielanie sumy prostej są przeprowadzone przez universal property, a nie przez nieuprawnione utożsamianie różnych przestrzeni. Równości weryfikuje się najpierw na tensorach prostych.
+3. **Odwzorowania i Kronecker:** macierz `S⊗T` w leksykograficznych bazach jest `A⊗B`. Rząd wynosi `rk A × rk B`, również dla macierzy prostokątnych i zerowych wymiarów.
+4. **Naturalne izomorfizmy:** zamiana i łączność czynników oraz rozdzielanie sumy prostej są przeprowadzone przez własność uniwersalną, a nie przez nieuprawnione utożsamianie różnych przestrzeni. Równości weryfikuje się najpierw na tensorach prostych.
 5. **`W⊗V^*→Hom(V,W)`:** tensor skończony daje skończony rząd; każdy operator o skończonym rzędzie ma rozkład na proste składniki; iniektywność wynika z niezależności wybranych `w_i`. Surjektywność do wszystkich operatorów jest poprawnie ograniczona do skończenie wymiarowego `V`.
 6. **Dokładność i ślad:** dla `U⊂V` rozkład algebraiczny `V=U⊕H` daje dokładny ciąg `0→U⊗W→V⊗W→(V/U)⊗W→0`, bez założenia na wymiary. Kanoniczna kontrakcja `V⊗V^*→K` przechodzi na `tr T` przez `Θ^{-1}(T)` tylko przy skończonym wymiarze `V`.
 
@@ -54,7 +54,7 @@ W bieżącej iteracji utworzono i wykonano **`/mnt/data/la_global12_tests.py`** 
 | Blok testów | Liczba PASS |
 |---|---:|
 | Rząd odwzorowania dualnego i anihilator | 1125 |
-| Aihilator przecięcia — tożsamości wymiarów | 900 |
+| Anihilator przecięcia — tożsamości wymiarów | 900 |
 | Kongruencja form i jednorodność formy kwadratowej | 6000 |
 | Kryterium Sylvestera, dokładne dodatnie macierze | 500 |
 | Rząd macierzy Kroneckera | 3840 |
