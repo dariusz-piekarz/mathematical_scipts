@@ -178,8 +178,7 @@ class ALG07Regressions(unittest.TestCase):
         src = SOURCE.read_text(encoding="utf-8")
         self.assertEqual(src.count(r"\begin{tikzpicture}"), 2)
         self.assertEqual(src.count(r"\end{tikzpicture}"), 2)
-        self.assertEqual(src.count(r"\begin{proof}"), 11)
-        # Three proof environments use an optional title.
+        # Proofs with and without optional titles all use the same begin tag.
         self.assertEqual(len(re.findall(r"\\begin\{proof\}", src)), 14)
         self.assertEqual(src.count(r"\end{proof}"), 14)
         stack = []
