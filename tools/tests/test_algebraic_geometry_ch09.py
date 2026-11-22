@@ -116,6 +116,19 @@ class ALG09Regressions(unittest.TestCase):
         self.assertEqual(len(labels), len(set(labels)))
         self.assertGreaterEqual(len(labels), 25)
 
+    def test_self_contained_weierstrass_and_projective_statements(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        weierstrass = src.split(r"\label{tw:ga9-weierstrass}", 1)[1].split(
+            r"\end{twierdzenie}", 1)[0]
+        self.assertIn(r"$n\ge1$ będzie liczbą całkowitą", weierstrass)
+        cech = src.split(r"\label{st:ga9-p1-coh}", 1)[1].split(
+            r"\end{stwierdzenie}", 1)[0]
+        self.assertIn(r"Niech $n\in\Z$", cech)
+        self.assertIn(r"\mathcal O_{\PP^1_\C}(n)", cech)
+        fs = src.split(r"\label{tw:ga9-fs}", 1)[1].split(
+            r"\end{twierdzenie}", 1)[0]
+        self.assertIn(r"$n\ge1$ będzie liczbą całkowitą", fs)
+
     def test_tikz_and_environment_balance(self):
         src = SOURCE.read_text(encoding="utf-8")
         self.assertEqual(src.count(r"\begin{tikzpicture}"), 2)
