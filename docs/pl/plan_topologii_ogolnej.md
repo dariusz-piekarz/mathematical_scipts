@@ -19,7 +19,7 @@ Stan: 22 listopada 2026. Źródłem prawdy dla rozdziałów włączonych do ksi�
 | **11** | **Zupełność, kategoria i twierdzenie Baire'a (wersja metryczna)** | **stabilny — audyt 6** |
 | **12** | **Przestrzenie jednostajne, jednostajna ciągłość, ciągi, sieci i filtry Cauchy'ego** | **stabilny — audyt 3** |
 | **13** | **Zupełność jednostajna i uzupełnienia metryczne/jednostajne** | **stabilny — audyt 05** |
-| **14** | **Zwartość lokalna, twierdzenie Baire'a dla lokalnie zwartych przestrzeni Hausdorffa; dalej przestrzenie o przeliczalnej bazie w nieskończoności** | **materiał przeniesiony z rozdziału 11; dalszy zakres w planie** |
+| **14** | **Zwartość lokalna, twierdzenie Baire'a, podprzestrzenie, iloczyny, przeliczalność w nieskończoności i wyczerpania zwarte** | **rozbudowany — audyt iteracyjny** |
 | 15 | Parazwartość, metryzowalność i podziały jedności | plan |
 | 16 | Przestrzenie całkowicie regularne i wprowadzenie do uzwarceń | plan |
 | 17 | Uzwarcenie Aleksandrowa oraz uzwarcenie Čecha–Stone’a | plan |
