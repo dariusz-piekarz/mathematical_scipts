@@ -50,6 +50,38 @@ class LeanIntrospectionRealSmokeTests(unittest.TestCase):
             self.assertGreater(len(constants[theorem]), 0)
             self.assertEqual(len(constants[theorem]), len(set(constants[theorem])))
 
+    def test_real_lean_426_classifies_type_and_value_references(self):
+        if not shutil.which("lake") or not (
+                LEAN_ROOT / ".lake" / "packages" / "mathlib").is_dir():
+            if os.environ.get("MATLIB_REQUIRE_REAL_LEAN_TEST") == "1":
+                self.fail("Mandatory classified real Lean test: Lake/Mathlib unavailable")
+            self.skipTest("Lake/Mathlib unavailable; no real Lean execution")
+        source = (LEAN_ROOT / "src" / "LST01_DeMorgan.lean").read_bytes()
+        theorems = ["lst01_de_morgan_and", "lst01_de_morgan_or"]
+        token = secrets.token_hex(16)
+        instrumented = (source + b"\n" +
+                        inspect.make_instrumentation(
+                            theorems, token, classified=True).encode("utf-8"))
+        with tempfile.TemporaryDirectory(prefix="atlas-lean-classified-") as directory:
+            target = Path(directory) / "Inspect.lean"
+            target.write_bytes(instrumented)
+            result = subprocess.run(
+                ["lake", "env", "lean", str(target)], cwd=LEAN_ROOT,
+                capture_output=True, text=True, encoding="utf-8",
+                errors="replace", check=False, timeout=180)
+        self.assertEqual(result.returncode, 0,
+                         result.stdout[-2000:] + "\n" + result.stderr[-2000:])
+        classified = inspect.parse_classified_inspection(
+            result.stdout + "\n" + result.stderr, token, theorems)
+        self.assertEqual(set(classified["constants"]), set(theorems))
+        for name in theorems:
+            self.assertEqual(
+                set(classified["constants"][name]),
+                set(classified["type_constants"][name]) |
+                set(classified["value_constants"][name]))
+        self.assertGreater(len(classified["reference_edges"]), 0)
+
+
 
 if __name__ == "__main__":
     unittest.main()
