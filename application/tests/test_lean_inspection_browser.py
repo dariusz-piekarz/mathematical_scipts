@@ -29,7 +29,7 @@ vm.runInContext(fs.readFileSync(0,'utf8'),ctx);
  const first=ctx.inspectLeanConstants();
  assert.equal(requests.length,1);
  assert.equal(requests[0].url,'/api/lean/dependencies/inspect');
- assert.deepEqual(JSON.parse(requests[0].args.body),{formalization_id:'old'});
+ assert.deepEqual(JSON.parse(requests[0].args.body),{formalization_id:'old',classify_references:true});
  state.leanEpoch=2;
  state.leanFragment={formalization_id:'new',formalization_status:'ready'};
  ui.leanInspection.textContent='New selection';
@@ -74,6 +74,25 @@ vm.runInContext(fs.readFileSync(0,'utf8'),ctx);
  assert.equal(visits[0].entity_id,'valid-e1');
  assert.equal(linked[1].children.length,0,'ambiguous declaration must not navigate');
  assert.equal(linked[2].children.length,0,'stale declaration must not navigate');
+ ctx.renderLeanInspection({inspection_status:'complete',
+   detail:'split by type/value',extraction_method:'Lean.ConstantInfo.getUsedConstantsAsSet',
+   constants:{theorem_new:['Aux.value','Eq']},
+   type_constants:{theorem_new:['Eq']},
+   value_constants:{theorem_new:['Aux.value']},
+   reference_edges:[
+     {declaration:'theorem_new',constant:'Eq',origin:'type'},
+     {declaration:'theorem_new',constant:'Aux.value',origin:'value'}]});
+ assert.equal(ui.leanInspection.children.length,3);
+ const classified=ui.leanInspection.children[1].children;
+ assert.equal(classified.length,5);
+ assert.match(classified[1].textContent,/Typ/);
+ assert.equal(classified[2].children[0].textContent,'Eq');
+ assert.match(classified[3].textContent,/Wartość/);
+ assert.equal(classified[4].children[0].children[0].textContent,'Aux.value');
+ assert.equal(classified[4].children[0].children[0].tag,'button');
+ assert.match(ui.leanInspection.children[2].textContent,/bez domknięcia przechodniego/);
+ assert.match(ui.leanInspection.children[2].textContent,/certyfikat: NIE/);
+
 })().catch(e=>{console.error(e);process.exitCode=1;});
 """
 
