@@ -53,3 +53,21 @@ W chwili sporządzania audytu:
 Nie należy ogłaszać sukcesu pełnej kompilacji LaTeX ani oceny PDF po nowych zmianach przed zakończeniem odpowiedniego przebiegu CI. Rozdział 39 zachowuje wcześniejszy status stabilny (niezmieniony blob); poprawione rozdziały 37 i 38 wymagają powtórnej niezależnej kontroli po korektach zgodnie z zasadą 2+1. Najbliższy krok: audyt II na nowych blobach i kontrola wyników CI.
 
 **Nowe treści:** brak; nie dodawano nieuzgodnionych twierdzeń, przykładów ani rozszerzeń zakresu.
+
+## 5. Uzupełnienie — wynik walidacji po korektach
+
+Po opublikowaniu pierwszej wersji raportu zakończył się przebieg
+[45081007565 — SUCCESS](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45081007565)
+dla commitu `a44363dce5669206c76e5cc342748e6fc7a70efb`.
+W podglądzie zadań GitHub Actions wszystkie kroki `validate-chapters` uzyskały **SUCCESS**, w tym:
+
+- inwentarz twierdzeń, import CLI i referencje,
+- regresje rozdziałów 37, 38 i 39 (oraz 07–36),
+- `Compile logic and set theory PDF`,
+- `Check compiled PDF and log`,
+- archiwizacja PDF i logu.
+
+Wynik potwierdza przejście automatycznej walidacji repozytorium **po pięciu poprawkach**.
+Nie jest osobną, wzrokową kontrolą wyrenderowanych stron ani weryfikacją dowodów
+w systemie Lean. Zaliczenie CI jest wymaganym potwierdzeniem technicznym,
+ale nie zastępuje dalszych niezależnych audytów 2+1 nowych blobów rozdziałów 37–38.
