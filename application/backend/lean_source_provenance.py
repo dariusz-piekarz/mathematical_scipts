@@ -6,6 +6,8 @@ the indexed offset. The SQLite index and manifest are not proof certificates.
 from __future__ import annotations
 
 import sqlite3
+import hashlib
+import json
 
 from backend import latex_parser
 
@@ -77,3 +79,35 @@ def owner_status(con: sqlite3.Connection, module: str, label: str,
     if binding is None or not valid_binding(binding, source, label):
         return "invalid_label_binding", None
     return "ok", entity_id
+
+
+def binding_sha256(module: str, label: str, binding: tuple) -> str:
+    """Immutable indexed-owner identity for versioned Lean execution history.
+
+    The document SHA does not change when SQLite reassigns an existing label.
+    Include the exact owner and every indexed boundary/metadata field so a
+    cached compilation cannot silently migrate to a different source object.
+    Caller must first establish owner_status == "ok".
+    """
+    if (not isinstance(module, str) or not module
+            or not isinstance(label, str) or not label
+            or not isinstance(binding, tuple) or len(binding) != 8
+            or not isinstance(binding[0], str) or not binding[0]
+            or not all(type(v) is int for v in binding[3:])):
+        raise ValueError("Invalid indexed source binding")
+    payload = {
+        "schema": 1,
+        "source_module": module,
+        "source_label": label,
+        "entity_id": binding[0],
+        "entity_kind": binding[1],
+        "entity_title": binding[2],
+        "start_line": binding[3],
+        "end_line": binding[4],
+        "start_offset": binding[5],
+        "end_offset": binding[6],
+        "label_offset": binding[7],
+    }
+    return hashlib.sha256(json.dumps(
+        payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+    ).encode("utf-8")).hexdigest()
