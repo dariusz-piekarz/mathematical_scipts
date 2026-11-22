@@ -27,7 +27,7 @@ Poprawka źródła: `77f4628a8dcff9b32b7b89b5547d89a0da58f9c1`. Test regresyjny 
 Właściwy CI dla zmodyfikowanego źródła i nowego testu:
 https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45008598489
 
-W chwili sporządzenia raportu workflow był w toku. Wynik i kontrolę PDF należy odnotować po rzeczywistym sprawdzeniu.
+**Weryfikacja zakończona:** GitHub Actions run `45008598489` dla commita `66ed20b08e70e4ab04c77ecf0cfcb4781a5fcada`: `completed / success`, bez nieudanych kroków. Artefakt `14748314830` zawiera `general_topology_ch14.pdf` i `.log`. PDF ma 4 strony A4; wyrenderowano i obejrzano wszystkie strony (kontrola wzorów, podziału tekstu i odstępów). Log nie zawiera `Overfull`, `Underfull`, `Missing character`, `LaTeX Warning`, `Undefined control sequence` ani `Fatal error`. Nie stwierdzono ucięć ani kolizji w składzie. Artefakt: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45008598489/artifacts/14748314830
 
 | Element | Status |
 |---|---|
@@ -35,5 +35,5 @@ W chwili sporządzenia raportu workflow był w toku. Wynik i kontrolę PDF nale�
 | Dowód kryterium dowolnych iloczynów | PASS — audyt niezależny |
 | Równoważność `σ`-zwartości, wyczerpania i przeliczalności w nieskończoności | PASS — audyt niezależny |
 | Twierdzenie Baire'a i lemat o otoczeniach | PASS |
-| Weryfikacja CI i PDF po poprawce | OCZEKUJE |
+| Weryfikacja CI i PDF po poprawce | **PASS — run 45008598489; 4 strony sprawdzone** |
 | Status rozdziału | **W AUDYCIE** — po istotnej poprawce nie oznaczać jako stabilny |
