@@ -10,8 +10,8 @@
 
 - Bieżący rozdział: **29**.
 - Ostatni zamknięty blob (rozdział 28): **a2afdd2b20b2694d70bdbee6ad6a0f8c42b9aea8**.
-- Liczba kolejnych czystych audytów (bieżący rozdział 29): **0/2**.
-- Kolejne działanie: **wykonać nowy audyt 01 rozdziału 29 (grassmanniany)**. Rozdział 28 zamknięto po koniecznej korekcie (audyt 01), dwóch kolejnych czystych audytach 02–03 bloba `a2afdd2b20b2694d70bdbee6ad6a0f8c42b9aea8` i dedykowanym CI completed/success (run 45023213569). Zatwierdzone przez użytkownika rozszerzenie LA-32 o transformatę Penrose’a: [plan](la32_penrose_extension_plan.md); dodać przy dojściu do rozdziału 32.
+- Liczba kolejnych czystych audytów (bieżący rozdział 29): **1/2** (plus wymagany oddzielny audyt końcowy po stabilizacji).
+- Kolejne działanie: **wykonać niezależny audyt 02 rozdziału 29 (grassmanniany)**; po dwóch czystych i CI wykonać jeszcze osobny pełny audyt końcowy tego samego bloba. Rozdział 28 zamknięto po koniecznej korekcie (audyt 01), dwóch kolejnych czystych audytach 02–03 bloba `a2afdd2b20b2694d70bdbee6ad6a0f8c42b9aea8` i dedykowanym CI completed/success (run 45023213569). Zatwierdzone przez użytkownika rozszerzenie LA-32 o transformatę Penrose’a: [plan](la32_penrose_extension_plan.md); dodać przy dojściu do rozdziału 32.
 - Historyczne audyty, w tym ręczne audyty rozdziałów 13–15 z 22 listopada, pozostają ważnymi źródłami, ale **nie są automatycznie liczone** jako wykonanie nowego przebiegu.
 
 ## Tabela statusów
@@ -35,7 +35,7 @@
 | 26 | STABILNY; audyty 02 i 03 czyste po poprawce, CI success | 2 | `80032eef1e0e5de817821d97de96aaf86c960e03` |
 | 27 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `a91dfa108d4a6ef4221b9ba24a98c87772c75d4a` |
 | 28 | STABILNY; audyt 01 korekta, 02 i 03 czyste, CI success | 2 | `a2afdd2b20b2694d70bdbee6ad6a0f8c42b9aea8` |
-| 29 | BIEŻĄCY; ponowny audyt 01 do wykonania | 0 | — |
+| 29 | OTWARTY; audyt 01 czysty, 02 do wykonania, następnie dodatkowy audyt końcowy | 1 | `55fc55e2ff1b95838e0b2ca1c4ec0a6018af64dd` |
 | 30 | W kolejce | 0 | — |
 | 31 | W kolejce | 0 | — |
 | 32 | W kolejce | 0 | — |
@@ -255,3 +255,10 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - [Audyt 02](re_audit_from_ch12/28_iteration_02_2026-11-22.md) i [audyt 03](re_audit_from_ch12/28_iteration_03_2026-11-22.md) to dwie kolejne czyste kontrole po korekcie. Wykonano **1205+520+450=2175** niezależnych testów w trzech oddzielnych skryptach Python, wszystkie PASS. Kontrola strukturalna: 664 linie, 36 unikalnych etykiet, 31 poprawnych odsyłaczy i 38 par środowisk LaTeX.
 - [CI 45023213569](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45023213569) **completed/success** dla commitu zawierającego identyczny blob rozdziału 28. **Rozdział 28: STABILNY (2/2)**; aktywny rozdział **29**.
 - **Zatwierdzony dodatek Penrose’a do LA-32**: [la32_penrose_extension_plan.md](la32_penrose_extension_plan.md). Dopisać przy audycie i opracowaniu 32: lokalną skalarną transformatę Penrose’a, konturową formułę z jednorodnością `−2`, sprawdzenie operatora falowego, przykład rezydualny i precyzyjne granice twierdzenia kohomologicznego. Nie dublować już istniejącej incydencji, kwadryki i fibracji.
+
+## Ostatnia rzeczywista iteracja — 2026-11-22 (rozdział 29, audyt 01)
+
+- **Stan: OTWARTY, 1/2**, następnie obowiązkowy dodatkowy audyt końcowy. Przeczytano pełne 743 wiersze źródła i sprawdzono atlas, rzutowania, styczne, wiązki, orientację, przestrzenie ilorazowe, osadzenie Plückera, równanie dla Gr₂(R⁴), odwzorowanie Gaussa, przykłady i warunki brzegowe. Nie znaleziono usterek wymagających korekty źródła.
+- SHA źródła: `55fc55e2ff1b95838e0b2ca1c4ec0a6018af64dd` (bez edycji). Raport: [29_iteration_01_2026-11-22.md](re_audit_from_ch12/29_iteration_01_2026-11-22.md); [commit 993e4e1](https://github.com/dariusz-piekarz/mathematical_scipts/commit/993e4e1238bbdd21297bfc00d254e3729a38f0e1).
+- [CI 45023597804](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45023597804): **completed/success**, SHA commit `edcd2f934d724636816d14b15aa8280e3273cdaf`, zweryfikowany identyczny blob LA-29. Nie przeprowadzono osobnego renderingu PDF LA-29: dostępny artefakt „current chapter” dotyczył LA-32. Nie wykonano nowych testów obliczeniowych.
+- Następny krok: **LA-29 audyt 02**, bez przechodzenia do LA-30. Zasada z 22.11.2026 wymaga po spełnieniu 2/2 i CI jeszcze osobnego czystego audytu kontrolnego tego samego etapu.
