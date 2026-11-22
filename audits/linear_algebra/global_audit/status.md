@@ -1,6 +1,6 @@
 # Globalny audyt algebry liniowej — status rozdziałów
 
-**Stan po iteracji 15 (LA29–32 skontrolowane; utworzono rejestr 382 dowodów; pełny audyt matematyczny trwa)**, 22 listopada 2026.  
+**Stan po iteracji globalnej 28 (363/382 dowodów, trwa stabilizacja LA29 po korekcie; 1/2 czystych kontroli)**, 22 listopada 2026.  
 **Aktualizacja:** rozdziały 01–05 zostały ponownie ustabilizowane. W rozdziale 05 poprawiono argument o braku podprzestrzeni dla zgodnego układu z niezerową prawą stroną, następnie wykonano dwa kolejne czyste audyty III–IV na identycznym SHA. Nowy PDF (7 stron) i CI dla poprawionego źródła [45006722306](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45006722306) zweryfikowane — SUCCESS. CI uruchomione wyłącznie zapisem końcowego statusu wymaga osobnej kontroli.
 
 | Rozdział | Status |
@@ -33,7 +33,7 @@
 | 26 | STABILNY; audyty 02 i 03 czyste po poprawce, CI success; kontrole 2, SHA `80032eef1e0e5de817821d97de96aaf86c960e03`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
 | 27 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success; kontrole 2, SHA `a91dfa108d4a6ef4221b9ba24a98c87772c75d4a`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
 | 28 | STABILNY po dodatkowym audycie; 04 korekta, 05–06 czyste, CI success; kontrole 2, SHA `b9507aa2db7eda554446248996e7c0ae241d4e73`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
-| 29 | STABILNY; audyty 01 i 02 czyste oraz dodatkowy końcowy 03 czysty, CI success i PDF obejrzany; kontrole 3 (2+1), SHA `55fc55e2ff1b95838e0b2ca1c4ec0a6018af64dd`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
+| 29 | HISTORYCZNIE STABILNY, ale globalna korekta iteracji 27 otworzyła nowy cykl: **1/2 czystych audytów** po zmianie, audyt +1 jeszcze oczekuje; **CI 45079917894 SUCCESS** i aktualny PDF 8/8 stron obejrzany; SHA `01213689fb5d2477db25f9ff713608b0171a00c8`. Szczegóły: globalne iteracje 27–28 |
 | 30 | STABILNY; po korekcie czyste audyty 03–04 + sceptyczny 05, CI success i PDF obejrzany; kontrole 3 (2+1), SHA `6d90013dd6c66d347e5ae2ac78b4c1a194aa979e`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
 | 31 | STABILNY; audyty 01–02 czyste + dodatkowy sceptyczny 03 czysty, CI success; kontrole 3 (2+1), SHA `6c1d09b9eaf4083c9ebaa361dbf46fc350eae147`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
 | 32 | STABILNY; zatwierdzony dodatek Penrose’a, audyt 01 korekcyjny, czyste 02–03 + końcowy 04, CI success; kontrole 3 (2+1), SHA `8aea8bd8db02ca8677fb0547f770c9166fdaef88`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
@@ -235,3 +235,8 @@ Raport: `iteration_09.md`. Zgodność 32 plików i 32 instrukcji `\\input` potwi
 ## Iteracja globalna 27 — LA29, 2026-11-22
 
 [Raport](iteration_27.md): pełna krytyczna lektura **6/6** dowodów LA29, przykładów, etykiet i odsyłaczy. Poprawiono typ matematyczny różniczki odwzorowania Gaussa w przykładzie paraboli, bez dodawania twierdzeń i bez zmiany etykiet. Bazowy blob `55fc55e2ff1b95838e0b2ca1c4ec0a6018af64dd`. **10 501/10 501** niezależnych kontroli numerycznych PASS. Pobrano prawdziwy artefakt wcześniejszego [CI 45070637516](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45070637516), PDF 320 stron, LA29 na stronach 287–294 (8/8 stron obejrzanych). Wynik tego CI **nie dotyczy nowego źródła**. Globalny licznik przeanalizowanych dowodów: **363/382**, pozostało 19 (LA30: 3, LA31: 6, LA32: 10). Korekta otwiera LA29 do nowych niezależnych kontroli: czyste **0/2**, dodatkowy audyt +1 oczekuje, CI i PDF nowej wersji niepotwierdzone. Kolejny etap: LA29, nie LA30.
+
+
+## Iteracja globalna 28 — 22 listopada 2026: LA29 (pierwszy czysty audyt nowego bloba)
+
+[Raport](iteration_28.md) i [per-dowodowy rejestr](iteration_28_proof_review_29.csv): **pełna niezależna krytyczna lektura 6/6 dowodów** LA29 na niezmienionym blobie \`01213689fb5d2477db25f9ff713608b0171a00c8\`. Nie znaleziono nowej usterki i nie zmieniano \`.tex\`. Niezależne exact-SymPy **2855/2855 PASS**. Potwierdzono aktualny [CI 45079917894 — SUCCESS](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45079917894), dwukrotną kompilację oraz rzeczywisty 320-stronicowy PDF; **8/8 stron LA29 (287–294) obejrzano**, 0 bloków poza stroną, brak ostrzeżeń LaTeX. Stan LA29 w nowym cyklu: **1/2 czystych, dodatkowy sceptyczny +1 niewykonany**. Ewidencja globalna **363/382**, pozostało LA30–32: 19 dowodów. Następny przebieg wciąż LA29.
