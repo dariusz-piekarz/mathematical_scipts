@@ -17,7 +17,7 @@ import sqlite3
 
 from fastapi import HTTPException
 
-from backend import lean_cgroup, lean_results, lean_process, lean_windows_job
+from backend import lean_cgroup, lean_results, lean_process, lean_run_lock, lean_windows_job
 
 LEAN_ROOT = Path(__file__).resolve().parents[1] / "lean"
 MAX_SOURCE_CHARS = 30000
@@ -333,24 +333,30 @@ def run(con: sqlite3.Connection, formalization_id: str,
 
     command = ["lake", "env", "lean", str(item["_file"].relative_to(lean_root))]
     try:
-        returncode, log, timed_out = lean_process.execute_registered(
-            command, lean_root, timeout=TIMEOUT_SECONDS,
-            memory_limit_mb=memory_mb, total_memory_mb=total_mb)
-    except (lean_cgroup.CgroupUnavailable, lean_windows_job.JobUnavailable) as exc:
+        # Lock spans execution and persistence. Multiple workers in one checkout
+        # must not start overlapping memory-intensive compilers or race on results.
+        with lean_run_lock.exclusive(lean_root):
+            try:
+                returncode, log, timed_out = lean_process.execute_registered(
+                    command, lean_root, timeout=TIMEOUT_SECONDS,
+                    memory_limit_mb=memory_mb, total_memory_mb=total_mb)
+            except (lean_cgroup.CgroupUnavailable, lean_windows_job.JobUnavailable,
+                    lean_process.MemoryLimitUnavailable) as exc:
+                return {"formalization_id": formalization_id, "proof_status": "blocked",
+                        "detail": str(exc), "certificate": False}
+            except RuntimeError as exc:
+                return finish("failed", "Niekompletny odczyt wyniku procesu Lean.",
+                              str(exc)[:500])
+            except OSError as exc:
+                return {"formalization_id": formalization_id,
+                        "proof_status": "toolchain_unavailable",
+                        "detail": str(exc), "certificate": False}
+            if timed_out:
+                return finish("timeout", f"Lean przekroczył limit {TIMEOUT_SECONDS} s.",
+                              log)
+            # Success does not prove statement equivalence or absence of axioms.
+            return finish("compiled" if returncode == 0 else "failed",
+                          f"Lean zakończył pracę z kodem {returncode}.", log)
+    except (lean_run_lock.RunnerBusy, lean_run_lock.RunnerLockUnavailable) as exc:
         return {"formalization_id": formalization_id, "proof_status": "blocked",
                 "detail": str(exc), "certificate": False}
-    except lean_process.MemoryLimitUnavailable as exc:
-        return {"formalization_id": formalization_id, "proof_status": "blocked",
-                "detail": str(exc), "certificate": False}
-    except RuntimeError as exc:
-        return finish("failed", "Niekompletny odczyt wyniku procesu Lean.", str(exc)[:500])
-    except OSError as exc:
-        return {"formalization_id": formalization_id, "proof_status": "toolchain_unavailable",
-                "detail": str(exc), "certificate": False}
-    if timed_out:
-        return finish("timeout", f"Lean przekroczył limit {TIMEOUT_SECONDS} s.", log)
-    # Success never establishes equivalence between the LaTeX and Lean statements.
-    # Do not infer the absence of sorry/extra axioms from exit status alone.
-    success = returncode == 0
-    return finish("compiled" if success else "failed",
-                  f"Lean zakończył pracę z kodem {returncode}.", log)
