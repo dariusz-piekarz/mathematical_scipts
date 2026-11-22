@@ -8,10 +8,10 @@
 
 ## Stan wykonania
 
-- Bieżący rozdział: **29**.
-- Ostatni zamknięty blob (rozdział 28): **a2afdd2b20b2694d70bdbee6ad6a0f8c42b9aea8**.
-- Liczba kolejnych czystych audytów (bieżący rozdział 29): **2/2** (wymagany oddzielny audyt końcowy 03 jeszcze niewykonany).
-- Kolejne działanie: **wykonać osobny, pełny, sceptyczny audyt końcowy 03 rozdziału 29 (grassmanniany)**; audyty 01–02 są czyste i CI dla tego samego bloba jest zielone, lecz etap nie jest zamknięty bez audytu końcowego. Rozdział 28 zamknięto po koniecznej korekcie (audyt 01), dwóch kolejnych czystych audytach 02–03 bloba `a2afdd2b20b2694d70bdbee6ad6a0f8c42b9aea8` i dedykowanym CI completed/success (run 45023213569). Zatwierdzone przez użytkownika rozszerzenie LA-32 o transformatę Penrose’a: [plan](la32_penrose_extension_plan.md); dodać przy dojściu do rozdziału 32.
+- Bieżący rozdział: **30**.
+- Ostatni zamknięty blob (rozdział 29): **55fc55e2ff1b95838e0b2ca1c4ec0a6018af64dd**.
+- Liczba czystych audytów bieżącego rozdziału 30: **0/2**; oddzielny końcowy audyt: **niewykonany**. Rozdział 29 zakończony: 2/2 oraz dodatkowy czysty audyt końcowy 03.
+- Kolejne działanie: **rozdział 30 — audyt 01**. Rozdział 29 zamknięto po dwóch czystych audytach 01–02, osobnym sceptycznym audycie końcowym 03, zielonym CI 45023597804 dla tego samego bloba oraz rzeczywistej kontroli 8-stronicowego PDF wyodrębnionego z książki. Rozdział 28 pozostaje zamknięty. Rozszerzenie LA-32 o transformatę Penrose’a pozostaje w planie.
 - Historyczne audyty, w tym ręczne audyty rozdziałów 13–15 z 22 listopada, pozostają ważnymi źródłami, ale **nie są automatycznie liczone** jako wykonanie nowego przebiegu.
 
 ## Tabela statusów
@@ -35,8 +35,8 @@
 | 26 | STABILNY; audyty 02 i 03 czyste po poprawce, CI success | 2 | `80032eef1e0e5de817821d97de96aaf86c960e03` |
 | 27 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `a91dfa108d4a6ef4221b9ba24a98c87772c75d4a` |
 | 28 | STABILNY; audyt 01 korekta, 02 i 03 czyste, CI success | 2 | `a2afdd2b20b2694d70bdbee6ad6a0f8c42b9aea8` |
-| 29 | OTWARTY; audyty 01 i 02 czyste, dodatkowy audyt końcowy 03 do wykonania | 2 | `55fc55e2ff1b95838e0b2ca1c4ec0a6018af64dd` |
-| 30 | W kolejce | 0 | — |
+| 29 | STABILNY; audyty 01 i 02 czyste oraz dodatkowy końcowy 03 czysty, CI success i PDF obejrzany | 3 (2+1) | `55fc55e2ff1b95838e0b2ca1c4ec0a6018af64dd` |
+| 30 | OTWARTY; audyt 01 do wykonania | 0 | — |
 | 31 | W kolejce | 0 | — |
 | 32 | W kolejce | 0 | — |
 
@@ -272,3 +272,11 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - [CI 45023597804](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45023597804) **completed/success**, bezpośrednio zweryfikowano identyczny blob rozdziału w commicie CI `edcd2f934d724636816d14b15aa8280e3273cdaf`.
 - Nie wykonano nowego renderingu PDF 29; układ rysunków nie ma niezależnej walidacji wizualnej.
 - **Uzasadnienie braku zamknięcia:** nadrzędny wymóg oddzielnego pełnego audytu końcowego po osiągnięciu 2/2. **Następny etap: rozdział 29, audyt 03 końcowy**, a nie 30.
+
+## Ostatnia rzeczywista iteracja — 2026-11-22 (rozdział 29, końcowy audyt 03)
+
+- **LA-29 STABILNY I ZAMKNIĘTY**: 2/2 wcześniejsze czyste audyty oraz oddzielny pełny audyt końcowy 03, także czysty, bez zmiany bloba `55fc55e2ff1b95838e0b2ca1c4ec0a6018af64dd`.
+- Raport: [29_iteration_03_2026-11-22.md](re_audit_from_ch12/29_iteration_03_2026-11-22.md), [commit 35ecbd5](https://github.com/dariusz-piekarz/mathematical_scipts/commit/35ecbd522a28a16845a5c61a92185b8e905f6266).
+- Matematyka, terminologia, etykiety i LaTeX: bez nowych usterek. Wykonano 14641 przypadków regresji Plückera, 0 błędów.
+- [CI 45023597804](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45023597804) completed/success, potwierdzono identyczny blob. Pobierano rzeczywisty artefakt pełnej książki i wizualnie przejrzano wszystkie **8 stron** rozdziału 29 (strony fizyczne 285–292) z dwoma rysunkami, bez zauważonych kolizji. To wcześniejszy CI, nie nowy run.
+- **Uzasadnienie zamknięcia:** dwa czyste audyty po ostatniej zmianie + dodatkowy niezależny czysty audyt końcowy + zielony CI zgodny z SHA + kontrola PDF. **Następny etap:** LA-30 audyt 01, 0/2. Nie rozpoczynać LA-29 ponownie bez konkretnej nowej przyczyny.
