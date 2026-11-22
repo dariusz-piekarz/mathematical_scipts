@@ -151,6 +151,15 @@ class ALG09Regressions(unittest.TestCase):
         self.assertIn("niestałych odwzorowań holomorficznych", src)
         self.assertNotIn("Na dowolnym mapie rzutowym", src)
 
+    def test_chow_graph_uses_algebraic_projection_not_analytic_graph(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        statement = src.split(r"\label{wn:ga9-hol-map}", 1)[1].split(
+            r"\end{proof}", 1)[0]
+        self.assertIn(r"$\Gamma\subseteq X\times Y$", statement)
+        self.assertIn(r"projekcja algebraiczna $\Gamma\to X$", statement)
+        self.assertNotIn(r"projekcja algebraiczna $\Gamma_f\to X$", statement)
+        self.assertIn(r"$\Gamma_f\subseteq X^{\rm an}", statement)
+
     def test_tikz_and_environment_balance(self):
         src = SOURCE.read_text(encoding="utf-8")
         self.assertEqual(src.count(r"\begin{tikzpicture}"), 2)
