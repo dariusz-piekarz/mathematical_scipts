@@ -11,7 +11,7 @@
 - Bieżący rozdział: **19**.
 - Ostatni zamknięty blob (rozdział 18): **ef815633cf3a1f795d912c510fbc8575f21e464d**.
 - Liczba kolejnych czystych audytów (bieżący rozdział 19): **0**.
-- Kolejne działanie: **wykonać audyt 01 rozdziału 19**. Rozdział 18 zamknięto po dwóch kolejnych czystych kontrolach niezmienionego bloba i zielonym dedykowanym CI.
+- Kolejne działanie: **wykonać audyt 02 rozdziału 19** na poprawionym blobie `ac826f20aa3462f01e0a051cef72631407fbc0dd`. Audyt 01 wykrył i naprawił nieścisłość w sformułowaniu twierdzenia; licznik czystych audytów po poprawce: 0/2.
 - Historyczne audyty, w tym ręczne audyty rozdziałów 13–15 z 22 listopada, pozostają ważnymi źródłami, ale **nie są automatycznie liczone** jako wykonanie nowego przebiegu.
 
 ## Tabela statusów
@@ -25,7 +25,7 @@
 | 16 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `4f8da3c4b87b87ee8f8e6f7c7504637485c6e09a` |
 | 17 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `05b93309d0e444f1c3fcbe3489cfd98a0f02846f` |
 | 18 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `ef815633cf3a1f795d912c510fbc8575f21e464d` |
-| 19 | BIEŻĄCY; audyt 01 do wykonania | 0 | — |
+| 19 | OTWARTY; audyt 01 z poprawką, CI nowego bloba do potwierdzenia | 0 | `ac826f20aa3462f01e0a051cef72631407fbc0dd` |
 | 20 | W kolejce | 0 | — |
 | 21 | W kolejce | 0 | — |
 | 22 | W kolejce | 0 | — |
@@ -157,3 +157,11 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - Raport: [18_iteration_02_2026-11-22.md](re_audit_from_ch12/18_iteration_02_2026-11-22.md), commit [4cc28c0](https://github.com/dariusz-piekarz/mathematical_scipts/commit/4cc28c00819826a84fdbbf0a72356622936e7df5).
 - Dedykowane CI: [run 45018755189](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45018755189), completed/success dla commitu `6d859ac49fbdcff1389888e6109337ffb22934e2` z tym samym blobem.
 - Następny: rozdział **19**, audyt 01.
+
+## Ostatnia rzeczywista iteracja — 2026-11-22 (rozdział 19, audyt 01)
+
+- **Wynik: korekta**, nie czysty audyt. Niespójny zakres twierdzenia o postaci Frobeniusa dla n=0 został poprawiony, [commit 9276ae7](https://github.com/dariusz-piekarz/mathematical_scipts/commit/9276ae75687489d7ef591df87ad2142c60a5795b).
+- Aktualny blob źródła: `ac826f20aa3462f01e0a051cef72631407fbc0dd`. Licznik kolejnych czystych kontroli po zmianie: **0/2**.
+- Raport: [19_iteration_01_2026-11-22.md](re_audit_from_ch12/19_iteration_01_2026-11-22.md), [commit d2deb1d](https://github.com/dariusz-piekarz/mathematical_scipts/commit/d2deb1d05894278e5145392e369fc157e8c32478).
+- Dotychczasowe dedykowane CI success [run 45019153860](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45019153860) dotyczy poprzedniego bloba, **nie zalicza** poprawionej wersji. Po poprawce uruchomiono [run 45020142844](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45020142844); w chwili audytu był w toku.
+- Następny: rozdział **19**, audyt 02 oraz kontrola CI na poprawionym blobie.
