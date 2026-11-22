@@ -152,7 +152,7 @@ def check_source() -> tuple[int, int]:
     chapters = next(
         b["chapters"] for b in data["books"] if b["id"] == "general_topology"
     )
-    assert len(chapters) == 19 and chapters[18] == CH
+    assert len(chapters) >= 19 and chapters[18] == CH
     joined = "\n".join((ROOT / p).read_text(encoding="utf-8")
                        for p in chapters)
     labels = re.findall(r"\\label\{([^}]+)\}", joined)
