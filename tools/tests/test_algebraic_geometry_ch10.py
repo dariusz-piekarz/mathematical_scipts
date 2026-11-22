@@ -139,7 +139,7 @@ class ALG10Regressions(unittest.TestCase):
             r"\begin{definicja}[Klasa dualna do podrozmaitości]":
                 "Niech $M$ będzie zwartą, spójną",
             r"\label{st:ga10-betti}":
-                "Niech $S$",
+                r"Niech $S\subseteq",
             r"\label{wn:ga10-blowup-canonical}":
                 "dowolnymi dzielnikami kanonicznymi",
             r"\begin{twierdzenie}[Rozkład Lefschetza":
