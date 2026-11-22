@@ -31,7 +31,7 @@ Stan: 22 listopada 2026. Źródłem prawdy dla rozdziałów włączonych do ksi�
 | **23** | **Wymiar topologiczny: wymiar pokryciowy Lebesgue’a, wymiary ind/Ind, charakterystyka wymiaru 0, wymiar odcinka i sześcianu, nerwy pokryć** | **stabilny — audyty 04–06 (2/2 + 1), CI 45051754287 PASS, osobny PDF 9 stron** |
 | **24** | **Grupy topologiczne, otoczenia elementu neutralnego, podgrupy, przestrzenie warstw i grupy ilorazowe, składowa neutralna, struktury jednostajne, twierdzenie Birkhoffa–Kakutaniego** | **stabilny — audyty 02–04 (2/2 + 1), CI 45053429106 i końcowy 45053945600 PASS, PDF 10 stron** |
 | **25** | **Continua i podcontinua, nieprzywiedlność, granice odwrotne, nierozkładalne continuum Knastera, solenoid dyadyczny, surjekcje Peana** | **stabilny — audyty 02–04 (2/2 + 1), CI 45056802863 i końcowy 45057529499 PASS, PDF 8 stron** |
-| **26** | **Twierdzenie Hahna–Mazurkiewicza: jednostajna lokalna spójność, małe drogi, surjekcja odcinka przez pętle, metryzowalność i lokalna spójność obrazów odcinka** | **stabilny — audyty 07–09 (2/2 + 1), CI 45062871304 PASS, osobny PDF 6 stron** |
+| **26** | **Twierdzenie Hahna–Mazurkiewicza: jednostajna lokalna spójność, małe drogi, surjekcja odcinka przez pętle, metryzowalność i lokalna spójność obrazów odcinka** | **stabilny — audyty 07–09 (2/2 + 1), CI 45062871304 i końcowy 45063338871 PASS, PDF 6 stron** |
 
 Zakresy 12–13 oraz 16–17 są rozdzielone według tematyki, żeby unikać powtarzania dowodów. Zgodnie z zasadą projektu nowe rozdziały nie oznaczają automatycznie ich stabilności.
 
@@ -393,9 +393,16 @@ W logach brak Overfull/Underfull,
 Missing character i LaTeX Warning.
 Osierocona strona 7 została usunięta.
 Po zmianie statusu i testów wersji 1.26
-pozostaje do wykonania finalne CI
-integracyjne, które nie zmienia
-matematycznego bloba rozdziału 26.
+wykonano końcowe
+[CI integracyjne 45063338871](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45063338871):
+**completed/success** (63 poprawne kroki).
+Pobrano artefakt ID 14769809528;
+sprawdzono stronę tytułową „Wersja 1.26 —
+rozdziały 01–26 stabilne”,
+pełną książkę 190 stron i rozdział 26
+6 stron oraz brak ostrzeżeń LaTeX
+w obu logach. Blob matematyczny
+rozdziału 26 pozostał niezmieniony.
 
 **Dalszy plan:** przekrojowy i szczegółowy audyt
 wcześniejszych rozdziałów, w szczególności
