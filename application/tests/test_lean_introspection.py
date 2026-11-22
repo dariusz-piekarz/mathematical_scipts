@@ -100,6 +100,73 @@ class ParsingTests(unittest.TestCase):
             with self.subTest(log=broken[-100:]), self.assertRaises(ValueError):
                 inspection.parse_classified_inspection(broken, TOKEN, ["theorem_x"])
 
+    def test_classified_two_declarations_interleaved_with_shared_and_empty_values(self):
+        a, b = "theorem_x", "theorem_y"
+        # The same constant can be referenced by both type and proof. A
+        # declaration without a readable value still needs BEGIN 0 / END.
+        events = [
+            f"{TOKEN} BEGIN {b} 1",
+            f"{TOKEN} BEGIN {a} 2",
+            f"{TOKEN} CONST {a} Eq",
+            f"{TOKEN} CONST {b} Eq",
+            f"{TOKEN} CONST {a} Nat.zero",
+            f"{TOKEN} END {a}",
+            f"{TOKEN} END {b}",
+            f"{TOKEN} TYPE_BEGIN {a} 2",
+            f"{TOKEN} TYPE_BEGIN {b} 1",
+            f"{TOKEN} TYPE_CONST {b} Eq",
+            f"{TOKEN} TYPE_CONST {a} Eq",
+            f"{TOKEN} TYPE_CONST {a} Nat.zero",
+            f"{TOKEN} TYPE_END {b}",
+            f"{TOKEN} TYPE_END {a}",
+            f"{TOKEN} VALUE_BEGIN {b} 0",
+            f"{TOKEN} VALUE_END {b}",
+            f"{TOKEN} VALUE_BEGIN {a} 1",
+            f"{TOKEN} VALUE_CONST {a} Eq",
+            f"{TOKEN} VALUE_END {a}",
+        ]
+        log = "\n".join("Inspect.lean:24:0: info: " + event for event in events)
+        data = inspection.parse_classified_inspection(log, TOKEN, [a, b])
+        self.assertEqual(data["constants"][a], ["Eq", "Nat.zero"])
+        self.assertEqual(data["constants"][b], ["Eq"])
+        self.assertEqual(data["value_constants"][a], ["Eq"])
+        self.assertEqual(data["value_constants"][b], [])
+        self.assertEqual(data["type_constants"][b], ["Eq"])
+        edges = data["reference_edges"]
+        self.assertIn({"declaration": a, "constant": "Eq", "origin": "type"}, edges)
+        self.assertIn({"declaration": a, "constant": "Eq", "origin": "value"}, edges)
+        self.assertNotIn({"declaration": b, "constant": "Eq", "origin": "value"}, edges)
+        self.assertEqual(len(edges), 4)
+
+    def test_classified_multi_declaration_protocol_fails_closed_on_partial_evidence(self):
+        names = ["theorem_x", "theorem_y"]
+        logs = []
+        for name in names:
+            logs.extend([
+                f"{TOKEN} BEGIN {name} 1",
+                f"{TOKEN} CONST {name} Eq",
+                f"{TOKEN} END {name}",
+                f"{TOKEN} TYPE_BEGIN {name} 1",
+                f"{TOKEN} TYPE_CONST {name} Eq",
+                f"{TOKEN} TYPE_END {name}",
+                f"{TOKEN} VALUE_BEGIN {name} 0",
+                f"{TOKEN} VALUE_END {name}",
+            ])
+        valid = "\n".join(logs)
+        inspection.parse_classified_inspection(valid, TOKEN, names)
+        for broken in (
+            valid.replace(f"{TOKEN} VALUE_END theorem_y", ""),
+            valid.replace(f"{TOKEN} TYPE_CONST theorem_y Eq", ""),
+            valid.replace(f"{TOKEN} TYPE_BEGIN theorem_y 1",
+                          f"{TOKEN} TYPE_BEGIN theorem_y 0"),
+            valid.replace(f"{TOKEN} VALUE_BEGIN theorem_y 0",
+                          f"{TOKEN} VALUE_BEGIN theorem_x 0"),
+            valid + "\n" + f"{TOKEN} TYPE_END theorem_x",
+            valid.replace(f"{TOKEN} CONST theorem_y Eq", ""),
+        ):
+            with self.subTest(last=broken[-100:]), self.assertRaises(ValueError):
+                inspection.parse_classified_inspection(broken, TOKEN, names)
+
     def test_complete_output_is_sorted_and_bound_to_declaration(self):
         result = inspection.parse_inspection(transcript(), TOKEN, ["theorem_x"])
         self.assertEqual(result, {"theorem_x": ["Eq", "Nat.zero"]})
