@@ -97,8 +97,9 @@ def execute_registered(
         # exited. Never report success before the captured output is complete.
         _stop_process_group(process)
         reader.join(timeout=2)
-        if reader.is_alive():
-            raise RuntimeError("Lean stdout pipe was left open by a child process.")
+        # A surviving descendant means the process tree did not finish cleanly.
+        # Never record a successful compilation after forcibly killing it.
+        raise RuntimeError("Lean stdout pipe was left open by a child process.")
     if read_errors:
         raise RuntimeError("Could not capture Lean output.") from read_errors[0]
     return process.returncode if not timed_out else None, tail.decode("utf-8", "replace"), timed_out
