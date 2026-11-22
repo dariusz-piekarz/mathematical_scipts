@@ -79,6 +79,18 @@ class ALG10Regressions(unittest.TestCase):
             self.assertEqual(2*g-2,d*(d-3))
             self.assertEqual(2-2*g, 2-d*(d-3)-2)
 
+    def test_projective_space_zero_dimensional_base_case(self):
+        src=SOURCE.read_text(encoding="utf-8")
+        block=src.split(r"\label{tw:ga10-cp-cohom}",1)[1].split(
+            r"\end{proof}",1)[0]
+        self.assertIn(r"Dla $n=0$",block)
+        self.assertIn(r"$h=0$",block)
+        self.assertIn(r"\int_{\PP^0(\C)}h^0",block)
+        for n in range(0,41):
+            degrees=[2*j for j in range(n+1)]
+            self.assertEqual(len(degrees),n+1)
+            self.assertEqual(degrees[-1],2*n)
+
     def test_hodge_diamond_k3(self):
         self.assertEqual(1+20+1,22)
         self.assertEqual(2*1+20,22)
