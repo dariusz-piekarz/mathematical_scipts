@@ -36,7 +36,7 @@ Pierwszy przebieg CI zgłosił **regresję testu rozdziału 14**: sztywne `len(c
 GitHub Actions dla poprawionej integracji:
 https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45009390372
 
-W chwili rozpoczęcia raportu workflow przechodzi przez etap kompilacji całej książki; wynik końcowy, PDF i log wymagają jeszcze odczytu.
+Pierwszy pełny workflow `45009390372` zakończył się niepowodzeniem wyłącznie na etapie kontroli logów: samodzielny `general_topology_ch15.tex` nie miał etykiety lematu z rozdziału 14. Kompilacje TeX i testy zakończyły się sukcesem, ale log `general_topology_ch15.log` zgłosił `LaTeX Warning: Reference 'lem:topog-baire-zwarte-domkniecie' undefined`. Poprawiono rozdział 15, zastępując to pojedyncze odwołanie tekstowym wskazaniem „lemat o otoczeniach mających zwarte domknięcia z rozdziału 14”, tak aby samodzielna wersja była samowystarczalna (commit `ec3be9c65dc4dac47b5d4b62a5510e3442b67c41`). Nowy workflow po poprawce: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45009615654 . Oględziny pierwszego PDF (3 strony) nie wykazały kolizji ani przepełnień; ostateczne potwierdzenie dotyczy ponownego CI.
 
 | Warstwa | Status |
 | --- | --- |
@@ -44,7 +44,7 @@ W chwili rozpoczęcia raportu workflow przechodzi przez etap kompilacji całej k
 | Dowód lokalnej skończoności i konstrukcja podziału | Audyt 01: PASS po doprecyzowaniu |
 | Przykłady i testy tożsamości | Testy zintegrowane |
 | Zależności i rozdziały 11–14 | Regresja naprawiona; CI w toku |
-| Kompilacja i oględziny PDF | Weryfikacja w toku |
+| Kompilacja i oględziny PDF | Pierwszy log: brakujący odsyłacz; poprawiono; nowy CI w toku |
 | Stabilność rozdziału | **W AUDYCIE — nie oznaczać jako stabilny** |
 
 Następna iteracja powinna ponownie sprawdzić normalność, wybór pokrycia `W_n`, nośniki oraz rozważyć pełny dowód ogólnego twierdzenia Stone'a.
