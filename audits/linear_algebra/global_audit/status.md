@@ -1,6 +1,6 @@
 # Globalny audyt algebry liniowej — status rozdziałów
 
-**Stan po iteracji 03/09**, 22 listopada 2026.
+**Stan po iteracji 04/09**, 22 listopada 2026.
 
 | Rozdział | Status |
 |---|---|
@@ -16,10 +16,10 @@
 | 10 | 03: 20 dowodów; własność uniwersalna, operatory skończonego rzędu; poprawiono terminologię; PDF/CI otwarte |
 | 11 | 03: 19 dowodów; algebra zewnętrzna, minory, przetasowania; PDF/CI otwarte |
 | 12 | 03: 13 dowodów; polaryzacja, Riesz, Gram--Schmidt; poprawiono 8 sformułowań; PDF/CI otwarte |
-| 13 | oczekuje na globalny audyt |
-| 14 | oczekuje na globalny audyt |
-| 15 | oczekuje na globalny audyt |
-| 16 | oczekuje na globalny audyt |
+| 13 | 04: sprawdzono rzuty, operator sprzężony i najmniejsze kwadraty; źródło bez zmian; PDF/CI otwarte |
+| 14 | 04: sprawdzono Schura, twierdzenie spektralne i jednoczesną triangularizację; doprecyzowano n=0; PDF/CI otwarte |
+| 15 | 04: sprawdzono LU/PLU, Eckarta--Younga i rozkład biegunowy; zdefiniowano zerowe wartości osobliwe i uzupełniono dwa kroki dowodów; PDF/CI otwarte |
+| 16 | 04: sprawdzono Cayleya--Hamiltona, rozkład pierwotny i wielomian minimalny; źródło bez zmian; PDF/CI otwarte |
 | 17 | oczekuje na globalny audyt |
 | 18 | oczekuje na globalny audyt |
 | 19 | oczekuje na globalny audyt |
@@ -37,4 +37,4 @@
 | 31 | oczekuje na globalny audyt |
 | 32 | oczekuje na globalny audyt |
 
-Iteracje 04–09 nie zostały jeszcze wykonane. Nie utożsamiać audytu źródła z pomyślną kompilacją ani audytem wizualnym.
+Iteracja 04 wykonana; iteracje 05–09 nie zostały jeszcze wykonane. Nie utożsamiać audytu źródła z pomyślną kompilacją ani audytem wizualnym.
