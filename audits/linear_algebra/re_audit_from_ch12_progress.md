@@ -10,8 +10,8 @@
 
 - Bieżący rozdział: **25**.
 - Ostatni zamknięty blob (rozdział 24): **92106feafce495e11f051279733cb34e9d9bed64**.
-- Liczba kolejnych czystych audytów (bieżący rozdział 25): **0**.
-- Kolejne działanie: **wykonać ponowny audyt 01 rozdziału 25**. Rozdział 24 zamknięty po dwóch czystych audytach 01–02 bloba `92106feafce495e11f051279733cb34e9d9bed64` i dedykowanym zielonym CI 45021237405.
+- Liczba kolejnych czystych audytów (bieżący rozdział 25): **1/2**.
+- Kolejne działanie: **wykonać audyt 02 rozdziału 25** na identycznym blobie `6b57fc1b64ef560b98e17f89322c688160376ccf`, bez automatycznego zaliczania audytów historycznych; audyt 01 czysty (1/2). Dedykowane CI 45021237405 zakończone sukcesem dla identycznego bloba.
 - Historyczne audyty, w tym ręczne audyty rozdziałów 13–15 z 22 listopada, pozostają ważnymi źródłami, ale **nie są automatycznie liczone** jako wykonanie nowego przebiegu.
 
 ## Tabela statusów
@@ -31,7 +31,7 @@
 | 22 | STABILNY; audyty 03 i 04 czyste po poprawce, CI success | 2 | `dfa3d790bfed4c92c66642ea626a6213bc06ad3f` |
 | 23 | STABILNY; audyty 01 i 02 czyste, CI success | 2 | `bbd199baed1ee2c1a88843aad9fbfd0eac665d22` |
 | 24 | STABILNY; audyty 01 i 02 czyste, CI success | 2 | `92106feafce495e11f051279733cb34e9d9bed64` |
-| 25 | BIEŻĄCY; ponowny audyt 01 do wykonania | 0 | — |
+| 25 | BIEŻĄCY; audyt 01 czysty, audyt 02 do wykonania | 1 | `6b57fc1b64ef560b98e17f89322c688160376ccf` |
 | 26 | W kolejce | 0 | — |
 | 27 | W kolejce | 0 | — |
 | 28 | W kolejce | 0 | — |
@@ -218,3 +218,10 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - Rozdział **24: STABILNY (2/2)**, niezmieniony blob `92106feafce495e11f051279733cb34e9d9bed64` po dwóch kolejnych samodzielnych czystych kontrolach.
 - Raporty [24_iteration_01_2026-11-22.md](re_audit_from_ch12/24_iteration_01_2026-11-22.md) i [24_iteration_02_2026-11-22.md](re_audit_from_ch12/24_iteration_02_2026-11-22.md). Wykonano 80 zespolonych przypadków DARE/CARE, 112 niezależnych skończenohoryzontowych LQR, 96 nowych porównań DARE/CARE z równaniami Lapunowa; wszystkie PASS. Źródło 1452 wiersze, 26 unikalnych etykiet, 31 poprawnych odsyłaczy.
 - [CI 45021237405](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45021237405) completed/success dla commitu zawierającego identyczny blob. Następny: rozdział **25**, audyt 01.
+
+## Ostatnia rzeczywista iteracja — 2026-11-22 (rozdział 25, audyt 01)
+
+- Raport [25_iteration_01_2026-11-22.md](re_audit_from_ch12/25_iteration_01_2026-11-22.md). Rozdział **25: OTWARTY (1/2 czystych audytów)**. Źródło `6b57fc1b64ef560b98e17f89322c688160376ccf` niezmienione; kontrola założeń, Kalmana, PBH, graminów, rozkładu Kalmana, stabilizowalności, wykrywalności i energii nie wykazała błędów.
+- Nowe, lokalnie wykonane niezależne testy `/mnt/data/la25_reaudit_independent.py`: **793** pełne układy wymiaru 2 nad F2/F3 (Kalman, PBH, obserwowalność), **400** dokładnych przypadków rozmieszczenia biegunów, **37** losowych testów graminów i minimalnej energii, razem **1230 PASS, 0 FAIL**. 47 unikalnych etykiet, 30 poprawnych odsyłaczy, 108 domkniętych środowisk.
+- [CI 45021237405](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45021237405): completed/success dla commitu o identycznym blobie. Nowszy run 45021828182 był in_progress w czasie sprawdzenia.
+- Następny: rozdział **25**, audyt **02** na tym samym blobie. Nie przechodzić jeszcze do 26.
