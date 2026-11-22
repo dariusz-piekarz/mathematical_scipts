@@ -113,8 +113,8 @@ class LeanFormalizationTests(unittest.TestCase):
         self.con.execute("UPDATE documents SET sha256=? WHERE id='LST-01'",
                          ("0" * 64,))
         self.con.commit()
-        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \\
-             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \\
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
              patch("backend.lean_formalization.subprocess.run") as spawn:
             result = lean.run(self.con, "sample", lean_root=self.root)
         self.assertEqual(result["proof_status"], "blocked")
@@ -125,7 +125,7 @@ class LeanFormalizationTests(unittest.TestCase):
     def test_runner_rejects_nontext_index_content(self):
         self.con.execute("UPDATE documents SET content=NULL WHERE id='LST-01'")
         self.con.commit()
-        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \\
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
              patch("backend.lean_formalization.subprocess.run") as spawn:
             result = lean.run(self.con, "sample", lean_root=self.root)
         self.assertEqual(result["proof_status"], "blocked")
