@@ -165,5 +165,37 @@ class TestLargeCardinalsChapter37(unittest.TestCase):
         ))
 
 
+    def test_los_nested_boolean_and_quantifier_regression(self):
+        # Principal finite ultrapowers: independent checks of all logical
+        # constructors on a small relational structure, not on ZFC itself.
+        values = tuple(itertools.product(range(3), repeat=3))
+        tested = 0
+        for at in range(3):
+            U = finite_principal_ultrafilter(3, at)
+            for f in values:
+                for g in values:
+                    formulae = (
+                        lambda i: f[i] != g[i] and f[i] < 2,
+                        lambda i: any(z < f[i] and z == g[i] for z in range(3)),
+                        lambda i: all(
+                            z >= f[i] or z < g[i] for z in range(3)
+                        ),
+                        lambda i: not any(
+                            z < f[i] and not (z < g[i])
+                            for z in range(3)
+                        ),
+                    )
+                    for phi in formulae:
+                        truth_set = frozenset(
+                            i for i in range(3) if phi(i)
+                        )
+                        self.assertEqual(
+                            truth_set in U, phi(at)
+                        )
+                        tested += 1
+        self.assertEqual(tested, 3 * 27 * 27 * 4)
+
+
+
 if __name__ == "__main__":
     unittest.main()
