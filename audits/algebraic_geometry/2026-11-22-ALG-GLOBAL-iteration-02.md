@@ -27,3 +27,8 @@ Audyt przekrojowy na aktualnej gałęzi `biblioteka-matematyczna-iteracja-6`, po
 ## Decyzja
 
 **GLOBALNY II: integracja techniczna, główne węzły matematyczne i PDF PASS; znaleziono problem spójności redakcyjnej.** W przeciwieństwie do lokalnego ALG-10/IX globalna stabilizacja pozostaje **OTWARTA**. Do zamknięcia potrzebne rozstrzygnięcie i ewentualna migracja terminologii w ALG-03/04, ich pełne reaudty po zmianach oraz osobny, bezusterkowy audyt globalny III i kontrolny IV. Nie tworzyć ALG-11 automatycznie.
+
+
+## Sprostowanie terminologiczne po audycie III (2026-11-22)
+
+Wskazanie słowa „dywizor” w ALG-03/04 jako błędu wymagającego migracji do „dzielnika” było nieprawidłową oceną normatywną. **„Dywizor” jest poprawnym polskim terminem matematycznym** (w szczególności: „dywizor Weila”, „dywizor główny”, „snop dywizora”); „dzielnik” jest również używanym odpowiednikiem ang. *divisor*. Konwencje terminologiczne mogą współistnieć bez zmiany treści twierdzeń. Nie wykonuje się automatycznej zamiany ani ponownych audytów ALG-03/04 wyłącznie z tej przyczyny. Historyczny opis odkrycia z audytu II zachowano dla przejrzystości, lecz **jego rekomendacja migracji oraz wskazana blokada są anulowane**. Zob. [niezależny audyt globalny III](2026-11-22-ALG-GLOBAL-iteration-03.md).
