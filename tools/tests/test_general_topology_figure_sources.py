@@ -47,8 +47,8 @@ def check() -> None:
             count += 1
 
     assert len(chapters) == 26
-    assert count == 25, ("illustration inventory changed", count)
-    assert len(illustrated) == 16, ("illustrated chapter set changed", len(illustrated))
+    assert count == 27, ("illustration inventory changed", count)
+    assert len(illustrated) == 17, ("illustrated chapter set changed", len(illustrated))
     print(f"PASS figure source inventory: {count} captioned, labeled TikZ figures "
           f"in {len(illustrated)} chapters")
 
