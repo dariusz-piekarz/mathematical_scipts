@@ -74,6 +74,25 @@ def cantor_ultrametric_models() -> int:
     return len(words) ** 3
 
 
+def gdelta_boundary_metric_models() -> int:
+    """Reciprocal distance prevents a Cauchy sequence from escaping (0,1).
+
+    This is a finite numerical model of the complete metric built
+    for G_delta sets: U_1=(0,infinity), U_2=(-infinity,1).
+    """
+    def rho(x, y):
+        return (
+            abs(x-y)
+            + 0.5 * min(1.0, abs(1/x-1/y))
+            + 0.25 * min(1.0, abs(1/(1-x)-1/(1-y)))
+        )
+    for n in range(2, 102):
+        x, y = 1.0/n, 1.0/(2*n)
+        assert rho(x, y) >= 0.5
+        assert abs(x-y) < 1.0/n
+    return 100
+
+
 def check_source() -> tuple[int, int]:
     text = (ROOT / CH).read_text(encoding="utf-8")
     full = (ROOT / "books/pl/general_topology.tex").read_text(encoding="utf-8")
@@ -116,6 +135,14 @@ def check_source() -> tuple[int, int]:
     ):
         assert necessary.lower() in text.lower(), necessary
 
+    for fragment in (
+        r"\$\rho(x_j,x)<\varepsilon\$.",
+        r"\$\sigma(a_m,a_l)<2^{-n}<\varepsilon\$",
+        "dla dowolnych",
+        r"\boldsymbol\Pi^0_{\alpha_n+1}",
+    ):
+        assert fragment in text, fragment
+
     for env in ("definicja", "twierdzenie", "lemat", "stwierdzenie",
                 "przyklad", "uwaga", "proof"):
         assert text.count(r"\begin{" + env + "}") == text.count(
@@ -145,7 +172,8 @@ def check_source() -> tuple[int, int]:
 if __name__ == "__main__":
     topologies, traces = finite_borel_models()
     triples = cantor_ultrametric_models()
+    boundary = gdelta_boundary_metric_models()
     labels, refs = check_source()
     print("PASS ch19: finite topologies=%d, Borel traces=%d, "
-          "Cantor ultrametric triples=%d, labels=%d, refs=%d"
-          % (topologies, traces, triples, labels, refs))
+          "Cantor ultrametric triples=%d, G-delta boundary cases=%d, labels=%d, refs=%d"
+          % (topologies, traces, triples, boundary, labels, refs))
