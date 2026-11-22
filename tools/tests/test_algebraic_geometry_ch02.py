@@ -38,11 +38,11 @@ class ALG02ProjectiveRegressions(unittest.TestCase):
             self.assertEqual(len(projective_points(p, 2)), p*p + p + 1)
 
     def test_parallel_affine_lines_meet_at_infinity(self):
-        # Coordinates [Z:X:Y], equations Y=0 and Y-Z=0.
+        # Coordinates [X:Y:Z], equations Y=0 and Y-Z=0.
         for p in PRIMES:
             points = {a for a in projective_points(p, 2)
-                      if a[2] == 0 and (a[2]-a[0]) % p == 0}
-            self.assertEqual(points, {(0, 1, 0)})
+                      if a[1] == 0 and (a[1]-a[2]) % p == 0}
+            self.assertEqual(points, {(1, 0, 0)})
 
     def test_two_standard_charts_cover_projective_line(self):
         for p in PRIMES:
@@ -76,14 +76,14 @@ class ALG02ProjectiveRegressions(unittest.TestCase):
 
     def test_homogenization_generators_spurious_point(self):
         # Original I=(x,xy-y)=(x,y). Naively homogenized:
-        # J=(X,XY-YZ), which incorrectly adds [Z:X:Y]=[0:0:1].
+        # J=(X,XY-YZ), which incorrectly adds [X:Y:Z]=[0:1:0].
         for p in PRIMES:
             naive = {v for v in projective_points(p, 2)
-                     if v[1] == 0 and (v[1]*v[2]-v[2]*v[0]) % p == 0}
+                     if v[0] == 0 and (v[0]*v[1]-v[1]*v[2]) % p == 0}
             correct = {v for v in projective_points(p, 2)
-                       if v[1] == 0 and v[2] == 0}
-            self.assertEqual(naive, {(1, 0, 0), (0, 0, 1)})
-            self.assertEqual(correct, {(1, 0, 0)})
+                       if v[0] == 0 and v[1] == 0}
+            self.assertEqual(naive, {(0, 0, 1), (0, 1, 0)})
+            self.assertEqual(correct, {(0, 0, 1)})
 
     def test_cremona_base_locus_and_involution(self):
         for p in PRIMES:
