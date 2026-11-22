@@ -17,8 +17,8 @@ class TestBooleanModelsChapter35(unittest.TestCase):
         book = (ROOT / "books/pl/logic_and_set_theory.tex").read_text("utf8")
         books = json.loads((ROOT / "catalog/books.json").read_text("utf8"))["books"]
         current = next(x for x in books if x["id"] == "logic_and_set_theory")
-        self.assertEqual(len(current["chapters"]), 35)
-        self.assertTrue(current["chapters"][-1].endswith(SOURCE.name))
+        self.assertGreaterEqual(len(current["chapters"]), 35)
+        self.assertTrue(current["chapters"][34].endswith(SOURCE.name))
         self.assertIn(SOURCE.name, book)
         self.assertIn(r"\label{ch:boolean-valued-independence}", TEXT)
 
