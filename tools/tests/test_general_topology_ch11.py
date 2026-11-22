@@ -85,7 +85,6 @@ def lint() -> tuple[int, int]:
         "thm:topog-baire-podprzestrzen-zupelna",
         "prop:topog-baire-rownowaznosci",
         "thm:topog-baire-metryczne",
-        "thm:topog-baire-lokalnie-zwarte",
         "thm:topog-baire-wymierne-nie-gdelta",
         "cor:topog-baire-domkniete",
     ]
@@ -100,8 +99,9 @@ def lint() -> tuple[int, int]:
     refs = re.findall(r"\\(?:ref|eqref|pageref)\{([^}]+)\}", src)
     assert len(labels) == len(set(labels)), "duplicate labels"
     assert set(refs) <= set(labels), sorted(set(refs) - set(labels))
-    assert r"\overline W^{\,X}=\overline H^{\,K}" in src
     assert r"$K_1\supseteq K_2\supseteq\cdots$" in src
+    assert r"\label{def:topog-baire-lokalna-zwartosc}" not in src
+    assert r"\label{thm:topog-baire-lokalnie-zwarte}" not in src
     assert r"$\Q$ jest pierwszej kategorii w sobie" in src
     assert not re.search(r"\b(?:sekwencj\w*|tensorowanie|zwartościowani\w*)\b", src, re.I)
     assert not re.search(r"\b(?:pierwszoprzeliczaln\w*|drugoprzeliczaln\w*)\b", src, re.I)
