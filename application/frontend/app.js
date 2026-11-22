@@ -168,28 +168,30 @@ function addLineRange(startLine,endLine){
   });
   renderSelection();toast("Dodano wycinek do zestawu.");
 }
-function addExcerpt(){
+// The generator and Lean must resolve text selections to the same absolute,
+// whole-line coordinates of the canonical indexed module (not display offsets).
+function selectedReaderWholeLines(){
   const data=state.currentData,source=$("latexSource"),sel=window.getSelection();
-  if(!data||state.simplified||!sel||sel.isCollapsed||!sel.rangeCount){
-    toast("Zaznacz fragment tekstu w widoku źródła LaTeX.");return;
-  }
+  if(!data||!state.currentModule||state.simplified||!sel||sel.isCollapsed||!sel.rangeCount)return null;
   const range=sel.getRangeAt(0);
-  if(!source.contains(range.startContainer)||!source.contains(range.endContainer)){
-    toast("Zaznaczenie musi mieścić się w źródle LaTeX.");return;
-  }
+  if(!source.contains(range.startContainer)||!source.contains(range.endContainer))return null;
   const prefix=range.cloneRange();
   prefix.selectNodeContents(source);
   prefix.setEnd(range.startContainer,range.startOffset);
   const start=prefix.toString().length,end=start+range.toString().length;
-  if(end<=start||end>data.latex.length){
-    toast("Nie można wyznaczyć wierszy zaznaczenia.");return;
-  }
+  if(end<=start||end>data.latex.length)return null;
   const first=data.entity?data.entity.start_line:1;
   const countNewlines=text=>(text.match(/\n/g)||[]).length;
   const startLine=first+countNewlines(data.latex.slice(0,start));
   const endLine=first+countNewlines(data.latex.slice(0,end-1));
-  addLineRange(startLine,endLine);
-  sel.removeAllRanges();
+  if(!Number.isSafeInteger(startLine)||!Number.isSafeInteger(endLine)||endLine<startLine)return null;
+  return {module_id:state.currentModule,start_line:startLine,end_line:endLine};
+}
+function addExcerpt(){
+  const lines=selectedReaderWholeLines();
+  if(!lines){toast("Zaznacz poprawny fragment w źródle LaTeX.");return;}
+  addLineRange(lines.start_line,lines.end_line);
+  window.getSelection().removeAllRanges();
 }
 function addRange(){
   addLineRange(Number($("rangeStart").value),Number($("rangeEnd").value));
@@ -903,24 +905,13 @@ function openLeanCurrent(){
   loadLeanFragment({module_id:state.currentModule,start_line:a,end_line:b});
 }
 function openLeanSelection(){
-  const data=state.currentData,source=$("latexSource"),sel=window.getSelection();
-  if(!data||state.simplified||!sel||sel.isCollapsed||!sel.rangeCount){
-    toast("Zaznacz dokładny fragment w źródle LaTeX.");return;
+  const lines=selectedReaderWholeLines();
+  if(!lines){toast("Zaznacz dokładny fragment w źródle LaTeX.");return;}
+  if(lines.end_line-lines.start_line>300){
+    toast("Dla Lean wybierz najwyżej 301 pełnych wierszy.");return;
   }
-  const range=sel.getRangeAt(0);
-  if(!source.contains(range.startContainer)||!source.contains(range.endContainer)){
-    toast("Zaznaczenie musi być w źródle LaTeX.");return;
-  }
-  const prefix=range.cloneRange();prefix.selectNodeContents(source);
-  prefix.setEnd(range.startContainer,range.startOffset);
-  const start=prefix.toString().length,end=start+range.toString().length;
-  if(end<=start||end>data.latex.length){toast("Nie udało się ustalić wierszy.");return;}
-  const first=data.entity?data.entity.start_line:1;
-  const n=s=>(s.match(/\n/g)||[]).length;
-  const startLine=first+n(data.latex.slice(0,start));
-  const endLine=first+n(data.latex.slice(0,end-1));
-  sel.removeAllRanges();
-  loadLeanFragment({module_id:state.currentModule,start_line:startLine,end_line:endLine});
+  window.getSelection().removeAllRanges();
+  loadLeanFragment(lines);
 }
 // Guard asynchronous Lean results by both selection epoch and exact fragment.
 function isCurrentLeanRun(epoch,item){
