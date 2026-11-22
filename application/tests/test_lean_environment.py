@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 from pathlib import Path
+import hashlib
+import os
 import shutil
 import subprocess
 import tempfile
@@ -229,6 +231,81 @@ class LeanEnvironmentTests(unittest.TestCase):
                             second["artifacts"][0]["sha256"])
         self.assertEqual(first["artifacts"][0]["size"],
                          second["artifacts"][0]["size"])
+
+    def test_olean_lexical_name_optimization_preserves_original_tree_schema(self):
+        """Compare with the pre-optimization algorithm, including exact key order."""
+        root = self.root / ".lake" / "build" / "lib" / "lean"
+        for name, contents in (
+            ("Zeta.olean", b"foo"),
+            ("sub/Alpha.olean", b"something longer"),
+            ("sub/Nazwa_ż.olean", b"polish"),
+            ("_nested/Ord.olean", b""),
+        ):
+            artifact = root / name
+            artifact.parent.mkdir(parents=True, exist_ok=True)
+            artifact.write_bytes(contents)
+        (root / "sub" / "ignored.txt").write_bytes(b"not an artifact")
+
+        def previous_implementation(budget):
+            # This reproduces the earlier name/sort/read path, NOT a
+            # replacement production fingerprint or weaker digest.
+            paths = []
+            for directory, dirs, names in os.walk(root, followlinks=False):
+                base = Path(directory)
+                if any((base / name).is_symlink() for name in dirs):
+                    raise ValueError("Symlinked Lake artifact directory")
+                for name in names:
+                    artifact = base / name
+                    if artifact.suffix == ".olean":
+                        if artifact.is_symlink():
+                            raise ValueError("Symlinked Lake .olean artifact")
+                        paths.append(artifact)
+            entries = []
+            metadata_only = 0
+            for artifact in sorted(paths, key=lambda x: x.relative_to(root).as_posix()):
+                info = artifact.stat()
+                if not artifact.is_file():
+                    raise ValueError("Lake .olean artifact is not a regular file")
+                entry = {
+                    "name": artifact.relative_to(root).as_posix(),
+                    "size": info.st_size,
+                    "mtime_ns": info.st_mtime_ns,
+                    "ctime_ns": info.st_ctime_ns,
+                    "inode": info.st_ino,
+                }
+                if info.st_size <= budget:
+                    digest = hashlib.sha256()
+                    with artifact.open("rb") as stream:
+                        for chunk in iter(lambda: stream.read(128 * 1024), b""):
+                            digest.update(chunk)
+                        open_size = os.fstat(stream.fileno()).st_size
+                    after = artifact.stat()
+                    if (info.st_size != open_size or info.st_size != after.st_size
+                            or info.st_mtime_ns != after.st_mtime_ns
+                            or info.st_ctime_ns != after.st_ctime_ns
+                            or info.st_ino != after.st_ino):
+                        raise ValueError("Lake .olean artifact changed while fingerprinting")
+                    entry["sha256"] = digest.hexdigest()
+                    budget -= info.st_size
+                else:
+                    entry["content"] = "metadata_only"
+                    metadata_only += 1
+                entries.append(entry)
+            return {
+                "label": "project", "state": "built",
+                "coverage": "metadata_only" if metadata_only else "content_sha256",
+                "artifacts": entries,
+            }
+
+        for budget in (0, 3, 128 * 1024):
+            with self.subTest(budget=budget):
+                expected = previous_implementation(budget)
+                actual = lean_environment._olean_tree(
+                    root, label="project", budget=[budget])
+                self.assertEqual(expected, actual)
+                self.assertEqual(
+                    [x["name"] for x in actual["artifacts"]],
+                    sorted(x["name"] for x in actual["artifacts"]))
 
     def test_unresolved_path_is_recorded_not_verified(self):
         fake = self.root / "missing"
