@@ -452,3 +452,26 @@ Kontynuować etapami pozostałe dowody,
 szczególnie techniczne fragmenty
 rozdziałów 12–18, oraz pełną
 kontrolę rysunków książki.
+
+
+## Globalny audyt 08 — twierdzenie Nagaty--Smirnowa
+
+[Audyt 08](../../audits/general_topology/00-globalny-audyt-08-rozdzial-15-nagata-smirnow.md)
+obejmuje szczegółową niezależną weryfikację
+twierdzenia Nagaty--Smirnowa w stabilnym rozdziale 15
+(blob `82e0fb5be75489017c8ea1844c698c87ce580901`).
+Sprawdzono konieczność przez twierdzenie Stone'a,
+konstrukcję normalności z bazy będącej
+przeliczalną sumą rodzin lokalnie skończonych,
+funkcje o zadanym zbiorze dodatniości,
+ciągłość odwzorowania
+\(F:X\to\ell^\infty(J)\)
+przy potencjalnie nieprzeliczalnym J
+oraz homeomorfizm na obraz.
+Nie znaleziono brakujących hipotez
+ani błędów w skontrolowanym dowodzie.
+Nie zmieniono stabilnego źródła rozdziału.
+
+Globalny audyt całej książki pozostaje otwarty:
+nie wszystkie pozostałe dowody
+przeszły niezależny audyt dowód po dowodzie.
