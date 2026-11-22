@@ -72,6 +72,37 @@ class ALG06Regressions(unittest.TestCase):
         self.assertFalse(higher)
         self.assertEqual(6+len(linear)+len(conic), 27)
 
+    def test_27_lines_intersection_configuration(self):
+        # In Pic(S)=ZH ⊕ ZE_1 ⊕ ... ⊕ ZE_6, pairing diag(1,-1,...).
+        curves = []
+        for i in range(6):
+            e = [0]*7
+            e[i+1] = 1
+            curves.append(tuple(e))
+        for i in range(6):
+            for j in range(i+1, 6):
+                ell = [0]*7
+                ell[0] = 1
+                ell[i+1] = ell[j+1] = -1
+                curves.append(tuple(ell))
+        for i in range(6):
+            conic = [2] + [-1]*6
+            conic[i+1] = 0
+            curves.append(tuple(conic))
+        L = (3,) + (-1,)*6  # -K_S
+        def intersection(a, b):
+            return a[0]*b[0] - sum(x*y for x, y in zip(a[1:], b[1:]))
+        self.assertEqual(len(curves), 27)
+        self.assertEqual(len(set(curves)), 27)
+        self.assertTrue(all(intersection(c, c) == -1 for c in curves))
+        self.assertTrue(all(intersection(L, c) == 1 for c in curves))
+        for a in curves:
+            matches = [intersection(a, b) for b in curves if a != b]
+            self.assertEqual(matches.count(1), 10)
+            self.assertEqual(matches.count(0), 16)
+            self.assertTrue(all(n in (0, 1) for n in matches))
+        self.assertEqual(27*10//2, 135)
+
     def test_fermat_27_explicit_lines(self):
         # Over F_7, -1 has exactly 3 cube roots, as over C.
         p = 7
