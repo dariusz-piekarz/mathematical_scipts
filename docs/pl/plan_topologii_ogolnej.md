@@ -21,7 +21,7 @@ Stan: 22 listopada 2026. Źródłem prawdy dla rozdziałów włączonych do ksi�
 | **13** | **Zupełność jednostajna i uzupełnienia metryczne/jednostajne** | **stabilny — audyt 05** |
 | **14** | **Zwartość lokalna, twierdzenie Baire'a, podprzestrzenie, iloczyny, przeliczalność w nieskończoności i wyczerpania zwarte** | **stabilny — audyt 03** |
 | **15** | **Parazwartość, lokalnie skończone pokrycia i podziały jedności; związki z metryzowalnością** | **stabilny — audyt 06; twierdzenia Stone’a i Nagaty–Smirnowa z pełnymi dowodami** |
-| **16** | **Topologia wyznaczona przez funkcje, przestrzenie całkowicie regularne, uzwarcenia i ich równoważność** | **rozdział napisany — audyt 01** |
+| **16** | **Topologia wyznaczona przez funkcje, przestrzenie całkowicie regularne, uzwarcenia i ich równoważność** | **audyt 02 zakończony; kontrola niezależna 03 w planie** |
 | 17 | Uzwarcenie Aleksandrowa oraz uzwarcenie Čecha–Stone’a | plan |
 | 18 | Przestrzenie odwzorowań, topologia zbieżności jednostajnej na zbiorach zwartych | plan |
 | 19 | Przestrzenie polskie i hierarchia zbiorów borelowskich | plan |
