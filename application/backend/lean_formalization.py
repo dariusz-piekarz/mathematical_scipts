@@ -221,8 +221,22 @@ def fragment(con: sqlite3.Connection, *, entity_id: str | None = None,
 def availability(lean_root: Path = LEAN_ROOT) -> dict[str, Any]:
     lake = shutil.which("lake")
     enabled = os.environ.get("MATLIB_LEAN_RUN") == "1"
+    try:
+        memory_mb = lean_process.configured_memory_limit_mb()
+        memory_error = None
+    except ValueError as exc:
+        memory_mb, memory_error = None, str(exc)
+    memory_supported = lean_process.memory_limit_supported()
+    memory_ready = memory_error is None and (memory_mb is None or memory_supported)
     return {"runner_enabled": enabled, "lake_available": bool(lake),
-            "ready": enabled and bool(lake) and (lean_root / "lakefile.toml").is_file(),
+            "ready": enabled and bool(lake) and memory_ready
+            and (lean_root / "lakefile.toml").is_file(),
+            "memory_limit_mb": memory_mb,
+            "memory_limit_enforced": memory_mb is not None and memory_supported,
+            "memory_limit_supported": memory_supported,
+            "memory_limit_error": memory_error if memory_error is not None else
+            ("Nieobsługiwany system limitu pamięci." if memory_mb is not None
+             and not memory_supported else None),
             "toolchain": (lean_root / "lean-toolchain").read_text(encoding="utf-8").strip()
             if (lean_root / "lean-toolchain").exists() else None,
             "registered_formalizations": len(_registry(lean_root))}
@@ -257,6 +271,15 @@ def run(con: sqlite3.Connection, formalization_id: str,
         return {"formalization_id": formalization_id, "proof_status": "blocked",
                 "detail": "Uruchamianie lokalne jest wyłączone. Ustaw MATLIB_LEAN_RUN=1.",
                 "certificate": False}
+    try:
+        memory_mb = lean_process.configured_memory_limit_mb()
+    except ValueError as exc:
+        return {"formalization_id": formalization_id, "proof_status": "blocked",
+                "detail": str(exc), "certificate": False}
+    if memory_mb is not None and not lean_process.memory_limit_supported():
+        return {"formalization_id": formalization_id, "proof_status": "blocked",
+                "detail": "Nie można wymusić limitu pamięci na tym systemie.",
+                "certificate": False}
     if shutil.which("lake") is None:
         return {"formalization_id": formalization_id, "proof_status": "toolchain_unavailable",
                 "detail": "Nie znaleziono polecenia lake (Lean 4).", "certificate": False}
@@ -289,7 +312,10 @@ def run(con: sqlite3.Connection, formalization_id: str,
     command = ["lake", "env", "lean", str(item["_file"].relative_to(lean_root))]
     try:
         returncode, log, timed_out = lean_process.execute_registered(
-            command, lean_root, timeout=TIMEOUT_SECONDS)
+            command, lean_root, timeout=TIMEOUT_SECONDS, memory_limit_mb=memory_mb)
+    except lean_process.MemoryLimitUnavailable as exc:
+        return {"formalization_id": formalization_id, "proof_status": "blocked",
+                "detail": str(exc), "certificate": False}
     except RuntimeError as exc:
         return finish("failed", "Niekompletny odczyt wyniku procesu Lean.", str(exc)[:500])
     except OSError as exc:
