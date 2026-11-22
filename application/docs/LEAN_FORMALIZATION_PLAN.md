@@ -112,3 +112,8 @@ Do wyświetlenia certyfikatu **Zweryfikowane matematycznie** wymagane są jednoc
 - Commity: `114a5537`, `2e7d8173`. Testy GitHub Actions uruchamiane przez push; **wynik tej iteracji niepotwierdzony w chwili zapisu**, nie deklarować zaliczenia bez sprawdzenia workflow. Poprzedni CI `45011821712` zakończył się sukcesem.
 - Bez zmian w źródłach `.tex` i rejestrze Lean. `certificate=false` pozostaje zasadą; brak toolchaina to `toolchain_unavailable`, nie `verified`.
 - Następny krok: sprawdzić CI nowego commitu; następnie ograniczyć zasoby i wielkość wyjścia procesu Lean, z testami timeout i przerwania procesu potomnego.
+
+### Strumień A — regresja diagnostyki runnera (22.11.2026)
+- Dodano `test_runner_truncates_large_output_and_never_certifies_failure` w `application/tests/test_lean_formalization.py`: symulowany nieudany proces emituje 100000 znaków stdout i końcową diagnostykę stderr; test wymaga statusu `failed`, `certificate=false`, logu o długości najwyżej 16000 znaków i poprawnego odczytu historii uruchomienia.
+- Commit testu: `6e8b6cda`. Test nie jest dowodem ograniczenia pamięci subprocess: `capture_output=True` nadal buforuje pełne stdout/stderr przed przycięciem. Nie deklarować ochrony przed nadmiernym wyjściem procesu.
+- W chwili zapisu nie ma potwierdzonego wyniku CI tego commitu. Następny krok: sprawdzić GitHub Actions, następnie zaimplementować ograniczone strumieniowanie wyjścia i niezawodne zakończenie grupy procesów przy timeout, z testami procesów potomnych, bez uruchamiania kodu z klienta.
