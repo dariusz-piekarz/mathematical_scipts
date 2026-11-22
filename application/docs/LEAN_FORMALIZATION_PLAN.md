@@ -229,3 +229,10 @@ Do wyświetlenia certyfikatu **Zweryfikowane matematycznie** wymagane są jednoc
 - Krawędzie mają jawnie ograniczoną semantykę; import `Mathlib` nie dowodzi użycia konkretnego lematu, a deklaracja w manifeście nie poświadcza elaboracji. Stan kompilacji jest osobny, zawsze `certificate=false`.
 - Dodano testy parsera komentarzy Lean, rozmiarów i importów, integralności SHA, HTTP na LST-01 oraz asynchronicznego JS przez Node. Raport: `application/docs/LEAN_DEPENDENCY_GRAPH_2026-11-22.md`. Nowszy wynik CI wymaga weryfikacji; nie modyfikowano źródeł `.tex` i `application/lean/`.
 - Kolejna faza: rzeczywiście wyeksportowane zależności deklaracji przez Lean (potwierdzona wersja narzędzi) i oddzielne rozróżnienie powiązań semantycznych od syntaktycznych.
+
+### Strumień A — rzeczywista inspekcja referencji w wyrażeniach Lean (22.11.2026)
+- Dodano lokalne, jawnie uruchamiane `POST /api/lean/dependencies/inspect`: kopia wyłącznie zarejestrowanego pliku z instrumentacją `run_meta`, wykorzystującą `Lean.Meta.getConstInfo` i `ConstantInfo.getUsedConstantsAsSet` do odczytu stałych z elaborowanych typów i wartości deklaracji.
+- Odmowa bez `MATLIB_LEAN_RUN=1`, aktualnego przypięcia SHA i dostępnego Lake, blokada międzyprocesowa, limity procesu/wyjścia oraz kontrola fingerprintu i źródła przed/po; niekompletne wyniki odrzucane. Dane nie trafiają do zwykłej historii kompilacji.
+- Panel grafu: przycisk inspekcji i osobne listy stałych dla każdej deklaracji. Zabezpieczenie starych odpowiedzi asynchronicznych, wyświetlanie przez `textContent`. Testy Python, HTTP i Node. Opis: `application/docs/LEAN_DECLARATION_INTROSPECTION_2026-11-22.md`.
+- Wynik `complete` oznacza jedynie udaną inspekcję w rzeczywiście uruchomionym Lean. Nie jest to domknięcie zależności ani minimalny graf przesłanek, nie przyznaje certyfikatu i nie poświadcza semantycznej zgodności z LaTeX-em.
+- **Do wykonania:** realny smoke test wygenerowanego `run_meta` w przypiętej wersji Lean 4.26.0 z Mathlib, dokładny wynik końcowego CI po ostatnim commicie i dalsze badanie pokrycia nietypowych nazw stałych.
