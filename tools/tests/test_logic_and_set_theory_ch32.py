@@ -115,6 +115,28 @@ class TestChapter32(unittest.TestCase):
         self.assertIn("nie udowodniliśmy", TEXT)
         self.assertIn(r"M[G]\models\mathrm{ZFC}", TEXT)
 
+    def test_small_forcing_names_and_valuations(self):
+        # Toy model of names and valuations for two conditions.
+        empty = frozenset()
+        one = frozenset({empty})  # 1={0} as a von Neumann ordinal
+        conditions = {empty, one}
+        top = empty
+        G = conditions
+
+        def check(x):
+            return frozenset((check(y), top) for y in x)
+
+        def value(name):
+            return frozenset(value(sigma) for sigma, p in name if p in G)
+
+        dot_G = frozenset((check(p), p) for p in conditions)
+        self.assertEqual(value(check(empty)), empty)
+        self.assertEqual(value(check(one)), one)
+        self.assertEqual(value(dot_G), frozenset(G))
+        self.assertIn("Schemat zastępowania", TEXT)
+        self.assertIn("rangi są wspólnie ograniczone", TEXT)
+        self.assertIn(r"X\in N_{\alpha+1}", TEXT)
+
     def test_no_unproved_forcing_theorem(self):
         self.assertNotIn(r"\begin{twierdzenie}[M[G] spełnia ZFC]", TEXT)
         self.assertIn(r"p\Vdash\varphi", TEXT)
