@@ -10,8 +10,8 @@
 
 - Bieżący rozdział: **13**.
 - Ostatni sprawdzony blob (rozdział 13, po poprawce): **cc5d09ff605ccf8bb7572ec56d4cc1f690edf3af**.
-- Liczba kolejnych czystych audytów od ostatniej poprawki (bieżący rozdział 13): **0**.
-- Kolejne działanie: **wykonać audyt 02 rozdziału 13 na nowym blobie**. W iteracji 01 poprawiono usterkę językową; licznik czystych kontroli wynosi 0.
+- Liczba kolejnych czystych audytów od ostatniej poprawki (bieżący rozdział 13): **1**.
+- Kolejne działanie: **wykonać audyt 03 rozdziału 13 na tym samym blobie**. Iteracja 02 była czysta; licznik wynosi 1/2.
 - Historyczne audyty, w tym ręczne audyty rozdziałów 13–15 z 22 listopada, pozostają ważnymi źródłami, ale **nie są automatycznie liczone** jako wykonanie nowego przebiegu.
 
 ## Tabela statusów
@@ -19,7 +19,7 @@
 | Rozdział | Stan nowej sekwencji | Czyste kontrole po ostatniej zmianie | Ostatni SHA |
 |---|---|---:|---|
 | 12 | STABILNY; iteracje 01 i 02 czyste, CI success | 2 | `ded0c69dc298d00842d4009073e2444e1037952a` |
-| 13 | OTWARTY; iteracja 01, poprawka językowa; oczekuje dwóch czystych audytów i CI | 0 | `cc5d09ff605ccf8bb7572ec56d4cc1f690edf3af` |
+| 13 | OTWARTY; iteracja 02 czysta, CI success dla bloba; wymagany audyt 03 | 1 | `cc5d09ff605ccf8bb7572ec56d4cc1f690edf3af` |
 | 14 | W kolejce | 0 | — |
 | 15 | W kolejce | 0 | — |
 | 16 | W kolejce | 0 | — |
@@ -66,3 +66,10 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - Poprawiono niegramatyczne objaśnienie sprzężonej transpozycji; matematyka nie wymagała zmian.
 - Raport: [13_iteration_01_2026-11-22.md](re_audit_from_ch12/13_iteration_01_2026-11-22.md), commit [19e13dc3](https://github.com/dariusz-piekarz/mathematical_scipts/commit/19e13dc3c19e5a8ebedfb5cb021ff8def1bf7a9f).
 - **Stan 13: otwarty, 0/2** czystych kontroli po ostatniej zmianie. Zielony wcześniejszy CI nie potwierdza nowego bloba. Następny: audyt 02 rozdziału 13.
+
+## Ostatnia rzeczywista iteracja — 2026-11-22 (rozdział 13, audyt 02)
+
+- Rozdział 13: czysta kontrola **1/2** bloba `cc5d09ff605ccf8bb7572ec56d4cc1f690edf3af`, bez zmiany źródła.
+- Raport: [13_iteration_02_2026-11-22.md](re_audit_from_ch12/13_iteration_02_2026-11-22.md), commit [53a273aa](https://github.com/dariusz-piekarz/mathematical_scipts/commit/53a273aa3fdae171de0e8e435bb4909a9208cc95).
+- [CI 45015993405](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45015993405): success dla commitu `b709ed3b18b9add604ddfbe404d4ca6379088224`, zawierającego ten sam blob.
+- Następny krok: audyt 03 rozdziału 13. Nie deklarowano nowej kompilacji PDF ani testów numerycznych.
