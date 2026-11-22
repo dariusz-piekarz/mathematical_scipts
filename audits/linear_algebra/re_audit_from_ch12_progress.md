@@ -10,8 +10,8 @@
 
 - Bieżący rozdział: **19**.
 - Ostatni zamknięty blob (rozdział 18): **ef815633cf3a1f795d912c510fbc8575f21e464d**.
-- Liczba kolejnych czystych audytów (bieżący rozdział 19): **0**.
-- Kolejne działanie: **wykonać audyt 03 rozdziału 19** na najnowszym blobie `dd289d5c86452910a89d60ddfbcc558ef6d5be85`. Audyt 02 wykrył i naprawił indeksowanie bloku Smitha oraz fleksję; licznik czystych audytów po ostatniej poprawce: 0/2. Dedykowane CI dla commitu poprawki: success (run 45020307205).
+- Liczba kolejnych czystych audytów (bieżący rozdział 19): **1**.
+- Kolejne działanie: **wykonać audyt 04 rozdziału 19** na niezmienionym blobie `dd289d5c86452910a89d60ddfbcc558ef6d5be85`. Audyt 03 czysty; licznik czystych audytów po ostatniej zmianie: 1/2. Dedykowane CI success (run 45020307205).
 - Historyczne audyty, w tym ręczne audyty rozdziałów 13–15 z 22 listopada, pozostają ważnymi źródłami, ale **nie są automatycznie liczone** jako wykonanie nowego przebiegu.
 
 ## Tabela statusów
@@ -25,7 +25,7 @@
 | 16 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `4f8da3c4b87b87ee8f8e6f7c7504637485c6e09a` |
 | 17 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `05b93309d0e444f1c3fcbe3489cfd98a0f02846f` |
 | 18 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `ef815633cf3a1f795d912c510fbc8575f21e464d` |
-| 19 | BIEŻĄCY; audyt 02 z dwiema poprawkami; audyt 03 do wykonania | 0 | `dd289d5c86452910a89d60ddfbcc558ef6d5be85` |
+| 19 | OTWARTY; audyt 03 czysty po poprawkach audytu 02, dedykowane CI success | 1 | `dd289d5c86452910a89d60ddfbcc558ef6d5be85` |
 | 20 | W kolejce | 0 | — |
 | 21 | W kolejce | 0 | — |
 | 22 | W kolejce | 0 | — |
@@ -172,3 +172,10 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - Blob po poprawkach: `dd289d5c86452910a89d60ddfbcc558ef6d5be85`. Audyt nieczysty, licznik **0/2** po ostatniej edycji. 1484 niezależne testy numeryczne PASS; 20 etykiet unikalnych, 14 odsyłaczy poprawnych.
 - [Dedykowane CI 45020307205](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45020307205): completed/success na commicie `b52330c2ca5497b4612cf320f49f1898e527729b` z tym samym blobem.
 - Następny: audyt 03 rozdziału 19.
+
+## Ostatnia rzeczywista iteracja — 2026-11-22 (rozdział 19, audyt 03)
+
+- Rozdział **19: OTWARTY (1/2)**, niezależny czysty audyt po poprawkach audytu 02 na blobie `dd289d5c86452910a89d60ddfbcc558ef6d5be85`, bez zmiany źródła.
+- Raport: [19_iteration_03_2026-11-22.md](re_audit_from_ch12/19_iteration_03_2026-11-22.md), [commit c6b1450](https://github.com/dariusz-piekarz/mathematical_scipts/commit/c6b1450433a735a79b4d0516a7f599cc830ba39d).
+- Dedykowane CI: [run 45020307205](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45020307205), completed/success na commicie `b52330c2ca5497b4612cf320f49f1898e527729b` z identycznym blobem.
+- Następny: rozdział **19**, audyt 04; jeśli czysty na niezmienionym blobie, zamknąć jako stabilny i przejść do 20.
