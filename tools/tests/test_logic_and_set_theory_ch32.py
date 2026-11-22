@@ -198,7 +198,8 @@ class TestChapter32(unittest.TestCase):
         # ones and preorders without a greatest condition.
         from itertools import product
         counts = {"preorders": 0, "filters": 0, "generics": 0,
-                  "dense_suborders": 0, "generic_transfers": 0}
+                  "dense_suborders": 0, "generic_transfers": 0,
+                  "rasiowa_cases": 0}
         for n in (1, 2, 3):
             universe = set(range(n))
             optional = [(p, q) for p in universe for q in universe if p != q]
@@ -238,6 +239,25 @@ class TestChapter32(unittest.TestCase):
                     )
 
                 dense_in_P = [D for D in subsets if is_dense(D, universe)]
+                # Exhaustive two-stage Rasiowa-Sikorski construction
+                # for every initial condition and ordered pair of dense sets.
+                for p0 in universe:
+                    for D0 in dense_in_P:
+                        for D1 in dense_in_P:
+                            chain = [p0]
+                            for D in (D0, D1):
+                                chain.append(min(
+                                    q for q in D if leq(q, chain[-1])
+                                ))
+                            R = {
+                                q for q in universe
+                                if any(leq(p, q) for p in chain)
+                            }
+                            self.assertTrue(is_filter(R, universe))
+                            self.assertIn(p0, R)
+                            self.assertTrue(R & D0)
+                            self.assertTrue(R & D1)
+                            counts["rasiowa_cases"] += 1
                 for G in subsets:
                     if not is_filter(G, universe):
                         continue
@@ -278,6 +298,7 @@ class TestChapter32(unittest.TestCase):
         self.assertEqual(counts, {
             "preorders": 34, "filters": 84, "generics": 49,
             "dense_suborders": 110, "generic_transfers": 140,
+            "rasiowa_cases": 1276,
         })
 
     def test_no_unproved_forcing_theorem(self):
