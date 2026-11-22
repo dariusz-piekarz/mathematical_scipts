@@ -76,6 +76,7 @@ vm.runInContext(fs.readFileSync(0,'utf8'),ctx);
  assert.equal(linked[2].children.length,0,'stale declaration must not navigate');
  ctx.renderLeanInspection({inspection_status:'complete',
    detail:'split by type/value',extraction_method:'Lean.ConstantInfo.getUsedConstantsAsSet',
+   inspection_schema_version:1,inspection_snapshot_sha256:'d'.repeat(64),
    constants:{theorem_new:['Aux.value','Eq']},
    type_constants:{theorem_new:['Eq']},
    value_constants:{theorem_new:['Aux.value']},
@@ -91,6 +92,8 @@ vm.runInContext(fs.readFileSync(0,'utf8'),ctx);
  assert.equal(classified[4].children[0].children[0].textContent,'Aux.value');
  assert.equal(classified[4].children[0].children[0].tag,'button');
  assert.match(ui.leanInspection.children[2].textContent,/bez domknięcia przechodniego/);
+ assert.match(ui.leanInspection.children[2].textContent,/Identyfikator migawki danych: d{16}/);
+ assert.match(ui.leanInspection.children[2].textContent,/nie jest certyfikatem/);
  assert.match(ui.leanInspection.children[2].textContent,/certyfikat: NIE/);
 
 })().catch(e=>{console.error(e);process.exitCode=1;});
