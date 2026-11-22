@@ -1,4 +1,4 @@
-name: Logic and set theory chapters 01-27 validation
+name: Logic and set theory chapters 01-28 validation
 
 on:
   push:
@@ -29,6 +29,7 @@ on:
       - "audits/logic_and_set_theory_ch25_audit_*.md"
       - "audits/logic_and_set_theory_ch26_audit_*.md"
       - "audits/logic_and_set_theory_ch27_audit_*.md"
+      - "audits/logic_and_set_theory_ch28_audit_*.md"
       - "tools/tests/test_logic_and_set_theory_ch12.py"
       - "tools/tests/test_logic_and_set_theory_ch13.py"
       - "tools/tests/test_logic_and_set_theory_ch14.py"
@@ -45,6 +46,7 @@ on:
       - "tools/tests/test_logic_and_set_theory_ch25.py"
       - "tools/tests/test_logic_and_set_theory_ch26.py"
       - "tools/tests/test_logic_and_set_theory_ch27.py"
+      - "tools/tests/test_logic_and_set_theory_ch28.py"
       - "tools/tests/test_logic_and_set_theory_ch11.py"
       - "tools/tests/test_logic_and_set_theory_ch10.py"
       - "tools/tests/test_logic_and_set_theory_ch09.py"
@@ -69,7 +71,7 @@ jobs:
           catalog = json.loads(Path("catalog/books.json").read_text(encoding="utf-8"))
           book = next(item for item in catalog["books"] if item["id"] == "logic_and_set_theory")
           chapters = book["chapters"]
-          assert len(chapters) >= 27, chapters
+          assert len(chapters) >= 28, chapters
           expected_names = [
               "01-zdania-i-spojniki-logiczne.tex",
               "02-kwantyfikatory-i-podstawowe-metody-dowodzenia.tex",
@@ -98,12 +100,13 @@ jobs:
               "25-aksjomaty-zf-zfc-i-konstrukcje-zbiorowe.tex",
               "26-aksjomat-wyboru-i-jego-rownowazne-postacie.tex",
               "27-liczby-kardynalne-i-arytmetyka-mocy.tex",
+              "28-liczby-porzadkowe-i-rekurencja-pozaskonczona.tex",
           ]
-          assert [Path(path).name for path in chapters[:27]] == expected_names
+          assert [Path(path).name for path in chapters[:28]] == expected_names
           entry = Path(book["entrypoint"])
           text = entry.read_text(encoding="utf-8")
           sources = []
-          for path in chapters[:27]:
+          for path in chapters[:28]:
               chapter = Path(path)
               assert chapter.is_file(), path
               assert "\\input{../../" + path + "}" in text, path
@@ -111,9 +114,9 @@ jobs:
           labels = [name for source in sources for name in re.findall(r"\\label\{([^}]+)\}", source)]
           refs = [name for source in sources for name in re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", source)]
           assert len(labels) == len(set(labels)), "Duplicate LaTeX labels"
-          assert len(labels) == 604, f"Unexpected labels: {len(labels)}"
-          assert len(refs) == 412, f"Unexpected references: {len(refs)}"
-          forward = {"ch:ordinals"}
+          assert len(labels) == 621, f"Unexpected labels: {len(labels)}"
+          assert len(refs) == 430, f"Unexpected references: {len(refs)}"
+          forward = set()
           assert set(refs) - set(labels) == forward, "Unexpected unresolved targets in partial book"
           inventories = [
               (sources[5], {"twierdzenie": 15, "wniosek": 1, "proof": 16,
@@ -182,6 +185,9 @@ jobs:
               (sources[26], {"twierdzenie": 11, "wniosek": 2,
                              "proof": 13, "definicja": 4,
                              "przyklad": 5, "uwaga": 6, "figure": 1}),
+              (sources[27], {"twierdzenie": 5, "lemat": 2,
+                             "wniosek": 1, "proof": 8,
+                             "definicja": 4, "przyklad": 5, "uwaga": 3}),
           ]
           for source, inventory in inventories:
               for env, expected in inventory.items():
@@ -238,6 +244,8 @@ jobs:
         run: python -m unittest tools.tests.test_logic_and_set_theory_ch26 -v
       - name: Run chapter 27 cardinal arithmetic regression tests
         run: python -m unittest tools.tests.test_logic_and_set_theory_ch27 -v
+      - name: Run chapter 28 ordinals regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch28 -v
       - name: Compile logic and set theory PDF
         uses: xu-cheng/latex-action@v3
         with:
@@ -254,7 +262,7 @@ jobs:
 
           log = Path("books/pl/logic_and_set_theory.log").read_text(errors="replace")
           refs = set(re.findall(r"LaTeX Warning: Reference `([^']+)' on page \d+ undefined", log))
-          allowed = {"ch:ordinals"}
+          allowed = set()
           assert refs <= allowed, f"Unexpected undefined references: {sorted(refs - allowed)}"
           assert not re.search(r"Overfull \\hbox", log), "Overfull TeX boxes"
           assert not re.search(r"LaTeX Warning: Citation .+ undefined", log), "Undefined citation"
@@ -266,7 +274,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: logic-and-set-theory-ch01-ch27
+          name: logic-and-set-theory-ch01-ch28
           path: |
             books/pl/logic_and_set_theory.pdf
             books/pl/logic_and_set_theory.log
