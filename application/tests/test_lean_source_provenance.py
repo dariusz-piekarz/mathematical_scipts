@@ -54,6 +54,17 @@ class SourceProvenanceTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             provenance.binding_sha256("LST-01", LABEL, ("incomplete",))
 
+    def test_non_theorem_owner_cannot_inherit_formalization(self):
+        for kind in ("section", "definition", "proof", "example", ""):
+            with self.subTest(kind=kind):
+                self.con.execute("UPDATE entities SET kind=? WHERE id='one'", (kind,))
+                status, entity = provenance.owner_status(self.con, "LST-01", LABEL, SOURCE)
+                self.assertEqual(status, "invalid_label_binding")
+                self.assertIsNone(entity)
+        self.con.execute("UPDATE entities SET kind='theorem' WHERE id='one'")
+        self.assertEqual(provenance.owner_status(self.con, "LST-01", LABEL, SOURCE),
+                         ("ok", "one"))
+
     def test_shifted_label_offset_is_never_current(self):
         for offset in (self.offset + 1, self.offset - 1, len(SOURCE), -1, None):
             with self.subTest(offset=offset):
