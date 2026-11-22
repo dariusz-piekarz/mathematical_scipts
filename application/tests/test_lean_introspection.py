@@ -57,6 +57,41 @@ class ParsingTests(unittest.TestCase):
             with self.subTest(bad=bad[:80]), self.assertRaises(ValueError):
                 inspection.parse_inspection(bad, TOKEN, ["theorem_x"])
 
+    def test_two_declarations_interleaved_and_reversed_are_complete(self):
+        a, b = "theorem_x", "theorem_y"
+        events = [
+            f"{TOKEN} BEGIN {b} 1",
+            f"{TOKEN} BEGIN {a} 2",
+            f"{TOKEN} CONST {a} Nat.zero",
+            f"{TOKEN} CONST {b} Eq",
+            f"{TOKEN} CONST {a} Nat.succ",
+            f"{TOKEN} END {b}",
+            f"{TOKEN} END {a}",
+        ]
+        output = "\\n".join("Inspect.lean:8:0: info: " + e for e in events)
+        self.assertEqual(inspection.parse_inspection(output, TOKEN, [a, b]),
+                         {a: ["Nat.succ", "Nat.zero"], b: ["Eq"]})
+
+    def test_two_declarations_fail_closed_on_missing_or_extra_events(self):
+        a, b = "theorem_x", "theorem_y"
+        valid = "\\n".join([
+            f"{TOKEN} BEGIN {a} 1", f"{TOKEN} CONST {a} Eq",
+            f"{TOKEN} END {a}", f"{TOKEN} BEGIN {b} 0",
+            f"{TOKEN} END {b}",
+        ])
+        self.assertEqual(inspection.parse_inspection(valid, TOKEN, [a, b]),
+                         {a: ["Eq"], b: []})
+        broken = (
+            valid.replace(f"{TOKEN} END {b}", ""),
+            valid.replace(f"{TOKEN} BEGIN {b} 0", f"{TOKEN} BEGIN {b} 1"),
+            valid + f"\\n{TOKEN} END {a}",
+            valid + f"\\n{TOKEN} BEGIN foreign 0",
+            valid.replace(f"{TOKEN} CONST {a} Eq", f"{TOKEN} CONST {b} Eq"),
+        )
+        for log in broken:
+            with self.subTest(log=log[-75:]), self.assertRaises(ValueError):
+                inspection.parse_inspection(log, TOKEN, [a, b])
+
     def test_count_bound_and_truncated_output_fail_closed(self):
         with self.assertRaises(ValueError):
             inspection.parse_inspection(f"{TOKEN} BEGIN theorem_x 999\n", TOKEN, ["theorem_x"])
