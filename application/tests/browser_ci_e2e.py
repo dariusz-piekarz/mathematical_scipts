@@ -102,6 +102,26 @@ def main() -> None:
                 assert blocked.json()["proof_status"] == "blocked"
                 assert blocked.json()["certificate"] is False
 
+                # Actual DOM text selection exercises the shared coordinate
+                # adapter, including the entity-relative -> module-absolute map.
+                page.evaluate("() => activateTab('reader')")
+                page.evaluate("""() => {
+                    const sourceNode = document.getElementById('latexSource');
+                    const selected = document.createRange();
+                    selected.selectNodeContents(sourceNode);
+                    const selection = window.getSelection();
+                    selection.removeAllRanges();
+                    selection.addRange(selected);
+                    openLeanSelection();
+                }""")
+                page.wait_for_function(
+                    "() => state.leanFragment?.formalization_id==='lst01-de-morgan' && state.leanFragment?.source_linkage==='contains_theorem'",
+                    timeout=15000,
+                )
+                expected_entity_lines = "".join(source.splitlines(keepends=True)[first-1:last])
+                assert page.locator("#leanLatex").text_content() == expected_entity_lines
+                assert page.evaluate("state.leanFragment.certificate") is False
+
                 page.evaluate("() => openModule('LST-01', true)")
                 page.wait_for_function(
                     "() => state.currentModule==='LST-01' && state.currentEntity===null && !!state.currentData",
