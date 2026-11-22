@@ -121,7 +121,12 @@ def inspect(con: sqlite3.Connection, identifier: str, *,
         with lean_run_lock.exclusive(lean_root):
             record = next((i for i in lean_catalog.list_formalizations(
                 con, lean_root=lean_root)["items"] if i["formalization_id"] == identifier), None)
-            if record is None or record["formalization_status"] != "ready":
+            # The manifest was loaded before obtaining the runner lock.
+            # Reject an ID whose catalog binding has changed in that gap.
+            if (record is None or record["formalization_status"] != "ready"
+                    or any(record.get(key) != item.get(key) for key in (
+                        "source_module", "source_label", "lean_file", "lean_theorem"))
+                    or record.get("lean_theorems") != names):
                 return _empty(identifier, "blocked", "Nieaktualne przypięcie źródła.")
             doc = con.execute("SELECT sha256,content FROM documents WHERE id=?",
                               (item["source_module"],)).fetchone()
