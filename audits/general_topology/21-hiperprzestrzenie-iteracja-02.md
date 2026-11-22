@@ -38,3 +38,13 @@ przed wydaniem statusu ostatecznego.
 
 **Wynik audytu 02:** matematyka czysta (1/2), bez edycji źródła.
 CI i PDF pozostają obowiązkowym, oddzielnym warunkiem stabilizacji.
+
+## Późniejsza korekta unieważniająca licznik
+
+Po audycie 02 kolejny przebieg kompilacji wykrył LaTeX Double subscript
+w zapisie U_i^-_{\!F}. Poprawkę wprowadzono w commicie
+9f02772e1222575964f13b98dd6910d7a71163c3,
+nowy blob to a8e0c4dbcf3c3100bf6b3c9e067b6fce0ddaa73b.
+Niniejszy audyt pozostaje dokumentacją czystej kontroli
+poprzedniego bloba, lecz **nie zalicza się** do 2/2
+wymaganych dla nowego bloba. Aktualny licznik: **0/2**.
