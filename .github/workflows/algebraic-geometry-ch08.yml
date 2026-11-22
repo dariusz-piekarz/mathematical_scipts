@@ -1,0 +1,82 @@
+name: Algebraic geometry ALG-08 birational surfaces, MMP and PDF validation
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - 'chapters/pl/algebraic_geometry/08-*'
+      - 'books/pl/algebraic_geometry.tex'
+      - 'shared/pl/rozdmuchanie_punktu_normalna.tex'
+      - 'tools/tests/test_algebraic_geometry_ch08.py'
+      - '.github/workflows/algebraic-geometry-ch08.yml'
+  workflow_dispatch:
+
+jobs:
+  validate-alg08:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify presnop terminology across the current corpus
+        run: python3 tools/normalize_polish_terminology.py --check
+      - name: Run ALG-08 Cremona, intersections and MMP regressions
+        run: python3 -m unittest tools.tests.test_algebraic_geometry_ch08 -v
+      - name: Create ALG-00 through ALG-08 LaTeX driver
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          main = Path("books/pl/algebraic_geometry.tex")
+          text = main.read_text(encoding="utf-8")
+          pattern = r'\\input\{../../chapters/pl/algebraic_geometry/[^}]+\.tex\}'
+          entries = re.findall(pattern, text)
+          assert len(entries) == 11, f"Expected 11 chapter inputs, got {len(entries)}"
+          kept = []
+          for line in text.splitlines():
+              if re.fullmatch(pattern, line.strip()) and not re.search(
+                  r'/(00|01|02|03|04|05|06|07|08)-[^}]+\.tex\}', line):
+                  continue
+              kept.append(line)
+          driver = "\n".join(kept) + "\n"
+          assert driver.count(r'\input{../../chapters/pl/algebraic_geometry/') == 9
+          assert driver.count(r'\input{../../chapters/pl/algebraic_geometry/08-') == 1
+          Path("books/pl/algebraic_geometry_ch08_audit.tex").write_text(driver, encoding="utf-8")
+          PY
+      - name: Compile ALG-00 through ALG-08 with genuine references
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: algebraic_geometry_ch08_audit.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Check PDF and all cross references
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root = Path("books/pl/algebraic_geometry_ch08_audit")
+          pdf = root.with_suffix(".pdf")
+          log = root.with_suffix(".log")
+          assert pdf.exists() and pdf.stat().st_size > 10000
+          assert log.exists()
+          s = log.read_text(encoding="utf-8", errors="replace")
+          for pattern in (
+              r'LaTeX Warning: Reference .* undefined',
+              r'LaTeX Warning: Citation .* undefined',
+              r'There were undefined references',
+              r'Rerun to get cross-references right',
+              r'(?m)^! ',
+          ):
+              assert not re.search(pattern, s), pattern
+          print(f"ALG-00 through ALG-08 PDF: {pdf.stat().st_size} bytes")
+          PY
+      - name: Archive PDF and complete LaTeX log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: algebraic-geometry-alg-08-audit
+          path: |
+            books/pl/algebraic_geometry_ch08_audit.pdf
+            books/pl/algebraic_geometry_ch08_audit.log
+          if-no-files-found: warn
