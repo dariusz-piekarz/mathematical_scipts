@@ -1,15 +1,15 @@
 # Geometria algebraiczna — rejestr statusów audytów
 
-**Ostatnia aktualizacja:** 2026-11-22, audyt ALG-03 nr 1.
+**Ostatnia aktualizacja:** 2026-11-22, audyt ALG-03 nr 2.
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`.
-**Następny przebieg:** **ALG-03, audyt nr 2** — niezależna iteracja po poprawkach definicji, rodzaju i rysunku 3.1 w audycie 1. ALG-00, ALG-01 i ALG-02 pozostają stabilne.
+**Następny przebieg:** **ALG-04, audyt nr 1** — ALG-00, ALG-01, ALG-02 i ALG-03 są stabilne. Rozpocząć szczegółowy audyt rozdziału „Algebra przemienna, snopy i krzywe algebraiczne”.
 
 | ID | Rozdział | Iteracja zakończona | Status | Raport / czynność |
 | --- | --- | ---: | --- | --- |
 | ALG-00 | Teoria pierścieni — od arytmetyki do geometrii równań | **15** | **STABILNY / ZAMKNIĘTY** | [Audyt 15](2026-11-22-ALG-00-iteration-15.md) — brak nowych usterek, PDF i CI PASS |
 | ALG-01 | Geometria afiniczna — równania, ideały i twierdzenie Hilberta o zerach | **5** | **STABILNY / ZAMKNIĘTY** | [Audyt 5](2026-11-22-ALG-01-iteration-05.md) — niezależna iteracja bez usterek, 30 dodatkowych kontroli, 11 regresji PASS, 23-stronicowy PDF PASS |
 | ALG-02 | Geometria rzutowa | **6** | **STABILNY / ZAMKNIĘTY** | [Audyt 6](2026-11-22-ALG-02-iteration-06.md) — niezależny, bezusterkowy reaudyt całego rozdziału; 15/15 testów, kontrola 11-stronicowego PDF i CI PASS, brak zmian źródła |
-| ALG-03 | Punkty osobliwe i geometria lokalna krzywych | **1** | **OTWARTY** | [Audyt 1](2026-11-22-ALG-03-iteration-01.md) — rząd 0, rzutowość w rodzaju i normalizacji, poprawa rysunku 3.1; 8/8 regresji PASS, CI SUCCESS, 8-stronicowy PDF PASS |
+| ALG-03 | Punkty osobliwe i geometria lokalna krzywych | **2** | **STABILNY / ZAMKNIĘTY** | [Audyt 2](2026-11-22-ALG-03-iteration-02.md) — niezależny bezusterkowy reaudyt, dodatkowe rachunki, 8/8 regresji PASS, CI SUCCESS, 8-stronicowy PDF PASS; bez zmian w źródle |
 | ALG-04 | Algebra przemienna, snopy i krzywe algebraiczne | 0 | Oczekuje | Po ALG-03 |
 | ALG-05 | Rozdmuchania i rozwiązywanie osobliwości | 0 | Oczekuje | Po ALG-04 |
 | ALG-06 | Powierzchnie algebraiczne | 0 | Oczekuje | Po ALG-05 |
@@ -41,3 +41,5 @@ ALG-02 po audycie 5: [raport](2026-11-22-ALG-02-iteration-05.md); 2 nowe poprawk
 ALG-02 po audycie 6: **STABILNY / ZAMKNIĘTY**, [raport niezależnej bezusterkowej iteracji](2026-11-22-ALG-02-iteration-06.md). Źródło niezmienione po audycie 5, blob `cb8985f4d343e991e3a603edcb18e5793bb944a9`; testy niezmienione, blob `473b598d07f24c754cd75a7e6ab879d0685d1e04`. Ponowna kontrola matematyczna 16 dowodów, 12 definicji, 12 przykładów, 5 twierdzeń, 6 lematów, 5 stwierdzeń; 12 etykiet i 9 odsyłaczy poprawnych. Niezależne rachunki w F₂, F₃, F₁₃ i F₁₇ PASS. Istniejący CI na dokładnie tych źródłach [45016651284](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45016651284) SUCCESS, 15/15 regresji, LaTeX PASS. PDF 11 stron ALG-02 w 55-stronicowej kompilacji, kontrola wizualna i marginesów PASS. Następny jest **ALG-03/1**. Nie modyfikowano `main` ani źródeł ALG-02 w audycie 6.
 
 ALG-03 po audycie 1: [raport](2026-11-22-ALG-03-iteration-01.md); bazowy blob źródła `05b33dba632a112a11f599f5f519232fe62fe4a0`, blob po poprawkach i korekcie rysunku `a8dfcc00dbc84fb2e893d44f3bc3ace86e27a886` ([commit 5d463e8a](https://github.com/dariusz-piekarz/mathematical_scipts/commit/5d463e8a03143818f0191c7735f90546eaf3861d)); 10 etykiet, 4 poprawne odsyłacze, 8 testów. Utworzono dedykowany workflow ALG-03. Pierwszy [CI 45017952008](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45017952008) SUCCESS, ale wizualna kontrola rysunku 3.1 ujawniła kolizje podpisów z gałęziami. Poprawiono TikZ; finalny [CI 45018200846](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45018200846) zakończył się **SUCCESS**, 8/8 regresji PASS; PDF całego ALG-00–03 63 strony, ALG-03 8 stron (56–63), 0 błędów/ostrzeżeń LaTeX, 0 bloków tekstowych poza stronami, rysunki 3.1, 3.2 i 3.3 po wizualnym odbiorze PASS. Artefakt nr `14751474980`. ALG-03 **OTWARTY**; następna iteracja 2.
+
+ALG-03 po audycie 2: **STABILNY / ZAMKNIĘTY**, [raport](2026-11-22-ALG-03-iteration-02.md). Źródło i testy bez zmian po audycie 1; ich bloby to `a8dfcc00dbc84fb2e893d44f3bc3ace86e27a886` oraz `97b50f9edc1de8586b3e1c3aa8c78b1385f80101`. Ponownie sprawdzono matematykę 4 twierdzeń, 1 lematu, 3 stwierdzeń, 10 definicji, 11 przykładów, 8 dowodów; 10 etykiet i 4 poprawne odsyłacze. Rachunki kontrolne w F₂, F₃, F₅, F₇, F₁₁, F₁₃, F₁₇, F₁₉ PASS. Ten sam [CI 45018200846](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45018200846) potwierdzony jako SUCCESS na identycznych źródłach, 8/8 testów. Zweryfikowano osobno 8-stronicowy PDF, brak kolizji rysunków i ostrzeżeń. Kryterium niezależnego audytu bez nowych usterek spełnione. **Następny rozdział: ALG-04/1**.
