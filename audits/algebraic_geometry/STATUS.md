@@ -8,7 +8,7 @@
 | --- | --- | ---: | --- | --- |
 | ALG-00 | Teoria pierścieni — od arytmetyki do geometrii równań | **15** | **STABILNY / ZAMKNIĘTY** | [Audyt 15](2026-11-22-ALG-00-iteration-15.md) — brak nowych usterek, PDF i CI PASS |
 | ALG-01 | Geometria afiniczna — równania, ideały i twierdzenie Hilberta o zerach | **5** | **STABILNY / ZAMKNIĘTY** | [Audyt 5](2026-11-22-ALG-01-iteration-05.md) — niezależna iteracja bez usterek, 30 dodatkowych kontroli, 11 regresji PASS, 23-stronicowy PDF PASS |
-| ALG-02 | Geometria rzutowa | **3** | **OTWARTY** | [Audyt 3](2026-11-22-ALG-02-iteration-03.md) — wyjaśniono gładkość na mapie, niezmienniczość krotności względem parametryzacji, dodano test funkcji Hilberta; 13 testów w źródle, nowy CI w toku |
+| ALG-02 | Geometria rzutowa | **3** | **OTWARTY** | [Audyt 3](2026-11-22-ALG-02-iteration-03.md) — wyjaśniono gładkość na mapie, niezmienniczość krotności względem parametryzacji, dodano test funkcji Hilberta; 13/13 testów PASS, CI SUCCESS, 11-stronicowy PDF PASS |
 | ALG-03 | Punkty osobliwe i geometria lokalna krzywych | 0 | Oczekuje | Po ALG-02 |
 | ALG-04 | Algebra przemienna, snopy i krzywe algebraiczne | 0 | Oczekuje | Po ALG-03 |
 | ALG-05 | Rozdmuchania i rozwiązywanie osobliwości | 0 | Oczekuje | Po ALG-04 |
@@ -30,4 +30,6 @@ ALG-02 po audycie 1 (historia): źródłowy blob `4c122514238f4cb0de7188c18f3b36
 
 ALG-02 po audycie 2: blob `e589cf3b4f42008ae280a2cfab582db2c3fb9e24` (ostatni źródłowy commit `317f754ccb6115a54df4ffaf9f34d3d770ce21e9`), 12 etykiet, 9 poprawnych odsyłaczy, 12/12 testów regresyjnych; PDF 11 stron po końcowej kompilacji trzech rozdziałów, kontrola wizualna PASS. [Audyt 2](2026-11-22-ALG-02-iteration-02.md). Dedykowany [CI 45013432718](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45013432718): **success**. Następny krok — **ALG-02/3**, rozdział pozostaje otwarty.
 
-ALG-02 po audycie 3: końcowy blob `0f7b150761abad30c1af3ff1f8d948794eb6c3a8` (commit `9085a0fb8b4760fadf65c31e3244457b6fab832b`), 12 etykiet, 9 istniejących odsyłaczy, 13 metod testowych. [Audyt 3](2026-11-22-ALG-02-iteration-03.md); [dedykowany CI 45014207204](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45014207204) — wynik końcowy należy sprawdzić przed zamknięciem iteracji. ALG-02 pozostaje otwarty do audytu 4, ponieważ audyt 3 przyniósł nowe poprawki dowodowe.
+ALG-02 po audycie 3: końcowy blob `0f7b150761abad30c1af3ff1f8d948794eb6c3a8` (commit `9085a0fb8b4760fadf65c31e3244457b6fab832b`), 12 etykiet, 9 istniejących odsyłaczy, 13 metod testowych. [Audyt 3](2026-11-22-ALG-02-iteration-03.md); [dedykowany CI 45014207204](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45014207204) — **SUCCESS**, 13/13 testów, LaTeX oraz odbiór PDF PASS. ALG-02 pozostaje otwarty do audytu 4, ponieważ audyt 3 przyniósł nowe poprawki dowodowe.
+
+Po finalnym odbiorze ALG-02 audytu 3: [GitHub Actions 45014207204](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45014207204) **success** na źródłowym commicie `9085a0fb`; 13/13 testów; artefakt `14751227710`; PDF 55 stron (ALG-02: strony 45–55, 11 stron), 0 ostrzeżeń finalnego LaTeX, 0 tekstu poza granicami stron i brak widocznych kolizji na rysunkach. Zamyka to etap kontroli technicznej audytu 3, lecz nie rozdział: następny obowiązkowy niezależny audyt 4.
