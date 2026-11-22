@@ -19,6 +19,22 @@ class LeanHttpTests(unittest.TestCase):
     def tearDownClass(cls):
         cls.context.__exit__(None, None, None)
 
+    def test_catalog_lists_navigable_real_formalizations(self):
+        response = self.client.get("/api/lean/catalog")
+        self.assertEqual(response.status_code, 200, response.text)
+        data = response.json()
+        self.assertGreaterEqual(data["total"], 5)
+        self.assertFalse(data["proof_status_included"])
+        entry = next(i for i in data["items"]
+                     if i["formalization_id"] == "lst01-de-morgan")
+        self.assertEqual(entry["source_label"], "thm:de-morgan-logic")
+        self.assertEqual(entry["index_status"], "ok")
+        self.assertEqual(entry["formalization_status"], "ready")
+        self.assertEqual(entry["statement_status"], "approved")
+        self.assertTrue(entry["source_entity_id"])
+        self.assertNotIn("proof_status", entry)
+        self.assertFalse(entry["certificate"])
+
     def test_status_and_missing_mapping(self):
         response = self.client.get("/api/lean/status")
         self.assertEqual(response.status_code, 200)
