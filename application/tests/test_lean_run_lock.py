@@ -116,6 +116,25 @@ class LeanRunLockTests(unittest.TestCase):
                     self.fail("linked data directory must never be used")
         opening.assert_not_called()
 
+    @unittest.skipUnless(os.name == "nt", "Native Windows junction test")
+    def test_native_windows_junction_directory_is_rejected(self):
+        parent = self.root.parent / "data"
+        parent.mkdir()
+        target = Path(self.tmp.name) / "redirected"
+        target.mkdir()
+        junction = parent / "lean_runs"
+        proc = subprocess.run(
+            ["cmd", "/c", "mklink", "/J", str(junction), str(target)],
+            capture_output=True, text=True, timeout=10,
+        )
+        if proc.returncode != 0:
+            self.skipTest("Windows junction creation unavailable: " + proc.stderr[:100])
+        self.assertTrue(junction.is_junction())
+        with self.assertRaises(lean_run_lock.RunnerLockUnavailable):
+            with lean_run_lock.exclusive(self.root):
+                self.fail("Windows junction cannot redirect the lock directory")
+        self.assertFalse((target / ".runner.lock").exists())
+
     @unittest.skipUnless(os.name == "posix", "Requires POSIX directory symlinks")
     def test_actual_linked_lock_directory_is_rejected(self):
         parent = self.root.parent / "data"
