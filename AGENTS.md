@@ -18,6 +18,9 @@ Refer to [the Polish terminology standard](docs/pl/standardy_terminologiczne.md)
 
 6. For topological countability properties, use **„spełnia pierwszy aksjomat przeliczalności”** and **„spełnia drugi aksjomat przeliczalności”** (with appropriate inflections), not adjectival formulations **„pierwszoprzeliczalna / pierwszo przeliczalna”** or **„drugoprzeliczalna / drugo przeliczalna”**. Prefer the noun phrases **„pierwszy aksjomat przeliczalności”** and **„drugi aksjomat przeliczalności”** in headings, propositions, explanations and figures. Applies globally to all Polish math scripts. Preserve existing stable LaTeX labels and references.
 
+
+7. For Polish set-theory manuscripts, **always spell out „liczba kardynalna”** with the correct grammatical case, number and feminine agreement: e.g. „liczba kardynalna Mahla”, „mierzalna liczba kardynalna”, „silnie nieosiągalna liczba kardynalna”, „słabo zwarta liczba kardynalna”. **Never shorten** this noun to „kardynał”, „kardynały” or their inflected forms in prose, headings or audits. Keep historical stable filenames and LaTeX labels unchanged.
+
 ## Preserve references and rigor
 
 - Preserve existing stable `\label` names and corresponding `\ref` targets even if they contain an older word. Text, theorem titles, captions and prose should follow the current terminology.
