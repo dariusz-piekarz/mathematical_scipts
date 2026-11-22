@@ -37,10 +37,14 @@ class TestExplicitStandardMatrices(unittest.TestCase):
         for p,q in itertools.product(P,repeat=2):
             self.assertEqual(mm(mat_std(p),mat_std(q)),mat_std(mul(p,q)))
 
-    def test_standard_matrix_orthogonality(self):
-        for a,b,c,d in itertools.product(range(2),repeat=4):
-            avg=sum(mat_std(p)[a][b]*mat_std(p)[c][d] for p in P)
-            self.assertEqual(Q(avg,6),Q(int(a==c and b==d),2))
+    def test_schur_averaging_in_nonorthonormal_basis(self):
+        # (e1-e2,e2-e3) is NOT orthonormal. Average conjugates,
+        # which has the basis-independent form tr(A)*I/d.
+        for a,b in itertools.product(range(2),repeat=2):
+            A=tuple(tuple(int(i==a and j==b) for j in range(2)) for i in range(2))
+            terms=[mm(mm(mat_std(p),A),mat_std(inv(p))) for p in P]
+            average=scalar(Q(1,6),matrix_sum(*terms))
+            self.assertEqual(average,scalar(Q(int(a==b),2),ident(2)))
 
     def test_sign_standard_mixed_orthogonality(self):
         for a,b in itertools.product(range(2),repeat=2):
