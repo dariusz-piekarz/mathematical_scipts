@@ -59,3 +59,9 @@ W każdym audycie sprawdzamy konsekwentnie te terminy w treści, twierdzeniach, 
 - Dla przestrzeni topologicznej \(X\) piszemy **„\(X\) spełnia pierwszy aksjomat przeliczalności”** lub **„\(X\) spełnia drugi aksjomat przeliczalności”**. Dopuszczalne są również odmiany typu „przestrzeń spełniająca drugi aksjomat przeliczalności” i „niespełnianie pierwszego aksjomatu przeliczalności”.
 - **Nie używamy** form „pierwszoprzeliczalna”, „pierwszo przeliczalna”, „drugoprzeliczalna”, „drugo przeliczalna” ani analogicznych odmian. W nagłówkach, treści twierdzeń, dowodach i podpisach stosujemy nazwy **„pierwszy aksjomat przeliczalności”** oraz **„drugi aksjomat przeliczalności”**, zamiast określeń „pierwsza/druga przeliczalność”.
 - Reguła obowiązuje **globalnie we wszystkich polskojęzycznych skryptach matematycznych**. Zachowujemy stabilne etykiety LaTeX i odsyłacze nawet wtedy, gdy zawierają starsze słownictwo.
+
+## 8. Pełna nazwa „liczba kardynalna” — bez skrótowego „kardynał”
+
+- W **każdym** polskojęzycznym skrypcie, w tekście, definicjach, twierdzeniach, podpisach i audytach piszemy wyłącznie pełne **„liczba kardynalna”**, **„liczby kardynalne”** i odpowiednio odmienione formy. **Nie używamy** samodzielnego, skróconego rzeczownika „kardynał” ani jego odmian.
+- Przykłady obowiązkowe: **„liczba kardynalna Mahla”**, **„mierzalna liczba kardynalna”**, **„silnie nieosiągalna liczba kardynalna”**, **„słabo zwarta liczba kardynalna”**, **„liczby kardynalne nieosiągalne”**. Przymiotniki, zaimki, orzeczenia i imiesłowy uzgadniamy w rodzaju żeńskim.
+- Zachowujemy historyczne nazwy plików i stabilne etykiety LaTeX, aby nie zrywać odsyłaczy. Nowe tytuły, odsyłacze opisowe, treść i raporty audytowe muszą już stosować pełną nazwę.
