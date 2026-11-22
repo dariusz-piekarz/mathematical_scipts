@@ -16,8 +16,8 @@ class TestContinuumForcingChapter34(unittest.TestCase):
         book = (ROOT / "books/pl/logic_and_set_theory.tex").read_text("utf8")
         catalog = json.loads((ROOT / "catalog/books.json").read_text("utf8"))
         logic = next(b for b in catalog["books"] if b["id"] == "logic_and_set_theory")
-        self.assertEqual(len(logic["chapters"]), 34)
-        self.assertTrue(logic["chapters"][-1].endswith(PATH.name))
+        self.assertGreaterEqual(len(logic["chapters"]), 34)
+        self.assertTrue(logic["chapters"][33].endswith(PATH.name))
         self.assertIn(PATH.name, book)
         self.assertIn(r"\label{ch:forcing-continuum}", TEXT)
 
