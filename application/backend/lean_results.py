@@ -19,7 +19,7 @@ DEFAULT_RESULTS_DIR = Path(__file__).resolve().parents[1] / "data" / "lean_runs"
 ID_PATTERN = re.compile(r"[A-Za-z0-9_-]{1,100}\Z")
 HEX_DIGEST = re.compile(r"[0-9a-f]{64}\Z")
 STORED_STATUSES = {"compiled", "failed", "timeout"}
-SCHEMA_VERSION = 4
+SCHEMA_VERSION = 5
 MAX_STORED_LOG = 16000
 MAX_RECORD_BYTES = 30000
 
@@ -75,10 +75,13 @@ def _project_sources_sha256(lean_root: Path) -> str:
     return digest.hexdigest()
 
 
-def fingerprint(source_sha256: str, lean_file: Path, lean_root: Path) -> dict[str, str]:
-    """Bind a run to its indexed source, local source tree and declared toolchain."""
+def fingerprint(source_sha256: str, lean_file: Path, lean_root: Path,
+                source_binding_sha256: str) -> dict[str, str]:
+    """Bind execution to source bytes AND exact indexed theorem ownership."""
     if not HEX_DIGEST.fullmatch(source_sha256):
         raise ValueError("Invalid indexed document SHA256")
+    if not isinstance(source_binding_sha256, str) or not HEX_DIGEST.fullmatch(source_binding_sha256):
+        raise ValueError("Missing or invalid indexed source binding SHA256")
     lean_sha256 = hashlib.sha256(lean_file.read_bytes()).hexdigest()
     project_sources_sha256 = _project_sources_sha256(lean_root)
     external_packages_sha256 = lean_environment.external_packages_sha256(lean_root)
@@ -95,6 +98,7 @@ def fingerprint(source_sha256: str, lean_file: Path, lean_root: Path) -> dict[st
     declared_toolchain = (lean_root / "lean-toolchain").read_text(encoding="utf-8").strip() \
         if (lean_root / "lean-toolchain").is_file() else "unavailable"
     return {"source_document_sha256": source_sha256,
+            "source_binding_sha256": source_binding_sha256,
             "lean_sha256": lean_sha256,
             "project_sources_sha256": project_sources_sha256,
             "external_packages_sha256": external_packages_sha256,
@@ -144,13 +148,13 @@ def save_run(identifier: str, expected: dict[str, str], *, proof_status: str,
     """Atomically save the latest actual result; callers must not store synthetic success."""
     if proof_status not in STORED_STATUSES:
         raise ValueError("Not an actual Lean process outcome")
-    if set(expected) != {"source_document_sha256", "lean_sha256",
+    if set(expected) != {"source_document_sha256", "source_binding_sha256", "lean_sha256",
                          "project_sources_sha256", "external_packages_sha256",
                          "compiled_artifacts_sha256", "executable_toolchain_sha256", "toolchain_sha256",
                          "declared_toolchain"}:
         raise ValueError("Incomplete run fingerprint")
     if (not all(isinstance(expected[key], str) and HEX_DIGEST.fullmatch(expected[key])
-                for key in ("source_document_sha256", "lean_sha256",
+                for key in ("source_document_sha256", "source_binding_sha256", "lean_sha256",
                             "project_sources_sha256", "external_packages_sha256",
                             "compiled_artifacts_sha256", "executable_toolchain_sha256", "toolchain_sha256"))
             or not isinstance(expected["declared_toolchain"], str)
