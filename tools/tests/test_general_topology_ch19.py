@@ -136,8 +136,8 @@ def check_source() -> tuple[int, int]:
         assert necessary.lower() in text.lower(), necessary
 
     for fragment in (
-        r"\$\rho(x_j,x)<\varepsilon\$.",
-        r"\$\sigma(a_m,a_l)<2^{-n}<\varepsilon\$",
+        r"$\rho(x_j,x)<\varepsilon$.",
+        r"$\sigma(a_m,a_l)<2^{-n}<\varepsilon$",
         "dla dowolnych",
         r"\boldsymbol\Pi^0_{\alpha_n+1}",
     ):
