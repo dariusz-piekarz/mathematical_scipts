@@ -127,5 +127,58 @@ class LeanAuditTests(unittest.TestCase):
         self.assertEqual(result, 0)
 
 
+
+class LeanSourcePinTests(unittest.TestCase):
+    def test_current_repo_approved_manifest_matches_canonical_tex(self):
+        root = Path(__file__).resolve().parents[1] / "lean"
+        registered = registered_files(root / "manifest.json", root)
+        self.assertIn("src/LST01_SyntaxValuations.lean", registered)
+        self.assertIn("lst01_syntax_modus_ponens",
+                      registered["src/LST01_SyntaxValuations.lean"])
+
+    def test_digest_guard_rejects_modified_tex(self):
+        import hashlib
+
+        with tempfile.TemporaryDirectory() as temp:
+            repository = Path(temp)
+            lean_root = repository / "application" / "lean"
+            (lean_root / "src").mkdir(parents=True)
+            source = repository / "chapters" / "pl" / "unit" / "01.tex"
+            source.parent.mkdir(parents=True)
+            source.write_text("original source\\n", encoding="utf-8")
+            (lean_root / "src" / "Example.lean").write_text(
+                "theorem x : True := by trivial\\n#print axioms x\\n", encoding="utf-8")
+            item = {"id": "x", "source_module": "X-01", "source_label": "thm:x",
+                    "lean_file": "src/Example.lean", "lean_theorem": "x",
+                    "lean_theorems": ["x"],
+                    "statement_status": "approved",
+                    "source_document_path": "chapters/pl/unit/01.tex",
+                    "source_document_sha256": hashlib.sha256(source.read_bytes()).hexdigest()}
+            manifest = lean_root / "manifest.json"
+            manifest.write_text(json.dumps({"items": [item]}), encoding="utf-8")
+            self.assertIn("src/Example.lean", registered_files(manifest, lean_root))
+            source.write_text("changed source\\n", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "digest is outdated"):
+                registered_files(manifest, lean_root)
+
+    def test_rejects_path_traversal_for_approved_entries(self):
+        import hashlib
+
+        with tempfile.TemporaryDirectory() as temp:
+            repository = Path(temp)
+            lean_root = repository / "application" / "lean"
+            (lean_root / "src").mkdir(parents=True)
+            (lean_root / "src" / "Example.lean").write_text(
+                "theorem x : True := by trivial\\n#print axioms x\\n", encoding="utf-8")
+            item = {"id": "x", "source_module": "X-01", "source_label": "thm:x",
+                    "lean_file": "src/Example.lean", "lean_theorem": "x",
+                    "statement_status": "approved",
+                    "source_document_path": "chapters/pl/../../../secret.tex",
+                    "source_document_sha256": hashlib.sha256(b"test").hexdigest()}
+            manifest = lean_root / "manifest.json"
+            manifest.write_text(json.dumps({"items": [item]}), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "Missing or untrusted"):
+                registered_files(manifest, lean_root)
+
 if __name__ == "__main__":
     unittest.main()
