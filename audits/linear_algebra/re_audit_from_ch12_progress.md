@@ -8,10 +8,10 @@
 
 ## Stan wykonania
 
-- Bieżący rozdział: **25**.
-- Ostatni zamknięty blob (rozdział 24): **92106feafce495e11f051279733cb34e9d9bed64**.
-- Liczba kolejnych czystych audytów (bieżący rozdział 25): **1/2**.
-- Kolejne działanie: **wykonać audyt 02 rozdziału 25** na identycznym blobie `6b57fc1b64ef560b98e17f89322c688160376ccf`, bez automatycznego zaliczania audytów historycznych; audyt 01 czysty (1/2). Dedykowane CI 45021237405 zakończone sukcesem dla identycznego bloba.
+- Bieżący rozdział: **26**.
+- Ostatni zamknięty blob (rozdział 25): **6b57fc1b64ef560b98e17f89322c688160376ccf**.
+- Liczba kolejnych czystych audytów (bieżący rozdział 26): **0/2**.
+- Kolejne działanie: **wykonać ponowny audyt 01 rozdziału 26**. Rozdział 25 zamknięto po dwóch czystych kontrolach 01 i 02 na blobie `6b57fc1b64ef560b98e17f89322c688160376ccf` oraz CI success 45021237405 i 45021828182.
 - Historyczne audyty, w tym ręczne audyty rozdziałów 13–15 z 22 listopada, pozostają ważnymi źródłami, ale **nie są automatycznie liczone** jako wykonanie nowego przebiegu.
 
 ## Tabela statusów
@@ -31,8 +31,8 @@
 | 22 | STABILNY; audyty 03 i 04 czyste po poprawce, CI success | 2 | `dfa3d790bfed4c92c66642ea626a6213bc06ad3f` |
 | 23 | STABILNY; audyty 01 i 02 czyste, CI success | 2 | `bbd199baed1ee2c1a88843aad9fbfd0eac665d22` |
 | 24 | STABILNY; audyty 01 i 02 czyste, CI success | 2 | `92106feafce495e11f051279733cb34e9d9bed64` |
-| 25 | BIEŻĄCY; audyt 01 czysty, audyt 02 do wykonania | 1 | `6b57fc1b64ef560b98e17f89322c688160376ccf` |
-| 26 | W kolejce | 0 | — |
+| 25 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `6b57fc1b64ef560b98e17f89322c688160376ccf` |
+| 26 | BIEŻĄCY; ponowny audyt 01 do wykonania | 0 | — |
 | 27 | W kolejce | 0 | — |
 | 28 | W kolejce | 0 | — |
 | 29 | W kolejce | 0 | — |
@@ -225,3 +225,9 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - Nowe, lokalnie wykonane niezależne testy `/mnt/data/la25_reaudit_independent.py`: **793** pełne układy wymiaru 2 nad F2/F3 (Kalman, PBH, obserwowalność), **400** dokładnych przypadków rozmieszczenia biegunów, **37** losowych testów graminów i minimalnej energii, razem **1230 PASS, 0 FAIL**. 47 unikalnych etykiet, 30 poprawnych odsyłaczy, 108 domkniętych środowisk.
 - [CI 45021237405](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45021237405): completed/success dla commitu o identycznym blobie. Nowszy run 45021828182 był in_progress w czasie sprawdzenia.
 - Następny: rozdział **25**, audyt **02** na tym samym blobie. Nie przechodzić jeszcze do 26.
+
+## Ostatnia rzeczywista iteracja — 2026-11-22 (rozdział 25, audyt 02)
+
+- Rozdział **25: STABILNY (2/2)** na źródle `6b57fc1b64ef560b98e17f89322c688160376ccf`, niezmienionym od audytu 01. Raport [25_iteration_02_2026-11-22.md](re_audit_from_ch12/25_iteration_02_2026-11-22.md).
+- Nowy lokalny test `/mnt/data/la25_reaudit_02_tests.py`: **889** kontroli Kalman/PBH/obserwowalność, **39** porównań graminu ciągłego i energii, **120** przykładów wymiernych sprzężenia zwrotnego, **1048 PASS**. LaTeX: 47 unikalnych etykiet, 30 poprawnych odsyłaczy, 108 par środowisk. Bez zmian źródła.
+- Dedykowane CI [45021237405](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45021237405) i [45021828182](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45021828182) completed/success z identycznym blobem. Następny: rozdział 26.
