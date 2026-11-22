@@ -7,7 +7,7 @@ Data: 2026-11-22. Źródło: `chapters/pl/general_topology/14-zwartosc-lokalna.t
 Zachowano bez zmian oryginalne trzy główne elementy przeniesione z rozdziału 11: definicję lokalnej zwartości, lemat o zwartym domknięciu otoczenia i lokalnie zwartą wersję twierdzenia Baire'a. Dopisano:
 
 - dziedziczenie zwartości lokalnej przez otwarte i domknięte podprzestrzenie lokalnie zwartej przestrzeni Hausdorffa (dowody obu kierunków);
-- skończone iloczyny lokalnie zwartych przestrzeni Hausdorffa;
+- skończone iloczyny lokalnie zwartych przestrzeni Hausdorffa oraz pełne kryterium dla dowolnych iloczynów niepustych przestrzeni Hausdorffa;
 - przykłady przestrzeni dyskretnych oraz przestrzeni euklidesowych;
 - definicje przeliczalności w nieskończoności i `σ`-zwartości, z rozróżnieniem kwantyfikatorów;
 - twierdzenie o równoważności `σ`-zwartości, przeliczalności w nieskończoności i istnienia wyczerpania `K_n⊂int K_(n+1)` w klasie lokalnie zwartych przestrzeni Hausdorffa;
@@ -20,16 +20,17 @@ Zachowano bez zmian oryginalne trzy główne elementy przeniesione z rozdziału 
 
 1. W dowodzie dziedziczenia przez otwarte podprzestrzenie wykorzystano lemat o zwartym domknięciu zawartym w zadanym otwartym podzbiorze, zaś dla domkniętych przecięcie zbioru zwartego z domkniętym.
 2. W dowodzie produktu iloczyn zwartych otoczeń ma niepuste otwarte otoczenie punktu; zwartość wynika z twierdzenia dla skończonych iloczynów z rozdziału 7.
-3. W wyczerpaniu: każde zwarte `C` ma zwarty zbiór `K` z `C⊂int K` (skończone podpokrycie otoczeń o zwartym domknięciu). Następnie rekurencja stosowana do `K_n∪C_(n+1)` daje ścisłe zawieranie w kolejnych wnętrzach. Odwrotnie, rosnące otwarte pokrycie zwartego `C` daje jego zawieranie w jednym `K_N`.
-4. Wnioski z drugiego aksjomatu przeliczalności opierają się na wcześniejszej własności Lindelöfa, bez użycia późniejszej parazwartości.
-5. Przykład `Q`: każdy zwarty `K⊂Q` jest domknięty w `R` i nie może zawierać niepustego względnie otwartego przedziału; z każdej rzekomo współkońcowej rodziny `K_n` dobierany jest `q_n→q` poza `K_n`; zbiór granicy wraz z ciągiem jest zwarty, a nie mieści się w żadnym `K_n`.
-6. Zachowano zasadę zależności: wszystkie wyniki potrzebne w rozdziale 14 pochodzą z rozdziałów 4, 5, 7, 9 i 11; nie korzysta się z rozdziałów 15–17 ani z teorii uzwarceń.
+3. Dla dowolnych iloczynów: przy lokalnej zwartości produktu zwarty zbiór $K$ zawierający podstawowe otwarte otoczenie produktu ma rzutowania pokrywające wszystkie czynniki poza skończoną liczbą; te czynniki muszą być zwarte. W drugą stronę użyto twierdzenia Tychonoffa oraz skończonego iloczynu przestrzeni lokalnie zwartych. Niepustość wszystkich czynników została jawnie założona.
+4. W wyczerpaniu: każde zwarte `C` ma zwarty zbiór `K` z `C⊂int K` (skończone podpokrycie otoczeń o zwartym domknięciu). Następnie rekurencja stosowana do `K_n∪C_(n+1)` daje ścisłe zawieranie w kolejnych wnętrzach. Odwrotnie, rosnące otwarte pokrycie zwartego `C` daje jego zawieranie w jednym `K_N`.
+5. Wnioski z drugiego aksjomatu przeliczalności opierają się na wcześniejszej własności Lindelöfa, bez użycia późniejszej parazwartości.
+6. Przykład `Q`: każdy zwarty `K⊂Q` jest domknięty w `R` i nie może zawierać niepustego względnie otwartego przedziału; z każdej rzekomo współkońcowej rodziny `K_n` dobierany jest `q_n→q` poza `K_n`; zbiór granicy wraz z ciągiem jest zwarty, a nie mieści się w żadnym `K_n`.
+7. Zachowano zasadę zależności: wszystkie wyniki potrzebne w rozdziale 14 pochodzą z rozdziałów 4, 5, 7, 9 i 11; nie korzysta się z rozdziałów 15–17 ani z teorii uzwarceń.
 
 ## Walidacja i stan
 
 Test `tools/tests/test_general_topology_ch14.py` rozszerzono o kontrolę nowych etykiet i zachowania materiału z rozdziału 11.
 
-W chwili powstawania raportu uruchomiona jest kompilacja w GitHub Actions, obejmująca książkę oraz samodzielny PDF rozdziału 14. **Nie uznawać wyniku CI ani kontroli graficznej za pozytywny przed rzeczywistym sprawdzeniem.**
+Pierwsza kompilacja rozszerzenia przed dodaniem kryterium dowolnych iloczynów zakończyła się sukcesem (`45007966956`), lecz jej PDF miał prawie pustą ostatnią stronę. Z tego powodu dodano pełny wynik o dowolnych iloczynach i rozszerzono testy. Dla finalnej wersji pozostaje do sprawdzenia nowy przebieg CI obejmujący książkę i samodzielny PDF rozdziału 14. **Nie uznawać wyniku CI ani kontroli graficznej za pozytywny przed rzeczywistym sprawdzeniem.**
 
 | Warstwa | Status |
 | --- | --- |
