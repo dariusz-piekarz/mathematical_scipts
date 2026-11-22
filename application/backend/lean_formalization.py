@@ -149,6 +149,10 @@ def fragment(con: sqlite3.Connection, *, entity_id: str | None = None,
         start_line=start_line, end_line=end_line)
     if len(content) > MAX_SOURCE_CHARS:
         raise HTTPException(413, "Fragment LaTeX jest zbyt duży. Wybierz mniejszy zakres.")
+    # Do not present a mapping as current when the indexed source is corrupted.
+    if (not isinstance(d["content"], str) or
+            hashlib.sha256(d["content"].encode("utf-8")).hexdigest() != d["sha256"]):
+        raise HTTPException(409, "Niezgodność treści rozdziału z SHA256 w indeksie.")
     matches = [r for r in _registry(lean_root) if _matches(r, d, labels)]
     if len(matches) > 1:
         raise HTTPException(409, "Wiele formalizacji pasuje do tego fragmentu; wymagane rozstrzygnięcie.")
