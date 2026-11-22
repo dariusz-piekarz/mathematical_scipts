@@ -64,6 +64,10 @@ def sources() -> tuple[int, int]:
         assert r"\label{"+label+"}" in src, label
     assert r"\Phi(z)_g=z_{g\circ f}" in src
     assert r"\widehat f=e_L^{-1}\circ\Phi" in src
+    assert r"\pi_f\colon[0,1]^I\to[0,1]" in src
+    assert r"\lim_{t\to-\infty}2\arctan t=-\pi" in src
+    assert r"\lim_{t\to+\infty}2\arctan t=\pi" in src
+    assert r"\widetilde e^{-1}(V)" in src
     assert r"(X^\ast,\iota)\preccurlyeq(K,e)" in src
     for env in ("definicja","lemat","twierdzenie","wniosek",
                 "przyklad","uwaga","proof","enumerate"):
