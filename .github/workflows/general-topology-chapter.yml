@@ -29,6 +29,7 @@ on:
       - 'tools/tests/test_general_topology_ch18.py'
       - 'tools/tests/test_general_topology_ch19.py'
       - 'tools/tests/test_general_topology_ch20.py'
+      - 'tools/tests/test_general_topology_ch21.py'
       - 'tools/validate_general_topology_ch10.sh'
       - 'tools/validate_general_topology_ch11.sh'
       - 'tools/validate_general_topology_ch12.sh'
@@ -58,6 +59,7 @@ on:
       - 'books/pl/general_topology_ch18.tex'
       - 'books/pl/general_topology_ch19.tex'
       - 'books/pl/general_topology_ch20.tex'
+      - 'books/pl/general_topology_ch21.tex'
       - 'audits/general_topology/**'
       - '.github/workflows/general-topology-chapter.yml'
   workflow_dispatch:
@@ -81,7 +83,7 @@ jobs:
           assert len(items) == 1
           book = items[0]
           assert book['entrypoint'] == 'books/pl/general_topology.tex'
-          assert book['chapters'] == ['chapters/pl/general_topology/01-przestrzenie-topologiczne.tex', 'chapters/pl/general_topology/02-operacje-topologiczne-na-zbiorach.tex', 'chapters/pl/general_topology/03-odwzorowania-ciagle.tex', 'chapters/pl/general_topology/04-konstrukcje-przestrzeni-topologicznych.tex', 'chapters/pl/general_topology/05-aksjomaty-oddzielania.tex', 'chapters/pl/general_topology/06-zbieznosc-topologiczna.tex', 'chapters/pl/general_topology/07-zwartosc.tex', 'chapters/pl/general_topology/08-spojnosc.tex', 'chapters/pl/general_topology/09-aksjomaty-przeliczalnosci.tex', 'chapters/pl/general_topology/10-metryzowalnosc.tex', 'chapters/pl/general_topology/11-zupelnosc-i-twierdzenie-bairea.tex', 'chapters/pl/general_topology/12-przestrzenie-jednostajne.tex', 'chapters/pl/general_topology/13-zupelnosc-jednostajna-i-uzupelnienia.tex', 'chapters/pl/general_topology/14-zwartosc-lokalna.tex', 'chapters/pl/general_topology/15-parazwartosc-i-podzialy-jednosci.tex', 'chapters/pl/general_topology/16-funkcje-ciagle-i-uzwarcenia.tex', 'chapters/pl/general_topology/17-uzwarcenia-aleksandrowa-i-cecha-stonea.tex', 'chapters/pl/general_topology/18-przestrzenie-odwzorowan-i-topologia-zwarto-otwarta.tex', 'chapters/pl/general_topology/19-przestrzenie-polskie-i-zbiory-borelowskie.tex', 'chapters/pl/general_topology/20-zbiory-analityczne-i-operacja-suslina.tex']
+          assert book['chapters'] == ['chapters/pl/general_topology/01-przestrzenie-topologiczne.tex', 'chapters/pl/general_topology/02-operacje-topologiczne-na-zbiorach.tex', 'chapters/pl/general_topology/03-odwzorowania-ciagle.tex', 'chapters/pl/general_topology/04-konstrukcje-przestrzeni-topologicznych.tex', 'chapters/pl/general_topology/05-aksjomaty-oddzielania.tex', 'chapters/pl/general_topology/06-zbieznosc-topologiczna.tex', 'chapters/pl/general_topology/07-zwartosc.tex', 'chapters/pl/general_topology/08-spojnosc.tex', 'chapters/pl/general_topology/09-aksjomaty-przeliczalnosci.tex', 'chapters/pl/general_topology/10-metryzowalnosc.tex', 'chapters/pl/general_topology/11-zupelnosc-i-twierdzenie-bairea.tex', 'chapters/pl/general_topology/12-przestrzenie-jednostajne.tex', 'chapters/pl/general_topology/13-zupelnosc-jednostajna-i-uzupelnienia.tex', 'chapters/pl/general_topology/14-zwartosc-lokalna.tex', 'chapters/pl/general_topology/15-parazwartosc-i-podzialy-jednosci.tex', 'chapters/pl/general_topology/16-funkcje-ciagle-i-uzwarcenia.tex', 'chapters/pl/general_topology/17-uzwarcenia-aleksandrowa-i-cecha-stonea.tex', 'chapters/pl/general_topology/18-przestrzenie-odwzorowan-i-topologia-zwarto-otwarta.tex', 'chapters/pl/general_topology/19-przestrzenie-polskie-i-zbiory-borelowskie.tex', 'chapters/pl/general_topology/20-zbiory-analityczne-i-operacja-suslina.tex', 'chapters/pl/general_topology/21-topologie-na-rodzinach-podzbiorow.tex']
           source = (root/book['entrypoint']).read_text(encoding='utf-8')
           for chapter in book['chapters']:
               assert r'\input{../../' + chapter + '}' in source
@@ -131,6 +133,8 @@ jobs:
         run: python tools/tests/test_general_topology_ch19.py
       - name: Verify Chapter 20 analytic sets and Souslin models
         run: python tools/tests/test_general_topology_ch20.py
+      - name: Verify Chapter 21 hyperspace finite models and references
+        run: python tools/tests/test_general_topology_ch21.py
       - name: Build complete book PDF
         uses: xu-cheng/latex-action@v3
         with:
@@ -251,6 +255,12 @@ jobs:
           root_file: general_topology_ch20.tex
           working_directory: books/pl
           args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Build standalone Chapter 21 PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: general_topology_ch21.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
       - name: Check PDF and LaTeX log
         run: |
           test -s books/pl/general_topology.pdf
@@ -273,7 +283,8 @@ jobs:
           test -s books/pl/general_topology_ch18.pdf
           test -s books/pl/general_topology_ch19.pdf
           test -s books/pl/general_topology_ch20.pdf
-          for log in books/pl/general_topology.log books/pl/general_topology_ch02.log books/pl/general_topology_ch03.log books/pl/general_topology_ch04.log books/pl/general_topology_ch05.log books/pl/general_topology_ch06.log books/pl/general_topology_ch07.log books/pl/general_topology_ch08.log books/pl/general_topology_ch09.log books/pl/general_topology_ch10.log books/pl/general_topology_ch11.log books/pl/general_topology_ch12.log books/pl/general_topology_ch13.log books/pl/general_topology_ch14.log books/pl/general_topology_ch15.log books/pl/general_topology_ch16.log books/pl/general_topology_ch17.log books/pl/general_topology_ch18.log books/pl/general_topology_ch19.log books/pl/general_topology_ch20.log; do
+          test -s books/pl/general_topology_ch21.pdf
+          for log in books/pl/general_topology.log books/pl/general_topology_ch02.log books/pl/general_topology_ch03.log books/pl/general_topology_ch04.log books/pl/general_topology_ch05.log books/pl/general_topology_ch06.log books/pl/general_topology_ch07.log books/pl/general_topology_ch08.log books/pl/general_topology_ch09.log books/pl/general_topology_ch10.log books/pl/general_topology_ch11.log books/pl/general_topology_ch12.log books/pl/general_topology_ch13.log books/pl/general_topology_ch14.log books/pl/general_topology_ch15.log books/pl/general_topology_ch16.log books/pl/general_topology_ch17.log books/pl/general_topology_ch18.log books/pl/general_topology_ch19.log books/pl/general_topology_ch20.log books/pl/general_topology_ch21.log; do
             if grep -qE 'Overfull|Underfull|Missing character|LaTeX Warning|Undefined control sequence|Fatal error' "$log"; then
               grep -nE 'Overfull|Underfull|Missing character|LaTeX Warning|Undefined control sequence|Fatal error' "$log"
               exit 1
@@ -283,7 +294,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: general-topology-ch01-ch20
+          name: general-topology-ch01-ch21
           path: |
             books/pl/general_topology.pdf
             books/pl/general_topology.log
@@ -325,4 +336,6 @@ jobs:
             books/pl/general_topology_ch19.log
             books/pl/general_topology_ch20.pdf
             books/pl/general_topology_ch20.log
+            books/pl/general_topology_ch21.pdf
+            books/pl/general_topology_ch21.log
           if-no-files-found: warn
