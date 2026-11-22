@@ -1,8 +1,8 @@
 # Algebra liniowa — audyt globalny, iteracja 28: LA29, pierwsza czysta kontrola
 
-**Data:** 22 listopada 2026. **Gałąź:** \`biblioteka-matematyczna-iteracja-6\`.
-**Rozdział:** \`chapters/pl/linear_algebra/29-grassmanniany.tex\`.
-**Niezmieniony blob źródła:** \`01213689fb5d2477db25f9ff713608b0171a00c8\` (746 wierszy).
+**Data:** 22 listopada 2026. **Gałąź:** `biblioteka-matematyczna-iteracja-6`.
+**Rozdział:** `chapters/pl/linear_algebra/29-grassmanniany.tex`.
+**Niezmieniony blob źródła:** `01213689fb5d2477db25f9ff713608b0171a00c8` (746 wierszy).
 **Poprzedni audyt:** iteracja 27 poprawiła precyzję typu różniczki odwzorowania Gaussa w przykładzie paraboli.
 **Werdykt:** brak wykrytych nowych usterek matematycznych i językowych; **pierwsza czysta kontrola po poprawce (1/2)**. Oddzielny sceptyczny audyt końcowy +1 jeszcze niewykonany; rozdział LA29 w ramach audytu globalnego pozostaje OTWARTY.
 
@@ -21,7 +21,7 @@ Przeczytano wszystkie 746 wierszy, cztery twierdzenia, dwa stwierdzenia, dwie de
 
 ## 2. Nowe, niezależne testy dokładne (nie powtarzano poprzedniego generatora)
 
-Skrypt \`/mnt/data/la29_global28_independent.py\`, SymPy i \`random.Random(202611220028)\`, wykonał **2855/2855 PASS**, 0 FAIL. W tym:
+Skrypt `/mnt/data/la29_global28_independent.py`, SymPy i `random.Random(202611220028)`, wykonał **2855/2855 PASS**, 0 FAIL. W tym:
 
 - 144+144+144+144 kontroli dokładnych idempotencji, symetrii, niezmienniczości wykresu i rekonstrukcji jego współrzędnych dla macierzy wymiernych;
 - 627×3 kontroli mniejszych minorów, tożsamości pivota i rozpiętości wykresu;
@@ -34,14 +34,14 @@ Wynik rachunkowy nie stanowi formalnej certyfikacji Lean. Poprzednia iteracja 27
 
 ## 3. Walidacja aktualnego bloba w GitHub Actions i rzeczywisty PDF
 
-**[GitHub Actions 45079917894 — completed/success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45079917894)** dla commitu \`759ed5a94bb65c8695a9cc16fe4cd9086f515d20\`, który zawiera dokładnie bieżący blob LA29 \`01213689fb5d2477db25f9ff713608b0171a00c8\`. Workflow przeszedł testy rozdziałowe, dwa przebiegi składania LaTeX, kontrolę odsyłaczy i eksport. Osobna [walidacja terminologii 45079917920](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45079917920) zakończyła się sukcesem.
+**[GitHub Actions 45079917894 — completed/success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45079917894)** dla commitu `759ed5a94bb65c8695a9cc16fe4cd9086f515d20`, który zawiera dokładnie bieżący blob LA29 `01213689fb5d2477db25f9ff713608b0171a00c8`. Workflow przeszedł testy rozdziałowe, dwa przebiegi składania LaTeX, kontrolę odsyłaczy i eksport. Osobna [walidacja terminologii 45079917920](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45079917920) zakończyła się sukcesem.
 
-Pobrano rzeczywisty artefakt \`14776449318\` tego CI, zawierający \`linear_algebra.pdf\` (320 stron A4) i \`linear_algebra.log\`. **LA29 zajmuje strony PDF 287–294, wszystkie 8/8 wyrenderowano i obejrzano**, w tym powiększenie strony 293 z poprawioną różniczką Gaussa oraz strony 294. Nie dostrzeżono kolizji podpisów, obciętych wzorów ani błędów rozmieszczenia rysunków. Programowe sprawdzenie prostokątów bloków tekstowych: żadnego poza stroną. W logu: **0** \`LaTeX Warning\`, \`Overfull\`, \`Underfull\`, \`Undefined control sequence\`, \`Missing character\`, \`undefined references\`. W porównaniu z wcześniejszym PDF strony 287–292 są identyczne tekstowo i pikselowo, a strony 293–294 różnią się wskutek celowej zmiany i przeniesienia akapitu; nie ma dodatkowej strony.
+Pobrano rzeczywisty artefakt `14776449318` tego CI, zawierający `linear_algebra.pdf` (320 stron A4) i `linear_algebra.log`. **LA29 zajmuje strony PDF 287–294, wszystkie 8/8 wyrenderowano i obejrzano**, w tym powiększenie strony 293 z poprawioną różniczką Gaussa oraz strony 294. Nie dostrzeżono kolizji podpisów, obciętych wzorów ani błędów rozmieszczenia rysunków. Programowe sprawdzenie prostokątów bloków tekstowych: żadnego poza stroną. W logu: **0** `LaTeX Warning`, `Overfull`, `Underfull`, `Undefined control sequence`, `Missing character`, `undefined references`. W porównaniu z wcześniejszym PDF strony 287–292 są identyczne tekstowo i pikselowo, a strony 293–294 różnią się wskutek celowej zmiany i przeniesienia akapitu; nie ma dodatkowej strony.
 
-W bieżącym źródle są **19 unikalnych etykiet**, **20 odsyłaczy** z prawidłowymi lokalnymi celami, sześć zgodnych par \`proof\`, dwie \`figure\` i dwie \`tikzpicture\`. Rejestr katalogu i kolejność rozdziałów zostały objęte zielonym workflow.
+W bieżącym źródle są **19 unikalnych etykiet**, **20 odsyłaczy** z prawidłowymi lokalnymi celami, sześć zgodnych par `proof`, dwie `figure` i dwie `tikzpicture`. Rejestr katalogu i kolejność rozdziałów zostały objęte zielonym workflow.
 
 ## 4. Decyzja i dalsza sekwencja
 
 W ramach **globalnej ewidencji 363/382 dowodów** pozostaje do osobnej lektury 19: LA30 — 3, LA31 — 6, LA32 — 10. **LA29 ma 1/2 czystych audytów po ostatniej korekcie; nie jest jeszcze zamknięty w tej nowej sekwencji.** Kolejny pełny audyt powinien niezależnie powtórzyć kontrolę LA29 na niezmienionym blobie; po osiągnięciu 2/2 wykonać jeszcze dodatkowy, osobny sceptyczny audyt końcowy +1. Dopiero potem wolno przejść do LA30.
 
-Nie modyfikowano źródeł \`.tex\`. Raport i ewidencja dowodów są jedynymi nowymi plikami; żaden wynik nie jest przedstawiany jako formalnie sprawdzony w Lean.
+Nie modyfikowano źródeł `.tex`. Raport i ewidencja dowodów są jedynymi nowymi plikami; żaden wynik nie jest przedstawiany jako formalnie sprawdzony w Lean.
