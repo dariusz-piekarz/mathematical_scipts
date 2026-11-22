@@ -20,7 +20,7 @@ Własność drzewa wymaga węzłów na wszystkich poziomach drzewa κ-owego, nie
 
 Lemat o przynależności klubów do miary normalnej jest niezależny od zanurzenia j: dla dopełnienia C dużego definiuje się f(α)=sup(C∩α) na dużym ogonie. Domkniętość C wymusza f(α)<α. Normalność daje stały obraz na dużym zbiorze B; nieograniczoność C i B prowadzi do sprzeczności.
 
-W drugim kroku sprawdzono wewnętrzną nieosiągalność κ w M. Jeśli M uważałby κ za singularny albo niekardynalny, istniałoby świadectwo w V, sprzeczne z regularnością κ jako kardynału V. Jeśli M naruszałoby silną graniczność przy λ<κ, w M można by skonstruować iniekcję κ→P^M(λ) ⊆ P^V(λ), sprzeczną z mocą zbioru potęgowego λ w V. W M zatem κ jest nieosiągalny i należy do j(Iκ), stąd Iκ ma miarę jeden, a wobec przynależności wszystkich klubów do tej samej miary jest stacjonarny.
+W drugim kroku sprawdzono wewnętrzną nieosiągalność κ w M. Jeśli M uważałby κ za singularny albo niekardynalny, istniałoby świadectwo w V, sprzeczne z regularnością κ jako liczby kardynalnej w V. Jeśli M naruszałoby silną graniczność przy λ<κ, w M można by skonstruować iniekcję κ→P^M(λ) ⊆ P^V(λ), sprzeczną z mocą zbioru potęgowego λ w V. W M zatem κ jest nieosiągalny i należy do j(Iκ), stąd Iκ ma miarę jeden, a wobec przynależności wszystkich klubów do tej samej miary jest stacjonarny.
 
 ## 4. Kolorowania par
 
