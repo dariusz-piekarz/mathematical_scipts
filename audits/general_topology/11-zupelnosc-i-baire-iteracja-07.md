@@ -27,7 +27,13 @@ Test `test_general_topology_ch11.py` zaktualizowano, aby oczekiwał tylko twierd
 | Zachowanie metrycznej wersji twierdzenia Baire'a | PASS |
 | Etykiety i odsyłacze w źródle | PASS |
 | Przeniesienie materiału bez utraty definicji/lematu/twierdzenia | PASS |
-| Regresja kompilacji PDF na nowej gałęzi | W toku — przed potwierdzeniem CI |
-| Status stabilności po zmianie | Audyt regresyjny otwarty do potwierdzenia CI i PDF |
+| Regresja kompilacji PDF na nowej gałęzi | PASS — workflow 45007367845 |
+| Status stabilności po zmianie | **STABILNY — audyt regresyjny zamknięty** |
 
 Następna czynność zgodnie z kolejnością użytkownika: po końcowej walidacji rozdziału 11 ponowna kontrola rozdziału 13.
+
+## Zamknięcie kontroli technicznej
+
+GitHub Actions `45007367845` zakończył się `completed/success` bez nieudanych kroków: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45007367845 . Pobrano artefakt `14747584273` z rzeczywistych kompilacji. PDF rozdziału 11 ma **4 strony A4**; rozdział 14 ma **1 stronę A4** z przeniesioną sekcją. Logi obu rozdziałów i rozdziału 13 nie zawierają `Overfull`, `Underfull`, `LaTeX Warning`, `Missing character`, `Undefined control sequence` ani `Fatal error`. Wykonano render i kontrolę wizualną wszystkich stron rozdziału 11 oraz strony rozdziału 14: bez ucięć, nakładających się etykiet lub nieczytelnych rysunków. Rozdział 11 zachowuje rysunek zstępujących kul w dobrym układzie.
+
+**Werdykt: rozdział 11 pozostaje stabilny po zmianie struktury.**
