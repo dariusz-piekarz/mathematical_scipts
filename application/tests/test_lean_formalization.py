@@ -81,7 +81,10 @@ class LeanFormalizationTests(unittest.TestCase):
 
     def test_adjacent_proof_can_open_its_theorem_formalization(self):
         proof = "\\begin{proof}\nDowód prawa de Morgana.\n\\end{proof}\n"
-        self.con.execute("UPDATE documents SET content=? WHERE id='LST-01'", (SOURCE + proof,))
+        updated_source = SOURCE + proof
+        updated_sha = hashlib.sha256(updated_source.encode("utf-8")).hexdigest()
+        self.con.execute("UPDATE documents SET content=?,sha256=? WHERE id='LST-01'",
+                         (updated_source, updated_sha))
         self.con.execute("INSERT INTO entities VALUES(?,?,?,?,?,?,?,?)",
                          ("LST-01/proof/0002", "LST-01", "proof", "Dowód",
                           4, 6, len(SOURCE), len(SOURCE) + len(proof)))
@@ -103,7 +106,12 @@ class LeanFormalizationTests(unittest.TestCase):
         self.assertEqual(a["formalization_status"], "ready")
         self.assertEqual(a["statement_status"], "approved")
         self.assertEqual(a["lean_theorems"], ["sample"])
-        self.con.execute("UPDATE documents SET sha256=?", ("f"*64,))
+        # A real change keeps the index internally consistent but invalidates
+        # the version pinned in the reviewed manifest.
+        revised_source = SOURCE + "% later editorial change\\n"
+        revised_sha = hashlib.sha256(revised_source.encode("utf-8")).hexdigest()
+        self.con.execute("UPDATE documents SET content=?,sha256=? WHERE id='LST-01'",
+                         (revised_source, revised_sha))
         self.con.commit()
         b = lean.fragment(self.con, entity_id="LST-01/theorem/0001",
                           lean_root=self.root)
@@ -112,6 +120,15 @@ class LeanFormalizationTests(unittest.TestCase):
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}):
             result = lean.run(self.con, "sample", lean_root=self.root)
         self.assertEqual(result["proof_status"], "blocked")
+
+    def test_corrupted_index_is_refused_by_reader(self):
+        self.con.execute("UPDATE documents SET sha256=? WHERE id='LST-01'",
+                         ("f" * 64,))
+        self.con.commit()
+        with self.assertRaises(HTTPException) as caught:
+            lean.fragment(self.con, entity_id="LST-01/theorem/0001",
+                          lean_root=self.root)
+        self.assertEqual(caught.exception.status_code, 409)
 
     def test_runner_blocks_inconsistent_index_before_subprocess(self):
         # Simulate a stale SQLite SHA while the source bytes remain unchanged.
