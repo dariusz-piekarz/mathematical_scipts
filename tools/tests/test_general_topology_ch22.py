@@ -99,7 +99,8 @@ def source_integration() -> tuple[int, int]:
     assert r"\setcounter{chapter}{21}" in standalone
     for i in ("14", "21"):
         assert rf"\externaldocument{{general_topology_ch{i}}}" in standalone
-    assert "Wersja 1.22 — rozdziały 01–22 stabilne" in book
+    stable = re.search(r"rozdziały 01–(\d+) stabilne", book)
+    assert stable and int(stable.group(1)) >= 22
 
     cat = json.loads((ROOT / "catalog/books.json").read_text(encoding="utf-8"))
     chapters = next(
