@@ -94,6 +94,23 @@ def parse_inspection(log: str, token: str, names: list[str]) -> dict[str, list[s
     return {name: sorted(found[name]) for name in names}
 
 
+def _indexed_binding(con: sqlite3.Connection, module: str, label: str,
+                     entity_id: str) -> tuple | None:
+    """Snapshot label position and indexed entity boundaries, not only its ID.
+
+    A rebuild may preserve the source SHA and entity ID while moving an
+    entity's offsets/kind or label position. Duplicate label rows also fail.
+    """
+    rows = con.execute(
+        "SELECT e.id,e.kind,e.title,e.start_line,e.end_line,"
+        "e.start_offset,e.end_offset,l.offset "
+        "FROM labels AS l JOIN entities AS e ON e.id=l.entity_id "
+        "WHERE e.document_id=? AND e.id=? AND l.name=? "
+        "ORDER BY l.offset LIMIT 2",
+        (module, entity_id, label)).fetchall()
+    return tuple(rows[0]) if len(rows) == 1 else None
+
+
 def _empty(identifier: str, status: str, detail: str) -> dict:
     return {"formalization_id": identifier, "inspection_status": status,
             "detail": detail, "constants": {}, "certificate": False}
@@ -131,6 +148,12 @@ def inspect(con: sqlite3.Connection, identifier: str, *,
                         "source_module", "source_label", "lean_file", "lean_theorem"))
                     or record.get("lean_theorems") != names):
                 return _empty(identifier, "blocked", "Nieaktualne przypięcie źródła.")
+            binding_before = _indexed_binding(
+                con, item["source_module"], item["source_label"],
+                record["source_entity_id"])
+            if binding_before is None:
+                return _empty(identifier, "blocked",
+                              "Nie można jednoznacznie przypiąć indeksowanego twierdzenia.")
             doc = con.execute("SELECT sha256,content FROM documents WHERE id=?",
                               (item["source_module"],)).fetchone()
             if (doc is None or not isinstance(doc["content"], str)
@@ -196,6 +219,11 @@ def inspect(con: sqlite3.Connection, identifier: str, *,
                     or current_record["index_status"] != record["index_status"]):
                 return _empty(identifier, "blocked",
                               "Powiązanie etykiety zmieniło się podczas inspekcji.")
+            if (_indexed_binding(
+                    con, item["source_module"], item["source_label"],
+                    current_record["source_entity_id"]) != binding_before):
+                return _empty(identifier, "blocked",
+                              "Granice indeksowanego twierdzenia zmieniły się podczas pracy.")
             if (before != after or
                     not lean._source_file_current(item, doc["sha256"], lean_root)):
                 return _empty(identifier, "blocked", "Źródło zmieniło się podczas pracy.")
