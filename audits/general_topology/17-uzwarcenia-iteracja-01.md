@@ -30,7 +30,7 @@ Zastosowano testy etykiet, domknięcia odsyłaczy i poprawności struktury LaTeX
 Workflow dla źródła z pełnymi dowodami i testem:
 https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45013696240
 
-W chwili tworzenia raportu przebieg CI trwa; należy dopisać wynik i wizualny audyt samodzielnego PDF po pobraniu artefaktu.
+Workflow [45013696240](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45013696240) dla kompletnego rozdziału, wniosku o jednoznaczności uzwarcenia jednopunktowego i testu: **completed/success**, bez nieudanych kroków. Pobierano artefakt `14751001466`, zawierający samodzielny `general_topology_ch17.pdf` (**5 stron A4**) oraz log. Sprawdzono logi samodzielnego rozdziału i całej książki: brak `Overfull`, `Underfull`, `Missing character`, `LaTeX Warning`, `Undefined control sequence` i `Fatal error`. Wyrenderowano i skontrolowano wszystkie pięć stron PDF: brak kolizji, ucięć wzorów i problemów z czcionkami. Ostatnia strona jest krótsza, lecz czytelna, i nie wymaga sztucznego uzupełniania.
 
 | Element | Status |
 | --- | --- |
@@ -38,5 +38,5 @@ W chwili tworzenia raportu przebieg CI trwa; należy dopisać wynik i wizualny a
 | Matematyczna kontrola konstrukcji Čecha–Stone’a | PASS — audyt 01 |
 | Własności uniwersalne, minimalność, maksymalność | PASS — audyt 01 |
 | Terminologia, założenia i przykłady | PASS — audyt 01 |
-| Testy i CI / logi / kontrola PDF | W toku |
+| Testy i CI / logi / kontrola PDF | **PASS — run 45013696240; PDF 5 stron** |
 | Stabilizacja | **W AUDYCIE — wymagana niezależna iteracja 02** |
