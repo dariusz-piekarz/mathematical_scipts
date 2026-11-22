@@ -411,3 +411,44 @@ pierwszej serii globalnej 01–22.
 Dalsze prace wariacyjne (zbieżność Mosco
 i epigraficzna) prowadzić w analizie
 funkcjonalnej, bez powielania topologii ogólnej.
+
+
+## Globalny audyt 06–07 (23–26 oraz filtracja Cauchy'ego)
+
+Kontynuując raporty globalne 01–05, wykonano:
+
+- [audyt 06, rozdziały 23–26](../../audits/general_topology/00-globalny-audyt-06-blok-23-26.md)
+  — sprawdzenie 64 środowisk dowodu pod kątem ich struktury
+  oraz niezależny przegląd najtrudniejszych zależności:
+  wymiar sześcianu przez lemat Poincarégo--Mirandy
+  i twierdzenie Brouwera, ilorazy i metryzowalność grup,
+  nierozkładalność Knastera, konstrukcja Peana
+  i pełny dowód Hahna--Mazurkiewicza;
+- [audyt 07, rozdział 13](../../audits/general_topology/00-globalny-audyt-07-rozdzial-13-filtry-cauchyego.md)
+  — szczegółowa kontrola minimalnych filtrów
+  Cauchy'ego, jednostajnej struktury uzupełnienia,
+  gęstości kanonicznego zanurzenia,
+  dowodu zupełności i lematu o przedłużeniu.
+
+Do workflow dodano test
+`tools/tests/test_general_topology_cross_dependencies.py`,
+który wykrywa brakujące odsyłacze,
+użycie w rozdziałach 23–26
+twierdzeń z późniejszych rozdziałów,
+sprawdza obecność twierdzenia
+Brouwera w topologii algebraicznej
+oraz modeluje minimalizację filtrów
+w skończonych przestrzeniach jednostajnych.
+Skończone modele nie zastępują
+ogólnych dowodów matematycznych.
+
+**Stan:** rozdziały 01–26 pozostają stabilne.
+Globalny audyt całości jest nadal **otwarty**:
+raporty 01–07 zawierają szczegółowe kontrole
+wybranych trudnych argumentów,
+ale nie poświadczają niezależnego
+sprawdzenia wszystkich dowodów 01–26.
+Kontynuować etapami pozostałe dowody,
+szczególnie techniczne fragmenty
+rozdziałów 12–18, oraz pełną
+kontrolę rysunków książki.
