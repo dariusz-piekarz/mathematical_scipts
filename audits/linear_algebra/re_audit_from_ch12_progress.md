@@ -8,10 +8,10 @@
 
 ## Stan wykonania
 
-- Bieżący rozdział: **27**.
-- Ostatni zamknięty blob (rozdział 26): **80032eef1e0e5de817821d97de96aaf86c960e03**.
-- Liczba kolejnych czystych audytów (bieżący rozdział 27): **0/2**.
-- Kolejne działanie: **wykonać ponowny audyt 01 rozdziału 27**. Rozdział 26 zamknięty po korekcie językowej, dwóch kolejnych czystych audytach 02–03 na blobie `80032eef1e0e5de817821d97de96aaf86c960e03` oraz dedykowanym CI success (run 45022565397 i 45022589412).
+- Bieżący rozdział: **28**.
+- Ostatni zamknięty blob (rozdział 27): **a91dfa108d4a6ef4221b9ba24a98c87772c75d4a**.
+- Liczba kolejnych czystych audytów (bieżący rozdział 28): **0/2**.
+- Kolejne działanie: **wykonać audyt 01 rozdziału 28**. Rozdział 27 zamknięty po nowych dwóch czystych kontrolach 01–02 tego samego bloba `a91dfa108d4a6ef4221b9ba24a98c87772c75d4a` i zielonym dedykowanym CI 45022565397.
 - Historyczne audyty, w tym ręczne audyty rozdziałów 13–15 z 22 listopada, pozostają ważnymi źródłami, ale **nie są automatycznie liczone** jako wykonanie nowego przebiegu.
 
 ## Tabela statusów
@@ -33,8 +33,8 @@
 | 24 | STABILNY; audyty 01 i 02 czyste, CI success | 2 | `92106feafce495e11f051279733cb34e9d9bed64` |
 | 25 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `6b57fc1b64ef560b98e17f89322c688160376ccf` |
 | 26 | STABILNY; audyty 02 i 03 czyste po poprawce, CI success | 2 | `80032eef1e0e5de817821d97de96aaf86c960e03` |
-| 27 | BIEŻĄCY; ponowny audyt 01 do wykonania | 0 | — |
-| 28 | W kolejce | 0 | — |
+| 27 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `a91dfa108d4a6ef4221b9ba24a98c87772c75d4a` |
+| 28 | BIEŻĄCY; ponowny audyt 01 do wykonania | 0 | — |
 | 29 | W kolejce | 0 | — |
 | 30 | W kolejce | 0 | — |
 | 31 | W kolejce | 0 | — |
@@ -242,3 +242,9 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 
 - [GitHub Actions 45022565397](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45022565397) i [45022589412](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45022589412) są już **completed/success**. Sprawdzono, że commit `5a7317df50f2ddd986d424a9ed3b0f9ea8592b4f` zawiera dokładnie aktualny blob rozdziału 26 `80032eef1e0e5de817821d97de96aaf86c960e03`.
 - Po spełnieniu 2/2 czystych audytów i CI rozdział **26: STABILNY**; aktywny jest **27**. Nie dodano nowego materiału, jedyna edycja to językowa korekta w dowodzie DRE.
+
+## Ostatnia rzeczywista iteracja — 2026-11-22 (rozdział 27, audyty 01 i 02)
+
+- Rozdział **27: STABILNY (2/2)**. Źródło `a91dfa108d4a6ef4221b9ba24a98c87772c75d4a` niezmienione między dwiema kolejnymi niezależnymi czystymi kontrolami.
+- Raporty: [27_iteration_01_2026-11-22.md](re_audit_from_ch12/27_iteration_01_2026-11-22.md), [27_iteration_02_2026-11-22.md](re_audit_from_ch12/27_iteration_02_2026-11-22.md). Nowe testy: 720 przypadków Hankela nad F2/F3/F5, 65 dyskretnych zrównoważeń, 85 przypadków najmniejszych kwadratów, 135 sprawdzeń parametrów Markowa i podobieństwa, 135 rang Hankela, 77 ciągłych zrównoważeń — **1217 PASS**. LaTeX: 32 unikalne etykiety, 32 poprawne odsyłacze i 57 domkniętych środowisk.
+- [CI 45022565397](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45022565397) completed/success dla identycznego bloba. Następny rozdział w nowej sekwencji: **28**.
