@@ -42,3 +42,9 @@ https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45010139633
 | Stabilizacja rozdziału | OTWARTA: nowy dowód wymaga niezależnego ponownego audytu po walidacji CI |
 
 Źródło metody: M. E. Rudin, *A New Proof that Metric Spaces are Paracompact*, Proceedings of the AMS 20 (1969), 603; niezależnie porównano główne oszacowania z omówieniem https://matthewhr.wordpress.com/2014/06/18/metric-spaces-are-paracompact-m-e-rudins-elementary-proof/ .
+
+## Weryfikacja po wpisaniu dowodu
+
+Workflow `45010139633` dla kompletnego dowodu i rozszerzonego testu zakończył się `completed/success`. Pobrano artefakt `14749202693`, zawierający samodzielny PDF rozdziału 15 (4 strony A4) i log. Kontrola logu nie wykazała `Overfull`, `Underfull`, `Missing character`, `LaTeX Warning`, `Undefined control sequence` ani `Fatal error`. Wykonano oględziny stron 3–4: wzory i dowód są czytelne.
+
+Dostrzeżono drobną usterkę redakcyjną: na granicy stron 3–4 sformułowanie tezy twierdzenia zostało rozdzielone. Skrócono nagłówek sekcji do „Twierdzenie Stone'a”, a tezę do równoważnego „Niech $(X,d)$ będzie przestrzenią metryczną. Wówczas $X$ jest parazwarta.” Dowód szczegółowy pozostaje bez zmian. Korekta w commicie `bcd83a8e9fdae6d46e5befe07bfa9acfafb4d15f` wymaga finalnej kontroli składu na tym commicie.
