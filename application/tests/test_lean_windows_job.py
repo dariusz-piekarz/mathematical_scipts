@@ -51,7 +51,7 @@ class LeanWindowsJobTests(unittest.TestCase):
                 info.JobMemoryLimit = memory_limit
                 info.BasicLimitInformation.LimitFlags = flags
             else:
-                self.assertEqual(info_class, 8)
+                self.assertEqual(info_class, lean_windows_job.JOB_OBJECT_BASIC_ACCOUNTING_INFORMATION)
                 info = ctypes.cast(pointer, ctypes.POINTER(
                     lean_windows_job.BasicAccountingInformation)).contents
                 info.ActiveProcesses = 2
