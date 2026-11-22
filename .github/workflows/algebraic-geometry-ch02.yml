@@ -1,0 +1,81 @@
+name: Algebraic geometry ALG-02 projective proofs and PDF validation
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - 'chapters/pl/algebraic_geometry/02-*'
+      - 'books/pl/algebraic_geometry.tex'
+      - 'tools/tests/test_algebraic_geometry_ch02.py'
+      - '.github/workflows/algebraic-geometry-ch02.yml'
+  workflow_dispatch:
+
+jobs:
+  validate-alg02:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run ALG-02 projective and Bezout regressions
+        run: python3 -m unittest tools.tests.test_algebraic_geometry_ch02 -v
+      - name: Create ALG-00 to ALG-02 LaTeX driver for shared proof references
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          main = Path("books/pl/algebraic_geometry.tex")
+          text = main.read_text(encoding="utf-8")
+          pattern = r'\\input\{../../chapters/pl/algebraic_geometry/[^}]+\.tex\}'
+          entries = re.findall(pattern, text)
+          assert len(entries) == 11, f"Expected 11 chapter inputs, found {len(entries)}"
+          kept = []
+          for line in text.splitlines():
+              m = re.fullmatch(pattern, line.strip())
+              if m and not re.search(r'/(00|01|02)-[^}]+\.tex\}', line):
+                  continue
+              kept.append(line)
+          driver = "\n".join(kept) + "\n"
+          assert driver.count(r'\input{../../chapters/pl/algebraic_geometry/') == 3
+          assert driver.count(r'\input{../../chapters/pl/algebraic_geometry/02-') == 1
+          Path("books/pl/algebraic_geometry_ch02_audit.tex").write_text(
+              driver, encoding="utf-8")
+          PY
+      - name: Compile ALG-00 to ALG-02 with genuine cross-chapter references
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: algebraic_geometry_ch02_audit.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Check LaTeX PDF and all cross references
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root = Path("books/pl/algebraic_geometry_ch02_audit")
+          pdf = root.with_suffix(".pdf")
+          log = root.with_suffix(".log")
+          assert pdf.exists() and pdf.stat().st_size > 10000
+          assert log.exists()
+          s = log.read_text(encoding="utf-8", errors="replace")
+          bad = (
+              r'LaTeX Warning: Reference .* undefined',
+              r'LaTeX Warning: Citation .* undefined',
+              r'There were undefined references',
+              r'Rerun to get cross-references right',
+              r'(?m)^! ',
+          )
+          for pattern in bad:
+              assert not re.search(pattern, s), f"PDF/log failure: {pattern}"
+          print(f"ALG-00 through ALG-02 PDF: {pdf.stat().st_size} bytes")
+          PY
+      - name: Archive PDF and full LaTeX log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: algebraic-geometry-alg-02-audit
+          path: |
+            books/pl/algebraic_geometry_ch02_audit.pdf
+            books/pl/algebraic_geometry_ch02_audit.log
+          if-no-files-found: warn
