@@ -85,3 +85,15 @@ dla bloba b63abaad... i wizualna inspekcja jego rzeczywistego PDF.
 
 **Status: OTWARTY — 0/2**. Po uzyskaniu kompilacji należy przeprowadzić
 dwa czyste audyty tej samej wersji, a następnie audyt nadmiarowy.
+
+## Uzupełnienie po kolejnej próbie kompilacji
+
+CI 45042232081 nie przeszło kompilacji książki: w dowodzie zwartości
+Fella wystąpiło LaTeX Double subscript w zapisie U_i^-_{\!F}.
+Trzy wystąpienia zamieniono na (U_i)^-_{\!F}, a definicja
+podbazowa U^-_{\!F} bez dolnego indeksu i pozostałe symbole
+pozostały niezmienione. Matematyczna treść dowodu nie uległa zmianie.
+Commit: 9f02772e1222575964f13b98dd6910d7a71163c3.
+Nowy blob źródła: a8e0c4dbcf3c3100bf6b3c9e067b6fce0ddaa73b.
+
+Wobec tej zmiany licznik czystych audytów jest ponownie 0/2.
