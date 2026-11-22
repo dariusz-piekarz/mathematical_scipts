@@ -40,6 +40,17 @@ class ParsingTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             inspection.make_instrumentation(["theorem_x", "theorem_x"], TOKEN)
 
+    def test_parser_rejects_empty_duplicate_and_invalid_expected_declarations(self):
+        # An empty expected set used to produce an apparently complete result
+        # from an empty log, without any actual Lean declaration evidence.
+        for names in ([], ["theorem_x", "theorem_x"],
+                      ["theorem_x", "foreign; #eval"],
+                      ["theorem_x"] * (inspection.MAX_THEOREMS + 1)):
+            with self.subTest(names=names), self.assertRaises(ValueError):
+                inspection.parse_inspection("", TOKEN, names)
+        with self.assertRaises(ValueError):
+            inspection.parse_inspection(transcript(), TOKEN, [])
+
     def test_complete_output_is_sorted_and_bound_to_declaration(self):
         result = inspection.parse_inspection(transcript(), TOKEN, ["theorem_x"])
         self.assertEqual(result, {"theorem_x": ["Eq", "Nat.zero"]})
