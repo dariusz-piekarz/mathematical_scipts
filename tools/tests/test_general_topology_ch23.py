@@ -7,6 +7,7 @@ infinite/compactness proofs in the manuscript.
 from __future__ import annotations
 
 import json
+import math
 import re
 from itertools import combinations, product
 from pathlib import Path
@@ -97,6 +98,23 @@ def freudenthal_simplex() -> int:
     return checked
 
 
+
+
+def cube_ball_radial_homeomorphism() -> int:
+    """Finite grid check of the cube-to-ball radial map used in PM lemma."""
+    total = 0
+    for n in (1, 2, 3, 4):
+        for u in product((-1., -.5, 0., .5, 1.), repeat=n):
+            r_inf = max(abs(x) for x in u)
+            r_2 = math.sqrt(sum(x*x for x in u))
+            v = tuple(x * r_inf / r_2 for x in u) if r_2 else u
+            assert math.sqrt(sum(x*x for x in v)) <= 1 + 1e-12
+            t_inf = max(abs(x) for x in v)
+            t_2 = math.sqrt(sum(x*x for x in v))
+            back = tuple(x * t_2 / t_inf for x in v) if t_inf else v
+            assert all(abs(a-b) < 1e-12 for a, b in zip(back, u))
+            total += 1
+    return total
 
 def poincare_miranda_boundary_model() -> int:
     """For f_i(x)=x_i-1/2, the clipped fixed-point equation has
@@ -198,7 +216,9 @@ if __name__ == "__main__":
     t = freudenthal_simplex()
     g = interval_grid_overlap()
     pm = poincare_miranda_boundary_model()
+    rad = cube_ball_radial_homeomorphism()
     labs, refs = source_integration()
     print(f"PASS ch23: {f} finite covers, {c} Cantor words, "
           f"{t} simplex points, {g} grid points, {pm} PM boundary checks, "
+          f"{rad} cube-ball radial tests, "
           f"{labs} labels and {refs} refs")
