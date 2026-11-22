@@ -270,6 +270,47 @@ class LeanFormalizationTests(unittest.TestCase):
                                   start_line=a, end_line=b, lean_root=self.root)
                 self.assertEqual(caught.exception.status_code, 400)
 
+    def test_wrong_label_offset_is_blocked_consistently_across_api_paths(self):
+        self.entry["source_document_sha256"] = self.digest
+        self.entry["statement_status"] = "approved"
+        self.save_manifest()
+        self.con.execute("UPDATE labels SET offset=offset+1 WHERE name=?", (LABEL,))
+        self.con.commit()
+        from backend import lean_catalog
+        catalog = lean_catalog.list_formalizations(self.con, lean_root=self.root)
+        self.assertEqual(catalog["items"][0]["index_status"], "invalid_label_binding")
+        self.assertEqual(catalog["items"][0]["formalization_status"], "stale")
+        self.assertIsNone(catalog["items"][0]["source_entity_id"])
+        with self.assertRaises(HTTPException) as caught:
+            lean.fragment(self.con, entity_id="LST-01/theorem/0001",
+                          lean_root=self.root)
+        self.assertEqual(caught.exception.status_code, 409)
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_process.execute_registered") as spawn:
+            response = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(response["proof_status"], "blocked")
+        self.assertFalse(response["certificate"])
+        spawn.assert_not_called()
+
+    def test_indexed_label_changed_during_execution_blocks_persistence(self):
+        self.entry["source_document_sha256"] = self.digest
+        self.entry["statement_status"] = "approved"
+        self.save_manifest()
+        def change_label(*args, **kwargs):
+            self.con.execute("UPDATE labels SET offset=offset+1 WHERE name=?", (LABEL,))
+            self.con.commit()
+            return (0, "Lean process succeeded", False)
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_process.execute_registered",
+                   side_effect=change_label) as spawn:
+            response = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(spawn.call_count, 1)
+        self.assertEqual(response["proof_status"], "blocked")
+        self.assertFalse(response["run_record_saved"])
+        self.assertFalse(response["certificate"])
+
     def test_local_execution_requires_explicit_opt_in(self):
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "0"}):
             result = lean.run(self.con, "sample", lean_root=self.root)
