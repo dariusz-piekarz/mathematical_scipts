@@ -36,6 +36,29 @@ class LeanCgroupTests(unittest.TestCase):
                 lean_cgroup.ProcessGroup.create(512)
             self.assertFalse(list(Path(tmp).iterdir()))
 
+    def test_cgroup_configures_memory_swap_and_oom_then_kills_survivors(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            parent = Path(tmp)
+            directory = parent / "matlib-lean-simulated"
+            directory.mkdir()
+            for name in ("cgroup.kill", "memory.max", "memory.swap.max",
+                         "memory.oom.group", "cgroup.events"):
+                (directory / name).write_text("", encoding="ascii")
+            with patch("backend.lean_cgroup._delegated_parent", return_value=parent), \
+                 patch("backend.lean_cgroup.tempfile.mkdtemp",
+                       return_value=str(directory)):
+                group = lean_cgroup.ProcessGroup.create(1024)
+            self.assertEqual((directory / "memory.max").read_text(), str(1024 * 1024 * 1024))
+            self.assertEqual((directory / "memory.swap.max").read_text(), "0")
+            self.assertEqual((directory / "memory.oom.group").read_text(), "1")
+            (directory / "cgroup.events").write_text("populated 1\n", encoding="ascii")
+            # Real cgroup control files are virtual: rmdir removes the directory
+            # even though they appear in a listing. Simulate that kernel behavior.
+            with patch.object(Path, "rmdir", return_value=None) as remove:
+                self.assertTrue(group.kill_and_remove())
+                remove.assert_called_once()
+            self.assertEqual((directory / "cgroup.kill").read_text(), "1")
+
     def test_runner_does_not_spawn_without_delegated_group(self):
         with patch("backend.lean_cgroup.ProcessGroup.create",
                    side_effect=lean_cgroup.CgroupUnavailable("not writable")), \
