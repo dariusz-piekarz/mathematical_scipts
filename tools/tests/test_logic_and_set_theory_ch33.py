@@ -362,6 +362,88 @@ class TestChapter33(unittest.TestCase):
                     checked += 2
         self.assertEqual(checked, 256)
 
+    def test_exhaustive_bounded_rank_two_atomic_truth(self):
+        # Independent, deeper counterexample search than the rank-one test:
+        # 80 distinct names (all rank-one names plus rank-two names with
+        # at most two pairs from four representatives), both generic branches.
+        # For every ordered pair check both atomic relations: 25_600 checks.
+        from functools import lru_cache
+        from itertools import combinations
+
+        P = ((), (0,), (1,))
+        top, left, right = P
+
+        def leq(q, p):
+            return q[:len(p)] == p
+
+        empty = frozenset()
+        rank_one = [
+            frozenset((empty, p) for p in selection)
+            for n in range(4)
+            for selection in combinations(P, n)
+        ]
+        representatives = (
+            empty,
+            frozenset({(empty, top)}),
+            frozenset({(empty, left)}),
+            frozenset({(empty, right)}),
+        )
+        possible_pairs = [(name, p) for name in representatives for p in P]
+        rank_two = [
+            frozenset(selected)
+            for n in range(3)
+            for selected in combinations(possible_pairs, n)
+        ]
+        names = list(dict.fromkeys(rank_one + rank_two))
+        self.assertEqual(len(names), 80)
+
+        @lru_cache(None)
+        def member(p, sigma, tau):
+            return all(
+                any(
+                    leq(r, q) and leq(r, s) and equal(r, sigma, pi)
+                    for r in P for pi, s in tau
+                )
+                for q in P if leq(q, p)
+            )
+
+        @lru_cache(None)
+        def equal(p, sigma, tau):
+            return (
+                all(
+                    any(leq(r, q) and member(r, pi, tau) for r in P)
+                    for pi, s in sigma for q in P
+                    if leq(q, p) and leq(q, s)
+                )
+                and all(
+                    any(leq(r, q) and member(r, pi, sigma) for r in P)
+                    for pi, s in tau for q in P
+                    if leq(q, p) and leq(q, s)
+                )
+            )
+
+        @lru_cache(None)
+        def valuation(name, branch):
+            G = {top, branch}
+            return frozenset(
+                valuation(pi, branch) for pi, p in name if p in G
+            )
+
+        checked = 0
+        for sigma in names:
+            for tau in names:
+                for branch in (left, right):
+                    G = {top, branch}
+                    a, b = valuation(sigma, branch), valuation(tau, branch)
+                    self.assertEqual(
+                        a in b, any(member(p, sigma, tau) for p in G)
+                    )
+                    self.assertEqual(
+                        a == b, any(equal(p, sigma, tau) for p in G)
+                    )
+                    checked += 2
+        self.assertEqual(checked, 25_600)
+
     def test_finite_names_singleton_pair_ordered_pair(self):
         top = "T"
         G = {top}
