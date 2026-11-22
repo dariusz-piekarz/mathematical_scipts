@@ -52,10 +52,13 @@ class SourceProvenanceTests(unittest.TestCase):
             "\\verb+\\label{thm:test}+\n",
         ):
             with self.subTest(candidate=candidate):
-                self.con.execute("UPDATE labels SET offset=0")
                 self.con.execute(
-                    "UPDATE entities SET start_line=1,end_line=? "
-                    "WHERE id='one'", (candidate.count("\n") + 1,))
+                    "UPDATE labels SET offset=?", (candidate.index("\\label"),))
+                self.con.execute(
+                    "UPDATE entities SET start_line=1,end_line=?,end_offset=? "
+                    "WHERE id='one'",
+                    (candidate.count("\n", 0, len(candidate) - 1) + 1,
+                     len(candidate)))
                 binding = provenance.indexed_binding(
                     self.con, "LST-01", LABEL, "one")
                 self.assertFalse(provenance.valid_binding(binding, candidate, LABEL))
