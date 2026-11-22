@@ -266,6 +266,16 @@ class LeanFormalizationTests(unittest.TestCase):
         self.assertEqual(reopened["proof_status"], "failed")
         self.assertFalse(reopened["certificate"])
 
+    def test_incomplete_descendant_cleanup_never_reports_compiled(self):
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_process.execute_registered",
+                   side_effect=RuntimeError("Lean stdout pipe was left open by a child process.")):
+            result = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(result["proof_status"], "failed")
+        self.assertFalse(result["certificate"])
+        self.assertIn("Niekompletny", result["detail"])
+
     def test_timeout_reported(self):
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
              patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
