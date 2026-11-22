@@ -1,10 +1,10 @@
 # Logika matematyczna i teoria mnogości — audyt XI rozdziału 35
 
 **Data:** 22 listopada 2026 r.  
-**Gałąź:** \`biblioteka-matematyczna-iteracja-6\`.  
-**Badany plik:** \`chapters/pl/logic_and_set_theory/35-modele-boolowskie-i-wzgledna-niesprzecznosc-ch.tex\`.  
-**Nieprzerwany identyfikator bloba rozdziału:** \`1d510628d52469ef8aa00ad021125192c54ec439\`.  
-**Werdykt kontroli merytorycznej:** czysto, bez konieczności modyfikowania treści rozdziału. Pełna kwalifikacja audytu jako drugiego czystego wymaga dodatkowej weryfikacji CI (poniżej).
+**Gałąź:** `biblioteka-matematyczna-iteracja-6`.  
+**Badany plik:** `chapters/pl/logic_and_set_theory/35-modele-boolowskie-i-wzgledna-niesprzecznosc-ch.tex`.  
+**Nieprzerwany identyfikator bloba rozdziału:** `1d510628d52469ef8aa00ad021125192c54ec439`.  
+**Werdykt końcowy: audyt XI CZYSTY — drugi czysty audyt (2/2).** Nie było konieczności modyfikowania treści rozdziału. Pełna walidacja CI oraz niezależna inspekcja rzeczywistego PDF potwierdziły wynik.
 
 ## 1. Ponowna kontrola założeń i przypadków brzegowych
 
@@ -29,8 +29,8 @@ Wykonano lokalnie *od zera*, bez użycia modułu testowego repozytorium, semanty
 
 Nie znaleziono nowych koniecznych poprawek językowych, znaczeniowych ani niezgodności z regułami terminologicznymi. Zachowano wszystkie etykiety i strukturę rozdziału. Poprzedni audyt X zweryfikował 28 unikalnych etykiet, 34 odsyłacze i 16 stron rozdziału (strony 296–311 PDF, cała książka 311 stron); w audycie XI źródło pozostało identyczne.
 
-Zapisanie raportu w katalogu \`audits\` wyzwala pełny workflow \`logic-and-set-theory-chapter.yml\`. Nie należy oznaczać audytu XI jako technicznie zamkniętego przed uzyskaniem wyniku nowego workflow. Wymagana jest weryfikacja identyfikatora przebiegu, testów, kompilacji i kontroli PDF.
+Pełne GitHub Actions **[45062047392](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45062047392): SUCCESS** dla commitu `d345409659806d4915d728118e0936ae5ba571e7`. Wszystkie kroki w tym testy rozdziału 35, skład LaTeX i walidacja PDF zakończyły się sukcesem. Pobrano artefakt **14770295070** z faktycznego przebiegu. PDF ma **311 stron**, A4; rozdział 35 obejmuje strony **296–311**. Wyrenderowano nowy zestaw 16 stron i oceniono montaż wszystkich stron pod kątem widocznych kolizji, obcięć i czytelności; problemów nie stwierdzono. W logu było **0** błędów LaTeX, **0** `Overfull \\hbox`, **0** nierozwiązanych odsyłaczy, **0** brakujących znaków; jedno `Underfull \\hbox` bez znaczenia dla układu.
 
 ## 4. Następny etap
 
-Po potwierdzonym zielonym CI: **audyt XI = drugi czysty (2/2)**. Następnie wykonać **audyt XII potwierdzający** na tym samym, niezmodyfikowanym blobie, obejmujący kolejny przegląd dowodów, założeń oraz pełnej walidacji technicznej. Dopiero po czystym audycie XII można uznać rozdział 35 za stabilny i przejść do dalszego planu.
+**Audyt XI = drugi czysty (2/2)** dla niezmienionego bloba `1d510628d52469ef8aa00ad021125192c54ec439`. Następnie wykonać **audyt XII potwierdzający** na dokładnie tym samym źródle, z osobną kontrolą dowodów i techniki. Dopiero po czystym audycie XII rozdział 35 otrzyma status stabilny.
