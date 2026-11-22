@@ -215,7 +215,10 @@ def inspect(con: sqlite3.Connection, identifier: str, *,
                 return _empty(identifier, "blocked",
                               "Błędne granice twierdzenia lub położenie etykiety w indeksie.")
             try:
-                before = lean_results.fingerprint(doc["sha256"], item["_file"], lean_root)
+                binding_sha256 = lean_source_provenance.binding_sha256(
+                    item["source_module"], item["source_label"], binding_before)
+                before = lean_results.fingerprint(
+                    doc["sha256"], item["_file"], lean_root, binding_sha256)
                 original = item["_file"].read_bytes()
                 if hashlib.sha256(original).hexdigest() != before["lean_sha256"]:
                     return _empty(identifier, "blocked", "Zmieniono kod przed uruchomieniem.")
@@ -250,7 +253,8 @@ def inspect(con: sqlite3.Connection, identifier: str, *,
                             if classified else None)
                 constants = (sections["constants"] if sections is not None else
                              parse_inspection(output, token, names))
-                after = lean_results.fingerprint(doc["sha256"], item["_file"], lean_root)
+                after = lean_results.fingerprint(
+                    doc["sha256"], item["_file"], lean_root, binding_sha256)
             except (OSError, ValueError) as exc:
                 return _empty(identifier, "blocked",
                               "Niekompletny wynik lub zmiana zależności: " + str(exc)[:160])
@@ -292,6 +296,7 @@ def inspect(con: sqlite3.Connection, identifier: str, *,
                 "constants": constants,
                 "extraction_method": "Lean.ConstantInfo.getUsedConstantsAsSet",
                 "source_document_sha256": doc["sha256"],
+                "source_binding_sha256": binding_sha256,
                 "lean_sha256": before["lean_sha256"],
                 "toolchain_sha256": before["toolchain_sha256"],
                 "certificate": False,
