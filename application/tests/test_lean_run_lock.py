@@ -71,6 +71,7 @@ class LeanRunLockTests(unittest.TestCase):
                 process.kill()
                 process.communicate(timeout=5)
 
+    @unittest.skipUnless(os.name == "posix", "Windows cannot rename an open CRT lock file")
     def test_replaced_lock_file_during_open_is_rejected(self):
         # Models a race in the interval between os.open and file locking.
         original_open = os.open
@@ -88,6 +89,18 @@ class LeanRunLockTests(unittest.TestCase):
                     self.fail("redirected path must not acquire runner lock")
         lockfile = self.root.parent / "data" / "lean_runs" / ".runner.lock"
         self.assertEqual(lockfile.read_bytes(), b"replacement")
+        with lean_run_lock.exclusive(self.root):
+            pass
+
+    @unittest.skipUnless(os.name == "nt", "Native Windows file-sharing contract")
+    def test_windows_open_lock_file_cannot_be_renamed(self):
+        lockfile = self.root.parent / "data" / "lean_runs" / ".runner.lock"
+        moved = lockfile.with_name(".runner.renamed")
+        with lean_run_lock.exclusive(self.root):
+            with self.assertRaises(OSError):
+                lockfile.rename(moved)
+            self.assertTrue(lockfile.is_file())
+            self.assertFalse(moved.exists())
         with lean_run_lock.exclusive(self.root):
             pass
 
