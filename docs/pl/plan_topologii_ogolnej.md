@@ -25,7 +25,8 @@ Stan: 22 listopada 2026. Źródłem prawdy dla rozdziałów włączonych do ksi�
 | **17** | **Uzwarcenie Aleksandrowa i uzwarcenie Čecha–Stone’a: konstrukcje, własności uniwersalne, minimalność, maksymalność i przykłady** | **stabilny — audyt 03; pełne dowody konstrukcji i własności uniwersalnych** |
 | **18** | **Przestrzenie odwzorowań, topologia zwarto-otwarta, zbieżność jednostajna na zbiorach zwartych, ewaluacja, prawo wykładnicze, metryzacja i zupełność** | **stabilny — audyt 03; pełne dowody i walidacja CI/PDF** |
 | **19** | **Przestrzenie polskie, podprzestrzenie G-delta, zbiory borelowskie i hierarchia indeksowana przeliczalnymi liczbami porządkowymi** | **stabilny — audyt 03; CI/PDF PASS; 590 unikatowych etykiet i 138 poprawnych odsyłaczy w książce** |
-| **20** | **Zbiory analityczne, rzuty zbiorów domkniętych, operacja Suslina, zbiór analityczny nieborelowski; bez powielania determinacji i redukcji Wadge’a z logiki** | **OTWARTY — audyt 03: dwie korekty merytoryczne w podsumowaniu; 0/2 dla nowego bloba, CI/PDF nowej wersji do potwierdzenia** |
+| **20** | **Zbiory analityczne, rzuty zbiorów domkniętych, operacja Suslina, zbiór nieborelowski analityczny** | **stabilny — audyty 05–07 (2/2 + 1); kodowanie drzewa 1/2 poprawione; CI/PDF PASS** |
+| **21** | **Topologie na rodzinach podzbiorów: Vietoris, metryka Hausdorffa, zupełność, zwartość, Fell, zbieżność i porównanie** | **stabilny — audyty 03–05 (2/2 + 1); CI/PDF PASS** |
 
 Zakresy 12–13 oraz 16–17 są rozdzielone według tematyki, żeby unikać powtarzania dowodów. Zgodnie z zasadą projektu nowe rozdziały nie oznaczają automatycznie ich stabilności.
 
@@ -112,3 +113,24 @@ jedną niezależną czystą kontrolę.
 - Raport: [20-zbiory-analityczne-iteracja-03.md](../../audits/general_topology/20-zbiory-analityczne-iteracja-03.md), [commit 5ff70fc](https://github.com/dariusz-piekarz/mathematical_scipts/commit/5ff70fcbc8f9daecbbe2f9a8ad145b8c1fc4a33c).
 - Dla **poprzedniego** bloba audytor pobrał realny PDF z [zielonego CI 45022608046](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45022608046), wyrenderował i obejrzał wszystkie 6 stron A4 bez zastrzeżeń do składu. Po poprawce trzeba potwierdzić CI i wizualnie zweryfikować nowy PDF, a nie przenosić wyniku CI poprzedniego bloba.
 - Następnie **audyt 04 rozdziału 20** (nie rozdział 21), zgodnie z zasadą kolejnych czystych audytów tego samego źródła. Zakres rozdziału pozostaje ograniczony do brakujących topologicznych dowodów, bez powielania teorii gier i determinacji ze skryptu logiki.
+
+
+## Zamknięcie rozdziałów 20 i 21 (2026-11-22)
+
+Rozdział 20: po audycie 03 znaleziono dodatkowy błąd kodowania
+uniwersalnego drzewa (predykat dodatniości nie rozróżnia par,
+gdy liczby naturalne są dodatnie). Poprawiono kod na wartości 1 i 2.
+Audyty 05, 06 oraz dodatkowy 07 są czyste dla bloba
+2607376331f94935063107dee49148b45cc1679f.
+Potwierdzono ukończone pomyślnie [CI 45040786110](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45040786110)
+i poprawność samodzielnego PDF rozdziału 20.
+
+Rozdział 21: wprowadzono rozdział o hiperprzestrzeniach,
+naprawiono kolizję etykiet, niejednoznaczność zapisu
+przykładu oraz błędy składni LaTeX (\mathscr i podwójne indeksy dolne).
+Audyty 03, 04 oraz dodatkowy 05 są czyste dla bloba
+a8e0c4dbcf3c3100bf6b3c9e067b6fce0ddaa73b.
+[CI 45042413561](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45042413561)
+ukończone sukcesem, zbudowano całą książkę i osobny PDF rozdziału 21.
+Sprawdzono wizualnie wszystkie siedem stron, w tym rysunek
+oraz dowód zwartości Fella. Status książki 1.21: rozdziały 01–21 stabilne.
