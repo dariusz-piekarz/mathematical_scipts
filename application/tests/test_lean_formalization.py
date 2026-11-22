@@ -593,12 +593,78 @@ class LeanFormalizationTests(unittest.TestCase):
         self.assertIn("modified Mathlib", result["detail"])
         spawn.assert_not_called()
 
+    def test_index_change_during_lock_acquisition_blocks_before_spawn(self):
+        from contextlib import contextmanager
+
+        @contextmanager
+        def mutate_while_waiting(root):
+            self.con.execute("UPDATE labels SET offset=offset+1 WHERE name=?", (LABEL,))
+            self.con.commit()
+            yield
+
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which",
+                   return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_run_lock.exclusive",
+                   side_effect=mutate_while_waiting), \
+             patch("backend.lean_formalization.lean_process.execute_registered") as spawn:
+            result = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(result["proof_status"], "blocked")
+        self.assertIn("Powiązanie", result["detail"])
+        self.assertFalse(result["certificate"])
+        spawn.assert_not_called()
+
+    def test_registered_lean_file_change_during_lock_acquisition_blocks_spawn(self):
+        from contextlib import contextmanager
+        file = self.root / "src" / "Example.lean"
+
+        @contextmanager
+        def mutate_while_waiting(root):
+            file.write_text("theorem sample (p : Prop) : p → p := by exact id\\n",
+                            encoding="utf-8")
+            yield
+
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which",
+                   return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_run_lock.exclusive",
+                   side_effect=mutate_while_waiting), \
+             patch("backend.lean_formalization.lean_process.execute_registered") as spawn:
+            result = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(result["proof_status"], "blocked")
+        self.assertIn("Pliki Lean", result["detail"])
+        self.assertFalse(result["certificate"])
+        spawn.assert_not_called()
+
+    def test_manifest_change_during_lock_acquisition_blocks_spawn(self):
+        from contextlib import contextmanager
+
+        @contextmanager
+        def mutate_while_waiting(root):
+            manifest = self.root / "manifest.json"
+            payload = json.loads(manifest.read_text(encoding="utf-8"))
+            payload["items"][0]["statement_status"] = "approved"
+            manifest.write_text(json.dumps(payload), encoding="utf-8")
+            yield
+
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which",
+                   return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_run_lock.exclusive",
+                   side_effect=mutate_while_waiting), \
+             patch("backend.lean_formalization.lean_process.execute_registered") as spawn:
+            result = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(result["proof_status"], "blocked")
+        self.assertIn("Pliki Lean", result["detail"])
+        self.assertFalse(result["certificate"])
+        spawn.assert_not_called()
+
     def test_external_checkout_change_during_compile_blocks_success(self):
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
              patch("backend.lean_formalization.shutil.which",
                    return_value="/fake/lake"), \
              patch("backend.lean_environment.external_packages_sha256",
-                   side_effect=["a" * 64, "b" * 64]), \
+                   side_effect=["a" * 64, "a" * 64, "b" * 64]), \
              patch("backend.lean_formalization.lean_process.execute_registered",
                    return_value=(0, "successful exit", False)) as spawn:
             result = lean.run(self.con, "sample", lean_root=self.root)
@@ -615,7 +681,7 @@ class LeanFormalizationTests(unittest.TestCase):
              patch("backend.lean_formalization.shutil.which",
                    return_value="/fake/lake"), \
              patch("backend.lean_environment.external_packages_sha256",
-                   side_effect=["a" * 64, ValueError("checkout dirty")]), \
+                   side_effect=["a" * 64, "a" * 64, ValueError("checkout dirty")]), \
              patch("backend.lean_formalization.lean_process.execute_registered",
                    return_value=(0, "successful exit", False)):
             result = lean.run(self.con, "sample", lean_root=self.root)
