@@ -166,6 +166,48 @@ class LeanResultsTests(unittest.TestCase):
         self.assertFalse(cached["run_cached"])
         self.assertTrue(cached["run_record_invalid"])
 
+    def test_olean_artifact_edit_revokes_compilation_history(self):
+        build = self.root / ".lake" / "build" / "lib" / "lean"
+        build.mkdir(parents=True)
+        artifact = build / "Auxiliary.olean"
+        artifact.write_bytes(b"compiled module A")
+        original = self.fp()
+        save_run("sample", original, proof_status="compiled",
+                 detail="real exit 0", results_root=self.output)
+        artifact.write_bytes(b"compiled module B")
+        current = self.fp()
+        self.assertNotEqual(original["compiled_artifacts_sha256"],
+                            current["compiled_artifacts_sha256"])
+        state = last_run("sample", current, results_root=self.output)
+        self.assertEqual(state["proof_status"], "not_run")
+        self.assertTrue(state["previous_run_outdated"])
+        self.assertFalse(state["run_cached"])
+
+    def test_missing_to_populated_olean_tree_revokes_cached_result(self):
+        original = self.fp()
+        save_run("sample", original, proof_status="compiled",
+                 detail="real exit 0", results_root=self.output)
+        build = self.root / ".lake" / "build" / "lib" / "lean"
+        build.mkdir(parents=True)
+        (build / "Example.olean").write_bytes(b"compiled")
+        self.assertTrue(last_run("sample", self.fp(),
+                                 results_root=self.output)["previous_run_outdated"])
+
+    def test_previous_v3_schema_not_accepted(self):
+        import json
+        expected = self.fp()
+        save_run("sample", expected, proof_status="compiled",
+                 detail="real exit 0", results_root=self.output)
+        record = self.output / "sample.json"
+        old = json.loads(record.read_text(encoding="utf-8"))
+        old["schema_version"] = 3
+        old.pop("compiled_artifacts_sha256")
+        record.write_text(json.dumps(old), encoding="utf-8")
+        state = last_run("sample", self.fp(), results_root=self.output)
+        self.assertEqual(state["proof_status"], "not_run")
+        self.assertTrue(state["run_record_invalid"])
+        self.assertFalse(state["run_cached"])
+
     def test_corrupt_record_cannot_be_treated_as_success(self):
         self.output.mkdir()
         (self.output / "sample.json").write_text('{broken', encoding="utf-8")
