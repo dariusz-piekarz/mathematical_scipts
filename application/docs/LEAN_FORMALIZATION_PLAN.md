@@ -105,3 +105,10 @@ Do wyświetlenia certyfikatu **Zweryfikowane matematycznie** wymagane są jednoc
 - `application/lean/manifest.json`: 3 istniejące etykiety wskazują nowy plik (każda własne `lean_theorem`). Trzy wcześniejsze pliki `Prop` pozostają jako pomocnicze; `lean_ci_audit.py` weryfikuje wszystkie 4 pliki `.lean` (łącznie 14 deklaracji), także niezarejestrowane jako główna reprezentacja UI.
 - Rozszerzono `test_lean_ci_audit.py` o wykrywanie pomocniczych plików oraz `test_lean_http.py` o 3 etykiety rzeczywistego indeksu. Raport porównania: `application/docs/LEAN_FORMULA_VALUATIONS_2026-11-22.md`.
 - **Status ostrożności:** nowy CI [45011738363](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45011738363) rozpoczął testy; 11 testów kontrolera zaliczonych, właściwa kompilacja nowego modułu musi jeszcze zostać potwierdzona. `statement_status=needs_review`, `certificate=false` pozostają bez zmian. Kanonicznych plików `.tex` nie modyfikowano.
+
+### Strumień A — integralność podglądu Lean (22.11.2026)
+- `backend/lean_formalization.py::fragment` weryfikuje SHA256 rzeczywistej treści `documents.content` względem `documents.sha256` przed udostępnieniem mapowania i kodu Lean. Uszkodzony indeks zwraca HTTP 409 zamiast pokazywać potencjalnie nieaktualne powiązanie jako gotowe.
+- Dodano regresję HTTP `test_corrupt_index_blocks_fragment_preview` w `tests/test_lean_http.py`, wymuszając błędny skrót w odpowiedzi warstwy indeksu.
+- Commity: `114a5537`, `2e7d8173`. Testy GitHub Actions uruchamiane przez push; **wynik tej iteracji niepotwierdzony w chwili zapisu**, nie deklarować zaliczenia bez sprawdzenia workflow. Poprzedni CI `45011821712` zakończył się sukcesem.
+- Bez zmian w źródłach `.tex` i rejestrze Lean. `certificate=false` pozostaje zasadą; brak toolchaina to `toolchain_unavailable`, nie `verified`.
+- Następny krok: sprawdzić CI nowego commitu; następnie ograniczyć zasoby i wielkość wyjścia procesu Lean, z testami timeout i przerwania procesu potomnego.
