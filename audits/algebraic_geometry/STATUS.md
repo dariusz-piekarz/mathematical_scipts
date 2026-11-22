@@ -1,8 +1,8 @@
 # Geometria algebraiczna — rejestr statusów audytów
 
-**Ostatnia aktualizacja:** 2026-11-22, audyt ALG-05 nr 1.
+**Ostatnia aktualizacja:** 2026-11-22, audyt ALG-05 nr 5.
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`.
-**Następny przebieg:** **ALG-05, audyt nr 2** — niezależne sprawdzenie po poprawkach terminologii map współrzędnych, dowodu własności uniwersalnej iloczynu włóknistego i gramatyki w audycie 1. ALG-00–04 pozostają stabilne.
+**Następny przebieg:** **ALG-05, audyt nr 6** — niezależna kontrola po poprawieniu ciała reszt w opisie włókna rozdmuchania oraz po nowej regresji; następnie dodatkowy audyt stabilizacyjny. ALG-00–04 pozostają stabilne.
 
 | ID | Rozdział | Iteracja zakończona | Status | Raport / czynność |
 | --- | --- | ---: | --- | --- |
@@ -11,7 +11,7 @@
 | ALG-02 | Geometria rzutowa | **6** | **STABILNY / ZAMKNIĘTY** | [Audyt 6](2026-11-22-ALG-02-iteration-06.md) — niezależny, bezusterkowy reaudyt całego rozdziału; 15/15 testów, kontrola 11-stronicowego PDF i CI PASS, brak zmian źródła |
 | ALG-03 | Punkty osobliwe i geometria lokalna krzywych | **2** | **STABILNY / ZAMKNIĘTY** | [Audyt 2](2026-11-22-ALG-03-iteration-02.md) — niezależny bezusterkowy reaudyt, dodatkowe rachunki, 8/8 regresji PASS, CI SUCCESS, 8-stronicowy PDF PASS; bez zmian w źródle |
 | ALG-04 | Algebra przemienna, snopy i krzywe algebraiczne | **4** | **STABILNY / ZAMKNIĘTY** | [Audyt 4](2026-11-22-ALG-04-iteration-04.md) — niezależny bezusterkowy reaudyt całego rozdziału, 14/14 regresji PASS, CI SUCCESS na identycznym źródle, 43-stronicowy PDF i 10 rysunków PASS |
-| ALG-05 | Rozdmuchania i rozwiązywanie osobliwości | **1** | **OTWARTY** | [Audyt 1](2026-11-22-ALG-05-iteration-01.md) — poprawiono terminologię „mapa”, zakazane „tensorowanie” i pełny dowód iloczynu włóknistego; 16/16 regresji PASS, końcowy CI SUCCESS, 16-stronicowy PDF i 4 rysunki PASS |
+| ALG-05 | Rozdmuchania i rozwiązywanie osobliwości | **5** | **OTWARTY** | [Audyt 5](2026-11-22-ALG-05-iteration-05.md) — poprawiono włókno nad punktem z ciałem reszt różnym od k, gramatykę i terminologię; dodano 17. test; dedykowane CI i PDF nowego źródła wymagają potwierdzenia |
 | ALG-06 | Powierzchnie algebraiczne | 0 | Oczekuje | Po ALG-05 |
 | ALG-07 | Teoria przecięć, grupy Chowa i klasy Cherna | 0 | Oczekuje | Po ALG-06 |
 | ALG-08 | Geometria biwymierna i modele minimalne | 0 | Oczekuje | Po ALG-07 |
@@ -67,3 +67,6 @@ bezusterkowy; ALG-04 nadal **STABILNY / ZAMKNIĘTY**.
 **Następny audyt rozdziałowy: ALG-05/1**.
 
 ALG-05 po audycie 1: **OTWARTY**. [Raport](2026-11-22-ALG-05-iteration-01.md). Źródło przed poprawkami blob `719d0f311a48579ef0bb6f44e31e2cbb65eb9977`, po poprawkach `99da0e0bc729d5d7c5d2eec2fd80e5022b7907a0` ([commity 4ddceb24](https://github.com/dariusz-piekarz/mathematical_scipts/commit/4ddceb248fbd09eef8036115bb9e7b83d3e5874d), [55731763](https://github.com/dariusz-piekarz/mathematical_scipts/commit/557317637da050a2455bb695071c92eb0485642f)). Uzupełniono dowód iloczynu włóknistego dla dowolnego schematu testowego, poprawiono 62 wiersze z odmianami „chart”, słowo „tensorowanie” i uzgodnienie rodzaju po zmianie na „mapa”. Testy 16 metod blob `27ac404ac13a4ed2f23791113134d157dd6bb577`; testy, kontrola terminologii i pierwszy CI [45023299954](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45023299954) **SUCCESS**, PDF ALG-00–05 124 strony, ALG-05 strony 109–124 (16 stron), 4 rysunki wizualnie PASS. Ponieważ ostatnia poprawka słowna wymaga odrębnego odbioru, końcowy [CI 45023899841](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45023899841) **SUCCESS** na aktualnym źródle i testach, 16/16 regresji PASS, pełna kompilacja i odsyłacze PASS, artefakt `14754542623`, PDF ALG-00–05 124 strony, ALG-05 16 stron (109–124), bez ostrzeżeń LaTeX i bez bloków tekstowych poza stronami; wszystkie cztery rysunki po wizualnej kontroli PASS. Po matematycznym audycie zsynchronizowano wyłącznie fragment ALG-05 w zbiorczym `sources/pl/geometria_algebraiczna(1).tex` (commit [19314d29](https://github.com/dariusz-piekarz/mathematical_scipts/commit/19314d29978e6895d11d9003ca7efacd5b64943a)). W rozdziałach ALG-00–05 220 etykiet unikalnych, w ALG-05 6/6 odsyłaczy poprawnych. **Następny ALG-05/2.**
+
+
+ALG-05 po audycie 5: [raport](2026-11-22-ALG-05-iteration-05.md), status **OTWARTY**. W aktualnym źródle uściślono włókno nad dowolnym punktem `z` centrum jako `P^{c-1}_{κ(z)}`; poprzednie `P^{c-1}_k` obowiązuje tylko dla punktów `k`-wymiernych. Poprawiono pozostałe błędne odmiany „mapa” i „dywizor” → „dzielnik”. Źródło po poprawkach: blob `2a3347cbf728519b3aa12bca57b2e1c7f49e7eb8` ([commit 988cc6ea](https://github.com/dariusz-piekarz/mathematical_scipts/commit/988cc6eae465e9fa66b0a7c69b5b4e2f307313e2)); testy: blob `e6a8f0926fa42f04add0a7f35547525e8ccc42d6` ([commit 76e993f9](https://github.com/dariusz-piekarz/mathematical_scipts/commit/76e993f987a4a79f41af6759583ff54adfa96031)). 43 unikalne etykiety, 6 poprawnych odsyłaczy, 18 dowodów, 4 rysunki TikZ, 17 metod regresyjnych. Wynik nowego CI/PDF wymaga odrębnego odbioru. **Następny ALG-05/6, bezusterkowa kontrola + po niej dodatkowy audyt stabilizacyjny.**
