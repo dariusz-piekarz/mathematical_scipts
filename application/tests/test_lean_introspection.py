@@ -297,6 +297,49 @@ class InspectionExecutionTests(unittest.TestCase):
                         "INSERT INTO labels VALUES(?,?,?)", ("t:x", "e1", 8))
                     self.con.commit()
 
+    def test_indexed_entity_metadata_change_during_run_blocks_completion(self):
+        # A reindex may retain the same document SHA and entity ID, changing
+        # offsets or the mathematical-object type. All must invalidate output.
+        mutations = (
+            ("kind", "UPDATE entities SET kind='section' WHERE id='e1'"),
+            ("title", "UPDATE entities SET title='Other theorem' WHERE id='e1'"),
+            ("start_line", "UPDATE entities SET start_line=2 WHERE id='e1'"),
+            ("end_line", "UPDATE entities SET end_line=2 WHERE id='e1'"),
+            ("start_offset", "UPDATE entities SET start_offset=1 WHERE id='e1'"),
+            ("end_offset", "UPDATE entities SET end_offset=3 WHERE id='e1'"),
+            ("label_offset", "UPDATE labels SET offset=9 WHERE name='t:x'"),
+        )
+        for field, sql in mutations:
+            with self.subTest(field=field):
+                def mutate(*args, **kwargs):
+                    self.con.execute(sql)
+                    self.con.commit()
+                    return 0, transcript(), False
+                try:
+                    outcome, spawn = self.execute(process=mutate)
+                    spawn.assert_called_once()
+                    self.assertEqual(outcome["inspection_status"], "blocked")
+                    self.assertEqual(outcome["constants"], {})
+                    self.assertFalse(outcome["certificate"])
+                finally:
+                    self.con.execute(
+                        "UPDATE entities SET kind='theorem', title='P', "
+                        "start_line=1, end_line=3, start_offset=0, end_offset=? "
+                        "WHERE id='e1'", (len(SOURCE),))
+                    self.con.execute(
+                        "UPDATE labels SET offset=8 WHERE name='t:x'")
+                    self.con.commit()
+
+    def test_duplicate_label_on_same_entity_rejected_before_compiler(self):
+        # Catalog deliberately uses DISTINCT entity IDs, so two identical
+        # label records need a separate fail-closed guard.
+        self.con.execute("INSERT INTO labels VALUES(?,?,?)", ("t:x", "e1", 11))
+        self.con.commit()
+        response, spawn = self.execute()
+        spawn.assert_not_called()
+        self.assertEqual(response["inspection_status"], "blocked")
+        self.assertFalse(response["certificate"])
+
     def test_dependency_change_after_process_refuses_stale_results(self):
         call=[0]
         def fingerprint(*args):
