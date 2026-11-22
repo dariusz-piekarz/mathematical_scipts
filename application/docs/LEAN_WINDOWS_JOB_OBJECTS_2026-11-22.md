@@ -28,7 +28,7 @@ python -m unittest discover -s tests -p "test_lean_windows_job.py" -v
 python -m unittest discover -s tests -p "test_lean_formalization.py" -v
 ```
 
-Testy z `test_lean_windows_job.py` obejmują odmowę startu bez poprawnego tokenu, uruchomienie dopiero po zdjęciu blokady, kontrolę kontraktu Win32 poprzez symulację, poprawność sprzątania i odmowę uruchomienia po błędzie Job Object. `test_native_windows_job_memory_restriction` wykonuje rzeczywistą próbę alokacji przekraczającej limit **wyłącznie na Windows**. Uruchomienie linuksowego CI nie dowodzi natywnej zgodności Windows: przebieg na Windows wymaga osobnego potwierdzenia.
+Testy z `test_lean_windows_job.py` obejmują odmowę startu bez poprawnego tokenu, uruchomienie dopiero po zdjęciu blokady, kontrolę kontraktu Win32 poprzez symulację, poprawność sprzątania i odmowę uruchomienia po błędzie Job Object. `test_native_windows_job_memory_restriction` wykonuje rzeczywistą próbę alokacji przekraczającej limit **wyłącznie na Windows**. `test_native_windows_timeout_terminates_descendants` sprawdza natywnie, że po timeout proces potomny nie może kontynuować działania. Uruchomienie linuksowego CI nie dowodzi natywnej zgodności Windows: przebieg na Windows wymaga osobnego potwierdzenia.
 
 ### Granice
 
