@@ -122,6 +122,50 @@ class LeanResultsTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.fp()
 
+    def test_external_checkout_identity_change_revokes_saved_success(self):
+        from unittest.mock import patch
+        with patch("backend.lean_environment.external_packages_sha256",
+                   return_value="a" * 64):
+            old = self.fp()
+        save_run("sample", old, proof_status="compiled",
+                 detail="real exit 0", results_root=self.output)
+        with patch("backend.lean_environment.external_packages_sha256",
+                   return_value="b" * 64):
+            current = self.fp()
+        self.assertNotEqual(old["external_packages_sha256"],
+                            current["external_packages_sha256"])
+        stale = last_run("sample", current, results_root=self.output)
+        self.assertEqual(stale["proof_status"], "not_run")
+        self.assertTrue(stale["previous_run_outdated"])
+
+    def test_actual_toolchain_change_revokes_saved_success(self):
+        from unittest.mock import patch
+        with patch("backend.lean_environment.executable_toolchain_sha256",
+                   return_value="a" * 64):
+            old = self.fp()
+        save_run("sample", old, proof_status="compiled",
+                 detail="real exit 0", results_root=self.output)
+        with patch("backend.lean_environment.executable_toolchain_sha256",
+                   return_value="b" * 64):
+            current = self.fp()
+        self.assertTrue(last_run("sample", current,
+                                 results_root=self.output)["previous_run_outdated"])
+
+    def test_previous_v2_schema_is_invalidated(self):
+        import json
+        original = self.fp()
+        save_run("sample", original, proof_status="compiled",
+                 detail="real exit 0", results_root=self.output)
+        path = self.output / "sample.json"
+        old = json.loads(path.read_text(encoding="utf-8"))
+        old["schema_version"] = 2
+        old.pop("external_packages_sha256")
+        old.pop("executable_toolchain_sha256")
+        path.write_text(json.dumps(old), encoding="utf-8")
+        cached = last_run("sample", self.fp(), results_root=self.output)
+        self.assertFalse(cached["run_cached"])
+        self.assertTrue(cached["run_record_invalid"])
+
     def test_corrupt_record_cannot_be_treated_as_success(self):
         self.output.mkdir()
         (self.output / "sample.json").write_text('{broken', encoding="utf-8")
