@@ -92,6 +92,9 @@ Pierwszy przebieg nowego zestawu wykrył wyłącznie **błąd reprezentacji dany
 
 - Wcześniejsza wersja po poprawie ufundowania: [GitHub Actions #45041914542](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45041914542) — **SUCCESS**, bez nowych testów.
 - Przebieg z rozszerzonymi testami: [GitHub Actions #45042054880](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45042054880) — **FAIL**, wyłącznie z powodu wskazanej wyżej niehashowalnej struktury testowej.
-- Aktualny przebieg: [GitHub Actions #45042143249](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45042143249) — wynik końcowy kompilacji i PDF zostanie wpisany po ukończeniu.
+- [GitHub Actions #45042143249](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45042143249): **SUCCESS** — 14 testów rozdziału 35, wcześniejsze regresje, kontrola katalogu, kompilacja LaTeX i walidacja logu.
+- [GitHub Actions #45042306940](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45042306940): przebieg po zapisaniu raportu audytu II, matematyczne źródło niezmienione względem poprzedniego przebiegu.
+- **PDF:** 306 stron; rozdział 35 zajmuje strony PDF **296–306** (drukowane **287–297**). Wyrenderowano i obejrzano wszystkie **11 stron**. Dłuższy dowód ufundowania, wzory w dowodzie zbioru potęgowego oraz sformułowanie wyniku o względnej niesprzeczności są czytelne, bez kolizji i ucięć tekstu.
+- **Log:** 0 błędów, 0 nierozwiązanych odsyłaczy i brakujących cytowań, 0 przepełnionych wierszy; 1 ostrzeżenie o niedopełnionym wierszu w całej książce.
 
 **Werdykt matematyczny:** audyt II wykrył istotną lukę dowodową w aksjomacie ufundowania oraz poważne przeskoki w zbiorze potęgowym i zastępowaniu. W źródle wszystkie trzy dowody rozbudowano i poprawiono. Rozdział 35 **nie jest stabilny**: konieczny jest niezależny audyt III, a potem dalsze iteracje do uzyskania czystego audytu i dodatkowego audytu potwierdzającego. Testy Python i CI nie są formalną weryfikacją w Lean.
