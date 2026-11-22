@@ -24,7 +24,9 @@
 ## Audyt globalny ALG-00–10
 
 [Audyt globalny I](2026-11-22-ALG-GLOBAL-iteration-01.md): wykryto i naprawiono nieaktualne fragmenty monolitu ALG-00–04, dodano regresję zgodności i osobny workflow dla obu PDF. **Audyt globalny OTWARTY**, ALG-10 po audytach VIII i IX jest już stabilny; audyt przekrojowy pozostaje niezależnym etapem. Nie przypisywać obecnemu źródłu wcześniejszych wyników CI.
-\n\n[Audyt globalny II](2026-11-22-ALG-GLOBAL-iteration-02.md): 187 regresji PASS, dwa identycznie renderujące się PDF (184/184 stron), 406 etykiet i 167 odsyłaczy bez błędów; wykryto niespójność terminów „dywizor” (ALG-03/04) i „dzielnik” (pozostałe rozdziały). Globalnie **OTWARTY** do ujednolicenia i audytów po zmianach.
+
+
+[Audyt globalny II](2026-11-22-ALG-GLOBAL-iteration-02.md): 187 regresji PASS, dwa identycznie renderujące się PDF (184/184 stron), 406 etykiet i 167 odsyłaczy bez błędów; wykryto niespójność terminów „dywizor” (ALG-03/04) i „dzielnik” (pozostałe rozdziały). Globalnie **OTWARTY** do ujednolicenia i audytów po zmianach.
 
 ## Metodologia
 
