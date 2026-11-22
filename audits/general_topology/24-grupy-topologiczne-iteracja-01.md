@@ -83,8 +83,8 @@ na tym samym blobie i jeden dodatkowy, zielony CI oraz inspekcja PDF.
 ## Dwie zasadnicze korekty uzupełniające
 
 **A. Birkhoff–Kakutani.** Początkowy szkic
-nie zawierał pełnej metryzowalności pierwszoprzeliczalnych
-grup. Dopisano twierdzenie w zgodnej terminologii
+nie zawierał pełnego twierdzenia o metryzowalności grup
+spełniających pierwszy aksjomat przeliczalności. Dopisano twierdzenie w zgodnej terminologii
 „spełnia pierwszy aksjomat przeliczalności”.
 Zbudowano zstępującą symetryczną bazę U_n
 z \(U_{n+1}^3\subseteq U_n\).
