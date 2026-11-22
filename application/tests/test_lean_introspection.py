@@ -68,13 +68,13 @@ class ParsingTests(unittest.TestCase):
             f"{TOKEN} END {b}",
             f"{TOKEN} END {a}",
         ]
-        output = "\\n".join("Inspect.lean:8:0: info: " + e for e in events)
+        output = "\n".join("Inspect.lean:8:0: info: " + e for e in events)
         self.assertEqual(inspection.parse_inspection(output, TOKEN, [a, b]),
                          {a: ["Nat.succ", "Nat.zero"], b: ["Eq"]})
 
     def test_two_declarations_fail_closed_on_missing_or_extra_events(self):
         a, b = "theorem_x", "theorem_y"
-        valid = "\\n".join([
+        valid = "\n".join([
             f"{TOKEN} BEGIN {a} 1", f"{TOKEN} CONST {a} Eq",
             f"{TOKEN} END {a}", f"{TOKEN} BEGIN {b} 0",
             f"{TOKEN} END {b}",
