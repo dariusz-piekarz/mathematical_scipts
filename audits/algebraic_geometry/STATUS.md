@@ -1,11 +1,11 @@
 # Geometria algebraiczna — rejestr statusów audytów
 
-> **Aktualizacja 2026-11-22 — po audytach ALG-07/IX, ALG-08/V, ALG-09/V, ALG-10/VI oraz kontroli po zamknięciu:** ALG-00–09 są zamknięte według raportów końcowych. ALG-10 został zamknięty w audycie VI na blobie `348d3762fa6cb197e0f4578504170e0fc7f107c9`, lecz w późniejszej kontroli wykryto i poprawiono błąd językowy w przykładzie normalizacji. Aktualny blob ALG-10: `a1b568aeff8e4d5a70731c4799e479c19475b56e`. **ALG-10 ponownie OTWARTY do regresji nowego źródła; 0 pełnych czystych kontroli od poprawki, dodatkowy audyt nowej wersji niewykonany.** Następny przebieg: ALG-10, nie ALG-11. Zob. [raport kontrolny](2026-11-22-ALG-10-global-control-01.md). Historyczna tabela poniżej jest migawką z audytu ALG-07/II i nie odzwierciedla późniejszych raportów.
+> **Aktualizacja 2026-11-22 — po ALG-10/VII i audycie globalnym I:** ALG-00–09 pozostają STABILNE. W ALG-10/VII wykryto i poprawiono nieścisłość definicji grupy Picarda oraz niespójny termin „ample”; źródło kanoniczne po korektach: blob `5b231c9b40ad7f547ccfb3050e3712b7be7a75b0`. Rozdział ALG-10 jest **OTWARTY** do nowych czystych reaudytów VIII i IX na tym blobie. Audyt globalny I naprawił starsze wersje ALG-00–04 w monolicie. Globalny workflow [45068819648](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45068819648) miał SUCCESS na poprzednim blobie ALG-10; najnowszy [45069448058](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45069448058) wymaga osobnego odbioru po korektach VII. Żadna pomyślna kompilacja poprzedniej wersji nie zastępuje kontroli nowej.
 
 
-**Ostatnia aktualizacja:** 2026-11-22; ALG-00–09 stabilne, ALG-10 ponownie otwarty po korekcie, audyt globalny I z poprawką monolitu.
+**Ostatnia aktualizacja:** 2026-11-22; audyt ALG-10/VII z poprawkami, audyt globalny I z naprawą monolitu.
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`.
-**Następny przebieg:** pełny reaudyt ALG-10 na nowym blobie i odbiór nowego CI/PDF; niezależnie audyt globalny II po synchronizacji całej książki. Nie rozpoczynać ALG-11.
+**Następny przebieg:** odebrać CI/PDF bieżącego bloba ALG-10, wykonać bezusterkowy reaudyt VIII i dodatkowy audyt IX dla pewności; równolegle globalny II i III. Nie rozpoczynać ALG-11.
 
 | ID | Rozdział | Iteracja zakończona | Status | Raport / czynność |
 | --- | --- | ---: | --- | --- |
@@ -19,7 +19,7 @@
 | ALG-07 | Teoria przecięć, grupy Chowa i klasy Cherna | **9** | **STABILNY / ZAMKNIĘTY** | [Audyt IX](2026-11-22-ALG-07-iteration-09.md) — końcowa kontrola bez nowych usterek |
 | ALG-08 | Geometria biwymierna i modele minimalne | **5** | **STABILNY / ZAMKNIĘTY** | [Audyt V](2026-11-22-ALG-08-iteration-05.md) — kontrola niezależna |
 | ALG-09 | Geometria algebraiczna a analiza zespolona | **5** | **STABILNY / ZAMKNIĘTY** | [Audyt V](2026-11-22-ALG-09-iteration-05.md) — kontrola niezależna |
-| ALG-10 | Geometria algebraiczna a topologia | **6 + korekta** | **OTWARTY** | [Audyt VI](2026-11-22-ALG-10-iteration-06.md) dotyczył poprzedniego bloba; [kontrola po zamknięciu](2026-11-22-ALG-10-global-control-01.md) zmieniła tekst, potrzebna ponowna stabilizacja |
+| ALG-10 | Geometria algebraiczna a topologia | **7** | **OTWARTY** | [Audyt VII](2026-11-22-ALG-10-iteration-07.md) — naprawa definicji grupy Picarda i terminologii; oczekuje na dwa czyste reaudty VIII i IX tego samego bloba |
 
 ## Audyt globalny ALG-00–10
 
