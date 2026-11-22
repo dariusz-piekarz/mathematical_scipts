@@ -20,9 +20,10 @@ class LeanResultsTests(unittest.TestCase):
         (self.root / "lean-toolchain").write_text("leanprover/lean4:v4.26.0\n", encoding="utf-8")
         (self.root / "lakefile.toml").write_text('name = "Test"\n', encoding="utf-8")
         self.source_sha = "a" * 64
+        self.binding_sha = "b" * 64
 
     def fp(self):
-        return fingerprint(self.source_sha, self.code, self.root)
+        return fingerprint(self.source_sha, self.code, self.root, self.binding_sha)
 
     def test_latest_real_compilation_survives_reopen(self):
         fp = self.fp()
@@ -51,6 +52,45 @@ class LeanResultsTests(unittest.TestCase):
         new = last_run("sample", self.fp(), results_root=self.output)
         self.assertEqual(new["proof_status"], "not_run")
         self.assertTrue(new["previous_run_outdated"])
+
+    def test_binding_reassignment_invalidates_cached_compilation(self):
+        original = self.fp()
+        save_run("sample", original, proof_status="compiled",
+                 detail="Lean executed", results_root=self.output)
+        self.binding_sha = "c" * 64
+        new = self.fp()
+        self.assertEqual(new["source_document_sha256"], original["source_document_sha256"])
+        self.assertEqual(new["lean_sha256"], original["lean_sha256"])
+        self.assertNotEqual(new["source_binding_sha256"], original["source_binding_sha256"])
+        self.assertTrue(last_run("sample", new, results_root=self.output)["previous_run_outdated"])
+        self.assertEqual(last_run("sample", new, results_root=self.output)["proof_status"], "not_run")
+        self.binding_sha = "b" * 64
+        self.assertEqual(last_run("sample", self.fp(), results_root=self.output)["proof_status"],
+                         "compiled")
+
+    def test_v4_record_cannot_be_reused_without_owner_identity(self):
+        import json
+        original = self.fp()
+        save_run("sample", original, proof_status="compiled",
+                 detail="Lean executed", results_root=self.output)
+        path = self.output / "sample.json"
+        legacy = json.loads(path.read_text(encoding="utf-8"))
+        legacy["schema_version"] = 4
+        legacy.pop("source_binding_sha256")
+        path.write_text(json.dumps(legacy), encoding="utf-8")
+        state = last_run("sample", self.fp(), results_root=self.output)
+        self.assertEqual(state["proof_status"], "not_run")
+        self.assertTrue(state["run_record_invalid"])
+
+    def test_missing_or_invalid_binding_digest_is_rejected(self):
+        for invalid in ("", "q" * 64, None):
+            with self.subTest(invalid=invalid), self.assertRaises(ValueError):
+                fingerprint(self.source_sha, self.code, self.root, invalid)
+        old = self.fp()
+        old.pop("source_binding_sha256")
+        with self.assertRaises(ValueError):
+            save_run("sample", old, proof_status="compiled",
+                     detail="no indexed owner", results_root=self.output)
 
     def test_invalidated_by_toolchain_or_lockfile(self):
         old = self.fp()
