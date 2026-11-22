@@ -161,7 +161,7 @@ class ALG06Regressions(unittest.TestCase):
         src = SOURCE.read_text(encoding="utf-8")
         hirz = src.split(r"\label{st:ga6-hirzebruch}", 1)[1].split(
             r"\end{stwierdzenie}", 1)[0]
-        self.assertIn("Niech $n", hirz)
+        self.assertIn(r"$n\ge0$", hirz)
         self.assertIn("$F$ klasę włókna", hirz)
         self.assertIn("$B$ sekcję", hirz)
         dp = src.split(r"\label{st:ga6-del-pezzo-degree}", 1)[1].split(
