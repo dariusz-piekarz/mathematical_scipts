@@ -133,6 +133,35 @@ class ALG10Regressions(unittest.TestCase):
         self.assertGreaterEqual(len(labels),23)
         self.assertGreaterEqual(s.count(r"\begin{proof}"),8)
 
+    def test_statements_have_self_contained_hypotheses(self):
+        src=SOURCE.read_text(encoding="utf-8")
+        checks={
+            r"\begin{definicja}[Klasa dualna do podrozmaitości]":
+                "Niech $M$ będzie zwartą, spójną",
+            r"\label{st:ga10-betti}":
+                "Niech $S$",
+            r"\label{wn:ga10-blowup-canonical}":
+                "dowolnymi dzielnikami kanonicznymi",
+            r"\begin{twierdzenie}[Rozkład Lefschetza":
+                "Niech $M$ będzie zwartą rozmaitością Kählerowską",
+            r"\label{st:ga10-hodge-ineq}":
+                "Niech $S$ będzie gładką spójną",
+            r"\begin{definicja}[Cykl algebraiczny i klasa Hodge'a]":
+                "$0\le p\le n$",
+        }
+        for start,expected in checks.items():
+            with self.subTest(start=start):
+                self.assertIn(start,src)
+                snippet=src.split(start,1)[1].split(r"\end{",1)[0]
+                self.assertIn(expected,snippet)
+
+    def test_hodge_index_quantified_positive_class(self):
+        src=SOURCE.read_text(encoding="utf-8")
+        block=src.split(r"\label{st:ga10-hodge-ineq}",1)[1].split(
+            r"\end{stwierdzenie}",1)[0]
+        self.assertIn("dzielnikiem obszernym",block)
+        self.assertIn(r"N^1(S)_{\R}",block)
+
     def test_tikz_and_environment_balance(self):
         s=SOURCE.read_text(encoding="utf-8")
         self.assertEqual(s.count(r"\begin{tikzpicture}"),4)
