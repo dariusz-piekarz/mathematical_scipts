@@ -18,6 +18,7 @@ from backend import lean_introspection as inspection
 
 SOURCE = "\\begin{twierdzenie}\\label{t:x}\nP.\n\\end{twierdzenie}\n"
 TOKEN = "a" * 32
+LABEL_OFFSET = SOURCE.index("\\label{t:x}")
 
 
 def transcript(*, token=TOKEN, name="theorem_x", constants=("Nat.zero", "Eq")):
@@ -154,7 +155,7 @@ class InspectionExecutionTests(unittest.TestCase):
                          ("LST-01","Logic",self.digest,SOURCE))
         self.con.execute("INSERT INTO entities VALUES(?,?,?,?,?,?,?,?)",
                          ("e1","LST-01","theorem","P",1,3,0,len(SOURCE)))
-        self.con.execute("INSERT INTO labels VALUES(?,?,?)",("t:x","e1",8))
+        self.con.execute("INSERT INTO labels VALUES(?,?,?)",("t:x","e1",LABEL_OFFSET))
         self.con.commit()
         self.ready={"ready":True,"lake_available":True,
                     "memory_limit_mb":None,"total_memory_limit_mb":None}
@@ -294,7 +295,7 @@ class InspectionExecutionTests(unittest.TestCase):
                 finally:
                     self.con.execute("DELETE FROM labels WHERE name=?", ("t:x",))
                     self.con.execute(
-                        "INSERT INTO labels VALUES(?,?,?)", ("t:x", "e1", 8))
+                        "INSERT INTO labels VALUES(?,?,?)", ("t:x", "e1", LABEL_OFFSET))
                     self.con.commit()
 
     def test_indexed_entity_metadata_change_during_run_blocks_completion(self):
@@ -307,7 +308,7 @@ class InspectionExecutionTests(unittest.TestCase):
             ("end_line", "UPDATE entities SET end_line=2 WHERE id='e1'"),
             ("start_offset", "UPDATE entities SET start_offset=1 WHERE id='e1'"),
             ("end_offset", "UPDATE entities SET end_offset=3 WHERE id='e1'"),
-            ("label_offset", "UPDATE labels SET offset=9 WHERE name='t:x'"),
+            ("label_offset", f"UPDATE labels SET offset={LABEL_OFFSET + 1} WHERE name='t:x'"),
         )
         for field, sql in mutations:
             with self.subTest(field=field):
@@ -327,18 +328,47 @@ class InspectionExecutionTests(unittest.TestCase):
                         "start_line=1, end_line=3, start_offset=0, end_offset=? "
                         "WHERE id='e1'", (len(SOURCE),))
                     self.con.execute(
-                        "UPDATE labels SET offset=8 WHERE name='t:x'")
+                        f"UPDATE labels SET offset={LABEL_OFFSET} WHERE name='t:x'")
                     self.con.commit()
 
     def test_duplicate_label_on_same_entity_rejected_before_compiler(self):
         # Catalog deliberately uses DISTINCT entity IDs, so two identical
         # label records need a separate fail-closed guard.
-        self.con.execute("INSERT INTO labels VALUES(?,?,?)", ("t:x", "e1", 11))
+        self.con.execute("INSERT INTO labels VALUES(?,?,?)", ("t:x", "e1", LABEL_OFFSET + 3))
         self.con.commit()
         response, spawn = self.execute()
         spawn.assert_not_called()
         self.assertEqual(response["inspection_status"], "blocked")
         self.assertFalse(response["certificate"])
+
+    def test_preexisting_corrupt_entity_bounds_and_label_positions_never_spawn(self):
+        # These records are already malformed before the request; a before/after
+        # comparison alone would accept the unchanged corruption.
+        invalid = (
+            ("wrong_label_offset", "UPDATE labels SET offset=0 WHERE name='t:x'"),
+            ("label_instead_of_command", f"UPDATE labels SET offset={LABEL_OFFSET + 1} WHERE name='t:x'"),
+            ("out_of_bounds_entity", "UPDATE entities SET end_offset=9999 WHERE id='e1'"),
+            ("label_outside_entity", f"UPDATE entities SET end_offset={LABEL_OFFSET} WHERE id='e1'"),
+            ("reversed_lines", "UPDATE entities SET start_line=5, end_line=2 WHERE id='e1'"),
+            ("negative_start", "UPDATE entities SET start_offset=-1 WHERE id='e1'"),
+        )
+        for reason, sql in invalid:
+            with self.subTest(reason=reason):
+                self.con.execute(sql)
+                self.con.commit()
+                try:
+                    result, spawned = self.execute()
+                    spawned.assert_not_called()
+                    self.assertEqual(result["inspection_status"], "blocked")
+                    self.assertEqual(result["constants"], {})
+                    self.assertFalse(result["certificate"])
+                finally:
+                    self.con.execute(
+                        "UPDATE entities SET start_offset=0, end_offset=?, "
+                        "start_line=1, end_line=3 WHERE id='e1'", (len(SOURCE),))
+                    self.con.execute(
+                        "UPDATE labels SET offset=? WHERE name='t:x'", (LABEL_OFFSET,))
+                    self.con.commit()
 
     def test_dependency_change_after_process_refuses_stale_results(self):
         call=[0]
