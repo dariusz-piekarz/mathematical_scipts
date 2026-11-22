@@ -28,6 +28,7 @@ Stan: 22 listopada 2026. Źródłem prawdy dla rozdziałów włączonych do ksi�
 | **20** | **Zbiory analityczne, rzuty zbiorów domkniętych, operacja Suslina, zbiór nieborelowski analityczny** | **stabilny — audyty 05–07 (2/2 + 1); kodowanie drzewa 1/2 poprawione; CI/PDF PASS** |
 | **21** | **Topologie na rodzinach podzbiorów: Vietoris, metryka Hausdorffa, zupełność, zwartość, Fell, zbieżność i porównanie** | **stabilny — audyty 03–05 (2/2 + 1); CI/PDF PASS** |
 | **22** | **Zbieżność Kuratowskiego, topologia Wijsmana i topologia Attoucha–Wetsa; związek z Fellem, właściwość przestrzeni, kontrprzykłady** | **stabilny — audyty 02–04 (2/2 + 1); CI/PDF PASS** |
+| **23** | **Wymiar topologiczny: wymiar pokryciowy Lebesgue’a, wymiary ind/Ind, charakterystyka wymiaru 0, wymiar odcinka i sześcianu, nerwy pokryć** | **w audycie — nie oznaczać jako stabilny przed 2/2 + 1 i zielonym CI/PDF** |
 
 Zakresy 12–13 oraz 16–17 są rozdzielone według tematyki, żeby unikać powtarzania dowodów. Zgodnie z zasadą projektu nowe rozdziały nie oznaczają automatycznie ich stabilności.
 
@@ -193,6 +194,8 @@ Użytkownik zatwierdził kolejne etapy 1–5 w dniu 22 listopada 2026:
    zbieżności zbiorów w rozdziale 22).
    W topologii ogólnej tylko odsyłacze, nie
    duplikacja pełnego wykładu.
+
+**Mapa nakładek dla etapów 23–25 i Mosco/epi:** [zobacz mapę](mapa_nakladek-topologia-ogolna-23-26-i-zbieznosc-wariacyjna.md). Istniejące dowody twierdzenia Brouwera (topologia algebraiczna, rozdział 19) i konstrukcji miary Haara (teoria miary, rozdział 23) nie powinny być duplikowane.
 
 **Reguła kolejności:** audytować już istniejący materiał,
 następnie tworzyć i stabilizować dokładnie jeden nowy rozdział.
