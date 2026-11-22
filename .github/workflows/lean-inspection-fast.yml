@@ -1,0 +1,56 @@
+name: Lean inspection - fast regression checks
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "application/backend/lean_introspection.py"
+      - "application/backend/lean_catalog.py"
+      - "application/backend/lean_formalization.py"
+      - "application/backend/lean_results.py"
+      - "application/tests/test_lean_introspection.py"
+      - "application/tests/test_lean_inspection_browser.py"
+      - "application/frontend/app.js"
+      - "application/requirements.txt"
+      - ".github/workflows/lean-inspection-fast.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lean-inspection-fast-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  lean-introspection-regressions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout current revision
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install API test requirements
+        working-directory: application
+        run: python -m pip install -r requirements.txt
+
+      - name: Require Node for JavaScript regression tests
+        run: node --version
+
+      - name: Exercise Lean introspection and browser contract without global LaTeX index
+        working-directory: application
+        run: |
+          python -m unittest \
+            tests.test_lean_introspection \
+            tests.test_lean_inspection_browser -v
+
+      - name: Explicitly distinguish parser tests from kernel validation
+        run: |
+          echo "These tests use mocked Lean subprocess results."
+          echo "The separate Lean 4 - kernel and axiom audit workflow is mandatory for real Lean verification."
