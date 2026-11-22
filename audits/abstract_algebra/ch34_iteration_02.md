@@ -43,7 +43,7 @@ Opublikowano i sprawdzono przez ponowny odczyt:
 - `catalog/books.json` (34 rozdziały algebry abstrakcyjnej);
 - `.github/workflows/abstract-algebra-chapter.yml` (oba zestawy testów AA-34 i kompilacja AA-01–AA-34).
 
-W chwili ostatniego sprawdzenia przebieg GitHub Actions [45039812764](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45039812764) **trwał**, a zdalne testy AA-34 i kompilacja pełnej książki nie miały jeszcze potwierdzonego wyniku. Lokalna walidacja i publikacja źródeł są potwierdzone, sukces całego zdalnego CI — **nie**.
+W przebiegu GitHub Actions [45039812764](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45039812764) krok **„Run AA-34 quartic resolvent and Galois regression tests” zakończył się sukcesem**, co potwierdza oba zestawy testów AA-34 w zdalnym CI. W chwili ostatniego sprawdzenia **kompilacja pełnej książki AA-01–AA-34 nadal trwała**, a kontrola końcowego PDF i odsyłaczy nie była jeszcze wykonana. Lokalna walidacja, publikacja źródeł i zdalne testy AA-34 są potwierdzone, sukces całego workflow — **jeszcze nie**.
 
 ## Decyzja
 
