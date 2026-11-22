@@ -1,5 +1,8 @@
 # Geometria algebraiczna — rejestr statusów audytów
 
+> **Aktualizacja 2026-11-22 — po audytach ALG-07/IX, ALG-08/V, ALG-09/V, ALG-10/VI oraz kontroli po zamknięciu:** ALG-00–09 są zamknięte według raportów końcowych. ALG-10 został zamknięty w audycie VI na blobie `348d3762fa6cb197e0f4578504170e0fc7f107c9`, lecz w późniejszej kontroli wykryto i poprawiono błąd językowy w przykładzie normalizacji. Aktualny blob ALG-10: `a1b568aeff8e4d5a70731c4799e479c19475b56e`. **ALG-10 ponownie OTWARTY do regresji nowego źródła; 0 pełnych czystych kontroli od poprawki, dodatkowy audyt nowej wersji niewykonany.** Następny przebieg: ALG-10, nie ALG-11. Zob. [raport kontrolny](2026-11-22-ALG-10-global-control-01.md). Historyczna tabela poniżej jest migawką z audytu ALG-07/II i nie odzwierciedla późniejszych raportów.
+
+
 **Ostatnia aktualizacja:** 2026-11-22, audyt ALG-07 nr 2.
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`.
 **Następny przebieg:** **ALG-07, audyt nr 3** — niezależna kontrola bloba po doprecyzowaniu związków między dzielnikami i klasami Chowa oraz definicji przez normalizację; kontynuować do stabilności plus osobny audyt dla pewności. ALG-00–06 pozostają zamknięte.
