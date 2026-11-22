@@ -1,8 +1,8 @@
 # Geometria algebraiczna — rejestr statusów audytów
 
-**Ostatnia aktualizacja:** 2026-11-22, audyt ALG-06 nr 5 (zamknięcie po IV i V).
+**Ostatnia aktualizacja:** 2026-11-22, audyt ALG-07 nr 1.
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`.
-**Następny przebieg:** **ALG-07, audyt nr 1** — teoria przecięć, grupy Chowa i klasy Cherna; ALG-00–06 są stabilne po dwóch niezależnych czystych audytach IV i V oraz dwóch kompilacjach aktualnego źródła.
+**Następny przebieg:** **ALG-07, audyt nr 2** — niezależna kontrola po poprawkach matematycznych i językowych z I; następnie powtarzać aż do stabilności plus dodatkowy audyt. ALG-00–06 pozostają zamknięte.
 
 | ID | Rozdział | Iteracja zakończona | Status | Raport / czynność |
 | --- | --- | ---: | --- | --- |
@@ -13,7 +13,7 @@
 | ALG-04 | Algebra przemienna, snopy i krzywe algebraiczne | **4** | **STABILNY / ZAMKNIĘTY** | [Audyt 4](2026-11-22-ALG-04-iteration-04.md) — niezależny bezusterkowy reaudyt całego rozdziału, 14/14 regresji PASS, CI SUCCESS na identycznym źródle, 43-stronicowy PDF i 10 rysunków PASS |
 | ALG-05 | Rozdmuchania i rozwiązywanie osobliwości | **10** | **STABILNY / ZAMKNIĘTY** | [Audyt IX](2026-11-22-ALG-05-iteration-09.md) i [audyt X](2026-11-22-ALG-05-iteration-10.md) — dwa niezależne bezusterkowe przeglądy, 18/18 regresji, dwie udane kompilacje źródła, PDF 124 strony, 4 rysunki skontrolowane |
 | ALG-06 | Powierzchnie algebraiczne | **5** | **STABILNY / ZAMKNIĘTY** | [Audyt IV](2026-11-22-ALG-06-iteration-04.md) oraz [audyt V](2026-11-22-ALG-06-iteration-05.md) — dwa niezależne bezusterkowe przeglądy, 21/21 regresji, dwie udane kompilacje, PDF 136 stron i 3 rysunki PASS |
-| ALG-07 | Teoria przecięć, grupy Chowa i klasy Cherna | 0 | **DO AUDYTU** | Następny ALG-07/I — nie zmieniać statusu przed rzeczywistym audytem |
+| ALG-07 | Teoria przecięć, grupy Chowa i klasy Cherna | **1** | **OTWARTY** | [Audyt I](2026-11-22-ALG-07-iteration-01.md) — poprawiono przypadki $m=1$, $n=0$, normalizację, hipotezy i terminologię; 21/21 regresji, CI SUCCESS, PDF 148 stron i 2 rysunki sprawdzone |
 | ALG-08 | Geometria biwymierna i modele minimalne | 0 | Oczekuje | Po ALG-07 |
 | ALG-09 | Geometria algebraiczna a analiza zespolona | 0 | Oczekuje | Po ALG-08 |
 | ALG-10 | Geometria algebraiczna a topologia | 0 | Oczekuje | Po ALG-09 |
@@ -91,3 +91,6 @@ ALG-06 po audycie II: [raport](2026-11-22-ALG-06-iteration-02.md), **OTWARTY**. 
 
 
 ALG-06 po audytach IV i V: **STABILNY / ZAMKNIĘTY**. [Raport IV](2026-11-22-ALG-06-iteration-04.md) to pierwszy pełny czysty audyt aktualnego źródła; [raport V](2026-11-22-ALG-06-iteration-05.md) to dodatkowa niezależna kontrola stabilizacyjna, obejmująca bezpośrednią enumerację 27 prostych na powierzchni Fermata nad F7 (135 par przecięć, 45 trójek, każda prosta przecina 10 innych). Po korektach III źródło ALG-06 nie było modyfikowane: niezmieniony blob `a01ddd983ae8c413587c25ea446f222e71a2060f` (1155 wierszy); monolit jest zgodny. Testy rozbudowano z 20 do 21 metod, w tym nowa kontrola 45 trójek [8a12a23](https://github.com/dariusz-piekarz/mathematical_scipts/commit/8a12a234ee6abf9f65b22221064618277f0a731b). **Dwie kompletne udane kompilacje na tym samym źródle**: [CI 45051723700](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45051723700) 20/20 PASS i [CI 45053107575](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45053107575) 21/21 PASS, oba SUCCESS. Artefakty `14765867240`, `14765979629`; PDF w obu przypadkach 136 stron, ALG-06 strony 125–136, cały wyekstrahowany tekst identyczny, trzy rysunki z podpisami na stronach 127/130/134, log 0 `LaTeX Warning`, `Overfull`, `Underfull`, `undefined references`, `Missing character`, 0 bloków poza stronami. Kontrola przekrojowa ALG-00–06 + lemat współdzielony: 257 unikalnych etykiet, 117/117 rozwiązanych odsyłaczy, 0 niesparowanych środowisk. **Następny ALG-07/I**.
+
+
+ALG-07 po audycie I: [raport](2026-11-22-ALG-07-iteration-01.md), **OTWARTY**. Wymagane poprawki: domknięcia rzutowe $y=x^m$ w nieskończoności z osobnym $m=1$, przypadek $\PP^0$ w pierścieniu Chowa, wyraźne ograniczenie wiązki na krzywą przed jej pullbackiem na normalizację, założenia samodzielnych twierdzeń i odmiana terminologii (31 historycznych „dywizor”, nazwy map, iniektywność, iloczyn tensorowy). Dodano kompletny przykład wielomianu Hilberta stopnia-$d$ powierzchni w $\PP^3$, z niezależnym sprawdzianem przez dokładny ciąg snopów dla wszystkich całkowitych skręceń. Końcowy blob źródła `f8d5c15c147783547fe4f48e3f8e383004e1ddf0` (1131 wierszy), zsynchronizowany z monolitem, 47 etykiet i 14 dowodów. Regresje 21 metod (test blob `20163708e48058ba51416cdef2fd77c116488ef2`). Dedykowany [CI 45054648568](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45054648568) **SUCCESS**, 21/21 regresji, LaTeX, odsyłacze i terminologia PASS. Artefakt `14766179486` PDF 148 stron, ALG-07 fizyczne strony 138–148, rysunki 7.1 i 7.2 na stronach 140/144, 11/11 stron przejrzanych, 0 ostrzeżeń, 0 elementów poza stronami. Ostatnia strona zapełniona lepiej (2176 zamiast 1147 znaków). Kontrola przekrojowa ALG-00–07 + lemat współdzielony: **304 unikalne etykiety, 131/131 rozwiązanych odsyłaczy, 0 niesparowanych środowisk**. Audyt I zawierał poprawki, zatem nie jest bezusterkowy; **następny ALG-07/II**, dalej osobna kontrola dla pewności przed ALG-08.
