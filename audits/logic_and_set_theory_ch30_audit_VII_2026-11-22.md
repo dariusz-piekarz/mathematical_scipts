@@ -33,9 +33,11 @@
 - Rozdział 30: **57 różnych etykiet i 49 odsyłaczy**, bez zmian w liczbie i nazwach celów.
 - Inwentarz środowisk niezmieniony: **12 definicji, 7 przykładów, 15 twierdzeń, 9 lematów, 4 wnioski, 15 uwag, 26 dowodów i 1 rysunek**.
 - Poprzednia wersja po audycie VI przeszła pełne CI: [GitHub Actions #45012535817](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45012535817) — `SUCCESS`.
-- **Bieżąca wersja VII:** [GitHub Actions #45013045512](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45013045512) — uruchomiona dla poprawionej wersji regresji; jej końcowy status należy sprawdzić po zakończeniu (nie utożsamiać z poprzednim sukcesem).
-- Ten audyt jest matematyczno-redakcyjny oparty na źródle, wynikach regresji i kontroli CI. Osobnej ręcznej inspekcji wszystkich stron nowo wyrenderowanego PDF nie wykonano podczas tej iteracji; nie przypisujemy jej statusu `PASS`.
+- **Bieżąca wersja VII:** [GitHub Actions #45013045512](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45013045512) — **SUCCESS** dla poprawionej wersji testów i źródła. Przebieg objął testy regresyjne rozdziałów 1–31, kompilację książki, kontrolę PDF oraz odsyłaczy. SHA źródła i testów zgodne z wyżej wskazanymi.
+- Zweryfikowano archiwum PDF z tego przebiegu: **273 strony w pełnej książce**, rozdział 30 na **21 stronach, od strony PDF 229 do 249** (rozdział 31 rozpoczyna się na stronie PDF 250).
+- Wyrenderowano **każdą z 21 stron** rozdziału i obejrzano zestawienie stron; skontrolowano obecność i układ drzewa gry, wzorów, tytułów sekcji i przypisania numerów. Nie stwierdzono widocznych kolizji tekstów i rysunku lub przyciętych elementów. Dodatkowa kontrola współrzędnych bloków tekstowych w PDF nie wykazała przekroczenia obszaru strony.
+- Log TeX: **0** przepełnień `Overfull \\hbox`, **0** niezdefiniowanych odsyłaczy, **0** niezdefiniowanych cytowań, **0** błędów LaTeX oraz **1** drobne ostrzeżenie `Underfull \\hbox` w całej książce.
 
 ## Werdykt
 
-**Audyt VII: dwa uzupełnienia dotyczące założeń i zależności dowodowych; brak wykrytych kontrprzykładów dla pozostałych twierdzeń.** Status techniczny najnowszej wersji zależy od końcowego wyniku aktualnego przebiegu CI. Dalsza iteracja powinna być ponownym niezależnym przejściem, nie powtórzeniem tego raportu.
+**Audyt VII: dwa uzupełnienia dotyczące założeń i zależności dowodowych; brak wykrytych kontrprzykładów dla pozostałych twierdzeń.** Bieżąca wersja przeszła regresje, kompilację i przegląd wizualny PDF; status po audycie VII — **stabilny technicznie**, z poprawioną precyzją matematyczną. Dalsza iteracja powinna być ponownym niezależnym przejściem, nie powtórzeniem tego raportu.
