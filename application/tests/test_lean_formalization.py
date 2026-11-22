@@ -270,6 +270,51 @@ class LeanFormalizationTests(unittest.TestCase):
                                   start_line=a, end_line=b, lean_root=self.root)
                 self.assertEqual(caught.exception.status_code, 400)
 
+    def test_compiled_history_does_not_migrate_to_new_owner_with_same_tex_sha(self):
+        self.entry["source_document_sha256"] = self.digest
+        self.entry["statement_status"] = "approved"
+        self.save_manifest()
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_process.execute_registered",
+                   return_value=(0, "real-process-interface", False)):
+            initial = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(initial["proof_status"], "compiled")
+        self.assertTrue(initial["run_record_saved"])
+        original = lean.fragment(self.con, entity_id="LST-01/theorem/0001",
+                                 lean_root=self.root)
+        self.assertEqual(original["proof_status"], "compiled")
+
+        # The document and its hash do not change; only the label owner does.
+        self.con.execute(
+            "INSERT INTO entities VALUES(?,?,?,?,?,?,?,?)",
+            ("LST-01/theorem/0002", "LST-01", "theorem", "Other owner",
+             1, 3, 0, len(SOURCE)))
+        self.con.execute(
+            "UPDATE labels SET entity_id=? WHERE name=?",
+            ("LST-01/theorem/0002", LABEL))
+        self.con.commit()
+        moved = lean.fragment(self.con, entity_id="LST-01/theorem/0002",
+                              lean_root=self.root)
+        self.assertEqual(moved["formalization_id"], "sample")
+        self.assertEqual(moved["source_document_sha256"], self.digest)
+        self.assertEqual(moved["formalization_status"], "ready")
+        self.assertEqual(moved["proof_status"], "not_run")
+        self.assertTrue(moved["previous_run_outdated"])
+        self.assertFalse(moved["certificate"])
+
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_process.execute_registered",
+                   return_value=(0, "new-process", False)):
+            rerun = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(rerun["proof_status"], "compiled")
+        refreshed = lean.fragment(self.con, entity_id="LST-01/theorem/0002",
+                                  lean_root=self.root)
+        self.assertEqual(refreshed["proof_status"], "compiled")
+        self.assertIn("new-process", refreshed["last_run_log"])
+        self.assertFalse(refreshed["certificate"])
+
     def test_wrong_label_offset_is_blocked_consistently_across_api_paths(self):
         self.entry["source_document_sha256"] = self.digest
         self.entry["statement_status"] = "approved"
