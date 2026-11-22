@@ -41,7 +41,7 @@
 - Rozdział i dwa zestawy testów opublikowano na gałęzi `biblioteka-matematyczna-iteracja-6`; porównanie Git blob SHA potwierdziło zgodność bajtową z wersjami po audycie.
 - Zaktualizowano `books/pl/abstract_algebra.tex` i `catalog/books.json`; w katalogu jest 35 rozdziałów.
 - Zaktualizowano `.github/workflows/abstract-algebra-chapter.yml` o testy AA-35 i kompilację książki AA-01–AA-35.
-- Zdalny workflow GitHub Actions: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45041272951 — krok **„Run AA-35 Frobenius and reduction regression tests” zakończył się sukcesem**. Podczas ostatniego sprawdzenia kompilacja całej książki AA-01–AA-35 nadal trwała; końcowa kontrola PDF i odsyłaczy pozostawała oczekująca. Nie ogłaszamy pełnego CI jako zaliczonego bez potwierdzenia.
+- Zdalny workflow GitHub Actions: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45041272951 — **cały workflow zakończył się wynikiem `success`**. Zdalne kroki „Run AA-35 Frobenius and reduction regression tests”, „Compile AA-01 to AA-35 book with latexmk” oraz „Verify PDF and references (no undefined refs)” wszystkie mają status **success** (potwierdzenie odczytem GitHub Actions).
 
 ## Werdykt
 
