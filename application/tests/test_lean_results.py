@@ -59,6 +59,69 @@ class LeanResultsTests(unittest.TestCase):
         self.assertTrue(last_run("sample", self.fp(), results_root=self.output)["previous_run_outdated"])
         self.assertNotEqual(old["toolchain_sha256"], self.fp()["toolchain_sha256"])
 
+    def test_sibling_module_edit_addition_removal_and_rename_invalidate_cache(self):
+        sibling = self.root / "src" / "Helper.lean"
+        original = self.fp()
+        save_run("sample", original, proof_status="compiled",
+                 detail="real exit 0", results_root=self.output)
+        sibling.write_text("def helper : Nat := 1\n", encoding="utf-8")
+        self.assertTrue(last_run("sample", self.fp(),
+                                 results_root=self.output)["previous_run_outdated"])
+        changed = self.fp()
+        self.assertNotEqual(original["project_sources_sha256"],
+                            changed["project_sources_sha256"])
+        sibling.write_text("def helper : Nat := 2\n", encoding="utf-8")
+        self.assertNotEqual(changed["project_sources_sha256"],
+                            self.fp()["project_sources_sha256"])
+        sibling.rename(self.root / "src" / "Renamed.lean")
+        self.assertNotEqual(changed["project_sources_sha256"],
+                            self.fp()["project_sources_sha256"])
+        (self.root / "src" / "Renamed.lean").unlink()
+        self.assertEqual(original["project_sources_sha256"],
+                         self.fp()["project_sources_sha256"])
+        self.assertEqual(last_run("sample", self.fp(),
+                                  results_root=self.output)["proof_status"], "compiled")
+
+    def test_manifest_and_lakefile_lean_invalidate_declared_environment(self):
+        original = self.fp()
+        save_run("sample", original, proof_status="compiled",
+                 detail="real exit 0", results_root=self.output)
+        manifest = self.root / "manifest.json"
+        manifest.write_text('{"items":[]}', encoding="utf-8")
+        self.assertNotEqual(original["toolchain_sha256"], self.fp()["toolchain_sha256"])
+        self.assertTrue(last_run("sample", self.fp(),
+                                 results_root=self.output)["previous_run_outdated"])
+        manifest.unlink()
+        lakefile = self.root / "lakefile.lean"
+        lakefile.write_text("import Lake\nopen Lake DSL\n", encoding="utf-8")
+        self.assertNotEqual(original["toolchain_sha256"], self.fp()["toolchain_sha256"])
+
+    def test_legacy_record_schema_is_not_accepted_as_current_compilation(self):
+        original = self.fp()
+        save_run("sample", original, proof_status="compiled",
+                 detail="real exit 0", results_root=self.output)
+        path = self.output / "sample.json"
+        import json
+        legacy = json.loads(path.read_text(encoding="utf-8"))
+        legacy["schema_version"] = 1
+        legacy.pop("project_sources_sha256", None)
+        path.write_text(json.dumps(legacy), encoding="utf-8")
+        result = last_run("sample", self.fp(), results_root=self.output)
+        self.assertEqual(result["proof_status"], "not_run")
+        self.assertTrue(result["run_record_invalid"])
+        self.assertFalse(result["run_cached"])
+
+    def test_symlinked_local_source_is_rejected(self):
+        target = self.root / "module.lean"
+        target.write_text("def external : Nat := 1\n", encoding="utf-8")
+        link = self.root / "src" / "External.lean"
+        try:
+            link.symlink_to(target)
+        except (OSError, NotImplementedError):
+            self.skipTest("Symbolic links unavailable on this system")
+        with self.assertRaises(ValueError):
+            self.fp()
+
     def test_corrupt_record_cannot_be_treated_as_success(self):
         self.output.mkdir()
         (self.output / "sample.json").write_text('{broken', encoding="utf-8")
