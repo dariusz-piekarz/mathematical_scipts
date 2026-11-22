@@ -16,14 +16,14 @@ Data: 2026-11-22. Źródło: `chapters/pl/general_topology/16-funkcje-ciagle-i-u
 
 ## Kontrola techniczna
 
-Poprzednia wersja źródła przeszła GitHub Actions `45012354172` (`success`), pełną kompilację i czterostronicowy PDF bez usterek. Po aktualnej korekcie należy sprawdzić nowy przebieg CI i skład PDF; nie należy przenosić poprzedniego sukcesu bez weryfikacji.
+Poprzednia wersja źródła przeszła GitHub Actions `45012354172` (`success`), pełną kompilację i czterostronicowy PDF bez usterek. Po aktualnej korekcie uruchomiono workflow [45012771143](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45012771143), który zakończył się `completed/success`, bez nieudanych kroków. Z artefaktu `14749659432` pobrano aktualny `general_topology_ch16.pdf` (4 strony A4) i log. Skontrolowano wszystkie cztery strony PDF: brak kolizji, ucięć tekstu i wadliwej typografii; poprawione fragmenty na stronie czwartej są czytelne. W samodzielnym logu LaTeX brak `Overfull`, `Underfull`, `LaTeX Warning`, `Missing character`, `Undefined control sequence` i `Fatal error`.
 
 | Warstwa | Status |
 | --- | --- |
 | Poprawność matematyczna i zależności | PASS |
 | Przykłady i przypadki brzegowe | PASS po doprecyzowaniu |
 | Język i jednoznaczność referencji | Poprawiono |
-| Nowy CI, PDF i log LaTeX | Weryfikacja |
-| Status | W AUDYCIE — do końcowej walidacji |
+| Nowy CI, PDF i log LaTeX | **PASS — run 45012771143, 4 strony obejrzane** |
+| Status | **W AUDYCIE — iteracja 02 zakończona; wymagana niezależna czysta iteracja 03** |
 
 Zgodnie z procedurą kolejne audyty mają weryfikować obecny materiał, bez nieuzasadnionego dopisywania nowych twierdzeń.
