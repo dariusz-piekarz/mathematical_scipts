@@ -28,6 +28,7 @@
         <nav class="tabs" aria-label="Widoki">
           <button id="showExplorer" class="mobile-explorer-btn" aria-label="Pokaż Explorer">☰</button>
           <button class="tab active" data-tab="reader">Czytnik</button>
+          <button class="tab" data-tab="lean">Lean 4</button>
           <button class="tab" data-tab="graph">Graf zależności</button>
           <button class="tab" data-tab="concepts">Graf pojęć</button>
           <button class="tab" data-tab="selection">Kreator zestawu</button>
@@ -36,11 +37,12 @@
         <main id="view-reader" class="tab-view reader-view">
           <div class="empty-state" id="readerEmpty"><div class="empty-icon">∫</div><h1>Twoja biblioteka matematyki</h1><p>Wybierz rozdział, sekcję lub twierdzenie z Explorera. Kliknij odsyłacz <code>\ref</code>, aby otworzyć treść cytowanego fragmentu.</p><div class="quick-actions"><button id="openFirst" class="primary-btn">Otwórz pierwszy rozdział</button><button id="openGraphQuick" class="secondary-btn">Przeglądaj graf</button></div></div>
           <section id="readerContent" class="hidden">
-            <div class="doc-header"><div><div id="docBreadcrumb" class="breadcrumb"></div><h1 id="docTitle"></h1><p id="docMeta" class="doc-meta"></p></div><button id="addCurrent" class="primary-btn">+ Do zestawu</button></div>
+            <div class="doc-header"><div><div id="docBreadcrumb" class="breadcrumb"></div><h1 id="docTitle"></h1><p id="docMeta" class="doc-meta"></p></div><div class="reader-main-actions"><button id="openLeanCurrent" class="secondary-btn">Zobacz w Lean</button><button id="addCurrent" class="primary-btn">+ Do zestawu</button></div></div>
             <div class="reader-toolbar"><span class="small-heading" id="readerKind">Źródło LaTeX</span><div class="toolbar-right"><span id="readSize"></span><button id="togglePreview" class="ghost-btn">Podgląd uproszczony</button><button id="showFull" class="ghost-btn hidden">Pokaż cały fragment</button></div></div>
             <div class="fragment-toolbar" aria-label="Dodawanie dokładnego fragmentu">
               <span>Zaznacz tekst LaTeX, aby dodać obejmujące go pełne wiersze, lub wpisz zakres wierszy źródłowego rozdziału.</span>
               <button id="addExcerpt" class="secondary-btn">+ Zaznaczenie</button>
+              <button id="openLeanSelection" class="secondary-btn">Zaznaczenie → Lean</button>
               <label>Od <input id="rangeStart" type="number" min="1" step="1" aria-label="Pierwszy wiersz"></label>
               <label>Do <input id="rangeEnd" type="number" min="1" step="1" aria-label="Ostatni wiersz"></label>
               <button id="addRange" class="secondary-btn">+ Wiersze</button>
@@ -48,6 +50,21 @@
             <div id="latexSource" class="latex-source" tabindex="0"></div>
             <div id="simplified" class="simplified hidden"></div>
             <div class="reader-note"><span>ⓘ</span><span>Widok tekstowy nie wykonuje makr LaTeX. Pełną wierność składu uzyskamy dopiero po kompilacji dokumentu.</span></div>
+          </section>
+        </main>
+        <main id="view-lean" class="tab-view hidden">
+          <div class="section-intro"><span class="eyebrow">FORMALIZACJA MATEMATYKI</span><h1>Lean 4 — źródło i status</h1><p>Wybierz twierdzenie z Explorera i kliknij „Zobacz w Lean” albo zaznacz wiersze źródła w Czytniku. Brak formalizacji nie oznacza błędu matematycznego. Kompilacja Lean nie gwarantuje zgodności ze stwierdzeniem z LaTeX-a.</p></div>
+          <div id="leanEmpty" class="empty-sub">Wybierz obiekt lub fragment LaTeX-a w Czytniku.</div>
+          <section id="leanResult" class="lean-panel hidden">
+            <div id="leanSourceInfo" class="lean-source-info"></div>
+            <div id="leanStatuses" class="lean-status-grid"></div>
+            <div class="lean-grid">
+              <div class="lean-code-pane"><h2>Oryginalny LaTeX</h2><pre id="leanLatex" class="lean-code"></pre></div>
+              <div class="lean-code-pane"><h2>Kod Lean 4</h2><pre id="leanCode" class="lean-code"></pre></div>
+            </div>
+            <div class="lean-execute"><button id="leanRun" class="primary-btn" disabled>Uruchom Lean</button><span id="leanRunnerInfo"></span></div>
+            <h2 class="small-heading">Wynik sprawdzania i diagnostyka</h2>
+            <pre id="leanLog" class="lean-code lean-log" role="status" aria-live="polite">Nie uruchomiono.</pre>
           </section>
         </main>
         <main id="view-graph" class="tab-view hidden">
