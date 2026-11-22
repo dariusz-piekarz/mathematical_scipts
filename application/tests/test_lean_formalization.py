@@ -95,15 +95,20 @@ class LeanFormalizationTests(unittest.TestCase):
 
     def test_pinned_source_and_stale_source(self):
         self.entry["source_document_sha256"] = self.digest
+        self.entry["statement_status"] = "approved"
+        self.entry["lean_theorems"] = ["sample"]
         self.save_manifest()
         a = lean.fragment(self.con, entity_id="LST-01/theorem/0001",
                           lean_root=self.root)
         self.assertEqual(a["formalization_status"], "ready")
+        self.assertEqual(a["statement_status"], "approved")
+        self.assertEqual(a["lean_theorems"], ["sample"])
         self.con.execute("UPDATE documents SET sha256=?", ("f"*64,))
         self.con.commit()
         b = lean.fragment(self.con, entity_id="LST-01/theorem/0001",
                           lean_root=self.root)
         self.assertEqual(b["formalization_status"], "stale")
+        self.assertEqual(b["statement_status"], "needs_review")
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}):
             result = lean.run(self.con, "sample", lean_root=self.root)
         self.assertEqual(result["proof_status"], "blocked")
