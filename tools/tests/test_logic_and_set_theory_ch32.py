@@ -1,0 +1,99 @@
+"""Chapter 32: basic forcing, generic filters, Cohen reals and valuations."""
+import re
+import unittest
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+CHAPTERS = ROOT / "chapters/pl/logic_and_set_theory"
+SOURCE = CHAPTERS / "32-podstawy-wymuszania-i-modele-generyczne.tex"
+TEXT = SOURCE.read_text(encoding="utf8")
+
+
+class TestChapter32(unittest.TestCase):
+    def test_registered_in_book_and_catalog(self):
+        entry = (ROOT / "books/pl/logic_and_set_theory.tex").read_text("utf8")
+        catalog = (ROOT / "catalog/books.json").read_text("utf8")
+        self.assertIn(SOURCE.name, entry)
+        self.assertIn(SOURCE.name, catalog)
+        self.assertIn(r"\label{ch:forcing-foundations}", TEXT)
+
+    def test_environments_and_labels(self):
+        counts = {
+            "definicja": 11, "lemat": 7, "twierdzenie": 4,
+            "wniosek": 1, "przyklad": 4, "uwaga": 4,
+            "proof": 12, "figure": 1, "tikzpicture": 1,
+        }
+        stack = []
+        for op, env in re.findall(r"\\(begin|end)\{([^}]+)\}", TEXT):
+            if op == "begin":
+                stack.append(env)
+            else:
+                self.assertTrue(stack)
+                self.assertEqual(stack.pop(), env)
+        self.assertFalse(stack)
+        for env, expected in counts.items():
+            with self.subTest(environment=env):
+                self.assertEqual(TEXT.count(r"\begin{" + env + "}"), expected)
+                self.assertEqual(TEXT.count(r"\end{" + env + "}"), expected)
+        labels = re.findall(r"\\label\{([^}]+)\}", TEXT)
+        self.assertEqual(len(labels), 33)
+        self.assertEqual(len(set(labels)), len(labels))
+
+    def test_references_have_targets(self):
+        all_labels = {
+            label
+            for path in CHAPTERS.glob("*.tex")
+            for label in re.findall(r"\\label\{([^}]+)\}", path.read_text("utf8"))
+        }
+        refs = re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", TEXT)
+        self.assertEqual(len(refs), 11)
+        self.assertEqual(set(refs) - all_labels, set())
+
+    def test_countable_generic_filter_construction(self):
+        self.assertIn(r"\label{thm:rasiowa-sikorski}", TEXT)
+        self.assertIn(r"\label{cor:countable-generic}", TEXT)
+        self.assertIn(r"p_{\max(m,n)}", TEXT)
+        self.assertIn(r"G\cap D_n", TEXT)
+        self.assertIn("przeliczalnym", TEXT)
+
+    def test_compatibility_of_finite_binary_conditions(self):
+        def compatible(p, q):
+            return all(p[i] == q[i] for i in p.keys() & q.keys())
+        p = {0: 0, 3: 1}
+        q = {1: 1, 3: 1}
+        r = {3: 0}
+        self.assertTrue(compatible(p, q))
+        self.assertFalse(compatible(p, r))
+        self.assertEqual(p | q, {0: 0, 1: 1, 3: 1})
+        self.assertIn(r"q\supseteq p", TEXT)
+
+    def test_cohen_real_is_new_and_total(self):
+        self.assertIn(r"\label{thm:cohen-new-real}", TEXT)
+        self.assertIn(r"\operatorname{dom}c_G=\omega", TEXT)
+        self.assertIn(r"c_G\notin M", TEXT)
+        self.assertIn(r"p\cup\{(n,1-x(n))\}", TEXT)
+        self.assertIn(r"\label{ex:cohen-filter-recovery}", TEXT)
+
+    def test_dense_suborder_transfer(self):
+        self.assertIn(r"\label{thm:forcing-dense-suborder}", TEXT)
+        self.assertIn(r"D_{\mathbb Q}", TEXT)
+        self.assertIn(r"2^{<\omega}", TEXT)
+
+    def test_name_hierarchy_and_extension_discipline(self):
+        self.assertIn(r"N_{\alpha+1}=\mathcal P(N_\alpha\times\mathbb P)", TEXT)
+        self.assertIn(r"\label{lem:forcing-valuation-exists}", TEXT)
+        self.assertIn(r"\check x", TEXT)
+        self.assertIn(r"\dot G", TEXT)
+        self.assertIn(r"\label{thm:forcing-extension-first}", TEXT)
+        self.assertIn(r"M\subseteq M[G]", TEXT)
+        self.assertIn(r"G\in M[G]", TEXT)
+        self.assertIn("nie udowodniliśmy", TEXT)
+        self.assertIn(r"M[G]\models\mathrm{ZFC}", TEXT)
+
+    def test_no_unproved_forcing_theorem(self):
+        self.assertNotIn(r"\begin{twierdzenie}[M[G] spełnia ZFC]", TEXT)
+        self.assertIn(r"p\Vdash\varphi", TEXT)
+
+
+if __name__ == "__main__":
+    unittest.main()
