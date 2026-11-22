@@ -68,6 +68,11 @@ class LeanFingerprintBenchmarkTests(unittest.TestCase):
         instrumented, details = perf._profile_olean_substeps(original, self.root)
         self.assertEqual(instrumented, uninstrumented)
         self.assertEqual(details["counts"]["content_bytes_read"], len(content))
+        # Path.lstat() delegates to Path.stat() in Python 3.13. The
+        # operation counters may include both calls; their nested durations
+        # must be counted once so buckets never exceed elapsed wall time.
+        self.assertLessEqual(sum(details["seconds"].values()),
+                             details["total_seconds"] + 1e-7)
         with patch.object(perf.lean_results.lean_environment,
                           "compiled_artifacts_sha256", wraps=original) as digest:
             report = perf.benchmark(self.root, samples=2)
