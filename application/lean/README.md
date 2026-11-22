@@ -13,12 +13,12 @@ Trzy wpisy `manifest.json` powiązane są z dokładnymi etykietami LaTeX z `LST-
 
 Pliki `LST01_DeMorgan.lean`, `LST01_ImplicationLaws.lean` i `LST01_NegatedImplication.lean` pozostają jako krótkie opracowania na poziomie `Prop`. Nowy CI kompiluje **każdy** plik `.lean` z `src/` i kontroluje raporty `#print axioms` dla wszystkich ich twierdzeń, także gdy dany plik nie jest głównym mapowaniem w panelu.
 
-Mapowanie `Prop` to tylko semantyka pojedynczego wartościowania, natomiast nowe mapowanie `Formula` oddaje budowę formuły i kwantyfikację po wszystkich wartościowaniach. Status `needs_review` pozostaje do odrębnego audytu matematycznego. Wczytanie pliku Lean w panelu nie jest certyfikatem wierności.
+Mapowanie `Prop` to tylko semantyka pojedynczego wartościowania, natomiast nowe mapowanie `Formula` oddaje budowę formuły i kwantyfikację po wszystkich wartościowaniach. **Trzy powiązania `LST-01` uzyskały `statement_status=approved` po osobnym audycie sześciu tez.** Zatwierdzenie dotyczy wyłącznie wersji źródła o SHA256 `9b5cbe26dee8ed5bc437cb3a0d19638eafc5d9ae178a3caa545b8bcf5842b8d0`. Wszystkie sześć deklaracji jest jawnie wymienione w grupach `lean_theorems`, a zgodność digestu jest sprawdzana w CI. Zmiana źródła unieważnia zatwierdzenie; sama kompilacja nie jest certyfikatem zgodności. Pełna analiza: [audyt semantyczny](../docs/LEAN_SEMANTIC_AUDIT_LST01_2026-11-22.md).
 
 ## Co jest dostępne w aplikacji
 1. Otwórz obiekt matematyczny w Explorerze; w Czytniku kliknij **Zobacz w Lean**.
 2. Alternatywnie zaznacz wiersze źródłowego LaTeX i kliknij **Zaznaczenie → Lean**, albo wpisz zakres wierszy. Kod Lean jest widoczny wyłącznie, jeśli w rejestrze istnieje formalizacja powiązana z odpowiednią etykietą.
-3. Odczytaj osobne statusy zgodności tłumaczenia, obecności/synchronizacji źródła i wykonania Lean. Przykładowy pilot `LST-01/thm:de-morgan-logic` pozostaje niezatwierdzonym szkicem.
+3. Odczytaj osobne statusy zgodności tłumaczenia, obecności/synchronizacji źródła i wykonania Lean. Powiązania `LST-01` są zatwierdzone semantycznie wyłącznie dla przypiętej wersji dokumentu; sprawdzenie wykonania Lean pozostaje odrębnym statusem.
 4. Lokalny przycisk **Uruchom Lean** jest domyślnie zablokowany. Nie uruchamia dowolnego kodu wpisanego w przeglądarce.
 
 ## Instalacja Lean/Mathlib (lokalne środowisko zaufane)
@@ -28,13 +28,13 @@ Zainstaluj elan/Lean 4 i upewnij się, że `lake` jest dostępne w PATH. Następ
 cd application/lean
 lake update
 lake exe cache get
-lake env lean src/LST01_DeMorgan.lean
+lake env lean src/LST01_SyntaxValuations.lean
 cd ..
 $env:MATLIB_LEAN_RUN = "1"
 python -m uvicorn backend.api:app --host 127.0.0.1 --port 8765
 ```
 
-`lean-toolchain` wskazuje Lean 4 `v4.26.0`, a `lakefile.toml` przypina Mathlib do commitu `2df2f0150c275ad53cb3c90f7c98ec15a56a1a67` (tag `v4.26.0`). `lake update` tworzy lokalny `lake-manifest.json`; workflow CI wykonuje je również na czystym repozytorium. **Rzeczywista kompilacja i kontrola aksjomatów pierwszego pliku `LST01_DeMorgan.lean` zakończyła się powodzeniem** w [przebiegu CI 45010519869](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45010519869). Nie oznacza to zatwierdzenia zgodności ze źródłem LaTeX.
+`lean-toolchain` wskazuje Lean 4 `v4.26.0`, a `lakefile.toml` przypina Mathlib do commitu `2df2f0150c275ad53cb3c90f7c98ec15a56a1a67` (tag `v4.26.0`). `lake update` tworzy lokalny `lake-manifest.json`; workflow CI wykonuje je również na czystym repozytorium. **Rzeczywista kompilacja czterech plików i kontrola aksjomatów wszystkich 14 deklaracji zakończyła się powodzeniem** w [przebiegu CI 45011738363](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45011738363). Semantyczne zatwierdzenie trzech grup przeprowadzono oddzielnie i przypięto do SHA źródła.
 
 **Bezpieczeństwo:** endpoint wykonania jest dla serwera uruchomionego lokalnie i pod kontrolą właściciela. Nie należy wystawiać go publicznie: Lean to program i zarejestrowany plik może wykonywać operacje IO. Timeout jest ograniczeniem operacyjnym, a nie sandboxem systemowym. Zdalny tryb wykonawczy wymaga odrębnego, izolowanego kontenera z ograniczonymi uprawnieniami, pamięcią, czasem i dostępem do sieci.
 
