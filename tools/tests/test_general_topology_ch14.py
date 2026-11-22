@@ -31,6 +31,14 @@ def test_relocation():
     assert r"\ref{lem:topog-baire-zwarte-domkniecie}" in c14
     assert r"\begin{twierdzenie}[Twierdzenie Baire'a --- wersja lokalnie zwarta]" in c14
     assert r"\label{thm:topog-baire-metryczne}" in c11
+    assert r"\label{prop:topog-lokalna-podprzestrzenie}" in c14
+    assert r"\label{prop:topog-lokalna-iloczyny}" in c14
+    assert r"\label{thm:topog-lokalna-wyczerpanie}" in c14
+    assert r"\label{prop:topog-lokalna-drugi-aksjomat}" in c14
+    assert r"\label{ex:topog-lokalna-dyskretna-nie-sigma}" in c14
+    assert r"\label{def:topog-lokalna-przeliczalnosc-nieskonczonosc}" in c14
+    assert r"\label{def:topog-lokalna-sigma-zwarta}" in c14
+    assert "nieprzeliczalnym" in c14
     assert c11.index(r"\label{thm:topog-baire-metryczne}") < c11.index(r"\section{Konsekwencje")
     assert r"\setcounter{chapter}{13}" in standalone
     expected = r"\input{../../chapters/pl/general_topology/14-zwartosc-lokalna.tex}"
