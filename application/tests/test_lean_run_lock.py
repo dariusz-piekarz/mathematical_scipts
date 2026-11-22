@@ -43,7 +43,7 @@ class LeanRunLockTests(unittest.TestCase):
             "from backend import lean_run_lock;"
             f"root=Path({str(self.root)!r});"
             f"ready=Path({str(marker)!r});"
-            "with lean_run_lock.exclusive(root):"
+            "\nwith lean_run_lock.exclusive(root):"
             "\n ready.write_text('locked');"
             "\n time.sleep(1.5)"
         )
@@ -75,7 +75,7 @@ class LeanRunLockTests(unittest.TestCase):
             "from pathlib import Path;"
             "import os;"
             "from backend import lean_run_lock;"
-            f"with lean_run_lock.exclusive(Path({str(self.root)!r})):"
+            f"\nwith lean_run_lock.exclusive(Path({str(self.root)!r})):"
             "\n os._exit(0)"
         )
         done = subprocess.run(
