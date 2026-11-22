@@ -153,7 +153,7 @@ def source_integration() -> tuple[int, int]:
     assert r"\setcounter{chapter}{24}" in entry
     for i in ("05", "08", "23"):
         assert rf"\externaldocument{{general_topology_ch{i}}}" in entry
-    assert "rozdziały 01–25 stabilne" in book
+    assert int(re.search(r"rozdziały 01–(\d+) stabilne", book).group(1)) >= 25
     source = "\n".join((ROOT / path).read_text(encoding="utf-8") for path in chapters)
     labels = re.findall(r"\\label\{([^}]+)\}", source)
     refs = re.findall(r"\\(?:ref|eqref|pageref)\{([^}]+)\}", source)
