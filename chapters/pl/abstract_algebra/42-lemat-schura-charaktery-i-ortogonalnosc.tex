@@ -1,0 +1,594 @@
+% AA-42 | Reprezentacje zespolone grup skonczonych: Schur, charaktery, ortogonalnosc.
+\chapter{Lemat Schura, charaktery i relacje ortogonalności}
+\markboth{Lemat Schura i charaktery}{Lemat Schura i charaktery}
+\label{aa:ch:schur-characters}
+
+\section{Dlaczego same rozkłady reprezentacji nie wystarczą?}
+Twierdzenie Maschkego z Rozdziału~\ref{aa:ch:representations}
+zapewnia rozkład każdej skończenie wymiarowej reprezentacji
+grupy skończonej na składniki nieprzywiedlne, ale samo nie daje
+sposobu obliczenia ich krotności ani rozpoznawania izomorfizmów.
+Narzędziami służącymi do tego celu są operatory przeplatające,
+lemat Schura i charaktery. Przy badaniu relacji ortogonalności
+będziemy pracować nad ciałem \(\mathbb C\); warunek ten
+jest istotny i nie może zostać bez komentarza przeniesiony
+na dowolne ciało.
+
+\begin{definicja}[Operator przeplatający i równoważność reprezentacji]
+\label{aa:def:intertwiner}
+Niech \(G\) będzie grupą, \(K\) ciałem, a
+\(\rho:G\to\operatorname{GL}_K(V)\) oraz
+\(\sigma:G\to\operatorname{GL}_K(W)\) reprezentacjami
+na przestrzeniach wektorowych \(V,W\) nad \(K\).
+Operatorem przeplatającym te reprezentacje nazywamy
+odwzorowanie \(K\)-liniowe \(T:V\to W\), dla którego
+\(T\rho(g)=\sigma(g)T\) dla każdego \(g\in G\).
+Przestrzeń wszystkich takich operatorów oznaczamy przez
+\(\operatorname{Hom}_G(V,W)\).
+Reprezentacje są równoważne, gdy istnieje
+odwracalny operator z \(\operatorname{Hom}_G(V,W)\).
+\end{definicja}
+
+\begin{lemat}[Pierwszy lemat Schura]\label{aa:lem:schur-first}
+Niech \(G\) będzie grupą i \(K\) ciałem.
+Jeżeli \(V\) i \(W\) są nieprzywiedlnymi, skończenie
+wymiarowymi reprezentacjami \(G\) nad \(K\), to każdy
+niezerowy \(T\in\operatorname{Hom}_G(V,W)\) jest izomorfizmem.
+W szczególności, jeżeli \(V\) i \(W\) nie są równoważne,
+to \(\operatorname{Hom}_G(V,W)=\{0\}\).
+\end{lemat}
+\begin{proof}
+Jeżeli \(v\in\ker T\), to
+\(T\rho(g)v=\sigma(g)Tv=0\), więc jądro jest
+podprzestrzenią \(G\)-niezmienniczą przestrzeni \(V\).
+Analogicznie \(\sigma(g)T(V)=T\rho(g)(V)\subseteq T(V)\),
+zatem obraz jest \(G\)-niezmienniczy w \(W\).
+Nieprzywiedlność daje \(\ker T=0\) albo \(\ker T=V\),
+oraz \(T(V)=0\) albo \(T(V)=W\).
+Dla \(T\ne0\) zachodzą odpowiednio \(\ker T=0\)
+i \(T(V)=W\), co oznacza, że \(T\) jest izomorfizmem.
+\end{proof}
+
+\begin{twierdzenie}[Lemat Schura nad \(\mathbb C\)]
+\label{aa:tw:schur-complex}
+Niech \(G\) będzie grupą, a \(V\ne0\) skończenie
+wymiarową, nieprzywiedlną reprezentacją \(G\)
+nad \(\mathbb C\). Wówczas każdy operator
+\(T\in\operatorname{Hom}_G(V,V)\) jest postaci
+\(T=\lambda I_V\) dla pewnej liczby
+\(\lambda\in\mathbb C\).
+\end{twierdzenie}
+\begin{proof}
+Wielomian charakterystyczny operatora \(T\)
+ma dodatni stopień, więc na mocy zasadniczego
+twierdzenia algebry posiada pierwiastek
+\(\lambda\in\mathbb C\).
+Operator \(T-\lambda I_V\) przeplata działanie \(G\)
+i nie jest odwracalny, gdyż ma niezerowe jądro.
+Z pierwszego lematu Schura wynika, że gdyby był
+niezerowy, musiałby być izomorfizmem.
+Dlatego \(T-\lambda I_V=0\).
+\end{proof}
+
+\begin{przyklad}[Dlaczego ciało \(\mathbb R\) nie wystarcza]
+\label{aa:prz:schur-real}
+Niech \(G=C_3=\langle g\rangle\) i niech generator działa
+na \(\mathbb R^2\) przez obrót o \(2\pi/3\):
+\[
+\rho(g)=
+\begin{pmatrix}
+-\frac12&-\frac{\sqrt3}{2}\\
+\frac{\sqrt3}{2}&-\frac12
+\end{pmatrix}.
+\]
+Macierz ma wielomian charakterystyczny \(T^2+T+1\),
+bez pierwiastków rzeczywistych. Nie istnieje więc
+prosta niezmiennicza, a reprezentacja jest nieprzywiedlna
+nad \(\mathbb R\). Operator
+\(J=\left(\begin{smallmatrix}0&-1\\1&0\end{smallmatrix}\right)\)
+komutuje z \(\rho(g)\), lecz nie jest wielokrotnością
+\(I\). Zatem końcowa teza lematu Schura nad \(\mathbb C\)
+nie zachodzi w tej postaci nad \(\mathbb R\).
+\end{przyklad}
+
+\section{Uśrednianie iloczynu hermitowskiego}
+\begin{stwierdzenie}[Unitarność reprezentacji grupy skończonej]
+\label{aa:prop:unitarization}
+Niech \(G\) będzie grupą skończoną, a
+\(\rho:G\to\operatorname{GL}_{\mathbb C}(V)\)
+reprezentacją na skończenie wymiarowej przestrzeni
+zespolonej \(V\). Istnieje dodatnio określony
+iloczyn hermitowski na \(V\), względem którego
+wszystkie \(\rho(g)\) są unitarne.
+\end{stwierdzenie}
+\begin{proof}
+Wybierzmy dowolny dodatnio określony iloczyn hermitowski
+\(\langle\cdot,\cdot\rangle_0\) na \(V\) i połóżmy
+\[
+\langle v,w\rangle_G
+=\frac1{|G|}\sum_{g\in G}
+\langle\rho(g)v,\rho(g)w\rangle_0.
+\]
+Skończona suma zachowuje własności
+półtoraliniowości oraz symetrii hermitowskiej.
+Dla \(v\ne0\) każdy składnik
+\(\langle\rho(g)v,\rho(g)v\rangle_0\) jest dodatni,
+bo \(\rho(g)\) jest odwracalne. Iloczyn jest zatem
+dodatnio określony. Dla \(h\in G\) podstawienie
+\(k=gh\) daje
+\(\langle\rho(h)v,\rho(h)w\rangle_G
+=\langle v,w\rangle_G\).
+Z definicji oznacza to unitarność każdego \(\rho(h)\).
+\end{proof}
+
+\begin{definicja}[Charakter reprezentacji]
+\label{aa:def:character}
+Niech \(G\) będzie grupą skończoną, a
+\(\rho:G\to\operatorname{GL}_{\mathbb C}(V)\)
+reprezentacją na skończenie wymiarowej przestrzeni
+zespolonej \(V\). Jej charakterem nazywamy funkcję
+\(\chi_\rho:G\to\mathbb C\) określoną wzorem
+\(\chi_\rho(g)=\operatorname{tr}(\rho(g))\).
+Charakter reprezentacji nieprzywiedlnej nazywamy
+charakterem nieprzywiedlnym.
+Funkcję \(f:G\to\mathbb C\) nazywamy funkcją klasową,
+gdy \(f(hgh^{-1})=f(g)\) dla wszystkich \(g,h\in G\).
+\end{definicja}
+
+\begin{stwierdzenie}[Podstawowe własności charakterów]
+\label{aa:prop:character-basics}
+Niech \(G\) będzie grupą skończoną, a
+\(\rho:G\to\operatorname{GL}_{\mathbb C}(V)\)
+skończenie wymiarową reprezentacją zespoloną
+o charakterze \(\chi_\rho\). Wtedy
+\(\chi_\rho(e)=\dim_{\mathbb C}V\),
+\(\chi_\rho(hgh^{-1})=\chi_\rho(g)\) oraz
+\(\chi_\rho(g^{-1})=\overline{\chi_\rho(g)}\).
+Ponadto dla reprezentacji \(\rho_1,\rho_2\)
+zachodzi \(\chi_{\rho_1\oplus\rho_2}
+=\chi_{\rho_1}+\chi_{\rho_2}\).
+\end{stwierdzenie}
+\begin{proof}
+Pierwsza równość wynika z \(\rho(e)=I_V\).
+Ponieważ
+\(\rho(hgh^{-1})=\rho(h)\rho(g)\rho(h)^{-1}\),
+niezmienniczość śladu przy podobieństwie daje drugą.
+Możemy przyjąć iloczyn hermitowski ze
+Stwierdzenia~\ref{aa:prop:unitarization}.
+Wtedy \(\rho(g^{-1})=\rho(g)^*\), a ślad operatora
+sprzężonego hermitowsko jest sprzężeniem śladu
+wyjściowego. Ostatnia własność wynika z postaci
+blokowo diagonalnej macierzy sumy prostej.
+\end{proof}
+
+\section{Relacje ortogonalności}
+\begin{definicja}[Iloczyn skalarny funkcji na grupie]
+\label{aa:def:character-inner-product}
+Niech \(G\) będzie grupą skończoną.
+Dla funkcji \(f,h:G\to\mathbb C\) określamy
+\[
+\langle f,h\rangle_G
+=\frac1{|G|}\sum_{g\in G}f(g)\overline{h(g)}.
+\]
+Jest to dodatnio określony iloczyn hermitowski
+na zespolonej przestrzeni wszystkich funkcji \(G\to\mathbb C\).
+Ogranicza się on do przestrzeni funkcji klasowych.
+\end{definicja}
+
+\begin{twierdzenie}[Ortogonalność współczynników macierzowych]
+\label{aa:tw:matrix-orthogonality}
+Niech \(G\) będzie grupą skończoną oraz
+\(\rho_i:G\to U(V_i)\), \(1\le i\le r\),
+skończenie wymiarowymi nieprzywiedlnymi reprezentacjami
+zespolonymi, parami nierównoważnymi.
+Niech \(d_i=\dim_{\mathbb C}V_i\) i wybierzmy
+bazę ortonormalną każdej \(V_i\). Dla współczynników
+macierzy \(\rho_i(g)\) zachodzi
+\[
+\frac1{|G|}\sum_{g\in G}
+(\rho_i(g))_{ab}\overline{(\rho_j(g))_{cd}}
+=\begin{cases}
+\dfrac{\delta_{ac}\delta_{bd}}{d_i},&i=j,\\[3pt]
+0,&i\ne j,
+\end{cases}
+\]
+dla \(1\le a,b\le d_i\) oraz \(1\le c,d\le d_j\).
+\end{twierdzenie}
+\begin{proof}
+Dla liniowego \(A:V_j\to V_i\) rozważmy operator
+\[
+\mathcal P_{ij}(A)=\frac1{|G|}\sum_{g\in G}
+\rho_i(g)A\rho_j(g)^{-1}.
+\]
+Podstawienie \(k=hg\) pokazuje, że
+\(\rho_i(h)\mathcal P_{ij}(A)
+=\mathcal P_{ij}(A)\rho_j(h)\) dla każdego \(h\in G\).
+Gdy \(i\ne j\), pierwszy lemat Schura daje
+\(\mathcal P_{ij}(A)=0\). Gdy \(i=j\), zespolony
+lemat Schura zapewnia \(\mathcal P_{ii}(A)=\lambda I\).
+Z niezmienniczości śladu przy sprzężeniu otrzymujemy
+\(d_i\lambda=\operatorname{tr}A\), czyli
+\(\mathcal P_{ii}(A)=(\operatorname{tr}A/d_i)I\).
+
+Niech teraz \(A\) wysyła \(d\)-ty wektor bazy \(V_j\)
+na \(b\)-ty wektor bazy \(V_i\), a pozostałe
+wektory bazowe na zero. Wówczas współczynnik
+\((a,c)\) operatora \(\mathcal P_{ij}(A)\) wynosi
+\[
+\frac1{|G|}\sum_{g\in G}
+(\rho_i(g))_{ab}(\rho_j(g)^{-1})_{dc}
+=\frac1{|G|}\sum_{g\in G}
+(\rho_i(g))_{ab}\overline{(\rho_j(g))_{cd}},
+\]
+gdzie ostatnia równość korzysta z unitarności.
+Gdy \(i=j\), mamy
+\(\operatorname{tr}A=\delta_{bd}\), a współczynnik
+\((a,c)\) operatora \(I\) jest równy \(\delta_{ac}\).
+Dostajemy obie postacie żądanej relacji.
+\end{proof}
+
+\begin{wniosek}[Ortogonalność charakterów nieprzywiedlnych]
+\label{aa:cor:character-orthogonality}
+Niech \(G\) będzie grupą skończoną, a
+\(\chi_1,\ldots,\chi_r\) charakterami parami
+nierównoważnych, skończenie wymiarowych
+nieprzywiedlnych reprezentacji zespolonych \(G\).
+Wtedy \(\langle\chi_i,\chi_j\rangle_G=\delta_{ij}\).
+\end{wniosek}
+\begin{proof}
+Dzięki unitarności możemy zastosować
+Twierdzenie~\ref{aa:tw:matrix-orthogonality}.
+Wyrażamy oba ślady jako sumy elementów diagonalnych:
+\[
+\langle\chi_i,\chi_j\rangle_G
+=\sum_{a=1}^{d_i}\sum_{c=1}^{d_j}
+\frac1{|G|}\sum_{g\in G}
+(\rho_i(g))_{aa}\overline{(\rho_j(g))_{cc}}.
+\]
+Dla \(i\ne j\) każdy składnik jest zerowy.
+Dla \(i=j\) wewnętrzna suma wynosi
+\(\delta_{ac}/d_i\); suma po \(a,c\) jest równa \(1\).
+\end{proof}
+
+\section{Krotności składników i reprezentacja regularna}
+\begin{stwierdzenie}[Występowanie nieprzywiedlnych składników]
+\label{aa:prop:regular-contains-all}
+Niech \(G\) będzie grupą skończoną.
+Każda skończenie wymiarowa nieprzywiedlna reprezentacja
+zespolona \(V\) grupy \(G\) jest równoważna składnikowi
+reprezentacji regularnej na \(\mathbb C[G]\).
+W szczególności istnieje tylko skończenie wiele klas
+równoważności takich reprezentacji.
+\end{stwierdzenie}
+\begin{proof}
+Wybierzmy \(0\ne v\in V\) i określmy
+\(G\)-równoważne odwzorowanie
+\(\Phi:\mathbb C[G]\to V\) przez
+\(\Phi([g])=\rho(g)v\), przedłużając liniowo.
+Jego obraz jest niezerową podprzestrzenią niezmienniczą,
+a więc dzięki nieprzywiedlności jest równy \(V\).
+Twierdzenie Maschkego zapewnia niezmiennicze dopełnienie
+\(\ker\Phi\) w \(\mathbb C[G]\); ograniczenie \(\Phi\)
+do tego dopełnienia daje izomorfizm z \(V\).
+Ponadto rozkład skończenie wymiarowej reprezentacji
+regularnej na nieprzywiedlne składniki ma skończenie
+wiele wyrazów. Każda klasa nieprzywiedlna pojawia
+się w tym rozkładzie: w istocie izomorficzny z \(V\)
+podmoduł, który przed chwilą skonstruowaliśmy,
+ma charakter zawarty w rozkładzie regularnym.
+Ściślej, jeśli \(\mathbb C[G]=\bigoplus_j S_j\),
+to rzut na \(V\) złożony z włączeniami \(S_j\)
+musi być niezerowy dla pewnego \(j\). Pierwszy
+lemat Schura daje wtedy \(S_j\simeq V\).
+Liczba różnych klas jest więc skończona.
+\end{proof}
+
+\begin{twierdzenie}[Krotności z iloczynów skalarnych]
+\label{aa:tw:multiplicities}
+Niech \(G\) będzie grupą skończoną.
+Niech \(V_1,\ldots,V_r\) będą przedstawicielami
+wszystkich klas równoważności nieprzywiedlnych
+reprezentacji zespolonych \(G\), z charakterami
+\(\chi_1,\ldots,\chi_r\). Jeżeli \(V\) jest dowolną
+skończenie wymiarową reprezentacją zespoloną
+o charakterze \(\chi_V\), to istnieją jednoznaczne
+liczby całkowite \(m_i\ge0\) takie, że
+\[
+V\simeq\bigoplus_{i=1}^r V_i^{\oplus m_i},
+\qquad m_i=\langle\chi_V,\chi_i\rangle_G.
+\]
+W konsekwencji dwie skończenie wymiarowe reprezentacje
+zespolone grupy \(G\) są równoważne wtedy i tylko
+wtedy, gdy mają te same charaktery.
+\end{twierdzenie}
+\begin{proof}
+Istnienie rozkładu wynika z twierdzenia Maschkego,
+a kompletność listy \(V_i\) ze
+Stwierdzenia~\ref{aa:prop:regular-contains-all}.
+Addytywność śladu daje
+\(\chi_V=\sum_i m_i\chi_i\).
+Iloczyn skalarny z \(\chi_j\) i ortogonalność
+charakterów prowadzą do
+\(\langle\chi_V,\chi_j\rangle_G=m_j\).
+Stąd krotności są wyznaczone jednoznacznie.
+Jeśli charaktery dwóch reprezentacji są równe,
+ich krotności wszystkich składników są jednakowe,
+więc obie reprezentacje są równoważne.
+Odwrotność wynika z niezmienniczości śladu
+przy podobieństwie.
+\end{proof}
+
+\begin{twierdzenie}[Charakter regularny i suma kwadratów wymiarów]
+\label{aa:tw:regular-character}
+Niech \(G\) będzie grupą skończoną i niech
+\(\rho_{\mathrm{reg}}\) będzie lewą reprezentacją
+regularną na \(\mathbb C[G]\). Jej charakter spełnia
+\[
+\chi_{\mathrm{reg}}(g)=
+\begin{cases}|G|,&g=e,\\0,&g\ne e.\end{cases}
+\]
+Jeżeli \(d_i=\dim_{\mathbb C}V_i=\chi_i(e)\)
+dla pełnej rodziny \(V_1,\ldots,V_r\) jak wyżej,
+to \(\mathbb C[G]\simeq\bigoplus_{i=1}^r
+V_i^{\oplus d_i}\) oraz
+\(\sum_{i=1}^r d_i^2=|G|\).
+\end{twierdzenie}
+\begin{proof}
+W bazie \(([h])_{h\in G}\) działanie elementu \(g\)
+permutuje bazę według \([h]\mapsto[gh]\).
+Jeżeli \(g\ne e\), to żaden wektor bazowy nie
+jest stały, bo \(gh=h\) wymusza \(g=e\).
+Ślad macierzy permutacyjnej jest liczbą
+nieruchomych wektorów bazowych, zatem wynosi \(0\);
+dla \(g=e\) wynosi \(|G|\).
+Z Twierdzenia~\ref{aa:tw:multiplicities} krotność
+\(V_i\) w reprezentacji regularnej to
+\[
+\langle\chi_{\mathrm{reg}},\chi_i\rangle_G
+=\frac1{|G|}|G|\overline{\chi_i(e)}=d_i.
+\]
+Porównując wymiary obu stron otrzymanego rozkładu,
+dostajemy \(|G|=\sum_i d_i^2\).
+\end{proof}
+
+\begin{stwierdzenie}[Jawny rzut na składnik izotypiczny]
+\label{aa:prop:isotypic-projector}
+Niech \(G\) będzie grupą skończoną, a
+\(V\) skończenie wymiarową reprezentacją zespoloną
+o działaniu \(\rho\). Dla każdego charakteru
+nieprzywiedlnego \(\chi_i\), którego wymiar
+wynosi \(d_i=\chi_i(e)\), określmy
+\[
+P_i=\frac{d_i}{|G|}\sum_{g\in G}
+\overline{\chi_i(g)}\,\rho(g).
+\]
+Wtedy \(P_i\) jest \(G\)-równoważnym rzutem
+na sumę wszystkich składników \(V\) równoważnych
+\(V_i\) w dowolnym rozkładzie na składniki
+nieprzywiedlne. Ponadto \(P_iP_j=0\) dla \(i\ne j\)
+oraz \(\sum_{i=1}^rP_i=I_V\), gdy \(\chi_1,\ldots,\chi_r\)
+stanowią pełną rodzinę.
+\end{stwierdzenie}
+\begin{proof}
+Charakter \(\chi_i\) jest funkcją klasową, zatem
+sprzężenie sumy definiującej \(P_i\) przez
+\(\rho(h)\) jedynie permutuje jej składniki.
+Wobec tego \(P_i\) przeplata działanie \(G\).
+Z twierdzenia Maschkego weźmy rozkład
+\(V=\bigoplus_\alpha W_\alpha\) na nieprzywiedlne
+podreprezentacje. Każda z nich jest zachowana przez
+\(P_i\), ponieważ sumujemy operatory \(\rho(g)\),
+które osobno zachowują \(W_\alpha\).
+Gdy \(W_\alpha\simeq V_j\), zespolony lemat Schura
+daje \(P_i|_{W_\alpha}=\lambda I\). Obliczając ślad,
+otrzymujemy
+\[
+d_j\lambda
+=\frac{d_i}{|G|}\sum_{g\in G}
+\overline{\chi_i(g)}\chi_j(g)
+=d_i\delta_{ij}.
+\]
+Jeżeli \(j=i\), to \(\lambda=1\); w przeciwnym
+przypadku \(\lambda=0\). To ustala działanie
+operatorów \(P_i\) na każdym składniku rozkładu
+i dowodzi wszystkich wskazanych własności.
+\end{proof}
+
+\section{Funkcje klasowe i ortogonalność kolumn}
+\begin{twierdzenie}[Charaktery jako baza funkcji klasowych]
+\label{aa:tw:characters-basis}
+Niech \(G\) będzie grupą skończoną.
+Wszystkie charaktery nieprzywiedlne zespolone
+\(\chi_1,\ldots,\chi_r\) tworzą bazę ortonormalną
+przestrzeni funkcji klasowych \(G\to\mathbb C\)
+względem iloczynu skalarnego
+z Definicji~\ref{aa:def:character-inner-product}.
+W szczególności liczba \(r\) klas równoważności
+nieprzywiedlnych reprezentacji zespolonych \(G\)
+jest równa liczbie klas sprzężoności w \(G\).
+\end{twierdzenie}
+\begin{proof}
+Charaktery są funkcjami klasowymi i są ortonormalne
+na mocy Wniosku~\ref{aa:cor:character-orthogonality}.
+Aby wykazać zupełność, załóżmy, że funkcja klasowa
+\(f:G\to\mathbb C\) jest prostopadła do każdego
+\(\chi_i\). Dla dowolnej reprezentacji \(\rho\)
+grupy \(G\) rozważmy operator
+\[
+T_f^\rho=\sum_{g\in G}f(g)\rho(g^{-1}).
+\]
+Ponieważ \(f\) jest stała na klasach sprzężoności,
+operator ten przeplata działanie \(G\).
+Na nieprzywiedlnej reprezentacji \(V_i\)
+lemat Schura daje \(T_f^{\rho_i}=\lambda_iI\).
+Biorąc ślad i korzystając z równości
+\(\chi_i(g^{-1})=\overline{\chi_i(g)}\), mamy
+\[
+d_i\lambda_i=\sum_{g\in G}
+f(g)\overline{\chi_i(g)}
+=|G|\langle f,\chi_i\rangle_G=0.
+\]
+Zatem \(T_f^{\rho_i}=0\) dla wszystkich \(i\).
+Reprezentacja regularna jest sumą takich składników,
+więc \(T_f^{\mathrm{reg}}=0\). Jednak
+\(T_f^{\mathrm{reg}}([e])
+=\sum_{g\in G}f(g)[g^{-1}]\).
+Liniowa niezależność formalnej bazy \(([g])\)
+wymusza \(f(g)=0\) dla każdego \(g\in G\).
+W przestrzeni skończenie wymiarowej brak
+niezerowego wektora prostopadłego do rozpiętości
+ortonormalnych charakterów oznacza, że rozpinają
+całą przestrzeń funkcji klasowych.
+Jej wymiar jest liczbą klas sprzężoności, ponieważ
+funkcja klasowa jest jednoznacznie wyznaczona przez
+jedną wartość na każdej klasie. Stąd \(r\) jest równy
+tej liczbie.
+\end{proof}
+
+\begin{wniosek}[Ortogonalność kolumn tablicy charakterów]
+\label{aa:cor:column-orthogonality}
+Niech \(G\) będzie grupą skończoną,
+\(C_1,\ldots,C_r\) jej wszystkimi klasami sprzężoności
+i \(g_k\in C_k\) ustalonymi reprezentantami.
+Jeżeli \(\chi_1,\ldots,\chi_r\) są wszystkimi
+charakterami nieprzywiedlnymi zespolonymi, to
+\[
+\sum_{i=1}^r\chi_i(g_k)\overline{\chi_i(g_\ell)}
+=\begin{cases}
+|G|/|C_k|,&k=\ell,\\
+0,&k\ne\ell.
+\end{cases}
+\]
+\end{wniosek}
+\begin{proof}
+W przestrzeni funkcji klasowych iloczyn skalarny ma
+postać
+\(\langle f,h\rangle_G
+=\sum_{k=1}^r (|C_k|/|G|)f(g_k)\overline{h(g_k)}\).
+Z Twierdzenia~\ref{aa:tw:characters-basis}
+macierz kwadratowa
+\(A_{ik}=\sqrt{|C_k|/|G|}\,\chi_i(g_k)\)
+ma ortonormalne wiersze. Jest więc unitarna,
+a jej kolumny także są ortonormalne.
+Równości \((A^*A)_{k\ell}=\delta_{k\ell}\)
+dają tezę po usunięciu dodatnich czynników
+\(\sqrt{|C_k||C_\ell|}/|G|\).
+\end{proof}
+
+\begin{wniosek}[Rozwinięcie funkcji klasowej]
+\label{aa:cor:class-fourier}
+Niech \(G\) będzie grupą skończoną, a
+\(f:G\to\mathbb C\) funkcją klasową.
+Dla pełnej rodziny charakterów
+nieprzywiedlnych \(\chi_1,\ldots,\chi_r\) zachodzi
+\[
+f=\sum_{i=1}^r\langle f,\chi_i\rangle_G\,\chi_i.
+\]
+Współczynniki są wyznaczone jednoznacznie.
+\end{wniosek}
+\begin{proof}
+Twierdzenie~\ref{aa:tw:characters-basis} zapewnia
+rozwinięcie w bazie ortonormalnej. Biorąc iloczyn
+skalarny obu stron z \(\chi_j\), dostajemy
+jednoznacznie współczynnik przy \(\chi_j\).
+\end{proof}
+
+\section{Dwie tablice charakterów}
+\begin{przyklad}[Wszystkie charaktery grupy \(C_3\)]
+\label{aa:prz:character-c3}
+Niech \(C_3=\langle g:g^3=e\rangle\) oraz
+\(\zeta=\exp(2\pi i/3)\). Trzy reprezentacje
+jednowymiarowe określone wzorami
+\(\rho_j(g)=\zeta^j\), \(j=0,1,2\), mają charaktery
+\(\chi_j(g^k)=\zeta^{jk}\).
+Są nierównoważne, gdyż mają różne wartości na \(g\).
+Równość
+\(\sum_{k=0}^2\zeta^{(j-\ell)k}
+=3\delta_{j\ell}\) dowodzi bezpośrednio ich
+ortogonalności. Wzór na sumę kwadratów wymiarów
+daje \(1^2+1^2+1^2=3\), a zatem nie występują
+żadne inne klasy reprezentacji nieprzywiedlnych.
+Tablica charakterów ma postać
+\[
+\begin{array}{c|ccc}
+ & e & g & g^2\\ \hline
+\chi_0&1&1&1\\
+\chi_1&1&\zeta&\zeta^2\\
+\chi_2&1&\zeta^2&\zeta
+\end{array}.
+\]
+Ponieważ \(C_3\) jest abelowa, każda klasa
+sprzężoności jest jednoelementowa. Ortogonalność
+kolumn wynika stąd również przez bezpośrednie
+obliczenie iloczynów kolumn tej tablicy.
+\end{przyklad}
+
+\begin{przyklad}[Pełna tablica charakterów \(S_3\)]
+\label{aa:prz:character-s3}
+Grupa \(S_3\) ma trzy klasy sprzężoności:
+jednostkę \(e\), trzy transpozycje \(t\) i dwa
+trójcykle \(c\). Reprezentacja trywialna ma charakter
+\((1,1,1)\), a reprezentacja znaku \((1,-1,1)\).
+Dla permutacyjnej reprezentacji \(\mathbb C^3\)
+ślad permutacji jest liczbą nieruchomych wektorów
+bazy. Jej charakter przyjmuje więc wartości
+\((3,1,0)\). Odejmując charakter składnika
+trywialnego, otrzymujemy charakter
+\(\chi_{\mathrm{std}}=(2,0,-1)\) reprezentacji
+na płaszczyźnie \(x_1+x_2+x_3=0\).
+
+W tej sytuacji dla funkcji klasowych
+\(\langle f,h\rangle_{S_3}
+=(f(e)\overline{h(e)}
++3f(t)\overline{h(t)}
++2f(c)\overline{h(c)})/6\).
+Stąd
+\(\langle\chi_{\mathrm{std}},
+\chi_{\mathrm{std}}\rangle_{S_3}
+=(4+2)/6=1\),
+więc reprezentacja standardowa jest nieprzywiedlna:
+gdyby była sumą co najmniej dwóch nieprzywiedlnych,
+jej iloczyn skalarny z samą sobą byłby sumą
+kwadratów dodatnich całkowitych krotności,
+a więc wynosiłby co najmniej \(2\).
+Iloczyny mieszane trzech charakterów są zerowe,
+co można sprawdzić na przykładzie
+\((2+2(-1))/6=0\) dla charakteru trywialnego
+i standardowego.
+
+Pełna tablica jest następująca:
+\[
+\begin{array}{c|ccc}
+& [e]\ (1)&[t]\ (3)&[c]\ (2)\\ \hline
+\chi_{\mathrm{triv}}&1&1&1\\
+\chi_{\mathrm{sgn}}&1&-1&1\\
+\chi_{\mathrm{std}}&2&0&-1
+\end{array}.
+\]
+Liczby w nawiasach to rozmiary klas. Ponieważ
+\(1^2+1^2+2^2=6=|S_3|\), tablica obejmuje
+wszystkie reprezentacje nieprzywiedlne.
+W pierwszej kolumnie suma kwadratów to \(6\),
+a w kolumnach transpozycji i trójcykli
+wynosi odpowiednio \(2=6/3\) i \(3=6/2\),
+zgodnie z ortogonalnością kolumn.
+\end{przyklad}
+
+\begin{uwaga}[Granice stosowalności]
+\label{aa:rem:characters-limits}
+Wnioski o ortonormalności charakterów,
+rozpoznawaniu reprezentacji po ich charakterach
+i sumie kwadratów wymiarów zostały udowodnione
+dla reprezentacji zespolonych grup skończonych.
+Nie wolno ich bezpośrednio stosować w
+charakterystyce dzielącej rząd grupy:
+wtedy twierdzenie Maschkego może zawieść,
+a różne nierównoważne reprezentacje mogą mieć
+ten sam charakter śladowy. Przykładowo nad
+\(\mathbb F_2\) trywialna reprezentacja \(C_2\)
+w wymiarze \(2\) i nietrywialne działanie
+\(s\mapsto\left(\begin{smallmatrix}1&1\\0&1\end{smallmatrix}\right)\)
+mają ślad \(0\) dla obu elementów \(C_2\),
+chociaż reprezentacje nie są równoważne:
+pierwsza ma działanie trywialne, druga nie.
+\end{uwaga}
