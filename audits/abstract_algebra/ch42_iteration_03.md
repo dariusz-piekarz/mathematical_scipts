@@ -76,11 +76,21 @@ wersja po korekcie składu została skutecznie skompilowana
 i wizualnie sprawdzona. AA-42 jest **stabilny pod względem
 matematycznym i typograficznym**.
 
-**Aktualizacja walidacji globalnej:** przebieg CI po zaostrzeniu
-reguły przepełnień i naprawie nagłówka AA-35 jest dostępny pod
+**Ostateczna walidacja globalna:** przebieg CI po zaostrzeniu
+reguły przepełnień i naprawie nagłówka AA-35 zakończył się
+**completed/success**:
 https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45070310562 .
-Na moment sporządzenia raportu przebieg ten był
-\`in_progress\`; jego status końcowy należy sprawdzić
-i odnotować odrębnie. Nie utożsamiać tego z już potwierdzonym
-sukcesem kompilacji poprawionego AA-42 w przebiegu
-\`45070170251\`.
+
+Pobrano niezależnie archiwum z *finalnego* przebiegu
+(\`abstract-algebra-aa01-aa42\`) i sprawdzono wytworzony PDF
+oraz log. Wynik: **269 stron A4** (AA-42 na stronach PDF 263–269);
+**0** ostrzeżeń LaTeX, **0** ostrzeżeń \`hyperref\`,
+**0** \`Overfull \\hbox\`, **0** \`Overfull \\vbox\`,
+**0** \`Underfull \\hbox\`, **0** niezdefiniowanych odsyłaczy
+i **0** błędów LaTeX. Dedykowane testy AA-42, cała kompilacja
+i rygorystyczny krok weryfikacji PDF otrzymały status \`success\`.
+
+**Werdykt końcowy:** AA-42 STABILNY po audytach I–III,
+dodatkowej kontroli na \(D_4\), dwóch udanych kompilacjach
+poprawionego źródła oraz finalnym zaostrzonym CI.
+Nie są wymagane dalsze zmiany w AA-42 na obecnym etapie.
