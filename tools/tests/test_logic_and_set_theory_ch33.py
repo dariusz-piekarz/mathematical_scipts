@@ -93,7 +93,7 @@ class TestChapter33(unittest.TestCase):
         self.assertIn(r"\mathcal S_\tau", TEXT)
         self.assertIn(r"\theta_\rho", TEXT)
         self.assertIn(r"q_{\sigma,t}", TEXT)
-        self.assertIn("najmniejszą rangę", TEXT)
+        self.assertIn(r"\emph{najmniejsza ranga}", TEXT)
 
     def test_minimality_and_limitations(self):
         self.assertIn(r"\label{thm:forcing33-minimal}", TEXT)
