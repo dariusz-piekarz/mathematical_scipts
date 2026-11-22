@@ -72,6 +72,8 @@ class TestChapter26(unittest.TestCase):
         self.assertIn(r"\ref{thm:zf-product}",TEXT)
         self.assertIn(r"\mathcal P(P\times\{0,1\})",TEXT)
         self.assertIn(r"\mathcal P(I\times\bigcup_{i\in I}A_i)",TEXT)
+        self.assertIn(r"\mathcal P(A\times B)",TEXT)
+        self.assertIn(r"reprezentantów z $\mathcal W$",TEXT)
 
     def test_explicit_empty_index_and_poset_cases(self):
         self.assertIn(r"łańcuch pusty musi mieć ograniczenie górne w $P$",TEXT)
