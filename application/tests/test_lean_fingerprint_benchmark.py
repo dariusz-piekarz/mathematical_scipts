@@ -64,6 +64,10 @@ class LeanFingerprintBenchmarkTests(unittest.TestCase):
         content = b"an actual compiled artifact"
         self.install_olean(content)
         original = perf.lean_results.lean_environment.compiled_artifacts_sha256
+        uninstrumented = original(self.root)
+        instrumented, details = perf._profile_olean_substeps(original, self.root)
+        self.assertEqual(instrumented, uninstrumented)
+        self.assertEqual(details["counts"]["content_bytes_read"], len(content))
         with patch.object(perf.lean_results.lean_environment,
                           "compiled_artifacts_sha256", wraps=original) as digest:
             report = perf.benchmark(self.root, samples=2)
