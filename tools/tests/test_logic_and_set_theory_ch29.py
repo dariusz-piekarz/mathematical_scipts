@@ -83,6 +83,26 @@ class TestChapter29(unittest.TestCase):
             self.assertEqual(maximal,decides)
         self.assertEqual(len([F for F in proper if all((b in F) != ((S-b) in F) for b in subsets)]),3)
 
+    def test_prime_ideals_are_ultrafilter_complements(self):
+        S=frozenset(range(3))
+        all_subsets=[frozenset(x for x in S if mask&(1<<x))
+                     for mask in range(1<<len(S))]
+        for mask in range(1<<len(all_subsets)):
+            I={a for j,a in enumerate(all_subsets) if (mask>>j)&1}
+            ideal=(frozenset() in I and S not in I
+                   and all(a|b in I for a in I for b in I)
+                   and all(b in I for a in I for b in all_subsets if b<=a))
+            prime=ideal and all((a in I or b in I)
+                                for a in all_subsets for b in all_subsets
+                                if a&b in I)
+            U=set(all_subsets)-I
+            ultra=(S in U and frozenset() not in U
+                   and all((a in U) != ((S-a) in U) for a in all_subsets))
+            self.assertEqual(prime,ultra)
+        self.assertIn("Ideałem właściwym",TEXT)
+        self.assertIn("pierwszy",TEXT)
+        self.assertIn("dopełnieniem",TEXT)
+
     def test_dc_finite_prefixes_form_a_coherent_graph(self):
         A=[set([0,1]),set([2,3]),set([4,5])]
         prefixes={()}
