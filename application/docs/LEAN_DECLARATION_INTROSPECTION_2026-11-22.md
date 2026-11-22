@@ -30,3 +30,8 @@ Nie zmieniono kanonicznych `.tex`, `application/lean/src` ani `application/lean/
 - Po udanej inspekcji aplikacja próbuje dopasować każdą nazwę stałej do listy zarejestrowanych twierdzeń w `/api/lean/catalog`. Tylko **jednoznaczne i aktualne** powiązanie daje odsyłacz do Czytnika; nie jest to formalne poświadczenie zależności semantycznej.
 - Test Node `test_lean_inspection_browser.py` sprawdza nawigowanie do jedynego dopasowania, odmowę dla niejednoznacznych i nieaktualnych wpisów oraz nieuruchamianie kodu w wynikach tekstowych.
 - Workflow `.github/workflows/lean-formalization.yml` uruchamia `test_lean_introspection_real.py` po zainstalowaniu przypiętych Lean 4.26.0 i Mathlib; `MATLIB_REQUIRE_REAL_LEAN_TEST=1` wymusza błąd, jeśli test nie może rozpocząć rzeczywistej inspekcji. Wynik należy odczytać z zakończonego GitHub Actions, a nie z samego commitu.
+
+## Realny przebieg CI 45022544766 i poprawka nazw
+
+- Obowiązkowy smoke test na przypiętym Lean 4.26.0/Mathlib **rzeczywiście wykrył błąd**: `Lean.Meta.getConstInfo` i `logInfo` były niewidoczne w wygenerowanym kodzie MetaM. Poprzednie testy mockowane nie mogły tego wykryć. W tym przebiegu kompilacja zarejestrowanych źródeł i kontrola aksjomatów przeszły prawidłowo, lecz inspekcja zakończyła się `FAIL`.
+- Zmieniono generator na jawne `open Lean Meta` oraz `getConstInfo` (commity `182eba74`, `b176f75e`). Powtórny przebieg `45022991473` musi zakończyć się rzeczywistym `success`, zanim funkcję można uznać za zweryfikowaną. Żadna z tych zmian nie modyfikuje kanonicznych źródeł `.tex` ani modułów `application/lean/src`.
