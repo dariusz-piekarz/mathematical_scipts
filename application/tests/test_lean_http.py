@@ -34,6 +34,32 @@ class LeanHttpTests(unittest.TestCase):
                                      json={"formalization_id": "x" * 101})
         self.assertEqual(malformed.status_code, 422)
 
+    def test_classified_inspection_flag_is_explicit_and_never_certifies(self):
+        from backend import lean_introspection
+        response = {"formalization_id": "lst01-de-morgan",
+                    "inspection_status": "complete",
+                    "constants": {"t": ["Eq"]},
+                    "type_constants": {"t": ["Eq"]},
+                    "value_constants": {"t": []},
+                    "reference_edges": [
+                        {"declaration": "t", "constant": "Eq", "origin": "type"}],
+                    "certificate": False}
+        with patch.object(lean_introspection, "inspect",
+                          return_value=response) as inspect_mock:
+            result = self.client.post("/api/lean/dependencies/inspect",
+                                      json={"formalization_id": "lst01-de-morgan",
+                                            "classify_references": True})
+        self.assertEqual(result.status_code, 200, result.text)
+        self.assertEqual(result.json()["reference_edges"], response["reference_edges"])
+        self.assertFalse(result.json()["certificate"])
+        self.assertTrue(inspect_mock.call_args.kwargs["classified"])
+        with patch.object(lean_introspection, "inspect",
+                          return_value=response) as inspect_mock:
+            basic = self.client.post("/api/lean/dependencies/inspect",
+                                     json={"formalization_id": "lst01-de-morgan"})
+        self.assertEqual(basic.status_code, 200)
+        self.assertFalse(inspect_mock.call_args.kwargs["classified"])
+
     def test_dependency_graph_real_lean_source(self):
         response = self.client.get("/api/lean/dependencies",
                                    params={"formalization_id": "lst01-de-morgan"})
