@@ -54,6 +54,65 @@ class LeanFingerprintBenchmarkTests(unittest.TestCase):
                  for file in self.root.rglob("*") if file.is_file()}
         self.assertEqual(prior, after)
 
+    def install_olean(self, data=b"compiled mathlib artifact"):
+        path = self.root / ".lake" / "build" / "lib" / "lean" / "Local" / "Example.olean"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
+        return path
+
+    def test_olean_subprofile_counts_real_file_io_without_a_second_digest(self):
+        content = b"an actual compiled artifact"
+        self.install_olean(content)
+        original = perf.lean_results.lean_environment.compiled_artifacts_sha256
+        with patch.object(perf.lean_results.lean_environment,
+                          "compiled_artifacts_sha256", wraps=original) as digest:
+            report = perf.benchmark(self.root, samples=2)
+        # The timing process executes ONE genuine digest per fingerprint,
+        # never a replacement, pre-scan or additional .olean verification.
+        self.assertEqual(digest.call_count, 2)
+        self.assertEqual(len(report["olean_subprofile_total_seconds"]), 2)
+        self.assertEqual(set(report["olean_breakdown_samples_seconds"]),
+                         set(perf.OLEAN_TIME_BUCKETS))
+        self.assertEqual(set(report["olean_breakdown_median_seconds"]),
+                         set(perf.OLEAN_TIME_BUCKETS))
+        for timing in report["olean_breakdown_samples_seconds"].values():
+            self.assertEqual(len(timing), 2)
+            self.assertTrue(all(v >= 0 for v in timing))
+        for observed in report["olean_io_samples"]:
+            self.assertEqual(set(observed), set(perf.OLEAN_IO_COUNTERS))
+            self.assertEqual(observed["olean_files_opened"], 1)
+            self.assertEqual(observed["content_bytes_read"], len(content))
+            self.assertGreaterEqual(observed["content_read_calls"], 1)
+            self.assertGreaterEqual(observed["directories_visited"], 1)
+            self.assertGreaterEqual(observed["stat_calls"], 2)
+            self.assertGreaterEqual(observed["fstat_calls"], 1)
+
+    def test_olean_metadata_only_respects_real_hash_budget(self):
+        self.install_olean(b"larger than the budget")
+        with patch.object(perf.lean_results.lean_environment,
+                          "MAX_OLEAN_HASH_BYTES", 1):
+            result = perf.benchmark(self.root, samples=2)
+        for observed in result["olean_io_samples"]:
+            self.assertEqual(observed["olean_files_opened"], 0)
+            self.assertEqual(observed["content_read_calls"], 0)
+            self.assertEqual(observed["content_bytes_read"], 0)
+            self.assertGreaterEqual(observed["stat_calls"], 1)
+
+    def test_olean_probes_are_restored_on_rejected_symlink(self):
+        target = self.root / "target"
+        target.write_bytes(b"compiled")
+        link = self.install_olean()
+        link.unlink()
+        try:
+            link.symlink_to(target)
+        except (OSError, NotImplementedError):
+            self.skipTest("Symbolic links are not available")
+        before = (Path.stat, Path.lstat, Path.open, perf.os.walk, perf.os.fstat)
+        with self.assertRaisesRegex(ValueError, "Symlinked"):
+            perf.benchmark(self.root, samples=1)
+        self.assertEqual(before,
+                         (Path.stat, Path.lstat, Path.open, perf.os.walk, perf.os.fstat))
+
     def test_environment_change_aborts_timing_not_cached(self):
         # Keep the full production fingerprint running in both measurements,
         # changing just the dependency evidence without short-circuiting it.
