@@ -57,7 +57,7 @@ Poniższa lista pochodzi z `catalog/books.json`. Liczba rozdziałów oznacza poz
 | [Geometria i topologia różniczkowa](books/pl/differential_geometry_and_topology.tex) | 20 |
 | [Analiza funkcjonalna](books/pl/functional_analysis.tex) | 35 |
 | [Teoria Galois](books/pl/galois_theory.tex) | 10 |
-| [Topologia ogólna](books/pl/general_topology.tex) | 21 (01–21 stabilne) |
+| [Topologia ogólna](books/pl/general_topology.tex) | 22 (01–22 stabilne) |
 | [Teoria grafów i węzłów](books/pl/graph_and_knot_theory.tex) | 37 |
 | [Teoria całki](books/pl/integration_theory.tex) | 17 |
 | [Algebra liniowa](books/pl/linear_algebra.tex) | 27 (01–27 stabilne) |
@@ -221,7 +221,7 @@ Rejestr `application/config/pending_reference_baseline.json` dokumentuje odsyła
 
 **Priorytet nowych skryptów (ustalona kolejność):**
 
-1. **Topologia ogólna** — od aksjomatów i podstaw przez zwartość, metryzowalność, sieci, filtry i przestrzenie jednostajne. [Szczegółowy plan rozdziałów 11–21 i statusów audytu](docs/pl/plan_topologii_ogolnej.md).
+1. **Topologia ogólna** — od aksjomatów i podstaw przez zwartość, metryzowalność, sieci, filtry i przestrzenie jednostajne. [Szczegółowy plan rozdziałów 11–22 i statusów audytu](docs/pl/plan_topologii_ogolnej.md).
    - Twierdzenie o zanurzaniu przestrzeni Tychonoffa w kostkę \([0,1]^I\) jest umieszczone w rozdziale 07. Twierdzenie Baire'a i zupełność znajdują się w rozdziale 11. W rozdziałach 16–17 obowiązuje termin **uzwarcenie** (nie „zwartościowanie”).
 2. **Analiza matematyczna** — uporządkowany, samodzielny kurs od fundamentów do analizy wielu zmiennych.
 3. **Analiza zespolona** — jedna i wiele zmiennych, pseudowypukłość, geometria zespolona i interpolacja.
