@@ -42,7 +42,7 @@ class TestChapter27(unittest.TestCase):
         refs=re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}",SOURCE)
         self.assertEqual(len(labels),len(set(labels)))
         self.assertEqual(len(re.findall(r"\\label\{([^}]+)\}",SOURCE)),24)
-        self.assertEqual(len(refs),14)
+        self.assertEqual(len(refs),16)
         self.assertEqual(set(refs)-set(labels),{"ch:ordinals"})
 
     def test_full_original_material_retained(self):
@@ -55,6 +55,17 @@ class TestChapter27(unittest.TestCase):
         self.assertIn(r"\begin{tikzpicture}",SOURCE)
         self.assertIn(r"\ref{thm:choice-hartogs}",SOURCE)
         self.assertIn(r"\ref{thm:zf-omega-recursion}",SOURCE)
+
+    def test_well_defined_cardinal_operations(self):
+        self.assertIn(r"\mathcal P(A\times B)",SOURCE)
+        self.assertIn(r"\beta\circ h\circ\alpha^{-1}",SOURCE)
+        self.assertIn(r"\beta^{-1}\circ k\circ\alpha",SOURCE)
+
+    def test_countable_subset_induction_is_grounded(self):
+        self.assertIn(r"\sum_{k\in s}(k+1)",SOURCE)
+        self.assertIn(r"\ref{thm:zf-wellordered-omega}",SOURCE)
+        self.assertIn(r"\ref{thm:zf-omega-recursion}",SOURCE)
+        self.assertIn(r"\mathcal P(D)",SOURCE)
 
     def test_cardinal_arithmetic_finite_cases(self):
         for a,b,c in itertools.product(range(5),repeat=3):
