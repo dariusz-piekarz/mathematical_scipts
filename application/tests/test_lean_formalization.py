@@ -24,7 +24,7 @@ class LeanFormalizationTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
-        self.root = Path(self.tmp.name) / "lean"
+        self.root = Path(self.tmp.name) / "application" / "lean"
         (self.root / "src").mkdir(parents=True)
         (self.root / "src" / "Example.lean").write_text(
             "theorem sample (p : Prop) : p → p := by intro h; exact h\n", encoding="utf-8")
@@ -120,6 +120,30 @@ class LeanFormalizationTests(unittest.TestCase):
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}):
             result = lean.run(self.con, "sample", lean_root=self.root)
         self.assertEqual(result["proof_status"], "blocked")
+
+    def test_changed_canonical_tex_revokes_approval_without_reindex(self):
+        file = Path(self.tmp.name) / "chapters" / "pl" / "unit" / "01.tex"
+        file.parent.mkdir(parents=True)
+        file.write_text(SOURCE, encoding="utf-8")
+        self.entry["source_document_path"] = "chapters/pl/unit/01.tex"
+        self.entry["source_document_sha256"] = self.digest
+        self.entry["statement_status"] = "approved"
+        self.save_manifest()
+        current = lean.fragment(self.con, entity_id="LST-01/theorem/0001",
+                                lean_root=self.root)
+        self.assertEqual(current["formalization_status"], "ready")
+        self.assertEqual(current["statement_status"], "approved")
+        file.write_text(SOURCE + "% source revised\\n", encoding="utf-8")
+        stale = lean.fragment(self.con, entity_id="LST-01/theorem/0001",
+                              lean_root=self.root)
+        self.assertEqual(stale["formalization_status"], "stale")
+        self.assertEqual(stale["statement_status"], "needs_review")
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \\
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \\
+             patch("backend.lean_formalization.subprocess.run") as spawn:
+            blocked = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(blocked["proof_status"], "blocked")
+        spawn.assert_not_called()
 
     def test_corrupted_index_is_refused_by_reader(self):
         self.con.execute("UPDATE documents SET sha256=? WHERE id='LST-01'",
