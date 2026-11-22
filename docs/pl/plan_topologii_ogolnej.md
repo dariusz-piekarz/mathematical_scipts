@@ -20,7 +20,7 @@ Stan: 22 listopada 2026. Źródłem prawdy dla rozdziałów włączonych do ksi�
 | **12** | **Przestrzenie jednostajne, jednostajna ciągłość, ciągi, sieci i filtry Cauchy'ego** | **stabilny — audyt 3** |
 | **13** | **Zupełność jednostajna i uzupełnienia metryczne/jednostajne** | **stabilny — audyt 05** |
 | **14** | **Zwartość lokalna, twierdzenie Baire'a, podprzestrzenie, iloczyny, przeliczalność w nieskończoności i wyczerpania zwarte** | **stabilny — audyt 03** |
-| **15** | **Parazwartość, lokalnie skończone pokrycia i podziały jedności; związki z metryzowalnością** | **ponownie otwarty — twierdzenie Nagaty–Smirnowa, audyt 05** |
+| **15** | **Parazwartość, lokalnie skończone pokrycia i podziały jedności; związki z metryzowalnością** | **stabilny — audyt 06; twierdzenia Stone’a i Nagaty–Smirnowa z pełnymi dowodami** |
 | 16 | Przestrzenie całkowicie regularne i wprowadzenie do uzwarceń | plan |
 | 17 | Uzwarcenie Aleksandrowa oraz uzwarcenie Čecha–Stone’a | plan |
 | 18 | Przestrzenie odwzorowań, topologia zbieżności jednostajnej na zbiorach zwartych | plan |
