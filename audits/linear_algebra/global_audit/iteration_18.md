@@ -37,7 +37,7 @@
 
 ## 3. Rzeczywiście wykonane regresje
 
-Dodano reprodukowalny [skrypt testowy LA03–LA05](../../tools/test_linear_algebra_la03_la05_exhaustive.py) — jego ścieżka w repozytorium to `tools/test_linear_algebra_la03_la05_exhaustive.py`. Odpowiada lokalnemu plikowi `/mnt/data/la_global18_finite_checks.py` (SHA256 `335cfb7afb6cac79cd4cea5f8945cf38c229f36dfb973b132c30e9e102de4a84`; lokalne wykonanie zakończone kodem 0).
+Dodano reprodukowalny [skrypt testowy LA03–LA05](../../../tools/test_linear_algebra_la03_la05_exhaustive.py) — jego ścieżka w repozytorium to `tools/test_linear_algebra_la03_la05_exhaustive.py`. Odpowiada lokalnemu plikowi `/mnt/data/la_global18_finite_checks.py` (SHA256 `335cfb7afb6cac79cd4cea5f8945cf38c229f36dfb973b132c30e9e102de4a84`; lokalne wykonanie zakończone kodem 0).
 
 **592 020 / 592 020 PASS; 30 716 przebadanych macierzy.**
 
