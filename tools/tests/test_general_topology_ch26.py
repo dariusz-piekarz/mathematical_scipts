@@ -56,7 +56,7 @@ def integration():
     assert r"\input{../../"+CH+"}" in entry
     assert r"\input{../../"+CH+"}" in book
     assert r"\setcounter{chapter}{25}" in entry
-    assert "rozdziały 01–25 stabilne" in book
+    assert "Wersja 1.26 — rozdziały 01–26 stabilne" in book
     for i in ("08","10","25"):
         assert rf"\externaldocument{{general_topology_ch{i}}}" in entry
     own=set(re.findall(r"\\label\{([^}]+)\}",chapter))
