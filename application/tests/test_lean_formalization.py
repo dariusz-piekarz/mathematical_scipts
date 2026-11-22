@@ -373,6 +373,50 @@ class LeanFormalizationTests(unittest.TestCase):
         self.assertIn("first run", cached["last_run_log"])
         self.assertFalse(cached["certificate"])
 
+    def test_unverifiable_external_package_blocks_before_start(self):
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which",
+                   return_value="/fake/lake"), \
+             patch("backend.lean_environment.external_packages_sha256",
+                   side_effect=ValueError("modified Mathlib")), \
+             patch("backend.lean_formalization.lean_process.execute_registered") as spawn:
+            result = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(result["proof_status"], "blocked")
+        self.assertFalse(result["certificate"])
+        self.assertIn("modified Mathlib", result["detail"])
+        spawn.assert_not_called()
+
+    def test_external_checkout_change_during_compile_blocks_success(self):
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which",
+                   return_value="/fake/lake"), \
+             patch("backend.lean_environment.external_packages_sha256",
+                   side_effect=["a" * 64, "b" * 64]), \
+             patch("backend.lean_formalization.lean_process.execute_registered",
+                   return_value=(0, "successful exit", False)) as spawn:
+            result = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(spawn.call_count, 1)
+        self.assertEqual(result["proof_status"], "blocked")
+        self.assertFalse(result["run_record_saved"])
+        self.assertFalse(result["certificate"])
+        cached = lean.fragment(self.con, entity_id="LST-01/theorem/0001",
+                               lean_root=self.root)
+        self.assertEqual(cached["proof_status"], "not_run")
+
+    def test_checkout_becomes_unverifiable_after_compile(self):
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which",
+                   return_value="/fake/lake"), \
+             patch("backend.lean_environment.external_packages_sha256",
+                   side_effect=["a" * 64, ValueError("checkout dirty")]), \
+             patch("backend.lean_formalization.lean_process.execute_registered",
+                   return_value=(0, "successful exit", False)):
+            result = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(result["proof_status"], "blocked")
+        self.assertFalse(result["certificate"])
+        self.assertFalse(result["run_record_saved"])
+        self.assertIn("checkout dirty", result["run_record_warning"])
+
     def test_compilation_success_is_not_semantic_certificate(self):
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
              patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
