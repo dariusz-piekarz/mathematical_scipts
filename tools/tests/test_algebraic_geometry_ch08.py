@@ -129,6 +129,60 @@ class ALG08Regressions(unittest.TestCase):
         self.assertIn("iniektywność", s)
         self.assertIn("Ze wzoru Noether", s)
 
+    def test_kodaira_and_mmp_same_base_field(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        for label in ("def:ga8-kodaira", "st:ga8-plurigenera-blowup"):
+            block = src.split(r"\label{" + label + "}", 1)[1].split(
+                r"\end{", 1)[0]
+            self.assertIn("charakterystyki zero", block)
+            self.assertIn("nad $k$", block)
+            self.assertNotIn(r"nad $\C$", block)
+        mmp = src.split(r"\label{tw:ga8-surface-mmp}", 1)[1].split(
+            r"\end{twierdzenie}", 1)[0]
+        self.assertIn("charakterystyki zero", mmp)
+
+    def test_castelnuovo_open_complements(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        theorem = src.split(r"\label{tw:ga8-castelnuovo}", 1)[1].split(
+            r"\end{twierdzenie}", 1)[0]
+        self.assertIn(r"S\setminus E", theorem)
+        self.assertIn(r"S'\setminus\{p\}", theorem)
+
+    def test_relative_picard_number_mori_fibration(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        theorem = src.split(
+            r"\label{tw:ga8-surface-contraction}", 1)[1].split(
+            r"\end{twierdzenie}", 1)[0]
+        self.assertIn(r"\rho(S/Y)=1", theorem)
+        self.assertIn("numerycznych klas krzywych kontraktowanych", theorem)
+        example = src.split(r"\label{prz:ga8-f1-two-rays}", 1)[1].split(
+            r"\end{przyklad}", 1)[0]
+        self.assertIn(r"\rho(S/\PP^1)=\rho(S)-\rho(\PP^1)=2-1=1", example)
+
+    def test_canonical_class_linear_equivalence(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        self.assertIn(r"K_{\mathbb F_n}\sim-2s-(n+2)f", src)
+        self.assertIn(r"K_S\sim-2s-3f", src)
+        self.assertIn(r"K_{\widetilde S}\sim\pi^*K_S+E", src)
+        self.assertNotIn(r"K_{\widetilde S}=\pi^*K_S+E", src)
+        self.assertIn(r"h^0(S,\omega_S)=h^0(S',\omega_{S'})", src)
+
+    def test_polish_coordinate_charts_and_explicit_fields(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        self.assertIn("W pierwszej mapie rozdmuchania", src)
+        self.assertIn("W drugiej mapie kładziemy", src)
+        self.assertNotIn("pierwszym mapie", src)
+        self.assertNotIn("drugim mapie", src)
+        for label in ("def:ga8-rational", "tw:ga8-function-fields",
+                      "def:ga8-cremona", "st:ga8-hexagon",
+                      "st:ga8-cremona-linear", "st:ga8-classes-blowup",
+                      "st:ga8-fn-cone", "def:ga8-minus-one",
+                      "def:ga8-nef", "def:ga8-minimal"):
+            with self.subTest(label=label):
+                statement = src.split(r"\label{" + label + "}", 1)[1].split(
+                    r"\end{", 1)[0]
+                self.assertIn("Niech $k$ będzie ciałem", statement)
+
     def test_source_figure_proof_and_environment_balance(self):
         s = SOURCE.read_text(encoding="utf-8")
         self.assertEqual(s.count(r"\begin{tikzpicture}"), 4)
