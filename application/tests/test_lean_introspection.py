@@ -154,7 +154,7 @@ class InspectionExecutionTests(unittest.TestCase):
         self.con.execute("INSERT INTO documents VALUES(?,?,?,?)",
                          ("LST-01","Logic",self.digest,SOURCE))
         self.con.execute("INSERT INTO entities VALUES(?,?,?,?,?,?,?,?)",
-                         ("e1","LST-01","theorem","P",1,3,0,len(SOURCE)))
+                         ("e1","LST-01","theorem","P",1,3,0,len(SOURCE) - 1))
         self.con.execute("INSERT INTO labels VALUES(?,?,?)",("t:x","e1",LABEL_OFFSET))
         self.con.commit()
         self.ready={"ready":True,"lake_available":True,
@@ -273,7 +273,7 @@ class InspectionExecutionTests(unittest.TestCase):
         # or is moved to a different theorem entity during the Lean process.
         self.con.execute(
             "INSERT INTO entities VALUES(?,?,?,?,?,?,?,?)",
-            ("e2", "LST-01", "theorem", "P duplicate", 1, 3, 0, len(SOURCE)))
+            ("e2", "LST-01", "theorem", "P duplicate", 1, 3, 0, len(SOURCE) - 1))
         self.con.commit()
         for mode in ("unlinked", "moved"):
             with self.subTest(mode=mode):
@@ -326,7 +326,7 @@ class InspectionExecutionTests(unittest.TestCase):
                     self.con.execute(
                         "UPDATE entities SET kind='theorem', title='P', "
                         "start_line=1, end_line=3, start_offset=0, end_offset=? "
-                        "WHERE id='e1'", (len(SOURCE),))
+                        "WHERE id='e1'", (len(SOURCE) - 1,))
                     self.con.execute(
                         f"UPDATE labels SET offset={LABEL_OFFSET} WHERE name='t:x'")
                     self.con.commit()
@@ -349,6 +349,8 @@ class InspectionExecutionTests(unittest.TestCase):
             ("label_instead_of_command", f"UPDATE labels SET offset={LABEL_OFFSET + 1} WHERE name='t:x'"),
             ("out_of_bounds_entity", "UPDATE entities SET end_offset=9999 WHERE id='e1'"),
             ("label_outside_entity", f"UPDATE entities SET end_offset={LABEL_OFFSET} WHERE id='e1'"),
+            ("wrong_start_line", "UPDATE entities SET start_line=2, end_line=3 WHERE id='e1'"),
+            ("wrong_end_line", "UPDATE entities SET start_line=1, end_line=2 WHERE id='e1'"),
             ("reversed_lines", "UPDATE entities SET start_line=5, end_line=2 WHERE id='e1'"),
             ("negative_start", "UPDATE entities SET start_offset=-1 WHERE id='e1'"),
         )
@@ -365,7 +367,7 @@ class InspectionExecutionTests(unittest.TestCase):
                 finally:
                     self.con.execute(
                         "UPDATE entities SET start_offset=0, end_offset=?, "
-                        "start_line=1, end_line=3 WHERE id='e1'", (len(SOURCE),))
+                        "start_line=1, end_line=3 WHERE id='e1'", (len(SOURCE) - 1,))
                     self.con.execute(
                         "UPDATE labels SET offset=? WHERE name='t:x'", (LABEL_OFFSET,))
                     self.con.commit()
