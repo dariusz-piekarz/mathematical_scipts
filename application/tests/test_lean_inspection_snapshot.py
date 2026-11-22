@@ -79,6 +79,7 @@ class LeanInspectionSnapshotTests(unittest.TestCase):
         invalid_cases = (
             {"fingerprint": {"source_document_sha256": "a" * 64}},
             {"fingerprint": {**fingerprint(), "source_binding_sha256": "broken"}},
+            {"fingerprint": {**fingerprint(), "new_dependency_digest": "f" * 64}},
             {"fingerprint": {**fingerprint(), "declared_toolchain": ""}},
             {"fingerprint": {**fingerprint(), "declared_toolchain": "  "}},
             {"fingerprint": {**fingerprint(), "declared_toolchain": "lean\nforged"}},
