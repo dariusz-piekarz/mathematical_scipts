@@ -37,6 +37,23 @@ class SourceProvenanceTests(unittest.TestCase):
         binding = provenance.indexed_binding(self.con, "LST-01", LABEL, "one")
         self.assertTrue(provenance.valid_binding(binding, SOURCE, LABEL))
 
+    def test_binding_digest_tracks_owner_metadata_not_just_tex_bytes(self):
+        first = provenance.indexed_binding(self.con, "LST-01", LABEL, "one")
+        digest = provenance.binding_sha256("LST-01", LABEL, first)
+        self.assertEqual(len(digest), 64)
+        self.assertEqual(digest, provenance.binding_sha256("LST-01", LABEL, first))
+        # Mutating indexed theorem metadata leaves source text unchanged.
+        self.con.execute("UPDATE entities SET title='Alternative' WHERE id='one'")
+        second = provenance.indexed_binding(self.con, "LST-01", LABEL, "one")
+        self.assertNotEqual(digest,
+                            provenance.binding_sha256("LST-01", LABEL, second))
+        self.assertNotEqual(digest,
+                            provenance.binding_sha256("LST-02", LABEL, first))
+        self.assertNotEqual(digest,
+                            provenance.binding_sha256("LST-01", "t:other", first))
+        with self.assertRaises(ValueError):
+            provenance.binding_sha256("LST-01", LABEL, ("incomplete",))
+
     def test_shifted_label_offset_is_never_current(self):
         for offset in (self.offset + 1, self.offset - 1, len(SOURCE), -1, None):
             with self.subTest(offset=offset):
