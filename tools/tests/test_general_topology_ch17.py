@@ -51,6 +51,7 @@ def sources() -> tuple[int, int]:
         "thm:topog-uzwarcenia-aleksandrow-kryterium",
         "thm:topog-uzwarcenia-aleksandrow-proper",
         "thm:topog-uzwarcenia-aleksandrow-minimalne",
+        "cor:topog-uzwarcenia-aleksandrow-jednoznacznosc",
         "lem:topog-uzwarcenia-lokalna-tych",
         "def:topog-uzwarcenia-cech-stone",
         "thm:topog-uzwarcenia-cech-stone-uniwersalne",
