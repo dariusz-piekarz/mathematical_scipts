@@ -1,6 +1,6 @@
 # Globalny audyt algebry liniowej — status rozdziałów
 
-**Stan po iteracji 07/09**, 22 listopada 2026.
+**Stan po iteracji 08/09**, 22 listopada 2026.
 
 | Rozdział | Status |
 |---|---|
@@ -32,9 +32,9 @@
 | 26 | 07: sprawdzono założenia i kluczowe tożsamości DARE/CARE, granice i przypadek Q≥0; testy CI PASS, wizualny PDF otwarty |
 | 27 | 07: sprawdzono faktoryzację Hankela, minimalność, podobieństwo i równoważenie gramianów; testy CI PASS, wizualny PDF otwarty |
 | 28 | 07: sprawdzono transformaty, realizację towarzyszącą i oszacowania BIBO; testy CI PASS, wizualny PDF otwarty |
-| 29 | oczekuje na globalny audyt |
-| 30 | oczekuje na globalny audyt |
-| 31 | oczekuje na globalny audyt |
-| 32 | oczekuje na globalny audyt |
+| 29 | 08: uzupełniono brakujący dowód własności Hausdorffa w osadzeniu Plückera; CI i wizualny PDF do kontroli |
+| 30 | 08: zweryfikowano własność uniwersalną, bazę 2^n i reprezentację na algebrze zewnętrznej; CI i wizualny PDF do kontroli |
+| 31 | 08: zweryfikowano nakrycia Pin/Spin, chiralość, warunki przejścia i klasę w2; CI i wizualny PDF do kontroli |
+| 32 | 08: dopisano rachunek w mapie przy nieskończoności i sprawdzono incydencję oraz Plückera; CI i wizualny PDF do kontroli |
 
-Iteracje 01–07 wykonane; iteracje 08–09 oczekują. Iteracja 07: audyt kluczowych argumentów i przegląd struktury 46 dowodów w rozdziałach 25–28; bez zmian merytorycznych. Workflow 44987751791 dla wejściowego HEAD fd4e4a7 zakończył się SUCCESS, w tym testy LA25–LA28 i pełny PDF. Wizualna kontrola stron PDF pozostaje niepotwierdzona; nie deklarować pełnej czystości. Wcześniejsze otwarte kontrole wizualne pozostają. Nie utożsamiać audytu źródła z pomyślną kompilacją ani audytem wizualnym.
+Iteracje 01–08 wykonane; iteracja 09 oczekuje. W iteracji 08 uzupełniono dowód Hausdorffowości przestrzeni rzutowej w LA29 oraz gładkości stereografii w punkcie nieskończonym w LA32. Weryfikacja PDF/CI dla zmian iteracji 08 i niezależna inspekcja rysunków pozostają otwarte. Dotychczasowe otwarte kontrole wizualne nie są uznane za zamknięte.
