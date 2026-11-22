@@ -48,3 +48,10 @@ https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45010139633
 Workflow `45010139633` dla kompletnego dowodu i rozszerzonego testu zakończył się `completed/success`. Pobrano artefakt `14749202693`, zawierający samodzielny PDF rozdziału 15 (4 strony A4) i log. Kontrola logu nie wykazała `Overfull`, `Underfull`, `Missing character`, `LaTeX Warning`, `Undefined control sequence` ani `Fatal error`. Wykonano oględziny stron 3–4: wzory i dowód są czytelne.
 
 Dostrzeżono drobną usterkę redakcyjną: na granicy stron 3–4 sformułowanie tezy twierdzenia zostało rozdzielone. Skrócono nagłówek sekcji do „Twierdzenie Stone'a”, a tezę do równoważnego „Niech $(X,d)$ będzie przestrzenią metryczną. Wówczas $X$ jest parazwarta.” Dowód szczegółowy pozostaje bez zmian. Korekta w commicie `bcd83a8e9fdae6d46e5befe07bfa9acfafb4d15f` wymaga finalnej kontroli składu na tym commicie.
+
+## Potwierdzenie końcowe po korekcie składu
+
+Ostatni przebieg dla końcowego źródła `bcd83a8e9fdae6d46e5befe07bfa9acfafb4d15f`:
+https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45010390038 — **completed/success**, bez nieudanych kroków. Artefakt `14749232978` zawiera samodzielny PDF rozdziału 15 (4 strony A4) i log. Kontrola logu nie znalazła `Overfull`, `Underfull`, `Missing character`, `LaTeX Warning`, `Undefined control sequence`, `Fatal error`. Ponowne oględziny stron 3–4 potwierdziły, że sformułowanie twierdzenia mieści się teraz w całości na stronie 3; dowód i końcowa uwaga znajdują się na stronie 4, bez kolizji elementów.
+
+**Werdykt końcowy audytu 03:** dowód Stone'a dopisany, testy i PDF PASS, ale rozdział pozostaje w audycie, ponieważ dowód jest nowy i wymaga jeszcze jednej niezależnej iteracji kontroli matematycznej, zgodnie z przyjętą procedurą.
