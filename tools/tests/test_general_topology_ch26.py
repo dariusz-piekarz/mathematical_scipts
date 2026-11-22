@@ -79,7 +79,7 @@ def integration():
     for bad in (r"\bunia\b",r"zwartościowani\w*",r"pierwszoprzeliczaln\w*",
                 r"drugoprzeliczaln\w*",r"sekwencyjn\w*"):
         assert not re.search(bad,chapter,re.I),bad
-    assert "żaden singleton" in chapter
+    assert "niepusty spójny podzbiór" in chapter
     assert "przestrzenią" in chapter
     return len(own),len(refs)
 
