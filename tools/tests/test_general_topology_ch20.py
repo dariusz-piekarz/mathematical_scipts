@@ -110,7 +110,7 @@ def integration_and_source() -> tuple[int, int]:
     ):
         assert not re.search(forbidden, text, re.I), forbidden
     assert "redukcjom Wadge'a" in text
-    assert "nie stanowi" in text and "mierzalności" in text
+    assert r"\emph{nie} stanowi" in text and "mierzalności" in text
     return len(labels), len(refs)
 
 
