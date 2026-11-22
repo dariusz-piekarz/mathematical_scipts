@@ -28,7 +28,7 @@ W rozdziale 37 omówiono definicje regularności, silnej graniczności i nieosi�
 
 **Normalność.** Równoważność z diagonalnym przecięciem sprawdzono w obu kierunkach przez funkcję regresywną. Miara pochodna W={X⊆κ : κ∈j(X)} jest κ-zupełna i normalna.
 
-Nie stwierdzono dodatkowego obowiązkowego rozszerzenia treści. Potencjalne tematy kardynałów Mahla i superzwartych zostawiamy jako propozycje, a nie niezatwierdzone uzupełnienia tego rozdziału.
+Nie stwierdzono dodatkowego obowiązkowego rozszerzenia treści. Potencjalne tematy liczb kardynalnych Mahla i superzwartych zostawiamy jako propozycje, a nie niezatwierdzone uzupełnienia tego rozdziału.
 
 ## 4. Inwentarz i testy
 
