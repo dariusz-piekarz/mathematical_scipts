@@ -104,8 +104,46 @@ class SourceProvenanceTests(unittest.TestCase):
         self.con.execute("DELETE FROM label_conflicts")
         self.con.execute("INSERT INTO label_conflicts VALUES(?,?,?,?,?,?)", (
             LABEL, "LST-01", "one", self.offset, 1, ""))
+        # The parser populates this table only after detecting a duplicate.
+        # Even a matching conflict row therefore signals global ambiguity.
+        self.assertEqual(provenance.owner_status(self.con, "LST-01", LABEL, SOURCE),
+                         ("ambiguous_label", None))
+
+    def test_cross_document_collision_blocks_primary_owner(self):
+        # The real index stores conflicts globally, not only in this document.
+        self.con.execute("INSERT INTO label_conflicts VALUES(?,?,?,?,?,?)", (
+            LABEL, "LST-99", "outside", 5, 1, ""))
+        self.assertEqual(
+            provenance.owner_status(self.con, "LST-01", LABEL, SOURCE),
+            ("ambiguous_label", None))
+
+    def test_canonical_occurrences_reject_missing_mismatched_or_duplicate_owner(self):
+        self.con.execute(
+            "CREATE TABLE label_occurrences("
+            "occurrence_id TEXT PRIMARY KEY, name TEXT, document_id TEXT, "
+            "entity_id TEXT, line INTEGER, offset INTEGER, concept_id TEXT)")
+        self.assertEqual(provenance.owner_status(self.con, "LST-01", LABEL, SOURCE),
+                         ("invalid_label_binding", None))
+        self.con.execute("INSERT INTO label_occurrences VALUES(?,?,?,?,?,?,?)",
+                         ("native", LABEL, "LST-01", "one", 1, self.offset, None))
         self.assertEqual(provenance.owner_status(self.con, "LST-01", LABEL, SOURCE),
                          ("ok", "one"))
+        for field, invalid in (
+                ("document_id", "LST-02"), ("entity_id", "wrong"),
+                ("offset", self.offset + 1)):
+            with self.subTest(field=field):
+                self.con.execute(f"UPDATE label_occurrences SET {field}=?",
+                                 (invalid,))
+                self.assertEqual(
+                    provenance.owner_status(self.con, "LST-01", LABEL, SOURCE),
+                    ("invalid_label_binding", None))
+                self.con.execute(f"UPDATE label_occurrences SET {field}=?",
+                                 ({"document_id":"LST-01", "entity_id":"one",
+                                   "offset":self.offset}[field],))
+        self.con.execute("INSERT INTO label_occurrences VALUES(?,?,?,?,?,?,?)",
+                         ("other", LABEL, "LST-02", "other", 1, self.offset, None))
+        self.assertEqual(provenance.owner_status(self.con, "LST-01", LABEL, SOURCE),
+                         ("ambiguous_label", None))
 
     def test_same_offset_distinct_conflict_owners_are_ambiguous(self):
         self.con.execute("INSERT INTO label_conflicts VALUES(?,?,?,?,?,?)", (
