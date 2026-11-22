@@ -45,6 +45,7 @@ Testy macierzowe nie weryfikują twierdzeń w pełnej ogólności (np. przestrze
 - W obu plikach występuje **70** odrębnych etykiet, **27** odsyłaczy oraz dokładnie **28** poprawnie sparowanych środowisk `proof`. Nie wykryto lokalnie powtórzonych etykiet ani naruszeń terminologii w sprawdzanym zestawie.
 - Źródło pojedynczego rysunku TikZ w LA13 (rzut ortogonalny i reszta) jest spójne geometrycznie: wektor od rzutu do `v` jest prostopadły do narysowanej prostej. **Brak nowej bezpośredniej inspekcji wyrenderowanej strony PDF** w tej iteracji.
 - [CI 45062408467](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45062408467) dla poprzedniej iteracji 18 zakończył się `completed/success`. Nie stanowi wyniku najnowszego testu LA12–13; jego osobne wykonanie podlega sprawdzeniu.
+- **Próba nowego CI:** [run 45064401149](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45064401149) zakończył się `failure` z powodu brakującej zależności `numpy` na runnerze. Dodano instalację `numpy>=2.0,<3` w odrębnym kroku workflow, bez zmian w treści matematycznej. W ponownym [run 45064528288](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45064528288) krok **LA12–LA13 conventions** uzyskał już `success`; w chwili tej aktualizacji kompilacja PDF jeszcze trwała.
 - Źródła LA12–13 nie zostały zmienione, wcześniejsza stabilizacja rozdziałów LA12–32 pozostaje zachowana. Nie dopisywano dodatkowego materiału bez zgody.
 
 ## 6. Decyzja i dalszy plan
