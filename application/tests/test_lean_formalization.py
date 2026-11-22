@@ -261,6 +261,64 @@ class LeanFormalizationTests(unittest.TestCase):
         self.assertEqual(state["memory_limit_mb"], 4096)
         self.assertEqual(spawn.call_args.kwargs["memory_limit_mb"], 4096)
 
+    def test_total_memory_limit_invalid_config_blocks_runner(self):
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1",
+                                     "MATLIB_LEAN_TOTAL_MEMORY_MB": "invalid"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_process.execute_registered") as spawn:
+            result = lean.run(self.con, "sample", lean_root=self.root)
+            state = lean.availability(lean_root=self.root)
+        self.assertEqual(result["proof_status"], "blocked")
+        self.assertFalse(result["certificate"])
+        self.assertFalse(state["ready"])
+        self.assertIsNotNone(state["total_memory_limit_error"])
+        spawn.assert_not_called()
+
+    def test_total_memory_without_delegation_never_spawns(self):
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1",
+                                     "MATLIB_LEAN_TOTAL_MEMORY_MB": "1024"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_cgroup.available",
+                   return_value=False), \
+             patch("backend.lean_formalization.lean_process.execute_registered") as spawn:
+            result = lean.run(self.con, "sample", lean_root=self.root)
+            state = lean.availability(lean_root=self.root)
+        self.assertEqual(result["proof_status"], "blocked")
+        self.assertFalse(result["certificate"])
+        self.assertFalse(state["ready"])
+        self.assertFalse(state["total_memory_limit_supported"])
+        spawn.assert_not_called()
+
+    def test_total_memory_allocation_error_refuses_run(self):
+        from backend import lean_cgroup
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1",
+                                     "MATLIB_LEAN_TOTAL_MEMORY_MB": "1024"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_cgroup.available",
+                   return_value=True), \
+             patch("backend.lean_formalization.lean_process.execute_registered",
+                   side_effect=lean_cgroup.CgroupUnavailable("permission denied")):
+            result = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(result["proof_status"], "blocked")
+        self.assertFalse(result["certificate"])
+        self.assertIn("permission denied", result["detail"])
+
+    def test_total_memory_cap_is_forwarded_without_certificate(self):
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1",
+                                     "MATLIB_LEAN_TOTAL_MEMORY_MB": "1024"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_cgroup.available",
+                   return_value=True), \
+             patch("backend.lean_formalization.lean_process.execute_registered",
+                   return_value=(0, "ok", False)) as spawn:
+            result = lean.run(self.con, "sample", lean_root=self.root)
+            state = lean.availability(lean_root=self.root)
+        self.assertEqual(result["proof_status"], "compiled")
+        self.assertFalse(result["certificate"])
+        self.assertEqual(state["total_memory_limit_mb"], 1024)
+        self.assertTrue(state["total_memory_limit_supported"])
+        self.assertEqual(spawn.call_args.kwargs["total_memory_mb"], 1024)
+
     def test_compilation_success_is_not_semantic_certificate(self):
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
              patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
