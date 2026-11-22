@@ -25,7 +25,7 @@ Stan: 22 listopada 2026. Źródłem prawdy dla rozdziałów włączonych do ksi�
 | **17** | **Uzwarcenie Aleksandrowa i uzwarcenie Čecha–Stone’a: konstrukcje, własności uniwersalne, minimalność, maksymalność i przykłady** | **stabilny — audyt 03; pełne dowody konstrukcji i własności uniwersalnych** |
 | **18** | **Przestrzenie odwzorowań, topologia zwarto-otwarta, zbieżność jednostajna na zbiorach zwartych, ewaluacja, prawo wykładnicze, metryzacja i zupełność** | **stabilny — audyt 03; pełne dowody i walidacja CI/PDF** |
 | **19** | **Przestrzenie polskie, podprzestrzenie G-delta, zbiory borelowskie i hierarchia indeksowana przeliczalnymi liczbami porządkowymi** | **stabilny — audyt 03; CI/PDF PASS; 590 unikatowych etykiet i 138 poprawnych odsyłaczy w książce** |
-| **20** | **Zbiory analityczne, rzuty zbiorów domkniętych, operacja Suslina, zbiór analityczny nieborelowski; bez powielania determinacji i redukcji Wadge’a z logiki** | **w audycie — iteracja 02 czysta (1/2 po zmianie źródła); pełny CI/PDF do potwierdzenia** |
+| **20** | **Zbiory analityczne, rzuty zbiorów domkniętych, operacja Suslina, zbiór analityczny nieborelowski; bez powielania determinacji i redukcji Wadge’a z logiki** | **w audycie — iteracja 02 czysta (1/2), dedykowany CI/PDF success (run 45022608046); potrzebny audyt 03** |
 
 Zakresy 12–13 oraz 16–17 są rozdzielone według tematyki, żeby unikać powtarzania dowodów. Zgodnie z zasadą projektu nowe rozdziały nie oznaczają automatycznie ich stabilności.
 
@@ -91,3 +91,16 @@ doprecyzowano import czterech odsyłaczy do rozdziału 19 przez
 \`xr-hyper\` w punkcie wejścia rozdziału 20.
 Dalszy etap: niezależny audyt 03 tego samego bloba oraz pełny
 zielony workflow, w tym kontrola PDF i logów.
+
+## CI dla rozdziału 20 (2026-11-22)
+
+[General topology chapter validation 45022608046](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45022608046)
+ma wynik **completed/success**, a zweryfikowany blob rozdziału 20
+to \`73de106461510c1be14419882d3b617602cca177\`.
+Wszystkie kroki: testy, pełna książka, samodzielny PDF 20 i
+kontrola logów LaTeX zakończyły się sukcesem.
+Samodzielny punkt wejścia importuje etykiety poprzedniego rozdziału
+przez \`xr-hyper\`, bez powielania treści 19.
+Status pozostaje **1/2**, ponieważ po uzupełnieniu źródła
+o równoważność definicji analityczności wykonano dotąd
+jedną niezależną czystą kontrolę.
