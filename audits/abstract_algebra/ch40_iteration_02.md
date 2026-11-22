@@ -46,7 +46,7 @@
 - Poprawiono wyłącznie `tools/tests/test_abstract_algebra_ch40_independent.py`: domyślne źródło jest odszukiwane relatywnie względem katalogu repozytorium; lokalny wariant pozostaje możliwy. Skrót rozdziału LaTeX nie uległ zmianie.
 - Ponowiono lokalnie cały zestaw 374 testów w układzie `tools.tests.*` **bez** `AA40_SOURCE`: **374/374 PASS**.
 - Poprawkę testu opublikowano w commicie `0ed9eaea3dd947c83e6ab076c7eece2e855428a5`.
-- **Ponowny zdalny przebieg CI:** [AA-01–AA-40 / run 45066500032](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45066500032). Krok `Run repository tool tests` oraz dedykowany krok `Run AA-40 integral extensions regression tests` **zakończyły się sukcesem**. Pełna kompilacja książki trwała przy ostatnim odczycie. Nie deklaruje się sukcesu tych kroków przed osobną kontrolą.
+- **Ponowny zdalny przebieg CI:** [AA-01–AA-40 / run 45066500032](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45066500032) — **completed / success**. Oddzielnie potwierdzono sukces ogólnych testów repozytorium, dedykowanych 374 testów AA-40, kompilacji pełnej książki AA-01–AA-40 oraz kroku `Verify PDF and references (no undefined refs)`.
 
 ## Zapis i publikacja
 
@@ -54,4 +54,4 @@
 - AA-40 nadaje się do dołączenia do `chapters/pl/abstract_algebra/`, `books/pl/abstract_algebra.tex`, `catalog/books.json` oraz workflow `abstract-algebra-chapter.yml`.
 - **GitHub Actions:** status rzeczywistych testów i pełnej kompilacji książki należy odnotować osobno po odczycie przebiegu CI; lokalna kompilacja rozdziału nie stanowi dowodu sukcesu CI pełnej książki.
 
-**Wynik: AA-40 STABILNY po audycie II, bez nowych poprawek merytorycznych.**
+**Wynik: AA-40 STABILNY po audycie II; bez zmian źródła; pełny zdalny CI AA-01–AA-40 zakończony sukcesem.**
