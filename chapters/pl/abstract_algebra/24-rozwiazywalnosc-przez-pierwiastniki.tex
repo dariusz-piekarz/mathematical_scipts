@@ -1,0 +1,606 @@
+% AA-24 | Algebra abstrakcyjna | Iteracja XII
+\chapter[Rozwiązywalność przez pierwiastniki]{Rozwiązywalność równań przez pierwiastniki i twierdzenie Abela--Ruffiniego}
+\label{aa:ch:radical-solvability}
+\label{aa:ch:radicals}
+
+\section{Co oznacza rozwiązanie równania przez pierwiastniki?}
+Wzór kwadratowy, wzory Cardana oraz wzory dla równań
+czwartego stopnia wykorzystują działania arytmetyczne i
+wyciąganie pierwiastków. Nie oznacza to, że każdy wielomian
+piątego stopnia można rozwiązać w ten sposób.
+Sformułujemy precyzyjne kryterium rozwiązywalności przez
+pierwiastniki dla wielomianów nad ciałem charakterystyki zero.
+Jego treść łączy teorię rozszerzeń ciał z teorią grup rozwiązalnych
+z Rozdziału~\ref{aa:ch:szeregi}.
+
+\begin{definicja}[Wieża rozszerzeń przez pierwiastniki]
+\label{aa:def:radical-tower}
+\label{aa:def:radical-extension}
+Niech $K$ będzie ciałem charakterystyki zero.
+\emph{Wieżą rozszerzeń przez pierwiastniki} nad $K$ nazywamy
+skończony ciąg rozszerzeń ciał
+$K=E_0\subseteq E_1\subseteq\cdots\subseteq E_r$
+taki, że dla każdego $i=1,\ldots,r$ istnieją
+$\alpha_i\in E_i$ i liczba całkowita $n_i\ge2$, dla których
+$E_i=E_{i-1}(\alpha_i)$ i $\alpha_i^{n_i}\in E_{i-1}$.
+Wielomian $f\in K[X]$ nazywamy \emph{rozwiązywalnym przez
+pierwiastniki nad $K$}, jeśli istnieje taka wieża, której
+ostatnie ciało zawiera wszystkie pierwiastki $f$
+w pewnym ustalonym domknięciu algebraicznym ciała $K$.
+\end{definicja}
+
+\begin{uwaga}[Dlaczego dopuszczamy pierwiastki z jedynki?]
+\label{aa:uw:radicals-roots-unity}
+Jeśli $\zeta_m$ jest pierwiastkiem pierwotnym $m$-tego stopnia
+z jedynki, to $\zeta_m^m=1\in K$; dołączenie $\zeta_m$
+jest zatem krokiem dopuszczonym w wieży. Możemy więc zawsze
+najpierw dołączyć skończenie wiele potrzebnych pierwiastków
+z jedynki. Nie oznacza to, że rozpatrujemy jedynie
+pierwiastki rzeczywiste: rozszerzenia i ich generatory
+mogą leżeć w dowolnym domknięciu algebraicznym.
+\end{uwaga}
+
+\begin{przyklad}[Równanie trzeciego stopnia]
+\label{aa:prz:radical-cubic-simple}
+Dla $f=X^3-2\in\mathbb Q[X]$ jego pierwiastki to
+$\alpha=\sqrt[3]2$, $\omega\alpha$, $\omega^2\alpha$,
+gdzie $\omega^2+\omega+1=0$ i $\omega^3=1$.
+Wieża
+$\mathbb Q\subseteq\mathbb Q(\alpha)
+\subseteq\mathbb Q(\alpha,\omega)$
+spełnia definicję, ponieważ $\alpha^3=2$ i $\omega^3=1$.
+Jest to przykład równania rozwiązywalnego przez pierwiastniki,
+choć jego grupa Galois jest nieabelową grupą $S_3$
+(Przykład~\ref{aa:prz:cubic-galois-s3}).
+Zatem \emph{abelowość} grupy Galois nie jest
+warunkiem koniecznym rozwiązywalności przez pierwiastniki.
+\end{przyklad}
+
+\begin{przyklad}[Dlaczego pojedynczy krok radykalny nie musi być Galois]
+\label{aa:prz:radicals-not-galois-step}
+Niech $\alpha=\sqrt[3]{2}\in\mathbb R$, a $\omega\in\mathbb C$
+niech będzie pierwotnym pierwiastkiem trzeciego stopnia z jedynki.
+Wielomian $X^3-2$ jest nierozkładalny nad $\mathbb Q$
+na mocy kryterium Eisensteina dla liczby $2$, toteż
+$[\mathbb Q(\alpha):\mathbb Q]=3$. Ciało
+$\mathbb Q(\alpha)$ zawiera się w $\mathbb R$, a więc
+nie zawiera nierzeczywistych pierwiastków $\omega\alpha$
+i $\omega^2\alpha$. Rozszerzenie $\mathbb Q(\alpha)/\mathbb Q$
+nie jest normalne ani Galois, chociaż $\alpha^3\in\mathbb Q$.
+Natomiast $L=\mathbb Q(\alpha,\omega)$ jest ciałem rozkładu;
+$[L:\mathbb Q(\alpha)]=2$, bo $\omega$ jest nierzeczywisty
+i spełnia $\omega^2+\omega+1=0$. Wobec tego $[L:\mathbb Q]=6$.
+Wybierając najpierw dołączenie $\omega$, a następnie $\alpha$,
+otrzymujemy wieżę o cyklicznych grupach względnych:
+$\mathbb Q(\omega)/\mathbb Q$ jest kwadratowe,
+a $L/\mathbb Q(\omega)$ jest cykliczne stopnia $3$.
+Ostatnie stwierdzenie wynika z rozdzielczości i normalności
+$L/\mathbb Q(\omega)$ oraz z faktu, że jego automorfizmy
+wysyłają $\alpha$ na $\omega^j\alpha$.
+Grupa Galois $L/\mathbb Q$ ma rząd $6$ i zawiera
+cykl trzech pierwiastków oraz sprzężenie zespolone,
+które zamienia dwa pierwiastki; jest zatem $S_3$.
+Przykład uzasadnia potrzebę dołączania pierwiastków z jedynki
+przed stosowaniem lematu o cyklicznych krokach Galois.
+\end{przyklad}
+
+\section{Rozszerzenia cykliczne i pierwiastki z jedynki}
+\begin{lemat}[Rozszerzenie przez pierwiastek przy obecności pierwiastków z jedynki]
+\label{aa:lem:kummer-simple-galois}
+\label{aa:lem:kummer-cyclic}
+Niech $F$ będzie ciałem charakterystyki zero,
+$n\ge2$ i niech $F$ zawiera wszystkie $n$-te pierwiastki
+z jedynki. Jeśli $\alpha\ne0$ spełnia $\alpha^n=a\in F^\times$
+i $E=F(\alpha)$, to $E/F$ jest skończonym rozszerzeniem
+Galois, a jego grupa Galois jest izomorficzna z podgrupą
+cyklicznej grupy $\mu_n$ pierwiastków $n$-tego stopnia
+z jedynki. W szczególności jest abelowa.
+\end{lemat}
+\begin{proof}
+Element $\alpha$ jest algebraiczny nad $F$, ponieważ
+zeruje $X^n-a$. Każdy pierwiastek tego wielomianu
+ma postać $\zeta\alpha$ dla pewnego $\zeta\in\mu_n\subseteq F$,
+więc wszystkie pierwiastki należą do $E$.
+Wielomian jest rozdzielczy: jego pochodna to
+$nX^{n-1}$, niezerowa w charakterystyce zero i
+niemająca wspólnego pierwiastka z $X^n-a$.
+Stąd $E/F$ jest ciałem rozkładu wielomianu rozdzielczego,
+czyli rozszerzeniem Galois.
+Dla $\sigma\in\operatorname{Gal}(E/F)$ istnieje jednoznaczne
+$\zeta_\sigma\in\mu_n$ z $\sigma(\alpha)=\zeta_\sigma\alpha$.
+Ponieważ $\sigma$ zachowuje wszystkie elementy $\mu_n$,
+$\zeta_{\sigma\tau}=\zeta_\sigma\zeta_\tau$.
+Wzór $\sigma\mapsto\zeta_\sigma$ jest zatem
+homomorfizmem grup. Jego jądro jest trywialne,
+ponieważ $\sigma$ ustalający $F$ i $\alpha$ ustala całe $E$.
+Jest więc iniekcją w $\mu_n$, które jest grupą cykliczną.
+\end{proof}
+
+\begin{lemat}[Cykliczne rozszerzenie stopnia będącego liczbą pierwszą]
+\label{aa:lem:kummer-cyclic-prime}
+Niech $p$ będzie liczbą pierwszą, $F$ ciałem
+charakterystyki zero zawierającym pierwotny $p$-ty
+pierwiastek z jedynki $\zeta$, a $E/F$ rozszerzeniem
+Galois o cyklicznej grupie rzędu $p$.
+Wtedy istnieje $\alpha\in E$ takie, że
+$E=F(\alpha)$ oraz $\alpha^p\in F$.
+\end{lemat}
+\begin{proof}
+Niech $\sigma$ generuje grupę Galois $G$ rzędu $p$.
+Rozszerzenie ma stopień $[E:F]=p$, a $\sigma$ jest
+$F$-liniowym endomorfizmem $E$ spełniającym
+$\sigma^p=\operatorname{id}$. Ponieważ $\operatorname{char}F=0$,
+liczba $p$ jest odwracalna w $F$. Dla $0\le j<p$ określmy
+jawnie operator $F$-liniowy
+\[
+P_j=\frac1p\sum_{k=0}^{p-1}\zeta^{-jk}\sigma^k:E\longrightarrow E.
+\]
+Po zastąpieniu indeksu $k$ przez $k+1$ i wykorzystaniu
+$\sigma^p=\operatorname{id}$ oraz $\zeta^p=1$ dostajemy
+$\sigma P_j=\zeta^j P_j$. Ponadto
+\[
+\sum_{j=0}^{p-1}P_j
+=\frac1p\sum_{k=0}^{p-1}\left(\sum_{j=0}^{p-1}\zeta^{-jk}\right)\sigma^k
+=\operatorname{id},
+\]
+ponieważ wewnętrzna suma wynosi $p$ dla $k=0$
+i $0$ dla $1\le k<p$ (jest sumą geometryczną
+z ilorazem różnym od $1$). Jeżeli $P_j=0$ dla
+wszystkich $1\le j<p$, to $P_0=\operatorname{id}$,
+a więc z $\sigma P_0=P_0$ wynikałoby
+$\sigma=\operatorname{id}$, wbrew $|G|=p>1$.
+Istnieje zatem $j\in\{1,\ldots,p-1\}$, dla którego
+$P_j\ne0$. Wybierzmy $x\in E$ tak, aby
+$\alpha=P_j(x)\ne0$. Mamy $\sigma(\alpha)=\zeta^j\alpha$.
+Podnosząc tę równość do potęgi $p$, otrzymujemy
+$\sigma(\alpha^p)=\alpha^p$, a ponieważ ciałem stałym
+$E^G$ jest $F$ (Twierdzenie~\ref{aa:tw:artin-fixed-field}),
+wnioskujemy $\alpha^p\in F$.
+
+Liczba $\zeta^j$ jest pierwiastkiem pierwotnym stopnia $p$,
+gdyż $p$ jest pierwsza i $j\not\equiv0\pmod p$.
+Elementy $\sigma^k(\alpha)=\zeta^{jk}\alpha$ dla
+$0\le k<p$ są zatem parami różne.
+Każdy jest pierwiastkiem wielomianu minimalnego
+$m_{\alpha,F}\in F[X]$, ponieważ automorfizmy $G$
+ustalają jego współczynniki. Wynika stąd
+$\deg m_{\alpha,F}\ge p$. Z drugiej strony
+$F(\alpha)\subseteq E$ daje $[F(\alpha):F]\le p$.
+Zatem $[F(\alpha):F]=p=[E:F]$,
+a z twierdzenia o wieży wynika $E=F(\alpha)$.
+\end{proof}
+
+\section{Skończone grupy rozwiązalne i wieże ciał}
+\begin{lemat}[Szereg podnormalny, którego kolejne ilorazy mają rząd będący liczbą pierwszą]
+\label{aa:lem:solvable-prime-series}
+Skończona grupa $G$ jest rozwiązalna wtedy i tylko wtedy,
+gdy istnieje szereg podnormalny
+$G=G_0\triangleright G_1\triangleright\cdots
+\triangleright G_r=\{1\}$, w którym każda grupa
+ilorazowa $G_{i-1}/G_i$ jest cykliczna, a jej rząd jest liczbą pierwszą.
+\end{lemat}
+\begin{proof}
+Jeśli istnieje taki szereg, wszystkie jego czynniki
+są abelowe, więc $G$ jest rozwiązalna na mocy
+Twierdzenia~\ref{aa:tw:solvable-series}.
+W drugą stronę wybierzmy szereg z czynnikami abelowymi,
+którego istnienie wynika z tego samego twierdzenia.
+Każda skończona grupa abelowa ma podgrupę indeksu
+pierwszego: wybieramy czynnik cykliczny rzędu podzielnego
+przez pewną liczbę pierwszą $p$ i homomorfizm na
+$\mathbb Z/p\mathbb Z$. Jego jądro jest normalne,
+a iloraz ma rząd $p$. Powtarzając ten argument,
+dostajemy szereg podnormalny o ilorazach cyklicznych
+o rzędach będących liczbami pierwszymi. Wstawiamy takie szeregi do szeregu
+wyjściowego; przeciwobrazy podgrup przez homomorfizmy
+$G_{i-1}\to G_{i-1}/G_i$ zapewniają normalność
+kolejnych włączeń. Liczba kroków jest skończona,
+ponieważ w każdym właściwym kroku rząd grupy maleje.
+
+Dokładniej, jeśli $G_{i-1}/G_i=A_0\triangleright
+A_1\triangleright\cdots\triangleright A_t=\{1\}$
+jest szeregiem z ilorazami o rzędach będących liczbami pierwszymi, to dla
+naturalnej projekcji $\pi:G_{i-1}\to G_{i-1}/G_i$
+wstawiamy grupy $\pi^{-1}(A_j)$ między
+$G_{i-1}$ i $G_i$. Izomorfizm
+$\pi^{-1}(A_{j-1})/\pi^{-1}(A_j)\cong A_{j-1}/A_j$
+uzasadnia dokładnie rzędy nowych ilorazów.
+Dla grupy abelowej $A$ istnienie takiego szeregu
+wynika np. z rozkładu na sumę prostą cyklicznych
+$p$-grup: z czynnika $C_{p^e}$ uzyskujemy
+kolejno $C_{p^e}\supset C_{p^{e-1}}\supset\cdots
+\supset C_p\supset\{1\}$; łączymy je po jednym czynniku.
+Wszystkie podgrupy grupy abelowej są normalne.
+\end{proof}
+
+\begin{twierdzenie}[Kryterium rozwiązywalności przez pierwiastniki]
+\label{aa:tw:radicals-solvable-galois}
+\label{aa:thm:radicals-implies-solvable}
+Niech $K$ będzie ciałem charakterystyki zero,
+$f\in K[X]$ wielomianem niezerowym dodatniego stopnia,
+a $L/K$ jego ciałem rozkładu w ustalonym domknięciu
+algebraicznym $K$. Wtedy $f$ jest rozwiązywalny
+przez pierwiastniki nad $K$ wtedy i tylko wtedy,
+gdy skończona grupa $\operatorname{Gal}(L/K)$ jest rozwiązalna.
+\end{twierdzenie}
+\begin{proof}
+W charakterystyce zero wielomian $f$ po usunięciu
+powtórzonych czynników ma pierwiastki pojedyncze,
+a jego ciało rozkładu $L/K$ jest skończonym rozszerzeniem
+Galois. Oznaczmy $G=\operatorname{Gal}(L/K)$.
+
+\emph{Krok 1: grupa rozwiązalna daje wieżę przez pierwiastniki.}
+Załóżmy, że $G$ jest rozwiązalna. Niech
+$M$ będzie iloczynem wszystkich różnych liczb pierwszych
+dzielących $|G|$; jeśli $G=\{1\}$, przyjmujemy $M=1$.
+Dołączmy do $K$ pierwiastek pierwotny $M$-tego stopnia
+z jedynki i oznaczmy otrzymane ciało przez $K'$.
+Mamy $K'=K(\zeta_M)$ i $\zeta_M^M=1\in K$,
+więc przejście $K\subseteq K'$ jest dozwolone w wieży
+(gdy $M=1$, nie potrzebujemy tego kroku).
+Rozważmy ciało złożone $L'=LK'$ we wspólnym domknięciu.
+Ponieważ $L/K$ jest Galois, również $L'/K'$ jest Galois.
+Ograniczenie automorfizmów daje iniekcję
+$G'=\operatorname{Gal}(L'/K')\hookrightarrow G$:
+automorfizm ustalający $K'$ i wszystkie elementy $L$
+ustala ciało przez nie generowane. Podgrupa grupy rozwiązalnej
+jest rozwiązalna; wynika to na przykład z inkluzji
+jej kolejnych podgrup pochodnych w odpowiednich
+podgrupach pochodnych $G$.
+
+Z Lematu~\ref{aa:lem:solvable-prime-series} wybierzmy
+szereg podnormalny
+$G'=H_0\triangleright H_1\triangleright\cdots
+\triangleright H_s=\{1\}$ z ilorazami cyklicznymi
+o rzędach będących liczbami pierwszymi. Odpowiedniość Galois
+(Twierdzenie~\ref{aa:tw:fundamental-galois}) daje wieżę
+$K'=(L')^{H_0}\subseteq (L')^{H_1}\subseteq\cdots
+\subseteq (L')^{H_s}=L'$.
+Ponieważ $H_i\triangleleft H_{i-1}$,
+każdy kolejny krok jest cyklicznym rozszerzeniem
+Galois stopnia $p_i$, gdzie $p_i$ jest liczbą pierwszą. Wszystkie $p_i$
+dzielą $|G|$, a więc w $K'$ znajdują się pierwiastki
+pierwotne $p_i$-tego stopnia z jedynki.
+Lemat~\ref{aa:lem:kummer-cyclic-prime} wykazuje,
+że każdy taki krok powstaje przez dołączenie jednego
+elementu, którego $p_i$-ta potęga leży w poprzednim ciele.
+Jest to wieża przez pierwiastniki zawierająca $L$,
+więc zawiera wszystkie pierwiastki $f$.
+
+\emph{Krok 2: wieża przez pierwiastniki daje grupę rozwiązalną.}
+Załóżmy, że mamy wieżę
+$K=E_0\subseteq E_1\subseteq\cdots\subseteq E_r$
+z $E_i=E_{i-1}(\alpha_i)$, $\alpha_i^{n_i}=a_i\in E_{i-1}$,
+i $L\subseteq E_r$. Możemy pominąć kroki, w których
+$\alpha_i=0$, bo nie zmieniają one ciała.
+Wybierzmy wspólną wielokrotność $N$ liczb $n_1,\ldots,n_r$
+i niech $K'_0=K(\zeta_N)$ (dla wieży pustej bierzemy $K'_0=K$).
+Ciało $K'_0/K$ jest skończonym rozszerzeniem Galois:
+jest ciałem rozkładu $X^N-1$ w charakterystyce zero.
+Jego grupa Galois jest abelowa, ponieważ dowolny automorfizm
+wysyła $\zeta_N$ na $\zeta_N^u$, gdzie
+$u\in(\mathbb Z/N\mathbb Z)^\times$, a przyporządkowanie
+$\sigma\mapsto u$ jest iniektywnym homomorfizmem
+w grupę abelową.
+
+Zbudujemy indukcyjnie skończone rozszerzenia Galois
+$K'_i/K$, zawierające $E_i$ i $K'_0$, takie że
+$\operatorname{Gal}(K'_i/K'_{i-1})$ jest abelowa.
+Załóżmy, że $K'_{i-1}$ jest już skonstruowane.
+Rozpatrzmy wszystkie $K$-zanurzenia
+$\sigma:E_{i-1}\hookrightarrow K'_{i-1}$;
+istnieją, ponieważ $E_{i-1}\subseteq K'_{i-1}$,
+a każde takie zanurzenie przedłuża się do automorfizmu
+$K'_{i-1}/K$ na mocy normalności i
+Wniosku~\ref{aa:wn:extend-embedding-finite}.
+Dla wszystkich tych $\sigma$ dołączmy do $K'_{i-1}$
+wszystkie pierwiastki wielomianów
+$X^{n_i}-\sigma(a_i)$; otrzymane ciało oznaczmy
+przez $K'_i$. Zawiera ono $E_i$, ponieważ wśród
+zanurzeń jest identyczność na $E_{i-1}$, a $\alpha_i$
+jest jednym z dołączonych pierwiastków.
+Ponieważ $K'_{i-1}$ zawiera $\mu_{n_i}$, dla każdego
+niezerowego $\sigma(a_i)$ wystarczy dołączyć jeden
+pierwiastek, by otrzymać wszystkie pozostałe.
+Rozszerzenie $K'_i/K'_{i-1}$ jest zatem ciałem złożonym
+skończenie wielu rozszerzeń Galois o cyklicznych
+grupach na mocy Lematu~\ref{aa:lem:kummer-simple-galois}.
+Jego grupa Galois jest abelowa: ograniczenia
+automorfizmów do tych prostych rozszerzeń dają
+iniekcję w iloczyn prosty ich abelowych grup Galois.
+
+Wykażmy normalność $K'_i/K$.
+Każde $K$-zanurzenie $\rho:K'_i\to\Omega$
+zachowuje $K'_{i-1}$ jako zbiór, gdyż
+$K'_{i-1}/K$ jest normalne. Ograniczenie $\rho$
+permutuje wszystkie $K$-zanurzenia
+$E_{i-1}\hookrightarrow K'_{i-1}$ poprzez składanie.
+Wysyła więc pierwiastki
+$X^{n_i}-\sigma(a_i)$ na pierwiastki wielomianów
+tej samej rodziny i zachowuje $K'_i$ jako zbiór.
+Ponieważ rozszerzenie jest skończone i rozdzielcze,
+wynika stąd, że $K'_i/K$ jest Galois.
+Otrzymujemy zatem ciąg dokładny grup
+\[
+1\to\operatorname{Gal}(K'_i/K'_{i-1})
+\to\operatorname{Gal}(K'_i/K)
+\to\operatorname{Gal}(K'_{i-1}/K)\to1.
+\]
+Surjektywność ostatniego homomorfizmu wynika z
+przedłużania zanurzeń. Skoro jądro jest abelowe,
+a grupa po prawej jest rozwiązalna na mocy indukcji,
+to grupa środkowa jest rozwiązalna
+(Lemat~\ref{aa:lem:solvable-extension}).
+
+W końcu $K'_r/K$ jest skończonym rozszerzeniem Galois
+o rozwiązalnej grupie, a $L\subseteq K'_r$.
+Ponieważ $L/K$ jest Galois, ograniczenie daje
+surjekcję $\operatorname{Gal}(K'_r/K)\twoheadrightarrow
+\operatorname{Gal}(L/K)$; każdemu automorfizmowi $L/K$
+można przedłużyć działanie do większego ciała.
+Obraz homomorficzny grupy rozwiązalnej jest rozwiązalny.
+Stąd $G=\operatorname{Gal}(L/K)$ jest rozwiązalna.
+\end{proof}
+
+\section{Wyróżnik i znak permutacji pierwiastków}
+\begin{definicja}[Wyróżnik wielomianu rozdzielczego]
+\label{aa:def:polynomial-discriminant-galois}
+Niech $K$ będzie ciałem charakterystyki różnej od $2$,
+a $f\in K[X]$ unormowanym wielomianem rozdzielczym
+stopnia $n\ge1$. Niech $\alpha_1,\ldots,\alpha_n$
+będą wszystkimi jego pierwiastkami w ciele rozkładu $L$.
+Definiujemy wyróżnik $f$ przez
+$\Delta(f)=\prod_{1\le i<j\le n}(\alpha_i-\alpha_j)^2$.
+Wartość $\Delta(f)$ nie zależy od kolejności pierwiastków.
+\end{definicja}
+
+\begin{twierdzenie}[Kryterium znaku grupy Galois]
+\label{aa:tw:galois-discriminant-sign}
+Przy powyższych założeniach niech
+$G=\operatorname{Gal}(L/K)\le S_n$ działa na pierwiastkach.
+Wtedy $\Delta(f)\in K^\times$ i
+$G\subseteq A_n$ wtedy i tylko wtedy, gdy $\Delta(f)$
+jest kwadratem elementu $K^\times$.
+\end{twierdzenie}
+\begin{proof}
+Niech $\delta=\prod_{i<j}(\alpha_i-\alpha_j)\in L^\times$.
+Każda permutacja pierwiastków zmienia $\delta$
+o swój znak: zamiana dwóch pierwiastków zmienia znak,
+a dowolna permutacja jest iloczynem transpozycji.
+Stąd dla $\sigma\in G$ mamy
+$\sigma(\delta)=\operatorname{sgn}(\sigma)\delta$.
+Zatem $\sigma(\delta^2)=\delta^2$ dla wszystkich $\sigma$.
+Ponieważ $L/K$ jest Galois, jego ciałem elementów
+stałych jest $K$ na mocy
+Twierdzenia~\ref{aa:tw:fundamental-galois}; stąd
+$\Delta(f)=\delta^2\in K^\times$.
+Jeżeli $G\subseteq A_n$, każdy automorfizm ustala
+$\delta$, więc $\delta\in K$ i $\Delta(f)$ jest kwadratem.
+Jeżeli natomiast $\Delta(f)=d^2$ dla $d\in K^\times$,
+to $\delta^2=d^2$. W ciele charakterystyki różnej od $2$
+wynika stąd $\delta=d$ lub $\delta=-d$, czyli $\delta\in K$.
+Każdy automorfizm musi zatem mieć znak dodatni,
+a więc $G\subseteq A_n$.
+\end{proof}
+
+\begin{przyklad}[Wyróżnik wielomianu trzeciego stopnia]
+\label{aa:prz:discriminant-cubic}
+Dla $f=X^3-2$ jego pierwiastki to
+$\alpha$, $\omega\alpha$, $\omega^2\alpha$,
+gdzie $\alpha^3=2$, $\omega^3=1$ i $\omega\ne1$.
+Korzystamy z $(1-\omega)(1-\omega^2)=3$
+i $(\omega-\omega^2)^2=-3$. Otrzymujemy
+\[
+\Delta(f)=\alpha^6(1-\omega)^2(1-\omega^2)^2
+(\omega-\omega^2)^2=4\cdot9\cdot(-3)=-108.
+\]
+Liczba $-108$ nie jest kwadratem w $\mathbb Q$,
+więc grupa Galois nie zawiera się w $A_3$.
+Z wcześniejszej analizy wiemy, że jest równa $S_3$.
+\end{przyklad}
+
+\section{Twierdzenie Abela--Ruffiniego i konkretny wielomian}
+\begin{twierdzenie}[Rozwiązywalność wielomianów stopnia co najwyżej cztery]
+\label{aa:tw:radicals-degree-four}
+Niech $K$ będzie ciałem charakterystyki zero.
+Każdy niezerowy wielomian $f\in K[X]$ stopnia co najwyżej
+cztery jest rozwiązywalny przez pierwiastniki nad $K$.
+\end{twierdzenie}
+\begin{proof}
+Po usunięciu powtórzonych czynników możemy założyć,
+że $f$ jest rozdzielczy, nie zmieniając jego ciała rozkładu.
+Grupa Galois ciała rozkładu działa wiernie na co najwyżej
+czterech pierwiastkach, więc jest podgrupą $S_n$ dla
+$n\le4$. Grupa $S_4$ jest rozwiązalna, gdyż posiada szereg
+$S_4\triangleright A_4\triangleright V_4\triangleright\{1\}$,
+w którym kolejne ilorazy mają odpowiednio rzędy $2$, $3$ i $4$
+i są abelowe ($V_4\cong C_2\times C_2$).
+
+Tutaj $V_4=\{\operatorname{id},(12)(34),(13)(24),(14)(23)\}$;
+jest podgrupą normalną $A_4$, ponieważ sprzężenie
+zachowuje typ cykliczny permutacji. Mamy
+$S_4/A_4\cong C_2$, $A_4/V_4\cong C_3$,
+a końcowy iloraz $V_4/\{1\}$ jest abelowy.
+Nie twierdzimy, że każdy z tych ilorazów musi być cykliczny:
+$V_4$ nie jest cykliczna, ale jest abelowa, co wystarcza
+w definicji rozwiązalności.
+Każda podgrupa grupy rozwiązalnej jest rozwiązalna,
+więc grupa Galois jest rozwiązalna.
+Twierdzenie~\ref{aa:tw:radicals-solvable-galois} kończy dowód.
+\end{proof}
+
+\begin{lemat}[Kryterium grupy symetrycznej stopnia pięć]
+\label{aa:lem:s5-criterion}
+Jeżeli nierozkładalny wielomian $f\in\mathbb Q[X]$
+stopnia pięć ma dokładnie trzy pierwiastki rzeczywiste,
+to grupa Galois jego ciała rozkładu jest izomorficzna z $S_5$.
+\end{lemat}
+\begin{proof}
+W charakterystyce zero $f$ ma pięć różnych pierwiastków.
+Jego grupa Galois $G\le S_5$ działa na nich przechodnio:
+izomorfizm prostych rozszerzeń odpowiadających dwóm
+pierwiastkom przedłuża się do automorfizmu ciała rozkładu.
+Ponieważ dokładnie dwa pierwiastki są nierzeczywiste,
+sprzężenie zespolone zamienia tę parę i ustala trzy
+pozostałe pierwiastki. Zatem $G$ zawiera transpozycję.
+Utwórzmy graf na pięciu pierwiastkach, w którym
+para jest krawędzią dokładnie wtedy, gdy zamieniająca
+ją transpozycja należy do $G$.
+Graf nie jest pusty, a $G$ permutuje jego składowe spójności,
+ponieważ sprzężenie transpozycji przez $g\in G$
+jest transpozycją końców przeniesionych przez $g$.
+Przechodniość działania oznacza, że wszystkie składowe
+mają tyle samo wierzchołków; ich liczność dzieli więc $5$.
+Ponieważ istnieje krawędź, składowe nie mogą być jednopunktowe.
+Graf jest zatem spójny. Transpozycje krawędzi grafu spójnego
+generują pełną grupę symetryczną: na drzewie rozpinającym
+przez kolejne sprzęganie transpozycji wzdłuż ścieżki
+otrzymujemy transpozycję dowolnej pary wierzchołków.
+
+Aby uzasadnić ostatni krok rachunkiem, niech
+$v_0,v_1,\ldots,v_m$ będzie ścieżką bez powtórzeń
+i $t_k=(v_{k-1}\,v_k)$ transpozycją odpowiadającą jej
+$k$-tej krawędzi. Dla $m\ge2$ element
+$h=t_1t_2\cdots t_{m-1}$ wysyła $v_{m-1}$ na $v_0$
+i ustala $v_m$, więc
+$h t_m h^{-1}=(v_0\,v_m)$.
+Dla $m=1$ żądana transpozycja jest po prostu $t_1$.
+Każde dwa wierzchołki są połączone ścieżką,
+a więc w $G$ leży transpozycja dowolnej pary.
+Ponieważ każda permutacja jest iloczynem transpozycji,
+$G$ musi być całą grupą $S_5$.
+Wobec tego $G=S_5$.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.86, every node/.style={font=\small}]
+  \foreach \i in {0,1,2,3,4}{
+    \node[draw,circle,minimum size=6.5mm,inner sep=0pt] (v\i) at (1.55*\i,0) {$v_{\i}$};
+  }
+  \foreach \i/\j in {0/1,1/2,2/3,3/4}{
+    \draw[thick] (v\i) -- (v\j);
+  }
+  \draw[dashed,thick,bend left=38] (v0) to (v4);
+  \node[above] at (3.1,1.45) {transpozycja otrzymana przez sprzężenie};
+\end{tikzpicture}
+\caption{Przykładowa ścieżka w grafie transpozycji.
+Ciągłe krawędzie oznaczają transpozycje należące do $G$.
+Linia przerywana nie oznacza nowego założenia:
+transpozycja $(v_0\,v_4)$ należy do $G$ na mocy
+rachunku sprzężeń z dowodu lematu.}
+\label{aa:fig:transpositions-path}
+\end{figure}
+
+\begin{twierdzenie}[Konkretny nierozwiązywalny wielomian piątego stopnia]
+\label{aa:tw:quintic-s5-example}
+\label{aa:ex:quintic-unsolvable}
+Wielomian $f(X)=X^5-4X+2\in\mathbb Q[X]$ ma
+grupę Galois izomorficzną z $S_5$ i nie jest
+rozwiązywalny przez pierwiastniki nad $\mathbb Q$.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: nierozkładalność.}
+Wielomian $f$ spełnia kryterium Eisensteina
+dla liczby pierwszej $2$: jego współczynnik
+wiodący nie jest podzielny przez $2$,
+pozostałe współczynniki są podzielne przez $2$,
+a wyraz wolny $2$ nie jest podzielny przez $4$.
+Zatem $f$ jest nierozkładalny nad $\mathbb Q$.
+Ciało rozkładu $L$ ma grupę Galois $G$ działającą
+wiernie i przechodnio na pięciu różnych pierwiastkach:
+przechodniość wynika z możliwości przedłużania
+$\mathbb Q$-zanurzeń wysyłających dowolny pierwiastek
+$f$ na dowolny inny, a różność pierwiastków
+z charakterystyki zero. Zatem $G\le S_5$ jest
+podgrupą przechodnią.
+
+\emph{Krok 2: liczba pierwiastków rzeczywistych.}
+Pochodna wynosi $f'(x)=5x^4-4$.
+Ma dokładnie dwa zera rzeczywiste $-c$ i $c$,
+gdzie $c=(4/5)^{1/4}>0$.
+Funkcja $f$ rośnie na $(-\infty,-c)$, maleje
+na $(-c,c)$ i rośnie na $(c,+\infty)$.
+Ponadto z $c^5=(4/5)c$ wynika
+$f(-c)=2+(16/5)c>0$ oraz
+$f(c)=2-(16/5)c<0$;
+ostatnia nierówność zachodzi, gdyż $c>5/8$,
+co wynika choćby z $c^4=4/5>(5/8)^4$.
+Ponieważ $f(x)\to-\infty$ dla $x\to-\infty$
+oraz $f(x)\to+\infty$ dla $x\to+\infty$,
+na każdym z trzech wskazanych przedziałów
+leży dokładnie jeden pierwiastek rzeczywisty.
+Pozostałe dwa pierwiastki są nierzeczywiste
+i wzajemnie sprzężone zespolenie.
+Sprzężenie zespolone, ograniczone do $L$, jest
+$\mathbb Q$-automorfizmem, bo $L$ jest ciałem
+rozkładu wielomianu o współczynnikach wymiernych.
+Jako permutacja pięciu pierwiastków jest transpozycją:
+zachowuje trzy pierwiastki rzeczywiste i zamienia
+pozostałe dwa. Stąd $G$ zawiera transpozycję.
+
+\emph{Krok 3: przechodnia grupa permutacji pięciu elementów
+zawierająca transpozycję jest całą grupą symetryczną.}
+Udowodnimy to bez odwoływania się do klasyfikacji
+podgrup $S_5$. Na zbiorze pięciu pierwiastków
+rozważmy graf, którego krawędziami są pary
+$\{i,j\}$ takie, że transpozycja $(ij)$ należy do $G$.
+Graf ma co najmniej jedną krawędź. Jeśli
+$g\in G$ i $(ij)\in G$, to
+$g(ij)g^{-1}=(g(i)\,g(j))\in G$,
+więc $G$ permutuje składowe spójności grafu.
+Ponieważ działanie $G$ na pięciu wierzchołkach
+jest przechodnie, wszystkie składowe mają tę samą
+liczbę wierzchołków. Ta liczba dzieli $5$.
+Nie może wynosić $1$, gdyż istnieje krawędź,
+a więc wynosi $5$: graf jest spójny.
+Transpozycje odpowiadające krawędziom dowolnego
+grafu spójnego generują pełną grupę symetryczną
+jego wierzchołków. Istotnie, dla krawędzi drzewa
+rozpinającego można, przez kolejne sprzęganie
+transpozycji wzdłuż ścieżki, otrzymać transpozycję
+dowolnych dwóch wierzchołków. Każda transpozycja
+należy zatem do $G$. Wynika stąd $G=S_5$.
+
+\emph{Krok 4: brak rozwiązywalności.}
+Grupa $A_5$ jest nieabelową grupą prostą
+(Twierdzenie~\ref{aa:tw:a5-simple}), zatem nie jest
+rozwiązalna (Wniosek~\ref{aa:wn:a5-not-solvable}).
+Ponieważ $A_5\le S_5$, grupa $S_5$ również nie może
+być rozwiązalna: podgrupa grupy rozwiązalnej
+zawsze jest rozwiązalna. Kryterium
+\ref{aa:tw:radicals-solvable-galois} pokazuje,
+że $f$ nie jest rozwiązywalny przez pierwiastniki.
+\end{proof}
+
+\begin{wniosek}[Twierdzenie Abela--Ruffiniego]
+\label{aa:wn:abel-ruffini}
+Nie istnieje ogólna metoda wyrażenia wszystkich pierwiastków
+każdego wielomianu piątego stopnia nad $\mathbb Q$
+za pomocą skończonego ciągu działań arytmetycznych
+i wyciągania pierwiastków, zaczynając od jego współczynników.
+Nie oznacza to, że \emph{żaden} wielomian piątego stopnia
+nie jest rozwiązywalny przez pierwiastniki.
+\end{wniosek}
+\begin{proof}
+Gdyby taka metoda istniała, stosowałaby się również
+do wielomianu $X^5-4X+2$. Byłby on wówczas
+rozwiązywalny przez pierwiastniki nad $\mathbb Q$,
+w sprzeczności z
+Twierdzeniem~\ref{aa:tw:quintic-s5-example}.
+Z drugiej strony wielomian $X^5-2$ jest rozwiązywalny
+przez pierwiastniki: po dołączeniu $\sqrt[5]2$ oraz
+pierwotnego pierwiastka piątego stopnia z jedynki
+otrzymujemy wszystkie jego pierwiastki.
+\end{proof}
+
+\begin{uwaga}[Granice i zastosowania kryterium]
+\label{aa:uw:radicals-next}
+W charakterystyce dodatniej wymagane są osobne
+ostrożności dotyczące rozdzielczości. Nasz dowód
+kryterium rozwiązywalności przez pierwiastniki zakłada
+charakterystykę zero. W przyszłych rozdziałach można
+rozwinąć teorię rozszerzeń cyklicznych, 90. twierdzenie Hilberta,
+rozwiązywalność geometrycznych konstrukcji oraz teorię Galois
+wielomianów związanych z działaniem grup na zbiorach pierwiastków.
+\end{uwaga}
