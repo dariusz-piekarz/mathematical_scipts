@@ -215,6 +215,26 @@ class ALG07Regressions(unittest.TestCase):
         )[1].split(r"\end{stwierdzenie}", 1)[0]
         self.assertIn("dla $D=C$ i $C$ gładkiej", degree)
 
+    def test_vector_bundle_rr_uses_chow_canonical_class(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        noether = src.split(r"\label{tw:ga7-noether}", 1)[1].split(
+            r"\end{twierdzenie}", 1)[0]
+        self.assertIn(
+            r"(c_1(\mathcal E)-c_1(\omega_S))", noether)
+        self.assertNotIn(r"(c_1(\mathcal E)-K_S)", noether)
+        proof = src.split(r"\label{tw:ga7-noether}", 1)[1].split(
+            r"\end{proof}", 1)[0]
+        self.assertIn(r"c_1(T_S)=-c_1(\omega_S)", proof)
+        self.assertIn(r"c_1(\omega_S)=[K_S]", proof)
+
+    def test_bezout_example_rejects_zero_polynomial(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        bezout = src.split(r"\label{prz:ga7-bezout}", 1)[1].split(
+            r"\end{przyklad}", 1)[0]
+        self.assertIn(r"$F\ne0$", bezout)
+        self.assertIn(r"$d\ge1$", bezout)
+        self.assertIn("dodatnich stopni", bezout)
+
     def test_source_terminology_and_crossrefs(self):
         src = SOURCE.read_text(encoding="utf-8")
         stripped = re.sub(
