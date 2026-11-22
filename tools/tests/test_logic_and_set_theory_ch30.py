@@ -41,7 +41,7 @@ class TestChapter30(unittest.TestCase):
         for path in DIR.glob("*.tex"):
             labels.update(re.findall(r"\\label\{([^}]+)\}",path.read_text("utf8")))
         refs=re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}",TEXT)
-        self.assertEqual(len(refs),48)
+        self.assertEqual(len(refs),49)
         self.assertEqual(set(refs)-labels,set())
 
     def test_original_pdf_full_material(self):
@@ -131,6 +131,8 @@ class TestChapter30(unittest.TestCase):
         self.assertIn(r"\label{thm:wadge-open-nonselfdual}",TEXT)
         self.assertIn(r"U_0=f^{-1}[U]",TEXT)
         self.assertIn(r"(f\circ g)^{-1}[U]",TEXT)
+        self.assertIn("który nie jest domknięty",TEXT)
+        self.assertIn(r"U_0=f^{-1}[V]",TEXT)
         self.assertIn("Już w ZF zachodzą następujące fakty",TEXT)
 
     def test_global_choice_not_conflated_with_ad(self):
