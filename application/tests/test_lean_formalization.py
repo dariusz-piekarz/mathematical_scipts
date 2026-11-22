@@ -79,6 +79,20 @@ class LeanFormalizationTests(unittest.TestCase):
         self.assertEqual(b["formalization_status"], "missing")
         self.assertIsNone(b["lean_code"])
 
+    def test_adjacent_proof_can_open_its_theorem_formalization(self):
+        proof = "\\begin{proof}\nDowód prawa de Morgana.\n\\end{proof}\n"
+        self.con.execute("UPDATE documents SET content=? WHERE id='LST-01'", (SOURCE + proof,))
+        self.con.execute("INSERT INTO entities VALUES(?,?,?,?,?,?,?,?)",
+                         ("LST-01/proof/0002", "LST-01", "proof", "Dowód",
+                          4, 6, len(SOURCE), len(SOURCE) + len(proof)))
+        self.con.commit()
+        result = lean.fragment(self.con, entity_id="LST-01/proof/0002",
+                               lean_root=self.root)
+        self.assertEqual(result["source_linkage"], "proof_of_adjacent_theorem")
+        self.assertEqual(result["formalization_id"], "sample")
+        self.assertEqual(result["statement_status"], "needs_review")
+        self.assertFalse(result["certificate"])
+
     def test_pinned_source_and_stale_source(self):
         self.entry["source_document_sha256"] = self.digest
         self.save_manifest()
