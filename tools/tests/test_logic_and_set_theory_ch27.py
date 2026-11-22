@@ -28,7 +28,7 @@ class TestChapter27(unittest.TestCase):
                 self.assertTrue(stack)
                 self.assertEqual(stack.pop(),env)
         self.assertFalse(stack)
-        expected={"definicja":4,"twierdzenie":11,"proof":12,
+        expected={"definicja":4,"twierdzenie":11,"proof":13,
                   "przyklad":5,"wniosek":2,"uwaga":6,"figure":1}
         for env,num in expected.items():
             with self.subTest(env=env):
@@ -42,7 +42,7 @@ class TestChapter27(unittest.TestCase):
         refs=re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}",SOURCE)
         self.assertEqual(len(labels),len(set(labels)))
         self.assertEqual(len(re.findall(r"\\label\{([^}]+)\}",SOURCE)),24)
-        self.assertEqual(len(refs),12)
+        self.assertEqual(len(refs),14)
         self.assertEqual(set(refs)-set(labels),{"ch:ordinals"})
 
     def test_full_original_material_retained(self):
@@ -66,6 +66,14 @@ class TestChapter27(unittest.TestCase):
         self.assertEqual(0**0,1)
         self.assertEqual(0**1,0)
         self.assertEqual(3**2,9)
+
+    def test_countability_proofs_include_explicit_constructions(self):
+        self.assertIn(r"t_{s+1}=t_s+s+1",SOURCE)
+        self.assertIn("przeliczalnie nieskończony",SOURCE)
+        self.assertIn(r"e(k+1):=\min",SOURCE)
+        self.assertIn(r"j:\Q\to\N",SOURCE)
+        self.assertIn(r"\gcd(|a|,b)=1",SOURCE)
+        self.assertIn(r"S\mapsto j[S]",SOURCE)
 
     def test_cantor_pairing_is_bijection_on_prefix(self):
         def pair(m,n):
