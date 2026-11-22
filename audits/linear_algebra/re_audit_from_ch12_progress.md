@@ -10,8 +10,8 @@
 
 - Bieżący rozdział: **26**.
 - Ostatni zamknięty blob (rozdział 25): **6b57fc1b64ef560b98e17f89322c688160376ccf**.
-- Liczba kolejnych czystych audytów (bieżący rozdział 26): **0/2**.
-- Kolejne działanie: **wykonać ponowny audyt 01 rozdziału 26**. Rozdział 25 zamknięto po dwóch czystych kontrolach 01 i 02 na blobie `6b57fc1b64ef560b98e17f89322c688160376ccf` oraz CI success 45021237405 i 45021828182.
+- Liczba kolejnych czystych audytów (bieżący rozdział 26): **2/2; CI dla poprawionego bloba w trakcie**.
+- Kolejne działanie: **potwierdzić zakończone sukcesem dedykowane CI dla bloba rozdziału 26 `80032eef1e0e5de817821d97de96aaf86c960e03`** (run 45022565397 lub nowszy z identycznym blobem), a następnie zamknąć 26 i przejść do audytu 01 rozdziału 27. Audyt 01 rozdziału 26 wykrył i poprawił błędne wyrażenie «w współczynnikach» na «we współczynnikach», czyste audyty 02–03 po poprawce.
 - Historyczne audyty, w tym ręczne audyty rozdziałów 13–15 z 22 listopada, pozostają ważnymi źródłami, ale **nie są automatycznie liczone** jako wykonanie nowego przebiegu.
 
 ## Tabela statusów
@@ -32,7 +32,7 @@
 | 23 | STABILNY; audyty 01 i 02 czyste, CI success | 2 | `bbd199baed1ee2c1a88843aad9fbfd0eac665d22` |
 | 24 | STABILNY; audyty 01 i 02 czyste, CI success | 2 | `92106feafce495e11f051279733cb34e9d9bed64` |
 | 25 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `6b57fc1b64ef560b98e17f89322c688160376ccf` |
-| 26 | BIEŻĄCY; ponowny audyt 01 do wykonania | 0 | — |
+| 26 | BIEŻĄCY; audyty 02 i 03 czyste po poprawce, oczekiwanie na CI dla nowego bloba | 2 | `80032eef1e0e5de817821d97de96aaf86c960e03` |
 | 27 | W kolejce | 0 | — |
 | 28 | W kolejce | 0 | — |
 | 29 | W kolejce | 0 | — |
@@ -231,3 +231,9 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - Rozdział **25: STABILNY (2/2)** na źródle `6b57fc1b64ef560b98e17f89322c688160376ccf`, niezmienionym od audytu 01. Raport [25_iteration_02_2026-11-22.md](re_audit_from_ch12/25_iteration_02_2026-11-22.md).
 - Nowy lokalny test `/mnt/data/la25_reaudit_02_tests.py`: **889** kontroli Kalman/PBH/obserwowalność, **39** porównań graminu ciągłego i energii, **120** przykładów wymiernych sprzężenia zwrotnego, **1048 PASS**. LaTeX: 47 unikalnych etykiet, 30 poprawnych odsyłaczy, 108 par środowisk. Bez zmian źródła.
 - Dedykowane CI [45021237405](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45021237405) i [45021828182](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45021828182) completed/success z identycznym blobem. Następny: rozdział 26.
+
+## Ostatnia rzeczywista iteracja — 2026-11-22 (rozdział 26, audyty 01–03)
+
+- W nowym [audycie 01](re_audit_from_ch12/26_iteration_01_2026-11-22.md) wykryto i poprawiono usterkę językową „w współczynnikach” → „we współczynnikach”, commit [5a7317df](https://github.com/dariusz-piekarz/mathematical_scipts/commit/5a7317df50f2ddd986d424a9ed3b0f9ea8592b4f). Audyt 01 **nieczysty, 0/2** po zmianie.
+- [Audyt 02](re_audit_from_ch12/26_iteration_02_2026-11-22.md) i [audyt 03](re_audit_from_ch12/26_iteration_03_2026-11-22.md) to dwa kolejne **czyste** przeglądy poprawionego bloba `80032eef1e0e5de817821d97de96aaf86c960e03` (2/2). Testy niezależne: 254 przypadki DARE/CARE/półokreślony koszt przed korektą, 196 testów porównań z Lapunowem po korekcie, 143 dodatkowe kontrole trójstanowe i monotoniczność rekurencji — wszystkie PASS. Weryfikacja LaTeX: 38 etykiet, 45 odsyłaczy, 56 par środowisk. Nie wykonano nowej wizualnej inspekcji PDF.
+- Dedykowane [CI 45022565397](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45022565397) dla commitu zawierającego dokładnie ten nowy blob było **in_progress** w chwili odczytu (kompilacja PDF). **Nie zamykać rozdziału ani nie przechodzić do 27 przed potwierdzeniem completed/success dla właściwego bloba**.
