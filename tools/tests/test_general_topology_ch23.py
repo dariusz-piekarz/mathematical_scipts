@@ -97,6 +97,29 @@ def freudenthal_simplex() -> int:
     return checked
 
 
+
+def poincare_miranda_boundary_model() -> int:
+    """For f_i(x)=x_i-1/2, the clipped fixed-point equation has
+    its only discrete test solution at the center of the cube.
+    This checks the elementary reduction to Brouwer, not Brouwer itself.
+    """
+    checks = 0
+    for n in (1, 2, 3):
+        for coords in product((0., .25, .5, .75, 1.), repeat=n):
+            f = tuple(x - .5 for x in coords)
+            clipped = tuple(min(1., max(0., x-v))
+                            for x, v in zip(coords, f))
+            fixed = all(abs(x-y) < 1e-12
+                        for x, y in zip(coords, clipped))
+            assert fixed == all(abs(x-.5) < 1e-12 for x in coords)
+            for i, x in enumerate(coords):
+                if x == 0:
+                    assert f[i] < 0
+                elif x == 1:
+                    assert f[i] > 0
+            checks += 1
+    return checks
+
 def interval_grid_overlap() -> int:
     checks = 0
     for h in (.05, .1, .2):
@@ -155,9 +178,16 @@ def source_integration() -> tuple[int, int]:
         r"zbieżności\s+zwartej",
     ):
         assert not re.search(forbidden, chapter, re.IGNORECASE), forbidden
-    # This first installment proves the upper Euclidean bound, not the
-    # general n-dimensional cube lower bound.
-    assert "wymaga również dolnego oszacowania" in chapter
+    # All dimensions of the standard cube are now covered, with the
+    # lower bound using Poincare-Miranda and Brouwer's fixed-point theorem.
+    for new_label in (
+        "lem:topog23-poincare-miranda",
+        "lem:topog23-generic-vectors",
+        "thm:topog23-cube-dimension",
+        "cor:topog23-box-dimension",
+    ):
+        assert rf"\label{{{new_label}}}" in chapter, new_label
+    assert "twierdzenia Brouwera" in chapter
     assert "Nerwem" in chapter
     return len(labels), len(refs)
 
@@ -167,7 +197,8 @@ if __name__ == "__main__":
     c = cantor_cylinders()
     t = freudenthal_simplex()
     g = interval_grid_overlap()
+    pm = poincare_miranda_boundary_model()
     labs, refs = source_integration()
     print(f"PASS ch23: {f} finite covers, {c} Cantor words, "
-          f"{t} simplex points, {g} grid points, "
+          f"{t} simplex points, {g} grid points, {pm} PM boundary checks, "
           f"{labs} labels and {refs} refs")
