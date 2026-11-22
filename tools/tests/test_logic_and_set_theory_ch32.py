@@ -49,12 +49,37 @@ class TestChapter32(unittest.TestCase):
         self.assertEqual(len(refs), 11)
         self.assertEqual(set(refs) - all_labels, set())
 
-    def test_countable_generic_filter_construction(self):
+    def test_rasiowa_sikorski_general_poset_and_countable_family(self):
         self.assertIn(r"\label{thm:rasiowa-sikorski}", TEXT)
         self.assertIn(r"\label{cor:countable-generic}", TEXT)
+        self.assertIn("niekoniecznie", TEXT)
+        self.assertIn("przeliczalnym", TEXT)
+        self.assertIn(r"\emph{dobre uporządkowanie}", TEXT)
         self.assertIn(r"p_{\max(m,n)}", TEXT)
         self.assertIn(r"G\cap D_n", TEXT)
-        self.assertIn("przeliczalnym", TEXT)
+        self.assertNotIn(r"Ustalmy enumerację \mathbb P", TEXT)
+
+        # A finite model of the lemma: extension order on binary sequences.
+        poset = [(), (0,), (1,), (0, 0), (0, 1), (1, 0), (1, 1)]
+        stronger = lambda q, p: q[:len(p)] == p
+        dense = [
+            {p for p in poset if len(p) >= 1},
+            {p for p in poset if len(p) == 2},
+        ]
+        self.assertTrue(all(
+            any(stronger(q, p) for q in D)
+            for D in dense for p in poset
+        ))
+        chain = [()]
+        for D in dense:
+            chain.append(next(q for q in poset if q in D and stronger(q, chain[-1])))
+        G = {q for q in poset if any(stronger(p, q) for p in chain)}
+        self.assertIn((), G)
+        self.assertTrue(all(G & D for D in dense))
+        self.assertTrue(all(
+            any(stronger(r, p) and stronger(r, q) for r in G)
+            for p in G for q in G
+        ))
 
     def test_compatibility_of_finite_binary_conditions(self):
         def compatible(p, q):
