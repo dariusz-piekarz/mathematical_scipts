@@ -1,4 +1,4 @@
-name: Logic and set theory chapters 01-31 validation
+name: Logic and set theory chapters 01-32 validation
 
 on:
   push:
@@ -33,6 +33,7 @@ on:
       - "audits/logic_and_set_theory_ch29_audit_*.md"
       - "audits/logic_and_set_theory_ch30_audit_*.md"
       - "audits/logic_and_set_theory_ch31_audit_*.md"
+      - "audits/logic_and_set_theory_ch32_audit_*.md"
       - "tools/tests/test_logic_and_set_theory_ch12.py"
       - "tools/tests/test_logic_and_set_theory_ch13.py"
       - "tools/tests/test_logic_and_set_theory_ch14.py"
@@ -53,6 +54,7 @@ on:
       - "tools/tests/test_logic_and_set_theory_ch29.py"
       - "tools/tests/test_logic_and_set_theory_ch30.py"
       - "tools/tests/test_logic_and_set_theory_ch31.py"
+      - "tools/tests/test_logic_and_set_theory_ch32.py"
       - "tools/tests/test_logic_and_set_theory_ch11.py"
       - "tools/tests/test_logic_and_set_theory_ch10.py"
       - "tools/tests/test_logic_and_set_theory_ch09.py"
@@ -77,7 +79,7 @@ jobs:
           catalog = json.loads(Path("catalog/books.json").read_text(encoding="utf-8"))
           book = next(item for item in catalog["books"] if item["id"] == "logic_and_set_theory")
           chapters = book["chapters"]
-          assert len(chapters) >= 31, chapters
+          assert len(chapters) >= 32, chapters
           expected_names = [
               "01-zdania-i-spojniki-logiczne.tex",
               "02-kwantyfikatory-i-podstawowe-metody-dowodzenia.tex",
@@ -110,12 +112,13 @@ jobs:
               "29-slabsze-zasady-wyboru-i-ich-ograniczenia.tex",
               "30-gry-nieskonczone-i-aksjomat-determinacji.tex",
               "31-uniwersum-konstruowalne-i-modele-wewnetrzne.tex",
+              "32-podstawy-wymuszania-i-modele-generyczne.tex",
           ]
-          assert [Path(path).name for path in chapters[:31]] == expected_names
+          assert [Path(path).name for path in chapters[:32]] == expected_names
           entry = Path(book["entrypoint"])
           text = entry.read_text(encoding="utf-8")
           sources = []
-          for path in chapters[:31]:
+          for path in chapters[:32]:
               chapter = Path(path)
               assert chapter.is_file(), path
               assert "\\input{../../" + path + "}" in text, path
@@ -123,8 +126,8 @@ jobs:
           labels = [name for source in sources for name in re.findall(r"\\label\{([^}]+)\}", source)]
           refs = [name for source in sources for name in re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", source)]
           assert len(labels) == len(set(labels)), "Duplicate LaTeX labels"
-          assert len(labels) == 770, f"Unexpected labels: {len(labels)}"
-          assert len(refs) == 579, f"Unexpected references: {len(refs)}"
+          assert len(labels) == 803, f"Unexpected labels: {len(labels)}"
+          assert len(refs) == 590, f"Unexpected references: {len(refs)}"
           forward = set()
           assert set(refs) - set(labels) == forward, "Unexpected unresolved targets in partial book"
           inventories = [
@@ -206,6 +209,9 @@ jobs:
               (sources[30], {"twierdzenie": 5, "lemat": 27,
                              "wniosek": 2, "proof": 34, "definicja": 6,
                              "przyklad": 9, "uwaga": 16}),
+              (sources[31], {"twierdzenie": 4, "lemat": 7,
+                             "wniosek": 1, "proof": 12, "definicja": 11,
+                             "przyklad": 4, "uwaga": 4, "figure": 1}),
           ]
           for source, inventory in inventories:
               for env, expected in inventory.items():
@@ -270,6 +276,8 @@ jobs:
         run: python -m unittest tools.tests.test_logic_and_set_theory_ch30 -v
       - name: Run chapter 31 constructibility regression tests
         run: python -m unittest tools.tests.test_logic_and_set_theory_ch31 -v
+      - name: Run chapter 32 forcing and generic-model regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch32 -v
       - name: Compile logic and set theory PDF
         uses: xu-cheng/latex-action@v3
         with:
@@ -298,7 +306,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: logic-and-set-theory-ch01-ch31
+          name: logic-and-set-theory-ch01-ch32
           path: |
             books/pl/logic_and_set_theory.pdf
             books/pl/logic_and_set_theory.log
