@@ -19,6 +19,21 @@ class LeanHttpTests(unittest.TestCase):
     def tearDownClass(cls):
         cls.context.__exit__(None, None, None)
 
+    def test_inspection_endpoint_is_opt_in_and_never_certifies(self):
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "0"}):
+            result = self.client.post("/api/lean/dependencies/inspect",
+                                      json={"formalization_id": "lst01-de-morgan"})
+        self.assertEqual(result.status_code, 200, result.text)
+        self.assertEqual(result.json()["inspection_status"], "blocked")
+        self.assertFalse(result.json()["certificate"])
+        self.assertEqual(result.json()["constants"], {})
+        invalid = self.client.post("/api/lean/dependencies/inspect",
+                                   json={"formalization_id": "../../etc"})
+        self.assertEqual(invalid.status_code, 400)
+        malformed = self.client.post("/api/lean/dependencies/inspect",
+                                     json={"formalization_id": "x" * 101})
+        self.assertEqual(malformed.status_code, 422)
+
     def test_dependency_graph_real_lean_source(self):
         response = self.client.get("/api/lean/dependencies",
                                    params={"formalization_id": "lst01-de-morgan"})
