@@ -338,6 +338,29 @@ class LeanFormalizationTests(unittest.TestCase):
         self.assertFalse(response["certificate"])
         spawn.assert_not_called()
 
+    def test_non_theorem_owner_is_rejected_across_catalog_preview_and_runner(self):
+        self.entry["source_document_sha256"] = self.digest
+        self.entry["statement_status"] = "approved"
+        self.save_manifest()
+        self.con.execute(
+            "UPDATE entities SET kind='section' WHERE id=?", ("LST-01/theorem/0001",))
+        self.con.commit()
+        from backend import lean_catalog
+        record = lean_catalog.list_formalizations(self.con, lean_root=self.root)["items"][0]
+        self.assertEqual(record["index_status"], "invalid_label_binding")
+        self.assertEqual(record["formalization_status"], "stale")
+        with self.assertRaises(HTTPException) as caught:
+            lean.fragment(self.con, entity_id="LST-01/theorem/0001",
+                          lean_root=self.root)
+        self.assertEqual(caught.exception.status_code, 409)
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_process.execute_registered") as spawn:
+            result = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(result["proof_status"], "blocked")
+        self.assertFalse(result["certificate"])
+        spawn.assert_not_called()
+
     def test_indexed_label_changed_during_execution_blocks_persistence(self):
         self.entry["source_document_sha256"] = self.digest
         self.entry["statement_status"] = "approved"
