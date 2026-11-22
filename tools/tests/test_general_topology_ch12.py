@@ -125,7 +125,7 @@ def lint() -> tuple[int, int]:
     expected = r"\input{../../" + CHAPTER + "}"
     assert expected in book and expected in standalone
     target = next(b for b in catalog["books"] if b["id"] == "general_topology")
-    assert target["chapters"][-1] == CHAPTER
+    assert target["chapters"][11] == CHAPTER
     assert target["entrypoint"] == "books/pl/general_topology.tex"
     assert "zbieżności jednostajnej na zbiorach zwartych" in plan
     assert "uzwarcenie Čecha–Stone’a" in plan
