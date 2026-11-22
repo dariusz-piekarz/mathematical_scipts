@@ -51,3 +51,5 @@ dowód w pełnych krokach, komentarz interpretacyjny, rysunek tam gdzie pomaga.
 Powyższy standard dotyczy także geometrii, algebry, topologii,
 analizy funkcjonalnej, PDE, teorii miary i wszystkich pozostałych
 polskojęzycznych tekstów matematycznych.
+
+9. **Terminologia sumy zbiorów (reguła globalna):** w polskich tekstach matematycznych dla konstrukcji $A\cup B$ używać nazw **„suma zbiorów”**, **„suma dwóch osi jako zbiorów punktów”** lub zapisu symbolicznego $A\cup B$; nie stosować rzeczownika „unia”. Gdy mowa o podprzestrzeniach liniowych, wyraźnie odróżniać sumę zbiorów punktów (operacja $\cup$) od sumy podprzestrzeni ($U+V$). Reguła obowiązuje w nowych rozdziałach, opisach rysunków, korektach i audytach wszystkich skryptów.
