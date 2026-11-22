@@ -17,6 +17,8 @@ import sqlite3
 
 from fastapi import HTTPException
 
+from backend import lean_results
+
 LEAN_ROOT = Path(__file__).resolve().parents[1] / "lean"
 MAX_SOURCE_CHARS = 30000
 MAX_LEAN_CHARS = 60000
@@ -124,9 +126,17 @@ def _matches(item: dict[str, Any], d: sqlite3.Row, labels: list[str]) -> bool:
     return item["source_module"] == d["id"] and item["source_label"] in labels
 
 
+def _results_override(lean_root: Path, results_root: Path | None) -> Path | None:
+    """Keep alternate Lean roots in tests isolated from the application run history."""
+    if results_root is not None:
+        return results_root
+    return lean_root.parent / "lean_runs" if lean_root.resolve() != LEAN_ROOT.resolve() else None
+
+
 def fragment(con: sqlite3.Connection, *, entity_id: str | None = None,
              module_id: str | None = None, start_line: int | None = None,
-             end_line: int | None = None, lean_root: Path = LEAN_ROOT) -> dict[str, Any]:
+             end_line: int | None = None, lean_root: Path = LEAN_ROOT,
+             results_root: Path | None = None) -> dict[str, Any]:
     d, content, labels, first, last, eid, linkage = _find_source(
         con, entity_id=entity_id, module_id=module_id,
         start_line=start_line, end_line=end_line)
@@ -153,6 +163,17 @@ def fragment(con: sqlite3.Connection, *, entity_id: str | None = None,
                  "formalization_status": "stale" if sha_ok is False else "ready" if sha_ok else "draft",
                  "source_pinned": sha_ok is not None,
                  "lean_file": item["lean_file"]})
+    if sha_ok is False:
+        return base
+    try:
+        fingerprint = lean_results.fingerprint(d["sha256"], item["_file"], lean_root)
+        run_info = lean_results.last_run(
+            item["id"], fingerprint,
+            results_root=_results_override(lean_root, results_root))
+        base.update(run_info)
+    except (OSError, ValueError) as exc:
+        base["run_record_invalid"] = True
+        base["run_record_error"] = str(exc)[:300]
     return base
 
 
@@ -167,7 +188,8 @@ def availability(lean_root: Path = LEAN_ROOT) -> dict[str, Any]:
 
 
 def run(con: sqlite3.Connection, formalization_id: str,
-        lean_root: Path = LEAN_ROOT) -> dict[str, Any]:
+        lean_root: Path = LEAN_ROOT,
+        results_root: Path | None = None) -> dict[str, Any]:
     if not VALID_ID.fullmatch(formalization_id):
         raise HTTPException(400, "Niepoprawny identyfikator.")
     matches = [i for i in _registry(lean_root) if i["id"] == formalization_id]
@@ -191,15 +213,37 @@ def run(con: sqlite3.Connection, formalization_id: str,
                 "detail": "Nie znaleziono polecenia lake (Lean 4).", "certificate": False}
     # A registered path is trusted only if local repository authors have reviewed it.
     # This is NOT a security boundary against a malicious .lean file.
+    try:
+        fingerprint = lean_results.fingerprint(d["sha256"], item["_file"], lean_root)
+    except (OSError, ValueError) as exc:
+        raise HTTPException(503, f"Nie można obliczyć wersji formalizacji: {exc}") from exc
+
+    def finish(status: str, detail: str, log: str = "") -> dict[str, Any]:
+        result = {"formalization_id": formalization_id, "proof_status": status,
+                  "detail": detail, "log": log, "statement_status": item["statement_status"],
+                  "certificate": False}
+        try:
+            after = lean_results.fingerprint(d["sha256"], item["_file"], lean_root)
+            if after != fingerprint:
+                return {**result, "proof_status": "blocked",
+                        "detail": "Zmiana plików formalizacji podczas pracy Lean; wynik unieważniony."}
+            saved = lean_results.save_run(
+                formalization_id, fingerprint, proof_status=status, detail=detail,
+                log=log, results_root=_results_override(lean_root, results_root))
+            result["run_record_saved"] = True
+            result["last_run_at"] = saved["finished_at"]
+        except (OSError, ValueError) as exc:
+            result["run_record_saved"] = False
+            result["run_record_warning"] = "Nie udało się zapisać historii uruchomienia: " + str(exc)[:250]
+        return result
+
     command = ["lake", "env", "lean", str(item["_file"].relative_to(lean_root))]
     try:
         p = subprocess.run(command, cwd=lean_root, capture_output=True,
                            text=True, encoding="utf-8", errors="replace",
                            timeout=TIMEOUT_SECONDS, check=False)
     except subprocess.TimeoutExpired:
-        return {"formalization_id": formalization_id, "proof_status": "timeout",
-                "detail": f"Lean przekroczył limit {TIMEOUT_SECONDS} s.",
-                "certificate": False}
+        return finish("timeout", f"Lean przekroczył limit {TIMEOUT_SECONDS} s.")
     except OSError as exc:
         return {"formalization_id": formalization_id, "proof_status": "toolchain_unavailable",
                 "detail": str(exc), "certificate": False}
@@ -207,8 +251,5 @@ def run(con: sqlite3.Connection, formalization_id: str,
     # Success never establishes equivalence between the LaTeX and Lean statements.
     # Do not infer the absence of sorry/extra axioms from exit status alone.
     success = p.returncode == 0
-    return {"formalization_id": formalization_id,
-            "proof_status": "compiled" if success else "failed",
-            "detail": f"Lean zakończył pracę z kodem {p.returncode}.",
-            "log": log, "statement_status": item["statement_status"],
-            "certificate": False}
+    return finish("compiled" if success else "failed",
+                  f"Lean zakończył pracę z kodem {p.returncode}.", log)
