@@ -17,7 +17,7 @@ import sqlite3
 
 from fastapi import HTTPException
 
-from backend import lean_cgroup, lean_results, lean_process
+from backend import lean_cgroup, lean_results, lean_process, lean_windows_job
 
 LEAN_ROOT = Path(__file__).resolve().parents[1] / "lean"
 MAX_SOURCE_CHARS = 30000
@@ -233,7 +233,7 @@ def availability(lean_root: Path = LEAN_ROOT) -> dict[str, Any]:
         total_error = None
     except ValueError as exc:
         total_mb, total_error = None, str(exc)
-    total_supported = lean_cgroup.available()
+    total_supported = lean_cgroup.available() or lean_windows_job.available()
     total_ready = total_error is None and (total_mb is None or total_supported)
     return {"runner_enabled": enabled, "lake_available": bool(lake),
             "ready": enabled and bool(lake) and memory_ready and total_ready
@@ -244,7 +244,7 @@ def availability(lean_root: Path = LEAN_ROOT) -> dict[str, Any]:
             "total_memory_limit_mb": total_mb,
             "total_memory_limit_supported": total_supported,
             "total_memory_limit_error": total_error if total_error is not None else
-            ("Brak delegowanego kontrolera pamięci cgroup v2." if total_mb is not None
+            ("Brak cgroup v2 lub Windows Job Objects dla łącznego limitu pamięci." if total_mb is not None
              and not total_supported else None),
             "memory_limit_error": memory_error if memory_error is not None else
             ("Nieobsługiwany system limitu pamięci." if memory_mb is not None
@@ -297,9 +297,10 @@ def run(con: sqlite3.Connection, formalization_id: str,
     except ValueError as exc:
         return {"formalization_id": formalization_id, "proof_status": "blocked",
                 "detail": str(exc), "certificate": False}
-    if total_mb is not None and not lean_cgroup.available():
+    if total_mb is not None and not (
+            lean_cgroup.available() or lean_windows_job.available()):
         return {"formalization_id": formalization_id, "proof_status": "blocked",
-                "detail": "Brak delegowanego kontrolera pamięci cgroup v2.",
+                "detail": "Brak cgroup v2 lub Windows Job Objects dla łącznego limitu pamięci.",
                 "certificate": False}
     if shutil.which("lake") is None:
         return {"formalization_id": formalization_id, "proof_status": "toolchain_unavailable",
@@ -335,7 +336,7 @@ def run(con: sqlite3.Connection, formalization_id: str,
         returncode, log, timed_out = lean_process.execute_registered(
             command, lean_root, timeout=TIMEOUT_SECONDS,
             memory_limit_mb=memory_mb, total_memory_mb=total_mb)
-    except lean_cgroup.CgroupUnavailable as exc:
+    except (lean_cgroup.CgroupUnavailable, lean_windows_job.JobUnavailable) as exc:
         return {"formalization_id": formalization_id, "proof_status": "blocked",
                 "detail": str(exc), "certificate": False}
     except lean_process.MemoryLimitUnavailable as exc:
