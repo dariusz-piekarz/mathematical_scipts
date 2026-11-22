@@ -58,10 +58,12 @@ class ALG00GeometricExamples(unittest.TestCase):
                 for y in range(p):
                     self.assertEqual((x*y % p == 0), (x == 0 or y == 0))
 
-    def test_axes_intersect_at_origin(self):
+    def test_axes_intersect_at_origin_only(self):
         for p in (2, 3, 5, 7):
-            self.assertEqual((0*0) % p, 0)
-            self.assertTrue(0 == 0 and 0 == 0)
+            horizontal = {(x, 0) for x in range(p)}
+            vertical = {(0, y) for y in range(p)}
+            self.assertEqual(horizontal & vertical, {(0, 0)})
+            self.assertEqual(len(horizontal | vertical), 2*p-1)
 
     def test_double_point_has_nonzero_nilpotent(self):
         # k[t]/(t^2): a+bt, with (a+bt)(c+dt)=ac+(ad+bc)t.
