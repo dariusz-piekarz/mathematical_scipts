@@ -119,9 +119,9 @@ def inspect(con: sqlite3.Connection, identifier: str, *,
 
     try:
         with lean_run_lock.exclusive(lean_root):
-            record = next(i for i in lean_catalog.list_formalizations(
-                con, lean_root=lean_root)["items"] if i["formalization_id"] == identifier)
-            if record["formalization_status"] != "ready":
+            record = next((i for i in lean_catalog.list_formalizations(
+                con, lean_root=lean_root)["items"] if i["formalization_id"] == identifier), None)
+            if record is None or record["formalization_status"] != "ready":
                 return _empty(identifier, "blocked", "Nieaktualne przypięcie źródła.")
             doc = con.execute("SELECT sha256,content FROM documents WHERE id=?",
                               (item["source_module"],)).fetchone()
@@ -179,6 +179,15 @@ def inspect(con: sqlite3.Connection, identifier: str, *,
                     != doc["sha256"]):
                 return _empty(identifier, "blocked",
                               "Indeks rozdziału zmienił się podczas inspekcji.")
+            # A parser rebuild can change a label -> entity relation without
+            # touching the document's bytes or SHA. Recheck the catalog mapping.
+            current_record = next((i for i in lean_catalog.list_formalizations(
+                con, lean_root=lean_root)["items"] if i["formalization_id"] == identifier), None)
+            if (current_record is None or current_record["formalization_status"] != "ready"
+                    or current_record["source_entity_id"] != record["source_entity_id"]
+                    or current_record["index_status"] != record["index_status"]):
+                return _empty(identifier, "blocked",
+                              "Powiązanie etykiety zmieniło się podczas inspekcji.")
             if (before != after or
                     not lean._source_file_current(item, doc["sha256"], lean_root)):
                 return _empty(identifier, "blocked", "Źródło zmieniło się podczas pracy.")
