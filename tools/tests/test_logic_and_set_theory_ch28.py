@@ -84,6 +84,11 @@ class TestChapter28(unittest.TestCase):
         self.assertIn(r"\gamma+1<\beta",TEXT)
         self.assertIn("Nie zakładamy istnienia wspólnego",TEXT)
 
+    def test_von_neumann_hierarchy_indices_in_domain(self):
+        self.assertIn(r"\delta+1<\alpha",TEXT)
+        self.assertIn(r"\lambda<\alpha",TEXT)
+        self.assertIn(r"V_\lambda:=\bigcup_{\beta<\lambda}V_\beta",TEXT)
+
     def test_wellorder_representation_no_hidden_choice(self):
         self.assertIn("Jest to jedyne miejsce w konstrukcji",TEXT)
         self.assertIn(r"\mathcal F_w:=\{f_v:v\prec w\}",TEXT)
