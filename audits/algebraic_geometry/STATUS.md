@@ -51,3 +51,17 @@ ALG-04 po audycie 2: [raport](2026-11-22-ALG-04-iteration-02.md), status **OTWAR
 ALG-04 po audycie 3: [raport](2026-11-22-ALG-04-iteration-03.md). **OTWARTY** — stary wzór na `O_C(D)(U)` dla `U=∅` dawał całe `k(C)`, co narusza aksjomat snopa. Poprawiono `O_C(D)(∅)={0}`, ograniczenia, zakres punktów zamkniętych, hipotezy twierdzenia i dodano pełny dowód sklejania na nierozkładalnej krzywej. Końcowy blob źródła `296643a6201b3cfd1f6dc3cc2523f35e11a0f701` ([commit f410a0ca](https://github.com/dariusz-piekarz/mathematical_scipts/commit/f410a0caeaff4fb53f0b4c4e5adf74d7a4cccfa6)). Testy mają 14 metod, blob `59a5fc606eb3673d54a286909a06dc7580800207` ([commit 0badda02](https://github.com/dariusz-piekarz/mathematical_scipts/commit/0badda02826e407a5b512c567b3be27c5931fbe7)). [Końcowy CI 45021359905](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45021359905) **SUCCESS**, wszystkie 14/14 testów PASS i LaTeX PASS; artefakt `14753388374`, PDF ALG-00–04 108 stron, ALG-04 43 strony (66–108), 0 ostrzeżeń/błędów, 0 bloków tekstowych poza stronami, 10 rysunków i nowy dowód sklejania po wizualnym odbiorze PASS. 177 etykiet w ALG-00–04 bez duplikatów, ALG-04 57/57 odsyłaczy, środowiska LaTeX poprawnie sparowane. **Następny ALG-04/4**, wymagany osobny audyt bezusterkowy.
 
 ALG-04 po audycie 4: **STABILNY / ZAMKNIĘTY**. [Raport IV](2026-11-22-ALG-04-iteration-04.md). Niezależnie skontrolowano pełen rozdział (4467 wierszy, blob `296643a6201b3cfd1f6dc3cc2523f35e11a0f701`) bez nowych usterek i bez zmian w źródle. 14/14 regresji w zweryfikowanym [CI 45021359905](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45021359905) PASS; 43-stronicowy PDF i wszystkie 10 rysunków ponownie skontrolowano, bez usterek. 177/177 etykiet unikalnych ALG-00–04, 57/57 odsyłaczy ALG-04. Dodatkowe 600 kontroli Hilberta, 51 kohomologii P¹, 24 parowań Laurenta, 20 kontroli rodzaju i 25 residuów PASS. Przed ALG-05 należy wykonać osobną globalną korektę terminu „przedsnop” na „presnop” oraz jego odmian, zgodnie z nową dyspozycją redakcyjną.
+
+**Redakcja globalna po audycie IV (2026-11-22):** wykonano osobną migrację
+terminologiczną „presnop”, zgodnie z [raportem globalnym](../terminology/2026-11-22-presnop-global.md).
+W ALG-04 zamieniono 11 form słownych, bez zmiany wzorów,
+etykiet lub odsyłaczy; w całej aktywnej Bibliotece
+32 wystąpienia w 4 plikach.
+Nowy blob rozdziału `ab1344ed93a02bb757e5a78cb3833d6c4a18079c`,
+commit globalny [37cda4dd](https://github.com/dariusz-piekarz/mathematical_scipts/commit/37cda4dda1065c95eac543c3cdeda1546e175701).
+Końcowy [CI ALG-04 45022536496](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45022536496)
+**SUCCESS**, 14/14 regresji PASS, kontrola globalna terminu PASS,
+kompilacja i PDF ALG-04 (43 strony), 10 rysunków, 0 ostrzeżeń i
+0 brakujących odsyłaczy. Niezależny audyt IV pozostaje
+bezusterkowy; ALG-04 nadal **STABILNY / ZAMKNIĘTY**.
+**Następny audyt rozdziałowy: ALG-05/1**.
