@@ -77,6 +77,36 @@ def model_circle():
     return count
 
 
+
+def model_birkhoff_kakutani():
+    """Finite weighted word distances model the chain construction."""
+    tests = 0
+    for n in (4, 8, 12):
+        subgroup = {0, n//2}
+        u = [set(range(n)), subgroup, {0}, {0}]
+        assert all({(a+b+c) % n for a in u[k+1]
+                    for b in u[k+1] for c in u[k+1]} <= u[k]
+                   for k in range(3))
+        rho = [0. if g == 0 else (.5 if g in subgroup else 1.)
+               for g in range(n)]
+        d = [[rho[(y-x) % n] for y in range(n)]
+             for x in range(n)]
+        for k in range(n):
+            for i in range(n):
+                for j in range(n):
+                    d[i][j] = min(d[i][j], d[i][k] + d[k][j])
+        for x, y, z in product(range(n), repeat=3):
+            assert d[x][y] >= 0
+            assert (d[x][y] == 0) == (x == y)
+            assert abs(d[x][y] - d[y][x]) < 1e-10
+            assert d[x][z] <= d[x][y] + d[y][z] + 1e-10
+            assert abs(d[(x+z) % n][(y+z) % n] - d[x][y]) < 1e-10
+            tests += 1
+        for k in (0, 1, 2):
+            ball = {g for g in range(n) if d[0][g] < 2**(-k)}
+            assert u[k+1] <= ball <= u[k]
+    return tests
+
 def test_source():
     chapter = (ROOT / CH).read_text(encoding="utf-8")
     entry = (ROOT / "books/pl/general_topology_ch24.tex").read_text(encoding="utf-8")
@@ -97,7 +127,8 @@ def test_source():
                   "thm:topog24-open-quotient", "thm:topog24-coset-hausdorff",
                   "thm:topog24-normal-quotient", "thm:topog24-isomorphism",
                   "thm:topog24-coset-compact", "thm:topog24-identity-component",
-                  "thm:topog24-uniformities"):
+                  "thm:topog24-uniformities", "thm:topog24-birkhoff-kakutani",
+                  "cor:topog24-right-metric"):
         assert rf"\label{{{label}}}" in chapter
     for env in ("definicja", "twierdzenie", "stwierdzenie", "wniosek",
                 "lemat", "uwaga", "przyklad", "proof", "figure", "tikzpicture",
@@ -115,6 +146,8 @@ if __name__ == "__main__":
     n = model_s3()
     c = model_cyclic()
     t = model_circle()
+    bk = model_birkhoff_kakutani()
     labels, refs = test_source()
     print(f"PASS ch24: {n} S3 quotient checks, {c} cyclic checks, "
-          f"{t} circle checks, {labels} labels, {refs} local refs")
+          f"{t} circle checks, {bk} BK chain checks, "
+          f"{labels} labels, {refs} local refs")
