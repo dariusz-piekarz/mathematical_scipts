@@ -42,8 +42,17 @@ Porównano sformułowanie głównego twierdzenia z opracowaniem topologii zwarto
 | Pełna kontrola matematyczna | PASS po doprecyzowaniach |
 | Kontrprzykłady i przypadki brzegowe | PASS |
 | Terminologia, oznaczenia i odsyłacze | PASS |
-| Testy regresji i CI | Do potwierdzenia po zmianach |
-| PDF i logi LaTeX | Do potwierdzenia po zmianach |
+| Testy regresji i CI | **PASS — run 45016403410** |
+| PDF i logi LaTeX | **PASS — 5 stron A4, bez ostrzeżeń** |
 | Decyzja | W AUDYCIE — nowy niezależny audyt 03 po walidacji |
 
 Pierwszy audyt pozostaje w audits/general_topology/18-przestrzenie-odwzorowan-iteracja-01.md. Nie należy oznaczać rozdziału stabilnym bez czystej, niezależnej iteracji po nowych poprawkach.
+
+
+## Walidacja końcowej wersji po korektach
+
+GitHub Actions: [45016403410](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45016403410), zakończony completed/success, bez nieudanych kroków. Test rozdziału 18 obejmujący 29 topologii na trzyelementowej dziedzinie i 82 odpowiadające im odwzorowania ciągłe zakończył się powodzeniem. Zakończyły się też sukcesem kompilacje pełnej książki i samodzielnego rozdziału 18 oraz kontrola logów.
+
+Artefakt 14752340712 pobrano do katalogu /mnt/data/topologia18_audyt02; plik general_topology_ch18.pdf ma 5 stron A4. Wyrenderowano wszystkie pięć stron i obejrzano ich zestawienie. Fragmenty poprawione w audycie 02, zwłaszcza uzasadnienie otoczenia W na stronie 3 oraz ilościowy dowód zupełności na stronie 5, są czytelne i nie kolidują z innymi elementami. W samodzielnym general_topology_ch18.log i pełnym general_topology.log brak Overfull, Underfull, Missing character, LaTeX Warning, Undefined control sequence i Fatal error.
+
+**Zamknięcie audytu 02**: poprawki zapisane, testy i PDF PASS. Rozdział pozostaje w audycie do niezależnego audytu 03, ponieważ iteracja 02 wprowadziła poprawki.
