@@ -1,12 +1,12 @@
 # Globalny audyt algebry liniowej — status rozdziałów
 
 **Stan po iteracji 09/09 (częściowa weryfikacja)**, 22 listopada 2026.  
-**Aktualizacja:** rozdział 01 ponownie audytowano i ustabilizowano (dwa ostatnie audyty czyste; CI i PDF potwierdzone).
+**Aktualizacja:** rozdziały 01–02 ponownie audytowano i ustabilizowano. Dla rozdziału 02 dwie ostatnie kontrole źródła są czyste; osobny PDF i dokładne testy przeszły. Końcowe CI na aktualnym commicie podlega osobnemu sprawdzeniu.
 
 | Rozdział | Status |
 |---|---|
 | 01 | STABILNY: trzy audyty rozdziału, dwa czyste, CI i osobny PDF PASS |
-| 02 | 01: poprawiono dowód; PDF/CI oczekują |
+| 02 | STABILNY: audyty stabilizacyjne I–III, dwa kolejne czyste na niezmienionym źródle; 16/16 dowodów, 17/17 odsyłaczy, testy nad F_2 i F_3, 10-stronicowy PDF; CI PASS dla audytu I |
 | 03 | 01: bez korekt; PDF/CI oczekują |
 | 04 | 01: uzupełniono rachunki; PDF/CI oczekują |
 | 05 | 02: sprawdzono dowody eliminacji, RREF, rzędu i przykłady; PDF/CI do potwierdzenia |
