@@ -1,11 +1,11 @@
 # Topologia ogólna — rozdział 19, audyt iteracja 02
 
-Data: 2026-11-22. Gałąź: \`biblioteka-matematyczna-iteracja-6\`.
-Plik źródłowy: \`chapters/pl/general_topology/19-przestrzenie-polskie-i-zbiory-borelowskie.tex\`.
+Data: 2026-11-22. Gałąź: `biblioteka-matematyczna-iteracja-6`.
+Plik źródłowy: `chapters/pl/general_topology/19-przestrzenie-polskie-i-zbiory-borelowskie.tex`.
 
 ## Niezależna ponowna kontrola
 
-Sprawdzono ponownie całą aktualną treść matematyczną rozdziału 19: definicje przestrzeni polskich, przykłady, iloczyny, charakteryzację podprzestrzeni typu \`G_\delta\`, σ-algebra borelowska, generatory i odwzorowania borelowskie, hierarchię skończoną oraz pozaskończoną. W tej iteracji nie dodano nowych twierdzeń ani definicji; skupiono się na istniejących dowodach, kontrprzykładach, kwantyfikatorach i LaTeX.
+Sprawdzono ponownie całą aktualną treść matematyczną rozdziału 19: definicje przestrzeni polskich, przykłady, iloczyny, charakteryzację podprzestrzeni typu `G_\delta`, σ-algebra borelowska, generatory i odwzorowania borelowskie, hierarchię skończoną oraz pozaskończoną. W tej iteracji nie dodano nowych twierdzeń ani definicji; skupiono się na istniejących dowodach, kontrprzykładach, kwantyfikatorach i LaTeX.
 
 1. **Polskość, ośrodkowość, drugi aksjomat przeliczalności.** Istnienie zgodnej zupełnej metryki nie oznacza zupełności każdej metryki zgodnej. Baza kul o środkach w przeliczalnym gęstym zbiorze i dodatnich promieniach wymiernych jest rzeczywiście bazą, ponieważ środek można wybrać bliżej niż ε/2. Metryka logitowa na (0,1) pochodzi z homeomorfizmu na R, więc jest zupełna i zgodna.
 2. **Przestrzenie Cantora i Baire'a.** Ultrametryka 2^{-k} przy pierwszej różnej współrzędnej wyznacza topologię produktową; nierówność ultrametryczna wynika z nierówności dla pierwszych indeksów różnic. Dla ciągu Cauchy'ego pierwszych n współrzędnych dostatecznie późnych wyrazów są ostatecznie równe, więc istnieje jednoznaczna granica współrzędna, a odległość do niej jest najwyżej 2^{-(n+1)}. W audycie 02 doprecyzowano ten krok. Zbiór ciągów o ostatecznie ustalonym ogonie jest przeliczalny i gęsty. Przestrzeń Cantora jest zwarta; przestrzeń Baire'a nie jest zwarta, co potwierdza rzutowanie na nieskończoną dyskretną N.
@@ -38,7 +38,9 @@ Commity:
 
 ## CI i PDF
 
-Wersja sprzed audytu 02 przeszła GitHub Actions 45018362870 i wizualny audyt PDF (6 stron). Te wyniki nie dowodzą poprawności *zmienionego* źródła. Bieżący CI dla commita 40c27a6df3a540c1e5159a195810e93bcdd83914 jest dostępny: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45019373792 . Status i szczegółowy audyt nowego PDF wymagają potwierdzenia po ukończeniu workflow.
+Wersja sprzed audytu 02 przeszła GitHub Actions 45018362870 i wizualny audyt PDF (6 stron). Dla poprawionego źródła uruchomiono odrębny workflow [45019373792](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45019373792) dla commita 40c27a6df3a540c1e5159a195810e93bcdd83914: **completed/success**, bez nieudanych kroków. Zakończyły się sukcesem test rozdziału 19, kompilacja całej książki, kompilacja samodzielnego rozdziału 19 i kontrola logów.
+
+Pobrano artefakt 14753047959 i rozpakowano do /mnt/data/topologia19_audyt02. Samodzielny general_topology_ch19.pdf ma **6 stron A4**. Wyrenderowano i obejrzano wszystkie strony, szczególnie strony 3–4, na których znajdują się dopracowane dowody o metryce ρ i o polskich podprzestrzeniach G_delta. Nie wykryto kolizji tekstu, uciętych wyrażeń ani usterek czcionek i numeracji. Logi general_topology_ch19.log i general_topology.log nie zawierają \`Overfull\`, \`Underfull\`, \`LaTeX Warning\`, \`Missing character\`, \`Undefined control sequence\` ani \`Fatal error\`.
 
 ## Wynik
 
@@ -48,7 +50,7 @@ Wersja sprzed audytu 02 przeszła GitHub Actions 45018362870 i wizualny audyt PD
 | Twierdzenie o G_delta (oba kierunki) | PASS po uzupełnieniach |
 | Zbiory borelowskie i hierarchia ordinalna | PASS |
 | Przypadki brzegowe, terminologia i odsyłacze | PASS |
-| Nowy CI i samodzielny PDF | Do weryfikacji |
+| Nowy CI i samodzielny PDF | **PASS — workflow 45019373792; 6 stron A4** |
 | Stabilizacja | **W AUDYCIE — iteracja 03 wymagana po poprawkach** |
 
 Nie przenosić pozytywnego statusu technicznego z audytu 01 bez sprawdzenia najnowszego kodu. Następną iterację przeprowadzić jako niezależny przegląd bez dodawania nowego materiału.
