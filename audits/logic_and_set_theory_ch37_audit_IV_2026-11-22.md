@@ -4,7 +4,7 @@
 **Gałąź:** biblioteka-matematyczna-iteracja-6.  
 **Rozdział:** chapters/pl/logic_and_set_theory/37-duze-liczby-kardynalne-nieosiagalnosc-i-mierzalnosc.tex.  
 **Blob rozdziału:** 3e0ae67b1b6a9abb5a4ff93691a2947d207647c4, bez zmian po poprawkach audytu I.  
-**Werdykt matematyczno-redakcyjny:** czysty; audyt potwierdzający nie ujawnił kolejnej koniecznej poprawki. Pełne domknięcie stabilności zależy od wyniku przebiegów CI dla audytów II–IV.
+**Werdykt końcowy: CZYSTY, ROZDZIAŁ 37 STABILNY (2/2+1).** Audyty II, III i IV nie ujawniły koniecznej poprawki. Pełne przebiegi CI, porównanie rzeczywistych PDF i kontrola logu zakończyły się pomyślnie.
 
 ## 1. Kontrola przypadków granicznych i kwantyfikatorów
 
@@ -23,6 +23,17 @@ Rozdział prowadzi od pojęć dostępnych w rozdziałach 25–28 do konstrukcji 
 
 Inwentarz źródła bez zmian: **775 wierszy; 26 etykiet; 18 odsyłaczy; 7 definicji; 4 lematy; 7 twierdzeń; 1 wniosek; 5 uwag; 1 przykład; 12 dowodów.** Zachowano nazwy etykiet i odpowiedni odczyt \ref w książce. Rzeczywisty PDF z przebiegu 45066748548: **326 stron A4**, rozdział 37 na stronach **321–326**. Wszystkie sześć stron obejrzano w montażu; brak zaobserwowanych błędów składu; log 0 overfull, 0 unresolved reference, 1 underfull.
 
-## 3. Warunek stabilności
+## 3. Pełne CI i audyt wizualny
 
-**Audyt I — nieczysty, poprawki wykonane. Audyt II — czysty merytorycznie. Audyt III — czysty merytorycznie. Audyt IV — czysty merytorycznie (potwierdzający).** Wszystkie audyty II–IV dotyczą identycznego bloba źródła. Przed wystawieniem końcowego statusu **STABILNY (2/2+1)** należy potwierdzić ukończenie pełnych testów GitHub Actions dla poprawionych testów rozdziału 37 i audytu IV. Następne rozszerzenia (kardynały Mahla, słabo zwarte i superzwarte) pozostają osobną propozycją, nie są dopisywane podczas audytów stabilnego rozdziału. Kompilacja LaTeX i Python nie oznacza weryfikacji w Lean.
+Wszystkie przebiegi dla niezmienionego źródła rozdziału zakończyły się sukcesem:
+
+- **[CI audytu II — 45067136599, SUCCESS](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45067136599)**.
+- **[CI regresji rozszerzonej — 45067212586, SUCCESS](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45067212586)**: dziewięć testów rozdziału 37, w tym 8748 nowych sprawdzeń formuł z kwantyfikatorami.
+- **[CI audytu III — 45067263971, SUCCESS](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45067263971)**.
+- **[CI audytu IV — 45067341251, SUCCESS](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45067341251)**, commit 22038b2c00db829644b5cc137a470988c6f260d7, artefakt PDF i logu **14771429612**.
+
+Pobrano rzeczywiste artefakty PDF z dwóch niezależnych przebiegów. Oba dokumenty mają **326 stron A4**. Rozdział 37 zajmuje strony PDF **321–326**. Po wyrenderowaniu sprawdzono wzrokowo wszystkie sześć stron; następnie porównano piksel po pikselu z kompilacją po pierwszym audycie: **6/6 stron identycznych**. Kontrola logu: **0** błędów LaTeX, **0** przepełnionych wierszy, **0** nierozwiązanych odsyłaczy, **0** brakujących znaków, **0** niezdefiniowanych poleceń; jedno ostrzeżenie underfull w całym dokumencie bez negatywnego wpływu na układ.
+
+## 4. Końcowy werdykt
+
+**Audyt I — nieczysty, niezbędne poprawki wykonane. Audyt II — czysty (1/2). Audyt III — czysty (2/2). Audyt IV — czysty (+1 potwierdzający). ROZDZIAŁ 37: STABILNY.** Wszystkie audyty II–IV dotyczyły identycznego bloba źródła **3e0ae67b1b6a9abb5a4ff93691a2947d207647c4**. Rozdział jest zaimportowany do książki, zarejestrowany w katalogu i objęty dziewięcioma regresjami oraz pełną kontrolą LaTeX. Dalsze rozszerzenia pozostają tematem osobnego planu. Kompilacja Python i LaTeX nie jest formalizacją w Lean.
