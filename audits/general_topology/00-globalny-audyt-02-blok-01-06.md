@@ -80,7 +80,7 @@ osobnymi skryptami wciąż wymaga kolejnych audytów.
 W przytoczonych dowodach nie znaleziono błędów matematycznych;
 regresje strukturalne pełnej książki przechodzą.
 Raport nie obejmuje kompletnego samodzielnego
-odtworzenia wszystkich 77 dowodów w blokach 01–06,
+odtworzenia wszystkich 87 dowodów w blokach 01–06,
 ani wizualnej inspekcji każdego rysunku.
 Nie podnosi statusu całego globalnego audytu do
 „stabilny”. Następne bloki do sprawdzenia:
