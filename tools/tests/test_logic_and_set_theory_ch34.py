@@ -116,6 +116,19 @@ class TestContinuumForcingChapter34(unittest.TestCase):
         self.assertIn(r"\operatorname{Add}(\omega,\kappa)^M", TEXT)
         self.assertIn(r"\label{lem:forcing34-add-ccc}", TEXT)
 
+    def test_cohen_binary_functions_are_not_literal_subsets(self):
+        # A binary sequence is a function, while its support is a set.
+        # The two objects are naturally bijective, not definitionally equal.
+        for bits in product((0, 1), repeat=5):
+            sequence = {n: bits[n] for n in range(5)}
+            support = {n for n in range(5) if sequence[n] == 1}
+            reconstructed = {n: int(n in support) for n in range(5)}
+            self.assertEqual(sequence, reconstructed)
+            self.assertNotEqual(sequence, support)
+        self.assertIn(r"c_\alpha(n)=1", TEXT)
+        self.assertIn(r"kanoniczne utożsamienie", TEXT)
+        self.assertIn(r"\mathcal P(\omega)", TEXT)
+
     def test_different_cohen_reals_have_dense_witnesses(self):
         # Any finite two-row assignment can be extended so the rows differ.
         for left in product((None, 0, 1), repeat=3):
