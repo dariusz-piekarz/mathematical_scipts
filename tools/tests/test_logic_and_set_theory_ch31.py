@@ -43,7 +43,7 @@ class TestChapter31(unittest.TestCase):
         for path in DIR.glob("*.tex"):
             all_labels.update(re.findall(r"\\label\{([^}]+)\}", path.read_text("utf8")))
         refs = re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", TEXT)
-        self.assertEqual(len(refs), 86)
+        self.assertEqual(len(refs), 87)
         self.assertEqual(set(refs) - all_labels, set())
 
     def test_first_finite_hierarchy_levels(self):
@@ -65,6 +65,8 @@ class TestChapter31(unittest.TestCase):
                 self.assertTrue(all(b in level for b in a))
         self.assertIn(r"\operatorname{Def}(\varnothing):=\{\varnothing\}", TEXT)
         self.assertIn(r"\mathcal P(L_2)", TEXT)
+        self.assertIn("każdy jego podzbiór", TEXT)
+        self.assertIn("schemat zastępowania", TEXT)
 
     def test_definition_is_relative_to_set_structures(self):
         for value in (
