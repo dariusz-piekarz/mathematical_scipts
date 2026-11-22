@@ -35,3 +35,13 @@ Testy z `test_lean_windows_job.py` obejmują odmowę startu bez poprawnego token
 Windows Job Object ogranicza łączną pamięć **committed**, a nie sumaryczne RSS. Jest to kontrola zasobów dla zatwierdzonych lokalnych źródeł, nie sandbox przeciw złośliwemu kodowi. Nie używamy flag umożliwiających swobodne opuszczenie Job Object. Jeśli aplikacja działa już wewnątrz Job Object, niekompatybilne zagnieżdżenie może spowodować odmowę przypisania; należy zachować `blocked`, a nie automatycznie wyłączyć limit. Windows wymaga nowoczesnego systemu obsługującego zagnieżdżone Job Objects.
 
 Podstawa API Microsoft: https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects oraz https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_extended_limit_information
+
+### Natywna weryfikacja CI (22.11.2026)
+
+Dodano osobny workflow `.github/workflows/lean-windows-job.yml` działający na `windows-latest` z Pythonem 3.13 x64. Ten workflow **rzeczywiście uruchamia** testy natywne Windows, w przeciwieństwie do linuxowego CI aplikacji.
+
+- Pierwszy przebieg [45017110708](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45017110708) wykrył błąd `QueryInformationJobObject(accounting): Windows error 24`. Przyczyną była błędna klasa informacji: `JobObjectBasicAccountingInformation = 1`, natomiast `8` oznacza `JobObjectBasicAndIoAccountingInformation` i wymaga innej, większej struktury. Poprawiono `lean_windows_job.py` (commit `0ddaf79d`), test kontraktu (commit `273779bf`) i dodano zabezpieczającą asercję (commit `14261e3a`).
+- Przebieg [45017169579](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45017169579): **SUCCESS**. Właściwy test Windows Job Objects: **11/11**, w tym `test_native_windows_job_memory_restriction` oraz `test_native_windows_timeout_terminates_descendants`. Testy `test_lean_process.py`: **8**, z czego 5 jawnie pominiętych (przeznaczone dla Linuksa/POSIX).
+- Dodano ponadto `test_native_nested_windows_jobs_preserve_inner_limit` (commit `7d79c52d`) obejmujący własny proces objęty limitem Job Object tworzący kolejny Job Object o mniejszym limicie. CI tej dodatkowej regresji: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45017259828; stan należy odczytać z GitHub Actions przed deklaracją sukcesu.
+
+Zielony wynik `windows-latest` potwierdza działanie na użytym obrazie runnera Windows, nie na konkretnym komputerze z Windows 11. Limit dotyczy pamięci committed Job Object; status `compiled` pozostaje oddzielny od recenzji zgodności semantycznej i nigdy nie ustanawia `certificate=true`.
