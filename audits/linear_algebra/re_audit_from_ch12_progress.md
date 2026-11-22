@@ -8,12 +8,12 @@
 
 <!-- CURRENT_RE_AUDIT_STATE
 chapter: 31
-iteration_last_reported: 0
-stage_status: OPEN_AUDIT_NOT_STARTED
-clean_checks_since_last_source_edit: 0
+iteration_last_reported: 1
+stage_status: OPEN_CLEAN_1_OF_2_CI_UNCONFIRMED
+clean_checks_since_last_source_edit: 1
 clean_checks_required: 2
 additional_sceptical_final_audit: NOT_DONE
-last_checked_blob_sha: null
+last_checked_blob_sha: 6c1d09b9eaf4083c9ebaa361dbf46fc350eae147
 last_completed_chapter: 30
 last_completed_blob_sha: 6d90013dd6c66d347e5ae2ac78b4c1a194aa979e
 last_completed_clean_audits: 2
@@ -21,15 +21,15 @@ last_completed_extra_final_audit: DONE_CLEAN
 last_completed_ci_run_id: 45039107786
 last_completed_ci_status: completed_success
 closure_reason: ch30_clean_audits_03_04_plus_final_05_and_matching_green_ci
-next_step: audit_ch31_initial
+next_step: audit_ch31_iteration_02
 -->
 
 ## Stan wykonania
 
 - Bieżący rozdział: **31**.
 - Ostatni zamknięty blob (rozdział 30): **6d90013dd6c66d347e5ae2ac78b4c1a194aa979e**.
-- Liczba czystych audytów bieżącego rozdziału 31: **0/2**; oddzielny końcowy audyt: **niewykonany**. Rozdział 30 zakończony: czyste 03–04 oraz dodatkowy sceptyczny 05.
-- Kolejne działanie: **rozdział 31 — pierwszy pełny audyt nowej sekwencji**. Rozdział 30 zamknięty na blobie `6d90013dd6c66d347e5ae2ac78b4c1a194aa979e` po czystych raportach 03–04 i dodatkowym końcowym 05, z CI completed/success i obejrzanym poprawionym PDF. Rozdziały 28–29 pozostają zamknięte. LA-32 — zatwierdzony dodatek Penrose’a pozostaje w planie.
+- Liczba czystych audytów bieżącego rozdziału 31: **1/2**; oddzielny końcowy audyt: **niewykonany**. Rozdział 30 zakończony: czyste 03–04 oraz dodatkowy sceptyczny 05.
+- Kolejne działanie: **rozdział 31 — drugi niezależny audyt nowej sekwencji**. Rozdział 30 zamknięty na blobie `6d90013dd6c66d347e5ae2ac78b4c1a194aa979e` po czystych raportach 03–04 i dodatkowym końcowym 05, z CI completed/success i obejrzanym poprawionym PDF. Rozdziały 28–29 pozostają zamknięte. LA-32 — zatwierdzony dodatek Penrose’a pozostaje w planie.
 - Historyczne audyty, w tym ręczne audyty rozdziałów 13–15 z 22 listopada, pozostają ważnymi źródłami, ale **nie są automatycznie liczone** jako wykonanie nowego przebiegu.
 
 ## Tabela statusów
@@ -55,7 +55,7 @@ next_step: audit_ch31_initial
 | 28 | STABILNY po dodatkowym audycie; 04 korekta, 05–06 czyste, CI success | 2 | `b9507aa2db7eda554446248996e7c0ae241d4e73` |
 | 29 | STABILNY; audyty 01 i 02 czyste oraz dodatkowy końcowy 03 czysty, CI success i PDF obejrzany | 3 (2+1) | `55fc55e2ff1b95838e0b2ca1c4ec0a6018af64dd` |
 | 30 | STABILNY; po korekcie czyste audyty 03–04 + sceptyczny 05, CI success i PDF obejrzany | 3 (2+1) | `6d90013dd6c66d347e5ae2ac78b4c1a194aa979e` |
-| 31 | OTWARTY; audyt 01 do wykonania | 0 | — |
+| 31 | OTWARTY; audyt 01 czysty, CI do potwierdzenia, dodatkowy audyt nieukończony | 1 | `6c1d09b9eaf4083c9ebaa361dbf46fc350eae147` |
 | 32 | W kolejce | 0 | — |
 
 ## Instrukcja dla każdej iteracji
@@ -330,3 +330,9 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - [Zielone CI 45039107786](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45039107786) jest **completed/success** dla commitu zawierającego dokładnie nowy blob. Również [CI 45039090215](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45039090215) completed/success dla commitu źródłowego.
 - W niezależnym audycie korekcyjnym z tej rozmowy pobrano artefakt pełnej książki już po zmianie, wyodrębniono LA-30 (strony 293–295), obejrzano wszystkie trzy strony i potwierdzono brak kolizji TikZ i zgłoszonych przepełnień LaTeX. Raport [30_iteration_03_corrective_2026-11-22_1636.md](re_audit_from_ch12/30_iteration_03_corrective_2026-11-22_1636.md), [commit uzupełnienia f570d6e](https://github.com/dariusz-piekarz/mathematical_scipts/commit/f570d6e19c7a1243ea0b37fc07574b5438edf373).
 - **Rozdział 30 STABILNY I ZAMKNIĘTY**, czyste 03–04 po ostatniej korekcie + oddzielny sceptyczny 05 + zielone CI zgodne z blobem. Raporty 01–02 starego bloba nie zaliczają się do nowej stabilizacji. **Następny etap: rozdział 31 — audyt 01; nie przechodzić dalej, dopóki 31 nie ustabilizuje się analogicznie.**
+
+## Ponowny audyt rozdziału 31 — 2026-11-22, iteracja 01
+
+- Raport: [31_iteration_01_2026-11-22.md](re_audit_from_ch12/31_iteration_01_2026-11-22.md).
+- Blob `6c1d09b9eaf4083c9ebaa361dbf46fc350eae147`; kontrola bez korekty źródła, **1/2**, CI niepotwierdzone, brak nowego zweryfikowanego PDF.
+- Następny: audyt 02 tego samego rozdziału, a po uzyskaniu wymaganych dwóch czystych audytów i zielonego CI osobny dodatkowy audyt sceptyczny.
