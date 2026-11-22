@@ -223,3 +223,9 @@ Do wyświetlenia certyfikatu **Zweryfikowane matematycznie** wymagane są jednoc
 - Katalog odróżnia `ready`, `draft` i `stale` na podstawie rzeczywistego indeksu, przypiętego SHA i pliku źródłowego; niejednoznaczne, brakujące oraz uszkodzone powiązania nie są nawigowalne.
 - Katalog celowo nie podaje stanu kompilacji; `certificate=false`. Dołączono regresje jednostkowe, HTTP i kontraktu UI. Raport: `application/docs/LEAN_CATALOG_2026-11-22.md`.
 - Wynik najnowszego GitHub Actions należy potwierdzić oddzielnie; do tego czasu nowe testy nie są oznaczone jako zaliczone.
+
+### Strumień A — graf zadeklarowanych zależności Lean (22.11.2026)
+- Dodano `GET /api/lean/dependencies` i panel grafu LaTeX → deklaracje rejestru → plik Lean → jawne importy modułów, z nawigacją do źródła i zabezpieczeniem przed wyścigami odpowiedzi API.
+- Krawędzie mają jawnie ograniczoną semantykę; import `Mathlib` nie dowodzi użycia konkretnego lematu, a deklaracja w manifeście nie poświadcza elaboracji. Stan kompilacji jest osobny, zawsze `certificate=false`.
+- Dodano testy parsera komentarzy Lean, rozmiarów i importów, integralności SHA, HTTP na LST-01 oraz asynchronicznego JS przez Node. Raport: `application/docs/LEAN_DEPENDENCY_GRAPH_2026-11-22.md`. Nowszy wynik CI wymaga weryfikacji; nie modyfikowano źródeł `.tex` i `application/lean/`.
+- Kolejna faza: rzeczywiście wyeksportowane zależności deklaracji przez Lean (potwierdzona wersja narzędzi) i oddzielne rozróżnienie powiązań semantycznych od syntaktycznych.
