@@ -64,6 +64,7 @@ def describe(identifier: str, names: list[str], *,
             or type(classified) is not bool):
         raise ValueError("Invalid inspection identity")
     if (not isinstance(fingerprint, dict)
+            or set(fingerprint) != set(FINGERPRINT_FIELDS)
             or any(not isinstance(fingerprint.get(field), str)
                    or not DIGEST.fullmatch(fingerprint[field])
                    for field in DIGEST_FIELDS)
