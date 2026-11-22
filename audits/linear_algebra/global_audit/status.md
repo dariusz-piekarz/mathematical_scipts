@@ -1,6 +1,6 @@
 # Globalny audyt algebry liniowej — status rozdziałów
 
-**Stan po iteracji 11 (LA-08 poprawiony i ustabilizowany, pełny audyt matematyczny trwa)**, 22 listopada 2026.  
+**Stan po iteracji 12 (LA07 i LA09–11 skontrolowane, pełny audyt matematyczny trwa)**, 22 listopada 2026.  
 **Aktualizacja:** rozdziały 01–05 zostały ponownie ustabilizowane. W rozdziale 05 poprawiono argument o braku podprzestrzeni dla zgodnego układu z niezerową prawą stroną, następnie wykonano dwa kolejne czyste audyty III–IV na identycznym SHA. Nowy PDF (7 stron) i CI dla poprawionego źródła [45006722306](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45006722306) zweryfikowane — SUCCESS. CI uruchomione wyłącznie zapisem końcowego statusu wymaga osobnej kontroli.
 
 | Rozdział | Status |
@@ -11,11 +11,11 @@
 | 04 | STABILNY: audyty stabilizacyjne I–III, II i III czyste na niezmienionym SHA; 15/15 dowodów, 24/24 odsyłacze, 10 przykładów, diagram i 12-stronicowy PDF zweryfikowane; dokładne testy F_2 i F_3 PASS |
 | 05 | STABILNY: audyty stabilizacyjne I–IV, po precyzyjnej korekcie II dwie kolejne czyste iteracje III–IV na jednym SHA; 10/10 dowodów, 16/16 odsyłaczy, 4 przykłady, testy dokładne 1553 macierzy/12558 układów oraz 800 macierzy nad Q PASS; końcowy 7-stronicowy PDF i CI 45006722306 SUCCESS |
 | 06 | Przegląd dowodów i obliczeń LA-06 w globalnej iteracji 11, bez nowych błędów; wspólne CI 45046473869 success; pełny PDF przed zmianą LA08 obejrzany w iteracji 10 |
-| 07 | Przegląd bazy dualnej, anihilatorów i naturalności w globalnej iteracji 11, bez nowych błędów w sprawdzonych fragmentach; CI 45046473869 success |
+| 07 | Pogłębiony przegląd globalny iteracja 12, bez koniecznych zmian; 20 środowisk proof, SHA `5e320759f55012f807be790214d6ad76119ab544`, CI 45047361654 success; globalne matematyczne kontrole nadal trwają |
 | 08 | STABILNY po rzeczywistej korekcie parowania alternowania: audyt 04 korekcyjny, czyste 05–06 + dodatkowy sceptyczny 07; CI 45046473869 success; SHA `0cd0e91a194700b38862f2f1478a693dcd2e5dd3`; PDF str. 87 obejrzany |
-| 09 | Wybrane dowody diagonalizacji, Sylvestera i char. 2 skontrolowane w iteracji 11 bez nowych błędów; CI 45046473869 success; pełna niezależna lektura wszystkich dowodów wciąż otwarta |
-| 10 | Własność uniwersalna, iloraz i ranga tensorowa skontrolowane w iteracji 11 bez nowych błędów; CI 45046473869 success; pełna niezależna lektura wszystkich dowodów wciąż otwarta |
-| 11 | Algebra zewnętrzna, przetasowania i Cauchy–Binet skontrolowane w iteracji 11 bez nowych błędów; CI 45046473869 success; pełna niezależna lektura wszystkich dowodów wciąż otwarta |
+| 09 | Pogłębiony przegląd globalny iteracja 12 (formy kwadratowe, Sylvester, kryterium dodatniej określoności, char. 2); bez koniecznych zmian, CI 45047361654 success; globalne kontrole matematyczne trwają |
+| 10 | Pogłębiony przegląd globalny iteracja 12 (własność uniwersalna, rząd tensorowy, Kronecker, dokładność); bez koniecznych zmian, CI 45047361654 success; globalne kontrole matematyczne trwają |
+| 11 | Pogłębiony przegląd globalny iteracja 12 (zewnętrzna/symetryczna, minory, Cauchy–Binet, przetasowania, symetryzatory); bez koniecznych zmian, CI 45047361654 success; globalne kontrole matematyczne trwają |
 | 12 | STABILNY; iteracje 01 i 02 czyste, CI success; kontrole 2, SHA `ded0c69dc298d00842d4009073e2444e1037952a`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
 | 13 | STABILNY; iteracje 02 i 03 czyste, CI success; kontrole 2, SHA `cc5d09ff605ccf8bb7572ec56d4cc1f690edf3af`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
 | 14 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success; kontrole 2, SHA `8216c60505324854e2339928bb9be562724e1db2`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
@@ -68,3 +68,12 @@ Raport: `iteration_09.md`. Zgodność 32 plików i 32 instrukcji `\\input` potwi
 - **Globalny audyt matematyczny całej książki wciąż OTWARTY**; kontrola struktury/odsyłaczy z iteracji 10 pozostaje aktualna (jedyna zmiana źródła to LA-08, bez zmiany etykiet), a ukończone osobne audyty LA12–32 nie są resetowane.
 
 **Kolejne działanie:** kontynuować niezależną lekturę pozostałych dowodów LA07 i LA09–11, następnie zależności spektralne LA14–20 i sterowanie LA22–28; konkretną nową usterkę poprawiać w odpowiednim rozdziale i stabilizować go ponownie.
+
+## Iteracja 12 — 2026-11-22: niezależny przegląd LA07, LA09–11
+
+**[Raport globalny 12](iteration_12.md)**: odczyt i pogłębiony przegląd dowodów oraz kluczowych zależności w czterech rozdziałach: **LA07 (20 środowisk proof), LA09 (14), LA10 (20), LA11 (19)**. Skontrolowano m.in. anihilatory i bidualność, polaryzację w char. 2, diagonalizację i prawo bezwładności Sylvestera, kryterium dodatniej określoności, własność uniwersalną tensorów, iniektywność `W⊗V^*→Hom(V,W)`, dokładność tensorowania nad ciałem, konstrukcje ilorazowe `S(V)` i `Λ(V)`, wzór Cauchy’ego–Bineta i symetryzatory bez zakładania odwracalności silni. **W skontrolowanym zakresie nie znaleziono koniecznej korekty źródła**; nie deklarujemy pełnej formalnej weryfikacji wszystkich 73 środowisk `proof`.
+
+- **Wykonane nowe niezależne testy:** `/mnt/data/la_global12_tests.py`, ustalony seed `202611221752`: **39 695/39 695 PASS**, zero błędów. Zbadano macierze nad `F₂,F₃,F₅` i dokładne dodatnio określone macierze wymierne; rząd odwzorowania dualnego, tożsamości wymiarów anihilatorów, kongruencje, Cauchy–Binet, rząd Kroneckera, superprzemienność i łączność algebry zewnętrznej, wzór przetasowań oraz `S_k²=k!S_k`, `A_k²=k!A_k`.
+- **Pliki źródłowe niezmienione**: SHA odpowiednio LA07 `5e320759f55012f807be790214d6ad76119ab544`, LA09 `979ce687c677125aeb8304e9d13cb8e7af842602`, LA10 `9c397a15f5f668e84cb68681e00bf0305cf73adf`, LA11 `17f1bae2db46ac6790f1fc562660393f2f616076`. [CI 45047361654](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45047361654) ma **completed/success**, a odczyt plików na commicie przetestowanym przez CI potwierdził dokładnie te same bloby.
+- **Kontrola wizualna:** nie wykonywano ponownej inspekcji kompletnego PDF w iteracji 12; pozostaje ważna odnotowana w iteracji 11 wizualna kontrola strony 87 po poprawce LA08 oraz wcześniejszy montaż całej książki w iteracji 10.
+- **Dalszy audyt matematyczny OTWARTY:** w kolejnej iteracji przejść do zależności LA14–20 (twierdzenie spektralne, Cayley–Hamilton, Jordan, Jordan–Chevalley, Frobenius, bloki pierwotne). Nie restartować ukończonej sekwencji LA12–32 bez konkretnej usterki; nie dodawać opcjonalnej treści bez zgody użytkownika.
