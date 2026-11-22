@@ -107,6 +107,16 @@ class TestBooleanModelsChapter35(unittest.TestCase):
         self.assertIn(r"\label{rem:boolean35-ill-founded}", TEXT)
         self.assertIn("Mostowskiego", TEXT)
 
+    def test_regular_open_algebra_excludes_empty_space(self):
+        # RO(empty) is trivial, whereas the chapter assumes 0 != 1.
+        self.assertIn(
+            r"Dla każdej \emph{niepustej} przestrzeni",
+            TEXT,
+        )
+        self.assertEqual(len({frozenset()}), 1)
+        point = frozenset({0})
+        self.assertEqual(len({frozenset(), point}), 2)
+
     def test_regular_open_completion_of_finite_fork(self):
         # Basic opens are downward-closed sets in a three-node fork.
         P = ("top", "left", "right")
@@ -154,12 +164,12 @@ class TestBooleanModelsChapter35(unittest.TestCase):
 
     def test_ro_completion_for_every_small_preorder(self):
         # Includes non-separative preorders, not only partial orders.
-        # For n=2,3,4 there are respectively 4,29,355 preorders
-        # on labelled elements.
+        # For n=1,2,3,4 there are respectively 1,4,29,355
+        # preorders on labelled elements.
         from itertools import product
 
         count = {}
-        for n in (2, 3, 4):
+        for n in (1, 2, 3, 4):
             off = [
                 (i, j) for i in range(n)
                 for j in range(n) if i != j
@@ -238,7 +248,7 @@ class TestBooleanModelsChapter35(unittest.TestCase):
                             bool(images[p] & images[q]), compatible
                         )
             count[n] = checked
-        self.assertEqual(count, {2: 4, 3: 29, 4: 355})
+        self.assertEqual(count, {1: 1, 2: 4, 3: 29, 4: 355})
         self.assertIn(r"\operatorname{RO}(\mathbb P)", TEXT)
 
     def test_atomic_forcing_truth_for_all_small_preorders(self):
