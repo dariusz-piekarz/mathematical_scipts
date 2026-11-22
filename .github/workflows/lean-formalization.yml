@@ -9,7 +9,12 @@ on:
       - "application/scripts/lean_ci_audit.py"
       - "application/tests/test_lean_ci_audit.py"
       - "application/backend/lean_introspection.py"
+      - "application/backend/lean_inspection_snapshot.py"
+      - "application/backend/lean_source_provenance.py"
+      - "application/backend/lean_formalization.py"
+      - "application/backend/lean_results.py"
       - "application/tests/test_lean_introspection.py"
+      - "application/tests/test_lean_inspection_snapshot.py"
       - "application/tests/test_lean_introspection_real.py"
       - "application/requirements.txt"
       - ".github/workflows/lean-formalization.yml"
@@ -37,9 +42,12 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Test axiom audit and manifest validation
+      - name: Test axiom audit, manifest and inspection snapshot contract
         working-directory: application
-        run: python -m unittest tests.test_lean_ci_audit -v
+        run: |
+          python -m unittest \
+            tests.test_lean_ci_audit \
+            tests.test_lean_inspection_snapshot -v
 
       - name: Initialize pinned Lake manifest on a fresh checkout
         working-directory: application/lean
