@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import io
+import ctypes
 import os
 from pathlib import Path
 import subprocess
@@ -21,6 +22,62 @@ class LeanWindowsJobTests(unittest.TestCase):
         self.assertGreater(
             lean_windows_job.ExtendedLimitInformation.JobMemoryLimit.offset,
             lean_windows_job.ExtendedLimitInformation.BasicLimitInformation.offset)
+
+    def test_native_api_contract_limits_before_assignment_and_closes_handle(self):
+        kernel = MagicMock()
+        kernel.CreateJobObjectW.return_value = 421
+        kernel.SetInformationJobObject.return_value = 1
+        kernel.OpenProcess.return_value = 422
+        kernel.AssignProcessToJobObject.return_value = 1
+        kernel.CloseHandle.return_value = 1
+        memory_limit = 1024 * 1024 * 1024
+        flags = (lean_windows_job.JOB_OBJECT_LIMIT_JOB_MEMORY |
+                 lean_windows_job.JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE)
+
+        def set_limit(handle, info_class, pointer, size):
+            self.assertEqual(handle, 421)
+            self.assertEqual(info_class, 9)
+            info = ctypes.cast(pointer, ctypes.POINTER(
+                lean_windows_job.ExtendedLimitInformation)).contents
+            self.assertEqual(info.JobMemoryLimit, memory_limit)
+            self.assertEqual(info.BasicLimitInformation.LimitFlags, flags)
+            return 1
+
+        def query(handle, info_class, pointer, size, _):
+            if info_class == 9:
+                info = ctypes.cast(pointer, ctypes.POINTER(
+                    lean_windows_job.ExtendedLimitInformation)).contents
+                info.JobMemoryLimit = memory_limit
+                info.BasicLimitInformation.LimitFlags = flags
+            else:
+                self.assertEqual(info_class, 8)
+                info = ctypes.cast(pointer, ctypes.POINTER(
+                    lean_windows_job.BasicAccountingInformation)).contents
+                info.ActiveProcesses = 2
+            return 1
+
+        kernel.SetInformationJobObject.side_effect = set_limit
+        kernel.QueryInformationJobObject.side_effect = query
+        with patch("backend.lean_windows_job._kernel", return_value=kernel):
+            job = lean_windows_job.ProcessJob.create(1024)
+        stream = MagicMock()
+        process = MagicMock(pid=555, stdin=stream)
+        job.start(process)
+        kernel.AssignProcessToJobObject.assert_called_once_with(421, 422)
+        stream.write.assert_called_once_with(b"START\n")
+        stream.flush.assert_called_once()
+        self.assertTrue(job.kill_and_close())
+        self.assertEqual(kernel.CloseHandle.call_args_list[-1].args, (421,))
+
+    def test_job_setup_failure_closes_handle_without_starting_lake(self):
+        kernel = MagicMock()
+        kernel.CreateJobObjectW.return_value = 421
+        kernel.SetInformationJobObject.return_value = 0
+        with patch("backend.lean_windows_job._kernel", return_value=kernel):
+            with self.assertRaises(lean_windows_job.JobUnavailable):
+                lean_windows_job.ProcessJob.create(1024)
+        kernel.CloseHandle.assert_called_once_with(421)
+        kernel.QueryInformationJobObject.assert_not_called()
 
     def test_launcher_requires_explicit_start_token(self):
         argv = ["lean_windows_exec.py", "--", "lake", "env", "lean", "test.lean"]
