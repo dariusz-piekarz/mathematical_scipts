@@ -45,7 +45,8 @@
 - Pierwszy workflow AA-01–AA-40 (run `45066102397`) zakończył się błędem w ogólnym kroku `Run repository tool tests`. Log pokazał pięć błędów `FileNotFoundError`: niezależny test AA-40 wskazywał lokalną ścieżkę `/mnt/data/AA-40-audyt-II-zrodlo.tex`, niedostępną w środowisku GitHub. Pozostałe kontrole testowe nie wskazały błędu matematycznego w AA-40.
 - Poprawiono wyłącznie `tools/tests/test_abstract_algebra_ch40_independent.py`: domyślne źródło jest odszukiwane relatywnie względem katalogu repozytorium; lokalny wariant pozostaje możliwy. Skrót rozdziału LaTeX nie uległ zmianie.
 - Ponowiono lokalnie cały zestaw 374 testów w układzie `tools.tests.*` **bez** `AA40_SOURCE`: **374/374 PASS**.
-- Poprawkę testu opublikowano w commicie `0ed9eaea3dd947c83e6ab076c7eece2e855428a5`; należy sprawdzić nowy przebieg CI przed stwierdzeniem sukcesu pełnej książki.
+- Poprawkę testu opublikowano w commicie `0ed9eaea3dd947c83e6ab076c7eece2e855428a5`.
+- **Ponowny zdalny przebieg CI:** [AA-01–AA-40 / run 45066500032](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45066500032). Krok `Run repository tool tests` oraz dedykowany krok `Run AA-40 integral extensions regression tests` **zakończyły się sukcesem**. Pełna kompilacja książki trwała przy ostatnim odczycie. Nie deklaruje się sukcesu tych kroków przed osobną kontrolą.
 
 ## Zapis i publikacja
 
