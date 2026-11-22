@@ -92,6 +92,20 @@ class ParsingTests(unittest.TestCase):
             with self.subTest(log=log[-75:]), self.assertRaises(ValueError):
                 inspection.parse_inspection(log, TOKEN, [a, b])
 
+    def test_rolling_log_saturation_rejects_apparently_complete_events(self):
+        complete = transcript()
+        capacity = inspection.MAX_OUTPUT_BYTES
+        # A truncated subprocess log can end with a complete-looking protocol.
+        # Equality with capture capacity must never count as verified output.
+        saturated = ("X" * (capacity - len(complete.encode("utf-8")) - 1)
+                     + "\n" + complete)
+        self.assertEqual(len(saturated.encode("utf-8")), capacity)
+        with self.assertRaisesRegex(ValueError, "saturated"):
+            inspection.parse_inspection(saturated, TOKEN, ["theorem_x"])
+        unsaturated = saturated[1:]
+        self.assertEqual(inspection.parse_inspection(
+            unsaturated, TOKEN, ["theorem_x"]), {"theorem_x": ["Eq", "Nat.zero"]})
+
     def test_count_bound_and_truncated_output_fail_closed(self):
         with self.assertRaises(ValueError):
             inspection.parse_inspection(f"{TOKEN} BEGIN theorem_x 999\n", TOKEN, ["theorem_x"])
@@ -187,6 +201,17 @@ class InspectionExecutionTests(unittest.TestCase):
                 self.assertEqual(response["inspection_status"],status)
                 self.assertFalse(response["certificate"])
                 self.assertEqual(response["constants"],{})
+
+    def test_full_diagnostic_tail_never_returns_complete(self):
+        complete = transcript()
+        limit = inspection.MAX_OUTPUT_BYTES
+        saturated = ("Z" * (limit - len(complete.encode("utf-8")) - 1)
+                     + "\n" + complete)
+        response, spawn = self.execute(result=(0, saturated, False))
+        spawn.assert_called_once()
+        self.assertEqual(response["inspection_status"], "blocked")
+        self.assertEqual(response["constants"], {})
+        self.assertFalse(response["certificate"])
 
     def test_dependency_change_after_process_refuses_stale_results(self):
         call=[0]
