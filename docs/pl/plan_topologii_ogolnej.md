@@ -29,7 +29,7 @@ Stan: 22 listopada 2026. Źródłem prawdy dla rozdziałów włączonych do ksi�
 | **21** | **Topologie na rodzinach podzbiorów: Vietoris, metryka Hausdorffa, zupełność, zwartość, Fell, zbieżność i porównanie** | **stabilny — audyty 03–05 (2/2 + 1); CI/PDF PASS** |
 | **22** | **Zbieżność Kuratowskiego, topologia Wijsmana i topologia Attoucha–Wetsa; związek z Fellem, właściwość przestrzeni, kontrprzykłady** | **stabilny — audyty 02–04 (2/2 + 1); CI/PDF PASS** |
 | **23** | **Wymiar topologiczny: wymiar pokryciowy Lebesgue’a, wymiary ind/Ind, charakterystyka wymiaru 0, wymiar odcinka i sześcianu, nerwy pokryć** | **stabilny — audyty 04–06 (2/2 + 1), CI 45051754287 PASS, osobny PDF 9 stron** |
-| **24** | **Grupy topologiczne, otoczenia elementu neutralnego, podgrupy, przestrzenie warstw i grupy ilorazowe, składowa neutralna, struktury jednostajne, twierdzenie Birkhoffa–Kakutaniego** | **stabilny — audyty 02–04 (2/2 + 1), CI 45053429106 PASS, osobny PDF 10 stron** |
+| **24** | **Grupy topologiczne, otoczenia elementu neutralnego, podgrupy, przestrzenie warstw i grupy ilorazowe, składowa neutralna, struktury jednostajne, twierdzenie Birkhoffa–Kakutaniego** | **stabilny — audyty 02–04 (2/2 + 1), CI 45053429106 i końcowy 45053945600 PASS, PDF 10 stron** |
 
 Zakresy 12–13 oraz 16–17 są rozdzielone według tematyki, żeby unikać powtarzania dowodów. Zgodnie z zasadą projektu nowe rozdziały nie oznaczają automatycznie ich stabilności.
 
@@ -275,7 +275,11 @@ i 10 (końcowe podsumowanie) sprawdzono indywidualnie.
 Brak ostrzeżeń Overfull/Underfull i LaTeX Warning.
 
 Po zmianie strony tytułowej na „Wersja 1.24 —
-rozdziały 01–24 stabilne” należy wykonać końcowe
-CI regresyjne dla integracji. Następny etap:
+rozdziały 01–24 stabilne” wykonano końcową
+[walidację CI 45053945600](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45053945600):
+**completed/success**. Pobrany artefakt ID 14766796640
+zawiera pełną książkę 175 stron oraz osobny rozdział
+24 liczący 10 stron. Potwierdzono tekst strony tytułowej
+i kompletność PDF. Następny etap:
 **rozdział 25 o continuach**, ze szczególną uwagą
 na brak powtarzania podstaw spójności z rozdziału 08.
