@@ -137,3 +137,96 @@ def executable_toolchain_sha256(lean_root: Path) -> str:
                 "binary": binary,
             }
     return _digest(record)
+
+
+MAX_OLEAN_FILES = 120000
+MAX_OLEAN_HASH_BYTES = 64 * 1024 * 1024
+
+
+def _olean_tree(root: Path, *, label: str, budget: list[int]) -> dict[str, object]:
+    """Inspect one installed Lake .olean tree without unbounded I/O.
+
+    Every artifact contributes its name, size, mtime, ctime and file identity.
+    File content is additionally SHA256-hashed while the global I/O budget
+    permits. Partial coverage is explicitly encoded in the fingerprint.
+    """
+    if root.is_symlink():
+        raise ValueError("Symlinked Lake artifact root")
+    if not root.exists():
+        return {"label": label, "state": "not_built"}
+    if not root.is_dir():
+        raise ValueError("Lake artifact root is not a directory")
+    paths: list[Path] = []
+    for directory, dirs, names in os.walk(root, followlinks=False):
+        base = Path(directory)
+        if any((base / name).is_symlink() for name in dirs):
+            raise ValueError("Symlinked Lake artifact directory")
+        for name in names:
+            artifact = base / name
+            if artifact.suffix == ".olean":
+                if artifact.is_symlink():
+                    raise ValueError("Symlinked Lake .olean artifact")
+                paths.append(artifact)
+                if len(paths) > MAX_OLEAN_FILES:
+                    raise ValueError("Too many Lake .olean artifacts")
+    entries: list[dict[str, object]] = []
+    metadata_only = 0
+    for artifact in sorted(paths, key=lambda x: x.relative_to(root).as_posix()):
+        info = artifact.stat()
+        if not artifact.is_file():
+            raise ValueError("Lake .olean artifact is not a regular file")
+        entry: dict[str, object] = {
+            "name": artifact.relative_to(root).as_posix(),
+            "size": info.st_size,
+            "mtime_ns": info.st_mtime_ns,
+            "ctime_ns": info.st_ctime_ns,
+            "inode": info.st_ino,
+        }
+        if info.st_size <= budget[0]:
+            digest = hashlib.sha256()
+            with artifact.open("rb") as stream:
+                for chunk in iter(lambda: stream.read(128 * 1024), b""):
+                    digest.update(chunk)
+                after = os.fstat(stream.fileno())
+            if (info.st_size != after.st_size or info.st_mtime_ns != after.st_mtime_ns
+                    or info.st_ctime_ns != after.st_ctime_ns):
+                raise ValueError("Lake .olean artifact changed while fingerprinting")
+            entry["sha256"] = digest.hexdigest()
+            budget[0] -= info.st_size
+        else:
+            entry["content"] = "metadata_only"
+            metadata_only += 1
+        entries.append(entry)
+    return {"label": label, "state": "built",
+            "coverage": "metadata_only" if metadata_only else "content_sha256",
+            "artifacts": entries}
+
+
+def compiled_artifacts_sha256(lean_root: Path) -> str:
+    """Fingerprint project and package .olean caches with explicit I/O bounds.
+
+    Mathlib may have gigabytes of .olean files. This function deliberately
+    does not claim full content verification once the content budget is spent.
+    A missing build tree and a populated build tree never have the same digest.
+    """
+    budget = [MAX_OLEAN_HASH_BYTES]
+    roots: list[tuple[str, Path]] = [
+        ("project", lean_root / ".lake" / "build" / "lib" / "lean"),
+    ]
+    packages = lean_root / ".lake" / "packages"
+    if packages.is_symlink():
+        raise ValueError("Symlinked Lake packages root")
+    if packages.exists():
+        if not packages.is_dir():
+            raise ValueError("Lake packages root is not a directory")
+        for package in sorted(packages.iterdir(), key=lambda p: p.name):
+            if package.is_symlink() or not package.is_dir():
+                raise ValueError("Invalid Lake package directory")
+            roots.append((f"package/{package.name}",
+                          package / ".lake" / "build" / "lib" / "lean"))
+    if len(roots) > MAX_PACKAGES + 1:
+        raise ValueError("Too many Lake artifact roots")
+    records = [_olean_tree(path, label=label, budget=budget)
+               for label, path in roots]
+    return _digest({"schema": 1, "hash_budget_bytes": MAX_OLEAN_HASH_BYTES,
+                    "roots": records})
