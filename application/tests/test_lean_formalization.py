@@ -205,6 +205,71 @@ class LeanFormalizationTests(unittest.TestCase):
             lean.fragment(self.con, module_id="LST-01", start_line=1,
                           end_line=1000, lean_root=self.root)
 
+    def test_entity_metadata_corruption_blocks_reviewed_mapping(self):
+        self.entry["source_document_sha256"] = self.digest
+        self.entry["statement_status"] = "approved"
+        self.save_manifest()
+        original = (0, len(SOURCE), 1, 3)
+        broken = [
+            (-1, len(SOURCE), 1, 3),
+            (0, len(SOURCE) + 1, 1, 3),
+            (len(SOURCE), len(SOURCE), 1, 3),
+            (0, len(SOURCE), 2, 3),
+            (0, len(SOURCE), 1, 2),
+            (None, len(SOURCE), 1, 3),
+        ]
+        for offsets in broken:
+            with self.subTest(offsets=offsets):
+                self.con.execute(
+                    "UPDATE entities SET start_offset=?,end_offset=?,"
+                    "start_line=?,end_line=? WHERE id='LST-01/theorem/0001'",
+                    offsets)
+                self.con.commit()
+                for selection in (
+                    {"entity_id": "LST-01/theorem/0001"},
+                    {"module_id": "LST-01", "start_line": 1, "end_line": 3},
+                ):
+                    with self.subTest(selection=selection):
+                        # A valid document SHA must never excuse corrupt spans.
+                        # No current/approved Lean mapping may be exposed.
+                        with self.assertRaises(HTTPException) as caught:
+                            lean.fragment(self.con, lean_root=self.root, **selection)
+                        self.assertEqual(caught.exception.status_code, 409)
+        self.con.execute(
+            "UPDATE entities SET start_offset=?,end_offset=?,"
+            "start_line=?,end_line=? WHERE id='LST-01/theorem/0001'",
+            original)
+        self.con.commit()
+        result = lean.fragment(self.con, entity_id="LST-01/theorem/0001",
+                               lean_root=self.root)
+        self.assertEqual(result["formalization_status"], "ready")
+        self.assertFalse(result["certificate"])
+
+    def test_corrupt_adjacent_theorem_cannot_link_proof(self):
+        proof = "\\begin{proof}\nDowód prawa de Morgana.\n\\end{proof}\n"
+        source = SOURCE + proof
+        digest = hashlib.sha256(source.encode("utf-8")).hexdigest()
+        self.con.execute("UPDATE documents SET content=?,sha256=? WHERE id='LST-01'",
+                         (source, digest))
+        self.con.execute("INSERT INTO entities VALUES(?,?,?,?,?,?,?,?)",
+                         ("LST-01/proof/0002", "LST-01", "proof", "Dowód",
+                          4, 6, len(SOURCE), len(source)))
+        self.con.execute(
+            "UPDATE entities SET start_line=2 WHERE id='LST-01/theorem/0001'")
+        self.con.commit()
+        with self.assertRaises(HTTPException) as caught:
+            lean.fragment(self.con, entity_id="LST-01/proof/0002",
+                          lean_root=self.root)
+        self.assertEqual(caught.exception.status_code, 409)
+
+    def test_boolean_line_indices_are_not_valid_fragments(self):
+        for a, b in ((True, 3), (1, True), (False, 3)):
+            with self.subTest(first=a, last=b):
+                with self.assertRaises(HTTPException) as caught:
+                    lean.fragment(self.con, module_id="LST-01",
+                                  start_line=a, end_line=b, lean_root=self.root)
+                self.assertEqual(caught.exception.status_code, 400)
+
     def test_local_execution_requires_explicit_opt_in(self):
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "0"}):
             result = lean.run(self.con, "sample", lean_root=self.root)
