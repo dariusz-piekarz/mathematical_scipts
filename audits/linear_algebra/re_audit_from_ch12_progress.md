@@ -8,10 +8,10 @@
 
 ## Stan wykonania
 
-- Bieżący rozdział: **24**.
-- Ostatni zamknięty blob (rozdział 23): **bbd199baed1ee2c1a88843aad9fbfd0eac665d22**.
-- Liczba kolejnych czystych audytów (bieżący rozdział 24): **0**.
-- Kolejne działanie: **wykonać ponowny audyt 01 rozdziału 24**. Rozdział 23 ma dwie kolejne czyste kontrole tego samego bloba `bbd199baed1ee2c1a88843aad9fbfd0eac665d22` (audyty 01–02) i zielone dedykowane CI 45021237405.
+- Bieżący rozdział: **25**.
+- Ostatni zamknięty blob (rozdział 24): **92106feafce495e11f051279733cb34e9d9bed64**.
+- Liczba kolejnych czystych audytów (bieżący rozdział 25): **0**.
+- Kolejne działanie: **wykonać ponowny audyt 01 rozdziału 25**. Rozdział 24 zamknięty po dwóch czystych audytach 01–02 bloba `92106feafce495e11f051279733cb34e9d9bed64` i dedykowanym zielonym CI 45021237405.
 - Historyczne audyty, w tym ręczne audyty rozdziałów 13–15 z 22 listopada, pozostają ważnymi źródłami, ale **nie są automatycznie liczone** jako wykonanie nowego przebiegu.
 
 ## Tabela statusów
@@ -30,8 +30,8 @@
 | 21 | STABILNY; audyty 01 i 02 czyste, CI success | 2 | `6527ae1a6daca48717e6a5f5e83958271abb16f5` |
 | 22 | STABILNY; audyty 03 i 04 czyste po poprawce, CI success | 2 | `dfa3d790bfed4c92c66642ea626a6213bc06ad3f` |
 | 23 | STABILNY; audyty 01 i 02 czyste, CI success | 2 | `bbd199baed1ee2c1a88843aad9fbfd0eac665d22` |
-| 24 | BIEŻĄCY; ponowny audyt 01 do wykonania | 0 | — |
-| 25 | W kolejce | 0 | — |
+| 24 | STABILNY; audyty 01 i 02 czyste, CI success | 2 | `92106feafce495e11f051279733cb34e9d9bed64` |
+| 25 | BIEŻĄCY; ponowny audyt 01 do wykonania | 0 | — |
 | 26 | W kolejce | 0 | — |
 | 27 | W kolejce | 0 | — |
 | 28 | W kolejce | 0 | — |
@@ -212,3 +212,9 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - Rozdział **23: STABILNY (2/2)**, źródło `bbd199baed1ee2c1a88843aad9fbfd0eac665d22` niezmienione między czystymi audytami 01 i 02.
 - Raporty: [23_iteration_01_2026-11-22.md](re_audit_from_ch12/23_iteration_01_2026-11-22.md) oraz [23_iteration_02_2026-11-22.md](re_audit_from_ch12/23_iteration_02_2026-11-22.md). Weryfikacja niezależna: 1494 testy widma i odwracalności operatora Steina nad ciałami skończonymi, 64 zespolone przypadki równania Steina, 64 tożsamości energii; wszystkie PASS. Struktura źródła: 965 wierszy, 25 unikalnych etykiet, 12 istniejących odsyłaczy.
 - [CI 45021237405](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45021237405) completed/success dla commitu zawierającego identyczny blob. Następny: rozdział 24.
+
+## Ostatnia rzeczywista iteracja — 2026-11-22 (rozdział 24, audyty 01 i 02)
+
+- Rozdział **24: STABILNY (2/2)**, niezmieniony blob `92106feafce495e11f051279733cb34e9d9bed64` po dwóch kolejnych samodzielnych czystych kontrolach.
+- Raporty [24_iteration_01_2026-11-22.md](re_audit_from_ch12/24_iteration_01_2026-11-22.md) i [24_iteration_02_2026-11-22.md](re_audit_from_ch12/24_iteration_02_2026-11-22.md). Wykonano 80 zespolonych przypadków DARE/CARE, 112 niezależnych skończenohoryzontowych LQR, 96 nowych porównań DARE/CARE z równaniami Lapunowa; wszystkie PASS. Źródło 1452 wiersze, 26 unikalnych etykiet, 31 poprawnych odsyłaczy.
+- [CI 45021237405](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45021237405) completed/success dla commitu zawierającego identyczny blob. Następny: rozdział **25**, audyt 01.
