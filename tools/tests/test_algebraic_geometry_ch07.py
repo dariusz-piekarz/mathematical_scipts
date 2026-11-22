@@ -181,6 +181,40 @@ class ALG07Regressions(unittest.TestCase):
         self.assertIn(r"\label{prz:ga7-hilbert-polynomial}", src)
         self.assertIn(r"\binom{m+3}{3}-\binom{m-d+3}{3}", src)
 
+    def test_canonical_divisor_distinct_from_chow_class(self):
+        # K_S is a divisor, H is a hyperplane divisor, h=[H] a Chow
+        # class. Linear equivalence must never be written against h.
+        src = SOURCE.read_text(encoding="utf-8")
+        self.assertIn(r"\omega_S\cong\mathcal O_S(d-4)", src)
+        self.assertIn(r"K_S\sim(d-4)H", src)
+        self.assertIn(r"h=[H]=c_1(\mathcal O_S(1))", src)
+        self.assertNotIn(r"K_S\sim(d-4)h", src)
+        statement = src.split(
+            r"\label{wn:ga7-degree-d-surface}", 1
+        )[1].split(r"\end{wniosek}", 1)[0]
+        self.assertIn("dzielnikiem", statement)
+        self.assertIn("kanonicznego", statement)
+        for d in range(1, 16):
+            self.assertEqual(d*(d-4)**2,
+                             d*(d-4)*(d-4))
+
+    def test_explicit_closed_point_and_canonical_hypotheses(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        blowup = src.split(
+            r"\label{prz:ga7-blowup-c2}", 1
+        )[1].split(r"\end{przyklad}", 1)[0]
+        self.assertIn("punktem zamkniętym", blowup)
+        self.assertIn(r"\operatorname{Bl}_pS", blowup)
+        parity = src.split(
+            r"\label{wn:ga7-parity}", 1
+        )[1].split(r"\end{wniosek}", 1)[0]
+        self.assertIn("dzielnikiem kanonicznym", parity)
+        self.assertIn(r"D\cdot(D-K_S)", parity)
+        degree = src.split(
+            r"\label{st:ga7-divisor-degree}", 1
+        )[1].split(r"\end{stwierdzenie}", 1)[0]
+        self.assertIn("dla $D=C$ i $C$ gładkiej", degree)
+
     def test_source_terminology_and_crossrefs(self):
         src = SOURCE.read_text(encoding="utf-8")
         stripped = re.sub(
