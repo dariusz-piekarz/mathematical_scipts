@@ -137,6 +137,34 @@ class TestChapter32(unittest.TestCase):
         self.assertIn("rangi są wspólnie ograniczone", TEXT)
         self.assertIn(r"X\in N_{\alpha+1}", TEXT)
 
+    def test_poset_without_greatest_element(self):
+        # A valid forcing preorder may have incompatible minimal elements
+        # and no largest element; the Rasiowa-Sikorski lemma still applies.
+        P = {"a", "b"}
+        leq = lambda p, q: p == q
+        self.assertTrue(all(leq(p, p) for p in P))
+        self.assertFalse(any(all(leq(p, top) for p in P) for top in P))
+        dense = [set(P), set(P)]
+        G = {"a"}
+        self.assertTrue(all(
+            any(leq(q, p) for q in D) for D in dense for p in P
+        ))
+        self.assertTrue(all(G & D for D in dense))
+        self.assertTrue(all(
+            any(leq(r, p) and leq(r, q) for r in G)
+            for p in G for q in G
+        ))
+        self.assertIn("ani istnienia", TEXT)
+        self.assertIn(r"1_{\mathbb P}", TEXT)
+        self.assertIn(r"\label{thm:rasiowa-sikorski}", TEXT)
+
+    def test_name_recognition_absoluteness_is_explicit(self):
+        # Syntactic regression, not a formal proof of set-theoretic absoluteness.
+        self.assertIn(r"\emph{absolutność bycia nazwą}", TEXT)
+        self.assertIn(r"N_{\alpha+1}^M", TEXT)
+        self.assertIn("wewnętrznym i zewnętrznym", TEXT)
+        self.assertIn("po zwykłej randze", TEXT)
+
     def test_no_unproved_forcing_theorem(self):
         self.assertNotIn(r"\begin{twierdzenie}[M[G] spełnia ZFC]", TEXT)
         self.assertIn(r"p\Vdash\varphi", TEXT)
