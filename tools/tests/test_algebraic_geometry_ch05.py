@@ -105,6 +105,19 @@ class ALG05Regressions(unittest.TestCase):
             self.assertTrue(all((u, 0) in locus for u in range(p)))
             self.assertTrue(all((0, y) in locus for y in range(p)))
 
+    def test_projective_fibres_over_nonrational_centre_points(self):
+        # X=A^3_{F_3}, Z=V(x_1,x_2)=A^1_{F_3}.
+        # The closed point (t^2+1) on Z has residue field F_9,
+        # since t^2+1 is irreducible over F_3.
+        self.assertFalse(any((t*t+1) % 3 == 0 for t in range(3)))
+        # Over that point the exceptional fibre is P^1_{F_9}, not
+        # P^1_{F_3}; their rational-point counts differ.
+        self.assertEqual(9 + 1, 10)
+        self.assertNotEqual(9 + 1, 3 + 1)
+        src = SOURCE.read_text(encoding="utf-8")
+        self.assertIn(r"\\PP^{c-1}_{\\kappa(z)}", src)
+        self.assertIn(r"\\widetilde X\\times_X\\Spec\\kappa(z)", src)
+
     def test_projective_chart_transition(self):
         for p in (3, 5, 7, 11):
             for v in range(1, p):
