@@ -5,7 +5,7 @@ const $ = id => document.getElementById(id);
 const state = {
   domains:[], modules:[], outlines:new Map(), expandedDomains:new Set(), expandedModules:new Set(),
   currentModule:null, currentEntity:null, currentData:null, selected:new Map(),
-  tab:"reader", granularity:"module", simplified:false, tooltipData:null, leanEpoch:0, leanFragment:null, leanRunner:null,
+  tab:"reader", granularity:"module", simplified:false, tooltipData:null, leanEpoch:0, leanFragment:null, leanRunner:null, leanCatalog:null, leanCatalogLoading:false, leanCatalogEpoch:0,
   tooltipKey:0, graph:null, conceptGraph:null, conceptEpoch:0, renderEpoch:0, draftSession:null,
 };
 const titleOr = item => item.title || item.subtype || item.kind || item.id;
@@ -25,6 +25,7 @@ function activateTab(name){
   document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
   for(const k of ["reader","lean","graph","concepts","selection"])$("view-"+k).classList.toggle("hidden",k!==name);
   if(name==="selection")renderSelection();
+  if(name==="lean" && !state.leanCatalog && !state.leanCatalogLoading)loadLeanCatalog();
   if(name==="graph" && !state.graph)loadGraph();
   if(name==="concepts" && !state.conceptGraph)loadConceptGraph();
   closeTip();
@@ -640,6 +641,62 @@ const leanProofLabels={
   failed:"Błąd Lean",timeout:"Przekroczony czas",
   toolchain_unavailable:"Brak Lean/lake",blocked:"Uruchomienie zablokowane"
 };
+
+async function loadLeanCatalog(){
+  if(state.leanCatalogLoading)return;
+  const epoch=++state.leanCatalogEpoch;
+  state.leanCatalogLoading=true;
+  $("leanCatalogSummary").textContent="Odczytywanie rejestru formalizacji…";
+  $("leanCatalogList").replaceChildren();
+  try{
+    const data=await api("/api/lean/catalog");
+    if(epoch!==state.leanCatalogEpoch)return;
+    state.leanCatalog=data;
+    renderLeanCatalog();
+  }catch(err){
+    if(epoch!==state.leanCatalogEpoch)return;
+    state.leanCatalog=null;
+    $("leanCatalogSummary").textContent="Nie można wczytać katalogu: "+err.message;
+  }finally{
+    if(epoch===state.leanCatalogEpoch)state.leanCatalogLoading=false;
+  }
+}
+function renderLeanCatalog(){
+  const data=state.leanCatalog;
+  if(!data)return;
+  $("leanCatalogSummary").textContent=
+    data.total+" formalizacji · "+data.ready+" przypiętych źródeł · "+
+    data.draft+" roboczych · "+data.stale+" nieaktualnych. "+
+    "Kompilację sprawdzaj osobno dla wybranego twierdzenia.";
+  const query=$("leanCatalogSearch").value.trim().toLocaleLowerCase("pl-PL");
+  const filter=$("leanCatalogFilter").value;
+  const items=data.items.filter(item=>
+    (filter==="all"||item.formalization_status===filter)&&
+    [item.source_module,item.source_label,item.formalization_id,
+      ...(item.lean_theorems||[])].join(" ").toLocaleLowerCase("pl-PL").includes(query)
+  );
+  const list=$("leanCatalogList");list.replaceChildren();
+  if(!items.length){
+    list.append(node("p",{className:"empty-sub"},"Brak pasujących formalizacji."));
+    return;
+  }
+  for(const item of items){
+    const b=node("button",{className:"lean-catalog-entry",type:"button"});
+    const status=leanFormalizationLabels[item.formalization_status]||item.formalization_status;
+    const review=leanStatementLabels[item.statement_status]||item.statement_status;
+    b.append(
+      node("strong",{},item.source_module+" · "+item.source_label),
+      node("small",{},item.lean_theorem+" · "+status+" · "+review)
+    );
+    if(!item.source_entity_id){
+      b.disabled=true;
+      b.title="Brak jednoznacznego powiązania: "+item.index_status;
+    }else{
+      b.addEventListener("click",()=>loadLeanFragment({entity_id:item.source_entity_id}));
+    }
+    list.append(b);
+  }
+}
 async function loadLeanFragment(query){
   const epoch=++state.leanEpoch;activateTab("lean");
   $("leanResult").classList.add("hidden");$("leanEmpty").classList.remove("hidden");
@@ -794,6 +851,9 @@ function listeners(){
   $("openLeanCurrent").addEventListener("click",openLeanCurrent);
   $("openLeanSelection").addEventListener("click",openLeanSelection);
   $("leanRun").addEventListener("click",runLeanFormalization);
+  $("leanCatalogRefresh").addEventListener("click",()=>{state.leanCatalog=null;loadLeanCatalog();});
+  $("leanCatalogSearch").addEventListener("input",renderLeanCatalog);
+  $("leanCatalogFilter").addEventListener("change",renderLeanCatalog);
   $("addExcerpt").addEventListener("click",addExcerpt);
   $("addRange").addEventListener("click",addRange);
   $("openFirst").addEventListener("click",()=>{if(state.modules.length)openModule(state.modules[0].id);});
