@@ -190,9 +190,18 @@ def _olean_tree(root: Path, *, label: str, budget: list[int],
         }
         if info.st_size <= budget[0]:
             digest = hashlib.sha256()
+            # The stat-based budget must bound actual reads too. A growing
+            # file must not turn a 64 MiB fingerprint budget into unlimited I/O.
             with artifact.open("rb") as stream:
-                for chunk in iter(lambda: stream.read(128 * 1024), b""):
+                remaining = info.st_size
+                while remaining:
+                    chunk = stream.read(min(128 * 1024, remaining))
+                    if not chunk:
+                        raise ValueError("Lake .olean artifact truncated while fingerprinting")
                     digest.update(chunk)
+                    remaining -= len(chunk)
+                if stream.read(1):
+                    raise ValueError("Lake .olean artifact grew while fingerprinting")
                 open_size = os.fstat(stream.fileno()).st_size
             # On Windows, stat(path) and fstat(fd) can expose different
             # creation-time semantics. Compare path metadata using the same

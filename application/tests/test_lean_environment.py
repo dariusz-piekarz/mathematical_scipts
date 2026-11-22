@@ -307,6 +307,81 @@ class LeanEnvironmentTests(unittest.TestCase):
                     [x["name"] for x in actual["artifacts"]],
                     sorted(x["name"] for x in actual["artifacts"]))
 
+    def test_olean_read_remains_bounded_for_a_growing_stream(self):
+        """A misbehaving/concurrently growing file must not allow unbounded reads."""
+        root = self.root / ".lake" / "build" / "lib" / "lean"
+        root.mkdir(parents=True)
+        artifact = root / "Growing.olean"
+        artifact.write_bytes(b"AAAA")
+        original_open = Path.open
+        requests = []
+
+        class GrowingStream:
+            def __init__(self, stream):
+                self.stream = stream
+
+            def __enter__(self):
+                self.stream.__enter__()
+                return self
+
+            def __exit__(self, *args):
+                return self.stream.__exit__(*args)
+
+            def read(self, count=-1):
+                requests.append(count)
+                if count < 0 or count > 4:
+                    raise AssertionError("Read exceeded stat-based fingerprint budget")
+                return b"B" * count  # Simulate data extending past the original EOF.
+
+            def fileno(self):
+                return self.stream.fileno()
+
+        def controlled_open(path, *args, **kwargs):
+            stream = original_open(path, *args, **kwargs)
+            if path == artifact and args and args[0] == "rb":
+                return GrowingStream(stream)
+            return stream
+
+        with patch.object(Path, "open", controlled_open):
+            with self.assertRaisesRegex(ValueError, "grew while fingerprinting"):
+                lean_environment._olean_tree(root, label="project", budget=[10])
+        self.assertEqual(requests, [4, 1])
+
+    def test_olean_truncated_read_is_rejected(self):
+        """A file shortening mid-read cannot silently receive a partial digest."""
+        root = self.root / ".lake" / "build" / "lib" / "lean"
+        root.mkdir(parents=True)
+        artifact = root / "Short.olean"
+        artifact.write_bytes(b"ABCD")
+        original_open = Path.open
+
+        class TruncatedStream:
+            def __init__(self, stream):
+                self.stream = stream
+
+            def __enter__(self):
+                self.stream.__enter__()
+                return self
+
+            def __exit__(self, *args):
+                return self.stream.__exit__(*args)
+
+            def read(self, count=-1):
+                return b""
+
+            def fileno(self):
+                return self.stream.fileno()
+
+        def controlled_open(path, *args, **kwargs):
+            stream = original_open(path, *args, **kwargs)
+            if path == artifact and args and args[0] == "rb":
+                return TruncatedStream(stream)
+            return stream
+
+        with patch.object(Path, "open", controlled_open):
+            with self.assertRaisesRegex(ValueError, "truncated while fingerprinting"):
+                lean_environment._olean_tree(root, label="project", budget=[10])
+
     def test_unresolved_path_is_recorded_not_verified(self):
         fake = self.root / "missing"
         value = lean_environment._binary_identity(str(fake))
