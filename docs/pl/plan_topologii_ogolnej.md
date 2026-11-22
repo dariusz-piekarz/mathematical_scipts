@@ -28,7 +28,7 @@ Stan: 22 listopada 2026. Źródłem prawdy dla rozdziałów włączonych do ksi�
 | **20** | **Zbiory analityczne, rzuty zbiorów domkniętych, operacja Suslina, zbiór nieborelowski analityczny** | **stabilny — audyty 05–07 (2/2 + 1); kodowanie drzewa 1/2 poprawione; CI/PDF PASS** |
 | **21** | **Topologie na rodzinach podzbiorów: Vietoris, metryka Hausdorffa, zupełność, zwartość, Fell, zbieżność i porównanie** | **stabilny — audyty 03–05 (2/2 + 1); CI/PDF PASS** |
 | **22** | **Zbieżność Kuratowskiego, topologia Wijsmana i topologia Attoucha–Wetsa; związek z Fellem, właściwość przestrzeni, kontrprzykłady** | **stabilny — audyty 02–04 (2/2 + 1); CI/PDF PASS** |
-| **23** | **Wymiar topologiczny: wymiar pokryciowy Lebesgue’a, wymiary ind/Ind, charakterystyka wymiaru 0, wymiar odcinka i sześcianu, nerwy pokryć** | **w audycie — nie oznaczać jako stabilny przed 2/2 + 1 i zielonym CI/PDF** |
+| **23** | **Wymiar topologiczny: wymiar pokryciowy Lebesgue’a, wymiary ind/Ind, charakterystyka wymiaru 0, wymiar odcinka i sześcianu, nerwy pokryć** | **stabilny — audyty 04–06 (2/2 + 1), CI 45051754287 PASS, osobny PDF 9 stron** |
 
 Zakresy 12–13 oraz 16–17 są rozdzielone według tematyki, żeby unikać powtarzania dowodów. Zgodnie z zasadą projektu nowe rozdziały nie oznaczają automatycznie ich stabilności.
 
@@ -201,3 +201,21 @@ Użytkownik zatwierdził kolejne etapy 1–5 w dniu 22 listopada 2026:
 następnie tworzyć i stabilizować dokładnie jeden nowy rozdział.
 Wykryte merytoryczne błędy poprawiać; rozszerzenia już zatwierdzonych
 rozdziałów przedstawiać osobno jako propozycje.
+
+## Zamknięcie rozdziału 23 (2026-11-22)
+
+Rozdział 23 ma stabilny blob `9dc1ed4784d929b405d00a3216865418f240a37c`.
+Zawiera pełny dowód wymiaru sześcianu `dim[0,1]^n=n`,
+wykorzystując twierdzenie Brouwera dostępne w AT-19 oraz własność
+Poincarégo–Mirandy, a także pełny argument triangulacyjny
+na górne oszacowanie dla zwartych podzbiorów przestrzeni euklidesowych.
+Audyty [04](../../audits/general_topology/23-wymiar-topologiczny-iteracja-04.md),
+[05](../../audits/general_topology/23-wymiar-topologiczny-iteracja-05.md),
+[06](../../audits/general_topology/23-wymiar-topologiczny-iteracja-06.md)
+były kolejno czyste na identycznym blobie, bez zmian źródła.
+[CI 45051754287](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45051754287)
+ukończyło się sukcesem. Pobrano artefakt 14766071024,
+obejrzano wszystkie 9 stron osobnego PDF, w tym rysunek i końcowe
+podsumowanie. Brak ostrzeżeń LaTeX oraz osieroconej strony.
+Po aktualizacji oznaczenia książki i regresji należy wykonać
+jeszcze kontrolę CI dla tej integracyjnej zmiany.
