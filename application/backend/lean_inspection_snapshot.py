@@ -68,7 +68,10 @@ def describe(identifier: str, names: list[str], *,
                    or not DIGEST.fullmatch(fingerprint[field])
                    for field in DIGEST_FIELDS)
             or not isinstance(fingerprint.get("declared_toolchain"), str)
-            or len(fingerprint["declared_toolchain"]) > 160):
+            or not fingerprint["declared_toolchain"].strip()
+            or len(fingerprint["declared_toolchain"]) > 160
+            or any(ord(ch) < 32 or ord(ch) == 127
+                   for ch in fingerprint["declared_toolchain"])):
         raise ValueError("Incomplete inspection environment fingerprint")
     provenance = {key: fingerprint[key] for key in FINGERPRINT_FIELDS}
     total = _validated_references(constants, names)
