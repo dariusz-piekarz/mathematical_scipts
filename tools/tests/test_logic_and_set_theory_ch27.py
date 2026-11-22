@@ -43,7 +43,7 @@ class TestChapter27(unittest.TestCase):
         self.assertEqual(len(labels),len(set(labels)))
         self.assertEqual(len(re.findall(r"\\label\{([^}]+)\}",SOURCE)),24)
         self.assertEqual(len(refs),16)
-        self.assertEqual(set(refs)-set(labels),{"ch:ordinals"})
+        self.assertEqual(set(refs)-set(labels),set())
 
     def test_full_original_material_retained(self):
         for label in ("thm:card-cb","thm:card-laws","thm:card-exponent-exponent",
