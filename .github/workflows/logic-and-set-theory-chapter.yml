@@ -354,7 +354,9 @@ jobs:
           assert refs <= allowed, f"Unexpected undefined references: {sorted(refs - allowed)}"
           assert not re.search(r"Overfull \\hbox", log), "Overfull TeX boxes"
           assert not re.search(r"LaTeX Warning: Citation .+ undefined", log), "Undefined citation"
-          print("PASS: PDF present; no unexpected references, missing citations or overfull boxes")
+          assert "destination with the same identifier" not in log, "Duplicate PDF page anchor"
+          assert "Token not allowed in a PDF string" not in log, "Invalid token in PDF bookmark"
+          print("PASS: PDF present; references, citations, box layout and PDF anchors/bookmarks clean")
           if refs:
               print("Documented forward references (not yet imported):", sorted(refs))
           PY
