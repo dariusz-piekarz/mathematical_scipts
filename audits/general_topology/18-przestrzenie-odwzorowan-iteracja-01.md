@@ -36,7 +36,16 @@ Dodano books/pl/general_topology_ch18.tex, wpis w books/pl/general_topology.tex,
 | Istotne przykłady i kontrprzykłady | PASS — pierwszy audyt |
 | Zgodność zależności z rozdziałami 12 i 14 | PASS |
 | Katalog, pliki główne i regresja rozdziału 17 | Wdrożono |
-| CI, logi i wizualne oględziny PDF | Do potwierdzenia |
+| CI, logi i wizualne oględziny PDF | **PASS — run 45015732921; PDF 5 stron A4** |
 | Decyzja | W AUDYCIE — wymagana dalsza niezależna iteracja |
 
 Źródła kontrolne: Munkres, Topology, rozdział o przestrzeniach funkcji; wykłady „Background on function spaces” (University of California Riverside); podręcznikowa własność prawa wykładniczego dla lokalnie zwartych przestrzeni Hausdorffa. Nie powielano fragmentów źródeł; dowody zapisano samodzielnie.
+
+
+## Końcowa kontrola techniczna audytu 01
+
+Przebieg GitHub Actions [45015732921](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45015732921) dla pełnego źródła i testu rozdziału 18 zakończył się completed/success. Osobno potwierdzono zielone kroki: Verify Chapter 18 compact-open topology and mapping spaces, Build complete book PDF, Build standalone Chapter 18 PDF i Check PDF and LaTeX log.
+
+Artefakt 14751384112 pobrano i rozpakowano do katalogu /mnt/data/topologia18_audyt01. Samodzielny general_topology_ch18.pdf ma **5 stron A4**. Wyrenderowano wszystkie strony i obejrzano je, także przejścia między sekcjami o ewaluacji, prawie wykładniczym i metryce z wyczerpania. Tekst, wzory, numeracja i odsyłacze są czytelne, bez kolizji i ucięć. W logach general_topology_ch18.log oraz general_topology.log nie występują Overfull, Underfull, Missing character, LaTeX Warning, Undefined control sequence ani Fatal error.
+
+**Werdykt audytu 01:** rozdział napisany, zintegrowany i zweryfikowany technicznie; pierwszy audyt matematyczny PASS. Nie oznaczać stabilności przed niezależną ponowną kontrolą nowego materiału w audycie 02.
