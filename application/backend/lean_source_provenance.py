@@ -71,7 +71,7 @@ def owner_status(con: sqlite3.Connection, module: str, label: str,
     ).fetchone()
     if conflicts_table is not None:
         conflict_rows = con.execute(
-            "SELECT DISTINCT offset FROM label_conflicts "
+            "SELECT DISTINCT offset, entity_id FROM label_conflicts "
             "WHERE name=? AND document_id=? LIMIT 2", (label, module)
         ).fetchall()
         if len(conflict_rows) > 1:
