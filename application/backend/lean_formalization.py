@@ -196,10 +196,17 @@ def run(con: sqlite3.Connection, formalization_id: str,
     if not matches:
         raise HTTPException(404, "Nieznana formalizacja.")
     item = matches[0]
-    d = con.execute("SELECT id,sha256 FROM documents WHERE id=?",
+    d = con.execute("SELECT id,sha256,content FROM documents WHERE id=?",
                     (item["source_module"],)).fetchone()
     if d is None:
         raise HTTPException(409, "Rozdział źródłowy nie znajduje się w indeksie.")
+    # An index SHA alone is not proof that the indexed bytes still match it.
+    # Fail closed before spawning Lean if the database is inconsistent.
+    if (not isinstance(d["content"], str) or
+            hashlib.sha256(d["content"].encode("utf-8")).hexdigest() != d["sha256"]):
+        return {"formalization_id": formalization_id, "proof_status": "blocked",
+                "detail": "Niezgodność treści rozdziału z SHA256 w indeksie.",
+                "certificate": False}
     if item.get("source_document_sha256") and item["source_document_sha256"] != d["sha256"]:
         return {"formalization_id": formalization_id, "proof_status": "blocked",
                 "detail": "Źródło LaTeX zmieniło się od czasu powiązania formalizacji.",
