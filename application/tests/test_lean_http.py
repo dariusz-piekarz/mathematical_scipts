@@ -82,6 +82,25 @@ class LeanHttpTests(unittest.TestCase):
                 self.assertEqual(data["statement_status"], "approved")
                 self.assertFalse(data["certificate"])
 
+    def test_corrupt_index_blocks_fragment_preview(self):
+        from backend import lean_formalization
+        from fastapi import HTTPException
+        from unittest.mock import patch as mock_patch
+
+        original = lean_formalization._find_source
+
+        def corrupt(*args, **kwargs):
+            d, content, labels, first, last, eid, linkage = original(*args, **kwargs)
+            d = dict(d)
+            d["sha256"] = "0" * 64
+            return d, content, labels, first, last, eid, linkage
+
+        with mock_patch.object(lean_formalization, "_find_source", side_effect=corrupt):
+            response = self.client.get("/api/lean/fragment", params={
+                "module_id": "LST-01", "start_line": 1, "end_line": 1
+            })
+        self.assertEqual(response.status_code, 409)
+
     def test_execution_disabled_by_default(self):
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "0"}):
             result = self.client.post("/api/lean/run", json={
