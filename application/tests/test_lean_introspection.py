@@ -152,14 +152,14 @@ class InspectionExecutionTests(unittest.TestCase):
                           "lean_sha256":hashlib.sha256(self.original).hexdigest(),
                           "toolchain_sha256":"c"*64}
 
-    def execute(self, *args, result=(0,transcript(),False), fingerprint=None, ready=None):
+    def execute(self, *args, result=(0,transcript(),False), fingerprint=None, ready=None, process=None):
         with patch.dict(os.environ,{"MATLIB_LEAN_RUN":"1"}), \
              patch.object(inspection.lean,"availability",return_value=ready or self.ready), \
              patch.object(inspection.lean_results,"fingerprint",
                           side_effect=fingerprint or (lambda *unused:self.fingerprint)), \
              patch.object(inspection.secrets,"token_hex",return_value=TOKEN), \
              patch.object(inspection.lean_process,"execute_registered",
-                          return_value=result) as spawn:
+                          return_value=result, side_effect=process) as spawn:
             output=inspection.inspect(self.con,"mapping",lean_root=self.root)
         return output,spawn
 
@@ -212,6 +212,28 @@ class InspectionExecutionTests(unittest.TestCase):
         self.assertEqual(response["inspection_status"], "blocked")
         self.assertEqual(response["constants"], {})
         self.assertFalse(response["certificate"])
+
+    def test_index_rebuild_during_lean_execution_blocks_stale_evidence(self):
+        for mode in ("reindexed", "corrupted"):
+            with self.subTest(mode=mode):
+                def mutate_index(*args, **kwargs):
+                    changed = SOURCE + "% reindexed\\n"
+                    new_digest = hashlib.sha256(changed.encode("utf-8")).hexdigest()
+                    self.con.execute(
+                        "UPDATE documents SET content=?,sha256=? WHERE id=?",
+                        (changed, new_digest if mode == "reindexed" else self.digest,
+                         "LST-01"))
+                    self.con.commit()
+                    return 0, transcript(), False
+
+                result, spawned = self.execute(process=mutate_index)
+                spawned.assert_called_once()
+                self.assertEqual(result["inspection_status"], "blocked")
+                self.assertEqual(result["constants"], {})
+                self.assertFalse(result["certificate"])
+                self.con.execute("UPDATE documents SET content=?,sha256=? WHERE id=?",
+                                 (SOURCE, self.digest, "LST-01"))
+                self.con.commit()
 
     def test_dependency_change_after_process_refuses_stale_results(self):
         call=[0]
