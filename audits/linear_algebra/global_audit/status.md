@@ -1,13 +1,13 @@
 # Globalny audyt algebry liniowej — status rozdziałów
 
 **Stan po iteracji 09/09 (częściowa weryfikacja)**, 22 listopada 2026.  
-**Aktualizacja:** rozdziały 01–02 ponownie audytowano i ustabilizowano. Dla rozdziału 02 dwie ostatnie kontrole źródła są czyste; osobny PDF i dokładne testy przeszły. Końcowe CI na aktualnym commicie podlega osobnemu sprawdzeniu.
+**Aktualizacja:** rozdziały 01–03 ponownie audytowano i ustabilizowano w niezależnych cyklach. Dla rozdziału 03 dwa audyty stabilizacyjne są czyste, źródło bez zmian, osobny PDF i nowy zestaw regresji PASS. CI dla commitu raportu I [45005167546](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45005167546) zakończyło się sukcesem; końcowe CI raportów należy sprawdzić oddzielnie.
 
 | Rozdział | Status |
 |---|---|
 | 01 | STABILNY: trzy audyty rozdziału, dwa czyste, CI i osobny PDF PASS |
 | 02 | STABILNY: audyty stabilizacyjne I–III, dwa kolejne czyste na niezmienionym źródle; 16/16 dowodów, 17/17 odsyłaczy, testy nad F_2 i F_3, 10-stronicowy PDF; CI PASS dla audytu I |
-| 03 | 01: bez korekt; PDF/CI oczekują |
+| 03 | STABILNY: audyty stabilizacyjne I–II czyste na identycznym SHA; 17/17 dowodów, 19/19 odsyłaczy, 8 przykładów, 10-stronicowy PDF i regresje 593 map/72 projekcji/8678 faktoryzacji/172544 tożsamości PASS |
 | 04 | 01: uzupełniono rachunki; PDF/CI oczekują |
 | 05 | 02: sprawdzono dowody eliminacji, RREF, rzędu i przykłady; PDF/CI do potwierdzenia |
 | 06 | 02: sprawdzono znak permutacji, wyznacznik, Laplace'a i Cramera; PDF/CI do potwierdzenia |
