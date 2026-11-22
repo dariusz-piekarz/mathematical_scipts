@@ -8,10 +8,10 @@
 
 ## Stan wykonania
 
-- Bieżący rozdział: **14**.
-- Ostatni zamknięty blob (rozdział 13): **cc5d09ff605ccf8bb7572ec56d4cc1f690edf3af**.
-- Liczba kolejnych czystych audytów (bieżący rozdział 14): **1**.
-- Kolejne działanie: **wykonać audyt 02 rozdziału 14** na blobie `8216c60505324854e2339928bb9be562724e1db2` i potwierdzić wymagane CI.
+- Bieżący rozdział: **15**.
+- Ostatni zamknięty blob (rozdział 14): **8216c60505324854e2339928bb9be562724e1db2**.
+- Liczba kolejnych czystych audytów (bieżący rozdział 15): **0**.
+- Kolejne działanie: **wykonać audyt 01 rozdziału 15**. Rozdział 14 zamknięto po dwóch czystych kontrolach i zielonym dedykowanym CI.
 - Historyczne audyty, w tym ręczne audyty rozdziałów 13–15 z 22 listopada, pozostają ważnymi źródłami, ale **nie są automatycznie liczone** jako wykonanie nowego przebiegu.
 
 ## Tabela statusów
@@ -20,8 +20,8 @@
 |---|---|---:|---|
 | 12 | STABILNY; iteracje 01 i 02 czyste, CI success | 2 | `ded0c69dc298d00842d4009073e2444e1037952a` |
 | 13 | STABILNY; iteracje 02 i 03 czyste, CI success | 2 | `cc5d09ff605ccf8bb7572ec56d4cc1f690edf3af` |
-| 14 | OTWARTY; audyt 01 czysty, wymagane audyt 02 i weryfikacja CI | 1 | `8216c60505324854e2339928bb9be562724e1db2` |
-| 15 | W kolejce | 0 | — |
+| 14 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `8216c60505324854e2339928bb9be562724e1db2` |
+| 15 | BIEŻĄCY; audyt 01 do wykonania | 0 | — |
 | 16 | W kolejce | 0 | — |
 | 17 | W kolejce | 0 | — |
 | 18 | W kolejce | 0 | — |
@@ -87,3 +87,10 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - Raport: [14_iteration_01_2026-11-22.md](re_audit_from_ch12/14_iteration_01_2026-11-22.md), commit [79498221](https://github.com/dariusz-piekarz/mathematical_scipts/commit/794982212afbb41af6004ff34eae0271c5fc71ec).
 - Na gałęzi widoczne są przebiegi CI o różnych wynikach; pełnego wymaganego zielonego CI dla bloba jeszcze nie potwierdzono.
 - Następny: rozdział 14, audyt 02.
+
+## Ostatnia rzeczywista iteracja — 2026-11-22 (rozdział 14, audyt 02)
+
+- Rozdział **14: STABILNY (2/2)**; blob `8216c60505324854e2339928bb9be562724e1db2` niezmieniony względem audytu 01.
+- Raport: [14_iteration_02_2026-11-22.md](re_audit_from_ch12/14_iteration_02_2026-11-22.md), commit [d686d9b0](https://github.com/dariusz-piekarz/mathematical_scipts/commit/d686d9b0a8950873cf2ea7abc341db90a017bdbf).
+- [Linear algebra chapter validation 45016577027](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45016577027): completed/success, commit `4045ae10c6093a34c2d5ad5b4d9001af041fb6bd`, ten sam blob rozdziału 14.
+- Następny: rozdział **15**, audyt 01.
