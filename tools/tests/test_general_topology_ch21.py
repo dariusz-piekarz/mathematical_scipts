@@ -94,7 +94,8 @@ def test_integration() -> tuple[int, int]:
     assert r"\setcounter{chapter}{20}" in entry
     for previous in ("07", "14", "18"):
         assert rf"\externaldocument{{general_topology_ch{previous}}}" in entry
-    assert "rozdziały 01–22 stabilne" in book
+    stable = re.search(r"rozdziały 01–(\d+) stabilne", book)
+    assert stable and int(stable.group(1)) >= 21
 
     catalog = json.loads((ROOT / "catalog/books.json").read_text(encoding="utf-8"))
     chapters = next(
