@@ -43,8 +43,9 @@ W tekście jawnie odróżniono:
 
 ## IV. Walidacja końcowa i werdykt
 
-Aktualny przebieg GitHub Actions: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45040918451
-
-**Status walidacji na etapie zapisu raportu:** testy matematyczne rozdziału 35 przeszły. Wynik kompilacji PDF, liczba stron, uwagi typograficzne i końcowe potwierdzenie CI zostaną dopisane po zakończeniu uruchomionej kompilacji.
+- [GitHub Actions #45040918451](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45040918451): **SUCCESS** — cały zestaw regresji rozdziałów 01–35, 11 testów rozdziału 35, poprawny inwentarz 879 etykiet i 670 odsyłaczy, kompilacja LaTeX i kontrola logu.
+- [GitHub Actions #45041124029](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45041124029): przebieg powtórzony po zapisaniu raportu audytu I; matematyczna treść rozdziału nie była w międzyczasie zmieniana.
+- **PDF całej książki:** **305 stron**. Rozdział 35 zajmuje strony PDF **296–305**, drukowane **287–296**. Wyrenderowano i obejrzano wszystkie **10 stron** nowego rozdziału: brak uciętych wzorów, kolizji tekstu i nieczytelnych podwójnych nawiasów boolowskich.
+- **Log LaTeX:** 0 błędów, 0 nierozwiązanych odsyłaczy, 0 brakujących cytowań i 0 ostrzeżeń o przepełnionych wierszach; w całej książce pozostało 1 ostrzeżenie o niedopełnionym wierszu.
 
 **Werdykt audytu I:** matematyczna konstrukcja względnej niesprzeczności została opracowana i poddana pierwszej kontroli. Weryfikacja integracyjna wykryła dwa problemy techniczne i oba zostały poprawione. **Rozdział 35 nie otrzymuje jeszcze statusu stabilnego:** kolejne niezależne audyty powinny ponownie skontrolować lemat pełności, ufundowanie, zbiór potęgowy i zastępowanie w uniwersum boolowskim oraz zgodność argumentu z logiką pierwszego rzędu dla dowolnych, także nietranzytywnych modeli.
