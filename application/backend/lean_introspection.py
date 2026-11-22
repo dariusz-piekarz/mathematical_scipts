@@ -47,8 +47,11 @@ def make_instrumentation(names: list[str], token: str) -> str:
 
 def parse_inspection(log: str, token: str, names: list[str]) -> dict[str, list[str]]:
     """Require unique BEGIN/CONST/END events and a complete, bounded transcript."""
-    if not TOKEN_RE.fullmatch(token) or len(log.encode("utf-8")) > MAX_OUTPUT_BYTES:
-        raise ValueError("Invalid or oversized Lean output")
+    # The subprocess collector retains only a tail. A full buffer may have
+    # silently discarded earlier diagnostics even if the last events look valid.
+    # Fail closed at the exact capacity boundary, not just above it.
+    if not TOKEN_RE.fullmatch(token) or len(log.encode("utf-8")) >= MAX_OUTPUT_BYTES:
+        raise ValueError("Invalid or saturated Lean output")
     expected = set(names)
     counts: dict[str, int] = {}
     found: dict[str, set[str]] = {}
