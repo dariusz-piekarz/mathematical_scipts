@@ -1,11 +1,11 @@
 # Geometria algebraiczna — rejestr statusów audytów
 
-> **Aktualizacja 2026-11-22 — ALG-10/IX, audyt globalny I:** Wszystkie ALG-00–ALG-10 są **STABILNE / ZAMKNIĘTE** według raportów końcowych, w tym ALG-10 po naprawczym VII oraz dwóch bezusterkowych przebiegach VIII i IX na niezmienionym blobie `5b231c9b40ad7f547ccfb3050e3712b7be7a75b0`. [Globalny CI 45069448058](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45069448058): SUCCESS, 187 testów PASS, dwa PDF po 184 strony, odsyłacze i logi PASS. **GLOBALNY AUDYT CAŁEJ KSIĄŻKI POZOSTAJE OTWARTY** mimo synchronizacji monolitu: wymaga kolejnych niezależnych kontroli przekrojowych, w tym kontroli spójności terminologicznej. Następny przebieg: ujednolicenie terminologii ALG-03/04, po nim globalny III i dodatkowy IV; nie ALG-11.
+> **Aktualizacja 2026-11-22 — po globalnym audycie IV:** ALG-00–ALG-10 oraz cała książka zostały ocenione jako **STABILNE / ZAMKNIĘTE** zgodnie z kryterium dwóch bezusterkowych, niezależnych audytów globalnych III i IV na niezmienionych źródłach. **„Dywizor” jest poprawnym terminem** i nie wymaga zamiany na „dzielnik”; przeciwny wniosek z audytu II został sprostowany. [Globalny III](2026-11-22-ALG-GLOBAL-iteration-03.md) · [Globalny IV](2026-11-22-ALG-GLOBAL-iteration-04.md).
 
 
-**Ostatnia aktualizacja:** 2026-11-22; ALG-10/IX stabilny, globalny II zakończony z otwartym zagadnieniem terminologii ALG-03/04.
+**Ostatnia aktualizacja:** 2026-11-22, globalny IV (bezusterkowy audyt kontrolny; status STABILNY / ZAMKNIĘTY).
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`.
-**Następny przebieg:** kontrolowana normalizacja terminologii dzielników w ALG-03/04 z ponownymi audytami i CI, następnie globalny audyt III i dodatkowy IV; nie rozpoczynać ALG-11.
+**Następny przebieg:** ewentualna dalsza kontrola powiązań z innymi tomami Biblioteki lub nowa zaplanowana treść, nie migracja poprawnego słowa „dywizor” i nie automatyczne tworzenie ALG-11.
 
 | ID | Rozdział | Iteracja zakończona | Status | Raport / czynność |
 | --- | --- | ---: | --- | --- |
@@ -23,10 +23,15 @@
 
 ## Audyt globalny ALG-00–10
 
-[Audyt globalny I](2026-11-22-ALG-GLOBAL-iteration-01.md): wykryto i naprawiono nieaktualne fragmenty monolitu ALG-00–04, dodano regresję zgodności i osobny workflow dla obu PDF. **Audyt globalny OTWARTY**, ALG-10 po audytach VIII i IX jest już stabilny; audyt przekrojowy pozostaje niezależnym etapem. Nie przypisywać obecnemu źródłu wcześniejszych wyników CI.
+[Audyt globalny I](2026-11-22-ALG-GLOBAL-iteration-01.md): odkryto i naprawiono historyczną rozbieżność monolitu z kanonicznymi rozdziałami ALG-00–04; dodano regresję i osobny workflow globalny. W tym historycznym etapie audyt pozostawał otwarty.
 
+[Audyt globalny II](2026-11-22-ALG-GLOBAL-iteration-02.md): zweryfikowano 187 testów, 406 etykiet, 167 odsyłaczy oraz dwa zgodne 184-stronicowe PDF. Zgłoszona wówczas konieczność zmiany słowa „dywizor” na „dzielnik” została **sprostowana i anulowana** — obie nazwy są poprawne, więc nie była to usterka.
 
-[Audyt globalny II](2026-11-22-ALG-GLOBAL-iteration-02.md): 187 regresji PASS, dwa identycznie renderujące się PDF (184/184 stron), 406 etykiet i 167 odsyłaczy bez błędów; wykryto niespójność terminów „dywizor” (ALG-03/04) i „dzielnik” (pozostałe rozdziały). Globalnie **OTWARTY** do ujednolicenia i audytów po zmianach.
+[Audyt globalny III](2026-11-22-ALG-GLOBAL-iteration-03.md): PASS — niezależna kontrola dowodów i węzłów między rozdziałami, 500 kontroli Noethera, po 14 641 kontroli Riemanna–Rocha i Hodge'a, 15 par krzywych Cremony, integralność monolitu oraz PDF. Źródła bez zmian.
+
+[Audyt globalny IV](2026-11-22-ALG-GLOBAL-iteration-04.md): PASS — dodatkowy audyt dla pewności na tych samych źródłach. Niezależna kontrola 27 prostych na powierzchni kubicznej, 2001 przypadków kohomologii na P¹, 440 prób parametryzacji kubiki węzłowej, 1000 prób Cremony, ogląd wybranych rysunków oraz zgodność obu 184-stronicowych PDF. Źródła bez zmian.
+
+**WYNIK KOŃCOWY: GLOBALNY ALG-00–ALG-10 STABILNY / ZAMKNIĘTY.** Nie przedstawiać regresji numerycznych jako formalnych dowodów twierdzeń zewnętrznych. Nie zmieniać poprawnego słowa „dywizor” mechanicznie.
 
 ## Metodologia
 
