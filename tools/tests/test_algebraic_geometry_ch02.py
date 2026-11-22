@@ -74,6 +74,28 @@ class ALG02ProjectiveRegressions(unittest.TestCase):
             self.assertEqual({v for v in hyperbola if v[2] == 0},
                              {(1, 0, 0), (0, 1, 0)})
 
+    def test_last_coordinate_homogenization_and_embedding(self):
+        # Iota(x,y)=[x:y:1], and affine f(x,y) becomes F(X,Y,Z).
+        for p in PRIMES:
+            for x, y in product(range(p), repeat=2):
+                affine = (y-x*x) % p
+                homogeneous = (y*1-x*x) % p  # YZ-X^2, Z=1
+                self.assertEqual(affine, homogeneous)
+                self.assertEqual(
+                    normalize((x, y, 1), p) in
+                    zero_locus(p, lambda X, Y, Z: Y*Z-X*X),
+                    affine == 0)
+                for z in range(1, p):
+                    X, Y = x*z % p, y*z % p
+                    self.assertEqual(
+                        (Y*z-X*X) % p,
+                        (z*z*(y-x*x)) % p)
+            for x, y in product(range(p), repeat=2):
+                self.assertEqual(
+                    (x*y-1) % p == 0,
+                    normalize((x, y, 1), p) in
+                    zero_locus(p, lambda X, Y, Z: X*Y-Z*Z))
+
     def test_homogenization_generators_spurious_point(self):
         # Original I=(x,xy-y)=(x,y). Naively homogenized:
         # J=(X,XY-YZ), which incorrectly adds [X:Y:Z]=[0:1:0].
