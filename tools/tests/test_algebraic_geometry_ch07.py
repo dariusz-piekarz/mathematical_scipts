@@ -256,6 +256,25 @@ class ALG07Regressions(unittest.TestCase):
         self.assertIn("nie należy automatycznie uważać za niezmienniki", summary)
         self.assertIn(r"12\chi(\mathcal O_S)", summary)
 
+    def test_standalone_field_hypotheses_are_explicit(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        cases = {
+            r"\label{tw:ga7-hypersurface-chern}":
+                "Niech $k$ będzie ciałem algebraicznie domkniętym",
+            r"\label{lem:ga7-chi-exact}":
+                "Niech $k$ będzie ciałem",
+            r"\label{lem:ga7-ch-td-surface}":
+                "Niech $k$ będzie ciałem charakterystyki zero",
+            r"\label{st:ga7-zero-section}":
+                "Niech $k$ będzie ciałem algebraicznie domkniętym",
+        }
+        for label, required in cases.items():
+            with self.subTest(label=label):
+                self.assertIn(label, src)
+                block = src.split(label, 1)[1].split(
+                    r"\end{", 1)[0]
+                self.assertIn(required, block)
+
     def test_bezout_example_rejects_zero_polynomial(self):
         src = SOURCE.read_text(encoding="utf-8")
         bezout = src.split(r"\label{prz:ga7-bezout}", 1)[1].split(
