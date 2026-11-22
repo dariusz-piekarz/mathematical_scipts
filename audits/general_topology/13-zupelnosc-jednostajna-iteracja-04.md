@@ -27,7 +27,7 @@ Commit poprawki: `e853d2a2d71ab8c53ee20681484fc89eca357fc5`.
 Weryfikacja dla dokładnego commita:
 https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45006829418
 
-W momencie sporządzenia raportu przebieg jest w trakcie kompilacji książki. Nie oznaczać go jako zakończonego sukcesem przed sprawdzeniem finalnego statusu, PDF i logów.
+**Wynik końcowy: completed / success**, zero nieudanych kroków, dla dokładnego commita `e853d2a2d71ab8c53ee20681484fc89eca357fc5`. Pobrano artefakt nr `14748440597`: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45006829418/artifacts/14748440597 . Samodzielny PDF rozdziału 13 ma 6 stron. Log `general_topology_ch13.log` nie zawiera `Overfull`, `Underfull`, `Missing character`, `LaTeX Warning`, `Undefined control sequence` ani `Fatal error`. Wyrenderowano i obejrzano strony 4–6, w tym nowe uzasadnienie konstrukcji ilorazu i dalszy dowód własności uniwersalnej; nie stwierdzono ucięć ani nakładania tekstu.
 
 ## Status
 
@@ -36,7 +36,7 @@ W momencie sporządzenia raportu przebieg jest w trakcie kompilacji książki. N
 | Filtry minimalne i konstrukcja uzupełnienia | PASS — audyt niezależny |
 | Własność uniwersalna | PASS — audyt niezależny |
 | Iloraz nierozdzielający | POPRAWIONY I UZASADNIONY |
-| Testy automatyczne | WERYFIKACJA KOŃCOWA |
-| Kompilacja pełna i samodzielna | WERYFIKACJA KOŃCOWA |
-| Oględziny nowego PDF | OTWARTE |
+| Testy automatyczne | PASS — CI 45006829418 |
+| Kompilacja pełna i samodzielna | PASS — CI 45006829418 |
+| Oględziny nowego PDF | PASS — strony 4–6 |
 | Stabilizacja rozdziału 13 | OTWARTA — nie ogłaszać przed finalnym QA |
