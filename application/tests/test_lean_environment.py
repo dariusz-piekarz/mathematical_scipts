@@ -203,6 +203,33 @@ class LeanEnvironmentTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "Too many"):
                 lean_environment.compiled_artifacts_sha256(self.root)
 
+    def test_olean_file_limit_applies_across_all_package_roots(self):
+        project = self.root / ".lake" / "build" / "lib" / "lean"
+        project.mkdir(parents=True)
+        (project / "First.olean").write_bytes(b"first")
+        external = (self.root / ".lake" / "packages" / "mathlib" /
+                    ".lake" / "build" / "lib" / "lean")
+        external.mkdir(parents=True)
+        (external / "Second.olean").write_bytes(b"second")
+        with patch("backend.lean_environment.MAX_OLEAN_FILES", 1):
+            with self.assertRaisesRegex(ValueError, "Too many"):
+                lean_environment.compiled_artifacts_sha256(self.root)
+
+    def test_olean_content_fingerprint_detects_same_length_edit(self):
+        root = self.root / ".lake" / "build" / "lib" / "lean"
+        root.mkdir(parents=True)
+        artifact = root / "Exact.olean"
+        artifact.write_bytes(b"AAAA")
+        first = lean_environment._olean_tree(
+            root, label="project", budget=[100])
+        artifact.write_bytes(b"BBBB")
+        second = lean_environment._olean_tree(
+            root, label="project", budget=[100])
+        self.assertNotEqual(first["artifacts"][0]["sha256"],
+                            second["artifacts"][0]["sha256"])
+        self.assertEqual(first["artifacts"][0]["size"],
+                         second["artifacts"][0]["size"])
+
     def test_unresolved_path_is_recorded_not_verified(self):
         fake = self.root / "missing"
         value = lean_environment._binary_identity(str(fake))
