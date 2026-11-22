@@ -309,7 +309,11 @@ def run(con: sqlite3.Connection, formalization_id: str,
     # This is NOT a security boundary against a malicious .lean file.
     try:
         fingerprint = lean_results.fingerprint(d["sha256"], item["_file"], lean_root)
-    except (OSError, ValueError) as exc:
+    except ValueError as exc:
+        return {"formalization_id": formalization_id, "proof_status": "blocked",
+                "detail": "Nie można zweryfikować zależności Lean: " + str(exc)[:250],
+                "certificate": False}
+    except OSError as exc:
         raise HTTPException(503, f"Nie można obliczyć wersji formalizacji: {exc}") from exc
 
     def finish(status: str, detail: str, log: str = "") -> dict[str, Any]:
@@ -320,7 +324,15 @@ def run(con: sqlite3.Connection, formalization_id: str,
             after = lean_results.fingerprint(d["sha256"], item["_file"], lean_root)
             if after != fingerprint or not _source_file_current(item, d["sha256"], lean_root):
                 return {**result, "proof_status": "blocked",
-                        "detail": "Zmiana plików formalizacji podczas pracy Lean; wynik unieważniony."}
+                        "detail": "Zmiana plików formalizacji podczas pracy Lean; wynik unieważniony.",
+                        "run_record_saved": False}
+        except (OSError, ValueError) as exc:
+            # A successful exit code is not trustworthy if the dependency
+            # snapshot can no longer be verified after that execution.
+            return {**result, "proof_status": "blocked",
+                    "detail": "Nie można ponownie zweryfikować zależności Lean.",
+                    "run_record_saved": False, "run_record_warning": str(exc)[:250]}
+        try:
             saved = lean_results.save_run(
                 formalization_id, fingerprint, proof_status=status, detail=detail,
                 log=log, results_root=_results_override(lean_root, results_root))
