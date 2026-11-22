@@ -19,7 +19,7 @@ DEFAULT_RESULTS_DIR = Path(__file__).resolve().parents[1] / "data" / "lean_runs"
 ID_PATTERN = re.compile(r"[A-Za-z0-9_-]{1,100}\Z")
 HEX_DIGEST = re.compile(r"[0-9a-f]{64}\Z")
 STORED_STATUSES = {"compiled", "failed", "timeout"}
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 MAX_STORED_LOG = 16000
 MAX_RECORD_BYTES = 30000
 
@@ -82,6 +82,7 @@ def fingerprint(source_sha256: str, lean_file: Path, lean_root: Path) -> dict[st
     lean_sha256 = hashlib.sha256(lean_file.read_bytes()).hexdigest()
     project_sources_sha256 = _project_sources_sha256(lean_root)
     external_packages_sha256 = lean_environment.external_packages_sha256(lean_root)
+    compiled_artifacts_sha256 = lean_environment.compiled_artifacts_sha256(lean_root)
     executable_toolchain_sha256 = lean_environment.executable_toolchain_sha256(lean_root)
     inputs: dict[str, str | None] = {}
     for name in ("lean-toolchain", "lakefile.toml", "lakefile.lean",
@@ -97,6 +98,7 @@ def fingerprint(source_sha256: str, lean_file: Path, lean_root: Path) -> dict[st
             "lean_sha256": lean_sha256,
             "project_sources_sha256": project_sources_sha256,
             "external_packages_sha256": external_packages_sha256,
+            "compiled_artifacts_sha256": compiled_artifacts_sha256,
             "executable_toolchain_sha256": executable_toolchain_sha256,
             "toolchain_sha256": toolchain_sha256,
             "declared_toolchain": declared_toolchain[:160]}
@@ -144,13 +146,13 @@ def save_run(identifier: str, expected: dict[str, str], *, proof_status: str,
         raise ValueError("Not an actual Lean process outcome")
     if set(expected) != {"source_document_sha256", "lean_sha256",
                          "project_sources_sha256", "external_packages_sha256",
-                         "executable_toolchain_sha256", "toolchain_sha256",
+                         "compiled_artifacts_sha256", "executable_toolchain_sha256", "toolchain_sha256",
                          "declared_toolchain"}:
         raise ValueError("Incomplete run fingerprint")
     if (not all(isinstance(expected[key], str) and HEX_DIGEST.fullmatch(expected[key])
                 for key in ("source_document_sha256", "lean_sha256",
                             "project_sources_sha256", "external_packages_sha256",
-                            "executable_toolchain_sha256", "toolchain_sha256"))
+                            "compiled_artifacts_sha256", "executable_toolchain_sha256", "toolchain_sha256"))
             or not isinstance(expected["declared_toolchain"], str)
             or len(expected["declared_toolchain"]) > 160):
         raise ValueError("Invalid run fingerprint")
