@@ -42,7 +42,7 @@
 - Opublikowano testy `tools/tests/test_abstract_algebra_ch33.py` (blob `b63a55734f3a09c5772d96b694b9450a9691b017`) i `tools/tests/test_abstract_algebra_ch33_independent.py` (blob `c92a516259049fb1ed5025fa257bc268bc46c9f2`). Zgodność bajtową obu testów potwierdzono ponownym odczytem GitHub.
 - `books/pl/abstract_algebra.tex` zawiera `\input` AA-33; `catalog/books.json` zawiera **33 rozdziały** w odpowiedniej kolejności.
 - Workflow `.github/workflows/abstract-algebra-chapter.yml` ma wyzwalacze dla nowych testów, krok z **100 testami AA-33** oraz krok `Compile AA-01 to AA-33 book with latexmk`.
-- Rzeczywisty przebieg [GitHub Actions #45023153837](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45023153837) był **w toku w chwili weryfikacji**: walidacja zależności zakończyła się powodzeniem, testy narzędzi trwały, a testy AA-33 i pełna kompilacja książki oczekiwały na wykonanie. **Nie przedstawiamy pełnego CI jako zaliczonego**.
+- Rzeczywisty przebieg [GitHub Actions #45023153837](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45023153837) był **w toku w chwili weryfikacji**: walidacja zależności i **zdalny krok 100/100 testów AA-33 zakończyły się powodzeniem**, natomiast pełna kompilacja książki nadal trwała; weryfikacja jej PDF i odsyłaczy oczekiwała na wykonanie. **Nie przedstawiamy pełnego CI jako zaliczonego**.
 
 ## 6. Następny etap
 
