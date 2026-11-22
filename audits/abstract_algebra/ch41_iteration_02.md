@@ -34,7 +34,18 @@
 
 ## Stan publikacji i CI
 
-Wyniki lokalne nie oznaczają automatycznie powodzenia pełnego zdalnego CI. Status walidacji GitHub Actions należy odnotować po faktycznym uruchomieniu i odczycie wyniku zdalnego przebiegu.
+**GitHub Actions:** https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45068795118
+
+Wynik przebiegu: **completed / success** (rzeczywisty odczyt GitHub Actions).
+
+| Zdalny etap | Status |
+|---|---|
+| Testy ogólne repozytorium | `success` |
+| Testy regresyjne i niezależne AA-41 | `success` |
+| Kompilacja książki AA-01–AA-41 | `success` |
+| Kontrola wygenerowanego PDF i odsyłaczy | `success` |
+
+**Końcowy status: AA-41 STABILNY po audytach I–II; pełne zdalne CI PASS.**
 
 ## Publikacja
 
