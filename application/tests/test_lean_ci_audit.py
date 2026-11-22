@@ -94,6 +94,27 @@ class LeanAuditTests(unittest.TestCase):
         self.assertEqual(result["theorems_checked"], 3)
         self.assertFalse(result["certificate"])
 
+    def test_registered_theorem_group_must_be_complete(self):
+        data = json.loads(self.manifest.read_text(encoding="utf-8"))
+        data["items"][0]["lean_theorems"] = ["pilotA", "missingGroupMember"]
+        self.manifest.write_text(json.dumps(data), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "Manifest theorem missing"):
+            audit(self.manifest, self.root, self.logs)
+
+    def test_rejects_approved_entry_without_source_digest(self):
+        data = json.loads(self.manifest.read_text(encoding="utf-8"))
+        data["items"][0]["statement_status"] = "approved"
+        self.manifest.write_text(json.dumps(data), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "pinned source digest"):
+            registered_files(self.manifest, self.root)
+
+    def test_rejects_theorem_group_without_main_theorem(self):
+        data = json.loads(self.manifest.read_text(encoding="utf-8"))
+        data["items"][0]["lean_theorems"] = ["pilotB"]
+        self.manifest.write_text(json.dumps(data), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "Malformed theorem group"):
+            registered_files(self.manifest, self.root)
+
     def test_cli_nonzero_for_missing_real_log(self):
         self.log.unlink()
         result = main(["--manifest", str(self.manifest), "--lean-root", str(self.root),
