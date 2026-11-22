@@ -34,7 +34,9 @@ def valid_binding(binding: tuple, source: str, label: str) -> bool:
     if not isinstance(binding, tuple) or len(binding) != 8:
         return False
     _, kind, title, first, last, start, end, offset = binding
-    if (not isinstance(kind, str) or not kind or not isinstance(title, str)
+    # The current registry pins mathematical *theorems*. A label reassigned
+    # to a section or definition must never inherit theorem verification.
+    if (kind != "theorem" or not isinstance(title, str)
             or not all(type(n) is int for n in (first, last, start, end, offset))
             or not (0 <= start <= offset < end <= len(source))
             or first != source.count("\n", 0, start) + 1
