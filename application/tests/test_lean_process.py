@@ -55,6 +55,20 @@ class LeanProcessTests(unittest.TestCase):
         self.assertEqual(log.strip(), str(512 * 1024 * 1024))
 
     @unittest.skipUnless(sys.platform.startswith("linux"), "Linux RLIMIT_AS only")
+    def test_linux_memory_ceiling_is_inherited_by_descendants(self):
+        child = "import resource; print(resource.getrlimit(resource.RLIMIT_AS)[0])"
+        parent = (
+            "import subprocess,sys;"
+            f"subprocess.run([sys.executable,'-c',{child!r}],check=True)"
+        )
+        returncode, log, timed_out = lean_process.execute_registered(
+            [sys.executable, "-c", parent], Path.cwd(), timeout=10,
+            memory_limit_mb=512)
+        self.assertFalse(timed_out)
+        self.assertEqual(returncode, 0, log)
+        self.assertEqual(log.strip(), str(512 * 1024 * 1024))
+
+    @unittest.skipUnless(sys.platform.startswith("linux"), "Linux RLIMIT_AS only")
     def test_linux_memory_ceiling_blocks_large_address_space_allocation(self):
         code = "a=bytearray(1200*1024*1024);print('allocated')"
         returncode, log, timed_out = lean_process.execute_registered(
