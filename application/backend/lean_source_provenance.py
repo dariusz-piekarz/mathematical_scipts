@@ -47,7 +47,8 @@ def valid_binding(binding: tuple, source: str, label: str) -> bool:
     if command is None or command.group(1) != "label":
         return False
     argument = latex_parser.read_argument(masked, command.end())
-    return argument is not None and argument[0].strip() == label
+    return (argument is not None and argument[0].strip() == label
+            and argument[1] <= end)
 
 
 def owner_status(con: sqlite3.Connection, module: str, label: str,
@@ -80,6 +81,21 @@ def owner_status(con: sqlite3.Connection, module: str, label: str,
     if binding is None or not valid_binding(binding, source, label):
         return "invalid_label_binding", None
 
+    # Production label records carry their own document and source line. The
+    # older minimal test fixtures do not; check these fields when they exist.
+    label_columns = {
+        row[1] for row in con.execute("PRAGMA table_info(labels)").fetchall()
+    }
+    expected_line = source.count("\\n", 0, binding[7]) + 1
+    if {"document_id", "line"} <= label_columns:
+        label_record = con.execute(
+            "SELECT document_id,line FROM labels WHERE name=?", (label,)
+        ).fetchone()
+        if (label_record is None or label_record[0] != module
+                or type(label_record[1]) is not int
+                or label_record[1] != expected_line):
+            return "invalid_label_binding", None
+
     # The canonical parser also retains every original occurrence. Its entry
     # must agree with the legacy label index, not merely share a text name.
     occurrences_table = con.execute(
@@ -87,13 +103,13 @@ def owner_status(con: sqlite3.Connection, module: str, label: str,
     ).fetchone()
     if occurrences_table is not None:
         occurrences = con.execute(
-            "SELECT document_id,entity_id,offset FROM label_occurrences "
+            "SELECT document_id,entity_id,offset,line FROM label_occurrences "
             "WHERE name=? LIMIT 2", (label,)
         ).fetchall()
         if len(occurrences) > 1:
             return "ambiguous_label", None
         if (len(occurrences) != 1
-                or tuple(occurrences[0]) != (module, entity_id, binding[7])):
+                or tuple(occurrences[0]) != (module, entity_id, binding[7], expected_line)):
             return "invalid_label_binding", None
     return "ok", entity_id
 
