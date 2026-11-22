@@ -4,7 +4,7 @@
 **Gałąź:** biblioteka-matematyczna-iteracja-6.  
 **Rozdział:** chapters/pl/logic_and_set_theory/39-slaba-zwartosc-charakterystyki-i-logika-infinitarna.tex.  
 **Blob źródła:** 9d06016d71a4c42434b8f0a58c13f666160a4034, bez zmian od audytów I i II.  
-**Werdykt matematyczny:** czysty — dodatkowa niezależna kontrola potwierdzająca. Do finalnego oznaczenia stabilności wymagany jest zielony pełny przebieg CI po rozszerzeniu testów oraz kontrola wynikowego PDF.
+**Werdykt końcowy: ROZDZIAŁ 39 STABILNY (2/2+1).** Audyty I, II oraz III są niezależnie czyste i nie wymagały zmian w źródle rozdziału. Pełne CI dla wszystkich trzech zakończyło się sukcesem, a końcowy PDF został pobrany i zweryfikowany.
 
 ## 1. Krytyczne próby obalenia implikacji
 
@@ -32,6 +32,15 @@ Punktem odniesienia jest **[CI 45070358451 — SUCCESS](https://github.com/dariu
 
 CI związane z rozszerzonym zestawem jedenastu testów: [45070999025](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45070999025). Audyt II ma odrębny [przebieg 45071067496](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45071067496). Audyt III uruchomi własne CI; nie należy podawać jego wyniku jako sukcesu przed zakończeniem pracy.
 
-## 4. Werdykt i warunek finalizacji
+## 4. Zamknięte przebiegi CI i analiza rzeczywistego PDF
 
-**Audyt I — czysty. Audyt II — czysty merytorycznie. Audyt III — czysty merytorycznie (+1 potwierdzający).** Wszystkie trzy przeprowadzono na identycznym blobie. Status „ROZDZIAŁ 39 STABILNY (2/2+1)” jest warunkowy aż do potwierdzenia zielonych przebiegów CI dla audytów II i III oraz niezależnej kontroli ostatniego PDF. Kompilacja Python i LaTeX nie jest formalizacją w Lean.
+- **[CI audytu I — 45070762870, SUCCESS](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45070762870)**.
+- **[CI rozszerzonych regresji — 45070999025, SUCCESS](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45070999025)**: 11 metod testowych rozdziału 39, w tym globalny test właściwego nazewnictwa w 39 rozdziałach.
+- **[CI audytu II — 45071067496, SUCCESS](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45071067496)**, artefakt 14773037531.
+- **[CI audytu III — 45071163738, SUCCESS](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45071163738)**, commit 9b6e7a37e4f06c939d1b2a9e4b760fff0f1d3f1e, artefakt 14773342497.
+
+Pobrano rzeczywiste pliki PDF z pierwszego oraz końcowego CI. Pełna książka ma **337 stron formatu A4**, rozdział 39 obejmuje strony **332–337**. Wszystkie sześć stron wyrenderowano i obejrzano, a następnie porównano z wcześniejszą kompilacją: **6/6 stron identycznych tekstowo i pikselowo**. Log końcowy: **0** błędów LaTeX, **0** przepełnionych wierszy, **0** brakujących znaków, **0** niezdefiniowanych odsyłaczy oraz jedno nieszkodliwe ostrzeżenie underfull.
+
+## 5. Werdykt i stabilność
+
+**Audyt I — czysty (1/2). Audyt II — czysty (2/2). Audyt III — czysty (+1 potwierdzający). ROZDZIAŁ 39 STABILNY.** Wszystkie dotyczyły niezmienionego bloba źródła **9d06016d71a4c42434b8f0a58c13f666160a4034**. Treść i etykiety LaTeX zachowano. Zaktualizowano wcześniejsze rozdziały 34, 35, 37 i 38 zgodnie z globalną zasadą pełnego rzeczownika „liczba kardynalna”; ich zmiany nie modyfikują matematycznych dowodów rozdziału 39. Po zakończeniu pełnego CI tej aktualizacji raportu, jego efekt nie wymaga dalszego rozszerzania treści rozdziału 39. Kompilacja LaTeX i testów Python nie jest formalizacją w Lean.
