@@ -124,3 +124,9 @@ Do wyświetlenia certyfikatu **Zweryfikowane matematycznie** wymagane są jednoc
 - `manifest.json`: 3 powiązania mają teraz `statement_status=approved` **wyłącznie dla** kanonicznego źródła `chapters/pl/logic_and_set_theory/01-zdania-i-spojniki-logiczne.tex`, SHA256 `9b5cbe26dee8ed5bc437cb3a0d19638eafc5d9ae178a3caa545b8bcf5842b8d0`. `lean_theorems` wymienia wszystkich 6 członów źródłowych twierdzeń.
 - W backendzie zmiana SHA w spójnym indeksie oraz zmiana fizycznego pliku `.tex` **bez przebudowania indeksu** unieważniają zatwierdzenie (`stale`, efektywne `needs_review`) i blokują lokalną kompilację. Uszkodzony indeks daje HTTP 409. W CI sprawdzana jest pełna lista grup, rzeczywisty SHA kanonicznego pliku, ścieżka źródła i wszystkie wyniki `#print axioms`. Dodano testy jednostkowe, API i antyregresyjne.
 - **Nadal `certificate=false`:** recenzja semantyczna tej iteracji jest oddzielna od udowodnienia formalnego w Lean i nie stanowi podpisu niezależnego recenzenta. Włączenie certyfikatów wymaga osobnej zaufanej polityki. Następny zakres: `thm:valuation-well-defined-xli`, `thm:equiv-test`, a potem `LST-02`.
+
+### Strumień A — brak tekstu źródła w podglądzie (22.11.2026)
+- W `_find_source` sprawdzana jest tekstowa treść `documents.content` przed wycinaniem zakresu obiektu i przed `splitlines` dla wyboru wierszy. W przypadku `NULL`/nietekstowej wartości API zgłasza HTTP 409 zamiast nieobsłużonego wyjątku.
+- Dodano `test_nontext_source_is_rejected_for_entity_and_line_selection` z obiema ścieżkami wyboru. Commity `a40f3f0a`, `9c28c3f1`.
+- Wynik CI nowych zmian wymaga osobnego potwierdzenia; nie deklarować sukcesu przed zakończeniem workflow. Nie modyfikowano kanonicznych `.tex` ani rejestru Lean.
+- Nadal otwarte: limit pamięci przechwytywanego stdout/stderr i poprawne zamykanie procesów potomnych przy timeout.
