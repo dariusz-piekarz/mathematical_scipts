@@ -1,0 +1,32 @@
+# Topologia ogólna — rozdział 20, niezależny audyt 02
+
+**Data:** 2026-11-22. **Gałąź:** \`biblioteka-matematyczna-iteracja-6\`.
+**Źródło:** \`chapters/pl/general_topology/20-zbiory-analityczne-i-operacja-suslina.tex\`.
+**Audytowany blob:** \`73de106461510c1be14419882d3b617602cca177\` (843 wiersze).
+**Decyzja:** **CZYSTY MATEMATYCZNIE, 1/2 po ostatniej edycji**.
+W audycie 01 zmodyfikowano źródło, uzupełniając dowód zgodności definicji analityczności, dlatego licznik aktualnego bloba zaczyna się od niniejszej kontroli.
+
+## Dokładny przegląd matematyczny
+
+1. **Lemat o surjekcji \(\mathcal N\to X\):** na dowolnej niepustej polskiej \(X\) skonstruowano niepuste domknięte \(F_s\). Przecięcia \(F_s\) z domkniętymi kulami o małych promieniach i środkach w gęstym przeliczalnym \(D\) stanowią przeliczalne pokrycia; każde dziecko jest domknięte i niepuste, jego średnica ≤\(2^{-|s|-2}\), a wybór potomka zawierającego \(x\) możliwy na każdym poziomie. Pełna gałąź wyznacza jeden punkt przez zupełność i średnice dążące do zera. Równe prefiksy obrazują się blisko siebie: ciągłość. Każdy \(x\) ma ścieżkę: surjektywność. Argument nie wymaga \(\sigma\)-zwartości.
+2. **Rzuty zbiorów domkniętych:** graf ciągłego \(f:\mathcal N\to X\) jest domknięty, ponieważ \(X\) jest Hausdorffa; w drugą stronę niepusta domknięta podprzestrzeń produktu polskich jest polska, a więc jest obrazem ciągłym \(\mathcal N\). Przypadek pusty wydzielono. Równoważność użyta w późniejszych dowodach jest niezależna od determinacji.
+3. **Przeliczalne działania:** rozłączne znaczniki \(n\) zapewniają domkniętość zbioru realizującego sumę, a warunek wszystkich współrzędnych w produkcie polskich zapewnia domkniętość zbioru realizującego przecięcie. Homeomorfizmy \(\mathbb N\times\mathcal N\cong\mathcal N\) i \(\mathcal N^{\mathbb N}\cong\mathcal N\) wymagają jedynie kodowania współrzędnych przez bijekcję \(\mathbb N^2\to\mathbb N\). W kierunku przecięcia wybieramy świadków w ZFC. Obrazy ciągłe i przeciwobrazy ciągłe analitycznych pozostają analityczne.
+4. **Borel a analityczność:** rodzina zbiorów jednocześnie analitycznych i koanalitycznych jest \(\sigma\)-algebrą, gdyż analityczne są zamknięte na przeliczalne sumy i przecięcia. Zamknięte podzbiory polskiej są analityczne jako polskie, a otwarte są sumami przeliczalnymi domkniętych. Stąd cała \(\mathcal B(X)\) należy do tej rodziny. Nie utożsamiono błędnie zbiorów analitycznych z koanalitycznymi.
+5. **Nowe stwierdzenie o zgodności ze skryptem logiki:** zapis binarny \(\alpha\mapsto0^{b(\alpha_1)}1\,0^{b(\alpha_2)}1\cdots\) jest homeomorfizmem \(\mathcal N\) na borelowską (typu \(G_\delta\)) podprzestrzeń \(C_\infty\subseteq2^{\mathbb N}\) złożoną z ciągów o nieskończenie wielu jedynkach. Ciągłość odwrotności wynika z faktu, że początkowe bloki zer można odczytać z skończonego prefiksu ciągu z \(C_\infty\). Trójkowe osadzenie \(j(u)=\sum_k 2u_k/3^k\) jest ciągłe, różnowartościowe (pierwszy różny składnik ma moduł \(2/3^k\), cały ogon ≤\(1/3^k\)), a przez zwartość Cantora homeomorficzne na domknięty obraz. Obraz \(E=j(C_\infty)\) jest borelowski w \(\mathbb R\). Transport dowolnego domkniętego \(F\subseteq\mathbb R^n\times\mathcal N\) przez \(\operatorname{id}\times i\) daje zbiór względnie domknięty w \(\mathbb R^n\times E\), zatem borelowski w \(\mathbb R^{n+1}\), z tym samym rzutem. Implikacja odwrotna wynika z analityczności zbiorów borelowskich i zachowania analityczności przez ciągłe obrazy. Dzięki temu definicje z obu skryptów są **naprawdę równoważne**, a nie tylko podobne.
+6. **Operacja Suslina:** dla domkniętych \(F_s\) przekroje cylindryczne definiują domknięty \(H\subseteq X\times\mathcal N\); jego rzut to \(\mathcal A(F_s)\). Dla odwrotności \(F_s=\overline{\pi_X(H\cap(X\times[s]))}\) i \(x\in\mathcal A(F_s)\) wybieramy \((x_n,u_n)\in H\) z \(d(x_n,x)<1/n\), \(u_n\in[\alpha|n]\). Zbieżność produktu i domkniętość \(H\) dają \((x,\alpha)\in H\). Nie wprowadzono fikcyjnej monotoniczności \(F_s\).
+7. **Uniwersalny zbiór analityczny:** dla zamkniętego \(F\subseteq\mathcal N^2\) drzewo wszystkich par prefiksów \((s,t)\) przecinających \(F\) rozpoznaje dokładnie \(F\). W drugą stronę świadkowie z cylindrów coraz dłuższych prefiksów zbiegają do \((x,y)\), więc domkniętość \(F\) wymusza przynależność. Kodowanie drzewa jednym \(c\in\mathcal N\) daje analityczny uniwersalny zbiór \(U\subseteq\mathcal N^2\).
+8. **Nieborelowski analityczny:** gdyby \(D=\{x:(x,x)\notin U\}\) był analityczny, musiałby być pewnym przekrojem \(U_c\); wtedy \(c\in D\Longleftrightarrow c\notin D\), sprzeczność. Jego dopełnienie \(E=\{x:(x,x)\in U\}\) jest analityczne jako przeciwobraz przez ciągłą przekątną, ale nie może być borelowskie (inaczej \(D\) byłby analityczny). Stąd istnieją domknięte \(F\subseteq\mathcal N^2\) o nieborelowskim rzucie.
+
+## Kontrole źródła i integracji
+
+- **23 unikatowe etykiety i 22 odsyłacze**, wszystkie mają cele w rozdziałach 19–20. Środowiska LaTeX są prawidłowo sparowane; delimitatory: 26 par \`\\[\\]\`, 291 par \`\\(\\)\`.
+- \`books/pl/general_topology.tex\`, \`books/pl/general_topology_ch20.tex\` i \`catalog/books.json\` zawierają rozdział 20. W samodzielnym punkcie wejścia zastosowano \`xr-hyper\` i \`\externaldocument{general_topology_ch19}\`, aby wczytać cztery odsyłacze do rozdziału 19 bez importowania całego tekstu.
+- Test \`tools/tests/test_general_topology_ch20.py\` obejmuje modele skończone i obecność dowodu zgodności definicji; test poprzedniego rozdziału akceptuje rozbudowaną książkę.
+- Wstępne uruchomienia CI przed poprawą \`xr-hyper\` nie zaliczyły końcowej kontroli z powodu niezdefiniowanych odsyłaczy w samodzielnym PDF, **mimo pomyślnej kompilacji**. Poprawkę zapisano w commitach \`5adf2b9\` i \`fe95b99\`.
+- Pełne dedykowane CI dla zaktualizowanego źródła i punktu wejścia pozostawało **w toku** podczas sporządzania raportu. Nie deklarujemy jeszcze zakończonego sukcesem CI ani osobnego wizualnego audytu PDF.
+
+## Granica z logiką i dalsze kroki
+
+Rozdział 20 nie zawiera wyników dotyczących AD/PD, gier Banacha–Mazura, redukcji Wadge’a i ich konsekwencji. Daje natomiast brakujące dowody topologiczne i **odniesienie porównawcze do definicji z logiki**. Uniwersalna mierzalność i własność zbioru doskonałego nie są deklarowane jako udowodnione.
+
+**Wniosek:** matematyka aktualnego bloba czysta (**1/2**). Następna samodzielna kontrola musi dotyczyć dokładnie bloba \`73de106461510c1be14419882d3b617602cca177\`, a zakończone pomyślnie dedykowane CI jest warunkiem stabilizacji.
