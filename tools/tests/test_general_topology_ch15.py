@@ -46,6 +46,59 @@ def test_hat_partition() -> int:
     return cases
 
 
+def test_stone_finite_discrete() -> int:
+    """Enumerate finite open covers, checking Rudin's recursive balls.
+
+    In the discrete metric, d(x,y)=1 for x!=y. At radius 2^-2,
+    every 3r_n-ball is a singleton and admissible centers cover all X.
+    """
+    cases = 0
+    for n in range(1, 5):
+        universe = (1 << n) - 1
+        opens = list(range(1, universe + 1))
+        for mask in range(1, 1 << len(opens)):
+            cover = [u for j, u in enumerate(opens) if (mask >> j) & 1]
+            union = 0
+            for u in cover:
+                union |= u
+            if union != universe:
+                continue
+            prior_centers: set[int] = set()
+            result: list[tuple[int, int, frozenset[int]]] = []
+            for level in range(1, 5):
+                radius = 2 ** (-level)
+                current_centers: set[int] = set()
+                for alpha, u in enumerate(cover):
+                    centers = set()
+                    for x in range(n):
+                        if x in prior_centers or not ((u >> x) & 1):
+                            continue
+                        if any(((v >> x) & 1) for v in cover[:alpha]):
+                            continue
+                        ball = {y for y in range(n)
+                                if (0 if x == y else 1) < 3 * radius}
+                        if all(((u >> y) & 1) for y in ball):
+                            centers.add(x)
+                    expanded = frozenset(
+                        y for x in centers for y in range(n)
+                        if (0 if x == y else 1) < radius
+                    )
+                    if expanded:
+                        assert all((u >> y) & 1 for y in expanded)
+                        result.append((level, alpha, expanded))
+                    current_centers.update(centers)
+                prior_centers.update(current_centers)
+            assert set().union(*(part for _, _, part in result)) == set(range(n))
+            # At each fixed level distinct alpha sets have distance >= 2^-level.
+            for level in range(1, 5):
+                layer = [(alpha, part) for lev, alpha, part in result if lev == level]
+                for j, (_, a) in enumerate(layer):
+                    for _, b in layer[j + 1:]:
+                        assert a.isdisjoint(b)
+            cases += 1
+    return cases
+
+
 def test_sources() -> tuple[int, int]:
     text = (ROOT / CH).read_text(encoding="utf-8")
     book = BOOK.read_text(encoding="utf-8")
@@ -63,10 +116,15 @@ def test_sources() -> tuple[int, int]:
         "thm:topog-parazwartosc-lindelof",
         "cor:topog-parazwartosc-klasy",
         "ex:topog-parazwartosc-prosta",
+        "thm:topog-parazwartosc-stone",
     ):
         assert rf"\label{{{needle}}}" in text, needle
     assert r"\prod_{j=1}^{n-1}(1-f_j)" in text
     assert r"\operatorname{supp}\varphi_n" in text
+    assert r"E_{\alpha,n}" in text
+    assert r"V_{\alpha,n}" in text
+    assert r"2r_M<\rho" in text
+    assert r"d(y,z)\ge3r_i" in text
     for env in ("twierdzenie", "lemat", "stwierdzenie", "wniosek",
                 "definicja", "przyklad", "uwaga", "proof", "enumerate"):
         assert text.count(r"\begin{" + env + "}") == text.count(
@@ -84,7 +142,8 @@ def test_sources() -> tuple[int, int]:
 
 
 if __name__ == "__main__":
+    finite = test_stone_finite_discrete()
     n = test_telescoping()
     m = test_hat_partition()
     labels, refs = test_sources()
-    print(f"PASS chapter 15 telescoping={n}, hat={m}, labels={labels}, refs={refs}")
+    print(f"PASS chapter 15 Stone finite covers={finite}, telescoping={n}, hat={m}, labels={labels}, refs={refs}")
