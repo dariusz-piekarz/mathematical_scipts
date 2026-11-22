@@ -194,6 +194,7 @@ class ALG04Regressions(unittest.TestCase):
             r"\begin{definicja}[Snop dywizora]", 1
         )[1].split(r"\end{definicja}", 1)[0]
         self.assertIn(r"\emph{niepustego}", definition)
+        self.assertIn("wszystkich zamkniętych", definition)
         self.assertIn(
             r"\mathcal O_C(D)(\varnothing)=\{0\}", definition)
         self.assertIn(r"ograniczenie do $\varnothing$", definition)
