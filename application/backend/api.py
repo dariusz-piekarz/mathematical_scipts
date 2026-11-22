@@ -25,6 +25,7 @@ from pydantic import BaseModel, Field
 from backend.latex_parser import analyze_selection, get_stats, show_label
 from backend import workspaces
 from backend.concept_graph import build_concept_graph
+from backend import lean_formalization
 
 ROOT = Path(__file__).resolve().parents[1]
 FRONTEND = ROOT / "frontend"
@@ -170,6 +171,35 @@ def entity_detail(entity_id: str, full: bool = False):
         return {"entity":entity_payload(row),"module_title":row["document_title"],"domain":row["domain"],
                 "labels":labels,"latex":content[:limit] if limit else content,
                 "truncated":bool(limit and len(content)>limit), "full_length":len(content)}
+
+
+
+@app.get("/api/lean/status")
+def lean_toolchain_status():
+    """Local availability of the trusted, explicitly enabled Lean runner."""
+    return lean_formalization.availability()
+
+
+@app.get("/api/lean/fragment")
+def lean_fragment(entity_id: str | None = None, module_id: str | None = None,
+                  start_line: Annotated[int | None, Query(ge=1)] = None,
+                  end_line: Annotated[int | None, Query(ge=1)] = None):
+    """Show exact indexed LaTeX and registered Lean code; never synthesize proof status."""
+    with db_connection() as con:
+        return lean_formalization.fragment(
+            con, entity_id=entity_id, module_id=module_id,
+            start_line=start_line, end_line=end_line)
+
+
+class LeanRunRequest(BaseModel):
+    formalization_id: str = Field(min_length=1, max_length=100)
+
+
+@app.post("/api/lean/run")
+def lean_run(request: LeanRunRequest):
+    """Run only a registered repository Lean file, never browser-provided code."""
+    with db_connection() as con:
+        return lean_formalization.run(con, request.formalization_id)
 
 
 @app.get("/api/labels/{label:path}")
