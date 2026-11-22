@@ -17,6 +17,8 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 
 BANNED = {
+    "presnop (use this spelling; rejected old variant)": re.compile(
+        r"\bprzed-?snop\w*\b", flags=re.IGNORECASE),
     "zwartościowanie (use uzwarcenie)": re.compile(
         r"\bzwartościowani\w*\b", flags=re.IGNORECASE),
     "zbieżność zwarta (use zbieżność jednostajna na zbiorach zwartych)": re.compile(
