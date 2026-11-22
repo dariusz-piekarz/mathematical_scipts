@@ -25,7 +25,7 @@ Stan: 22 listopada 2026. Źródłem prawdy dla rozdziałów włączonych do ksi�
 | **17** | **Uzwarcenie Aleksandrowa i uzwarcenie Čecha–Stone’a: konstrukcje, własności uniwersalne, minimalność, maksymalność i przykłady** | **stabilny — audyt 03; pełne dowody konstrukcji i własności uniwersalnych** |
 | **18** | **Przestrzenie odwzorowań, topologia zwarto-otwarta, zbieżność jednostajna na zbiorach zwartych, ewaluacja, prawo wykładnicze, metryzacja i zupełność** | **stabilny — audyt 03; pełne dowody i walidacja CI/PDF** |
 | **19** | **Przestrzenie polskie, podprzestrzenie G-delta, zbiory borelowskie i hierarchia indeksowana przeliczalnymi liczbami porządkowymi** | **stabilny — audyt 03; CI/PDF PASS; 590 unikatowych etykiet i 138 poprawnych odsyłaczy w książce** |
-| **20** | **Zbiory analityczne, rzuty zbiorów domkniętych, operacja Suslina, zbiór analityczny nieborelowski; bez powielania determinacji i redukcji Wadge’a z logiki** | **utworzony; audyt 01 i walidacja CI/PDF w toku** |
+| **20** | **Zbiory analityczne, rzuty zbiorów domkniętych, operacja Suslina, zbiór analityczny nieborelowski; bez powielania determinacji i redukcji Wadge’a z logiki** | **w audycie — iteracja 02 czysta (1/2 po zmianie źródła); pełny CI/PDF do potwierdzenia** |
 
 Zakresy 12–13 oraz 16–17 są rozdzielone według tematyki, żeby unikać powtarzania dowodów. Zgodnie z zasadą projektu nowe rozdziały nie oznaczają automatycznie ich stabilności.
 
@@ -75,3 +75,19 @@ Testy: \`tools/tests/test_general_topology_ch20.py\`;
 punkt wejścia \`books/pl/general_topology_ch20.tex\`.
 Do czasu zakończenia audytów i zielonego CI
 **nie** oznaczać rozdziału 20 jako stabilnego.
+
+## Audyt 20/02 i zgodność definicji (2026-11-22)
+
+Po audycie 01 dodano dowód zgodności analityczności jako ciągłego
+obrazu \(\mathbb N^{\mathbb N}\) z definicją przez rzuty borelowskich
+podzbiorów \(\mathbb R^{n+1}\), stosowaną w rozdziale 30 skryptu logiki.
+Nowy blob rozdziału 20:
+\`73de106461510c1be14419882d3b617602cca177\`.
+Drugi raport: [20-zbiory-analityczne-iteracja-02.md](../../audits/general_topology/20-zbiory-analityczne-iteracja-02.md).
+Pierwsza **czysta** kontrola nowego bloba: **1/2**;
+raport 01 dotyczy pierwotnego bloba i nie zalicza się do stabilizacji
+po zmianie. W testach i kompilacji samodzielnej
+doprecyzowano import czterech odsyłaczy do rozdziału 19 przez
+\`xr-hyper\` w punkcie wejścia rozdziału 20.
+Dalszy etap: niezależny audyt 03 tego samego bloba oraz pełny
+zielony workflow, w tym kontrola PDF i logów.
