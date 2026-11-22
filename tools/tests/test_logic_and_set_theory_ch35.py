@@ -94,6 +94,7 @@ class TestBooleanModelsChapter35(unittest.TestCase):
             with self.subTest(axiom=name):
                 self.assertIn(name, TEXT)
         self.assertIn(r"\Pi_\sigma", TEXT)
+        self.assertIn(r"T_\sigma", TEXT)
         self.assertIn(r"f_\tau(\rho)", TEXT)
         self.assertIn(r"\check\omega", TEXT)
 
@@ -231,6 +232,139 @@ class TestBooleanModelsChapter35(unittest.TestCase):
         self.assertEqual(member(empty, target), 1)
         self.assertEqual(member(one, target), 2)
         self.assertEqual(member(mixture, target), 3)
+
+    def test_power_set_all_restricted_names_in_four_element_algebra(self):
+        # Every one of the 64 tested names, including names with values
+        # outside sigma, must agree with the restricted-name power set.
+        from itertools import product
+
+        empty = frozenset()
+        one = frozenset({(empty, 3)})
+        two = frozenset({(one, 3)})
+        sigma = frozenset({(empty, 3), (one, 2)})
+        restricted = [
+            frozenset({(empty, a), (one, b)})
+            for a in range(4) for b in (0, 2)
+        ]
+        Pi = frozenset((f, 3) for f in restricted)
+
+        @lru_cache(None)
+        def member(sigma, tau):
+            return self.join(
+                b & equal(sigma, pi) for pi, b in tau
+            )
+
+        @lru_cache(None)
+        def equal(sigma, tau):
+            v = 3
+            for pi, b in sigma:
+                v &= (3 ^ b) | member(pi, tau)
+            for pi, b in tau:
+                v &= (3 ^ b) | member(pi, sigma)
+            return v
+
+        @lru_cache(None)
+        def value(name, atom):
+            return frozenset(
+                value(pi, atom) for pi, b in name if b & atom
+            )
+
+        checked = 0
+        for coefficients in product(range(4), repeat=3):
+            tau = frozenset(zip((empty, one, two), coefficients))
+            f_tau = frozenset(
+                (rho, b & member(rho, tau)) for rho, b in sigma
+            )
+            self.assertIn(f_tau, restricted)
+            for atom in (1, 2):
+                subset = value(tau, atom) <= value(sigma, atom)
+                self.assertEqual(
+                    subset, bool(member(tau, Pi) & atom)
+                )
+                if subset:
+                    self.assertTrue(equal(tau, f_tau) & atom)
+                checked += 1
+        self.assertEqual(checked, 128)
+        self.assertIn(r"T_\sigma", TEXT)
+        self.assertIn(r"\llbracket\tau=f_\tau\rrbracket", TEXT)
+
+    def test_founding_element_uses_minimal_rank_among_all_names(self):
+        # The least-rank representative of an element of sigma need
+        # not occur literally in dom(sigma).
+        from itertools import product
+
+        empty = frozenset()
+        one = frozenset({(empty, 3)})
+        two = frozenset({(one, 3)})
+        high_empty = frozenset({(two, 0)})
+
+        @lru_cache(None)
+        def rank(name):
+            return 0 if not name else 1 + max(
+                rank(pi) for pi, _ in name
+            )
+
+        @lru_cache(None)
+        def value(name, atom):
+            return frozenset(
+                value(pi, atom) for pi, b in name if b & atom
+            )
+
+        example = frozenset({(high_empty, 3)})
+        self.assertEqual(value(high_empty, 1), value(empty, 1))
+        self.assertNotIn(empty, {name for name, _ in example})
+        self.assertLess(rank(empty), rank(high_empty))
+
+        candidates = (empty, one, two, high_empty)
+        checked = 0
+        for coefficients in product(range(4), repeat=len(candidates)):
+            sigma = frozenset(zip(candidates, coefficients))
+            for atom in (1, 2):
+                interpreted = value(sigma, atom)
+                if not interpreted:
+                    continue
+                eligible = [
+                    name for name in candidates
+                    if value(name, atom) in interpreted
+                ]
+                witness = min(eligible, key=rank)
+                self.assertIn(value(witness, atom), interpreted)
+                self.assertFalse(value(witness, atom) & interpreted)
+                checked += 1
+        self.assertGreater(checked, 300)
+        self.assertIn("Rozpatrzmy \\emph{wszystkie nazwy}", TEXT)
+        self.assertIn(r"\operatorname{rk}(\eta)", TEXT)
+
+    def test_boolean_replacement_image_for_singleton_operation(self):
+        # Finite instance of replacement phi(x,y): y={x}, with
+        # names and Boolean truth evaluated at both ultrafilters.
+        from itertools import product
+
+        empty = frozenset()
+        one = frozenset({(empty, 3)})
+        two = frozenset({(one, 3)})
+
+        @lru_cache(None)
+        def value(name, atom):
+            return frozenset(
+                value(pi, atom) for pi, b in name if b & atom
+            )
+
+        count = 0
+        for coefficients in product(range(4), repeat=3):
+            sigma = frozenset(zip((empty, one, two), coefficients))
+            R = frozenset(
+                (frozenset({(pi, 3)}), b) for pi, b in sigma
+            )
+            for atom in (1, 2):
+                expected = frozenset(
+                    {x} for x in value(sigma, atom)
+                )
+                self.assertEqual(value(R, atom), expected)
+                count += 1
+        self.assertEqual(count, 128)
+        self.assertIn(r"R_\sigma(\rho)", TEXT)
+        self.assertIn(r"\exists!y", TEXT)
 
     @staticmethod
     def join(items):
