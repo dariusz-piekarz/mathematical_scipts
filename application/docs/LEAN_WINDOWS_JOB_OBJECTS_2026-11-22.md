@@ -45,3 +45,6 @@ Dodano osobny workflow `.github/workflows/lean-windows-job.yml` działający na 
 - Dodano ponadto `test_native_nested_windows_jobs_preserve_inner_limit` (commit `7d79c52d`) obejmujący własny proces objęty limitem Job Object tworzący kolejny Job Object o mniejszym limicie. CI tej dodatkowej regresji: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45017259828; stan należy odczytać z GitHub Actions przed deklaracją sukcesu.
 
 Zielony wynik `windows-latest` potwierdza działanie na użytym obrazie runnera Windows, nie na konkretnym komputerze z Windows 11. Limit dotyczy pamięci committed Job Object; status `compiled` pozostaje oddzielny od recenzji zgodności semantycznej i nigdy nie ustanawia `certificate=true`.
+
+
+**Aktualizacja CI:** [45017259828](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45017259828) — **SUCCESS**. Potwierdzono natywne zagnieżdżenie Job Objects z limitem wewnętrznym, alokację ponad limit (odmowa) oraz zakończenie procesów potomnych po timeout. Łącznie **12 zaliczonych testów Windows Job Objects**, plus 8 testów runnera (5 pominiętych zgodnie z warunkami platformowymi). Natywne sprawdzenie obejmuje obraz GitHub `windows-latest`, nie fizyczny komputer z Windows 11.
