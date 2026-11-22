@@ -88,6 +88,7 @@ def integration_and_source() -> tuple[int, int]:
         "thm:topog20-rzut",
         "thm:topog20-closure",
         "cor:topog20-borel",
+        "prop:topog20-borel-projection",
         "def:topog20-suslin",
         "thm:topog20-suslin",
         "lem:topog20-universal",
