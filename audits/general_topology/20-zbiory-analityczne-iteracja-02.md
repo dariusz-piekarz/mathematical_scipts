@@ -23,10 +23,23 @@ W audycie 01 zmodyfikowano źródło, uzupełniając dowód zgodności definicji
 - \`books/pl/general_topology.tex\`, \`books/pl/general_topology_ch20.tex\` i \`catalog/books.json\` zawierają rozdział 20. W samodzielnym punkcie wejścia zastosowano \`xr-hyper\` i \`\externaldocument{general_topology_ch19}\`, aby wczytać cztery odsyłacze do rozdziału 19 bez importowania całego tekstu.
 - Test \`tools/tests/test_general_topology_ch20.py\` obejmuje modele skończone i obecność dowodu zgodności definicji; test poprzedniego rozdziału akceptuje rozbudowaną książkę.
 - Wstępne uruchomienia CI przed poprawą \`xr-hyper\` nie zaliczyły końcowej kontroli z powodu niezdefiniowanych odsyłaczy w samodzielnym PDF, **mimo pomyślnej kompilacji**. Poprawkę zapisano w commitach \`5adf2b9\` i \`fe95b99\`.
-- Pełne dedykowane CI dla zaktualizowanego źródła i punktu wejścia pozostawało **w toku** podczas sporządzania raportu. Nie deklarujemy jeszcze zakończonego sukcesem CI ani osobnego wizualnego audytu PDF.
+- [Dedykowane CI 45022608046](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45022608046) zakończyło się **completed/success** na commicie `5adf2b956d575f0ddfe0d3347a76fadfd491d1da`, którego rozdział 20 ma blob `73de106461510c1be14419882d3b617602cca177` — identyczny z audytowanym. Sukces potwierdzono dla: testu analityczności i operacji Suslina, kompilacji pełnej książki, samodzielnego PDF rozdziału 20 oraz kontroli logów LaTeX. Nie przeprowadzono niezależnej wizualnej inspekcji nowego PDF.
 
 ## Granica z logiką i dalsze kroki
 
 Rozdział 20 nie zawiera wyników dotyczących AD/PD, gier Banacha–Mazura, redukcji Wadge’a i ich konsekwencji. Daje natomiast brakujące dowody topologiczne i **odniesienie porównawcze do definicji z logiki**. Uniwersalna mierzalność i własność zbioru doskonałego nie są deklarowane jako udowodnione.
 
 **Wniosek:** matematyka aktualnego bloba czysta (**1/2**). Następna samodzielna kontrola musi dotyczyć dokładnie bloba \`73de106461510c1be14419882d3b617602cca177\`, a zakończone pomyślnie dedykowane CI jest warunkiem stabilizacji.
+
+## Potwierdzenie zakończenia CI
+
+Pełne CI zostało zweryfikowane **po** sporządzeniu pierwszej wersji raportu:
+[run 45022608046](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45022608046)
+ma wynik **completed/success**. Sprawdzono SHA źródła z commitu
+walidowanego — dokładnie \`73de106461510c1be14419882d3b617602cca177\`.
+Wykonano skutecznie kroki \`Verify Chapter 20 analytic sets and Souslin models\`,
+\`Build complete book PDF\`, \`Build standalone Chapter 20 PDF\`
+i \`Check PDF and LaTeX log\`.
+Warunek CI stabilizacji jest zatem spełniony dla tego bloba,
+pozostaje **drugi niezależny czysty audyt** i oględziny PDF, jeśli wymagane
+w pełnym audycie wizualnym.
