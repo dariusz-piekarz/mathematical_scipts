@@ -43,21 +43,29 @@ class LeanHttpTests(unittest.TestCase):
         self.assertIn("lst01_syntax_de_morgan_and", data["lean_code"])
         self.assertIn("inductive Formula", data["lean_code"])
         self.assertIn("def equivalent", data["lean_code"])
-        self.assertEqual(data["statement_status"], "needs_review")
+        self.assertEqual(data["statement_status"], "approved")
+        self.assertEqual(data["formalization_status"], "ready")
+        self.assertEqual(data["source_document_sha256"],
+                         "9b5cbe26dee8ed5bc437cb3a0d19638eafc5d9ae178a3caa545b8bcf5842b8d0")
+        self.assertEqual(data["lean_theorems"],
+                         ["lst01_syntax_de_morgan_and", "lst01_syntax_de_morgan_or"])
         self.assertFalse(data["certificate"])
 
     def test_all_lST01_source_labels_show_syntax_and_valuation_proofs(self):
         outline = self.client.get("/api/modules/LST-01/outline")
         self.assertEqual(outline.status_code, 200)
         expected = {
-            "thm:de-morgan-logic": ("lst01-de-morgan", "lst01_syntax_de_morgan_and"),
-            "thm:implication-laws": ("lst01-implication-laws",
-                                      "lst01_syntax_implication_as_disjunction"),
-            "thm:negated-implication-xli": ("lst01-negated-implication",
-                                           "lst01_syntax_negated_implication"),
+            "thm:de-morgan-logic": (
+                "lst01-de-morgan", ["lst01_syntax_de_morgan_and", "lst01_syntax_de_morgan_or"]),
+            "thm:implication-laws": (
+                "lst01-implication-laws",
+                ["lst01_syntax_implication_as_disjunction",
+                 "lst01_syntax_implication_contrapositive", "lst01_syntax_modus_ponens"]),
+            "thm:negated-implication-xli": (
+                "lst01-negated-implication", ["lst01_syntax_negated_implication"]),
         }
         entities = outline.json()["entities"]
-        for label, (formal_id, theorem) in expected.items():
+        for label, (formal_id, theorems) in expected.items():
             with self.subTest(label=label):
                 entity = next(e for e in entities if label in e.get("labels", []))
                 reply = self.client.get("/api/lean/fragment",
@@ -65,11 +73,13 @@ class LeanHttpTests(unittest.TestCase):
                 self.assertEqual(reply.status_code, 200, reply.text)
                 data = reply.json()
                 self.assertEqual(data["formalization_id"], formal_id)
-                self.assertEqual(data["lean_theorem"], theorem)
+                self.assertEqual(data["lean_theorem"], theorems[0])
+                self.assertEqual(data["lean_theorems"], theorems)
+                self.assertEqual(data["formalization_status"], "ready")
                 self.assertIn("inductive Formula", data["lean_code"])
                 self.assertIn("def equivalent", data["lean_code"])
                 self.assertIn("∀ ν : Valuation", data["lean_code"])
-                self.assertEqual(data["statement_status"], "needs_review")
+                self.assertEqual(data["statement_status"], "approved")
                 self.assertFalse(data["certificate"])
 
     def test_execution_disabled_by_default(self):
