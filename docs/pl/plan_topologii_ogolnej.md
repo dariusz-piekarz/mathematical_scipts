@@ -29,6 +29,7 @@ Stan: 22 listopada 2026. Źródłem prawdy dla rozdziałów włączonych do ksi�
 | **21** | **Topologie na rodzinach podzbiorów: Vietoris, metryka Hausdorffa, zupełność, zwartość, Fell, zbieżność i porównanie** | **stabilny — audyty 03–05 (2/2 + 1); CI/PDF PASS** |
 | **22** | **Zbieżność Kuratowskiego, topologia Wijsmana i topologia Attoucha–Wetsa; związek z Fellem, właściwość przestrzeni, kontrprzykłady** | **stabilny — audyty 02–04 (2/2 + 1); CI/PDF PASS** |
 | **23** | **Wymiar topologiczny: wymiar pokryciowy Lebesgue’a, wymiary ind/Ind, charakterystyka wymiaru 0, wymiar odcinka i sześcianu, nerwy pokryć** | **stabilny — audyty 04–06 (2/2 + 1), CI 45051754287 PASS, osobny PDF 9 stron** |
+| **24** | **Grupy topologiczne, otoczenia neutralności, podgrupy i ich domknięcia, przestrzenie warstw i grupy ilorazowe, składowa spójna, lewe i prawe struktury jednostajne** | **w audycie — rozdział i testy utworzone, wynik CI/PDF do potwierdzenia** |
 
 Zakresy 12–13 oraz 16–17 są rozdzielone według tematyki, żeby unikać powtarzania dowodów. Zgodnie z zasadą projektu nowe rozdziały nie oznaczają automatycznie ich stabilności.
 
