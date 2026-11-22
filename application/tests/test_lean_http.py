@@ -40,7 +40,9 @@ class LeanHttpTests(unittest.TestCase):
         self.assertEqual(result.status_code, 200, result.text)
         data = result.json()
         self.assertEqual(data["formalization_id"], "lst01-de-morgan")
-        self.assertIn("lst01_de_morgan_and", data["lean_code"])
+        self.assertIn("lst01_syntax_de_morgan_and", data["lean_code"])
+        self.assertIn("inductive Formula", data["lean_code"])
+        self.assertIn("def equivalent", data["lean_code"])
         self.assertEqual(data["statement_status"], "needs_review")
         self.assertFalse(data["certificate"])
 
