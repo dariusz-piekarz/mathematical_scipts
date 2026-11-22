@@ -37,17 +37,46 @@ class LeanFingerprintBenchmarkTests(unittest.TestCase):
         self.assertEqual(result["real_fingerprint_calls"], 3)
         self.assertEqual(len(result["samples_seconds"]), 3)
         self.assertGreaterEqual(result["total_seconds"], 0)
+        self.assertEqual(
+            set(result["component_samples_seconds"]),
+            {"local_sources", "external_packages", "olean_artifacts", "tool_executables"})
+        self.assertEqual(
+            set(result["component_median_seconds"]),
+            set(result["component_samples_seconds"]))
+        for name, measurements in result["component_samples_seconds"].items():
+            with self.subTest(component=name):
+                self.assertEqual(len(measurements), 3)
+                self.assertTrue(all(0 <= value <= result["max_seconds"]
+                                    for value in measurements))
+        self.assertEqual(len(result["other_work_samples_seconds"]), 3)
+        self.assertTrue(all(value >= 0 for value in result["other_work_samples_seconds"]))
         after = {file.relative_to(self.root): file.read_bytes()
                  for file in self.root.rglob("*") if file.is_file()}
         self.assertEqual(prior, after)
 
     def test_environment_change_aborts_timing_not_cached(self):
-        with patch.object(perf.lean_results, "fingerprint",
-                          side_effect=[{"project_sources_sha256": "a"},
-                                       {"project_sources_sha256": "b"}]) as probe:
+        # Keep the full production fingerprint running in both measurements,
+        # changing just the dependency evidence without short-circuiting it.
+        with patch.object(perf.lean_results.lean_environment,
+                          "external_packages_sha256",
+                          side_effect=["a" * 64, "b" * 64]) as probe:
             with self.assertRaisesRegex(RuntimeError, "changed during"):
                 perf.benchmark(self.root, samples=2)
         self.assertEqual(probe.call_count, 2)
+
+    def test_timing_instrumentation_is_removed_after_execution(self):
+        original_sources = perf.lean_results._project_sources_sha256
+        original_packages = perf.lean_results.lean_environment.external_packages_sha256
+        original_artifacts = perf.lean_results.lean_environment.compiled_artifacts_sha256
+        original_binaries = perf.lean_results.lean_environment.executable_toolchain_sha256
+        perf.benchmark(self.root, samples=2)
+        self.assertIs(perf.lean_results._project_sources_sha256, original_sources)
+        self.assertIs(perf.lean_results.lean_environment.external_packages_sha256,
+                      original_packages)
+        self.assertIs(perf.lean_results.lean_environment.compiled_artifacts_sha256,
+                      original_artifacts)
+        self.assertIs(perf.lean_results.lean_environment.executable_toolchain_sha256,
+                      original_binaries)
 
     def test_invalid_samples_and_manifest_paths_fail_closed(self):
         for value in (0, 7, True, None, 2.5):
