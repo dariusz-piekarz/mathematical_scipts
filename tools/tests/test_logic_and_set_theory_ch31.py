@@ -87,6 +87,9 @@ class TestChapter31(unittest.TestCase):
         self.assertIn("ZFC", TEXT)
         self.assertIn("wyróżnianie", TEXT)
         self.assertIn("zastępowanie", TEXT)
+        self.assertIn(r"\alpha_{n+1}:=F(\alpha_n)", TEXT)
+        self.assertIn(r"\beta_{e,\vec a}", TEXT)
+        self.assertIn("nie zastosowano ac ani dc", TEXT.lower())
 
     def test_condensation_does_not_assume_internal_full_zf(self):
         for label in (
