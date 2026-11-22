@@ -30,7 +30,7 @@ Testy na modelach skończonych nie zastępują dowodu dla ogólnych przestrzeni 
 Właściwy przebieg CI na dokładnym commicie `149d0c15131e55ed565be3ebbc301d1f11a8d692`:
 https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45006347152
 
-W chwili redagowania raportu testy Python dotarły do fazy kompilacji książki, a końcowy status CI i PDF nie były jeszcze potwierdzone. Odczytać wynik po zakończeniu workflow, nie oznaczać przedwcześnie jako PASS.
+**Wynik końcowy: completed / success**, bez nieudanych kroków, dla commita `149d0c15131e55ed565be3ebbc301d1f11a8d692`. Pobrano artefakt `14748008154`: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45006347152/artifacts/14748008154 . Samodzielny `general_topology_ch13.pdf` liczy sześć stron. Log `general_topology_ch13.log` nie zawiera `Overfull`, `Underfull`, `Missing character`, `LaTeX Warning`, `Undefined control sequence` ani `Fatal error`. Wykonano render i oględziny stron 4–6, w tym poprawionego dowodu na stronie 4. Nie stwierdzono ucięć tekstu ani kolizji składu.
 
 ## Status
 
@@ -39,7 +39,7 @@ W chwili redagowania raportu testy Python dotarły do fazy kompilacji książki,
 | Kontrola konstrukcji filtrów minimalnych | PASS (ponowny audyt) |
 | Poprawność kroku zbieżności w uzupełnieniu | PASS po doprecyzowaniu |
 | Własność uniwersalna | PASS w przeglądzie matematycznym |
-| Rozszerzony test skończonych modeli | Zapisany; wynik CI należy potwierdzić |
-| Pełny PDF i czysty log | WERYFIKACJA W TOKU |
+| Rozszerzony test skończonych modeli | PASS — CI 45006347152 |
+| Pełny PDF i czysty log | PASS |
 | Stabilizacja rozdziału | OTWARTA — przed kolejnym audytem |
 
