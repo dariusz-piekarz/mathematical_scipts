@@ -1,6 +1,6 @@
 # Globalny audyt algebry liniowej — status rozdziałów
 
-**Stan po iteracji 12 (LA07 i LA09–11 skontrolowane, pełny audyt matematyczny trwa)**, 22 listopada 2026.  
+**Stan po iteracji 13 (LA14–20 skontrolowane, pełny audyt matematyczny trwa)**, 22 listopada 2026.  
 **Aktualizacja:** rozdziały 01–05 zostały ponownie ustabilizowane. W rozdziale 05 poprawiono argument o braku podprzestrzeni dla zgodnego układu z niezerową prawą stroną, następnie wykonano dwa kolejne czyste audyty III–IV na identycznym SHA. Nowy PDF (7 stron) i CI dla poprawionego źródła [45006722306](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45006722306) zweryfikowane — SUCCESS. CI uruchomione wyłącznie zapisem końcowego statusu wymaga osobnej kontroli.
 
 | Rozdział | Status |
@@ -18,13 +18,13 @@
 | 11 | Pogłębiony przegląd globalny iteracja 12 (zewnętrzna/symetryczna, minory, Cauchy–Binet, przetasowania, symetryzatory); bez koniecznych zmian, CI 45047361654 success; globalne kontrole matematyczne trwają |
 | 12 | STABILNY; iteracje 01 i 02 czyste, CI success; kontrole 2, SHA `ded0c69dc298d00842d4009073e2444e1037952a`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
 | 13 | STABILNY; iteracje 02 i 03 czyste, CI success; kontrole 2, SHA `cc5d09ff605ccf8bb7572ec56d4cc1f690edf3af`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
-| 14 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success; kontrole 2, SHA `8216c60505324854e2339928bb9be562724e1db2`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
-| 15 | STABILNY; audyty 02 i 03 czyste po poprawce, dedykowane CI success; kontrole 2, SHA `5a17f877bf3639cebc33ca95c202aca4498bd6c9`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
-| 16 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success; kontrole 2, SHA `4f8da3c4b87b87ee8f8e6f7c7504637485c6e09a`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
-| 17 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success; kontrole 2, SHA `05b93309d0e444f1c3fcbe3489cfd98a0f02846f`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
-| 18 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success; kontrole 2, SHA `ef815633cf3a1f795d912c510fbc8575f21e464d`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
-| 19 | STABILNY; audyty 03 i 04 czyste, CI success; kontrole 2, SHA `dd289d5c86452910a89d60ddfbcc558ef6d5be85`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
-| 20 | STABILNY; audyty 01 i 02 czyste, CI success; kontrole 2, SHA `8d585c7f4c208990ad5f82222cc47f586144c138`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
+| 14 | STABILNY z zakończonej sekwencji rozdziałowej (historyczne 2/2 czyste i CI); **dodatkowy globalny audyt 13 czysty w zbadanym zakresie**, źródło bez zmian, CI 45047971276 success; SHA 8216c60505324854e2339928bb9be562724e1db2 |
+| 15 | STABILNY z zakończonej sekwencji rozdziałowej (historyczne 2/2 czyste i CI); **dodatkowy globalny audyt 13 czysty w zbadanym zakresie**, źródło bez zmian, CI 45047971276 success; SHA 5a17f877bf3639cebc33ca95c202aca4498bd6c9 |
+| 16 | STABILNY z zakończonej sekwencji rozdziałowej (historyczne 2/2 czyste i CI); **dodatkowy globalny audyt 13 czysty w zbadanym zakresie**, źródło bez zmian, CI 45047971276 success; SHA 4f8da3c4b87b87ee8f8e6f7c7504637485c6e09a |
+| 17 | STABILNY z zakończonej sekwencji rozdziałowej (historyczne 2/2 czyste i CI); **dodatkowy globalny audyt 13 czysty w zbadanym zakresie**, źródło bez zmian, CI 45047971276 success; SHA 05b93309d0e444f1c3fcbe3489cfd98a0f02846f |
+| 18 | STABILNY z zakończonej sekwencji rozdziałowej (historyczne 2/2 czyste i CI); **dodatkowy globalny audyt 13 czysty w zbadanym zakresie**, źródło bez zmian, CI 45047971276 success; SHA ef815633cf3a1f795d912c510fbc8575f21e464d |
+| 19 | STABILNY z zakończonej sekwencji rozdziałowej (historyczne 2/2 czyste i CI); **dodatkowy globalny audyt 13 czysty w zbadanym zakresie**, źródło bez zmian, CI 45047971276 success; SHA dd289d5c86452910a89d60ddfbcc558ef6d5be85 |
+| 20 | STABILNY z zakończonej sekwencji rozdziałowej (historyczne 2/2 czyste i CI); **dodatkowy globalny audyt 13 czysty w zbadanym zakresie**, źródło bez zmian, CI 45047971276 success; SHA 8d585c7f4c208990ad5f82222cc47f586144c138 |
 | 21 | STABILNY; audyty 01 i 02 czyste, CI success; kontrole 2, SHA `6527ae1a6daca48717e6a5f5e83958271abb16f5`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
 | 22 | STABILNY; audyty 03 i 04 czyste po poprawce, CI success; kontrole 2, SHA `dfa3d790bfed4c92c66642ea626a6213bc06ad3f`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
 | 23 | STABILNY; audyty 01 i 02 czyste, CI success; kontrole 2, SHA `bbd199baed1ee2c1a88843aad9fbfd0eac665d22`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
@@ -77,3 +77,11 @@ Raport: `iteration_09.md`. Zgodność 32 plików i 32 instrukcji `\\input` potwi
 - **Pliki źródłowe niezmienione**: SHA odpowiednio LA07 `5e320759f55012f807be790214d6ad76119ab544`, LA09 `979ce687c677125aeb8304e9d13cb8e7af842602`, LA10 `9c397a15f5f668e84cb68681e00bf0305cf73adf`, LA11 `17f1bae2db46ac6790f1fc562660393f2f616076`. [CI 45047361654](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45047361654) ma **completed/success**, a odczyt plików na commicie przetestowanym przez CI potwierdził dokładnie te same bloby.
 - **Kontrola wizualna:** nie wykonywano ponownej inspekcji kompletnego PDF w iteracji 12; pozostaje ważna odnotowana w iteracji 11 wizualna kontrola strony 87 po poprawce LA08 oraz wcześniejszy montaż całej książki w iteracji 10.
 - **Dalszy audyt matematyczny OTWARTY:** w kolejnej iteracji przejść do zależności LA14–20 (twierdzenie spektralne, Cayley–Hamilton, Jordan, Jordan–Chevalley, Frobenius, bloki pierwotne). Nie restartować ukończonej sekwencji LA12–32 bez konkretnej usterki; nie dodawać opcjonalnej treści bez zgody użytkownika.
+
+## Iteracja 13 — 2026-11-22: spektrum, Jordan, Frobenius (LA14–20)
+
+**[Raport globalny 13](iteration_13.md)** — pogłębiony niezależny przegląd kluczowych dowodów i zależności w siedmiu rozdziałach LA14–20: **7263 wiersze, 69 środowisk proof**. Skontrolowano Schura, twierdzenie spektralne, jednoczesną diagonalizację i triangularizację, LU/PLU/Cholesky/QR/SVD/Eckarta–Younga, Cayleya–Hamiltona, konstrukcję łańcuchów Jordana, CRT dla rzutów spektralnych, rozkład Jordana–Chevalleya, Smitha/Frobeniusa i pierwotne bloki dla nierozkładalnych wielomianów stopnia większego niż jeden. **Brak koniecznej korekty źródeł w zbadanym zakresie.** Liczba 69 nie oznacza nowej pełnej formalnej kontroli każdego wiersza wszystkich dowodów.
+
+- **52 517/52 517 PASS**, 0 FAIL — nowa niezależna regresja /mnt/data/la_global13_spectral_tests.py (seed 20261122, 219 wierszy), obejmująca dokładne testy nad F2/F3/F5 i Q[t], oraz obliczenia numeryczne Schura/SVD/QR/Eckarta–Younga/rozkładu biegunowego. Test ostrości wielomianu minimalnego sprawdza również m_T/(t−λ), a nie tylko m_T(T)=0. Liczby oznaczają przypadki rachunkowe, nie formalną liczbę dowodów.
+- **[CI 45047971276](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45047971276) completed/success**; odczyt siedmiu plików w SHA commitu 3078c9ca833f69d908bddbb616086646898e64e6 potwierdził bloby identyczne z aktualną gałęzią. Źródeł LaTeX nie zmieniono, w tej iteracji nie oglądano ponownie pełnego PDF.
+- **Globalna kontrola matematyczna nadal OTWARTA.** Następny etap: LA21–28 (komutant, Sylvester/Lapunow, Riccati, sterowalność, obserwowalność, gramiany i realizacje). Nie wznawiać zakończonej kolejki stabilizacji 12–32 bez rzeczywistego nowego błędu.
