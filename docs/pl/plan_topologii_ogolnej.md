@@ -25,7 +25,7 @@ Stan: 22 listopada 2026. Źródłem prawdy dla rozdziałów włączonych do ksi�
 | **17** | **Uzwarcenie Aleksandrowa i uzwarcenie Čecha–Stone’a: konstrukcje, własności uniwersalne, minimalność, maksymalność i przykłady** | **stabilny — audyt 03; pełne dowody konstrukcji i własności uniwersalnych** |
 | **18** | **Przestrzenie odwzorowań, topologia zwarto-otwarta, zbieżność jednostajna na zbiorach zwartych, ewaluacja, prawo wykładnicze, metryzacja i zupełność** | **stabilny — audyt 03; pełne dowody i walidacja CI/PDF** |
 | **19** | **Przestrzenie polskie, podprzestrzenie G-delta, zbiory borelowskie i hierarchia indeksowana przeliczalnymi liczbami porządkowymi** | **stabilny — audyt 03; CI/PDF PASS; 590 unikatowych etykiet i 138 poprawnych odsyłaczy w książce** |
-| **20** | **Zbiory analityczne, rzuty zbiorów domkniętych, operacja Suslina, zbiór analityczny nieborelowski; bez powielania determinacji i redukcji Wadge’a z logiki** | **w audycie — iteracja 02 czysta (1/2), dedykowany CI/PDF success (run 45022608046); potrzebny audyt 03** |
+| **20** | **Zbiory analityczne, rzuty zbiorów domkniętych, operacja Suslina, zbiór analityczny nieborelowski; bez powielania determinacji i redukcji Wadge’a z logiki** | **OTWARTY — audyt 03: dwie korekty merytoryczne w podsumowaniu; 0/2 dla nowego bloba, CI/PDF nowej wersji do potwierdzenia** |
 
 Zakresy 12–13 oraz 16–17 są rozdzielone według tematyki, żeby unikać powtarzania dowodów. Zgodnie z zasadą projektu nowe rozdziały nie oznaczają automatycznie ich stabilności.
 
@@ -104,3 +104,11 @@ przez \`xr-hyper\`, bez powielania treści 19.
 Status pozostaje **1/2**, ponieważ po uzupełnieniu źródła
 o równoważność definicji analityczności wykonano dotąd
 jedną niezależną czystą kontrolę.
+
+## Audyt rozdziału 20/03 — 2026-11-22
+
+- Audyt 03 był **korekcyjny**: w podsumowaniu błędnie pominięto przypadek pustego zbioru analitycznego oraz błędnie uogólniono ścisłość klasy analitycznej nad borelowską na wszystkie przestrzenie polskie. Obie poprawki: [commit e9ce798](https://github.com/dariusz-piekarz/mathematical_scipts/commit/e9ce798ade43ff453229f916019686a424917316).
+- Nowy blob źródła: `c7644dae32a49ae9ac1403f4932018d440586e9b`. Licznik czystych audytów po zmianie: **0/2**.
+- Raport: [20-zbiory-analityczne-iteracja-03.md](../../audits/general_topology/20-zbiory-analityczne-iteracja-03.md), [commit 5ff70fc](https://github.com/dariusz-piekarz/mathematical_scipts/commit/5ff70fcbc8f9daecbbe2f9a8ad145b8c1fc4a33c).
+- Dla **poprzedniego** bloba audytor pobrał realny PDF z [zielonego CI 45022608046](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45022608046), wyrenderował i obejrzał wszystkie 6 stron A4 bez zastrzeżeń do składu. Po poprawce trzeba potwierdzić CI i wizualnie zweryfikować nowy PDF, a nie przenosić wyniku CI poprzedniego bloba.
+- Następnie **audyt 04 rozdziału 20** (nie rozdział 21), zgodnie z zasadą kolejnych czystych audytów tego samego źródła. Zakres rozdziału pozostaje ograniczony do brakujących topologicznych dowodów, bez powielania teorii gier i determinacji ze skryptu logiki.
