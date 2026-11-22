@@ -182,5 +182,25 @@ class ALG04Regressions(unittest.TestCase):
 
 
 
+    def test_divisor_sheaf_has_zero_section_on_empty_open(self):
+        """The vacuous valuation condition on U=empty is NOT a sheaf."""
+        # For every nonzero rational f the condition
+        # ord_P(f)+n_P >= 0 for all P in the empty set is true.
+        # Thus the naive formula would make F(empty)=k(C),
+        # contradicting the sheaf axiom for the empty cover.
+        assert all([])  # empty universal quantification is vacuously true
+        src = SRC.read_text(encoding="utf-8")
+        definition = src.split(
+            r"\begin{definicja}[Snop dywizora]", 1
+        )[1].split(r"\end{definicja}", 1)[0]
+        self.assertIn(r"\emph{niepustego}", definition)
+        self.assertIn(
+            r"\mathcal O_C(D)(\varnothing)=\{0\}", definition)
+        self.assertIn(r"ograniczenie do $\varnothing$", definition)
+        self.assertIn(
+            r"$C$ gładką nierozkładalną krzywą", definition)
+
+
+
 if __name__ == "__main__":
     unittest.main()
