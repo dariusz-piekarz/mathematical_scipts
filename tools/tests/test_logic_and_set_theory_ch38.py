@@ -86,7 +86,7 @@ class TestChapter38(unittest.TestCase):
             with self.subTest(label=label):
                 self.assertIn(r"\label{" + label + "}", TEXT)
         self.assertIn("Nie dowodziliśmy odwrotnych", TEXT)
-        self.assertIn(r"\ref{thm:lc37-normal-exists}", TEXT)
+        self.assertIn(r"\ref{thm:lc37-measurable-inaccessible}", TEXT)
         self.assertIn(r"\ref{lem:lc37-uniform}", TEXT)
 
     def test_binary_tree_level_sizes_and_branch_coherence(self):
