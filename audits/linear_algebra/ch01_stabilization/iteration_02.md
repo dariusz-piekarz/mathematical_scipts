@@ -14,7 +14,7 @@
 
 ## Testy, odsyłacze i układ
 - Samodzielne testy przeszły: 125 par podprzestrzeni nad małymi ciałami, 12 000 skończonych nośników, 323 rodziny w kryteriach baz; **40 884 przypadki wymiany Steinitza** z powtarzanymi/zerowymi generatorami również **PASS**.
-- Dokładnie 24 środowiska twierdzeń/lematów/stwierdzeń/wniosków i 24 dowody, bez wiszących twierdzeń. 69 różnych etykiet, wszystkie 26 odsyłaczy rozdziału wskazują na lokalne etykiety. Żadne dopasowanie zakazanego słowa „unia” nie występuje poza utrwalonymi etykietami \(\LaTeX\).
+- Dokładnie 24 środowiska twierdzeń/lematów/stwierdzeń/wniosków i 24 dowody, bez wiszących twierdzeń. 69 różnych etykiet, wszystkie 27 odsyłaczy rozdziału wskazują na lokalne etykiety. Żadne dopasowanie zakazanego słowa „unia” nie występuje poza utrwalonymi etykietami \(\LaTeX\).
 - CI dla wersji bez zmian semantycznych poza dostosowaniem delimitatorów matematyki: [45003215772](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45003215772) **SUCCESS**. CI dla dokładnie aktualnego SHA po zmianie delimitatorów [45003380934](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45003380934) pozostaje do potwierdzenia.
 - PDF skompilowanego rozdziału po merytorycznej korekcie to 16 stron A4 (strony 6–21 książki), bez pustych stron i tekstu poza formatem. Obejrzano montaż wszystkich 16 stron oraz powiększenia obu diagramów ze stron 9 i 13 książki, bez kolizji tekstu z rysunkami.
 
