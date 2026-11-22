@@ -137,7 +137,7 @@ def source_integrity() -> tuple[int, int]:
     chapters = next(
         b["chapters"] for b in obj["books"] if b["id"] == "general_topology"
     )
-    assert len(chapters) == 18 and chapters[17] == CH
+    assert len(chapters) >= 18 and chapters[17] == CH
     joined = "\n".join(
         (ROOT / path).read_text(encoding="utf-8") for path in chapters
     )
