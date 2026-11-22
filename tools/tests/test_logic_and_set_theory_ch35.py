@@ -358,7 +358,7 @@ class TestBooleanModelsChapter35(unittest.TestCase):
             )
             for atom in (1, 2):
                 expected = frozenset(
-                    {x} for x in value(sigma, atom)
+                    frozenset({x}) for x in value(sigma, atom)
                 )
                 self.assertEqual(value(R, atom), expected)
                 count += 1
