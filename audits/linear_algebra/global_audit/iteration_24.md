@@ -2,7 +2,7 @@
 
 **Data:** 22 listopada 2026. **Gałąź:** `biblioteka-matematyczna-iteracja-6`. **Poprzednio:** [iteracja 23](iteration_23.md).
 
-**Wynik przeglądu:** wszystkie **34 tezy wraz z pełnymi dowodami** przeczytano indywidualnie i przeanalizowano; wykryto i poprawiono **2 braki samodzielnego określenia hipotez** w rozdziale LA24. Pozostałe kontrolowane argumenty matematyczne nie wymagały modyfikacji. **Testy i przegląd dowodów nie stanowią formalizacji Lean.**
+**Wynik przeglądu:** wszystkie **34 tezy wraz z pełnymi dowodami** przeczytano indywidualnie i przeanalizowano; wykryto i poprawiono **6 miejsc wymagających uściślenia hipotez i interpunkcji** w rozdziale LA24. Pozostałe kontrolowane argumenty matematyczne nie wymagały modyfikacji. **Testy i przegląd dowodów nie stanowią formalizacji Lean.**
 
 ## 1. Skontrolowane wersje źródeł
 
@@ -11,8 +11,8 @@
 | LA21 — komutanty i centralizatory | `6527ae1a6daca48717e6a5f5e83958271abb16f5` | 899 | **9/9** | 25 | 37 | 7 | 0 |
 | LA22 — równania Sylvestera i Lapunowa | `dfa3d790bfed4c92c66642ea626a6213bc06ad3f` | 936 | **10/10** | 25 | 25 | 5 | 0 |
 | LA23 — równanie dyskretne i Schur | `bbd199baed1ee2c1a88843aad9fbfd0eac665d22` | 965 | **7/7** | 25 | 12 | 6 | 0 |
-| LA24 — Riccati i sterowanie LQR, **po korekcie** | `e66a2c7a282efcd9e81b074f27b3a28b0810c477` | 1460 | **8/8** | 26 | 31 | 3 | 0 |
-| **Razem** | | **4260** | **34/34** | **101** | **105** | **21** | **0** |
+| LA24 — Riccati i sterowanie LQR, **po korekcie** | `52335170d324782c97a70331b7b834f0d2b1c5cc` | 1479 | **8/8** | 26 | 31 | 3 | 0 |
+| **Razem** | | **4279** | **34/34** | **101** | **105** | **21** | **0** |
 
 [Rejestr per-dowodowy](iteration_24_proof_review_21_24.csv) zawiera zakresy tezy i dowodu, dokładną wersję blob SHA, adnotację o krytycznych krokach, status poprawek LA24 oraz osobne pole `formal_Lean_review=NIE`. Wszystkie 34 środowiska `proof` mają koniec, a w każdym rozdziale etykiety są lokalnie niepowtarzalne.
 
@@ -39,9 +39,9 @@
 - Widmo endomorfizmu `X↦A*XA` to wszystkie iloczyny `conj(λ_i)λ_j`, również bez diagonalizowalności A: dowód wykorzystuje triangularizację Schura i jednostki macierzowe. Unikalność rozwiązania dowolnego równania Steina **nie implikuje Schur-stabilności**, co pokazują przykłady.
 - Dokładne próbkowanie `e^{hH}` zachowuje równoważność Hurwitza/Schura dla każdego h>0, lecz jawny Euler wymaga `2 Reλ+h|λ|²<0`. Rachunek przykładu 2×2 i warunki dodatniej określoności zweryfikowano osobno.
 
-## 5. LA24 — osiem dowodów, dwie poprawki sformułowań
+## 5. LA24 — osiem dowodów i sześć poprawek sformułowań
 
-Poprawiono w oryginalnym pliku LaTeX tezy `thm:lin24-dare-recursion` i `thm:lin24-dre`. Zastąpiono sformułowanie **„Dla macierzy A,B,Q,R spełniających założenia rozdziału”** jawnymi hipotezami `n,m≥1`, `A∈Mat_(n×n)(C)`, `B∈Mat_(n×m)(C)`, `Q∈Mat_(n×n)(C)`, `R∈Mat_(m×m)(C)`, `Q=Q*>0`, `R=R*>0`. Wynik, dowody, etykiety i notacja nie zmieniły się. **To rzeczywiste korekty źródła**, nie wyłącznie propozycje.
+Poprawiono w oryginalnym pliku LaTeX **dwa twierdzenia** (`thm:lin24-dare-recursion`, `thm:lin24-dre`) oraz **cztery definicje** (`def:lin24-discrete-cost`, `def:lin24-dare`, `def:lin24-continuous-cost`, `def:lin24-care`). We wszystkich sześciu miejscach podano jawnie `n,m≥1`, `A∈Mat_(n×n)(C)`, `B∈Mat_(n×m)(C)`, `Q∈Mat_(n×n)(C)`, `R∈Mat_(m×m)(C)`, `Q=Q*>0`, `R=R*>0`, zamiast polegać na globalnych „założeniach rozdziału”. Po wprowadzeniu osobnych zdań poprawiono też wielkie litery w początkach zdań w obu twierdzeniach. **Treść równań, dowody i etykiety pozostały niezmienione**. Pierwsze dwie poprawki w commicie `a88e57e06dcfe1c4e733abe45e29a0414713a8df`, uzupełnienia definicji i interpunkcji w `061005098f476ba5e6dfd083490ef2a82fbf3f4c`. Są to rzeczywiste poprawki źródeł.
 
 - Rekurencja DARE: uzupełnienie kwadratu przy `M_N=R+B*P_N B>0` daje unikat pierwszego sterowania i `P_N≥0`; monotoniczność wartości optymalnej z nieujemności kosztów; ograniczenie z góry przez rozwiązanie Steina dla sterowania zerowego, gdy A jest Schur.
 - Stabilizujące DARE: monotoniczne `P_N↑P≥Q>0`, ciągłość inwersji `R+B*P B`, równanie `P=Q+K*RK+(A−BK)*P(A−BK)` i Schur-stabilność zamkniętej pętli. **Jednoznaczność dwóch stabilizujących rozwiązań** wynika z `D=A_1* D A_2` i zaniku ich potęg. Dodatnie rozwiązanie nie może być niestabilizujące przy Q>0.
@@ -58,5 +58,5 @@ Dodano [tools/test_linear_algebra_la21_la24_control.py](../../../tools/test_line
 
 ## 7. LaTeX, graf odsyłaczy, dalsze prace
 
-- **4260 wierszy, 34 środowiska dowodów z `\end{proof}`, 101 etykiet bez lokalnych powtórzeń, 105 odsyłaczy, 21 przykładów.** W tych czterech plikach brak ilustracji i środowisk TikZ. Kontrola terminologiczna nie wykazała odrzuconych określeń w prozie. Rendering strony PDF nie był oglądany wizualnie.
+- **4279 wierszy, 34 środowiska dowodów z `\end{proof}`, 101 etykiet bez lokalnych powtórzeń, 105 odsyłaczy, 21 przykładów.** W tych czterech plikach brak ilustracji i środowisk TikZ. Kontrola terminologiczna nie wykazała odrzuconych określeń w prozie. Rendering strony PDF nie był oglądany wizualnie.
 - **Postęp globalny po iteracji 24: 311/382 indywidualnie przejrzanych dowodów. Pozostało 71 dowodów, wszystkie w LA25–32.** To nie zastępuje wcześniejszych audytów rozdziałowych; po zamknięciu pełnej ewidencji należy przeprowadzić dodatkowy sceptyczny audyt końcowy, w tym rzeczywistą inspekcję PDF, zgodności etykiet, treści matematycznych, języka i przykładów.
