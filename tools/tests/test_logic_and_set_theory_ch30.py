@@ -41,7 +41,7 @@ class TestChapter30(unittest.TestCase):
         for path in DIR.glob("*.tex"):
             labels.update(re.findall(r"\\label\{([^}]+)\}",path.read_text("utf8")))
         refs=re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}",TEXT)
-        self.assertEqual(len(refs),45)
+        self.assertEqual(len(refs),46)
         self.assertEqual(set(refs)-labels,set())
 
     def test_original_pdf_full_material(self):
@@ -84,7 +84,7 @@ class TestChapter30(unittest.TestCase):
         self.assertIn(r"\theta:\omega^\omega\to D\subseteq2^\omega",TEXT)
         self.assertIn(r"0^{n_0}1",TEXT)
         self.assertIn(r"f[2^\omega]",TEXT)
-        self.assertIn("odwrócenie",TEXT.lower() + " odwrócenie")
+        self.assertIn("przestrzeń $2^\\omega$ jest zwarta".replace("$2^\\omega$","$2^\\omega$"),TEXT.lower())
         # Przy dowolnym binarnym prefiksie u znajdują się dwa różne przedłużenia.
         for length in range(6):
             for prefix in itertools.product((0,1),repeat=length):
@@ -99,6 +99,12 @@ class TestChapter30(unittest.TestCase):
         self.assertIn(r"T_F:=\{s\in T:[s]\cap F\ne\varnothing\}",TEXT)
         self.assertIn(r"c_n\in C_n",TEXT)
         self.assertIn(r"\omega^2",TEXT)
+
+    def test_canonical_baire_in_reals_no_dc(self):
+        self.assertIn(r"\overline{I_{n+1}}",TEXT)
+        self.assertIn(r"\operatorname{diam}(I_n)",TEXT)
+        self.assertIn("pierwszą",TEXT)
+        self.assertIn(r"\ref{lem:ad-meager-countable-union}",TEXT)
 
     def test_baire_and_regularity_dependencies(self):
         self.assertIn(r"\ref{lem:ad-meager-countable-union}",TEXT)
