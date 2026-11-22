@@ -30,7 +30,7 @@ Stan: 22 listopada 2026. Źródłem prawdy dla rozdziałów włączonych do ksi�
 | **22** | **Zbieżność Kuratowskiego, topologia Wijsmana i topologia Attoucha–Wetsa; związek z Fellem, właściwość przestrzeni, kontrprzykłady** | **stabilny — audyty 02–04 (2/2 + 1); CI/PDF PASS** |
 | **23** | **Wymiar topologiczny: wymiar pokryciowy Lebesgue’a, wymiary ind/Ind, charakterystyka wymiaru 0, wymiar odcinka i sześcianu, nerwy pokryć** | **stabilny — audyty 04–06 (2/2 + 1), CI 45051754287 PASS, osobny PDF 9 stron** |
 | **24** | **Grupy topologiczne, otoczenia elementu neutralnego, podgrupy, przestrzenie warstw i grupy ilorazowe, składowa neutralna, struktury jednostajne, twierdzenie Birkhoffa–Kakutaniego** | **stabilny — audyty 02–04 (2/2 + 1), CI 45053429106 i końcowy 45053945600 PASS, PDF 10 stron** |
-| **25** | **Continua i podcontinua, nieprzywiedlność, granice odwrotne, nierozkładalne continuum Knastera, solenoid dyadyczny, surjekcje Peana** | **w audycie — źródło i testy utworzone; wymagane 2 czyste audyty + 1 potwierdzający i zielony CI/PDF** |
+| **25** | **Continua i podcontinua, nieprzywiedlność, granice odwrotne, nierozkładalne continuum Knastera, solenoid dyadyczny, surjekcje Peana** | **stabilny — audyty 02–04 (2/2 + 1), CI 45056802863 PASS, osobny PDF 8 stron** |
 
 Zakresy 12–13 oraz 16–17 są rozdzielone według tematyki, żeby unikać powtarzania dowodów. Zgodnie z zasadą projektu nowe rozdziały nie oznaczają automatycznie ich stabilności.
 
@@ -284,3 +284,54 @@ zawiera pełną książkę 175 stron oraz osobny rozdział
 i kompletność PDF. Następny etap:
 **rozdział 25 o continuach**, ze szczególną uwagą
 na brak powtarzania podstaw spójności z rozdziału 08.
+
+
+## Zamknięcie rozdziału 25 (2026-11-22)
+
+Źródło: `chapters/pl/general_topology/25-continua-i-ich-struktura.tex`;
+stabilny blob `7b772123870296af95d3ce951ccddb65685af7aa`.
+Zawiera pełne dowody przecięć zstępujących
+i łańcuchów podcontinuów, istnienia minimalnego
+continuum między punktami (Kuratowski–Zorn),
+nierozkładalności continuum Knastera
+z granicy odwrotnej odwzorowania namiotowego,
+braku lokalnej spójności solenoidu dyadycznego,
+surjekcji ze wspólnego przedziału na skończone
+grafy spójne oraz surjekcji Peana
+\([0,1]\to[0,1]^n\) przez kodowanie
+Cantora i twierdzenie Tietzego.
+
+Audyty:
+[01 — korekcyjny](../../audits/general_topology/25-continua-iteracja-01.md),
+[02 — czysty](../../audits/general_topology/25-continua-iteracja-02.md),
+[03 — czysty](../../audits/general_topology/25-continua-iteracja-03.md),
+[04 — nadmiarowy, czysty](../../audits/general_topology/25-continua-iteracja-04.md).
+Ostatnie trzy odnoszą się do tego samego niezmienionego
+bloba źródła (2/2+1).
+[GitHub Actions 45056802863](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45056802863)
+completed/success na tym blobie.
+Pobrano artefakt 14767733188, rzeczywiście
+wyrenderowano i obejrzano wszystkie
+8 stron rozdziału; stronę 6 z rysunkiem
+i stronę 8 z dowodem Peana skontrolowano
+oddzielnie. Cała książka miała 183 strony;
+w logach brak Overfull, Underfull,
+LaTeX Warning i Missing character.
+
+Ogólne twierdzenie Hahna–Mazurkiewicza
+jest wskazane jako dalszy temat do pełnego
+opracowania, a nie przedstawione jako
+rzekomo udowodnione. Pełne dowody
+zawarte w rozdziale dotyczą
+konkretnych twierdzeń wymienionych powyżej.
+
+**Po aktualizacji tytułu do wersji 1.25
+(01–25 stabilne) należy wykonać końcowe
+CI integracyjne**, aby potwierdzić
+stabilność tytułu i testów wersji.
+Dalszy plan: osobne rozwinięcie
+twierdzenia Hahna–Mazurkiewicza
+po kontroli pokrycia z innymi skryptami
+oraz zbieżność Mosco i epigraficzna
+w analizie funkcjonalnej, a nie jako
+duplikat topologii ogólnej.
