@@ -8,28 +8,28 @@
 
 <!-- CURRENT_RE_AUDIT_STATE
 chapter: 32
-iteration_last_reported: 0
-stage_status: OPEN_PENROSE_EXTENSION_APPROVED
-clean_checks_since_last_source_edit: 0
+iteration_last_reported: 4
+stage_status: SEQUENCE_COMPLETED
+clean_checks_since_last_source_edit: 2
 clean_checks_required: 2
-additional_sceptical_final_audit: NOT_DONE
-last_checked_blob_sha: null
-last_completed_chapter: 31
-last_completed_blob_sha: 6c1d09b9eaf4083c9ebaa361dbf46fc350eae147
+additional_sceptical_final_audit: DONE_CLEAN
+last_checked_blob_sha: 8aea8bd8db02ca8677fb0547f770c9166fdaef88
+last_completed_chapter: 32
+last_completed_blob_sha: 8aea8bd8db02ca8677fb0547f770c9166fdaef88
 last_completed_clean_audits: 2
 last_completed_extra_final_audit: DONE_CLEAN
-last_completed_ci_run_id: 45039588413
+last_completed_ci_run_id: 45040651674
 last_completed_ci_status: completed_success
-closure_reason: ch31_audits_01_02_clean_plus_final_03_and_matching_ci
-next_step: extend_LA32_with_approved_Penrose_transform_then_audit
+closure_reason: ch32_approved_Penrose_extension_plus_clean_audits_02_03_and_final_04_matching_ci
+next_step: STOP_THIS_SEQUENCE_NO_RESTART_FROM_12
 -->
 
 ## Stan wykonania
 
-- Bieżący rozdział: **32**.
-- Ostatni zamknięty blob (rozdział 31): **6c1d09b9eaf4083c9ebaa361dbf46fc350eae147**.
-- Liczba czystych audytów bieżącego rozdziału 32: **0/2**; oddzielny końcowy audyt: **niewykonany**. Rozdział 31 zakończony: czyste 01–02 oraz dodatkowy sceptyczny 03.
-- Kolejne działanie: **rozdział 32 — najpierw włączyć zatwierdzony dodatek o transformacie Penrose’a**, zgodnie z [planem](la32_penrose_extension_plan.md), następnie wykonać dwa czyste audyty tego samego bloba, osobny sceptyczny audyt końcowy i potwierdzić CI. Rozdział 31 zamknięto po czystych 01–02, dodatkowym 03 i CI completed/success 45039588413.
+- Bieżący rozdział: **brak — sekwencja 12–32 zakończona**.
+- Ostatni zamknięty blob (rozdział 32): **8aea8bd8db02ca8677fb0547f770c9166fdaef88**.
+- Kontrole ostatniego rozdziału 32: **2/2 czyste + dodatkowy sceptyczny audyt końcowy 04 czysty**; CI dla bloba completed/success. Wszystkie rozdziały 12–32 stabilne.
+- Kolejne działanie: **nie wznawiać ukończonej sekwencji 12–32 i nie wracać do 12**. Raport końcowy: [re_audit_from_ch12_final_2026-11-22.md](re_audit_from_ch12_final_2026-11-22.md). Ewentualny audyt globalny całej książki prowadzić jako osobne zadanie. Rozdział 32 zawiera zatwierdzoną transformatę Penrose’a.
 - Historyczne audyty, w tym ręczne audyty rozdziałów 13–15 z 22 listopada, pozostają ważnymi źródłami, ale **nie są automatycznie liczone** jako wykonanie nowego przebiegu.
 
 ## Tabela statusów
@@ -56,7 +56,7 @@ next_step: extend_LA32_with_approved_Penrose_transform_then_audit
 | 29 | STABILNY; audyty 01 i 02 czyste oraz dodatkowy końcowy 03 czysty, CI success i PDF obejrzany | 3 (2+1) | `55fc55e2ff1b95838e0b2ca1c4ec0a6018af64dd` |
 | 30 | STABILNY; po korekcie czyste audyty 03–04 + sceptyczny 05, CI success i PDF obejrzany | 3 (2+1) | `6d90013dd6c66d347e5ae2ac78b4c1a194aa979e` |
 | 31 | STABILNY; audyty 01–02 czyste + dodatkowy sceptyczny 03 czysty, CI success | 3 (2+1) | `6c1d09b9eaf4083c9ebaa361dbf46fc350eae147` |
-| 32 | BIEŻĄCY; zatwierdzone rozszerzenie Penrose’a przed audytami | 0 | — |
+| 32 | STABILNY; zatwierdzony dodatek Penrose’a, audyt 01 korekcyjny, czyste 02–03 + końcowy 04, CI success | 3 (2+1) | `8aea8bd8db02ca8677fb0547f770c9166fdaef88` |
 
 ## Instrukcja dla każdej iteracji
 
@@ -349,3 +349,8 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - Niezależnie przeczytano cały LA-31 (1496 wierszy), wykonano **94 639** dodatkowych dokładnych i numerycznych testów (wszystkie PASS), statyczną kontrolę 33 etykiet, 27 odsyłaczy, 58 par środowisk i 4 diagramów oraz obejrzano wszystkich 14 stron rozdziału 31 w rzeczywistym artefakcie [CI 45039588413](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45039588413). Źródło LA-31 pozostało niezmienione: `6c1d09b9eaf4083c9ebaa361dbf46fc350eae147`.
 - Raport [31_additional_independent_audit_2026-11-22.md](re_audit_from_ch12/31_additional_independent_audit_2026-11-22.md), [commit 5a407d7](https://github.com/dariusz-piekarz/mathematical_scipts/commit/5a407d7ba279d7960c20741bda7a5a9f3243dec5). Praca rozpoczęła się przed równoległym zamknięciem LA-31; nie przypisujemy sobie cudzych audytów 02/03 i **nie zwiększamy oficjalnego licznika 2+1**.
 - **LA-31 nadal zamknięty, bieżący etap LA-32**, bez cofania kolejki. Następny krok z rejestru: zatwierdzony dodatek transformacji Penrose’a do LA-32 i jego nowe audyty.
+
+## Zamknięcie całej ponownej sekwencji — 2026-11-22
+
+- Rozdział **32 STABILNY** po zatwierdzonym dodatku Penrose’a: [audyt korekcyjny 01](re_audit_from_ch12/32_iteration_01_2026-11-22.md), [czysty 02](re_audit_from_ch12/32_iteration_02_2026-11-22.md), [czysty 03](re_audit_from_ch12/32_iteration_03_2026-11-22.md), [końcowy sceptyczny 04](re_audit_from_ch12/32_iteration_04_2026-11-22.md). Finalny blob `8aea8bd8db02ca8677fb0547f770c9166fdaef88`; [CI 45040651674](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45040651674) **completed/success** dla tego samego bloba. W nowych testach Penrose’a, incydencji, kwadryk, J i stereografii: **6183 PASS**. Nowy rysunek wyrenderowano i obejrzano, bez kolizji; pełnego złożonego PDF nie oglądano osobiście.
+- **Wszystkie rozdziały 12–32 mają status STABILNY.** [Pełny raport końcowy](re_audit_from_ch12_final_2026-11-22.md). **Nie rozpoczynać automatycznie ponownej iteracji od 12**. Inne audyty, np. globalne całej książki, prowadzić oddzielnie.
