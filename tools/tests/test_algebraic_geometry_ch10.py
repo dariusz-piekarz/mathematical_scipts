@@ -162,6 +162,20 @@ class ALG10Regressions(unittest.TestCase):
         self.assertIn("dzielnikiem obszernym",block)
         self.assertIn(r"N^1(S)_{\R}",block)
 
+    def test_picard_is_group_of_isomorphism_classes(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        block = s.split("[Grupy Picarda i Nérona--Severiego]", 1)[1].split(
+            r"\end{definicja}", 1)[0]
+        self.assertIn("grupa klas izomorfizmu", block)
+        self.assertIn("indukowanym przez iloczyn tensorowy", block)
+        self.assertNotIn("grupa izomorfizmów", block)
+
+    def test_hodge_index_uses_polish_ampleness_terminology(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        block = s.split("[Hodge'a o indeksie", 1)[1].split(
+            r"\end{twierdzenie}", 1)[0]
+        self.assertIn("dzielnikiem obszernym", block)
+        self.assertNotIn("dzielnikiem ample", block)
     def test_tikz_and_environment_balance(self):
         s=SOURCE.read_text(encoding="utf-8")
         self.assertEqual(s.count(r"\begin{tikzpicture}"),4)
