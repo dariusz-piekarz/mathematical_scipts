@@ -183,6 +183,33 @@ class ALG06Regressions(unittest.TestCase):
         self.assertNotIn("dzielniky", src.lower())
         self.assertNotIn("charcie", src.lower())
 
+    def test_intersection_residue_degree_over_finite_field(self):
+        # The conic x^2+xz+z^2+y^2 over F_2 meets y=0 in a
+        # degree-2 closed point, not a rational point.
+        self.assertFalse(any((t*t + t + 1) % 2 == 0
+                             for t in range(2)))
+        # Derivatives of the conic are (z,0,x); their sole
+        # possible common projective zero [0:1:0] is not on it.
+        self.assertEqual((0*0+0*0+0*0+1*1) % 2, 1)
+        self.assertEqual(2*1, 2)
+        src = SOURCE.read_text(encoding="utf-8")
+        self.assertIn(r"[\kappa(p):k]\,i_p", src)
+        block = src.split(r"\label{tw:ga6-intersection-global}", 1)[1].split(
+            r"\end{twierdzenie}", 1)[0]
+        self.assertIn("ciałem algebraicznie domkniętym", block)
+        self.assertIn("charakterystyki $0$", block)
+
+    def test_adjunction_standalone_field_hypotheses(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        block = src.split(r"\label{tw:ga6-adjunction}", 1)[1].split(
+            r"\end{twierdzenie}", 1)[0]
+        self.assertIn("charakterystyki $0$", block)
+        self.assertIn("$C\subseteq S$", block)
+        hirz = src.split(r"\label{st:ga6-hirzebruch}", 1)[1].split(
+            r"\end{stwierdzenie}", 1)[0]
+        self.assertIn("charakterystyki $0$", hirz)
+        self.assertIn(r"\PP_{\PP^1_k}", hirz)
+
     def test_stable_labels_and_source_terms(self):
         src = SOURCE.read_text(encoding="utf-8")
         no_refs = re.sub(r"\\(?:label|ref|cref|eqref)\{[^}]+\}", "", src)
