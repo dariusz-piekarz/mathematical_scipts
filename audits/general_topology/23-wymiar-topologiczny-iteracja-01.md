@@ -1,6 +1,6 @@
 # Topologia ogólna — rozdział 23, audyt 01
 
-**Data:** 2026-11-22. **Branża źródła:** biblioteka-matematyczna-iteracja-6.
+**Data:** 2026-11-22. **Gałąź:** biblioteka-matematyczna-iteracja-6.
 **Plik:** chapters/pl/general_topology/23-wymiar-topologiczny.tex.
 **Wynik:** audyt korekcyjny (**0/2** czystych audytów po zmianie).
 **Blob po korekcie:** 26d9348431988f5e221404b647cd7a343f457a26.
@@ -111,7 +111,7 @@ odnosić się do niezmienionego bloba 26d93484... .
 
 ## Dodane następnie: pełny wymiar sześcianu
 
-Po pierwszym audycie użytkownikowy zatwierdzony zakres
+Po pierwszym audycie zatwierdzony zakres
 teorii wymiaru rozszerzono o pełne dolne oszacowanie
 \(\dim[0,1]^n\ge n\), a więc o równość
 \(\dim[0,1]^n=n\) dla każdego \(n\ge1\).
