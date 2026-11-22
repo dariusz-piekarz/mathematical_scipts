@@ -24,7 +24,7 @@ TOKEN_RE = re.compile(r"[0-9a-f]{32}\Z")
 NAME_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_'.]*\Z")
 
 
-def make_instrumentation(names: list[str], token: str) -> str:
+def make_instrumentation(names: list[str], token: str, *, classified: bool = False) -> str:
     """MetaM commands with identifiers from the trusted manifest only."""
     if (not TOKEN_RE.fullmatch(token) or not 1 <= len(names) <= MAX_THEOREMS
             or len(names) != len(set(names))
@@ -42,6 +42,21 @@ def make_instrumentation(names: list[str], token: str) -> str:
             f'    logInfo m!"{token} CONST {name} {{constant}}"',
             f'  logInfo m!"{token} END {name}"',
         ])
+        if classified:
+            lines.extend([
+                "  let typeConstants := info.type.getUsedConstantsAsSet.toList",
+                "  let valueConstants := match info.value? true with",
+                "    | some value => value.getUsedConstantsAsSet.toList",
+                "    | none => []",
+                f'  logInfo m!"{token} TYPE_BEGIN {name} {{typeConstants.length}}"',
+                "  for constant in typeConstants do",
+                f'    logInfo m!"{token} TYPE_CONST {name} {{constant}}"',
+                f'  logInfo m!"{token} TYPE_END {name}"',
+                f'  logInfo m!"{token} VALUE_BEGIN {name} {{valueConstants.length}}"',
+                "  for constant in valueConstants do",
+                f'    logInfo m!"{token} VALUE_CONST {name} {{constant}}"',
+                f'  logInfo m!"{token} VALUE_END {name}"',
+            ])
     return "\n".join(lines) + "\n"
 
 
@@ -94,6 +109,52 @@ def parse_inspection(log: str, token: str, names: list[str]) -> dict[str, list[s
     return {name: sorted(found[name]) for name in names}
 
 
+def parse_classified_inspection(log: str, token: str,
+                                names: list[str]) -> dict:
+    """Require type and value events for every registered declaration.
+
+    Preserve the legacy complete constant list while attributing each direct
+    expression reference to its origin. This is not a transitive proof graph.
+    """
+    if len(log.encode("utf-8")) >= MAX_OUTPUT_BYTES:
+        raise ValueError("Saturated classified Lean output")
+    streams: dict[str, list[str]] = {"total": [], "type": [], "value": []}
+    for line in log.splitlines():
+        offset = line.find(token + " ")
+        if offset < 0:
+            continue
+        fields = line[offset:].strip().split()
+        if len(fields) < 3 or fields[0] != token:
+            raise ValueError("Malformed classified Lean output")
+        event = fields[1]
+        if event in ("BEGIN", "CONST", "END"):
+            streams["total"].append(line)
+        elif event.startswith("TYPE_") or event.startswith("VALUE_"):
+            origin, event_name = event.split("_", 1)
+            if origin not in ("TYPE", "VALUE") or event_name not in (
+                    "BEGIN", "CONST", "END"):
+                raise ValueError("Unknown classified Lean event")
+            streams[origin.lower()].append(
+                line[:offset] + token + " " + event_name + " " +
+                " ".join(fields[2:]))
+        else:
+            raise ValueError("Unexpected classified Lean event")
+    total = parse_inspection("\n".join(streams["total"]), token, names)
+    types = parse_inspection("\n".join(streams["type"]), token, names)
+    values = parse_inspection("\n".join(streams["value"]), token, names)
+    if any(set(total[name]) != set(types[name]) | set(values[name])
+           for name in names):
+        raise ValueError("Type/value references disagree with Lean total")
+    edges = [
+        {"declaration": name, "constant": value, "origin": origin}
+        for name in names
+        for origin, refs in (("type", types[name]), ("value", values[name]))
+        for value in refs
+    ]
+    return {"constants": total, "type_constants": types,
+            "value_constants": values, "reference_edges": edges}
+
+
 def _indexed_binding(con: sqlite3.Connection, module: str, label: str,
                      entity_id: str) -> tuple | None:
     """Snapshot label position and indexed entity boundaries, not only its ID.
@@ -136,7 +197,7 @@ def _empty(identifier: str, status: str, detail: str) -> dict:
 
 
 def inspect(con: sqlite3.Connection, identifier: str, *,
-            lean_root: Path = lean.LEAN_ROOT) -> dict:
+            lean_root: Path = lean.LEAN_ROOT, classified: bool = False) -> dict:
     if not lean.VALID_ID.fullmatch(identifier):
         raise HTTPException(400, "Niepoprawny identyfikator.")
     item = next((i for i in lean._registry(lean_root) if i["id"] == identifier), None)
@@ -192,7 +253,7 @@ def inspect(con: sqlite3.Connection, identifier: str, *,
                 return _empty(identifier, "blocked", "Nie można zweryfikować zależności.")
             token = secrets.token_hex(16)
             try:
-                generated = make_instrumentation(names, token).encode("utf-8")
+                generated = make_instrumentation(names, token, classified=classified).encode("utf-8")
                 work = lean_root.parent / "data" / "lean_runs"
                 work.mkdir(mode=0o700, parents=True, exist_ok=True)
                 with tempfile.TemporaryDirectory(prefix="inspection-", dir=work) as directory:
@@ -215,7 +276,10 @@ def inspect(con: sqlite3.Connection, identifier: str, *,
             if code != 0:
                 return _empty(identifier, "failed", "Lean zwrócił błąd: " + output[-400:])
             try:
-                constants = parse_inspection(output, token, names)
+                sections = (parse_classified_inspection(output, token, names)
+                            if classified else None)
+                constants = (sections["constants"] if sections is not None else
+                             parse_inspection(output, token, names))
                 after = lean_results.fingerprint(doc["sha256"], item["_file"], lean_root)
             except (OSError, ValueError) as exc:
                 return _empty(identifier, "blocked",
@@ -251,6 +315,7 @@ def inspect(con: sqlite3.Connection, identifier: str, *,
                     not lean._source_file_current(item, doc["sha256"], lean_root)):
                 return _empty(identifier, "blocked", "Źródło zmieniło się podczas pracy.")
             return {
+                **(sections or {}),
                 "formalization_id": identifier, "inspection_status": "complete",
                 "detail": ("Stałe z typów i wartości deklaracji z rzeczywistego procesu Lean. "
                            "To nie minimalny graf przesłanek ani certyfikat."),
