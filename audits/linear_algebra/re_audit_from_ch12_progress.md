@@ -8,10 +8,10 @@
 
 ## Stan wykonania
 
-- Bieżący rozdział: **18**.
-- Ostatni zamknięty blob (rozdział 17): **05b93309d0e444f1c3fcbe3489cfd98a0f02846f**.
-- Liczba kolejnych czystych audytów (bieżący rozdział 18): **1**.
-- Kolejne działanie: **wykonać audyt 02 rozdziału 18** na niezmienionym blobie `ef815633cf3a1f795d912c510fbc8575f21e464d`. Audyt 01 czysty, dedykowane CI success.
+- Bieżący rozdział: **19**.
+- Ostatni zamknięty blob (rozdział 18): **ef815633cf3a1f795d912c510fbc8575f21e464d**.
+- Liczba kolejnych czystych audytów (bieżący rozdział 19): **0**.
+- Kolejne działanie: **wykonać audyt 01 rozdziału 19**. Rozdział 18 zamknięto po dwóch kolejnych czystych kontrolach niezmienionego bloba i zielonym dedykowanym CI.
 - Historyczne audyty, w tym ręczne audyty rozdziałów 13–15 z 22 listopada, pozostają ważnymi źródłami, ale **nie są automatycznie liczone** jako wykonanie nowego przebiegu.
 
 ## Tabela statusów
@@ -24,8 +24,8 @@
 | 15 | STABILNY; audyty 02 i 03 czyste po poprawce, dedykowane CI success | 2 | `5a17f877bf3639cebc33ca95c202aca4498bd6c9` |
 | 16 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `4f8da3c4b87b87ee8f8e6f7c7504637485c6e09a` |
 | 17 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `05b93309d0e444f1c3fcbe3489cfd98a0f02846f` |
-| 18 | OTWARTY; audyt 01 czysty, dedykowane CI success | 1 | `ef815633cf3a1f795d912c510fbc8575f21e464d` |
-| 19 | W kolejce | 0 | — |
+| 18 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `ef815633cf3a1f795d912c510fbc8575f21e464d` |
+| 19 | BIEŻĄCY; audyt 01 do wykonania | 0 | — |
 | 20 | W kolejce | 0 | — |
 | 21 | W kolejce | 0 | — |
 | 22 | W kolejce | 0 | — |
@@ -150,3 +150,10 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - Raport: [18_iteration_01_2026-11-22.md](re_audit_from_ch12/18_iteration_01_2026-11-22.md), commit [bb36660](https://github.com/dariusz-piekarz/mathematical_scipts/commit/bb36660e18968bd062649c65a4c5e9dbdccf3036).
 - Dedykowane CI [run 45018755189](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45018755189): completed/success na commicie `6d859ac49fbdcff1389888e6109337ffb22934e2` z tym samym blobem rozdziału 18.
 - Następny: rozdział **18**, audyt 02.
+
+## Ostatnia rzeczywista iteracja — 2026-11-22 (rozdział 18, audyt 02)
+
+- Rozdział **18: STABILNY (2/2)**; audyty 01 i 02 czyste na niezmienionym blobie `ef815633cf3a1f795d912c510fbc8575f21e464d`.
+- Raport: [18_iteration_02_2026-11-22.md](re_audit_from_ch12/18_iteration_02_2026-11-22.md), commit [4cc28c0](https://github.com/dariusz-piekarz/mathematical_scipts/commit/4cc28c00819826a84fdbbf0a72356622936e7df5).
+- Dedykowane CI: [run 45018755189](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45018755189), completed/success dla commitu `6d859ac49fbdcff1389888e6109337ffb22934e2` z tym samym blobem.
+- Następny: rozdział **19**, audyt 01.
