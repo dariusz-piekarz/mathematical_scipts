@@ -119,6 +119,14 @@ class ALG05Regressions(unittest.TestCase):
         self.assertIn(r"\widetilde X\times_X\Spec\kappa(z)", src)
         self.assertIn(r"E\times_Z\Spec\kappa(z)", src)
 
+    def test_positive_codimension_for_exceptional_projective_fibres(self):
+        # For a regular immersion of codimension zero, Z=X and I=0.
+        # Its Rees algebra is concentrated in degree zero, so Proj is
+        # empty; no projective fibres P^(c-1) should be asserted.
+        src = SOURCE.read_text(encoding="utf-8")
+        self.assertEqual(src.count(r"stały kowymiar $c\ge1$"), 2)
+        self.assertIn(r"\PP^{c-1}_{\kappa(z)}", src)
+
     def test_projective_chart_transition(self):
         for p in (3, 5, 7, 11):
             for v in range(1, p):
