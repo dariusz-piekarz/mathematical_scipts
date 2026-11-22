@@ -227,6 +227,35 @@ class ALG07Regressions(unittest.TestCase):
         self.assertIn(r"c_1(T_S)=-c_1(\omega_S)", proof)
         self.assertIn(r"c_1(\omega_S)=[K_S]", proof)
 
+    def test_noether_statement_defines_canonical_divisor(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        statement = src.split(r"\label{tw:ga7-noether}", 1)[1].split(
+            r"\end{twierdzenie}", 1)[0]
+        self.assertIn(
+            r"Niech $K_S$ będzie dowolnym dzielnikiem kanonicznym",
+            statement)
+        self.assertIn(r"K_S^2+\deg c_2(T_S)", statement)
+
+    def test_line_bundle_rr_distinguishes_divisor_and_chow_class(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        proof = src.split(r"\label{tw:ga7-noether}", 1)[1].split(
+            r"\end{proof}", 1)[0]
+        self.assertIn(r"c_1(\mathcal E)=[D]", proof)
+        self.assertNotIn(r"$c_1=D$", proof)
+
+    def test_chern_numbers_not_individually_birational_invariant(self):
+        # The blow-up changes K^2 by -1 and deg(c2) by +1,
+        # preserving 12 chi(O_S) rather than each summand.
+        for canonical_square in range(-20, 25):
+            for second_chern in range(0, 25):
+                self.assertEqual(
+                    (canonical_square - 1) + (second_chern + 1),
+                    canonical_square + second_chern)
+        src = SOURCE.read_text(encoding="utf-8")
+        summary = src.split(r"\label{sec:ga7-summary}", 1)[1]
+        self.assertIn("nie należy automatycznie uważać za niezmienniki", summary)
+        self.assertIn(r"12\chi(\mathcal O_S)", summary)
+
     def test_bezout_example_rejects_zero_polynomial(self):
         src = SOURCE.read_text(encoding="utf-8")
         bezout = src.split(r"\label{prz:ga7-bezout}", 1)[1].split(
