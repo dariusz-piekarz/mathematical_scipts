@@ -24,7 +24,7 @@ Stan: 22 listopada 2026. Źródłem prawdy dla rozdziałów włączonych do ksi�
 | **16** | **Topologia wyznaczona przez funkcje, przestrzenie całkowicie regularne, uzwarcenia i ich równoważność** | **stabilny — audyt 03** |
 | **17** | **Uzwarcenie Aleksandrowa i uzwarcenie Čecha–Stone’a: konstrukcje, własności uniwersalne, minimalność, maksymalność i przykłady** | **stabilny — audyt 03; pełne dowody konstrukcji i własności uniwersalnych** |
 | **18** | **Przestrzenie odwzorowań, topologia zwarto-otwarta, zbieżność jednostajna na zbiorach zwartych, ewaluacja, prawo wykładnicze, metryzacja i zupełność** | **stabilny — audyt 03; pełne dowody i walidacja CI/PDF** |
-| **19** | **Przestrzenie polskie, podprzestrzenie G-delta, zbiory borelowskie i hierarchia indeksowana przeliczalnymi liczbami porządkowymi** | **rozdział napisany — audyt 01** |
+| **19** | **Przestrzenie polskie, podprzestrzenie G-delta, zbiory borelowskie i hierarchia indeksowana przeliczalnymi liczbami porządkowymi** | **audyt 02 zakończony; CI/PDF PASS, niezależny audyt 03 przed stabilizacją** |
 | 20 | Podstawy opisowej teorii mnogości i jej związki z topologią | plan |
 
 Zakresy 12–13 oraz 16–17 są rozdzielone według tematyki, żeby unikać powtarzania dowodów. Zgodnie z zasadą projektu nowe rozdziały nie oznaczają automatycznie ich stabilności.
