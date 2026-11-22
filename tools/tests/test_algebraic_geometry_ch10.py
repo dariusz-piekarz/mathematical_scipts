@@ -176,6 +176,7 @@ class ALG10Regressions(unittest.TestCase):
             r"\end{twierdzenie}", 1)[0]
         self.assertIn("dzielnikiem obszernym", block)
         self.assertNotIn("dzielnikiem ample", block)
+        self.assertNotRegex(s, r"\bample\b")
     def test_tikz_and_environment_balance(self):
         s=SOURCE.read_text(encoding="utf-8")
         self.assertEqual(s.count(r"\begin{tikzpicture}"),4)
