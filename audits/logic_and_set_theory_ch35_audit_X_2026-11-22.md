@@ -4,7 +4,7 @@
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`.  
 **Źródło:** `chapters/pl/logic_and_set_theory/35-modele-boolowskie-i-wzgledna-niesprzecznosc-ch.tex`.  
 **Blob źródła:** `1d510628d52469ef8aa00ad021125192c54ec439` (bez zmian w audycie X).  
-**Werdykt matematyczno-redakcyjny:** nie ujawniono nowego błędu ani koniecznej poprawki treści. **Werdykt końcowy pozostaje tymczasowy** do pełnej kontroli technicznej przebiegu wskazanego poniżej. Poprzedni audyt IX był nieczysty; licznik stabilności nie zostaje przedwcześnie zwiększony.
+**Werdykt końcowy: audyt X CZYSTY (1/2).** Nie ujawniono nowego błędu ani koniecznej poprawki treści. Pełne GitHub Actions przebiegu 45061439175, analiza logu i nowa wizualna kontrola wszystkich 16 stron rozdziału zakończyły się pomyślnie. Poprzedni audyt IX pozostaje nieczysty; pierwszy czysty audyt dotyczy dokładnie bloba wskazanego wyżej.
 
 ## 1. Niezależne ponowne sprawdzenie dowodu
 
@@ -23,8 +23,16 @@ Dodano `test_mixing_for_nonmaximal_antichains_and_zero_coefficients` do `tools/t
 
 Kontrolny rachunek lokalny o tych samych parametrach dał **960/960 zgodności**. W przebiegu GitHub Actions **[45061439175](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45061439175)** krok testów rozdziału 35 (23 metody po uzupełnieniu) zakończył się **SUCCESS**.
 
-## 3. Technika i status końcowy
+## 3. Pełne CI i niezależna inspekcja rzeczywistego PDF
 
-W chwili zapisu raportu przebieg GitHub Actions 45061439175 wykonywał jeszcze pełną kompilację `books/pl/logic_and_set_theory.tex`. **Nie deklaruje się końcowego SUCCESS całego workflow, dopóki kompilacja, inspekcja logu i archiwizacja nie zostaną potwierdzone**. Również nowa wzrokowa kontrola PDF nie została jeszcze wykonana; poprzedni audyt IX zweryfikował wizualnie 16 stron rozdziału z tego samego bloba źródła.
+**GitHub Actions [45061439175](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45061439175): SUCCESS**, commit `7112f096338146174995447d5ddf50ef0110089d`. Przebieg obejmował 23 testy rozdziału 35, testy pozostałych rozdziałów, inwentarz i odsyłacze, pełną kompilację książki oraz kontrolę logu i gotowego PDF.
 
-**Status:** audyt matematyczny X bez nowych usterek, ale formalne zamknięcie i zwiększenie licznika czystych audytów dopiero po domknięciu kontroli technicznej. Po domknięciu: audyt XI niezależnie na niezmienionym blobie, a następnie dodatkowy audyt potwierdzający, zanim zacznie się rozdział 36. Ani testy Python, ani kompilacja LaTeX nie stanowią weryfikacji dowodów w Lean.
+Pobrano rzeczywisty ZIP artefaktu **14769179583** z przebiegu. Dokument `logic_and_set_theory.pdf` ma **311 stron**. Rozdział 35 obejmuje strony PDF **296–311** (16 stron). Wyrenderowano wszystkie 16 stron w nowym montażu 4 × 4 i niezależnie skontrolowano układ, brak uciętych wzorów oraz brak nakładających się elementów. Nie stwierdzono nowej usterki wizualnej.
+
+Analiza logu kompilacji: **0** komunikatów `Overfull \\hbox`, **0** nierozwiązanych odsyłaczy, **0** brakujących znaków, **0** błędów `LaTeX Error`, **0** błędów `Undefined control sequence`; jedno ostrzeżenie `Underfull \\hbox` w całym dokumencie, bez wpływu na czytelność rozdziału.
+
+## 4. Werdykt i dalszy etap
+
+**Pierwszy niezależny czysty audyt źródła `1d510628d52469ef8aa00ad021125192c54ec439`: 1/2.** Test został rozszerzony bez zmiany źródła rozdziału. Następna iteracja to audyt XI na tym samym blobie, z własną kontrolą przypadków brzegowych, dowodów zachowania ZFC i przejścia do CH oraz ¬CH. Następnie wymagany jest dodatkowy audyt potwierdzający stabilność, zanim rozpocznie się rozdział 36.
+
+Sukces CI i testów skończonych algebr Boole'a nie oznacza weryfikacji dowodów w Lean.
