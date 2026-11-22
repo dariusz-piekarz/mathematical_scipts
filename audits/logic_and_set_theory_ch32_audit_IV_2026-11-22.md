@@ -1,8 +1,8 @@
 # Logika matematyczna i teoria mnogości — audyt IV rozdziału 32
 
 **Data:** 22 listopada 2026 r.  
-**Gałąź:** \`biblioteka-matematyczna-iteracja-6\`.  
-**Rozdział:** \`chapters/pl/logic_and_set_theory/32-podstawy-wymuszania-i-modele-generyczne.tex\`.  
+**Gałąź:** `biblioteka-matematyczna-iteracja-6`.  
+**Rozdział:** `chapters/pl/logic_and_set_theory/32-podstawy-wymuszania-i-modele-generyczne.tex`.  
 **Zakres:** weryfikacja matematyczna i językowa definicji, lematów, twierdzeń, przykładów i dowodów, w szczególności rozróżnienia obiektów liczonych wewnątrz modelu $M$ i w zewnętrznym uniwersum ZFC; testy regresyjne, LaTeX, odsyłacze oraz kompilacja całego skryptu.
 
 ## Wykryte i naprawione nieścisłości
@@ -45,7 +45,7 @@ W końcowej uwadze zastąpiono nieprecyzyjne „zawieranie $M$ i $G$” dwoma r�
 
 - Zachowano dotychczasową strukturę: **8 sekcji, 11 definicji, 7 lematów, 4 twierdzenia, 1 wniosek, 4 przykłady, 4 uwagi, 12 dowodów i 1 rysunek TikZ**.
 - Zachowano **33 etykiety i 11 odsyłaczy** rozdziału, co nie zmienia zatwierdzonego inwentarza 803 etykiet i 590 odsyłaczy dla książki.
-- Rozszerzono \`tools/tests/test_logic_and_set_theory_ch32.py\` o regresje dla poprawnego przedłużania skończonych warunków $p$ do $q$ różniącego się od ustalonego ciągu $x$ i o kontrolę jawnych hipotez przykładu $\dot C$. Testy są kontrolą regresji, **nie formalnym dowodem** twierdzeń w Lean.
+- Rozszerzono `tools/tests/test_logic_and_set_theory_ch32.py` o regresje dla poprawnego przedłużania skończonych warunków $p$ do $q$ różniącego się od ustalonego ciągu $x$ i o kontrolę jawnych hipotez przykładu $\dot C$. Testy są kontrolą regresji, **nie formalnym dowodem** twierdzeń w Lean.
 - [GitHub Actions — walidacja zmian audytu IV](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45017199305). Kompilacja pełnej książki i przegląd stron PDF wymagają odnotowania **wyniku końcowego** po zakończeniu biegu.
 
 ## Werdykt wstępny
