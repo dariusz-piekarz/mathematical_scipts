@@ -22,6 +22,19 @@ Zasady przyjęte 21 listopada 2026 r. Obowiązują przy opracowywaniu **wszystki
 - Dopuszczalne są polskie formy przymiotnikowe: „dualny”, „dualna”, „dualne”, np. „odwzorowanie dualne”, „baza dualna”, „przestrzeń dualna”; również „odwzorowanie sprzężone”, gdy odpowiada znaczeniu.
 - Zalecane sformułowania: „przestrzeń dualna do ilorazu” i „przestrzeń dualna do sumy prostej”. Nie zmieniamy z tego powodu istniejących etykiet \verb|\label| i odsyłaczy \verb|\ref|.
 
+## 7. „Presnop” — obowiązująca nazwa presheaf
+
+- Używamy wyłącznie polskiego terminu **presnop** oraz odmian:
+  **presnopy**, **presnopu**, **presnopem**, **presnopów**,
+  **presnopami**, **presnopie**.
+- Różnicujemy **presnop** (dane lokalne i ograniczenia)
+  oraz **snop** (dodatkowe aksjomaty jednoznaczności i sklejania).
+- Zasada obowiązuje we wszystkich polskich skryptach, suplementach,
+  opisach rysunków, planach i kolejnych audytach. Istniejące stabilne
+  etykiety LaTeX i odsyłacze należy zachować.
+- Automatyczna kontrola: `python tools/normalize_polish_terminology.py --check`
+  oraz `python tools/check_terminology.py --all`.
+
 ## Audyty
 
 W każdym audycie sprawdzamy konsekwentnie te terminy w treści, twierdzeniach, przykładach, podpisach rysunków i komentarzach LaTeX, bez naruszania historycznych etykiet odsyłaczy. Terminologia nie może zmieniać poprawnego znaczenia matematycznego.
