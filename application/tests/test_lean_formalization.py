@@ -417,6 +417,29 @@ class LeanFormalizationTests(unittest.TestCase):
         self.assertFalse(result["run_record_saved"])
         self.assertIn("checkout dirty", result["run_record_warning"])
 
+    def test_olean_artifact_modified_during_execution_revokes_compiled(self):
+        build = self.root / ".lake" / "build" / "lib" / "lean"
+        build.mkdir(parents=True)
+        artifact = build / "Dependency.olean"
+        artifact.write_bytes(b"original compiled module")
+
+        def mutate_artifact(*args, **kwargs):
+            artifact.write_bytes(b"updated compiled module")
+            return (0, "success", False)
+
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_process.execute_registered",
+                   side_effect=mutate_artifact):
+            result = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(result["proof_status"], "blocked")
+        self.assertFalse(result["certificate"])
+        self.assertFalse(result["run_record_saved"])
+        reopened = lean.fragment(self.con, entity_id="LST-01/theorem/0001",
+                                 lean_root=self.root)
+        self.assertEqual(reopened["proof_status"], "not_run")
+        self.assertFalse(reopened["run_cached"])
+
     def test_compilation_success_is_not_semantic_certificate(self):
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
              patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
