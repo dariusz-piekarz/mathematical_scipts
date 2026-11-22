@@ -103,6 +103,37 @@ class ALG06Regressions(unittest.TestCase):
             self.assertTrue(all(n in (0, 1) for n in matches))
         self.assertEqual(27*10//2, 135)
 
+    def test_27_lines_45_triangles_of_incidence(self):
+        # An independent Picard-lattice enumeration of tritangent
+        # triples: 45 triangles, each of 27 lines belongs to five.
+        classes = []
+        for i in range(6):
+            v = [0]*7
+            v[i+1] = 1
+            classes.append(tuple(v))
+        for i, j in itertools.combinations(range(6), 2):
+            v = [0]*7
+            v[0], v[i+1], v[j+1] = 1, -1, -1
+            classes.append(tuple(v))
+        for i in range(6):
+            v = [2] + [-1]*6
+            v[i+1] = 0
+            classes.append(tuple(v))
+
+        def intersect(a, b):
+            return a[0]*b[0] - sum(x*y for x, y in zip(a[1:], b[1:]))
+
+        triples = [
+            (i, j, k) for i, j, k in
+            itertools.combinations(range(27), 3)
+            if intersect(classes[i], classes[j]) == 1
+            and intersect(classes[j], classes[k]) == 1
+            and intersect(classes[i], classes[k]) == 1
+        ]
+        self.assertEqual(len(triples), 45)
+        for i in range(27):
+            self.assertEqual(sum(i in triple for triple in triples), 5)
+
     def test_fermat_27_explicit_lines(self):
         # Over F_7, -1 has exactly 3 cube roots, as over C.
         p = 7
