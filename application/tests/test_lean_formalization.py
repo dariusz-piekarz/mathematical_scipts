@@ -557,6 +557,11 @@ class LeanFrontEndContractTests(unittest.TestCase):
             self.assertIn('id="' + key + '"', page)
         self.assertIn('"/api/lean/fragment?"', js)
         self.assertIn('"/api/lean/run"', js)
+        self.assertIn('"/api/lean/catalog"', js)
+        for key in ("leanCatalogSearch", "leanCatalogFilter", "leanCatalogList",
+                    "leanCatalogRefresh"):
+            self.assertIn('id="' + key + '"', page)
+
         self.assertIn('textContent=result.lean_code', js)
 
 
