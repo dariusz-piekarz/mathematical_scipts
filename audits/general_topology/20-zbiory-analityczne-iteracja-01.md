@@ -3,7 +3,7 @@
 **Data:** 2026-11-22. **Gałąź:** \`biblioteka-matematyczna-iteracja-6\`.
 **Źródło:** \`chapters/pl/general_topology/20-zbiory-analityczne-i-operacja-suslina.tex\`.
 **Blob:** \`2de2c9a5d30952abdb726f856f9bad55dfa857d1\` (728 wierszy).
-**Wynik:** pierwszy audyt matematyczny i strukturalny **CZYSTY**.
+**Wynik dla pierwotnego bloba:** matematycznie czysty, ale **niezaliczany do stabilizacji aktualnej wersji**, ponieważ w dalszym toku prac dodano nowy dowód zgodności z definicją skryptu logiki.
 **Status stabilizacji:** **W AUDYCIE** — konieczna kolejna niezależna kontrola i pełny zielony workflow dla tego samego bloba.
 
 ## Kontrola nakładania się ze skryptem logiki
@@ -34,3 +34,31 @@ Nowy materiał celowo ograniczono do wciąż brakujących **dowodów topologiczn
 ## Decyzja
 
 **Audyt 01: czysty matematycznie; rozdział 20 pozostaje w audycie** do samodzielnego ponownego przeglądu i zakończonej pomyślnie walidacji CI/PDF. Nie dodawać tu treści rozdziału 30 logiki, szczególnie determinacji i redukcji Wadge’a. Ewentualne głębsze twierdzenia o mierzalności zbiorów analitycznych wymagają osobnego dowodu i dalszego planowania między skryptami.
+
+
+## Uzupełnienie po pierwszym audycie (zmiana źródła)
+
+Po porównaniu definicji zbiorów analitycznych z rozdziałem 30 logiki dodano pełny dowód
+równoważności topologicznej definicji analityczności i definicji „rzut borelowskiego
+podzbioru \(\mathbb R^{n+1}\)” stosowanej w skrypcie logiki.
+Nie pozostawiono nieuzasadnionego stwierdzenia, że oba opisy są równoważne.
+Dowód koduje \(\mathbb N^{\mathbb N}\) w \(2^{\mathbb N}\)
+przez kolejne bloki zer zakończone jedynką,
+następnie osadza tę przestrzeń w borelowskim podzbiorze prostej
+przez standardowe trójkowe osadzenie Cantora.
+Commit źródła: [fa5724d](https://github.com/dariusz-piekarz/mathematical_scipts/commit/fa5724df5958f804576bea60d77d798ea2c4fb15);
+nowy blob: \`73de106461510c1be14419882d3b617602cca177\`.
+
+Integracja ujawniła również, że samodzielna kompilacja rozdziału 20 potrzebuje
+etykiet rozdziału 19. Dodano import \`xr-hyper\` i
+\`\externaldocument{general_topology_ch19}\`
+w \`books/pl/general_topology_ch20.tex\`;
+workflow buduje rozdział 19 przed rozdziałem 20.
+Ten błąd odpowiadał za wcześniejsze niepowodzenie
+końcowej kontroli logu mimo poprawnej kompilacji PDF.
+Zmiany integracyjne nie zmieniają bloba źródła matematycznego,
+ale wymagają nowej walidacji CI.
+
+**Formalny licznik czystych audytów aktualnego źródła po dodaniu nowej tezy: 0/2.**
+Kolejny audyt musi objąć blob \`73de106461510c1be14419882d3b617602cca177\`;
+nie należy bezwarunkowo przenosić statusu poprzedniej wersji.
