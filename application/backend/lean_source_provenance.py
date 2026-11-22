@@ -64,26 +64,37 @@ def owner_status(con: sqlite3.Connection, module: str, label: str,
         return "unlinked_label", None
     if len(rows) != 1:
         return "ambiguous_label", None
-    # The main label index is globally unique, but repeated source labels can
-    # be recorded separately as conflicts. Same-module ambiguity is fatal.
+    # labels is the parser's legacy globally-unique lookup. Duplicates
+    # anywhere in the library are recorded in label_conflicts (including the
+    # original owner). Never endorse the first owner of a global collision.
     conflicts_table = con.execute(
         "SELECT 1 FROM sqlite_master WHERE type='table' AND name='label_conflicts'"
     ).fetchone()
-    if conflicts_table is not None:
-        conflict_rows = con.execute(
-            "SELECT DISTINCT offset, entity_id FROM label_conflicts "
-            "WHERE name=? AND document_id=? LIMIT 2", (label, module)
-        ).fetchall()
-        if (len(conflict_rows) > 1 or
-                (conflict_rows and conflict_rows[0][1] != rows[0][0])):
-            return "ambiguous_label", None
+    if conflicts_table is not None and con.execute(
+        "SELECT 1 FROM label_conflicts WHERE name=? LIMIT 1", (label,)
+    ).fetchone() is not None:
+        return "ambiguous_label", None
+
     entity_id = rows[0][0]
     binding = indexed_binding(con, module, label, entity_id)
-    if (conflicts_table is not None and conflict_rows and binding is not None
-            and conflict_rows[0][0] != binding[7]):
-        return "ambiguous_label", None
     if binding is None or not valid_binding(binding, source, label):
         return "invalid_label_binding", None
+
+    # The canonical parser also retains every original occurrence. Its entry
+    # must agree with the legacy label index, not merely share a text name.
+    occurrences_table = con.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='label_occurrences'"
+    ).fetchone()
+    if occurrences_table is not None:
+        occurrences = con.execute(
+            "SELECT document_id,entity_id,offset FROM label_occurrences "
+            "WHERE name=? LIMIT 2", (label,)
+        ).fetchall()
+        if len(occurrences) > 1:
+            return "ambiguous_label", None
+        if (len(occurrences) != 1
+                or tuple(occurrences[0]) != (module, entity_id, binding[7])):
+            return "invalid_label_binding", None
     return "ok", entity_id
 
 
