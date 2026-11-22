@@ -62,8 +62,10 @@ Dodatkowa asercja chroni rozróżnienie symboli $\operatorname{rk}(\tau)$ i $\rh
 
 ## CI, PDF i werdykt
 
-[GitHub Actions — pełna walidacja audytu III](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45021115326).
+- [GitHub Actions #45021115326](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45021115326): **SUCCESS** — 16 testów regresyjnych rozdziału 33 (w tym 256 skończonych przypadków lematu prawdy), komplet pozostałych testów rozdziałów 01–32, kontrola inwentarza i odsyłaczy, kompilacja LaTeX oraz kontrola skompilowanego PDF.
+- [GitHub Actions #45021176300](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45021176300): **SUCCESS** także po dodaniu raportu audytu III; źródła matematyczne były niezmienione między przebiegami.
+- **Aktualny PDF:** 288 stron, rozdział 33 zajmuje strony PDF **281–288**. Wszystkie osiem stron wyrenderowano i obejrzano, ze szczególną uwagą na rekurencję atomową, definicję wymuszania formuł, schemat zastępowania oraz końcowe przykłady. Rysunki nie występują w tym rozdziale; nie stwierdzono nakładania się tekstu z formułami, utraconych znaków ani ucięć.
+- **Log LaTeX:** 0 błędów, 0 ostrzeżeń `Overfull \\hbox`, 0 nierozwiązanych odsyłaczy, 0 nierozwiązanych cytowań; 1 ostrzeżenie `Underfull \\hbox` w całej książce.
+- **Uwaga o składzie:** końcowa strona rozdziału jest częściowo niezapełniona, ale zawiera merytoryczny przykład i końcową uwagę; nie zastosowano agresywnego ścieśniania dowodów.
 
-**Status przed zamknięciem przebiegu:** trzeba jeszcze potwierdzić ostateczny wynik testów, kompilację i brak kolizji w aktualnym PDF; raport zostanie odpowiednio uzupełniony po sprawdzeniu artefaktu.
-
-**Werdykt matematyczny:** wykryto rzeczywistą nieścisłość w parametrach formuły definiowalności oraz trzy problemy jednoznaczności/ścisłości sformułowań. Wszystkie poprawiono w kodzie źródłowym. Rozdział 33 pozostaje **w trakcie audytowania, nie jest jeszcze oznaczony jako stabilny**. Po potwierdzeniu CI należy wykonać niezależny audyt IV.
+**Werdykt po audycie III:** wykryto rzeczywistą nieścisłość w parametrach formuły definiowalności oraz trzy problemy jednoznaczności/ścisłości sformułowań. Wszystkie poprawiono w kodzie źródłowym. **Kontrola matematyczna po poprawkach, 16 testów, kompilacja i przegląd PDF: PASS.** Rozdział 33 pozostaje **w trakcie audytowania, nie jest jeszcze oznaczony jako stabilny**, ponieważ audyt III wymagał rzeczywistych korekt. Następny etap to niezależny **audyt IV**.
