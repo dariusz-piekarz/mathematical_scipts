@@ -319,6 +319,39 @@ class LeanFormalizationTests(unittest.TestCase):
         self.assertTrue(state["total_memory_limit_supported"])
         self.assertEqual(spawn.call_args.kwargs["total_memory_mb"], 1024)
 
+    def test_windows_job_available_routes_aggregate_limit_without_certificate(self):
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1",
+                                     "MATLIB_LEAN_TOTAL_MEMORY_MB": "2048"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_cgroup.available",
+                   return_value=False), \
+             patch("backend.lean_formalization.lean_windows_job.available",
+                   return_value=True), \
+             patch("backend.lean_formalization.lean_process.execute_registered",
+                   return_value=(0, "ok", False)) as execute:
+            state = lean.availability(lean_root=self.root)
+            result = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertTrue(state["total_memory_limit_supported"])
+        self.assertEqual(state["total_memory_limit_mb"], 2048)
+        self.assertEqual(execute.call_args.kwargs["total_memory_mb"], 2048)
+        self.assertEqual(result["proof_status"], "compiled")
+        self.assertFalse(result["certificate"])
+
+    def test_windows_job_creation_failure_is_blocked(self):
+        from backend import lean_windows_job
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1",
+                                     "MATLIB_LEAN_TOTAL_MEMORY_MB": "2048"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_windows_job.available",
+                   return_value=True), \
+             patch("backend.lean_formalization.lean_process.execute_registered",
+                   side_effect=lean_windows_job.JobUnavailable(
+                       "AssignProcessToJobObject refused")):
+            result = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(result["proof_status"], "blocked")
+        self.assertIn("AssignProcessToJobObject", result["detail"])
+        self.assertFalse(result["certificate"])
+
     def test_compilation_success_is_not_semantic_certificate(self):
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
              patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
