@@ -8,6 +8,7 @@ Skipping when the toolchain/cache is absent is NOT a successful Lean test.
 from __future__ import annotations
 
 from pathlib import Path
+import os
 import secrets
 import shutil
 import subprocess
@@ -20,10 +21,12 @@ LEAN_ROOT = Path(__file__).resolve().parents[1] / "lean"
 
 
 class LeanIntrospectionRealSmokeTests(unittest.TestCase):
-    @unittest.skipUnless(shutil.which("lake"), "Actual Lake/Lean required")
     def test_real_lean_426_reports_constants(self):
-        if not (LEAN_ROOT / ".lake" / "packages" / "mathlib").is_dir():
-            self.skipTest("Mathlib checkout unavailable; no real Lean execution")
+        if not shutil.which("lake") or not (
+                LEAN_ROOT / ".lake" / "packages" / "mathlib").is_dir():
+            if os.environ.get("MATLIB_REQUIRE_REAL_LEAN_TEST") == "1":
+                self.fail("Mandatory real Lean smoke test: Lake or Mathlib unavailable")
+            self.skipTest("Lake/Mathlib unavailable; no real Lean execution")
         source = (LEAN_ROOT / "src" / "LST01_DeMorgan.lean").read_bytes()
         theorem = "lst01_de_morgan_and"
         token = secrets.token_hex(16)
