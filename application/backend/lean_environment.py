@@ -143,7 +143,8 @@ MAX_OLEAN_FILES = 120000
 MAX_OLEAN_HASH_BYTES = 64 * 1024 * 1024
 
 
-def _olean_tree(root: Path, *, label: str, budget: list[int]) -> dict[str, object]:
+def _olean_tree(root: Path, *, label: str, budget: list[int],
+                counter: list[int] | None = None) -> dict[str, object]:
     """Inspect one installed Lake .olean tree without unbounded I/O.
 
     Every artifact contributes its name, size, mtime, ctime and file identity.
@@ -156,6 +157,8 @@ def _olean_tree(root: Path, *, label: str, budget: list[int]) -> dict[str, objec
         return {"label": label, "state": "not_built"}
     if not root.is_dir():
         raise ValueError("Lake artifact root is not a directory")
+    if counter is None:
+        counter = [0]
     paths: list[Path] = []
     for directory, dirs, names in os.walk(root, followlinks=False):
         base = Path(directory)
@@ -167,7 +170,8 @@ def _olean_tree(root: Path, *, label: str, budget: list[int]) -> dict[str, objec
                 if artifact.is_symlink():
                     raise ValueError("Symlinked Lake .olean artifact")
                 paths.append(artifact)
-                if len(paths) > MAX_OLEAN_FILES:
+                counter[0] += 1
+                if counter[0] > MAX_OLEAN_FILES:
                     raise ValueError("Too many Lake .olean artifacts")
     entries: list[dict[str, object]] = []
     metadata_only = 0
@@ -210,6 +214,7 @@ def compiled_artifacts_sha256(lean_root: Path) -> str:
     A missing build tree and a populated build tree never have the same digest.
     """
     budget = [MAX_OLEAN_HASH_BYTES]
+    counter = [0]
     roots: list[tuple[str, Path]] = [
         ("project", lean_root / ".lake" / "build" / "lib" / "lean"),
     ]
@@ -226,7 +231,7 @@ def compiled_artifacts_sha256(lean_root: Path) -> str:
                           package / ".lake" / "build" / "lib" / "lean"))
     if len(roots) > MAX_PACKAGES + 1:
         raise ValueError("Too many Lake artifact roots")
-    records = [_olean_tree(path, label=label, budget=budget)
+    records = [_olean_tree(path, label=label, budget=budget, counter=counter)
                for label, path in roots]
     return _digest({"schema": 1, "hash_budget_bytes": MAX_OLEAN_HASH_BYTES,
                     "roots": records})
