@@ -768,6 +768,41 @@ class TestBooleanModelsChapter35(unittest.TestCase):
                 power_checks += 1
         self.assertEqual(power_checks, 1536)
 
+    def test_three_atom_decision_of_finite_named_real(self):
+        # Finite Boolean analogue of the no-new-reals argument:
+        # every named subset is decided by a ground subset on each atom.
+        from itertools import product
+
+        cases = 0
+        for coefficients in product(range(8), repeat=4):
+            equality_values = []
+            for ground_subset in range(16):
+                truth = 7
+                for n, coefficient in enumerate(coefficients):
+                    if ground_subset & (1 << n):
+                        truth &= coefficient
+                    else:
+                        truth &= 7 ^ coefficient
+                equality_values.append(truth)
+
+            joint = 0
+            for value in equality_values:
+                joint |= value
+            self.assertEqual(joint, 7)
+            for atom in (1, 2, 4):
+                possible = [
+                    x for x, value in enumerate(equality_values)
+                    if value & atom
+                ]
+                self.assertEqual(len(possible), 1)
+                expected = sum(
+                    (1 << n) for n, coefficient in enumerate(coefficients)
+                    if coefficient & atom
+                )
+                self.assertEqual(possible[0], expected)
+                cases += 1
+        self.assertEqual(cases, 12288)
+
     def test_ultrafilter_quotient_soundness_on_boolean_propositions(self):
         B = range(4)
         U0, U1 = {1, 3}, {2, 3}
