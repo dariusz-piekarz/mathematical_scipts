@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import shutil
 import subprocess
 import tempfile
 import unittest
@@ -65,6 +66,37 @@ class LeanEnvironmentTests(unittest.TestCase):
         with patch("backend.lean_environment._git", side_effect=git):
             with self.assertRaisesRegex(ValueError, "Modified or untracked"):
                 lean_environment.external_packages_sha256(self.root)
+
+    @unittest.skipUnless(shutil.which("git"), "Git not installed")
+    def test_real_git_checkout_dirty_state_and_new_commit(self):
+        # Exercise real installed checkout metadata, not only mocked Git output.
+        package = self.root / ".lake" / "packages" / "mathlib"
+        package.mkdir(parents=True)
+        git = shutil.which("git")
+
+        def command(*args):
+            result = subprocess.run(
+                [git, "-C", str(package), *args],
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                text=True, check=False, timeout=10)
+            self.assertEqual(result.returncode, 0, result.stderr)
+
+        command("init", "--quiet")
+        command("config", "core.autocrlf", "false")
+        source = package / "Mathlib.lean"
+        source.write_text("def auxiliary : Nat := 1\n", encoding="utf-8")
+        command("add", "Mathlib.lean")
+        command("-c", "user.name=Test", "-c", "user.email=test@example.invalid",
+                "commit", "-qm", "initial")
+        baseline = lean_environment.external_packages_sha256(self.root)
+        source.write_text("def auxiliary : Nat := 2\n", encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "Modified"):
+            lean_environment.external_packages_sha256(self.root)
+        command("add", "Mathlib.lean")
+        command("-c", "user.name=Test", "-c", "user.email=test@example.invalid",
+                "commit", "-qm", "revised")
+        self.assertNotEqual(baseline,
+                            lean_environment.external_packages_sha256(self.root))
 
     def test_git_timeout_fails_closed(self):
         with patch("backend.lean_environment.shutil.which", return_value="git"), \
