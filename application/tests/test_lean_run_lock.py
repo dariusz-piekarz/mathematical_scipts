@@ -8,6 +8,7 @@ import sys
 import tempfile
 import time
 import unittest
+from unittest.mock import patch
 
 from backend import lean_run_lock
 
@@ -69,6 +70,50 @@ class LeanRunLockTests(unittest.TestCase):
             if process.poll() is None:
                 process.kill()
                 process.communicate(timeout=5)
+
+    def test_replaced_lock_file_during_open_is_rejected(self):
+        # Models a race in the interval between os.open and file locking.
+        original_open = os.open
+
+        def swap_path(path, flags, mode=0o600):
+            fd = original_open(path, flags, mode)
+            current = Path(path)
+            current.rename(current.with_name(".runner.old"))
+            current.write_bytes(b"replacement")
+            return fd
+
+        with patch("backend.lean_run_lock.os.open", side_effect=swap_path):
+            with self.assertRaises(lean_run_lock.RunnerLockUnavailable):
+                with lean_run_lock.exclusive(self.root):
+                    self.fail("redirected path must not acquire runner lock")
+        lockfile = self.root.parent / "data" / "lean_runs" / ".runner.lock"
+        self.assertEqual(lockfile.read_bytes(), b"replacement")
+        with lean_run_lock.exclusive(self.root):
+            pass
+
+    def test_linked_lock_directory_is_rejected_before_os_open(self):
+        def link_detected(path):
+            return Path(path).name == "lean_runs"
+
+        with patch("backend.lean_run_lock._link_or_junction",
+                   side_effect=link_detected), \
+             patch("backend.lean_run_lock.os.open") as opening:
+            with self.assertRaises(lean_run_lock.RunnerLockUnavailable):
+                with lean_run_lock.exclusive(self.root):
+                    self.fail("linked data directory must never be used")
+        opening.assert_not_called()
+
+    @unittest.skipUnless(os.name == "posix", "Requires POSIX directory symlinks")
+    def test_actual_linked_lock_directory_is_rejected(self):
+        parent = self.root.parent / "data"
+        parent.mkdir()
+        real = Path(self.tmp.name) / "redirected"
+        real.mkdir()
+        (parent / "lean_runs").symlink_to(real, target_is_directory=True)
+        with self.assertRaises(lean_run_lock.RunnerLockUnavailable):
+            with lean_run_lock.exclusive(self.root):
+                self.fail("symlinked lock folder must never be used")
+        self.assertFalse((real / ".runner.lock").exists())
 
     @unittest.skipUnless(os.name == "posix" and hasattr(os, "O_NOFOLLOW"),
                          "POSIX O_NOFOLLOW requirement")
