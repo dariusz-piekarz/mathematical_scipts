@@ -1,14 +1,14 @@
 # Geometria algebraiczna — rejestr statusów audytów
 
-**Ostatnia aktualizacja:** 2026-11-22, audyt ALG-02 nr 5.
+**Ostatnia aktualizacja:** 2026-11-22, audyt ALG-02 nr 6.
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`.
-**Następny przebieg:** **ALG-02, audyt nr 6** — niezależny przegląd stabilizacyjny po poprawkach audytu 5. ALG-00 i ALG-01 pozostają stabilne.
+**Następny przebieg:** **ALG-03, audyt nr 1** — ALG-00, ALG-01 i ALG-02 są stabilne. Rozpocząć szczegółowy audyt „Punkty osobliwe i geometria lokalna krzywych”.
 
 | ID | Rozdział | Iteracja zakończona | Status | Raport / czynność |
 | --- | --- | ---: | --- | --- |
 | ALG-00 | Teoria pierścieni — od arytmetyki do geometrii równań | **15** | **STABILNY / ZAMKNIĘTY** | [Audyt 15](2026-11-22-ALG-00-iteration-15.md) — brak nowych usterek, PDF i CI PASS |
 | ALG-01 | Geometria afiniczna — równania, ideały i twierdzenie Hilberta o zerach | **5** | **STABILNY / ZAMKNIĘTY** | [Audyt 5](2026-11-22-ALG-01-iteration-05.md) — niezależna iteracja bez usterek, 30 dodatkowych kontroli, 11 regresji PASS, 23-stronicowy PDF PASS |
-| ALG-02 | Geometria rzutowa | **5** | **OTWARTY** | [Audyt 5](2026-11-22-ALG-02-iteration-05.md) — doprecyzowano zbiór zerowy ideału jednorodnego, udowodniono brak przedłużenia Cremony do morfizmu; 15/15 testów PASS, CI SUCCESS, 11-stronicowy PDF PASS |
+| ALG-02 | Geometria rzutowa | **6** | **STABILNY / ZAMKNIĘTY** | [Audyt 6](2026-11-22-ALG-02-iteration-06.md) — niezależny, bezusterkowy reaudyt całego rozdziału; 15/15 testów, kontrola 11-stronicowego PDF i CI PASS, brak zmian źródła |
 | ALG-03 | Punkty osobliwe i geometria lokalna krzywych | 0 | Oczekuje | Po ALG-02 |
 | ALG-04 | Algebra przemienna, snopy i krzywe algebraiczne | 0 | Oczekuje | Po ALG-03 |
 | ALG-05 | Rozdmuchania i rozwiązywanie osobliwości | 0 | Oczekuje | Po ALG-04 |
@@ -37,3 +37,5 @@ Po finalnym odbiorze ALG-02 audytu 3: [GitHub Actions 45014207204](https://githu
 ALG-02 po audycie 4: zaktualizowany blob źródła `2eeaf0975533e590d4eb49364228695fcc7b8558` (commit `03d622d953a23a93a0045348f4f60638be2a3dd9`); 12 etykiet, 9 poprawnych odsyłaczy, 14 metod testowych. [Raport audytu 4](2026-11-22-ALG-02-iteration-04.md). Pierwsze CI z 14 testami [45015627260](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45015627260) zakończone SUCCESS, ale PDF miał niemal pustą 12. stronę; wykonano korektę składu i uruchomiono [końcowe CI 45015903499](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45015903499). Finalny odbiór na `03d622d9` zakończony **SUCCESS**, 14/14 testów, PDF ALG-00–ALG-02 55 stron, ALG-02 dokładnie 11 stron, 0 ostrzeżeń LaTeX i 0 przekroczeń marginesów. Weryfikacja rysunków, Cremony, stycznej i ostatniej strony PASS. Artefakt końcowy GitHub Actions `14751721982`. Ponieważ w audycie 4 dokonano poprawek, status ALG-02 pozostaje OTWARTY; następnym krokiem jest audyt 5.
 
 ALG-02 po audycie 5: [raport](2026-11-22-ALG-02-iteration-05.md); 2 nowe poprawki matematyczne, 15 regresji. Końcowy blob źródła po korekcie łamania stron `cb8985f4d343e991e3a603edcb18e5793bb944a9` (commit `046a4cff8cd5a6653f69bdc9b9ddacadd5b02ae8`). 12 etykiet, 9 poprawnych odsyłaczy; CI z 15 testami [45016450186](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45016450186) SUCCESS, ale PDF miał osieroconą 12. stronę. Końcowy CI/PDF po korekcie: [45016651284](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45016651284), **SUCCESS** — 15/15 regresji, PDF 55 stron ALG-00–ALG-02, w tym ALG-02 dokładnie 11 stron, finalny log bez błędów/ostrzeżeń, 0 bloków poza granicami, kontrola wizualna obu rysunków i podsumowania PASS. Artefakt `14751632209`. Rozdział pozostaje OTWARTY; następny audyt 6.
+
+ALG-02 po audycie 6: **STABILNY / ZAMKNIĘTY**, [raport niezależnej bezusterkowej iteracji](2026-11-22-ALG-02-iteration-06.md). Źródło niezmienione po audycie 5, blob `cb8985f4d343e991e3a603edcb18e5793bb944a9`; testy niezmienione, blob `473b598d07f24c754cd75a7e6ab879d0685d1e04`. Ponowna kontrola matematyczna 16 dowodów, 12 definicji, 12 przykładów, 5 twierdzeń, 6 lematów, 5 stwierdzeń; 12 etykiet i 9 odsyłaczy poprawnych. Niezależne rachunki w F₂, F₃, F₁₃ i F₁₇ PASS. Istniejący CI na dokładnie tych źródłach [45016651284](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45016651284) SUCCESS, 15/15 regresji, LaTeX PASS. PDF 11 stron ALG-02 w 55-stronicowej kompilacji, kontrola wizualna i marginesów PASS. Następny jest **ALG-03/1**. Nie modyfikowano `main` ani źródeł ALG-02 w audycie 6.
