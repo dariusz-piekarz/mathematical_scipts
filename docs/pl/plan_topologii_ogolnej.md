@@ -29,7 +29,7 @@ Stan: 22 listopada 2026. Źródłem prawdy dla rozdziałów włączonych do ksi�
 | **21** | **Topologie na rodzinach podzbiorów: Vietoris, metryka Hausdorffa, zupełność, zwartość, Fell, zbieżność i porównanie** | **stabilny — audyty 03–05 (2/2 + 1); CI/PDF PASS** |
 | **22** | **Zbieżność Kuratowskiego, topologia Wijsmana i topologia Attoucha–Wetsa; związek z Fellem, właściwość przestrzeni, kontrprzykłady** | **stabilny — audyty 02–04 (2/2 + 1); CI/PDF PASS** |
 | **23** | **Wymiar topologiczny: wymiar pokryciowy Lebesgue’a, wymiary ind/Ind, charakterystyka wymiaru 0, wymiar odcinka i sześcianu, nerwy pokryć** | **stabilny — audyty 04–06 (2/2 + 1), CI 45051754287 PASS, osobny PDF 9 stron** |
-| **24** | **Grupy topologiczne, otoczenia neutralności, podgrupy i ich domknięcia, przestrzenie warstw i grupy ilorazowe, składowa spójna, lewe i prawe struktury jednostajne** | **w audycie — rozdział i testy utworzone, wynik CI/PDF do potwierdzenia** |
+| **24** | **Grupy topologiczne, otoczenia elementu neutralnego, podgrupy, przestrzenie warstw i grupy ilorazowe, składowa neutralna, struktury jednostajne, twierdzenie Birkhoffa–Kakutaniego** | **stabilny — audyty 02–04 (2/2 + 1), CI 45053429106 PASS, osobny PDF 10 stron** |
 
 Zakresy 12–13 oraz 16–17 są rozdzielone według tematyki, żeby unikać powtarzania dowodów. Zgodnie z zasadą projektu nowe rozdziały nie oznaczają automatycznie ich stabilności.
 
@@ -243,3 +243,39 @@ całościowego audytu matematycznego.
 Przed zamknięciem fazy globalnego audytu
 kontynuować kontrolę rozdział po rozdziale
 i porównania z innymi skryptami.
+
+
+## Zamknięcie rozdziału 24 (2026-11-22)
+
+Rozdział `24-grupy-topologiczne-i-przestrzenie-jednorodne.tex`
+ma stabilny blob `4b72d373d98eab0c1cc4563b72a6bb8fa62170b6`.
+Zawiera szczegółowe dowody regularności grup, kryterium
+Hausdorffowości G/H, otwartości projekcji G→G/H,
+ciągłości działania na przestrzeni warstw,
+topologicznego twierdzenia o izomorfizmie,
+normalności składowej spójnej oraz całkowitej
+niespójności G/G^0, lewych i prawych struktur
+jednostajnych i twierdzenia Birkhoffa–Kakutaniego
+z konstrukcją lewostronnie niezmienniczej metryki łańcuchowej.
+
+Audyt [01](../../audits/general_topology/24-grupy-topologiczne-iteracja-01.md)
+był korekcyjny: uzupełniono pełny dowód metryzowalności
+i ciągłości działania na G/H, a także przykład nienormalnej
+podgrupy S3.
+Audyty [02](../../audits/general_topology/24-grupy-topologiczne-iteracja-02.md),
+[03](../../audits/general_topology/24-grupy-topologiczne-iteracja-03.md)
+i dodatkowy [04](../../audits/general_topology/24-grupy-topologiczne-iteracja-04.md)
+są czyste na identycznym blobie. Kontrola
+[CI 45053429106](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45053429106)
+zakończyła się sukcesem: samodzielny rozdział ma 10 stron,
+cała książka 175 stron. Pobrano oryginalny artefakt
+GitHub Actions ID 14766264355, wyrenderowano i obejrzano
+wszystkie 10 stron, a strony 6 (rysunek ilorazu)
+i 10 (końcowe podsumowanie) sprawdzono indywidualnie.
+Brak ostrzeżeń Overfull/Underfull i LaTeX Warning.
+
+Po zmianie strony tytułowej na „Wersja 1.24 —
+rozdziały 01–24 stabilne” należy wykonać końcowe
+CI regresyjne dla integracji. Następny etap:
+**rozdział 25 o continuach**, ze szczególną uwagą
+na brak powtarzania podstaw spójności z rozdziału 08.
