@@ -159,7 +159,9 @@ def _olean_tree(root: Path, *, label: str, budget: list[int],
         raise ValueError("Lake artifact root is not a directory")
     if counter is None:
         counter = [0]
-    paths: list[Path] = []
+    # Store lexical relative names once; they determine both sorting and
+    # the serialized identity. No filesystem observation is cached.
+    paths: list[tuple[str, Path]] = []
     for directory, dirs, names in os.walk(root, followlinks=False):
         base = Path(directory)
         if any((base / name).is_symlink() for name in dirs):
@@ -169,18 +171,18 @@ def _olean_tree(root: Path, *, label: str, budget: list[int],
             if artifact.suffix == ".olean":
                 if artifact.is_symlink():
                     raise ValueError("Symlinked Lake .olean artifact")
-                paths.append(artifact)
+                paths.append((artifact.relative_to(root).as_posix(), artifact))
                 counter[0] += 1
                 if counter[0] > MAX_OLEAN_FILES:
                     raise ValueError("Too many Lake .olean artifacts")
     entries: list[dict[str, object]] = []
     metadata_only = 0
-    for artifact in sorted(paths, key=lambda x: x.relative_to(root).as_posix()):
+    for relative_name, artifact in sorted(paths, key=lambda entry: entry[0]):
         info = artifact.stat()
         if not artifact.is_file():
             raise ValueError("Lake .olean artifact is not a regular file")
         entry: dict[str, object] = {
-            "name": artifact.relative_to(root).as_posix(),
+            "name": relative_name,
             "size": info.st_size,
             "mtime_ns": info.st_mtime_ns,
             "ctime_ns": info.st_ctime_ns,
