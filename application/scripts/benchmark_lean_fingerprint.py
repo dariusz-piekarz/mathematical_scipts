@@ -10,6 +10,7 @@ import argparse
 from contextlib import ExitStack
 import hashlib
 import json
+import os
 from pathlib import Path
 import statistics
 import sys
@@ -53,9 +54,141 @@ COMPONENTS = (
 )
 
 
+
+# These probes wrap the *real* calls used by compiled_artifacts_sha256.
+# No second walk, synthetic hash, skipped file or persistent cache is introduced.
+# Instrumentation is process-local, single-threaded and MUST NOT be used in the
+# server/runner; unittest.mock.patch is restored even when a digest raises.
+OLEAN_TIME_BUCKETS = (
+    "directory_scan", "metadata", "file_open", "content_read",
+    "hashing_sorting_and_other",
+)
+OLEAN_IO_COUNTERS = (
+    "directories_visited", "stat_calls", "lstat_calls", "fstat_calls",
+    "olean_files_opened", "content_read_calls", "content_bytes_read",
+)
+
+
+class _ObservedOleanStream:
+    def __init__(self, stream, timings: dict[str, float],
+                 counters: dict[str, int]):
+        self.stream = stream
+        self.timings = timings
+        self.counters = counters
+
+    def __enter__(self):
+        self.stream.__enter__()
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        return self.stream.__exit__(exc_type, exc, tb)
+
+    def read(self, *args, **kwargs):
+        started = time.perf_counter()
+        try:
+            data = self.stream.read(*args, **kwargs)
+        finally:
+            self.timings["content_read"] += time.perf_counter() - started
+        self.counters["content_read_calls"] += 1
+        self.counters["content_bytes_read"] += len(data)
+        return data
+
+    def fileno(self):
+        return self.stream.fileno()
+
+    def __getattr__(self, name):
+        return getattr(self.stream, name)
+
+
+def _profile_olean_substeps(original, *args, **kwargs) -> tuple[str, dict]:
+    """Observe the original Lake .olean digest, including its original limits.
+
+    directory_scan is time spent advancing os.walk; metadata covers Path
+    stat/lstat and os.fstat; file_open covers opening .olean file handles;
+    content_read covers read() calls, not hashlib.update. The residual also
+    contains sorting, SHA256 updates, Python loops and probe overhead. Timings
+    are diagnostic approximations, not independent security attestations.
+    """
+    timings = {label: 0.0 for label in OLEAN_TIME_BUCKETS}
+    counters = {label: 0 for label in OLEAN_IO_COUNTERS}
+    raw_walk = os.walk
+    raw_fstat = os.fstat
+    raw_stat, raw_lstat, raw_open = Path.stat, Path.lstat, Path.open
+
+    def observed_walk(*walk_args, **walk_kwargs):
+        source = raw_walk(*walk_args, **walk_kwargs)
+
+        def advance():
+            while True:
+                started = time.perf_counter()
+                try:
+                    item = next(source)
+                except StopIteration:
+                    timings["directory_scan"] += time.perf_counter() - started
+                    return
+                except BaseException:
+                    timings["directory_scan"] += time.perf_counter() - started
+                    raise
+                timings["directory_scan"] += time.perf_counter() - started
+                counters["directories_visited"] += 1
+                yield item
+
+        return advance()
+
+    def observed_stat(path, *stat_args, **stat_kwargs):
+        started = time.perf_counter()
+        try:
+            return raw_stat(path, *stat_args, **stat_kwargs)
+        finally:
+            timings["metadata"] += time.perf_counter() - started
+            counters["stat_calls"] += 1
+
+    def observed_lstat(path, *stat_args, **stat_kwargs):
+        started = time.perf_counter()
+        try:
+            return raw_lstat(path, *stat_args, **stat_kwargs)
+        finally:
+            timings["metadata"] += time.perf_counter() - started
+            counters["lstat_calls"] += 1
+
+    def observed_fstat(*stat_args, **stat_kwargs):
+        started = time.perf_counter()
+        try:
+            return raw_fstat(*stat_args, **stat_kwargs)
+        finally:
+            timings["metadata"] += time.perf_counter() - started
+            counters["fstat_calls"] += 1
+
+    def observed_open(path, *open_args, **open_kwargs):
+        mode = open_args[0] if open_args else open_kwargs.get("mode", "r")
+        if path.suffix != ".olean" or mode != "rb":
+            return raw_open(path, *open_args, **open_kwargs)
+        started = time.perf_counter()
+        try:
+            stream = raw_open(path, *open_args, **open_kwargs)
+        finally:
+            timings["file_open"] += time.perf_counter() - started
+        counters["olean_files_opened"] += 1
+        return _ObservedOleanStream(stream, timings, counters)
+
+    with ExitStack() as stack:
+        stack.enter_context(patch.object(os, "walk", observed_walk))
+        stack.enter_context(patch.object(os, "fstat", observed_fstat))
+        stack.enter_context(patch.object(Path, "stat", observed_stat))
+        stack.enter_context(patch.object(Path, "lstat", observed_lstat))
+        stack.enter_context(patch.object(Path, "open", observed_open))
+        started = time.perf_counter()
+        result = original(*args, **kwargs)
+        elapsed = time.perf_counter() - started
+    timings["hashing_sorting_and_other"] = max(
+        0.0, elapsed - sum(timings[name] for name in OLEAN_TIME_BUCKETS[:-1]))
+    return result, {"total_seconds": elapsed, "seconds": timings, "counts": counters}
+
+
 def _profile_once(document_sha: str, file: Path, lean_root: Path,
-                  binding_sha: str) -> tuple[dict[str, str], float, dict[str, float]]:
+                  binding_sha: str) -> tuple[dict[str, str], float, dict[str, float], dict]:
     parts: dict[str, float] = {}
+    olean_breakdown: dict = {}
     with ExitStack() as stack:
         for label, module, attribute in COMPONENTS:
             original = getattr(module, attribute)
@@ -63,6 +196,10 @@ def _profile_once(document_sha: str, file: Path, lean_root: Path,
             def measure(*args, _original=original, _label=label, **kwargs):
                 t0 = time.perf_counter()
                 try:
+                    if _label == "olean_artifacts":
+                        value, details = _profile_olean_substeps(_original, *args, **kwargs)
+                        olean_breakdown.update(details)
+                        return value
                     return _original(*args, **kwargs)
                 finally:
                     parts[_label] = time.perf_counter() - t0
@@ -72,9 +209,9 @@ def _profile_once(document_sha: str, file: Path, lean_root: Path,
         fingerprint = lean_results.fingerprint(
             document_sha, file, lean_root, binding_sha)
         elapsed = time.perf_counter() - started
-    if set(parts) != {name for name, _, _ in COMPONENTS}:
+    if set(parts) != {name for name, _, _ in COMPONENTS} or not olean_breakdown:
         raise RuntimeError("Incomplete fingerprint timing instrumentation")
-    return fingerprint, elapsed, parts
+    return fingerprint, elapsed, parts, olean_breakdown
 
 
 def benchmark(lean_root: Path, *, samples: int = 3) -> dict:
@@ -87,14 +224,21 @@ def benchmark(lean_root: Path, *, samples: int = 3) -> dict:
     durations: list[float] = []
     measurements = {name: [] for name, _, _ in COMPONENTS}
     unclassified: list[float] = []
+    olean_timings = {name: [] for name in OLEAN_TIME_BUCKETS}
+    olean_counts: list[dict[str, int]] = []
+    olean_totals: list[float] = []
     first: dict[str, str] | None = None
     for _ in range(samples):
-        measured, elapsed, parts = _profile_once(
+        measured, elapsed, parts, olean = _profile_once(
             document_sha, file, lean_root, dummy_binding)
         if first is not None and measured != first:
             raise RuntimeError("Dependencies changed during the fingerprint benchmark")
         first = measured
         durations.append(elapsed)
+        olean_totals.append(olean["total_seconds"])
+        olean_counts.append(olean["counts"])
+        for name in OLEAN_TIME_BUCKETS:
+            olean_timings[name].append(olean["seconds"][name])
         for name, value in parts.items():
             measurements[name].append(value)
         # Includes selected .lean bytes, Lake/manifest metadata, and Python
@@ -117,6 +261,21 @@ def benchmark(lean_root: Path, *, samples: int = 3) -> dict:
             for name, values in measurements.items()
         },
         "other_work_samples_seconds": [round(v, 6) for v in unclassified],
+        "olean_breakdown_samples_seconds": {
+            name: [round(v, 6) for v in values]
+            for name, values in olean_timings.items()
+        },
+        "olean_breakdown_median_seconds": {
+            name: round(statistics.median(values), 6)
+            for name, values in olean_timings.items()
+        },
+        "olean_subprofile_total_seconds": [round(v, 6) for v in olean_totals],
+        "olean_io_samples": olean_counts,
+        "olean_method": (
+            "single original digest pass: os.walk advancement, Path.stat/lstat "
+            "and os.fstat, .olean open/read; remainder includes SHA256, sorting, "
+            "Python and probe overhead; no content or metadata checks bypassed"
+        ),
         "method": "perf_counter around original digest calls inside full fingerprint; no caching",
         "stability": "all fingerprint dictionaries identical during benchmark",
     }
