@@ -122,6 +122,7 @@ def source_integration() -> tuple[int, int]:
         "def:topog22-wijsman",
         "thm:topog22-wijsman-metrizable",
         "thm:topog22-wijsman-kuratowski",
+        "prop:topog22-wijsman-fell",
         "def:topog22-aw",
         "thm:topog22-aw-metric",
         "prop:topog22-aw-wijsman",
