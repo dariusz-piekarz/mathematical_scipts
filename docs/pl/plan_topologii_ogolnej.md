@@ -22,7 +22,7 @@ Stan: 22 listopada 2026. Źródłem prawdy dla rozdziałów włączonych do ksi�
 | **14** | **Zwartość lokalna, twierdzenie Baire'a, podprzestrzenie, iloczyny, przeliczalność w nieskończoności i wyczerpania zwarte** | **stabilny — audyt 03** |
 | **15** | **Parazwartość, lokalnie skończone pokrycia i podziały jedności; związki z metryzowalnością** | **stabilny — audyt 06; twierdzenia Stone’a i Nagaty–Smirnowa z pełnymi dowodami** |
 | **16** | **Topologia wyznaczona przez funkcje, przestrzenie całkowicie regularne, uzwarcenia i ich równoważność** | **stabilny — audyt 03** |
-| **17** | **Uzwarcenie Aleksandrowa i uzwarcenie Čecha–Stone’a: konstrukcje, własności uniwersalne, minimalność, maksymalność i przykłady** | **rozdział napisany — audyt 01** |
+| **17** | **Uzwarcenie Aleksandrowa i uzwarcenie Čecha–Stone’a: konstrukcje, własności uniwersalne, minimalność, maksymalność i przykłady** | **audyt 02 zakończony; CI i PDF PASS, stabilizacja po niezależnym audycie 03** |
 | 18 | Przestrzenie odwzorowań, topologia zbieżności jednostajnej na zbiorach zwartych | plan |
 | 19 | Przestrzenie polskie i hierarchia zbiorów borelowskich | plan |
 | 20 | Podstawy opisowej teorii mnogości i jej związki z topologią | plan |
