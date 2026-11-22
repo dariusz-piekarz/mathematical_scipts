@@ -27,6 +27,13 @@ rozdziału.
 
 ## Wspólne konwencje matematyczne
 
+- **Presnop**, **presnopy** — jedyna przyjęta nazwa obiektu określanego
+  po angielsku jako *presheaf*. Odmiana: **presnopu**, **presnopem**,
+  **presnopy**, **presnopów**, **presnopami**. Termin dotyczy także
+  presnopów zbiorów, grup, pierścieni i modułów. **Snop** jest presnopem
+  spełniającym aksjomaty jednoznaczności i sklejania. Zasada obowiązuje
+  w całej Bibliotece, również w tytułach, podpisach, przykładach i nowych audytach.
+
 - Angielskie *chart* w geometrii różniczkowej = **mapa**;
   *mapping* = **odwzorowanie**.
 - Angielskie *domain* oznaczające niepusty otwarty spójny
