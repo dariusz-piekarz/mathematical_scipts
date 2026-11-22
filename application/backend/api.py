@@ -27,6 +27,7 @@ from backend import workspaces
 from backend.concept_graph import build_concept_graph
 from backend import lean_catalog
 from backend import lean_dependencies
+from backend import lean_introspection
 from backend import lean_formalization
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -194,6 +195,17 @@ def lean_dependencies_graph(formalization_id: str):
     """Read manifest links and literal imports; not proof-level dependencies."""
     with db_connection() as con:
         return lean_dependencies.graph(con, formalization_id)
+
+
+class LeanInspectionRequest(BaseModel):
+    formalization_id: str = Field(min_length=1, max_length=100)
+
+
+@app.post("/api/lean/dependencies/inspect")
+def inspect_lean_declaration_constants(request: LeanInspectionRequest):
+    """Opt-in local Lean process: actual expression references, no certificate."""
+    with db_connection() as con:
+        return lean_introspection.inspect(con, request.formalization_id)
 
 
 @app.get("/api/lean/fragment")
