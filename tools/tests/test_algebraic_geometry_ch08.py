@@ -183,6 +183,32 @@ class ALG08Regressions(unittest.TestCase):
                     r"\end{", 1)[0]
                 self.assertIn("Niech $k$ będzie ciałem", statement)
 
+    def test_common_resolution_not_only_birational_morphisms(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        note = src.split(r"\label{tw:ga8-q-pg}", 1)[1].split(
+            r"\end{uwaga}", 1)[0]
+        self.assertIn("wspólnego", note)
+        self.assertIn(r"$T\to S$ i $T\to S'$", note)
+        self.assertNotIn("faktoryzacji morfizmów biwymiernych", note)
+
+    def test_all_remaining_canonical_divisors_quantified(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        required = {
+            "st:ga8-exceptional-curve": "dowolnego dzielnika kanonicznego",
+            "st:ga8-hexagon": "dowolnym dzielnikiem",
+            "st:ga8-classes-blowup": "dzielnikami kanonicznymi",
+            "st:ga8-fn-cone": "dzielnika kanonicznego",
+            "tw:ga8-negative-implies-minusone": "dzielnikiem kanonicznym",
+            "tw:ga8-surface-contraction": "dzielnikiem kanonicznym",
+            "tw:ga8-surface-mmp": "dzielnik",
+            "tw:ga8-minimal-unique": "dzielnikami kanonicznymi",
+        }
+        for label, phrase in required.items():
+            with self.subTest(label=label):
+                block = src.split(r"\label{" + label + "}", 1)[1].split(
+                    r"\end{", 1)[0]
+                self.assertIn(phrase, block)
+
     def test_source_figure_proof_and_environment_balance(self):
         s = SOURCE.read_text(encoding="utf-8")
         self.assertEqual(s.count(r"\begin{tikzpicture}"), 4)
