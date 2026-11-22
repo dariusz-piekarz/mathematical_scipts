@@ -112,6 +112,10 @@ def integration_and_source() -> tuple[int, int]:
         assert not re.search(forbidden, text, re.I), forbidden
     assert "redukcjom Wadge'a" in text
     assert r"\emph{nie} stanowi" in text and "mierzalności" in text
+    # Regression: analytic empty set is not a continuous image of nonempty Baire space.
+    assert "jest pusty\nalbo jest ciągłym obrazem" in text
+    # Non-strict inclusion for countable discrete Polish spaces.
+    assert "w przeliczalnej przestrzeni\ndyskretnej" in text
     return len(labels), len(refs)
 
 
