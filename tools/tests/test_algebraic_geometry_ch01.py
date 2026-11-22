@@ -88,9 +88,16 @@ class ALG01GeometryRegressions(unittest.TestCase):
             zeros = vanishing_points(
                 p, [lambda x, y: x**3, lambda x, y: x*x*y])
             self.assertEqual(zeros, {(0, y) for y in range(p)})
-        # Every monomial in I is divisible by x^2; x is not.
-        self.assertTrue(1 < 2)
-        self.assertTrue(3 >= 3)
+        # A monomial x^a y^b belongs to the monomial ideal exactly
+        # when it is divisible by x^3 or by x^2 y.
+        generators = ((3, 0), (2, 1))
+        def in_ideal(exponents):
+            return any(exponents[0] >= a and exponents[1] >= b
+                       for a, b in generators)
+        self.assertFalse(in_ideal((1, 0)))   # x not in I
+        self.assertFalse(in_ideal((2, 0)))   # x^2 not in I
+        self.assertTrue(in_ideal((3, 0)))    # x^3 in I
+        self.assertTrue(in_ideal((2, 1)))    # x^2 y in I
 
     def test_finite_field_affine_point_sets_are_discrete(self):
         # Polynomials x-a and y-b cut out exactly one F_p-point.
