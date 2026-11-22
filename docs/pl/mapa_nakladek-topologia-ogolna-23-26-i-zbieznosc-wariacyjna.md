@@ -67,17 +67,38 @@ i [zielone CI](https://github.com/dariusz-piekarz/mathematical_scipts/actions/ru
 - Następny etap: **continua — rozdział 25**,
   bez odtwarzania podstaw spójności z rozdziału 08.
 
-## 25. Continua — kolejny zatwierdzony etap
+## 25. Continua — etap ukończony i stabilny
 
-- `chapters/pl/general_topology/08-spojnosc.tex`
-  zawiera definicje spójności, składowe,
-  spójność drogą i lokalną oraz krzywą sinusową topologa.
-- **Nowy zakres bez powtórzeń:** continua jako niepuste
-  zwarte spójne przestrzenie Hausdorffa,
-  continuum nierozkładalne, strukturę podcontinuów,
-  niektóre twierdzenia o obrazach i funkcjach Peana,
-  granice odwrotne z zachowaniem ścisłych hipotez.
-  Nie powtarzać podstaw rozdziału 08.
+Kanoniczny rozdział:
+`chapters/pl/general_topology/25-continua-i-ich-struktura.tex`.
+Status: **stabilny 2/2+1**, 8-stronicowy PDF i
+[zielone CI 45056802863](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45056802863).
+Końcowe CI integracyjne po zmianie strony tytułowej
+pozostaje oddzielnym potwierdzeniem.
+
+- `chapters/pl/general_topology/08-spojnosc.tex` zawiera
+  definicje spójności, składowe, spójność drogową i lokalną,
+  twierdzenia o sumach i obrazach spójnych oraz
+  krzywą sinusową topologa. Rozdział 25 nie powtarza
+  tych dowodów.
+- Rozdział 25 wnosi strukturę podcontinuów, lemat
+  o przecięciu zstępującym i łańcuchu, istnienie
+  minimalnego continuum między punktami,
+  rozkładalność i nierozkładalność, ciągłe
+  granice odwrotne, pełny dowód
+  nierozkładalności continuum Knastera
+  oraz nie-lokalną spójność solenoidu dyadycznego.
+- Istnienie krzywych Peana na `[0,1]^n`
+  jest udowodnione przez kodowanie Cantora
+  z `general_topology/23-wymiar-topologiczny.tex`
+  i twierdzenie Tietzego z
+  `general_topology/05-aksjomaty-oddzielania.tex`.
+  Nie kopiujemy wcześniejszych dowodów
+  Cantora ani Tietzego.
+- Ogólne twierdzenie Hahna–Mazurkiewicza
+  jest wyraźnie opisane jako klasyczny wynik,
+  do którego pełnego dowodu można wrócić
+  w osobnym opracowaniu.
 
 ## Analiza wariacyjna: Mosco i zbieżność epigraficzna
 
@@ -107,5 +128,5 @@ audyt do dwóch kolejnych czystych kontroli
 na tym samym blobie oraz jeden audyt dodatkowy,
 rzeczywista kompilacja samodzielna i globalna
 oraz wizualna kontrola PDF.
-Rozdział 24 jest już stabilny. Rozdział 25 o continuach i planowany
-materiał o zbieżności Mosco nie są jeszcze napisane ani stabilne.
+Rozdziały 24 i 25 są stabilne. Materiał o zbieżności Mosco
+i zbieżności epigraficznej pozostaje w planie analizy funkcjonalnej.
