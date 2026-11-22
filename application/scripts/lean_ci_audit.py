@@ -19,7 +19,8 @@ DECLARATION = re.compile(
     r"(?:theorem|lemma)\s+([A-Za-z_][A-Za-z0-9_'.]*)\b"
 )
 AXIOM_REPORT = re.compile(
-    r"""['"]?(?P<name>[A-Za-z_][A-Za-z0-9_'.]*)['"]?\s+"""
+    r"""(?:(?P<quote>['"])(?P<quoted_name>[A-Za-z_][A-Za-z0-9_'.]*)(?P=quote)"""
+    r"""|(?P<bare_name>[A-Za-z_][A-Za-z0-9_'.]*))\s+"""
     r"""(?:(?:depends\s+on\s+axioms:\s*\[(?P<axioms>[^\]]*)\])|"""
     r"""(?:does\s+not\s+depend\s+on\s+any\s+axioms))""",
     re.IGNORECASE,
@@ -73,7 +74,7 @@ def inspect_log(log: str, theorems: list[str]) -> dict[str, list[str]]:
     found: dict[str, list[str]] = {}
     expected = set(theorems)
     for match in AXIOM_REPORT.finditer(log):
-        name = match.group("name")
+        name = match.group("quoted_name") or match.group("bare_name")
         if name not in expected:
             continue
         if name in found:
