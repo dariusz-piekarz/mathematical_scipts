@@ -81,6 +81,65 @@ def solenoid_root_branches() -> int:
     return checks
 
 
+
+def peano_interleaving() -> int:
+    """All dyadic lattice points at resolution 1/16 in the square are
+    reached by an interleaving of finitely many binary digits.
+    """
+    seen = set()
+    for digits in product((0, 1), repeat=8):
+        x = sum(digits[2*j] * 2**(3-j) for j in range(4))
+        y = sum(digits[2*j+1] * 2**(3-j) for j in range(4))
+        seen.add((x, y))
+    assert seen == {(x, y) for x in range(16) for y in range(16)}
+    return len(seen)
+
+
+def finite_graph_tours() -> int:
+    """Construct a closed walk from a root visiting every edge,
+    the discrete model used in the finite graph Peano proof.
+    """
+    examples = [
+        (3, [(0, 1), (1, 2)]),
+        (3, [(0, 1), (1, 2), (2, 0)]),
+        (5, [(0, 1), (0, 2), (2, 3), (2, 4)]),
+    ]
+    seen_count = 0
+    for n, edges in examples:
+        adjacency = {v: set() for v in range(n)}
+        for a, b in edges:
+            adjacency[a].add(b)
+            adjacency[b].add(a)
+        parent = {0: None}
+        stack = [0]
+        while stack:
+            x = stack.pop()
+            for y in sorted(adjacency[x]):
+                if y not in parent:
+                    parent[y] = x
+                    stack.append(y)
+        assert len(parent) == n
+
+        def root_path(x):
+            path = [x]
+            while parent[path[-1]] is not None:
+                path.append(parent[path[-1]])
+            return list(reversed(path))
+
+        walk = [0]
+        for u, v in edges:
+            path = root_path(u)
+            walk.extend(path[1:])
+            walk.append(v)
+            other = root_path(v)
+            walk.extend(list(reversed(other))[1:])
+            assert walk[-1] == 0
+        traversed = {frozenset((walk[i], walk[i+1]))
+                     for i in range(len(walk)-1)}
+        assert all(frozenset((u, v)) in traversed for u, v in edges)
+        seen_count += len(edges)
+    return seen_count
+
 def source_integration() -> tuple[int, int]:
     chapter = (ROOT / CH).read_text(encoding="utf-8")
     entry = (ROOT / "books/pl/general_topology_ch25.tex").read_text(encoding="utf-8")
@@ -140,6 +199,9 @@ if __name__ == "__main__":
     t = tent_branches()
     f = inverse_limit_finite_sets()
     s = solenoid_root_branches()
+    g = finite_graph_tours()
+    peano = peano_interleaving()
     l, r = source_integration()
     print(f"PASS ch25: {t} tent branch checks, {f} inverse-limit checks, "
-          f"{s} solenoid-root checks; {l} local labels and {r} global refs")
+          f"{s} solenoid-root checks, {g} graph edges, "
+          f"{peano} dyadic Peano targets; {l} labels and {r} refs")
