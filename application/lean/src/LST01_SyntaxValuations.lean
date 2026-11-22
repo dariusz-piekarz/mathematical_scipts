@@ -104,3 +104,15 @@ theorem lst01_syntax_repeated_atom (n : Nat) :
 #print axioms lst01_syntax_negated_implication
 #print axioms lst01_syntax_iff_as_two_implications
 #print axioms lst01_syntax_repeated_atom
+
+/-- LST-01, thm:equiv-test: semantic equivalence iff the biconditional is a tautology. -/
+theorem lst01_syntax_equivalence_test (p q : LST01.Formula) :
+    LST01.equivalent p q ↔ LST01.tautology (.iff p q) := by
+  constructor
+  · intro h ν
+    simp [LST01.eval, h ν]
+  · intro h ν
+    have hv := h ν
+    simpa [LST01.eval] using hv
+
+#print axioms lst01_syntax_equivalence_test
