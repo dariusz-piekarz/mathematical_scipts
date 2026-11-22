@@ -1,0 +1,45 @@
+name: Lean Windows Job Object native validation
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "application/backend/lean_process.py"
+      - "application/backend/lean_windows_job.py"
+      - "application/backend/lean_windows_exec.py"
+      - "application/tests/test_lean_windows_job.py"
+      - "application/tests/test_lean_process.py"
+      - ".github/workflows/lean-windows-job.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-windows-job:
+    name: Native Windows Job Object memory and descendants
+    runs-on: windows-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: application
+    env:
+      MATLIB_LEAN_RUN: "0"
+      MATLIB_LEAN_TOTAL_MEMORY_MB: "512"
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+      - name: Install Python 3.13 (64-bit)
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          architecture: x64
+      - name: Validate gated Windows runner and real Job Object limits
+        shell: pwsh
+        run: |
+          python -c "import sys,platform;assert sys.platform=='win32';assert platform.architecture()[0]=='64bit'"
+          python -W default -m unittest discover -s tests -p "test_lean_windows_job.py" -v
+      - name: Validate bounded output and process timeout on Windows
+        shell: pwsh
+        run: python -W default -m unittest discover -s tests -p "test_lean_process.py" -v
