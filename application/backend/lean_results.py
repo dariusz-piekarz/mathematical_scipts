@@ -40,9 +40,12 @@ def fingerprint(source_sha256: str, lean_file: Path, lean_root: Path) -> dict[st
     toolchain_sha256 = hashlib.sha256(
         json.dumps(inputs, sort_keys=True, separators=(",", ":")).encode("utf-8")
     ).hexdigest()
+    declared_toolchain = (lean_root / "lean-toolchain").read_text(encoding="utf-8").strip() \
+        if (lean_root / "lean-toolchain").is_file() else "unavailable"
     return {"source_document_sha256": source_sha256,
             "lean_sha256": lean_sha256,
-            "toolchain_sha256": toolchain_sha256}
+            "toolchain_sha256": toolchain_sha256,
+            "declared_toolchain": declared_toolchain[:160]}
 
 
 def _record_path(identifier: str, override: Path | None) -> Path:
@@ -63,7 +66,9 @@ def last_run(identifier: str, expected: dict[str, str], *,
         record = json.loads(path.read_text(encoding="utf-8"))
         if (not isinstance(record, dict) or record.get("schema_version") != SCHEMA_VERSION
                 or record.get("formalization_id") != identifier
-                or record.get("proof_status") not in STORED_STATUSES):
+                or record.get("proof_status") not in STORED_STATUSES
+                or not all(isinstance(record.get(key), str)
+                           for key in ("finished_at", "detail", "log"))):
             raise ValueError("invalid schema")
     except (OSError, ValueError, UnicodeError, TypeError):
         return {"proof_status": "not_run", "run_cached": False,
@@ -83,10 +88,13 @@ def save_run(identifier: str, expected: dict[str, str], *, proof_status: str,
     """Atomically save the latest actual result; callers must not store synthetic success."""
     if proof_status not in STORED_STATUSES:
         raise ValueError("Not an actual Lean process outcome")
-    if set(expected) != {"source_document_sha256", "lean_sha256", "toolchain_sha256"}:
+    if set(expected) != {"source_document_sha256", "lean_sha256",
+                         "toolchain_sha256", "declared_toolchain"}:
         raise ValueError("Incomplete run fingerprint")
-    if not all(isinstance(value, str) and HEX_DIGEST.fullmatch(value)
-               for value in expected.values()):
+    if (not all(isinstance(expected[key], str) and HEX_DIGEST.fullmatch(expected[key])
+                for key in ("source_document_sha256", "lean_sha256", "toolchain_sha256"))
+            or not isinstance(expected["declared_toolchain"], str)
+            or len(expected["declared_toolchain"]) > 160):
         raise ValueError("Invalid run fingerprint")
     path = _record_path(identifier, results_root)
     record = {"schema_version": SCHEMA_VERSION, "formalization_id": identifier,
