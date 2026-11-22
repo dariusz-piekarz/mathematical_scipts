@@ -1,14 +1,14 @@
 # Geometria algebraiczna — rejestr statusów audytów
 
-**Ostatnia aktualizacja:** 2026-11-22, audyt ALG-02 nr 1.
+**Ostatnia aktualizacja:** 2026-11-22, audyt ALG-02 nr 2.
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`.
-**Następny przebieg:** **ALG-02, audyt nr 2** — odrębna sceptyczna iteracja po poprawkach współrzędnych i dowodów. ALG-00 i ALG-01 pozostają stabilne.
+**Następny przebieg:** **ALG-02, audyt nr 3** — niezależny przegląd po ujednoliceniu homogenizacji z konwencją [X:Y:Z]. ALG-00 i ALG-01 pozostają stabilne.
 
 | ID | Rozdział | Iteracja zakończona | Status | Raport / czynność |
 | --- | --- | ---: | --- | --- |
 | ALG-00 | Teoria pierścieni — od arytmetyki do geometrii równań | **15** | **STABILNY / ZAMKNIĘTY** | [Audyt 15](2026-11-22-ALG-00-iteration-15.md) — brak nowych usterek, PDF i CI PASS |
 | ALG-01 | Geometria afiniczna — równania, ideały i twierdzenie Hilberta o zerach | **5** | **STABILNY / ZAMKNIĘTY** | [Audyt 5](2026-11-22-ALG-01-iteration-05.md) — niezależna iteracja bez usterek, 30 dodatkowych kontroli, 11 regresji PASS, 23-stronicowy PDF PASS |
-| ALG-02 | Geometria rzutowa | **1** | **OTWARTY** | [Audyt 1](2026-11-22-ALG-02-iteration-01.md) — błędna kolejność współrzędnych, punkty w nieskończoności, dowody Bézouta i rezultantu, 11 testów, 11-stronicowy PDF PASS; następnie audyt 2 |
+| ALG-02 | Geometria rzutowa | **2** | **OTWARTY** | [Audyt 2](2026-11-22-ALG-02-iteration-02.md) — poprawiono ogólną homogenizację i domknięcie rzutowe, przypadki brzegowe; 12 testów; następnie audyt 3 |
 | ALG-03 | Punkty osobliwe i geometria lokalna krzywych | 0 | Oczekuje | Po ALG-02 |
 | ALG-04 | Algebra przemienna, snopy i krzywe algebraiczne | 0 | Oczekuje | Po ALG-03 |
 | ALG-05 | Rozdmuchania i rozwiązywanie osobliwości | 0 | Oczekuje | Po ALG-04 |
@@ -26,4 +26,6 @@ Stabilne matematycznie ALG-00: ostatni bezusterkowy audyt 15; po globalnej korek
 
 Stabilne ALG-01: blob źródła `2026c006d75bebfcb3f59ccd29896ba6d631b7f8` (źródłowy commit `8ce8ddf51e596ffa304d12813760c7bd4a87dfa1`); ostatni testowy commit `b5ddb259f364f416f711dcad8ab29ce1afbb11b9`. Iteracja stabilizacyjna 5 nie modyfikowała pliku `.tex`; 29 etykiet, 21 odsyłaczy, 11/11 testów, 23-stronicowy PDF. Raport: [ALG-01 audyt 5](2026-11-22-ALG-01-iteration-05.md).
 
-ALG-02 po audycie 1: źródłowy blob `4c122514238f4cb0de7188c18f3b36e569e00552`, 12 unikalnych etykiet, 9 rozwiązanych odsyłaczy, 11/11 regresji, osobny 11-stronicowy PDF. [Dedykowany CI 45012542403](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45012542403): **success**. Następny jest audyt **ALG-02/2**, nie ALG-03.
+ALG-02 po audycie 1 (historia): źródłowy blob `4c122514238f4cb0de7188c18f3b36e569e00552`, 12 unikalnych etykiet, 9 rozwiązanych odsyłaczy, 11/11 regresji, osobny 11-stronicowy PDF. [Dedykowany CI 45012542403](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45012542403): **success**. Następny jest audyt **ALG-02/2**, nie ALG-03.
+
+ALG-02 po audycie 2: blob `7c3c22b3238f29010ca15f146db9dde8acc05094` (commit źródła `c6b4d284154643ccf63ee3852d54c546a7ed9068`), 12 etykiet, 9 poprawnych odsyłaczy, 12 testów regresyjnych. [Audyt 2](2026-11-22-ALG-02-iteration-02.md). Dedykowany [CI 45013242360](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45013242360). Następny krok — **ALG-02/3**, rozdział pozostaje otwarty.
