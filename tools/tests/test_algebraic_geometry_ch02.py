@@ -148,6 +148,54 @@ class ALG02ProjectiveRegressions(unittest.TestCase):
             basis = [0, 1]
             self.assertEqual(len(basis) + len(basis), 2*2)
 
+    def test_hilbert_function_of_nonmonomial_complete_intersection(self):
+        # F=X^2+YZ, G=Y^3+XZ^2. At Z=0 the equations
+        # X^2=Y^3=0 have no projective common point. The
+        # quotient must have Hilbert function 1,3,5,6,6,...
+        # Check this via independent modular ranks of ideal pieces.
+        def monomials(m):
+            return [(a, b, m-a-b) for a in range(m+1)
+                    for b in range(m-a+1)]
+
+        def modular_rank(rows, p):
+            pivots = {}
+            for source in rows:
+                row = source[:]
+                while True:
+                    col = next((i for i, value in enumerate(row)
+                                if value % p), None)
+                    if col is None:
+                        break
+                    if col not in pivots:
+                        inverse = pow(row[col] % p, -1, p)
+                        pivots[col] = [(x*inverse) % p for x in row]
+                        break
+                    multiple = row[col] % p
+                    row = [(x-multiple*y) % p
+                           for x, y in zip(row, pivots[col])]
+            return len(pivots)
+
+        F = {(2, 0, 0): 1, (0, 1, 1): 1}
+        G = {(0, 3, 0): 1, (1, 0, 2): 1}
+        for p in PRIMES:
+            dimensions = []
+            for m in range(7):
+                mon = monomials(m)
+                positions = {term: j for j, term in enumerate(mon)}
+                rows = []
+                for degree, polynomial in ((2, F), (3, G)):
+                    if m < degree:
+                        continue
+                    for a, b, c in monomials(m-degree):
+                        row = [0]*len(mon)
+                        for (i, j, k), coefficient in polynomial.items():
+                            pos = positions[(a+i, b+j, c+k)]
+                            row[pos] = (row[pos]+coefficient) % p
+                        rows.append(row)
+                dimensions.append(len(mon)-modular_rank(rows, p))
+            self.assertEqual(dimensions, [1, 3, 5, 6, 6, 6, 6],
+                             f"Unexpected Hilbert function over F_{p}")
+
     def test_complete_intersection_monomial_basis(self):
         # k[x,y]/(x^d,y^e) has basis {x^i y^j: i<d, j<e}.
         for d, e in ((1, 1), (1, 3), (2, 2), (2, 5), (3, 4)):
