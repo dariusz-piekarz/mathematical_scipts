@@ -8,6 +8,10 @@ on:
       - "application/lean/**"
       - "application/scripts/lean_ci_audit.py"
       - "application/tests/test_lean_ci_audit.py"
+      - "application/backend/lean_introspection.py"
+      - "application/tests/test_lean_introspection.py"
+      - "application/tests/test_lean_introspection_real.py"
+      - "application/requirements.txt"
       - ".github/workflows/lean-formalization.yml"
   workflow_dispatch:
 
@@ -92,6 +96,17 @@ jobs:
           python ../scripts/lean_ci_audit.py \
             --manifest manifest.json --lean-root . \
             --logs-dir ci_lean_logs --report ci_lean_report.json
+
+      - name: Install application dependencies for Lean introspection test
+        working-directory: application
+        run: python -m pip install -r requirements.txt
+
+      - name: Execute real Lean MetaM constant introspection (mandatory, no skips)
+        working-directory: application
+        env:
+          MATLIB_REQUIRE_REAL_LEAN_TEST: "1"
+          LEAN_NUM_THREADS: "1"
+        run: python -m unittest tests.test_lean_introspection_real -v
 
       - name: Upload Lean compilation and axiom evidence
         if: always()
