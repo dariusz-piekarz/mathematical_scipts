@@ -4,7 +4,7 @@
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`.  
 **Źródło:** `chapters/pl/logic_and_set_theory/35-modele-boolowskie-i-wzgledna-niesprzecznosc-ch.tex`.  
 **Blob rozdziału:** `1d510628d52469ef8aa00ad021125192c54ec439` (bez zmian od audytów X i XI).  
-**Werdykt merytoryczny:** niezależny audyt potwierdzający nie znalazł kolejnych koniecznych poprawek. **Zamknięcie techniczne** wymaga zielonego CI uruchomionego zapisem tego raportu.
+**Werdykt końcowy: AUDYT XII CZYSTY, ROZDZIAŁ 35 STABILNY (2/2+1).** Niezależny audyt potwierdzający nie znalazł kolejnych koniecznych poprawek. Pełne CI dla pierwotnego zapisu audytu XII zakończyło się sukcesem; sprawdzono rzeczywisty artefakt, log i wizualny wynik wszystkich stron rozdziału.
 
 ## 1. Ponowny dowód przypadków krytycznych
 
@@ -27,7 +27,7 @@ Sprawdzono niezależnie dwa kierunki kroku egzystencjalnego w lemacie prawdy. Z 
 
 Osobno skontrolowano obydwa argumenty wymuszające: \(\operatorname{Add}(\omega,\omega_2)\) spełnia ccc, zachowuje \(\omega_1,\omega_2\) i dodaje przynajmniej \(\aleph_2\) różnych podzbiorów \(\omega\); \(\operatorname{Coll}(\omega_1,2^{\aleph_0})\) jest przeliczalnie domknięte, zachowuje \(\omega_1\) i podzbiory \(\omega\), a daje surjekcję na stary zbiór podzbiorów \(\omega\). Wniosek \(\operatorname{Con}(\mathrm{ZFC})\Rightarrow\operatorname{Con}(\mathrm{ZFC}+\mathrm{CH}/\neg\mathrm{CH})\) dotyczy dwóch osobnych teorii i wynika z pełności rachunku pierwszego rzędu; nie wyprowadza bezwarunkowej niesprzeczności ZFC.
 
-## 2. Nowa próba adversarialna (niezależna od testów repozytorium)
+## 2. Nowa próba odpornościowa (niezależna od testów repozytorium)
 
 Przygotowano nowy, odrębny generator **223** niekanonicznych nazw boolowskich z rangami do czwartego poziomu rekurencji, także z zerowymi współczynnikami, powtórnymi wartościami semantycznymi i niejednakowymi rangami argumentów.
 
@@ -39,6 +39,12 @@ Ponownie pobrano bieżący plik z GitHub i stwierdzono: **2406 wierszy, 28 róż
 
 Przed audytem XII audyt XI uzyskał **[SUCCESS w GitHub Actions 45062047392](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45062047392)**, a jego rzeczywisty artefakt PDF **14770295070** ma **311 stron**. Wykonano nowy montaż i wzrokową kontrolę wszystkich stron rozdziału 35 (**PDF 296–311**), bez zaobserwowanych kolizji. Log: **0** błędów LaTeX, **0** przepełnionych wierszy, **0** nierozwiązanych odsyłaczy, **0** brakujących znaków, jedno nieszkodliwe ostrzeżenie `Underfull \hbox`.
 
-## 4. Werdykt i przejście dalej
+## 4. Końcowe CI audytu XII i porównanie artefaktów
 
-**Czyste audyty X i XI: 2/2. Audyt XII merytorycznie czysty — dodatkowy audyt potwierdzający.** Warunkiem końcowego oznaczenia stabilności jest potwierdzony, ukończony zielony przebieg CI dla zapisu raportu XII. Po tym można zakończyć etap rozdziału 35 bez dopisywania niezatwierdzonych rozszerzeń i przejść do uzgodnienia zakresu następnego rozdziału. Niezależne testy Python i kompilacja LaTeX nie oznaczają formalnej weryfikacji dowodów w Lean.
+GitHub Actions **[45062514837](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45062514837): SUCCESS**, commit `5de8fee615d868117c334cc0427ef58208198516`. Zakończono testy rozdziałów 01–35, pełną kompilację LaTeX, kontrolę referencji i logów oraz archiwizację. Pobrano rzeczywisty artefakt **14770295576**, zawierający PDF i log.
+
+Nowy PDF ma **311 stron**, A4. Podczas inspekcji wszystkich 16 stron rozdziału 35 (strony PDF 296–311) wyrenderowano je ponownie w rozdzielczości 90 dpi i **porównano piksel po pikselu** z niezależnym renderem artefaktu audytu XI. **16/16 stron jest identycznych wizualnie**; tekst stron ma ten sam SHA-256 `d88130c65f8aa5287f509c4b0b1dd177479b6e31e9df6cb17053a42701189804`. W logu: **0** błędów LaTeX, **0** przepełnionych wierszy, **0** nierozwiązanych odsyłaczy, **0** brakujących znaków; **1** ostrzeżenie underfull w całej książce, bez obserwowanego wpływu na skład.
+
+## 5. Końcowy werdykt i przejście dalej
+
+**Audyt X — czysty (1/2), audyt XI — czysty (2/2), audyt XII — czysty (+1 potwierdzający). ROZDZIAŁ 35: STABILNY.** We wszystkich trzech audytach źródło pozostało tym samym blobem `1d510628d52469ef8aa00ad021125192c54ec439`. Żadna modyfikacja raportu nie zmienia źródła ani wyników matematycznych. Zamknięto etap rozdziału 35 bez dopisywania niezatwierdzonych rozszerzeń. Dalszy etap to ustalenie zakresu rozdziału 36 i jego szczegółowe opracowanie. Niezależne testy Python i kompilacja LaTeX nie oznaczają formalnej weryfikacji dowodów w Lean.
