@@ -91,6 +91,8 @@ def _find_source(con: sqlite3.Connection, *, entity_id: str | None,
                         (e["document_id"],)).fetchone()
         if d is None:
             raise HTTPException(404, "Nie znaleziono rozdziału.")
+        if not isinstance(d["content"], str):
+            raise HTTPException(409, "Brak tekstowej treści rozdziału w indeksie.")
         content = d["content"][e["start_offset"]:e["end_offset"]]
         labels = [row[0] for row in con.execute(
             "SELECT name FROM labels WHERE entity_id=? ORDER BY offset", (entity_id,))]
@@ -117,6 +119,8 @@ def _find_source(con: sqlite3.Connection, *, entity_id: str | None,
                     (module_id,)).fetchone()
     if d is None:
         raise HTTPException(404, "Nieznany moduł.")
+    if not isinstance(d["content"], str):
+        raise HTTPException(409, "Brak tekstowej treści rozdziału w indeksie.")
     lines = d["content"].splitlines(keepends=True)
     if end_line > len(lines):
         raise HTTPException(400, "Zakres wykracza poza rozdział.")
