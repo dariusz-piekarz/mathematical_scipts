@@ -219,6 +219,23 @@ class LeanFormalizationTests(unittest.TestCase):
         self.assertTrue(invalidated["previous_run_outdated"])
         self.assertFalse(invalidated["certificate"])
 
+    def test_runner_truncates_large_output_and_never_certifies_failure(self):
+        noisy = subprocess.CompletedProcess(
+            args=["lake"], returncode=1, stdout="X" * 100000,
+            stderr="diagnostic at end")
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
+             patch("backend.lean_formalization.subprocess.run", return_value=noisy):
+            result = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(result["proof_status"], "failed")
+        self.assertFalse(result["certificate"])
+        self.assertLessEqual(len(result["log"]), 16000)
+        self.assertIn("diagnostic at end", result["log"])
+        reopened = lean.fragment(self.con, entity_id="LST-01/theorem/0001",
+                                 lean_root=self.root)
+        self.assertEqual(reopened["proof_status"], "failed")
+        self.assertFalse(reopened["certificate"])
+
     def test_timeout_reported(self):
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
              patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
