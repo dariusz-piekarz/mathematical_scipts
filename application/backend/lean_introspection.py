@@ -50,8 +50,11 @@ def parse_inspection(log: str, token: str, names: list[str]) -> dict[str, list[s
     # The subprocess collector retains only a tail. A full buffer may have
     # silently discarded earlier diagnostics even if the last events look valid.
     # Fail closed at the exact capacity boundary, not just above it.
-    if not TOKEN_RE.fullmatch(token) or len(log.encode("utf-8")) >= MAX_OUTPUT_BYTES:
-        raise ValueError("Invalid or saturated Lean output")
+    if (not TOKEN_RE.fullmatch(token) or len(log.encode("utf-8")) >= MAX_OUTPUT_BYTES
+            or not 1 <= len(names) <= MAX_THEOREMS
+            or len(names) != len(set(names))
+            or any(not NAME_RE.fullmatch(name) for name in names)):
+        raise ValueError("Invalid declarations or saturated Lean output")
     expected = set(names)
     counts: dict[str, int] = {}
     found: dict[str, set[str]] = {}
