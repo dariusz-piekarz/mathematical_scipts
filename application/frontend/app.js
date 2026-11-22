@@ -5,7 +5,7 @@ const $ = id => document.getElementById(id);
 const state = {
   domains:[], modules:[], outlines:new Map(), expandedDomains:new Set(), expandedModules:new Set(),
   currentModule:null, currentEntity:null, currentData:null, selected:new Map(),
-  tab:"reader", granularity:"module", simplified:false, tooltipData:null,
+  tab:"reader", granularity:"module", simplified:false, tooltipData:null, leanEpoch:0, leanFragment:null, leanRunner:null,
   tooltipKey:0, graph:null, conceptGraph:null, conceptEpoch:0, renderEpoch:0, draftSession:null,
 };
 const titleOr = item => item.title || item.subtype || item.kind || item.id;
@@ -23,7 +23,7 @@ async function api(path, options={}) {
 function activateTab(name){
   state.tab=name;
   document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
-  for(const k of ["reader","graph","concepts","selection"])$("view-"+k).classList.toggle("hidden",k!==name);
+  for(const k of ["reader","lean","graph","concepts","selection"])$("view-"+k).classList.toggle("hidden",k!==name);
   if(name==="selection")renderSelection();
   if(name==="graph" && !state.graph)loadGraph();
   if(name==="concepts" && !state.conceptGraph)loadConceptGraph();
@@ -626,6 +626,123 @@ function renderConceptEvidence(data){
   }
 }
 
+
+/* Lean 4: exact indexed source -> registered formalization. No client code execution. */
+const leanStatementLabels={
+  unreviewed:"Nieprzejrzana",needs_review:"Wymaga przeglądu",approved:"Zatwierdzona"
+};
+const leanFormalizationLabels={
+  missing:"Brak formalizacji",draft:"Szkic (bez SHA źródła)",
+  ready:"Źródło przypięte",stale:"Źródło zmienione"
+};
+const leanProofLabels={
+  not_run:"Nie uruchomiono",compiled:"Lean skompilował kod",
+  failed:"Błąd Lean",timeout:"Przekroczony czas",
+  toolchain_unavailable:"Brak Lean/lake",blocked:"Uruchomienie zablokowane"
+};
+async function loadLeanFragment(query){
+  const epoch=++state.leanEpoch;activateTab("lean");
+  $("leanResult").classList.add("hidden");$("leanEmpty").classList.remove("hidden");
+  $("leanEmpty").textContent="Odczytywanie źródła i formalizacji…";
+  try {
+    const result=await api("/api/lean/fragment?"+new URLSearchParams(query));
+    if(epoch!==state.leanEpoch)return;
+    state.leanFragment=result;state.leanRunner=null;
+    renderLeanFragment(result);
+    try{
+      const available=await api("/api/lean/status");
+      if(epoch!==state.leanEpoch)return;
+      state.leanRunner=available;
+      const message=!available.runner_enabled?
+        "Uruchamianie wyłączone. W lokalnym serwerze ustaw MATLIB_LEAN_RUN=1.":
+        !available.lake_available?
+        "Brak lake/Lean 4 w PATH. Zainstaluj elan i przygotuj Mathlib.":
+        "Dostępny lokalny runner Lean 4 · "+(available.toolchain||"wersja nieznana");
+      $("leanRunnerInfo").textContent=message;
+      $("leanRun").disabled=!available.ready||!result.formalization_id||result.formalization_status==="stale";
+    }catch(err){$("leanRunnerInfo").textContent=err.message;$("leanRun").disabled=true;}
+  }catch(err){
+    if(epoch!==state.leanEpoch)return;
+    $("leanEmpty").textContent="Nie można otworzyć fragmentu: "+err.message;toast(err.message);
+  }
+}
+function renderLeanFragment(result){
+  $("leanEmpty").classList.add("hidden");$("leanResult").classList.remove("hidden");
+  $("leanSourceInfo").textContent=result.source_module+" · wiersze "+result.start_line+
+    "–"+result.end_line+(result.source_labels.length?" · "+result.source_labels.join(", "):"");
+  $("leanLatex").textContent=result.source_latex;
+  $("leanCode").textContent=result.lean_code||"Brak powiązanej formalizacji Lean dla tego fragmentu.";
+  const statuses=$("leanStatuses");statuses.replaceChildren();
+  for(const [name,label] of [
+    ["statement_status","Zgodność stwierdzenia"],
+    ["formalization_status","Formalizacja"],
+    ["proof_status","Sprawdzenie Lean"]
+  ]){
+    const card=node("div",{className:"lean-status"});
+    const val=result[name],mapped=name==="statement_status"?leanStatementLabels:
+      name==="formalization_status"?leanFormalizationLabels:leanProofLabels;
+    card.append(node("small",{},label),node("strong",{},mapped[val]||val));
+    statuses.append(card);
+  }
+  const note=result.formalization_id?
+    "Identyfikator: "+result.formalization_id+" · "+(result.lean_theorem||""):
+    "Brak kodu. Nie wygenerowano ani nie uruchomiono żadnego dowodu.";
+  $("leanRunnerInfo").textContent=note;
+  $("leanLog").textContent="Nie uruchomiono. Kompilacja Lean i zgodność tłumaczenia są oceniane oddzielnie.";
+  $("leanRun").disabled=true;
+}
+function openLeanCurrent(){
+  if(!state.currentData){toast("Najpierw wybierz obiekt w Czytniku.");return;}
+  if(state.currentEntity){loadLeanFragment({entity_id:state.currentEntity});return;}
+  const a=Number($("rangeStart").value),b=Number($("rangeEnd").value);
+  if(!Number.isSafeInteger(a)||!Number.isSafeInteger(b)||b<a||b-a>300){
+    toast("Dla całego rozdziału wybierz najwyżej 301 wierszy lub otwórz twierdzenie z Explorera.");return;
+  }
+  loadLeanFragment({module_id:state.currentModule,start_line:a,end_line:b});
+}
+function openLeanSelection(){
+  const data=state.currentData,source=$("latexSource"),sel=window.getSelection();
+  if(!data||state.simplified||!sel||sel.isCollapsed||!sel.rangeCount){
+    toast("Zaznacz dokładny fragment w źródle LaTeX.");return;
+  }
+  const range=sel.getRangeAt(0);
+  if(!source.contains(range.startContainer)||!source.contains(range.endContainer)){
+    toast("Zaznaczenie musi być w źródle LaTeX.");return;
+  }
+  const prefix=range.cloneRange();prefix.selectNodeContents(source);
+  prefix.setEnd(range.startContainer,range.startOffset);
+  const start=prefix.toString().length,end=start+range.toString().length;
+  if(end<=start||end>data.latex.length){toast("Nie udało się ustalić wierszy.");return;}
+  const first=data.entity?data.entity.start_line:1;
+  const n=s=>(s.match(/\n/g)||[]).length;
+  const startLine=first+n(data.latex.slice(0,start));
+  const endLine=first+n(data.latex.slice(0,end-1));
+  sel.removeAllRanges();
+  loadLeanFragment({module_id:state.currentModule,start_line:startLine,end_line:endLine});
+}
+async function runLeanFormalization(){
+  const item=state.leanFragment;
+  if(!item?.formalization_id||!state.leanRunner?.ready)return;
+  const button=$("leanRun");
+  button.disabled=true;button.textContent="Sprawdzanie…";
+  $("leanLog").textContent="Uruchamianie lokalnego Lean 4…";
+  try{
+    const r=await api("/api/lean/run",{
+      method:"POST",body:JSON.stringify({formalization_id:item.formalization_id})});
+    item.proof_status=r.proof_status;
+    renderLeanFragment(item);
+    $("leanLog").textContent=(r.detail||"")+"\n"+(r.log||"");
+    $("leanRunnerInfo").textContent="Zakończono sprawdzanie kodu Lean. Zgodność z oryginalnym twierdzeniem wymaga osobnego przeglądu.";
+    if(r.proof_status==="compiled"&&!r.certificate){
+      $("leanRunnerInfo").textContent+=" Brak certyfikatu matematycznej zgodności.";
+    }
+  }catch(e){$("leanLog").textContent="Błąd sprawdzania: "+e.message;}
+  finally{
+    button.textContent="Uruchom Lean";
+    button.disabled=!state.leanRunner?.ready||item.formalization_status==="stale";
+  }
+}
+
 async function init(){
   try{
     const [domains,mods,stats]=await Promise.all([api("/api/domains"),api("/api/modules?limit=500"),api("/api/stats")]);
@@ -643,6 +760,9 @@ function listeners(){
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>activateTab(b.dataset.tab)));
   $("granularity").addEventListener("change",e=>{state.granularity=e.target.value;renderTree();});
   $("addCurrent").addEventListener("click",addCurrent);
+  $("openLeanCurrent").addEventListener("click",openLeanCurrent);
+  $("openLeanSelection").addEventListener("click",openLeanSelection);
+  $("leanRun").addEventListener("click",runLeanFormalization);
   $("addExcerpt").addEventListener("click",addExcerpt);
   $("addRange").addEventListener("click",addRange);
   $("openFirst").addEventListener("click",()=>{if(state.modules.length)openModule(state.modules[0].id);});
