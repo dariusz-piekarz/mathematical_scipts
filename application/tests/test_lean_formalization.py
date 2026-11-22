@@ -154,6 +154,16 @@ class LeanFormalizationTests(unittest.TestCase):
                           lean_root=self.root)
         self.assertEqual(caught.exception.status_code, 409)
 
+    def test_nontext_source_is_rejected_for_entity_and_line_selection(self):
+        self.con.execute("UPDATE documents SET content=NULL WHERE id='LST-01'")
+        self.con.commit()
+        for kwargs in ({"entity_id": "LST-01/theorem/0001"},
+                       {"module_id": "LST-01", "start_line": 1, "end_line": 1}):
+            with self.subTest(kwargs=kwargs):
+                with self.assertRaises(HTTPException) as caught:
+                    lean.fragment(self.con, lean_root=self.root, **kwargs)
+                self.assertEqual(caught.exception.status_code, 409)
+
     def test_runner_blocks_inconsistent_index_before_subprocess(self):
         # Simulate a stale SQLite SHA while the source bytes remain unchanged.
         self.con.execute("UPDATE documents SET sha256=? WHERE id='LST-01'",
