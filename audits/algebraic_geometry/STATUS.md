@@ -1,13 +1,13 @@
 # Geometria algebraiczna — rejestr statusów audytów
 
-**Ostatnia aktualizacja:** 2026-11-22, audyt ALG-00 nr 15.
+**Ostatnia aktualizacja:** 2026-11-22, audyt ALG-01 nr 1.
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`.
-**Następny rozdział do pracy:** **ALG-01** — pierwszy pełny audyt; nie wracać do ALG-00 bez nowej rzeczywistej regresji.
+**Następny przebieg:** **ALG-01, audyt nr 2** — kontynuować iteracje aż do osobnego audytu bez nowych usterek; ALG-00 pozostaje stabilny.
 
 | ID | Rozdział | Iteracja zakończona | Status | Raport / czynność |
 | --- | --- | ---: | --- | --- |
 | ALG-00 | Teoria pierścieni — od arytmetyki do geometrii równań | **15** | **STABILNY / ZAMKNIĘTY** | [Audyt 15](2026-11-22-ALG-00-iteration-15.md) — brak nowych usterek, PDF i CI PASS |
-| ALG-01 | Geometria afiniczna — równania, ideały i twierdzenie Hilberta o zerach | 0 | **DO AUDYTU** | Następny przebieg — audyt 1 |
+| ALG-01 | Geometria afiniczna — równania, ideały i twierdzenie Hilberta o zerach | **1** | **OTWARTY** | [Audyt 1](2026-11-22-ALG-01-iteration-01.md) — poprawki matematyczne, 10 testów, nowy workflow i przegląd PDF; następnie audyt 2 |
 | ALG-02 | Geometria rzutowa | 0 | Oczekuje | Po ALG-01 |
 | ALG-03 | Punkty osobliwe i geometria lokalna krzywych | 0 | Oczekuje | Po ALG-02 |
 | ALG-04 | Algebra przemienna, snopy i krzywe algebraiczne | 0 | Oczekuje | Po ALG-03 |
