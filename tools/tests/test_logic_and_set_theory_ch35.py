@@ -450,6 +450,107 @@ class TestBooleanModelsChapter35(unittest.TestCase):
         self.assertIn(r"\sigma(e(\xi))", TEXT)
         self.assertIn(r"\dot a(\check\varnothing)=\{0\}", TEXT)
 
+    def test_three_atom_name_semantics_power_set_and_foundation(self):
+        # Independent eight-element Boolean algebra check (three atoms).
+        # Fixed seed makes all 16,000 name pairs reproducible.
+        from itertools import product
+        from random import Random
+
+        empty = frozenset()
+        one = frozenset({(empty, 7)})
+        two = frozenset({(one, 7)})
+        three = frozenset({(two, 7)})
+        bases = (empty, one, two)
+        names = [
+            frozenset(zip(bases, coefficients))
+            for coefficients in product(range(8), repeat=3)
+        ]
+
+        @lru_cache(None)
+        def member(a, b):
+            return self.join(coefficient & equal(a, child)
+                             for child, coefficient in b)
+
+        @lru_cache(None)
+        def equal(a, b):
+            result = 7
+            for child, coefficient in a:
+                result &= (7 ^ coefficient) | member(child, b)
+            for child, coefficient in b:
+                result &= (7 ^ coefficient) | member(child, a)
+            return result
+
+        @lru_cache(None)
+        def interpreted(name, atom):
+            return frozenset(
+                interpreted(child, atom)
+                for child, coefficient in name
+                if coefficient & atom
+            )
+
+        @lru_cache(None)
+        def rank(name):
+            return 0 if not name else 1 + max(
+                rank(child) for child, _ in name
+            )
+
+        rng = Random(35)
+        for _ in range(16000):
+            a, b = rng.choice(names), rng.choice(names)
+            for atom in (1, 2, 4):
+                self.assertEqual(
+                    bool(equal(a, b) & atom),
+                    interpreted(a, atom) == interpreted(b, atom)
+                )
+                self.assertEqual(
+                    bool(member(a, b) & atom),
+                    interpreted(a, atom) in interpreted(b, atom)
+                )
+
+        foundation_checks = 0
+        for name in names:
+            for atom in (1, 2, 4):
+                content = interpreted(name, atom)
+                if content:
+                    eligible = [
+                        candidate for candidate in
+                        (empty, one, two, three)
+                        if interpreted(candidate, atom) in content
+                    ]
+                    self.assertTrue(eligible)
+                    minimal = min(eligible, key=rank)
+                    self.assertTrue(
+                        interpreted(minimal, atom).isdisjoint(content)
+                    )
+                    foundation_checks += 1
+        self.assertEqual(foundation_checks, 1344)
+
+        sigma = frozenset(((empty, 3), (one, 5), (two, 6)))
+        restricted = [
+            frozenset(((empty, a), (one, b), (two, c)))
+            for a in range(8) for b in range(8) for c in range(8)
+            if (a & 3) == a and (b & 5) == b and (c & 6) == c
+        ]
+        self.assertEqual(len(restricted), 64)
+        powerset = frozenset((name, 7) for name in restricted)
+
+        power_checks = 0
+        for tau in names:
+            witness = frozenset(
+                (rho, coefficient & member(rho, tau))
+                for rho, coefficient in sigma
+            )
+            self.assertIn(witness, restricted)
+            for atom in (1, 2, 4):
+                subset = interpreted(tau, atom) <= interpreted(sigma, atom)
+                self.assertEqual(
+                    bool(member(tau, powerset) & atom), subset
+                )
+                if subset:
+                    self.assertTrue(equal(tau, witness) & atom)
+                power_checks += 1
+        self.assertEqual(power_checks, 1536)
+
     def test_ultrafilter_quotient_soundness_on_boolean_propositions(self):
         B = range(4)
         U0, U1 = {1, 3}, {2, 3}
