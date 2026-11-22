@@ -165,6 +165,33 @@ class TestChapter32(unittest.TestCase):
         self.assertIn("wewnętrznym i zewnętrznym", TEXT)
         self.assertIn("po zwykłej randze", TEXT)
 
+    def test_cohen_finite_conditions_and_new_real_witness(self):
+        # A concrete finite-prefix analogue of the dense set E_x:
+        # every partial condition can be extended to disagree with x.
+        from itertools import combinations, product
+
+        x = {n: (n % 2) for n in range(5)}
+        for size in range(4):
+            for dom in combinations(range(4), size):
+                for values in product((0, 1), repeat=size):
+                    p = dict(zip(dom, values))
+                    n = next(i for i in range(5) if i not in p)
+                    q = p | {n: 1 - x[n]}
+                    self.assertTrue(all(q[k] == v for k, v in p.items()))
+                    self.assertNotEqual(q[n], x[n])
+        self.assertIn(r"\operatorname{Fn}(\omega,2)^M", TEXT)
+        self.assertIn("wszystkie te obiekty", TEXT)
+        self.assertIn(r"\bigcup G\in M", TEXT)
+
+    def test_cohen_name_example_has_full_hypotheses(self):
+        start = TEXT.index(r"\label{ex:forcing-cohen-name}")
+        end = TEXT.index(r"\end{przyklad}", start)
+        example = TEXT[start:end]
+        self.assertIn("przeliczalnym tranzytywnym", example)
+        self.assertIn(r"\mathbb P_{\mathrm C}=\operatorname{Fn}(\omega,2)", example)
+        self.assertIn(r"G\subseteq\mathbb P_{\mathrm C}", example)
+        self.assertIn(r"c_G", example)
+
     def test_no_unproved_forcing_theorem(self):
         self.assertNotIn(r"\begin{twierdzenie}[M[G] spełnia ZFC]", TEXT)
         self.assertIn(r"p\Vdash\varphi", TEXT)
