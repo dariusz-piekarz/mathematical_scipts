@@ -124,8 +124,16 @@ def executable_toolchain_sha256(lean_root: Path) -> str:
     for tool in ("lean", "lake"):
         resolved = _elan_which(lean_root, tool)
         fallback = shutil.which(tool)
-        record[tool] = {
-            "resolution": "elan" if resolved else "path" if fallback else "missing",
-            "binary": _binary_identity(resolved or fallback),
-        }
+        binary = _binary_identity(resolved or fallback)
+        if binary["state"] != "present":
+            # An inaccessible/advertised-but-missing program cannot establish
+            # executable provenance. Use one stable unverified state even when
+            # another component temporarily overrides PATH resolution.
+            record[tool] = {"resolution": "not_verified",
+                            "binary": {"state": "missing"}}
+        else:
+            record[tool] = {
+                "resolution": "elan" if resolved else "path",
+                "binary": binary,
+            }
     return _digest(record)
