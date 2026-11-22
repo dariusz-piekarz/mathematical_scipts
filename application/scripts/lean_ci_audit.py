@@ -47,6 +47,14 @@ def registered_files(manifest: Path, lean_root: Path) -> dict[str, list[str]]:
         if not resolved.is_relative_to(root) or not resolved.is_file():
             raise ValueError("Untrusted or missing Lean file: " + rel)
         output.setdefault(rel, []).append(name)
+    # All Lean files in the trusted source tree are compiled and axiom-audited,
+    # including pedagogical Prop-level companions not shown as the primary UI mapping.
+    for source in sorted(root.rglob("*.lean")):
+        resolved = source.resolve()
+        if not resolved.is_relative_to(root) or not resolved.is_file():
+            raise ValueError("Invalid Lean source path: " + str(source))
+        rel = resolved.relative_to(lean_root.resolve()).as_posix()
+        output.setdefault(rel, [])
     return output
 
 
