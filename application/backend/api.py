@@ -25,6 +25,7 @@ from pydantic import BaseModel, Field
 from backend.latex_parser import analyze_selection, get_stats, show_label
 from backend import workspaces
 from backend.concept_graph import build_concept_graph
+from backend import lean_catalog
 from backend import lean_formalization
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -178,6 +179,13 @@ def entity_detail(entity_id: str, full: bool = False):
 def lean_toolchain_status():
     """Local availability of the trusted, explicitly enabled Lean runner."""
     return lean_formalization.availability()
+
+
+@app.get("/api/lean/catalog")
+def lean_catalog_index():
+    """Browse registered mappings, independently of compilation status."""
+    with db_connection() as con:
+        return lean_catalog.list_formalizations(con)
 
 
 @app.get("/api/lean/fragment")
