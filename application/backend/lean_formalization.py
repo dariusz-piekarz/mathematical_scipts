@@ -17,7 +17,7 @@ import sqlite3
 
 from fastapi import HTTPException
 
-from backend import lean_results, lean_process
+from backend import lean_cgroup, lean_results, lean_process
 
 LEAN_ROOT = Path(__file__).resolve().parents[1] / "lean"
 MAX_SOURCE_CHARS = 30000
@@ -228,12 +228,24 @@ def availability(lean_root: Path = LEAN_ROOT) -> dict[str, Any]:
         memory_mb, memory_error = None, str(exc)
     memory_supported = lean_process.memory_limit_supported()
     memory_ready = memory_error is None and (memory_mb is None or memory_supported)
+    try:
+        total_mb = lean_cgroup.configured_total_memory_mb()
+        total_error = None
+    except ValueError as exc:
+        total_mb, total_error = None, str(exc)
+    total_supported = lean_cgroup.available()
+    total_ready = total_error is None and (total_mb is None or total_supported)
     return {"runner_enabled": enabled, "lake_available": bool(lake),
-            "ready": enabled and bool(lake) and memory_ready
+            "ready": enabled and bool(lake) and memory_ready and total_ready
             and (lean_root / "lakefile.toml").is_file(),
             "memory_limit_mb": memory_mb,
             "memory_limit_enforced": memory_mb is not None and memory_supported,
             "memory_limit_supported": memory_supported,
+            "total_memory_limit_mb": total_mb,
+            "total_memory_limit_supported": total_supported,
+            "total_memory_limit_error": total_error if total_error is not None else
+            ("Brak delegowanego kontrolera pamięci cgroup v2." if total_mb is not None
+             and not total_supported else None),
             "memory_limit_error": memory_error if memory_error is not None else
             ("Nieobsługiwany system limitu pamięci." if memory_mb is not None
              and not memory_supported else None),
@@ -280,6 +292,15 @@ def run(con: sqlite3.Connection, formalization_id: str,
         return {"formalization_id": formalization_id, "proof_status": "blocked",
                 "detail": "Nie można wymusić limitu pamięci na tym systemie.",
                 "certificate": False}
+    try:
+        total_mb = lean_cgroup.configured_total_memory_mb()
+    except ValueError as exc:
+        return {"formalization_id": formalization_id, "proof_status": "blocked",
+                "detail": str(exc), "certificate": False}
+    if total_mb is not None and not lean_cgroup.available():
+        return {"formalization_id": formalization_id, "proof_status": "blocked",
+                "detail": "Brak delegowanego kontrolera pamięci cgroup v2.",
+                "certificate": False}
     if shutil.which("lake") is None:
         return {"formalization_id": formalization_id, "proof_status": "toolchain_unavailable",
                 "detail": "Nie znaleziono polecenia lake (Lean 4).", "certificate": False}
@@ -312,7 +333,11 @@ def run(con: sqlite3.Connection, formalization_id: str,
     command = ["lake", "env", "lean", str(item["_file"].relative_to(lean_root))]
     try:
         returncode, log, timed_out = lean_process.execute_registered(
-            command, lean_root, timeout=TIMEOUT_SECONDS, memory_limit_mb=memory_mb)
+            command, lean_root, timeout=TIMEOUT_SECONDS,
+            memory_limit_mb=memory_mb, total_memory_mb=total_mb)
+    except lean_cgroup.CgroupUnavailable as exc:
+        return {"formalization_id": formalization_id, "proof_status": "blocked",
+                "detail": str(exc), "certificate": False}
     except lean_process.MemoryLimitUnavailable as exc:
         return {"formalization_id": formalization_id, "proof_status": "blocked",
                 "detail": str(exc), "certificate": False}
