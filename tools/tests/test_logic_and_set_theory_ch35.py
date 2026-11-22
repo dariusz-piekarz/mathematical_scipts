@@ -886,5 +886,64 @@ class TestBooleanModelsChapter35(unittest.TestCase):
         self.assertIn(r"\label{ex:boolean35-four}", TEXT)
 
 
+    def test_mixing_for_nonmaximal_antichains_and_zero_coefficients(self):
+        # Independent 8-element Boolean-algebra regression of the mixing lemma.
+        # Covers nonmaximal antichains, zero coefficients, and literal
+        # name collisions without reducing to canonical ground names.
+        from itertools import product
+
+        empty = frozenset()
+        one = frozenset({(empty, 7)})
+        two = frozenset({(one, 7)})
+        bases = (empty, one, two)
+        names = [
+            frozenset(zip(bases, coefficients))
+            for coefficients in product(range(8), repeat=3)
+        ]
+
+        @lru_cache(None)
+        def membership(sigma, tau):
+            return self.join(
+                coefficient & equality(sigma, child)
+                for child, coefficient in tau
+            )
+
+        @lru_cache(None)
+        def equality(sigma, tau):
+            result = 7
+            for child, coefficient in sigma:
+                result &= (7 ^ coefficient) | membership(child, tau)
+            for child, coefficient in tau:
+                result &= (7 ^ coefficient) | membership(child, sigma)
+            return result
+
+        checks = 0
+        for antichain in ((1, 2, 4), (3, 4), (1, 6), (7,)):
+            for k in range(120):
+                chosen = {
+                    a: names[(41 * k + 9 * a) % len(names)]
+                    for a in antichain
+                }
+                support = set().union(*(
+                    {name for name, _ in chosen[a]} for a in antichain
+                ))
+                mixed = frozenset((
+                    name,
+                    self.join(
+                        a & dict(chosen[a]).get(name, 0)
+                        for a in antichain
+                    )
+                ) for name in support)
+                for a, target in chosen.items():
+                    self.assertEqual(
+                        a & equality(mixed, target), a,
+                        (antichain, k, a),
+                    )
+                    checks += 1
+
+        self.assertEqual(checks, 960)
+        self.assertIn(r"\label{lem:boolean35-mixing}", TEXT)
+
+
 if __name__ == "__main__":
     unittest.main()
