@@ -36,8 +36,8 @@ class TestLargeCardinalsChapter37(unittest.TestCase):
         book = (ROOT / "books/pl/logic_and_set_theory.tex").read_text("utf-8")
         doc = json.loads((ROOT / "catalog/books.json").read_text("utf-8"))
         entry = next(e for e in doc["books"] if e["id"] == "logic_and_set_theory")
-        self.assertEqual(len(entry["chapters"]), 37)
-        self.assertEqual(entry["chapters"][-1], f"chapters/pl/logic_and_set_theory/{NAME}")
+        self.assertGreaterEqual(len(entry["chapters"]), 37)
+        self.assertEqual(entry["chapters"][36], f"chapters/pl/logic_and_set_theory/{NAME}")
         self.assertIn(r"\input{../../chapters/pl/logic_and_set_theory/" + NAME + "}", book)
         self.assertIn(r"\label{ch:large-cardinals}", TEXT)
 
