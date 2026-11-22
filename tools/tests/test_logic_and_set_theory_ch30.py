@@ -150,6 +150,8 @@ class TestChapter30(unittest.TestCase):
         self.assertIn("Nie jest samodzielnym dowodem tego wyniku", TEXT)
         self.assertIn("nie jest tutaj przedstawiany jako udowodniony", TEXT)
         self.assertIn(r"\label{rem:ad-analytic-input}", TEXT)
+        self.assertIn(r"$A\setminus U$ jest projektywny", TEXT)
+        self.assertIn("z AC, a nie z PD stosowanego", TEXT)
 
     def test_global_choice_not_conflated_with_ad(self):
         self.assertIn(r"\mathrm{AD}",TEXT)
