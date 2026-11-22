@@ -16,7 +16,7 @@ Niezależnie sprawdzono następujące zagadnienia R01: definicje pierścienia/al
 
 1. **Przykład rodziny zbiorów skończonych i kofinitywnych (`ex:finite-cofinite`).** Dodano niezależny argument zamknięcia na sumę oraz rozbicie dowodu zamknięcia na różnicę `A\setminus B`: wynik jest skończony, jeśli `A` jest skończony lub `X\setminus B` jest skończony; w jedynym pozostałym przypadku `X\setminus(A\setminus B)=(X\setminus A)\cup B` jest skończony. Zachowano istniejący kontrprzykład do σ-addytywnego zamknięcia rodziny na sumy przeliczalne.
 2. **σ-algebra generowana przez podział.** Wprowadzono notację `E_J=\bigcup_{i\in J}E_i` oraz wprost sprawdzono `E_I=X`, `X\setminus E_J=E_{I\setminus J}` i `\bigcup_n E_{J_n}=E_{\bigcup_n J_n}`.
-3. **Sześciow-elementowy przykład układu Dynkina.** Uzasadniono zamknięcie na dopełnienia, różnice zbiorów zagnieżdżonych i przeliczalne sumy rozłącznych elementów, przy zachowaniu kontrprzykładu `\{1,2\}\cap\{1,3\}=\{1\}\notin\mathcal D`. Uwaga: jest to uściślenie istniejącego przykładu, nie nowe twierdzenie.
+3. **Sześcioelementowy przykład układu Dynkina.** Uzasadniono zamknięcie na dopełnienia, różnice zbiorów zagnieżdżonych i przeliczalne sumy rozłącznych elementów, przy zachowaniu kontrprzykładu `\{1,2\}\cap\{1,3\}=\{1\}\notin\mathcal D`. Uwaga: jest to uściślenie istniejącego przykładu, nie nowe twierdzenie.
 4. **Nieciągłość `\chi_{\mathbb Q}`.** Doprecyzowano, że w każdym otoczeniu dowolnego punktu są liczby wymierne i niewymierne, na których funkcja przyjmuje różne wartości.
 
 Commit źródła: `3ffb542ce3385c01630a4daff9c7dffa0975fdd0`.
