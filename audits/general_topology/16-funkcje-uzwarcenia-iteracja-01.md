@@ -48,3 +48,12 @@ Pierwsza kompletna wersja bez porządku uzwarceń przeszła GitHub Actions: [run
 Workflow `45012081743` (porządek uzwarceń i ilorazowe porównanie przedziału z okręgiem) zakończył się `completed/success`. PDF miał cztery strony A4 i bezbłędny log, ale strona czwarta zawierała niemal tylko zakończenie przykładu. Dla poprawy zakresu merytorycznego i składu dodano przykład `ex:topog-uzwarcenia-ciag-zbiezny`: uzwarcenie dyskretnego `N` przez `K={0}∪{1/n}`, wraz z dowodem kryterium `f:N→[0,1]` przedłuża się ciągle do `K` wtedy i tylko wtedy, gdy `f(n)` jest zbieżny. Zawarto również kontrprzykład z funkcją naprzemienną. Przykład przygotowuje motywację do własności uniwersalnej uzwarcenia Čecha–Stone’a, nie antycypując jej twierdzenia.
 
 Źródło z nowym przykładem: commit `29f686fdb189806236cd7a305244de234c3bd19d`; test etykiety: `d204adee3952c2c99adabd357372702bd53e5081`. Ostatni workflow dla tej wersji: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45012354172 . Po zakończeniu trzeba skontrolować PDF i log nowej wersji.
+
+## Zamknięcie walidacji technicznej audytu 01
+
+Końcowy workflow dla najnowszego źródła i testu:
+https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45012354172 — `completed/success`, bez nieudanych kroków. Artefakt `14750496652` zawiera samodzielny `general_topology_ch16.pdf` (**4 strony A4**) i logi. Sprawdzono log samodzielny i pełnej książki: brak `Overfull`, `Underfull`, `LaTeX Warning`, `Missing character`, `Undefined control sequence` oraz `Fatal error`. Wyrenderowano i obejrzano wszystkie cztery strony; tekst, wzory i numeracja są czytelne, bez kolizji. Dodatkowy przykład z uzwarceniem przeliczalnej przestrzeni dyskretnej wypełnia ostatnią stronę i wyjaśnia, że nie każda funkcja ciągła ograniczona przedłuża się do dowolnego uzwarcenia.
+
+Sprawdzono poprawność argumentu tego przykładu: domknięty zbiór `K={0}∪{1/n}` jest zwarty; `e(N)` jest gęstą podprzestrzenią dyskretną; funkcja `f:N→[0,1]` przedłuża się ciągle do `K` dokładnie przy zbieżności ciągu `f(n)` w `[0,1]`; kierunek konieczny wynika z ciągłości w punkcie `0`, a wystarczający z definicji wartości w `0` jako granicy. Funkcja przyjmująca naprzemiennie `0` i `1` nie ma przedłużenia.
+
+**Werdykt: audyt 01 wykonany, wszystkie testy i PDF PASS. Rozdział 16 nadal W AUDYCIE, ponieważ nowa treść wymaga co najmniej jednej niezależnej, czystej iteracji matematycznej.**
