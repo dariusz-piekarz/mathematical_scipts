@@ -692,7 +692,18 @@ function renderLeanFragment(result){
     "Identyfikator: "+result.formalization_id+" · "+(result.lean_theorem||""):
     "Brak kodu. Nie wygenerowano ani nie uruchomiono żadnego dowodu.";
   $("leanRunnerInfo").textContent=note;
-  $("leanLog").textContent="Nie uruchomiono. Kompilacja Lean i zgodność tłumaczenia są oceniane oddzielnie.";
+  if(result.run_cached){
+    $("leanLog").textContent="Ostatnie uruchomienie: "+(result.last_run_at||"czas nieznany")+
+      "\n"+(result.last_run_detail||"")+
+      (result.last_run_log?"\n"+result.last_run_log:"")+
+      "\nUwaga: kompilacja nie jest certyfikatem zgodności z LaTeX-em.";
+  }else if(result.previous_run_outdated){
+    $("leanLog").textContent="Poprzedni wynik Lean unieważniono: zmienił się LaTeX, kod Lean lub konfiguracja narzędzi. Uruchom Lean ponownie.";
+  }else if(result.run_record_invalid){
+    $("leanLog").textContent="Zapis ostatniego uruchomienia jest nieczytelny. Wymagane ponowne sprawdzenie.";
+  }else{
+    $("leanLog").textContent="Nie uruchomiono. Kompilacja Lean i zgodność tłumaczenia są oceniane oddzielnie.";
+  }
   $("leanRun").disabled=true;
 }
 function openLeanCurrent(){
@@ -740,8 +751,13 @@ async function runLeanFormalization(){
       method:"POST",body:JSON.stringify({formalization_id:item.formalization_id})});
     if(!isCurrentLeanRun(epoch,item))return;
     item.proof_status=r.proof_status;
+    item.run_cached=Boolean(r.run_record_saved);
+    item.last_run_at=r.last_run_at||null;
+    item.last_run_detail=r.detail||"";
+    item.last_run_log=r.log||"";
     renderLeanFragment(item);
-    $("leanLog").textContent=(r.detail||"")+"\n"+(r.log||"");
+    $("leanLog").textContent=(r.detail||"")+"\n"+(r.log||"")+
+      (r.run_record_warning?"\n"+r.run_record_warning:"");
     $("leanRunnerInfo").textContent="Zakończono sprawdzanie kodu Lean. Zgodność z oryginalnym twierdzeniem wymaga osobnego przeglądu.";
     if(r.proof_status==="compiled"&&!r.certificate){
       $("leanRunnerInfo").textContent+=" Brak certyfikatu matematycznej zgodności.";
