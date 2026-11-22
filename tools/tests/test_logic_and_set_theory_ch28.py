@@ -52,7 +52,7 @@ class TestChapter28(unittest.TestCase):
         for file in files:
             labels.update(re.findall(r"\\label\{([^}]+)\}",file.read_text("utf8")))
         refs=re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}",TEXT)
-        self.assertEqual(len(refs),18)
+        self.assertEqual(len(refs),20)
         self.assertFalse(set(refs)-labels)
 
     def test_ordinal_successors_and_unions_on_finite_models(self):
@@ -111,6 +111,9 @@ class TestChapter28(unittest.TestCase):
         self.assertIn(r"2\cdot\omega",TEXT)
         self.assertIn(r"\omega\cdot2",TEXT)
         self.assertIn(r"\aleph_0",TEXT)
+        self.assertIn(r"f(n+1)=n",TEXT)
+        self.assertIn(r"\omega+\omega\ge\omega+1",TEXT)
+        self.assertIn("niepoprawnych przybliżeń",TEXT)
 
     def test_burali_forti_non_set(self):
         self.assertIn(r"\gamma\in\gamma",TEXT)
