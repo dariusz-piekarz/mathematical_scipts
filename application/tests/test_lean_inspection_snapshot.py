@@ -83,6 +83,7 @@ class LeanInspectionSnapshotTests(unittest.TestCase):
             {"constants": {"thmA": ["Eq"], "thmB": []}},
             {"type_constants": {"thmA": ["Eq"], "thmB": ["Nat.zero"]}},
             {"names": ["thmA", "thmA"]},
+            {"names": ["thmA", ["unhashable"]]},
             {"names": []},
             {"identifier": "../unsafe"},
             {"classified": 1},
