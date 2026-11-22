@@ -636,7 +636,7 @@ const leanStatementLabels={
 };
 const leanFormalizationLabels={
   missing:"Brak formalizacji",draft:"Szkic (bez SHA źródła)",
-  ready:"Źródło przypięte",stale:"Źródło zmienione"
+  ready:"Źródło przypięte",stale:"Powiązanie nieaktualne"
 };
 const leanProofLabels={
   not_run:"Nie uruchomiono",compiled:"Lean skompilował kod",
@@ -686,9 +686,17 @@ function renderLeanCatalog(){
     const b=node("button",{className:"lean-catalog-entry",type:"button"});
     const status=leanFormalizationLabels[item.formalization_status]||item.formalization_status;
     const review=leanStatementLabels[item.statement_status]||item.statement_status;
+    const indexIssue={
+      invalid_label_binding:"Błędne położenie etykiety w indeksie",
+      ambiguous_label:"Niejednoznaczna etykieta",
+      unlinked_label:"Brak etykiety w indeksie",
+      corrupt_document:"Uszkodzony indeks rozdziału",
+      missing_document:"Brak indeksowanego rozdziału"
+    }[item.index_status];
     b.append(
       node("strong",{},item.source_module+" · "+item.source_label),
-      node("small",{},item.lean_theorem+" · "+status+" · "+review)
+      node("small",{},item.lean_theorem+" · "+status+" · "+review+
+        (indexIssue?" · "+indexIssue:""))
     );
     if(!item.source_entity_id){
       b.disabled=true;
