@@ -78,16 +78,13 @@ class Chapter39Audits(unittest.TestCase):
                 r"\\label\{([^}]+)\}", path.read_text("utf-8")))
         self.assertFalse(set(refs) - all_labels, set(refs) - all_labels)
 
-    def test_no_abbreviated_cardinal_noun_in_last_three_chapters(self):
-        # Preserve historical filenames and LaTeX labels; inspect only prose.
-        bad = re.compile(r"(?iu)kardynał(?:u|em|owi|y|ów|ami|ach)?\b")
-        for name in (
-            "37-duze-liczby-kardynalne-nieosiagalnosc-i-mierzalnosc.tex",
-            "38-kardynaly-mahla-i-slaba-zwartosc.tex",
-            NAME,
-        ):
-            src = (DIRECTORY / name).read_text("utf-8")
-            self.assertIsNone(bad.search(src), name)
+    def test_no_abbreviated_cardinal_noun_in_any_chapter(self):
+        # Every Polish chapter must use the full noun "liczba kardynalna".
+        # This checks file contents, not legacy filenames or labels.
+        bad = re.compile(r"(?iu)\bkardynał(?:u|em|owi|y|ów|ami|ach)?\b")
+        for chapter in DIRECTORY.glob("*.tex"):
+            src = chapter.read_text("utf-8")
+            self.assertIsNone(bad.search(src), chapter.name)
 
     def test_required_equivalences_are_explicit(self):
         for label in (
@@ -169,6 +166,47 @@ class Chapter39Audits(unittest.TestCase):
             for w in vals:
                 if all(v[i] == w[i] for i in support):
                     self.assertEqual(phi(v), phi(w))
+
+
+    def test_three_color_profile_bounds_finite(self):
+        for n in (3, 4):
+            pairs = tuple(itertools.combinations(range(n), 2))
+            for pattern in itertools.product((0, 1, 2), repeat=len(pairs)):
+                colors = dict(zip(pairs, pattern))
+                profiles = {
+                    a: tuple(colors[(b, a)] for b in range(a))
+                    for a in range(n)
+                }
+                for delta in range(n):
+                    nodes = {profiles[a][:delta] for a in range(delta, n)}
+                    self.assertTrue(nodes)
+                    self.assertLessEqual(len(nodes), 3 ** delta)
+                    for node in nodes:
+                        for gamma in range(delta):
+                            self.assertIn(
+                                node[:gamma],
+                                {profiles[a][:gamma] for a in range(gamma, n)},
+                            )
+
+    def test_pruned_binary_tree_branch_constraints(self):
+        # Exhaust all nonempty subsets of the four top-level leaves.
+        full = finite_binary_tree(3)
+        leaves = tuple(x for x in full if len(x) == 2)
+        for mask in range(1, 1 << len(leaves)):
+            kept_leaves = [x for i, x in enumerate(leaves) if mask & (1 << i)]
+            nodes = tuple(
+                x for x in full
+                if any(leaf[:len(x)] == x for leaf in kept_leaves)
+            )
+            satisfying = 0
+            for valuation in range(1 << len(nodes)):
+                chosen = {
+                    node for i, node in enumerate(nodes)
+                    if valuation & (1 << i)
+                }
+                satisfying += int(satisfaction_for_tree(nodes, chosen, 3))
+            self.assertEqual(satisfying, len(kept_leaves))
+
 
 
 if __name__ == "__main__":
