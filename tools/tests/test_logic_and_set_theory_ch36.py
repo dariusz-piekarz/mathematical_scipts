@@ -59,7 +59,7 @@ class TestSymmetricChoiceChapter36(unittest.TestCase):
              "thm:sym36-", "rem:sym36-", "ex:sym36-")
         ) for name in labels))
         refs = re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", TEXT)
-        self.assertEqual(len(refs), 26)
+        self.assertEqual(len(refs), 27)
         available = set()
         for chapter in CHAPTERS.glob("*.tex"):
             available.update(re.findall(
