@@ -100,6 +100,43 @@ pozostaje oddzielnym potwierdzeniem.
   do którego pełnego dowodu można wrócić
   w osobnym opracowaniu.
 
+## 26. Twierdzenie Hahna--Mazurkiewicza — etap stabilny
+
+Źródło:
+`chapters/pl/general_topology/26-twierdzenie-hahna-mazurkiewicza.tex`.
+Audyty czyste 07–09 (2/2+1),
+[CI 45062871304](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45062871304)
+PASS, samodzielny PDF 6 stron.
+
+- `general_topology/08-spojnosc.tex` dostarcza
+  lokalnej spójności i charakterystyki przez
+  otwarte składowe zbiorów otwartych;
+  w rozdziale 26 korzystamy z tych wyników
+  bez kopiowania ich dowodów.
+- `general_topology/10-metryzowalnosc.tex`
+  zawiera twierdzenie Urysohna; w kierunku
+  koniecznym 26 stosujemy je dopiero
+  po udowodnieniu drugiego aksjomatu
+  przeliczalności obrazu odcinka.
+- `general_topology/25-continua-i-ich-struktura.tex`
+  zawiera przykłady continuów, Knastera,
+  solenoid, grafy i konstrukcję krzywych
+  na sześcianach. Rozdział 26 jest
+  **ogólną** charakteryzacją obrazów odcinka,
+  z pełnym dowodem w obu kierunkach,
+  w tym konstrukcją małych dróg,
+  pętli przybliżających i zbieżności
+  jednostajnej do surjekcji.
+- Powtórzony przykład grafów i sześcianów
+  usunięto z rozdziału 26 podczas audytu
+  wydawniczego; pozostały niezależne
+  przykłady koniecznych założeń.
+- Nie kopiować ogólnego dowodu
+  Hahna–Mazurkiewicza do skryptu
+  geometrii różniczkowej ani topologii
+  algebraicznej. Tam można się nań
+  powołać przez odsyłacz.
+
 ## Analiza wariacyjna: Mosco i zbieżność epigraficzna
 
 - `chapters/pl/functional_analysis/16-funkcjonaly-wypukle-i-podstawy-rachunku-wariacyjnego.tex`
