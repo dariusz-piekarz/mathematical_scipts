@@ -140,7 +140,7 @@ class LeanFormalizationTests(unittest.TestCase):
         self.assertEqual(stale["statement_status"], "needs_review")
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
              patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
-             patch("backend.lean_formalization.subprocess.run") as spawn:
+             patch("backend.lean_formalization.lean_process.execute_registered") as spawn:
             blocked = lean.run(self.con, "sample", lean_root=self.root)
         self.assertEqual(blocked["proof_status"], "blocked")
         spawn.assert_not_called()
@@ -171,7 +171,7 @@ class LeanFormalizationTests(unittest.TestCase):
         self.con.commit()
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
              patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
-             patch("backend.lean_formalization.subprocess.run") as spawn:
+             patch("backend.lean_formalization.lean_process.execute_registered") as spawn:
             result = lean.run(self.con, "sample", lean_root=self.root)
         self.assertEqual(result["proof_status"], "blocked")
         self.assertFalse(result["certificate"])
@@ -182,7 +182,7 @@ class LeanFormalizationTests(unittest.TestCase):
         self.con.execute("UPDATE documents SET content=NULL WHERE id='LST-01'")
         self.con.commit()
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
-             patch("backend.lean_formalization.subprocess.run") as spawn:
+             patch("backend.lean_formalization.lean_process.execute_registered") as spawn:
             result = lean.run(self.con, "sample", lean_root=self.root)
         self.assertEqual(result["proof_status"], "blocked")
         self.assertFalse(result["certificate"])
@@ -218,11 +218,10 @@ class LeanFormalizationTests(unittest.TestCase):
         self.assertEqual(result["proof_status"], "toolchain_unavailable")
 
     def test_compilation_success_is_not_semantic_certificate(self):
-        result = subprocess.CompletedProcess(args=["lake"], returncode=0,
-                                             stdout="ok", stderr="")
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
              patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
-             patch("backend.lean_formalization.subprocess.run", return_value=result):
+             patch("backend.lean_formalization.lean_process.execute_registered",
+                   return_value=(0, "ok", False)):
             output = lean.run(self.con, "sample", lean_root=self.root)
         self.assertEqual(output["proof_status"], "compiled")
         self.assertFalse(output["certificate"])
@@ -236,11 +235,10 @@ class LeanFormalizationTests(unittest.TestCase):
         self.assertIn("ok", reopened["last_run_log"])
 
     def test_provenance_change_unsets_saved_success(self):
-        done = subprocess.CompletedProcess(args=["lake"], returncode=0,
-                                           stdout="accepted", stderr="")
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
              patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
-             patch("backend.lean_formalization.subprocess.run", return_value=done):
+             patch("backend.lean_formalization.lean_process.execute_registered",
+                   return_value=(0, "accepted", False)):
             lean.run(self.con, "sample", lean_root=self.root)
         self.assertTrue(lean.fragment(self.con, entity_id="LST-01/theorem/0001",
                                       lean_root=self.root)["run_cached"])
@@ -253,13 +251,11 @@ class LeanFormalizationTests(unittest.TestCase):
         self.assertTrue(invalidated["previous_run_outdated"])
         self.assertFalse(invalidated["certificate"])
 
-    def test_runner_truncates_large_output_and_never_certifies_failure(self):
-        noisy = subprocess.CompletedProcess(
-            args=["lake"], returncode=1, stdout="X" * 100000,
-            stderr="diagnostic at end")
+    def test_runner_persists_bounded_failure_log_without_certificate(self):
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
              patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
-             patch("backend.lean_formalization.subprocess.run", return_value=noisy):
+             patch("backend.lean_formalization.lean_process.execute_registered",
+                   return_value=(1, "X" * 15980 + "diagnostic at end", False)):
             result = lean.run(self.con, "sample", lean_root=self.root)
         self.assertEqual(result["proof_status"], "failed")
         self.assertFalse(result["certificate"])
@@ -273,8 +269,8 @@ class LeanFormalizationTests(unittest.TestCase):
     def test_timeout_reported(self):
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
              patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
-             patch("backend.lean_formalization.subprocess.run",
-                   side_effect=subprocess.TimeoutExpired(["lake"], 40)):
+             patch("backend.lean_formalization.lean_process.execute_registered",
+                   return_value=(None, "", True)):
             result = lean.run(self.con, "sample", lean_root=self.root)
         self.assertEqual(result["proof_status"], "timeout")
 
