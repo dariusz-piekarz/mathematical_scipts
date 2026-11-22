@@ -58,6 +58,8 @@ class TestChapter33(unittest.TestCase):
         self.assertIn(r"p\Vdash\sigma\in\tau", TEXT)
         self.assertIn(r"p\Vdash\sigma=\tau", TEXT)
         self.assertIn(r"\mathbin{\#}", TEXT)
+        self.assertIn(r"\operatorname{rk}(\tau)", TEXT)
+        self.assertNotIn(r"\rho(\tau)", TEXT)
         self.assertIn("ściśle rosnąca", TEXT)
         self.assertIn(r"\label{lem:forcing33-atomic-monotone}", TEXT)
         self.assertIn(r"\label{lem:forcing33-atomic-dense}", TEXT)
