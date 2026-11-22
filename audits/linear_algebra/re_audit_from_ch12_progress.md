@@ -34,7 +34,7 @@
 | 25 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `6b57fc1b64ef560b98e17f89322c688160376ccf` |
 | 26 | STABILNY; audyty 02 i 03 czyste po poprawce, CI success | 2 | `80032eef1e0e5de817821d97de96aaf86c960e03` |
 | 27 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `a91dfa108d4a6ef4221b9ba24a98c87772c75d4a` |
-| 28 | STABILNY; audyt 01 korekta, 02 i 03 czyste, CI success | 2 | `a2afdd2b20b2694d70bdbee6ad6a0f8c42b9aea8` |
+| 28 | STABILNY po dodatkowym audycie; 04 korekta, 05–06 czyste, CI success | 2 | `b9507aa2db7eda554446248996e7c0ae241d4e73` |
 | 29 | STABILNY; audyty 01 i 02 czyste oraz dodatkowy końcowy 03 czysty, CI success i PDF obejrzany | 3 (2+1) | `55fc55e2ff1b95838e0b2ca1c4ec0a6018af64dd` |
 | 30 | OTWARTY; audyt 01 do wykonania | 0 | — |
 | 31 | W kolejce | 0 | — |
@@ -280,3 +280,10 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - Matematyka, terminologia, etykiety i LaTeX: bez nowych usterek. Wykonano 14641 przypadków regresji Plückera, 0 błędów.
 - [CI 45023597804](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45023597804) completed/success, potwierdzono identyczny blob. Pobierano rzeczywisty artefakt pełnej książki i wizualnie przejrzano wszystkie **8 stron** rozdziału 29 (strony fizyczne 285–292) z dwoma rysunkami, bez zauważonych kolizji. To wcześniejszy CI, nie nowy run.
 - **Uzasadnienie zamknięcia:** dwa czyste audyty po ostatniej zmianie + dodatkowy niezależny czysty audyt końcowy + zielony CI zgodny z SHA + kontrola PDF. **Następny etap:** LA-30 audyt 01, 0/2. Nie rozpoczynać LA-29 ponownie bez konkretnej nowej przyczyny.
+
+## Audyt kontrolny dla pewności — 2026-11-22 (rozdział 28, audyty 04–06)
+
+- Na wyraźną prośbę użytkownika ponownie szczegółowo zweryfikowano **LA-28**, niezależnie od trwającej kolejki, której bieżącym rozdziałem pozostaje ten sam rozdział wskazany w nagłówku powyżej.
+- [Audyt 04](re_audit_from_ch12/28_iteration_04_2026-11-22.md) wykrył dwie usterki redakcyjne: nieprecyzyjną hipotezę skończonego nośnika pojedynczego `u_k` (zamiast ciągu `(u_k)_{k≥0}`) i brak przecinka przed „podstawiając”. Poprawiono źródło w [commicie 9c4229fa](https://github.com/dariusz-piekarz/mathematical_scipts/commit/9c4229fa1cf7f686654345ee9140d7b8e9bbee7a), nowy blob `b9507aa2db7eda554446248996e7c0ae241d4e73`. **Audyt 04 nieczysty, reset 0/2**.
+- [Audyt 05](re_audit_from_ch12/28_iteration_05_2026-11-22.md) i [audyt 06](re_audit_from_ch12/28_iteration_06_2026-11-22.md): **dwie kolejne czyste kontrole bloba `b9507aa2db7eda554446248996e7c0ae241d4e73` (2/2)**. Wykonano dodatkowo **783 + 690 = 1473** rzeczywiste kontrole obliczeniowe w dwóch zestawach Python, wszystkie PASS, 0 FAIL. Źródło: 664 wiersze, 36 etykiet, 31 poprawnych odsyłaczy, 38 par środowisk. Nie wykonywano osobnej inspekcji graficznej PDF.
+- [Dedykowane CI 45038348657](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45038348657) **completed/success**, commit `9c4229fa1cf7f686654345ee9140d7b8e9bbee7a` zawiera dokładnie finalny blob. **Rozdział 28 ponownie STABILNY**, wcześniejsza korekta nie zmienia matematyki. Rozdział 29 i aktualna kolejka nie zostały cofnięte.
