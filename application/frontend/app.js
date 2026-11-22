@@ -701,6 +701,8 @@ async function loadLeanFragment(query){
   const epoch=++state.leanEpoch;activateTab("lean");
   $("leanDependencies").classList.add("hidden");
   $("leanDependencyGraph").replaceChildren();
+  $("leanInspect").disabled=true;
+  $("leanInspection").textContent="Nie wykonano inspekcji deklaracji.";
   $("leanResult").classList.add("hidden");$("leanEmpty").classList.remove("hidden");
   $("leanEmpty").textContent="Odczytywanie źródła i formalizacji…";
   try {
@@ -720,6 +722,7 @@ async function loadLeanFragment(query){
         "Dostępny lokalny runner Lean 4 · "+(available.toolchain||"wersja nieznana");
       $("leanRunnerInfo").textContent=message;
       $("leanRun").disabled=!available.ready||!result.formalization_id||result.formalization_status==="stale";
+      $("leanInspect").disabled=!available.ready||!result.formalization_id||result.formalization_status!=="ready";
     }catch(err){$("leanRunnerInfo").textContent=err.message;$("leanRun").disabled=true;}
   }catch(err){
     if(epoch!==state.leanEpoch)return;
@@ -800,6 +803,7 @@ function renderLeanDependencies(data){
     " zadeklarowanych połączeń · stan źródła: "+
     (leanFormalizationLabels[data.formalization_status]||data.formalization_status)+".";
   $("leanDependencyLimitations").textContent=data.limitations;
+  $("leanInspect").disabled=!state.leanRunner?.ready||state.leanFragment?.formalization_status!=="ready";
 }
 async function loadLeanDependencies(item,epoch){
   const panel=$("leanDependencies");
@@ -817,6 +821,49 @@ async function loadLeanDependencies(item,epoch){
     $("leanDependencyGraph").replaceChildren();
     $("leanDependencyLimitations").textContent=
       "Brak grafu nie stanowi oceny poprawności matematycznej.";
+  }
+}
+
+function renderLeanInspection(result){
+  const target=$("leanInspection");
+  target.replaceChildren();
+  if(result.inspection_status!=="complete"){
+    target.append(node("p",{},"Inspekcja: "+result.inspection_status+" · "+(result.detail||"brak wyniku")));
+    return;
+  }
+  target.append(node("p",{},result.detail));
+  const names=Object.keys(result.constants).sort();
+  for(const name of names){
+    const group=node("section",{className:"lean-constant-group"});
+    const values=result.constants[name];
+    group.append(node("h3",{},name+" · "+values.length+" stałych"));
+    const list=node("ul");
+    for(const value of values)list.append(node("li",{},value));
+    group.append(list);
+    target.append(group);
+  }
+  target.append(node("p",{className:"doc-meta"},
+    "Metoda: "+result.extraction_method+" · certyfikat: NIE."));
+}
+async function inspectLeanConstants(){
+  const item=state.leanFragment,epoch=state.leanEpoch,runner=state.leanRunner;
+  if(!item?.formalization_id||!runner?.ready||item.formalization_status!=="ready")return;
+  const button=$("leanInspect");
+  button.disabled=true;button.textContent="Analizowanie w Lean…";
+  $("leanInspection").textContent="Trwa lokalna inspekcja wyrażeń Lean…";
+  try{
+    const result=await api("/api/lean/dependencies/inspect",{
+      method:"POST",body:JSON.stringify({formalization_id:item.formalization_id})});
+    if(!isCurrentLeanRun(epoch,item))return;
+    renderLeanInspection(result);
+  }catch(err){
+    if(isCurrentLeanRun(epoch,item))
+      $("leanInspection").textContent="Nie wykonano inspekcji: "+err.message;
+  }finally{
+    if(isCurrentLeanRun(epoch,item)){
+      button.textContent="Odczytaj stałe przez Lean";
+      button.disabled=!state.leanRunner?.ready||item.formalization_status!=="ready";
+    }
   }
 }
 function openLeanCurrent(){
@@ -905,6 +952,7 @@ function listeners(){
   $("openLeanCurrent").addEventListener("click",openLeanCurrent);
   $("openLeanSelection").addEventListener("click",openLeanSelection);
   $("leanRun").addEventListener("click",runLeanFormalization);
+  $("leanInspect").addEventListener("click",inspectLeanConstants);
   $("leanCatalogRefresh").addEventListener("click",()=>{state.leanCatalog=null;loadLeanCatalog();});
   $("leanCatalogSearch").addEventListener("input",renderLeanCatalog);
   $("leanCatalogFilter").addEventListener("change",renderLeanCatalog);
