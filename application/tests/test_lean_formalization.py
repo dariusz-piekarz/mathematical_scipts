@@ -146,6 +146,32 @@ class LeanFormalizationTests(unittest.TestCase):
             output = lean.run(self.con, "sample", lean_root=self.root)
         self.assertEqual(output["proof_status"], "compiled")
         self.assertFalse(output["certificate"])
+        self.assertTrue(output["run_record_saved"])
+        # The same indexed theorem must show the last real execution after reopening.
+        reopened = lean.fragment(self.con, entity_id="LST-01/theorem/0001",
+                                 lean_root=self.root)
+        self.assertEqual(reopened["proof_status"], "compiled")
+        self.assertTrue(reopened["run_cached"])
+        self.assertFalse(reopened["certificate"])
+        self.assertIn("ok", reopened["last_run_log"])
+
+    def test_provenance_change_unsets_saved_success(self):
+        done = subprocess.CompletedProcess(args=["lake"], returncode=0,
+                                           stdout="accepted", stderr="")
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
+             patch("backend.lean_formalization.subprocess.run", return_value=done):
+            lean.run(self.con, "sample", lean_root=self.root)
+        self.assertTrue(lean.fragment(self.con, entity_id="LST-01/theorem/0001",
+                                      lean_root=self.root)["run_cached"])
+        lean_source = self.root / "src" / "Example.lean"
+        lean_source.write_text("theorem sample (p : Prop) : p → p := by exact id\n",
+                               encoding="utf-8")
+        invalidated = lean.fragment(self.con, entity_id="LST-01/theorem/0001",
+                                    lean_root=self.root)
+        self.assertEqual(invalidated["proof_status"], "not_run")
+        self.assertTrue(invalidated["previous_run_outdated"])
+        self.assertFalse(invalidated["certificate"])
 
     def test_timeout_reported(self):
         with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
