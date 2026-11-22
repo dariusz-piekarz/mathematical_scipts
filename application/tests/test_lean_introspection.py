@@ -235,6 +235,27 @@ class InspectionExecutionTests(unittest.TestCase):
                                  (SOURCE, self.digest, "LST-01"))
                 self.con.commit()
 
+    def test_manifest_binding_changed_before_lock_blocks_wrong_source(self):
+        # The in-memory registry entry may be read before another process
+        # rewrites the manifest. Do not use old source info with a new catalog.
+        baseline = inspection.lean_catalog.list_formalizations(
+            self.con, lean_root=self.root)["items"][0]
+        for field, altered in (
+            ("source_module", "LST-02"),
+            ("source_label", "t:other"),
+            ("lean_file", "src/Elsewhere.lean"),
+            ("lean_theorems", ["other_declaration"]),
+        ):
+            with self.subTest(field=field):
+                changed = {**baseline, field: altered}
+                with patch.object(inspection.lean_catalog, "list_formalizations",
+                                  return_value={"items": [changed]}):
+                    result, spawned = self.execute()
+                spawned.assert_not_called()
+                self.assertEqual(result["inspection_status"], "blocked")
+                self.assertEqual(result["constants"], {})
+                self.assertFalse(result["certificate"])
+
     def test_label_binding_rebuilt_during_execution_never_returns_complete(self):
         # The document hash stays unchanged, but its label becomes unlinked
         # or is moved to a different theorem entity during the Lean process.
