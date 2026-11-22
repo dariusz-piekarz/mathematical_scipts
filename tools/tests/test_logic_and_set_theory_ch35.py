@@ -152,6 +152,95 @@ class TestBooleanModelsChapter35(unittest.TestCase):
         self.assertEqual(interior(closure(left | right)), entire)
         self.assertIn(r"\operatorname{RO}(\mathbb P)", TEXT)
 
+    def test_ro_completion_for_every_small_preorder(self):
+        # Includes non-separative preorders, not only partial orders.
+        # For n=2,3,4 there are respectively 4,29,355 preorders
+        # on labelled elements.
+        from itertools import product
+
+        count = {}
+        for n in (2, 3, 4):
+            off = [
+                (i, j) for i in range(n)
+                for j in range(n) if i != j
+            ]
+            checked = 0
+            for bits in product((0, 1), repeat=len(off)):
+                rel = {(i, i) for i in range(n)}
+                rel.update(
+                    pair for pair, bit in zip(off, bits) if bit
+                )
+                if any(
+                    (a, c) not in rel
+                    for a, b in rel
+                    for b2, c in rel if b == b2
+                ):
+                    continue
+                checked += 1
+                universe = set(range(n))
+                below = {
+                    p: {q for q in universe if (q, p) in rel}
+                    for p in universe
+                }
+
+                def closure(s):
+                    return {p for p in universe if below[p] & s}
+
+                def interior(s):
+                    return {p for p in universe if below[p] <= s}
+
+                def regularize(s):
+                    return frozenset(interior(closure(s)))
+
+                subsets = [
+                    frozenset(p for p in universe if mask & (1 << p))
+                    for mask in range(1 << n)
+                ]
+                ro = {s for s in subsets if regularize(s) == s}
+                top = frozenset(universe)
+                self.assertIn(frozenset(), ro)
+                self.assertIn(top, ro)
+
+                for a in ro:
+                    complement = frozenset(universe - closure(a))
+                    self.assertIn(complement, ro)
+                    self.assertFalse(a & complement)
+                    self.assertEqual(regularize(a | complement), top)
+                    for b in ro:
+                        self.assertIn(frozenset(a & b), ro)
+                        self.assertIn(regularize(a | b), ro)
+
+                images = {p: regularize(below[p]) for p in universe}
+                for val in images.values():
+                    self.assertIn(val, ro)
+                    self.assertTrue(val)
+                for b in ro:
+                    join = frozenset()
+                    for image in images.values():
+                        if image <= b:
+                            join = regularize(join | image)
+                    self.assertEqual(join, b)
+
+                    for p in universe:
+                        if images[p] & b:
+                            self.assertTrue(any(
+                                (q, p) in rel and images[q] <= b
+                                for q in universe
+                            ))
+
+                for p in universe:
+                    for q in universe:
+                        compatible = any(
+                            (r, p) in rel and (r, q) in rel
+                            for r in universe
+                        )
+                        self.assertEqual(
+                            bool(images[p] & images[q]), compatible
+                        )
+            count[n] = checked
+        self.assertEqual(count, {2: 4, 3: 29, 4: 355})
+        self.assertIn(r"\operatorname{RO}(\mathbb P)", TEXT)
+
     def test_exhaustive_four_valued_atomic_truth(self):
         # B=P({0,1}) encoded as bitmasks 0,1,2,3.
         # Truth at the principal ultrafilter on atom 1/2 must coincide
