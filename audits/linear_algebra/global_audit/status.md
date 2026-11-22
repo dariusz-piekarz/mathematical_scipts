@@ -1,6 +1,6 @@
 # Globalny audyt algebry liniowej — status rozdziałów
 
-**Stan po iteracji 09/09 (częściowa weryfikacja)**, 22 listopada 2026.  
+**Stan po iteracji 10 (pełny audyt odsyłaczy, globalny PDF wciąż otwarty)**, 22 listopada 2026.  
 **Aktualizacja:** rozdziały 01–05 zostały ponownie ustabilizowane. W rozdziale 05 poprawiono argument o braku podprzestrzeni dla zgodnego układu z niezerową prawą stroną, następnie wykonano dwa kolejne czyste audyty III–IV na identycznym SHA. Nowy PDF (7 stron) i CI dla poprawionego źródła [45006722306](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45006722306) zweryfikowane — SUCCESS. CI uruchomione wyłącznie zapisem końcowego statusu wymaga osobnej kontroli.
 
 | Rozdział | Status |
@@ -43,3 +43,14 @@ Iteracje 01–08 mają raporty; iteracja 09 wykonała kontrolę struktury 32 pli
 
 ## Wynik iteracji 09
 Raport: `iteration_09.md`. Zgodność 32 plików i 32 instrukcji `\\input` potwierdzona; źródła 8 rozdziałów próbkowane; CI dla commitu iteracji 08 SUCCESS. Pełny przegląd wszystkich odsyłaczy, dowodów i renderowanych rysunków nie został wykonany. Żaden rozdział nie uzyskał nowego statusu „ostatecznie czysty” wyłącznie na tej podstawie.
+
+## Aktualizacja globalna — iteracja 10 (22 listopada 2026)
+
+**[Raport iteracji 10](iteration_10.md)** oraz dwa [inwentarze LA01–16](iteration_10_inventory_01_16.json) i [LA17–32](iteration_10_inventory_17_32.json) dokumentują pełny, a nie próbkowany, odczyt 32 aktualnych plików rozdziałów. **Wynik integralności strukturalnej: czysty.**
+
+- Źródła łącznie **37 466 wierszy**, **1083** unikalne etykiety, **659** rozpoznanych odsyłaczy; **0** duplikatów, **0** niezdefiniowanych celów, **0** źle domkniętych/zagnieżdżonych środowisk; **382** środowiska `proof`, **21** rysunków `figure`. Wszystkie **32** instrukcje `\\input` w głównym pliku książki mają oczekiwaną kolejność.
+- Jedyny odsyłacz do późniejszego rozdziału: LA-08 → LA-10, zapowiedź bez wcześniejszego użycia wyniku. Wybrane nakładki: 09/12 Grama–Schmidta (realny/zespolony), 22/23 Lapunow (ciągły/dyskretny), 24/26 Riccati (podstawowy/uogólniony), 25/27 gramiany sterowalności/obserwowalności — **bez mechanicznego scalania**.
+- Ponowne regresje niezależnych skryptów dla LA30–32: **8961/8961 PASS**. Potwierdzony [CI 45041600675](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45041600675) **completed/success**; budowa całego PDF i kroki walidacji odsyłaczy/ostrzeżeń LaTeX przeszły. W przebiegu znajdują się artefakty `linear-algebra-ch01-ch32` (ID 14761539115) oraz `linear-algebra-current-chapter` (ID 14761763450); istnieją i nie były przeterminowane podczas odczytu.
+- Po poprzednich raportach ukończono również **oddzielną sekwencję stabilizacyjną LA12–32**: [raport końcowy](../re_audit_from_ch12_final_2026-11-22.md), w tym zatwierdzony dodatek Penrose’a do LA32. **Nie wznawiać od rozdziału 12** tylko z powodu kolejnej iteracji globalnej.
+- **Globalny audyt książki nadal OTWARTY:** brak osobnej wizualnej kontroli całego PDF po dodatku Penrose’a, a samo przejście CI nie jest niezależną lekturą wszystkich 382 dowodów. Krok `Report pre-existing global library validation issues` ma w workflow `continue-on-error: true`, więc zielony wynik tego workflow nie dowodzi automatycznie bezbłędności pozostałych części Biblioteki. Wcześniejszy status iteracji 09 pozostaje historycznie prawdziwy dla zakresu wykonanych wtedy czynności.
+- Następne zadanie globalne: pobrać z CI artefakt pełnego PDF i wyrenderować/obejrzeć wszystkie strony, ze szczególną uwagą na 21 ilustracji oraz poprawiony fragment LA32; następnie pogłębić przegląd dowodów i zaktualizować tabelę bez przypisywania wykonania nieprzeprowadzonym kontrolom.
