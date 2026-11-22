@@ -1,11 +1,11 @@
 # Geometria algebraiczna — rejestr statusów audytów
 
-> **Aktualizacja 2026-11-22 — ALG-10/IX, audyt globalny I:** Wszystkie ALG-00–ALG-10 są **STABILNE / ZAMKNIĘTE** według raportów końcowych, w tym ALG-10 po naprawczym VII oraz dwóch bezusterkowych przebiegach VIII i IX na niezmienionym blobie `5b231c9b40ad7f547ccfb3050e3712b7be7a75b0`. [Globalny CI 45069448058](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45069448058): SUCCESS, 187 testów PASS, dwa PDF po 184 strony, odsyłacze i logi PASS. **GLOBALNY AUDYT CAŁEJ KSIĄŻKI POZOSTAJE OTWARTY** mimo synchronizacji monolitu: wymaga kolejnych niezależnych kontroli przekrojowych, w tym kontroli spójności terminologicznej. Następny przebieg: globalny II; nie ALG-11.
+> **Aktualizacja 2026-11-22 — ALG-10/IX, audyt globalny I:** Wszystkie ALG-00–ALG-10 są **STABILNE / ZAMKNIĘTE** według raportów końcowych, w tym ALG-10 po naprawczym VII oraz dwóch bezusterkowych przebiegach VIII i IX na niezmienionym blobie `5b231c9b40ad7f547ccfb3050e3712b7be7a75b0`. [Globalny CI 45069448058](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45069448058): SUCCESS, 187 testów PASS, dwa PDF po 184 strony, odsyłacze i logi PASS. **GLOBALNY AUDYT CAŁEJ KSIĄŻKI POZOSTAJE OTWARTY** mimo synchronizacji monolitu: wymaga kolejnych niezależnych kontroli przekrojowych, w tym kontroli spójności terminologicznej. Następny przebieg: ujednolicenie terminologii ALG-03/04, po nim globalny III i dodatkowy IV; nie ALG-11.
 
 
-**Ostatnia aktualizacja:** 2026-11-22; ALG-10/IX stabilny na blobie `5b231c9b...`; globalna integracja do następnego audytu.
+**Ostatnia aktualizacja:** 2026-11-22; ALG-10/IX stabilny, globalny II zakończony z otwartym zagadnieniem terminologii ALG-03/04.
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`.
-**Następny przebieg:** globalny audyt II ALG-00–10 (spójność pojęć, odsyłaczy, matematyki, rysunków i dwóch PDF), następnie dodatkowa globalna kontrola; nie tworzyć ALG-11 bez odrębnej decyzji.
+**Następny przebieg:** kontrolowana normalizacja terminologii dzielników w ALG-03/04 z ponownymi audytami i CI, następnie globalny audyt III i dodatkowy IV; nie rozpoczynać ALG-11.
 
 | ID | Rozdział | Iteracja zakończona | Status | Raport / czynność |
 | --- | --- | ---: | --- | --- |
@@ -24,6 +24,7 @@
 ## Audyt globalny ALG-00–10
 
 [Audyt globalny I](2026-11-22-ALG-GLOBAL-iteration-01.md): wykryto i naprawiono nieaktualne fragmenty monolitu ALG-00–04, dodano regresję zgodności i osobny workflow dla obu PDF. **Audyt globalny OTWARTY**, ALG-10 po audytach VIII i IX jest już stabilny; audyt przekrojowy pozostaje niezależnym etapem. Nie przypisywać obecnemu źródłu wcześniejszych wyników CI.
+\n\n[Audyt globalny II](2026-11-22-ALG-GLOBAL-iteration-02.md): 187 regresji PASS, dwa identycznie renderujące się PDF (184/184 stron), 406 etykiet i 167 odsyłaczy bez błędów; wykryto niespójność terminów „dywizor” (ALG-03/04) i „dzielnik” (pozostałe rozdziały). Globalnie **OTWARTY** do ujednolicenia i audytów po zmianach.
 
 ## Metodologia
 
