@@ -81,6 +81,43 @@ def finite_partition_checks():
     return total, filters_checked
 
 
+
+def finite_entourage_orientation_checks():
+    """Regression: the image of an entourage need not be symmetric.
+
+    Finite uniformities have a least entourage R, an equivalence
+    relation, but their larger entourages may be asymmetric. In the
+    completion, one must use a symmetric D subset E when reversing
+    the direction of an entourage at a dense point.
+    """
+    n = 3
+    all_pairs = {(i, j) for i in range(n) for j in range(n)}
+    checked = 0
+    asymmetric = 0
+    for labels in partitions(n):
+        blocks = [frozenset(i for i, k in enumerate(labels) if k == j)
+                  for j in range(max(labels) + 1)]
+        R = {(i, j) for block in blocks for i in block for j in block}
+        other_pairs = sorted(all_pairs - R)
+        for mask in range(1 << len(other_pairs)):
+            E = R | {pair for k, pair in enumerate(other_pairs)
+                     if mask & (1 << k)}
+            D = E & {(b, a) for a, b in E}
+            assert R <= D <= E
+            assert D == {(b, a) for a, b in D}
+            # Every minimal Cauchy filter is the principal filter
+            # of its R-class. Choosing x in the class witnesses
+            # both directions in the symmetric entourage D.
+            for block in blocks:
+                for x in block:
+                    assert all((a, x) in D and (x, a) in D
+                               for a in block)
+            if any((b, a) not in E for a, b in E):
+                asymmetric += 1
+            checked += 1
+    assert asymmetric > 0, "asymmetric entourages must be exercised"
+    return checked, asymmetric
+
 def lint():
     source = (ROOT / CH).read_text(encoding="utf-8")
     assert (ROOT / STANDALONE).is_file()
@@ -107,5 +144,7 @@ def lint():
 
 if __name__ == "__main__":
     n,filters=finite_partition_checks()
+    checked, asymmetric = finite_entourage_orientation_checks()
     l,r=lint()
-    print(f"PASS chapter 13 finite uniformities={n}, principal Cauchy filters={filters}, labels={l}, refs={r}")
+    print(f"PASS chapter 13 finite uniformities={n}, principal Cauchy filters={filters}, "
+          f"entourage models={checked}, asymmetric={asymmetric}, labels={l}, refs={r}")
