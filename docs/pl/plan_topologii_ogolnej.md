@@ -162,3 +162,39 @@ zakończyła się completed/success po aktualizacji strony tytułowej
 i testów regresyjnych. Pobraną pełną książkę 1.22
 (156 stron A4) sprawdzono pod kątem zgodności tytułu,
 paginacji końcowego rozdziału i poprawności PDF.
+
+## Zatwierdzony dalszy plan po rozdziale 22
+
+Użytkownik zatwierdził kolejne etapy 1–5 w dniu 22 listopada 2026:
+
+1. **Globalny audyt 01–22**: zależności twierdzeń, pełne dowody,
+   terminologia, stabilność LaTeX/PDF, porównanie z innymi skryptami.
+   Pierwsza kontrola przekrojowa:
+   [audyt 00/01](../../audits/general_topology/00-globalny-audyt-01.md).
+   Pełne przejrzenie każdego z dowodów i wszystkich rysunków
+   jest oddzielnym zadaniem; nie deklarować go wykonanym na
+   podstawie testów strukturalnych.
+2. **Rozdział 23: Wymiar topologiczny** — wymiar pokryciowy
+   Lebesgue'a, definicje małego i dużego wymiaru indukcyjnego,
+   przykłady, niezmienniczość, porównanie wymiaru zero,
+   podstawowe oszacowania i twierdzenia z dowodami.
+   Najpierw przygotować tekst, potem 2/2 czyste audyty +
+   jeden potwierdzający na niezmienionym blobie oraz CI/PDF.
+3. **Grupy topologiczne** — działania ciągłe, otoczenia jedynki,
+   domknięte podgrupy, ilorazy, przykłady; przed rozpoczęciem
+   sprawdzić, które wyniki są już w algebrze abstrakcyjnej
+   i topologii algebraicznej.
+4. **Continua / przestrzenie continuum** — continua,
+   spójność lokalna, struktura i kontrprzykłady.
+   Rozdział 08 dostarcza podstaw; nie powielać go.
+5. **Zbieżność Mosco i zbieżność epigraficzna**
+   — materiał przypisany roboczo do analizy
+   funkcjonalnej/wariacyjnej (po sprawdzeniu
+   zbieżności zbiorów w rozdziale 22).
+   W topologii ogólnej tylko odsyłacze, nie
+   duplikacja pełnego wykładu.
+
+**Reguła kolejności:** audytować już istniejący materiał,
+następnie tworzyć i stabilizować dokładnie jeden nowy rozdział.
+Wykryte merytoryczne błędy poprawiać; rozszerzenia już zatwierdzonych
+rozdziałów przedstawiać osobno jako propozycje.
