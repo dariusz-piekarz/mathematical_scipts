@@ -1,8 +1,8 @@
 # Geometria algebraiczna — rejestr statusów audytów
 
-**Ostatnia aktualizacja:** 2026-11-22, audyt ALG-05 nr 7.
+**Ostatnia aktualizacja:** 2026-11-22, audyt ALG-05 nr 8.
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`.
-**Następny przebieg:** **ALG-05, audyt nr 8** — sprawdzenie włókien normalnych nad dowolnymi punktami oraz paginacji rysunku 5.2 po zmianach VII. Po bezusterkowym VIII wymagany jeszcze audyt dla pewności; ALG-00–04 pozostają stabilne.
+**Następny przebieg:** **ALG-05, audyt nr 9** — niezależne sprawdzenie po dodaniu założenia dodatniego kowymiaru; po bezusterkowym IX wymagany dodatkowy audyt stabilizacyjny X. ALG-00–04 pozostają stabilne.
 
 | ID | Rozdział | Iteracja zakończona | Status | Raport / czynność |
 | --- | --- | ---: | --- | --- |
@@ -11,7 +11,7 @@
 | ALG-02 | Geometria rzutowa | **6** | **STABILNY / ZAMKNIĘTY** | [Audyt 6](2026-11-22-ALG-02-iteration-06.md) — niezależny, bezusterkowy reaudyt całego rozdziału; 15/15 testów, kontrola 11-stronicowego PDF i CI PASS, brak zmian źródła |
 | ALG-03 | Punkty osobliwe i geometria lokalna krzywych | **2** | **STABILNY / ZAMKNIĘTY** | [Audyt 2](2026-11-22-ALG-03-iteration-02.md) — niezależny bezusterkowy reaudyt, dodatkowe rachunki, 8/8 regresji PASS, CI SUCCESS, 8-stronicowy PDF PASS; bez zmian w źródle |
 | ALG-04 | Algebra przemienna, snopy i krzywe algebraiczne | **4** | **STABILNY / ZAMKNIĘTY** | [Audyt 4](2026-11-22-ALG-04-iteration-04.md) — niezależny bezusterkowy reaudyt całego rozdziału, 14/14 regresji PASS, CI SUCCESS na identycznym źródle, 43-stronicowy PDF i 10 rysunków PASS |
-| ALG-05 | Rozdmuchania i rozwiązywanie osobliwości | **7** | **OTWARTY** | [Audyt 7](2026-11-22-ALG-05-iteration-07.md) — doprecyzowano włókno $E_z$ i poprawiono układ rysunku 5.2; 13 rachunków PASS, 17/17 regresji, CI SUCCESS, PDF 124 strony, podpis rysunku 5.2 na tej samej stronie |
+| ALG-05 | Rozdmuchania i rozwiązywanie osobliwości | **8** | **OTWARTY** | [Audyt 8](2026-11-22-ALG-05-iteration-08.md) — dodano wymagany dodatni kowymiar $c\ge1$ do wzoru włókna rozdmuchania; CI SUCCESS, 18/18 regresji, 124-stronicowy PDF i rysunki sprawdzone |
 | ALG-06 | Powierzchnie algebraiczne | 0 | Oczekuje | Po ALG-05 |
 | ALG-07 | Teoria przecięć, grupy Chowa i klasy Cherna | 0 | Oczekuje | Po ALG-06 |
 | ALG-08 | Geometria biwymierna i modele minimalne | 0 | Oczekuje | Po ALG-07 |
@@ -76,3 +76,6 @@ ALG-05 po audycie 6: [raport](2026-11-22-ALG-05-iteration-06.md), **OTWARTY**. P
 
 
 ALG-05 po audycie 7: [raport](2026-11-22-ALG-05-iteration-07.md), **OTWARTY**. W uwadze o projektywizacji wiązki normalnej uzupełniono brakujący zapis `E_z=E×_Z Spec κ(z) ≅ P^{c-1}_{κ(z)}` ([commit dd8b032](https://github.com/dariusz-piekarz/mathematical_scipts/commit/dd8b0322f76d7ae1c557cef912d7c602b97c302d)), rozszerzono regresję ([719b0b8](https://github.com/dariusz-piekarz/mathematical_scipts/commit/719b0b8862f3ff1f3a8fab26b5fd2301d56870a9)), oraz poprawiono podział między stronami, który oddzielał rysunek 5.2 od podpisu ([b33d0e2](https://github.com/dariusz-piekarz/mathematical_scipts/commit/b33d0e2021947c57b75221ba63c8ebf735c9a3fc)). Zaktualizowany blob rozdziału: `bbee8161048a6a8bd6956a927a25ea195e14910c`; synchronizacja monolitu [a4b39c8](https://github.com/dariusz-piekarz/mathematical_scipts/commit/a4b39c8df4bb99677e019014369d3c0a82b0a9f9). Dodatkowe 13/13 kontroli rachunkowych PASS, 43 etykiety i 6 odsyłaczy lokalnych zachowane. **Następny ALG-05/8**, dopiero potem czysty audyt stabilizacyjny. Dedykowany [CI 45041046937](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45041046937) **SUCCESS** na końcowym blobie źródła: 17/17 regresji, LaTeX, terminologia i odsyłacze PASS. Artefakt PDF `14761279250`: 124 strony, ALG-05 strony 109–124, 0 ostrzeżeń i brak przekroczeń granic stron; wizualnie potwierdzono rysunek 5.2 wraz z podpisem na stronie 119. Dopiero następny niezależny bezusterkowy audyt może rozpocząć etap stabilizacji.
+
+
+ALG-05 po audycie 8: [raport](2026-11-22-ALG-05-iteration-08.md), **OTWARTY**. Ujawniono brzegowy przypadek kowymiaru 0: jeśli Z=X, algebra Reesa ideału zerowego ma tylko stopień 0, jej Proj jest pusta, więc bez przyjętej konwencji nie należy formułować włókna P^{c-1}. Dodano jawny warunek `c≥1` w uwadze i wniosku (blob `ce875493dd73898840eb57dc061b92b5919b6790`, [commit cc53bc5](https://github.com/dariusz-piekarz/mathematical_scipts/commit/cc53bc5a68efceb74794904b09436881d1cfc970)). Dodano test [554f4c4](https://github.com/dariusz-piekarz/mathematical_scipts/commit/554f4c4371f79aba9e82925a5ec3f8a8e3fe1c61); zsynchronizowano monolit [5c11c59](https://github.com/dariusz-piekarz/mathematical_scipts/commit/5c11c595327f1fa1a9489a0e6fd74d88fa052096). Dedykowany [CI 45041560523](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45041560523) **SUCCESS**, 18/18 testów regresyjnych, LaTeX i odsyłacze PASS. Artefakt `14762145763` przejrzano: PDF 124 strony, ALG-05 strony 109–124, 0 LaTeX Warning/Overfull/Underfull, 0 bloków poza stronami, podpisy 4 rysunków na właściwych stronach. 43 unikalne etykiety, 6 poprawnych lokalnych odsyłaczy, 18 środowisk dowodów i 4 rysunki TikZ. **Następny ALG-05/IX**, a po bezusterkowym IX jeszcze obowiązkowy audyt X dla pewności; ALG-06 nie rozpoczęto.
