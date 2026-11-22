@@ -31,6 +31,7 @@ Stan: 22 listopada 2026. Źródłem prawdy dla rozdziałów włączonych do ksi�
 | **23** | **Wymiar topologiczny: wymiar pokryciowy Lebesgue’a, wymiary ind/Ind, charakterystyka wymiaru 0, wymiar odcinka i sześcianu, nerwy pokryć** | **stabilny — audyty 04–06 (2/2 + 1), CI 45051754287 PASS, osobny PDF 9 stron** |
 | **24** | **Grupy topologiczne, otoczenia elementu neutralnego, podgrupy, przestrzenie warstw i grupy ilorazowe, składowa neutralna, struktury jednostajne, twierdzenie Birkhoffa–Kakutaniego** | **stabilny — audyty 02–04 (2/2 + 1), CI 45053429106 i końcowy 45053945600 PASS, PDF 10 stron** |
 | **25** | **Continua i podcontinua, nieprzywiedlność, granice odwrotne, nierozkładalne continuum Knastera, solenoid dyadyczny, surjekcje Peana** | **stabilny — audyty 02–04 (2/2 + 1), CI 45056802863 i końcowy 45057529499 PASS, PDF 8 stron** |
+| **26** | **Twierdzenie Hahna–Mazurkiewicza: jednostajna lokalna spójność, konstrukcja małych dróg, poprawki przez pętle, surjekcja odcinka, konieczność metryzowalności i spójności lokalnej** | **w audycie — rozdział i testy utworzone, CI/PDF w weryfikacji; 0/2** |
 
 Zakresy 12–13 oraz 16–17 są rozdzielone według tematyki, żeby unikać powtarzania dowodów. Zgodnie z zasadą projektu nowe rozdziały nie oznaczają automatycznie ich stabilności.
 
