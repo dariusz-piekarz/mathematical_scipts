@@ -6,13 +6,57 @@ sandbox for arbitrary user-supplied Lean code or an isolation boundary.
 from __future__ import annotations
 
 import os
+import re
+import sys
 from pathlib import Path
 import signal
 import subprocess
 import threading
 
+try:
+    import resource
+except ImportError:  # Windows
+    resource = None
+
 MAX_LOG_BYTES = 16000
 READ_CHUNK_BYTES = 8192
+MIN_MEMORY_MB = 512
+MAX_MEMORY_MB = 65536
+
+
+class MemoryLimitUnavailable(RuntimeError):
+    """Requested memory ceiling is not enforceable on this host."""
+
+
+def configured_memory_limit_mb() -> int | None:
+    """Read an opt-in, strictly validated per-process virtual memory ceiling."""
+    raw = os.environ.get("MATLIB_LEAN_MEMORY_MB")
+    if raw is None:
+        return None
+    if not re.fullmatch(r"[1-9][0-9]{0,4}", raw):
+        raise ValueError("MATLIB_LEAN_MEMORY_MB musi być liczbą całkowitą od 512 do 65536.")
+    value = int(raw)
+    if not MIN_MEMORY_MB <= value <= MAX_MEMORY_MB:
+        raise ValueError("MATLIB_LEAN_MEMORY_MB musi być z zakresu 512–65536 MiB.")
+    return value
+
+
+def memory_limit_supported() -> bool:
+    """Limit verified for Linux RLIMIT_AS; other OSes fail closed when requested."""
+    return sys.platform.startswith("linux") and resource is not None and hasattr(resource, "RLIMIT_AS")
+
+
+def _limited_command(command: list[str], memory_limit_mb: int | None) -> list[str]:
+    if memory_limit_mb is None:
+        return command
+    if not isinstance(memory_limit_mb, int) or not MIN_MEMORY_MB <= memory_limit_mb <= MAX_MEMORY_MB:
+        raise ValueError("Unsupported memory limit.")
+    if not memory_limit_supported():
+        raise MemoryLimitUnavailable("Nie można wymusić limitu pamięci na tym systemie.")
+    helper = Path(__file__).with_name("lean_memory_exec.py")
+    if not helper.is_file():
+        raise MemoryLimitUnavailable("Brak programu ustawiającego limit pamięci Lean.")
+    return [sys.executable, str(helper), str(memory_limit_mb * 1024 * 1024), "--", *command]
 
 
 def _stop_process_group(process: subprocess.Popen[bytes]) -> None:
@@ -42,7 +86,7 @@ def _stop_process_group(process: subprocess.Popen[bytes]) -> None:
 
 def execute_registered(
     command: list[str], cwd: Path, *, timeout: float,
-    log_limit: int = MAX_LOG_BYTES,
+    log_limit: int = MAX_LOG_BYTES, memory_limit_mb: int | None = None,
 ) -> tuple[int | None, str, bool]:
     """Return (exit code, output tail, timed out) using bounded RAM for output.
 
@@ -52,6 +96,7 @@ def execute_registered(
     """
     if timeout <= 0 or log_limit <= 0:
         raise ValueError("Execution limits must be positive.")
+    command = _limited_command(command, memory_limit_mb)
     process = subprocess.Popen(
         command, cwd=cwd, stdin=subprocess.DEVNULL,
         stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=0,
