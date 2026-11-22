@@ -8,7 +8,7 @@
 
 ## 1. Niezależna kontrola definicji i rachunków kardynalnych
 
-Regularność kardynału κ została sformułowana przez cf(κ)=κ, zaś silna graniczność przez 2^λ<κ dla każdego kardynału λ<κ. W definicji nieosiągalności konieczny jest osobny warunek nieprzeliczalności, gdyż ω jest regularny i silnie graniczny. Nie zrównano słabej nieosiągalności z silną. Argument, że silnie nieosiągalny nie jest kardynałem następczym, poprawnie wykorzystuje λ^+≤2^λ.
+Regularność liczby kardynalnej κ została sformułowana przez cf(κ)=κ, zaś silna graniczność przez 2^λ<κ dla każdej liczby kardynalnej λ<κ. W definicji nieosiągalności konieczny jest osobny warunek nieprzeliczalności, gdyż ω jest regularną i silnie graniczną liczbą kardynalną. Nie zrównano słabej nieosiągalności z silną. Argument, że silnie nieosiągalna liczba kardynalna nie jest następnikiem innej liczby kardynalnej, poprawnie wykorzystuje λ^+≤2^λ.
 
 W indukcji po rangach V_α dla α<κ krok następnika korzysta z silnej graniczności, a krok graniczny z regularności: mniej niż κ zbiorów, każdy mocy mniejszej niż κ, ma sumę mocy mniejszej niż κ. W dowodzie V_κ ⊨ ZFC oddzielnie skontrolowano pusty zbiór, parę, sumę, nieskończoność, potęgowanie, wyróżnianie, zastępowanie i wybór. Szczególnie ograniczenie rang zbioru wartości formuły definiowanej nad V_κ używa dwóch niezależnych przesłanek: moc dziedziny jest <κ, a κ jest regularny. Zwykła graniczność κ nie wystarczyłaby.
 
