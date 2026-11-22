@@ -121,3 +121,23 @@ ani niejawnych założeń domkniętości/pustości.
 Wymagana dalsza niezależna czysta kontrola
 tego samego bloba oraz audyt dodatkowy
 i zielony CI z realnym przeglądem PDF.
+
+
+## Aktualizacja po inspekcji PDF
+
+Po audycie 02 pobrano rzeczywisty PDF z zielonego
+[CI 45051084818](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45051084818)
+(artefakt general-topology-ch01-ch23, ID 14765586288).
+Wyrenderowano wszystkie 10 stron A4 i obejrzano je.
+Wzory i rysunek nie zachodziły na siebie, lecz
+zidentyfikowano problem redakcyjny:
+ostatnia, dziesiąta strona zawierała wyłącznie
+krótkie podsumowanie i była niemal pusta.
+Skrócono podsumowanie bez zmiany wyników matematycznych
+w commicie 16672f16602b27fc08ba96a201c76c001fcf24a8
+(nowy blob źródła: ef9c42ad0b4a423bf85f4cb80939ee9c46b3da96).
+
+**Niniejszy audyt pozostaje czystą kontrolą matematyki
+poprzedniego bloba, ale po tej zmianie nie zalicza się
+do dwóch czystych audytów najnowszego źródła.**
+Aktualny licznik: **0/2**. Konieczne ponowne CI i rendering.
