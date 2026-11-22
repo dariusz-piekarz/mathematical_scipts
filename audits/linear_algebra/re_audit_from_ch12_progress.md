@@ -6,12 +6,27 @@
 **Zakres:** 12–32; wszystkie rozdziały muszą przejść nową sekwencję, również jeśli miały historyczny status stabilny.
 **Zasada stabilności:** dwie następujące po sobie czyste kontrole tego samego bloba po ostatniej zmianie oraz zielona walidacja CI.
 
+<!-- CURRENT_RE_AUDIT_STATE
+chapter: 30
+iteration_last_reported: 3
+stage_status: OPEN_AFTER_CORRECTION
+clean_checks_since_last_source_edit: 0
+clean_checks_required: 2
+additional_sceptical_final_audit: NOT_DONE
+last_checked_blob_sha: 6d90013dd6c66d347e5ae2ac78b4c1a194aa979e
+last_source_edit_commit: f629b926d93d76f7d09018feeb0c4c06c847f928
+closure_reason: null
+next_step: audit_ch30_corrected_source_and_verify_ci
+ci_run_id: 45039090215
+ci_status_last_checked: in_progress
+-->
+
 ## Stan wykonania
 
 - Bieżący rozdział: **30**.
 - Ostatni zamknięty blob (rozdział 29): **55fc55e2ff1b95838e0b2ca1c4ec0a6018af64dd**.
 - Liczba czystych audytów bieżącego rozdziału 30: **0/2**; oddzielny końcowy audyt: **niewykonany**. Rozdział 29 zakończony: 2/2 oraz dodatkowy czysty audyt końcowy 03.
-- Kolejne działanie: **rozdział 30 — audyt 01**. Rozdział 29 zamknięto po dwóch czystych audytach 01–02, osobnym sceptycznym audycie końcowym 03, zielonym CI 45023597804 dla tego samego bloba oraz rzeczywistej kontroli 8-stronicowego PDF wyodrębnionego z książki. Rozdział 28 pozostaje zamknięty. Rozszerzenie LA-32 o transformatę Penrose’a pozostaje w planie.
+- Kolejne działanie: **rozdział 30 — pełny audyt powtórny poprawionego bloba**, po korekcie w audycie 03 niezależnym; zresetowano czyste kontrole do 0/2, oddzielny audyt końcowy niewykonany. Rozdziały 28 i 29 pozostają zamknięte. Rozszerzenie LA-32 o transformatę Penrose’a pozostaje w planie.
 - Historyczne audyty, w tym ręczne audyty rozdziałów 13–15 z 22 listopada, pozostają ważnymi źródłami, ale **nie są automatycznie liczone** jako wykonanie nowego przebiegu.
 
 ## Tabela statusów
@@ -36,7 +51,7 @@
 | 27 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `a91dfa108d4a6ef4221b9ba24a98c87772c75d4a` |
 | 28 | STABILNY po dodatkowym audycie; 04 korekta, 05–06 czyste, CI success | 2 | `b9507aa2db7eda554446248996e7c0ae241d4e73` |
 | 29 | STABILNY; audyty 01 i 02 czyste oraz dodatkowy końcowy 03 czysty, CI success i PDF obejrzany | 3 (2+1) | `55fc55e2ff1b95838e0b2ca1c4ec0a6018af64dd` |
-| 30 | OTWARTY; audyt 01 do wykonania | 0 | — |
+| 30 | OTWARTY; audyty 01–02 na starym blobie; audyt korekcyjny 03, reset; CI nowego bloba niepotwierdzone | 0 | `6d90013dd6c66d347e5ae2ac78b4c1a194aa979e` |
 | 31 | W kolejce | 0 | — |
 | 32 | W kolejce | 0 | — |
 
@@ -287,3 +302,13 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - [Audyt 04](re_audit_from_ch12/28_iteration_04_2026-11-22.md) wykrył dwie usterki redakcyjne: nieprecyzyjną hipotezę skończonego nośnika pojedynczego `u_k` (zamiast ciągu `(u_k)_{k≥0}`) i brak przecinka przed „podstawiając”. Poprawiono źródło w [commicie 9c4229fa](https://github.com/dariusz-piekarz/mathematical_scipts/commit/9c4229fa1cf7f686654345ee9140d7b8e9bbee7a), nowy blob `b9507aa2db7eda554446248996e7c0ae241d4e73`. **Audyt 04 nieczysty, reset 0/2**.
 - [Audyt 05](re_audit_from_ch12/28_iteration_05_2026-11-22.md) i [audyt 06](re_audit_from_ch12/28_iteration_06_2026-11-22.md): **dwie kolejne czyste kontrole bloba `b9507aa2db7eda554446248996e7c0ae241d4e73` (2/2)**. Wykonano dodatkowo **783 + 690 = 1473** rzeczywiste kontrole obliczeniowe w dwóch zestawach Python, wszystkie PASS, 0 FAIL. Źródło: 664 wiersze, 36 etykiet, 31 poprawnych odsyłaczy, 38 par środowisk. Nie wykonywano osobnej inspekcji graficznej PDF.
 - [Dedykowane CI 45038348657](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45038348657) **completed/success**, commit `9c4229fa1cf7f686654345ee9140d7b8e9bbee7a` zawiera dokładnie finalny blob. **Rozdział 28 ponownie STABILNY**, wcześniejsza korekta nie zmienia matematyki. Rozdział 29 i aktualna kolejka nie zostały cofnięte.
+
+
+## Ostatnia rzeczywista iteracja — 2026-11-22 (rozdział 30, niezależny audyt korekcyjny 03)
+
+- Bieżący rozdział **30 OTWARTY**, źródło przed poprawką `7a0a02da8836336cb43df52e4dc41d6697600bd4`, po poprawce **`6d90013dd6c66d347e5ae2ac78b4c1a194aa979e`**. Licznik czystych kontroli po ostatniej zmianie **0/2**; oddzielny audyt końcowy **nie wykonany**.
+- Dwa równolegle zapisane raporty [30-01](re_audit_from_ch12/30_iteration_01_2026-11-22.md) i [30-02](re_audit_from_ch12/30_iteration_02_2026-11-22.md) są na **starym blobie** i nie liczą się po tej zmianie. Nie nadpisano tych dokumentów.
+- Krytyczny [audyt korekcyjny 03](re_audit_from_ch12/30_iteration_03_corrective_2026-11-22_1636.md) znalazł niejawne kwantyfikatory w stwierdzeniu i rzeczywistą kolizję rysunku; obie poprawki wdrożono w [commicie f629b926](https://github.com/dariusz-piekarz/mathematical_scipts/commit/f629b926d93d76f7d09018feeb0c4c06c847f928); raport zapisano w [commicie 5166f071](https://github.com/dariusz-piekarz/mathematical_scipts/commit/5166f07195058fddeb7947401a9b722bc08541d4).
+- Niezależne testy 43 921/43 921 PASS; 11 etykiet bez kolizji, 11 odsyłaczy, 14 par środowisk. PDF bloba wejściowego: strony 293–295 obejrzane; poprawiony sam rysunek skompilowany lokalnie i obejrzany; pełny PDF **po edycji niezweryfikowany**.
+- [CI 45039090215](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45039090215), commit źródłowy `f629b926…`: **in_progress** w chwili ostatniego sprawdzenia. To **nie** jest zielony wynik. Nie zamykać rozdziału ani nie przechodzić do 31.
+- **Następny etap:** jedna nowa, sceptyczna pełna kontrola poprawionego bloba, ponowne testy, CI i gdy możliwe wizualny PDF poprawionej wersji; zamknięcie dopiero 2 kolejne czyste kontrole + oddzielna końcowa + zielony CI.
