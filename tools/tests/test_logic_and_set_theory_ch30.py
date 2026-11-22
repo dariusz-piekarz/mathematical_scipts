@@ -135,6 +135,22 @@ class TestChapter30(unittest.TestCase):
         self.assertIn(r"U_0=f^{-1}[V]",TEXT)
         self.assertIn("Już w ZF zachodzą następujące fakty",TEXT)
 
+    def test_lebesgue_measurability_assumptions_and_proof_scope(self):
+        # The classical AD conclusion is stronger than the AD+DC proof
+        # supplied here; the headings and explanatory notes must agree.
+        self.assertIn(
+            r"\\section{Mierzalność w sensie Lebesgue'a przy AD i DC}", TEXT
+        )
+        self.assertIn(
+            r"\\begin{twierdzenie}[Mierzalność zbiorów liczb rzeczywistych przy AD i DC]", TEXT
+        )
+        self.assertIn(
+            r"$\\mathrm{ZF}+\\mathrm{DC}+\\mathrm{AD}$", TEXT
+        )
+        self.assertIn("Nie jest samodzielnym dowodem tego wyniku", TEXT)
+        self.assertIn("nie jest tutaj przedstawiany jako udowodniony", TEXT)
+        self.assertIn(r"\\label{rem:ad-analytic-input}", TEXT)
+
     def test_global_choice_not_conflated_with_ad(self):
         self.assertIn(r"\mathrm{AD}",TEXT)
         self.assertIn("sprzeczny z AC",TEXT)
