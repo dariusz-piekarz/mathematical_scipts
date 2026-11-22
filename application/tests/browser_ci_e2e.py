@@ -42,6 +42,7 @@ def main() -> None:
         [sys.executable, "-m", "uvicorn", "backend.api:app", "--host", "127.0.0.1",
          "--port", str(PORT), "--log-level", "warning"],
         cwd=ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE,
+        env={**os.environ, "MATLIB_LEAN_RUN": "0"},
     )
     try:
         stats = wait_for_server(proc)
@@ -64,6 +65,74 @@ def main() -> None:
                 chapter_title = page.locator("#docTitle").inner_text()
                 assert chapter_title.strip()
                 assert page.locator("#latexSource").inner_text().strip()
+                # Full browser-to-API Lean contract: exact indexed theorem,
+                # exact whole-line selection, missing partial span and safe runner.
+                with sqlite3.connect(ROOT / "data" / "biblioteka.db") as db:
+                    theorem = db.execute("""
+                        SELECT e.id,e.start_line,e.end_line,e.start_offset,e.end_offset,
+                               d.content
+                        FROM entities e
+                        JOIN labels l ON l.entity_id=e.id
+                        JOIN documents d ON d.id=e.document_id
+                        WHERE d.id='LST-01' AND l.name='thm:de-morgan-logic'
+                        LIMIT 1
+                    """).fetchone()
+                assert theorem is not None, "Registered Lean source theorem missing"
+                entity_id, first, last, begin, finish, source = theorem
+                assert first < last, "Expected multiline theorem for negative selection"
+                page.evaluate("(entity) => openEntity(entity, true)", entity_id)
+                page.wait_for_function(
+                    "(entity) => state.currentEntity===entity && !!state.currentData",
+                    arg=entity_id, timeout=15000,
+                )
+                page.locator("#openLeanCurrent").click()
+                page.wait_for_function(
+                    "() => state.leanFragment?.formalization_id==='lst01-de-morgan'",
+                    timeout=15000,
+                )
+                assert page.locator("#leanLatex").text_content() == source[begin:finish]
+                assert "inductive Formula" in page.locator("#leanCode").text_content()
+                assert page.evaluate("state.leanFragment.formalization_status") == "ready"
+                assert page.evaluate("state.leanFragment.statement_status") == "approved"
+                assert page.evaluate("state.leanFragment.certificate") is False
+                assert page.locator("#leanRun").is_disabled()
+                blocked = page.request.post(URL + "/api/lean/run",
+                                            data={"formalization_id": "lst01-de-morgan"})
+                assert blocked.status == 200
+                assert blocked.json()["proof_status"] == "blocked"
+                assert blocked.json()["certificate"] is False
+
+                page.evaluate("() => openModule('LST-01', true)")
+                page.wait_for_function(
+                    "() => state.currentModule==='LST-01' && state.currentEntity===null && !!state.currentData",
+                    timeout=15000,
+                )
+                page.locator("#rangeStart").fill(str(first))
+                page.locator("#rangeEnd").fill(str(last))
+                page.locator("#openLeanCurrent").click()
+                page.wait_for_function(
+                    "() => state.leanFragment?.formalization_id==='lst01-de-morgan' && state.leanFragment?.source_linkage==='contains_theorem'",
+                    timeout=15000,
+                )
+                expected_lines = "".join(source.splitlines(keepends=True)[first-1:last])
+                assert page.locator("#leanLatex").text_content() == expected_lines
+                assert page.evaluate("state.leanFragment.certificate") is False
+
+                page.evaluate("() => openModule('LST-01', true)")
+                page.wait_for_function(
+                    "() => state.currentModule==='LST-01' && state.currentEntity===null && !!state.currentData",
+                    timeout=15000,
+                )
+                page.locator("#rangeStart").fill(str(first))
+                page.locator("#rangeEnd").fill(str(last-1))
+                page.locator("#openLeanCurrent").click()
+                page.wait_for_function(
+                    "() => state.leanFragment?.formalization_status==='missing'",
+                    timeout=15000,
+                )
+                assert page.evaluate("state.leanFragment.lean_code") is None
+                assert page.evaluate("state.leanFragment.certificate") is False
+                assert page.locator("#leanRun").is_disabled()
                 # Last-line selection must not offer an inexistent line after
                 # a canonical TeX file ending with a terminal newline.
                 page.evaluate("() => openModule('BT-00', true)")
