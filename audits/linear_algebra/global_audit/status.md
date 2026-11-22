@@ -110,3 +110,13 @@ Raport: `iteration_09.md`. Zgodność 32 plików i 32 instrukcji `\\input` potwi
   Kolumna individual_formal_certification=NIE oznacza **brak osobnego per-dowodowego certyfikatu krok po kroku w tym rejestrze**, a nie brak wcześniejszych audytów ani twierdzenie o nieweryfikowaniu kodu przez odrębny proces Lean.
 - **Kontrola spójności źródeł:** 32 rozdziały, 1083 etykiety, 660 prostych odsyłaczy. Od inwentarza iteracji 10 zmienił się tylko LA08 (korekta z iteracji 11), bez zmiany etykiet; nowy, dodatkowy odsyłacz wskazuje istniejący cel. Nie stwierdzono brakujących odsyłaczy ani zduplikowanych etykiet.
 - **Dalszy audyt globalny OTWARTY.** Następnie krokowa analiza fundamentów LA01–05 i niezależny blok LA12–13, a później sceptyczna kontrola przekrojowa. Nie resetować zamkniętych rozdziałowych audytów LA12–32 bez konkretnej nowej usterki. Nie utożsamiać licznika PASS/CI z formalizacją wszystkich 382 dowodów.
+
+
+## Iteracja 16 — 2026-11-22: fundamenty LA01–05 i spójność LA12–13
+
+**[Raport globalny 16](iteration_16.md)** — niezależna analiza kluczowych dowodów dotyczących Steinitza, aksjomatu wyboru i lematu Zorna, baz nieskończonych i wymiarów kardynalnych, ilorazów, rzędu i jądra, zmian bazy i postaci schodkowej; dodatkowo kontrola zespolonej konwencji iloczynu skalarnego, polaryzacji i twierdzenia Riesza, oraz rzutów ortogonalnych.
+
+- **Wynik czysty w rzeczywiście skontrolowanym zakresie**: brak koniecznych zmian źródeł LA01–05 i LA12–13, zgodność dotychczasowych SHA; **15 930/15 930 PASS** w nowych testach dokładnych nad F₂/F₃ i numerycznych zespolonych (skrypt `/mnt/data/la_global16_checks.py`, SHA256 `b4e6bc09f1eafb2ed522c3c9c5da88017649a6c672f5da45e07b86f1c4219b8b`).
+- W 7 zbadanych rozdziałach: 110 istniejących środowisk `proof` (nie mylić z liczbą indywidualnie certyfikowanych), 296 etykiet i 130 odsyłaczy. W wybranym audycie struktur brak źle domkniętych środowisk i duplikatów etykiet w jednym pliku; stabilne identyfikatory etykiet pozostawiono bez zmian.
+- **Nie wykonano nowej kompilacji PDF ani nowego przebiegu CI** w tej iteracji. Stary [run 45047971276](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45047971276) poświadcza sukces wcześniejszej wersji mającej identyczne źródła rozdziałowe, nie nowego raportu ani zmian aplikacji.
+- Stabilizacja rozdziałowa LA12–32 pozostaje zamknięta; **globalny audyt wszystkich 382 dowodów pozostaje otwarty**. Następnie kontynuować indywidualną, krokową kontrolę pozostałych dowodów LA01–05, potem LA12–13 i końcowy sceptyczny audyt przekrojowy; nie dopisywać opcjonalnych tematów bez zgody użytkownika.
