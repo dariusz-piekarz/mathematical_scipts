@@ -13,6 +13,8 @@ import signal
 import subprocess
 import threading
 
+from backend import lean_cgroup
+
 try:
     import resource
 except ImportError:  # Windows
@@ -87,16 +89,43 @@ def _stop_process_group(process: subprocess.Popen[bytes]) -> None:
 def execute_registered(
     command: list[str], cwd: Path, *, timeout: float,
     log_limit: int = MAX_LOG_BYTES, memory_limit_mb: int | None = None,
+    total_memory_mb: int | None = None,
 ) -> tuple[int | None, str, bool]:
-    """Return (exit code, output tail, timed out) using bounded RAM for output.
+    """Launch approved code; opt-in cgroup caps aggregate memory of all children.
 
-    stdout and stderr share one pipe. A daemon reader drains it continuously
-    while retaining only the latest ``log_limit`` bytes in memory. Descendants
-    that retain stdout open after the main process exits are treated as an error.
+    Cgroup creation and limit setup happen before spawning. The child joins
+    the new group before executing the actual toolchain. Cleanup kills any
+    surviving descendants and refuses to report their run as successful.
     """
     if timeout <= 0 or log_limit <= 0:
         raise ValueError("Execution limits must be positive.")
     command = _limited_command(command, memory_limit_mb)
+    group = None
+    if total_memory_mb is not None:
+        group = lean_cgroup.ProcessGroup.create(total_memory_mb)
+        helper = Path(__file__).with_name("lean_cgroup_exec.py")
+        if not helper.is_file():
+            group.kill_and_remove()
+            raise lean_cgroup.CgroupUnavailable("Brak programu dołączającego proces do cgroup.")
+        command = [sys.executable, str(helper), str(group.path), "--", *command]
+    try:
+        result = _execute_process(command, cwd, timeout=timeout, log_limit=log_limit)
+    finally:
+        if group is not None:
+            surviving_tasks = group.kill_and_remove()
+    if group is not None:
+        if surviving_tasks and not result[2]:
+            raise lean_cgroup.CgroupUnavailable(
+                "Procesy Lean pozostawały w cgroup po zakończeniu kompilatora.")
+        if result[0] == 125 and "Lean cgroup guard" in result[1]:
+            raise lean_cgroup.CgroupUnavailable(
+                "Nie udało się dołączyć kompilatora do ograniczonej cgroup.")
+    return result
+
+
+def _execute_process(command: list[str], cwd: Path, *,
+                     timeout: float, log_limit: int) -> tuple[int | None, str, bool]:
+    """Drain merged stdout/stderr into a bounded tail while enforcing timeout."""
     process = subprocess.Popen(
         command, cwd=cwd, stdin=subprocess.DEVNULL,
         stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=0,
