@@ -107,10 +107,55 @@ class ALG06Regressions(unittest.TestCase):
                         # Projective-coordinate transitions differ by scalar t
                         self.assertEqual(left[0], right[0])
 
+    def test_intersection_statement_explicit_closed_point(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        block = src.split(r"\label{st:ga6-transversal-one}", 1)[1].split(
+            r"\end{stwierdzenie}", 1)[0]
+        self.assertIn("dwiema różnymi całkowitymi krzywymi", block)
+        self.assertIn("punktem zamkniętym", block)
+        self.assertIn(r"i_p(C,D;S)=1", block)
+
+    def test_blowup_statements_are_self_contained(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        for label in ("st:ga6-blowup-form", "st:ga6-Kblowup",
+                      "st:ga6-pic-blowup"):
+            with self.subTest(label=label):
+                block = src.split(r"\label{" + label + "}", 1)[1].split(
+                    r"\end{stwierdzenie}", 1)[0]
+                self.assertIn("punktem zamkniętym", block)
+                self.assertIn(r"\pi:\widetilde S=", block)
+                self.assertIn("dzielnikiem wyjątkowym", block)
+
+    def test_named_objects_in_global_results(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        hirz = src.split(r"\label{st:ga6-hirzebruch}", 1)[1].split(
+            r"\end{stwierdzenie}", 1)[0]
+        self.assertIn("Niech $n", hirz)
+        self.assertIn("$F$ klasę włókna", hirz)
+        self.assertIn("$B$ sekcję", hirz)
+        dp = src.split(r"\label{st:ga6-del-pezzo-degree}", 1)[1].split(
+            r"\end{stwierdzenie}", 1)[0]
+        self.assertIn("punktach zamkniętych", dp)
+        self.assertIn("Oznaczmy przez $H$", dp)
+        self.assertIn("$E_1,\\ldots,E_r$ dzielniki wyjątkowe".replace(
+            "\\\\", "\\"), dp)
+        chi = src.split(r"\label{st:ga6-chi}", 1)[1].split(
+            r"\end{stwierdzenie}", 1)[0]
+        self.assertIn("nad $\\C$".replace("\\\\", "\\"), chi)
+        self.assertIn(r"p_g(S)=\dim_\C H^0", chi)
+
+    def test_polish_divisor_inflection(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        self.assertIn("[Dzielniki i ich równoważność liniowa]", src)
+        self.assertIn("Dwa dzielniki $D,D'$", src)
+        self.assertIn("jako dzielniki, a zatem", src)
+        self.assertNotIn("dzielniky", src.lower())
+        self.assertNotIn("charcie", src.lower())
+
     def test_stable_labels_and_source_terms(self):
         src = SOURCE.read_text(encoding="utf-8")
         no_refs = re.sub(r"\\(?:label|ref|cref|eqref)\{[^}]+\}", "", src)
-        self.assertIsNone(re.search(r"dywizor|chart|injektywno", no_refs, re.I))
+        self.assertIsNone(re.search(r"dywizor|chart|charcie|dzielniky|injektywno", no_refs, re.I))
         self.assertIn(r"\nu^*(\mathcal O_S(D)|_C)", src)
         self.assertIn(r"N_{E/\widetilde S}\cong\mathcal O_{\PP^1_k}(-1)", src)
         self.assertIn(r"\label{tw:ga6-27-lines}", src)
