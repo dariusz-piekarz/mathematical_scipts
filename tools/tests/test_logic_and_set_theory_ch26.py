@@ -36,7 +36,7 @@ class TestChapter26(unittest.TestCase):
         labels=re.findall(r"\\label\{([^}]+)\}",TEXT)
         refs=re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}",TEXT)
         self.assertEqual(len(labels),20)
-        self.assertEqual(len(refs),17)
+        self.assertEqual(len(refs),18)
         other="\n".join(x.read_text(encoding="utf8") for x in DIR.glob("*.tex"))
         all_labels=re.findall(r"\\label\{([^}]+)\}",other)
         self.assertEqual(len(all_labels),len(set(all_labels)))
@@ -57,6 +57,27 @@ class TestChapter26(unittest.TestCase):
         self.assertIn(r"f(y)\ge y=f(x)",proof)
         self.assertIn(r"f(y)<f(x)",proof)
         self.assertNotIn("nieskończony ściśle malejący ciąg",proof)
+
+    def test_finite_choice_induction_has_defined_indices(self):
+        section=TEXT.split(r"\begin{twierdzenie}[Wybór ze skończonej rodziny w ZF]",1)[1].split(r"\end{proof}",1)[0]
+        self.assertNotIn(r"A_{e(n)}",section)
+        self.assertIn(r"$(B_k)_{k\in S(n)}$",section)
+        self.assertIn(r"$B_k:=A_{e(k)}$",section)
+        self.assertIn(r"$e:n\to I$",section)
+        self.assertIn(r"$c(i)\in A_i$",section)
+
+    def test_hartogs_and_zorn_bounding_sets(self):
+        self.assertIn(r"\mathcal P(A)\times\mathcal P(A\times A)",TEXT)
+        self.assertIn(r"\mathcal P(\mathcal W)",TEXT)
+        self.assertIn(r"\ref{thm:zf-product}",TEXT)
+        self.assertIn(r"\mathcal P(P\times\{0,1\})",TEXT)
+        self.assertIn(r"\mathcal P(I\times\bigcup_{i\in I}A_i)",TEXT)
+
+    def test_explicit_empty_index_and_poset_cases(self):
+        self.assertIn(r"łańcuch pusty musi mieć ograniczenie górne w $P$",TEXT)
+        self.assertIn(r"$I=\varnothing$ zawiera funkcję pustą",TEXT)
+        self.assertIn(r"Dla $I=\varnothing$ funkcja pusta",TEXT)
+
 
     def test_hartogs_small_cases(self):
         # Dla n elementów typy dobrze uporządkowanych podzbiorów
