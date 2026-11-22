@@ -8,17 +8,19 @@ JS = Path(__file__).resolve().parents[1] / "frontend" / "app.js"
 
 NODE = r"""
 const assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
-const node=(tag,attrs={},text='')=>({tag,attrs,textContent:text,children:[],
+const node=(tag,attrs={},text='')=>({tag,attrs,textContent:text,children:[],events:{},
  append(...children){this.children.push(...children);},
- replaceChildren(...children){this.children=children;}});
+ replaceChildren(...children){this.children=children;},
+ addEventListener(type,callback){this.events[type]=callback;}});
 const ui={
  leanInspect:{disabled:false,textContent:'Odczytaj stałe przez Lean'},
  leanInspection:node('div')
 };
 const state={leanEpoch:1,leanFragment:{formalization_id:'old',formalization_status:'ready'},
  leanRunner:{ready:true}};
-const requests=[];
+const requests=[],visits=[];
 const ctx={state,$:id=>ui[id],node,
+ loadLeanFragment:query=>visits.push(query),
  api:(url,args)=>new Promise(resolve=>requests.push({url,args,resolve})),
  isCurrentLeanRun:(epoch,item)=>epoch===state.leanEpoch&&item===state.leanFragment};
 vm.createContext(ctx);
@@ -50,6 +52,28 @@ vm.runInContext(fs.readFileSync(0,'utf8'),ctx);
  await third;
  assert.match(ui.leanInspection.children[0].textContent,/blocked/);
  assert.match(ui.leanInspection.children[0].textContent,/SHA changed/);
+ state.leanCatalog={items:[
+   {formalization_id:'candidate',source_module:'LST-01',source_label:'thm:example',
+    source_entity_id:'valid-e1',index_status:'ok',formalization_status:'ready',
+    lean_theorems:['Aux.value']},
+   {formalization_id:'amb1',source_entity_id:'amb-e2',index_status:'ok',
+    formalization_status:'ready',lean_theorems:['Ambiguous']},
+   {formalization_id:'amb2',source_entity_id:'amb-e3',index_status:'ok',
+    formalization_status:'ready',lean_theorems:['Ambiguous']},
+   {formalization_id:'stale',source_entity_id:'stale-e4',index_status:'ok',
+    formalization_status:'stale',lean_theorems:['Old.value']}
+ ]};
+ ctx.renderLeanInspection({inspection_status:'complete',
+   detail:'from Lean',extraction_method:'method',
+   constants:{new_thm:['Aux.value','Ambiguous','Old.value']}});
+ const linked=ui.leanInspection.children[1].children[1].children;
+ assert.equal(linked[0].children[0].tag,'button');
+ assert.equal(linked[0].children[0].textContent,'Aux.value');
+ linked[0].children[0].events.click();
+ assert.equal(visits.length,1);
+ assert.equal(visits[0].entity_id,'valid-e1');
+ assert.equal(linked[1].children.length,0,'ambiguous declaration must not navigate');
+ assert.equal(linked[2].children.length,0,'stale declaration must not navigate');
 })().catch(e=>{console.error(e);process.exitCode=1;});
 """
 
