@@ -55,6 +55,31 @@ class ALG02ProjectiveRegressions(unittest.TestCase):
                 y = s * pow(t, -1, p) % p
                 self.assertEqual(x*y % p, 1)
 
+    def test_scaling_and_affine_cremona_formula(self):
+        # Degree-zero forms use only nonzero scalars; the torus
+        # Cremona formula is (x,y) -> (1/x,1/y).
+        for p in PRIMES:
+            constant_form = lambda X, Y, Z: 1 % p
+            quadratic_form = lambda X, Y, Z: (X*Z-Y*Y) % p
+            for scale in range(1, p):
+                for x, y, z in product(range(p), repeat=3):
+                    self.assertEqual(
+                        constant_form(scale*x, scale*y, scale*z),
+                        constant_form(x, y, z))
+                    self.assertEqual(
+                        quadratic_form(scale*x, scale*y, scale*z),
+                        scale*scale*quadratic_form(x, y, z) % p)
+            for x, y in product(range(1, p), repeat=2):
+                image = normalize((y, x, x*y), p)
+                expected = normalize(
+                    (pow(x, -1, p), pow(y, -1, p), 1), p)
+                self.assertEqual(image, expected)
+                image_again = normalize(
+                    (image[1]*image[2],
+                     image[0]*image[2],
+                     image[0]*image[1]), p)
+                self.assertEqual(image_again, normalize((x, y, 1), p))
+
     def test_projective_conic_parametrization(self):
         for p in PRIMES:
             parametrized = {
