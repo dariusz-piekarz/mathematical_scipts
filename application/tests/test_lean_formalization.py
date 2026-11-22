@@ -133,13 +133,13 @@ class LeanFormalizationTests(unittest.TestCase):
                                 lean_root=self.root)
         self.assertEqual(current["formalization_status"], "ready")
         self.assertEqual(current["statement_status"], "approved")
-        file.write_text(SOURCE + "% source revised\\n", encoding="utf-8")
+        file.write_text(SOURCE + "% source revised\n", encoding="utf-8")
         stale = lean.fragment(self.con, entity_id="LST-01/theorem/0001",
                               lean_root=self.root)
         self.assertEqual(stale["formalization_status"], "stale")
         self.assertEqual(stale["statement_status"], "needs_review")
-        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \\
-             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \\
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which", return_value="/fake/lake"), \
              patch("backend.lean_formalization.subprocess.run") as spawn:
             blocked = lean.run(self.con, "sample", lean_root=self.root)
         self.assertEqual(blocked["proof_status"], "blocked")
