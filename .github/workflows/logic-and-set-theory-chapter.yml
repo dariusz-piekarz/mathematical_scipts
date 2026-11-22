@@ -1,4 +1,4 @@
-name: Logic and set theory chapters 01-24 validation
+name: Logic and set theory chapters 01-26 validation
 
 on:
   push:
@@ -26,6 +26,8 @@ on:
       - "audits/logic_and_set_theory_ch22_audit_*.md"
       - "audits/logic_and_set_theory_ch23_audit_*.md"
       - "audits/logic_and_set_theory_ch24_audit_*.md"
+      - "audits/logic_and_set_theory_ch25_audit_*.md"
+      - "audits/logic_and_set_theory_ch26_audit_*.md"
       - "tools/tests/test_logic_and_set_theory_ch12.py"
       - "tools/tests/test_logic_and_set_theory_ch13.py"
       - "tools/tests/test_logic_and_set_theory_ch14.py"
@@ -39,6 +41,8 @@ on:
       - "tools/tests/test_logic_and_set_theory_ch22.py"
       - "tools/tests/test_logic_and_set_theory_ch23.py"
       - "tools/tests/test_logic_and_set_theory_ch24.py"
+      - "tools/tests/test_logic_and_set_theory_ch25.py"
+      - "tools/tests/test_logic_and_set_theory_ch26.py"
       - "tools/tests/test_logic_and_set_theory_ch11.py"
       - "tools/tests/test_logic_and_set_theory_ch10.py"
       - "tools/tests/test_logic_and_set_theory_ch09.py"
@@ -63,7 +67,7 @@ jobs:
           catalog = json.loads(Path("catalog/books.json").read_text(encoding="utf-8"))
           book = next(item for item in catalog["books"] if item["id"] == "logic_and_set_theory")
           chapters = book["chapters"]
-          assert len(chapters) >= 24, chapters
+          assert len(chapters) >= 26, chapters
           expected_names = [
               "01-zdania-i-spojniki-logiczne.tex",
               "02-kwantyfikatory-i-podstawowe-metody-dowodzenia.tex",
@@ -89,12 +93,14 @@ jobs:
               "22-drugie-twierdzenie-godla-i-twierdzenie-loba.tex",
               "23-dolne-twierdzenie-lowenheima-skolema-i-domkniecia-skolema.tex",
               "24-gorne-twierdzenie-lowenheima-skolema-i-paradoks-skolema.tex",
+              "25-aksjomaty-zf-zfc-i-konstrukcje-zbiorowe.tex",
+              "26-aksjomat-wyboru-i-jego-rownowazne-postacie.tex",
           ]
-          assert [Path(path).name for path in chapters[:24]] == expected_names
+          assert [Path(path).name for path in chapters[:26]] == expected_names
           entry = Path(book["entrypoint"])
           text = entry.read_text(encoding="utf-8")
           sources = []
-          for path in chapters[:24]:
+          for path in chapters[:26]:
               chapter = Path(path)
               assert chapter.is_file(), path
               assert "\\input{../../" + path + "}" in text, path
@@ -102,9 +108,9 @@ jobs:
           labels = [name for source in sources for name in re.findall(r"\\label\{([^}]+)\}", source)]
           refs = [name for source in sources for name in re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", source)]
           assert len(labels) == len(set(labels)), "Duplicate LaTeX labels"
-          assert len(labels) == 514, f"Unexpected labels: {len(labels)}"
-          assert len(refs) == 353, f"Unexpected references: {len(refs)}"
-          forward = {"ch:zf-axioms"}
+          assert len(labels) == 580, f"Unexpected labels: {len(labels)}"
+          assert len(refs) == 393, f"Unexpected references: {len(refs)}"
+          forward = set()
           assert set(refs) - set(labels) == forward, "Unexpected unresolved targets in partial book"
           inventories = [
               (sources[5], {"twierdzenie": 15, "wniosek": 1, "proof": 16,
@@ -164,6 +170,12 @@ jobs:
               (sources[23], {"twierdzenie": 4, "lemat": 2, "wniosek": 1,
                              "proof": 7, "definicja": 2,
                              "przyklad": 2, "uwaga": 6}),
+              (sources[24], {"twierdzenie": 11, "lemat": 6, "wniosek": 2,
+                             "proof": 19, "definicja": 16,
+                             "przyklad": 14, "uwaga": 5, "figure": 1}),
+              (sources[25], {"twierdzenie": 8, "lemat": 1, "wniosek": 1,
+                             "proof": 10, "definicja": 5,
+                             "przyklad": 10, "uwaga": 2}),
           ]
           for source, inventory in inventories:
               for env, expected in inventory.items():
@@ -214,6 +226,10 @@ jobs:
         run: python -m unittest tools.tests.test_logic_and_set_theory_ch23 -v
       - name: Run chapter 24 upward Lowenheim-Skolem regression tests
         run: python -m unittest tools.tests.test_logic_and_set_theory_ch24 -v
+      - name: Run chapter 25 ZF construction and arithmetic regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch25 -v
+      - name: Run chapter 26 axiom of choice regression tests
+        run: python -m unittest tools.tests.test_logic_and_set_theory_ch26 -v
       - name: Compile logic and set theory PDF
         uses: xu-cheng/latex-action@v3
         with:
@@ -230,7 +246,7 @@ jobs:
 
           log = Path("books/pl/logic_and_set_theory.log").read_text(errors="replace")
           refs = set(re.findall(r"LaTeX Warning: Reference `([^']+)' on page \d+ undefined", log))
-          allowed = {"ch:zf-axioms"}
+          allowed = set()
           assert refs <= allowed, f"Unexpected undefined references: {sorted(refs - allowed)}"
           assert not re.search(r"Overfull \\hbox", log), "Overfull TeX boxes"
           assert not re.search(r"LaTeX Warning: Citation .+ undefined", log), "Undefined citation"
@@ -242,7 +258,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: logic-and-set-theory-ch01-ch24
+          name: logic-and-set-theory-ch01-ch26
           path: |
             books/pl/logic_and_set_theory.pdf
             books/pl/logic_and_set_theory.log
