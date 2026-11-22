@@ -70,7 +70,7 @@ class TestContinuumForcingChapter34(unittest.TestCase):
 
     def test_delta_system_case_analysis(self):
         section = TEXT[TEXT.index(r"\label{lem:forcing34-delta}"):
-                       TEXT.index(r"\end{lemat}", TEXT.index(r"\label{lem:forcing34-delta}"))]
+                       TEXT.index(r"\end{proof}", TEXT.index(r"\label{lem:forcing34-delta}"))]
         self.assertIn("regularności", section)
         self.assertIn("Indukujemy po $n$", section)
         self.assertIn(r"R\cup\{x\}", section)
