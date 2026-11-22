@@ -8,10 +8,10 @@
 
 ## Stan wykonania
 
-- Bieżący rozdział: **22**.
-- Ostatni zamknięty blob (rozdział 21): **6527ae1a6daca48717e6a5f5e83958271abb16f5**.
-- Liczba kolejnych czystych audytów (bieżący rozdział 22): **0**.
-- Kolejne działanie: **wykonać ponowny audyt 01 rozdziału 22**. Rozdział 21 zamknięty po dwóch czystych kontrolach audyty 01 i 02 bloba `6527ae1a6daca48717e6a5f5e83958271abb16f5` i CI success 45020307205.
+- Bieżący rozdział: **23**.
+- Ostatni zamknięty blob (rozdział 22): **dfa3d790bfed4c92c66642ea626a6213bc06ad3f**.
+- Liczba kolejnych czystych audytów (bieżący rozdział 23): **0**.
+- Kolejne działanie: **wykonać ponowny audyt 01 rozdziału 23**. Rozdział 22 zamknięto po dwóch czystych kontrolach 03–04 na blobie `dfa3d790bfed4c92c66642ea626a6213bc06ad3f` i dedykowanym CI success (run 45021237405). Audyt 02 zawierał poprawkę, dlatego nie był liczony jako czysty.
 - Historyczne audyty, w tym ręczne audyty rozdziałów 13–15 z 22 listopada, pozostają ważnymi źródłami, ale **nie są automatycznie liczone** jako wykonanie nowego przebiegu.
 
 ## Tabela statusów
@@ -28,8 +28,8 @@
 | 19 | STABILNY; audyty 03 i 04 czyste, CI success | 2 | `dd289d5c86452910a89d60ddfbcc558ef6d5be85` |
 | 20 | STABILNY; audyty 01 i 02 czyste, CI success | 2 | `8d585c7f4c208990ad5f82222cc47f586144c138` |
 | 21 | STABILNY; audyty 01 i 02 czyste, CI success | 2 | `6527ae1a6daca48717e6a5f5e83958271abb16f5` |
-| 22 | BIEŻĄCY; ponowny audyt 01 do wykonania | 0 | — |
-| 23 | W kolejce | 0 | — |
+| 22 | STABILNY; audyty 03 i 04 czyste po poprawce, CI success | 2 | `dfa3d790bfed4c92c66642ea626a6213bc06ad3f` |
+| 23 | BIEŻĄCY; ponowny audyt 01 do wykonania | 0 | — |
 | 24 | W kolejce | 0 | — |
 | 25 | W kolejce | 0 | — |
 | 26 | W kolejce | 0 | — |
@@ -200,3 +200,9 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - Raporty: [21_iteration_01_2026-11-22.md](re_audit_from_ch12/21_iteration_01_2026-11-22.md), [21_iteration_02_2026-11-22.md](re_audit_from_ch12/21_iteration_02_2026-11-22.md). Audyt 01: 1368 PASS; audyt 02: 1708 PASS, w tym 340 innych próbek. Testy rozwiązywały AX=XA i niezależnie sprawdzały wzory z dwóch klasyfikacji.
 - Dedykowane [CI 45020307205](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45020307205): completed/success na commicie z identycznym źródłem.
 - Następny: rozdział **22**, audyt 01.
+
+## Ostatnia rzeczywista iteracja — 2026-11-22 (rozdział 22, audyty 01–04)
+
+- Audyt 01 równolegle sprawdzał stary blob `1e38cbc7e7fc2613a2914a8c92c4e9bf92005920`; po nim wykryto błąd zakresu deklaracji we wstępie i w [audycie 02](re_audit_from_ch12/22_iteration_02_2026-11-22.md) wykonano korektę, commit [b6d3687](https://github.com/dariusz-piekarz/mathematical_scipts/commit/b6d3687237d6a08b31ad4da5b18f00370d6577b5). Licznik po zmianie wyzerowano.
+- [Audyt 03](re_audit_from_ch12/22_iteration_03_2026-11-22.md) oraz [audyt 04](re_audit_from_ch12/22_iteration_04_2026-11-22.md) są czyste (2/2) na niezmienionym blobie `dfa3d790bfed4c92c66642ea626a6213bc06ad3f`. Sprawdzono m.in. 887 kontroli Sylvestera i przykładów, 48 zespolonych przypadków Lapunowa, 4 kontrole całkowe i 342 testy bloków Jordana; brak niezgodności. Źródło 936 wierszy, 25 etykiet i 25 poprawnych odsyłaczy.
+- [CI 45021237405](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45021237405) completed/success dla commitu `b6d3687237d6a08b31ad4da5b18f00370d6577b5`, potwierdzono identyczny blob źródła rozdziału 22. Rozdział **STABILNY**; następny 23.
