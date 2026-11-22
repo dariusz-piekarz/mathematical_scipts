@@ -65,3 +65,12 @@ Do wyświetlenia certyfikatu **Zweryfikowane matematycznie** wymagane są jednoc
 
 ## Dziennik iteracji Lean
 - 2026-11-22 — użytkownik zatwierdził uruchamianie Lean z aplikacji, podgląd kodu i statusu dla wybranego fragmentu. Przyjęto cztery etapy i dwa rozdzielone strumienie automatyczne. Etap 1 traktować jako pierwszy cel implementacji. Rzeczywiste wykonanie Lean nie jest jeszcze potwierdzone.
+
+
+### Stan implementacji po pierwszej ręcznej iteracji (22.11.2026)
+- Utworzono `application/backend/lean_formalization.py` oraz API `/api/lean/status`, `/api/lean/fragment`, `/api/lean/run`.
+- Utworzono w aplikacji zakładkę **Lean 4**, przyciski dla obiektu i zaznaczenia w Czytniku, pokaz źródła LaTeX, kodu Lean, statusów i diagnostyki. Dla `proof` bez własnej etykiety dopuszczono wyłącznie powiązanie z bezpośrednio poprzedzającym twierdzeniem oraz wyraźny komunikat o ograniczeniu.
+- Dodano pilot `LST-01:thm:de-morgan-logic`, w rejestrze jako `needs_review` i `draft`, bez certyfikatu. Lean `v4.26.0` + Mathlib `v4.26.0` zadeklarowane, ale **nie uruchomiono realnej kompilacji Lean** z powodu braku `lake` w środowisku implementacji; `lake-manifest.json` jeszcze do wygenerowania.
+- Dodano `application/tests/test_lean_formalization.py`, `test_lean_http.py` i `application/lean/README.md`. Test jednostkowy podstawowej implementacji przeszedł w GitHub Actions run 45008510683; nowo dodane testy HTTP i powiązania dowodów czekają na wynik najnowszego CI (nie należy ekstrapolować poprzedniego sukcesu).
+- Utworzono dwie aktywne automatyzacje: rozwój modułu o :15 i pilotaż formalizacji o :45 każdej godziny (Europe/Warsaw); zakresy zapisu są rozłączne.
+- **Pozostało do zamknięcia etapu 1:** sprawdzenie nowego CI, rzeczywisty test `lake env lean`, przypięcie SHA źródła oraz zależności Mathlib, audyt semantyczny, pełny test przeglądarkowy ścieżki Lean, a także kontrola izolacji wykonania. `compiled` nie jest równoznaczne z `certificate=true`.
