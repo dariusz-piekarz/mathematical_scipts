@@ -16,9 +16,9 @@ Stan: 22 listopada 2026. Źródłem prawdy dla rozdziałów włączonych do ksi�
 | 08 | Spójność i spójność łukowa | po audytach |
 | 09 | Aksjomaty przeliczalności i własność Lindelöfa | po audytach |
 | 10 | Metryzowalność i twierdzenie Urysohna | po audytach |
-| **11** | **Zupełność, kategoria i twierdzenie Baire'a (wersje metryczna oraz lokalnie zwarta)** | **napisany; weryfikacja CI/audyt** |
-| **12** | **Przestrzenie jednostajne, jednostajna ciągłość, ciągi, sieci i filtry Cauchy'ego** | **napisany; audyt i CI otwarte** |
-| 13 | Zupełność jednostajna i uzupełnienia metryczne/jednostajne | plan |
+| **11** | **Zupełność, kategoria i twierdzenie Baire'a (wersje metryczna oraz lokalnie zwarta)** | **stabilny — audyt 6** |
+| **12** | **Przestrzenie jednostajne, jednostajna ciągłość, ciągi, sieci i filtry Cauchy'ego** | **stabilny — audyt 3** |
+| **13** | **Zupełność jednostajna i uzupełnienia metryczne/jednostajne** | **napisany — audyt w toku** |
 | 14 | Zwartość lokalna, przestrzenie o przeliczalnej bazie w nieskończoności | plan |
 | 15 | Parazwartość, metryzowalność i podziały jedności | plan |
 | 16 | Przestrzenie całkowicie regularne i wprowadzenie do uzwarceń | plan |
