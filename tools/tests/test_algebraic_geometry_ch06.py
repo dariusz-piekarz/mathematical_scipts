@@ -124,7 +124,7 @@ class ALG06Regressions(unittest.TestCase):
                     r"\end{stwierdzenie}", 1)[0]
                 self.assertIn("punktem zamkniętym", block)
                 self.assertIn(r"\pi:\widetilde S=", block)
-                self.assertIn("dzielnikiem wyjątkowym", block)
+                self.assertRegex(block, r"dzielnikiem\s+wyjątkowym")
 
     def test_named_objects_in_global_results(self):
         src = SOURCE.read_text(encoding="utf-8")
