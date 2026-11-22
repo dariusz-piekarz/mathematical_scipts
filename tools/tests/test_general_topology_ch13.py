@@ -88,7 +88,7 @@ def lint():
     assert r"\input{../../" + CH + "}" in (ROOT / STANDALONE).read_text(encoding="utf-8")
     entry = next(b for b in json.loads((ROOT / "catalog/books.json").read_text())["books"]
                  if b["id"] == "general_topology")
-    assert entry["chapters"][-1] == CH
+    assert entry["chapters"][12] == CH
     labels, refs = [], []
     for p in entry["chapters"]:
         text = (ROOT / p).read_text(encoding="utf-8")
