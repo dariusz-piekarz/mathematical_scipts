@@ -338,6 +338,39 @@ class LeanFormalizationTests(unittest.TestCase):
         self.assertFalse(response["certificate"])
         spawn.assert_not_called()
 
+    def test_cross_document_label_conflict_blocks_catalog_preview_and_runner(self):
+        self.entry["source_document_sha256"] = self.digest
+        self.entry["statement_status"] = "approved"
+        self.save_manifest()
+        self.con.executescript("""
+            CREATE TABLE label_conflicts(
+                name TEXT, document_id TEXT, entity_id TEXT,
+                offset INTEGER, line INTEGER, excerpt TEXT,
+                PRIMARY KEY(name, document_id));
+        """)
+        # A duplicate in a different chapter invalidates even the first
+        # globally indexed owner. Its source bytes/SHA remain unchanged.
+        self.con.execute("INSERT INTO label_conflicts VALUES(?,?,?,?,?,?)",
+                         (LABEL, "LST-99", "external-theorem", 0, 1, ""))
+        self.con.commit()
+        from backend import lean_catalog
+        entry = lean_catalog.list_formalizations(self.con, lean_root=self.root)["items"][0]
+        self.assertEqual(entry["index_status"], "ambiguous_label")
+        self.assertEqual(entry["formalization_status"], "stale")
+        self.assertIsNone(entry["source_entity_id"])
+        with self.assertRaises(HTTPException) as exc:
+            lean.fragment(self.con, entity_id="LST-01/theorem/0001",
+                          lean_root=self.root)
+        self.assertEqual(exc.exception.status_code, 409)
+        with patch.dict(os.environ, {"MATLIB_LEAN_RUN": "1"}), \
+             patch("backend.lean_formalization.shutil.which",
+                   return_value="/fake/lake"), \
+             patch("backend.lean_formalization.lean_process.execute_registered") as spawn:
+            result = lean.run(self.con, "sample", lean_root=self.root)
+        self.assertEqual(result["proof_status"], "blocked")
+        self.assertFalse(result["certificate"])
+        spawn.assert_not_called()
+
     def test_non_theorem_owner_is_rejected_across_catalog_preview_and_runner(self):
         self.entry["source_document_sha256"] = self.digest
         self.entry["statement_status"] = "approved"
