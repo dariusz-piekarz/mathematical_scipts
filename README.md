@@ -49,7 +49,7 @@ Poniższa lista pochodzi z `catalog/books.json`. Liczba rozdziałów oznacza poz
 
 | Książka / punkt wejścia | Rozdziały |
 | --- | ---: |
-| [Algebra abstrakcyjna](books/pl/abstract_algebra.tex) | 21 (01–21 stabilne) |
+| [Algebra abstrakcyjna](books/pl/abstract_algebra.tex) | 22 (01–22 stabilne) |
 | [Geometria algebraiczna](books/pl/algebraic_geometry.tex) | 11 |
 | [Topologia algebraiczna](books/pl/algebraic_topology.tex) | 31 |
 | [Twierdzenie Banacha–Tarskiego](books/pl/banach_tarski.tex) | 11 |
