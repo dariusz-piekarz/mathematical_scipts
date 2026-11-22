@@ -41,12 +41,15 @@ def exclusive(lean_root: Path) -> Iterator[None]:
         raise RunnerLockUnavailable("Nie można otworzyć blokady runnera Lean.") from exc
     locked = False
     try:
-        if not stat.S_ISREG(os.fstat(fd).st_mode):
-            raise RunnerLockUnavailable("Blokada runnera Lean nie jest zwykłym plikiem.")
-        # Windows msvcrt.locking requires a nonempty file and a stable offset.
-        if os.fstat(fd).st_size == 0:
-            os.write(fd, b"\0")
-        os.lseek(fd, 0, os.SEEK_SET)
+        try:
+            if not stat.S_ISREG(os.fstat(fd).st_mode):
+                raise RunnerLockUnavailable("Blokada runnera Lean nie jest zwykłym plikiem.")
+            # Windows msvcrt.locking requires a nonempty file and a stable offset.
+            if os.fstat(fd).st_size == 0:
+                os.write(fd, b"\0")
+            os.lseek(fd, 0, os.SEEK_SET)
+        except OSError as exc:
+            raise RunnerLockUnavailable("Błąd pliku blokady runnera Lean.") from exc
         try:
             if os.name == "nt":
                 import msvcrt
@@ -58,12 +61,11 @@ def exclusive(lean_root: Path) -> Iterator[None]:
                 raise RunnerLockUnavailable("Brak bezpiecznej blokady na tym systemie.")
             locked = True
         except OSError as exc:
-            if exc.errno in (errno.EACCES, errno.EAGAIN, errno.EWOULDBLOCK) or getattr(exc, "winerror", None) in (32, 33):
+            if (exc.errno in (errno.EACCES, errno.EAGAIN, errno.EWOULDBLOCK)
+                    or getattr(exc, "winerror", None) in (32, 33)):
                 raise RunnerBusy("Inny proces już uruchamia formalizację Lean.") from exc
             raise RunnerLockUnavailable("Nie można uzyskać blokady runnera Lean.") from exc
         yield
-    except OSError as exc:
-        raise RunnerLockUnavailable("Błąd pliku blokady runnera Lean.") from exc
     finally:
         try:
             if locked:
