@@ -129,7 +129,7 @@ def source_integration() -> tuple[int, int]:
     ):
         assert not re.search(forbidden, chapter, re.IGNORECASE), forbidden
     assert "twierdzenie Hahna--Mazurkiewicza" in chapter
-    assert "nie powtarzamy" in chapter
+    assert "Nie powtarzamy" in chapter
     return len(own_labels), len(refs)
 
 
