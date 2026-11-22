@@ -19,3 +19,7 @@ Testy korzystające z atrap subprocess nie są rzeczywistą kompilacją Lean. Br
 ## Ograniczenia i następny krok
 
 Weryfikacja SHA zamyka konkretną lukę w integralności indeksu, lecz nie zapewnia izolacji systemowej wykonywanego pliku Lean, a istniejący runner nadal wymaga lokalnego zaufanego środowiska. Następna iteracja: odczytać wynik CI, skontrolować regresję całego backendu oraz wzmocnić ograniczenia wyjścia i zasobów procesu; bez rozszerzania uprawnień do wykonywania kodu dostarczonego przez klienta.
+
+## Retest po wykryciu błędu składni testu
+
+Pierwszy przebieg po dodaniu regresji, [45011756997](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45011756997), zakończył się błędem `SyntaxError: unexpected character after line continuation character` w `tests/test_lean_formalization.py:116`: nowe testy zawierały podwójne ukośniki na końcu wierszy `with`. Poprawiono trzy kontynuacje na pojedynczy znak `\\` (commit `4314f43c7f572c9aad2adb5295a30acbb3f6f8bd`). Ponowny rzeczywisty test: [45011821712](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45011821712), wynik oczekujący. Nie zaliczać regresji przed jego zakończeniem.
