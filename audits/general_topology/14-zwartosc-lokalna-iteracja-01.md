@@ -30,15 +30,17 @@ Zachowano bez zmian oryginalne trzy główne elementy przeniesione z rozdziału 
 
 Test `tools/tests/test_general_topology_ch14.py` rozszerzono o kontrolę nowych etykiet i zachowania materiału z rozdziału 11.
 
-Pierwsza kompilacja rozszerzenia przed dodaniem kryterium dowolnych iloczynów zakończyła się sukcesem (`45007966956`), lecz jej PDF miał prawie pustą ostatnią stronę. Z tego powodu dodano pełny wynik o dowolnych iloczynach i rozszerzono testy. Dla finalnej wersji pozostaje do sprawdzenia nowy przebieg CI obejmujący książkę i samodzielny PDF rozdziału 14. **Nie uznawać wyniku CI ani kontroli graficznej za pozytywny przed rzeczywistym sprawdzeniem.**
+Pierwsza kompilacja rozszerzenia przed dodaniem kryterium dowolnych iloczynów zakończyła się sukcesem (`45007966956`), lecz jej PDF miał prawie pustą ostatnią stronę. Z tego powodu dodano pełny wynik o dowolnych iloczynach i rozszerzono testy. Końcowy przebieg z kryterium dowolnych iloczynów i jego testem: **45008243682**, commit `43060190ff550cf852131ebaff81481633919a98`, `completed / success`, bez nieudanych kroków. https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45008243682 . Pobrano artefakt `14748916841`, zawierający `general_topology_ch14.pdf` (4 strony A4) oraz log. Sprawdzono log: brak `Overfull`, `Underfull`, `Missing character`, `LaTeX Warning`, `Undefined control sequence` i `Fatal error`. Wyrenderowano i obejrzano wszystkie 4 strony: brak ucięć, kolizji podpisów i wzorów; ostatnia strona jest wypełniona nowym szczegółowym kontrprzykładem i uwagą. **Nie uznawać wyniku CI ani kontroli graficznej za pozytywny przed rzeczywistym sprawdzeniem.**
 
 | Warstwa | Status |
 | --- | --- |
 | Matematyka, dowody i zależności | Kontrola wstępna PASS |
 | Szczegółowość przykładów i kontrprzykładów | Kontrola wstępna PASS |
 | Terminologia i odsyłacze | Weryfikacja źródła wykonana |
-| Testy CI, kompilacja samodzielna i całej książki | W toku |
-| Render i kontrola PDF | Do wykonania |
+| Testy CI, kompilacja samodzielna i całej książki | PASS — run 45008243682 |
+| Render i kontrola PDF | PASS — wszystkie 4 strony |
 | Stabilizacja rozdziału | **W AUDYCIE — ITERACJA 01** |
 
 Następny krok: audyt niezależny po sprawdzeniu pełnego CI, w szczególności wyrównanie stron, ewentualne błędy dzielenia wyrazów i kompletność dowodów.
+
+**Ważne:** jest to pierwsza iteracja audytu nowego materiału. Kolejna niezależna iteracja matematyczna powinna zweryfikować w szczególności kryterium dowolnych iloczynów i konstrukcję wyczerpania. Nie nadawać jeszcze statusu STABILNY.
