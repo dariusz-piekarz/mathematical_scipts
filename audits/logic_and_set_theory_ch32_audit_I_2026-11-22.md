@@ -29,8 +29,11 @@ Pierwsza pełna wersja rozdziału wprowadza pojęcia wymuszania, zgodności i an
 - Książka została zarejestrowana w `books/pl/logic_and_set_theory.tex` i `catalog/books.json` jako 32. rozdział.
 - Pipeline `.github/workflows/logic-and-set-theory-chapter.yml` obejmuje 32 rozdziały, nowe testy `tools/tests/test_logic_and_set_theory_ch32.py`, bilans **803 etykiet i 590 odsyłaczy** dla pełnej książki.
 - [Pierwszy przebieg #45014361647](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45014361647): kontrola rejestracji, odsyłaczy, inwentarzy i testy rozdziału 32 **PASS**; kompilacja PDF **FAIL** z powodu błędu nagłówka wskazanego wyżej.
-- [Powtórzony przebieg #45014576177](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45014576177): uruchomiony po poprawce nagłówka. Końcowy status wymaga odczytania po ukończeniu; nie wolno zakładać sukcesu bez wyniku CI.
+- [Powtórzony przebieg #45014576177](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45014576177): **SUCCESS** po poprawce nagłówka, obejmujący wszystkie testy 1–32 i kompilację całej książki.
+- [Przebieg #45014622819](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45014622819) po dodaniu raportu audytu I: **SUCCESS**; potwierdza stan z raportem w repozytorium.
+- **PDF:** pełna książka liczy **279 stron**, rozdział 32 zajmuje **6 stron PDF 274–279** (drukowane numery 265–270). Ręcznie obejrzano wszystkie sześć stron na zestawieniu renderów, w szczególności drzewo warunków Cohena, tytuły, wzory i zakończenie rozdziału. Brak widocznych kolizji, ucięć lub problemów z rysunkiem.
+- **Log LaTeX:** **0 błędów**, **0 niezdefiniowanych odsyłaczy**, **0 przepełnień `Overfull \\hbox`**, **1 ostrzeżenie `Underfull \\hbox`** w całej książce.
 
 ## Werdykt audytu I
 
-**Wykonano rzeczywiste poprawki matematycznej precyzji i LaTeX.** Główne konstrukcje nie wykazały sprzeczności podczas niniejszego audytu, jednak rozdział pozostaje w fazie audytów, a do potwierdzenia aktualnego stanu technicznego potrzebny jest końcowy wynik nowej kompilacji oraz przegląd stron PDF.
+**Wykonano rzeczywiste poprawki matematycznej precyzji i LaTeX.** Główne konstrukcje nie wykazały sprzeczności podczas niniejszego audytu. Rozdział 32 jest **technicznie poprawny po audycie I**: testy, kompilacja oraz przegląd wszystkich sześciu stron PDF zakończyły się pozytywnie. Status matematyczny: **wersja wstępna do dalszych niezależnych audytów**, bez nieuprawnionego przypisywania ZFC rozszerzeniu przed twierdzeniem o wymuszaniu.
