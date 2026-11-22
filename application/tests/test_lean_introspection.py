@@ -235,6 +235,36 @@ class InspectionExecutionTests(unittest.TestCase):
                                  (SOURCE, self.digest, "LST-01"))
                 self.con.commit()
 
+    def test_label_binding_rebuilt_during_execution_never_returns_complete(self):
+        # The document hash stays unchanged, but its label becomes unlinked
+        # or is moved to a different theorem entity during the Lean process.
+        self.con.execute(
+            "INSERT INTO entities VALUES(?,?,?,?,?,?,?,?)",
+            ("e2", "LST-01", "theorem", "P duplicate", 1, 3, 0, len(SOURCE)))
+        self.con.commit()
+        for mode in ("unlinked", "moved"):
+            with self.subTest(mode=mode):
+                def mutate_labels(*args, **kwargs):
+                    if mode == "unlinked":
+                        self.con.execute("DELETE FROM labels WHERE name=?", ("t:x",))
+                    else:
+                        self.con.execute(
+                            "UPDATE labels SET entity_id=? WHERE name=?", ("e2", "t:x"))
+                    self.con.commit()
+                    return 0, transcript(), False
+
+                try:
+                    response, spawned = self.execute(process=mutate_labels)
+                    spawned.assert_called_once()
+                    self.assertEqual(response["inspection_status"], "blocked")
+                    self.assertEqual(response["constants"], {})
+                    self.assertFalse(response["certificate"])
+                finally:
+                    self.con.execute("DELETE FROM labels WHERE name=?", ("t:x",))
+                    self.con.execute(
+                        "INSERT INTO labels VALUES(?,?,?)", ("t:x", "e1", 8))
+                    self.con.commit()
+
     def test_dependency_change_after_process_refuses_stale_results(self):
         call=[0]
         def fingerprint(*args):
