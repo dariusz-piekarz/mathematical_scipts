@@ -94,7 +94,7 @@ def test_integration() -> tuple[int, int]:
     assert r"\setcounter{chapter}{20}" in entry
     for previous in ("07", "14", "18"):
         assert rf"\externaldocument{{general_topology_ch{previous}}}" in entry
-    assert "rozdział 21 w audycie" in book
+    assert "Wersja 1.21 — rozdziały 01–21 stabilne" in book
 
     catalog = json.loads((ROOT / "catalog/books.json").read_text(encoding="utf-8"))
     chapters = next(
