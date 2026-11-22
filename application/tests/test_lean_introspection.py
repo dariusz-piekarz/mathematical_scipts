@@ -84,8 +84,8 @@ class ParsingTests(unittest.TestCase):
         broken = (
             valid.replace(f"{TOKEN} END {b}", ""),
             valid.replace(f"{TOKEN} BEGIN {b} 0", f"{TOKEN} BEGIN {b} 1"),
-            valid + f"\\n{TOKEN} END {a}",
-            valid + f"\\n{TOKEN} BEGIN foreign 0",
+            valid + f"\n{TOKEN} END {a}",
+            valid + f"\n{TOKEN} BEGIN foreign 0",
             valid.replace(f"{TOKEN} CONST {a} Eq", f"{TOKEN} CONST {b} Eq"),
         )
         for log in broken:
