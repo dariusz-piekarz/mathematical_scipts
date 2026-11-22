@@ -44,15 +44,15 @@ def make_instrumentation(names: list[str], token: str, *, classified: bool = Fal
         ])
         if classified:
             lines.extend([
-                "  let typeConstants := info.type.getUsedConstantsAsSet.toList",
-                "  let valueConstants := match info.value? true with",
+                "  let typeConstants : List Name := info.type.getUsedConstantsAsSet.toList",
+                "  let valueConstants : List Name := match info.value? true with",
                 "    | some value => value.getUsedConstantsAsSet.toList",
                 "    | none => []",
                 f'  logInfo m!"{token} TYPE_BEGIN {name} {{typeConstants.length}}"',
                 "  for constant in typeConstants do",
                 f'    logInfo m!"{token} TYPE_CONST {name} {{constant}}"',
                 f'  logInfo m!"{token} TYPE_END {name}"',
-                f'  logInfo m!"{token} VALUE_BEGIN {name} {{valueConstants.length}}"',
+                f'  logInfo m!"{token} VALUE_BEGIN {name} {{toString valueConstants.length}}"',
                 "  for constant in valueConstants do",
                 f'    logInfo m!"{token} VALUE_CONST {name} {{constant}}"',
                 f'  logInfo m!"{token} VALUE_END {name}"',
