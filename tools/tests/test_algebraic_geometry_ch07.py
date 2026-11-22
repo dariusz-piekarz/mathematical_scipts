@@ -235,6 +235,38 @@ class ALG07Regressions(unittest.TestCase):
         self.assertIn(r"$d\ge1$", bezout)
         self.assertIn("dodatnich stopni", bezout)
 
+    def test_nodal_normalization_pushes_two_zeros_to_one_point(self):
+        # W: y^2=x^2(x+1), nu(t)=(t^2-1,t(t^2-1)).
+        # The node is the image of t=+1 and t=-1, each a
+        # simple zero of x; its principal cycle has weight 2.
+        for p in (3, 5, 7, 11, 13):
+            zeros = []
+            for t in range(p):
+                x = (t*t-1) % p
+                y = (t*x) % p
+                self.assertEqual((y*y-x*x*(x+1)) % p, 0)
+                if x == 0:
+                    zeros.append(t)
+                    self.assertEqual(y, 0)
+                    self.assertNotEqual((2*t) % p, 0)
+            self.assertEqual(set(zeros), {1, p-1})
+            self.assertEqual(len(zeros), 2)
+
+    def test_singular_curve_divisor_defined_by_pushforward(self):
+        src = SOURCE.read_text(encoding="utf-8")
+        definition = src.split(
+            r"\label{def:ga7-rational-divisor}", 1
+        )[1].split(r"\end{definicja}", 1)[0]
+        self.assertIn(r"\nu_*", definition)
+        self.assertIn(r"\operatorname{div}_{\widetilde W}(f)", definition)
+        self.assertIn(r"\operatorname{ord}_q(f)[\nu(q)]", definition)
+        self.assertIn(r"[\kappa(q):\kappa(\nu(q))]", definition)
+        example = src.split(
+            r"\label{prz:ga7-nodal-divisor}", 1
+        )[1].split(r"\end{przyklad}", 1)[0]
+        self.assertIn(r"$t=1$ i $t=-1$", example)
+        self.assertIn(r"\operatorname{div}_W(x)=2[p]", example)
+
     def test_source_terminology_and_crossrefs(self):
         src = SOURCE.read_text(encoding="utf-8")
         stripped = re.sub(
