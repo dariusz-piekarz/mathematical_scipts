@@ -11,7 +11,7 @@
 - Bieżący rozdział: **19**.
 - Ostatni zamknięty blob (rozdział 18): **ef815633cf3a1f795d912c510fbc8575f21e464d**.
 - Liczba kolejnych czystych audytów (bieżący rozdział 19): **0**.
-- Kolejne działanie: **wykonać audyt 02 rozdziału 19** na poprawionym blobie `ac826f20aa3462f01e0a051cef72631407fbc0dd`. Audyt 01 wykrył i naprawił nieścisłość w sformułowaniu twierdzenia; licznik czystych audytów po poprawce: 0/2.
+- Kolejne działanie: **wykonać audyt 03 rozdziału 19** na najnowszym blobie `dd289d5c86452910a89d60ddfbcc558ef6d5be85`. Audyt 02 wykrył i naprawił indeksowanie bloku Smitha oraz fleksję; licznik czystych audytów po ostatniej poprawce: 0/2. Dedykowane CI dla commitu poprawki: success (run 45020307205).
 - Historyczne audyty, w tym ręczne audyty rozdziałów 13–15 z 22 listopada, pozostają ważnymi źródłami, ale **nie są automatycznie liczone** jako wykonanie nowego przebiegu.
 
 ## Tabela statusów
@@ -25,7 +25,7 @@
 | 16 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `4f8da3c4b87b87ee8f8e6f7c7504637485c6e09a` |
 | 17 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `05b93309d0e444f1c3fcbe3489cfd98a0f02846f` |
 | 18 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success | 2 | `ef815633cf3a1f795d912c510fbc8575f21e464d` |
-| 19 | OTWARTY; audyt 01 z poprawką, CI nowego bloba do potwierdzenia | 0 | `ac826f20aa3462f01e0a051cef72631407fbc0dd` |
+| 19 | BIEŻĄCY; audyt 02 z dwiema poprawkami; audyt 03 do wykonania | 0 | `dd289d5c86452910a89d60ddfbcc558ef6d5be85` |
 | 20 | W kolejce | 0 | — |
 | 21 | W kolejce | 0 | — |
 | 22 | W kolejce | 0 | — |
@@ -165,3 +165,10 @@ Przed pracą odczytaj aktualne źródło, raporty, AGENTS.md i globalne standard
 - Raport: [19_iteration_01_2026-11-22.md](re_audit_from_ch12/19_iteration_01_2026-11-22.md), [commit d2deb1d](https://github.com/dariusz-piekarz/mathematical_scipts/commit/d2deb1d05894278e5145392e369fc157e8c32478).
 - Dotychczasowe dedykowane CI success [run 45019153860](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45019153860) dotyczy poprzedniego bloba, **nie zalicza** poprawionej wersji. Po poprawce uruchomiono [run 45020142844](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45020142844); w chwili audytu był w toku.
 - Następny: rozdział **19**, audyt 02 oraz kontrola CI na poprawionym blobie.
+
+## Ostatnia rzeczywista iteracja — 2026-11-22 (rozdział 19, audyt 02)
+
+- Raport [19_iteration_02_2026-11-22.md](re_audit_from_ch12/19_iteration_02_2026-11-22.md); skorygowano błędne indeksy bloku Smitha i fleksję `oba wielomiany`, commit [b52330c](https://github.com/dariusz-piekarz/mathematical_scipts/commit/b52330c2ca5497b4612cf320f49f1898e527729b).
+- Blob po poprawkach: `dd289d5c86452910a89d60ddfbcc558ef6d5be85`. Audyt nieczysty, licznik **0/2** po ostatniej edycji. 1484 niezależne testy numeryczne PASS; 20 etykiet unikalnych, 14 odsyłaczy poprawnych.
+- [Dedykowane CI 45020307205](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45020307205): completed/success na commicie `b52330c2ca5497b4612cf320f49f1898e527729b` z tym samym blobem.
+- Następny: audyt 03 rozdziału 19.
