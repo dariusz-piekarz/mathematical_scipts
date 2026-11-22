@@ -33,6 +33,7 @@ def test_relocation():
     assert r"\label{thm:topog-baire-metryczne}" in c11
     assert r"\label{prop:topog-lokalna-podprzestrzenie}" in c14
     assert r"\label{prop:topog-lokalna-iloczyny}" in c14
+    assert r"\label{thm:topog-lokalna-dowolny-iloczyn}" in c14
     assert r"\label{thm:topog-lokalna-wyczerpanie}" in c14
     assert r"\label{prop:topog-lokalna-drugi-aksjomat}" in c14
     assert r"\label{ex:topog-lokalna-dyskretna-nie-sigma}" in c14
