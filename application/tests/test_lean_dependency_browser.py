@@ -18,7 +18,8 @@ const dom={
   leanDependencies:{classList:{remove(){},add(){}}},
   leanDependencyStatus:{textContent:''},
   leanDependencyLimitations:{textContent:''},
-  leanDependencyGraph:node('div')
+  leanDependencyGraph:node('div'),
+  leanInspect:{disabled:true}
 };
 const state={leanEpoch:1,leanFragment:{formalization_id:'old'}};
 const jobs=[],opened=[];
