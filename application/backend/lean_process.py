@@ -13,7 +13,7 @@ import signal
 import subprocess
 import threading
 
-from backend import lean_cgroup
+from backend import lean_cgroup, lean_windows_job
 
 try:
     import resource
@@ -101,18 +101,42 @@ def execute_registered(
         raise ValueError("Execution limits must be positive.")
     command = _limited_command(command, memory_limit_mb)
     group = None
+    windows_job = None
+    startup = None
     if total_memory_mb is not None:
-        group = lean_cgroup.ProcessGroup.create(total_memory_mb)
-        helper = Path(__file__).with_name("lean_cgroup_exec.py")
-        if not helper.is_file():
-            group.kill_and_remove()
-            raise lean_cgroup.CgroupUnavailable("Brak programu dołączającego proces do cgroup.")
-        command = [sys.executable, str(helper), str(group.path), "--", *command]
+        if lean_windows_job.available():
+            windows_job = lean_windows_job.ProcessJob.create(total_memory_mb)
+            helper = Path(__file__).with_name("lean_windows_exec.py")
+            if not helper.is_file():
+                windows_job.kill_and_close()
+                raise lean_windows_job.JobUnavailable(
+                    "Brak programu Windows do uruchamiania kompilatora Lean.")
+            command = [sys.executable, str(helper), "--", *command]
+            startup = windows_job.start
+        else:
+            group = lean_cgroup.ProcessGroup.create(total_memory_mb)
+            helper = Path(__file__).with_name("lean_cgroup_exec.py")
+            if not helper.is_file():
+                group.kill_and_remove()
+                raise lean_cgroup.CgroupUnavailable(
+                    "Brak programu dołączającego proces do cgroup.")
+            command = [sys.executable, str(helper), str(group.path), "--", *command]
     try:
-        result = _execute_process(command, cwd, timeout=timeout, log_limit=log_limit)
+        result = _execute_process(
+            command, cwd, timeout=timeout, log_limit=log_limit, startup=startup)
     finally:
-        if group is not None:
+        surviving_tasks = False
+        if windows_job is not None:
+            surviving_tasks = windows_job.kill_and_close()
+        elif group is not None:
             surviving_tasks = group.kill_and_remove()
+    if windows_job is not None:
+        if surviving_tasks and not result[2]:
+            raise lean_windows_job.JobUnavailable(
+                "Procesy Lean pozostawały w Job Object po zakończeniu kompilatora.")
+        if result[0] == 125 and "Windows Lean job guard" in result[1]:
+            raise lean_windows_job.JobUnavailable(
+                "Nie udało się uruchomić kompilatora w Job Object.")
     if group is not None:
         if surviving_tasks and not result[2]:
             raise lean_cgroup.CgroupUnavailable(
@@ -124,15 +148,32 @@ def execute_registered(
 
 
 def _execute_process(command: list[str], cwd: Path, *,
-                     timeout: float, log_limit: int) -> tuple[int | None, str, bool]:
+                     timeout: float, log_limit: int,
+                     startup=None) -> tuple[int | None, str, bool]:
     """Drain merged stdout/stderr into a bounded tail while enforcing timeout."""
     process = subprocess.Popen(
-        command, cwd=cwd, stdin=subprocess.DEVNULL,
+        command, cwd=cwd,
+        stdin=subprocess.PIPE if startup is not None else subprocess.DEVNULL,
         stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=0,
         start_new_session=(os.name == "posix"),
         creationflags=(subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0),
     )
     assert process.stdout is not None
+    if startup is not None:
+        # The helper is blocked on stdin. Failure to attach must never allow
+        # any toolchain subprocess to start.
+        try:
+            startup(process)
+        except Exception:
+            if process.poll() is None:
+                process.kill()
+            try:
+                process.wait(timeout=5)
+            finally:
+                if process.stdin is not None:
+                    process.stdin.close()
+                process.stdout.close()
+            raise
     tail = bytearray()
     read_errors: list[OSError] = []
 
