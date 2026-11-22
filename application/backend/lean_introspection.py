@@ -30,11 +30,12 @@ def make_instrumentation(names: list[str], token: str) -> str:
             or len(names) != len(set(names))
             or any(not lean.VALID_THEOREM.fullmatch(n) for n in names)):
         raise ValueError("Invalid Lean introspection identifiers")
-    lines = ["\n\n-- ATLAS generated inspection; never a certificate."]
+    lines = ["\n\n-- ATLAS generated inspection; never a certificate.",
+             "open Lean Meta"]
     for name in names:
         lines.extend([
             "run_meta do",
-            f"  let info ← Lean.Meta.getConstInfo {chr(96)}{name}",
+            f"  let info ← getConstInfo {chr(96)}{name}",
             "  let constants := info.getUsedConstantsAsSet.toList",
             f'  logInfo m!"{token} BEGIN {name} {{constants.length}}"',
             "  for constant in constants do",
