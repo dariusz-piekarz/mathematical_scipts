@@ -31,6 +31,11 @@ def model_s3():
     assert all(op(x, inv(x)) == e for x in g)
     assert all(op(x, op(y, inv(x))) in even for x in g for y in even)
     assert any(op(x, op(y, inv(x))) not in h for x in g for y in h)
+    # The induced left action on cosets is transitive; stabilizer of H is H.
+    assert all(any(coset_eq == frozenset(op(x, z) for z in h)
+                   for x in g)
+               for coset_eq in {frozenset(op(x, z) for z in h) for x in g})
+    assert {x for x in g if frozenset(op(x, z) for z in h) == h} == set(h)
 
     def coset(x, subgroup):
         return frozenset(op(x, z) for z in subgroup)
@@ -124,7 +129,8 @@ def test_source():
     assert set(refs) <= set(labels), sorted(set(refs)-set(labels))
     for label in ("thm:topog24-difference", "lem:topog24-closure",
                   "thm:topog24-regular", "thm:topog24-subgroup-closure",
-                  "thm:topog24-open-quotient", "thm:topog24-coset-hausdorff",
+                  "thm:topog24-open-quotient", "thm:topog24-coset-action",
+                  "thm:topog24-coset-hausdorff",
                   "thm:topog24-normal-quotient", "thm:topog24-isomorphism",
                   "thm:topog24-coset-compact", "thm:topog24-identity-component",
                   "thm:topog24-uniformities", "thm:topog24-birkhoff-kakutani",
