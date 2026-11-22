@@ -219,6 +219,28 @@ class LeanWindowsJobTests(unittest.TestCase):
         job.kill_and_close.assert_called_once()
 
     @unittest.skipUnless(sys.platform == "win32", "Native Windows Job Objects test")
+    def test_native_nested_windows_jobs_preserve_inner_limit(self):
+        # The outer, already limited interpreter creates a second Job Object.
+        # This covers the common case of a launcher already running in a job.
+        app_dir = Path(__file__).resolve().parents[1]
+        code = (
+            "from pathlib import Path;"
+            "import sys;"
+            "from backend import lean_process;"
+            "rc,log,to=lean_process.execute_registered("
+            "[sys.executable,'-c',\"print('nested-job-ok')\"],"
+            "Path.cwd(),timeout=8,total_memory_mb=512);"
+            "assert rc==0 and not to and 'nested-job-ok' in log,(rc,log,to);"
+            "print('outer-job-ok')"
+        )
+        status, log, timed_out = lean_process.execute_registered(
+            [sys.executable, "-c", code], app_dir,
+            timeout=15, total_memory_mb=2048)
+        self.assertFalse(timed_out)
+        self.assertEqual(status, 0, log)
+        self.assertIn("outer-job-ok", log)
+
+    @unittest.skipUnless(sys.platform == "win32", "Native Windows Job Objects test")
     def test_native_windows_timeout_terminates_descendants(self):
         with tempfile.TemporaryDirectory() as tmp:
             destination = Path(tmp) / "survived"
