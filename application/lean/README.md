@@ -2,6 +2,14 @@
 
 Pierwszy etap rozwijany niezależnie od audytów LaTeX. Źródła matematyczne są tylko do odczytu; kod Lean ma odrębny rejestr w `manifest.json`.
 
+## Zakres pilotażu
+Do ręcznego mapowania źródła `LST-01` służą trzy wpisy w `manifest.json`:
+- `thm:de-morgan-logic` — dwa prawa de Morgana (`LST01_DeMorgan.lean`), skompilowane w rzeczywistym CI.
+- `thm:implication-laws` — obie równoważności implikacji oraz modus ponens (`LST01_ImplicationLaws.lean`).
+- `thm:negated-implication-xli` — równoważność negacji implikacji (`LST01_NegatedImplication.lean`).
+
+Dwa ostatnie pliki wymagają osobnego przebiegu CI po dodaniu. Wszystkie trzy powiązania mają status `needs_review`: `Prop` formalizuje wartości logiczne, a nie wprost składnię formuł i wszystkie funkcje wartościujące; nie wolno mylić tych dwóch poziomów.
+
 ## Co jest dostępne w aplikacji
 1. Otwórz obiekt matematyczny w Explorerze; w Czytniku kliknij **Zobacz w Lean**.
 2. Alternatywnie zaznacz wiersze źródłowego LaTeX i kliknij **Zaznaczenie → Lean**, albo wpisz zakres wierszy. Kod Lean jest widoczny wyłącznie, jeśli w rejestrze istnieje formalizacja powiązana z odpowiednią etykietą.
@@ -21,7 +29,7 @@ $env:MATLIB_LEAN_RUN = "1"
 python -m uvicorn backend.api:app --host 127.0.0.1 --port 8765
 ```
 
-`lean-toolchain` i `lakefile.toml` wskazują kompatybilną parę Lean/Mathlib `v4.26.0`. Po pierwszym udanym `lake update` należy dodać i wersjonować wygenerowany `lake-manifest.json` dla pełnej powtarzalności. Środowisko wykonawcze bieżącej iteracji **nie ma zainstalowanego** `lake`; prawdziwa kompilacja pliku demonstracyjnego nie została jeszcze potwierdzona.
+`lean-toolchain` wskazuje Lean 4 `v4.26.0`, a `lakefile.toml` przypina Mathlib do commitu `2df2f0150c275ad53cb3c90f7c98ec15a56a1a67` (tag `v4.26.0`). `lake update` tworzy lokalny `lake-manifest.json`; workflow CI wykonuje je również na czystym repozytorium. **Rzeczywista kompilacja i kontrola aksjomatów pierwszego pliku `LST01_DeMorgan.lean` zakończyła się powodzeniem** w [przebiegu CI 45010519869](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45010519869). Nie oznacza to zatwierdzenia zgodności ze źródłem LaTeX.
 
 **Bezpieczeństwo:** endpoint wykonania jest dla serwera uruchomionego lokalnie i pod kontrolą właściciela. Nie należy wystawiać go publicznie: Lean to program i zarejestrowany plik może wykonywać operacje IO. Timeout jest ograniczeniem operacyjnym, a nie sandboxem systemowym. Zdalny tryb wykonawczy wymaga odrębnego, izolowanego kontenera z ograniczonymi uprawnieniami, pamięcią, czasem i dostępem do sieci.
 
