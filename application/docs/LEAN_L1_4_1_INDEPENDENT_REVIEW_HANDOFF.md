@@ -1,4 +1,29 @@
-# Atlas L1.4.1 — pakiet do niezależnego odbioru po naprawie #12
+# Atlas L1.4.1 — pakiet do niezależnego odbioru (aktualny kandydat)
+
+## Aktualny SHA po poprawce zasobów #13 — techniczna stabilizacja w toku
+
+**Kandydat:** `02190e107a6305bc7b73334a566de25f9216584d` (niezmienny commit). **Fragment:** `L1.4`; podetap architektury L1.4.1.  
+**Status:** `testing`, brak pełnego 2+1 na tym SHA i brak autentykowanej niezależnej recenzji. `skeptical_review=pending`, `certificate=false`. Nie awansować do `stable` ani L1.4.2.  
+**Dziennik:** [issue #13 — bounded canonical TeX hashing](https://github.com/dariusz-piekarz/mathematical_scipts/issues/13), [issue #10 — obligatory review](https://github.com/dariusz-piekarz/mathematical_scipts/issues/10), [issue #11 — separate LST-02 semantic review](https://github.com/dariusz-piekarz/mathematical_scipts/issues/11).
+
+### Co zmieniło się względem ca6165bc
+
+- `application/backend/lean_formalization.py::_source_file_current` wcześniej wykonywała `hashlib.sha256(path.read_bytes())`. Teraz fizyczny kanoniczny TeX haszowany jest porcjami po 64 KiB, a pliki przekraczające 16 MiB są odrzucane (kontrola wielkości przed i w trakcie czytania).
+- `application/tests/test_lean_formalization.py`: dwie nowe regresje, jedna wykrywająca zakaz nieograniczonego `Path.read_bytes` i zmianę pojedynczego bajtu pliku 4 MiB, druga sprawdzająca odmowę dla pliku większego niż 16 MiB.
+- **RED** [GitHub Actions #45272887609](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45272887609) na `eda06eb9`: rzeczywiste `FAILED (failures=1, skipped=10)` z `AssertionError: unbounded Path.read_bytes`. **GREEN** [CI aplikacji #45273085659](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45273085659): `completed/success`, **740** testów Python, `skipped=10`, `unreviewed_skips=0`, obie nowe regresje `ok`; Chromium **509** rozdziałów, `javascript_errors=[]`. [Szybkie regresje Lean #45273085385](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45273085385) `completed/success`.
+- **Nowe 2+1** [#45273475902](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45273475902) sterowane [commitem kontrolnym `ffc2c8cf`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/ffc2c8cfd4df94017b0700944d81cd967f9aa5e9) z `candidate_sha=02190e10...` i `fragment=L1.4`; `prepare=success`, pierwsza runda w toku podczas wpisu. **Nie przenosić historycznych 3/3** z `ca6165bc`.
+- W obecnym rejestrze są **9 mapowań**, 5 dla LST-01 i 4 `needs_review` dla LST-02; przypięte źródła mają około 31–32 tys. znaków każde, a więc znacznie mniej niż limit. Nowa kontrola ogranicza RAM i łączną długość jednego odczytu, ale **nie tworzy atomowej migawki plików/SQLite**, nie poświadcza semantyki i nie oznacza pełnej izolacji procesu.
+
+### Wymagania dla recenzenta na nowym SHA
+
+1. Odtworzyć kod i testy z dokładnego `02190e107a6305bc7b73334a566de25f9216584d`, nie z ruchomej gałęzi. Sprawdzić konsekwencje limitu 16 MiB, obsługę błędów I/O, wczesną odmowę dla dużego pliku oraz wykrywanie zmiany małego pliku.
+2. Sprawdzić aktualny wynik workflow #45273475902: trzy kompletne rundy z aplikacją, Chromium, Windows, prawdziwym Lean/Mathlib i audytem aksjomatów oraz sceptycznym kontraktem i `evidence`. Nie ufać samemu oznaczeniu koloru bez `candidate_sha` w raportach.
+3. Ponowić weryfikację negatywnych scenariuszy TOCTOU z #12, zatwierdzeń i cofnięć manifestu, zmian SQLite i ścieżek, konfliktów etykiet, ukrywania `proof_status`, ograniczeń snapshotu i `certificate=false`.
+4. Dopiero po pełnym 3/3 wydać **rzeczywiście niezależną i uwierzytelnioną** decyzję `approve` lub `request changes` z pełnym SHA w GitHub/chronionym kanale. Autor, asystent, CI i niesygnowany JSON nie mogą sami udzielić niezależnej aprobaty.
+
+---
+
+## Archiwum: historyczny kandydat ca6165bc — 3/3 PASS na starszym kodzie
 
 **Aktualny kandydat kodu:** `ca6165bcd0f59aa6fb836e1922b51aeba51be193`  
 **Gałąź:** `biblioteka-matematyczna-iteracja-6` (ruchomy HEAD; **nie** jest przedmiotem odbioru)  
