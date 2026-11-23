@@ -19,6 +19,8 @@ def rational_riccati_poly(q):
     """
     q=s.Poly(q,x)
     degree=q.degree()
+    if q.is_zero:
+        return s.Integer(0)
     if degree==0:
         return s.sqrt(q.as_expr())
     if degree%2:
