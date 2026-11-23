@@ -31,7 +31,7 @@ Przed napisaniem niniejszego raportu pobrano na nowo cały rozdział 09, wszystk
 ## Powtórna kontrola 8 przykładów
 
 1. `E=c_0, E'=ℓ¹`: słabo-* zwarta metryzowalna kula; wektory bazowe nie mają podciągu Cauchy'ego w normie.
-2. `E=ℓ¹(I)` z nieprzeliczalnym `I`: produkt dysków z topologią współrzędną jest słabo-* zwarty i niemetryzowalny. Kierowana sieć `χ_F` zbiega do `χ_I`, żadna sekwencja skończonych nośników tej granicy nie osiąga — tekst używa poprawnie **ciągów**, nie dawnej notacji `\\mathbf 1`.
+2. `E=ℓ¹(I)` z nieprzeliczalnym `I`: produkt dysków z topologią współrzędną jest słabo-* zwarty i niemetryzowalny. Kierowana sieć `χ_F` zbiega do `χ_I`, żaden ciąg funkcji o skończonych nośnikach nie zbiega do tej granicy — tekst używa poprawnie **ciągów**, nie dawnej notacji `\\mathbf 1`.
 3. Niezupełne `c_{00}`: `f_n(x)=n x_n` daje słabo-* zbieżny ciąg do zera, a `||f_n||=n`, stąd zwartość bez równociągłości.
 4. Ekstremalne punkty wypukłego wielokąta oraz kuli **niezerowej** rzeczywistej przestrzeni Hilberta: wcześniejsze kontrprzykłady dla niewypukłego wielokąta i `H={0}` są wyeliminowane; tożsamość równoległoboku działa.
 5. Produkt przedziałów `[-1,1]^I`: ekstremalność wymusza każdą współrzędną równą `±1`.
