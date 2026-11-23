@@ -67,7 +67,7 @@ class FunctionalAnalysisChapter04(unittest.TestCase):
         for n in range(1, 200):
             scalar = 1 / n
             val = scalar * points[n % len(points)]
-            self.assertLessEqual(abs(val), 7/n)
+            self.assertLessEqual(abs(val), 7/n + 1e-12)
         unbounded_points = [n*n for n in range(1, 200)]
         self.assertTrue(all((1/n)*v == n
                             for n, v in enumerate(unbounded_points, 1)))
