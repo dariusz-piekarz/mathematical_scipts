@@ -109,6 +109,7 @@ jobs:
           ]
           assert item["chapters"][:32] == expected, "Incorrect chapter order"
           labels, refs = [], []
+          proof_count = 0
           for path in item["chapters"]:
               chapter = root / path
               assert chapter.is_file(), f"Missing chapter: {path}"
@@ -117,11 +118,13 @@ jobs:
               assert r"\includegraphics" not in chapter_text, f"Unexpected external graphic: {path}"
               labels += re.findall(r"\\label\{([^}]+)\}", chapter_text)
               refs += re.findall(r"\\(?:ref|eqref)\{([^}]+)\}", chapter_text)
+              proof_count += chapter_text.count(r"\begin{proof}")
               for lineno, line in enumerate(chapter_text.splitlines(), 1):
                   if r"\label{" in line or r"\ref{" in line or line.strip().startswith("%"):
                       continue
                   assert not re.search(r"\bunia\b|\bunii\b|\bunię\b|\bunią\b", line, flags=re.I), (path, lineno, "Use suma zbiorow")
                   assert not re.search(r"\brelacj\w*\s+liniow\w*|\bliniow\w*\s+relacj\w*", line, flags=re.I), (path, lineno, "Use warunek niezaleznosci liniowej")
+          assert proof_count == 382, f"Expected 382 registered mathematical proofs; found {proof_count}"
           assert len(labels) == len(set(labels)), "Duplicated labels across LA chapters"
           assert set(refs).issubset(set(labels)), f"Unresolved LA refs: {set(refs)-set(labels)}"
           print(f"Linear algebra chapters, order, terminology and references OK ({len(labels)} labels)")
@@ -244,9 +247,9 @@ jobs:
             echo "Unresolved references in linear algebra PDF"
             exit 1
           fi
-          if grep -qE '(Overfull|Underfull|Missing character|LaTeX Warning|Undefined control sequence|Fatal error)' books/pl/linear_algebra.log; then
+          if grep -qE '(Overfull|Underfull|Missing character|LaTeX Warning|Package hyperref Warning|Undefined control sequence|Fatal error)' books/pl/linear_algebra.log; then
             echo "Final LaTeX log contains layout or compilation warnings"
-            grep -nE '(Overfull|Underfull|Missing character|LaTeX Warning|Undefined control sequence|Fatal error)' books/pl/linear_algebra.log || true
+            grep -nE '(Overfull|Underfull|Missing character|LaTeX Warning|Package hyperref Warning|Undefined control sequence|Fatal error)' books/pl/linear_algebra.log || true
             exit 1
           fi
       - name: Export latest audited chapter as a standalone PDF
