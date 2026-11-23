@@ -73,6 +73,38 @@ class LeanOleanCpuProfileTests(unittest.TestCase):
         }
         self.assertEqual(before, after)
 
+    def test_compare_genuine_benchmark_with_profile_without_extra_digest(self):
+        from scripts import benchmark_lean_fingerprint as perf
+        evidence = perf.benchmark(self.root, samples=2)
+        original = lean_environment.compiled_artifacts_sha256
+        with patch.object(profile_lean_olean_cpu.lean_environment,
+                          "compiled_artifacts_sha256", wraps=original) as digest:
+            cpu = profile_lean_olean_cpu.profile_olean_cpu(self.root)
+            profile_lean_olean_cpu.require_matching_benchmark(evidence, cpu)
+        self.assertEqual(digest.call_count, 1)
+        self.assertEqual(evidence["compiled_artifacts_sha256"],
+                         cpu["compiled_artifacts_sha256"])
+        changed = dict(evidence)
+        changed["compiled_artifacts_sha256"] = "b" * 64
+        with self.assertRaisesRegex(RuntimeError, "changed between"):
+            profile_lean_olean_cpu.require_matching_benchmark(changed, cpu)
+
+    def test_reject_forged_or_incomplete_comparison_evidence(self):
+        from scripts import benchmark_lean_fingerprint as perf
+        baseline = perf.benchmark(self.root, samples=1)
+        cpu = profile_lean_olean_cpu.profile_olean_cpu(self.root)
+        for bad in (
+            None, {}, {"compiled_artifacts_sha256": "invalid"},
+            {**baseline, "certificate": True},
+            {**baseline, "real_fingerprint_calls": True},
+            {**baseline, "real_fingerprint_calls": 0},
+        ):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                profile_lean_olean_cpu.require_matching_benchmark(bad, cpu)
+        with self.assertRaises(ValueError):
+            profile_lean_olean_cpu.require_matching_benchmark(
+                baseline, {**cpu, "actual_digest_calls": 0})
+
     def test_invalid_limits_fail_before_scanning(self):
         for limit in (0, 21, True, None, 1.5):
             with self.subTest(limit=limit), patch.object(
