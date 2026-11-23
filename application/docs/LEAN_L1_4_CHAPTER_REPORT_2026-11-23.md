@@ -169,3 +169,47 @@ To techniczne potwierdzenie wskazanego kodu, **nie**
 uwierzytelniony niezależny odbiór ani certyfikacja matematyczna.
 [Issue #10](https://github.com/dariusz-piekarz/mathematical_scipts/issues/10)
 pozostaje otwarte. Nie awansować do L1.4.2 przed formalnym `stable`.
+
+
+## Dodatkowy sceptyczny test: TOCTOU statusu draft (#12)
+
+Dotychczasowy raport L1.4.1 ponownie porównywał fizyczny
+kanoniczny plik LaTeX **tylko dla statusu `ready`**.
+Jeśli plik TeX zmieniał się po odczycie katalogu, lecz bez
+zmiany SQLite, `draft` ze wskazaną `source_document_path`
+mógł nieprawidłowo pozostać aktualny.
+
+[Regresja negatywna `4cb894fd`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/4cb894fd15a249dc5ed7c1d6abce2c8d682e7919)
+odtworzyła problem w prawdziwym
+[CI #45251355545](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45251355545):
+`(ready,draft,stale,approved)=(0,1,0,0)`,
+gdy wymagano `(0,0,1,0)`, `FAILED (failures=1)`.
+
+W [poprawce `c84b00bc`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/c84b00bc6258fd08256afc60c3913bcbf8512621)
+weryfikacja fizycznego źródła po katalogu obejmuje także
+`draft` z jawną ścieżką, zachowując dotychczasowe
+niezatwierdzone bezścieżkowe `draft`. W
+[komicie `ca6165bc`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/ca6165bcd0f59aa6fb836e1922b51aeba51be193)
+dodano osobną regresję pozytywną, potwierdzającą, że
+niezmieniony TeX nie unieważnia poprawnego `draft`.
+[CI aplikacji #45251663688](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45251663688)
+= **completed/success**, 738 testów, 10 sklasyfikowanych
+pominięć, 0 nierozliczonych, Chromium 509 rozdziałów
+bez błędów JavaScript.
+
+Próba rozpoczęcia nowej stabilizacji na niezmiennym SHA
+`ca6165bcd0f59aa6fb836e1922b51aeba51be193`
+została odrzucona **przed rundą 1**
+([#45252342342](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45252342342)):
+`Invalid fragment ID` wskutek `fragment=L1.4.1`.
+Dopuszczalny format selektora to `L1.4`; [commit kontrolny
+`fdc10295`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/fdc102952a99fb726a31f9b717afdb82c9af134c)
+uruchamia powtórny
+[2+1 #45252666627](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45252666627)
+dla **tego samego ocenianego kodu**. W chwili zapisania
+jego trzy pełne rundy nie były jeszcze potwierdzone.
+
+Odbiór końcowy nadal wymaga 2+1 dla poprawionego SHA
+oraz niezależnej, uwierzytelnionej oceny.
+Brak zmiany kanonicznych źródeł i formalizacji Lean.
+`status=stabilizing`, `certificate=false`.
