@@ -33,7 +33,7 @@ Niezależny przegląd pełnych 9 dowodów, 5 środowisk przykładów, 15 etykiet
 
 1. **Terminologia:** „Sekwencyjne kryterium ograniczoności” zastąpiono „Ciągowe kryterium ograniczoności”.
 2. **Terminologia:** w definicji pierwszego aksjomatu przeliczalności usunięto niedopuszczone określenie „pierwszoprzeliczalną”; użyto konstrukcji „spełnia pierwszy aksjomat przeliczalności”.
-3. **Funkcje charakterystyczne:** trzy wystąpienia niezgodnego ze standardem zapisu \mathbf1 zmieniono na \chi_A.
+3. **Funkcje charakterystyczne:** dwa wystąpienia niezgodnego ze standardem zapisu \mathbf1 zmieniono na \chi_A.
 4. **Warunki brzegowe:** w stwierdzeniu o równociągłości w przestrzeniach unormowanych doprecyzowano konwencję sup pustej rodziny operatorów (wartość 0).
 5. **Dowód metryzowalności:** dodano zdanie o zerowej różnicy końców pustego podłańcucha w indukcji dzielącej łańcuch według połowy łącznej wagi.
 6. Uaktualniono metadane źródła („audyt III”); nie zmieniono żadnej z 15 etykiet i zachowano wszystkie 9 dowodów i 5 przykładów.
