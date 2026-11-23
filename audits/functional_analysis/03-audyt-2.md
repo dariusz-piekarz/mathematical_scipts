@@ -4,7 +4,7 @@
 **Gałąź:** biblioteka-matematyczna-iteracja-6.  
 **Źródło:** chapters/pl/functional_analysis/03-sieci-struktura-jednostajna-i-zupelnosc.tex.  
 **SHA audytowanego źródła:** 5ea236a2bdf75e97e9ef8082340457c9ee9bd0a6.  
-**Wynik:** czysty audyt matematyczno-redakcyjny (1/2), po pozytywnej walidacji rozszerzonego CI. **Rozdział 03 jeszcze niestabilny**.
+**Wynik:** **czysty audyt matematyczno-redakcyjny i techniczny (1/2), CI PASS**. Rozdział 03 jeszcze niestabilny.
 
 ## Metoda i zakres
 
@@ -55,8 +55,8 @@ Nie stwierdzono nieprawdziwego twierdzenia ani dalszego przeskoku uzasadniające
 
 - Rozszerzono **tylko** narzędzia kontrolne: tools/tests/test_functional_analysis_ch03.py zawiera teraz **14 testów** zamiast 10. Nowe testy dotyczą jawnej symetrii W, niezmienniczości reprezentantów z marginesem do brzegu U, sum sieci Cauchy'ego o indeksach iloczynowych i przeliczalnych nośników.
 - Kompilacja korzysta z pełnego kontekstu rozdziałów 01–05, aby odsyłacze były rzeczywiście rozwiązywane, nie pomijane.
-- [Dedykowany przebieg nowego CI 45156131987](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45156131987): testy Pythona **14/14 PASS**; końcowy stan kompilacji i kontroli PDF należy potwierdzić.
+- [Dedykowany przebieg CI 45156131987](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45156131987): **pełny SUCCESS** — 14/14 testów Pythona PASS, przygotowanie dokumentu z rozdziałami 01–05 PASS, kompilacja LaTeX PASS, kontrola PDF i odsyłaczy PASS, artefakt przesłany. Pobrany plik PDF ma **33 strony A4, 480445 bajtów**. Końcowy log: 0 błędów `Undefined control sequence`, 0 nierozwiązanych odsyłaczy, 0 `Overfull \\hbox`, 0 `Missing character`. Ponownie wyrenderowano strony 19–21 i sprawdzono wizualnie treść konstrukcji uzupełnienia, diagram 3.1 oraz podpisy.
 
 ## Decyzja
 
-**Audyt 03/02 czysty matematycznie i redakcyjnie**, bez zmian w rozdziale. Po potwierdzonym PASS całego CI zalicza się jako **1/2 wymaganych czystych audytów**. Przed rozpoczęciem rozdziału 04 trzeba wykonać jeszcze niezależny czysty audyt potwierdzający 03/03.
+**Audyt 03/02 CZYSTY (1/2), potwierdzony pełnym CI PASS**, bez zmian w rozdziale. Przed rozpoczęciem rozdziału 04 trzeba wykonać jeszcze niezależny czysty audyt potwierdzający 03/03.
