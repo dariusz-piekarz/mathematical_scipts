@@ -54,3 +54,13 @@ Pobrano ponownie pliki wszystkich rozdziałów **01–11** z bieżącej gałęzi
 Pierwszy rzeczywisty przebieg dedykowanego CI [#45229321602](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45229321602) zakończył się **FAILURE** na teście terminologii, a więc nie uruchomił kompilacji LaTeX. Poprawiono źródło, nie rozluźniając kontraktu. Następny przebieg [#45229640597](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45229640597), na commicie `e031a92243475d69c78437b6f94efab333e7fa54`, przeszedł **15/15 testów** i przygotowanie kompletnego kontekstu 01–11; jego późniejsze etapy kompilacji i PDF należy zweryfikować wprost po ukończeniu. Nie przypisujemy statusu PASS krokom jeszcze nierozstrzygniętym.
 
 **Werdykt 11/02: AUDYT Z POPRAWKAMI — 0/2.** Po zielonym CI i inspekcji PDF następna iteracja 11/03 powinna niezależnie skontrolować niezmienioną wersję źródła SHA `73505ec4ff0f51ae76f0cfdf67cccd5eccbbd2b2`; dopiero wtedy może uzyskać pierwszy czysty wynik 1/2. Rozdział 12 jest zablokowany.
+
+## Zakończenie audytu 11/02 — CI i PDF
+
+Po poprawkach rozdziału 11 dedykowany przebieg [GitHub Actions #45229640597](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45229640597) zakończył się **COMPLETED/SUCCESS**: **15/15 testów regresyjnych PASS**, kompletowanie 11 rzeczywistych `\input` PASS, kompilacja LaTeX PASS, automatyczna kontrola logów oraz PDF i odsyłaczy PASS, publikacja artefaktu `functional-analysis-ch11-pdf` PASS. Dokument pobrano z artefaktu **#14845897294**: `functional_analysis_ch11_context_ci.pdf`, **66 stron**. Rozdział 11 zajmuje strony **61–66**.
+
+Przeprowadzono dodatkową **rzeczywistą inspekcję wizualną** wszystkich stron 61–66 na arkuszu podglądowym oraz osobno powiększono stronę **65** z diagramem TikZ. **Nie stwierdzono kolizji etykiet, obcięć wzorów, nachodzenia podpisu na rysunek ani bloków tekstu poza marginesami strony.** Programowa kontrola współrzędnych bloków tekstowych w PyMuPDF również nie wykazała przekroczeń prostokątów stron. Samo CI potwierdza budowę dokumentu i testy kontraktów, a nie stanowi formalnego dowodu twierdzeń.
+
+Dodatkowy workflow wyzwolony zapisem pierwszej wersji niniejszego raportu ma identyczne SHA źródła i testów; jego końcowy rezultat należy sprawdzić osobno przed zamknięciem raportu. W tej iteracji **nie** zalicza się czystego przeglądu: źródło uległo zmianom terminologicznym i zostało rozszerzone matematyczne uzasadnienie przykładu.
+
+**Ostateczny werdykt merytoryczny 11/02: AUDYT Z POPRAWKAMI, STABILIZACJA 0/2.** Następna niezależna kontrola 11/03 może rozpocząć pierwsze czyste zaliczenie wyłącznie na niezmienionym blobie `73505ec4ff0f51ae76f0cfdf67cccd5eccbbd2b2`, po potwierdzeniu zielonego CI.
