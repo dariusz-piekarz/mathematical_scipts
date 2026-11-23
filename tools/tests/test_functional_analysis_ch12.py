@@ -53,6 +53,14 @@ class Chapter12Audit(unittest.TestCase):
         self.assertIn(r"\Phi(\chi_{A_n})=0", self.source)
         self.assertIn(r"T(\chi_K)", self.source)
 
+    def test_inline_math_balanced_by_paragraph(self):
+        # Inline math may span lines, but no paragraph may end in math mode.
+        text = "\n".join(line.split("%", 1)[0] for line in self.source.splitlines())
+        for n, paragraph in enumerate(re.split(r"\n\s*\n", text), 1):
+            dollars = re.findall(r"(?<!\\)\$", paragraph)
+            self.assertEqual(len(dollars) % 2, 0, f"Paragraph {n}: unbalanced $")
+        self.assertIn(r"$(L^\infty(\mu))'$", self.source)
+
     def test_operator_norm_and_completion_hypotheses(self):
         self.assertIn(r"\mathcal L(E,F)", self.source)
         self.assertIn(r"\|T_n-T\|\to0", self.source)
