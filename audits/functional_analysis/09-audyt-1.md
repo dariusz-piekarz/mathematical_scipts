@@ -53,13 +53,19 @@ Na pobranych źródłach 01–09 po poprawkach niezależnie zliczono: **14 par �
 
 Utworzono `tools/tests/test_functional_analysis_ch09.py` z **18 testami**: spójność książki, liczba środowisk, etykiety/odsyłacze, polska terminologia, hipoteza wypukłości wielokąta, polary i równociągłość, modele Banacha–Alaoglu, metryka z odczytów, sieć po skończonych nośnikach, kontrprzykład na `c_{00}`, przykłady Hilberta i `ℓ¹`, lemat dominacji, rekonstrukcja seminormy Mackeya, interpolacja z powtarzaniem indeksów, promień `R=0`, rysunek TikZ.
 
-Utworzono też `.github/workflows/functional-analysis-ch09.yml`, uruchamiający testy, budowę kontekstu LaTeX 01–09, kompilację PDF, automatyczną kontrolę odsyłaczy i artefaktu. W przebiegu [CI #45207624031](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45207624031) **18 testów i kompilacja LaTeX przeszły pomyślnie**; końcowy etap kontroli PDF pozostawał w toku w chwili tworzenia raportu. Nie należy przedstawiać tego jako niezależnej wizualnej inspekcji stron PDF.
+Utworzono też `.github/workflows/functional-analysis-ch09.yml`, uruchamiający testy, budowę kontekstu LaTeX 01–09, kompilację PDF, automatyczną kontrolę odsyłaczy i artefaktu. W przebiegu [CI #45207624031](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45207624031) **wszystkie 18 testów, przygotowanie kontekstu 01–09, kompilacja LaTeX, kontrola PDF i odsyłaczy oraz publikacja artefaktu przeszły pomyślnie (SUCCESS)**. Dodatkowo pobrano rzeczywisty artefakt PDF tego przebiegu i przeprowadzono niezależną inspekcję stron 48–55, obejmującą rysunek TikZ na stronie 51.
 
 ## Propozycje uzupełnień, niewprowadzone do źródła
 
-1. Po twierdzeniu o słabo-* metryzowalnej kuli przydatna byłaby krótka osobna uwaga o różnicy między zwartością ciągową a własnością Frécheta–Urysohna dla topologii niemet­ryzowalnych (opcjonalne).
+1. Po twierdzeniu o słabo-* metryzowalnej kuli przydatna byłaby krótka osobna uwaga o różnicy między zwartością ciągową a własnością Frécheta–Urysohna dla topologii niemetryzowalnych (opcjonalne).
 2. Można rozważyć osobny diagram obrazujący różnicę między domkniętą otoczką wypukłą a skończoną otoczką wypukłą punktów ekstremalnych (opcjonalne). Każda taka rozbudowa wymaga uprzedniej zgody użytkownika.
 
 ## Decyzja
 
 **Audyt 09/01: Z POPRAWKAMI (0/2)**. Najpierw potwierdzić końcowy sukces dedykowanego CI i wykonać niezależny przegląd 09/02 na niezmienionym źródle; dopiero dwa kolejne czyste audyty pozwolą przejść do rozdziału 10.
+
+## Niezależna inspekcja PDF po zakończeniu CI
+
+Pobrano oryginalny artefakt `functional-analysis-ch09-pdf` z [udanego CI #45207624031](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45207624031) (ID artefaktu `14833303556`). PDF ma **55 stron formatu A4**; rozdział 09 rozpoczyna się na **stronie 48**, a kończy na **stronie 55**. Dokument ma 640283 bajty. Wyrenderowano i obejrzano wszystkie **8 stron 48–55**, w szczególności rysunek z wielokątem i wspierającą poziomicą na stronie 51. Rysunek, podpis oraz sąsiadujące akapity nie nachodzą na siebie i nie zostały ucięte. Kontrola współrzędnych bloków tekstowych przez PyMuPDF wykazała **0 bloków poza granicami strony** na stronach 48–55. Automatyczna kontrola logu LaTeX i odsyłaczy zakończyła się sukcesem.
+
+**Wynik techniczny: PASS. Werdykt matematyczno-redakcyjny 09/01 pozostaje Z POPRAWKAMI, 0/2 czystych audytów.** Następny etap to 09/02 na tym samym blob SHA źródła.
