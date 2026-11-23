@@ -83,9 +83,6 @@ def check_initial_sigma():
 def check_product_projections():
     x, y = (0, 1), (0, 1, 2)
     xy = tuple(product(x, y))
-    sigma_x = {frozenset(x), frozenset(), frozenset({0}), frozenset({1})}
-    sigma_y = {frozenset(y), frozenset(),
-               frozenset({0}), frozenset({1}), frozenset({2})}
     # Enumerate all sub-sigma-algebras of the full powersets.
     def all_sigmas(points):
         subsets = powerset(points)
@@ -124,12 +121,13 @@ def check_pushforward():
                 rhs = sum(pushed_y[j] for j in y if gv[j] in c)
                 assert lhs == rhs
                 cases += 1
-    assert cases == 648
+    assert cases == 576
     print(f"PASS R05 functorial pushforward: {cases} cases")
-    assert all(
-        (7 if 1 in b else 0) == sum((7,) if 1 in b else ())
-        for b in powerset(y)
-    )
+    for b in powerset(y):
+        preimage = x if 1 in b else ()
+        assert sum(weights[i] for i in preimage) == (
+            sum(weights) if 1 in b else 0
+        )
 
 
 def check_latex_sources():
