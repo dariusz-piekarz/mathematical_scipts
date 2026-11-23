@@ -66,3 +66,15 @@ Ten test uzupełnia test zgodności z poprzednim algorytmem (różne budżety, U
 - Pełne CI aplikacji i nowy przypięty Lean+Mathlib na `4aa3f8fd` **nie miały potwierdzonego zakończenia** podczas tej kontroli. Wynik poprzedniego profilera `aecd94e7` jest potwierdzony, ale nie dowodzi jeszcze przyspieszenia najnowszej produkcyjnej optymalizacji `b1bd6db7`.
 
 **Wniosek:** test niezależnej budowy SHA256 całego drzewa projekt/pakiety działa poprawnie na dwóch systemach, a wymaganie zamknięcia L1.1 nadal obejmuje realny pinned Mathlib i pełny CI na bieżącym kodzie.
+
+## Parowany mikrobenchmark `relative_to` na tym samym runnerze (23.11.2026)
+
+**Wynik poprzedniego pełnego Lean CI:** [#45145379315](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45145379315) na `5cf01379` zakończony sukcesem, w tym kompilacja przypiętego Mathlib, kontrola aksjomatów, introspekcja i wszystkie trzy odciski oraz profil CPU. Po optymalizacji `b1bd6db7` mediana pełnego fingerprintu to `0.402131 s`, a części `.olean` `0.334226 s`; `cProfile` zarejestrował `1112269` wywołań. Wcześniejszy profil (SHA `aecd94e7`) wykazał `2116775` wywołań. Porównanie między runnerami jest przesłanką poprawy, ale **nie wiarygodnym pomiarem względnego zysku czasowego**.
+
+**Nowe narzędzie:** `application/scripts/benchmark_lean_paths.py` zbiera jeden niepodążający za symlinkami zestaw nazw `.olean` w drzewach projektu i pakietów; odtwarza starą konwersję `(base / name).relative_to(root)` i nową konwersję z jednym `base.relative_to(root)` na katalog. Sprawdza pełną zgodność uporządkowanych par `(label, relative_name)`, a następnie naprzemiennie mierzy oba algorytmy na **tym samym zestawie nazw i runnerze**. Nie odczytuje zawartości `.olean` ani nie zastępuje produkcyjnej kontroli integralności.
+
+**Zakres metryki:** zmierzony czas dotyczy **wyłącznie tworzenia nazw względnych**, bez skanowania katalogów, walidacji plików i SHA256. Wyniki muszą być opisane jako mikrobenchmark, a nie całkowity zysk w fingerprintingu. Dodatkowy warunek `--compare-with` wymaga, by liczba kandydatów była zgodna z wcześniejszym raportem prawdziwego fingerprintu na tym samym runnerze.
+
+**Testy:** `application/tests/test_lean_paths_benchmark.py` sprawdza zgodność obu sposobów konwersji dla podkatalogów, Unicode, plików ukrytych i pakietu Mathlib, niezmienność plików, redukcję liczby wywołań `relative_to`, reakcję na zmianę populacji oraz odmowę przy symlinku. Testy są podłączone do Linux i Windows, a parowany benchmark do przypiętego Lean+Mathlib w `.github/workflows/lean-formalization.yml`.
+
+**Commity tej poditeracji:** `0ac3c9e5` (narzędzie), `9d89afaf` (testy), `54cfeb95` (CI Linux/Windows), `1a7b9e9a` (realny Mathlib). W momencie opracowania raportu wyniki tych zmian pozostają do zweryfikowania. Funkcje produkcyjne fingerprintu i certyfikacja matematyczna nie zostały zmienione.
