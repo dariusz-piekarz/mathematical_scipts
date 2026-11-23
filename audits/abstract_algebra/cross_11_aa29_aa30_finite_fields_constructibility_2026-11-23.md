@@ -56,6 +56,33 @@ Wszystkie 23 etykiety są unikatowe. Trzy odsyłacze do rozdziałów zewnętrzny
 
 Na ostatnim zatwierdzonym PDF (269 stron) wyrenderowano i przejrzano wszystkie 10 stron obu rozdziałów, w tym rysunek pięciokąta w AA-30. Brak widocznych kolizji, obcięć i niewłaściwych podpisów. To źródłowe wydanie będzie porównane z **rzeczywistym PDF** powstałym po zakończeniu CI z poprawionym testem.
 
-## Werdykt warunkowy
+## Uzupełnienie ścieżki stabilizacji testu
 
-Przegląd matematyczny obu rozdziałów nie wykazał konieczności korekty źródeł. **Zamknięcie AA-X11 jako STABILNY** wymaga jednak pomyślnego uruchomienia **obu** testów na aktualnym commicie, kompilacji całego tomu i weryfikacji odsyłaczy, pobrania końcowego artefaktu PDF oraz porównania 10 stron. Wyniki te powinny zostać dołączone do tego raportu, a następnie wykorzystane w audycie globalnym.
+Pierwszy przebieg (45144204606) zakończył się niepowodzeniem AA-30 z powodu **niedopasowania symbolu zmiennej we własnym teście** `sympy.cyclotomic_poly` / `sympy.degree`; poprawka: `56aad8facf726de03b61ee792a2f767d207161aa`.
+
+W drugim przebiegu (45144664195) test dotarł przez ogólne kryterium do ręcznie wpisanych przykładów, gdzie niepoprawnie oczekiwano, że foremny **51-kąt nie jest konstruowalny**. Jest przeciwnie: \(51=3\cdot17\), \(\varphi(51)=2\cdot16=32\), stąd \(\varphi(51)\) jest potęgą \(2\). Poprawiono **wyłącznie oczekiwanie w teście** (`51:False` → `51:True`), commit `b294a0a5119b632c962b6e99c11bd39708eff0f1`. Oba problemy wykryły i zatrzymały CI, co jest prawidłowym zachowaniem bramki regresyjnej; nie stanowiły błędów źródłowych AA-29–AA-30.
+
+## Końcowy werdykt AA-X11 — STABILNY
+
+**Ostateczny przebieg GitHub Actions:** [45145091735](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45145091735), na commicie `b294a0a5119b632c962b6e99c11bd39708eff0f1`. Stan: **completed / success**, zadanie **75/75 kroków**, żaden krok `failure`. Bezpośrednio odczytano log zadania `137592292538`:
+
+- `Run AA-X11 finite-field polynomial factorization and Mobius tests`: **19 395/19 395 PASS**.
+- `Run AA-X11 Gauss-Wantzel and S4 constructibility confirmation`: **1707/1707 PASS**; spośród 518 badanych \(n\in\{3,\dots,520\}\) znaleziono 45 wartości dających konstruowalny foremny \(n\)-kąt.
+- `Run AA-GLOBAL all 42 chapter source and audit-coverage gate`: **PASS** (43 rozdziały nie zostały postulowane: dokładnie 42 obecne; 844 unikatowe etykiety i 373 odsyłacze bez błędów).
+- `Compile AA-01 to AA-42 book with latexmk`: **success**.
+- `Verify PDF and references (no undefined refs)`: **success**.
+- `Archive build output`: **success**.
+
+**AA-X11 łącznie: 21 102/21 102 PASS** (19 395 + 1707). Liczby opisują próby modeli, nie ilość niezależnych matematycznych twierdzeń ani formalną weryfikację w Lean.
+
+**Oryginalny artefakt z powyższego przebiegu:** `abstract-algebra-aa01-aa42`, ID **14803538703**. Pobraną paczkę `aa-x11-global-final-ci.zip` otwarto i bezpośrednio przeanalizowano:
+- `abstract_algebra.pdf`: **269 stron**, **2 024 014 B**, SHA-256 **`66aac3aa82b6e555666d7be7b833c458c24ecdc3069a24497177be042e8a5b8b`**, `is_repaired=False`;
+- `abstract_algebra.log`: **45 293 B**, SHA-256 `8e587b6fcd4f0f5a9ae847dd54b4f2e9150e1c79b6ed9431c52ecd7563b9d9a7`.
+
+**Końcowy log LaTeX:** **0** `LaTeX Warning:`, **0** `LaTeX Error:`, **0** ostrzeżeń `hyperref`, **0** `Overfull/Underfull \hbox` i `\vbox`, **0** nierozwiązanych odsyłaczy, **0** komunikatów o potrzebie ponownej kompilacji.
+
+**Kontrola wizualna i regresja:** każdą stronę AA-29 (PDF 197–200) i AA-30 (201–206) obejrzano w poprzednio zatwierdzonym wydaniu, łącznie z rysunkiem pięciokąta. Następnie wszystkie **10/10** stron porównano piksel po pikselu przy 72 dpi i porównano warstwy tekstu z końcowym, rzeczywistym wydaniem CI; **10/10 identyczne**. Rozszerzona globalna regresja potwierdziła identyczność **269/269** stron PDF i **269/269** warstw tekstowych z poprzednim zatwierdzonym wydaniem, a kontrola wszystkich słów wykazała **140 857** pozycji tekstowych i **0** wyjść poza stronę.
+
+### Podsumowanie
+
+**AA-X11 jest STABILNY w zbadanym zakresie przekrojowym.** Matematyczne źródła AA-29–AA-30 pozostawiono bez zmian; poprawiono wyłącznie dwa błędne założenia testowe. Warunki niezależnych kontroli obliczeniowych, integralności źródeł i odsyłaczy, pełnego CI i oględzin wynikowego PDF są spełnione. Zamknięcie globalnego audytu AA-01–AA-42 zostało udokumentowane osobno.
