@@ -347,6 +347,77 @@ class LeanEnvironmentTests(unittest.TestCase):
                 lean_environment._olean_tree(root, label="project", budget=[10])
         self.assertEqual(requests, [4, 1])
 
+
+    def test_real_olean_growth_during_read_fails_closed(self):
+        """Append real bytes to an open .olean, without mocking read results."""
+        import threading
+
+        root = self.root / ".lake" / "build" / "lib" / "lean"
+        root.mkdir(parents=True)
+        artifact = root / "Racing.olean"
+        artifact.write_bytes(b"A" * (128 * 1024))
+        original_open = Path.open
+        started = threading.Event()
+        finished = threading.Event()
+        errors = []
+
+        def append_bytes():
+            if not started.wait(5):
+                errors.append("read never started")
+                finished.set()
+                return
+            try:
+                with original_open(artifact, "ab") as writer:
+                    writer.write(b"B")
+                    writer.flush()
+                    os.fsync(writer.fileno())
+            except OSError as exc:
+                errors.append(str(exc))
+            finally:
+                finished.set()
+
+        class CoordinatedStream:
+            def __init__(self, stream):
+                self.stream = stream
+
+            def __enter__(self):
+                self.stream.__enter__()
+                return self
+
+            def __exit__(self, *args):
+                return self.stream.__exit__(*args)
+
+            def read(self, count=-1):
+                if not started.is_set():
+                    started.set()
+                    if not finished.wait(5):
+                        raise AssertionError("concurrent append timed out")
+                    if errors:
+                        raise AssertionError("concurrent append failed: " + str(errors))
+                return self.stream.read(count)
+
+            def fileno(self):
+                return self.stream.fileno()
+
+        def coordinated_open(path, *args, **kwargs):
+            stream = original_open(path, *args, **kwargs)
+            if path == artifact and args and args[0] == "rb":
+                return CoordinatedStream(stream)
+            return stream
+
+        worker = threading.Thread(target=append_bytes, daemon=True)
+        worker.start()
+        try:
+            with patch.object(Path, "open", coordinated_open):
+                with self.assertRaisesRegex(ValueError, "grew while fingerprinting"):
+                    lean_environment._olean_tree(
+                        root, label="project", budget=[128 * 1024 + 1])
+        finally:
+            worker.join(timeout=5)
+        self.assertFalse(worker.is_alive())
+        self.assertFalse(errors, errors)
+        self.assertEqual(artifact.stat().st_size, 128 * 1024 + 1)
+
     def test_olean_truncated_read_is_rejected(self):
         """A file shortening mid-read cannot silently receive a partial digest."""
         root = self.root / ".lake" / "build" / "lib" / "lean"
