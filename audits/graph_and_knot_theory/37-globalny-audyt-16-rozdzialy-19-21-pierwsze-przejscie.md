@@ -223,6 +223,39 @@ odpowiadało macierzy `A`; przy odwrotnym kierunku
 okręgu bazowego wystąpiłaby macierz `A^-1`.
 To usuwa niejawne założenie o orientacji pętli.
 
+## Końcowy wynik CI i kontrola graficzna
+
+Ostateczny przebieg źródeł, po poprawieniu rysunku
+nachylenia torusa i orientacji litery HNN:
+[GitHub Actions 45187307341](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45187307341)
+na commicie `547029ff022b4a6413bb153a1954444bf8a7f2dc`.
+
+**Obie prace PASS:** `structural-audit=success` oraz
+`full-book-pdf=success`. Globalna regresja:
+44/44 źródła, 0 brakujących odsyłaczy,
+0 powtórzonych etykiet, 0 błędów środowisk.
+Wszystkie 894 dokładne przypadki nowego testu (377+5+176+12+318+6)
+zakończyły się powodzeniem.
+
+Pobrano końcowy artefakt PDF i zweryfikowano:
+- **275 stron A4** i trzy pełne przebiegi `pdflatex`;
+- **0 bajtów** w pliku ostrzeżeń składu;
+- rzeczywistą obecność poprawionego podpisu
+  nachylenia `1/1` na stronie PDF 171
+  i doprecyzowanej orientacji litery HNN
+  w przykładzie Sol na stronie PDF 179;
+- wizualnie przejrzano strony **164–180** w bloku
+  rozdziałów 19–21, w szczególności grafy Taita,
+  podpisany laplasjan, torus z meridianem i długością,
+  diagram nachylenia oraz graf JSJ;
+- nie wykryto przepełnień marginesów,
+  obciętych podpisów ani kolizji rysunków
+  z tekstem.
+
+Jest to świadectwo poprawnego składu
+i regresji rachunkowej, nie formalny dowód
+całego zestawu twierdzeń zewnętrznych.
+
 ## Stabilizacja przed 22–24
 
 1. **Drugie niezależne przejście**
