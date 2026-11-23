@@ -80,3 +80,24 @@ W kolejnym przebiegu wykryto ryzyko w samym mechanizmie testów: poprzednia enum
 **Test negatywny zabezpieczenia:** na lokalnym fragmencie testowym celowo usunięto z tezy definicję `D_+`. Nowa funkcja zakończyła się oczekiwanym błędem `AssertionError: missing key hypothesis: niech $D_+$ oznacza podgraf`; po przywróceniu poprawnego fragmentu cały zestaw ponownie przeszedł PASS. Potwierdza to, że kontrola wykrywa przynajmniej ten konkretny regres źródła.
 
 **Werdykt bez zmian: audyt 31 W STABILIZACJI.** Nie rozpoczynać audytu rozdziałów 43–44 przed zamknięciem bramki jakości dla 40–42.
+
+
+## ZAMKNIĘCIE AUDYTU 31 — potwierdzone CI, PDF i wizualizacja
+
+**Werdykt końcowy: ZAMKNIĘTY / LOKALNIE STABILNY** dla źródłowych rozdziałów **40–42**. Poprzednie oznaczenia „w stabilizacji” dokumentują stan sprzed tej końcowej kontroli; nie są już aktualnym werdyktem.
+
+### Dowody odczytane z rzeczywistego przebiegu
+
+GitHub Actions: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45284927021, zdarzenie \`push\`, **dokładny SHA** \`556587924ede7975e2339cd2190f82770c2f1fdc\`, stan \`completed\`, wynik \`success\`.
+
+- \`structural-audit\` (job \`138078678374\`): **completed/success**. Sprawdzono listę kroków i pełny dekodowany log. Krok drugiego przejścia 40–42 wykazał \`PASS chapter 40: 4564...\`, \`PASS chapter 40: repaired TeX hypotheses and conclusion explicitly guarded\`, \`PASS chapter 41: 1099...\`, \`PASS chapter 42: 3288...\`. Wszystkie wcześniejsze kroki regresyjne zakończyły się sukcesem.
+- \`full-book-pdf\` (job \`138078677989\`): **completed/success**. Krok trzykrotnej kompilacji \`pdflatex\` oraz upload artefaktów mają wynik \`success\`.
+- Pobrano rzeczywisty artefakt strukturalny \`14871870172\`, sprawdzono plik \`graph_knot_global_audit.json\`: \`source_count=44\`, \`catalog_count=44\`, zgodność katalogu i książki; listy \`duplicate_labels\`, \`unresolved_references\`, \`environment_errors\`, \`forbidden_language\`, \`unclosed_proofs\` i \`duplicate_passage_candidates\` puste. Kontrola nie oznacza formalnego dowodu matematycznego.
+- Pobrano rzeczywisty artefakt książki \`14870944437\`: PDF **298 stron A4**, trzy logi kompilacji i plik \`graph_and_knot_full_warnings.txt\` mający **0 bajtów**.
+- Z PDF bezpośrednio wyrenderowano i obejrzano wszystkie **20 stron PDF 64–83** dotyczące rozdziałów źródłowych 40, 41 i 42 (w druku rozdziały 9, 10 i 11). W tym poprawione twierdzenie o \`D_+\` znajduje się na **stronach PDF 65–66**. Nie znaleziono widocznych urwanych wzorów, wyjść poza margines ani nakładających się rysunków, podpisów czy etykiet. Wszystkie pięć arkuszy kontaktowych obejrzano osobno. Jest to kontrola wizualna, nie dowód poprawności treści.
+
+**Kontrola świeżości:** porównanie GitHub \`556587924...\` → najnowsza gałąź wykonane przed zamknięciem wykazało wyłącznie zmianę raportu \`52-globalny-audyt-31-...\`; źródła, test drugiego przejścia i workflow pozostały bez zmian względem certyfikowanego przebiegu.
+
+**Uściślenie planu audytów:** repozytorium ma dokładnie **44 pliki źródłowe o numerach \`00\`–\`43\`**, a nie rozdziały \`01\`–\`44\`. Jedynym następnym źródłem nieobjętym szczegółowym audytem jest **rozdział 43** (ekspandery, widmo Laplasjanu, spacery losowe). Wcześniejsze sformułowanie „43–44” jest błędem numeracji; nie należy dopisywać nieistniejącego rozdziału 44 w celu zamknięcia audytu.
+
+**Dalej:** pierwsze szczegółowe przejście źródłowego rozdziału 43, następnie jego niezależne drugie przejście i globalna kontrola 44 plików. Rozdziały źródłowe **01–42** pozostają **lokalnie stabilne**, a globalny audyt całego tomu nadal jest otwarty.
