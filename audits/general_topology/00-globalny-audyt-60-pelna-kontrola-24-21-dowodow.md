@@ -16,7 +16,7 @@ Niniejszy raport uzupełnia wcześniejszą [macierz 35](00-globalny-audyt-35-mac
 | 24-03 | `cor:topog24-homogeneous`; 106 | **PASS.** Translacja `L_{yx⁻¹}` przenosi `x` w `y`; niezmienniczość lokalnych własności topologicznych wynika z homeomorfizmu. |
 | 24-04 | `lem:topog24-small-neighborhoods`; 129 | **PASS.** `V=W₁∩W₂∩W₁⁻¹∩W₂⁻¹` jest otwarte i symetryczne, `V²⊂U`. Indukcyjna iteracja `V_{j+1}²⊂V_j` i `e∈V_j` daje `V_r^k⊂U` dla `2^r≥k`. |
 | 24-05 | `lem:topog24-closure`; 158 | **PASS.** Dla `x∈cl V` otwarte `xV` przecina `V`; równość `xv=w` daje `x=wv⁻¹∈V²`. Symetria jest tu niezbędna. |
-| 24-06 | `thm:topog24-regular`; 182 | **PASS.** Przesunięcie otoczenia elementu neutralnego ze zwartym w sensie domknięcia zawieraniem `cl V⊂x⁻¹O` (nie twierdzimy, że `cl V` jest zwarte) zapewnia `x∈xV⊂cl(xV)⊂O`; `T₁` wynika z Hausdorffowości. |
+| 24-06 | `thm:topog24-regular`; 182 | **PASS.** Wybór otwartego otoczenia `V` elementu neutralnego z `cl V⊂x⁻¹O` i jego przesunięcie zapewniają `x∈xV⊂cl(xV)⊂O`; `T₁` wynika z Hausdorffowości. |
 | 24-07 | `prop:topog24-hom-continuity`; 204 | **PASS.** Dzięki homomorficzności `f(xV)=f(x)f(V)`; ciągłość w `e_G` wystarcza do ciągłości w dowolnym `x`. |
 | 24-08 | `thm:topog24-subgroup-closure`; 245 | **PASS.** Ciągłość mapy różnicowej `(x,y)↦xy⁻¹` zapewnia, że dowolne otoczenie `ab⁻¹` spotyka podgrupę `H`; domknięcie jest podgrupą. Sprzężenie jako homeomorfizm zachowuje domknięcie i normalność. |
 | 24-09 | `prop:topog24-open-closed`; 287 | **PASS.** Dopełnienie otwartej podgrupy jest sumą innych otwartych lewych warstw; prawa wersja wynika analogicznie. |
