@@ -35,6 +35,8 @@ class LeanFingerprintBenchmarkTests(unittest.TestCase):
         result = perf.benchmark(self.root, samples=3)
         self.assertFalse(result["certificate"])
         self.assertEqual(result["real_fingerprint_calls"], 3)
+        self.assertEqual(result["compiled_artifacts_sha256"],
+                         perf.lean_results.lean_environment.compiled_artifacts_sha256(self.root))
         self.assertEqual(len(result["samples_seconds"]), 3)
         self.assertGreaterEqual(result["total_seconds"], 0)
         self.assertEqual(
