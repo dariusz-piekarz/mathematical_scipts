@@ -1,0 +1,904 @@
+% AA-47 | Algorytmy Rischa i Kovacica — zakres zatwierdzony przez kontynuację.
+% Dowody pełne: integracja C(x), redukcja Hermite'a, test Rothsteina--Tragera,
+% r'+hr=s przy h wielomianowym, wymierna galaz Riccatiego dla q wielomianowego.
+% Wyniki cytowane: pelny algorytm Rischa i pelny algorytm Kovacica (przypadki 2, 3).
+\chapter{Algorytmy Rischa i Kovacica}
+\chaptermark{Algorytmy Rischa i Kovacica}
+\label{aa:ch:risch-kovacic}
+
+Twierdzenie Liouville'a z rozdziału
+\ref{aa:ch:liouville-elementary-integration}
+daje kryterium istnienia elementarnej funkcji pierwotnej,
+a teoria Picarda--Vessiota z rozdziału
+\ref{aa:ch:picard-vessiot}
+wiąże rozwiązania liouvillowskie równań liniowych
+z grupami algebraicznymi. Są to twierdzenia
+strukturalne. W tym rozdziale przejdziemy
+od istnienia do \emph{rozstrzygalnych obliczeń}.
+
+Dla przejrzystości rozdzielamy dwa poziomy:
+\emph{pełne dowody} procedur nad
+$\mathbb C(x)$, dla równań $r'+hr=s$
+z $h\in\mathbb C[x]$, $s\in\mathbb C(x)$,
+oraz dla wymiernego równania Riccatiego
+z wielomianowym współczynnikiem;
+\emph{klasyczne wyniki cytowane}
+dotyczą ogólnego algorytmu Rischa
+i pozostałych gałęzi algorytmu Kovacica.
+Nie utożsamiamy pierwszego zakresu
+z pełną implementacją drugiego.
+
+\section{Model obliczeń i znaczenie odpowiedzi algorytmu}
+
+\begin{definicja}[Efektywnie zadane współczynniki]
+\label{aa:def:effective-constants}
+Przy obliczeniach nad ciałem $C$ charakterystyki
+$0$ zakładamy dostęp do dokładnych działań,
+testu równości i efektywnego rozkładu
+wielomianów używanych w procedurze
+na czynniki w odpowiednim skończonym
+algebraicznym rozszerzeniu ciała współczynników.
+Jako podstawowy przykład można przyjąć
+ciało liczb algebraicznych
+$\overline{\mathbb Q}\subset\mathbb C$.
+Twierdzenia matematyczne poniżej formułujemy
+nad $\mathbb C$, a słowo \emph{algorytm}
+oznacza skończoną liczbę wskazanych działań
+na efektywnie reprezentowanych danych.
+\end{definicja}
+
+Przy zadaniu współczynników przez dowolne
+nienazwane liczby zespolone bez testu równości
+nie otrzymujemy modelu efektywnego.
+W szczególności \emph{pełne}
+twierdzenia o rozstrzygalności wymagają
+jawnego określenia sposobu reprezentacji
+ciała współczynników.
+
+\section{Całkowanie wymierne: pełny algorytm}
+
+\begin{twierdzenie}[Rozkład na część wymierną i logarytmy]
+\label{aa:tw:rational-integration-algorithm}
+Niech $f\in\mathbb C(x)$. Istnieją
+$R\in\mathbb C(x)$, parami różne
+$a_1,\ldots,a_m\in\mathbb C$
+i $c_1,\ldots,c_m\in\mathbb C$ takie, że
+\begin{equation}\label{aa:eq:rational-integration}
+ f=R'+\sum_{j=1}^{m}\frac{c_j}{x-a_j}.
+\end{equation}
+Można je wyznaczyć w skończonej liczbie
+działań arytmetycznych i rozkładów wielomianów.
+Ponadto $f$ ma funkcję pierwotną
+w $\mathbb C(x)$ wtedy i tylko wtedy,
+gdy wszystkie residua $c_j$ są zerowe.
+Niezależnie od tego $f$ ma lokalną
+elementarną funkcję pierwotną.
+\end{twierdzenie}
+\begin{proof}
+Dzielimy licznik przez mianownik,
+a następnie rozkładamy część właściwą
+na ułamki proste:
+\[
+ f=P(x)+
+ \sum_{j=1}^{m}\sum_{k=1}^{n_j}
+         \frac{b_{j,k}}{(x-a_j)^k}.
+\]
+Jest to skończona procedura nad
+ciałem, w którym rozkłada się mianownik.
+Wielomian $P$ całkujemy wyraz po wyrazie.
+Dla $k\ge2$ element
+$-b_{j,k}(x-a_j)^{1-k}/(k-1)$
+ma pochodną
+$b_{j,k}(x-a_j)^{-k}$.
+Po odjęciu otrzymanych pochodnych
+pozostają tylko składniki
+$b_{j,1}/(x-a_j)$.
+Daje to~\eqref{aa:eq:rational-integration}
+z $c_j=b_{j,1}$.
+W każdym skończonym punkcie
+residuum pochodnej funkcji wymiernej
+jest zerowe: pochodna szeregu
+Laurenta $\sum_k v_k(x-a)^k$
+nie ma współczynnika przy
+$(x-a)^{-1}$, gdyż dla $k=0$
+otrzymujemy $k v_k=0$.
+Jeśli więc $f$ ma wymierną funkcję
+pierwotną, wszystkie $c_j$ muszą być
+zerowe. Odwrotnie, przy znikających
+residuach $f=R'$, więc taka
+funkcja pierwotna istnieje.
+W ogólnym przypadku na ustalonych
+lokalnych gałęziach można przyjąć
+$R+\sum_jc_j\log(x-a_j)$.
+\end{proof}
+
+\begin{definicja}[Redukcja Hermite'a]
+\label{aa:def:hermite-rational}
+\emph{Redukcją Hermite'a funkcji wymiernej}
+nazywamy konstrukcję, która odejmuje
+pochodne wymiernych części głównych
+rzędu co najmniej dwa i sprowadza
+$f$ do sumy pochodnej wymiernej
+oraz funkcji wymiernej mającej
+wyłącznie bieguny proste.
+W dowodzie
+Twierdzenia~\ref{aa:tw:rational-integration-algorithm}
+wykonaliśmy taką redukcję
+przez rozkład na ułamki proste.
+Warianty bez rozdzielania mianownika
+na czynniki liniowe używają
+dzielenia wielomianów i ich NWD.
+\end{definicja}
+
+\begin{przyklad}[Obliczenie obu części]
+\label{aa:prz:hermite-example}
+Dla
+$f=2x+3/(x-1)^3+5/(x-1)$
+otrzymujemy
+\[
+ R=x^2-\frac{3}{2(x-1)^2},
+ \qquad
+ f=R'+\frac5{x-1}.
+\]
+Zatem na dowolnym obszarze,
+na którym można wybrać gałąź
+logarytmu $x-1$, funkcją
+pierwotną jest
+$R+5\log(x-1)$.
+Nie istnieje wymierna funkcja
+pierwotna, ponieważ residuum
+w $1$ wynosi $5$.
+\end{przyklad}
+
+\begin{twierdzenie}[Wykorzystanie wypadkowej do residuów]
+\label{aa:tw:rothstein-trager}
+Niech $A,B\in\mathbb C[x]$,
+$\deg A<\deg B$, a $B$ będzie
+unormowanym wielomianem bez
+pierwiastków wielokrotnych.
+Dla każdego pierwiastka $a$ wielomianu
+$B$ residuum $A/B$ jest równe
+$c_a=A(a)/B'(a)$.
+Wielomian
+\begin{equation}\label{aa:eq:rt-resultant}
+ T(z)=\operatorname{Res}_x(B(x),A(x)-zB'(x))
+\end{equation}
+ma (z uwzględnieniem krotności)
+dokładnie te wartości $c_a$ jako pierwiastki.
+Jeśli $c$ przebiega różne pierwiastki $T$,
+a $P_c=\gcd(B,A-cB')$ jest unormowany,
+to zachodzi tożsamość
+\begin{equation}\label{aa:eq:rt-reconstruction}
+ \frac{A}{B}=\sum_{c:T(c)=0}
+              c\frac{P_c'}{P_c}.
+\end{equation}
+Zatem przy efektywnym rozkładzie
+$T$ i obliczaniu NWD można znaleźć
+część logarytmiczną bez wcześniejszego
+rozkładu $B$ na czynniki liniowe.
+\end{twierdzenie}
+\begin{proof}
+Ponieważ pierwiastki $a$ wielomianu $B$
+są proste, lokalnie
+$B(x)=(x-a)B'(a)+O((x-a)^2)$,
+co daje podane residuum.
+Własność wypadkowej dla
+unormowanego $B$ daje
+\[
+ T(z)=\prod_{B(a)=0}
+           (A(a)-zB'(a))
+     =\left(\prod_{B(a)=0}B'(a)\right)
+       \prod_{B(a)=0}(c_a-z).
+\]
+Zatem pierwiastki wypadkowej są
+dokładnie wartościami residuów.
+Pierwiastkami $P_c$ są właśnie
+te pierwiastki $a$ wielomianu $B$,
+dla których $c_a=c$. W szczególności
+\[
+ \frac{P_c'}{P_c}
+ =\sum_{\substack{B(a)=0\\c_a=c}}
+             \frac1{x-a}.
+\]
+Obie strony~\eqref{aa:eq:rt-reconstruction}
+mają te same części główne
+przy każdym skończonym biegunie;
+obie są właściwymi funkcjami wymiernymi
+(przy nieskończoności mają granicę
+zerową). Ich różnica jest wielomianem
+bez części wielomianowej, a więc zerem.
+\end{proof}
+
+\begin{przyklad}[Wypadkowa bez rozkładu mianownika]
+\label{aa:prz:rt-example}
+Dla $A=1$, $B=x^2+1$ mamy
+$B'=2x$ i
+\[
+ T(z)=\operatorname{Res}_x(x^2+1,1-2zx)
+     =1+4z^2.
+\]
+Pierwiastkami są $c=\pm i/2$.
+Odpowiednie NWD wybierają czynniki
+$x+i$ i $x-i$. Otrzymujemy
+\[
+ \frac1{x^2+1}
+ =\frac1{2i}\left(\frac1{x-i}
+                         -\frac1{x+i}\right).
+\]
+Dla $A=2x$ otrzymalibyśmy
+jedno residuum $c=1$, a
+$P_1=x^2+1$, skąd
+$2x/(x^2+1)=B'/B$.
+\end{przyklad}
+
+\section{Efektywna część algorytmu Rischa: krok wykładniczy}
+
+Niech $h\in\mathbb C[x]$ i $s\in\mathbb C(x)$.
+Dla niezerowego $h$ wielomian
+$p(x)=\int h(x)\,\mathrm dx$
+jest niestały; na mocy
+Lematu~\ref{aa:lem:exp-polynomial-constant-field}
+element $t=e^{p(x)}$ jest
+przestępny nad $\mathbb C(x)$
+i nie dodaje stałych.
+Z Twierdzenia
+\ref{aa:tw:hyperexponential-criterion}
+wynika, że element
+$st$ ma elementarną funkcję pierwotną
+wtedy i tylko wtedy, gdy
+\begin{equation}\label{aa:eq:risch-first-order}
+ r'+hr=s
+\end{equation}
+ma rozwiązanie $r\in\mathbb C(x)$.
+Pokażemy, że w tym zakresie
+test jest faktycznie \emph{skończonym
+algorytmem decyzyjnym}.
+
+\begin{lemat}[Bieguny wymiernego rozwiązania]
+\label{aa:lem:risch-poles}
+Niech $h\in\mathbb C[x]$ i
+$s,r\in\mathbb C(x)$ spełniają
+$r'+hr=s$. Jeżeli $r$ ma
+w skończonym punkcie $a$
+biegun rzędu $j\ge1$, to
+$s$ ma w $a$ biegun dokładnie
+rzędu $j+1$. Współczynnik
+wiodący części głównej $s$
+jest równy $-j$ razy
+współczynnik wiodący
+części głównej $r$.
+W szczególności rozwiązanie
+$r$ nie może mieć biegunów
+w punktach regularności $s$,
+a prosty biegun $s$ uniemożliwia
+istnienie rozwiązania.
+\end{lemat}
+\begin{proof}
+W lokalnej zmiennej $z=x-a$
+zapiszmy $r=b_{-j}z^{-j}+
+O(z^{1-j})$, gdzie $b_{-j}\ne0$.
+Wtedy $r'=-j b_{-j}z^{-j-1}
++O(z^{-j})$, natomiast
+$hr$ ma biegun rzędu
+co najwyżej $j$, ponieważ
+$h$ jest regularny w $a$.
+Składnik o rzędzie $j+1$
+nie może się skasować.
+Zatem $s$ ma dokładnie
+taki biegun i podany
+współczynnik.
+\end{proof}
+
+\begin{twierdzenie}[Algorytm wymiernego równania Rischa]
+\label{aa:tw:risch-polynomial-h-algorithm}
+Niech $h\in\mathbb C[x]\setminus\{0\}$,
+$s\in\mathbb C(x)$.
+Istnieje skończona procedura,
+oparta na rozkładzie mianownika
+$s$ oraz rozwiązywaniu
+skończonych układów równań liniowych,
+która rozstrzyga istnienie
+$r\in\mathbb C(x)$ spełniającego
+$r'+hr=s$ i, jeśli rozwiązanie
+istnieje, wyznacza je.
+Dla $h=0$ kryterium
+istnienia wymiernej funkcji pierwotnej
+jest podane w
+Twierdzeniu~\ref{aa:tw:rational-integration-algorithm}.
+\end{twierdzenie}
+\begin{proof}
+Niech $a$ będzie skończonym biegunem
+$s$ rzędu $m$. Jeżeli $m=1$,
+Lemat~\ref{aa:lem:risch-poles}
+wyklucza rozwiązanie.
+Gdy $m\ge2$, ewentualne rozwiązanie
+ma w $a$ część główną
+$R_a(z)=\sum_{j=1}^{m-1}b_jz^{-j}$.
+Podstawiamy ją do $r'+hr=s$
+i porównujemy kolejno współczynniki
+przy $z^{-m},z^{-m+1},\ldots,z^{-2}$.
+Układ jest trójkątny:
+współczynnik przy $z^{-j-1}$
+zawiera $-j b_j$ oraz wyrazy
+zależące wyłącznie od
+$b_{j+1},\ldots,b_{m-1}$,
+bo $h$ ma nieujemne potęgi $z$.
+Ponieważ charakterystyka wynosi
+$0$, wszystkie $b_j$ są
+jednoznacznie wyznaczone.
+Pozostaje sprawdzić współczynnik
+przy $z^{-1}$. Jeżeli
+różni się od odpowiedniego
+współczynnika $s$, nie ma
+rozwiązania. Jeśli się zgadza,
+wyznaczona część główna usuwa
+wszystkie bieguny w $a$.
+Powtarzamy to dla każdego
+skończonego bieguna $s$.
+Otrzymujemy wymierną funkcję
+$R=\sum_aR_a(x-a)$ i wielomian
+$S=s-R'-hR\in\mathbb C[x]$.
+
+Gdyby pierwotne równanie miało
+rozwiązanie wymierne $r$,
+to Lemat~\ref{aa:lem:risch-poles}
+i jednoznaczność porównań
+współczynników wymuszają,
+że $r-R$ nie ma żadnych
+skończonych biegunów.
+Zatem $r-R=P\in\mathbb C[x]$.
+Pozostaje zdecydować, czy
+$P'+hP=S$ ma rozwiązanie wielomianowe.
+
+Jeżeli $h$ ma dodatni stopień
+$d$ i $S\ne0$, to
+dla niezerowego $P$ mamy
+$\deg(P'+hP)=\deg P+d$.
+Wobec tego stopień $P$
+musi być równy
+$\deg S-d$. Jeśli liczba
+ta jest ujemna, rozwiązania
+nie ma; w przeciwnym razie
+podstawiamy wielomian
+$P=\sum_{k=0}^{\deg S-d}p_kx^k$
+i rozstrzygamy skończony
+\emph{liniowy} układ równań
+na współczynniki $p_k$.
+Jeśli $S=0$, rozwiązaniem
+jest $P=0$, a innego
+wielomianowego rozwiązania
+jednorodnego nie ma.
+
+Jeśli $h=c\in\mathbb C^\times$
+jest stały, operator
+$P\mapsto P'+cP$ jest
+odwracalny na każdym
+skończenie wymiarowym
+zbiorze wielomianów
+stopnia co najwyżej $\deg S$.
+Można to zobaczyć bezpośrednio:
+\[
+ P=\sum_{k=0}^{\deg S}
+                 \frac{(-1)^k S^{(k)}}{c^{k+1}}
+\]
+spełnia $P'+cP=S$, ponieważ
+suma teleskopuje, a wyższe
+pochodne $S$ znikają.
+Dla $S=0$ przyjmujemy $P=0$.
+We wszystkich przypadkach
+wykonaliśmy skończoną liczbę
+działań. Uzasadniliśmy też
+konieczność i dostateczność
+każdego testu.
+\end{proof}
+
+\begin{przyklad}[Obliczenie zakończone sukcesem]
+\label{aa:prz:risch-e-success}
+Dla $h=1$ i $s=1/x^2-1/x$
+jedyny możliwy biegun $r$
+jest prosty i znajduje się
+w $0$. Z wyrazu $x^{-2}$
+wynika $R=-1/x$.
+Sprawdzamy
+$R'+R=1/x^2-1/x=s$,
+zatem $S=0$.
+Wynik algorytmu jest
+\[
+ \int e^x\left(\frac1{x^2}-\frac1x\right)
+ \,\mathrm dx=-\frac{e^x}{x}+C.
+\]
+Dla $h=1$, $s=1/x$
+procedura kończy się negatywnie
+od razu po wykryciu bieguna prostego.
+\end{przyklad}
+
+\begin{przyklad}[Całka Gaussa jako odpowiedź negatywna]
+\label{aa:prz:risch-gauss-decision}
+Dla $h=-2x$ i $s=1$
+nie ma biegunów skończonych.
+Pozostało $P'-2xP=1$.
+Ponieważ $\deg S=0<1=\deg h$,
+algorytm dowodzi nieistnienia
+wymiernego $P$.
+W połączeniu z kryterium
+\ref{aa:tw:hyperexponential-criterion}
+jest to dowód braku
+elementarnej funkcji pierwotnej
+$e^{-x^2}$, nie tylko niepowodzenie
+heurystycznego programu.
+\end{przyklad}
+
+\begin{uwaga}[Pełny algorytm Rischa -- wynik klasyczny]
+\label{aa:uw:full-risch-scope}
+Właściwy algorytm Rischa
+wychodzi daleko poza pole
+$\mathbb C(x,e^{p(x)})$:
+przetwarza odpowiednio
+reprezentowane wieże
+rozszerzeń elementarnych,
+redukuje części algebraiczne
+i przestępne i rozwiązuje
+równania różniczkowe o bardziej
+złożonych współczynnikach.
+Jego zupełność w pełnym
+zakresie przyjmujemy jako
+wynik klasyczny (Risch;
+Bronstein, \emph{Symbolic Integration I}).
+W tym rozdziale udowodniono
+kompletną procedurę \emph{tylko}
+dla opisanej klasy wymiernej
+i dla $h\in\mathbb C[x]$.
+Nie twierdzimy, że
+implementacje systemów CAS
+realizują wszystkie przypadki
+ogólnego twierdzenia.
+\end{uwaga}
+
+\section{Algorytm Kovacica: redukcja i klasyfikacja}
+
+\begin{lemat}[Usunięcie pierwszej pochodnej]
+\label{aa:lem:kovacic-normal-form}
+Niech $a,b\in\mathbb C(x)$.
+Lokalnie, w punkcie bez osobliwości
+odpowiednich funkcji, podstawienie
+$y=z\exp(-\tfrac12\int a(x)\,\mathrm dx)$
+przekształca równanie
+\[
+ y''+a(x)y'+b(x)y=0
+\]
+w równanie $z''=q(x)z$, gdzie
+\begin{equation}\label{aa:eq:kovacic-normal-q}
+ q=\frac{a'}2+\frac{a^2}4-b
+ \in\mathbb C(x).
+\end{equation}
+Podstawienie jest odwracalne
+w lokalnym rozszerzeniu
+liouvillowskim.
+\end{lemat}
+\begin{proof}
+Niech $g=\exp(-\tfrac12\int a\,\mathrm dx)$;
+wtedy $g'/g=-a/2$.
+Dla $y=gz$ mamy
+$y'=g(z'-az/2)$ oraz
+$y''=g(z''-az'+(a^2/4-a'/2)z)$.
+Po podstawieniu w równanie
+znikają wyrazy przy $z'$,
+a pozostaje
+$z''+(b-a'/2-a^2/4)z=0$,
+co jest równoważne podanej tezie.
+Współczynnik $g$ jest niezerowy,
+zatem podstawienie jest odwracalne.
+\end{proof}
+
+\begin{lemat}[Równanie Riccatiego]
+\label{aa:lem:kovacic-riccati}
+Niech $q\in\mathbb C(x)$ i
+$z$ będzie niezerowym
+lokalnym rozwiązaniem
+$z''=qz$. Wówczas
+$r=z'/z$ spełnia
+$r'+r^2=q$.
+Odwrotnie, jeśli element
+$r$ dowolnego rozszerzenia
+różniczkowego spełnia
+$r'+r^2=q$, a
+$z\ne0$ spełnia $z'/z=r$,
+to $z''=qz$.
+\end{lemat}
+\begin{proof}
+Z reguły ilorazu
+$r'=z''/z-(z'/z)^2
+=q-r^2$.
+Odwrotnie, różniczkując
+$z'=rz$ otrzymujemy
+$z''=(r'+r^2)z=qz$.
+\end{proof}
+
+\begin{twierdzenie}[Trzy przypadki Kovacica -- wynik klasyczny]
+\label{aa:tw:kovacic-classification}
+Niech $q\in\mathbb C(x)$,
+a współczynniki będą zadane
+efektywnie. Dla równania
+$z''=qz$ klasyczny algorytm
+Kovacica rozstrzyga, czy istnieje
+niezerowe rozwiązanie
+liouvillowskie, i jeśli istnieje,
+konstruuje takie rozwiązanie.
+Wynik klasyfikacyjny dla
+logarytmicznej pochodnej
+$r=z'/z$ dopuszcza następujące
+rodzaje przypadków:
+\begin{enumerate}
+\item $r\in\mathbb C(x)$
+(przypadek redukowalny);
+\item $r$ jest algebraiczne
+nad $\mathbb C(x)$ stopnia
+$2$ (przypadek imprimitivej
+grupy Galois);
+\item $r$ jest algebraiczne
+stopnia $4$, $6$ lub $12$
+(przypadek skończonej
+prymitywnej grupy Galois);
+\item nie ma niezerowego
+rozwiązania liouvillowskiego.
+\end{enumerate}
+W przypadkach 1--3
+algorytm wyszukuje skończoną
+liczbę możliwości wynikających
+z rozwinięć lokalnych
+i sprawdza tożsamości
+wymierne lub algebraiczne.
+\end{twierdzenie}
+
+\begin{uwaga}[Źródło i granice klasyfikacji]
+\label{aa:uw:kovacic-citation}
+Powyższy wynik cytujemy z:
+J.~Kovacic, \emph{An algorithm
+for solving second order linear
+homogeneous differential equations},
+\emph{Journal of Symbolic Computation}
+2 (1986), 3--43.
+Klasyfikacja korzysta z
+podgrup algebraicznych
+$\mathrm{SL}_2(\mathbb C)$
+oraz z teorii Picarda--Vessiota
+w rozdziale~\ref{aa:ch:picard-vessiot}.
+Nie przedstawiamy rozgałęzień
+2 i 3 jako samodzielnie
+udowodnionych w tym rozdziale,
+ani nie traktujemy testu
+gałęzi 1 jako testu
+liouvillowskości w całej klasie.
+\end{uwaga}
+
+\section{Gałąź wymierna Riccatiego dla wielomianowego współczynnika}
+
+\begin{lemat}[Bieguny wymiernego rozwiązania Riccatiego]
+\label{aa:lem:kovacic-rational-poles}
+Niech $q\in\mathbb C[x]$
+i niech $r\in\mathbb C(x)$
+spełnia $r'+r^2=q$.
+Każdy skończony biegun $r$
+jest prosty i ma residuum $1$.
+Istnieją więc
+$\omega\in\mathbb C[x]$
+oraz unormowany, niezerowy
+wielomian $P\in\mathbb C[x]$
+bez pierwiastków wielokrotnych
+takie, że
+\begin{equation}\label{aa:eq:kovacic-rational-r}
+ r=\omega+\frac{P'}P.
+\end{equation}
+Co więcej, $P$ ma dokładnie
+wszystkie skończone bieguny $r$
+jako pierwiastki.
+\end{lemat}
+\begin{proof}
+Jeśli $r$ ma biegun rzędu
+$m\ge2$ w $a$, to $r^2$
+ma biegun rzędu $2m$,
+a $r'$ rzędu $m+1<2m$,
+co przeczy regularności $q$.
+Dla bieguna prostego piszemy
+$r=c(x-a)^{-1}+O(1)$,
+$c\ne0$. Współczynnik
+przy $(x-a)^{-2}$ w
+$r'+r^2$ wynosi
+$c^2-c$; musi być zerowy,
+więc $c=1$.
+Odejmując od $r$
+sumę $1/(x-a)$ po jego
+skończonych biegunach
+otrzymujemy funkcję wymierną
+bez biegunów skończonych,
+a więc wielomian $\omega$.
+Jeśli $P$ jest iloczynem
+$(x-a)$ po tych biegunach
+(jeśli ich nie ma, $P=1$),
+to $P'/P=\sum_a1/(x-a)$,
+co daje tezę.
+\end{proof}
+
+\begin{twierdzenie}[Pełny test wymiernego Riccatiego dla $q$ wielomianowego]
+\label{aa:tw:kovacic-polynomial-rational-decision}
+Niech $q\in\mathbb C[x]$
+będzie zadany efektywnie.
+Istnieje skończony algorytm,
+który rozstrzyga, czy
+równanie
+\begin{equation}\label{aa:eq:kovacic-poly-riccati}
+ r'+r^2=q
+\end{equation}
+ma rozwiązanie $r\in\mathbb C(x)$.
+Jeżeli $q$ jest stałe,
+rozwiązaniem jest dowolny
+stały pierwiastek kwadratowy $q$.
+Jeżeli $\deg q$ jest nieparzysty,
+nie ma rozwiązania wymiernego.
+Gdy $\deg q=2d\ge2$,
+procedura obejmuje dokładnie
+dwa możliwe wielomiany
+$\omega$ stopnia $d$,
+obliczenie jednego wymuszonego
+stopnia $n$ dla każdego
+z nich, oraz rozwiązanie
+skończonego układu
+\emph{liniowego} na
+współczynniki wielomianu $P$
+stopnia $n$.
+\end{twierdzenie}
+\begin{proof}
+W Lemacie~\ref{aa:lem:kovacic-rational-poles}
+otrzymaliśmy postać
+$r=\omega+P'/P$, gdzie
+$\omega\in\mathbb C[x]$
+i $P$ jest unormowany.
+Podstawienie do Riccatiego daje
+\begin{equation}\label{aa:eq:kovacic-polynomial-P}
+ P''+2\omega P'
+ +(\omega'+\omega^2-q)P=0.
+\end{equation}
+Jeżeli $\deg P=n$, to
+$P'/P=n/x+O(x^{-2})$
+w nieskończoności.
+Jeśli $\omega$ ma dodatni
+stopień $d$, to człony
+$\omega'$ oraz
+$2\omega(P'/P)$
+mają stopień co najwyżej
+$d-1$ w części wielomianowej,
+a pochodna $P'/P$ i jego
+kwadrat mają wyłącznie
+ujemne potęgi.
+Stąd wielomianowa część
+$r'+r^2$ ma stopień $2d$
+i współczynnik wiodący
+równy kwadratowi
+współczynnika wiodącego
+$\omega$. W szczególności
+$q$ musi mieć dodatni
+\emph{parzysty} stopień.
+Jeśli $\omega$ jest stały,
+wielomianowa część
+$r'+r^2$ jest stała,
+więc nie otrzymamy
+$q$ dodatniego stopnia.
+To dowodzi przeszkody
+dla nieparzystego stopnia.
+
+Załóżmy teraz $\deg q=2d\ge2$.
+Niech $a_d$ oznacza
+współczynnik wiodący
+$\omega$. Musi zachodzić
+$a_d^2=[x^{2d}]q$, są
+zatem dwa możliwe wybory
+$a_d\in\mathbb C^\times$.
+Dla każdego wybieramy
+kolejno współczynniki
+$a_{d-1},\ldots,a_0$
+tak, aby
+\[
+ \deg(q-\omega^2)\le d-1.
+\]
+Współczynniki przy
+$x^{2d-1},\ldots,x^d$
+wyznaczają rekurencyjnie
+wszystkie $a_j$,
+ponieważ współczynnik
+przy nieznanym $a_j$
+wynosi $2a_d\ne0$.
+Są to dokładnie
+dwa możliwe wielomiany
+$\omega$.
+
+Porównajmy teraz
+współczynnik przy
+$x^{d-1}$ w tożsamości
+\[
+ q-\omega^2-\omega'
+ =2\omega\frac{P'}P+
+ \left(\frac{P'}P\right)'
+ +\left(\frac{P'}P\right)^2.
+\]
+Ponieważ $P'/P=n/x+O(x^{-2})$,
+jego prawa strona ma
+współczynnik przy $x^{d-1}$
+równy $2a_dn$. Dlatego
+\begin{equation}\label{aa:eq:kovacic-degree-n}
+ n=\frac{[x^{d-1}](q-\omega^2-\omega')}
+          {2a_d}.
+\end{equation}
+Jeśli otrzymana liczba
+nie należy do $\mathbb Z_{\ge0}$,
+to wybór $\omega$ jest
+niemożliwy.
+
+W pozostałych przypadkach
+podstawiamy
+$P=x^n+\sum_{j=0}^{n-1}p_jx^j$
+do~\eqref{aa:eq:kovacic-polynomial-P}.
+Porównanie współczynników
+daje skończony
+\emph{liniowy} układ równań
+dla $p_0,\ldots,p_{n-1}$.
+Każde jego rozwiązanie
+wyznacza wielomian $P$
+spełniający tożsamość.
+Nie może on mieć
+wielokrotnych pierwiastków:
+gdyby $a$ był pierwiastkiem
+krotności $m\ge2$, wyraz
+$P''$ w~\eqref{aa:eq:kovacic-polynomial-P}
+miałby w $a$ rząd
+$m-2$ z niezerowym współczynnikiem,
+podczas gdy pozostałe
+wyrazy miałyby rząd
+co najmniej $m-1$.
+Stąd konstrukcja $r$
+z~\eqref{aa:eq:kovacic-rational-r}
+jest poprawna i spełnia
+\eqref{aa:eq:kovacic-poly-riccati}.
+
+Na odwrót każde wymierne
+rozwiązanie miało postać
+z Lematu~\ref{aa:lem:kovacic-rational-poles},
+a porównanie współczynników
+wymuszało jeden z dwóch
+wyborów $\omega$, ten sam
+stopień $n$ i rozwiązanie
+jednego z badanych układów.
+Algorytm nie odrzuci więc
+żadnego wymiernego rozwiązania.
+Dla $q$ stałego zawsze
+wystarcza stałe $r$
+z $r^2=q$, co kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Dwa wyniki pozytywne]
+\label{aa:prz:kovacic-polynomial-success}
+Dla $q=x^2+1$ możemy
+wybrać $\omega=x$ i
+\eqref{aa:eq:kovacic-degree-n}
+daje $n=0$; wielomian
+$P=1$ spełnia
+\eqref{aa:eq:kovacic-polynomial-P}.
+Otrzymujemy $r=x$ oraz
+rozwiązanie
+$z=e^{x^2/2}$.
+Dla $q=x^2+3$ ten sam
+wybór $\omega=x$
+daje $n=1$, a
+$P=x$ spełnia
+$P''+2xP'+(1+x^2-(x^2+3))P=0$.
+Stąd
+\[
+ r=x+\frac1x,\qquad
+ z=xe^{x^2/2},\qquad
+ z''=(x^2+3)z.
+\]
+Obydwa wyniki można
+zweryfikować niezależnie
+przez różniczkowanie.
+\end{przyklad}
+
+\begin{przyklad}[Dlaczego gałąź wymierna nie jest całą procedurą]
+\label{aa:prz:kovacic-quadratic-example}
+Rozważmy
+$q=x+5/(16x^2)$.
+W nieskończoności $q$
+ma część wielomianową
+stopnia nieparzystego,
+więc równanie Riccatiego
+nie ma \emph{wymiernego}
+rozwiązania: gdyby miało,
+wielomianowa część
+$r'+r^2$ byłaby stopnia
+parzystego albo stała.
+Jednakże
+\[
+ r=\sqrt{x}-\frac1{4x}
+\]
+spełnia $r'+r^2=q$,
+co sprawdzamy bezpośrednio:
+składniki z $x^{-1/2}$
+znoszą się, a przy
+$x^{-2}$ zostaje $5/16$.
+Jest to element
+stopnia $2$ nad
+$\mathbb C(x)$. Odpowiada
+mu rozwiązanie
+\[
+ z=x^{-1/4}
+       \exp\left(\frac23 x^{3/2}\right)
+\]
+na lokalnie wybranych
+gałęziach. Dlatego
+odrzucenie pierwszej gałęzi
+nie jest dowodem braku
+rozwiązań liouvillowskich.
+\end{przyklad}
+
+\begin{przyklad}[Równanie Airy'ego]
+\label{aa:prz:kovacic-airy}
+Dla $q=x$ mamy
+$\deg q=1$, zatem test
+wymierny daje odpowiedź negatywną.
+Silniejsze stwierdzenie,
+że równanie Airy'ego
+$z''=xz$ \emph{nie ma żadnego}
+niezerowego rozwiązania
+liouvillowskiego,
+udowodniliśmy już w
+Twierdzeniu~\ref{aa:tw:pv-airy-group},
+korzystając z kryterium
+Picarda--Vessiota i
+wykluczenia wszystkich
+\emph{algebraicznych}
+rozwiązań Riccatiego.
+Nie przypisujemy tej
+silniejszej konkluzji
+samemu testowi wymiernemu.
+\end{przyklad}
+
+\section{Zestawienie i granice rozstrzygalności}
+
+\begin{itemize}
+\item Dla $f\in\mathbb C(x)$
+procedura wymierna
+z~\ref{aa:tw:rational-integration-algorithm}
+wyznacza pochodną wymierną,
+residua i logarytmy, a
+test znikania residuów
+rozstrzyga istnienie
+\emph{wymiernej} funkcji pierwotnej.
+\item Dla $s\in\mathbb C(x)$,
+$h\in\mathbb C[x]\setminus\{0\}$
+procedura~\ref{aa:tw:risch-polynomial-h-algorithm}
+i kryterium AA-45
+rozstrzygają elementarność
+funkcji pierwotnej
+$s\exp(\int h\,\mathrm dx)$.
+\item Dla $z''=qz$ z
+$q\in\mathbb C[x]$
+procedura~\ref{aa:tw:kovacic-polynomial-rational-decision}
+rozstrzyga istnienie
+\emph{wymiernego} rozwiązania
+Riccatiego i daje wtedy
+rozwiązanie liouvillowskie.
+Ogólna procedura Kovacica
+dla $q\in\mathbb C(x)$
+obejmuje też rozwiązania
+algebraiczne stopni
+$2,4,6,12$; jej pełna
+poprawność jest cytowana,
+nie udowodniona.
+\end{itemize}
+
+W żadnym z tych problemów
+numericalne przybliżenie
+funkcji pierwotnej albo
+rozwiązania równania
+różniczkowego nie zastępuje
+dokładnej odpowiedzi o
+elementarności lub
+liouvillowskości.
