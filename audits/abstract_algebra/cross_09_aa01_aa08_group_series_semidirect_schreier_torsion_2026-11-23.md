@@ -80,7 +80,7 @@ Szczegóły:
 - jawne projekcje CRT i części \(p\)-pierwotne dla wszystkich grup \(C_m\oplus C_n\), \(1\le m,n\le20\), łącznie ze wszystkimi elementami;
 - biliniowe odwzorowania \(C_m\times C_n\to C_k\), \(1\le m,n\le60,\ 1\le k\le12\), poprzez rzeczywistą listę dopuszczalnych obrazów pary generatorów. Ich liczba musi wynosić \(\gcd(m,n,k)\).
 
-Oba testy uruchomiono lokalnie na oddzielnych, rozwiniętych prototypach oraz dodano w wersji repozytoryjnej do GitHub Actions. Faktyczny wynik obu kroków CI należy potwierdzić osobno.
+Oba testy uruchomiono lokalnie na oddzielnych, rozwiniętych prototypach oraz dodano w wersji repozytoryjnej do GitHub Actions. Z rzeczywistych logów zakończonego przebiegu potwierdzono dokładne wyniki opublikowanych implementacji: **152 948/152 948 PASS** dla Testu A i **113 735/113 735 PASS** dla Testu B. Łącznie **266 683/266 683 PASS**.
 
 ## 5. Struktura LaTeX
 
@@ -110,8 +110,30 @@ Z ostatniego **wcześniej zakończonego z sukcesem** artefaktu PDF wyrenderowano
 - AA-07: **57–63** (7);
 - AA-08: **64–70** (7).
 
-Uwzględniono rysunki działań grup, grafy warstw i graf Schreiera. W tak przeprowadzonych oględzinach nie stwierdzono widocznych kolizji, ucięć ani przepełnień. **Wydanie z nowego workflow** wymaga osobnego potwierdzenia i porównania stron z obejrzaną wersją.
+Uwzględniono rysunki działań grup, grafy warstw i graf Schreiera. W tak przeprowadzonych oględzinach nie stwierdzono widocznych kolizji, ucięć ani przepełnień. Wydanie końcowe z nowego workflow zostało następnie pobrane i porównane pikselowo ze skontrolowanymi stronami. Wyniki zamknięcia podano w punkcie 8.
 
 ## 7. Warunek końcowego zamknięcia
 
-Należy potwierdzić rzeczywisty sukces GitHub Actions dla dwóch nowych testów i pełnej kompilacji AA-01–AA-42, pobrać nowy artefakt PDF, przejrzeć log LaTeX i porównać strony AA-01–AA-08 pikselowo z opisanym wyżej PDF. **AA-X09 nie jest jeszcze oznaczony jako zamknięty**, jeśli te czynności nie zostały potwierdzone. Samo dodanie kroków do CI nie oznacza ich przejścia.
+Powyższe warunki zostały rzeczywiście spełnione i są udokumentowane w punkcie 8: nie utożsamiamy konfiguracji workflow z wykonanym CI.
+
+
+## 8. Werdykt końcowy — AA-X09 STABILNY
+
+**Zdalny workflow:** [GitHub Actions 45141038763](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45141038763) dla commitu `67b03ab16ae693696658e9e26be4e7c973a58a69`; ostateczny stan **completed / success**, zadanie `validate-cli` również **completed / success**. Wszystkie **70/70 kroków** zadania zakończyły się, bez błędów. Bezpośrednio odczytano rzeczywiste logi zadania `137578816290`, a nie wyłącznie konfigurację workflow.
+
+Potwierdzone kroki:
+- `Run AA-X09 group Sylow Jordan-Holder semidirect tests`: **success**, log: **152 948/152 948 PASS**;
+- `Run AA-X09 Schreier and abelian tensor confirmation`: **success**, log: **113 735/113 735 PASS**;
+- `Compile AA-01 to AA-42 book with latexmk`: **success**;
+- `Verify PDF and references (no undefined refs)`: **success**;
+- `Archive build output`: **success**.
+
+**Artefakt bezpośrednio pobrany z tego przebiegu:** `abstract-algebra-aa01-aa42`, identyfikator **14802087429**, rozmiar ZIP **2 007 504 B**. Archiwum zawiera pliki `abstract_algebra.pdf` (**269 stron**, **2 024 014 B**, SHA-256 `4bda6670bd4e28960eea73e3e93316576ea5d8a6934b6cbf8903216251616ed4`) i `abstract_algebra.log` (**45 293 B**). PDF ma poprawną strukturę i nie wymaga naprawy (`is_repaired=False`).
+
+**Bezpośrednia analiza logu finalnego PDF:** **0** błędów LaTeX, **0** ostrzeżeń LaTeX, **0** ostrzeżeń `hyperref`, **0** przepełnionych/niedopełnionych ramek `hbox/vbox`, **0** niezdefiniowanych odsyłaczy oraz **0** komunikatów o konieczności ponownego przeliczenia odsyłaczy.
+
+**Porównanie wszystkich 61 stron AA-01–AA-08:** każdą stronę PDF w zakresie 10–70 z pobranego artefaktu CI wyrenderowano do identycznej rozdzielczości (72 dpi) i porównano z wizualnie obejrzanym wcześniej wydaniem pochodzącym z zakończonego sukcesem workflow. Otrzymano **61/61 identycznych renderów** na poziomie pikseli i **61/61 identycznych warstw tekstowych**. Wszystkie słowa na tych stronach mieszczą się w granicach powierzchni strony: **0** słów poza granicą. Dotyczy to również ilustracji w AA-02, AA-03, AA-05, AA-07 i AA-08. W ten sposób wyniki przeglądu wizualnego odnoszą się do ostatecznie zatwierdzonego artefaktu, a nie tylko do wydania wcześniejszego.
+
+**Werdykt: AA-X09 STABILNY w sprawdzonym zakresie przekrojowym.** Dwa niezależne testy (łącznie **266 683** sprawdzenia), analiza matematycznych założeń i połączeń dowodowych, integralność **203** etykiet i **56** odsyłaczy, zakończone pełne CI oraz kontrola kompletu **61** stron nie wskazują na konieczność zmiany źródeł AA-01–AA-08. Osiem plików TeX pozostawiono **bez zmian**. Nie przedstawiamy wyników skończonych testów jako dowodu wszystkich twierdzeń w pełnej ogólności.
+
+**Dalszy globalny audyt:** kolejne niezależne kontrole powinny objąć bloki jeszcze niezbadane w ramach zakończonych AA-X01–AA-X09, w szczególności AA-10–AA-11 oraz AA-15, a następnie zintegrować wszystkie wyniki w końcowym audycie globalnym tomu AA-01–AA-42.
