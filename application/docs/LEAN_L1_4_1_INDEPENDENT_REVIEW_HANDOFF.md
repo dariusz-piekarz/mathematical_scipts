@@ -1,5 +1,28 @@
 # Atlas L1.4.1 — pakiet do niezależnego odbioru (aktualny kandydat)
 
+## Obecny kandydat po naprawie #14 — 198ececc
+
+**Oceniany kod, niezmienny SHA:** `198ececceb511c37b4feb23fe1e283392bc091ee`, fragment `L1.4`, podetap L1.4.1. **Status: `testing`**, po pojedynczym GREEN, bez ukończonego nowego 3/3 i bez niezależnej uwierzytelnionej recenzji. `skeptical_review=pending`, `certificate=false`. L1.4.2 zablokowane.
+
+### Granice nowej poprawki i rzeczywiste testy
+
+- `lean_formalization.fragment`: zarejestrowany plik Lean jest odczytywany **najwyżej `MAX_LEAN_CHARS * 4 + 1` bajtów przed dekodowaniem**, zamiast nieograniczonego `Path.read_text`. Nadal `MAX_LEAN_CHARS=60000`, HTTP 413 dla za dużego pliku, HTTP 503 dla niepoprawnego UTF-8. Cztery bajty na znak wystarczają również dla najdłuższych znaków UTF-8. [Poprawka `93aa071a`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/93aa071af624e87072f34fdd5f5879896cce17a2).
+- `lean_results.fingerprint`: wybrany plik Lean haszowany SHA256 porcjami 64 KiB, a nie przez nieograniczone `read_bytes`; odmowa dla pliku przekraczającego 64 MiB na `stat` lub w trakcie czytania. Hash niezmienionej zawartości pozostaje ten sam. [Poprawka `198ececc`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/198ececceb511c37b4feb23fe1e283392bc091ee).
+- [RED #45283297636](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45283297636) na starym kodzie `8e49671f` rzeczywiście `completed/failure`, **742 testy, dwa błędy dokładnie nowych regresji**, `AssertionError: unbounded Lean Path.read_text` i `AssertionError: unbounded selected Lean read_bytes`.
+- [GREEN #45283418687](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45283418687) na nowym kodzie `198ececc` **`completed/success`**, 742 testy: **732 PASS, 10 sklasyfikowanych SKIP**, `unreviewed_skips=0`, obie nowe regresje `passed`, prawdziwy Chromium 509 rozdziałów, `javascript_errors=[]`. Pobrany [artefakt #14871231252](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45283418687/artifacts/14871231252) ma poprawny SHA256 ZIP `fd467354956b3c1efec758bbd164ccc9257ba523d7d64077bbd34af6430cf53e` i pasujące imienne wyniki. Osobne szybkie [Windows #45283418670](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45283418670) i [Lean inspection #45283418854](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45283418854) `completed/success`.
+- **Nowe immutable 2+1:** [#45283773343](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45283773343), sterowane [commitem `d618635a`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/d618635a36543f74a55ead4a594e8a4974d29310) z `candidate_sha=198ececc...`, `fragment=L1.4`. Przy pierwotnym zapisie dopiero `queued`; nie deklarować 3/3 przed sprawdzeniem trzech pełnych przebiegów, sceptycznego testu i `evidence`. Historyczne [3/3 #45273475902](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45273475902) dotyczy tylko starego SHA `02190e10`.
+
+### Recenzent musi zweryfikować
+
+1. Dokładny oceniany SHA i obie regresje (RED i GREEN), odczyt ograniczony bajtowo, obsługę Unicode oraz ciągłość fingerprintów dla niezmienionych plików.
+2. Wszystkie trzy rundy nowego 2+1, rzeczywisty Lean/Mathlib z audytem aksjomatów, natywne Windows i Chromium, `skips`, `skeptical_contract`, `evidence`; nie pomylić SHA kontrolnego commitu z SHA kodu.
+3. Pozostałe ryzyka TOCTOU z [#12](https://github.com/dariusz-piekarz/mathematical_scipts/issues/12), kanonicznego TeX z [#13](https://github.com/dariusz-piekarz/mathematical_scipts/issues/13), brak atomowego snapshotu i `certificate=false`.
+4. Wydać osobną, **autentykowaną i niezależną** decyzję `approve` lub `request changes` przypiętą do dokładnego SHA po 3/3. Autor, AI ani niezaufany JSON nie mogą tego zastąpić. [Issue odbiorowy #10](https://github.com/dariusz-piekarz/mathematical_scipts/issues/10), [issue defektu #14](https://github.com/dariusz-piekarz/mathematical_scipts/issues/14), [odrębny LST-02 #11](https://github.com/dariusz-piekarz/mathematical_scipts/issues/11).
+
+---
+
+## Archiwum: 3/3 PASS dla historycznego SHA 02190e10 (nie bieżącego kodu)
+
 ## Aktualny SHA po poprawce zasobów #13 — 3/3 PASS, niezależny odbiór nadal oczekiwany
 
 **Kandydat:** `02190e107a6305bc7b73334a566de25f9216584d` (niezmienny commit). **Fragment:** `L1.4`; podetap architektury L1.4.1.  
