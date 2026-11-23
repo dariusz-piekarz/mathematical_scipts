@@ -45,7 +45,7 @@ jobs:
           sudo apt-get update -qq
           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
             latexmk lmodern texlive-latex-base texlive-latex-recommended \
-            texlive-latex-extra texlive-fonts-recommended texlive-lang-polish
+            texlive-latex-extra texlive-fonts-recommended texlive-lang-polish poppler-utils
       - name: Compile complete 31-chapter book with cross-references
         run: |
           cd books/pl
@@ -82,6 +82,30 @@ jobs:
           cd books/pl
           latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error measure_theory_ch15_lii.tex
           test -s measure_theory_ch15_lii.pdf
+      - name: Verify PDF page counts and render page previews
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess
+
+          def pages(path):
+              data = subprocess.check_output(['pdfinfo', str(path)], text=True)
+              line = next(line for line in data.splitlines() if line.startswith('Pages:'))
+              return int(line.split(':', 1)[1].strip())
+
+          book = Path('books/pl/measure_theory.pdf')
+          chapter = Path('books/pl/measure_theory_ch15_lii.pdf')
+          book_pages, chapter_pages = pages(book), pages(chapter)
+          assert book_pages >= 100, f'Unexpectedly short full book: {book_pages} pages'
+          assert 4 <= chapter_pages <= 25, f'Unexpected chapter PDF size: {chapter_pages} pages'
+          print(f'Valid PDF page counts: book={book_pages}, chapter={chapter_pages}')
+          PY
+          mkdir -p books/pl/ch15_lii_previews
+          count=$(pdfinfo books/pl/measure_theory_ch15_lii.pdf | awk '/^Pages:/ {print $2}')
+          middle=$(( (count + 1) / 2 ))
+          for n in 1 "$middle" "$count"; do
+            pdftoppm -f "$n" -l "$n" -singlefile -r 100 -png               books/pl/measure_theory_ch15_lii.pdf "books/pl/ch15_lii_previews/chapter_p${n}"
+          done
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -93,3 +117,4 @@ jobs:
             books/pl/measure_theory.log
             books/pl/measure_theory_ch15_lii.pdf
             books/pl/measure_theory_ch15_lii.log
+            books/pl/ch15_lii_previews/*.png
