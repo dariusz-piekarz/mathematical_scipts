@@ -167,6 +167,10 @@ def _olean_tree(root: Path, *, label: str, budget: list[int],
         base = Path(directory)
         if any((base / name).is_symlink() for name in dirs):
             raise ValueError("Symlinked Lake artifact directory")
+        # Resolve the lexical relative directory at most once, and only if
+        # it contains an .olean candidate. os.walk yields basename entries,
+        # so joining the POSIX relative prefix preserves the existing schema.
+        relative_directory: str | None = None
         for name in names:
             # Avoid allocating Path objects for unrelated build outputs.
             # Path(".olean").suffix is empty; keep that legacy exclusion.
@@ -175,7 +179,11 @@ def _olean_tree(root: Path, *, label: str, budget: list[int],
             artifact = base / name
             if artifact.is_symlink():
                 raise ValueError("Symlinked Lake .olean artifact")
-            paths.append((artifact.relative_to(root).as_posix(), artifact))
+            if relative_directory is None:
+                relative_directory = base.relative_to(root).as_posix()
+            relative_name = (name if relative_directory == "."
+                             else f"{relative_directory}/{name}")
+            paths.append((relative_name, artifact))
             counter[0] += 1
             if counter[0] > MAX_OLEAN_FILES:
                 raise ValueError("Too many Lake .olean artifacts")
