@@ -109,6 +109,37 @@ def positive_negative_blowdown():
     return count+1
 
 
+
+def slam_dunk_primitive_slopes():
+    """Check integer-r elimination using integral meridian relations.
+
+    The crucial counterexample with two rational slopes is included:
+    the naive rational-r extension changes H1 and is thus false.
+    """
+    count=0
+    for r in range(-6,7):
+        for c in range(-8,9):
+            if not c:continue
+            for d in range(1,9):
+                if gcd(abs(c),d)!=1:continue
+                # Hopf link's H1 relation matrix:
+                # r*mu_U+mu_V=0; d*mu_U+c*mu_V=0.
+                original=determinant([[r,1],[d,c]])
+                numerator=r*c-d
+                assert original==numerator
+                assert gcd(abs(numerator),abs(c))==1
+                # H1 of n/c surgery on the unknot has order |n|.
+                assert abs(original)==abs(numerator)
+                count+=1
+    # r=1/2, s=4: Hopf surgery gives H1 order 2,
+    # whereas naive slam-dunk slope 1/4 gives H1 order 1.
+    hopf=determinant([[1,2],[1,4]])
+    naive=Fraction(1,2)-Fraction(1,4)
+    assert hopf==2 and naive==Fraction(1,4)
+    assert abs(hopf)!=abs(naive.numerator)
+    return count+1
+
+
 def hirzebruch_jung(num,den):
     assert num>den>=1 and gcd(num,den)==1
     a,b=num,den
@@ -213,4 +244,5 @@ if __name__=="__main__":
     source_labels()
     print("PASS Kirby ±1 blowdown integral congruence and linking:",positive_negative_blowdown())
     print("PASS Cpq continued fractions, determinant, inverse and linking:",continued_fraction_plumbings())
+    print("PASS integer-r slam-dunk and rational-r counterexample:",slam_dunk_primitive_slopes())
     print("PASS rational ball boundary kernel and metabolizer:",casson_harer_boundary_kernel())
