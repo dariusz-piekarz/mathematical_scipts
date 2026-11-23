@@ -25,6 +25,24 @@ class LeanResultsTests(unittest.TestCase):
     def fp(self):
         return fingerprint(self.source_sha, self.code, self.root, self.binding_sha)
 
+    def test_oversize_registered_lean_file_rejected_without_read_bytes(self):
+        # The selected module's SHA256 must be memory bounded independently
+        # of the project-wide source scan and its separate 64 MiB check.
+        from unittest.mock import patch
+        from backend import lean_results
+        with self.code.open("wb") as stream:
+            stream.truncate(64 * 1024 * 1024 + 1)
+        original = Path.read_bytes
+
+        def reject_unbounded_selected_file(path, *args, **kwargs):
+            if path == self.code:
+                raise AssertionError("unbounded selected Lean read_bytes")
+            return original(path, *args, **kwargs)
+
+        with patch.object(Path, "read_bytes", reject_unbounded_selected_file):
+            with self.assertRaisesRegex(ValueError, "Oversized.*Lean"):
+                self.fp()
+
     def test_latest_real_compilation_survives_reopen(self):
         fp = self.fp()
         self.assertEqual(last_run("sample", fp, results_root=self.output)["proof_status"], "not_run")
