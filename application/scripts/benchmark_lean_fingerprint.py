@@ -271,6 +271,9 @@ def benchmark(lean_root: Path, *, samples: int = 3) -> dict:
         "purpose": "timing_only_not_a_formalization_result",
         "certificate": False,
         "real_fingerprint_calls": samples,
+        # Read from a genuine full fingerprint; no second artifact digest.
+        # Allows the later cProfile run to detect changed .olean provenance.
+        "compiled_artifacts_sha256": first["compiled_artifacts_sha256"],
         "samples_seconds": [round(v, 6) for v in durations],
         "median_seconds": round(statistics.median(durations), 6),
         "total_seconds": round(sum(durations), 6),
