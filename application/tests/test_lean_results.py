@@ -456,6 +456,33 @@ class LeanResultsTests(unittest.TestCase):
         self.assertFalse(invalid["run_cached"])
         self.assertTrue(invalid["run_record_invalid"])
 
+    def test_l13_fifo_swap_cannot_block_before_regular_file_check(self):
+        """Replacing a record with a FIFO must be rejected without waiting."""
+        import os
+        from unittest.mock import patch
+        if not hasattr(os, "mkfifo") or not hasattr(os, "O_NONBLOCK"):
+            self.skipTest("Host does not support POSIX nonblocking FIFOs")
+        fp = self.fp()
+        save_run("sample", fp, proof_status="compiled",
+                 detail="genuine result", results_root=self.output)
+        record = self.output / "sample.json"
+        archived = self.root / "old-result.json"
+        original_open = os.open
+
+        def substitute_fifo(path, flags, *args, **kwargs):
+            # If O_NONBLOCK is accidentally removed, fail immediately rather
+            # than letting a CI worker hang opening a FIFO without a writer.
+            self.assertTrue(flags & os.O_NONBLOCK)
+            record.replace(archived)
+            os.mkfifo(record)
+            return original_open(path, flags, *args, **kwargs)
+
+        with patch("backend.lean_results.os.open", side_effect=substitute_fifo):
+            result = last_run("sample", fp, results_root=self.output)
+        self.assertEqual(result["proof_status"], "not_run")
+        self.assertFalse(result["run_cached"])
+        self.assertTrue(result["run_record_invalid"])
+
     def test_l13_file_swapped_for_symlink_just_before_open_fails_closed(self):
         """An actual last-moment symlink swap is rejected on supporting hosts."""
         import os
