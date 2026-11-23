@@ -142,9 +142,16 @@ i zbadanych pod kątem aksjomatów. Spośród tych 25 **siedem**
 jest nowych w LST-02. W rejestrze istnieją **4 nowe mapowania
 LST-02**, a nie 7; łączna liczba wpisów manifestu to 9.
 
-[Nowy techniczny 2+1 #45208224201](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45208224201)
-uruchomiono na niezmiennym kodzie `163c8f64`; jego trzy pełne
-rundy i sceptyczna bramka wymagają osobnego zakończenia. Jeśli
+[Techniczny 2+1 #45208224201](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45208224201)
+**zakończony sukcesem, 3/3 rund PASS** na niezmiennym kodzie `163c8f64`.
+W każdej rundzie 736 testów aplikacji (10 sklasyfikowanych pominięć,
+0 nierozliczonych), Chromium 509 rozdziałów bez błędów JavaScript,
+5 plików i 25 rzeczywiście skompilowanych twierdzeń Lean 4.26.0
+z `axiom_check=passed`; natywny Windows i regresje Lean PASS.
+[Końcowy raport](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45208224201/artifacts/14837066604)
+ma `problems=[]`, `status=stabilizing`, `skeptical_review=pending`,
+`certificate=false`. Sceptyczna bramka kontraktowa i zadanie agregacji
+zakończyły się sukcesem, ale nie zastępują recenzji semantycznej. Jeśli
 nowe testy lub kod ulegną zmianie, konieczny będzie nowy SHA i
 reset licznika. Aktualnego przeglądu nie zaliczać jako
 niezależnej aprobującej recenzji.
