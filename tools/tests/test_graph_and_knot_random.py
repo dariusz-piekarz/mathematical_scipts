@@ -211,7 +211,7 @@ def test_integrity():
         (ROOT/book["entrypoint"]).read_text(encoding="utf-8")
     )
     assert includes == book["chapters"]
-    assert len(includes) == 43 and includes[11] == CHAPTER
+    assert len(includes) == 44 and includes[11] == CHAPTER
     assert all((ROOT/path).is_file() for path in includes)
     s = (ROOT/CHAPTER).read_text(encoding="utf-8")
     labels = re.findall(r"\\label\{([^}]+)\}",s)
