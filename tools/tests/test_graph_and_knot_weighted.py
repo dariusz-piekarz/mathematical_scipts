@@ -221,6 +221,18 @@ def test_astar_reopen():
     h = {0: 2, 1: 0, 2: 1, 3: 0}
     assert h[0] <= 1+h[2] and h[2] > 0+h[1]
     assert a_star(sample, 0, 3, h) == dijkstra(sample, 0)[3] == 2
+    # An admissible but inconsistent heuristic forces a reopening:
+    # without it, node 1 would be permanently closed at cost 4,
+    # although the optimal route 0->2->1->3 has cost 13.
+    counterexample = {
+        0: {1: 4, 2: 2},
+        1: {3: 10},
+        2: {1: 1, 3: 30},
+        3: {}
+    }
+    h_reopen = {0: 0, 1: 0, 2: 10, 3: 0}
+    assert h_reopen[2] > counterexample[2][1] + h_reopen[1]
+    assert a_star(counterexample, 0, 3, h_reopen) == 13
     return count
 
 def test_ch():

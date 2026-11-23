@@ -343,6 +343,70 @@ Dla $h\equiv0$ A*
 redukuje się do Dijkstry.
 \end{uwaga}
 
+\begin{twierdzenie}[A* z ponownym otwieraniem]
+\label{thm:tg-weighted-astar-reopen}
+Niech $D=(V,A)$ będzie skończonym grafem skierowanym
+o nieujemnych wagach, $s,t\in V$, a $h$ heurystyką
+dopuszczalną, niekoniecznie spójną, z $h(t)=0$.
+Jeżeli po każdej ścisłej poprawie kosztu $g(v)$
+wierzchołek $v$ jest ponownie umieszczany w kolejce,
+a wpisy nieaktualne są pomijane, to A* zatrzymany
+po pobraniu celu z aktualnym kluczem znajduje
+koszt $\delta(s,t)$ lub stwierdza brak drogi.
+\end{twierdzenie}
+\begin{proof}
+Każda skończona wartość $g(v)$ jest kosztem spaceru,
+więc nie może być mniejsza od $\delta(s,v)$.
+Załóżmy, że cel $t$ jest osiągalny i że
+algorytm miałby pobrać $t$ z kosztem
+$g(t)>\delta(s,t)$. Wybierzmy najkrótszą ścieżkę
+$P=(s=v_0,\ldots,v_r=t)$. Na tej ścieżce
+istnieje wówczas wierzchołek $v_i$ oczekujący
+na przetworzenie z optymalnym kosztem
+$g(v_i)=\delta(s,v_i)$.
+Istotnie, początkowo jest nim $s$; po przetworzeniu
+takiego wierzchołka relaksacja następnego łuku
+albo wpisuje $v_{i+1}$ do kolejki z jego
+optymalnym kosztem, albo ten wierzchołek
+został już przetworzony z optymalnym kosztem,
+co pozwala przejść dalej wzdłuż $P$.
+W razie poprawy zamkniętego wierzchołka
+ponowne otwieranie zachowuje ten niezmiennik.
+Dopuszczalność heurystyki daje
+\[
+f(v_i)=\delta(s,v_i)+h(v_i)
+\leq\delta(s,v_i)+\delta(v_i,t)=\delta(s,t).
+\]
+Natomiast $f(t)=g(t)>\delta(s,t)$.
+Cel nie mógłby zatem zostać pobrany jako minimum
+kolejki, sprzeczność. Jeśli $t$ nie jest
+osiągalny, algorytm wyczerpie kolejkę,
+ponieważ wszystkie skuteczne poprawy kosztów
+pochodzą od spacerów, których cykle o nieujemnym
+koszcie można usuwać, a w grafie skończonym
+jest skończenie wiele istotnych ścieżek prostych.
+\end{proof}
+
+\begin{przyklad}[Dlaczego należy ponownie otwierać wierzchołki]
+\label{ex:tg-astar-reopen}
+Weźmy łuki $s\to a$ o wadze $4$,
+$s\to b$ o wadze $2$, $b\to a$ o wadze $1$,
+$a\to t$ o wadze $10$ i $b\to t$ o wadze $30$.
+Niech $h(s)=0$, $h(a)=0$, $h(b)=10$, $h(t)=0$.
+Heurystyka jest dopuszczalna, ponieważ
+$\delta(b,t)=11$ i $\delta(a,t)=10$,
+ale nie jest spójna: $h(b)>w(b,a)+h(a)$.
+Po rozwinięciu $s$ algorytm pobiera $a$ z kosztem
+$g(a)=4$, gdyż jego klucz wynosi $4$,
+podczas gdy klucz $b$ wynosi $12$.
+Następnie przetwarza $b$ i poprawia koszt
+$a$ do $3$. Wariant, który nie otwiera
+ponownie $a$, zwróci koszt $14$.
+Wariant poprawny jeszcze raz przetwarza $a$
+i zwraca koszt $13$, realizowany przez
+$s\to b\to a\to t$.
+\end{przyklad}
+
 \begin{przyklad}[Heurystyka euklidesowa]
 Jeżeli wierzchołki mają
 pozycje $x_v\in\mathbb R^2$
@@ -393,28 +457,46 @@ Samo pierwsze spotkanie
 frontów nie jest wystarczające.
 \end{stwierdzenie}
 \begin{proof}
-Każda skończona wartość
-$\mu$ pochodzi z
-rzeczywistego spaceru,
-więc nie jest mniejsza
-od $\delta(s,t)$.
-Jeśli istniałaby tańsza
-ścieżka $P$, na jej
-granicy z obszarami
-ustalonymi z obu stron
-znaleźlibyśmy albo
-wierzchołek, albo
-łuk łączący fronty
-i dający kandydata
-o koszcie co najwyżej
-$w(P)$. Dopóki taki
-łącznik nie jest dostępny,
-nieustalone fragmenty
-tej ścieżki mają
-łączny koszt co najmniej
-$k_F+k_B$.
-Przy $k_F+k_B\geq\mu$
-prowadzi to do sprzeczności.
+Każda skończona wartość $\mu$ jest kosztem rzeczywistego
+spaceru z $s$ do $t$, więc $\delta(s,t)\leq\mu$.
+Przypuśćmy, że $\delta(s,t)<\mu$ i wybierzmy
+ścieżkę najkrótszą $P=(v_0=s,\ldots,v_r=t)$.
+Niech $S_F$ i $S_B$ oznaczają zbiory wierzchołków
+ustalonych odpowiednio przez przeszukiwanie od $s$
+i od $t$ po odwróconych łukach.
+Nie wszystkie wierzchołki $P$ mogą leżeć w $S_F$:
+w przeciwnym razie podczas przetwarzania $t$
+otrzymalibyśmy $\mu\leq\delta(s,t)$.
+Analogicznie nie wszystkie leżą w $S_B$.
+
+Niech $i$ będzie najmniejszym indeksem, dla którego
+$v_i\notin S_F$, a $j$ największym indeksem, dla
+którego $v_j\notin S_B$. Jeśli $i\leq j$, to po
+ustaleniu poprzednika $v_i$ (lub od samej inicjalizacji,
+gdy $i=0$) otrzymujemy
+$d_F(v_i)\leq w(v_0,\ldots,v_i)$.
+Podobnie
+$d_B(v_j)\leq w(v_j,\ldots,v_r)$.
+Ponieważ wszystkie wagi są nieujemne,
+\[
+k_F+k_B\leq d_F(v_i)+d_B(v_j)
+\leq w(P)=\delta(s,t)<\mu,
+\]
+co przeczy warunkowi zatrzymania.
+
+Niech więc $i>j$. Jeśli $i=j+1$,
+łuk $v_j\to v_{j+1}$ łączy wierzchołek
+ustalony od $s$ z wierzchołkiem ustalonym
+od $t$. Przy przeglądaniu tego łuku
+przez późniejsze z obu przeszukiwań
+aktualizacja kandydata daje
+$\mu\leq\delta(s,t)$, sprzeczność.
+Jeśli $i\geq j+2$, wierzchołek $v_{j+1}$
+należy do obu zbiorów ustalonych.
+Kandydat przechodzący przez ten wierzchołek
+również ma koszt co najwyżej $w(P)$.
+W każdym przypadku otrzymujemy sprzeczność,
+a więc $\mu=\delta(s,t)$.
 \end{proof}
 
 \section{Hierarchie kontrakcji: szybkie zapytania po przygotowaniu grafu}
@@ -563,22 +645,23 @@ tej samej sieci drogowej.
 \section{Porównanie i wybór algorytmu}
 \label{sec:tg-weighted-summary}
 
-\begin{center}
-\small
-\begin{tabular}{p{.23\textwidth}p{.29\textwidth}p{.33\textwidth}}
-\hline
-Algorytm & Założenia & Zastosowanie\\
-\hline
-BFS & koszty jednostkowe & graf nieważony\\
-Dijkstra & wagi nieujemne & jedno źródło lub cel\\
-Bellman--Ford & dopuszczalne wagi ujemne & jedno źródło, wykrywanie cykli\\
-Floyd--Warshall & graf skończony & wszystkie pary\\
-A* & nieujemne wagi, dobra heurystyka & pojedyncza trasa\\
-Dwukierunkowy Dijkstra & wagi nieujemne & pojedyncza para\\
-CH & dodatnie wagi, przygotowanie grafu & wiele tras w stabilnej sieci\\
-\hline
-\end{tabular}
-\end{center}
+\begin{itemize}[leftmargin=2em,itemsep=3pt]
+\item \textbf{BFS}: koszty jednostkowe, graf nieważony.
+\item \textbf{Dijkstra}: nieujemne wagi, jedno źródło
+      albo pojedyncza para wierzchołków.
+\item \textbf{Bellman--Ford}: dopuszczalne wagi ujemne,
+      wyznaczanie odległości i wykrywanie osiągalnych cykli ujemnych.
+\item \textbf{Floyd--Warshall}: odległości między
+      wszystkimi parami wierzchołków.
+\item \textbf{A*}: jedno zapytanie do celu, nieujemne
+      wagi i dopuszczalna heurystyka; przy heurystyce
+      niespójnej konieczne jest ponowne otwieranie.
+\item \textbf{Dijkstra dwukierunkowy}: jedna para wierzchołków,
+      nieujemne wagi i przeszukiwanie wsteczne.
+\item \textbf{CH}: wiele zapytań na wstępnie przygotowanej
+      sieci o dodatnich wagach; czas przygotowania
+      i zajętość pamięci są częścią kosztu metody.
+\end{itemize}
 
 A* zwykle przetwarza mniej
 wierzchołków, gdy potrafimy
