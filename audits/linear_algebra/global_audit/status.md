@@ -1,7 +1,15 @@
 # Globalny audyt algebry liniowej — status rozdziałów
 
-**Stan po iteracji globalnej 32 (372/382 dowodów; LA29–31 stabilne)**, 23 listopada 2026.  
+**Stan po globalnym audycie 37 (2026-11-23): 382/382 dowodów; WSZYSTKIE LA-01–LA-32 oraz CAŁA KSIĄŻKA STABILNE / ZAMKNIĘTE po dwóch czystych audytach 35–36 i dodatkowym sceptycznym 37; [CI 45133440134](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45133440134) completed/success; oba końcowe przebiegi LaTeX oraz PDF 320 stron bez ostrzeżeń.**
 **Aktualizacja:** rozdziały 01–05 zostały ponownie ustabilizowane. W rozdziale 05 poprawiono argument o braku podprzestrzeni dla zgodnego układu z niezerową prawą stroną, następnie wykonano dwa kolejne czyste audyty III–IV na identycznym SHA. Nowy PDF (7 stron) i CI dla poprawionego źródła [45006722306](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45006722306) zweryfikowane — SUCCESS. CI uruchomione wyłącznie zapisem końcowego statusu wymaga osobnej kontroli.
+
+## Zamknięcie globalne — 23 listopada 2026
+
+[Audyty globalne 33](iteration_33.md) i [34](iteration_34.md) były korekcyjne: znaleziono nieobsłużone ostrzeżenia `hyperref` i `amsmath` w zakładkach oraz starych zapisach `{k\\choose j}`. W LA-13/32 skorygowano wyłącznie zakładki PDF; w LA-22 i LA-23 zamieniono łącznie trzy przestarzałe polecenia `\\choose` na `\\binom`. Ostrzeżenie `amsmath` zgłaszało się tylko na pierwszym takim miejscu, dlatego po początkowej korekcie LA-22 nadal występowało w LA-23; późniejszy audyt ustalił pełną przyczynę. Poprzednie nieudane rygorystyczne CI nie były zaliczane jako PASS.
+
+[Audyty globalne 35](iteration_35.md) i [36](iteration_36.md) wykonano po ostatniej zmianie źródła, w dwóch odrębnych czystych kontrolach **na identycznych blobach**. [Audyt globalny 37](iteration_37.md) był osobnym dodatkowym audytem sceptycznym, również czystym. Ostateczne, rzeczywiście pobrane artefakty [CI 45133440134](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45133440134) (SHA `3774f90a56fce37490cb795b381338586984c5c0`): 32 poprawnie ułożone pliki, **382/382** sparowanych dowodów, **1083 unikalne etykiety, 660/660 odsyłaczy**, PDF **320 stron**, 261 zakładek, 0 bloków poza stronami i **0** błędów, ostrzeżeń `LaTeX`/`Package`, przepełnień i brakujących odsyłaczy. Dwa przebiegi kompilacji i komplet testów CI zakończyły się sukcesem; niezależne testy algebry liniowej, rzutów, formy Plückera, incydencji i fibracji potwierdziły wybrane rachunki.
+
+**WYNIK KOŃCOWY: AUDYT GLOBALNY AL-01–LA-32 STABILNY / ZAMKNIĘTY (2 czyste + 1 niezależny kontrolny).** Nie ponawiać zamkniętej sekwencji LA-12–32 ani globalnego audytu 1–37 bez nowej, konkretnej usterki. Taki status nie oznacza formalnej weryfikacji twierdzeń przez Lean.
 
 | Rozdział | Status |
 |---|---|
@@ -17,7 +25,7 @@
 | 10 | Pogłębiony przegląd globalny iteracja 12 (własność uniwersalna, rząd tensorowy, Kronecker, dokładność); bez koniecznych zmian, CI 45047361654 success; globalne kontrole matematyczne trwają |
 | 11 | Pogłębiony przegląd globalny iteracja 12 (zewnętrzna/symetryczna, minory, Cauchy–Binet, przetasowania, symetryzatory); bez koniecznych zmian, CI 45047361654 success; globalne kontrole matematyczne trwają |
 | 12 | STABILNY; iteracje 01 i 02 czyste, CI success; kontrole 2, SHA `ded0c69dc298d00842d4009073e2444e1037952a`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
-| 13 | STABILNY; iteracje 02 i 03 czyste, CI success; kontrole 2, SHA `cc5d09ff605ccf8bb7572ec56d4cc1f690edf3af`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
+| 13 | **STABILNY / ZAMKNIĘTY** — po naprawie zakładki PDF \\texorpdfstring: aktualny blob `ddf705004f13f4df7289036d82c13ff64fe89f56`; czyste audyty globalne 35–36 + końcowy 37 (2+1), CI 45133440134 SUCCESS, źródło niezmienione od poprawek |
 | 14 | STABILNY z zakończonej sekwencji rozdziałowej (historyczne 2/2 czyste i CI); **dodatkowy globalny audyt 13 czysty w zbadanym zakresie**, źródło bez zmian, CI 45047971276 success; SHA 8216c60505324854e2339928bb9be562724e1db2 |
 | 15 | STABILNY z zakończonej sekwencji rozdziałowej (historyczne 2/2 czyste i CI); **dodatkowy globalny audyt 13 czysty w zbadanym zakresie**, źródło bez zmian, CI 45047971276 success; SHA 5a17f877bf3639cebc33ca95c202aca4498bd6c9 |
 | 16 | STABILNY z zakończonej sekwencji rozdziałowej (historyczne 2/2 czyste i CI); **dodatkowy globalny audyt 13 czysty w zbadanym zakresie**, źródło bez zmian, CI 45047971276 success; SHA 4f8da3c4b87b87ee8f8e6f7c7504637485c6e09a |
@@ -26,8 +34,8 @@
 | 19 | STABILNY z zakończonej sekwencji rozdziałowej (historyczne 2/2 czyste i CI); **dodatkowy globalny audyt 13 czysty w zbadanym zakresie**, źródło bez zmian, CI 45047971276 success; SHA dd289d5c86452910a89d60ddfbcc558ef6d5be85 |
 | 20 | STABILNY z zakończonej sekwencji rozdziałowej (historyczne 2/2 czyste i CI); **dodatkowy globalny audyt 13 czysty w zbadanym zakresie**, źródło bez zmian, CI 45047971276 success; SHA 8d585c7f4c208990ad5f82222cc47f586144c138 |
 | 21 | STABILNY; audyty 01 i 02 czyste, CI success; kontrole 2, SHA `6527ae1a6daca48717e6a5f5e83958271abb16f5`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
-| 22 | STABILNY; audyty 03 i 04 czyste po poprawce, CI success; kontrole 2, SHA `dfa3d790bfed4c92c66642ea626a6213bc06ad3f`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
-| 23 | STABILNY; audyty 01 i 02 czyste, CI success; kontrole 2, SHA `bbd199baed1ee2c1a88843aad9fbfd0eac665d22`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
+| 22 | **STABILNY / ZAMKNIĘTY** — poprawa zapisu współczynnika dwumianowego: blob `735db5c063d9ac9c148894a8ffdcc681339e9611`; audyty 35–36 czyste + sceptyczny 37, CI 45133440134 SUCCESS, brak ostrzeżeń amsmath |
+| 23 | **STABILNY / ZAMKNIĘTY** — zastąpiono dwa historyczne `{k\\choose j}` przez `\\binom{k}{j}`; nowy blob `0a79284e9d1f0db121800c733ab1fd2cecf0bf5c`; 2+1 czyste kontrole 35–37, CI 45133440134 SUCCESS |
 | 24 | STABILNY; audyty 01 i 02 czyste, CI success; kontrole 2, SHA `92106feafce495e11f051279733cb34e9d9bed64`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
 | 25 | STABILNY; audyty 01 i 02 czyste, dedykowane CI success; kontrole 2, SHA `6b57fc1b64ef560b98e17f89322c688160376ccf`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
 | 26 | STABILNY; audyty 02 i 03 czyste po poprawce, CI success; kontrole 2, SHA `80032eef1e0e5de817821d97de96aaf86c960e03`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
@@ -36,7 +44,7 @@
 | 29 | **STABILNY po globalnym audycie 30**: poprawka w iteracji 27, dwa czyste pełne audyty 28–29 (2/2), osobny sceptyczny audyt końcowy 30 (+1) czysty. Blob `01213689fb5d2477db25f9ff713608b0171a00c8` bez zmian. CI 45079917894, 45081081248, 45081121567 completed/success, dwukrotna kompilacja i PDF 8/8 stron (287–294) skontrolowane. Dodatkowe 1872/1872 niezależnych testów dokładnych PASS. Następny etap globalny LA30 |
 | 30 | **STABILNY; globalny audyt 31 CZYSTY** — niezależna pełna lektura trzech dowodów, nowych 8050/8050 testów dokładnych PASS, aktualny blob `6d90013dd6c66d347e5ae2ac78b4c1a194aa979e`; potwierdzone 2+1 poprzednich audytów stabilizacyjnych na tym blobie (re_audit_from_ch12/30_iteration_03–05). [CI 45083998648](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45083998648) completed/success, pełny PDF 320 stron, LA-30 strony 295–297 (3/3 sprawdzone). Raport: [iteration_31.md](iteration_31.md). Następny LA-31 |
 | 31 | **STABILNY, audyt globalny 32 CZYSTY**: pełna kontrola 6 dowodów i przykładów na niezmienionym blobie `6c1d09b9eaf4083c9ebaa361dbf46fc350eae147`; niezależne rachunki dokładne 2207/2207 PASS, 33 etykiety i 27 odsyłaczy poprawne; CI [45083998648](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45083998648) i [45084582378](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45084582378) completed/success, aktualny PDF 320 stron: LA-31 strony 298–311, 14/14 obejrzanych. Wcześniejsza stabilizacja 2+1 udokumentowana w re_audit_from_ch12/31_iteration_01–03. [Raport](iteration_32.md). Następny: LA-32 |
-| 32 | STABILNY; zatwierdzony dodatek Penrose’a, audyt 01 korekcyjny, czyste 02–03 + końcowy 04, CI success; kontrole 3 (2+1), SHA `8aea8bd8db02ca8677fb0547f770c9166fdaef88`; szczegółowe raporty w sekwencji `re_audit_from_ch12` |
+| 32 | **STABILNY / ZAMKNIĘTY** — zatwierdzona transformata Penrose'a i poprawione zakładki PDF; aktualny blob `9ed35f18a5300f6e9ee70e8654ef0092e260af2f`; 10/10 dowodów w audycie 33, potem czyste audyty 35–36 oraz osobny sceptyczny 37, CI 45133440134 SUCCESS |
 
 Iteracje 01–08 mają raporty; iteracja 09 wykonała kontrolę struktury 32 plików, próbkę 8 rozdziałów oraz weryfikację CI dla iteracji 08. Historyczna obserwacja po iteracji 09: audyt matematyczny i wizualny PDF nie były wtedy zamknięte; audyt PDF przeprowadzono później w iteracji 10.
 
