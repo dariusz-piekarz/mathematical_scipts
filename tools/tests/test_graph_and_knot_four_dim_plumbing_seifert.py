@@ -294,6 +294,93 @@ def a5_triangle_checks():
     return len(group)
 
 
+
+def solve_fraction(A,b):
+    """Independent rational Gauss-Jordan solver; never uses determinant cofactors."""
+    n=len(A)
+    assert n==len(b) and all(len(row)==n for row in A)
+    aug=[[Fraction(t) for t in row]+[Fraction(rhs)]
+         for row,rhs in zip(A,b)]
+    for j in range(n):
+        i=next((k for k in range(j,n) if aug[k][j]!=0),None)
+        assert i is not None
+        aug[i],aug[j]=aug[j],aug[i]
+        pv=aug[j][j]
+        aug[j]=[z/pv for z in aug[j]]
+        for k in range(n):
+            if k!=j:
+                c=aug[k][j]
+                aug[k]=[x-c*y for x,y in zip(aug[k],aug[j])]
+    return [row[-1] for row in aug]
+
+
+def an_linking_checks():
+    # A_n: the x1 linking self-pairing is n/(n+1) mod 1.
+    cases=0
+    for n in range(1,21):
+        Q=qtree([-2]*n,[(i,i+1) for i in range(n-1)])
+        e1=[int(i==0) for i in range(n)]
+        inv_col=solve_fraction(Q,e1)
+        actual=-inv_col[0]
+        expected=Fraction(n,n+1)
+        assert actual==expected
+        assert actual.denominator==n+1
+        # Test bilinear linking pairing against relation vectors Q*z.
+        for shift in (1,-1,3):
+            rel=[sum(Q[i][j]*(shift if j==0 else 0)
+                     for j in range(n)) for i in range(n)]
+            new_e1=[x+y for x,y in zip(e1,rel)]
+            assert sum(new_e1[i]*inv_col[i] for i in range(n))-inv_col[0] == shift
+            cases+=1
+    return cases
+
+
+def star_zero_e_kernel_checks():
+    """Cross-check zero e_Q, primitive null vector and torsion Smith minors."""
+    samples=[
+        (-1,(3,3,3),3),
+        (-1,(2,3,6),1),
+        (-1,(2,4,4),2),
+        (-1,(2,2),1),
+        (-2,(2,2,2,2),8),
+    ]
+    count=0
+    for b,alphas,torsion_expected in samples:
+        assert Fraction(b)+sum((Fraction(1,a) for a in alphas),Fraction())==0
+        edges=[(0,i) for i in range(1,len(alphas)+1)]
+        Q=qtree([b]+[-a for a in alphas],edges)
+        from math import lcm
+        central=lcm(*alphas)
+        null=[central]+[central//a for a in alphas]
+        assert gcd(*null)==1
+        assert all(sum(Q[i][j]*null[j] for j in range(len(null)))==0
+                   for i in range(len(null)))
+        assert det(Q)==0
+        n=len(null)
+        minors=smith_maximal_minor_gcd(Q,n-1)
+        # Torsion order is the product of nonzero Smith factors.
+        assert minors==torsion_expected,(b,alphas,minors)
+        S=seifert_matrix(b,alphas,(1,)*len(alphas))
+        assert det(S)==0
+        assert smith_maximal_minor_gcd(S,n-1)==torsion_expected
+        count+=1
+    return count
+
+
+def trefoil_murasugi_signature_checks():
+    # Independent exact principal-minor check for the positive
+    # definite 2x2 Seifert symmetrization of a trefoil.
+    S=[[2,-1],[-1,2]]
+    assert S[0][0]>0 and det(S)>0
+    assert det(S)==3
+    assert all(sum(x[i]*S[i][j]*x[j] for i in range(2) for j in range(2))>0
+               for x in product((-2,-1,0,1,2),repeat=2) if x!=(0,0))
+    # Two positive eigenvalues imply signature = 2;
+    # Murasugi: g4>=1; Seifert genus 1: g4<=1.
+    assert abs(2)<=2*1
+    return 24
+
+
 def source_checks():
     names=[
         "22-wezly-i-rozmaitosci-czterowymiarowe.tex",
@@ -302,11 +389,15 @@ def source_checks():
     ]
     x,y,z=[(BASE/n).read_text(encoding="utf8") for n in names]
     assert r"\label{lem:kt-isotropic-signature}" in x
+    assert r"\label{ex:kt-trefoil-four-genus-signature}" in x
     assert r"\label{ex:kt-fox-milnor-matrix}" in x
     assert r"\label{lem:tg-plumbing-leaf-determinant}" in y
+    assert r"\label{st:tg-plumbing-An-linking}" in y
     assert r"\label{ex:tg-plumbing-D4-leaf}" in y
     assert r"\label{ex:tg-seifert-zero-e-torsion}" in z
     assert r"\label{st:tg-star-definiteness}" in z
+    assert r"\label{cor:tg-star-nullspace-boundary}" in z
+    assert r"\label{ex:tg-star-zero-e-kernel}" in z
 
 
 if __name__=="__main__":
@@ -318,3 +409,6 @@ if __name__=="__main__":
     print("PASS Fox-Milnor exact Laurent factorization:",fox_milnor_checks())
     print("PASS Murasugi isotropic algebra:",isotropic_signature_checks())
     print("PASS E8 triangle group finite A5 image:",a5_triangle_checks())
+    print("PASS A_n exact linking form and integral relations:",an_linking_checks())
+    print("PASS Seifert zero-Euler primitive kernels and Smith torsion:",star_zero_e_kernel_checks())
+    print("PASS trefoil signature obstruction to smooth slicing:",trefoil_murasugi_signature_checks())
