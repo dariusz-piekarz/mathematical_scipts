@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Final AA-01..AA-42 global source audit: chapters, labels, references, coverage.
+"""Global AA-01..AA-43 source audit, preserving verified AA-01..AA-42: chapters, labels, references, coverage.
 
 The mathematical cross-audits remain distinct: this gate tests objective
 source consistency rather than claiming to prove theorems.
@@ -39,14 +39,14 @@ def text(src):
 
 def main():
     chapters=sorted(CHDIR.glob("[0-9][0-9]-*.tex"))
-    assert len(chapters)==42,("wrong chapter number",len(chapters))
+    assert len(chapters)==43,("wrong chapter number",len(chapters))
     ids=[int(p.name[:2]) for p in chapters]
-    assert ids==list(range(1,43)),("numbering",ids)
+    assert ids==list(range(1,44)),("numbering",ids)
     canonical={p.resolve() for p in chapters}
     book=text(BOOK)
     ins=[(BOOK.parent/p).resolve() for p in INPUT.findall(book)]
-    assert len(ins)==42,("book input number",len(ins))
-    assert len(set(ins))==42,("duplicate book input",ins)
+    assert len(ins)==43,("book input number",len(ins))
+    assert len(set(ins))==43,("duplicate book input",ins)
     assert set(ins)==canonical,("book mismatched sources",
                                  [str(p) for p in canonical-set(ins)],
                                  [str(p) for p in set(ins)-canonical])
@@ -95,18 +95,23 @@ def main():
     # This checks existence/coverage, NOT the verdict or mathematical correctness
     # of individual reports. Each report carries its own CI and PDF evidence.
     assert len(COVERAGE)==11
+    newest=AUD/"ch43_iteration_01.md"
+    assert newest.is_file() and newest.stat().st_size>1000,("missing AA-43 first audit",newest)
+    assert 43 not in covered, "AA-43 must remain explicitly distinct from closed AA-01..AA-42 cross-audit"
+    assert len(chapters)==len(covered)+1
     assert len(owners)>0 and len(references)>0
     counter.update({
         "chapters":len(chapters),
         "cross_reports":len(COVERAGE),
         "cross_covered_chapters":len(covered),
+        "individually_audited_new_chapters":1,
         "unique_labels":len(owners),
         "unique_reference_targets":len(references),
         "unresolved_reference_targets":len(missing),
         "duplicate_label_targets":len(dup),
         "misordered_or_missing_chapters":0
     })
-    print("AA GLOBAL 01-42 SOURCE INTEGRITY: PASS",dict(sorted(counter.items())))
+    print("AA GLOBAL 01-43 SOURCE INTEGRITY: PASS",dict(sorted(counter.items())))
     print("AA GLOBAL cross-audit chapter coverage:",{
         "all_chapters":len(covered),
         "overlap_chapters":{k:len(v) for k,v in covered.items() if len(v)>1},
