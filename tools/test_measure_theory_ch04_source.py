@@ -34,6 +34,13 @@ for kind, name in re.findall(r"\\(begin|end)\{([^}]+)\}", source):
         assert stack and stack.pop() == name, f"unbalanced environment: {name}"
 assert not stack, f"unclosed environments: {stack}"
 
+assert "Jeśli $a=b$, to $\\Gamma_f$ jest singletonem" in source, (
+    "the zero-length Lipschitz graph case is not justified"
+)
+assert "Niech $a,b\\in\\mathbb R$, $a\\le b$, $L\\ge0$" in source, (
+    "explicit Lipschitz graph hypotheses are missing"
+)
+
 for forbidden in (
     r"\mathbf{1}", r"\mathbb{1}", r"\mathds{1}",
     "zbieżność zdominowana", "unia zbiorów",
