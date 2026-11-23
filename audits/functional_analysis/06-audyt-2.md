@@ -51,8 +51,8 @@ To istotne merytorycznie, ponieważ rozdział jawnie dopuszcza TVS nie-Hausdorff
 - Rozszerzono tools/tests/test_functional_analysis_ch06.py z **14 do 17 testów**. Dodane: formalna kontrola warunku Hausdorffa i kontrprzykładu w tekście; asymetryczna funkcja podliniowa p(x,y)=x+|y|, która przyjmuje także wartości ujemne; obrót fazy w kompleksowym Hahn–Banachu. Przebudowano również wcześniejszy zbyt trywialny test oddzielania punktu od podprzestrzeni na rzeczywiste oszacowanie funkcjonału przez funkcjonał Minkowskiego w R².
 - **17 środowisk proof, 5 środowisk przyklad, 22 unikatowe etykiety, 19 wystąpień odsyłaczy, 0 celów brakujących w rzeczywistym kontekście rozdziałów 01–06**.
 - Nie przywrócono słowa „dual” jako samodzielnego rzeczownika w treści, nie ma niezgodnego zapisu funkcji charakterystycznej. Stabilne identyfikatory LaTeX i nazwa pliku pozostały niezmienione.
-- W dedykowanym [CI 45177060637](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45177060637) etapy testów i kompilacji zakończyły się PASS. Pełny status walidacji PDF, odsyłaczy i artefaktu uzupełnić po końcowym wyniku.
-- Przedział stron i kontrolę wizualną PDF nowego stanu trzeba potwierdzić po pobraniu artefaktu.
+- Dedykowany [CI 45177060637](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45177060637) zakończył się pełnym **SUCCESS**: **17/17 testów PASS**, przygotowanie kontekstowego dokumentu 01–06 PASS, dwukrotna kompilacja LaTeX PASS, weryfikacja końcowych odsyłaczy i PDF PASS, artefakt zapisany. W pierwszym przebiegu kompilacji pojawiło się przejściowe ostrzeżenie o odsyłaczach; ostateczny log po kolejnym przebiegu nie zawiera takiego ostrzeżenia.
+- Pobrano rzeczywisty PDF z tego przebiegu: **39 stron A4, 523156 bajtów**. Wyrenderowano i przejrzano strony **33–39**, obejmujące rozdział 06 i końcowy fragment rozdziału 05. Na wszystkich siedmiu stronach **0 bloków tekstu poza stroną**; nie stwierdzono kolizji, przycięć ani problemów ze składem. Końcowy log PDF zawiera **0** wystąpień `Undefined control sequence`, `There were undefined references`, `Overfull \\hbox` i `Missing character`.
 
 ## Decyzja
 
