@@ -342,7 +342,7 @@ def star_zero_e_kernel_checks():
         (-1,(2,3,6),1),
         (-1,(2,4,4),2),
         (-1,(2,2),1),
-        (-2,(2,2,2,2),8),
+        (-2,(2,2,2,2),4),
     ]
     count=0
     for b,alphas,torsion_expected in samples:
