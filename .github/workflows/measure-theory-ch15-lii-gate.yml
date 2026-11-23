@@ -72,19 +72,29 @@ jobs:
           chapter_path = Path('chapters/pl/measure_theory/15-dualnosc-wypuklosc-i-slaba-zbieznosc-w-przestrzeniach-lp.tex')
           chapter_tex = chapter_path.read_text(encoding='utf-8')
           local_labels = set(re.findall(r'\\label\{([^}]+)\}', chapter_tex))
+          all_references = set(re.findall(r'\\(?:ref|eqref|pageref|autoref|nameref)\{([^}]+)\}', chapter_tex))
+          needed_external = all_references - local_labels
           assert local_labels, 'No labels found in chapter 15'
+          assert needed_external, 'No cross-chapter references detected'
 
-          # The complete book was compiled first. Keep only external labels
-          # so the isolated chapter cannot duplicate labels defined locally.
+          # The book compiles before this step. Import ONLY labels which
+          # chapter 15 actually references, avoiding duplicate local labels
+          # and misleading links to unrelated chapters.
           full_aux = (root / 'measure_theory.aux').read_text(encoding='utf-8')
           external_labels = []
+          seen = set()
           for line in full_aux.splitlines():
               match = re.match(r'\\newlabel\{([^}]+)\}', line)
-              if match and match.group(1) not in local_labels:
+              if not match:
+                  continue
+              label = match.group(1)
+              if label in needed_external:
+                  assert label not in seen, f'Duplicate external label in full book: {label}'
                   external_labels.append(line)
-          assert len(external_labels) > 30, 'Full book has too few imported cross-references'
-          assert any(line.startswith(r'\newlabel{ch:przestrzenie-lp}') for line in external_labels), \
-              'Chapter 14 external label missing'
+                  seen.add(label)
+          missing = needed_external - seen
+          assert not missing, f'Unresolved chapter 15 external references: {sorted(missing)}'
+          assert not (seen & local_labels), 'External/local label collision'
           (root / 'measure_theory_ch15_external.aux').write_text(
               r'\relax' + '\n' + '\n'.join(external_labels) + '\n', encoding='utf-8'
           )
