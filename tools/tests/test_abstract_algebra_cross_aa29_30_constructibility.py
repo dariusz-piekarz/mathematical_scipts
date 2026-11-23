@@ -144,7 +144,7 @@ def main():
         else:
             check('nonconstructible_odd_factor',any(ph%p==0 for p in (3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107,109,113,127,131,137,139,149,151,157,163,167,173,179,181,191,193,197,199,211,223,227,229,233,239,241,251,257,263,269,271,277,281,283,293,307,311,313,317,331,337,347,349,353,359,367,373,379,383,389,397,401,409,419,421,431,433,439,443,449,457,461,463,467,479,487,491,499,503,509,521)),n)
         if n<=85:
-            check('cyclotomic_polynomial_degree',sp.degree(sp.cyclotomic_poly(n),sp.symbols('x'))==ph,n)
+            check('cyclotomic_polynomial_degree',sp.degree(sp.cyclotomic_poly(n,sp.symbols('x')),sp.symbols('x'))==ph,n)
     for n in (5,7,9,17,257,255,15,21,51):
         expected={5:True,7:False,9:False,17:True,257:True,255:True,15:True,21:False,51:False}[n]
         check('specific_polygon_cases',power_of_two(phi(n))==expected,n)
