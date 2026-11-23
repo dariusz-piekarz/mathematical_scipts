@@ -171,32 +171,133 @@ dla 23 639 sprawdzonych kandydatów,
 więc nie dodajemy tych 3120
 powtórnie do sumy.
 
-## Wynik CI i bramka do zamknięcia pierwszego przejścia
+## Walidacja CI i oględziny PDF — PASS
 
-Końcowy commit źródeł algorytmicznych:
+Zmiany matematyczne w 37–39 zakończono commitem
 5186f5aedd007e45368adc0a2594d3dc6fd14374.
-Commit pełnego źródła+workflow+testu:
-50581a2eb7b2c349843957cea10a1073c572c114.
+Po nim zmieniono jedynie nowy moduł
+testowy, workflow i raport audytu;
+treść trzech źródeł TeX nie była
+dalej zmieniana.
 
-[GitHub Actions 45271265050](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45271265050)
+### A. Wszystkie testy i kontrola struktury — PASS
 
-**structural-audit: SUCCESS**
-— 44/44 rozdziały, 0 zduplikowanych etykiet,
-0 nierozwiązanych odsyłaczy, 0 błędów środowisk,
-0 niedozwolonych terminów; wszystkie
-nowe regresje PASS.
+[GitHub Actions 45271265050](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45271265050),
+commit 50581a2eb7b2c349843957cea10a1073c572c114:
 
-Pozostaje sprawdzenie jobu **full-book-pdf**,
-który powinien trzykrotnie złożyć cały tom,
-zapisać pusty plik ostrzeżeń
-oraz udostępnić PDF do kontroli
-stron źródłowych rozdziałów 37–39.
+- **structural-audit = success**;
+- **44/44** rozdziały;
+- **0** zduplikowanych etykiet,
+  **0** nierozwiązanych odsyłaczy,
+  **0** błędów środowiskowych,
+  **0** zakazanych terminów;
+- **34 941** nowych przypadków
+  z niezależnymi oraklami — PASS,
+  w tym **23 639** zweryfikowanych
+  kandydatów na minimalne lasy
+  w **3120** instancjach grafów;
+- wykonano także wszystkie wcześniejsze
+  pakiety regresyjne całego tomu.
 
-**Status bloku: pierwsze przejście
-matematyczne wykonane, walidacja
-PDF w toku; rozdziały 37–39
-NIE SĄ jeszcze lokalnie stabilne.**
-Po zamknięciu pierwszej bramki
-przystępujemy do audytu 29 —
-drugiego niezależnego przejścia.
-Stabilne lokalnie pozostają rozdziały 01–36.
+### B. Pełny skład ze zgodnego stanu źródeł — PASS
+
+[GitHub Actions 45271072741](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45271072741)
+to pomyślny przebieg dla **dokładnie końcowego
+stanu plików źródłowych rozdziałów 37–39**
+(commit 5186f5aedd007e45368adc0a2594d3dc6fd14374).
+Oba zadania, `structural-audit` i `full-book-pdf`,
+zakończyły się sukcesem.
+
+Pobrano artefakt
+*graph-and-knot-complete-book-audit*,
+**ID 14864662169**.
+Sprawdzono pliki
+`graph_and_knot_full_pass1.txt`,
+`graph_and_knot_full_pass2.txt`,
+`graph_and_knot_full_pass3.txt`
+oraz końcowy PDF:
+- **293 strony A4**, pełny tom;
+- **3** skuteczne kompilacje `pdflatex`;
+- **0 bajtów** w pliku ostrzeżeń
+  `graph_and_knot_full_warnings.txt`.
+
+W chwili tej kontroli dodatkowa kompilacja
+w przebiegu 45271265050 była jeszcze
+w toku, dlatego nie przypisujemy jej
+przedwcześnie statusu success.
+Weryfikacja PDF opiera się na
+zakończonym przebiegu dla
+**identycznych źródeł LaTeX**
+oraz na niezależnym pozytywnym
+przebiegu strukturalnym po
+dołączeniu ostatnich testów.
+
+### C. Oględziny wszystkich stron 37–39 — PASS
+
+Położenie rozdziałów w tomie
+wynika z kolejności modułów.
+Źródłowe 37–39 są drukowanymi
+rozdziałami 6–8, a **nie**
+ostatnimi rozdziałami książki.
+
+Wyrenderowano i obejrzano:
+- **42–48** — źródłowy 37,
+  rozdział drukowany 6:
+  BFS, warstwy, twierdzenia
+  DFS, nowy test punktów
+  artykulacji, przykład
+  dwóch trójkątów, diagram BFS,
+  cykle skierowane;
+- **49–55** — źródłowy 38,
+  rozdział drukowany 7:
+  Dijkstra, nowy dowód
+  zasięgu ujemnych cykli
+  Bellmana–Forda (strona 51),
+  Floyd–Warshall, A*,
+  dwukierunkowy Dijkstra i CH;
+- **56–61** — źródłowy 39,
+  rozdział drukowany 8:
+  własności przekroju i cyklu,
+  nowe kryterium optymalności
+  i jednoznaczności MST
+  (strony 57–58),
+  DSU, Prim, Kruskal,
+  wykres ważonego grafu.
+
+Nie znaleziono obciętych wzorów,
+nakładających się napisów,
+uciętych węzłów diagramów,
+kolizji podpisów ani wyjścia
+tekstu poza marginesy.
+Wykonano inspekcję kompletu
+**20 stron** tego bloku.
+PDF na stronie 62 rozpoczyna
+kolejny, niezwiązany z audytem
+rozdział algorytmów przepływowych.
+
+## Werdykt audytu 28
+
+**PIERWSZE SZCZEGÓŁOWE PRZEJŚCIE: PASS.**
+
+Rzeczywiste zmiany matematyczne
+w trzech plikach, niezależne
+regresje, kontrola struktury
+44 rozdziałów, trzykrotna
+kompilacja pełnej książki
+z identycznego stanu źródeł
+oraz wizualna kontrola
+wszystkich stron 37–39
+zakończyły się pomyślnie.
+
+**Rozdziały 37–39 nadal są
+W STABILIZACJI.**
+Warunkiem lokalnej stabilności
+jest **audyt 29** — drugie
+niezależne przejście, własne
+poprawki i regresje, końcowa
+bramka CI oraz PDF.
+
+**Rozdziały 01–36 pozostają
+lokalnie stabilne.**
+Ogólny audyt wszystkich 44
+rozdziałów nadal trwa.
