@@ -177,15 +177,39 @@ class FunctionalAnalysisChapter08(unittest.TestCase):
                         int(i==j))
 
     def test_pointwise_cauchy_net_vs_sequence_distinction(self):
-        # Directed finite sets of constraints allow eventual exact
-        # interpolation on each fixed functional.
-        finite_sets=[{1}, {2}, {1,2}, {1,2,3}, {1,2,3,4}]
-        values={1:7,2:-2,3:4,4:15}
-        for j in values:
-            cofinal = [G for G in finite_sets if j in G]
-            self.assertTrue(cofinal)
-            self.assertTrue(all(values[j]==values[j] for G in cofinal))
-        self.assertIn(r"\mathcal G",self.source)
+        # Exact finite-dimensional model of the directed interpolation
+        # argument: for G subset H, the H-interpolant agrees with Phi
+        # on every coordinate in G. No claim of an infinite-dimensional
+        # nonconvergent net is made by this finite model.
+        from fractions import Fraction
+
+        indices = frozenset(range(1, 5))
+        finite_sets = [
+            frozenset(s)
+            for size in range(len(indices) + 1)
+            for s in itertools.combinations(sorted(indices), size)
+        ]
+        phi = {1: Fraction(7), 2: Fraction(-2),
+               3: Fraction(4), 4: Fraction(15)}
+
+        def interpolate(G):
+            return {j: phi[j] if j in G else Fraction(0)
+                    for j in indices}
+
+        for G in finite_sets:
+            x_G = interpolate(G)
+            self.assertTrue(all(x_G[j] == phi[j] for j in G))
+            for H in finite_sets:
+                if G <= H:
+                    x_H = interpolate(H)
+                    self.assertTrue(all(x_H[j] == x_G[j] for j in G))
+
+        for j in indices:
+            anchor = frozenset({j})
+            tail = [G for G in finite_sets if anchor <= G]
+            self.assertTrue(tail)
+            self.assertTrue(all(interpolate(G)[j] == phi[j] for G in tail))
+        self.assertIn(r"\\mathcal G", self.source)
 
     def test_strong_operator_norm_bounded_sets(self):
         # E=R² with l1 norm, E'=linfty; bounded B gives
