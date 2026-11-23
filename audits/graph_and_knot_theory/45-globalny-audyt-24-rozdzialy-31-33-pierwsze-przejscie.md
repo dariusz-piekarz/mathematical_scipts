@@ -240,12 +240,14 @@ niniejszy raport: treść źródeł `.tex` nie uległa dalszej zmianie.
   potwierdził `structural-audit=success`.
   Nowy moduł wykonał wszystkie **6505**
   regresji z wynikiem PASS.
-  Weryfikacja pełnego PDF tego dodatkowego
-  uruchomienia była nadal w toku w chwili
-  niniejszego zapisu. Nie traktujemy jej
-  jako zakończonej, a dowód poprawności
-  składu pochodzi z wcześniejszego,
-  **identycznego stanu źródeł LaTeX**.
+  W późniejszej kontroli potwierdzono również
+  **full-book-pdf=success** w tym przebiegu,
+  w tym trzykrotny skład całego tomu.
+  Oba zadania końcowej walidacji
+  zakończyły się zatem sukcesem.
+  Poprawność składu potwierdzono ponadto
+  przez oględziny artefaktu źródłowo
+  identycznego przebiegu 45233024929.
 
 Log ostatniego testu strukturalnego potwierdza
 **44/44** źródła, **0** zduplikowanych etykiet,
