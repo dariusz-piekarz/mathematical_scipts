@@ -4,6 +4,9 @@ Every forged or incomplete report must fail closed; no test run grants a
 Lean/LaTeX semantic certificate.
 """
 import json
+import os
+import subprocess
+import sys
 from pathlib import Path
 import tempfile
 import unittest
@@ -73,6 +76,28 @@ class GateTests(unittest.TestCase):
         }
         args.update(overrides)
         return evaluate(SHA, "L1.1", self.root, **args)
+
+    def test_direct_cli_runs_outside_application_without_pythonpath(self):
+        # Reproduce the exact workflow entrypoint (not `python -m scripts...`).
+        script = Path(__file__).resolve().parents[1] / "scripts" / "atlas_validation_gate.py"
+        output = self.root / "cli-result.json"
+        env = os.environ.copy()
+        env.pop("PYTHONPATH", None)
+        run = subprocess.run([
+            sys.executable, str(script), "gate",
+            "--sha", SHA, "--fragment", "L1.1",
+            "--reports", str(self.root),
+            "--application", "success", "--native", "success",
+            "--lean", "success", "--skeptic", "success",
+            "--output", str(output),
+        ], cwd=self.root, env=env, text=True, capture_output=True,
+            check=False)
+        self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+        self.assertIn("ATLAS_STABILIZATION", run.stdout)
+        result = json.loads(output.read_text(encoding="utf-8"))
+        self.assertEqual(result["status"], "stabilizing")
+        self.assertEqual(result["problems"], [])
+        self.assertIs(result["certificate"], False)
 
     def test_reject_short_sha(self):
         with self.assertRaises(ValueError):
