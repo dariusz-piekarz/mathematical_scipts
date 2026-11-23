@@ -162,6 +162,7 @@ def test_source():
             "chapters/pl/graph_and_knot_theory/15-dyskretna-teoria-morse-a-formana.tex")
     text=source.read_text(encoding="utf-8")
     assert r"\label{thm:tg-forman-algebraic-cancellation}" in text
+    assert r"\label{thm:tg-forman-tree-cotree}" in text
     assert r"\xrightarrow{\lambda}" in text
     assert r"\ref{thm:tg-forman-algebraic-cancellation}" in text
 
