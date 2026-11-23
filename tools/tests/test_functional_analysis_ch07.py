@@ -236,7 +236,12 @@ class FunctionalAnalysisChapter07(unittest.TestCase):
                 truncated=x[:m]+(0j,)*(len(x)-m)
                 self.assertLessEqual(
                     sum(abs(v) for v in truncated),norm1+1e-12)
-            self.assertEqual(norm1<=1, norm1<=1)
+            if norm1 > 1:
+                self.assertGreater(abs(pairing),1)
+            else:
+                for trial in itertools.product((0,1,-1,1j,-1j), repeat=len(x)):
+                    self.assertLessEqual(
+                        abs(sum(a*v for a,v in zip(trial,x))),1+1e-12)
 
     def test_weak_convex_closure_separation(self):
         # If x0 lies outside the l1 ball, a functional in its dual
