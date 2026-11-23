@@ -69,7 +69,7 @@ class FunctionalAnalysisChapter04(unittest.TestCase):
             val = scalar * points[n % len(points)]
             self.assertLessEqual(abs(val), 7/n + 1e-12)
         unbounded_points = [n*n for n in range(1, 200)]
-        self.assertTrue(all((1/n)*v == n
+        self.assertTrue(all(math.isclose((1/n)*v, n, rel_tol=1e-12, abs_tol=1e-12)
                             for n, v in enumerate(unbounded_points, 1)))
 
     def test_quasinorm_convex_hull_unbounded(self):
