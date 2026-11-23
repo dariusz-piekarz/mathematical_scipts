@@ -571,6 +571,94 @@ od potomka do przodka trafia na szary
 wierzchołek różny od rodzica.
 \end{proof}
 
+\begin{stwierdzenie}[Mosty i punkty artykulacji w multigrafach]
+\label{prop:tg-dfs-multigraph-edges}
+Niech $G=(V,E)$ będzie skończonym nieskierowanym
+\emph{multigrafem bez pętli}, którego krawędzie
+mają odrębne identyfikatory, nawet jeśli łączą
+tę samą parę wierzchołków. W algorytmie DFS
+każdą krawędź zapisujemy w listach sąsiedztwa
+jako parę $(w,\mathrm{id})$. W wywołaniu dla
+wierzchołka $v$ pomijamy wyłącznie
+\emph{identyfikator krawędzi drzewowej},
+którą przyszliśmy z rodzica, nie wszystkie
+krawędzie do tego rodzica.
+Wtedy wzór rekurencyjny na $\mathrm{low}$,
+kryterium mostu
+z Twierdzenia~\ref{thm:tg-dfs-bridge}
+oraz kryteria punktu artykulacji
+z Twierdzenia~\ref{thm:tg-dfs-articulation}
+pozostają prawdziwe.
+Cały rachunek można przeprowadzić
+w czasie $O(|V|+|E|)$.
+\end{stwierdzenie}
+
+\begin{proof}
+Identyfikatory zapewniają, że jedynie
+krawędź, po której DFS weszło z
+rodzica do dziecka, nie jest rozpatrywana
+ponownie jako krawędź wsteczna.
+Wszystkie inne krawędzie do
+aktywnego przodka, również równoległe
+do krawędzi drzewa, uczestniczą
+w minimum definiującym $\mathrm{low}$.
+Dowód własności zagnieżdżania
+przedziałów DFS nie wymaga
+prostoty grafu. Także każda krawędź
+niedrzewowa multigrafu łączy
+potomka z przodkiem: dwie
+niepowiązane gałęzie nie mogłyby
+mieć krawędzi między sobą,
+gdyż przeglądanie wcześniejszej
+z nich odkryłoby drugą.
+
+Dla krawędzi drzewa $vw$,
+gdzie $p[w]=v$, warunek
+$\mathrm{low}[w]\leq\mathrm{tin}[v]$
+oznacza istnienie innej
+krawędzi wychodzącej z
+$T_w$ do $v$ lub wyżej,
+a więc po usunięciu
+\emph{samej krawędzi drzewowej}
+połączenie nie zostaje przerwane.
+Jest to dokładnie argument
+kryterium mostu, także w
+obecności krawędzi równoległych.
+Przy usunięciu całego wierzchołka
+$v$ połączenie przez $v$
+już nie wystarcza: potrzeba
+krawędzi do ścisłego przodka,
+co daje nierówność
+$\mathrm{low}[w]<\mathrm{tin}[v]$
+dla każdego dziecka wierzchołka
+niebędącego punktem artykulacji.
+Warunek na liczbę dzieci
+korzenia nie ulega zmianie.
+Każdy wpis listy sąsiedztwa
+jest analizowany stałą liczbę
+razy, więc koszt pozostaje liniowy.
+\end{proof}
+
+\begin{przyklad}[Dwie krawędzie równoległe]
+\label{ex:tg-dfs-parallel-edges}
+Niech $V=\{u,v\}$, a $E=\{e_1,e_2\}$,
+gdzie obie krawędzie łączą $u$ z $v$.
+W DFS z korzeniem $u$ przyjmijmy
+$e_1$ jako krawędź drzewa i
+$\mathrm{tin}[u]=1$, $\mathrm{tin}[v]=2$.
+Druga krawędź $e_2$ jest niedrzewowa
+i daje
+$\mathrm{low}[v]=\mathrm{tin}[u]=1$.
+Zatem $e_1$ nie jest mostem.
+Oczywiście $e_2$ również nie jest
+mostem, bo po usunięciu którejkolwiek
+krawędzi końce nadal są połączone.
+Błędne pominięcie \emph{obu}
+krawędzi do rodzica
+dałoby $\mathrm{low}[v]=2$
+i fałszywy wynik.
+\end{przyklad}
+
 \section{DFS w grafach skierowanych: porządek topologiczny}
 \label{sec:tg-algo-dag}
 
