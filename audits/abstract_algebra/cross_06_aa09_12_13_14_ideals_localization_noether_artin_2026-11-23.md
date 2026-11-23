@@ -113,3 +113,34 @@ python tools/tests/test_abstract_algebra_cross_aa09_14_confirming.py
 **Werdykt matematyczny:** w badanych zależnościach i przykładach nie znaleziono błędów wymagających poprawek, pozostawiono niezmienione źródła AA-09, AA-12, AA-13, AA-14. Nie jest to deklaracja formalnego sprawdzenia wszystkich twierdzeń programu.
 
 **Bramka stabilizacji AA-X06:** zamknąć pełny zdalny workflow z sukcesem dla obu nowych testów, całego tomu AA-01–AA-42, kontroli odsyłaczy i PDF oraz wykonać wizualną kontrolę składów powiązanych rozdziałów. Do czasu uzyskania tych wyników **AA-X06 jest w trakcie stabilizacji**, nie zamknięty.
+
+
+## 7. Zamknięcie AA-X06 — niezależne CI i wizualna kontrola PDF
+
+**Zweryfikowany przebieg:** [GitHub Actions 45135955047](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45135955047) dla commitu \`ff06f57c73cd1ebd7a52f6fadaed7d8dafe8a7c3\`. Wynik faktyczny: **completed/success**, wszystkie **64/64** kroki workflow zakończone, żaden bez błędu nie został ukryty jako \`failure\`. W szczególności osobno sprawdzono:
+- \`Run AA-X06 finite ring localization cross-audit\`: **completed/success**;
+- \`Run AA-X06 independent local algebra confirmation\`: **completed/success**;
+- \`Compile AA-01 to AA-42 book with latexmk\`: **completed/success**;
+- \`Verify PDF and references (no undefined refs)\`: **completed/success**;
+- \`Archive build output\`: **completed/success**.
+
+Pobrano i rozpakowano **rzeczywisty artefakt z tego workflow**: \`abstract-algebra-aa01-aa42\`, identyfikator **14800520086** (ZIP: **2 007 504 B**). Zawiera \`abstract_algebra.pdf\` (**269 stron**, rozmiar **2 024 014 B**, SHA-256 \`e0c754eb929d4055d4dfceec85672d886dc46fd5baee85f9fb8f3375e8dd7c57\`) oraz \`abstract_algebra.log\`.
+
+Analiza końcowego logu:
+- **0** ostrzeżeń \`LaTeX Warning\`, **0** ostrzeżeń \`hyperref\`;
+- **0** \`Overfull \\hbox\`, **0** \`Overfull \\vbox\`, **0** \`Underfull \\hbox\`;
+- **0** błędów LaTeX, **0** niezdefiniowanych odsyłaczy.
+
+**Kontrola wizualna:** pobrano wcześniejszy rzeczywisty PDF z tych samych niezmienionych źródeł, wyrenderowano i obejrzano wszystkie **29 stron** badanych rozdziałów:
+- AA-09: strony PDF **71–78** (8);
+- AA-12: strony PDF **94–102** (9);
+- AA-13: strony PDF **103–107** (5);
+- AA-14: strony PDF **108–114** (7).
+
+Nie stwierdzono widocznych na przejrzanych renderach kolizji wzorów i napisów, obcięć ani problemów z rozmieszczeniem elementów. **Każda z 29 stron** końcowego artefaktu \`45135955047\` została następnie porównana piksel po pikselu z obejrzanym wydaniem przy identycznej rozdzielczości: **29/29 renderów identycznych**. Wyekstrahowany tekst tych stron także był **29/29 identyczny**. PDF nie wymaga naprawy struktury (\`is_repaired=False\`).
+
+### Werdykt końcowy
+
+**AA-X06: STABILNY w badanym zakresie przekrojowym.** Dwa niezależne modele matematyczne (łącznie **502 543** prawidłowych sprawdzeń), przegląd hipotez i przejść dowodowych, kontrola **123** etykiet i **25** odsyłaczy, pełne zielone CI oraz inspekcja i porównanie 29 stron PDF nie wykazały błędu wymagającego modyfikacji rozdziałów. **Nie zmieniono matematycznych źródeł AA-09, AA-12, AA-13 ani AA-14.**
+
+Stabilność AA-X06 nie oznacza zakończenia globalnego audytu **wszystkich** możliwych zależności w tomie AA-01–AA-42. Kolejna iteracja powinna wybrać nowy, niepowtarzający się zakres przekrojowy.
