@@ -64,3 +64,9 @@ Przeprowadzono dodatkową **rzeczywistą inspekcję wizualną** wszystkich stron
 Dodatkowy workflow wyzwolony zapisem pierwszej wersji niniejszego raportu ma identyczne SHA źródła i testów; jego końcowy rezultat należy sprawdzić osobno przed zamknięciem raportu. W tej iteracji **nie** zalicza się czystego przeglądu: źródło uległo zmianom terminologicznym i zostało rozszerzone matematyczne uzasadnienie przykładu.
 
 **Ostateczny werdykt merytoryczny 11/02: AUDYT Z POPRAWKAMI, STABILIZACJA 0/2.** Następna niezależna kontrola 11/03 może rozpocząć pierwsze czyste zaliczenie wyłącznie na niezmienionym blobie `73505ec4ff0f51ae76f0cfdf67cccd5eccbbd2b2`, po potwierdzeniu zielonego CI.
+
+## Ostateczne potwierdzenie CI dla audytu 11/02
+
+Po zakończeniu inspekcji PDF i zapisaniu uzupełnionego raportu zakończył się najnowszy przebieg dedykowanego [GitHub Actions #45230359395](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45230359395), commit `220751fae228be67949156de8173457a89f05f6f`: **COMPLETED/SUCCESS**. Potwierdzono wszystkie kroki: **15/15 testów regresyjnych PASS**, przygotowanie kontekstu 01–11 PASS, kompilację LaTeX PASS, automatyczną kontrolę PDF i odsyłaczy PASS oraz przesłanie artefaktu PASS. Poprzedni przebieg raportu [#45230008006](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45230008006) również był zielony. Źródło rozdziału 11 pozostaje w blobie SHA `73505ec4ff0f51ae76f0cfdf67cccd5eccbbd2b2`.
+
+**Bramka techniczna 11/02 jest ukończona; audyt pozostaje audytem z poprawkami (0/2).** Od następnej iteracji 11/03 wolno rozpocząć pierwszą niezależną kontrolę stabilizacyjną tego niezmienionego źródła. Rozdział 12 nadal czeka na 2/2 czystych audytów rozdziału 11.
