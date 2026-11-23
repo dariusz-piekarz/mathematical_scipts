@@ -6,6 +6,8 @@
 
 ## Wskaźnik wykonywania
 
+> Aktualizacja 2026-11-23, L1.4 (odrębna architektura): pierwsza jednostka raportów rozdziałowych jest w fazie **testing** (stabilizacja **0/3**); szczegóły w [LEAN_L1_4_CHAPTER_REPORT_2026-11-23.md](LEAN_L1_4_CHAPTER_REPORT_2026-11-23.md). Wskaźnik historyczny L1.1 poniżej nie jest aktualnym stanem L1.4. Zamknięcie technicznego L1.3 nie oznacza ukończenia pilotażu 20–30 formalizacji z pierwotnego planu.
+
 - Aktywny etap: **1 — Lean 4, stabilizacja i rozwój formalizacji**.
 - Aktywny fragment: **L1.1 — limit odczytu `.olean` i weryfikacja CI**.
 - Stan: **testing** (po kolejnych zmianach kodu od czasu zweryfikowanego kandydata konieczna ponowna walidacja).

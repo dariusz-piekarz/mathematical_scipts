@@ -11,6 +11,7 @@ from unittest.mock import patch
 
 from fastapi import HTTPException
 from backend import lean_catalog
+from backend import lean_chapter_report
 
 
 SOURCE = "\\begin{twierdzenie}\\label{t:x}\nPrawa logiczne.\n\\end{twierdzenie}\n"
@@ -126,6 +127,71 @@ class LeanCatalogTests(unittest.TestCase):
             with self.assertRaises(HTTPException) as err:
                 lean_catalog.list_formalizations(self.con, lean_root=self.root)
         self.assertEqual(err.exception.status_code, 503)
+
+
+    def test_l14_chapter_report_ready_is_not_compilation(self):
+        self.item.update(source_document_sha256=self.digest,
+                         statement_status="approved")
+        self.save_manifest()
+        data = lean_chapter_report.chapter_report(self.con, "LST-01", lean_root=self.root)
+        self.assertEqual(data["report_schema_version"], 1)
+        self.assertEqual((data["total"], data["ready"], data["draft"],
+                          data["stale"], data["statement_approved"]), (1, 1, 0, 0, 1))
+        self.assertEqual(data["source_document_sha256"], self.digest)
+        self.assertEqual(data["scope"], "manifest_and_index_only")
+        self.assertFalse(data["run_history_checked"])
+        self.assertFalse(data["dependency_fingerprint_checked"])
+        self.assertFalse(data["proof_status_included"])
+        self.assertFalse(data["certificate"])
+        self.assertNotIn("proof_status", data["items"][0])
+
+    def test_l14_chapter_report_fails_closed_on_corrupt_index(self):
+        self.item.update(source_document_sha256=self.digest,
+                         statement_status="approved")
+        self.save_manifest()
+        self.con.execute("UPDATE documents SET sha256=?", ("0" * 64,))
+        self.con.commit()
+        data = lean_chapter_report.chapter_report(self.con, "LST-01", lean_root=self.root)
+        self.assertEqual(data["source_index_status"], "corrupt_document")
+        self.assertIsNone(data["source_document_sha256"])
+        self.assertEqual((data["ready"], data["stale"], data["statement_approved"]),
+                         (0, 1, 0))
+        self.assertEqual(data["items"][0]["statement_status"], "needs_review")
+        self.assertFalse(data["certificate"])
+
+    def test_l14_chapter_report_never_runs_fingerprint_or_history(self):
+        from backend import lean_results
+        with patch.object(lean_results, "fingerprint",
+                          side_effect=AssertionError("Not a report dependency")), \
+             patch.object(lean_results, "last_run",
+                          side_effect=AssertionError("Not a report dependency")):
+            data = lean_chapter_report.chapter_report(self.con, "LST-01",
+                                                      lean_root=self.root)
+        self.assertEqual(data["draft"], 1)
+        self.assertFalse(data["run_history_checked"])
+
+    def test_l14_chapter_report_rejects_unknown_and_unsafe_module(self):
+        with self.assertRaises(HTTPException) as missing:
+            lean_chapter_report.chapter_report(self.con, "LA-09",
+                                               lean_root=self.root)
+        self.assertEqual(missing.exception.status_code, 404)
+        with self.assertRaises(HTTPException) as malformed:
+            lean_chapter_report.chapter_report(self.con, "../LST-01",
+                                               lean_root=self.root)
+        self.assertEqual(malformed.exception.status_code, 400)
+
+    def test_l14_chapter_report_empty_registered_module(self):
+        source = "No registered Lean mapping."
+        digest = hashlib.sha256(source.encode("utf-8")).hexdigest()
+        self.con.execute("INSERT INTO documents VALUES(?,?,?,?)",
+                         ("LST-02", "Second", digest, source))
+        self.con.commit()
+        data = lean_chapter_report.chapter_report(self.con, "LST-02",
+                                                  lean_root=self.root)
+        self.assertEqual((data["total"], data["ready"], data["draft"], data["stale"]),
+                         (0, 0, 0, 0))
+        self.assertEqual(data["source_index_status"], "ok")
+        self.assertFalse(data["certificate"])
 
 
 if __name__ == "__main__":

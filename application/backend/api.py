@@ -26,6 +26,7 @@ from backend.latex_parser import analyze_selection, get_stats, show_label
 from backend import workspaces
 from backend.concept_graph import build_concept_graph
 from backend import lean_catalog
+from backend import lean_chapter_report
 from backend import lean_dependencies
 from backend import lean_introspection
 from backend import lean_formalization
@@ -188,6 +189,13 @@ def lean_catalog_index():
     """Browse registered mappings, independently of compilation status."""
     with db_connection() as con:
         return lean_catalog.list_formalizations(con)
+
+
+@app.get("/api/lean/chapter-report")
+def lean_chapter_diagnostics(module_id: str):
+    """Versioned registration diagnostics for one chapter; no cached proof claims."""
+    with db_connection() as con:
+        return lean_chapter_report.chapter_report(con, module_id)
 
 
 @app.get("/api/lean/dependencies")

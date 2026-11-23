@@ -101,6 +101,25 @@ class LeanHttpTests(unittest.TestCase):
         self.assertNotIn("proof_status", entry)
         self.assertFalse(entry["certificate"])
 
+    def test_l14_chapter_report_is_read_only_and_does_not_certify(self):
+        response = self.client.get("/api/lean/chapter-report",
+                                   params={"module_id": "LST-01"})
+        self.assertEqual(response.status_code, 200, response.text)
+        data = response.json()
+        self.assertEqual(data["report_schema_version"], 1)
+        self.assertGreaterEqual(data["total"], 5)
+        self.assertEqual(data["source_index_status"], "ok")
+        self.assertFalse(data["proof_status_included"])
+        self.assertFalse(data["certificate"])
+        self.assertNotIn("proof_status", data)
+        self.assertFalse(data["run_history_checked"])
+        self.assertEqual(
+            self.client.get("/api/lean/chapter-report",
+                            params={"module_id": "../LST-01"}).status_code, 400)
+        self.assertEqual(
+            self.client.get("/api/lean/chapter-report",
+                            params={"module_id": "not-a-chapter"}).status_code, 404)
+
     def test_status_and_missing_mapping(self):
         response = self.client.get("/api/lean/status")
         self.assertEqual(response.status_code, 200)
