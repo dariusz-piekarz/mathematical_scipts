@@ -54,3 +54,19 @@ Nowy test utworzono w commicie \`57791136733cbc6b2d26a67c287d48bc51ec6f51\`. Wor
 Nie znaleziono nowych błędów w badanych twierdzeniach i zależnościach. Źródła matematyczne AA-28, AA-32, AA-33 pozostawiono bez zmian. **Oba niezależne audyty matematyczne AA-X04 są ukończone**.
 
 W chwili opublikowania tego raportu nowy pełny workflow [AA-01–AA-42, AA-X04](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45131584372) znajdował się w toku. Aby oznaczyć AA-X04 jako ostatecznie **STABILNY**, należy stwierdzić \`completed/success\` nowego testu i pełnego CI, obejmującego skład tomu, odsyłacze i pozostałe regresje, a następnie zaktualizować niniejszy raport. W tej iteracji nie wykonywano nowej odrębnej wizualnej inspekcji stron PDF; ich ocena jest udokumentowana we wcześniejszych audytach rozdziałowych.
+
+
+## Dodatkowa kontrola odsyłaczy i struktury
+
+Niezależnie pobrano aktualne źródła AA-28, AA-32 i AA-33 bezpośrednio z docelowej gałęzi. Ich bloby: AA-28 \`2e24a69608aeab7856acf40f882480a97eb455bc\`, AA-32 \`f8c525aff1093478dcd8b1083387a42a37078086\`, AA-33 \`40f339a13b5890418869a12ef27881d29233ffe7\` (bez zmian matematycznych w bieżącej iteracji).
+
+| Rozdział | Etykiety | Odsyłacze | Dowody | Przykłady |
+|---|---:|---:|---:|---:|
+| AA-28 | 10 | 6 | 4 | 2 |
+| AA-32 | 9 | 5 | 4 | 4 |
+| AA-33 | 10 | 5 | 4 | 3 |
+| **Suma** | **29** | **16** | **12** | **9** |
+
+Wszystkie 29 etykiet są unikatowe. Każdy z 16 odsyłaczy ma istniejący cel; pięć odsyłaczy zewnętrznych wskazuje odpowiednio \`aa:ch:fields-fractions\` (AA-19), \`aa:ch:kummer\` (AA-26), \`aa:tw:fundamental-symmetric\` i \`aa:tw:vieta-general\` (AA-31), \`aa:tw:orbita-stabilizator\` (AA-03). Zweryfikowano te etykiety w źródłach docelowych. Wszystkie środowiska \`\\begin\`/\`\\end\` są poprawnie zagnieżdżone, a wszystkie trzy rozdziały występują w pliku głównym \`books/pl/abstract_algebra.tex\`.
+
+**Weryfikacja w zdalnym CI:** oba nowo dodane kroki \`Run AA-X04 cyclotomic cross-audit\` i \`Run AA-X04 independent confirmation\` w przebiegu \`45131584372\` uzyskały status \`completed/success\`. Status końcowy całej kompilacji i kontroli odsyłaczy pozostaje odrębną bramką stabilizacji.
