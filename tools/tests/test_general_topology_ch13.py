@@ -140,6 +140,11 @@ def lint():
             r"\end{" + env + "}"), env
     assert r"\label{thm:topog-uzupelnienia-istnienie}" in source
     assert r"\label{thm:topog-uzupelnienia-uniwersalnosc}" in source
+    example_start = source.index(r"\label{ex:topog-uzupelnienia-arctan}")
+    example_end = source.index(r"\end{przyklad}", example_start)
+    assert "samą topologię (rozdział~10)." in source[example_start:example_end], (
+        "arctan metric example must refer to the chapter proving equivalence"
+    )
     return len(labels),len(refs)
 
 if __name__ == "__main__":
