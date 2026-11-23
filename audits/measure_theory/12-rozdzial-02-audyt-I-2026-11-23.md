@@ -44,14 +44,25 @@ Trzy niezależne zadania CI, każde dotyczące tylko kontroli R02:
 3. **`chapter-02-book-reference-context`**: trzykrotna kompilacja `books/pl/measure_theory.tex` wyłącznie jako kontekst odsyłaczy R02; sprawdzenie czterech etykiet, braku niezdefiniowanych referencji, metadanych i tekstu PDF. Nie jest to matematyczny audyt R01 ani R03–R31.
 
 Przebieg CI: **[45131898964](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45131898964)** na źródłowym commitcie `c75d73d091d7967487c221724cb76db3c1bc288e`.
-**Potwierdzony wynik w chwili przygotowania raportu:** job `chapter-02-finite-models` zakończył się sukcesem. Odczytano jego faktyczny log: **`PASS: 8 completed sets, 64 pairs, 64 disjoint triples`**. Dodatkowo etap `Compile twice, inspect reference scope and extract PDF text` był już oznaczony `completed/success`, choć całość joba i job pełnej książki jeszcze trwały. Wynik wszystkich zadań musi zostać ponownie odczytany po ukończeniu; nie przedstawiać ich przedwcześnie jako zaliczonych.
+**Końcowy, potwierdzony wynik:** GitHub Actions [45131898964](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45131898964) osiągnął status **`completed/success`**; wszystkie trzy joby (`chapter-02`, `chapter-02-finite-models`, `chapter-02-book-reference-context`) mają wynik **`success`**. Odczytano zarówno status API, jak i log testu modeli skończonych: **`PASS: 8 completed sets, 64 pairs, 64 disjoint triples`**. Oryginalny rozdział 02 nie był zmieniany.
 
-## 5. Status i otwarte sprawy
+## 5. Rzeczywista weryfikacja obu artefaktów PDF
 
-**R02: AUDYT I WYKONANY, JESZCZE NIEUSTABILIZOWANY.**
+Pobrano oba artefakty z ukończonego CI: ZIP izolowanego rozdziału `14797948060` oraz ZIP pełnego kontekstu książki `14798122629`. Rozpakowano PDF, logi i tekst, po czym dokonano kontroli renderowania i geometrii dokumentu:
 
-Przed zatwierdzeniem potrzebne są: końcowe wyniki wszystkich trzech jobów CI, realna kontrola PDF rozdziału 02, wizualne potwierdzenie odsyłaczy oraz co najmniej **jeden dodatkowy pełny, niezależny, czysty audyt R02 po ostatniej poprawce** (dotychczasowe audyty R01 nie mogą go zastępować). Jeśli pojawi się wykazany błąd R02, naprawić i powtórzyć kontrolę R02.
+- PDF izolowanego R02: **8 stron A4, 266 126 bajtów**, rzeczywiście wyrenderowanych i obejrzanych w zestawieniu wszystkich stron. Brak uciętych wzorów, nachodzących na siebie napisów, brakujących stron i nieczytelnych nagłówków. Analiza bloków tekstu (PyMuPDF) potwierdziła **187 bloków na 8 stronach, 0 poza granicą strony**.
+- Izolowany R02 zawiera **4 widoczne `??`**, wyłącznie dla czterech wystąpień trzech odsyłaczy do R01. Odpowiadają im dokładnie cztery oczekiwane ostrzeżenia logu LaTeX; nie oznaczają błędu źródła.
+- W pełnej książce skompilowanej w trzech przebiegach `pdflatex` jest **256 stron A4**. R02 zajmuje **fizyczne strony PDF 18–25**, 8 stron; brak `??` na tych stronach oraz **0 bloków poza stroną**.
+- Sprawdzono wszystkie **4 interaktywne odsyłacze z R02 do R01** w pełnym PDF: na stronach fizycznych 18, 19, 24 i 25 prowadzą one odpowiednio do stron fizycznych **12, 13, 14 i 12** (sprawdzenie docelowych kotwic dla `ch:przestrzenie-mierzalne`, `ex:countable-cocountable`, `thm:pi-lambda` i powtórzonego `ch:przestrzenie-mierzalne`). Wszystkie cele rozwiązywane prawidłowo.
+- Końcowy log `measure_theory.log` pełnej książki nie zawiera ostrzeżeń o niezdefiniowanych odsyłaczach, nie odnotowano też `Overfull \\hbox`. Nie audytowano matematycznie pozostałych rozdziałów; pełny build jest wyłącznie kontrolą integracji odsyłaczy.
 
-Nie proponuje się samowolnego usuwania czy scalania treści. Osobny skrypt o rozszerzeniach pojęcia całki pozostaje bez zmian.
+Potwierdzony wynik CI nie został przypisany wcześniejszemu, nieukończonemu przebiegowi ani innemu SHA; jest to wykonanie na commitcie `c75d73d091d7967487c221724cb76db3c1bc288e`.
 
-**Następna iteracja:** nadal wyłącznie rozdział 02; odczytać CI `45131898964`, zbadać PDF i przeprowadzić niezależny matematyczny przegląd ponowny. Przejście do R03 jest zabronione przed zatwierdzeniem stabilności R02.
+
+## 6. Status stabilizacji i otwarte sprawy
+
+**R02: SAMODZIELNY AUDYT I WYKONANY, JESZCZE NIEUSTABILIZOWANY.** Kontrola strukturalna, wykonane testy modeli skończonych, kompilacja izolowanego R02, pełny build kontekstowy i oględziny 8 stron są już zakończone, jednak według rygoru przyjętego dla Biblioteki po pierwszym samodzielnym, pełnym audycie rozdziału nie zatwierdzamy stabilności bez **kolejnego niezależnego, sceptycznego, czystego audytu matematycznego i redakcyjnego tego samego R02**.
+
+Nie znaleziono w tej iteracji nowego udowodnionego błędu wymagającego edycji zaakceptowanej treści. Nie wprowadzono dodatkowych twierdzeń, nie zmieniono żadnych etykiet ani zakresu żadnego rozdziału. Wartościowe rozbudowy wymagałyby osobnej akceptacji.
+
+**Następna iteracja:** tylko R02 — niezależnie ponownie przejść każde z jego 10 twierdzeń, 2 wniosków, 8 definicji, 14 przykładów i 14 dowodów oraz kontrolę terminologiczną. Jeśli kontrola będzie czysta, rozważyć certyfikację R02 dopiero po jednoznacznym udokumentowaniu pełnego przeglądu. Nie przechodzić do R03 w tej iteracji ani przed zatwierdzeniem R02.
