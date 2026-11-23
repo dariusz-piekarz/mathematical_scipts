@@ -1,0 +1,118 @@
+name: Measure theory chapter 04 audit validation
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "chapters/pl/measure_theory/04-miara-lebesguea-na-przestrzeni-euklidesowej.tex"
+      - "tools/test_measure_theory_ch04_geometry.py"
+      - "books/pl/measure_theory.tex"
+      - ".github/workflows/measure-theory-ch04.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  chapter-04-exact-geometry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check exact rational geometry and finite-grid volume
+        run: python3 tools/test_measure_theory_ch04_geometry.py
+
+  chapter-04-pdf-and-references:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Polish LaTeX, TikZ and PDF inspection tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-lang-polish texlive-pictures lmodern poppler-utils
+      - name: Prepare isolated chapter 04 with original book preamble
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          source = Path("books/pl/measure_theory.tex").read_text(encoding="utf-8")
+          preamble = source.split(r"\begin{document}", 1)[0]
+          chapter = "../../chapters/pl/measure_theory/04-miara-lebesguea-na-przestrzeni-euklidesowej.tex"
+          isolated = preamble + "\n" + r"\begin{document}" + "\n"
+          isolated += r"\mainmatter" + "\n" + r"\input{" + chapter + "}\n"
+          isolated += r"\end{document}" + "\n"
+          Path("books/pl/measure_theory_ch04_ci.tex").write_text(isolated, encoding="utf-8")
+          PY
+      - name: Compile and inspect isolated R04 PDF
+        working-directory: books/pl
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory_ch04_ci.tex > ch04_pass1.txt
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory_ch04_ci.tex > ch04_pass2.txt
+          test -s measure_theory_ch04_ci.pdf
+          pdfinfo measure_theory_ch04_ci.pdf | tee ch04_pdfinfo.txt
+          pdftotext -layout measure_theory_ch04_ci.pdf ch04_layout.txt
+          grep -q "Miara Lebesgue" ch04_layout.txt
+          grep -q "Cantora" ch04_layout.txt
+          if grep -E 'Overfull \\hbox' measure_theory_ch04_ci.log; then
+            echo "R04 isolated PDF has overfull lines"
+            exit 1
+          fi
+          pdftotext -bbox measure_theory_ch04_ci.pdf ch04_bbox.html
+          python3 - <<'PY'
+          from xml.etree import ElementTree as ET
+          tree = ET.parse("ch04_bbox.html")
+          root = tree.getroot()
+          ns = "{http://www.w3.org/1999/xhtml}"
+          pages = root.findall(".//" + ns + "page")
+          words_checked = 0
+          for page in pages:
+              width = float(page.get("width"))
+              height = float(page.get("height"))
+              for word in page.iter(ns + "word"):
+                  x0 = float(word.get("xMin"))
+                  y0 = float(word.get("yMin"))
+                  x1 = float(word.get("xMax"))
+                  y1 = float(word.get("yMax"))
+                  assert 0 <= x0 <= x1 <= width, (x0,x1,width)
+                  assert 0 <= y0 <= y1 <= height, (y0,y1,height)
+                  words_checked += 1
+          assert len(pages) >= 2 and words_checked > 500
+          print(f"PASS isolated R04 PDF bounds: {len(pages)} pages, {words_checked} words")
+          PY
+          pdftoppm -f 1 -l 15 -r 90 -png measure_theory_ch04_ci.pdf ch04_preview > /dev/null 2>&1
+      - name: Compile full book solely to validate R04 cross-references
+        working-directory: books/pl
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory.tex > ch04_full_pass1.txt
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory.tex > ch04_full_pass2.txt
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory.tex > ch04_full_pass3.txt
+          test -s measure_theory.pdf
+          for target in 'ch:lebesgue' 'thm:lebesgue-exists' 'thm:lebesgue-completion' \
+                        'thm:cantor-properties' 'thm:vitali' 'ch:caratheodory' 'def:borel'; do
+            grep -Fq "\\newlabel{$target}" measure_theory.aux
+          done
+          if grep -E 'LaTeX Warning: (Reference|Citation).*undefined|There were undefined references|multiply defined|Overfull \\hbox' measure_theory.log; then
+            echo "Book references or lines have diagnostic errors"
+            exit 1
+          fi
+          pdfinfo measure_theory.pdf | tee ch04_book_pdfinfo.txt
+      - name: Upload R04 PDF, raster previews and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: measure-theory-ch04-audit-pdf
+          if-no-files-found: warn
+          path: |
+            books/pl/measure_theory_ch04_ci.pdf
+            books/pl/ch04_preview-*.png
+            books/pl/ch04_layout.txt
+            books/pl/ch04_bbox.html
+            books/pl/ch04_pdfinfo.txt
+            books/pl/measure_theory_ch04_ci.log
+            books/pl/ch04_pass*.txt
+            books/pl/ch04_book_pdfinfo.txt
+            books/pl/measure_theory.log
+            books/pl/ch04_full_pass*.txt
