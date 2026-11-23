@@ -85,3 +85,12 @@ Testy rachunkowe używają dokładnej arytmetyki SymPy i małych pierścieni sko
 ## Niezależny rachunek kontrolny (poza workflow)
 
 Po dodaniu testów do GitHub wykonano osobną serię **560 dokładnych kontroli SymPy**, niezależną od pliku regresyjnego: 100 wybranych wielomianów w Q[x,y] sprawdzono pod kątem zgodności derywacji D=x∂_x+2y∂_y z podstawieniem y=x²; dla każdego wykonano cztery dodatkowe kontrole po lokalizacji przez x^k, k=1,2,3,4; ponadto sprawdzono D-stabilność (x^p) dla pochodnych 12 jednomianów przy p=2,3,5,7,11 (60 przypadków). **560/560 PASS**. Są to sprawdzenia przykładów, nie formalizacja ani dowód ogólnego twierdzenia. Wynik CI pozostaje oddzielną bramką, której status należy odczytać z rzeczywistego przebiegu.
+
+
+## Pierwsze CI: wykryty błąd testu i rzeczywista poprawka
+
+**Pierwszy przebieg:** [45284141975](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45284141975), SHA **00e7e546c17fa4dea58c459da70f9887f1a9d212**, wynik **completed / failure**, job **138075940293**. W kroku ogólnego odkrywania testów wykonano 4533 testy i otrzymano **4 błędy** w podprzypadkach nowej funkcji `test_stable_ideal_and_quotient_derivation` dla stałego wielomianu `P=1`. Przyczyną był wyłącznie błąd programu testowego: Python `int` nie ma metody `.subs`; nie była to błędna równość matematyczna. Wszystkie pozostałe sześć funkcji testowych nowego modułu miały wynik `ok`, lecz wydzielony krok AA-X31 oraz kompilacja pełnej książki nie zostały uruchomione z powodu wcześniejszego zakończenia jobu.
+
+**Rzeczywista poprawka:** commit **8955f12205028cae869fceb0cbe3d92e197fafd8** zmienił podstawienie `P.subs(...)` na `sp.sympify(P).subs(...)`, tak aby stała `P=1` również była prawidłowym obiektem SymPy. Nie zmieniono źródeł LaTeX ani twierdzenia. Workflow został ponownie wyzwolony przez poprawkę pliku testowego, ale jego wynik wymaga dalszej weryfikacji. Wcześniejszy zielony CI AA-X30 nie jest dowodem poprawności AA-X31.
+
+Diagnostyka globalnego repozytorium raportuje również wcześniejsze błędy brakujących zagnieżdżonych importów i rozbieżności kopii źródeł w *innych skryptach*; workflow ma dla niej `continue-on-error: true`. W odczytanym logu przyczyną przerwania kroku blokującego były wspomniane cztery błędy nowego testu. Dalszy werdykt AA-X31 pozostaje w stabilizacji.
