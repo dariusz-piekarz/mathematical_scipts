@@ -45,7 +45,7 @@ Przeprowadzono ponowny, niezależny audyt całego aktualnego rozdziału, a nie w
 - **Separacja nie-Hausdorffa:** `R²` z seminormą `p(x,y)=|x|`, zamknięta prosta `M={0}×R` i punkt `x_0=(3,1)` mają separator `F(x,y)=x/3`.
 - **Struktura:** **17** par środowisk `proof`, **5** par `przyklad`, **22** unikatowe etykiety, **19** wystąpień odsyłaczy; wszystkie ich cele istnieją w źródłach 01–06.
 - **Terminologia:** brak niedozwolonego samodzielnego słowa „dual”, zapisów `\\mathbf1`, wyrazów „sekwencyjny” i „pierwszoprzeliczalna”. W przykładzie `L^p` użyto `\\chi_{[0,1]}`.
-- Dotychczasowy pakiet **19 testów regresyjnych** obejmuje m.in. Zorna i model przedłużenia jednowymiarowego, fazę zespoloną, przypadki nie-Hausdorffa, anihilator ilorazu, wzór na odległość i niejednoznaczność.
+- Dotychczasowy pakiet **19 testów regresyjnych** obejmuje skończenie wymiarowe modele przedłużenia jednowymiarowego, fazę zespoloną, przypadki nie-Hausdorffa, anihilator ilorazu, wzór na odległość i niejednoznaczność. **Nie weryfikuje numerycznie lematu Kuratowskiego–Zorna** — jego zastosowanie sprawdzono wyłącznie w dowodzie matematycznym.
 - Przed niniejszym raportem ukończono pełnym **SUCCESS** [CI 45178710978](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45178710978) z identycznym SHA źródła, 19/19 testami oraz pełną kontrolą kontekstu 01–06. Po zapisaniu niniejszego raportu uruchomiony dedykowany workflow powtórzy niezależnie kontrolę CI; ostateczny wynik zostanie dodany po zakończeniu.
 - Wizualna inspekcja siedmiu stron rozdziału 06 (33–39) została przeprowadzona w audycie 06/03 i potwierdziła brak kolizji oraz elementów poza stroną. Źródło rozdziału od tej kontroli pozostało niezmienione.
 
