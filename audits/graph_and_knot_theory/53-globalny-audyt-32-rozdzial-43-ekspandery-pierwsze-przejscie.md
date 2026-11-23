@@ -42,3 +42,14 @@ Z potwierdzonego artefaktu 298-stronicowego PDF z poprzedniego stabilnego SHA 55
 ## Werdykt tymczasowy
 
 **Audyt 32: pierwsze przejście merytoryczne i wizualne wykonane; regresje i pełny PDF na nowym SHA w stabilizacji.** Nie uznawać rozdziału 43 za zamknięty bez potwierdzonego wyniku CI, źródeł testu i PDF, a następnie niezależnego drugiego przejścia.
+
+
+## Potwierdzony wynik zdalnego testu strukturalnego
+
+Przebieg https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45289361352 dla dokładnego SHA \`30c7c5a99e5fb047e7744b3d0cdbe31a93c8fb9a\`:
+
+- job \`structural-audit\`, ID \`138093867113\`: **completed / success**; lista kroków potwierdza sukces \`First independent Cheeger, diameter and lazy mixing audit (43)\`;
+- przejrzano rzeczywisty log tego jobu: \`PASS chapter 43: 193 exhaustive positive-regular graphs; 165 connected mixing/diameter checks\`; \`PASS chapter 43: complete graphs, cycles, bipartite laziness and TeX hypotheses\`; \`PASS chapter 43 first independent audit (...)\`;
+- job \`full-book-pdf\`, ID \`138093867521\`: na chwilę tego odczytu wciąż **in_progress**, z aktywną instalacją TeX. Nie można jeszcze poświadczyć nowej kompilacji.
+
+Źródło rozdziału 43 nie było zmieniane podczas tworzenia testów; sześć stron 84–89 obejrzano w rzeczywistym PDF z poprzedniego pomyślnego przebiegu, który zawiera tę samą wersję źródła. **Pierwsze przejście 43 nadal otwarte do końcowego potwierdzenia PDF/CI**.
