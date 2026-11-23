@@ -53,3 +53,17 @@ Zmiana zakresu książki na 43+ nie unieważnia zamkniętego raportu AA-01–AA-
 AA-45 obejmuje kryteria hiperwykładnicze i dla skończonych sum Laurenta, cztery pełne analizy całek nieelementarnych (Gaussa, sinusowej, logarytmicznej, eliptycznej), 12 dowodów i 5 przykładów. Ukończono audyty I–III, wykonano dwie niezależne serie regresji (10 + 8 testów PASS) i zweryfikowano zielony CI: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45154562082, commit 9a375ac376c90e04d6ec8b3172a224afd7551572. Końcowy PDF ma 289 stron, osiem stron AA-45 obejrzano, końcowy log bez błędów i ostrzeżeń; 45 rozdziałów w katalogu, bez brakujących odsyłaczy. Historii audytów AA-01–AA-42 nie zmieniono.
 
 **Następny odblokowany etap: AA-46 — automorfizmy różniczkowe, rozszerzenia Picarda–Vessiota i grupy Galois równań liniowych.** Obowiązuje zasada: opracowanie AA-46, następnie niezależne audyty do stabilizacji, dopiero AA-47 (o ile zostanie zatwierdzony).
+
+
+## Aktualizacja stanu — 23 listopada 2026 r. (AA-46)
+
+**AA-43: STABILNY** — audits/abstract_algebra/ch43_iteration_03.md.
+**AA-44: STABILNY** — audits/abstract_algebra/ch44_iteration_03.md.
+**AA-45: STABILNY** — audits/abstract_algebra/ch45_iteration_03.md.
+**AA-46: STABILNY** — audits/abstract_algebra/ch46_iteration_03.md.
+
+Rozdział AA-46 włączono do kanonicznej książki i katalogu. Przeprowadzono trzy audyty, w tym rzeczywiste poprawki: poprawny dowód Eisensteina dla T^m−x przy dowolnym m≥2 (w tym złożonym), doprecyzowanie normalizacji Laurentów, zamiana tytułu sekcji powodującego ostrzeżenia hyperref oraz wzmocnienie niezależnych testów.
+
+**Ostateczny GitHub Actions:** https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45157760575 — completed / success, 83/83 kroków. Testy AA-46: 10/10 SymPy + 8/8 Fraction PASS. Integralność: 46 rozdziałów, 939 etykiet unikatowych, 0 duplikatów, 451 odsyłaczy, 0 brakujących celów. Ostateczny PDF: 297 stron; AA-46 zajmuje 7 stron PDF 291–297, wszystkie obejrzano, końcowy log bez błędów i ostrzeżeń.
+
+**AA-47 jest warunkowy**, zgodnie z tabelą tego planu: algorytmy Rischa i Kovacica należy najpierw objąć odrębną decyzją o zakresie (wymagane dowody poprawności, własne przykłady i audyty). Nie uruchamiać AA-47 automatycznie wyłącznie dlatego, że AA-46 osiągnął stabilność.
