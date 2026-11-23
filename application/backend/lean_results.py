@@ -173,20 +173,30 @@ def last_run(identifier: str, expected: dict[str, str], *,
         with os.fdopen(descriptor, "rb") as stream:
             opened = os.fstat(stream.fileno())
             named = path.lstat()
-            def identity(info: os.stat_result) -> tuple[int, int, int, int, int]:
-                return (info.st_dev, info.st_ino, info.st_size,
-                        info.st_mtime_ns, info.st_ctime_ns)
+            def common_identity(info: os.stat_result) -> tuple[int, int, int, int]:
+                # Windows Path.lstat and os.fstat can report different st_ctime
+                # semantics for the *same* file (creation vs change time).
+                # Use the stable file ID, size and modification time for the
+                # cross-API check; compare ctime only within the same API.
+                return (info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns)
+            def same_object(left: os.stat_result, right: os.stat_result) -> bool:
+                return (common_identity(left) == common_identity(right)
+                        and (os.name == "nt"
+                             or left.st_ctime_ns == right.st_ctime_ns))
             if (not stat.S_ISREG(opened.st_mode)
                     or not stat.S_ISREG(named.st_mode)
-                    or identity(opened) != identity(named)):
+                    or not same_object(opened, named)):
                 raise ValueError("Lean run record was replaced before reading")
             # Bound actual bytes even if the file grows after the first stat.
             raw = stream.read(MAX_RECORD_BYTES + 1)
             named_after = path.lstat()
             opened_after = os.fstat(stream.fileno())
             if (not stat.S_ISREG(named_after.st_mode)
-                    or identity(opened) != identity(opened_after)
-                    or identity(opened) != identity(named_after)):
+                    or not same_object(opened, opened_after)
+                    or not same_object(named, named_after)
+                    or not same_object(opened, named_after)
+                    or opened.st_ctime_ns != opened_after.st_ctime_ns
+                    or named.st_ctime_ns != named_after.st_ctime_ns):
                 raise ValueError("Lean run record changed during reading")
         if len(raw) > MAX_RECORD_BYTES:
             raise ValueError("Oversized Lean run record")
