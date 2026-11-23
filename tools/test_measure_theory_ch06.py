@@ -132,6 +132,8 @@ def check_source():
     assert "Niech $(X,\\mathcal F,\\mu)$ będzie przestrzenią z miarą,\na $(f_n)_{n\\ge1}$" in source
     assert "na mocy twierdzenia\n\\ref{thm:composition-measurable}" in source
     assert "Niech $(X,\\mathcal F)$ będzie przestrzenią mierzalną.\nJeżeli $(f_n)_{n\\ge1}$" in source
+    assert "Dla $X=\\varnothing$ dopuszczamy reprezentację jako pustą sumę" in source
+    assert "Dla $X=\\varnothing$ obie strony równoważności zachodzą" in source
     print(f"PASS R06 source: {len(refs)} refs, TeX environments, terminology")
 
 
