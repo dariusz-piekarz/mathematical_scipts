@@ -192,7 +192,7 @@ class Chapter13Audit(unittest.TestCase):
     def test_weak_poisson_continuity_and_density_documented(self):
         self.assertIn(r"|\Lambda(v)|\le\|f\|_2\|v\|_2",self.source)
         self.assertIn(r"\|u\|_2\le\|u'\|_2/\sqrt2",self.source)
-        self.assertIn(r"u''=-f",self.source)
+        self.assertIn(r"w''=-f",self.source)
         self.assertIn("w normie $H$",self.source)
         self.assertIn(r"\widetilde h_n\to h",self.source)
         self.assertIn(r"u=w",self.source)
