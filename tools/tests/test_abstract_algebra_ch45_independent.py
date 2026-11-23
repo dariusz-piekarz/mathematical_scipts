@@ -88,12 +88,21 @@ class AA45IndependentRational(unittest.TestCase):
             if m==0 and n==1:self.assertEqual(at_infinity,-2)
 
     def test_07_residue_rational_independence(self):
-        # c1=1, c2=sqrt(2) are rationally independent.
-        # Integer orders (m1,m2) with c1*m1+c2*m2=0 force m1=m2=0.
-        # Check algebraic-pair implementation in Q[sqrt(2)].
-        for m,n in product(range(-6,7),repeat=2):
-            residue=(Q(m),Q(n))
-            self.assertEqual(residue==(0,0),(m==0 and n==0))
+        # Independent basis 1,sqrt(2).  A residue is a rational pair.
+        # c=(1,sqrt(2),1+sqrt(2)); cancellations mean both coordinates zero.
+        c=((Q(1),Q(0)),(Q(0),Q(1)),(Q(1),Q(1)))
+        for a,b,d in product(range(-3,4),repeat=3):
+            coeff1=a+d
+            coeff2=b+d
+            pair=tuple(sum(Q(v)*c[j][i] for j,v in enumerate((a,b,d)))
+                       for i in (0,1))
+            self.assertEqual(pair,(Q(coeff1),Q(coeff2)))
+            self.assertEqual(pair==(Q(0),Q(0)),a==-d and b==-d)
+            if pair==(Q(0),Q(0)):
+                # The two basis decompositions define monomials U1=u1*u3,
+                # U2=u2*u3 with zero local order at this point.
+                self.assertEqual(a+d,0)
+                self.assertEqual(b+d,0)
 
     def test_08_structure(self):
         text=SRC.read_text(encoding="utf-8")
