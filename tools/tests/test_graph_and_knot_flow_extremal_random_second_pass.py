@@ -9,6 +9,7 @@ from functools import lru_cache
 from fractions import Fraction
 from itertools import combinations
 from math import comb
+from pathlib import Path
 from random import Random
 
 RNG = Random(20261123031)
@@ -167,8 +168,38 @@ def verify_random_moments():
     print(f"PASS chapter 42: {checked} exact G(n,p) graph probabilities and moment checks")
 
 
+def verify_source_hypotheses():
+    """Guard the precise repaired statement, not merely the numerical fact.
+
+    The unqualified edge-disjoint-path claim is false when the original
+    network includes zero-capacity arcs. This guard fails if the TeX source
+    accidentally reverts to the erroneous statement, even if path-oracle
+    tests continue to pass.
+    """
+    root = Path(__file__).resolve().parents[2]
+    path = root / "chapters/pl/graph_and_knot_theory/40-algorytmy-przeplywowe-ford-fulkerson-edmonds-karp-dinic.tex"
+    chapter = path.read_text(encoding="utf-8")
+    label = r"\label{thm:tg-flow-integral-paths}"
+    assert chapter.count(label) == 1, "missing or duplicate integral path theorem"
+    theorem = chapter.split(label, 1)[1].split(r"\end{twierdzenie}", 1)[0]
+    proof = chapter.split(label, 1)[1].split(r"\end{proof}", 1)[0]
+    required = (
+        r"$k=|f|\geq0$",
+        r"niech $D_+$ oznacza podgraf",
+        r"o przepustowości $1$",
+        r"w $D_+$",
+        r"liczbie łuków $D_+$",
+    )
+    for fragment in required:
+        assert fragment in theorem, f"missing key hypothesis: {fragment}"
+    assert "Nie można w tym wniosku liczyć dróg" in proof
+    assert "przepustowości $0$" in proof
+    print("PASS chapter 40: repaired TeX hypotheses and conclusion explicitly guarded")
+
+
 if __name__ == "__main__":
     verify_packing()
+    verify_source_hypotheses()
     verify_extremal()
     verify_random_moments()
     print("PASS audit 31 independent finite tests (not a substitute for mathematical proofs)")
