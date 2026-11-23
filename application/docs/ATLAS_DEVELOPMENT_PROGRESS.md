@@ -178,3 +178,12 @@
 - **Rozróżnienie SHA:** produkcyjna poprawka fingerprintu i jej testy są potwierdzone 3/3 na SHA `dda19fc9`; późniejsza zmiana samego kontrolera recenzji nie jest objęta tym historycznym 2+1. Dla formalnego zamknięcia fragmentu potrzebne jest odpowiednie ponowne rozliczenie końcowego kontrolera/źródła na jednym SHA. W żadnym wypadku nie stwierdzać `stable` na podstawie samego 3/3 sprzed zmiany gate.
 - **Stan**: aktywny L1.1, `testing/stabilizing`, brak uwierzytelnionego niezależnego przeglądu. `certificate=false`, nie przechodzić do L1.2. Dalszy krok: przypiąć nowy kandydat zawierający poprawkę kontrolera, sprawdzić skoordynowane 2+1 na tym SHA, przygotować niezależną, uwierzytelnioną ścieżkę zatwierdzania bez samooceny JSON.
 
+
+
+### 2026-11-23 — uruchomiona nowa seria 2+1 po zabezpieczeniu zatwierdzania audytu
+
+- Żądanie `application/config/atlas_validation_request.json` przypina pełny `candidate_sha=5e6e017a7d98ce2dfb384b4e973cce08159be3fc` i `fragment=L1.1`. Zmiana wyzwoliła [Atlas #45136597724](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45136597724); odczytano jego `prepare`: `completed/success`, wynik z logu `verified_branch_ancestry=true`, dokładny SHA zgodny z żądaniem. Na chwilę wpisu zadania trzech faz CI nie były jeszcze zakończone. Nie deklarować sukcesu na podstawie samego `prepare`.
+- Odrębne pełne CI aplikacji [#45136169753](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45136169753), dokładnie SHA `5e6e017a...`, `completed/success`: **687 testów, 10 sklasyfikowanych pominięć, zero nieznanych**, nowy test podszywania się pod recenzenta zakończony `ok`, prawdziwy Chromium `passed`, 494 rozdziały i brak błędów JS. Nie zastępuje to trzech wymaganych rund w orkiestratorze.
+- Starszy komplet [#45133923118](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45133923118) potwierdza **3/3 na SHA `dda19fc9...`**, ale ten SHA zawierał słabszą wersję walidatora recenzji. Po zmianie kodu kontrolera odliczanie dla finalnego kandydata jest ostrożnie **0/3** do zamknięcia odpowiednich nowych testów. Zmiana nie dotyczyła produkcyjnego odczytu `.olean`, źródeł Lean ani kanonicznych `.tex`.
+- **Stan:** L1.1 `testing`, review = `pending_authenticated_review`, `certificate=false`. Następny jeden krok: sprawdzić realny wynik nowego #45136597724 wraz z dokładnymi raportami trzech rund i niezależnie uwierzytelnioną recenzją przed formalnym `stable`; nie rozpoczynać L1.2.
+
