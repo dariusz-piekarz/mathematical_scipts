@@ -183,7 +183,7 @@ class ConstructibilityGenericGaloisInterface(unittest.TestCase):
                 self.assertEqual(is_two_power(totient), fermat_form)
         for n, want in ((5, True), (7, False), (9, False),
                         (15, True), (17, True), (33, False),
-                        (51, False), (85, True),
+                        (51, True), (85, True),
                         (257, True), (65537, True)):
             self.assertEqual(is_two_power(int(sp.totient(n))), want)
 
