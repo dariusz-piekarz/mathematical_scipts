@@ -180,7 +180,7 @@ def verify_source():
     cheeger = text.split(r"\label{thm:tg-expander-cheeger}", 1)[1].split(r"\end{twierdzenie}", 1)[0]
     assert r"\lambda_2(G)" in cheeger and r"\Phi(G)" in cheeger
     mixing = text.split(r"\label{thm:tg-expander-mixing}", 1)[1].split(r"\end{twierdzenie}", 1)[0]
-    assert r"spójnym grafem" in mixing and r"d-regularnym" in mixing
+    assert r"spójnym grafem" in mixing and r"$d$-regularnym" in mixing
     assert r"\|\mu Q^t-\pi\|_{\mathrm{TV}}" in mixing
     assert r"Q=(I+P)/2" in text
     print("PASS chapter 43 second pass: exact hypotheses and stable TeX labels")
