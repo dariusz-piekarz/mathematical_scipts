@@ -145,6 +145,25 @@ class LeanFormalizationTests(unittest.TestCase):
         self.assertEqual(blocked["proof_status"], "blocked")
         spawn.assert_not_called()
 
+    def test_canonical_tex_sha_is_streamed_without_read_bytes(self):
+        # File hashing must not allocate memory proportional to the size of
+        # an attacker-controlled on-disk TeX file. A normal read_bytes() call
+        # was the old unbounded implementation and must be rejected.
+        file = Path(self.tmp.name) / "chapters" / "pl" / "unit" / "bulk.tex"
+        file.parent.mkdir(parents=True, exist_ok=True)
+        payload = SOURCE.encode("utf-8") + (b"x" * (4 * 1024 * 1024))
+        file.write_bytes(payload)
+        registered = {"source_document_path": "chapters/pl/unit/bulk.tex"}
+        digest = hashlib.sha256(payload).hexdigest()
+        with patch.object(Path, "read_bytes",
+                          side_effect=AssertionError("unbounded Path.read_bytes")):
+            self.assertTrue(lean._source_file_current(registered, digest, self.root))
+            # Preserve the fail-closed behavior even for a one-byte edit.
+            with file.open("r+b") as stream:
+                stream.seek(-1, 2)
+                stream.write(b"y")
+            self.assertFalse(lean._source_file_current(registered, digest, self.root))
+
     def test_corrupted_index_is_refused_by_reader(self):
         self.con.execute("UPDATE documents SET sha256=? WHERE id='LST-01'",
                          ("f" * 64,))
