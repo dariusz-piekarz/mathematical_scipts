@@ -23,6 +23,7 @@ STORED_STATUSES = {"compiled", "failed", "timeout"}
 SCHEMA_VERSION = 5
 MAX_STORED_LOG = 16000
 MAX_RECORD_BYTES = 30000
+MAX_REGISTERED_LEAN_FILE_BYTES = 64 * 1024 * 1024
 FINGERPRINT_DIGEST_FIELDS = (
     "source_document_sha256", "source_binding_sha256", "lean_sha256",
     "project_sources_sha256", "external_packages_sha256",
@@ -114,7 +115,20 @@ def fingerprint(source_sha256: str, lean_file: Path, lean_root: Path,
         raise ValueError("Invalid indexed document SHA256")
     if not isinstance(source_binding_sha256, str) or not HEX_DIGEST.fullmatch(source_binding_sha256):
         raise ValueError("Missing or invalid indexed source binding SHA256")
-    lean_sha256 = hashlib.sha256(lean_file.read_bytes()).hexdigest()
+    # A registered source path may contain arbitrary local bytes. Do not
+    # allocate its entire contents to fingerprint it; reject an oversized
+    # module before reading and also if it grows during the bounded scan.
+    if lean_file.stat().st_size > MAX_REGISTERED_LEAN_FILE_BYTES:
+        raise ValueError("Oversized registered Lean module")
+    digest = hashlib.sha256()
+    read_total = 0
+    with lean_file.open("rb") as source:
+        for chunk in iter(lambda: source.read(64 * 1024), b""):
+            read_total += len(chunk)
+            if read_total > MAX_REGISTERED_LEAN_FILE_BYTES:
+                raise ValueError("Oversized registered Lean module")
+            digest.update(chunk)
+    lean_sha256 = digest.hexdigest()
     project_sources_sha256 = _project_sources_sha256(lean_root)
     external_packages_sha256 = lean_environment.external_packages_sha256(lean_root)
     compiled_artifacts_sha256 = lean_environment.compiled_artifacts_sha256(lean_root)
