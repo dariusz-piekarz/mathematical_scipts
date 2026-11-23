@@ -435,6 +435,103 @@ i każdego wierzchołka, dlatego zachowują
 złożoność DFS.
 \end{proof}
 
+\begin{twierdzenie}[Punkty artykulacji i liczby \texttt{low}]
+\label{thm:tg-dfs-articulation}
+Niech $G=(V,E)$ będzie skończonym grafem prostym
+nieskierowanym, a $p,\mathrm{tin},\mathrm{low}$
+niech będą danymi z pełnego przeszukiwania DFS.
+Wierzchołek $v$ nazywamy \emph{punktem artykulacji},
+jeśli usunięcie $v$ i wszystkich incydentnych
+z nim krawędzi zwiększa liczbę składowych spójnych
+grafu. Wówczas:
+\begin{enumerate}[label=(\roman*)]
+\item jeśli $v$ jest korzeniem swojego drzewa DFS,
+to jest punktem artykulacji wtedy i tylko wtedy,
+gdy ma co najmniej dwoje dzieci w tym drzewie;
+\item jeśli $v$ nie jest korzeniem, to jest punktem
+artykulacji wtedy i tylko wtedy, gdy istnieje
+jego dziecko $w$ spełniające
+$\mathrm{low}[w]\geq\mathrm{tin}[v]$.
+\end{enumerate}
+Wszystkie punkty artykulacji można wyznaczyć
+w czasie $O(n+m)$ i przy $O(n)$ pamięci
+pomocniczej dla reprezentacji listowej.
+\end{twierdzenie}
+
+\begin{proof}
+Pracujemy w jednej składowej spójnej $G$,
+a przez $T_w$ oznaczamy poddrzewo DFS
+o korzeniu $w$. Z
+Twierdzenia~\ref{thm:tg-dfs-intervals}(iv)
+każda krawędź niedrzewowa łączy
+wierzchołek z jego przodkiem.
+Jeżeli $w$ jest dzieckiem $v$,
+to z $T_w$ może wychodzić krawędź
+niedrzewowa do ścisłego przodka $v$
+dokładnie wtedy, gdy
+$\mathrm{low}[w]<\mathrm{tin}[v]$.
+Krawędź do samego $v$ nie wystarcza
+do zachowania łączności po jego usunięciu.
+
+Niech $v$ nie będzie korzeniem.
+Jeżeli pewne dziecko $w$ spełnia
+$\mathrm{low}[w]\geq\mathrm{tin}[v]$,
+to po usunięciu $v$ poddrzewo $T_w$
+nie ma krawędzi do części składowej
+zawierającej rodzica $v$.
+Zatem liczba składowych wzrasta.
+Jeśli natomiast dla każdego dziecka
+$w$ zachodzi
+$\mathrm{low}[w]<\mathrm{tin}[v]$,
+to każde poddrzewo dziecięce
+łączy się bez udziału $v$ ze ścisłym
+przodkiem $v$. Droga przodków od
+korzenia do rodzica $v$ pozostaje
+spójna, podobnie jak pozostałe
+części drzewa DFS po usunięciu $v$.
+Wobec tego nie powstaje nowa składowa.
+
+Niech teraz $v$ będzie korzeniem.
+Poddrzewa jego różnych dzieci
+nie mają między sobą krawędzi:
+taka krawędź zostałaby zbadana
+przy wykonywaniu pierwszego z
+dwóch wywołań i spowodowałaby
+odkrycie drugiego poddrzewa
+wewnątrz pierwszego. Po usunięciu
+$v$ pozostaje dokładnie tyle
+składowych, ile $v$ ma dzieci,
+z pominięciem pustej składowej
+w przypadku jednoelementowym.
+Usunięcie korzenia zwiększa zatem
+liczbę składowych dokładnie wtedy,
+gdy dzieci jest co najmniej dwoje.
+
+Podczas jednej procedury DFS
+przechowujemy dla korzeni
+liczbę dzieci, a dla pozostałych
+wierzchołków porównujemy
+$\mathrm{low}[w]$ z $\mathrm{tin}[v]$
+przy powrocie z rekurencji.
+Każda krawędź i każdy wierzchołek
+są przetwarzane stałą liczbę razy,
+co daje zapowiedziane oszacowania.
+\end{proof}
+
+\begin{przyklad}[Punkt artykulacji bez mostu na cyklu]
+\label{ex:tg-dfs-articulation}
+Niech $G$ składa się z dwóch trójkątów
+$abc$ i $cde$, których jedynym wspólnym
+wierzchołkiem jest $c$.
+Żadna z sześciu krawędzi nie jest mostem,
+gdyż każda leży na cyklu. Jednak $c$
+jest punktem artykulacji: po jego usunięciu
+pozostają dwie składowe z krawędziami
+$ab$ i $de$. Przykład pokazuje, że
+kryterium punktów artykulacji nie jest
+tym samym co kryterium mostu.
+\end{przyklad}
+
 \begin{przyklad}[Mosty i liczby \texttt{low}]
 \label{ex:tg-dfs-low}
 Rozważmy graf o wierzchołkach $\{s,a,b,c,d\}$
