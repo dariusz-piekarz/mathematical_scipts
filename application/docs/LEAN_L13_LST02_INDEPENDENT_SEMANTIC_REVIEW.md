@@ -123,3 +123,22 @@ Dalszy pakiet **LA-01** i przejście do **L1.4.2** pozostają
 zablokowane do spełnienia sekwencyjnego planu. W szczególności
 pełny pilotaż L1.3 to **20–30 odrębnych mapowań**, obejmujących
 LST-01, LST-02 i LA-01; bieżący manifest ma ich **9**.
+
+
+## 5. Dodatkowa kontrola na skończonych modelach
+
+Przygotowano [odtwarzalny program Python](review_evidence/lst02_finite_model_audit.py)
+i [raport z rzeczywistego wykonania](LEAN_L13_LST02_FINITE_MODEL_AUDIT_2026-11-23.md)
+(commit [`29cc379f`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/29cc379f94771393ba15196a938ddf6d07b1c8bd)).
+Program bez korzystania z kodu Lean sprawdza 31 modeli jednoargumentowych
+na dziedzinach 0–4, 689 modeli dwuargumentowych na parach dziedzin
+0–3 oraz odnajduje 201 kontrmodeli do niedozwolonej odwrotnej
+implikacji mieszanej. Każda asercja **PASS**. Weryfikacja Git blob
+SHA `c1b753b6bc09271a6fb8b4cd25b29545a9b8c34e` potwierdza,
+że kod w repozytorium jest bajtowo identyczny z lokalnie uruchomionym.
+
+Recenzent może powtórzyć: `python application/docs/review_evidence/lst02_finite_model_audit.py`.
+**Wynik skończonych modeli nie jest dowodem ogólnym ani
+niezależną recenzją semantyczną.** Nie zmieniono żadnego źródła
+Lean lub LaTeX ani `manifest.json`; nadal `needs_review`
+i `certificate=false`.
