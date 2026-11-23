@@ -103,3 +103,24 @@ atomowa migawka ani certyfikat Lean–LaTeX. **Wynik 3/3 dla
 `1c4b89b1` pozostaje prawdziwym historycznym dowodem, ale
 nie może zostać przypisany nowemu kandydatowi.** Ponowne 2+1
 obowiązkowe na nowym SHA. `certificate=false`.
+
+## Techniczna stabilizacja poprawionego L1.4.1 — wynik 3/3
+
+Nowy kandydat `a1f93d985778492082a66db3975d05e9d73ed763`
+(oddzielny od wcześniej rozliczonego `1c4b89b1`) otrzymał
+[3/3 pełnych PASS w workflow #45175198218](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45175198218)
+zakończonym 2026-11-23 12:49 UTC. W każdej rundzie jest `732` testów
+Pythona, `10` sklasyfikowanych pominięć i `0` nierozliczonych.
+Prawdziwy Lean 4.26.0/Mathlib o commicie
+`2df2f0150c275ad53cb3c90f7c98ec15a56a1a67` skompilował
+`4` pliki / `18` twierdzeń przy `axiom_check=passed`.
+Windows i Chromium, testy regresyjne, sceptyczny kontrakt oraz
+agregacja końcowa również zakończyły się sukcesem.
+
+[Artefakt `atlas-validation-status`](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45175198218/artifacts/14820217988)
+jawnie zapisuje `problems=[]`, `status=stabilizing`,
+`skeptical_review=pending` oraz `certificate=false`.
+Zgłoszono [wniosek o niezależny odbiór #9](https://github.com/dariusz-piekarz/mathematical_scipts/issues/9).
+Formalnego statusu `stable` **nie nadano**, dopóki nie ma osobno
+uwierzytelnionej aprobaty recenzenta dla dokładnie tego SHA.
+Zmiana kodu resetuje cały 2+1. Nie rozpoczęto L1.4.2.

@@ -6,20 +6,20 @@
 
 ## Wskaźnik wykonywania
 
-- Bieżący etap: **Lean 4 / L1.4.1 — raport rozdziałowy**, stan **testing / stabilizing**, licznik stabilizacji **1/3 kompletnych rund PASS** (druga runda: aplikacja/Chromium, Windows i regresje Lean PASS; rzeczywisty Lean/Mathlib w toku podczas tego audytu).
-- Aktualny niezmienny kandydat: `a1f93d985778492082a66db3975d05e9d73ed763`. [Commit z naprawą](https://github.com/dariusz-piekarz/mathematical_scipts/commit/a1f93d985778492082a66db3975d05e9d73ed763) dodaje kontrolę zmian `statement_status`, zestawu rejestracji i własności etykiety oraz trzy regresje.
-- [Pełne CI aplikacji #45175157959](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45175157959): **completed/success**, 732 testy, 10 sklasyfikowanych pominięć, 0 nierozliczonych, Chromium 507 rozdziałów, zero błędów JavaScript. [Niezmienna kontrola 2+1 #45175198218](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45175198218): w toku; **pełna runda 1 PASS**, w rundzie 2 oczekuje rzeczywisty Lean/Mathlib. Każda z dwóch zaliczonych rund aplikacji: 732 testy, 3 nowe regresje PASS.
-- Poprzedni [2+1 #45160961943](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45160961943) zakończył się **3/3 PASS dla historycznego SHA `1c4b89b1`**, ale został unieważniony jako podstawa awansu nowego kodu po wykryciu niespójności manifestu i etykiet. Nie zaliczać go do nowego licznika.
-- [Issue #8](https://github.com/dariusz-piekarz/mathematical_scipts/issues/8) zamknięto jako **zastąpione, a nie zatwierdzone**. [Issue #9](https://github.com/dariusz-piekarz/mathematical_scipts/issues/9) dotyczy wyłącznie nowego SHA `a1f93d98` i zbiera wymagane wyniki CI oraz **niezależny, uwierzytelniony odbiór** (jeszcze nieudzielony).
-- [Audyt L1.4.1](LEAN_L1_4_CHAPTER_REPORT_2026-11-23.md) i [przegląd krytyczny](LEAN_L1_4_SKEPTICAL_REVIEW_2026-11-23.md) dokumentują granice: brak atomowej migawki wieloplikowej; `ready` nie jest wynikiem kompilacji, `statement_approved` nie jest certyfikatem semantycznym.
-- Nie rozpoczynać L1.4.2 bez pełnych 3/3 dla **aktualnego SHA** oraz osobnego uwierzytelnionego zatwierdzenia; `certificate=false`.
-- Techniczne L1.1–L1.3 historycznie zamknięte na własnych SHA; pilotaż 20–30 formalizacji nie został jeszcze osobno rozliczony.
+- **Aktywny etap:** Lean 4, L1.4.1 — odczytowy raport rozdziałowy. **Techniczna stabilizacja 2+1 zakończona: 3/3 PASS** na niezmiennym SHA `a1f93d985778492082a66db3975d05e9d73ed763`. **Status formalny: `stabilizing`**, brak uwierzytelnionej decyzji niezależnego recenzenta. `certificate=false`.
+- [Przypięty workflow #45175198218](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45175198218): `completed/success` (2026-11-23, 12:49 UTC), 3 pełne rundy aplikacja/Chromium, natywny Windows/Linux, testy Lean, rzeczywisty Lean/Mathlib, sceptyczne kontrakty i końcowa agregacja `evidence`.
+- Każda runda aplikacji: **732 imienne testy**, **10 sklasyfikowanych pominięć**, **0 nierozliczonych**, Chromium **507 rozdziałów**, `javascript_errors=[]`; wszystkie trzy dodatkowe negatywne regresje L1.4.1 PASS. [Osobne pełne CI #45175157959](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45175157959) również `completed/success`.
+- W każdej rundzie Lean: rzeczywiste **Lean 4.26.0**, przypięty Mathlib `2df2f0150c275ad53cb3c90f7c98ec15a56a1a67`, **4 pliki/18 twierdzeń**, `axiom_check=passed`, `semantic_certificate=false`.
+- [Końcowy artefakt `atlas-validation-status`](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45175198218/artifacts/14820217988): `passes[1..3].passed=true`, wszystkie wymagane wyniki `success`, `problems=[]`, **`status=stabilizing`**, **`skeptical_review=pending`**, `certificate=false`. Zielony workflow nie nadaje automatycznie `stable`.
+- [Wniosek #9 o niezależną recenzję](https://github.com/dariusz-piekarz/mathematical_scipts/issues/9) aktualnego SHA nadal otwarty; [kompletny pakiet dowodowy](https://github.com/dariusz-piekarz/mathematical_scipts/issues/9#issuecomment-7101693593). Historyczny [wniosek #8](https://github.com/dariusz-piekarz/mathematical_scipts/issues/8) dotyczący starszego kodu zamknięty **jako zastąpiony, a nie zatwierdzony**. Nie wystawiać fikcyjnego `independent=true` w JSON.
+- Po rzeczywistej, **uwierzytelnionej i niezależnej aprobacie** dokładnego SHA dokonać ręcznego odbioru jednostki. W razie zmian kodu reset 2+1. **Nie przechodzić do L1.4.2**, dopóki L1.4.1 nie ma formalnego `stable`.
+- Wyniki Lean/Mathlib i SHA są **diagnostyką wykonania i źródła**, nie matematycznym poświadczeniem odpowiedniości Lean–LaTeX. Techniczne L1.1–L1.3 zachowują własny historyczny zakres; pierwotny pilotaż 20–30 formalizacji pozostaje odrębnie nierozliczony.
 
 ## Status etapów
 
 | Etap | Status | Pierwszy nierozliczony fragment |
 | --- | --- | --- |
-| 1. Lean 4 | testing (L1.4.1, new immutable 2+1) | L1.4.1 |
+| 1. Lean 4 | stabilizing (L1.4.1, independent review pending) | L1.4.1 |
 | 2. Inteligentny graf | planned | G2.1 |
 | 3. Generator PDF + Czytnik | planned | P3.1 |
 | 4. Centrum audytów i deduplikacja | planned | A4.1 |
@@ -271,3 +271,12 @@
 - Oba zadania aplikacyjne: `732` testy, `10` sklasyfikowanych pominięć, `unreviewed_skips=0`, `507` rozdziałów w Chromium, `javascript_errors=[]`. Negatywne regresje wycofania `approved`, zmiany liczby wpisów manifestu i usunięcia etykiety: po `ok` w każdej rundzie.
 - [Wniosek o niezależną aprobatę #9](https://github.com/dariusz-piekarz/mathematical_scipts/issues/9): otwarty, brak niezależnej decyzji; [uzupełniony aktualnym dowodem](https://github.com/dariusz-piekarz/mathematical_scipts/issues/9#issuecomment-7101512329).
 - **Decyzja:** nadal `stabilizing` (techniczna kontrola w toku); nie rozpoczynać L1.4.2. `certificate=false`.
+
+### 2026-11-23 — L1.4.1, finalny wynik technicznej stabilizacji nowego kandydata
+
+- **Kod:** `a1f93d985778492082a66db3975d05e9d73ed763` (wspólna gałąź może przesuwać HEAD; wyniki dotyczą wyłącznie tego SHA).
+- [Workflow #45175198218](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45175198218) zakończony **`completed/success`**, trzy pełne rundy PASS. Każda: `732` testy Pythona, `10` sklasyfikowanych pominięć i `0` nierozliczonych; natywne Windows, Chromium, obowiązkowe Lean/Mathlib PASS.
+- Wszystkie trzy joby `lean-pilot`: Lean 4.26.0, Mathlib `2df2f0150c275ad53cb3c90f7c98ec15a56a1a67`, `4` pliki, `18` twierdzeń, `axiom_check=passed`, `semantic_certificate=false`; zadanie sceptycznego kontraktu PASS.
+- [Raport `atlas-validation-status`](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45175198218/artifacts/14820217988): `problems=[]`, `3/3`, **`status=stabilizing`**, **`skeptical_review=pending`**, `certificate=false`.
+- [Issue #9](https://github.com/dariusz-piekarz/mathematical_scipts/issues/9) i [komentarz dowodowy](https://github.com/dariusz-piekarz/mathematical_scipts/issues/9#issuecomment-7101693593) wyznaczają brakującą decyzję niezależnego recenzenta; na dzień aktualizacji nie ma uwierzytelnionej aprobaty.
+- **Odbiór techniczny: 3/3 PASS. Odbiór formalny: otwarty.** Nie awansować `stable`, nie rozpoczynać L1.4.2 i nie nazywać `compiled` zgodnością semantyczną Lean–LaTeX. `certificate=false`.

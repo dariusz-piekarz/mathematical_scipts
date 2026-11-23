@@ -90,3 +90,23 @@ kandydata ([issue #8](https://github.com/dariusz-piekarz/mathematical_scipts/iss
 zamknięto jako zastąpiony, bez udawania odbioru. Dla
 [`a1f93d98` testy/2+1 ruszyły od zera](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45175198218).
 Końcowy status `stable` pozostaje wstrzymany.
+
+## Wynik 3/3 na nowym kandydacie — 2026-11-23
+
+Niezmienny commit `a1f93d985778492082a66db3975d05e9d73ed763`
+po naprawie weryfikacji manifestu i relacji etykiet przeszedł
+[pełny techniczny 2+1 #45175198218](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45175198218).
+W każdej rundzie: `732` testy Pythona, `10` sklasyfikowanych
+pominięć, `0` nierozliczonych; 507 rozdziałów w Chromium; natywne
+Windows i przypięty Lean/Mathlib PASS; kompilacja 18 twierdzeń w
+4 plikach, `axiom_check=passed`. Sceptyczne testy kontraktowe PASS.
+
+[Końcowy status](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45175198218/artifacts/14820217988):
+`problems=[]`, `skeptical_review=pending`,
+`status=stabilizing`, `certificate=false`.
+Niezależnej, uwierzytelnionej aprobaty w
+[issue #9](https://github.com/dariusz-piekarz/mathematical_scipts/issues/9)
+jeszcze nie uzyskano; wpisy autora zmian ani asystenta nie stanowią jej
+substytutu. Historyczne przeglądy nie poświadczają semantycznej
+równoważności LaTeX–Lean. Pozostaje `stabilizing`, nie `stable`;
+L1.4.2 nadal nierozpoczęte.
