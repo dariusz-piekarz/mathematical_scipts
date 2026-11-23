@@ -115,3 +115,10 @@ Po stabilnym AA-49 i poleceniu „kontynuuj” rozpoczęto **AA-50 — Trzeci pr
 **AA-50 STABILNY w ustalonym zakresie**. Zrealizowano trzeci przypadek Kovacica: skończone grupy Galois (projektywnie A4,S4,A5) i parametry n=4,6,12, rekurencja P_i oraz poprawność odzyskiwania algebraicznych rozwiązań Riccatiego z wielomianu F. Pełny dowód równania transportowego i pierwiastków F jest samodzielny; wyczerpujące lokalne listy oraz klasyfikacja grup pozostają jawnie cytowanymi klasycznymi twierdzeniami. Przykłady czworościenny, ośmiościenny, dwudziestościenny, każdy z P_{−1}=0, dokładnie zweryfikowane.
 
 **Raport końcowy:** `audits/abstract_algebra/ch50_iteration_03.md` (po audytach I i II). **CI:** https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45184219678 — 92/92 SUCCESS na commicie 4103a830163f9abcebca492d26e58f33e9784f82. **Testy:** 13/13 SymPy + 12/12 Fraction. **Integralność:** 50 rozdziałów, 1042 etykiety, 564 odsyłacze, 0 brakujących. **PDF:** 322 strony, AA-50 na stronach 317–322, wszystkie obejrzano; log bez błędów/ostrzeżeń. W repozytorium istnieją niezależne, jawnie odnotowane diagnostyki innych skryptów; nie przypisano ich AA-50. Historyczne AA-01–AA-49 pozostają nienaruszone. **AA-51 nieotwarty.**
+
+
+## Ponowna stabilizacja AA-50 — 24 listopada 2026 r.
+
+Audyt IV wykrył pominiętą pochodną jednostki w rozkładzie nieunormowanego wielomianu F, błędne nazwanie lokalizacji i niejawny przypadek q=0. Poprawiono źródło w commicie 611ac48fbb27eec6529c6dc4ed0d00fd9878b16b; niezależny sprawdzian symboliczny 3/3 PASS. Raport: `audits/abstract_algebra/ch50_iteration_04.md`.
+
+**AA-50 W AUDYCIE — ponowna stabilizacja.** Poprzedni zielony CI dotyczy starszego źródła. Następna iteracja: pełne regresje, CI oraz kontrola PDF po zmianie. AA-51 nieotwarty. Historyczne statusy AA-01–AA-49 bez zmian.
