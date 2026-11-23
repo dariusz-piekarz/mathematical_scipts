@@ -49,3 +49,11 @@ python scripts/profile_lean_olean_cpu.py --top 12 --output lean/ci_olean_cpu_pro
 **Kontrola między profilerami:** komity `dcb7169f`, `ea43fc19`, `42addf18`, `55db1c06`, `6128cf9e` pozwalają zapisać wynik `compiled_artifacts_sha256` z oryginalnego pełnego benchmarku, porównać go z **pojedynczym rzeczywistym** przebiegiem `cProfile` i odrzucić wynik, jeżeli pliki `.olean` zmieniły się między pomiarami. Porównanie to nie dodaje kolejnego haszowania ani certyfikatu matematycznego. Nowy workflow używa `--compare-with lean/ci_fingerprint_benchmark.json`.
 
 **Bramka:** po zmianie produkcyjnej należy uzyskać testy Linux/Windows, pełne CI, rzeczywisty pinned Mathlib, raport o identycznych digestach, a dopiero potem ocenić ewentualne przyspieszenie na sparowanym pomiarze. Nie obniżać limitów 64 MiB, 120000 plików ani liczby punktów kontroli `before/locked/after`. `certificate=false` niezmiennie.
+
+## Niezależna regresja pełnego fingerprintu — projekt i Mathlib (23.11.2026)
+
+Dodano `application/tests/test_lean_environment.py::test_olean_multiroot_digest_matches_independent_expected_schema` (`41d60ad9`, uzupełnienie importu `4aa3f8fd`). Regresja tworzy rzeczywiste pliki i metadane OS w drzewie projektu oraz pakietu Mathlib, z nazwami podkatalogów, plikami wyłączonymi przez filtr i **wspólnym** budżetem SHA256 ograniczonym do trzech bajtów. Oczekiwany JSON i jego SHA256 są budowane niezależnie od produkcyjnego skanera; porównanie dotyczy **całego** `compiled_artifacts_sha256`, nie tylko poszczególnych nazw.
+
+Ten test uzupełnia test zgodności z poprzednim algorytmem (różne budżety, Unicode, kolejność pól) oraz test policzalnej redukcji wywołań `Path.relative_to`. Celem jest wykrycie regresji w kolejności sortowania, dzieleniu budżetu między projekt i pakiety lub nazwach względnych. Zmian produkcyjnych nie wprowadzono w tej poditeracji.
+
+**Wynik nowego testu pozostaje zależny od zakończenia CI.** Do czasu potwierdzenia CI na jego commicie nie podnosić statusu stabilizacji L1.1. Pomiary z wcześniejszego, rzeczywistego profilera pozostają ważne wyłącznie dla commita, na którym je uruchomiono.
