@@ -140,6 +140,36 @@ class FunctionalAnalysisChapter07(unittest.TestCase):
                     self.assertLessEqual(abs(x)+abs(y), 1)
         self.assertIn(r"\operatorname{aco}(\varnothing)=\{0\}",self.chapter)
 
+    def test_empty_absolute_convex_hull_convention(self):
+        # The empty set vacuously satisfies universal convexity and
+        # balance conditions. Under the chosen convention the aco
+        # operation instead returns the least NONEMPTY balanced convex
+        # superset: {0}.
+        self.assertIn(r"\emph{niepusty} zbiór wypukły", self.chapter)
+        self.assertIn(
+            r"$\operatorname{aco}(\varnothing)=\{0\}$",
+            self.chapter)
+        x0 = (0.0, 0.0)
+        self.assertTrue(all(abs(t*x0[0])+abs(t*x0[1]) == 0
+                            for t in (-2, -1, 0, .5, 1, 2)))
+        # In R² the empty polar is all functionals; its bipolar is {0}.
+        for point in ((1,0),(0,-1),(.1,.4),(0,0)):
+            in_bipolar = all(
+                abs(a[0]*point[0]+a[1]*point[1])<=1
+                for a in ((2**k,0) for k in range(1,9))
+            ) and all(
+                abs(a[0]*point[0]+a[1]*point[1])<=1
+                for a in ((0,2**k) for k in range(1,9))
+            )
+            if point == x0:
+                self.assertTrue(in_bipolar)
+            else:
+                # Large scalar multiples force every nonzero point out.
+                self.assertTrue(any(
+                    abs(t*point[i]) > 1 for i in (0,1)
+                    for t in (2**k for k in range(1,15))
+                ))
+
     def test_l1_and_linf_polar_unit_balls(self):
         # Polar of the l1 unit diamond = linf dual square.
         points = [(1,0),(-1,0),(0,1),(0,-1)]
