@@ -67,6 +67,8 @@ class Chapter09Audit(unittest.TestCase):
         self.assertNotIn("przestrzeń dualna topologiczna", s)
         self.assertIn("przestrzeń sprzężoną", s)
         self.assertIn(r"\chi_F", s)
+        self.assertIn(r"\chi_I", s)
+        self.assertNotIn(r"\mathbf 1_", s)
 
     def test_r_equicontinuous_polar_model(self):
         # E=R^2, E' identified with R^2, U=(-1,1)^2:
