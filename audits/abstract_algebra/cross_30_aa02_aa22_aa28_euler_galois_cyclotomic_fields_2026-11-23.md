@@ -81,3 +81,10 @@ Nazwa kroku: Run AA-X30 Euler cyclotomic Galois compositum checks.
 **Wartościowe rozszerzenie opcjonalne (do decyzji użytkownika):** po twierdzeniu aa:tw:cyclotomic-galois w AA-28 umieścić wniosek o złożeniu i przecięciu ciał cyklotomicznych z wyraźnym odsyłaczem do AA-02 i AA-22. To nie jest obowiązkowa poprawka istniejącego dowodu; nie dodano jej do zatwierdzonych źródeł zgodnie z AGENTS.md.
 
 **Następny etap:** stabilizacja AA-X30, a następnie dopiero nowy zakres AA-X31.
+
+
+## Niezależna kontrola II — dodatkowe 3600 par modułów
+
+Po zapisaniu testów wykonano **odrębny rachunek wyczerpujący w JavaScript** (bez SymPy, bez ponownego używania modułu Python z CI). Dla wszystkich 3600 uporządkowanych par `1≤m,n≤60` obliczono elementarnie grupy jednostek U(N), ich podgrupy H_m, H_n, H_d, gdzie N=lcm(m,n), d=gcd(m,n), a następnie bezpośrednio produkty podgrup H_mH_n. Porównano te produkty z H_d oraz zweryfikowano liczbowo równość φ(m)φ(n)=φ(N)φ(d). **Wynik: 3600/3600 par PASS, zero rozbieżności**.
+
+Ta kontrola jest niezależna kodowo od testów GitHub Actions i obejmuje również przypadki m=1, n=1 oraz niecoprime m,n. Wykonanie rachunku zostało potwierdzone w bieżącej sesji audytowej; nie zastępuje ono żadnego z ogólnych dowodów ani nie stanowi jeszcze końcowej stabilizacji nowego workflow.
