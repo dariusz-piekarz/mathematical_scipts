@@ -44,8 +44,8 @@ W czasie przeglądu równolegle opublikowano raport 05-audyt-2.md ze statusem �
 ## Regresje oraz PDF
 
 - Rozszerzono tools/tests/test_functional_analysis_ch05.py **12→15 testów**: nowe kontrole niepustego K, oszacowań seminormy supremum i konwencji dla pustego K, jawnego odsyłacza do kompletności C∞ oraz punktu x/p_A(x) na brzegu elipsy.
-- Etap testów nowych przebiegów Actions zakończył się PASS. [CI 45170212776](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45170212776) sprawdza kompilację i odsyłacze z aktualnego źródła; wynik końcowy zostanie dopisany po zakończeniu.
-- Weryfikacja składu obejmuje strony 27–33 33-stronicowego kontekstowego PDF z rozdziałami 01–05, a w szczególności diagram Minkowskiego.
+- [Przebieg GitHub Actions 45170212776](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45170212776) zakończył się pełnym **SUCCESS**: 15/15 testów PASS, kompilacja LaTeX w dwóch przebiegach PASS, kontrola końcowego PDF i odsyłaczy PASS oraz zapis artefaktu PASS. Pierwsze przejście LaTeX sygnalizowało przejściowe nierozwiązane odsyłacze; **końcowy log po drugim przebiegu nie zawiera takich ostrzeżeń**.
+- Pobrano i sprawdzono aktualny artefakt PDF z powyższego przebiegu: **33 strony A4, 482683 bajty**. Wyrenderowano i obejrzano komplet siedmiu stron rozdziału 05 (**strony 27–33**), ze szczególnym uwzględnieniem diagramu i podpisu Minkowskiego na stronie 29. Brak kolizji, ucięć i uszkodzonych znaków; kontrola współrzędnych bloków tekstu na stronach 27–33 wykazała **0 elementów poza obszarem strony**. Końcowy log nie zawiera błędów `Undefined control sequence`, nierozwiązanych odsyłaczy, `Overfull \\hbox` ani `Missing character`.
 
 ## Decyzja
 
