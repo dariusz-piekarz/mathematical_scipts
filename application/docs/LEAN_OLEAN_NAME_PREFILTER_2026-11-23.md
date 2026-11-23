@@ -43,3 +43,15 @@ Po sprawdzeniu powyższego CI wykonać niezależne, powtarzalne porównanie czas
 - Każda próbka obejmowała `1127` katalogów, `352` otwarcia plików `.olean` oraz `67100584` bajty odczytu. `stat_calls=16984`, `lstat_calls=8871`, `fstat_calls=352` w profilerze.
 - Podczas weryfikacji nowego licznika, [szybkie testy #45143070328](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45143070328) na SHA `fd58593c` uzyskały `completed/success` dla Linux i Windows. Pełne CI oraz nowe pinned Mathlib dla tego SHA były jeszcze uruchomione; nie przypisywać im sukcesu przed zakończeniem.
 - Benchmark poprzedniej optymalizacji wykonano na osobnym runnerze; porównanie samych median między uruchomieniami nie daje wiarygodnego procentowego zysku. Dane zapisano jako bazę do dalszych pomiarów, a nie jako dowód przyspieszenia.
+
+## Audyt kolejny — niezmienność populacji plików w pomiarach (23.11.2026)
+
+**Obserwacja:** identyczność fingerprintu pomiędzy próbkami nie gwarantuje porównywalnego obciążenia. Nowe, nieistotne dla fingerprintu pliki (np. logi w `.lake/build/lib/lean`) są wyłączone z haszowania, lecz mogą zwiększać koszt przeglądania katalogu.
+
+**Poprawka:** po każdej pełnej próbce `benchmark_lean_fingerprint.py` sprawdza niezmienność wszystkich liczników `olean_io_samples`; przed tym sprawdza `walk_files_seen = olean_name_candidates + non_olean_names_skipped` i `olean_files_opened <= olean_name_candidates`. Odrzuca porównanie przez `RuntimeError`, jeśli fingerprint jest identyczny, ale zmieniło się obciążenie skanowania. Jest to kontrola wiarygodności *pomiaru*, nie zmiana produkcyjnego odcisku ani cache.
+
+**Regresje:** test tworzy po pierwszej rzeczywistej próbce dodatkowy plik `ignored.log` (bez zmiany artefaktu `.olean`) i oczekuje odrzucenia drugiej próbki; osobny test modyfikuje w kontrolowany sposób licznik i oczekuje odmowy raportowania niespójnego wyniku. W produkcji nie ma dodatkowego odczytu ani odrębnego przebiegu `os.walk`.
+
+**Zmiany:** `03e5d2d4` (kontrola), `51e67723` (regresje). CI uruchomiono — nie uznawać za zaliczone przed odczytaniem wyników końcowych. Poprzednia modyfikacja `fd58593c` ma zakończone sukcesem [pełne CI aplikacji #45143070332](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45143070332) i [szybkie testy Linux/Windows #45143070328](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45143070328). Jej przypięty Lean+Mathlib [#45143070388](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45143070388) w chwili kontroli był na etapie kompilacji z kontrolą aksjomatów; **brak jeszcze pomiaru nowych liczników**.
+
+**Kryterium ukończenia L1.1:** stabilne szybkie i pełne testy, zakończony realny pinned Mathlib, powtarzalność wyników i ostrożna analiza czasu. `certificate=false` i rozdzielenie zgodności LaTeX od kompilacji Lean pozostają nienaruszone.
