@@ -1,6 +1,6 @@
 # Atlas / Lean — L1.4.1: diagnostyczny raport rozdziałowy
 
-**Data:** 2026-11-23. **Gałąź:** `biblioteka-matematyczna-iteracja-6`. **Stan: testing / stabilizacja 0/3**.
+**Data:** 2026-11-23. **Gałąź:** `biblioteka-matematyczna-iteracja-6`. **Aktualny stan: 3/3 techniczne PASS; `stabilizing`, oczekuje na niezależny odbiór.**
 
 ## Zakres pierwszej zmiany L1.4
 
@@ -53,3 +53,27 @@ bez zatwierdzenia. Dodano dwie regresje negatywne: manifest bez ścieżki
 oraz zmiana bajtów kanonicznego TeX po odczycie katalogu. Nie jest to
 pełna migawka atomowa ani formalna certyfikacja zgodności twierdzeń;
 `certificate=false`. Rygor 2+1 liczyć od nowego SHA tej poprawki.
+
+## Rozliczenie stabilizacji — 2026-11-23, 13:00 Europe/Warsaw
+
+Kandydat `1c4b89b1a9ef8affe95e3073739d99bc1c57aa2d`.
+[GitHub Actions 2+1 #45160961943](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45160961943)
+wykonał wszystkie trzy rundy i zakończył się `success`:
+`application=success`, `linux_windows=success`,
+`pinned_lean_mathlib=success`, `skeptical_regression_suite=success`.
+Każda runda zawiera 729 testów jednostkowych, 10 uprzednio
+sklasyfikowanych pominięć i 0 nierozliczonych. Wszystkie 10 testów
+L1.4.1 zostało ponownie potwierdzonych w osobnym pełnym CI;
+przypięty Lean/Mathlib w każdej rundzie skompilował 4 pliki i 18 twierdzeń
+z `axiom_check=passed`. [Artefakt decyzji
+walidacyjnej](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45160961943/artifacts/14814696978)
+zawiera `problems=[]` i **`status=stabilizing`,
+`skeptical_review=pending`, `certificate=false`**.
+
+Jedynym brakującym formalnym warunkiem awansu jest zewnętrzna,
+uwierzytelniona decyzja recenzenta, niezależna od autora zmian
+i od automatycznych testów. Zgłoszenie do odbioru:
+[issue #8](https://github.com/dariusz-piekarz/mathematical_scipts/issues/8).
+Nie tworzyć deklaracji `stable` ani niesygnowanego pozornego
+zatwierdzenia. Po aprobacie trzeba zachować SHA i powiązać decyzję
+z tą wersją; zmiana produkcyjna wymaga nowego 2+1.

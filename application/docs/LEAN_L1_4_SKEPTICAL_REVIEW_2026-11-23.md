@@ -3,7 +3,7 @@
 **Data:** 2026-11-23  
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`  
 **Sprawdzany niezmienny commit:** `1c4b89b1a9ef8affe95e3073739d99bc1c57aa2d`  
-**Wynik cząstkowy:** przegląd statyczny i samodzielne pełne CI aplikacji wykonane; **stabilizacja 2+1 = 0/3 potwierdzonych kompletnych rund**, końcowa decyzja `stable` **wstrzymana**. Raport nie jest podpisaną aprobatą niezależnego człowieka.
+**Wynik cząstkowy w chwili pierwotnego sporządzenia dokumentu (przed CI):** przegląd statyczny i samodzielne pełne CI aplikacji wykonane; **stabilizacja 2+1 = 0/3 potwierdzonych kompletnych rund**, końcowa decyzja `stable` **wstrzymana**. Raport nie jest podpisaną aprobatą niezależnego człowieka.
 
 ## Granice zaufania
 
@@ -33,3 +33,34 @@ Pominięcia w tym jobie obejmują osobny host dla Lean/Mathlib, Windows i konfig
 - Jeżeli 2+1 ma błąd lub test wymagany został pominięty, pozostać przy `testing`/`blocked`, naprawić i **wyzerować** licznik dla nowego SHA. Nie przechodzić do L1.4.2.
 
 **Decyzja tej iteracji:** odnotować zakończony przegląd statyczny i 10 rzeczywistych regresji, **nie** zamykać L1.4.1. `certificate=false` pozostaje niezmienne.
+
+## Aktualizacja 2026-11-23, 13:00 Europe/Warsaw — wykonane 3/3
+
+Stan `0/3` z pierwotnego nagłówka był migawką **przed** zakończeniem CI.
+Aktualne, sprawdzone wyniki kandydata
+`1c4b89b1a9ef8affe95e3073739d99bc1c57aa2d`:
+
+- [2+1 #45160961943](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45160961943)
+  zakończony `completed/success` 2026-11-23 11:23:30 UTC;
+  trzy pełne rundy aplikacji, Lean/Mathlib, testów natywnych i regresji Lean,
+  `skeptical_contract` oraz `evidence` zakończone `success`.
+- **3 × 729** nazwanych wyników testów Python, **3 × 10**
+  sklasyfikowanych pominięć, **zero** nierozliczonych. Osobne testy
+  przypiętego Lean/Mathlib i natywnego Windows przechodzą w wymaganych
+  zadaniach, więc pominięcia w jobach aplikacyjnych nie są fałszywie
+  liczone jako wykonane testy.
+- W każdej rundzie zadanie `lean-pilot` zgłosiło rzeczywistą
+  kompilację **4 plików Lean i 18 twierdzeń**, `axiom_check=passed`,
+  `semantic_certificate=false`.
+- [Artefakt `atlas-validation-status`](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45160961943/artifacts/14814696978):
+  `passes[1..3].passed=true`, `workflow_results` bez błędów,
+  `problems=[]`, **`skeptical_review=pending`,
+  `status=stabilizing`, `certificate=false`**.
+- [Issue #8](https://github.com/dariusz-piekarz/mathematical_scipts/issues/8)
+  otwarte jako formalny wniosek o **niezależną, uwierzytelnioną recenzję**
+  konkretnie tego SHA. Automatyczna walidacja/raport sporządzony przez
+  asystenta nie może jej zastąpić.
+
+**Decyzja:** techniczna bramka 2+1 jest zakończona; niezależny odbiór
+i formalne przejście do `stable` — **nie**. Obecna jednostka L1.4.1
+pozostaje `stabilizing`. L1.4.2 nie rozpoczęto.

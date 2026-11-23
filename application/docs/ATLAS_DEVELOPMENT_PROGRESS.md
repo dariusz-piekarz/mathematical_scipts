@@ -6,19 +6,21 @@
 
 ## Wskaźnik wykonywania
 
-- Bieżący etap: **Lean 4 / L1.4.1 — raport rozdziałowy**, status **testing / stabilizing**; odbiór **0/3** na nowym kandydacie.
-- Kod kandydata: `1c4b89b1a9ef8affe95e3073739d99bc1c57aa2d`.
-- [Przypięta kontrola 2+1 #45160961943](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45160961943), uruchomiona żądaniem konfiguracji gałęzi. Wcześniejszy [#45160226769](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45160226769) dotyczył starszego SHA i został anulowany; nie jest zaliczony. Rzeczywiste sukcesy można liczyć tylko po zakończeniu jobów bieżącego kandydata.
-- Wewnętrzny sceptyczny audyt L1.4.1 wykrył trzy osobne przypadki: przenikanie przyszłych pól historii, niespójne odczyty generacji SQLite oraz brak ścieżki kanonicznego TeX lub jego późniejszą podmianę. Dodano negatywne regresje i odrzucanie statusów `ready/approved` w niezweryfikowanych przypadkach. [Raport i ograniczenia](LEAN_L1_4_CHAPTER_REPORT_2026-11-23.md).
-- Nie wykonano niezależnego, uwierzytelnionego odbioru recenzenta. `certificate=false`; kontrola środowiska i wykonania Lean nie poświadcza zgodności twierdzeń z LaTeX-em.
-- Następny krok: odebrać komplet 2+1 na **niezmienionym** `1c4b89b1...`, natywne Windows/Linux, pełne testy i Chromium oraz rzeczywisty Lean/Mathlib, wykonać końcową kontrolę sceptyczną. Nie przechodzić do L1.4.2 bez `stable`.
-- Zakresy techniczne L1.1–L1.3 są historycznie zamknięte na osobnych SHA. Pilotaż 20–30 formalizacji pozostaje odrębnym niewykonanym zobowiązaniem pierwotnego planu.
+- Bieżący etap: **Lean 4 / L1.4.1 — raport rozdziałowy**, **3/3 pełnych rund technicznych PASS**; status **stabilizing (pending independent approval)**, nie `stable`.
+- Kod kandydata (niezmienny SHA): `1c4b89b1a9ef8affe95e3073739d99bc1c57aa2d`.
+- [Stabilizacja #45160961943](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45160961943): zakończona `success` 2026-11-23 11:23 UTC. W każdej z trzech rund 729 wyników testów Python, 10 sklasyfikowanych pominięć, 0 nierozliczonych; wszystkie joby aplikacyjne, Windows/Linux, przypięte Lean/Mathlib, `skeptical_contract` i `evidence` — `success`.
+- [Końcowy artefakt statusu](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45160961943/artifacts/14814696978): `problems=[]`, `skeptical_review=pending`, `status=stabilizing`, `certificate=false`. **Sukces workflow nie jest autoryzacją niezależnego przeglądu.**
+- [Osobny pełny smoke i testy #45160932019](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45160932019): `success`; Chromium zaindeksowało 506 rozdziałów, 0 błędów JavaScript. W trzech rundach użyto osobnych hostów na testy natywne i Lean.
+- Wewnętrzny audyt krytycznych przypadków i faktyczny status kontroli: [raport sceptyczny](LEAN_L1_4_SKEPTICAL_REVIEW_2026-11-23.md). Pozostaje **odrębna, uwierzytelniona decyzja niezależnego recenzenta**: [issue #8 — protokół odbioru](https://github.com/dariusz-piekarz/mathematical_scipts/issues/8).
+- Następny krok: rozliczyć [issue #8](https://github.com/dariusz-piekarz/mathematical_scipts/issues/8) na tym samym SHA; dopiero po udokumentowanym zewnętrznym odbiorze zamknąć L1.4.1 i rozpocząć L1.4.2. Nie dodawać fikcyjnego `independent=true` do niesygnowanego JSON.
+- Nadal `certificate=false`: diagnostyka wykonania Lean i recenzja statusów nie poświadcza zgodności semantycznej twierdzeń Lean i LaTeX.
+- Techniczne L1.1–L1.3 zamknięte historycznie na własnych SHA; pilotaż 20–30 formalizacji pozostaje odrębnie nierozliczony.
 
 ## Status etapów
 
 | Etap | Status | Pierwszy nierozliczony fragment |
 | --- | --- | --- |
-| 1. Lean 4 | implementing | L1.1 |
+| 1. Lean 4 | stabilizing (L1.4.1, independent review pending) | L1.4.1 |
 | 2. Inteligentny graf | planned | G2.1 |
 | 3. Generator PDF + Czytnik | planned | P3.1 |
 | 4. Centrum audytów i deduplikacja | planned | A4.1 |
