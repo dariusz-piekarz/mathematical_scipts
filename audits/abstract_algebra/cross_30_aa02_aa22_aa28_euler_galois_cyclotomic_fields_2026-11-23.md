@@ -88,3 +88,12 @@ Nazwa kroku: Run AA-X30 Euler cyclotomic Galois compositum checks.
 Po zapisaniu testów wykonano **odrębny rachunek wyczerpujący w JavaScript** (bez SymPy, bez ponownego używania modułu Python z CI). Dla wszystkich 3600 uporządkowanych par `1≤m,n≤60` obliczono elementarnie grupy jednostek U(N), ich podgrupy H_m, H_n, H_d, gdzie N=lcm(m,n), d=gcd(m,n), a następnie bezpośrednio produkty podgrup H_mH_n. Porównano te produkty z H_d oraz zweryfikowano liczbowo równość φ(m)φ(n)=φ(N)φ(d). **Wynik: 3600/3600 par PASS, zero rozbieżności**.
 
 Ta kontrola jest niezależna kodowo od testów GitHub Actions i obejmuje również przypadki m=1, n=1 oraz niecoprime m,n. Wykonanie rachunku zostało potwierdzone w bieżącej sesji audytowej; nie zastępuje ono żadnego z ogólnych dowodów ani nie stanowi jeszcze końcowej stabilizacji nowego workflow.
+
+
+## Zamknięcie AA-X30 — potwierdzona stabilizacja
+
+**Nieprzemijający dowód wykonania:** [GitHub Actions #45283034330](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45283034330), commit **b2d7c2b82784d7606e56b25ea4e6691f3ba7c427**, status **completed / success**. Job `validate-cli`, ID **138072119688**, zakończony **completed / success**; wszystkie 108 kroków figurujące w zakończonym jobie mają status `completed` (w tym post-steps).
+
+Odczytano dekodowany log. W wydzielonym kroku **Run AA-X30 Euler cyclotomic Galois compositum checks** wszystkie 7 testów `CyclotomicCompositumAudit` mają status `ok` (wiersze około 10164–10175; `Ran 7 tests in 0.415s`, `OK`). Sukces mają także **Run repository tool tests**, **Compile AA-01 to AA-50 book with latexmk**, **Verify PDF and references (no undefined refs)** i **Archive build output**.
+
+**Werdykt: AA-X30 ZAMKNIĘTY / STABILNY**, wyłącznie w zakresie interfejsu AA-02 × AA-22 × AA-28. Siedem regresji w CI i dodatkowe 3600/3600 par modułów w niezależnej kontroli nie zastępują ogólnego dowodu ani formalizacji Lean. Nie wykonano niezależnego wizualnego przeglądu stron PDF. Nie zmieniono zatwierdzonych rozdziałów. Kolejny etap: nowy AA-X31.
