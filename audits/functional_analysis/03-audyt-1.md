@@ -41,12 +41,13 @@ Niezależna kontrola wszystkich 9 dowodów i 3 środowisk przykładów, w tym de
 - **Przypadek `λ=0` oraz niezerowe `λ`:** sprawdzono działanie mnożenia skalarnego na klasach sieci Cauchy'ego; otoczenia są zrównoważone.
 - **Brzeg `U`:** dwie równoważne sieci `1-1/n` i `1+1/n` przy `U=(-1,1)` pokazują, dlaczego „ostatecznie w U” nie definiuje dobrze otoczenia klasy; stałe `V` zapewnia zapas.
 - Dodano `tools/tests/test_functional_analysis_ch03.py` z **10 testami**: integracja, środowiska i odsyłacze, terminologia i symbol `W_0`, skierowanie skończonych zbiorów, filtry ogonów, własności `E_U`, zbieżność współrzędna `e_n`, aproksymacje w `ℓ²` i reprezentanci na brzegu `U`.
-- Dodano `.github/workflows/functional-analysis-ch03.yml`, który kompiluje rozdział 03 w pełnym kontekście rozdziałów 01–05, aby sprawdzić rzeczywiste odsyłacze. **Końcowy status CI do uzupełnienia po zakończeniu przebiegu**.
+- Dodano `.github/workflows/functional-analysis-ch03.yml`, który kompiluje rozdział 03 w pełnym kontekście rozdziałów 01–05, aby sprawdzić rzeczywiste odsyłacze. **CI: PASS** w [przebiegu 45154989674](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45154989674), z dokładnie poprawionym źródłem rozdziału. Przeszło 10/10 testów, kompilacja LaTeX, kontrola PDF/odsyłaczy i zapis artefaktu.
 
 ## Kontrola składu i ilustracji
 
-- Rysunek 3.1 pokazuje gęste osadzenie `j:X→X̂` i liniowe przedłużenie `T̂`; kontrola wizualna PDF wymagana przed ostatecznym zamknięciem raportu.
-- W nowym workflow sprawdzane są brak błędów LaTeX, brak nierozwiązanych odsyłaczy, brak przepełnionych wierszy i brak brakujących znaków w końcowym logu.
+- Rysunek 3.1 pokazuje gęste osadzenie `j:X→X̂` i liniowe przedłużenie `T̂`; **wizualnie sprawdzono stronę 21** — strzałki, etykiety, opis i otaczający tekst nie kolidują. Przejrzano wszystkie osiem stron rozdziału 03 (strony 15–22 dokumentu).
+- Końcowy PDF obejmuje 33 strony A4 z kontekstem rozdziałów 01–05. Lokalna analiza PDF: na stronach 15–22 brak glifów wychodzących poza stronę; końcowy log zawiera **0** wystąpień `Undefined control sequence`, `There were undefined references`, `Overfull \\hbox` oraz `Missing character`.
+- PDF i log rzeczywiście pobrano z artefaktu GitHub Actions po źródłowych poprawkach, a nie z lokalnej nieaktualnej kopii.
 
 ## Decyzja
 
