@@ -59,3 +59,11 @@ Workflow \`.github/workflows/abstract-algebra-chapter.yml\` rozszerzono o wyzwal
 **AA-X19: W STABILIZACJI.** W kontrolowanych zależnościach nie wykryto sprzeczności matematycznej ani koniecznej korekty zatwierdzonych rozdziałów. Nie zmieniono źródeł AA-23, AA-32, AA-33; dodatkowe twierdzenie identyfikujące formę śladu z podpisaną wypadkową można później dodać za zgodą użytkownika jako wzbogacenie, lecz nie jest to naprawa.
 
 Do zamknięcia wymagane są odczyt rzeczywistych wyników **6/6 testów** w nowym kroku CI, \`completed/success\` całego workflow, pozytywna kompilacja AA-01–AA-50 i kontrola PDF/odsyłaczy. Kompilacja nie oznacza osobnej wizualnej inspekcji stron PDF. Testy konkretnych wielomianów nie zastępują dowodu podanego w punkcie 1. AA-51 pozostaje nieotwarty.
+
+## 5. Zamknięcie po pełnym CI — AA-X19 STABILNY / PASS
+
+Zweryfikowano zakończony przebieg [GitHub Actions 45213530134](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45213530134) dla commitu workflow \`904bcebcbe6a867ac5ce26c2c68b756dba77586e\`: **completed / success**. Job \`validate-cli\` zakończył **97/97 kroków**, bez awarii. W logu potwierdzono wszystkie **6/6 testów AA-X19** jako \`ok\`, zarówno globalnie, jak i w samodzielnym kroku \`Run AA-X19 trace discriminant resultant crosschecks\`.
+
+\`Compile AA-01 to AA-50 book with latexmk\` oraz \`Verify PDF and references (no undefined refs)\`: oba **success**. Opublikowano artefakt \`abstract-algebra-aa01-aa50\` — ID \`14836929170\`, ZIP **2 289 388 B**. Kompilacja i sprawdzenie odsyłaczy nie zastępują osobnej wizualnej inspekcji stron PDF; takiej inspekcji tu nie wykonywano.
+
+**Werdykt końcowy:** AA-X19 zamknięty jako stabilny w objętym zakresie przekrojowym AA-23 × AA-32 × AA-33. Nie wykryto koniecznej korekty matematycznej. Nie zmieniono rozdziałów AA-01–AA-50 ani ich historycznych statusów. Dowód podano niezależnie od testów skończonych; testy i kompilacja nie są formalną weryfikacją Lean. AA-51 nie otwierano.
