@@ -380,6 +380,70 @@ class LeanEnvironmentTests(unittest.TestCase):
                     [x["name"] for x in actual["artifacts"]],
                     sorted(x["name"] for x in actual["artifacts"]))
 
+    def test_olean_multiroot_digest_matches_independent_expected_schema(self):
+        """Check project/package paths and shared hash budget independently.
+
+        Builds expected JSON directly from real OS metadata, instead of
+        invoking _olean_tree a second time or duplicating its scanner.
+        """
+        project = self.root / ".lake" / "build" / "lib" / "lean"
+        package = (self.root / ".lake" / "packages" / "mathlib"
+                   / ".lake" / "build" / "lib" / "lean")
+        fixture = (
+            (project, "Nested/Large.olean", b"long"),
+            (project, "Root.olean", b"x"),
+            (package, "Mathlib/Z.olean", b"zz"),
+        )
+        for directory, relative, content in fixture:
+            target = directory / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(content)
+        # These are deliberately outside the .olean artifact population.
+        (project / ".olean").write_bytes(b"hidden name without extension")
+        (project / "Nested" / "skip.olean.tmp").write_bytes(b"ignored")
+
+        remaining = 3
+        roots = []
+        for label, directory in (
+            ("project", project), ("package/mathlib", package)
+        ):
+            records = []
+            metadata_only = False
+            files = sorted(
+                (name, content) for folder, name, content in fixture
+                if folder == directory
+            )
+            for name, content in files:
+                info = (directory / name).stat()
+                record = {
+                    "name": name,
+                    "size": info.st_size,
+                    "mtime_ns": info.st_mtime_ns,
+                    "ctime_ns": info.st_ctime_ns,
+                    "inode": info.st_ino,
+                }
+                if info.st_size <= remaining:
+                    record["sha256"] = hashlib.sha256(content).hexdigest()
+                    remaining -= info.st_size
+                else:
+                    record["content"] = "metadata_only"
+                    metadata_only = True
+                records.append(record)
+            roots.append({
+                "label": label, "state": "built",
+                "coverage": "metadata_only" if metadata_only else "content_sha256",
+                "artifacts": records,
+            })
+        expected = hashlib.sha256(json.dumps({
+            "schema": 1, "hash_budget_bytes": 3, "roots": roots,
+        }, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+        with patch.object(lean_environment, "MAX_OLEAN_HASH_BYTES", 3):
+            actual = lean_environment.compiled_artifacts_sha256(self.root)
+        self.assertEqual(actual, expected)
+        self.assertEqual(remaining, 0)
+        self.assertEqual(roots[0]["coverage"], "metadata_only")
+        self.assertEqual(roots[1]["coverage"], "content_sha256")
+
     def test_olean_read_remains_bounded_for_a_growing_stream(self):
         """A misbehaving/concurrently growing file must not allow unbounded reads."""
         root = self.root / ".lake" / "build" / "lib" / "lean"
