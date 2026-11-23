@@ -44,7 +44,7 @@ Zastąpiono to rasteryzacją **wszystkich** stron, odczytem liczby stron przez `
 
 ## 5. Kontrola źródeł, etykiet i standardów po zmianach
 
-Z aktualnych blobów R01–R04 zebrano wszystkie etykiety; w R04 jest **28 etykiet i 31 odsyłaczy**. Wszystkie odsyłacze z R04 mają cel w R01–R04; nie wykryto duplikatów etykiet ani nieprawidłowo sparowanych środowisk. Kod podpisu rysunku nadal zawiera \`\par\smallskip\`; zachowana jest wcześniejsza poprawka przypadku $a=b$. Nie wystąpiły zabronione oznaczenia \`\mathbf{1}\`, \`\mathbb{1}\`, \`\mathds{1}\` ani „zbieżność zdominowana”, „unia zbiorów”. Nie zmieniono żadnej etykiety ani pliku źródłowego innego rozdziału.
+Z aktualnych blobów R01–R04 zebrano wszystkie etykiety; w R04 jest **28 etykiet i 31 odsyłaczy**. Wszystkie odsyłacze z R04 mają cel w R01–R04; nie wykryto duplikatów etykiet ani nieprawidłowo sparowanych środowisk. Kod podpisu rysunku nadal zawiera `\par\smallskip`; zachowana jest wcześniejsza poprawka przypadku $a=b$. Nie wystąpiły zabronione oznaczenia `\mathbf{1}`, `\mathbb{1}`, `\mathds{1}` ani „zbieżność zdominowana”, „unia zbiorów”. Nie zmieniono żadnej etykiety ani pliku źródłowego innego rozdziału.
 
 ## 6. Stan CI i decyzja
 
