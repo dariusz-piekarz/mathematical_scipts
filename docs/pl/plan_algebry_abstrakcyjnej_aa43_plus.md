@@ -42,3 +42,14 @@ Zmiana zakresu książki na 43+ nie unieważnia zamkniętego raportu AA-01–AA-
 **AA-44: STABILNY** — raport audits/abstract_algebra/ch44_iteration_03.md. Rozdział zawiera pełne dowody konieczności i dostateczności twierdzenia Liouville'a; dwa niezależne zestawy testów (9 + 5) zakończyły się sukcesem. Pełny CI na ostatecznym commicie źródła 9edced10d90537b7466f9bf2d94f4b9a439b63eb: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45151940204 — completed / success. Sprawdzono końcowy 281-stronicowy PDF i wszystkie 6 stron AA-44.
 
 **Następny odblokowany etap: AA-45** (całki nieelementarne i kryteria hiperwykładnicze), zgodnie z zasadą jednego rozdziału i wielokrotnych audytów do stabilizacji. **AA-46** (Picard–Vessiot) dopiero później. Historycznych statusów AA-01–AA-42 nie zmieniono.
+
+
+## Aktualizacja stanu — 23 listopada 2026 r. (AA-45)
+
+**AA-43: STABILNY** — raport audits/abstract_algebra/ch43_iteration_03.md.
+**AA-44: STABILNY** — raport audits/abstract_algebra/ch44_iteration_03.md.
+**AA-45: STABILNY** — raport audits/abstract_algebra/ch45_iteration_03.md.
+
+AA-45 obejmuje kryteria hiperwykładnicze i dla skończonych sum Laurenta, cztery pełne analizy całek nieelementarnych (Gaussa, sinusowej, logarytmicznej, eliptycznej), 12 dowodów i 5 przykładów. Ukończono audyty I–III, wykonano dwie niezależne serie regresji (10 + 8 testów PASS) i zweryfikowano zielony CI: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45154562082, commit 9a375ac376c90e04d6ec8b3172a224afd7551572. Końcowy PDF ma 289 stron, osiem stron AA-45 obejrzano, końcowy log bez błędów i ostrzeżeń; 45 rozdziałów w katalogu, bez brakujących odsyłaczy. Historii audytów AA-01–AA-42 nie zmieniono.
+
+**Następny odblokowany etap: AA-46 — automorfizmy różniczkowe, rozszerzenia Picarda–Vessiota i grupy Galois równań liniowych.** Obowiązuje zasada: opracowanie AA-46, następnie niezależne audyty do stabilizacji, dopiero AA-47 (o ile zostanie zatwierdzony).
