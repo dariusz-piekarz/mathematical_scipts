@@ -12,6 +12,8 @@ from pathlib import Path
 import re
 import subprocess
 
+from scripts.atlas_ci_report import classify_skip
+
 SHA = re.compile(r"[0-9a-f]{40}\Z")
 EXPECTED_PASSES = ("1", "2", "3")
 REQUIRED_L11_TEST = "test_real_olean_growth_during_read_fails_closed"
@@ -43,7 +45,7 @@ def validate_unit_report(document: dict, sha: str, pass_id: str) -> list[str]:
         problems.append("unit report must declare certificate=false")
     if document.get("success") is not True:
         problems.append("unit tests did not succeed")
-    if not isinstance(document.get("executed"), int) or document["executed"] < 1:
+    if type(document.get("executed")) is not int or document["executed"] < 1:
         problems.append("empty or malformed test suite")
     for key in ("failures", "errors", "unexpected_successes", "unreviewed_skips"):
         if type(document.get(key)) is not int or document[key] != 0:
@@ -69,16 +71,25 @@ def validate_unit_report(document: dict, sha: str, pass_id: str) -> list[str]:
             problems.append("failed or unrecognized test outcome")
         if status == "skipped":
             skipped.append(entry)
-            if not entry.get("reason") or entry.get("classification") in (None, "unreviewed"):
+            reason = entry.get("reason")
+            if not isinstance(reason, str) or not reason.strip():
                 problems.append("unreviewed or unreasoned skip")
+            else:
+                # The report's category is untrusted. Recompute it from the
+                # exact test identity and skip reason using the allowlist.
+                expected = classify_skip(name, reason)
+                if expected == "unreviewed" or entry.get("classification") != expected:
+                    problems.append("skip classification does not match reviewed allowlist")
         if name.endswith(REQUIRED_L11_TEST) and status == "passed":
             observed.add(name)
     if not observed:
         problems.append("mandatory L1.1 real-file growth regression not passed")
-    if len(skipped) != document.get("skipped"):
+    if type(document.get("skipped")) is not int or len(skipped) != document["skipped"]:
         problems.append("skip count does not match named outcomes")
-    if document.get("outcome_count") != len(outcomes):
+    if type(document.get("outcome_count")) is not int or document["outcome_count"] != len(outcomes):
         problems.append("outcome count mismatch")
+    if type(document.get("executed")) is int and document["executed"] != len(outcomes):
+        problems.append("executed test count does not match per-test outcomes")
     return problems
 
 
