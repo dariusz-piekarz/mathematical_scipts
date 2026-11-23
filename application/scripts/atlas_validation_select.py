@@ -13,7 +13,7 @@ import re
 
 from scripts.atlas_validation_gate import verify_ancestor
 
-FRAGMENT = re.compile(r"[LGPA SMN]".replace(" ", "") + r"[1-7]\\.[1-9][0-9]*\\Z")
+FRAGMENT = re.compile(r"[LGPASMN][1-7]\.[1-9][0-9]*\Z")
 
 
 def select(event: str, *, dispatch_sha: str, dispatch_fragment: str,
@@ -48,7 +48,7 @@ def main(argv: list[str] | None = None) -> int:
                            request_path=args.request)
     verify_ancestor(sha, branch=args.branch)
     with args.output.open("a", encoding="utf-8") as stream:
-        stream.write(f"sha={sha}\\nfragment={fragment}\\n")
+        stream.write(f"sha={sha}\nfragment={fragment}\n")
     print(json.dumps({"candidate_sha": sha, "fragment": fragment,
                       "verified_branch_ancestry": True}, sort_keys=True))
     return 0
