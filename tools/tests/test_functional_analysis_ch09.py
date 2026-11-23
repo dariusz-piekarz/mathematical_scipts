@@ -138,6 +138,16 @@ class Chapter09Audit(unittest.TestCase):
         self.assertNotEqual(a,b)
         self.assertIn("wypukłego wielokąta", self.source)
 
+    def test_zero_hilbert_space_requires_explicit_exclusion(self):
+        # The zero-dimensional Hilbert space has B={0} and S=empty;
+        # its unique ball point is extreme, so the usual B extremals = S
+        # characterization needs H != {0}.
+        ball = {(0.0,)}
+        sphere = {x for x in ball if sum(t*t for t in x) == 1}
+        self.assertEqual(sphere, set())
+        self.assertEqual(ball, {(0.0,)})
+        self.assertIn("niezerową rzeczywistą przestrzenią", self.source)
+
     def test_hilbert_unit_sphere_midpoint_identity(self):
         u, v = (1.,0.), (0.,1.)
         x = tuple((a+b)/2 for a,b in zip(u,v))
