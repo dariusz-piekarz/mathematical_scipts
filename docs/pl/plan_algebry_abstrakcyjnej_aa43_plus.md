@@ -91,3 +91,8 @@ Po AA-47 STABILNY i nowym poleceniu „kontynuuj” rozpoczęto **AA-48 — Wymi
 **AA-48: STABILNY w ograniczonym, dokładnie udowodnionym zakresie** — kompletna pierwsza gałąź Kovacica dla dowolnego q∈C(x), czyli algorytm istnienia wymiernego rozwiązania Riccatiego. Audyty I–III, zwłaszcza audits/abstract_algebra/ch48_iteration_03.md; uzupełnienie po drugim audycie obejmuje przykład jednoczesnego bieguna ustalonego i ruchomego. Pozostałe gałęzie algebraiczne ogólnego Kovacica nie są objęte tym werdyktem.
 
 **Końcowy GitHub Actions:** https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45172784971, commit 666027e7fd7764ade14c38fc5ac8518b4f04bf4d — success 88/88. Testy 12/12 + 9/9 PASS. Integralność 48 rozdziałów, 992 unikatowe etykiety, 501 odsyłaczy, 0 braków. Końcowy PDF 310 stron; AA-48 na stronach PDF 305–310, wszystkie przejrzane, brak błędów i ostrzeżeń LaTeX. Historyczne raporty AA-01–AA-42 niezmienione. **AA-49 nie rozpoczęto.**
+
+
+## Otwarcie AA-49 — 23 listopada 2026 r.
+
+Po stabilnym AA-48 i poleceniu „kontynuuj” rozpoczęto **AA-49 — kwadratowy przypadek algorytmu Kovacica**. Zakres opisuje `docs/pl/zakres_aa49_kovacic_kwadratowy.md`. Dowody samodzielne obejmują ślad i wyróżnik rozwiązań Riccatiego, symetryczny kwadrat, równanie trzeciego rzędu i odzyskiwanie rozwiązań. Klasyczne wyczerpujące listy lokalne E_a i E_∞ są jawnie cytowane (Kovacic, 1986). Nie przypisywać własnemu opracowaniu pełnego dowodu klasyfikacji lokalnej. **AA-49 W AUDYCIE**, aż do audytów I–III, dwóch niezależnych zestawów testów, pełnego CI i oględzin wszystkich stron PDF. AA-50 nieotwarty.
