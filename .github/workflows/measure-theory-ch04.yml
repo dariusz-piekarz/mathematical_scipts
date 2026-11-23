@@ -85,7 +85,13 @@ jobs:
           assert len(pages) >= 2 and words_checked > 500
           print(f"PASS isolated R04 PDF bounds: {len(pages)} pages, {words_checked} words")
           PY
-          pdftoppm -f 1 -l 15 -r 90 -png measure_theory_ch04_ci.pdf ch04_preview > /dev/null 2>&1
+          # Render ALL pages: a fixed -l 15 silently omits later pages.
+          pages=$(pdfinfo measure_theory_ch04_ci.pdf | awk '/^Pages:/ {print $2}')
+          test "${pages}" -ge 2
+          pdftoppm -r 90 -png measure_theory_ch04_ci.pdf ch04_preview > /dev/null 2>&1
+          previews=$(find . -maxdepth 1 -name 'ch04_preview-*.png' -type f | wc -l)
+          test "${previews}" -eq "${pages}"
+          echo "Rendered and archived all ${previews} pages of the isolated R04 PDF"
       - name: Compile full book solely to validate R04 cross-references
         working-directory: books/pl
         run: |
