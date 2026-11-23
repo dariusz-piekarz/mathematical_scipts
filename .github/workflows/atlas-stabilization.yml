@@ -1,0 +1,146 @@
+name: Atlas - immutable SHA 2+1 stabilization
+
+# Push is deliberately narrow: ordinary mathematics audits must not restart
+# three real pinned Lean/Mathlib suites. Later candidates are explicit inputs.
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - ".github/workflows/atlas-stabilization.yml"
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        description: "Exact 40-character SHA already on biblioteka-matematyczna-iteracja-6"
+        required: true
+        type: string
+      fragment:
+        description: "Single fragment under audit, for example L1.1"
+        required: true
+        default: "L1.1"
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: atlas-stabilization-${{ github.event.inputs.candidate_sha || github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    outputs:
+      sha: ${{ steps.validate.outputs.sha }}
+    steps:
+      - name: Checkout branch history for ancestry check
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Reject short, unrelated or nonexistent candidate SHA
+        id: validate
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha || github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python application/scripts/atlas_validation_gate.py verify-sha \
+            --sha "$CANDIDATE_SHA" --branch biblioteka-matematyczna-iteracja-6
+          echo "sha=$CANDIDATE_SHA" >> "$GITHUB_OUTPUT"
+
+  # Each pass gets a distinct fresh runner. Called workflows checkout the
+  # SAME exact validated commit, not the branch's moving HEAD.
+  application:
+    needs: prepare
+    strategy:
+      fail-fast: false
+      matrix:
+        pass: ["1", "2", "3"]
+    uses: ./.github/workflows/mathematical-library-app.yml
+    with:
+      candidate_sha: ${{ needs.prepare.outputs.sha }}
+      validation_pass: ${{ matrix.pass }}
+
+  linux-windows:
+    needs: prepare
+    strategy:
+      fail-fast: false
+      matrix:
+        pass: ["1", "2", "3"]
+    uses: ./.github/workflows/lean-inspection-fast.yml
+    with:
+      candidate_sha: ${{ needs.prepare.outputs.sha }}
+      validation_pass: ${{ matrix.pass }}
+
+  pinned-lean:
+    needs: prepare
+    strategy:
+      fail-fast: false
+      matrix:
+        pass: ["1", "2", "3"]
+    uses: ./.github/workflows/lean-formalization.yml
+    with:
+      candidate_sha: ${{ needs.prepare.outputs.sha }}
+      validation_pass: ${{ matrix.pass }}
+
+  skeptical-contract:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Check out exactly the pinned candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+      - name: Independently challenge gate fail-closed edge cases
+        working-directory: application
+        run: python -m unittest tests.test_atlas_validation_gate -v
+      - name: State audit limitation
+        run: |
+          echo "Adversarial CI evidence tests are not an independent mathematical review."
+          echo "The final gate will remain stabilizing without a separately recorded reviewer decision."
+
+  evidence:
+    if: ${{ always() }}
+    needs: [prepare, application, linux-windows, pinned-lean, skeptical-contract]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout candidate for immutable gate code
+        uses: actions/checkout@v4
+        if: ${{ needs.prepare.result == 'success' }}
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+      - name: Retrieve per-pass named Python outcomes
+        uses: actions/download-artifact@v4
+        if: ${{ needs.prepare.result == 'success' }}
+        with:
+          pattern: atlas-unittest-*
+          path: .atlas-evidence
+          merge-multiple: false
+      - name: Reject missing, misattributed or unreviewed evidence
+        if: ${{ needs.prepare.result == 'success' }}
+        env:
+          CANDIDATE_SHA: ${{ needs.prepare.outputs.sha }}
+          FRAGMENT: ${{ inputs.fragment || 'L1.1' }}
+          APP_RESULT: ${{ needs.application.result }}
+          NATIVE_RESULT: ${{ needs.linux-windows.result }}
+          LEAN_RESULT: ${{ needs.pinned-lean.result }}
+          SKEPTIC_RESULT: ${{ needs.skeptical-contract.result }}
+        shell: bash
+        run: |
+          python application/scripts/atlas_validation_gate.py gate \
+            --sha "$CANDIDATE_SHA" --fragment "$FRAGMENT" \
+            --reports .atlas-evidence \
+            --application "$APP_RESULT" --native "$NATIVE_RESULT" \
+            --lean "$LEAN_RESULT" --skeptic "$SKEPTIC_RESULT" \
+            --output application/data/atlas_validation_status.json
+      - name: Upload explicit non-certificate decision
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-validation-status
+          path: application/data/atlas_validation_status.json
+          if-no-files-found: warn
