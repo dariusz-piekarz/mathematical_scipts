@@ -1,0 +1,66 @@
+name: Measure theory chapter 01 PDF validation
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "chapters/pl/measure_theory/01-rodziny-zbiorow-i-przestrzenie-mierzalne.tex"
+      - "books/pl/measure_theory.tex"
+      - ".github/workflows/measure-theory-ch01.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  chapter-01:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install TeX Live and PDF inspection tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-lang-polish texlive-pictures poppler-utils
+      - name: Prepare chapter-only document using book preamble
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          main=Path("books/pl/measure_theory.tex").read_text(encoding="utf-8")
+          preamble=main.split(r"\begin{document}",1)[0]
+          target=r"../../chapters/pl/measure_theory/01-rodziny-zbiorow-i-przestrzenie-mierzalne.tex"
+          wrapper=preamble+r"""
+          \begin{document}
+          \frontmatter
+          \tableofcontents
+          \mainmatter
+          \input{"""+target+r"""}
+          \end{document}
+          """
+          Path("books/pl/measure_theory_ch01_ci.tex").write_text(wrapper,encoding="utf-8")
+          PY
+      - name: Compile twice and reject undefined references
+        working-directory: books/pl
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory_ch01_ci.tex
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory_ch01_ci.tex
+          test -s measure_theory_ch01_ci.pdf
+          if grep -E "LaTeX Warning: (Reference|Citation).*undefined|There were undefined references" measure_theory_ch01_ci.log; then
+            echo "Cross-chapter references need external context; review log above"
+          fi
+          pdfinfo measure_theory_ch01_ci.pdf
+          pdftotext -layout measure_theory_ch01_ci.pdf measure_theory_ch01_ci.txt
+          grep -q "Rodziny zbiorów i przestrzenie mierzalne" measure_theory_ch01_ci.txt
+      - name: Upload PDF and diagnostic logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: measure-theory-ch01-pdf
+          path: |
+            books/pl/measure_theory_ch01_ci.pdf
+            books/pl/measure_theory_ch01_ci.log
+            books/pl/measure_theory_ch01_ci.txt
+          if-no-files-found: warn
