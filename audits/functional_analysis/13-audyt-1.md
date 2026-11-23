@@ -57,3 +57,11 @@ Pobrano ponownie źródła rozdziałów 01–13. W sumie jest **251 etykiet, bez
 ## Decyzja
 
 **13/01: AUDYT Z POPRAWKAMI, 0/2.** Warunkiem następnej niezależnej kontroli 13/02 jest potwierdzenie ukończonego zielonego CI i kontrola rzeczywistego PDF dla wskazanego SHA. Następnie obowiązują dwie niezależne czyste kontrole identycznego źródła. Do chwili ich spełnienia rozdział 14 pozostaje zablokowany.
+
+## Wynik końcowy CI i inspekcji PDF
+
+Po zapisaniu raportu audytu 13/01 dedykowany przebieg [GitHub Actions #45254273546](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45254273546) na commicie 3649b336496d54e350840522be7672b44679f8ae zakończył się **COMPLETED / SUCCESS**. Potwierdzono wszystkie kroki: **21/21 testów PASS**, przygotowanie pełnego kontekstu źródłowego 01–13 PASS, kompilacja LaTeX PASS, kontrola PDF/odsyłaczy PASS oraz publikacja artefaktu PASS. Wcześniejszy przebieg [#45253868291](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45253868291) na tym samym końcowym źródle i testach również był zielony.
+
+Pobrano wygenerowany rzeczywiście artefakt functional-analysis-ch13-pdf z przebiegu #45253868291. Kompilacja ma **78 stron**; rozdział 13 zajmuje końcową część strony 72 oraz strony **73–78**. Obejrzenie stron 72–78 w renderach PDF (strona 72 w osobnym powiększeniu, pozostałe w arkuszu kontaktowym) nie ujawniło kolizji podpisów, przyciętych wzorów ani wychodzących poza stronę akapitów. Kontrola położenia bloków tekstowych w PyMuPDF dla stron 73–78 wykazała **0 bloków wychodzących poza prostokąt strony**. W rozdziale 13 nie ma rysunków TikZ, więc brak osobnej inspekcji diagramów.
+
+**Stan po rzeczywistym zielonym CI i PDF:** audyt 13/01 zakończony poprawkami źródła i testów, z potwierdzoną bramką techniczną; **0/2 czystych audytów**. Kolejna jednostka pracy to niezależny audyt stabilizacyjny **13/02** identycznego źródła o blob SHA 1ca8b2ee077f558e50412c5d74e116779ab44f31. Nie otwierać rozdziału 14 przed osiągnięciem 2/2 i ponownym potwierdzeniem CI. Wynik techniczny nie jest formalną weryfikacją dowodów.
