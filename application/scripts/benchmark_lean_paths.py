@@ -18,7 +18,7 @@ APPLICATION = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(APPLICATION))
 
 from backend import lean_environment
-from scripts.benchmark_lean_fingerprint import _registered_inputs
+from scripts.benchmark_lean_fingerprint import OLEAN_IO_COUNTERS, _registered_inputs
 
 
 def collect_names(lean_root: Path) -> list[tuple[str, Path, Path, tuple[str, ...]]]:
@@ -143,6 +143,45 @@ def benchmark(lean_root: Path, *, samples: int = 5,
     }
 
 
+
+def expected_candidates_from_benchmark(evidence: object) -> int:
+    """Validate real fingerprint evidence before using its file population.
+
+    A matching name count is only a diagnostic consistency check, not a
+    replacement for provenance verification or proof compilation.
+    """
+    if not isinstance(evidence, dict):
+        raise ValueError("Invalid fingerprint benchmark evidence")
+    if (evidence.get("purpose") != "timing_only_not_a_formalization_result"
+            or evidence.get("certificate") is not False):
+        raise ValueError("Invalid fingerprint benchmark purpose or certificate")
+    samples = evidence.get("real_fingerprint_calls")
+    digest = evidence.get("compiled_artifacts_sha256")
+    if (type(samples) is not int or not 1 <= samples <= 6
+            or not isinstance(digest, str) or len(digest) != 64
+            or any(char not in "0123456789abcdef" for char in digest)):
+        raise ValueError("Incomplete fingerprint benchmark provenance")
+    counts = evidence.get("olean_io_samples")
+    if not isinstance(counts, list) or len(counts) != samples:
+        raise ValueError("Missing fingerprint benchmark I/O samples")
+    expected_keys = set(OLEAN_IO_COUNTERS)
+    first = counts[0]
+    for current in counts:
+        if (not isinstance(current, dict)
+                or set(current) != expected_keys
+                or any(type(value) is not int or value < 0
+                       for value in current.values())):
+            raise ValueError("Malformed fingerprint benchmark I/O counters")
+        if current != first:
+            raise ValueError("Changing fingerprint benchmark scan population")
+    if (first["walk_files_seen"] !=
+            first["olean_name_candidates"] + first["non_olean_names_skipped"]
+            or first["olean_files_opened"] > first["olean_name_candidates"]
+            or first["olean_name_candidates"] > lean_environment.MAX_OLEAN_FILES):
+        raise ValueError("Contradictory fingerprint benchmark filename counters")
+    return first["olean_name_candidates"]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--lean-root", type=Path, default=APPLICATION / "lean")
@@ -156,11 +195,7 @@ def main() -> None:
         if args.compare_with.stat().st_size > 2 * 1024 * 1024:
             raise ValueError("Unexpectedly large fingerprint evidence")
         previous = json.loads(args.compare_with.read_text(encoding="utf-8"))
-        counts = previous["olean_io_samples"]
-        if (not counts or previous.get("certificate") is not False
-                or any(item != counts[0] for item in counts)):
-            raise ValueError("Invalid or changing fingerprint scan population")
-        expected = counts[0]["olean_name_candidates"]
+        expected = expected_candidates_from_benchmark(previous)
     report = benchmark(
         args.lean_root, samples=args.samples, expected_candidates=expected)
     serialized = json.dumps(report, ensure_ascii=False, indent=2) + "\n"
