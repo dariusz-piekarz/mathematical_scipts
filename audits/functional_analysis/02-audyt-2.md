@@ -4,7 +4,7 @@
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`.  
 **Rozdział:** `chapters/pl/functional_analysis/02-podprzestrzenie-produkty-ilorazy-i-topologie-uniwersalne.tex`.  
 **SHA obiektu Git źródła audytowanego rozdziału:** `0b2772a13459c13d9720e3726966981b289e2bed`.  
-**Wynik matematyczno-redakcyjny:** bez nowych poprawek do LaTeX. **Pierwszy czysty audyt rozdziału 02 (1/2), pod warunkiem końcowego PASS rozszerzonego CI**. Nie przechodzić do rozdziału 03 przed potwierdzeniem stabilizacji 02.
+**Wynik matematyczno-redakcyjny i techniczny:** bez nowych poprawek do LaTeX. **Pierwszy czysty audyt rozdziału 02 (1/2), potwierdzony przez CI PASS**. Nie przechodzić do rozdziału 03 przed potwierdzeniem stabilizacji 02.
 
 ## Metoda
 
@@ -61,5 +61,5 @@ Nie stwierdzono nowej błędnej tezy ani luki wymagającej korekty źródła.
 ## CI i decyzja
 
 - Poprzedni przebieg [45152793250](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45152793250): **9/9 PASS**, kompilacja z rzeczywistym kontekstem rozdziałów 01–05, kontrola PDF i odsyłaczy PASS.
-- Rozszerzone CI (12 testów): **stan w chwili pisania wymaga potwierdzenia**. Wynik czystego audytu liczony jako 1/2 dopiero po potwierdzeniu PASS nowego przebiegu.
+- Rozszerzone CI: [przebieg 45153722035](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45153722035) — **12/12 testów PASS**, kompilacja LaTeX PASS, kontrola PDF i odsyłaczy PASS, zapis artefaktu PASS. Zweryfikowano pobrany artefakt: **33 strony A4**, 480468 bajtów, końcowy log bez przepełnionych wierszy, brakujących znaków i niezdefiniowanych odsyłaczy. Ostrzeżenia o odsyłaczach z pierwszego przebiegu kompilacji zniknęły po drugim.
 - **Rozdział 02: bez zmian merytorycznych po audycie 01, oczekuje drugiego czystego audytu potwierdzającego**. Do rozdziału 03 nie przechodzimy przed stabilizacją rozdziału 02.
