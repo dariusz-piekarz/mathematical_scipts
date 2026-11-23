@@ -250,6 +250,32 @@ class LeanEnvironmentTests(unittest.TestCase):
                          hashlib.sha256(b"content").hexdigest())
         self.assertEqual(actual["artifacts"][1]["content"], "metadata_only")
 
+    def test_olean_name_prefilter_matches_path_suffix_for_mixed_build_files(self):
+        """Unrelated build files are ignored; hidden suffix semantics stay intact."""
+        root = self.root / ".lake" / "build" / "lib" / "lean"
+        names = (
+            ".olean", "..olean", ".hidden.olean", "Ordinary.olean",
+            "Notes.olean.old", "Plain.txt", "other.olean.tmp",
+            "nested/Unicode_ż.olean", "nested/Foo.olean",
+            "nested/.olean", "nested/Readme.md",
+        )
+        for name in names:
+            artifact = root / name
+            artifact.parent.mkdir(parents=True, exist_ok=True)
+            artifact.write_bytes(name.encode("utf-8"))
+        expected = sorted(
+            (root / name).relative_to(root).as_posix()
+            for name in names if (root / name).suffix == ".olean"
+        )
+        tree = lean_environment._olean_tree(
+            root, label="project", budget=[1024])
+        self.assertEqual(
+            [entry["name"] for entry in tree["artifacts"]], expected)
+        self.assertEqual(tree["coverage"], "content_sha256")
+        for entry in tree["artifacts"]:
+            self.assertEqual(entry["sha256"], hashlib.sha256(
+                (root / entry["name"]).read_bytes()).hexdigest())
+
     def test_olean_lexical_name_optimization_preserves_original_tree_schema(self):
         """Compare with the pre-optimization algorithm, including exact key order."""
         root = self.root / ".lake" / "build" / "lib" / "lean"
