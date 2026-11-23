@@ -60,11 +60,78 @@ W dwóch niezależnych audytach 26–27 sprawdzono łącznie **883 220 przypadk�
 
 Końcowa kontrola strukturalna źródeł (commit 4fd017d45e72a197896b4b666eab3d68c407681d): 44/44 rozdziały, 0 duplikatów etykiet, 0 nierozwiązanych odsyłaczy, 0 błędów środowiska i 0 zakazanych terminów.
 
-## Bramka PDF i werdykt
+## Końcowy wynik CI: dwie niezależne bramki PASS
 
-Po sprawdzeniu nowej matematyki i regresji należy:
-1. potwierdzić sukces full-book-pdf dla końcowej wersji źródeł;
-2. zweryfikować trzy przebiegi pdflatex i pusty plik ostrzeżeń;
-3. obejrzeć nowe strony rozdziałów 34–36, w tym długi lemat C_p, wzór charakterystyki Eulera i nową bibliografię.
+[GitHub Actions 45254635859](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45254635859)
+dla końcowego commitu źródłowo-testowego
+4fd017d45e72a197896b4b666eab3d68c407681d:
 
-**Do czasu spełnienia wszystkich tych warunków 34–36 pozostają w stabilizacji.** W razie powodzenia drugi niezależny audyt będzie zakończony PASS, a lokalnie stabilne staną się rozdziały 01–36. Następny blok: audyt 28, pierwsze przejście rozdziałów 37–39. Ogólny audyt 44 rozdziałów nadal pozostaje otwarty.
+1. **structural-audit — SUCCESS.** Potwierdzono wszystkie 44/44 źródła katalogowe, 0 duplikatów etykiet, 0 niezwiązanych odsyłaczy, 0 błędów środowiskowych, 0 zabronionych terminów i PASS wszystkich 855 624 nowych regresji. Z powodzeniem wykonano również wszystkie starsze pakiety testowe.
+2. **full-book-pdf — SUCCESS.** Wykonano trzy pełne kompilacje pdflatex dla rzeczywistego 44-rozdziałowego tomu. Wynik to **290 stron PDF A4**; plik audit_output/graph_and_knot_full_warnings.txt ma **0 bajtów**.
+
+Pobrano końcowy artefakt *graph-and-knot-complete-book-audit*:
+**ID 14858605979**, ZIP graph_audit27_final_45254635859.zip.
+Skontrolowano obecność trzech plików logów pass1, pass2, pass3
+oraz finalnego PDF; dodatkowo z PDF wydobyto tekst
+nowych twierdzeń i przykładu.
+
+## Oględziny wizualne rzeczywistego, końcowego PDF
+
+Wyrenderowano i otwarto wszystkie strony PDF **272–290**:
+
+- **272–279** — rozdział źródłowy 34, drukowany 41:
+  nowy lemat o ogólnym metabolizerze C_p,
+  dowód cykliczności, formę splecenia,
+  diagram dwóch operacji i
+  tabelę ograniczeń stosowania twierdzeń.
+- **280–286** — rozdział źródłowy 35, drukowany 42:
+  algebra Frobeniusa, wzór gradującej
+  charakterystyki Eulera, *oba* nowe
+  przykłady pierwszego ruchu Reidemeistera
+  (strona 281), kostka Khovanova,
+  definicja CFK^− z warunkiem n_z(φ)=0,
+  algebra Temperleya–Lieba i zastosowania.
+- **287–290** — rozdział źródłowy 36, drukowany 43:
+  kompletna bibliografia z dopisanymi
+  pozycjami Lee, Ni, Symington, Rasmussenem
+  i ich DOI oraz mapa zależności
+  matematycznych i końcowe podsumowanie.
+
+**Werdykt oględzin: PASS.**
+Nie wykryto uciętych wzorów,
+nachodzących napisów, podpisów
+przecinających diagramy, błędnej
+numeracji, ani przekroczeń marginesów.
+Oględziny przeprowadzono na **artefakcie
+końcowego przebiegu**, nie wyłącznie
+na wcześniejszym PDF.
+
+## Końcowy status rozdziałów
+
+**AUDYT 27: PASS — DRUGIE NIEZALEŻNE PRZEJŚCIE ZAKOŃCZONE.**
+
+Rozdziały **34–36 są LOKALNIE STABILNE**.
+Stabilizacja opiera się łącznie na:
+- dwóch niezależnych, rzeczywiście przeprowadzonych
+  audytach 26 i 27, ze zmianami matematycznymi
+  w źródłach 34, 35 i bibliografii 36;
+- 883 220 dokładnych przypadkach
+  w obu niezależnych pakietach;
+- zakończonych sukcesem obu zadaniach
+  ostatniego CI, w tym trzech przebiegach
+  pełnego składu TeX;
+- kontroli wizualnej każdej strony
+  audytowanego bloku w ostatecznym PDF.
+
+Testy, poprawność składu i oględziny
+**nie poświadczają formalnie** wyników
+Freedmana, Ni, Floera,
+Khovanova, Symington ani
+niezmienników Seiberga–Wittena.
+Wyniki zewnętrzne są w źródle jawnie wydzielone.
+
+**Łączny stan: rozdziały 01–36 lokalnie stabilne.**
+Kolejny etap: **audyt 28 — pierwsze
+przejście rozdziałów 37–39**.
+Globalny audyt całego tomu
+44 rozdziałów nadal jest otwarty.
