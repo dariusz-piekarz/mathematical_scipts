@@ -74,9 +74,16 @@ class LocalProjectiveFlatInterface(unittest.TestCase):
                 # No cyclic submodule of M can contain more than |R| elements.
                 self.assertGreater(len(M), len(R.elements))
                 # Yet (1,0) and (0,1) visibly generate M.
-                self.assertEqual({(r, c) for r in R.elements for c in range(p)}, set(M))
-                # The residue field is cyclic but not free over non-field R.
-                self.assertEqual(p ** k % p, 0)
+                generators = ((R.one, 0), (R.zero, 1))
+                generated = {
+                    (R.add(R.mul(a, generators[0][0]), R.mul(b, generators[1][0])),
+                     (a[0] * generators[0][1] + b[0] * generators[1][1]) % p)
+                    for a, b in product(R.elements, repeat=2)
+                }
+                self.assertEqual(generated, set(M))
+                # The residue field has a nonzero annihilator (t), unlike free rank 1.
+                self.assertNotEqual(R.t, R.zero)
+                self.assertEqual(R.t[0], 0)
                 self.assertNotEqual(p, p ** k)
     def test_explicit_matrix_idempotent_and_local_free_summand(self):
         for p, k in ((2, 2), (2, 3), (3, 2)):
