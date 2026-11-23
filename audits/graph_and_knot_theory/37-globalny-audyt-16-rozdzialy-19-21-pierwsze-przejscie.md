@@ -197,6 +197,32 @@ Wyniki skończone nie zastępują dowodów
 twierdzenia Goeritza, JSJ, Lickorisha
 ani innych twierdzeń ogólnych.
 
+## Kontrola rysunku nachylenia torusa
+
+Niezależna inspekcja renderu poprzedniego PDF wykazała
+**błąd geometryczny** w rysunku nachylenia `1/1`
+rozdziału 20: czerwony odcinek miał oba końce wewnątrz
+prostokąta fundamentalnego, zatem nie reprezentował
+zamkniętej krzywej na `T²=R²/Z²`.
+
+Poprawiono rysunek TikZ: czerwony odcinek biegnie
+teraz **od (0,0) do (4.2,2.5)**, czyli od narożnika
+do narożnika utożsamianego przez relację definiującą
+torus, i wyznacza klasę `μ+λ`. Uzupełniono podpis,
+aby czytelnik nie traktował przekątnej jako otwartego
+łuku. Dodano regresję sprawdzającą odpowiedni fragment
+źródła. Poprawność graficzną nowego renderu trzeba
+sprawdzić w końcowym PDF po zmianie.
+
+## Konwencja litery stabilnej w przykładzie Sol
+
+Doprecyzowano, że dla rozmaitości torusa odwzorowania
+`M_A` stabilna litera w prezentacji
+`Z²⋊_A Z` została wybrana tak, aby sprzężenie
+odpowiadało macierzy `A`; przy odwrotnym kierunku
+okręgu bazowego wystąpiłaby macierz `A^-1`.
+To usuwa niejawne założenie o orientacji pętli.
+
 ## Stabilizacja przed 22–24
 
 1. **Drugie niezależne przejście**
