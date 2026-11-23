@@ -32,8 +32,11 @@ EXPECTED_SKIPS = (
 
 
 def classify_skip(test_id: str, reason: str) -> str:
+    # Discovery without -t returns 'test_module.Class.test'; explicit module
+    # imports instead return 'tests.test_module.Class.test'. Both must match.
+    normalized = test_id.removeprefix("tests.")
     for prefix, expected_reason, category in EXPECTED_SKIPS:
-        if test_id.startswith(prefix) and reason == expected_reason:
+        if normalized.startswith(prefix.removeprefix("tests.")) and reason == expected_reason:
             return category
     return "unreviewed"
 
