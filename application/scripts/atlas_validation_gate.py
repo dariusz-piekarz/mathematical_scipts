@@ -118,7 +118,9 @@ def evaluate(
             problems.append(f"{key} workflow result is {result!r}, not success")
     review_state = "pending"
     if review is not None:
-        if (review.get("candidate_sha") == sha
+        if not isinstance(review, dict):
+            problems.append("skeptical review must be a JSON object")
+        elif (review.get("candidate_sha") == sha
                 and review.get("fragment") == fragment
                 and review.get("decision") == "approved"
                 and isinstance(review.get("reviewer"), str)
@@ -166,7 +168,10 @@ def main(argv: list[str] | None = None) -> int:
         verify_ancestor(args.sha, branch=args.branch)
         print(args.sha)
         return 0
-    review = json.loads(args.review.read_text(encoding="utf-8")) if args.review else None
+    # Review lives in the *control* revision, not in the frozen source under test.
+    # Absence is legitimate and forces 'stabilizing', never 'stable'.
+    review = (json.loads(args.review.read_text(encoding="utf-8"))
+              if args.review is not None and args.review.is_file() else None)
     value = evaluate(args.sha, args.fragment, args.reports,
                      application=args.application, native=args.native,
                      lean=args.lean, skeptic=args.skeptic, review=review)
