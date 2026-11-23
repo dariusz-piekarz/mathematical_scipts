@@ -42,7 +42,9 @@ W definicji `aco(A)` pojawia się explicite `aco(∅)={0}`, lecz wcześniejsze s
 - Rozszerzono `tools/tests/test_functional_analysis_ch07.py` z **16 do 20 testów**. Nowe kontrole obejmują: (i) jawne zastosowanie separacji do `D=cl C` i konkretny niedomknięty odcinek `C=(0,1)`; (ii) kompleksowy support na absolutnie wypukłej kuli ważonej `|z_1|+2|z_2|≤1` i obrót fazy; (iii) kompleksową wersję wzoru na bipolar zbioru bazowych wektorów produktu; (iv) konwencję `aco(∅)={0}` i bipolar pustego zbioru.
 - Zachowano **11 par `proof`**, **4 pary `przyklad`**, **17 unikatowych etykiet** i diagram TikZ polary `l¹/l∞`. Dotychczasowe odsyłacze między rozdziałami pozostają niezmienione.
 - Wprowadzone zmiany dotyczą wyłącznie istniejącego rozdziału 07 i jego testów. Żaden ze stabilnych rozdziałów 01–06 nie został zmodyfikowany.
-- Dedykowany workflow `functional-analysis-ch07.yml` kontroluje testy, kompilację dokumentu 01–07, ostateczne odsyłacze i PDF; najnowszy [CI 45183998311](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45183998311) obejmuje testy dla tej wersji. Wynik końcowy i wizualną kontrolę PDF należy dopisać po zweryfikowaniu artefaktu.
+- Dedykowany [GitHub Actions 45183998311](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45183998311) zakończył się **pełnym SUCCESS** dla aktualnego źródła i zestawu **20/20 testów PASS**. Kompilacja LaTeX dokumentu w kontekście 01–07, końcowa kontrola PDF i odsyłaczy oraz publikacja artefaktu przeszły wszystkie kroki.
+- Pobrano **PDF A4, 43 strony, 556327 bajtów**, zgodny z tym SHA źródła. Wyrenderowano i wizualnie obejrzano strony **39–43** (cały rozdział 07), w tym poprawioną definicję otoczki absolutnie wypukłej i diagram polary rombu i kwadratu. **0 bloków tekstowych poza stroną**, brak nachodzących podpisów, ucięć i błędów typograficznych.
+- Przejściowe ostrzeżenie o odsyłaczach wystąpiło jedynie po pierwszym przebiegu LaTeX; **końcowy log** nie zawiera `Undefined control sequence`, `There were undefined references`, `Overfull \\hbox` ani `Missing character`. Końcowy status workflow potwierdzony przez GitHub API.
 
 ## Decyzja
 
