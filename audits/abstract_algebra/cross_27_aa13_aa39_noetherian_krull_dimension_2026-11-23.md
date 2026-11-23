@@ -86,3 +86,17 @@ Testy skończonych modeli nie zastępują twierdzenia ogólnego ani formalizacji
 Do workflow .github/workflows/abstract-algebra-chapter.yml podłączono osobny wyzwalacz i krok **Run AA-X27 Noetherian ACC and Krull dimension checks**; commit bramki **bcc704aa6f72c5579ab26a8ac91bfb032b01846a**.
 
 **Werdykt przy zapisaniu suplementu: W STABILIZACJI CI**, bez deklaracji końcowego PASS. Warunkiem zamknięcia jest 8/8 nowych testów, zielony pełny workflow, kompilacja AA-01–AA-50 i automatyczna kontrola referencji oraz PDF. Rzeczywisty wynik CI zostanie wpisany do raportu po weryfikacji dokładnego przebiegu i SHA.
+
+## Zamknięcie AA-X27 — weryfikacja GitHub Actions i stabilizacja
+
+**Niezmienny przebieg referencyjny:** [GitHub Actions 45271071179](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45271071179), commit testowo-workflowowy **bcc704aa6f72c5579ab26a8ac91bfb032b01846a**. Status: **completed / success**. Job validate-cli ID **138030698790**: **105/105 ukończonych kroków**, bez błędów.
+
+Odczytano bezpośrednio rzeczywisty log tego jobu. Wszystkie **8/8 testów AA-X27 mają wynik ok**, każda funkcja zarówno przy globalnym odkrywaniu testów, jak i w osobnym kroku Run AA-X27 Noetherian ACC and Krull dimension checks. Globalny zbiór regresji oraz pozostałe kontrole rozdziałów przeszły.
+
+**Kompilacja AA-01–AA-50:** krok Compile AA-01 to AA-50 book with latexmk — **success**. Krok Verify PDF and references (no undefined refs) — **success**. Artefakt abstract-algebra-aa01-aa50, ID **14865507715**, ZIP **2 289 387 bajtów**, nieprzedawniony przy kontroli. Automatyczny skład i weryfikacja odsyłaczy, cytowań oraz przepełnionych pól w logu **nie zastępują osobnej wizualnej inspekcji stron PDF**; w tym audycie jej nie wykonano.
+
+**Werdykt: AA-X27 ZAMKNIĘTY / STABILNY** dla szczegółowo opisanego interfejsu AA-13 × AA-39, z udowodnionym zachowaniem noetherowskości i specyfiką wymiaru Krulla dla ilorazów, lokalizacji i przykładów niecałkowitych. Żadna istotna korekta zatwierdzonych rozdziałów nie okazała się konieczna; wszystkie AA-01–AA-50 pozostają niezmienione. Globalny audyt wszystkich dowodów tomu pozostaje osobnym zadaniem. Osiem regresji to nie formalizacja w Lean.
+
+**Propozycja do osobnego zatwierdzenia:** rozbudować AA-39 o uzasadniony przykład noetherowskiego pierścienia nieskończonego wymiaru Krulla; nie wprowadzono takiego rozszerzenia automatycznie, zgodnie z AGENTS.md. Nie mylić tej propozycji z już udowodnionymi skończonymi przykładami.
+
+**Kolejna odrębna iteracja:** AA-X28, wyłącznie nowy zakres, po zamknięciu obecnego audytu.
