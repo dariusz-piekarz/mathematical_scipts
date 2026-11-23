@@ -3,6 +3,7 @@
 Not a replacement for an actual LaTeX compile or visual PDF inspection.
 """
 import re
+from fractions import Fraction
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -61,19 +62,31 @@ assert re.search(
 
 blocks = re.findall(r"\\foreach \\a/\\b in \{([^}]*)\}", figure.group())
 assert len(blocks) == 3, f"expected 3 loop-drawn Cantor stages, got {len(blocks)}"
+expected = [(Fraction(0), Fraction(1))]
+checked_endpoints = 0
+tolerance = Fraction(1, 10**6)  # TikZ specifies six decimal places
 for n, block in enumerate(blocks, start=1):
-    intervals = [tuple(map(float, item.split("/"))) for item in block.split(",")]
-    assert len(intervals) == 2 ** n
-    assert abs(intervals[0][0]) < 1e-9
-    assert abs(intervals[-1][1] - 1) < 1e-9
-    length = 3 ** (-n)
-    for a, b in intervals:
-        assert abs((b-a) - length) < 3e-6, (n, a, b)
-    for (_, right), (left, _) in zip(intervals, intervals[1:]):
-        assert right < left, f"overlapping Cantor intervals in stage {n}"
+    intervals = [
+        tuple(Fraction(value) for value in item.split("/"))
+        for item in block.split(",")
+    ]
+    expected = [
+        part
+        for a, b in expected
+        for part in (
+            (a, a + (b-a)/3),
+            (b - (b-a)/3, b),
+        )
+    ]
+    assert len(intervals) == len(expected) == 2**n
+    for (a, b), (want_a, want_b) in zip(intervals, expected):
+        assert abs(a - want_a) <= tolerance, (n, a, want_a)
+        assert abs(b - want_b) <= tolerance, (n, b, want_b)
+        checked_endpoints += 2
+assert checked_endpoints == 28
 
 print(
     f"PASS R04: {len(labels)} labels in R01-R04, "
     f"{len(references)} resolved references, "
-    f"paired TeX environments, Cantor stages 1-3 and caption"
+    f"paired TeX environments, 28 Cantor endpoints and caption"
 )
