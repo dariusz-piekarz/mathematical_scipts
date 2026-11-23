@@ -106,7 +106,16 @@ def positive_negative_blowdown():
     Bd=[[-3,-1],[-1,-4]]
     assert determinant(Q)==determinant(Bd)==11
     assert -solve(Bd,[1,0])[0]==Fraction(4,11)
-    return count+1
+    # The original text incorrectly inferred cyclicity from a unit entry.
+    # diag(1,2,2) has a unit entry but cokernel (Z/2)^2, not Z/4.
+    counter=[[1,0,0],[0,2,0],[0,0,2]]
+    assert determinant(counter)==4
+    assert all(sum(counter[i][j]*x[j] for j in range(3))%2==0
+               for i in (1,2) for x in ((0,1,0),(0,0,1)))
+    # The two independent residual parity coordinates yield (Z/2)^2.
+    residue={(x%2,y%2) for x in range(4) for y in range(4)}
+    assert residue=={(0,0),(1,0),(0,1),(1,1)}
+    return count+2
 
 
 
