@@ -351,6 +351,46 @@ def check_arf_gauss():
     return cases
 
 
+
+def check_arf_enlargement_isometry():
+    """Independent brute force over F2; checks every input to the shear isometry."""
+    matrices=[
+        [],[[1,0],[-1,1]],[[1,0],[-1,-1]],
+        [[1,0,0,0],[-1,1,0,0],[0,0,1,0],[0,0,-1,1]],
+    ]
+    checked=0
+    def q(matrix,vector):
+        return sum(vector[i]*matrix[i][j]*vector[j]
+                   for i in range(len(vector)) for j in range(len(vector)))%2
+    for V in matrices:
+        n=len(V)
+        for u in product(range(2),repeat=n):
+            for v in product(range(2),repeat=n):
+                for z in (0,1):
+                    for mode in (0,1):
+                        Vp=enlarged(V,list(u),list(v),z,mode)
+                        for x in product(range(2),repeat=n):
+                            for sb,tb in product(range(2),repeat=2):
+                                shear=(tb+sum((u[i]+v[i])*x[i]
+                                              for i in range(n))+z*sb)%2
+                                assert q(Vp,x+(sb,tb))==(q(V,x)+sb*shear)%2
+                                checked+=1
+    return checked
+
+
+def check_conway_arf_congruence():
+    """Algebraic consequence Δsym(-1)=∇(2i), modulo 8."""
+    tests=0
+    for a2 in range(-10,11):
+        for a4 in (-3,0,4):
+            for a6 in (-2,0,3):
+                delta=1-4*a2+16*a4-64*a6
+                assert delta%8==(1-4*(a2%2))%8
+                assert ((delta%8==1) == (a2%2==0))
+                tests+=1
+    return tests
+
+
 def test_source():
     names=[
         "16-od-triangulacji-do-topologii-i-geometrii-rozmaitosci.tex",
@@ -366,6 +406,9 @@ def test_source():
     assert r"V&u&0\\ v^T&z&0\\0&1&0" in c
     assert r"V&u&0\\v^T&z&1\\0&0&0" in c
     assert r"b_1b_2b_1=b_2b_1b_2" in c
+    assert r"\label{thm:kt-arf-conway-slice}" in c
+    assert r"t'=t+(u+v)^Tx+zs" in c
+    assert "Jawna przerwa na dolnym fragmencie" in c
 
 
 if __name__=="__main__":
@@ -383,3 +426,5 @@ if __name__=="__main__":
     print("PASS Jones trefoil TL bracket:",check_jones_trefoil())
     print("PASS Temperley--Lieb RII/RIII exact braid identities:",check_tl_reidemeister())
     print("PASS Arf quadratic Gauss sums:",check_arf_gauss())
+    print("PASS Arf quadratic S-enlargement isometries over F2:",check_arf_enlargement_isometry())
+    print("PASS Arf-Conway mod 8 congruences:",check_conway_arf_congruence())
