@@ -194,7 +194,9 @@ class Chapter13Audit(unittest.TestCase):
         self.assertIn(r"\|u\|_2\le\|u'\|_2/\sqrt2",self.source)
         self.assertIn(r"u''=-f",self.source)
         self.assertIn("w normie $H$",self.source)
-        self.assertIn(r"\widetilde g_n\to g",self.source)
+        self.assertIn(r"\widetilde h_n\to h",self.source)
+        self.assertIn(r"u=w",self.source)
+        self.assertIn(r"w''=-f",self.source)
 
     def test_examples_and_complex_conventions(self):
         self.assertIn(r"\chi_{[0,1]}", self.source)
