@@ -57,3 +57,17 @@ Uruchomiono pełny zdalny workflow po integracji nowego testu:
 https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45130907559
 
 **W chwili sporządzenia tego raportu** wynik CI nie był jeszcze końcowy; jego status należy zaktualizować po zakończeniu testów, składania całej książki i weryfikacji odsyłaczy. Tylko zakończony sukcesem workflow zamyka AA-X03 jako etap stabilny.
+
+
+## 6. Aktualizacja po zakończeniu zdalnego CI
+
+Rzeczywisty przebieg [GitHub Actions 45130907559](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45130907559) dla commitu \`14bc3f4ac4f76ece1b645feeaf315ae02a82a7f8\` zakończył się stanem **completed / success**. Zweryfikowano osobno kroki:
+- \`Run AA-31 to AA-36 Galois cross-audit\`: **success**;
+- \`Run AA-X03 independent confirming audit\`: **success**;
+- \`Compile AA-01 to AA-42 book with latexmk\`: **success**;
+- \`Verify PDF and references (no undefined refs)\`: **success**;
+- \`Archive build output\`: **success**.
+
+Wygenerowany został rzeczywisty artefakt \`abstract-algebra-aa01-aa42\` (ID **14798111257**, rozmiar **2007504 B**). Sprawdzono istnienie artefaktu oraz status kroków kompilacji i kontroli odsyłaczy; nie przeprowadzono w tej aktualizacji odrębnej inspekcji wszystkich jego stron. Wcześniejszy audyt AA-X03 zawiera osobny, udokumentowany przegląd 26 stron odpowiednich rozdziałów.
+
+**Werdykt końcowy AA-X03: STABILNY.** Obydwa niezależne audyty matematyczne, osobny test regresyjny, zdalne CI i weryfikacja książki zakończyły się pomyślnie; źródła AA-31–AA-36 pozostawiono bez zmian.
