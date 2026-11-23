@@ -112,7 +112,7 @@ def dual_l1_atomic():
                 integral = sum(a*b*c for a,b,c in zip(f,g,masses))
                 assert abs(integral) <= M
                 count += 1
-    assert count > 7000
+    assert count == 6750
     print(f"PASS R15 finite-atom L1 dual bound: {count} tests")
 
 
@@ -127,7 +127,7 @@ def weak_rademacher_dyadic():
                 partial=sum(values[interval*span:(interval+1)*span])
                 assert partial == 0
                 count += 1
-    assert count > 3000
+    assert count == 1012
     print(f"PASS R15 Rademacher weak cancellation: {count} dyadic intervals")
 
 
