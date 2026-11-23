@@ -1,6 +1,7 @@
 """Tests for same-host, read-only comparison of .olean path conversion."""
 from __future__ import annotations
 
+import copy
 import json
 from pathlib import Path
 import tempfile
@@ -101,6 +102,50 @@ class LeanPathMicrobenchmarkTests(unittest.TestCase):
         for count in (-1, 2.5, True):
             with self.subTest(count=count), self.assertRaises(ValueError):
                 paths.benchmark(self.root, expected_candidates=count)
+
+    def test_compare_with_rejects_corrupted_fingerprint_evidence(self):
+        """Only a genuine, stable full fingerprint report supplies name counts."""
+        from scripts import benchmark_lean_fingerprint as full
+        evidence = full.benchmark(self.root, samples=2)
+        expected = paths.expected_candidates_from_benchmark(evidence)
+        self.assertEqual(expected, 4)
+        self.assertEqual(
+            paths.benchmark(self.root, samples=2, expected_candidates=expected)
+            ["olean_candidates"], 4)
+
+        variants = []
+        for key, invalid in (
+            ("purpose", "not_a_fingerprint_benchmark"),
+            ("certificate", True),
+            ("real_fingerprint_calls", True),
+            ("real_fingerprint_calls", 3),
+            ("compiled_artifacts_sha256", "invalid-digest"),
+            ("olean_io_samples", []),
+        ):
+            broken = copy.deepcopy(evidence)
+            broken[key] = invalid
+            variants.append(broken)
+        for key, invalid in (
+            ("walk_files_seen", -1),
+            ("olean_name_candidates", True),
+            ("non_olean_names_skipped", 1000000),
+            ("olean_files_opened", 9999999),
+        ):
+            broken = copy.deepcopy(evidence)
+            broken["olean_io_samples"][0][key] = invalid
+            broken["olean_io_samples"][1][key] = invalid
+            variants.append(broken)
+        changed = copy.deepcopy(evidence)
+        changed["olean_io_samples"][1]["olean_name_candidates"] += 1
+        variants.append(changed)
+        missing = copy.deepcopy(evidence)
+        del missing["olean_io_samples"][0]["directories_visited"]
+        variants.append(missing)
+        variants.extend((None, {}, []))
+
+        for index, evidence_variant in enumerate(variants):
+            with self.subTest(case=index), self.assertRaises(ValueError):
+                paths.expected_candidates_from_benchmark(evidence_variant)
 
     def test_symlinked_olean_is_rejected_without_following_it(self):
         path = self.project / "Bad.olean"
