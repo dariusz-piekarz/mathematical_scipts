@@ -9,6 +9,8 @@ import tempfile
 import unittest
 
 from scripts.atlas_ci_report import classify_skip
+from scripts.atlas_validation_select import select
+
 from scripts.atlas_validation_gate import (
     evaluate, require_sha, validate_unit_report,
 )
@@ -133,6 +135,38 @@ class GateTests(unittest.TestCase):
         doc["outcome_count"] = 2
         self.assertIn("duplicate test identity",
                       validate_unit_report(doc, SHA, "1"))
+
+
+class CandidateSelectionTests(unittest.TestCase):
+    def test_push_reads_valid_candidate_without_moving_its_sha(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            request = Path(tmp) / "request.json"
+            request.write_text(json.dumps({
+                "candidate_sha": SHA, "fragment": "L1.1",
+                "request_note": "frozen candidate",
+            }), encoding="utf-8")
+            self.assertEqual(
+                select("push", dispatch_sha="", dispatch_fragment="",
+                       request_path=request), (SHA, "L1.1"))
+
+    def test_manual_dispatch_overrides_stale_request(self):
+        path = Path("does-not-exist.json")
+        self.assertEqual(
+            select("workflow_dispatch", dispatch_sha=OTHER,
+                   dispatch_fragment="L1.2", request_path=path),
+            (OTHER, "L1.2"))
+
+    def test_unknown_fragment_and_request_fields_are_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            request = Path(tmp) / "request.json"
+            for data in (
+                {"candidate_sha": SHA, "fragment": "L1.1\\nINJECTED=1"},
+                {"candidate_sha": SHA, "fragment": "L1.1", "extra": "x"},
+            ):
+                request.write_text(json.dumps(data), encoding="utf-8")
+                with self.assertRaises(ValueError):
+                    select("push", dispatch_sha="", dispatch_fragment="",
+                           request_path=request)
 
 
 if __name__ == "__main__":
