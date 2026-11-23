@@ -276,6 +276,35 @@ class LeanEnvironmentTests(unittest.TestCase):
             self.assertEqual(entry["sha256"], hashlib.sha256(
                 (root / entry["name"]).read_bytes()).hexdigest())
 
+    def test_olean_relative_directory_is_computed_once_per_populated_folder(self):
+        """Avoid per-artifact relative_to without changing lexical names."""
+        root = self.root / ".lake" / "build" / "lib" / "lean"
+        names = (
+            "A.olean", "B.olean", "..olean",
+            "nested/C.olean", "nested/Nazwa_ż.olean",
+            "nested/fake.olean.tmp", "no_artifacts/README.txt",
+        )
+        for name in names:
+            file = root / name
+            file.parent.mkdir(parents=True, exist_ok=True)
+            file.write_bytes(name.encode("utf-8"))
+        original = Path.relative_to
+        calls = []
+
+        def observed(path, *args, **kwargs):
+            calls.append(path)
+            return original(path, *args, **kwargs)
+
+        with patch.object(Path, "relative_to", observed):
+            actual = lean_environment._olean_tree(
+                root, label="project", budget=[4096])
+        self.assertEqual(
+            sorted(calls), sorted([root, root / "nested"]))
+        self.assertEqual(
+            [row["name"] for row in actual["artifacts"]],
+            sorted(name for name in names if (root / name).suffix == ".olean"))
+        self.assertEqual(actual["coverage"], "content_sha256")
+
     def test_olean_lexical_name_optimization_preserves_original_tree_schema(self):
         """Compare with the pre-optimization algorithm, including exact key order."""
         root = self.root / ".lake" / "build" / "lib" / "lean"
