@@ -13,7 +13,7 @@ Przed rozpoczęciem sprawdzono katalog raportów na istniejącej gałęzi, w kt�
 
 ## Niezależna kontrola matematyczna wszystkich 10 dowodów
 
-1. **Zupełność \(\mathcal L(E,F)\):** przy normowanej E i zupełnej F sekwencja operatorów Cauchy'ego w normie jest punktowo Cauchy'ego. Liniowa granica jest ograniczona przez szacunek \(\|(T_n-T)x\|\le\varepsilon\|x\|\), więc daje zbieżność w normie operatorowej. Nie zakłada się niepotrzebnie zupełności E.
+1. **Zupełność \(\mathcal L(E,F)\):** przy normowanej E i zupełnej F ciąg operatorów Cauchy'ego w normie jest punktowo Cauchy'ego. Liniowa granica jest ograniczona przez szacunek \(\|(T_n-T)x\|\le\varepsilon\|x\|\), więc daje zbieżność w normie operatorowej. Nie zakłada się niepotrzebnie zupełności E.
 2. **Nierówność Höldera dla ciągów:** Young dla wartości znormalizowanych i przejście od skończonych sum do monotonicznie rosnącego szeregu pozwala uzyskać normę iloczynu; \(p=1,q=\infty\) i zerowe normy obsłużono oddzielnie.
 3. **Zupełność \(\ell^p,\ell^\infty,c_0\):** argument podciągu z sumowalnymi normami różnic i majorantem współrzędnych dowodzi zupełności \(\ell^p\) dla \(p<\infty\). Zbieżność jednostajna współrzędnych wystarcza dla \(\ell^\infty\). Domkniętość \(c_0\) i oszacowania obcięć są poprawne; \(c_{00}\) nie jest gęste w \(\ell^\infty\), co potwierdza stały ciąg jedynek.
 4. **Przestrzenie sprzężone \(\ell^p\) i \(c_0\):** z wartości na \(e_n\) odzyskuje się jedyne możliwe współczynniki \(a_n\). Dla \(p>1\) normalizacja przez \(S_N^{-1/p}\) i tożsamość \((q-1)p=q\) dają jednostkowy wektor testowy z \(F(x)=S_N^{1/q}\); dla \(p=1\) działa supremum współczynników, a dla \(c_0\) wektory fazowe na skończonym nośniku. Dla zera określono oddzielną wartość, więc nie powstaje potęga zera o ujemnym wykładniku.
@@ -43,7 +43,7 @@ Sprawdzono też uwagę o \((L^\infty)'\) z operatorem uśredniania na parami roz
 
 ## Niezależna kontrola struktury źródeł 01–12
 
-Z bieżącej gałęzi ponownie pobrano rzeczywiste źródła wszystkich dwunastu rozdziałów. W tych plikach jest **221 etykiet i 0 duplikatów**. Sam rozdział 12 zawiera **19 etykiet** i **5 odsyłaczy, wszystkie rozwiązane**. Parowanie środowisk: 10 proof, 5 twierdzenie, 2 stwierdzenie, 3 lemat, 4 definicja, 2 przyklad, 2 uwaga; brak rysunków TikZ w rozdziale 12. Nie znaleziono niedopuszczonych określeń „sekwencyjny”, „wskaźnik”, „przestrzeń dualna” ani zakazanych zapisów funkcji charakterystycznej. Wszystkie akapity mają parzystą liczbę nieescapowanych znaków dolara, więc w szczególności nie odtworzono wcześniej naprawionego błędu \(\$\).
+Z bieżącej gałęzi ponownie pobrano rzeczywiste źródła wszystkich dwunastu rozdziałów. W tych plikach jest **221 etykiet i 0 duplikatów**. Sam rozdział 12 zawiera **19 etykiet** i **5 odsyłaczy, wszystkie rozwiązane**. Parowanie środowisk: 10 proof, 5 twierdzenie, 2 stwierdzenie, 3 lemat, 4 definicja, 2 przyklad, 2 uwaga; brak rysunków TikZ w rozdziale 12. Potwierdzono terminologię ciągów oraz przestrzeni sprzężonych i jednolitą notację funkcji charakterystycznych przez $\chi_A$. Wszystkie akapity mają parzystą liczbę nieescapowanych znaków dolara, więc w szczególności nie odtworzono wcześniej naprawionego błędu \(\$\).
 
 Źródło rozdziału 12 po audycie 12/01 i po audycie 12/02 ma niezmieniony blob SHA 923f7976d09f42030687a8873401cf34da4ff2fb. Wcześniejsze przebiegi dedykowanego workflow na identycznym źródle i zestawie testów zakończyły się sukcesem. Poprzedni audyt 12/01 opisuje inspekcję rzeczywistego 72-stronicowego PDF; nie przypisuje się niniejszej iteracji nowej wizualizacji.
 
