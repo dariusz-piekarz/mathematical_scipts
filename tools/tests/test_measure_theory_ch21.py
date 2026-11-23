@@ -131,6 +131,7 @@ class TestMeasureTheoryChapter21(unittest.TestCase):
             "thm:compact-riesz-21", "lem:exhaustion-21",
             "thm:riesz-c0-positive-21", "thm:riesz-complex-21",
             "cor:riesz-order-21", "cor:measures-separate-21",
+            "ex:riesz-complex-atoms-21",
         }
         self.assertTrue(expected.issubset(set(labels)))
         stack = []
