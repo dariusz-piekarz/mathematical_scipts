@@ -84,7 +84,7 @@ class GateTests(unittest.TestCase):
         self.assertEqual(len(result["passes"]), 3)
         self.assertIs(result["certificate"], False)
 
-    def test_matching_documented_review_is_required_to_be_stable(self):
+    def test_self_declared_independent_review_never_grants_stable(self):
         reviewer = {
             "candidate_sha": SHA, "fragment": "L1.1",
             "decision": "approved", "independent": True,
@@ -93,7 +93,17 @@ class GateTests(unittest.TestCase):
             "checks": ["TOCTOU regression independently reviewed",
                        "SHA / skip evidence and negative cases checked"],
         }
-        self.assertEqual(self.run_gate(review=reviewer)["status"], "stable")
+        forged = self.run_gate(review=reviewer)
+        self.assertEqual(forged["status"], "stabilizing")
+        self.assertEqual(forged["skeptical_review"], "documented_unverified")
+        self.assertEqual(forged["problems"], [])
+        self.assertIs(forged["certificate"], False)
+        # Any person who can write JSON can also fill in an "independent"
+        # claim; adding further fields may not authenticate that claim.
+        reviewer["reviewer"] = "Fake Independent Reviewer"
+        reviewer["independent"] = True
+        reviewer["verification"] = "approved"
+        self.assertEqual(self.run_gate(review=reviewer)["status"], "stabilizing")
         reviewer["candidate_sha"] = OTHER
         self.assertEqual(self.run_gate(review=reviewer)["status"], "blocked")
 
