@@ -136,6 +136,8 @@ def test_ramsey():
     for s in range(1, 9):
         for t in range(1, 9):
             bound[s, t] = math.comb(s+t-2, s-1)
+    for s in range(1, 9):
+        for t in range(1, 9):
             assert bound[s, t] == bound[t, s]
     assert bound[3, 3] == 6
     for s in range(2, 9):
