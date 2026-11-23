@@ -292,6 +292,22 @@ class LeanCatalogTests(unittest.TestCase):
         self.assertFalse(data["certificate"])
 
 
+    def test_l14_draft_with_unchanged_canonical_tex_stays_draft(self):
+        # An unapproved mapping with a real canonical source is still a
+        # valid draft; a provenance check must not silently grant approval.
+        self.set_l14_canonical_file()
+        self.save_manifest()
+        data = lean_chapter_report.chapter_report(self.con, "LST-01",
+                                                  lean_root=self.root)
+        self.assertEqual((data["ready"], data["draft"], data["stale"],
+                          data["statement_approved"]), (0, 1, 0, 0))
+        entry = data["items"][0]
+        self.assertEqual(entry["index_status"], "ok")
+        self.assertEqual(entry["formalization_status"], "draft")
+        self.assertEqual(entry["statement_status"], "needs_review")
+        self.assertFalse(entry["certificate"])
+        self.assertFalse(data["certificate"])
+
     def test_l14_draft_tex_changed_after_catalog_downgrades_draft(self):
         # A draft is navigable, but must not remain current if its actual
         # canonical TeX changes after catalogue construction.
