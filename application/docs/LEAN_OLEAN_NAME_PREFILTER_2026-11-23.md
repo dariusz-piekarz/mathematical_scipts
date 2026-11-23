@@ -27,3 +27,11 @@ Nie zmieniono schematu fingerprintu ani trzech punktów kontroli `before/locked/
 ## Kolejna iteracja
 
 Po sprawdzeniu powyższego CI wykonać niezależne, powtarzalne porównanie czasów na przypiętym Mathlib, z raportem identyczności fingerprintów i liczby operacji metadanych. Nie wprowadzać cache, redukcji zakresu hashy ani zmian limitów bezpieczeństwa tylko w celu poprawy czasu. Zamknięcie L1.1 wymaga odrębnego rozliczenia testów i pomiarów.
+
+## Kontynuacja: profil liczby nazw bez dodatkowego skanowania (23.11.2026)
+
+- `application/scripts/benchmark_lean_fingerprint.py` zapisuje obecnie `walk_files_seen`, `olean_name_candidates` oraz `non_olean_names_skipped`. Liczniki powstają **wewnątrz już istniejącego** `os.walk`; nie są nowym pełnym obejściem katalogów i nie modyfikują danych zwracanych przez skaner produkcyjny.
+- Nowy test tworzy rzeczywiste pliki (7 nazw; 2 kandydatów `.olean`, 5 nazw odrzuconych), porównuje wynik instrumentowanego przebiegu z wynikami nieinstrumentowanego SHA256 i kontroluje faktyczną liczbę otwarć i odczytanych bajtów.
+- To **metryka zakresu filtrowania**, a nie bezpośredni pomiar przyspieszenia. Nie wyciągać procentowego zysku czasu na podstawie samych liczników.
+- Poprzednia zmiana `c64983d7` przeszła pełne CI aplikacji [45142363332](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45142363332), Lean-fast [45142363338](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45142363338) i Windows [45142363458](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45142363458). Pinned Lean+Mathlib [45142363347](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45142363347) nie miał jeszcze końcowego wyniku w chwili rozpoczęcia tej iteracji.
+- Własne zmiany diagnostyki to commity `b279c518`, `fd58593c`. Ich wyniki CI należy ocenić osobno; nie deklarować stabilizacji przed `completed/success` i porównaniem nowego `ci_fingerprint_benchmark.json` z poprzednim profilem na przypiętym Mathlib.
