@@ -42,3 +42,8 @@ Trzeba jeszcze uzyskać pełny zielony CI na finalnym źródle, skompilować ksi
 ## Korekta po pierwszym przebiegu CI
 
 W przebiegu GitHub Actions [#45176160492](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45176160492) testy ogólne zakończyły się 3 błędami, ponieważ testowy enumerator `case2_local_sets` sprawdzał `v.is_integer is True` także dla zwykłej wartości Python `2`. Ta wartość nie była traktowana jak obiekt symboliczny o własności `is_integer=True`, więc w testowym E_a brakowało zawsze dopuszczalnej kandydatki 2. Poprawka `s.sympify(v).is_integer is True` występuje w dwóch miejscach (skończone bieguny i nieskończoność) i zachowuje kandydatów 2,2±2sqrt(1+4b). Jest to poprawka implementacji **testów**, nie matematycznego twierdzenia. Celem ponownego CI jest potwierdzenie wszystkich list E_a,E_∞ oraz pełnego PDF.
+
+
+## Kontrola językowa
+
+W końcowej rewizji redakcyjnej skorygowano literówkę „afininiczny” na „afiniczny” w dowodzie algorytmu dla rodziny wielomianów pomocniczych. Nie wpływa to na hipotezy ani wnioski matematyczne.
