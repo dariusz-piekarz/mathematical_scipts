@@ -25,3 +25,49 @@ Pełne drzewo GitHub (2409 wpisów, `truncated=false`) potwierdza 50 plików źr
 Opcjonalnie dodać do AA-36 krótkie porównanie „rozwiązywalność przez pierwiastniki” versus „konstruowalność cyrklem i linijką” z odsyłaczem do kontrprzykładu `X^4-X-1` z AA-30. Wymaga osobnej zgody.
 
 **Następny krok:** ponownie odczytać HEAD i obecność AA-51; przy dalszym braku źródła wybrać nowy, niepowtórzony audyt przekrojowy z naciskiem na kompletność hipotez dowodów. Osobno uruchomić pełną kompilację i inspekcję PDF w środowisku z dostępnym checkoutem i zależnościami.
+
+## AA-X25 — niezależna stabilizacja: kryterium przez domknięcie normalne
+
+Po pierwotnym audycie AA-30 × AA-36 wykonano **nowy, niezależny most matematyczny**, bez modyfikowania zatwierdzonych rozdziałów. Uzupełnia on omówioną już przeszkodę stopnia o warunek konieczny i dostateczny, który jednoznacznie odróżnia pierwiastniki od konstrukcji cyrklem i linijką.
+
+### 1. Kryterium grupy Galois dla rzeczywistych liczb algebraicznych
+
+**Twierdzenie.** Niech \(\alpha\in\mathbb R\) będzie liczbą algebraiczną nad \(\mathbb Q\), a \(L\subseteq\mathbb C\) ciałem rozkładu jej monicznego wielomianu minimalnego nad \(\mathbb Q\). Wtedy następujące warunki są równoważne:
+(a) \(\alpha\) jest konstruowalna z \(\{0,1\}\) cyrklem i linijką;
+(b) \(\operatorname{Gal}(L/\mathbb Q)\) jest skończoną \(2\)-grupą.
+
+**Dowód (a ⇒ b).** Na podstawie kryterium wieży kwadratowej z AA-30 istnieją ciała \(\mathbb Q=K_0\subseteq\cdots\subseteq K_r\subseteq\mathbb R\), z \(\alpha\in K_r\) i \([K_i:K_{i-1}]\in\{1,2\}\). Lemat o domknięciu normalnym tej wieży z AA-30 gwarantuje istnienie skończonego rozszerzenia Galois \(N/\mathbb Q\) zawierającego \(K_r\), dla którego grupa \(\operatorname{Gal}(N/\mathbb Q)\) jest \(2\)-grupą. Skoro \(N/\mathbb Q\) jest normalne i zawiera \(\alpha\), zawiera wszystkie sprzężenia \(\alpha\), a więc całe ciało rozkładu \(L\). Ponieważ \(L/\mathbb Q\) też jest Galois, odwzorowanie ograniczenia \(\operatorname{Gal}(N/\mathbb Q)\twoheadrightarrow\operatorname{Gal}(L/\mathbb Q)\) jest surjekcją. Iloraz skończonej \(2\)-grupy jest \(2\)-grupą.
+
+**Dowód (b ⇒ a).** Załóżmy, że \(G=\operatorname{Gal}(L/\mathbb Q)\) jest \(2\)-grupą. Niech \(H=\operatorname{Gal}(L/\mathbb Q(\alpha))\). Jest to podgrupa \(G\), a z odpowiedniości Galois \(L^H=\mathbb Q(\alpha)\). Każda podgrupa właściwa skończonej \(2\)-grupy jest zawarta w podgrupie maksymalnej; każda podgrupa maksymalna skończonej \(2\)-grupy ma indeks \(2\). Stosując ten fakt kolejno wewnątrz coraz mniejszych podgrup zawierających \(H\), otrzymujemy skończony łańcuch \(G=G_0\supsetneq G_1\supsetneq\cdots\supsetneq G_s=H\) z \([G_{j-1}:G_j]=2\) dla wszystkich \(j\). Dla ciał stałych mamy zatem wieżę
+\(\mathbb Q=L^{G_0}\subsetneq L^{G_1}\subsetneq\cdots\subsetneq L^{G_s}=\mathbb Q(\alpha)\),
+a z prawa odpowiedniości \([L^{G_j}:L^{G_{j-1}}]=2\). Wszystkie jej ciała pośrednie leżą w \(\mathbb Q(\alpha)\subseteq\mathbb R\), więc jest to **rzeczywista** wieża kwadratowa kończąca się ciałem zawierającym \(\alpha\). Z kryterium AA-30 liczba \(\alpha\) jest konstruowalna. **Koniec dowodu.**
+
+Warunek rzeczywistości jest istotny dla użytej formy wieży. Dla współrzędnych punktu zespolonego konstruowalność bada się osobno dla części rzeczywistej i urojonej. Sam warunek \([\mathbb Q(\alpha):\mathbb Q]=2^m\) nie wystarcza: normalne domknięcie może mieć grupę niebędącą \(2\)-grupą.
+
+### 2. Dwa rzeczywiste przykłady o tym samym stopniu cztery
+
+- Dla \(g=X^4-2\) dodatnia rzeczywista liczba \(\sqrt[4]{2}\) jest konstruowalna, gdyż \(\mathbb Q\subset\mathbb Q(\sqrt2)\subset\mathbb Q(\sqrt[4]{2})\) jest wieżą dwóch rozszerzeń kwadratowych. Grupa Galois jej domknięcia normalnego jest \(D_4\) rzędu \(8\), zatem również spełnia kryterium.
+- Dla \(f=X^4-X-1\) każda rzeczywista liczba \(\alpha\) będąca pierwiastkiem ma stopień \(4\) nad \(\mathbb Q\) (nierozkładalność z AA-30), lecz nie jest konstruowalna: grupa Galois domknięcia normalnego to \(S_4\) rzędu \(24\), a \(24\) nie jest potęgą \(2\). **Jednocześnie** \(S_4\) jest rozwiązalna, ponieważ jej szereg pochodny to \(S_4\triangleright A_4\triangleright V_4\triangleright\{1\}\). Z AA-24 wynika więc rozwiązywalność \(f\) przez pierwiastniki, która nie implikuje konstruowalności.
+
+Niezależny dowód \(G_f=S_4\) można przeprowadzić bez rezolwenty: redukcja \(f\) modulo \(2\) jest nierozkładalna stopnia \(4\), więc z AA-35 grupa Galois zawiera **4-cykl**; redukcja modulo \(7\) ma typ \((1,3)\), ponieważ
+\[
+\bar f=(X-3)(X^3+3X^2+2X-2)
+\quad\text{w }\mathbb F_7[X],
+\]
+a czynnik sześcienny nie ma pierwiastka w \(\mathbb F_7\), więc jest nierozkładalny. Wyróżnik \(\operatorname{disc}(f)=-283\) nie jest podzielny ani przez \(2\), ani przez \(7\), a więc oba zastosowania AA-35 są uprawnione. Grupa zawiera 4-cykl i 3-cykl; jej rząd jest podzielny przez \(12\), więc jako dzielnik \(24\) wynosi \(12\) lub \(24\). Przy rzędzie \(12\) byłaby podgrupą indeksu \(2\) w \(S_4\), czyli \(A_4\), która **nie zawiera 4-cykli**. Stąd musi mieć rząd \(24\) i być całą \(S_4\). Ten dowód nie zakłada, że dowolna specjalizacja wielomianu ogólnego odziedziczy \(S_4\): wyznacza grupę **konkretnego** wielomianu.
+
+### 3. Trwałe regresje i CI
+
+Nowy moduł tools/tests/test_abstract_algebra_cross_aa30_36.py obejmuje **8 testów**:
+1. niezależna nierozkładalność redukcji modulo \(2\), faktoryzacja modulo \(7\), wyróżnik i dobra redukcja;
+2. pełne **48/48** par 4-cykli i 3-cykli w \(S_4\), dla każdej dokładne generowanie grupy \(24\)-elementowej;
+3. dokładny szereg pochodny \(S_4>A_4>V_4>1\), wykazujący różnicę między rozwiązalnością a byciem \(2\)-grupą;
+4. podgrupy \(D_4\) o rzędach \(8,4,2,1\) i rzeczywistą wieżę \(\sqrt2,\sqrt[4]2\);
+5. dwie rzeczywiste wartości pierwiastków \(X^4-X-1\), nierozkładalność stopnia \(4\), a mimo to niekonstruowalność;
+6. **98** klasyfikacji wielokątów o \(3\le n\le100\), porównujących liczbę względnie pierwszych reszt z kryterium wyróżnionych liczb pierwszych Fermata, dodatkowo przypadki 257 i 65537;
+7. bezpośrednie niezmienniki elementarnych funkcji symetrycznych dla **24** permutacji, z rozróżnieniem modelu numerycznego i dowodu ogólnego;
+8. liczbę źródeł 50, **24 etykiety i 20 odsyłaczy** w AA-30 oraz AA-36 i pełną integralność etykiet całej książki.
+
+Wprowadzono osobny krok Run AA-X25 constructibility versus generic Galois checks w .github/workflows/abstract-algebra-chapter.yml, wraz z wyzwalaczem zmiany testu. Uruchomienie: [GitHub Actions 45251750248](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45251750248) na commicie af403110c6e494d110e79b365480654f782ce872.
+
+**Status przy zapisie: W STABILIZACJI CI.** Do zamknięcia wymagane są odczyt w rzeczywistym logu 8/8 testów \`ok\`, zakończony zielony workflow, kompilacja AA-01–AA-50 oraz automatyczna weryfikacja odsyłaczy i PDF. Kompilacja nie jest niezależnym wizualnym audytem wszystkich stron PDF. Testy skończonych modeli nie są formalną weryfikacją Lean. Nie wprowadzono dodatkowego twierdzenia do zatwierdzonych rozdziałów; to **opcjonalna propozycja** rozszerzenia AA-30 lub AA-36, której użytkownik jeszcze nie zatwierdził.
