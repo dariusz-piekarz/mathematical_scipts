@@ -158,3 +158,7 @@ ALG-10 po audytach III–VI: **STABILNY / ZAMKNIĘTY**. [Audyt III](2026-11-22-A
 ## Kontrola regresyjna ALG-00 nr 05 — 23 listopada 2026
 
 [Raport kontroli 05](2026-11-23-ALG-00-regression-control-05.md): niezmieniony blob `daedcd38d31e42c738df7f7d12a66d3994ebda8a`, 5546/5546 nowych skończonych asercji PASS; nie wykryto jednoznacznej usterki matematycznej. Odczytano też awarię CI 45113110234: brak `lmodern.sty` w workflow teorii miary, nie błąd ALG-00. Brak nowej dwukrotnej kompilacji i wizualnej kontroli PDF z powodu niedostępności pełnego drzewa lokalnie (DNS GitHub). **To nie jest pełny audyt stabilizacyjny; status ALG-00–10 bez zmian, licznik czystych pełnych audytów bez zmian.**
+
+## Kontrola regresyjna ALG-00 nr 06 — 23 listopada 2026
+
+[Raport 06](2026-11-23-ALG-00-regression-control-06.md): źródło ALG-00 niezmienione (blob `daedcd38d31e42c738df7f7d12a66d3994ebda8a`); kontrola matematyczna i sceptyczna bez nowej usterki, **179636/179636** lokalnych asercji PASS. Reuse AA-09–AA-12 bez zmian. Nie potwierdzono nowego CI ALG-00. **Brak nowej dwukrotnej kompilacji i oglądu PDF** (DNS GitHub blokuje pobranie pełnego drzewa), więc nie jest to nowy pełny audyt stabilizacyjny. Statusy ALG-00–10 oraz licznik pełnych czystych audytów bez zmian.
