@@ -205,8 +205,10 @@ class FunctionalAnalysisChapter04(unittest.TestCase):
                         distance(x, z), distance(x, y)+distance(y, z)+1e-14)
         # For any two points, the tail beyond coordinate N is < 2^-N.
         for n in (4, 8, 16, 32):
-            tail = sum(2.0**(-k) for k in range(n+1, 200))
-            self.assertLess(tail, 2.0**(-n))
+            from fractions import Fraction
+            tail = sum((Fraction(1, 2**k) for k in range(n+1, 200)),
+                       Fraction(0))
+            self.assertLess(tail, Fraction(1, 2**n))
 
     def test_empty_operator_family_convention(self):
         self.assertIn(r"\sup_{T\in\mathcal T}\|T\|=0", self.chapter)
