@@ -49,7 +49,7 @@ Nie znaleziono nowej niepoprawnej tezy ani luki wymagającej zmiany źródła.
 - Rozdział pozostaje podłączony do książki; żadnych nowych twierdzeń i rozszerzeń w rozdziale nie wprowadzono.
 - Oryginalny sześciostronicowy PDF kompilacji z poprzedniej iteracji odtworzono z artefaktu GitHub Actions; sprawdzono log końcowy: brak błędnych odsyłaczy, brak przepełnionych wierszy, brak niepoprawnych znaków. Powtórnie obejrzano komplet 6 stron: **PASS**.
 - Wzmocniono istniejące testy regresyjne w tools/tests/test_functional_analysis_ch01.py z 8 do 11 testów, w tym testy czynnika n^{1-1/p}, współrzędnej niekontrolowanej w iloczynie i aproksymacji funkcji skokowej. Rozdział źródłowy **nie zmienił się**.
-- GitHub Actions: [dedykowany przebieg po rozszerzeniu testów](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45151106431), weryfikacja stanu CI przy zamknięciu raportu.
+- GitHub Actions: **PASS** — [dedykowany przebieg po rozszerzeniu testów](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45151106431). Potwierdzono **11/11 testów**, przygotowanie izolowanego dokumentu, dwie kompilacje LaTeX, kontrolę PDF/odsyłaczy/logu i poprawne zapisanie artefaktu.
 
 ## Propozycje bez automatycznej ingerencji
 
@@ -57,4 +57,4 @@ Pozostają wyłącznie propozycje opisane w audycie 1: porównanie L^p i ℓ^p d
 
 ## Wniosek
 
-**Czysty audyt 1/2**, jeśli dedykowany CI zakończy się sukcesem: brak nowych korekt merytorycznych, językowych, referencyjnych i składowych. Według przyjętych zasad potrzebny jeszcze jeden niezależny czysty audyt potwierdzający rozdział 01. Nie przechodzimy do rozdziału 02.
+**Czysty audyt 1/2 — POTWIERDZONY CI (PASS)**: brak nowych korekt merytorycznych, językowych, referencyjnych i składowych. Według przyjętych zasad potrzebny jeszcze jeden niezależny czysty audyt potwierdzający rozdział 01. Nie przechodzimy do rozdziału 02.
