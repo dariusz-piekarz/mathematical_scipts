@@ -182,6 +182,62 @@ class FunctionalAnalysisChapter07(unittest.TestCase):
                 abs(sum(v*a for v,a in zip(x,signs))),supvalue)
             self.assertEqual(supvalue<=1, sum(abs(a) for a in x)<=1)
 
+    def test_weak_closure_argument_separates_closed_hull(self):
+        # The separation theorem assumes a CLOSED convex set.
+        # C=(0,1) is not closed, D=cl(C)=[0,1]. A separator of D
+        # is automatically a separator of C, not conversely by citation.
+        self.assertIn(r"$D=\overline C$", self.chapter)
+        self.assertIn(
+            r"Wniosek~\ref{cor:point-closed-convex} do $D$",
+            self.chapter)
+        c=[k/20 for k in range(1,20)]
+        d=[0.0]+c+[1.0]
+        x0=2.0
+        ell=lambda x:-x
+        alpha=-1.5
+        self.assertLess(ell(x0),alpha)
+        self.assertLess(alpha,min(map(ell,d)))
+        self.assertLessEqual(min(map(ell,d)),min(map(ell,c)))
+
+    def test_complex_bipolar_support_on_balanced_weighted_ball(self):
+        # C={|z1|+2|z2|<=1} is absolutely convex in C².
+        # For F(z)=z1+(2+i)z2, the support is max(1,|2+i|/2).
+        coefficient=2+1j
+        expected=max(1,abs(coefficient)/2)
+        gauge=lambda z:abs(z[0])+2*abs(z[1])
+        F=lambda z:z[0]+coefficient*z[1]
+        witness=(0j, .5*coefficient.conjugate()/abs(coefficient))
+        self.assertAlmostEqual(gauge(witness),1)
+        self.assertAlmostEqual(F(witness).real,expected)
+        self.assertAlmostEqual(abs(F(witness)),expected)
+        for z in [(0j,0j),(1+0j,0j),(.1+.2j, .1-.1j),witness]:
+            if gauge(z)>1:
+                continue
+            for angle in (0,math.pi/4,math.pi/2,2*math.pi/3):
+                phase=complex(math.cos(angle), math.sin(angle))
+                rotated=(phase*z[0],phase*z[1])
+                self.assertAlmostEqual(gauge(rotated),gauge(z))
+                self.assertLessEqual(abs(F(rotated)),expected+1e-12)
+
+    def test_product_bipolar_complex_finite_support_phase(self):
+        # Sup |sum_n a_n x_n| over |a_n|<=1, finite support, equals
+        # sum |x_n| also in the complex case.
+        vectors=[
+            (1+1j, -.5j, 2-1j, 0j),
+            (.2j, -.25+.3j, .1+0j, 0j),
+            (0j,0j,0j,0j)
+        ]
+        for x in vectors:
+            norm1=sum(abs(v) for v in x)
+            coeffs=tuple(0j if v==0 else v.conjugate()/abs(v) for v in x)
+            pairing=sum(a*v for a,v in zip(coeffs,x))
+            self.assertAlmostEqual(abs(pairing),norm1)
+            for m in range(1,len(x)+1):
+                truncated=x[:m]+(0j,)*(len(x)-m)
+                self.assertLessEqual(
+                    sum(abs(v) for v in truncated),norm1+1e-12)
+            self.assertEqual(norm1<=1, norm1<=1)
+
     def test_weak_convex_closure_separation(self):
         # If x0 lies outside the l1 ball, a functional in its dual
         # produces an open halfspace separating x0 from the closed ball.
