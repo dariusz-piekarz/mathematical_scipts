@@ -192,7 +192,7 @@ def check_integration():
                         (ROOT / book["entrypoint"]).read_text(encoding="utf-8"))
     assert book["chapters"] == inputs, (len(book["chapters"]), len(inputs))
     assert all((ROOT / path).exists() for path in inputs)
-    assert inputs[6] == REL and len(inputs) == 38
+    assert inputs[6] == REL and len(inputs) == 39
     src = (ROOT / REL).read_text(encoding="utf-8")
     for env in ["proof", "twierdzenie", "lemat", "stwierdzenie",
                 "definicja", "przyklad", "tikzpicture", "figure"]:
