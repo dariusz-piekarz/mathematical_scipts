@@ -67,3 +67,8 @@ Rozdział AA-46 włączono do kanonicznej książki i katalogu. Przeprowadzono t
 **Ostateczny GitHub Actions:** https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45157760575 — completed / success, 83/83 kroków. Testy AA-46: 10/10 SymPy + 8/8 Fraction PASS. Integralność: 46 rozdziałów, 939 etykiet unikatowych, 0 duplikatów, 451 odsyłaczy, 0 brakujących celów. Ostateczny PDF: 297 stron; AA-46 zajmuje 7 stron PDF 291–297, wszystkie obejrzano, końcowy log bez błędów i ostrzeżeń.
 
 **AA-47 jest warunkowy**, zgodnie z tabelą tego planu: algorytmy Rischa i Kovacica należy najpierw objąć odrębną decyzją o zakresie (wymagane dowody poprawności, własne przykłady i audyty). Nie uruchamiać AA-47 automatycznie wyłącznie dlatego, że AA-46 osiągnął stabilność.
+
+
+## Otwarcie AA-47 — 23 listopada 2026 r.
+
+Na podstawie prośby o kontynuację po stabilnym AA-46 przyjęto **ograniczony, audytowalny zakres** AA-47 w `docs/pl/zakres_aa47_risch_kovacic.md`: pełne dowody algorytmów wymiernych i dla wielomianowych parametrów, plus wyraźnie cytowane klasyczne wyniki pełnego Rischa i Kovacica. Rozdział i audyty dopiero powstają. **AA-47 NIE STABILNY** do zielonego CI, niezależnych audytów i pełnej kontroli PDF; nie otwierać AA-48.
