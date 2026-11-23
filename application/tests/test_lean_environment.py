@@ -232,6 +232,24 @@ class LeanEnvironmentTests(unittest.TestCase):
         self.assertEqual(first["artifacts"][0]["size"],
                          second["artifacts"][0]["size"])
 
+    def test_olean_regular_file_check_reuses_stat_snapshot(self):
+        """Keep the full digest/schema without a redundant is_file stat."""
+        root = self.root / ".lake" / "build" / "lib" / "lean"
+        root.mkdir(parents=True)
+        (root / "Full.olean").write_bytes(b"content")
+        (root / "Metadata.olean").write_bytes(b"larger than budget")
+        baseline = lean_environment._olean_tree(
+            root, label="project", budget=[7])
+        with patch.object(Path, "is_file",
+                          side_effect=AssertionError("redundant is_file stat")):
+            actual = lean_environment._olean_tree(
+                root, label="project", budget=[7])
+        self.assertEqual(baseline, actual)
+        self.assertEqual(actual["coverage"], "metadata_only")
+        self.assertEqual(actual["artifacts"][0]["sha256"],
+                         hashlib.sha256(b"content").hexdigest())
+        self.assertEqual(actual["artifacts"][1]["content"], "metadata_only")
+
     def test_olean_lexical_name_optimization_preserves_original_tree_schema(self):
         """Compare with the pre-optimization algorithm, including exact key order."""
         root = self.root / ".lake" / "build" / "lib" / "lean"
