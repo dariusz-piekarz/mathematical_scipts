@@ -137,10 +137,15 @@ def audit() -> dict:
         if enverr:
             results["environment_errors"].append({"source": path, "errors": enverr})
         bad_terms = []
+        # Identifiers such as sec:tg-dual are not English nouns in prose.
+        prose = re.sub(
+            r"\\(?:label|ref|eqref|pageref|autoref|cref|Cref)\{[^{}]*\}",
+            " ", text
+        )
         for word, pattern in FORBIDDEN.items():
-            for match in pattern.finditer(text):
+            for match in pattern.finditer(prose):
                 bad_terms.append({"term": word, "excerpt":
-                                  text[max(0, match.start()-50):match.end()+50]})
+                                  prose[max(0, match.start()-50):match.end()+50]})
         if bad_terms:
             results["forbidden_language"].append({"source": path, "matches": bad_terms[:30]})
         theorem_count = sum(len(re.findall(r"\\begin\{" + name + r"\}", text))
@@ -162,7 +167,12 @@ def audit() -> dict:
             "sections": len(re.findall(r"\\section(?:\[[^\]]*\])?\{", text)),
             "has_chapter_heading": bool(re.search(r"\\chapter\*?\{", text[:700])),
         })
-        shingles_by_file[path] = shingles(text)
+        # Identical TikZ boilerplate is a drawing convention, not duplicated prose.
+        without_figures = re.sub(
+            r"\\begin\{tikzpicture\}.*?\\end\{tikzpicture\}",
+            " ", text, flags=re.S
+        )
+        shingles_by_file[path] = shingles(without_figures)
 
     results["total"] = {
         "theorems_and_lemmas": total_theorems,
