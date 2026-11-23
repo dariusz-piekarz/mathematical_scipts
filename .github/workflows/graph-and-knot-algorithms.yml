@@ -67,6 +67,10 @@ jobs:
           grep -q 'Przeszukiwanie wszerz' graph_algorithms_layout.txt
           grep -q 'Przeszukiwanie w głąb' graph_algorithms_layout.txt
           pdfinfo graph_and_knot_algorithms_ci.pdf > graph_algorithms_pdfinfo.txt
+          if grep -E 'Overfull \\hbox|Overfull \\vbox' graph_and_knot_algorithms_ci.log; then
+            echo "PDF contains a protruding line/box: not stable"
+            exit 1
+          fi
           if grep -E 'LaTeX Warning: Label.*multiply defined|LaTeX Warning: Reference.*undefined' graph_and_knot_algorithms_ci.log; then
             echo "Check unresolved book references in the isolated 00-05+37 subset"
           fi
