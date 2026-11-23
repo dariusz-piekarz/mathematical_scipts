@@ -275,6 +275,66 @@ def check_jones_trefoil():
     return bracket
 
 
+
+def tl_reduce(word):
+    """Reduce the 3-strand Temperley--Lieb basis word to (scalar, basis)."""
+    w=list(word);scalar={0:1}
+    while True:
+        updated=False
+        for i in range(len(w)-1):
+            if w[i]==w[i+1]:
+                scalar=poly_mul(scalar,{2:-1,-2:-1})  # e_i²=δe_i
+                w=w[:i]+w[i+1:]
+                updated=True
+                break
+        if updated:continue
+        for i in range(len(w)-2):
+            if w[i]==w[i+2] and w[i]!=w[i+1]:
+                w=w[:i+1]+w[i+3:]  # e1 e2 e1=e1, e2 e1 e2=e2
+                updated=True
+                break
+        if not updated:break
+    assert tuple(w) in ((),(1,),(2,),(1,2),(2,1)),w
+    return scalar,tuple(w)
+
+
+def tl_add(a,b):
+    out=dict(a)
+    for basis,coefficient in b.items():
+        out[basis]=poly_add(out.get(basis,{}),coefficient)
+    return {basis:v for basis,v in out.items() if v}
+
+
+def tl_mul(a,b):
+    result={}
+    for wa,pa in a.items():
+        for wb,pb in b.items():
+            scalar,word=tl_reduce(wa+wb)
+            term=poly_mul(poly_mul(pa,pb),scalar)
+            result[word]=poly_add(result.get(word,{}),term)
+    return {word:v for word,v in result.items() if v}
+
+
+def check_tl_reidemeister():
+    identity={():{0:1}}
+    braids={i:{():{1:1},(i,):{-1:1}} for i in (1,2)}
+    inverses={i:{():{-1:1},(i,):{1:1}} for i in (1,2)}
+    for i in (1,2):
+        assert tl_mul(braids[i],inverses[i])==identity
+        assert tl_mul(inverses[i],braids[i])==identity
+    left=tl_mul(tl_mul(braids[1],braids[2]),braids[1])
+    right=tl_mul(tl_mul(braids[2],braids[1]),braids[2])
+    assert left==right
+    assert left=={
+        (): {3:1},
+        (1,): {1:1},
+        (2,): {1:1},
+        (1,2): {-1:1},
+        (2,1): {-1:1},
+    },left
+    return len(left)
+
+
 def check_arf_gauss():
     cases=0
     for g in (1,2):
@@ -305,6 +365,7 @@ def test_source():
     assert r"\label{thm:kt-signature-four-genus}" in c
     assert r"V&u&0\\ v^T&z&0\\0&1&0" in c
     assert r"V&u&0\\v^T&z&1\\0&0&0" in c
+    assert r"b_1b_2b_1=b_2b_1b_2" in c
 
 
 if __name__=="__main__":
@@ -320,4 +381,5 @@ if __name__=="__main__":
           check_seifert_alexander())
     print("PASS Fox trefoil coloring moduli:",check_fox_coloring())
     print("PASS Jones trefoil TL bracket:",check_jones_trefoil())
+    print("PASS Temperley--Lieb RII/RIII exact braid identities:",check_tl_reidemeister())
     print("PASS Arf quadratic Gauss sums:",check_arf_gauss())
