@@ -6,19 +6,21 @@
 
 ## Wskaźnik wykonywania
 
-- **Aktywny etap:** Lean 4 / L1.4.1 — odczytowy raport rozdziałowy; **testing**, techniczny 2+1 **1/3 pełnych rund PASS** na niezmiennym kandydacie `94a7b4a1e592b1b0504b881f9c016004786ca6d9`. Runda 2: aplikacja/Chromium, Windows i szybkie Lean PASS; realny Lean/Mathlib w toku przy tym odczycie.
-- **Niezmienny SHA:** `94a7b4a1e592b1b0504b881f9c016004786ca6d9`. [Poprawka źródła `67504fed`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/67504fedb12d84d09500ea79dfedde98ee072822) dodaje pełną kontrolę pochodzenia encji (tytuł, zakres, offset etykiety) i ścieżki kanonicznego TeX. [Commit testowy `94a7b4a1`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/94a7b4a1e592b1b0504b881f9c016004786ca6d9) usuwa błędną rekurencję mocków.
-- [Samodzielne CI #45181097354](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181097354): `completed/success` na dokładnym SHA `94a7b4a1...`: **735 testów, 10 sklasyfikowanych pominięć, 0 nierozliczonych**. Wszystkie trzy nowe regresje PASS. Chromium: **509** rozdziałów, `javascript_errors=[]`. [Drugie pełne CI kontrolne #45181137943](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181137943) również `completed/success`; dotyczy osobnego commita konfiguracyjnego zawierającego ten sam kod i nie liczy się jako osobna runda niezmiennego 2+1.
-- [Niezmienny workflow 2+1 #45181138327](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181138327): **in_progress**, pierwsza pełna runda **PASS**. [Lean/Mathlib 1. rundy](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181138327/job/137717705566) rzeczywiście uruchomił Lean 4.26.0 i Mathlib `2df2f0150c275ad53cb3c90f7c98ec15a56a1a67`, kompilując 4 pliki / 18 twierdzeń z `axiom_check=passed` i `semantic_certificate=false`. [Aplikacja 2. rundy](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181138327/job/137721146105): 735 testów, 10 sklasyfikowanych pominięć, `unreviewed_skips=0`, 3 nowe regresje PASS, Chromium 509 rozdziałów, `javascript_errors=[]`; natywny Windows i szybkie Lean PASS. [Realne Lean/Mathlib 2. rundy](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181138327/job/137721146470) **w toku** (instalacja Mathlib przy weryfikacji), więc nie zaliczono 2/3. [Starszy #45180840429](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45180840429) = **completed/failure**, niezaliczony.
-- **Wniosek o niezależny odbiór nowego SHA:** [issue #10](https://github.com/dariusz-piekarz/mathematical_scipts/issues/10) otwarty, bez uwierzytelnionej niezależnej decyzji. [Issue #9](https://github.com/dariusz-piekarz/mathematical_scipts/issues/9) zamknięte jako zastąpione, nie zatwierdzone.
-- Historyczne **3/3 PASS** w [#45175198218](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45175198218) dotyczy wyłącznie dawnego `a1f93d98`, nie nowej wersji. Każda zmiana kodu lub testów wymaga osobnego 2+1.
-- **Nie awansować do L1.4.2**, dopóki 2+1 dla dokładnie `94a7b4a1` i odrębna niezależna, uwierzytelniona recenzja nie zakończą się pozytywnie. `certificate=false`: poprawna kompilacja Lean nie poświadcza semantycznej równoważności z LaTeX-em. Techniczne L1.1–L1.3 zachowują historyczny zakres; pilotaż 20–30 formalizacji wciąż odrębnie nierozliczony.
+## Bieżąca stabilizacja techniczna L1.4.1 — nowy kandydat
+
+- **Stan: `stabilizing`**; 3/3 technicznych, kompletnych rund **PASS** wyłącznie dla niezmiennego SHA `94a7b4a1e592b1b0504b881f9c016004786ca6d9`. **Nie ma niezależnej, uwierzytelnionej aprobaty**, dlatego nie przyznano `stable`.
+- [Workflow 2+1 #45181138327](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181138327) **completed/success**, w tym wszystkie 3 przebiegi aplikacji/Chromium, natywny Windows, testy Lean, rzeczywisty przypięty Lean/Mathlib, sceptyczna bramka `skeptical_contract` i agregacja `evidence`.
+- W każdej z 3 rund: **735** testów Python, **10** sklasyfikowanych pominięć, **0** nierozliczonych; Chromium **509** rozdziałów i `javascript_errors=[]`; trzy nowe regresje TOCTOU PASS.
+- W każdej rundzie rzeczywisty Lean **4.26.0**, Mathlib `2df2f0150c275ad53cb3c90f7c98ec15a56a1a67`, 4 pliki / 18 twierdzeń, `axiom_check=passed`, `semantic_certificate=false`. To nie jest poświadczenie zgodności stwierdzeń Lean z LaTeX-em.
+- [Zadanie końcowe](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181138327/job/137727204037) i [artefakt `atlas-validation-status`](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181138327/artifacts/14823870210) stwierdzają `problems=[]`, `status=stabilizing`, `skeptical_review=pending`, `certificate=false`.
+- [Issue #10](https://github.com/dariusz-piekarz/mathematical_scipts/issues/10) zbiera [dowody 3/3 i checklistę zewnętrznej recenzji](https://github.com/dariusz-piekarz/mathematical_scipts/issues/10#issuecomment-7102760266). Brak zatwierdzenia niezależnego recenzenta w uwierzytelnionym kanale. Nie wpisywać `independent=true` do niesygnowanego JSON i nie utożsamiać automatycznego CI z przeglądem człowieka.
+- **Nie rozpoczynać L1.4.2**, dopóki L1.4.1 nie uzyska formalnego `stable`. Każda nowa zmiana produkcyjnego kandydata wymaga nowego 2+1. `certificate=false`.
 
 ## Status etapów
 
 | Etap | Status | Pierwszy nierozliczony fragment |
 | --- | --- | --- |
-| 1. Lean 4 | testing (L1.4.1, new immutable 2+1) | L1.4.1 |
+| 1. Lean 4 | stabilizing (L1.4.1, authenticated independent review pending) | L1.4.1 |
 | 2. Inteligentny graf | planned | G2.1 |
 | 3. Generator PDF + Czytnik | planned | P3.1 |
 | 4. Centrum audytów i deduplikacja | planned | A4.1 |
@@ -315,3 +317,10 @@
 - [2+1 #45181138327](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181138327) **1/3 kompletne PASS**. Pierwsze [Lean/Mathlib](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181138327/job/137717705566): rzeczywisty Lean 4.26.0, przypięty Mathlib `2df2f0150c275ad53cb3c90f7c98ec15a56a1a67`, 4 pliki / 18 twierdzeń, `axiom_check=passed`, `semantic_certificate=false`.
 - Runda 2: [aplikacja/Chromium](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181138327/job/137721146105) = `success`, `735` testów, `10` sklasyfikowanych pominięć, `0` nierozliczonych; trzy nowe regresje statusu TOCTOU `ok`; Chromium 509 rozdziałów, zero błędów JS. Windows i szybkie regresje Lean 2. rundy także `success`. [Właściwe Lean/Mathlib 2. rundy](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181138327/job/137721146470) jeszcze trwa i nie jest zaliczone.
 - [Issue #10](https://github.com/dariusz-piekarz/mathematical_scipts/issues/10) pozostaje otwarte bez uwierzytelnionej aprobaty niezależnego recenzenta. Status L1.4.1 nadal `testing`; nie rozpoczynać L1.4.2. `certificate=false`.
+
+### 2026-11-23 — L1.4.1, kompletny techniczny 2+1 dla `94a7b4a1`
+
+- Potwierdzono [#45181138327](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181138327): trzy rundy `application + native Windows + Lean/Mathlib + regressions` PASS, `skeptical_contract` PASS i `evidence` PASS.
+- Każda runda: 735 testów Python, 10 sklasyfikowanych pominięć, `unreviewed_skips=0`, Chromium 509 rozdziałów, zero błędów JS. Lean 4.26.0, Mathlib `2df2f0150c275ad53cb3c90f7c98ec15a56a1a67`, 4 pliki, 18 twierdzeń, `axiom_check=passed`.
+- [Artefakt statusu](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181138327/artifacts/14823870210): `passes=[true,true,true]`, `problems=[]`, `status=stabilizing`, `skeptical_review=pending`, `certificate=false`.
+- [Odbiór #10](https://github.com/dariusz-piekarz/mathematical_scipts/issues/10#issuecomment-7102760266) nadal otwarty, brak niezależnej uwierzytelnionej decyzji. Dlatego zamknięto jedynie etap **techniczny**, nie formalny. L1.4.2 nadal nierozpoczęte.

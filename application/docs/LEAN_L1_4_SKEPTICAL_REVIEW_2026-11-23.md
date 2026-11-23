@@ -110,3 +110,24 @@ jeszcze nie uzyskano; wpisy autora zmian ani asystenta nie stanowią jej
 substytutu. Historyczne przeglądy nie poświadczają semantycznej
 równoważności LaTeX–Lean. Pozostaje `stabilizing`, nie `stable`;
 L1.4.2 nadal nierozpoczęte.
+
+## Zakończenie technicznej stabilizacji — `94a7b4a1`
+
+[Workflow 2+1 #45181138327](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181138327)
+zakończył się `completed/success` na niezmiennym SHA
+`94a7b4a1e592b1b0504b881f9c016004786ca6d9`. Wszystkie trzy pełne rundy aplikacji,
+natywnego Windows, rzeczywistego Lean/Mathlib i regresji
+zakończyły się sukcesem. Każda runda: 735 testów Python, 10
+sklasyfikowanych pominięć, 0 nierozliczonych, Chromium 509 rozdziałów,
+brak błędów JavaScript. Lean 4.26.0 / Mathlib
+`2df2f0150c275ad53cb3c90f7c98ec15a56a1a67`,
+4 pliki, 18 twierdzeń i `axiom_check=passed` w każdym przebiegu.
+Sceptyczny kontrakt i końcowe zadanie `evidence` także PASS.
+
+[Artefakt końcowy](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181138327/artifacts/14823870210)
+dokumentuje `problems=[]`, `3/3`, lecz `status=stabilizing`,
+`skeptical_review=pending`, `certificate=false`.
+To techniczne potwierdzenie wskazanego kodu, **nie**
+uwierzytelniony niezależny odbiór ani certyfikacja matematyczna.
+[Issue #10](https://github.com/dariusz-piekarz/mathematical_scipts/issues/10)
+pozostaje otwarte. Nie awansować do L1.4.2 przed formalnym `stable`.
