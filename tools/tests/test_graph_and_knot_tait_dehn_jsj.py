@@ -88,6 +88,7 @@ def check_signed_kirchhoff():
                     for tree in trees)
             assert signed_laplacian_cofactor(v,edges,weights)==rhs
             checks+=1
+    assert signed_laplacian_cofactor(3,[(0,1),(1,2),(0,2)],(1,1,-1))==-1
     assert signed_laplacian_cofactor(2,[(0,1),(0,1)],(1,-1))==0
     assert len(spanning_trees(2,[(0,1),(0,1)]))==2
     return checks
@@ -365,6 +366,7 @@ def test_sources():
     a,b,c=[(BASE/n).read_text(encoding="utf-8") for n in paths]
     assert r"\label{thm:tg-tait-dual-trees}" in a
     assert r"\label{cor:tg-tait-weighted-dual}" in a
+    assert r"\label{ex:tg-goeritz-crossing-change}" in a
     assert r"\label{thm:tg-tait-tutte}" in a
     assert "Wagi ujemne nie zliczają drzew" in a
     assert "ps-qr=1" in b
