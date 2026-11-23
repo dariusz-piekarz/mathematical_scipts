@@ -6,20 +6,19 @@
 
 ## Wskaźnik wykonywania
 
-- **Aktywny etap:** Lean 4, L1.4.1 — odczytowy raport rozdziałowy. **Techniczna stabilizacja 2+1 zakończona: 3/3 PASS** na niezmiennym SHA `a1f93d985778492082a66db3975d05e9d73ed763`. **Status formalny: `stabilizing`**, brak uwierzytelnionej decyzji niezależnego recenzenta. `certificate=false`.
-- [Przypięty workflow #45175198218](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45175198218): `completed/success` (2026-11-23, 12:49 UTC), 3 pełne rundy aplikacja/Chromium, natywny Windows/Linux, testy Lean, rzeczywisty Lean/Mathlib, sceptyczne kontrakty i końcowa agregacja `evidence`.
-- Każda runda aplikacji: **732 imienne testy**, **10 sklasyfikowanych pominięć**, **0 nierozliczonych**, Chromium **507 rozdziałów**, `javascript_errors=[]`; wszystkie trzy dodatkowe negatywne regresje L1.4.1 PASS. [Osobne pełne CI #45175157959](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45175157959) również `completed/success`.
-- W każdej rundzie Lean: rzeczywiste **Lean 4.26.0**, przypięty Mathlib `2df2f0150c275ad53cb3c90f7c98ec15a56a1a67`, **4 pliki/18 twierdzeń**, `axiom_check=passed`, `semantic_certificate=false`.
-- [Końcowy artefakt `atlas-validation-status`](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45175198218/artifacts/14820217988): `passes[1..3].passed=true`, wszystkie wymagane wyniki `success`, `problems=[]`, **`status=stabilizing`**, **`skeptical_review=pending`**, `certificate=false`. Zielony workflow nie nadaje automatycznie `stable`.
-- [Wniosek #9 o niezależną recenzję](https://github.com/dariusz-piekarz/mathematical_scipts/issues/9) aktualnego SHA nadal otwarty; [kompletny pakiet dowodowy](https://github.com/dariusz-piekarz/mathematical_scipts/issues/9#issuecomment-7101693593). Historyczny [wniosek #8](https://github.com/dariusz-piekarz/mathematical_scipts/issues/8) dotyczący starszego kodu zamknięty **jako zastąpiony, a nie zatwierdzony**. Nie wystawiać fikcyjnego `independent=true` w JSON.
-- Po rzeczywistej, **uwierzytelnionej i niezależnej aprobacie** dokładnego SHA dokonać ręcznego odbioru jednostki. W razie zmian kodu reset 2+1. **Nie przechodzić do L1.4.2**, dopóki L1.4.1 nie ma formalnego `stable`.
-- Wyniki Lean/Mathlib i SHA są **diagnostyką wykonania i źródła**, nie matematycznym poświadczeniem odpowiedniości Lean–LaTeX. Techniczne L1.1–L1.3 zachowują własny historyczny zakres; pierwotny pilotaż 20–30 formalizacji pozostaje odrębnie nierozliczony.
+- **Bieżąca jednostka:** Lean 4 / L1.4.1 — odczytowy raport rozdziałowy; status **testing**, nowy licznik stabilizacji **0/3 pełnych rund** w chwili tej aktualizacji.
+- **Nowy niezmienny SHA kodu:** `67504fedb12d84d09500ea79dfedde98ee072822`; [poprawka i trzy negatywne regresje](https://github.com/dariusz-piekarz/mathematical_scipts/commit/67504fedb12d84d09500ea79dfedde98ee072822). Porównywane są kompletne metadane indeksowanego obiektu (`title`, zakres i offset etykiety) oraz `source_document_path` pomiędzy odczytami.
+- [Samodzielne CI #45180787822](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45180787822) oraz [nowy rygor 2+1 #45180840429](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45180840429): **uruchomione/w kolejce**; wyników nie wolno przypisywać przed zakończeniem.
+- Historyczny [workflow 2+1 #45175198218](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45175198218) zaliczył **3/3 PASS wyłącznie dla wcześniejszego `a1f93d98`**. Wynik nie jest przenoszony na nowy commit. 
+- [Poprzednie zgłoszenie niezależnej recenzji #9](https://github.com/dariusz-piekarz/mathematical_scipts/issues/9) dotyczy `a1f93d98` i nie jest aprobatą nowego SHA. Nowy kod wymaga po ukończeniu 2+1 **osobnego uwierzytelnionego, niezależnego odbioru**.
+- Bieżący projekt pozostaje **diagnostyczny**. Nawet `ready`, `approved`, udany Lean i `axiom_check=passed` nie są automatyczną certyfikacją zgodności Lean–LaTeX. `certificate=false`.
+- **Nie przechodzić do L1.4.2**, zanim trzy pełne rundy nowego SHA i oddzielna niezależna recenzja zakończą się pozytywnie. Techniczne L1.1–L1.3 zamknięte na własnych SHA; pierwotny pilotaż 20–30 formalizacji nadal nie został osobno rozliczony.
 
 ## Status etapów
 
 | Etap | Status | Pierwszy nierozliczony fragment |
 | --- | --- | --- |
-| 1. Lean 4 | stabilizing (L1.4.1, independent review pending) | L1.4.1 |
+| 1. Lean 4 | testing (L1.4.1, new immutable 2+1) | L1.4.1 |
 | 2. Inteligentny graf | planned | G2.1 |
 | 3. Generator PDF + Czytnik | planned | P3.1 |
 | 4. Centrum audytów i deduplikacja | planned | A4.1 |
@@ -288,3 +287,9 @@
 - **Niezależny odbiór:** issue #9 pozostaje **open**; wszystkie trzy istniejące komentarze są technicznymi raportami konta właściciela `dariusz-piekarz`, a nie uwierzytelnioną decyzją niezależnego recenzenta. **Brak `approve` lub `request-changes` od niezależnego recenzenta**. Nie uznawać własnych raportów za audyt zewnętrzny.
 - **Licznik:** techniczne **3/3 PASS** dla wskazanego SHA, formalna bramka niezależnego odbioru **pending**; status **`stabilizing`**, `certificate=false`. Brak podstaw do `stable`; L1.4.2 nie rozpoczęto.
 - **Następny jeden krok:** uzyskać i zweryfikować uwierzytelnioną, niezależną decyzję recenzenta dla dokładnego SHA `a1f93d98...` w issue #9 lub kontrolowanym procesie recenzji GitHub. Bez takiej decyzji utrzymać blokadę przejścia.
+
+### 2026-11-23 — L1.4.1, kolejny audyt identyczności obiektu i ścieżki
+
+- [Commit `67504fed`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/67504fedb12d84d09500ea79dfedde98ee072822): rozszerzono ochronę przed zmianą indeksowanych metadanych przy niezmienionym `source_entity_id` i SHA dokumentu oraz zmianą kanonicznej ścieżki do innego pliku o tych samych bajtach. Dodano trzy nowe negatywne testy.
+- [Osobne CI #45180787822](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45180787822) i [2+1 #45180840429](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45180840429): w toku lub w kolejce przy tej aktualizacji. Nowy licznik `0/3` do czasu rzeczywistego zakończenia pełnej rundy.
+- Poprzedni `a1f93d98` ma prawdziwe 3/3 PASS, ale wyłącznie historycznie; poprzednia recenzja w issue #9 nie zamyka nowej wersji. Nie dodawano `independent=true`, `stable` ani certyfikatu semantycznego.
