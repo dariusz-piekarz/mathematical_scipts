@@ -188,7 +188,8 @@ def last_run(identifier: str, expected: dict[str, str], *,
         completed = datetime.fromisoformat(record["finished_at"])
         if completed.tzinfo is None or completed.utcoffset() is None:
             raise ValueError("Lean run timestamp is missing timezone")
-    except (OSError, ValueError, UnicodeError, TypeError, OverflowError):
+    except (OSError, ValueError, UnicodeError, TypeError, OverflowError,
+            RecursionError):
         return invalid
     if any(record[key] != expected[key] for key in FINGERPRINT_FIELDS):
         return {"proof_status": "not_run", "run_cached": False,
