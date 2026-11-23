@@ -62,7 +62,7 @@ class TestMeasureTheoryChapter20(unittest.TestCase):
     def test_dense_atomic_support_and_measure_zero_complement(self):
         # Enumerate dense rational atoms and put positive mass on each.
         rationals = sorted({p / q for q in range(1, 26) for p in range(-2*q, 2*q+1)})
-        w = [2 ** (-(i + 1)) for i in range(len(rationals))]
+        w = [(6 / math.pi**2) / (i + 1)**2 for i in range(len(rationals))]
         self.assertTrue(all(weight > 0 for weight in w))
         for a, b in ((-1.2, -.9), (-.1, .1), (.15, .25), (.9, 1.05)):
             self.assertTrue(any(a < q < b for q in rationals))
