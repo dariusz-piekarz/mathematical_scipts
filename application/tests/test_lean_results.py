@@ -289,6 +289,22 @@ class LeanResultsTests(unittest.TestCase):
         self.assertEqual(reopened["last_run_detail"], "Lean błąd: nazwę λ sprawdzono")
         self.assertFalse(reopened["certificate"])
 
+    def test_l12_excessive_json_nesting_is_invalid_not_uncaught(self):
+        """Even a bounded-size local file may overflow the JSON decoder depth."""
+        fp = self.fp()
+        save_run("sample", fp, proof_status="compiled",
+                 detail="genuine run", results_root=self.output)
+        path = self.output / "sample.json"
+        # 28,001 bytes: below MAX_RECORD_BYTES, but deep enough to raise
+        # RecursionError in CPython's accelerated JSON decoder.
+        data = "[" * 14000 + "0" + "]" * 14000
+        self.assertLess(len(data.encode("utf-8")), 30000)
+        path.write_text(data, encoding="utf-8")
+        state = last_run("sample", fp, results_root=self.output)
+        self.assertEqual(state["proof_status"], "not_run")
+        self.assertFalse(state["run_cached"])
+        self.assertTrue(state["run_record_invalid"])
+
     def test_l12_json_escape_expansion_does_not_invalidate_saved_log(self):
         """Control characters expand to 6 bytes in JSON, not one byte."""
         from backend import lean_results
