@@ -54,7 +54,7 @@ jobs:
           sudo apt-get install -y --no-install-recommends \
             texlive-latex-base texlive-latex-recommended texlive-latex-extra \
             texlive-lang-polish texlive-pictures lmodern poppler-utils
-      - name: Make audited 00-05 plus graph algorithms, probability and expanders PDF
+      - name: Make audited 00-06 plus graph algorithms, probability and expanders PDF
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -65,16 +65,17 @@ jobs:
           assert len(matches) == 44
           marker = matches[0]
           preamble = source.split(marker, 1)[0]
-          # The initial six historical chapters resolve chapter references
-          # used by the new algorithms module; the rest are deliberately omitted.
-          chosen = matches[:13]
-          assert '37-algorytmiczne-przeszukiwanie-grafow-bfs-dfs' in chosen[-7]
-          assert '38-najkrotsze-drogi-wazone-i-algorytmy-wyszukiwania-tras' in chosen[-6]
-          assert '39-minimalne-drzewa-rozpinajace-prim-kruskal-dsu' in chosen[-5]
-          assert '40-algorytmy-przeplywowe-ford-fulkerson-edmonds-karp-dinic' in chosen[-4]
-          assert '41-twierdzenia-mantela-turana-i-ramseya' in chosen[-3]
-          assert '42-grafy-losowe-i-metoda-probabilistyczna' in chosen[-2]
-          assert '43-ekspandery-widmo-laplasjanu-i-spacery-losowe' in chosen[-1]
+          # Include historical chapter 06 after the algorithmic block:
+          # chapter 05 now explicitly refers forward to its incidence algebra.
+          chosen = matches[:14]
+          assert '06-macierze-incydencji-cykle-i-przekroje' in chosen[-1]
+          assert '37-algorytmiczne-przeszukiwanie-grafow-bfs-dfs' in chosen[-8]
+          assert '38-najkrotsze-drogi-wazone-i-algorytmy-wyszukiwania-tras' in chosen[-7]
+          assert '39-minimalne-drzewa-rozpinajace-prim-kruskal-dsu' in chosen[-6]
+          assert '40-algorytmy-przeplywowe-ford-fulkerson-edmonds-karp-dinic' in chosen[-5]
+          assert '41-twierdzenia-mantela-turana-i-ramseya' in chosen[-4]
+          assert '42-grafy-losowe-i-metoda-probabilistyczna' in chosen[-3]
+          assert '43-ekspandery-widmo-laplasjanu-i-spacery-losowe' in chosen[-2]
           text = preamble + '\n'.join(chosen) + '\n\\end{document}\n'
           (root / 'graph_and_knot_algorithms_ci.tex').write_text(text, encoding='utf-8')
           PY
@@ -85,7 +86,7 @@ jobs:
           pdflatex -interaction=nonstopmode -halt-on-error -file-line-error graph_and_knot_algorithms_ci.tex > graph_algorithms_pass2.txt
           pdflatex -interaction=nonstopmode -halt-on-error -file-line-error graph_and_knot_algorithms_ci.tex > graph_algorithms_pass3.txt
           test -s graph_and_knot_algorithms_ci.pdf
-          for target in 'ch:tg-bfs-dfs' 'thm:tg-bfs-correct' 'thm:tg-dfs-bridge' 'fig:tg-bfs-layers' 'ch:tg-shortest-paths' 'thm:tg-weighted-astar' 'thm:tg-weighted-ch-query' 'fig:tg-weighted-sample' 'ch:tg-mst' 'thm:tg-mst-cut' 'thm:tg-mst-kruskal' 'thm:tg-mst-prim' 'fig:tg-mst-five' 'ch:tg-flow-algorithms' 'thm:tg-flow-certificate' 'thm:tg-flow-ek' 'thm:tg-flow-dinic' 'fig:tg-flow-cut-five' 'ch:tg-extremal-ramsey' 'thm:tg-mantel' 'thm:tg-turan' 'thm:tg-ramsey-finite' 'thm:tg-ramsey-33' 'fig:tg-ramsey-c5' 'ch:tg-random-graphs' 'prop:tg-random-triangle-moments' 'thm:tg-random-triangle-threshold' 'thm:tg-random-connectivity' 'thm:tg-random-ramsey-bound' 'fig:tg-random-realization' 'ch:tg-expanders' 'lem:tg-expander-energy' 'thm:tg-expander-cheeger' 'thm:tg-expander-mixing' 'thm:tg-expander-diameter' 'fig:tg-expander-cycle-cut'; do
+          for target in 'ch:tg-bfs-dfs' 'thm:tg-bfs-correct' 'thm:tg-dfs-bridge' 'fig:tg-bfs-layers' 'ch:tg-shortest-paths' 'thm:tg-weighted-astar' 'thm:tg-weighted-ch-query' 'fig:tg-weighted-sample' 'ch:tg-mst' 'thm:tg-mst-cut' 'thm:tg-mst-kruskal' 'thm:tg-mst-prim' 'fig:tg-mst-five' 'ch:tg-flow-algorithms' 'thm:tg-flow-certificate' 'thm:tg-flow-ek' 'thm:tg-flow-dinic' 'fig:tg-flow-cut-five' 'ch:tg-extremal-ramsey' 'thm:tg-mantel' 'thm:tg-turan' 'thm:tg-ramsey-finite' 'thm:tg-ramsey-33' 'fig:tg-ramsey-c5' 'ch:tg-random-graphs' 'prop:tg-random-triangle-moments' 'thm:tg-random-triangle-threshold' 'thm:tg-random-connectivity' 'thm:tg-random-ramsey-bound' 'fig:tg-random-realization' 'ch:tg-expanders' 'lem:tg-expander-energy' 'thm:tg-expander-cheeger' 'thm:tg-expander-mixing' 'thm:tg-expander-diameter' 'fig:tg-expander-cycle-cut' 'ch:tg-algebra' 'thm:tg-rank' 'thm:tg-edge-hodge'; do
             grep -Fq "\\newlabel{$target}" graph_and_knot_algorithms_ci.aux
           done
           pdftotext -layout graph_and_knot_algorithms_ci.pdf graph_algorithms_layout.txt
@@ -103,6 +104,7 @@ jobs:
           grep -q 'losowe' graph_algorithms_layout.txt
           grep -q 'Cheegera' graph_algorithms_layout.txt
           grep -q 'Ekspandery' graph_algorithms_layout.txt
+          grep -q 'Macierze incydencji' graph_algorithms_layout.txt
           pdfinfo graph_and_knot_algorithms_ci.pdf > graph_algorithms_pdfinfo.txt
           if grep -E 'Overfull \\hbox|Overfull \\vbox' graph_and_knot_algorithms_ci.log; then
             echo "PDF contains a protruding line/box: not stable"
