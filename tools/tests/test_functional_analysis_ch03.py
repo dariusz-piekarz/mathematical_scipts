@@ -114,6 +114,48 @@ class FunctionalAnalysisChapter03(unittest.TestCase):
         self.assertTrue(all(errors[i+1] < errors[i] for i in range(len(errors)-1)))
         self.assertLess(errors[-1], 1e-8)
 
+    def test_completion_uses_symmetric_neighborhood(self):
+        # The representative-switching step needs -W=W, not just W+W⊂V.
+        self.assertIn("wybieramy symetryczne otoczenie", self.chapter)
+        self.assertRegex(
+            self.chapter,
+            r"wybieramy symetryczne otoczenie\s+"
+            r"\$W\$ z \$W\+W\\subseteq V\$",
+        )
+        self.assertIn(r"$y_e+W_0\subseteq V$", self.chapter)
+
+    def test_equivalent_cauchy_representatives_margin(self):
+        # x_n and y_n both converge to 0 and describe the same completed point;
+        # both have a fixed margin in U=(-1,1).
+        for n in range(3, 500):
+            x = 1 / n
+            y = -1 / n
+            self.assertLess(abs(x-y), 2/n + 1e-12)
+            self.assertLess(abs(x) + 0.5, 1)
+            self.assertLess(abs(y) + 0.5, 1)
+
+    def test_cauchy_net_sum_on_product_indices(self):
+        # For x_n=1/n and y_m=2/m the product-indexed sum is Cauchy.
+        for bound in (10, 100, 1000):
+            indices = (bound, bound+1, bound+10, bound+100)
+            tol = 6/bound
+            for n in indices:
+                for m in indices:
+                    for nn in indices:
+                        for mm in indices:
+                            delta = abs((1/n+2/m)-(1/nn+2/mm))
+                            self.assertLess(delta, tol)
+
+    def test_nonmetrizable_sigma_space_sequential_closure(self):
+        # A countable union of finite/countable supports is still countable;
+        # no such union can cover a formally new, unlisted coordinate.
+        supports = [{2*k, 2*k+1} for k in range(300)]
+        union = set().union(*supports)
+        self.assertEqual(len(union), 600)
+        self.assertNotIn(100_000, union)
+        for support in supports:
+            self.assertTrue(support.issubset(union))
+
     def test_completion_open_neighborhood_representatives(self):
         # Equivalent sequences 1 +/- 1/n have the same limit.
         # Only 1-1/n is eventually inside (-1,1), but neither
