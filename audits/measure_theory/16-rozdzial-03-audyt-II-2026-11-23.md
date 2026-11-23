@@ -36,7 +36,7 @@ Regresja niezależnie, od początku, konstruuje z kosztów pokryć **wszystkie 1
 
 Dodatkowo test sprawdza model **bez σ-skończoności** na czteropunktowej przestrzeni: algebra wyznaczona przez dwa bloki ma premiarę o masie `∞` pierwszego bloku i masie 1 drugiego; po konstrukcji Carathéodory'ego powstaje **8 zbiorów mierzalnych**, podczas gdy uzupełnienie pierwotnej σ-algebry ma **4 zbiory**. Stanowi to kontrolny kontrprzykład pokazujący, dlaczego utożsamienie obu rodzin w `thm:caratheodory-completion` musi wymagać dodatkowych przesłanek.
 
-Oba testy uruchomiono lokalnie. W GitHub Actions [45135022116](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45135022116) na commicie `c9aff9636d81996c00661b4504afac30a0e51099` zadanie `chapter-03-finite-models` zakończyło się **`success`** dla nowego i wcześniejszego testu. Końcowy status drugiego joba (PDF) wymaga osobnego sprawdzenia; w chwili pierwotnej redakcji raportu kompilacja była w toku.
+Oba testy uruchomiono lokalnie. W GitHub Actions [45135022116](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45135022116) na commicie `c9aff9636d81996c00661b4504afac30a0e51099` zadanie `chapter-03-finite-models` zakończyło się **`success`** dla nowego i wcześniejszego testu. Końcowy status drugiego joba (PDF) wymaga osobnego sprawdzenia; w chwili pierwotnej redakcji raportu kompilacja była w toku; końcowy wynik potwierdzono poniżej: `completed/success`, 2/2 jobów.
 
 ## Kontrola LaTeX, PDF, odsyłaczy i terminologii
 
@@ -44,9 +44,13 @@ W źródle R03 jest **18 unikatowych etykiet**, **25 odsyłaczy** i **38 poprawn
 
 W poprzedniej iteracji wykonano i obejrzano realny PDF R03 (wszystkie **6 stron**) oraz jego wersję w 256-stronicowej książce. W tej iteracji niezależnie ponowiono analizę geometrii plików PDF z tamtego samego, niezmienionego źródła: **119 bloków tekstowych** w izolowanym PDF, **0 poza granicami stron**; rozdział R03 zajmuje strony fizyczne 26–31 pełnej książki, **0 nierozwiązanych odsyłaczy**, **25 hiperłączy**, **0 bloków poza stronami**. Sprawdzono aktywne cele odsyłaczy w kontekście książki. Nie nazywa się tego merytorycznym audytem innych rozdziałów.
 
-## Stabilizacja i proponowane następne działanie
+## Stabilizacja — decyzja końcowa
 
-**R03: drugi niezależny, pełny audyt matematyczny CZYSTY, kontrola PDF wizualnie CZYSTA.** R03 pozostaje **niezmieniony** od ostatniej poprawki. Formalny certyfikat stabilności należy oprzeć na tym raporcie, potwierdzonym wyniku CI i ponownym odczycie blobu R03.
+**ROZDZIAŁ 03 JEST STABILNY — STABILIZACJA FORMALNIE ZATWIERDZONA.** Drugi niezależny pełny audyt matematyczny jest czysty, a PDF poprawny wizualnie. Plik R03 nie zmienił się po ostatniej merytorycznej poprawce. Certyfikacja obejmuje **wyłącznie** źródło `chapters/pl/measure_theory/03-miary-zewnetrzne-i-konstrukcja-caratheodoryego.tex` o blobie **`3c95138c4dc60b892835e8c9bc8421c70666ee72`**.
+
+Potwierdzono końcowy status API GitHub Actions **[45135022116](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45135022116)**: `completed/success`, **2/2 jobów zaliczone** na commicie `c9aff9636d81996c00661b4504afac30a0e51099`; zarówno nowy test wyczerpujący, jak i ponowne dwa przebiegi izolowanej kompilacji R03 i trzy przebiegi pełnej książki zakończyły się pomyślnie. Wyniki testów w rzeczywistym logu: **16 384** zestawy kosztów, **112 022** wystąpienia zbiorów Carathéodory'ego, **43** nieaddytywne funkcje zachowujące koszt, a przy braku σ-skończoności **8** zbiorów Carathéodory'ego wobec **4** zbiorów uzupełnienia. Ustalono zgodność z poprzednim niezależnym przeglądem R03 z raportu XV, przeglądem **6/6 stron PDF**, kompletnymi odsyłaczami i standardami redakcyjnymi.
+
+**Brak otwartych błędów blokujących stabilizację R03.** Ewentualna przyszła zmiana źródła R03 wymaga ponownej kontroli; formalna stabilizacja nie jest stwierdzeniem o matematycznej poprawności R04–R31.
 
 **Propozycja opcjonalna, bez zmiany źródła:** rozważyć później dodanie jako osobnego przykładu wyżej opisanego przypadku bez σ-skończoności, gdzie rodzina Carathéodory'ego jest większa od uzupełnienia. Wzbogacenie materiału wymaga wyraźnej zgody użytkownika, nie jest błędem tekstu ani warunkiem stabilizacji.
 
