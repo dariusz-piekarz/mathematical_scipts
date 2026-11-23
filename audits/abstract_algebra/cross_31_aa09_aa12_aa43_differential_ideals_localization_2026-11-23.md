@@ -80,3 +80,8 @@ Testy rachunkowe używają dokładnej arytmetyki SymPy i małych pierścieni sko
 **Propozycja opcjonalna (nie dodana automatycznie do źródeł):** po definicji rozszerzenia różniczkowego w AA-43 umieścić krótki podrozdział „Derywacje pierścieni, ideały różniczkowe i lokalizacje”, zawierający powyższe twierdzenia. Jest to rozbudowa treści zatwierdzonego rozdziału i wymaga osobnej zgody zgodnie z AGENTS.md.
 
 **Następny etap:** stabilizacja AA-X31, a dopiero po jej zamknięciu niezależny AA-X32.
+
+
+## Niezależny rachunek kontrolny (poza workflow)
+
+Po dodaniu testów do GitHub wykonano osobną serię **560 dokładnych kontroli SymPy**, niezależną od pliku regresyjnego: 100 wybranych wielomianów w Q[x,y] sprawdzono pod kątem zgodności derywacji D=x∂_x+2y∂_y z podstawieniem y=x²; dla każdego wykonano cztery dodatkowe kontrole po lokalizacji przez x^k, k=1,2,3,4; ponadto sprawdzono D-stabilność (x^p) dla pochodnych 12 jednomianów przy p=2,3,5,7,11 (60 przypadków). **560/560 PASS**. Są to sprawdzenia przykładów, nie formalizacja ani dowód ogólnego twierdzenia. Wynik CI pozostaje oddzielną bramką, której status należy odczytać z rzeczywistego przebiegu.
