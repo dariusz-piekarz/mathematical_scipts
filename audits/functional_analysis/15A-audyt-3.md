@@ -48,3 +48,11 @@ Przejrzano stronę 90–95 faktycznego, **109-stronicowego** PDF z poprzedniego 
 Po zmianach źródła i testów uruchomiono dedykowane workflow [#45290644408](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45290644408) oraz [#45290645512](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45290645512). Przy opracowywaniu tego raportu status końcowy **nie był jeszcze potwierdzony**; wyniku nie wolno deklarować jako PASS z wyprzedzeniem.
 
 **Werdykt 15A/03: POPRAWKA KONIECZNA; 0/2 czystych audytów na nowym źródle.** Następna jednostka pracy to ponowny niezależny audyt 15A/04 (potencjalnie pierwszy czysty) po potwierdzeniu działania testów, kompilacji LaTeX, jakości nowego PDF i kompletności odsyłaczy. **Nie rozpoczynać 15B przed stabilizacją 15A.**
+
+## Potwierdzenie zakończonej bramki po poprawce i kontrola PDF
+
+Dedykowany przebieg [#45290645512](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45290645512), uruchomiony na commicie `2b8f08724bd1a78ab05110398360317ed2323aca`, zawierającym **zarówno poprawione źródło 15A, jak i nowy test**, zakończył się **completed/success**. Weryfikacja wszystkich dziewięciu kroków rzeczywistego joba: regresje **PASS**, przygotowanie kompletnego kontekstu 01–17 (z 15A i 15B) **PASS**, kompilacja LaTeX **PASS**, analiza PDF i odsyłaczy **PASS**, publikacja artefaktu **PASS**.
+
+Pobrano i sprawdzono dokładnie ten artefakt `functional-analysis-ch15a-pdf` (ID `14873897034`). Zawiera **109 stron A4**. Tekst wyodrębniony z PDF potwierdza poprawione założenie „W zespolonej przestrzeni Hilberta ...”; osobno wyrenderowano stronę **95** i sprawdzono wizualnie, że prawidłowa notacja `L^2(\R,\lambda_1;\C)` jest czytelna, bez ucięć i nałożeń. Bezpośredni odczyt logu: **0** `Undefined control sequence`, **0** niezdefiniowanych odsyłaczy, **0** `Overfull \\hbox`, **0** brakujących glifów i ostrzeżeń `LaTeX Warning`; pozostaje **1** `Underfull \\hbox` w rozdziale 16, bez wpływu na 15A.
+
+Ponownie odczytane bloby bieżącej gałęzi: źródło `afe39ee7e7d189d2d15bbf4a81457cc57c63be7a`, regresja `6f44e390ea07e2e5593c8a0a246fd4060355f727`. **Bramka po poprawce PASS, lecz audyt 15A/03 pozostaje poprawkowy (0/2).** Potrzebne są dwa niezależne czyste audyty nowej wersji, począwszy od **15A/04**. Nie należy interpretować zielonego CI jako substytutu tych audytów.
