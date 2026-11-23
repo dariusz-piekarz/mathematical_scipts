@@ -56,3 +56,9 @@ Przy źródle i testach o niezmienionych SHA potwierdzono pełny sukces [GitHub 
 **Rozdział 09 ma dwa kolejne czyste, niezależne przeglądy tej samej wersji źródła: audyty 09/03 i 09/04, z wynikiem 2/2.** Żaden nie wymagał modyfikacji źródła, testów ani rysunku. W odniesieniu do niezmienionych plików testów i LaTeX istnieje już ukończony z sukcesem przebieg CI `#45213422713`.
 
 **Stan techniczny po zapisaniu raportu:** nowy przebieg CI może zostać wyzwolony zmianą wyłącznie pliku raportu; jego wynik należy sprawdzić przed ostatecznym zamknięciem 09 i rozpoczęciem audytu rozdziału 10. Zamknięcie rozdziału 09 jest warunkowe do czasu potwierdzenia bieżącego CI, mimo że poprzedni CI dla identycznego źródła był zielony.
+
+## Uzupełnienie po zielonym CI — ostateczne zamknięcie rozdziału 09
+
+Po zapisaniu raportu 09/04 ukończył się jego dedykowany [GitHub Actions #45214286262](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45214286262) na commicie `16a72105276032bd27121ed5cc564074cc30b16b`: **COMPLETED / SUCCESS**. Kroki: **19/19 testów PASS**, przygotowanie rzeczywistego kontekstu rozdziałów 01–09 PASS, kompilacja LaTeX PASS, automatyczna weryfikacja PDF i odsyłaczy PASS, publikacja artefaktu PASS. Sprawdzono ponownie aktualny blob SHA źródła: **`d0a20b01bdabfa4e85d9c00ebe11c8c41bea650a`**, bez zmian od 09/02 i 09/03.
+
+**Decyzja końcowa: ROZDZIAŁ 09 STABILNY — 2/2 czystych niezależnych audytów tego samego źródła + zielone CI.** W kolejnej iteracji dopuszczony jest audyt 10/01. Kompilacja i testy są oddzielone od oceny matematycznej, którą dokumentują rozdział po rozdziale audyty 09/03 i 09/04.
