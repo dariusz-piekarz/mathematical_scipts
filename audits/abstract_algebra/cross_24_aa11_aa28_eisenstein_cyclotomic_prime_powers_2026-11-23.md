@@ -28,3 +28,70 @@ W aktualnym katalogu `chapters/pl/abstract_algebra` jest 50 źródeł AA-01–AA
 Opcjonalnie w AA-28 po dowodzie nierozkładalności dodać przykład alternatywnego zastosowania kryterium Eisensteina do `Phi_{p^k}(X+1)`; wymaga odrębnej zgody, gdyż jest to nowe uzupełnienie zatwierdzonego rozdziału.
 
 **Następny krok:** ponownie sprawdzić HEAD i istnienie AA-51; jeśli nadal brak, wybrać nową, niepowtórzoną kontrolę przekrojową i przeprowadzić ją w osobnym numerowanym raporcie. Przy dostępie do artefaktów CI wykonać osobną inspekcję PDF i weryfikację workflow.
+
+## Kontynuacja AA-X24 — pełne uogólnienie, testy trwałe i bramka CI
+
+Uzupełniono dotychczasowy raport o niezależny dowód ogólny i **7 trwałych testów**. Źródła AA-11 i AA-28 nie zostały zmienione. Weryfikacja obejmuje 50 rozdziałów przy kontrolowaniu etykiet i odsyłaczy.
+
+### 1. Wartość wielomianu cyklotomicznego w punkcie 1
+
+**Twierdzenie.** Dla każdego \(n\ge2\) zachodzi
+\[
+\Phi_n(1)=
+\begin{cases}
+p,&n=p^k,\quad p\text{ pierwsza},\ k\ge1,\\
+1,&n\text{ nie jest potęgą liczby pierwszej}.
+\end{cases}
+\]
+Dla \(n=1\) mamy natomiast \(\Phi_1(1)=0\).
+
+**Dowód.** Dla \(n=p^k\) wzór
+\(\Phi_{p^k}(X)=1+X^{p^{k-1}}+\cdots+X^{(p-1)p^{k-1}}\)
+daje bezpośrednio \(\Phi_{p^k}(1)=p\).
+Dla ogólnego \(n>1\) z AA-28 wynika
+\((X^n-1)/(X-1)=\prod_{d\mid n,\ d>1}\Phi_d(X)\).
+Wstawiając \(X=1\) (do wielomianu ilorazowego, nie do nieokreślonej wartości \(0/0\)), otrzymujemy
+\(n=\prod_{d\mid n,\ d>1}\Phi_d(1)\).
+Przeprowadźmy indukcję po \(n\). Jeśli \(n\) nie jest potęgą jednej liczby pierwszej, wśród jego właściwych dzielników pierwsze potęgi mają postać \(p^j\), gdzie \(1\le j\le v_p(n)\). Iloczyn ich wartości w \(1\), obliczonych w pierwszym kroku, jest równy
+\(\prod_{p\mid n}p^{v_p(n)}=n\).
+Wszystkie pozostałe właściwe dzielniki \(d>1\) również nie są potęgami jednej liczby pierwszej, więc na mocy założenia indukcyjnego ich \(\Phi_d(1)=1\). Ponieważ \(\Phi_n(1)\) jest liczbą całkowitą i iloczyn całkowitych wartości dla właściwych dzielników już wynosi \(n\), otrzymujemy \(\Phi_n(1)=1\). Dla \(n=1\) z definicji \(\Phi_1=X-1\), zatem wartość wynosi \(0\). **Koniec dowodu.**
+
+**Konsekwencja.** Dla \(n>1\), które nie jest potęgą liczby pierwszej, przesunięcie \(\Phi_n(X+1)\) ma wyraz wolny \(1\), więc **nie spełnia kryterium Eisensteina względem żadnej liczby pierwszej** w tej konkretnej postaci. Nie przeczy to nierozkładalności \(\Phi_n\) nad \(\mathbb Q\), udowodnionej ogólnie w AA-28. Na przykład \(\Phi_6(X+1)=X^2+X+1\).
+
+### 2. Uogólnienie na dowolną liczbę \(n\) podzielną przez \(p\)
+
+**Twierdzenie.** Niech \(p\) będzie liczbą pierwszą, \(n=p^k m\), \(k\ge1\), \(\gcd(m,p)=1\), \(m\ge1\). W \(\mathbb F_p[X]\) zachodzi
+\[
+\overline{\Phi_n}(X)=\overline{\Phi_m}(X)^{\,\varphi(p^k)}
+\quad\text{gdzie}\quad\varphi(p^k)=p^{k-1}(p-1).
+\]
+W szczególności \(\overline{\Phi_n}\) jest bez powtórzonych czynników **dokładnie wtedy**, gdy \(p=2\) i \(k=1\).
+
+**Dowód.** W charakterystyce zero pierwiastki wielomianu \(\Phi_m(X^{p^k})\) są dokładnie pierwiastkami z jedynki rzędu \(mp^j\) dla \(0\le j\le k\). Rzeczywiście, jeśli \(z^{p^k}\) ma rząd dokładnie \(m\) względnie pierwszy z \(p\), to rząd \(z\) ma część pierwszą do \(p\) równą \(m\), a część \(p\)-potęgową \(p^j\) z \(j\le k\); i odwrotnie każda taka liczba spełnia warunek. Pierwiastki są proste, a obie strony moniczne. Dlatego
+\[
+\Phi_m(X^{p^k})=\prod_{j=0}^k \Phi_{mp^j}(X).
+\]
+Dzieląc przez analogiczną tożsamość dla \(k-1\), otrzymujemy
+\(\Phi_m(X^{p^k})=\Phi_m(X^{p^{k-1}})\Phi_{mp^k}(X)\).
+Współczynniki są całkowite. Redukując modulo \(p\) i stosując tożsamość Frobeniusa, dostajemy
+\(\overline{\Phi_m}(X)^{p^k}=\overline{\Phi_m}(X)^{p^{k-1}}\overline{\Phi_n}(X)\).
+Moniczny wielomian \(\overline{\Phi_m}\) jest niezerowy, więc możemy go skrócić w dziedzinie \(\mathbb F_p[X]\); stąd \(\overline{\Phi_n}=\overline{\Phi_m}^{p^k-p^{k-1}}\).
+
+Ponieważ \(p\nmid m\), pochodna \(X^m-1\) jest względnie pierwsza z \(X^m-1\) w \(\mathbb F_p[X]\). Wielomian \(\overline{\Phi_m}\) jest jego monicznym dzielnikiem na mocy tożsamości cyklotomicznej redukowanej modulo \(p\), więc również jest bez powtórzonych czynników. Jego dodatnia potęga jest bez powtórzonych czynników wtedy i tylko wtedy, gdy wykładnik \(\varphi(p^k)\) wynosi \(1\), a to zachodzi dokładnie dla \(p=2,k=1\). **Koniec dowodu.**
+
+Jest to ważny przypadek brzegowy: **nie każda liczba pierwsza dzieląca \(n\) jest złą liczbą pierwszą dla \(\Phi_n\)**. Dla \(n=6\) i \(p=2\) otrzymujemy \(\overline{\Phi_6}=X^2+X+1\), wielomian rozdzielczy, mimo że \(2\mid6\). Dla \(n=8,p=2\) otrzymujemy \(\overline{\Phi_8}=(X-1)^4\), więc redukcja jest nierozdzielcza.
+
+### 3. Zautomatyzowana kontrola dokładna
+
+Dodano plik tools/tests/test_abstract_algebra_cross_aa11_28.py z **7 testami**:
+1. trzynaście modeli \(p^k\) i wszystkie współczynniki kryterium Eisensteina po przesunięciu;
+2. tożsamość \(\prod_{d\mid n}\Phi_d=X^n-1\) dla \(1\le n\le45\) i algebraiczne odwrócenie przesunięcia;
+3. kompletną kontrolę \(\Phi_n(1)\) dla \(1\le n\le100\), z przypadkami nienależącymi do potęg liczb pierwszych;
+4. ogólne równanie \(\overline{\Phi_{mp^k}}=\overline{\Phi_m}^{\varphi(p^k)}\) dla \(2\le n\le85\), dla każdej liczby pierwszej \(p\mid n\), wraz z wymiarem NWD wielomianu i jego pochodnej;
+5. niezależny wzór dwumianowy na wszystkie współczynniki \(\Phi_{p^k}(X+1)\), bez użycia bezpośredniego rozwijania wielomianu cyklotomicznego;
+6. przypadki brzegowe \(n=1,2,6,8\) i jednostronność kryterium Eisensteina;
+7. globalną zgodność etykiet i odsyłaczy w 50 rozdziałach, w tym **47 etykiet i 24 odsyłacze** badanej pary.
+
+Podłączono plik do wyzwalacza i osobnego kroku Run AA-X24 Eisenstein and prime-power cyclotomic crosschecks w .github/workflows/abstract-algebra-chapter.yml. **Bramka:** [GitHub Actions 45247774608](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45247774608), commit 902a93fe7da2c839f6ce898e083fab8177667473. Na etapie wpisania tego uzupełnienia przebieg był w toku; wynik można zatwierdzić dopiero po 7/7 pozytywnych testach, całym zakończonym workflow, sukcesie kompilacji AA-01–AA-50 i automatycznej kontroli PDF/odsyłaczy.
+
+**Wstępny werdykt:** nie wykryto matematycznego błędu wymagającego zmiany zatwierdzonych źródeł. Wskazane dwa twierdzenia są opcjonalnym rozszerzeniem tekstu AA-28, pozostawionym do decyzji użytkownika, a nie zmianą w rozdziałach. Nie utożsamiamy kompilacji i sprawdzenia ostrzeżeń w logu z niezależną wizualną kontrolą stron PDF. Testy nie są formalną weryfikacją Lean.
