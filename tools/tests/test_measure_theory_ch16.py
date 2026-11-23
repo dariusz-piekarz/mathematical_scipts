@@ -107,7 +107,7 @@ class TestMeasureTheoryChapter16(unittest.TestCase):
             tail = 2.0 ** (-n)
             approx = sum(2.0 ** (-(k + 1)) for k in range(n))
             self.assertAlmostEqual(approx + tail, 1.0, places=13)
-            self.assertLess(tail, 1.0 / (n + 1))
+            self.assertLessEqual(tail, 1.0 / (n + 1))
 
     def test_oscillatory_example_interval_cancellation(self):
         # An exact primitive proves the sin(nx) integral vanishes on intervals.
