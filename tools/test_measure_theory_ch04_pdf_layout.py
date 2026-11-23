@@ -5,6 +5,7 @@ The parser validates *text* bounds and the axis-caption separation; it is
 not a substitute for visually reviewing the TikZ fills or all pages.
 """
 import sys
+import re
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
@@ -12,7 +13,12 @@ NAMESPACE = "{http://www.w3.org/1999/xhtml}"
 
 
 def inspect_bbox(filename):
-    root = ET.parse(filename).getroot()
+    # Poppler can emit C0 font glyphs in its XHTML output. XML 1.0
+    # forbids these control characters although the PDF is valid.
+    # Replace only forbidden XML controls; keep text boxes and words.
+    data = filename.read_text(encoding="utf-8")
+    sanitized = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f]", "\ufffd", data)
+    root = ET.fromstring(sanitized)
     pages = root.findall(f".//{NAMESPACE}page")
     assert pages, "PDF has no pages"
     word_count = 0
