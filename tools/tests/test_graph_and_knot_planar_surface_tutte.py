@@ -348,7 +348,12 @@ def source_integration():
     a=paths["10"].read_text(encoding="utf-8")
     b=paths["11"].read_text(encoding="utf-8")
     c=paths["12"].read_text(encoding="utf-8")
-    assert "Odwrotna implikacja" in a and "Przyjmujemy ją tutaj" in a
+    # The previously documented external assumption is now replaced by
+    # a complete proof; guard against its accidental reintroduction.
+    assert r"\label{lem:tg-kuratowski-contractible-edge}" in a
+    assert r"\label{lem:tg-kuratowski-minor-to-subdivision}" in a
+    assert r"\begin{proof}[Dowód implikacji" in a
+    assert "Przyjmujemy ją tutaj" not in a
     assert r"thm:tg-rotation-genus" in b and r"thm:tg-surface-homology" in b
     assert r"thm:tg-tutte-recursion" in c and r"thm:tg-flow-color-dual" in c
     assert r"\tau_V(G)" in paths["05"].read_text(encoding="utf-8")
