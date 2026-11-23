@@ -219,40 +219,87 @@ przestrzeni moduli ani
 globalnej formuły
 sklejania niezmienników.
 
-## CI i bramka pierwszego przejścia
+## Zamknięcie pierwszego przejścia — CI i oględziny
 
-Uruchomienie końcowe:
-[GitHub Actions 45233297909](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45233297909)
-dla commitów źródeł i testów
-zawierających wszystkie
-powyższe poprawki.
+**Ostateczny stan źródeł rozdziałów 31–33** jest zapisany w
+commicie `5f2a0badb362cf18ef34f714a17a942add22ea59`.
+Po nim zmieniono tylko osobny moduł testowy, workflow oraz
+niniejszy raport: treść źródeł `.tex` nie uległa dalszej zmianie.
 
-Wymagamy niezależnie:
-- `structural-audit=success` z **44/44** źródeł,
-  bez duplikatów etykiet,
-  nierozwiązanych odsyłaczy
-  i błędów środowisk;
-- **6505** nowych przypadków `PASS`,
-  a także wykonania wcześniejszych regresji;
-- `full-book-pdf=success`,
-  trzech pełnych kompilacji `pdflatex`,
-  braku ostrzeżeń i przekroczonych marginesów;
-- oględzin rzeczywistego PDF
-  wszystkich stron rozdziałów 31–33,
-  zwłaszcza rysunków sfer Parka,
-  macierzy formy przecięcia,
-  diagramu wymiernej kontrakcji
-  i schematów `knot surgery`.
+- **Pełny przebieg źródłowo równoważny**
+  [GitHub Actions 45233024929](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45233024929)
+  dla commitu workflow `5973637b7ea3e04450dc6c555a5940e652c7371b`
+  potwierdził `structural-audit=success` oraz
+  `full-book-pdf=success`.
+  Pełny **285-stronicowy** tom skompilowano w **trzech**
+  przebiegach `pdflatex`; plik ostrzeżeń ma **0 bajtów**.
+  Artefakt PDF ID **14847827914** został pobrany.
+- **Rozszerzony test, który dodano już po tym przebiegu**:
+  [GitHub Actions 45233297909](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45233297909)
+  dla commitu `553f5c58eae0fac484b98ccaeb72bec082f8dad6`
+  potwierdził `structural-audit=success`.
+  Nowy moduł wykonał wszystkie **6505**
+  regresji z wynikiem PASS.
+  Weryfikacja pełnego PDF tego dodatkowego
+  uruchomienia była nadal w toku w chwili
+  niniejszego zapisu. Nie traktujemy jej
+  jako zakończonej, a dowód poprawności
+  składu pochodzi z wcześniejszego,
+  **identycznego stanu źródeł LaTeX**.
 
-**Werdykt tymczasowy: pierwszy audyt 31–33
-w realizacji; status lokalnej
-stabilizacji nadal OTWARTY.**
-Po potwierdzeniu bramki pierwszy
-audyt otrzyma PASS, ale rozdziały
-31–33 nadal wymagają drugiego
-niezależnego przejścia,
-czyli audytu 25.
+Log ostatniego testu strukturalnego potwierdza
+**44/44** źródła, **0** zduplikowanych etykiet,
+**0** nierozwiązanych odsyłaczy,
+**0** błędów środowiska
+i **0** terminów zakazanych.
 
-Rozdziały **01–30** pozostają
-lokalnie stabilne. Audyt globalny
-wszystkich 44 rozdziałów trwa.
+### Przegląd rzeczywistych stron PDF
+
+Wyrenderowano i obejrzano wszystkie strony
+**251–270**, obejmujące cały blok:
+- **251–257** — źródłowy rozdział **31**
+  (drukowany rozdział 38): graf sześciu sfer
+  Parka, macierz `Q_7`, nowy metabolizer
+  i jego dowód, diagram wymiernej kontrakcji,
+  wniosek z twierdzenia Freedmana;
+- **258–263** — źródłowy rozdział **32**
+  (drukowany rozdział 39): odwrót
+  `Q_7^{-1}`, dodatnie parowanie
+  `K_7·[ω_7]` i nowy dolny szacunek,
+  przykład liczbowy, schemat zmiany znaku,
+  argument Taubesa–Li–Liu;
+- **264–270** — źródłowy rozdział **33**
+  (drukowany rozdział 40): model
+  `S¹×E_K`, diagram klejenia torusów,
+  homologie i grupy fundamentalne,
+  wielomiany SW, nowy dowód
+  multiplikatywności i przykład
+  dwóch trójlistników wobec `T(2,5)`,
+  diagram chirurgii na K3.
+
+W skontrolowanych stronach nie znaleziono
+uciętych wzorów, nakładających się napisów,
+złamanych etykiet ani przekroczeń marginesów.
+Naturalne puste miejsce na końcu rozdziału
+31 nie stanowi problemu składu.
+
+## Werdykt audytu 24
+
+**Pierwsze szczegółowe przejście rozdziałów 31–33: PASS.**
+
+Oznacza to pomyślną kontrolę matematyczną
+pierwszego przejścia, realne poprawki
+w trzech plikach, **6505 nowych
+dokładnych testów**, poprawne
+źródła i odsyłacze oraz trzykrotnie
+złożony i oglądany pełny PDF
+z identycznego stanu źródeł.
+
+**Rozdziały 31–33 pozostają W STABILIZACJI.**
+Do lokalnej stabilności niezbędne jest
+drugie, niezależne szczegółowe przejście
+— **audyt 25** — oraz ponowna walidacja.
+
+**Rozdziały 01–30 pozostają lokalnie stabilne.**
+Całościowy audyt wszystkich
+44 rozdziałów trwa nadal.
