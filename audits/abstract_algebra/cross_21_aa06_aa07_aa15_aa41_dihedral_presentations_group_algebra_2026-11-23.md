@@ -79,3 +79,13 @@ Przegląd wymienionych czterech źródeł nie ujawnił koniecznej korekty matema
 po własności uniwersalnej wolnej algebry w AA-15 byłoby użytecznym **opcjonalnym** uzupełnieniem, lecz wymaga decyzji użytkownika zgodnie z \`AGENTS.md\`; bez aprobaty nie zmieniamy gotowych rozdziałów.
 
 Testy skończone nie zastępują ogólnego dowodu, nie są formalną kompilacją Lean i nie oznaczają wizualnego przeglądu wszystkich stron PDF. **AA-01–AA-50 pozostają niezmienione; AA-51 nie otwierano.**
+
+## 5. Zamknięcie AA-X21 — końcowa bramka PASS
+
+Rzeczywisty przebieg [GitHub Actions 45224658006](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45224658006) na dokładnie commicie workflow \`3f6991c0ac6d28a86fe1b09a0c9c183d2b71ab48\` zakończył się **completed/success**. Job \`validate-cli\` wykonał **99/99 kroków**, bez awarii. Odczytano log jobu \`137867800100\` i potwierdzono **8/8 testów AA-X21 = ok**, każdy zarówno przy globalnym odkrywaniu \`unittest\`, jak i w osobnym kroku \`Run AA-X21 dihedral presentation group algebra representations\`.
+
+Krok \`Compile AA-01 to AA-50 book with latexmk\`: **success**. Krok \`Verify PDF and references (no undefined refs)\`: **success**. Artefakt \`abstract-algebra-aa01-aa50\` ID \`14842782171\`, ZIP **2 289 388 bajtów**. Nie wykonano dodatkowej niezależnej inspekcji wizualnej stron PDF; status kompilacji i automatycznej integralności referencji nie jest tym samym co taka inspekcja.
+
+**AA-X21: ZAMKNIĘTY / STABILNY** w zakresie wskazanej kontroli przekrojowej. Nie ujawniono błędu wymagającego zmian zatwierdzonych rozdziałów. Ogólny dowód izomorfizmu prezentowanej algebry grupowej jest odrębny od testów skończonych przykładów; nie deklarujemy formalnej weryfikacji Lean. Wszystkie dotychczasowe statusy AA-01–AA-50 zachowano; rozdziałów nie modyfikowano i nie otwierano AA-51.
+
+**Następna iteracja:** wybrać inny zakres i otworzyć AA-X22 dopiero po powyższym zamknięciu, nadal bez automatycznego dopisywania opcjonalnych uzupełnień do zatwierdzonych źródeł.
