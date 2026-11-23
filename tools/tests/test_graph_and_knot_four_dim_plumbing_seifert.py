@@ -246,7 +246,13 @@ def fox_milnor_checks():
             rhs={k+g:c for k,c in pmul(f,f_rev).items()}
             assert pdet(M)==rhs,(g,V,f)
             checks+=1
-    return checks
+    V=[[0,2],[1,0]]
+    M=[[padd({1:V[i][j]},{0:-V[j][i]}) for j in range(2)]
+       for i in range(2)]
+    assert pdet(M)=={0:-2,1:5,2:-2}
+    assert det([[V[i][j]-V[j][i] for j in range(2)]
+                for i in range(2)])==1
+    return checks+1
 
 
 def isotropic_signature_checks():
@@ -296,6 +302,7 @@ def source_checks():
     ]
     x,y,z=[(BASE/n).read_text(encoding="utf8") for n in names]
     assert r"\label{lem:kt-isotropic-signature}" in x
+    assert r"\label{ex:kt-fox-milnor-matrix}" in x
     assert r"\label{lem:tg-plumbing-leaf-determinant}" in y
     assert r"\label{ex:tg-plumbing-D4-leaf}" in y
     assert r"\label{ex:tg-seifert-zero-e-torsion}" in z
