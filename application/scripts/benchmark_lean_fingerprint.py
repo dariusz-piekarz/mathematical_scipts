@@ -243,6 +243,19 @@ def benchmark(lean_root: Path, *, samples: int = 3) -> dict:
             document_sha, file, lean_root, dummy_binding)
         if first is not None and measured != first:
             raise RuntimeError("Dependencies changed during the fingerprint benchmark")
+        # Non-.olean build files are excluded from the fingerprint, but
+        # still cost time to enumerate. A changing file population makes
+        # cross-sample timing misleading even if the digest stays identical.
+        observed_counts = olean["counts"]
+        if (observed_counts["walk_files_seen"] !=
+                observed_counts["olean_name_candidates"] +
+                observed_counts["non_olean_names_skipped"]
+                or observed_counts["olean_files_opened"] >
+                observed_counts["olean_name_candidates"]):
+            raise RuntimeError("Inconsistent Lean .olean filename counters")
+        if olean_counts and observed_counts != olean_counts[0]:
+            raise RuntimeError(
+                "Lean artifact I/O counters changed during the fingerprint benchmark")
         first = measured
         durations.append(elapsed)
         olean_totals.append(olean["total_seconds"])
