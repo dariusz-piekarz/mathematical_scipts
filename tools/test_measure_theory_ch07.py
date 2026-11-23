@@ -109,9 +109,15 @@ def check_sources():
     source = files[-1]
     labels = [m.group(1) for f in files
               for m in re.finditer(r"\\label\{([^}]+)\}", f)]
+    # R07 legitimately refers forward to R08. Read R08 labels as
+    # dependency context only; do not audit or edit the next chapter.
+    forward = (BASE / "08-twierdzenia-graniczne-dla-calki-lebesguea.tex").read_text(
+        encoding="utf8"
+    )
+    labels.extend(m.group(1) for m in re.finditer(r"\\label\{([^}]+)\}", forward))
     refs = [m.group(1) for m in
             re.finditer(r"\\(?:ref|eqref|pageref)\{([^}]+)\}", source)]
-    assert len(labels) == len(set(labels)), "duplicate labels R01-R07"
+    assert len(labels) == len(set(labels)), "duplicate labels R01-R08 (reference context)"
     assert set(refs).issubset(set(labels)), f"missing refs: {set(refs)-set(labels)}"
     stack = []
     for kind, name in re.findall(r"\\(begin|end)\{([^}]+)\}", source):
