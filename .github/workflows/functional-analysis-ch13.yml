@@ -1,0 +1,84 @@
+name: Functional analysis - chapter 13 audit
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - 'chapters/pl/functional_analysis/0[1-9]-*.tex'
+      - 'chapters/pl/functional_analysis/10-*.tex'
+      - 'chapters/pl/functional_analysis/11-*.tex'
+      - 'chapters/pl/functional_analysis/12-*.tex'
+      - 'chapters/pl/functional_analysis/13-*.tex'
+      - 'books/pl/functional_analysis.tex'
+      - 'tools/tests/test_functional_analysis_ch13.py'
+      - 'audits/functional_analysis/13*'
+      - '.github/workflows/functional-analysis-ch13.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit-ch13:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check 13 Hilbert Fourier Riesz and Lax-Milgram contracts
+        run: python3 tools/tests/test_functional_analysis_ch13.py
+      - name: Prepare TeX wrapper with complete reference context 01-13
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          book = Path('books/pl/functional_analysis.tex').read_text(encoding='utf-8')
+          assert book.count(r'\begin{document}') == 1
+          pre = book.split(r'\begin{document}', 1)[0]
+          inputs = re.findall(
+              r'\\input\{(\.\./\.\./chapters/pl/functional_analysis/[^}]+)\}',
+              book
+          )
+          assert len(inputs) >= 13
+          assert all(inputs[i].split('/')[-1].startswith(f'{i+1:02d}-')
+                     for i in range(13))
+          body = r'\begin{document}' + '\n'
+          body += '\n'.join(r'\input{' + name + '}' for name in inputs[:13])
+          body += '\n' + r'\end{document}' + '\n'
+          Path('books/pl/functional_analysis_ch13_context_ci.tex').write_text(
+              pre + body, encoding='utf-8'
+          )
+          PY
+      - name: Compile chapter 13 with complete 01-13 reference context
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: functional_analysis_ch13_context_ci.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Verify PDF, chapter heading, mathematical content and cross-references
+        run: |
+          if ! command -v pdfinfo >/dev/null || ! command -v pdftotext >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq poppler-utils
+          fi
+          test -s books/pl/functional_analysis_ch13_context_ci.pdf
+          test -s books/pl/functional_analysis_ch13_context_ci.log
+          if grep -E 'Undefined control sequence|There were undefined references|LaTeX Warning: (Reference|Citation).*undefined|Overfull \\hbox|Missing character' books/pl/functional_analysis_ch13_context_ci.log; then
+            echo 'Chapter 13 LaTeX diagnostics failed.'
+            exit 1
+          fi
+          pdfinfo books/pl/functional_analysis_ch13_context_ci.pdf
+          pdftotext -layout books/pl/functional_analysis_ch13_context_ci.pdf books/pl/functional_analysis_ch13_context_ci.txt
+          grep -q 'Przestrzenie Hilberta' books/pl/functional_analysis_ch13_context_ci.txt
+          grep -q 'Twierdzenie Riesza' books/pl/functional_analysis_ch13_context_ci.txt
+          grep -q 'Twierdzenie Laxa' books/pl/functional_analysis_ch13_context_ci.txt
+      - name: Upload PDF and diagnostic logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: functional-analysis-ch13-pdf
+          path: |
+            books/pl/functional_analysis_ch13_context_ci.pdf
+            books/pl/functional_analysis_ch13_context_ci.log
+            books/pl/functional_analysis_ch13_context_ci.txt
+          if-no-files-found: warn
