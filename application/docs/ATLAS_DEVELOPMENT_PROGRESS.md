@@ -8,8 +8,8 @@
 
 - Aktywny etap: **1 — Lean 4, stabilizacja i rozwój formalizacji**.
 - Aktywny fragment: **L1.1 — limit odczytu `.olean` i weryfikacja CI**.
-- Stan: **testing** (wdrożono poprawkę we wcześniejszej iteracji, ale nie potwierdzono jeszcze pełnych testów po zmianie).
-- Stabilizacja 2+1 na SHA finalnego kodu: **0/3** potwierdzonych czystych kontroli.
+- Stan: **testing** (po kolejnych zmianach kodu od czasu zweryfikowanego kandydata konieczna ponowna walidacja).
+- Stabilizacja 2+1 na SHA finalnego kodu: **0/3**; historyczne 3/3 dotyczy starszego SHA `457683f8...`.
 - Dodatkowy sceptyczny audyt bieżącej poprawki: **niezaliczony / do wykonania**.
 - Następny krok: odczytaj aktualny `application/docs/LEAN_FORMALIZATION_PLAN.md`, HEAD, logi i workflow dla poprawki limitu rzeczywistych odczytów `.olean`; uruchom/zweryfikuj regresje obejmujące współbieżny wzrost pliku, za wczesny EOF, narzut jednego bajtu, Windows/Linux oraz prawdziwy Lean/Mathlib. Wykonaj kolejne kontrole do 2+1. **Nie przechodź do L1.2 do pełnego zamknięcia L1.1.**
 
@@ -242,3 +242,12 @@
 - **Sceptyczna kontrola techniczna:** job `skeptical_contract` (ID `137583859434`) uruchomił rzeczywiście **18/18 testów** walidatora, w tym fałszywe kategorie pominięć, brak wyników, zamianę rund, brak regresji rzeczywistego pliku, fałszywego recenzenta i uruchomienie CLI spoza katalogu aplikacji. Wynik `OK`. To jest kontrola kontraktu i przypadków negatywnych, **nie** poświadczony niezależny audyt osoby trzeciej.
 - **Licznik techniczny 2+1:** **3/3** na SHA `457683f8...` (ukończone); status końcowego artefaktu **`stabilizing`**, `skeptical_review=pending`, `certificate=false`. Brakuje uwierzytelnionego, niezależnego zatwierdzenia recenzenta wymaganego przez kanoniczny plan. Nie nadajemy `stable`, nie przechodzimy do L1.2.
 - **Następny dokładnie jeden krok:** uzyskać i zweryfikować niezależny, uwierzytelniony odbiór L1.1 według `application/docs/ATLAS_L11_REVIEW_PACKET.md`, odnoszący się do dokładnego SHA `457683f8...` i artefaktu 3/3. Do tego czasu fragment pozostaje `stabilizing` (oczekiwanie na odbiór).
+
+
+### 2026-11-23, ok. 11:00 Europe/Warsaw — L1.1: kontrola aktualności kandydata po zmianach równoległych
+
+- **Jedna iteracja weryfikacyjna, bez zmiany kodu:** ponownie odczytano kanoniczny plan, dziennik, plan Lean, ogólny dziennik, aktualne źródła i testy L1.1 oraz historyczny wynik [Atlas #45141403307](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45141403307). Nie przeprowadzono nowego CI ani uwierzytelnionej recenzji; brak nowego poświadczenia osoby trzeciej.
+- **Istotne nowe ustalenie:** obecny blob `application/backend/lean_environment.py` = `1f7cea1d620d9a2648c3d01d4b6324df3d69d6a4`, podczas gdy blob na sprawdzonym kandydacie `457683f8a964c79c51cbd9f36fd091d912e4ee80` = `110b14e8ea5268aeb0dae0e6f00c9d1f4d6adb10`; **nie są identyczne**. Aktualny blob testów `application/tests/test_lean_environment.py` = `2f8358e2e05ac3dbbe1624534f84f70d12788087`. Porównanie GitHub kandydata z gałęzią wykazało zmiany w obu plikach (odpowiednio 22 dodane/8 usuniętych oraz 138 dodanych linii), obejmujące optymalizację skanowania drzewa `.olean` i regresje zgodności fingerprintu. To nie jest wyłącznie zmiana dokumentacji.
+- **Konsekwencja:** historyczne **3/3** na `457683f8...` pozostaje udokumentowanym wynikiem **wyłącznie tamtego SHA**, nie może potwierdzać obecnego kodu. Dla zmienionej implementacji licznik **0/3** do czasu nowego kompletnego CI 2+1 na jednym zamrożonym SHA. Nawet 3/3 wymaga dodatkowo uwierzytelnionej niezależnej recenzji. Nie oznaczać `stable` ani nie rozpoczynać L1.2.
+- **Stan:** L1.1 = `testing` (ponowna walidacja po zmianie kodu), audyt sceptyczny nowej optymalizacji = niezaliczony, formalne zatwierdzenie = `pending_authenticated_review`, `certificate=false`. Nie podajemy SHA HEAD jako potwierdzonego, gdyż odczyt treści przez API potwierdza SHA blobów, nie commit gałęzi.
+- **Następny dokładnie jeden krok:** przypiąć aktualny commit zawierający optymalizację i uruchomić pełne 2+1 (aplikacja/Chromium, natywne Linux/Windows, Lean/Mathlib, sceptyczny audyt) na tym samym SHA; następnie dopiero rozliczać formalny odbiór.
