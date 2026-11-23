@@ -2,9 +2,12 @@
 
 **Data:** 2026-11-23. **Gałąź:** `biblioteka-matematyczna-iteracja-6`.
 **Jednostka:** L1.2 — osobna od ustabilizowanej optymalizacji L1.1.
-**Stan:** implementacja i testy przeszły szybkie regresje Linux/Windows oraz
-pełne CI aplikacji; rzeczywista kontrola przypiętego Lean+Mathlib i formalna
-stabilizacja 2+1 nadal otwarte.
+**Stan końcowy: STABILNY (2026-11-23)** dla niezmienionego commita
+`cfcf23f8eb3d60814c60212c27745b6dd01edf9d`. Trzy pełne przebiegi
+CI na tym samym SHA, osobny przypięty Lean 4/Mathlib, natywne regresje
+Linux/Windows i niezależny sceptyczny przegląd zakończone pomyślnie.
+Odnosi się to wyłącznie do rygoru interpretacji lokalnych rekordów
+uruchomienia; nie jest certyfikatem zgodności twierdzeń z LaTeX-em.
 
 ## Problem i ograniczony zakres
 
@@ -62,21 +65,74 @@ Commity `752ea793` i `550bb1ea` podłączają ten test do szybkiego
 Linux/Windows i osobnego przypiętego workflow Lean 4 / Mathlib. Kontrakt
 API i runner Lean pozostają bez zmian.
 
-## Bramka stabilizacji
+## Niezależny przegląd sceptyczny i poprawki
 
-- [x] Udane regresje Linux i natywny Windows dla L1.2:
-      [#45151036509](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45151036509),
-      182 testy Linux i 82 na natywnym Windows, `completed/success`.
-- [x] Pełne CI aplikacji na commicie obejmującym implementację i testy:
-      [#45151140917](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45151140917),
-      SHA `774d7beb`, `completed/success`: 712 testów Pythona,
-      10 sklasyfikowanych pominięć, `unreviewed_skips=0`,
-      rzeczywisty Chromium `passed`, 501 zaindeksowanych rozdziałów,
-      brak raportowanych błędów JavaScript.
-- [ ] Rzeczywisty Lean 4.26.0 / przypięty Mathlib oraz kontrola aksjomatów
-- [ ] Odrębny sceptyczny przegląd semantyki `run_record_invalid` i
-      `previous_run_outdated`
-- [ ] Powtarzalna walidacja 2+1 na tym samym SHA
+Przeanalizowano bezpośrednio `lean_results.last_run`,
+`lean_results.save_run` oraz miejsca użycia w API czytnika i w procesie
+uruchamiania Lean. Weryfikacja nie opierała się wyłącznie na pozytywnych
+wynikach testów: w jej trakcie wykryto i poprawiono dwa realne problemy.
 
-Do zamknięcia tych bramek oznaczać L1.2 jako **W TOKU**.
-L1.1 pozostaje niezależnie **ZAMKNIĘTY** dla SHA `95508306`.
+1. **Rozmiar zapisu vs odczytu:** pierwotnie `save_run` ograniczał log do
+   16 000 *znaków*, a `last_run` odrzucał rekord przekraczający
+   30 000 *bajtów*. Wielobajtowe znaki UTF-8 oraz rozwinięcie escapingu
+   JSON powodowały, że prawidłowo zapisany rekord był potem odrzucany.
+   Commit [`7e50cd3e`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/7e50cd3ed3a14359be669f03c37d2d2e4f14141a)
+   dobiera najdłuższy mieszczący się w limicie **sufiks logu** na podstawie
+   rzeczywiście zakodowanego JSON i zapisuje maksymalnie 30 000 bajtów
+   atomowo. Testy w commicie
+   [`3c613db2`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/3c613db2d3a67840276c780e87cded0fa6748308)
+   sprawdzają Unicode, znaki sterujące i odczyt zapisanej historii.
+2. **Głębokie zagnieżdżenie JSON:** nawet lokalny plik mniejszy niż
+   30 000 bajtów może zawierać 14 000 zagnieżdżonych tablic i wywołać
+   `RecursionError` parsera. Zamiast błędu serwera odczyt ma zwracać
+   `not_run` i `run_record_invalid=true`, zawsze
+   `run_cached=false`. Implementacja:
+   [`08419340`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/08419340233b0d9787fda06c31c9c00480cf8108);
+   test deterministyczny (28 001 bajtów):
+   [`cfcf23f8`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/cfcf23f8eb3d60814c60212c27745b6dd01edf9d).
+
+Przegląd potwierdza: dokładny schemat rekordu 5; odrzucanie
+zduplikowanych kluczy, fałszywego `certificate`, nadmiarowych lub
+brakujących pól i błędnych SHA256; prawidłowe rozróżnienie rekordu
+**niepoprawnego** od poprawnego, ale **nieaktualnego**; limit faktycznego
+odczytu; jawnie `certificate=false` dla całej diagnostyki. Kompilacja
+Lean i kontrola aksjomatów nie zastępują ręcznej oceny równoważności
+twierdzenia z kanonicznym źródłem LaTeX.
+
+**Pozostałe granice zaufania (jawnie zaakceptowane w zakresie L1.2):**
+lokalny JSON z uprawnieniami zapisu nie ma podpisu/poświadczenia
+kryptograficznego; proces mogący modyfikować katalog wyników może
+podrobić strukturalnie poprawny rekord. `is_symlink()` przed
+`open()` nie usuwa wyścigu TOCTOU, a zmiana katalogu nadrzędnego
+przez niezaufany proces również wymaga oddzielnego modelu bezpieczeństwa.
+Nie przypisujemy testom własności sandboxa ani dowodu pochodzenia danych.
+Mechanizmy uruchamiania Lean i checkpointy `before/locked/after`
+nie były w tej iteracji osłabiane.
+
+## Bramka stabilizacji — ZALICZONA
+
+Dla **identycznego** SHA
+`cfcf23f8eb3d60814c60212c27745b6dd01edf9d`:
+
+| Kontrola | Dowód | Wynik |
+|---|---|---|
+| Szybki Linux + natywny Windows | [#45154777288](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45154777288), 185/85 testów, nowe przypadki Unicode i głębokiego JSON `ok` | PASS |
+| Natywne Windows Job Objects | [#45154777383](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45154777383) | PASS |
+| Pełne CI, próba 1 | [#45154777272](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45154777272), job `137624819790` | PASS |
+| Pełne CI, próba 2 | ten sam run, `run_attempt=2`, job `137625935752` | PASS |
+| Pełne CI, próba 3 | ten sam run, `run_attempt=3`, job `137627050626` | PASS |
+| Lean 4.26.0, przypięty Mathlib, kompilacja i kontrola aksjomatów | [#45154777475](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45154777475) | PASS |
+| Rzeczywista introspekcja MetaM oraz trzy pełne fingerprinty | ten sam run Lean+Mathlib; fingerprint artefaktów zgodny z niezależnym przebiegiem profilera CPU | PASS |
+| Sceptyczny przegląd semantyki zapisów oraz granic zaufania | powyższa analiza i testy z wykryciem dwóch usterek | PASS, z wyszczególnionymi ograniczeniami |
+
+W **każdej** z trzech prób pełnego CI: `715` wykonanych testów Pythona,
+`10` sklasyfikowanych pominięć, `unreviewed_skips=0`; Chromium
+`passed`, `504` zaindeksowane rozdziały, `javascript_errors=[]`.
+Wszystkie próby miały `candidate_sha=cfcf23f8eb3d60814c60212c27745b6dd01edf9d`.
+
+**Decyzja:** L1.2 — walidacja i spójność lokalnych rekordów uruchomienia
+Lean — **ZAMKNIĘTY / STABILNY** w precyzyjnie opisanym zakresie.
+Jeżeli przyszła zmiana obejmie ten podsystem, wymaga własnych regresji
+i nowej stabilizacji; sukcesy dla starego SHA nie przechodzą
+automatycznie na nowy kod. L1.1 pozostaje niezależnie **ZAMKNIĘTY**
+dla SHA `95508306`.
