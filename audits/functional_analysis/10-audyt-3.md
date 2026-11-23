@@ -55,3 +55,9 @@ Dedykowany [GitHub Actions #45217695143](https://github.com/dariusz-piekarz/math
 ## Decyzja
 
 **Rozdział 10 — 10/03: CZYSTY, pierwszy z dwóch wymaganych audytów stabilizacyjnych (1/2).** Brak zmian źródła LaTeX i brak nowego kontrprzykładu. Następna iteracja: **10/04**, niezależna kontrola tej samej wersji SHA `2ea6b36366c8ec4dc1d2ecf8192fae1054c841b0`. Dopiero dwa czyste przeglądy i zielony dedykowany CI zezwalają na przejście do rozdziału 11.
+
+## Uzupełnienie po ostatecznym CI dla 10/03
+
+Po zapisaniu raportu oraz korekcie wyłącznie jego redakcji zakończył się dedykowany przebieg [GitHub Actions #45222141311](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45222141311) na commicie `d45f1c9bf169949c03ec927da7eeda13bc338469`. **Status: COMPLETED / SUCCESS.** Wszystkie kroki zakończyły się sukcesem: **13/13 testów**, przygotowanie rzeczywistego kontekstu źródłowego 01–10, kompilacja LaTeX, automatyczna weryfikacja PDF i odsyłaczy oraz publikacja artefaktu. Po ukończeniu workflow ponownie sprawdzono blob rozdziału 10: `2ea6b36366c8ec4dc1d2ecf8192fae1054c841b0` — bez zmian od 10/02. W audycie 10/03 nie wykonywano nowej wizualnej inspekcji PDF: niezależna inspekcja dla identycznego źródła znajduje się w audycie 10/02.
+
+**Werdykt zamkniętej iteracji: CZYSTY, 1/2, CI ZIELONE.** Kolejna niezależna iteracja 10/04 powinna weryfikować tę samą wersję źródła. Dopiero drugi czysty audyt i zielony CI pozwolą zamknąć rozdział 10 i przejść do rozdziału 11.
