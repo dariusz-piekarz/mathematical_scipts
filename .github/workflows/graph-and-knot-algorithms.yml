@@ -66,11 +66,12 @@ jobs:
           text = preamble + '\n'.join(chosen) + '\n\\end{document}\n'
           (root / 'graph_and_knot_algorithms_ci.tex').write_text(text, encoding='utf-8')
           PY
-      - name: Compile twice and inspect PDF / references
+      - name: Compile three times and reject unstable references / layout
         working-directory: books/pl
         run: |
           pdflatex -interaction=nonstopmode -halt-on-error -file-line-error graph_and_knot_algorithms_ci.tex > graph_algorithms_pass1.txt
           pdflatex -interaction=nonstopmode -halt-on-error -file-line-error graph_and_knot_algorithms_ci.tex > graph_algorithms_pass2.txt
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error graph_and_knot_algorithms_ci.tex > graph_algorithms_pass3.txt
           test -s graph_and_knot_algorithms_ci.pdf
           for target in 'ch:tg-bfs-dfs' 'thm:tg-bfs-correct' 'thm:tg-dfs-bridge' 'fig:tg-bfs-layers' 'ch:tg-shortest-paths' 'thm:tg-weighted-astar' 'thm:tg-weighted-ch-query' 'fig:tg-weighted-sample' 'ch:tg-mst' 'thm:tg-mst-cut' 'thm:tg-mst-kruskal' 'thm:tg-mst-prim' 'fig:tg-mst-five' 'ch:tg-flow-algorithms' 'thm:tg-flow-certificate' 'thm:tg-flow-ek' 'thm:tg-flow-dinic' 'fig:tg-flow-cut-five'; do
             grep -Fq "\\newlabel{$target}" graph_and_knot_algorithms_ci.aux
@@ -89,8 +90,9 @@ jobs:
             echo "PDF contains a protruding line/box: not stable"
             exit 1
           fi
-          if grep -E 'LaTeX Warning: Label.*multiply defined|LaTeX Warning: Reference.*undefined' graph_and_knot_algorithms_ci.log; then
-            echo "Inspect any unresolved references in the isolated 00-05+37+38+39+40 subset"
+          if grep -E 'LaTeX Warning:.*(multiply defined|undefined|Label\(s\) may have changed)|There were undefined references' graph_and_knot_algorithms_ci.log; then
+            echo "Unstable or unresolved references after three LaTeX passes"
+            exit 1
           fi
       - name: Upload actual PDF, logs and extracted text
         if: always()
