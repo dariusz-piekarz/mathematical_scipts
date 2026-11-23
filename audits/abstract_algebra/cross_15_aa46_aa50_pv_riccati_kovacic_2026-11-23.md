@@ -42,3 +42,11 @@ Nowy test uruchomiony na pełnym checkoutcie przez CI powinien wykonać łączni
 ## 4. Następny krok
 
 Zweryfikować wynik dokładnie tego uruchomienia workflow, w szczególności krok AA-X15, ogólną integralność i `latexmk`. Jeżeli pełny CI zostanie zielony i nie wykaże nowej usterki, zamknąć AA-X15 jako czysty audyt przekrojowy bez zmiany statusów rozdziałów. Jeżeli pojawi się awaria, poprawić i ponowić walidację przed przejściem do kolejnego zakresu.
+
+## 5. Zamknięcie po niezależnym odczycie GitHub Actions (2026-11-23)
+
+**AA-X15: ZAMKNIĘTY — PASS w określonym zakresie audytu przekrojowego.** Zweryfikowano rzeczywisty zakończony przebieg [45196378758](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45196378758) na dokładnie `9fdeafaf9f859b2f7fd4f922878b70c90ae6d25f`: `completed / success`; pojedynczy job `validate-cli`, 93 kroki z wynikiem completed, bez błędów. Krok `Run AA-X15 cross-chapter Riccati and PV checks`: **success**. Z logu tego przebiegu niezależnie odczytano wszystkie pięć testów `CrossAuditAA46to50`: `test_airy_exclusions`, `test_finite_local_sets`, `test_labels_and_refs_aa43_to_aa50`, `test_quadratic_models_and_discriminant`, `test_risch_pv_rational_interface` — wszystkie **ok**.
+
+Następne kroki `Compile AA-01 to AA-50 book with latexmk` i `Verify PDF and references (no undefined refs)`: **success**, archiwizacja również **success**. Artefakt `abstract-algebra-aa01-aa50` o ID `14829465683` został przesłany (2 289 387 B ZIP). Kompilacja i reguły odsyłaczy są w tej iteracji potwierdzone; **nie wykonywano osobnej wizualnej inspekcji stron PDF**. Rozdziały AA-01–AA-50 nie były zmieniane przez AA-X15, stąd nie przenosi się tego audytu na nowe deklaracje o składzie wizualnym. Wcześniejsze statusy stabilności nie są resetowane.
+
+**Następny niezależny zakres:** AA-15 × AA-41–AA-42 — zgodność definicji algebry grupowej, lewych modułów, Maschkego, Schura i centralnych operatorów/projektorów. Wymaga osobnego raportu i testu; poprzedni audyt AA-41–AA-42 nie obejmował interfejsu z AA-15.
