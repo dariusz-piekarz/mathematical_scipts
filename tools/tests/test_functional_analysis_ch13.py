@@ -75,7 +75,7 @@ class Chapter13Audit(unittest.TestCase):
         x = [1+2j, -3+1j]
         y = [2-1j, 4+3j]
         self.assertAlmostEqual(abs(inner(x, y)-inner(y, x).conjugate()), 0)
-        self.assertAlmostEqual(abs(inner(2j*x[0:1][0:1] if False else [2j*z for z in x], y)-2j*inner(x, y)), 0)
+        self.assertAlmostEqual(abs(inner([2j*z for z in x], y)-2j*inner(x, y)), 0)
         self.assertAlmostEqual(abs(inner(x, [2j*z for z in y]) + 2j*inner(x, y)), 0)
 
     def test_complex_polarization_formula(self):
