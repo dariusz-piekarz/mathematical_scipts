@@ -71,3 +71,15 @@ Nowy plik tools/tests/test_abstract_algebra_cross_aa26_27_29.py zawiera **8 niez
 Nie zakładamy, że testy przykładów dowodzą ogólnych twierdzeń; argumenty ogólne zostały zapisane osobno w punktach 1–3. Testy nie stanowią formalizacji Lean. Nowy moduł dodano do wyzwalacza i kroku Run AA-X26 Kummer Artin-Schreier finite-field bridge checks w .github/workflows/abstract-algebra-chapter.yml. Commit workflow **47dbe4e023f9c82daa1238ba1abba3e2f62d1d7e**.
 
 **Stan przy sporządzeniu raportu: W STABILIZACJI.** Do zamknięcia wymagane są 8/8 testów jako ok w rzeczywistym logu, ukończony zielony workflow, kompilacja AA-01–AA-50 i kontrola PDF oraz wszystkich odsyłaczy. Osobny wizualny przegląd wszystkich stron PDF nie jest wykonany. Nie zmieniono zatwierdzonych rozdziałów. Proponowane jako **opcjonalne rozszerzenie**, wymagające osobnej zgody: krótka tabela zestawiająca oba mechanizmy Frobeniusa w AA-27 lub AA-29; nie jest to poprawka obowiązkowa.
+
+## Zamknięcie AA-X26 — stabilizacja zweryfikowana
+
+**Przebieg produkcyjny:** [GitHub Actions 45254636448](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45254636448), sprawdzony na niezmiennym commicie workflow **47dbe4e023f9c82daa1238ba1abba3e2f62d1d7e**. Status **completed / success**, job validate-cli ID **137973114648**, **104/104 kroki** ukończone, bez błędów.
+
+Odczytano rzeczywisty, dekodowany log tego jobu. Każdy z **8/8 testów AA-X26** ma wynik **ok** zarówno w globalnym odkrywaniu testów repozytorium, jak i w wydzielonym kroku Run AA-X26 Kummer Artin-Schreier finite-field bridge checks. Pozostałe testy repozytorium zakończyły się pozytywnie. Test wykorzystujący SymPy emituje nieblokujące ostrzeżenie deprecacyjne biblioteki (dotyczy przyszłego sortowania elementów modularnych), ale nie ma błędów matematycznych ani testowych.
+
+**Pełny tom:** Compile AA-01 to AA-50 book with latexmk — **success**. Verify PDF and references (no undefined refs) — **success**. Archiwum artefaktu abstract-algebra-aa01-aa50, ID **14858236301**, ZIP **2 289 387 bajtów**. Nie przeprowadzono osobnej wizualnej inspekcji stron PDF; kompilacja i analiza logu LaTeX nie są z nią utożsamiane.
+
+**Werdykt AA-X26: ZAMKNIĘTY / STABILNY** w zakresie interfejsu AA-26 × AA-27 × AA-29, po udowodnieniu i niezależnym przetestowaniu wzorów dla Frobeniusa multiplikatywnego i addytywnego nad ciałami skończonymi. Nie wykryto koniecznych poprawek w zatwierdzonych źródłach; wszystkie AA-01–AA-50 pozostały bez zmian. Testy nie stanowią formalizacji Lean i nie przesądzają o pełnym audycie pozostałych dowodów całego tomu. AA-51 nie został otwarty. Propozycja opcjonalnej tabeli porównującej oba mechanizmy pozostaje do decyzji użytkownika.
+
+**Następny etap:** AA-X27 — nowy, niezduplikowany zakres i ponowna stabilizacja, dopiero po niniejszym zamknięciu.
