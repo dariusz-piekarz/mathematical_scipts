@@ -336,6 +336,7 @@ def source_integration():
     assert r"thm:tg-free-pi1" in source["07"]
     assert r"thm:tg-kirchhoff" in source["08"]
     assert r"thm:tg-euler-plane" in source["09"]
+    assert "Dwukolorowanie ścian bez dwudzielności grafu" in source["09"]
 
 
 if __name__=="__main__":
