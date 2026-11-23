@@ -118,7 +118,7 @@ class FrobeniusReductionInterface(unittest.TestCase):
 
     def test_exact_cubic_frobenius_patterns_and_bad_prime(self):
         f=X**3-X-1
-        patterns={2:(3,),5:(1,2),23:(1,2),59:(1,1,1)}
+        patterns={2:(3,),5:(1,2),23:(1,1,1),59:(1,1,1)}
         for p,expected in patterns.items():
             with self.subTest(p=p):
                 self.assertEqual(factor_degrees(f,p),expected)
