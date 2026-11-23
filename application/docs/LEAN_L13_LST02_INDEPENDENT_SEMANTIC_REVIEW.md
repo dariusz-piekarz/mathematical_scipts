@@ -1,5 +1,16 @@
 # L1.3 / LST-02 — pakiet do niezależnej recenzji semantycznej
 
+> **Uwaga o nowszej rewizji, 2026-11-23:** po zakończeniu 3/3 dla
+> historycznego SHA `163c8f6415d9d390fc1a737f6954b2865eff6c6e`
+> dodano dokładny kontrprzykład źródłowy na liczbach naturalnych
+> do `thm:swap-mixed` w nowym SHA
+> `44cc2031d9e62ad0158dbea5cc59462e7bc6124a`.
+> **Poniższe 3/3 i wcześniejsze siedem deklaracji dotyczą
+> wyłącznie poprzedniego SHA.** Nowy kandydat ma osiem deklaracji
+> LST-02; jego kompilacja i nowe 2+1 muszą być sprawdzone
+> niezależnie. Bez osobnej recenzji oba warianty pozostają
+> `needs_review`, `certificate=false`.
+
 **Audytowany, niezmienny commit:** `163c8f6415d9d390fc1a737f6954b2865eff6c6e`.  
 **Cztery formalizacje zgłoszone do recenzji:** `needs_review`, nie `approved`.  
 **Odbiór techniczny:** [2+1 #45208224201](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45208224201), **3/3 PASS**.  
