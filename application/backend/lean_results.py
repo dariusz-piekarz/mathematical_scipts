@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import re
+import stat
 import tempfile
 from typing import Any
 
@@ -162,9 +163,31 @@ def last_run(identifier: str, expected: dict[str, str], *,
             return invalid
         if not path.is_file():
             return {"proof_status": "not_run", "run_cached": False}
-        # Bound the actual bytes read, including if a file grows after stat.
-        with path.open("rb") as stream:
+        # The path may change after the checks above. O_NOFOLLOW prevents
+        # following the final symlink on supporting POSIX filesystems.
+        # A descriptor identity check is also needed on Windows, where
+        # O_NOFOLLOW may not exist. Parent directories remain outside this
+        # local trust boundary.
+        flags = os.O_RDONLY | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0)
+        descriptor = os.open(path, flags)
+        with os.fdopen(descriptor, "rb") as stream:
+            opened = os.fstat(stream.fileno())
+            named = path.lstat()
+            def identity(info: os.stat_result) -> tuple[int, int, int, int, int]:
+                return (info.st_dev, info.st_ino, info.st_size,
+                        info.st_mtime_ns, info.st_ctime_ns)
+            if (not stat.S_ISREG(opened.st_mode)
+                    or not stat.S_ISREG(named.st_mode)
+                    or identity(opened) != identity(named)):
+                raise ValueError("Lean run record was replaced before reading")
+            # Bound actual bytes even if the file grows after the first stat.
             raw = stream.read(MAX_RECORD_BYTES + 1)
+            named_after = path.lstat()
+            opened_after = os.fstat(stream.fileno())
+            if (not stat.S_ISREG(named_after.st_mode)
+                    or identity(opened) != identity(opened_after)
+                    or identity(opened) != identity(named_after)):
+                raise ValueError("Lean run record changed during reading")
         if len(raw) > MAX_RECORD_BYTES:
             raise ValueError("Oversized Lean run record")
         record = json.loads(raw.decode("utf-8"), object_pairs_hook=_unique_json_keys)
