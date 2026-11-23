@@ -57,3 +57,12 @@ Dodano `application/tests/test_lean_environment.py::test_olean_multiroot_digest_
 Ten test uzupełnia test zgodności z poprzednim algorytmem (różne budżety, Unicode, kolejność pól) oraz test policzalnej redukcji wywołań `Path.relative_to`. Celem jest wykrycie regresji w kolejności sortowania, dzieleniu budżetu między projekt i pakiety lub nazwach względnych. Zmian produkcyjnych nie wprowadzono w tej poditeracji.
 
 **Wynik nowego testu pozostaje zależny od zakończenia CI.** Do czasu potwierdzenia CI na jego commicie nie podnosić statusu stabilizacji L1.1. Pomiary z wcześniejszego, rzeczywistego profilera pozostają ważne wyłącznie dla commita, na którym je uruchomiono.
+
+## Wynik niezależnego testu projektu i Mathlib (23.11.2026)
+
+- Pierwszy przebieg nowego testu na commicie `41d60ad9` zakończył się błędem **wyłącznie testowym** `NameError: name 'json' is not defined`, potwierdzonym osobno w Linux i Windows ([CI #45145944311](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45145944311)). Nie był to błąd produkcyjnego fingerprintu.
+- Dodano brakujący import w commicie `4aa3f8fd` i uruchomiono testy ponownie. [Szybki Lean CI #45145976138](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45145976138) zakończył się `completed/success` zarówno dla Linux, jak i natywnego Windows. Logi obu zadań jawnie potwierdzają `test_olean_multiroot_digest_matches_independent_expected_schema ... ok`.
+- [Windows Job Objects #45145976141](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45145976141) na tym samym SHA również zakończył się sukcesem.
+- Pełne CI aplikacji i nowy przypięty Lean+Mathlib na `4aa3f8fd` **nie miały potwierdzonego zakończenia** podczas tej kontroli. Wynik poprzedniego profilera `aecd94e7` jest potwierdzony, ale nie dowodzi jeszcze przyspieszenia najnowszej produkcyjnej optymalizacji `b1bd6db7`.
+
+**Wniosek:** test niezależnej budowy SHA256 całego drzewa projekt/pakiety działa poprawnie na dwóch systemach, a wymaganie zamknięcia L1.1 nadal obejmuje realny pinned Mathlib i pełny CI na bieżącym kodzie.
