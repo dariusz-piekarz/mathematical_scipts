@@ -47,7 +47,9 @@ class Chapter02Audit(unittest.TestCase):
         all_labels = set()
         for source in self.texts.values():
             all_labels.update(re.findall(r"\\label\{([^}]+)\}", source))
-        for ref in re.findall(r"\\(?:ref|hyperref)\[?([^}\]]+)[}\]]", self.text):
+        refs = (re.findall(r"\\ref\{([^}]+)\}", self.text)
+                + re.findall(r"\\hyperref\[([^]]+)\]", self.text))
+        for ref in refs:
             self.assertIn(ref, all_labels)
         for label in ("sec:tvs", "sec:lokalnie-wypukle", "thm:final-tvs",
                       "thm:quotient-norm", "thm:hausdorffization"):
