@@ -4,7 +4,7 @@
 **Gałąź:** biblioteka-matematyczna-iteracja-6.  
 **Źródło:** chapters/pl/functional_analysis/05-przestrzenie-lokalnie-wypukle-i-seminormy.tex.  
 **SHA źródła:** 2b72d6c88f413021d695024481b1a4a5c466476c.  
-**Wynik matematyczno-redakcyjny:** **CZYSTY** — nie wprowadzono żadnych zmian do rozdziału; pierwszy kandydat do 1/2 czystych audytów od ostatniej korekty 05/03. **Rozdział 05 nadal NIE jest stabilny.**
+**Wynik:** **CZYSTY matematycznie, redakcyjnie i technicznie, 1/2 wymaganych kolejnych czystych audytów po korekcie 05/03.** Nie wprowadzono zmian do rozdziału. **Rozdział 05 nadal NIE jest stabilny.**
 
 ## Metoda audytu
 
@@ -49,8 +49,9 @@ Dodatkowo ponownie wyprowadzono nierówność dla L^p([0,1]), 0<p<1, wykorzystuj
 - **13 par proof, 5 par przyklad, 19 unikatowych etykiet, 14 odsyłaczy**, wszystkie ich cele znajdują się w rzeczywistych rozdziałach 01–05.
 - Słownictwo zgodne z ustalonymi konwencjami: „zupełność ciągowa”, „przestrzeń sprzężona”, oznaczenie funkcji charakterystycznych χ_A, bez niepożądanych anglicyzmów i niedozwolonych form.
 - Sprawdzono matematyczne przesłanki diagramu Minkowskiego, w tym p_A(x)>0; nie wprowadzano zmian w TikZ ani opisie.
-- W dedykowanym [CI 45171358837](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45171358837) etap **18 testów** przeszedł PASS, a przygotowanie dokumentu 01–05 PASS. Końcową kompilację, kontrolę odsyłaczy oraz PDF trzeba odnotować po potwierdzeniu całego przebiegu.
+- [CI 45171617783](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45171617783) zakończył się **pełnym SUCCESS** przy niezmienionym źródle i 18 testach: 18/18 PASS, poprawna kompilacja LaTeX w kontekście rozdziałów 01–05, końcowa kontrola odsyłaczy i PDF PASS, zapis artefaktu PASS. Wcześniejszy [CI 45171358837](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45171358837) również był w pełni udany.
+- Pobrano artefakt PDF z przebiegu 45171358837, dla dokładnie tej samej wersji rozdziału i testów: **33 strony A4, 482683 bajty**. Wyrenderowano i obejrzano strony **27–33**, w tym schemat Minkowskiego na stronie 29. Żadne bloki tekstowe nie wychodzą poza strony (0 stwierdzonych odchyleń), brak kolizji etykiet z diagramem. W końcowym logu: **0** wystąpień `Undefined control sequence`, `There were undefined references`, `Overfull \\hbox`, `Missing character`.
 
 ## Werdykt
 
-**Czysty audyt matematyczno-redakcyjny bez zmian w rozdziale 05.** Po potwierdzonym pełnym CI może zostać zaliczony jako **1/2 kolejnych czystych audytów**. Do stabilizacji konieczny następny niezależny audyt 05/05. **Nie rozpoczynano rozdziału 06.**
+**CZYSTY AUDYT 05/04, pełny CI PASS, bez zmian w rozdziale. Zalicza się jako 1/2 kolejnych czystych audytów.** Do stabilizacji konieczny następny niezależny audyt 05/05. **Nie rozpoczynano rozdziału 06.**
