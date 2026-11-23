@@ -6,6 +6,8 @@
 
 ## Wskaźnik wykonywania
 
+- **Priorytet naprawczy:** L1.3 — otwarty pilotaż LST-01 / LST-02 / LA-01. Nowa partia LST-02: 4 mapowania `needs_review`, 2+1 w toku na niezmiennym SHA `163c8f64`. Etap L1.4.1 ma historyczne 3/3 PASS, ale czeka w `stabilizing` na niezależny odbiór, a L1.4.2 nie rozpoczęto.
+
 ## Bieżąca stabilizacja techniczna L1.4.1 — nowy kandydat
 
 - **Stan: `stabilizing`**; 3/3 technicznych, kompletnych rund **PASS** wyłącznie dla niezmiennego SHA `94a7b4a1e592b1b0504b881f9c016004786ca6d9`. **Nie ma niezależnej, uwierzytelnionej aprobaty**, dlatego nie przyznano `stable`.
@@ -364,3 +366,13 @@
 - [Pierwsze CI Lean #45206413529](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45206413529) i [CI aplikacji #45206413567](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45206413567) niezaliczone: test niepoprawnie oczekiwał dwóch ukośników TeX. [Commit korekty `163c8f64`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/163c8f6415d9d390fc1a737f6954b2865eff6c6e) usuwa błąd.
 - [CI aplikacji #45206502457](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45206502457) `completed/success`: **736** testów Pythona, **10** sklasyfikowanych pominięć, **0** nierozliczonych, test LST-02 PASS; Chromium **509** rozdziałów, `javascript_errors=[]`. [Przypięty Lean #45206502490](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45206502490): w trakcie instalacji środowiska przy zapisie. Nie przenosić sukcesu app CI na wynik kompilacji Lean.
 - Otwarte [issue #11](https://github.com/dariusz-piekarz/mathematical_scipts/issues/11) wymaga 20–30 recenzowanych mapowań, w tym LA-01; `certificate=false`. [Stary kandydat L1.4.1](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181138327) pozostaje historycznie 3/3 PASS **na starym SHA i 5-wpisowym manifeście**; nie dowodzi poprawności nowego, rozszerzonego rejestru. L1.4.2 nierozpoczęte.
+
+
+### 2026-11-23 — L1.3: cztery kandydackie mapowania LST-02, Lean/Mathlib PASS
+
+- **Niezmienny kandydat techniczny:** `163c8f6415d9d390fc1a737f6954b2865eff6c6e`, 4 nowe mapowania do etykiet kanonicznego LST-02, 7 deklaracji w `LST02_Quantifiers.lean` (jedna deklaracja dokumentuje kontrprzykład pomocniczy). Nowe powiązania `needs_review`, bez zaakceptowanego SHA źródła i bez certyfikatu semantycznego.
+- [CI aplikacji #45206502457](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45206502457) `completed/success`: **736** testów Python, 10 sklasyfikowanych pominięć, `unreviewed_skips=0`, nowy test literalnych etykiet LST-02 `ok`, Chromium 509 rozdziałów, `javascript_errors=[]`.
+- [CI Lean #45206502490](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45206502490) `completed/success`: prawdziwy Lean **4.26.0**, Mathlib `2df2f0150c275ad53cb3c90f7c98ec15a56a1a67`, **5 plików i 25 twierdzeń**, `axiom_check=passed`, rzeczywiste testy MetaM i benchmarki `.olean` PASS, `semantic_certificate=false`. [Artefakt axiom audit](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45206502490/artifacts/14833733548).
+- [Kontrolny commit `205d2400`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/205d2400aadaa0240a915a15159e6210500cb437) ustawia na istniejącej gałęzi `fragment=L1.3` i dokładnie SHA `163c8f64`, bez zmiany ocenianego kodu. [2+1 #45208224201](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45208224201) **in_progress**, przygotowanie zweryfikowane, szybkie regresje Lean oraz natywny Windows pierwszej rundy PASS; aplikacja i przypięty Lean/Mathlib pierwszej rundy w toku; **0/3 kompletnych rund** przy tej aktualizacji.
+- Po ujawnieniu brakującego L1.3 skupiamy iterację na domknięciu **wcześniejszego** pilotażu; dotychczasowe L1.4.1 w [issue #10](https://github.com/dariusz-piekarz/mathematical_scipts/issues/10) jest **zamrożone** w `stabilizing` do niezależnego odbioru. Jego historyczne [3/3 #45181138327](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181138327) pozostaje prawdą **wyłącznie dla poprzedniego commita i 5-wpisowego manifestu**, nie jest wynikiem zaktualizowanej integracji.
+- [Issue #11](https://github.com/dariusz-piekarz/mathematical_scipts/issues/11#issuecomment-7106003785) rozlicza 9 mapowań (LST-01: 5, LST-02: 4, LA-01: 0), **25 skompilowanych deklaracji** (inna jednostka) oraz brak recenzji semantycznej nowych czterech mapowań. Pilotaż 20–30 nadal nieukończony. `certificate=false`; **L1.4.2 nierozpoczęty**.
