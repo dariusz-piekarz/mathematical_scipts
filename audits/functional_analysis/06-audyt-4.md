@@ -4,7 +4,7 @@
 **Gałąź:** `biblioteka-matematyczna-iteracja-6`.  
 **Źródło:** `chapters/pl/functional_analysis/06-twierdzenie-hahna-banacha-i-ciagly-dual.tex`.  
 **SHA źródła:** `c8caeb6a6c102e6bfa4ad4560c6a0f3d6c682000`, niezmieniony od audytu 06/02 i pierwszej czystej kontroli 06/03.  
-**Wynik matematyczno-redakcyjny:** **CZYSTY — drugi kolejny czysty audyt, 2/2**. Po potwierdzeniu CI i PDF rozdział 06 można uznać za **STABILNY**. Nie zmieniono źródła.
+**Wynik matematyczny, redakcyjny i techniczny:** **CZYSTY — drugi kolejny czysty audyt (2/2). Rozdział 06 STABILNY** po pełnym CI i sprawdzeniu PDF. Nie zmieniono źródła.
 
 ## Metodologia
 
@@ -46,9 +46,9 @@ Przeprowadzono ponowny, niezależny audyt całego aktualnego rozdziału, a nie w
 - **Struktura:** **17** par środowisk `proof`, **5** par `przyklad`, **22** unikatowe etykiety, **19** wystąpień odsyłaczy; wszystkie ich cele istnieją w źródłach 01–06.
 - **Terminologia:** brak niedozwolonego samodzielnego słowa „dual”, zapisów `\\mathbf1`, wyrazów „sekwencyjny” i „pierwszoprzeliczalna”. W przykładzie `L^p` użyto `\\chi_{[0,1]}`.
 - Dotychczasowy pakiet **19 testów regresyjnych** obejmuje skończenie wymiarowe modele przedłużenia jednowymiarowego, fazę zespoloną, przypadki nie-Hausdorffa, anihilator ilorazu, wzór na odległość i niejednoznaczność. **Nie weryfikuje numerycznie lematu Kuratowskiego–Zorna** — jego zastosowanie sprawdzono wyłącznie w dowodzie matematycznym.
-- Przed niniejszym raportem ukończono pełnym **SUCCESS** [CI 45178710978](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45178710978) z identycznym SHA źródła, 19/19 testami oraz pełną kontrolą kontekstu 01–06. Po zapisaniu niniejszego raportu uruchomiony dedykowany workflow powtórzy niezależnie kontrolę CI; ostateczny wynik zostanie dodany po zakończeniu.
-- Wizualna inspekcja siedmiu stron rozdziału 06 (33–39) została przeprowadzona w audycie 06/03 i potwierdziła brak kolizji oraz elementów poza stroną. Źródło rozdziału od tej kontroli pozostało niezmienione.
+- Przed niniejszym raportem ukończono pełnym **SUCCESS** [CI 45178710978](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45178710978) z identycznym SHA źródła, 19/19 testami oraz pełną kontrolą kontekstu 01–06. Po zapisaniu pierwszej wersji niniejszego raportu dedykowany [CI 45180827667](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45180827667) również zakończył się **pełnym SUCCESS**: 19/19 testów, przygotowanie kontekstu 01–06, dwukrotna kompilacja LaTeX, walidacja końcowego PDF i odsyłaczy oraz zapis artefaktu. Ostrzeżenie o odsyłaczach z pierwszego przebiegu kompilacji nie występuje w logu końcowym.
+- Niezależnie zweryfikowano PDF z tym samym SHA rozdziału (39 stron A4, rozdział 06 na stronach 33–39). Wyrenderowano i obejrzano **wszystkie 7 stron**; programowy test geometrii wykazał **0 bloków tekstu poza stroną**, brak widocznych kolizji, uszkodzonych znaków lub ucięć. Źródło rozdziału od tej kontroli pozostało niezmienione.
 
 ## Decyzja
 
-**Matematyka 17/17 PASS; przykłady 5/5 PASS. Audyt 06/04 jest drugim czystym audytem bez modyfikacji źródła.** Po potwierdzeniu technicznych kontroli z raportu rozdział 06 jest **STABILNY (2/2)**. Dopuszcza się rozpoczęcie audytu rozdziału 07 dopiero po tym potwierdzeniu.
+**17/17 dowodów PASS, 5/5 przykładów PASS, 19/19 testów PASS, pełny GitHub Actions SUCCESS, PDF i odsyłacze zweryfikowane. Audyt 06/04 jest drugim kolejnym czystym audytem bez modyfikacji źródła. Rozdział 06 jest STABILNY (2/2).** Następna jednostka pracy: rozdział 07 — oddzielanie zbiorów wypukłych, polary i twierdzenie bipolarne.
