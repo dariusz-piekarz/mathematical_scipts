@@ -144,7 +144,31 @@ class AA50IndependentFraction(unittest.TestCase):
                 down=at(A[i-1],z) if i>0 else Q(0)
                 self.assertEqual(ap+(i+1)*qv*up-(i-1)*down,
                                  -n*down+mu*a,(i,z))
-    def test_10_source_regression(self):
+    def test_10_octahedral_exact_P_minus_one(self):
+        # n=6, ν=1/4, θ=3/(2x)+2/(x-1).
+        H=[Q(-3,2),Q(7,2)]
+        Qp=[Q(-3,16),Q(115,576),Q(-15,64)]
+        p=recurrence(6,[Q(1)],S,H,Qp)
+        self.assertEqual(p[-1],[Q(0)])
+        self.assertEqual(p[6],[Q(-1)])
+        self.assertEqual(len(p),8)
+        self.assertEqual(local_set(6,Q(-3,16)),[3,4,5,6,7,8,9])
+        self.assertEqual(local_set(6,Q(-2,9)),[4,6,8])
+        self.assertEqual(local_set(6,Q(-15,64)),[5,6,7])
+
+    def test_11_icosahedral_exact_P_minus_one(self):
+        # n=12, ν=1/5, θ=3/x+4/(x-1).
+        H=[Q(-3),Q(7)]
+        Qp=[Q(-3,16),Q(739,3600),Q(-6,25)]
+        p=recurrence(12,[Q(1)],S,H,Qp)
+        self.assertEqual(p[-1],[Q(0)])
+        self.assertEqual(p[12],[Q(-1)])
+        self.assertEqual(len(p),14)
+        self.assertEqual(local_set(12,Q(-3,16)),[3,4,5,6,7,8,9])
+        self.assertEqual(local_set(12,Q(-2,9)),[4,5,6,7,8])
+        self.assertEqual(local_set(12,Q(-6,25)),[5,6,7])
+
+    def test_12_source_regression(self):
         data=SOURCE.read_text(encoding="utf-8")
         labels=re.findall(r"\\label\{([^}]+)\}",data)
         self.assertEqual(len(labels),len(set(labels)))

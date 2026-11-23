@@ -125,7 +125,39 @@ class AA50KovacicFiniteSymPy(unittest.TestCase):
             self.assertTrue(same(s.diff(out,b,2)))
             self.assertTrue(same(s.diff(out,a,b)))
 
-    def test_11_source_labels_and_scope(self):
+    def test_11_octahedral_schwarz_example(self):
+        q=-s.Rational(3,16)/x**2-s.Rational(2,9)/(x-1)**2
+        q+=s.Rational(101,576)/(x*(x-1))
+        S=x*(x-1)
+        theta=s.Rational(3,2)/x+2/(x-1)
+        self.assertTrue(same(s.cancel(S*S*q),
+            -s.Rational(15,64)*x*x+s.Rational(115,576)*x-s.Rational(3,16)))
+        self.assertEqual(local_set(6,-s.Rational(3,16)),[3,4,5,6,7,8,9])
+        self.assertEqual(local_set(6,-s.Rational(2,9)),[4,6,8])
+        self.assertEqual(local_set(6,-s.Rational(15,64)),[5,6,7])
+        p=get_p(6,S,theta,q,s.Integer(1))
+        self.assertTrue(same(p[-1]))
+        F=polynomial_F(6,S,p)
+        self.assertEqual(s.degree(F,t),6)
+        self.assertTrue(same(transport(F,6,S,theta,q)))
+
+    def test_12_icosahedral_schwarz_example(self):
+        q=-s.Rational(3,16)/x**2-s.Rational(2,9)/(x-1)**2
+        q+=s.Rational(611,3600)/(x*(x-1))
+        S=x*(x-1)
+        theta=3/x+4/(x-1)
+        self.assertTrue(same(s.cancel(S*S*q),
+            -s.Rational(6,25)*x*x+s.Rational(739,3600)*x-s.Rational(3,16)))
+        self.assertEqual(local_set(12,-s.Rational(3,16)),[3,4,5,6,7,8,9])
+        self.assertEqual(local_set(12,-s.Rational(2,9)),[4,5,6,7,8])
+        self.assertEqual(local_set(12,-s.Rational(6,25)),[5,6,7])
+        p=get_p(12,S,theta,q,s.Integer(1))
+        self.assertTrue(same(p[-1]))
+        F=polynomial_F(12,S,p)
+        self.assertEqual(s.degree(F,t),12)
+        self.assertTrue(same(transport(F,12,S,theta,q)))
+
+    def test_13_source_labels_and_scope(self):
         data=SRC.read_text(encoding="utf-8")
         labels=re.findall(r"\\label\{([^}]+)\}",data)
         self.assertEqual(len(labels),len(set(labels)))
