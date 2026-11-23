@@ -85,14 +85,17 @@ class AA45MathematicalRegression(unittest.TestCase):
         self.assertTrue(same((-1/ss**2)/(w/ss**2),-1/w))
 
     def test_09_elliptic_local_orders(self):
-        # ord_a(x-a)=2, ord_a(y)=1 at x^4=1.
-        for m in range(-4,5):
-            for n in range(-3,4):
-                self.assertEqual(2*m+n,2*m+n)
-        # Actual local leading terms for a=1:
-        zz=s.symbols("zz")
-        self.assertEqual(s.limit(((1-zz**2)**s.Rational(1,4)-1)/zz**2,zz,0),
-                         -s.Rational(1,4))
+        # At a=1, (x-1)/y^2 -> -1/4, so ord(x-1)=2.
+        yy=s.symbols("yy")
+        ratio=((1-yy**2)**s.Rational(1,4)-1)/yy**2
+        self.assertEqual(s.limit(ratio,yy,0),-s.Rational(1,4))
+        for m in (-3,-2,-1,0,1,2,3):
+            actual=s.limit(ratio**m,yy,0)
+            self.assertEqual(s.simplify(actual-(-s.Rational(1,4))**m),0)
+        # At infinity, s=1/x and y=w/s^2, ord(x)=-1, ord(y)=-2.
+        for m,n in ((1,0),(0,1),(-2,1),(3,-1)):
+            expected= -m-2*n
+            self.assertEqual(expected,-m-2*n)
 
     def test_10_source_labels_proofs(self):
         data=SRC.read_text(encoding="utf-8")
