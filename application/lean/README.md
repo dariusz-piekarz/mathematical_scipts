@@ -4,7 +4,7 @@ Pierwszy etap rozwijany niezależnie od audytów LaTeX. Źródła matematyczne s
 
 ## Zakres pilotażu
 
-Trzy wpisy `manifest.json` powiązane są z dokładnymi etykietami LaTeX z `LST-01`. Głównym źródłem pokazywanym w panelu jest teraz `src/LST01_SyntaxValuations.lean`: definiuje **indukcyjną składnię formuł** (litera, negacja, koniunkcja, alternatywa, implikacja, równoważność), funkcję `eval` dla wartościowania `Nat → Bool`, równoważność formuł przez wszystkie wartościowania oraz tautologię.
+Manifest zawiera obecnie **9 powiązań** (5 z `LST-01` i 4 z `LST-02`). Pierwotne trzy mapowania logiczne mają źródło w `LST-01`. Głównym plikiem Lean dla LST-01 pokazywanym w panelu jest `src/LST01_SyntaxValuations.lean`: definiuje **indukcyjną składnię formuł** (litera, negacja, koniunkcja, alternatywa, implikacja, równoważność), funkcję `eval` dla wartościowania `Nat → Bool`, równoważność formuł przez wszystkie wartościowania oraz tautologię.
 
 - `thm:de-morgan-logic` — oba prawa de Morgana dla formuł.
 - `thm:implication-laws` — rozwinięcie implikacji, przeciwstawienie i modus ponens.
@@ -13,7 +13,7 @@ Trzy wpisy `manifest.json` powiązane są z dokładnymi etykietami LaTeX z `LST-
 
 Pliki `LST01_DeMorgan.lean`, `LST01_ImplicationLaws.lean` i `LST01_NegatedImplication.lean` pozostają jako krótkie opracowania na poziomie `Prop`. Nowy CI kompiluje **każdy** plik `.lean` z `src/` i kontroluje raporty `#print axioms` dla wszystkich ich twierdzeń, także gdy dany plik nie jest głównym mapowaniem w panelu.
 
-Mapowanie `Prop` to tylko semantyka pojedynczego wartościowania, natomiast nowe mapowanie `Formula` oddaje budowę formuły i kwantyfikację po wszystkich wartościowaniach. **Trzy powiązania `LST-01` uzyskały `statement_status=approved` po osobnym audycie sześciu tez.** Zatwierdzenie dotyczy wyłącznie wersji źródła o SHA256 `9b5cbe26dee8ed5bc437cb3a0d19638eafc5d9ae178a3caa545b8bcf5842b8d0`. Wszystkie sześć deklaracji jest jawnie wymienione w grupach `lean_theorems`, a zgodność digestu jest sprawdzana w CI. Zmiana źródła unieważnia zatwierdzenie; sama kompilacja nie jest certyfikatem zgodności. Pełna analiza: [audyt semantyczny](../docs/LEAN_SEMANTIC_AUDIT_LST01_2026-11-22.md).
+Mapowanie `Prop` to tylko semantyka pojedynczego wartościowania, natomiast nowe mapowanie `Formula` oddaje budowę formuły i kwantyfikację po wszystkich wartościowaniach. **Historycznie pierwsze trzy powiązania `LST-01` uzyskały `statement_status=approved` po osobnym audycie sześciu tez.** Później rejestr rozszerzono do pięciu mapowań LST-01 obejmujących łącznie **10 deklaracji** zapisanych w grupach `lean_theorems`. Wszystkie pięć mapowań jest w rejestrze oznaczonych `approved` względem dokładnego SHA256 źródła `9b5cbe26dee8ed5bc437cb3a0d19638eafc5d9ae178a3caa545b8bcf5842b8d0`; kontrole digestu nie stanowią automatycznego poświadczenia niezależnej recenzji ani równoważności semantycznej. Zmiana źródła unieważnia zatwierdzenie; sama kompilacja nie jest certyfikatem zgodności. Pełna analiza: [audyt semantyczny](../docs/LEAN_SEMANTIC_AUDIT_LST01_2026-11-22.md).
 
 ## Co jest dostępne w aplikacji
 1. Otwórz obiekt matematyczny w Explorerze; w Czytniku kliknij **Zobacz w Lean**.
@@ -34,7 +34,7 @@ $env:MATLIB_LEAN_RUN = "1"
 python -m uvicorn backend.api:app --host 127.0.0.1 --port 8765
 ```
 
-`lean-toolchain` wskazuje Lean 4 `v4.26.0`, a `lakefile.toml` przypina Mathlib do commitu `2df2f0150c275ad53cb3c90f7c98ec15a56a1a67` (tag `v4.26.0`). `lake update` tworzy lokalny `lake-manifest.json`; workflow CI wykonuje je również na czystym repozytorium. **Rzeczywista kompilacja czterech plików i kontrola aksjomatów wszystkich 14 deklaracji zakończyła się powodzeniem** w [przebiegu CI 45011738363](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45011738363). Semantyczne zatwierdzenie trzech grup przeprowadzono oddzielnie i przypięto do SHA źródła.
+`lean-toolchain` wskazuje Lean 4 `v4.26.0`, a `lakefile.toml` przypina Mathlib do commitu `2df2f0150c275ad53cb3c90f7c98ec15a56a1a67` (tag `v4.26.0`). `lake update` tworzy lokalny `lake-manifest.json`; workflow CI wykonuje je również na czystym repozytorium. **Historyczny** [CI #45011738363](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45011738363) kompilował cztery pliki i kontrolował 14 deklaracji. **Aktualny** [CI Lean #45206502490](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45206502490) `completed/success` na `163c8f64` kompilował pięć plików (w tym LST-02), **25 twierdzeń**, `axiom_check=passed`, Lean 4.26.0 i przypięty Mathlib; weryfikacja semantyczna pozostaje odrębną procedurą.
 
 **Bezpieczeństwo:** endpoint wykonania jest dla serwera uruchomionego lokalnie i pod kontrolą właściciela. Nie należy wystawiać go publicznie: Lean to program i zarejestrowany plik może wykonywać operacje IO. Timeout jest ograniczeniem operacyjnym, a nie sandboxem systemowym. Zdalny tryb wykonawczy wymaga odrębnego, izolowanego kontenera z ograniczonymi uprawnieniami, pamięcią, czasem i dostępem do sieci.
 
@@ -69,7 +69,7 @@ wymaga odrębnej recenzji; `certificate=false`.
 - [Raport mapowań LST-02](../docs/LEAN_L13_LST02_PILOT_2026-11-23.md)
 - [Issue #11 — niezamknięty pilotaż 20–30](https://github.com/dariusz-piekarz/mathematical_scipts/issues/11)
 - [CI aplikacji #45206502457](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45206502457) — `completed/success`, 736 testów, 10 sklasyfikowanych pominięć i 0 nierozliczonych, Chromium PASS na 509 rozdziałach.
-- [Rzeczywisty Lean #45206502490](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45206502490) — rozpoczęty na poprawionym SHA `163c8f6415d9d390fc1a737f6954b2865eff6c6e`; w chwili zapisu instalacja przypiętego Lean/Mathlib jeszcze trwa. **Nie uznawać nowej formalizacji za skompilowaną bez ukończonego joba**.
+- [Rzeczywisty Lean #45206502490](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45206502490) — **`completed/success`** na poprawionym SHA `163c8f6415d9d390fc1a737f6954b2865eff6c6e`: **5 plików, 25 twierdzeń, kontrola aksjomatów PASS**, w tym 7 nowych deklaracji LST-02. Pozostaje obowiązek niezależnej recenzji semantycznej. [Przebieg technicznej stabilizacji 2+1 #45208224201](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45208224201) został uruchomiony na tym SHA; wynik każdej pełnej rundy wymaga osobnego zakończenia.
 
 Pierwszy CI dla `2deca7ba` zakończył się błędem testu
 odczytującego dosłowną etykietę TeX z podwójnym ukośnikiem.
