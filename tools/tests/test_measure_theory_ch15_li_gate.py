@@ -94,12 +94,22 @@ class TestMeasureTheoryChapter15Gate(unittest.TestCase):
             self.assertGreater(integrals[-1], integrals[0])
 
     def test_rademacher_cancellation_on_dyadic_blocks(self):
-        for n in range(1, 9):
+        # r_n has 2^(n+1) alternating signs on its level-(n+1) cells.
+        # The integral over EVERY level-m dyadic cell, 0 <= m <= n,
+        # must vanish, not merely the first such cell.
+        for n in range(1, 10):
             signs = [1 if k % 2 == 0 else -1 for k in range(2 ** (n + 1))]
-            for m in range(n):
-                block = 2 ** (n + 1 - m)
-                self.assertEqual(sum(signs[:block]), 0)
-                self.assertEqual(sum(signs), 0)
+            self.assertEqual(sum(signs), 0)
+            for m in range(n + 1):
+                cells_per_block = 2 ** (n + 1 - m)
+                self.assertEqual(len(signs) % cells_per_block, 0)
+                for start in range(0, len(signs), cells_per_block):
+                    self.assertEqual(sum(signs[start:start + cells_per_block]), 0)
+
+            # Negative control: an error in a later block must be detected.
+            damaged = signs.copy()
+            damaged[-1] *= -1
+            self.assertNotEqual(sum(damaged[-2:]), 0)
 
     def test_environment_nesting_labels_and_local_refs(self):
         source = CHAPTER.read_text(encoding="utf-8")
