@@ -1,0 +1,153 @@
+name: Measure theory chapter 02 PDF and finite-measure validation
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "chapters/pl/measure_theory/02-miary-i-ich-podstawowe-wlasnosci.tex"
+      - "books/pl/measure_theory.tex"
+      - ".github/workflows/measure-theory-ch02.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  chapter-02:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install TeX Live and PDF inspection tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-lang-polish texlive-pictures lmodern poppler-utils
+      - name: Build chapter-only document with the original book preamble
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          main = Path("books/pl/measure_theory.tex").read_text(encoding="utf-8")
+          preamble = main.split(r"\begin{document}", 1)[0]
+          target = r"../../chapters/pl/measure_theory/02-miary-i-ich-podstawowe-wlasnosci.tex"
+          wrapper = preamble + "\n" + r"\begin{document}" + "\n" + r"\mainmatter" + "\n" + r"\input{" + target + "}\n" + r"\end{document}" + "\n"
+          Path("books/pl/measure_theory_ch02_ci.tex").write_text(wrapper, encoding="utf-8")
+          PY
+      - name: Compile twice, inspect reference scope and extract PDF text
+        working-directory: books/pl
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory_ch02_ci.tex
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory_ch02_ci.tex
+          test -s measure_theory_ch02_ci.pdf
+          pdfinfo measure_theory_ch02_ci.pdf
+          pdftotext -layout measure_theory_ch02_ci.pdf measure_theory_ch02_ci.txt
+          grep -q "Miary i ich podstawowe własności" measure_theory_ch02_ci.txt
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+          base = Path("../../chapters/pl/measure_theory")
+          current = (base / "02-miary-i-ich-podstawowe-wlasnosci.tex").read_text(encoding="utf-8")
+          previous = (base / "01-rodziny-zbiorow-i-przestrzenie-mierzalne.tex").read_text(encoding="utf-8")
+          labels = set(re.findall(r"\\label\{([^}]+)\}", current))
+          refs = set(re.findall(r"\\(?:ref|eqref|pageref)\{([^}]+)\}", current))
+          earlier = set(re.findall(r"\\label\{([^}]+)\}", previous))
+          external = refs - labels
+          assert external == {"ch:przestrzenie-mierzalne", "ex:countable-cocountable", "thm:pi-lambda"}, external
+          assert external.issubset(earlier), external - earlier
+          log = Path("measure_theory_ch02_ci.log").read_text(encoding="utf-8", errors="replace")
+          undefined = set(re.findall(r"LaTeX Warning: Reference .([^']+)' on page \d+ undefined", log))
+          assert undefined.issubset(external), (undefined, external)
+          print("PASS: 3 external chapter-01 targets are present; no unexpected undefined references")
+          PY
+      - name: Upload chapter PDF and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: measure-theory-ch02-pdf
+          path: |
+            books/pl/measure_theory_ch02_ci.pdf
+            books/pl/measure_theory_ch02_ci.log
+            books/pl/measure_theory_ch02_ci.txt
+          if-no-files-found: warn
+
+  chapter-02-finite-models:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Exhaustively check the three-point incomplete-measure example and its completion
+        run: |
+          python3 - <<'PY'
+          from itertools import combinations, product
+          U = frozenset("abc")
+          P = [frozenset(s) for k in range(4) for s in combinations("abc", k)]
+          F = {frozenset(), frozenset("ab"), frozenset("c"), U}
+          def mu(a): 
+              assert a in F
+              return int("c" in a)
+          completed = {e for e in P if any(a <= e <= b and mu(b-a) == 0 for a in F for b in F if a <= b)}
+          assert completed == set(P) and len(completed) == 8
+          assert frozenset("a") not in F and mu(frozenset("ab")) == 0
+          def mubar(a): return int("c" in a)
+          pairs = 0
+          triples = 0
+          for a,b in product(P, repeat=2):
+              assert mubar(a | b) <= mubar(a) + mubar(b)
+              if not (a & b):
+                  assert mubar(a | b) == mubar(a) + mubar(b)
+              if a <= b:
+                  assert mubar(a) <= mubar(b)
+              pairs += 1
+          for a,b,c in product(P, repeat=3):
+              if not (a & b or a & c or b & c):
+                  assert mubar(a | b | c) == mubar(a) + mubar(b) + mubar(c)
+                  triples += 1
+          assert all(mubar(a) == mu(a) for a in F)
+          print(f"PASS: {len(completed)} completed sets, {pairs} pairs, {triples} disjoint triples")
+          PY
+
+  chapter-02-book-reference-context:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install TeX Live and PDF inspection tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-lang-polish texlive-pictures lmodern poppler-utils
+      - name: Compile full book only for cross-chapter reference context
+        working-directory: books/pl
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory.tex > measure_theory_ch02_full_pass1.txt
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory.tex > measure_theory_ch02_full_pass2.txt
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory.tex > measure_theory_ch02_full_pass3.txt
+          test -s measure_theory.pdf
+          for target in 'ch:przestrzenie-mierzalne' 'ex:countable-cocountable' 'thm:pi-lambda' 'ch:miary-wlasnosci'; do
+            grep -Fq "\\newlabel{$target}" measure_theory.aux
+          done
+          if grep -E 'LaTeX Warning: (Reference|Citation).*undefined|There were undefined references|multiply defined' measure_theory.log; then
+            echo "Full-book cross-references remain unresolved"
+            exit 1
+          fi
+          pdfinfo measure_theory.pdf | tee measure_theory_ch02_full_pdfinfo.txt
+          pdftotext -layout measure_theory.pdf measure_theory_ch02_full_text.txt
+          grep -q "Miary i ich podstawowe własności" measure_theory_ch02_full_text.txt
+      - name: Upload full-book PDF and reference diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: measure-theory-ch02-book-context
+          path: |
+            books/pl/measure_theory.pdf
+            books/pl/measure_theory.log
+            books/pl/measure_theory.aux
+            books/pl/measure_theory_ch02_full_pdfinfo.txt
+            books/pl/measure_theory_ch02_full_text.txt
+            books/pl/measure_theory_ch02_full_pass1.txt
+            books/pl/measure_theory_ch02_full_pass2.txt
+            books/pl/measure_theory_ch02_full_pass3.txt
+          if-no-files-found: warn
