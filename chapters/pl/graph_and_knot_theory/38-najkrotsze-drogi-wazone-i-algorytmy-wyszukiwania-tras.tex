@@ -218,6 +218,134 @@ Nie oznacza to, że każda odległość
 od $s$ jest równa $-\infty$.
 \end{uwaga}
 
+\begin{twierdzenie}[Rozpoznawanie wszystkich odległości $-\infty$]
+\label{thm:tg-weighted-bellman-negative-reach}
+Niech $D=(V,A)$ będzie skończonym grafem
+skierowanym o rzeczywistych wagach,
+a $s\in V$. Wykonajmy $n-1$
+pełnych przebiegów relaksacji
+algorytmu Bellmana--Forda
+i oznaczmy otrzymane wartości przez $d$.
+Niech $Z$ będzie zbiorem wszystkich
+wierzchołków $v$, dla których istnieje
+łuk $u\to v$ taki, że
+$d[u]<+\infty$ oraz
+$d[u]+w(u,v)<d[v]$.
+Niech $R(Z)$ oznacza wszystkie
+wierzchołki osiągalne z pewnego
+wierzchołka $Z$ (łącznie z $Z$).
+Wówczas dla każdego $v\in V$
+zachodzi
+\[
+\delta(s,v)=-\infty
+\quad\Longleftrightarrow\quad
+v\in R(Z).
+\]
+Po oznaczeniu $R(Z)$ pozostałe
+osiągalne wierzchołki mają
+skończone, prawidłowe wartości
+$d[v]=\delta(s,v)$, a
+nieosiągalne mają $d[v]=+\infty$.
+Całość obliczamy w czasie
+$O(nm+n+m)$ i przy pamięci
+pomocniczej $O(n+m)$.
+\end{twierdzenie}
+
+\begin{proof}
+Zauważmy najpierw, że po $n-1$
+przebiegach wartość $d[v]$ nie
+przekracza kosztu żadnej
+ścieżki prostej z $s$ do $v$:
+każda taka ścieżka ma co najwyżej
+$n-1$ łuków, a indukcja użyta
+w dowodzie Twierdzenia
+\ref{thm:tg-weighted-bellman}
+nie wymaga braku cykli ujemnych.
+Jednocześnie każda skończona
+wartość $d[v]$ reprezentuje koszt
+rzeczywistego spaceru.
+
+Jeżeli $v\in Z$, to pewien
+spacer z $s$ do $u$, przedłużony
+łukiem $u\to v$, ma koszt
+ściśle mniejszy od $d[v]$,
+a zatem również mniejszy od
+kosztu każdej ścieżki prostej
+z $s$ do $v$. W tym spacerze
+musi występować cykl o ujemnym
+koszcie: gdyby wszystkie
+usuwane zamknięte fragmenty
+miały koszty nieujemne,
+ich usunięcie dałoby ścieżkę
+prostą o koszcie nie większym,
+sprzeczność. Cykl ten jest
+osiągalny z $s$, a z niego
+można dojść do $v$.
+To samo dotyczy każdego
+wierzchołka osiągalnego z $v$.
+Otrzymujemy
+$R(Z)\subseteq\{v:\delta(s,v)=-\infty\}$.
+
+W drugą stronę niech $C$ będzie
+cyklem ujemnym osiągalnym z $s$.
+Po $n-1$ przebiegach wszystkie
+jego wierzchołki mają skończone
+wartości. Przypuśćmy, że żaden
+łuk $u\to v$ należący do $C$
+nie spełnia
+$d[u]+w(u,v)<d[v]$.
+Dodanie nierówności
+$d[v]\leq d[u]+w(u,v)$
+po całym cyklu dałoby
+$0\leq w(C)<0$, sprzeczność.
+Zatem pewien wierzchołek
+cyklu należy do $Z$.
+Z tego wierzchołka można
+dojść do wszystkich innych
+wierzchołków cyklu, a następnie
+do każdego wierzchołka, którego
+odległość wynosi $-\infty$.
+To dowodzi inkluzji odwrotnej.
+
+Jeżeli $v$ nie należy do
+$R(Z)$ i jest osiągalny,
+nie istnieje ujemny cykl
+leżący na spacerze z $s$
+do $v$. Lemat
+\ref{lem:tg-weighted-realization}
+zapewnia więc najkrótszą
+ścieżkę prostą, której koszt
+jest już osiągnięty po
+$n-1$ przebiegach.
+Równość $d[v]=\delta(s,v)$
+wynika z niezmiennika
+relaksacji. Wierzchołki
+nieosiągalne pozostają z
+wartością $+\infty$.
+Zbiór $Z$ wyznaczamy jednym
+przeglądem łuków, a jego
+osiągalne domknięcie przez
+BFS lub DFS. Daje to
+zapowiedzianą złożoność.
+\end{proof}
+
+\begin{przyklad}[Ujemny cykl nie psuje każdej odległości]
+\label{ex:tg-weighted-negative-propagation}
+Niech łuki i ich wagi będą następujące:
+$s\to a$ (waga $1$), $a\to b$ (waga $-3$),
+$b\to a$ (waga $1$), $b\to c$ (waga $2$)
+oraz $s\to t$ (waga $5$).
+Cykl $a\to b\to a$ ma wagę $-2$.
+Wobec tego
+$\delta(s,a)=\delta(s,b)=\delta(s,c)=-\infty$,
+natomiast $\delta(s,t)=5$
+i $\delta(s,s)=0$.
+Algorytm oznaczający tylko wierzchołki
+\emph{samego} ujemnego cyklu przeoczyłby
+$c$; przeszukanie z $Z$ wyznacza
+również wszystkie dalsze wierzchołki.
+\end{przyklad}
+
 \begin{przyklad}
 Dla łuków $s\to a$ o wadze $3$,
 $s\to b$ o wadze $7$, $a\to b$
