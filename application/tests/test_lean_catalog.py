@@ -384,7 +384,7 @@ class LeanCatalogTests(unittest.TestCase):
             self.con.commit()
             # The owner ID and source-document SHA have not changed.
             self.assertEqual(
-                lean_catalog.list_formalizations(
+                real_catalog(
                     self.con, lean_root=self.root)["ready"], 1)
             return catalog
 
@@ -414,7 +414,7 @@ class LeanCatalogTests(unittest.TestCase):
                 (len(SOURCE) - 1, "theorem-one"))
             self.con.commit()
             self.assertEqual(
-                lean_catalog.list_formalizations(
+                real_catalog(
                     self.con, lean_root=self.root)["ready"], 1)
             return catalog
 
@@ -442,7 +442,7 @@ class LeanCatalogTests(unittest.TestCase):
             self.item["source_document_path"] = "chapters/pl/logic/02.tex"
             self.save_manifest()
             self.assertEqual(
-                lean_catalog.list_formalizations(
+                real_catalog(
                     self.con, lean_root=self.root)["ready"], 1)
             return catalog
 
