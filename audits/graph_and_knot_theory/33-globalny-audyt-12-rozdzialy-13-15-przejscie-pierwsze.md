@@ -115,8 +115,20 @@ twierdzeń Pachnera/Formana. Rachunki Reeba sprawdzają
 tylko konsekwencje arytmetyczne, nie konstrukcję grafu Reeba.
 
 Po tym przebiegu dodano jeszcze przykład `RP²`
-(commit `f08e9f231f0b3c15c83bcffb112195a7eb3451c2`);
-ostatni skład książki wymaga osobnej kontroli.
+(commit `f08e9f231f0b3c15c83bcffb112195a7eb3451c2`).
+**Końcowy przebieg po tej poprawce:**
+[45176136460](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45176136460) —
+`structural-audit=success`, `full-book-pdf=success`.
+Pobrano jego artefakt `graph-and-knot-complete-book-audit`
+i sprawdzono rzeczywisty PDF: **269 stron A4**, trzy udane
+przebiegi `pdflatex`, **0** ostrzeżeń w końcowym logu.
+Wyrenderowano i obejrzano strony PDF **121–136**,
+obejmujące wszystkie trzy audytowane rozdziały i rysunki
+(z początkiem następnego rozdziału). Nie stwierdzono
+uciętych wzorów, nachodzących na siebie podpisów,
+rysunków wystających poza margines ani pustych stron
+powstałych przez korekty. Ta inspekcja wizualna
+nie stanowi weryfikacji poprawności matematycznej.
 
 ## Dalsza stabilizacja
 
@@ -126,7 +138,8 @@ ostatni skład książki wymaga osobnej kontroli.
    twierdzenia o `b_1(R_f)=g`.
 3. Sprawdzić orientacje strzałek w grafie Hassego i konwencję
    `V`-ścieżek oraz wzór na silną retrakcję.
-4. Odczytać finalne logi i fizycznie skontrolować strony
-   zawierające nowe argumenty i podpisy rysunków.
+4. Przejrzeć w następnym przejściu niezależnie wyszczególnione
+   punkty matematyczne; kontrola końcowego PDF i CI z obecnej
+   iteracji jest już zakończona sukcesem.
 5. Dopiero po zamknięciu tych punktów rozważyć oznaczenie
    rozdziałów 13–15 jako lokalnie stabilnych i przejść do 16–18.
