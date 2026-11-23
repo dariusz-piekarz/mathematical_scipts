@@ -70,3 +70,22 @@ Niezależnie pobrano aktualne źródła AA-28, AA-32 i AA-33 bezpośrednio z doc
 Wszystkie 29 etykiet są unikatowe. Każdy z 16 odsyłaczy ma istniejący cel; pięć odsyłaczy zewnętrznych wskazuje odpowiednio \`aa:ch:fields-fractions\` (AA-19), \`aa:ch:kummer\` (AA-26), \`aa:tw:fundamental-symmetric\` i \`aa:tw:vieta-general\` (AA-31), \`aa:tw:orbita-stabilizator\` (AA-03). Zweryfikowano te etykiety w źródłach docelowych. Wszystkie środowiska \`\\begin\`/\`\\end\` są poprawnie zagnieżdżone, a wszystkie trzy rozdziały występują w pliku głównym \`books/pl/abstract_algebra.tex\`.
 
 **Weryfikacja w zdalnym CI:** oba nowo dodane kroki \`Run AA-X04 cyclotomic cross-audit\` i \`Run AA-X04 independent confirmation\` w przebiegu \`45131584372\` uzyskały status \`completed/success\`. Status końcowy całej kompilacji i kontroli odsyłaczy pozostaje odrębną bramką stabilizacji.
+
+
+## Zamknięcie AA-X04 po pełnym CI i kontroli wizualnej
+
+**Wynik końcowy:** [GitHub Actions 45131584372](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45131584372), commit \`eee72c287a91d90992994b81587e2c2bca172997\`: **completed/success**, bez nieudanych kroków.
+
+Potwierdzono osobno sukces:
+- \`Run AA-X04 cyclotomic cross-audit\`;
+- \`Run AA-X04 independent confirmation\`;
+- \`Run AA-X03 independent confirming audit\`;
+- \`Compile AA-01 to AA-42 book with latexmk\`;
+- \`Verify PDF and references (no undefined refs)\`;
+- \`Archive build output\`.
+
+Pobrano oryginalny artefakt GitHub Actions **14797877474** \`abstract-algebra-aa01-aa42\` z przebiegu \`45131584372\`, obejmujący \`abstract_algebra.pdf\` i \`abstract_algebra.log\`. PDF liczy **269 stron**. Bezpośrednia analiza finalnego logu wykazała **0** ostrzeżeń LaTeX, **0** ostrzeżeń \`hyperref\`, **0** \`Overfull \\hbox\`, **0** \`Overfull \\vbox\`, **0** \`Underfull \\hbox\`, **0** nierozwiązanych odsyłaczy i **0** błędów LaTeX.
+
+Przeprowadzono **kontrolę wizualną 12 stron związanych z AA-X04**: PDF 193–196 (AA-28), PDF 211–214 (AA-32) i PDF 215–218 (AA-33). Wyrenderowano je, obejrzano zestawienia stron i nie stwierdzono kolizji tekstu, wzorów, rysunków ani ucięć. Ponadto porównano z najnowszym wydaniem PDF z GitHub Actions: tekst oraz obraz rastrowy **wszystkich 12 stron** były dokładnie identyczne ze skontrolowanym wydaniem, więc oględziny dotyczą także wyniku końcowego CI.
+
+**Końcowy werdykt AA-X04: STABILNY.** Dwa niezależne audyty matematyczne (602 oraz 4772 dokładne sprawdzenia), kontrola 29 unikatowych etykiet i 16 odsyłaczy, pełny CI i kontrola PDF zakończyły się bez nowego błędu wymagającego korekty źródeł. Zatwierdzone źródła AA-28/32/33 pozostały bez zmian; przejść można do następnej niezależnej kontroli przekrojowej.
