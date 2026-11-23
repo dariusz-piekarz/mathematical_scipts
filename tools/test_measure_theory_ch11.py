@@ -140,8 +140,11 @@ def test_sources():
         else:
             assert stack and stack.pop()==env, f"unbalanced environment {env}"
     assert not stack, f"open environments {stack}"
+    # Search whole words only: "konsekwencji" contains "sekwencji"
+    # as a substring, but is correct Polish and must not be flagged.
+    assert not re.search(r"\bsekwencj\w*", src, flags=re.UNICODE)
     for disallowed in (
-        "sekwencji", "unia zbiorów", "zbieżność zdominowana",
+        "unia zbiorów", "zbieżność zdominowana",
         "pierwszoprzeliczal", "drugoprzeliczal",
         r"\mathbf{1}", r"\mathbb{1}", r"\mathds{1}",
     ):
