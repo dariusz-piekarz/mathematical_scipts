@@ -246,7 +246,22 @@ def fragment(con: sqlite3.Connection, *, entity_id: str | None = None,
     sha_ok = item.get("source_document_sha256") == d["sha256"] if item.get("source_document_sha256") else None
     if sha_ok is not False and not _source_file_current(item, d["sha256"], lean_root):
         sha_ok = False
-    content_lean = item["_file"].read_text(encoding="utf-8")
+    # Bound *bytes before decoding*. Path.read_text() first allocated the
+    # entire physical Lean file and only then enforced MAX_LEAN_CHARS.
+    # UTF-8 occupies at most 4 bytes per Unicode code point, so this byte
+    # bound never rejects a previously valid <= MAX_LEAN_CHARS text solely
+    # because it contains multibyte characters.
+    try:
+        with item["_file"].open("rb") as source:
+            lean_bytes = source.read(MAX_LEAN_CHARS * 4 + 1)
+    except OSError as exc:
+        raise HTTPException(503, "Nie można odczytać zarejestrowanego pliku Lean.") from exc
+    if len(lean_bytes) > MAX_LEAN_CHARS * 4:
+        raise HTTPException(413, "Zarejestrowany plik Lean jest zbyt duży.")
+    try:
+        content_lean = lean_bytes.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise HTTPException(503, "Niepoprawne kodowanie UTF-8 pliku Lean.") from exc
     if len(content_lean) > MAX_LEAN_CHARS:
         raise HTTPException(413, "Zarejestrowany plik Lean jest zbyt duży.")
     base.update({"formalization_id": item["id"], "lean_theorem": item["lean_theorem"],
