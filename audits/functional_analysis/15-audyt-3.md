@@ -45,3 +45,11 @@ Niezależnie otwarto faktyczny artefakt PDF `functional-analysis-ch15-pdf` z wcz
 ## Decyzja i warunek zamknięcia
 
 **15/03 — DRUGI NIEZALEŻNY CZYSTY AUDYT; matematyka/redakcja 2/2, bloby źródła i testów niezmienione.** Ten raport powinien wyzwolić dedykowany workflow rozdziału 15. **Nie oznaczać rozdziału jako ostatecznie STABILNY, dopóki po niniejszym commicie CI nie zostanie potwierdzone jako completed/success.** Po jego zielonym wyniku stabilizację można formalnie domknąć i odblokować jednostkę **15A** (przed rozdziałem 16 zgodnie z kolejnością książki). Plan dodatniego pierwiastka operatora pozostaje przy rozdziale 32.
+
+## Ostateczne potwierdzenie po drugim czystym audycie
+
+Odczytany bezpośrednio z GitHub Actions przebieg [#45283098577](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45283098577), wywołany zapisem niniejszego audytu na commicie [05867426851caf2e15afb097ea908ba17af776dc](https://github.com/dariusz-piekarz/mathematical_scipts/commit/05867426851caf2e15afb097ea908ba17af776dc), zakończył się statusem **completed / success**. Weryfikacja dziewięciu kroków zadania `audit-ch15` wykazała: testy matematyczne **PASS**, kontekst LaTeX rozdziałów 01–15 **PASS**, faktyczna kompilacja LaTeX **PASS**, kontrola PDF/nagłówków/odsyłaczy **PASS**, artefakt PDF i logi **opublikowane**.
+
+Po ukończonym CI ponownie odczytano z istniejącej gałęzi źródło rozdziału 15 i jego testy: SHA odpowiednio `39f14f53417fd613006032d5cb5e9b7bbdcc6ebe` i `b077bed8553d8122a86a3d7dd4dab1dc052a73b5`. Są identyczne jak przy audycie 15/02, wcześniejszym zielonym przebiegu #45280205438 oraz bieżącym #45283098577. Wizualny przegląd rzeczywistego PDF tej samej wersji źródła został wykonany i opisany powyżej.
+
+**KOŃCOWA DECYZJA: ROZDZIAŁ 15 — STABILNY (2/2 czystych niezależnych audytów matematyczno-redakcyjnych + zakończone zielone CI, bez zmian źródła).** Odblokowano następną jednostkę **15A — Całkowanie funkcji w przestrzeniach lokalnie wypukłych**, którą należy audytować i stabilizować osobno. Rozdział 16 nadal wymaga zachowania kolejności po 15A oraz 15B. Dopisanie niniejszej adnotacji modyfikuje tylko dokumentację audytową; nowe CI wywołane tą adnotacją nie jest dodatkową niezależną kontrolą matematyczną.
