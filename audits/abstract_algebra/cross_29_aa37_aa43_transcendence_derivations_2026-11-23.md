@@ -66,3 +66,14 @@ Commit utworzenia testów: bb94b1aa7156935598e587740f94210a3c952f33. Commit pod�
 **Opcjonalna propozycja, nie dodana do wcześniej zatwierdzonych źródeł:** w AA-43, bezpośrednio po twierdzeniu aa:tw:algebraic-derivation-extension, dodać krótki wniosek: dla charakterystyki zero derywację na L można jednoznacznie wyznaczyć przez derywację na K i dowolne wartości w K(B) na bazie transcendencji B. Wprowadza to przydatny pomost do AA-37, lecz rozszerzenie zakresu wymaga osobnego zatwierdzenia zgodnie z AGENTS.md.
 
 **Dalej:** najpierw stabilizacja AA-X29, dopiero po niej niezależny AA-X30.
+
+
+## Zamknięcie AA-X29 — dowody stabilizacji
+
+**Dokładny przebieg CI:** https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45279816765, przypięty do SHA 39da3bfd6e263e4b264c62444966a9401cd1ced9, wynik **completed / success**; job validate-cli **138060998987** także **completed / success**.
+
+Zweryfikowano pełny dekodowany log. Wydzielony krok **Run AA-X29 transcendence bases and derivation extensions** ukończył wszystkie 7 regresji z wynikiem ok (sekcja logu wiersze około 10126–10137: `Ran 7 tests in 0.507s`, `OK`). Osobno potwierdzono sukces kroków Run repository tool tests, Compile AA-01 to AA-50 book with latexmk oraz Verify PDF and references (no undefined refs).
+
+**Werdykt końcowy AA-X29: ZAMKNIĘTY / STABILNY** w sprawdzonym interfejsie AA-37 × AA-43. Źródła zatwierdzonych rozdziałów nie zostały zmienione, a nowe testy nie zastępują ogólnych dowodów ani formalizacji Lean. Nie przeprowadzono niezależnej wizualnej inspekcji stron PDF; zielony krok kompilacyjny i kontrola logów tego nie poświadczają.
+
+Dalszy etap: osobny AA-X30, dopiero po powyższej stabilizacji.
