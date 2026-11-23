@@ -46,3 +46,15 @@ Do `.github/workflows/abstract-algebra-chapter.yml` dodano wyzwalacz ścieżki i
 - Rozdziały AA-15, AA-41, AA-42 pozostają niezmienione. Nie stwierdzono błędu wymagającego korekty ich źródeł.
 - Jeżeli bieżące CI nie przejdzie, odczytać błąd testu, poprawić rzeczywistą przyczynę i powtórzyć CI. Nie traktować lokalnych testów arytmetycznych jako dowodu pełnego przebiegu CI.
 - AA-51 nadal nieutworzony i nie jest automatycznie zakładany przez audyty przekrojowe.
+
+## 5. Ostateczna bramka i zamknięcie AA-X16
+
+**AA-X16: ZAMKNIĘTY / PASS** w dokładnie wyznaczonym zakresie przekrojowym.
+
+Zweryfikowano końcowy wynik GitHub Actions [45199128470](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45199128470) na commicie `39b73c112661fbe686c50f0021557c8cf13ba53c`: `completed/success`. W jobie `validate-cli` **94/94 wykonane kroki zakończyły się bez awarii**. Z odczytanego logu potwierdzono wszystkie **7/7 przypadków testowych AA-X16 = ok** zarówno przy globalnym `unittest discover`, jak i osobno w kroku `Run AA-X16 S3 group algebra and exact representation projectors`. Przeszły także niezależne testy poprzednich rozdziałów i bramka integralności AA-GLOBAL.
+
+**LaTeX/PDF:** krok `Compile AA-01 to AA-50 book with latexmk` = success; `Verify PDF and references (no undefined refs)` = success; archiwizacja = success. Artefakt `abstract-algebra-aa01-aa50` ID `14830392777`, ZIP 2 289 387 bajtów. W tej iteracji nie wykonano niezależnych wizualnych oględzin PDF i nie przypisuje się takiego wyniku.
+
+**Zakres werdyktu:** obliczone modele, struktury algebr grupowych, warunki Maschkego, projektory i źródłowe etykiety; testy skończone nie dowodzą wszystkich ogólnych twierdzeń. Rozdziały AA-15, AA-41 i AA-42 pozostają nienaruszone, a historyczne statusy stabilności AA-01–AA-50 nie zostały zmienione.
+
+**Następna odrębna iteracja:** AA-X17 — połączyć wzór Burnside'a dla działań skończonych (AA-03) z operatorem uśredniania na reprezentacji permutacyjnej (AA-41) oraz z ortogonalnością charakterów (AA-42). Najpierw przeczytać aktualne rozdziały i wykonać niezależną kontrolę bez automatycznego dopisywania materiału do zatwierdzonych źródeł.
