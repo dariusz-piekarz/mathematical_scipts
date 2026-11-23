@@ -40,10 +40,10 @@ Niezależny przegląd pełnych 9 dowodów, 5 środowisk przykładów, 15 etykiet
 
 ## Testy, odsyłacze i skład
 
-- Dodano tests/tools/test odpowiednik w **tools/tests/test_functional_analysis_ch04.py**: 12 testów struktury, referencji, terminologii, skalarnych ciągów, otoczki wypukłej w L^p, rodzin T_n, topologii operatorowych, skończeniewymiarowej kontroli normy, metryki produktu i kroku indukcyjnego.
+- Dodano **tools/tests/test_functional_analysis_ch04.py**: 12 testów struktury, referencji, terminologii, skalarnych ciągów, otoczki wypukłej w L^p, rodzin T_n, topologii operatorowych, skończeniewymiarowej kontroli normy, metryki produktu i kroku indukcyjnego.
 - Przy dwóch próbach nowego testu ciągowego kryterium ograniczoności CI wykrył **błąd precyzji porównania liczb zmiennoprzecinkowych**, nie błąd twierdzenia. W testach poprawiono porównania na tolerancyjne. Rejestr wcześniejszych nieudanych przebiegów zachowano w historii GitHub Actions; nie są traktowane jako pozytywna walidacja.
-- Dodano **.github/workflows/functional-analysis-ch04.yml**: kompilacja w rzeczywistym kontekście rozdziałów 01–05, testy Python, kontrola brakujących odsyłaczy i błędów LaTeX, artefakt PDF. Potwierdzenie wyniku końcowej kompilacji i oględziny ilustracji nastąpią po zakończeniu poprawionego przebiegu.
-- Rozdział nie zawiera odrębnego rysunku TikZ; skontrolowano czytelność wyprowadzanych wzorów i tabel w kontekstowym PDF.
+- Dodano **.github/workflows/functional-analysis-ch04.yml**: kompilacja w rzeczywistym kontekście rozdziałów 01–05, testy Python, kontrola brakujących odsyłaczy i błędów LaTeX, artefakt PDF. **Przebieg CI [45157298984](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45157298984) zakończył się SUCCESS**: 12/12 testów PASS, kompilacja PASS, walidacja PDF i odsyłaczy PASS, zapis artefaktu PASS. Dodatkowo workflow zoptymalizowano, aby pomijał zbędne instalacje narzędzi PDF, gdy są już dostępne na runnerze.
+- Rozdział nie zawiera odrębnego rysunku TikZ. Pobrano i sprawdzono rzeczywisty artefakt z przebiegu CI: **33 strony A4, 480542 bajty**; rozdział 04 znajduje się na stronach **22–27**. Przejrzano arkusz kontrolny stron 22–27 oraz stronę 25 w pełnej rozdzielczości. Wzory, odsyłacze, nagłówki i zakończenia dowodów są czytelne; nie stwierdzono kolizji ani obcięć. W końcowym logu LaTeX brak niezdefiniowanych odsyłaczy, przepełnionych wierszy i brakujących znaków.
 
 ## Wniosek
 
