@@ -191,21 +191,67 @@ Nie należy utożsamiać sukcesu
 skończonych testów z dowodem
 ogólnych twierdzeń geometrycznych.
 
-## Bramka końcowej stabilizacji
+## Końcowa bramka CI i wizualna kontrola PDF
 
-Do zamknięcia pozostaje sprawdzenie
-rzeczywiście wygenerowanego końcowego
-PDF 44-rozdziałowego tomu po wszystkich
-zmianach audytu 17:
-pełna trzykrotna kompilacja, brak
-ostrzeżeń i przepełnień,
-inspekcja rysunków, stron,
-nowych macierzy, dowodów
-i odsyłaczy. Po zakończeniu
-tych kontroli blok 19–21
-może uzyskać status
-**lokalnie stabilny**, a
-następny audyt obejmie 22–24.
+Po wszystkich korektach źródłowych i dopięciu regresji
+ostateczny przebieg
+[GitHub Actions 45200337579](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45200337579)
+na commicie `a93c3408c1c49ab6c07976a3fbee2e82a1f4d669`
+zakończył oba zadania:
+`structural-audit=success` oraz `full-book-pdf=success`.
 
-Globalny audyt całego tomu
-pozostaje otwarty.
+Potwierdzono:
+- **44/44** źródeł, **0** niezwiązanych odsyłaczy,
+  **0** powielonych etykiet, **0** błędów środowisk
+  i **0** niedozwolonych terminów;
+- **3884** dokładne przypadki regresyjne
+  w dziewięciu grupach oraz kontrolę
+  macierzy Goeritza po zmianie skrzyżowania;
+- trzy udane przebiegi `pdflatex`;
+- końcowy tom ma **276 stron A4**;
+- plik `graph_and_knot_full_warnings.txt` ma **0 bajtów**
+  (bez ostrzeżeń LaTeX i bez przepełnionych ramek).
+
+Pobrano **artefakt końcowego przebiegu**, a nie
+wcześniejsze składanie źródeł. Renderowano
+i obejrzano wszystkie strony **164–181**:
+- rozdział 19: strony 164–168, w tym grafy Taita,
+  ważona dualność i podpisany wyznacznik
+  po zmianie skrzyżowania (strona 168);
+- rozdział 20: strony 169–177, w tym diagram
+  meridian–długość, poprawiony model
+  nachylenia `1/1` (strona 172),
+  macierz chirurgii, formę splecenia i
+  uzupełniony rachunek Kirby'ego (strony 176–177);
+- rozdział 21: strony 178–181, w tym rysunek
+  grafu JSJ (strona 179), twierdzenie
+  o homologii wiązek torusowych (strona 180)
+  i nowy kontrprzykład o identycznym grafie JSJ
+  i różnej homologii (strona 181).
+
+W renderach nie stwierdzono kolizji rysunków
+z podpisami, obciętych wzorów ani
+naruszeń marginesów. Sprawdzenie wizualne
+potwierdza czytelność i poprawny skład,
+nie jest dodatkowym dowodem wyników zewnętrznych.
+
+## Końcowy werdykt i kontynuacja
+
+**ROZDZIAŁY 19–21: LOKALNIE STABILNE (PASS).**
+
+Drugie niezależne przejście, korekty,
+testy rachunkowe, globalna walidacja
+struktury, pełny PDF i jego kontrola
+wizualna zakończyły się pomyślnie.
+Jawnie przyjęte twierdzenia Goeritza,
+JSJ, Kirby'ego, hiperbolizacji i
+Gordona–Lueckego nadal pozostają
+wynikami klasycznymi, których
+pełnych dowodów nie przedstawiano
+w tym bloku; stabilizacja lokalna
+nie oznacza ich formalizacji.
+
+Następny blok audytu: **22–24**.
+Audyt matematyczny całego
+44-rozdziałowego tomu pozostaje
+otwarty.
