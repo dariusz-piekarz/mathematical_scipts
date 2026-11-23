@@ -106,3 +106,21 @@ Wszystkie **62 etykiety są unikatowe**; każda z 28 referencji ma cel lokalny l
 **Wynik matematyczny:** w badanych zależnościach AA-16–AA-18 nie wykryto błędów wymagających korekty źródeł. Zatwierdzone pliki TeX pozostawiono bez zmian. Dwa odrębne zestawy testów wykonano **rzeczywiście lokalnie** i opublikowano z integrowaną kontrolą CI.
 
 Nowy pełny przebieg walidacji książki AA-01–AA-42, obejmujący oba testy, jest uruchamiany z commitu \`5c441354a822f8bc079ee5616918c66f41fece85\`. **Nie uznajemy AA-X05 za finalnie stabilny, dopóki nie zostanie potwierdzone \`completed/success\`** dla dedykowanych testów, kompilacji całego PDF i kontroli odsyłaczy oraz przeprowadzona kontrola składu. Wyniki te należy dopisać do raportu po ich faktycznym uzyskaniu.
+
+
+## 7. Zamknięcie po faktycznym CI i kontroli PDF
+
+Końcowy przebieg [Abstract algebra AA-01 to AA-42 — GitHub Actions 45133090699](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45133090699), dla commitu \`5c441354a822f8bc079ee5616918c66f41fece85\`, zakończył się wynikiem **completed/success**.
+
+Z rzeczywistych kroków pracy CI, a nie tylko ze zbiorczego statusu, potwierdzono:
+- \`Run AA-X05 module and Smith cross-audit\`: **success**;
+- \`Run AA-X05 independent 3x3 Smith audit\`: **success**;
+- \`Compile AA-01 to AA-42 book with latexmk\`: **success**;
+- \`Verify PDF and references (no undefined refs)\`: **success**;
+- \`Archive build output\`: **success**.
+
+**Oryginalny artefakt** \`abstract-algebra-aa01-aa42\`, identyfikator GitHub **14799046088**, został pobrany i rozpakowany. Zawiera \`abstract_algebra.pdf\` (269 stron) i \`abstract_algebra.log\`. W finalnym logu stwierdzono **0** \`Overfull \\hbox\`, **0** \`Overfull \\vbox\`, **0** \`Underfull \\hbox\`, **0** ostrzeżeń LaTeX, **0** ostrzeżeń \`hyperref\`, **0** błędów LaTeX i **0** niezdefiniowanych odsyłaczy.
+
+**Oględziny składu:** strony PDF **121–126 (AA-16)**, **127–133 (AA-17)** i **134–141 (AA-18)** to w sumie **21 stron**. Wyrenderowano wszystkie 21 stron, obejrzano zestawienie stron i sprawdzono brak widocznych obcięć, kolizji tekstu oraz wad rozmieszczenia wzorów. Następnie wyrenderowano **wszystkie te same strony z końcowego artefaktu CI** i porównano je piksel po pikselu z wersją obejrzaną wcześniej: **21/21 obrazów identycznych**, mimo różnicy sum kontrolnych całych plików PDF. To potwierdza, że wynik wizualny dotyczy także ostatecznego wydania z CI.
+
+**Werdykt AA-X05: STABILNY w sprawdzonym zakresie przekrojowym.** Dwa rzeczywiście uruchomione niezależne zestawy obliczeń (15 559 i 78 732 sprawdzeń), spójność 62 etykiet i 28 odsyłaczy, kompletność rozdziałów w książce, finalne CI, analiza logu i wizualna kontrola składu nie ujawniły potrzeby korekty źródeł AA-16–AA-18. Źródła matematyczne tych rozdziałów pozostały niezmienione. Nie oznacza to formalnej weryfikacji każdego dowodu w pozostałych 39 rozdziałach.
