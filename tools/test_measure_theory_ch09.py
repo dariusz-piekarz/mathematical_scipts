@@ -108,14 +108,22 @@ def check_egorov_null_exception():
 
 
 def check_local_vs_global():
+    comparisons = 0
     for n in range(1, 65):
-        # f_n=chi_[n,n+1) on R; full bad set always has measure 1.
-        assert Fraction(1) == 1
-        # Every fixed compact interval [-R,R] eventually avoids support.
+        # Length of [n,n+1) equals 1, so the global bad-set mass
+        # cannot tend to 0.
+        full_mass = Fraction(n+1)-Fraction(n)
+        assert full_mass == 1
         for radius in range(1, 8):
-            if n > radius:
-                assert n >= radius
-    print("PASS R09 local/global mass escape: 64 moving supports")
+            # Exact length of [n,n+1) intersect [-R,R].
+            overlap = max(Fraction(0), min(Fraction(n+1), Fraction(radius))
+                          - max(Fraction(n), Fraction(-radius)))
+            assert 0 <= overlap <= full_mass
+            if n >= radius:
+                assert overlap == 0
+            comparisons += 1
+    assert comparisons == 448
+    print(f"PASS R09 local/global mass escape: {comparisons} overlaps")
 
 
 def check_source():
