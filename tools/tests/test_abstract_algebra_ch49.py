@@ -46,14 +46,14 @@ def case2_local_sets(q):
             values=[2,2+2*s.sqrt(1+4*b),2-2*s.sqrt(1+4*b)]
         else:
             values=[m]
-        E[a]=sorted({int(v) for v in values if v.is_integer is True})
+        E[a]=sorted({int(v) for v in values if s.sympify(v).is_integer is True})
     inf_ord=s.degree(den,x)-s.degree(num,x)
     if inf_ord>2:
         Einf=[0,2,4]
     elif inf_ord==2:
         b=s.limit(x**2*q,x,s.oo)
         vals=[2,2+2*s.sqrt(1+4*b),2-2*s.sqrt(1+4*b)]
-        Einf=sorted({int(v) for v in vals if v.is_integer is True})
+        Einf=sorted({int(v) for v in vals if s.sympify(v).is_integer is True})
     else:
         Einf=[int(inf_ord)]
     return E,Einf

@@ -37,3 +37,8 @@ Zagadnienie, czy istnieje odpowiednie P w **całej afinicznej rodzinie** rozwią
 Dodano przykład i test odrzucania kwadratowego wyróżnika; dodano test bieguna prostego i braku dopuszczalnych stopni n. Rozdział ma obecnie 5 środowisk dowodu, 5 przykładów i 25 unikatowych etykiet. Zestawy testów liczą **13 SymPy + 10 Fraction**.
 
 Trzeba jeszcze uzyskać pełny zielony CI na finalnym źródle, skompilować książkę AA-01–AA-49, skontrolować log i obejrzeć wszystkie strony AA-49. Bez tych wyników audyt III nie może oznaczyć rozdziału jako STABILNY. AA-50 pozostaje nieotwarty.
+
+
+## Korekta po pierwszym przebiegu CI
+
+W przebiegu GitHub Actions [#45176160492](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45176160492) testy ogólne zakończyły się 3 błędami, ponieważ testowy enumerator `case2_local_sets` sprawdzał `v.is_integer is True` także dla zwykłej wartości Python `2`. Ta wartość nie była traktowana jak obiekt symboliczny o własności `is_integer=True`, więc w testowym E_a brakowało zawsze dopuszczalnej kandydatki 2. Poprawka `s.sympify(v).is_integer is True` występuje w dwóch miejscach (skończone bieguny i nieskończoność) i zachowuje kandydatów 2,2±2sqrt(1+4b). Jest to poprawka implementacji **testów**, nie matematycznego twierdzenia. Celem ponownego CI jest potwierdzenie wszystkich list E_a,E_∞ oraz pełnego PDF.
