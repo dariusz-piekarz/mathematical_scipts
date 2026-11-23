@@ -77,8 +77,124 @@ uzyskano:
 Przebieg źródłowo-testowy: commit 8bcc7d0c5f544e67bcf4e4fed4279f3823ca6462.
 Ostatni commit zmieniający źródła TeX: 7f4664958cd8f5732b11ed5784fc742c9d262667.
 
-## Bramka PDF i status
+## Wyniki końcowe CI, pełnego PDF i oględzin — PASS
 
-Do pełnego zamknięcia pierwszego przejścia trzeba sprawdzić wynik full-book-pdf w CI dla końcowego stanu źródeł, potwierdzić trzy kompilacje, brak ostrzeżeń oraz obejrzeć każdą stronę drukowanych rozdziałów odpowiadających źródłowym 40–42 (w tym nowe długie dowody, ilustracje i wzory).
+### Niezależne regresje — PASS
 
-**Obecny status: kontrola matematyczna i regresje PASS; końcowa kompilacja i kontrola wizualna PDF wymagają osobnego potwierdzenia.** Nie oznaczać 40–42 jako lokalnie stabilnych po jednym przejściu. Po pierwszym przejściu będzie potrzebny osobny audyt 31 z drugim niezależnym zestawem kontroli. Rozdziały 01–39 pozostają lokalnie stabilne, cały 44-rozdziałowy tom nadal w audycie.
+Końcowy przebieg
+https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45279941031
+dla commitu 8bcc7d0c5f544e67bcf4e4fed4279f3823ca6462
+potwierdził pomyślne zakończenie obu zadań:
+
+1. structural-audit = success:
+   - katalog źródeł 44/44;
+   - duplicate_labels = 0;
+   - unresolved_references = 0;
+   - environment_errors = 0;
+   - forbidden_language = 0;
+   - nowe testy PASS: 2050 sieci przepływowych oraz
+     osobno 2050 wariantów z pojemnościami 1,
+     1550 wydzielonych ścieżek przepływu,
+     3200 losowych grafów dla Caro–Weiego,
+     54 porównania analitycznej wariancji klik
+     z wyliczeniem zależności wspólnych krawędzi
+     oraz 6 pełnych enumeracji modelu G(n,1/2);
+   - wszystkie pakiety regresji wcześniejszych rozdziałów PASS.
+2. full-book-pdf = success, z potrójną kompilacją pdflatex.
+
+Nie traktujemy liczby 1550 ścieżek jako
+niezależnych sieci. Jest to dodatkowa
+liczba obiektów weryfikowanych
+w ramach 2050 instancji przepływowych.
+
+### Pełny skład 44-rozdziałowego tomu — PASS
+
+Pobrano artefakt GitHub Actions
+graph-and-knot-complete-book-audit,
+**ID 14869880839**, z tego samego przebiegu.
+Weryfikacja faktycznych plików artefaktu:
+
+- PDF: **298 stron A4**;
+- trzy istniejące logi pass1, pass2 i pass3
+  zakończonych pomyślnie kompilacji pdflatex;
+- plik graph_and_knot_full_warnings.txt
+  o rozmiarze **0 bajtów**;
+- tekst końcowego PDF zawiera
+  nowy rozkład całkowitoliczbowego przepływu,
+  nierówność Caro–Weiego
+  i dwustronny próg występowania kliki.
+
+W szczególności jest to **skład dla wersji
+z trzema nowymi twierdzeniami i
+z podłączonymi testami audytu 30**,
+a nie wyłącznie PDF z poprzedniej iteracji.
+
+### Oględziny wizualne źródłowych rozdziałów 40–42 — PASS
+
+Rzeczywisty układ drukowanej książki:
+źródłowe rozdziały 40, 41 i 42
+odpowiadają drukowanym rozdziałom **9, 10, 11**.
+
+Wyrenderowano i obejrzano wszystkie
+**20 stron PDF 64–83** na pięciu arkuszach kontaktowych:
+
+- **64–70**: źródłowy rozdział 40,
+  pełny blok przepływów. Nowe twierdzenie
+  o rozkładzie przepływów na str. **65–66**,
+  poprawny układ wzoru i dowodu,
+  diagram przepływu i przekroju na str. 67 i 69.
+- **71–76**: źródłowy rozdział 41,
+  twierdzenia Mantela, Turána i Ramseya.
+  Nowa nierówność Caro–Weiego na str.
+  **73–74**, przykład sumy klik,
+  rysunki grafów dwudzielnych i C5.
+- **77–83**: źródłowy rozdział 42,
+  modele G(n,p), liczby trójkątów
+  i izolowanych wierzchołków,
+  próg spójności i nowy dwustronny próg
+  klik na str. **81–82**,
+  zastosowanie probabilistyczne do Ramseya.
+
+Kontrola wizualna: nie znaleziono
+uciętych wzorów, tekstu poza marginesami,
+nakładających się podpisów rysunków,
+kolizji etykiet ani urwanych diagramów.
+Każda strona została rzeczywiście
+wyrenderowana z końcowego PDF
+i obejrzana.
+
+## Końcowy werdykt audytu 30
+
+**PIERWSZE SZCZEGÓŁOWE PRZEJŚCIE: PASS.**
+
+Kryteria pierwszego przejścia zostały
+spełnione łącznie: rzeczywiste matematyczne
+zmiany w źródłach 40–42, niezależny
+zestaw testów, sukces obu zadań CI,
+trzy kompilacje pełnego 298-stronicowego
+tomu i oględziny wszystkich 20 stron
+audytowanego bloku.
+
+Wyniki skryptów testowych oraz
+składu LaTeX nie są formalnym
+dowodem ogólnych twierdzeń.
+Ich pełne dowody matematyczne
+znajdują się w rozdziałach;
+testy stanowią kontrolę
+regresyjną i dodatkową weryfikację
+przypadków skończonych.
+
+**Rozdziały 40–42 pozostają
+W STABILIZACJI**: wymagają
+**audytu 31 — drugiego niezależnego przejścia**
+z własnymi sprawdzeniami matematycznymi,
+poprawkami, nowymi regresjami i
+końcową bramką PDF/CI.
+
+**Rozdziały 01–39 pozostają
+LOKALNIE STABILNE.**
+Do ukończenia całej książki
+pozostała również kontrola
+rozdziałów źródłowych 43–44.
+Globalny audyt tomu 44 rozdziałów
+nadal jest otwarty.
