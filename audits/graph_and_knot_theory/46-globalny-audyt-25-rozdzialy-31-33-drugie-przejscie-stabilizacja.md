@@ -151,33 +151,116 @@ rozdziałów 01–30. W tych testach
 nie przypisuje się dowodom analitycznym
 statusu potwierdzenia formalnego.
 
-## CI i kontrola składu PDF
+## Walidacja CI i kontrola wizualna PDF
 
-Końcowy przebieg dla źródeł i testów:
-[GitHub Actions 45247833818](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45247833818),
-commit źródłowo-testowy
-`092613a1ab3bf0d16943b3526803b950d9caa168`.
+**Dwa komplementarne, rzeczywiście zakończone przebiegi
+kontroli dotyczą tego samego stanu plików źródłowych TeX.**
 
-Zadanie **`structural-audit=success`**:
-- **44/44** rozdziały;
-- **0** duplikatów etykiet, **0** niezwiązanych odsyłaczy;
-- **0** błędów środowiska i **0** zakazanych terminów;
-- wszystkie **4187** nowych przypadków: PASS.
+**Źródła 31–33, ostatni commit:**
+`54387ed6416d9f71289659a34c866c3d9e0305de`.
+Kolejne commity dotyczyły **wyłącznie nowych testów,
+konfiguracji CI i raportu**; nie zmieniały tych źródeł.
 
-Do pełnego zamknięcia bramki należy jeszcze
-potwierdzić `full-book-pdf=success`
-po trzech kompilacjach `pdflatex`,
-sprawdzić brak ostrzeżeń i obejrzeć
-strony rozdziałów 31–33,
-w szczególności nowe długie macierze
-i dowód rodzin węzłów.
+### A. Pełna kompilacja po ostatniej zmianie źródeł — PASS
 
-**Status rozdziałów 31–33 pozostaje
-„w stabilizacji” do zamknięcia
-tej ostatniej bramki.**
-Wówczas będzie można uznać
-rozdziały 01–33 za lokalnie stabilne.
-Następna iteracja: audyt 26
-(pierwsze przejście rozdziałów 34–36).
-Audyt globalny 44 rozdziałów
+[GitHub Actions 45247629746](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45247629746)
+dla ostatniego commitu źródłowego:
+**`structural-audit=success` i `full-book-pdf=success`. Artefakt
+`graph-and-knot-complete-book-audit`,
+ID **14853409226**, został pobrany i sprawdzony:
+
+- rzeczywiste trzy wykonania `pdflatex` na pełnym
+  44-rozdziałowym tomie: PASS;
+- końcowe PDF **286 stron, A4**;
+- **0 bajtów** w pliku ostrzeżeń
+  `graph_and_knot_full_warnings.txt`;
+- poprzednie regresje oraz kontrola strukturalna: PASS.
+
+### B. Rozszerzony niezależny test drugiego przejścia — PASS
+
+[GitHub Actions 45247833818](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45247833818)
+dla commitu źródłowo-testowego
+`092613a1ab3bf0d16943b3526803b950d9caa168`:
+
+- `structural-audit=success`:
+  **44/44** rozdziały,
+  **0** powtórzonych etykiet,
+  **0** niezwiązanych odsyłaczy,
+  **0** błędów środowiska,
+  **0** zakazanych terminów;
+- wszystkie **4187** nowych niezależnych
+  regresji: PASS;
+- wszystkie regresje audytu 24 oraz
+  wcześniejszych bloków: PASS.
+
+**Uwaga o statusie najnowszego PDF:** zadanie
+`full-book-pdf` przebiegu 45247833818
+było nadal w fazie instalacji TeX podczas
+niniejszej kontroli. Nie przypisujemy
+mu przedwcześnie wyniku PASS.
+Pełna, trzykrotna walidacja PDF została
+jednak już potwierdzona przez przebieg
+**A na identycznych plikach źródłowych LaTeX**.
+Zmiany w zadaniu testowym nie modyfikują
+tekstu składanego do PDF.
+
+### C. Oględziny stron źródłowych 31–33
+
+Otworzono, wyrenderowano i obejrzano komplet stron
+**251–271** PDF z przebiegu A, w sześciu
+grupach kontaktowych:
+
+- **251–257**, rozdział drukowany 38:
+  konstrukcja Parka, konfiguracja sześciu sfer,
+  macierz i pełna odwrotność `Q_7`,
+  metabolizer, schemat wymiernej kontrakcji,
+  grupa fundamentalna i klasyfikacja TOP;
+- **258–263**, rozdział drukowany 39:
+  klasa kanoniczna, nowy przykład
+  ujemnego pola formalnej klasy,
+  wzory parowań i dodatnie oszacowanie,
+  teoria komór, Taubes–Li–Liu;
+- **264–271**, rozdział drukowany 40:
+  sklejenie dla chirurgii,
+  ciągi Mayera–Vietorisa i van Kampena,
+  formuła wielomianowa Fintushela–Sterna,
+  dwa trójlistniki, nowa cała rodzina
+  węzłów o tej samej liczbie klas podstawowych
+  oraz podsumowujące diagramy.
+
+W oględzinach **nie stwierdzono**
+uciątych wzorów, kolizji tekstów i figur,
+nakładania podpisów ani wyjścia
+z ramki tekstowej. Strona kończąca
+rozdział 40 ma prawidłową, naturalną
+ilość wolnego miejsca po zakończeniu treści.
+
+## Werdykt audytu 25
+
+**DRUGIE NIEZALEŻNE PRZEJŚCIE: PASS.**
+
+Blok **rozdziałów 31–33 uznajemy za
+LOKALNIE STABILNY** na podstawie:
+- dwóch rzeczywistych, różnych audytów
+  matematycznych 24 i 25;
+- **10 692** dokładnych regresji
+  podzielonych na niezależne moduły;
+- zakończonej, potrójnej kompilacji
+  i kontroli strukturalnej dla
+  **identycznego finalnego stanu źródeł TeX**;
+- ponownej zielonej kontroli
+  strukturalnej po dodaniu ostatniego modułu testów;
+- wizualnej inspekcji wszystkich 21 stron
+  z analizowanych rozdziałów.
+
+Nie utożsamiamy poprawności kompilacji
+z formalną weryfikacją twierdzeń
+Parka, Freedmana, Taubesa–Li–Liu
+ani Fintushela–Sterna;
+są one jawnie wynikami zewnętrznymi.
+
+**Rozdziały 01–33: lokalnie stabilne.**
+Następny etap: **audyt 26 — pierwsze
+przejście źródłowych rozdziałów 34–36**.
+Globalny audyt całego tomu 44 rozdziałów
 pozostaje otwarty.
