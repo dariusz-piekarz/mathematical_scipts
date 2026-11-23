@@ -48,3 +48,11 @@ Ponownie pobrano wszystkie rzeczywiste pliki rozdziałów 01–14 z istniejącej
 ## Decyzja przed końcową bramką
 
 **14/03: DRUGI CZYSTY AUDYT MATEMATYCZNO-REDAKCYJNY — 2/2.** Źródło, testy i workflow pozostawiono bez zmian, aby oba czyste audyty odnosiły się dokładnie do bloba SHA 8ea2ec43a6dca36e644000517fa19d589bd134fe. Aby formalnie oznaczyć rozdział 14 jako **STABILNY** i rozpocząć audyt 15/01, należy potwierdzić zakończenie workflow wywołanego tym raportem z wynikiem **SUCCESS**. Do tej chwili nie deklarować wyniku CI z przyszłego przebiegu.
+
+## Ostateczna decyzja po zielonym CI
+
+Nowy przebieg [GitHub Actions #45276241416](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45276241416), uruchomiony zapisaniem audytu 14/03 na commicie c21cd4d9d9c0445a33934db02fc3eb8777b009dc, zakończył się **COMPLETED / SUCCESS**. GitHub API potwierdziło wszystkie kroki: **21/21 testów regresyjnych PASS**, przygotowanie rzeczywistego dokumentu z rozdziałów 01–14 PASS, kompilacja LaTeX PASS, kontrola PDF/odsyłaczy PASS i publikacja artefaktu PASS.
+
+Bezpośrednio po tym przebiegu zweryfikowano, że badany blob rozdziału 14 ma nadal SHA **8ea2ec43a6dca36e644000517fa19d589bd134fe**, a zestaw testów SHA **ad9ce5ad851b9f09a1323bb009ef1604a78150b7**. Oba czyste audyty 14/02 i 14/03 dotyczą dokładnie tego samego źródła. Audyt 14/01 udokumentował także wizualną inspekcję faktycznego 84-stronicowego PDF dla tej wersji źródła, w tym diagramu na stronie 80.
+
+**KOŃCOWA DECYZJA: ROZDZIAŁ 14 — STABILNY (2/2 niezależnych czystych audytów + ukończone zielone CI).** Odblokowano audyt **15/01** w następnej jednostce pracy. Nie zmieniano w tej iteracji matematycznych źródeł, testów ani workflow. Ewentualne kolejne CI uruchomione wyłącznie dopisaniem niniejszej decyzji nie zmienia wyniku kontroli tego samego bloba źródła.
