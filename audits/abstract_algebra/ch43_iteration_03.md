@@ -43,7 +43,7 @@ Dwa zestawy testów nie są równoważne formalnemu dowodowi w Lean; wzajemnie k
 **Globalna bramka źródeł w tym przebiegu:**
 - **43** pliki rozdziałów, prawidłowa kolejność wszystkich `\input`;
 - **864/864** unikatowe etykiety, **0** duplikatów;
-- **377** wystąpień odsyłaczy, **244+** różnych celów (dokładnie **246**), **0** brakujących celów;
+- **377** wystąpień odsyłaczy, **246** różnych celów, **0** brakujących celów;
 - **405** dowodów, **276** przykładów;
 - 11 poprzednich raportów przekrojowych nadal pokrywa **42** historyczne rozdziały; AA-43 ma oddzielny cykl trzech audytów.
 
