@@ -1,0 +1,80 @@
+name: Functional analysis - chapter 09 audit
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - 'chapters/pl/functional_analysis/0[1-9]-*.tex'
+      - 'books/pl/functional_analysis.tex'
+      - 'tools/tests/test_functional_analysis_ch09.py'
+      - 'audits/functional_analysis/09*'
+      - '.github/workflows/functional-analysis-ch09.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit-ch09:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check 09 weak-star compactness, extreme points and Mackey contracts
+        run: python3 tools/tests/test_functional_analysis_ch09.py
+      - name: Prepare TeX wrapper with complete reference context 01-09
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          book = Path('books/pl/functional_analysis.tex').read_text(encoding='utf-8')
+          assert book.count(r'\begin{document}') == 1
+          pre = book.split(r'\begin{document}', 1)[0]
+          inputs = re.findall(
+              r'\\input\{(\.\./\.\./chapters/pl/functional_analysis/[^}]+)\}',
+              book
+          )
+          assert len(inputs) >= 9
+          assert all(inputs[i].split('/')[-1].startswith(f'{i+1:02d}-')
+                     for i in range(9))
+          body = r'\begin{document}' + '\n'
+          body += '\n'.join(r'\input{' + name + '}' for name in inputs[:9])
+          body += '\n' + r'\end{document}' + '\n'
+          Path('books/pl/functional_analysis_ch09_context_ci.tex').write_text(
+              pre + body, encoding='utf-8'
+          )
+          PY
+      - name: Compile chapter 09 with complete 01-09 reference context
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: functional_analysis_ch09_context_ci.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Verify PDF, chapter heading, mathematical content and cross-references
+        run: |
+          if ! command -v pdfinfo >/dev/null || ! command -v pdftotext >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq poppler-utils
+          fi
+          test -s books/pl/functional_analysis_ch09_context_ci.pdf
+          test -s books/pl/functional_analysis_ch09_context_ci.log
+          if grep -E 'Undefined control sequence|There were undefined references|LaTeX Warning: (Reference|Citation).*undefined|Overfull \\hbox|Missing character' books/pl/functional_analysis_ch09_context_ci.log; then
+            echo 'Chapter 09 LaTeX diagnostics failed.'
+            exit 1
+          fi
+          pdfinfo books/pl/functional_analysis_ch09_context_ci.pdf
+          pdftotext -layout books/pl/functional_analysis_ch09_context_ci.pdf books/pl/functional_analysis_ch09_context_ci.txt
+          grep -q 'Banach.Alaoglu, Krein.Milman i topologia Mackeya' books/pl/functional_analysis_ch09_context_ci.txt
+          grep -q 'Zasada maksimum Bauera' books/pl/functional_analysis_ch09_context_ci.txt
+          grep -q 'Kryterium przedłużenia z wieloma warunkami' books/pl/functional_analysis_ch09_context_ci.txt
+      - name: Upload PDF and diagnostic logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: functional-analysis-ch09-pdf
+          path: |
+            books/pl/functional_analysis_ch09_context_ci.pdf
+            books/pl/functional_analysis_ch09_context_ci.log
+            books/pl/functional_analysis_ch09_context_ci.txt
+          if-no-files-found: warn
