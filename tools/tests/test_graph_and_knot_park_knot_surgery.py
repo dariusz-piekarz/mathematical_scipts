@@ -14,6 +14,43 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]/"chapters/pl/graph_and_knot_theory"
 
 
+
+def park_spheres_and_canonical_class():
+    """Exact intersection calculations in h,e1,...,e13."""
+    def unit(k):
+        return [int(j==k) for j in range(14)]
+    def plus(*terms):
+        return [sum(vec[i]*scale for scale,vec in terms)
+                for i in range(14)]
+    def diff(a,b):return [x-y for x,y in zip(a,b)]
+    def dot(a,b):return a[0]*b[0]-sum(
+        a[j]*b[j] for j in range(1,14))
+    h=unit(0)
+    e={j:unit(j) for j in range(1,14)}
+    f=plus((3,h),*[(-1,e[j]) for j in range(1,10)])
+    s=plus((4,f),(1,e[9]),*[(-2,e[j]) for j in range(10,14)])
+    v=[
+        diff(e[4],e[7]),diff(e[1],e[4]),
+        plus((1,h),(-1,e[1]),(-1,e[2]),(-1,e[3])),
+        diff(e[2],e[5]),diff(e[5],e[9]),
+    ]
+    u=[s]+list(reversed(v))
+    canonical=plus((-3,h),*[(1,e[j]) for j in range(1,14)])
+    cnt=0
+    assert dot(f,f)==0; cnt+=1
+    for j in range(1,10):
+        assert dot(f,e[j])==1;cnt+=1
+    assert dot(s,s)==-9;cnt+=1
+    for i in range(6):
+        assert dot(u[i],u[i])==(-9 if i==0 else -2);cnt+=1
+    for i in range(6):
+        for j in range(i+1,6):
+            assert dot(u[i],u[j])==int(j==i+1);cnt+=1
+    for i in range(6):
+        assert dot(canonical,u[i])==(7 if i==0 else 0);cnt+=1
+    return cnt
+
+
 def c7_boundary_linking():
     # Six-sphere plumbing: weights -9,-2,-2,-2,-2,-2.
     weights = [-9]+[-2]*5
@@ -148,6 +185,7 @@ def source_anchors():
 
 if __name__=="__main__":
     source_anchors()
+    print("PASS Park E(1) sphere classes and canonical adjunction:",park_spheres_and_canonical_class())
     print("PASS Park C7 H1 linking and metabolizer:",c7_boundary_linking())
     print("PASS Park canonical pairing and quantitative lower bound:",park_cone_lower_bound())
     print("PASS knot connected-sum Alexander and SW coefficient algebra:",knot_connected_sums())
