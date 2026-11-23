@@ -27,10 +27,10 @@ Z GitHub Actions pobrano i sprawdzono **rzeczywiste**, zakończone przebiegi `Ge
 - [45142452915](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45142452915) — commit dodający regresję `6f5ba48b`, `completed/success`;
 - [45142948686](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45142948686) — późniejszy przebieg `abf50f65`, `completed/success`.
 
-Workflow uruchomiony **przez sam raport 58**, [45143609812](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45143609812), miał przy odczycie status **`in_progress`**, bez końcowego wyniku. Nie wolno przedstawiać go jako zakończonego sukcesem, ani rozszerzać sukcesu poprzednich workflow na każdy późniejszy commit innych obszarów.
+Workflow uruchomiony **przez sam raport 58**, [45143609812](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45143609812), miał przy pierwszym odczycie status `in_progress`, a w **ponownej, rzeczywistej kontroli** uzyskał **`completed/success`** na dokładnym commicie raportu 58 `3cfb529e7cf57c9e0e0bec87b6f8e4c1f6bd3970`. Nie rozszerzamy tego wyniku na późniejsze, niezwiązane commity.
 
 ## Decyzja
 
-**PASS — matematyczna i redakcyjna stabilizacja rozdziału 13 po korekcie odsyłacza, cykl 2+1 zakończony.** Źródło, test i ich potwierdzone przebiegi CI są zgodne; poprawka nie wymaga kolejnego resetowania cyklu. **Status pełnego CI commitu raportu 58 nadal otwarty** w chwili kontroli i należy go zweryfikować osobno przed deklaracją zielonego statusu całego HEAD.
+**PASS — matematyczna i redakcyjna stabilizacja rozdziału 13 po korekcie odsyłacza, cykl 2+1 zakończony.** Źródło, test i ich potwierdzone przebiegi CI są zgodne; poprawka nie wymaga kolejnego resetowania cyklu. **CI dla commitu raportu 58 również potwierdzone jako zielone.** Nie oznacza to automatycznie zielonego CI każdego późniejszego HEAD, gdy na gałęzi trwają równoległe prace.
 
 W silnym standardzie dokumentowania każdego dowodu bilans globalny po raporcie 56 wynosi **281/325**. Do takiego samego indywidualnego opisu pozostało **44 dowodów** w rozdziałach **24 (21), 25 (14), 26 (9)**, niezależnie od ich wcześniejszych, ukończonych lokalnych cykli 2+1. Następny raport powinien zacząć od 24.
