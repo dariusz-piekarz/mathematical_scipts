@@ -132,6 +132,7 @@ class TestMeasureTheoryChapter20(unittest.TestCase):
             "def:radon-measure-20", "thm:polish-tight-20",
             "thm:lch-secondcountable-radon-20", "lem:cutoff-radon-20",
             "thm:uniqueness-cc-20", "thm:cc-dense-lp-radon-20",
+            "cor:support-test-20",
         }
         self.assertTrue(required.issubset(set(labels)))
         other = CH17.read_text(encoding="utf-8") + CH23.read_text(encoding="utf-8")
