@@ -1,0 +1,76 @@
+name: Functional analysis - chapter 05 audit
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - 'chapters/pl/functional_analysis/01-przestrzenie-liniowo-topologiczne-definicje-i-przyklady.tex'
+      - 'chapters/pl/functional_analysis/02-podprzestrzenie-produkty-ilorazy-i-topologie-uniwersalne.tex'
+      - 'chapters/pl/functional_analysis/03-sieci-struktura-jednostajna-i-zupelnosc.tex'
+      - 'chapters/pl/functional_analysis/04-zbiory-ograniczone-rodziny-operatorow-i-metryzowalnosc.tex'
+      - 'chapters/pl/functional_analysis/05-przestrzenie-lokalnie-wypukle-i-seminormy.tex'
+      - 'books/pl/functional_analysis.tex'
+      - 'tools/tests/test_functional_analysis_ch05.py'
+      - 'audits/functional_analysis/05*'
+      - '.github/workflows/functional-analysis-ch05.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit-ch05:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check 05 seminorm, gauge, Frechet and reference contracts
+        run: python3 tools/tests/test_functional_analysis_ch05.py
+      - name: Prepare TeX wrapper with complete reference context 01-05
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          book = Path("books/pl/functional_analysis.tex").read_text(encoding="utf-8")
+          assert book.count(r"\begin{document}") == 1
+          pre = book.split(r"\begin{document}", 1)[0]
+          import re
+          chapter_inputs = re.findall(r'\\input\{(\.\./\.\./chapters/pl/functional_analysis/[^}]+)\}', book)
+          assert len(chapter_inputs) >= 5
+          assert all(chapter_inputs[i].split('/')[-1].startswith(f'{i+1:02d}-') for i in range(5))
+          body = '\\begin{document}\n' + '\n'.join('\\input{' + filename + '}' for filename in chapter_inputs[:5]) + '\n\\end{document}\n'
+          Path("books/pl/functional_analysis_ch05_context_ci.tex").write_text(pre + body, encoding="utf-8")
+          PY
+      - name: Compile chapter 05 with complete 01-05 reference context
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: functional_analysis_ch05_context_ci.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Verify PDF and resolve cross-chapter links
+        run: |
+          if ! command -v pdfinfo >/dev/null || ! command -v pdftotext >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq poppler-utils
+          fi
+          test -s books/pl/functional_analysis_ch05_context_ci.pdf
+          test -s books/pl/functional_analysis_ch05_context_ci.log
+          if grep -E 'Undefined control sequence|There were undefined references|LaTeX Warning: (Reference|Citation).*undefined|Overfull \\hbox|Missing character' books/pl/functional_analysis_ch05_context_ci.log; then
+            echo 'Chapter 05 LaTeX check failed; see diagnostics.'
+            exit 1
+          fi
+          pdfinfo books/pl/functional_analysis_ch05_context_ci.pdf
+          pdftotext -layout books/pl/functional_analysis_ch05_context_ci.pdf books/pl/functional_analysis_ch05_context_ci.txt
+          grep -q 'Przestrzenie lokalnie wypukłe i seminormy' books/pl/functional_analysis_ch05_context_ci.txt
+          grep -q 'Funkcjonał Minkowskiego' books/pl/functional_analysis_ch05_context_ci.txt
+          grep -q 'Przestrzenie lokalnie wypukłe i seminormy' books/pl/functional_analysis_ch05_context_ci.txt
+      - name: Upload PDF and diagnostic logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: functional-analysis-ch05-pdf
+          path: |
+            books/pl/functional_analysis_ch05_context_ci.pdf
+            books/pl/functional_analysis_ch05_context_ci.log
+            books/pl/functional_analysis_ch05_context_ci.txt
+          if-no-files-found: warn
