@@ -4,7 +4,7 @@
 **Gałąź:** biblioteka-matematyczna-iteracja-6.  
 **Rozdział:** chapters/pl/functional_analysis/04-zbiory-ograniczone-rodziny-operatorow-i-metryzowalnosc.tex.  
 **SHA obiektu Git kontrolowanego źródła:** 589a27c647ffbc9e3de07c482d9e63a73cb7c040.  
-**Decyzja matematyczno-redakcyjna:** CZYSTY (bez zmian w LaTeX) — pierwsza kontrola potwierdzająca, **1/2** po końcowym sukcesie CI. Rozdział 04 nie jest jeszcze stabilny.
+**Decyzja matematyczno-redakcyjna i techniczna:** **CZYSTY (1/2)**, potwierdzony przez końcowy CI PASS. Bez zmian w źródłowym LaTeX; rozdział 04 nie jest jeszcze stabilny.
 
 ## Procedura
 
@@ -44,9 +44,9 @@ Przeprowadzono niezależny, pełny przegląd dziewięciu dowodów i pięciu przy
 - Zachowano reguły językowe: „ciągowe kryterium” zamiast „sekwencyjne”, „spełnia pierwszy aksjomat przeliczalności” oraz \chi_A jako notację funkcji charakterystycznej.
 - Rozszerzono wyłącznie tools/tests/test_functional_analysis_ch04.py z 12 do **15 testów**. Kontrole numeryczne uzupełniają, ale nie zastępują powyższych dowodów.
 - [Poprzedni pełny CI 45158087741](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45158087741) zakończony SUCCESS dla tego samego pliku LaTeX, 12/12 wcześniejszych testów i dokumentu kontekstowego 01–05.
-- **Rozszerzone CI 15/15 i PDF:** końcowy wynik będzie odnotowany po zakończeniu [przebiegu 45158968331](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45158968331).
+- **Rozszerzone CI: [przebieg 45158968331](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45158968331) — pełny SUCCESS.** Zweryfikowano 15/15 testów (wynik `Ran 15 tests` / `OK`), dwa przebiegi kompilacji LaTeX, kontrolę PDF i odsyłaczy oraz poprawne zapisanie artefaktu. Pobrany z tego przebiegu **PDF ma 33 strony A4, 480542 bajty**. Obejrzano ponownie komplet stron 22–27, w tym wyprowadzenie metryki na stronach 25–26. Dla tych sześciu stron sprawdzono także pozycje wszystkich bloków tekstu — zero elementów poza granicami strony. Końcowy log nie zawiera `Undefined control sequence`, `There were undefined references`, `Overfull \hbox` ani `Missing character`.
 - Obejrzano render poprzednio skompilowanego PDF obejmujący strony 22–27 rozdziału, w szczególności wzory dowodu metryzowalności na stronach 25–26; brak zauważalnych kolizji i ucięć. Ponieważ tekst źródłowy nie został zmieniony, przejrzany obraz jest reprezentatywny również dla tej iteracji.
 
 ## Decyzja
 
-**Audyt 04/02 CZYSTY matematycznie i redakcyjnie, bez poprawek rozdziału.** Liczony jako **1/2 kolejnych czystych audytów po potwierdzeniu pełnego CI**. Rozdział 04 pozostaje w stabilizacji, a audyt 04/03 będzie kolejną niezależną kontrolą potwierdzającą przed rozdziałem 05.
+**Audyt 04/02 CZYSTY matematycznie, redakcyjnie i technicznie — 1/2 kolejnych czystych audytów, pełny CI PASS.** Rozdział 04 pozostaje w stabilizacji, a audyt 04/03 będzie kolejną niezależną kontrolą potwierdzającą przed rozdziałem 05.
