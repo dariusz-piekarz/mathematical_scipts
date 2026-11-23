@@ -253,7 +253,7 @@ def check_integration():
         r"\\input\{../../(chapters/pl/graph_and_knot_theory/[^}]+)\}",
         (ROOT / book["entrypoint"]).read_text(encoding="utf-8"),
     )
-    assert included == book["chapters"] and len(included) == 41
+    assert included == book["chapters"] and len(included) == 42
     assert included[6].endswith("37-algorytmiczne-przeszukiwanie-grafow-bfs-dfs.tex")
     assert included[7].endswith("38-najkrotsze-drogi-wazone-i-algorytmy-wyszukiwania-tras.tex")
     assert included[8] == CHAPTER

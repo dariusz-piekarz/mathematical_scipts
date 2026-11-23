@@ -1,0 +1,518 @@
+\chapter{Ekstremalna teoria grafów: twierdzenia Mantela, Turána i Ramseya}
+\label{ch:tg-extremal-ramsey}
+
+W rozdziale \ref{ch:tg-podstawy} wprowadziliśmy grafy proste,
+kliki oraz zbiory niezależne. Zbadamy teraz największą liczbę
+krawędzi przy zakazie ustalonej kliki, a następnie twierdzenia
+gwarantujące istnienie kliki lub zbioru niezależnego.
+Grafy losowe i ekspandery zostaną opracowane w osobnych modułach.
+
+\section{Funkcja ekstremalna i grafy Turána}
+\label{sec:tg-extremal-notation}
+
+Niech $G=(V,E)$ będzie skończonym grafem prostym
+nieskierowanym, $n=|V|$, $m=|E|$.
+Oznaczamy sąsiedztwo wierzchołka $v$ przez $N_G(v)$,
+a jego stopień przez $d_G(v)$.
+
+\begin{definicja}[Funkcja ekstremalna]
+\label{def:tg-extremal-ex}
+Dla skończonego grafu prostego $H$ i liczby całkowitej
+$n\geq0$ niech $\operatorname{ex}(n,H)$ oznacza maksymalną
+liczbę krawędzi grafu prostego o $n$ wierzchołkach,
+który nie zawiera $H$ jako podgrafu (niekoniecznie
+indukowanego). Jeśli nie istnieje żaden taki graf,
+przyjmujemy $\operatorname{ex}(n,H)=-\infty$.
+\end{definicja}
+
+\begin{definicja}[Graf Turána]
+\label{def:tg-turan}
+Dla $r\geq1$ i $n\geq0$ grafem Turána $T_r(n)$
+nazywamy pełny graf $r$-dzielny na $n$ wierzchołkach,
+którego $r$ części mają liczności różniące się
+o co najwyżej jeden; dopuszczamy części puste.
+Jeśli $n=ar+q$, $0\leq q<r$, to $q$ części
+ma rozmiar $a+1$, a pozostałe $r-q$ rozmiar $a$.
+\end{definicja}
+
+Każda klika $T_r(n)$ zawiera najwyżej jeden wierzchołek
+z każdej części, więc graf nie zawiera $K_{r+1}$.
+Licząc pary z różnych części, otrzymujemy
+\[
+e(T_r(n))=\frac12\left(n^2-q(a+1)^2-(r-q)a^2\right).
+\]
+
+\section{Twierdzenie Mantela}
+\label{sec:tg-extremal-mantel}
+
+\begin{twierdzenie}[Twierdzenie Mantela]
+\label{thm:tg-mantel}
+Dla każdego $n\geq0$ zachodzi
+\[
+\operatorname{ex}(n,K_3)=\left\lfloor\frac{n^2}{4}\right\rfloor.
+\]
+Równość osiąga graf pełny dwudzielny
+$K_{\lfloor n/2\rfloor,\lceil n/2\rceil}$.
+\end{twierdzenie}
+\begin{proof}
+Dla $n\leq1$ teza jest oczywista.
+Niech $G$ nie ma trójkątów, $n\geq2$ i $m=|E(G)|$.
+Jeśli $uv\in E$, to $N_G(u)\cap N_G(v)=\varnothing$,
+ponieważ wspólny sąsiad tworzyłby trójkąt.
+Zatem $d_G(u)+d_G(v)\leq n$.
+Zliczając stopnie przy końcach wszystkich krawędzi,
+dostajemy
+\[
+\sum_{v\in V}d_G(v)^2
+=\sum_{uv\in E}\bigl(d_G(u)+d_G(v)\bigr)\leq nm.
+\]
+Lemat o uściskach dłoni i nierówność
+Cauchy'ego--Schwarza dają
+\[
+\sum_{v\in V}d_G(v)^2
+\geq\frac{(\sum_vd_G(v))^2}{n}=\frac{4m^2}{n}.
+\]
+Gdy $m>0$, otrzymujemy $m\leq n^2/4$;
+dla $m=0$ nierówność jest natychmiastowa.
+Ponieważ $m$ jest całkowite,
+$m\leq\lfloor n^2/4\rfloor$.
+Graf o wskazanych dwóch częściach
+nie zawiera trójkąta, a ma dokładnie
+$\lfloor n/2\rfloor\lceil n/2\rceil
+=\lfloor n^2/4\rfloor$ krawędzi.
+\end{proof}
+
+\begin{przyklad}[Osiem wierzchołków]
+\label{ex:tg-mantel-8}
+Graf na ośmiu wierzchołkach bez trójkąta
+może mieć co najwyżej $16$ krawędzi.
+Graf $K_{4,4}$ osiąga tę liczbę.
+Dołożenie krawędzi wewnątrz którejkolwiek
+części tworzy trójkąt z każdym wierzchołkiem
+drugiej części.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=.9]
+\foreach \i/\y in {1/1.2,2/0,3/-1.2}{
+  \node[tgVertex] (a\i) at (-2,\y) {$a_{\i}$};
+  \node[tgVertex] (b\i) at (2,\y) {$b_{\i}$};
+}
+\foreach \i in {1,2,3}{
+  \foreach \j in {1,2,3}{\draw[tgEdge] (a\i)--(b\j);}
+}
+\node[font=\small] at (-2,-1.8) {$A$};
+\node[font=\small] at (2,-1.8) {$B$};
+\end{tikzpicture}
+\caption{Graf $K_{3,3}$ ma dziewięć krawędzi
+i nie zawiera trójkąta; każda krawędź łączy obie części.}
+\label{fig:tg-mantel-graph}
+\end{figure}
+
+\section{Symetryzacja Zykowa i twierdzenie Turána}
+\label{sec:tg-extremal-turan}
+
+Dwa różne wierzchołki $u,v$ nazywamy
+\emph{bliźniakami}, jeśli $N_G(u)=N_G(v)$.
+Są wtedy niesąsiadujące.
+Równość zbiorów sąsiadów jest relacją równoważności;
+każda jej klasa jest zbiorem niezależnym.
+
+\begin{lemat}[Symetryzacja Zykowa]
+\label{lem:tg-zykov}
+Niech $G$ nie zawiera $K_{r+1}$.
+Niech $A,B$ będą dwiema różnymi klasami bliźniaków,
+pomiędzy którymi nie ma krawędzi.
+Zastąpmy sąsiedztwa każdego wierzchołka $B$
+sąsiedztwami jednego ustalonego wierzchołka $A$,
+pozostawiając $A\cup B$ jako zbiór niezależny.
+Nowy graf nadal nie zawiera $K_{r+1}$,
+a liczba krawędzi zmienia się o
+$|B|(d_G(a)-d_G(b))$, gdzie $a\in A$, $b\in B$.
+Jeśli oba stopnie są równe, operacja nie zmienia
+liczby krawędzi, scala $A,B$ w jedną klasę
+bliźniaków i nie rozdziela żadnej innej klasy.
+\end{lemat}
+\begin{proof}
+Każda klika po modyfikacji zawiera
+co najwyżej jeden wierzchołek $B$.
+Jeśli zawiera taki wierzchołek,
+możemy go zastąpić dowolnym elementem $A$,
+otrzymując klikę tej samej wielkości
+w grafie pierwotnym.
+Nie ma krawędzi wewnątrz $B$ ani między
+$A$ i $B$, więc zmiana liczby krawędzi
+jest sumą zmian stopni wierzchołków $B$:
+$|B|(d_G(a)-d_G(b))$.
+Po symetryzacji $A\cup B$ ma identyczne
+sąsiedztwa. Jeśli $x,y$ spoza $A\cup B$
+miały wcześniej jednakowe sąsiedztwa,
+były jednocześnie sąsiadami każdego
+$a\in A$ albo żaden z nich nie był.
+Zmiany relacji do $B$ są zatem dla $x,y$
+identyczne i nie rozbijają ich klasy.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie Turána]
+\label{thm:tg-turan}
+Dla wszystkich $n\geq0$, $r\geq1$ zachodzi
+\[
+\operatorname{ex}(n,K_{r+1})=e(T_r(n)).
+\]
+\end{twierdzenie}
+\begin{proof}
+Wśród wszystkich grafów $n$-wierzchołkowych
+bez $K_{r+1}$ wybierzmy graf $G$
+o największej liczbie krawędzi,
+a wśród takich grafów ten, dla którego
+suma kwadratów liczności klas bliźniaków
+jest największa. Obie maksymalizacje mają
+rozwiązania, gdyż rozważamy zbiór skończony.
+
+Jeżeli dwa niesąsiadujące wierzchołki
+należałyby do różnych klas bliźniaków
+$A,B$, to nie byłoby krawędzi między
+tymi klasami. Gdy ich stopnie są różne,
+symetryzacja klasy o mniejszym stopniu
+do klasy o większym zwiększa liczbę krawędzi,
+co przeczy pierwszej maksymalizacji.
+Gdy stopnie są równe, lemat
+\ref{lem:tg-zykov} pozwala scalić klasy
+bez zmiany liczby krawędzi
+i bez rozbicia pozostałych klas.
+Suma kwadratów liczności klas rośnie
+wówczas co najmniej o $2|A||B|>0$,
+wbrew drugiej maksymalizacji.
+Zatem każde dwie różne klasy bliźniaków
+są połączone wszystkimi możliwymi
+krawędziami, a $G$ jest pełnym grafem
+wielodzielnym.
+
+Niech $k$ oznacza liczbę niepustych części.
+Wybierając po jednym wierzchołku z każdej,
+dostajemy klikę $K_k$, więc $k\leq r$.
+Jeśli $k<\min\{n,r\}$, to pewna część
+ma co najmniej dwa wierzchołki.
+Możemy ją rozdzielić na dwie niepuste
+części i dodać krawędzie między nimi.
+Nie powstaje $K_{r+1}$, lecz liczba
+krawędzi ściśle rośnie, sprzeczność.
+Stąd $k=\min\{n,r\}$, gdy $n>0$;
+dla $n=0$ teza jest natychmiastowa.
+
+Oznaczmy rozmiary części przez $n_1,\ldots,n_k$.
+Liczba krawędzi wynosi
+$\frac12(n^2-\sum_i n_i^2)$.
+Jeśli $n_i\geq n_j+2$,
+przeniesienie jednego wierzchołka
+z części $i$ do części $j$ zmniejsza
+sumę kwadratów o $2(n_i-n_j-1)>0$,
+a więc zwiększa liczbę krawędzi.
+To niemożliwe, zatem części mają rozmiary
+różniące się co najwyżej o jeden.
+Otrzymaliśmy graf izomorficzny z $T_r(n)$.
+Ponieważ on sam nie zawiera $K_{r+1}$,
+oszacowanie jest ostre.
+\end{proof}
+
+\begin{wniosek}[Prostsze oszacowanie]
+\label{cor:tg-turan-bound}
+Dla $n\geq0$, $r\geq1$ każdy graf
+bez $K_{r+1}$ spełnia
+\[
+|E(G)|\leq\frac12\left(1-\frac1r\right)n^2.
+\]
+\end{wniosek}
+\begin{proof}
+Jeżeli liczności $r$ części grafu Turána
+(z uwzględnieniem pustych) wynoszą $n_i$,
+to nierówność Cauchy'ego--Schwarza daje
+$\sum_i n_i^2\geq n^2/r$.
+Wstawiamy to do wzoru na $e(T_r(n))$
+i stosujemy twierdzenie \ref{thm:tg-turan}.
+\end{proof}
+
+\begin{przyklad}[Zakaz $K_4$]
+\label{ex:tg-turan-ten}
+Dla $n=10$ i $r=3$ podział grafu
+$T_3(10)$ ma części wielkości $4,3,3$.
+Ma on $\tfrac12(100-16-9-9)=33$ krawędzie.
+Żaden dziesięciowierzchołkowy graf bez $K_4$
+nie ma więcej krawędzi.
+\end{przyklad}
+
+\section{Liczby Ramseya i skończone twierdzenie Ramseya}
+\label{sec:tg-extremal-ramsey}
+
+\begin{definicja}[Liczba Ramseya]
+\label{def:tg-ramsey-number}
+Dla liczb całkowitych $s,t\geq1$
+liczbą Ramseya $R(s,t)$ nazywamy
+najmniejszą dodatnią liczbę całkowitą $N$,
+taką że każde dwukolorowanie krawędzi
+$K_N$ na czerwono i niebiesko zawiera
+czerwoną klikę $K_s$ albo niebieską
+klikę $K_t$. Klikę jednoelementową
+traktujemy jako jednobarwną.
+Istnienie takiego $N$ udowodnimy poniżej.
+\end{definicja}
+
+\begin{twierdzenie}[Skończone twierdzenie Ramseya]
+\label{thm:tg-ramsey-finite}
+Dla wszystkich $s,t\geq1$
+liczba $R(s,t)$ istnieje i jest skończona.
+Zachodzą równości
+$R(1,t)=R(s,1)=1$, a dla $s,t\geq2$
+nierówność
+\[
+R(s,t)\leq R(s-1,t)+R(s,t-1).
+\]
+\end{twierdzenie}
+\begin{proof}
+Indukujemy po $s+t$.
+Jeśli $s=1$ albo $t=1$,
+teza wynika z definicji.
+Niech $s,t\geq2$ i
+$N=R(s-1,t)+R(s,t-1)$.
+W dowolnym dwukolorowaniu $K_N$
+wybierzmy wierzchołek $v$.
+Ma on $N-1$ sąsiadów,
+więc co najmniej
+$R(s-1,t)$ spośród krawędzi
+wychodzących z $v$ jest
+czerwonych albo co najmniej
+$R(s,t-1)$ jest niebieskich:
+w przeciwnym razie ich suma
+nie przekroczyłaby $N-2$.
+
+Jeżeli pierwsza alternatywa
+zachodzi, to w zbiorze
+czerwonych sąsiadów $v$
+istnieje czerwona $K_{s-1}$
+lub niebieska $K_t$.
+Pierwszą rozszerzamy
+o wierzchołek $v$
+do czerwonej $K_s$.
+W drugiej alternatywie
+w zbiorze niebieskich
+sąsiadów $v$ istnieje
+czerwona $K_s$ albo
+niebieska $K_{t-1}$;
+drugą rozszerzamy o $v$.
+Tym samym $N$ ma
+wymaganą własność,
+co dowodzi skończoności
+i nierówności rekurencyjnej.
+\end{proof}
+
+\begin{wniosek}[Dwumianowe oszacowanie Ramseya]
+\label{cor:tg-ramsey-binomial}
+Dla wszystkich $s,t\geq1$ zachodzi
+\[
+R(s,t)\leq\binom{s+t-2}{s-1}.
+\]
+W szczególności
+$R(k,k)\leq\binom{2k-2}{k-1}$.
+\end{wniosek}
+\begin{proof}
+Jeżeli $s=1$ lub $t=1$,
+obie strony są równe $1$.
+W pozostałych przypadkach
+stosujemy indukcję,
+nierówność z twierdzenia
+\ref{thm:tg-ramsey-finite}
+oraz tożsamość Pascala
+\[
+\binom{s+t-3}{s-2}
++\binom{s+t-3}{s-1}
+=\binom{s+t-2}{s-1}.
+\]
+\end{proof}
+
+\begin{stwierdzenie}[Wersja dla kliki i zbioru niezależnego]
+\label{prop:tg-ramsey-clique-independent}
+Niech $s,t\geq1$ oraz $n\geq R(s,t)$.
+Każdy graf prosty o $n$ wierzchołkach
+zawiera klikę o $s$ wierzchołkach
+albo zbiór niezależny
+o $t$ wierzchołkach.
+\end{stwierdzenie}
+\begin{proof}
+W grafie pełnym $K_n$ kolorujemy
+na czerwono krawędzie
+danego grafu $G$,
+a na niebiesko pozostałe.
+Klika czerwona jest
+kliką $G$, a klika
+niebieska jest
+zbiorem niezależnym w $G$.
+Stosujemy definicję $R(s,t)$.
+\end{proof}
+
+\section{Dokładna wartość $R(3,3)$}
+\label{sec:tg-extremal-r33}
+
+\begin{twierdzenie}[Liczba Ramseya dla trójkątów]
+\label{thm:tg-ramsey-33}
+Zachodzi $R(3,3)=6$.
+Oznacza to, że każdy
+graf prosty o sześciu
+wierzchołkach zawiera
+trójkąt albo trójelementowy
+zbiór niezależny,
+podczas gdy dla pięciu
+wierzchołków obie
+konfiguracje można wykluczyć.
+\end{twierdzenie}
+\begin{proof}
+Najpierw zauważmy, że
+$R(2,3)=3$: w dwukolorowaniu
+$K_3$ albo istnieje
+czerwona krawędź,
+albo wszystkie krawędzie
+są niebieskie, a
+w $K_2$ niebieska
+kolorystyka wyklucza
+oba żądane przypadki.
+Analogicznie $R(3,2)=3$.
+Zatem
+$R(3,3)\leq R(2,3)+R(3,2)=6$.
+
+Pokolorujmy krawędzie
+cyklu $C_5$ na czerwono,
+a pozostałe krawędzie
+$K_5$ na niebiesko.
+Graf czerwony nie ma
+trójkątów, a jego
+dopełnienie także jest
+cyklem pięciowierzchołkowym,
+więc graf niebieski
+również nie ma trójkątów.
+Stąd $R(3,3)>5$.
+Połączenie obu
+nierówności kończy dowód.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=.95]
+\foreach \i in {0,...,4}{
+  \pgfmathsetmacro{\angle}{90+72*\i}
+  \node[tgVertex] (v\i) at (\angle:1.8) {$\i$};
+}
+\foreach \i in {0,...,4}{
+  \pgfmathtruncatemacro{\j}{mod(\i+1,5)}
+  \pgfmathtruncatemacro{\k}{mod(\i+2,5)}
+  \draw[tgTree] (v\i)--(v\j);
+  \draw[tgGhost,densely dashed] (v\i)--(v\k);
+}
+\end{tikzpicture}
+\caption{Dwukolorowanie $K_5$ bez
+jednobarwnego trójkąta.
+Krawędzie ciągłe tworzą $C_5$,
+a przerywane jego dopełnienie,
+również izomorficzne z $C_5$.}
+\label{fig:tg-ramsey-c5}
+\end{figure}
+
+\begin{przyklad}[Dwa różne zagadnienia]
+\label{ex:tg-ramsey-versus-turan}
+Twierdzenie Mantela mówi,
+że graf o sześciu wierzchołkach
+bez trójkąta ma co najwyżej
+$\lfloor36/4\rfloor=9$ krawędzi.
+Twierdzenie Ramseya daje
+inny rodzaj wniosku:
+każdy taki graf ma
+trójelementowy zbiór
+niezależny. Samo
+oszacowanie liczby
+krawędzi nie jest
+jeszcze tym twierdzeniem.
+\end{przyklad}
+
+\section{Twierdzenie Ramseya dla wielu kolorów}
+\label{sec:tg-extremal-multicolor}
+
+\begin{twierdzenie}[Wielobarwne twierdzenie Ramseya]
+\label{thm:tg-ramsey-multicolor}
+Niech $q\geq2$ i
+$k_1,\ldots,k_q\geq1$
+będą liczbami całkowitymi.
+Istnieje liczba $N$ taka,
+że każde kolorowanie
+krawędzi $K_N$ jednym
+z $q$ kolorów zawiera,
+dla pewnego $i\in\{1,\ldots,q\}$,
+jednobarwną klikę
+$K_{k_i}$ w kolorze $i$.
+\end{twierdzenie}
+\begin{proof}
+Indukujemy po $q$.
+Dla $q=2$ teza
+jest twierdzeniem
+\ref{thm:tg-ramsey-finite}.
+Dla $q\geq3$ niech $M$
+będzie liczbą zapewniającą
+tezę dla pierwszych
+$q-1$ kolorów.
+Bierzemy $N=R(M,k_q)$.
+W zadanym kolorowaniu
+$K_N$ łączymy
+kolory $1,\ldots,q-1$
+w jeden kolor czerwony,
+a kolor $q$
+zastępujemy niebieskim.
+W wersji dwukolorowej
+istnieje niebieska
+$K_{k_q}$, która
+kończy dowód, albo
+czerwona $K_M$.
+W tej drugiej wszystkie
+krawędzie mają
+jeden z pierwszych
+$q-1$ oryginalnych
+kolorów, więc
+założenie indukcyjne
+daje wymaganą klikę.
+\end{proof}
+
+\section{Dalsze problemy ekstremalne}
+\label{sec:tg-extremal-next}
+
+Twierdzenie Turána
+dotyczy zakazu kliki
+$K_{r+1}$.
+Dla ogólnego podgrafu
+zabronionego $H$
+funkcja
+$\operatorname{ex}(n,H)$
+nie musi być opisana
+przez grafy wielodzielne.
+Nie należy też utożsamiać
+problemu zakazu podgrafu
+z zakazem podgrafu
+\emph{indukowanego}.
+
+Ramseyowskie oszacowanie
+dwumianowe ma charakter
+ogólny, ale nie
+zawsze jest ostre.
+Otrzymana dokładna
+wartość $R(3,3)=6$
+jest tego najprostszym
+przykładem.
+
+W kolejnym osobnym
+module rozpatrzymy
+model $G(n,p)$,
+metody probabilistyczne
+i ich zastosowanie
+do dolnych oszacowań
+liczb Ramseya.
+Później przejdziemy
+do ekspanderów,
+ich własności
+kombinatorycznych
+i spektralnych.
