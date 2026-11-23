@@ -187,3 +187,15 @@
 - Starszy komplet [#45133923118](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45133923118) potwierdza **3/3 na SHA `dda19fc9...`**, ale ten SHA zawierał słabszą wersję walidatora recenzji. Po zmianie kodu kontrolera odliczanie dla finalnego kandydata jest ostrożnie **0/3** do zamknięcia odpowiednich nowych testów. Zmiana nie dotyczyła produkcyjnego odczytu `.olean`, źródeł Lean ani kanonicznych `.tex`.
 - **Stan:** L1.1 `testing`, review = `pending_authenticated_review`, `certificate=false`. Następny jeden krok: sprawdzić realny wynik nowego #45136597724 wraz z dokładnymi raportami trzech rund i niezależnie uwierzytelnioną recenzją przed formalnym `stable`; nie rozpoczynać L1.2.
 
+
+
+### 2026-11-23 — L1.1: zweryfikowane 2/3 na kandydacie z zabezpieczonym gate i pakiet odbiorowy
+
+- **SHA kandydata**: `5e6e017a7d98ce2dfb384b4e973cce08159be3fc`, badany przez [sekwencyjny Atlas #45136597724](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45136597724), bez zmiany jego kodu podczas tego wpisu.
+- Pierwsza pełna runda: aplikacja 687 testów/10 sklasyfikowanych pominięć, Chromium 494 rozdziały i 0 błędów JS, Linux 140 testów, Windows 43; rzeczywisty pinned Lean 4 + Mathlib `2df2f0150c275ad53cb3c90f7c98ec15a56a1a67`, audyt 18 twierdzeń/aksjomatów, MetaM, trzy zgodne pełne fingerprinty. Wszystkie odpowiednie joby `success`; `certificate=false`.
+- Druga pełna runda: wszystkie joby aplikacji, Linux, Windows i pinned Lean+Mathlib `completed/success`. Imienny `ATLAS_UNITTEST_REPORT`: 687 testów, 10 pominięć, `unreviewed_skips=0`, `validation_pass=2`, zgodny candidate SHA. Sceptyczny kontrakt kontrolera `completed/success`. **Dwie kompletne grupy potwierdzone, 2/3**.
+- Trzecia runda: natywne Linux i Windows już `completed/success`, aplikacja i rzeczywisty Lean+Mathlib były w toku przy tej kontroli. **Nie zaliczono jej jako kompletnej.**
+- **Nowy artefakt przeglądu**: [ATLAS_L11_REVIEW_PACKET.md](ATLAS_L11_REVIEW_PACKET.md) zawiera kod kandydacki, nazwane regresje `.olean`, linki do dowodów, ryzyka TOCTOU, kryteria bezpieczeństwa i wymagania dotyczące poświadczonego, niezależnego zatwierdzenia. Nie jest recenzją i nie zawiera fałszywego poświadczenia.
+- **Weryfikowalność recenzenta:** GitHub API zwrócił `403 Resource not accessible by integration` przy odczycie ochrony gałęzi; nie oznacza to braku ochrony. Brak potwierdzenia niezależnej tożsamości recenzenta, więc `stable` pozostaje zablokowane. Nie traktować niesygnowanego JSON z `independent=true` jako zatwierdzenia; poprawka `5e6e017a` wymusza `documented_unverified`.
+- **Stan**: L1.1=`testing/stabilizing`; **2/3** potwierdzone technicznie w bieżącym pełnym 2+1, brak zatwierdzonego audytu. `certificate=false`, L1.2 nierozpoczęty. Kolejny krok: odczytać wynik trzeciej rundy, końcowy `atlas-validation-status`, a potem przeprowadzić autentykowany niezależny odbiór na tym samym SHA bez nadawania `stable` samym kodem.
+
