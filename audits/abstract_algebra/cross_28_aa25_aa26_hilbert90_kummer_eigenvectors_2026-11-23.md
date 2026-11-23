@@ -58,3 +58,14 @@ Nowy moduł został podłączony do .github/workflows/abstract-algebra-chapter.y
 **Propozycja opcjonalna (bez automatycznego dopisywania):** po twierdzeniu aa:tw:kummer-converse w AA-26 dodać odsyłacz do multiplikatywnej postaci 90. twierdzenia Hilberta i powyższy alternatywny krótki dowód. Wymaga osobnej zgody według AGENTS.md.
 
 **Dalszy krok:** potwierdzenie dokładnego przebiegu CI i stabilizacja AA-X28, dopiero następnie wybór nowego przekrojowego zakresu AA-X29.
+
+
+## Zamknięcie AA-X28 — po rzeczywistej stabilizacji CI
+
+**Niezmienny przebieg referencyjny:** https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45275923867, SHA `bc27417de3da58f3383e8abb82a12afed7dcd7f1`, status **completed / success**. Job `validate-cli` ID **138047572132** również **completed / success**.
+
+Odczytano rzeczywisty log jobu. W wydzielonym kroku **Run AA-X28 Hilbert 90 and Kummer eigenvector crosschecks** wszystkie sześć testów `TestAA28HilbertKummer` mają status `ok` (log około wierszy 10093–10103; `Ran 6 tests in 0.247s`, `OK`). Osobno potwierdzono sukces kroków **Run repository tool tests**, **Compile AA-01 to AA-50 book with latexmk** oraz **Verify PDF and references (no undefined refs)**. Brak błędów tych kroków. Testy obliczeniowe nie są dowodami ogólnymi ani formalizacją Lean.
+
+**Werdykt aktualny: AA-X28 ZAMKNIĘTY / STABILNY** w sprawdzonym zakresie AA-25 × AA-26. Żadne zatwierdzone źródło rozdziałowe nie zostało zmodyfikowane. Nie przeprowadzono odrębnej wizualnej inspekcji stron PDF; status sukcesu kompilacji i automatycznej kontroli logów nie oznacza takiej inspekcji.
+
+**Kolejny etap:** osobny, nowy audyt AA-X29 z własną stabilizacją.
