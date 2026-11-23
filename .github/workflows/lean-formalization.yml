@@ -23,12 +23,22 @@ on:
       - "application/requirements.txt"
       - ".github/workflows/lean-formalization.yml"
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      candidate_sha:
+        description: "Full immutable commit SHA"
+        required: true
+        type: string
+      validation_pass:
+        description: "Independent validation pass ID"
+        required: true
+        type: string
 
 permissions:
   contents: read
 
 concurrency:
-  group: lean-formalization-${{ github.ref }}
+  group: ${{ inputs.validation_pass && format('atlas-lean-{0}-{1}', github.run_id, inputs.validation_pass) || format('lean-formalization-{0}', github.ref) }}
   # Keep the active pinned Lean + Mathlib audit running despite frequent commits.
   # GitHub concurrency retains at most one pending run for this branch.
   cancel-in-progress: false
@@ -40,6 +50,8 @@ jobs:
     steps:
       - name: Checkout canonical repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha || github.sha }}
 
       - name: Set up Python for evidence checks
         uses: actions/setup-python@v5
