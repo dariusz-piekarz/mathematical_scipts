@@ -22,6 +22,7 @@ from backend import lean_cgroup, lean_results, lean_process, lean_run_lock, lean
 LEAN_ROOT = Path(__file__).resolve().parents[1] / "lean"
 MAX_SOURCE_CHARS = 30000
 MAX_LEAN_CHARS = 60000
+MAX_CANONICAL_TEX_BYTES = 16 * 1024 * 1024  # fail closed on abnormal physical TeX
 TIMEOUT_SECONDS = 40
 VALID_ID = re.compile(r"^[a-zA-Z0-9_-]{1,100}$")
 VALID_THEOREM = re.compile(r"^[a-zA-Z_][a-zA-Z0-9_'.]*$")
@@ -174,8 +175,21 @@ def _source_file_current(item: dict[str, Any], digest: str, lean_root: Path) -> 
     path = (repo / rel).resolve()
     if not path.is_relative_to(allowed) or not path.is_file():
         return False
+    # Canonical chapter files come from a local checkout, but their physical
+    # bytes may change independently from the SQLite index. Never load the
+    # entire on-disk file into RAM for this read-only provenance check.
     try:
-        return hashlib.sha256(path.read_bytes()).hexdigest() == digest
+        if path.stat().st_size > MAX_CANONICAL_TEX_BYTES:
+            return False
+        current = hashlib.sha256()
+        count = 0
+        with path.open("rb") as source:
+            while chunk := source.read(64 * 1024):
+                count += len(chunk)
+                if count > MAX_CANONICAL_TEX_BYTES:
+                    return False
+                current.update(chunk)
+        return current.hexdigest() == digest
     except OSError:
         return False
 
