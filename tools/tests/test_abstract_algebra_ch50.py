@@ -105,7 +105,8 @@ class AA50KovacicFiniteSymPy(unittest.TestCase):
 
     def test_08_airy_and_poles_obstructions(self):
         q=x
-        self.assertEqual(s.degree(s.denom(q),x)-s.degree(s.numer(q),x),-1)
+        num,den=s.fraction(s.cancel(q))
+        self.assertEqual(s.degree(den,x)-s.degree(num,x),-1)
         q2=1/x**3
         den=s.factor_list(s.denom(q2))[1]
         self.assertEqual(den,[(x,3)])
