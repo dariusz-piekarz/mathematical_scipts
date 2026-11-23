@@ -54,3 +54,11 @@ Dodano \`.github/workflows/functional-analysis-ch14.yml\`: testy, przygotowanie 
 ## Decyzja
 
 **14/01: Z POPRAWKAMI — 0/2 czystych audytów.** Kolejna iteracja powinna sprawdzić wynik CI, wizualnie skontrolować PDF (zwłaszcza wykres \(y=x^2\)), ponownie przeanalizować cały rozdział 14 na niezmienionym blobie i wykonać audyt 14/02. Rozdział 15 zablokowany do dwóch czystych niezależnych kontroli identycznego źródła.
+
+## Uzupełnienie 14/01: zakończone CI i inspekcja PDF
+
+Po dodaniu workflow dedykowany przebieg [#45273100710](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45273100710), commit d8a96d4f367ae2dd0a93beac2f334f925db4f819, zakończył się **COMPLETED/SUCCESS**. Wykonano **21/21 testów PASS**, przygotowano rzeczywisty kontekst \`\\input\` rozdziałów 01–14, skompilowano LaTeX bez błędów, sprawdzono PDF i odsyłacze oraz przesłano artefakt. Również nowszy przebieg [#45273331679](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45273331679), uruchomiony zapisaniem raportu audytu 14/01, zakończył się **COMPLETED/SUCCESS**.
+
+Pobrano faktyczny artefakt \`functional-analysis-ch14-pdf\` z przebiegu #45273100710. Dokument ma **84 strony**, a rozdział 14 zaczyna się na stronie **78** i kończy na stronie **84**. Wykonano render wszystkich stron 78–84 i obejrzano zbiorczy arkusz kontaktowy oraz **powiększoną stronę 80** z diagramem krzywej \`y=x^2\` i kierunków stałych. Wykres jest czytelny, opisy osi, podpisy i wzory nie nachodzą na siebie. Kontrola PyMuPDF wszystkich stron 78–84: **0 bloków tekstowych wychodzących poza prostokąt strony**. Kontrola wizualna nie zastępuje dowodu matematycznego.
+
+**Stan końcowy 14/01:** wszystkie rzeczywiste bramki techniczne zielone, źródło LaTeX zachowało blob SHA **8ea2ec43a6dca36e644000517fa19d589bd134fe**, testy nadal mają 21 przypadków. Ze względu na wprowadzone w 14/01 poprawki matematyczno-redakcyjne audyt pozostaje **Z POPRAWKAMI, 0/2**. Następnym etapem jest **14/02** jako pierwszy niezależny czysty przegląd aktualnego bloba; rozdział 15 pozostaje zablokowany.
