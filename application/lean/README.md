@@ -55,9 +55,9 @@ Testy obejmują wybór obiektu i zakresu, brak formalizacji, źródło stale, ś
 
 ## LST-02: pierwsza partia pilotażu (2026-11-23)
 
-Nowy plik `src/LST02_Quantifiers.lean` formalizuje cztery tezy z kanonicznego
-rozdziału **LST-02** w siedmiu deklaracjach (w tym pomocniczy
-kontrprzykład dla pustych dziedzin): negacje kwantyfikatorów,
+Plik `src/LST02_Quantifiers.lean` formalizuje cztery tezy z kanonicznego
+rozdziału **LST-02** w **ośmiu deklaracjach** (w tym dwa pomocnicze
+kontrprzykłady: dla pustych dziedzin oraz dokładnie źródłowy `ℕ, x<y`): negacje kwantyfikatorów,
 zamiany kolejności kwantyfikatorów jednego typu, tylko właściwy
 kierunek implikacji dla kwantyfikatorów różnych typów oraz rozwinięcie
 `∃!`. Rejestr `manifest.json` zawiera teraz **9 wpisów** (5 LST-01,
@@ -75,3 +75,10 @@ Pierwszy CI dla `2deca7ba` zakończył się błędem testu
 odczytującego dosłowną etykietę TeX z podwójnym ukośnikiem.
 Commit `163c8f64` poprawił ten test; błędne CI nie jest
 zaliczoną rundą stabilizacji.
+
+
+### Aktualna stabilizacja LST-02: SHA `44cc2031`
+
+[CI 2+1 #45229708674](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45229708674) **`completed/success`, 3/3 pełne rundy PASS** na niezmiennym SHA `44cc2031d9e62ad0158dbea5cc59462e7bc6124a`. W każdej rundzie 736 testów Python, 10 sklasyfikowanych pominięć i 0 nierozliczonych, Chromium 509 rozdziałów i `javascript_errors=[]`, Windows, 5 plików i **26 twierdzeń Lean 4.26.0** na Mathlib `2df2f0150c275ad53cb3c90f7c98ec15a56a1a67`, `axiom_check=passed` i rzeczywisty MetaM. Nowy `lst02_mixed_nat_counterexample` formalizuje dokładnie źródłowy kontrprzykład `D=E=ℕ, P(x,y)⇔x<y` i nie potrzebuje dodatkowych aksjomatów. [Artefakt końcowy](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45229708674/artifacts/14845769244): `problems=[]`, **`status=stabilizing`**, `skeptical_review=pending`, `certificate=false`.
+
+Poprzedni wynik [#45208224201](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45208224201) dotyczy **historycznego** SHA `163c8f64` i 25 skompilowanych deklaracji; nie jest aktualnym wynikiem nowej wersji. Cztery mapowania LST-02 nadal `needs_review`; niezależny odbiór semantyczny oraz pilotaż 20–30 mapowań pozostają otwarte w [issue #11](https://github.com/dariusz-piekarz/mathematical_scipts/issues/11). Nie zaczynać LA-01 ani L1.4.2 przed wymaganym zamknięciem bieżącej partii.

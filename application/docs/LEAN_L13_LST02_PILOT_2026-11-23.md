@@ -1,5 +1,8 @@
 # L1.3 — iteracja pilotażowa LST-02 (kandydaci do recenzji)
 
+**Aktualizacja końcowa dla obecnej rewizji `44cc2031`:** [pełne techniczne 2+1 #45229708674](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45229708674) **3/3 PASS**. W LST-02 są **8 deklaracji** (w tym obydwa kontrprzykłady: `Empty` i dokładny `ℕ, x<y`), rejestr obejmuje **4 mapowania LST-02** oraz 5 LST-01; rzeczywisty Lean skompilował **26 twierdzeń w 5 plikach**. Raport końcowy ma `status=stabilizing`, `skeptical_review=pending`, `certificate=false`; wszystkie cztery nowe mapowania pozostają `needs_review`. **Sekcje o braku arytmetycznego przykładu i niedokończonym CI poniżej opisują historyczne rewizje, nie bieżący stan.** [Aktualny pakiet odbiorowy](LEAN_L13_LST02_INDEPENDENT_SEMANTIC_REVIEW.md).
+
+
 **Zakres:** jeden pakiet czterech mapowań dla kanonicznego
 `LST-02`, bez ingerencji w plik LaTeX, starych formalizacji LST-01,
 weryfikowany kandydat L1.4.1 ani status tamtego 2+1.
