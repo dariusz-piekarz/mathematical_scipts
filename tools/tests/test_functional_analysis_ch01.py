@@ -51,6 +51,10 @@ class FunctionalAnalysisChapter01(unittest.TestCase):
         self.assertIn(r"\chi_{A_i}", self.chapter)
         self.assertIn(r"f\chi_", self.chapter)
 
+    def test_no_standalone_english_dual(self) -> None:
+        prose = re.sub(r"\\(?:label|ref)\{[^}]+\}", "", self.chapter)
+        self.assertIsNone(re.search(r"(?<![\w-])dual(?![\w-])", prose))
+
     def test_l_p_triangle_inequality_numeric(self) -> None:
         rng = random.Random(1142)
         for p in (0.2, 0.5, 0.8):
