@@ -144,7 +144,26 @@ class AA49SymPyRegression(unittest.TestCase):
         self.assertTrue(eq(s.diff(1/(x+3),x)+(1/(x+3))**2))
         self.assertTrue(eq(trace_operator(s.Integer(0),s.Integer(0))))
         self.assertTrue(eq(discriminant(s.Integer(0),s.Integer(0))))
-    def test_11_documented_claims_and_labels(self):
+    def test_11_square_discriminant_falls_back_to_case_one(self):
+        q=2/x**2
+        E,Einf=case2_local_sets(q)
+        self.assertEqual(E,{s.Integer(0):[-4,2,8]})
+        self.assertEqual(Einf,[-4,2,8])
+        self.assertIn(({s.Integer(0):2},2,0),case2_valid_degrees(E,Einf))
+        theta=1/x
+        self.assertTrue(eq(auxiliary_operator(s.Integer(1),theta,q)))
+        delta=discriminant(theta,q)
+        self.assertTrue(eq(delta,9/x**2))
+        self.assertTrue(eq((theta+3/x)/2,2/x))
+        self.assertTrue(eq((theta-3/x)/2,-1/x))
+    def test_12_simple_pole_candidate_set(self):
+        q=1/x
+        E,Einf=case2_local_sets(q)
+        self.assertEqual(E,{s.Integer(0):[4]})
+        self.assertEqual(Einf,[1])
+        self.assertEqual(case2_valid_degrees(E,Einf),[])
+
+    def test_13_documented_claims_and_labels(self):
         text=SOURCE.read_text(encoding="utf-8")
         labels=re.findall(r"\\label\{([^}]+)\}",text)
         self.assertEqual(len(labels),len(set(labels)))
