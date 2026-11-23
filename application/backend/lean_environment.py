@@ -180,7 +180,10 @@ def _olean_tree(root: Path, *, label: str, budget: list[int],
     metadata_only = 0
     for relative_name, artifact in sorted(paths, key=lambda entry: entry[0]):
         info = artifact.stat()
-        if not artifact.is_file():
+        # Reuse the same stat snapshot for type and identity checks; a
+        # second Path.is_file() stat cannot strengthen the later fd/path
+        # comparisons, and adds an OS call for every .olean artifact.
+        if not stat.S_ISREG(info.st_mode):
             raise ValueError("Lake .olean artifact is not a regular file")
         entry: dict[str, object] = {
             "name": relative_name,
