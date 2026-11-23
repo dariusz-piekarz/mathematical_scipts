@@ -50,19 +50,31 @@ def chapter_report(con: sqlite3.Connection, module_id: str, *,
         {**{name: item[name] for name in REPORT_ITEM_FIELDS}, "certificate": False}
         for item in catalog["items"] if item["source_module"] == module_id
     ]
-    if not index_current:
-        # A corrupt chapter must not inherit positive claims, even if a
-        # concurrent change to the index occurred while assembling the report.
+    # The catalogue reads the same SQLite index separately. Detect a generation
+    # switch in between these reads, including a new *internally valid* SHA.
+    # No version of a changing chapter may acquire a positive report status.
+    after = con.execute(
+        "SELECT sha256,content FROM documents WHERE id=?", (module_id,)
+    ).fetchone()
+    changed = (
+        after is None or after["sha256"] != indexed_sha
+        or after["content"] != content
+    )
+    source_index_status = (
+        "changed_during_report" if changed else
+        "ok" if index_current else "corrupt_document"
+    )
+    if source_index_status != "ok":
         for item in entries:
-            item["index_status"] = "corrupt_document"
+            item["index_status"] = source_index_status
             item["formalization_status"] = "stale"
             item["statement_status"] = "needs_review"
 
     return {
         "report_schema_version": REPORT_SCHEMA_VERSION,
         "source_module": module_id,
-        "source_index_status": "ok" if index_current else "corrupt_document",
-        "source_document_sha256": indexed_sha if index_current else None,
+        "source_index_status": source_index_status,
+        "source_document_sha256": indexed_sha if source_index_status == "ok" else None,
         "total": len(entries),
         "ready": sum(x["formalization_status"] == "ready" for x in entries),
         "draft": sum(x["formalization_status"] == "draft" for x in entries),

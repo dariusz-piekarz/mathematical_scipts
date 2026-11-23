@@ -23,3 +23,19 @@
 ## Wewnętrzny przegląd sceptyczny przed stabilizacją
 
 Przegląd odkrył potencjalny wyciek przyszłych pól historii: naiwny raport przekazywał całą strukturę z katalogu, a więc przyszłe rozszerzenie katalogu mogłoby wprowadzić do raportu `proof_status` mimo `proof_status_included=false`. Zastosowano ścisłą projekcję pól i regresję z podrobionym `compiled`, logiem i `certificate=true`. Wynik 2+1 trzeba liczyć od **nowego** commita, bez zaliczania wcześniejszego CI.
+
+## Usterka wykryta podczas kolejnego przeglądu sceptycznego
+
+Dwa odrębne odczyty SQLite (początkowy `documents` i późniejszy
+`lean_catalog.list_formalizations`) mogły należeć do różnych generacji
+indeksu. W szczególności katalog mógł zwrócić status `ready` ze
+starszego punktu kontrolnego, a dokument mógł już mieć inne bajty i
+inny, spójny SHA256. Dodano końcowe ponowne sprawdzenie
+`documents.sha256` i całego `documents.content`. Wykryta podmiana
+ustawia `source_index_status=changed_during_report`, wszystkie
+powiązania jako `stale`, `statement_status=needs_review` i zeruje
+`statement_approved`, bez zwracania poprzedniego SHA jako aktualnego.
+Test regresyjny wstrzykuje taką zmianę pomiędzy odczytami i sprawdza
+odmowę podniesienia statusu. Nie oznacza to atomowego snapshotu przy
+dowolnej późniejszej zmianie ani bezpieczeństwa nieufnego drzewa plików.
+Kandydat sprzed tej poprawki nie może otrzymać końcowego odbioru L1.4.1.

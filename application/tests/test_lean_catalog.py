@@ -209,5 +209,36 @@ class LeanCatalogTests(unittest.TestCase):
         self.assertFalse(data["proof_status_included"])
 
 
+    def test_l14_chapter_report_does_not_join_two_sqlite_generations(self):
+        self.item.update(source_document_sha256=self.digest,
+                         statement_status="approved")
+        self.save_manifest()
+        initial = lean_catalog.list_formalizations(self.con, lean_root=self.root)
+        self.assertEqual(initial["ready"], 1)
+        next_content = SOURCE + "% new index generation\\n"
+        next_digest = hashlib.sha256(next_content.encode("utf-8")).hexdigest()
+
+        def change_generation(*args, **kwargs):
+            # Simulate an atomic index update after the report's first SELECT.
+            self.con.execute("UPDATE documents SET content=?,sha256=? WHERE id=?",
+                             (next_content, next_digest, "LST-01"))
+            self.con.commit()
+            # Adversarially return a formerly approved catalogue snapshot.
+            return initial
+
+        with patch.object(lean_chapter_report.lean_catalog,
+                          "list_formalizations", side_effect=change_generation):
+            result = lean_chapter_report.chapter_report(self.con, "LST-01",
+                                                        lean_root=self.root)
+        self.assertEqual(result["source_index_status"], "changed_during_report")
+        self.assertIsNone(result["source_document_sha256"])
+        self.assertEqual((result["ready"], result["stale"],
+                          result["statement_approved"]), (0, 1, 0))
+        self.assertEqual(result["items"][0]["index_status"],
+                         "changed_during_report")
+        self.assertEqual(result["items"][0]["statement_status"], "needs_review")
+        self.assertFalse(result["certificate"])
+
+
 if __name__ == "__main__":
     unittest.main()
