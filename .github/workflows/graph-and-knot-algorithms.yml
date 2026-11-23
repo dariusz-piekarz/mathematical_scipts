@@ -1,0 +1,84 @@
+name: Graph and knot theory - algorithms audit
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - 'chapters/pl/graph_and_knot_theory/**'
+      - 'books/pl/graph_and_knot_theory.tex'
+      - 'catalog/books.json'
+      - 'tools/tests/test_graph_and_knot_bfs_dfs.py'
+      - 'audits/graph_and_knot_theory/**'
+      - '.github/workflows/graph-and-knot-algorithms.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  finite-models:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Exhaustive BFS / DFS / DAG / bridges / catalog tests
+        run: python3 tools/tests/test_graph_and_knot_bfs_dfs.py
+
+  chapter-pdf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Polish LaTeX and TikZ
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-lang-polish texlive-pictures lmodern poppler-utils
+      - name: Make audited 00-05 and BFS/DFS PDF with canonical book preamble
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root = Path('books/pl')
+          source = (root / 'graph_and_knot_theory.tex').read_text(encoding='utf-8')
+          matches = re.findall(r'\\input\{../../chapters/pl/graph_and_knot_theory/[^}]+\}', source)
+          assert len(matches) == 38
+          marker = matches[0]
+          preamble = source.split(marker, 1)[0]
+          # The initial six historical chapters resolve chapter references
+          # used by the new algorithms module; the rest are deliberately omitted.
+          chosen = matches[:7]
+          assert '37-algorytmiczne-przeszukiwanie-grafow-bfs-dfs' in chosen[-1]
+          text = preamble + '\n'.join(chosen) + '\n\\end{document}\n'
+          (root / 'graph_and_knot_algorithms_ci.tex').write_text(text, encoding='utf-8')
+          PY
+      - name: Compile twice and inspect PDF / references
+        working-directory: books/pl
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error graph_and_knot_algorithms_ci.tex > graph_algorithms_pass1.txt
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error graph_and_knot_algorithms_ci.tex > graph_algorithms_pass2.txt
+          test -s graph_and_knot_algorithms_ci.pdf
+          for target in 'ch:tg-bfs-dfs' 'thm:tg-bfs-correct' 'thm:tg-dfs-bridge' 'fig:tg-bfs-layers'; do
+            grep -Fq "\\newlabel{$target}" graph_and_knot_algorithms_ci.aux
+          done
+          pdftotext -layout graph_and_knot_algorithms_ci.pdf graph_algorithms_layout.txt
+          grep -q 'Przeszukiwanie wszerz' graph_algorithms_layout.txt
+          grep -q 'Przeszukiwanie w głąb' graph_algorithms_layout.txt
+          pdfinfo graph_and_knot_algorithms_ci.pdf > graph_algorithms_pdfinfo.txt
+          if grep -E 'LaTeX Warning: Label.*multiply defined|LaTeX Warning: Reference.*undefined' graph_and_knot_algorithms_ci.log; then
+            echo "Check unresolved book references in the isolated 00-05+37 subset"
+          fi
+      - name: Upload actual PDF, logs and extracted text
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: graph-and-knot-bfs-dfs-pdf
+          if-no-files-found: warn
+          path: |
+            books/pl/graph_and_knot_algorithms_ci.pdf
+            books/pl/graph_and_knot_algorithms_ci.log
+            books/pl/graph_algorithms_pass*.txt
+            books/pl/graph_algorithms_layout.txt
+            books/pl/graph_algorithms_pdfinfo.txt

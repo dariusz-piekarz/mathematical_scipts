@@ -170,7 +170,8 @@ Krawędzie $bd,cd,ef$ nie należą do tego drzewa;
 nie wpływa to na poprawność obliczonych odległości.
 \end{przyklad}
 
-\begin{center}
+\begin{figure}[htbp]
+\centering
 \begin{tikzpicture}[scale=.9]
 \node[tgBlueVertex] (s) at (0,0) {$s$};
 \node[tgVertex] (a) at (2,1.35) {$a$};
@@ -183,11 +184,14 @@ nie wpływa to na poprawność obliczonych odległości.
  (b)--(e) (d)--(f);
 \draw[tgGhost] (b)--(d) (c)--(d) (e)--(f);
 \node[font=\footnotesize,text=tgNavy] at (0,-.6) {$d=0$};
-\node[font=\footnotesize,text=tgNavy] at (2,-2.0) {$d=1$};
-\node[font=\footnotesize,text=tgNavy] at (4,-2.0) {$d=2$};
+\node[font=\footnotesize,text=tgNavy] at (2,-2.2) {$d=1$};
+\node[font=\footnotesize,text=tgNavy] at (4,-2.2) {$d=2$};
 \node[font=\footnotesize,text=tgNavy] at (6,-.6) {$d=3$};
 \end{tikzpicture}
-\end{center}
+\caption{Przykładowe warstwy BFS od $s$: krawędzie drzewa
+oznaczono linią ciągłą, pozostałe -- przerywaną.}
+\label{fig:tg-bfs-layers}
+\end{figure}
 
 \begin{stwierdzenie}[Złożoność BFS]
 \label{prop:tg-bfs-complexity}
@@ -301,8 +305,9 @@ wynik DFS spełnia:
       przedziały $[\mathrm{tin}[u],\mathrm{tout}[u]]$
       i $[\mathrm{tin}[v],\mathrm{tout}[v]]$ są rozłączne
       albo jeden jest właściwie zawarty w drugim;
-\item $u$ jest przodkiem $v$ w lesie DFS wtedy i tylko
-      wtedy, gdy przedział $v$ zawiera się
+\item $u$ jest przodkiem $v$ w lesie DFS
+      (dopuszczamy $u=v$) wtedy i tylko wtedy,
+      gdy przedział $v$ zawiera się
       w przedziale $u$;
 \item każda krawędź niedrzewowa łączy wierzchołek
       z jego właściwym przodkiem w lesie DFS.
@@ -500,37 +505,39 @@ złożoność $O(|V|+|A|)$ dla list
 sąsiedztwa wychodzącego.
 \end{twierdzenie}
 \begin{proof}
-Łuk $u\to v$ do szarego $v$ wraz
-z drzewową drogą skierowaną od
-przodka $v$ do potomka $u$
+Jeżeli podczas przeglądania łuku $u\to v$
+wierzchołek $v$ jest szary, należy on
+do aktywnego stosu rekurencji i jest
+przodkiem $u$. Łuk $u\to v$ wraz
+z drzewową drogą skierowaną od $v$ do $u$
 tworzy skierowany cykl.
-Odwrotnie, gdyby istniał skierowany
-cykl i nie było takiego łuku,
-wybierzmy na nim wierzchołek
-odkryty najwcześniej, oznaczony $x$.
-W chwili odkrycia $x$ pozostałe
-wierzchołki cyklu są białe.
-Rekurencja DFS musi po kolejnych
-łukach cyklu dotrzeć do ostatniego
-jego wierzchołka, zanim zakończy
-wywołanie dla $x$. Ostatni łuk
-prowadzi zatem do szarego $x$,
-co daje sprzeczność.
 
-W grafie bez cykli rozważmy dowolny
-łuk $u\to v$. Gdy algorytm przegląda
-ten łuk, $v$ jest albo biały,
-albo czarny; stan szary jest
-niemożliwy. Jeśli $v$ jest biały,
-jego wywołanie DFS zakończy się przed
-zakończeniem wywołania dla $u$.
-Jeśli jest czarny, już zakończyło się
-wcześniej. W obu przypadkach
-$\mathrm{tout}[u]>\mathrm{tout}[v]$,
-co dowodzi własności porządku.
-Koszt wynika z jednorazowego
-przeglądania każdego łuku
-i wierzchołka.
+Załóżmy odwrotnie, że DFS nie znalazło
+żadnego łuku do szarego wierzchołka.
+Rozważmy dowolny łuk $u\to v$.
+W chwili jego przeglądania $v$ jest biały
+albo czarny. Jeśli jest biały, wywołanie
+\texttt{DFS(v)} skończy się przed zakończeniem
+\texttt{DFS(u)}. Jeśli jest czarny, jego
+wywołanie zakończyło się już wcześniej.
+W obu przypadkach
+$\mathrm{tout}[u]>\mathrm{tout}[v]$.
+Istnienie skierowanego cyklu
+$v_0\to v_1\to\cdots\to v_{k-1}\to v_0$
+wymagałoby zatem nierówności
+$\mathrm{tout}[v_0]>\mathrm{tout}[v_1]>
+\cdots>\mathrm{tout}[v_{k-1}]>
+\mathrm{tout}[v_0]$, co jest niemożliwe.
+Otrzymujemy równoważność.
+
+Dla acyklicznego $D$ stwierdzona
+nierówność obowiązuje na każdym łuku,
+zatem uporządkowanie wierzchołków
+według malejących czasów wyjścia
+jest porządkiem topologicznym.
+Każdy wierzchołek i każdy łuk
+analizujemy stałą liczbę razy,
+więc koszt wynosi $O(|V|+|A|)$.
 \end{proof}
 
 \begin{przyklad}[Zależności pomiędzy czynnościami]
