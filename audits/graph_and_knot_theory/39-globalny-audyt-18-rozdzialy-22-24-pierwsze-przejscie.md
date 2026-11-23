@@ -212,33 +212,69 @@ dokładnych modeli skończonych,
 nie dowodzą ogólnych twierdzeń
 o czterorozmaitościach.
 
-## Struktura i niezakończone kontrole
+## Końcowe CI, PDF i kontrola rysunków
 
-Po wprowadzeniu testu (przebieg
-[45204620682](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45204620682))
-`structural-audit=success`:
-`44/44` źródła,
-`0` powtórzonych etykiet,
-`0` nierozwiązanych odsyłaczy,
-`0` błędów środowiskowych
-oraz `0` zakazanych terminów.
+Po wprowadzeniu **wszystkich** korekt, łącznie z przykładem
+Foxa–Milnora, końcowy przebieg
+[GitHub Actions 45205018711](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45205018711)
+na commicie `4f8e2771a6bd4fe13c90f4e3e248f29b783797da`
+zakończył oba zadania ze statusem **success**:
+`structural-audit` oraz `full-book-pdf`.
 
-Należy dodatkowo:
-1. potwierdzić nowy test końcowy
-   z przykładem Foxa–Milnora;
-2. skompilować cały tom trzy razy
-   po **ostatniej** zmianie;
-3. pobrać i obejrzeć PDF,
-   szczególnie nowe fragmenty
-   rozdziałów 22–24, rysunki
-   `A_n,D_n,E8` i gwiazdę Seiferta;
-4. przeprowadzić drugi,
-   niezależny audyt tego bloku,
-   zanim otrzyma on status
-   lokalnie stabilny.
+- **44/44** źródeł, **0** powtórzonych etykiet,
+  **0** brakujących odsyłaczy, **0** błędów środowisk
+  i **0** zakazanych terminów;
+- **66 778** dokładnych przypadków w siedmiu nowych
+  grupach regresji, wszystkie **PASS**; w tym
+  **341** przypadków faktoryzacji Foxa–Milnora
+  (łącznie z nowym przykładem);
+- trzy udane przebiegi `pdflatex` na **całym tomie**;
+- końcowy PDF zawiera **278 stron A4**;
+- `graph_and_knot_full_warnings.txt` ma **0 bajtów**,
+  bez ostrzeżeń LaTeX lub zgłoszonych przepełnień.
 
-**Werdykt pierwszego przejścia:
-poprawki matematyczne wprowadzono,
-blok 22–24 nadal W STABILIZACJI.
-Nie przechodzić do 25–27
-bez zamknięcia stabilizacji.**
+Pobrano artefakt **tego końcowego przebiegu**,
+a nie wcześniejszy PDF. Renderowano i obejrzano
+wszystkie strony PDF **182–207**, obejmujące cały blok:
+
+- **182–189 (rozdział 22):** dołączanie uchwytów,
+  formy przecięcia, lemat izotropowy, jawna
+  faktoryzacja Foxa–Milnora na stronie **188**;
+- **190–200 (rozdział 23):** modele plumbing,
+  grafy `A_n`, `D_n`, `E8`,
+  rekurencja liścia na stronie **193**,
+  sfera Poincarégo, blow-down,
+  wnioski Freedmana–Donaldsona;
+- **201–207 (rozdział 24):** rysunek lokalnego
+  rozwarstwienia, przykład `e_Q=0` z torsją
+  `Z/3` (strona **204**),
+  kryterium określoności macierzy
+  gwiaździstej (strona **205**)
+  i rysunek brzegowego rozwarstwienia
+  `E8` (strona **206**).
+
+W kontrolowanych renderach nie stwierdzono
+kolizji rysunków z podpisami, obciętych wzorów
+ani naruszenia marginesów. Kontrola PDF
+i skończone testy nie zastępują pełnych dowodów
+twierdzeń Freedmana, Donaldsona, Murasugiego
+ani klasyfikacji rozwarstwień Seiferta.
+
+## Werdykt i następny etap
+
+**AUDYT 18: PIERWSZE PRZEJŚCIE ROZDZIAŁÓW 22–24 PASS.**
+Poprawki zapisano w źródłach,
+regresje przeszły, kompletny PDF złożono
+i zweryfikowano wizualnie.
+
+**Rozdziały 22–24 nadal W STABILIZACJI.**
+Następny audyt 19 obejmie drugie niezależne
+przejście, szczególnie geometryczny lemat
+metabolizera, wnioski `E8`/Freedman–Donaldson,
+orientacje i grupy Seiferta.
+Dopiero po drugim przejściu blok może otrzymać
+status lokalnie stabilnego i pozwolić
+na rozpoczęcie audytu 25–27.
+
+Globalny szczegółowy audyt całego tomu
+44 rozdziałów pozostaje otwarty.
