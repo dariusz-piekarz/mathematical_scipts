@@ -49,7 +49,8 @@ Wszystkie przykłady merytorycznie poprawne; ilustracja ilorazu `R²/M` objęta 
 
 - Dodano `tools/tests/test_functional_analysis_ch02.py` — 9 testów strukturalnych, terminologicznych, matematycznych modeli i realnych odsyłaczy do rozdziałów 01, 02 oraz 05.
 - Dodano `.github/workflows/functional-analysis-ch02.yml`: buduje PDF z aktualnych rozdziałów 01, 02 i 05 z oryginalną preambułą książki; rozdziały 01 i 05 stanowią rzeczywisty kontekst odsyłaczy.
-- Pierwszy przebieg CI: [GitHub Actions 45152469928](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45152469928). Testy Pythona: **9/9 PASS**; kompilacja PDF, odsyłacze i kontrola wizualna: **do potwierdzenia** przy finalizacji audytu.
+- Pierwszy przebieg CI [45152469928](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45152469928) wykrył pięć nierozwiązanych odsyłaczy w rozdziale 05, wynikających wyłącznie z niepełnego wrappera (brak rozdziałów 03 i 04); kompilacja PDF sama w sobie zakończyła się sukcesem. **Poprawiono workflow bez wyłączania testu odsyłaczy**: kontekst obejmuje rzeczywiste źródła 01–05.
+- [Końcowy przebieg 45152793250](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45152793250): **9/9 testów PASS**, kompilacja LaTeX PASS, 0 nierozwiązanych odsyłaczy i brak przepełnionych wierszy — **PASS**; artefakt PDF i log załączone do przebiegu. PDF kontekstowy ma **33 strony A4**, rozdział 02 zajmuje strony **7–15** (na stronie 15 kończy się tekst rozdziału 02, po czym rozpoczyna się rozdział 03). Wszystkie strony 7–14 obejrzano wizualnie, w tym rysunek 2.1 ilorazu; nie znaleziono kolizji napisów ani ucięć. Dodatkowo sprawdzono treść początku strony 15.
 
 ## Propozycje nieobowiązkowe
 
