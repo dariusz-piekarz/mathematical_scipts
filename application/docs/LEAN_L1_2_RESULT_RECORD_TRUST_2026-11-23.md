@@ -2,7 +2,9 @@
 
 **Data:** 2026-11-23. **Gałąź:** `biblioteka-matematyczna-iteracja-6`.
 **Jednostka:** L1.2 — osobna od ustabilizowanej optymalizacji L1.1.
-**Stan:** implementacja i testy złożone; wyniki nowego CI do weryfikacji.
+**Stan:** implementacja i testy przeszły szybkie regresje Linux/Windows oraz
+pełne CI aplikacji; rzeczywista kontrola przypiętego Lean+Mathlib i formalna
+stabilizacja 2+1 nadal otwarte.
 
 ## Problem i ograniczony zakres
 
@@ -62,8 +64,15 @@ API i runner Lean pozostają bez zmian.
 
 ## Bramka stabilizacji
 
-- [ ] Udane regresje Linux i natywny Windows dla L1.2
-- [ ] Pełne CI aplikacji na commicie obejmującym implementację i testy
+- [x] Udane regresje Linux i natywny Windows dla L1.2:
+      [#45151036509](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45151036509),
+      182 testy Linux i 82 na natywnym Windows, `completed/success`.
+- [x] Pełne CI aplikacji na commicie obejmującym implementację i testy:
+      [#45151140917](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45151140917),
+      SHA `774d7beb`, `completed/success`: 712 testów Pythona,
+      10 sklasyfikowanych pominięć, `unreviewed_skips=0`,
+      rzeczywisty Chromium `passed`, 501 zaindeksowanych rozdziałów,
+      brak raportowanych błędów JavaScript.
 - [ ] Rzeczywisty Lean 4.26.0 / przypięty Mathlib oraz kontrola aksjomatów
 - [ ] Odrębny sceptyczny przegląd semantyki `run_record_invalid` i
       `previous_run_outdated`
