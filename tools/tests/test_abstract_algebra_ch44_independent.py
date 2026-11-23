@@ -61,12 +61,15 @@ class TestIndependentAA44(unittest.TestCase):
             norm=-(x*x+1)
             norm_deriv=-2*x
             self.assertEqual(norm_deriv/(2*norm),x/(x*x+1))
-    def test_04_algebraic_constant_obstruction(self):
+    def test_04_exact_constant_and_logarithmic_derivation(self):
         for x in (F(-2),F(1,3),F(2)):
-            # D(t-x)=0 when Dt=Dx=1.
-            self.assertEqual(F(1)-F(1),0)
-            # D(3t+x^2) at Dt=1/x.
-            self.assertEqual(F(3)/x+2*x,F(3)/x+2*x)
+            # t-x: coefficient vectors and their x-derivatives.
+            self.assertEqual(derivative([-x,F(1)],[-F(1),F(0)],F(1),False),[0])
+            # 3t+x^2, with Dt=1/x: independent arithmetic.
+            self.assertEqual(derivative([x*x,F(3)],[2*x,F(0)],F(1)/x,False),
+                             [2*x+F(3)/x])
+            # xt becomes a new constant if Dt/t=-1/x.
+            self.assertEqual(derivative([F(0),x],[F(0),F(1)],-F(1)/x,True),[0])
     def test_05_structure(self):
         s=SRC.read_text(encoding="utf-8")
         labs=re.findall(r"\\label\{([^}]+)\}",s)
