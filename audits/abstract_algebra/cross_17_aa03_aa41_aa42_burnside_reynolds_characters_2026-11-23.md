@@ -52,3 +52,13 @@ Do `.github/workflows/abstract-algebra-chapter.yml` dodano wyzwalacz ścieżki t
 **Opcjonalne uzupełnienie do decyzji użytkownika:** w AA-41, po operatorze Reynoldsa, można dodać osobne stwierdzenie z powyższym krótkim dowodem: lemat Burnside'a = wymiar przestrzeni niezmienniczej = iloczyn skalarny charakteru permutacyjnego z trywialnym. Jest to wartościowe połączenie trzech działów, lecz **nie jest niezbędną poprawką** i zgodnie z `AGENTS.md` nie zostało automatycznie dodane do zatwierdzonego rozdziału.
 
 **Statusy AA-01–AA-50 pozostają nienaruszone.** AA-51 nie został otwarty.
+
+## 5. Bramki końcowe — zamknięcie AA-X17
+
+**AA-X17: ZAMKNIĘTY / PASS** w zakresie wskazanej kontroli przekrojowej.
+
+Zweryfikowano rzeczywisty zakończony przebieg [CI 45206650247](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45206650247) (ID: `45206650247`) na dokładnie `b0c27d40e4159817c941cc1b489e78c4cab26e7f`: `completed/success`, jeden job `validate-cli`, **95/95 kroków completed**, brak awarii. W nowym kroku `Run AA-X17 Burnside Reynolds and character interface` odczytano **7/7 testów ok**, dodatkowo wszystkie siedem pojawiło się jako `ok` w globalnym `unittest discover`.
+
+Krok `Compile AA-01 to AA-50 book with latexmk`: **success**. Krok `Verify PDF and references (no undefined refs)`: **success**. Artefakt `abstract-algebra-aa01-aa50` (ZIP, ID `14834586491`, 2 289 387 bajtów) został przesłany. Raport nie stanowi potwierdzenia osobnej **wizualnej inspekcji stron** tego PDF.
+
+Wynik dotyczy zależności `AA-03 × AA-41 × AA-42` oraz wskazanych przypadków, nie pełnej formalnej weryfikacji wszystkich twierdzeń w książce. **Nie zmieniano treści AA-01–AA-50 ani ich dotychczasowych statusów**. Propozycja redakcyjnego dodania równoważnego dowodu lematu Burnside'a do AA-41 pozostaje opcjonalna i nie została automatycznie wdrożona.
