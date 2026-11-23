@@ -177,6 +177,26 @@ class LeanFormalizationTests(unittest.TestCase):
             self.assertFalse(lean._source_file_current(
                 registered, self.digest, self.root))
 
+    def test_oversize_lean_fragment_never_reads_full_text(self):
+        # Preview must enforce a byte cap before allocating decoded source.
+        # Previously Path.read_text loaded the entire file before checking
+        # MAX_LEAN_CHARS; this regression fails against that implementation.
+        module = self.root / "src" / "Example.lean"
+        with module.open("wb") as stream:
+            stream.truncate(lean.MAX_LEAN_CHARS * 4 + 1)
+        original = Path.read_text
+
+        def reject_unbounded_lean_text(path, *args, **kwargs):
+            if path == module:
+                raise AssertionError("unbounded Lean Path.read_text")
+            return original(path, *args, **kwargs)
+
+        with patch.object(Path, "read_text", reject_unbounded_lean_text):
+            with self.assertRaises(HTTPException) as caught:
+                lean.fragment(self.con, entity_id="LST-01/theorem/0001",
+                              lean_root=self.root)
+        self.assertEqual(caught.exception.status_code, 413)
+
     def test_corrupted_index_is_refused_by_reader(self):
         self.con.execute("UPDATE documents SET sha256=? WHERE id='LST-01'",
                          ("f" * 64,))
