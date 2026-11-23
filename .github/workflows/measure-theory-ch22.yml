@@ -30,7 +30,7 @@ jobs:
           python-version: '3.12'
       - name: Validate test script syntax
         run: python -m py_compile tools/tests/test_measure_theory_ch22.py
-      - name: Run 8 chapter 22 finite model and source regressions
+      - name: Run chapter 22 finite model and source regressions
         run: python -m unittest discover -s tools/tests -p 'test_measure_theory_ch22.py' -v
       - name: Audit cross-file labels, references and 31-chapter structure
         run: python -m unittest discover -s tools/tests -p 'test_measure_theory_book_integrity.py' -v
@@ -77,7 +77,7 @@ jobs:
           assert own and needed, 'Missing local labels or expected cross-chapter references'
 
           # The full book is compiled first; import only chapter 22's
-          # external references, including its forward reference to ch22.
+          # external references from the full book.
           aux = (root / 'measure_theory.aux').read_text(encoding='utf-8')
           selected = []
           found = set()
@@ -145,8 +145,7 @@ jobs:
           PY
           mkdir -p books/pl/ch22_previews
           count=$(pdfinfo books/pl/measure_theory_ch22.pdf | awk '/^Pages:/ {print $2}')
-          middle=$(( (count + 1) / 2 ))
-          for n in 1 "$middle" "$count"; do
+          for n in $(seq 1 "$count"); do
             pdftoppm -f "$n" -l "$n" -singlefile -r 100 -png               books/pl/measure_theory_ch22.pdf "books/pl/ch22_previews/chapter_p${n}"
           done
       - uses: actions/upload-artifact@v4
