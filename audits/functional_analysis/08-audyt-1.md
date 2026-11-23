@@ -50,7 +50,8 @@ Odczytano rzeczywisty rozdział 08 na wskazanej gałęzi oraz wcześniejsze rozd
 
 - Zliczono **12 par środowisk proof, 5 par przyklad, 18 unikatowych etykiet i 9 wystąpień odsyłaczy**; 0 odsyłaczy nierozwiązanych w rzeczywistym zbiorze rozdziałów 01–08.
 - Poprawione źródło: SHA a01d4316fdeacef759c89955b14bc062abedbcd4.
-- Dedykowany [CI 45196353669](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45196353669): 17 testów i przygotowanie kontekstu 01–08 mają wynik PASS. Końcową kompilację i wizualny przegląd PDF uzupełnić po ukończeniu przebiegu.
+- Dedykowany [CI 45196353669](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45196353669) zakończył się **pełnym SUCCESS**: 17/17 testów PASS, przygotowanie kontekstu źródeł 01–08 PASS, kompilacja LaTeX PASS, końcowa kontrola PDF i odsyłaczy PASS, publikacja artefaktu PASS. Z logu: `Ran 17 tests`, `OK`, `Pages: 48`.
+- Pobrano PDF z tego dokładnego przebiegu (A4, **48 stron, 589874 bajty**, SHA pliku zgodne z oryginalnym ZIP). Rozdział 08 zaczyna się na stronie **43** i kończy na **48**. Wyrenderowano i obejrzano strony **43–48**, a dodatkowo skontrolowano geometrię bloków wszystkich 48 stron: **0 bloków poza stroną**, bez widocznych kolizji, ucięć tekstu i błędów oznaczeń. W **końcowym** logu: 0 `Undefined control sequence`, 0 `There were undefined references`, 0 `Overfull \\hbox`, 0 `Missing character`. Przejściowe ostrzeżenie o odsyłaczach po pierwszym przebiegu kompilacji zniknęło po przebiegu końcowym.
 
 ## Decyzja
 
