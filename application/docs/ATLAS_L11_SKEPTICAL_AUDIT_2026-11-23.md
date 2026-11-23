@@ -35,3 +35,15 @@ W sceptycznej inspekcji `application/backend/lean_environment.py` wykryto nowy p
 - **Warunek formalny pozostaje otwarty:** odrębna recenzja z uwierzytelnionym zatwierdzeniem (np. właściwie skonfigurowana chroniona aprobata GitHub lub podpisana recenzja z zaufanym kluczem). Do jej przyjęcia nie przechodzić do L1.2 ani nie przedstawiać wyników jako `stable`. W tym dokumencie nie podpisano żadnego takiego zatwierdzenia.
 
 **Werdykt technicznej kontroli:** zbadano krytyczne regresje deskryptora i kompletność 3/3; nie znaleziono kolejnego potwierdzonego defektu w implementacji fingerprintu. Ryzyka TOCTOU oraz poświadczenie niezależnego audytu pozostają jawne. **Decyzja końcowa: `pending_authenticated_review`**.
+
+
+## Audyt raportów CI po pełnym 3/3 — sprawdzanie pochodzenia pominięć
+
+[Atlas #45136597724](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45136597724) zakończył `completed/success` dla `5e6e017a7d98ce2dfb384b4e973cce08159be3fc`. Odczytany bezpośrednio log końcowego joba `evidence` zawiera: `passed=true` w każdym z trzech przebiegów, po 687 testów aplikacji, 10 sklasyfikowanych pominięć, `unreviewed_skips=0`, wszystkie cztery grupy jobów `success`, `problems=[]`, `status=stabilizing`, `skeptical_review=pending`, `certificate=false`. To **3/3 zakończone technicznie**, ale nie poświadczenie recenzenta.
+
+W następującej po nim analizie kodu walidatora wykryto, że `validate_unit_report()` ufał dowolnej niepustej wartości `entry["classification"]`, jeśli tylko nie była równa `unreviewed`; nie weryfikował jej względem faktycznego identyfikatora testu i powodu `reason`. Raport mógł zatem podać `classification="windows_native"` dla nieznanego testu. Ponadto `executed` nie musiało odpowiadać liczbie imiennych `outcomes`. To narusza deklarowaną zasadę **fail-closed dla sfałszowanych artefaktów**. Nie oznacza wykrycia udanego ataku na GitHub Actions ani błędu runnera Lean.
+
+- [Poprawka `51cef7cc`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/51cef7ccb7e8aece049bf9254cca9b01b0627bdf): walidator niezależnie ponownie wywołuje `classify_skip(name, reason)`, odrzuca nieznane lub podmienione kategorie, sprawdza dokładnie typy i liczby `skipped`, `outcome_count`, `executed`.
+- [Nowe testy `c3503db4`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/c3503db43bb2bb666baf0f34eb6bcbb3c2f7581b): obca nazwa testu z podrobioną kategorią, fałszywa kategoria dla prawidłowego testu, legalny wyjątek Windows, ukryte brakujące wyniki i nieprawidłowy typ licznika.
+- **Stabilizacja:** poprzednie 3/3 pozostaje ważnym historycznym wynikiem dla SHA `5e6e017a`, ale nowe zmiany kodu walidatora/testów wymagają ponownego CI na `c3503db4` i kolejnej serii 2+1 na tym samym nowym SHA. **Nie przenosić licznika 3/3 między commitami.** Bez autentykowanej zewnętrznej recenzji pozostawić `stabilizing` i `certificate=false`.
+
