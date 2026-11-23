@@ -30,6 +30,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.candidate_sha || github.sha }}
+      - name: Require exact pinned checkout identity
+        env:
+          EXPECTED_SHA: ${{ inputs.candidate_sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
