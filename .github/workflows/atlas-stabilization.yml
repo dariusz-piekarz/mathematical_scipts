@@ -8,6 +8,7 @@ on:
       - biblioteka-matematyczna-iteracja-6
     paths:
       - ".github/workflows/atlas-stabilization.yml"
+      - "application/config/atlas_validation_request.json"
   workflow_dispatch:
     inputs:
       candidate_sha:
@@ -34,19 +35,20 @@ jobs:
     timeout-minutes: 8
     outputs:
       sha: ${{ steps.validate.outputs.sha }}
+      fragment: ${{ steps.validate.outputs.fragment }}
     steps:
       - name: Checkout branch with full ancestry
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Check candidate is full SHA in the branch history
+      - name: Resolve branch-local request and verify commit ancestry
         id: validate
+        working-directory: application
         env:
-          CANDIDATE_SHA: ${{ inputs.candidate_sha || github.sha }}
-        run: |
-          set -euo pipefail
-          python application/scripts/atlas_validation_gate.py verify-sha --sha "$CANDIDATE_SHA" --branch biblioteka-matematyczna-iteracja-6
-          echo "sha=$CANDIDATE_SHA" >> "$GITHUB_OUTPUT"
+          ATLAS_EVENT: ${{ github.event_name }}
+          ATLAS_DISPATCH_SHA: ${{ inputs.candidate_sha }}
+          ATLAS_DISPATCH_FRAGMENT: ${{ inputs.fragment }}
+        run: python -m scripts.atlas_validation_select --request config/atlas_validation_request.json --event "$ATLAS_EVENT" --dispatch-sha "$ATLAS_DISPATCH_SHA" --dispatch-fragment "$ATLAS_DISPATCH_FRAGMENT" --output "$GITHUB_OUTPUT"
 
   application_1:
     name: "application independent pass 1"
@@ -158,7 +160,7 @@ jobs:
         if: ${{ always() && needs.prepare.result == 'success' }}
         env:
           CANDIDATE_SHA: ${{ needs.prepare.outputs.sha }}
-          FRAGMENT: ${{ inputs.fragment || 'L1.1' }}
+          FRAGMENT: ${{ needs.prepare.outputs.fragment }}
           APP_RESULT: ${{ (needs.application_1.result == 'success' && needs.application_2.result == 'success' && needs.application_3.result == 'success') && 'success' || 'failure' }}
           NATIVE_RESULT: ${{ (needs.fast_1.result == 'success' && needs.fast_2.result == 'success' && needs.fast_3.result == 'success') && 'success' || 'failure' }}
           LEAN_RESULT: ${{ (needs.lean_1.result == 'success' && needs.lean_2.result == 'success' && needs.lean_3.result == 'success') && 'success' || 'failure' }}
