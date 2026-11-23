@@ -65,6 +65,42 @@ class LeanCatalogTests(unittest.TestCase):
         self.assertNotIn("proof_status", entry)
         self.assertFalse(entry["certificate"])
 
+    def test_l142_document_integrity_digest_once_per_module_per_call(self):
+        # One read-only catalog invocation already holds a single SQLite
+        # document row per module; hashing the same immutable content again
+        # for every registered label adds cost without a freshness guarantee.
+        # A later invocation MUST recheck the changed index.
+        second = dict(self.item, id="t-two")
+        (self.root / "manifest.json").write_text(
+            json.dumps({"schema_version": 1, "items": [self.item, second]}),
+            encoding="utf-8")
+        original = hashlib.sha256
+        source_bytes = SOURCE.encode("utf-8")
+        checks = []
+
+        def count_document_digest(*args, **kwargs):
+            if args and args[0] == source_bytes:
+                checks.append(True)
+            return original(*args, **kwargs)
+
+        with patch.object(lean_catalog.hashlib, "sha256",
+                          side_effect=count_document_digest):
+            first = lean_catalog.list_formalizations(self.con, lean_root=self.root)
+        self.assertEqual(first["draft"], 2)
+        self.assertEqual(len(checks), 1)  # one digest, not once per mapping
+        self.con.execute("UPDATE documents SET sha256=? WHERE id='LST-01'",
+                         ("0" * 64,))
+        self.con.commit()
+        with patch.object(lean_catalog.hashlib, "sha256",
+                          side_effect=count_document_digest):
+            changed = lean_catalog.list_formalizations(self.con, lean_root=self.root)
+        self.assertEqual(len(checks), 2)  # new request revalidates
+        self.assertEqual(changed["stale"], 2)
+        self.assertTrue(all(
+            item["index_status"] == "corrupt_document"
+            and item["statement_status"] == "needs_review"
+            for item in changed["items"]))
+
     def test_pinned_mapping_becomes_stale_on_source_change(self):
         self.item.update(source_document_sha256=self.digest,
                          statement_status="approved")
