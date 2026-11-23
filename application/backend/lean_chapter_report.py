@@ -139,9 +139,17 @@ def chapter_report(con: sqlite3.Connection, module_id: str, *,
             entry["formalization_status"] = "stale"
             entry["statement_status"] = "needs_review"
             continue
-        if entry["formalization_status"] == "ready" and (
-                not registered.get("source_document_path")
-                or not lean._source_file_current(registered, indexed_sha, lean_root)):
+        # The catalogue inspected the canonical TeX earlier. A physical
+        # source change after that read invalidates drafts with registered
+        # canonical paths as well as approved/ready mappings. Preserve legacy
+        # pathless drafts, but never treat pathless "ready" as verified.
+        source_path = registered.get("source_document_path")
+        source_unverifiable = (
+            (entry["formalization_status"] == "ready" and not source_path)
+            or (bool(source_path) and
+                not lean._source_file_current(registered, indexed_sha, lean_root))
+        )
+        if source_unverifiable:
             entry["index_status"] = "unverifiable_canonical_source"
             entry["formalization_status"] = "stale"
             entry["statement_status"] = "needs_review"
