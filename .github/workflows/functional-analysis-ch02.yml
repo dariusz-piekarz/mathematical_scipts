@@ -7,6 +7,8 @@ on:
     paths:
       - 'chapters/pl/functional_analysis/01-przestrzenie-liniowo-topologiczne-definicje-i-przyklady.tex'
       - 'chapters/pl/functional_analysis/02-podprzestrzenie-produkty-ilorazy-i-topologie-uniwersalne.tex'
+      - 'chapters/pl/functional_analysis/03-sieci-struktura-jednostajna-i-zupelnosc.tex'
+      - 'chapters/pl/functional_analysis/04-zbiory-ograniczone-rodziny-operatorow-i-metryzowalnosc.tex'
       - 'chapters/pl/functional_analysis/05-przestrzenie-lokalnie-wypukle-i-seminormy.tex'
       - 'books/pl/functional_analysis.tex'
       - 'tools/tests/test_functional_analysis_ch02.py'
@@ -25,23 +27,21 @@ jobs:
       - uses: actions/checkout@v4
       - name: Check 02 mathematics examples and reference contracts
         run: python3 tools/tests/test_functional_analysis_ch02.py
-      - name: Prepare TeX wrapper from canonical preamble with cross-reference context
+      - name: Prepare TeX wrapper with complete reference context 01-05
         run: |
           python3 - <<'PY'
           from pathlib import Path
           book = Path("books/pl/functional_analysis.tex").read_text(encoding="utf-8")
           assert book.count(r"\begin{document}") == 1
           pre = book.split(r"\begin{document}", 1)[0]
-          body = r"""
-          \begin{document}
-          \input{../../chapters/pl/functional_analysis/01-przestrzenie-liniowo-topologiczne-definicje-i-przyklady.tex}
-          \input{../../chapters/pl/functional_analysis/02-podprzestrzenie-produkty-ilorazy-i-topologie-uniwersalne.tex}
-          \input{../../chapters/pl/functional_analysis/05-przestrzenie-lokalnie-wypukle-i-seminormy.tex}
-          \end{document}
-          """
+          import re
+          chapter_inputs = re.findall(r'\\input\{(\.\./\.\./chapters/pl/functional_analysis/[^}]+)\}', book)
+          assert len(chapter_inputs) >= 5
+          assert all(chapter_inputs[i].split('/')[-1].startswith(f'{i+1:02d}-') for i in range(5))
+          body = '\\begin{document}\n' + '\n'.join('\\input{' + filename + '}' for filename in chapter_inputs[:5]) + '\n\\end{document}\n'
           Path("books/pl/functional_analysis_ch02_context_ci.tex").write_text(pre + body, encoding="utf-8")
           PY
-      - name: Compile isolated chapter with actual 01 and 05 reference context
+      - name: Compile chapter 02 with complete 01-05 reference context
         uses: xu-cheng/latex-action@v3
         with:
           root_file: functional_analysis_ch02_context_ci.tex
