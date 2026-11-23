@@ -49,8 +49,10 @@ jobs:
           args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
       - name: Verify PDF and resolve cross-chapter links
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq poppler-utils
+          if ! command -v pdfinfo >/dev/null || ! command -v pdftotext >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq poppler-utils
+          fi
           test -s books/pl/functional_analysis_ch04_context_ci.pdf
           test -s books/pl/functional_analysis_ch04_context_ci.log
           if grep -E 'Undefined control sequence|There were undefined references|LaTeX Warning: (Reference|Citation).*undefined|Overfull \\hbox|Missing character' books/pl/functional_analysis_ch04_context_ci.log; then
