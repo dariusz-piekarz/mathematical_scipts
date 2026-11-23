@@ -44,7 +44,7 @@ class TestAA31DerivationsQuotientsLocalization(unittest.TestCase):
                     self.assertEqual(sp.expand(sp.rem(difference,f,y)),0)
                     self.assertEqual(
                         sp.simplify(delta(P).subs(y,x**2)-
-                                    x*sp.diff(P.subs(y,x**2),x)),0)
+                                    x*sp.diff(sp.sympify(P).subs(y,x**2),x)),0)
 
     def test_nonstable_ideals_do_not_admit_induced_derivation(self):
         self.assertEqual(sp.diff(x,x),1)
