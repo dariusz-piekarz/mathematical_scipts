@@ -1,5 +1,7 @@
 """Finite-coordinate witnesses for the 15A incomplete-space counterexample."""
 from fractions import Fraction
+import cmath
+import math
 import unittest
 
 
@@ -26,6 +28,17 @@ class Chapter15ARegressionTests(unittest.TestCase):
             self.assertEqual(half, Fraction(1, 2**(2*n+5)))
             self.assertGreater(half, 0)
             self.assertEqual(half+other, 0)
+
+    def test_complex_modulation_not_norm_continuous(self):
+        # Complex-valued L2: U_t f(x) = exp(i*t*x)*f(x).
+        # At x = pi/t the multiplier differs from 1 in modulus by 2.
+        # Continuity of the multiplier then gives essential supremum 2
+        # on R; finite samples only witness the sharp lower bound.
+        for t in (-2.0, -0.5, 0.25, 3.0):
+            x = math.pi / t
+            self.assertAlmostEqual(abs(cmath.exp(1j*t*x) - 1), 2.0, places=12)
+            self.assertLessEqual(abs(cmath.exp(1j*t*x) - 1), 2.0 + 1e-12)
+
 
 
 if __name__ == "__main__":
