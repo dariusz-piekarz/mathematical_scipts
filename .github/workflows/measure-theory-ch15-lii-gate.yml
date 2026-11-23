@@ -1,0 +1,95 @@
+name: Measure theory chapter 15 LII stabilization
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "chapters/pl/measure_theory/15-dualnosc-wypuklosc-i-slaba-zbieznosc-w-przestrzeniach-lp.tex"
+      - "books/pl/measure_theory.tex"
+      - "chapters/pl/measure_theory/10-regularnosc-funkcji-mierzalnych-i-aproksymacja-funkcjami-ciaglymi.tex"
+      - "chapters/pl/measure_theory/14-przestrzenie-lp-i-ich-podstawowe-wlasnosci.tex"
+      - "tools/tests/test_measure_theory_ch15_li_gate.py"
+      - "audits/measure_theory/00-audyt-lii-rozdzial-15-bramka-regresji-2026-11-23.md"
+      - ".github/workflows/measure-theory-ch15-lii-gate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: measure-ch15-lii-\${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  tests:
+    name: Chapter 15 source and mathematical regressions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate test script syntax
+        run: python -m py_compile tools/tests/test_measure_theory_ch15_li_gate.py
+      - name: Run 8 independent LII regression cases on real repository sources
+        run: python -m unittest discover -s tools/tests -p 'test_measure_theory_ch15_li_gate.py' -v
+
+  pdf:
+    name: Chapter 15 and complete measure theory PDF
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install LaTeX packages including lmodern and Polish babel
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            latexmk lmodern texlive-latex-base texlive-latex-recommended \
+            texlive-latex-extra texlive-fonts-recommended texlive-lang-polish
+      - name: Compile complete 31-chapter book with cross-references
+        run: |
+          cd books/pl
+          latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error measure_theory.tex
+      - name: Verify book log and output PDF
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          pdf = Path('books/pl/measure_theory.pdf')
+          log = Path('books/pl/measure_theory.log')
+          assert pdf.is_file() and pdf.stat().st_size > 10000, 'Missing or empty book PDF'
+          content = log.read_text(encoding='utf-8', errors='replace')
+          for phrase in ('There were undefined references', 'There were undefined citations', 'Rerun to get cross-references right'):
+              assert phrase not in content, f'Unresolved full-book cross-reference: {phrase}'
+          print('Full book PDF:', pdf.stat().st_size, 'bytes, no unresolved references')
+          PY
+      - name: Generate isolated chapter 15 document from canonical book preamble
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          root = Path('books/pl')
+          content = (root / 'measure_theory.tex').read_text(encoding='utf-8')
+          marker = r'\begin{document}'
+          assert marker in content
+          header = content.split(marker, 1)[0]
+          chapter = r'\input{../../chapters/pl/measure_theory/15-dualnosc-wypuklosc-i-slaba-zbieznosc-w-przestrzeniach-lp.tex}'
+          (root / 'measure_theory_ch15_lii.tex').write_text(
+              header + marker + '\n' + r'\mainmatter' + '\n' + chapter + '\n' + r'\end{document}' + '\n',
+              encoding='utf-8',
+          )
+          PY
+      - name: Compile isolated chapter 15 PDF
+        run: |
+          cd books/pl
+          latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error measure_theory_ch15_lii.tex
+          test -s measure_theory_ch15_lii.pdf
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: measure-theory-ch15-lii-pdf-and-logs
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            books/pl/measure_theory.pdf
+            books/pl/measure_theory.log
+            books/pl/measure_theory_ch15_lii.pdf
+            books/pl/measure_theory_ch15_lii.log
