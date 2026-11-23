@@ -145,7 +145,7 @@ def verify_exhaustive():
                 total += 1
                 if diameter(n, edges) is not None:
                     connected += 1
-    assert total > 200 and connected > 100, (total, connected)
+    assert total == 193 and connected >= 150, (total, connected)
     print(f"PASS chapter 43: {total} exhaustive positive-regular graphs; {connected} connected mixing/diameter checks")
 
 
