@@ -6,14 +6,13 @@
 
 ## Wskaźnik wykonywania
 
-> Aktualizacja 2026-11-23, L1.4 (odrębna architektura): pierwsza jednostka raportów rozdziałowych jest w fazie **testing** (stabilizacja **0/3**); szczegóły w [LEAN_L1_4_CHAPTER_REPORT_2026-11-23.md](LEAN_L1_4_CHAPTER_REPORT_2026-11-23.md). Wskaźnik historyczny L1.1 poniżej nie jest aktualnym stanem L1.4. Zamknięcie technicznego L1.3 nie oznacza ukończenia pilotażu 20–30 formalizacji z pierwotnego planu.
-
-- Aktywny etap: **1 — Lean 4, stabilizacja i rozwój formalizacji**.
-- Aktywny fragment: **L1.1 — limit odczytu `.olean` i weryfikacja CI**.
-- Stan: **testing** (po kolejnych zmianach kodu od czasu zweryfikowanego kandydata konieczna ponowna walidacja).
-- Stabilizacja 2+1 na SHA finalnego kodu: **0/3**; historyczne 3/3 dotyczy starszego SHA `457683f8...`.
-- Dodatkowy sceptyczny audyt bieżącej poprawki: **niezaliczony / do wykonania**.
-- Następny krok: odczytaj aktualny `application/docs/LEAN_FORMALIZATION_PLAN.md`, HEAD, logi i workflow dla poprawki limitu rzeczywistych odczytów `.olean`; uruchom/zweryfikuj regresje obejmujące współbieżny wzrost pliku, za wczesny EOF, narzut jednego bajtu, Windows/Linux oraz prawdziwy Lean/Mathlib. Wykonaj kolejne kontrole do 2+1. **Nie przechodź do L1.2 do pełnego zamknięcia L1.1.**
+- Etap: **1 — Lean 4**, bieżąca jednostka techniczna: **L1.4.1 (raport rozdziałowy)**.
+- Stan: **testing / stabilizing**, **0/3** potwierdzonych pełnych rund na kodzie `8e32405f6d66a389b3d7f4a0c8a5257ef6d4d8c7` w chwili zapisu.
+- [Nowa stabilizacja #45160226769](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45160226769) sprawdza przypięty SHA. Starszy [#45159511491](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45159511491) jest wyłącznie historyczny i nie daje zaliczenia dla nowego kodu.
+- Wewnętrzny audyt wykrył i poprawił przenikanie przyszłych pól historii oraz niespójne generacje dokumentu SQLite. Rygorystyczne testy regresyjne i opis znajdują się w [raporcie L1.4.1](LEAN_L1_4_CHAPTER_REPORT_2026-11-23.md).
+- Niezależne uwierzytelnione zatwierdzenie recenzenta: **brak**. `certificate=false`. Zgodność treści LaTeX–Lean nie wynika z kompilacji ani diagnostyki.
+- L1.1, L1.2 oraz techniczne L1.3 zachowują status dla swoich odrębnych SHA. Pilotaż 20–30 formalizacji pozostaje oddzielnie nierozliczony.
+- Kolejny krok: zakończyć kompletne 2+1 na tym SHA (Chromium, natywne Windows/Linux, przypięty Lean/Mathlib, sceptyczny audyt), potem dopiero L1.4.2 (cache/pomiar).
 
 ## Status etapów
 
