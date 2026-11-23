@@ -221,6 +221,40 @@ class FunctionalAnalysisChapter06(unittest.TestCase):
                 self.assertGreaterEqual(max(abs(x-t),abs(y-t)),distance-1e-12)
         self.assertAlmostEqual(abs(.5)+abs(-.5),1)
 
+    def test_nonhausdorff_ambient_point_separator(self):
+        # X=R^2 with the non-Hausdorff topology of p(x,y)=|x|.
+        # M=ker(p) is closed, x0=(3,1) is outside M, and
+        # F(x,y)=x/3 is a continuous separating functional.
+        seminorm = lambda x, y: abs(x)
+        separator = lambda x, y: x/3
+        x0=(3,1)
+        self.assertAlmostEqual(separator(*x0), 1)
+        for y in (-7, -1, 0, 2, 9):
+            self.assertEqual(seminorm(0,y), 0)
+            self.assertAlmostEqual(separator(0,y),0)
+        for x in (-3, -1, 0, 0.3, 4):
+            for y in (-2, 0, 8):
+                self.assertLessEqual(
+                    abs(separator(x,y)), seminorm(x,y)/3+1e-12)
+
+    def test_exact_extension_interval_with_signed_sublinear_function(self):
+        # With p(x,y)=x+|y| and f(x,0)=x, the one-step inequalities
+        # for extending along x0=(0,1) give precisely [-1,1].
+        p=lambda x,y: x+abs(y)
+        f=lambda x:x
+        for y in range(-7,8):
+            self.assertEqual(f(y)-p(y,-1), -1)
+        for z in range(-7,8):
+            self.assertEqual(p(z,1)-f(z),1)
+        for a in (-1,-0.5,0,0.375,1):
+            for x in range(-5,6):
+                for y in range(-5,6):
+                    self.assertLessEqual(x+a*y,p(x,y)+1e-12)
+        # Outside the exact admissible interval one can disprove
+        # domination by choosing x=0 and y with the correct sign.
+        self.assertGreater(1.1,p(0,1))
+        self.assertGreater(-(-1.1),p(0,-1))
+
     def test_no_extension_from_line_in_quasinorm_lp(self):
         # For 0<p<1 and f(c*chi_[0,1])=c, d(c*1,0)=|c|^p.
         for p in (.25,.5,.75):
