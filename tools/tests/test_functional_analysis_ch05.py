@@ -201,6 +201,53 @@ class FunctionalAnalysisChapter05(unittest.TestCase):
         # This formula must not be applied to kernel elements.
         self.assertIn(r"p_A(x)>0", self.chapter)
 
+    def test_atomless_lp_equal_mass_partition(self):
+        # For f(t)=t on [0,1], nu_f([0,a]) = a^(p+1)/(p+1).
+        # This explicitly realizes the partition used in the proof
+        # that a continuous functional on L^p (p<1) must vanish.
+        for p in (0.25, 0.5, 0.8):
+            pnorm = (1/(p+1))**(1/p)
+            for n in (2, 3, 8, 32):
+                endpoints = [(k/n)**(1/(p+1)) for k in range(n+1)]
+                masses = [
+                    (endpoints[k+1]**(p+1)-endpoints[k]**(p+1))/(p+1)
+                    for k in range(n)
+                ]
+                self.assertAlmostEqual(sum(masses), 1/(p+1))
+                for mass in masses:
+                    self.assertAlmostEqual(mass, 1/(n*(p+1)))
+                combined = sum(mass**(1/p) for mass in masses)
+                self.assertAlmostEqual(combined, n**(1-1/p)*pnorm)
+                self.assertLess(combined, pnorm)
+
+    def test_complex_minkowski_gauge_homogeneity_and_subadditivity(self):
+        # Complex absolutely convex ball A={|z_1|+2|z_2|<1}.
+        gauge = lambda z: abs(z[0])+2*abs(z[1])
+        vectors = [
+            (0j, 0j), (1+2j, -1j), (-3+1j, 2-2j), (0j, 5j)
+        ]
+        scalars = (0j, 1j, -1+0j, 0.4+0.3j, 2-3j)
+        for x in vectors:
+            for a in scalars:
+                ax = (a*x[0], a*x[1])
+                self.assertAlmostEqual(gauge(ax), abs(a)*gauge(x))
+            for y in vectors:
+                xy = (x[0]+y[0], x[1]+y[1])
+                self.assertLessEqual(gauge(xy), gauge(x)+gauge(y)+1e-12)
+
+    def test_nonhausdorff_seminorm_family_and_separation(self):
+        # A single p(x,y)=|x| does not separate (0,1) and 0.
+        p1 = lambda v: abs(v[0])
+        p2 = lambda v: abs(v[1])
+        self.assertEqual(p1((0, 1)), 0)
+        self.assertEqual(p2((0, 1)), 1)
+        for x in (-2, -1, 0, 1, 3):
+            for y in (-2, 0, 1, 4):
+                if (x, y) != (0, 0):
+                    self.assertGreater(max(p1((x,y)), p2((x,y))), 0)
+        self.assertIn(r"\bigcap_{p\in\mathcal P}\ker p=\{0\}",
+                      self.chapter)
+
     def test_quotient_seminorm_balls_and_local_convexity(self):
         # Linear quotient of R^2 by horizontal axis identifies with R.
         norm = lambda vector: abs(vector[1])
