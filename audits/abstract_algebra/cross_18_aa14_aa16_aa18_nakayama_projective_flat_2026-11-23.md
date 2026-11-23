@@ -40,3 +40,13 @@ Workflow \`.github/workflows/abstract-algebra-chapter.yml\` rozszerzono o osobny
 ## 4. Granice i dalszy plan
 
 Przeprowadzony dowód łączy trzy rozdziały i podkreśla konieczne założenia: przemienność, lokalność i skończone generowanie modułu rzutowego. W zatwierdzonych rozdziałach nie znaleziono sprzeczności wymagającej natychmiastowej korekty. Dodanie powyższego twierdzenia jako materiału wzbogacającego AA-16 wymaga osobnej decyzji użytkownika — **nie wstawiano go automatycznie**. Zachowano statusy AA-01–AA-50; AA-51 nie został otwarty.
+
+## 5. Wynik końcowy — AA-X18 ZAMKNIĘTY / PASS
+
+Zweryfikowano ostateczny wynik [GitHub Actions 45210323226](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45210323226) na \`22b9f898be49e7c3437f7c12790077a0954337af\`: **completed/success**, job \`validate-cli\`, **96/96 kroków ukończonych**, zero kroków błędnych. Odczytano rzeczywiste logi i potwierdzono wszystkie **6/6 testów AA-X18 = ok**, zarówno jako część globalnego odkrywania testów, jak i w samodzielnym kroku \`Run AA-X18 Nakayama local-projective-flat crosschecks\`.
+
+Krok \`Compile AA-01 to AA-50 book with latexmk\`: **success**; \`Verify PDF and references (no undefined refs)\`: **success**; publikacja artefaktu także **success**. Artefakt \`abstract-algebra-aa01-aa50\`, ID \`14835854098\`, ZIP 2 289 388 bajtów. **Nie deklaruje się niezależnej wizualnej inspekcji stron PDF.**
+
+Dodatkowa, odrębna kontrola arytmetyczna (poza skryptem Pythona, kod JS) dla trzech par \`(p,k)=(2,2),(2,3),(3,2)\` wykazała prawdziwość wszystkich pięciu sprawdzanych warunków: rozmiary ideałów \`(t)\` i \`(t^2)\`, nilpotentność o właściwym wykładniku, kryterium odwracalności, niezerowy moduł \`(t)/(t^2)\` oraz rozmiar i postać obrazu/jądra rozważanego idempotentu. Nie przenosi się tych testów przykładów na formalną weryfikację twierdzenia ogólnego; osobny dowód opisano w punkcie 1.
+
+**Werdykt:** niezależna kontrola logiczna, źródłowa i testowa AA-14 × AA-16 × AA-18 zamknięta bez koniecznych poprawek zatwierdzonych źródeł. Dotychczasowe statusy stabilności rozdziałów AA-01–AA-50 pozostają nienaruszone. AA-51 nie otwierano.
