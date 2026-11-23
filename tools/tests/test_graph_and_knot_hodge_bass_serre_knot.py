@@ -407,6 +407,8 @@ def test_source():
     assert r"V&u&0\\v^T&z&1\\0&0&0" in c
     assert r"b_1b_2b_1=b_2b_1b_2" in c
     assert r"\label{thm:kt-arf-conway-slice}" in c
+    assert r"\label{def:kt-peripheral}" in c
+    assert r"\label{thm:kt-peripheral-homology}" in c
     assert r"t'=t+(u+v)^Tx+zs" in c
     assert "Jawna przerwa na dolnym fragmencie" in c
 
