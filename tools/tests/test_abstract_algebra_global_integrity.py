@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Global AA-01..AA-45 source audit, preserving verified AA-01..AA-42: chapters, labels, references, coverage.
+"""Global AA-01..AA-46 source audit, preserving verified AA-01..AA-42: chapters, labels, references, coverage.
 
 The mathematical cross-audits remain distinct: this gate tests objective
 source consistency rather than claiming to prove theorems.
@@ -39,14 +39,14 @@ def text(src):
 
 def main():
     chapters=sorted(CHDIR.glob("[0-9][0-9]-*.tex"))
-    assert len(chapters)==45,("wrong chapter number",len(chapters))
+    assert len(chapters)==46,("wrong chapter number",len(chapters))
     ids=[int(p.name[:2]) for p in chapters]
-    assert ids==list(range(1,46)),("numbering",ids)
+    assert ids==list(range(1,47)),("numbering",ids)
     canonical={p.resolve() for p in chapters}
     book=text(BOOK)
     ins=[(BOOK.parent/p).resolve() for p in INPUT.findall(book)]
-    assert len(ins)==45,("book input number",len(ins))
-    assert len(set(ins))==45,("duplicate book input",ins)
+    assert len(ins)==46,("book input number",len(ins))
+    assert len(set(ins))==46,("duplicate book input",ins)
     assert set(ins)==canonical,("book mismatched sources",
                                  [str(p) for p in canonical-set(ins)],
                                  [str(p) for p in set(ins)-canonical])
@@ -99,23 +99,25 @@ def main():
     assert previous.is_file() and previous.stat().st_size>1000,("missing AA-43 first audit",previous)
     previous44=AUD/"ch44_iteration_01.md"
     assert previous44.is_file() and previous44.stat().st_size>1000,("missing AA-44 first audit",previous44)
-    newest=AUD/"ch45_iteration_01.md"
-    assert newest.is_file() and newest.stat().st_size>1000,("missing AA-45 first audit",newest)
-    assert all(k not in covered for k in (43,44,45)), "AA-43/44/45 retain separate audits from AA-01..AA-42"
-    assert len(chapters)==len(covered)+3
+    previous45=AUD/"ch45_iteration_01.md"
+    assert previous45.is_file() and previous45.stat().st_size>1000,("missing AA-45 first audit",previous45)
+    newest=AUD/"ch46_iteration_01.md"
+    assert newest.is_file() and newest.stat().st_size>1000,("missing AA-46 first audit",newest)
+    assert all(k not in covered for k in (43,44,45,46)), "AA-43..46 retain separate audits from AA-01..AA-42"
+    assert len(chapters)==len(covered)+4
     assert len(owners)>0 and len(references)>0
     counter.update({
         "chapters":len(chapters),
         "cross_reports":len(COVERAGE),
         "cross_covered_chapters":len(covered),
-        "individually_audited_new_chapters":3,
+        "individually_audited_new_chapters":4,
         "unique_labels":len(owners),
         "unique_reference_targets":len(references),
         "unresolved_reference_targets":len(missing),
         "duplicate_label_targets":len(dup),
         "misordered_or_missing_chapters":0
     })
-    print("AA GLOBAL 01-45 SOURCE INTEGRITY: PASS",dict(sorted(counter.items())))
+    print("AA GLOBAL 01-46 SOURCE INTEGRITY: PASS",dict(sorted(counter.items())))
     print("AA GLOBAL cross-audit chapter coverage:",{
         "all_chapters":len(covered),
         "overlap_chapters":{k:len(v) for k,v in covered.items() if len(v)>1},
