@@ -168,14 +168,17 @@ def _olean_tree(root: Path, *, label: str, budget: list[int],
         if any((base / name).is_symlink() for name in dirs):
             raise ValueError("Symlinked Lake artifact directory")
         for name in names:
+            # Avoid allocating Path objects for unrelated build outputs.
+            # Path(".olean").suffix is empty; keep that legacy exclusion.
+            if not name.endswith(".olean") or name == ".olean":
+                continue
             artifact = base / name
-            if artifact.suffix == ".olean":
-                if artifact.is_symlink():
-                    raise ValueError("Symlinked Lake .olean artifact")
-                paths.append((artifact.relative_to(root).as_posix(), artifact))
-                counter[0] += 1
-                if counter[0] > MAX_OLEAN_FILES:
-                    raise ValueError("Too many Lake .olean artifacts")
+            if artifact.is_symlink():
+                raise ValueError("Symlinked Lake .olean artifact")
+            paths.append((artifact.relative_to(root).as_posix(), artifact))
+            counter[0] += 1
+            if counter[0] > MAX_OLEAN_FILES:
+                raise ValueError("Too many Lake .olean artifacts")
     entries: list[dict[str, object]] = []
     metadata_only = 0
     for relative_name, artifact in sorted(paths, key=lambda entry: entry[0]):
