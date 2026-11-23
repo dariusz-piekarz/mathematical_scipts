@@ -78,6 +78,33 @@ class FunctionalAnalysisChapter01(unittest.TestCase):
             for scale in (-1, -.25, 0, .3, 1):
                 self.assertTrue(in_a(scale*x, scale*y))
 
+    def test_atomless_partition_scaling_for_zero_functional(self) -> None:
+        # n * (measure(A) / n) ** (1/p), with measure(A)=1.
+        for p in (0.2, 0.5, 0.8, 0.95):
+            values = [n ** (1 - 1 / p) for n in (2, 4, 8, 16, 64, 256)]
+            self.assertTrue(all(a > b for a, b in zip(values, values[1:])))
+            self.assertGreater(values[0], values[-1])
+
+    def test_product_topology_uncontrolled_coordinate(self) -> None:
+        from itertools import combinations
+        coordinates = range(7)
+        for count in range(7):
+            for restricted in combinations(coordinates, count):
+                uncontrolled = next(i for i in range(8) if i not in restricted)
+                for t in (0.1, 1.0, 5.0, 1000.0):
+                    vector = {uncontrolled: t + 1}
+                    self.assertTrue(all(vector.get(i, 0) == 0 for i in restricted))
+                    self.assertGreater(abs(vector[uncontrolled]), t)
+
+    def test_continuous_step_approximation_l1_error(self) -> None:
+        # The linear interpolation over [1/2-1/n, 1/2+1/n]
+        # has exact L1 distance 1/(2n) from the Heaviside step.
+        from fractions import Fraction
+        for n in range(3, 101):
+            error = Fraction(1, 2 * n)
+            self.assertLessEqual(error, Fraction(2, n))
+            self.assertLess(error, Fraction(1, n))
+
     def test_spike_l1_norm_formula(self) -> None:
         for n in (1, 2, 3, 10, 100):
             self.assertTrue(math.isclose(.5/n, 1/(2*n)))
