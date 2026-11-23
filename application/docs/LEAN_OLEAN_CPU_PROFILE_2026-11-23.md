@@ -37,3 +37,15 @@ python scripts/profile_lean_olean_cpu.py --top 12 --output lean/ci_olean_cpu_pro
 2. Sprawdzić regresje Windows i realną kompilację; zachować odniesienie do konkretnego SHA.
 3. Dalsze optymalizacje podejmować na podstawie hotspotów i równoważności fingerprintu, a nie wyłącznie czasu.
 4. Bez zmian dla `certificate=false` bez rzeczywistej, aktualnej kompilacji i niezależnej kontroli semantycznej przekładu LaTeX.
+
+## Kontrola rzeczywistego profilera i nowa optymalizacja (23.11.2026)
+
+**Dane z realnego CI:** [pinned Lean 4.26.0 + Mathlib #45144415733](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45144415733), commit `aecd94e7`, zakończony `completed/success`. Profil `cProfile` zawierał 2 116 775 wywołań i `profiled_seconds=0.737163`. Wśród funkcji o największym czasie kumulacyjnym znalazły się: `_olean_tree` (10 wywołań; 0.724415 s), `Path.relative_to` (7 732; 0.313158 s), `Path.stat` (16 984; 0.175563 s), `Path.is_symlink` (8 871; 0.150315 s). Czasy kumulacyjne nachodzą na siebie. To **czas profilowanego wykonania**, nie efekt nowej optymalizacji.
+
+**Hipoteza:** największy łatwy do usunięcia koszt poza kontrolami bezpieczeństwa pochodzi z `Path.relative_to(root)` wykonywanego dla każdej nazwy `.olean`. W skanowaniu mamy 1127 katalogów i 7732 kandydatów; wykonanie tej operacji raz na katalog zawierający kandydata powinno ograniczyć liczbę wywołań bez zmiany przetwarzanego zbioru.
+
+**Zmiana `b1bd6db7`:** produkcyjny `_olean_tree` zapisuje względną nazwę katalogu raz na katalog z przynajmniej jednym kandydatem `.olean`, a następnie łączy ją z nazwą zwróconą przez `os.walk`. Nie stosuje `resolve()`, nie podąża za symlinkami i nie zmienia kolejności ani metadanych. Osobny test `5cf01379` sprawdza dla plików w katalogu głównym i zagnieżdżonym dokładnie dwa wywołania `relative_to` zamiast pięciu, poprawność nazw Unicode i brak wywołań w katalogu bez kandydatów. Istniejący test porównawczy przeciw poprzedniemu algorytmowi pozostaje w zestawie.
+
+**Kontrola między profilerami:** komity `dcb7169f`, `ea43fc19`, `42addf18`, `55db1c06`, `6128cf9e` pozwalają zapisać wynik `compiled_artifacts_sha256` z oryginalnego pełnego benchmarku, porównać go z **pojedynczym rzeczywistym** przebiegiem `cProfile` i odrzucić wynik, jeżeli pliki `.olean` zmieniły się między pomiarami. Porównanie to nie dodaje kolejnego haszowania ani certyfikatu matematycznego. Nowy workflow używa `--compare-with lean/ci_fingerprint_benchmark.json`.
+
+**Bramka:** po zmianie produkcyjnej należy uzyskać testy Linux/Windows, pełne CI, rzeczywisty pinned Mathlib, raport o identycznych digestach, a dopiero potem ocenić ewentualne przyspieszenie na sparowanym pomiarze. Nie obniżać limitów 64 MiB, 120000 plików ani liczby punktów kontroli `before/locked/after`. `certificate=false` niezmiennie.
