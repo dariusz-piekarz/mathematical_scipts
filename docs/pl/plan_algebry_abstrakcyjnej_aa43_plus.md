@@ -33,3 +33,12 @@ Dla każdego nowego rozdziału należy:
 7. udokumentować źródła, poprawki, commity, faktyczny CI i ostateczny werdykt `STABILNY` — dopiero potem zacząć następny numer.
 
 Zmiana zakresu książki na 43+ nie unieważnia zamkniętego raportu AA-01–AA-42. Test integralności należy rozszerzać o nowy rozdział **bez fałszowania historycznego pokrycia**. Nie wolno przedstawiać obliczeń skończonych przypadków jako dowodu wszystkich twierdzeń ani oznaczać nieodbytej kompilacji jako zatwierdzonej.
+
+
+## Aktualizacja stanu — 23 listopada 2026 r. (AA-44)
+
+**AA-43: STABILNY** — raport audits/abstract_algebra/ch43_iteration_03.md.
+
+**AA-44: STABILNY** — raport audits/abstract_algebra/ch44_iteration_03.md. Rozdział zawiera pełne dowody konieczności i dostateczności twierdzenia Liouville'a; dwa niezależne zestawy testów (9 + 5) zakończyły się sukcesem. Pełny CI na ostatecznym commicie źródła 9edced10d90537b7466f9bf2d94f4b9a439b63eb: https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45151940204 — completed / success. Sprawdzono końcowy 281-stronicowy PDF i wszystkie 6 stron AA-44.
+
+**Następny odblokowany etap: AA-45** (całki nieelementarne i kryteria hiperwykładnicze), zgodnie z zasadą jednego rozdziału i wielokrotnych audytów do stabilizacji. **AA-46** (Picard–Vessiot) dopiero później. Historycznych statusów AA-01–AA-42 nie zmieniono.
