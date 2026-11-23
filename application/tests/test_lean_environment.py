@@ -418,6 +418,56 @@ class LeanEnvironmentTests(unittest.TestCase):
         self.assertFalse(errors, errors)
         self.assertEqual(artifact.stat().st_size, 128 * 1024 + 1)
 
+    def test_olean_rejects_same_size_file_substituted_at_open(self):
+        """A transient path-to-FD swap must not combine two file identities.
+
+        The original path is never altered, so the old stat/size/stat checks
+        all agree; only checking os.fstat(fd).st_dev/st_ino catches the swap.
+        This runs with real OS descriptors on both POSIX and Windows.
+        """
+        root = self.root / ".lake" / "build" / "lib" / "lean"
+        root.mkdir(parents=True)
+        artifact = root / "Source.olean"
+        artifact.write_bytes(b"ABCD")
+        foreign = self.root / "Unrelated.olean"
+        foreign.write_bytes(b"WXYZ")
+        self.assertEqual(artifact.stat().st_size, foreign.stat().st_size)
+        self.assertNotEqual(artifact.stat().st_ino, foreign.stat().st_ino)
+        original_open = Path.open
+        substitutions = []
+
+        def swapped_open(path, *args, **kwargs):
+            if path == artifact and args and args[0] == "rb":
+                substitutions.append(True)
+                return original_open(foreign, *args, **kwargs)
+            return original_open(path, *args, **kwargs)
+
+        with patch.object(Path, "open", swapped_open):
+            with self.assertRaisesRegex(ValueError, "identity changed"):
+                lean_environment._olean_tree(
+                    root, label="project", budget=[16])
+        self.assertEqual(substitutions, [True])
+        self.assertEqual(artifact.read_bytes(), b"ABCD")
+        self.assertEqual(foreign.read_bytes(), b"WXYZ")
+
+    def test_olean_rejects_nonregular_descriptor_at_open(self):
+        """A switched descriptor to an OS null device cannot masquerade as .olean."""
+        root = self.root / ".lake" / "build" / "lib" / "lean"
+        root.mkdir(parents=True)
+        artifact = root / "Empty.olean"
+        artifact.write_bytes(b"")
+        original_open = Path.open
+
+        def device_open(path, *args, **kwargs):
+            if path == artifact and args and args[0] == "rb":
+                return original_open(Path(os.devnull), *args, **kwargs)
+            return original_open(path, *args, **kwargs)
+
+        with patch.object(Path, "open", device_open):
+            with self.assertRaisesRegex(ValueError, "identity changed"):
+                lean_environment._olean_tree(
+                    root, label="project", budget=[16])
+
     def test_olean_truncated_read_is_rejected(self):
         """A file shortening mid-read cannot silently receive a partial digest."""
         root = self.root / ".lake" / "build" / "lib" / "lean"
