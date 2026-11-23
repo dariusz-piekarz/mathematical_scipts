@@ -13,7 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 CHAPTER = ROOT / "chapters/pl/measure_theory/20-miary-borelowskie-regularnosc-i-miary-radona.tex"
 CH17 = ROOT / "chapters/pl/measure_theory/17-bezwzgledna-ciaglosc-osobliwosc-i-rozklad-lebesguea-miar.tex"
-CH23 = ROOT / "chapters/pl/measure_theory/23-miara-haara-i-grupy-lokalnie-zwarte.tex"
+CH23 = ROOT / "chapters/pl/measure_theory/23-miara-haara-na-grupach-lokalnie-zwartych.tex"
 
 
 def finite_subsets(n):
