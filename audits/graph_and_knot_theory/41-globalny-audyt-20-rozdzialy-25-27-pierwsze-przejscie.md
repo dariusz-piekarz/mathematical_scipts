@@ -210,29 +210,62 @@ istnienia `B_{p,q}`
 ani dowodem twierdzeń
 Parka lub Symington.
 
-## CI i bramka stabilizacji
+## Końcowy przebieg CI i kontrola składu
 
-[GitHub Actions 45215345443](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45215345443):
-`structural-audit=success`,
-`44/44` źródła,
-`0` etykiet powtórzonych,
-`0` brakujących odsyłaczy,
-`0` błędów środowiska
-i `0` niedozwolonych terminów;
-**4028 nowych przypadków PASS**.
+Po wszystkich poprawkach matematycznych i dodaniu regresji
+[GitHub Actions 45215345443](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45215345443)
+dla commitu `dff813b5f8eddfc3ec20f435089534953417209b`
+zakończył **oba zadania** statusem **success**:
+`structural-audit` i `full-book-pdf`.
 
-Po poprawkach trzeba jeszcze
-potwierdzić końcowy wynik
-trzykrotnej kompilacji
-pełnego 44-rozdziałowego PDF,
-pobrać jego artefakt i obejrzeć
-strony 25–27 wraz z rysunkami
-sklejeń, łańcuchami i wzorami.
-Dopiero wtedy pierwsze
-przejście można zamknąć.
+- Źródła: **44/44 rozdziały**, **0** duplikatów etykiet,
+  **0** nierozwiązanych odsyłaczy, **0** błędów środowiska,
+  **0** terminów zakazanych;
+- dokładne regresje: **4028 nowych PASS**,
+  w dodatku do uprzednio ustabilizowanych testów;
+- trzy udane przebiegi `pdflatex` całego tomu;
+- wygenerowany i pobrany z tego samego przebiegu
+  PDF: **281 stron A4**;
+- `audit_output/graph_and_knot_full_warnings.txt`
+  ma **0 bajtów**.
 
-**Werdykt: audyt 20 trwa do zamknięcia
-bramki PDF; rozdziały 25–27
-pozostają W STABILIZACJI
-co najmniej do drugiego,
-niezależnego przejścia (audyt 21).**
+Przegląd wizualny faktycznie wygenerowanego PDF
+objął **wszystkie strony 210–226**,
+czyli cały pierwszy audytowany blok:
+
+- **210–214:** rozdział 25; w szczególności
+  poprawione założenia `slam-dunk`,
+  nowy kontrprzykład homologiczny,
+  kontrakcje składowych `±1`,
+  diagram z usunięciem wierzchołka `−1`
+  i nowy przykład `+1`;
+- **215–221:** rozdział 26; konfiguracje `C_p`,
+  soczewkowe brzegi, rysunki dla `p=2,3,4`,
+  pełny ciąg pary dla `B_p`,
+  diagram wymiennego wypełnienia
+  i zmiana niezmienników;
+- **222–226:** rozdział 27; grafy `C_{5,1}`
+  i `C_{5,2}`, algorytm ułamków,
+  wyznaczniki `C_{p,q}`,
+  nowy przykład `C_{7,3}` (s. 225)
+  oraz schemat wymiernej kontrakcji.
+
+Nie wykryto widocznych kolizji etykiet
+ani rysunków z tekstem, obciętych
+wyrażeń czy przekroczeń marginesów.
+Rozkład stron jest prawidłowy.
+
+## Werdykt audytu 20
+
+**Pierwsze przejście rozdziałów 25–27 zakończone: PASS.**
+Poprawiono istotną fałszywą tezę o
+`slam-dunk`, uzupełniono rachunki,
+przeprowadzono niezależne regresje,
+skompilowano pełny tom i sprawdzono wizualnie PDF.
+
+**Rozdziały 25–27 nadal W STABILIZACJI:**
+wymagane drugie, niezależne przejście,
+czyli **audyt 21**.
+Rozdziały **01–24** pozostają lokalnie
+stabilne; globalny audyt wszystkich
+44 rozdziałów pozostaje otwarty.
