@@ -74,6 +74,19 @@ theorem lst02_mixed_empty_counterexample :
   · rintro ⟨y, _⟩
     exact y.elim
 
+
+/-- The source's exact arithmetic counterexample for the non-equivalence
+    of mixed quantifiers: for every natural x there is y > x,
+    but no fixed natural y is greater than every natural x. -/
+theorem lst02_mixed_nat_counterexample :
+    (∀ x : ℕ, ∃ y : ℕ, x < y) ∧
+      ¬ (∃ y : ℕ, ∀ x : ℕ, x < y) := by
+  constructor
+  · intro x
+    exact ⟨x + 1, Nat.lt_succ_self x⟩
+  · rintro ⟨y, hy⟩
+    exact (lt_irrefl y) (hy y)
+
 theorem lst02_unique_exists_expansion {D : Type u} (P : D → Prop) :
     (∃! x : D, P x) ↔
       ∃ x : D, P x ∧ ∀ y : D, P y → y = x := by
@@ -85,4 +98,5 @@ theorem lst02_unique_exists_expansion {D : Type u} (P : D → Prop) :
 #print axioms lst02_swap_exists
 #print axioms lst02_mixed_quantifier_forward
 #print axioms lst02_mixed_empty_counterexample
+#print axioms lst02_mixed_nat_counterexample
 #print axioms lst02_unique_exists_expansion

@@ -163,7 +163,12 @@ class LeanSourcePinTests(unittest.TestCase):
         new_file = root / "src" / "LST02_Quantifiers.lean"
         parsed = expected_theorems(
             new_file, registered["src/LST02_Quantifiers.lean"])
-        self.assertEqual(len(parsed), 7)
+        self.assertEqual(len(parsed), 8)
+        self.assertIn("lst02_mixed_nat_counterexample", parsed)
+        self.assertIn("lst02_mixed_nat_counterexample",
+                      next(item for item in candidates if item["source_label"] == "thm:swap-mixed")["lean_theorems"])
+        self.assertIn(r"D=E=\N", source)
+        self.assertIn(r"x<y", source)
         self.assertIn("lst02_mixed_empty_counterexample", parsed)
 
     def test_digest_guard_rejects_modified_tex(self):

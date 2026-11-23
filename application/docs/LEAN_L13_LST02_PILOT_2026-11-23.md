@@ -10,7 +10,7 @@ weryfikowany kandydat L1.4.1 ani status tamtego 2+1.
 | --- | --- | --- |
 | `thm:negation-quantifiers` | `lst02_not_forall`, `lst02_not_exists` | Obie równoważności, klasyczna logika, domena także pusta |
 | `thm:same-quantifier-order` | `lst02_swap_forall`, `lst02_swap_exists` | Wymiana obu kwantyfikatorów tego samego typu bez założenia niepustości |
-| `thm:swap-mixed` | `lst02_mixed_quantifier_forward`, `lst02_mixed_empty_counterexample` | Tylko poprawny kierunek implikacji; drugi pomocniczy kontrprzykład dla pustych dziedzin |
+| `thm:swap-mixed` | `lst02_mixed_quantifier_forward`, `lst02_mixed_empty_counterexample`, `lst02_mixed_nat_counterexample` | Poprawny kierunek implikacji oraz dwa kontrprzykłady do odwrotności: dla pustych dziedzin i dokładny przykład źródłowy na ℕ |
 | `thm:unique-expansion-xli` | `lst02_unique_exists_expansion` | Definicyjne rozwinięcie `∃!` do istnienia i jednoznaczności |
 
 Przepisanie nie wzmacnia hipotez o niepustości, nie wprowadza
@@ -163,3 +163,33 @@ logiki i fakt, że arytmetyczny kontrprzykład źródłowy nie jest
 dosłownie odwzorowany. Dopiero po osobnym odbiorze można
 rozważyć `approved` i przypięcie SHA256 TeX. `certificate=false`
 pozostaje obowiązujące.
+
+
+## Korekta pokrycia przykładu źródłowego — kandydat po 163c8f64
+
+**Powód:** w kanonicznym dowodzie `thm:swap-mixed` podano
+dokładnie `D=E=\\N` oraz `P(x,y) \\iff x<y`.
+Wersja `163c8f6415d9d390fc1a737f6954b2865eff6c6e`,
+technicznie przetestowana 3/3, zawierała tylko alternatywny
+kontrprzykład z pustymi dziedzinami, który jest poprawny, ale
+nie odwzorowuje konkretnego przykładu z dowodu LaTeX.
+
+**Zmiana w tej samej partii LST-02:** deklaracja
+`lst02_mixed_nat_counterexample` formalizuje oba zdania
+`\\forall x:ℕ,\\exists y:ℕ,x<y` i
+`\\neg(\\exists y:ℕ,\\forall x:ℕ,x<y)` jako koniunkcję.
+Pierwsze jest wykazane świadkiem `x+1`, drugie przez
+podstawienie `x=y` i nierówność `\\neg(y<y)`.
+Nową deklarację dodano do **istniejącego mapowania**
+`lst02-mixed-quantifier-forward`, nie utworzono piątego mapowania.
+Rejestr nadal ma **9** mapowań, cztery nowe są `needs_review`.
+Plik `LST02_Quantifiers.lean` zawiera teraz **8** deklaracji,
+które podlegają rzeczywistej kompilacji i kontroli `#print axioms`.
+
+**Zasada dowodowa:** historyczne 3/3 [#45208224201](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45208224201)
+dotyczy wyłącznie poprzedniego SHA z siedmioma deklaracjami LST-02.
+Po zmianie kodu/testów/manifestu nowa wersja wymaga
+własnej walidacji na nowym niezmiennym SHA; do jej zakończenia
+nie twierdzić, że ma 3/3 PASS. Sam audyt tekstu i nawet udana
+kompilacja nie zastępują odrębnej niezależnej recenzji semantycznej.
+`statement_status=needs_review`, `certificate=false`.
