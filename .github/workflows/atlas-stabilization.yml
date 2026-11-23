@@ -171,8 +171,14 @@ jobs:
           NATIVE_RESULT: ${{ (needs.fast_1.result == 'success' && needs.fast_2.result == 'success' && needs.fast_3.result == 'success') && 'success' || 'failure' }}
           LEAN_RESULT: ${{ (needs.lean_1.result == 'success' && needs.lean_2.result == 'success' && needs.lean_3.result == 'success') && 'success' || 'failure' }}
           SKEPTIC_RESULT: ${{ needs.skeptical_contract.result }}
+        shell: bash
         run: |
-          python application/scripts/atlas_validation_gate.py gate --sha "$CANDIDATE_SHA" --fragment "$FRAGMENT" --reports .atlas-evidence --review .atlas-control/application/config/atlas_skeptical_review.json --application "$APP_RESULT" --native "$NATIVE_RESULT" --lean "$LEAN_RESULT" --skeptic "$SKEPTIC_RESULT" --output application/data/atlas_validation_status.json
+          set -euo pipefail
+          review_args=()
+          if [[ -f .atlas-control/application/config/atlas_skeptical_review.json ]]; then
+            review_args=(--review .atlas-control/application/config/atlas_skeptical_review.json)
+          fi
+          python application/scripts/atlas_validation_gate.py gate --sha "$CANDIDATE_SHA" --fragment "$FRAGMENT" --reports .atlas-evidence "${review_args[@]}" --application "$APP_RESULT" --native "$NATIVE_RESULT" --lean "$LEAN_RESULT" --skeptic "$SKEPTIC_RESULT" --output application/data/atlas_validation_status.json
       - name: Upload explicit non-certificate status
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
