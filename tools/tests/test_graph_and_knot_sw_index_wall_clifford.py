@@ -78,9 +78,12 @@ def clifford_real_iso():
         for x,y in spinors:
             out0=m00*x+m01*y
             out1=m10*x+m11*y
-            lhs=abs(out0)**2+abs(out1)**2
-            rhs=norm_v*(abs(x)**2+abs(y)**2)
-            # Every expression is an integer, despite Python's abs.
+            # All coordinates are Gaussian integers. Avoid abs(z)**2,
+            # whose floating square root can introduce rounding noise.
+            norm2=lambda z:int(z.real)**2+int(z.imag)**2
+            lhs=norm2(out0)+norm2(out1)
+            rhs=norm_v*(norm2(x)+norm2(y))
+            # Now both sides are exact Python integers.
             assert lhs==rhs,(v0,v1,v2,v3,x,y,lhs,rhs)
             if norm_v:
                 assert lhs>0
