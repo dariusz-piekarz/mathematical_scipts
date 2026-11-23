@@ -50,3 +50,9 @@ Z bieżącej gałęzi ponownie pobrano rzeczywiste źródła wszystkich dwunastu
 ## Decyzja stabilizacyjna
 
 **Matematycznie i redakcyjnie: CZYSTY 12/03 — 2/2 kolejnych czystych audytów na identycznym źródle.** W tej iteracji nie poprawiano pliku źródłowego, testów ani workflow. **Ostateczne zamknięcie rozdziału 12 i zezwolenie na audyt rozdziału 13 wymagają bezpośredniego sprawdzenia zielonego CI uruchomionego zapisaniem tego raportu.** Kompilacja i testy regresyjne są kontrolami technicznymi, a nie zastępują kontroli merytorycznej.
+
+## Końcowa decyzja po rzeczywistym zielonym CI
+
+Po zapisaniu niezależnego przeglądu 12/03 dedykowany przebieg [GitHub Actions #45251735929](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45251735929), uruchomiony commitem b33e435312f5b4154e8af528a173c064cbc12d8d, zakończył się **COMPLETED / SUCCESS**. Potwierdzono wszystkie kroki: **18/18 testów regresyjnych PASS**, przygotowanie faktycznego kontekstu rozdziałów 01–12 PASS, kompilacja LaTeX PASS, kontrola PDF i odsyłaczy PASS oraz publikacja artefaktu PASS. Ponownie odczytany blob źródła to nadal **923f7976d09f42030687a8873401cf34da4ff2fb**, identyczny dla obu czystych przeglądów 12/02 i 12/03. Wcześniejszą wizualną inspekcję PDF tego samego źródła dokumentuje 12/01.
+
+**Decyzja: ROZDZIAŁ 12 STABILNY — dwa niezależne czyste audyty identycznego źródła (2/2) oraz ukończona zielona bramka techniczna.** Dopuszcza się rozpoczęcie audytu rozdziału 13 w następnej jednostce pracy. Ewentualna kolejna kompilacja wywołana wyłącznie aktualizacją niniejszego raportu nie jest nowym audytem matematycznym. Kontrole CI i PDF nie są formalnym poświadczeniem poprawności matematycznej dowodów.
