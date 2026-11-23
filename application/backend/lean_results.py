@@ -212,15 +212,37 @@ def save_run(identifier: str, expected: dict[str, str], *, proof_status: str,
               "detail": str(detail)[:1000], "log": str(log)[-MAX_STORED_LOG:],
               "finished_at": datetime.now(timezone.utc).isoformat(),
               "certificate": False}
+    # The read path enforces a *byte* limit. Truncating logs only by Unicode
+    # code points could otherwise create a successful save which cannot be read
+    # back (e.g. a long Lean error log containing non-ASCII names or symbols).
+    def serialized() -> bytes:
+        return (json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n").encode("utf-8")
+
+    payload = serialized()
+    if len(payload) > MAX_RECORD_BYTES:
+        original_log = record["log"]
+        lower, upper = 0, len(original_log)
+        # Preserve the most recent diagnostic lines; JSON escaping and UTF-8
+        # can take more than one byte per input character.
+        while lower < upper:
+            middle = (lower + upper + 1) // 2
+            record["log"] = original_log[-middle:] if middle else ""
+            if len(serialized()) <= MAX_RECORD_BYTES:
+                lower = middle
+            else:
+                upper = middle - 1
+        record["log"] = original_log[-lower:] if lower else ""
+        payload = serialized()
+        if len(payload) > MAX_RECORD_BYTES:
+            raise ValueError("Lean run metadata exceeds record byte limit")
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary: Path | None = None
     try:
-        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent,
+        with tempfile.NamedTemporaryFile(mode="wb", dir=path.parent,
                                          prefix=f".{identifier}.", suffix=".tmp",
                                          delete=False) as out:
             temporary = Path(out.name)
-            json.dump(record, out, ensure_ascii=False, sort_keys=True)
-            out.write("\n")
+            out.write(payload)
         os.replace(temporary, path)
     finally:
         if temporary is not None:
