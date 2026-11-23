@@ -32,3 +32,13 @@ Audyt 08/01 dokumentuje ukończone z sukcesem CI `45196353669`, 17 testów, komp
 ## Werdykt
 
 **Matematyka i redakcja źródła: audyt 08/03 czysty, drugi kolejny czysty przegląd tej samej wersji (2/2).** W testach wykonano realną poprawkę, lecz bez zmiany źródła rozdziału. **Stabilizacja techniczna pozostaje warunkowa:** trzeba potwierdzić ukończony CI na commicie zawierającym nowy test, w szczególności uruchomienie 17 testów i kompilację LaTeX. Nie ogłaszać jeszcze ostatecznej stabilności i nie otwierać 09.
+
+## Uzupełnienie po zakończeniu CI — zamknięcie stabilizacji 08
+
+Po sporządzeniu raportu ustalono przyczynę błędu GitHub Actions dla wcześniejszego testu: użyto asercji wyszukującej dwa dosłowne znaki ukośnika odwrotnego przed `mathcal G`, podczas gdy rzeczywisty LaTeX zawiera pojedynczy ukośnik. Była to **usterka testu**, nie błąd rozdziału. Poprawiono ją w commicie [`3a56f12ffc03053cef9e203925de2bacd6f5db88`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/3a56f12ffc03053cef9e203925de2bacd6f5db88). Dodana w audycie 08/03 rzeczywista próba interpolacji na wszystkich 16 podzbiorach i kontrola zgodności na ogonach pozostały bez zmian.
+
+Dedykowany [GitHub Actions **#45206271068**](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45206271068) dla poprawionego testu zakończył się statusem **SUCCESS** (uruchomiony na commicie `3a56f12ffc03053cef9e203925de2bacd6f5db88`). Poszczególne etapy: **17 testów regresyjnych PASS**, przygotowanie kontekstu LaTeX 01–08 PASS, kompilacja LaTeX PASS, kontrola PDF i odsyłaczy PASS oraz publikacja artefaktu PASS. Nie oznacza to nowej wizualnej inspekcji PDF (ta została udokumentowana w 08/01), lecz potwierdza kompilację i automatyczne kontrole bieżącej wersji.
+
+SHA źródła rozdziału 08 pozostaje **`a01d4316fdeacef759c89955b14bc062abedbcd4`**. Audyty 08/02 i 08/03 są dwoma następującymi po sobie **czystymi przeglądami matematycznymi tej samej wersji**. Korekta dotyczyła wyłącznie kodu testu, który jest już objęty zielonym CI.
+
+**Ostateczny werdykt: rozdział 08 STABILNY — 2/2 czystych audytów + zielony CI. Wolno rozpocząć audyt rozdziału 09.**
