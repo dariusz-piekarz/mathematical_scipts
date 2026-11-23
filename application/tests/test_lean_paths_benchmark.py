@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import copy
 import json
+import shutil
 from pathlib import Path
 import tempfile
 import unittest
@@ -106,12 +107,17 @@ class LeanPathMicrobenchmarkTests(unittest.TestCase):
     def test_compare_with_rejects_corrupted_fingerprint_evidence(self):
         """Only a genuine, stable full fingerprint report supplies name counts."""
         from scripts import benchmark_lean_fingerprint as full
+        # The broader name-conversion fixture deliberately has a directory
+        # named "mathlib" without a Git checkout. The full production
+        # fingerprint must reject such a package, so remove that fake
+        # dependency in this independent provenance-contract test.
+        shutil.rmtree(self.root / ".lake" / "packages")
         evidence = full.benchmark(self.root, samples=2)
         expected = paths.expected_candidates_from_benchmark(evidence)
-        self.assertEqual(expected, 4)
+        self.assertEqual(expected, 3)
         self.assertEqual(
             paths.benchmark(self.root, samples=2, expected_candidates=expected)
-            ["olean_candidates"], 4)
+            ["olean_candidates"], 3)
 
         variants = []
         for key, invalid in (
