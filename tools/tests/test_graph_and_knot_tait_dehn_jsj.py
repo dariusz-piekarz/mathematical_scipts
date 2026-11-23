@@ -269,6 +269,8 @@ def test_sources():
     assert r"\label{thm:tg-tait-tutte}" in a
     assert "Wagi ujemne nie zliczają drzew" in a
     assert "ps-qr=1" in b
+    assert r"(0,0)--(4.2,2.5)" in b
+    assert "Przeciwległe boki" in b
     assert r"\label{thm:tg-jsj-graph-of-groups}" in c
     assert r"\label{ex:tg-jsj-sol-torus-bundle}" in c
 
