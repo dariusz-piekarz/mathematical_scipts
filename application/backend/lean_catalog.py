@@ -17,19 +17,27 @@ def list_formalizations(con: sqlite3.Connection, *,
     if len(registry) > MAX_ENTRIES:
         raise HTTPException(503, "Zbyt duży rejestr formalizacji Lean.")
     documents = {}
+    # L1.4.2: cache *only* the digest of the SQLite row already fetched once
+    # per module in this invocation. Never cache across requests or skip the
+    # per-label owner_status / per-file canonical provenance checks.
+    document_validity = {}
     items = []
     for item in registry:
         module, label = item["source_module"], item["source_label"]
         if module not in documents:
-            documents[module] = con.execute(
+            doc = con.execute(
                 "SELECT id,sha256,content FROM documents WHERE id=?", (module,)
             ).fetchone()
+            documents[module] = doc
+            document_validity[module] = bool(
+                doc is not None and isinstance(doc["content"], str)
+                and hashlib.sha256(doc["content"].encode("utf-8")).hexdigest()
+                == doc["sha256"])
         doc = documents[module]
         entity_id = None
         if doc is None:
             index_status = "missing_document"
-        elif (not isinstance(doc["content"], str) or
-              hashlib.sha256(doc["content"].encode("utf-8")).hexdigest() != doc["sha256"]):
+        elif not document_validity[module]:
             index_status = "corrupt_document"
         else:
             index_status, entity_id = lean_source_provenance.owner_status(
