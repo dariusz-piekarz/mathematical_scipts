@@ -124,8 +124,9 @@ class TraceDiscriminantResultantInterface(unittest.TestCase):
         M = sp.Matrix([[0, t], [1, 0]])
         self.assertEqual(M ** 2, t * sp.eye(2))
         self.assertEqual(M.trace(), 0)
-        self.assertEqual(sp.trace(M ** 2) % 2, 0)
-        self.assertEqual((sp.discriminant(x ** 2 + t, x)) % 2, 0)
+        self.assertTrue(sp.Poly(sp.trace(M ** 2), t, modulus=2).is_zero)
+        self.assertTrue(sp.Poly(sp.discriminant(x ** 2 + t, x),
+                                t, modulus=2).is_zero)
 
     def test_source_compatibility_and_links(self):
         focus = [
