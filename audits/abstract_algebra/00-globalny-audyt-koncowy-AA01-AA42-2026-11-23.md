@@ -65,8 +65,56 @@ Na zatwierdzonym wcześniejszym artefakcie `abstract_algebra.pdf` wykonano nieza
 
 Szczegółowe audyty przekrojowe AA-X01–AA-X10 zawierają odrębne oględziny przypisanych im stron. W AA-X11 obejrzano wszystkie **10 stron** rozdziałów AA-29 (197–200) i AA-30 (201–206), w tym rysunek pięciokąta; nie stwierdzono kolizji czy ucięć. Weryfikacja końcowego wydania po AA-X11 wymaga jeszcze porównania z nowym artefaktem GitHub Actions.
 
-## 6. Stan zamknięcia i ograniczenia
+## 6. Wynik rzeczywistej globalnej bramki
 
-**Nie oznaczamy tego raportu jako końcowego PASS**, dopóki najnowszy workflow z poprawionym testem AA-X11 i nową globalną bramką nie zakończy się z wynikiem `success`. Należy także pobrać artefakt, skontrolować końcowy log LaTeX, strony AA-29–AA-30 i wyniki globalnego testu na rzeczywistym drzewie gałęzi. Wcześniejszy nieudany przebieg AA-X11 zawierał błędy **oczekiwań testowych** (nie błąd źródłowych twierdzeń), które są jawnie odnotowane w `cross_11_aa29_aa30_finite_fields_constructibility_2026-11-23.md`.
+W `.github/workflows/abstract-algebra-chapter.yml` dodano i wykonano `tools/tests/test_abstract_algebra_global_integrity.py`, a w zdalnym logu otrzymano wynik:
 
-Po zielonym CI, aktualizacji raportu AA-X11 i potwierdzeniu PDF można ogłosić globalny audyt przekrojowy **AA-01–AA-42 stabilnym w zadeklarowanym zakresie**. Nie daje to formalnego dowodu w Lean, nie gwarantuje niewykrycia wszystkich możliwych błędów w nieskończonych przypadkach i nie jest powodem do pominięcia przyszłych audytów regresyjnych.
+```text
+AA GLOBAL 01-42 SOURCE INTEGRITY: PASS
+chapters: 42
+cross_reports: 11
+cross_covered_chapters: 42
+label_occurrences: 844
+unique_labels: 844
+duplicate_label_targets: 0
+reference_occurrences: 373
+unique_reference_targets: 244
+unresolved_reference_targets: 0
+proofs: 399
+examples: 267
+theorems: 216
+lemmas: 102
+corollaries: 50
+misordered_or_missing_chapters: 0
+```
+
+Mapa raportów audytów przekrojowych obejmuje **wszystkie 42 rozdziały**; AA-32 i AA-33 są objęte dwoma kontrolami z różnych perspektyw, żaden rozdział nie jest pominięty. Stan `PASS` potwierdzono na faktycznych źródłach gałęzi w CI, nie na ręcznym zestawieniu. Weryfikacja struktury objęła również **pełne zagnieżdżenie środowisk** w każdym rozdziale, kompletność `\input` i tożsamość wszystkich ścieżek.
+
+## 7. Końcowy werdykt globalny — STABILNY
+
+**Bramka integracyjna:** [GitHub Actions 45145091735](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45145091735), commit `b294a0a5119b632c962b6e99c11bd39708eff0f1`, status końcowy **completed / success**, **75/75 kroków** zadania zakończonych bez błędów. W szczególności z wynikiem `success` zakończyły się:
+- oba nowe niezależne testy AA-X11: **19 395/19 395** i **1707/1707 PASS** (łącznie **21 102/21 102**);
+- nowa bramka integralności wszystkich 42 rozdziałów (liczby podane w pkt 6);
+- pełna kompilacja całej książki `AA-01–AA-42` przy użyciu `latexmk`;
+- weryfikacja PDF i odsyłaczy;
+- archiwizacja rzeczywistego PDF i logu.
+
+Początkowe nieudane przebiegi AA-X11 wykryły błędy **samego testu** (niezgodny symbol zmiennej w wywołaniu SymPy; niepoprawne oczekiwanie niekonstruowalności foremnego 51-kąta). Poprawki są wyraźnie udokumentowane w raporcie AA-X11, a **dopiero ostatni zielony przebieg** stanowi podstawę zamknięcia.
+
+**Artefakt faktycznie pobrany z GitHub Actions:** `abstract-algebra-aa01-aa42`, ID **14803538703**:
+- `abstract_algebra.pdf`: dokładnie **269 stron**, **2 024 014 B**, SHA-256 `66aac3aa82b6e555666d7be7b833c458c24ecdc3069a24497177be042e8a5b8b`; `is_repaired=False`;
+- `abstract_algebra.log`: **45 293 B**, SHA-256 `8e587b6fcd4f0f5a9ae847dd54b4f2e9150e1c79b6ed9431c52ecd7563b9d9a7`.
+
+**Ostateczny log:** **zero** błędów LaTeX, ostrzeżeń LaTeX i `hyperref`, przepełnień i niedopełnień ramek `hbox/vbox`, niezdefiniowanych odsyłaczy oraz komunikatów wymagających ponownego przeliczenia odsyłaczy.
+
+**Globalna weryfikacja PDF:** dodatkowo do niezależnych oględzin wszystkich **10 stron AA-29–AA-30**, zakończonych audytem bez widocznych usterek, wykonano porównanie **wszystkich 269 stron** końcowego PDF z wcześniejszym, już zatwierdzonym wydaniem: **269/269 stron pikselowo identycznych** przy 72 dpi i **269/269 warstw tekstowych identycznych**. Obejrzano również **9 stron frontmatter** (strona tytułowa i kompletny spis treści). W finalnym PDF:
+- liczba rozdziałów prawidłowo wyodrębnionych z układu stron: **42/42**, w kolejności od AA-01 do AA-42;
+- pozycji wyrazów według PyMuPDF: **140 857**;
+- słów poza obszarem którejkolwiek strony: **0**;
+- błędów struktury PDF wymagających naprawy: **0**.
+
+### Wniosek i ograniczenia
+
+**Globalny audyt matematyczno-strukturalny całego tomu AA-01–AA-42: STABILNY w zweryfikowanym zakresie**. Zakończono wszystkie audyty rozdziałowe oraz 11 nieredundantnych audytów przekrojowych, sprawdzono ich sumaryczne pokrycie i odsyłacze, uruchomiono niezależne testy modelowe i zakończono pełny CI oraz audyt wygenerowanego PDF. W tych kontrolach **nie stwierdzono otwartych błędów wymagających poprawki źródeł LaTeX**.
+
+To oznacza zamknięcie bieżącego cyklu audytowego, **nie matematyczną nieomylność tekstu**. Pozostaje naturalny obowiązek uruchamiania bramek regresyjnych przy dalszych zmianach, przeglądu nowych zależności i — jeśli będzie to osobnym celem — stopniowej formalizacji wybranych dowodów w Lean. Nie należy przedstawiać kontroli obliczeniowych jako formalnego dowodu wszystkich twierdzeń.
