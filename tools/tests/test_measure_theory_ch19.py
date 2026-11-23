@@ -29,7 +29,7 @@ class TestMeasureTheoryChapter19(unittest.TestCase):
         P = [.1, .2, .3, .4]
         f = [1.5, .5, 1., .75]
         Q = [p * z for p, z in zip(P, f)]
-        self.assertAlmostEqual(sum(Q), 0.9)
+        self.assertAlmostEqual(sum(Q), .85)
         values = [3., -1., 2., 4.]
         self.assertAlmostEqual(sum(v * q for v, q in zip(values, Q)),
                                sum(v * z * p for v, z, p in zip(values, f, P)))
