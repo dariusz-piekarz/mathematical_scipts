@@ -324,3 +324,11 @@
 - Każda runda: 735 testów Python, 10 sklasyfikowanych pominięć, `unreviewed_skips=0`, Chromium 509 rozdziałów, zero błędów JS. Lean 4.26.0, Mathlib `2df2f0150c275ad53cb3c90f7c98ec15a56a1a67`, 4 pliki, 18 twierdzeń, `axiom_check=passed`.
 - [Artefakt statusu](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181138327/artifacts/14823870210): `passes=[true,true,true]`, `problems=[]`, `status=stabilizing`, `skeptical_review=pending`, `certificate=false`.
 - [Odbiór #10](https://github.com/dariusz-piekarz/mathematical_scipts/issues/10#issuecomment-7102760266) nadal otwarty, brak niezależnej uwierzytelnionej decyzji. Dlatego zamknięto jedynie etap **techniczny**, nie formalny. L1.4.2 nadal nierozpoczęte.
+
+### 2026-11-23, ok. 15:00 Europe/Warsaw — L1.4.1, niezależna kontrola kanału zatwierdzenia
+
+- **HEAD przed zapisem:** `36f95d0acf6c44da8c597de4fa96deb43b2947b8`; aktywny fragment z aktualnego wskaźnika: **L1.4.1**, kandydat `94a7b4a1e592b1b0504b881f9c016004786ca6d9`. Bez zmian kodu, testów, runnera i źródeł `.tex`.
+- Ponownie pobrano [zadania workflow #45181138327](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181138327): **15/15** `completed/success`, w tym trzy zestawy aplikacja/Chromium, natywny Windows, Lean/Mathlib i regresje, plus `skeptical_contract` i `evidence`. Licznik **2+1 = 3/3 technicznie** dla dokładnego kandydata; nie jest to nowa seria po commicie dziennika.
+- **Dodatkowa sceptyczna kontrola poświadczenia:** [issue #10](https://github.com/dariusz-piekarz/mathematical_scipts/issues/10) nadal `open`, ma trzy komentarze będące raportami technicznymi, bez niezależnej decyzji; [PR #7](https://github.com/dariusz-piekarz/mathematical_scipts/pull/7) nadal `open/draft`, lista złożonych GitHub Reviews jest **pusta (0)**. Nie ma podstaw do uznania komentarzy właściciela za niezależne zatwierdzenie.
+- **Status:** `stabilizing`, nie `stable`; formalna bramka uwierzytelnionej niezależnej recenzji nadal **blocked/pending**. `certificate=false`; kompilacja Lean nie poświadcza zgodności semantycznej. **L1.4.2 nierozpoczęte.**
+- **Następny jeden krok:** zweryfikować rzeczywistą, niezależną, uwierzytelnioną decyzję recenzenta dotyczącą dokładnego SHA `94a7b4a1...` w chronionym kanale GitHub; bez niej nie zmieniać statusu.
