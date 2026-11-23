@@ -93,8 +93,35 @@ class LeanFingerprintBenchmarkTests(unittest.TestCase):
             self.assertEqual(observed["content_bytes_read"], len(content))
             self.assertGreaterEqual(observed["content_read_calls"], 1)
             self.assertGreaterEqual(observed["directories_visited"], 1)
+            self.assertEqual(observed["walk_files_seen"], 1)
+            self.assertEqual(observed["olean_name_candidates"], 1)
+            self.assertEqual(observed["non_olean_names_skipped"], 0)
             self.assertGreaterEqual(observed["stat_calls"], 2)
             self.assertGreaterEqual(observed["fstat_calls"], 1)
+
+    def test_olean_filename_counters_measure_real_skipped_names(self):
+        """Mixed on-disk files are counted without altering actual SHA256."""
+        artifact = self.install_olean(b"hash this artifact")
+        ignored = ("not-lean.txt", ".olean", "copy.olean.old",
+                   "module.olean.tmp", ".other")
+        for name in ignored + ("nested/Example.olean",):
+            path = artifact.parent / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(name.encode("utf-8"))
+        original = perf.lean_results.lean_environment.compiled_artifacts_sha256
+        baseline = original(self.root)
+        fingerprint, details = perf._profile_olean_substeps(original, self.root)
+        self.assertEqual(fingerprint, baseline)
+        counts = details["counts"]
+        self.assertEqual(counts["walk_files_seen"], 7)
+        self.assertEqual(counts["olean_name_candidates"], 2)
+        self.assertEqual(counts["non_olean_names_skipped"], 5)
+        self.assertEqual(counts["olean_files_opened"], 2)
+        self.assertEqual(
+            counts["walk_files_seen"],
+            counts["olean_name_candidates"] + counts["non_olean_names_skipped"])
+        self.assertEqual(counts["content_bytes_read"],
+                         len(b"hash this artifact") + len(b"nested/Example.olean"))
 
     def test_olean_metadata_only_respects_real_hash_budget(self):
         self.install_olean(b"larger than the budget")
