@@ -144,15 +144,14 @@ def test_integration() -> tuple[int, int]:
         r"\bunia\b",
     ):
         assert not re.search(forbidden, ch, re.IGNORECASE), forbidden
-    # Visual regression: A/B labels in the Hausdorff-distance figure
-    # formerly overlapped by about 3 PDF points. The figure has y=1cm,
-    # so enforce at least 0.45cm between their TikZ center positions.
+    # Visual regression: the A and B labels of the Hausdorff-distance
+    # diagram overlapped in the original PDF. TikZ y units are 1cm.
     visual = re.search(
         r'\\begin\{tikzpicture\}\[x=3\.05cm,y=1cm\](.*?)\\end\{tikzpicture\}',
         ch,
         re.DOTALL,
     )
-    assert visual, "missing Hausdorff-distance figure"
+    assert visual, "missing Hausdorff-distance diagram"
     nodes = {
         label: (float(x), float(y))
         for x, y, label in re.findall(
@@ -160,56 +159,8 @@ def test_integration() -> tuple[int, int]:
             visual.group(1),
         )
     }
-    assert '$A
-
-if __name__ == "__main__":
-    metric_checks = finite_hausdorff_models()
-    finite_checks = finite_vietoris_fell_models()
-    escaping_sets()
-    labels, refs = test_integration()
-    print(
-        f"PASS ch21: {metric_checks} Hausdorff triangle checks, "
-        f"{finite_checks} finite Vietoris/Fell cases; "
-        f"{labels} labels, {refs} refs"
-    )
- in nodes and '$B
-
-if __name__ == "__main__":
-    metric_checks = finite_hausdorff_models()
-    finite_checks = finite_vietoris_fell_models()
-    escaping_sets()
-    labels, refs = test_integration()
-    print(
-        f"PASS ch21: {metric_checks} Hausdorff triangle checks, "
-        f"{finite_checks} finite Vietoris/Fell cases; "
-        f"{labels} labels, {refs} refs"
-    )
- in nodes, nodes
-    assert nodes['$A
-
-if __name__ == "__main__":
-    metric_checks = finite_hausdorff_models()
-    finite_checks = finite_vietoris_fell_models()
-    escaping_sets()
-    labels, refs = test_integration()
-    print(
-        f"PASS ch21: {metric_checks} Hausdorff triangle checks, "
-        f"{finite_checks} finite Vietoris/Fell cases; "
-        f"{labels} labels, {refs} refs"
-    )
-][1] - nodes['$B
-
-if __name__ == "__main__":
-    metric_checks = finite_hausdorff_models()
-    finite_checks = finite_vietoris_fell_models()
-    escaping_sets()
-    labels, refs = test_integration()
-    print(
-        f"PASS ch21: {metric_checks} Hausdorff triangle checks, "
-        f"{finite_checks} finite Vietoris/Fell cases; "
-        f"{labels} labels, {refs} refs"
-    )
-][1] >= 0.45, nodes
+    assert "$A$" in nodes and "$B$" in nodes, nodes
+    assert nodes["$A$"][1] - nodes["$B$"][1] >= 0.45, nodes
 
     return len(labels), len(refs)
 
