@@ -1,0 +1,522 @@
+% AA-43 | Rozdział przygotowany ze starszego skryptu sources/pl/galois(2).tex.
+% Dalsze ogniwa: AA-44 — twierdzenie Liouville'a, AA-45 — całki nieelementarne,
+% AA-46 — podstawy różniczkowej teorii Galois.
+\chapter{Ciała różniczkowe, derywacje i rozszerzenia różniczkowe}
+\label{aa:ch:differential-fields}
+
+Równanie algebraiczne można badać przez rozszerzenia ciał i ich
+automorfizmy. Badanie równania $DF=f$, gdzie $D$ jest pochodną,
+wymaga dodatkowo informacji o tym, jak różniczkowanie zachowuje się
+przy dołączaniu nowych elementów. Zaczniemy od derywacji, ciał
+stałych oraz rozszerzeń algebraicznych i przestępnych. Zbudowane
+narzędzia posłużą w kolejnym rozdziale do sformułowania i dowodu
+twierdzenia Liouville'a o całkowaniu w funkcjach elementarnych.
+
+\section{Derywacje i ciała stałych}
+
+\begin{definicja}[Ciało różniczkowe]
+\label{aa:def:differential-field}
+Niech $K$ będzie ciałem charakterystyki $0$.
+\emph{Derywacją} na $K$ nazywamy odwzorowanie $D:K\to K$,
+dla którego dla wszystkich $a,b\in K$ zachodzą
+$D(a+b)=Da+Db$ oraz $D(ab)=aDb+bDa$.
+Parę $(K,D)$ nazywamy \emph{ciałem różniczkowym}, a
+\[
+C_K=\{a\in K:Da=0\}
+\]
+jego \emph{ciałem stałych}.
+\end{definicja}
+
+\begin{stwierdzenie}[Reguły rachunku różniczkowego]
+\label{aa:st:differential-field-rules}
+Niech $(K,D)$ będzie ciałem różniczkowym. Wtedy
+$D(1)=0$, $D(-a)=-Da$, $D(a^{-1})=-a^{-2}Da$
+dla $a\ne0$ oraz
+\[
+D\!\left(\frac ab\right)=\frac{bDa-aDb}{b^2}
+\quad(a,b\in K,\ b\ne0).
+\]
+Zbiór $C_K$ jest podciałem $K$, zawierającym $\mathbb Q$.
+Dla każdej liczby całkowitej $n$ i $a\in K^\times$
+zachodzi $D(a^n)=na^{n-1}Da$.
+\end{stwierdzenie}
+\begin{proof}
+Z reguły iloczynu dla $1\cdot1=1$ wynika
+$D1=2D1$, stąd $D1=0$. Addytywność daje
+$D(-a)=-Da$. Jeśli $a\ne0$, to
+$0=D(aa^{-1})=(Da)a^{-1}+aD(a^{-1})$,
+co daje regułę odwrotności, a następnie ilorazu.
+Jądro addytywnego odwzorowania $D$ jest zamknięte
+na dodawanie, odejmowanie i mnożenie; reguła
+odwrotności zapewnia też zamkniętość na odwrotności
+elementów niezerowych. Każda liczba całkowita ma
+pochodną zero, podobnie jak jej odwrotność w $K$,
+więc $\mathbb Q\subseteq C_K$.
+Regułę dla dodatnich $n$ otrzymujemy przez indukcję
+z reguły iloczynu, a dla ujemnych z reguły
+odwrotności. Przypadek $n=0$ został już wykazany.
+\end{proof}
+
+\begin{przyklad}[Funkcje wymierne]
+\label{aa:prz:differential-rational-field}
+Niech $C$ będzie ciałem charakterystyki $0$, a
+$K=C(x)$ ciałem funkcji wymiernych jednej zmiennej.
+Istnieje jedyna derywacja $D$ o własnościach
+$D(c)=0$ dla $c\in C$ i $Dx=1$.
+Dla $P,Q\in C[x]$, $Q\ne0$, reguła ilorazu przyjmuje postać
+\[
+D(P/Q)=\frac{P'Q-PQ'}{Q^2}.
+\]
+Pokażemy, że $C_K=C$. Jeśli niezerowa funkcja $P/Q$,
+zapisana w postaci nieskracalnej, spełnia $D(P/Q)=0$,
+to $P'Q=PQ'$. Względna pierwszość $P$ i $Q$
+w $C[x]$ oznacza, że $P\mid P'$.
+Gdyby $\deg P\ge1$, w charakterystyce $0$ mielibyśmy
+$\deg P'=\deg P-1$, sprzeczność. Zatem $P$
+jest stały; równość $P'Q=PQ'$ implikuje wtedy
+$Q'=0$, czyli także $Q$ jest stały.
+Funkcja zerowa oczywiście należy do $C$.
+\end{przyklad}
+
+\begin{przyklad}[Derywacja zerowa i rola charakterystyki]
+\label{aa:prz:zero-derivation-and-positive-characteristic}
+Derywacja $D=0$ na dowolnym ciele charakterystyki $0$
+ma całe to ciało jako ciało stałych.
+Nie można natomiast bez zmiany twierdzeń zastąpić
+założenia o charakterystyce $0$ charakterystyką $p>0$:
+w $\mathbb F_p(x)$, przy $Dx=1$, mamy
+$D(x^p)=p x^{p-1}=0$, choć $x^p$ nie należy
+do $\mathbb F_p$. Co więcej, dołączenie pierwiastka
+$\alpha$ równania $\alpha^p=x$ nie pozwala przedłużyć
+derywacji z $Dx=1$, bo
+$1=Dx=D(\alpha^p)=p\alpha^{p-1}D\alpha=0$.
+\end{przyklad}
+
+\begin{definicja}[Rozszerzenie różniczkowe]
+\label{aa:def:differential-extension}
+Niech $(K,D)$ będzie ciałem różniczkowym.
+\emph{Rozszerzeniem różniczkowym} $L/K$ nazywamy
+rozszerzenie ciał wraz z derywacją, również
+oznaczaną przez $D:L\to L$, której ograniczenie
+do $K$ jest równe pierwotnej derywacji.
+Mówimy, że jest ono \emph{bez nowych stałych},
+jeśli $C_L=C_K$.
+Homomorfizm $\sigma:L\to M$ rozszerzeń różniczkowych
+nad $K$ nazywamy \emph{różniczkowym}, jeśli
+$\sigma|_K=\mathrm{id}_K$ i $D\sigma(a)=\sigma(Da)$
+dla każdego $a\in L$.
+\end{definicja}
+
+Warunek $C_L=C_K$ jest istotny, ponieważ z samej
+własności $\sigma|_K=\mathrm{id}_K$ nie wynika,
+że funkcja pierwotna ma jednoznaczną stałą całkowania
+w $C_K$. Pokażemy niżej, jak zapewnić brak nowych
+stałych w konstrukcjach logarytmicznych.
+
+\section{Algebraiczne przedłużanie derywacji}
+
+\begin{twierdzenie}[Jednoznaczne przedłużenie]
+\label{aa:tw:algebraic-derivation-extension}
+Niech $(K,D)$ będzie ciałem różniczkowym
+charakterystyki $0$, a $L/K$ dowolnym rozszerzeniem
+algebraicznym. Wówczas istnieje dokładnie jedna
+derywacja $L\to L$ przedłużająca $D$.
+
+Jeśli $\alpha\in L$ ma nad $K$ unormowany wielomian
+minimalny $m_\alpha(T)\in K[T]$, a
+$m_\alpha^D(T)$ powstaje przez zastosowanie $D$
+do wszystkich jego współczynników, to
+\[
+D\alpha=-\frac{m_\alpha^D(\alpha)}{m_\alpha'(\alpha)}.
+\]
+Mianownik jest niezerowy.
+\end{twierdzenie}
+\begin{proof}
+Każdy nierozkładalny wielomian nad ciałem charakterystyki
+$0$ jest rozdzielczy (zob.
+Wniosek~\ref{aa:wn:charzero-separable}). W szczególności
+$m_\alpha'(\alpha)\ne0$.
+Jeśli przedłużenie istnieje, zastosowanie derywacji
+do równości $m_\alpha(\alpha)=0$ oraz reguły iloczynu
+wymusza
+$0=m_\alpha^D(\alpha)+m_\alpha'(\alpha)D\alpha$.
+Otrzymujemy wskazany, jedyny możliwy wzór.
+
+Dla ustalonej $\alpha$ zdefiniujmy $D\alpha$ tym wzorem.
+Dla wielomianu $f\in K[T]$ połóżmy
+$D(f(\alpha))=f^D(\alpha)+f'(\alpha)D\alpha$.
+Musimy wykazać niezależność od przedstawienia.
+Jeśli $f(\alpha)=g(\alpha)$, to
+$f-g=m_\alpha h$ dla pewnego $h\in K[T]$.
+Reguła Leibniza dla wielomianów daje
+\[
+(f-g)^D(\alpha)+(f-g)'(\alpha)D\alpha
+=h(\alpha)\bigl(m_\alpha^D(\alpha)
+                +m_\alpha'(\alpha)D\alpha\bigr)=0,
+\]
+ponieważ wszystkie wyrazy zawierające
+$m_\alpha(\alpha)$ znikają. Operacja jest więc
+dobrze określona na $K[\alpha]$.
+Bezpośrednio z definicji i reguły iloczynu
+dla wielomianów wynika addytywność i reguła
+Leibniza. Ponieważ $\alpha$ jest algebraiczny,
+$K[\alpha]=K(\alpha)$ jest ciałem; wzór na
+odwrotność zapewnia derywację na całym $K(\alpha)$.
+
+Jeżeli $L/K$ jest skończone, możemy dołączać
+skończenie wiele generatorów algebraicznych
+jeden po drugim. Na każdym piętrze przedłużenie
+jest jednoznaczne, więc wynik nie zależy
+od wybranej kolejności generatorów.
+W rozszerzeniu dowolnym każdy element $L$
+należy do skończonego podrozszerzenia.
+Na sumie dwóch takich podrozszerzeń
+przedłużenia z poprzedniego kroku są jednoznaczne;
+zgadzają się więc na ich części wspólnej.
+Definiując pochodną każdego elementu przez
+jego dowolne skończone podrozszerzenie,
+otrzymujemy spójną derywację na $L$.
+Jednoznaczność dla $L$ wynika z tego samego wzoru.
+\end{proof}
+
+\begin{wniosek}[Brak nowych stałych przy rozszerzeniu algebraicznym]
+\label{aa:cor:algebraic-constants}
+Niech $(K,D)$ będzie ciałem różniczkowym
+charakterystyki $0$, którego ciało stałych $C=C_K$
+jest algebraicznie domknięte. Wtedy dowolne
+rozszerzenie algebraiczne $L/K$, wyposażone
+w jedyne przedłużenie derywacji, spełnia $C_L=C$.
+\end{wniosek}
+\begin{proof}
+Oczywiście $C\subseteq C_L$. Niech $\alpha\in C_L$,
+a $m_\alpha\in K[T]$ będzie unormowanym
+wielomianem minimalnym. Z poprzedniego twierdzenia
+i $D\alpha=0$ wynika $m_\alpha^D(\alpha)=0$.
+Ponieważ współczynnik wiodący $m_\alpha$ wynosi $1$,
+mamy $\deg m_\alpha^D<\deg m_\alpha$,
+chyba że $m_\alpha^D=0$. Minimalność wielomianu
+$m_\alpha$ wymusza $m_\alpha^D=0$.
+Wszystkie współczynniki $m_\alpha$ należą zatem do $C$,
+więc $\alpha$ jest algebraiczny nad $C$.
+Algebraiczna domkniętość $C$ daje $\alpha\in C$.
+\end{proof}
+
+\begin{przyklad}[Pochodna funkcji algebraicznej]
+\label{aa:prz:derivative-algebraic-sqrt}
+Niech $K=\mathbb C(x)$ z derywacją $Dx=1$, a
+$\alpha^2=x^2+1$ w rozszerzeniu algebraicznym.
+Wielomian $T^2-(x^2+1)$ ma nad $K$ stopień $2$
+i jest nierozkładalny: $x^2+1$ ma w $\mathbb C(x)$
+proste zera $i$ i $-i$, więc nie jest kwadratem
+funkcji wymiernej. Różniczkując relację, otrzymujemy
+$2\alpha D\alpha=2x$, czyli
+$D\alpha=x/\alpha$. Jest to także wynik wzoru
+z poprzedniego twierdzenia.
+\end{przyklad}
+
+\begin{przyklad}[Dlaczego domkniętość algebraiczna stałych jest potrzebna?]
+\label{aa:prz:algebraic-new-constants}
+Niech $K=\mathbb Q(x)$, $Dx=1$, $Dq=0$
+dla $q\in\mathbb Q$. Z przykładu
+\ref{aa:prz:differential-rational-field} mamy
+$C_K=\mathbb Q$, które nie jest algebraicznie
+domknięte. W rozszerzeniu
+$L=\mathbb Q(i)(x)$ jedyne przedłużenie
+derywacji spełnia $D(i)=0$, bo
+$i^2+1=0$ i $2iD(i)=0$. Dlatego
+$C_L=\mathbb Q(i)\ne\mathbb Q$.
+\end{przyklad}
+
+\section{Ślad i norma a derywacja}
+
+\begin{twierdzenie}[Różniczkowanie śladu i normy]
+\label{aa:tw:differential-trace-norm}
+Niech $(K,D)$ będzie ciałem różniczkowym
+charakterystyki $0$, a $L/K$ skończonym rozszerzeniem
+algebraicznym z jedynym przedłużeniem $D$.
+Dla każdego $v\in L$ i $u\in L^\times$ zachodzi
+\[
+D\!\left(\operatorname{Tr}_{L/K}(v)\right)
+=\operatorname{Tr}_{L/K}(Dv),
+\qquad
+\frac{D\!\left(N_{L/K}(u)\right)}{N_{L/K}(u)}
+=\operatorname{Tr}_{L/K}\!\left(\frac{Du}{u}\right).
+\]
+Nie zakładamy normalności $L/K$.
+\end{twierdzenie}
+\begin{proof}
+Wybierzmy domknięcie algebraiczne $\overline K$
+z jedynym przedłużeniem $D$ z poprzedniego
+twierdzenia. Ponieważ $\operatorname{char}K=0$,
+rozszerzenie $L/K$ jest rozdzielcze.
+Niech $\sigma_1,\ldots,\sigma_d:L\to\overline K$
+będą wszystkimi $K$-zanurzeniami, gdzie $d=[L:K]$.
+Dla każdego $w\in L$ mamy
+$D(\sigma_j(w))=\sigma_j(Dw)$: istotnie,
+obie strony są wymuszone przez wielomian minimalny
+elementu $w$ nad $K$ i wzór na pochodną jego
+pierwiastka. Korzystając ze wzorów na ślad
+i normę przez zanurzenia
+(Twierdzenie~\ref{aa:tw:trace-norm-embeddings}),
+otrzymujemy
+\[
+\begin{aligned}
+D\operatorname{Tr}_{L/K}(v)
+ &=D\left(\sum_{j=1}^d\sigma_j(v)\right)
+  =\sum_{j=1}^d\sigma_j(Dv)
+  =\operatorname{Tr}_{L/K}(Dv),\\
+\frac{DN_{L/K}(u)}{N_{L/K}(u)}
+ &=\frac{D\prod_{j=1}^d\sigma_j(u)}
+         {\prod_{j=1}^d\sigma_j(u)}
+  =\sum_{j=1}^d\frac{\sigma_j(Du)}{\sigma_j(u)}
+  =\operatorname{Tr}_{L/K}\left(\frac{Du}{u}\right).
+\end{aligned}
+\]
+Wszystkie czynniki normy są niezerowe,
+gdyż zanurzenia ciał są różnowartościowe.
+\end{proof}
+
+\begin{przyklad}[Ślad i norma w rozszerzeniu kwadratowym]
+\label{aa:prz:differential-quadratic-trace-norm}
+W przykładzie \ref{aa:prz:derivative-algebraic-sqrt}
+mamy $\alpha^2=x^2+1$ i
+$\operatorname{Tr}_{L/K}(\alpha)=0$,
+$N_{L/K}(\alpha)=-(x^2+1)$.
+Pierwsza tożsamość daje
+$\operatorname{Tr}_{L/K}(D\alpha)=D0=0$.
+Druga ma po lewej stronie
+$D(-(x^2+1))/(-(x^2+1))=2x/(x^2+1)$.
+Po prawej, ponieważ $D\alpha/\alpha=x/(x^2+1)\in K$,
+otrzymujemy
+$\operatorname{Tr}_{L/K}(D\alpha/\alpha)=2x/(x^2+1)$.
+W ten sposób obie tożsamości można sprawdzić bezpośrednio.
+\end{przyklad}
+
+\section{Przestępne dołączanie funkcji pierwotnych}
+
+Niech odtąd $(K,D)$ ma charakterystykę $0$ i
+$t$ będzie \emph{przestępny} nad $K$.
+Podając $Dt=a\in K$, rozszerzamy $D$ jednoznacznie
+na $K(t)$ przez formalną regułę iloczynu i ilorazu.
+W następnym lemacie ustalimy dokładnie, kiedy
+takie dołączenie zachowuje ciało stałych.
+
+\begin{lemat}[Kryterium braku nowych stałych]
+\label{aa:lem:primitive-extension-constants}
+Niech $(K,D)$ będzie ciałem różniczkowym
+charakterystyki $0$, $C=C_K$, a $t$ będzie
+przestępny nad $K$ i spełniał $Dt=a\in K$.
+Wtedy $C_{K(t)}=C$ wtedy i tylko wtedy,
+gdy nie istnieje $b\in K$ spełniający $Db=a$.
+\end{lemat}
+\begin{proof}
+Jeżeli $Db=a$, to $D(t-b)=0$, a
+$t-b\notin K$ z powodu przestępności $t$.
+Powstaje zatem nowa stała.
+
+W drugim kierunku przypuśćmy, że
+$R\in K(t)\setminus C$ i $DR=0$.
+Funkcję wymierną $R$ można rozwinąć
+jednoznacznie jako formalny szereg Laurenta
+w nieskończoności
+$R=\sum_{j\le m}r_jt^j$, gdzie $r_j\in K$
+i $r_m\ne0$, a $m\in\mathbb Z$.
+Derywacja jest na tym szeregu zgodna z
+\[
+D(r_jt^j)=(Dr_j)t^j+j\,a\,r_jt^{j-1}.
+\]
+Tożsamość zachodzi również dla ujemnych $j$,
+a współczynnik każdej potęgi pochodzi ze
+skończenie wielu wyrazów.
+
+Z porównania współczynników przy $t^m$
+w równości $DR=0$ otrzymujemy $Dr_m=0$,
+czyli $r_m\in C^\times$.
+Jeżeli $m=0$, odejmujemy stałą $r_0\in C$.
+Otrzymany niezerowy szereg ma najwyższy
+wykładnik ujemny (gdyby był zerowy,
+$R$ od początku należałoby do $C$).
+Możemy więc w każdym przypadku założyć $m\ne0$.
+Współczynnik przy $t^{m-1}$ daje
+$Dr_{m-1}+ma r_m=0$; jeżeli w rozwinięciu
+nie ma wyrazu $t^{m-1}$, przyjmujemy
+$r_{m-1}=0$. Wobec tego
+$b=-r_{m-1}/(mr_m)\in K$ spełnia $Db=a$.
+To kończy dowód przez kontrapozycję.
+\end{proof}
+
+\begin{przyklad}[Dołączenie logarytmu]
+\label{aa:prz:logarithmic-extension}
+Weźmy $K=\mathbb C(x)$, $Dx=1$ oraz
+$a=1/x$. W $K$ nie ma elementu $b$
+spełniającego $Db=1/x$: po rozkładzie
+funkcji wymiernej na ułamki proste
+pochodna każdego składnika ma przy
+każdym skończonym biegunie resztę $0$,
+natomiast $1/x$ ma w $0$ resztę $1$.
+Dołączając przestępny element $\ell$ z
+$D\ell=1/x$, otrzymujemy rozszerzenie
+różniczkowe $K(\ell)/K$ bez nowych stałych.
+Lokalnie analitycznie $\ell$ może być
+zarodkiem wybranej gałęzi funkcji $\log x$.
+\end{przyklad}
+
+\begin{przyklad}[Sztuczne dołączenie nowej stałej]
+\label{aa:prz:new-constant-obstruction}
+Niech $K=\mathbb C(x)$, $Dx=1$ i dołączmy
+przestępny element $t$ z $Dt=1$.
+Ponieważ $Dx=1$, element $t-x$
+jest nową stałą w $K(t)$.
+Nie wolno więc automatycznie nazywać
+dowolnej przestępnej zmiennej spełniającej
+równanie pierwszego rzędu rozszerzeniem
+bez nowych stałych.
+\end{przyklad}
+
+\section{Rozszerzenia wykładnicze i elementarne}
+
+\begin{lemat}[Stałe w rozszerzeniu wykładniczym]
+\label{aa:lem:exponential-extension-constants}
+Niech $(K,D)$ będzie ciałem różniczkowym
+charakterystyki $0$, $C=C_K$, a $t$ będzie
+przestępny nad $K$ i spełniał $Dt=ht$
+dla pewnego $h\in K$. Wtedy $C_{K(t)}=C$
+wtedy i tylko wtedy, gdy dla żadnej liczby
+całkowitej $m\ne0$ i żadnego $u\in K^\times$
+nie zachodzi $Du/u=-mh$.
+\end{lemat}
+\begin{proof}
+Jeśli taka para $(m,u)$ istnieje,
+to $D(ut^m)=0$, a $ut^m\notin K$
+z powodu przestępności $t$. Jest więc
+nową stałą.
+
+Odwrotnie, przypuśćmy, że
+$R\in K(t)\setminus C$ i $DR=0$.
+Rozwijamy $R$ formalnie w nieskończoności
+jako $\sum_{j\le m}r_jt^j$ z $r_m\ne0$.
+Tym razem
+$D(r_jt^j)=(Dr_j+jhr_j)t^j$.
+Jeśli $m=0$, z równania współczynnika
+$t^0$ otrzymujemy $Dr_0=0$.
+Odejmujemy $r_0\in C$; pozostały niezerowy
+szereg ma najwyższą potęgę $m<0$.
+Zatem możemy przyjąć $m\ne0$.
+Współczynnik przy $t^m$ daje
+$Dr_m+mhr_m=0$,
+czyli $Dr_m/r_m=-mh$.
+Wybór $u=r_m\in K^\times$ spełnia
+żądaną tożsamość.
+\end{proof}
+
+\begin{przyklad}[Dołączenie wykładniczej]
+\label{aa:prz:exponential-extension}
+W $K=\mathbb C(x)$, $Dx=1$ nie istnieje
+niezerowa funkcja wymierna $u$ spełniająca
+$Du/u=c$ dla niezerowej stałej $c\in\mathbb C$.
+Rzeczywiście, rozkład licznika i mianownika
+na czynniki liniowe daje
+\[
+\frac{Du}{u}
+=\sum_{a\in\mathbb C}\frac{m_a}{x-a},
+\qquad m_a\in\mathbb Z,
+\]
+gdzie suma ma skończoną liczbę niezerowych wyrazów.
+Po prawej jest funkcja właściwa, a więc
+nie może być niezerową stałą.
+
+Jeśli przestępny element $t$ spełnia
+$Dt=t$, poprzedni lemat daje
+$C_{K(t)}=\mathbb C$.
+Analitycznie możemy wybrać $t=e^x$.
+Przestępność tego zarodka można też wykazać
+algebraicznie: gdyby $t$ był algebraiczny
+nad $K$, skończony stopień $d=[K(t):K]$
+i twierdzenie o śladzie i normie dałyby
+\[
+\frac{DN_{K(t)/K}(t)}{N_{K(t)/K}(t)}
+=\operatorname{Tr}_{K(t)/K}(Dt/t)
+=\operatorname{Tr}_{K(t)/K}(1)=d,
+\]
+co jest niemożliwe dla niezerowej stałej $d$
+i funkcji wymiernej $N(t)\in\mathbb C(x)^\times$.
+\end{przyklad}
+
+\begin{definicja}[Rozszerzenie elementarne bez nowych stałych]
+\label{aa:def:elementary-differential-extension}
+Niech $(K,D)$ będzie ciałem różniczkowym
+charakterystyki $0$.
+\emph{Rozszerzeniem elementarnym} $E/K$
+nazywamy rozszerzenie różniczkowe, dla
+którego istnieje skończona wieża
+$K=K_0\subseteq K_1\subseteq\cdots\subseteq K_r=E$,
+gdzie $K_j=K_{j-1}(\theta_j)$, a każdy
+generator $\theta_j$ spełnia co najmniej
+jeden z trzech warunków:
+\begin{enumerate}
+\item $\theta_j$ jest algebraiczny nad $K_{j-1}$;
+\item $D\theta_j=Du/u$ dla pewnego
+      $u\in K_{j-1}^\times$ (krok logarytmiczny);
+\item $\theta_j\ne0$ i
+      $D\theta_j/\theta_j=Dv$ dla pewnego
+      $v\in K_{j-1}$ (krok wykładniczy).
+\end{enumerate}
+Jeżeli ponadto $C_E=C_K$, mówimy, że
+rozszerzenie jest \emph{bez nowych stałych}.
+Dla $f\in K$ mówimy, że $f$ ma
+\emph{elementarną funkcję pierwotną bez nowych stałych},
+jeśli istnieje takie $E/K$ i $F\in E$
+spełniające $DF=f$.
+\end{definicja}
+
+\begin{uwaga}[Granice definicji]
+\label{aa:uw:elementary-versus-liouvillian}
+Krok logarytmiczny ma postać
+$D\theta=Du/u$, a \emph{nie} dowolną postać
+$D\theta=a\in K_{j-1}$. Dopuszczenie dowolnej
+funkcji pierwotnej już w definicji
+prowadzi do większej klasy rozszerzeń
+\emph{liouvillowskich}, rozważanych w
+różniczkowej teorii Galois.
+Wybór lokalnej gałęzi logarytmu lub
+pierwiastka nie oznacza, że te funkcje
+muszą istnieć jako jednowartościowe
+funkcje globalne na całej płaszczyźnie.
+Elementarną całkowalność będziemy
+badać algebraicznie, a interpretować
+lokalnie na wspólnym obszarze
+określoności odpowiednich funkcji.
+\end{uwaga}
+
+\begin{przyklad}[Automorfizmy dwóch rozszerzeń]
+\label{aa:prz:elementary-automorphisms}
+Niech $K=\mathbb C(x)$ z $Dx=1$.
+
+Dla $L=K(t)$, gdzie $t$ jest przestępny i $Dt=t$,
+każdy automorfizm różniczkowy $\sigma:L\to L$
+nad $K$ spełnia
+$D(\sigma(t)/t)=0$, więc
+$\sigma(t)=ct$ dla pewnego $c\in\mathbb C^\times$,
+ponieważ $C_L=\mathbb C$.
+Każdy taki wybór odwrotnie wyznacza automorfizm
+o odwrotności $t\mapsto c^{-1}t$.
+Grupa tych automorfizmów jest więc
+izomorficzna z $(\mathbb C^\times,\cdot)$.
+
+Dla $M=K(\ell)$, gdzie $\ell$ jest przestępny
+i $D\ell=1/x$, mamy $C_M=\mathbb C$.
+Równanie $D(\sigma(\ell)-\ell)=0$ daje
+$\sigma(\ell)=\ell+c$ dla $c\in\mathbb C$,
+a wszystkie te przesunięcia są automorfizmami.
+Ich grupa jest izomorficzna z $(\mathbb C,+)$.
+W obu przypadkach warunek komutowania z
+derywacją ogranicza automorfizmy zwykłego
+rozszerzenia ciał do bardzo konkretnej rodziny.
+\end{przyklad}
+
+Równości dla śladu i normy oraz kryteria
+braku nowych stałych są dokładnie tymi
+narzędziami, które pozwolą w następnym
+rozdziale sprowadzić problem całkowania
+elementarnego z wieży rozszerzeń do
+tożsamości w początkowym ciele różniczkowym.
