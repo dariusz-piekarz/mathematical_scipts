@@ -37,6 +37,8 @@ Nie wykryto fałszywej tezy matematycznej. W jednym dowodzie wymagane było dopi
 
 - Pięć wystąpień `\mathbf1_A` (także z innymi indeksami) zastąpiono przez obowiązujące `\chi_A`; dotyczy przykładów z `L^1` i dowodu dla `L^p`.
 - Uzupełniono dowód ograniczoności zbiorów zwartych: jeśli `x∈tV` i `n≥t`, zrównoważenie daje `x∈nV`.
+- Usunięto dwa przypadki niedozwolonego rzeczownika „dual” z prozy (bez zmiany historycznej etykiety `thm:lp-trivial-dual`).
+- Zmieniono nagłówek „Przykłady przestrzeni nienormowalnych” na „Topologie produktowe i zbieżność punktowa”: drugi przykład obejmuje także przypadki normowalne, więc wcześniejszy nagłówek był mylący.
 - Skorygowano zapowiedź rozdziałów: produkty/podprzestrzenie/ilorazy są w 02, sieci w 03, ograniczoność i metryzowalność w 04, seminormy i lokalna wypukłość w 05.
 - Zachowano bez zmian wszystkie istniejące etykiety i nazwy twierdzeń.
 
@@ -44,9 +46,9 @@ Nie wykryto fałszywej tezy matematycznej. W jednym dowodzie wymagane było dopi
 
 - **9** par środowisk `proof`, **7** przykładów; **15** unikatowych etykiet i **4** odsyłacze, wszystkie do etykiet zdefiniowanych w rozdziale; identyfikatory etykiet zachowane: **PASS**.
 - Modelowe kontrole liczbowe: świadek niewypukłości, norma `L^1` funkcji trójkątnych, wykładnik `1-1/p<0`, losowe próby podaddytywności potęgi `p`: **PASS** (kontrole pomocnicze, nie dowody).
-- Dodano `tools/tests/test_functional_analysis_ch01.py`, zawierający **7 testów** struktury, oznaczeń, odsyłaczy, integracji z książką i rachunków pomocniczych.
-- Dodano `.github/workflows/functional-analysis-ch01.yml`, który uruchamia testy i buduje wyizolowany PDF rozdziału z preambułą książki. **Stan w chwili sporządzenia raportu:** uruchomienie CI zgłoszone; bez potwierdzonego wyniku kompilacji/PDF. Samo istnienie workflow nie jest dowodem poprawnej kompilacji.
-- Oględziny wszystkich stron finalnego PDF: **nieprzeprowadzone** (wymagają gotowego artefaktu). Nie deklarować PASS bez oględzin.
+- Dodano `tools/tests/test_functional_analysis_ch01.py`, zawierający **8 testów** struktury, oznaczeń, odsyłaczy, integracji z książką, rachunków pomocniczych i zakazu angielskiego rzeczownika „dual” w prozie.
+- Dodano `.github/workflows/functional-analysis-ch01.yml`, który uruchamia testy i buduje wyizolowany PDF rozdziału z preambułą książki. **CI: PASS** na commicie `1e36e936578ad6632bf429e1af4327df9ff3232e`, [przebieg 45149989014](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45149989014): 8/8 testów Pythona, dwukrotna kompilacja LaTeX, kontrola logu po drugiej kompilacji i zawartości PDF, zapis artefaktu. PDF ma 6 stron A4 i 264612 bajtów. Ostrzeżenia o niezdefiniowanych odsyłaczach występowały tylko w pierwszym przebiegu kompilacji i zniknęły po drugim.
+- Oględziny wszystkich 6 stron finalnego PDF: **PASS** — renderowane strony z repozytoryjnego artefaktu sprawdzono wizualnie w układzie 3×2; brak widocznych kolizji, obcięć i przekroczeń marginesów. Rozdział nie zawiera rysunków wymagających osobnej kontroli. Log końcowy bez błędnych odsyłaczy, overfull i brakujących znaków.
 
 ## Propozycje merytoryczne — nie dodano, wymagana decyzja użytkownika
 
@@ -55,4 +57,4 @@ Nie wykryto fałszywej tezy matematycznej. W jednym dowodzie wymagane było dopi
 
 ## Decyzja i kolejny etap
 
-**Po pierwszym audycie: poprawki wprowadzone, status rozdziału — NIEUSTABILIZOWANY.** Nie jest to audyt czysty, ponieważ wymagał zmian. Kolejna iteracja: niezależny ponowny przegląd wszystkich 9 dowodów i 7 przykładów na zaktualizowanej wersji, wynik dedykowanego CI, logi PDF oraz oględziny składu; dopiero kolejne czyste audyty mogą uzasadniać stabilizację rozdziału 01. Nie przechodzić do rozdziału 02 przed stabilizacją 01.
+**Po pierwszym audycie: poprawki wprowadzone, status rozdziału — NIEUSTABILIZOWANY.** Nie jest to audyt czysty, ponieważ wymagał zmian. Kolejna iteracja: niezależny ponowny przegląd wszystkich 9 dowodów i 7 przykładów na aktualnej wersji oraz ponowne potwierdzenie jakości składu i odsyłaczy. Pierwsza iteracja nie może być liczona jako czysta; dopiero kolejne czyste audyty mogą uzasadniać stabilizację rozdziału 01. Nie przechodzić do rozdziału 02 przed stabilizacją 01.
