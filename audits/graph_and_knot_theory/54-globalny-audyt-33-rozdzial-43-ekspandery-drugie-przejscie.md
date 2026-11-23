@@ -40,3 +40,18 @@ Ponowiony przebieg [45290837906](https://github.com/dariusz-piekarz/mathematical
 Potwierdzono, że pierwszy przebieg CI dla rozdziału 43 (#45289361352) zakończył się sukcesem całego workflow i wygenerował 298-stronicowy PDF bez ostrzeżeń. Z tego dokładnego artefaktu obejrzano wizualnie strony 84–89 w jednym arkuszu sześciu stron; nie stwierdzono kolizji rysunków, urwanych wzorów ani napisów wychodzących poza marginesy. Przy drugim przejściu nie zmieniano źródła rozdziału 43 (SHA blobu `d02bda242d51fa11ae470d1a8d1822f5d8ceccbb`), tylko testy i raporty.
 
 **Werdykt w chwili utworzenia raportu:** drugie przejście matematyczne i `structural-audit` **PASS**. Ostateczne zamknięcie rozdziału 43 wymaga sprawdzenia sukcesu `full-book-pdf` ponowionego przebiegu #45290837906 oraz kontroli jego artefaktów. Dopiero wtedy możliwe jest przejście do końcowego audytu globalnego wszystkich 44 plików źródłowych.
+
+## Końcowe zamknięcie audytu 33 — 2026-11-24
+
+**WERDYKT: ZAMKNIĘTY / LOKALNIE STABILNY rozdział źródłowy 43.** Rozdziały 01–43 są obecnie lokalnie stabilne po wymaganych, oddzielnych przejściach. Nie utożsamiać tej stabilności z końcowym globalnym audytem wszystkich zależności międzyrozdziałowych.
+
+**Weryfikacja dokładnego przebiegu CI:** [GitHub Actions #45290837906](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45290837906), przypięty do SHA `edde0e47136b5385b80a5bc26ef5ff146ddacf9c`; `completed / success`. Zadania `structural-audit` (ID **138098860586**) oraz `full-book-pdf` (ID **138098860033**) mają `completed / success`. Rzeczywisty log drugiego przejścia zawiera wszystkie pięć komunikatów PASS: 20 rodzin strukturalnych, 1500 testów lematu współpowierzchniowego i energii, 1326 kontroli mieszania, hipotezy/etykiety źródłowe oraz końcowy status całego pakietu.
+
+**Rzeczywiste artefakty tego samego SHA**, pobrane i rozpakowane:
+- `graph-and-knot-global-structure` ID **14874057290**: `source_count=44`, `catalog_count=44`, `catalog_matches_book`; puste listy `duplicate_labels`, `unresolved_references`, `forbidden_language`, `environment_errors`, `unclosed_proofs`, `duplicate_passage_candidates`.
+- `graph-and-knot-complete-book-audit` ID **14874620986**: rzeczywisty PDF **298 stron A4** i trzy logi kompilacji; `graph_and_knot_full_warnings.txt` ma **0 bajtów**.
+- Z końcowego PDF ponownie wyrenderowano komplet stron **84–89** i porównano piksel po pikselu z wyrenderowanymi wcześniej stronami pierwszego przejścia, przy identycznych ustawieniach DPI: **6/6 dokładnych zgodności**. Wcześniejsza bezpośrednia kontrola wizualna obejmowała wszystkie te strony i diagram `C_8`.
+
+**Kontrola integralności:** po certyfikowanym SHA porównanie z gałęzią wykazało wyłącznie zmiany w raportach audytu 32 i 33; nie było zmian źródła 43, dwóch zestawów testów ani pliku workflow. Pierwotny błąd dopasowania tekstowego `d-regularnym` do LaTeX `$d$-regularnym` został poprawiony i zweryfikowany powtórnym sukcesem całej bramki.
+
+**Dalej:** globalny audyt matematyczny tomu z 44 plikami `00`–`43`, szczególnie spójności twierdzeń, odsyłaczy oraz ewentualnych powtórzeń między rozdziałami. Globalny audyt pozostaje **OTWARTY**, nawet jeśli wszystkie szczegółowe audyty rozdziałowe są już lokalnie zamknięte.
