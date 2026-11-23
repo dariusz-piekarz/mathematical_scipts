@@ -1,0 +1,82 @@
+name: Functional analysis - chapter 11 audit
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - 'chapters/pl/functional_analysis/0[1-9]-*.tex'
+      - 'chapters/pl/functional_analysis/10-*.tex'
+      - 'chapters/pl/functional_analysis/11-*.tex'
+      - 'books/pl/functional_analysis.tex'
+      - 'tools/tests/test_functional_analysis_ch11.py'
+      - 'audits/functional_analysis/11*'
+      - '.github/workflows/functional-analysis-ch11.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit-ch11:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check 11 Frechet, open mapping, closed graph contracts
+        run: python3 tools/tests/test_functional_analysis_ch11.py
+      - name: Prepare TeX wrapper with complete reference context 01-11
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          book = Path('books/pl/functional_analysis.tex').read_text(encoding='utf-8')
+          assert book.count(r'\begin{document}') == 1
+          pre = book.split(r'\begin{document}', 1)[0]
+          inputs = re.findall(
+              r'\\input\{(\.\./\.\./chapters/pl/functional_analysis/[^}]+)\}',
+              book
+          )
+          assert len(inputs) >= 11
+          assert all(inputs[i].split('/')[-1].startswith(f'{i+1:02d}-')
+                     for i in range(11))
+          body = r'\begin{document}' + '\n'
+          body += '\n'.join(r'\input{' + name + '}' for name in inputs[:11])
+          body += '\n' + r'\end{document}' + '\n'
+          Path('books/pl/functional_analysis_ch11_context_ci.tex').write_text(
+              pre + body, encoding='utf-8'
+          )
+          PY
+      - name: Compile chapter 11 with complete 01-11 reference context
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: functional_analysis_ch11_context_ci.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Verify PDF, chapter heading, mathematical content and cross-references
+        run: |
+          if ! command -v pdfinfo >/dev/null || ! command -v pdftotext >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq poppler-utils
+          fi
+          test -s books/pl/functional_analysis_ch11_context_ci.pdf
+          test -s books/pl/functional_analysis_ch11_context_ci.log
+          if grep -E 'Undefined control sequence|There were undefined references|LaTeX Warning: (Reference|Citation).*undefined|Overfull \\hbox|Missing character' books/pl/functional_analysis_ch11_context_ci.log; then
+            echo 'Chapter 11 LaTeX diagnostics failed.'
+            exit 1
+          fi
+          pdfinfo books/pl/functional_analysis_ch11_context_ci.pdf
+          pdftotext -layout books/pl/functional_analysis_ch11_context_ci.pdf books/pl/functional_analysis_ch11_context_ci.txt
+          grep -q 'Przestrzenie Frécheta' books/pl/functional_analysis_ch11_context_ci.txt
+          grep -q 'Twierdzenie o odwzorowaniu otwartym' books/pl/functional_analysis_ch11_context_ci.txt
+          grep -q 'Twierdzenie o wykresie domkniętym' books/pl/functional_analysis_ch11_context_ci.txt
+      - name: Upload PDF and diagnostic logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: functional-analysis-ch11-pdf
+          path: |
+            books/pl/functional_analysis_ch11_context_ci.pdf
+            books/pl/functional_analysis_ch11_context_ci.log
+            books/pl/functional_analysis_ch11_context_ci.txt
+          if-no-files-found: warn
