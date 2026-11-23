@@ -124,3 +124,27 @@ Zgłoszono [wniosek o niezależny odbiór #9](https://github.com/dariusz-piekarz
 Formalnego statusu `stable` **nie nadano**, dopóki nie ma osobno
 uwierzytelnionej aprobaty recenzenta dla dokładnie tego SHA.
 Zmiana kodu resetuje cały 2+1. Nie rozpoczęto L1.4.2.
+
+## Dalszy audyt TOCTOU: pełna tożsamość obiektu i ścieżka źródła
+
+Wygenerowany wcześniej raport `a1f93d98` porównywał po odczycie
+katalogu tylko identyfikator właściciela etykiety. Dwie poprawne
+migawki SQLite z tym samym `entity_id` i tym samym SHA dokumentu
+mogły jednak mieć inne `entities.title` lub `end_offset`.
+`owner_status` obydwa stany uznawał za `ok`, choć zmieniał się
+dokładny rekord `indexed_binding` używany przez osobną kontrolę
+pochodzenia wyników Lean. Ponadto zmiana `source_document_path`
+na drugi plik TeX o identycznych bajtach mogła przejść niezauważona.
+
+Raport L1.4.1 zachowuje odtąd **pierwszą** ograniczoną do 250
+elementów migawkę manifestu i wiązania encji, a następnie sprawdza ją
+z najnowszym manifestem i `indexed_binding` po katalogowaniu.
+Rozbieżności skutkują `changed_manifest_during_report` lub
+`changed_index_binding`, `stale/needs_review`, bez `approved`.
+Nowe trzy regresje wstrzykują zmianę tytułu, zakresu oraz ścieżki
+do równoważnego bajtowo pliku `.tex`. Nawet ten dodatkowy odczyt
+**nie jest atomowym snapshotem** współbieżnych danych SQLite i
+systemu plików. Wynik `3/3` dla `a1f93d98` pozostaje dowodem
+historycznym wyłącznie na ten SHA; nowy commit musi otrzymać
+**osobną stabilizację 2+1 i niezależny odbiór**.
+`certificate=false`.

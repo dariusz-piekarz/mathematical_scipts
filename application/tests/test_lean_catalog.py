@@ -368,5 +368,94 @@ class LeanCatalogTests(unittest.TestCase):
         self.assertFalse(data["certificate"])
 
 
+    def test_l14_same_owner_changed_title_downgrades_ready(self):
+        self.item.update(source_document_sha256=self.digest,
+                         statement_status="approved")
+        self.set_l14_canonical_file()
+        self.save_manifest()
+        real_catalog = lean_catalog.list_formalizations
+
+        def alter_indexed_title(*args, **kwargs):
+            catalog = real_catalog(*args, **kwargs)
+            self.assertEqual(catalog["ready"], 1)
+            self.con.execute(
+                "UPDATE entities SET title=? WHERE id=?",
+                ("Changed metadata", "theorem-one"))
+            self.con.commit()
+            # The owner ID and source-document SHA have not changed.
+            self.assertEqual(
+                lean_catalog.list_formalizations(
+                    self.con, lean_root=self.root)["ready"], 1)
+            return catalog
+
+        with patch.object(lean_chapter_report.lean_catalog,
+                          "list_formalizations", side_effect=alter_indexed_title):
+            data = lean_chapter_report.chapter_report(
+                self.con, "LST-01", lean_root=self.root)
+        self.assertEqual(data["source_index_status"], "ok")
+        self.assertEqual((data["ready"], data["stale"],
+                          data["statement_approved"]), (0, 1, 0))
+        self.assertEqual(data["items"][0]["index_status"], "changed_index_binding")
+        self.assertEqual(data["items"][0]["statement_status"], "needs_review")
+        self.assertFalse(data["certificate"])
+
+    def test_l14_same_owner_changed_span_downgrades_ready(self):
+        self.item.update(source_document_sha256=self.digest,
+                         statement_status="approved")
+        self.set_l14_canonical_file()
+        self.save_manifest()
+        real_catalog = lean_catalog.list_formalizations
+
+        def alter_indexed_span(*args, **kwargs):
+            catalog = real_catalog(*args, **kwargs)
+            self.assertEqual(catalog["ready"], 1)
+            self.con.execute(
+                "UPDATE entities SET end_offset=? WHERE id=?",
+                (len(SOURCE) - 1, "theorem-one"))
+            self.con.commit()
+            self.assertEqual(
+                lean_catalog.list_formalizations(
+                    self.con, lean_root=self.root)["ready"], 1)
+            return catalog
+
+        with patch.object(lean_chapter_report.lean_catalog,
+                          "list_formalizations", side_effect=alter_indexed_span):
+            data = lean_chapter_report.chapter_report(
+                self.con, "LST-01", lean_root=self.root)
+        self.assertEqual((data["ready"], data["stale"],
+                          data["statement_approved"]), (0, 1, 0))
+        self.assertEqual(data["items"][0]["index_status"], "changed_index_binding")
+        self.assertFalse(data["certificate"])
+
+    def test_l14_canonical_path_swapped_after_catalog_is_stale(self):
+        self.item.update(source_document_sha256=self.digest,
+                         statement_status="approved")
+        original_tex = self.set_l14_canonical_file()
+        self.save_manifest()
+        replacement = original_tex.with_name("02.tex")
+        replacement.write_text(SOURCE, encoding="utf-8")
+        real_catalog = lean_catalog.list_formalizations
+
+        def swap_path(*args, **kwargs):
+            catalog = real_catalog(*args, **kwargs)
+            self.assertEqual(catalog["ready"], 1)
+            self.item["source_document_path"] = "chapters/pl/logic/02.tex"
+            self.save_manifest()
+            self.assertEqual(
+                lean_catalog.list_formalizations(
+                    self.con, lean_root=self.root)["ready"], 1)
+            return catalog
+
+        with patch.object(lean_chapter_report.lean_catalog,
+                          "list_formalizations", side_effect=swap_path):
+            data = lean_chapter_report.chapter_report(
+                self.con, "LST-01", lean_root=self.root)
+        self.assertEqual((data["ready"], data["stale"],
+                          data["statement_approved"]), (0, 1, 0))
+        self.assertEqual(data["items"][0]["index_status"],
+                         "changed_manifest_during_report")
+        self.assertFalse(data["certificate"])
+
+
 if __name__ == "__main__":
     unittest.main()

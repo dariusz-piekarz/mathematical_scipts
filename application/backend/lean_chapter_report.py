@@ -20,6 +20,13 @@ REPORT_ITEM_FIELDS = (
     "lean_file", "lean_theorem", "lean_theorems", "index_status",
     "formalization_status", "statement_status",
 )
+# Compare both manifest generations, including path fields not in the
+# public catalogue. A changed canonical path must not inherit old approval.
+MANIFEST_IDENTITY_FIELDS = (
+    "source_module", "source_label", "source_document_sha256",
+    "source_document_path", "statement_status", "lean_file",
+    "lean_theorem", "lean_theorems",
+)
 
 
 def chapter_report(con: sqlite3.Connection, module_id: str, *,
@@ -40,6 +47,26 @@ def chapter_report(con: sqlite3.Connection, module_id: str, *,
         and lean_results_hex(indexed_sha)
         and hashlib.sha256(content.encode("utf-8")).hexdigest() == indexed_sha
     )
+
+    # Keep an initial, bounded manifest and exact indexed-entity snapshot.
+    # Catalogue owner_status and a later owner_status can both say "ok" for
+    # the *same entity ID* even if the entity's title or span changed between
+    # the calls. Compare the actual indexed binding, not only its owner ID.
+    initial_registry = lean._registry(lean_root)
+    if len(initial_registry) > lean_catalog.MAX_ENTRIES:
+        raise HTTPException(503, "Zbyt duży rejestr formalizacji Lean.")
+    initial_items = {item["id"]: item for item in initial_registry
+                     if item["source_module"] == module_id}
+    initial_bindings = {}
+    if index_current:
+        for item in initial_items.values():
+            status, owner = lean_source_provenance.owner_status(
+                con, module_id, item["source_label"], content)
+            if status == "ok" and owner is not None:
+                initial_bindings[item["id"]] = (
+                    lean_source_provenance.indexed_binding(
+                        con, module_id, item["source_label"], owner)
+                )
 
     # Reuse the existing, bounded catalogue: it checks label ownership,
     # manifest SHA and canonical on-disk TeX. Do not invent proof statuses.
@@ -64,7 +91,9 @@ def chapter_report(con: sqlite3.Connection, module_id: str, *,
     actual_ids = {item["id"] for item in latest_registry
                   if item["source_module"] == module_id}
     listed_ids = {entry["formalization_id"] for entry in entries}
-    changed_manifest = actual_ids != listed_ids or len(listed_ids) != len(entries)
+    changed_manifest = (actual_ids != listed_ids
+                        or set(initial_items) != listed_ids
+                        or len(listed_ids) != len(entries))
     for entry in entries:
         if changed_manifest:
             entry["index_status"] = "changed_manifest_during_report"
@@ -74,8 +103,11 @@ def chapter_report(con: sqlite3.Connection, module_id: str, *,
         if entry["formalization_status"] not in ("ready", "draft"):
             continue
         registered = registry.get(entry["formalization_id"])
+        before = initial_items.get(entry["formalization_id"])
         changed_item = (
-            registered is None
+            registered is None or before is None
+            or any(before.get(name) != registered.get(name)
+                   for name in MANIFEST_IDENTITY_FIELDS)
             or registered.get("source_module") != module_id
             or registered.get("source_label") != entry["source_label"]
             or registered.get("statement_status") != entry["statement_status"]
@@ -95,7 +127,14 @@ def chapter_report(con: sqlite3.Connection, module_id: str, *,
         # without changing the document's content SHA256.
         owner_status, owner_id = lean_source_provenance.owner_status(
             con, module_id, entry["source_label"], content)
-        if owner_status != "ok" or owner_id != entry["source_entity_id"]:
+        actual_binding = (
+            lean_source_provenance.indexed_binding(
+                con, module_id, entry["source_label"], owner_id)
+            if owner_status == "ok" and owner_id is not None else None
+        )
+        if (owner_status != "ok" or owner_id != entry["source_entity_id"]
+                or actual_binding is None
+                or initial_bindings.get(entry["formalization_id"]) != actual_binding):
             entry["index_status"] = "changed_index_binding"
             entry["formalization_status"] = "stale"
             entry["statement_status"] = "needs_review"
