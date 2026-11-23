@@ -54,3 +54,11 @@ Ponownie skontrolowano rozdział 09, pierwotny raport `09-audyt-1.md`, stabilną
 ## Werdykt i następny krok
 
 **Audyt 09/02 jest NIE CZYSTY, 0/2**, pomimo prawidłowych dowodów głównych. Wprowadzono jedną konieczną hipotezę matematyczną, jedną korektę notacji i uściślenie wstępu. Nie przechodzić do rozdziału 10. Najpierw potwierdzić zielony CI aktualnego commita, potem wykonać niezależny audyt 09/03 na niezmienionej wersji i dążyć do dwóch kolejnych czystych audytów.
+
+## Potwierdzenie po zakończeniu CI (ta sama wersja źródła)
+
+Dedykowany przebieg [GitHub Actions #45210787098](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45210787098), dla commita `53aadb046ea434c13e9f0231fcd90f93919ed993`, zakończył się pełnym **SUCCESS**. Potwierdzono: **19/19 regresji PASS**, przygotowanie rzeczywistego kontekstu źródeł 01–09 PASS, kompilację LaTeX PASS, końcową automatyczną kontrolę PDF i odsyłaczy PASS oraz publikację artefaktu PASS.
+
+Pobrano rzeczywisty artefakt `functional-analysis-ch09-pdf` (ID `14834593866`). Wygenerowany dokument ma **55 stron A4** i **640287 bajtów** (SHA-256: `1ab7f72c41742b3419676e104d8de9441c4e69329d88defa14cf2a6517b78e2e`). Dla stron **48–55** niezależnie sprawdzono bloki tekstowe przez PyMuPDF: **0 bloków poza granicami strony**. Wyrenderowano oraz obejrzano ponownie stronę **51** z rysunkiem wielokąta oraz poprawionym zdaniem „Jeżeli H jest niezerową rzeczywistą przestrzenią Hilberta”; nie stwierdzono kolizji ani obcięć. Kontrola nie poświadcza formalnie wszystkich twierdzeń; jest odrębną walidacją składu i wybranych kontraktów źródłowych.
+
+**Ostateczny status 09/02: matematyka po poprawkach i CI PASS, ale audyt nadal Z POPRAWKAMI (0/2).** Kolejna niezależna iteracja to **09/03**; wymagana jest stabilizacja bez dalszych zmian rozdziału, zanim audyt przejdzie do rozdziału 10.
