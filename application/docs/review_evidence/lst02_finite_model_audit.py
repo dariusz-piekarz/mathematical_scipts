@@ -1,12 +1,21 @@
-"""Independent finite-model sanity checks for LST-02 mappings, not a proof.
+"""Finite-model sanity checks for LST-02. Does not certify Lean/LaTeX semantics.
 
-No Mathlib, application runtime, or GitHub checkout is required.
-Checks all Boolean predicates on domain cardinalities 0..3 (unary: 0..4).
+This executable intentionally uses explicit exceptions rather than ``assert``:
+Python -O and -OO remove assert statements and must not disable the audit.
 """
 from __future__ import annotations
 
 from itertools import product
 import json
+
+
+class FiniteModelAuditError(RuntimeError):
+    """A finite-model requirement or its negative control failed."""
+
+
+def require(condition: bool, detail: str) -> None:
+    if not condition:
+        raise FiniteModelAuditError(detail)
 
 
 def all_truth_assignments(size: int):
@@ -16,19 +25,22 @@ def all_truth_assignments(size: int):
 def test_unary() -> dict:
     checked = 0
     for d in range(5):
-        for truth in all_truth_assignments(d):
-            values = list(truth)
-            # LST-02: thm:negation-quantifiers (classical Boolean semantics)
-            assert (not all(values)) == any(not x for x in values)
-            assert (not any(values)) == all(not x for x in values)
-            # LST-02: thm:unique-expansion-xli
+        for values in all_truth_assignments(d):
+            # Classical Boolean semantics: both quantifier De Morgan laws.
+            require((not all(values)) == any(not x for x in values),
+                    f"not-forall law fails at d={d}, P={values}")
+            require((not any(values)) == all(not x for x in values),
+                    f"not-exists law fails at d={d}, P={values}")
+            # Exists-unique means one and only one witness.
             exists_unique = sum(values) == 1
             exists_and_unique = any(
                 values[x] and all((not values[y]) or y == x for y in range(d))
                 for x in range(d)
             )
-            assert exists_unique == exists_and_unique
+            require(exists_unique == exists_and_unique,
+                    f"unique-exists expansion fails at d={d}, P={values}")
             checked += 1
+    require(checked == 31, f"expected 31 unary models, got {checked}")
     return {"unary_predicates": checked, "domain_sizes": list(range(5))}
 
 
@@ -42,26 +54,31 @@ def test_binary() -> dict:
             pairs = list(product(range(d), range(e)))
             for bits in all_truth_assignments(len(pairs)):
                 predicate = dict(zip(pairs, bits, strict=True))
-                p = lambda x, y: predicate[x, y]
-                # LST-02: thm:same-quantifier-order
+                def p(x: int, y: int) -> bool:
+                    return predicate[x, y]
+                # Switch the order of binders, not argument order of P(x,y).
                 ff_xy = all(all(p(x, y) for y in range(e)) for x in range(d))
                 ff_yx = all(all(p(x, y) for x in range(d)) for y in range(e))
-                assert ff_xy == ff_yx
+                require(ff_xy == ff_yx,
+                        f"forall-commutation fails at d={d}, e={e}, P={bits}")
                 ee_xy = any(any(p(x, y) for y in range(e)) for x in range(d))
                 ee_yx = any(any(p(x, y) for x in range(d)) for y in range(e))
-                assert ee_xy == ee_yx
-                # LST-02: thm:swap-mixed, only this forward implication.
+                require(ee_xy == ee_yx,
+                        f"exists-commutation fails at d={d}, e={e}, P={bits}")
                 exists_forall = any(all(p(x, y) for x in range(d)) for y in range(e))
                 forall_exists = all(any(p(x, y) for y in range(e)) for x in range(d))
-                assert not exists_forall or forall_exists
-                # The unclaimed reverse implication is generally false.
+                require(not exists_forall or forall_exists,
+                        f"mixed forward implication fails at d={d}, e={e}, P={bits}")
                 if forall_exists and not exists_forall:
                     reverse_counterexamples += 1
                     empty_empty_counterexample |= d == 0 and e == 0
                     positive_positive_counterexample |= d > 0 and e > 0
                 checked += 1
-    assert empty_empty_counterexample
-    assert positive_positive_counterexample
+    require(checked == 689, f"expected 689 binary models, got {checked}")
+    require(reverse_counterexamples == 201,
+            f"expected 201 countermodels, got {reverse_counterexamples}")
+    require(empty_empty_counterexample, "missing empty-empty reverse countermodel")
+    require(positive_positive_counterexample, "missing nonempty reverse countermodel")
     return {
         "binary_predicates": checked,
         "domain_sizes": list(range(4)),
@@ -71,11 +88,39 @@ def test_binary() -> dict:
     }
 
 
+def test_negative_controls() -> dict:
+    """Ensure false claims actually fail, even if Python has -O enabled."""
+    vals = (True, False)
+    incorrect_de_morgan = (not all(vals)) == all(not x for x in vals)
+    vals_two = (True, True)
+    incorrect_unique = (sum(vals_two) == 1) == any(vals_two)
+    # A nonempty counterexample: D=E={0,1}, P(x,y) iff x=y.
+    reverse_mixed_false_claim = (
+        not all(any(x == y for y in range(2)) for x in range(2))
+        or any(all(x == y for x in range(2)) for y in range(2))
+    )
+    rejected = 0
+    for name, false_claim in (
+        ("wrong_not_forall", incorrect_de_morgan),
+        ("wrong_unique", incorrect_unique),
+        ("wrong_reverse_mixed", reverse_mixed_false_claim),
+    ):
+        try:
+            require(false_claim, f"negative control: {name}")
+        except FiniteModelAuditError:
+            rejected += 1
+        else:
+            raise FiniteModelAuditError(f"negative control silently passed: {name}")
+    require(rejected == 3, "not all negative controls were rejected")
+    return {"deliberately_false_claims_rejected": rejected}
+
+
 def main() -> None:
     result = {
         "scope": "finite Boolean models only; not a semantic certificate",
         "unary": test_unary(),
         "binary": test_binary(),
+        "negative_controls": test_negative_controls(),
         "status": "passed",
         "certificate": False,
     }
