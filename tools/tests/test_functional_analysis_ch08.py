@@ -209,7 +209,7 @@ class FunctionalAnalysisChapter08(unittest.TestCase):
             tail = [G for G in finite_sets if anchor <= G]
             self.assertTrue(tail)
             self.assertTrue(all(interpolate(G)[j] == phi[j] for G in tail))
-        self.assertIn(r"\\mathcal G", self.source)
+        self.assertIn(r"\mathcal G", self.source)
 
     def test_strong_operator_norm_bounded_sets(self):
         # E=R² with l1 norm, E'=linfty; bounded B gives
