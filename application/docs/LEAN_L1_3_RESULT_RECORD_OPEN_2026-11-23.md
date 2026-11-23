@@ -1,7 +1,7 @@
 # Atlas / Lean — L1.3: bezpieczniejszy odczyt lokalnych zapisów Lean
 
 **Data:** 2026-11-23. **Gałąź:** `biblioteka-matematyczna-iteracja-6`.
-**Stan:** implementacja i regresje weryfikowane przez CI; **L1.3 nie jest jeszcze stabilny**.
+**Stan końcowy: L1.3 ZAMKNIĘTY / STABILNY** (2026-11-23), wyłącznie dla niezmienionego commita `42426f17dd90a553050657b55537f907e3231d45` i zakresu opisanego poniżej. Rygor 2+1, natywne testy Windows/Linux oraz rzeczywisty Lean+Mathlib zakończone sukcesem.
 
 ## Motywacja i zakres
 
@@ -80,19 +80,52 @@ Nie zapewnia to kryptograficznego poświadczenia kompilacji Lean,
 izolacji wykonywalnych plików Lean ani równoważności formalizacji
 z kanonicznym LaTeX-em.
 
-## Bramka stabilizacji — otwarta
+## Bramka stabilizacji — ZALICZONA
 
-- [ ] Szybkie regresje na Linux i Windows po końcowych commitach
-  `1d659bb2` i `42426f17`.
-- [ ] Pełne CI aplikacji na aktualnym kodzie; odsyłacze oraz
-  rzeczywisty Chromium.
-- [ ] Rzeczywisty Lean 4.26.0 + przypięty Mathlib z kompilacją i
-  kontrolą aksjomatów na aktualnym kodzie (nie na wcześniejszym SHA).
-- [ ] Osobny sceptyczny przegląd, w tym odmowa dla FIFO/symlinków
-  i opis niezamkniętych klas ataków.
-- [ ] Rygor 2+1: trzy **zakończone sukcesem** pełne kontrole
-  dokładnie tego samego niezmiennego SHA.
+**Zamrożona wersja kodu i regresji:**
+`42426f17dd90a553050657b55537f907e3231d45`. Dalszy
+commit dokumentacyjny nie stanowi nowego SHA produkcyjnego.
 
-Wyniki L1.1 i L1.2 pozostają zamknięte na własnych SHA. Nowe
-wymagania L1.3 rozlicza się niezależnie; nie przenosi się
-historycznego PASS na zmieniony kod.
+| Kontrola | GitHub Actions / szczegóły | Wynik |
+|---|---|---|
+| Szybki Linux + Windows | [#45157059258](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45157059258), 189/89 testów | PASS |
+| Natywne Windows Job Objects | [#45157059445](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45157059445) | PASS |
+| Pełne CI aplikacji, próba 1 | [#45157059233](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45157059233), job `137632579507` | PASS |
+| Pełne CI aplikacji, próba 2 | ten sam run, `run_attempt=2`, job `137633720323` | PASS |
+| Pełne CI aplikacji, próba 3 | ten sam run, `run_attempt=3`, job `137634737212` | PASS |
+| Przypięty Lean 4.26.0 / Mathlib, realna kompilacja i aksjomaty | [#45157059389](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45157059389) | PASS |
+| MetaM, trzy fingerprinty, parowany benchmark ścieżek, profil CPU | ten sam pinned workflow, job `137634354400`; digest artefaktów z benchmarku i profilera identyczny | PASS |
+| Niezależny przegląd sceptyczny | poniższa analiza i regresje modyfikujące rzeczywistą ścieżkę pliku | PASS w opisanym modelu |
+
+W **każdym** z trzech pełnych przebiegów: `719` wykonanych testów
+Pythona, `10` sklasyfikowanych pominięć,
+`unreviewed_skips=0`, `505` rozdziałów w indeksie,
+Chromium `passed`, `javascript_errors=[]`, pełny
+`candidate_sha=42426f17dd90a553050657b55537f907e3231d45`.
+
+**Przegląd sceptyczny:** przebieg pierwszych zmian L1.3 wykazał
+rzeczywistą regresję na Windows, której nie zamaskowano. Wyjaśniono
+niezgodne semantyki `ctime` między `fstat` i `lstat`, a następnie
+uzyskano sukces testów Windows bez rezygnacji z kontroli identyfikatora,
+rozmiaru i modyfikacji pliku. Dodatkowo wykryto i poprawiono ryzyko
+blokady przy podmianie rekordu na FIFO jeszcze przed kontrolą typu.
+Na Linux potwierdzono: odmowę podmiany ścieżki na symlink przed otwarciem,
+odmowę zastąpienia otwartego pliku mimo identycznej treści oraz odmowę
+dla FIFO bez oczekiwania na zapisujący proces. Na Windows test symlinku
+i symulacji metadanych przeszedł; test zamiany nazwy **otwartego**
+pliku został **jawnie pominięty** ze względu na odmowę WinError 32,
+a test POSIX FIFO również został pominięty. Te pominięcia nie są
+udawanymi sukcesami; odnoszą się do specyficznych możliwości hosta.
+
+**Granice niezmienione:** lokalny modyfikowalny JSON nie jest
+kryptograficznym dowodem pochodzenia, sprawdzenie końcowego wpisu
+nie zapewnia atomowej kontroli wszystkich katalogów nadrzędnych,
+nie wyklucza wszystkich wielokrotnych wyścigów ani nie izoluje
+dowolnego kodu Lean. Jak wcześniej, `certificate=false`;
+kompilacja, kontrola aksjomatów i zgodność tezy z LaTeX-em mają
+odrębne statusy. Nie osłabiono checkpointów `before/locked/after`.
+
+**Decyzja:** zamknąć **L1.3 — odczyt i tożsamość lokalnego rekordu
+historii Lean**. Następny podetap architektury wymaga własnego
+zakresu, testów i stabilizacji. L1.1 i L1.2 pozostają
+zamknięte na swoich odrębnych SHA.
