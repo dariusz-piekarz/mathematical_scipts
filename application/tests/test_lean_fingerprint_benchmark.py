@@ -149,6 +149,40 @@ class LeanFingerprintBenchmarkTests(unittest.TestCase):
         self.assertEqual(before,
                          (Path.stat, Path.lstat, Path.open, perf.os.walk, perf.os.fstat))
 
+    def test_changing_ignored_build_files_invalidates_timing_samples(self):
+        """The .olean SHA is unchanged but the scan workload is no longer stable."""
+        artifact = self.install_olean(b"unchanged compiled content")
+        original = perf._profile_once
+        invocations = [0]
+
+        def change_only_ignored_name(*args, **kwargs):
+            invocations[0] += 1
+            if invocations[0] == 2:
+                (artifact.parent / "ignored.log").write_bytes(b"new log")
+            return original(*args, **kwargs)
+
+        with patch.object(perf, "_profile_once", side_effect=change_only_ignored_name):
+            with self.assertRaisesRegex(
+                    RuntimeError, "I/O counters changed during"):
+                perf.benchmark(self.root, samples=2)
+        self.assertEqual(invocations[0], 2)
+        self.assertEqual(artifact.read_bytes(), b"unchanged compiled content")
+
+    def test_reject_inconsistent_olean_name_counters(self):
+        """A profiler regression cannot emit self-contradictory evidence."""
+        self.install_olean()
+        original = perf._profile_once
+
+        def inconsistent(*args, **kwargs):
+            fingerprint, elapsed, parts, profile = original(*args, **kwargs)
+            profile["counts"]["non_olean_names_skipped"] += 1
+            return fingerprint, elapsed, parts, profile
+
+        with patch.object(perf, "_profile_once", side_effect=inconsistent):
+            with self.assertRaisesRegex(
+                    RuntimeError, "Inconsistent Lean .olean filename counters"):
+                perf.benchmark(self.root, samples=1)
+
     def test_environment_change_aborts_timing_not_cached(self):
         # Keep the full production fingerprint running in both measurements,
         # changing just the dependency evidence without short-circuiting it.
