@@ -258,6 +258,102 @@ def check_jsj_combinatorics():
     return len(examples)
 
 
+
+def check_weighted_planar_duality():
+    """Exact reciprocal-weight dual tree sum for C3, theta3 and a tree."""
+    tests=0
+    for w in product((-3,-2,-1,1,2,3), repeat=3):
+        w=tuple(Fraction(x) for x in w)
+        # Triangle primal: 3 two-edge spanning trees; dual: three parallel edges.
+        primal=w[0]*w[1]+w[0]*w[2]+w[1]*w[2]
+        dual=(w[0]*w[1]*w[2])*sum((1/x for x in w),Fraction())
+        assert primal==dual
+        # Three-parallel-edge primal; its dual is C3.
+        primal_parallel=sum(w,Fraction())
+        dual_triangle=(w[0]*w[1]*w[2])*(
+            Fraction(1,w[0]*w[1])+Fraction(1,w[0]*w[2])+
+            Fraction(1,w[1]*w[2]))
+        assert primal_parallel==dual_triangle
+        # Three-edge tree primal, one-vertex 3-loop dual; only empty dual tree.
+        assert w[0]*w[1]*w[2]==(w[0]*w[1]*w[2])*1
+        tests+=3
+    return tests
+
+
+def check_kirby_congruence():
+    """Exact rational linking pairings under Kirby slides and ±1 blow-ups."""
+    tests=0
+    bases=[[[a,b],[b,c]] for a,b,c in product(range(-3,4),repeat=3)
+           if a*c-b*b!=0]
+    Ps=(
+        [[1,1],[0,1]],[[1,-1],[0,1]],
+        [[1,0],[1,1]],[[1,0],[-1,1]],
+        [[0,1],[1,0]],
+    )
+    def inverse2(Q):
+        determinant=det_int(Q)
+        assert determinant
+        return [[Fraction(Q[1][1],determinant),
+                 Fraction(-Q[0][1],determinant)],
+                [Fraction(-Q[1][0],determinant),
+                 Fraction(Q[0][0],determinant)]]
+    def quadratic(inv,x,y):
+        return sum(x[i]*inv[i][j]*y[j]
+                   for i in range(2) for j in range(2))
+    def mm(A,B):
+        return [[sum(A[i][k]*B[k][j] for k in range(len(B)))
+                 for j in range(len(B[0]))] for i in range(len(A))]
+    def tr(A):
+        return [list(row) for row in zip(*A)]
+    x=(1,2);y=(-2,3)
+    for Q in bases:
+        Qi=inverse2(Q)
+        for P in Ps:
+            Qp=mm(mm(tr(P),Q),P)
+            assert det_int(Qp)==det_int(Q)
+            # For 2x2: integral cokernel group is described by det and gcd(entries).
+            assert gcd(*[abs(v) for row in Qp for v in row])==gcd(
+                *[abs(v) for row in Q for v in row])
+            xp=[sum(P[k][i]*x[k] for k in range(2)) for i in range(2)]
+            yp=[sum(P[k][i]*y[k] for k in range(2)) for i in range(2)]
+            assert quadratic(Qi,x,y)==quadratic(inverse2(Qp),xp,yp)
+            tests+=1
+        for epsilon in (-1,1):
+            # Integral unit block adds trivial coker and an integer linking term.
+            Qp=[Q[0]+[0],Q[1]+[0],[0,0,epsilon]]
+            assert det_int(Qp)==epsilon*det_int(Q)
+            assert Fraction(-1,epsilon).denominator==1
+            tests+=1
+    return tests
+
+
+def check_torus_bundle_h1():
+    """2x2 integer Smith invariants for abelianizations Z⊕coker(A-I)."""
+    tests=0
+    for a,b,c,d in product(range(-3,4),repeat=4):
+        if a*d-b*c!=1:continue
+        W=[[a-1,b],[c,d-1]]
+        determinant=det_int(W)
+        divisor=gcd(*[abs(v) for row in W for v in row])
+        if determinant:
+            assert divisor>0 and abs(determinant)%divisor==0
+            invariants=(divisor,abs(determinant)//divisor)
+            assert invariants[1]%invariants[0]==0
+            torsion_order=abs(determinant)
+            assert torsion_order==invariants[0]*invariants[1]
+            rank=1
+        elif divisor:
+            rank=2
+        else:
+            rank=3
+        # A=I gives T^3, an example with a loop edge but abelian H1 rank three.
+        if (a,b,c,d)==(1,0,0,1):assert rank==3
+        if (a,b,c,d)==(2,1,1,1):
+            assert determinant==-1 and rank==1 and torsion_order==1
+        tests+=1
+    return tests
+
+
 def test_sources():
     paths=[
         "19-grafy-taita-wielomian-tutte-a-i-macierze-goeritza.tex",
@@ -266,12 +362,15 @@ def test_sources():
     ]
     a,b,c=[(BASE/n).read_text(encoding="utf-8") for n in paths]
     assert r"\label{thm:tg-tait-dual-trees}" in a
+    assert r"\label{cor:tg-tait-weighted-dual}" in a
     assert r"\label{thm:tg-tait-tutte}" in a
     assert "Wagi ujemne nie zliczają drzew" in a
     assert "ps-qr=1" in b
+    assert r"\label{st:kt-kirby-matrix}" in b
     assert r"(0,0)--(4.2,2.5)" in b
     assert "Przeciwległe boki" in b
     assert r"\label{thm:tg-jsj-graph-of-groups}" in c
+    assert r"\label{st:tg-jsj-mapping-torus-h1}" in c
     assert r"\label{ex:tg-jsj-sol-torus-bundle}" in c
 
 
@@ -283,3 +382,6 @@ if __name__=="__main__":
     print("PASS cyclic branched cover determinant blocks:",check_branched_covers())
     print("PASS surgery torsion linking form invariance:",check_linking_pairing())
     print("PASS JSJ graph spanning trees/HNN and Sol monodromy:",check_jsj_combinatorics())
+    print("PASS weighted planar dual reciprocity:",check_weighted_planar_duality())
+    print("PASS Kirby matrix congruence and linking-form invariance:",check_kirby_congruence())
+    print("PASS torus bundle H1 via integral cokernel:",check_torus_bundle_h1())
