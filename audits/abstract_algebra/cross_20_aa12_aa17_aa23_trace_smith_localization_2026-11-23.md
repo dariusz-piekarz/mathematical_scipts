@@ -57,3 +57,13 @@ Uzupełniono \`.github/workflows/abstract-algebra-chapter.yml\` o wyzwalacz dla 
 **AA-X20: W AUDYCIE / STABILIZACJI CI.** W kontrolowanym zakresie nie wykryto sprzeczności między zatwierdzonymi rozdziałami. Nie zmieniano żadnego źródła AA-01–AA-50. Nowe teoretyczne połączenie może zostać zaproponowane do dodania po AA-17 jako przykład zastosowania postaci Smitha, jednak nie wstawiano go automatycznie bez zgody użytkownika.
 
 **Bramka zamknięcia:** zweryfikować \`6/6\` testów \`ok\`, zakończony sukcesem cały workflow, kompilację pełnego tomu przez \`latexmk\`, a także kontrolę PDF i odsyłaczy. Sama kompilacja nie oznacza niezależnych oględzin wizualnych stron.
+
+## 5. Zamknięcie AA-X20 po pełnej weryfikacji CI
+
+**AA-X20: ZAMKNIĘTY — PASS w określonym zakresie przekrojowym.** Niezależnie od wcześniejszych pięciu lokalnych testów rachunkowych odczytano ostateczny wynik [GitHub Actions 45222177294](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45222177294) dla dokładnie \`497ea71f410eb02037430c8e2810f3dcf687491d\`. Przebieg ma \`completed / success\`; job \`validate-cli\` — **98/98 kroków ukończonych**, bez awarii.
+
+Z rzeczywistego logu jobu \`137859065780\` zweryfikowano wszystkie **6/6 testów AA-X20 = ok** — każdy zarówno w globalnym odkrywaniu testów, jak i w kroku \`Run AA-X20 trace Smith localization crosschecks\`. W szczególności na pełnym checkoutcie przeszedł test unikatowości etykiet całej 50-rozdziałowej książki oraz 34 odsyłaczy trzech badanych rozdziałów.
+
+\`Compile AA-01 to AA-50 book with latexmk\`: **success**. \`Verify PDF and references (no undefined refs)\`: **success**. Przesłano artefakt \`abstract-algebra-aa01-aa50\`, ID \`14842500747\`, ZIP **2 289 390 B**. Nie wykonano odrębnej wizualnej inspekcji poszczególnych stron PDF; kompilacja i automatyczna kontrola odsyłaczy nie są z nią utożsamiane.
+
+**Werdykt:** w badanych zależnościach nie wykryto błędu matematycznego wymagającego zmiany zatwierdzonych rozdziałów. Dowód twierdzenia przekrojowego i modele skończone są odrębnymi warstwami uzasadnienia; testy nie stanowią formalizacji w Lean. **Treść AA-01–AA-50 i ich historyczne statusy pozostały bez zmian; AA-51 nie otwierano.** Opcjonalny nowy przykład Smith–lokalizacja–forma śladu pozostaje propozycją do decyzji użytkownika.
