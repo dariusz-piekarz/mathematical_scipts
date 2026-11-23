@@ -205,6 +205,31 @@ etykiet, `0` nierozwiązanych odsyłaczy,
 Testy skończonych przypadków
 nie zastępują dowodów twierdzeń.
 
+## Końcowy skład i inspekcja graficzna
+
+Po ostatnich zmianach źródłowych i testowych przebieg
+[45181849098](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181849098),
+przypięty do commitu `eab5a315293a9ac68c70fab2a1af3bb34c515107`,
+zakończył oba zadania sukcesem:
+`structural-audit=success`, `full-book-pdf=success`.
+Artefakt PDF został rzeczywiście pobrany i sprawdzony:
+- **273 strony A4**, trzy udane przebiegi `pdflatex`;
+- końcowy plik `graph_and_knot_full_warnings.txt` ma **0 bajtów**,
+  a log nie zawiera ostrzeżeń LaTeX ani przepełnionych ramek;
+- renderowano strony PDF **136–165** (przegląd obejmuje całe
+  rozdziały 16–18 na stronach 136–162 i początek rozdziału 19),
+  w szczególności rysunki grafów Cayleya, działanie grafów grup,
+  diagramy węzłów, wygładzania Seiferta, Kauffmana i warkoczy;
+- w renderach nie wykryto oczywistych kolizji tekstu z ilustracjami,
+  obcięcia wzorów lub podpisów czy utraty marginesów.
+  Jest to inspekcja składu, nie dowód poprawności rysunków
+  jako modeli geometrycznych.
+
+**Wszystkie zdefiniowane w bieżącym przejściu kontrole
+strukturalne, regresyjne i składu — PASS.**
+Nie zamyka to planowanego niezależnego drugiego
+przejścia matematycznego rozdziału 18.
+
 ## Bramka stabilizacji
 
 **Rozdziały 16–18: OTWARTE — po pierwszym przejściu.**
@@ -215,11 +240,11 @@ Do kolejnej iteracji:
    dwuznaczności konwencji znaków,
    własności Arfa i długości oraz dowodu
    addytywności rodzaju;
-2. wyniki pełnego PDF dla ostatniego
-   commitu, przegląd obrazów stron
-   zmienionych sekcji i rysunków;
-3. potwierdzenie stabilności
-   po kontrolach CI przed przejściem do 19–21.
+2. drugie sprawdzenie, czy diagramy Reidemeistera
+   i konwencje przesunięć Seiferta oddają dokładnie
+   lokalną topologię, nie tylko czy są czytelne;
+3. po audycie matematycznym stabilizacja bloku
+   16–18 i dopiero potem przejście do 19–21.
 
 Audyt matematyczny **44-rozdziałowego
 tomu pozostaje otwarty**.
