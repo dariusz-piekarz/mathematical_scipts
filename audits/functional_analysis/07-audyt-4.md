@@ -4,7 +4,7 @@
 **Gałąź:** biblioteka-matematyczna-iteracja-6.  
 **Źródło:** chapters/pl/functional_analysis/07-oddzielanie-zbiorow-wypuklych-polary-i-twierdzenie-bipolarne.tex.  
 **SHA kontrolowanego źródła:** 3802015b41891911fe852e6a2600547d894fab8c — identyczny z końcową wersją po audycie 07/03.  
-**Werdykt matematyczno-redakcyjny:** **CZYSTY**, nie modyfikowano rozdziału. Po potwierdzeniu pełnego CI/PDF audyt zalicza się jako **1/2**; rozdział 07 nie jest jeszcze stabilny.
+**Werdykt matematyczny, redakcyjny i techniczny:** **CZYSTY — 1/2** kolejnych czystych audytów. Rozdział źródłowy niezmieniony, pełny CI i kontrola PDF zakończone pomyślnie. Rozdział 07 nie jest jeszcze stabilny.
 
 ## Przedmiot niezależnego audytu
 
@@ -43,8 +43,9 @@ Odczytano ponownie aktualną pełną treść rozdziału, bez ograniczania się d
 - 11/11 środowisk proof, 4/4 środowisk przyklad, 17 unikatowych etykiet, 12 wystąpień odsyłaczy i **0 brakujących celów** w rzeczywistych rozdziałach 01–07. Pozostałe środowiska lematów, twierdzeń, stwierdzeń, wniosków, definicji i uwag mają zgodne otwarcia i zamknięcia.
 - Zachowano terminologię: „przestrzeń sprzężona” zamiast niedozwolonego rzeczownikowego „dual”; poprawne polskie terminy dotyczące zwartości i topologii.
 - Źródło LaTeX identyczne blob SHA z audytem 07/03. Etykiety, sekwencja rozdziałów i schemat polarności niezmienione.
-- Dedykowane [GitHub Actions 45185870226](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45185870226) uruchomiono po rozszerzeniu regresji. Stan końcowy, kompilacja i oględziny PDF do uzupełnienia po ukończeniu CI.
+- Dedykowane [GitHub Actions 45186232281](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45186232281) zakończyło się **pełnym SUCCESS** przy niezmienionym blob SHA rozdziału. Wszystkie **22/22 testy PASS**, przygotowanie kontekstu rzeczywistych rozdziałów 01–07, kompilacja LaTeX, kontrola końcowego PDF i odsyłaczy oraz publikacja artefaktu PASS. W logu: `Ran 22 tests`, `OK`, `Pages: 43`.
+- Pobrano wynikowy **43-stronicowy PDF A4** (556327 bajtów) z [CI 45185870226](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45185870226), uruchomionego dla dokładnie tego samego źródła i 22 testów. Wyrenderowano i obejrzano strony **39–43**, zawierające cały rozdział 07 i diagram rombu/kwadratu: **0 bloków poza stroną**, bez widocznych kolizji tekstu, ucięć i uszkodzeń znaków. Końcowy log LaTeX zawiera **0** `Undefined control sequence`, `There were undefined references`, `Overfull \\hbox`, `Missing character`. Przejściowe ostrzeżenie po pierwszym przebiegu kompilacji nie występuje po końcowym przebiegu.
 
 ## Decyzja
 
-**Czysty audyt matematyczno-redakcyjny 07/04, bez zmian w źródle.** Po pełnym pozytywnym CI/PDF zaliczyć **1/2** czystych audytów. Kolejny wymagany etap: niezależny audyt 07/05 aktualnej wersji. Nie rozpoczynać rozdziału 08 przed uzyskaniem 2/2.
+**CZYSTY audyt 07/04, 11/11 dowodów PASS, 4/4 przykłady PASS, 22/22 testy PASS, pełny CI i PDF zweryfikowane. Zalicza się jako 1/2 kolejnych czystych audytów bez zmian źródła.** Kolejny wymagany etap: niezależny audyt 07/05 aktualnej wersji. Nie rozpoczynać rozdziału 08 przed uzyskaniem 2/2.
