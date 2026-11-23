@@ -45,7 +45,6 @@ class DifferentialFieldAA43(unittest.TestCase):
             u=normalize((2*c*bp-b*cp)/disc)
             v=normalize((b*bp-2*cp)/disc)
             # In K[alpha]/(alpha^2+b*alpha+c), alpha'=u+v*alpha.
-            self.assertEqual(normalize(2*u+b*v+bp*b*0+cp + v*b*b*0),normalize(2*u+b*v+cp))
             # Check the defining relation coefficient-by-coefficient:
             # (2alpha+b)(u+v alpha)+b' alpha +c'=0
             constant=normalize(b*u-2*c*v+cp)
