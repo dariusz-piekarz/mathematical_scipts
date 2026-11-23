@@ -64,3 +64,46 @@ jobs:
             books/pl/measure_theory_ch01_ci.log
             books/pl/measure_theory_ch01_ci.txt
           if-no-files-found: warn
+
+  chapter-01-book-reference-context:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install TeX Live and PDF inspection tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-lang-polish texlive-pictures lmodern poppler-utils
+      - name: Compile complete book as reference context for chapter 01
+        working-directory: books/pl
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory.tex > measure_theory_full_pass1.txt
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory.tex > measure_theory_full_pass2.txt
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory.tex > measure_theory_full_pass3.txt
+          test -s measure_theory.pdf
+          grep -Fq '\newlabel{ch:miary-wlasnosci}' measure_theory.aux
+          if grep -E 'LaTeX Warning: (Reference|Citation).*undefined|There were undefined references|multiply defined' measure_theory.log; then
+            echo "Full-book cross-references remain unresolved"
+            exit 1
+          fi
+          pdfinfo measure_theory.pdf | tee measure_theory_full_pdfinfo.txt
+          pdftotext -layout measure_theory.pdf measure_theory_full_text.txt
+          grep -q "Rodziny zbiorów i przestrzenie mierzalne" measure_theory_full_text.txt
+          grep -q "Miary i ich podstawowe właściwości" measure_theory_full_text.txt
+      - name: Upload complete-book reference-context PDF and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: measure-theory-ch01-full-book-context
+          path: |
+            books/pl/measure_theory.pdf
+            books/pl/measure_theory.log
+            books/pl/measure_theory.aux
+            books/pl/measure_theory_full_pdfinfo.txt
+            books/pl/measure_theory_full_text.txt
+            books/pl/measure_theory_full_pass1.txt
+            books/pl/measure_theory_full_pass2.txt
+            books/pl/measure_theory_full_pass3.txt
+          if-no-files-found: warn
