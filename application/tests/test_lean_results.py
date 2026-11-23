@@ -269,6 +269,41 @@ class LeanResultsTests(unittest.TestCase):
         save_run("sample", fp, proof_status="compiled", detail="ok", results_root=self.output)
         self.assertEqual(last_run("sample", fp, results_root=self.output)["proof_status"], "compiled")
 
+    def test_l12_utf8_multibyte_log_roundtrip_never_exceeds_record_limit(self):
+        """Byte-bounded JSON must still round-trip long non-ASCII Lean logs."""
+        from backend import lean_results
+        fp = self.fp()
+        log = "λ→∀ż🚀" * 4000 + " FINAL_UNICODE_DIAGNOSTIC"
+        record = save_run("sample", fp, proof_status="failed",
+                          detail="Lean błąd: nazwę λ sprawdzono",
+                          log=log, results_root=self.output)
+        path = self.output / "sample.json"
+        self.assertLessEqual(path.stat().st_size, lean_results.MAX_RECORD_BYTES)
+        self.assertLessEqual(len(record["log"]), lean_results.MAX_STORED_LOG)
+        self.assertTrue(record["log"].endswith(" FINAL_UNICODE_DIAGNOSTIC"))
+        self.assertLess(len(record["log"]), len(log))
+        reopened = last_run("sample", fp, results_root=self.output)
+        self.assertTrue(reopened["run_cached"])
+        self.assertEqual(reopened["proof_status"], "failed")
+        self.assertEqual(reopened["last_run_log"], record["log"])
+        self.assertEqual(reopened["last_run_detail"], "Lean błąd: nazwę λ sprawdzono")
+        self.assertFalse(reopened["certificate"])
+
+    def test_l12_json_escape_expansion_does_not_invalidate_saved_log(self):
+        """Control characters expand to 6 bytes in JSON, not one byte."""
+        from backend import lean_results
+        fp = self.fp()
+        log = "\x00" * 16000 + " COMPLETED"
+        saved = save_run("sample", fp, proof_status="timeout",
+                         detail="time limit", log=log, results_root=self.output)
+        self.assertLessEqual((self.output / "sample.json").stat().st_size,
+                             lean_results.MAX_RECORD_BYTES)
+        reopened = last_run("sample", fp, results_root=self.output)
+        self.assertTrue(reopened["run_cached"])
+        self.assertEqual(reopened["proof_status"], "timeout")
+        self.assertEqual(reopened["last_run_log"], saved["log"])
+        self.assertTrue(saved["log"].endswith(" COMPLETED"))
+
     def test_oversize_log_is_truncated(self):
         fp = self.fp()
         save_run("sample", fp, proof_status="failed", detail="error", log="x" * 32000,
