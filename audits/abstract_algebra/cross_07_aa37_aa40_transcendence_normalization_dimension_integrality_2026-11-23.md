@@ -1,18 +1,18 @@
 # AA-X07 — audyt przekrojowy AA-37–AA-40: transcendencja, normalizacja Noether, wymiar Krulla, całkowitość
 
 **Data:** 23 listopada 2026 r.  
-**Repozytorium:** \`dariusz-piekarz/mathematical_scipts\`. **Istniejąca gałąź:** \`biblioteka-matematyczna-iteracja-6\`.
+**Repozytorium:** `dariusz-piekarz/mathematical_scipts`. **Istniejąca gałąź:** `biblioteka-matematyczna-iteracja-6`.
 
 ## 1. Źródła i dokładny zakres
 
 | Rozdział | Główne wyniki | SHA Git blob źródła |
 | --- | --- | --- |
-| AA-37 | Bazy transcendencji, wymiana algebraiczna, niezmienniczość stopnia transcendencji | \`b710ae2447d41aef8681de6d55f4c6d3709616c1\` |
-| AA-38 | Trójkątne zmiany zmiennych, lemat normalizacyjny Noether, także nad ciałami skończonymi | \`2edea1072ab0b052f492e88f9dd508ba5c938d3a\` |
-| AA-39 | Wymiar Krulla, ideały pierwsze ilorazów i lokalizacji, \(\dim K[U,V]=2\) | \`1b8990241d26cbf461a0e7b4a07546a3ef77fa9e\` |
-| AA-40 | Rozszerzenia całkowite, wznoszenie i nieporównywalność ideałów, wymiar \(K[X_1,\ldots,X_n]\) | \`101cd301f88c9e1cc84e89d2ce3cb57bc7c8fe2b\` |
+| AA-37 | Bazy transcendencji, wymiana algebraiczna, niezmienniczość stopnia transcendencji | `b710ae2447d41aef8681de6d55f4c6d3709616c1` |
+| AA-38 | Trójkątne zmiany zmiennych, lemat normalizacyjny Noether, także nad ciałami skończonymi | `2edea1072ab0b052f492e88f9dd508ba5c938d3a` |
+| AA-39 | Wymiar Krulla, ideały pierwsze ilorazów i lokalizacji, \(\dim K[U,V]=2\) | `1b8990241d26cbf461a0e7b4a07546a3ef77fa9e` |
+| AA-40 | Rozszerzenia całkowite, wznoszenie i nieporównywalność ideałów, wymiar \(K[X_1,\ldots,X_n]\) | `101cd301f88c9e1cc84e89d2ce3cb57bc7c8fe2b` |
 
-Audyt opiera się na **faktycznych aktualnych plikach** rozdziałów, nie na streszczeniu z wcześniejszych iteracji. Wszystkie cztery pliki są dołączone przez \`\\input\` do \`books/pl/abstract_algebra.tex\`. Nie zmieniono ich treści matematycznej.
+Audyt opiera się na **faktycznych aktualnych plikach** rozdziałów, nie na streszczeniu z wcześniejszych iteracji. Wszystkie cztery pliki są dołączone przez `\input` do `books/pl/abstract_algebra.tex`. Nie zmieniono ich treści matematycznej.
 
 ## 2. Niezależna kontrola matematyczna zależności
 
@@ -46,7 +46,7 @@ Dla algebraicznej krzywej z ostrzem \(K[t^2,t^3]\subseteq K[t]\) kontrolowano re
 
 ## 3. Test I — moniczność i niezależne rachunki nad ciałami skończonymi
 
-**Ścieżka:** \`tools/tests/test_abstract_algebra_cross_aa37_40.py\`; **3085/3085 PASS**.
+**Ścieżka:** `tools/tests/test_abstract_algebra_cross_aa37_40.py`; **3085/3085 PASS**.
 
 - Wyliczono wszystkie jednomiany niestałe stopnia całkowitego \(\le3\) w \(2\) albo \(3\) zmiennych i dodatkowe deterministycznie wybrane kombinacje dwu- i trójmianowe, nad \(\mathbb F_2,\mathbb F_3,\mathbb F_5\).
 - Dla każdego sprawdzono różność wag, dokładny stopień po trójkątnym podstawieniu, zgodność współczynnika wiodącego z przewidzianym niezerowym skalarem i równość po podstawieniu odwrotnym.
@@ -57,7 +57,7 @@ Dodatkowe testy nad ciałami skończonymi są istotne, ponieważ niepoprawna wer
 
 ## 4. Niezależny test II — rzeczywiste włókna skończonych rozszerzeń całkowitych
 
-**Ścieżka:** \`tools/tests/test_abstract_algebra_cross_aa37_40_confirming.py\`; **4752/4752 PASS**.
+**Ścieżka:** `tools/tests/test_abstract_algebra_cross_aa37_40_confirming.py`; **4752/4752 PASS**.
 
 Rozpatrzono zupełnie inny typ konstrukcji niż w teście I:
 \[
@@ -89,23 +89,51 @@ Wynik: **4752/4752** zaliczonych kontroli, **682** wystąpienia czynników pierw
 | **Razem** | **67** | **45** | **31** | **30** |
 
 Wszystkie 67 etykiet są unikatowe. Spośród 45 wystąpień odsyłaczy tylko trzy wskazują poza badany blok; potwierdzono ich istnienie przez osobne odczytanie odpowiednich plików:
-- \`aa:tw:fundamental-symmetric\` — AA-31;
-- \`aa:ch:pierscienie\` — AA-09;
-- \`aa:ch:lokalizacja\` — AA-12.
+- `aa:tw:fundamental-symmetric` — AA-31;
+- `aa:ch:pierscienie` — AA-09;
+- `aa:ch:lokalizacja` — AA-12.
 
-Wszystkie środowiska \`\\begin{...}\` i \`\\end{...}\` są poprawnie sparowane, a AA-37–AA-40 występują we właściwej kolejności w głównym pliku książki.
+Wszystkie środowiska `\begin{...}` i `\end{...}` są poprawnie sparowane, a AA-37–AA-40 występują we właściwej kolejności w głównym pliku książki.
 
 ## 6. Integracja CI i warunek zamknięcia
 
 Oba skrypty (SymPy + standardowa biblioteka Pythona) wykonano **lokalnie** i zapisano bajtowo identyczne wersje w repozytorium:
-- test I: commit \`23a89c094ab5906cf685c64871b0cd84d42ab16c\`;
-- test II: commit \`3fa7e008e41f87fffb2c1edb25a355e0fd12c108\`;
-- integracja obu kroków i ścieżek wyzwalających w \`.github/workflows/abstract-algebra-chapter.yml\`: commit \`b0e1b09ebbbcf1839f3859d7136a4165abd01077\`.
+- test I: commit `23a89c094ab5906cf685c64871b0cd84d42ab16c`;
+- test II: commit `3fa7e008e41f87fffb2c1edb25a355e0fd12c108`;
+- integracja obu kroków i ścieżek wyzwalających w `.github/workflows/abstract-algebra-chapter.yml`: commit `b0e1b09ebbbcf1839f3859d7136a4165abd01077`.
 
 Polecenia odtwarzające:
-\`\`\`bash
+```bash
 python tools/tests/test_abstract_algebra_cross_aa37_40.py
 python tools/tests/test_abstract_algebra_cross_aa37_40_confirming.py
-\`\`\`
+```
 
-**Stan matematyczny:** dla sprawdzonego zakresu nie znaleziono koniecznej poprawki źródeł AA-37–AA-40. **Formalną stabilność AA-X07** potwierdzamy dopiero po zakończeniu zdalnego CI (dwa nowe zestawy, pełne PDF AA-01–AA-42, weryfikacja odsyłaczy), pobraniu rzeczywistego artefaktu i wizualnej kontroli stron czterech rozdziałów. Dopóki te kroki nie zostały wykonane, **AA-X07 pozostaje w trakcie zamykania**.
+**Stan po audycie matematycznym:** nie znaleziono koniecznej poprawki źródeł AA-37–AA-40. Warunki końcowej stabilizacji, tj. pełne CI i kontrola oryginalnego artefaktu PDF, zostały następnie spełnione i są udokumentowane poniżej.
+
+
+## 7. Końcowy werdykt AA-X07 — STABILNY
+
+**GitHub Actions:** [przebieg 45137927084](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45137927084), commit `b0e1b09ebbbcf1839f3859d7136a4165abd01077`, zakończony **completed/success**. Wykonano **66/66 kroków**, żaden nie ma wyniku `failure`.
+
+Oddzielnie zweryfikowano status **completed/success** następujących kroków:
+- `Run AA-X07 Noether normalization and quotient models`;
+- `Run AA-X07 independent prime-fiber confirmation`;
+- `Compile AA-01 to AA-42 book with latexmk`;
+- `Verify PDF and references (no undefined refs)`;
+- `Archive build output`.
+
+**Faktyczny artefakt GitHub:** `abstract-algebra-aa01-aa42`, ID **14801355712**, pobrany z powyższego przebiegu. ZIP zawiera `abstract_algebra.pdf` (**269 stron**, **2 024 014 B**, SHA-256 `70324d921a45ca3843f015479ddcf74f91e9c70b13c048c1a5db6e4fc477c58a`) oraz `abstract_algebra.log`. PDF ma poprawną strukturę (`is_repaired=False`).
+
+**Log końcowego CI:** `0` błędów `LaTeX Error`, `0` ostrzeżeń `LaTeX Warning`, `0` ostrzeżeń `hyperref`, `0` przepełnionych lub niedopełnionych wierszy i kolumn (`Overfull/Underfull \hbox`, `Overfull/Underfull \vbox`) oraz `0` niezdefiniowanych odsyłaczy.
+
+**Kontrola wizualna składu:** wyrenderowano i obejrzano wszystkie **24 strony** czterech rozdziałów:
+- AA-37: strony PDF **233–237** (5 stron);
+- AA-38: strony PDF **238–242** (5 stron);
+- AA-39: strony PDF **243–248** (6 stron), w tym rysunek krzyżujących się prostych;
+- AA-40: strony PDF **249–256** (8 stron).
+
+Na obejrzanych stronach nie wykryto widocznych nakładających się oznaczeń, uciętych tekstów, błędów składu ani wad rysunku. Wszystkie te strony zestawiono dodatkowo z końcowym PDF CI: **24/24 identyczne obrazy przy renderze 72 dpi** i **24/24 identyczne warstwy wyodrębnionego tekstu**. Na 24 stronach brak słów o współrzędnych poza obszarem kartki.
+
+### Zamknięcie
+
+**AA-X07: STABILNY w sprawdzonym zakresie przekrojowym.** Dwa odrębne zestawy kontroli matematycznych (**7837/7837**), przegląd zależności dowodowych, **67** etykiet, **45** odsyłaczy, pełny zielony workflow, faktyczny artefakt PDF oraz wizualna analiza wszystkich 24 stron nie wykazały potrzeby korekty źródeł AA-37–AA-40. Matematyczne pliki rozdziałów pozostawiono niezmienione. Jest to stabilizacja określonego bloku zależności, **nie formalna weryfikacja wszystkich dowodów całej książki**.
