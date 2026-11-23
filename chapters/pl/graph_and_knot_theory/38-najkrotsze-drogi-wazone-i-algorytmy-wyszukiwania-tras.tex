@@ -549,6 +549,136 @@ przeskalowanie uwzględniające
 górne ograniczenie prędkości.
 \end{przyklad}
 
+\section{Potencjały i algorytm Johnsona dla wszystkich par}
+\label{sec:tg-weighted-johnson}
+
+\begin{twierdzenie}[Ważenie potencjałowe i algorytm Johnsona]
+\label{thm:tg-weighted-johnson}
+Niech $D=(V,A)$ będzie skończonym
+grafem skierowanym bez pętli,
+$|V|=n$, $|A|=m$, o rzeczywistych
+wagach $w:A\to\mathbb R$.
+Załóżmy, że $D$ nie zawiera
+skierowanego cyklu o ujemnej wadze.
+Dodajmy nowy wierzchołek $q$ i
+łuki $q\to v$ o wadze zero
+dla wszystkich $v\in V$,
+bez dodawania łuków do $q$.
+Oznaczmy przez
+$p(v):=\delta(q,v)$ odległości
+obliczone algorytmem Bellmana--Forda
+w rozszerzonym grafie.
+Wówczas:
+\begin{enumerate}[label=(\roman*)]
+\item każda liczba $p(v)$ jest skończona
+i dla każdego łuku $u\to v$ zachodzi
+$p(v)\le p(u)+w(u,v)$;
+\item nowe wagi
+$w_p(u,v):=w(u,v)+p(u)-p(v)$
+są nieujemne;
+\item dla dowolnych $s,t\in V$
+zachodzi równość
+\[
+\delta_w(s,t)
+=\delta_{w_p}(s,t)-p(s)+p(t),
+\]
+z zachowaniem wartości $+\infty$
+dla par niepołączonych drogą.
+\end{enumerate}
+Dlatego jednorazowy Bellman--Ford
+i po jednym uruchomieniu Dijkstry
+dla każdego $s\in V$
+wyznaczają wszystkie odległości.
+Przy listach sąsiedztwa i kopcu
+z operacją zmniejszania klucza
+otrzymujemy czas
+$O(n(n+m)\log(n+1))$ dla $n\ge2$;
+pamięć pomocnicza to $O(n+m)$
+poza macierzą $n^2$ wyników.
+Jeżeli występuje cykl ujemny,
+wstępny Bellman--Ford wykrywa
+go i nie stosujemy algorytmu
+Johnsona w tej postaci.
+\end{twierdzenie}
+
+\begin{proof}
+Nowy wierzchołek $q$ jest
+źródłem łuku o koszcie zero
+do każdego $v$, a zatem
+wszystkie wierzchołki są
+osiągalne z $q$.
+Ponieważ do $q$ nie prowadzą
+łuki, nowy graf nie ma
+cyklu ujemnego. Z
+Twierdzenia~\ref{thm:tg-weighted-bellman}
+wynika, że wszystkie $p(v)$
+są skończone i poprawne.
+Przedłużenie najkrótszego
+spaceru z $q$ do $u$
+o łuk $u\to v$ pokazuje,
+że $p(v)\le p(u)+w(u,v)$,
+co dowodzi (i) i nieujemności
+wag w (ii).
+
+Dla dowolnego spaceru
+$P=(s=v_0,v_1,\ldots,v_k=t)$
+sumowanie wag potencjałowych daje
+\[
+\begin{aligned}
+w_p(P)
+&=\sum_{i=0}^{k-1}
+\bigl(w(v_i,v_{i+1})
++p(v_i)-p(v_{i+1})\bigr)\\
+&=w(P)+p(s)-p(t).
+\end{aligned}
+\]
+Dla ustalonych końców
+zmiana kosztu jest stała,
+a zatem wszystkie porównania
+spacerów, w tym ich minimów,
+pozostają takie same.
+Nie zmienia się także
+osiągalność pary wierzchołków.
+W ten sposób otrzymujemy (iii).
+
+W rozszerzonym grafie jest
+$n+1$ wierzchołków i $m+n$
+łuków, więc wstępny
+Bellman--Ford wykonuje
+$O(n(n+m))$ operacji.
+Kolejne $n$ przebiegów
+Dijkstry dla nieujemnych wag
+$w_p$ zajmuje
+$O(n(n+m)\log(n+1))$ czasu.
+Potrzebujemy list sąsiedztwa,
+potencjałów i jednej
+kolejki Dijkstry, czyli
+$O(n+m)$ pamięci roboczej;
+zapis wszystkich wyników
+zajmuje dodatkowo $O(n^2)$.
+\end{proof}
+
+\begin{przyklad}[Rzeczywista ujemna krawędź i nieujemne wagi po redukcji]
+\label{ex:tg-weighted-johnson}
+Rozważmy łuki $s\to a$ o wadze $-2$,
+$s\to b$ o wadze $5$,
+$a\to b$ o wadze $1$
+oraz $b\to a$ o wadze $4$.
+Jedyny skierowany cykl ma wagę $5>0$.
+Po dodaniu nowego źródła $q$
+z łukami zerowymi dostajemy
+$p(s)=0$, $p(a)=-2$, $p(b)=-1$.
+Wagi po redukcji dla
+czterech wymienionych łuków
+wynoszą kolejno $0,6,0,5$,
+więc są nieujemne.
+Algorytm Dijkstry oblicza
+$\delta_{w_p}(s,b)=0$, a
+powrót do poprzednich wag daje
+$\delta_w(s,b)=0-p(s)+p(b)=-1$,
+zgodnie z drogą $s\to a\to b$.
+\end{przyklad}
+
 \section{Dwukierunkowy algorytm Dijkstry}
 \label{sec:tg-weighted-bidir}
 
