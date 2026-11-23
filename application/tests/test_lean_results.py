@@ -278,5 +278,102 @@ class LeanResultsTests(unittest.TestCase):
         self.assertFalse(result["certificate"])
 
 
+    def test_l12_cached_record_rejects_spoofed_fields_and_malformed_provenance(self):
+        """A local JSON file must not promote an invalid execution record."""
+        import json
+        fp = self.fp()
+        saved = save_run("sample", fp, proof_status="compiled",
+                         detail="genuine result", results_root=self.output)
+        record = self.output / "sample.json"
+        original = record.read_bytes()
+
+        mutations = (
+            {"certificate": True},
+            {"certificate": "false"},
+            {"new_untrusted_field": "verified"},
+            {"source_binding_sha256": "not-a-digest"},
+            {"source_binding_sha256": None},
+            {"schema_version": True},
+            {"proof_status": "verified"},
+            {"finished_at": "not-a-timestamp"},
+            {"finished_at": "2026-11-23T09:00:00"},
+            {"detail": "x" * 1001},
+            {"log": "x" * 16001},
+            {"declared_toolchain": "z" * 161},
+        )
+        for changes in mutations:
+            with self.subTest(changes=list(changes)):
+                data = dict(saved)
+                data.update(changes)
+                record.write_text(json.dumps(data), encoding="utf-8")
+                state = last_run("sample", fp, results_root=self.output)
+                self.assertEqual(state["proof_status"], "not_run")
+                self.assertFalse(state["run_cached"])
+                self.assertTrue(state["run_record_invalid"])
+        missing = dict(saved)
+        del missing["toolchain_sha256"]
+        record.write_text(json.dumps(missing), encoding="utf-8")
+        self.assertTrue(last_run("sample", fp, results_root=self.output)[
+            "run_record_invalid"])
+
+        # Duplicate fields are ambiguous even when both values appear valid.
+        duplicate = original.decode("utf-8").replace(
+            '"proof_status": "compiled"',
+            '"proof_status": "compiled", "proof_status": "compiled"'
+        )
+        self.assertNotEqual(duplicate, original.decode("utf-8"))
+        record.write_text(duplicate, encoding="utf-8")
+        self.assertTrue(last_run("sample", fp, results_root=self.output)[
+            "run_record_invalid"])
+
+        # Huge records must not be returned or fully parsed.
+        record.write_bytes(original + b" " * 30001)
+        self.assertTrue(last_run("sample", fp, results_root=self.output)[
+            "run_record_invalid"])
+
+        # A syntactically valid but older fingerprint remains "outdated",
+        # not a forged or malformed execution record.
+        old = dict(saved)
+        old["lean_sha256"] = "f" * 64
+        record.write_text(json.dumps(old), encoding="utf-8")
+        self.assertTrue(last_run("sample", fp, results_root=self.output)[
+            "previous_run_outdated"])
+        record.write_bytes(original)
+        self.assertTrue(last_run("sample", fp, results_root=self.output)[
+            "run_cached"])
+
+    def test_l12_missing_or_extra_expected_provenance_cannot_reuse_cache(self):
+        fp = self.fp()
+        save_run("sample", fp, proof_status="compiled",
+                 detail="genuine result", results_root=self.output)
+        for invalid in (
+            {}, {"lean_sha256": fp["lean_sha256"]},
+            {**fp, "extra_untrusted_field": "abc"},
+            {**fp, "lean_sha256": "not-a-hash"},
+            {**fp, "declared_toolchain": "x" * 161},
+        ):
+            with self.subTest(keys=list(invalid)):
+                result = last_run("sample", invalid, results_root=self.output)
+                self.assertFalse(result["run_cached"])
+                self.assertEqual(result["proof_status"], "not_run")
+                self.assertTrue(result["run_record_invalid"])
+
+    def test_l12_result_symlink_never_reuses_cached_success(self):
+        fp = self.fp()
+        save_run("sample", fp, proof_status="compiled",
+                 detail="genuine result", results_root=self.output)
+        record = self.output / "sample.json"
+        elsewhere = self.root / "backed-up-result.json"
+        record.replace(elsewhere)
+        try:
+            record.symlink_to(elsewhere)
+        except (OSError, NotImplementedError):
+            self.skipTest("Symlinks not available on this host")
+        result = last_run("sample", fp, results_root=self.output)
+        self.assertEqual(result["proof_status"], "not_run")
+        self.assertTrue(result["run_record_invalid"])
+        self.assertFalse(result["run_cached"])
+
+
 if __name__ == "__main__":
     unittest.main()
