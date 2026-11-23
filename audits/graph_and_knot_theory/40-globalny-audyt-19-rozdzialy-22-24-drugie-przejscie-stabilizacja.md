@@ -202,17 +202,68 @@ W przebiegu
 Wszystkie **66 867** przypadków
 nowego testu zakończyły się sukcesem.
 
-## Status końcowej stabilizacji
+## Końcowy przebieg CI i weryfikacja PDF
 
-Pozostało potwierdzić po ostatnim
-commicie źródłowym:
-pełną trzykrotną kompilację
-44-rozdziałowego PDF,
-zero ostrzeżeń, wizualną inspekcję
-rozdziałów 22–24 i ich
-nowych wzorów oraz rysunków.
-Dopiero po tych bramkach
-można uznać blok 22–24
-za **lokalnie stabilny**.
-Globalny audyt wszystkich
-44 rozdziałów pozostaje otwarty.
+**Po wszystkich poprawkach źródeł i testów** przebieg
+[GitHub Actions 45210934282](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45210934282)
+dla commitu `e7de93944709cdbab1f71b8e2d399d0a95eef1aa`
+zakończył się wynikiem **success** w obu
+zadaniach: `structural-audit` i `full-book-pdf`.
+
+Potwierdzono:
+- **44/44** pliki i rozdziały, **0** powtórzonych etykiet,
+  **0** nierozwiązanych odsyłaczy,
+  **0** błędów środowisk, **0** terminów zakazanych;
+- **66 867** dokładnych kontroli w dziesięciu grupach,
+  wszystkie **PASS** po korekcie oczekiwanej wartości
+  torsji w czteroramiennym przykładzie;
+- **trzy rzeczywiste, udane przebiegi `pdflatex`**
+  pełnego tomu;
+- końcowy **280-stronicowy PDF A4**;
+- `graph_and_knot_full_warnings.txt` ma **0 bajtów**,
+  bez ostrzeżeń LaTeX i zgłoszonych przepełnień.
+
+Pobrano artefakt **ostatniego przebiegu**,
+a nie historyczną kopię PDF.
+Niezależna inspekcja wizualna obejmowała
+wszystkie strony PDF **182–209**:
+- **182–189**: rozdział 22, w tym sygnatura trójlistnika,
+  metabolizer, Fox–Milnor, Freedman i rodzaj czterowymiarowy;
+- **190–201**: rozdział 23, w tym łańcuchy `A_n`,
+  formę splecenia (strona **195**), `D_4`, `E_8`,
+  poprawiony argument obydwu orientacji w
+  obstrukcji Donaldsona (strona **199**);
+- **202–209**: rozdział 24, w tym rozwarstwienia
+  Seiferta, `e_Q=0` i torsję, kryterium
+  określoności oraz nowe jądro gwiazdy
+  `(3,1,1,1)` na stronie **207**,
+  grafy i podpisy rysunków.
+
+Nie zaobserwowano kolizji
+rysunków z podpisami, obciętych
+wzorów, zaburzonych marginesów
+ani istotnych problemów łamania tekstu.
+Potwierdzono obecność nowych fragmentów
+w wygenerowanym, a nie tylko źródłowym, dokumencie.
+
+## Werdykt audytu 19
+
+**ROZDZIAŁY 22–24 — LOKALNIE STABILNE (PASS).**
+
+Dwa niezależne przejścia (audyty 18 i 19)
+objęły rzeczywiste poprawki i uzupełnienia
+dowodów, modele liczbowe, integralne
+kryteria Smitha i macierzy przecięcia,
+pełny skład i inspekcję PDF.
+Twierdzenia Murasugiego, Freedmana,
+Donaldsona, Kirby'ego i geometryczną
+identyfikację rozwarstwień Seiferta
+oznaczono jako wyniki przyjmowane,
+których samo CI ani testy skończone
+nie formalizują.
+
+**Stan tomu: rozdziały 01–24 lokalnie stabilne.
+Następny etap: audyt 20, pierwsze szczegółowe
+przejście historycznych rozdziałów 25–27.**
+Całościowy audyt matematyczny
+wszystkich 44 rozdziałów pozostaje otwarty.
