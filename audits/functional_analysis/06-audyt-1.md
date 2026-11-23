@@ -50,7 +50,8 @@ Sprawdzono matematycznie wszystkie 17 dowodów i pięć przykładów, założeni
 
 - Dodano tools/tests/test_functional_analysis_ch06.py: **14 testów** obejmujących strukturę tekstu, zgodność etykiet i odsyłaczy, warunek symetrii, model jednowymiarowego przedłużenia rzeczywistego, rekonstrukcję zespoloną, oszacowanie seminormą, rodziny normujących przedłużeń, separację, zbieżność operatorów współrzędnych, anihilator i normę odległości.
 - Dodano .github/workflows/functional-analysis-ch06.yml: dedykowane testy i kompilacja LaTeX pełnego kontekstu rozdziałów 01–06, podwójna kontrola odsyłaczy i PDF oraz artefakt.
-- [Przebieg 45175593130](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45175593130): etap testów **14/14 PASS**, przygotowanie TeX 01–06 PASS; ostateczny wynik kompilacji i wizualnej kontroli PDF trzeba dopisać po zakończeniu.
+- [Przebieg 45175593130](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45175593130): **pełny SUCCESS** — 14/14 testów PASS, kompilacja LaTeX w kontekście rzeczywistych rozdziałów 01–06 PASS, kontrola odsyłaczy i PDF PASS oraz zapis artefaktu PASS.
+- Pobrano PDF z tego przebiegu: **39 stron A4**, rozdział 06 na stronach **33–39**. Wyrenderowano i przejrzano wizualnie wszystkie 7 stron, ze szczególnym uwzględnieniem dowodu oddzielania punktu od domkniętej podprzestrzeni na stronie 37. **0 bloków tekstu poza obszarem strony**, brak nachodzenia wzorów na tekst i przycięć. Końcowy log LaTeX: 0 wystąpień `Undefined control sequence`, `There were undefined references`, `Overfull \\hbox`, `Missing character`.
 
 ## Decyzja
 
