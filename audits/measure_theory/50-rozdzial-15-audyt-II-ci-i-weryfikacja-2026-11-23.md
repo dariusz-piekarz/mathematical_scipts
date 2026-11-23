@@ -40,3 +40,18 @@ Autentyczne logi testów potwierdzają:
 **R01–R14:** zachowują wcześniejsze statusy STABILNE; w tej iteracji nie były audytowane. **R16–R31:** nietknięte. Nie scalano books/pl/integration_theory.tex.
 
 **Następna iteracja:** audyt **LI / R15 III** — niezależne oględziny wszystkich stron PDF, ponowna kontrola bloba i formalna decyzja o stabilizacji R15, bez otwierania R16.
+
+
+---
+
+## Uzupełnienie: niezależna kontrola wizualna autentycznego PDF
+
+Po pierwotnym zapisie raportu wykonano brakującą **niezależną inspekcję graficzną**, o której była mowa w ograniczeniach technicznych powyżej. Pobrano ponownie **rzeczywisty artefakt CI 14827393155** dla commitu **3c56f41fbbd2e116ae4732d74770e1cd2ba1d33e**. Rozpakowano ZIP do /mnt/data/r15_audit50. Do kontroli wykorzystano autentyczny plik /mnt/data/r15_audit50/measure_theory_ch15_ci.pdf, zawierający **6 stron A4**.
+
+Za pomocą renderera PDF utworzono **6/6 obrazów stron przy 140 dpi**, a następnie planszę zbiorczą /mnt/data/r15_audit50/contact.png. Obejrzano wszystkie strony: w szczególności stronę 2 z nierównościami punktu środkowego i rozbudowanym dowodem, strony 3–4 z reprezentacją dualną, stronę 5 z definicją słabej zbieżności i przykładem funkcji Rademachera oraz stronę 6 z domknięciem argumentu o słabo zbieżnym podciągu i minimalizacją energii. **Nie zauważono uciętych formuł, nachodzenia oznaczeń ani innych wad składu; R15 nie zawiera TikZ.**
+
+**Niezależny od workflow odczyt PyMuPDF:** **2910 słów według własnej segmentacji, 0 słów poza prostokątami stron**, 6 stron. W CI Poppler wykrył **3805 słów**, również w obszarze stron; różnica liczników wynika z tokenizacji. Ponownie otwarto autentyczne logi: **izolowany R15 — 0 Overfull hbox i 0 Underfull hbox**; **pełna książka — 258 stron, 0 Overfull hbox, 0 niezdefiniowanych odsyłaczy, 14 wcześniejszych nieblokujących Underfull hbox**.
+
+Po ostatnich poprawkach niezależny skan źródeł R01–R15 wykazał **17 etykiet R15, 17 odsyłaczy, 0 brakujących celów, 0 duplikatów w kontekście R01–R15, 0 niedomkniętych środowisk i 0 naruszeń terminologii**. Blob źródła R15 nadal wynosi **d41de3e4f4e7faad473065b3f472e5f6fa95b352**.
+
+**Aktualizacja wcześniejszego ograniczenia:** niezależna inspekcja graficzna **została już wykonana — PASS**. Nie jest dalszą zaległością techniczną. Nie znaleziono nowej usterki wymagającej zmiany źródła. Dla zachowania rygoru stabilizacji po poprawkach podczas tej iteracji **R15 pozostaje W STABILIZACJI**, a audyt **LI / R15 III** służy ostatniej czystej, niezależnej kontroli matematycznej i formalnemu zatwierdzeniu. Nie rozpoczynano R16.
