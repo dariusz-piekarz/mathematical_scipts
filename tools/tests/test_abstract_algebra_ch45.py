@@ -92,10 +92,13 @@ class AA45MathematicalRegression(unittest.TestCase):
         for m in (-3,-2,-1,0,1,2,3):
             actual=s.limit(ratio**m,yy,0)
             self.assertEqual(s.simplify(actual-(-s.Rational(1,4))**m),0)
-        # At infinity, s=1/x and y=w/s^2, ord(x)=-1, ord(y)=-2.
-        for m,n in ((1,0),(0,1),(-2,1),(3,-1)):
-            expected= -m-2*n
-            self.assertEqual(expected,-m-2*n)
+        # At infinity, x=1/ss and y=w/ss^2 with w(0)=+i or -i.
+        ss=s.symbols("ss")
+        for w0 in (s.I,-s.I):
+            for m,n in ((1,0),(0,1),(-2,1),(3,-1)):
+                expr=(1/ss)**m*(w0/ss**2)**n
+                normalised=s.simplify(ss**(m+2*n)*expr)
+                self.assertEqual(s.simplify(normalised-w0**n),0)
 
     def test_10_source_labels_proofs(self):
         data=SRC.read_text(encoding="utf-8")
