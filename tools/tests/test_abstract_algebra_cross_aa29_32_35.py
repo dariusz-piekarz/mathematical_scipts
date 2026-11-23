@@ -128,8 +128,17 @@ class FrobeniusReductionInterface(unittest.TestCase):
                 if p==23:
                     self.assertEqual(poly.eval(10)%p,0)
                     self.assertEqual(poly.diff().eval(10)%p,0)
+                    self.assertEqual(poly.gcd(poly.diff()).degree(),1)
+                    factors=sp.factor_list(poly)[1]
+                    self.assertEqual(sorted((g.degree(),m) for g,m in factors),
+                                     [(1,1),(1,2)])
                 else:
+                    self.assertEqual(poly.gcd(poly.diff()).degree(),0)
                     self.assertEqual(sum(expected),3)
+                    if p==59:
+                        self.assertEqual(
+                            tuple(sorted(int(r) for r in (4,13,42)
+                                         if poly.eval(r)%p==0)),(4,13,42))
 
     def test_parity_equals_quadratic_character_of_discriminant(self):
         # For odd good p, Frobenius sign = Legendre(disc mod p).
