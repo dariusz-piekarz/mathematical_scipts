@@ -2,7 +2,7 @@
 
 **Data:** 23 listopada 2026 r.
 **Działanie:** realizacja kolejnego rozdziału po stabilizacji AA-46, po poleceniu użytkownika „kontynuuj”.
-**Status:** w przygotowaniu — nie zamykać bez wielokrotnych audytów.
+**Status:** STABILNY w określonym niżej zakresie — raport: audits/abstract_algebra/ch47_iteration_03.md, końcowy CI #45161159035.
 
 ## Jawnie przyjęty zakres
 

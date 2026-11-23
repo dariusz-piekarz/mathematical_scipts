@@ -72,3 +72,10 @@ Rozdział AA-46 włączono do kanonicznej książki i katalogu. Przeprowadzono t
 ## Otwarcie AA-47 — 23 listopada 2026 r.
 
 Na podstawie prośby o kontynuację po stabilnym AA-46 przyjęto **ograniczony, audytowalny zakres** AA-47 w `docs/pl/zakres_aa47_risch_kovacic.md`: pełne dowody algorytmów wymiernych i dla wielomianowych parametrów, plus wyraźnie cytowane klasyczne wyniki pełnego Rischa i Kovacica. Rozdział i audyty dopiero powstają. **AA-47 NIE STABILNY** do zielonego CI, niezależnych audytów i pełnej kontroli PDF; nie otwierać AA-48.
+
+
+## Zamknięcie AA-47 — 23 listopada 2026 r.
+
+**AA-47: STABILNY w zatwierdzonym, ograniczonym zakresie** — audyty I–III, zwłaszcza `audits/abstract_algebra/ch47_iteration_03.md`. Pełne dowody: integracja wymierna, algorytm dla r'+hr=s przy h wielomianowym oraz wymierna gałąź Riccatiego dla q wielomianowego. Pełne algorytmy Rischa i Kovacica poza tym zakresem są odrębnie oznaczonymi klasycznymi wynikami cytowanymi, a nie samodzielnie dowiedzionymi.
+
+**Końcowy CI:** https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45161159035 — success 85/85 na commicie b9be84c91aff3cb203f567edcfb6ee7705295bc9. Testy AA-47: 11/11 + 10/10 PASS. Integralność: 47 rozdziałów, 969 etykiet, 0 błędnych odsyłaczy. PDF: 304 strony; wszystkie siedem stron AA-47 (298–304) obejrzano, końcowy log bez błędów i ostrzeżeń. Poprawiono przypadek q=0 w regresji i status strony tytułowej. Historycznych raportów AA-01–AA-42 nie zmieniono. **AA-48 nie został rozpoczęty.**
