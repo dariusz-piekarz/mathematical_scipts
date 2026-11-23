@@ -13,7 +13,7 @@ Zapoznano się z AGENTS.md, docs/pl/standardy_terminologiczne.md oraz plikiem bo
 
 ## 2. Kontrola matematyczna rozdziału
 
-Po poprawkach R09 liczy **603 wiersze** (liczba dokładna do potwierdzenia przy końcowym odczycie), **8 sekcji, 7 twierdzeń, 4 wnioski, 3 definicje, 10 środowisk dowodu, 5 przykładów, 4 uwagi oraz 1 rysunek TikZ**.
+Po poprawkach R09 liczy **601 wierszy** (potwierdzone końcowym odczytem GitHub), **8 sekcji, 7 twierdzeń, 4 wnioski, 3 definicje, 10 środowisk dowodu, 5 przykładów, 4 uwagi oraz 1 rysunek TikZ**.
 
 Sprawdzono następujące argumenty i przypadki brzegowe:
 
