@@ -52,3 +52,26 @@ cd application
 python -m unittest tests.test_lean_formalization -v
 ```
 Testy obejmują wybór obiektu i zakresu, brak formalizacji, źródło stale, ścieżki, blokadę uruchamiania i symulację subprocess. Test z atrapą procesu NIE jest prawdziwą weryfikacją twierdzenia w Lean. CI aplikacji uruchamia te testy przez zwykłe unittest discover.
+
+## LST-02: pierwsza partia pilotażu (2026-11-23)
+
+Nowy plik `src/LST02_Quantifiers.lean` formalizuje cztery tezy z kanonicznego
+rozdziału **LST-02** w siedmiu deklaracjach (w tym pomocniczy
+kontrprzykład dla pustych dziedzin): negacje kwantyfikatorów,
+zamiany kolejności kwantyfikatorów jednego typu, tylko właściwy
+kierunek implikacji dla kwantyfikatorów różnych typów oraz rozwinięcie
+`∃!`. Rejestr `manifest.json` zawiera teraz **9 wpisów** (5 LST-01,
+4 LST-02). Wszystkie cztery nowe wpisy mają
+`statement_status=needs_review`, nie mają zatwierdzonego
+SHA256 źródła i pozostają `draft`. Pełna zgodność semantyczna
+wymaga odrębnej recenzji; `certificate=false`.
+
+- [Raport mapowań LST-02](../docs/LEAN_L13_LST02_PILOT_2026-11-23.md)
+- [Issue #11 — niezamknięty pilotaż 20–30](https://github.com/dariusz-piekarz/mathematical_scipts/issues/11)
+- [CI aplikacji #45206502457](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45206502457) — `completed/success`, 736 testów, 10 sklasyfikowanych pominięć i 0 nierozliczonych, Chromium PASS na 509 rozdziałach.
+- [Rzeczywisty Lean #45206502490](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45206502490) — rozpoczęty na poprawionym SHA `163c8f6415d9d390fc1a737f6954b2865eff6c6e`; w chwili zapisu instalacja przypiętego Lean/Mathlib jeszcze trwa. **Nie uznawać nowej formalizacji za skompilowaną bez ukończonego joba**.
+
+Pierwszy CI dla `2deca7ba` zakończył się błędem testu
+odczytującego dosłowną etykietę TeX z podwójnym ukośnikiem.
+Commit `163c8f64` poprawił ten test; błędne CI nie jest
+zaliczoną rundą stabilizacji.
