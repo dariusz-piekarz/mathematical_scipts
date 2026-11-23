@@ -1,8 +1,11 @@
 # Lean / Atlas — L1.1: walidacja optymalizacji .olean i bramka stabilizacji
 
-**Stan na 2026-11-23:** produkcyjna optymalizacja przechodzi aktualne regresje
-oraz rzeczywiste Lean 4 i Mathlib; dodatkowy rygor 2+1 na jednym niezmiennym
-commicie jest jeszcze w toku. Nie przedstawiać go jako zaliczonego.
+**Stan końcowy (2026-11-23): L1.1 ZAMKNIĘTY dla commita
+`95508306b8bd0a07eb2c3ea05c8fc732ebb2980b`.** Zakończono rygor
+stabilizacji 2+1: trzy niezależne, udane pełne kontrole tego samego SHA,
+dwa udane przebiegi realnego Lean/Mathlib oraz osobny przegląd dowodów z CI.
+Dotyczy to wyłącznie infrastruktury fingerprintu, nie semantycznej zgodności
+twierdzeń Lean z LaTeX-em.
 
 ## Zakres i niezmienniki
 
@@ -77,18 +80,36 @@ jest kontrolowanym porównaniem przed/po.
 - Błędy wcześniejszych fikstur zostały odnotowane, nie zamienione w PASS.
 - Status `verified` w aplikacji nie wynika z tych pomiarów.
 
-## Niezamknięta bramka 2+1
+## Bramka stabilizacji 2+1 — ZALICZONA
 
-Rygor stabilizacji 2+1 wymaga trzech udanych pełnych kontroli **tego samego
-niezmiennego SHA** oraz osobnego przeglądu. Dla `95508306`:
-- Pierwsza pełna próba `#45147764748`: sukces.
-- Drugie uruchomienie tego samego joba i SHA zostało uruchomione przez
-  GitHub Actions (`run_attempt=2`), ale przy tym zapisie nie było
-  końcowego `success`.
-- Trzeciej próby **nie** zalicza się, dopóki faktycznie nie zostanie
-  zakończona.
-- Jeśli wystąpi regresja, poprawić przed akceptacją; nie deklarować
-  ukończenia 2+1 ani nie przechodzić do następnego modułu.
+Dla dokładnego SHA `95508306b8bd0a07eb2c3ea05c8fc732ebb2980b`
+ten sam workflow [Mathematical library application checks
+#45147764748](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45147764748)
+uruchomiono trzykrotnie bez zmian kodu:
 
-Decyzja: **podsystem optymalizacji jest zweryfikowany funkcjonalnie i
-mierzalnie, lecz formalne zamknięcie 2+1 jest nadal warunkowe**.
+| Próba | Zakończenie | Testy Pythona | Pominięte / nieprzejrzane | Przeglądarka | Rozdziały |
+|---|---|---:|---:|---|---:|
+| `run_attempt=1`, job `137601180297` | `completed/success` | 709 | 10 / 0 | `passed`, brak błędów JS | 499 |
+| `run_attempt=2`, job `137605576100` | `completed/success` | 709 | 10 / 0 | `passed`, brak błędów JS | 499 |
+| `run_attempt=3`, job `137607935928` | `completed/success` | 709 | 10 / 0 | `passed`, brak błędów JS | 499 |
+
+Dodatkowo na tym samym SHA [Lean kernel + axiom audit
+#45147764790](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45147764790)
+zakończył się sukcesem, a szybki workflow
+[Linux/Windows #45147764722](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45147764722)
+również `completed/success`.
+
+**Przegląd sceptyczny po trzecim przebiegu:** sprawdzono logi każdej próby,
+identyczność pełnego SHA checkoutu, liczbę i klasyfikację pominięć,
+rzeczywisty test przeglądarkowy i wynik kontroli odsyłaczy. Nie zauważono
+regresji w podsystemie Lean ani w kontrakcie API/Czytnika/Explorera.
+`unreviewed_skips=0` nie oznacza zerowej liczby pominięć: każda próba
+miała dokładnie 10 oznaczonych przypadków zależnych od dostępności
+środowiska; odrębny workflow wymaga rzeczywistego Lean.
+
+**Decyzja:** zamknąć **L1.1 — optymalizacja tworzenia względnych nazw
+i diagnostyka fingerprintu .olean**. Uznane kryteria są ograniczone do
+wskazanego SHA. Nie przypisywać tym wynikom certyfikatu zgodności
+semantycznej twierdzeń; `certificate=false` pozostaje bez zmian.
+Kolejne prace można prowadzić jako **nową jednostkę architektury**,
+z odrębną stabilizacją, bez ponownego otwierania L1.1 bez nowej regresji.
