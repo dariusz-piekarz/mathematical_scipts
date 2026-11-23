@@ -136,6 +136,36 @@ class LeanSourcePinTests(unittest.TestCase):
         self.assertIn("lst01_syntax_modus_ponens",
                       registered["src/LST01_SyntaxValuations.lean"])
 
+    def test_l13_lst02_candidates_match_real_labels(self):
+        root = Path(__file__).resolve().parents[1] / "lean"
+        repo = root.resolve().parents[1]
+        registry = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+        candidates = [item for item in registry["items"]
+                      if item["source_module"] == "LST-02"]
+        self.assertEqual(len(candidates), 4)
+        self.assertEqual(len({item["source_label"] for item in candidates}), 4)
+        canonical = "chapters/pl/logic_and_set_theory/02-kwantyfikatory-i-podstawowe-metody-dowodzenia.tex"
+        source = (repo / canonical).read_text(encoding="utf-8")
+        names = {
+            "thm:negation-quantifiers",
+            "thm:same-quantifier-order",
+            "thm:swap-mixed",
+            "thm:unique-expansion-xli",
+        }
+        self.assertEqual({item["source_label"] for item in candidates}, names)
+        for item in candidates:
+            self.assertEqual(item["statement_status"], "needs_review")
+            self.assertNotIn("source_document_sha256", item)
+            self.assertEqual(item["source_document_path"], canonical)
+            self.assertEqual(source.count(r"\\label{" + item["source_label"] + "}"), 1)
+            self.assertEqual(item["lean_file"], "src/LST02_Quantifiers.lean")
+        registered = registered_files(root / "manifest.json", root)
+        new_file = root / "src" / "LST02_Quantifiers.lean"
+        parsed = expected_theorems(
+            new_file, registered["src/LST02_Quantifiers.lean"])
+        self.assertEqual(len(parsed), 7)
+        self.assertIn("lst02_mixed_empty_counterexample", parsed)
+
     def test_digest_guard_rejects_modified_tex(self):
         import hashlib
 
