@@ -42,7 +42,13 @@ Na czteroelementowej przestrzeni wyliczono **15 algebr** wyznaczonych podziałam
 
 Osobny test weryfikuje kontrprzykład diagnostyczny do błędnej konieczności premiary. Wszystkie trzy moduły zgłosiły `PASS` lokalnie. Wyniki **nie zastępują ogólnych dowodów**, lecz stanowią niezależną regresję.
 
-**CI:** nowy workflow ma dwa joby: `chapter-03-finite-models` uruchamia test, a `chapter-03-pdf-and-book-context` kompiluje izolowany R03 dwukrotnie oraz pełną książkę trzykrotnie wyłącznie w celu sprawdzenia odsyłaczy i składu R03. Powstały PDF oraz logi są archiwizowane. Przebieg **[45134011603](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45134011603)** na commitcie `760d8a7723ef0da8d9d0adc18d884af6ac2ab350` — job modeli skończonych uzyskał `success`; kompilacja była w toku podczas pierwszego odczytu. Końcowy wynik należy potwierdzić osobno.
+**CI — wynik rzeczywisty:** nowy workflow ma dwa joby: `chapter-03-finite-models` uruchamia test, a `chapter-03-pdf-and-book-context` kompiluje izolowany R03 dwukrotnie oraz pełną książkę trzykrotnie wyłącznie w celu sprawdzenia odsyłaczy. Przebieg **[45134011603](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45134011603)** na commicie `760d8a7723ef0da8d9d0adc18d884af6ac2ab350` zakończył się statusem **`completed/success`**, oba joby **`success`**. Odczytano faktyczne logi: test skończonych modeli wykazał `PASS` dla 81 miar zewnętrznych, 756 premiar, 309 modeli σ-skończonych i kontrprzykładu na konieczność premiary. CI wyprodukował izolowany PDF 6 stron (251 295 bajtów) i pełną książkę 256 stron (1 877 357 bajtów). Zarchiwizowano artefakt **`14799685121`**.
+
+### Weryfikacja wizualna prawdziwych PDF
+
+Pobrano archiwum artefaktu 14799685121, rozpakowano PDF i logi, wyrenderowano wszystkie 6 stron izolowanego R03 i obejrzano je na wspólnym zestawieniu. Nie stwierdzono kolizji napisów, uciętych wzorów, brakujących stron ani błędnego składu. Dodatkowa kontrola geometrii bloków tekstu narzędziem PyMuPDF: **119 bloków tekstowych na 6 stronach, 0 poza stroną**. Izolowany dokument zawiera **6 znaków zastępczych `??`** od odsyłaczy do R02 i R04, co jest oczekiwane bez ich dołączenia; jego log zawiera dokładnie 6 ostrzeżeń o takich referencjach i **0 ostrzeżeń Overfull**.
+
+Wygenerowany w tym samym jobie PDF kompletnej książki ma 256 stron; rozdział 03 zajmuje strony fizyczne **26–31**. Wszystkie 6 stron mają **0 symboli `??`** oraz **0 bloków tekstu poza granicą strony**. Wykryto **25 aktywnych hiperłączy** z tych sześciu stron; sześć kieruje do sąsiednich rozdziałów: pięć celów w R02 (fizyczne strony 18, 18, 24, 20, 22) i jeden do R04 (fizyczna strona 32). Wszystkie cele są poprawne. Końcowy log pełnej kompilacji zawiera **0 ostrzeżeń o niezdefiniowanych odsyłaczach** i **0 Overfull**. To kontrola techniczna kontekstu, nie audyt matematyczny R02 ani R04.
 
 ## 5. Kontrola LaTeX i terminologii
 
@@ -54,6 +60,6 @@ Brak `\\mathbf{1}`, `\\mathbb{1}`, `\\mathds{1}`, „zbieżność zdominowana”
 
 **ROZDZIAŁ 03: AUDYT I WYKONANY, FORMALNIE JESZCZE NIESTABILNY.**
 
-Powód: w tej iteracji nastąpiła **rzeczywista poprawka** tekstu. Zgodnie z protokołem wymaga to **kolejnego pełnego, niezależnego, czystego audytu tego samego rozdziału na nowym blobie**, w tym sceptycznej oceny poprawionego fragmentu i innych twierdzeń. Należy też zamknąć kontrolę CI i realny przegląd wyrenderowanego PDF R03. Sam fakt pozytywnych testów skończonych nie oznacza stabilności.
+Powód: w tej iteracji nastąpiła **rzeczywista poprawka** tekstu. Zgodnie z protokołem wymaga to **kolejnego pełnego, niezależnego, czystego audytu tego samego rozdziału na nowym blobie**, w tym sceptycznej oceny poprawionego fragmentu i innych twierdzeń. Kontrola CI, rzeczywisty przegląd wszystkich stron R03 i rozwiązywanie odsyłaczy w pełnej książce są zakończone pozytywnie. Sam fakt pozytywnych testów skończonych nie oznacza stabilności.
 
-**Następna iteracja:** audyt II wyłącznie R03; potwierdzić bieżący CI, skontrolować strony i hiperłącza w PDF, ponownie przeanalizować wszystkie dowody. Nie przechodzić do R04 przed wyraźnym certyfikatem stabilności R03.
+**Następna iteracja:** audyt II wyłącznie R03; ponownie przeanalizować wszystkie twierdzenia, lematy, przykłady i dowody na nowym blobie, szczególnie poprawione rozróżnienie warunku wystarczającego od koniecznego. Nie przechodzić do R04 przed wyraźnym certyfikatem stabilności R03.
