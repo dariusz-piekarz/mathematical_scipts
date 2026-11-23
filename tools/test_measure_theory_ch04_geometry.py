@@ -79,7 +79,21 @@ def graph_cover_bound():
             assert cover_area < previous
         previous = cover_area
     assert previous < Fraction(1, 50)
-    print("PASS Lipschitz graph: 9 rational covering bounds")
+    # If a=b the graph is one point; arbitrarily small boxes suffice.
+    singleton_areas = [Fraction(4, N*N) for N in (2, 4, 8, 16, 32)]
+    assert all(singleton_areas[i+1] < singleton_areas[i]
+               for i in range(len(singleton_areas)-1))
+    assert singleton_areas[-1] < Fraction(1, 100)
+    # A constant function (L=0) on a non-degenerate interval is covered
+    # by the same construction; its covering area still tends to zero.
+    flat_areas = [
+        N*(Fraction(1,N)+2*Fraction(1,N**2))*(2*Fraction(1,N**2))
+        for N in (2, 4, 8, 16, 32, 64, 128)
+    ]
+    assert all(flat_areas[i+1] < flat_areas[i]
+               for i in range(len(flat_areas)-1))
+    assert flat_areas[-1] < Fraction(1, 5000)
+    print("PASS Lipschitz graph: positive L, singleton and L=0 boundary cases")
 
 if __name__ == "__main__":
     check_grid_volume()
