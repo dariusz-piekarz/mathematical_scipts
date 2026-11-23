@@ -45,8 +45,8 @@ Niezależny przegląd całego rozdziału, wszystkich 13 dowodów, pięciu środo
 
 - Dodano tools/tests/test_functional_analysis_ch05.py: **12 testów** dotyczących integracji w książce, referencji, terminologii, absolutnej wypukłości, funkcjonału Minkowskiego w wymiarze 2 i na c_00, argumentu podziału nieatomowej miary, sinusoidalnego kontrprzykładu dla C∞, metryki od seminorm, granic i konstrukcji ilorazowej.
 - Dodano .github/workflows/functional-analysis-ch05.yml: dedykowana kontrola rozdziału 05 z oryginalną preambułą i tekstami rozdziałów 01–05, testami, kompilacją PDF, kontrolą brakujących odsyłaczy, ostrzeżeń i przepełnionych wierszy oraz zapisem artefaktów.
-- Początkowy przebieg [45160274967](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45160274967) zakończył się **SUCCESS** przy pierwszej wersji poprawek i 12 testach; po dalszym rozwinięciu uzasadnienia oszacowania dla L poprawny końcowy przebieg jeszcze wymaga potwierdzenia.
-- Kontrola wizualna finalnego PDF, w tym podpisu i etykiety rysunku Minkowskiego, wymaga zakończenia przebiegu po ostatniej zmianie źródła.
+- Początkowy przebieg [45160274967](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45160274967) zakończył się SUCCESS przy pierwszej wersji poprawek i 12 testach. **Końcowy przebieg [45160591150](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45160591150) zakończył się pełnym SUCCESS już po ostatnim rozwinięciu uzasadnienia oszacowania dla L**: 12/12 testów, kompilacja LaTeX, kontrola odsyłaczy i PDF oraz zapis artefaktu.
+- Pobrano rzeczywisty artefakt z ostatniego przebiegu: **33 strony A4; PDF 482689 bajtów**. Rozdział 05 zajmuje strony **27–33**; przejrzano wizualnie wszystkie siedem stron, a stronę 29 z rysunkiem Minkowskiego w powiększeniu. Brak kolizji napisów, nakładania etykiet na strzałki i ucięć tekstu. Na każdej stronie 27–33 programowo skontrolowano granice bloków tekstowych — **0 bloków poza stroną**. Końcowy log zawiera **0** wystąpień `Undefined control sequence`, `There were undefined references`, `Overfull \\hbox` i `Missing character`.
 
 ## Decyzja
 
