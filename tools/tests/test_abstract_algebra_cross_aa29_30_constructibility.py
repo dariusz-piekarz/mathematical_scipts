@@ -146,7 +146,7 @@ def main():
         if n<=85:
             check('cyclotomic_polynomial_degree',sp.degree(sp.cyclotomic_poly(n,sp.symbols('x')),sp.symbols('x'))==ph,n)
     for n in (5,7,9,17,257,255,15,21,51):
-        expected={5:True,7:False,9:False,17:True,257:True,255:True,15:True,21:False,51:False}[n]
+        expected={5:True,7:False,9:False,17:True,257:True,255:True,15:True,21:False,51:True}[n]
         check('specific_polygon_cases',power_of_two(phi(n))==expected,n)
     for k,v in check_quartic().items():stats[k]=stats.get(k,0)+v
     total=sum(stats.values())
