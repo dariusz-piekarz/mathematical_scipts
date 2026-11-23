@@ -127,6 +127,48 @@ class GateTests(unittest.TestCase):
             json.dumps(doc), encoding="utf-8")
         self.assertEqual(self.run_gate()["status"], "blocked")
 
+    def test_forged_skip_category_cannot_bypass_allowlist(self):
+        doc = evidence("1")
+        doc["outcomes"].append({
+            "id": "tests.unrelated.Fake.test_disabled", "status": "skipped",
+            "reason": "Native Windows Job Objects test",
+            "classification": "windows_native",
+        })
+        doc["executed"] = 2
+        doc["outcome_count"] = 2
+        doc["skipped"] = 1
+        doc["unreviewed_skips"] = 0
+        issues = validate_unit_report(doc, SHA, "1")
+        self.assertIn("skip classification does not match reviewed allowlist", issues)
+        (self.root / "atlas-unittest-1" / "report.json").write_text(
+            json.dumps(doc), encoding="utf-8")
+        self.assertEqual(self.run_gate()["status"], "blocked")
+
+    def test_valid_platform_skip_and_spoofed_category_are_distinguished(self):
+        doc = evidence("1")
+        doc["outcomes"].append({
+            "id": "tests.test_lean_windows_job.Foo.test_native",
+            "status": "skipped",
+            "reason": "Native Windows Job Objects test",
+            "classification": "windows_native",
+        })
+        doc["executed"] = 2
+        doc["outcome_count"] = 2
+        doc["skipped"] = 1
+        self.assertEqual(validate_unit_report(doc, SHA, "1"), [])
+        doc["outcomes"][1]["classification"] = "pinned_lean"
+        self.assertIn("skip classification does not match reviewed allowlist",
+                      validate_unit_report(doc, SHA, "1"))
+
+    def test_report_cannot_hide_missing_test_outcomes(self):
+        doc = evidence("1")
+        doc["executed"] = 687
+        self.assertIn("executed test count does not match per-test outcomes",
+                      validate_unit_report(doc, SHA, "1"))
+        doc["executed"] = True
+        self.assertIn("empty or malformed test suite",
+                      validate_unit_report(doc, SHA, "1"))
+
     def test_missing_mandatory_real_file_regression_is_blocked(self):
         doc = evidence("3")
         doc["outcomes"][0]["id"] = "tests.other.Test.incomplete"
