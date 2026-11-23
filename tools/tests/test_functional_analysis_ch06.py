@@ -128,16 +128,23 @@ class FunctionalAnalysisChapter06(unittest.TestCase):
                     self.assertLessEqual(abs(F(x,y)), 1+1e-12)
 
     def test_point_closed_subspace_separator(self):
-        # X=R², M={(x,0)}, x0=(0,3), f(x,y)=y/3.
-        for x in (-5,-1,0,1,8):
-            self.assertEqual(0/3, 0)
-            self.assertAlmostEqual((0-0), 0)
-            self.assertAlmostEqual((x*0)/3, 0)
-        self.assertAlmostEqual(3/3, 1)
-        # Symmetric neighborhoods: if x0-m is small, so is m-x0.
-        near = lambda a,b: max(abs(a),abs(b)) < .5
-        for m in (-5,0,1,5):
-            self.assertEqual(near(-m,3), near(m,-3))
+        # X=R² with sup norm, M={(x,0)}, x0=(0,3),
+        # W={||z||∞<2}, U={||z||∞<1}. The difference x0-m never
+        # belongs to U and the separator F(x,y)=y/3 is dominated by
+        # the gauge p_U(x,y)=||z||∞.
+        gauge = lambda x, y: max(abs(x), abs(y))
+        functional = lambda x, y: y/3
+        for m in (-5,-1,0,1,8):
+            self.assertGreaterEqual(gauge(-m, 3), 3)
+            self.assertAlmostEqual(functional(m, 0), 0)
+            self.assertEqual(gauge(-m, 3), gauge(m, -3))
+            for scalar in (-3.0, -1.5, 0, .75, 2):
+                self.assertLessEqual(
+                    abs(scalar),
+                    gauge(m, 3*scalar)+1e-12)
+                self.assertAlmostEqual(
+                    functional(m, 3*scalar), scalar)
+        self.assertAlmostEqual(functional(0, 3), 1)
 
     def test_product_dual_depends_on_finitely_many_coordinates(self):
         support=(1,4,8)
@@ -149,6 +156,47 @@ class FunctionalAnalysisChapter06(unittest.TestCase):
             y=dict(x)
             y[nonsupport] = 99999
             self.assertEqual(evaluate(y), evaluate(x))
+
+    def test_finite_dimensional_nonhausdorff_warning(self):
+        self.assertIn(r"\emph{Hausdorffa} każdy funkcjonał liniowy",
+                      self.source)
+        self.assertIn(r"$\{\varnothing,\R\}$", self.source)
+        self.assertIn(r"$x\mapsto x$ nie jest ciągły", self.source)
+        self.assertNotIn(
+            "W skończonym wymiarze każdy funkcjonał liniowy jest ciągły",
+            self.source)
+
+    def test_asymmetric_sublinear_function_may_take_negative_values(self):
+        # p(x,y)=x+|y| is sublinear even though p(-2,0)=-2<0.
+        # Hahn–Banach in the real case needs neither p>=0 nor symmetry.
+        p = lambda x, y: x + abs(y)
+        self.assertLess(p(-2, 0), 0)
+        for x in range(-3, 4):
+            for y in range(-3, 4):
+                for a in (0, .25, 1, 2):
+                    self.assertAlmostEqual(p(a*x, a*y), a*p(x, y))
+                for u in range(-2, 3):
+                    for v in range(-2, 3):
+                        self.assertLessEqual(
+                            p(x+u, y+v), p(x, y)+p(u, v)+1e-12)
+                # f(x,0)=x extends as F(x,y)=x+3y/4 and satisfies F<=p.
+                self.assertLessEqual(x+.75*y, p(x, y)+1e-12)
+
+    def test_phase_rotation_in_complex_hahn_banach(self):
+        # In the complex proof choose alpha on the unit circle to make
+        # Re(alpha*F(z))=|F(z)| before using the real inequality.
+        f = lambda z: z[0]+2j*z[1]
+        p = lambda z: abs(z[0])+2*abs(z[1])
+        for z in ((0j,0j), (1+2j,-2+1j), (0,3j), (1j,1j)):
+            value = f(z)
+            if value == 0:
+                continue
+            alpha = value.conjugate()/abs(value)
+            rotated = (alpha*z[0], alpha*z[1])
+            self.assertAlmostEqual(abs(alpha), 1.0)
+            self.assertAlmostEqual(f(rotated).real, abs(value))
+            self.assertLessEqual(f(rotated).real, p(rotated)+1e-12)
+            self.assertAlmostEqual(p(rotated), p(z))
 
     def test_quotient_dual_and_anihilator(self):
         # R² / (R × {0}) is R. Every quotient functional lifts
