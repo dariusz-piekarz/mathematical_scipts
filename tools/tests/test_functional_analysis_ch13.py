@@ -176,11 +176,17 @@ class Chapter13Audit(unittest.TestCase):
 
     def test_weak_poisson_f_constant_one(self):
         # -u''=1, u(0)=u(1)=0; u(t)=t(1-t)/2 and u'=1/2-t.
+        exact = lambda t: t*(1-t)/2
+        h = 1e-4
         for k in range(11):
             t = k/10
-            u = t*(1-t)/2
-            self.assertAlmostEqual(0.5-t, 0.5-t)
+            u = exact(t)
             self.assertGreaterEqual(u, -1e-12)
+            if 0 < k < 10:
+                first = (exact(t+h)-exact(t-h))/(2*h)
+                second = (exact(t+h)-2*exact(t)+exact(t-h))/h**2
+                self.assertAlmostEqual(first, 0.5-t, places=9)
+                self.assertAlmostEqual(-second, 1.0, places=7)
         self.assertAlmostEqual(0*(1-0)/2, 0)
         self.assertAlmostEqual(1*(1-1)/2, 0)
         # weak test v(t)=t(1-t): int u'v'=1/6=int v.
