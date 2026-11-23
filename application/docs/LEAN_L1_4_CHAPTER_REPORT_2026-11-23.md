@@ -19,3 +19,7 @@
 **Granice:** kompilacja i kontrola aksjomatów to diagnostyka wykonania Lean. Nawet poprawne SHA, `statement_status=approved` i `compiled` nie stanowią automatycznego poświadczenia zgodności twierdzeń z LaTeX-em. Zachować `certificate=false`.
 
 **Uwaga do planu:** w dokumentacji historycznej oznaczenie L1.3 użyto także dla pilotażu 20–30 formalizacji. Zamknięty techniczny L1.3 dotyczył odczytu lokalnych rekordów; przejście do tego podetapu architektury nie jest deklaracją ukończenia całego pilotażu.
+
+## Wewnętrzny przegląd sceptyczny przed stabilizacją
+
+Przegląd odkrył potencjalny wyciek przyszłych pól historii: naiwny raport przekazywał całą strukturę z katalogu, a więc przyszłe rozszerzenie katalogu mogłoby wprowadzić do raportu `proof_status` mimo `proof_status_included=false`. Zastosowano ścisłą projekcję pól i regresję z podrobionym `compiled`, logiem i `certificate=true`. Wynik 2+1 trzeba liczyć od **nowego** commita, bez zaliczania wcześniejszego CI.

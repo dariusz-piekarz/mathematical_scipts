@@ -194,5 +194,20 @@ class LeanCatalogTests(unittest.TestCase):
         self.assertFalse(data["certificate"])
 
 
+    def test_l14_chapter_report_does_not_leak_future_cached_fields(self):
+        current = lean_catalog.list_formalizations(self.con, lean_root=self.root)
+        malicious = dict(current["items"][0], proof_status="compiled",
+                         last_run_log="untrusted", certificate=True)
+        with patch.object(lean_chapter_report.lean_catalog, "list_formalizations",
+                          return_value={"items": [malicious]}):
+            data = lean_chapter_report.chapter_report(self.con, "LST-01",
+                                                      lean_root=self.root)
+        self.assertEqual(data["total"], 1)
+        self.assertNotIn("proof_status", data["items"][0])
+        self.assertNotIn("last_run_log", data["items"][0])
+        self.assertFalse(data["items"][0]["certificate"])
+        self.assertFalse(data["proof_status_included"])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -15,6 +15,11 @@ from fastapi import HTTPException
 from backend import lean_catalog, lean_formalization as lean
 
 REPORT_SCHEMA_VERSION = 1
+REPORT_ITEM_FIELDS = (
+    "formalization_id", "source_module", "source_label", "source_entity_id",
+    "lean_file", "lean_theorem", "lean_theorems", "index_status",
+    "formalization_status", "statement_status",
+)
 
 
 def chapter_report(con: sqlite3.Connection, module_id: str, *,
@@ -39,8 +44,12 @@ def chapter_report(con: sqlite3.Connection, module_id: str, *,
     # Reuse the existing, bounded catalogue: it checks label ownership,
     # manifest SHA and canonical on-disk TeX. Do not invent proof statuses.
     catalog = lean_catalog.list_formalizations(con, lean_root=lean_root)
-    entries = [dict(item) for item in catalog["items"]
-               if item["source_module"] == module_id]
+    # Project a fixed allowlist. Future catalogue additions (including any
+    # eventual cached proof status) must not silently enter this report.
+    entries = [
+        {**{name: item[name] for name in REPORT_ITEM_FIELDS}, "certificate": False}
+        for item in catalog["items"] if item["source_module"] == module_id
+    ]
     if not index_current:
         # A corrupt chapter must not inherit positive claims, even if a
         # concurrent change to the index occurred while assembling the report.
