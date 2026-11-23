@@ -157,7 +157,7 @@ class LeanSourcePinTests(unittest.TestCase):
             self.assertEqual(item["statement_status"], "needs_review")
             self.assertNotIn("source_document_sha256", item)
             self.assertEqual(item["source_document_path"], canonical)
-            self.assertEqual(source.count(r"\\label{" + item["source_label"] + "}"), 1)
+            self.assertEqual(source.count(r"\label{" + item["source_label"] + "}"), 1)
             self.assertEqual(item["lean_file"], "src/LST02_Quantifiers.lean")
         registered = registered_files(root / "manifest.json", root)
         new_file = root / "src" / "LST02_Quantifiers.lean"
