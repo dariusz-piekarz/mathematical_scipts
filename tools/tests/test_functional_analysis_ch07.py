@@ -123,6 +123,38 @@ class FunctionalAnalysisChapter07(unittest.TestCase):
         self.assertGreater(delta, 0)
         self.assertLessEqual(max(A)+delta, min(B))
 
+    def test_nonsymmetric_unbounded_open_gauge_with_kernel_ray(self):
+        # V=(-infinity,1) is open, convex, absorbing, nonbalanced.
+        # p_V(x)=max(x,0), so the gauge need not be a norm or even.
+        gauge=lambda x:max(x,0.0)
+        self.assertEqual(gauge(-2),0)
+        self.assertNotEqual(gauge(-2),gauge(2))
+        for x in (-10,-3,-1,0,.5,1,2,7):
+            self.assertEqual(gauge(x)<1,x<1)
+            for t in (0,.3,1,2.5):
+                self.assertAlmostEqual(gauge(t*x),t*gauge(x))
+            for y in (-7,-1,0,1,8):
+                self.assertLessEqual(gauge(x+y),gauge(x)+gauge(y)+1e-12)
+        self.assertIn(r"$V=\{p_V<1\}$",self.chapter)
+
+    def test_strong_separation_in_nonhausdorff_local_convex_space(self):
+        # X=R² carries the (non-Hausdorff) topology of seminorm |x|.
+        # A={(1,0)} compact, B={3}×R closed, convex, and disjoint.
+        # Continuous ell(x,y)=x strongly separates A and B.
+        p=lambda z:abs(z[0])
+        ell=lambda z:z[0]
+        a=(1.0,0.0)
+        B=[(3.0,y) for y in (-100,-1,0,2,19,200)]
+        self.assertLessEqual(ell(a)+1.5,min(ell(b) for b in B))
+        for y in (-100,-1,0,2,19,200):
+            b=(3.0,y)
+            self.assertGreaterEqual(p((b[0]-a[0],b[1]-a[1])),2)
+            self.assertAlmostEqual(ell((0.0,y)),0)
+        for x in (-3,-1,0,1,5):
+            for y in (-5,0,7):
+                self.assertLessEqual(abs(ell((x,y))),p((x,y)))
+        self.assertIn(r"Niech $X$ będzie lokalnie wypukłą TVS",self.chapter)
+
     def test_supporting_hyperplane_unit_disk(self):
         # Unit Euclidean disk supported at x0=(1,0) by ell(x)=x1.
         for i in range(81):
