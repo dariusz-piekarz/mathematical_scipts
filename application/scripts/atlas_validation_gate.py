@@ -12,7 +12,13 @@ from pathlib import Path
 import re
 import subprocess
 
-from scripts.atlas_ci_report import classify_skip
+# This module is both imported as `scripts.atlas_validation_gate` from tests
+# and executed as `python application/scripts/atlas_validation_gate.py` in CI.
+# Direct file execution has no parent `scripts` package on sys.path.
+if __package__:
+    from .atlas_ci_report import classify_skip
+else:
+    from atlas_ci_report import classify_skip
 
 SHA = re.compile(r"[0-9a-f]{40}\Z")
 EXPECTED_PASSES = ("1", "2", "3")
