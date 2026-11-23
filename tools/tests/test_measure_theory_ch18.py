@@ -158,7 +158,7 @@ class TestMeasureTheoryChapter18(unittest.TestCase):
         self.assertIn(r"\label{thm:RN-finite-18}", source)
         self.assertIn(r"\label{thm:RN-sigfin-18}", source)
         self.assertIn(r"\label{thm:CE-orthogonal-18}", source)
-        self.assertIn("skończona prawie wszędzie", source)
+        self.assertIn(r"\nu(E_m)=\infty", source)
         self.assertIn(r"\kappa\perp\mu", source)
         self.assertNotRegex(source, r"\\(?:mathbf|mathbb)\{1\}_")
         finite_proof = source.split(r"\begin{twierdzenie}[Radon--Nikodym dla miar skończonych]", 1)[1]
