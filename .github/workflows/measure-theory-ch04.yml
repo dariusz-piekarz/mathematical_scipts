@@ -8,6 +8,7 @@ on:
       - "chapters/pl/measure_theory/04-miara-lebesguea-na-przestrzeni-euklidesowej.tex"
       - "tools/test_measure_theory_ch04_geometry.py"
       - "tools/test_measure_theory_ch04_source.py"
+      - "tools/test_measure_theory_ch04_pdf_layout.py"
       - "books/pl/measure_theory.tex"
       - ".github/workflows/measure-theory-ch04.yml"
   workflow_dispatch:
@@ -64,27 +65,7 @@ jobs:
             exit 1
           fi
           pdftotext -bbox measure_theory_ch04_ci.pdf ch04_bbox.html
-          python3 - <<'PY'
-          from xml.etree import ElementTree as ET
-          tree = ET.parse("ch04_bbox.html")
-          root = tree.getroot()
-          ns = "{http://www.w3.org/1999/xhtml}"
-          pages = root.findall(".//" + ns + "page")
-          words_checked = 0
-          for page in pages:
-              width = float(page.get("width"))
-              height = float(page.get("height"))
-              for word in page.iter(ns + "word"):
-                  x0 = float(word.get("xMin"))
-                  y0 = float(word.get("yMin"))
-                  x1 = float(word.get("xMax"))
-                  y1 = float(word.get("yMax"))
-                  assert 0 <= x0 <= x1 <= width, (x0,x1,width)
-                  assert 0 <= y0 <= y1 <= height, (y0,y1,height)
-                  words_checked += 1
-          assert len(pages) >= 2 and words_checked > 500
-          print(f"PASS isolated R04 PDF bounds: {len(pages)} pages, {words_checked} words")
-          PY
+          python3 ../../tools/test_measure_theory_ch04_pdf_layout.py ch04_bbox.html
           # Render ALL pages: a fixed -l 15 silently omits later pages.
           pages=$(pdfinfo measure_theory_ch04_ci.pdf | awk '/^Pages:/ {print $2}')
           test "${pages}" -ge 2
