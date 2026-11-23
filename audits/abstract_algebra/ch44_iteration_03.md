@@ -14,7 +14,7 @@ Sformułowano i udowodniono obie implikacje twierdzenia Liouville'a dla ciała r
 Weryfikacja matematyczna obejmowała:
 1. Jednoznaczną formalną część wielomianową pp_t(R), z dowodem zachowania właściwości funkcji wymiernej przez D w przypadkach Dt=a oraz Dt=ht.
 2. Części wielomianowe pochodnej logarytmicznej dla unormowanych wielomianów p i q: Db/b (krok pierwotny) oraz Db/b+(deg p-deg q)h (krok wykładniczy).
-3. Algebraiczne zejście dla skończonych rozszerzeń nierozdzielonych? Nie: w charakterystyce zero każde skończone rozszerzenie jest rozdzielcze. Użyto poprawnych wzorów na ślad i normę, bez wymagania normalności, oraz dzielenia przez niezerowy stopień rozszerzenia.
+3. Algebraiczne zejście dla skończonych rozszerzeń w charakterystyce zero (a więc rozdzielczych). Użyto poprawnych wzorów na ślad i normę, bez wymagania normalności, oraz dzielenia przez niezerowy stopień rozszerzenia.
 4. Logarytmiczne zejście z rozbiciem na stopień wielomianu m=0, m=1 i m>=2. W ostatnim przypadku sprzeczność wynika z nowej stałej t-w.
 5. Wykładnicze zejście: każdy dodatni współczynnik p_k prowadziłby do nowej stałej p_k t^k; pozostały wyraz A Da jest dokładną pochodną.
 6. Przejście indukcyjne po całej wieży, z użyciem kroku algebraicznego także dla algebraicznych generatorów spełniających jednocześnie warunek logarytmiczny lub wykładniczy.
