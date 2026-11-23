@@ -51,3 +51,11 @@ Poprzedni audyt 13/01 dokumentuje pobranie 78-stronicowego PDF oraz wizualną in
 ## Decyzja
 
 **13/04: drugi CZYSTY audyt źródła, 2/2; bez zmian LaTeX, testów lub workflow.** Raport ma jedynie utrwalić niezależną kontrolę obecnego bloba. **Po jego zapisaniu należy odczytać końcowy status nowego dedykowanego CI.** Po zielonym CI na tej samej wersji zostanie spełniony warunek oznaczenia rozdziału 13 jako STABILNEGO i odblokowania audytu 14/01. Nie należy przedstawiać nieukończonego CI jako wyniku PASS.
+
+## Ostateczne potwierdzenie stabilizacji 13
+
+Przebieg [GitHub Actions #45270797207](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45270797207), uruchomiony po zapisaniu drugiego niezależnego czystego audytu 13/04 na commicie 023dd1159ed39df13295b7b9857994a7ee3438ae, zakończył się **COMPLETED/SUCCESS**. Z osobnego odczytu kroków wynikają: **21/21 testów regresyjnych PASS**, przygotowanie kompletnego kontekstu źródłowego 01–13 PASS, kompilacja LaTeX PASS, weryfikacja PDF i odsyłaczy PASS, przesłanie artefaktu PASS.
+
+Zweryfikowano, że źródło rozdziału 13 ma nadal blob SHA **1ca8b2ee077f558e50412c5d74e116779ab44f31**, a testy mają SHA **ea8ea6a5b82596705f5f717c57317a6a06268369**, identyczne jak przy audycie 13/03 oraz wcześniejszym zielonym CI #45268726941. Wizualną inspekcję PDF tej samej wersji źródła udokumentowano w 13/01.
+
+**KOŃCOWA DECYZJA: ROZDZIAŁ 13 — STABILNY (2/2 CZYSTYCH AUDYTÓW + ZIELONE CI).** Można rozpocząć audyt **14/01**. Niniejsze uzupełnienie zmienia tylko plik dokumentacji, bez zmian w LaTeX, testach lub workflow. Ewentualny kolejny workflow uruchomiony samym zapisem niniejszego raportu nie jest dodatkowym niezależnym audytem matematycznym ani nie narusza identyczności sprawdzonego źródła.
