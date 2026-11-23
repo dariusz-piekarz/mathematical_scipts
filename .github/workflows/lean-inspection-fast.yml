@@ -57,6 +57,10 @@ jobs:
         with:
           ref: ${{ inputs.candidate_sha || github.sha }}
 
+      - name: Require exact pinned checkout identity on Linux
+        env:
+          EXPECTED_SHA: ${{ inputs.candidate_sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -97,6 +101,12 @@ jobs:
         with:
           ref: ${{ inputs.candidate_sha || github.sha }}
 
+      - name: Require exact pinned checkout identity on Windows
+        shell: pwsh
+        env:
+          EXPECTED_SHA: ${{ inputs.candidate_sha || github.sha }}
+        run: |
+          if ((git rev-parse HEAD).Trim() -ne $env:EXPECTED_SHA) { throw "Wrong checkout SHA" }
       - name: Install Python
         uses: actions/setup-python@v5
         with:
