@@ -182,29 +182,68 @@ całego słowa. Nie traktuje się
 początkowego nieudanego
 przebiegu CI jako sukcesu.
 
-## Status CI i stabilizacji
+## Końcowy przebieg CI i kontrola wizualna
 
-Po ostatnich poprawkach oczekujemy
-na końcowe wyniki pełnego
-workflow uruchomionego
-dla commitu
-`732ff686e63a13d0e7ba8688b3470a5681179c14`:
-[GitHub Actions 45225257390](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45225257390).
+**Po ostatniej poprawce w nowym teście**, dla commitu
+`a4d3e879b50914bc4858a348a8963308bd0296da`,
+[GitHub Actions 45225602706](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45225602706)
+zakończył się wynikiem **success** w obu zadaniach:
+`structural-audit` oraz `full-book-pdf`.
 
-Do zamknięcia **pierwszego przejścia**
-wymagane są:
-(1) `structural-audit=success`,
-(2) **89 906** regresji `PASS`,
-(3) trzykrotny pełny skład 44-rozdziałowego
-PDF bez ostrzeżeń,
-(4) oględziny stron z rozdziałami 28–30
-z uwzględnieniem nowych twierdzeń
-i rysunków.
+Potwierdzenia z logu `structural-audit`:
+- **44/44** źródła i rozdziały;
+- **0** duplikatów etykiet, **0** nierozwiązanych odsyłaczy,
+  **0** błędów środowisk, **0** terminów zakazanych;
+- **86 700** testów klasy charakterystycznej, indeksu i parzystości: PASS;
+- **81** modeli równania ściany na `CP²`: PASS;
+- **3125** modeli rzeczywistego mnożenia Clifforda: PASS;
+- łącznie **89 906 nowych przypadków: PASS**.
 
-**Nie oznaczać rozdziałów 28–30
-jako lokalnie stabilnych przed
-drugim niezależnym przejściem
-(audyt 23).**
+Zadanie `full-book-pdf` zakończyło się sukcesem:
+- wszystkie **trzy** przebiegi rzeczywistego `pdflatex`;
+- **284-stronicowy PDF A4** całego tomu;
+- plik `graph_and_knot_full_warnings.txt` ma **0 bajtów**
+  (brak ostrzeżeń, przepełnień i błędów zgłoszonych w logu).
 
-Globalny audyt całego
-44-rozdziałowego tomu pozostaje otwarty.
+Pobrano artefakt końcowy
+`graph-and-knot-complete-book-audit` (ID **14843620294**).
+Inspekcja wizualna wszystkich stron **228–249** obejmuje:
+- **228–233**, rozdział 28, w tym nowy wniosek
+  o parzystości i przykład `CP²#CP²`;
+- **234–241**, rozdział 29, w tym nowy przykład ściany
+  `6π−t`, diagram komór, kryterium Coulomba i
+  model Kuranishiego;
+- **242–249**, rozdział 30, w tym nowy lemat
+  mnożenia Clifforda, rysunek kraty okresów,
+  dowód transwersalności i diagram półprostej.
+
+Na 22 stronach **nie wykryto** obciętych wzorów,
+nakładających się napisów, kolizji podpisów z rysunkami
+ani naruszeń marginesów. Sprawdzono dodatkowo
+identyczność tekstu tych stron między artefaktem
+ostatniego CI a wcześniejszą kompilacją
+**tego samego stanu źródeł** (run 45224836628).
+
+Dwa wcześniejsze przebiegi nowego testu miały wynik
+failure z przyczyn technicznych **w samym teście**:
+(1) fałszywe dopasowanie do słowa `konsekwencja`;
+(2) zaokrąglenie przy `abs(z)**2`
+zamiast dokładnej normy liczby całkowitej Gaussa.
+Oba błędy testu usunięto; końcowy przebieg
+potwierdza wszystkie przypadki metodą całkowitoliczbową.
+
+## Werdykt audytu 22
+
+**Pierwsze przejście rozdziałów 28–30: PASS.**
+
+Dokonano rzeczywistych poprawek matematycznych
+i językowych w trzech źródłach, włączono
+niezależną regresję do CI, potwierdzono pełną
+kompilację i wizualnie skontrolowano cały blok.
+
+**Rozdziały 28–30 pozostają W STABILIZACJI.**
+Ich lokalne ustabilizowanie wymaga drugiego
+szczegółowego, niezależnego audytu:
+**audyt 23**. Blok 01–27 jest lokalnie stabilny.
+Globalny audyt wszystkich 44 rozdziałów
+pozostaje otwarty.
