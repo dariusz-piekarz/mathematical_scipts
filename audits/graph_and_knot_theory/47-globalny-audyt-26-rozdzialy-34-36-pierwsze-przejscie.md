@@ -264,22 +264,80 @@ wyniku należy weryfikować
 późniejszy przebieg
 [GitHub Actions 45252104140](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45252104140).
 
-## Bramka i status
+## Bramka i status: wykonane kontrole
 
-Pierwsze przejście wymaga:
-- zakończonej zielonej
-  kontroli strukturalnej;
-- trzykrotnego składu pełnego
-  44-rozdziałowego PDF
-  i braku ostrzeżeń LaTeX;
-- oględzin wszystkich stron
-  źródłowych rozdziałów 34–36,
-  w tym diagramów i nowego
-  lematu o bilansie wymiernym.
+### Kontrola matematyczna i testy — PASS
 
-**Rozdziały 34–36 pozostają w stabilizacji.**
-Po pomyślnym pierwszym przejściu
-następny etap to **audyt 27:
-drugie niezależne przejście 34–36**.
-Dotychczas rozdziały **01–33**
-pozostają lokalnie stabilne.
+W końcowym przebiegu źródłowym
+[GitHub Actions 45252104140](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45252104140)
+dla commitu `5e831c27adc3eeb12ff016f1fa068764cf65e2a2`
+zadanie `structural-audit` zakończyło się **success**,
+zawierając m.in. **27 596** nowych regresji (PASS)
+i wszystkie pakiety starszych rozdziałów:
+**44/44** źródła, **0** duplikatów etykiet,
+**0** niezwiązanych odsyłaczy,
+**0** błędów środowiska,
+**0** terminów zakazanych.
+
+### Pełna kompilacja i przegląd PDF — PASS dla bazowego stanu matematycznego
+
+[GitHub Actions 45251930683](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45251930683)
+dla commitu źródłowo-testowego
+`1c6205f83180e4a372b04a64b9a0777a482cfe4d`
+zakończył się **success** w zadaniach
+`structural-audit` i `full-book-pdf`.
+Pobrano artefakt PDF **14856492888**:
+kompletne **287 stron A4**, trzy
+pomyślne kompilacje `pdflatex`,
+plik ostrzeżeń LaTeX o rozmiarze **0 bajtów**.
+
+Wyrenderowano i **obejrzano wszystkie strony 272–287**,
+zawierające łącznie cały audytowany blok:
+- **272–278** — drukowany rozdział 41
+  (źródłowy 34): graf plumbingowy, formy
+  przecięcia i splecenia, nowy wniosek
+  o wymiernym bilansie, diagram dwóch
+  chirurgii, tabela warunków;
+- **279–284** — drukowany rozdział 42
+  (źródłowy 35): algebra Frobeniusa,
+  nowy lemat i dowód, kompleks
+  zredukowany, warunek `n_z(φ)=0`,
+  przykład Whiteheada, Temperley–Lieb;
+- **285–287** — drukowany rozdział 43
+  (źródłowy 36): bibliografia z
+  uzupełnionymi DOI i nowa mapa
+  zależności dowodów.
+
+W tych stronach **nie zauważono**
+uciętych wzorów, nachodzących podpisów
+ani kolizji diagramów. Zmiana dodana
+**po** przebiegu 45251930683 to tylko
+dodatkowe 11 wierszy tekstu o
+przeciwnych konwencjach znaku
+formy splecenia w źródle 34.
+Dla tej właśnie końcowej wersji
+zadanie strukturalne jest PASS,
+ale dodatkowy skład PDF z
+przebiegu **45252104140**
+był jeszcze w toku podczas
+ostatniej kontroli.
+
+### Status i kolejna iteracja
+
+Matematyczne poprawki **34–36**
+i regresje pierwszego przejścia
+są zakończone. Pełny PDF wersji
+sprzed ostatniego doprecyzowania
+znaku skompilował się bez ostrzeżeń
+i przeszedł oględziny wszystkich stron.
+**Do formalnego zamknięcia pierwszego
+przejścia pozostaje potwierdzenie
+końcowej kompilacji wersji zawierającej
+również dopisek o konwencji.**
+
+Blok **34–36 nadal jest W STABILIZACJI**,
+także po udanym pierwszym przejściu,
+aż do odrębnego audytu 27.
+**01–33 pozostają lokalnie stabilne.**
+Globalny audyt 44-rozdziałowego
+tomu pozostaje otwarty.
