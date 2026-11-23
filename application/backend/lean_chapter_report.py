@@ -50,6 +50,29 @@ def chapter_report(con: sqlite3.Connection, module_id: str, *,
         {**{name: item[name] for name in REPORT_ITEM_FIELDS}, "certificate": False}
         for item in catalog["items"] if item["source_module"] == module_id
     ]
+    # Catalogue "ready" may be based on a pinned manifest SHA without a
+    # canonical .tex path. Require an independently readable canonical file,
+    # and check it again after the catalogue pass. This remains diagnostics:
+    # no cryptographic attestation or atomic filesystem snapshot is implied.
+    registry = {item["id"]: item for item in lean._registry(lean_root)}
+    for entry in entries:
+        if entry["formalization_status"] != "ready":
+            continue
+        registered = registry.get(entry["formalization_id"])
+        if (registered is None
+                or not registered.get("source_document_path")
+                or registered.get("source_module") != module_id
+                or registered.get("source_label") != entry["source_label"]
+                or registered.get("source_document_sha256") != indexed_sha
+                or registered.get("lean_file") != entry["lean_file"]
+                or registered.get("lean_theorem") != entry["lean_theorem"]
+                or registered.get("lean_theorems",
+                                  [registered.get("lean_theorem")]) != entry["lean_theorems"]
+                or not lean._source_file_current(registered, indexed_sha, lean_root)):
+            entry["index_status"] = "unverifiable_canonical_source"
+            entry["formalization_status"] = "stale"
+            entry["statement_status"] = "needs_review"
+
     # The catalogue reads the same SQLite index separately. Detect a generation
     # switch in between these reads, including a new *internally valid* SHA.
     # No version of a changing chapter may acquire a positive report status.

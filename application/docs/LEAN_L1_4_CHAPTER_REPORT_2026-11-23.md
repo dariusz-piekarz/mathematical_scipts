@@ -39,3 +39,17 @@ Test regresyjny wstrzykuje taką zmianę pomiędzy odczytami i sprawdza
 odmowę podniesienia statusu. Nie oznacza to atomowego snapshotu przy
 dowolnej późniejszej zmianie ani bezpieczeństwa nieufnego drzewa plików.
 Kandydat sprzed tej poprawki nie może otrzymać końcowego odbioru L1.4.1.
+
+## Kolejny sceptyczny audyt: kanoniczny plik LaTeX
+
+Wykryto możliwy fałszywie dodatni status `ready`: starszy katalog
+akceptował wpis z przypiętym SHA256, ale bez podanej fizycznej ścieżki
+kanonicznego pliku `.tex`; nie miał wtedy czego weryfikować na dysku.
+Raport L1.4.1 wymaga teraz jawnej ścieżki i ponownie sprawdza treść
+kanonicznego pliku **po** odczycie katalogu. Zmiana manifestu między
+odczytami lub brak możliwości potwierdzenia ścieżki powoduje
+`unverifiable_canonical_source`, `stale`, `needs_review`,
+bez zatwierdzenia. Dodano dwie regresje negatywne: manifest bez ścieżki
+oraz zmiana bajtów kanonicznego TeX po odczycie katalogu. Nie jest to
+pełna migawka atomowa ani formalna certyfikacja zgodności twierdzeń;
+`certificate=false`. Rygor 2+1 liczyć od nowego SHA tej poprawki.

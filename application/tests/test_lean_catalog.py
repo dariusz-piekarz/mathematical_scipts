@@ -129,9 +129,17 @@ class LeanCatalogTests(unittest.TestCase):
         self.assertEqual(err.exception.status_code, 503)
 
 
+    def set_l14_canonical_file(self):
+        tex = Path(self.temp.name) / "chapters" / "pl" / "logic" / "01.tex"
+        tex.parent.mkdir(parents=True, exist_ok=True)
+        tex.write_text(SOURCE, encoding="utf-8")
+        self.item["source_document_path"] = "chapters/pl/logic/01.tex"
+        return tex
+
     def test_l14_chapter_report_ready_is_not_compilation(self):
         self.item.update(source_document_sha256=self.digest,
                          statement_status="approved")
+        self.set_l14_canonical_file()
         self.save_manifest()
         data = lean_chapter_report.chapter_report(self.con, "LST-01", lean_root=self.root)
         self.assertEqual(data["report_schema_version"], 1)
@@ -212,6 +220,7 @@ class LeanCatalogTests(unittest.TestCase):
     def test_l14_chapter_report_does_not_join_two_sqlite_generations(self):
         self.item.update(source_document_sha256=self.digest,
                          statement_status="approved")
+        self.set_l14_canonical_file()
         self.save_manifest()
         initial = lean_catalog.list_formalizations(self.con, lean_root=self.root)
         self.assertEqual(initial["ready"], 1)
@@ -238,6 +247,49 @@ class LeanCatalogTests(unittest.TestCase):
                          "changed_during_report")
         self.assertEqual(result["items"][0]["statement_status"], "needs_review")
         self.assertFalse(result["certificate"])
+
+
+    def test_l14_pinned_approved_without_canonical_path_is_not_ready(self):
+        self.item.update(source_document_sha256=self.digest,
+                         statement_status="approved")
+        self.save_manifest()
+        # The older catalogue by itself says ready, since no physical TeX
+        # path was supplied. The stricter chapter report must not.
+        self.assertEqual(
+            lean_catalog.list_formalizations(self.con, lean_root=self.root)["ready"], 1)
+        data = lean_chapter_report.chapter_report(self.con, "LST-01",
+                                                  lean_root=self.root)
+        self.assertEqual(data["source_index_status"], "ok")
+        self.assertEqual((data["ready"], data["stale"],
+                          data["statement_approved"]), (0, 1, 0))
+        self.assertEqual(data["items"][0]["index_status"],
+                         "unverifiable_canonical_source")
+        self.assertEqual(data["items"][0]["statement_status"], "needs_review")
+        self.assertFalse(data["certificate"])
+
+    def test_l14_tex_changed_after_catalog_downgrades_ready(self):
+        self.item.update(source_document_sha256=self.digest,
+                         statement_status="approved")
+        tex = self.set_l14_canonical_file()
+        self.save_manifest()
+        original = lean_catalog.list_formalizations
+
+        def change_source_after_catalog(*args, **kwargs):
+            catalogue = original(*args, **kwargs)
+            self.assertEqual(catalogue["ready"], 1)
+            tex.write_text(SOURCE + "% changed on disk\\n", encoding="utf-8")
+            return catalogue
+
+        with patch.object(lean_chapter_report.lean_catalog,
+                          "list_formalizations",
+                          side_effect=change_source_after_catalog):
+            data = lean_chapter_report.chapter_report(self.con, "LST-01",
+                                                      lean_root=self.root)
+        self.assertEqual((data["ready"], data["stale"],
+                          data["statement_approved"]), (0, 1, 0))
+        self.assertEqual(data["items"][0]["index_status"],
+                         "unverifiable_canonical_source")
+        self.assertFalse(data["certificate"])
 
 
 if __name__ == "__main__":
