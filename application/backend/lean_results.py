@@ -22,6 +22,37 @@ STORED_STATUSES = {"compiled", "failed", "timeout"}
 SCHEMA_VERSION = 5
 MAX_STORED_LOG = 16000
 MAX_RECORD_BYTES = 30000
+FINGERPRINT_DIGEST_FIELDS = (
+    "source_document_sha256", "source_binding_sha256", "lean_sha256",
+    "project_sources_sha256", "external_packages_sha256",
+    "compiled_artifacts_sha256", "executable_toolchain_sha256",
+    "toolchain_sha256",
+)
+FINGERPRINT_FIELDS = frozenset((*FINGERPRINT_DIGEST_FIELDS, "declared_toolchain"))
+RECORD_FIELDS = frozenset((
+    *FINGERPRINT_FIELDS, "schema_version", "formalization_id",
+    "proof_status", "detail", "log", "finished_at", "certificate",
+))
+
+
+def _valid_fingerprint_fields(value: object) -> bool:
+    return (
+        isinstance(value, dict) and set(value) == FINGERPRINT_FIELDS
+        and all(isinstance(value[field], str) and HEX_DIGEST.fullmatch(value[field])
+                for field in FINGERPRINT_DIGEST_FIELDS)
+        and isinstance(value["declared_toolchain"], str)
+        and len(value["declared_toolchain"]) <= 160
+    )
+
+
+def _unique_json_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    """Reject duplicate JSON members rather than accepting last-key-wins."""
+    result: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError("Duplicate Lean run record field")
+        result[key] = value
+    return result
 
 
 def result_dir(override: Path | None = None) -> Path:
@@ -116,50 +147,65 @@ def _record_path(identifier: str, override: Path | None) -> Path:
 
 def last_run(identifier: str, expected: dict[str, str], *,
              results_root: Path | None = None) -> dict[str, Any]:
-    """Return only a matching real execution result; invalidate any changed dependency."""
+    """Return only a well-formed, version-matching local Lean execution result.
+
+    Cached execution diagnostics are never proof certificates. A writable local
+    file is not cryptographic attestation of a past execution.
+    """
     path = _record_path(identifier, results_root)
-    if not path.is_file():
-        return {"proof_status": "not_run", "run_cached": False}
+    invalid = {"proof_status": "not_run", "run_cached": False,
+               "run_record_invalid": True}
+    if not _valid_fingerprint_fields(expected):
+        return invalid
     try:
-        if path.stat().st_size > MAX_RECORD_BYTES:
-            raise ValueError("oversized")
-        record = json.loads(path.read_text(encoding="utf-8"))
-        if (not isinstance(record, dict) or record.get("schema_version") != SCHEMA_VERSION
-                or record.get("formalization_id") != identifier
-                or record.get("proof_status") not in STORED_STATUSES
-                or not all(isinstance(record.get(key), str)
-                           for key in ("finished_at", "detail", "log"))):
-            raise ValueError("invalid schema")
-    except (OSError, ValueError, UnicodeError, TypeError):
-        return {"proof_status": "not_run", "run_cached": False,
-                "run_record_invalid": True}
-    if any(record.get(key) != value for key, value in expected.items()):
+        if path.is_symlink():
+            return invalid
+        if not path.is_file():
+            return {"proof_status": "not_run", "run_cached": False}
+        # Bound the actual bytes read, including if a file grows after stat.
+        with path.open("rb") as stream:
+            raw = stream.read(MAX_RECORD_BYTES + 1)
+        if len(raw) > MAX_RECORD_BYTES:
+            raise ValueError("Oversized Lean run record")
+        record = json.loads(raw.decode("utf-8"), object_pairs_hook=_unique_json_keys)
+        if (not isinstance(record, dict)
+                or set(record) != RECORD_FIELDS
+                or type(record["schema_version"]) is not int
+                or record["schema_version"] != SCHEMA_VERSION
+                or record["formalization_id"] != identifier
+                or not isinstance(record["proof_status"], str)
+                or record["proof_status"] not in STORED_STATUSES
+                or record["certificate"] is not False
+                or not _valid_fingerprint_fields({
+                    name: record[name] for name in FINGERPRINT_FIELDS
+                })
+                or not isinstance(record["finished_at"], str)
+                or not isinstance(record["detail"], str)
+                or not isinstance(record["log"], str)
+                or len(record["detail"]) > 1000
+                or len(record["log"]) > MAX_STORED_LOG):
+            raise ValueError("Invalid Lean run record schema")
+        completed = datetime.fromisoformat(record["finished_at"])
+        if completed.tzinfo is None or completed.utcoffset() is None:
+            raise ValueError("Lean run timestamp is missing timezone")
+    except (OSError, ValueError, UnicodeError, TypeError, OverflowError):
+        return invalid
+    if any(record[key] != expected[key] for key in FINGERPRINT_FIELDS):
         return {"proof_status": "not_run", "run_cached": False,
                 "previous_run_outdated": True}
     return {"proof_status": record["proof_status"], "run_cached": True,
-            "last_run_at": record.get("finished_at"),
-            "last_run_detail": record.get("detail", ""),
-            "last_run_log": record.get("log", "")[:MAX_STORED_LOG],
+            "last_run_at": record["finished_at"],
+            "last_run_detail": record["detail"],
+            "last_run_log": record["log"],
             "certificate": False}
-
 
 def save_run(identifier: str, expected: dict[str, str], *, proof_status: str,
              detail: str, log: str = "", results_root: Path | None = None) -> dict[str, Any]:
     """Atomically save the latest actual result; callers must not store synthetic success."""
     if proof_status not in STORED_STATUSES:
         raise ValueError("Not an actual Lean process outcome")
-    if set(expected) != {"source_document_sha256", "source_binding_sha256", "lean_sha256",
-                         "project_sources_sha256", "external_packages_sha256",
-                         "compiled_artifacts_sha256", "executable_toolchain_sha256", "toolchain_sha256",
-                         "declared_toolchain"}:
-        raise ValueError("Incomplete run fingerprint")
-    if (not all(isinstance(expected[key], str) and HEX_DIGEST.fullmatch(expected[key])
-                for key in ("source_document_sha256", "source_binding_sha256", "lean_sha256",
-                            "project_sources_sha256", "external_packages_sha256",
-                            "compiled_artifacts_sha256", "executable_toolchain_sha256", "toolchain_sha256"))
-            or not isinstance(expected["declared_toolchain"], str)
-            or len(expected["declared_toolchain"]) > 160):
-        raise ValueError("Invalid run fingerprint")
+    if not _valid_fingerprint_fields(expected):
+        raise ValueError("Incomplete or invalid run fingerprint")
     path = _record_path(identifier, results_root)
     record = {"schema_version": SCHEMA_VERSION, "formalization_id": identifier,
               **expected, "proof_status": proof_status,
