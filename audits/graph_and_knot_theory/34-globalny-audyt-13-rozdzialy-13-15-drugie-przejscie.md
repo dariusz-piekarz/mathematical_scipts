@@ -14,7 +14,7 @@ Ponownie zbadano wszystkie główne twierdzenia i argumenty historycznych rozdzi
   zawierający dokładnie jedno siodło, stopnie wierzchołków
   grafu Reeba, rachunek `b_1(R_f)=g`, przypadek nieorientowalny;
 - **15 — Forman**: konwencja orientacji krawędzi w grafie Hassego,
-  equivalence z zamkniętą `V`-ścieżką, parowania drzewowe,
+  równoważność z zamkniętą `V`-ścieżką, parowania drzewowe,
   wzór barycentryczny na kolaps, kompleks łańcuchowy Morse'a
   i silne nierówności Morse'a.
 
@@ -197,14 +197,43 @@ kryteriów grafu Hassego i `V`-ścieżek.
   `ubuntu-24.04`, aby uniezależnić kontrolę od
   zmiennych repozytoriów pakietów obrazu `ubuntu-latest`.
 
+## Końcowy przebieg po przypięciu środowiska
+
+[45179359262](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45179359262)
+na commicie `8d6f57cf6ff4ca0a4ad2db394ba8cf1a0193451f`
+zakończył obie prace sukcesem:
+`structural-audit=success` i `full-book-pdf=success`.
+Przebieg zawiera nowy test eliminacji łańcuchowej,
+weryfikację `44/44` źródeł, odsyłaczy i wszystkie
+wcześniejsze kontrole historycznych rozdziałów.
+
+Pobrano i otwarto rzeczywisty artefakt
+`graph-and-knot-complete-book-audit` z tego przebiegu:
+- **272 strony A4**, trzy udane przebiegi `pdflatex`;
+- końcowy `graph_and_knot_full_warnings.txt`:
+  **0 wierszy**;
+- zweryfikowano renderowane strony PDF **121–135**,
+  obejmujące rozdziały 13–15, nowe dowody
+  eliminacji algebraicznej, konstrukcję drzewo--drzewo
+  dualne i rysunki;
+- brak widocznych kolizji tekstu z rysunkami,
+  obcięć wzorów, nakładania podpisów oraz
+  problemów marginesów w tym zakresie.
+
+Numeracja stron całej książki może się nieznacznie
+zmieniać przy zmianie dystrybucji TeX
+(ostatni PDF ma 272 strony, poprzedni 271).
+Stąd liczba stron nie jest sama w sobie
+wskaźnikiem defektu składu.
+
 ## Werdykt i bramka stabilizacji
 
-**Drugie przejście merytoryczne: PASS po uzupełnieniu
-dowodów i wykonaniu niezależnej regresji algebraicznej.**
-Historyczne 13–15 mogą otrzymać status lokalnie
-stabilnych dopiero po końcowym sukcesie pełnego
-workflow na ostatnim stanie treści i kontroli
-renderowanych stron po zmianach w rozdziałach 14–15.
+**Historyczne rozdziały 13–15: LOKALNIE STABILNE (PASS)**
+w zakresie dwóch szczegółowych przejść matematycznych,
+regresji algebraicznej, kontroli struktury i
+rzeczywistego składu PDF. Wszystkie bramki
+z tego audytu są zakończone sukcesem.
+Następny blok szczegółowego audytu: **16–18**.
 
 **Wszystkie 44 rozdziały nadal nie przeszły globalnego
 szczegółowego audytu matematycznego.**
