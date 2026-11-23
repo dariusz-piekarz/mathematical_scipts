@@ -28,7 +28,7 @@
 13. **`thm:topog26-small-paths`, 100–295: PASS.** Drobne łańcuchy w małych spójnych zbiorach C_{n,j} tworzą zgodne podziały czasu o długości maksymalnej ≤2⁻ⁿ. Oscylacja wartości na jednym przedziale jest ≤2S_n, na dwóch sąsiednich ≤4S_n. To zapewnia jednostajną ciągłość na gęstym zbiorze parametrów i przedłużenie dzięki zupełności X. Nie założono wcześniej istnienia dróg w samych zbiorach C_{n,j}.
 14. **`lem:topog26-excursion`, 339–405: PASS.** Skończoność zbioru docelowego E umożliwia wybór rozłącznych przedziałów J_i także przy t_y=0 lub 1. Pętle do punktów przypisanych temu samemu t_y łączą się w h(t_y), zachowując ciągłość i oba końce; jednostajny błąd jest mniejszy niż 2ε.
 15. **`thm:topog26-hm-sufficient`, 444–561: PASS.** Kolejne drogi f_n mają δ_n/2-gęste obrazy, a przyrosty o koszcie ≤2ε_n tworzą szereg zbieżny. Granica jest jednostajna i ciągła. Surjektywność nie wymaga zbieżności czasów t_n: wystarczy d(x,f(t_n))→0 oraz domkniętość zwartego obrazu f([0,1]).
-16. **`lem:topog26-image-second-countable`, 592–651: PASS.** Zwarta włókna f⁻¹({x}) pozwalają objąć je skończoną sumą V elementów przeliczalnej bazy odcinka. Zbiór W_V=X\f([0,1]\V) jest otwarty dzięki Hausdorffowości X i spełnia x∈W_V⊂O.
+16. **`lem:topog26-image-second-countable`, 592–651: PASS.** Zwarte włókna f⁻¹({x}) pozwalają objąć je skończoną sumą V elementów przeliczalnej bazy odcinka. Zbiór W_V=X\f([0,1]\V) jest otwarty dzięki Hausdorffowości X i spełnia x∈W_V⊂O.
 17. **`lem:topog26-image-locally-connected`, 661–738: PASS.** Skończone obrazy przedziałów I_j zawierają x, więc ich suma K jest spójna. Otwarte W=X\f([0,1]\V) z włókna zawartego w V spełnia x∈W⊂K⊂O. Stąd składowe spójne dowolnego otwartego O są otwarte, jak wymaga lokalna spójność.
 
 ## CI, wynik i zakres
