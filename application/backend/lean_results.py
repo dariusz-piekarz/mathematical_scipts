@@ -168,7 +168,12 @@ def last_run(identifier: str, expected: dict[str, str], *,
         # A descriptor identity check is also needed on Windows, where
         # O_NOFOLLOW may not exist. Parent directories remain outside this
         # local trust boundary.
-        flags = os.O_RDONLY | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0)
+        # O_NONBLOCK prevents a last-moment substitution with a named pipe
+        # from hanging before fstat can reject the non-regular descriptor.
+        # Regular files are unaffected by O_NONBLOCK on POSIX.
+        flags = (os.O_RDONLY | getattr(os, "O_BINARY", 0)
+                 | getattr(os, "O_NOFOLLOW", 0)
+                 | getattr(os, "O_NONBLOCK", 0))
         descriptor = os.open(path, flags)
         with os.fdopen(descriptor, "rb") as stream:
             opened = os.fstat(stream.fileno())
