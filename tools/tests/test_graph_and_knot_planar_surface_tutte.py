@@ -167,8 +167,10 @@ def check_surface_complex(n, edges, faces):
 
 
 def dual_edges(edges, face_of):
-    return tuple(sorted(tuple(sorted((face_of[(u,v)],face_of[(v,u)])))
-                        for u,v in edges))
+    # Preserve original edge indices: each edge e corresponds to dual e*.
+    # Sorting the dual edge *sequence* would corrupt complementary-tree tests.
+    return tuple(tuple(sorted((face_of[(u,v)],face_of[(v,u)])))
+                 for u,v in edges)
 
 
 def count_flows(n, edges, q):
