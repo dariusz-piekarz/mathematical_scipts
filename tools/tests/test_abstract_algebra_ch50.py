@@ -115,7 +115,8 @@ class AA50KovacicFiniteSymPy(unittest.TestCase):
         q=x+s.Rational(5,16)/x**2
         r=s.sqrt(x)-1/(4*x)
         self.assertTrue(same(s.diff(r,x)+r*r,q))
-        self.assertEqual(s.degree(s.denom(q),x)-s.degree(s.numer(q),x),-1)
+        num,den=s.fraction(s.cancel(q))
+        self.assertEqual(s.degree(den,x)-s.degree(num,x),-1)
 
     def test_10_recurrence_is_linear_in_monic_p(self):
         q=qtet();S=x*(x-1);theta=1/x+s.Rational(4,3)/(x-1)
