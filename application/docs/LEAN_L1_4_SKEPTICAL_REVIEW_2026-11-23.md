@@ -64,3 +64,29 @@ Aktualne, sprawdzone wyniki kandydata
 **Decyzja:** techniczna bramka 2+1 jest zakończona; niezależny odbiór
 i formalne przejście do `stable` — **nie**. Obecna jednostka L1.4.1
 pozostaje `stabilizing`. L1.4.2 nie rozpoczęto.
+
+## Aktualizacja audytu 2026-11-23 — krytyczne znalezisko po 3/3
+
+Weryfikacja źródeł przed zewnętrznym odbiorem wskazała realną lukę
+w `1c4b89b1`: drugi odczyt manifestu sprawdzał ścieżkę kanonicznego
+TeX, lecz nie porównywał aktualnego `statement_status`. Zatem
+wycofanie `approved` po odczycie katalogu mogło pozostawić licznik
+`statement_approved=1`. Ponadto zmiana liczby pozycji rejestru albo
+przypisania etykiety w SQLite nie musiała zmieniać SHA dokumentu.
+
+Poprawka w [`a1f93d98`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/a1f93d985778492082a66db3975d05e9d73ed763)
+wymaga spójnego zestawu identyfikatorów dla całego rozdziału,
+porównuje najważniejsze pola drugiego manifestu, ponawia
+`owner_status` na etykietach i obniża `ready/approved` do
+`stale/needs_review` w razie rozbieżności. Trzy nowe regresje
+testują cofnięcie aprobaty, dopisanie formalizacji i usunięcie
+etykiety w trakcie przygotowania raportu.
+
+To nadal nie jest transakcja atomowa obejmująca SQLite, manifest i
+TeX. Zostaje `certificate=false`. Wcześniejszy, prawdziwy
+[3/3 PASS](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45160961943)
+odnosi się **wyłącznie do starszego SHA**. Wniosek o recenzję starego
+kandydata ([issue #8](https://github.com/dariusz-piekarz/mathematical_scipts/issues/8))
+zamknięto jako zastąpiony, bez udawania odbioru. Dla
+[`a1f93d98` testy/2+1 ruszyły od zera](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45175198218).
+Końcowy status `stable` pozostaje wstrzymany.

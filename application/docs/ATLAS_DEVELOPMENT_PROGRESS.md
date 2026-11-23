@@ -6,21 +6,20 @@
 
 ## Wskaźnik wykonywania
 
-- Bieżący etap: **Lean 4 / L1.4.1 — raport rozdziałowy**, **3/3 pełnych rund technicznych PASS**; status **stabilizing (pending independent approval)**, nie `stable`.
-- Kod kandydata (niezmienny SHA): `1c4b89b1a9ef8affe95e3073739d99bc1c57aa2d`.
-- [Stabilizacja #45160961943](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45160961943): zakończona `success` 2026-11-23 11:23 UTC. W każdej z trzech rund 729 wyników testów Python, 10 sklasyfikowanych pominięć, 0 nierozliczonych; wszystkie joby aplikacyjne, Windows/Linux, przypięte Lean/Mathlib, `skeptical_contract` i `evidence` — `success`.
-- [Końcowy artefakt statusu](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45160961943/artifacts/14814696978): `problems=[]`, `skeptical_review=pending`, `status=stabilizing`, `certificate=false`. **Sukces workflow nie jest autoryzacją niezależnego przeglądu.**
-- [Osobny pełny smoke i testy #45160932019](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45160932019): `success`; Chromium zaindeksowało 506 rozdziałów, 0 błędów JavaScript. W trzech rundach użyto osobnych hostów na testy natywne i Lean.
-- Wewnętrzny audyt krytycznych przypadków i faktyczny status kontroli: [raport sceptyczny](LEAN_L1_4_SKEPTICAL_REVIEW_2026-11-23.md). Pozostaje **odrębna, uwierzytelniona decyzja niezależnego recenzenta**: [issue #8 — protokół odbioru](https://github.com/dariusz-piekarz/mathematical_scipts/issues/8).
-- Następny krok: rozliczyć [issue #8](https://github.com/dariusz-piekarz/mathematical_scipts/issues/8) na tym samym SHA; dopiero po udokumentowanym zewnętrznym odbiorze zamknąć L1.4.1 i rozpocząć L1.4.2. Nie dodawać fikcyjnego `independent=true` do niesygnowanego JSON.
-- Nadal `certificate=false`: diagnostyka wykonania Lean i recenzja statusów nie poświadcza zgodności semantycznej twierdzeń Lean i LaTeX.
-- Techniczne L1.1–L1.3 zamknięte historycznie na własnych SHA; pilotaż 20–30 formalizacji pozostaje odrębnie nierozliczony.
+- Bieżący etap: **Lean 4 / L1.4.1 — raport rozdziałowy**, stan **testing / stabilizing**, nowy licznik stabilizacji **0/3 kompletnych rund** w chwili tej aktualizacji.
+- Aktualny niezmienny kandydat: `a1f93d985778492082a66db3975d05e9d73ed763`. [Commit z naprawą](https://github.com/dariusz-piekarz/mathematical_scipts/commit/a1f93d985778492082a66db3975d05e9d73ed763) dodaje kontrolę zmian `statement_status`, zestawu rejestracji i własności etykiety oraz trzy regresje.
+- [Pełne CI aplikacji #45175157959](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45175157959) i [nowa niezmienna kontrola 2+1 #45175198218](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45175198218): **w toku** przy zapisie tej notatki; sprawdzać rzeczywiste zadania aż do kompletnego raportu.
+- Poprzedni [2+1 #45160961943](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45160961943) zakończył się **3/3 PASS dla historycznego SHA `1c4b89b1`**, ale został unieważniony jako podstawa awansu nowego kodu po wykryciu niespójności manifestu i etykiet. Nie zaliczać go do nowego licznika.
+- [Issue #8](https://github.com/dariusz-piekarz/mathematical_scipts/issues/8) zamknięto jako **zastąpione, a nie zatwierdzone**. Dopiero po technicznej stabilizacji aktualnego SHA wymagany jest nowy niezależny, uwierzytelniony odbiór.
+- [Audyt L1.4.1](LEAN_L1_4_CHAPTER_REPORT_2026-11-23.md) i [przegląd krytyczny](LEAN_L1_4_SKEPTICAL_REVIEW_2026-11-23.md) dokumentują granice: brak atomowej migawki wieloplikowej; `ready` nie jest wynikiem kompilacji, `statement_approved` nie jest certyfikatem semantycznym.
+- Nie rozpoczynać L1.4.2 bez pełnych 3/3 dla **aktualnego SHA** oraz osobnego uwierzytelnionego zatwierdzenia; `certificate=false`.
+- Techniczne L1.1–L1.3 historycznie zamknięte na własnych SHA; pilotaż 20–30 formalizacji nie został jeszcze osobno rozliczony.
 
 ## Status etapów
 
 | Etap | Status | Pierwszy nierozliczony fragment |
 | --- | --- | --- |
-| 1. Lean 4 | stabilizing (L1.4.1, independent review pending) | L1.4.1 |
+| 1. Lean 4 | testing (L1.4.1, new immutable 2+1) | L1.4.1 |
 | 2. Inteligentny graf | planned | G2.1 |
 | 3. Generator PDF + Czytnik | planned | P3.1 |
 | 4. Centrum audytów i deduplikacja | planned | A4.1 |
