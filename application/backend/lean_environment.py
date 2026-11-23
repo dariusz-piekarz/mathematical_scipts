@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 import re
 import shutil
+import stat
 import subprocess
 
 MAX_PACKAGES = 64
@@ -202,15 +203,23 @@ def _olean_tree(root: Path, *, label: str, budget: list[int],
                     remaining -= len(chunk)
                 if stream.read(1):
                     raise ValueError("Lake .olean artifact grew while fingerprinting")
-                open_size = os.fstat(stream.fileno()).st_size
-            # On Windows, stat(path) and fstat(fd) can expose different
-            # creation-time semantics. Compare path metadata using the same
-            # API before and after the read, retaining a handle size check.
+                # Stat the *opened descriptor*, not merely its path. An
+                # artifact swapped between path.stat() and open() can have
+                # identical size while pointing at different file contents.
+                opened = os.fstat(stream.fileno())
+                if (not stat.S_ISREG(opened.st_mode)
+                        or info.st_dev != opened.st_dev
+                        or info.st_ino != opened.st_ino):
+                    raise ValueError("Lake .olean artifact identity changed while fingerprinting")
+            # Windows may report different creation-time semantics for fstat
+            # versus stat(path). Compare timestamp fields using path.stat()
+            # before and after, but demand descriptor identity as above.
             after = artifact.stat()
-            if (info.st_size != open_size or info.st_size != after.st_size
+            if (info.st_size != opened.st_size or info.st_size != after.st_size
                     or info.st_mtime_ns != after.st_mtime_ns
                     or info.st_ctime_ns != after.st_ctime_ns
-                    or info.st_ino != after.st_ino):
+                    or info.st_ino != after.st_ino
+                    or info.st_dev != after.st_dev):
                 raise ValueError("Lake .olean artifact changed while fingerprinting")
             entry["sha256"] = digest.hexdigest()
             budget[0] -= info.st_size
