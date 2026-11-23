@@ -170,3 +170,65 @@ jobs:
             books/pl/measure_theory_ch15_lii.pdf
             books/pl/measure_theory_ch15_lii.log
             books/pl/ch15_lii_previews/*.png
+
+  report-statuses:
+    name: Publish tests and PDF results as readable commit statuses
+    if: ${{ always() }}
+    needs: [tests, pdf]
+    runs-on: ubuntu-latest
+    permissions:
+      statuses: write
+    steps:
+      - name: Publish durable results after both validation jobs finish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TESTS_OUTCOME: ${{ needs.tests.result }}
+          PDF_OUTCOME: ${{ needs.pdf.result }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from urllib.request import Request, urlopen
+
+          outcomes = {
+              'measure-theory/ch15-regressions': os.environ['TESTS_OUTCOME'],
+              'measure-theory/ch15-pdf': os.environ['PDF_OUTCOME'],
+          }
+          url = (
+              f"{os.environ['GITHUB_API_URL']}/repos/"
+              f"{os.environ['GITHUB_REPOSITORY']}/statuses/{os.environ['GITHUB_SHA']}"
+          )
+          run_url = (
+              f"{os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}"
+              f"/actions/runs/{os.environ['GITHUB_RUN_ID']}"
+          )
+          failures = []
+          for context, outcome in outcomes.items():
+              state = {'success': 'success', 'failure': 'failure'}.get(outcome, 'error')
+              payload = {
+                  'state': state,
+                  'context': context,
+                  'description': f'Actions job concluded: {outcome}'[:140],
+                  'target_url': run_url,
+              }
+              request = Request(
+                  url,
+                  data=json.dumps(payload).encode('utf-8'),
+                  headers={
+                      'Authorization': f"Bearer {os.environ['GH_TOKEN']}",
+                      'Accept': 'application/vnd.github+json',
+                      'X-GitHub-Api-Version': '2022-11-28',
+                      'Content-Type': 'application/json',
+                      'User-Agent': 'measure-theory-ch15-ci',
+                  },
+                  method='POST',
+              )
+              try:
+                  with urlopen(request, timeout=30) as response:
+                      assert response.status == 201, response.status
+                      print(f'{context}: {state}; target: {run_url}')
+              except Exception as exc:
+                  failures.append(f'{context}: {exc}')
+          if failures:
+              raise RuntimeError('Cannot publish CI status: ' + '; '.join(failures))
+          PY
