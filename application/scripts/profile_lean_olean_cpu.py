@@ -79,13 +79,44 @@ def profile_olean_cpu(lean_root: Path, *, limit: int = 12) -> dict:
     }
 
 
+
+def require_matching_benchmark(benchmark: object, cpu_report: object) -> None:
+    """Fail closed if separate genuine observations refer to different artifacts.
+
+    This compares evidence already obtained by two tools; it does not read
+    an .olean file or invoke a second fingerprint pass.
+    """
+    if not isinstance(benchmark, dict) or not isinstance(cpu_report, dict):
+        raise ValueError("Malformed Lean benchmark/profile evidence")
+    first = benchmark.get("compiled_artifacts_sha256")
+    second = cpu_report.get("compiled_artifacts_sha256")
+    if (not isinstance(first, str) or HEX.fullmatch(first) is None
+            or not isinstance(second, str) or HEX.fullmatch(second) is None
+            or benchmark.get("certificate") is not False
+            or cpu_report.get("certificate") is not False
+            or type(benchmark.get("real_fingerprint_calls")) is not int
+            or benchmark["real_fingerprint_calls"] < 1
+            or cpu_report.get("actual_digest_calls") != 1):
+        raise ValueError("Incomplete or invalid Lean benchmark/profile provenance")
+    if first != second:
+        raise RuntimeError(
+            "Lean .olean artifacts changed between benchmark and CPU profile")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--lean-root", type=Path, default=APPLICATION / "lean")
     parser.add_argument("--top", type=int, default=12)
+    parser.add_argument("--compare-with", type=Path,
+                        help="Previously recorded genuine full fingerprint benchmark JSON")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     report = profile_olean_cpu(args.lean_root, limit=args.top)
+    if args.compare_with is not None:
+        if args.compare_with.stat().st_size > 2 * 1024 * 1024:
+            raise ValueError("Lean benchmark evidence is unexpectedly large")
+        prior = json.loads(args.compare_with.read_text(encoding="utf-8"))
+        require_matching_benchmark(prior, report)
     serialized = json.dumps(report, ensure_ascii=False, indent=2) + "\n"
     if args.output is not None:
         args.output.parent.mkdir(parents=True, exist_ok=True)
