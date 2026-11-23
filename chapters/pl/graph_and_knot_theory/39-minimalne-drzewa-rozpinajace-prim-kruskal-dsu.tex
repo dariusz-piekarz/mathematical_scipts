@@ -1,0 +1,543 @@
+\chapter{Minimalne drzewa rozpinające: algorytmy Prima, Kruskala i DSU}
+\label{ch:tg-mst}
+
+W rozdziale \ref{ch:tg-bfs-dfs} skonstruowaliśmy drzewa
+przeszukiwania, a w rozdziale \ref{ch:tg-shortest-paths}
+minimalizowaliśmy koszt pojedynczej drogi.
+Tym razem chcemy połączyć \emph{wszystkie} wierzchołki
+danej składowej, płacąc jak najmniej za wybrane krawędzie.
+Minimalne drzewo rozpinające jest na ogół różne od
+drzewa najkrótszych dróg: pierwsze minimalizuje sumę
+wag całego drzewa, drugie osobno odległości od źródła.
+
+\section{Zadanie minimalnego drzewa i lasu rozpinającego}
+\label{sec:tg-mst-model}
+
+Przez cały rozdział $G=(V,E)$ oznacza \emph{skończony
+graf prosty nieskierowany}, $n=|V|$, $m=|E|$,
+a $w\colon E\to\mathbb R$ jest dowolną funkcją wag.
+W szczególności dopuszczamy wagi ujemne, zerowe i powtarzające
+się. Dla $F\subseteq E$ piszemy
+$w(F)=\sum_{e\in F}w(e)$; dla $F=\varnothing$ suma wynosi zero.
+Pojęcia drzewa rozpinającego oraz przekroju $\delta_G(S)$
+zostały zdefiniowane w rozdziale \ref{ch:tg-drzewa}.
+Zbiór krawędzi nazywamy \emph{lasem}, jeśli podgraf,
+który wyznacza na zbiorze wszystkich wierzchołków,
+nie zawiera cyklu.
+
+\begin{definicja}[Minimalne drzewo i minimalny las rozpinający]
+\label{def:tg-mst}
+Jeżeli $G$ jest spójny, \emph{minimalnym drzewem
+rozpinającym} (MST, od \emph{minimum spanning tree})
+nazywamy drzewo rozpinające $T$ o najmniejszej
+możliwej wartości $w(E(T))$.
+
+Dla dowolnego $G$ \emph{minimalnym lasem rozpinającym}
+(MSF, od \emph{minimum spanning forest}) nazywamy las
+$F\subseteq E$, którego ograniczenie do każdej składowej
+spójnej $G$ jest minimalnym drzewem rozpinającym
+tej składowej. Wierzchołek izolowany tworzy drzewo
+jednowierzchołkowe o koszcie zero.
+\end{definicja}
+
+\begin{stwierdzenie}[Istnienie i liczba krawędzi]
+\label{prop:tg-mst-existence}
+Każdy skończony graf ważony ma co najmniej jeden MSF.
+Jeżeli $G$ ma $c$ składowych spójnych (dla $V=\varnothing$
+przyjmujemy $c=0$), to każdy MSF zawiera dokładnie $n-c$
+krawędzi.
+\end{stwierdzenie}
+\begin{proof}
+Każda składowa skończonego grafu ma drzewo rozpinające,
+a takich drzew jest skończenie wiele.
+Wybierzmy w każdej składowej drzewo o najmniejszej sumie wag.
+Ich suma rozłączna daje MSF. Drzewo na $n_i$ wierzchołkach
+ma $n_i-1$ krawędzi. Sumując po $c$ składowych,
+otrzymujemy $\sum_i(n_i-1)=n-c$.
+\end{proof}
+
+\begin{uwaga}[Wagi ujemne nie stanowią problemu]
+Algorytmy Prima i Kruskala są poprawne również dla wag
+ujemnych. Nie stosują warunku nieujemności używanego
+w algorytmie Dijkstry. Nie należy również mylić MSF
+z minimalnym podgrafem spójnym o dowolnej liczbie krawędzi:
+w obecności cykli ujemnych ten drugi problem miałby
+inne rozwiązania.
+\end{uwaga}
+
+\section{Własność przekroju i własność cyklu}
+\label{sec:tg-mst-cut-cycle}
+
+\begin{twierdzenie}[Własność przekroju -- bezpieczna krawędź]
+\label{thm:tg-mst-cut}
+Niech $G=(V,E)$ będzie skończonym grafem ważonym,
+a $F\subseteq E$ lasem zawartym w pewnym MSF.
+Niech $S\subseteq V$ będzie zbiorem takim, że żadna
+krawędź $F$ nie należy do $\delta_G(S)$.
+Jeżeli $\delta_G(S)\ne\varnothing$ i
+$e\in\delta_G(S)$ jest krawędzią o najmniejszej
+wadze w tym przekroju, to istnieje MSF
+zawierający $F\cup\{e\}$.
+\end{twierdzenie}
+\begin{proof}
+Wybierzmy MSF $T$ zawierający $F$.
+Jeśli $e\in T$, nie ma czego dowodzić.
+W przeciwnym przypadku końce $e$ należą
+do tej samej składowej spójnej $G$, zatem
+dodanie $e$ do drzewa $T$ tej składowej
+tworzy dokładnie jeden cykl $C$.
+Ponieważ $e$ przecina podział $(S,V\setminus S)$,
+cykl $C$ musi przechodzić przez przekrój
+jeszcze przynajmniej raz. Wybierzmy
+$f\in C\cap\delta_G(S)$, $f\ne e$.
+Z założenia $w(e)\leq w(f)$.
+Zbiór $(T\setminus\{f\})\cup\{e\}$ jest lasem
+rozpinającym te same składowe i ma wagę nie większą
+od $T$. Minimalność $T$ wymusza równość kosztów.
+Ponadto $f\notin F$, ponieważ przekrój nie
+zawiera krawędzi $F$. Otrzymany MSF zawiera
+$F\cup\{e\}$.
+\end{proof}
+
+\begin{wniosek}[Krawędź jednoznacznie najlżejsza]
+\label{cor:tg-mst-strict-cut}
+Jeżeli $e$ jest jedyną krawędzią o najmniejszej
+wadze na pewnym niepustym przekroju $\delta_G(S)$,
+to $e$ należy do każdego MSF grafu $G$.
+\end{wniosek}
+\begin{proof}
+Gdyby pewien MSF nie zawierał $e$, jego ścieżka
+między końcami $e$ musiałaby przekroczyć ten
+przekrój inną krawędzią $f$ o wadze większej
+od $w(e)$. Zastąpienie $f$ przez $e$
+zmniejszyłoby koszt, sprzecznie z minimalnością.
+\end{proof}
+
+\begin{twierdzenie}[Własność cyklu]
+\label{thm:tg-mst-cycle}
+Niech $C$ będzie cyklem prostym w skończonym
+grafie ważonym $G$. Jeśli jedna z jego krawędzi
+$e$ ma wagę \emph{ściśle większą} od wag wszystkich
+pozostałych krawędzi $C$, to $e$ nie należy
+do żadnego MSF grafu $G$.
+\end{twierdzenie}
+\begin{proof}
+Gdyby $e$ należała do MSF $T$, usunięcie
+jej dzieliłoby odpowiednie drzewo na dwa
+niepuste zbiory wierzchołków $S$ oraz $R$.
+Ścieżka $C\setminus\{e\}$ łączy końce $e$,
+więc zawiera inną krawędź $f$ między $S$ i $R$.
+Z założenia $w(f)<w(e)$.
+Zbiór $(T\setminus\{e\})\cup\{f\}$ jest
+lasem rozpinającym o mniejszej wadze,
+co jest sprzecznością.
+\end{proof}
+
+\begin{stwierdzenie}[Jednoznaczność przy różnych wagach]
+\label{prop:tg-mst-unique}
+Jeżeli wagi wszystkich krawędzi skończonego
+grafu $G$ są parami różne, to $G$ ma dokładnie
+jeden MSF. Odwrotna implikacja nie zachodzi.
+\end{stwierdzenie}
+\begin{proof}
+Przypuśćmy, że istnieją dwa różne MSF $T_1,T_2$.
+Wybierzmy krawędź $e$ o najmniejszej wadze
+w różnicy symetrycznej ich zbiorów krawędzi
+i, po ewentualnej zamianie oznaczeń, przyjmijmy
+$e\in T_1\setminus T_2$.
+Dodanie $e$ do $T_2$ tworzy cykl. Pewna krawędź
+$f$ tego cyklu należy do $T_2\setminus T_1$:
+gdyby wszystkie pozostałe krawędzie cyklu
+należały do $T_1$, wraz z $e$ tworzyłyby
+cykl w $T_1$. Z wyboru $e$ i różności wag
+mamy $w(e)<w(f)$, więc
+$(T_2\setminus\{f\})\cup\{e\}$
+ma koszt mniejszy niż $T_2$, sprzeczność.
+Dla przeciwwskazania do implikacji odwrotnej
+wystarczy graf będący drzewem o dwóch
+krawędziach o tej samej wadze: samo to drzewo
+jest jedynym MST.
+\end{proof}
+
+\section{Kruskal: porządkowanie krawędzi}
+\label{sec:tg-mst-kruskal}
+
+Algorytm Kruskala porządkuje wszystkie krawędzie
+według niemalejących wag. Przy równych wagach
+stosujemy dowolny, lecz ustalony porządek
+rozstrzygania remisów. Zaczynamy od
+$F=\varnothing$ i przeglądamy kolejne krawędzie
+$e=\{u,v\}$. Dodajemy $e$ dokładnie wtedy,
+gdy $u$ i $v$ należą do różnych składowych
+lasu $(V,F)$. Krawędzie tworzące cykl pomijamy.
+
+\begin{twierdzenie}[Poprawność Kruskala]
+\label{thm:tg-mst-kruskal}
+Dla każdego skończonego nieskierowanego
+grafu ważonego algorytm Kruskala zwraca MSF,
+także jeśli graf jest niespójny albo
+ma ujemne bądź powtarzające się wagi.
+\end{twierdzenie}
+\begin{proof}
+W każdym kroku $F$ jest lasem, bo dodajemy
+krawędź tylko między różnymi jego składowymi.
+Indukujemy po liczbie dodanych krawędzi,
+że $F$ jest zawarty w pewnym MSF.
+Dla $F=\varnothing$ teza wynika z
+\ref{prop:tg-mst-existence}.
+Niech rozpatrywana krawędź $e=uv$
+pozwala połączyć dwa drzewa lasu.
+Weźmy za $S$ zbiór wierzchołków
+drzewa $F$ zawierającego $u$.
+Żadna krawędź $F$ nie przecina
+$\delta_G(S)$. Gdyby istniała
+krawędź $f$ tego przekroju
+o wadze mniejszej niż $w(e)$,
+zostałaby rozpatrzona wcześniej.
+W tamtym momencie jej końce
+nie mogły być połączone przez
+krawędzie już wybrane: pozostają
+rozdzielone także teraz.
+Algorytm musiałby zatem dodać $f$,
+sprzecznie z definicją $S$.
+Krawędź $e$ jest więc
+jedną z najlżejszych na tym
+przekroju, a twierdzenie
+\ref{thm:tg-mst-cut} przedłuża
+indukcyjny niezmiennik.
+
+Po przejrzeniu całej listy
+żadne dwa wierzchołki połączone
+ścieżką w $G$ nie mogą leżeć
+w różnych składowych $(V,F)$:
+na takiej ścieżce znalazłaby
+się krawędź między tymi
+składowymi, którą algorytm
+musiałby dodać podczas
+przetwarzania. Stąd $F$
+rozpina każdą składową $G$.
+Ponieważ $F$ zawiera się
+w pewnym MSF i ma tę samą
+liczbę krawędzi $n-c$,
+jest tym MSF.
+\end{proof}
+
+\section{Struktura DSU: zbiory rozłączne}
+\label{sec:tg-mst-dsu}
+
+W Kruskalu trzeba szybko sprawdzać,
+czy końce krawędzi są już połączone.
+Służy do tego DSU (ang. \emph{disjoint-set union}),
+zwane również strukturą \emph{union--find}.
+
+\begin{definicja}[Operacje DSU]
+\label{def:tg-mst-dsu}
+Dla zbioru $V$ przechowujemy podział
+na rozłączne klasy. Operacja
+$\mathrm{find}(v)$ zwraca reprezentanta
+klasy zawierającej $v$.
+Operacja $\mathrm{union}(u,v)$
+scala klasy zawierające $u$ i $v$,
+jeśli są różne.
+Początkowo każda klasa jest
+jednoelementowa.
+\end{definicja}
+
+Realizacja tablicowa przechowuje dla
+każdego $v$ rodzica $\mathrm{parent}[v]$
+oraz, dla korzeni, rozmiar $\mathrm{size}[v]$.
+W operacji $\mathrm{find}$ podążamy
+po rodzicach aż do korzenia
+i opcjonalnie skracamy ścieżkę,
+przypisując wszystkim odwiedzonym
+wierzchołkom tego samego korzenia.
+Przy łączeniu dwóch różnych klas
+korzeń klasy mniejszej zostaje
+dzieckiem korzenia klasy większej
+(\emph{union by size}).
+
+\begin{stwierdzenie}[Poprawność i koszt DSU]
+\label{prop:tg-mst-dsu}
+Operacje $\mathrm{find}$ i $\mathrm{union}$
+zachowują dokładnie podział uzyskany
+przez dotychczasowe scalenia.
+Przy łączeniu według rozmiaru
+wysokość drzew rodziców wynosi
+co najwyżej $\lfloor\log_2 n\rfloor$
+dla $n\geq1$. Dlatego nawet
+bez kompresji ścieżek każda
+operacja kosztuje $O(\log(n+1))$.
+Inicjalizacja wymaga $O(n)$ pamięci
+i czasu.
+\end{stwierdzenie}
+\begin{proof}
+Na początku każdy wierzchołek
+jest korzeniem swojej klasy.
+Łączenie dwóch klas zmienia
+jedynie rodzica jednego
+z dwóch korzeni, więc
+nie tworzy cyklu i scala
+dokładnie żądane klasy.
+Kompresja ścieżek nie
+zmienia korzenia żadnego
+wierzchołka, zatem nie
+zmienia podziału.
+
+Jeśli głębokość danego wierzchołka
+zwiększa się o jeden podczas
+łączenia według rozmiaru, to
+liczba elementów w jego klasie
+co najmniej się podwaja.
+Ponieważ rozmiar klasy
+nie przekracza $n$,
+głębokość może wzrosnąć
+co najwyżej $\lfloor\log_2 n\rfloor$ razy.
+Kompresja ścieżek tylko
+zmniejsza długość dróg do korzenia.
+\end{proof}
+
+\begin{uwaga}[Silniejsze oszacowanie amortyzowane]
+Dla połączenia kompresji ścieżek
+z łączeniem według rozmiaru
+znane klasyczne twierdzenie
+o DSU daje amortyzowany koszt
+$O(\alpha(n))$ jednej operacji,
+gdzie $\alpha$ jest odwrotnością
+funkcji Ackermanna w odpowiedniej
+standardowej normalizacji.
+Pełny dowód tego mocniejszego
+oszacowania wymaga osobnej
+analizy amortyzowanej i nie
+jest tu przedstawiany.
+Udowodnione wyżej ograniczenie
+logarytmiczne wystarcza
+do oszacowania Kruskala.
+\end{uwaga}
+
+\begin{stwierdzenie}[Złożoność Kruskala z DSU]
+\label{prop:tg-mst-kruskal-cost}
+Dla grafu o $n$ wierzchołkach
+i $m$ krawędziach Kruskal
+z sortowaniem porównaniowym
+i DSU przez łączenie według
+rozmiaru działa w czasie
+\[
+O\bigl(n+m\log(m+1)+
+      m\log(n+1)\bigr)
+\]
+i używa $O(n+m)$ pamięci.
+Z kompresją ścieżek można
+dodatkowo wykorzystać
+wspomniane oszacowanie
+amortyzowane $O(\alpha(n))$
+dla operacji DSU.
+\end{stwierdzenie}
+\begin{proof}
+Inicjalizacja DSU kosztuje $O(n)$,
+sortowanie $O(m\log(m+1))$.
+Dla każdej krawędzi wykonujemy
+stałą liczbę operacji
+$\mathrm{find}$ i co najwyżej
+jedną operację $\mathrm{union}$,
+o koszcie $O(\log(n+1))$ każda.
+Lista posortowanych krawędzi
+i tablice DSU zajmują $O(n+m)$
+pamięci.
+\end{proof}
+
+\section{Prim: rozwijanie jednego drzewa}
+\label{sec:tg-mst-prim}
+
+Algorytm Prima dla spójnego
+grafu rozpoczynamy od korzenia
+$r$ i zbioru $S=\{r\}$.
+Utrzymujemy w kopcu
+krawędzie mające jeden koniec
+w $S$, a drugi poza $S$,
+uporządkowane według wagi.
+Pobieramy najlżejszą z nich,
+dołączamy nowy wierzchołek
+i dodajemy do kopca jego
+krawędzie prowadzące
+do jeszcze nieodwiedzonych
+wierzchołków. Wpisy,
+których oba końce zostały
+już odwiedzone, odrzucamy.
+Jeżeli kolejka się opróżni,
+zakończyliśmy tę składową.
+W grafie niespójnym zaczynamy
+od kolejnego nieodwiedzonego
+wierzchołka i powtarzamy
+procedurę, otrzymując MSF.
+
+\begin{twierdzenie}[Poprawność Prima]
+\label{thm:tg-mst-prim}
+Dla dowolnego skończonego
+nieskierowanego grafu ważonego
+algorytm Prima, uruchomiony
+kolejno na wszystkich
+składowych spójnych,
+zwraca minimalny las
+rozpinający.
+\end{twierdzenie}
+\begin{proof}
+W obrębie jednej składowej
+utrzymujemy drzewo $F$
+rozpinające zbiór
+już odwiedzonych wierzchołków
+$S$. Dla $S=\{r\}$ jest ono
+puste. Każda wybierana
+krawędź łączy $S$ z
+$V\setminus S$, więc
+nie tworzy cyklu.
+Ponieważ kopiec zawiera
+wszystkie dotąd odkryte
+krawędzie przecinające
+ten podział, po usunięciu
+wpisów nieaktualnych
+najtańszy jego element
+jest najlżejszą krawędzią
+przekroju $\delta_G(S)$.
+Żadna krawędź $F$
+nie przecina tego podziału,
+więc twierdzenie
+\ref{thm:tg-mst-cut} zapewnia,
+że dodanie wybranej
+krawędzi zachowuje
+możliwość przedłużenia
+$F$ do MSF.
+Gdy kopiec jest pusty,
+z $S$ nie wychodzi żadna
+krawędź, więc $S$
+jest całą aktualną
+składową spójną $G$.
+Po odwiedzeniu wszystkich
+składowych otrzymujemy
+las rozpinający
+o minimalnym koszcie.
+\end{proof}
+
+\begin{stwierdzenie}[Złożoność Prima]
+\label{prop:tg-mst-prim-cost}
+Wariant Prima z listami
+sąsiedztwa i kopcem
+krawędzi, dopuszczającym
+wpisy nieaktualne,
+wykonuje $O(n+m\log(m+1))$
+operacji i potrzebuje
+$O(n+m)$ pamięci
+łącznie z kopiami
+przechowywanych krawędzi.
+\end{stwierdzenie}
+\begin{proof}
+Każdy wierzchołek
+odwiedzamy raz.
+Każda krawędź zostaje
+wstawiona do kopca
+co najwyżej raz:
+podczas odwiedzenia
+wcześniejszego z jej
+końców, jeśli drugi
+jest wówczas nieodwiedzony.
+Liczba operacji kopcowych
+jest więc $O(m)$,
+a rozmiar kopca nie
+przekracza $m$.
+Odczyty list sąsiedztwa
+kosztują razem $O(n+m)$.
+\end{proof}
+
+\section{Przykłady, remisy i kontrola wyników}
+\label{sec:tg-mst-examples}
+
+\begin{przyklad}[Ten sam koszt, inne kolejności]
+\label{ex:tg-mst-five}
+Niech $V=\{a,b,c,d,e\}$,
+a krawędzie mają wagi
+$w(ab)=1$, $w(bc)=2$,
+$w(cd)=3$, $w(de)=2$,
+$w(ae)=9$, $w(ac)=4$,
+$w(bd)=5$, $w(ce)=6$.
+Kruskal wybiera $ab$,
+następnie $bc$ i $de$
+(w dowolnej kolejności
+dla dwóch wag $2$),
+a w końcu $cd$.
+Otrzymuje drzewo
+o koszcie $1+2+2+3=8$.
+Prim z korzeniem $a$
+może wybierać kolejno
+$ab,bc,cd,de$, również
+otrzymując koszt $8$.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=.95]
+\node[tgBlueVertex] (a) at (-2,0) {$a$};
+\node[tgVertex] (b) at (-1,1.5) {$b$};
+\node[tgVertex] (c) at (1,1.5) {$c$};
+\node[tgVertex] (d) at (2,0) {$d$};
+\node[tgVertex] (e) at (0,-1.7) {$e$};
+\draw[tgGhost] (a) to[bend right=12] node[below left,font=\scriptsize] {$9$} (e);
+\draw[tgGhost] (a) to[bend left=16] node[above,font=\scriptsize] {$4$} (c);
+\draw[tgGhost] (b) to[bend left=13] node[above right,font=\scriptsize] {$5$} (d);
+\draw[tgGhost] (c)--node[right,font=\scriptsize] {$6$} (e);
+\draw[tgTree] (a)--node[above left,font=\scriptsize] {$1$} (b);
+\draw[tgTree] (b)--node[above,font=\scriptsize] {$2$} (c);
+\draw[tgTree] (c)--node[above right,font=\scriptsize] {$3$} (d);
+\draw[tgTree] (d)--node[below right,font=\scriptsize] {$2$} (e);
+\end{tikzpicture}
+\caption{Minimalne drzewo rozpinające o koszcie $8$:
+krawędzie wybrane zaznaczono linią ciągłą,
+a pominięte -- przerywaną.}
+\label{fig:tg-mst-five}
+\end{figure}
+
+\begin{przyklad}[Remisy nie muszą dawać jednoznaczności]
+\label{ex:tg-mst-ties}
+Dla trójkąta z wagami wszystkich
+trzech krawędzi równymi $1$
+istnieją dokładnie trzy różne MST,
+każde o koszcie $2$.
+Jeśli jednak graf jest drzewem,
+jego jedynym MST jest to drzewo
+nawet przy powtarzających się wagach.
+\end{przyklad}
+
+\begin{przyklad}[Graf niespójny i waga ujemna]
+\label{ex:tg-mst-disconnected}
+Niech $G$ ma składową
+o wierzchołkach $\{a,b,c\}$
+z wagami $w(ab)=-3$,
+$w(bc)=1$, $w(ac)=4$,
+drugą składową będącą
+krawędzią $de$ o wadze $0$,
+oraz izolowany wierzchołek $f$.
+MSF zawiera $ab$, $bc$ i $de$,
+ma $6-3=3$ krawędzie
+i koszt $-3+1+0=-2$.
+Nie istnieje drzewo
+rozpinające cały $G$,
+bo $G$ jest niespójny.
+\end{przyklad}
+
+\begin{uwaga}[Dlaczego własność przekroju łączy oba algorytmy]
+Kruskal wybiera najlżejszą
+krawędź przekroju jednej
+z aktualnych składowych lasu,
+a Prim -- najlżejszą krawędź
+przekroju zbioru już
+odwiedzonych wierzchołków.
+Różnią się kolejnością,
+lecz podstawą poprawności
+obu metod jest to samo
+twierdzenie \ref{thm:tg-mst-cut}.
+W następnym module
+własności przekroju
+pojawią się ponownie
+przy przepływach
+i minimalnych przekrojach,
+ale tam optymalizujemy
+inną wielkość.
+\end{uwaga}
