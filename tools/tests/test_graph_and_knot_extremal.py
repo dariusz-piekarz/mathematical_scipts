@@ -162,7 +162,7 @@ def test_integration():
     inp = re.findall(r"\\input\{../../(chapters/pl/graph_and_knot_theory/[^}]+)\}",
                      (ROOT / book["entrypoint"]).read_text(encoding="utf-8"))
     assert book["chapters"] == inp
-    assert len(inp) == 42, (len(inp), inp)
+    assert len(inp) == 43, (len(inp), inp)
     assert inp[10] == CHAPTER
     assert all((ROOT / p).is_file() for p in inp)
     source = (ROOT / CHAPTER).read_text(encoding="utf-8")

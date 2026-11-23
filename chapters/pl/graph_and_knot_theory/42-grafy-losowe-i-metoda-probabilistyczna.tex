@@ -1,0 +1,783 @@
+\chapter{Grafy losowe i metoda probabilistyczna}
+\label{ch:tg-random-graphs}
+
+Twierdzenia Mantela, Turána i Ramseya z rozdziału
+\ref{ch:tg-extremal-ramsey} dotyczyły wszystkich grafów
+spełniających określone założenia. Teraz będziemy
+losować grafy, aby obliczać prawdopodobieństwa ich
+własności i wykazywać istnienie grafów
+o określonej strukturze. Podamy definicję modelu
+Erdősa--Rényiego, przeanalizujemy liczby krawędzi,
+trójkątów i wierzchołków izolowanych, a następnie
+udowodnimy progi pojawiania się trójkąta
+i spójności. Na koniec zastosujemy metodę
+probabilistyczną do liczb Ramseya.
+
+\section{Model Erdősa--Rényiego i zmienne losowe}
+\label{sec:tg-random-model}
+
+\begin{definicja}[Losowy graf $G(n,p)$]
+\label{def:tg-random-gnp}
+Niech $n\geq0$ będzie liczbą całkowitą,
+$p\in[0,1]$ oraz
+$V=\{1,\ldots,n\}$. Model $G(n,p)$
+jest grafem prostym nieskierowanym
+na zbiorze $V$, w którym każda
+z $\binom n2$ możliwych krawędzi
+jest wybierana niezależnie
+z prawdopodobieństwem $p$.
+
+Dokładniej, dla każdej pary
+$e\in\binom V2$ rozważamy niezależną
+zmienną Bernoulliego $I_e$
+o wartości $1$ z prawdopodobieństwem
+$p$ i $0$ z prawdopodobieństwem
+$1-p$. Zbiór krawędzi to
+$E=\{e:I_e=1\}$.
+\end{definicja}
+
+Dla konkretnego grafu $H$ na
+oznaczonym zbiorze $V$ zachodzi
+\[
+\mathbb P(G(n,p)=H)
+=p^{|E(H)|}(1-p)^{\binom n2-|E(H)|},
+\]
+z naturalną konwencją dla
+$p=0$ i $p=1$. Model ten
+nie nakłada warunku spójności
+ani stałej liczby krawędzi.
+Jeżeli parametr zależy od $n$,
+zapisujemy $p=p_n$.
+
+\begin{definicja}[Zdarzenie zachodzące z prawdopodobieństwem
+dążącym do jedności]
+\label{def:tg-random-whp}
+Niech $A_n$ będzie zdarzeniem
+dotyczącym grafu $G(n,p_n)$.
+Mówimy, że $A_n$ zachodzi
+\emph{z prawdopodobieństwem
+dążącym do jedności}, jeśli
+$\lim_{n\to\infty}\mathbb P(A_n)=1$.
+Analogicznie własność zanika
+z prawdopodobieństwem dążącym
+do jedności, jeśli jej
+prawdopodobieństwo dąży do zera.
+\end{definicja}
+
+\begin{stwierdzenie}[Krawędzie i stopnie]
+\label{prop:tg-random-edges-degrees}
+Dla $G(n,p)$ i $n\geq1$
+liczba krawędzi $M=|E|$
+ma rozkład dwumianowy
+$\operatorname{Bin}(\binom n2,p)$.
+W szczególności
+\[
+\mathbb E M=\binom n2p,
+\qquad
+\operatorname{Var}(M)=\binom n2p(1-p).
+\]
+Dla każdego $v\in V$
+stopień $d_G(v)$ ma rozkład
+$\operatorname{Bin}(n-1,p)$,
+a więc jego wartość oczekiwana
+wynosi $(n-1)p$, a wariancja
+$(n-1)p(1-p)$.
+\end{stwierdzenie}
+\begin{proof}
+Mamy $M=\sum_{e\in\binom V2}I_e$,
+a $d_G(v)=\sum_{e\ni v}I_e$.
+Pierwsza suma ma $\binom n2$
+składników, druga $n-1$,
+a wszystkie składniki
+w każdej sumie są niezależnymi
+zmiennymi Bernoulliego
+z parametrem $p$.
+Wzory wynikają z liniowości
+wartości oczekiwanej
+i addytywności wariancji
+dla zmiennych niezależnych.
+\end{proof}
+
+\begin{wniosek}[Koncentracja liczby krawędzi]
+\label{cor:tg-random-edge-concentration}
+Jeżeli $p_n\in[0,1]$ oraz
+$\mu_n=\binom n2p_n\to\infty$,
+to dla każdego $\varepsilon>0$
+\[
+\mathbb P\bigl(
+|M-\mu_n|\geq\varepsilon\mu_n
+\bigr)\longrightarrow0.
+\]
+\end{wniosek}
+\begin{proof}
+Dla każdego $n$ z $\mu_n>0$
+nierówność Czebyszewa daje
+\[
+\mathbb P(|M-\mu_n|\geq\varepsilon\mu_n)
+\leq\frac{\operatorname{Var}(M)}
+{\varepsilon^2\mu_n^2}
+=\frac{1-p_n}{\varepsilon^2\mu_n}
+\leq\frac1{\varepsilon^2\mu_n}
+\longrightarrow0.
+\]
+\end{proof}
+
+\begin{przyklad}[Mały model probabilistyczny]
+\label{ex:tg-random-four}
+Dla $G(4,\tfrac12)$ istnieje
+sześć możliwych krawędzi,
+z których każda jest wybierana
+z prawdopodobieństwem $\tfrac12$.
+Wszystkie $2^6=64$ grafy
+na oznaczonym zbiorze
+czterech wierzchołków
+są jednakowo prawdopodobne.
+Otrzymujemy $\mathbb EM=3$
+oraz $\operatorname{Var}(M)=\tfrac32$.
+Prawdopodobieństwo braku
+jakiejkolwiek krawędzi
+wynosi $2^{-6}$.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=.92]
+\foreach \i in {1,...,6}{
+  \pgfmathsetmacro{\ang}{90-60*(\i-1)}
+  \node[tgVertex] (v\i) at (\ang:1.85) {$\i$};
+}
+\draw[tgTree] (v1)--(v2)--(v3);
+\draw[tgTree] (v3)--(v4);
+\draw[tgTree] (v4)--(v6);
+\draw[tgTree] (v6)--(v1);
+\draw[tgTree] (v2)--(v5);
+\draw[tgTree] (v1)--(v3);
+\end{tikzpicture}
+\caption{Jedna z możliwych realizacji
+modelu $G(6,p)$. Rysunek przedstawia
+konkretny graf, a nie średnią
+ani strukturę typową dla każdego $p$.}
+\label{fig:tg-random-realization}
+\end{figure}
+
+\section{Metoda pierwszego i drugiego momentu}
+\label{sec:tg-random-moments}
+
+\begin{lemat}[Pierwszy moment]
+\label{lem:tg-random-first-moment}
+Niech $X$ będzie nieujemną
+zmienną losową o skończonej
+wartości oczekiwanej.
+Wtedy
+$\mathbb P(X\geq1)\leq\mathbb EX$.
+Jeżeli dodatkowo $X$ jest
+całkowitoliczbowa i
+$\mathbb EX<1$, to
+$\mathbb P(X=0)>0$.
+\end{lemat}
+\begin{proof}
+Nierówność Markowa
+$\mathbb P(X\geq1)\leq\mathbb EX$
+wynika bezpośrednio
+z $\mathbb EX\geq
+\mathbb E(X\chi_{\{X\geq1\}})
+\geq\mathbb P(X\geq1)$.
+Jeśli $X$ jest nieujemna
+i całkowitoliczbowa,
+zdarzenia $X=0$ oraz
+$X\geq1$ są dopełniające,
+więc przy $\mathbb EX<1$
+dostajemy
+$\mathbb P(X=0)\geq1-\mathbb EX>0$.
+\end{proof}
+
+\begin{lemat}[Drugi moment i nieistnienie zera]
+\label{lem:tg-random-second-moment}
+Niech $X$ będzie nieujemną
+zmienną losową o skończonej
+wariancji, dla której
+$\mu=\mathbb EX>0$.
+Wtedy
+\[
+\mathbb P(X=0)
+\leq\frac{\operatorname{Var}(X)}{\mu^2}.
+\]
+W szczególności, jeżeli
+dla ciągu $X_n$ zachodzi
+$\mathbb EX_n>0$ oraz
+$\operatorname{Var}(X_n)/
+(\mathbb EX_n)^2\to0$,
+to $\mathbb P(X_n>0)\to1$.
+\end{lemat}
+\begin{proof}
+Zdarzenie $\{X=0\}$ zawiera
+się w $\{|X-\mu|\geq\mu\}$.
+Stosujemy nierówność Czebyszewa
+i przechodzimy do granicy.
+\end{proof}
+
+Zaletą metody pierwszego
+momentu jest to, że
+wystarczy obliczyć
+średnią liczbę
+zabronionych konfiguracji.
+Metoda drugiego momentu
+uwzględnia natomiast
+zależności między
+wystąpieniami tych
+konfiguracji.
+
+\section{Trójkąty i próg ich pojawiania się}
+\label{sec:tg-random-triangles}
+
+\begin{stwierdzenie}[Średnia i wariancja liczby trójkątów]
+\label{prop:tg-random-triangle-moments}
+Niech $n\geq3$, $p\in[0,1]$,
+a $X$ oznacza liczbę
+nieuporządkowanych trójek
+wierzchołków tworzących
+trójkąt w $G(n,p)$.
+Wówczas
+\[
+\mathbb EX=\binom n3p^3
+\]
+oraz
+\[
+\operatorname{Var}(X)
+=\binom n3p^3(1-p^3)
++2\binom n2\binom{n-2}2p^5(1-p).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Niech $\mathcal T=\binom V3$
+i $J_T$ będzie wskaźnikiem
+obecności trójkąta
+na trójce $T$.
+Wtedy $X=\sum_{T\in\mathcal T}J_T$,
+a $\mathbb EJ_T=p^3$,
+ponieważ konieczna jest
+obecność wszystkich
+trzech niezależnie
+wybieranych krawędzi.
+
+Dla różnych trójek $T,U$
+wskaźniki są niezależne,
+jeśli trójkąty
+nie mają wspólnej krawędzi;
+mogą przy tym dzielić
+jeden wierzchołek.
+Jeśli mają wspólną
+krawędź, ich suma
+wymaga obecności pięciu
+różnych krawędzi, więc
+$\operatorname{Cov}(J_T,J_U)
+=p^5-p^6=p^5(1-p)$.
+Liczba \emph{nieuporządkowanych}
+par różnych trójkątów
+mających wspólną
+krawędź to
+$\binom n2\binom{n-2}2$:
+najpierw wybieramy
+wspólną krawędź,
+potem dwa różne
+wierzchołki uzupełniające.
+Korzystając z tożsamości
+$\operatorname{Var}(\sum J_T)
+=\sum\operatorname{Var}(J_T)
++2\sum_{T<U}\operatorname{Cov}(J_T,J_U)$,
+otrzymujemy wzór.
+\end{proof}
+
+\begin{twierdzenie}[Próg występowania trójkąta]
+\label{thm:tg-random-triangle-threshold}
+Niech $p_n\in[0,1]$.
+Jeżeli $np_n\to0$, to
+$\mathbb P(G(n,p_n)\text{ zawiera }K_3)\to0$.
+Jeżeli $np_n\to\infty$, to
+$\mathbb P(G(n,p_n)\text{ zawiera }K_3)\to1$.
+Zatem funkcja $n^{-1}$
+wyznacza próg pojawiania się
+trójkąta w powyższym sensie.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $np_n\to0$, to
+$\mathbb EX=\binom n3p_n^3
+\leq(np_n)^3/6\to0$.
+Pierwszy moment
+\ref{lem:tg-random-first-moment}
+daje $\mathbb P(X>0)\to0$.
+
+Jeśli $np_n\to\infty$,
+to dla dużych $n$
+wartość $\mu_n=\binom n3p_n^3$
+jest dodatnia i rośnie
+do nieskończoności.
+Ze wzoru na wariancję
+i $\binom n3\asymp n^3$
+dostajemy
+\[
+\frac{\operatorname{Var}(X)}{\mu_n^2}
+\leq\frac1{\mu_n}
++\frac{2\binom n2\binom{n-2}2}
+{\binom n3^2\,p_n}
+=O\left(\frac1{(np_n)^3}
++\frac1{n^2p_n}\right)\to0.
+\]
+Ostatnia granica wynika
+z $np_n\to\infty$.
+Lemat
+\ref{lem:tg-random-second-moment}
+daje $\mathbb P(X=0)\to0$,
+a więc $\mathbb P(X>0)\to1$.
+\end{proof}
+
+\begin{uwaga}[Co oznacza próg]
+Twierdzenie nie stwierdza,
+że dla pojedynczego $n$
+graf mający $p>1/n$
+musi zawierać trójkąt.
+Granice dotyczą ciągów
+prawdopodobieństw
+i zachowania
+przy $n\to\infty$.
+W obszarze $p_n\asymp1/n$
+prawdopodobieństwo
+może pozostać
+oddalone zarówno od zera,
+jak i od jedności.
+\end{uwaga}
+\section{Wierzchołki izolowane i próg spójności}
+\label{sec:tg-random-connectivity}
+
+\begin{stwierdzenie}[Liczba wierzchołków izolowanych]
+\label{prop:tg-random-isolates}
+Niech $n\geq2$, $p\in[0,1]$
+i niech $Y$ będzie liczbą
+wierzchołków stopnia zero
+w $G(n,p)$. Wówczas
+\[
+\mathbb EY=n(1-p)^{n-1}
+\]
+oraz
+\[
+\operatorname{Var}(Y)=
+nq(1-q)+n(n-1)p(1-p)^{2n-3},
+\qquad q=(1-p)^{n-1}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Dla $v\in V$ niech $J_v$
+będzie wskaźnikiem izolowania
+$v$. Zdarzenie $J_v=1$
+wymaga braku wszystkich
+$n-1$ krawędzi przy $v$,
+więc $\mathbb EJ_v=q$.
+Dla $u\ne v$ izolowanie
+obu wierzchołków
+wymaga braku $2n-3$
+różnych krawędzi
+(gdyż krawędź $uv$
+byłaby zliczona podwójnie).
+Stąd
+\[
+\operatorname{Cov}(J_u,J_v)
+=(1-p)^{2n-3}-(1-p)^{2n-2}
+=p(1-p)^{2n-3}.
+\]
+Sumujemy wartości oczekiwane,
+wariancje poszczególnych
+wskaźników i kowariancje
+uporządkowanych par
+różnych wierzchołków.
+\end{proof}
+
+\begin{twierdzenie}[Próg spójności]
+\label{thm:tg-random-connectivity}
+Niech $a_n>0$ dla dostatecznie
+dużych $n$, przy czym
+$a_n\to\infty$ oraz
+$a_n=o(\log n)$.
+Zdefiniujmy
+\[
+p_n^-=\frac{\log n-a_n}{n},
+\qquad
+p_n^+=\frac{\log n+a_n}{n}.
+\]
+Dla dostatecznie dużych $n$
+obie liczby należą do $[0,1]$.
+Wówczas
+\[
+\mathbb P\bigl(G(n,p_n^-)
+\text{ jest spójny}\bigr)\to0,
+\qquad
+\mathbb P\bigl(G(n,p_n^+)
+\text{ jest spójny}\bigr)\to1.
+\]
+Zatem $(\log n)/n$ jest
+progiem spójności
+w powyższym sensie.
+\end{twierdzenie}
+\begin{proof}
+Najpierw rozważmy
+$p=p_n^-$ i liczbę
+izolowanych wierzchołków $Y$.
+Ponieważ $p=O((\log n)/n)$,
+mamy $np^2\to0$, a zatem
+\[
+\begin{aligned}
+\mathbb EY
+&=n(1-p)^{n-1}\\
+&=\exp\bigl(\log n-(n-1)p+O(np^2)\bigr)\\
+&=\exp(a_n+o(1))\longrightarrow\infty.
+\end{aligned}
+\]
+Dla $q=(1-p)^{n-1}$
+wzór z
+\ref{prop:tg-random-isolates}
+daje
+\[
+\begin{aligned}
+\frac{\operatorname{Var}(Y)}{(\mathbb EY)^2}
+&=\frac{1-q}{nq}
++\frac{n-1}{n}\frac{p}{1-p}\\
+&\leq\frac1{\mathbb EY}
++\frac{p}{1-p}\longrightarrow0.
+\end{aligned}
+\]
+Lemat \ref{lem:tg-random-second-moment}
+pokazuje, że
+$\mathbb P(Y>0)\to1$.
+Dla $n\geq2$ graf
+z wierzchołkiem izolowanym
+jest niespójny, zatem
+prawdopodobieństwo
+spójności dąży do zera.
+
+Niech teraz $p=p_n^+$.
+Jeżeli graf jest niespójny,
+ma składową o liczności
+$k$, gdzie
+$1\leq k\leq\lfloor n/2\rfloor$.
+Dla ustalonego zbioru
+$S\subseteq V$, $|S|=k$,
+brak krawędzi między
+$S$ i $V\setminus S$
+ma prawdopodobieństwo
+$(1-p)^{k(n-k)}$.
+Wobec tego
+\[
+\mathbb P(G(n,p)\text{ jest niespójny})
+\leq\sum_{k=1}^{\lfloor n/2\rfloor}
+\binom nk(1-p)^{k(n-k)}.
+\]
+Stosujemy
+$\binom nk\leq(en/k)^k$
+oraz $1-p\leq e^{-p}$.
+Dla $k\leq n/\log n$
+przy dostatecznie dużym $n$
+otrzymujemy
+\[
+p(n-k)\geq
+(\log n+a_n)(1-1/\log n)
+\geq\log n+a_n/2-1.
+\]
+Zatem suma składników
+o takich $k$ jest
+nie większa niż
+\[
+\sum_{k\geq1}
+\left(\frac{e^2e^{-a_n/2}}{k}\right)^k
+\leq\sum_{k\geq1}
+\left(e^2e^{-a_n/2}\right)^k
+\longrightarrow0.
+\]
+Dla $n/\log n<k\leq n/2$
+mamy $n/k<\log n$
+oraz $n-k\geq n/2$, więc
+\[
+\binom nk(1-p)^{k(n-k)}
+\leq\left(
+e\log n\,e^{-(\log n+a_n)/2}
+\right)^k
+\leq\left(\frac{e\log n}{\sqrt n}\right)^k.
+\]
+Ostatnia suma również
+dąży do zera, gdyż jej
+podstawa zmierza do zera.
+Zatem prawdopodobieństwo
+niespójności $G(n,p_n^+)$
+dąży do zera.
+\end{proof}
+
+\begin{uwaga}[Brak izolowanych wierzchołków
+nie jest równoważny spójności]
+Zdarzenie braku wierzchołków
+izolowanych samo w sobie
+nie gwarantuje spójności:
+suma rozłączna dwóch
+trójkątów nie ma
+wierzchołków izolowanych,
+lecz jest niespójna.
+Dlatego w drugim
+kierunku twierdzenia
+potrzebne było
+oszacowanie wszystkich
+przekrojów oddzielających
+niepuste składowe.
+\end{uwaga}
+
+\begin{przyklad}[Trzy wierzchołki]
+\label{ex:tg-random-three-connect}
+W grafie $G(3,p)$
+warunek spójności
+jest równoważny
+obecności co najmniej
+dwóch spośród trzech
+możliwych krawędzi.
+Zatem
+\[
+\mathbb P(G(3,p)\text{ jest spójny})
+=3p^2(1-p)+p^3=3p^2-2p^3.
+\]
+Z kolei prawdopodobieństwo
+wystąpienia trójkąta
+wynosi $p^3$.
+Są to różne własności
+i mają różne
+prawdopodobieństwa.
+\end{przyklad}
+
+\section{Pierwszy moment i występowanie większych klik}
+\label{sec:tg-random-cliques}
+
+\begin{stwierdzenie}[Oszacowanie dla kliki]
+\label{prop:tg-random-cliques}
+Niech $r\geq2$
+będzie stałą liczbą
+całkowitą, a $Z_r$
+liczbą $r$-elementowych
+zbiorów wierzchołków
+wyznaczających $K_r$
+w grafie $G(n,p)$.
+Wówczas
+\[
+\mathbb EZ_r=
+\binom nr p^{\binom r2},
+\qquad
+\mathbb P(Z_r>0)
+\leq\binom nr p^{\binom r2}.
+\]
+Jeżeli $r\geq3$ i
+$p_n=o(n^{-2/(r-1)})$,
+to
+$\mathbb P(G(n,p_n)
+\text{ zawiera }K_r)\to0$.
+\end{stwierdzenie}
+\begin{proof}
+Dla ustalonego
+$r$-elementowego
+zbioru wierzchołków
+potrzeba obecności
+$\binom r2$ niezależnie
+wybieranych krawędzi;
+prawdopodobieństwo
+wynosi zatem
+$p^{\binom r2}$.
+Liniowość wartości
+oczekiwanej daje wzór,
+a lemat
+\ref{lem:tg-random-first-moment}
+daje nierówność.
+Jeśli
+$p_n=o(n^{-2/(r-1)})$,
+to
+$n^rp_n^{\binom r2}
+=\bigl(n^{2/(r-1)}p_n\bigr)^{\binom r2}
+\to0$, co dowodzi
+ostatniej tezy.
+\end{proof}
+
+Zauważmy, że to
+oszacowanie jest
+\emph{jednokierunkowe}:
+samo obliczenie
+wartości oczekiwanej
+nie wystarcza
+do wykazania istnienia
+kliki z prawdopodobieństwem
+dążącym do jedności.
+Dla trójkątów
+potrzebowaliśmy
+w tym celu
+wariancji i
+drugiego momentu.
+
+\section{Probabilistyczne oszacowanie liczb Ramseya}
+\label{sec:tg-random-ramsey}
+
+Losowy graf można
+również wykorzystać
+do konstrukcji
+\emph{nie wprost}:
+wystarczy wykazać,
+że prawdopodobieństwo
+istnienia grafu
+bez zadanych
+konfiguracji jest
+dodatnie. Otrzymamy
+w ten sposób
+dolną granicę
+liczby Ramseya
+$R(k,k)$ z
+rozdziału
+\ref{ch:tg-extremal-ramsey}.
+
+\begin{twierdzenie}[Dolne ograniczenie Ramseya
+metodą pierwszego momentu]
+\label{thm:tg-random-ramsey-bound}
+Niech $k\geq2$
+oraz $n\geq1$
+będą liczbami
+całkowitymi.
+Jeżeli
+\[
+\binom nk\,2^{1-\binom k2}<1,
+\]
+to istnieje graf
+prosty na $n$
+wierzchołkach,
+który nie zawiera
+ani kliki $K_k$,
+ani $k$-elementowego
+zbioru niezależnego.
+W szczególności
+$R(k,k)>n$.
+\end{twierdzenie}
+\begin{proof}
+Kolorujmy niezależnie
+każdą krawędź
+$K_n$ na czerwono
+lub niebiesko,
+każdym kolorem
+z prawdopodobieństwem
+$1/2$. Dla ustalonego
+$k$-elementowego
+zbioru $S$ wszystkie
+$\binom k2$ krawędzie
+muszą mieć jednakowy
+kolor, aby otrzymać
+jednobarwną $K_k$.
+To prawdopodobieństwo
+wynosi
+$2(1/2)^{\binom k2}
+=2^{1-\binom k2}$.
+Jeśli $X$ oznacza
+liczbę jednobarwnych
+klik $K_k$, to
+z liniowości wartości
+oczekiwanej
+\[
+\mathbb EX=
+\binom nk\,2^{1-\binom k2}.
+\]
+Na mocy
+\ref{lem:tg-random-first-moment}
+przy $\mathbb EX<1$
+istnieje kolorowanie
+z $X=0$. Uznajmy
+czerwone krawędzie
+za krawędzie grafu $G$,
+a niebieskie za jego
+dopełnienie. Wówczas
+$G$ nie ma $K_k$
+ani $k$-elementowego
+zbioru niezależnego.
+Definicja $R(k,k)$
+daje $R(k,k)>n$.
+\end{proof}
+
+\begin{wniosek}[Wykładniczy wzrost liczb Ramseya]
+\label{cor:tg-random-ramsey-exponential}
+Dla każdego
+całkowitego $k\geq3$
+zachodzi
+\[
+R(k,k)>
+\left\lfloor2^{(k-1)/2}\right\rfloor.
+\]
+\end{wniosek}
+\begin{proof}
+Przyjmijmy
+$n=\lfloor2^{(k-1)/2}\rfloor$.
+Wówczas
+\[
+\binom nk\,2^{1-\binom k2}
+\leq\frac{n^k}{k!}
+\,2^{1-\binom k2}
+\leq\frac2{k!}<1
+\]
+dla $k\geq3$.
+Stosujemy twierdzenie
+\ref{thm:tg-random-ramsey-bound}.
+\end{proof}
+
+\begin{uwaga}[Istnienie a konstrukcja]
+Dowód daje dodatnie
+prawdopodobieństwo
+istnienia grafu
+o żądanej własności,
+ale sam nie wskazuje,
+który konkretny
+graf ją posiada.
+Jest to charakterystyczny
+element metody
+probabilistycznej.
+Do konstrukcji jawnej
+potrzebne są dodatkowe
+pomysły lub algorytmy.
+\end{uwaga}
+
+\section{Podsumowanie i dalsze kierunki}
+\label{sec:tg-random-summary}
+
+Model $G(n,p)$
+dostarczył trzech
+odmiennych rodzajów
+wyników:
+\begin{itemize}[leftmargin=2em,itemsep=3pt]
+\item wzorów dokładnych
+na wartości oczekiwane
+i wariancje
+liczb krawędzi,
+trójkątów oraz
+wierzchołków izolowanych;
+\item progów
+dla wystąpienia
+trójkąta
+($p\asymp n^{-1}$)
+i spójności
+($p\asymp(\log n)/n$);
+\item dowodu
+istnienia
+grafów o małych
+klikach i małych
+zbiorach niezależnych,
+prowadzącego do
+wykładniczych
+dolnych ograniczeń
+liczb Ramseya.
+\end{itemize}
+
+Następny osobny
+moduł zostanie
+poświęcony
+\emph{ekspanderom}:
+własnościom
+izoperymetrycznym,
+nierównościom
+spektralnym,
+przykładom
+oraz zależności
+między ekspansją
+a szybkim mieszaniem
+spacerów losowych.

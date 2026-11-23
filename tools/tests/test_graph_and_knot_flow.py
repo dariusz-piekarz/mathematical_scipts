@@ -294,7 +294,7 @@ def test_integration():
     includes = re.findall(r"\\input\{../../(chapters/pl/graph_and_knot_theory/[^}]+)\}",
                           (ROOT / book["entrypoint"]).read_text(encoding="utf-8"))
     assert book["chapters"] == includes, (len(book["chapters"]), len(includes))
-    assert len(includes) == 42
+    assert len(includes) == 43
     assert includes[9] == CHAPTER
     assert all((ROOT / path).is_file() for path in includes)
     source = (ROOT / CHAPTER).read_text(encoding="utf-8")

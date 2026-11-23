@@ -261,7 +261,7 @@ def test_integrity():
     included = re.findall(r"\\input\{../../(chapters/pl/graph_and_knot_theory/[^}]+)\}",
                           content)
     assert book["chapters"] == included, (len(book["chapters"]), len(included))
-    assert len(included) == 42
+    assert len(included) == 43
     assert included[6].endswith("37-algorytmiczne-przeszukiwanie-grafow-bfs-dfs.tex")
     assert included[7] == CHAPTER
     assert all((ROOT / path).is_file() for path in included)
