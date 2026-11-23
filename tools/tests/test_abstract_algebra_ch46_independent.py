@@ -86,10 +86,13 @@ class IndependentPVAA46(unittest.TestCase):
             self.assertNotEqual(coeff,0)
 
     def test_08_rational_residue_obstruction_and_structure(self):
-        # Derivative of (x-a)^(-m) has pole order m+1, never a residue.
+        # For u=(x-a)^(-m), u'=-m*(x-a)^(-m-1):
+        # no pole of order one can appear from such a derivative.
         for m in range(1,9):
-            self.assertEqual(-m,(-m))
-            self.assertNotEqual(-m,0)
+            for dx in [Q(1,2),Q(1),Q(2),Q(3)]:
+                self.assertEqual(-Q(m)/dx**(m+1),
+                                 (-m)*dx**(-m-1))
+            self.assertGreater(m+1,1)
         s=SRC.read_text(encoding="utf-8")
         labels=re.findall(r"\\label\{([^}]+)\}",s)
         self.assertEqual(len(labels),len(set(labels)))
