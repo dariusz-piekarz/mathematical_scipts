@@ -3,7 +3,7 @@
 **Data:** 23 listopada 2026 r.
 **Poprzedni etap:** AA-48 STABILNY.
 **Rozdział:** chapters/pl/abstract_algebra/49-kwadratowy-przypadek-algorytmu-kovacica.tex.
-**Status:** W AUDYCIE — NIE STABILNY.
+**Status:** STABILNY w określonym zakresie — audyt III: audits/abstract_algebra/ch49_iteration_03.md, końcowy CI #45177895911.
 
 ## Zakres matematyczny
 
@@ -20,3 +20,8 @@
 To **drugi** przypadek Kovacica; przypadek trzeci (skończone prymitywne grupy algebraiczne i stopnie 4, 6, 12) jest poza zakresem. Wnioski o zupełności wynikają warunkowo z cytowanej klasyfikacji lokalnej; sprawdzenie kilku modeli nie stanowi dowodu tej klasyfikacji.
 
 **AA-50 nieotwarty.**
+
+
+## Wynik stabilizacji
+
+Zakończono audyty I–III. Zestawy regresji 13 SymPy + 10 Fraction PASS, CI 90/90 SUCCESS, PDF 316 stron, wszystkie strony AA-49 (311–316) obejrzane, końcowy log bez błędów i ostrzeżeń. Klasyczne listy lokalne E_a, E∞ nadal jawnie cytowane. AA-50 nieotwarty.

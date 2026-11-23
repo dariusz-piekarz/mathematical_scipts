@@ -96,3 +96,10 @@ Po AA-47 STABILNY i nowym poleceniu „kontynuuj” rozpoczęto **AA-48 — Wymi
 ## Otwarcie AA-49 — 23 listopada 2026 r.
 
 Po stabilnym AA-48 i poleceniu „kontynuuj” rozpoczęto **AA-49 — kwadratowy przypadek algorytmu Kovacica**. Zakres opisuje `docs/pl/zakres_aa49_kovacic_kwadratowy.md`. Dowody samodzielne obejmują ślad i wyróżnik rozwiązań Riccatiego, symetryczny kwadrat, równanie trzeciego rzędu i odzyskiwanie rozwiązań. Klasyczne wyczerpujące listy lokalne E_a i E_∞ są jawnie cytowane (Kovacic, 1986). Nie przypisywać własnemu opracowaniu pełnego dowodu klasyfikacji lokalnej. **AA-49 W AUDYCIE**, aż do audytów I–III, dwóch niezależnych zestawów testów, pełnego CI i oględzin wszystkich stron PDF. AA-50 nieotwarty.
+
+
+## Zamknięcie AA-49 — 23 listopada 2026 r.
+
+**AA-49: STABILNY w opisanym, jawnie ograniczonym zakresie** — kwadratowy przypadek algorytmu Kovacica. Wszystkie tożsamości dla śladu, wyróżnika, symetrycznego kwadratu i operatora trzeciego rzędu udowodniono; wyczerpujące klasyczne listy lokalnych kandydatów E_a,E∞ pochodzą z jawnie cytowanego twierdzenia Kovacica (1986). Audyty I–III: audits/abstract_algebra/ch49_iteration_01.md, ch49_iteration_02.md, ch49_iteration_03.md. Właściwą kontrolę niekwadratowości wyróżnika dodano po audycie II; wykryto i poprawiono testowe pomijanie kandydatki 2 w zbiorach E_a.
+
+**Końcowy CI:** https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45177895911 na commicie 30fe591cf985ee3061fb2a4d529b3a911d7732c9 — 90/90 SUCCESS; 13/13 SymPy +10/10 Fraction PASS. Integralność: 49 rozdziałów, 1017 unikatowych etykiet, 537 odsyłaczy, 0 nieistniejących celów. Ostateczny PDF 316 stron, AA-49 na stronach 311–316, każda obejrzana, log bez błędów i ostrzeżeń. Poprzednie rozdziały bez zmian treści. **AA-50 nie rozpoczęto.**
