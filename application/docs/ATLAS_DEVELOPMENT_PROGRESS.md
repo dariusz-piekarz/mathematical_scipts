@@ -6,13 +6,13 @@
 
 ## Wskaźnik wykonywania
 
-- Etap: **1 — Lean 4**, bieżąca jednostka techniczna: **L1.4.1 (raport rozdziałowy)**.
-- Stan: **testing / stabilizing**, **0/3** potwierdzonych pełnych rund na kodzie `8e32405f6d66a389b3d7f4a0c8a5257ef6d4d8c7` w chwili zapisu.
-- [Nowa stabilizacja #45160226769](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45160226769) sprawdza przypięty SHA. Starszy [#45159511491](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45159511491) jest wyłącznie historyczny i nie daje zaliczenia dla nowego kodu.
-- Wewnętrzny audyt wykrył i poprawił przenikanie przyszłych pól historii oraz niespójne generacje dokumentu SQLite. Rygorystyczne testy regresyjne i opis znajdują się w [raporcie L1.4.1](LEAN_L1_4_CHAPTER_REPORT_2026-11-23.md).
-- Niezależne uwierzytelnione zatwierdzenie recenzenta: **brak**. `certificate=false`. Zgodność treści LaTeX–Lean nie wynika z kompilacji ani diagnostyki.
-- L1.1, L1.2 oraz techniczne L1.3 zachowują status dla swoich odrębnych SHA. Pilotaż 20–30 formalizacji pozostaje oddzielnie nierozliczony.
-- Kolejny krok: zakończyć kompletne 2+1 na tym SHA (Chromium, natywne Windows/Linux, przypięty Lean/Mathlib, sceptyczny audyt), potem dopiero L1.4.2 (cache/pomiar).
+- Bieżący etap: **Lean 4 / L1.4.1 — raport rozdziałowy**, status **testing / stabilizing**; odbiór **0/3** na nowym kandydacie.
+- Kod kandydata: `1c4b89b1a9ef8affe95e3073739d99bc1c57aa2d`.
+- [Przypięta kontrola 2+1 #45160961943](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45160961943), uruchomiona żądaniem konfiguracji gałęzi. Wcześniejszy [#45160226769](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45160226769) dotyczył starszego SHA i został anulowany; nie jest zaliczony. Rzeczywiste sukcesy można liczyć tylko po zakończeniu jobów bieżącego kandydata.
+- Wewnętrzny sceptyczny audyt L1.4.1 wykrył trzy osobne przypadki: przenikanie przyszłych pól historii, niespójne odczyty generacji SQLite oraz brak ścieżki kanonicznego TeX lub jego późniejszą podmianę. Dodano negatywne regresje i odrzucanie statusów `ready/approved` w niezweryfikowanych przypadkach. [Raport i ograniczenia](LEAN_L1_4_CHAPTER_REPORT_2026-11-23.md).
+- Nie wykonano niezależnego, uwierzytelnionego odbioru recenzenta. `certificate=false`; kontrola środowiska i wykonania Lean nie poświadcza zgodności twierdzeń z LaTeX-em.
+- Następny krok: odebrać komplet 2+1 na **niezmienionym** `1c4b89b1...`, natywne Windows/Linux, pełne testy i Chromium oraz rzeczywisty Lean/Mathlib, wykonać końcową kontrolę sceptyczną. Nie przechodzić do L1.4.2 bez `stable`.
+- Zakresy techniczne L1.1–L1.3 są historycznie zamknięte na osobnych SHA. Pilotaż 20–30 formalizacji pozostaje odrębnym niewykonanym zobowiązaniem pierwotnego planu.
 
 ## Status etapów
 
