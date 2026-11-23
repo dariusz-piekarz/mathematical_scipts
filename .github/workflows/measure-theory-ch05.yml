@@ -1,0 +1,124 @@
+name: Measure theory chapter 05 audit validation
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "chapters/pl/measure_theory/05-struktura-przestrzeni-mierzalnych.tex"
+      - "tools/test_measure_theory_ch05.py"
+      - "books/pl/measure_theory.tex"
+      - ".github/workflows/measure-theory-ch05.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  chapter-05-finite-and-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test finite models of trace, initial structure, products and images
+        run: python3 tools/test_measure_theory_ch05.py
+
+  chapter-05-pdf-and-references:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Polish LaTeX, TikZ and PDF inspection tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-lang-polish texlive-pictures lmodern poppler-utils
+      - name: Prepare isolated chapter 05 with original book preamble
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          source = Path("books/pl/measure_theory.tex").read_text(encoding="utf-8")
+          preamble = source.split(r"\begin{document}", 1)[0]
+          chapter = "../../chapters/pl/measure_theory/05-struktura-przestrzeni-mierzalnych.tex"
+          isolated = preamble + "\n" + r"\begin{document}" + "\n"
+          isolated += r"\mainmatter" + "\n" + r"\input{" + chapter + "}\n"
+          isolated += r"\end{document}" + "\n"
+          Path("books/pl/measure_theory_ch05_ci.tex").write_text(isolated, encoding="utf-8")
+          PY
+      - name: Compile R05 and verify all pages and text bounds
+        working-directory: books/pl
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory_ch05_ci.tex > ch05_pass1.txt
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory_ch05_ci.tex > ch05_pass2.txt
+          test -s measure_theory_ch05_ci.pdf
+          pdfinfo measure_theory_ch05_ci.pdf | tee ch05_pdfinfo.txt
+          pdftotext -layout measure_theory_ch05_ci.pdf ch05_layout.txt
+          grep -q "Struktura przestrzeni mierzalnych" ch05_layout.txt
+          grep -q "Standardowe" ch05_layout.txt || grep -q "standardowe" ch05_layout.txt
+          if grep -E 'Overfull \\hbox' measure_theory_ch05_ci.log; then
+            echo "R05 isolated PDF has overfull lines"
+            exit 1
+          fi
+          pdftotext -bbox measure_theory_ch05_ci.pdf ch05_bbox.html
+          python3 - <<'PY'
+          import re
+          from xml.etree import ElementTree as ET
+          from pathlib import Path
+          xml = Path("ch05_bbox.html").read_text(encoding="utf-8")
+          xml = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f]", "\ufffd", xml)
+          root = ET.fromstring(xml)
+          ns = "{http://www.w3.org/1999/xhtml}"
+          pages = root.findall(".//" + ns + "page")
+          words = 0
+          for page in pages:
+              width = float(page.get("width"))
+              height = float(page.get("height"))
+              for word in page.iter(ns + "word"):
+                  x0,y0 = float(word.get("xMin")),float(word.get("yMin"))
+                  x1,y1 = float(word.get("xMax")),float(word.get("yMax"))
+                  assert 0 <= x0 <= x1 <= width, (x0,x1,width)
+                  assert 0 <= y0 <= y1 <= height, (y0,y1,height)
+                  words += 1
+          assert len(pages) >= 2 and words >= 500, (len(pages),words)
+          print(f"PASS R05 PDF: {len(pages)} pages, {words} words inside page bounds")
+          PY
+          pages=$(pdfinfo measure_theory_ch05_ci.pdf | awk '/^Pages:/ {print $2}')
+          pdftoppm -r 90 -png measure_theory_ch05_ci.pdf ch05_preview > /dev/null 2>&1
+          previews=$(find . -maxdepth 1 -name 'ch05_preview-*.png' -type f | wc -l)
+          test "$previews" -eq "$pages"
+          echo "PASS R05 all-page preview: $previews/$pages"
+      - name: Compile full book and validate chapter 05 cross-references
+        working-directory: books/pl
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory.tex > ch05_full_pass1.txt
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory.tex > ch05_full_pass2.txt
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory.tex > ch05_full_pass3.txt
+          test -s measure_theory.pdf
+          for target in 'ch:struktura-przestrzeni' 'lem:trace-generation' \
+                        'thm:initial-sigma' 'thm:borel-product' \
+                        'thm:standard-countably-generated' 'thm:pushforward-composition'; do
+            grep -Fq "\\newlabel{$target}" measure_theory.aux
+          done
+          if grep -E 'LaTeX Warning: (Reference|Citation).*undefined|There were undefined references|multiply defined|Overfull \\hbox' measure_theory.log; then
+            echo "Full book has unresolved references or overfull lines"
+            exit 1
+          fi
+          pdfinfo measure_theory.pdf | tee ch05_book_pdfinfo.txt
+      - name: Upload R05 PDF, all page previews and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: measure-theory-ch05-audit-pdf
+          if-no-files-found: warn
+          path: |
+            books/pl/measure_theory_ch05_ci.pdf
+            books/pl/ch05_preview-*.png
+            books/pl/ch05_layout.txt
+            books/pl/ch05_bbox.html
+            books/pl/ch05_pdfinfo.txt
+            books/pl/measure_theory_ch05_ci.log
+            books/pl/ch05_pass*.txt
+            books/pl/ch05_book_pdfinfo.txt
+            books/pl/measure_theory.log
+            books/pl/ch05_full_pass*.txt
