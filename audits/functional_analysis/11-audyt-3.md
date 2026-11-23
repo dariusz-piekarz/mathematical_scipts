@@ -46,3 +46,9 @@ Zrealizowane wcześniej, już zakończone **CI #45230679301: SUCCESS**, w tym 15
 ## Decyzja
 
 **11/03: CZYSTY, 1/2.** Po korektach 11/02 rozdział 11 pomyślnie przeszedł pierwszy niezależny audyt stabilizacyjny na niezmienionym blob SHA `73505ec4ff0f51ae76f0cfdf67cccd5eccbbd2b2`. Nie było potrzeby ingerencji w źródło LaTeX, testy czy workflow. **Po zapisaniu raportu należy osobno sprawdzić wynik wyzwolonego CI**. Następna iteracja: audyt **11/04**, drugi niezależny przegląd tego samego SHA. Dopiero 2/2 i zielone CI pozwolą rozpocząć rozdział 12.
+
+## Uzupełnienie: wynik CI po audycie 11/03
+
+Dedykowany przebieg [GitHub Actions #45232838912](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45232838912), uruchomiony commitem raportu `913bd489f933b22da4e47e95c902d88330dcb924`, zakończył się **COMPLETED / SUCCESS**. Wszystkie kroki: **15/15 testów PASS**, przygotowanie rzeczywistego kontekstu źródłowego 01–11 PASS, kompilacja LaTeX PASS, automatyczna kontrola PDF i odsyłaczy PASS, publikacja artefaktu PASS. Rzeczywista inspekcja wizualna tego samego SHA jest udokumentowana w raporcie 11/02. Sprawdzono ponownie niezmieniony blob SHA źródła: `73505ec4ff0f51ae76f0cfdf67cccd5eccbbd2b2`.
+
+**Ostateczny wynik audytu 11/03: CZYSTY 1/2 + ZIELONE CI.** Raport uzupełniono wyłącznie dokumentacyjnie; kolejny przebieg GitHub Actions ewentualnie wyzwolony przez tę zmianę raportu nie stanowi nowego audytu matematycznego. Następna iteracja powinna przeprowadzić **11/04** jako drugi niezależny czysty przegląd tego samego SHA. Rozdział 12 pozostaje zamknięty do osiągnięcia 2/2 i potwierdzenia CI.
