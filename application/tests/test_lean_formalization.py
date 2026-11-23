@@ -164,6 +164,19 @@ class LeanFormalizationTests(unittest.TestCase):
                 stream.write(b"y")
             self.assertFalse(lean._source_file_current(registered, digest, self.root))
 
+    def test_oversize_canonical_tex_is_rejected_before_hashing(self):
+        # An abnormally large checked-out TeX file must not consume an
+        # unbounded amount of I/O, even if the caller supplies a digest.
+        file = Path(self.tmp.name) / "chapters" / "pl" / "unit" / "oversize.tex"
+        file.parent.mkdir(parents=True, exist_ok=True)
+        with file.open("wb") as source:
+            source.truncate(lean.MAX_CANONICAL_TEX_BYTES + 1)
+        registered = {"source_document_path": "chapters/pl/unit/oversize.tex"}
+        with patch.object(Path, "read_bytes",
+                          side_effect=AssertionError("oversize file read")):
+            self.assertFalse(lean._source_file_current(
+                registered, self.digest, self.root))
+
     def test_corrupted_index_is_refused_by_reader(self):
         self.con.execute("UPDATE documents SET sha256=? WHERE id='LST-01'",
                          ("f" * 64,))
