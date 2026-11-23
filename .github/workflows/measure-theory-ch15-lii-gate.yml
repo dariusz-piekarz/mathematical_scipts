@@ -62,26 +62,65 @@ jobs:
               assert phrase not in content, f'Unresolved full-book cross-reference: {phrase}'
           print('Full book PDF:', pdf.stat().st_size, 'bytes, no unresolved references')
           PY
-      - name: Generate isolated chapter 15 document from canonical book preamble
+      - name: Generate isolated chapter 15 with genuine external cross-references
         run: |
           python - <<'PY'
+          import re
           from pathlib import Path
+
           root = Path('books/pl')
-          content = (root / 'measure_theory.tex').read_text(encoding='utf-8')
+          chapter_path = Path('chapters/pl/measure_theory/15-dualnosc-wypuklosc-i-slaba-zbieznosc-w-przestrzeniach-lp.tex')
+          chapter_tex = chapter_path.read_text(encoding='utf-8')
+          local_labels = set(re.findall(r'\\label\{([^}]+)\}', chapter_tex))
+          assert local_labels, 'No labels found in chapter 15'
+
+          # The complete book was compiled first. Keep only external labels
+          # so the isolated chapter cannot duplicate labels defined locally.
+          full_aux = (root / 'measure_theory.aux').read_text(encoding='utf-8')
+          external_labels = []
+          for line in full_aux.splitlines():
+              match = re.match(r'\\newlabel\{([^}]+)\}', line)
+              if match and match.group(1) not in local_labels:
+                  external_labels.append(line)
+          assert len(external_labels) > 30, 'Full book has too few imported cross-references'
+          assert any(line.startswith(r'\newlabel{ch:przestrzenie-lp}') for line in external_labels), \
+              'Chapter 14 external label missing'
+          (root / 'measure_theory_ch15_external.aux').write_text(
+              r'\relax' + '\n' + '\n'.join(external_labels) + '\n', encoding='utf-8'
+          )
+
+          complete_tex = (root / 'measure_theory.tex').read_text(encoding='utf-8')
           marker = r'\begin{document}'
-          assert marker in content
-          header = content.split(marker, 1)[0]
+          assert marker in complete_tex
+          header = complete_tex.split(marker, 1)[0]
           chapter = r'\input{../../chapters/pl/measure_theory/15-dualnosc-wypuklosc-i-slaba-zbieznosc-w-przestrzeniach-lp.tex}'
+          external = r'\usepackage{xr-hyper}' + '\n' + \
+              r'\externaldocument{measure_theory_ch15_external}[measure_theory.pdf]'
           (root / 'measure_theory_ch15_lii.tex').write_text(
-              header + marker + '\n' + r'\mainmatter' + '\n' + chapter + '\n' + r'\end{document}' + '\n',
+              header + external + '\n' + marker + '\n' + r'\mainmatter' + '\n' +
+              r'\setcounter{chapter}{14}' + '\n' + chapter + '\n' + r'\end{document}' + '\n',
               encoding='utf-8',
           )
+          print('Imported', len(external_labels), 'external labels; excluded', len(local_labels), 'local labels')
           PY
-      - name: Compile isolated chapter 15 PDF
+      - name: Compile isolated chapter 15 PDF and verify cross-references
         run: |
           cd books/pl
           latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error measure_theory_ch15_lii.tex
           test -s measure_theory_ch15_lii.pdf
+          python - <<'PY'
+          from pathlib import Path
+          log = Path('measure_theory_ch15_lii.log').read_text(encoding='utf-8', errors='replace')
+          forbidden = (
+              'There were undefined references',
+              'There were undefined citations',
+              'multiply defined',
+              'Rerun to get cross-references right',
+          )
+          for phrase in forbidden:
+              assert phrase not in log, f'Isolated chapter cross-references: {phrase}'
+          print('Isolated chapter cross-references resolved')
+          PY
       - name: Verify PDF page counts and render page previews
         run: |
           python - <<'PY'
