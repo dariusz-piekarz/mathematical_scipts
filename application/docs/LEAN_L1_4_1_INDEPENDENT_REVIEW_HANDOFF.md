@@ -3,7 +3,7 @@
 **Aktualny kandydat kodu:** `ca6165bcd0f59aa6fb836e1922b51aeba51be193`  
 **Gałąź:** `biblioteka-matematyczna-iteracja-6` (ruchomy HEAD; **nie** jest przedmiotem odbioru)  
 **Zakres:** odczytowy raport rozdziałowy powiązań kanonicznego LaTeX-u z rejestrem Lean  
-**Stan techniczny (23.11.2026, ok. 19:58 UTC):** dwie pełne rundy 2+1 zakończone PASS; trzecia w toku. Sprawdzić końcowy stan workflow, nie ekstrapolować.  
+**Stan techniczny (23.11.2026, 20:02 UTC):** **3/3 pełnych rund 2+1 PASS** na dokładnym SHA `ca6165bcd0f59aa6fb836e1922b51aeba51be193`; `prepare`, wszystkie 12 zadań rund, `skeptical_contract` i `evidence` zakończyły się `success`.  
 **Stan formalny:** `stabilizing` najwyżej po 3/3, niezależna uwierzytelniona recenzja nadal **oczekiwana**. `certificate=false`.  
 **Odbiór:** [issue #10](https://github.com/dariusz-piekarz/mathematical_scipts/issues/10); [naprawiona usterka #12](https://github.com/dariusz-piekarz/mathematical_scipts/issues/12).  
 **Właściwa stabilizacja:** [Atlas 2+1 #45252666627](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45252666627), wywołana kontrolnym commitem `fdc102952a99fb726a31f9b717afdb82c9af134c` z `candidate_sha=ca6165bc...` oraz `fragment=L1.4`.
@@ -34,6 +34,18 @@ gh run download 45252666627 -R dariusz-piekarz/mathematical_scipts -n atlas-vali
 **Ważne:** `headSha` workflow wskazuje commit **kontrolny** `fdc10295...`, a nie oceniany SHA. Weryfikacja celu musi użyć `candidate_sha` z wygenerowanego `atlas_validation_status.json` oraz `prepare.outputs.sha`, następnie wszystkich trzech pełnych rund aplikacji, Windows, szybkich regresji, prawdziwego Lean/Mathlib, sceptycznego kontraktu i zadania `evidence`. Kontrolne `fragment=L1.4` to poprawna składnia selektora obejmująca podetap L1.4.1; próba z `fragment=L1.4.1` została odrzucona w `prepare` [#45252342342](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45252342342) i nie liczy się jako PASS.
 
 [Pełne CI aplikacji #45251663688](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45251663688) na `ca6165bc` zakończyło się sukcesem: 738 testów Python, 10 sklasyfikowanych pominięć, `unreviewed_skips=0`, Chromium 509 rozdziałów, bez błędów JavaScript. Jest to **osobny** sukces CI, nie zastępuje kompletu 2+1. Poprzedni [3/3 #45181138327](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45181138327) dotyczył wyłącznie historycznego `94a7b4a1e592b1b0504b881f9c016004786ca6d9`, przed poprawką #12.
+
+### Wynik końcowy rzeczywistego 2+1 (weryfikacja logu `evidence`)
+
+[Workflow #45252666627](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45252666627) zakończony `completed/success` 23.11.2026 o 20:02 UTC. Zadanie `evidence` wypisało rzeczywisty rekord `ATLAS_STABILIZATION`: `candidate_sha=ca6165bc...`, `fragment=L1.4`, `passes=[true,true,true]`, `problems=[]`, `status=stabilizing`, `skeptical_review=pending`, `certificate=false`. Łącznie 15/15 zadań `success`.
+
+W **każdej** z trzech rund: `738` testów Python, `10` sklasyfikowanych pominięć, `unreviewed_skips=0`; Chromium przejrzał `509` rozdziałów bez błędów JavaScript; natywne zadania Windows, szybkie regresje i prawdziwy Lean/Mathlib `success`. W logu `lean independent pass 3 / lean-pilot` potwierdzono przypięty Mathlib `2df2f0150c275ad53cb3c90f7c98ec15a56a1a67`, `files=5`, `theorems=26`, `axiom_check=passed`, `semantic_certificate=false`. Jest to 26 **deklaracji**, a nie 26 mapowań semantycznych.
+
+[Końcowy artefakt `atlas-validation-status`](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45252666627/artifacts/14855289830), digest ZIP deklarowany przez GitHub: `sha256:9b4feae298d747b0af3c03c73b65865d8c1e8c67140ec9f04e66c165a767818b`. Potwierdzono treść statusu w logu `evidence`; nie oznacza to osobnej weryfikacji bajtów pobranego ZIP.
+
+[Porównanie ze stanem gałęzi `a4eb80db`](https://github.com/dariusz-piekarz/mathematical_scipts/compare/ca6165bcd0f59aa6fb836e1922b51aeba51be193...a4eb80dbff7da27a19358612a1d3e71ccc95470a): `67` późniejszych commitów, `41` zmienionych plików. **Brak zmian** w `application/backend/`, `application/frontend/`, `application/tests/`, `application/scripts/`, `application/lean/`, źródłowym LST-01/LST-02 oraz krytycznych workflow Atlas/Lean. Zmienione zostały dokumenty odbioru i konfiguracja kontrolna, ale nie kod oceniany w tej stabilizacji. To porównanie nie stanowi niezależnego review.
+
+**Brama formalna nadal zamknięta:** brak uwierzytelnionej decyzji niezależnego recenzenta w [issue #10](https://github.com/dariusz-piekarz/mathematical_scipts/issues/10); [PR #7](https://github.com/dariusz-piekarz/mathematical_scipts/pull/7) bez zgłoszonego przeglądu. `stable` i L1.4.2 pozostają niedostępne, `certificate=false`.
 
 ## 3. Macierz kontroli negatywnych i pozytywnych
 
