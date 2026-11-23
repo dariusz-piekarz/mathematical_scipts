@@ -193,7 +193,8 @@ def verify(n, edges, check_exchange=False):
     independent_dsu_invariants(n, edges)
     if check_exchange:
         verify_exchange_lemmas(n, edges, optima)
-    if len(optima) == 1 and len(set(w for _, _, w in edges)) == len(edges):
+    if len(set(w for _, _, w in edges)) == len(edges):
+        assert len(optima) == 1, (n, edges, "nonunique despite distinct weights")
         assert frozenset((u, v) for u, v, _ in kruskal(n, edges)) == optima[0]
 
 
