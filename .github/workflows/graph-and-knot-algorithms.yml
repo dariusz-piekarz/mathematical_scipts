@@ -11,6 +11,7 @@ on:
       - 'tools/tests/test_graph_and_knot_bfs_dfs.py'
       - 'tools/tests/test_graph_and_knot_weighted.py'
       - 'tools/tests/test_graph_and_knot_mst.py'
+      - 'tools/tests/test_graph_and_knot_flow.py'
       - 'audits/graph_and_knot_theory/**'
       - '.github/workflows/graph-and-knot-algorithms.yml'
   workflow_dispatch:
@@ -30,6 +31,8 @@ jobs:
         run: python3 tools/tests/test_graph_and_knot_weighted.py
       - name: Exhaustive MST forest enumerations and DSU checks
         run: python3 tools/tests/test_graph_and_knot_mst.py
+      - name: Exact max-flow/min-cut crosschecks for EK, Dinic and FF
+        run: python3 tools/tests/test_graph_and_knot_flow.py
 
   chapter-pdf:
     runs-on: ubuntu-latest
@@ -42,7 +45,7 @@ jobs:
           sudo apt-get install -y --no-install-recommends \
             texlive-latex-base texlive-latex-recommended texlive-latex-extra \
             texlive-lang-polish texlive-pictures lmodern poppler-utils
-      - name: Make audited 00-05 plus BFS/DFS, weighted paths and MST PDF
+      - name: Make audited 00-05 plus BFS/DFS, weighted, MST and flow PDF
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -50,15 +53,16 @@ jobs:
           root = Path('books/pl')
           source = (root / 'graph_and_knot_theory.tex').read_text(encoding='utf-8')
           matches = re.findall(r'\\input\{../../chapters/pl/graph_and_knot_theory/[^}]+\}', source)
-          assert len(matches) == 40
+          assert len(matches) == 41
           marker = matches[0]
           preamble = source.split(marker, 1)[0]
           # The initial six historical chapters resolve chapter references
           # used by the new algorithms module; the rest are deliberately omitted.
-          chosen = matches[:9]
-          assert '37-algorytmiczne-przeszukiwanie-grafow-bfs-dfs' in chosen[-3]
-          assert '38-najkrotsze-drogi-wazone-i-algorytmy-wyszukiwania-tras' in chosen[-2]
-          assert '39-minimalne-drzewa-rozpinajace-prim-kruskal-dsu' in chosen[-1]
+          chosen = matches[:10]
+          assert '37-algorytmiczne-przeszukiwanie-grafow-bfs-dfs' in chosen[-4]
+          assert '38-najkrotsze-drogi-wazone-i-algorytmy-wyszukiwania-tras' in chosen[-3]
+          assert '39-minimalne-drzewa-rozpinajace-prim-kruskal-dsu' in chosen[-2]
+          assert '40-algorytmy-przeplywowe-ford-fulkerson-edmonds-karp-dinic' in chosen[-1]
           text = preamble + '\n'.join(chosen) + '\n\\end{document}\n'
           (root / 'graph_and_knot_algorithms_ci.tex').write_text(text, encoding='utf-8')
           PY
@@ -68,7 +72,7 @@ jobs:
           pdflatex -interaction=nonstopmode -halt-on-error -file-line-error graph_and_knot_algorithms_ci.tex > graph_algorithms_pass1.txt
           pdflatex -interaction=nonstopmode -halt-on-error -file-line-error graph_and_knot_algorithms_ci.tex > graph_algorithms_pass2.txt
           test -s graph_and_knot_algorithms_ci.pdf
-          for target in 'ch:tg-bfs-dfs' 'thm:tg-bfs-correct' 'thm:tg-dfs-bridge' 'fig:tg-bfs-layers' 'ch:tg-shortest-paths' 'thm:tg-weighted-astar' 'thm:tg-weighted-ch-query' 'fig:tg-weighted-sample' 'ch:tg-mst' 'thm:tg-mst-cut' 'thm:tg-mst-kruskal' 'thm:tg-mst-prim' 'fig:tg-mst-five'; do
+          for target in 'ch:tg-bfs-dfs' 'thm:tg-bfs-correct' 'thm:tg-dfs-bridge' 'fig:tg-bfs-layers' 'ch:tg-shortest-paths' 'thm:tg-weighted-astar' 'thm:tg-weighted-ch-query' 'fig:tg-weighted-sample' 'ch:tg-mst' 'thm:tg-mst-cut' 'thm:tg-mst-kruskal' 'thm:tg-mst-prim' 'fig:tg-mst-five' 'ch:tg-flow-algorithms' 'thm:tg-flow-certificate' 'thm:tg-flow-ek' 'thm:tg-flow-dinic' 'fig:tg-flow-cut-five'; do
             grep -Fq "\\newlabel{$target}" graph_and_knot_algorithms_ci.aux
           done
           pdftotext -layout graph_and_knot_algorithms_ci.pdf graph_algorithms_layout.txt
@@ -78,19 +82,21 @@ jobs:
           grep -q 'kontrakcji' graph_algorithms_layout.txt
           grep -q 'Kruskal' graph_algorithms_layout.txt
           grep -q 'Prim' graph_algorithms_layout.txt
+          grep -q 'Edmonds' graph_algorithms_layout.txt
+          grep -q 'Dinic' graph_algorithms_layout.txt
           pdfinfo graph_and_knot_algorithms_ci.pdf > graph_algorithms_pdfinfo.txt
           if grep -E 'Overfull \\hbox|Overfull \\vbox' graph_and_knot_algorithms_ci.log; then
             echo "PDF contains a protruding line/box: not stable"
             exit 1
           fi
           if grep -E 'LaTeX Warning: Label.*multiply defined|LaTeX Warning: Reference.*undefined' graph_and_knot_algorithms_ci.log; then
-            echo "Check unresolved book references in the isolated 00-05+37 subset"
+            echo "Inspect any unresolved references in the isolated 00-05+37+38+39+40 subset"
           fi
       - name: Upload actual PDF, logs and extracted text
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: graph-and-knot-mst-algorithms-pdf
+          name: graph-and-knot-flow-algorithms-pdf
           if-no-files-found: warn
           path: |
             books/pl/graph_and_knot_algorithms_ci.pdf
