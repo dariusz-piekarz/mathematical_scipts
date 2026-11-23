@@ -76,6 +76,19 @@ class TestHaarChapter23(unittest.TestCase):
                 # Inversion (b,a) -> (-b/a,1/a) has abs Jacobian a^(-3).
                 self.assertEqual(1/a**3 / (1/a)**2, 1/a)
 
+    def test_disjoint_translates_and_torus_invariance(self):
+        # Z is noncompact; translates of a finite interval can be disjoint.
+        K = set(range(-3, 4))
+        translates = [{x + 7*n for x in K} for n in range(20)]
+        self.assertEqual(len(set.union(*translates)), 20 * len(K))
+        # Discrete torus models: translation preserves every subset's mass.
+        for n in range(2, 9):
+            for mask in range(1 << n):
+                A = {i for i in range(n) if mask & (1 << i)}
+                for t in range(n):
+                    B = {(i+t) % n for i in A}
+                    self.assertEqual(Fraction(len(A), n), Fraction(len(B), n))
+
     def test_source_guards(self):
         s = SOURCE.read_text(encoding="utf-8")
         labels = re.findall(r"\\label\{([^}]+)\}", s)
@@ -88,6 +101,9 @@ class TestHaarChapter23(unittest.TestCase):
         self.assertIn(r"\int_Gh(x)\,\mathrm d\widetilde\mu(x)", s)
         self.assertIn(r"\mu(E(c,t))=t^{-1}\mu(E)", s)
         self.assertIn("odwrotną inkluzję", s)
+        self.assertIn(r"\bigcup_{j=1}^n g_jKK^{-1}", s)
+        self.assertIn(r"\mu(G)\ge\sum_{n\ge1}\mu(g_nK)=+\infty", s)
+        self.assertIn(r"m^*(\varnothing)=t(\varnothing)=0", s)
         stack = []
         for m in re.finditer(r"\\(begin|end)\{([^}]+)\}", s):
             if m[1] == "begin":
