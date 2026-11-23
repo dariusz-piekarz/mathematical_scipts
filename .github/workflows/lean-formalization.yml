@@ -8,7 +8,9 @@ on:
       - "application/lean/**"
       - "application/scripts/lean_ci_audit.py"
       - "application/scripts/benchmark_lean_fingerprint.py"
+      - "application/scripts/profile_lean_olean_cpu.py"
       - "application/tests/test_lean_fingerprint_benchmark.py"
+      - "application/tests/test_lean_olean_cpu_profile.py"
       - "application/tests/test_lean_environment.py"
       - "application/tests/test_lean_ci_audit.py"
       - "application/backend/lean_introspection.py"
@@ -68,6 +70,7 @@ jobs:
           python -m unittest \
             tests.test_lean_ci_audit \
             tests.test_lean_fingerprint_benchmark \
+            tests.test_lean_olean_cpu_profile \
             tests.test_lean_environment \
             tests.test_lean_inspection_snapshot -v
 
@@ -146,6 +149,12 @@ jobs:
           python scripts/benchmark_lean_fingerprint.py \
             --samples 3 --output lean/ci_fingerprint_benchmark.json
 
+      - name: Profile one genuine .olean fingerprint pass on pinned Mathlib
+        working-directory: application
+        run: |
+          python scripts/profile_lean_olean_cpu.py \
+            --top 12 --output lean/ci_olean_cpu_profile.json
+
       - name: Upload Lean compilation and axiom evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -156,4 +165,5 @@ jobs:
             application/lean/ci_lean_report.json
             application/lean/ci_lean_files.txt
             application/lean/ci_fingerprint_benchmark.json
+            application/lean/ci_olean_cpu_profile.json
           if-no-files-found: warn
