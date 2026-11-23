@@ -4,7 +4,7 @@
 **Gałąź:** biblioteka-matematyczna-iteracja-6.  
 **Źródło:** chapters/pl/functional_analysis/06-twierdzenie-hahna-banacha-i-ciagly-dual.tex.  
 **SHA źródła:** c8caeb6a6c102e6bfa4ad4560c6a0f3d6c682000, identyczny z końcowym stanem audytu 06/02.  
-**Wynik matematyczno-redakcyjny:** **CZYSTY**, bez zmian źródła. Pierwszy kandydat do **1/2** czystych audytów po ostatniej korekcie; wymaga jeszcze końcowej kontroli CI. Rozdział 06 nie jest jeszcze stabilny.
+**Wynik matematyczny, redakcyjny i techniczny:** **CZYSTY — 1/2 kolejnych czystych audytów** po ostatniej korekcie. Brak zmian źródła. Pełny CI i PDF zweryfikowane; rozdział 06 nie jest jeszcze stabilny.
 
 ## Niezależność i zakres
 
@@ -52,9 +52,10 @@ Wszystkie powyższe dowody oceniono **PASS**.
 
 - Zachowano **17 środowisk dowodów, 5 środowisk przykładów, 22 unikatowe etykiety, 19 wystąpień odsyłaczy**; **0** brakujących celów odsyłaczy w rzeczywistym kontekście rozdziałów 01–06.
 - Nie występują niepoprawne formy „ciągły dual”, „Dual ilorazu”, „sekwencyj”, „pierwszoprzeliczalna” ani niedozwolony zapis funkcji charakterystycznej. Wszystkie poprawki z 06/01 i 06/02 pozostają w tekście.
-- [CI 45178170981](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45178170981): rozszerzone 19 testów i nowa kompilacja pełnego kontekstu. Stan końcowy CI i PDF zostanie dopisany po zakończeniu przebiegu; potwierdzenie jest warunkiem zaliczenia.
+- **[CI 45178170981](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45178170981) — pełny SUCCESS**: 19/19 testów PASS, przygotowanie kontekstu 01–06, kompilacja LaTeX, końcowa weryfikacja PDF i odsyłaczy oraz zapis artefaktu PASS. W pierwszym przebiegu LaTeX pojawiło się przejściowe ostrzeżenie o odsyłaczach, którego nie ma w logu końcowym.
+- Pobrano artefakt tego przebiegu: **PDF A4, 39 stron, 523156 bajtów**. Rozdział 06 zaczyna się na stronie 33 i kończy na 39. Strony **33–39 wyrenderowano i obejrzano**, bez kolizji tekstu i równań, obcięć lub uszkodzeń znaków. Automatyczna kontrola granic bloków tekstowych: **0 bloków poza stroną**. Końcowy log LaTeX: **0** `Undefined control sequence`, `There were undefined references`, `Overfull \\hbox`, `Missing character`.
 - Poprzednie [CI 45177664269](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45177664269): pełny SUCCESS (17 testów, LaTeX i odsyłacze) dla tego samego niezmienionego tekstu rozdziału.
 
 ## Decyzja
 
-**Czysty przegląd matematyczno-redakcyjny 06/03. Po końcowym CI można zaliczyć go jako 1/2 kolejnych czystych audytów.** Rozdział 06 pozostaje w stabilizacji; w następnej iteracji przeprowadzić audyt 06/04, nie rozpoczynać rozdziału 07.
+**CZYSTY audyt matematyczny, redakcyjny i techniczny 06/03, z pełnym CI PASS. Zalicza się jako 1/2 kolejnych czystych audytów.** Rozdział 06 pozostaje w stabilizacji; w następnej iteracji przeprowadzić audyt 06/04, nie rozpoczynać rozdziału 07.
