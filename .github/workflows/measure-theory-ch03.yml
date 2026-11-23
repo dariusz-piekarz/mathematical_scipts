@@ -1,0 +1,98 @@
+name: Measure theory chapter 03 audit validation
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "chapters/pl/measure_theory/03-miary-zewnetrzne-i-konstrukcja-caratheodoryego.tex"
+      - "tools/test_measure_theory_ch03_outer.py"
+      - "books/pl/measure_theory.tex"
+      - ".github/workflows/measure-theory-ch03.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  chapter-03-finite-models:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check outer measures, Caratheodory and premeasure extensions
+        run: python3 tools/test_measure_theory_ch03_outer.py
+
+  chapter-03-pdf-and-book-context:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install LaTeX and PDF inspection
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-lang-polish texlive-pictures lmodern poppler-utils
+      - name: Prepare chapter 03 using the book preamble
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          src = Path("books/pl/measure_theory.tex").read_text(encoding="utf-8")
+          preamble = src.split(r"\begin{document}", 1)[0]
+          target = r"../../chapters/pl/measure_theory/03-miary-zewnetrzne-i-konstrukcja-caratheodoryego.tex"
+          content = preamble + "\n" + r"\begin{document}" + "\n"
+          content += r"\mainmatter" + "\n" + r"\input{" + target + "}\n"
+          content += r"\end{document}" + "\n"
+          Path("books/pl/measure_theory_ch03_ci.tex").write_text(content, encoding="utf-8")
+          PY
+      - name: Compile isolated chapter 03 and inspect PDF
+        working-directory: books/pl
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory_ch03_ci.tex > measure_theory_ch03_pass1.txt
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory_ch03_ci.tex > measure_theory_ch03_pass2.txt
+          test -s measure_theory_ch03_ci.pdf
+          pdfinfo measure_theory_ch03_ci.pdf | tee measure_theory_ch03_pdfinfo.txt
+          pdftotext -layout measure_theory_ch03_ci.pdf measure_theory_ch03_ci.txt
+          grep -q "Miary zewnętrzne i konstrukcja" measure_theory_ch03_ci.txt
+          if grep -E 'Overfull \\hbox' measure_theory_ch03_ci.log; then
+            echo "Chapter 03 has overfull lines"
+            exit 1
+          fi
+      - name: Compile complete book solely for chapter 03 cross-references
+        working-directory: books/pl
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory.tex > measure_theory_ch03_full_pass1.txt
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory.tex > measure_theory_ch03_full_pass2.txt
+          pdflatex -interaction=nonstopmode -halt-on-error -file-line-error measure_theory.tex > measure_theory_ch03_full_pass3.txt
+          test -s measure_theory.pdf
+          for target in 'ch:caratheodory' 'ch:miary-wlasnosci' 'ch:lebesgue' 'thm:completion'; do
+            grep -Fq "\\newlabel{$target}" measure_theory.aux
+          done
+          if grep -E 'LaTeX Warning: (Reference|Citation).*undefined|There were undefined references|multiply defined|Overfull \\hbox' measure_theory.log; then
+            echo "Unresolved reference, duplicate label, or overfull line in book"
+            exit 1
+          fi
+          pdfinfo measure_theory.pdf | tee measure_theory_ch03_full_pdfinfo.txt
+          pdftotext -layout measure_theory.pdf measure_theory_ch03_full_text.txt
+          grep -q "Miary zewnętrzne i konstrukcja" measure_theory_ch03_full_text.txt
+      - name: Archive diagnostic PDFs and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: measure-theory-ch03-visual-audit
+          path: |
+            books/pl/measure_theory_ch03_ci.pdf
+            books/pl/measure_theory_ch03_ci.log
+            books/pl/measure_theory_ch03_ci.txt
+            books/pl/measure_theory_ch03_pdfinfo.txt
+            books/pl/measure_theory.pdf
+            books/pl/measure_theory.log
+            books/pl/measure_theory_ch03_full_pdfinfo.txt
+            books/pl/measure_theory_ch03_full_text.txt
+            books/pl/measure_theory_ch03_pass1.txt
+            books/pl/measure_theory_ch03_pass2.txt
+            books/pl/measure_theory_ch03_full_pass1.txt
+            books/pl/measure_theory_ch03_full_pass2.txt
+            books/pl/measure_theory_ch03_full_pass3.txt
+          if-no-files-found: warn
