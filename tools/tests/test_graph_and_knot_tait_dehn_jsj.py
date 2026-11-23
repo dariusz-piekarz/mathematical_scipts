@@ -350,6 +350,8 @@ def check_torus_bundle_h1():
         if (a,b,c,d)==(1,0,0,1):assert rank==3
         if (a,b,c,d)==(2,1,1,1):
             assert determinant==-1 and rank==1 and torsion_order==1
+        if (a,b,c,d)==(3,2,1,1):
+            assert determinant==-2 and rank==1 and invariants==(1,2)
         tests+=1
     return tests
 
@@ -371,6 +373,7 @@ def test_sources():
     assert "Przeciwległe boki" in b
     assert r"\label{thm:tg-jsj-graph-of-groups}" in c
     assert r"\label{st:tg-jsj-mapping-torus-h1}" in c
+    assert r"\label{ex:tg-jsj-same-graph-different-h1}" in c
     assert r"\label{ex:tg-jsj-sol-torus-bundle}" in c
 
 
