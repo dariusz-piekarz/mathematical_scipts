@@ -62,7 +62,7 @@ Dopiero po stabilizacji przejść do pierwszego szczegółowego audytu pozostał
 
 ## Kontynuacja audytu 31 — regresja hipotez w źródle (2026-11-23)
 
-W kolejnym przebiegu wykryto ryzyko w samym mechanizmie testów: poprzednia enumeracja potwierdzała poprawne twierdzenie o drógach w podgrafie dodatnich przepustowości, lecz nie wykrywałaby przypadkowego usunięcia tego ograniczenia z pliku LaTeX. Jest to regresja jakości kontroli, a nie kolejny błąd dowodu.
+W kolejnym przebiegu wykryto ryzyko w samym mechanizmie testów: poprzednia enumeracja potwierdzała poprawne twierdzenie o drogach w podgrafie dodatnich przepustowości, lecz nie wykrywałaby przypadkowego usunięcia tego ograniczenia z pliku LaTeX. Jest to regresja jakości kontroli, a nie kolejny błąd dowodu.
 
 **Zastosowane zabezpieczenie:** w istniejącym teście drugiego przejścia dodano funkcję \`verify_source_hypotheses()\`. W czasie wykonywania CI otwiera ona rzeczywisty plik źródłowy rozdziału 40, izoluje twierdzenie \`thm:tg-flow-integral-paths\` i wymaga:
 - jawnego założenia \`k=|f|≥0\`;
@@ -75,5 +75,8 @@ W kolejnym przebiegu wykryto ryzyko w samym mechanizmie testów: poprzednia enum
 **Rzeczywista weryfikacja wykonana w tej iteracji:** uruchomiono niezależny pakiet dokładnych testów z lokalnej kopii pliku — 4564 kontroli dróg/przekrojów, 1099 kontroli ekstremalnych i 3288 przypadków modelu \`G(n,p)\`, wszystkie PASS. Następnie przeprowadzono lokalne uruchomienie rozszerzonego pakietu w *syntetycznej strukturze repozytorium*, na reprezentatywnym fragmencie TeX zawierającym wymagane hipotezy; nowa kontrola źródła również PASS. Niezależnie przez konektor GitHub odczytano **prawdziwy źródłowy rozdział 40** na istniejącej gałęzi i sprawdzono obecność wszystkich wymaganych fragmentów — komplet PASS. Test na fragmencie syntetycznym **nie jest** równoznaczny z przebiegiem CI na całej książce.
 
 **Pozostaje otwarte:** sprawdzenie rzeczywistych przebiegów GitHub Actions typu push i wyników obu jobów dla commitu z nowymi testami, pełny 44-rozdziałowy PDF, kontrola ostrzeżeń, odsyłaczy i oględziny zmienionych stron. Narzędzie do odczytu przebiegów po SHA udostępnia wyłącznie przebiegi PR, dlatego pusta lista nie daje żadnego wniosku o statusie przepływu uruchamianego przez push.
+
+
+**Test negatywny zabezpieczenia:** na lokalnym fragmencie testowym celowo usunięto z tezy definicję `D_+`. Nowa funkcja zakończyła się oczekiwanym błędem `AssertionError: missing key hypothesis: niech $D_+$ oznacza podgraf`; po przywróceniu poprawnego fragmentu cały zestaw ponownie przeszedł PASS. Potwierdza to, że kontrola wykrywa przynajmniej ten konkretny regres źródła.
 
 **Werdykt bez zmian: audyt 31 W STABILIZACJI.** Nie rozpoczynać audytu rozdziałów 43–44 przed zamknięciem bramki jakości dla 40–42.
