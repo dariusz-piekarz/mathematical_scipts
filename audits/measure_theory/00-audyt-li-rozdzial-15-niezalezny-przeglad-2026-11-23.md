@@ -9,7 +9,7 @@ Punkt odniesienia: po audytach wcześniejszych, w tym L; LI jest trzecim niezale
 ## Zakres weryfikacji matematycznej
 
 1. **Izometryczne parowanie `L^p-L^q`:** sprawdzono przypadki `1<p<∞`, `p=1` i funkcję `g=0`, poprawność normalizacji oraz jawnie potrzebną `σ`-skończoność dla lematu dotyczącego `p=1`. Przykład miary nieskończonej na jednym punkcie rzeczywiście wyklucza izometrię w pełnej ogólności.
-2. **Nierówności punktu środkowego:** dla `p≥2` kontrola redukcji do nierówności skalarnych i Höldera/Clarks(o)na, dla `1<p<2` kontrola wartości własnych hesjanu `|z|^p`, całkowalności osobliwości przy przejściu przez zero i oszacowania całkowego z Höldera. Współczynniki oraz zależność od `p` zweryfikowane.
+2. **Nierówności punktu środkowego:** dla `p≥2` kontrola redukcji do nierówności skalarnych i typu Clarksona, dla `1<p<2` kontrola wartości własnych hesjanu `|z|^p`, całkowalności osobliwości przy przejściu przez zero i oszacowania całkowego z Höldera. Współczynniki oraz zależność od `p` zweryfikowane.
 3. **Jednostajna wypukłość i metoda wariacyjna:** z `\|f-h\|_p≥ε` otrzymuje się dodatni ubytek normy środka, a ciąg minimalizujący energię jest Cauchy'ego. Sprawdzono również `Λ=0` i graniczny przypadek `R=0`.
 4. **Reprezentacja `(L^p)^*=L^q` (`1<p<∞`):** kontrola różniczkowania pod całką przez dominację, zastosowania zmian `v↦iv`, całkowalności funkcji reprezentującej i jednoznaczności. Nie jest używane twierdzenie Radona–Nikodyma.
 5. **Reprezentacja `(L^1)^*=L^∞` przy `σ`-skończoności:** kontrola funkcji wagowej `w>0` p.w., miary skończonej `P=wμ`, reprezentacji Hilbertowskiej, oszacowania `|g|≤\|Λ\|` oraz przejścia z funkcji obciętych do `L^1(μ)`.
