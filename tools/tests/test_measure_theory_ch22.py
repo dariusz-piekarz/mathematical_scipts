@@ -9,6 +9,7 @@ import math
 import re
 import unittest
 from pathlib import Path
+from fractions import Fraction
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "chapters/pl/measure_theory/22-zbieznosc-miar-twierdzenie-portmanteau-i-zwartosc-prochorowa.tex"
@@ -95,6 +96,30 @@ class TestMeasureTheoryChapter22(unittest.TestCase):
             self.assertAlmostEqual(pn * n, 1)  # First moment remains 1.
         # The limit delta_0 has first absolute moment zero.
         self.assertEqual(0, 0 * 1.0)
+
+    def test_nonattained_infimum_in_prokhorov_selection(self):
+        # On {0, 1}, rho_j({0}) = a + 1/(4*j).
+        # The infimum is a, but no member realizes it.
+        a = Fraction(3, 4)
+        b = Fraction(7, 8)
+        for j in range(1, 101):
+            p = a + Fraction(1, 4*j)
+            self.assertGreater(p, a)
+            self.assertLessEqual(p, 1)
+            if j >= 3:
+                self.assertLess(p, b)
+        source = SOURCE.read_text(encoding="utf-8")
+        self.assertIn(r"$\rho_k(V_{m,k})<1-\varepsilon2^{-m-2}$", source)
+        self.assertIn(r"\ge1-\varepsilon/2>1-\varepsilon", source)
+
+    def test_compact_cutoffs_detect_escaping_mass(self):
+        for R in (1, 2, 5, 20):
+            cutoff = lambda x: max(0, min(1, R+1-abs(x)))
+            self.assertTrue(all(cutoff(x) == 1 for x in range(-R, R+1)))
+            self.assertTrue(all(cutoff(n) == 0 for n in range(R+1, R+20)))
+        source = SOURCE.read_text(encoding="utf-8")
+        self.assertIn(r"\mu([-R,R])\le\int f_R", source)
+        self.assertIn(r"\mu(\mathbb R)=0", source)
 
     def test_tex_structure_and_new_counterexample(self):
         source = SOURCE.read_text(encoding="utf-8")
