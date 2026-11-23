@@ -1,0 +1,77 @@
+name: Graph and knot theory - full book global audit
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - 'chapters/pl/graph_and_knot_theory/**'
+      - 'books/pl/graph_and_knot_theory.tex'
+      - 'tools/tests/test_graph_and_knot_global.py'
+      - '.github/workflows/graph-and-knot-global-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  structural-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Audit all chapter sources, labels, cross-references and duplicated text
+        run: python3 tools/tests/test_graph_and_knot_global.py --strict
+      - name: Upload structural audit JSON (also if errors found)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: graph-and-knot-global-structure
+          if-no-files-found: warn
+          path: audit_output/graph_knot_global_audit.json
+
+  full-book-pdf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install full Polish TeX support and TikZ
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-lang-polish texlive-pictures lmodern poppler-utils
+      - name: Compile the real 44-chapter book three times
+        run: |
+          mkdir -p audit_output
+          cd books/pl
+          trap 'test ! -f graph_and_knot_theory.log || cp graph_and_knot_theory.log ../../audit_output/graph_and_knot_full_book.log' EXIT
+          for pass in 1 2 3; do
+            echo "Compiling complete book, pass $pass"
+            pdflatex -interaction=nonstopmode -halt-on-error \
+              -file-line-error graph_and_knot_theory.tex \
+              > "../../audit_output/graph_and_knot_full_pass$pass.txt" 2>&1 || {
+                echo "Full compilation failed at pass $pass"
+                tail -n 80 "../../audit_output/graph_and_knot_full_pass$pass.txt"
+                exit 1
+              }
+          done
+          test -s graph_and_knot_theory.pdf
+          pdfinfo graph_and_knot_theory.pdf > ../../audit_output/graph_and_knot_full_pdfinfo.txt
+          pdftotext -layout graph_and_knot_theory.pdf ../../audit_output/graph_and_knot_full_layout.txt
+          grep -E 'Overfull|Underfull|LaTeX Warning|Package .* Warning' \
+            graph_and_knot_theory.log > ../../audit_output/graph_and_knot_full_warnings.txt || true
+          echo "Full PDF successfully built; inspect reported warnings."
+          grep -E 'Pages:|Page size:' ../../audit_output/graph_and_knot_full_pdfinfo.txt
+          echo "Warnings (count):"
+          wc -l < ../../audit_output/graph_and_knot_full_warnings.txt
+      - name: Upload full book PDF and validation logs, including failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: graph-and-knot-complete-book-audit
+          if-no-files-found: warn
+          path: |
+            books/pl/graph_and_knot_theory.pdf
+            audit_output/graph_and_knot_full_*.txt
+            audit_output/graph_and_knot_full_*.log
