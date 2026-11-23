@@ -4,7 +4,7 @@
 **Gałąź:** biblioteka-matematyczna-iteracja-6.  
 **Źródło:** chapters/pl/functional_analysis/12-klasyczne-przestrzenie-banacha-i-ich-duale.tex.  
 **SHA przed zmianami:** 0b858ed0ee8309ce1aa7925bfb3e4de92e71a0f3.  
-**SHA po zmianach:** 090fd502097cbc3d7531b8af95005d1525ccf019.  
+**SHA po wszystkich poprawkach 12/01:** 923f7976d09f42030687a8873401cf34da4ff2fb.  
 **Werdykt:** **AUDYT Z POPRAWKAMI, NIESTABILNY 0/2.** Rozdział 13 pozostaje zablokowany.
 
 ## Stan wejściowy
@@ -40,12 +40,25 @@ Przejrzano też osobny przykład nadmiarowych funkcjonałów $(L^\infty)'$ oraz 
 - W dowodzie reprezentacji dodatniego funkcjonału jawnie wykazano $\mu^*(U)=m(U)$ i $\mu^*(K)=T(\chi_K)<\infty$.
 - Przed zastosowaniem Höldera w dowodzie Minkowskiego dopisano $\lvert f+g\rvert^p\le2^{p-1}(\lvert f\rvert^p+\lvert g\rvert^p)$, aby uzasadnić całkowalność odpowiedniej potęgi sumy.
 
-**Commit źródła:** 9edb7d5f5eae107864f6c93cde76ede87c372971. **Końcowy blob SHA:** 090fd502097cbc3d7531b8af95005d1525ccf019.
+**Commit źródła:** 9edb7d5f5eae107864f6c93cde76ede87c372971. **Blob SHA po korektach terminologii i dowodów:** 090fd502097cbc3d7531b8af95005d1525ccf019; **ostateczny blob po naprawie składni:** 923f7976d09f42030687a8873401cf34da4ff2fb.
 
 ## Struktura, odsyłacze i bramki techniczne
 
 Pobrano wszystkie 12 plików źródłowych: **221 etykiet bez duplikatów**, w tym **19 etykiet rozdziału 12** i **5 odsyłaczy rozdziału 12, wszystkie rozwiązane**. Wszystkie środowiska 12 są sparowane: **10 proof**, **4 definicja**, **2 stwierdzenie**, **5 twierdzenie**, **3 lemat**, **2 przyklad**, **2 uwaga**. Nie ma rysunków TikZ w tym rozdziale.
 
-Dodano **17 testów regresyjnych** w tools/tests/test_functional_analysis_ch12.py, obejmujących: numeryczne modele Höldera, testy izometrii funkcjonałów, skończone modele miar i wariacji, tożsamość dyskretyzacji warstwowej, oznaczenia, strukturę środowisk i rozwiązanie odsyłaczy w kontekście 01–12. Dodano dedykowany workflow .github/workflows/functional-analysis-ch12.yml, który rzeczywiście uruchamia testy, kompiluje 12 plików LaTeX i weryfikuje PDF i logi. **Nie deklaruje się ostatecznego sukcesu CI przed bezpośrednim sprawdzeniem wyniku.**
+Dodano początkowo **17 testów regresyjnych**, a po diagnostyce kompilacji rozszerzono zestaw do **18 testów** w tools/tests/test_functional_analysis_ch12.py, obejmujących: numeryczne modele Höldera, testy izometrii funkcjonałów, skończone modele miar i wariacji, tożsamość dyskretyzacji warstwowej, oznaczenia, strukturę środowisk i rozwiązanie odsyłaczy w kontekście 01–12. Dodano dedykowany workflow .github/workflows/functional-analysis-ch12.yml, który rzeczywiście uruchamia testy, kompiluje 12 plików LaTeX i weryfikuje PDF i logi. **Nie deklaruje się ostatecznego sukcesu CI przed bezpośrednim sprawdzeniem wyniku.**
 
 **Decyzja:** **12/01 Z POPRAWKAMI — 0/2**. Kolejny audyt 12/02 powinien niezależnie przejrzeć ten sam blob, zweryfikować złożony PDF i usunąć ewentualne usterki. Rozdział 13 pozostaje zablokowany do zamknięcia 12.
+
+
+## Uzupełnienie 12/01: diagnostyka CI, poprawka składni i faktyczny PDF
+
+Pierwszy dedykowany przebieg [#45247874812](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45247874812) zakończył się **FAILURE**. Testy regresyjne były zielone, lecz kompilacja LaTeX zatrzymała się na wierszu 347 rozdziału 12 z komunikatem „Missing $ inserted”. Z rzeczywistego logu kompilacji (pobranego z artefaktu GitHub Actions) ustalono, że w uwadze o przestrzeni sprzężonej $(L^\infty(\mu))'$ zabrakło końcowego znacznika trybu matematycznego. Wprowadzono poprawkę składni, commit e60beaa15645dcae08b6668a9a2aaae602c8bda0. Ostateczny blob źródła to **923f7976d09f42030687a8873401cf34da4ff2fb**.
+
+Do pliku tools/tests/test_functional_analysis_ch12.py dodano test bilansowania znaczników matematycznych w akapitach LaTeX. Nowy zestaw zawiera **18 testów**, blob SHA a3d6007eb6ded526358b5a02fccd943bd8c2f4a5, commit 567d84238ca18c6df1c5d7fdeb69586c03339c7f. Tego testu nie rozluźniano mimo nieudanego wcześniejszego CI.
+
+Nowy rzeczywisty przebieg [GitHub Actions #45248566903](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45248566903) zakończył się **COMPLETED/SUCCESS**: **18/18 testów PASS**, przygotowanie kontekstu 01–12 PASS, kompilacja LaTeX PASS, weryfikacja PDF i odsyłaczy PASS oraz publikacja artefaktu PASS. Ukończony sukcesem jest również [przebieg #45248672491](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45248672491), wyzwolony zapisaniem późniejszego audytu 12/02 (bez zmiany LaTeX).
+
+Pobrano faktyczny artefakt functional-analysis-ch12-pdf z runu #45248566903 i obejrzano wygenerowany dokument **72 strony**, z rozdziałem 12 na końcu strony 66 i stronach 67–72. Wykonano zbiorczy podgląd stron 61–72 z właściwym kontekstem rozdziału 11. Kontrola PyMuPDF wszystkich stron 61–72 nie wykazała żadnego bloku tekstowego wychodzącego poza prostokąt strony. Oględziny nie wskazują kolizji podpisów, obciętych wzorów ani tekstu nachodzącego na marginesy. Kontrola graficzna i techniczna nie stanowi formalnego dowodu twierdzeń.
+
+**Ostateczny werdykt 12/01: Z POPRAWKAMI, 0/2**, przy zielonym CI po naprawie źródła. Nowy audyt 12/02 (utworzony niezależnie przez automatyzację) dotyczy ostatecznego SHA **923f7976d09f42030687a8873401cf34da4ff2fb**; nie wymagał zmian źródła i może stanowić pierwszy z dwóch czystych audytów stabilizacyjnych, o ile następny audyt potwierdzi brak nieujawnionej usterki. Rozdział 13 nadal zablokowany.
