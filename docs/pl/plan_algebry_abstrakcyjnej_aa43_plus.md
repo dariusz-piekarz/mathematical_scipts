@@ -84,3 +84,10 @@ Na podstawie prośby o kontynuację po stabilnym AA-46 przyjęto **ograniczony, 
 ## Otwarcie AA-48 — 23 listopada 2026 r.
 
 Po AA-47 STABILNY i nowym poleceniu „kontynuuj” rozpoczęto **AA-48 — Wymierna gałąź algorytmu Kovacica dla potencjałów wymiernych**. Zakres w docs/pl/zakres_aa48_kovacic_wymierny.md; różni się od AA-47 uogólnieniem z wielomianowego q na q wymierne, z pełną analizą części głównych i nieskończoności. Wymagane audyty I–III, niezależne testy, pełny CI i przegląd każdej strony PDF. **AA-48 w audycie, NIE STABILNY** do spełnienia bramek. AA-49 nieotwarty.
+
+
+## Zamknięcie AA-48 — 23 listopada 2026 r.
+
+**AA-48: STABILNY w ograniczonym, dokładnie udowodnionym zakresie** — kompletna pierwsza gałąź Kovacica dla dowolnego q∈C(x), czyli algorytm istnienia wymiernego rozwiązania Riccatiego. Audyty I–III, zwłaszcza audits/abstract_algebra/ch48_iteration_03.md; uzupełnienie po drugim audycie obejmuje przykład jednoczesnego bieguna ustalonego i ruchomego. Pozostałe gałęzie algebraiczne ogólnego Kovacica nie są objęte tym werdyktem.
+
+**Końcowy GitHub Actions:** https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45172784971, commit 666027e7fd7764ade14c38fc5ac8518b4f04bf4d — success 88/88. Testy 12/12 + 9/9 PASS. Integralność 48 rozdziałów, 992 unikatowe etykiety, 501 odsyłaczy, 0 braków. Końcowy PDF 310 stron; AA-48 na stronach PDF 305–310, wszystkie przejrzane, brak błędów i ostrzeżeń LaTeX. Historyczne raporty AA-01–AA-42 niezmienione. **AA-49 nie rozpoczęto.**

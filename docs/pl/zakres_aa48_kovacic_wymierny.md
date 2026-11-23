@@ -2,7 +2,7 @@
 
 **Data:** 23 listopada 2026 r.
 **Po stabilizacji:** AA-47 — Algorytmy Rischa i Kovacica.
-**Zakres przyjęty na podstawie polecenia „kontynuuj”:** pierwsza gałąź algorytmu Kovacica dla q wymiernego, czyli kompletny test rozwiązań wymiernych równania Riccatiego. Status: W AUDYCIE, NIE STABILNY.
+**Zakres przyjęty na podstawie polecenia „kontynuuj”:** pierwsza gałąź algorytmu Kovacica dla q wymiernego, czyli kompletny test rozwiązań wymiernych równania Riccatiego. Status: STABILNY w opisanym zakresie; końcowy raport: audits/abstract_algebra/ch48_iteration_03.md, CI #45172784971.
 
 ## Główne rezultaty wymagane
 
@@ -17,3 +17,8 @@
 ## Granice i następny rozdział
 
 To pełna procedura dla r w C(x) przy q w C(x), a nie pełny algorytm Kovacica. AA-49 pozostaje nieotwarty do decyzji o zakresie.
+
+
+## Zamknięcie
+
+Audyty I–III zakończone, 12/12 testów SymPy oraz 9/9 niezależnych Fraction PASS, pełny CI 88/88 SUCCESS, ostateczny 310-stronicowy PDF bez błędów, sześć stron AA-48 obejrzanych. AA-49 nieotwarty.
