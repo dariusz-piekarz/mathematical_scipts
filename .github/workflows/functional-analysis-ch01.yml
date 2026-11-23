@@ -1,0 +1,68 @@
+name: Functional analysis - chapter 01 audit
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - 'chapters/pl/functional_analysis/01-przestrzenie-liniowo-topologiczne-definicje-i-przyklady.tex'
+      - 'books/pl/functional_analysis.tex'
+      - 'tools/tests/test_functional_analysis_ch01.py'
+      - 'audits/functional_analysis/**'
+      - '.github/workflows/functional-analysis-ch01.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit-ch01:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test chapter structure, labels, examples, and terminology
+        run: python3 tools/tests/test_functional_analysis_ch01.py
+      - name: Prepare standalone document from the canonical book preamble
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          book = Path("books/pl/functional_analysis.tex").read_text(encoding="utf-8")
+          assert book.count(r"\begin{document}") == 1
+          preamble = book.split(r"\begin{document}", 1)[0]
+          content = preamble + r"""
+          \begin{document}
+          \input{../../chapters/pl/functional_analysis/01-przestrzenie-liniowo-topologiczne-definicje-i-przyklady.tex}
+          \end{document}
+          """
+          Path("books/pl/functional_analysis_ch01_ci.tex").write_text(content, encoding="utf-8")
+          PY
+      - name: Compile Chapter 01 with two LaTeX passes
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: functional_analysis_ch01_ci.tex
+          working_directory: books/pl
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - name: Verify PDF, references, and critical formatting issues
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq poppler-utils
+          test -s books/pl/functional_analysis_ch01_ci.pdf
+          test -s books/pl/functional_analysis_ch01_ci.log
+          if grep -E 'Undefined control sequence|There were undefined references|LaTeX Warning: (Reference|Citation).*undefined|Overfull \\hbox|Missing character' books/pl/functional_analysis_ch01_ci.log; then
+            echo 'Chapter 01 audit failed: LaTeX diagnostics reported above.'
+            exit 1
+          fi
+          pdfinfo books/pl/functional_analysis_ch01_ci.pdf
+          pdftotext -layout books/pl/functional_analysis_ch01_ci.pdf books/pl/functional_analysis_ch01_ci.txt
+          grep -q 'Przestrzenie liniowo-topologiczne' books/pl/functional_analysis_ch01_ci.txt
+      - name: Upload chapter PDF and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: functional-analysis-ch01-pdf
+          path: |
+            books/pl/functional_analysis_ch01_ci.pdf
+            books/pl/functional_analysis_ch01_ci.log
+            books/pl/functional_analysis_ch01_ci.txt
+          if-no-files-found: warn
