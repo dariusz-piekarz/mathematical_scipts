@@ -292,6 +292,34 @@ class LeanCatalogTests(unittest.TestCase):
         self.assertFalse(data["certificate"])
 
 
+    def test_l14_draft_tex_changed_after_catalog_downgrades_draft(self):
+        # A draft is navigable, but must not remain current if its actual
+        # canonical TeX changes after catalogue construction.
+        tex = self.set_l14_canonical_file()
+        self.save_manifest()
+        original = lean_catalog.list_formalizations
+
+        def change_draft_source_after_catalog(*args, **kwargs):
+            catalogue = original(*args, **kwargs)
+            self.assertEqual((catalogue["draft"], catalogue["stale"]), (1, 0))
+            self.assertEqual(catalogue["items"][0]["statement_status"],
+                             "needs_review")
+            tex.write_text(SOURCE + "% altered after catalogue\n", encoding="utf-8")
+            return catalogue
+
+        with patch.object(lean_chapter_report.lean_catalog,
+                          "list_formalizations",
+                          side_effect=change_draft_source_after_catalog):
+            data = lean_chapter_report.chapter_report(self.con, "LST-01",
+                                                      lean_root=self.root)
+        self.assertEqual((data["ready"], data["draft"], data["stale"],
+                          data["statement_approved"]), (0, 0, 1, 0))
+        self.assertEqual(data["items"][0]["index_status"],
+                         "unverifiable_canonical_source")
+        self.assertEqual(data["items"][0]["formalization_status"], "stale")
+        self.assertEqual(data["items"][0]["statement_status"], "needs_review")
+        self.assertFalse(data["certificate"])
+
     def test_l14_manifest_approval_revoked_after_catalog_is_stale(self):
         self.item.update(source_document_sha256=self.digest,
                          statement_status="approved")
