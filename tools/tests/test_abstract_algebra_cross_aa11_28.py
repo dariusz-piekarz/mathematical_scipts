@@ -94,7 +94,13 @@ class EisensteinCyclotomicInterface(unittest.TestCase):
                     # If p does not divide m, Phi_m divides squarefree
                     # X^m-1 in F_p[X]; thus it is itself squarefree.
                     self.assertEqual(h.gcd(h.diff()).degree(), 0)
-                    expected_gcd_degree = (exponent-1)*h.degree()
+                    # If k>=2, exponent is divisible by p and the
+                    # derivative of h**exponent vanishes identically.
+                    # Otherwise the gcd equals h**(exponent-1).
+                    expected_gcd_degree = (
+                        reduced.degree() if exponent % p == 0
+                        else (exponent-1)*h.degree()
+                    )
                     self.assertEqual(reduced.gcd(reduced.diff()).degree(),
                                      expected_gcd_degree)
                     self.assertEqual(
