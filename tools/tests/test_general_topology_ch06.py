@@ -216,9 +216,9 @@ for env in ('twierdzenie','stwierdzenie','definicja','przyklad','wniosek','uwaga
     assert text.count(r'\begin{' + env + '}') == text.count(r'\end{' + env + '}')
 assert not re.search(r'\b(unia|kofinita|tensorowanie|sekwencyjn[yae])\b',text,re.I)
 
-# Visual regression: in Figure 6.1 the epsilon marker and the label
-# "wyrazy dalsze" used to overlap in the compiled PDF.  Check
-# their vertical separation in the TikZ source (TikZ units: cm).
+
+# Visual regression: the epsilon marker and the "wyrazy dalsze" label
+# used to overlap in Figure 6.1. Verify their vertical separation in cm.
 figure = re.search(
     r'\\begin\{figure\}[\s\S]*?\\label\{fig:topog-ciag-kula\}',
     text,
@@ -231,14 +231,12 @@ positions = {
         figure.group(0),
     )
 }
-assert r'$\varepsilonprint(f'PASS Ch. 06: filter/closure/sequence cases={filter_cases}, map/filter cases={map_checks}, '
-      f'local labels={len(labels)}, total labels={len(all_labels)}, refs={len(refs)}')
- in positions
-assert 'wyrazy dalsze' in positions
-eps_y = positions[r'$\varepsilonprint(f'PASS Ch. 06: filter/closure/sequence cases={filter_cases}, map/filter cases={map_checks}, '
-      f'local labels={len(labels)}, total labels={len(all_labels)}, refs={len(refs)}')
-][1]
-tail_y = positions['wyrazy dalsze'][1]
+eps_label = r"$\varepsilon$"
+assert eps_label in positions, positions
+assert "wyrazy dalsze" in positions, positions
+eps_y = positions[eps_label][1]
+tail_y = positions["wyrazy dalsze"][1]
 assert eps_y - tail_y >= 0.40, (eps_y, tail_y)
+
 print(f'PASS Ch. 06: filter/closure/sequence cases={filter_cases}, map/filter cases={map_checks}, '
       f'local labels={len(labels)}, total labels={len(all_labels)}, refs={len(refs)}')
