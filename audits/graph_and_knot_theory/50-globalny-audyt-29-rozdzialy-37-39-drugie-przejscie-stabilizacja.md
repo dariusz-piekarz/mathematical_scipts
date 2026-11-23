@@ -72,11 +72,144 @@ commit źródłowo-testowy `181b45395836c20f01e0040a2b3c9e5ffc1dc733`:
 Wykonano także wszystkie starsze moduły testowe,
 w tym niezależny audyt 28.
 
-## Bramka końcowego PDF — wymagane dalsze sprawdzenie
+## Końcowe bramki: dwa rzeczywiste zielone przebiegi — PASS
 
-Do pełnego zamknięcia drugiego przejścia należy potwierdzić:
-- `full-book-pdf = success` dla końcowego stanu plików źródłowych TeX, najlepiej dla run 45277041073;
-- rzeczywiste trzy przebiegi `pdflatex` i plik ostrzeżeń długości zero;
-- odczyt i oględziny wizualne wszystkich stron zawierających źródłowe rozdziały 37–39, w tym nowy przykład multigrafu, Johnsona i granicy perturbacji MST.
+### A. Matematyka, struktura i nowe regresje — PASS
 
-**Do czasu przejścia tej bramki nie przypisujemy blokowi 37–39 lokalnej stabilności.** W przypadku PASS stabilne będą lokalnie rozdziały 01–39; do audytowania pozostaną źródłowe rozdziały 40–44. Następna iteracja — audyt 30: pierwsze przejście rozdziałów 40–42.
+[GitHub Actions 45277041073](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45277041073), commit
+`181b45395836c20f01e0040a2b3c9e5ffc1dc733`:
+
+- **structural-audit = success**;
+- 44/44 rozdziały, 0 duplikatów etykiet,
+  0 niezwiązanych odsyłaczy,
+  0 błędów środowiskowych,
+  0 zabronionych terminów;
+- nowe testy dotyczące 37–39:
+  3780 multigrafów, 24 805 przypadków
+  usunięcia pojedynczej krawędzi,
+  18 900 przypadków usunięcia wierzchołka,
+  2241 grafów z prawidłowymi
+  odległościami Johnsona,
+  1119 grafów z wykrytym cyklem ujemnym,
+  67 389 porównań odległości
+  z niezależnym algorytmem Floyda–Warshalla,
+  18 585 wyliczonych lasów,
+  435 testów odporności
+  i 435 dokładnych remisów
+  na granicy `γ/2` — wszystkie PASS;
+- pierwsze niezależne regresje audytu 28
+  oraz starsze moduły również PASS.
+
+### B. Źródłowo identyczny pełny skład tomu — PASS
+
+[GitHub Actions 45276540727](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45276540727)
+uruchomiono dla **ostatniego commitu
+zmieniającego źródła LaTeX rozdziałów 37–39**:
+`21c0eecd6a7bf629a4689e4b7b3824285b161b4a`.
+Późniejsze zmiany dotyczyły **wyłącznie modułu
+testowego, workflow i raportu**.
+W tym przebiegu oba zadania,
+**structural-audit** i **full-book-pdf**,
+zakończyły się **success**.
+
+Pobrano i rozpakowano oficjalny
+artefakt GitHub Actions
+`graph-and-knot-complete-book-audit`
+**ID 14868796721**.
+W rzeczywistym artefakcie potwierdzono:
+
+- pliki wynikowe trzech kolejnych
+  kompilacji `pdflatex`;
+- końcowy PDF **295 stron A4**;
+- plik
+  `graph_and_knot_full_warnings.txt`
+  o długości **0 bajtów**;
+- plik diagnostyki układu i końcowy log.
+
+Odrębne zadanie **full-book-pdf**
+w przebiegu 45277041073 było jeszcze
+w toku podczas ostatniej kontroli,
+więc **nie przypisujemy mu
+przedwcześnie wyniku success**.
+Jest to dodatkowy przebieg dla
+niezmienionych plików źródłowych
+LaTeX, służący potwierdzeniu
+tych samych wyników.
+
+### C. Kontrola wizualna wszystkich stron 37–39 — PASS
+
+Na podstawie PDF z przebiegu B
+sprawdzono pozycję nowych rozdziałów
+w drukowanym tomie. Rozdziały
+**źródłowe 37–39** tworzą
+**rozdziały drukowane 6–8**,
+na stronach **PDF 42–63**.
+
+Rzeczywiście wyrenderowano
+i osobno obejrzano kontaktowe arkusze
+każdej ze stron **42–63**:
+
+- 42–49: źródłowy 37 —
+  BFS, DFS, kryteria mostów,
+  punkty artykulacji, nowa
+  poprawka dla krawędzi
+  równoległych (strony 47–48),
+  diagram warstw i algorytm DAG;
+- 50–57: źródłowy 38 —
+  Bellman–Ford, Dijkstra, A*,
+  nowy algorytm Johnsona
+  i przykład liczbowy
+  (strony 54–55),
+  dwukierunkowa Dijkstra
+  i hierarchie kontrakcji;
+- 58–63: źródłowy 39 —
+  własności przekroju i cyklu,
+  certyfikat MST, nowa
+  ilościowa luka optymalności
+  i przykład granicznej
+  perturbacji wag (strona 60),
+  Prim, Kruskal, DSU,
+  rysunek ważonego grafu.
+
+**Werdykt wizualny: PASS**.
+Nie zauważono uciętych
+wzorów, wychodzących poza
+margines elementów, nałożonych
+podpisów, naruszenia
+odstępów diagramów
+ani błędnej numeracji.
+Po przejściu do PDF strona 64
+rozpoczyna kolejny rozdział
+o przepływach, co potwierdza
+właściwy zakres stron kontroli.
+
+## Końcowy werdykt audytu 29
+
+**DRUGIE NIEZALEŻNE PRZEJŚCIE: PASS.**
+
+Rozdziały **37–39 uznaje się za
+LOKALNIE STABILNE** na podstawie
+obu audytów 28 i 29, realnych zmian
+matematycznych w trzech plikach,
+dwóch niezależnych zestawów
+regresyjnych, potrójnego składu
+źródłowo identycznego PDF
+i oględzin pełnych 22 stron bloku.
+
+Kontrola kodu Python, CI
+oraz wizualizacja PDF nie są
+formalistycznym poświadczeniem
+dowodów; ich rola to niezależne
+regresje algorytmiczne,
+kontrola spójności i
+jakości technicznej.
+
+**Stan całej książki: rozdziały
+01–39 lokalnie stabilne.**
+Do pierwszego i drugiego przejścia
+pozostały źródłowe rozdziały
+**40–44**. Następna iteracja:
+**audyt 30 — pierwsze szczegółowe
+przejście rozdziałów 40–42**.
+Globalny audyt 44 rozdziałów
+pozostaje otwarty.
