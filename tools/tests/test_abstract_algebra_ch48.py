@@ -121,7 +121,19 @@ class AA48RationalKovacicSympy(unittest.TestCase):
         self.assertTrue(equal(potential(u+s.diff(p,x)/p),q))
         self.assertTrue(equal(u+s.diff(p,x)/p,2/x))
 
-    def test_11_source_structure(self):
+    def test_11_movable_pole_with_fixed_singularity(self):
+        q=x*x-8*x+23-16/(x-1)+2/(x-1)**2
+        u=x-4+2/(x-1)
+        p=x-2
+        r=u+s.diff(p,x)/p
+        self.assertTrue(equal(potential(r),q))
+        self.assertTrue(equal(poly_equation(u,p,q),0))
+        self.assertEqual(p.subs(x,1),-1)
+        self.assertEqual(s.limit((x-2)*q,x,2),0)
+        self.assertEqual(s.limit((x-2)*r,x,2),1)
+        self.assertEqual(s.limit(q-s.diff(u,x)-u*u,x,s.oo),2)
+
+    def test_12_source_structure(self):
         data=SOURCE.read_text(encoding="utf-8")
         labels=re.findall(r"\\label\{([^}]+)\}",data)
         self.assertEqual(len(labels),len(set(labels)))

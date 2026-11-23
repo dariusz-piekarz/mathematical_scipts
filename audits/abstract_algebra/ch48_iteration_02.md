@@ -29,7 +29,7 @@ Te przypadki wyczerpują wszystkie możliwe części wielomianowe r. Skończono�
 
 Warunek P(a)≠0 dla biegunów q jest istotny. Dla q=2/x² i u=−1/x równanie P''+2uP'=0 ma rozwiązanie P=x³, ale P(0)=0: formalnie otrzymuje się r=−1/x+3/x=2/x, a zatem zmienia się wybrana gałąź residuum. Takie P musi zostać odrzucone w danej gałęzi, mimo że końcowa funkcja r jest poprawna (i powinna pojawić się w gałęzi R=2/x, P=1).
 
-Rozwiązania liniowego układu współczynników P tworzą afiniczną przestrzeń V. Warunek P(a)=0 jest podprzestrzenią afiniczną lub całym V. Jeżeli żaden z finitely many warunków P(a)=0 nie obejmuje całego V, to nad nieskończonym ciałem C istnieje wspólne P spełniające wszystkie nierówności P(a)≠0. Aby to rozstrzygnąć, można sprawdzić, czy każdy liniowy funkcjonał P↦P(a) znika identycznie na V. W ten sposób nie trzeba wybierać arbitralnego rozwiązania układu, które może przypadkiem być niedopuszczalne.
+Rozwiązania liniowego układu współczynników P tworzą afiniczną przestrzeń V. Warunek P(a)=0 jest podprzestrzenią afiniczną lub całym V. Jeżeli żaden ze skończenie wielu warunków P(a)=0 nie obejmuje całego V, to nad nieskończonym ciałem C istnieje wspólne P spełniające wszystkie nierówności P(a)≠0. Aby to rozstrzygnąć, można sprawdzić, czy każdy liniowy funkcjonał P↦P(a) znika identycznie na V. W ten sposób nie trzeba wybierać arbitralnego rozwiązania układu, które może przypadkiem być niedopuszczalne.
 
 ## 5. Przeliczone przykłady
 
@@ -49,3 +49,8 @@ Pierwszy audyt sprawdził definicje i dowód lokalny. Drugi niezależnie przelic
 - dopiero potem wystawić audyt III i ewentualny werdykt STABILNY.
 
 **AA-48 NIE STABILNY**, AA-49 nieotwarty.
+
+
+## Uzupełnienie po drugim audycie
+
+Dopisano przykład z **jednoczesnym biegunem ustalonym i ruchomym**: q=x²−8x+23−16/(x−1)+2/(x−1)², u=x−4+2/(x−1), P=x−2, r=u+P'/P. Sprawdzono q=u'+u²+2u P'/P+P''/P i P(1)≠0. Dodano test do zestawu SymPy. Przykład wyklucza potencjalnie błędny wniosek, że dla q z biegunami zawsze można przyjąć P=1.
