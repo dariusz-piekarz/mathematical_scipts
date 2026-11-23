@@ -61,7 +61,7 @@ def check_signed_quantization():
 def check_extended_halfline_tests():
     vals = (-math.inf, Fraction(-2), Fraction(0),
             Fraction(1, 2), math.inf)
-    cuts = (-3, -1, 0, 1, 2)
+    cuts = (-3, -1, Fraction(1, 4), 1, 2)
     checked = 0
     for triple in product(vals, repeat=3):
         signatures = [
