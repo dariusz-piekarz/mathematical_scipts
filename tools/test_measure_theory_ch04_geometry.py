@@ -95,9 +95,48 @@ def graph_cover_bound():
     assert flat_areas[-1] < Fraction(1, 5000)
     print("PASS Lipschitz graph: positive L, singleton and L=0 boundary cases")
 
+
+def affine_interval_regression():
+    """Exact 1D checks for negative scaling and endpoint conventions in R04.
+
+    The image of [a,b) under t<0 is (tb,ta], not [tb,ta).
+    Finite endpoints have zero Lebesgue measure, so an arbitrarily
+    small half-open enlargement gives the correct outer-measure bound.
+    """
+    intervals = [
+        (Fraction(-7, 3), Fraction(-1, 4)),
+        (Fraction(0), Fraction(5, 6)),
+        (Fraction(1, 9), Fraction(17, 8)),
+    ]
+    scales = (Fraction(-5, 2), Fraction(-1, 3), Fraction(1, 2), Fraction(7, 3))
+    shifts = (Fraction(-4, 7), Fraction(0), Fraction(11, 5))
+    cases = 0
+    for a, b in intervals:
+        assert a < b
+        for t in scales:
+            for shift in shifts:
+                image_a, image_b = shift+t*a, shift+t*b
+                lo, hi = min(image_a, image_b), max(image_a, image_b)
+                assert hi-lo == abs(t)*(b-a)
+                if t < 0:
+                    # Image of the half-open interval [a,b) is (lo,hi].
+                    # A half-open box [lo-eps,hi+eps) covers that image.
+                    for eps in (Fraction(1, 10), Fraction(1, 1000)):
+                        cover_a, cover_b = lo-eps, hi+eps
+                        assert cover_a < lo < hi < cover_b
+                        assert cover_b-cover_a == abs(t)*(b-a)+2*eps
+                else:
+                    # Positive scaling and translation preserve [a,b).
+                    assert image_a == lo and image_b == hi
+                cases += 1
+    assert cases == 36
+    print(f"PASS affine half-open interval regression: {cases} rational cases")
+
+
 if __name__ == "__main__":
     check_grid_volume()
     cantor_interval_stages()
     smith_volterra_cantor()
     cantor_function_non_absolute_continuity()
     graph_cover_bound()
+    affine_interval_regression()
