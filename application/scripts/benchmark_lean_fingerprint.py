@@ -64,7 +64,8 @@ OLEAN_TIME_BUCKETS = (
     "hashing_sorting_and_other",
 )
 OLEAN_IO_COUNTERS = (
-    "directories_visited", "stat_calls", "lstat_calls", "fstat_calls",
+    "directories_visited", "walk_files_seen", "olean_name_candidates",
+    "non_olean_names_skipped", "stat_calls", "lstat_calls", "fstat_calls",
     "olean_files_opened", "content_read_calls", "content_bytes_read",
 )
 
@@ -147,6 +148,14 @@ def _profile_olean_substeps(original, *args, **kwargs) -> tuple[str, dict]:
                     raise
                 timings["directory_scan"] += time.perf_counter() - started
                 counters["directories_visited"] += 1
+                # Derive name counts from this original os.walk result only.
+                # The exact name '.olean' has no Path suffix.
+                names = item[2]
+                candidates = sum(name.endswith(".olean") and name != ".olean"
+                                 for name in names)
+                counters["walk_files_seen"] += len(names)
+                counters["olean_name_candidates"] += candidates
+                counters["non_olean_names_skipped"] += len(names) - candidates
                 yield item
 
         return advance()
@@ -274,7 +283,8 @@ def benchmark(lean_root: Path, *, samples: int = 3) -> dict:
         "olean_io_samples": olean_counts,
         "olean_method": (
             "single original digest pass: os.walk advancement, Path.stat/lstat "
-            "and os.fstat, .olean open/read; remainder includes SHA256, sorting, "
+            "and os.fstat, .olean open/read; filename counters reuse os.walk " 
+            "results to count paths avoided; remainder includes SHA256, sorting, "
             "Python and probe overhead; no content or metadata checks bypassed"
         ),
         "method": "perf_counter around original digest calls inside full fingerprint; no caching",
