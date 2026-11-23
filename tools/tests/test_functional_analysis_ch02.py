@@ -100,6 +100,48 @@ class Chapter02Audit(unittest.TestCase):
         self.assertEqual(preimages((1, 1)), (None, None))
         self.assertEqual(preimages((0, 0)), (0, 0))
 
+    def test_diagonal_quotient_norm_and_triangle(self):
+        # For M=span((1,1)) in Euclidean R^2, dist((a,b), M)=|a-b|/sqrt(2).
+        from itertools import product
+        for a, b in product(range(-3, 4), repeat=2):
+            quotient_norm = abs(a-b) / math.sqrt(2)
+            closest = (a+b)/2
+            self.assertTrue(math.isclose(
+                math.hypot(a-closest, b-closest), quotient_norm,
+                rel_tol=1e-12, abs_tol=1e-12,
+            ))
+            for t in (-7, -1, 0, 0.5, 2, 8):
+                self.assertLessEqual(
+                    quotient_norm, math.hypot(a-t, b-t)+1e-12
+                )
+        for a, b, c, d in product(range(-2, 3), repeat=4):
+            left = abs((a+c)-(b+d))
+            right = abs(a-b) + abs(c-d)
+            self.assertLessEqual(left, right)
+
+    def test_nonclosed_subspace_has_nonseparating_quotient_seminorm(self):
+        # x=(2^-n)_{n>=1} belongs to l2 but not c00.
+        # Its distance to c00 is zero, because finite truncations converge.
+        tail_norms = [
+            math.sqrt((4.0**(-(n+1)))/(1-0.25))
+            for n in range(1, 40)
+        ]
+        self.assertTrue(all(v > 0 for v in tail_norms))
+        self.assertTrue(all(x > y for x, y in zip(tail_norms, tail_norms[1:])))
+        self.assertLess(tail_norms[-1], 1e-10)
+
+    def test_product_functional_requires_finitely_many_coordinates(self):
+        indices = tuple(range(5))
+        for number in range(len(indices)):
+            for restricted in combinations(indices, number):
+                j = next(i for i in indices if i not in restricted)
+                # No coordinate constraint on j can control L(x)=3*x_j.
+                for scale in (1.0, 10.0, 100.0):
+                    vector = {j: scale}
+                    self.assertTrue(all(vector.get(i, 0) == 0
+                                        for i in restricted))
+                    self.assertGreater(abs(3*vector[j]), 1)
+
     def test_direct_sum_topologies_e_n(self):
         # In product topology e_n converges coordinatewise to 0,
         # whereas the seminorm p_(1,1,...) has value 1.
