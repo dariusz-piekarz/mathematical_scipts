@@ -31,18 +31,29 @@ Dwa widoczne znaki zapytania w PDF (strony 4 i 7) to oczekiwane konsekwencje dw�
 
 ## 3. Nowa, rzeczywista kontrola integracyjna w CI
 
-W istniejącym workflow `.github/workflows/measure-theory-ch01.yml` dodano **osobny** job `chapter-01-book-reference-context`. Job nie audytuje merytorycznie pozostałych rozdziałów: kompiluje istniejący `books/pl/measure_theory.tex` w trzech przebiegach `pdflatex`, sprawdza niepustość PDF, obecność `\\newlabel{ch:miary-wlasnosci}` w pliku AUX, brak ostrzeżeń o niezdefiniowanych odsyłaczach i powielonych etykietach w końcowym logu, treść obu tytułów rozdziałów przez `pdftotext` oraz metadane przez `pdfinfo`. Pełny PDF, log i diagnostyka są przesyłane jako osobny artefakt, także gdy kompilacja się nie powiedzie. Dotychczasowy job pojedynczego rozdziału pozostaje bez zmian.
+W istniejącym workflow `.github/workflows/measure-theory-ch01.yml` dodano **osobny** job `chapter-01-book-reference-context`. Job nie audytuje merytorycznie pozostałych rozdziałów: kompiluje istniejący `books/pl/measure_theory.tex` w trzech przebiegach `pdflatex`, sprawdza niepustość PDF, obecność `\newlabel{ch:miary-wlasnosci}` w pliku AUX, brak ostrzeżeń o niezdefiniowanych odsyłaczach i powielonych etykietach w końcowym logu, treść obu tytułów rozdziałów przez `pdftotext` oraz metadane przez `pdfinfo`. Pełny PDF, log i diagnostyka są przesyłane jako osobny artefakt, także gdy kompilacja się nie powiedzie. Dotychczasowy job pojedynczego rozdziału pozostaje bez zmian.
 
 - Commit workflow: **`f5ffba344ef79383cecdab0543e03b2f8193f6f6`**.
 - Ponowny odczyt z GitHub potwierdził blob SHA workflow **`bb2185dfd62ab5f6bb8edf7417445a84a2e68729`** i obecność nowego joba.
-- GitHub Actions automatycznie uruchomił przebieg **[45130982570](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45130982570)**; w ostatnim sprawdzeniu stan **`in_progress`**, bez wyniku końcowego. **Nie twierdzimy, że pełna książka się już skompilowała.**
+- Pierwszy przebieg pełnej walidacji [45130982570](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45130982570) **rzeczywiście skompilował książkę trzema przebiegami**: 256 stron A4, 1 877 150 bajtów, brak ostrzeżeń o niezdefiniowanych odsyłaczach, powielonych etykietach oraz brak `Overfull \\hbox`. Job zakończył się jednak niepowodzeniem na błędnym teście tytułu rozdziału 02 (`właściwości` zamiast prawidłowego `własności`). Pobrano jego pełny artefakt `14797438662` i ustalono przyczynę na podstawie logu oraz tekstu PDF. **Nie był to błąd LaTeX ani matematyki.**
+- Poprawiono dokładnie ten test w workflow; commit **`4d392a223fab3d5f23cb840bf2801a4ce812e934`**.
+- Ponowne uruchomienie **[45131257517](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45131257517)** (commit `4d392a223fab3d5f23cb840bf2801a4ce812e934`) zakończyło się **`completed/success` w obu jobach**: izolowany `chapter-01` i `chapter-01-book-reference-context`. Odczytano również log joba pełnej książki: **256 stron, 1 877 150 bajtów**, artefakt **`14797284681`**. Sprawdzenie `\newlabel{ch:miary-wlasnosci}`, zawartości obu tytułów i braku niezdefiniowanych odsyłaczy przeszło poprawnie.
+- W pobranym PDF pełnej książki (z pierwszego buildu, na niezmienionych źródłach) rozdział 01 zajmuje strony fizyczne **12–17** (drukowane 1–6), a rozdział 02 zaczyna się na stronie fizycznej **18**. Programowa inspekcja potwierdziła **dwa aktywne hiperłącza z R01 do strony 18**, po jednym na stronach fizycznych 14 i 17. Na wszystkich sześciu stronach R01 w pełnej książce liczba `??` wynosi **zero**, a liczba bloków tekstu wychodzących poza stronę także **zero**. Widok stron 14 i 17 osobno potwierdza zastąpienie `??` numerem rozdziału `2`.
 
 Źródło rozdziału 01 oraz źródła R02–R31 pozostały niezmienione.
 
-## 4. Rozstrzygnięcie i następna iteracja
+## 4. Końcowy status rozdziału 01 — STABILNY
 
-**Status R01: niezależne czyste kontrole matematyczne utrzymane, izolowany PDF — wizualnie sprawdzony i poprawnie złożony, pełna poprawność odsyłaczy — OCZEKUJE na wynik nowego joba. Formalny status: JESZCZE NIEUSTABILIZOWANY.**
+**Rozdział 01 „Rodziny zbiorów i przestrzenie mierzalne” ZOSTAŁ USTABILIZOWANY w ramach przyjętego protokołu.**
 
-Jest to rzeczywista, mierzalna iteracja: pobrano i obejrzano 7/7 stron, oceniono 100 bloków tekstowych (0 poza stroną), zidentyfikowano lokalizacje dwóch oczekiwanych `??` i wdrożono nowy, automatycznie uruchomiony job walidacji pełnej książki. W tej iteracji nie zmieniano treści matematycznej, więc nie resetuje ona serii niezależnych czystych audytów.
+Uzasadnienie certyfikacji:
+1. Ostatnia poprawka merytoryczna R01 została wykonana w audycie IV; audyty V, VI, VII, VIII i późniejsze kontrole techniczne nie wykazały nowych usterek tekstu. Zachowano wszystkie 19 etykiet i 12 odsyłaczy, bez zmiany ich nazw.
+2. Niezależna wizualna kontrola wszystkich **7/7** stron izolowanego PDF: bez obciętych wzorów i kolizji; **100** bloków tekstowych, **0** poza stroną.
+3. Końcowa pełna książka z **31 rozdziałami** została rzeczywiście złożona w **3 przebiegach `pdflatex`**, **256 stron A4**, bez ostrzeżeń o niezdefiniowanych odsyłaczach i etykietach oraz bez `Overfull \\hbox`. Jest to **kontrola integracji i referencji R01**, a nie merytoryczny audyt R02–R31.
+4. Dwa zewnętrzne odsyłacze R01 do `ch:miary-wlasnosci` zostały zweryfikowane zarówno w `.aux`, jak i w prawdziwym PDF jako aktywne hiperłącza prowadzące do rozdziału 02.
+5. Ponownie uruchomiony CI [45131257517](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45131257517) zakończył **oba joby sukcesem**, potwierdzono status API i log.
+6. Zasady redakcyjne `AGENTS.md` i `docs/pl/standardy_terminologiczne.md` nadal obowiązują; R01 używa `\chi_A`. Potencjalne opcjonalne wzbogacenia (np. zastąpienie powtórzonego przykładu `\chi_{\mathbb Q}`) pozostają tylko propozycjami i nie blokują stabilności.
 
-**Następnie:** odczytać końcowy wynik joba `chapter-01-book-reference-context`; jeżeli się nie powiedzie, poprawić rzeczywistą przyczynę w zakresie kontrolowanego rozdziału lub jego narzędzi bez zmieniania niesprawdzonych rozdziałów; jeśli się powiedzie, pobrać pełny PDF, potwierdzić rozwiązanie obu odsyłaczy R01 i podjąć decyzję o finalnej stabilizacji. Dopiero w odrębnej późniejszej iteracji rozpocząć rozdział 02.
+**Zakres certyfikacji:** wyłącznie rozdział 01 w aktualnym stanie blob `a7c8610bf1eb9e4612e96df9f038679af4d4d2fb`. Ewentualna późniejsza zmiana źródła R01 wymaga ponownej weryfikacji. Nie zatwierdza to matematycznej poprawności pozostałych rozdziałów książki.
+
+**Następna iteracja:** rozpocząć osobny audyt rozdziału 02, powtarzany aż do jego stabilizacji. Nie wykonywać w tej samej iteracji audytu R02.
