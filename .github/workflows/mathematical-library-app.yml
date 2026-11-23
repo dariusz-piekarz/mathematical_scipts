@@ -9,6 +9,16 @@ on:
       - "chapters/pl/**"
       - ".github/workflows/mathematical-library-app.yml"
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      candidate_sha:
+        description: "Full immutable commit SHA to test"
+        required: true
+        type: string
+      validation_pass:
+        description: "Independent validation pass ID"
+        required: true
+        type: string
 
 jobs:
   index-and-test:
@@ -18,6 +28,8 @@ jobs:
         working-directory: application
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha || github.sha }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
@@ -67,8 +79,23 @@ jobs:
             application/data/unresolved_reference_triage.md
             application/data/chart_terminology.json
           if-no-files-found: warn
-      - name: Run application regression tests
-        run: python -W default -m unittest discover -s tests -q
+      - name: Run application regression tests and classify every skip
+        env:
+          ATLAS_CANDIDATE_SHA: ${{ inputs.candidate_sha || github.sha }}
+          ATLAS_VALIDATION_PASS: ${{ inputs.validation_pass || 'standalone' }}
+        run: |
+          python -W default scripts/atlas_ci_report.py \\
+            --start tests \\
+            --output data/report.json \\
+            --candidate-sha "$ATLAS_CANDIDATE_SHA" \\
+            --pass-id "$ATLAS_VALIDATION_PASS"
+      - name: Upload named unittest and skip evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-unittest-${{ inputs.validation_pass || 'standalone' }}
+          path: application/data/report.json
+          if-no-files-found: warn
       - name: Compile-check browser smoke scripts
         run: python -m py_compile tests/browser_ci_e2e.py tests/browser_e2e.py tests/browser_workspace_e2e.py
       - name: Install Chromium for browser smoke test
