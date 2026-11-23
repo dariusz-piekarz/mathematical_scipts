@@ -58,3 +58,22 @@ W trakcie tej iteracji odczyt statusów po commicie `08d5d630...` zwrócił pust
 Aby zamknąć 40–42 i uznać rozdziały źródłowe 01–42 za lokalnie stabilne, trzeba uzyskać na końcowym SHA sukces `structural-audit` z nowym krokiem, sukces `full-book-pdf`, brak błędów odsyłaczy i ostrzeżeń kompilacji oraz rzeczywistą kontrolę stron poprawionego rozdziału 40. Nie zamykać audytu 31 na podstawie samego uruchomienia lokalnego.
 
 Dopiero po stabilizacji przejść do pierwszego szczegółowego audytu pozostałych rozdziałów źródłowych 43–44. Globalny audyt wszystkich 44 rozdziałów jest nadal otwarty.
+
+
+## Kontynuacja audytu 31 — regresja hipotez w źródle (2026-11-23)
+
+W kolejnym przebiegu wykryto ryzyko w samym mechanizmie testów: poprzednia enumeracja potwierdzała poprawne twierdzenie o drógach w podgrafie dodatnich przepustowości, lecz nie wykrywałaby przypadkowego usunięcia tego ograniczenia z pliku LaTeX. Jest to regresja jakości kontroli, a nie kolejny błąd dowodu.
+
+**Zastosowane zabezpieczenie:** w istniejącym teście drugiego przejścia dodano funkcję \`verify_source_hypotheses()\`. W czasie wykonywania CI otwiera ona rzeczywisty plik źródłowy rozdziału 40, izoluje twierdzenie \`thm:tg-flow-integral-paths\` i wymaga:
+- jawnego założenia \`k=|f|≥0\`;
+- definicji \`D_+\` i ograniczenia do łuków o przepustowości 1;
+- obu wystąpień ograniczenia w tezie o drogach i rozcinających łukach;
+- uzasadnienia w dowodzie, że nie wolno liczyć ścieżek korzystających z łuków o przepustowości 0.
+
+**Commit zabezpieczenia:** \`556587924ede7975e2339cd2190f82770c2f1fdc\`.
+
+**Rzeczywista weryfikacja wykonana w tej iteracji:** uruchomiono niezależny pakiet dokładnych testów z lokalnej kopii pliku — 4564 kontroli dróg/przekrojów, 1099 kontroli ekstremalnych i 3288 przypadków modelu \`G(n,p)\`, wszystkie PASS. Następnie przeprowadzono lokalne uruchomienie rozszerzonego pakietu w *syntetycznej strukturze repozytorium*, na reprezentatywnym fragmencie TeX zawierającym wymagane hipotezy; nowa kontrola źródła również PASS. Niezależnie przez konektor GitHub odczytano **prawdziwy źródłowy rozdział 40** na istniejącej gałęzi i sprawdzono obecność wszystkich wymaganych fragmentów — komplet PASS. Test na fragmencie syntetycznym **nie jest** równoznaczny z przebiegiem CI na całej książce.
+
+**Pozostaje otwarte:** sprawdzenie rzeczywistych przebiegów GitHub Actions typu push i wyników obu jobów dla commitu z nowymi testami, pełny 44-rozdziałowy PDF, kontrola ostrzeżeń, odsyłaczy i oględziny zmienionych stron. Narzędzie do odczytu przebiegów po SHA udostępnia wyłącznie przebiegi PR, dlatego pusta lista nie daje żadnego wniosku o statusie przepływu uruchamianego przez push.
+
+**Werdykt bez zmian: audyt 31 W STABILIZACJI.** Nie rozpoczynać audytu rozdziałów 43–44 przed zamknięciem bramki jakości dla 40–42.
