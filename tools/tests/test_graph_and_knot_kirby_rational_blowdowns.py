@@ -187,10 +187,10 @@ def casson_harer_boundary_kernel():
         assert ker=={(p*j)%n for j in range(p)}
         assert set(k%p for k in range(n))==set(range(p))
         # Kernel is self-orthogonal for linking coefficient (p-1)/p².
-        assert all((a*b*(p-1))%n==0 for a in ker for b in ker)
-        assert all(
-            all((x*k*(p-1))%n==0 for k in ker)==(x%p==0)
-            for x in range(n))
+        # Orthogonality to a cyclic subgroup is checked on its generator p.
+        assert (p*p*(p-1))%n==0
+        orth={x for x in range(n) if (x*p*(p-1))%n==0}
+        assert orth==ker
         total+=1
     return total
 
