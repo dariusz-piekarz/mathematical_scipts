@@ -107,8 +107,9 @@ def source_anchors():
     assert r"\label{lem:tg-sw12-clifford-real-iso}" in c
     for source in (a,b,c):
         assert "konciąg" not in source
-        assert "sekwencja" not in source.lower()
-        assert "sekwencji" not in source.lower()
+        # Check *complete words*: "konsekwencja" contains this substring.
+        import re
+        assert not re.search(r"\bsekwencja\b|\bsekwencji\b",source.lower())
         assert "Każda ciąg" not in source
     assert r"\ref{lem:tg-sw12-clifford-real-iso}" in c
 
