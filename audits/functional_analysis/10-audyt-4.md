@@ -55,3 +55,9 @@ Dedykowany plik regresyjny `tools/tests/test_functional_analysis_ch10.py` zawier
 ## Decyzja przed ostatnią bramką CI
 
 **Merytorycznie rozdział 10 spełnia warunek stabilizacji 2/2:** niezależne audyty **10/03 i 10/04** są czyste, wykonane na **identycznym blobie `2ea6b36366c8ec4dc1d2ecf8192fae1054c841b0`**, bez zmian źródła lub testów. **Techniczne zamknięcie 10 wymaga jeszcze potwierdzenia zielonego CI uruchomionego przez raport 10/04.** Po jego sukcesie rozdział 11 może być przedmiotem następnej iteracji, ale nie wcześniej.
+
+## Zakończenie CI i formalne zamknięcie rozdziału 10
+
+Po zapisaniu raportu 10/04 wykonano dedykowane przebiegi [#45224512698](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45224512698) i [#45224548863](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45224548863) dla wersji źródła `2ea6b36366c8ec4dc1d2ecf8192fae1054c841b0` oraz niezmienionych 13 testów. **Oba przebiegi: COMPLETED / SUCCESS.** W najnowszym potwierdzono wszystkie kroki: **13/13 testów PASS**, przygotowanie kontekstu rozdziałów 01–10 PASS, kompilacja LaTeX PASS, automatyczna kontrola PDF/odsyłaczy PASS, publikacja artefaktu PASS. Zawartość źródła nie zmieniła się między audytami **10/03 i 10/04**.
+
+**Decyzja: ROZDZIAŁ 10 STABILNY — 2/2 niezależnych czystych audytów identycznego LaTeX + zielone CI.** Wynik CI nie jest formalną weryfikacją matematyczną; poprawność treści oceniono oddzielnie w audytach. **Od następnej iteracji wolno rozpocząć rozdział 11**, zachowując rytm audyt → poprawki → dwa czyste przeglądy → zielone CI.
