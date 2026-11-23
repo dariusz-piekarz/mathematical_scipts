@@ -108,3 +108,10 @@ Po stabilnym AA-48 i poleceniu „kontynuuj” rozpoczęto **AA-49 — kwadratow
 ## Otwarcie AA-50 — 23 listopada 2026 r.
 
 Po stabilnym AA-49 i poleceniu „kontynuuj” rozpoczęto **AA-50 — Trzeci przypadek algorytmu Kovacica i skończone grupy Galois**. Plan szczegółowy i granice dowodu: `docs/pl/zakres_aa50_kovacic_skonczone_grupy.md`. Dowody własne: rekurencja dla P_i i wielomianu F, równanie transportowe, pierwiastki F jako rozwiązania Riccatiego. Wyłącznie jako klasyczne wyniki cytowane: konieczne lokalne listy E_c i E∞, kompletność algorytmu i grupy A4, S4, A5. Własny dokładny przykład czworościenny, dwa zestawy regresji. **AA-50 w audycie, NIE STABILNY** do dwóch niezależnych audytów, testów, pełnego CI i oględzin każdej nowej strony PDF. AA-51 nieotwarty.
+
+
+## Zamknięcie AA-50 — 23 listopada 2026 r.
+
+**AA-50 STABILNY w ustalonym zakresie**. Zrealizowano trzeci przypadek Kovacica: skończone grupy Galois (projektywnie A4,S4,A5) i parametry n=4,6,12, rekurencja P_i oraz poprawność odzyskiwania algebraicznych rozwiązań Riccatiego z wielomianu F. Pełny dowód równania transportowego i pierwiastków F jest samodzielny; wyczerpujące lokalne listy oraz klasyfikacja grup pozostają jawnie cytowanymi klasycznymi twierdzeniami. Przykłady czworościenny, ośmiościenny, dwudziestościenny, każdy z P_{−1}=0, dokładnie zweryfikowane.
+
+**Raport końcowy:** `audits/abstract_algebra/ch50_iteration_03.md` (po audytach I i II). **CI:** https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45184219678 — 92/92 SUCCESS na commicie 4103a830163f9abcebca492d26e58f33e9784f82. **Testy:** 13/13 SymPy + 12/12 Fraction. **Integralność:** 50 rozdziałów, 1042 etykiety, 564 odsyłacze, 0 brakujących. **PDF:** 322 strony, AA-50 na stronach 317–322, wszystkie obejrzano; log bez błędów/ostrzeżeń. W repozytorium istnieją niezależne, jawnie odnotowane diagnostyki innych skryptów; nie przypisano ich AA-50. Historyczne AA-01–AA-49 pozostają nienaruszone. **AA-51 nieotwarty.**

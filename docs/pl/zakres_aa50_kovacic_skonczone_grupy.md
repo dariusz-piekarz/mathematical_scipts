@@ -2,7 +2,7 @@
 
 **Data:** 23 listopada 2026 r.
 **Poprzedni etap:** AA-49 STABILNY.
-**Status:** W AUDYCIE, NIE STABILNY.
+**Status:** STABILNY w opisanym zakresie — raport III: audits/abstract_algebra/ch50_iteration_03.md, końcowy CI #45184219678.
 **Źródło:** chapters/pl/abstract_algebra/50-trzeci-przypadek-kovacica-i-skonczone-grupy-galois.tex.
 
 ## Zatwierdzony zakres bieżącej iteracji
@@ -20,3 +20,8 @@
 Samodzielne dowody rekurencji i odzyskiwania pierwiastków nie są niezależnym dowodem wyczerpującej klasyfikacji lokalnej, algebry niezmienników A4/S4/A5 ani pełnego twierdzenia Picarda–Vessiota. Nie przypisujemy typu grupy Galois wyłącznie faktowi, że rekurencja n=4 znalazła rozwiązanie: może on wystąpić również w wcześniejszych gałęziach. Model efektywny musi obsługiwać rozkład wielomianów i testy równości; nie twierdzimy, że ogólna implementacja CAS jest w tym zakresie kompletna.
 
 **AA-51 nieotwarty.**
+
+
+## Zamknięcie
+
+Audyty I–III, 13/13 symbolicznych i 12/12 niezależnych testów wymiernych PASS; CI 92/92 SUCCESS na commicie 4103a830163f9abcebca492d26e58f33e9784f82. PDF 322 strony, AA-50 strony 317–322 obejrzane; log bez błędów i ostrzeżeń. Klasyczna kompletność lokalna i grupy A4, S4, A5 pozostają jawnie cytowanymi twierdzeniami. AA-51 nieotwarty.

@@ -45,3 +45,8 @@ Zależności innych skryptów w ogólnym zadaniu „Validate chapter dependencie
 ## 6. Bramka zamknięcia
 
 AA-50 pozostaje **NIE STABILNY**, dopóki nie będzie zielonego CI na ostatnich źródłach, poprawnych obu zestawów AA-50, kontrolnej kompilacji 50-rozdziałowej książki i oględzin wszystkich nowych stron. Trzeci audyt i decyzja o AA-51 dopiero po zakończeniu tych kontroli.
+
+
+## Uzupełnienie po finalnym przeglądzie
+
+Rozdział rozszerzono o samodzielną definicję prymitywności dwuwymiarowej reprezentacji i lemat o wykładnikach indycjalnych α(α−1)=b, z pełnym dowodem przy biegunach podwójnych i przy nieskończoności. Pierwsza naprawa testu stopnia funkcji wymiernej poprawiła asercję dla q=x, jednak identyczny błąd pozostał w teście q=x+5/(16x²); drugą asercję naprawiono w commicie e352973ce00948876f325f899867186b9cf47147. Wszystkie trzy przykłady n=4,6,12 pozostają potwierdzone przez SymPy i Fraction. Końcowy CI #45184219678 oraz PDF opisano w audycie III: audits/abstract_algebra/ch50_iteration_03.md.
