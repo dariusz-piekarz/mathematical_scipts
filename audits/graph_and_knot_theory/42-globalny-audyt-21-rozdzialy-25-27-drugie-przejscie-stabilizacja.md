@@ -177,19 +177,101 @@ istnienia wymiernej kuli homologii
 ani twierdzeń klasyfikujących
 czterorozmaitości.
 
-## CI i ostatnia bramka
+## Końcowy przebieg CI i kontrola złożonego tomu
 
-Zmiany źródłowe i nowe regresje
-zapisano na istniejącej gałęzi.
-Pozostaje potwierdzić końcowe
-uruchomienie pełnego workflow
-wraz z trzykrotnym składem
-44-rozdziałowego tomu oraz
-inspekcją stron 25–27.
-Dopiero po tej kontroli
-można uznać rozdziały **25–27**
-za lokalnie stabilne.
+Po wszystkich poprawkach rozdziałów 25–27 oraz
+aktualizacji testu końcowy przebieg
+[GitHub Actions 45222364768](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45222364768),
+dla commitu źródłowego
+`906a180e1f6f1638c73b67d28c2ea63b98fbb482`,
+zakończył **oba zadania** ze statusem **success**:
+`structural-audit` i `full-book-pdf`.
 
-Globalny audyt całego
-44-rozdziałowego tomu
-pozostaje otwarty.
+Potwierdzono:
+- **44/44** źródła rozdziałów;
+- **0** powtórzonych etykiet,
+  **0** nierozwiązanych odsyłaczy,
+  **0** błędów środowisk,
+  **0** terminów niedozwolonych;
+- **10 686** dokładnych przypadków
+  w sześciu grupach testów rozdziałów
+  25–27, **wszystkie PASS**;
+- **trzy udane przebiegi `pdflatex`**
+  na wszystkich 44 rozdziałach;
+- rzeczywisty PDF z **282 stronami A4**;
+- plik `graph_and_knot_full_warnings.txt`
+  pusty (**0 bajtów**), bez ostrzeżeń
+  LaTeX i zgłoszonych przepełnień.
+
+Pobrano PDF z **tego przebiegu**, nie starszy
+artefakt. Wygenerowano renderingi i
+sprawdzono wizualnie **wszystkie strony
+210–227**, czyli cały blok:
+
+- **210–214:** rozdział 25 —
+  poprawiony lemat `slam-dunk`,
+  obydwie kontrakcje `±1`,
+  nowy kontrprzykład postaci Smitha,
+  rysunek grafu i podpisy;
+- **215–221:** rozdział 26 —
+  konfiguracja `C_p`, rysunki
+  `C_2,C_3,C_4`, ciąg dokładny
+  wypełnienia, warunek normalnego
+  generowania `π1(W)`, diagram
+  wymiany `C_p` na `B_p`;
+- **222–227:** rozdział 27 —
+  ułamki łańcuchowe, grafy
+  `C_{5,1},C_{5,2}`, przykład
+  `C_{7,3}`, uogólnione
+  kryterium `π1`, rozróżnienie
+  izometrii form splecenia
+  i dyfeomorfizmu przestrzeni
+  soczewkowych, diagram sklejenia.
+
+Nie wykryto na tych stronach
+uciętych wzorów, naruszeń marginesów,
+nachodzenia tekstu na rysunki
+ani błędów łamania podpisów.
+Kontrola wizualna dotyczy
+renderingu po **ostatniej**
+zmianie w rozdziale 27.
+
+## Werdykt audytu 21
+
+**ROZDZIAŁY 25–27 — LOKALNIE STABILNE (PASS).**
+
+Dwa szczegółowe przejścia, audyty
+20 i 21, doprowadziły do:
+- naprawy fałszywej hipotezy
+  o wymiernym `slam-dunk`;
+- naprawy nieuprawnionego
+  wniosku o postaci Smitha;
+- ścisłego kryterium prostej
+  spójności po wymiernej kontrakcji;
+- rozróżnienia kanonicznych
+  współczynników form splecenia,
+  izometrii całych form i
+  klasyfikacji przestrzeni
+  soczewkowych;
+- niezależnej regresji
+  arytmetycznej i homologicznej,
+  trzykrotnej kompilacji
+  pełnego tomu i inspekcji
+  rzeczywistego PDF.
+
+Twierdzenia geometryczne
+Cassona–Harera, Kirby'ego,
+Fintushela–Sterna, Parka i
+Symington pozostają jawnie
+przyjęte z literatury.
+Testy nie są ich
+formalną weryfikacją.
+
+**Stan tomu: rozdziały 01–27 lokalnie stabilne.**
+**Następny etap: audyt 22,
+pierwsze przejście rozdziałów 28–30**,
+następnie ich drugi audyt
+przed dalszą rozbudową.
+Całościowy audyt wszystkich
+44 rozdziałów pozostaje
+otwarty.
