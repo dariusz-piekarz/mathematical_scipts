@@ -148,3 +148,29 @@ python tools/tests/test_abstract_algebra_cross_aa19_24_confirming.py
 Przeprowadzono lokalnie kontrolę składu **wszystkich 36 stron** AA-19–AA-24, na podstawie ostatniego wcześniej zakończonego z sukcesem artefaktu PDF, włączając rysunek AA-24. Oględziny nie ujawniły widocznych kolizji i ucięć. Dopiero potwierdzony wynik nowego GitHub Actions oraz porównanie z pobranym z niego artefaktem PDF pozwalają oznaczyć bieżącą iterację jako ostatecznie stabilną.
 
 **Wstępny werdykt merytoryczny:** nie stwierdzono konieczności zmian sześciu plików źródłowych. **AA-X08 nie zostaje jeszcze uznany za zamknięty**, dopóki jego nowe testy, pełna kompilacja książki i rzeczywisty artefakt nie przejdą potwierdzonych kontroli końcowych.
+
+
+## 7. Potwierdzenie końcowe — AA-X08 STABILNY
+
+Pełny workflow [GitHub Actions 45139250570](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45139250570) uruchomiony na commicie `283f1bb2e2382e880c7282c5443f60f5fc507b4f` zakończył się faktycznym statusem **completed/success**. W zadaniu walidacyjnym wszystkie **68/68 kroków** zakończyły się poprawnie, a w szczególności niezależnie potwierdzono:
+- `Run AA-X08 finite-field trace norm and Galois confirmation` — **success**;
+- `Run AA-X08 independent quintic and solvability confirmation` — **success**;
+- `Compile AA-01 to AA-42 book with latexmk` — **success**;
+- `Verify PDF and references (no undefined refs)` — **success**;
+- `Archive build output` — **success**.
+
+**Pobrano rzeczywisty artefakt GitHub Actions:** `abstract-algebra-aa01-aa42`, ID **14800912734**, ZIP z plikami `abstract_algebra.pdf` (dokładnie **2 024 014 B**, **269 stron**, SHA-256 `a896891a672d97cb742f6fe33b75b5a1e63ebd6c118efbcb0687bc2abc9c87a8`) oraz `abstract_algebra.log` (**45 293 B**). PDF nie wymaga naprawy struktury (`is_repaired=False`).
+
+**Analiza logu oryginalnego artefaktu:** **0** `LaTeX Warning`, **0** `hyperref Warning`, **0** `LaTeX Error`, **0** `Overfull/Underfull \hbox`, **0** `Overfull/Underfull \vbox`, **0** niezdefiniowanych odsyłaczy i **0** komunikatów sugerujących ponowne przeliczenie odsyłaczy.
+
+**Kontrola wizualna:** obejrzano wszystkie **36 stron** AA-19–AA-24 ze stabilnego poprzedniego PDF (również rysunek grafu transpozycji w AA-24). Dla każdej strony wykonano porównanie z nowym, faktycznym artefaktem CI na poziomie pikseli przy rozdzielczości 72 dpi oraz warstwy tekstowej:
+- AA-19: strony PDF **142–146** (5 stron);
+- AA-20: strony PDF **147–152** (6 stron);
+- AA-21: strony PDF **153–158** (6 stron);
+- AA-22: strony PDF **159–163** (5 stron);
+- AA-23: strony PDF **164–170** (7 stron);
+- AA-24: strony PDF **171–177** (7 stron).
+
+Wynik: **36/36 identycznych obrazów**, **36/36 identycznych tekstów**, **0** bloków tekstowych poza granicami strony. Nie stwierdzono widocznych kolizji wzorów, obcięć ani błędów rysunku. To pozwala uznać wykonane oględziny za odnoszące się do finalnego wydania tego workflow.
+
+**Werdykt końcowy:** **AA-X08 STABILNY w badanym zakresie przekrojowym.** Dwa niezależne zestawy kontroli (**2136 + 22 656 = 24 792 PASS**), przegląd zależności dowodowych, kontrola **130** unikatowych etykiet i **88** odsyłaczy, kompletne CI oraz bezusterkowa inspekcja PDF nie wykazały potrzeby korekt matematycznych źródeł AA-19–AA-24. Przejście do kolejnego niepowtarzającego się bloku globalnego audytu jest uzasadnione. Nie oznacza to jeszcze formalnej weryfikacji całego tomu.
