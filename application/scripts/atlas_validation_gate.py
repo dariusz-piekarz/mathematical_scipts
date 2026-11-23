@@ -130,10 +130,16 @@ def evaluate(
                 and all(isinstance(c, str) and c.strip() for c in review["checks"])
                 and review.get("critical_findings") == []
                 and review.get("independent") is True):
-            review_state = "documented_approved"
+            # This JSON has no cryptographic signature, GitHub-protected
+            # reviewer identity or independently verified approval channel.
+            # It is useful as a review *claim*, never as proof of independence.
+            review_state = "documented_unverified"
         else:
             problems.append("skeptical review record invalid or not approved")
-    status = "blocked" if problems else ("stable" if review_state == "documented_approved" else "stabilizing")
+    # No in-repository JSON may unilaterally promote a fragment to stable.
+    # Stability requires an independently authenticated reviewer decision
+    # recorded by a trusted, protected approval process outside this gate.
+    status = "blocked" if problems else "stabilizing"
     return {
         "schema": 1,
         "candidate_sha": sha,
@@ -144,8 +150,9 @@ def evaluate(
         "skeptical_review": review_state,
         "problems": problems,
         "certificate": False,
-        "policy": ("2+1 on immutable SHA; independent skeptical review documented "
-                   "separately; no Lean/LaTeX semantic certification"),
+        "policy": ("2+1 on immutable SHA; unverified review JSON cannot "
+                   "grant stable; requires separately authenticated independent "
+                   "review and manual advancement; no Lean/LaTeX certificate"),
     }
 
 
