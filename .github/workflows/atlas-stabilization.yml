@@ -149,6 +149,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ needs.prepare.outputs.sha }}
+      - name: Checkout review record from the control commit, not the audited candidate
+        if: ${{ needs.prepare.result == 'success' }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: .atlas-control
       - name: Download named outcomes for every independent pass
         if: ${{ needs.prepare.result == 'success' }}
         uses: actions/download-artifact@v4
@@ -166,7 +172,7 @@ jobs:
           LEAN_RESULT: ${{ (needs.lean_1.result == 'success' && needs.lean_2.result == 'success' && needs.lean_3.result == 'success') && 'success' || 'failure' }}
           SKEPTIC_RESULT: ${{ needs.skeptical_contract.result }}
         run: |
-          python application/scripts/atlas_validation_gate.py gate --sha "$CANDIDATE_SHA" --fragment "$FRAGMENT" --reports .atlas-evidence --application "$APP_RESULT" --native "$NATIVE_RESULT" --lean "$LEAN_RESULT" --skeptic "$SKEPTIC_RESULT" --output application/data/atlas_validation_status.json
+          python application/scripts/atlas_validation_gate.py gate --sha "$CANDIDATE_SHA" --fragment "$FRAGMENT" --reports .atlas-evidence --review .atlas-control/application/config/atlas_skeptical_review.json --application "$APP_RESULT" --native "$NATIVE_RESULT" --lean "$LEAN_RESULT" --skeptic "$SKEPTIC_RESULT" --output application/data/atlas_validation_status.json
       - name: Upload explicit non-certificate status
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
