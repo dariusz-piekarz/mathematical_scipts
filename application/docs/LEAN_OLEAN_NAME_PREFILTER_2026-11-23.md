@@ -35,3 +35,11 @@ Po sprawdzeniu powyższego CI wykonać niezależne, powtarzalne porównanie czas
 - To **metryka zakresu filtrowania**, a nie bezpośredni pomiar przyspieszenia. Nie wyciągać procentowego zysku czasu na podstawie samych liczników.
 - Poprzednia zmiana `c64983d7` przeszła pełne CI aplikacji [45142363332](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45142363332), Lean-fast [45142363338](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45142363338) i Windows [45142363458](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45142363458). Pinned Lean+Mathlib [45142363347](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45142363347) nie miał jeszcze końcowego wyniku w chwili rozpoczęcia tej iteracji.
 - Własne zmiany diagnostyki to commity `b279c518`, `fd58593c`. Ich wyniki CI należy ocenić osobno; nie deklarować stabilizacji przed `completed/success` i porównaniem nowego `ci_fingerprint_benchmark.json` z poprzednim profilem na przypiętym Mathlib.
+
+## Potwierdzenie realnego Mathlib po poprzednim etapie (09:00 UTC, 23.11.2026)
+
+- [Lean + Mathlib #45142363347](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45142363347), SHA `c64983d7`: kroki kompilacji z kontrolą aksjomatów, test rzeczywistego `MetaM` oraz pomiar trzech fingerprintów zakończyły się sukcesem.
+- Trzy pełne fingerprinty: `0.513163 s`, `0.495617 s`, `0.500735 s`; mediana `0.500735 s`. Skan `.olean` miał medianę `0.427738 s`.
+- Każda próbka obejmowała `1127` katalogów, `352` otwarcia plików `.olean` oraz `67100584` bajty odczytu. `stat_calls=16984`, `lstat_calls=8871`, `fstat_calls=352` w profilerze.
+- Podczas weryfikacji nowego licznika, [szybkie testy #45143070328](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45143070328) na SHA `fd58593c` uzyskały `completed/success` dla Linux i Windows. Pełne CI oraz nowe pinned Mathlib dla tego SHA były jeszcze uruchomione; nie przypisywać im sukcesu przed zakończeniem.
+- Benchmark poprzedniej optymalizacji wykonano na osobnym runnerze; porównanie samych median między uruchomieniami nie daje wiarygodnego procentowego zysku. Dane zapisano jako bazę do dalszych pomiarów, a nie jako dowód przyspieszenia.
