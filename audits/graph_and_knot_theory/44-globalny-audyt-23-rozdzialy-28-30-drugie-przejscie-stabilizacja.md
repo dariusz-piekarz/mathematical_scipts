@@ -200,29 +200,79 @@ W CI należy zawsze sprawdzać
 (aktualnie `15bade78d69f5a4ca0f61450900d45b0d34a1e43`),
 a nie wynik wcześniejszej wersji źródeł.
 
-## Bramka końcowa audytu 23
+## Końcowe potwierdzenie CI i składu pełnego tomu
 
+**Po wszystkich poprawkach matematycznych i po włączeniu
+niezależnych testów** przebieg
 [GitHub Actions 45229804811](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45229804811)
-ma już wynik `structural-audit=success`.
-Log potwierdza:
-**44/44** rozdziały, **0** duplikatów etykiet,
-**0** niezwiązanych odsyłaczy,
-**0** błędów środowiska i
-**0** terminów zakazanych;
-wszystkie **29 430** przypadków nowego
-modułu są `PASS`.
+dla commitu źródłowego
+`15bade78d69f5a4ca0f61450900d45b0d34a1e43`
+zakończył się **success** w obu zadaniach:
+`structural-audit` i `full-book-pdf`.
 
-Zamknięcie audytu wymaga jeszcze
-końcowego `full-book-pdf=success`,
-trzech przebiegów `pdflatex`,
-pustego pliku ostrzeżeń
-i wizualnego przeglądu
-nowych stron rozdziałów 28–30.
+Z logu zadania strukturalnego:
+- **44/44** katalogowe rozdziały;
+- **0** duplikatów etykiet;
+- **0** niezwiązanych odsyłaczy;
+- **0** błędów środowiskowych i **0** terminów zakazanych;
+- wszystkie **29 430** regresji audytu 23: **PASS**;
+- dodatkowo bez regresji wykonano pełne
+  wcześniej ustabilizowane pakiety kontrolne
+  i **89 906** przypadków audytu 22.
 
-**Dopóki te warunki nie są spełnione,
-rozdziały 28–30 pozostają w stabilizacji.**
-W razie powodzenia: lokalna stabilizacja
-rozdziałów 01–30; następnie audyt 24
-(pierwsze przejście 31–33).
-Całościowy audyt 44-rozdziałowego
-tomu pozostaje otwarty.
+W końcowym zadaniu `full-book-pdf`:
+- **trzy udane wykonania `pdflatex`** dla wszystkich 44 rozdziałów;
+- wynikowy **285-stronicowy PDF A4**;
+- plik `audit_output/graph_and_knot_full_warnings.txt`
+  ma **0 bajtów** — brak ostrzeżeń i przekroczeń pól tekstowych.
+
+Pobrano artefakt **14847491447** z ostatniego,
+właściwego przebiegu CI. Przegląd wizualny
+wszystkich stron PDF **228–250**
+wykonano na wyrenderowanych rzeczywistych stronach:
+- **228–233**: rozdział 28 (drukowany numer 35),
+  wraz z nowym kryterium dla sfery o kwadracie
+  `−4`, przeszkodą modulo 4 i przykładem `E(4)`;
+- **234–241**: rozdział 29 (drukowany numer 36),
+  wraz z nowym lematem o rodzinie przecinającej
+  ścianę, formułą `6π−t` i wykresem komór;
+- **242–250**: rozdział 30 (drukowany numer 37),
+  wraz z macierzą symbolu na stronie **245**,
+  wnioskiem o determinantach, rachunkami
+  Hodge'a, schematem kraty okresów,
+  transwersalnością i rysunkiem półprostej
+  modelu Kuranishiego.
+
+Nie znaleziono obciętych wzorów,
+nakładających się tekstów i grafik,
+źle położonych podpisów
+ani naruszeń marginesów.
+Nowe fragmenty potwierdzono również
+w tekstowym wyciągu **z końcowego PDF**,
+nie jedynie w plikach źródłowych.
+
+## Werdykt audytu 23
+
+**ROZDZIAŁY 28–30 — LOKALNIE STABILNE (PASS).**
+
+Dwa niezależne przejścia (audyty 22 i 23)
+zawierały rzeczywiste, różne uzupełnienia
+matematyczne, pełne dowody dostępnych
+tożsamości, oddzielnie zadeklarowane
+zewnętrzne twierdzenia analityczne,
+**119 336 dokładnych testów** dwóch
+modułów, sukces CI i rzeczywistą
+wizualną kontrolę składów PDF.
+
+Status ten oznacza stabilność według
+przyjętej procedury audytowej —
+nie formalny dowód twierdzeń Fredholma,
+Atiyaha–Singera, Sarda–Smale'a, Taubesa,
+Fintushela–Sterna ani niezmienników SW
+przez samą kompilację LaTeX lub testy.
+
+**Rozdziały 01–30: lokalnie stabilne.
+Następny etap: audyt 24, pierwsze
+szczegółowe przejście rozdziałów 31–33.**
+Globalny audyt całego tomu
+44 rozdziałów pozostaje otwarty.
