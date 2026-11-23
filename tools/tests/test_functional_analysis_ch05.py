@@ -165,6 +165,42 @@ class FunctionalAnalysisChapter05(unittest.TestCase):
             ]
             self.assertTrue(all(x >= y for x,y in zip(tails,tails[1:])))
 
+    def test_compact_seminorm_excludes_empty_supremum_ambiguity(self):
+        self.assertIn("niepustego", self.chapter)
+        self.assertIn(r"p_K=0", self.chapter)
+        # A finite compact set K={0,1/2,1} in [0,1]:
+        # p_K is subadditive and absolutely homogeneous.
+        positions = (0.0, 0.5, 1.0)
+        f = [t*t for t in positions]
+        g = [1-t for t in positions]
+        p = lambda v: max(map(abs, v))
+        self.assertLessEqual(p([a+b for a, b in zip(f,g)]),
+                             p(f)+p(g)+1e-12)
+        for scalar in (-3, 0, 0.25, 2):
+            self.assertAlmostEqual(
+                p([scalar*val for val in f]),
+                abs(scalar)*p(f))
+
+    def test_frechet_completeness_reference_is_explicit(self):
+        self.assertIn(
+            r"Zupełność wykażemy w Twierdzeniu~\ref{thm:smooth-complete}",
+            self.chapter)
+        self.assertNotIn("Zupełność wykażemy w następnym stwierdzeniu",
+                         self.chapter)
+        self.assertIn(r"\label{thm:smooth-complete}", self.chapter)
+
+    def test_minkowski_boundary_and_nonzero_condition(self):
+        # The gauge of A = {(x,y): x^2/4 + y^2 < 1} is
+        # sqrt(x^2/4+y^2). Points scaled by it lie on the boundary.
+        points = ((3, 0), (1, 2), (-1, 1.3), (0, 0.1))
+        for x, y in points:
+            gauge = math.hypot(x/2, y)
+            self.assertGreater(gauge, 0)
+            xx, yy = x/gauge, y/gauge
+            self.assertAlmostEqual((xx/2)**2+yy**2, 1)
+        # This formula must not be applied to kernel elements.
+        self.assertIn(r"p_A(x)>0", self.chapter)
+
     def test_quotient_seminorm_balls_and_local_convexity(self):
         # Linear quotient of R^2 by horizontal axis identifies with R.
         norm = lambda vector: abs(vector[1])
