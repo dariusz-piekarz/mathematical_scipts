@@ -6,7 +6,7 @@
 
 ## 1. Twierdzenie przekrojowe i pełny dowód
 
-Niech \(f(X)=X^4+aX^3+bX^2+cX+d\in\mathbb Z[X]\) będzie moniczny i mieć cztery różne pierwiastki nad \(\mathbb Q\). Niech \(r_f(Y)=Y^3-bY^2+(ac-4d)Y-(a^2d+c^2-4bd)\) będzie rezolwentą z AA-34. Dla liczby pierwszej \(p\) takiej, że \(p\nmid\operatorname{disc}(f)\), rozkłady \(\overline f\in\mathbb F_p[X]\) i \(\overline{r_f}\in\mathbb F_p[Y]\) na nierozkładalne czynniki są rozdzielcze. Jeżeli typ stopni czynników \(\overline f\) wynosi \(\lambda\), to typ stopni czynników \(\overline{r_f}\) jest równy \(\rho_*(\lambda)\), gdzie \(\rho:S_4\to S_3\) jest działaniem na trzech rozkładach czteroelementowego zbioru na dwie pary, a jego wartości są następujące:
+Niech \(f(X)=X^4+aX^3+bX^2+cX+d\in\mathbb Z[X]\) będzie moniczny i będzie miał cztery różne pierwiastki nad \(\mathbb Q\). Niech \(r_f(Y)=Y^3-bY^2+(ac-4d)Y-(a^2d+c^2-4bd)\) będzie rezolwentą z AA-34. Dla liczby pierwszej \(p\) takiej, że \(p\nmid\operatorname{disc}(f)\), rozkłady \(\overline f\in\mathbb F_p[X]\) i \(\overline{r_f}\in\mathbb F_p[Y]\) na nierozkładalne czynniki są rozdzielcze. Jeżeli typ stopni czynników \(\overline f\) wynosi \(\lambda\), to typ stopni czynników \(\overline{r_f}\) jest równy \(\rho_*(\lambda)\), gdzie \(\rho:S_4\to S_3\) jest działaniem na trzech rozkładach czteroelementowego zbioru na dwie pary, a jego wartości są następujące:
 
 | Typ \(\overline f\) | Typ \(\overline{r_f}\) | Uzasadnienie |
 |---|---|---|
