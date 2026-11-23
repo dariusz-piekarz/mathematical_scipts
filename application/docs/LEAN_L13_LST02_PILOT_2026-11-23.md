@@ -193,3 +193,11 @@ własnej walidacji na nowym niezmiennym SHA; do jej zakończenia
 nie twierdzić, że ma 3/3 PASS. Sam audyt tekstu i nawet udana
 kompilacja nie zastępują odrębnej niezależnej recenzji semantycznej.
 `statement_status=needs_review`, `certificate=false`.
+
+
+### Uruchomienie CI dla korekty arytmetycznej `44cc2031`
+
+- [Aplikacja #45228985240](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45228985240) `completed/success`, 736 testów, 10 sklasyfikowanych pominięć i brak nierozliczonych; poprawiona regresja `thm:swap-mixed` PASS.
+- [Lean/Mathlib #45228985100](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45228985100) `completed/success`, Lean 4.26.0, przypięty Mathlib `2df2f0150c275ad53cb3c90f7c98ec15a56a1a67`, 5 plików / **26** twierdzeń / `axiom_check=passed`; deklaracja `lst02_mixed_nat_counterexample` nie zależy od żadnych dodatkowych aksjomatów w logu, MetaM i pomiary `.olean` PASS. [Artefakt](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45228985100/artifacts/14845114094).
+- [Nowa techniczna stabilizacja 2+1 #45229708674](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45229708674) uruchomiona dla tego SHA: **0/3 kompletnych rund** przy zapisie, pierwsza w toku. Historyczny [3/3 #45208224201](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45208224201) jest dowodem tylko dla poprzedniego SHA bez `lst02_mixed_nat_counterexample`.
+- Uzupełnienie oryginalnego przykładu źródłowego **nie** nadaje samodzielnie `approved` i nie stanowi niezależnej akceptacji semantycznej. Nadal cztery nowe wpisy `needs_review`, `certificate=false`, LA-01 nierozpoczęte.

@@ -1,5 +1,8 @@
 # L1.3 / LST-02 — pakiet do niezależnej recenzji semantycznej
 
+
+**Aktualizacja kontrolna:** samodzielny [CI aplikacji #45228985240](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45228985240) i [CI Lean #45228985100](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45228985100) są `completed/success` dla nowszego SHA `44cc2031d9e62ad0158dbea5cc59462e7bc6124a`. Nowy plik zawiera osiem deklaracji LST-02; rzeczywisty Lean skompilował łącznie 26 twierdzeń, `axiom_check=passed`, nowy kontrprzykład na ℕ jest bez dodatkowych aksjomatów. [Świeże 2+1 #45229708674](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45229708674) ma na moment wpisu **0/3 kompletnych rund**. Pozostałe informacje w tym pakiecie o **3/3 PASS** odnoszą się wyłącznie do historycznego SHA `163c8f64`. Recenzja niezależna nadal `pending`, `certificate=false`.
+
 > **Uwaga o nowszej rewizji, 2026-11-23:** po zakończeniu 3/3 dla
 > historycznego SHA `163c8f6415d9d390fc1a737f6954b2865eff6c6e`
 > dodano dokładny kontrprzykład źródłowy na liczbach naturalnych
