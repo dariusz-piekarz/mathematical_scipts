@@ -12,7 +12,7 @@ from pathlib import Path
 
 from fastapi import HTTPException
 
-from backend import lean_catalog, lean_formalization as lean
+from backend import lean_catalog, lean_formalization as lean, lean_source_provenance
 
 REPORT_SCHEMA_VERSION = 1
 REPORT_ITEM_FIELDS = (
@@ -54,20 +54,54 @@ def chapter_report(con: sqlite3.Connection, module_id: str, *,
     # canonical .tex path. Require an independently readable canonical file,
     # and check it again after the catalogue pass. This remains diagnostics:
     # no cryptographic attestation or atomic filesystem snapshot is implied.
-    registry = {item["id"]: item for item in lean._registry(lean_root)}
+    latest_registry = lean._registry(lean_root)
+    if len(latest_registry) > lean_catalog.MAX_ENTRIES:
+        raise HTTPException(503, "Zbyt duży rejestr formalizacji Lean.")
+    registry = {item["id"]: item for item in latest_registry}
+    # The catalogue may have read an earlier manifest generation. Compare
+    # identities for the entire chapter, not merely the items returned before
+    # an addition or deletion. Never mix an old approval with a newer manifest.
+    actual_ids = {item["id"] for item in latest_registry
+                  if item["source_module"] == module_id}
+    listed_ids = {entry["formalization_id"] for entry in entries}
+    changed_manifest = actual_ids != listed_ids or len(listed_ids) != len(entries)
     for entry in entries:
-        if entry["formalization_status"] != "ready":
+        if changed_manifest:
+            entry["index_status"] = "changed_manifest_during_report"
+            entry["formalization_status"] = "stale"
+            entry["statement_status"] = "needs_review"
+            continue
+        if entry["formalization_status"] not in ("ready", "draft"):
             continue
         registered = registry.get(entry["formalization_id"])
-        if (registered is None
-                or not registered.get("source_document_path")
-                or registered.get("source_module") != module_id
-                or registered.get("source_label") != entry["source_label"]
-                or registered.get("source_document_sha256") != indexed_sha
-                or registered.get("lean_file") != entry["lean_file"]
-                or registered.get("lean_theorem") != entry["lean_theorem"]
-                or registered.get("lean_theorems",
-                                  [registered.get("lean_theorem")]) != entry["lean_theorems"]
+        changed_item = (
+            registered is None
+            or registered.get("source_module") != module_id
+            or registered.get("source_label") != entry["source_label"]
+            or registered.get("statement_status") != entry["statement_status"]
+            or registered.get("lean_file") != entry["lean_file"]
+            or registered.get("lean_theorem") != entry["lean_theorem"]
+            or registered.get("lean_theorems",
+                              [registered.get("lean_theorem")]) != entry["lean_theorems"]
+            or (entry["formalization_status"] == "ready"
+                and registered.get("source_document_sha256") != indexed_sha)
+        )
+        if changed_item:
+            entry["index_status"] = "changed_manifest_during_report"
+            entry["formalization_status"] = "stale"
+            entry["statement_status"] = "needs_review"
+            continue
+        # Label ownership is a separate SQLite relation and can change
+        # without changing the document's content SHA256.
+        owner_status, owner_id = lean_source_provenance.owner_status(
+            con, module_id, entry["source_label"], content)
+        if owner_status != "ok" or owner_id != entry["source_entity_id"]:
+            entry["index_status"] = "changed_index_binding"
+            entry["formalization_status"] = "stale"
+            entry["statement_status"] = "needs_review"
+            continue
+        if entry["formalization_status"] == "ready" and (
+                not registered.get("source_document_path")
                 or not lean._source_file_current(registered, indexed_sha, lean_root)):
             entry["index_status"] = "unverifiable_canonical_source"
             entry["formalization_status"] = "stale"

@@ -292,5 +292,81 @@ class LeanCatalogTests(unittest.TestCase):
         self.assertFalse(data["certificate"])
 
 
+    def test_l14_manifest_approval_revoked_after_catalog_is_stale(self):
+        self.item.update(source_document_sha256=self.digest,
+                         statement_status="approved")
+        self.set_l14_canonical_file()
+        self.save_manifest()
+        real_catalog = lean_catalog.list_formalizations
+
+        def revoke_approval(*args, **kwargs):
+            catalog = real_catalog(*args, **kwargs)
+            self.assertEqual(catalog["ready"], 1)
+            self.item["statement_status"] = "needs_review"
+            self.save_manifest()
+            return catalog
+
+        with patch.object(lean_chapter_report.lean_catalog,
+                          "list_formalizations", side_effect=revoke_approval):
+            data = lean_chapter_report.chapter_report(
+                self.con, "LST-01", lean_root=self.root)
+        self.assertEqual((data["ready"], data["stale"],
+                          data["statement_approved"]), (0, 1, 0))
+        self.assertEqual(data["items"][0]["index_status"],
+                         "changed_manifest_during_report")
+        self.assertEqual(data["items"][0]["statement_status"], "needs_review")
+        self.assertFalse(data["certificate"])
+
+    def test_l14_manifest_addition_after_catalog_is_not_silently_omitted(self):
+        self.item.update(source_document_sha256=self.digest,
+                         statement_status="approved")
+        self.set_l14_canonical_file()
+        self.save_manifest()
+        real_catalog = lean_catalog.list_formalizations
+
+        def register_another(*args, **kwargs):
+            catalog = real_catalog(*args, **kwargs)
+            added = dict(self.item, id="t-two")
+            (self.root / "manifest.json").write_text(
+                json.dumps({"schema_version": 1, "items": [self.item, added]}),
+                encoding="utf-8")
+            return catalog
+
+        with patch.object(lean_chapter_report.lean_catalog,
+                          "list_formalizations", side_effect=register_another):
+            data = lean_chapter_report.chapter_report(
+                self.con, "LST-01", lean_root=self.root)
+        self.assertEqual((data["ready"], data["stale"],
+                          data["statement_approved"]), (0, 1, 0))
+        self.assertEqual(data["items"][0]["index_status"],
+                         "changed_manifest_during_report")
+        self.assertFalse(data["certificate"])
+
+    def test_l14_relocated_label_after_catalog_downgrades_ready(self):
+        self.item.update(source_document_sha256=self.digest,
+                         statement_status="approved")
+        self.set_l14_canonical_file()
+        self.save_manifest()
+        real_catalog = lean_catalog.list_formalizations
+
+        def remove_owner(*args, **kwargs):
+            catalog = real_catalog(*args, **kwargs)
+            self.assertEqual(catalog["ready"], 1)
+            self.con.execute("DELETE FROM labels")
+            self.con.commit()
+            return catalog
+
+        with patch.object(lean_chapter_report.lean_catalog,
+                          "list_formalizations", side_effect=remove_owner):
+            data = lean_chapter_report.chapter_report(
+                self.con, "LST-01", lean_root=self.root)
+        self.assertEqual(data["source_index_status"], "ok")
+        self.assertEqual((data["ready"], data["stale"],
+                          data["statement_approved"]), (0, 1, 0))
+        self.assertEqual(data["items"][0]["index_status"], "changed_index_binding")
+        self.assertEqual(data["items"][0]["statement_status"], "needs_review")
+        self.assertFalse(data["certificate"])
+
+
 if __name__ == "__main__":
     unittest.main()

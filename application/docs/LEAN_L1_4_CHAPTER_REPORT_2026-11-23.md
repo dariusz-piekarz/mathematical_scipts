@@ -77,3 +77,29 @@ i od automatycznych testów. Zgłoszenie do odbioru:
 Nie tworzyć deklaracji `stable` ani niesygnowanego pozornego
 zatwierdzenia. Po aprobacie trzeba zachować SHA i powiązać decyzję
 z tą wersją; zmiana produkcyjna wymaga nowego 2+1.
+
+## Niezależna analiza bramki po 3/3: wycofanie aprobaty w trakcie raportu
+
+Przy odbiorze technicznym `1c4b89b1` wykryto kolejny rzeczywisty
+przypadek niespójności: status `statement_status` z pierwszego
+manifestu Lean nie był ponownie porównywany po odczycie katalogu.
+Podmiana `approved` na `needs_review` mogła pozostawić pozytywne
+`statement_approved` w raporcie. Podobnie można było dopisać lub
+usunąć wpisy manifestu albo przenieść etykietę w SQLite bez zmiany
+`documents.sha256`, podczas gdy katalog raportował poprzedni stan.
+
+Nowa poprawka:
+- porównuje zestawy identyfikatorów formalizacji w całym rozdziale;
+- sprawdza ponownie `statement_status` i podstawowe pola wiązania;
+- ponownie rozstrzyga właściciela etykiety na aktualnym indeksie;
+- przy rozbieżności ustawia odpowiednio
+  `changed_manifest_during_report` albo `changed_index_binding`
+  oraz obniża status do `stale/needs_review`;
+- utrzymuje limit 250 wpisów także dla drugiego odczytu.
+
+Trzy niezależne negatywne regresje wstrzykują wymienione zmiany
+dokładnie pomiędzy odczytami. To nadal kontrola diagnostyczna, a nie
+atomowa migawka ani certyfikat Lean–LaTeX. **Wynik 3/3 dla
+`1c4b89b1` pozostaje prawdziwym historycznym dowodem, ale
+nie może zostać przypisany nowemu kandydatowi.** Ponowne 2+1
+obowiązkowe na nowym SHA. `certificate=false`.
