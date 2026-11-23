@@ -409,6 +409,107 @@ class LeanResultsTests(unittest.TestCase):
                 self.assertEqual(result["proof_status"], "not_run")
                 self.assertTrue(result["run_record_invalid"])
 
+    def test_l13_opened_descriptor_is_regular_and_matches_named_file(self):
+        """The cached record must not be reused if its path changes mid-read."""
+        import os
+        from unittest.mock import patch
+        fp = self.fp()
+        save_run("sample", fp, proof_status="compiled",
+                 detail="real process exit", results_root=self.output)
+        record = self.output / "sample.json"
+        original_open = os.open
+        observed_flags = []
+
+        def capture_open(path, flags, *args, **kwargs):
+            observed_flags.append(flags)
+            return original_open(path, flags, *args, **kwargs)
+
+        with patch("backend.lean_results.os.open", side_effect=capture_open):
+            valid = last_run("sample", fp, results_root=self.output)
+        self.assertTrue(valid["run_cached"])
+        self.assertEqual(valid["proof_status"], "compiled")
+        self.assertTrue(observed_flags)
+        if hasattr(os, "O_NOFOLLOW"):
+            self.assertTrue(observed_flags[-1] & os.O_NOFOLLOW)
+
+        # Simulate a changed identity reported for the pathname, even if
+        # the bytes available from the open descriptor are still valid.
+        from types import SimpleNamespace
+        original_lstat = Path.lstat
+        calls = []
+
+        def changed_identity(path, *args, **kwargs):
+            info = original_lstat(path, *args, **kwargs)
+            if path == record:
+                calls.append(path)
+                if len(calls) >= 2:
+                    return SimpleNamespace(
+                        st_mode=info.st_mode, st_dev=info.st_dev,
+                        st_ino=info.st_ino + 1, st_size=info.st_size,
+                        st_mtime_ns=info.st_mtime_ns, st_ctime_ns=info.st_ctime_ns,
+                    )
+            return info
+
+        with patch.object(Path, "lstat", changed_identity):
+            invalid = last_run("sample", fp, results_root=self.output)
+        self.assertGreaterEqual(len(calls), 2)
+        self.assertFalse(invalid["run_cached"])
+        self.assertTrue(invalid["run_record_invalid"])
+
+    def test_l13_file_swapped_for_symlink_just_before_open_fails_closed(self):
+        """An actual last-moment symlink swap is rejected on supporting hosts."""
+        import os
+        from unittest.mock import patch
+        fp = self.fp()
+        save_run("sample", fp, proof_status="compiled",
+                 detail="real result", results_root=self.output)
+        record = self.output / "sample.json"
+        moved = self.root / "external-result.json"
+        original_open = os.open
+
+        def swap_and_open(path, flags, *args, **kwargs):
+            record.replace(moved)
+            try:
+                record.symlink_to(moved)
+            except (OSError, NotImplementedError):
+                # If symlinks are not available, the test cannot model the swap.
+                raise unittest.SkipTest("Symlink unavailable for atomic-open race")
+            return original_open(path, flags, *args, **kwargs)
+
+        with patch("backend.lean_results.os.open", side_effect=swap_and_open):
+            result = last_run("sample", fp, results_root=self.output)
+        self.assertFalse(result["run_cached"])
+        self.assertEqual(result["proof_status"], "not_run")
+        self.assertTrue(result["run_record_invalid"])
+
+    def test_l13_replacement_after_open_cannot_reuse_cached_compilation(self):
+        """An already-open descriptor must match the current directory entry."""
+        import os
+        from unittest.mock import patch
+        fp = self.fp()
+        save_run("sample", fp, proof_status="compiled",
+                 detail="real result", results_root=self.output)
+        record = self.output / "sample.json"
+        archive = self.root / "old-record.json"
+        data = record.read_bytes()
+        original_open = os.open
+
+        def open_and_replace(path, flags, *args, **kwargs):
+            descriptor = original_open(path, flags, *args, **kwargs)
+            try:
+                record.replace(archive)
+                record.write_bytes(data)
+            except OSError as exc:
+                os.close(descriptor)
+                raise unittest.SkipTest(f"Host prevents rename of open file: {exc}")
+            return descriptor
+
+        with patch("backend.lean_results.os.open", side_effect=open_and_replace):
+            result = last_run("sample", fp, results_root=self.output)
+        self.assertFalse(result["run_cached"])
+        self.assertEqual(result["proof_status"], "not_run")
+        self.assertTrue(result["run_record_invalid"])
+
     def test_l12_result_symlink_never_reuses_cached_success(self):
         fp = self.fp()
         save_run("sample", fp, proof_status="compiled",
