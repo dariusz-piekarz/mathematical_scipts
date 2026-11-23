@@ -1,0 +1,196 @@
+name: Measure theory chapter 16 stabilization
+
+on:
+  push:
+    branches:
+      - biblioteka-matematyczna-iteracja-6
+    paths:
+      - "chapters/pl/measure_theory/16-miary-ze-znakiem-miary-zespolone-i-wariacja-calkowita.tex"
+      - "books/pl/measure_theory.tex"
+      - "tools/tests/test_measure_theory_ch16.py"
+      - "tools/tests/test_measure_theory_book_integrity.py"
+      - ".github/workflows/measure-theory-ch16.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: measure-ch16-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  tests:
+    name: Chapter 16 source and mathematical regressions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate test script syntax
+        run: python -m py_compile tools/tests/test_measure_theory_ch16.py
+      - name: Run 8 chapter 16 finite model and source regressions
+        run: python -m unittest discover -s tools/tests -p 'test_measure_theory_ch16.py' -v
+      - name: Audit cross-file labels, references and 31-chapter structure
+        run: python -m unittest discover -s tools/tests -p 'test_measure_theory_book_integrity.py' -v
+
+  pdf:
+    name: Chapter 16 and complete measure theory PDF
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install LaTeX packages including lmodern and Polish babel
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            latexmk lmodern texlive-latex-base texlive-latex-recommended \
+            texlive-latex-extra texlive-fonts-recommended texlive-lang-polish poppler-utils
+      - name: Compile complete 31-chapter book with cross-references
+        run: |
+          cd books/pl
+          latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error measure_theory.tex
+      - name: Verify book log and output PDF
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          pdf = Path('books/pl/measure_theory.pdf')
+          log = Path('books/pl/measure_theory.log')
+          assert pdf.is_file() and pdf.stat().st_size > 10000, 'Missing or empty book PDF'
+          content = log.read_text(encoding='utf-8', errors='replace')
+          for phrase in ('There were undefined references', 'There were undefined citations', 'Rerun to get cross-references right'):
+              assert phrase not in content, f'Unresolved full-book cross-reference: {phrase}'
+          print('Full book PDF:', pdf.stat().st_size, 'bytes, no unresolved references')
+          PY
+      - name: Generate isolated chapter 16 from canonical book preamble
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          root = Path('books/pl')
+          master = (root / 'measure_theory.tex').read_text(encoding='utf-8')
+          marker = r'\begin{document}'
+          assert marker in master
+          header = master.split(marker, 1)[0]
+          chapter = r'\input{../../chapters/pl/measure_theory/16-miary-ze-znakiem-miary-zespolone-i-wariacja-calkowita.tex}'
+          (root / 'measure_theory_ch16.tex').write_text(
+              header + marker + '\n' + r'\mainmatter' + '\n' +
+              r'\setcounter{chapter}{15}' + '\n' + chapter + '\n' +
+              r'\end{document}' + '\n', encoding='utf-8'
+          )
+          PY
+      - name: Compile isolated chapter 16 PDF and verify cross-references
+        run: |
+          cd books/pl
+          latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error measure_theory_ch16.tex
+          test -s measure_theory_ch16.pdf
+          python - <<'PY'
+          from pathlib import Path
+          log = Path('measure_theory_ch16.log').read_text(encoding='utf-8', errors='replace')
+          forbidden = (
+              'There were undefined references',
+              'There were undefined citations',
+              'multiply defined',
+              'Rerun to get cross-references right',
+          )
+          for phrase in forbidden:
+              assert phrase not in log, f'Isolated chapter cross-references: {phrase}'
+          print('Isolated chapter cross-references resolved')
+          PY
+      - name: Verify PDF page counts and render page previews
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess
+
+          def pages(path):
+              data = subprocess.check_output(['pdfinfo', str(path)], text=True)
+              line = next(line for line in data.splitlines() if line.startswith('Pages:'))
+              return int(line.split(':', 1)[1].strip())
+
+          book = Path('books/pl/measure_theory.pdf')
+          chapter = Path('books/pl/measure_theory_ch16.pdf')
+          book_pages, chapter_pages = pages(book), pages(chapter)
+          assert book_pages >= 100, f'Unexpectedly short full book: {book_pages} pages'
+          assert 4 <= chapter_pages <= 25, f'Unexpected chapter PDF size: {chapter_pages} pages'
+          print(f'Valid PDF page counts: book={book_pages}, chapter={chapter_pages}')
+          PY
+          mkdir -p books/pl/ch16_previews
+          count=$(pdfinfo books/pl/measure_theory_ch16.pdf | awk '/^Pages:/ {print $2}')
+          middle=$(( (count + 1) / 2 ))
+          for n in 1 "$middle" "$count"; do
+            pdftoppm -f "$n" -l "$n" -singlefile -r 100 -png               books/pl/measure_theory_ch16.pdf "books/pl/ch16_previews/chapter_p${n}"
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: measure-theory-ch16-pdf-and-logs
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            books/pl/measure_theory.pdf
+            books/pl/measure_theory.log
+            books/pl/measure_theory_ch16.pdf
+            books/pl/measure_theory_ch16.log
+            books/pl/ch16_previews/*.png
+
+  report-statuses:
+    name: Publish tests and PDF results as readable commit statuses
+    if: ${{ always() }}
+    needs: [tests, pdf]
+    runs-on: ubuntu-latest
+    permissions:
+      statuses: write
+    steps:
+      - name: Publish durable results after both validation jobs finish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TESTS_OUTCOME: ${{ needs.tests.result }}
+          PDF_OUTCOME: ${{ needs.pdf.result }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from urllib.request import Request, urlopen
+
+          outcomes = {
+              'measure-theory/ch16-regressions': os.environ['TESTS_OUTCOME'],
+              'measure-theory/ch16-pdf': os.environ['PDF_OUTCOME'],
+          }
+          url = (
+              f"{os.environ['GITHUB_API_URL']}/repos/"
+              f"{os.environ['GITHUB_REPOSITORY']}/statuses/{os.environ['GITHUB_SHA']}"
+          )
+          run_url = (
+              f"{os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}"
+              f"/actions/runs/{os.environ['GITHUB_RUN_ID']}"
+          )
+          failures = []
+          for context, outcome in outcomes.items():
+              state = {'success': 'success', 'failure': 'failure'}.get(outcome, 'error')
+              payload = {
+                  'state': state,
+                  'context': context,
+                  'description': f'Actions job concluded: {outcome}'[:140],
+                  'target_url': run_url,
+              }
+              request = Request(
+                  url,
+                  data=json.dumps(payload).encode('utf-8'),
+                  headers={
+                      'Authorization': f"Bearer {os.environ['GH_TOKEN']}",
+                      'Accept': 'application/vnd.github+json',
+                      'X-GitHub-Api-Version': '2022-11-28',
+                      'Content-Type': 'application/json',
+                      'User-Agent': 'measure-theory-ch15-ci',
+                  },
+                  method='POST',
+              )
+              try:
+                  with urlopen(request, timeout=30) as response:
+                      assert response.status == 201, response.status
+                      print(f'{context}: {state}; target: {run_url}')
+              except Exception as exc:
+                  failures.append(f'{context}: {exc}')
+          if failures:
+              raise RuntimeError('Cannot publish CI status: ' + '; '.join(failures))
+          PY
