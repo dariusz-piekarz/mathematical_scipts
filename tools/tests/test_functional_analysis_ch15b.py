@@ -480,5 +480,42 @@ class TestChapter15B(unittest.TestCase):
             self.assertEqual(energy(2+h,1+k)-energy(Fraction(2),Fraction(1)),
                              (2*h*h+3*k*k)/2)
 
+
+    def test_audit34_measurability_and_completeness_contracts(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            "B_{n,j}=C_{n,j}\\setminus\\bigcup_{i<j}C_{n,i}",
+            "\\mu(E_n)<2^{-n}",
+            "\\|f_{n_{k+1}}-f_{n_k}\\|_{L^1}\\le 2^{-k}",
+            "\\|f-f_{n_k}\\|_{L^1}\\le\\sum_{j\\ge k}2^{-j}",
+            "\\chi_A(s)\\nu(B)x",
+            "v_n(b)=f(b)",
+        ):
+            self.assertIn(fragment, source)
+
+    def test_audit34_vector_l1_cauchy_tail(self):
+        # Exact finite-atom witnesses of the telescoping estimate.
+        # f_k has two coordinates and converges to f in weighted l1.
+        weights = [Fraction(1, 2), Fraction(1, 3), Fraction(1, 6)]
+        f = [(Fraction(2), Fraction(-1)), (Fraction(-3), Fraction(4)),
+             (Fraction(0), Fraction(5))]
+        v = [(1, -1), (-1, 1), (1, 1)]
+
+        def fn(k):
+            return [tuple(x + Fraction(y, 2**k) for x, y in zip(a,b))
+                    for a,b in zip(f,v)]
+
+        def dist(u,w):
+            return sum(mu*sum(abs(x-y) for x,y in zip(a,b))
+                       for mu,a,b in zip(weights,u,w))
+
+        for k in range(1, 20):
+            self.assertEqual(dist(fn(k+1),fn(k)), Fraction(1, 2**k))
+            self.assertEqual(dist(fn(k),f), Fraction(1, 2**(k-1)))
+            for m in range(k+1, 21):
+                tail = sum(Fraction(1, 2**j) for j in range(k,m))
+                self.assertEqual(dist(fn(k),fn(m)), tail)
+                self.assertLessEqual(tail, dist(fn(k),f))
+
 if __name__ == "__main__":
     unittest.main()
