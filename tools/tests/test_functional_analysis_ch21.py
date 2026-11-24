@@ -130,5 +130,45 @@ class Chapter21(unittest.TestCase):
                 self.assertEqual(act(conv(P,Q),f,z),
                                  act(Q,test_operator(P,f),z))
 
+    def test_FA21_smoothing_and_strong_convergence_01(self):
+        from fractions import Fraction as F
+        from math import comb
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"\supp\varphi\times(\supp\varphi-K)",
+            r"Lemat~\ref{lem:iterated-distributions21} do $T_1$",
+            r"\rho(z)\varphi(y+z)",
+            r"\int_{\R^d}\rho_\varepsilon(x)\,\mathrm d\lambda_d(x)=1",
+            r"\ref{thm:D-bounded18}",
+            r"\partial^\alpha\varphi(y+\varepsilon z)",
+            r"\varepsilon\|z\|_1 p_{m+1}(\varphi)",
+            r"CC_{\rho,d}",
+            r"w topologii $L^1_{\mathrm{loc}}$",
+            r"(\partial T_1)*T_H=0",
+            r"T_1*\delta_0=T_1",
+            r"\partial_1 V=\delta_0",
+        ):
+            self.assertIn(fragment, s)
+        # Asymmetric nonnegative unit-mass polynomial model on [0,1]:
+        # rho(z)=2z. Its moments detect a wrong reflection sign.
+        def moment(k):
+            return F(2,k+2)
+        self.assertEqual(moment(0),1)
+        for n in range(1,7):
+            for y,eps in product([-2,0,2],[F(1,2),F(1,4),F(1,8)]):
+                plus = sum(comb(n,k)*y**(n-k)*eps**k*moment(k)
+                           for k in range(n+1))
+                minus = sum(comb(n,k)*y**(n-k)*(-eps)**k*moment(k)
+                            for k in range(n+1))
+                # Reflected kernel integrates phi(y+eps*z), not phi(y-eps*z).
+                reflected = sum(comb(n,k)*y**(n-k)*(-eps)**k
+                                *(-1)**k*moment(k) for k in range(n+1))
+                self.assertEqual(plus,reflected)
+                # Bound by eps * E[z] * sup |phi'| on [y,y+eps].
+                bound = eps*moment(1)*n*max(abs(y),abs(y+eps))**(n-1)
+                self.assertLessEqual(abs(plus-y**n),bound)
+                if n == 1:
+                    self.assertNotEqual(plus,minus)
+
 if __name__ == "__main__":
     unittest.main()
