@@ -313,15 +313,18 @@ $Bh$ jest niezerowy i spełnia
 $BB^T(Bh)=\lambda Bh$.
 Ograniczenia $B^T$ oraz $\lambda^{-1}B$ do odpowiednich
 przestrzeni własnych są wzajemnie odwrotne, ponieważ
-$BB^Tf=\lambda f$ oraz $B^TBh=\lambda h$. Stąd zgadzają się krotności.
+$BB^Tf=\lambda f$ oraz $B^TBh=\lambda h$.
+Obie macierze są symetryczne, więc krotności
+algebraiczne ich wartości własnych są równe wymiarom
+odpowiednich przestrzeni własnych.
 \end{proof}
 
 \section{Twierdzenie macierzowo-drzewowe Kirchhoffa}
 \label{sec:tg-matrix-tree}
 
 \begin{definicja}[Liczba drzew rozpinających]
-Dla skończonego grafu prostego $G$ przez $\tau(G)$
-oznaczamy liczbę jego drzew rozpinających.
+Dla skończonego grafu prostego $G$ o niepustym
+zbiorze wierzchołków przez $\tau(G)$ oznaczamy liczbę jego drzew rozpinających.
 Jeśli $G$ jest niespójny, przyjmujemy $\tau(G)=0$.
 Dla grafu jednoelementowego $K_1$ przyjmujemy
 $\tau(K_1)=1$, ponieważ jego jedynym drzewem
@@ -458,9 +461,11 @@ zawiera dokładnie jeden z zadanych korzeni.
 \label{thm:tg-rooted-forest-minor}
 Niech $G=(V,E)$ będzie skończonym grafem prostym
 o $n\geq1$ wierzchołkach z dodatnimi wagami $w_e$,
-a $L=BWB^T$ jego laplasjanem ważonym.
+a $L$ jego laplasjanem ważonym, zdefiniowanym przez
+macierz incydencji $B$ i macierz wag $W$ jako $BWB^T$.
 Dla dowolnego niepustego zbioru $S\subseteq V$ niech
-$I=V\setminus S$. Wówczas
+$I=V\setminus S$, a $L_{II}$ oznacza podmacierz
+o wierszach i kolumnach indeksowanych przez $I$. Wówczas
 \[
 \det L_{II}=\sum_{F\in\mathcal F_S}\prod_{e\in E(F)}w_e,
 \]
@@ -515,8 +520,9 @@ Po podstawieniu do sumy otrzymujemy tezę.
 
 \begin{wniosek}[Wielomian lasów ukorzenionych]
 \label{cor:tg-rooted-forest-polynomial}
-Niech $G$ i $L$ spełniają założenia twierdzenia
-\ref{thm:tg-rooted-forest-minor}. Dla $t\in\mathbb R$
+Niech $G=(V,E)$ będzie skończonym grafem prostym
+o $n\geq1$ wierzchołkach, z dodatnimi wagami $w_e$
+i laplasjanem ważonym $L$. Dla $t\in\mathbb R$
 zachodzi
 \[
 \det(L+tI_n)=
@@ -585,13 +591,14 @@ liczonymi z krotnościami. Wtedy
 Z twierdzenia o energii i spójności jądro $L$ jest
 jednowymiarowe, rozpięte przez $\mathbf1=(1,\ldots,1)^T$.
 Z twierdzenia Kirchhoffa każdy główny kofaktor $L$
-wynosi $\tau(G)$. Co więcej, macierz dopełnień
-algebraicznych $\operatorname{adj}(L)$ ma wszystkie
-kolumny w $\ker L$, ponieważ
-$L\operatorname{adj}(L)=(\det L)I=0$.
-Symetria $L$ i zgodność diagonalnych elementów
-$\operatorname{adj}(L)$ z $\tau(G)$ dają
-$\operatorname{adj}(L)=\tau(G)\mathbf1\mathbf1^T$.
+wynosi $\tau(G)$. Macierz dołączona
+$\operatorname{adj}(L)$ (transpozycja macierzy dopełnień
+algebraicznych) ma wszystkie kolumny w $\ker L$,
+ponieważ $L\operatorname{adj}(L)=(\det L)I=0$.
+Jej $j$-ta kolumna jest więc wielokrotnością
+$\mathbf1$; element diagonalny tej kolumny jest
+równy $\tau(G)$, co wyznacza tę wielokrotność.
+Stąd $\operatorname{adj}(L)=\tau(G)\mathbf1\mathbf1^T$.
 
 Rozważmy macierz
 $M=L+\tfrac1n\mathbf1\mathbf1^T$.
@@ -600,8 +607,14 @@ identyczność, a na dopełnieniu ortogonalnym jak $L$.
 Zatem jej wartości własne, z uwzględnieniem krotności,
 to $1,\lambda_2,\ldots,\lambda_n$
 i $\det M=\prod_{j=2}^n\lambda_j$.
-Z drugiej strony wzór na wyznacznik po dodaniu
-macierzy rzędu jeden daje
+Z drugiej strony korzystamy z tożsamości
+$\det(A+uv^T)=\det A+v^T\operatorname{adj}(A)u$,
+ważnej również dla macierzy osobliwych.
+Wynika ona z wieloliniowości wyznacznika względem
+kolumn: składniki z co najmniej dwiema kolumnami
+pochodzącymi z $uv^T$ znikają, a składniki z jedną
+taką kolumną dają rozwinięcia według dopełnień
+algebraicznych. Otrzymujemy
 \[
 \det M=\det L+\frac1n\mathbf1^T\operatorname{adj}(L)\mathbf1
 =\frac1n\tau(G)n^2=n\tau(G).
@@ -644,12 +657,16 @@ $r_e=1/w_e$ jako opór. Ustalenie kierunków krawędzi jest wyłącznie
 pomocnicze; to równania przepływu, a nie te kierunki, wyznaczają
 prąd w sieci. W przyjętej konwencji macierzy $B$
 kolumna krawędzi $u\to v$ ma znak $-1$ przy $u$
-i $+1$ przy $v$. Dlatego $Bj$ jest bilansem wpływu,
-a $j=WB^Tf$ zapisuje prąd fizyczny ze znakiem
-przeciwnym do kierunku pomocniczego: standardowy prąd
-od $u$ do $v$ ma wartość $w_e(f(u)-f(v))=-j_e$.
-Równanie $Bj=[s]-[t]$ odpowiada w tej konwencji
-fizycznemu wprowadzeniu prądu w $s$ i odebraniu go w $t$.
+i $+1$ przy $v$. Niech $i_e$ oznacza prąd fizyczny, dodatni w kierunku
+pomocniczym $u\to v$. Z prawa Ohma
+$i_e=w_e(f(u)-f(v))$. W przyjętej konwencji
+$Bi$ jest bilansem wpływającego prądu pomniejszonego
+o wypływający. Dla jednostkowego źródła w $s$
+i ujścia w $t$ mamy zatem $-Bi=[s]-[t]$, gdzie
+$[v]$ oznacza wektor bazy standardowej przy $v$.
+W dalszym ciągu zapisujemy $j=-i=WB^Tf$,
+więc równania przyjmują postać $Bj=Lf=[s]-[t]$.
+Zmiana znaku nie wpływa na energię prądu.
 
 \begin{definicja}[Efektywna rezystancja między wierzchołkami]
 Niech $G=(V,E)$ będzie skończonym spójnym grafem prostym,
@@ -662,7 +679,10 @@ Liczbę $R_{\mathrm{eff}}(s,t):=f(s)-f(t)$ nazywamy
 \end{definicja}
 
 \begin{stwierdzenie}[Istnienie rozwiązania i dodatniość oporu]
-W sytuacji z poprzedniej definicji równanie $Lf=b$ ma
+Niech $G=(V,E)$ będzie skończonym spójnym grafem
+prostym z dodatnimi przewodnościami $w_e$,
+$L$ jego laplasjanem ważonym, a $s,t\in V$ różnymi
+wierzchołkami. Dla $b=[s]-[t]$ równanie $Lf=b$ ma
 rozwiązanie, a każde dwa rozwiązania różnią się funkcją stałą.
 Liczba $R_{\mathrm{eff}}(s,t)$ nie zależy od wyboru rozwiązania
 i jest ściśle dodatnia. Ponadto
@@ -761,7 +781,8 @@ otrzymujemy
 \end{aligned}
 \]
 W drugim przejściu użyliśmy $j_0=WB^Tf$,
-a w trzecim $Bh=0$ i poprzedniego stwierdzenia.
+a w trzecim $h^TB^Tf=(Bh)^Tf=0$ i tożsamości
+$R_{\mathrm{eff}}(s,t)=f^TLf$.
 Ponieważ $W^{-1}$ jest dodatnio określona,
 ostatni składnik jest nieujemny i znika wyłącznie
 dla $h=0$. Zatem $j_0$ jest jedynym minimizatorem,
@@ -774,6 +795,8 @@ Niech $G=(V,E)$ będzie skończonym spójnym grafem
 prostym, $s,t\in V$, $s\ne t$, a $w,w'$ dwiema
 rodzinami dodatnich przewodności na $E$, takimi że
 $w'_e\ge w_e$ dla każdej krawędzi $e$.
+Niech $R_w$ i $R_{w'}$ oznaczają rezystancje
+efektywne dla odpowiednich przewodności.
 Wtedy $R_{w'}(s,t)\le R_w(s,t)$.
 Równość zachodzi dokładnie wtedy, gdy prąd minimalizujący
 energię dla $w$ znika na każdej krawędzi, której
@@ -809,7 +832,8 @@ $f(s)-f(t)$ pozostaje bez zmian, co daje równość.
 \begin{wniosek}[Dodawanie krawędzi]
 Niech $G$ będzie skończonym spójnym grafem prostym
 z dodatnimi przewodnościami, a $s,t$ jego różnymi
-wierzchołkami. Dodanie krawędzi między niesąsiadującymi
+wierzchołkami, a $L$ jego ważonym laplasjanem.
+Dodanie krawędzi między różnymi niesąsiadującymi
 wierzchołkami $u,v$ z dodatnią przewodnością nie zwiększa
 $R_{\mathrm{eff}}(s,t)$. Zmniejsza ją ściśle wtedy i tylko
 wtedy, gdy $f(u)\ne f(v)$ dla rozwiązania $Lf=[s]-[t]$
@@ -823,8 +847,9 @@ energię, więc nowe minimum nie przekracza starego.
 Jeśli minima są równe, przedłużony prąd jest
 minimizatorem także w nowym grafie. Z zasady Thomsona
 pochodzi z potencjału $g$, a zerowy prąd na nowej
-krawędzi daje $g(u)=g(v)$. Na starych krawędziach
-prądy pochodzące z $f$ i $g$ są identyczne, więc
+krawędzi daje $g(u)=g(v)$. Zachowujemy pomocnicze orientacje starych krawędzi.
+Prądy pochodzące z $f$ i $g$ są na nich identyczne,
+czyli $WB^T(f-g)=0$. Odwracalność $W$ daje
 $B^T(f-g)=0$. Spójność daje stałość $f-g$,
 a stąd $f(u)=f(v)$.
 Odwrotnie, jeśli $f(u)=f(v)$, dodatkowa krawędź
