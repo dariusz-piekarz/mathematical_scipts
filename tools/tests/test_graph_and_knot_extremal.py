@@ -146,6 +146,37 @@ def test_zykov_classes():
     return count
 
 
+def test_caro_wei():
+    # TG41-CW-01: exact rational bounds, independent subset oracle,
+    # and direct enumeration of the permutation expectation.
+    from fractions import Fraction
+
+    graphs = permutations = 0
+    for n in range(1, 6):
+        for mask in range(1 << len(pairs(n))):
+            graph = edges_of(n, mask)
+            neighbors = [{u for u in range(n)
+                          if tuple(sorted((u, v))) in graph}
+                         for v in range(n)]
+            alpha = max(len(S) for k in range(n+1)
+                        for S in itertools.combinations(range(n), k)
+                        if all((u, v) not in graph
+                               for u, v in itertools.combinations(S, 2)))
+            bound = sum((Fraction(1, len(N)+1) for N in neighbors), Fraction(0))
+            assert alpha >= bound >= Fraction(n*n, n+2*len(graph))
+            total = 0
+            for order in itertools.permutations(range(n)):
+                position = {v: i for i, v in enumerate(order)}
+                chosen = {v for v in range(n)
+                          if all(position[v] < position[u] for u in neighbors[v])}
+                assert all(not (u in chosen and v in chosen) for u, v in graph)
+                total += len(chosen)
+                permutations += 1
+            assert Fraction(total, math.factorial(n)) == bound
+            graphs += 1
+    return graphs, permutations
+
+
 def test_ramsey():
     all5 = frozenset(pairs(5))
     cycle = frozenset(tuple(sorted((i, (i+1) % 5))) for i in range(5))
@@ -218,6 +249,7 @@ if __name__ == "__main__":
     print("PASS all simple graphs n=0..6; Turan/Mantel:", test_exhaustive_turan())
     print("PASS nonedge symmetrization and clique-free preservation:", test_zykov())
     print("PASS TG41-ZYK-01 whole-class symmetrizations:", test_zykov_classes())
+    print("PASS TG41-CW-01 graphs and permutations:", test_caro_wei())
     print("PASS red/blue K5 and K6 Ramsey colorings:", test_ramsey())
     test_hand_examples()
     print("PASS exact numeric examples, graph catalog and LaTeX structure")
