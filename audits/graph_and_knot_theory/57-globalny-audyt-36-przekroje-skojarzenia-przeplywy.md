@@ -7,3 +7,9 @@
 Dodano niezależne regresje dokładne: wszystkie dopuszczalne przepływy na pełnych grafach skierowanych o 2–3 wierzchołkach z wartościami łuków 0–3 i nieujemną wartością netto (rekonstrukcja ścieżek i cykli); wszystkie grafy dwudzielne o obu częściach 0–3, porównanie skojarzeń, pokryć, deficytu i przekrojów sieci. Strażnik poprawionej formuły źródłowej. Włączono do CI.
 
 Status: korekty zapisane; nie deklarujemy sukcesu testów ani kompilacji przed odczytem przebiegów. Audyt 36 otwarty.
+
+## Stabilizacja — wynik pierwszego CI i korekta składu
+
+Dla SHA 49f90b2ffa5560b4cf2de6f75e4ed3dae4a5fb75: workflow globalny 45297375724, job structural-audit 138121086189 success. Rzeczywisty log potwierdza PASS dla 430 dopuszczalnych przepływów całkowitoliczbowych oraz 689 grafów dwudzielnych. Osobny workflow algorytmiczny 45297375815, terminologia i aplikacja: success. Job full-book-pdf 138121085812: failure wyłącznie przez jedno Underfull hbox (badness 1609). Trzy przebiegi wygenerowały 298 stron. Pobrano artefakt 14877097750 i odczytano pełny log: ostrzeżenie w rozdziale 40, akapit 178–196, linia kończąca się „Kładziemy”. Przyczyna: skład rozbudowanego akapitu z długą formułą śródtekstową.
+
+Skrócono zdania i wyodrębniono wzór na q do osobnego wiersza matematycznego, bez zmiany rozumowania, hipotez i strażnika regresyjnego. Nie zmieniano progów ostrzeżeń ani workflow. Konieczne ponowne przejście globalnego i algorytmicznego CI oraz kontrola wizualna PDF. Audyt 36 pozostaje otwarty.
