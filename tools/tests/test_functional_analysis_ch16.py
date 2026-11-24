@@ -157,5 +157,14 @@ class Chapter16(unittest.TestCase):
             # Integral u'*v' = a/6 = integral v, for u=x*(1-x)/2.
             self.assertEqual(F(1,2)*a/3,a/6)
 
+
+    def test_FA16_SOBolev_quantifiers_01(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        self.assertIn(r"\exists v\in L^2(0,1;\R)", source)
+        self.assertIn(r"\text{dla każdego }x\in[0,1]", source)
+        self.assertIn(r"$(u+v)/2\in C$", source)
+        self.assertIn(r"$J(u)=J(v)=m$ jest skończone", source)
+        self.assertNotIn(r"$u(0)=u(1)=0$ są spełnione", source)
+
 if __name__ == "__main__":
     unittest.main()
