@@ -1,0 +1,3 @@
+ # MA1-14 — kontrola techniczna po iteracji 01
+
+2026-11-24. Run 45457889209 na bd97359f41c1d15e1ef274a2960a0ea6cae024bc oraz 45457882535 na c98a23815075f61e4ccd90559230a8ea68111a06 success. Artefakt 14951307514, PDF 88 stron, rozdział 14 fizyczne 84–88 (drukowane 81–85). Wyrenderowano i obejrzano wszystkie pięć stron w planszy 0.85x. Rysunek funkcji znaku ma rozróżnione puste kółka i pełny punkt, brak widocznych kolizji; tezy mieszczą się na stronach. Odczyt źródła 87a24e82ddbc09f1ab0dbc197d2fa57bff068aa8 i kontrola warunku punktu skupienia, zaprzeczenia kryterium ciągowego oraz zagnieżdżonych progów w granicach rozszerzonych. Nie zmieniano źródła, nie deklarowano pełnej ponownej stabilizacji matematycznej. Dalszy audyt rozdziału 14.
