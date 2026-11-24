@@ -13,9 +13,11 @@ bazę pierwszej homologii dowolnego grafu.
 
 \begin{definicja}[Drzewo i las]
 \emph{Drzewem} nazywamy skończony, spójny, acykliczny
-graf prosty. \emph{Lasem} nazywamy graf prosty
+graf prosty. \emph{Lasem} nazywamy skończony graf prosty
 acykliczny, niekoniecznie spójny. W szczególności
 każda składowa spójna lasu jest drzewem.
+Graf zerowy jest lasem, lecz nie jest drzewem,
+ponieważ zgodnie z przyjętą definicją nie jest spójny.
 \end{definicja}
 
 Dopuszczamy drzewo jednowierzchołkowe $K_1$; nie ma
@@ -359,8 +361,8 @@ rozpinające całego $G$, gdyż $G$ nie jest spójny.
 \emph{Drzewem ukorzenionym} nazywamy parę
 $(T,r)$, gdzie $T$ jest drzewem, a
 $r\in V(T)$ jest wyróżnionym
-\emph{korzeniem}. Dla $v\ne r$ jedyna droga
-od $r$ do $v$ ma przedostatni wierzchołek
+\emph{korzeniem}. Dla $v\in V(T)\setminus\{r\}$ jedyna droga
+prosta od $r$ do $v$ ma przedostatni wierzchołek
 $p(v)$, zwany \emph{rodzicem} $v$. Każdy
 wierzchołek $w\ne r$ o $p(w)=v$ jest \emph{dzieckiem}
 $v$. \emph{Głębokością} $v$ nazywamy
@@ -379,21 +381,28 @@ głębokość maleje o jeden aż do $r$.
 \begin{proof}
 Jeżeli $uv$ jest krawędzią, to
 $|h(u)-h(v)|\le1$ z nierówności trójkąta
-dla odległości grafowej. Gdyby głębokości
-były równe, drogi od $r$ do $u$ i do $v$
-musiałyby najpierw mieć wspólny odcinek,
-a potem rozdzielić się (bo $u\ne v$).
-Fragmenty obu dróg od ostatniego wspólnego
-wierzchołka do $u,v$ oraz krawędź $uv$
-utworzyłyby cykl, co jest niemożliwe.
+dla odległości grafowej. Gdyby głębokości były równe, droga prosta od $r$
+do $u$ nie zawierałaby $v$: jej każdy początkowy
+fragment jest jedyną drogą prostą między swoimi
+końcami, a zatem realizuje odległość tych końców.
+Gdyby $v$ występował przed $u$, mielibyśmy
+$h(v)<h(u)$. Możemy więc przedłużyć drogę do $u$
+o krawędź $uv$ i otrzymać drogę prostą od $r$ do $v$
+o długości $h(u)+1=h(v)+1$. Jest ona różna od drogi
+realizującej $h(v)$, wbrew jedyności drogi prostej.
 Stąd różnica głębokości wynosi jeden.
 
-Dla $v\ne r$ jedyna droga od $r$ do $v$
+Dla $v\ne r$ jedyna droga prosta od $r$ do $v$
 ma dokładnie jeden wierzchołek bezpośrednio
-poprzedzający $v$ i jego głębokość wynosi
-$h(v)-1$. Gdyby istniał inny sąsiad o
-takiej głębokości, powstałyby dwie różne
-drogi od $r$ do $v$, wbrew jedyności.
+poprzedzający $v$, a jej początkowy fragment
+realizuje odległość tego wierzchołka od $r$.
+Zatem $h(p(v))=h(v)-1$.
+Gdyby istniał inny sąsiad $w$ o głębokości $h(v)-1$,
+droga od $r$ do $w$ nie mogłaby zawierać $v$,
+ponieważ każdy jej początkowy fragment realizuje
+odległość od korzenia. Po dołączeniu $wv$ otrzymalibyśmy
+drugą drogę prostą od $r$ do $v$, z innym przedostatnim
+wierzchołkiem, wbrew jedyności.
 Kolejne zastosowanie rodzica zmniejsza
 nieujemną liczbę całkowitą $h$ o jeden,
 a więc kończy się dokładnie w korzeniu.
@@ -421,20 +430,26 @@ Każdy wierzchołek poza $r$ ma jednoznacznego rodzica.}
 
 \begin{twierdzenie}[Konstrukcja BFS i odległości]
 Niech $G=(V,E)$ będzie skończonym spójnym
-grafem prostym, a $r\in V$. Rozważmy algorytm,
-który nadaje $r$ poziom $0$, a pozostałym
-wierzchołkom kolejne poziomy przez przeglądanie
-sąsiadów w kolejności niemalejących poziomów.
-Gdy wierzchołek $v$ zostaje pierwszy raz
-odkryty jako sąsiad już odkrytego $u$,
-nadajemy mu poziom $h(v)=h(u)+1$ i zapisujemy
-krawędź $uv$ jako krawędź rodzicielską.
+grafem prostym, a $r\in V$. Rozważmy następujący algorytm przeszukiwania wszerz
+(ang. \emph{breadth-first search}, BFS).
+Początkowo jedynie $r$ jest oznaczony jako odkryty,
+ma poziom $h(r)=0$ i znajduje się w kolejce.
+Dopóki kolejka nie jest pusta, usuwamy z jej początku
+wierzchołek $u$ i przeglądamy wszystkich jego sąsiadów.
+Każdego dotąd nieodkrytego sąsiada $v$ natychmiast
+oznaczamy jako odkrytego, nadajemy mu poziom
+$h(v)=h(u)+1$, zapisujemy krawędź $uv$ jako rodzicielską
+i dopisujemy $v$ na końcu kolejki. Kolejność przeglądania
+sąsiadów pojedynczego wierzchołka może być dowolna.
 Wtedy $h(v)=d_G(r,v)$ dla każdego $v\in V$,
 a krawędzie rodzicielskie tworzą drzewo
 rozpinające $G$.
 \end{twierdzenie}
 
 \begin{proof}
+Każdy wierzchołek trafia do kolejki najwyżej raz,
+gdyż oznaczamy go jako odkrytego już przy dopisaniu.
+Graf jest skończony, więc procedura się kończy.
 Najpierw pokażmy, że każdemu wierzchołkowi
 przypisany zostanie poziom. Gdyby po zakończeniu
 procedury pozostał nieodkryty wierzchołek,
@@ -445,18 +460,36 @@ przeglądania wszystkich sąsiadów odkrytego
 wierzchołka, więc jej drugi koniec również
 zostałby odkryty. Sprzeczność.
 
-Poziomy są rozpatrywane w kolejności $0,1,2,\ldots$.
-W chwili odkrycia $v$ z poziomem $h(v)=k$
-istnieje łańcuch kolejnych krawędzi
-rodzicielskich długości $k$ prowadzący od $r$
-do $v$. Wobec tego $d_G(r,v)\le k$.
-Gdyby istniała krótsza droga długości $\ell<k$,
-to indukcyjnie po kolejnych wierzchołkach tej
-drogi algorytm odkryłby wierzchołek na pozycji
-$j$ nie później niż przy przetwarzaniu poziomu
-$j-1$. W szczególności $v$ otrzymałby poziom
-co najwyżej $\ell$, sprzecznie z przypisaniem
-poziomu $k$. Zatem $h(v)=d_G(r,v)$.
+Pokażemy, że poziomy w kolejce są niemalejące
+i różnią się najwyżej o jeden. Początkowo kolejka
+zawiera tylko $r$, więc ma tę własność. Jeżeli
+pierwszy wierzchołek ma poziom $k$, pozostałe mają
+poziom $k$ lub $k+1$, a nowo dopisywane mają poziom
+$k+1$. Po usunięciu pierwszego i dopisaniu nowych
+wierzchołków własność zostaje zachowana (dla pustej
+kolejki jest spełniona automatycznie).
+Indukcyjnie wynika stąd, że przetwarzane wierzchołki
+mają niemalejące poziomy.
+
+Każdy odkryty wierzchołek $v$ z poziomem $k>0$
+ma rodzica o poziomie $k-1$. Powtarzając tę operację,
+po dokładnie $k$ krokach osiągamy jedyny wierzchołek
+o poziomie zero, czyli $r$. Wierzchołki tej drogi
+są różne, bo mają różne poziomy. Zatem $d_G(r,v)\le h(v)$.
+
+Dla dowolnej krawędzi $uv\in E$ mamy
+$h(v)\le h(u)+1$: gdy przetwarzamy $u$, sąsiad $v$
+albo zostaje odkryty z poziomem $h(u)+1$, albo został
+odkryty wcześniej. W tym drugim przypadku, o ile
+$v\ne r$, jego rodzic był przetwarzany nie później
+niż $u$, a więc miał poziom co najwyżej $h(u)$.
+W obu przypadkach otrzymujemy żądaną nierówność;
+dla $v=r$ zachodzi ona także.
+Stosując ją kolejno do krawędzi dowolnej najkrótszej
+drogi $r=v_0,v_1,\ldots,v_\ell=v$, uzyskujemy
+$h(v_j)\le j$ przez indukcję po $j$, zaczynając od
+$h(r)=0$. Stąd $h(v)\le\ell=d_G(r,v)$.
+Łącząc obie nierówności, otrzymujemy $h(v)=d_G(r,v)$.
 
 Każdy $v\ne r$ ma dokładnie jedną wybraną
 krawędź rodzicielską. Wzdłuż kolejnych rodziców
@@ -681,7 +714,9 @@ co najmniej jedną krawędź. Każdy jej
 nieizolowany wierzchołek ma stopień co najmniej
 dwa, bo stopnie są parzyste. W skończonym
 grafie o tej własności istnieje cykl:
-rozpocznijmy spacer, w każdym kroku przechodząc
+rozpocznijmy spacer w dowolnym wierzchołku tej
+składowej, wybierając najpierw dowolną incydentną
+krawędź, a w każdym następnym kroku przechodząc
 krawędzią inną niż ta, którą właśnie weszliśmy.
 Nie możemy zakończyć ruchu w wierzchołku
 stopnia co najmniej dwa; ponieważ graf jest
