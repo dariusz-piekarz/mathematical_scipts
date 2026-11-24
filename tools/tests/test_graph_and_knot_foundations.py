@@ -272,6 +272,88 @@ def test_chapter01_regressions():
     return graphs,sequences
 
 
+def test_chapter02_regressions():
+    graphs=forests=spanning=coordinates=dual=0
+    for n in range(6):
+        es=pairs(n)
+        for mask in range(1<<len(es)):
+            edges=[e for i,e in enumerate(es) if mask>>i&1]
+            m=len(edges)
+            c=component_count(n,edges)
+            # Independent parity model of the entire cycle space.
+            even=set()
+            for x in range(1<<m):
+                parity=0
+                for i,(u,v) in enumerate(edges):
+                    if x>>i&1:
+                        parity^=(1<<u)|(1<<v)
+                if parity==0:
+                    even.add(x)
+            assert len(even)==1<<(m-n+c)
+            found=0
+            for t in range(1<<m):
+                te=[e for i,e in enumerate(edges) if t>>i&1]
+                ct=component_count(n,te)
+                if len(te)!=n-ct:
+                    continue
+                forests+=1
+                maximal=all(component_count(n,te+[e])==ct
+                            for i,e in enumerate(edges) if not t>>i&1)
+                assert maximal==(ct==c)==(len(te)==n-c)
+                if ct!=c:
+                    continue
+                spanning+=1
+                found+=1
+                outside=((1<<m)-1)^t
+                assert len({x&outside for x in even})==len(even)
+                assert len(even)==1<<outside.bit_count()
+                coordinates+=len(even)
+                basis=[]
+                adj=[[] for _ in range(n)]
+                for i,(u,v) in enumerate(edges):
+                    if t>>i&1:
+                        adj[u].append((v,i))
+                        adj[v].append((u,i))
+                for j,(u,v) in enumerate(edges):
+                    if t>>j&1:
+                        continue
+                    # Unique forest path, independent of cut enumeration.
+                    stack=[(u,-1,0)]
+                    p=None
+                    while stack:
+                        w,prev,bits=stack.pop()
+                        if w==v:
+                            p=bits
+                            break
+                        for y,i in adj[w]:
+                            if y!=prev:
+                                stack.append((y,w,bits|(1<<i)))
+                    assert p is not None
+                    cycle=p|(1<<j)
+                    assert cycle in even
+                    basis.append(cycle)
+                    for i,(a,b) in enumerate(edges):
+                        if not t>>i&1:
+                            continue
+                        # Reachability after deletion of the tree edge.
+                        seen={u}
+                        q=[u]
+                        for w in q:
+                            for y,k in adj[w]:
+                                if k!=i and y not in seen:
+                                    seen.add(y)
+                                    q.append(y)
+                        assert (v not in seen)==bool(p>>i&1)
+                        dual+=1
+                generated={0}
+                for b in basis:
+                    generated |= {x^b for x in generated}
+                assert generated==even
+            assert found>0
+            graphs+=1
+    return graphs,forests,spanning,coordinates,dual
+
+
 def test_source_consistency():
     catalog=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book=next(x for x in catalog["books"] if x["id"]=="graph_and_knot_theory")
@@ -290,3 +372,5 @@ if __name__=="__main__":
     print("PASS handshake, complement, odd cycles, incidence rank, bridges, Euler, Robbins, Havel-Hakimi")
     graphs,seqs=test_chapter01_regressions()
     print(f"PASS chapter 01: {graphs} graphs, {seqs} degree sequences; EG, HH, triangle trace, empty graph")
+    g,f,t,x,d=test_chapter02_regressions()
+    print(f"PASS chapter 02: {g} graphs, {f} forests, {t} spanning forests, {x} coordinates, {d} fundamental duality cases")
