@@ -343,6 +343,63 @@ def audit_radial_contraction():
     return checks
 
 
+def audit_length_metric():
+    """TG07-MET-01: unit-edge metric at quarter points, including loops."""
+    graphs=points=distances=0
+    for n in range(1,4):
+        types=list(combinations(range(n),2))+[(v,v) for v in range(n)]
+        for multiplicities in product(range(3),repeat=len(types)):
+            E=[e for e,k in zip(types,multiplicities) for _ in range(k)]
+            if len(E)>4 or not is_connected(n,E):
+                continue
+            # Each unit edge subdivided into four equal parts.
+            N=n+3*len(E)
+            adj=[[] for _ in range(N)]
+            for j,(u,v) in enumerate(E):
+                path=[u,n+3*j,n+3*j+1,n+3*j+2,v]
+                for x,y in zip(path,path[1:]):
+                    adj[x].append(y)
+                    adj[y].append(x)
+            D=[]
+            for x in range(N):
+                row=[None]*N
+                row[x]=0
+                queue=[x]
+                for u in queue:
+                    for v in adj[u]:
+                        if row[v] is None:
+                            row[v]=row[u]+1
+                            queue.append(v)
+                D.append(row)
+            B=[[0 if u==v else n+1 for v in range(n)] for u in range(n)]
+            for u,v in E:
+                if u!=v:
+                    B[u][v]=B[v][u]=1
+            for k in range(n):
+                for u in range(n):
+                    for v in range(n):
+                        B[u][v]=min(B[u][v],B[u][k]+B[k][v])
+            assert all(D[u][v]==4*B[u][v] for u in range(n) for v in range(n))
+            def ends(x):
+                if x<n:
+                    return [(x,0)]
+                j,t=divmod(x-n,3)
+                u,v=E[j]
+                return [(u,t+1),(v,3-t)]
+            for x in range(N):
+                for y in range(N):
+                    expected=min(a+4*B[u][v]+b for u,a in ends(x) for v,b in ends(y))
+                    if x>=n and y>=n and (x-n)//3==(y-n)//3:
+                        expected=min(expected,abs(x-y))
+                    assert D[x][y]==expected
+                    assert (D[x][y]==0)==(x==y)
+                    assert D[x][y]==D[y][x]
+                    distances+=1
+            points+=N
+            graphs+=1
+    return graphs,points,distances
+
+
 def planar_rotation(n,edges):
     """Exhaustive oriented sphere-embedding search via cyclic edge orders.
 
@@ -479,6 +536,7 @@ if __name__=="__main__":
     print("PASS TG07-PERM-01 cases, connected, deck automorphisms:",audit_permutation_covers())
     print("PASS TG07-UC-01 graphs, roots, vertices, incidences:",audit_universal_cover_prefixes())
     print("PASS TG07-RAD-01 exact radial contraction checks:",audit_radial_contraction())
+    print("PASS TG07-MET-01 graphs, points, distances:",audit_length_metric())
     print("PASS 08: exact Kirchhoff/Dirichlet/Thomson models:",graph_count)
     print("PASS 09: exhaustive rotations, planar faces and coloring:",audit_planarity())
     print("PASS source conventions, notation and 44-chapter catalog")
