@@ -89,7 +89,7 @@ def a_star(graph, source, goal, heuristic):
                 heappush(heap, (candidate + heuristic[v], candidate, v))
     return inf
 
-def bidirectional_dijkstra(graph, source, target):
+def bidirectional_dijkstra(graph, source, target, policy='min'):
     rev = reverse_graph(graph)
     dist_f = {v: inf for v in graph}
     dist_b = {v: inf for v in graph}
@@ -97,7 +97,8 @@ def bidirectional_dijkstra(graph, source, target):
     dist_b[target] = 0
     pq_f, pq_b = [(0, source)], [(0, target)]
     seen_f, seen_b = set(), set()
-    mu = inf
+    mu = 0 if source == target else inf
+    step = 0
 
     def top(heap, seen, dist):
         while heap and (heap[0][1] in seen or heap[0][0] != dist[heap[0][1]]):
@@ -109,7 +110,9 @@ def bidirectional_dijkstra(graph, source, target):
         kb = top(pq_b, seen_b, dist_b)
         if kf == inf or kb == inf or kf + kb >= mu:
             break
-        forward = kf <= kb
+        forward = {'min': kf <= kb, 'forward': True,
+                   'backward': False, 'alternate': step % 2 == 0}[policy]
+        step += 1
         heap, seen = (pq_f, seen_f) if forward else (pq_b, seen_b)
         dist, other = (dist_f, dist_b) if forward else (dist_b, dist_f)
         adj = graph if forward else rev
@@ -167,7 +170,8 @@ def test_exhaustive_nonnegative():
                     h = {v: 0 if dist_to_t[v] == inf else dist_to_t[v] for v in graph}
                     assert a_star(graph, s, t, h) == dij[t]
                     assert a_star(graph, s, t, {v: 0 for v in graph}) == dij[t]
-                    assert bidirectional_dijkstra(graph, s, t) == dij[t]
+                    for policy in ('min', 'forward', 'backward', 'alternate'):
+                        assert bidirectional_dijkstra(graph, s, t, policy) == dij[t], (graph, s, t, policy)
             count += 1
     return count
 
