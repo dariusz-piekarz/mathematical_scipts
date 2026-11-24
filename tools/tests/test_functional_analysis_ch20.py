@@ -125,5 +125,37 @@ class Chapter20(unittest.TestCase):
                         rhs += integral(product(product(b,f),phi),-1,1)
                         self.assertEqual(lhs,rhs)
 
+
+    def test_FA20_primitive_and_gradient_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"\supp\psi\subseteq[u,v]",
+            r"\max\{1,\ell\}(1+\lambda_1(K)p_m(\eta))p_m(\varphi)",
+            r"T=-S\circ R",
+            r"R(\varphi')(x)=\int_{-\infty}^x",
+            r"(e^AT)'=e^AT'+(e^A)'T",
+            r"e^{-A}V+T_{ce^{-A}}",
+            r"\partial_jT_Q=0",
+            r"h_j=(\operatorname{Id}-P_j)\psi",
+            r"\supp\theta_j\subseteq L_1\times\cdots\times L_d",
+            r"\supp(T-T_c)=\varnothing",
+            r"\langle S,\psi\rangle=\langle T,\eta\otimes\psi\rangle",
+        ):
+            self.assertIn(fragment, s)
+        # Exact polynomial model of the zero-integral primitive on [-1,1].
+        # eta=3/4(1-x^2) has integral one on this interval.
+        eta = [Fraction(3,4),0,Fraction(-3,4)]
+        self.assertEqual(integral(eta,-1,1),1)
+        for phi in ([1,0,-1],[0,1,0,-1],[1,2,-1,-2]):
+            mass = integral(phi,-1,1)
+            h = [(phi[i] if i<len(phi) else 0) -
+                 mass*(eta[i] if i<len(eta) else 0)
+                 for i in range(max(len(phi),len(eta)))]
+            self.assertEqual(integral(h,-1,1),0)
+            primitive = [-integral(h,0,-1)] + [Fraction(c,i+1) for i,c in enumerate(h)]
+            self.assertEqual(sum(c*(-1)**i for i,c in enumerate(primitive)),0)
+            self.assertEqual(sum(primitive),0)
+            self.assertEqual(derivative(primitive),h)
+
 if __name__ == "__main__":
     unittest.main()
