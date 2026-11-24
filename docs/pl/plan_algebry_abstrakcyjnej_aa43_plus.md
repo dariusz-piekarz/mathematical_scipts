@@ -312,3 +312,7 @@ AA-70: skalar Casimira, rekurencja krotności z różnic śladów, operator ró�
 ## Zamknięcie AA-70 — 24 listopada 2026 r.
 
 **AA-70 STABILNY w ustalonym zakresie; etapy D/P zaliczone.** Cztery dowody, dwa przykłady i trzy trwałe regresje zaliczone; CI [45489653511](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45489653511) 149/149 success, 4792 testy, źródło 18f76eb8ecb04ecbaf316065b6e52c2c4d2b0d53. PDF 436 stron, artefakt 14965733181, wszystkie strony AA-70 (fizyczne 433–436) obejrzane, log czysty. Raport `audits/abstract_algebra/ch70_iteration_04.md`. AA-01–70 stabilne. **AA-71 nieotwarty.** Następny etap D: wzór wymiarowy Weyla z pełnym argumentem granicznym i przykładami.
+
+## Otwarcie AA-71 — 24 listopada 2026 r.
+
+AA-71: specjalizacja wykładnicza i symetria alternantów, dokładny rząd znikania oraz momenty, pełny dowód wzoru wymiarowego Weyla, wielomian wymiaru wzdłuż promienia dominującego i przykłady A1/A2/B2/G2. **Etap D W AUDYCIE.** AA-71-DIM-01 zaliczony (9 układów, 530 modeli, 5462 momenty); pełny CI i PDF do potwierdzenia. AA-72 nieotwarty.
