@@ -131,7 +131,7 @@ class TestAA28HilbertKummer(unittest.TestCase):
     def test_chapter_inventory_and_stable_labels(self):
         root = Path(__file__).resolve().parents[2]
         base = root/"chapters/pl/abstract_algebra"
-        self.assertEqual(len(list(base.glob("[0-9][0-9]-*.tex"))),51)
+        self.assertEqual(len(list(base.glob("[0-9][0-9]-*.tex"))),52)
         ch25 = (base/"25-twierdzenie-hilberta-90-i-rownania-normowe.tex").read_text(encoding="utf-8")
         ch26 = (base/"26-rozszerzenia-cykliczne-i-teoria-kummera.tex").read_text(encoding="utf-8")
         self.assertIn(r"\label{aa:tw:hilbert90-multiplicative}",ch25)

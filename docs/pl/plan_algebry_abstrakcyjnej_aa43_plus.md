@@ -139,3 +139,8 @@ AA-51: skończone podgrupy PGL2(C), klasyfikacja typów izomorfizmu, samodzielne
 ## Zamknięcie AA-51 — 24 listopada 2026 r.
 
 **AA-51 STABILNY w ustalonym zakresie.** Audyty I–VI zakończone. Klasyfikacja typów izomorfizmu skończonych podgrup PGL2(C), dowody orbitowe i sylowowskie, realizacja C_n, D_n, A4, S4, A5 i minimalne orbity 4,6,12; poza zakresem pozostają klasyfikacja sprzężoności i kompletność lokalnych list Kovacica. Raport: `audits/abstract_algebra/ch51_iteration_06.md`. CI https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45297142088, head 5a43b83dcba946ada40fc541e84250e4fc6791f6, 112/112 SUCCESS, 4559 testów repozytorium oraz dedykowane 4+3 PASS. 51 rozdziałów, 1055 etykiet, 577 odsyłaczy, zero brakujących celów. Artefakt 14877820453: PDF 329 stron, AA-51 na stronach 325–329, wszystkie obejrzane; log bez ostrzeżeń i błędów. Status w planie jest nadrzędny wobec historycznego opisu daty na stronie tytułowej PDF. AA-01–50 pozostają stabilne. AA-52 nieotwarty.
+
+
+## Otwarcie AA-52 — 24 listopada 2026 r.
+
+AA-52: skończone podgrupy SL2(C), sprzęganie do SU(2), centralne nakrycie, grupy dwucykliczne i binarne grupy wielościenne, klasyfikacja z dokładnością do sprzężenia poprzez charaktery obrotów, naturalna reprezentacja oraz półniezmienniki orbit. Zakres nie obejmuje pełnych tablic charakterów ani odpowiedniości McKaya. **AA-52 W AUDYCIE**, AA-53 nieotwarty. AA-01–51 zachowują status stabilny. Raport: `audits/abstract_algebra/ch52_iteration_01.md`.

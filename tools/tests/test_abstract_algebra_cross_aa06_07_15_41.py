@@ -200,7 +200,7 @@ class PresentationGroupAlgebraInterface(unittest.TestCase):
     def test_source_references_and_compatibility(self):
         folder=ROOT/"chapters/pl/abstract_algebra"
         paths=sorted(folder.glob("[0-9][0-9]-*.tex"))
-        self.assertEqual(len(paths),51)
+        self.assertEqual(len(paths),52)
         source={p.name:p.read_text(encoding="utf-8") for p in paths}
         labels=[m for s in source.values()
                 for m in re.findall(r"\\label\{([^{}]+)\}",s)]
