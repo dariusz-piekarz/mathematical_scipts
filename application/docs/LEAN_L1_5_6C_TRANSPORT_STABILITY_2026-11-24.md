@@ -164,3 +164,9 @@ Powyższe jest projektem testu, a nie dowodem wykonania. Po potwierdzeniu trzeci
 4. Trwałe regresje: niezgodność ID/obrazu, błędny kod wyjścia, timeout CLI bez potwierdzenia stanu kontenera, błąd usuwania, niedostępny daemon, przekroczenie wyjścia. Testy parsera i atrap nie zastępują realnego Docker. Dopiero potem 2+1 na jednym SHA.
 
 To są kryteria projektowe, nie wykonane testy RT-05. Nie wprowadzać nowego wykonania Lean ani nie zmieniać polityki produkcyjnej przed stabilizacją RT-04.
+
+## Druga pełna kontrola aplikacji dla RT-04
+
+- Kandydat 8f9f9b891bc661c61db82cc3d3d45a78c58922e4: [CI aplikacji 45451772527](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45451772527), próby 1–2 completed/success. Druga próba: 881 testów, 871 zaliczonych, 10 sklasyfikowanych pominięć, brak niesklasyfikowanych; wszystkie siedem regresji sieciowych i serializacji ok. Chromium passed, 537 rozdziałów, javascript_errors=[]. [Docker 45451772599](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45451772599) pozostaje 3/3 na tym samym SHA.
+- Siedem kontrolowanych blobów nadal identycznych z kandydatem. Zlecono trzeci przebieg aplikacji job 138652715038; stan Docker 3/3, aplikacja 2/3. Nie liczyć zlecenia jako sukcesu. Nie zmieniono implementacji ani polityki; RT-05 rozpocząć dopiero po ukończeniu ostatniej próby.
+- Zakres i ograniczenia bez zmian: wyłączone IPv6 poza potwierdzonym zakresem; obserwacja stałego fixture nie jest pełnym dowodem bezpieczeństwa. execution_allowed=false, proof_status=not_run, certificate=false.
