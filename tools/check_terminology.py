@@ -17,6 +17,8 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 
 BANNED = {
+    "liczby hiperrzeczywiste (canonical Polish terminology)": re.compile(
+        r"\bhiperrealn\w*\b", flags=re.IGNORECASE),
     "presnop (use this spelling; rejected old variant)": re.compile(
         r"\bprzed-?snop\w*\b", flags=re.IGNORECASE),
     "zwartościowanie (use uzwarcenie)": re.compile(
