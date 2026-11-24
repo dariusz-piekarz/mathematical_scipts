@@ -146,7 +146,10 @@ a następnie wplatamy nowy zamknięty szlak. Aby uzyskać czas $O(|V|+|E|)$, trz
 przeglądania całego obiegu przy każdym wplataniu.
 Przechowujemy obieg jako listę dwukierunkową wystąpień
 wierzchołków i krawędzi, a wystąpienia oczekujące na
-sprawdzenie w osobnej kolejce. Przy każdym wierzchołku
+sprawdzenie w osobnej kolejce. Na początku obie listy
+zawierają tylko jedno wystąpienie wybranego wierzchołka
+dodatniego stopnia, reprezentujące zamknięty szlak
+długości zero. Pierwsze wplatanie utworzy niepusty obieg. Przy każdym wierzchołku
 utrzymujemy wskaźnik na pierwszą jeszcze niesprawdzoną
 pozycję listy incydencji. Pozycje wykorzystanych krawędzi
 pomijamy; każdą krawędź oznaczamy jako wykorzystaną
@@ -154,12 +157,20 @@ niezależnie od tego, przez który jej koniec ją znaleziono.
 Dla pobranego wystąpienia $w$ budujemy i wplatamy kolejne
 zamknięte szlaki zaczynające się w $w$, dopóki pozostaje
 tam niewykorzystana krawędź. Nowe wystąpienia dodajemy
-do kolejki. Gdy przy $w$ nie ma już niewykorzystanych
+do kolejki, a dotychczasowe wystąpienie $w$ zachowujemy
+jako początek wplecionego fragmentu. Fragment kończy
+się nowym wystąpieniem $w$, po którym następuje
+dotychczasowy dalszy ciąg listy. Jeśli nowy szlak ma
+$k$ krawędzi, powstaje dokładnie $k$ nowych wystąpień
+wierzchołków. Gdy przy $w$ nie ma już niewykorzystanych
 krawędzi, nie pojawią się one później. Każde wystąpienie
 jest sprawdzane najwyżej raz, a każde wplatanie jest
 stałoczasowe poza samą konstrukcją nowego szlaku.
 Lista incydencji ma łącznie $2|E|$ pozycji (także dla
-pętli), a lista obiegu $O(|E|)$ pozycji. Po wyczerpaniu
+pętli). Wskaźniki przesuwamy wyłącznie do przodu,
+zatem łącznie wykonujemy co najwyżej $2|E|$ takich
+przesunięć. W kolejce pojawia się co najwyżej
+$|E|+1$ wystąpień wierzchołków. Po wyczerpaniu
 kolejki nie może pozostać niewykorzystana krawędź,
 gdyż spójność nośnika wymuszałaby jej incydencję
 z pewnym wystąpieniem w obiegu. Stąd podana złożoność,
@@ -465,9 +476,12 @@ dziecko wierzchołka $S_v$ jest jego potomkiem.
 Ponieważ $pv$ nie jest mostem, w $G-pv$ nadal istnieje
 droga od $v$ do $p$. Musi ona zawierać krawędź między
 $S_v$ i $V\setminus S_v$. Jest to krawędź niedrzewowa,
-która na mocy własności DFS łączy pewnego potomka
-$x\in S_v$
-z przodkiem $y$ wierzchołka $v$ (ewentualnie $y=p$).
+która na mocy własności DFS łączy pewien wierzchołek
+$x\in S_v$ (być może $x=v$) z jego przodkiem
+$y\notin S_v$. Istotnie, $y$ nie może być potomkiem
+$x$, ponieważ wtedy należałby do $S_v$. Ponieważ
+$y$ jest przodkiem $x$ i leży poza $S_v$, musi być
+ścisłym przodkiem $v$ (być może $y=p$).
 W orientacji możemy przejść od $v$ do $x$ w dół drzewa,
 a potem łukiem $x\to y$. W ten sposób dotarliśmy do
 wierzchołka o ściśle mniejszej głębokości niż $v$.
