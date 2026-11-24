@@ -95,6 +95,10 @@ i trafia na koniec kolejki. Powstała kolejka
 ma nadal wartości niemalejące i najwyżej dwie
 kolejne wartości. Indukcja po liczbie usunięć
 daje tezę, także gdy kolejka przejściowo staje się pusta.
+Ponadto wartości $d$ kolejno usuwanych wierzchołków są
+niemalejące: po usunięciu elementu o wartości $k$
+każdy pozostający lub nowo dopisany element ma wartość
+co najmniej $k$.
 Oznaczanie wierzchołka przy pierwszym dopisaniu sprawia,
 że żadne późniejsze przeglądanie krawędzi nie dopisze go
 powtórnie.
@@ -321,7 +325,12 @@ wynik DFS spełnia:
 Każdy wierzchołek otrzymuje rodzica tylko w chwili
 pierwszego odkrycia. Rodzic jest odkryty wcześniej
 i pozostaje szary do końca wywołania potomka.
-Nie może więc powstać cykl skierowany ku rodzicom.
+Czas odkrycia ściśle maleje przy przechodzeniu do rodzica.
+Każdy łańcuch rodziców kończy się więc w korzeniu.
+Gdyby nieskierowane krawędzie rodziców tworzyły cykl,
+wierzchołek o największym czasie wejścia na tym cyklu
+musiałby mieć dwóch rodziców (obaj sąsiedzi na cyklu
+zostaliby odkryci wcześniej), co jest niemożliwe.
 Z dowolnego korzenia DFS docieramy do wszystkich
 osiągalnych wierzchołków: gdyby pierwszy wierzchołek
 nieodkryty na drodze wychodzącej od korzenia
@@ -370,17 +379,14 @@ różnym wierzchołkom.
 \section{Mosty i wykrywanie cykli metodą DFS}
 \label{sec:tg-algo-low}
 
-Dla ustalonego drzewa DFS zakorzenionego w $r$
-oznaczmy przez $T_v$ zbiór wierzchołków
-poddrzewa o korzeniu $v$. Dla $v\in V$
-zdefiniujmy $\mathrm{low}[v]$ jako minimum
-$\mathrm{tin}[x]$ po wszystkich wierzchołkach
-$x$, do których można dotrzeć z pewnego
-$y\in T_v$ po co najwyżej jednej krawędzi
-niedrzewowej biegnącej ku przodkowi,
-dopuszczając również drogę długości zero
-z $v$ do $v$ oraz krawędzie drzewa
-prowadzące w dół do $y$.
+Dla każdego $v\in V$ oznaczmy przez $T_v$ zbiór
+wierzchołków poddrzewa o korzeniu $v$ w jego drzewie DFS.
+Liczba $\mathrm{low}[v]$ jest minimum czasu wejścia
+wśród wierzchołków osiągalnych z $v$ przez zejście
+w dół drzewa do pewnego $y\in T_v$, po którym można
+przejść co najwyżej jedną krawędzią niedrzewową
+od $y$ do jego właściwego przodka. Dopuszczamy także
+pozostanie w $v$.
 W szczególności $\mathrm{low}[v]\leq\mathrm{tin}[v]$.
 Równoważnie obliczamy to minimum rekurencyjnie
 w czasie kończenia procedury DFS:
@@ -389,13 +395,19 @@ w czasie kończenia procedury DFS:
 \mathrm{low}[v]=\min\bigl(
   &\{\mathrm{tin}[v]\}\\
   &{}\cup\{\mathrm{tin}[w]:vw\in E,\
-                  w\text{ jest właściwym przodkiem }v\}\\
+                  w\text{ jest właściwym przodkiem }v,\ w\ne p[v]\}\\
   &{}\cup\{\mathrm{low}[w]:p[w]=v\}
 \bigr).
 \end{aligned}
 \]
-Dla grafu \emph{prostego} przy przeglądaniu
-krawędzi wykluczamy jedyną krawędź do rodzica.
+Aby uzasadnić wzór, rozróżniamy drogi, które nie
+schodzą do dziecka $v$, oraz drogi, które najpierw
+schodzą do dziecka $w$. W pierwszym przypadku
+pozostajemy w $v$ lub przechodzimy krawędzią niedrzewową
+do przodka; w drugim wszystkie dopuszczalne końce
+są dokładnie tymi uwzględnionymi przez $\mathrm{low}[w]$.
+Dla grafu \emph{prostego} warunek $w\ne p[v]$ wyklucza
+jedyną krawędź do rodzica.
 Dla multigrafu trzeba odróżniać identyfikatory
 krawędzi równoległych; pominięcie wszystkich
 krawędzi do rodzica dałoby niepoprawny wynik.
