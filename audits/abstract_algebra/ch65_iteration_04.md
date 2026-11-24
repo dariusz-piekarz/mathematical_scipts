@@ -1,0 +1,7 @@
+# AA-65 — audyt IV etapu D: pełny CI i korekta składu
+
+24 listopada 2026 r. Gałąź biblioteka-matematyczna-iteracja-6. CI 45425552893, job 138556424573, head 59730ec54becaa08e99156a2a9f808110035cace: 141/141 kroków success. Oba trwałe zestawy AA-65, w tym regresja typu C, zaliczone. Bramka globalna PASS: 65 rozdziałów, 567 dowodów, 1232 unikatowe etykiety, 855 wystąpień odsyłaczy i 469 unikatowych celów; zero brakujących i powielonych etykiet.
+
+Artefakt 14937140843 pobrano do lokalnego środowiska. PDF 415 stron, SHA-256 c7ee85932f5d43b3dfea90063832c1e3c640da7e1144d3c3d7e852e312f9a7a2. Końcowy log: 0 Overfull, 0 Underfull, 0 Warning:, 0 niezdefiniowanych odsyłaczy, 0 wierszy zaczynających się od !. Wyrenderowano w PyMuPDF w skali 1,5 i obejrzano osobno wszystkie fizyczne strony AA-65 (411–415, drukowane 398–402). Wzory, tekst, odsyłacze i diagram bez kolizji lub obcięć. Jednak strona 402 zawierała jedynie diagram z podpisem, oddzielony od przykładu 65.9. Wprowadzono lokalny podział strony przed sekcją 65.4, żeby przykład i diagram znajdowały się razem. Commit f837d608b8c7ded8c3514d9c640f002664b3734a, nowy blob de5a75ddc4688815c350abde96e8b32923fcd2f5. Zmiana ograniczona do komentarza i polecenia newpage, bez zmiany treści matematycznej.
+
+Etap D nadal otwarty: konieczna kompilacja i ponowne oględziny po korekcie składu. Dotychczasowy CI potwierdza wersję sprzed korekty, nie wersję końcową. P i AA-66 nieotwarte.
