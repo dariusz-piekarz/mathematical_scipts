@@ -95,5 +95,43 @@ class Chapter25(unittest.TestCase):
         for t in product(range(-2,3),repeat=3):
             self.assertEqual(mm((t,),mm(J,I)),mm(mm((t,),J),I))
 
+    def test_FA25_tempered_extension_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"\widetilde T\in\mathcal S'",
+            r"\ref{thm:tempered-estimate22}",
+            r"\delta f/(2p_{j,j}(f))",
+            r"C p_{N,m}(\varphi_j-\varphi_k)",
+            r"\widetilde T(f)=\lim_jT(\varphi_j)",
+            r"C p_{N,m}(\varphi_j-\psi_j)",
+            r"|\widetilde T(f)|\le C p_{N,m}(f)",
+            r"\widetilde T|_{\mathcal D}=T",
+            r"\ref{prop:schwartz-embeddings22}",
+            r"e^{-n/2}(n+2)^N p_{0,m}(\psi)",
+            r"e^{n/2}\int_\R e^y\psi(y)",
+            r"\ref{ex:non-tempered22}",
+        ):
+            self.assertIn(fragment,s)
+        from math import factorial
+        # Finite model of the Cauchy estimate for a dominated functional.
+        # c_k=(-1)^k(1+k)^N/2^(k+1), weighted dual sum <= 1.
+        for N,r,s,a,b in product(range(5),(F(1,2),F(-1,3),F(0)),
+                                 (F(1,4),F(-2,3)),range(-2,3),range(-2,3)):
+            f=[a*r**k+b*s**k for k in range(12)]
+            c=[F((-1)**k*(1+k)**N,2**(k+1)) for k in range(12)]
+            for n in range(1,12):
+                for m in (n+1,12):
+                    v=sum(c[k]*f[k] for k in range(n,m))
+                    p=max((1+k)**N*abs(f[k]) for k in range(n,m))
+                    self.assertLessEqual(abs(v),p)
+                    self.assertLessEqual(abs(v),p*sum(F(1,2**(k+1)) for k in range(n,m)))
+        # Exact rational upper-bound certificate for (n+2)^N exp(-n/2).
+        for N,n in product(range(9),range(1,61)):
+            term=F(n,2)**(N+1)/factorial(N+1)
+            lower=sum(F(n,2)**k/factorial(k) for k in range(N+2))
+            self.assertTrue(lower>=term>0)
+            self.assertLessEqual(F((n+2)**N,1)/term,
+                                 F(3**N*2**(N+1)*factorial(N+1),n))
+
 if __name__ == "__main__":
     unittest.main()
