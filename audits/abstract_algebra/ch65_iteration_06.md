@@ -1,0 +1,17 @@
+# AA-65 — niezależny etap P, zamknięcie stabilizacji
+
+24 listopada 2026 r. Gałąź biblioteka-matematyczna-iteracja-6. Źródło de5a75ddc4688815c350abde96e8b32923fcd2f5, identyczne z zatwierdzoną wersją etapu D.
+
+## Matematyka i redakcja
+Ponownie przeczytano wszystkie pięć dowodów oraz definicje i przykład. Rozkład wagowy wykorzystuje twierdzenie o zupełnej rozkładalności wyłącznie dla sl2; komutujące diagonalizowalne operatory h_i mają wspólne przestrzenie własne i ich ograniczenia do podmodułu są diagonalizowalne. W twierdzeniu o odbiciach rozkład h=Kh_i+ker(alpha_i) jest sumą prostą, a ograniczenie funkcjonału do drugiego składnika pozostaje niezmienione. Równość krotności obejmuje również nieobecne wagi. W dowodzie cykliczności indukcja po długości słowa sprawdza niezmienniczość rozpiętości słów obniżających względem e_i i nie korzysta z pełnej rozkładalności. W twierdzeniu o dominującej całkowitości pierwszy zerowy wyraz f_i^{m+1}v daje lambda(h_i)=m, także m=0; charakterystyka zero gwarantuje niezerowość współczynnika m+1. Maksymalność w skończonym częściowo uporządkowanym zbiorze wag nie wymaga porządku na K. Jednoznaczność: oba rzuty z podmodułu cyklicznego C są surjekcjami, każde niezerowe jądro byłoby całym odpowiednim prostym składnikiem, sprzecznie z jednowymiarowością C_lambda. Sprawdzono znaki działania na przestrzeni sprzężonej, wagi i etykiety diagramu. Nie wykryto usterek wymagających zmiany źródła.
+
+## Regresje wykonane ponownie
+Blob a0fce07fd80a9c1a9d00510a46ccded0eb2bcc06: 32 modele, 1278 wektorów monomialnych, 4434 odbicia, 16158 relacji, 32 najwyższe monomy; PASS.
+Blob 7efca378ef42de9d915fd5936a526f50e2d27880: 9 modeli tensorowych A, 169 wektorów, 138 porównań krotności, 676 relacji, 20 przestrzeni najwyższych wag, suma wymiarów 26; 4 modele C, 112 przestrzeni wagowych, 94 wpisy Cartana, 462 odbicia, 3912 relacji, 12 jednowymiarowych przestrzeni najwyższych wag; PASS.
+
+Niezależny pomocniczy test w Pythonie/SymPy: wszystkie 81 iloczynów tensorowych L(a) tensor L(b) dla a,b=0..8. Zbudowano macierze operatora podwyższającego E na każdej przestrzeni wagowej i obliczono rangi dokładnie nad Q. Sprawdzono 729 przestrzeni: wymiar jądra wynosi 1 dokładnie dla wag a+b-2k, 0<=k<=min(a,b), poza nimi 0. Łącznie 285 jednowymiarowych składowych najwyższej wagi i 729 równości krotności wag przeciwnych. Wszystkie zaliczone. Test pomocniczy nie jest formalizacją Lean; nie wykryto nowej usterki wymagającej trwałej regresji.
+
+## CI i PDF
+CI 45428203616, job 138565913922, head d9034ca7ae2bf66a12298f716a478c0a0d71aec4, 141/141 success. Ponownie odczytano archiwum artefaktu 14937697568, PDF 415 stron, SHA-256 f4f8dc5819837330f9fe69479e742623eac0e70faa52c7b2079d251cbbd57cba zgodna z etapem D. Fizyczne strony 411–415 (drukowane 398–402) ponownie wyrenderowano w PyMuPDF w skali 1,5 i obejrzano zestawienie pięciu stron. Wzory i odsyłacze czytelne, przykład 65.9 wraz z diagramem na stronie 402, brak obcięć i kolizji. Końcowy log: zero Overfull, Underfull, Warning:, undefined references i wierszy zaczynających się od !. Nie uruchamiano ponownej kompilacji niezmienionego źródła.
+
+AA-65 STABILNY w ustalonym zakresie. Etapy D/P zaliczone. AA-66 nieotwarty. Następny etap D: twierdzenie Weyla o zupełnej rozkładalności, z niezależnym dowodem bez korzystania z pełnej klasyfikacji reprezentacji. Istnienie reprezentacji każdej wagi dominującej pozostaje na kolejny rozdział.
