@@ -140,11 +140,11 @@ class DockerCommandFailed(ValueError):
     """Local CLI returned a nonzero exit code."""
 
 
-class DockerCleanupDeadline(DockerCommandTimeout):
+class DockerCleanupDeadline(TimeoutError):
     """Shared cleanup deadline exhausted; daemon state is not confirmed."""
 
 
-class DockerCLIReapUnconfirmed(DockerCommandTimeout):
+class DockerCLIReapUnconfirmed(TimeoutError):
     """Local CLI leader could not be reaped within the remaining budget."""
 
 
