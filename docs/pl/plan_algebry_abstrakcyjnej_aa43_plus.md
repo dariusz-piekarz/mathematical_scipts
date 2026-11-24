@@ -316,3 +316,7 @@ AA-70: skalar Casimira, rekurencja krotności z różnic śladów, operator ró�
 ## Otwarcie AA-71 — 24 listopada 2026 r.
 
 AA-71: specjalizacja wykładnicza i symetria alternantów, dokładny rząd znikania oraz momenty, pełny dowód wzoru wymiarowego Weyla, wielomian wymiaru wzdłuż promienia dominującego i przykłady A1/A2/B2/G2. **Etap D W AUDYCIE.** AA-71-DIM-01 zaliczony (9 układów, 530 modeli, 5462 momenty); pełny CI i PDF do potwierdzenia. AA-72 nieotwarty.
+
+## Zamknięcie AA-71 — 24 listopada 2026 r.
+
+**AA-71 STABILNY w ustalonym zakresie; etapy D/P zaliczone.** Cztery dowody, trzy przykłady i dwie trwałe regresje zaliczone; CI [45502051812](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45502051812) 150/150 success, 4797 testów, źródło a3bc7d6e5da04f440b3a38ff837213d0d3c88f9a. PDF 440 stron, artefakt 14972225786, wszystkie strony AA-71 (fizyczne 437–440) obejrzane, log czysty. Raport `audits/abstract_algebra/ch71_iteration_04.md`. AA-01–71 stabilne. **AA-72 nieotwarty.** Proponowany następny zakres: wzór krotności Kostanta, funkcja partycji korzeni dodatnich i przykłady, z pełnym dowodem na podstawie wzoru charakterów.
