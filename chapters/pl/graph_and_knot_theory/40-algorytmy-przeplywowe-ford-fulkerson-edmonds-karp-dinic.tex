@@ -28,9 +28,11 @@ Przechowujemy je oddzielnie, również jeśli ich
 przejścia resztowe mają te same końce. Jeśli dopuszczamy
 łuki równoległe, każdy łuk ma własny identyfikator,
 a zapis $(u,v)$ określa jedynie jego początek i koniec.
-Przez pojemność przekroju rozumiemy sumę przepustowości
+Dla $S\subseteq V$ przez pojemność przekroju
+$c(S,V\setminus S)$ rozumiemy sumę przepustowości
 wszystkich oryginalnych łuków prowadzących z $S$ do
-$V\setminus S$.
+$V\setminus S$. Terminy \emph{pojemność resztowa}
+i \emph{przepustowość resztowa} mają tutaj to samo znaczenie.
 
 \begin{definicja}[Przejścia resztowe i ścieżka powiększająca]
 \label{def:tg-flow-residual}
@@ -343,9 +345,10 @@ Jego liczba powiększeń jest nie większa niż
 $C_s:=\sum_{a:\,s\to v}c(a)$, gdzie sumujemy
 po wszystkich łukach wychodzących z $s$.
 Przy znalezieniu ścieżki za pomocą DFS
-czas wynosi $O((n+m)(C_s+1))$,
-co nie musi być wielomianowe względem
-długości binarnego zapisu przepustowości.
+czas wynosi $O((n+m)(C_s+1))$.
+Jest to ograniczenie pseudowielomianowe:
+zależy od wartości liczbowej $C_s$, a nie od
+długości jej zapisu binarnego.
 \end{twierdzenie}
 \begin{proof}
 Z lematu \ref{lem:tg-flow-augment} przepływy
@@ -366,6 +369,36 @@ przeszukań dochodzi ostatnie, nieudane przeszukanie
 potwierdzające brak ścieżki. Stąd zapowiedziane
 ograniczenie liczby operacji arytmetycznych.
 \end{proof}
+
+\begin{przyklad}[Wiele powiększeń przy dużych przepustowościach]
+\label{ex:tg-flow-ff-pseudopoly}
+Niech $N\geq1$ będzie liczbą całkowitą. W sieci
+z wierzchołkami $s,a,b,t$ przyjmijmy przepustowość
+$N$ na czterech łukach $s\to a$, $s\to b$,
+$a\to t$, $b\to t$ oraz przepustowość $1$
+na łuku $a\to b$. Innych łuków nie ma.
+
+Wybierajmy naprzemiennie ścieżki $s\to a\to b\to t$
+oraz $s\to b\to a\to t$, w drugiej z nich używając
+przejścia resztowego wstecz względem $a\to b$.
+Po $2j$ powiększeniach ($0\leq j\leq N$) na każdym
+z czterech zewnętrznych łuków płynie $j$ jednostek,
+a na $a\to b$ przepływ jest zerowy. Istotnie, dla
+$j<N$ pierwsza ścieżka przesyła jedną jednostkę,
+nasycając $a\to b$. Druga przesyła także jedną
+jednostkę i zeruje przepływ na tym łuku.
+Przepływ na wszystkich zewnętrznych łukach zwiększa
+się w rezultacie z $j$ do $j+1$.
+
+Otrzymujemy dokładnie $2N$ powiększeń i maksymalny
+przepływ wartości $2N$, równej pojemności przekroju
+$\{s\}$. Przy $N=2^k$ długość zapisu przepustowości
+wynosi $O(k+1)$, lecz liczba powiększeń jest
+wykładnicza względem $k$. Natomiast wybór dwóch
+ścieżek $s\to a\to t$ i $s\to b\to t$ pozwala
+osiągnąć ten sam wynik po dwóch powiększeniach.
+Przykład pokazuje znaczenie reguły wyboru ścieżki.
+\end{przyklad}
 
 \begin{uwaga}[Pojemności wymierne i niewymierne]
 Jeśli wszystkie przepustowości są wymierne,
