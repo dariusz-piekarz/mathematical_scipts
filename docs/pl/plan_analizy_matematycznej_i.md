@@ -22,3 +22,12 @@ Wzorce: Geometria i topologia różniczkowa, rozdział 01 (motywacja, szczegół
 5. Konsekwencje w R: twierdzenie o części całkowitej i przybliżeniach wymiernych, gęstość liczb niewymiernych, twierdzenie o przedziałach zstępujących (w wersji porządkowej i z warunkiem dowolnie małej długości), istnienie i jednoznaczność dodatniego pierwiastka stopnia n przez supremum i jawne oszacowanie przyrostu potęgi; identyfikacja przekroju sqrt(2) z MA1-02. Nie korzystać z ciągłości ani pochodnych.
 6. Jednoznaczność zupełnego ciała uporządkowanego: dla dowolnego takiego F przypisanie x -> {q w Q: q_F < x} jest izomorfizmem porządków i ciał z R_D; jawnie wykazać surjekcję przez supremum, zachowanie dodawania i mnożenia przez przybliżenia wymierne, jednoznaczność izomorfizmu przez gęstość.
 Granice zakresu: nie wprowadzać jeszcze ogólnej zbieżności ciągów rzeczywistych, metryk, konstrukcji funkcji elementarnych, liczb hiperrealnych ani rozszerzonej prostej. W MA1-03 stosować odsyłacze do MA1-01/02 zamiast ponownego dowodzenia konstrukcji Q, przekrojów i własności modułu. Rozdział ma zawierać przykłady i kontrprzykłady, rysunki osi tylko gdy poprawiają zrozumienie, trwałe regresje i komplet kontroli przed stabilizacją.
+
+## MA1-05 — liczby zespolone (po zaliczeniu bramki MA1-04)
+1. Konstrukcja C jako R^2 z działaniami, aksjomaty ciała, odwrotność, zanurzenie R i jednostka urojona. Związek z R[X]/(X^2+1) bez powtarzania teorii ilorazów.
+2. Postać algebraiczna, część rzeczywista i urojona, sprzężenie i jego własności, brak porządku zgodnego z działaniami (i^2=-1).
+3. Moduł z pierwiastka MA1-03, multiplikatywność, nierówność trójkąta i odwrotna, oszacowania części rzeczywistej i urojonej.
+4. Geometria: płaszczyzna zespolona, dodawanie jako przesunięcie, sprzężenie jako odbicie, mnożenie jako odwzorowanie liniowe o macierzy [[Re z,-Im z],[Im z,Re z]], skala |z|, obroty jednostkowe bez użycia trygonometrii; czytelne rysunki.
+5. Rozwiązanie z^2=w z jawnym wyprowadzeniem współrzędnych, osobne przypadki zera i ujemnej liczby rzeczywistej; wzór kwadratowy, przykłady. Bez zasadniczego twierdzenia algebry na tym etapie.
+6. Okrąg jednostkowy jako grupa i normalizacja z/|z|. Argument liczbowy, exp, sin, cos, wzór Eulera, wzór de Moivre'a i pierwiastki dowolnego stopnia po konstrukcji funkcji elementarnych i szeregów (MA1-18); unikać kołowości.
+7. Testy regresyjne arytmetyki par, sprzężenia, odwrotności, modułu, pierwiastków i geometrii; audyty matematyczne, redakcyjne i techniczne, rysunki i Atlas.
