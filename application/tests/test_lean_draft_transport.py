@@ -632,3 +632,99 @@ class RuntimeOutputLimitTests(unittest.TestCase):
         self.assertIn("exec /bin/busybox sleep 90", _OUTPUT_FIXTURE)
         self.assertNotIn("while", _OUTPUT_FIXTURE)
         self.assertNotIn("/dev/zero", _OUTPUT_FIXTURE)
+
+
+class RuntimeReportTests(unittest.TestCase):
+    sha = "f" * 40
+
+    def report(self):
+        from scripts.lean_rootless_ci_probe import build_success_report
+        flags = {"certificate": False, "execution_allowed": False, "proof_status": "not_run"}
+        cases = {}
+        for i, (name, status, code) in enumerate((
+            ("normal", "runtime_limits_security_network_checked", 0),
+            ("controlled_failure", "controlled_failure_checked", 42),
+            ("timeout", "timeout_checked", 137), ("output_limit", "output_limit_checked", 137)
+        ), 1):
+            cases[name] = {**flags, "status": status, "cleanup_status": "removed_verified",
+                           "image_id": "sha256:" + str(i)*64, "container_id": str(i+4)*64,
+                           "exit_code": code, "container_state": "exited"}
+        cases["preflight"] = {**flags, "status": "configuration_checked",
+                              "cleanup_status": "removed", "image_id": cases["normal"]["image_id"]}
+        cases["normal"]["observations"] = {
+            "memory.max": str(policy.MEMORY_BYTES), "memory.swap.max": "0",
+            "pids.max": str(policy.PIDS_LIMIT), "cpu.max": "100000 100000",
+            "Uid": "65534 65534 65534 65534", "Gid": "65534 65534 65534 65534",
+            "CapEff": "0000000000000000", "NoNewPrivs": "1", "Seccomp": "2",
+            "root.write": "EROFS", "tmp.write": "ok", "tmp.owner_mode": "65534:65534:700",
+            "root.mountopts": "ro,relatime", "tmp.mountopts": "rw,noexec,nosuid,nodev",
+            "net.interfaces": "lo", "net.ipv4_default": "absent", "net.ipv6_usable_default": "absent",
+            "net.docker_socket": "absent", "net.ipv4_rows": 0, "net.ipv6_rows": 3}
+        cases["timeout"].update(running_after_cli_timeout=True, cli_timeout_seconds=transport.COMMAND_TIMEOUT)
+        cases["output_limit"].update(running_after_cli_output_limit=True, capture_limit_bytes=transport.MAX_METADATA_BYTES)
+        return build_success_report(checkout_sha=self.sha, expected_sha=self.sha,
+                                    docker={"client": "28.0.4", "server": "28.0.4"}, cases=cases)
+
+    def test_success_report_is_strict_and_checkout_bound(self):
+        from scripts.lean_rootless_ci_probe import validate_success_report
+        report = self.report()
+        validate_success_report(report, expected_sha=self.sha)
+        for key, value in (("checkout_sha", "a"*40), ("schema_version", True),
+                           ("certificate", True), ("execution_allowed", True),
+                           ("proof_status", "verified"), ("extra", None)):
+            changed = {**report, key: value}
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                validate_success_report(changed, expected_sha=self.sha)
+
+    def test_missing_case_duplicate_id_or_wrong_image_is_rejected(self):
+        from scripts.lean_rootless_ci_probe import validate_success_report
+        for mode in ("missing", "extra", "duplicate_container", "duplicate_image", "preflight_mismatch"):
+            report = self.report()
+            c = report["cases"]
+            if mode == "missing":
+                del c["timeout"]
+            elif mode == "extra":
+                c["unknown"] = c["normal"]
+            elif mode == "duplicate_container":
+                c["timeout"]["container_id"] = c["normal"]["container_id"]
+            elif mode == "duplicate_image":
+                c["timeout"]["image_id"] = c["normal"]["image_id"]
+            else:
+                c["preflight"]["image_id"] = c["timeout"]["image_id"]
+            with self.subTest(mode=mode), self.assertRaises(ValueError):
+                validate_success_report(report, expected_sha=self.sha)
+
+    def test_case_flags_cleanup_and_exit_are_not_promotable(self):
+        from scripts.lean_rootless_ci_probe import validate_success_report
+        for key, value in (("cleanup_status", "removed"), ("exit_code", True),
+                           ("certificate", True), ("execution_allowed", True),
+                           ("status", "not_run"), ("running_after_cli_timeout", False)):
+            report = self.report()
+            report["cases"]["timeout"][key] = value
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                validate_success_report(report, expected_sha=self.sha)
+
+    def test_missing_or_unsafe_summary_observations_are_rejected(self):
+        from scripts.lean_rootless_ci_probe import validate_success_report
+        for key, value in (("net.ipv4_rows", True), ("net.ipv6_rows", 0),
+                           ("root.mountopts", "rw"), ("memory.max", "0"),
+                           ("net.interfaces", "eth0"), ("cpu.max", "max 100000")):
+            report = self.report()
+            report["cases"]["normal"]["observations"][key] = value
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                validate_success_report(report, expected_sha=self.sha)
+        report = self.report()
+        del report["cases"]["normal"]["observations"]["CapEff"]
+        with self.assertRaises(ValueError):
+            validate_success_report(report, expected_sha=self.sha)
+
+    def test_engine_versions_required_from_both_endpoints(self):
+        from scripts.lean_rootless_ci_probe import report_engine_versions
+        self.assertEqual(report_engine_versions({"Client": {"Version": "28.0.4"},
+                         "Server": {"Version": "28.0.4"}}),
+                         {"client": "28.0.4", "server": "28.0.4"})
+        for data in ({}, {"Client": {"Version": "28.0.4"}},
+                     {"Client": {"Version": True}, "Server": {"Version": "28.0.4"}},
+                     {"Client": {"Version": "28.0.4"}, "Server": {"Version": "28.0.4\n"}}):
+            with self.subTest(data=data), self.assertRaises(ValueError):
+                report_engine_versions(data)
