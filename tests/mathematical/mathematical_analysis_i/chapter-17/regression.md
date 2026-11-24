@@ -17,3 +17,4 @@ Testy Python sprawdzają skończone świadki i tożsamości w dokładnej arytmet
 | MA1-17-013 | ma1:ex:inverse-of-jump | Rozłączny obraz, poprawna odwrotność, względna ciągłość przy 1 | semantyczna + Python |
 | MA1-17-014 | ma1:thm:continuous-injective-monotone | Wartość środkowa między skrajnymi, sprzeczność z iniekcją, uporządkowanie czterech punktów | semantyczna |
 | MA1-17-015 | ma1:cor:monotone-homeomorphism | Obraz przedziałem, ścisła monotoniczność, ciągła odwrotność | semantyczna |
+| MA1-17-016 | ma1:ex:dense-monotone-jumps | Ciągłość szeregu po wyłączeniu k-tego składnika w r_k, dokładny skok 2^(-k), ciągłość prawostronna i suma skoków 1 | semantyczna + Python (test_exact_jump_and_right_continuity) |
