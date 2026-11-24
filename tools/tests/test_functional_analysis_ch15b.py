@@ -31,6 +31,7 @@ class TestChapter15B(unittest.TestCase):
         ]
 
         def vecsum(weighted):
+            weighted = tuple(weighted)
             return tuple(sum((w * v[k] for w, v in weighted), Fraction(0))
                          for k in range(2))
 
@@ -46,6 +47,7 @@ class TestChapter15B(unittest.TestCase):
             (mu[i] * nu[j], f[i][j])
             for i in range(len(mu)) for j in range(len(nu))
         )
+        self.assertEqual(product, (Fraction(-53, 210), Fraction(61, 50)))
         self.assertEqual(by_s, product)
         self.assertEqual(by_t, product)
 
