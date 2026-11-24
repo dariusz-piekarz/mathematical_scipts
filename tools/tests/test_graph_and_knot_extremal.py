@@ -111,6 +111,41 @@ def test_zykov():
     return checked
 
 
+def test_zykov_classes():
+    # TG41-ZYK-01: verify whole-class symmetrization, not only vertex cloning.
+    def classes(n, graph):
+        groups = {}
+        for v in range(n):
+            neighbors = frozenset(u for u in range(n)
+                                  if tuple(sorted((u, v))) in graph)
+            groups.setdefault(neighbors, set()).add(v)
+        return list(groups.values())
+
+    count = 0
+    for n in range(6):
+        for mask in range(1 << len(pairs(n))):
+            graph = edges_of(n, mask)
+            old = classes(n, graph)
+            for A, B in itertools.permutations(old, 2):
+                if any(tuple(sorted((a, b))) in graph for a in A for b in B):
+                    continue
+                a, b = min(A), min(B)
+                neighbors = {v for v in range(n)
+                             if tuple(sorted((a, v))) in graph}
+                degree_b = sum(b in edge for edge in graph)
+                changed = frozenset({e for e in graph if not B.intersection(e)}
+                                    | {tuple(sorted((v, w))) for v in B for w in neighbors})
+                assert len(changed) - len(graph) == len(B)*(len(neighbors)-degree_b)
+                for k in range(2, n+1):
+                    assert not has_clique(n, changed, k) or has_clique(n, graph, k)
+                new = classes(n, changed)
+                assert any(A | B <= C for C in new)
+                assert all(any(C <= D for D in new) for C in old)
+                assert sum(len(C)**2 for C in new) >= sum(len(C)**2 for C in old)+2*len(A)*len(B)
+                count += 1
+    return count
+
+
 def test_ramsey():
     all5 = frozenset(pairs(5))
     cycle = frozenset(tuple(sorted((i, (i+1) % 5))) for i in range(5))
@@ -182,6 +217,7 @@ if __name__ == "__main__":
     test_integration()
     print("PASS all simple graphs n=0..6; Turan/Mantel:", test_exhaustive_turan())
     print("PASS nonedge symmetrization and clique-free preservation:", test_zykov())
+    print("PASS TG41-ZYK-01 whole-class symmetrizations:", test_zykov_classes())
     print("PASS red/blue K5 and K6 Ramsey colorings:", test_ramsey())
     test_hand_examples()
     print("PASS exact numeric examples, graph catalog and LaTeX structure")
