@@ -493,19 +493,22 @@ Niech $v$ nie będzie korzeniem.
 Jeżeli pewne dziecko $w$ spełnia
 $\mathrm{low}[w]\geq\mathrm{tin}[v]$,
 to po usunięciu $v$ poddrzewo $T_w$
-nie ma krawędzi do części składowej
-zawierającej rodzica $v$.
-Zatem liczba składowych wzrasta.
+nie ma krawędzi do żadnego wierzchołka spoza $T_w$:
+krawędź do innego poddrzewa dziecięcego przeczyłaby
+własności przodków DFS, a krawędź do ścisłego przodka $v$
+przeczyłaby nierówności dla $\mathrm{low}[w]$.
+Poddrzewo $T_w$ pozostaje spójne, a rodzic $v$ leży
+poza nim. Zatem liczba składowych wzrasta.
 Jeśli natomiast dla każdego dziecka
 $w$ zachodzi
 $\mathrm{low}[w]<\mathrm{tin}[v]$,
 to każde poddrzewo dziecięce
 łączy się bez udziału $v$ ze ścisłym
-przodkiem $v$. Droga przodków od
-korzenia do rodzica $v$ pozostaje
-spójna, podobnie jak pozostałe
-części drzewa DFS po usunięciu $v$.
-Wobec tego nie powstaje nowa składowa.
+przodkiem $v$. Poza poddrzewem $T_v$ każdy wierzchołek składowej
+nadal jest połączony z korzeniem swoją drogą drzewową,
+która nie zawiera $v$. Każde poddrzewo dziecięce
+jest spójne i ma krawędź do tej części składowej.
+Wobec tego cała składowa po usunięciu $v$ pozostaje spójna.
 
 Niech teraz $v$ będzie korzeniem.
 Poddrzewa jego różnych dzieci
@@ -515,10 +518,10 @@ przy wykonywaniu pierwszego z
 dwóch wywołań i spowodowałaby
 odkrycie drugiego poddrzewa
 wewnątrz pierwszego. Po usunięciu
-$v$ pozostaje dokładnie tyle
-składowych, ile $v$ ma dzieci,
-z pominięciem pustej składowej
-w przypadku jednoelementowym.
+$v$ w obrębie jego pierwotnej składowej pozostaje
+dokładnie tyle składowych, ile $v$ ma dzieci.
+Dla izolowanego korzenia liczba ta wynosi zero;
+pozostałe składowe grafu nie zmieniają się.
 Usunięcie korzenia zwiększa zatem
 liczbę składowych dokładnie wtedy,
 gdy dzieci jest co najmniej dwoje.
@@ -599,8 +602,18 @@ wierzchołka $v$ pomijamy wyłącznie
 \emph{identyfikator krawędzi drzewowej},
 którą przyszliśmy z rodzica, nie wszystkie
 krawędzie do tego rodzica.
-Wtedy wzór rekurencyjny na $\mathrm{low}$,
-kryterium mostu
+Niech $e_v$ oznacza identyfikator krawędzi drzewowej
+prowadzącej do $v$ (dla korzenia $e_v=\bot$).
+Wtedy właściwa rekurencja ma postać
+\[
+\mathrm{low}[v]=\min\bigl(
+\{\mathrm{tin}[v]\}
+\cup\{\mathrm{tin}[x]:(x,i)\in N_{\mathrm{id}}(v),\
+i\ne e_v,\ x\text{ jest właściwym przodkiem }v\}
+\cup\{\mathrm{low}[w]:p[w]=v\}\bigr),
+\]
+gdzie $N_{\mathrm{id}}(v)$ jest listą par sąsiad--identyfikator.
+Kryterium mostu
 z Twierdzenia~\ref{thm:tg-dfs-bridge}
 oraz kryteria punktu artykulacji
 z Twierdzenia~\ref{thm:tg-dfs-articulation}
@@ -647,7 +660,11 @@ krawędzi do ścisłego przodka,
 co daje nierówność
 $\mathrm{low}[w]<\mathrm{tin}[v]$
 dla każdego dziecka wierzchołka
-niebędącego punktem artykulacji.
+niebędącego korzeniem ani punktem artykulacji.
+Jeżeli nierówność nie zachodzi, poddrzewo dziecka
+zostaje odcięte od rodzica $v$ po usunięciu $v$.
+W przeciwnym przypadku wszystkie poddrzewa dziecięce
+pozostają połączone z częścią drzewa zawierającą korzeń.
 Warunek na liczbę dzieci
 korzenia nie ulega zmianie.
 Każdy wpis listy sąsiedztwa
