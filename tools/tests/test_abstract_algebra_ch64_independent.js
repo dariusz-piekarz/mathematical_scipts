@@ -33,7 +33,9 @@ function cartan64(){
    let hs=H.map(conj);const normalizerRank=rank(basis.map(Y=>hs.flatMap(T=>br(Y,T).flat())));
    assert(d-normalizerRank===n-1,"centralizer of diagonal");
    // For any root basis vector at least one bracket is nonzero modulo H; hence no extra normalizer.
-   const hRank=rank(hs.map(A=>A.flat()));for(const Y of basis.slice(n-1)){assert(hs.some(T=>rank([...hs.map(A=>A.flat()),br(Y,T).flat()])>hRank),"nonzero root outside H");}normalizers++;
+   const off=A=>A.flatMap((row,i)=>row.filter((_,j)=>i!==j));
+   const quotientRank=rank(basis.map(Y=>hs.flatMap(T=>off(mul(mul(V,br(Y,T)),U)))));
+   assert(d-quotientRank===n-1,"normalizer dimension in quotient");normalizers++;
    models++;
   }
  }
