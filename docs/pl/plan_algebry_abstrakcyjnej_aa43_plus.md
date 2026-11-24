@@ -179,3 +179,8 @@ AA-55: grafy McKaya i afiniczne diagramy Dynkina, zakres docs/pl/zakres_aa55_gra
 ## Otwarcie AA-56 — 24 listopada 2026 r.
 
 AA-56: macierze Cartana, układy korzeni i grupy Weyla, zakres docs/pl/zakres_aa56_uklady_korzeni.md. AA-01–55 stabilne, **AA-56 W AUDYCIE**, AA-57 nieotwarty. Samodzielna klasyfikacja skończona, bez algebr Liego i pełnej teorii afinicznej.
+
+
+## Zamknięcie AA-56 — 24 listopada 2026 r.
+
+**AA-56 STABILNY w ustalonym zakresie.** Audyty III–IV czyste (2/2), 23670 drzew ważonych, 348796 par korzeni ADE, 755808 par korzeni klasycznych i 14 grup Weyla. CI [45359728972](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45359728972): 122/122 success; artefakt 14903848814, PDF 360 stron, AA-56 fizyczne 352–360 (drukowane 341–349), wszystkie obejrzane, log bez błędów i ostrzeżeń. Blob b75d8fac66195d710df141cdae3e3081b137d687. Raport końcowy `audits/abstract_algebra/ch56_iteration_05.md`. AA-01–55 pozostają stabilne. **AA-57 nieotwarty**; propozycja: wprowadzenie do algebr Liego, twierdzenia Engela i Liego, z przygotowaniem do struktury półprostej. Status planu nadrzędny wobec historycznej strony tytułowej.
