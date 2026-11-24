@@ -3,7 +3,7 @@
 No Lean, untrusted payload, registry access or user-provided code. The fixture
 image is constructed from a system static BusyBox with a harmless entrypoint.
 The preflight remains configuration-only. A separate CI-only runtime probe
-starts the fixed harmless fixture to read actual cgroup limits.
+starts the fixed harmless fixture to observe cgroup limits and security flags.
 """
 from __future__ import annotations
 
@@ -27,6 +27,29 @@ for key in memory.max memory.swap.max pids.max cpu.max; do
     value=$(/bin/busybox cat "/sys/fs/cgroup/$key")
     printf '%s=%s\\n' "$key" "$value"
 done
+# Observe the actual credentials and kernel flags of the fixture shell.
+/bin/busybox awk '
+    /^(Uid|Gid):/ {key=$1; sub(/:$/, "", key); printf "%s=%s %s %s %s\\n",key,$2,$3,$4,$5}
+    /^(CapEff|NoNewPrivs|Seccomp):/ {key=$1; sub(/:$/, "", key); printf "%s=%s\\n",key,$2}
+' "/proc/$/status"
+/bin/busybox awk '
+    $5 == "/" {print "root.mountopts=" $6}
+    $5 == "/tmp" {print "tmp.mountopts=" $6}
+' "/proc/$/mountinfo"
+# The image file is world-writable by mode, so a permissions-only refusal
+# is not enough. Require the actual read-only filesystem error.
+test "$(/bin/busybox stat -c %a /opt/atlas/write-check)" = 666
+if err=$(LC_ALL=C /bin/busybox touch /opt/atlas/write-check 2>&1); then
+    exit 11
+fi
+case "$err" in
+    *"Read-only file system"*) printf 'root.write=EROFS\\n' ;;
+    *) exit 12 ;;
+esac
+printf 'atlas-runtime-fixture' > /tmp/atlas-write-check
+test "$(/bin/busybox cat /tmp/atlas-write-check)" = atlas-runtime-fixture
+/bin/busybox rm /tmp/atlas-write-check
+printf 'tmp.write=ok\\n'
 """
 
 
@@ -51,6 +74,43 @@ def validate_runtime_limits(output: bytes) -> dict:
     return values
 
 
+
+def validate_runtime_security(output: bytes) -> dict:
+    """Check observed credentials, kernel restrictions and filesystem probes."""
+    values = {}
+    for line in output.decode("ascii").splitlines():
+        key, sep, value = line.partition("=")
+        if not sep or key in values:
+            raise ValueError("Malformed or duplicate security observation")
+        values[key] = value
+    exact = {"Uid": "65534 65534 65534 65534", "Gid": "65534 65534 65534 65534",
+             "CapEff": "0000000000000000", "NoNewPrivs": "1", "Seccomp": "2",
+             "root.write": "EROFS", "tmp.write": "ok"}
+    if set(values) != set(exact) | {"root.mountopts", "tmp.mountopts"}:
+        raise ValueError("Missing or unexpected security observation")
+    if any(values[k] != v for k, v in exact.items()):
+        raise ValueError("Runtime credentials, restrictions or write probes differ")
+    root_opts = set(values["root.mountopts"].split(","))
+    tmp_opts = set(values["tmp.mountopts"].split(","))
+    if "ro" not in root_opts or "rw" in root_opts:
+        raise ValueError("Root mount must be read-only")
+    if not {"rw", "noexec", "nosuid", "nodev"} <= tmp_opts or tmp_opts & {"ro", "exec", "suid", "dev"}:
+        raise ValueError("Unexpected runtime temporary mount options")
+    return values
+
+
+def validate_runtime_observations(output: bytes) -> dict:
+    cgroup = []
+    security = []
+    for line in output.splitlines():
+        if line.partition(b"=")[0] in {b"memory.max", b"memory.swap.max", b"pids.max", b"cpu.max"}:
+            cgroup.append(line)
+        else:
+            security.append(line)
+    return {**validate_runtime_limits(b"\n".join(cgroup)),
+            **validate_runtime_security(b"\n".join(security))}
+
+
 def check_runtime_limits(prefix: list[str], env: dict[str, str], image_id: str) -> dict:
     """CI only; never pass source, accept commands or enable draft execution."""
     def call(*args):
@@ -67,7 +127,7 @@ def check_runtime_limits(prefix: list[str], env: dict[str, str], image_id: str) 
     try:
         transport.validate_container(transport._decode_metadata(call("container", "inspect", cid)),
                                      container_id=cid, image_id=image_id, name=name)
-        values = validate_runtime_limits(call("container", "start", "--attach", cid))
+        values = validate_runtime_observations(call("container", "start", "--attach", cid))
         records = transport._decode_metadata(call("container", "inspect", cid))
         if (type(records) is not list or len(records) != 1 or type(records[0]) is not dict
                 or records[0].get("Id") != cid or records[0].get("Image") != image_id):
@@ -81,7 +141,7 @@ def check_runtime_limits(prefix: list[str], env: dict[str, str], image_id: str) 
         # Kill/remove by exact ID even if the local CLI timed out.
         # An unsuccessful removal is a failed test, never a success report.
         call("container", "rm", "--force", cid)
-    return {"status": "runtime_limits_checked", "observations": values,
+    return {"status": "runtime_limits_and_security_checked", "observations": values,
             "image_id": image_id, "cleanup_status": "removed",
             "execution_allowed": False, "proof_status": "not_run", "certificate": False}
 
@@ -103,10 +163,14 @@ def main() -> int:
         entry = context / "run-draft"
         entry.write_text(_FIXTURE, encoding="utf-8")
         entry.chmod(0o755)
+        writable = context / "write-check"
+        writable.write_bytes(b"fixed harmless fixture")
+        writable.chmod(0o666)
         (context / "Dockerfile").write_text(
             "FROM scratch\n"
             "COPY busybox /bin/busybox\n"
             "COPY run-draft /opt/atlas/run-draft\n"
+            "COPY write-check /opt/atlas/write-check\n"
             "ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\n"
             "ENV HOME=/tmp LEAN_NUM_THREADS=1\n"
             "USER 65534:65534\n"
