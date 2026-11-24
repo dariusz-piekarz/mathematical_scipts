@@ -1,0 +1,552 @@
+\chapter{Rodziny sprzężone: rachunek posterioru i prognoza}
+\label{ch:conjugate-families}
+\paragraph{Powiązania i odsyłacze.} Wzór Bayesa i warunki normalizacji wprowadziliśmy w rozdziale~\ref{ch:bayes-foundations}; predykcję rozwijamy w rozdziale~\ref{ch:bayes-estimation-prediction}.
+
+
+\section{Dlaczego sprzężoność jest użyteczna?}
+Sprzężoność pozwala przekształcić wzór Bayesa w jawny rachunek:
+po obserwacji danych rozkład a posteriori pozostaje w tej samej
+rodzinie co prior. W praktyce otrzymujemy dzięki temu proste
+prognozy, przedziały wiarygodności i wygodne aktualizowanie wiedzy
+po napływie nowych obserwacji. Nie jest to jednak argument za
+wyborem rodziny jako \emph{prawdziwego} modelu danych:
+wygoda obliczeniowa nie zastępuje diagnostyki ani analizy wrażliwości.
+
+\begin{definicja}[Rodzina sprzężona]
+Dla jądra wiarygodności $p(x\mid\theta)$ na
+$\Theta_0$ rodzinę \emph{właściwych} priorów
+$\{\pi_\eta:\eta\in H\}$ nazywamy sprzężoną, jeśli dla
+każdego dopuszczalnego $\eta$ i każdego $x$ o dodatniej,
+skończonej gęstości predykcyjnej rozkład a posteriori jest
+równy $\pi_{T(\eta,x)}$ dla pewnego odwzorowania aktualizacji
+$T$. Sprzężoność określa parę (model wiarygodności, prior),
+a nie własność samej rodziny priorów.
+\end{definicja}
+
+\section{Beta--Bernoulli i beta--dwumianowy: szacowanie odsetka}
+\begin{definicja}[Rozkład beta]
+Dla $a,b>0$ rozkład $\operatorname{Beta}(a,b)$ na $(0,1)$
+ma gęstość
+\[
+ f_{a,b}(p)=\frac{p^{a-1}(1-p)^{b-1}}{B(a,b)},
+ \qquad B(a,b)=\int_0^1u^{a-1}(1-u)^{b-1}\,\dd\lambda_1(u)
+ =\frac{\Gamma(a)\Gamma(b)}{\Gamma(a+b)}.
+\]
+Funkcja $\Gamma(t)=\int_0^\infty u^{t-1}e^{-u}\,\dd\lambda_1(u)$
+dla $t>0$ jest funkcją gamma. Tożsamość beta--gamma wynika
+ze zmiany zmiennych w podwójnej całce gamma; wykorzystamy
+ją do obliczania momentów.
+\end{definicja}
+
+\begin{lemat}[Tożsamość beta--gamma]
+Dla wszystkich $a,b>0$ zachodzi
+$B(a,b)=\Gamma(a)\Gamma(b)/\Gamma(a+b)$.
+\end{lemat}
+\begin{proof}
+Korzystając z twierdzenia Tonellego, zapisujemy iloczyn
+$\Gamma(a)\Gamma(b)$ jako całkę funkcji
+$x^{a-1}y^{b-1}e^{-x-y}$ po $(0,\infty)^2$
+względem $\lambda_2$. Podstawiamy $x=ru$, $y=r(1-u)$
+dla $r>0$, $u\in(0,1)$. Jakobian ma wartość $r$,
+więc nowa całka jest iloczynem
+$\int_0^\infty r^{a+b-1}e^{-r}\,\dd\lambda_1(r)$
+i $\int_0^1u^{a-1}(1-u)^{b-1}\,\dd\lambda_1(u)$.
+Pierwsza całka równa się $\Gamma(a+b)$, druga $B(a,b)$.
+\end{proof}
+
+\begin{twierdzenie}[Sprzężoność i rozkład predykcyjny beta--dwumianowy]
+\label{thm:beta-binomial}
+Niech $p\sim\operatorname{Beta}(a,b)$, $a,b>0$, a warunkowo
+względem $p$ zmienne $X_1,\ldots,X_n$ będą niezależne
+i $X_i\mid p\sim\operatorname{Bernoulli}(p)$, gdzie $n\ge1$.
+Niech $S=\sum_{i=1}^nX_i$ i $s\in\{0,\ldots,n\}$.
+Wtedy
+\[
+ p\mid S=s\sim\operatorname{Beta}(a+s,b+n-s),\qquad
+ \E[p\mid S=s]=\frac{a+s}{a+b+n},
+\]
+\[
+ \Var(p\mid S=s)=\frac{(a+s)(b+n-s)}{(a+b+n)^2(a+b+n+1)}.
+\]
+Jeżeli po próbie otrzymamy $m\ge1$ nowych, warunkowo niezależnych
+obserwacji Bernoulliego o tym samym parametrze i
+$T$ oznacza liczbę sukcesów, to dla $j=0,\ldots,m$
+\[
+ \Prob(T=j\mid S=s)
+ =\binom mj\frac{B(a+s+j,b+n-s+m-j)}{B(a+s,b+n-s)}.
+\]
+W szczególności przyszły pojedynczy sukces ma prawdopodobieństwo
+$(a+s)/(a+b+n)$.
+\end{twierdzenie}
+\begin{proof}
+Prawdopodobieństwo $S=s$ przy znanym $p$ wynosi
+$\binom ns p^s(1-p)^{n-s}$. Iloczyn gęstości prioru i
+wiarygodności jest proporcjonalny do
+$p^{a+s-1}(1-p)^{b+n-s-1}$, więc normalizacja przez
+$B(a+s,b+n-s)$ daje rozkład wskazany w tezie.
+Dla $r>0$, $t>0$, $k\in\{1,2\}$, z definicji beta
+$\E[U^k]=B(r+k,t)/B(r,t)$, gdzie
+$U\sim\operatorname{Beta}(r,t)$. Tożsamość
+$\Gamma(z+1)=z\Gamma(z)$ daje
+$\E U=r/(r+t)$ oraz $\Var(U)=rt/[(r+t)^2(r+t+1)]$.
+Po wstawieniu $r=a+s$, $t=b+n-s$ otrzymujemy wzory
+momentowe. Dla nowych obserwacji
+$\Prob(T=j\mid p)=\binom mjp^j(1-p)^{m-j}$.
+Całkując to prawdopodobieństwo względem wyprowadzonego
+posterioru, otrzymujemy ostatni wzór.
+\end{proof}
+
+\begin{stwierdzenie}[Średnia posterioru jako kompromis MLE i prioru]
+\label{prop:beta-shrinkage}
+W założeniach twierdzenia~\ref{thm:beta-binomial} oznaczmy
+$\widehat p=S/n$, $m_0=a/(a+b)$ i $w=n/(n+a+b)$.
+Wówczas $\E[p\mid S]=w\widehat p+(1-w)m_0$.
+\end{stwierdzenie}
+\begin{proof}
+Po podstawieniu dostajemy
+$\frac{n}{n+a+b}\frac Sn+
+\frac{a+b}{n+a+b}\frac{a}{a+b}=(S+a)/(n+a+b)$.
+\end{proof}
+
+\begin{przyklad}[Kontrola jakości: 7 wad na 100 sztuk]
+Dla $S=7$, $n=100$ estymator MLE wynosi $0{,}07$.
+Z priorem $\operatorname{Beta}(1,1)$ posterior ma rozkład
+$\operatorname{Beta}(8,94)$, średnią $8/102\approx0{,}0784$,
+a prawdopodobieństwo wady następnej sztuki wynosi także $8/102$.
+Dla prioru $\operatorname{Beta}(20,80)$ posterior ma rozkład
+$\operatorname{Beta}(27,173)$ i średnią $0{,}135$.
+Obydwa modele używają identycznych danych, lecz różnią się
+założeniami; prior o łącznej masie parametrów $a+b=100$
+ma wyraźny wpływ na wynik. „Siła prioru” $a+b$ jest tu
+wygodnym skrótem algebraicznym, nie dokładną liczbą
+rzeczywistych dodatkowych niezależnych obserwacji.
+Przedział wiarygodności wyznaczymy z kwantyli rozkładu beta,
+a jego interpretację odróżnimy od przedziału Wilsona z
+rozdziału~\ref{ch:confidence-intervals}.
+\end{przyklad}
+
+\begin{uwaga}[MAP i przypadki na brzegu]
+Dla posterioru $\operatorname{Beta}(r,t)$, $r,t>1$,
+moda leży w $(r-1)/(r+t-2)$. Jeśli $r\le1$ lub $t\le1$,
+maksimum gęstości może wypadać na brzegu lub nie być osiągane
+na otwartym $(0,1)$. Gdy $r=t=1$, gęstość jest stała:
+każdy punkt $(0,1)$ jest jej dominantą. Przy $r<1$ lub
+$t<1$ gęstość może być nieograniczona w pobliżu brzegu,
+a wówczas \emph{maksymalizator w otwartym przedziale nie istnieje}.
+Nie wolno bezwarunkowo używać wzoru na modę dla dowolnych
+$r,t>0$. Sam MAP nie jest niezmienniczy względem nieliniowej
+reparametryzacji; podobny problem dotyczy definicji HPD.
+\end{uwaga}
+
+\section{Gamma--Poisson: częstość awarii i ekspozycja}
+\begin{definicja}[Rozkład gamma w parametryzacji shape--rate]
+Dla $a,b>0$ przez $\operatorname{Gamma}(a,b)$ rozumiemy
+rozkład na $(0,\infty)$ o gęstości
+$g_{a,b}(\lambda)=b^a\lambda^{a-1}e^{-b\lambda}/\Gamma(a)$.
+Pierwszy parametr to \emph{kształt} (shape), drugi to
+\emph{intensywność zaniku} (rate), a nie skala.
+Średnia wynosi $a/b$, a wariancja $a/b^2$.
+Jeżeli $\lambda$ jest liczbą awarii na godzinę, wtedy
+$b$ ma jednostkę godzin, tak aby iloczyn $b\lambda$
+był bezwymiarowy.
+\end{definicja}
+
+\begin{twierdzenie}[Aktualizacja i predykcja gamma--Poisson]
+\label{thm:gamma-poisson}
+Niech $\lambda\sim\operatorname{Gamma}(a,b)$,
+$a,b>0$. Warunkowo przy $\lambda$ obserwujemy niezależne
+zliczenia $Y_i\sim\operatorname{Pois}(e_i\lambda)$,
+gdzie ekspozycje $e_i>0$ są znanymi liczbami,
+$i=1,\ldots,n$, $n\ge1$. Niech $S=\sum_{i=1}^nY_i$
+i $E=\sum_{i=1}^ne_i$. Wtedy
+$\lambda\mid Y_1,\ldots,Y_n\sim\operatorname{Gamma}(a+S,b+E)$.
+Dla nowej ekspozycji $e_*>0$ i nowego zliczenia
+$Y_*\mid\lambda\sim\operatorname{Pois}(e_*\lambda)$,
+warunkowo niezależnego od danych, zachodzi dla $k\in\N\cup\{0\}$
+\[
+ \Prob(Y_*=k\mid Y_1,\ldots,Y_n)
+ =\frac{\Gamma(a+S+k)}{\Gamma(a+S)k!}
+ \left(\frac{b+E}{b+E+e_*}\right)^{a+S}
+ \left(\frac{e_*}{b+E+e_*}\right)^k.
+\]
+Ponadto $\E[Y_*\mid Y]=e_*(a+S)/(b+E)$ i
+$\Var(Y_*\mid Y)=e_*(a+S)/(b+E)
++e_*^2(a+S)/(b+E)^2$.
+\end{twierdzenie}
+\begin{proof}
+Warunkowa wiarygodność zliczeń, z dokładnością do
+czynnika niezależnego od $\lambda$, wynosi
+$\lambda^Se^{-E\lambda}$. Mnożenie przez prior
+$\lambda^{a-1}e^{-b\lambda}$ daje jądro gamma
+$\lambda^{a+S-1}e^{-(b+E)\lambda}$, które jest
+normalizowalne, gdy $a+S,b+E>0$.
+Piszmy $r=a+S$, $v=b+E$. Warunkowe prawdopodobieństwo
+$Y_*=k$ ma postać
+\[
+ \frac{e_*^kv^r}{k!\Gamma(r)}
+ \int_0^\infty\lambda^{k+r-1}
+ e^{-(v+e_*)\lambda}\,\dd\lambda_1(\lambda).
+\]
+Z definicji funkcji gamma całka wynosi
+$\Gamma(r+k)/(v+e_*)^{r+k}$, co daje wzór.
+Wreszcie korzystamy z tożsamości
+$\E[Y_*\mid\lambda,Y]=e_*\lambda$ i
+$\Var(Y_*\mid\lambda,Y)=e_*\lambda$;
+wzór na wariancję całkowitą z rozdziału~\ref{ch:bayes-foundations}
+daje podane dwa składniki.
+\end{proof}
+
+\begin{przyklad}[Awaryjność z różną długością obserwacji]
+Obserwujemy 4 awarie podczas 200 godzin działania urządzenia.
+Model zliczeń ma ekspozycję $E=200$ godzin i nieznaną
+intensywność $\lambda$ na godzinę. Niech prior to
+$\operatorname{Gamma}(2,100)$ (shape--rate).
+Posterior to $\operatorname{Gamma}(6,300)$ i
+$\E[\lambda\mid\mathrm{dane}]=6/300=0{,}02$ na godzinę.
+Prognozowana liczba awarii przez następne 50 godzin ma średnią
+$50\cdot0{,}02=1$. Jej wariancja wynosi
+$1+50^2\cdot 6/300^2=1+1/6$; to więcej niż
+wariancja rozkładu Poissona z ustalonym parametrem $1$.
+Powodem jest niepewność o $\lambda$.
+W praktyce niezależność przyrostów i stała intensywność
+w czasie wymagają sprawdzenia; przy sezonowości lub awariach
+w klastrach rozważamy model bardziej złożony.
+\end{przyklad}
+
+\section{Gamma--wykładniczy: czas oczekiwania}
+\begin{twierdzenie}[Posterior intensywności rozkładu wykładniczego]
+Niech $\lambda\sim\operatorname{Gamma}(a,b)$, $a,b>0$,
+a przy znanym $\lambda$ obserwacje $T_1,\ldots,T_n$
+będą niezależne o gęstości
+$f(t\mid\lambda)=\lambda e^{-\lambda t}\ind{t\ge0}$
+względem miary Lebesgue'a, $n\ge1$.
+Dla $s=\sum_{i=1}^n t_i$ posterior ma rozkład
+$\operatorname{Gamma}(a+n,b+s)$.
+Jeżeli przyszły czas $T_*$ jest warunkowo niezależny od danych,
+ma warunkową gęstość wykładniczą o tej samej intensywności,
+to dla $u\ge0$
+\[
+ \Prob(T_*>u\mid T_1=t_1,\ldots,T_n=t_n)
+ =\left(\frac{b+s}{b+s+u}\right)^{a+n}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Iloczyn gęstości obserwacji daje $\lambda^n e^{-s\lambda}$,
+więc posterior jest gamma przez mnożenie przez jego prior.
+Po warunkowaniu na $\lambda$ prawdopodobieństwo przetrwania
+to $e^{-u\lambda}$. Całkując je względem posterioru
+$\operatorname{Gamma}(a+n,b+s)$ i wykorzystując wzór na
+funkcję gamma, otrzymujemy wskazaną potęgę.
+\end{proof}
+
+\begin{uwaga}[Cenzorowanie a kompletne czasy]
+Jeżeli niektórych czasów nie zaobserwowano do końca, zwykły
+iloczyn $\prod_i\lambda e^{-\lambda t_i}$ jest błędny.
+Przy prawostronnym, niezależnym cenzorowaniu z liczbą
+rzeczywiście zaobserwowanych zdarzeń $d$ i łącznym czasem
+ekspozycji $E$, część wiarygodności zależna od $\lambda$
+ma postać $\lambda^d e^{-\lambda E}$. Posterior
+$\operatorname{Gamma}(a+d,b+E)$ pozostaje sprzężony,
+ale tylko przy prawidłowym opisaniu mechanizmu cenzorowania.
+\end{uwaga}
+
+\section{Normalny model średniej ze znaną wariancją}
+\begin{twierdzenie}[Normalny prior dla normalnej średniej]
+\label{thm:normal-normal}
+Niech $\mu\sim\mathcal N(m_0,v_0)$, $v_0>0$, a warunkowo
+względem $\mu$ zmienne $X_1,\ldots,X_n$ będą niezależne
+$\mathcal N(\mu,\sigma^2)$ dla znanego $\sigma^2>0$, $n\ge1$.
+Wtedy
+\[
+ \mu\mid X_1=x_1,\ldots,X_n=x_n\sim\mathcal N(m_n,v_n),
+ \quad v_n=\left(\frac1{v_0}+\frac n{\sigma^2}\right)^{-1},
+ \quad m_n=v_n\left(\frac{m_0}{v_0}+\frac{n\overline x}{\sigma^2}\right).
+\]
+Średnia posterioru jest średnią ważoną priorowej średniej
+$m_0$ i średniej z próby $\overline x$, z wagami
+proporcjonalnymi do ich precyzji (odwrotności wariancji).
+\end{twierdzenie}
+\begin{proof}
+Zależność od $\mu$ w priorze i wiarygodności ma postać
+$\exp\{-\tfrac12[(\mu-m_0)^2/v_0+
+\sum_{i=1}^n(x_i-\mu)^2/\sigma^2]\}$.
+Po rozpisaniu kwadratów współczynnik przy $\mu^2$
+wynosi $v_0^{-1}+n\sigma^{-2}=v_n^{-1}$,
+a współczynnik przy $-2\mu$ jest
+$m_0/v_0+n\overline x/\sigma^2=v_n^{-1}m_n$.
+Uzupełnienie kwadratu daje jądro rozkładu
+$\mathcal N(m_n,v_n)$; normalizacja jest skończona.
+\end{proof}
+
+\begin{przyklad}[Pomiar z kalibracją a nowe obserwacje]
+Z wcześniejszej kalibracji wynika $\mu\sim\mathcal N(10,1)$.
+Pięć nowych niezależnych pomiarów ma znaną wariancję
+błędu $\sigma^2=4$ i średnią $12$. Posteriorowa precyzja
+wynosi $1+5/4=2{,}25$, zatem
+$v_n=4/9\approx0{,}4444$ i
+$m_n=(10+5\cdot12/4)/(1+5/4)=100/9\approx11{,}111$.
+Wartość średniej została przesunięta od priorowego $10$ ku
+obserwowanemu $12$. Jeżeli wariancja pomiaru jest nieznana,
+ten rozkład przestaje być automatycznie właściwym modelem.
+\end{przyklad}
+
+\section{Nieznane średnia i wariancja: normalny--odwrotny gamma}
+\begin{definicja}[Rozkład odwrotny gamma]
+Dla $\alpha,\beta>0$ rozkład
+$\operatorname{InvGamma}(\alpha,\beta)$ na $(0,\infty)$
+ma gęstość
+$h(v)=\beta^\alpha v^{-\alpha-1}e^{-\beta/v}/\Gamma(\alpha)$.
+Parametr $\beta$ jest parametrem \emph{skali w wykładniku},
+a nie intensywnością gamma na $v$. Jeżeli
+$V\sim\operatorname{InvGamma}(\alpha,\beta)$,
+to $V^{-1}\sim\operatorname{Gamma}(\alpha,\beta)$
+w parametryzacji shape--rate.
+\end{definicja}
+
+\begin{twierdzenie}[Sprzężony model normalny z nieznanymi parametrami]
+\label{thm:normal-invgamma}
+Niech $X_1,\ldots,X_n$ będą warunkowo niezależne
+$\mathcal N(\mu,v)$, gdzie $\mu\in\R$, $v>0$, $n\ge1$.
+Niech prior ma postać
+$v\sim\operatorname{InvGamma}(\alpha_0,\beta_0)$,
+$\mu\mid v\sim\mathcal N(m_0,v/\kappa_0)$,
+przy $\alpha_0,\beta_0,\kappa_0>0$, $m_0\in\R$.
+Piszmy $\overline x=n^{-1}\sum_ix_i$,
+$S=\sum_i(x_i-\overline x)^2$. Wtedy posterior ma tę samą
+postać z parametrami
+\[
+ \kappa_n=\kappa_0+n,\quad
+ m_n=\frac{\kappa_0m_0+n\overline x}{\kappa_0+n},\quad
+ \alpha_n=\alpha_0+\frac n2,
+\]
+\[
+ \beta_n=\beta_0+\frac S2+
+ \frac{\kappa_0n}{2(\kappa_0+n)}(\overline x-m_0)^2.
+\]
+Dokładniej $v\mid x\sim\operatorname{InvGamma}(\alpha_n,\beta_n)$
+i $\mu\mid v,x\sim\mathcal N(m_n,v/\kappa_n)$.
+\end{twierdzenie}
+\begin{proof}
+Wspólny prior ma gęstość względem miary Lebesgue'a $\lambda_2$
+na $\R\times(0,\infty)$
+proporcjonalną do
+$v^{-\alpha_0-3/2}\exp\{-\beta_0/v-
+\kappa_0(\mu-m_0)^2/(2v)\}$.
+Wiarygodność jest proporcjonalna do
+$v^{-n/2}\exp\{-\sum_i(x_i-\mu)^2/(2v)\}$.
+Korzystamy z dwóch tożsamości:
+$\sum_i(x_i-\mu)^2=S+n(\mu-\overline x)^2$ oraz
+\[
+ \kappa_0(\mu-m_0)^2+n(\mu-\overline x)^2
+ =\kappa_n(\mu-m_n)^2+
+ \frac{\kappa_0n}{\kappa_n}(\overline x-m_0)^2.
+\]
+Po podstawieniu wspólne jądro posterioru jest równe
+$v^{-\alpha_n-3/2}\exp\{-\beta_n/v-
+\kappa_n(\mu-m_n)^2/(2v)\}$.
+Jest to jądro gęstości normalnej warunkowej pomnożonej przez
+gęstość odwrotną gamma z parametrami $\alpha_n,\beta_n$;
+obydwa czynniki są normalizowalne.
+\end{proof}
+
+\begin{wniosek}[Predykcja t-Studenta]
+\label{cor:student-predictive}
+W założeniach twierdzenia~\ref{thm:normal-invgamma}
+niech $X_*$ będzie nową obserwacją warunkowo niezależną
+od próby przy znanych $\mu,v$ i niech $X_*\mid\mu,v\sim
+\mathcal N(\mu,v)$. Wtedy $X_*\mid x$ ma rozkład
+$t$-Studenta z $2\alpha_n$ stopniami swobody, środkiem $m_n$
+i parametrem skali
+$s_n=\sqrt{\beta_n(\kappa_n+1)/(\alpha_n\kappa_n)}$,
+w tej konwencji, że $(X_*-m_n)/s_n$ ma standardowy rozkład
+$t_{2\alpha_n}$.
+\end{wniosek}
+\begin{proof}
+Przy ustalonym $v$ całkujemy najpierw po $\mu$;
+w wyniku splotu normalnego dostajemy
+$X_*\mid v,x\sim\mathcal N(m_n,v(1+\kappa_n^{-1}))$.
+Zatem przy niezależnych $Z\sim\mathcal N(0,1)$
+i $G\sim\operatorname{Gamma}(\alpha_n,\beta_n)$
+można przedstawić $X_*-m_n=\sqrt{(1+\kappa_n^{-1})/G}\,Z$.
+Ponieważ $2\beta_n G\sim\chi^2_{2\alpha_n}$
+(z własności transformacji rozkładu gamma), stosunek
+$Z/\sqrt{2\beta_nG/(2\alpha_n)}$ ma standardowy rozkład
+$t_{2\alpha_n}$. Po przeliczeniu współczynnika otrzymujemy
+$s_n^2=\beta_n(\kappa_n+1)/(\alpha_n\kappa_n)$.
+\end{proof}
+
+\begin{uwaga}[Uwaga na istnienie momentów]
+Dla posterioru $\operatorname{InvGamma}(\alpha_n,\beta_n)$
+wartość oczekiwana wariancji $v$ istnieje dopiero przy
+$\alpha_n>1$ i wynosi $\beta_n/(\alpha_n-1)$.
+Wariancja rozkładu predykcyjnego t-Studenta jest skończona
+dopiero przy $2\alpha_n>2$. Nie należy podawać nieistniejących
+momentów w modelach z bardzo słabą informacją.
+\end{uwaga}
+
+\section{Dirichlet--wielomianowy: więcej niż dwie kategorie}
+\begin{definicja}[Rozkład Dirichleta]
+Dla $K\ge2$ i $a_1,\ldots,a_K>0$ niech
+$\Delta_{K-1}=\{(p_1,\ldots,p_K)\in(0,1)^K:\sum_{j=1}^Kp_j=1\}$.
+Rozkład $\operatorname{Dirichlet}(a_1,\ldots,a_K)$ ma
+gęstość względem $\dd\lambda_{K-1}(p_1,\ldots,p_{K-1})$
+na obszarze $p_j>0$, $\sum_{j<K}p_j<1$, po podstawieniu
+$p_K=1-\sum_{j<K}p_j$, proporcjonalną do
+$\prod_{j=1}^Kp_j^{a_j-1}$. Stała normalizacji jest
+$\Gamma(a_\bullet)/\prod_{j=1}^K\Gamma(a_j)$,
+gdzie $a_\bullet=\sum_{j=1}^Ka_j$.
+\end{definicja}
+
+\begin{lemat}[Stała normalizująca rozkładu Dirichleta]
+Dla $K\ge2$ oraz $a_1,\ldots,a_K>0$ zachodzi
+\[
+ \int_{D_{K-1}}\prod_{j=1}^{K}p_j^{a_j-1}
+ \,\dd\lambda_{K-1}(p_1,\ldots,p_{K-1})
+ =\frac{\prod_{j=1}^K\Gamma(a_j)}{\Gamma(a_\bullet)},
+\]
+gdzie $D_{K-1}=\{(p_1,\ldots,p_{K-1}):p_j>0,
+\ \sum_{j<K}p_j<1\}$, $p_K=1-\sum_{j<K}p_j$ oraz
+$a_\bullet=\sum_{j=1}^Ka_j$.
+\end{lemat}
+\begin{proof}
+Iloczyn $\prod_{j=1}^K\Gamma(a_j)$ jest całką funkcji
+$\prod_{j=1}^Kt_j^{a_j-1}e^{-t_j}$ po $(0,\infty)^K$
+względem $\lambda_K$. Wprowadzamy
+$r=\sum_{j=1}^Kt_j$ i $p_j=t_j/r$ dla $j<K$;
+wtedy $t_K=r(1-\sum_{j<K}p_j)$.
+Jakobian tej zamiany zmiennych ma wartość $r^{K-1}$.
+Po zastosowaniu Tonellego całka rozdziela się na
+$\int_0^\infty r^{a_\bullet-1}e^{-r}\,\dd\lambda_1(r)
+=\Gamma(a_\bullet)$ i całkę z tezy. Dzielenie
+przez dodatnią wartość $\Gamma(a_\bullet)$ kończy dowód.
+\end{proof}
+
+\begin{twierdzenie}[Sprzężoność dla zliczeń wielokategorialnych]
+Niech $p=(p_1,\ldots,p_K)$ ma rozkład
+$\operatorname{Dirichlet}(a_1,\ldots,a_K)$, a przy znanym $p$
+obserwujemy $n\ge1$ niezależnych wyników z $K$ kategorii,
+przy czym prawdopodobieństwo kategorii $j$ wynosi $p_j$.
+Jeśli w danych kategoria $j$ wystąpiła $N_j$ razy,
+$\sum_{j=1}^KN_j=n$, to posterior ma rozkład
+$\operatorname{Dirichlet}(a_1+N_1,\ldots,a_K+N_K)$.
+Prawdopodobieństwo, że następny wynik trafi do kategorii $j$,
+wynosi $(a_j+N_j)/(a_\bullet+n)$.
+\end{twierdzenie}
+\begin{proof}
+Wiarygodność jako funkcja $p$ jest proporcjonalna do
+$\prod_{j=1}^Kp_j^{N_j}$. Po pomnożeniu przez gęstość
+Dirichleta otrzymujemy jądro
+$\prod_{j=1}^Kp_j^{a_j+N_j-1}$, którego normalizacja
+jest gęstością posterioru. Średnią współrzędnej
+$p_j$ obliczamy przez iloraz stałych normalizujących
+$\Gamma(a_j+N_j+1)/\Gamma(a_j+N_j)$ oraz
+$\Gamma(a_\bullet+n)/\Gamma(a_\bullet+n+1)$.
+\end{proof}
+
+\section{Obliczenia numeryczne i porównanie z metodami klasycznymi}
+Posterior warunkowy opisuje parametry \emph{po zobaczeniu danych},
+ale jeszcze przed ich obserwacją także prior nakłada konkretne
+ograniczenia na możliwą próbę. W rozdziale~\ref{ch:bayes-estimation-prediction}
+wyprowadzimy predykcyjny rozkład liczby sukcesów z modelu
+beta--dwumianowego i pokażemy, jak może on służyć do oceny
+realizmu założeń a priori. Nie wolno zastępować tej kontroli
+stwierdzeniem, że algebraiczna sprzężoność jest wygodna.
+
+W obliczeniach posteriorów korzystamy ze stabilnych funkcji
+bibliotecznych kwantyli beta, gamma i t-Studenta; bezpośrednie
+mnożenie dużej liczby gęstości prowadzi do niedomiaru
+zmiennoprzecinkowego. Poniższe programy odtwarzają
+parametry posterioru i predykcję, ale nie zastępują
+diagnostyki poprawności modelu.
+
+\begin{lstlisting}[language=Python,caption={Kompletny program: beta--dwumianowy, przedziały i test wrażliwości na prior (Python).}]
+from scipy.stats import beta
+
+n, defects = 100, 7
+for a, b in [(1, 1), (2, 18), (20, 80)]:
+    post_a, post_b = a + defects, b + n - defects
+    mean = post_a / (post_a + post_b)
+    lo, hi = beta.ppf([0.025, 0.975], post_a, post_b)
+    prob_over_10pct = beta.sf(0.10, post_a, post_b)
+    print((a, b), "mean:", round(mean, 5),
+          "95% credible:", (round(lo, 5), round(hi, 5)),
+          "P(p>0.10|data):", round(prob_over_10pct, 5))
+
+# Probability of zero defects in the next ten devices.
+a1, b1 = 1 + defects, 1 + n - defects
+from scipy.special import betaln
+import numpy as np
+prob_zero = np.exp(betaln(a1, b1 + 10) - betaln(a1, b1))
+print("predictive P(0 defects among next 10):", prob_zero)
+\end{lstlisting}
+
+\begin{lstlisting}[language=Julia,caption={Kompletny program: aktualizacja sprzężona i predykcja gamma--Poisson (Julia, biblioteka standardowa).}]
+using Printf
+
+function gamma_poisson_update(a::Real, b::Real,
+                              counts::AbstractVector{<:Integer},
+                              exposures::AbstractVector{<:Real})
+    length(counts) == length(exposures) ||
+        throw(DimensionMismatch("different lengths"))
+    a > 0 && b > 0 || throw(ArgumentError("prior must be proper"))
+    all(x -> x >= 0, counts) || throw(ArgumentError("negative count"))
+    all(x -> x > 0, exposures) || throw(ArgumentError("exposure <= 0"))
+    a_new = a + sum(counts)
+    b_new = b + sum(exposures)
+    return a_new, b_new
+end
+
+a, b = gamma_poisson_update(2.0, 100.0, [1, 0, 3],
+                            [50.0, 50.0, 100.0])
+e_next = 50.0
+mean_next = e_next * a / b
+var_next = mean_next + e_next^2 * a / b^2
+@printf("posterior Gamma(shape=%.1f, rate=%.1f)\n", a, b)
+@printf("predictive mean=%.6f, variance=%.6f\n",
+        mean_next, var_next)
+\end{lstlisting}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.26\textwidth}>{\raggedright\arraybackslash}p{.29\textwidth}>{\raggedright\arraybackslash}p{.32\textwidth}}
+\toprule
+\textbf{Problem / dane} & \textbf{Klasyczne narzędzie} & \textbf{Sprzężony model bayesowski i uwaga}\\
+\midrule
+Odsetek wad, mała próba & MLE, Wilson, Clopper--Pearson & Beta--Bernoulli; posterior zależy od prioru.\\
+Zliczenia z ekspozycją & MLE Poissona, dokładny przedział & Gamma--Poisson; łatwa predykcja z nadmierną dyspersją.\\
+Średnia przy znanym $\sigma$ & Średnia, przedział normalny & Normalny--normalny; precyzyjna aktualizacja.\\
+Średnia i wariancja przy normalności & $t$-Studenta, $\chi^2$ & Normalny--odwrotny gamma; predykcja t.\\
+Wiele kategorii & Udziały empiryczne, wielomianowy & Dirichlet--wielomianowy; prosty posterior.\\
+Nieustalony mechanizm zależności & Model czasowy lub hierarchiczny & Sama sprzężoność iid nie usuwa zależności.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{zadanie}[Brak awarii nie oznacza zerowej intensywności]
+Podczas 50 godzin działania nie zanotowano awarii. Przy priorze
+$\lambda\sim\operatorname{Gamma}(1,50)$ i modelu Poissona
+z intensywnością $\lambda$ na godzinę wyznacz posterior oraz
+prawdopodobieństwo braku awarii w ciągu kolejnych 50 godzin.
+\par\emph{Rozwiązanie.} W twierdzeniu~\ref{thm:gamma-poisson}
+$S=0$, $E=50$, więc posterior to $\operatorname{Gamma}(1,100)$.
+Prawdopodobieństwo $Y_*=0$ dla $e_*=50$ wynosi
+$(100/(100+50))^1=2/3$.
+Estymator MLE intensywności wynosi $0$, ale nie wynika z tego
+zerowa predykcyjna szansa przyszłej awarii.
+\end{zadanie}
+
+\begin{zadanie}[Dane i wrażliwość na założenia]
+Dla danych $S=7$, $n=100$ rozważ priory
+$\operatorname{Beta}(1,1)$ i $\operatorname{Beta}(20,80)$.
+Porównaj średnie posteriorów i zinterpretuj różnicę.
+\par\emph{Rozwiązanie.} Otrzymujemy odpowiednio
+$8/102\approx0{,}0784$ i $27/200=0{,}135$.
+Duża różnica przy stałych danych wynika z innej ilości i treści
+informacji zakodowanej w priorach. W praktyce należy opisać
+pochodzenie prioru i pokazać analizę wrażliwości; nie wystarczy
+wybrać prioru, który daje oczekiwany wynik.
+\end{zadanie}
+
+
+% ================================================================
+% ROZDZIAL 19 -- ESTYMACJA I PREDYKCJA BAYESOWSKA
+% ================================================================

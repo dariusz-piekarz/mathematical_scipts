@@ -1,0 +1,1630 @@
+\chapter{Łańcuchy Markowa w czasie dyskretnym}
+\label{ch:markov}
+\paragraph{Odsyłacze międzytomowe.} Uogólnienie łańcuchów na czas ciągły znajduje się w tomie II, rozdziale~\ref{II-ch:ctmc}, zaś algorytmy MCMC w tomie IV, rozdziale~\ref{IV-ch:mcmc}.
+
+
+\section{Dlaczego przeszłość można zastąpić stanem?}
+
+Wyobraźmy sobie układ, który każdego dnia znajduje się w jednym
+z ustalonych stanów. Aby przewidzieć następny dzień, zwykle
+potrzebujemy pewnej informacji o przeszłości. W modelu Markowa
+zakładamy, że \emph{aktualny stan zawiera całą informację o
+przeszłości potrzebną do przewidywania następnego stanu}.
+Nie jest to założenie o niezależności kolejnych stanów: przeciwnie,
+stan jutrzejszy zazwyczaj zależy od dzisiejszego. Kluczowe jest
+to, że zależność od wcześniejszych stanów znika \emph{po
+uwarunkowaniu na stan obecny}.
+
+\begin{definicja}[Jednorodny łańcuch Markowa]
+Niech $(\Omega,\mathcal F,\Prob)$ będzie przestrzenią
+probabilistyczną, $S$ niepustym zbiorem skończonym lub
+przeliczalnym, wyposażonym w $2^S$, oraz
+$X_n:\Omega\to S$ ($n\in\N_0$) ciągiem zmiennych losowych.
+Mówimy, że $(X_n)_{n\geq0}$ jest \emph{jednorodnym
+łańcuchem Markowa} o macierzy przejścia
+$P=(p_{ij})_{i,j\in S}$, gdy
+\[
+ p_{ij}\geq0,\qquad \sum_{j\in S}p_{ij}=1
+ \quad(i\in S),
+\]
+oraz dla każdego $n\geq0$ i $j\in S$ zachodzi
+\[
+\Prob(X_{n+1}=j\mid\sigma(X_0,\ldots,X_n))
+=p_{X_nj}\quad\text{p.n.}
+\]
+Początkowy rozkład $\mu_i=\Prob(X_0=i)$
+razem z $P$ określa prawo wszystkich skończenie
+wymiarowych rozkładów procesu. Macierz $P$ nazywamy
+\emph{stochastyczną wierszowo}.
+\end{definicja}
+
+\begin{uwaga}
+Gdy $\Prob(X_n=i)=0$, zapis
+$\Prob(X_{n+1}=j\mid X_n=i)$ jako iloraz liczb
+nie jest zdefiniowany. Sformułowanie przez
+warunkową wartość oczekiwaną nie ma tej wady:
+$p_{X_nj}$ określamy tylko z dokładnością do
+prawdopodobieństwa zero. Jeśli przejścia zależą
+od $n$, otrzymujemy łańcuch niejednorodny
+z macierzami $P_n$.
+\end{uwaga}
+
+
+\begin{uwaga}[Jak czytać prawdopodobieństwa dotyczące procesu?]
+Zmienna $X_k$ opisuje stan w chwili $k$; zapis
+$X_k=i_k$ jest \emph{zdarzeniem} $\{\omega:X_k(\omega)=i_k\}$.
+Zapis
+\[
+\Prob(X_0=i_0,\ldots,X_n=i_n)
+=\Prob\left(\bigcap_{k=0}^n\{X_k=i_k\}\right)
+\]
+oznacza prawdopodobieństwo \emph{dokładnie wskazanej historii},
+a nie dowolnej historii, która kończy się stanem $i_n$.
+Przecinek wewnątrz argumentu $\Prob$ oznacza więc
+przecięcie zdarzeń. Natomiast
+$\Prob(X_n=j)$ sumuje prawdopodobieństwa \emph{wszystkich}
+historii kończących się w $j$.
+
+Podobnie zapis
+$\Prob(X_{n+1}=j\mid X_0=i_0,\ldots,X_n=i_n)$
+oznacza iloraz prawdopodobieństw zdarzeń, pod warunkiem
+że wskazana historia ma dodatnie prawdopodobieństwo.
+Pisanie $\Prob(X_0\mid X_1=j)$ bez wskazania zdarzenia
+związanego z $X_0$ nie oznacza jednej liczby.
+Można natomiast mówić o \emph{rozkładzie warunkowym}
+$\Law(X_0\mid X_1=j)$, podając prawdopodobieństwa
+$\Prob(X_0=i\mid X_1=j)$ dla wszystkich $i\in S$,
+lub o liczbie $\E[X_0\mid X_1=j]$, gdy stany są liczbami
+i $X_0$ jest całkowalna. Są to różne obiekty.
+\end{uwaga}
+
+\begin{stwierdzenie}[Wersja elementarna własności Markowa]
+Niech $(X_n)$ będzie jednorodnym łańcuchem Markowa
+na przeliczalnym $S$ o macierzy $P$. Jeżeli
+$\Prob(X_0=i_0,\ldots,X_n=i_n)>0$, to dla każdego $j\in S$
+\[
+\Prob(X_{n+1}=j\mid X_0=i_0,\ldots,X_n=i_n)=p_{i_nj}.
+\]
+Jeśli ponadto $\Prob(X_n=i)>0$, to
+$\Prob(X_{n+1}=j\mid X_n=i)=p_{ij}$.
+\end{stwierdzenie}
+\begin{proof}
+Niech $A=\{X_0=i_0,\ldots,X_n=i_n\}\in
+\sigma(X_0,\ldots,X_n)$. Z definicji łańcucha
+$\E[\ind{\{X_{n+1}=j\}}\mid
+\sigma(X_0,\ldots,X_n)]=p_{X_nj}$.
+Mnożymy tę równość przez $\ind A$ i bierzemy
+wartości oczekiwane. Otrzymujemy
+$\Prob(A\cap\{X_{n+1}=j\})=p_{i_nj}\Prob(A)$.
+Dzielenie przez dodatnie $\Prob(A)$ daje pierwszą
+równość. Druga wynika analogicznie, wybierając
+$A=\{X_n=i\}$. Jeżeli $\Prob(A)=0$, dzielenie
+nie jest dozwolone: wtedy pozostaje poprawne
+sformułowanie przez warunkową wartość oczekiwaną.
+\end{proof}
+
+\begin{uwaga}[Co jest założeniem, a co twierdzeniem?]
+Własności Markowa nie można udowodnić dla \emph{dowolnego}
+procesu losowego: definiuje ona szczególną klasę procesów.
+Można natomiast udowodnić, że konkretny proces ma tę własność,
+a następnie wyprowadzić z niej prawo trajektorii,
+własności wielokrokowe i mocną własność Markowa.
+Osobne znaczenie ma \emph{zanikanie wpływu stanu początkowego}
+po wielu krokach. Jest to twierdzenie asymptotyczne,
+które dla skończonych łańcuchów wymaga m.in.
+nieprzywiedlności i nieokresowości.
+\end{uwaga}
+
+\begin{twierdzenie}[Prawo trajektorii]
+Jeżeli $(X_n)$ jest jednorodnym łańcuchem Markowa
+na $S$ o rozkładzie początkowym $\mu$ i macierzy $P$,
+to dla każdego $n\geq0$ i $i_0,\ldots,i_n\in S$
+\[
+\Prob(X_0=i_0,\ldots,X_n=i_n)
+=\mu_{i_0}\prod_{k=1}^n p_{i_{k-1}i_k},
+\]
+przy czym iloczyn pusty dla $n=0$ jest równy $1$.
+\end{twierdzenie}
+\begin{proof}
+Dla $n=0$ równość jest definicją $\mu$.
+Niech $A=\{X_0=i_0,\ldots,X_{n-1}=i_{n-1}\}$.
+Ponieważ $\ind A$ jest $\sigma(X_0,\ldots,X_{n-1})$-
+mierzalna, z definicji łańcucha i własności
+wyciągania czynnika otrzymujemy
+\[
+\Prob(A\cap\{X_n=i_n\})
+=\E\left[\ind A\E[\ind{\{X_n=i_n\}}
+\mid\sigma(X_0,\ldots,X_{n-1})]\right]
+=p_{i_{n-1}i_n}\Prob(A).
+\]
+Indukcja daje wymagany iloczyn, również wtedy,
+gdy $\Prob(A)=0$; nie dzielimy tu przez
+prawdopodobieństwo zdarzenia warunkującego.
+\end{proof}
+
+
+\begin{twierdzenie}[Iloczynowe prawo trajektorii charakteryzuje łańcuch]
+Niech $S$ będzie przeliczalny, $\mu$ rozkładem na $S$,
+$P$ macierzą stochastyczną, a $(X_n)_{n\geq0}$ procesem
+o wartościach w $S$. Załóżmy, że dla wszystkich $n\geq0$
+i wszystkich $i_0,\ldots,i_n\in S$ zachodzi
+\[
+\Prob(X_0=i_0,\ldots,X_n=i_n)
+=\mu_{i_0}\prod_{k=1}^np_{i_{k-1}i_k}.
+\]
+Wtedy proces jest jednorodnym łańcuchem Markowa
+o rozkładzie początkowym $\mu$ i macierzy $P$.
+\end{twierdzenie}
+\begin{proof}
+Dla historii $A=\{X_0=i_0,\ldots,X_n=i_n\}$
+o dodatnim prawdopodobieństwie dzielenie wzoru
+dla $n+1$ przez wzór dla $n$ daje
+$\Prob(X_{n+1}=j\mid A)=p_{i_nj}$.
+Każde zdarzenie z $\sigma(X_0,\ldots,X_n)$
+jest sumą rozłącznych atomów postaci $A$,
+ponieważ $S^{n+1}$ jest przeliczalny.
+Na atomach o prawdopodobieństwie zero nie trzeba
+niczego sprawdzać; na pozostałych otrzymana
+równość mówi, że $p_{X_nj}$ spełnia definicyjną
+tożsamość całkową warunkowej wartości oczekiwanej.
+Wobec tego
+$\E[\ind{\{X_{n+1}=j\}}\mid
+\sigma(X_0,\ldots,X_n)]=p_{X_nj}$ p.n.
+To jest własność Markowa.
+\end{proof}
+
+\begin{twierdzenie}[Warunkowanie wstecz: przeszłość i przyszłość]
+Niech $(X_n)$ będzie jednorodnym łańcuchem Markowa
+na przeliczalnym $S$ o rozkładzie początkowym
+$\mu$ i macierzy $P$ oraz niech $n\geq1$.
+Jeśli historia $\{X_1=i_1,\ldots,X_n=i_n\}$
+ma dodatnie prawdopodobieństwo, to dla każdego $i\in S$
+\[
+\Prob(X_0=i\mid X_1=i_1,\ldots,X_n=i_n)
+=\Prob(X_0=i\mid X_1=i_1)
+=\frac{\mu_i p_{ii_1}}{\sum_{k\in S}\mu_kp_{ki_1}}.
+\]
+W szczególności, po poznaniu $X_1$ dalsze stany
+$X_2,\ldots,X_n$ nie dostarczają dodatkowej informacji
+o $X_0$. Nie należy mylić tego z niezależnością
+$X_0$ i $X_1$.
+\end{twierdzenie}
+\begin{proof}
+Ze wzoru na prawo trajektorii
+\begin{align*}
+\Prob(X_0=i, X_1=i_1,\ldots,X_n=i_n)
+&=\mu_i p_{ii_1}\,c,\\
+\Prob(X_1=i_1,\ldots,X_n=i_n)
+&=\left(\sum_{k\in S}\mu_kp_{ki_1}\right)c,
+\end{align*}
+gdzie $c=\prod_{r=2}^np_{i_{r-1}i_r}$,
+a dla $n=1$ przyjmujemy $c=1$. Prawdopodobieństwo
+warunkujące jest dodatnie, więc $c>0$ i
+$\sum_k\mu_kp_{ki_1}>0$. Po podzieleniu
+obu wzorów wspólny czynnik $c$ się skraca.
+Tak samo przy $n=1$ otrzymujemy drugi warunek.
+To jest \emph{warunkowa niezależność} przeszłości
+i dalszej przyszłości względem stanu pośredniego.
+\end{proof}
+
+
+\begin{uwaga}[Dlaczego można warunkować zarówno do przodu, jak i wstecz?]
+Dla trzech chwil nie należy pisać
+$\Prob(X_0\mid X_1,X_2)$ jako liczby.
+Jeżeli $x_1,x_2$ są zaobserwowane, szukamy np.
+$\Prob(X_0=i\mid X_1=x_1,X_2=x_2)$.
+Po ustaleniu $X_1=x_1$ przyszły czynnik
+$p_{x_1x_2}$ jest \emph{ten sam} dla każdego
+kandydata $X_0=i$, więc skraca się w ilorazie.
+Jest to szczególny przypadek warunkowej niezależności:
+$\sigma(X_0)$ oraz $\sigma(X_2,\ldots,X_n)$
+są warunkowo niezależne względem $\sigma(X_1)$.
+Bez poznania $X_1$ taka niezależność nie musi zachodzić.
+\end{uwaga}
+
+\begin{uwaga}[Łańcuch odwrócony w czasie]
+Jeśli $\mu_n(j)=\Prob(X_n=j)$, to dla $n\geq1$
+i $\mu_n(j)>0$ zachodzi
+\[
+\Prob(X_{n-1}=i\mid X_n=j)
+=\frac{\mu_{n-1}(i)p_{ij}}{\mu_n(j)}.
+\]
+Wynik jest formułą Bayesa zastosowaną do dwóch
+sąsiednich stanów; w ogólności zależy od $n$,
+ponieważ rozkłady $\mu_{n-1}$ i $\mu_n$ mogą się zmieniać.
+Jeśli $\mu_0=\pi$ jest stacjonarny, macierz
+przejścia wstecz ma stałe współrzędne
+$\widetilde p_{ji}=\pi_i p_{ij}/\pi_j$
+dla $\pi_j>0$. Równowaga szczegółowa oznacza
+wówczas $\widetilde p_{ji}=p_{ji}$.
+\end{uwaga}
+
+\begin{przyklad}[Pogoda z pamięcią jednego dnia]
+Niech $S=\{s,d\}$ oznacza odpowiednio dzień suchy
+i deszczowy, a
+\[
+P=\begin{pmatrix} 4/5&1/5\\ 2/5&3/5\end{pmatrix}.
+\]
+Jeżeli dzisiaj jest sucho, szansa deszczu jutro
+wynosi $1/5$. Prawdopodobieństwo sekwencji
+$s,d,d,s$, jeśli zaczynamy na pewno od $s$, jest
+$(1/5)(3/5)(2/5)=6/125$. Nie mnożymy
+bezwarunkowych prawdopodobieństw dni: kolejne stany
+nie są niezależne.
+\end{przyklad}
+
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,
+  stan/.style={draw,very thick,ellipse,minimum width=2.5cm,
+  minimum height=1.2cm,align=center,font=\small}]
+\node[stan,draw=blue!65!black,fill=blue!8] (s) at (0,0) {sucho\\$s$};
+\node[stan,draw=orange!75!black,fill=orange!13] (d) at (6,0) {deszcz\\$d$};
+\draw[->,thick,blue!65!black] (s) edge[loop above,looseness=5] node[above] {$4/5$} (s);
+\draw[->,thick,orange!75!black] (d) edge[loop above,looseness=5] node[above] {$3/5$} (d);
+\draw[->,thick] (s) edge[bend left=16] node[above] {$1/5$} (d);
+\draw[->,thick] (d) edge[bend left=16] node[below] {$2/5$} (s);
+\end{tikzpicture}
+
+{\small\emph{Rysunek.} Graf skierowany dwustanowego łańcucha pogody.
+Każda strzałka odpowiada jednej możliwości przejścia;
+suma etykiet strzałek wychodzących z danego stanu wynosi $1$.
+Pętla oznacza pozostanie w tym samym stanie, a nie brak kolejnego losowania.}
+\end{center}
+
+\begin{przyklad}[Jedna ścieżka, wiele możliwych ścieżek]
+Dla przedstawionego łańcucha i $X_0=s$ p.n. mamy
+$\Prob(X_0=s,X_1=d,X_2=d,X_3=s)=6/125$.
+Natomiast $\Prob(X_2=d\mid X_0=s)$ jest sumą
+prawdopodobieństw dwóch dopuszczalnych historii
+$(s,s,d)$ i $(s,d,d)$:
+\[
+\Prob(X_2=d\mid X_0=s)
+=\underbrace{\frac45\frac15}_{s\to s\to d}
++\underbrace{\frac15\frac35}_{s\to d\to d}
+=\frac7{25}.
+\]
+To wyjaśnia różnicę między \emph{prawdopodobieństwem
+trajektorii} i \emph{prawdopodobieństwem stanu w danej chwili}.
+Przykładowo
+$\Prob(X_2=d\mid X_0=s,X_1=d)=3/5$,
+ponieważ po poznaniu stanu $X_1$ historia wcześniejsza
+nie zmienia prognozy następnego kroku.
+\end{przyklad}
+
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=.94,
+  every node/.style={font=\small},
+  pathstate/.style={circle,draw=blue!65!black,fill=blue!8,
+  minimum size=9mm,inner sep=1pt}]
+\node[pathstate] (s0) at (0,0) {$s$};
+\node[pathstate] (s1) at (3,1.45) {$s$};
+\node[pathstate,draw=orange!80!black,fill=orange!10] (d1) at (3,-1.45) {$d$};
+\node[pathstate] (ss) at (6,2.3) {$s$};
+\node[pathstate,draw=orange!80!black,fill=orange!10] (sd) at (6,.6) {$d$};
+\node[pathstate] (ds) at (6,-.6) {$s$};
+\node[pathstate,draw=orange!80!black,fill=orange!10] (dd) at (6,-2.3) {$d$};
+\draw[->,thick] (s0)--node[above]{$4/5$}(s1);
+\draw[->,thick] (s0)--node[below]{$1/5$}(d1);
+\draw[->] (s1)--node[above]{$4/5$}(ss);
+\draw[->,very thick,orange!75!black] (s1)--node[below]{$1/5$}(sd);
+\draw[->] (d1)--node[above]{$2/5$}(ds);
+\draw[->,very thick,orange!75!black] (d1)--node[below]{$3/5$}(dd);
+\node at (0,3.05) {$n=0$};\node at (3,3.05) {$n=1$};\node at (6.7,3.05) {$n=2$};
+\end{tikzpicture}
+
+{\small\emph{Rysunek.} Drzewo dwóch kroków z początkowego stanu suchego.
+W przeciwieństwie do grafu przejść ten rysunek odróżnia
+historie: dwie pomarańczowe strzałki kończą się w deszczu,
+a ich prawdopodobieństwa trzeba dodać.
+Kolejne krawędzie jednej historii mnożymy.}
+\end{center}
+
+\begin{przyklad}[Proces, który nie ma własności Markowa]
+Najpierw losujemy ukrytą zmienną $H\in\{1,2\}$
+z prawdopodobieństwami $1/2,1/2$. Jeśli $H=1$,
+losowania $X_0,X_1,\ldots$ są niezależnymi próbami
+Bernoulliego o parametrze $1/4$; jeśli $H=2$,
+mają parametr $3/4$. Bez znajomości $H$
+obserwacje nie tworzą łańcucha Markowa.
+Rzeczywiście, dla $p_1=1/4$, $p_2=3/4$,
+\begin{align*}
+\Prob(X_2=1\mid X_1=1,X_0=1)
+&=\frac{p_1^3+p_2^3}{p_1^2+p_2^2}=\frac7{10},\\
+\Prob(X_2=1\mid X_1=1,X_0=0)
+&=\frac{p_1^2(1-p_1)+p_2^2(1-p_2)}
+{p_1(1-p_1)+p_2(1-p_2)}=\frac12.
+\end{align*}
+Mimo jednakowego stanu obecnego $X_1=1$ prognoza
+zależy od $X_0$. Powód: przeszłe obserwacje
+pozwalają wnioskować o ukrytym parametrze $H$,
+którego sam $X_1$ nie opisuje. Gdyby do stanu
+dołączyć $H$, uzyskalibyśmy bogatszy opis o własności Markowa.
+\end{przyklad}
+
+\begin{przyklad}[Ruch po grafie]
+Niech $G=(V,E)$ będzie skończonym nieskierowanym grafem,
+w którym każdy wierzchołek ma dodatni stopień $d(v)$.
+Z wierzchołka $v$ przechodzimy jednostajnie do jednego
+z jego sąsiadów: $p_{vw}=1/d(v)$, gdy $\{v,w\}\in E$,
+i zero w przeciwnym razie. Jest to spacer losowy
+po grafie. Mimo że wybór sąsiada jest jednostajny,
+stany o większym stopniu będą zwykle częściej odwiedzane.
+\end{przyklad}
+
+\section{Macierze przejścia, półgrupa i własność Markowa}
+
+\begin{twierdzenie}[Chapmana--Kołmogorowa]
+Niech $(X_n)$ będzie jednorodnym łańcuchem Markowa
+o macierzy $P$ na przeliczalnym $S$. Dla $m,n\geq0$
+przyjmijmy $p_{ij}^{(n)}=(P^n)_{ij}$, przy czym
+$P^0=I$. Wówczas
+\[
+\Prob(X_{m+n}=j\mid\sigma(X_0,\ldots,X_m))
+=p^{(n)}_{X_mj}\quad\text{p.n.},\qquad
+p_{ij}^{(m+n)}=\sum_{k\in S}p_{ik}^{(m)}p_{kj}^{(n)}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy $\mathcal F_m^X=\sigma(X_0,\ldots,X_m)$.
+Pokażemy indukcyjnie względem $n$, że
+$\E[\ind{\{X_{m+n}=j\}}\mid\mathcal F_m^X]
+=(P^n)_{X_mj}$. Dla $n=0$ jest to
+$\ind{\{X_m=j\}}=(P^0)_{X_mj}$, a dla $n=1$
+równość jest właśnie własnością Markowa.
+Załóżmy teraz tezę dla $n\geq1$ i każdego
+początkowego czasu. Zastosujmy ją z czasem $m+1$,
+a następnie użyjmy własności wieży:
+\begin{align*}
+&\E[\ind{\{X_{m+n+1}=j\}}\mid\mathcal F_m^X]\\
+&=\E[(P^n)_{X_{m+1}j}\mid\mathcal F_m^X]\\
+&=\E\left[\sum_{k\in S}(P^n)_{kj}
+ \ind{\{X_{m+1}=k\}}\mid\mathcal F_m^X\right]\\
+&=\sum_{k\in S}(P^n)_{kj}\,p_{X_mk}
+ =(P^{n+1})_{X_mj}.
+\end{align*}
+Przy przedostatniej równości wyrazy szeregu są
+nieujemne, więc można przejść z sumą pod znak
+warunkowej wartości oczekiwanej przez warunkową
+zbieżność monotoniczną. Ostatnią równość daje
+definicja mnożenia macierzy stochastycznych.
+
+Aby odczytać z tego wynik probabilistyczny,
+wystarczy wziąć $A=\{X_m=i\}$ o dodatnim
+prawdopodobieństwie i pomnożyć otrzymaną
+tożsamość przez $\ind A$; dostajemy
+$\Prob(X_{m+n}=j\mid X_m=i)=(P^n)_{ij}$.
+Nie korzystamy z takiego ilorazu, gdy $\Prob(A)=0$.
+
+Pozostaje równość Chapmana--Kołmogorowa. Z
+identyczności macierzowej $P^{m+n}=P^mP^n$
+wynika dla wszystkich $i,j$:
+$(P^{m+n})_{ij}=\sum_{k\in S}(P^m)_{ik}(P^n)_{kj}$.
+Alternatywnie można to uzyskać, sumując po stanie
+pośrednim $X_m=k$ dla łańcucha skonstruowanego
+z deterministycznym $X_0=i$. Ten drugi opis
+uzasadnia intuicję: każda droga długości $m+n$
+przechodzi po $m$ krokach przez dokładnie jeden
+stan $k$, więc rozłączne możliwości należy zsumować.
+\end{proof}
+
+
+\begin{twierdzenie}[Pełna własność zapominania przeszłości]
+Niech $(X_n)_{n\geq0}$ będzie jednorodnym łańcuchem
+Markowa na przeliczalnym zbiorze $S$, o macierzy $P$,
+a $\mathcal F_n^X=\sigma(X_0,\ldots,X_n)$. Dla
+$n\geq0$, $r\geq1$ i ograniczonej funkcji
+$f:S^r\to\R$ mamy
+\[
+\E[f(X_{n+1},\ldots,X_{n+r})\mid\mathcal F_n^X]
+=\sum_{j_1,\ldots,j_r\in S} f(j_1,\ldots,j_r)
+ p_{X_nj_1}p_{j_1j_2}\cdots p_{j_{r-1}j_r}
+\quad\text{p.n.}
+\]
+W szczególności, po poznaniu $X_n$ rozkład
+\emph{całego skończonego fragmentu przyszłości}
+nie zależy od wcześniejszych stanów $X_0,\ldots,X_{n-1}$.
+\end{twierdzenie}
+\begin{proof}
+Wystarczy najpierw rozważyć funkcję wskaźnikową
+$f=\ind{\{(j_1,\ldots,j_r)\}}$. Ustalmy historię
+$A=\{X_0=i_0,\ldots,X_n=i_n\}$ o dodatnim
+prawdopodobieństwie. Z prawa trajektorii
+\begin{align*}
+&\Prob(A, X_{n+1}=j_1,\ldots,X_{n+r}=j_r)\\
+&\qquad=\Prob(A)\,p_{i_nj_1}p_{j_1j_2}\cdots
+p_{j_{r-1}j_r}.
+\end{align*}
+Dzielenie przez $\Prob(A)$ daje odpowiednią
+warunkową równość. Jeżeli $\Prob(A)=0$, obie
+strony tożsamości całkowej na $A$ mają wartość zero.
+Zdarzenia $A$ tworzą przeliczalny podział $\Omega$,
+a każde zdarzenie z $\mathcal F_n^X$ jest sumą
+niektórych elementów tego podziału. Zsumowanie
+równości po tych elementach pokazuje, że prawa
+strona jest wersją wskazanej warunkowej wartości
+oczekiwanej. Dla dowolnej ograniczonej $f$ mnożymy
+równości wskaźnikowe przez $f(j_1,\ldots,j_r)$
+i sumujemy po wszystkich ciągach stanów.
+Zamiana sum z wartościami oczekiwanymi jest
+uprawniona, gdyż suma modułów jest ograniczona
+przez $\|f\|_\infty$ po pomnożeniu przez
+odpowiednie prawdopodobieństwa trajektorii.
+\end{proof}
+
+\begin{uwaga}[Dwa różne znaczenia słowa „zapominanie”]
+Powyższa własność jest \emph{dokładna i natychmiastowa}:
+przeszłość przestaje mieć znaczenie dla dalszej prognozy,
+gdy stan obecny jest znany. Nie przesądza ona o tym,
+czy $\Prob(X_n=j\mid X_0=i)$ zbliża się, gdy
+$n\to\infty$, do liczby niezależnej od $i$.
+Takie \emph{asymptotyczne zapominanie początku}
+wynika w skończonym przypadku z nieprzywiedlności
+i nieokresowości. Dla łańcucha naprzemiennego
+$0\leftrightarrow1$ własność Markowa zachodzi,
+a pamięć o stanie początkowym pozostaje na zawsze.
+\end{uwaga}
+
+Dla ograniczonej $f:S\to\R$ oznaczmy
+$(Pf)(i)=\sum_jp_{ij}f(j)$ oraz
+$(P^nf)(i)=\sum_jp_{ij}^{(n)}f(j)$.
+Wtedy
+$\E[f(X_{m+n})\mid\sigma(X_0,\ldots,X_m)]
+=(P^nf)(X_m)$. Ta postać jest szczególnie użyteczna:
+operator $P$ \emph{propaguje obserwable w przyszłość},
+natomiast rozkład wierszowy $\mu$ propaguje się jako
+$\mu P^n$.
+
+\begin{przyklad}[Dwa stany: rozwiązanie jawne]
+Dla $0<\alpha,\beta\leq1$ weźmy
+$P=\begin{psmallmatrix}1-\alpha&\alpha\\
+\beta&1-\beta\end{psmallmatrix}$.
+Jeśli $q_n=\Prob(X_n=1)$, to
+$q_{n+1}=\alpha(1-q_n)+(1-\beta)q_n
+=\alpha+(1-\alpha-\beta)q_n$.
+Po odjęciu $q_*=\alpha/(\alpha+\beta)$ otrzymujemy
+$q_{n+1}-q_*=(1-\alpha-\beta)(q_n-q_*)$,
+więc
+\[
+q_n=\frac{\alpha}{\alpha+\beta}
++(1-\alpha-\beta)^n
+\left(q_0-\frac{\alpha}{\alpha+\beta}\right).
+\]
+Przy $\alpha=\beta=1$ łańcuch zmienia stan
+w każdym kroku i nigdy nie zbiega w rozkładzie
+z ustalonego stanu, mimo istnienia rozkładu
+stacjonarnego $(1/2,1/2)$. W pozostałych
+przypadkach $\alpha,\beta>0$ i
+$\alpha+\beta<2$ mamy $|1-\alpha-\beta|<1$,
+więc rozkład dąży do stacjonarnego.
+\end{przyklad}
+
+
+\begin{przyklad}[Ilościowe zapominanie początku a własność Markowa]
+Dla łańcucha pogody
+$P=\begin{psmallmatrix}4/5&1/5\\2/5&3/5\end{psmallmatrix}$
+rozkład stacjonarny jest równy
+$\pi=(2/3,1/3)$. Wzór dla łańcucha dwustanowego
+daje
+\begin{align*}
+\Prob(X_n=d\mid X_0=s)&=\frac13\bigl(1-(2/5)^n\bigr),\\
+\Prob(X_n=d\mid X_0=d)&=\frac13+\frac23(2/5)^n.
+\end{align*}
+Różnica obu prognoz wynosi $(2/5)^n$,
+a zatem zależność od stanu początkowego zanika
+wykładniczo. Jest to \emph{inny fakt} niż to,
+że do prognozowania $X_{n+1}$ wystarcza $X_n$.
+Pierwszy mówi o coraz słabszym wpływie dawnej historii;
+drugi — o warunkowej niezależności w jednym kroku.
+\end{przyklad}
+
+\section{Konstrukcja i łączenie z niezależnymi losowaniami}
+
+Zasadnicze jest pytanie, czy każda macierz $P$ i rozkład
+początkowy rzeczywiście wyznaczają łańcuch. Można to
+zrobić bez polegania na nieformalnych warunkowych
+losowaniach.
+
+\begin{twierdzenie}[Konstrukcja z jednostajnych zmiennych losowych]
+Dla dowolnego przeliczalnego $S$, macierzy stochastycznej
+$P$ na $S$ oraz rozkładu $\mu$ na $S$ istnieje
+jednorodny łańcuch Markowa $(X_n)_{n\geq0}$
+o rozkładzie początkowym $\mu$ i macierzy $P$.
+\end{twierdzenie}
+\begin{proof}
+Wybierzmy enumerację $S=\{s_1,s_2,\ldots\}$
+(w przypadku skończonym kończymy listę).
+Dla $i\in S$ i $u\in(0,1)$ niech $F(i,u)=s_r$,
+gdzie $r$ jest najmniejszym indeksem takim, że
+$\sum_{\ell\leq r}p_{i,s_\ell}\geq u$.
+Definicja ma sens poza ewentualnym zbiorem punktów
+brzegowych miary Lebesgue'a zero, w których można
+przypisać dowolny stan; przy prawdopodobieństwie
+sumującym się do jedności dla każdego $u<1$
+odpowiedni indeks istnieje. Funkcja $F$ jest
+mierzalna względem $2^S\otimes\mathcal B((0,1))$.
+Na przestrzeni iloczynowej weźmy niezależne
+$U_1,U_2,\ldots\sim\Unif(0,1)$, niezależne od
+$X_0$ o rozkładzie $\mu$, i rekurencyjnie połóżmy
+$X_{n+1}=F(X_n,U_{n+1})$. Ponieważ
+$U_{n+1}$ jest niezależna od $X_0,U_1,\ldots,U_n$,
+a w szczególności od $\sigma(X_0,\ldots,X_n)$,
+warunkowo przy $X_n=i$ otrzymujemy
+$\Prob(F(i,U_{n+1})=j)=p_{ij}$.
+Zatem $\E[\ind{\{X_{n+1}=j\}}\mid\sigma(X_0,\ldots,X_n)]
+=p_{X_nj}$, jak należało wykazać.
+\end{proof}
+
+\section{Czasy wejścia, mocna własność Markowa}
+
+\begin{definicja}[Czas wejścia i powrotu]
+Dla łańcucha $(X_n)$ i zbioru $A\subseteq S$ definiujemy
+$\tau_A=\inf\{n\geq0:X_n\in A\}$ oraz
+$\tau_A^+=\inf\{n\geq1:X_n\in A\}$,
+przyjmując $\inf\varnothing=\infty$.
+Dla jednego stanu piszemy $\tau_i$ i $\tau_i^+$.
+\end{definicja}
+
+\begin{twierdzenie}[Mocna własność Markowa, wersja dyskretna]
+Niech $(X_n)$ będzie jednorodnym łańcuchem Markowa
+na przeliczalnym $S$, a $\tau$ czasem zatrzymania
+względem jego naturalnej filtracji
+$\mathcal F_n^X=\sigma(X_0,\ldots,X_n)$.
+Dla każdego $r\geq0$ i ograniczonej funkcji
+$f:S^{r+1}\to\R$ zachodzi
+\[
+\E\bigl[f(X_\tau,\ldots,X_{\tau+r})
+\ind{\{\tau<\infty\}}\mid\mathcal F_\tau^X\bigr]
+=\ind{\{\tau<\infty\}}\,G_f(X_\tau),
+\]
+gdzie $G_f(i)=\E_i f(X_0,\ldots,X_r)$, a
+$\E_i$ oznacza wartość oczekiwaną dla łańcucha
+rozpoczynającego w $i$. Wartości procesu na
+$\{\tau=\infty\}$ w formule rozumiemy jako zero.
+\end{twierdzenie}
+\begin{proof}
+Definicję $\mathcal F_\tau^X$ podamy dokładnie
+w następnym rozdziale; tu wystarczy jej własność:
+jeśli $A\in\mathcal F_\tau^X$, to
+$A\cap\{\tau=n\}\in\mathcal F_n^X$.
+Dla dowolnego takiego $A$ piszemy, korzystając
+z rozbicia $\{\tau<\infty\}=\bigcup_{n\geq0}\{\tau=n\}$,
+\begin{align*}
+&\E\bigl[\ind A\ind{\{\tau<\infty\}}
+ f(X_\tau,\ldots,X_{\tau+r})\bigr]\\
+&=\sum_{n\geq0}\E\bigl[
+\ind{A\cap\{\tau=n\}}f(X_n,\ldots,X_{n+r})\bigr]\\
+&=\sum_{n\geq0}\E\bigl[
+\ind{A\cap\{\tau=n\}}G_f(X_n)\bigr]
+=\E\bigl[\ind A\ind{\{\tau<\infty\}}G_f(X_\tau)\bigr].
+\end{align*}
+Druga równość wynika ze zwykłej własności Markowa
+oraz warunkowania względem $\mathcal F_n^X$.
+Szeregi są absolutnie zbieżne, bo $f$ jest ograniczona
+i zdarzenia $\{\tau=n\}$ są rozłączne.
+Prawa strona jest $\mathcal F_\tau^X$-mierzalna,
+a więc definiuje wskazaną warunkową wartość
+oczekiwaną. Nie ma tu żadnego warunkowania
+na zdarzenie $\{\tau=n\}$ o dodatniej miarze:
+dowód działa również dla zerowych prawdopodobieństw.
+\end{proof}
+
+\begin{przyklad}[Po pierwszym deszczu]
+W modelu pogody zatrzymajmy obserwację w pierwszym
+dniu deszczowym $\tau_d$. Na zdarzeniu
+$\{\tau_d<\infty\}$ prawdopodobieństwo, że
+następnego dnia będzie sucho, wynosi $p_{ds}$,
+niezależnie od liczby dni oczekiwania na deszcz.
+To właśnie treść mocnej własności Markowa:
+czas $\tau_d$ jest losowy, ale przyszłość po
+zatrzymaniu znów zaczyna się od obecnego stanu.
+\end{przyklad}
+
+\section{Klasy komunikujące, powracanie i okresowość}
+
+\begin{definicja}[Komunikowanie, nieprzywiedlność, okres]
+Dla $i,j\in S$ piszemy $i\to j$, jeśli istnieje
+$n\geq0$ z $p_{ij}^{(n)}>0$. Stany $i$ i $j$
+\emph{komunikują się}, jeśli $i\to j$ i $j\to i$.
+Łańcuch jest \emph{nieprzywiedlny}, gdy wszystkie
+stany komunikują się. Klasa $C\subseteq S$
+jest \emph{domknięta}, jeśli $p_{ij}=0$ dla
+$i\in C$, $j\notin C$. Okresem stanu $i$ nazywamy
+$d(i)=\gcd\{n\geq1:p_{ii}^{(n)}>0\}$;
+przez $\gcd$ rozumiemy największy wspólny dzielnik
+niepustego zbioru, zaś jeśli zbiór jest pusty,
+stan nie ma dodatnich czasów powrotu i okres
+pozostawiamy nieokreślony.
+\end{definicja}
+
+\begin{lemat}[Okres jest wspólny dla klasy komunikującej]
+Jeżeli stany $i,j$ komunikują się i istnieje
+$n\geq1$ z $p_{ii}^{(n)}>0$, to $d(i)=d(j)$.
+\end{lemat}
+\begin{proof}
+Wybierzmy $r,s\geq0$ takie, że
+$p_{ij}^{(r)}>0$ i $p_{ji}^{(s)}>0$.
+W szczególności istnieje cykl z $i$ do $j$ i z
+powrotem długości $r+s$, a więc $d(i)$ dzieli $r+s$.
+Dla dowolnego $n$ z $p_{jj}^{(n)}>0$ powstaje
+cykl w $i$ długości $r+n+s$, zatem $d(i)$
+dzieli $r+n+s$ i $r+s$, więc dzieli $n$.
+Tym samym $d(i)$ dzieli $d(j)$.
+Zamieniając $i$ z $j$, otrzymujemy podzielność
+odwrotną, a więc równość.
+\end{proof}
+
+\begin{definicja}[Stan powracający i przemijający]
+Stan $i\in S$ jest \emph{powracający}, jeśli
+$\Prob_i(\tau_i^+<\infty)=1$, a
+\emph{przemijający}, jeśli
+$\Prob_i(\tau_i^+<\infty)<1$.
+Stan powracający jest \emph{dodatnio powracający},
+jeżeli $\E_i\tau_i^+<\infty$, a \emph{zerowo
+powracający}, jeśli $\E_i\tau_i^+=\infty$.
+\end{definicja}
+
+\begin{twierdzenie}[Kryterium powracania przez szereg odwiedzin]
+Dla każdego stanu $i$ przeliczalnego jednorodnego
+łańcucha Markowa zachodzi równoważność
+\[
+ i\text{ jest powracający}\quad\Longleftrightarrow
+\quad\sum_{n=0}^{\infty}p_{ii}^{(n)}=\infty.
+\]
+Jeżeli $r_i=\Prob_i(\tau_i^+<\infty)<1$,
+to $\sum_{n\geq0}p_{ii}^{(n)}=1/(1-r_i)$.
+\end{twierdzenie}
+\begin{proof}
+Rozważmy liczbę wszystkich wizyt w $i$,
+$N_i=\sum_{n\geq0}\ind{\{X_n=i\}}$, dla łańcucha
+rozpoczętego w $i$. Niech $T_k$ oznacza chwilę
+$k$-tego powrotu po czasie zero; $T_0=0$.
+Mocna własność Markowa zastosowana w $T_k$
+daje indukcyjnie
+$\Prob_i(T_k<\infty)=r_i^k$.
+Z monotonicznej zbieżności
+\[
+\sum_{n\geq0}p_{ii}^{(n)}=\E_iN_i
+=\sum_{k\geq0}\Prob_i(T_k<\infty)
+=\sum_{k\geq0}r_i^k.
+\]
+Ostatni szereg jest skończony dokładnie dla $r_i<1$;
+przy $r_i=1$ jest rozbieżny. Dowód obejmuje oba
+przypadki bez zakładania, że czas powrotu ma
+skończoną wartość oczekiwaną.
+\end{proof}
+
+\begin{przyklad}[Spacer symetryczny na prostej całkowitej]
+Niech $X_0=0$ i $X_n=\xi_1+\cdots+\xi_n$,
+gdzie $\xi_k$ są niezależne i przyjmują $\pm1$
+z prawdopodobieństwem $1/2$. Dla $n\geq0$
+$\Prob_0(X_{2n+1}=0)=0$ i
+$\Prob_0(X_{2n}=0)=\binom{2n}{n}2^{-2n}$.
+Ze wzoru Stirlinga
+$\binom{2n}{n}2^{-2n}\sim1/\sqrt{\pi n}$.
+Szereg prawdopodobieństw powrotu jest rozbieżny,
+więc spacer jest powracający. Ponadto okres wynosi $2$.
+Dla spaceru z dryfem $\Prob(\xi_k=1)=p\ne1/2$
+mamy
+$\Prob_0(X_{2n}=0)=\binom{2n}{n}[p(1-p)]^n
+\sim[4p(1-p)]^n/\sqrt{\pi n}$,
+a $4p(1-p)<1$; stan zero jest zatem przemijający.
+\end{przyklad}
+
+\begin{przyklad}[Dlaczego przy powracaniu liczy się cały szereg]
+Łańcuch może w jednym kroku powracać bardzo mało
+prawdopodobnie, ale i tak powracać niemal na pewno,
+ponieważ ma nieskończenie wiele okazji. Dlatego
+samo $p_{ii}$ nie rozstrzyga o powracaniu.
+Na przykład spacer symetryczny ma $p_{00}=0$,
+a mimo to stan zero jest powracający.
+\end{przyklad}
+
+
+\begin{stwierdzenie}[Domknięcie i komunikowanie]
+Dla jednorodnego łańcucha na przeliczalnym zbiorze $S$
+relacja komunikowania jest relacją równoważności.
+Jeśli klasa komunikująca $C$ jest domknięta i
+$X_0\in C$ p.n., to $X_n\in C$ dla wszystkich
+$n\geq0$ prawie na pewno.
+\end{stwierdzenie}
+\begin{proof}
+Zwrotność wynika z $p_{ii}^{(0)}=1$,
+a symetryczność jest częścią definicji.
+Jeśli $i\to j$ w $m$ krokach i $j\to k$ w $n$,
+to z równania Chapmana--Kołmogorowa
+$p_{ik}^{(m+n)}\geq p_{ij}^{(m)}p_{jk}^{(n)}>0$.
+Tak samo, łącząc drogę powrotną $k\to j\to i$,
+dostajemy $k\to i$. To dowodzi przechodniości.
+Jeśli $C$ jest domknięta, to dla każdego
+$i\in C$ mamy $\Prob_i(X_1\in C)=1$.
+Indukcja z warunkowaniem względem $X_n$
+daje $\Prob(X_n\in C)=1$ przy $X_0\in C$ p.n.
+Przeliczalne przecięcie zdarzeń pełnej miary
+zapewnia pozostawanie w $C$ jednocześnie
+we wszystkich chwilach. 
+\end{proof}
+
+\begin{przyklad}[Dwie klasy pochłaniające i stan przejściowy]
+Niech $S=\{0,1,2\}$ i
+$P=\begin{psmallmatrix}1&0&0\\ 1/3&0&2/3\\ 0&0&1\end{psmallmatrix}$.
+Stany $0$ i $2$ są oddzielnymi domkniętymi klasami,
+a stan $1$ jest przemijający. Rozkłady
+$\delta_0$ i $\delta_2$ są stacjonarne;
+stacjonarny jest też każdy ich wypukły
+mieszany rozkład $t\delta_0+(1-t)\delta_2$.
+Zatem bez nieprzywiedlności nie musi być
+jednoznacznego rozkładu stacjonarnego ani
+wspólnej granicy niezależnej od startu.
+\end{przyklad}
+
+\begin{uwaga}[Kiedy dowód prawa Markowa przechodzi na proces obserwowany?]
+Własność Markowa zależy od wyboru \emph{stanu}.
+Jeśli stan rzeczywisty ma dwie składowe $(X_n,H)$,
+ale obserwujemy tylko $X_n$, to proces obserwacji
+nie musi mieć własności Markowa. Rozkład warunkowy
+przyszłości może zależeć od wcześniejszych obserwacji,
+gdyż pomagają one odtworzyć ukrytą składową $H$.
+W dowodach własności Markowa należy więc wskazać
+niezależne innowacje lub zweryfikować tożsamość
+warunkową, a nie wnioskować z samej znajomości
+jednokrokowych rozkładów bezwarunkowych.
+\end{uwaga}
+
+\begin{przyklad}[Rozwiązane zadanie: pochłanianie a warunkowanie wstecz]
+W modelu pogody z macierzą
+$P=\begin{psmallmatrix}4/5&1/5\\2/5&3/5\end{psmallmatrix}$
+przyjmijmy $\Prob(X_0=s)=3/4$ i
+$\Prob(X_0=d)=1/4$. Wyznaczymy prawdopodobieństwo
+obserwacji $X_0=s,X_1=d,X_2=d$ oraz szansę,
+że pierwszy dzień był suchy, jeśli widzimy
+deszcz w dniach $1$ i $2$.
+
+Z prawa trajektorii
+$\Prob(X_0=s,X_1=d,X_2=d)
+=(3/4)(1/5)(3/5)=9/100$.
+Prawdopodobieństwo warunkujące wynosi
+\[
+\Prob(X_1=d,X_2=d)
+=\left(\frac34\frac15+\frac14\frac35\right)\frac35
+=\frac9{50}.
+\]
+Stąd
+$\Prob(X_0=s\mid X_1=d,X_2=d)
+=(9/100)/(9/50)=1/2$.
+Gdybyśmy znali jedynie $X_1=d$, wynik także
+wynosiłby
+$[(3/4)(1/5)]/[(3/4)(1/5)+(1/4)(3/5)]=1/2$.
+To konkretne sprawdzenie warunkowej niezależności
+przeszłości i dalszej przyszłości po poznaniu
+stanu pośredniego.
+\end{przyklad}
+
+\section{Rozkłady stacjonarne i równowaga}
+
+\begin{definicja}[Rozkład stacjonarny i odwracalność]
+Rozkład probabilistyczny $\pi=(\pi_i)_{i\in S}$
+jest \emph{stacjonarny} dla $P$, jeśli
+$\pi_j=\sum_{i\in S}\pi_i p_{ij}$ dla każdego $j$,
+czyli $\pi P=\pi$.
+Mówimy, że $\pi$ spełnia \emph{warunek równowagi
+szczegółowej}, jeśli
+$\pi_i p_{ij}=\pi_jp_{ji}$ dla wszystkich $i,j\in S$.
+\end{definicja}
+
+\begin{stwierdzenie}[Równowaga szczegółowa implikuje stacjonarność]
+Jeżeli $\pi$ jest rozkładem probabilistycznym
+spełniającym warunek równowagi szczegółowej,
+to jest stacjonarny.
+\end{stwierdzenie}
+\begin{proof}
+Dla każdego $j$ sumujemy po $i$:
+$\sum_i\pi_i p_{ij}=\sum_i\pi_jp_{ji}
+=\pi_j\sum_i p_{ji}=\pi_j$.
+W ostatnim wyrażeniu sumujemy \emph{wiersz}
+macierzy $P$ o indeksie początkowym $j$.
+\end{proof}
+
+\begin{przyklad}[Spacer na grafie: przewaga wierzchołków o dużym stopniu]
+Dla skończonego nieskierowanego grafu bez
+wierzchołków izolowanych zdefiniujmy
+$\pi_v=d(v)/\sum_{w\in V}d(w)$.
+Gdy $v,w$ są sąsiadami,
+$\pi_vp_{vw}=1/\sum_zd(z)=\pi_wp_{wv}$;
+gdy nie są, obie strony znikają. Zatem $\pi$
+jest stacjonarny. Wierzchołek z trzykrotnie
+większą liczbą sąsiadów ma w równowadze
+trzykrotnie większe prawdopodobieństwo wizyty.
+\end{przyklad}
+
+\begin{przyklad}[Stacjonarność nie jest zbieżnością]
+Dla $P=\begin{psmallmatrix}0&1\\1&0\end{psmallmatrix}$
+rozkład $(1/2,1/2)$ jest stacjonarny, ale startując
+od pierwszego stanu, rozkłady kolejnych $X_n$
+naprzemiennie wynoszą $(1,0)$ i $(0,1)$.
+Sama równość $\pi P=\pi$ nie wystarcza do
+$\mu P^n\to\pi$; trzeba kontrolować okresowość.
+\end{przyklad}
+
+\begin{twierdzenie}[Istnienie rozkładu stacjonarnego na skończonym zbiorze]
+Każda macierz stochastyczna $P$ na niepustym
+skończonym zbiorze $S$ ma co najmniej jeden
+rozkład stacjonarny.
+\end{twierdzenie}
+\begin{proof}
+Wybierzmy dowolny rozkład $\mu$ i zdefiniujmy
+$\nu_N=N^{-1}\sum_{n=0}^{N-1}\mu P^n$.
+Są to rozkłady probabilistyczne w skończenie
+wymiarowym sympleksie
+$\{x_i\geq0,\ \sum_i x_i=1\}$, który jest zwarty.
+Istnieje więc podciąg $N_k$ i rozkład $\pi$ taki,
+że $\nu_{N_k}\to\pi$ współrzędnie. Ponieważ
+\[
+\nu_NP-\nu_N=\frac{\mu P^N-\mu}{N},
+\]
+prawa strona zbiega do zera współrzędnie
+(jej współrzędne są ograniczone modułem przez $1/N$).
+Przechodząc do granicy i korzystając z ciągłości
+mnożenia macierzy w skończonym wymiarze,
+otrzymujemy $\pi P=\pi$.
+\end{proof}
+
+\begin{twierdzenie}[Jedyność rozkładu stacjonarnego dla skończonego łańcucha]
+Jeśli $S$ jest skończony, a $P$ nieprzywiedlna,
+to rozkład stacjonarny $\pi$ istnieje, jest jedyny
+i spełnia $\pi_i>0$ dla każdego $i\in S$.
+\end{twierdzenie}
+\begin{proof}
+Istnienie wynika z poprzedniego twierdzenia.
+Jeżeli $\pi_i>0$ i $i\to j$, to dla pewnego $n$
+$\pi_j=(\pi P^n)_j\geq\pi_i p_{ij}^{(n)}>0$.
+Ponieważ pewne $\pi_i>0$ i łańcuch jest
+nieprzywiedlny, wszystkie współrzędne są dodatnie.
+Niech $\rho$ będzie innym rozkładem stacjonarnym;
+z tego samego argumentu $\rho_i>0$.
+Niech $c=\max_{i\in S}\pi_i/\rho_i$ i
+$D_i=c\rho_i-\pi_i\geq0$. Co najmniej jeden $D_i=0$.
+Ponieważ obie miary są stacjonarne,
+$D_j=\sum_iD_i p_{ij}$ dla wszystkich $j$.
+Jeśli $D_j=0$, to każdy $i$ z $p_{ij}>0$ ma $D_i=0$.
+Przez iterację dostajemy $D_i=0$ dla wszystkich $i$
+mających drogę do $j$, a przez nieprzywiedlność
+dla wszystkich $i$. Zatem $\pi=c\rho$.
+Sumowanie współrzędnych daje $c=1$, więc
+$\pi=\rho$.
+\end{proof}
+
+\begin{lemat}[Wspólna dodatnia potęga w przypadku nieokresowym]
+Niech $S$ będzie skończony, $P$ nieprzywiedlna
+i niech okres stanów wynosi $1$. Wtedy istnieje
+$N\geq1$, dla którego wszystkie współrzędne
+macierzy $P^N$ są dodatnie.
+\end{lemat}
+\begin{proof}
+Ustalmy stan $o$. Z definicji okresu liczby
+$n\geq1$ z $p_{oo}^{(n)}>0$ mają największy
+wspólny dzielnik równy $1$. Istnieje zatem
+\emph{skończony} podzbiór długości
+$n_1,\ldots,n_r$ o tym samym NWD: kolejne NWD
+liczb naturalnych tworzą ciąg nierosnący,
+który po skończonej liczbie zmian stabilizuje się.
+Każda dostatecznie duża liczba naturalna jest
+nieujemną kombinacją całkowitą $n_1,\ldots,n_r$.
+Aby to uzasadnić, oznaczmy $a=n_1$.
+Reszty modulo $a$ osiągane przez nieujemne sumy
+$n_1,\ldots,n_r$ tworzą podmonoid skończonej
+grupy $\Z/a\Z$, a więc są podgrupą;
+NWD równy $1$ oznacza, że jest to cała grupa.
+Wybierzmy dla każdej reszty jedną nieujemną sumę
+$h_r$ o tej reszcie. Każda liczba o danej reszcie
+większa lub równa $h_r$ jest postaci $h_r+ka$,
+$k\geq0$, więc jest realizowana jako długość
+ścieżki z $o$ do $o$.
+
+Dla każdego $i,j\in S$ wybierzmy dodatnie
+ścieżki $i\to o$ i $o\to j$ o długościach
+$r_i,s_j$; można tu dopuścić długość zero.
+Wobec poprzedniego ustępu, gdy $N-r_i-s_j$
+jest dostatecznie duże, istnieje ścieżka
+$i\to o\to o\to j$ długości dokładnie $N$.
+Ponieważ par $(i,j)$ jest skończenie wiele,
+wybierzmy wspólne duże $N$. Wtedy
+$p_{ij}^{(N)}>0$ dla wszystkich par.
+\end{proof}
+
+\begin{twierdzenie}[Zbieżność skończonego łańcucha ergodycznego]
+Niech $S$ będzie skończony, $P$ nieprzywiedlna
+i nieokresowa. Wtedy istnieje jedyny rozkład
+stacjonarny $\pi$ i dla każdego początkowego
+rozkładu $\mu$ zachodzi
+\[
+\sum_{j\in S}|(\mu P^n)_j-\pi_j|\longrightarrow0.
+\]
+Co więcej, istnieją stałe $C<\infty$ i $r\in(0,1)$
+(zależne od $P$), dla których lewa strona jest
+nie większa niż $Cr^n$.
+\end{twierdzenie}
+\begin{proof}
+Z poprzedniego lematu wybierzmy $N$ takie,
+że $Q=P^N$ ma wszystkie współrzędne dodatnie.
+Niech $m=|S|$ i $\varepsilon=m\min_{i,j}Q_{ij}>0$.
+Gdy $\varepsilon=1$, wszystkie wiersze $Q$ są
+jednostajne i po $N$ krokach następuje pełne
+zapomnienie stanu początkowego.
+W przeciwnym razie $0<\varepsilon<1$ i
+\[
+Q_{ij}=\varepsilon\,u_j+(1-\varepsilon)R_{ij},
+\qquad u_j=1/m,
+\]
+gdzie $R$ jest macierzą stochastyczną (nieujemność
+wynika z definicji $\varepsilon$).
+Dla dowolnych rozkładów $\mu,\nu$
+$\mu Q-\nu Q=(1-\varepsilon)(\mu R-\nu R)$.
+Ponieważ przejście stochastyczne nie zwiększa
+normy sumy modułów różnic,
+\[
+\|\mu Q-\nu Q\|_1
+\leq(1-\varepsilon)\|\mu-\nu\|_1.
+\]
+Ustalmy stacjonarny $\pi$ i podstawmy $\nu=\pi$.
+Iteracja daje
+$\|\mu Q^k-\pi\|_1\leq2(1-\varepsilon)^k$.
+Dla $n=kN+r$, $0\leq r<N$, kontrakcja przez
+$P^r$ daje ten sam szacunek z $k=\lfloor n/N\rfloor$.
+Przy $0<\varepsilon<1$ jest on geometryczny:
+można wziąć $r_0=(1-\varepsilon)^{1/N}<1$
+i stałą $C=2/(1-\varepsilon)$.
+Przy $\varepsilon=1$ rozkład jest dokładnie
+stacjonarny od pewnego kroku, więc dowolna stała
+$r_0\in(0,1)$ i wystarczająco duże $C$ wystarczą.
+\end{proof}
+
+\begin{uwaga}[Odległość całkowitej wariacji]
+Na zbiorze przeliczalnym definiujemy
+$\|\mu-\nu\|_{\mathrm{TV}}=\sup_{A\subseteq S}
+|\mu(A)-\nu(A)|=\frac12\sum_i|\mu_i-\nu_i|$.
+Użyta w dowodzie norma $\ell^1$ jest dwa razy
+większa od odległości całkowitej wariacji.
+W przypadku przestrzeni nieskończonych rozkład
+stacjonarny może nie istnieć, a okresowość nie
+jest jedyną przeszkodą zbieżności.
+\end{uwaga}
+
+
+\begin{przyklad}[Stacjonarność bez niezależności obserwacji]
+Niech $S=\{0,1\}$, a macierz przejścia wynosi
+$P=\begin{psmallmatrix}3/4&1/4\\1/4&3/4\end{psmallmatrix}$.
+Rozpocznijmy proces od rozkładu stacjonarnego
+$\pi=(1/2,1/2)$. Wtedy dla każdego $n$
+$\Prob(X_n=1)=1/2$, lecz
+$\Prob(X_0=1,X_1=1)=\pi_1p_{11}=3/8$,
+podczas gdy iloczyn mas brzegowych wynosi $1/4$.
+Zatem ciąg jest stacjonarny, ale kolejne stany
+nie są niezależne. Rozkład każdej pojedynczej obserwacji
+nie wyznacza zależności czasowej procesu.
+\end{przyklad}
+
+\section{Problemy wejścia jako równania harmoniczne}
+
+\begin{twierdzenie}[Prawdopodobieństwo trafienia]
+Niech $A,B\subseteq S$ będą rozłączne, a
+$\tau_A,\tau_B$ czasami wejścia.
+Dla $i\in S$ połóżmy
+$h(i)=\Prob_i(\tau_A<\tau_B,\ \tau_A<\infty)$.
+Wtedy $0\leq h\leq1$, $h=1$ na $A$,
+$h=0$ na $B$ oraz
+\[
+h(i)=\sum_{j\in S}p_{ij}h(j)
+\quad(i\notin A\cup B).
+\]
+Co więcej, $h$ jest \emph{najmniejszą}
+nieujemną funkcją spełniającą te warunki brzegowe
+i równanie na $S\setminus(A\cup B)$.
+Jeśli $\Prob_i(\tau_A\wedge\tau_B<\infty)=1$
+dla wszystkich $i$, to $h$ jest jedynym
+ograniczonym rozwiązaniem układu z tymi
+warunkami brzegowymi.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $i\in A$, mamy $\tau_A=0<\tau_B$,
+a jeśli $i\in B$, to $\tau_B=0$,
+więc wartości brzegowe wynoszą odpowiednio $1$ i $0$.
+Dla $i\notin A\cup B$ rozdzielamy zdarzenie trafienia
+według pierwszego kroku. Z prawa całkowitego
+prawdopodobieństwa i własności Markowa
+\[
+ h(i)=\sum_{j\in S}\Prob_i(X_1=j)
+ \Prob_i(\tau_A<\tau_B,\tau_A<\infty\mid X_1=j)
+ =\sum_{j\in S}p_{ij}h(j),
+\]
+przy czym składniki odpowiadające $p_{ij}=0$
+można pominąć. Istotne jest przesunięcie czasu:
+po pierwszym kroku problem zaczyna się od nowa
+w stanie $j$.
+
+Niech $g:S\to[0,\infty)$ będzie innym rozwiązaniem
+z tymi samymi wartościami brzegowymi, niekoniecznie
+ograniczonym. Dla $\tau=\tau_A\wedge\tau_B$
+pokażemy indukcyjnie
+$g(i)=\E_i[g(X_{n\wedge\tau})]$.
+Dla $n=0$ jest to oczywiste. Zdarzenie
+$\{\tau\leq n\}$ oznacza, że proces znajduje się
+już na brzegu, więc wartość zatrzymanego procesu
+nie zmienia się. Na $\{\tau>n\}$, warunkując
+względem $\mathcal F_n^X$, stosujemy
+$\E[g(X_{n+1})\mid\mathcal F_n^X]=(Pg)(X_n)
+=g(X_n)$. Dla nieujemnego $g$ równość
+warunkowych całek jest dozwolona także przed
+ustaleniem całkowalności; z indukcji wynika,
+że każda rozważana wartość oczekiwana jest
+równa skończonemu $g(i)$.
+
+Na $\{\tau_A\leq n,\tau_A<\tau_B\}$ mamy
+$g(X_{n\wedge\tau})=1$, a poza tym z
+nieujemności otrzymujemy
+$g(i)\geq\Prob_i(\tau_A\leq n,\tau_A<\tau_B)$.
+Zdarzenia po prawej rosną do
+$\{\tau_A<\tau_B,\tau_A<\infty\}$;
+ciągłość miary od dołu daje $g(i)\geq h(i)$.
+
+Jeśli $g$ jest ograniczona i $\tau<\infty$
+prawie na pewno przy każdym starcie, to
+$X_{n\wedge\tau}=X_\tau$ od pewnego losowego
+momentu. Zbieżność zdominowana prowadzi do
+\[
+ g(i)=\lim_n\E_i g(X_{n\wedge\tau})
+ =\E_i g(X_\tau)
+ =\Prob_i(\tau_A<\tau_B)=h(i).
+\]
+W ostatniej równości używamy wartości $g=1$
+na $A$ i $g=0$ na $B$. To dowodzi jednoznaczności
+w klasie funkcji ograniczonych. 
+\end{proof}
+
+\begin{przyklad}[Ruina gracza: model skończony]
+Niech $S=\{0,\ldots,N\}$, gdzie $N\geq2$,
+$0$ i $N$ są pochłaniające,
+a dla $1\leq i\leq N-1$
+przejścia $i\to i+1$ i $i\to i-1$ zachodzą
+z prawdopodobieństwami odpowiednio $p\in(0,1)$
+i $q=1-p$. Niech $h_i$ oznacza prawdopodobieństwo
+dotarcia do $N$ przed zerem ze stanu $i$.
+Równanie harmoniczne przyjmuje postać
+$h_i=ph_{i+1}+qh_{i-1}$, z $h_0=0$, $h_N=1$.
+Jeśli $p\ne q$, szukamy rozwiązań $h_i=A+B(q/p)^i$,
+co po warunkach brzegowych daje
+\[
+h_i=\frac{1-(q/p)^i}{1-(q/p)^N}.
+\]
+Jeśli $p=q=1/2$, równanie oznacza stałe
+pierwsze różnice, więc $h_i=i/N$.
+
+Również oczekiwany czas pochłonięcia
+$u_i=\E_i(\tau_{\{0,N\}})$ można wyprowadzić
+bez zgadywania. Ponieważ z każdego stanu wewnętrznego
+istnieje droga do brzegu długości co najwyżej $N-1$
+o prawdopodobieństwie ograniczonym od dołu przez
+dodatnią liczbę zależną od $p,q,N$, czas
+pochłonięcia ma ogon geometryczny i $u_i<\infty$.
+Pierwszy krok daje $u_i=1+pu_{i+1}+qu_{i-1}$,
+$u_0=u_N=0$. Przy $p=q$ rozwiązanie ma postać
+$u_i=i(N-i)$; podstawienie w równaniu sprawdza
+je wprost. Przy $p\ne q$, funkcja $i\mapsto i$
+spełnia $p(i+1)+q(i-1)-i=p-q$,
+a $h$ jest harmoniczna, stąd
+\[
+u_i=\frac{Nh_i-i}{p-q}.
+\]
+Jednoznaczność rozwiązań wynika z zasady maksimum
+dla różnicy dwóch rozwiązań: dodatnie maksimum
+w punkcie wewnętrznym propaguje do sąsiadów,
+a więc aż do brzegu, gdzie funkcja jest zerowa.
+\end{przyklad}
+
+\begin{przyklad}[Łańcuch urodzeń i śmierci na skończonym odcinku]
+Na $S=\{0,\ldots,N\}$ przyjmijmy
+$p_{i,i+1}=b_i>0$ dla $i<N$,
+$p_{i,i-1}=d_i>0$ dla $i>0$ oraz
+$p_{ii}=1-b_i-d_i\geq0$, z pominięciem
+nieistniejących przejść na brzegach.
+Warunek równowagi szczegółowej daje
+$\pi_i b_i=\pi_{i+1}d_{i+1}$.
+Stąd rekurencyjnie
+\[
+\pi_i=C\prod_{k=0}^{i-1}\frac{b_k}{d_{k+1}},
+\qquad
+C^{-1}=1+\sum_{i=1}^N\prod_{k=0}^{i-1}
+\frac{b_k}{d_{k+1}}.
+\]
+Pusty iloczyn przy $i=0$ jest równy $1$.
+Otrzymujemy dokładnie rozkład stacjonarny.
+To model np. ograniczonego bufora, w którym
+przyjścia zwiększają zajętość, a obsługa ją zmniejsza.
+\end{przyklad}
+
+\section{Zależność i korelacja w łańcuchu stacjonarnym}
+
+\begin{stwierdzenie}[Kowariancja przez operator przejścia]
+Niech $S$ będzie skończony, $(X_n)$ łańcuchem
+o rozkładzie początkowym stacjonarnym $\pi$, a
+$f,g:S\to\R$. Wtedy dla $k\geq0$
+\[
+\Cov(f(X_0),g(X_k))=
+\sum_{i\in S}\pi_i f(i)(P^kg)(i)
+-\Bigl(\sum_i\pi_i f(i)\Bigr)
+ \Bigl(\sum_j\pi_jg(j)\Bigr).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Warunkowanie względem $X_0$ daje
+$\E[g(X_k)\mid X_0]=(P^kg)(X_0)$.
+Mnożymy przez $f(X_0)$ i stosujemy wieżę.
+Następnie odejmujemy iloczyn średnich,
+które przy stacjonarnym rozkładzie
+nie zależą od czasu.
+\end{proof}
+
+\begin{przyklad}[Autokorelacja dwustanowego łańcucha]
+Niech $S=\{0,1\}$, $\alpha,\beta>0$,
+$\alpha+\beta<2$ oraz rozkład początkowy
+$\pi=(\beta,\alpha)/(\alpha+\beta)$.
+Dla $I_n=\ind{\{X_n=1\}}$ otrzymujemy
+\[
+\Cov(I_0,I_k)=\pi_1(1-\pi_1)(1-\alpha-\beta)^k.
+\]
+Wynika to z jawnego wzoru na prawdopodobieństwo
+$X_k=1$ przy starcie z $X_0=1$.
+Jeśli $\alpha+\beta>1$, korelacje zmieniają
+znak naprzemiennie, a jeśli $\alpha+\beta<1$,
+zanikają bez zmiany znaku. Proces może zatem
+mieć pamięć statystyczną mimo ustalonego rozkładu
+jednowymiarowego.
+\end{przyklad}
+
+\section{Częstości odwiedzin i twierdzenie ergodyczne}
+
+Istnienie rozkładu stacjonarnego nie oznacza samo
+przez się, że \emph{rozkład $X_n$} musi do niego
+zbiegać. Pojawia się jednak inne pytanie:
+jaki odsetek czasu pojedyncza trajektoria
+spędza w danym stanie? Dla skończonego
+nieprzywiedlnego łańcucha odpowiedź jest
+znacznie stabilniejsza i nie wymaga nieokresowości.
+
+\begin{lemat}[Jednostajny ogon czasu wejścia w skończonym łańcuchu]
+Niech $S$ będzie skończony, a $P$ nieprzywiedlna.
+Dla dowolnego $i\in S$ istnieją liczby całkowite
+$L\geq1$ oraz $\delta>0$ takie, że dla każdego
+stanu początkowego $j\in S$ i $k\geq0$
+\[
+\Prob_j(\tau_i>kL)\leq(1-\delta)^k.
+\]
+Ponadto $\E_j\tau_i<\infty$ i
+$\E_i\tau_i^+<\infty$.
+\end{lemat}
+\begin{proof}
+Ustalmy $i\in S$. Dla każdego $j\neq i$
+nieprzywiedlność zapewnia ścieżkę
+$j=j_0,j_1,\ldots,j_{\ell_j}=i$ o dodatnim
+prawdopodobieństwie
+$a_j=\prod_{r=1}^{\ell_j}p_{j_{r-1}j_r}>0$.
+Dla $j=i$ wybierzmy analogicznie dodatnią
+ścieżkę powrotu z $i$ do $i$, tym razem o
+długości co najmniej $1$; istnienie wynika z
+nieprzywiedlności i skończoności $S$
+(w przypadku jednego stanu bierzemy pętlę długości $1$).
+Ponieważ $S$ jest skończony, możemy ustalić
+$L\geq\max_j\ell_j$ oraz
+$\delta=\min_j a_j\in(0,1]$.
+Z każdego stanu $j\neq i$ istnieje zatem
+prawdopodobieństwo co najmniej $\delta$, że
+$\tau_i\leq L$; ze stanu $i$ dotyczy to
+$\tau_i^+$.
+
+Niech $j\neq i$. Na zdarzeniu $\{\tau_i>kL\}$
+w chwili $kL$ znajdujemy się w pewnym stanie
+$X_{kL}\neq i$. Własność Markowa i oszacowanie
+jednego bloku dają
+\begin{align*}
+\Prob_j(\tau_i>(k+1)L)
+&=\E_j\Bigl[\ind{\{\tau_i>kL\}}
+  \Prob_j(\tau_i>(k+1)L\mid\mathcal F_{kL}^X)\Bigr]\\
+&\leq(1-\delta)\Prob_j(\tau_i>kL).
+\end{align*}
+Iteracja od $k=0$ daje zadany geometryczny ogon.
+Dla $j=i$ czas $\tau_i=0$, więc oszacowanie
+jest trywialne.
+
+Dla dodatniego czasu powrotu pierwszy blok
+rozpoczyna się w $i$ i wykorzystujemy wybraną
+ścieżkę powrotu. Jeżeli po $k\geq1$ blokach
+nie było powrotu, to $X_{kL}\neq i$; od tego
+momentu stosujemy drogę prowadzącą do $i$.
+W obu przypadkach prawdopodobieństwo sukcesu
+w następnym bloku jest co najmniej $\delta$.
+Ten sam argument indukcyjny daje zatem
+$\Prob_i(\tau_i^+>kL)\leq(1-\delta)^k$.
+Wreszcie dla nieujemnej całkowitoliczbowej zmiennej
+losowej $T$ mamy $\E T=\sum_{n\geq0}\Prob(T>n)$.
+Grupując wyrazy w bloki długości $L$, otrzymujemy
+\[
+\E_j\tau_i\leq L\sum_{k\geq0}(1-\delta)^k
+=\frac L\delta,
+\qquad
+\E_i\tau_i^+\leq\frac L\delta.
+\]
+Otrzymaliśmy jednocześnie prawie pewną skończoność
+obu czasów i ich całkowalność.
+\end{proof}
+
+\begin{twierdzenie}[Częstości stanów i wzór na średni czas powrotu]
+Niech $(X_n)$ będzie jednorodnym nieprzywiedlnym
+łańcuchem Markowa na skończonym $S$, a $\pi$
+jego jedynym rozkładem stacjonarnym. Wtedy
+dla każdego $i\in S$ i dowolnego rozkładu
+początkowego
+\[
+\frac1n\sum_{k=0}^{n-1}\ind{\{X_k=i\}}
+\longrightarrow\pi_i\quad\text{prawie na pewno}.
+\]
+Ponadto $\E_i\tau_i^+=1/\pi_i$.
+\end{twierdzenie}
+\begin{proof}
+Zacznijmy od prawa procesu $\Prob_i$, tzn.
+$X_0=i$ prawie na pewno. Zdefiniujmy $T_0=0$ i
+rekurencyjnie $T_r=\inf\{n>T_{r-1}:X_n=i\}$.
+Z poprzedniego lematu i mocnej własności Markowa
+wszystkie $T_r$ są skończone p.n., a odstępy
+$L_r=T_r-T_{r-1}$ są niezależne i mają wspólny
+rozkład $\tau_i^+$ przy $\Prob_i$. Nie jest to
+stwierdzenie o niezależności stanów łańcucha:
+niezależne są \emph{całe odcinki pomiędzy kolejnymi
+powrotami}, po rozpoczęciu każdego z nich w stanie $i$.
+Niech $m_i=\E_i\tau_i^+\in(0,\infty)$. MPWL daje
+\[
+ \frac{T_r}{r}=\frac1r\sum_{s=1}^rL_s
+ \longrightarrow m_i\quad\text{p.n.}
+\]
+
+W celu przejścia od długości cykli do liczby
+odwiedzin wprowadźmy
+$r(n)=\max\{r\geq0:T_r\leq n\}$.
+Ponieważ wszystkie odstępy są skończone i
+$T_r\geq r$, mamy $r(n)\to\infty$ przy $n\to\infty$.
+Z definicji $T_{r(n)}\leq n<T_{r(n)+1}$, skąd
+\[
+ \frac{T_{r(n)}}{r(n)}
+ \leq\frac n{r(n)}
+ <\frac{T_{r(n)+1}}{r(n)+1}
+   \frac{r(n)+1}{r(n)}.
+\]
+Dla $r(n)\geq1$ obie skrajne strony zbiegają
+do $m_i$, a więc $r(n)/n\to1/m_i$.
+Liczba $N_i(n)=\sum_{k=0}^{n-1}\ind{\{X_k=i\}}$
+zlicza chwile $T_r<n$, podczas gdy $r(n)$
+zlicza dodatnie powroty $T_r\leq n$.
+Zatem $|N_i(n)-r(n)|\leq1$, a stąd
+$N_i(n)/n\to1/m_i$ prawie na pewno.
+
+Dla dowolnego stanu początkowego $j$ mamy
+$\tau_i<\infty$ p.n. (poprzedni lemat).
+Po tej chwili, dzięki mocnej własności Markowa,
+proces ma prawo łańcucha startującego od $i$.
+Przed $\tau_i$ nie ma żadnej wizyty w $i$;
+pojedyncza skończona chwila wejścia nie wpływa
+na stosunek liczby wizyt do $n$. Stąd granica
+$1/m_i$ jest niezależna od stanu początkowego,
+a zsumowanie po rozkładzie początkowym daje ją
+dla dowolnego startu. W skończonym $S$ można
+jednocześnie wybrać zbiór pełnej miary dla
+wszystkich stanów $i$.
+
+Aby rozpoznać tę granicę, rozpocznijmy łańcuch
+z rozkładu stacjonarnego $\pi$. Wtedy
+$\E_\pi N_i(n)/n=\pi_i$ dla każdego $n$,
+bo $\Prob_\pi(X_k=i)=\pi_i$. Ponieważ
+$0\leq N_i(n)/n\leq1$, zbieżność zdominowana
+daje $\pi_i=1/m_i$, czyli
+$\E_i\tau_i^+=1/\pi_i$. Zwróćmy uwagę,
+że w tym rozumowaniu \emph{nie} użyliśmy
+nieokresowości: okresowy łańcuch również może
+mieć stabilne częstości odwiedzin.
+\end{proof}
+
+\begin{wniosek}[Ergodyczne uśrednianie obserwabli]
+Przy założeniach poprzedniego twierdzenia,
+dla każdej funkcji $f:S\to\R$ i dowolnego
+rozkładu początkowego zachodzi
+\[
+\frac1n\sum_{k=0}^{n-1}f(X_k)
+\longrightarrow\sum_{i\in S}\pi_i f(i)
+\quad\text{prawie na pewno}.
+\]
+\end{wniosek}
+\begin{proof}
+Ponieważ $S$ jest skończony,
+$\frac1n\sum_{k<n}f(X_k)=
+\sum_{i\in S}f(i)\frac1n\sum_{k<n}\ind{\{X_k=i\}}$.
+Dla wszystkich stanów jednocześnie zachodzi
+prawie pewna zbieżność częstości, a skończona
+suma pozwala przejść do granicy.
+\end{proof}
+
+\begin{przyklad}[Naprzemienne odwiedziny mimo stabilnych częstości]
+Dla macierzy
+$P=\begin{psmallmatrix}0&1\\1&0\end{psmallmatrix}$
+i $X_0=0$ rozkład $X_n$ nie jest zbieżny:
+znajduje się na przemian w stanie $0$ lub $1$.
+Jednak na każdej trajektorii
+$\frac1n\sum_{k<n}\ind{\{X_k=0\}}\to1/2$
+i analogicznie dla stanu $1$. Nieokresowość
+potrzebna jest dla zbieżności \emph{rozkładów
+w kolejnych chwilach}, ale nie dla \emph{częstości
+na jednej długiej trajektorii}.
+\end{przyklad}
+
+\section{Macierz fundamentalna łańcucha pochłaniającego}
+
+\begin{twierdzenie}[Liczba wizyt i prawdopodobieństwa pochłonięcia]
+Niech $S=T\sqcup A$ będzie skończoną przestrzenią
+stanów, gdzie $A$ jest niepustym zbiorem stanów
+pochłaniających, a dla każdego $i\in T$ istnieje
+droga o dodatnim prawdopodobieństwie do $A$.
+Po uporządkowaniu stanów zapiszmy
+\[
+P=\begin{pmatrix}Q&R\\0&I\end{pmatrix},
+\]
+gdzie $Q$ opisuje przejścia wewnątrz $T$,
+a $R$ z $T$ do $A$. Wtedy $Q^n\to0$, macierz
+$I-Q$ jest odwracalna i
+\[
+N:=(I-Q)^{-1}=\sum_{n=0}^{\infty}Q^n.
+\]
+Współrzędna $N_{ij}$ jest oczekiwaną liczbą
+wizyt w stanie $j\in T$ (łącznie z chwilą zero)
+przed pochłonięciem, przy starcie w $i\in T$.
+Oczekiwane czasy pochłonięcia tworzą wektor
+$N\mathbf 1$, a prawdopodobieństwa pochłonięcia
+w poszczególnych stanach $a\in A$ tworzą
+macierz $B=NR$.
+\end{twierdzenie}
+\begin{proof}
+Ponieważ $T$ jest skończony i z każdego stanu
+istnieje dodatnia droga do $A$, znajdziemy
+$L\geq1$, $\delta>0$ takie, że z dowolnego
+stanu $i\in T$ prawdopodobieństwo wejścia do $A$
+w najbliższych $L$ krokach jest co najmniej
+$\delta$. Dzięki własności Markowa
+$\Prob_i(\tau_A>kL)\leq(1-\delta)^k$.
+A zatem wszystkie sumy wierszy $Q^n$ dążą do zera,
+i to geometrycznie. Otrzymujemy zbieżność
+szeregu macierzy $\sum_{n\geq0}Q^n$.
+Dla sumy częściowej
+$(I-Q)\sum_{n=0}^{m}Q^n=I-Q^{m+1}$.
+Przechodząc z $m\to\infty$, dostajemy
+$(I-Q)N=I$; analogicznie $N(I-Q)=I$.
+
+Dla $i,j\in T$ prawdopodobieństwo
+$\Prob_i(X_n=j,\tau_A>n)$ jest równe
+$(Q^n)_{ij}$. Sumując po $n$ i stosując
+monotoniczną zbieżność, otrzymujemy
+$N_{ij}=\E_i\sum_{n<\tau_A}\ind{\{X_n=j\}}$.
+Sumowanie po $j$ daje
+$\E_i\tau_A=(N\mathbf 1)_i$.
+Prawdopodobieństwo pochłonięcia w $a\in A$
+dokładnie po $n+1$ krokach wynosi
+$(Q^nR)_{ia}$. Sumujemy po $n$, więc
+$B_{ia}=\sum_{n\geq0}(Q^nR)_{ia}=(NR)_{ia}$.
+\end{proof}
+
+\begin{przyklad}[Cztery stany, dwa cele pochłaniające]
+Niech $S=\{0,1,2,3\}$, stany $0,3$ będą
+pochłaniające, a przejścia z pozostałych
+stanów będą następujące:
+ze stanu $1$ idziemy do $0$ z prawdopodobieństwem
+$1/4$ lub do $2$ z prawdopodobieństwem $3/4$;
+ze stanu $2$ idziemy do $1$ z prawdopodobieństwem
+$1/2$ lub do $3$ z prawdopodobieństwem $1/2$.
+Dla uporządkowania $T=(1,2)$ i $A=(0,3)$ mamy
+\[
+Q=\begin{pmatrix}0&3/4\\1/2&0\end{pmatrix},
+\qquad R=\begin{pmatrix}1/4&0\\0&1/2\end{pmatrix},
+\]
+oraz
+\[
+N=\begin{pmatrix}8/5&6/5\\4/5&8/5\end{pmatrix},
+\qquad B=NR=\begin{pmatrix}2/5&3/5\\1/5&4/5\end{pmatrix}.
+\]
+Zaczynając w stanie $1$, spędzamy średnio
+$8/5$ kroków w stanie $1$ i $6/5$ w stanie $2$,
+a czas do pochłonięcia ma średnią $14/5$.
+Prawdopodobieństwo zakończenia w stanie $3$
+wynosi $3/5$. Zaczynając w stanie $2$, czas
+ma średnią $12/5$, a szansa zakończenia w $3$
+wynosi $4/5$.
+\end{przyklad}
+
+
+\section{Zadanie rozwiązane: trajektorie, warunkowanie i pochłanianie}
+
+\begin{przyklad}[Urządzenie: pełne rozwiązanie jednego modelu]
+Urządzenie jest w jednym z trzech stanów:
+$0$ (sprawne), $1$ (awaria przejściowa),
+$2$ (wyłączone na stałe). Macierz przejścia wynosi
+\[
+P=\begin{pmatrix}
+\frac12&\frac13&\frac16\\
+\frac14&\frac12&\frac14\\
+0&0&1
+\end{pmatrix},
+\qquad
+\mu=\left(\frac34,\frac14,0\right).
+\]
+Rozwiążemy pięć pytań, zwracając uwagę na różnicę
+między warunkowaniem, sumowaniem trajektorii
+i czasami zatrzymania.
+
+\emph{(1) Jakie jest prawdopodobieństwo trajektorii
+$0\to1\to0\to2$?}
+Początkowy stan nie jest ustalony, dlatego
+musimy uwzględnić $\mu_0=3/4$:
+\[
+\Prob(X_0=0,X_1=1,X_2=0,X_3=2)
+=\frac34\cdot\frac13\cdot\frac14\cdot\frac16
+=\frac1{96}.
+\]
+
+\emph{(2) Jak porównać przewidywanie stanu $1$
+po jednej i po dwóch obserwacjach?}
+Jeśli wiemy, że $X_0=0$ i $X_1=1$, własność
+Markowa daje
+$\Prob(X_2=1\mid X_0=0,X_1=1)=p_{11}=1/2$.
+Jeżeli znamy jedynie $X_0=0$, rozważamy wszystkie
+możliwe stany pośrednie:
+\[
+\Prob(X_2=1\mid X_0=0)
+=(P^2)_{01}=\frac12\frac13+\frac13\frac12=\frac13.
+\]
+Te liczby są różne, ponieważ \emph{poznanie stanu
+pośredniego} zmienia informację, na której opiera się prognoza.
+
+\emph{(3) Jak odtworzyć stan początkowy z późniejszych obserwacji?}
+Po zaobserwowaniu $X_1=1$ chcemy obliczyć
+$\Prob(X_0=0\mid X_1=1)$. Mamy
+\[
+\Prob(X_1=1)=\frac34\frac13+\frac14\frac12=\frac38,
+\qquad
+\Prob(X_0=0\mid X_1=1)
+=\frac{(3/4)(1/3)}{3/8}=\frac23.
+\]
+Jeśli wiemy dodatkowo, że $X_2=0$, wynik nadal
+wynosi $2/3$, bo czynnik $p_{10}=1/4$ występuje
+zarówno w liczniku, jak i w mianowniku. To konkretny
+przykład warunkowej niezależności przeszłości
+i dalszej przyszłości przy znanym stanie pośrednim.
+
+\emph{(4) Jakie jest prawdopodobieństwo trwałego
+wyłączenia w ciągu dwóch kroków, jeśli $X_0=0$?}
+Stan $2$ jest pochłaniający, więc zdarzenie
+$\{\tau_2\leq2\}$ jest równoważne $\{X_2=2\}$.
+Można dojść do $2$ bezpośrednio w pierwszym kroku
+lub w drugim kroku przez stan $0$ albo $1$:
+\[
+\Prob_0(\tau_2\leq2)
+=\frac16+\frac12\frac16+\frac13\frac14
+=\frac13.
+\]
+Pierwszy składnik obejmuje trajektorię, która
+dotarła do stanu $2$ już w chwili $1$ i pozostała tam
+do chwili $2$. Nie wolno liczyć jej ponownie jako
+nowego wejścia w chwili $2$.
+
+\emph{(5) Ile kroków średnio upłynie do trwałego wyłączenia?}
+Niech $m_i=\E_i\tau_2$, gdzie $\tau_2$
+jest pierwszym czasem wejścia do stanu $2$.
+Mamy $m_2=0$, a analiza pierwszego kroku daje
+\[
+\begin{cases}
+m_0=1+\frac12m_0+\frac13m_1,\\[2pt]
+m_1=1+\frac14m_0+\frac12m_1.
+\end{cases}
+\]
+Pierwsza jedynka jest kosztem wykonanego kroku,
+a po nim pozostaje oczekiwany czas dalszego
+oczekiwania. Przekształcając układ otrzymujemy
+$3m_0-2m_1=6$ oraz $-m_0+2m_1=4$.
+Dodanie równań daje $2m_0=10$, a więc
+$m_0=5$ i $m_1=9/2$.
+Skończoność tych średnich jest uzasadniona:
+z każdego niepochłaniającego stanu można dotrzeć
+do $2$ w jednym kroku z prawdopodobieństwem
+co najmniej $1/6$, więc
+$\Prob_i(\tau_2>n)\leq(5/6)^n$.
+Wreszcie, jeśli początkowy stan ma rozkład $\mu$,
+średni czas wynosi
+$\E_\mu\tau_2=(3/4)\cdot5+(1/4)\cdot(9/2)=39/8$.
+\end{przyklad}
+
+\section{Dwa dalsze modele: urna i nieskończona kolejka}
+
+\begin{przyklad}[Model Ehrenfesta: dlaczego pojawia się dwumianowy]
+Rozważmy $N\geq1$ rozróżnialnych cząstek,
+z których każda znajduje się w jednym z dwóch
+pojemników. W każdym kroku wybieramy jednostajnie
+jedną cząstkę i przenosimy do drugiego pojemnika.
+Niech $X_n\in\{0,\ldots,N\}$ oznacza liczbę
+cząstek w pierwszym pojemniku. Wtedy
+\[
+p_{k,k+1}=\frac{N-k}{N},\qquad
+p_{k,k-1}=\frac{k}{N},
+\]
+przy czym nieistniejące przejścia na brzegach
+pomijamy. Warunek równowagi szczegółowej
+$\pi_k(N-k)/N=\pi_{k+1}(k+1)/N$
+prowadzi do $\pi_{k+1}/\pi_k=(N-k)/(k+1)$,
+więc po normalizacji
+$\pi_k=2^{-N}\binom Nk$.
+Jest to rozkład dwumianowy $\Bin(N,1/2)$.
+
+Łańcuch ma jednak okres $2$, ponieważ parzystość
+liczby cząstek w pierwszym pojemniku zmienia się
+w każdym kroku. Rozkład $X_n$ nie zbiega z
+ustalonego stanu do $\pi$, choć częstości odwiedzin
+spełniają twierdzenie ergodyczne. Jeśli w każdym
+kroku z prawdopodobieństwem $1/2$ pozostaniemy
+bez ruchu, a z prawdopodobieństwem $1/2$ wykonamy
+powyższe przejście, nowa macierz wynosi
+$P'=(I+P)/2$. Jest nieokresowa, zachowuje $\pi$
+i teraz rozkłady zbiegną do $\pi$.
+\end{przyklad}
+
+\begin{przyklad}[Stabilna i niestabilna kolejka w czasie dyskretnym]
+Niech $S=\N_0$, $p,q\in(0,1)$, $p+q=1$.
+W stanach $i\geq1$ przechodzimy do $i+1$
+z prawdopodobieństwem $p$ i do $i-1$
+z prawdopodobieństwem $q$.
+W stanie $0$ przechodzimy do $1$ z
+prawdopodobieństwem $p$ i pozostajemy w $0$
+z prawdopodobieństwem $q$. Taki łańcuch
+modeluje liczbę klientów w buforze z przyjściami
+i odchodzeniem pojedynczych jednostek.
+
+Równowaga szczegółowa daje
+$\pi_i p=\pi_{i+1}q$, czyli
+$\pi_i=\pi_0(p/q)^i$. Jeśli $\rho=p/q<1$,
+możemy unormować szereg geometryczny,
+otrzymując
+\[
+\pi_i=(1-\rho)\rho^i,
+\qquad \E_\pi X=\frac{\rho}{1-\rho}.
+\]
+Gdy $p\geq q$, ta sama rekurencja nie może
+definiować rozkładu probabilistycznego.
+Nie istnieje również żaden inny rozkład
+stacjonarny: równość masy wpływającej i
+wypływającej ze skończonego zbioru
+$\{0,\ldots,i\}$ wymusza
+$\pi_i p=\pi_{i+1}q$ dla każdego $i$.
+Bez sumowalności nie można spełnić
+$\sum_i\pi_i=1$. Jest to przykład sytuacji,
+w której dla skończonego łańcucha stacjonarność
+była automatyczna, ale w przeliczalnym
+tak być nie musi.
+\end{przyklad}
+
+
+\section{Granice zakresu przedstawionej teorii}
+
+Zajmowaliśmy się \emph{przeliczalnymi} przestrzeniami
+stanów i \emph{dyskretnym} czasem. Dla ogólnych
+przestrzeni stanów macierz zastępuje jądro
+przejścia $K(x,A)$, mierzalne w $x$ i będące
+miarą probabilistyczną w $A$. Przy czasie ciągłym
+pojawiają się półgrupy $(P_t)_{t\geq0}$,
+generatory i problemy regularności trajektorii.
+Systematyczną teorię tych procesów rozwiniemy
+w tomie II; tutaj konstrukcje dyskretne
+przygotowują formalizm filtracji i martyngałów.
+
+

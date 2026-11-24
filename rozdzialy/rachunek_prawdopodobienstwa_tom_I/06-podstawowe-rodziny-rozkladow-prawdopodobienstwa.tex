@@ -1,0 +1,1205 @@
+\chapter{Podstawowe rodziny rozkładów prawdopodobieństwa}
+\label{ch:distributions}
+
+\section{Rozkład Bernoulliego i dwumianowy}
+Pierwszym modelem losowym jest doświadczenie z dwiema
+możliwościami: sukces albo porażka. Nie ma potrzeby zakładać,
+że są równie prawdopodobne. Parametr $p$ określa szansę sukcesu,
+a wskaźnik sukcesu ma rozkład Bernoulliego. Licząc sukcesy
+w $n$ niezależnych próbach o tym samym parametrze, otrzymujemy
+rozkład dwumianowy. Współczynnik $\binom nk$ odpowiada
+liczbie różnych rozmieszczeń sukcesów, nie nowej losowości.
+
+\begin{definicja}
+Niech $p\in[0,1]$. Mówimy, że zmienna losowa $X$ ma
+\emph{rozkład Bernoulliego} z parametrem $p$, jeżeli
+$\Prob(X=1)=p$ i $\Prob(X=0)=1-p$.
+Piszemy $X\sim\operatorname{Bern}(p)$.
+\end{definicja}
+
+Zmienna o rozkładzie Bernoulliego jest wskaźnikiem zdarzenia
+o prawdopodobieństwie $p$, toteż
+$\E X=p$, $\Var(X)=p(1-p)$, a
+$M_X(t)=1-p+pe^t$ dla $t\in\R$.
+
+\begin{definicja}
+Niech $n\in\N\cup\{0\}$ i $p\in[0,1]$.
+Zmienna losowa $X$ ma \emph{rozkład dwumianowy} $\Bin(n,p)$,
+gdy dla $k=0,\ldots,n$ zachodzi
+\begin{equation}\label{eq:binomial}
+\Prob(X=k)=\binom nk p^k(1-p)^{n-k},
+\end{equation}
+a poza tym zakresem $\Prob(X=k)=0$. Przy $p=0$ lub $p=1$
+przyjmujemy standardową interpretację iloczynów z potęgą zerową,
+w tym $0^0=1$ w tym wzorze.
+\end{definicja}
+
+\begin{twierdzenie}[Suma prób Bernoulliego]
+Niech $X_1,\ldots,X_n$ będą niezależnymi zmiennymi o rozkładzie
+$\operatorname{Bern}(p)$, gdzie $n\geq1$. Wtedy
+$S_n:=X_1+\cdots+X_n\sim\Bin(n,p)$ oraz
+\[
+\E S_n=np,\qquad \Var(S_n)=np(1-p),\qquad
+M_{S_n}(t)=(1-p+pe^t)^n.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla ustalonego $k\in\{0,\ldots,n\}$ określmy,
+które spośród $n$ prób zakończyły się sukcesem.
+Jeśli dokładnie zbiór indeksów $I\subseteq\{1,\ldots,n\}$,
+$|I|=k$, odpowiada sukcesom, to zdarzenie to ma postać
+$\bigcap_{i\in I}\{X_i=1\}\cap
+\bigcap_{j\notin I}\{X_j=0\}$.
+Z niezależności jego prawdopodobieństwo jest równe
+$p^k(1-p)^{n-k}$.
+
+Różne zbiory $I$ opisują rozłączne zdarzenia,
+a zdarzenie $\{S_n=k\}$ jest ich sumą. Ponieważ
+liczba $k$-elementowych podzbiorów indeksów wynosi
+$\binom nk$, z addytywności dostajemy
+$\Prob(S_n=k)=\binom nk p^k(1-p)^{n-k}$.
+Po zsumowaniu tego wyrażenia dla wszystkich $k$
+otrzymujemy przez dwumian Newtona
+$(p+(1-p))^n=1$, co stanowi dodatkową kontrolę normalizacji.
+
+Dla wskaźnika pojedynczej próby
+$\E X_i=p$, $\Var(X_i)=p(1-p)$.
+Liniowość wartości oczekiwanej i addytywność
+wariancji niezależnych składników dają
+$\E S_n=np$ i $\Var(S_n)=np(1-p)$.
+Wreszcie $M_{X_i}(t)=1-p+pe^t$, więc niezależność daje
+$M_{S_n}(t)=\prod_{i=1}^nM_{X_i}(t)
+=(1-p+pe^t)^n$.
+\end{proof}
+
+\begin{przyklad}[Liczba wadliwych elementów]
+Jeżeli każdy z 20 elementów jest wadliwy niezależnie z
+prawdopodobieństwem $0{,}02$, to liczba wadliwych elementów
+ma rozkład $\Bin(20,0{,}02)$. Prawdopodobieństwo
+braku wad wynosi $0{,}98^{20}$, a dokładnie jednej wady
+$20\cdot0{,}02\cdot0{,}98^{19}$.
+Jeżeli elementy pobierano z małej partii \emph{bez zwracania},
+rozkład dwumianowy nie jest na ogół dokładny.
+\end{przyklad}
+
+\section{Rozkład geometryczny i ujemny dwumianowy}
+Rozkład dwumianowy ustala liczbę prób i pyta o liczbę sukcesów.
+Można odwrócić punkt widzenia: ustalić liczbę sukcesów i
+pytać, ile prób potrzeba, by je osiągnąć. Pierwszy sukces
+prowadzi do rozkładu geometrycznego, a $r$-ty do ujemnego
+dwumianowego. Ich postać odzwierciedla zdarzenie
+„najpierw odpowiednia liczba porażek, a następnie sukces”.
+
+\begin{definicja}
+Niech $p\in(0,1]$. Rozkładem geometrycznym $\Geom(p)$
+na $\{1,2,\ldots\}$ nazywamy rozkład o funkcji masy
+$\Prob(T=k)=(1-p)^{k-1}p$, $k\geq1$.
+Zmienna $T$ opisuje numer pierwszej udanej próby
+w ciągu niezależnych prób Bernoulliego z prawdopodobieństwem sukcesu $p$.
+\end{definicja}
+
+\begin{stwierdzenie}
+Dla $T\sim\Geom(p)$ zachodzi $\Prob(T>k)=(1-p)^k$ dla
+$k\in\N\cup\{0\}$, a także
+$\E T=1/p$ i $\Var(T)=(1-p)/p^2$.
+Jeśli $p\in(0,1)$, to dla $m,n\geq0$
+$\Prob(T>m+n\mid T>m)=\Prob(T>n)$.
+\end{stwierdzenie}
+\begin{proof}
+Zdarzenie $\{T>k\}$ oznacza, że w pierwszych $k$
+próbach nie wystąpił sukces. Każda próba kończy się
+niepowodzeniem z prawdopodobieństwem $q=1-p$;
+przez niezależność otrzymujemy
+$\Prob(T>k)=q^k$.
+
+Dla $q<1$ szereg geometryczny
+$\sum_{k=0}^\infty q^k=1/(1-q)$ jest zbieżny
+jednostajnie na każdym przedziale $[0,q_0]$ z $q_0<1$.
+Również szeregi pochodnych, począwszy od
+$\sum_{k=1}^\infty kq^{k-1}$, są jednostajnie zbieżne
+na takich przedziałach (ich wyrazy można ograniczyć przez
+$kq_0^{k-1}$). Pozwala to różniczkować wyraz po wyrazie.
+Otrzymujemy
+$\sum_{k=1}^\infty kq^{k-1}=1/(1-q)^2$.
+Różniczkując jeszcze raz lub wykorzystując tożsamość
+$k^2=k(k-1)+k$, dostajemy
+$\sum_{k=1}^\infty k^2q^{k-1}=(1+q)/(1-q)^3$.
+Stąd
+$\E T=p/(1-q)^2=1/p$,
+$\E T^2=p(1+q)/(1-q)^3=(1+q)/p^2$
+i $\Var(T)=\E T^2-(\E T)^2=q/p^2$.
+
+Dla $p\in(0,1)$ mamy $q>0$ i
+$\Prob(T>m)>0$, więc warunkowanie jest zdefiniowane.
+Ponieważ $\{T>m+n\}\subseteq\{T>m\}$,
+\[
+\Prob(T>m+n\mid T>m)
+=\frac{q^{m+n}}{q^m}=q^n=\Prob(T>n).
+\]
+Przy $p=1$ zdarzenie $\{T>m\}$ dla $m\geq1$
+ma masę zero i powyższe warunkowanie nie ma sensu,
+co wyjaśnia ograniczenie w tezie.
+\end{proof}
+
+\begin{uwaga}
+Spotyka się także rozkład geometryczny na $\{0,1,\ldots\}$,
+gdzie zmienna oznacza liczbę niepowodzeń \emph{przed} pierwszym sukcesem.
+Jest to rozkład $T-1$, a jego średnia wynosi $(1-p)/p$.
+Dlatego zawsze należy podać konwencję numerowania.
+\end{uwaga}
+
+\begin{definicja}
+Dla $r\in\N$ i $p\in(0,1]$ rozkładem ujemnym dwumianowym
+(w konwencji liczby prób do $r$-tego sukcesu) nazywamy rozkład
+zmiennej $T_r$ określonej przez
+$\Prob(T_r=n)=\binom{n-1}{r-1}p^r(1-p)^{n-r}$, $n\geq r$.
+\end{definicja}
+
+\begin{stwierdzenie}
+Jeżeli $T_r$ jest numerem próby, w której następuje $r$-ty sukces
+w ciągu niezależnych prób Bernoulliego z parametrem $p>0$,
+to ma powyższy rozkład, a ponadto
+$\E T_r=r/p$ i $\Var(T_r)=r(1-p)/p^2$.
+\end{stwierdzenie}
+\begin{proof}
+Aby $r$-ty sukces nastąpił dokładnie w próbie numer $n$,
+próba $n$ musi zakończyć się sukcesem, a wśród pierwszych
+$n-1$ prób musi znaleźć się dokładnie $r-1$ sukcesów.
+Dla każdej konkretnej konfiguracji tych prób, przez
+niezależność, prawdopodobieństwo wynosi
+$p^r(1-p)^{n-r}$. Konfiguracji jest
+$\binom{n-1}{r-1}$; są rozłączne, co daje wzór na masę.
+
+Wykażmy starannie niezależność czasów oczekiwania,
+której nie wolno wywnioskować wyłącznie z intuicji.
+Niech $W_1$ będzie liczbą prób do pierwszego sukcesu,
+a dla $j\geq2$ niech $W_j$ oznacza liczbę kolejnych prób
+pomiędzy sukcesami numer $j-1$ i $j$, licząc próbę
+zakończoną sukcesem. Dla dowolnych $k_1,\ldots,k_r\geq1$
+zdarzenie $\{W_1=k_1,\ldots,W_r=k_r\}$ oznacza
+jednoznacznie określony ciąg
+$k_1+\cdots+k_r$ wyników: w każdym bloku $k_j-1$
+niepowodzeń, po których następuje sukces.
+Przez niezależność pojedynczych prób jego
+prawdopodobieństwo jest równe
+$\prod_{j=1}^r p(1-p)^{k_j-1}$.
+Jest to iloczyn mas rozkładów $\Geom(p)$;
+zatem $W_1,\ldots,W_r$ są niezależne i jednakowo
+rozłożone. Ponieważ $T_r=W_1+\cdots+W_r$,
+z liniowości wartości oczekiwanej i addytywności
+wariancji otrzymujemy
+$\E T_r=r/p$ i $\Var(T_r)=r(1-p)/p^2$.
+\end{proof}
+
+\section{Rozkład hipergeometryczny}
+Liczba sukcesów w próbie bez zwracania różni się od liczby
+sukcesów w niezależnych próbach Bernoulliego. Każdy kolejny
+wynik zmienia skład dostępnej populacji. Zliczając możliwe
+podzbiory zamiast ciągów niezależnych doświadczeń, otrzymujemy
+rozkład hipergeometryczny. Ujemna kowariancja wyników kolejnych
+losowań tłumaczy, dlaczego wariancja jest mniejsza niż w modelu
+dwumianowym z taką samą średnią.
+
+\begin{definicja}
+Niech $N\in\N$, $K\in\{0,\ldots,N\}$
+i $n\in\{0,\ldots,N\}$.
+Zmienna losowa $X$ ma rozkład hipergeometryczny
+$\operatorname{HGeom}(N,K,n)$, jeżeli
+\begin{equation}\label{eq:hypergeom}
+\Prob(X=k)=\frac{\binom Kk\binom{N-K}{n-k}}{\binom Nn}
+\quad(k\in\Z),
+\end{equation}
+przy konwencji, że symbol Newtona jest zerem poza właściwym zakresem.
+Jest to liczba wyróżnionych obiektów w próbie $n$ elementów
+losowanej jednostajnie bez zwracania z populacji $N$ elementów,
+w której $K$ obiektów jest wyróżnionych.
+\end{definicja}
+
+\begin{twierdzenie}
+Jeżeli $X\sim\operatorname{HGeom}(N,K,n)$, to
+$\E X=nK/N$. Dla $N>1$ zachodzi
+\[
+\Var(X)=n\frac KN\left(1-\frac KN\right)\frac{N-n}{N-1}.
+\]
+Dla $N=1$ wariancja wynosi zero.
+\end{twierdzenie}
+\begin{proof}
+Realizujmy losowanie jako pierwszych $n$ pozycji jednostajnej
+losowej permutacji $N$ różnych elementów. Dla
+$j=1,\ldots,n$ niech $I_j$ oznacza, że na pozycji $j$
+znajduje się obiekt wyróżniony. Wówczas
+$X=\sum_{j=1}^n I_j$.
+Każda pozycja ma ten sam rozkład i dokładnie $K$
+z $N$ obiektów jest wyróżnionych, toteż
+$\Prob(I_j=1)=K/N=:p$ i $\E I_j=p$.
+Liniowość wartości oczekiwanej daje $\E X=np$.
+
+Dla $N>1$ i różnych $i,j$ obliczamy prawdopodobieństwo
+dwóch wyróżnionych obiektów przez warunkowanie:
+$\Prob(I_i=I_j=1)=(K/N)((K-1)/(N-1))$,
+przy czym dla $K=0$ lub $K=1$ wynik ten jest zerem.
+Zatem
+\[
+\Cov(I_i,I_j)=\frac{K(K-1)}{N(N-1)}-
+\left(\frac KN\right)^2
+=-\frac{p(1-p)}{N-1}.
+\]
+Każdy wskaźnik ma wariancję $p(1-p)$, a w sumie
+występuje $n$ wariancji i $n(n-1)$ kowariancji
+uporządkowanych par różnych indeksów. Otrzymujemy
+\[
+\Var(X)=np(1-p)-\frac{n(n-1)}{N-1}p(1-p)
+=np(1-p)\frac{N-n}{N-1}.
+\]
+Dla $N=1$ dopuszczalne $n$ to $0$ lub $1$,
+a liczba obiektów wyróżnionych w próbie jest stała,
+więc wariancja wynosi zero.
+\end{proof}
+
+\begin{uwaga}
+Względem wariancji rozkładu $\Bin(n,K/N)$ pojawia się
+czynnik korekcyjny $(N-n)/(N-1)$, odzwierciedlający ujemną
+zależność losowań bez zwracania. Jeśli $N$ jest duże w porównaniu
+z $n$, oba modele mogą dawać zbliżone wyniki.
+\end{uwaga}
+
+
+\begin{przyklad}[Taka sama średnia, ale różna wariancja]
+W populacji znajduje się $N=10$ kul, z których $K=5$
+jest czerwonych. Losujemy $n=4$ kule bez zwracania.
+Liczba czerwonych ma rozkład hipergeometryczny,
+a więc średnią $4\cdot(5/10)=2$ oraz wariancję
+$4\cdot(1/2)(1/2)\cdot(10-4)/(10-1)=2/3$.
+Gdybyśmy losowali ze zwracaniem, liczba czerwonych
+miałaby rozkład $\Bin(4,1/2)$ o tej samej średniej $2$,
+ale wariancji $4\cdot(1/2)(1/2)=1$.
+Przy losowaniu bez zwracania pojawienie się czerwonej kuli
+zmniejsza szansę czerwonej kuli w kolejnej próbie.
+Ta ujemna zależność ogranicza rozrzut liczby sukcesów.
+\end{przyklad}
+
+\section{Rozkład Poissona}
+Jeśli mamy bardzo wiele prób, lecz sukces w każdej z nich jest
+bardzo rzadki, rozkład dwumianowy bywa niewygodny w obliczeniach.
+Gdy liczba prób rośnie, prawdopodobieństwo sukcesu maleje, a
+oczekiwana liczba sukcesów pozostaje stała, otrzymujemy
+rozkład Poissona. Parametr $\lambda$ opisuje jednocześnie
+średnią i wariancję. Samo występowanie zdarzeń „w czasie” nie
+wystarcza jednak do przyjęcia rozkładu Poissona: odpowiednia
+struktura zależności musi wynikać z modelu.
+
+\begin{definicja}
+Niech $\lambda>0$. Zmienna losowa $X$ ma rozkład Poissona
+$\Poi(\lambda)$, jeżeli
+$\Prob(X=k)=e^{-\lambda}\lambda^k/k!$ dla
+$k\in\{0,1,2,\ldots\}$.
+\end{definicja}
+
+\begin{stwierdzenie}
+Dla $X\sim\Poi(\lambda)$ zachodzi
+$\E X=\lambda$, $\Var(X)=\lambda$ oraz
+$M_X(t)=\exp(\lambda(e^t-1))$ dla $t\in\R$.
+\end{stwierdzenie}
+\begin{proof}
+Najpierw sprawdzamy, że wzór definiuje rozkład:
+\[
+\sum_{k=0}^\infty e^{-\lambda}\frac{\lambda^k}{k!}
+=e^{-\lambda}e^\lambda=1.
+\]
+Dla każdego $t\in\R$ funkcja tworząca momenty jest
+skończona, ponieważ
+\[
+M_X(t)=\sum_{k=0}^\infty e^{tk}
+ e^{-\lambda}\frac{\lambda^k}{k!}
+=e^{-\lambda}\sum_{k=0}^\infty\frac{(\lambda e^t)^k}{k!}
+=\exp\bigl(\lambda(e^t-1)\bigr).
+\]
+Ponieważ funkcja jest skończona w otoczeniu zera,
+możemy odzyskać momenty przez różniczkowanie:
+$M_X'(t)=\lambda e^tM_X(t)$,
+a $M_X''(t)=(\lambda e^t+\lambda^2e^{2t})M_X(t)$.
+W szczególności $\E X=M_X'(0)=\lambda$,
+$\E X^2=M_X''(0)=\lambda+\lambda^2$,
+stąd $\Var(X)=\lambda$.
+\end{proof}
+
+\begin{twierdzenie}[Prawo rzadkich zdarzeń]
+Niech $\lambda>0$ i niech $X_n\sim\Bin(n,\lambda/n)$
+dla całkowitych $n\geq\lceil\lambda\rceil$ z $n\geq1$.
+Wtedy dla każdego ustalonego $k\in\N\cup\{0\}$
+\[
+\lim_{n\to\infty}\Prob(X_n=k)
+=e^{-\lambda}\frac{\lambda^k}{k!}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla ustalonego $k\geq0$ i dostatecznie dużego $n$
+mamy $n\geq k$ oraz $\lambda/n\leq1$. Z definicji
+rozkładu dwumianowego
+\[
+\Prob(X_n=k)=\binom nk\left(\frac\lambda n\right)^k
+\left(1-\frac\lambda n\right)^{n-k}.
+\]
+Rozdzielamy to wyrażenie na czynniki o prostych granicach:
+\[
+\Prob(X_n=k)=\frac{\lambda^k}{k!}
+\underbrace{\prod_{j=0}^{k-1}\left(1-\frac jn\right)}_{\longrightarrow1}
+\underbrace{\left(1-\frac\lambda n\right)^n}_{\longrightarrow e^{-\lambda}}
+\underbrace{\left(1-\frac\lambda n\right)^{-k}}_{\longrightarrow1}.
+\]
+Pierwszy iloczyn ma stałą liczbę czynników (bo $k$ nie
+zależy od $n$). Granica środkowego czynnika jest
+klasyczną granicą wykładniczą, możliwą też do
+wyprowadzenia przez logarytmowanie:
+$n\log(1-\lambda/n)\to-\lambda$.
+Ostatni czynnik zmierza do jedności.
+Iloczyn granic daje $e^{-\lambda}\lambda^k/k!$.
+Twierdzenie stwierdza na tym etapie zbieżność
+każdej ustalonej masy punktowej; przejście do
+języka zbieżności według rozkładu omówimy osobno.
+\end{proof}
+
+\begin{przyklad}[Zliczanie defektów]
+Jeśli w dużej liczbie niezależnych prób każdy defekt jest rzadki,
+a oczekiwana liczba defektów wynosi około $\lambda$, to rozkład
+Poissona może przybliżać rozkład liczby defektów.
+Nie jest jednak automatycznym modelem dowolnych zliczeń:
+przy klastrowaniu zdarzeń lub nadmiernej zmienności
+wariancja może różnić się istotnie od średniej.
+\end{przyklad}
+
+\begin{stwierdzenie}[Dodawanie rozkładów Poissona]
+Jeśli $X\sim\Poi(\lambda)$ i $Y\sim\Poi(\eta)$ są niezależne,
+gdzie $\lambda,\eta>0$, to $X+Y\sim\Poi(\lambda+\eta)$.
+\end{stwierdzenie}
+\begin{proof}
+Dla $k\geq0$ całkowitego z niezależności wynika
+\[
+\Prob(X+Y=k)
+=\sum_{j=0}^k e^{-\lambda}\frac{\lambda^j}{j!}
+ e^{-\eta}\frac{\eta^{k-j}}{(k-j)!}
+=e^{-(\lambda+\eta)}\frac{(\lambda+\eta)^k}{k!},
+\]
+gdzie ostatnią równość daje dwumian Newtona.
+\end{proof}
+
+\begin{przyklad}[Oczekiwanie na zebranie wszystkich kuponów]
+Niech $N\geq1$ i załóżmy, że w kolejnych niezależnych próbach
+losujemy jednostajnie jedną z $N$ etykiet. Niech $T$ oznacza
+liczbę prób potrzebną, aby zobaczyć wszystkie etykiety.
+Po zebraniu $j$ różnych etykiet, gdzie $0\leq j<N$,
+każda kolejna próba daje nową etykietę z prawdopodobieństwem
+$p_j=(N-j)/N$. Liczba dalszych prób do kolejnej nowej etykiety
+ma rozkład geometryczny $\Geom(p_j)$, a zatem wartość
+oczekiwaną $N/(N-j)$. Sumując oczekiwane czasy przejść
+między kolejnymi stanami liczby poznanych etykiet,
+otrzymujemy
+$\E T=\sum_{j=0}^{N-1}N/(N-j)=N\sum_{k=1}^N1/k$.
+Nie trzeba przy tym zakładać, że wszystkie czasy oczekiwania
+są z góry wzajemnie niezależne: do obliczenia średniej
+wystarcza liniowość wartości oczekiwanej.
+\end{przyklad}
+
+\section{Rozkład jednostajny ciągły i wykładniczy}
+W przestrzeni ciągłej nie da się przypisać jednakowej dodatniej
+masy wszystkim punktom odcinka. Jednostajność oznacza więc,
+że prawdopodobieństwo przedziału jest proporcjonalne do jego
+długości. Rozkład wykładniczy odpowiada innej intuicji:
+jeśli wydarzenie nie zaszło przez czas $s$, dodatkowy czas
+oczekiwania ma mieć tę samą regułę co na początku.
+Ta własność braku pamięci wyznacza wykładniczy kształt ogona.
+
+\begin{definicja}
+Dla $a,b\in\R$ z $a<b$ rozkładem jednostajnym
+$\Unif(a,b)$ nazywamy rozkład o gęstości
+$f(x)=\ind{\{a<x<b\}}/(b-a)$.
+\end{definicja}
+
+\begin{stwierdzenie}
+Jeżeli $X\sim\Unif(a,b)$, to
+\[
+F_X(x)=\begin{cases}
+0,&x\leq a,\\
+\dfrac{x-a}{b-a},&a<x<b,\\
+1,&x\geq b,
+\end{cases}
+\qquad
+\E X=\frac{a+b}{2},\qquad
+\Var(X)=\frac{(b-a)^2}{12}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Gęstość $f(x)=(b-a)^{-1}\ind{\{a<x<b\}}$
+jest nieujemna i ma całkę równą jeden.
+Dla $x\leq a$ przedział $(-\infty,x]$ nie przecina
+nośnika gęstości z dodatnią miarą, więc $F_X(x)=0$.
+Dla $a<x<b$ całkujemy stałą gęstość od $a$ do $x$,
+co daje $F_X(x)=(x-a)/(b-a)$.
+Dla $x\geq b$ całka obejmuje cały nośnik i wynosi jeden.
+
+Momenty obliczamy z definicji:
+\[
+\E X=\frac1{b-a}\int_a^b x\,\dd\lambda_1(x)
+=\frac{b^2-a^2}{2(b-a)}=\frac{a+b}2,
+\]
+\[
+\E X^2=\frac1{b-a}\int_a^b x^2\,\dd\lambda_1(x)
+=\frac{b^3-a^3}{3(b-a)}=\frac{a^2+ab+b^2}3.
+\]
+Po odjęciu $((a+b)/2)^2$ od drugiego momentu
+i uproszczeniu otrzymujemy
+$\Var(X)=(b-a)^2/12$.
+\end{proof}
+
+\begin{definicja}
+Dla $\lambda>0$ rozkładem wykładniczym $\operatorname{Exp}(\lambda)$
+z parametrem intensywności $\lambda$ nazywamy rozkład
+o gęstości $f(x)=\lambda e^{-\lambda x}\ind{\{x\geq0\}}$.
+\end{definicja}
+
+\begin{stwierdzenie}
+Jeżeli $X\sim\operatorname{Exp}(\lambda)$, to dla $x\geq0$
+$F_X(x)=1-e^{-\lambda x}$, a
+$\E X=1/\lambda$ i $\Var(X)=1/\lambda^2$.
+Dla $s,t\geq0$ zachodzi
+$\Prob(X>s+t\mid X>s)=\Prob(X>t)$.
+\end{stwierdzenie}
+\begin{proof}
+Dla $x<0$ mamy $F_X(x)=0$. Dla $x\geq0$ całkowanie
+gęstości daje
+$F_X(x)=\int_0^x\lambda e^{-\lambda t}\,\dd\lambda_1(t)
+=1-e^{-\lambda x}$.
+Zatem ogon ma postać
+$\Prob(X>x)=e^{-\lambda x}$.
+
+Aby obliczyć momenty, wykonujemy zmianę zmiennych
+$u=\lambda x$ i używamy rekurencji całki gamma
+(albo dwukrotnego całkowania przez części):
+\[
+\E X^k=\int_0^\infty x^k\lambda e^{-\lambda x}
+\,\dd\lambda_1(x)=\frac{k!}{\lambda^k}
+\qquad(k=1,2).
+\]
+Otrzymujemy $\E X=1/\lambda$ i
+$\Var(X)=2/\lambda^2-1/\lambda^2=1/\lambda^2$.
+
+Wreszcie $\{X>s+t\}\subseteq\{X>s\}$ oraz
+$\Prob(X>s)=e^{-\lambda s}>0$, więc
+\[
+\Prob(X>s+t\mid X>s)
+=\frac{\Prob(X>s+t)}{\Prob(X>s)}
+=\frac{e^{-\lambda(s+t)}}{e^{-\lambda s}}
+=e^{-\lambda t}=\Prob(X>t).
+\]
+Interpretacja: wiedza o dotychczasowym czasie oczekiwania
+nie zmienia rozkładu dodatkowego czasu.
+\end{proof}
+
+\begin{uwaga}
+Rozkład wykładniczy jest ciągłym odpowiednikiem rozkładu
+geometrycznego ze względu na własność braku pamięci.
+W procesach stochastycznych pojawi się jako rozkład czasów
+oczekiwania w procesie Poissona.
+\end{uwaga}
+
+\begin{przyklad}[Generowanie zmiennej wykładniczej z jednostajnej]
+Niech $U\sim\Unif(0,1)$ i $\lambda>0$. Zmienna
+$X=-\log(1-U)/\lambda$ ma rozkład $\operatorname{Exp}(\lambda)$,
+ponieważ dla $x\geq0$ zachodzi
+$\Prob(X\leq x)=\Prob(U\leq1-e^{-\lambda x})=1-e^{-\lambda x}$.
+Jest to szczególny przypadek metody odwrotnej dystrybuanty,
+opartej na kwantylu uogólnionym. Pozwala ona przejść od
+jednostajnej liczby pseudolosowej do zadanej rodziny rozkładów.
+\end{przyklad}
+
+\section{Rozkład normalny}
+Rozkład normalny wyróżnia jego postać analityczna oraz stabilność
+względem dodawania niezależnych zmiennych normalnych. Służy też
+jako rozkład graniczny dla odpowiednio unormowanych sum
+wielu drobnych składników, co uzasadnimy później przy CTG.
+Na razie nie będziemy motywować jego gęstości wyłącznie
+rysunkiem dzwonu: wyprowadzimy normalizację przez całkę Gaussa
+oraz sprawdzimy wzory na momenty i własności sum.
+
+\begin{definicja}
+Niech $\mu\in\R$ i $\sigma>0$. Rozkładem normalnym
+$\Normal(\mu,\sigma^2)$ nazywamy rozkład o gęstości
+\begin{equation}\label{eq:normal}
+f(x)=\frac{1}{\sigma\sqrt{2\pi}}
+\exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right),
+\qquad x\in\R.
+\end{equation}
+Rozkład $\Normal(0,1)$ nazywamy standardowym normalnym.
+Jego dystrybuantę oznaczamy przez $\Phi$.
+\end{definicja}
+
+\begin{lemat}[Całka Gaussa]
+Zachodzi $\int_\R e^{-x^2/2}\,\dd\lambda_1(x)=\sqrt{2\pi}$.
+\end{lemat}
+\begin{proof}
+Niech $I=\int_\R e^{-x^2/2}\,\dd\lambda_1(x)$.
+Z twierdzenia Tonellego i przejścia do współrzędnych biegunowych
+otrzymujemy
+\[
+I^2=\int_{\R^2}e^{-(x^2+y^2)/2}\,\dd\lambda_2(x,y)
+=\int_0^{2\pi}\!\int_0^\infty e^{-r^2/2}r\,
+\dd\lambda_1(r)\,\dd\lambda_1(\varphi)=2\pi.
+\]
+Ponieważ $I>0$, mamy $I=\sqrt{2\pi}$.
+\end{proof}
+
+\begin{stwierdzenie}[Momenty i funkcja tworząca]
+Jeżeli $X\sim\Normal(\mu,\sigma^2)$, to
+$\E X=\mu$, $\Var(X)=\sigma^2$ oraz
+$M_X(t)=\exp(\mu t+\sigma^2t^2/2)$ dla wszystkich $t\in\R$.
+Ponadto $aX+b\sim\Normal(a\mu+b,a^2\sigma^2)$
+dla $a\ne0$ i $b\in\R$; dla $a=0$ rozkład jest skupiony
+w punkcie $b$.
+\end{stwierdzenie}
+\begin{proof}
+Niech $Z=(X-\mu)/\sigma$. Z twierdzenia o
+przekształceniach zmiennych wynika, że $Z$ ma gęstość
+$g(z)=(2\pi)^{-1/2}e^{-z^2/2}$.
+Dla $t\in\R$ obliczamy
+\[
+M_X(t)=\frac{e^{\mu t}}{\sqrt{2\pi}}\int_\R
+\exp\!\left(\sigma tz-\frac{z^2}2\right)
+\,\dd\lambda_1(z).
+\]
+Tożsamość
+$\sigma tz-z^2/2=-(z-\sigma t)^2/2+\sigma^2t^2/2$
+pozwala wyjąć z całki czynnik
+$e^{\sigma^2t^2/2}$. Pozostała całka z gęstości
+Gaussa przesuniętej o $\sigma t$ wynosi jeden.
+Otrzymujemy więc
+$M_X(t)=\exp(\mu t+\sigma^2t^2/2)$
+dla wszystkich $t\in\R$.
+Ponieważ funkcja ta jest skończona na całej prostej,
+możemy różniczkować pod całką. Z równości
+$M_X'(0)=\mu$ i $M_X''(0)=\mu^2+\sigma^2$
+wynikają wzory na średnią i wariancję.
+Dla $a\ne0$ transformacja gęstości przez funkcję
+$x\mapsto ax+b$ daje rozkład
+$\Normal(a\mu+b,a^2\sigma^2)$;
+gdy $a=0$, zmienna $aX+b$ jest stale równa $b$.
+\end{proof}
+
+\begin{stwierdzenie}[Suma niezależnych zmiennych normalnych]
+Jeżeli $X\sim\Normal(\mu_1,\sigma_1^2)$ i
+$Y\sim\Normal(\mu_2,\sigma_2^2)$ są niezależne,
+gdzie $\sigma_1,\sigma_2>0$, to
+$X+Y\sim\Normal(\mu_1+\mu_2,\sigma_1^2+\sigma_2^2)$.
+\end{stwierdzenie}
+\begin{proof}
+Z niezależności i wzoru na splot wynika dla $s\in\R$
+\[
+f_{X+Y}(s)=\frac1{2\pi\sigma_1\sigma_2}
+\int_\R\exp\!\left(-\frac{(x-\mu_1)^2}{2\sigma_1^2}
+-\frac{(s-x-\mu_2)^2}{2\sigma_2^2}\right)\,\dd\lambda_1(x).
+\]
+Oznaczmy $v=\sigma_1^2+\sigma_2^2$ oraz
+$c(s)=(\mu_1\sigma_2^2+(s-\mu_2)\sigma_1^2)/v$.
+Uzupełnienie kwadratu daje
+\[
+\frac{(x-\mu_1)^2}{\sigma_1^2}
++\frac{(s-x-\mu_2)^2}{\sigma_2^2}
+=\frac{v}{\sigma_1^2\sigma_2^2}(x-c(s))^2
++\frac{(s-\mu_1-\mu_2)^2}{v}.
+\]
+Całkując pierwszy czynnik za pomocą całki Gaussa, otrzymujemy
+\[
+f_{X+Y}(s)=\frac{1}{\sqrt{2\pi v}}
+\exp\!\left(-\frac{(s-\mu_1-\mu_2)^2}{2v}\right),
+\]
+czyli żądaną gęstość.
+\end{proof}
+
+\begin{przyklad}[Standaryzacja]
+Jeżeli $X\sim\Normal(\mu,\sigma^2)$, to
+$Z:=(X-\mu)/\sigma\sim\Normal(0,1)$.
+W konsekwencji dla $a<b$
+$\Prob(a<X\leq b)=\Phi((b-\mu)/\sigma)-\Phi((a-\mu)/\sigma)$.
+Dystrybuanta $\Phi$ nie ma pierwotnej wyrażalnej przez skończone
+kombinacje standardowych funkcji elementarnych; jej wartości
+wyznacza się numerycznie lub za pomocą funkcji błędu.
+\end{przyklad}
+
+\section{Funkcja gamma i funkcja beta}
+Próby normalizowania funkcji takich jak
+$x^{a-1}e^{-x}$ albo $x^{a-1}(1-x)^{b-1}$ prowadzą
+do całek, które nie zawsze są elementarne. Funkcje gamma i beta
+zapisują te całki w sposób systematyczny. Nie są jedynie
+technicznym dodatkiem: ich tożsamości pozwalają wyprowadzać
+wzory na momenty i zależności między rozkładami gamma,
+chi-kwadrat, beta i t-Studenta.
+
+\begin{definicja}
+Dla $a,b>0$ definiujemy funkcję gamma i funkcję beta Eulera wzorami
+\[
+\Gamma(a):=\int_0^\infty t^{a-1}e^{-t}\,\dd\lambda_1(t),
+\qquad
+\mathrm B(a,b):=\int_0^1 t^{a-1}(1-t)^{b-1}\,\dd\lambda_1(t).
+\]
+Obie całki są skończone i dodatnie dla podanych parametrów.
+\end{definicja}
+
+\begin{lemat}[Podstawowe tożsamości]
+Dla $a,b>0$ zachodzą
+$\Gamma(a+1)=a\Gamma(a)$ oraz
+$\mathrm B(a,b)=\Gamma(a)\Gamma(b)/\Gamma(a+b)$.
+Ponadto $\Gamma(1)=1$, $\Gamma(1/2)=\sqrt\pi$
+i $\Gamma(n+1)=n!$ dla $n\in\N\cup\{0\}$.
+\end{lemat}
+\begin{proof}
+Najpierw uzasadnijmy zbieżność całki definiującej
+$\Gamma(a)$. Przy zerze funkcja $t^{a-1}e^{-t}$
+zachowuje się jak $t^{a-1}$, a ta jest całkowalna
+na $(0,1)$ wtedy i tylko wtedy, gdy $a>0$.
+Na $(1,\infty)$ czynnik wykładniczy zapewnia
+całkowalność każdego wielomianowego czynnika.
+Podobnie całka beta jest zbieżna, ponieważ
+przy końcach przedziału czynniki zachowują się
+jak $t^{a-1}$ i $(1-t)^{b-1}$.
+
+Całkując przez części i wykorzystując znikanie
+wyrazów brzegowych $t^a e^{-t}$ dla $t\to0+$
+i $t\to\infty$, otrzymujemy
+\[
+\Gamma(a+1)=\int_0^\infty t^ae^{-t}\,\dd\lambda_1(t)
+=a\int_0^\infty t^{a-1}e^{-t}\,\dd\lambda_1(t)
+=a\Gamma(a).
+\]
+Ponieważ $\Gamma(1)=\int_0^\infty e^{-t}\,\dd\lambda_1(t)=1$,
+indukcja daje $\Gamma(n+1)=n!$.
+Podstawienie $t=u^2$ i symetria całki Gaussa dają
+$\Gamma(1/2)=2\int_0^\infty e^{-u^2}\,\dd\lambda_1(u)
+=\sqrt\pi$.
+
+Aby wyprowadzić relację z funkcją beta, zapiszmy
+przez Tonellego iloczyn dwóch dodatnich całek:
+\[
+\Gamma(a)\Gamma(b)
+=\int_{(0,\infty)^2}u^{a-1}v^{b-1}e^{-u-v}
+\,\dd\lambda_2(u,v).
+\]
+Wprowadzamy $r=u+v>0$ i $w=u/(u+v)\in(0,1)$.
+Odwrotnie, $u=rw$, $v=r(1-w)$; wyznacznik macierzy
+pochodnych odwzorowania $(r,w)\mapsto(u,v)$
+ma moduł $r$. Funkcja podcałkowa wraz z jakobianem
+przyjmuje postać
+$r^{a+b-1}e^{-r}w^{a-1}(1-w)^{b-1}$.
+Możemy więc ponownie rozdzielić całkę:
+\[
+\Gamma(a)\Gamma(b)
+=\left(\int_0^\infty r^{a+b-1}e^{-r}\,\dd\lambda_1(r)\right)
+\left(\int_0^1w^{a-1}(1-w)^{b-1}\,\dd\lambda_1(w)\right)
+=\Gamma(a+b)\mathrm B(a,b).
+\]
+Dzielenie przez dodatnie $\Gamma(a+b)$ kończy dowód.
+\end{proof}
+
+\section{Rozkład gamma}
+Jeśli czas do jednego zdarzenia ma rozkład wykładniczy, to
+suma kilku niezależnych czasów oczekiwania prowadzi do rodziny
+gamma. Parametr kształtu opisuje m.in. liczbę składników
+w przypadkach całkowitych, a parametr intensywności reguluje
+skalę czasową. Funkcję gamma można traktować jako naturalne
+przedłużenie silni do argumentów dodatnich.
+
+\begin{definicja}
+Niech $\alpha,\lambda>0$. Rozkładem gamma $\Gam(\alpha,\lambda)$
+o parametrze kształtu $\alpha$ i \emph{intensywności} $\lambda$
+nazywamy rozkład o gęstości
+\begin{equation}\label{eq:gamma}
+f(x)=\frac{\lambda^\alpha}{\Gamma(\alpha)}
+ x^{\alpha-1}e^{-\lambda x}\ind{\{x>0\}}.
+\end{equation}
+\end{definicja}
+
+\begin{stwierdzenie}
+Dla $X\sim\Gam(\alpha,\lambda)$ zachodzi
+\[
+\E X=\frac\alpha\lambda,\qquad
+\Var(X)=\frac\alpha{\lambda^2},\qquad
+M_X(t)=\left(\frac\lambda{\lambda-t}\right)^\alpha\quad(t<\lambda).
+\]
+Jeżeli $X\sim\Gam(\alpha,\lambda)$ i
+$Y\sim\Gam(\beta,\lambda)$ są niezależne, to
+$X+Y\sim\Gam(\alpha+\beta,\lambda)$.
+\end{stwierdzenie}
+\begin{proof}
+Najpierw sprawdźmy normalizację gęstości. Dla
+$\alpha,\lambda>0$, po podstawieniu $u=\lambda x$,
+\[
+\int_0^\infty\frac{\lambda^\alpha}{\Gamma(\alpha)}
+ x^{\alpha-1}e^{-\lambda x}\,\dd\lambda_1(x)
+=\frac1{\Gamma(\alpha)}\int_0^\infty
+u^{\alpha-1}e^{-u}\,\dd\lambda_1(u)=1.
+\]
+Dla $r\geq0$ ten sam rachunek daje
+$\E X^r=\Gamma(\alpha+r)/(\lambda^r\Gamma(\alpha))$.
+Korzystając z rekurencji funkcji gamma dla $r=1,2$,
+mamy $\E X=\alpha/\lambda$ i
+$\E X^2=\alpha(\alpha+1)/\lambda^2$.
+Różnica drugiego momentu i kwadratu średniej daje
+$\Var(X)=\alpha/\lambda^2$.
+
+Dla $t<\lambda$ obliczamy
+\[
+M_X(t)=\frac{\lambda^\alpha}{\Gamma(\alpha)}
+\int_0^\infty x^{\alpha-1}e^{-(\lambda-t)x}
+\,\dd\lambda_1(x)
+=\left(\frac{\lambda}{\lambda-t}\right)^\alpha,
+\]
+gdzie użyliśmy kolejno zmiany $u=(\lambda-t)x$
+i definicji funkcji gamma.
+
+Dla sumy niezależnych zmiennych gamma z tą samą
+intensywnością korzystamy ze splotu:
+\[
+f_{X+Y}(s)=\frac{\lambda^{\alpha+\beta}e^{-\lambda s}}
+{\Gamma(\alpha)\Gamma(\beta)}
+\int_0^s x^{\alpha-1}(s-x)^{\beta-1}\,\dd\lambda_1(x),
+\quad s>0.
+\]
+Podstawiamy $x=sw$, co daje czynnik
+$s^{\alpha+\beta-1}$ i całkę $\mathrm B(\alpha,\beta)$.
+Tożsamość beta--gamma redukuje współczynnik do
+$1/\Gamma(\alpha+\beta)$. Otrzymujemy dokładnie
+gęstość $\Gam(\alpha+\beta,\lambda)$.
+Wspólna intensywność jest istotna: dla różnych
+intensywności ten prosty wzór na sumę nie obowiązuje.
+\end{proof}
+
+\begin{uwaga}
+W literaturze używa się również parametru \emph{skali}
+$\beta=1/\lambda$, zapisując gęstość jako
+$x^{\alpha-1}e^{-x/\beta}/(\Gamma(\alpha)\beta^\alpha)$.
+W tej książce drugi parametr rozkładu gamma jest zawsze
+\emph{intensywnością}, a nie skalą.
+Rozkład $\operatorname{Exp}(\lambda)$ jest równy $\Gam(1,\lambda)$.
+\end{uwaga}
+
+\section{Rozkład chi-kwadrat}
+Suma kwadratów niezależnych standardowych zmiennych normalnych
+jest naturalną miarą kwadratowego odchylenia wektora losowego
+od początku układu. Jej rozkład należy do rodziny gamma i
+nazywa się chi-kwadrat. Dla całkowitej liczby stopni swobody
+ma ona bezpośredni sens geometryczny; definicję przez gamma
+można natomiast rozszerzyć na dowolne dodatnie $\nu$.
+
+\begin{definicja}
+Niech $\nu>0$. Rozkładem chi-kwadrat z $\nu$ stopniami swobody,
+oznaczanym $\chi^2_\nu$, nazywamy rozkład
+$\Gam(\nu/2,1/2)$, a więc rozkład o gęstości
+\begin{equation}\label{eq:chisq}
+f_\nu(x)=\frac{1}{2^{\nu/2}\Gamma(\nu/2)}
+ x^{\nu/2-1}e^{-x/2}\ind{\{x>0\}}.
+\end{equation}
+Dla naturalnego $\nu$ liczba $\nu$ jest liczbą stopni swobody
+w poniższej reprezentacji za pomocą zmiennych normalnych.
+\end{definicja}
+
+\begin{twierdzenie}[Suma kwadratów zmiennych normalnych]
+Niech $\nu\in\N$ i niech $Z_1,\ldots,Z_\nu$ będą niezależne
+i mają rozkład $\Normal(0,1)$. Wówczas
+$U:=\sum_{j=1}^\nu Z_j^2\sim\chi^2_\nu$.
+Dla dowolnego rzeczywistego $\nu>0$, jeżeli $U\sim\chi^2_\nu$,
+to $\E U=\nu$ oraz $\Var(U)=2\nu$.
+\end{twierdzenie}
+\begin{proof}
+Wystarczy najpierw obliczyć rozkład $Z^2$ dla jednej
+standardowej zmiennej normalnej $Z$.
+Funkcja $g(z)=z^2$ jest różnowartościowa na
+$(-\infty,0)$ i $(0,\infty)$, a dla $u>0$ ma
+przeciwobrazy $z_\pm=\pm\sqrt u$. Pochodna ma
+moduł $|g'(z_\pm)|=2\sqrt u$. Ze wzoru
+na transformację o dwóch gałęziach
+\[
+f_{Z^2}(u)=\frac{\varphi(\sqrt u)}{2\sqrt u}
++\frac{\varphi(-\sqrt u)}{2\sqrt u}
+=\frac{e^{-u/2}}{\sqrt{2\pi u}}
+\qquad(u>0).
+\]
+Ponieważ $\Gamma(1/2)=\sqrt\pi$, wzór ten jest równy
+$u^{-1/2}e^{-u/2}/(2^{1/2}\Gamma(1/2))$.
+Jest to gęstość $\Gam(1/2,1/2)$.
+
+Każda zmienna $Z_j^2$ ma więc taki sam rozkład gamma.
+Z niezależności $Z_j$ wynika niezależność mierzalnych
+funkcji $Z_j^2$. Własność dodawania niezależnych
+rozkładów gamma o wspólnej intensywności daje
+$\sum_{j=1}^\nu Z_j^2\sim\Gam(\nu/2,1/2)=\chi^2_\nu$.
+Niezależnie od tego, czy $\nu$ jest całkowite,
+przez definicję $\chi^2_\nu$ jako rozkładu gamma
+obliczamy $\E U=(\nu/2)/(1/2)=\nu$ oraz
+$\Var(U)=(\nu/2)/(1/2)^2=2\nu$.
+\end{proof}
+
+\begin{przyklad}[Trzy współrzędne normalne]
+Jeżeli $Z_1,Z_2,Z_3$ są niezależne i standardowo normalne,
+to $R^2:=Z_1^2+Z_2^2+Z_3^2\sim\chi^2_3$.
+Średnia $R^2$ wynosi $3$, a wariancja $6$.
+Nie należy mylić rozkładu $R^2$ z rozkładem $R$:
+po spierwiastkowaniu powstaje inny rozkład, określany
+jako rozkład chi.
+\end{przyklad}
+
+\section{Rozkład beta}
+W przeciwieństwie do rozkładu gamma, który żyje na dodatniej
+półprostej, rozkład beta jest skupiony na odcinku $(0,1)$.
+Dzięki dwóm parametrom może być symetryczny, skupiony bliżej
+jednego końca albo silnie wygięty w środku przedziału.
+Jest więc użyteczny do modelowania proporcji i udziałów.
+Jego normalizacja pochodzi wprost z funkcji beta Eulera.
+
+\begin{definicja}
+Niech $a,b>0$. Rozkładem beta $\Betad(a,b)$ na $(0,1)$
+nazywamy rozkład o gęstości
+\begin{equation}\label{eq:beta}
+f(x)=\frac{x^{a-1}(1-x)^{b-1}}{\mathrm B(a,b)}
+\ind{\{0<x<1\}}.
+\end{equation}
+\end{definicja}
+
+\begin{stwierdzenie}
+Jeżeli $X\sim\Betad(a,b)$, to
+\[
+\E X=\frac a{a+b},\qquad
+\Var(X)=\frac{ab}{(a+b)^2(a+b+1)}.
+\]
+Rozkład $\Betad(1,1)$ jest jednostajny na $(0,1)$.
+\end{stwierdzenie}
+\begin{proof}
+Najpierw sprawdzamy normalizację: gęstość jest
+nieujemna, a jej całka po $(0,1)$ równa
+$\mathrm B(a,b)/\mathrm B(a,b)=1$.
+Dla $r\geq0$ mnożenie gęstości przez $x^r$
+i wykorzystanie definicji funkcji beta daje
+\[
+\E X^r=\frac{\mathrm B(a+r,b)}{\mathrm B(a,b)}
+=\frac{\Gamma(a+r)\Gamma(a+b)}
+{\Gamma(a)\Gamma(a+b+r)}.
+\]
+Dla $r=1$ rekurencja $\Gamma(s+1)=s\Gamma(s)$
+prowadzi do $\E X=a/(a+b)$. Dla $r=2$
+otrzymujemy
+$\E X^2=a(a+1)/[(a+b)(a+b+1)]$.
+Stąd
+\[
+\Var(X)=\frac{a(a+1)}{(a+b)(a+b+1)}
+-\frac{a^2}{(a+b)^2}
+=\frac{ab}{(a+b)^2(a+b+1)}.
+\]
+Wreszcie $\mathrm B(1,1)=\int_0^1 1\,\dd\lambda_1(x)=1$,
+więc dla $a=b=1$ gęstość jest stała i równa jeden
+na $(0,1)$, tak jak w rozkładzie jednostajnym.
+\end{proof}
+
+\section{Rozkład t-Studenta}
+Jeżeli zmienną normalną dzielimy przez niezależne losowe
+odchylenie związane z rozkładem chi-kwadrat, mianownik może
+przyjmować małe wartości. Powstają wówczas obserwacje znacznie
+bardziej odległe od zera niż w rozkładzie normalnym. To źródło
+cięższych ogonów rozkładu t-Studenta. Liczba stopni swobody
+steruje częstością takich odchyleń i decyduje, które momenty
+w ogóle istnieją.
+
+\begin{definicja}
+Niech $\nu>0$, $Z\sim\Normal(0,1)$ oraz
+$U\sim\chi^2_\nu$ będą niezależne. Zmienną
+$T:=Z/\sqrt{U/\nu}$ nazywamy zmienną o rozkładzie
+t-Studenta z $\nu$ stopniami swobody i zapisujemy $T\sim t_\nu$.
+\end{definicja}
+
+\begin{twierdzenie}[Gęstość rozkładu Studenta]
+Dla każdego $\nu>0$ zmienna $T\sim t_\nu$ ma gęstość
+\begin{equation}\label{eq:student}
+f_\nu(t)=
+\frac{\Gamma((\nu+1)/2)}{\sqrt{\nu\pi}\,\Gamma(\nu/2)}
+\left(1+\frac{t^2}{\nu}\right)^{-(\nu+1)/2},
+\qquad t\in\R.
+\end{equation}
+Gęstość jest parzysta. Dla $\nu>1$ wartość oczekiwana
+jest równa zero, a dla $\nu>2$ wariancja wynosi $\nu/(\nu-2)$.
+Dla $0<\nu\leq1$ wartość oczekiwana nie istnieje,
+a dla $0<\nu\leq2$ drugi moment jest nieskończony.
+\end{twierdzenie}
+\begin{proof}
+Niech $\varphi(z)=(2\pi)^{-1/2}e^{-z^2/2}$ oznacza
+gęstość standardowego rozkładu normalnego.
+Z niezależności $(Z,U)$ ma na $\R\times(0,\infty)$
+gęstość $\varphi(z)f_U(u)$, gdzie
+$f_U(u)=u^{\nu/2-1}e^{-u/2}/(2^{\nu/2}\Gamma(\nu/2))$.
+Dla ustalonego $u>0$ przechodzimy od
+$(z,u)$ do $(t,u)$ przez $z=t\sqrt{u/\nu}$.
+Moduł jakobianu odwrotnej zmiany jest
+$\sqrt{u/\nu}$. Stąd gęstość pary $(T,U)$
+wynosi $\varphi(t\sqrt{u/\nu})f_U(u)\sqrt{u/\nu}$.
+Całkując po $u$ i grupując potęgi, otrzymujemy
+\[
+f_T(t)=\frac1{\sqrt{2\pi\nu}\,2^{\nu/2}\Gamma(\nu/2)}
+\int_0^\infty u^{(\nu+1)/2-1}
+\exp\!\left(-\frac{1+t^2/\nu}{2}u\right)
+\,\dd\lambda_1(u).
+\]
+Oznaczmy $a=(\nu+1)/2$ i $c=(1+t^2/\nu)/2>0$.
+Podstawienie $v=cu$ daje
+$\int_0^\infty u^{a-1}e^{-cu}\,\dd\lambda_1(u)
+=\Gamma(a)c^{-a}$.
+Po wstawieniu i uproszczeniu potęg dwójki
+otrzymujemy
+\[
+f_T(t)=\frac{\Gamma((\nu+1)/2)}
+{\sqrt{\nu\pi}\,\Gamma(\nu/2)}
+\left(1+\frac{t^2}{\nu}\right)^{-(\nu+1)/2}.
+\]
+Gęstość jest parzysta, ale symetria sama w sobie
+nie gwarantuje istnienia wartości oczekiwanej.
+Dla $|t|\geq1$ istnieją stałe dodatnie $c_1,c_2$
+(zależne od $\nu$) takie, że
+$c_1|t|^{-\nu-1}\leq f_T(t)
+\leq c_2|t|^{-\nu-1}$. Zatem dla $r\geq0$
+całka $\int_{|t|\geq1}|t|^rf_T(t)\,\dd\lambda_1(t)$
+zachowuje się pod względem zbieżności jak
+$\int_1^\infty t^{r-\nu-1}\,\dd\lambda_1(t)$,
+a ta jest skończona dokładnie dla $r<\nu$.
+W konsekwencji $\E|T|<\infty$ wtedy i tylko wtedy,
+gdy $\nu>1$; w tym przypadku $\E T=0$ przez parzystość.
+Dla $\nu>2$ drugi moment istnieje i
+\[
+\E T^2=\nu\E Z^2\,\E(U^{-1})
+=\nu\frac{1}{\nu-2},
+\]
+ponieważ $\E Z^2=1$ oraz, z całki gamma,
+$\E(U^{-1})=1/(\nu-2)$. Zatem
+$\Var(T)=\nu/(\nu-2)$. Przy $\nu\leq2$ drugi
+moment jest nieskończony, więc wariancja nie jest
+skończoną liczbą; dla $\nu\leq1$ średnia nie istnieje.
+\end{proof}
+
+\begin{uwaga}
+Parametr $\nu$ w definicji rozkładu Studenta może być dowolną
+dodatnią liczbą rzeczywistą. W klasycznych zadaniach o estymacji
+wariancji na podstawie próby normalnej występują zwykle całkowite
+liczby stopni swobody, często $n-1$.
+Dla $\nu\to\infty$ rozkład $t_\nu$ zbiega według rozkładu
+do $\Normal(0,1)$; dowód znajdzie się w rozdziale
+o centralnym twierdzeniu granicznym.
+\end{uwaga}
+
+\section{Rozkład Cauchy'ego}
+Symetryczna, gładka gęstość nie musi opisywać rozkładu z dobrze
+określoną średnią. Rozkład Cauchy'ego stanowi ważny kontrprzykład:
+mimo symetrii jego dodatnia i ujemna część pierwszego momentu
+są rozbieżne. Na nim zobaczymy, dlaczego formalne „znoszenie się”
+nieskończoności nie jest dopuszczalnym sposobem obliczania
+wartości oczekiwanej.
+
+\begin{definicja}
+Niech $x_0\in\R$ i $\gamma>0$. Rozkładem Cauchy'ego
+o parametrze położenia $x_0$ i skali $\gamma$
+nazywamy rozkład o gęstości
+\begin{equation}\label{eq:cauchy}
+f(x)=\frac1{\pi\gamma}
+\frac{1}{1+((x-x_0)/\gamma)^2},\qquad x\in\R.
+\end{equation}
+\end{definicja}
+
+\begin{stwierdzenie}
+Jeżeli $X$ ma powyższy rozkład, to
+\[
+F_X(x)=\frac12+\frac1\pi
+\arctan\!\left(\frac{x-x_0}{\gamma}\right).
+\]
+Dla każdego $r\geq1$ zachodzi $\E|X-x_0|^r=\infty$.
+W szczególności wartość oczekiwana $\E X$ nie istnieje,
+a wariancja nie jest zdefiniowana.
+Rozkład standardowy Cauchy'ego ($x_0=0$, $\gamma=1$)
+jest równy rozkładowi $t_1$.
+\end{stwierdzenie}
+\begin{proof}
+Całka z gęstości \eqref{eq:cauchy} po $(-\infty,x]$
+daje wskazaną dystrybuantę.
+Dla dużych $|x|$ funkcja $|x-x_0|^r f(x)$
+zachowuje się jak dodatnia stała razy $|x|^{r-2}$,
+której całka po półprostej jest rozbieżna dla $r\geq1$.
+W szczególności dodatnia i ujemna część
+$X-x_0$ mają nieskończone wartości oczekiwane,
+więc nie można definiować średniej jako ich różnicy.
+Podstawienie $\nu=1$ do \eqref{eq:student} i tożsamości
+$\Gamma(1)=1$, $\Gamma(1/2)=\sqrt\pi$ daje gęstość
+$1/[\pi(1+x^2)]$ rozkładu standardowego Cauchy'ego.
+\end{proof}
+
+\begin{przyklad}[Wartość główna a wartość oczekiwana]
+Dla standardowego rozkładu Cauchy'ego zachodzi
+$\int_{-R}^{R}x/[\pi(1+x^2)]\,\dd\lambda_1(x)=0$
+dla każdego $R>0$ z powodu nieparzystości funkcji.
+Wartość główna Cauchy'ego całki wynosi zatem zero,
+ale nie jest to wartość oczekiwana: całki z części dodatniej
+i ujemnej są obie nieskończone. Nie można stosować
+symetrycznego znoszenia się rozbieżnych całek w definicji
+wartości oczekiwanej.
+\end{przyklad}
+
+\begin{przyklad}[Tangens kąta jednostajnego]
+Jeśli $U\sim\Unif(-\pi/2,\pi/2)$ i $X=\tan U$,
+to $X$ ma standardowy rozkład Cauchy'ego. Rzeczywiście,
+$\tan$ jest dyfeomorfizmem tego przedziału na $\R$,
+a pochodna funkcji odwrotnej wynosi
+$(\arctan x)'=1/(1+x^2)$.
+Wzór na transformację gęstości daje $f_X(x)=1/[\pi(1+x^2)]$.
+\end{przyklad}
+
+
+\begin{przyklad}[Porównanie ogonów rozkładu normalnego i Cauchy'ego]
+Niech $Z\sim\Normal(0,1)$, $C$ ma standardowy rozkład
+Cauchy'ego i niech $t>0$. Z nierówności Markowa
+dla $Z^2$ wynika $\Prob(|Z|\geq t)\leq1/t^2$.
+W rzeczywistości ogon normalny maleje znacznie szybciej:
+dla każdego $u>0$, korzystając z
+$M_Z(u)=e^{u^2/2}$, mamy
+$\Prob(Z\geq t)=\Prob(e^{uZ}\geq e^{ut})
+\leq e^{-ut+u^2/2}$.
+Wybór $u=t$ daje $\Prob(Z\geq t)\leq e^{-t^2/2}$,
+a przez symetrię $\Prob(|Z|\geq t)\leq2e^{-t^2/2}$.
+
+Tymczasem dla $C$ zachodzi
+$\Prob(|C|\geq t)=1-(2/\pi)\arctan t$.
+Z asymptotyki $\pi/2-\arctan t\sim1/t$
+otrzymujemy $\Prob(|C|\geq t)\sim 2/(\pi t)$.
+Różnica między zanikiem wykładniczym a potęgowym
+wyjaśnia, dlaczego w rozkładzie Cauchy'ego brak nawet
+pierwszego bezwzględnego momentu.
+\end{przyklad}
+
+\section{Dalsze użyteczne rozkłady}
+Nie wszystkie użyteczne rodziny wymagają nowej konstrukcji od zera.
+Rozkład lognormalny powstaje przez wykładnicze przekształcenie
+rozkładu normalnego. Rozkład Fishera--Snedecora powstaje z ilorazu
+dwóch niezależnych odpowiednio unormowanych zmiennych chi-kwadrat.
+To przykłady ważnej zasady: z prostych rozkładów tworzymy
+bardziej złożone za pomocą działań na zmiennych losowych.
+
+\begin{definicja}
+Zmienna $X$ ma rozkład lognormalny z parametrami
+$\mu\in\R$, $\sigma>0$, jeżeli $\log X\sim\Normal(\mu,\sigma^2)$
+(prawie na pewno $X>0$). Ma wtedy gęstość
+$\ind{\{x>0\}}\exp(- (\log x-\mu)^2/(2\sigma^2))
+/[x\sigma\sqrt{2\pi}]$.
+\end{definicja}
+
+\begin{stwierdzenie}
+Jeżeli $X$ ma rozkład lognormalny z parametrami $\mu,\sigma$,
+to $\E X=e^{\mu+\sigma^2/2}$ oraz
+$\Var(X)=(e^{\sigma^2}-1)e^{2\mu+\sigma^2}$.
+\end{stwierdzenie}
+\begin{uwaga}
+Nie należy stąd wnioskować, że funkcja tworząca momenty
+$M_X(t)=\E e^{tX}$ jest skończona w otoczeniu zera.
+Dla lognormalnej zmiennej losowej $M_X(t)=\infty$
+dla każdego $t>0$, choć wszystkie momenty
+$\E X^r$ są skończone. Rozbieżność wynika z tego,
+że dla $X=e^Y$, gdzie $Y$ jest normalna,
+wykładnik $te^y-(y-\mu)^2/(2\sigma^2)$
+rośnie do $+\infty$ przy $y\to+\infty$.
+\end{uwaga}
+\begin{proof}
+Zapisujemy $X=e^Y$, gdzie $Y\sim\Normal(\mu,\sigma^2)$.
+Wtedy $\E X=M_Y(1)$ i $\E X^2=M_Y(2)$,
+co daje odpowiednio $e^{\mu+\sigma^2/2}$ i
+$e^{2\mu+2\sigma^2}$. Odejmujemy kwadrat średniej.
+\end{proof}
+
+\begin{definicja}
+Niech $d_1,d_2\in\N$ i niech $U\sim\chi^2_{d_1}$ oraz
+$V\sim\chi^2_{d_2}$ będą niezależne. Rozkład zmiennej
+$F:=(U/d_1)/(V/d_2)$ nazywamy rozkładem Fishera--Snedecora
+i oznaczamy $F_{d_1,d_2}$.
+\end{definicja}
+
+\begin{stwierdzenie}
+Rozkład $F_{d_1,d_2}$ ma gęstość
+\[
+f(x)=\frac{\Gamma((d_1+d_2)/2)}
+{\Gamma(d_1/2)\Gamma(d_2/2)}
+\left(\frac{d_1}{d_2}\right)^{d_1/2}
+\frac{x^{d_1/2-1}}{(1+d_1x/d_2)^{(d_1+d_2)/2}}
+\ind{\{x>0\}}.
+\]
+Jeżeli $T\sim t_\nu$ i $\nu\in\N$, to $T^2\sim F_{1,\nu}$.
+\end{stwierdzenie}
+\begin{proof}
+Oznaczmy $a=d_1/2$ oraz $b=d_2/2$.
+Z niezależności $U,V$ ich gęstość łączna na dodatnim
+kwadrancie jest równa
+\[
+f_{U,V}(u,v)=\frac{u^{a-1}v^{b-1}e^{-(u+v)/2}}
+{2^{a+b}\Gamma(a)\Gamma(b)}.
+\]
+Definicja $X=(U/d_1)/(V/d_2)$ prowadzi do zmiany
+$u=(d_1/d_2)xv$, przy której moduł jakobianu
+odwrotnej transformacji $(x,v)\mapsto(u,v)$ wynosi
+$d_1v/d_2$. Podstawiając do gęstości łącznej,
+a następnie całkując po $v>0$, dostajemy
+\[
+f_X(x)=\frac{(d_1/d_2)^a x^{a-1}}
+{2^{a+b}\Gamma(a)\Gamma(b)}
+\int_0^\infty v^{a+b-1}
+\exp\!\left(-\frac{1+(d_1/d_2)x}{2}v\right)
+\,\dd\lambda_1(v),\quad x>0.
+\]
+Po podstawieniu $w=(1+(d_1/d_2)x)v/2$
+całka wynosi
+$\Gamma(a+b)\,[2/(1+(d_1/d_2)x)]^{a+b}$.
+Po uproszczeniu otrzymujemy podaną gęstość.
+
+Dla $T\sim t_\nu$ mamy z definicji
+$T^2=(Z^2/1)/(V/\nu)$, gdzie
+$Z^2\sim\chi_1^2$, $V\sim\chi_\nu^2$ i są niezależne.
+Zatem $T^2\sim F_{1,\nu}$. Ten argument działa
+również dla dowolnego rzeczywistego $\nu>0$, jeśli
+rozszerzymy definicję $F_{d_1,d_2}$ na rzeczywiste
+dodatnie parametry; w tekście zasadnicza definicja
+podana została dla całkowitych stopni swobody.
+\end{proof}
+
+\section{Porównanie rozkładów i wybór modelu}
+Właściwy wybór modelu nie polega na dopasowaniu znanego wzoru
+do przypadkowej tabeli. Najpierw trzeba rozpoznać mechanizm:
+losowanie ze zwracaniem czy bez, ustalona liczba prób czy czekanie
+na sukces, pojedyncza wielkość czy suma/iloraz wielkości losowych.
+Dopiero potem parametryzuje się odpowiadający mu rozkład.
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{3.0cm}p{4.1cm}p{5.9cm}@{}}
+\hline
+Rozkład & Parametry & Typowe zastosowanie \\
+\hline
+Bernoulliego & $p\in[0,1]$ & Wynik pojedynczej próby binarnej \\
+Dwumianowy & $n\in\N_0$, $p\in[0,1]$ & Liczba sukcesów w niezależnych próbach \\
+Hipergeometryczny & $0\leq K,n\leq N$ & Losowanie bez zwracania \\
+Poissona & $\lambda>0$ & Liczba rzadkich niezależnych zdarzeń \\
+Geometryczny & $p\in(0,1]$ & Liczba prób do pierwszego sukcesu \\
+Jednostajny & $a<b$ & Jednorodne losowanie punktu odcinka \\
+Wykładniczy & $\lambda>0$ & Niepamiętający czas oczekiwania \\
+Normalny & $\mu\in\R$, $\sigma>0$ & Błędy pomiaru, sumy licznych składników \\
+Gamma & $\alpha,\lambda>0$ & Dodatnie czasy i sumy czasów oczekiwania \\
+Chi-kwadrat & $\nu>0$ & Sumy kwadratów normalnych \\
+Beta & $a,b>0$ & Udziały, proporcje i zmienne o wartościach w $(0,1)$ \\
+t-Studenta & $\nu>0$ & Standaryzowane ilorazy normalnej i chi-kwadrat \\
+Cauchy'ego & $x_0\in\R$, $\gamma>0$ & Model z ciężkimi ogonami, kontrprzykłady dla momentów \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{uwaga}
+Zapis $\N_0$ w tabeli oznacza $\{0,1,2,\ldots\}$.
+Przykłady zastosowań są wskazówkami modelowymi, a nie
+warunkami definiującymi rozkłady. To, czy model jest odpowiedni,
+wynika z przyjętych założeń, sposobu zbierania danych
+i weryfikacji ich zgodności z modelem.
+\end{uwaga}
+

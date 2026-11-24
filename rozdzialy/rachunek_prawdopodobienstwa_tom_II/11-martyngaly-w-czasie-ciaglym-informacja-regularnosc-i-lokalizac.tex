@@ -1,0 +1,496 @@
+\chapter{Martyngały w czasie ciągłym: informacja, regularność i lokalizacja}
+\label{ch:mart-cont}
+
+\section{Dlaczego przejście od czasu dyskretnego nie jest automatyczne?}
+W tomie I martyngał był ciągiem $(M_n)_{n\ge0}$, którego
+warunkowa prognoza następnej wartości, przy znajomości przeszłości,
+wynosiła dokładnie wartość obecną. W czasie ciągłym rozważamy
+nieprzeliczalną rodzinę chwil. Pojawiają się dwa nowe pytania:
+jak wybierać jedną wspólną wersję trajektorii oraz co znaczy
+zatrzymać proces w chwili wybranej na podstawie obserwacji?
+Później zobaczymy też, że proces ze skokami może być martyngałem,
+mimo że jego trajektorie mają skończoną wariację całkowitą.
+
+\begin{definicja}[Martyngał, podmartyngał i nadmartyngał]
+Niech $(\Omega,\calF,\Prob)$ będzie przestrzenią probabilistyczną,
+$(\calF_t)_{t\ge0}$ filtracją i $M=(M_t)_{t\ge0}$ procesem
+rzeczywistym, adaptowanym, takim że $\E|M_t|<\infty$
+dla każdego $t\ge0$. Proces $M$ jest \emph{martyngałem}, jeśli
+$\E[M_t\mid\calF_s]=M_s$ prawie na pewno dla wszystkich
+$0\le s\le t$. Jest \emph{podmartyngałem}, jeśli
+$\E[M_t\mid\calF_s]\ge M_s$, a \emph{nadmartyngałem},
+gdy zachodzi nierówność przeciwna. Filtracja spełnia
+\emph{warunki zwykłe}, jeśli jest zupełna (każdy podzbiór zbioru z $\calF$ o prawdopodobieństwie
+zero należy do $\calF_0$) i prawostronnie ciągła:
+$\calF_t=\bigcap_{u>t}\calF_u$ dla każdego $t\ge0$.
+\end{definicja}
+
+Ważne, że równość dla każdej pary $s,t$ jest rozumiana osobno
+prawie na pewno. Nie wolno bez dodatkowego argumentu zażądać
+jednego zbioru miary jeden, na którym równości warunkowe
+miałyby zachodzić jednocześnie dla nieprzeliczalnie wielu par.
+
+\begin{przyklad}[Trzy modele uczciwej ewolucji]
+Niech $W$ będzie standardowym procesem Wienera w jego
+uzupełnionej filtracji naturalnej. Wówczas
+$W_t$ jest martyngałem z powodu niezależnych wycentrowanych
+przyrostów. Proces $W_t^2-t$ również nim jest, ponieważ
+\[
+\E[W_t^2-t\mid\calF_s]
+=W_s^2+\E[(W_t-W_s)^2]-t=W_s^2-s.
+\]
+Jeśli $N$ jest procesem Poissona o intensywności $\lambda>0$,
+to $N_t-\lambda t$ jest martyngałem, gdyż przyrost liczby
+zdarzeń po chwili $s$ jest niezależny od przeszłości i ma
+średnią $\lambda(t-s)$. Pierwsze dwa procesy mają trajektorie
+ciągłe, ostatni ma skoki wysokości jeden.
+\end{przyklad}
+
+\begin{lemat}[Warunkowe wartości oczekiwane są jednostajnie całkowalne]
+Niech $X\in L^1(\Omega,\calF,\Prob)$. Rodzina
+$\{\E[X\mid\calG]:\calG\subseteq\calF\text{ jest pod-}\sigma\text{-ciałem}\}$
+jest jednostajnie całkowalna.
+\end{lemat}
+\begin{proof}
+Ustalmy $K>0$ i rozłóżmy $X=U+V$, gdzie
+$U=X\ind{\{|X|\le K/2\}}$ oraz
+$V=X\ind{\{|X|>K/2\}}$. Dla dowolnego $\calG$
+połóżmy $Y=\E[X\mid\calG]$. Wówczas
+$|\E[U\mid\calG]|\le K/2$, skąd na zdarzeniu
+$\{|Y|>K\}$ zachodzi $|\E[V\mid\calG]|>K/2$
+i $|Y|\le K/2+|\E[V\mid\calG]|\le2|\E[V\mid\calG]|$.
+Dlatego
+\[
+\E[|Y|\ind{\{|Y|>K\}}]
+\le2\E|\E[V\mid\calG]|
+\le2\E|V|
+=2\E[|X|\ind{\{|X|>K/2\}}].
+\]
+Prawa strona nie zależy od $\calG$ i dąży do zera
+przy $K\to\infty$ dzięki całkowalności $X$.
+\end{proof}
+
+\begin{wniosek}[Jednostajna całkowalność na skończonym horyzoncie]
+Niech $M$ będzie martyngałem oraz $T<\infty$.
+Wtedy rodzina $\{M_t:0\le t\le T\}$ jest jednostajnie
+całkowalna, gdyż $M_t=\E[M_T\mid\calF_t]$.
+\end{wniosek}
+
+\section{Prawostronne modyfikacje: skąd bierze się regularność?}
+\begin{definicja}[Trajektoria c\`adl\`ag]
+Funkcja $f:[0,\infty)\to\R$ jest c\`adl\`ag, jeśli
+jest prawostronnie ciągła i ma skończone granice lewostronne
+we wszystkich chwilach $t>0$. Proces jest c\`adl\`ag,
+gdy prawie wszystkie jego trajektorie mają tę własność.
+\end{definicja}
+
+\begin{lemat}[Zbieżność odwrotnych warunkowych wartości oczekiwanych]
+Niech $(\calG_n)_{n\ge1}$ będzie malejącym ciągiem
+pod-$\sigma$-ciał przestrzeni $(\Omega,\calF,\Prob)$,
+$\calG_\infty=\bigcap_n\calG_n$, a $X\in L^1$.
+Wtedy
+$\E[X\mid\calG_n]\to\E[X\mid\calG_\infty]$ w $L^1$.
+\end{lemat}
+\begin{proof}
+Najpierw niech $X\in L^2$ i $Y_n=\E[X\mid\calG_n]$.
+Dla $m\ge n$ mamy $Y_m=\E[Y_n\mid\calG_m]$.
+Ortogonalność rzutu warunkowego daje
+$\|Y_n-Y_m\|_2^2=\|Y_n\|_2^2-\|Y_m\|_2^2$.
+Normy $\|Y_n\|_2$ maleją i są nieujemne, zatem
+$(Y_n)$ jest ciągiem Cauchy'ego w $L^2$. Niech $Y$
+będzie jego granicą. Dla każdego ustalonego $k$ wszystkie
+$Y_n$ z $n\ge k$ są $\calG_k$-mierzalne; domkniętość
+$L^2(\calG_k)$ daje mierzalność $Y$ względem każdego
+$\calG_k$, czyli względem $\calG_\infty$.
+Dla $A\in\calG_\infty$ i wszystkich $n$ mamy
+$\E[Y_n\ind A]=\E[X\ind A]$; przejście do granicy
+w $L^1$ identyfikuje $Y=\E[X\mid\calG_\infty]$.
+Dla ogólnego $X\in L^1$ przybliżamy $X$ obcięciami
+$X^{(K)}\in L^2$. Kontrakcja warunkowania w $L^1$
+pozwala przenieść zbieżność z $X^{(K)}$ na $X$ po
+przejściu $K\to\infty$.
+\end{proof}
+
+\begin{lemat}[Dlaczego z ograniczonej liczby przekroczeń wynikają granice?]
+Niech $D$ będzie gęstym podzbiorem przedziału $[0,T]$,
+a $f:D\to\R$ funkcją ograniczoną. Załóżmy, że dla każdej
+pary liczb wymiernych $a<b$ funkcja $f$, oglądana w
+rosnącym porządku chwil z $D$, ma skończenie wiele pełnych
+przekroczeń przedziału $[a,b]$ w górę. Wtedy w każdej chwili
+$t<T$ istnieje skończona prawa granica
+$\lim_{r\downarrow t,\,r\in D}f(r)$, a w każdej chwili
+$t>0$ istnieje skończona lewa granica wzdłuż $D$.
+Funkcja zdefiniowana przez prawe granice (z wartością $f(T)$
+w końcu przedziału, gdy $T\in D$) jest c\`adl\`ag.
+\end{lemat}
+\begin{proof}
+Brak prawej granicy w chwili $t$ oznaczałby
+$\liminf_{r\downarrow t,\,r\in D}f(r)
+<\limsup_{r\downarrow t,\,r\in D}f(r)$.
+Można wtedy wybrać wymierne $a<b$ pomiędzy tymi
+liczbami oraz dowolnie długie skończone ciągi chwil
+z $D\cap(t,t+\delta)$, w których wartości naprzemiennie
+spadają poniżej $a$ i rosną powyżej $b$.
+Po ustawieniu chwil rosnąco otrzymujemy dowolnie wiele
+przekroczeń w górę, sprzecznie z założeniem.
+To samo rozumowanie, z chwilami zbliżającymi się do $t$
+od lewej, daje istnienie granicy lewostronnej.
+Ograniczoność $f$ zapewnia skończoność obu granic.
+
+Oznaczmy prawą granicę przez $g(t)$. Gdyby dla
+$t_n\downarrow t$ zachodziło $g(t_n)\not\to g(t)$,
+można by znaleźć $r_n\in D$ położone tuż za $t_n$,
+tak by $r_n\downarrow t$ oraz
+$|f(r_n)-g(t_n)|\to0$; byłaby to sprzeczność z
+definicją $g(t)$. Analogicznie, dla $t_n\uparrow t$
+wybieramy $r_n\in D$ między $t_n$ i $t$.
+Istnienie lewej granicy $f$ w $t$ pociąga wówczas
+istnienie tej samej lewej granicy dla $g$.
+Zatem $g$ jest prawostronnie ciągła i ma granice
+lewostronne.
+\end{proof}
+
+\begin{twierdzenie}[Regularizacja martyngału typu zamkniętego]
+\label{thm:regularizacja}
+Niech filtracja $(\calF_t)_{t\ge0}$ spełnia warunki zwykłe,
+a $X\in L^1(\Omega,\calF,\Prob)$. Proces
+$M_t=\E[X\mid\calF_t]$ ma modyfikację c\`adl\`ag.
+Dokładniej, istnieje proces $\widetilde M$ o trajektoriach
+c\`adl\`ag, taki że dla każdego $t\ge0$
+$\widetilde M_t=M_t$ prawie na pewno.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy skończony horyzont $T>0$ i wybierzmy
+$D_T=(\Q\cap[0,T])\cup\{T\}$. Dla dowolnych liczb
+wymiernych $a<b$ i skończonego uporządkowanego podzbioru
+$D_T$ zastosujmy nierówność przekroczeń do dyskretnego
+martyngału otrzymanego przez próbkowanie $(M_t)$ w tych
+chwilach. Oczekiwana liczba przekroczeń przedziału
+$[a,b]$ jest ograniczona przez stałą zależną od
+$a,b$ i $\E|X|$, a nie od liczby punktów próbkowania:
+taki wniosek wynika z dowodu nierówności przekroczeń
+zamieszczonego w tomie I (i ponownie w rozdziale
+\ref{ch:stop-cont}). Przechodząc po rosnących skończonych
+podzbiorach do całego $D_T$, otrzymujemy prawie na pewno
+skończoną liczbę przekroczeń każdego przedziału
+wymiernego. Wynika stąd istnienie skończonych granic
+jednostronnych $M_{s-}$ i $M_{s+}$ wzdłuż $D_T$
+we wszystkich chwilach $s\in(0,T)$, z wyjątkiem jednego
+zbioru zerowego (zastosowaliśmy tylko przeliczalnie wiele
+par $a<b$). Skończoność granic wynika też z ograniczenia
+$\sup_{r\in D_T}|M_r|<\infty$ prawie na pewno;
+to ostatnie uzyskujemy z nierówności maksymalnej w $L^1$
+dla skończonych podzbiorów i zbieżności monotonicznej.
+
+Definiujemy $\widetilde M_s=\lim_{r\downarrow s,r\in D_T}M_r$
+dla $s<T$ oraz $\widetilde M_T=M_T$. Poprzedni lemat
+o funkcjach rzeczywistych z granicami jednostronnymi
+zapewnia, że $s\mapsto\widetilde M_s$ jest prawostronnie
+ciągła i ma granice z lewej: gdyby prawostronna ciągłość
+zawiodła, powstałyby dwie sekwencje punktów zbieżne do
+tej samej chwili o różnych granicach, sprzeczne z istnieniem
+wspólnej granicy prawostronnej próbek z $D_T$.
+
+Aby sprawdzić, że to modyfikacja właściwego procesu, dla
+każdego ustalonego $s<T$ wybieramy $r_n\in D_T$ malejące
+do $s$. Z lematu o malejących $\sigma$-ciałach i prawostronnej
+ciągłości filtracji
+$M_{r_n}=\E[X\mid\calF_{r_n}]\to
+\E[X\mid\calF_s]=M_s$ w $L^1$.
+Z drugiej strony lewa strona zbiega prawie na pewno do
+$\widetilde M_s$. Stąd $\widetilde M_s=M_s$ prawie na pewno.
+Łącząc konstrukcje na horyzontach $T=1,2,\ldots$
+(na wspólnym zbiorze pełnej miary), otrzymujemy proces
+na $[0,\infty)$; wartości na nakładających się odcinkach
+są zgodne jako prawe granice z tego samego zbioru
+wymiernych chwil.
+\end{proof}
+
+\begin{uwaga}[Dlaczego wymagana jest prawostronna ciągłość filtracji?]
+Bez warunku $\calF_{t+}=\calF_t$ granica
+$\E[X\mid\calF_r]$ przy $r\downarrow t$ może być
+warunkową wartością względem większego $\sigma$-ciała
+$\calF_{t+}$, a nie względem $\calF_t$.
+Uzyskujemy wtedy proces prawostronnie ciągły, który w chwili
+$t$ może wykorzystywać informację niedostępną w $\calF_t$.
+To jest powód, dla którego warunki zwykłe są podstawowym
+założeniem teorii w czasie ciągłym.
+\end{uwaga}
+
+
+\begin{przyklad}[Dlaczego nie wystarcza lewostronna informacja?]
+Niech $\Omega=\{-1,1\}$, obydwa wyniki mają prawdopodobieństwo
+$1/2$, a $X(\omega)=\omega$. Przyjmijmy $\calF_0=\{\varnothing,\Omega\}$
+oraz $\calF_t=\sigma(X)$ dla $t>0$. Wtedy
+$M_t=\E[X\mid\calF_t]$ ma postać $M_0=0$ i $M_t=X$ dla $t>0$.
+Jest to martyngał, ale nie posiada modyfikacji prawostronnie ciągłej
+w chwili zero. Istotnie, dla wszystkich wymiernych $r>0$
+każda modyfikacja musiałaby mieć $\widetilde M_r=X$ poza jednym
+wspólnym zbiorem zerowym, a więc prawa granica w zerze wynosiłaby
+$X\ne0=\widetilde M_0$ prawie na pewno. Filtracja nie jest
+prawostronnie ciągła w zerze, ponieważ
+$\calF_{0+}=\bigcap_{t>0}\calF_t=\sigma(X)\supsetneq\calF_0$.
+Ten przykład ujawnia, że regularizacja jest twierdzeniem o
+\emph{procesie oraz informacji}, a nie wyłącznie o funkcjach czasu.
+\end{przyklad}
+
+\begin{lemat}[Mierzalność wartości procesu zatrzymanego]
+Niech $X=(X_t)_{t\ge0}$ będzie rzeczywistym procesem adaptowanym
+o wszędzie prawostronnie ciągłych trajektoriach, a $\tau$ czasem zatrzymania.
+Dla każdego $t\ge0$ zmienna $X_{t\wedge\tau}$ jest $\calF_t$-mierzalna.
+\end{lemat}
+\begin{proof}
+Ustalmy $t>0$. Przybliżamy $\tau\wedge t$ od góry przez czasy
+$\rho_n=2^{-n}\lceil2^n(\tau\wedge t)\rceil\wedge t$, które
+przyjmują skończenie wiele wartości z $[0,t]$ i są czasami
+zatrzymania. Dla każdego $n$ mamy
+$X_{\rho_n}=\sum_{u\in D_n}X_u\ind{\{\rho_n=u\}}$,
+gdzie $D_n$ jest skończonym zbiorem wartości $\rho_n$.
+Każdy składnik jest $\calF_t$-mierzalny (ponieważ $u\le t$),
+a $\rho_n\downarrow\tau\wedge t$. Prawostronna ciągłość daje
+$X_{\rho_n}\to X_{\tau\wedge t}$ prawie na pewno, a więc ostatnia
+zmienna jest mierzalna względem $\calF_t$, po ewentualnym
+uzupełnieniu filtracji. Dla procesu o prawostronnie ciągłych
+trajektoriach dla każdego $\omega$ argument jest punktowy.
+\end{proof}
+
+
+\section{Czasy zatrzymania i proces zatrzymany}
+\begin{definicja}[Proces zatrzymany]
+Niech $X$ będzie procesem adaptowanym c\`adl\`ag,
+a $\tau$ czasem zatrzymania (dopuszczamy wartość $\infty$).
+Dla $t\ge0$ definiujemy $X_t^\tau=X_{t\wedge\tau}$.
+Gdy $\tau=\infty$, przyjmujemy $t\wedge\tau=t$.
+\end{definicja}
+
+\begin{twierdzenie}[Zatrzymanie w ustalonej chwili]
+Niech $M$ będzie martyngałem c\`adl\`ag, a $\tau$
+czasem zatrzymania. Wtedy $M^\tau$ jest martyngałem.
+Jeżeli $X$ jest podmartyngałem (odpowiednio nadmartyngałem)
+c\`adl\`ag \emph{klasy $(DL)$}, to $X^\tau$ pozostaje
+podmartyngałem (odpowiednio nadmartyngałem).
+Tutaj klasa $(DL)$ oznacza, że dla każdego $T<\infty$
+rodzina $\{X_\sigma: \sigma\le T,\ \sigma
+\text{ jest czasem zatrzymania}\}$ jest jednostajnie
+całkowalna.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $0\le s\le t$ i czas
+$\rho=s\vee(t\wedge\tau)$. Ponieważ
+$s\le\rho\le t$, twierdzenie o ograniczonym
+próbkowaniu opcjonalnym daje
+$\E[M_\rho\mid\calF_s]=M_s$.
+Na zdarzeniu $\{\tau>s\}\in\calF_s$ mamy
+$\rho=t\wedge\tau$, a na $\{\tau\le s\}$
+proces zatrzymany jest już stały. Dlatego
+\[
+\begin{aligned}
+\E[M_{t\wedge\tau}\mid\calF_s]
+&=\ind{\{\tau\le s\}}M_\tau
+ +\ind{\{\tau>s\}}\E[M_\rho\mid\calF_s]\\
+&=M_{s\wedge\tau}.
+\end{aligned}
+\]
+Dla podmartyngału $X$ klasy $(DL)$ te same przybliżenia
+siatkowe czasów $s$ i $t\wedge\tau$, użyte w dowodzie
+twierdzenia~\ref{thm:optional-cont}, dają
+$\E[X_{t\wedge\tau}\mid\calF_s]\ge X_{s\wedge\tau}$.
+Istotne jest przejście do granicy w $L^1$:
+z klasy $(DL)$ otrzymujemy jednostajną całkowalność
+wartości w przybliżających czasach zatrzymania,
+a prawostronna ciągłość daje ich zbieżność prawie na pewno.
+Nierówność przechodzi więc do granicy w warunkowych
+wartościach oczekiwanych. Dla nadmartyngału zmieniamy
+znak procesu i powtarzamy argument. Samo formalne
+podstawienie losowej chwili w definicji podmartyngału
+nie jest dowodem.
+\end{proof}
+
+\begin{uwaga}[Nie mylić zatrzymania z granicą $M_\tau$]
+Powyższe twierdzenie dotyczy procesu $M_{t\wedge\tau}$
+przy każdym skończonym $t$. Nie wolno z niego wnioskować
+$\E M_\tau=\E M_0$ dla nieograniczonego czasu $\tau$:
+przejście $t\to\infty$ wymaga dodatkowego warunku
+jednostajnej całkowalności.
+\end{uwaga}
+
+\begin{zadanie}[Co odróżnia martyngał od procesu o niemalejącej średniej?]
+Niech $W$ będzie standardowym procesem Wienera w jego
+filtracji naturalnej. Sprawdzić bez rachunku It\^o, które
+z procesów $W_t$, $W_t^2$ i $W_t^2-t$ są martyngałami.
+
+\emph{Rozwiązanie.} Dla $s<t$ zapiszmy
+$W_t=W_s+U$, gdzie $U\sim\Normal(0,t-s)$
+i $U$ jest niezależne od $\calF_s$.
+Stąd $\E[W_t\mid\calF_s]=W_s$.
+Po podniesieniu do kwadratu i warunkowaniu otrzymujemy
+\[
+\E[W_t^2\mid\calF_s]
+=W_s^2+2W_s\E U+\E U^2=W_s^2+(t-s).
+\]
+Proces $W_t^2$ jest zatem podmartyngałem, ale nie
+martyngałem. Odejmując od niego deterministyczny
+proces $t$, dostajemy
+$\E[W_t^2-t\mid\calF_s]=W_s^2-s$.
+Wyraz $t$ jest dokładnie kompensacją narastającej
+wariancji, którą w kolejnym rozdziale opiszemy za
+pomocą nawiasu procesu.
+\end{zadanie}
+
+\section{Martyngały lokalne}
+\begin{definicja}[Lokalny martyngał i lokalizacja]
+Niech $M$ będzie adaptowanym procesem c\`adl\`ag o
+wartościach rzeczywistych. Nazywamy go \emph{lokalnym
+martyngałem}, jeżeli istnieją czasy zatrzymania
+$\tau_k\uparrow\infty$ prawie na pewno, takie że dla
+każdego $k$ proces $M^{\tau_k}$ jest martyngałem.
+Ciąg $(\tau_k)$ nazywamy \emph{ciągiem lokalizującym}.
+\end{definicja}
+
+\begin{twierdzenie}[Zatrzymanie ograniczonego procesu lokalnego]
+Niech $M$ będzie ciągłym lokalnym martyngałem z $M_0=0$,
+a $\tau_K=\inf\{t\ge0:|M_t|\ge K\}$ dla $K>0$.
+Wówczas $M^{\tau_K}$ jest martyngałem ograniczonym
+przez $K$. Czasy $\tau_K\uparrow\infty$ prawie na pewno,
+gdy $K\to\infty$.
+\end{twierdzenie}
+\begin{proof}
+Niech $\sigma_n$ lokalizuje $M$. Proces
+$M^{\tau_K\wedge\sigma_n}$ jest martyngałem na mocy
+próbkowania opcjonalnego zastosowanego do
+$M^{\sigma_n}$: zatrzymujemy go dodatkowo w $\tau_K$.
+Ciągłość $M$ daje $|M_{t\wedge\tau_K\wedge\sigma_n}|\le K$.
+Dla ustalonego $t$ mamy
+$M_{t\wedge\tau_K\wedge\sigma_n}\to M_{t\wedge\tau_K}$
+prawie na pewno, a wspólne ograniczenie przez $K$
+pozwala przejść do granicy w $L^1$.
+Dla $s\le t$ przechodzimy do granicy w warunkowych
+równościach martyngałowych, używając kontrakcji warunkowania
+w $L^1$. Otrzymujemy martyngał $M^{\tau_K}$.
+Na każdym ograniczonym przedziale trajektoria ciągła jest
+ograniczona, więc dla dużego $K$ nie przekracza poziomu
+$K$ na tym przedziale. To dowodzi $\tau_K\uparrow\infty$.
+\end{proof}
+
+\begin{zadanie}[Kompensowany proces Poissona i momenty]
+Niech $N$ będzie procesem Poissona o intensywności
+$\lambda>0$ oraz $M_t=N_t-\lambda t$. Wykazać,
+że $M$ jest martyngałem, i wyznaczyć jego wariancję.
+
+\emph{Rozwiązanie.} Dla $s<t$ przyrost
+$N_t-N_s$ ma rozkład Poissona z parametrem
+$\lambda(t-s)$ i jest niezależny od $\calF_s$.
+Stąd $\E[M_t-M_s\mid\calF_s]=0$. Ponadto
+$\Var(M_t)=\Var(N_t)=\lambda t$.
+W przeciwieństwie do $W_t$, trajektoria $M$ jest
+odcinkami liniowa i ma skoki wielkości $1$.
+\end{zadanie}
+
+
+\begin{twierdzenie}[Nieujemny lokalny martyngał jest nadmartyngałem]
+\label{thm:positive-local-supermart}
+Niech $M=(M_t)_{t\ge0}$ będzie rzeczywistym lokalnym
+martyngałem c\`adl\`ag względem filtracji $(\calF_t)$,
+$M_t\ge0$ dla każdego $t$ poza jednym zbiorem zerowym,
+oraz $\E M_0<\infty$. Wówczas $M_t\in L^1$ dla wszystkich $t$
+i dla $0\le s\le t$ zachodzi
+$\E[M_t\mid\calF_s]\le M_s$ prawie na pewno.
+W szczególności $\E M_t\le\E M_0$.
+\end{twierdzenie}
+\begin{proof}
+Niech $(\tau_k)$ lokalizuje $M$. Dla każdego $k$ proces
+$M^{\tau_k}$ jest martyngałem, toteż
+$\E[M_{t\wedge\tau_k}\mid\calF_s]=M_{s\wedge\tau_k}$.
+Z warunkowego lematu Fatou dla nieujemnych zmiennych dostajemy
+\[
+\E[M_t\mid\calF_s]
+\le\liminf_{k\to\infty}\E[M_{t\wedge\tau_k}\mid\calF_s]
+=\lim_{k\to\infty}M_{s\wedge\tau_k}=M_s.
+\]
+W tym rachunku lewą stronę początkowo rozumiemy jako rozszerzoną
+warunkową wartość oczekiwaną. Niezależnie, z bezwarunkowego
+lematu Fatou i $\E M_{t\wedge\tau_k}=\E M_0$ otrzymujemy
+$\E M_t\le\E M_0<\infty$ dla każdego $t$.
+Wobec tego wszystkie występujące warunkowe wartości
+oczekiwane są zwykłymi zmiennymi całkowalnymi, a poprzednia
+nierówność dowodzi własności nadmartyngału.
+Nierówność może być ostra: lokalizacja zapewnia uczciwość
+\emph{przed zatrzymaniem}, ale nie gwarantuje jednostajnej
+całkowalności potrzebnej do zachowania średniej po usunięciu
+lokalizacji.
+\end{proof}
+
+\begin{uwaga}[Różnica między lokalnym martyngałem a martyngałem]
+Każdy martyngał c\`adl\`ag jest lokalnym martyngałem
+(można wziąć $\tau_k=k$), ale implikacja odwrotna nie jest
+ogólnie prawdziwa. Poprzednie twierdzenie pokazuje jedynie,
+że nieujemny lokalny martyngał jest nadmartyngałem;
+aby stwierdzić równość warunkowych wartości oczekiwanych,
+trzeba jeszcze kontrolować brak utraty masy przy lokalizacji.
+\end{uwaga}
+
+
+\section{Wykładnik gaussowski: martyngał, który traci średnią w granicy}
+\begin{twierdzenie}[Wykładnik procesu Wienera]
+Niech $W$ będzie standardowym procesem Wienera, a
+$\theta\in\R$. Wtedy
+$Z_t=\exp(\theta W_t-\tfrac12\theta^2t)$
+jest dodatnim, ciągłym martyngałem o $\E Z_t=1$
+dla każdego $t\ge0$. Gdy $\theta\ne0$,
+$Z_t\to0$ prawie na pewno przy $t\to\infty$.
+W szczególności rodzina $\{Z_t:t\ge0\}$ nie jest
+jednostajnie całkowalna. Jest to konkretny przykład
+martyngału ograniczonego w $L^1$, który nie zbiega w $L^1$.
+\end{twierdzenie}
+\begin{proof}
+Niech $s<t$. Z niezależności przyrostów
+$W_t-W_s\sim\Normal(0,t-s)$ i z gaussowskiej
+funkcji tworzącej momenty mamy
+\[
+\E[Z_t\mid\calF_s]
+=Z_s\E\exp\bigl(\theta(W_t-W_s)-\tfrac12\theta^2(t-s)\bigr)
+=Z_s.
+\]
+Dla liczb całkowitych $n$, przyrosty
+$W_n-W_{n-1}$ są niezależne i mają ten sam rozkład
+$\Normal(0,1)$; mocne prawo wielkich liczb daje
+$W_n/n\to0$ prawie na pewno.
+Dla $u>0$ zasada odbicia i symetria dają
+$\Prob(\sup_{0\le s\le1}|W_s|>u)\le
+4(1-\Phi(u))\le C e^{-u^2/2}$ dla $u\ge1$.
+Dlatego dla każdego $\varepsilon>0$ suma
+$\sum_n\Prob(\sup_{n\le t\le n+1}|W_t-W_n|>\varepsilon n)$
+jest skończona. Lemat Borela--Cantellego pokazuje, że
+$\sup_{n\le t\le n+1}|W_t-W_n|/n\to0$ prawie na pewno.
+Stąd $W_t/t\to0$ dla $t\to\infty$, a więc
+$t^{-1}\log Z_t=\theta W_t/t-\theta^2/2\to-\theta^2/2<0$.
+To wymusza $Z_t\to0$ prawie na pewno.
+Gdyby rodzina $(Z_t)$ była jednostajnie całkowalna,
+zbieżność prawie na pewno pociągałaby zbieżność w $L^1$,
+a zatem $\E Z_t\to0$. Przeczy to $\E Z_t=1$.
+\end{proof}
+
+\section{Przypadek zatrzymania na pierwszym trafieniu}
+\begin{zadanie}[Dlaczego $\E M_\tau$ może różnić się od $\E M_0$?]
+Niech $W$ będzie procesem Wienera, a
+$\tau=\inf\{t\ge0:W_t=1\}$. Wykazać, że
+$\tau<\infty$ prawie na pewno, lecz
+$\E W_\tau=1\ne0=\E W_0$.
+
+\emph{Rozwiązanie.} Z zasady odbicia
+$\Prob(\tau\le t)=2(1-\Phi(1/\sqrt t))\to1$.
+Z ciągłości trajektorii $W_\tau=1$ na $\{\tau<\infty\}$.
+Dla każdego skończonego $T$ proces $W_{t\wedge\tau}$
+jest martyngałem i $\E W_{T\wedge\tau}=0$.
+Nie można jednak przejść do granicy pod wartością oczekiwaną:
+rodzina $\{W_{T\wedge\tau}:T\ge0\}$ nie jest
+jednostajnie całkowalna, skoro granica prawie na pewno
+ma wartość oczekiwaną $1$, a wszystkie zmienne mają
+średnią $0$. To konkretny przykład nieuprawnionego
+stosowania próbkowania opcjonalnego.
+\end{zadanie}
+
+
+% ================================================================
+% ROZDZIAŁ 12. PRÓBKOWANIE, NIERÓWNOŚCI, ZBIEŻNOŚĆ
+% ================================================================

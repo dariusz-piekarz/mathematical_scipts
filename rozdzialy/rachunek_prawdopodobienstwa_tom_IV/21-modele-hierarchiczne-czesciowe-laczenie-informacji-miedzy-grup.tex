@@ -1,0 +1,436 @@
+\chapter{Modele hierarchiczne: częściowe łączenie informacji między grupami}
+\label{ch:hierarchical-bayes}
+\paragraph{Powiązania i odsyłacze.} Wzory dla modeli sprzężonych wyprowadzono w rozdziale~\ref{ch:conjugate-families}; teorię ryzyka i decyzji w rozdziałach~\ref{ch:decision} i~\ref{ch:bayes-estimation-prediction}.
+
+
+\section{Kiedy oddzielne analizy grup zawodzą?}
+Załóżmy, że chcemy porównać niezawodność dziesięciu maszyn.
+Dla jednej zarejestrowano dwa zdarzenia, a dla innej dwieście.
+Estymowanie każdej intensywności zupełnie osobno pomija możliwość,
+że maszyny są technologicznie podobne. Zastąpienie wszystkich
+intensywności jedną wspólną wartością ukrywa natomiast rzeczywistą
+zmienność pomiędzy maszynami. \emph{Model hierarchiczny} opisuje te
+źródła niepewności osobno.
+
+Niech $J\ge2$ oznacza liczbę grup, $j\in\{1,\ldots,J\}$ numer grupy,
+$\theta_j$ jej nieznany parametr, a $Y_j$ jej obserwację zbiorczą.
+Poniżej rozróżniamy trzy strategie: \emph{brak łączenia}
+(ang. \emph{no pooling}), \emph{pełne łączenie}
+(\emph{complete pooling}) oraz \emph{częściowe łączenie}
+(\emph{partial pooling}). Trzecia strategia nie jest prostą średnią
+wyników: jej wagi zależą od precyzji obserwacji i od zmienności
+międzygrupowej.
+
+\begin{definicja}[Hierarchiczny model normalny]
+\label{def:normal-hierarchical}
+Ustalmy $J\ge2$, znane liczby $v_j>0$, $\mu\in\R$ i $\tau^2>0$.
+Niech $\theta_1,\ldots,\theta_J$ będą warunkowo niezależne przy
+$(\mu,\tau^2)$ i $\theta_j\mid\mu,\tau^2\sim\Normal(\mu,\tau^2)$.
+Warunkowo względem wektora $\theta=(\theta_1,\ldots,\theta_J)$
+niech $Y_1,\ldots,Y_J$ będą niezależne oraz
+$Y_j\mid\theta\sim\Normal(\theta_j,v_j)$.
+Na przykład, gdy grupa $j$ zawiera $n_j\ge1$ niezależnych
+pomiarów $X_{ji}\mid\theta_j\sim\Normal(\theta_j,\sigma^2)$
+przy znanym $\sigma^2>0$, możemy przyjąć
+$Y_j=n_j^{-1}\sum_{i=1}^{n_j}X_{ji}$ i $v_j=\sigma^2/n_j$.
+Liczbę $\tau^2$ nazywamy \emph{wariancją międzygrupową}.
+\end{definicja}
+
+Zadanie praktyczne wymaga rozróżnienia poziomów losowości:
+$\theta_j$ opisuje grupę, $X_{ji}$ pojedynczy pomiar, a $\mu$
+wspólną lokalizację rozkładu parametrów grup. Jeśli $\mu,\tau^2$
+są znane, poszczególne grupy pozostają niezależne marginalnie;
+nie jest to jednak prawdą po dodaniu wspólnego losowego hiperparametru
+$\mu$ i jego scałkowaniu.
+
+\section{Dokładny posterior i pochodzenie częściowego łączenia}
+\begin{twierdzenie}[Posterior normalny i współczynnik ściągania]
+\label{thm:normal-partial-pooling}
+W modelu z definicji~\ref{def:normal-hierarchical}, przy ustalonych
+$\mu,\tau^2$, dla każdego $j$ i $y\in\R^J$ zachodzi
+\[
+\begin{aligned}
+ \theta_j\mid (Y=y,\mu,\tau^2)&\sim\Normal(m_j,s_j^2),
+ & s_j^2&=\left(\frac1{\tau^2}+\frac1{v_j}\right)^{-1},\\
+ m_j&=w_jy_j+(1-w_j)\mu,
+ & w_j&=\frac{\tau^2}{\tau^2+v_j}.
+\end{aligned}
+\]
+Współrzędne $\theta_j$ są także niezależne warunkowo względem
+$Y=y,\mu,\tau^2$. Przy $v_j=\sigma^2/n_j$ waga $w_j$ rośnie
+wraz z liczebnością $n_j$ i wraz ze zmiennością $\tau^2$.
+\end{twierdzenie}
+\begin{proof}
+Warunkowa gęstość $\theta_j=t$ po zaobserwowaniu $Y_j=y_j$
+jest proporcjonalna do
+$\exp[-(t-\mu)^2/(2\tau^2)-(y_j-t)^2/(2v_j)]$.
+Współczynnik przy $t^2$ po rozwinięciu wynosi
+$\tau^{-2}+v_j^{-1}$, a liniowy
+$\mu\tau^{-2}+y_jv_j^{-1}$. Uzupełnienie kwadratu
+daje wariancję $s_j^2$ i średnią
+$s_j^2(\mu/\tau^2+y_j/v_j)=m_j$.
+Iloczynowy charakter prioru i wiarygodności dowodzi
+warunkowej niezależności po aktualizacji. Zapis
+$w_j=n_j\tau^2/(n_j\tau^2+\sigma^2)$ wyjaśnia monotoniczność.
+\end{proof}
+
+\begin{twierdzenie}[Zysk w średnim błędzie i jego ograniczenie]
+\label{thm:shrinkage-bayes-risk}
+W założeniach twierdzenia~\ref{thm:normal-partial-pooling}
+porównajmy estymatory $\delta_{\rm odd}(Y_j)=Y_j$,
+$\delta_{\rm wsp}(Y_j)=\mu$ i
+$\delta_{\rm hier}(Y_j)=m_j$ przy stracie kwadratowej.
+Ich ryzyka uśrednione względem prioru $\theta_j\sim\Normal(\mu,\tau^2)$
+wynoszą odpowiednio $v_j$, $\tau^2$ oraz
+$\tau^2v_j/(\tau^2+v_j)$.
+Ostatnia liczba jest ściśle mniejsza od obu poprzednich.
+Przy \emph{ustalonym} $\theta_j=t$ ryzyko częstościowe estymatora
+hierarchicznego wynosi jednak
+$(1-w_j)^2(t-\mu)^2+w_j^2v_j$ i może być większe od $v_j$.
+\end{twierdzenie}
+\begin{proof}
+Estymator $Y_j$ ma błąd $Y_j-\theta_j$ o wariancji $v_j$.
+Estymator stały $\mu$ ma średni błąd kwadratowy
+$\E[(\theta_j-\mu)^2]=\tau^2$.
+Z twierdzenia~\ref{thm:normal-partial-pooling} posteriorowy
+błąd średniokwadratowy $m_j$ równa się $s_j^2$ niezależnie od
+obserwacji, zatem prawo całkowitej wartości oczekiwanej
+daje ryzyko Bayesa $s_j^2$.
+Alternatywnie, dla ustalonego $t$ podstawiamy
+$m_j-t=w_j(Y_j-t)+(1-w_j)(\mu-t)$ i wykorzystujemy
+zerową średnią szumu oraz $\Var(Y_j\mid\theta_j=t)=v_j$.
+Uśrednienie ostatniego wzoru po $t$ daje
+$w_j^2v_j+(1-w_j)^2\tau^2=s_j^2$.
+Z uwagi na $v_j,\tau^2>0$ mamy
+$s_j^2<v_j$ i $s_j^2<\tau^2$. Ryzyko warunkowe rośnie
+natomiast kwadratowo z $|t-\mu|$, co wyklucza dominację
+przy wszystkich $t$ w tym jednowymiarowym porównaniu.
+\end{proof}
+
+\begin{przyklad}[Dwie grupy o różnej liczebności]
+Niech $\mu=10$, $\tau^2=4$, $\sigma^2=16$.
+Grupa A ma $n_A=4$ i średnią $Y_A=14$, grupa B ma
+$n_B=64$ i średnią $Y_B=14$. W pierwszej grupie
+$v_A=4$, $w_A=1/2$, $m_A=12$, $s_A^2=2$.
+W drugiej $v_B=1/4$, $w_B=16/17$, $m_B=234/17\approx13{,}765$,
+$s_B^2=4/17\approx0{,}235$.
+Obie grupy mają tę samą średnią z próby, ale wynikiem
+analizy hierarchicznej jest silniejsze ściągnięcie grupy
+słabo reprezentowanej i znacznie mniejsza niepewność
+dla grupy z wieloma pomiarami. Nie oznacza to automatycznie,
+że dane z grupy A są błędne.
+\end{przyklad}
+
+
+\Needspace{92mm}
+\begin{center}
+\begin{tikzpicture}[>=Latex, every node/.style={font=\small},node distance=12mm]
+\node[draw,rounded corners,fill=blue!5,minimum width=30mm,minimum height=8mm] (hyper) {$\mu,\tau^2$};
+\node[draw,rounded corners,below left=13mm and 18mm of hyper,minimum width=25mm] (t1) {$\theta_1$};
+\node[draw,rounded corners,below right=13mm and 18mm of hyper,minimum width=25mm] (t2) {$\theta_J$};
+\node[draw,rounded corners,below=11mm of t1] (y1) {$Y_1$};
+\node[draw,rounded corners,below=11mm of t2] (y2) {$Y_J$};
+\draw[->] (hyper)--(t1); \draw[->] (hyper)--(t2);
+\draw[->] (t1)--(y1); \draw[->] (t2)--(y2);
+\node at ($(t1)!0.5!(t2)$) {$\cdots$};
+\node[below=2mm of y1,font=\footnotesize] {$v_1$ -- znane};
+\node[below=2mm of y2,font=\footnotesize] {$v_J$ -- znane};
+\end{tikzpicture}
+
+{\small\emph{Rysunek 21.1.} Wspólne hiperparametry wyznaczają rozkłady parametrów grup, a obserwacje informują o poszczególnych grupach.}
+\end{center}
+
+\section{Prognoza dla znanej i nowej grupy}
+\begin{twierdzenie}[Dwie różne predykcje]
+\label{thm:hierarchical-predictive}
+W modelu~\ref{def:normal-hierarchical} niech przyszły pomiar
+$Z_j\mid\theta_j\sim\Normal(\theta_j,\sigma^2)$ będzie warunkowo
+niezależny od dotychczasowych danych dla znanej grupy $j$,
+a $Z_{\rm nowy}\mid\theta_{\rm nowy}\sim\Normal(\theta_{\rm nowy},\sigma^2)$
+dla nowej grupy, gdzie $\theta_{\rm nowy}\mid\mu,\tau^2\sim\Normal(\mu,\tau^2)$
+i jest niezależny od istniejących grup. Wtedy
+\[
+ Z_j\mid Y=y,\mu,\tau^2\sim\Normal(m_j,\sigma^2+s_j^2),
+ \qquad Z_{\rm nowy}\mid Y=y,\mu,\tau^2\sim\Normal(\mu,\sigma^2+\tau^2).
+\]
+\end{twierdzenie}
+\begin{proof}
+Nowy pomiar jest sumą $\theta_j$ i niezależnego
+szumu $\Normal(0,\sigma^2)$. Po aktualizacji $\theta_j$
+ma rozkład normalny ze średnią $m_j$ i wariancją $s_j^2$,
+co daje pierwszy rozkład. Dla nowej grupy obserwacje
+$Y$ nie aktualizują jej indywidualnego parametru przy
+znanych hiperparametrach: pozostaje rozkład
+$\Normal(\mu,\tau^2)$. Splot z szumem daje drugą tezę.
+\end{proof}
+
+\begin{uwaga}[Jednostka walidacji]
+Jeżeli prognozujemy kolejny pomiar \emph{tej samej} maszyny,
+możemy trenować na jej wcześniejszych wynikach. Jeśli chcemy
+przewidywać wyniki \emph{zupełnie nowej} maszyny, walidacja
+powinna odkładać całe maszyny (\emph{leave-one-group-out}).
+Losowy podział pojedynczych pomiarów między trening i test
+zwykle przecenia jakość przewidywania dla nowych grup.
+\end{uwaga}
+
+\section{Nieznane hiperparametry: pełny Bayes i empirical Bayes}
+W praktyce $\mu$ i $\tau^2$ nie są znane. Dotychczasowe
+wzory należy wtedy \emph{uśrednić po ich posteriorze},
+a nie podstawiać oszacowania i udawać, że jest pewne.
+
+\begin{twierdzenie}[Posterior hiperparametrów w modelu normalnym]
+\label{thm:normal-hyperposterior}
+Przyjmijmy model~\ref{def:normal-hierarchical} z nieznanymi
+hiperparametrami $\mu\in\R$, $u=\tau^2>0$, znanymi
+$v_j>0$ oraz niezależnymi, właściwymi priorami
+$\mu\sim\Normal(m_0,V_0)$ i
+$u\sim\operatorname{InvGamma}(a,b)$, gdzie $V_0,a,b>0$.
+Przez $\operatorname{InvGamma}(a,b)$ rozumiemy rozkład
+z gęstością $b^a u^{-a-1}e^{-b/u}/\Gamma(a)$ dla $u>0$
+względem $\lambda_1$. Po scałkowaniu parametrów grup
+$Y_j\mid\mu,u\sim\Normal(\mu,u+v_j)$ są niezależne,
+a posterior hiperparametrów ma gęstość proporcjonalną do
+\[
+ \exp\!\left[-\frac{(\mu-m_0)^2}{2V_0}\right]
+ u^{-a-1}e^{-b/u}\prod_{j=1}^J(u+v_j)^{-1/2}
+ \exp\!\left[-\frac{(y_j-\mu)^2}{2(u+v_j)}\right].
+\]
+Dla ustalonego $u$ posterior $\mu\mid u,Y=y$ jest normalny
+o wariancji $V(u)=(V_0^{-1}+\sum_j(u+v_j)^{-1})^{-1}$
+i średniej
+$M(u)=V(u)(m_0/V_0+\sum_jy_j/(u+v_j))$.
+Posterior hiperparametrów jest właściwy dla każdego $y\in\R^J$.
+\end{twierdzenie}
+\begin{proof}
+Po scałkowaniu niezależnych $\theta_j$ każda obserwacja
+$Y_j$ jest sumą dwóch niezależnych zmiennych normalnych,
+stąd wynika jej gęstość i niezależność warunkowa.
+Mnożąc iloczyn tych gęstości przez priory otrzymujemy
+pierwszy wzór. Jako funkcja $\mu$, wykładnik jest
+ujemną połową dodatnio określonej funkcji kwadratowej;
+uzupełnienie kwadratu daje $M(u)$ i $V(u)$.
+Ponieważ $u+v_j\ge v_j>0$, marginalna wiarygodność
+$\prod_j\varphi(y_j;\mu,u+v_j)$ jest ograniczona
+z góry przez $\prod_j(2\pi v_j)^{-1/2}$.
+Jej całka względem właściwego prioru jest skończona
+i dodatnia, co dowodzi normalizowalności posterioru.
+\end{proof}
+
+\begin{stwierdzenie}[Dodatkowa niepewność hiperparametrów]
+\label{prop:hier-variance-hyper}
+Niech $H=(\mu,u)$ ma właściwy posterior z poprzedniego
+twierdzenia i niech drugi moment $\theta_j\mid Y$ będzie skończony.
+Wtedy
+\[
+ \E[\theta_j\mid Y]=\E[m_j(H)\mid Y],\qquad
+ \Var(\theta_j\mid Y)=\E[s_j^2(H)\mid Y]
+                       +\Var(m_j(H)\mid Y).
+\]
+Tu $m_j(H),s_j^2(H)$ otrzymujemy ze wzorów
+z twierdzenia~\ref{thm:normal-partial-pooling} po podstawieniu
+$\tau^2=u$. Ostatni składnik jest nieujemny i znika tylko,
+gdy posteriorowa średnia grupy nie zależy losowo od $H$.
+\end{stwierdzenie}
+\begin{proof}
+Pierwszy wzór to własność iterowanej warunkowej wartości
+oczekiwanej, drugi to prawo całkowitej wariancji
+z warunkowaniem najpierw po $H$, a następnie po $Y$.
+\end{proof}
+
+\begin{uwaga}[Kiedy wersja empirical Bayes może mylić?]
+Metoda \emph{empirical Bayes} szacuje $H$ z danych, a potem
+podstawia $\widehat H$ do wzorów dla $m_j$ i $s_j^2$.
+Bywa szybka i użyteczna przy wielu grupach, ale naiwny
+przedział $m_j(\widehat H)\pm1{,}96s_j(\widehat H)$
+nie obejmuje niepewności oszacowania $H$. Pełny model
+bayesowski ją uwzględnia, choć rezultat nadal zależy od
+modelu i hiperprioru. Przy kilku grupach $u$ jest często
+słabo zidentyfikowany; trzeba obejrzeć jego posterior,
+a nie tylko wybraną estymatę punktową.
+\end{uwaga}
+
+\section{Zliczenia i udziały: hierarchiczny model beta--dwumianowy}
+\begin{twierdzenie}[Łączenie informacji o rzadkich wadach]
+\label{thm:hierarchical-beta-binomial}
+Niech $J\ge2$, $\kappa>0$, $m\in(0,1)$.
+Warunkowo przy znanych $m,\kappa$ zmienne $p_j$ są niezależne
+i $p_j\sim\operatorname{Beta}(\kappa m,\kappa(1-m))$.
+Dla każdego $j$ niech $S_j\mid p_j\sim\Bin(n_j,p_j)$,
+$n_j\ge1$, i niech zliczenia są warunkowo niezależne.
+Wtedy dla $s_j\in\{0,\ldots,n_j\}$
+\[
+ p_j\mid S_j=s_j,m,\kappa
+ \sim\operatorname{Beta}(\kappa m+s_j,\kappa(1-m)+n_j-s_j),
+\]
+\[
+ \E[p_j\mid S_j=s_j,m,\kappa]
+ =\frac{n_j}{n_j+\kappa}\frac{s_j}{n_j}
+ +\frac{\kappa}{n_j+\kappa}m.
+\]
+Jeżeli w jednej grupie obserwujemy wskaźniki
+$X_{j1},\ldots,X_{jn_j}$ niezależne warunkowo przy $p_j$
+i o rozkładzie $\operatorname{Bernoulli}(p_j)$, to dla $i\ne k$
+\[
+ \Cov(X_{ji},X_{jk})=\frac{m(1-m)}{\kappa+1},\quad
+ \Var(S_j)=n_jm(1-m)\left(1+\frac{n_j-1}{\kappa+1}\right).
+\]
+\end{twierdzenie}
+\begin{proof}
+Iloczyn wiarygodności dwumianowej i gęstości beta
+jest proporcjonalny do
+$p_j^{\kappa m+s_j-1}(1-p_j)^{\kappa(1-m)+n_j-s_j-1}$,
+co daje pierwszy wzór i średnią. Dla różnych obserwacji
+tej samej grupy, przy warunkowej niezależności,
+$\E[X_{ji}X_{jk}]=\E[p_j^2]$ oraz
+$\E X_{ji}=\E p_j=m$.
+Wobec tego kowariancja wynosi
+$\Var(p_j)=m(1-m)/(\kappa+1)$.
+Ponieważ marginalnie $X_{ji}$ jest Bernoulliego
+z parametrem $m$, suma $n_j$ wariancji i
+$n_j(n_j-1)$ kowariancji daje ostatni wzór.
+\end{proof}
+
+\begin{przyklad}[Dwie linie produkcyjne]
+Przyjmijmy $m=0{,}10$, $\kappa=20$. Jedna linia nie wykazała
+wad w dwóch próbach, druga wykazała siedem wad w stu.
+Oddzielne estymatory MLE to odpowiednio $0$ i $0{,}07$.
+Posteriorowe średnie są równe
+$(0+2)/(2+20)=0{,}0909\ldots$ oraz
+$(7+2)/(100+20)=0{,}075$.
+Pierwsza linia nie jest uznawana za całkowicie bezawaryjną
+tylko na podstawie dwóch obserwacji. Przy niewłaściwie
+ustalonym $m$ ten efekt może jednak prowadzić do błędnego
+ściągania, więc parametry populacyjne należy poddawać
+diagnostyce i analizie wrażliwości.
+\end{przyklad}
+
+\section{Zaskakujący rezultat: ściąganie może pomagać bez prioru}
+Poniższe twierdzenie nie zakłada, że nieznany wektor średnich
+został wylosowany z rozkładu. Stanowi częstościowy argument,
+dlaczego estymowanie grup w pełnej izolacji może być nieefektywne.
+
+\begin{twierdzenie}[Fenomen Jamesa--Steina]
+\label{thm:james-stein}
+Niech $d\ge3$, $\sigma^2>0$ i
+$X\sim\Normal_d(\theta,\sigma^2 I_d)$, gdzie
+$\theta\in\R^d$ jest ustalonym, nieznanym parametrem,
+a $\Normal_d$ oznacza $d$-wymiarowy rozkład normalny.
+Przy stracie $L(\theta,a)=\norm{a-\theta}^2$ estymator
+$\delta_{\rm JS}(x)=(1-(d-2)\sigma^2/\norm{x}^2)x$
+dla $x\ne0$ oraz $\delta_{\rm JS}(0)=0$ ma ryzyko
+\[
+ R(\theta,\delta_{\rm JS})
+ =d\sigma^2-(d-2)^2\sigma^4
+   \E_\theta\!\left[\frac1{\norm{X}^2}\right]
+ <d\sigma^2=R(\theta,X)
+\]
+dla \emph{każdego} $\theta\in\R^d$.
+Wartość oczekiwana we wzorze jest skończona i dodatnia.
+\end{twierdzenie}
+\begin{proof}
+Niech $a=(d-2)\sigma^2$ i
+$g(x)=-ax/\norm{x}^2$ dla $x\ne0$.
+W przestrzeni $\R^d\setminus\{0\}$ zachodzi
+$\norm{g(x)}^2=a^2/\norm{x}^2$ oraz
+$\operatorname{div}g(x)=-a(d-2)/\norm{x}^2$.
+Dla gęstości normalnej $f_\theta$ mamy
+$\partial_i f_\theta(x)=-(x_i-\theta_i)f_\theta(x)/\sigma^2$.
+Całkowanie przez części po obszarze
+$\{\varepsilon<\norm{x}<R\}$, a następnie przejście
+$\varepsilon\downarrow0$, $R\uparrow\infty$, daje
+\[
+ \E_\theta[(X-\theta)\cdot g(X)]
+   =\sigma^2\E_\theta[\operatorname{div}g(X)].
+\]
+Istotnie, wyraz brzegowy na sferze o promieniu
+$\varepsilon$ jest rzędu $O(\varepsilon^{d-2})$,
+ponieważ $\norm{g(x)}=a/\varepsilon$, pole sfery ma
+rząd $\varepsilon^{d-1}$, a $f_\theta$ jest lokalnie
+ograniczona. Zewnętrzny wyraz brzegowy zanika dzięki
+gaussowskiemu zanikowi gęstości.
+Całkowalność $\norm{X}^{-2}$ w otoczeniu zera
+wynika z $\int_0^1r^{d-3}\,\dd\lambda_1(r)<\infty$,
+co wymaga $d\ge3$; poza kulą jednostkową funkcja
+$\norm{x}^{-2}$ jest ograniczona.
+Rozwijając błąd kwadratowy $X+g(X)-\theta$ dostajemy
+\[
+ R(\theta,X+g)=d\sigma^2
+   +2\sigma^2\E_\theta[\operatorname{div}g(X)]
+   +\E_\theta\norm{g(X)}^2.
+\]
+Podstawienie wyliczonych pochodnych daje
+$d\sigma^2+[a^2-2\sigma^2a(d-2)]\E_\theta[\norm{X}^{-2}]$.
+Dla $a=(d-2)\sigma^2$ współczynnik wynosi
+$-(d-2)^2\sigma^4<0$. Ponieważ rozkład normalny nie
+przypisuje dodatniej masy punktowi zero, definicja w zerze
+nie wpływa na ryzyko.
+\end{proof}
+
+\begin{uwaga}[Nie należy nadinterpretować twierdzenia]
+Wynik nie mówi, że wszystkie współrzędne osobno są
+estymowane lepiej, ani że procedura Jamesa--Steina zawsze
+zwraca wartość między zerem a średnią z próby (czynnik
+ściągania może być ujemny). Stwierdza poprawę łącznego
+częstościowego ryzyka kwadratowego dla $d\ge3$.
+Łączenie informacji między grupami może więc przynieść
+korzyść nawet bez bayesowskiej interpretacji $\theta$.
+\end{uwaga}
+
+\section{Kiedy jaką metodę stosować?}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.27\textwidth}>{\raggedright\arraybackslash}p{.31\textwidth}>{\raggedright\arraybackslash}p{.27\textwidth}}
+\toprule
+\textbf{Sytuacja} & \textbf{Metoda do rozważenia} & \textbf{Główne ryzyko}\\
+\midrule
+Dużo obserwacji w każdej odrębnej grupie & Estymacja oddzielna lub hierarchiczna & Nadmierne ściąganie rzeczywiście różnych grup.\\
+Małe próby w wielu podobnych grupach & Model hierarchiczny z partial pooling & Nietrafny rozkład grup i hiperprior.\\
+Jedna wspólna intensywność uzasadniona procesem & Model ze wspólnym parametrem & Ukrycie heterogeniczności.\\
+Dane binarne w licznych partiach & Beta--dwumianowy lub logit hierarchiczny & Zależności i zmiany w czasie.\\
+Szybka analiza wielu grup & Empirical Bayes & Niedoszacowanie niepewności hiperparametrów.\\
+Predykcja nowej grupy & Pełny posterior predykcyjny grupy & Niepoprawny podział trening/test.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\Needspace{23\baselineskip}
+\begin{lstlisting}[language=Python,caption={Kompletny program: partial pooling dla średnich grup i ryzyko Jamesa--Steina (Python, NumPy).}]
+import numpy as np
+
+mu, tau2, sigma2 = 10.0, 4.0, 16.0
+n = np.array([4, 64], dtype=float)
+y = np.array([14.0, 14.0])
+v = sigma2 / n
+w = tau2 / (tau2 + v)
+post_mean = w * y + (1.0 - w) * mu
+post_var = tau2 * v / (tau2 + v)
+print("group posterior means:", post_mean)
+print("group posterior SD:", np.sqrt(post_var))
+
+rng = np.random.default_rng(2026)
+d, sigma, repetitions = 5, 2.0, 100000
+theta = np.zeros(d)
+X = rng.normal(theta, sigma, size=(repetitions, d))
+r2 = np.sum(X**2, axis=1)
+js = (1.0 - (d - 2) * sigma**2 / r2)[:, None] * X
+risk_raw = np.mean(np.sum((X - theta)**2, axis=1))
+risk_js = np.mean(np.sum((js - theta)**2, axis=1))
+print("empirical risks raw/JS:", risk_raw, risk_js)
+print("theoretical risk raw:", d * sigma**2)
+\end{lstlisting}
+
+\begin{zadanie}[Rola precyzji i zmienności międzygrupowej]
+Przy znanym $\mu=0$ i $v_j=1$ dwie analizy używają
+odpowiednio $\tau^2=1/9$ oraz $\tau^2=9$.
+Obliczyć $w_j$ i wyjaśnić różnicę.
+\par\emph{Rozwiązanie.} Otrzymujemy $w_j=1/10$ i $9/10$.
+W pierwszym przypadku podobieństwo grup jest silnym
+założeniem priorowym i szacowanie ściąga prawie całkowicie
+do zera. W drugim obserwowana grupa może wyraźnie
+różnić się od populacji, więc wynik jest bliski średniej
+z jej własnych pomiarów. Przed wyborem $\tau^2$ trzeba
+sprawdzić zakres możliwej heterogeniczności i liczbę grup.
+\end{zadanie}
+
+% ================================================================
+% ROZDZIAL 22 -- ASYMPTOTYKA BAYESOWSKA
+% ================================================================

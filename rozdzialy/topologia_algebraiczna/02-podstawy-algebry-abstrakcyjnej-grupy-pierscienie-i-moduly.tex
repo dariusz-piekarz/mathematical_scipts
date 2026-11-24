@@ -1,0 +1,461 @@
+\chapter{Podstawy algebry abstrakcyjnej: grupy, pierścienie i moduły}
+\label{ch:algebra-abstrakcyjna-v5}
+
+W topologii algebraicznej każdej przestrzeni przypisujemy grupy, a odwzorowaniom
+ciągłym --- homomorfizmy. Grupa podstawowa może być nieprzemienna, grupy
+homologii są abelowe, a iloczyn tensorowy i funktory $\operatorname{Tor}$,
+$\operatorname{Ext}$ opisują oddziaływanie współczynników. Dlatego zbieramy
+potrzebne konstrukcje \emph{przed} rozdziałem o homologii algebraicznej.
+Żadne twierdzenie niniejszego rozdziału nie odsyła do osobnego rozdziału
+książki geometrycznej o algebrze tensorowej. Pracujemy nad pierścieniami
+z jedynką, homomorfizmy pierścieni zachowują jedynkę, a moduły są lewostronne,
+jeżeli nie wskazano inaczej.
+
+\section{Grupy, homomorfizmy, podgrupy normalne}
+\begin{definicja}
+\emph{Grupa} to zbiór $G$ z działaniem $(g,h)\mapsto gh$ łącznym,
+elementem neutralnym $1_G$ i odwrotnościami $g^{-1}$ wszystkich elementów.
+Jest \emph{abelowa}, gdy $gh=hg$ dla wszystkich $g,h\in G$.
+\emph{Homomorfizm} $\varphi:G\to H$ spełnia
+$\varphi(gh)=\varphi(g)\varphi(h)$. Podgrupa $N\leq G$ jest
+\emph{normalna}, $N\trianglelefteq G$, gdy $gNg^{-1}=N$ dla wszystkich
+$g\in G$. Jądro homomorfizmu to $\ker\varphi=\varphi^{-1}(\{1_H\})$.
+\end{definicja}
+\begin{przyklad}
+$(\Z,+)$, $(\Z/m\Z,+)$, grupa permutacji $S_m$ i grupa macierzy
+$\mathrm{GL}_m(\R)$ są grupami. Pierwsze dwie są abelowe, dwie następne
+zazwyczaj nie. Homomorfizm $\Z\to \Z/m\Z$ wysyłający $k$ na jego
+resztę ma jądro $m\Z$. Wyznacznik jest homomorfizmem
+$\det:\mathrm{GL}_m(\R)\to\R^\times$ z jądrem
+$\mathrm{SL}_m(\R)$.
+\end{przyklad}
+\begin{stwierdzenie}
+Dla każdego homomorfizmu grup $\varphi:G\to H$ jego jądro jest
+normalną podgrupą $G$, a obraz jest podgrupą $H$.
+\end{stwierdzenie}
+\begin{proof}
+Jeżeli $n\in\ker\varphi$ i $g\in G$, to
+$\varphi(gng^{-1})=\varphi(g)1_H\varphi(g)^{-1}=1_H$.
+Pozostałe aksjomaty wynikają z zachowywania iloczynu, jedynki
+i odwrotności przez $\varphi$.
+\end{proof}
+
+\begin{definicja}
+Dla $N\trianglelefteq G$ na zbiorze klas lewostronnych $G/N$ definiujemy
+$(gN)(hN)=ghN$. Tak otrzymana grupa nazywa się \emph{ilorazową}.
+\end{definicja}
+\begin{lemat}
+Iloczyn na $G/N$ jest dobrze określony wtedy i tylko wtedy, gdy $N$
+jest normalna. Naturalny rzut $q:G\to G/N$ jest homomorfizmem.
+\end{lemat}
+\begin{proof}
+Przy normalności $g'=gn$, $h'=hm$ implikuje
+$g'h'=gh(h^{-1}nh)m$, zatem $g'h'N=ghN$. W drugą stronę,
+niezależność iloczynu od reprezentantów daje
+$(gN)(nN)(g^{-1}N)=(gN)(N)(g^{-1}N)=N$,
+więc $gng^{-1}\in N$. Włączenie dla $g^{-1}$ daje równość.
+\end{proof}
+\begin{twierdzenie}[Pierwsze twierdzenie o izomorfizmie]
+\label{thm:izo-grupy-v5}
+Jeżeli $\varphi:G\to H$ jest homomorfizmem grup, to
+$G/\ker\varphi\cong\operatorname{im}\varphi$, przy czym izomorfizm
+wysyła $g\ker\varphi$ na $\varphi(g)$.
+\end{twierdzenie}
+\begin{proof}
+Dla $\varphi(g)=\varphi(h)$ mamy $h^{-1}g\in\ker\varphi$,
+a więc $g\ker\varphi=h\ker\varphi$. Wzór nie zależy zatem
+od reprezentanta i jest różnowartościowy. Surjektywność na obraz
+jest oczywista, a zgodność z mnożeniem wynika z własności $\varphi$.
+\end{proof}
+\begin{uwaga}
+W topologii z tego twierdzenia otrzymamy np. abelianizację
+$\pi_1(X)\twoheadrightarrow H_1(X;\Z)$. Dla niełukowo spójnych
+przestrzeni twierdzenie stosuje się osobno do wyróżnionej składowej
+łukowej.
+\end{uwaga}
+
+\section{Działania grup, orbity, stabilizatory i iloczyny półproste}
+\begin{definicja}
+\emph{Lewym działaniem} grupy $G$ na zbiorze $X$ nazywamy funkcję
+$(g,x)\mapsto gx$ spełniającą $1_Gx=x$ i $(gh)x=g(hx)$.
+\emph{Orbita} $x$ to $Gx=\{gx:g\in G\}$, a \emph{stabilizator}
+$G_x=\{g\in G:gx=x\}$.
+\end{definicja}
+\begin{twierdzenie}[Orbita i stabilizator]
+Dla działania $G\curvearrowright X$ i każdego $x\in X$ istnieje
+bijekcja zbiorów $G/G_x\to Gx$, $gG_x\mapsto gx$.
+Jeżeli $G$ jest skończona, to $|Gx|=[G:G_x]$.
+\end{twierdzenie}
+\begin{proof}
+Równość $gx=hx$ jest równoważna $h^{-1}g\in G_x$,
+czyli $gG_x=hG_x$. To daje poprawność i injektywność.
+Każdy punkt orbity ma postać $gx$, zatem mapa jest na.
+\end{proof}
+\begin{przyklad}
+Działanie $\Z$ na $\R$ przez $n\cdot t=t+n$ ma iloraz
+$\R/\Z\cong S^1$; stabilizatory są trywialne.
+Działanie $S_m$ na $\{1,\ldots,m\}$ jest przechodnie,
+a stabilizator $1$ jest izomorficzny z $S_{m-1}$.
+\end{przyklad}
+
+\begin{definicja}[Iloczyn prosty i półprosty]
+Dla grup $N,H$ iloczyn prosty $N\times H$ ma mnożenie
+$(n,h)(n',h')=(nn',hh')$. Jeżeli
+$\alpha:H\to\operatorname{Aut}(N)$ jest homomorfizmem,
+to \emph{iloczyn półprosty} $N\rtimes_\alpha H$ jest zbiorem
+$N\times H$ z mnożeniem
+$(n,h)(n',h')=(n\alpha_h(n'),hh')$.
+\end{definicja}
+\begin{stwierdzenie}
+Powyższe mnożenie jest grupowe; elementem neutralnym jest
+$(1_N,1_H)$, a odwrotność $(n,h)$ wynosi
+$(\alpha_{h^{-1}}(n^{-1}),h^{-1})$. Jeśli $\alpha$ jest
+trywialne, otrzymujemy iloczyn prosty.
+\end{stwierdzenie}
+\begin{proof}
+Łączność wynika z $\alpha_{hh'}=\alpha_h\alpha_{h'}$:
+obie strony iloczynu trzech elementów mają pierwszą współrzędną
+$n\alpha_h(n')\alpha_{hh'}(n'')$. Wstawienie podanego wzoru
+na odwrotność daje jedynkę z obu stron.
+\end{proof}
+\begin{przyklad}[Grupa butelki Kleina]
+Niech $H=\Z$, $N=\Z$ i $\alpha_k(n)=(-1)^k n$. Wtedy
+$N\rtimes_\alpha H$ jest grupą o prezentacji
+$\langle a,b\mid aba^{-1}=b^{-1}\rangle$.
+To pojawi się przy obliczaniu grupy podstawowej butelki Kleina
+z monodromii fibracji okręgowej.
+\end{przyklad}
+
+\section{Grupy wolne i prezentacje przez generatory i relacje}
+\begin{definicja}
+Niech $S$ będzie zbiorem. \emph{Grupa wolna} $F(S)$ składa się ze
+zredukowanych skończonych słów w symbolach $s,s^{-1}$, $s\in S$,
+z mnożeniem przez konkatenację i redukcję par $ss^{-1}$ i $s^{-1}s$.
+\emph{Prezentacja} $\langle S\mid R\rangle$ oznacza iloraz $F(S)$
+przez najmniejszą normalną podgrupę zawierającą słowa relacji $R$.
+\end{definicja}
+\begin{twierdzenie}[Własność uniwersalna grupy wolnej]
+Dla dowolnej grupy $H$ i funkcji $u:S\to H$ istnieje dokładnie
+jeden homomorfizm $\overline u:F(S)\to H$ przedłużający $u$.
+Homomorfizm ten przechodzi na $\langle S\mid R\rangle$ wtedy
+i tylko wtedy, gdy wszystkie relacje z $R$ mają obraz $1_H$.
+\end{twierdzenie}
+\begin{proof}
+Definiujemy obraz słowa, mnożąc obrazy kolejnych liter,
+a dla $s^{-1}$ biorąc $u(s)^{-1}$. Usunięcie sąsiednich
+liter odwrotnych nie zmienia wartości. Każdy homomorfizm
+musi działać na słowach w ten sposób, co daje jednoznaczność.
+Przejście na iloraz to zawieranie domknięcia normalnego $R$
+w jądrze, równoważne zerowaniu relacji.
+\end{proof}
+\begin{przyklad}
+Grupa podstawowa bukietu $r$ okręgów jest wolna na $r$
+generatorach. Dołączenie $2$-komórki wzdłuż słowa
+$aba^{-1}b^{-1}$ wymusza przemienność generatorów i daje
+$\langle a,b\mid aba^{-1}b^{-1}\rangle\cong\Z^2$.
+Ścisły związek z dołączaniem komórek dowiedziemy z twierdzenia
+van Kampena.
+\end{przyklad}
+
+\section{Pierścienie, ideały i konstrukcja ilorazu}
+\begin{definicja}
+\emph{Pierścień z jedynką} $(R,+,\cdot,0,1)$ ma abelową grupę
+addytywną, łączne mnożenie z jedynką oraz rozdzielność mnożenia
+względem dodawania. Jest \emph{przemienny}, gdy $ab=ba$.
+Podzbiór $I\subseteq R$ jest \emph{ideałem dwustronnym}, gdy
+jest podgrupą addytywną i $rI,Ir\subseteq I$ dla wszystkich $r\in R$.
+\end{definicja}
+\begin{przyklad}
+$\Z$, $\Q[x]$, pierścień macierzy $M_n(\R)$ i pierścień grupowy
+$\Z[G]$ są pierścieniami z jedynką. Pierścień $M_n(\R)$
+przy $n\ge2$ jest nieprzemienny. W $\Z$ każdy ideał ma postać
+$m\Z$; w $\Q[x]$ ideały mają postać $(f)$.
+\end{przyklad}
+\begin{twierdzenie}[Pierścień ilorazowy]
+Jeżeli $I\triangleleft R$ jest ideałem dwustronnym, to na $R/I$
+wzory $(r+I)+(s+I)=(r+s)+I$ i $(r+I)(s+I)=rs+I$
+definiują pierścień. Jeżeli $\varphi:R\to S$ jest homomorfizmem
+pierścieni, to $R/\ker\varphi\cong\operatorname{im}\varphi$.
+\end{twierdzenie}
+\begin{proof}
+Dla $r'=r+i$, $s'=s+j$ mamy
+$r's'-rs=rj+is+ij\in I$, stąd mnożenie nie zależy
+od reprezentantów. Aksjomaty dziedziczymy z $R$.
+Izomorfizm ilorazu z obrazem jest zadany przez $r+\ker\varphi
+\mapsto\varphi(r)$; sprawdzenie jego poprawności i bijektywności
+przebiega tak jak dla grup.
+\end{proof}
+\begin{definicja}
+\emph{Dziedziną całkowitości} nazywamy niezerowy pierścień
+przemienny z jedynką bez dzielników zera. \emph{Ciałem} jest
+pierścień przemienny, w którym każdy element niezerowy jest
+odwracalny. \emph{Dziedziną ideałów głównych} (PID) jest
+dziedzina, w której każdy ideał jest generowany przez jeden element.
+\end{definicja}
+\begin{przyklad}
+$\Z$ jest PID na mocy dzielenia z resztą, podobnie $K[x]$
+dla dowolnego ciała $K$. Pierścień $\Z[x]$ nie jest PID:
+ideał $(2,x)$ nie jest główny, ponieważ jego generator musiałby
+dzielić jednocześnie $2$ i $x$, a ich jedyne wspólne dzielniki to jednostki.
+Jednak $1\notin(2,x)$, co widać po podstawieniu $x=0$
+i redukcji modulo $2$. Pierścień $\Z/6\Z$ ma dzielniki zera,
+ponieważ $[2][3]=[0]$, więc nie jest dziedziną.
+\end{przyklad}
+
+\section{Moduły, podmoduły, ilorazy i ranga}
+\begin{definicja}
+Niech $R$ będzie pierścieniem z jedynką. \emph{Lewy $R$-moduł}
+$M$ jest grupą abelową z działaniem $R\times M\to M$ takim,
+że $(rs)m=r(sm)$, $1m=m$ oraz zachodzą obie rozdzielności.
+Podmoduł $N\subseteq M$ jest podgrupą addytywną zamkniętą
+na mnożenie przez skalar. Homomorfizm $R$-modułów zachowuje
+sumy i mnożenie przez elementy $R$.
+\end{definicja}
+\begin{przyklad}
+Moduły nad $\Z$ to dokładnie grupy abelowe, a moduły nad
+ciałem to przestrzenie wektorowe. $2\Z\subset\Z$ jest
+podmodułem, którego ilorazem jest $\Z/2\Z$.
+Przy pierścieniu $R=\Z/4\Z$ podmoduł $2R$ nie jest wolnym
+$R$-modułem: ma dwa elementy, podczas gdy każdy wolny
+moduł niezerowej skończonej rangi ma co najmniej cztery.
+\end{przyklad}
+\begin{twierdzenie}[Pierwsze twierdzenie o izomorfizmie modułów]
+Jeżeli $f:M\to N$ jest homomorfizmem $R$-modułów, to
+$M/\ker f\cong\operatorname{im}f$ jako $R$-moduły.
+\end{twierdzenie}
+\begin{proof}
+Mapa $m+\ker f\mapsto f(m)$ jest poprawna i bijektywna
+dzięki rachunkowi jak dla grup; dodatkowo
+$f(rm)=rf(m)$ pokazuje zgodność działania $R$.
+\end{proof}
+
+\begin{definicja}
+Rodzina $(e_i)_{i\in I}$ jest \emph{bazą modułu} $M$,
+jeżeli każdy element ma jednoznaczne przedstawienie jako
+skończona kombinacja $\sum_{i\in I}r_ie_i$.
+Moduł z bazą nazywamy \emph{wolnym}. Zapis $R^{(I)}$
+oznacza sumę prostą $|I|$ kopii $R$, a nie iloczyn wszystkich
+kopii. \emph{Ciąg dokładny} $M'\xrightarrow{u}M\xrightarrow{v}M''$
+spełnia $\operatorname{im}u=\ker v$; \emph{krótki ciąg dokładny}
+ma postać $0\to M'\xrightarrow{u}M\xrightarrow{v}M''\to0$.
+\end{definicja}
+\begin{twierdzenie}[Rozszczepienie krótkiego ciągu]
+Dla krótkiego ciągu dokładnego $R$-modułów
+$0\to A\xrightarrow{i}B\xrightarrow{p}C\to0$
+następujące warunki są równoważne:
+(i) istnieje $R$-liniowe $s:C\to B$ z $ps=\id_C$;
+(ii) istnieje $R$-liniowe $r:B\to A$ z $ri=\id_A$;
+(iii) $B\cong A\oplus C$ w sposób zgodny z danym ciągiem.
+\end{twierdzenie}
+\begin{proof}
+Z (i) wynika, że $b=(b-sp(b))+sp(b)$, gdzie pierwszy
+składnik należy do $\ker p=\operatorname{im}i$.
+Suma jest prosta: jeśli $i(a)=s(c)$, to zastosowanie $p$
+daje $c=0$, następnie $a=0$. To daje (iii).
+Z (iii) otrzymujemy naturalne włączenie $C\to A\oplus C$
+i rzut na $A$, co daje (i) i (ii). Alternatywnie z (ii) mamy
+$B=i(A)\oplus\ker r$, a $p|_{\ker r}$ jest izomorfizmem na $C$.
+\end{proof}
+\begin{przyklad}[Ciąg nierozszczepialny]
+$0\to\Z\xrightarrow{\cdot 2}\Z\to\Z/2\Z\to0$
+jest dokładny, ale nie rozszczepia się. Gdyby $s:\Z/2\Z\to\Z$
+był przekrojem addytywnym, obraz klasy $[1]$ musiałby być
+jednocześnie niezerowy (bo $ps([1])=[1]$) i mieć rząd $2$,
+co jest niemożliwe w $\Z$.
+\end{przyklad}
+
+
+\section{Iloczyn tensorowy modułów: konstrukcja bez zewnętrznych odsyłaczy}
+\label{sec:tensor-algebra-v5}
+Dotychczas operowaliśmy na grupach $M$, $N$ osobno. Iloczyn
+tensorowy reprezentuje odwzorowania \emph{dwuliniowe}:
+zamiast rozpatrywać funkcję dwu zmiennych, można rozpatrywać
+jedno odwzorowanie liniowe z nowego modułu.
+
+\begin{definicja}[Odwzorowanie zbilansowane]
+Niech $R$ będzie pierścieniem przemiennym z jedynką,
+a $M,N,P$ modułami nad $R$. Odwzorowanie
+$b:M\times N\to P$ jest $R$-\emph{dwuliniowe}, jeśli jest
+addytywne w każdej zmiennej oraz
+$b(rm,n)=r b(m,n)=b(m,rn)$ dla wszystkich $r\in R$.
+\end{definicja}
+\begin{twierdzenie}[Istnienie i uniwersalność tensoru]
+\label{thm:tensor-uni-v5}
+Dla dwóch modułów $M,N$ nad przemiennym pierścieniem $R$
+istnieje $R$-moduł $M\otimes_RN$ oraz odwzorowanie
+dwuliniowe $\otimes:M\times N\to M\otimes_RN$ takie, że
+każde odwzorowanie dwuliniowe $b:M\times N\to P$
+ma dokładnie jedno faktoryzowanie
+$b=\overline b\circ\otimes$ przez $R$-liniowe
+$\overline b:M\otimes_RN\to P$.
+Para ta jest jednoznaczna z dokładnością do jednoznacznego
+izomorfizmu zachowującego elementy $m\otimes n$.
+\end{twierdzenie}
+\begin{proof}
+Niech $F$ będzie wolnym $R$-modułem o bazie symboli $[m,n]$
+indeksowanych przez pary $(m,n)\in M\times N$.
+Niech $L$ będzie podmodułem generowanym przez elementy
+\[
+[m+m',n]-[m,n]-[m',n],\quad
+[m,n+n']-[m,n]-[m,n'],\quad
+[rm,n]-r[m,n],\quad[m,rn]-r[m,n].
+\]
+Definiujemy $M\otimes_RN=F/L$ i $m\otimes n=[m,n]+L$.
+Relacje gwarantują dwuliniowość. Dla $b$ jak w tezie
+wolność $F$ daje liniową mapę $B:F\to P$, $B([m,n])=b(m,n)$.
+Dwuliniowość oznacza $L\subseteq\ker B$, więc $B$ przechodzi
+na jedyną mapę $\overline b:F/L\to P$. Jedyność bierze się
+stąd, że elementy $m\otimes n$ generują $F/L$.
+Jeżeli $(T,t)$ ma tę samą własność, to uniwersalność daje
+mapy $T\to M\otimes_RN$ i odwrotną, a obie kompozycje
+są identycznościami na generatorach, więc są identycznościami.
+\end{proof}
+\begin{przyklad}
+Dla grup abelowych $(\Z/m)\otimes_\Z(\Z/n)\cong\Z/d$,
+$d=\gcd(m,n)$, przy $m,n\ge1$. Istotnie tensor jest
+generowany przez $[1]\otimes[1]$, a relacje $m[1]=n[1]=0$
+narzucają $m t=nt=0$; odwzorowanie dwuliniowe
+$([a],[b])\mapsto[ab]\in\Z/d$ dowodzi, że element
+o rzędzie $d$ faktycznie istnieje. W szczególności
+$\Z/2\otimes\Z/3=0$, choć oba czynniki są niezerowe.
+\end{przyklad}
+\begin{stwierdzenie}[Rachunek tensorów]
+Dla przemiennego $R$ i $R$-modułów $M,N,P$ istnieją naturalne
+izomorfizmy
+\[
+R\otimes_RM\cong M,\qquad
+(M\oplus N)\otimes_RP\cong(M\otimes_RP)\oplus(N\otimes_RP),
+\qquad (M\otimes_RN)\otimes_RP\cong M\otimes_R(N\otimes_RP).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Dla pierwszego izomorfizmu wzór $r\otimes m\mapsto rm$
+jest liniowy z odwrotnością $m\mapsto1\otimes m$.
+W drugim wzór $(m,n)\otimes p\mapsto(m\otimes p,n\otimes p)$
+i jego odwrotność wynikają z uniwersalności, bo oba wyrażenia
+są dwuliniowe. Dla trzeciego definiujemy na prostych tensorach
+$(m\otimes n)\otimes p\mapsto m\otimes(n\otimes p)$;
+kolejne zastosowania uniwersalności gwarantują poprawność
+względem wszystkich relacji. Odwrotne przestawienie nawiasów
+daje odwrotność.
+\end{proof}
+\begin{twierdzenie}[Prawostronna dokładność tensorowania]
+Jeżeli $M'\xrightarrow{u}M\xrightarrow{v}M''\to0$ jest
+dokładnym ciągiem $R$-modułów nad przemiennym $R$,
+to dla każdego $R$-modułu $N$ ciąg
+$M'\otimes_RN\xrightarrow{u\otimes1}M\otimes_RN
+\xrightarrow{v\otimes1}M''\otimes_RN\to0$ jest dokładny.
+\end{twierdzenie}
+\begin{proof}
+Surjektywność ostatniej mapy wynika z faktu, że każdy
+prosty tensor $m''\otimes n$ ma podniesienie $m\otimes n$.
+Ponieważ $M''\cong M/\operatorname{im}u$, mapa $M\otimes N\to
+M''\otimes N$ jest uniwersalnym ilorazem, w którym
+$(u(m'))\otimes n$ staje się zerem: po przejściu do
+ilorazu $(M\otimes N)/\operatorname{im}(u\otimes1)$
+wartość $m\otimes n$ zależy tylko od klasy $m$ modulo
+$\operatorname{im}u$. Odwrotnie, ta zależność daje mapę
+z $M''\otimes N$ do ilorazu. Mapy są wzajemnie odwrotne
+na tensorach prostych.
+\end{proof}
+\begin{przyklad}[Dlaczego brak lewostronnej dokładności?]
+Wstrzyknięcie $\Z\xrightarrow{\cdot2}\Z$ po tensorowaniu
+z $\Z/2\Z$ staje się mapą zerową
+$\Z/2\Z\xrightarrow{0}\Z/2\Z$, która nie jest injekcją.
+Właśnie tę utratę informacji wykryje funktor $\operatorname{Tor}$.
+\end{przyklad}
+
+\begin{uwaga}[Ranga modułu nie jest liczbą generatorów]
+Jeśli $R$ jest dziedziną z ciałem ułamków $K$, rangą $R$-modułu
+$M$ nazywamy $\dim_K(K\otimes_R M)$; iloczyn tensorowy
+został właśnie skonstruowany. Dla $R=\Z$
+moduł $\Z/6\Z$ ma rangę $0$, choć potrzebuje generatora,
+a $\Z^3\oplus\Z/2\Z$ ma rangę $3$.
+Nie wolno nazywać rangą wymiaru $M/N$, chyba że pracujemy
+w kategorii przestrzeni wektorowych lub po rozszerzeniu skalarów.
+\end{uwaga}
+
+\section{Projektywność, \texorpdfstring{$\operatorname{Tor}$ i $\operatorname{Ext}$}{Tor i Ext}}
+\begin{definicja}
+Moduł $P$ nad $R$ nazywamy \emph{projektywnym}, jeśli dla
+każdej surjekcji $e:M\twoheadrightarrow N$ i każdej mapy
+$f:P\to N$ istnieje $\widetilde f:P\to M$ z
+$e\widetilde f=f$. Moduł $F$ nazywamy \emph{płaskim}, jeśli
+$-\otimes_RF$ przekształca wszystkie krótkie ciągi dokładne
+w krótkie ciągi dokładne.
+\end{definicja}
+\begin{stwierdzenie}
+Wolny moduł jest projektywny, a projektywny jest płaski.
+Każdy moduł jest ilorazem wolnego modułu.
+\end{stwierdzenie}
+\begin{proof}
+Jeżeli $P$ jest wolny o bazie $(e_i)$, to dla każdego $f$
+wybieramy preobrazy $f(e_i)$ przez surjekcję $e$ i przedłużamy
+liniowo. To daje podniesienie. Dla dowolnego $M$ surjekcja
+z wolnego modułu na generatorach symboli $[m]$ jest zadana
+$[m]\mapsto m$. Moduł projektywny jest składnikiem prostym
+wolnego: podnosząc $\id_P$ wzdłuż wolnej surjekcji $F\to P$
+otrzymujemy $F\cong P\oplus\ker(F\to P)$.
+Tensorowanie przez wolny moduł jest dokładne, bo jest sumą
+prostą kopii odwzorowań danego ciągu; dokładność sum prostych
+sprawdzamy po współrzędnych. Każdy składnik prosty funktora
+dokładnego jest dokładny, stąd $P$ jest płaski.
+\end{proof}
+\begin{definicja}[Wolna prezentacja i pierwsze funktory pochodne]
+Dla grup abelowych $A,B$ wybieramy wolną prezentację
+$0\to F_1\xrightarrow{d}F_0\to A\to0$; istnieje, ponieważ
+podgrupa grupy wolnej nad $\Z$ jest wolna. Definiujemy
+$\operatorname{Tor}_1^{\Z}(A,B)=\ker(d\otimes1_B)$ oraz
+$\operatorname{Ext}^1_{\Z}(A,B)=\operatorname{coker}
+\bigl(\operatorname{Hom}(F_0,B)\to\operatorname{Hom}(F_1,B)\bigr)$.
+Niezależność od prezentacji wynika z porównania prezentacji
+za pomocą podnoszeń homomorfizmów wolnych grup; dowód
+zapiszemy w lemacie niżej.
+\end{definicja}
+\begin{lemat}[Niezależność od prezentacji]
+Jeżeli $F_1\to F_0$ i $F'_1\to F'_0$ są wolnymi prezentacjami
+tej samej grupy $A$, to istnieją mapy łańcuchowe między
+odpowiednimi dwustopniowymi kompleksami indukujące
+$\id_A$ w stopniu zerowym, a ich kompozycje są łańcuchowo
+homotopijne z identycznościami. Dlatego $\operatorname{Tor}_1$
+i $\operatorname{Ext}^1$ powyżej nie zależą od prezentacji.
+\end{lemat}
+\begin{proof}
+Niech $p:F_0\twoheadrightarrow A$, $p':F'_0\twoheadrightarrow A$.
+Wybieramy dla każdego elementu bazy $F_0$ podniesienie przez
+$p'$ jego obrazu przez $p$, uzyskując $f_0:F_0\to F'_0$
+z $p'f_0=p$. Mapa $f_0d$ ląduje w $\ker p'=\operatorname{im}d'$, 
+a $d':F'_1\to\operatorname{im}d'$ jest izomorfizmem;
+można zatem położyć $f_1=(d')^{-1}f_0d$.
+Analogicznie konstruujemy $g_0,g_1$ w przeciwną stronę.
+Ponieważ $gf-\id$ indukuje zero na $A$, obraz
+$g_0f_0-\id_{F_0}$ leży w $\operatorname{im}d$.
+Definiujemy $h_0=d^{-1}(g_0f_0-\id)$ na $F_0$.
+Wtedy $dh_0=g_0f_0-\id$ oraz, ponieważ $d$ jest injekcją,
+$h_0d=g_1f_1-\id$; jest to homotopia łańcuchowa.
+Podobnie dla $fg-\id$. Tensorowanie zachowuje homotopie
+łańcuchowe, a zastosowanie $\operatorname{Hom}(-,B)$
+odwraca ich kierunek i również zachowuje homotopie.
+Stąd izomorfizmy odpowiednich grup homologii i kohomologii.
+\end{proof}
+\begin{przyklad}
+Dla $A=\Z/m\Z$ prezentacja
+$0\to\Z\xrightarrow{\cdot m}\Z\to A\to0$ daje
+\[
+\operatorname{Tor}_1^\Z(A,B)=\{b\in B:mb=0\},\qquad
+\operatorname{Ext}^1_\Z(A,B)=B/mB.
+\]
+Jeśli $A$ jest wolna, oba funktory znikają, gdyż można
+wybrać prezentację $F_1=0$.
+\end{przyklad}
+\begin{uwaga}[Połączenie z następnym rozdziałem]
+Dalszy rozdział o algebrze homologicznej wprowadzi
+kompleksy i krótkie ciągi dokładne kompleksów. Definicje
+$\operatorname{Tor}$ i $\operatorname{Ext}$ wykorzystamy potem
+w twierdzeniu Künnetha oraz twierdzeniu o współczynnikach
+uniwersalnych. Powyższy dowód pokazuje, dlaczego tensoru
+nie wolno traktować jak zwykłego iloczynu kartezjańskiego.
+\end{uwaga}
+\clearpage
+
+

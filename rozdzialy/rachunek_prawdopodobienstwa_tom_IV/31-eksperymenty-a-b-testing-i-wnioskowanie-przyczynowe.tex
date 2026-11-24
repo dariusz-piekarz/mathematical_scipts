@@ -1,0 +1,260 @@
+\chapter{Eksperymenty, A/B testing i wnioskowanie przyczynowe}
+\label{ch:causal-ab}
+\paragraph{Powiązania i odsyłacze.} Podstawy testowania i wielokrotności znajdziesz w rozdziałach~\ref{ch:testing} i~\ref{ch:multiple-testing}; regresję do korekty zmiennych w rozdziale~\ref{ch:linear-regression}.
+
+
+\section{Od związku statystycznego do efektu działania}
+W badaniu obserwacyjnym pacjenci przyjmujący nowy lek mogą różnić się od pozostałych wiekiem, stanem zdrowia i dostępem do opieki. Samo porównanie ich wyników nie musi zatem mierzyć działania leku. Podobny problem występuje w A/B testingu: użytkownicy, którzy sami włączyli nową funkcję, mogą być bardziej aktywni już \emph{przed} jej włączeniem. Wnioskowanie przyczynowe pyta o wynik, jaki wystąpiłby u tej samej jednostki po zastosowaniu różnych, jasno określonych działań.
+
+\begin{definicja}[Wyniki potencjalne, spójność i jednostka eksperymentu]\label{def:potential-outcomes}
+Niech $i=1,\ldots,N$ numeruje ustalone jednostki. Dla każdej jednostki definiujemy dwie \emph{ustalone} wartości potencjalne $Y_i(0),Y_i(1)\in\R$: wyniki odpowiednio bez interwencji i z interwencją. Zmienna $A_i\in\{0,1\}$ oznacza przydział, a obserwowany wynik spełnia warunek \emph{spójności}
+\[
+Y_i^{\mathrm{obs}}=(1-A_i)Y_i(0)+A_iY_i(1).
+\]
+W tym modelu wynik jednostki nie zależy od przydziałów innych jednostek, a sposób przeprowadzenia interwencji jest jednoznaczny. Są to elementy założenia braku interferencji i dobrze określonych interwencji; ich niespełnienie wymaga innego modelu wyników potencjalnych.
+Definiujemy indywidualny efekt $\tau_i=Y_i(1)-Y_i(0)$ i średni efekt w badanej populacji skończonej $\tau_N=N^{-1}\sum_{i=1}^N\tau_i$.
+\end{definicja}
+
+Nie obserwujemy jednocześnie $Y_i(0)$ i $Y_i(1)$ dla tej samej jednostki. Jest to \emph{fundamentalny problem wnioskowania przyczynowego}; nie można go usunąć przez większą liczbę pomiarów tej samej zrealizowanej interwencji. Randomizacja pozwala natomiast estymować \emph{średni} efekt bez konieczności odtwarzania wszystkich efektów indywidualnych.
+
+\begin{uwaga}[ATE, ATT i ryzyko wyboru niewłaściwego celu]
+Przy losowej jednostce z populacji docelowej definiujemy $\mathrm{ATE}=\E[Y(1)-Y(0)]$ oraz $\mathrm{ATT}=\E[Y(1)-Y(0)\mid A=1]$, o ile odpowiednie wartości oczekiwane istnieją. Nie muszą być równe: ATT dotyczy osób rzeczywiście leczonych, a ATE całej populacji docelowej. W eksperymencie na ustalonych $N$ jednostkach podstawowym parametrem będzie $\tau_N$. Przenoszenie wniosku z uczestników na inną populację wymaga osobnego założenia o reprezentatywności lub modelu transportowalności.
+\end{uwaga}
+
+\section{Pełna randomizacja i jej gwarancje skończonopróbkowe}
+\begin{definicja}[Kompletny plan losowania]\label{def:complete-randomization}
+Niech $N\ge4$, $2\le n_1\le N-2$, $n_0=N-n_1$. Losujemy wektor $A=(A_1,\ldots,A_N)$ jednostajnie ze zbioru
+$\mathcal W=\{a\in\{0,1\}^N:\sum_i a_i=n_1\}$, niezależnie od ustalonych wyników potencjalnych. Estymator różnicy średnich ma postać
+\[
+\widehat\tau=\frac1{n_1}\sum_{i:A_i=1}Y_i^{\mathrm{obs}}-\frac1{n_0}\sum_{i:A_i=0}Y_i^{\mathrm{obs}}.
+\]
+Dla $a\in\{0,1\}$ oznaczamy $\bar Y(a)=N^{-1}\sum_iY_i(a)$, a $S_a^2=(N-1)^{-1}\sum_i(Y_i(a)-\bar Y(a))^2$. Niech także $S_\tau^2=(N-1)^{-1}\sum_i(\tau_i-\tau_N)^2$.
+\end{definicja}
+
+\begin{twierdzenie}[Nieobciążoność i wariancja Neymana]\label{thm:neyman-variance}
+W planie~\ref{def:complete-randomization}, przy ustalonych wynikach potencjalnych, zachodzi
+\[
+\E_A\widehat\tau=\tau_N,\qquad
+\Var_A(\widehat\tau)=\frac{S_1^2}{n_1}+\frac{S_0^2}{n_0}-\frac{S_\tau^2}{N},
+\]
+gdzie $\E_A,\Var_A$ oznaczają wartość oczekiwaną i wariancję wyłącznie względem randomizacji.
+\end{twierdzenie}
+\begin{proof}
+Dla każdego $i$ prawdopodobieństwo $A_i=1$ wynosi $n_1/N$, więc liniowość wartości oczekiwanej daje $\E_A[n_1^{-1}\sum_i A_iY_i(1)]=\bar Y(1)$ i analogicznie $\E_A[n_0^{-1}\sum_i(1-A_i)Y_i(0)]=\bar Y(0)$.
+
+Dla ustalonego wektora liczb $u=(u_1,\ldots,u_N)$ z wariancją skończonopopulacyjną $S_u^2$, średnia w losowej próbie bez zwracania o liczności $m$ ma wariancję $(m^{-1}-N^{-1})S_u^2$. Ponadto, dla dwóch wektorów $u,v$, kowariancja średniej $u$ w grupie losowo wybranej i średniej $v$ w grupie dopełniającej wynosi $-S_{uv}/N$, gdzie $S_{uv}=(N-1)^{-1}\sum_i(u_i-\bar u)(v_i-\bar v)$. Ostatni wzór wynika z $\Cov_A(A_i,1-A_j)=-(n_1n_0/N^2)$ dla $i=j$ i $n_1n_0/[N^2(N-1)]$ dla $i\ne j$, po rozwinięciu podwójnej sumy. Otrzymujemy
+$\Var_A(\widehat\tau)=(n_1^{-1}-N^{-1})S_1^2+(n_0^{-1}-N^{-1})S_0^2+2S_{10}/N$.
+Ponieważ $S_\tau^2=S_1^2+S_0^2-2S_{10}$, wynika teza.
+\end{proof}
+
+\begin{wniosek}[Konserwatywna ocena niepewności]\label{cor:neyman-se}
+W planie~\ref{def:complete-randomization} niech $s_a^2$ będzie wariancją z mianownikiem $n_a-1$, obliczoną z wyników obserwowanych w grupie $a$, $a=0,1$. Estymator
+$\widehat V_N=s_1^2/n_1+s_0^2/n_0$ spełnia $\E_A\widehat V_N=\Var_A(\widehat\tau)+S_\tau^2/N\ge\Var_A(\widehat\tau)$.
+\end{wniosek}
+\begin{proof}
+Każda grupa jest próbą prostą bez zwracania z odpowiedniego skończonego zbioru wyników potencjalnych, więc $\E_As_a^2=S_a^2$. Podstawiamy do twierdzenia~\ref{thm:neyman-variance}.
+\end{proof}
+
+\begin{uwaga}[Czego nie obiecuje ten wniosek?]
+Konserwatywność zachodzi dla \emph{wartości oczekiwanej estymatora wariancji}, nie stanowi automatycznej dokładnej gwarancji pokrycia dowolnego przedziału $\widehat\tau\pm z_{1-\alpha/2}\sqrt{\widehat V_N}$ przy małym $N$. Przedziały normalne wymagają odpowiednich warunków asymptotycznych. Ponadto, gdy skutki indywidualne nie są jednakowe, $S_\tau^2$ nie jest identyfikowalne z samej pojedynczej realizacji randomizacji.
+\end{uwaga}
+
+\section{Dokładny test randomizacyjny i dwa różne rodzaje hipotezy zerowej}
+\begin{definicja}[Hipoteza ostra Fishera]\label{def:fisher-sharp}
+W skończonopopulacyjnym modelu~\ref{def:potential-outcomes} \emph{ostrą hipotezą zerową Fishera} nazywamy $H_0^{\mathrm F}:Y_i(1)=Y_i(0)$ dla wszystkich $i=1,\ldots,N$. W odróżnieniu od hipotezy słabej Neymana $H_0^{\mathrm N}:\tau_N=0$, hipoteza ostra pozwala odtworzyć wszystkie brakujące wyniki potencjalne z zaobserwowanych wyników.
+\end{definicja}
+
+\begin{twierdzenie}[Dokładna kontrola poziomu testu randomizacyjnego]\label{thm:fisher-exact}
+Niech losowanie ma plan~\ref{def:complete-randomization}, niech pod $H_0^{\mathrm F}$ wyniki są stałym wektorem $y=(y_1,\ldots,y_N)$, a $T(a,y)\in\R$ dowolną ustaloną przed obejrzeniem danych statystyką, w której większa wartość oznacza silniejsze odstępstwo od hipotezy. Dla obserwowanego $A\in\mathcal W$ zdefiniujmy
+\[
+ p_{\mathrm{rand}}(A,y)=\frac1{|\mathcal W|}\sum_{a\in\mathcal W}\mathbf 1_{\{T(a,y)\ge T(A,y)\}}.
+\]
+Wtedy dla każdego $\alpha\in[0,1]$ zachodzi $\Prob_A(p_{\mathrm{rand}}(A,y)\le\alpha)\le\alpha$.
+\end{twierdzenie}
+\begin{proof}
+Niech $M=|\mathcal W|$ i uszeregujmy możliwe wartości statystyki nierosnąco, uwzględniając powtórzenia. Dla każdego wyniku na pozycji $j$ liczba wartości nie mniejszych od niego jest co najmniej $j$. Zatem warunek $p_{\mathrm{rand}}\le\alpha$ spełnia co najwyżej $\lfloor\alpha M\rfloor$ z $M$ jednakowo prawdopodobnych przydziałów. Losowość dotyczy jedynie $A$, więc prawdopodobieństwo odrzucenia nie przekracza $\alpha$.
+\end{proof}
+
+\begin{przyklad}[Mały eksperyment: wszystkie przydziały]
+Dla $N=6$ i $n_1=n_0=3$ jest $\binom63=20$ dopuszczalnych przydziałów. Po zapisaniu wyników możemy dla każdego przydziału obliczyć różnicę średnich. Jeżeli obserwowana wartość bezwzględna jest co najmniej tak duża jak w dwóch spośród dwudziestu przydziałów (wliczając obserwowany), dokładna dwustronna wartość p wynosi $2/20=0{,}1$. Nie należy tutaj wstawiać dowolnego asymptotycznego rozkładu t: rozkład randomizacyjny jest dostępny z samego planu eksperymentu.
+\end{przyklad}
+
+\begin{uwaga}[Ostra hipoteza a brak średniego efektu]
+Dokładność testu~\ref{thm:fisher-exact} dotyczy $H_0^{\mathrm F}$, a nie automatycznie $H_0^{\mathrm N}$. Przy zróżnicowanych efektach indywidualnych średni efekt może być zerowy, chociaż hipoteza ostra jest fałszywa. Trzeba rozdzielać pytanie „czy żadnej jednostce interwencja nie pomogła ani nie zaszkodziła?” od pytania „czy przeciętny efekt wynosi zero?”.
+\end{uwaga}
+
+\section{A/B testing: projekt, moc i pułapki sekwencyjnego oglądania danych}
+\begin{przyklad}[Projekt eksperymentu na odsetku konwersji]
+Niech konwersja będzie zmienną Bernoulliego, $p_0,p_1\in(0,1)$ oznaczają prawdopodobieństwa odpowiednio w grupie kontrolnej i testowej, a $\Delta=p_1-p_0$ jest efektem na skali bezwzględnej. W modelu dwóch niezależnych prób po $m$ osób, z rozkładów Bernoulliego, $\widehat\Delta=\widehat p_1-\widehat p_0$ ma wariancję $p_1(1-p_1)/m+p_0(1-p_0)/m$. Przybliżony przedział poziomu $1-\alpha$ to $\widehat\Delta\pm z_{1-\alpha/2}\sqrt{\widehat p_1(1-\widehat p_1)/m+\widehat p_0(1-\widehat p_0)/m}$. Dla niewielu konwersji należy rozważyć przedział oparty na wynikach dwóch przedziałów Wilsona lub metodę dokładniejszą, zamiast bezkrytycznie używać Walda.
+\end{przyklad}
+
+\begin{stwierdzenie}[Przybliżona liczebność próby]\label{prop:ab-samplesize}
+Jeżeli planujemy dwie niezależne próby Bernoulliego po $m$ obserwacji, chcemy wykryć ustaloną różnicę $\Delta\ne0$, zakładamy przybliżenie normalne i oznaczamy $v=p_0(1-p_0)+p_1(1-p_1)$, to orientacyjna liczebność na grupę przy dwustronnym poziomie $\alpha$ i mocy $1-\beta$ wynosi
+\[
+ m\approx\frac{(z_{1-\alpha/2}+z_{1-\beta})^2\,v}{\Delta^2}.
+\]
+Wzór jest heurystycznym przybliżeniem planistycznym, a nie dokładną gwarancją przy skończonym $m$.
+\end{stwierdzenie}
+\begin{proof}
+W przybliżeniu $\widehat\Delta\sim\Normal(\Delta,v/m)$. Dla testu dwustronnego odrzucenie następuje w przybliżeniu wtedy, gdy $|\widehat\Delta|$ przekroczy próg równy $z_{1-\alpha/2}$ razy zakładany błąd standardowy. Zignorowanie mniejszego ogona w rozkładzie przesuniętym daje równanie $|\Delta|\sqrt{m/v}\approx z_{1-\alpha/2}+z_{1-\beta}$. Po podniesieniu do kwadratu otrzymujemy wzór. Dokładne planowanie powinno uwzględnić wariancję pod hipotezą zerową, rozkład testowy, dyskretność danych i zamierzony schemat analiz.
+\end{proof}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.28\textwidth}>{\raggedright\arraybackslash}p{.27\textwidth}>{\raggedright\arraybackslash}p{.29\textwidth}}
+\toprule
+\textbf{Pytanie} & \textbf{Decyzja projektowa} & \textbf{Ryzyko, które kontrolujemy}\\
+\midrule
+Kto jest niezależną jednostką? & Losuj osobę albo klaster użytkowników & Interferencja i pseudoreplikacja\\
+Jaki jest główny wynik? & Ustal metrykę i okno pomiaru z góry & Wybór „najlepszej” metryki po teście\\
+Jaka różnica ma znaczenie? & Ustal minimalny istotny efekt praktyczny & Duże $n$ i błahy efekt\\
+Kiedy kończymy zbieranie danych? & Z góry ustal liczność i regułę stopu & Inflacja błędu przy podglądaniu\\
+Czy mamy kilka grup/testów? & Zaplanuj kontrolę FWER lub FDR & Fałszywe odkrycia\\
+Czy obserwacje są zależne? & Rozważ randomizację klastrową, modele mieszane & Zaniżone błędy standardowe\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{uwaga}[Podglądanie danych i niedotrzymanie planu]
+Klasyczny test o poziomie $\alpha$ zwykle kontroluje błąd przy ustalonym wcześniej terminie analizy. Powtarzane kończenie eksperymentu przy pierwszym $p<\alpha$ podnosi częstość fałszywych alarmów. Jeśli potrzebujemy analiz pośrednich, należy z góry przyjąć plan sekwencyjny (np. granice alfa-spending, e-wartości lub inne procedury z udowodnioną kontrolą błędu). Warto też odróżnić \emph{intention to treat} (porównanie według przydziału) od analizy tylko użytkowników, którzy faktycznie skorzystali z funkcji: takie przejście może zniszczyć randomizację.
+\end{uwaga}
+
+\section{Badania obserwacyjne: identyfikacja, propensity score i podwójna odporność}
+\begin{definicja}[Warunki identyfikacji efektu średniego]\label{def:causal-id}
+Niech $(X,A,Y(0),Y(1))$ będzie wektorem losowym, gdzie $X$ jest mierzalną przed interwencją kowariantą o wartościach w przestrzeni $\mathsf X$, $A\in\{0,1\}$, $\E|Y(a)|<\infty$ dla $a=0,1$ oraz $Y=AY(1)+(1-A)Y(0)$. Zakładamy:
+\begin{enumerate}
+\item \emph{Wymienność warunkową} $(Y(0),Y(1))\perp A\mid X$.
+\item \emph{Dodatniość} $0<e(X)<1$ niemal na pewno, gdzie $e(x)=\Prob(A=1\mid X=x)$ jest wersją warunkowego prawdopodobieństwa (\emph{propensity score}).
+\item \emph{Spójność} obserwowany wynik odpowiada rzeczywiście otrzymanej, jednoznacznie określonej interwencji, a brak interferencji zapewnia sens wynikom potencjalnym.
+\end{enumerate}
+Zakładamy istnienie regularnych rozkładów warunkowych i odpowiednich wersji warunkowych wartości oczekiwanych.
+\end{definicja}
+
+\begin{twierdzenie}[Standaryzacja i ważenie odwrotnością prawdopodobieństwa]\label{thm:causal-ipw}
+Przy założeniach definicji~\ref{def:causal-id}, jeżeli dodatkowo $\E[|Y|/e(X)\mid A=1]$ i $\E[|Y|/(1-e(X))\mid A=0]$ są skończone (co zachodzi np. przy ograniczonych wynikach i $e(X)$ oddzielonym od $0,1$), to dla $m_a(x)=\E[Y\mid A=a,X=x]$ zachodzi
+\[
+ \mathrm{ATE}=\E[m_1(X)-m_0(X)]
+ =\E\!\left[\frac{AY}{e(X)}-\frac{(1-A)Y}{1-e(X)}\right].
+\]
+\end{twierdzenie}
+\begin{proof}
+Wymienność i spójność dają $m_a(X)=\E[Y(a)\mid X]$ niemal na pewno. Wobec tego $\E[m_1(X)-m_0(X)]=\E[Y(1)-Y(0)]$. Dalej, warunkując względem $X$ i korzystając z $\E[A Y\mid X]=e(X)m_1(X)$ oraz $\E[(1-A)Y\mid X]=(1-e(X))m_0(X)$, otrzymujemy równanie z wagami. Dodatkowe warunki całkowalności uprawniają do użycia własności wieży.
+\end{proof}
+
+\begin{twierdzenie}[Tożsamość podwójnej odporności]\label{thm:dr-id}
+Przy założeniach definicji~\ref{def:causal-id} niech $\widetilde e:\mathsf X\to(0,1)$ i $\widetilde m_0,\widetilde m_1:\mathsf X\to\R$ będą mierzalnymi funkcjami, dla których poniższe składniki są całkowalne. Zdefiniujmy
+\[
+ \psi=\widetilde m_1(X)-\widetilde m_0(X)
+ +\frac{A}{\widetilde e(X)}(Y-\widetilde m_1(X))
+ -\frac{1-A}{1-\widetilde e(X)}(Y-\widetilde m_0(X)).
+\]
+Jeżeli $\widetilde e=e$ niemal na pewno \emph{albo} $\widetilde m_0=m_0$ i $\widetilde m_1=m_1$ niemal na pewno, to $\E\psi=\mathrm{ATE}$.
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy rzeczywiste funkcje przez $e,m_0,m_1$. Po warunkowaniu względem $X$ mamy
+\[
+ \E[\psi\mid X]=\widetilde m_1-\widetilde m_0
+ +\frac e{\widetilde e}(m_1-\widetilde m_1)
+ -\frac{1-e}{1-\widetilde e}(m_0-\widetilde m_0),
+\]
+gdzie wszystkie funkcje po prawej obliczono w $X$. Jeśli $\widetilde e=e$, prawa strona upraszcza się do $m_1-m_0$; jeśli obie $\widetilde m_a=m_a$, składniki resztowe znikają. W obu sytuacjach twierdzenie~\ref{thm:causal-ipw} daje wynik po uśrednieniu.
+\end{proof}
+
+\begin{uwaga}[Czego podwójna odporność nie gwarantuje?]
+Twierdzenie dotyczy \emph{funkcji populacyjnych}, a nie automatycznej nieobciążoności skończonopróbkowej po podstawieniu funkcji dopasowanych na tych samych danych. Do uzasadnienia asymptotycznego potrzebne są dodatkowe warunki dotyczące estymacji funkcji pomocniczych, np. cross-fitting, ograniczeń wag i zbieżności iloczynów błędów. Żadna metoda nie naprawia niezmierzonego czynnika zakłócającego ani braku dodatniości.
+\end{uwaga}
+
+\section{Różnica w różnicach: gdy mamy dane przed i po}
+\begin{twierdzenie}[Identyfikacja ATT w modelu dwóch terminów]\label{thm:did-att}
+Niech $A\in\{0,1\}$ oznacza przynależność do grupy poddanej interwencji po chwili $0$, a $Y_0(0),Y_1(0),Y_1(1)$ są całkowalnymi wynikami potencjalnymi w chwilach $0$ i $1$; przed interwencją wszystkie jednostki mają wynik $Y_0=Y_0(0)$, po interwencji zaś $Y_1=A Y_1(1)+(1-A)Y_1(0)$. Załóżmy $0<\Prob(A=1)<1$ i \emph{równoległe trendy} bez leczenia:
+$\E[Y_1(0)-Y_0(0)\mid A=1]=\E[Y_1(0)-Y_0(0)\mid A=0]$.
+Wtedy efekt średni w grupie leczonej $\mathrm{ATT}=\E[Y_1(1)-Y_1(0)\mid A=1]$ spełnia
+\[
+\mathrm{ATT}=\big(\E[Y_1\mid A=1]-\E[Y_0\mid A=1]\big)
+ -\big(\E[Y_1\mid A=0]-\E[Y_0\mid A=0]\big).
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla $A=1$ obserwowana zmiana jest sumą $Y_1(1)-Y_1(0)$ i nieobserwowanej zmiany $Y_1(0)-Y_0(0)$. Dla $A=0$ obserwujemy dokładnie tę drugą zmianę. Po odjęciu średnich warunek równoległych trendów usuwa nieobserwowany składnik, pozostawiając ATT.
+\end{proof}
+
+\begin{uwaga}[Trendy równoległe nie są testowalne z dwóch chwil]
+Zaledwie jeden pomiar przed interwencją nie pozwala zweryfikować kontrfaktycznego trendu po interwencji. Wiele pomiarów przed interwencją umożliwia ocenę zgodności trendów historycznych, ale nadal nie dowodzi założenia dotyczącego nieobserwowanej przyszłości. W analizach panelowych należy dodatkowo uwzględniać autokorelację i klastry; proste błędy standardowe dla niezależnych wierszy są zwykle niewłaściwe.
+\end{uwaga}
+
+\section{Laboratorium: od randomizacji do oszacowania efektu}
+\begin{lstlisting}[language=Python,caption={Kompletny program: dokładny test randomizacyjny dla małej próby (Python, itertools, NumPy).}]
+from itertools import combinations
+import numpy as np
+
+outcomes = np.array([4., 5., 7., 8., 10., 11.])
+assignment = np.array([0, 0, 0, 1, 1, 1], dtype=int)
+
+def contrast(a, y):
+    return y[a == 1].mean() - y[a == 0].mean()
+
+observed = abs(contrast(assignment, outcomes))
+values = []
+for idx in combinations(range(len(outcomes)), 3):
+    a = np.zeros(len(outcomes), dtype=int)
+    a[list(idx)] = 1
+    values.append(abs(contrast(a, outcomes)))
+p_value = np.mean(np.array(values) >= observed - 1e-12)
+print("number of assignments:", len(values))
+print("observed difference:", contrast(assignment, outcomes))
+print("two-sided Fisher randomization p:", p_value)
+# Exact for the sharp no-effect null under complete randomization.
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python,caption={Kompletny program: dwie grupy A/B, estymacja różnicy konwersji, przedział i kontrola zrównoważenia (Python, NumPy, SciPy).}]
+import numpy as np
+from scipy import stats
+
+rng = np.random.default_rng(2031)
+n = 800
+x = rng.normal(0, 1, n)  # pre-treatment engagement score
+assignment = np.array([0] * (n//2) + [1] * (n//2))
+rng.shuffle(assignment)
+logit = np.log(0.08 / 0.92) + 0.65*x + 0.38*assignment
+prob = 1 / (1 + np.exp(-logit))
+y = rng.binomial(1, prob)
+n0, n1 = (assignment == 0).sum(), (assignment == 1).sum()
+p0, p1 = y[assignment == 0].mean(), y[assignment == 1].mean()
+rd = p1 - p0
+se = np.sqrt(p0*(1-p0)/n0 + p1*(1-p1)/n1)
+z = stats.norm.ppf(0.975)
+print("conversions control, treatment:", p0, p1)
+print("risk difference:", rd)
+print("approximate 95% CI:", (rd - z*se, rd + z*se))
+print("baseline mean imbalance:", x[assignment == 1].mean() -
+      x[assignment == 0].mean())
+print("unit of randomization: user; analysis: intention to treat")
+# For rare conversions compare this approximation with a score-based CI.
+\end{lstlisting}
+
+\begin{lstlisting}[language=Julia,caption={Kompletny program: estymator różnicy średnich w doświadczeniu randomizowanym (Julia, Random, Statistics).}]
+using Random, Statistics
+Random.seed!(2031)
+n = 500
+Y0 = randn(n)
+Y1 = Y0 .+ 0.3 .+ 0.2 .* randn(n)
+A = shuffle(vcat(zeros(Int, div(n, 2)), ones(Int, div(n, 2))))
+observed = ifelse.(A .== 1, Y1, Y0)
+treatment = observed[A .== 1]
+control = observed[A .== 0]
+estimate = mean(treatment) - mean(control)
+se = sqrt(var(treatment) / length(treatment) +
+          var(control) / length(control))
+println("ATE in this finite population: ", mean(Y1 .- Y0))
+println("randomized estimate: ", estimate, "; SE: ", se)
+\end{lstlisting}
+
+\begin{zadanie}[Która analiza zachowuje sens randomizacji?]
+W eksperymencie A/B wylosowano wariant funkcji dla $1000$ użytkowników, ale tylko część użytkowników rzeczywiście ją otworzyła. Badacz porównuje tych, którzy otworzyli nową wersję, z wszystkimi użytkownikami kontrolnymi, ponieważ uzyskuje niższą wartość p. Czy estymuje efekt przydziału?\par
+\emph{Rozwiązanie.} Nie. Otwarcie funkcji jest zdarzeniem \emph{po przydziale} i może zależeć od zachowań, które wpływają na wynik. Selekcja według otwarcia może wprowadzić obciążenie. Pierwotnym, identyfikowalnym dzięki randomizacji celem jest efekt \emph{przydziału} (intention to treat), obliczany po wszystkich jednostkach zgodnie z wylosowanym wariantem. Efekt faktycznego użycia wymaga odrębnych założeń i metod, np. analizy z instrumentem, nie zaś arbitralnego usuwania obserwacji.
+\end{zadanie}
+
+\paragraph{Dalsza lektura.}
+O rozróżnieniu identyfikacji, estymacji i decyzji w badaniach interwencyjnych oraz obserwacyjnych zob. \href{https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/}{Hernán i Robins, \emph{Causal Inference: What If}}. Konstrukcje rozdziału opierają się na jawnych założeniach spójności, wymienności i dodatniości, a nie na utożsamieniu korelacji z przyczynowością.
+
+
+% --- Rozdzial 32: praktyczne laboratorium porownawcze ---

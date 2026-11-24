@@ -1,0 +1,491 @@
+\chapter{Rozwiązania silne i słabe oraz twierdzenie Yamada--Watanabego}
+\label{ch:weak-strong-sde}
+
+\section{Motywacja: co należy ustalić przed rozwiązaniem równania?}
+
+Gdy rozwiązujemy klasyczne równanie różniczkowe, znamy funkcję
+wymuszającą i szukamy odpowiedniej trajektorii. W równaniu
+stochastycznym sytuacja jest subtelniejsza. Możemy albo z góry
+ustalić przestrzeń probabilistyczną, filtrację i proces Wienera,
+a następnie szukać procesu $X$ na tej przestrzeni, albo
+pozwolić, by przestrzeń i szum były częścią konstruowanego
+rozwiązania. Pierwszy problem nazywamy \emph{silnym}, a drugi
+\emph{słabym}. Przymiotniki te nie dotyczą rozmiaru współczynników
+ani siły zastosowanej normy.
+
+Co więcej, pytanie o \emph{istnienie} rozwiązania i pytanie
+o jego \emph{jednoznaczność} są niezależne. Musimy również
+odróżnić dwie jednoznaczności: zgodność trajektorii przy
+wspólnym szumie oraz zgodność samych praw rozkładu. To
+rozróżnienie ma znaczenie nawet wtedy, gdy rozważamy wyłącznie
+równania o ciągłych trajektoriach.
+
+\section{Dokładne definicje i podstawowe implikacje}
+
+Niech $T>0$, $d,m\in\N$, $x\in\R^d$,
+$b:[0,T]\times\R^d\to\R^d$ oraz
+$\sigma:[0,T]\times\R^d\to\R^{d\times m}$ będą
+funkcjami borelowskimi. W tym rozdziale rozważamy
+\[
+ X_t=x+\int_0^t b(s,X_s)\,\dd s
+ +\int_0^t\sigma(s,X_s)\,\dd W_s,
+ \qquad 0\le t\le T.
+ \tag{14.1}\label{eq:weak-strong-main}
+\]
+
+\begin{definicja}[Rozwiązanie słabe]
+\label{def:weak-solution}
+\emph{Rozwiązaniem słabym} równania \eqref{eq:weak-strong-main}
+nazywamy układ
+$(\Omega,\calF,\Prob,(\calF_t)_{0\le t\le T},W,X)$,
+w którym $(\Omega,\calF,\Prob)$ jest przestrzenią
+probabilistyczną, filtracja spełnia warunki zwykłe,
+$W$ jest $m$-wymiarowym procesem Wienera \emph{względem tej
+filtracji}, a $X$ jest ciągłym, adaptowanym procesem
+$\R^d$-wartościowym o $X_0=x$ i
+\[
+ \int_0^T\bigl(\|b(s,X_s)\|+
+ \|\sigma(s,X_s)\|_{\mathrm{HS}}^2\bigr)\,\dd s<\infty
+ \quad\text{prawie na pewno}.
+\]
+Wymagamy, aby \eqref{eq:weak-strong-main} zachodziło
+prawie na pewno dla wszystkich $t$ jednocześnie.
+Przestrzeń probabilistyczna i proces Wienera są częścią
+poszukiwanego rozwiązania.
+\end{definicja}
+
+\begin{definicja}[Rozwiązanie silne]
+\label{def:strong-solution-precise}
+\emph{Silnym rozwiązaniem} na zadanej przestrzeni z zadanym
+procesem Wienera $W$ nazywamy rozwiązanie
+\eqref{eq:weak-strong-main}, adaptowane do uzupełnionej,
+prawostronnie ciągłej filtracji naturalnej procesu $W$.
+Równoważnie, w powyższym przypadku deterministycznego stanu
+początkowego, można wybrać proces $X$ będący nieantycypującym,
+mierzalnym funkcjonałem trajektorii $W$. Dla losowego stanu
+początkowego należy do danych tego funkcjonału dodać stan
+początkowy, niezależny od przyszłych przyrostów szumu.
+\end{definicja}
+
+\begin{definicja}[Dwa rodzaje jednoznaczności]
+\label{def:path-law-uniq}
+Równanie \eqref{eq:weak-strong-main} ma
+\emph{jednoznaczność ścieżkową}, jeżeli na każdej wspólnej
+przestrzeni probabilistycznej z tym samym procesem Wienera
+każde dwa rozwiązania $X,Y$ o tym samym stanie początkowym
+są nierozróżnialne, to jest
+$\Prob(X_t=Y_t\text{ dla wszystkich }t\le T)=1$.
+
+Mówimy o \emph{jednoznaczności co do prawa}, jeżeli prawa
+procesu $X$ na $C([0,T];\R^d)$ są jednakowe dla wszystkich
+słabych rozwiązań tego równania o wskazanym stanie początkowym.
+Nie jest to z definicji to samo, co jednoznaczność wspólnego
+prawa pary $(X,W)$.
+\end{definicja}
+
+\begin{uwaga}[Nie mylimy przestrzeni praw z przestrzenią trajektorii]
+Równość $\Law(X)=\Law(Y)$ jest równością miar na
+$C([0,T];\R^d)$ i nie oznacza, że $X_t(\omega)=Y_t(\omega)$.
+Nawet jeśli dwa procesy mają to samo prawo, mogą być
+zdefiniowane na różnych przestrzeniach probabilistycznych.
+Jednoznaczność ścieżkowa wymaga porównania dwóch procesów
+na \emph{tej samej} przestrzeni i przy \emph{tym samym} szumie.
+\end{uwaga}
+
+\begin{przyklad}[Istnienie bez jednoznaczności]
+Niech $d=m=1$, $\sigma\equiv0$,
+$b(x)=2\sqrt{\max\{x,0\}}$ i $x=0$.
+Dla każdego $c\ge0$ funkcja
+$X_t^{(c)}=(t-c)_+^2$ spełnia
+$X_t^{(c)}=\int_0^t2\sqrt{X_s^{(c)}}\,\dd s$.
+Istnieje też rozwiązanie identycznie zerowe.
+Są to rozwiązania silne na każdej przestrzeni z procesem
+Wienera, ale nie zachodzi ani jednoznaczność ścieżkowa,
+ani jednoznaczność co do prawa. Nie można więc zastąpić
+hipotezy Lipschitza samą ciągłością współczynnika.
+\end{przyklad}
+
+\section{Przygotowanie do twierdzenia Yamada--Watanabego}
+
+Dowód nie polega na formalnej manipulacji z prawami
+rozkładu. Kluczowa idea jest następująca: \emph{dwa
+warunkowo niezależne rozwiązania przy tej samej realizacji
+szumu muszą, na mocy jednoznaczności ścieżkowej, być równe}.
+Z tego wywnioskujemy, że przy ustalonym szumie rozkład
+warunkowy rozwiązania skupia się w jednym punkcie.
+Aby uniknąć ukrytego założenia o mierzalności, osobno
+uzasadnimy wszystkie kroki tej konstrukcji.
+
+\begin{lemat}[Niezależność przyszłych przyrostów i przyczynowość]
+\label{lem:YW-causality}
+Niech $(W,X)$ będzie słabym rozwiązaniem
+\eqref{eq:weak-strong-main}. Wybierzmy regularny rozkład
+warunkowy $K(w,\dd y)$ całej trajektorii $X$ pod warunkiem
+$W=w$, gdzie $w\in C([0,T];\R^m)$ i
+$y\in C([0,T];\R^d)$. Dla każdego $t\in[0,T]$ oraz
+każdej ograniczonej borelowskiej funkcji $F$ zależnej
+wyłącznie od $y|_{[0,t]}$ istnieje wersja funkcji
+$w\mapsto\int F(y)K(w,\dd y)$ mierzalna względem
+$\sigma(w_s:0\le s\le t)$ po uzupełnieniu miary Wienera.
+\end{lemat}
+\begin{proof}
+Zmienna $F(X)$ jest $\calF_t$-mierzalna.
+Przyszły proces przyrostów $(W_{t+s}-W_t)_{0\le s\le T-t}$
+jest niezależny od $\calF_t$, a więc także od $F(X)$
+oraz historii $W$ do chwili $t$. Zatem dla każdej ograniczonej
+funkcji $G$ przeszłości $W$ i każdej ograniczonej funkcji $H$
+przyszłych przyrostów mamy
+\[
+ \E[F(X)G(W_{\le t})H(W_{t+\cdot}-W_t)]
+ =\E[F(X)G(W_{\le t})]\,\E H(W_{t+\cdot}-W_t).
+\]
+Twierdzenie o klasie monotonicznej rozciąga tę równość
+na ograniczone funkcje całej trajektorii $W$. Oznacza to,
+że $\E[F(X)\mid\sigma(W_s:0\le s\le T)]$ jest równe
+$\E[F(X)\mid\sigma(W_s:0\le s\le t)]$ prawie na pewno.
+Lewa strona jest $\int F(y)K(W,\dd y)$, co daje tezę.
+\end{proof}
+
+\begin{lemat}[Równanie Itô jako własność wspólnego prawa]
+\label{lem:YW-transfer}
+Jeśli dwie pary ciągłych procesów $(X,W)$ i
+$(\widehat X,\widehat W)$ mają to samo prawo na
+$C([0,T];\R^d)\times C([0,T];\R^m)$, a oba procesy
+$W,\widehat W$ są procesami Wienera względem odpowiednich
+filtracji zawierających historie $X,\widehat X$, to
+spełnianie równania \eqref{eq:weak-strong-main} przez
+pierwszą parę implikuje jego spełnianie przez drugą
+(z tymi samymi współczynnikami i stanem początkowym).
+\end{lemat}
+\begin{proof}
+Całka $\int_0^t b(s,X_s)\,\dd s$ jest borelowskim
+funkcjonałem trajektorii $X$ tam, gdzie istnieje.
+Dla całki stochastycznej oznaczmy
+$H_s=\sigma(s,X_s)$ i najpierw obetnijmy jej wartości,
+$H_s^{(K)}=H_s\ind{\{\|H_s\|\le K\}}$.
+Dla ustalonego $K$ uśrednienia lewostronne
+\[
+ H_s^{(K,n)}=n\int_{(s-1/n)^+}^{s}H_r^{(K)}\,\dd r
+\]
+są ciągłymi, adaptowanymi funkcjami czasu i zbieżne do
+$H^{(K)}$ w $L^2(\Prob\otimes\dd s)$ na podstawie
+ciągłości przesunięć w $L^2$ oraz zbieżności zdominowanej.
+W dalszym przybliżeniu zastępujemy je wartościami na
+lewych końcach drobnego deterministycznego podziału.
+Otrzymana całka jest skończoną sumą
+$\sum_j H_{t_j}^{(K,n)}(W_{t_{j+1}}-W_{t_j})$,
+a więc \emph{borelowskim funkcjonałem pary} $(X,W)$.
+Izometria Itô daje zbieżność tych sum do
+$\int_0^tH_s^{(K)}\,\dd W_s$ w prawdopodobieństwie.
+Po dopuszczeniu $K\to\infty$ i lokalizacji przy
+$\int_0^T\|H_s\|^2\,\dd s$ otrzymujemy całą całkę.
+Wybierając podciągi, wyrażamy zatem całkę w każdej
+wymiernej chwili jako prawie wszędzie określoną granicę
+borelowskich funkcjonałów pary $(X,W)$.
+Ta sama konstrukcja i te same rozkłady par pozwalają
+przenieść tożsamość równania na $(\widehat X,\widehat W)$.
+Ciągłość obu stron rozszerza ją ze zbioru chwil wymiernych
+na wszystkie $t$.
+\end{proof}
+
+\begin{twierdzenie}[Yamada--Watanabe: wersja dla równań Browna]
+\label{th:YW}
+Niech $b,\sigma$ będą funkcjami borelowskimi określonymi
+przed \eqref{eq:weak-strong-main}, a $x\in\R^d$ będzie
+ustalony. Załóżmy, że istnieje przynajmniej jedno słabe
+rozwiązanie \eqref{eq:weak-strong-main}, i że zachodzi
+jednoznaczność ścieżkowa w sensie
+Definicji~\ref{def:path-law-uniq}. Wówczas:
+\begin{enumerate}
+\item istnieje silne rozwiązanie dla każdego $m$-wymiarowego
+procesu Wienera na przestrzeni z filtracją naturalną,
+po jej zwykłym uzupełnieniu;
+\item rozwiązanie jest nieantycypującym mierzalnym funkcjonałem
+trajektorii $W$, z dokładnością do nierozróżnialności;
+\item zachodzi jednoznaczność co do prawa procesu $X$,
+a nawet jednoznaczność wspólnego prawa pary $(X,W)$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: warunkowe kopie.} Ustalmy słabe rozwiązanie
+i oznaczmy jego wspólne prawo $(W,X)$ przez $\mu$.
+Ponieważ przestrzenie ciągłych trajektorii są polskie,
+istnieje regularny rozkład warunkowy $K(w,\dd y)$
+rozwiązania przy ustalonej trajektorii szumu.
+Na przestrzeni kanonicznej trójek $(w,y_1,y_2)$
+wprowadzamy miarę
+\[
+ \mathsf Q(\dd w,\dd y_1,\dd y_2)
+ =\mu_W(\dd w)K(w,\dd y_1)K(w,\dd y_2),
+\]
+gdzie $\mu_W$ jest miarą Wienera. Warunkowo względem
+$w$ procesy $y_1,y_2$ są niezależnymi kopiami z prawa
+$K(w,\cdot)$.
+
+\emph{Krok 2: wspólny proces Wienera.} Nie możemy po prostu
+założyć, że $w$ jest procesem Wienera względem filtracji
+zawierającej historie obu $y_i$: trzeba to udowodnić.
+Niech $\calG_t$ będzie uzupełnioną filtracją generowaną
+przez $w_s,y_{1,s},y_{2,s}$ dla $s\le t$ (następnie bierzemy
+jej wersję prawostronnie ciągłą). Dla ograniczonej funkcji
+$F$ zależnej od tych historii jej warunkowa średnia pod
+warunkiem całego $w$ jest funkcją historii $w_{\le t}$,
+ponieważ warunkowe prawo dwóch kopii jest iloczynem
+$K(w,\cdot)$ i zachodzi Lemat~\ref{lem:YW-causality}.
+Przyszłe przyrosty $w$ są niezależne od jego przeszłości,
+zatem niezależne od $\calG_t$. Przejście do filtracji
+prawostronnie ciągłej uzasadnia się przez przybliżenie
+chwil $t$ z góry i prawostronną ciągłość trajektorii.
+Proces $w$ pozostaje więc procesem Wienera względem
+wspólnej filtracji.
+
+\emph{Krok 3: obie kopie rozwiązują to samo równanie.}
+Z definicji $\mathsf Q$ każda para $(y_i,w)$ ma prawo
+$\mu$. Lematem~\ref{lem:YW-transfer} przenosimy zatem
+równanie Itô na każdą z par, względem wspólnej filtracji
+z kroku 2. Obie kopie mają wspólny szum $w$ i wspólny
+stan początkowy. Z jednoznaczności ścieżkowej wynika
+$y_1=y_2$ jako trajektorie, $\mathsf Q$-prawie na pewno.
+
+\emph{Krok 4: skupienie rozkładu warunkowego w punkcie.}
+Warunkowa niezależność i poprzednia równość dają
+\[
+ \int K(w,\dd y_1)K(w,\dd y_2)
+ \ind{\{y_1\ne y_2\}}=0
+ \quad\text{dla }\mu_W\text{-prawie każdego }w.
+\]
+Lemat~\ref{lem:dirac-audit}, udowodniony poniżej,
+pokazuje, że taka miara musi być miarą Diraca.
+Wobec tego $K(w,\cdot)=\delta_{F(w)}$ prawie wszędzie,
+dla pewnego mierzalnego odwzorowania
+$F:C([0,T];\R^m)\to C([0,T];\R^d)$.
+Lemat~\ref{lem:YW-causality} pokazuje, że ograniczenie
+$F(w)|_{[0,t]}$ zależy, z dokładnością do zbiorów zerowych,
+wyłącznie od $w|_{[0,t]}$. Stąd proces $F(W)$ jest
+adaptowany do uzupełnionej filtracji naturalnej i,
+na mocy Lematu~\ref{lem:YW-transfer}, spełnia SDE.
+Otrzymaliśmy silne istnienie. To samo odwzorowanie możemy
+zastosować do dowolnego innego procesu Wienera, gdyż jego
+prawo jest $\mu_W$.
+
+\emph{Krok 5: jednoznaczność prawa.} Dla dwóch dowolnych
+słabych rozwiązań wybierzmy ich jądra warunkowe
+$K_1(w,\cdot)$ i $K_2(w,\cdot)$ i powtórzmy kroki 1--3,
+tym razem losując jedną kopię z $K_1$, a drugą z $K_2$.
+Jednoznaczność ścieżkowa znów wymusza równość kopii.
+Ponieważ obie są warunkowo niezależne, ich jądra są
+jednocześnie jednakowymi miarami Diraca. Otrzymujemy
+to samo prawo pary $(X,W)$, a po marginalizacji ---
+to samo prawo $X$.
+\end{proof}
+
+\begin{uwaga}[Zakres twierdzenia]
+Powyższy dowód korzysta ze standardowego twierdzenia o
+istnieniu regularnych rozkładów warunkowych na przestrzeniach
+polskich oraz z konstrukcji miary na iloczynie za pomocą jąder.
+Nie jest to bezpośredni wniosek z elementarnego rachunku
+Itô; potrzebny jest też Lemat~\ref{lem:YW-transfer}.
+Analogiczna idea działa dla wielu równań napędzanych
+procesami ze skokami, ale wymaga ponownej kontroli
+przyczynowości i kanonicznej przestrzeni losowych miar.
+\end{uwaga}
+
+
+\section{Doprecyzowanie argumentu warunkowego w twierdzeniu Yamada--Watanabego}
+
+\begin{lemat}[Kiedy warunkowy rozkład jest miarą Diraca?]
+\label{lem:dirac-audit}
+Niech $S$ będzie przestrzenią polską, $K$ miarą
+probabilistyczną na $S$ i niech $Y_1,Y_2$ będą
+niezależnymi zmiennymi o rozkładzie $K$. Jeżeli
+$\Prob(Y_1=Y_2)=1$, to $K=\delta_y$ dla pewnego $y\in S$.
+Jeśli ponadto $w\mapsto K(w,\cdot)$ jest jądrem
+probabilistycznym przyjmującym prawie wszędzie miary
+Diraca, to jego atom $F(w)$ można wybrać mierzalnie
+względem uzupełnienia odpowiedniej miary bazowej.
+\end{lemat}
+\begin{proof}
+Wybieramy przeliczalną rodzinę zbiorów borelowskich
+rozdzielającą punkty $S$ (na przykład kule o wymiernych
+promieniach i środkach z przeliczalnego zbioru gęstego).
+Dla każdego zbioru $A$ z tej rodziny niezależność daje
+$\Prob(Y_1\in A,Y_2\notin A)=K(A)(1-K(A))=0$.
+Wszystkie te wartości są więc równe zeru lub jedności.
+Dwie niezależne realizacje należą prawie na pewno do
+identycznych elementów całej rodziny, a rodzina rozdziela
+punkty, więc są równe. Gdyby $K$ nie było miarą Diraca,
+istniałby zbiór borelowski o prawdopodobieństwie ściśle
+między zerem a jednością: można wziąć dwie rozłączne
+okolice punktów należących do nośnika $K$.
+Otrzymujemy sprzeczność.
+
+Dla mierzalności rozważamy odwzorowanie
+$\delta:S\to\mathcal P(S)$, $y\mapsto\delta_y$.
+Jest ono ciągłe i różnowartościowe. Jego obraz jest
+nawet domknięty: jeśli $\delta_{y_n}$ zbiega słabo do
+$\mu$, to ciasność zbieżnej rodziny daje wspólny
+zwarty zbiór zawierający prawie wszystkie $y_n$;
+podciąg $y_{n_k}\to y$ pokazuje $\mu=\delta_y$.
+Każdy zbieżny podciąg punktów ma tę samą granicę,
+więc $y_n\to y$. Odwrotność obrazu jest zatem
+ciągła, a w szczególności borelowska. Na zbiorze pełnej miary, na którym
+$K(w,\cdot)$ jest miarą Diraca, kładziemy
+$F(w)=\delta^{-1}(K(w,\cdot))$; poza nim wybieramy
+ustalony punkt. To daje wymagany funkcjonał.
+\end{proof}
+
+\begin{uwaga}[Dlaczego sama równość praw nie wystarcza?]
+W dowodzie Twierdzenia~\ref{th:YW} wspólne prawo pary
+$(X,W)$ nie jest zastępnikiem warunku adaptacji.
+Najpierw potrzebujemy Lematu~\ref{lem:YW-causality}, aby
+udowodnić, że warunkowe kopie nie mają informacji o
+przyszłych przyrostach $W$. Dopiero wtedy wspólny proces
+$W$ pozostaje procesem Wienera względem filtracji
+powiększonej o historie obu kopii i wolno zastosować
+jednoznaczność ścieżkową. Lemat~\ref{lem:dirac-audit}
+uzasadnia ostatni etap, w którym warunkowe prawo
+zostaje zastąpione mierzalnym funkcjonałem $F(W)$.
+\end{uwaga}
+
+\section{Przykłady i zastosowania jednoznaczności}
+
+\begin{zadanie}[Silne rozwiązanie jest automatycznie słabym]
+Przypuśćmy, że współczynniki $b,\sigma$ spełniają
+globalny warunek Lipschitza i liniowego wzrostu.
+Co dokładnie wynika o wszystkich trzech rodzajach
+jednoznaczności?
+
+\emph{Rozwiązanie.} Z twierdzenia konstrukcyjnego
+rozdziału~5 istnieje silne rozwiązanie i zachodzi
+jednoznaczność ścieżkowa. W szczególności rozwiązanie
+silne jest słabym, bo jego filtracja i szum spełniają
+Definicję~\ref{def:weak-solution}. Hipotezy
+Twierdzenia~\ref{th:YW} są spełnione, a więc zachodzi
+jednoznaczność co do prawa, także dla dowolnych słabych
+rozwiązań konstruowanych na innych przestrzeniach.
+Rozwiązanie silne nie jest z definicji ``bardziej
+regularną'' trajektorią; chodzi wyłącznie o źródło
+losowości i mierzalność względem niego.
+\end{zadanie}
+
+\begin{twierdzenie}[Słabe istnienie przy ograniczonym dryfie]
+\label{th:bounded-borel-weak}
+Niech $b:[0,T]\times\R\to\R$ będzie ograniczoną funkcją
+borelowską, a $x\in\R$. Równanie
+\[
+ X_t=x+\int_0^t b(s,X_s)\,\dd s+W_t
+ \tag{14.2}\label{eq:borel-drift}
+\]
+ma słabe rozwiązanie, a jego prawo na $C([0,T];\R)$
+jest jednoznaczne.
+\end{twierdzenie}
+\begin{proof}
+\emph{Istnienie.} Na przestrzeni z procesem Wienera $B$
+pod miarą $\mathsf P$ połóżmy $X_t=x+B_t$ i
+\[
+ Z_T=\exp\left(\int_0^Tb(s,X_s)\,\dd B_s
+ -\tfrac12\int_0^Tb(s,X_s)^2\,\dd s\right).
+\]
+Ograniczoność $b$ zapewnia warunek Novikova,
+więc $\E_{\mathsf P}Z_T=1$ i możemy określić
+$\dd\mathsf Q=Z_T\dd\mathsf P$.
+Twierdzenie Girsanowa z rozdziału~8 mówi, że
+$W_t=B_t-\int_0^tb(s,X_s)\dd s$ jest
+procesem Wienera pod $\mathsf Q$.
+Wobec tego $X=x+\int b(s,X_s)\dd s+W$,
+co daje słabe rozwiązanie.
+
+\emph{Jednoznaczność prawa.} Niech $\widehat X$ będzie
+dowolnym słabym rozwiązaniem napędzanym przez
+$\widehat W$ pod miarą $\widehat{\mathsf P}$.
+Girsanow zastosowany z przeciwnym znakiem do
+$\theta_s=b(s,\widehat X_s)$ daje miarę
+$\widehat{\mathsf Q}$, równoważną
+$\widehat{\mathsf P}$, pod którą
+$\widehat X_t-x=\widehat W_t+
+\int_0^tb(s,\widehat X_s)\dd s$ jest
+standardowym procesem Wienera. Jednocześnie
+\[
+ \frac{\dd\widehat{\mathsf P}}{\dd\widehat{\mathsf Q}}
+ =\exp\left(\int_0^T b(s,\widehat X_s)\,\dd\widehat X_s
+ -\frac12\int_0^Tb(s,\widehat X_s)^2\,\dd s\right).
+\]
+Całka po prawej jest całką Itô względem Browna
+$\widehat X-x$ pod $\widehat{\mathsf Q}$ i jest
+mierzalnym funkcjonałem trajektorii $\widehat X$
+z dokładnością do zbioru zerowego, co uzasadnia
+Lemat~\ref{lem:YW-transfer}. Ponieważ pod
+$\widehat{\mathsf Q}$ prawo $\widehat X$ jest zawsze
+prawem procesu $x+B$, powyższy wzór wyznacza jednoznacznie
+jego prawo pod $\widehat{\mathsf P}$.
+\end{proof}
+
+\begin{uwaga}[Czego twierdzenie o ograniczonym dryfie nie dowodzi?]
+W Twierdzeniu~\ref{th:bounded-borel-weak} skonstruowano
+\emph{słabe} rozwiązanie i wykazano jednoznaczność co do
+prawa. Nie udowodniono na tej podstawie jednoznaczności
+ścieżkowej ani istnienia silnego rozwiązania przy dowolnym
+ograniczonym borelowskim dryfie. Takie wzmocnienia wymagają
+osobnych argumentów regularizacyjnych.
+\end{uwaga}
+
+\begin{przyklad}[Dlaczego sama jednoznaczność prawa nie zastępuje ścieżkowej?]
+Dwa procesy $X,Y$ mogą być niezależnymi ruchami Browna.
+Wówczas $\Law(X)=\Law(Y)$, ale
+$\Prob(X_t=Y_t\text{ dla każdego }t\in[0,T])=0$.
+Ta obserwacja dotyczy ogólnie praw procesów. Nie jest
+kontrprzykładem do Twierdzenia~\ref{th:YW}, ponieważ
+procesy nie zostały przedstawione jako dwa rozwiązania
+tego samego SDE napędzanego przez \emph{wspólny} proces
+Wienera.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex,node distance=2cm]
+\node[draw,rounded corners,align=center,minimum width=3cm,minimum height=.7cm]
+ (w) {zadany szum $W$};
+\node[draw,rounded corners,align=center,below left=1.3cm and 1.9cm of w,
+ minimum width=3.3cm,minimum height=.9cm] (strong)
+ {rozwiązanie silne\\$X=F(W)$};
+\node[draw,rounded corners,align=center,below right=1.3cm and 1.9cm of w,
+ minimum width=3.4cm,minimum height=.9cm] (weak)
+ {rozwiązanie słabe\\$\Law(W,X)$};
+\draw[->,thick,blue!70!black] (w)--(strong)
+ node[midway,left,scale=.85] {konstrukcja};
+\draw[->,thick,blue!70!black] (w)--(weak)
+ node[midway,right,scale=.85] {wybór prawa};
+\draw[->,thick,dashed] (strong)--(weak)
+ node[midway,below,scale=.85] {implikuje};
+\end{tikzpicture}
+\par\smallskip\small
+Różnica między ujęciem silnym i słabym: w pierwszym
+szum jest dany przed konstrukcją rozwiązania, a w drugim
+możemy wybierać go razem z przestrzenią probabilistyczną.
+\end{center}
+
+\section{Podsumowanie i kierunki dalszej teorii}
+
+Otrzymaliśmy wnikliwe rozróżnienie istnienia silnego i słabego,
+jednoznaczności ścieżkowej oraz jednoznaczności co do prawa.
+Twierdzenie Yamada--Watanabego wyjaśnia, dlaczego przy
+istnieniu słabego rozwiązania jednoznaczność ścieżkowa
+wymusza silne istnienie: rozkład warunkowy rozwiązania
+przy danej trajektorii szumu musi się skoncentrować w jednym
+punkcie. Dowód wymagał regularnych rozkładów warunkowych,
+argumentu przyczynowości i kontroli całek Itô przy
+przenoszeniu praw par procesów.
+
+W kolejnych rozdziałach rozwiniemy całki po trajektoriach
+w języku miary Wienera i wprowadzimy fizyczne całki
+Feynmana, z uwzględnieniem różnicy pomiędzy miarą
+probabilistyczną i oscylacyjnym formalizmem propagatora.
+
+
+
+
+% ===========================================================================
+% ROZDZIAŁ 15: całki po trajektoriach, most Browna, jądra Feynmana--Kaca
+% ===========================================================================
+% Część końcowa: ścisłe całki funkcyjne i rachunek operatorowy.
+% W całym rozdziale 16 twierdzenie spektralne, klasyczne jądra gaussowskie
+% i podstawowa teoria generatorów półgrup są jawnie przyjmowanymi narzędziami.

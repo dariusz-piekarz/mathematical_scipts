@@ -1,0 +1,509 @@
+\chapter{Całka Stratonovicha i jej związek z całką Itô}
+\label{ch:stratonovich}
+
+\section{Dwie reguły sumowania, dwa rachunki}
+W klasycznym rachunku różniczkowym funkcja złożona
+spełnia regułę łańcuchową bez dodatkowych wyrazów.
+W rachunku Itô pojawia się poprawka zależna od wariacji
+kwadratowej. Można jednak zdefiniować inną całkę,
+która w przypadku ciągłych procesów Itô zachowuje
+zwykłą regułę łańcuchową. Jest nią \emph{całka
+Stratonovicha}.
+
+Trzeba tu odróżnić dwa pytania. Pierwsze dotyczy
+\emph{istnienia granicy} sum, w których współczynnik
+wybieramy na środku przedziału. Drugie dotyczy tego,
+\emph{co dokładnie rozumiemy przez środek}: w poniższej
+konstrukcji użyjemy średniej arytmetycznej wartości
+procesu podcałkowego na obu końcach przedziału.
+Takie sumy są symetryczne, lecz w przeciwieństwie do
+sum Itô korzystają z przyszłej wartości integrandu.
+Nie jest to strategia przewidywalna w rozumieniu
+rozdziału \ref{ch:ito-construction}.
+
+\begin{przyklad}[Najprostsza różnica]
+Dla procesu Wienera $W_0=0$ rozważmy
+\[
+S_\pi^{\mathrm L}=\sum_kW_{t_k}\Delta_kW,
+\qquad
+S_\pi^{\mathrm S}=
+\frac12\sum_k(W_{t_k}+W_{t_{k+1}})\Delta_kW.
+\]
+Drugie wyrażenie jest dokładnie teleskopowe:
+$S_\pi^{\mathrm S}=\frac12W_T^2$ dla każdego podziału.
+Natomiast $S_\pi^{\mathrm L}\to\frac12(W_T^2-T)$
+w $L^2$. Zatem odpowiednia poprawka wynosi $T/2$.
+\emph{To nie wybór dowolnej estetycznej konwencji}:
+obydwa rachunki odpowiadają różnym konstrukcjom
+matematycznym i różnym sposobom aproksymowania hałasu.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex,x=1.0cm,y=.85cm]
+\draw[->] (0,0)--(8.5,0) node[right] {$t$};
+\draw[->] (0,-.35)--(0,2.5) node[above] {$W_t$};
+\draw[thick,blue!70!black]
+ (0,0)--(.6,.3)--(1.2,1.15)--(1.8,.9)--(2.4,1.6)
+ --(3,1.0)--(3.6,.65)--(4.2,1.35)--(4.8,1.1)
+ --(5.4,1.9)--(6,1.4)--(6.6,2.1)--(7.2,1.5)--(7.8,1.85);
+\foreach \x in {0,1.8,3.6,5.4,7.8}
+ {\draw[dashed,gray!70] (\x,0)--(\x,2.25);}
+\fill[blue!65!black] (1.8,.9) circle (2pt);
+\fill[blue!65!black] (3.6,.65) circle (2pt);
+\draw[<->,orange!75!black,thick] (1.8,2.3)--(3.6,2.3)
+ node[midway,above,scale=.85] {jeden przedział};
+\node[scale=.81,anchor=north] at (1.8,-.12) {$t_k$};
+\node[scale=.81,anchor=north] at (3.6,-.12) {$t_{k+1}$};
+\node[scale=.78,align=left,anchor=west] at (5.0,2.42)
+ {Itô: lewy koniec\\Stratonovich: średnia końców};
+\end{tikzpicture}
+\par\smallskip\small Porównanie reguł próbkowania na tym samym odcinku trajektorii.
+\end{center}
+
+\section{Kowariacja i zbieżność sum symetrycznych}
+\begin{definicja}[Kowariacja ciągłych procesów Itô]
+Niech $H$ i $X$ będą ciągłymi procesami Itô,
+$H=H_0+\int_0^.\alpha_s\,\dd s+
+\int_0^.\beta_s\,\dd W_s$ oraz
+$X=X_0+\int_0^.b_s\,\dd s+
+\int_0^.\sigma_s\,\dd W_s$,
+z lokalnymi warunkami całkowalności jak w
+rozdziale \ref{ch:ito-formula}. Definiujemy
+\[
+[H,X]_t:=\int_0^t\beta_s\sigma_s\,\dd s.
+\tag{4.1}\label{eq:HX-bracket}
+\]
+Jest to dobrze określony ciągły proces skończonej
+wariacji, ponieważ
+$\int_0^T|\beta_s\sigma_s|\,\dd s
+\le(\int_0^T\beta_s^2\,\dd s)^{1/2}
+(\int_0^T\sigma_s^2\,\dd s)^{1/2}<\infty$
+prawie na pewno.
+\end{definicja}
+
+\begin{twierdzenie}[Zbieżność symetrycznych sum]
+\label{th:strat-sums}
+Niech $X,H$ będą ciągłymi procesami Itô, jak w
+poprzedniej definicji. Niech $\pi_n$ będą
+\emph{deterministycznymi} podziałami $[0,T]$
+o średnicy dążącej do zera. Dla $t\in[0,T]$
+niech
+\[
+S_t^{(n)}:=\frac12\sum_k
+(H_{t_k}+H_{t_{k+1}})
+\bigl(X_{t_{k+1}\wedge t}-X_{t_k\wedge t}\bigr)
+\ind{\{t_k<t\}},
+\]
+przy czym w składniku przeciętym przez $t$
+zastępujemy $H_{t_{k+1}}$ wartością $H_t$.
+Wtedy
+\[
+S_t^{(n)}\ \xrightarrow[n\to\infty]{\mathrm{ucp}}
+\int_0^tH_s\,\dd X_s+\frac12[H,X]_t,
+\tag{4.2}\label{eq:strat-sum}
+\]
+gdzie $\int H\,\dd X:=\int Hb\,\dd s+
+\int H\sigma\,\dd W$ oznacza całkę Itô.
+\end{twierdzenie}
+\begin{proof}
+Dla $t=T$ rozkładamy sumę na część lewostronną i
+część poprawkową:
+\[
+S_T^{(n)}=\sum_kH_{t_k}\Delta_kX
++\frac12\sum_k\Delta_kH\,\Delta_kX.
+\tag{4.3}\label{eq:strat-decomp}
+\]
+Dla składnika pierwszego definiujemy
+$H_s^{(n)}=H_{t_k}$ na $(t_k,t_{k+1}]$.
+Jest to proces przewidywalny. Z ciągłości $H$ mamy
+$\sup_s|H_s^{(n)}-H_s|\to0$ ścieżkowo. Część
+całki względem skończonej wariacji spełnia
+\[
+\left|\int_0^T(H_s^{(n)}-H_s)b_s\,\dd s\right|
+\le\norm{H^{(n)}-H}_\infty\int_0^T|b_s|\,\dd s
+\longrightarrow0
+\]
+prawie na pewno. Dla części stochastycznej
+lokalizujemy energię $\int_0^T\sigma_s^2\,\dd s$
+i supremum $|H|$. Wtedy zbieżność zdominowana
+i izometria Itô zapewniają
+$\E|\int_0^T(H_s^{(n)}-H_s)\sigma_s\,\dd W_s|^2\to0$
+po zatrzymaniu. Usuwając lokalizację, otrzymujemy
+zbieżność w prawdopodobieństwie do $\int_0^TH_s\,\dd X_s$.
+
+W drugim składniku \eqref{eq:strat-decomp} korzystamy
+z kowariacji. Z polaryzacji i lematu
+\ref{lem:ito-qv} zastosowanego do $H+X$ i $H-X$
+wynika ucp-zbieżność
+$\sum_{t_{k+1}\le t}\Delta_kH\Delta_kX\to[H,X]_t$.
+Połączenie obydwu granic daje \eqref{eq:strat-sum}
+w chwili końcowej. Dla uciętych sum wszystkie powyższe
+oszacowania zachodzą także w supremum po $t$, ponieważ
+całki stochastyczne kontroluje nierówność maksymalna
+Dooba, a sumy kwadratów przyrostów zbiegają ucp.
+Różnica spowodowana ostatnim, niepełnym odcinkiem
+jest zaniedbywalna wskutek ciągłości $H,X$ i
+ograniczoności odpowiednich sum w prawdopodobieństwie.
+Otrzymujemy zbieżność ucp na całym $[0,T]$.
+\end{proof}
+
+\begin{definicja}[Całka Stratonovicha]
+Dla ciągłych procesów Itô $H,X$ z poprzedniego
+twierdzenia definiujemy
+\[
+\int_0^tH_s\circ\dd X_s
+:=\int_0^tH_s\,\dd X_s+\frac12[H,X]_t.
+\tag{4.4}\label{eq:strat-def}
+\]
+Symbol $\circ\dd X_s$ oznacza całkowanie
+Stratonovicha, natomiast $\dd X_s$ bez kółka
+oznacza całkowanie Itô. Równość
+\eqref{eq:strat-sum} pokazuje, że definicja zgadza
+się z granicą symetrycznych sum Riemanna.
+\end{definicja}
+
+\begin{uwaga}[Granice stosowalności]
+Wzór \eqref{eq:strat-def} zdefiniowaliśmy dla
+\emph{ciągłych procesów Itô}, a nie dla każdego
+procesu przewidywalnego. Dla ogólnych
+półmartyngałów ciągłych można go rozszerzyć przez
+kowariację; dla procesów ze skokami trzeba ponadto
+rozróżnić kilka nierównoważnych konwencji (np.
+całkę kanoniczną Marcusa). Nie będziemy ich utożsamiać.
+\end{uwaga}
+
+\section{Reguła łańcuchowa bez członu drugiego rzędu}
+\begin{twierdzenie}[Reguła łańcuchowa Stratonovicha]
+\label{th:strat-chain}
+Niech $X$ będzie jednowymiarowym ciągłym procesem
+Itô. Dla każdej funkcji $F\in C^3(\R)$ zachodzi
+prawie na pewno, dla wszystkich $t\in[0,T]$,
+\[
+F(X_t)-F(X_0)=\int_0^t F'(X_s)\circ\dd X_s.
+\tag{4.5}\label{eq:strat-chain}
+\]
+Jeśli $F\in C^{1,3}([0,T]\times\R)$, a pochodna mieszana
+$F_{tx}$ istnieje i jest ciągła, to
+\[
+F(t,X_t)-F(0,X_0)
+=\int_0^tF_t(s,X_s)\,\dd s
++\int_0^tF_x(s,X_s)\circ\dd X_s.
+\tag{4.6}\label{eq:strat-chain-time}
+\]
+\end{twierdzenie}
+\begin{proof}
+Ze wzoru Itô mamy
+$F(X_t)-F(X_0)=\int_0^tF'(X_s)\,\dd X_s
++\frac12\int_0^tF''(X_s)\,\dd[X]_s$.
+Ponadto, stosując wzór Itô do $F'(X)$
+(co wyjaśnia założenie $F\in C^3$),
+dostajemy, że współczynnik przy $\dd W_s$ w
+rozkładzie $F'(X_s)$ jest równy
+$F''(X_s)\sigma_s$. Stąd
+$[F'(X),X]_t=\int_0^tF''(X_s)\sigma_s^2\,\dd s
+=\int_0^tF''(X_s)\,\dd[X]_s$.
+Po podstawieniu definicji \eqref{eq:strat-def}
+człony drugiego rzędu znoszą się i otrzymujemy
+\eqref{eq:strat-chain}. W przypadku funkcji zależnej
+od czasu stosujemy tę samą argumentację do
+$H_s=F_x(s,X_s)$: skończona wariacja składnika
+$\int F_{xt}\,\dd s$ nie wnosi kowariacji.
+\end{proof}
+
+\begin{zadanie}[Trzy elementarne całki]
+Obliczyć, bez pozostawiania symboli całek po prawej
+stronie, wyrażenia
+$\int_0^TW_s\circ\dd W_s$,
+$\int_0^TW_s^2\circ\dd W_s$
+oraz $\int_0^Te^{W_s}\circ\dd W_s$.
+
+\emph{Rozwiązanie.} Z reguły łańcuchowej dla
+$F(x)=x^2/2$, $F(x)=x^3/3$ i $F(x)=e^x$
+(odpowiednio) otrzymujemy
+\[
+\int_0^TW_s\circ\dd W_s=\frac12W_T^2,
+\quad \int_0^TW_s^2\circ\dd W_s=\frac13W_T^3,
+\quad \int_0^Te^{W_s}\circ\dd W_s=e^{W_T}-1.
+\]
+Dla pierwszej całki porównanie z Itô daje
+$\int_0^T W_s\circ\dd W_s
+=\int_0^TW_s\,\dd W_s+T/2$.
+Dla drugiej różnica wynosi $\int_0^TW_s\,\dd s$;
+nie jest zatem stałą deterministyczną.
+\end{zadanie}
+
+\begin{twierdzenie}[Iloczyn i całkowanie przez części]
+Dla dwóch ciągłych procesów Itô $X,Y$ zachodzi
+\[
+X_tY_t-X_0Y_0
+=\int_0^tX_s\circ\dd Y_s+
+\int_0^tY_s\circ\dd X_s.
+\tag{4.7}\label{eq:strat-product}
+\]
+\end{twierdzenie}
+\begin{proof}
+Ze wzoru na iloczyn Itô (twierdzenie
+\ref{th:ito-product}) otrzymujemy
+$\dd(XY)=X\,\dd Y+Y\,\dd X+\dd[X,Y]$.
+Z kolei \eqref{eq:strat-def} daje
+$\int X\circ\dd Y=\int X\,\dd Y+\frac12[X,Y]$
+oraz analogiczną równość po zamianie $X,Y$.
+Dodanie obu wyrażeń daje dokładnie
+\eqref{eq:strat-product}.
+\end{proof}
+
+\begin{lemat}[Jednoznaczność rozkładu na martyngał i skończoną wariację]
+\label{lem:uniqueness-mart-fv}
+Niech $M,N$ będą ciągłymi lokalnymi martyngałami zaczynającymi się
+w zerze, a $A,B$ ciągłymi, adaptowanymi procesami o skończonej
+wariacji na każdym przedziale zwartym, także zaczynającymi się
+w zerze. Jeżeli $M_t+A_t=N_t+B_t$ dla wszystkich $t$ prawie
+na pewno (z dokładnością do nierozróżnialności), to $M=N$ i
+$A=B$ z tą samą dokładnością.
+\end{lemat}
+\begin{proof}
+Proces $D=M-N=B-A$ jest ciągłym lokalnym martyngałem
+i jednocześnie ma skończoną wariację. Dla dowolnej
+trajektorii ciągłego procesu o skończonej wariacji na $[0,T]$
+\[
+\sum_{[u,v]\in\pi}(D_v-D_u)^2
+\le\max_{[u,v]\in\pi}|D_v-D_u|\,\operatorname{TV}_{[0,T]}(D)
+\longrightarrow0
+\]
+gdy średnica deterministycznego podziału dąży do zera.
+Z definicji wariacji kwadratowej ciągłego lokalnego
+martyngału wynika więc $[D]_t=0$ dla każdego $t$.
+Zatrzymajmy $D$ tak, aby $D^\tau$ i jego kwadrat były
+całkowalne. Proces $(D^\tau)^2-[D^\tau]$
+jest martyngałem, zatem
+$\E(D_{t\wedge\tau})^2=0$.
+Otrzymujemy $D_{t\wedge\tau}=0$ prawie na pewno.
+Usuwamy lokalizację i korzystamy z ciągłości trajektorii,
+aby uzyskać $D\equiv0$, co dowodzi obu równości.
+\end{proof}
+
+\section{Konwersja równań Itô i Stratonovicha}
+Sama funkcja $\sigma$ nie określa procesu, jeśli nie
+wiemy, w jakiej konwencji jest całka. Rozważmy
+formalnie równania
+\[
+\dd X_t=b_I(X_t)\,\dd t+\sigma(X_t)\,\dd W_t,
+\qquad
+\dd X_t=b_S(X_t)\,\dd t+\sigma(X_t)\circ\dd W_t.
+\]
+Współczynniki dryfu $b_I$ i $b_S$ nie są na ogół
+identyczne.
+
+\begin{twierdzenie}[Konwersja w jednym wymiarze]
+\label{th:ito-strat-conversion}
+Niech $b_S,\sigma\in C^2(\R)$ mają lokalnie ograniczone
+pochodne, a $X$ będzie ciągłym procesem Itô o
+wartościach rzeczywistych, dla którego
+\[
+X_t=X_0+\int_0^tb_S(X_s)\,\dd s
++\int_0^t\sigma(X_s)\circ\dd W_s
+\tag{4.8}\label{eq:StratSDE}
+\]
+przy czym wszystkie całki istnieją lokalnie.
+Wówczas równoważnie $X$ spełnia równanie Itô
+\[
+X_t=X_0+\int_0^t
+\left[b_S(X_s)+\frac12\sigma(X_s)\sigma'(X_s)\right]\dd s
++\int_0^t\sigma(X_s)\,\dd W_s.
+\tag{4.9}\label{eq:ItoSDE}
+\]
+Odwrotnie, każde rozwiązanie Itô \eqref{eq:ItoSDE}
+(mające wskazaną regularność) spełnia \eqref{eq:StratSDE}.
+\end{twierdzenie}
+\begin{proof}
+Najpierw wyeliminujmy pozorną kolistość rozumowania.
+Z założenia $X$ jest procesem Itô, zatem istnieją
+procesy $\widetilde b$ i $\widetilde\sigma$, dla których
+$\dd X_t=\widetilde b_t\,\dd t+
+\widetilde\sigma_t\,\dd W_t$. Po rozwinięciu całki
+Stratonovicha z \eqref{eq:StratSDE} otrzymujemy
+\[
+X_t=X_0+\int_0^t b_S(X_s)\,\dd s
++\int_0^t\sigma(X_s)\,\dd W_s
++\tfrac12[\sigma(X),W]_t.
+\]
+Ostatni składnik ma skończoną wariację. Na mocy lematu \ref{lem:uniqueness-mart-fv}
+jednoznaczność rozkładu na ciągły lokalny martyngał
+i proces o skończonej wariacji daje
+$\int_0^.\widetilde\sigma_s\,\dd W_s
+=\int_0^.\sigma(X_s)\,\dd W_s$.
+Z izometrii po lokalizacji wnioskujemy
+$\widetilde\sigma_s=\sigma(X_s)$ dla
+$(\lambda_1\otimes\Prob)$-prawie wszystkich $(s,\omega)$.
+Teraz wzór Itô dla $\sigma(X)$ pokazuje, że jego
+współczynnik dyfuzji wynosi
+$\sigma'(X_s)\sigma(X_s)$; zatem
+$[\sigma(X),W]_t=\int_0^t\sigma'(X_s)\sigma(X_s)\,\dd s$.
+Definicja całki Stratonovicha daje więc
+\[
+\int_0^t\sigma(X_s)\circ\dd W_s
+=\int_0^t\sigma(X_s)\,\dd W_s
++\frac12\int_0^t\sigma'(X_s)\sigma(X_s)\,\dd s.
+\]
+Po podstawieniu do \eqref{eq:StratSDE} otrzymujemy
+\eqref{eq:ItoSDE}. W drugą stronę odejmujemy tę samą
+poprawkę. Lokalizacja pozwala kontrolować współczynniki
+bez zakładania ich globalnej ograniczoności.
+\end{proof}
+
+\begin{zadanie}[Geometryczny ruch Browna w obu konwencjach]
+Niech $X_0=x_0>0$, $\mu\in\R$, $\gamma\in\R$.
+Pokazać, że proces
+$X_t=x_0\exp((\mu-\gamma^2/2)t+\gamma W_t)$
+rozwiązuje równanie Itô
+$\dd X_t=\mu X_t\,\dd t+\gamma X_t\,\dd W_t$
+i podać równoważne równanie Stratonovicha.
+
+\emph{Rozwiązanie.} Stosujemy wzór Itô do
+$F(t,w)=x_0\exp((\mu-\gamma^2/2)t+\gamma w)$.
+Ponieważ $F_t=(\mu-\gamma^2/2)F$,
+$F_w=\gamma F$ i $F_{ww}=\gamma^2F$, wynika stąd
+$\dd X_t=\mu X_t\,\dd t+\gamma X_t\,\dd W_t$.
+Równoważny zapis Stratonovicha brzmi
+\[
+\dd X_t=(\mu-\tfrac12\gamma^2)X_t\,\dd t
++\gamma X_t\circ\dd W_t.
+\]
+Przy zerowym dryfie \emph{Stratonovicha}, czyli
+$\dd X_t=\gamma X_t\circ\dd W_t$, rozwiązaniem jest
+$x_0e^{\gamma W_t}$, nie
+$x_0e^{\gamma W_t-\gamma^2t/2}$.
+\end{zadanie}
+
+\begin{przyklad}[Szum addytywny]
+Jeśli $\sigma(x)\equiv\gamma$ jest stała, to
+$\sigma\sigma'=0$. Równania
+$\dd X_t=-\kappa X_t\,\dd t+\gamma\,\dd W_t$
+oraz
+$\dd X_t=-\kappa X_t\,\dd t+\gamma\circ\dd W_t$
+są równoważne. Dotyczy to m.in. procesu
+Ornsteina--Uhlenbecka z szumem addytywnym.
+Różnica między konwencjami pojawia się dopiero przy
+odpowiedniej zależności współczynnika dyfuzji od stanu.
+\end{przyklad}
+
+\section{Wielowymiarowa poprawka i znaczenie geometryczne}
+\begin{twierdzenie}[Konwersja wielowymiarowa]
+Niech $W=(W^1,\ldots,W^m)$ będzie $m$-wymiarowym
+ruchem Browna, $X$ ciągłym procesem Itô w $\R^d$,
+a $b_S:\R^d\to\R^d$ i
+$\sigma:\R^d\to\R^{d\times m}$ będą klasy $C^2$
+z lokalnie ograniczonymi pochodnymi.
+Załóżmy, że $X$ spełnia w sensie całkowym
+\[
+\dd X_t^i=b_S^i(X_t)\,\dd t
++\sum_{k=1}^m\sigma_{ik}(X_t)\circ\dd W_t^k,
+\quad i=1,\ldots,d.
+\]
+Wówczas $X$ spełnia równanie Itô o tym samym
+współczynniku dyfuzji oraz dryfie
+\[
+b_I^i(x)=b_S^i(x)+\frac12\sum_{j=1}^d
+\sum_{k=1}^m\partial_{x_j}\sigma_{ik}(x)\,
+\sigma_{jk}(x).
+\tag{4.10}\label{eq:strat-multi-correction}
+\]
+\end{twierdzenie}
+\begin{proof}
+Podobnie jak w dowodzie jednowymiarowym, zaczynamy
+od dowolnego rozkładu Itô procesu $X$ o macierzy
+dyfuzji $\widetilde\sigma$. Zapis całkowy równania
+Stratonovicha różni się od całki Itô z macierzą
+$\sigma(X)$ wyłącznie procesem o skończonej wariacji.
+Lemat \ref{lem:uniqueness-mart-fv}, a następnie izometria
+Itô, dają $\widetilde\sigma_s=\sigma(X_s)$ prawie
+wszędzie względem $\dd s\otimes\dd\Prob$.
+Dopiero teraz, dla ustalonego $i,k$, stosujemy
+wielowymiarowy wzór Itô do $H_t=\sigma_{ik}(X_t)$.
+Współczynnik przy $\dd W_t^\ell$ w jego części
+martyngałowej jest równy
+$\sum_j\partial_{x_j}\sigma_{ik}(X_t)\sigma_{j\ell}(X_t)$.
+Zatem, z definicji kowariacji,
+$[\sigma_{ik}(X),W^k]_t=
+\int_0^t\sum_j\partial_{x_j}\sigma_{ik}(X_s)
+\sigma_{jk}(X_s)\,\dd s$.
+Sumujemy to po $k$ i dodajemy połowę kowariacji do
+całek Itô. To jest dokładnie różnica dryfów podana
+we wzorze \eqref{eq:strat-multi-correction}.
+\end{proof}
+
+\begin{przyklad}[Pole wektorowe na płaszczyźnie]
+Niech $V(x,y)=(-y,x)$ i rozważmy równanie
+Stratonovicha $\dd X_t=V(X_t)\circ\dd W_t$
+dla $X_t=(X_t^1,X_t^2)$. Macierz pochodnej $DV$
+ma postać $\left(\begin{smallmatrix}0&-1\\1&0\end{smallmatrix}\right)$,
+zatem $DV(x,y)V(x,y)=(-x,-y)$.
+Równoważne równanie Itô to
+\[
+\dd X_t=-\frac12X_t\,\dd t+V(X_t)\,\dd W_t.
+\]
+Z reguły łańcuchowej Stratonovicha dla $\norm{x}^2$
+wynika $\dd\norm{X_t}^2=2X_t\cdot V(X_t)\circ\dd W_t=0$.
+Stąd $\norm{X_t}=\norm{X_0}$ dla wszystkich $t$:
+trajektoria porusza się po okręgu. W konwencji Itô
+ten sam wynik wymaga poprawki od wariacji kwadratowej:
+$-\norm{X_t}^2\,\dd t+\norm{V(X_t)}^2\,\dd t=0$.
+To elementarny przykład geometrycznego znaczenia
+rachunku Stratonovicha.
+\end{przyklad}
+
+\section{Aproksymacje gładkimi trajektoriami: elementarny przypadek Wong--Zakaia}
+\begin{zadanie}[Dlaczego wygładzenie szumu prowadzi do Stratonovicha?]
+Niech $W^{(n)}$ będzie liniową interpolacją
+trajektorii Wienera na deterministycznym podziale
+$\pi_n$ o średnicy dążącej do zera. Dla $x_0>0$
+i $\gamma\in\R$ rozwiązać klasyczne równanie
+Riemanna--Stieltjesa
+\[
+X_t^{(n)}=x_0+\gamma\int_0^t
+X_s^{(n)}\,\dd W_s^{(n)}
+\]
+i znaleźć granicę jednostajną na $[0,T]$.
+
+\emph{Rozwiązanie.} Każda trajektoria $W^{(n)}$
+jest odcinkami liniowa, a więc ma skończoną wariację
+na $[0,T]$. Klasyczna reguła łańcuchowa daje
+$X_t^{(n)}=x_0\exp(\gamma W_t^{(n)})$.
+Ponieważ prawie każda trajektoria $W$ jest
+jednostajnie ciągła na $[0,T]$, jej interpolacje
+liniowe zbiegają jednostajnie do $W$. Ciągłość
+funkcji wykładniczej na zwartym zbiorze zawierającym
+wartości wszystkich interpolacji zapewnia
+\[
+\sup_{t\le T}|X_t^{(n)}-x_0e^{\gamma W_t}|
+\longrightarrow0\qquad\text{prawie na pewno}.
+\]
+Proces graniczny rozwiązuje
+$\dd X_t=\gamma X_t\circ\dd W_t$,
+a nie $\dd X_t=\gamma X_t\,\dd W_t$.
+Udowodniliśmy zatem elementarną wersję zjawiska
+Wong--Zakaia. Ogólne twierdzenie dla wielowymiarowych,
+nieliniowych układów wymaga dodatkowej teorii i
+nie wynika samo z tego przykładu.
+\end{zadanie}
+
+\section{Co otrzymaliśmy i jaką teorię rozwiniemy dalej?}
+Całka Stratonovicha nie jest prostym przemianowaniem
+całki Itô. Łączy się z nią inna reguła sumowania i
+inne przesunięcie współczynnika dryfu. Jest wygodna
+przy zmianie współrzędnych, w problemach geometrycznych
+i przy aproksymowaniu ruchu Browna gładkimi ścieżkami.
+Natomiast całka Itô naturalnie współpracuje z
+warunkową wartością oczekiwaną, martyngałami i
+rachunkiem probabilistycznym. Obydwie konwencje są
+ściśle powiązane wzorem korekcyjnym.
+
+Dalsze rozdziały poświęcimy istnieniu, jednoznaczności
+i własnościom rozwiązań stochastycznych równań
+różniczkowych, wzorowi Feynmana--Kaca oraz całkom
+po przestrzeni trajektorii względem miary Wienera.
+
+
+% ============================================================================
+% ROZDZIAL 5 — SDE: konstrukcja, istnienie i jednoznacznosc
+% ============================================================================

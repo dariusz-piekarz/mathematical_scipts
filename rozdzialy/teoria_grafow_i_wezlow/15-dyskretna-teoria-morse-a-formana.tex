@@ -1,0 +1,368 @@
+\chapter{Dyskretna teoria Morse'a Formana}
+\label{ch:tg-forman}
+
+W klasycznej teorii Morse'a topologia rozmaitości jest
+odczytywana z punktów krytycznych funkcji gładkiej.
+W kompleksie symplicjalnym nie mamy pochodnych,
+ale dysponujemy relacją bycia ścianą innego sympleksu.
+Dyskretna teoria Morse'a wykorzystuje \emph{acykliczne
+parowania komórek} do usuwania zbędnych par sympleksów.
+Przedstawimy najpierw tę konstrukcję, a następnie
+wyjaśnimy dokładnie, które wnioski da się udowodnić
+samą algebrą kompleksów łańcuchowych.
+
+\section{Relacja incydencji i parowanie komórek}
+\label{sec:tg-forman-matching}
+
+\begin{definicja}[Pokrycie w posetcie ścian]
+Niech $K$ będzie skończonym kompleksem symplicjalnym.
+Mówimy, że sympleks $\beta$ \emph{pokrywa} sympleks
+$\alpha$, i piszemy $\alpha\prec\beta$, gdy
+$\alpha\subset\beta$ oraz
+$\dim\beta=\dim\alpha+1$. \emph{Graf Hassego}
+relacji ścian ma wierzchołki odpowiadające niepustym
+sympleksom i krawędź między $\alpha$ i $\beta$
+dokładnie wtedy, gdy $\alpha\prec\beta$.
+\end{definicja}
+
+\begin{definicja}[Dyskretne pole gradientowe]
+\label{def:tg-discrete-morse-field}
+Niech $K$ będzie skończonym kompleksem symplicjalnym.
+\emph{Parowaniem} $\mathcal V$ nazywamy rodzinę par
+$(\alpha^p,\beta^{p+1})$, w których
+$\alpha\prec\beta$ i żaden sympleks nie występuje
+w więcej niż jednej parze. Sympleks niewystępujący
+w żadnej parze nazywamy \emph{krytycznym}.
+\emph{$\mathcal V$-ścieżką wymiaru $p$} nazywamy ciąg
+\[
+\alpha_0^p\prec\beta_0^{p+1}\succ\alpha_1^p
+\prec\beta_1^{p+1}\succ\cdots\succ\alpha_r^p,
+\]
+w którym każda $\alpha_i\prec\beta_i$ należy do
+$\mathcal V$, zaś $\alpha_{i+1}\prec\beta_i$ i
+$\alpha_{i+1}\ne\alpha_i$. Parowanie jest
+\emph{acykliczne}, gdy nie istnieje niebanalna
+zamknięta $\mathcal V$-ścieżka z
+$\alpha_r=\alpha_0$.
+\end{definicja}
+
+To ostatnie ograniczenie jest kluczowe. Samo parowanie
+może krążyć w zamkniętym cyklu i nie pozwalać na
+monotoniczne upraszczanie kompleksu. Acykliczność
+stanowi kombinatoryczny odpowiednik braku zamkniętych
+trajektorii gradientowych.
+
+\begin{stwierdzenie}[Charakteryzacja przez graf skierowany]
+\label{thm:tg-morse-acyclic}
+Niech $\mathcal V$ będzie parowaniem sympleksów
+skończonego kompleksu $K$. W grafie Hassego skierujmy
+każdą krawędź nieparowaną od sympleksu mniejszego do
+większego, a parowaną od większego do mniejszego.
+Wtedy $\mathcal V$ jest acykliczne wtedy i tylko wtedy,
+gdy tak otrzymany graf skierowany nie ma cyklu skierowanego.
+\end{stwierdzenie}
+
+\begin{proof}
+Zamknięta $\mathcal V$-ścieżka daje cykl skierowany:
+od $\beta_i$ przechodzimy strzałką parowaną do
+$\alpha_i$, następnie strzałką nieparowaną do
+$\beta_{i-1}$ (indeksy czytamy cyklicznie).
+W drugą stronę niech $C$ będzie cyklem skierowanym
+w grafie Hassego i wybierzmy na nim sympleks $\beta$
+o maksymalnym wymiarze $p+1$. Strzałka wychodząca
+z $\beta$ nie może prowadzić do nadsympleksu,
+bo przeczyłoby to maksymalności wymiaru. Prowadzi
+więc do pewnej ściany $\alpha$ wymiaru $p$ po
+krawędzi parowanej. Ponieważ $\alpha$ jest już
+sparowana z $\beta$, jej następna strzałka nie może
+prowadzić w dół: oznaczałoby to drugą parę zawierającą
+$\alpha$. Musi zatem prowadzić po krawędzi
+nieparowanej do innego sympleksu wymiaru $p+1$.
+Powtarzając rozumowanie, przechodzimy naprzemiennie
+między wymiarami $p+1$ i $p$ (bez możliwości przejścia
+na większy wymiar), aż cykl się zamknie. Otrzymaliśmy
+niebanalną zamkniętą $\mathcal V$-ścieżkę.
+\end{proof}
+
+\begin{uwaga}[Dyskretna funkcja Morse'a]
+Równoważny opis można podać przy pomocy funkcji
+$F$ na zbiorze sympleksów, dla której każdy sympleks
+ma co najwyżej jedną bezpośrednią ścianę o wartości
+$\ge F(\sigma)$ i co najwyżej jeden bezpośredni
+nadsympleks o wartości $\le F(\sigma)$.
+Po zadaniu acyklicznego parowania taki $F$ można
+skonstruować, przypisując liczbom wierzchołków
+skierowanego grafu Hassego porządek topologiczny.
+Dla krawędzi nieparowanej wartości rosną od ściany
+do nadsympleksu, a dla parowanej kierunek nierówności
+jest odwrotny. W dalszym wykładzie wygodniej
+pracować bezpośrednio z parowaniem.
+\end{uwaga}
+
+\begin{samepage}
+\begin{center}
+\begin{minipage}{.96\linewidth}\centering
+\begin{tikzpicture}[scale=.91,>=Stealth,line cap=round]
+ \node[tgTealVertex] (v0) at (0,0) {$a$};
+ \node[tgBlueVertex] (v1) at (2,0) {$b$};
+ \node[tgBlueVertex] (v2) at (4,0) {$c$};
+ \draw[tgTree,->] (v1)--(v0);
+ \draw[tgTree,->] (v2)--(v1);
+ \node[text=tgNavy,font=\small] at (2,-.63)
+   {pary: $(b,ab)$ i $(c,bc)$};
+ \node[text=tgTeal,font=\small] at (0,.52) {krytyczny};
+\end{tikzpicture}\par\smallskip
+
+{\footnotesize Dla drzewa wybór rodzica każdego niekorzeniowego
+wierzchołka daje acykliczne parowanie.}
+\end{minipage}
+\end{center}
+\end{samepage}
+
+\section{Dyskretny gradient na grafie i drzewa rozpinające}
+\label{sec:tg-forman-on-graph}
+
+\begin{twierdzenie}[Parowanie wyznaczone przez drzewo]
+\label{thm:tg-forman-tree}
+Niech $G$ będzie skończonym spójnym grafem z $n\ge1$
+wierzchołkami i $m$ krawędziami, a $T$ drzewem
+rozpinającym $G$. Traktujemy $G$ jako jednowymiarowy
+kompleks CW; ewentualne pętle i krawędzie równoległe
+można uprzednio podzielić na prosty kompleks symplicjalny.
+Wybierzmy korzeń $r\in V(T)$ i dla każdego $v\ne r$
+sparujmy $v$ z krawędzią łączącą $v$ z jego rodzicem
+w drzewie $T$. Otrzymane parowanie jest acykliczne.
+Ma dokładnie jeden krytyczny wierzchołek oraz
+$m-n+1$ krytycznych krawędzi.
+\end{twierdzenie}
+
+\begin{proof}
+Każdy wierzchołek $v\ne r$ występuje dokładnie raz,
+a każda krawędź drzewa również dokładnie raz jako
+para z jej dalszym od korzenia końcem. Krawędzie
+spoza $T$ nie są sparowane i są krytyczne; ich liczba
+to $m-(n-1)=m-n+1$. Korzeń jest jedynym krytycznym
+wierzchołkiem.
+
+Każda $\mathcal V$-ścieżka wymiaru zero biegnie
+od wierzchołka do jego rodzica: jeśli
+$(v,e_v)$ jest parą, drugim końcem $e_v$ jest
+właśnie rodzic $v$. Odległość w drzewie od korzenia
+maleje więc o jeden przy każdym kroku takiej ścieżki.
+Żadna niebanalna $\mathcal V$-ścieżka nie może być
+zamknięta. W wymiarze jeden nie ma par krawędź--trójkąt,
+więc innych zamkniętych ścieżek również nie ma.
+\end{proof}
+
+\begin{przyklad}[Trójkątny cykl]
+Dla grafu $C_3$ o wierzchołkach $a,b,c$ wybieramy
+drzewo $T=\{ab,bc\}$ i korzeń $a$.
+Pary to $(b,ab)$ oraz $(c,bc)$. Krytyczny pozostaje
+wierzchołek $a$ i krawędź $ac$. Otrzymujemy więc
+jedną krytyczną komórkę wymiaru zero i jedną
+wymiaru jeden, co odpowiada homotopijnemu typowi $S^1$.
+Jeżeli teraz dołączymy wypełniający trójkąt $abc$,
+możemy dodatkowo sparować krawędź $ac$ z trójkątem.
+Pozostaje tylko krytyczny wierzchołek $a$, zgodnie
+z kontraktowalnością dysku.
+\end{przyklad}
+
+\section{Elementarny kolaps a zachowanie typu homotopijnego}
+\label{sec:tg-forman-collapse}
+
+\begin{definicja}[Para wolna i elementarny kolaps]
+Niech $K$ będzie skończonym kompleksem symplicjalnym.
+Para $\alpha\prec\beta$ nazywa się \emph{wolna},
+gdy $\beta$ jest jedynym maksymalnym sympleksem $K$
+zawierającym $\alpha$. Usunięcie obu sympleksów
+$\alpha$ i $\beta$ (bez usuwania ich pozostałych
+ścian) nazywamy \emph{elementarnym kolapsem}.
+Zakładamy, że usuwane sympleksy tworzą rzeczywiście
+parę kowymiaru jeden; wtedy pozostały zbiór sympleksów
+nadal jest kompleksem.
+\end{definicja}
+
+\begin{stwierdzenie}[Kolaps nie zmienia typu homotopijnego]
+Jeżeli $K'$ powstaje ze skończonego kompleksu
+symplicjalnego $K$ przez elementarny kolaps wolnej
+pary $\alpha\prec\beta$, to włączenie
+$|K'|\hookrightarrow|K|$ jest równoważnością homotopijną,
+a nawet istnieje silna retrakcja deformacyjna
+$|K|$ na $|K'|$.
+\end{stwierdzenie}
+
+\begin{proof}
+Realizację sympleksu $\beta$ traktujemy jako kulę
+geometryczną $D^{p+1}$. Wnętrze ściany $\alpha$
+stanowi otwartą część jej brzegu, do której nie
+przylega inny sympleks maksymalny. Kula $\beta$
+bez wnętrza $\alpha$ i bez własnego wnętrza
+pozostawia pozostałe ściany, które tworzą podkompleks
+będący dyskiem wymiaru $p$. Można deformować całą
+kulę $\beta$ na sumę tych pozostałych ścian przez
+przesuwanie punktów wzdłuż odcinków prowadzących
+od punktu wybranego na wnętrzu wolnej ściany ku
+przeciwległej części brzegu. Jest to standardowa
+retrakcja PL dysku na brzeg z usuniętą otwartą ścianą,
+wykonywana relatywnie do pozostałych ścian.
+Wobec wolności $\alpha$ deformacja jest identycznością
+na wszystkich pozostałych sympleksach i skleja się
+z identycznością poza $\beta$. Dostajemy silną
+retrakcję deformacyjną $|K|$ na $|K'|$.
+\end{proof}
+
+\begin{przyklad}[Dysk z jednym krytycznym wierzchołkiem]
+Niech $K$ będzie pełnym trójkątem $abc$. Najpierw
+usuwamy wolną parę $(ac,abc)$, pozostawiając dwa
+odcinki $ab$ i $bc$. Następnie usuwamy
+$(c,bc)$, potem $(b,ab)$. Otrzymujemy jednoelementowy
+kompleks $\{a\}$. Każdy krok jest elementarnym
+kolapsem. W ten sposób nie tylko obliczamy homologie,
+ale wykazujemy kontraktowalność geometryczną całej
+realizacji $|K|$.
+\end{przyklad}
+
+\section{Komórki krytyczne, kompleks Morse'a i nierówności}
+\label{sec:tg-forman-inequalities}
+
+\begin{uwaga}[Acykliczne parowanie a elementarny kolaps]
+Nie każda para z acyklicznego parowania jest wolną parą
+w wyjściowym kompleksie. Nie wolno więc usuwać wszystkich
+sparowanych komórek w dowolnej kolejności jako kolapsów
+bez wcześniejszego sprawdzenia warunku wolnej ściany.
+Twierdzenie Formana konstruuje odpowiedni model CW,
+a jego dowód wymaga uporządkowania par zgodnie z dyskretnym
+przepływem gradientowym. Jest to istotnie mocniejszy wynik
+niż elementarne twierdzenie o pojedynczym kolapsie.
+\end{uwaga}
+
+\begin{twierdzenie}[Forman; podstawowe twierdzenie]
+\label{thm:tg-forman-main}
+Niech $K$ będzie skończonym regularnym kompleksem CW,
+a $\mathcal V$ acyklicznym parowaniem jego komórek.
+Niech $c_p$ oznacza liczbę niesparowanych komórek
+wymiaru $p$. Wtedy $|K|$ jest homotopijnie równoważny
+kompleksowi CW mającemu dokładnie $c_p$ komórek
+wymiaru $p$ dla każdego $p$.
+W szczególności istnieje skończony kompleks łańcuchowy
+Morse'a nad dowolnym ciałem $\mathbb F$, którego grupy łańcuchów
+w stopniu $p$ mają wymiar $c_p$, a homologie są
+izomorficzne z homologiami $|K|$.
+\end{twierdzenie}
+
+\begin{uwaga}[Status twierdzenia Formana]
+Jest to głęboki rezultat; nie wynika on wyłącznie z
+istnienia parowania. Dowód wykorzystuje porządkowanie
+acyklicznych par i odpowiednie przekształcenia komórkowe
+(algebraiczną wersję można skonstruować przez eliminację
+par w kompleksie łańcuchowym). W szczególności pary
+występujące w polu gradientowym \emph{nie muszą być
+od razu wolnymi parami} w pierwotnym kompleksie.
+Powyżej udowodniono bezpośrednio tylko zachowanie
+homotopii dla rzeczywistych elementarnych kolapsów.
+Pełne twierdzenie Formana przyjmujemy tutaj z literatury.
+\end{uwaga}
+
+\begin{twierdzenie}[Słabe i silne nierówności Morse'a]
+\label{thm:tg-forman-ineq}
+Niech $K$ będzie skończonym kompleksem symplicjalnym,
+$\mathcal V$ acyklicznym parowaniem, a $c_p$ liczbą
+krytycznych $p$-sympleksów. Niech
+$b_p=\dim_{\mathbb F}H_p(|K|;\mathbb F)$
+dla ustalonego ciała $\mathbb F$. Wtedy dla każdego
+$p\ge0$ zachodzi $c_p\ge b_p$, a ponadto
+\[
+ \sum_{j=0}^p(-1)^{p-j}c_j
+ \ge \sum_{j=0}^p(-1)^{p-j}b_j,
+ \qquad
+ \sum_{j\ge0}(-1)^jc_j=\chi(|K|).
+\]
+\end{twierdzenie}
+
+\begin{proof}
+Stosujemy twierdzenie Formana, które daje skończony
+kompleks łańcuchowy Morse'a $(M_*,d_*)$ z
+$\dim M_p=c_p$ i homologiami o wymiarach $b_p$.
+Niech $r_p=\operatorname{rank}d_p$; przyjmujemy
+$r_0=0$ i $r_p=0$ ponad wymiarem kompleksu.
+Z twierdzenia o rzędzie oraz definicji homologii mamy
+$b_p=(c_p-r_p)-r_{p+1}$, zatem
+\[
+ c_p=b_p+r_p+r_{p+1}.
+\]
+Od razu dostajemy $c_p\ge b_p$.
+Po zsumowaniu naprzemiennym od zera do $p$
+wszystkie składniki $r_j$ w środku teleskopowo
+się znoszą i pozostaje $r_{p+1}\ge0$. Stąd silne
+nierówności. Sumując po wszystkich wymiarach,
+ponieważ najwyższy rząd jest zerowy, uzyskujemy
+$\sum(-1)^pc_p=\sum(-1)^pb_p=\chi(|K|)$,
+gdzie ostatnia równość jest wzorem Eulera--Poincarégo
+udowodnionym w rozdziale o triangulacjach.
+\end{proof}
+
+\begin{przyklad}[Sfera z czterech trójkątów]
+Rozważmy triangulację brzegu czworościanu o wierzchołkach
+$0,1,2,3$. Parujemy wierzchołki $1,2,3$
+odpowiednio z krawędziami $01,02,03$ oraz krawędzie
+$12,13,23$ z trójkątami $012,013,023$.
+Niesparowane są dokładnie wierzchołek $0$ i trójkąt
+$123$. Parowanie jest acykliczne: w wymiarze zero
+wszystkie ścieżki kierują się w stronę korzenia $0$,
+a w wymiarze jeden po wejściu w sparowany trójkąt
+przechodzimy tylko do krawędzi incydentnych z $0$,
+które nie są sparowane z trójkątami, więc ścieżka
+nie może się zamknąć. Otrzymujemy
+$(c_0,c_1,c_2)=(1,0,1)$, zgodne z
+$H_0(S^2)=H_2(S^2)\cong\mathbb Z$ i $H_1(S^2)=0$.
+\end{przyklad}
+
+\begin{samepage}
+\begin{center}
+\begin{minipage}{.96\linewidth}\centering
+\begin{tikzpicture}[scale=1.0,line join=round,line cap=round]
+ \coordinate (a) at (-1.15,-.7);\coordinate (b) at (1.2,-.7);
+ \coordinate (c) at (.3,1.35);\coordinate (d) at (-.2,.18);
+ \fill[tgGold!20] (b)--(c)--(d)--cycle;
+ \draw[tgEdge] (a)--(b)--(c)--cycle (a)--(d)--(b) (c)--(d);
+ \node[tgTealVertex] at (a) {$0$};
+ \node[tgBlueVertex] at (b) {$1$};
+ \node[tgBlueVertex] at (c) {$2$};
+ \node[tgBlueVertex] at (d) {$3$};
+ \node[font=\small,text=tgTeal] at (-1.55,-1.25) {krytyczne $0$};
+ \node[font=\small,text=tgGold] at (1.6,.6) {krytyczne $123$};
+\end{tikzpicture}\par\smallskip
+
+{\footnotesize Na brzegu czworościanu pozostają dwie komórki
+krytyczne: wierzchołek i ściana.}
+\end{minipage}
+\end{center}
+\end{samepage}
+
+\section{Zestawienie teorii ciągłej i dyskretnej}
+\label{sec:tg-morse-bridge}
+
+Oba rodzaje teorii Morse'a prowadzą do opisu topologii
+za pomocą niewielkiej liczby danych krytycznych,
+ale nie są definicyjnie tożsame. Klasyczna funkcja
+Morse'a na rozmaitości jest różniczkowalna, a jej
+punkty krytyczne są badane przy użyciu hesjanu.
+Dyskretne pole gradientowe działa na zbiorze komórek,
+a warunkiem podstawowym jest brak zamkniętych
+$\mathcal V$-ścieżek. W obu przypadkach otrzymujemy
+nierówności wiążące liczby krytycznych obiektów
+z liczbami Bettiego i charakterystyką Eulera.
+
+\begin{uwaga}[Minimalność a doskonałość]
+Parowanie nazywamy \emph{doskonałym nad ciałem}
+$\mathbb F$, gdy $c_p=b_p$ dla wszystkich $p$.
+Jest to warunek silniejszy niż samo spełnianie równości
+$\sum(-1)^pc_p=\chi$. Dla grafu spójnego konstrukcja
+z drzewa rozpinającego daje doskonałe parowanie
+($c_0=1$, $c_1=m-n+1$). Dla brzegu czworościanu
+otrzymujemy również doskonałe parowanie z dwiema
+komórkami krytycznymi. W bardziej złożonych
+kompleksach istnienie doskonałego parowania nie jest
+zagwarantowane.
+\end{uwaga}
+

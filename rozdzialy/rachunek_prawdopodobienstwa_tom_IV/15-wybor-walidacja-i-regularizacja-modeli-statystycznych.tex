@@ -1,0 +1,432 @@
+\chapter{Wybór, walidacja i regularizacja modeli statystycznych}
+\label{ch:model-selection}
+\paragraph{Powiązania i odsyłacze.} Modele bazowe pochodzą z rozdziałów~\ref{ch:linear-regression} i~\ref{ch:glm}; o ryzyku predykcji i funkcjach straty zobacz rozdział~\ref{ch:decision}.
+
+
+\section{Dopasowanie nie jest jeszcze uogólnianiem}
+W rozdziałach~\ref{ch:linear-regression} i~\ref{ch:glm} nauczyliśmy się
+estymować współczynniki modelu oraz wnioskować o nich \emph{pod założeniem
+poprawności modelu}. Praktyczny problem jest trudniejszy: czy rozważany
+model dobrze przewiduje nowe dane, czy nie dopasował jedynie przypadkowego
+szumu? Jeśli dodamy do regresji liniowej kolejne kolumny, resztowa suma
+kwadratów na danych uczących nie wzrośnie, ale jakość predykcji może się
+pogorszyć. Odróżnimy trzy cele: \emph{opis zależności}, \emph{predykcję}
+i \emph{wnioskowanie przyczynowe}. Dla każdego z nich dobór modelu może być
+inny. W szczególności niska wartość błędu predykcji sama nie uzasadnia
+interpretacji współczynnika jako efektu przyczynowego.
+
+\begin{definicja}[Ryzyko predykcyjne i ryzyko empiryczne]
+\label{def:predictive-risk}
+Niech $(\mathsf X,\mathcal X)$ oraz $(\mathsf Y,\mathcal Y)$
+będą przestrzeniami mierzalnymi, $(X,Y)$ parą losową
+o prawie $P$ na ich iloczynie, a
+$\ell:\mathsf Y\times\mathsf Y\to[0,\infty)$ mierzalną funkcją
+straty. Dla mierzalnej funkcji predykcyjnej
+$f:\mathsf X\to\mathsf Y$ definiujemy
+$R_P(f)=\E_P\ell(Y,f(X))$, zakładając skończoność wartości oczekiwanej.
+Dla obserwacji $(X_i,Y_i)_{i=1}^n$ ryzyko empiryczne wynosi
+$\widehat R_n(f)=n^{-1}\sum_{i=1}^n\ell(Y_i,f(X_i))$.
+Jeżeli $\widehat f_n$ jest wyznaczona z tej samej próby, to
+$\widehat R_n(\widehat f_n)$ nazywamy \emph{błędem treningowym}.
+Dla niezależnej od próby uczącej pary $(X_*,Y_*)\sim P$ błąd
+nowej obserwacji ma warunkową wartość oczekiwaną
+$R_P(\widehat f_n)=\E[\ell(Y_*,\widehat f_n(X_*))\mid\mathcal D_n]$,
+gdzie $\mathcal D_n$ oznacza dane uczące.
+\end{definicja}
+
+\begin{uwaga}[Co jest losowe?]
+$R_P(f)$ jest liczbą dla ustalonego $f$; $R_P(\widehat f_n)$ jest
+zmienną losową, ponieważ procedura treningowa używa losowej próby.
+Błąd na zbiorze testowym estymuje ryzyko \emph{już wytrenowanego}
+modelu, pod warunkiem że testowe dane reprezentują docelowy rozkład
+i nie były wykorzystywane przy wyborze tego modelu.
+\end{uwaga}
+
+\begin{twierdzenie}[Optymizm błędu treningowego w normalnym modelu liniowym]
+\label{thm:training-optimism}
+Niech $n>p\ge1$, $X\in\R^{n\times p}$ ma rząd $p$ oraz
+$Y=X\beta+\varepsilon$, gdzie
+$\varepsilon\sim\mathcal N_n(0,\sigma^2I_n)$ i $\sigma>0$.
+Niech $H=X(X^\top X)^{-1}X^\top$ oraz $\widehat Y=HY$.
+Niech niezależny wektor $Y^{\rm new}=X\beta+\varepsilon^{\rm new}$
+ma ten sam rozkład co $Y$. Wtedy
+\[
+ \E\|Y-\widehat Y\|_2^2=(n-p)\sigma^2,
+ \qquad
+ \E\|Y^{\rm new}-\widehat Y\|_2^2=(n+p)\sigma^2.
+\]
+Zatem optymizm błędu treningowego wynosi dokładnie
+$2p\sigma^2/n$ po podzieleniu sum kwadratów przez $n$.
+\end{twierdzenie}
+\begin{proof}
+Ponieważ $(I_n-H)X\beta=0$, mamy
+$Y-\widehat Y=(I_n-H)\varepsilon$. Stąd
+$\E\|Y-\widehat Y\|^2=\sigma^2\operatorname{tr}(I_n-H)
+=(n-p)\sigma^2$.
+Z kolei $Y^{\rm new}-\widehat Y=\varepsilon^{\rm new}-H\varepsilon$.
+Składniki są niezależne, wycentrowane, więc średni kwadrat normy to
+$\sigma^2\operatorname{tr}(I_n)+\sigma^2\operatorname{tr}(H^\top H)
+=(n+p)\sigma^2$, gdyż $H$ jest rzutem rzędu $p$.
+\end{proof}
+
+\begin{przyklad}[Więcej parametrów nie musi pomagać]
+Dwa modele liniowe o wymiarach $p=2$ i $p=12$ dopasowano do tej samej
+próby $n=50$ przy poprawności obu modeli i tej samej wariancji błędu.
+Różnica oczekiwanego optymizmu, liczona na obserwację, wynosi
+$2(12-2)\sigma^2/50=0{,}4\sigma^2$. To nie mówi, który model
+jest bezwzględnie lepszy: model prostszy może pomijać ważną
+zależność, a model bogatszy zwiększa wariancję predykcji.
+\end{przyklad}
+
+\section{AIC i BIC: dwie kary za złożoność}
+\begin{definicja}[Kryteria informacyjne]
+Niech $\{P_\theta:\theta\in\Theta\subset\R^k\}$ będzie
+regularnym modelem parametrycznym o log-wiarygodności $\ell_n(\theta)$
+dla \emph{tych samych obserwacji} $y_1,\ldots,y_n$.
+Jeżeli istnieje maksimum $\widehat\theta$, definiujemy
+\[
+ \operatorname{AIC}=-2\ell_n(\widehat\theta)+2k,
+ \qquad
+ \operatorname{BIC}=-2\ell_n(\widehat\theta)+k\log n.
+\]
+AIC to \emph{kryterium informacyjne Akaikego} (Akaike information
+criterion), a BIC to \emph{bayesowskie kryterium informacyjne}
+(Bayesian information criterion). W obu przypadkach mniejsza
+wartość oznacza preferencję kryterium wśród porównywanych modeli.
+Liczba $k$ obejmuje wszystkie
+estymowane parametry, także parametr wariancji, jeżeli jest nieznany.
+\end{definicja}
+
+\begin{twierdzenie}[AIC i BIC w regresji normalnej]
+\label{thm:aic-gaussian}
+Niech $Y\sim\mathcal N_n(X\beta,\sigma^2I_n)$, gdzie
+$X\in\R^{n\times p}$ ma pełny rząd kolumnowy, $n>p$,
+a $\beta\in\R^p$ i $\sigma^2>0$ są nieznane.
+Jeśli $\mathrm{RSS}=\min_b\|Y-Xb\|^2>0$, to MLE wariancji
+wynosi $\widehat\sigma^2=\mathrm{RSS}/n$ i
+\[
+ -2\ell_n(\widehat\beta,\widehat\sigma^2)
+ =n\bigl(\log(2\pi)+1+\log(\mathrm{RSS}/n)\bigr).
+\]
+W szczególności, przy porównywaniu modeli dla tego samego $Y$,
+$\operatorname{AIC}=n\log(\mathrm{RSS}/n)+2(p+1)+C_n$ oraz
+$\operatorname{BIC}=n\log(\mathrm{RSS}/n)+(p+1)\log n+C_n$,
+gdzie $C_n=n(\log(2\pi)+1)$ nie zależy od modelu.
+\end{twierdzenie}
+\begin{proof}
+Log-wiarygodność wynosi
+$\ell_n(b,v)=-\tfrac n2\log(2\pi v)-\|Y-Xb\|^2/(2v)$.
+Dla każdego $v>0$ maksymalizacja po $b$ prowadzi do MNK.
+Dla $v>0$ funkcja $-\tfrac n2\log v-\mathrm{RSS}/(2v)$
+ma pochodną $(\mathrm{RSS}-nv)/(2v^2)$ i osiąga
+jedyne maksimum w $v=\mathrm{RSS}/n$, pod warunkiem
+$\mathrm{RSS}>0$. Podstawienie i policzenie parametrów daje tezę.
+\end{proof}
+
+\begin{uwaga}[Dlaczego kryteria różnią się celem?]
+AIC ma uzasadnienie asymptotyczne w szacowaniu pozapróbkowego
+błędu logarytmicznego (straty związanej z dywergencją
+Kullbacka--Leiblera). BIC powstaje, przy dodatkowych
+założeniach, z przybliżenia logarytmu \emph{zintegrowanej
+wiarygodności} i silniej karze liczbę parametrów, gdy $n$
+jest duże. Nie są to równoważne cele. Nie należy
+interpretować $\Delta\mathrm{AIC}$ jako p-value ani niższego BIC
+jako dowodu prawdziwości modelu.
+\end{uwaga}
+
+\begin{stwierdzenie}[Źródło kary BIC: przybliżenie Laplace'a]
+\label{prop:bic-laplace}
+Niech $\Theta\subset\R^k$ będzie otwarta, a $\pi$
+gęstością a priori dodatnią i ciągłą w otoczeniu
+$\theta_0$. Załóżmy, że log-wiarygodność $\ell_n$
+ma wewnętrzny maksymalizator $\widehat\theta_n$ zbieżny do
+$\theta_0$ według prawdopodobieństwa, że lokalnie
+$-n^{-1}\nabla^2\ell_n(\theta)\to J$ jednostajnie według
+prawdopodobieństwa, gdzie $J$ jest dodatnio określona,
+i że pozostała część całki jest zaniedbywalna względem
+wkładu otoczenia maksimum. Zakładamy również
+odpowiednią dominację umożliwiającą asymptotykę Laplace'a.
+Wtedy dla $m_n=\int_\Theta e^{\ell_n(\theta)}\pi(\theta)
+\,\dd\lambda_k(\theta)$ zachodzi
+$-2\log m_n=-2\ell_n(\widehat\theta_n)+k\log n
++O_{\mathbb P}(1)$.
+\end{stwierdzenie}
+\begin{proof}
+W otoczeniu maksimum rozwinięcie Taylora daje
+$\ell_n(\theta)=\ell_n(\widehat\theta_n)-\tfrac n2
+(\theta-\widehat\theta_n)^\top J
+(\theta-\widehat\theta_n)+o(n\|\theta-\widehat\theta_n\|^2)$
+na skali $\|\theta-\widehat\theta_n\|=O(n^{-1/2})$,
+w sensie prawdopodobieństwa.
+Po podstawieniu $u=\sqrt n(\theta-\widehat\theta_n)$
+całka lokalna jest asymptotycznie równa
+$e^{\ell_n(\widehat\theta_n)}\pi(\theta_0)n^{-k/2}
+(2\pi)^{k/2}(\det J)^{-1/2}$.
+Założenie o zaniedbywalności reszty pozwala zastąpić
+całą całkę wkładem lokalnym; logarytmowanie kończy dowód.
+\end{proof}
+
+\begin{uwaga}[Uczciwe granice twierdzenia]
+Do powyższego przybliżenia nie wystarcza samo istnienie
+hesjanu w maksimum: potrzeba kontroli całki poza nim,
+regularności skali $n^{-1/2}$ i właściwego prioru.
+Przy parametrach na brzegu, w modelach osobliwych
+lub przy silnej nieidentyfikowalności kara $k\log n$
+może nie być właściwa. W szczególności pełne
+uzasadnienie AIC w modelu nieregularnym wymaga
+osobnej analizy; prosty wzór z karą $2k$ nie jest
+uniwersalną korektą optymizmu.
+\end{uwaga}
+
+\section{Rozdzielenie danych, walidacja krzyżowa i wyciek informacji}
+\begin{definicja}[Walidacja $K$-krotna]
+Niech $(Z_i)_{i=1}^n$, $Z_i=(X_i,Y_i)$, będzie próbą
+niezależną o wspólnym rozkładzie. Dzielimy indeksy
+$\{1,\ldots,n\}$ na niepuste, rozłączne zbiory
+$V_1,\ldots,V_K$, $2\le K\le n$, o sumie równej
+całemu zbiorowi. Dla algorytmu uczącego $\mathcal A$
+niech $\widehat f^{(-j)}$ oznacza model wytrenowany
+wyłącznie na danych o indeksach spoza $V_j$.
+Wtedy \emph{błąd walidacji krzyżowej} jest równy
+\[
+ \widehat R_{\rm CV}=
+ \frac1n\sum_{j=1}^K\sum_{i\in V_j}
+ \ell(Y_i,\widehat f^{(-j)}(X_i)).
+\]
+\end{definicja}
+
+\begin{stwierdzenie}[Bezstronność błędu testowego przy niezależnym teście]
+\label{prop:test-unbiased}
+Niech $(\mathsf X,\mathcal X)$ i $(\mathsf Y,\mathcal Y)$ będą przestrzeniami mierzalnymi, $P$ prawem na $(\mathsf X\times\mathsf Y,\mathcal X\otimes\mathcal Y)$, a $m\ge1$. Niech $\mathcal D_{\rm train}$ oznacza dane uczące, $\widehat f=\mathcal A(\mathcal D_{\rm train})$ będzie mierzalną funkcją predykcyjną $\mathsf X\to\mathsf Y$, a $(X_j^*,Y_j^*)_{j=1}^m$ niezależną próbą testową o wspólnym prawie $P$, niezależną od $\mathcal D_{\rm train}$. Niech strata $\ell:\mathsf Y\times\mathsf Y\to\R$ będzie mierzalna i $\E|\ell(Y_j^*,\widehat f(X_j^*))|<\infty$. Definiujemy losowe ryzyko $R_P(\widehat f)=\int_{\mathsf X\times\mathsf Y}\ell(y,\widehat f(x))\,\dd P(x,y)$. Wówczas estymator
+$\widehat R_{\rm test}=m^{-1}\sum_{j=1}^m
+\ell(Y_j^*,\widehat f(X_j^*))$
+spełnia $\E(\widehat R_{\rm test}\mid\mathcal D_{\rm train})
+=R_P(\widehat f)$.
+\end{stwierdzenie}
+\begin{proof}
+Po warunkowaniu względem danych uczących $\widehat f$
+jest ustalona, zaś każda para $(X_j^*,Y_j^*)$ ma rozkład $P$.
+Liniowość warunkowej wartości oczekiwanej daje
+$\E[\ell(Y_j^*,\widehat f(X_j^*))\mid\mathcal D_{\rm train}]
+=\int_{\mathsf X\times\mathsf Y}\ell(y,\widehat f(x))\,\dd P(x,y)$.
+Uśrednienie po $j$ kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Wyciek informacji przed walidacją]
+Jeśli standaryzujemy kolumny całej tabeli, a dopiero potem
+dzielimy dane na trening i test, średnie i odchylenia użyte
+do transformacji korzystają z obserwacji testowych. Podobny
+problem pojawia się przy imputacji braków danych, wyborze cech
+na podstawie korelacji z wynikiem albo selekcji hiperparametrów
+na zbiorze testowym. Każda taka operacja musi zostać wykonana
+\emph{wewnątrz} odpowiedniego fragmentu uczącego.
+Dla próby niezależnej służy do tego \texttt{Pipeline}; przy
+selekcji hiperparametrów i równoczesnym szacowaniu jakości
+stosujemy zagnieżdżoną walidację krzyżową albo oddzielny test.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex, every node/.style={font=\small},
+  s/.style={draw,rounded corners,align=center,minimum height=9mm,inner sep=3pt},
+  node distance=11mm and 8mm]
+\node[s] (d) {Dane dostępne do analizy};
+\node[s,right=of d] (tr) {Trening i walidacja\\strojenie modelu};
+\node[s,right=of tr] (te) {Odłożony test\\jednorazowa ocena};
+\draw[->,thick] (d)--(tr);
+\draw[->,thick] (tr)--(te);
+\node[below=6mm of tr,align=center,text=black!70] {Wszystkie transformacje i dobór parametrów\\wyłącznie w obrębie danych treningowych};
+\end{tikzpicture}
+\end{center}
+
+\begin{uwaga}[Czego walidacja $K$-krotna nie obiecuje?]
+$\widehat R_{\rm CV}$ nie jest na ogół dokładnie
+nieobciążonym oszacowaniem ryzyka modelu trenowanego
+na całych $n$ obserwacjach: w kolejnych podziałach
+uczymy na mniejszych próbach. Przy danych zależnych
+losowe mieszanie obserwacji może dodatkowo zaniżać błąd.
+Dla szeregów czasowych stosujemy podziały zachowujące
+chronologię, opisane w rozdziale~\ref{ch:time-series}.
+\end{uwaga}
+
+\section{Ridge i lasso: kiedy wprowadzenie obciążenia pomaga predykcji?}
+\begin{definicja}[Regresja ridge i lasso]
+Dla ustalonej macierzy $X\in\R^{n\times p}$, wektora
+$y\in\R^n$ i $\lambda>0$ definiujemy:
+\begin{itemize}
+\item \emph{ridge}: dowolny minimizator
+$Q_{\rm R}(b)=\frac12\|y-Xb\|_2^2+\frac\lambda2\|b\|_2^2$;
+\item \emph{lasso}: dowolny minimizator
+$Q_{\rm L}(b)=\frac12\|y-Xb\|_2^2+\lambda\sum_{j=1}^p|b_j|$.
+\end{itemize}
+W zastosowaniach z wyrazem wolnym zwykle \emph{nie karzemy}
+tego wyrazu i standaryzujemy cechy liczbowe, ponieważ
+wielkość kary zależy od jednostek współczynników.
+\end{definicja}
+
+\begin{twierdzenie}[Rozwiązanie ridge i jego obciążenie]
+\label{thm:ridge}
+Dla dowolnego $X\in\R^{n\times p}$, $y\in\R^n$
+i $\lambda>0$ problem ridge ma dokładnie jedno rozwiązanie:
+$\widehat\beta_\lambda=(X^\top X+\lambda I_p)^{-1}X^\top y$.
+Jeżeli $Y=X\beta+\varepsilon$ z $\E\varepsilon=0$
+i $\Cov(\varepsilon)=\sigma^2I_n$, to
+\[
+ \E\widehat\beta_\lambda=(X^\top X+\lambda I_p)^{-1}
+ X^\top X\beta,
+ \qquad
+ \Cov(\widehat\beta_\lambda)=\sigma^2A_\lambda X^\top X A_\lambda,
+ \quad A_\lambda=(X^\top X+\lambda I_p)^{-1}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Hesjan funkcji $Q_{\rm R}$ wynosi
+$X^\top X+\lambda I_p$, jest dodatnio określony, więc
+kryterium jest ściśle wypukłe i koercywne.
+Jego pochodna $X^\top(Xb-y)+\lambda b$ zeruje się
+wyłącznie w podanym punkcie. Ostatnie równości
+wynikają z liniowości estymatora i tożsamości
+$\widehat\beta_\lambda=A_\lambda X^\top(X\beta+\varepsilon)$.
+\end{proof}
+
+\begin{twierdzenie}[Lasso z ortogonalnymi kolumnami]
+\label{thm:lasso-soft}
+Jeżeli $X\in\R^{n\times p}$ spełnia $X^\top X=I_p$,
+a $z=X^\top y$, to jedyny minimizator $Q_{\rm L}$ ma
+współrzędne
+$\widehat\beta_{\lambda,j}=\operatorname{sgn}(z_j)
+\max(|z_j|-\lambda,0)$, przy $\operatorname{sgn}(0)=0$.
+\end{twierdzenie}
+\begin{proof}
+Po odrzuceniu składnika niezależnego od $b$ kryterium
+jest sumą funkcji $q_j(t)=\frac12(t-z_j)^2+\lambda|t|$.
+Dla $t>0$ pochodna to $t-z_j+\lambda$, dla $t<0$
+wynosi $t-z_j-\lambda$. W punkcie $0$ warunek minimum
+dla funkcji wypukłej to $0\in-z_j+\lambda[-1,1]$.
+Z tych trzech przypadków otrzymujemy formułę.
+Ścisła wypukłość składnika kwadratowego zapewnia
+jedyność rozwiązania.
+\end{proof}
+
+\begin{uwaga}[Wybór ridge czy lasso]
+Ridge zmniejsza współczynniki w sposób ciągły, ale na ogół
+nie zeruje ich dokładnie; jest szczególnie pomocny przy
+współliniowości i wielu słabych sygnałach.
+Lasso może dawać współczynniki równe zeru, jednak przy
+silnej korelacji cech wybór konkretnych zmiennych bywa
+niestabilny. Żadna z metod nie naprawia błędnej definicji
+jednostki obserwacji lub zależności czasowej. Wybór
+$\lambda$ powinien korzystać wyłącznie z danych uczących.
+\end{uwaga}
+
+\section{Laboratorium: dobór stopnia wielomianu bez przecieku danych}
+W kolejnym programie używamy wielomianowych regresorów
+o stopniach od $1$ do $8$. Każdy kandydat ma oddzielny
+potok transformacji: rozwinięcie cech i dopasowanie
+regresji zachodzą tylko na danej części treningowej.
+Na końcu porównujemy wybór walidacyjny z wynikiem na
+odłożonym teście. W pokazanej, odtwarzalnej symulacji
+najlepiej wypada stopień $2$, z walidacyjnym MSE około
+$0{,}319$ i testowym MSE około $0{,}189$. Nie oczekujemy,
+że wartości te będą identyczne: oba oszacowania opierają
+się na różnych fragmentach skończonej próby.
+Poniższy przykład jest symulacją
+odtwarzalną po ustaleniu ziarna generatora; rzeczywiste
+dane powinny być dzielone zgodnie z mechanizmem ich
+powstawania.
+
+\begin{lstlisting}[language=Python,caption={Kompletny program: wybór stopnia modelu, walidacja i niezależny test (Python, scikit-learn).}]
+import numpy as np
+from sklearn.model_selection import KFold, cross_val_score
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import PolynomialFeatures, StandardScaler
+from sklearn.linear_model import Ridge
+from sklearn.metrics import mean_squared_error
+
+rng = np.random.default_rng(2026)
+x = rng.uniform(-2.0, 2.0, size=150)
+y = 1.5 + 0.8*x - 0.7*x**2 + rng.normal(0, 0.5, 150)
+indices = rng.permutation(len(x))
+train, test = indices[:110], indices[110:]
+Xtr, Xte = x[train, None], x[test, None]
+ytr, yte = y[train], y[test]
+cv = KFold(n_splits=5, shuffle=True, random_state=11)
+
+results = []
+for degree in range(1, 9):
+    pipe = make_pipeline(PolynomialFeatures(degree, include_bias=False),
+                         StandardScaler(), Ridge(alpha=1.0))
+    # Negative score because scikit-learn maximizes its scoring metric.
+    mse_cv = -cross_val_score(pipe, Xtr, ytr, cv=cv,
+                             scoring="neg_mean_squared_error").mean()
+    results.append((degree, mse_cv))
+
+best_degree, best_cv = min(results, key=lambda item: item[1])
+best = make_pipeline(PolynomialFeatures(best_degree, include_bias=False),
+                     StandardScaler(), Ridge(alpha=1.0))
+best.fit(Xtr, ytr)
+test_mse = mean_squared_error(yte, best.predict(Xte))
+print("CV results:", results)
+print("degree chosen by CV:", best_degree)
+print("CV MSE:", best_cv)
+print("holdout MSE:", test_mse)
+\end{lstlisting}
+
+\paragraph{Interpretacja.}
+Program nie wybiera stopnia na podstawie wyniku testowego.
+Nie porównujemy wielu konfiguracji na teście, a następnie
+nie nazywamy najmniejszego błędu \emph{niezależną oceną}.
+Przy rzeczywistych danych czasowych zwykły \texttt{KFold}
+z mieszaniem byłby niewłaściwy; użyjemy innego podziału
+w rozdziale~\ref{ch:time-series}.
+
+\section{Porównania metod i zadania}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.24\textwidth}>{\raggedright\arraybackslash}p{.32\textwidth}>{\raggedright\arraybackslash}p{.31\textwidth}}
+\toprule
+\textbf{Cel} & \textbf{Metoda} & \textbf{Warunek i ryzyko}\\
+\midrule
+Dopasowanie porównywalnych modeli o pełnej wiarygodności & AIC & Te same dane i odpowiedź; regularna asymptotyka; ryzyko przetrenowania.\\
+Preferowanie prostszego modelu parametrycznego & BIC & Regularność i interpretacja w kategoriach aproksymacji ewidencji modelu.\\
+Wybór jakości predykcji dla danych iid & Walidacja krzyżowa & Transformacje w ramach foldów; dobór liczby foldów i metryki.\\
+Niezależna ocena końcowego modelu & Odłożony zbiór testowy & Test nie może uczestniczyć w strojeniu.\\
+Wiele skorelowanych zmiennych & Ridge & Obciążenie za mniejszą wariancję; skala cech.\\
+Szukamy rzadkiego zbioru predyktorów & Lasso & Niestabilna selekcja przy współliniowości.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{zadanie}[Dlaczego nie można porównać AIC wprost?]
+Analityk dopasował regresję logistyczną do $100$ produktów,
+z których $5$ ma braki danych, oraz regresję Poissona do
+$95$ obserwacji dotyczących innego rodzaju odpowiedzi.
+Pierwszy model ma AIC równe $89$, drugi $76$. Czy drugi
+model jest lepszy?
+\par\emph{Rozwiązanie.} Nie. Wiarygodności dotyczą innych
+zmiennych i potencjalnie różnych zbiorów danych;
+różnice AIC nie odpowiadają wspólnej mierze ryzyka.
+Najpierw trzeba ustalić ten sam cel predykcji, rozkład
+odpowiedzi, obserwacje i stratę. Dla dwóch konkurencyjnych
+modeli tego samego wyniku można zastosować wspólną
+walidację na identycznych podziałach danych.
+\end{zadanie}
+
+\begin{zadanie}[Ridge a nieobciążoność]
+Niech $X^\top X=I_p$, a $Y=X\beta+\varepsilon$,
+$\E\varepsilon=0$, $\Cov(\varepsilon)=\sigma^2I_n$.
+Wyznacz obciążenie ridge oraz MSE wektorowy
+$\E\|\widehat\beta_\lambda-\beta\|_2^2$.
+\par\emph{Rozwiązanie.} Z twierdzenia~\ref{thm:ridge}
+$\E\widehat\beta_\lambda=\beta/(1+\lambda)$,
+więc obciążenie wynosi $-\lambda\beta/(1+\lambda)$.
+Kowariancja jest równa
+$\sigma^2(1+\lambda)^{-2}I_p$, skąd
+$\E\|\widehat\beta_\lambda-\beta\|_2^2
+=(\lambda^2\|\beta\|_2^2+p\sigma^2)/(1+\lambda)^2$.
+Zależnie od nieznanego $\beta$ pewne dodatnie
+$\lambda$ mogą poprawiać MSE względem MNK, ale nie
+wynika z tego uniwersalna optymalność jednej kary.
+\end{zadanie}
+
+% ================================================================
+% ROZDZIAL 16 -- DANE ZALEZNE W CZASIE
+% ================================================================

@@ -1,0 +1,311 @@
+\chapter{Informacja Fishera, efektywność i granice dokładności estymacji}
+\label{ch:fisher-information}
+\paragraph{Powiązania i odsyłacze.} Korzystamy z funkcji score z rozdziału~\ref{ch:likelihood} oraz z teorii estymatorów w rozdziale~\ref{ch:estimators}; przybliżenia asymptotyczne omawia rozdział~\ref{ch:asymptotic-estimation}.
+
+
+\section{Motywacja: jak rozróżnialne są pobliskie parametry?}
+Rozważmy dwa modele Bernoulliego: $p=0{,}50$ oraz $p=0{,}51$.
+Jedna obserwacja nie pozwala ich wiarygodnie rozdzielić, nawet jeżeli
+znamy dokładnie formułę rozkładu. Podobnie dwie wartości średniej
+rozkładu normalnego są trudniejsze do rozróżnienia, gdy wariancja
+pomiaru jest duża. \emph{Informacja Fishera} formalizuje lokalną
+wrażliwość rozkładu obserwacji na zmianę parametru; nie jest miarą
+informacji zawartej w pojedynczym, już zaobserwowanym wyniku.
+
+\begin{definicja}[Score i informacja Fishera]\label{def:fisher-score}
+Niech $\Theta\subset\R$ będzie przedziałem otwartym, a
+$\{P_\theta:\theta\in\Theta\}$ rodziną rozkładów zdominowaną
+przez miarę $\sigma$-skończoną $\mu$. Załóżmy, że istnieje wspólny zbiór $S\in\mathcal A$
+taki, że $p_\theta(x)>0$ dla $x\in S$, $p_\theta(x)=0$
+poza $S$ dla wszystkich $\theta$, oraz dla $\mu$-prawie
+każdego $x\in S$ funkcja $\theta\mapsto p_\theta(x)$
+jest różniczkowalna. Załóżmy ponadto, że
+$s_\theta(x):=\partial_\theta\log p_\theta(x)$ należy do
+$L^2(P_\theta)$. Funkcję $s_\theta$ nazywamy \emph{score}, a
+$I(\theta):=\E_\theta[s_\theta(X)^2]$ \emph{informacją Fishera
+w jednej obserwacji}. Informację w próbie zapisujemy $I_n(\theta)$.
+\end{definicja}
+
+Nie zakładamy automatycznie, że $\E_\theta s_\theta=0$.
+Tę własność trzeba uzasadnić regularnością modelu. Nie należy też
+mylić losowej \emph{informacji obserwowanej}
+$j_\theta(X)=-\partial_\theta^2\log p_\theta(X)$ z jej
+wartością oczekiwaną: dla ustalonej obserwacji wartości mogą być
+bardzo różne.
+
+\begin{twierdzenie}[Tożsamość score i addytywność informacji]
+\label{thm:score-information}
+Niech $p_\theta(x)$ będzie rodziną gęstości względem wspólnej
+miary $\mu$ na przedziale parametrów $\Theta$. Załóżmy, że
+$\partial_\theta p_\theta$ istnieje $\mu$-p.n. oraz że
+$\partial_\theta\int_{\mathsf X} p_\theta(x)\,\dd\mu(x)
+=\int_{\mathsf X}\partial_\theta p_\theta(x)\,\dd\mu(x)$; ponadto
+$\int_{\mathsf X}(\partial_\theta p_\theta(x))^2/p_\theta(x)\,\dd\mu(x)<\infty$.
+Wtedy $\E_\theta s_\theta=0$. Jeśli $X_1,\ldots,X_n$ są
+niezależne o tym samym prawie $P_\theta$, to
+$I_n(\theta)=nI(\theta)$.
+Jeśli dodatkowo istnieje $\partial_\theta^2p_\theta$,
+można dwukrotnie różniczkować całkę normalizującą i
+$\E_\theta|\partial_\theta^2\log p_\theta(X)|<\infty$,
+to $I(\theta)=-\E_\theta\partial_\theta^2\log p_\theta(X)$.
+\end{twierdzenie}
+\begin{proof}
+Z definicji $s_\theta p_\theta=\partial_\theta p_\theta$,
+więc $\E_\theta s_\theta=\int_{\mathsf X}\partial_\theta p_\theta(x)
+\,\dd\mu(x)=\partial_\theta1=0$. Dla próby score jest sumą
+$S_n=\sum_i s_\theta(X_i)$: wynika to z logarytmowania
+iloczynu gęstości. Po podniesieniu do kwadratu
+$\E S_n^2=\sum_i\E s_\theta(X_i)^2+
+2\sum_{i<j}\E s_\theta(X_i)s_\theta(X_j)$.
+Niezależność i zerowanie średniej eliminują wszystkie wyrazy
+mieszane, zatem $I_n=nI$.
+Z równości $\partial_\theta^2\log p=(\partial_\theta^2p)/p-
+(\partial_\theta p)^2/p^2$ dostajemy
+$\E_\theta\partial_\theta^2\log p=
+\int_{\mathsf X}\partial_\theta^2p_\theta(x)\,\dd\mu(x)-I(\theta)=-I(\theta)$.
+Ostatnia równość wykorzystuje dopuszczoną zamianę drugiej
+pochodnej z całką i nie jest poprawna bez niej.
+\end{proof}
+
+\begin{zadanie}[Bernoulli: dlaczego skrajne prawdopodobieństwa są szczególne?]
+Niech $X\sim\operatorname{Bernoulli}(p)$, $p\in(0,1)$.
+Oblicz score i informację, a następnie podaj przybliżony
+błąd standardowy $\widehat p$ z $n$ niezależnych prób.
+\par\emph{Rozwiązanie.} Mamy
+$\ell(p;x)=x\log p+(1-x)\log(1-p)$,
+$s_p(x)=x/p-(1-x)/(1-p)=(x-p)/(p(1-p))$.
+Ponieważ $\Var_p X=p(1-p)$, informacja wynosi
+$I(p)=1/[p(1-p)]$ i $I_n(p)=n/[p(1-p)]$.
+Dla $\widehat p=\bar X$ zachodzi dokładnie
+$\Var_p\widehat p=p(1-p)/n$. Stąd po podstawieniu
+$\widehat p$ orientacyjny błąd standardowy to
+$\sqrt{\widehat p(1-\widehat p)/n}$.
+Blisko $p=0$ lub $1$ wzór wymaga ostrożności: punkty brzegowe
+nie należą do otwartej przestrzeni parametrów, a dla $\widehat p=0$
+nie można wnioskować, że niepewność parametru faktycznie znika.
+\end{zadanie}
+
+\begin{przyklad}[Poisson z ekspozycją i normalny pomiar]
+Jeśli niezależne $Y_i\sim\operatorname{Pois}(\lambda t_i)$,
+$t_i>0$, to score jest $S(\lambda)=\sum_iY_i/\lambda-
+\sum_it_i$, a informacja w całej próbie wynosi
+$I(\lambda)=\sum_it_i/\lambda$. To \emph{łączny czas ekspozycji},
+a nie liczba okresów, wyznacza podstawową skalę dokładności
+estymacji intensywności. Jeśli $X_i\sim\Normal(\mu,\sigma^2)$
+przy znanym $\sigma$, to $s_\mu(X_i)=(X_i-\mu)/\sigma^2$,
+$I_n(\mu)=n/\sigma^2$: większy szum oznacza mniejszą informację.
+\end{przyklad}
+
+\section{Nierówność Craméra--Rao i warunki jej stosowania}
+\begin{twierdzenie}[Nierówność Craméra--Rao dla funkcji parametru]
+\label{thm:cramer-rao}
+Niech $\Theta\subset\R$ będzie przedziałem otwartym,
+$T$ rzeczywistą statystyką z $\E_\theta T^2<\infty$,
+a $g(\theta)=\E_\theta T$. Załóżmy, że score
+$S_\theta=\partial_\theta\log p_\theta(X)$ całej obserwacji
+jest kwadratowo całkowalny, $\E_\theta S_\theta=0$,
+$0<I_n(\theta)<\infty$ oraz że wolno różniczkować
+$\int_{\mathsf X} T(x)p_\theta(x)\,\dd\mu(x)$ pod całką. Wtedy
+\[
+\Var_\theta(T)\ge\frac{[g'(\theta)]^2}{I_n(\theta)}.
+\]
+Równość dla ustalonego $\theta$ zachodzi (gdy $g'(\theta)\ne0$)
+dokładnie wtedy, gdy $T-g(\theta)$ jest $P_\theta$-p.n.
+proporcjonalna do $S_\theta$.
+\end{twierdzenie}
+\begin{proof}
+Z dozwolonego różniczkowania i tożsamości
+$\partial_\theta p_\theta=S_\theta p_\theta$ otrzymujemy
+$g'(\theta)=\E_\theta[T S_\theta]$.
+Ponieważ $\E_\theta S_\theta=0$, ta wartość jest kowariancją
+$\Cov_\theta(T,S_\theta)$. Nierówność Cauchy'ego--Schwarza
+daje $|g'(\theta)|^2\le\Var_\theta(T)\Var_\theta(S_\theta)$.
+Ostatnia wariancja równa się $I_n(\theta)$, co po podzieleniu
+przez dodatnią liczbę daje tezę. Warunek równości w
+Cauchym--Schwarzu jest równoważny liniowej zależności
+zmiennych scentrowanych w $L^2(P_\theta)$.
+\end{proof}
+
+\begin{wniosek}[Znak równości w modelu normalnym]
+Jeśli $X_1,\ldots,X_n\iid\Normal(\mu,\sigma^2)$ przy
+znanej $\sigma^2>0$, to dla nieobciążonego estymatora
+$\bar X$ średniej $\mu$ mamy
+$\Var_\mu(\bar X)=\sigma^2/n=1/I_n(\mu)$.
+Zatem $\bar X$ osiąga granicę Craméra--Rao przy każdym $\mu$.
+\end{wniosek}
+
+\begin{uwaga}[Czemu rozkład jednostajny łamie naiwny rachunek?]
+Dla próby $X_i\iid U(0,\theta)$ nośnik $(0,\theta)^n$
+zależy od $\theta$. Na wnętrzu nośnika log-wiarygodność ma
+pochodną $-n/\theta$, której wartość oczekiwana jest
+$-n/\theta\ne0$. Zatem krok $\E_\theta S_\theta=0$
+nie zachodzi i poprzednie twierdzenie nie ma zastosowania.
+Co więcej, skorygowany estymator maksimum ma wariancję rzędu
+$n^{-2}$, a nie $n^{-1}$. Nie jest to paradoks, lecz efekt
+informacji pochodzącej z \emph{brzegu nośnika}.
+\end{uwaga}
+
+\section{Wiele parametrów i parametry zakłócające}
+\begin{twierdzenie}[Macierzowa nierówność Craméra--Rao]
+\label{thm:cr-matrix}
+Niech $\Theta\subset\R^d$ będzie otwarta, a score całej próby
+$S_\theta=\nabla_\theta\log p_\theta(X)$ spełnia
+$\E_\theta S_\theta=0$, $I_n(\theta)=\E_\theta[S_\theta
+S_\theta^{\mathsf T}]$ jest dodatnio określona oraz
+$\nabla_\theta\E_\theta T=\E_\theta[T S_\theta]$ dla
+$T\in L^2(P_\theta)$. Oznaczmy $g(\theta)=\E_\theta T$.
+Wtedy
+\[
+\Var_\theta(T)\ge \nabla g(\theta)^{\mathsf T}
+I_n(\theta)^{-1}\nabla g(\theta).
+\]
+\end{twierdzenie}
+\begin{proof}
+Niech $a=I_n^{-1}\nabla g$ i $Z=T-g-a^{\mathsf T}S_\theta$.
+Ponieważ $\E Z=0$ oraz $\E[(T-g)S_\theta]=\nabla g$,
+rozwinięcie kwadratu i $\E[S_\theta S_\theta^{\mathsf T}]=I_n$
+dają $\E Z^2=\Var(T)-2a^{\mathsf T}\nabla g+a^{\mathsf T}I_na
+=\Var(T)-\nabla g^{\mathsf T}I_n^{-1}\nabla g$.
+Nieujemność $\E Z^2$ kończy dowód.
+\end{proof}
+
+Jeśli $\theta=(\psi,\eta)$, gdzie $\psi$ jest interesującym
+nas parametrem, a $\eta$ parametrem zakłócającym, należy użyć
+pełnej macierzy informacji. Dla odpowiedniego rozkładu blokowego
+$I=\begin{psmallmatrix}I_{\psi\psi}&I_{\psi\eta}\\
+I_{\eta\psi}&I_{\eta\eta}\end{psmallmatrix}$, gdy dolny blok
+jest odwracalny, pierwszy element $I^{-1}$ to
+$(I_{\psi\psi}-I_{\psi\eta}I_{\eta\eta}^{-1}I_{\eta\psi})^{-1}$.
+Wyrażenie w nawiasie nazywamy informacją efektywną o $\psi$.
+Nie wolno więc automatycznie używać $1/I_{\psi\psi}$,
+jak gdyby $\eta$ było znane.
+
+\begin{zadanie}[Normalny model z nieznaną wariancją]
+Dla próby $X_i\iid\Normal(\mu,v)$, $\mu\in\R$, $v>0$,
+oblicz macierz informacji parametrów $(\mu,v)$.
+\par\emph{Rozwiązanie.} Pojedynczy score ma składowe
+$s_\mu=(X-\mu)/v$ i
+$s_v=-1/(2v)+(X-\mu)^2/(2v^2)$.
+Z symetrii rozkładu normalnego składnik mieszany wynosi zero.
+Z momentów centralnych $\E(X-\mu)^2=v$ i
+$\E(X-\mu)^4=3v^2$ otrzymujemy
+$I_1=\diag(1/v,1/(2v^2))$.
+Dla $n$ niezależnych pomiarów $I_n=nI_1$.
+Zatem parametr $v$ jest tu informacyjnie ortogonalny do $\mu$:
+nieznana wariancja nie zmienia elementu $(I_n^{-1})_{\mu\mu}$,
+choć istotnie zmienia sposób szacowania błędu standardowego z danych.
+\end{zadanie}
+
+
+\section{Lokalna geometria modeli: informacja a dywergencja KL}
+Tożsamość informacyjna ma dodatkową interpretację, która jest
+przydatna przy projektowaniu doświadczenia. Dwa bardzo bliskie
+parametry nie dają dwóch zupełnie różnych rozkładów; w modelach
+regularnych ich odległość w sensie dywergencji KL jest
+\emph{drugiego rzędu} względem różnicy parametrów. Informacja
+Fishera jest współczynnikiem tego rozwinięcia.
+
+\begin{stwierdzenie}[Lokalne rozwinięcie dywergencji KL]
+\label{prop:kl-fisher-expansion}
+Niech $\Theta\subset\R$ będzie otwartym przedziałem, a
+$\{p_\eta:\eta\in\Theta\}$ modelem zdominowanym o dodatnich
+gęstościach na wspólnym nośniku. Ustalmy $\theta\in\Theta$.
+Załóżmy, że funkcja
+$K(h)=\E_\theta[\log p_\theta(X)-\log p_{\theta+h}(X)]$
+jest dwukrotnie różniczkowalna w otoczeniu $h=0$, przy czym
+wolno różniczkować pod wartością oczekiwaną, a tożsamości
+informacyjne obowiązują dla $\eta$ w tym otoczeniu.
+Wtedy
+$K(h)=\tfrac12 I(\theta)h^2+o(h^2)$, gdy $h\to0$.
+\end{stwierdzenie}
+\begin{proof}
+Ponieważ $K(0)=0$ i $K'(0)=-\E_\theta s_\theta(X)=0$,
+wystarczy policzyć drugą pochodną w zerze.
+Mamy $K''(0)=-\E_\theta\partial_\theta^2\log p_\theta(X)
+=I(\theta)$. Rozwinięcie Taylora z resztą Peana daje tezę.
+Przytoczone założenia są istotne: przy nośniku zależnym od
+parametru nawet wartość $K(h)$ może być nieskończona w jednej
+stronie zera.
+\end{proof}
+
+\begin{przyklad}[Dlaczego powtarzanie pomiaru pomaga?]
+Dla $P_\mu=\Normal(\mu,\sigma^2)$ przy znanym $\sigma>0$
+rachunek gaussowski daje dokładnie
+$D_{\rm KL}(P_\mu\|P_{\mu+h})=h^2/(2\sigma^2)$.
+Dla $n$ niezależnych pomiarów dywergencja praw wspólnych jest
+$n$ razy większa. Dlatego przy ustalonym stosunku sygnału
+do szumu wzrost liczby niezależnych pomiarów zwiększa
+rozróżnialność parametrów. Jeśli jednak wielokrotnie mierzymy
+ten sam obiekt przy wspólnym błędzie systematycznym, model
+iloczynowy nie jest poprawny i wniosek o addytywności nie musi
+pozostać prawdziwy.
+\end{przyklad}
+
+\section{Efektywność i ryzyko: co rzeczywiście mierzymy?}
+W statystyce mówi się czasem, że estymator jest \emph{efektywny},
+gdy osiąga granicę Craméra--Rao w danym regularnym modelu.
+To jest własność \emph{względem konkretnej funkcji straty i klasy
+estymatorów}, a nie stwierdzenie, że jest to najlepsza procedura
+do wszystkich zastosowań. Granica Craméra--Rao dotyczy w podanej
+wersji estymatorów o ustalonej wartości oczekiwanej $g(\theta)$.
+Estymator obciążony może mieć mniejsze MSE; metody odporne mogą
+być lepsze, gdy część pomiarów jest zanieczyszczona.
+
+\begin{zadanie}[Dwa sposoby estymacji wariancji normalnej]
+Dla $X_i\iid\Normal(\mu,\sigma^2)$ o nieznanych $\mu$ i
+$\sigma^2$ porównaj estymator nieobciążony
+$S^2=(n-1)^{-1}\sum_i(X_i-\bar X)^2$ i MLE
+$V_n=n^{-1}\sum_i(X_i-\bar X)^2$ przy stracie kwadratowej.
+\par\emph{Rozwiązanie.} Z rozkładu
+$(n-1)S^2/\sigma^2\sim\chi^2_{n-1}$ wynika
+$\E S^2=\sigma^2$ i $\Var S^2=2\sigma^4/(n-1)$.
+Dla $V_n=(n-1)S^2/n$ mamy
+$\E V_n=(n-1)\sigma^2/n$ i
+$\Var V_n=2(n-1)\sigma^4/n^2$. Dlatego
+\[
+\MSE_\theta(V_n)=\frac{2(n-1)+1}{n^2}\sigma^4
+=\frac{2n-1}{n^2}\sigma^4,
+\qquad
+\MSE_\theta(S^2)=\frac{2}{n-1}\sigma^4.
+\]
+Dla $n\ge2$ pierwszy z tych błędów jest mniejszy.
+Ten przykład przypomina, że minimalna wariancja w klasie
+estymatorów nieobciążonych nie rozstrzyga optymalności przy
+uwzględnieniu estymatorów obciążonych.
+\end{zadanie}
+
+\section{Kiedy granica informacyjna daje praktyczną odpowiedź?}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}p{0.32\textwidth}>{\raggedright\arraybackslash}p{0.30\textwidth}}
+\toprule
+\textbf{Cel} & \textbf{Co można obliczyć?} & \textbf{Czego nie wolno wnioskować?}\\
+\midrule
+Porównanie dwóch nieobciążonych estymatorów & Wariancje, MSE i dolną granicę Craméra--Rao & Osiąganie granicy nie jest gwarantowane\\
+Projektowanie pomiaru & Informację na obserwację lub ekspozycję & Więcej rekordów nie zawsze znaczy więcej informacji przy zależności\\
+Parametr z nuisance & Macierz informacji i dopełnienie Schura & Nie wolno pominąć współparametrów\\
+Mała próba i punkt brzegowy & Dokładny rozkład estymatora, przedział dokładny & Asymptotyczna normalność może być złym przybliżeniem\\
+Model o zmiennym nośniku & Bezpośredni rachunek rozkładu statystyki & Nie stosować regularnego Craméra--Rao bez założeń\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{zadanie}[Jednostki informacji przy obserwacji zdarzeń]
+Dwie maszyny pracowały odpowiednio $20$ i $80$ godzin;
+zaobserwowano łącznie $7$ awarii. W modelu niezależnych zliczeń
+Poissona o wspólnej intensywności $\lambda$ oblicz MLE i
+przybliżony błąd standardowy.
+\par\emph{Rozwiązanie.} Łączna ekspozycja to $T=100$ godzin,
+więc $\widehat\lambda=7/100=0{,}07$ awarii na godzinę.
+Obserwowana krzywizna log-wiarygodności przy maksimum wynosi
+$j(\widehat\lambda)=7/\widehat\lambda^2$;
+informacja Fishera to $T/\lambda$.
+Oba sposoby po podstawieniu MLE prowadzą do
+$\widehat{\mathrm{se}}=\sqrt{\widehat\lambda/T}
+\approx0{,}0265$ na godzinę. Jest to oszacowanie asymptotyczne:
+przy zaledwie siedmiu zdarzeniach warto porównać je z dokładną
+procedurą opartą na rozkładzie Poissona.
+\end{zadanie}
+
+% ================================================================
+% ROZDZIAL 8 -- ASYMPTOTYCZNA TEORIA ESTYMACJI
+% ================================================================

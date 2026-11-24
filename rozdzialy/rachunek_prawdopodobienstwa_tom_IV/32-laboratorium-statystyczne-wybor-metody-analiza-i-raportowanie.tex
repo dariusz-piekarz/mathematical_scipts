@@ -1,0 +1,257 @@
+\chapter{Laboratorium statystyczne: wybór metody, analiza i raportowanie}
+\label{ch:stat-laboratory}
+\paragraph{Powiązania i odsyłacze.} Laboratorium łączy teorię testowania z rozdziału~\ref{ch:testing}, regresję z rozdziałów~\ref{ch:linear-regression}--\ref{ch:glm}, podejście bayesowskie z rozdziału~\ref{ch:bayes-foundations} oraz projektowanie eksperymentów z rozdziału~\ref{ch:causal-ab}.
+
+
+\section{Przed uruchomieniem testu: co trzeba wiedzieć o danych?}
+Ten rozdział nie wprowadza jednego nowego testu. Łączy teorię z poprzednich rozdziałów w kompletny tok postępowania. W praktyce najgroźniejsze błędy powstają \emph{przed} obliczeniem wartości p: niewłaściwy cel, pozorna niezależność jednostek, zmiana hipotezy po analizie, selekcja danych albo zastosowanie poprawnego testu do nieodpowiedniego projektu.
+
+\begin{definicja}[Plan analizy statystycznej]\label{def:stat-analysis-plan}
+\emph{Planem analizy} nazywamy ustalony przed obejrzeniem wyników docelowych zestaw reguł określających: populację i jednostkę analizy, parametr będący celem wnioskowania (\emph{estimand}), główny wynik, schemat losowania lub przydziału, główny estymator/test, sposób liczenia niepewności, sposób obchodzenia się z brakami danych, wielokrotnością porównań i analizami pośrednimi. Plan może wskazywać również wcześniej ustalone analizy wrażliwości i kryterium decyzji praktycznej.
+\end{definicja}
+
+\begin{center}
+\begin{tikzpicture}[node distance=5mm and 6mm,>=Latex,
+box/.style={draw=blue!55!black,rounded corners=2pt,align=center,text width=3.15cm,font=\footnotesize,inner sep=5pt},
+arrow/.style={->,line width=.65pt}]
+\node[box] (goal) {Zdefiniuj cel: efekt, średnia,\\prognoza czy związek?};
+\node[box,right=of goal] (design) {Rozpoznaj projekt:\\jednostka i zależność};
+\node[box,right=of design] (method) {Wybierz model oraz\\procedurę niepewności};
+\node[box,below=of method] (check) {Zbadaj diagnostykę\\i wrażliwość};
+\node[box,left=of check] (report) {Raportuj efekt, przedział,\\założenia i ograniczenia};
+\draw[arrow] (goal)--(design);
+\draw[arrow] (design)--(method);
+\draw[arrow] (method)--(check);
+\draw[arrow] (check)--(report);
+\end{tikzpicture}
+
+{\small\emph{Rysunek 32.1.} Schemat pracy z danymi. Diagnostyka może uzasadnić analizę wrażliwości, lecz nie powinna automatycznie zastępować celu ustalonego w planie.}
+\end{center}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.30\textwidth}>{\raggedright\arraybackslash}p{.26\textwidth}>{\raggedright\arraybackslash}p{.29\textwidth}}
+\toprule
+\textbf{Struktura danych i pytanie} & \textbf{Procedura do rozważenia} & \textbf{Krytyczny warunek}\\
+\midrule
+Dwie niezależne grupy, średnie & Welch; odporny test/studentyzowany bootstrap & Niezależność jednostek, ciężkie ogony\\
+Dwa pomiary tej samej osoby & Test t dla różnic; test zmian znaków & Pary są poprawnie skojarzone\\
+Kilka grup, jedna zmienna ciągła & ANOVA, Welch, kontrasty & Projekt i wariancje błędów\\
+Jedna zmienna i kowarianty & ANCOVA lub regresja & Kowarianty sprzed interwencji; interakcje\\
+Wiele powiązanych wyników & MANOVA/MANCOVA & Wspólny cel i macierz kowariancji\\
+Wiele wizyt tej samej osoby & Model mieszany; RM--ANOVA w prostym planie & Struktura korelacji i braki danych\\
+Sukces/porażka & Model dwumianowy, logit lub test proporcji & Prawidłowy mianownik i poziom jednostki\\
+Liczba zdarzeń w różnym czasie & Poisson z offsetem; model ujemny dwumianowy & Ekspozycja i nadmierna dyspersja\\
+Szereg czasowy & ARMA, GLS/HAC, walidacja chronologiczna & Stacjonarność i zależność\\
+Obserwacje nierandomizowane, efekt działania & Standaryzacja, IPW/AIPW, DiD & Wymienność lub trendy równoległe\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Studium I: eksperyment A/B od losowania do wniosku}
+\begin{przyklad}[Pytanie biznesowe i parametr]
+Platforma wylosowała jeden z dwóch wariantów interfejsu dla każdego z $5000$ użytkowników. Interesuje nas, czy nowy wariant zwiększa prawdopodobieństwo dokonania zakupu w ciągu ustalonego okna obserwacji. Jednostką randomizacji i analizy jest \emph{użytkownik}, nie odsłona strony. Głównym parametrem jest różnica prawdopodobieństw konwersji $\Delta=p_1-p_0$, a nie iloraz szans z regresji logistycznej. Przed rozpoczęciem eksperymentu ustalamy też minimalną praktycznie istotną poprawę, np. $\Delta_\star=0{,}01$; sam fakt otrzymania $p<0{,}05$ nie dowodzi przekroczenia tego progu.
+\end{przyklad}
+
+Dla dwóch niezależnych prób Bernoulliego o licznościach $n_0,n_1$, przy $0<p_0,p_1<1$, niech $K_a$ oznacza liczbę zakupów i $\widehat p_a=K_a/n_a$. Przy niezależności jednostek oraz rosnących $n_a$, dwuwymiarowe centralne twierdzenie graniczne i twierdzenie Slutsky'ego prowadzą do przybliżenia
+\[
+\frac{(\widehat p_1-\widehat p_0)-(p_1-p_0)}{\sqrt{\widehat p_1(1-\widehat p_1)/n_1+\widehat p_0(1-\widehat p_0)/n_0}}\ \overset{d}{\longrightarrow}\ \Normal(0,1).
+\]
+Gdy konwersji jest bardzo mało, gdy $\widehat p_a$ leży na brzegu $\{0,1\}$ albo gdy jednostki są zależne, powyższa normalizacja nie uzasadnia stosowania naiwnego przedziału Walda. Warto wówczas rozważyć dokładniejsze metody dla danych binarnych albo procedury uwzględniające zależność.
+
+\begin{stwierdzenie}[Efekt standardyzowany z regresji logistycznej]\label{prop:logit-std}
+Niech dla każdego $x\in\R^q$ i $a\in\{0,1\}$ model warunkowej średniej ma postać $m_a(x;\beta)=g(v_a(x)^\top\beta)$, gdzie $g(u)=(1+e^{-u})^{-1}$, $v_a(x)\in\R^r$ jest zadanym wektorem cech zawierającym m.in. wartość $a$, a $\beta\in\R^r$. Dla ustalonych kowariant $x_1,\ldots,x_n$ definiujemy \emph{standaryzowaną różnicę ryzyka}
+$D(\beta)=n^{-1}\sum_i[m_1(x_i;\beta)-m_0(x_i;\beta)]$.
+Wtedy gradient ma postać
+\[
+\nabla D(\beta)=\frac1n\sum_{i=1}^n\left[g'(v_1(x_i)^\top\beta)v_1(x_i)-g'(v_0(x_i)^\top\beta)v_0(x_i)\right],
+\]
+gdzie $g'(u)=g(u)(1-g(u))$. Jeśli $\widehat\beta$ jest asymptotycznie normalny, a $\widehat\Sigma_\beta$ estymuje jego macierz kowariancji w skali estymatora, to warunkowy, pierwszorzędowy przybliżony błąd standardowy $D(\widehat\beta)$ można obliczyć jako $\sqrt{\nabla D(\widehat\beta)^\top\widehat\Sigma_\beta\nabla D(\widehat\beta)}$.
+\end{stwierdzenie}
+\begin{proof}
+Pochodna funkcji logistycznej wynika bezpośrednio z reguły łańcuchowej. Skończoną sumę można różniczkować wyraz po wyrazie, otrzymując wzór na gradient. Drugie stwierdzenie jest zastosowaniem wielowymiarowej metody delty do różniczkowalnego odwzorowania $D$. Dla losowych kowariant z próby populacyjnej dochodzi również niepewność wynikająca z estymacji rozkładu $X$; nie wolno bez dodatkowych warunków utożsamiać powyższego rachunku z pełnym bezwarunkowym błędem standardowym populacyjnego ATE.
+\end{proof}
+
+\begin{uwaga}[Współczynnik logitowy to nie różnica ryzyka]
+Regresja logistyczna podaje zwykle $e^{\widehat\beta_A}$, czyli \emph{warunkowy iloraz szans}. Nawet w poprawnym modelu nie jest on tym samym co iloraz ryzyka $p_1/p_0$ ani różnica ryzyka $p_1-p_0$. Dla komunikacji biznesowej różnica ryzyka w punktach procentowych bywa bardziej zrozumiała, ale trzeba zawsze podać także wyjściowy poziom ryzyka i horyzont obserwacji.
+\end{uwaga}
+
+\begin{lstlisting}[language=Python,caption={Kompletny program: A/B testing z analizą podstawową, standaryzacją logistyczną i posteriorowym porównaniem odsetków (Python, NumPy, SciPy, statsmodels).}]
+import numpy as np
+from scipy import stats
+from scipy.special import expit
+import statsmodels.api as sm
+
+rng = np.random.default_rng(2032)
+n = 5000
+A = np.repeat([0, 1], n // 2)
+rng.shuffle(A)
+x = rng.normal(size=n)  # measured before randomization
+risk = expit(np.log(.08 / .92) + .55*x + .45*A)
+y = rng.binomial(1, risk)
+
+n0, n1 = np.sum(A == 0), np.sum(A == 1)
+k0, k1 = y[A == 0].sum(), y[A == 1].sum()
+p0, p1 = k0 / n0, k1 / n1
+rd = p1 - p0
+se = np.sqrt(p0*(1-p0)/n0 + p1*(1-p1)/n1)
+ci = (rd - 1.96*se, rd + 1.96*se)
+pooled = (k0 + k1) / (n0 + n1)
+z = rd / np.sqrt(pooled*(1-pooled)*(1/n0 + 1/n1))
+pvalue = 2*stats.norm.sf(abs(z))
+print("control, treatment:", p0, p1)
+print("risk difference, 95% Wald CI:", rd, ci)
+print("two-sided pooled z-test p:", pvalue)
+print("pre-treatment baseline imbalance:", x[A == 1].mean() -
+      x[A == 0].mean())
+
+# Pre-specified adjusted analysis, with A and baseline x.
+X = sm.add_constant(np.column_stack((A, x)))
+fit = sm.GLM(y, X, family=sm.families.Binomial()).fit(
+    cov_type="HC3")
+X0, X1 = X.copy(), X.copy()
+X0[:, 1], X1[:, 1] = 0, 1
+eta0, eta1 = X0 @ fit.params, X1 @ fit.params
+m0, m1 = expit(eta0), expit(eta1)
+adjusted = (m1 - m0).mean()
+# This Delta-method SE conditions on the observed covariate values.
+grad = ((m1*(1-m1))[:, None] * X1 -
+        (m0*(1-m0))[:, None] * X0).mean(axis=0)
+adjusted_se = np.sqrt(grad @ fit.cov_params() @ grad)
+print("conditional-on-X adjusted difference:", adjusted)
+print("conditional-on-X delta-method SE:", adjusted_se)
+print("adjusted conditional odds ratio:", np.exp(fit.params[1]))
+
+# Independent Beta(1, 1) priors for the two conversion rates.
+draw0 = rng.beta(k0 + 1, n0 - k0 + 1, size=100000)
+draw1 = rng.beta(k1 + 1, n1 - k1 + 1, size=100000)
+difference = draw1 - draw0
+print("posterior 95% credible interval:",
+      np.quantile(difference, [0.025, 0.975]))
+print("posterior P(p1 > p0 | data):", np.mean(difference > 0))
+# Randomization targets effect of assignment (intention to treat).
+\end{lstlisting}
+
+\begin{przyklad}[Interpretacja wyników z wygenerowanego eksperymentu A/B]
+Przy ustalonym ziarnie powyższy program daje $200/2500=0{,}080$ konwersji w grupie kontrolnej i $305/2500=0{,}122$ w grupie testowej. Różnica wynosi $0{,}042$, czyli $4{,}2$ punktu procentowego, a normalny przedział ufności $95\%$ wynosi w przybliżeniu $[0{,}0253,0{,}0587]$. Test dwóch proporcji daje wartość p około $8{,}31\cdot10^{-7}$. Po uwzględnieniu mierzonej przed interwencją cechy $x$ model logistyczny i standaryzacja dają różnicę około $0{,}0415$; iloraz szans około $1{,}61$ jest wielkością na innej skali, nie zastępuje różnicy ryzyka. W tym sztucznym przykładzie cały przedział dla różnicy leży powyżej wcześniej ustalonego progu praktycznego $0{,}01$. Nie oznacza to jednak, że identyczna dokładność wystąpi przy mniejszych próbach, rzadkich zdarzeniach lub zależnych użytkownikach.
+\end{przyklad}
+
+\begin{uwaga}[Porównywanie podejść klasycznego i bayesowskiego]
+Przedział ufności w pierwszej części programu ma interpretację częstościową w hipotetycznie powtarzanych próbach, natomiast przedział z losowań posterioru opisuje niepewność parametru warunkową względem danych i konkretnego prioru. Nie należy bezpośrednio porównywać wartości p z $\Prob(p_1>p_0\mid\text{dane})$ jako dwóch estymatorów tej samej wielkości. Powyższy rozkład beta przyjmuje niezależne prawdopodobieństwa konwersji; nie jest to model warunkowy z kowariantą $x$.
+\end{uwaga}
+
+\section{Studium II: obserwacyjne porównanie i paradoks Simpsona}
+\begin{zadanie}[Ta sama tabela, sprzeczny wniosek po agregacji]\label{ex:simpson-decision}
+W badaniu obserwacyjnym porównano sukces dwóch metod w dwóch warstwach o różnym bazowym prawdopodobieństwie sukcesu. Zliczenia przedstawia tabela:
+\begin{center}\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{Warstwa} & \textbf{Metoda 0: sukcesy / łącznie} & \textbf{Metoda 1: sukcesy / łącznie}\\
+\midrule
+Niska skuteczność & $1/10$ & $18/90$\\
+Wysoka skuteczność & $72/90$ & $9/10$\\
+\bottomrule
+\end{tabular}
+\end{center}
+Oblicz różnicę sukcesu bez uwzględnienia warstw oraz różnice wewnątrz warstw. Zastanów się, czy wynik jest przyczynowy.\par
+\emph{Rozwiązanie.} Dla metody 0 otrzymujemy łącznie $73/100=0{,}73$, a dla metody 1 $27/100=0{,}27$. Naiwna różnica wynosi $-0{,}46$. Jednak w warstwie o niskiej bazowej skuteczności metoda 1 daje $0{,}20-0{,}10=0{,}10$, a w warstwie o wysokiej bazowej skuteczności $0{,}90-0{,}80=0{,}10$. Po standaryzacji do populacji, w której każda warstwa ma wagę $1/2$, różnica wynosi $0{,}10$. Agregacja zmieniła kierunek porównania, ponieważ metody stosowano u pacjentów z bardzo różnym bazowym prawdopodobieństwem sukcesu. Samo skorygowanie o znane warstwy nie gwarantuje przyczynowości: potrzeba dodatkowo wiarygodnej wymienności warunkowej, dodatniości i spójności interwencji.
+\end{zadanie}
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,>=Latex]
+% Rysunek odtwarza dokładnie odsetki z tabeli (1/10,18/90,72/90,9/10,73/100,27/100).
+% Oddzielna legenda nad wykresem, aby próbki kolorów nie zakrywały opisów.
+\begin{scope}[every node/.style={font=\scriptsize}]
+  \fill[blue!65!black] (1.50,4.56) rectangle +(0.27,0.16);
+  \node[anchor=west] at (1.87,4.64) {metoda 0};
+  \fill[red!70!black] (3.60,4.56) rectangle +(0.27,0.16);
+  \node[anchor=west] at (3.97,4.64) {metoda 1};
+\end{scope}
+\draw[->] (0.55,0.45)--(0.55,4.28);
+\draw[->] (0.55,0.45)--(7.40,0.45);
+\node[anchor=west,font=\footnotesize] at (0.55,4.93) {Odsetek sukcesów};
+\foreach \v/\lab in {0/0,0.5/50,1/100} {
+   \draw (0.48,{0.45+3.5*\v})--(0.62,{0.45+3.5*\v});
+   \node[anchor=east,font=\scriptsize] at (0.42,{0.45+3.5*\v}) {\lab\%};
+}
+\draw[densely dashed,gray!70] (5.15,0.48)--(5.15,4.06);
+\foreach \x/\label in {1.70/{niska},3.85/{wysoka},6.25/{łącznie}} {
+  \node[font=\footnotesize] at (\x,0.13) {\label};
+}
+% Dwie serie o znanej wysokości; jawnie podpisane procenty.
+\foreach \x/\v/\lab in {1.48/0.10/10,3.63/0.80/80,6.03/0.73/73} {
+   \fill[blue!65!black] (\x,0.45) rectangle +(.34,{3.5*\v});
+   \node[font=\scriptsize,blue!55!black,anchor=south] at ({\x+.17},{0.49+3.5*\v}) {\lab\%};
+}
+\foreach \x/\v/\lab in {1.87/0.20/20,4.02/0.90/90,6.42/0.27/27} {
+   \fill[red!70!black] (\x,0.45) rectangle +(.34,{3.5*\v});
+   \node[font=\scriptsize,red!65!black,anchor=south] at ({\x+.17},{0.49+3.5*\v}) {\lab\%};
+}
+\end{tikzpicture}
+
+{\small\emph{Rysunek 32.2.} Paradoks Simpsona. Metoda 1 ma wyższy odsetek sukcesów osobno w każdej warstwie, lecz niższy w próbie połączonej z powodu różnych proporcji warstw.}
+\end{center}
+
+\section{Studium III: pary, klastry i wielokrotność -- nie zamieniaj jednostek}
+\begin{przyklad}[Pomiary tej samej osoby]
+Jeżeli $40$ osób otrzymuje po dwa pomiary, testujemy średnią różnicę na \emph{czterdziestu} wartościach $D_i=Y_{i,2}-Y_{i,1}$, a nie na osiemdziesięciu niezależnych pomiarach. Wnioskowanie za pomocą sparowanego testu t wymaga niezależnych osób i odpowiednich warunków normalności różnic przy małej próbie. Test Wilcoxona wymaga innych założeń i dotyczy funkcjonału rozkładu różnic, nie po prostu tej samej średniej. Przy więcej niż dwóch wizytach lub nierównych odstępach lepszy może być model mieszany.
+\end{przyklad}
+
+\begin{przyklad}[Wybór post hoc a wielokrotność]
+Załóżmy, że porównujemy pięć wariantów interfejsu, z których żaden nie różni się od kontrolnego. Wykonując niezależnie pięć testów o poziomie $0{,}05$, otrzymalibyśmy prawdopodobieństwo co najmniej jednego fałszywego odrzucenia równe $1-0{,}95^5\approx0{,}226$ (przy niezależności testów). Jeśli zależności nie znamy, nierówność Bonferroniego daje uniwersalne ograniczenie $\mathrm{FWER}\le\sum_{j=1}^5\alpha_j$. Dobór korekty zależy od tego, czy kontrolujemy ryzyko choć jednego fałszywego odkrycia, czy oczekiwany odsetek błędnych odkryć.
+\end{przyklad}
+
+\begin{lstlisting}[language=Python,caption={Kompletny program: dane sparowane, poprawny test różnic i ilustracja wielokrotności (Python, NumPy, SciPy, statsmodels).}]
+import numpy as np
+from scipy import stats
+from statsmodels.stats.multitest import multipletests
+
+rng = np.random.default_rng(2033)
+subjects = 40
+baseline = rng.normal(10, 2.5, subjects)
+followup = baseline + 0.6 + rng.normal(0, 1.0, subjects)
+diff = followup - baseline
+paired = stats.ttest_rel(followup, baseline)
+wrong = stats.ttest_ind(followup, baseline, equal_var=False)
+print("mean change, paired t p:", diff.mean(), paired.pvalue)
+print("wrong independent Welch p:", wrong.pvalue)
+print("difference variance:", np.var(diff, ddof=1))
+
+pvalues = np.array([.008, .02, .045, .09, .17])
+reject, adjusted, _, _ = multipletests(pvalues, .05,
+                                      method="holm")
+print("raw p:", pvalues)
+print("Holm adjusted p:", adjusted)
+print("Holm rejection:", reject)
+\end{lstlisting}
+
+\section{Raportowanie niepewności i audyt decyzji}
+\begin{definicja}[Minimalny raport wyniku]
+Dla analizy porównawczej \emph{minimalnym raportem} nazywamy zapis zawierający: definicję populacji i jednostki, liczbę jednostek i braków, definicję zmiennej wynikowej, oszacowanie parametru i jednostkę jego miary, przedział niepewności z określoną interpretacją, nazwę testu lub modelu z założeniami, liczbę wykonanych porównań oraz informację o analizach zaplanowanych i eksploracyjnych. Przedział, wartość p lub posterior nie zastępują jawnego opisu jakości projektu.
+\end{definicja}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.26\textwidth}>{\raggedright\arraybackslash}p{.55\textwidth}}
+\toprule
+\textbf{Element decyzji} & \textbf{Pytanie kontrolne}\\
+\midrule
+Cel & Czy estymujemy efekt interwencji, związek czy predykcję?\\
+Projekt & Czy jednostki były losowane / przydzielane niezależnie?\\
+Braki danych & Czy mechanizm brakowania może zależeć od nieobserwowanego wyniku?\\
+Estymacja & Czy estymator jest zgodny z celem i typem danych?\\
+Niepewność & Czy błąd standardowy uwzględnia klastry, dobór i selekcję?\\
+Diagnostyka & Czy analizujemy model reszt i wpływ obserwacji, nie tylko p-value Shapiro--Wilka?\\
+Wielokrotność & Czy wynik jest pierwotny, czy wybrany spośród wielu prób?\\
+Praktyka & Czy oszacowana różnica przekracza próg istotności praktycznej?\\
+Replikacja & Czy kod, ziarno losowania, wersje bibliotek i dane są możliwe do odtworzenia?\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{zadanie}[Sformułuj obronny wniosek]
+W eksperymencie A/B uzyskano oszacowaną różnicę konwersji $0{,}006$, asymptotyczny przedział ufności $95\%$ równy $[-0{,}002,0{,}014]$, a biznesowy próg opłacalności to $0{,}01$. Jak sformułować wniosek?\par
+\emph{Rozwiązanie.} Dane są zgodne zarówno z niewielką stratą, jak i poprawą przekraczającą próg biznesowy. Nie ma podstaw do stwierdzenia, że udowodniono wzrost konwersji; nie można też uznać braku odrzucenia za dowód nieistnienia efektu. Jeśli celem jest wykazanie poprawy co najmniej $0{,}01$, należy zaplanować jednostronny test lub przedział dla takiego progu z odpowiednią mocą i regułą decyzji. Decyzja może dodatkowo wymagać analizy kosztów, ryzyka i kolejnych danych.
+\end{zadanie}
+
+\paragraph{Podsumowanie praktyczne.}
+\emph{Nie istnieje jeden ``najlepszy test statystyczny'' niezależny od pytania i projektu.} Nawet matematycznie dokładny test Shapiro--Wilka, Wilksa lub t-Studenta odpowiada na określoną hipotezę i wymaga określonych warunków. Zadaniem analityka jest najpierw zdefiniować problem, a potem dopasować do niego model, estymator i kontrolę niepewności. Statystyka nie zastępuje projektu badania; dobrze wykonany projekt czyni późniejszą statystykę wiarygodną.
+

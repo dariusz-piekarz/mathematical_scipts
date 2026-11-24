@@ -1,0 +1,557 @@
+\chapter{Funkcja wiarygodności i informacja zawarta w danych}
+\label{ch:likelihood}
+\paragraph{Powiązania i odsyłacze.} Dalsze zastosowania wiarygodności w MLE i informacji Fishera podajemy w rozdziałach~\ref{ch:estimators} i~\ref{ch:fisher-information}; warunkowanie jest rozwinięte w tomie I, rozdziale~\ref{I-ch:condexp}.
+
+
+\section{Dlaczego sam rozkład próby nie wystarcza?}
+W tomie I obliczaliśmy prawdopodobieństwa \emph{przy ustalonym modelu}. Teraz
+obserwujemy wynik $x$ i porównujemy wartości parametru $\theta$, pod którymi
+wynik ten jest bardziej albo mniej zgodny z modelem. Nie zamieniamy przy tym
+automatycznie parametru w zmienną losową. W podejściu klasycznym $\theta$
+pozostaje nieznaną, ale ustaloną wartością. W szczególności wyrażenie
+$L_x(\theta)$ nie oznacza $\Prob(\theta\mid X=x)$.
+
+\begin{przyklad}[Dwie hipotezy o wadliwości]
+Jeśli w $100$ niezależnych kontrolach stwierdzono $7$ wad, model
+$S\sim\Bin(100,p)$ przypisuje prawdopodobieństwo
+$\binom{100}{7}p^7(1-p)^{93}$ obserwacji $S=7$. Dla $p=0{,}05$ i $p=0{,}07$
+możemy porównać te prawdopodobieństwa. Iloraz jest miarą \emph{względnej
+zgodności zaobserwowanego wyniku z dwiema ustalonymi wartościami parametru},
+a nie prawdopodobieństwem, że drugi parametr jest prawdziwy.
+\end{przyklad}
+
+\begin{definicja}[Funkcja wiarygodności]\label{def:likelihood}
+Niech $\mathcal E=(\mathsf X,\calA,\{P_\theta:\theta\in\Theta\})$ będzie
+modelem zdominowanym przez ustaloną miarę $\sigma$-skończoną $\mu$.
+Wybierzmy dla wszystkich $\theta\in\Theta$ określone wersje gęstości
+$p_\theta=\dd P_\theta/\dd\mu$. Dla zaobserwowanej wartości $x\in\mathsf X$
+\emph{funkcją wiarygodności} nazywamy funkcję
+$L_x:\Theta\to[0,\infty]$, $L_x(\theta)=p_\theta(x)$.
+Jeśli $p_\theta(x)>0$, logarytmiczną funkcją wiarygodności jest
+$\ell_x(\theta)=\log p_\theta(x)$; dla $p_\theta(x)=0$ przyjmujemy
+$\ell_x(\theta)=-\infty$.
+\end{definicja}
+
+\begin{uwaga}[Wersje gęstości, nośnik i interpretacja]
+Gęstość jest określona wyłącznie $\mu$-prawie wszędzie dla każdego
+\emph{ustalonego} $\theta$. Zmieniając jej wersję na zbiorze zerowym
+zależnym od $\theta$, można w nieprzeliczalnej rodzinie sztucznie zmienić
+wartości punktowe wiarygodności. W praktyce wybiera się wspólną,
+jednoznacznie opisaną postać $p_\theta(x)$, a w twierdzeniach o MLE
+wprowadza odpowiednie warunki regularności i mierzalności.
+Jeśli na całej przestrzeni parametrów $L_x$ jest zerowa, model przypisuje
+obserwacji zerową gęstość w każdej rozważanej wartości parametru; nie
+wyciągamy wtedy wniosku o maksimum wiarygodności bez osobnej analizy modelu.
+\end{uwaga}
+
+\begin{stwierdzenie}[Zmiana miary dominującej i względna wiarygodność]\label{prop:change-reference}
+Załóżmy, że $\mu$ i $\nu$ są równoważnymi miarami $\sigma$-skończonymi na
+$(\mathsf X,\calA)$ i że wybrano zgodne wersje gęstości $p_\theta^\mu$
+i $p_\theta^\nu$, dla których w ustalonym punkcie $x$ zachodzi
+$p_\theta^\nu(x)=c(x)p_\theta^\mu(x)$ dla wszystkich $\theta\in\Theta$,
+gdzie $0<c(x)<\infty$ nie zależy od $\theta$. Wtedy porządek wartości
+wiarygodności, ilorazy tych wartości i zbiory maksimów pozostają niezmienione.
+\end{stwierdzenie}
+\begin{proof}
+Dla dowolnych $\theta_1,\theta_2$ mamy
+$L_x^\nu(\theta_1)/L_x^\nu(\theta_2)
+=L_x^\mu(\theta_1)/L_x^\mu(\theta_2)$, o ile mianowniki są dodatnie.
+Ponadto mnożenie wszystkich wartości przez tę samą dodatnią liczbę nie
+zmienia relacji $\le$ ani argumentów maksimum. Związek wersji gęstości
+wynika z reguły łańcuchowej Radona--Nikodyma, ale jej równość prawie
+wszędzie sama przez się nie daje równości punktowej we wszystkich parametrach.
+\end{proof}
+
+
+\begin{uwaga}[Maksimum punktowe a estymator losowy]
+W definicji MLE nie wystarczy dla każdej obserwacji $x$ wskazać
+liczbę maksymalizującą $L_x$: odwzorowanie $x\mapsto\widehat\theta(x)$
+musi być także mierzalne. Przy zwartej przestrzeni parametrów,
+ciągłości odpowiedniej funkcji względem parametru i wspólnych
+warunkach mierzalności można stosować twierdzenia o mierzalnym
+wyborze; nie wynikają one jednak z samej reguły „wyzeruj score”.
+W wszystkich jawnych modelach rozważanych poniżej podajemy
+bezpośrednie, mierzalne formuły.
+\end{uwaga}
+
+\section{Próba niezależna i logarytm wiarygodności}
+\begin{stwierdzenie}[Rozkład iloczynowy]\label{prop:product-likelihood}
+Niech $X_1,\ldots,X_n$ będą niezależne i mają wspólny rozkład z gęstością
+$f_\theta$ względem miary $\sigma$-skończonej $\lambda$ na $(\mathsf S,\mathcal S)$.
+Wybierzmy wspólną wersję gęstości iloczynowej
+$p_\theta(x_1,\ldots,x_n)=\prod_{i=1}^nf_\theta(x_i)$.
+Wówczas $L_x(\theta)=\prod_i f_\theta(x_i)$, a dla dodatnich czynników
+$\ell_x(\theta)=\sum_i\log f_\theta(x_i)$.
+\end{stwierdzenie}
+\begin{proof}
+Dla mierzalnych prostokątów $A_1\times\cdots\times A_n$ niezależność
+daje $P_\theta(X_i\in A_i,\ i=1,\ldots,n)=\prod_i\int_{A_i}f_\theta\,\dd\lambda$.
+Z twierdzenia Tonellego prawa strona jest całką $\prod_i f_\theta(x_i)$
+na prostokącie względem $\lambda^{\otimes n}$. Prostokąty tworzą klasę
+$\pi$ generującą \mbox{$\mathcal S^{\otimes n}$}, zatem jednoznaczność
+miar probabilistycznych rozszerza tę równość na całe $\sigma$-ciało.
+Ostatnia równość wynika z $\log\prod_i a_i=\sum_i\log a_i$ dla $a_i>0$.
+\end{proof}
+
+\emph{Motywacja obliczeniowa.} Iloczyn wielu małych wartości może prowadzić
+do niedomiaru numerycznego. Suma logarytmów jest stabilniejsza, a maksimum
+pozostaje niezmienione, ponieważ logarytm jest ściśle rosnący. Wyrazy
+stałe względem parametru można pominąć \emph{przy maksymalizacji}, ale nie
+zawsze przy obliczaniu bezwzględnych wartości funkcji wiarygodności.
+
+\section{Estymator największej wiarygodności}
+\begin{definicja}[MLE]\label{def:mle}
+W eksperymencie z definicji~\ref{def:likelihood} \emph{estymatorem
+największej wiarygodności} (MLE) nazywamy mierzalny wybór
+$\widehat\theta:\mathsf X\to\Theta$ taki, że dla obserwacji $x$ należących
+do określonego zbioru o pełnej mierze dla każdego $P_\theta$ zachodzi
+$L_x(\widehat\theta(x))=\sup_{\vartheta\in\Theta}L_x(\vartheta)>0$.
+Jeśli maksimum nie jest osiągane lub nie istnieje mierzalny wybór,
+MLE w tej postaci może nie istnieć. Gdy maksimów jest kilka, estymator
+nie musi być jednoznaczny.
+\end{definicja}
+
+\begin{twierdzenie}[MLE w modelu Bernoulliego]\label{thm:mle-bernoulli}
+Niech $X_1,\ldots,X_n$ będą niezależne o rozkładzie $\operatorname{Bernoulli}(p)$,
+$p\in[0,1]$, i $S=\sum_iX_i$. Wybierając wersję funkcji wiarygodności
+$L_x(p)=p^{S(x)}(1-p)^{n-S(x)}$ z interpretacją wartości brzegowych przez
+ciągłość, otrzymujemy jednoznaczny MLE $\widehat p=S/n$.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $0<S<n$, to dla $p\in(0,1)$ mamy
+$\ell_x(p)=S\log p+(n-S)\log(1-p)$ i
+$\ell_x'(p)=S/p-(n-S)/(1-p)$, zatem jedyny punkt stacjonarny to
+$p=S/n$. Ponadto $\ell_x''(p)=-S/p^2-(n-S)/(1-p)^2<0$, więc jest to
+maksimum ścisłe. Przy $p\downarrow0$ lub $p\uparrow1$ funkcja dąży do
+$-\infty$. Jeżeli $S=0$, wiarygodność równa $(1-p)^n$ jest ściśle malejąca
+i ma maksimum w $p=0$; gdy $S=n$, funkcja $p^n$ jest ściśle rosnąca i ma
+maksimum w $p=1$. Rozpatrzyliśmy wszystkie możliwe wyniki.
+\end{proof}
+
+\begin{zadanie}[Sto produktów: co naprawdę mówi wiarygodność?]\label{zad:lik-quality}
+W $100$ niezależnych kontrolach znaleziono $7$ wad. Oblicz MLE $p$ i iloraz
+wiarygodności hipotez $p=0{,}07$ i $p=0{,}05$. Czy iloraz jest prawdopodobieństwem
+prawdziwości hipotezy?
+\par\emph{Rozwiązanie.} Z twierdzenia~\ref{thm:mle-bernoulli} mamy
+$\widehat p=7/100=0{,}07$. Dla dwóch ustalonych parametrów
+\[
+\frac{L_x(0{,}07)}{L_x(0{,}05)}
+=\left(\frac{0{,}07}{0{,}05}\right)^7
+ \left(\frac{0{,}93}{0{,}95}\right)^{93}
+\approx1{,}457.
+\]
+Dane są około $1{,}46$ raza bardziej wiarygodne pod parametrem $0{,}07$
+niż pod parametrem $0{,}05$. To porównanie \emph{dwóch wartości parametru},
+a nie rozkład prawdopodobieństwa na wartościach $p$. Sama liczba nie
+stanowi jeszcze testu o kontrolowanym prawdopodobieństwie błędu ani
+odpowiedzi na pytanie, z jakim prawdopodobieństwem $p=0{,}07$.
+\end{zadanie}
+
+\begin{center}
+\begin{tikzpicture}[x=28cm,y=3.0cm,>=Latex]
+  \draw[->] (0,0)--(.185,0) node[right] {$p$};
+  \draw[->] (0,0)--(0,1.16) node[above] {$L(p)/L(0{,}07)$};
+  \foreach \x/\lab in {.03/{0{,}03},.05/{0{,}05},.07/{0{,}07},.10/{0{,}10},.15/{0{,}15}} {
+    \draw (\x,-.019)--(\x,.019) node[below=3pt] {\scriptsize $\lab$};
+  }
+  \foreach \y in {.5,1} {\draw (-.0015,\y)--(.0015,\y) node[left=3pt] {\scriptsize $\y$};}
+  \draw[thick,blue!65!black,domain=.004:.175,samples=120,smooth]
+    plot (\x,{exp(7*ln(\x/.07)+93*ln((1-\x)/.93))});
+  \draw[dashed] (.07,0)--(.07,1);
+  \fill[blue!65!black] (.07,1) circle (1.7pt);
+\end{tikzpicture}
+\end{center}
+\noindent\emph{Rysunek 3.1.} Względna wiarygodność w modelu
+Bernoulliego dla $k=7$ wad i $n=100$ prób. Maksimum wskazuje
+$\widehat p=0{,}07$, lecz wykres nie jest rozkładem prawdopodobieństwa
+na osi parametru.
+
+
+\begin{twierdzenie}[MLE intensywności z uwzględnieniem ekspozycji]\label{thm:mle-pois}
+Niech $Y_1,\ldots,Y_m$ będą niezależne, $Y_i\sim\Pois(\lambda t_i)$,
+gdzie $t_i>0$ są znane, a $\lambda\in[0,\infty)$. Niech
+$S=\sum_iY_i$ i $T=\sum_i t_i$. Wtedy
+$\widehat\lambda=S/T$ jest jednoznacznym MLE.
+\end{twierdzenie}
+\begin{proof}
+Po pominięciu wyrazów niezależnych od $\lambda$ log-wiarygodność ma dla
+$\lambda>0$ postać $\ell(\lambda)=S\log\lambda-\lambda T+C$.
+Jeżeli $S>0$, jej pochodna znika wyłącznie w $\lambda=S/T$, a druga
+pochodna $-S/\lambda^2$ jest ujemna. Gdy $S=0$, wiarygodność jest
+proporcjonalna do $e^{-\lambda T}$ i przyjmuje maksimum przy $\lambda=0$.
+Pozostałe czynniki $\prod_i t_i^{y_i}/y_i!$ są dodatnie i niezależne
+od $\lambda$, więc nie zmieniają maksymalizatora.
+\end{proof}
+
+\begin{zadanie}[Zgłoszenia przy różnych czasach ekspozycji]
+Przez $10$, $20$ i $40$ godzin obserwowano trzy maszyny i zliczono
+odpowiednio $2$, $5$ i $7$ awarii. Oszacuj intensywność w modelu
+$Y_i\sim\Pois(\lambda t_i)$ niezależnie.
+\par\emph{Rozwiązanie.} Suma zdarzeń to $14$, a czas ekspozycji $70$
+godzin, więc $\widehat\lambda=14/70=0{,}2$ awarii na godzinę.
+Nie uśredniamy bez wag trzech intensywności $2/10$, $5/20$, $7/40$:
+otrzymalibyśmy inną liczbę, która nie jest MLE tego modelu.
+Jeżeli maszyny pracowały w różnych warunkach, model ze wspólnym
+$\lambda$ może być niewiarygodny, niezależnie od poprawności rachunku.
+\end{zadanie}
+
+\begin{twierdzenie}[MLE w modelu normalnym]\label{thm:mle-normal}
+Niech $n\ge2$, a $X_1,\ldots,X_n$ będą niezależne o rozkładzie
+$\Normal(\mu,\sigma^2)$, gdzie $\mu\in\R$, $\sigma^2>0$. Dla każdej
+próby $x$ o niejednakowych współrzędnych funkcja wiarygodności ma
+jednoznaczne maksimum w
+$\widehat\mu=\bar x$ oraz
+$\widehat{\sigma^2}=n^{-1}\sum_i(x_i-\bar x)^2$.
+Jeśli wszystkie obserwacje są identyczne, supremum wiarygodności jest
+nieskończone i nie jest osiągane w przestrzeni parametrów.
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy $v=\sigma^2$. Z dokładnością do stałej log-wiarygodność jest
+$\ell(\mu,v)=-\frac n2\log v-(2v)^{-1}\sum_i(x_i-\mu)^2$.
+Dla każdego ustalonego $v>0$ maksymalizacja względem $\mu$ sprowadza się
+do minimalizacji sumy kwadratów. Z lematu~\ref{lem:sum-of-squares}
+jedynym minimizatorem jest $\mu=\bar x$. Po podstawieniu
+$Q=\sum_i(x_i-\bar x)^2$ otrzymujemy
+$\ell(\bar x,v)=-\frac n2\log v-\frac Q{2v}+C$.
+Jeśli $Q>0$, pochodna wynosi $(Q-nv)/(2v^2)$: jest dodatnia dla
+$v<Q/n$ i ujemna dla $v>Q/n$. Gdy $v\downarrow0$ lub $v\uparrow\infty$,
+wartość funkcji dąży do $-\infty$. Jedynym maksimum jest więc $v=Q/n$.
+Gdy $Q=0$, mamy $\ell(\bar x,v)=-\frac n2\log v+C\to\infty$
+przy $v\downarrow0$, co dowodzi ostatniego twierdzenia.
+\end{proof}
+
+\begin{uwaga}[MLE i nieobciążoność to różne kryteria]
+Estymator MLE wariancji w modelu normalnym ma mianownik $n$;
+nieobciążony estymator z rozdziału 2 ma mianownik $n-1$.
+Oba są matematycznie poprawnymi odpowiedziami na \emph{różne kryteria}:
+pierwszy maksymalizuje wiarygodność, drugi spełnia warunek
+$\E_\theta S_n^2=\sigma^2$. Mniejsza wartość mianownika nie jest
+argumentem przeciw MLE, podobnie jak obciążenie MLE nie oznacza jego
+bezużyteczności.
+\end{uwaga}
+
+\section{Nieregularny model: jednostajny rozkład i koniec nośnika}
+\begin{twierdzenie}[MLE końca przedziału]\label{thm:mle-uniform}
+Niech $X_1,\ldots,X_n$ będą niezależne o rozkładzie jednostajnym na
+$(0,\theta)$, gdzie $\theta>0$. Dla obserwacji $x_i>0$ z
+$M=\max_i x_i>0$ oraz wybranej wersji gęstości
+$f_\theta(x)=\theta^{-1}\ind{\{0<x\le\theta\}}$ jedynym MLE jest
+$\widehat\theta=M$. Co więcej, $\E_\theta\widehat\theta=n\theta/(n+1)$.
+\end{twierdzenie}
+\begin{proof}
+Dla obserwacji dodatnich wiarygodność ma postać
+$L_x(\theta)=\theta^{-n}\ind{\{\theta\ge M\}}$.
+Dla $\theta<M$ jest zerowa; dla $\theta\ge M$ ściśle maleje, więc
+osiąga maksimum w $M$. Wartość oczekiwaną maksimum policzono
+w przykładzie~\ref{ex:max-uniform}. Zwróćmy uwagę, że inna wersja
+gęstości z ostrą nierównością $x<\theta$ prowadziłaby do supremum
+w $\theta\downarrow M$, którego nie osiągano by w tym konkretnym punkcie.
+Właśnie dlatego w niektórych modelach z nośnikiem zależnym od parametru
+trzeba jawnie ustalić wersję gęstości.
+\end{proof}
+
+\begin{uwaga}[Kiedy nie używać zwykłych wzorów score?]
+W modelu jednostajnym nośnik zależy od $\theta$. Nie wolno więc
+formalnie różniczkować $\int_0^\theta\theta^{-1}\,\dd x=1$
+tak, jakby granice całkowania były niezależne od parametru.
+W szczególności brak średniego score równego zero przy naiwnym
+różniczkowaniu $\log(1/\theta)$. Ta rodzina nie spełnia typowych
+warunków regularności klasycznej teorii informacji Fishera.
+Dla $0<X<\theta$ formalny score pochodzący z samej gęstości
+wewnątrz nośnika wynosi $-1/\theta$, więc
+$\E_\theta s_\theta(X)=-1/\theta\ne0$.
+Nie jest to sprzeczne z twierdzeniem~\ref{thm:fisher-identities}:
+pochodna całki po \emph{ruchomym} nośniku zawiera dodatkowy wyraz
+brzegowy, którego tamte hipotezy wykluczały.
+\end{uwaga}
+
+\section{Score i informacja Fishera: po co mierzyć krzywiznę wiarygodności?}
+\begin{definicja}[Score i informacja Fishera]\label{def:score-fisher}
+Niech $\Theta\subset\R$ będzie otwartym przedziałem, a $p_\theta(x)>0$
+wersją gęstości dla $\mu$-prawie wszystkich $x$ na wspólnym, niezależnym od
+$\theta$ nośniku. W punktach, gdzie istnieje pochodna, definiujemy
+\emph{score} $s_\theta(x)=\partial_\theta\log p_\theta(x)$.
+Jeśli $s_\theta(X)\in L^2(P_\theta)$, \emph{informacją Fishera} nazywamy
+$I(\theta)=\E_\theta[s_\theta(X)^2]$.
+Jeśli użyjemy całej próby, informacja jej wspólnego prawa może być różna
+od informacji jednej obserwacji; będziemy oznaczać ją przez $I_n(\theta)$.
+\end{definicja}
+
+\begin{twierdzenie}[Tożsamości informacyjne przy jawnych założeniach]\label{thm:fisher-identities}
+Niech $\Theta\subset\R$ będzie otwartym przedziałem, a $(\mathsf X,\calA,\mu)$
+przestrzenią z miarą $\sigma$-skończoną. Załóżmy, że dla każdego
+$\theta\in\Theta$ funkcja $x\mapsto p_\theta(x)$ jest dodatnią gęstością
+probabilistyczną, że istnieje wspólny zbiór $E\in\calA$ o $\mu(\mathsf X\setminus E)=0$,
+na którym $\theta\mapsto p_\theta(x)$ jest dwukrotnie
+różniczkowalna dla każdego $x\in E$, i że w otoczeniu każdej
+$\theta_0$ istnieją całkowalne względem $\mu$ funkcje dominujące
+$|\partial_\theta p_\theta(x)|$ oraz $|\partial^2_\theta p_\theta(x)|$.
+Dodatkowo załóżmy skończoność $\E_\theta[s_\theta(X)^2]$ i
+$\E_\theta|\partial_\theta^2\log p_\theta(X)|$.
+Wówczas dla każdego $\theta\in\Theta$ zachodzi
+\[
+\E_\theta s_\theta(X)=0,\qquad
+I(\theta)=-\E_\theta[\partial_\theta^2\log p_\theta(X)].
+\]
+Jeśli $X_1,\ldots,X_n$ są niezależne z tym samym prawem $P_\theta$,
+to $I_n(\theta)=nI(\theta)$.
+\end{twierdzenie}
+\begin{proof}
+Z dominacji i twierdzenia o różniczkowaniu pod całką
+$\int_{\mathsf X}\partial_\theta p_\theta\,\dd\mu
+=\partial_\theta\int_{\mathsf X}p_\theta\,\dd\mu=0$ oraz
+$\int_{\mathsf X}\partial_\theta^2p_\theta\,\dd\mu=0$.
+Ponieważ $s_\theta=(\partial_\theta p_\theta)/p_\theta$, mamy
+$\E_\theta s_\theta(X)=\int_{\mathsf X}\partial_\theta p_\theta\,\dd\mu=0$.
+Kolejne różniczkowanie logarytmu daje
+$\partial_\theta^2\log p_\theta
+=(\partial_\theta^2p_\theta)/p_\theta
+-((\partial_\theta p_\theta)/p_\theta)^2$.
+Mnożymy przez $p_\theta$, całkujemy i stosujemy poprzednią równość.
+Dla niezależnej próby score jest sumą $\sum_i s_\theta(X_i)$.
+Każdy składnik ma średnią zero i skończony drugi moment, a różne składniki
+są niezależne, toteż $\E(\sum_i s_\theta(X_i))^2=nI(\theta)$.
+\end{proof}
+
+\begin{przyklad}[Informacja dla Bernoulliego i modelu normalnego]
+Dla pojedynczej obserwacji Bernoulliego z $p\in(0,1)$
+$s_p(X)=X/p-(1-X)/(1-p)=(X-p)/(p(1-p))$, więc
+$I(p)=1/(p(1-p))$. Dla $n$ obserwacji informacja wynosi
+$n/(p(1-p))$. Gdy obserwujemy $X\sim\Normal(\mu,\sigma^2)$ przy znanym
+$\sigma>0$, score dla $\mu$ to $(X-\mu)/\sigma^2$, toteż
+$I(\mu)=1/\sigma^2$ i $I_n(\mu)=n/\sigma^2$.
+Wyniki informacyjne odnoszą się do określonej parametryzacji i modelu:
+nie wolno porównywać samych liczbowych wartości informacji dla parametrów
+o różnych jednostkach bez uwzględnienia transformacji.
+\end{przyklad}
+
+\section{Rodziny wykładnicze i skąd biorą się proste statystyki}
+\begin{definicja}[Jednoparametrowa naturalna rodzina wykładnicza]\label{def:exp-family}
+Niech $J\subset\R$ będzie otwartym przedziałem, $h:\mathsf X\to[0,\infty)$
+i $T:\mathsf X\to\R$ funkcjami mierzalnymi, a $\mu$ ustaloną miarą.
+Załóżmy, że
+$0<\int_{\mathsf X}h(x)e^{\eta T(x)}\,\dd\mu(x)<\infty$ dla wszystkich $\eta\in J$.
+Definiujemy
+$A(\eta)=\log\int_{\mathsf X}h(x)e^{\eta T(x)}\,\dd\mu(x)$ oraz
+$p_\eta(x)=h(x)\exp\{\eta T(x)-A(\eta)\}$.
+Rodzinę $\{p_\eta:\eta\in J\}$ nazywamy naturalną rodziną wykładniczą.
+\end{definicja}
+
+\begin{twierdzenie}[Pochodne funkcji normalizującej]\label{thm:exp-family-moments}
+W definicji~\ref{def:exp-family} załóżmy, że $J$ jest otwarty.
+Wtedy $A$ jest dwukrotnie różniczkowalna na $J$ i
+$A'(\eta)=\E_\eta T(X)$, $A''(\eta)=\Var_\eta(T(X))\ge0$.
+Dla niezależnej próby z tej rodziny log-wiarygodność ma postać
+$\ell(\eta)=\eta\sum_iT(x_i)-nA(\eta)+\sum_i\log h(x_i)$
+na zbiorze obserwacji o dodatnim $h(x_i)$.
+\end{twierdzenie}
+\begin{proof}
+Niech $Z(\eta)=\int_{\mathsf X}h e^{\eta T}\,\dd\mu$. Dla ustalonego
+$\eta\in J$ wybierzmy $\delta>0$ tak, że
+$[\eta-2\delta,\eta+2\delta]\subset J$. Dla $k=1,2$ wyrażenie
+$|T|^k e^{\eta T}$ jest z góry ograniczone przez stałą razy
+$e^{(\eta-\delta)T}+e^{(\eta+\delta)T}$.
+Po pomnożeniu przez $h$ otrzymujemy całkowalną funkcję dominującą,
+więc możemy dwukrotnie różniczkować pod całką:
+$Z'(\eta)=\int_{\mathsf X}T h e^{\eta T}\,\dd\mu$,
+$Z''(\eta)=\int_{\mathsf X}T^2 h e^{\eta T}\,\dd\mu$.
+Ponieważ $A=\log Z$, mamy $A'=Z'/Z=\E_\eta T(X)$ i
+$A''=Z''/Z-(Z'/Z)^2=\Var_\eta T(X)$.
+Ostatnią równość otrzymujemy przez zsumowanie logarytmów gęstości.
+\end{proof}
+
+\begin{przyklad}[Postać kanoniczna Bernoulliego]
+Jeżeli $p\in(0,1)$ i $\eta=\log(p/(1-p))$, to
+$\Prob_\eta(X=x)=\exp\{\eta x-\log(1+e^\eta)\}$ dla $x\in\{0,1\}$.
+Zatem $T(x)=x$, $A(\eta)=\log(1+e^\eta)$, a równanie score dla
+$n$ niezależnych obserwacji ma postać
+$\sum_i x_i-nA'(\eta)=0$. Ponieważ
+$A'(\eta)=e^\eta/(1+e^\eta)=p$, wracamy do
+$\widehat p=\bar x$ dla $0<\bar x<1$.
+Dla $\bar x\in\{0,1\}$ optimum występuje na granicy
+$\eta\to\mp\infty$ i nie ma skończonego MLE w parametryzacji $\eta\in\R$.
+\end{przyklad}
+
+\section{Dlaczego MLE ma sens asymptotyczny? Dywergencja Kullbacka--Leiblera}
+\begin{definicja}[Dywergencja Kullbacka--Leiblera]\label{def:kl}
+Niech $P$ i $Q$ będą miarami probabilistycznymi z gęstościami $p$ i $q$
+względem wspólnej miary $\mu$. Jeśli $P\ll Q$, definiujemy
+$D_{\mathrm{KL}}(P\|Q)=\int_{\mathsf X}p(x)\log\frac{p(x)}{q(x)}\,\dd\mu(x)$,
+z konwencją, że całkujemy po zbiorze $\{p>0\}$, a iloraz
+$p/q$ ma znaczenie tylko tam, gdzie $q>0$; $0\log0$ interpretujemy jako $0$.
+Jeśli $P$ nie jest absolutnie ciągła względem $Q$, definiujemy
+$D_{\mathrm{KL}}(P\|Q)=+\infty$.
+\end{definicja}
+\begin{twierdzenie}[Nieujemność i znaczenie dywergencji KL]\label{thm:kl-basic}
+Dla dowolnych miar probabilistycznych $P,Q$ zachodzi
+$D_{\mathrm{KL}}(P\|Q)\in[0,\infty]$. Równość z zerem zachodzi wtedy
+i tylko wtedy, gdy $P=Q$. Jeżeli $P_{\theta_0}$ i $P_\theta$ mają
+odpowiednie gęstości, a $\log p_{\theta_0}(X)$ oraz
+$\log p_\theta(X)$ są całkowalne przy $P_{\theta_0}$, to
+\[
+\E_{\theta_0}\log p_\theta(X)
+=\E_{\theta_0}\log p_{\theta_0}(X)
+-D_{\mathrm{KL}}(P_{\theta_0}\|P_\theta).
+\]
+\end{twierdzenie}
+\begin{proof}
+W przypadku $P\ll Q$ zdefiniujmy pochodną $r=\dd P/\dd Q$.
+Funkcja $\phi(t)=t\log t-t+1$ dla $t\ge0$ jest nieujemna;
+osiąga zero tylko w $t=1$ (pochodna dla $t>0$ to $\log t$, a druga
+pochodna $1/t>0$). Ponieważ $\int_{\mathsf X}r\,\dd Q=1$, mamy
+$\int_{\mathsf X}\phi(r)\,\dd Q=\int_{\mathsf X}r\log r\,\dd Q=D_{\mathrm{KL}}(P\|Q)\ge0$.
+Jeżeli całka jest zerowa, $\phi(r)=0$ $Q$-prawie wszędzie,
+czyli $r=1$ $Q$-prawie wszędzie i $P=Q$.
+Dla $P\not\ll Q$ dywergencja jest nieskończona z definicji.
+Ostatnią równość otrzymujemy przez odjęcie obu całkowalnych logarytmów
+i zastosowanie definicji $D_{\mathrm{KL}}$.
+\end{proof}
+
+\emph{Intuicja.} Przy prawdziwym parametrze $\theta_0$ oczekiwany
+logarytm wiarygodności jest największy (przy identyfikowalności jednoznacznie)
+dla $\theta=\theta_0$. Z prawa wielkich liczb dla \emph{ustalonego}
+$\theta$ mamy zbieżność uśrednionej log-wiarygodności. To jednak nie
+wystarcza do zgodności MLE: maksimum jest wyznaczane po \emph{wszystkich}
+parametrach naraz. Potrzebne jest odpowiednie \emph{jednostajne}
+kontrolowanie log-wiarygodności.
+
+\begin{twierdzenie}[Elementarne twierdzenie o zgodności maksymalizatora]\label{thm:argmax-consistency}
+Niech $(\Theta,d)$ będzie zwartą przestrzenią metryczną,
+$M:\Theta\to\R$ funkcją ciągłą o jedynym maksimum w $\theta_0$.
+Niech $M_n:\Theta\to\R$ będą losowymi funkcjami ciągłymi, dla których
+$\sup_{\theta\in\Theta}|M_n(\theta)-M(\theta)|\to0$ prawie na pewno.
+Jeśli $\widehat\theta_n$ są mierzalnymi maksymalizatorami $M_n$, to
+$\widehat\theta_n\to\theta_0$ prawie na pewno.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $\varepsilon>0$. Zbiór
+$K_\varepsilon=\{\theta\in\Theta:d(\theta,\theta_0)\ge\varepsilon\}$
+jest zwarty. Jeżeli jest pusty, twierdzenie dla tego $\varepsilon$
+jest trywialne. W przeciwnym razie, przez jednoznaczność maksimum
+i ciągłość $M$, liczba
+$\gamma=M(\theta_0)-\max_{\theta\in K_\varepsilon}M(\theta)$
+jest dodatnia. Na zdarzeniu zbieżności jednostajnej dla dostatecznie
+dużego $n$ zachodzi $\sup|M_n-M|<\gamma/3$.
+Wówczas $M_n(\theta_0)>M(\theta_0)-\gamma/3$, natomiast dla
+$\theta\in K_\varepsilon$ mamy
+$M_n(\theta)<M(\theta_0)-2\gamma/3$.
+Maksymalizator $M_n$ nie może więc należeć do $K_\varepsilon$.
+Ponieważ $\varepsilon>0$ było dowolne, otrzymujemy zbieżność.
+\end{proof}
+
+\begin{przyklad}[Zgodność MLE dla Bernoulliego wewnątrz parametrycznego przedziału]
+Niech $p_0\in[\delta,1-\delta]$, gdzie $0<\delta<1/2$, oraz
+$\Theta=[\delta,1-\delta]$. Dla próby Bernoulliego
+$M_n(p)=n^{-1}\ell(p)=\bar X_n\log p+(1-\bar X_n)\log(1-p)$.
+Prawo wielkich liczb daje $\bar X_n\to p_0$ prawie na pewno, a
+\[
+\sup_{p\in\Theta}|M_n(p)-M(p)|
+\le |\bar X_n-p_0|
+\sup_{p\in\Theta}\left|\log\frac p{1-p}\right|\longrightarrow0,
+\]
+gdzie $M(p)=p_0\log p+(1-p_0)\log(1-p)$.
+Ścisła wklęsłość $M$ i obliczenie pochodnej dają jedyne maksimum
+w $p_0$. Poprzednie twierdzenie dowodzi zatem mocnej zgodności
+ograniczonego MLE. Nie użyliśmy tu nieudowodnionego ogólnego twierdzenia
+o zbieżności jednostajnej: oszacowanie jest jawne.
+\end{przyklad}
+
+\section{Parametry zakłócające, profilowanie i niezmienniczość}
+\begin{definicja}[Wiarygodność profilowa]
+Niech $\theta=(\psi,\lambda)\in\Psi\times\Lambda$, gdzie $\psi$ jest
+parametrem zainteresowania, a $\lambda$ parametrem zakłócającym.
+Definiujemy $L_{\mathrm{prof}}(\psi;x)=\sup_{\lambda\in\Lambda}
+L_x(\psi,\lambda)$, jeśli supremum jest dobrze określone.
+Nie traktujemy $L_{\mathrm{prof}}$ jako rozkładu prawdopodobieństwa na $\Psi$.
+\end{definicja}
+
+\begin{przyklad}[Profilowanie wariancji w modelu normalnym]
+Dla obserwacji $x$ takich, że $Q(\mu)=\sum_i(x_i-\mu)^2>0$
+dla każdej $\mu$, maksimum wiarygodności względem wariancji przy ustalonym
+$\mu$ osiąga się w $\widehat v_\mu=Q(\mu)/n$. Po podstawieniu
+otrzymujemy $L_{\mathrm{prof}}(\mu;x)\propto Q(\mu)^{-n/2}$.
+Ponieważ $Q(\mu)$ jest najmniejsze w $\bar x$, maksimum profilowe
+wypada w $\mu=\bar x$. Profilowanie zachowuje w tym przypadku MLE $\mu$,
+lecz rozkład statystyki ilorazu wiarygodności wymaga odrębnej teorii.
+\end{przyklad}
+
+\begin{stwierdzenie}[Niezmienniczość MLE względem zmiany parametryzacji]
+Niech $g:\Theta\to\Phi$ będzie bijekcją, a $\widehat\theta$ maksymalizatorem
+$L_x$ w $\Theta$. W parametryzacji $\varphi=g(\theta)$ funkcja wiarygodności
+ma postać $\widetilde L_x(\varphi)=L_x(g^{-1}(\varphi))$.
+Wtedy $g(\widehat\theta)$ jest maksymalizatorem $\widetilde L_x$.
+\end{stwierdzenie}
+\begin{proof}
+Dla każdego $\varphi\in\Phi$ istnieje $\theta=g^{-1}(\varphi)$.
+Z definicji maksimum
+$\widetilde L_x(\varphi)=L_x(\theta)\le L_x(\widehat\theta)
+=\widetilde L_x(g(\widehat\theta))$.
+\end{proof}
+
+\begin{uwaga}[Praktyczna pułapka: transformacja parametru]
+Przy zastąpieniu parametru $\sigma$ parametrem $\sigma^2$ \emph{nie}
+mnożymy wiarygodności przez Jacobian zmiany zmiennej: jest to zmiana
+\emph{parametryzacji modelu}, a nie transformacja gęstości rozkładu
+losowego parametru. Jacobian pojawiłby się natomiast przy przekształcaniu
+gęstości \emph{prioru} w teorii bayesowskiej.
+\end{uwaga}
+
+\section{Jak dobierać narzędzie w praktyce? Porównania i ograniczenia}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.26\textwidth}>{\raggedright\arraybackslash}p{0.32\textwidth}>{\raggedright\arraybackslash}p{0.30\textwidth}}
+\toprule
+\textbf{Problem} & \textbf{Metoda / pierwsze obliczenie} & \textbf{Co koniecznie sprawdzić?}\\
+\midrule
+Odsetek wad & $\widehat p=k/n$ z modelu Bernoulliego & Zależność w partiach; reprezentatywność\\
+Liczba awarii w różnych okresach & $\widehat\lambda=\sum_i y_i/\sum_i t_i$ & Ekspozycję; nadmierną dyspersję\\
+Pomiar około stałego poziomu & MLE średniej i wariancji w modelu normalnym & Ogony; odstające pomiary; dopasowanie rozkładu\\
+Nieznany górny kres rozkładu & Maksimum próby w modelu $U(0,\theta)$ & Czy rzeczywiście występuje ostry kres nośnika?\\
+Parametry zakłócające & Profilowanie lub wspólna optymalizacja & Wielomodalność; różnice identyfikowalności\\
+Optimum na brzegu & Analiza ograniczeń, nie tylko równania score & Czy maksimum jest osiągane?\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Praktyczna sekwencja obliczeń.}
+Należy wskazać jednostkę obserwacji i parametry, zapisać \emph{pełną}
+wiarygodność z ograniczeniami na $\theta$, a następnie (i) sprawdzić
+punkty stacjonarne, (ii) brzegi i zależność nośnika od parametru,
+(iii) istnienie maksimum, (iv) wpływ specyfikacji modelu na wynik.
+Jeśli dane są zależne, nie wolno bez uzasadnienia zastąpić ich prawa
+wspólnego iloczynem rozkładów marginalnych.
+
+\Needspace{16\baselineskip}
+\noindent\textbf{Przykład numeryczny w Pythonie.}\par
+\par
+\Needspace{13\baselineskip}
+\smallskip
+\begin{lstlisting}[language=Python,caption={Wiarygodność modelu Bernoulliego i iloraz wiarygodności (Python).}]
+import numpy as np
+k, n = 7, 100
+p_hat = k / n
+logL = lambda p: k * np.log(p) + (n-k) * np.log1p(-p)
+log_ratio = logL(0.07) - logL(0.05)
+print(p_hat, np.exp(log_ratio))
+# 0.07, ok. 1.457...
+\end{lstlisting}
+\Needspace{16\baselineskip}
+\noindent\textbf{To samo w Julii (bez dodatkowych pakietów).}\par
+\par
+\Needspace{13\baselineskip}
+\smallskip
+\begin{lstlisting}[language=Julia,caption={Wiarygodność Bernoulliego i intensywność Poissona (Julia).}]
+k, n = 7, 100
+p_hat = k / n
+logL(p) = k * log(p) + (n-k) * log1p(-p)
+println((p_hat, exp(logL(0.07) - logL(0.05))))
+y, t = [2, 5, 7], [10.0, 20.0, 40.0]
+println(sum(y) / sum(t))  # intensywnosc: 0.2 na godzine
+\end{lstlisting}
+
+Funkcja używa $\log(1-p)$ w wariancie numerycznie stabilniejszym
+$\operatorname{log1p}(-p)$. Dla obserwacji brzegowych potrzebujemy
+osobnej obsługi $p=0$ i $p=1$, aby nie obliczać wyrażeń typu $0\cdot\log0$.
+
+% ================================================================
+% ROZDZIAL 4 -- STATYSTYCZNA TEORIA DECYZJI
+% ================================================================

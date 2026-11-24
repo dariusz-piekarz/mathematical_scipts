@@ -1,0 +1,495 @@
+\chapter{Homologia Morse'a: od punktów krytycznych do homologii singularnej}
+\label{ch:morse-v10}
+
+\section{Dlaczego rachunek punktów krytycznych wykrywa topologię?}
+W teorii singularnej grupy łańcuchów są zwykle nieskończenie generowane,
+ponieważ generatory stanowią wszystkie sympleksy singularne. Dla zwartej
+gładkiej rozmaitości można skonstruować znacznie mniejszy kompleks:
+jego generatorami będą punkty krytyczne jednej funkcji, a różniczkę
+wyznaczymy, licząc odpowiednio zorientowane trajektorie gradientowe.
+Zaskakujący jest fakt, że jego homologia nie zależy od wybranej
+funkcji ani metryki: odzyskujemy zwykłą homologię singularną.
+Przedstawimy dwa obrazy tej samej konstrukcji: geometryczny (trajektorie)
+i komórkowy (doczepianie uchwytów). Nie będziemy utożsamiać pełnego
+twierdzenia o sklejaniu trajektorii z prostą konsekwencją twierdzenia
+Sarda: wprowadza ono osobny, głęboki argument analityczny.
+
+\section{Funkcja Morse'a, indeks i lokalny model}
+\begin{definicja}[Punkt niezdegenerowany i indeks Morse'a]
+Niech $M$ będzie gładką rozmaitością bez brzegu o wymiarze $n$,
+a $f\in C^\infty(M,\R)$. Punkt $p\in M$ nazywamy \emph{krytycznym}, jeśli $\dd f_p=0$.
+W dowolnym układzie współrzędnych wokół $p$ określmy w takim
+punkcie formę $\operatorname{Hess}_p f$ przez macierz drugich
+pochodnych funkcji zapisanej we współrzędnych.
+Jest ona niezależna od mapy jako forma dwuliniowa na $T_pM$, gdyż
+składniki zależne od pochodnych pierwszego rzędu znikają dla $\dd f_p=0$.
+Punkt krytyczny jest \emph{niezdegenerowany}, gdy hesjan nie ma jądra.
+\emph{Indeksem} $\lambda(p)$ nazywamy wymiar maksymalnej podprzestrzeni,
+na której $\operatorname{Hess}_pf$ jest ujemnie określony.
+Funkcja jest \emph{funkcją Morse'a}, jeżeli wszystkie jej punkty
+krytyczne są niezdegenerowane.
+Zbiór punktów krytycznych oznaczamy przez
+$\operatorname{Crit}(f):=\{p\in M:\dd f_p=0\}$.
+\end{definicja}
+
+\begin{twierdzenie}[Lemat Morse'a — używane twierdzenie geometryczne]
+\label{thm:morse-lemma-v10}
+Jeśli $p$ jest niezdegenerowanym punktem krytycznym funkcji
+$f\in C^\infty(M,\R)$ o indeksie $\lambda$, to istnieją gładkie
+współrzędne $(x_1,\ldots,x_n)$, w których $p$ ma współrzędne $0$ oraz
+\[
+ f(x)=f(p)-\sum_{i=1}^{\lambda}x_i^2+
+                \sum_{i=\lambda+1}^{n}x_i^2.
+\]
+W szczególności niezdegenerowane punkty krytyczne są izolowane.
+\end{twierdzenie}
+\begin{proof}
+Przyjmijmy lokalne współrzędne z $p=0$. Ponieważ
+$\mathrm df_0=0$, dwukrotne zastosowanie wzoru Newtona--Leibniza daje
+\[
+f(x)-f(0)=\int_{t\in[0,1]}(1-t)\,\D^2f(tx)[x,x] \,\dd t
+=x^\top A(x)x,
+\quad A(x)=\int_{t\in[0,1]}(1-t)\,\operatorname{Hess}f(tx)\,\dd t.
+\]
+Macierz $A(x)$ jest symetryczna i gładka oraz
+$A(0)=\tfrac12\operatorname{Hess}_0f$ jest odwracalna.
+Po jednej stałej liniowej zmianie współrzędnych
+możemy założyć $A(0)=J=\operatorname{diag}(-I_\lambda,I_{n-\lambda})$.
+Rozpiszmy $A(x)$ blokowo względem
+$\R^\lambda\oplus\R^{n-\lambda}$; blok górny jest
+ujemnie określony w małym otoczeniu zera.
+Gładka eliminacja bloków mieszanych prowadzi do
+formy blokowo diagonalnej, której drugi blok jest
+dodatnio określonym dopełnieniem Schura.
+Na stożkach macierzy dodatnio określonych operacja
+pierwiastka kwadratowego jest gładka.
+Normalizując w ten sposób oba bloki, znajdujemy
+gładką rodzinę macierzy odwracalnych $L(x)$ z
+$A(x)=L(x)^\top J L(x)$.
+Wobec tego $y=L(x)x$ ma w zerze różniczkę $L(0)$,
+a zatem jest lokalnym dyfeomorfizmem na mocy twierdzenia
+o funkcji odwrotnej. W nowych współrzędnych
+$f=f(0)-\sum_{i=1}^\lambda y_i^2+\sum_{i=\lambda+1}^n y_i^2$.
+Ta postać pokazuje też, że $p$ jest izolowanym punktem krytycznym.
+\end{proof}
+
+\begin{wniosek}[Skończoność punktów krytycznych]
+Jeżeli $M$ jest zwartą rozmaitością bez brzegu, a $f:M\to\R$ jest
+funkcją Morse'a, to zbiór $\operatorname{Crit}(f)$ jest skończony.
+\end{wniosek}
+\begin{proof}
+Zbiór krytyczny jest domknięty, gdyż jest miejscem zerowym ciągłej
+sekcji $\dd f$ wiązki kostycznej, a zatem zwarty. Z poprzedniego
+twierdzenia jest dyskretny. Zwarta przestrzeń dyskretna jest skończona.
+\end{proof}
+
+\section{Przepływ gradientowy, rozmaitości stabilne i transwersalność}
+\begin{definicja}[Para Morse'a--Smale'a]
+Niech $M$ będzie zwartą gładką rozmaitością bez brzegu,
+$f:M\to\R$ funkcją Morse'a, a $g$ metryką riemannowską.
+Pole $X=-\operatorname{grad}_g f$ ma zupełny przepływ
+$\Phi:\R\times M\to M$. Dla $p\in\operatorname{Crit}(f)$ definiujemy
+\begin{align*}
+ W^u(p)&=\{x\in M:\lim_{t\to-\infty}\Phi_t(x)=p\},\\
+ W^s(p)&=\{x\in M:\lim_{t\to+\infty}\Phi_t(x)=p\}.
+\end{align*}
+Para $(f,g)$ jest \emph{parą Morse'a--Smale'a}, jeżeli
+$W^u(p)$ przecina $W^s(q)$ transwersalnie dla wszystkich
+$p,q\in\operatorname{Crit}(f)$. Transwersalność rozumiemy w każdym
+punkcie przecięcia, jako równość $T_xW^u(p)+T_xW^s(q)=T_xM$.
+\end{definicja}
+
+\begin{lemat}[Monotoniczność energii i wymiary]
+\label{lem:morse-energy-v10}
+Dla każdej trajektorii $t\mapsto\Phi_t(x)$ zachodzi
+$\frac{\dd}{\dd t}f(\Phi_t(x))=-\|\operatorname{grad}_g f(\Phi_t(x))\|_g^2$.
+Rozmaitości $W^u(p)$ i $W^s(p)$ są zanurzonymi rozmaitościami,
+obie są dyfeomorficzne odpowiednio z $\R^{\lambda(p)}$ oraz
+$\R^{n-\lambda(p)}$. Jeśli trajektoria nietrywialna łączy
+$p$ z $q$, to $f(p)>f(q)$.
+\end{lemat}
+\begin{proof}
+Pierwsza równość jest regułą łańcuchową i definicją gradientu.
+Jeżeli całka z $\|\operatorname{grad}f\|^2$ na dowolnym odcinku
+nietrywialnej trajektorii byłaby zerowa, gradient byłby na nim zerowy
+i trajektoria byłaby stała, sprzeczność. Stąd ścisła nierówność.
+W otoczeniu $p$ liniaryzacja pola ma postać
+$-\operatorname{Hess}_pf$ po identyfikacji za pomocą $g$; ma
+$\lambda(p)$ dodatnich i $n-\lambda(p)$ ujemnych wartości własnych.
+Twierdzenie o rozmaitościach stabilnej i niestabilnej daje wskazane
+wymiary i gładkie zanurzenia. Globalne rozmaitości otrzymuje się
+przez obrazy lokalnych przy przepływie; w przypadku gradientowym
+są dyfeomorficzne z przestrzeniami euklidesowymi odpowiednich wymiarów.
+To ostatnie korzysta ze standardowego twierdzenia o rozmaitościach
+stabilnych, które traktujemy jako narzędzie z geometrii dynamiki.
+\end{proof}
+
+Dla $p\ne q$ oznaczamy przez
+$\widetilde{\mathcal M}(p,q)=W^u(p)\cap W^s(q)$
+przestrzeń \emph{sparametryzowanych} trajektorii. Translacja czasu
+$\tau\cdot x=\Phi_\tau(x)$ wyznacza wolne działanie $\R$.
+Iloraz $\mathcal M(p,q)=\widetilde{\mathcal M}(p,q)/\R$
+nazywamy przestrzenią \emph{trajektorii niesparametryzowanych}.
+
+\begin{stwierdzenie}[Wymiar przestrzeni trajektorii]
+\label{prop:morse-dimension-v10}
+Dla pary Morse'a--Smale'a i $p\ne q$ przestrzeń
+$\mathcal M(p,q)$ jest gładką rozmaitością wymiaru
+$\lambda(p)-\lambda(q)-1$, o ile jest niepusta.
+\end{stwierdzenie}
+\begin{proof}
+Transwersalność daje
+$\dim(W^u(p)\cap W^s(q))=\lambda(p)+(n-\lambda(q))-n
+=\lambda(p)-\lambda(q)$.
+W każdym punkcie przecięcia pole $X$ jest niezerowe i styczne do
+przecięcia, więc jego przepływ daje lokalny model
+$(t,y)\mapsto\Phi_t(y)$ dla działania translacji.
+Globalny przekrój tego działania otrzymujemy na przecięciu z
+regularnym poziomem $f=c$ dla $f(q)<c<f(p)$:
+na każdej trajektorii $f$ jest ściśle malejąca, więc przecina
+poziom $c$ dokładnie raz, transwersalnie.
+Ten przekrój jest dyfeomorficzny z ilorazem i ma wymiar
+$\lambda(p)-\lambda(q)-1$.
+\end{proof}
+
+\section{Zliczanie trajektorii i kompleks Morse'a}
+Wybierzmy orientację każdej niestabilnej rozmaitości $W^u(p)$.
+Wzdłuż $W^s(q)$ wybór orientacji $W^u(q)$ indukuje orientację wiązki
+normalnej do $W^s(q)$, zgodnie z rozkładem stabilnym i niestabilnym
+przy $q$ i transportem przez przepływ. Gdy $\lambda(p)-\lambda(q)=1$,
+w punkcie $x\in W^u(p)\cap W^s(q)$ transwersalność pozwala porównać
+orientację $T_xW^u(p)$ z orientacjami normalną do $W^s(q)$
+i dodatniego kierunku przepływu. Tak otrzymujemy znak
+$\varepsilon(\gamma)\in\{-1,+1\}$ niesparametryzowanej
+trajektorii $\gamma\in\mathcal M(p,q)$. To ujęcie nie wymaga
+orientowalności całej rozmaitości $M$. Przy zmianie orientacji
+$W^u(p)$ zmieniają się znaki trajektorii wychodzących z $p$;
+przy zmianie orientacji $W^u(q)$ zmieniają się znaki trajektorii
+dochodzących do $q$. Obie zmiany odpowiadają zmianie znaków
+odpowiednich generatorów kompleksu Morse'a.
+
+\begin{twierdzenie}[Kompaktyfikacja trajektorii — twierdzenie geometryczne]
+\label{thm:morse-compact-v10}
+Niech $M$ będzie zwartą rozmaitością bez brzegu,
+a $(f,g)$ parą Morse'a--Smale'a. Wtedy:
+\begin{enumerate}[label=(\roman*)]
+\item jeśli $\lambda(p)-\lambda(q)=1$, zbiór $\mathcal M(p,q)$
+      jest skończony;
+\item jeśli $\lambda(p)-\lambda(r)=2$, przestrzeń
+      $\mathcal M(p,r)$ dopuszcza zwartą kompaktyfikację
+      $\overline{\mathcal M}(p,r)$ o strukturze zorientowanej
+      jednowymiarowej rozmaitości z brzegiem, przy czym
+      \[
+       \partial\overline{\mathcal M}(p,r)=
+       \coprod_{\lambda(q)=\lambda(p)-1}
+       \mathcal M(p,q)\times\mathcal M(q,r),
+      \]
+      a znak punktu brzegowego odpowiada iloczynowi znaków
+      dwóch sklejanych trajektorii, z jednym wspólnym znakiem
+      wynikającym z przyjętej orientacji brzegu.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Wyjaśnijmy dokładnie zakres użytego wyniku. Z równania energii
+\[
+\int_{t\in\R}\|\operatorname{grad}f(\gamma(t))\|_g^2\,\dd t
+=f(p)-f(q)
+\]
+wynika ograniczenie energii trajektorii.
+Przy zwartości $M$ ciąg trajektorii można, po dobraniu translacji
+czasu i wybraniu podciągów, badać przez zwartość rozwiązań ODE
+na przedziałach ograniczonych. Utrata zwartości może polegać na tym,
+że trajektoria spędza coraz dłuższy czas w otoczeniu pośredniego
+punktu krytycznego $q$. Powstaje wówczas trajektoria
+\emph{łamana} $p\to q\to r$. Ścisły spadek $f$
+i transwersalność ograniczają liczbę łamań; gdy różnica
+indeksów wynosi $1$, łamanie jest niemożliwe, a dla różnicy
+$2$ pojawia się dokładnie jeden punkt pośredni.
+Aby stwierdzić, że każdemu takiemu złamaniu odpowiada
+\emph{jeden koniec gładkiej jednowymiarowej rozmaitości}
+$\mathcal M(p,r)$, potrzebne jest twierdzenie o sklejaniu
+trajektorii i zgodności orientacji. Jego dowód wykorzystuje
+lokalną postać przepływu przy punktach hiperbolicznych
+oraz oszacowania dla sklejonych rozwiązań i nie jest
+konsekwencją samej zwartości ODE. Przyjmujemy ten
+konkretny wynik pomocniczy; wszystkie dalsze użycia
+odnoszą się dokładnie do punktów (i)--(ii), bez
+niejawnego założenia silniejszej kompaktyfikacji.
+W szczególności nie twierdzimy, że samo ograniczenie energii
+dowodzi istnienia współrzędnych sklejania lub zgodności
+orientacji brzegowych. Te części są treścią przyjętego
+twierdzenia geometrycznego.
+\end{proof}
+
+\begin{definicja}[Kompleks Morse'a]
+\label{def:morse-complex-v10}
+Dla pary Morse'a--Smale'a $(f,g)$ na zwartej rozmaitości bez brzegu
+niech $CM_k(f,g)$ będzie wolną grupą abelową z bazą
+$\{p\in\operatorname{Crit}(f):\lambda(p)=k\}$.
+Określamy homomorfizm $\partial_k:CM_k(f,g)\to CM_{k-1}(f,g)$,
+$\partial_kp=\sum_{\lambda(q)=k-1}n(p,q)q$, gdzie
+$n(p,q)=\sum_{\gamma\in\mathcal M(p,q)}\varepsilon(\gamma)\in\Z$.
+Skończoność sum wynika z Twierdzenia~\ref{thm:morse-compact-v10}.
+\end{definicja}
+
+\begin{twierdzenie}[Różniczka Morse'a spełnia $\partial^2=0$]
+\label{thm:morse-d2-v10}
+Dla każdej pary Morse'a--Smale'a $(f,g)$ na zwartej gładkiej
+rozmaitości bez brzegu zachodzi $\partial_{k-1}\partial_k=0$
+dla wszystkich $k\in\Z$.
+\end{twierdzenie}
+\begin{proof}
+Współczynnik przy krytycznym punkcie $r$ o indeksie $k-2$
+w $\partial_{k-1}\partial_kp$ wynosi
+$\sum_{\lambda(q)=k-1}n(p,q)n(q,r)$.
+Każdy składnik tego wyrażenia odpowiada punktowi brzegowemu
+$\overline{\mathcal M}(p,r)$ z odpowiednim znakiem, według
+Twierdzenia~\ref{thm:morse-compact-v10}(ii). Zorientowana
+zwarta jednowymiarowa rozmaitość jest skończoną sumą odcinków
+i okręgów; końce każdego odcinka mają przeciwne znaki,
+a okręgi nie mają brzegu. Suma znaków jej punktów brzegowych
+jest więc zerowa. Zatem wskazany współczynnik znika dla
+każdego $r$, co dowodzi $\partial_{k-1}\partial_k=0$.
+\end{proof}
+
+Definiujemy $HM_k(f,g)=\ker\partial_k/\operatorname{im}\partial_{k+1}$.
+Istotą teorii jest wykazanie, że grupy te nie są nowymi
+niezmiennikami zależnymi od pary $(f,g)$.
+
+\section{Od uchwytów do homologii singularnej}
+\begin{twierdzenie}[Zmiana podpoziomu w punkcie krytycznym]
+\label{thm:morse-handle-v10}
+Niech $M$ będzie zwartą gładką rozmaitością bez brzegu,
+$f:M\to\R$ funkcją Morse'a, a $a<b$ liczbami regularnymi
+takimi, że $f^{-1}([a,b])$ zawiera dokładnie jeden punkt
+krytyczny $p$ o indeksie $k$.
+Wtedy podpoziom $M^b=f^{-1}(( -\infty,b])$ powstaje,
+z dokładnością do homotopii, z $M^a$ przez dołączenie
+jednej $k$-komórki. Ponadto
+$H_j(M^b,M^a;\Z)\cong\Z$ dla $j=k$ i jest zerem
+dla $j\ne k$.
+\end{twierdzenie}
+\begin{proof}
+Z lematu Morse'a wokół $p$ mamy $f-f(p)=-\|u\|^2+\|v\|^2$
+dla $u\in\R^k$, $v\in\R^{n-k}$. Uchwyt
+$D^k\times D^{n-k}$ doczepiamy wzdłuż
+$S^{k-1}\times D^{n-k}$, ponieważ tylko w tych kierunkach
+występuje spadek wartości $f$ przy przechodzeniu
+przez poziom krytyczny. Na obszarze bez punktów krytycznych, dla dowolnie ustalonej
+metryki $g$, pole $-\operatorname{grad}_g f/\|\operatorname{grad}_g f\|_g^2$
+spełnia $\dd f(X)=-1$; jego przepływ identyfikuje regularne
+podpoziomy po pominięciu małych otoczeń punktów krytycznych.
+Czas przepływu jest skończony, a zwartość $f^{-1}([a,b])$
+zapobiega ucieczce trajektorii przez nieskończoność.
+Daje to standardowe twierdzenie o dołączaniu uchwytu
+(przyjmujemy jego lokalno-globalną wersję z teorii Morse'a).
+Para $(D^k\times D^{n-k},S^{k-1}\times D^{n-k})$
+deformacyjnie zwija się do $(D^k,S^{k-1})$.
+Względna homologia tej pary jest $\Z$ w stopniu $k$
+i zerem w pozostałych stopniach. Ekscyzja przenosi
+ten rachunek na $(M^b,M^a)$.
+\end{proof}
+
+\begin{lemat}[Kilka punktów krytycznych o tej samej wartości]
+\label{lem:morse-same-level-audit}
+Niech $M$ będzie zwartą gładką rozmaitością bez brzegu,
+$f:M\to\R$ funkcją Morse'a, a $a<c<b$ liczbami takimi, że
+$a,b$ są regularne i jedyną wartością krytyczną w $[a,b]$ jest $c$.
+Niech $p_1,\dots,p_r$ będą wszystkimi punktami krytycznymi na
+poziomie $c$ i niech $k_i=\lambda(p_i)$. Wtedy $M^b$ powstaje z $M^a$,
+z dokładnością do homotopii par, przez jednoczesne dołączenie
+$r$ komórek wymiarów $k_1,\dots,k_r$. W szczególności
+\[
+ H_j(M^b,M^a;\Z)\cong
+ \bigoplus_{\{i:k_i=j\}}\Z.
+\]
+\end{lemat}
+\begin{proof}
+Ponieważ punkty $p_i$ są skończenie liczne i izolowane, istnieją
+parami rozłączne małe otoczenia Morse'a $U_i$ zawarte w
+$f^{-1}((a,b))$. W każdym $U_i$ lokalny rachunek z dowodu
+Twierdzenia~\ref{thm:morse-handle-v10} dostarcza uchwytu
+$D^{k_i}\times D^{n-k_i}$ z częścią przyczepiającą
+$S^{k_i-1}\times D^{n-k_i}$. Poza sumą tych otoczeń
+nie ma punktów krytycznych na $f^{-1}([a,b])$;
+znormalizowany przepływ gradientowy pozwala przesunąć
+poziomy regularne do okolic $U_i$. Dlatego uchwyty można
+doczepić jednocześnie, a ich części przyczepiające są
+parami rozłączne. Względna ekscyzja redukuje
+$H_j(M^b,M^a;\Z)$ do sumy prostej homologii par
+$(D^{k_i}\times D^{n-k_i},S^{k_i-1}\times D^{n-k_i})$.
+Każda wnosi jedną kopię $\Z$ w stopniu $k_i$.
+Argument wykorzystuje tę samą geometryczną wersję twierdzenia
+o doczepianiu uchwytów co Twierdzenie~\ref{thm:morse-handle-v10}.
+\end{proof}
+
+\begin{twierdzenie}[Zgodność homologii Morse'a i singularnej]
+\label{thm:morse-singular-v10}
+Dla zwartej gładkiej rozmaitości $M$ bez brzegu i pary
+Morse'a--Smale'a $(f,g)$ istnieją izomorfizmy
+$HM_k(f,g)\cong H_k(M;\Z)$ dla wszystkich $k\ge0$.
+Są naturalne względem map kontynuacji pomiędzy
+parami Morse'a--Smale'a, po ustaleniu zwyczajowych
+identyfikacji z homologią singularną.
+\end{twierdzenie}
+\begin{proof}
+Dla funkcji Morse'a wybierzmy przedziały rozdzielające
+\emph{różne wartości krytyczne}, a niekoniecznie poszczególne
+punkty krytyczne: kilka punktów może mieć tę samą wartość
+(np. dwa siodła funkcji $\cos\theta+\cos\varphi$ na torusie).
+Lemat~\ref{lem:morse-same-level-audit} umożliwia doczepienie
+wszystkich uchwytów danego poziomu jednocześnie. Otrzymujemy
+filtrację przez podpoziomy i strukturę CW, w której na każdy
+punkt krytyczny $p$ przypada komórka wymiaru $\lambda(p)$.
+Zatem grupa $k$-łańcuchów komórkowych jest wolna na punktach
+krytycznych o indeksie $k$.
+W transwersalnym ustawieniu Morse'a--Smale'a liczba
+incydencji komórki niestabilnej $p$ z komórką
+niższego indeksu $q$ jest stopniem mapy przyłączającej,
+a stopień ten można obliczyć przez zorientowane przecięcia
+$W^u(p)$ z przekrojem poprzecznym do $W^s(q)$.
+Każde takie przecięcie odpowiada jednej trajektorii
+$p\to q$, a znak przecięcia jest dokładnie
+$\varepsilon(\gamma)$. Otrzymujemy więc
+$\partial^{\mathrm{cell}}p=\sum_qn(p,q)q=\partial p$.
+W tym przejściu używa się \emph{twierdzenia o zgodności
+liczb incydencji z liczeniem trajektorii}; wynika ono
+z konstrukcji map przyłączających za pomocą przepływu
+oraz transwersalnego przecięcia z regularnym poziomem.
+Jest to standardowe twierdzenie geometryczne, którego
+pełny dowód wymaga kontroli deformacji brzegów
+uchwytów w pobliżu wielu punktów krytycznych; nie
+zastępujemy go bezpodstawnym stwierdzeniem, że
+same grupy łańcuchów są z definicji identyczne.
+Homologia komórkowa jest izomorficzna z singularną,
+co kończy argument po zastosowaniu przytoczonego
+twierdzenia o liczbach incydencji. Naturalność
+wynika z map kontynuacji, które opisujemy dalej.
+\end{proof}
+
+\begin{uwaga}[Kontynuacja, niezmienniczość i zakres dowodu]
+Dla dwóch par Morse'a--Smale'a $(f_0,g_0)$ i $(f_1,g_1)$
+wybiera się gładką rodzinę danych i liczy trajektorie równania
+$\dot\gamma=-\operatorname{grad}_{g_s}f_s(\gamma)$,
+przy parametrze $s\in\R$ stałym dla $s\ll0$ i $s\gg0$.
+Dla regularnej rodziny parametrów daje to mapę łańcuchową
+$CM_*(f_0,g_0)\to CM_*(f_1,g_1)$; kompaktyfikacja
+jednowymiarowych przestrzeni trajektorii dowodzi zgodności
+z różniczką. Porównując dwie homotopie rodzin,
+otrzymuje się homotopię łańcuchową; odwrócenie
+kontynuacji daje izomorfizm w homologii.
+Pełne niezależne przeprowadzenie tej konstrukcji
+wymaga analitycznego twierdzenia o sklejaniu
+(zależnego od parametru). W naszym skrypcie
+niezmienniczość wynika również z izomorfizmu
+z homologią singularną w Twierdzeniu~\ref{thm:morse-singular-v10}.
+\end{uwaga}
+
+\section{Nierówności Morse'a i charakterystyka Eulera}
+\begin{twierdzenie}[Silne nierówności Morse'a]
+\label{thm:morse-inequalities-v10}
+Niech $M$ będzie zwartą rozmaitością bez brzegu, $(f,g)$
+parą Morse'a--Smale'a, $m_k$ liczbą punktów krytycznych
+indeksu $k$ i $b_k=\dim_\Q H_k(M;\Q)$.
+Istnieje wielomian $Q(t)\in\Z[t]$ o nieujemnych współczynnikach taki, że
+\[
+\sum_{k=0}^{n}m_kt^k-\sum_{k=0}^{n}b_kt^k=(1+t)Q(t).
+\]
+W szczególności $m_k\ge b_k$,
+$\sum_{j=0}^k(-1)^{k-j}m_j\ge
+\sum_{j=0}^k(-1)^{k-j}b_j$ i
+$\sum_k(-1)^km_k=\chi(M)$.
+\end{twierdzenie}
+\begin{proof}
+Tensorujmy kompleks Morse'a z $\Q$. Niech
+$r_k=\operatorname{rank}_\Q\partial_k$; przyjmujemy $r_0=r_{n+1}=0$.
+Z wymiarów $\ker\partial_k$ i ilorazu homologii wynika
+$m_k=b_k+r_k+r_{k+1}$. Pomnóżmy przez $t^k$
+i zsumujmy po $k$. Otrzymujemy wzór z
+$Q(t)=\sum_{k=0}^{n-1}r_{k+1}t^k$, którego współczynniki
+są nieujemnymi liczbami całkowitymi.
+Porównanie współczynników daje słabe nierówności.
+Naprzemienne sumowanie do $k$ daje różnicę $r_{k+1}\ge0$;
+podstawienie $t=-1$ daje wzór na charakterystykę Eulera.
+\end{proof}
+
+\section{Przykłady obliczeń}
+\begin{przyklad}[Sfera i funkcja wysokości]
+Dla $S^n\subset\R^{n+1}$, $n\ge1$, funkcja
+$f(x)=x_{n+1}$ ma dwa punkty krytyczne: minimum indeksu $0$
+i maksimum indeksu $n$. Dlatego $CM_0\cong CM_n\cong\Z$
+i pozostałe grupy łańcuchowe są zerowe.
+Dla $n>1$ różniczka automatycznie znika z przyczyn
+stopniowania. Dla $n=1$ dwie trajektorie od maksimum
+do minimum mają przeciwne znaki i znoszą się.
+W obu przypadkach odzyskujemy $H_0(S^n;\Z)\cong\Z$
+i $H_n(S^n;\Z)\cong\Z$.
+\end{przyklad}
+
+\begin{przyklad}[Cztery punkty krytyczne torusa]
+Na $T^2=S^1\times S^1$ rozważmy
+$f(\theta,\varphi)=\cos\theta+\cos\varphi$
+z płaską metryką produktową. Punkty $(\pi,\pi)$,
+$(0,\pi)$, $(\pi,0)$, $(0,0)$ mają indeksy odpowiednio
+$0,1,1,2$. Stąd $CM_0\cong CM_2\cong\Z$ i $CM_1\cong\Z^2$.
+Ponieważ znana homologia torusa ma rangi $1,2,1$,
+nierówności Morse'a są tu równościami; wymusza to
+$\partial_1=\partial_2=0$ po tensorowaniu z $\Q$,
+a ponieważ grupy łańcuchowe są wolne, różniczki są zerowe
+również nad $\Z$. Nie zakładaliśmy więc bez uzasadnienia,
+że symetria automatycznie znosi wszystkie znaki.
+\end{przyklad}
+
+\begin{przyklad}[Niedoskonała funkcja na okręgu]
+Dla $f(\theta)=\cos(2\theta)$ na $S^1$ mamy dwa maksima
+$p_1,p_2$ i dwa minima $q_1,q_2$. Po wybraniu orientacji
+niestabilnych kierunków różniczka może mieć postać
+$\partial p_1=q_1-q_2$ oraz $\partial p_2=q_2-q_1$.
+Macierz $\partial_1$ ma rząd $1$ nad $\Z$ i obraz
+$\Z(q_1-q_2)$. Zatem $HM_1\cong\Z$ oraz
+$HM_0\cong\Z$, mimo że funkcja posiada więcej punktów
+krytycznych niż funkcja wysokości na okręgu.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=0.93,font=\small]
+\draw[->] (-3.55,0)--(3.58,0) node[right] {$\theta$};
+\draw[very thick,manifoldblue,domain=-3.14159:3.14159,samples=140]
+ plot (\x,{0.85*cos(deg(2*\x))});
+\draw[manifoldred,->,thick] (-0.40,0.59)--(-0.75,0.06);
+\draw[manifoldred,->,thick] ( 0.40,0.59)--( 0.75,0.06);
+\fill[manifoldblue] (0,0.85) circle (1.7pt);
+\fill[manifoldblue] (-1.5708,-0.85) circle (1.7pt);
+\fill[manifoldblue] ( 1.5708,-0.85) circle (1.7pt);
+\draw[manifoldblue,fill=white] (-3.14159,.85) circle (1.7pt);
+\draw[manifoldblue,fill=white] ( 3.14159,.85) circle (1.7pt);
+\node[above] at (0,1.02) {maksimum};
+\node[below] at (-1.5708,-1.02) {minimum};
+\node[below] at ( 1.5708,-1.02) {minimum};
+\node[below] at (-3.14159,-0.08) {$-\pi$};
+\node[below] at ( 3.14159,-0.08) {$\pi$};
+\node[anchor=west] at (-3.46,1.53) {$f(\theta)=\cos(2\theta)$};
+\end{tikzpicture}
+\end{center}
+\begin{center}\small Wykres $f(\theta)=\cos(2\theta)$ dla
+$\theta\in[-\pi,\pi]$; końce przedziału oznaczają ten sam
+punkt okręgu. Pełne punkty oznaczają trzy widoczne ekstrema
+we wnętrzu przedziału, a punkty puste -- jeden wspólny
+punkt maksymalny po utożsamieniu końców. Strzałki wskazują
+kierunek ujemnego przepływu gradientowego.\end{center}
+
+\section{Związek z teorią uchwytów i z topologią algebraiczną}
+Kompleks Morse'a pozwala obliczać niezmienniki topologiczne
+przez skończony rachunek algebraiczny, a geometria przepływu
+wyjaśnia, skąd biorą się współczynniki różniczki.
+W rozdziale o Pontriaginie--Thomie punkty regularne
+i podrozmaitości reprezentowały klasy stabilnej homotopii;
+tutaj liczby trajektorii reprezentują mapy brzegowe w
+kompleksie łańcuchowym. Przy późniejszym połączeniu z geometrią algebraiczną
+pożyteczna będzie analogia z przestrzeniami modułów i
+zorientowanymi liczbami przecięć, lecz do przeniesienia tej
+konstrukcji potrzebne są osobne twierdzenia o zwartości,
+transwersalności i orientacji przestrzeni modułów.
+
+
+% Iteracja X, rozdział XIX. Wymaga preambuły wersji IX.

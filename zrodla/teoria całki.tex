@@ -1,0 +1,1736 @@
+% !TeX program = pdflatex
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[polish]{babel}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[unicode]{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!45!black,urlcolor=blue!45!black}
+\geometry{margin=2.5cm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setlength{\emergencystretch}{2em}
+\setlist[enumerate]{topsep=4pt,itemsep=2pt}
+\setlist[itemize]{topsep=4pt,itemsep=2pt}
+\numberwithin{equation}{section}
+\theoremstyle{plain}
+\newtheorem{twierdzenie}{Twierdzenie}[section]
+\newtheorem{lemat}[twierdzenie]{Lemat}
+\newtheorem{stwierdzenie}[twierdzenie]{Stwierdzenie}
+\newtheorem{wniosek}[twierdzenie]{Wniosek}
+\theoremstyle{definition}
+\newtheorem{definicja}[twierdzenie]{Definicja}
+\newtheorem{przyklad}[twierdzenie]{Przykład}
+\theoremstyle{remark}
+\newtheorem{uwaga}[twierdzenie]{Uwaga}
+\renewcommand{\proofname}{Dowód}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Rozszerzenia pojęcia całki}
+\fancyhead[R]{\small\ifnum\value{section}>0 Sekcja \thesection\else Wprowadzenie\fi}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\newcommand{\R}{\mathbb R}
+\newcommand{\N}{\mathbb N}
+\newcommand{\C}{\mathbb C}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\La}{\lambda}
+\newcommand{\ind}[1]{\mathbf 1_{#1}}
+\newcommand{\osc}{\operatorname{osc}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\mesh}{\operatorname{mesh}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\AC}{\mathrm{AC}}
+\newcommand{\BV}{\mathrm{BV}}
+\newcommand{\HK}{\mathrm{HK}}
+\newcommand{\RS}{\mathrm{RS}}
+\newcommand{\KS}{\mathrm{KS}}
+\newcommand{\Dn}{\underline D}
+\newcommand{\Du}{\overline D}
+\newcommand{\pv}{\mathrm{p.w.}}
+\DeclareMathOperator{\esssup}{ess\,sup}
+\title{Rozszerzenia pojęcia całki\\\large Definicje, kryteria, dowody i przykłady}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+\begin{abstract}
+Przedstawiamy całki Darboux, Riemanna i Riemanna--Stieltjesa, całki Henstocka--Kurzweila, Perrona, Kurzweila--Stieltjesa i McShane'a, wąską i szeroką całkę Denjoya oraz ich związki z teorią miary. Omawiamy ponadto całkę Lebesgue'a, konstrukcję Daniella--Stone'a, twierdzenie Riesza--Markowa, całkę Radona i miarę Haara. Tekst obejmuje \emph{część I}: kończy się wprowadzeniem do całki Mawhina. Uzupełniono dowody, rachunki wzorcowe, kryteria zbieżności i porównania klas całkowalności; fragmenty nieuwzględnione w skanie oznaczono jako autorskie rozszerzenia. Dalsze tematy wymienione w pierwotnym spisie treści pozostają zapowiedziane, lecz nie są tutaj opracowywane.
+\end{abstract}
+\tableofcontents
+
+\section*{Wstęp i konwencje}
+\addcontentsline{toc}{section}{Wstęp i konwencje}
+W sekcjach dotyczących jednej zmiennej $[a,b]\subset\R$ jest ustalonym przedziałem zwartym, $a<b$, a $\lambda$ oznacza miarę Lebesgue'a. Zakładamy podstawy teorii miary, algebry liniowej oraz analizy funkcjonalnej. Podstawy grup topologicznych i lokalnej zwartości wprowadzamy przed konstrukcją miary Haara.
+
+\textbf{Co porównujemy.} Całkowalność zależy od funkcji, dziedziny, miary lub funkcji całkującej oraz przestrzeni wartości. Zmiana któregokolwiek z tych elementów może zmienić odpowiedź. O ile nie zaznaczamy inaczej, całki przyjmują wartości skończone. Dla nieujemnych funkcji mierzalnych dopuszczamy również $+\infty$. Funkcje są rzeczywiste; zespolone całkujemy osobno przez części rzeczywistą i urojoną. Symbolem $\ind{A}$ oznaczamy funkcję charakterystyczną zbioru $A$.
+
+Przez $\mathcal L^1(\mu)$ oznaczamy zbiór konkretnych funkcji mierzalnych $f$ o skończonych wartościach i $\int |f|\,\mathrm d\mu<\infty$, a przez $L^1(\mu)$ jego przestrzeń ilorazową względem równości prawie wszędzie. Jest to istotne przy porównywaniu Riemanna i Lebesgue'a: $\ind{\Q\cap[0,1]}$ nie jest całkowalna w sensie Riemanna, chociaż reprezentuje w $L^1$ tę samą klasę co funkcja zerowa.
+
+\textbf{Terminologia.} \emph{Integrand} to funkcja podcałkowa; \emph{integrator} to funkcja całkująca (w teorii Stieltjesa). \emph{Antiderivative} oznacza funkcję pierwotną, zaś \emph{primitive} w teorii całki HK jest ciągłą funkcją pierwotną w sensie tej teorii, z pochodną równą funkcji podcałkowej prawie wszędzie. \emph{Gauge} oznacza cechowanie, \emph{tagged partition} --- podział znaczony, \emph{refinement} --- zagęszczenie. \emph{Bounded variation} to wahanie ograniczone, a \emph{regulated function} --- funkcja regulowana (mająca skończone granice jednostronne). \emph{Finite-valued} oznacza funkcję o skończonych wartościach, niekoniecznie ograniczoną.
+
+Podziałem przedziału $[a,b]$ nazywamy zbiór $P=\{a=x_0<x_1<\dots<x_n=b\}$. Jego średnicą jest $\mesh P=\max_i(x_i-x_{i-1})$. Po wyborze znaczników $t_i\in[x_{i-1},x_i]$ powstaje podział znaczony $\mathcal P=\{(t_i,[x_{i-1},x_i])\}_{i=1}^n$, o sumie
+\[
+S(f,\mathcal P)=\sum_{i=1}^n f(t_i)(x_i-x_{i-1}).
+\]
+W sumach Stieltjesa długość przedziału zastępujemy przyrostem funkcji całkującej.
+
+\section{Całka Darboux}
+\begin{definicja}
+Niech $f:[a,b]\to\R$ będzie ograniczona, a $P=\{x_0,\dots,x_n\}$ podziałem. Kładziemy $m_i=\inf_{[x_{i-1},x_i]}f$, $M_i=\sup_{[x_{i-1},x_i]}f$ oraz
+\[
+L(f,P)=\sum_{i=1}^n m_i(x_i-x_{i-1}),\qquad
+U(f,P)=\sum_{i=1}^n M_i(x_i-x_{i-1}).
+\]
+Całkami dolną i górną nazywamy $\underline{\int_a^b}f=\sup_P L(f,P)$ i $\overline{\int_a^b}f=\inf_P U(f,P)$. Funkcja jest całkowalna w sensie Darboux, gdy wartości te są równe; ich wspólną wartość oznaczamy $\int_a^b f(x)\,\mathrm dx$.
+\end{definicja}
+\begin{lemat}
+Jeśli $P\subset P'$ (zagęszczenie), to $L(f,P)\le L(f,P')\le U(f,P')\le U(f,P)$. Dla dowolnych podziałów $P_1,P_2$ zachodzi $L(f,P_1)\le U(f,P_2)$.
+\end{lemat}
+\begin{proof}
+Wstawienie jednego punktu $y\in(x_{k-1},x_k)$ nie zmniejsza sumy dolnej: infima na dwóch powstałych odcinkach są nie mniejsze od infimum na odcinku pierwotnym. Analogicznie suma górna nie rośnie. Pierwsza teza wynika przez iterację. Dla dwóch podziałów stosujemy wspólne zagęszczenie $P_1\cup P_2$.
+\end{proof}
+\begin{twierdzenie}[Kryterium Riemanna]
+Ograniczona funkcja $f:[a,b]\to\R$ jest całkowalna w sensie Darboux wtedy i tylko wtedy, gdy dla każdego $\varepsilon>0$ istnieje podział $P$ taki, że $U(f,P)-L(f,P)<\varepsilon$.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli obie całki Darboux wynoszą $I$, wybieramy $P_1,P_2$ z $L(f,P_1)>I-\varepsilon/2$ i $U(f,P_2)<I+\varepsilon/2$. Wspólne zagęszczenie ma żądaną własność. Odwrotnie, zawsze $0\le\overline{\int_a^b}f-\underline{\int_a^b}f\le U(f,P)-L(f,P)$. Prawa strona może być dowolnie mała, więc całki są równe.
+\end{proof}
+\begin{przyklad}[Funkcje ciągłe i monotoniczne]
+Funkcja ciągła jest jednostajnie ciągła na $[a,b]$, toteż przy małej średnicy podziału oscylacje na jego komórkach są małe. Jeśli $f$ jest niemalejąca, to dla podziału równomiernego o kroku $h=(b-a)/n$ zachodzi $U(f,P)-L(f,P)=h(f(b)-f(a))\to0$. Podobnie dla funkcji nierosnącej.
+\end{przyklad}
+\begin{przyklad}[Funkcja Dirichleta]
+Dla $D=\ind{\Q\cap[a,b]}$ na każdym niezdegenerowanym przedziale infimum wynosi $0$, a supremum $1$. Dlatego $L(D,P)=0$ i $U(D,P)=b-a$ dla wszystkich podziałów. Funkcja nie jest całkowalna w sensie Darboux.
+\end{przyklad}
+\begin{przyklad}[Funkcja Thomaego]
+Niech $T(x)=1/q$, jeśli $x=p/q\in[0,1]\cap\Q$ jest zapisany w postaci nieskracalnej z $q\ge1$, a $T(x)=0$ dla niewymiernych $x$. Funkcja jest ciągła dokładnie w punktach niewymiernych. Jest całkowalna w sensie Darboux i jej całka wynosi $0$: punkty wymierne z mianownikami $\le N$ tworzą zbiór skończony, który można osłonić odcinkami o dowolnie małej łącznej długości; poza nimi $0\le T\le1/N$.
+\end{przyklad}
+\begin{przyklad}[Obliczenie z definicji]
+Dla $f(x)=x^2$ na $[0,1]$, przy $P_n=\{i/n:0\le i\le n\}$ mamy
+\[
+U(f,P_n)=\frac1{n^3}\sum_{i=1}^n i^2=\frac{(n+1)(2n+1)}{6n^2},\qquad
+L(f,P_n)=\frac1{n^3}\sum_{i=0}^{n-1}i^2=\frac{(n-1)(2n-1)}{6n^2}.
+\]
+Obie sumy dążą do $1/3$, a zatem $\int_0^1x^2\,\mathrm dx=1/3$.
+\end{przyklad}
+
+\section{Całka Riemanna}
+\begin{definicja}
+Funkcja $f:[a,b]\to\R$ jest całkowalna w sensie Riemanna z całką $I$, jeśli dla każdego $\varepsilon>0$ istnieje $\delta>0$ takie, że dla każdego podziału znaczonego $\mathcal P$ o $\mesh P<\delta$ zachodzi $|S(f,\mathcal P)-I|<\varepsilon$.
+\end{definicja}
+\begin{stwierdzenie}
+Każda funkcja całkowalna w sensie Riemanna jest ograniczona.
+\end{stwierdzenie}
+\begin{proof}
+Gdyby $f$ była nieograniczona, dla dowolnego ustalonego podziału musiałaby być nieograniczona na co najmniej jednej komórce. Zmieniając znacznik tylko na niej, uzyskalibyśmy sumy o dowolnie dużej różnicy, wbrew definicji całki.
+\end{proof}
+\begin{twierdzenie}[Darboux]
+Ograniczona funkcja $f:[a,b]\to\R$ jest całkowalna w sensie Riemanna wtedy i tylko wtedy, gdy jest całkowalna w sensie Darboux. Wartości całek są równe.
+\end{twierdzenie}
+\begin{proof}
+Niech $I$ będzie całką Riemanna. Dla danego $\varepsilon>0$ bierzemy podział $P$ o średnicy odpowiadającej błędowi $\varepsilon/4$. Dla dowolnego $\eta>0$ na każdej komórce można wybrać znaczniki z wartościami funkcji mniejszymi od $m_i+\eta/(b-a)$ i większymi od $M_i-\eta/(b-a)$. Stąd $U(f,P)-L(f,P)<\varepsilon/2+2\eta$. Przechodząc z $\eta\downarrow0$, uzyskujemy kryterium Darboux.
+
+Odwrotnie, niech $J$ będzie całką Darboux i $|f|\le M$. Wybieramy $P_0$ z $U(f,P_0)-L(f,P_0)<\varepsilon/2$. Niech $k$ oznacza liczbę punktów wewnętrznych $P_0$. Dla dowolnego podziału $P$ komórkami złymi nazwiemy te, których wnętrza zawierają punkt $P_0$; jest ich co najwyżej $k$. Ich łączna długość jest mniejsza od $k\mesh P$. Na pozostałych komórkach oscylację kontrolują komórki $P_0$, więc
+\[
+U(f,P)-L(f,P)\le U(f,P_0)-L(f,P_0)+2Mk\mesh P.
+\]
+Dla dostatecznie małej $\mesh P$ prawa strona jest mniejsza od $\varepsilon$. Ponieważ $L(f,P)\le J\le U(f,P)$, każda suma znaczona różni się od $J$ o mniej niż $\varepsilon$.
+\end{proof}
+\begin{twierdzenie}[Kryterium Lebesgue'a]
+Ograniczona funkcja $f:[a,b]\to\R$ jest całkowalna w sensie Riemanna wtedy i tylko wtedy, gdy zbiór jej punktów nieciągłości $D(f)$ ma miarę Lebesgue'a równą zeru.
+\end{twierdzenie}
+\begin{proof}
+Dla $x\in[a,b]$ definiujemy oscylację \[\osc_x f=\inf_{r>0}\left(\sup_{y\in[a,b]\cap(x-r,x+r)}f(y)-\inf_{y\in[a,b]\cap(x-r,x+r)}f(y)\right).\] Funkcja jest ciągła w $x$ wtedy i tylko wtedy, gdy $\osc_x f=0$. Zbiory $D_r=\{x:\osc_x f\ge r\}$ są zwarte, a $D(f)=\bigcup_{n\ge1}D_{1/n}$.
+
+Niech $\lambda(D(f))=0$, $|f|\le M$, a $\varepsilon>0$. Wybieramy $r>0$ z $r(b-a)<\varepsilon/2$ i otwarty zbiór $G\supset D_r$ o mierze $\lambda(G)<\varepsilon/(4M)$ (gdy $M=0$, teza jest oczywista). Punkty spoza $G$ mają otoczenia o oscylacji mniejszej od $r$. Z lematu o liczbie Lebesgue'a dla skończonego podpokrycia wynika, że przy dostatecznie drobnym podziale komórki albo leżą w $G$, albo mają oscylację mniejszą od $r$. Wtedy $U(f,P)-L(f,P)\le2M\lambda(G)+r(b-a)<\varepsilon$.
+
+Odwrotnie, dla ustalonego $r>0$ i dowolnego $\varepsilon>0$ wybieramy $P$ z $U(f,P)-L(f,P)<r\varepsilon$. Każda komórka, której wnętrze przecina $D_r$, ma oscylację co najmniej $r$. Ich łączna długość jest co najwyżej $\varepsilon$. Zbiór $D_r$ jest pokryty ich domknięciami oraz skończonym zbiorem punktów podziału, zatem $\lambda(D_r)\le\varepsilon$. Przechodzimy z $\varepsilon\downarrow0$, a następnie sumujemy po $r=1/n$.
+\end{proof}
+\begin{twierdzenie}[Własności]
+Klasa $\mathcal R[a,b]$ funkcji całkowalnych w sensie Riemanna jest kratą wektorową. Całka jest liniowa, monotoniczna i addytywna względem przedziału. Granica jednostajna funkcji całkowalnych w sensie Riemanna również jest całkowalna i całki zbiegają. Jeśli $f\in\mathcal R[a,b]$, to $F(x)=\int_a^x f(t)\,\mathrm dt$ jest lipschitzowska i $F'(x)=f(x)$ w każdym punkcie ciągłości $f$ we wnętrzu przedziału. Jeśli $F$ jest ciągła na $[a,b]$, różniczkowalna na $(a,b)$, a jej pochodna ma całkowalne w sensie Riemanna przedłużenie na $[a,b]$, to $\int_a^b F'(x)\,\mathrm dx=F(b)-F(a)$.
+\end{twierdzenie}
+\begin{proof}
+Oszacowanie oscylacji $\osc(f+g)\le\osc(f)+\osc(g)$ daje liniowość i stabilność na operacje liniowe; nierówność $\bigl||f|-|g|\bigr|\le|f-g|$ pozwala otrzymać domkniętość na moduł, a więc na $\max$ i $\min$. Monotoniczność wynika z porównania sum. Addytywność na podprzedziałach otrzymujemy przez wstawienie punktu rozcięcia. Zbieżność jednostajna daje $|S(f_n,P)-S(f,P)|\le(b-a)\|f_n-f\|_\infty$. Dla $F$ mamy $|F(y)-F(x)|\le\|f\|_\infty|y-x|$; ilorazy różnicowe dążą do $f(x)$ w punktach ciągłości. Ostatnią tezę uzyskujemy z twierdzenia Lagrange'a na komórkach i przejścia do granicy sum Riemanna.
+\end{proof}
+\begin{uwaga}[Słabości całki Riemanna]
+Zbieżność punktowa nie zachowuje całkowalności: jeżeli $\Q\cap[0,1]=\{q_1,q_2,\dots\}$, to $\ind{\{q_1,\dots,q_n\}}\to\ind{\Q\cap[0,1]}$. Całka Riemanna nie obejmuje funkcji nieograniczonych ani wszystkich pochodnych (istnieją różniczkowalne funkcje o nieograniczonej pochodnej). Seminorma $\int_a^b|f|$ po utożsamieniu funkcji równych p.w. jest normą, lecz otrzymana przestrzeń nie jest zupełna.
+\end{uwaga}
+\begin{przyklad}[Dlaczego brakuje zupełności]
+Na $[0,1]$ niech $f_n(x)=\min\{n,x^{-1/2}\}$ dla $x>0$ i $f_n(0)=n$. Każde $f_n$ jest ciągłe, a $f_n\uparrow f$ poza zerem, gdzie $f(x)=x^{-1/2}$. Zbieżność zmajoryzowana (lub bezpośrednie całkowanie) daje $\int_0^1|f_n-f|\,\mathrm dx\to0$, zatem $(f_n)$ jest ciągiem Cauchy'ego w normie $L^1$. Nie istnieje jednak ograniczona funkcja całkowalna w sensie Riemanna, która byłaby równa $f$ prawie wszędzie.
+\end{przyklad}
+
+\section{Całka Riemanna--Stieltjesa}
+\begin{definicja}
+Niech $f,\alpha:[a,b]\to\R$. Piszemy $f\in\mathcal R(\alpha)$, jeśli istnieje $I\in\R$ takie, że dla każdego $\varepsilon>0$ istnieje $\delta>0$ i dla każdego podziału znaczonego $\mathcal P$ o $\mesh P<\delta$ zachodzi
+\[
+\left|\sum_{i=1}^n f(t_i)(\alpha(x_i)-\alpha(x_{i-1}))-I\right|<\varepsilon.
+\]
+Wtedy $I=\int_a^b f\,\mathrm d\alpha$ jest całką Riemanna--Stieltjesa. Przy $\alpha(x)=x$ otrzymujemy całkę Riemanna.
+\end{definicja}
+\begin{uwaga}[Rozszerzenie]
+Dla niemalejącej $\alpha$ i ograniczonej $f$ można definiować sumy dolne i górne Stieltjesa z przyrostami $\alpha$. Jeżeli $\alpha$ ma skok, nawet ciągła w sensie jednostronnym funkcja $f$ może wymagać zgodności znaczników w otoczeniu tego skoku; zwykła całka Riemanna--Stieltjesa może wówczas nie istnieć.
+\end{uwaga}
+\begin{twierdzenie}[Narzędzia]
+Niech $V_a^b(\alpha)=\sup_P\sum_i|\alpha(x_i)-\alpha(x_{i-1})|$.
+\begin{enumerate}[label=(\alph*)]
+\item Jeśli $f$ jest ciągła i $\alpha$ ma wahanie ograniczone, to $f\in\mathcal R(\alpha)$ i $\bigl|\int_a^b f\,\mathrm d\alpha\bigr|\le\|f\|_\infty V_a^b(\alpha)$.
+\item Jeśli $f,\alpha$ mają wahanie ograniczone i nie mają wspólnych punktów nieciągłości, to obie całki Stieltjesa istnieją oraz
+$\int_a^b f\,\mathrm d\alpha+\int_a^b\alpha\,\mathrm df=f(b)\alpha(b)-f(a)\alpha(a)$.
+\item Jeśli $\alpha\in C^1[a,b]$ i $f\in\mathcal R[a,b]$, to $\int_a^b f\,\mathrm d\alpha=\int_a^b f(x)\alpha'(x)\,\mathrm dx$.
+\item Całka jest liniowa w każdej zmiennej, jeśli odpowiednie całki istnieją. Dla niemalejącej $\alpha$ jest dodatnia i monotoniczna względem $f$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Dla (a) rozbijamy każdą komórkę jednego podziału według punktów drugiego. Różnica sum przy zagęszczeniu jest ograniczona przez $\omega_f(\mesh P)V_a^b(\alpha)$, gdzie $\omega_f(h)=\sup_{|s-t|\le h}|f(s)-f(t)|$. Porównując dwa podziały z ich wspólnym zagęszczeniem i korzystając z $\omega_f(h)\to0$, dostajemy kryterium Cauchy'ego. Oszacowanie całki wynika z oszacowania każdej sumy.
+
+Dla (b) korzystamy z dyskretnej tożsamości sumowania przez części i rozdzielamy błąd związany ze zmianą znaczników. Brak wspólnych nieciągłości i ograniczone wahanie pozwalają ten błąd uczynić dowolnie małym. W (c) twierdzenie Lagrange'a daje $\alpha(x_i)-\alpha(x_{i-1})=\alpha'(\xi_i)(x_i-x_{i-1})$; z jednostajnej ciągłości $\alpha'$ wynika, że możemy zastąpić $\xi_i$ przez $t_i$. Ostatnia teza wynika bezpośrednio z definicji.
+\end{proof}
+\begin{twierdzenie}[Kryterium oscylacyjne]
+Niech $\alpha:[a,b]\to\R$ będzie niemalejąca, prawostronnie ciągła, a $f:[a,b]\to\R$ ograniczona. Niech $\mu_\alpha$ będzie miarą Lebesgue'a--Stieltjesa określoną przez $\mu_\alpha((s,t])=\alpha(t)-\alpha(s)$ dla $a\le s<t\le b$, przy $\mu_\alpha(\{a\})=0$. Następujące warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $f\in\mathcal R(\alpha)$;
+\item $\mu_\alpha(D(f))=0$;
+\item dla każdego $\varepsilon>0$ istnieje $\delta>0$ takie, że dla każdego podziału $P$ o $\mesh P<\delta$ zachodzi $\sum_i\osc_{[x_{i-1},x_i]}f\,(\alpha(x_i)-\alpha(x_{i-1}))<\varepsilon$.
+\end{enumerate}
+Wówczas $\int_a^b f\,\mathrm d\alpha=\int_{(a,b]}f\,\mathrm d\mu_\alpha$.
+\end{twierdzenie}
+\begin{proof}
+Dla niemalejącej $\alpha$ suma górna minus dolna jest dokładnie sumą z (iii). Porównywanie sum dla dowolnych znaczników dowodzi (i)$\Leftrightarrow$(iii), tak samo jak w kryterium Darboux.
+
+Niech $M=\|f\|_\infty$. Jeżeli $\mu_\alpha(D(f))=0$, to dla $r>0$ zwarty zbiór $D_r=\{x:\osc_x f\ge r\}$ można pokryć zbiorem otwartym $G$ o dowolnie małej mierze $\mu_\alpha$. Poza $G$ oscylacje $f$ są lokalnie mniejsze od $r$. Przy dostatecznie drobnym podziale przedziały leżące w $G$ wnoszą do sumy (iii) nie więcej niż $2M\mu_\alpha(G)$, a pozostałe nie więcej niż $r(\alpha(b)-\alpha(a))$. To dowodzi (iii).
+
+Jeśli zachodzi (iii), wybieramy podziały z coraz mniejszą średnicą i punktami podziału poza atomami $\mu_\alpha$ (można to zrobić, ponieważ atomów jest co najwyżej przeliczalnie wiele). Komórki o wnętrzach przecinających $D_r$ mają oscylację co najmniej $r$, więc ich suma miar jest arbitralnie mała. Punkty wewnętrzne leżące na granicach komórek nie są atomami, zaś obecność punktu $b$ w $D_r$ powoduje oscylację w ostatniej komórce. Przy konwencji $\mu_\alpha(\{a\})=0$ otrzymujemy $\mu_\alpha(D_r)=0$. Sumowanie po $r=1/n$ daje (ii).
+
+Funkcje schodkowe dolne i górne względem podziałów zbiegają prawie wszędzie do $f$ i mają całki Lebesgue'a--Stieltjesa równe sumom dolnym i górnym. Zbieżność zmajoryzowana daje ostatnią równość.
+\end{proof}
+\begin{uwaga}[Atomy i końce przedziału]
+Jeżeli $\mu_\alpha(\{c\})=\alpha(c)-\alpha(c-)>0$ dla $c\in(a,b]$, warunek z poprzedniego twierdzenia wymusza ciągłość $f$ w $c$ (przy $c=b$ w sensie lewostronnym). Konwencja $\mu_\alpha(\{a\})=0$ wynika z użycia przyrostów od $\alpha(a)$; przy innej konwencji konieczna jest osobna poprawka za atom w $a$.
+\end{uwaga}
+\begin{przyklad}[Część ciągła i atomy]
+Na $[0,1]$ weźmy $\alpha(x)=x+\tfrac12\ind{[1/3,1]}(x)+\ind{[2/3,1]}(x)$. Dla $f(x)=x^2$ istnieje całka Stieltjesa i
+\[
+\int_0^1x^2\,\mathrm d\alpha=\int_0^1x^2\,\mathrm dx+\frac12\left(\frac13\right)^2+\left(\frac23\right)^2=\frac13+\frac1{18}+\frac49=\frac56.
+\]
+Dla $\alpha(x)=\lfloor x\rfloor$ na $[0,n]$, $n\in\N$, oraz ciągłej $f$ otrzymujemy analogicznie $\int_0^n f\,\mathrm d\alpha=\sum_{k=1}^n f(k)$.
+\end{przyklad}
+\begin{przyklad}[Wspólny skok]
+Niech $c\in(a,b)$ i $f=\alpha=\ind{[c,b]}$. Zwykła całka Riemanna--Stieltjesa nie istnieje: na przedziale zawierającym $c$ suma zależy od tego, czy znacznik wybrano przed czy po $c$. Natomiast pojęcie całki Kurzweila--Stieltjesa pozwoli otrzymać wartość $1$.
+\end{przyklad}
+\begin{przyklad}[Dlaczego nie wystarczy wybrać jednego podziału]
+Niech $a<c<b$, $\alpha=\ind{[c,b]}$ i $f=\ind{(c,b]}$, przy czym $f(c)=0$. Dla podziału zawierającego $c$ każda suma dolna i górna Stieltjesa może być równa zeru: dodatni przyrost funkcji całkującej kończy się w $c$, a na $[x_{i-1},c]$ funkcja $f$ jest równa zeru. Podziały przecinające $c$ mogą jednak dawać sumy $0$ albo $1$, zależnie od znacznika. Warunek „dla wszystkich dostatecznie drobnych podziałów” w definicji Riemanna--Stieltjesa jest więc istotny; zagęszczanie jednego wybranego podziału nie wystarcza.
+\end{przyklad}
+\begin{przyklad}[Wpływ funkcji całkującej na całkowalność]
+Na $[0,1]$ niech $f=\ind{\Q\cap(0,1/4]}$ i $\alpha=\ind{[1/2,1]}$. Funkcja $f$ nie jest całkowalna Riemanna względem długości, gdyż jest nieciągła na całym $(0,1/4)$. Jest jednak ciągła i równa zeru w otoczeniu jedynego atomu $\mu_\alpha$, zatem $\int_0^1 f\,\mathrm d\alpha=0$ w sensie Riemanna--Stieltjesa. Z kolei funkcja z przykładu 3.7 jest Riemanna całkowalna względem długości, ale nie względem wskazanego $\alpha$. Dla różnych funkcji całkujących klasy całkowalności nie muszą być porównywalne przez inkluzję.
+\end{przyklad}
+
+% ============================================================
+% UZUPELNIENIE MATEMATYCZNE: ROZDZIAL 3
+% ============================================================
+\subsection*{Rachunek praktyczny: skoki i kontrola błędu}
+\begin{twierdzenie}[Jeden skok w zwykłej całce Stieltjesa]\label{tw:rs-jeden-skok}
+Niech $a<c<b$, $A\ne0$, $\alpha(x)=A\ind{[c,b]}(x)$ dla $x\in[a,b]$, a $f:[a,b]\to\R$ będzie ograniczona. Całka Riemanna--Stieltjesa $\int_a^b f\,\mathrm d\alpha$ istnieje wtedy i tylko wtedy, gdy $f$ jest ciągła w $c$. Wówczas $\int_a^b f\,\mathrm d\alpha=Af(c)$. Jeśli skok jest umieszczony w $b$, warunkiem jest ciągłość lewostronna $f$ w $b$, a dla skoku umieszczonego w $a$ funkcją $\ind{[a,b]}$ integrator jest stały i całka wynosi zero.
+\end{twierdzenie}
+\begin{proof}
+W każdej sumie Stieltjesa wszystkie przyrosty $\alpha$ są zerowe poza jedną komórką $[u,v]$, dla której $u<c\le v$. Suma wynosi więc $Af(t)$, gdzie $t\in[u,v]$. Jeśli $f$ jest ciągła w $c$, dostatecznie mała średnica podziału wymusza $|f(t)-f(c)|<\varepsilon/|A|$.
+
+Odwrotnie, załóżmy istnienie całki i rozważmy dowolny ciąg $t_n\to c$. Dobieramy komórki $[u_n,v_n]$ o długościach dążących do zera, zawierające zarówno $c$, jak i $t_n$, przy czym $u_n<c\le v_n$. Uzupełniamy je do podziałów o średnicach dążących do zera. Sumy ze znacznikiem $t_n$ oraz ze znacznikiem $c$ muszą mieć tę samą granicę. Zatem $A(f(t_n)-f(c))\to0$. Ponieważ $(t_n)$ był dowolny, $f$ jest ciągła w $c$. Wariant dla $c=b$ ma identyczny dowód z granicą jednostronną. W punkcie $a$ integrator $A\ind{[a,b]}$ ma wszystkie przyrosty równe zeru.
+\end{proof}
+\begin{wniosek}[Skończona liczba atomów]\label{wn:rs-suma-skokow}
+Niech $\alpha(x)=h(x)+\sum_{k=1}^m A_k\ind{[c_k,b]}(x)$ na $[a,b]$, gdzie $h\in\BV[a,b]$ jest ciągła, $a<c_1<\cdots<c_m\le b$, a $A_k\in\R$. Jeśli $f\in C[a,b]$, to
+\[
+\int_a^b f\,\mathrm d\alpha=\int_a^b f\,\mathrm dh+\sum_{k=1}^m A_kf(c_k).
+\]
+W przypadku samej części skokowej wystarczy ciągłość $f$ we wszystkich $c_k$ (jednostronna w $b$).
+\end{wniosek}
+\begin{proof}
+Stosujemy liniowość całki i twierdzenie \ref{tw:rs-jeden-skok}. Dla ciągłego $f$ całka względem $h\in\BV$ istnieje na mocy twierdzenia z początku rozdziału.
+\end{proof}
+\begin{twierdzenie}[Oszacowanie błędu sumy Stieltjesa]\label{tw:rs-blad-kwadratury}
+Niech $f\in C[a,b]$, $\alpha\in\BV[a,b]$, a $\mathcal P$ będzie dowolnym podziałem znaczonym o średnicy $h$. Wówczas
+\[
+\left|S(f,\alpha;\mathcal P)-\int_a^b f\,\mathrm d\alpha\right|
+\le \omega_f(h)\Var_a^b(\alpha),
+\qquad
+\omega_f(h):=\sup_{\substack{x,y\in[a,b]\\|x-y|\le h}}|f(x)-f(y)|.
+\]
+Jeżeli $f$ jest lipschitzowska ze stałą $L$, błąd nie przekracza $Lh\Var_a^b(\alpha)$.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy podział $\mathcal P$ i zagęszczajmy każdą jego komórkę niezależnie, wybierając dowolne nowe znaczniki. Wewnątrz komórki $[x_{i-1},x_i]$ oba rodzaje znaczników są oddalone najwyżej o $h$; zatem różnica starego wkładu i sumy po jej zagęszczeniu ma moduł nie większy niż $\omega_f(h)\Var_{x_{i-1}}^{x_i}(\alpha)$. Po zsumowaniu otrzymujemy podane oszacowanie dla różnicy sum. Przy średnicy zagęszczenia dążącej do zera nowa suma dąży do całki Riemanna--Stieltjesa.
+\end{proof}
+\begin{przyklad}[Skończona kwadratura ze znanym błędem]
+Niech $f(x)=e^x$ na $[0,1]$ i $\alpha(x)=x+2\ind{[1/2,1]}(x)$. Wówczas
+$\int_0^1e^x\,\mathrm d\alpha=e-1+2\sqrt e$.
+Dla dowolnego podziału znaczonego o średnicy $h$ twierdzenie \ref{tw:rs-blad-kwadratury} daje
+$|S-(e-1+2\sqrt e)|\le 3eh$, gdyż $\Var_0^1(\alpha)=3$ i $\omega_f(h)\le eh$.
+\end{przyklad}
+\begin{uwaga}[Zgodność trzech konwencji]
+W zwykłej całce Riemanna--Stieltjesa przy skoku w $c$ dowolne znaczniki wymuszają ciągłość $f$ w $c$. W całce Kurzweila--Stieltjesa cechowanie może wymusić znacznik $c$ i wówczas poprawny wkład skoku wynosi $f(c)\Delta^-\alpha(c)$, nawet jeśli $f$ nie jest ciągła. Całka Lebesgue'a--Stieltjesa wymaga mierzalności i całkowalności względem miary, lecz nie ciągłości w atomie: wkład wynosi również $f(c)\mu_\alpha(\{c\})$. Zbieżność wartości całek nie oznacza więc równości ich dziedzin.
+\end{uwaga}
+
+\section{Całka Henstocka--Kurzweila}
+\begin{definicja}
+\emph{Cechowaniem} na $[a,b]$ nazywamy dowolną funkcję $\delta:[a,b]\to(0,\infty)$. Podział znaczony $\mathcal P=\{(t_i,[x_{i-1},x_i])\}$ jest $\delta$-drobny, jeśli $t_i\in[x_{i-1},x_i]\subset(t_i-\delta(t_i),t_i+\delta(t_i))$ dla każdego $i$.
+\end{definicja}
+\begin{lemat}[Cousina]
+Dla każdego cechowania $\delta$ na $[a,b]$ istnieje $\delta$-drobny podział znaczony tego przedziału.
+\end{lemat}
+\begin{proof}
+Przypuśćmy, że przedział nie ma takiego podziału. Dzielimy go na połowy; co najmniej jedna również nie ma drobnego podziału, bo dwa drobne podziały połówek można połączyć. Powtarzając, dostajemy zstępujący ciąg domkniętych przedziałów $J_n$ długości dążących do zera, z których żaden nie ma podziału drobnego. Ich przecięcie jest punktem $t$. Dla dostatecznie dużego $n$ mamy $J_n\subset(t-\delta(t),t+\delta(t))$, więc pojedynczy znaczony przedział $(t,J_n)$ jest drobny. Sprzeczność.
+\end{proof}
+\begin{definicja}
+Funkcja $f:[a,b]\to\R$ jest całkowalna w sensie Henstocka--Kurzweila z całką $I$, jeżeli dla każdego $\varepsilon>0$ istnieje cechowanie $\delta$ takie, że dla każdego $\delta$-drobnego podziału znaczonego $\mathcal P$ zachodzi $|S(f,\mathcal P)-I|<\varepsilon$.
+\end{definicja}
+\begin{twierdzenie}[Kryterium Cauchy'ego]
+Funkcja $f$ jest całkowalna w sensie HK wtedy i tylko wtedy, gdy dla każdego $\varepsilon>0$ istnieje cechowanie $\delta$ takie, że $|S(f,\mathcal P)-S(f,\mathcal Q)|<\varepsilon$ dla wszystkich $\delta$-drobnych podziałów $\mathcal P,\mathcal Q$.
+\end{twierdzenie}
+\begin{proof}
+Konieczność wynika z nierówności trójkąta. Dla dostateczności wybieramy cechowania $\delta_n$ odpowiadające błędom $2^{-n}$, zastępujemy je kolejno minimami z poprzednimi i wybieramy $\delta_n$-drobne podziały $\mathcal P_n$ z lematu Cousina. Sumy $S(f,\mathcal P_n)$ tworzą ciąg Cauchy'ego. Niech $I$ będzie jego granicą. Dla danego $n$ i dowolnego $\delta_n$-drobnego podziału $\mathcal P$ porównujemy jego sumę z sumami $S(f,\mathcal P_m)$, $m\ge n$, i przechodzimy z $m\to\infty$. Otrzymujemy $|S(f,\mathcal P)-I|\le2^{-n}$.
+\end{proof}
+\begin{twierdzenie}[Liniowość, porządek i lokalność]
+Klasa funkcji HK-całkowalnych jest przestrzenią wektorową, całka jest liniowa i monotoniczna. Jeśli $a<c<b$, to $f$ jest całkowalna w sensie HK na $[a,b]$ wtedy i tylko wtedy, gdy jest całkowalna na obu $[a,c]$ i $[c,b]$; wówczas $\int_a^b f=\int_a^c f+\int_c^b f$.
+\end{twierdzenie}
+\begin{proof}
+Dla liniowości i monotoniczności bierzemy minimum odpowiednich cechowań. Ograniczenie HK-całki do podprzedziału otrzymujemy, uzupełniając dowolny drobny podział tego podprzedziału ustalonymi drobnymi podziałami dopełnienia; różnica pełnych sum kontroluje różnicę sum częściowych. W drugą stronę wybieramy cechowania na obu podprzedziałach, dla $t\ne c$ dodatkowo mniejsze od $|t-c|$, a w punkcie $c$ bierzemy minimum cechowań. Każdy przedział drobnego podziału przecinający $c$ ma znacznik $c$; rozcinamy go w $c$. Powstałe części dają drobne podziały z tą samą sumą.
+\end{proof}
+\begin{stwierdzenie}
+$\mathcal R[a,b]\subset\HK[a,b]$ i obie całki są równe.
+\end{stwierdzenie}
+\begin{proof}
+Do cechowania HK wystarczy wziąć funkcję stałą $\delta(t)=\delta_0/2$, gdzie $\delta_0$ pochodzi z definicji całki Riemanna.
+\end{proof}
+\begin{przyklad}[Funkcja Dirichleta jest HK-całkowalna]
+Niech $\Q\cap[0,1]=\{q_1,q_2,\dots\}$ i $D=\ind{\Q\cap[0,1]}$. Dla $\varepsilon>0$ kładziemy $\delta(q_k)=\varepsilon 2^{-k-3}$, a w punktach niewymiernych np. $\delta(t)=1$. Każdy składnik sumy z niezerowym znacznikiem $q_k$ ma długość mniejszą od $2\delta(q_k)$. Stąd dla każdego drobnego podziału $0\le S(D,\mathcal P)\le\sum_k 2\delta(q_k)<\varepsilon$. Całka HK jest równa $0$.
+\end{przyklad}
+\begin{lemat}[Zmiany na zbiorze miary zero]
+Jeśli $h:[a,b]\to\R$ ma skończone wartości i jest równa zeru poza zbiorem $N$ miary Lebesgue'a zero, to jej całka HK istnieje i wynosi $0$. To samo dotyczy całki McShane'a. Zmiana funkcji całkowalnej na zbiorze miary zero nie zmienia wartości żadnej z tych całek.
+\end{lemat}
+\begin{proof}
+Rozbijamy $N$ na zbiory $N_k=\{t\in N:k-1<|h(t)|\le k\}$, $k\ge1$. Dla ustalonego $\varepsilon>0$ wybieramy otwarte pokrycia $U_k\supset N_k$ z $\lambda(U_k)<\varepsilon2^{-k-1}/k$. Jeśli $t\in N_k$, dobieramy $\delta(t)>0$ tak, aby $(t-\delta(t),t+\delta(t))\subset U_k$; poza $N$ cechowanie jest dowolne. W podziale drobnym, również wolnym w sensie McShane'a, komórki z oznaczonymi punktami należącymi do $N_k$ mają rozłączne wnętrza i leżą w $U_k$. Ich wkład do modułu sumy jest co najwyżej $k\lambda(U_k)$. Sumując po $k$, dostajemy błąd mniejszy od $\varepsilon$.
+\end{proof}
+\begin{przyklad}[Wszystkie pochodne są całkowalne HK]
+Jeśli $F:[a,b]\to\R$ jest ciągła, różniczkowalna na $(a,b)$ i ma jednostronne pochodne skończone na końcach, to $F'$ (z tymi wartościami na końcach) jest HK-całkowalna i $\int_a^bF'(x)\,\mathrm dx=F(b)-F(a)$. Dla $\varepsilon>0$ przy każdym $t$ wybieramy $\delta(t)$ tak, aby $|F(y)-F(t)-F'(t)(y-t)|\le\varepsilon|y-t|/(b-a)$ dla bliskich $y$. Po oszacowaniu różnicy sumy i przyrostu $F$ na każdej komórce i zsumowaniu otrzymujemy błąd $\le\varepsilon$.
+\end{przyklad}
+\begin{przyklad}[Pochodna nieabsolutnie całkowalna]
+Niech $F(x)=x^2\cos(\pi/x^2)$ dla $x\in(0,1]$ i $F(0)=0$. Wtedy $F'(0)=0$ oraz $F'(x)=2x\cos(\pi/x^2)+(2\pi/x)\sin(\pi/x^2)$. Pochodna jest całkowalna HK i $\int_0^1F'(x)\,\mathrm dx=F(1)-F(0)=-1$. Natomiast $\int_0^1|F'(x)|\,\mathrm dx=\infty$: po podstawieniu $u=x^{-2}$ istotny składnik daje całkę porównywalną z $\int_\pi^\infty |\sin u|u^{-1}\,\mathrm du$.
+\end{przyklad}
+\begin{lemat}[Saksa--Henstocka]
+Niech $f\in\HK[a,b]$, $F(x)=\int_a^x f$, a $\delta$ niech zapewnia błąd $\varepsilon$ w definicji całki HK. Wówczas dla każdego skończonego $\delta$-drobnego \emph{częściowego} podziału znaczonego $\{(t_j,[u_j,v_j])\}$ o parami rozłącznych wnętrzach zachodzi
+\[
+\sum_j\left|f(t_j)(v_j-u_j)-(F(v_j)-F(u_j))\right|\le2\varepsilon.
+\]
+\end{lemat}
+\begin{proof}
+Uzupełniamy częściowy podział drobnymi podziałami luk; ich wkład jest dowolnie bliski całkom po lukach. Po dodaniu wkładów i użyciu addytywności $F$ otrzymujemy oszacowanie modułu sumy błędów przez $\varepsilon$ (z granicą po błędzie uzupełnienia). Dla dowolnego podzbioru przedziałów powtarzamy argument, zatem każda suma częściowa błędów jest ograniczona przez $\varepsilon$. Suma składników dodatnich i przeciwnych do ujemnych jest więc osobno $\le\varepsilon$, co daje oszacowanie $2\varepsilon$.
+\end{proof}
+\begin{twierdzenie}[Prawie wszędzie pochodna pierwotnej]
+Jeśli $f\in\HK[a,b]$, a $F(x)=\int_a^x f$, to $F$ jest ciągła, $F'(x)=f(x)$ prawie wszędzie oraz $f$ jest mierzalna w sensie Lebesgue'a.
+\end{twierdzenie}
+\begin{proof}
+Ciągłość $F$ wynika z lokalności całki HK i możliwości wymuszenia dowolnie małego wkładu komórki, zawierającej ustalony znacznik. Z lematu Saksa--Henstocka otrzymujemy następujące oszacowanie: dla ustalonego $r>0$ zbiór punktów, w których istnieją dowolnie małe przedziały $[u,v]$ zawierające $x$ i spełniające $|F(v)-F(u)-f(x)(v-u)|>r(v-u)$, ma miarę zewnętrzną zero. Istotnie, takie przedziały tworzą drobne pokrycie Vitaliego. Z lematu pokryciowego wybieramy przedziały o rozłącznych wnętrzach, których pięciokrotne powiększenia pokrywają zbiór. Dla każdej skończonej podrodziny lemat Saksa--Henstocka daje $r\sum_j(v_j-u_j)<2\varepsilon$. Stąd miara zewnętrzna zbioru jest nie większa niż $10\varepsilon/r$, a $\varepsilon$ jest dowolne. Stosując ten argument do $r=1/n$, dostajemy $F'=f$ poza zbiorem miary zero. Pochodna $F$ jest granicą mierzalnych ilorazów różnicowych na zbiorze swojego istnienia, co daje mierzalność $f$ po uzupełnieniu miary.
+\end{proof}
+\begin{twierdzenie}[Hake'a: związek z całkami niewłaściwymi]
+Niech $f:[a,b]\to\R$ ma skończone wartości. Wówczas $f\in\HK[a,b]$ wtedy i tylko wtedy, gdy $f\in\HK[c,b]$ dla każdego $c>a$ oraz istnieje skończona granica $L=\lim_{c\downarrow a}\int_c^b f$. W tym przypadku $\int_a^b f=L$, niezależnie od wartości $f(a)$.
+\end{twierdzenie}
+\begin{proof}
+Konieczność wynika z lokalności i ciągłości pierwotnej. Dla dostateczności definiujemy $F(a)=0$ i $F(x)=L-\int_x^b f$ dla $x>a$. Funkcja jest ciągła, a jej przyrosty na przedziałach oddalonych od $a$ są lokalnymi całkami. Wybieramy ciąg $b=c_0>c_1>\dots\downarrow a$. Na $J_n=[c_n,c_{n-1}]$ wybieramy cechowanie z lematu Saksa--Henstocka z błędem mniejszym od $\varepsilon2^{-n-2}$. Znaczniki wewnętrzne ograniczamy do ich $J_n$; w punktach $c_n$ bierzemy minimum dwóch sąsiednich cechowań. W $a$ wybieramy $\delta(a)>0$ z $|F(y)|+|f(a)|(y-a)<\varepsilon/2$ dla $a<y<a+\delta(a)$, a poza $a$ zmniejszamy cechowania tak, aby przedziały z innymi znacznikami nie zawierały $a$. Przedział początkowy dowolnego drobnego podziału ma znacznik $a$, pozostałe można pogrupować według $J_n$ (i ewentualnie rozciąć w $c_n$). Suma błędów jest mniejsza od $\varepsilon/2+\sum_n\varepsilon2^{-n-2}<\varepsilon$.
+\end{proof}
+\begin{przyklad}[Szeregi i całkowalność]
+Dla $I_n=(2^{-n},2^{-n+1}]$ i ciągu $(a_n)_{n\ge1}$ kładziemy $f(x)=2^n a_n$ na $I_n$, a $f(0)=0$. Wówczas
+\[
+f\in\HK[0,1]\iff\sum_{n\ge1}a_n\ \text{jest zbieżny},\qquad
+f\in\mathcal L^1[0,1]\iff\sum_{n\ge1}|a_n|<\infty.
+\]
+Pierwsza równoważność wynika z twierdzenia Hake'a, druga z $\int_{I_n}|f|\,\mathrm d\lambda=|a_n|$. Ponadto $f$ jest całkowalna Riemanna dokładnie wtedy, gdy $\sup_n2^n|a_n|<\infty$. Dla $a_n=(-1)^{n+1}/n$ otrzymujemy $\int_0^1f=\log2$ w sensie HK, lecz $\int_0^1|f|\,\mathrm d\lambda=\infty$.
+\end{przyklad}
+\begin{przyklad}[Nie każda osobliwość jest całkowalna]
+Funkcja $f(x)=1/x$ na $(0,1]$, niezależnie od skończonej wartości w $0$, nie jest całkowalna HK na $[0,1]$, bo $\int_c^1\mathrm dx/x=-\log c\to\infty$. Na $[-1,1]$ funkcja $1/x$ z dowolną skończoną wartością w $0$ ma wartość główną Cauchy'ego równą $0$, ale nie ma całki HK, gdyż jej ograniczenie do $[0,1]$ nie jest HK-całkowalne.
+\end{przyklad}
+\begin{twierdzenie}[Mnożniki o wahaniu ograniczonym]
+Niech $f\in\HK[a,b]$, $F(x)=\int_a^x f$, a $g:[a,b]\to\R$ ma wahanie ograniczone. Wtedy $fg\in\HK[a,b]$ oraz
+\[
+\int_a^b f(x)g(x)\,\mathrm dx=F(b)g(b)-F(a)g(a)-\int_a^b F\,\mathrm dg,
+\]
+gdzie ostatnia całka jest zwykłą całką Riemanna--Stieltjesa.
+\end{twierdzenie}
+\begin{proof}
+Całka $\int_a^b F\,\mathrm dg$ istnieje, ponieważ $F$ jest ciągła, a $g$ ma wahanie ograniczone. Dla $\delta$ z lematu Saksa--Henstocka i $\Delta F_i=F(x_i)-F(x_{i-1})$ mamy
+$|S(fg,\mathcal P)-\sum_i g(t_i)\Delta F_i|\le2\varepsilon\|g\|_\infty$.
+Ponieważ $\sum_i|g(t_i)-g(x_{i-1})|\le V_a^b(g)$ i $|\Delta F_i|\le\omega_F(\mesh P)$, różnica między $\sum_i g(t_i)\Delta F_i$ i $\sum_i g(x_{i-1})\Delta F_i$ nie przekracza $\omega_F(\mesh P)V_a^b(g)$. Dokładne sumowanie przez części daje
+$\sum_i g(x_{i-1})\Delta F_i=F(b)g(b)-F(a)g(a)-\sum_iF(x_i)(g(x_i)-g(x_{i-1}))$.
+Ostatnia suma dąży do $\int F\,\mathrm dg$. Bierzemy $\varepsilon$ małe i dodatkowo ograniczamy cechowanie stałą zapewniającą dostatecznie małą średnicę podziałów.
+\end{proof}
+\begin{uwaga}[Ograniczenia całki HK]
+Klasa $\HK[a,b]$ nie jest kratą: z całkowalności $f$ nie wynika całkowalność $|f|$ (przykład z pochodną nieabsolutnie całkowalną). Nie jest też algebrą, ponieważ $x^{-1/2}$ na $(0,1]$ po odpowiednim określeniu w zerze ma całkę HK, a jej kwadrat $1/x$ nie. Seminorma Alexiewicza $\|f\|_A=\sup_{x\in[a,b]}\left|\int_a^x f\right|$ jest normą po utożsamieniu funkcji równych prawie wszędzie, lecz otrzymana przestrzeń nie jest zupełna.
+\end{uwaga}
+\begin{uwaga}[Całka Henstocka--Kurzweila--Stieltjesa]
+Zastępując w sumach drobnych $x_i-x_{i-1}$ przez $\alpha(x_i)-\alpha(x_{i-1})$, otrzymujemy całkę HK--Stieltjesa. W szczególności dla $f=\alpha=\ind{[c,b]}$, $a<c<b$, całka istnieje i wynosi $1$. Cechowanie można dobrać tak, aby każdy przedział o niezerowym przyroście $\alpha$ miał znacznik $c$. Reguła całkowania przez części wymaga tu poprawek na wspólne skoki.
+\end{uwaga}
+
+% ============================================================
+% UZUPELNIENIE MATEMATYCZNE: ROZDZIAL 4
+% ============================================================
+\subsection*{Lemat Saksa--Henstocka: uzupełnienie konstrukcji}
+\begin{lemat}[Uzupełnianie podziału częściowego]\label{lem:hk-uzupelnianie}
+Niech $f\in\HK[a,b]$, $F(x)=\int_a^x f$, a $\delta$ będzie cechowaniem, dla którego wszystkie $\delta$-drobne sumy na $[a,b]$ różnią się od $F(b)-F(a)$ o mniej niż $\varepsilon$. Jeśli $\mathcal Q=\{(t_j,[u_j,v_j])\}_{j=1}^m$ jest dowolnym $\delta$-drobnym podziałem częściowym z rozłącznymi wnętrzami, to
+\[
+\left|\sum_{j=1}^m\bigl(f(t_j)(v_j-u_j)-F(v_j)+F(u_j)\bigr)\right|\le\varepsilon.
+\]
+Ponadto suma modułów wyrazów w nawiasach jest nie większa niż $2\varepsilon$.
+\end{lemat}
+\begin{proof}
+Uporządkujmy przedziały częściowego podziału. Ich dopełnienie składa się ze skończenie wielu (być może pustych) przedziałów domkniętych $J_k$ o rozłącznych wnętrzach. Dla dowolnego $\eta>0$ lokalność całki HK i lemat Cousina pozwalają wybrać na każdym niepustym $J_k$ podział znaczony, drobny względem $\delta$ oraz względem cechowania dającego błąd $\eta/(m+1)$ dla lokalnej całki po $J_k$. Połączenie tych podziałów z $\mathcal Q$ daje pełny podział $\delta$-drobny. Przyrosty $F$ na wszystkich komórkach sumują się do $F(b)-F(a)$. Błąd na $J_k$ jest mniejszy od $\eta/(m+1)$, zatem suma błędów na $\mathcal Q$ ma moduł nie większy niż $\varepsilon+\eta$. Przechodzimy z $\eta\downarrow0$.
+
+Ten sam argument działa dla każdego podzbioru komórek $\mathcal Q$. Stosując go osobno do komórek o błędzie dodatnim i ujemnym, widzimy, że suma błędów dodatnich oraz modułów błędów ujemnych nie przekracza osobno $\varepsilon$. Ich suma jest więc nie większa niż $2\varepsilon$.
+\end{proof}
+\begin{uwaga}[Dlaczego ograniczamy każdą sumę częściową]
+Nie wystarcza samo oszacowanie modułu sumy wszystkich błędów: dodatnie i ujemne błędy mogą się znosić. Dopiero możliwość wybrania dowolnego podzbioru komórek w lemacie \ref{lem:hk-uzupelnianie} pozwala otrzymać sumę modułów. Jest ona potrzebna w dowodzie całkowania przez części i przy własnościach funkcji pierwotnych.
+\end{uwaga}
+
+\subsection*{Efektywne podstawienie i całkowanie przez części}
+\begin{twierdzenie}[Podstawienie przez dyfeomorfizm klasy $C^1$]\label{tw:hk-podstawienie}
+Niech $a<b$, $u<v$, $f\in\HK[a,b]$ i niech $\phi:[u,v]\to[a,b]$ będzie rosnącym dyfeomorfizmem klasy $C^1$, to znaczy $\phi\in C^1[u,v]$, $\phi(u)=a$, $\phi(v)=b$ i $\phi'(t)>0$ dla $t\in[u,v]$. Wówczas $t\mapsto f(\phi(t))\phi'(t)$ jest HK-całkowalna na $[u,v]$ oraz
+\[
+\int_u^v f(\phi(t))\phi'(t)\,\mathrm dt=\int_a^b f(x)\,\mathrm dx.
+\]
+Dla malejącego dyfeomorfizmu z $\phi(u)=b$, $\phi(v)=a$ całka po prawej ma odwrócone granice.
+\end{twierdzenie}
+\begin{proof}
+Niech $F(x)=\int_a^x f$. Funkcja $F$ jest ciągła i $F'=f$ prawie wszędzie. Najpierw uzasadnimy, że $F\circ\phi$ należy do $\AC G_*[u,v]$. Z charakteryzacji pierwotnych HK w rozdziale o wąskiej całce Denjoya mamy $[a,b]=\bigcup_n E_n$, gdzie zbiory $E_n$ są domknięte i $F\in\AC_*(E_n)$. Zbiory $\phi^{-1}(E_n)$ są domknięte i pokrywają $[u,v]$. Ponieważ $\phi$ jest lipschitzowska, dla rozłącznych przedziałów o końcach w $\phi^{-1}(E_n)$ i o małej łącznej długości obrazy mają także małą sumę długości i rozłączne wnętrza. Równość
+$\osc_J(F\circ\phi)=\osc_{\phi(J)}F$ dowodzi $F\circ\phi\in\AC_*(\phi^{-1}(E_n))$.
+
+Dyfeomorfizm i jego odwrotność są lipschitzowskie na zwartych przedziałach, więc przeciwobraz zbioru miary zero ma miarę zero. W punktach, w których $F'(\phi(t))=f(\phi(t))$, zwykła reguła łańcuchowa daje $(F\circ\phi)'(t)=f(\phi(t))\phi'(t)$. Twierdzenie o pierwotnych $\AC G_*$ daje całkowalność HK tej pochodnej i wzór Newtona--Leibniza; ostatni przyrost wynosi $F(b)-F(a)$.
+\end{proof}
+\begin{uwaga}[Zakres twierdzenia]
+Warunek $\phi'(t)>0$ zabezpiecza przed trudnościami z przenoszeniem zbiorów wyjątkowych. Istnieją mocniejsze twierdzenia o podstawieniu dla mniej regularnych funkcji $\phi$, ale bez dodatkowych warunków na składanie pierwotnych i na zbiory wyjątkowe nie wolno automatycznie zastępować dyfeomorfizmu dowolną funkcją absolutnie ciągłą.
+\end{uwaga}
+\begin{wniosek}[Całkowanie przez części z mnożnikiem absolutnie ciągłym]\label{wn:hk-ibp-ac}
+Niech $f\in\HK[a,b]$, $F(x)=\int_a^x f$, a $g\in\AC[a,b]$. Wtedy $fg\in\HK[a,b]$ i
+\[
+\int_a^b f(x)g(x)\,\mathrm dx=F(b)g(b)-F(a)g(a)-\int_a^b F(x)g'(x)\,\mathrm d\lambda(x).
+\]
+Ostatnia całka jest całką Lebesgue'a, ponieważ $F$ jest ograniczona i $g'\in L^1[a,b]$.
+\end{wniosek}
+\begin{proof}
+Funkcja $g$ ma wahanie ograniczone, gdyż $\Var(g)\le\int_a^b|g'|\,\mathrm d\lambda$. Stosujemy twierdzenie o mnożnikach BV z początku rozdziału i klasyczną identyfikację $\int F\,\mathrm dg=\int Fg'\,\mathrm d\lambda$ dla $F$ ciągłej i $g$ absolutnie ciągłej.
+\end{proof}
+\begin{przyklad}[Mnożnik i całka niewłaściwa]
+Niech $f(x)=\sin(1/x)/x$ dla $x\in(0,1]$ i $f(0)=0$. Podstawienie $t=1/x$ na $[\varepsilon,1]$ daje
+$\int_\varepsilon^1f(x)\,\mathrm dx=\int_1^{1/\varepsilon}(\sin t)/t\,\mathrm dt$.
+Całka po prawej jest zbieżna na mocy kryterium Dirichleta, zatem twierdzenie Hake'a daje
+$\int_0^1f(x)\,\mathrm dx=\int_1^\infty (\sin t)/t\,\mathrm dt$ w sensie HK. Nie zachodzi całkowalność Lebesgue'a wartości bezwzględnej, gdyż $\int_1^\infty|\sin t|/t\,\mathrm dt=\infty$.
+\end{przyklad}
+
+\subsection*{Kryterium dla osobliwości oscylacyjnych}
+\begin{twierdzenie}[Rodzina całek oscylacyjnych]\label{tw:hk-oscylacyjne}
+Niech $p\in\R$, $q>0$ i niech $f_{p,q}:[0,1]\to\R$ będzie określona wzorem $f_{p,q}(0)=0$ oraz $f_{p,q}(x)=x^{-p}\sin(x^{-q})$ dla $x\in(0,1]$. Wówczas
+\[
+ f_{p,q}\in\HK[0,1]\quad\Longleftrightarrow\quad p<q+1,
+ \qquad f_{p,q}\in L^1[0,1]\quad\Longleftrightarrow\quad p<1.
+\]
+W szczególności dla $1\le p<q+1$ całka HK istnieje, lecz nie jest bezwzględnie zbieżna.
+\end{twierdzenie}
+\begin{proof}
+Na $[\varepsilon,1]$ funkcja jest ciągła. Podstawiając $t=x^{-q}$, uzyskujemy
+\[
+\int_\varepsilon^1x^{-p}\sin(x^{-q})\,\mathrm dx
+=\frac1q\int_1^{\varepsilon^{-q}}t^{(p-1)/q-1}\sin t\,\mathrm dt.
+\]
+Oznaczmy wykładnik przez $\beta=(p-1)/q-1$. Gdy $\beta<0$, funkcja $t^\beta$ maleje do zera; kryterium Dirichleta daje zbieżność całki niewłaściwej. Gdy $\beta=0$, pierwotna $-\cos t$ nie ma granicy. Jeśli $\beta>0$, na kolejnych półokresach całki z $t^\beta\sin t$ nie dążą do zera; jest to sprzeczne z warunkiem Cauchy'ego dla całki niewłaściwej. Twierdzenie Hake'a daje pierwszą równoważność. Po zastąpieniu sinusa jego modułem i użyciu średniej $|\sin t|$ na okresach otrzymujemy zbieżność wtedy i tylko wtedy, gdy $\beta<-1$, co jest równoważne $p<1$.
+\end{proof}
+\begin{przyklad}[Dokładny próg przy całce $x^{-2}\sin(x^{-2})$]
+Dla $p=q=2$ mamy $2<3$, więc całka $\int_0^1x^{-2}\sin(x^{-2})\,\mathrm dx$ istnieje w sensie HK, ale nie w sensie Lebesgue'a. Podstawienie z dowodu daje użyteczną reprezentację obliczeniową
+$\int_0^1x^{-2}\sin(x^{-2})\,\mathrm dx=\tfrac12\int_1^\infty t^{-1/2}\sin t\,\mathrm dt$.
+\end{przyklad}
+
+\subsection*{Zbieżność funkcji HK-całkowalnych}
+\begin{twierdzenie}[Zbieżność z majorantą Lebesgue'a]\label{tw:hk-zbieznosc-dct}
+Niech $f_n:[a,b]\to\R$ będą mierzalne i HK-całkowalne, $f_n\to f$ prawie wszędzie, a $g\in L^1[a,b]$ niech spełnia $|f_n|\le g$ prawie wszędzie dla każdego $n$. Wówczas $f,f_n\in L^1[a,b]$ i
+$\lim_{n\to\infty}\int_a^bf_n\,\mathrm dx=\int_a^bf\,\mathrm dx$, przy czym po obu stronach całkę można rozumieć zarówno w sensie Lebesgue'a, jak i HK.
+\end{twierdzenie}
+\begin{proof}
+Z oszacowania $|f_n|\le g$ wynika bezwzględna całkowalność Lebesgue'a każdej $f_n$; zbieżność prawie wszędzie i $|f|\le g$ dają to samo dla $f$. Stosujemy twierdzenie Lebesgue'a o zbieżności zdominowanej oraz zgodność całek Lebesgue'a i HK. Nie jest to twierdzenie o dowolnej majorancie HK-całkowalnej.
+\end{proof}
+\begin{przyklad}[Dlaczego sama zbieżność punktowa nie wystarcza]
+Niech $f_n(0)=0$ i $f_n(x)=n\ind{(0,1/n]}(x)$ na $[0,1]$. Każda $f_n$ jest Riemanna, a więc HK-całkowalna, oraz $f_n(x)\to0$ w każdym punkcie $[0,1]$. Mimo to $\int_0^1f_n\,\mathrm dx=1$ dla każdego $n$. Nie istnieje jedna całkowalna funkcja $g$ z $|f_n|\le g$ prawie wszędzie dla wszystkich $n$.
+\end{przyklad}
+\begin{stwierdzenie}[Jednostajna zbieżność]\label{st:hk-zbieznosc-jednostajna}
+Jeśli $f_n\in\HK[a,b]$ i $f_n\to f$ jednostajnie, to $f\in\HK[a,b]$ oraz $\int_a^bf_n\to\int_a^bf$.
+\end{stwierdzenie}
+\begin{proof}
+Dla dwóch funkcji HK-całkowalnych $h,k$ zachodzi $|\int_a^b(h-k)|\le(b-a)\|h-k\|_\infty$, ponieważ nierówność dla sum przechodzi na granicę. Stąd całki $I_n=\int_a^bf_n$ tworzą ciąg Cauchy'ego. Dla ustalonego $\varepsilon>0$ wybieramy $n$ z $(b-a)\|f-f_n\|_\infty<\varepsilon/3$ oraz $|I-I_n|<\varepsilon/3$, gdzie $I=\lim I_n$. Następnie bierzemy cechowanie dla $f_n$ zapewniające błąd sumy mniejszy niż $\varepsilon/3$. Nierówność trójkąta kończy dowód bez wcześniejszego zakładania całkowalności $f$.
+\end{proof}
+
+\section{Całka Perrona}
+Całka Perrona zastępuje sumy całkowe porównywaniem funkcji, których pochodne Diniego leżą po obu stronach funkcji całkowanej. Daje inną charakterystykę tej samej skalarnej klasy co całka HK.
+\begin{definicja}[Pochodne Diniego i funkcje porównawcze]
+Dla ciągłej $H:[a,b]\to\R$ definiujemy
+\[
+\Dn H(x)=\liminf_{\substack{y\to x\\y\ne x}}\frac{H(y)-H(x)}{y-x},\qquad
+\Du H(x)=\limsup_{\substack{y\to x\\y\ne x}}\frac{H(y)-H(x)}{y-x}.
+\]
+Na końcach przedziału granice są jednostronne; dopuszczamy wartości nieskończone. Dla funkcji $f:[a,b]\to\R$ o skończonych wartościach \emph{funkcją górną} nazywamy ciągłą funkcję $M$ z $M(a)=0$ i $\Dn M(x)\ge f(x)$ dla wszystkich $x$; \emph{funkcją dolną} nazywamy ciągłą $m$ z $m(a)=0$ i $\Du m(x)\le f(x)$ dla wszystkich $x$. Całki górną i dolną Perrona definiujemy przez
+\[
+\overline{(\mathrm{Pe})\!\int_a^b}f=\inf_M M(b),\qquad
+\underline{(\mathrm{Pe})\!\int_a^b}f=\sup_m m(b).
+\]
+Jeśli obie rodziny funkcji porównawczych są niepuste, a te kresy są równe i skończone, nazywamy $f$ całkowalną w sensie Perrona i oznaczamy tę wspólną wartość przez $(\mathrm{Pe})\int_a^b f$.
+\end{definicja}
+\begin{lemat}[Porządek funkcji porównawczych]
+Jeżeli $H:[a,b]\to\R$ jest ciągła i $\Dn H(x)\ge0$ dla każdego $x$, to $H$ jest niemalejąca. Dla każdej funkcji górnej $M$ i dolnej $m$ funkcja $M-m$ jest niemalejąca, a $m(b)\le M(b)$.
+\end{lemat}
+\begin{proof}
+Dla $\eta>0$ funkcja $G(x)=H(x)+\eta x$ ma $\Dn G\ge\eta$. Gdyby $G(v)<G(u)$ przy $u<v$, jej maksimum na $[u,v]$ byłoby osiągnięte w pewnym $c<v$. W dostatecznie bliskich punktach po prawej od $c$ ilorazy różnicowe są dodatnie, co przeczy maksymalności. Tak więc $G$ jest niemalejąca; przechodząc z $\eta\downarrow0$, otrzymujemy tezę dla $H$. Z definicji ograniczeń Diniego wynika $\Dn(M-m)\ge0$, gdyż dla dostatecznie bliskich $y$ ilorazy różnicowe $M$ i $m$ są odpowiednio $\ge f(x)-\eta$ i $\le f(x)+\eta$. Zastosowanie pierwszej części i $M(a)=m(a)=0$ kończy dowód.
+\end{proof}
+\begin{twierdzenie}[Perron i HK]
+Funkcje całkowalne w sensie Perrona i HK tworzą tę samą klasę, a wartości całek są równe.
+\end{twierdzenie}
+\begin{proof}
+Dowodzimy implikacji Perron $\Rightarrow$ HK. Niech $I$ będzie całką Perrona. Dla $\varepsilon>0$ wybieramy funkcje porównawcze $M,m$ z $M(b)-m(b)<\varepsilon/2$ i kładziemy $\eta=\varepsilon/(2(b-a))$. Z definicji granic Diniego dla każdego $t$ istnieje $\delta(t)>0$ taka, że dla $0<|y-t|<\delta(t)$ zachodzą nierówności
+\[
+\frac{M(y)-M(t)}{y-t}\ge f(t)-\eta,\qquad
+\frac{m(y)-m(t)}{y-t}\le f(t)+\eta.
+\]
+Dla przedziału $[u,v]$ z $u\le t\le v$ zawartego w otoczeniu cechowania, po rozpisaniu obu przyrostów przez punkt $t$ otrzymujemy
+\[
+m(v)-m(u)-\eta(v-u)\le f(t)(v-u)\le M(v)-M(u)+\eta(v-u).
+\]
+Sumujemy po komórkach dowolnego $\delta$-drobnego podziału, uzyskując $m(b)-\eta(b-a)\le S(f,\mathcal P)\le M(b)+\eta(b-a)$. Ponieważ $m(b)\le I\le M(b)$ i $M(b)-m(b)<\varepsilon/2$, każda suma różni się od $I$ o mniej niż $\varepsilon$. Jest to całkowalność HK.
+
+Implikacja HK $\Rightarrow$ Perron jest klasycznym, głębszym twierdzeniem teorii Perrona: konstruuje się ciągłe funkcje porównawcze ze ścisłą kontrolą zachowania pierwotnej również na zbiorze wyjątkowym. Sama równość pochodnych prawie wszędzie nie wystarcza. Traktujemy tę implikację jako wynik zewnętrzny.
+\end{proof}
+\begin{stwierdzenie}[Odtwarzanie pochodnej]
+Jeżeli $F:[a,b]\to\R$ jest ciągła i różniczkowalna na $(a,b)$ z jednostronnymi pochodnymi skończonymi na końcach, to $F'$ jest całkowalna w sensie Perrona i $(\mathrm{Pe})\int_a^b F'=F(b)-F(a)$.
+\end{stwierdzenie}
+\begin{proof}
+Funkcja $F-F(a)$ jest jednocześnie funkcją górną i dolną dla $F'$, a lemat o porządku ściska obie całki do jej przyrostu.
+\end{proof}
+\begin{przyklad}[Funkcja charakterystyczna liczb wymiernych]
+Niech $f=\ind{\Q\cap[0,1]}$. Dla $\varepsilon>0$ wybieramy otwarty zbiór $O\supset\Q\cap[0,1]$ o mierze Lebesgue'a mniejszej od $\varepsilon$ i definiujemy $M(x)=\lambda(O\cap[0,x])$, $m(x)=0$. Funkcja $M$ jest ciągła, niemalejąca i ma pochodną równą $1$ w każdym punkcie wymiernym, ponieważ punkt ten należy do wnętrza $O$. W pozostałych punktach $\Dn M\ge0=f$, a $\Du m=0\le f$ wszędzie. Stąd $0\le(\mathrm{Pe})\int_0^1f\le M(1)<\varepsilon$, więc całka jest równa zeru.
+\end{przyklad}
+\begin{uwaga}[Dlaczego warunek punktowy jest ważny]
+Nie wolno bezkrytycznie zastępować warunków na pochodne funkcji porównawczych nierównościami prawie wszędzie. Funkcja Cantora i funkcja zerowa mają pochodną równą zero prawie wszędzie, ale różne przyrosty na $[0,1]$. Potrzebna jest kontrola zbiorów wyjątkowych.
+\end{uwaga}
+
+% ============================================================
+% UZUPELNIENIE MATEMATYCZNE: ROZDZIAL 5
+% ============================================================
+\subsection*{Konstrukcja funkcji porównawczych}
+\begin{lemat}[Ścisłe funkcje górne i dolne]\label{lem:perron-scisle}
+Niech $f:[a,b]\to\R$ będzie funkcją Perrona-całkowalną, a $I=(\mathrm{Pe})\int_a^b f$. Dla każdego $\varepsilon>0$ istnieją funkcja górna $M$ i funkcja dolna $m$ takie, że
+$0\le M(b)-I<\varepsilon$, $0\le I-m(b)<\varepsilon$ i $0\le M(x)-m(x)$ dla wszystkich $x\in[a,b]$.
+\end{lemat}
+\begin{proof}
+Kresy definiujące całki górną i dolną Perrona są równe $I$, zatem z ich definicji można wybrać $M,m$ o wymaganych wartościach końcowych. Funkcja $M-m$ jest niemalejąca na mocy lematu o porządku z początku rozdziału i znika w $a$, więc pozostaje nieujemna na całym przedziale.
+\end{proof}
+\begin{twierdzenie}[Bezpośrednia konstrukcja dla funkcji z kontrolowanym zbiorem wyjątkowym]\label{tw:perron-wyjatki}
+Niech $E\subset(a,b)$ będzie zwartym zbiorem miary Lebesgue'a zero, a $F\in C[a,b]$ będzie różniczkowalna w każdym punkcie $[a,b]\setminus E$ (jednostronnie na końcach). Załóżmy, że $F$ jest lipschitzowska ze stałą $L$ na pewnym otwartym otoczeniu $U$ zbioru $E$, a $f:[a,b]\to\R$ jest funkcją o skończonych wartościach, równą $F'$ poza $E$ oraz ograniczoną przez $K$ na $E$. Wtedy $f$ jest Perrona-całkowalna i
+$(\mathrm{Pe})\int_a^b f=F(b)-F(a)$.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $\varepsilon>0$ i $B>L+K+1$. Wybieramy zbiór otwarty $O$ taki, że $E\subset O$, $\overline O\subset U$ oraz $B\lambda(O)<\varepsilon$; jest to możliwe dzięki zwartości $E$ i $\lambda(E)=0$. Definiujemy $H(x)=B\lambda(O\cap[a,x])$. Funkcja $H$ jest ciągła, niemalejąca, $H(a)=0$ i $H(b)<\varepsilon$. W każdym punkcie $x\in E$ funkcja $H$ jest lokalnie afiniczna o nachyleniu $B$, a nachylenia siecznych $F$ mają moduły nie większe niż $L$. Stąd $\Dn(F+H)(x)\ge B-L>f(x)$ oraz $\Du(F-H)(x)\le L-B<f(x)$.
+
+W punktach $x\notin E$ funkcja $F$ jest różniczkowalna; monotoniczność $H$ daje $\Dn(F+H)(x)\ge F'(x)=f(x)$ i $\Du(F-H)(x)\le F'(x)=f(x)$. Funkcje $M=F-F(a)+H$ i $m=F-F(a)-H$ są więc odpowiednio górna i dolna. Ich wartości końcowe różnią się o $2H(b)<2\varepsilon$. Z dowolności $\varepsilon$ i z definicji całki Perrona wynika teza.
+\end{proof}
+\begin{uwaga}[Granica argumentu]
+W poprzednim dowodzie kontrola lipschitzowska na otoczeniu $E$ była potrzebna, aby wybrać \emph{jedno} skończone nachylenie $B$ dominujące wszystkie sieczne w punktach wyjątkowych. Dla dowolnej pierwotnej HK taka kontrola nie musi istnieć. Dowód ogólnej implikacji HK $\Rightarrow$ Perron wymaga zatem subtelniejszej konstrukcji funkcji porównawczych; nie wynika z samej tożsamości $F'=f$ prawie wszędzie.
+\end{uwaga}
+\begin{wniosek}[Funkcje kawałkami gładkie]\label{wn:perron-kawalkami}
+Jeśli $F\in C[a,b]$ jest kawałkami klasy $C^1$ względem skończonego podziału $a=x_0<\dots<x_m=b$, to dowolna funkcja $f$ równa $F'$ poza punktami $x_1,\dots,x_{m-1}$ i mająca w tych punktach skończone wartości jest Perrona-całkowalna, a jej całka wynosi $F(b)-F(a)$.
+\end{wniosek}
+\begin{proof}
+Funkcja $F$ jest globalnie lipschitzowska i różniczkowalna poza skończonym zbiorem $E=\{x_1,\ldots,x_{m-1}\}$. Zastosowanie twierdzenia \ref{tw:perron-wyjatki} daje tezę. Jeśli w punktach końcowych pochodne jednostronne nie istnieją, wystarczy dowolnie przypisać skończone wartości funkcji $f$ i użyć osobno małych odcinków brzegowych; otrzymamy ten sam wynik przez zgodność Perrona z HK oraz niezmienniczość całki HK przy zmianach w skończonym zbiorze.
+\end{proof}
+\begin{przyklad}[Wartość bezwzględna]
+Dla $F(x)=|x|$ na $[-1,2]$ niech $f(x)=-1$ dla $x<0$, $f(x)=1$ dla $x>0$, a $f(0)=17$. Wówczas $f$ jest Perrona-całkowalna oraz $(\mathrm{Pe})\int_{-1}^{2}f=F(2)-F(-1)=1$. Dowód nie wymaga nadawania sztucznej pochodnej $F'(0)$.
+\end{przyklad}
+\subsection*{Porównanie konstrukcji Perrona i HK}
+\begin{stwierdzenie}[Kontrola sum z funkcji porównawczych]\label{st:perron-sumy}
+Niech $f:[a,b]\to\R$ ma skończone wartości, $M,m$ będą ciągłymi funkcjami porównawczymi z definicji Perrona, a $\eta>0$. Istnieje cechowanie $\delta$ takie, że każdy $\delta$-drobny podział znaczony $\mathcal P$ spełnia
+\[
+ m(b)-\eta(b-a)\le S(f,\mathcal P)\le M(b)+\eta(b-a).
+\]
+\end{stwierdzenie}
+\begin{proof}
+W punkcie $t$ wybieramy promień cechowania tak, aby ilorazy różnicowe funkcji $M$ były większe od $f(t)-\eta$, a ilorazy różnicowe funkcji $m$ mniejsze od $f(t)+\eta$, niezależnie od kierunku zbliżania się do $t$. Dla każdego $u\le t\le v$ z tej nierówności, po uwzględnieniu znaków mianowników dla $u<t$ i $v>t$, otrzymujemy
+$m(v)-m(u)-\eta(v-u)\le f(t)(v-u)\le M(v)-M(u)+\eta(v-u)$. Sumowanie po komórkach kończy dowód.
+\end{proof}
+W ten sposób implikacja Perron $\Rightarrow$ HK jest konstruktywna: para funkcji $M,m$ bliska w punkcie $b$ daje cechowanie kontrolujące \emph{każdą} sumę całkową. W kierunku odwrotnym trzeba zbudować funkcje $M,m$ z cechowań HK. Jest to klasyczne twierdzenie o ciągłych funkcjach porównawczych, przyjęte tutaj jako odrębny wynik zewnętrzny.
+
+\section{Całka Kurzweila--Stieltjesa}
+\label{sec:kurzweil-stieltjes}
+Całka Kurzweila--Stieltjesa (KS) łączy przyrosty funkcji całkującej z cechowaniami znanymi z całki Henstocka--Kurzweila. Jej przewaga nad całką Riemanna--Stieltjesa ujawnia się przede wszystkim przy wspólnych nieciągłościach funkcji podcałkowej i całkującej. W tej sekcji, oprócz kryteriów istnienia, wyprowadzimy wzory obliczeniowe i oszacowania błędu przybliżeń.
+
+\subsection*{Definicja, jednoznaczność i podstawowe oszacowania}
+\begin{definicja}[Całka Kurzweila--Stieltjesa]
+Niech $a<b$ i niech $f,\alpha:[a,b]\to\R$ będą funkcjami o skończonych wartościach. \emph{Cechowaniem} nazywamy funkcję $\delta:[a,b]\to(0,\infty)$. Podział znaczony $\mathcal P=\{(\xi_i,[x_{i-1},x_i])\}_{i=1}^n$, gdzie $a=x_0<\cdots<x_n=b$ i $\xi_i\in[x_{i-1},x_i]$, jest \emph{$\delta$-drobny}, jeżeli $[x_{i-1},x_i]\subset(\xi_i-\delta(\xi_i),\xi_i+\delta(\xi_i))$ dla każdego $i$. Definiujemy
+\[
+ S_\alpha(f,\mathcal P):=\sum_{i=1}^n f(\xi_i)\bigl(\alpha(x_i)-\alpha(x_{i-1})\bigr).
+\]
+Liczba $I\in\R$ jest całką KS z $f$ względem $\alpha$, jeżeli dla każdego $\varepsilon>0$ istnieje cechowanie $\delta$ takie, że $|S_\alpha(f,\mathcal P)-I|<\varepsilon$ dla każdego $\delta$-drobnego podziału znaczonego $\mathcal P$. Piszemy wówczas $I=(\KS)\int_a^b f\,\mathrm d\alpha$.
+\end{definicja}
+Istnienie podziału $\delta$-drobnego dla każdego cechowania wynika z lematu Cousina (lemat 4.2). Gdy $\alpha(x)=x$, definicja jest dokładnie definicją całki Henstocka--Kurzweila. W szczególności nie wolno utożsamiać dowolnej całki KS z całką względem miary Stieltjesa: potrzebne są dodatkowe założenia.
+
+\begin{twierdzenie}[Kryterium Cauchy'ego, liniowość i zgodność]
+\label{tw:ks-cauchy}
+Dla funkcji $f,\alpha:[a,b]\to\R$ o skończonych wartościach całka $(\KS)\int_a^b f\,\mathrm d\alpha$ istnieje wtedy i tylko wtedy, gdy dla każdego $\varepsilon>0$ istnieje cechowanie $\delta$ takie, że
+$|S_\alpha(f,\mathcal P)-S_\alpha(f,\mathcal Q)|<\varepsilon$ dla dowolnych dwóch $\delta$-drobnych podziałów znaczonych $\mathcal P,\mathcal Q$. Całka jest jednoznaczna i liniowa osobno w $f$ i $\alpha$, o ile rozważane całki istnieją. Jeżeli istnieje właściwa całka Riemanna--Stieltjesa $\int_a^b f\,\mathrm d\alpha$, to istnieje również całka KS i ma tę samą wartość.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli sumy są bliskie liczbie $I$, ich różnica jest mniejsza od $2\varepsilon$. Odwrotnie, dla każdego $m\ge1$ wybieramy cechowanie $\delta_m$ zapewniające różnice sum mniejsze niż $2^{-m}$ i zastępujemy je przez $\min(\delta_1,\ldots,\delta_m)$. Wybieramy odpowiadające im podziały $\mathcal P_m$. Gdy $k\ge m$, obie sumy $S_\alpha(f,\mathcal P_k)$ i $S_\alpha(f,\mathcal P_m)$ są porównywalne przez cechowanie $\delta_m$, toteż tworzą ciąg Cauchy'ego. Niech $I$ będzie jego granicą. Dla dowolnego $\delta_m$-drobnego podziału $\mathcal P$ porównujemy jego sumę z $\mathcal P_k$ i przechodzimy z $k$ do nieskończoności; otrzymujemy $|S_\alpha(f,\mathcal P)-I|\le2^{-m}$. Jednoznaczność wynika z istnienia podziałów drobnych dla minimum dwóch cechowań. Liniowość dostajemy z liniowości sum i ponownego użycia minimum cechowań. Dla całki Riemanna--Stieltjesa wystarcza cechowanie stałe mniejsze niż dopuszczalna średnica podziału.
+\end{proof}
+
+\begin{definicja}[Wahanie całkowite i funkcja regulowana]
+Dla $\alpha:[a,b]\to\R$ definiujemy $V_a^b(\alpha):=\sup_P\sum_i|\alpha(x_i)-\alpha(x_{i-1})|$, gdzie supremum przebiega wszystkie podziały $P$ przedziału $[a,b]$. Piszemy $\alpha\in\BV[a,b]$, jeśli $V_a^b(\alpha)<\infty$. Funkcja $f:[a,b]\to\R$ jest \emph{regulowana}, gdy istnieją skończone granice $f(t-)$ dla $t\in(a,b]$ i $f(t+)$ dla $t\in[a,b)$. Równoważnie $f$ jest jednostajną granicą funkcji schodkowych, przy czym wartości w skończonej liczbie węzłów można określać niezależnie od wartości na otwartych przedziałach.
+\end{definicja}
+\begin{proof}[Uzasadnienie równoważności]
+Każda funkcja schodkowa ma granice jednostronne, a jednostajna granica funkcji posiadających takie granice spełnia jednostronny warunek Cauchy'ego. W przeciwnym kierunku ustalmy $\varepsilon>0$. W każdym punkcie $t$ mamy jednostronne otoczenia, na których oscylacja $f$ jest mniejsza niż $\varepsilon$. Lemat Cousina dostarcza skończony podział, którego wnętrza komórek można rozciąć w znacznikach, tak aby na każdym z otrzymanych otwartych przedziałów oscylacja $f$ była mniejsza niż $\varepsilon$. Na tych przedziałach podstawiamy stałe, a w węzłach zachowujemy dokładne wartości $f$. Powstała funkcja schodkowa przybliża $f$ jednostajnie z błędem co najwyżej $\varepsilon$.
+\end{proof}
+
+\begin{lemat}[Oszacowanie przez wahanie]
+\label{lem:ks-var}
+Jeżeli $\alpha\in\BV[a,b]$ i $f:[a,b]\to\R$ jest ograniczona, to dla każdego podziału znaczonego $\mathcal P$ zachodzi $|S_\alpha(f,\mathcal P)|\le\|f\|_\infty V_a^b(\alpha)$. Jeżeli całka KS istnieje, to
+\[
+ \left|(\KS)\int_a^b f\,\mathrm d\alpha\right|\le\|f\|_\infty V_a^b(\alpha).
+\]
+\end{lemat}
+\begin{proof}
+Stosujemy nierówność trójkąta do sumy $S_\alpha(f,\mathcal P)$, a następnie przechodzimy do granicy po podziałach $\delta$-drobnych.
+\end{proof}
+
+\subsection*{Skoki, wartości w punktach i funkcje schodkowe}
+Dla regulowanej $g:[a,b]\to\R$ stosujemy oznaczenia $\Delta^-g(t)=g(t)-g(t-)$ dla $t\in(a,b]$, $\Delta^+g(t)=g(t+)-g(t)$ dla $t\in[a,b)$ i $\Delta g(t)=g(t+)-g(t-)$ dla $t\in(a,b)$. Na końcach przyjmujemy $\Delta^-g(a)=\Delta^+g(b)=0$ oraz $\Delta g(a)=\Delta^+g(a)$, $\Delta g(b)=\Delta^-g(b)$. Rozróżnienie skoku lewostronnego i prawostronnego jest istotne: $g(t)$ nie musi równać się żadnej granicy jednostronnej.
+
+\begin{lemat}[Punktowy wzór wykonawczy]
+\label{lem:ks-point}
+Niech $g:[a,b]\to\R$ będzie regulowana i $c\in[a,b]$. Dla dowolnej liczby $q\in\R$ zachodzi
+\[
+ (\KS)\int_a^b q\ind{\{c\}}(t)\,\mathrm dg(t)=q\Delta g(c).
+\]
+W szczególności wartość funkcji podcałkowej w punkcie skoku nie może być pomijana.
+\end{lemat}
+\begin{proof}
+Rozpatrzmy $a<c<b$. Dla $t\ne c$ wybieramy $\delta(t)<|t-c|/2$; wartość $\delta(c)>0$ dobieramy tak małą, aby $|g(u)-g(c-)|<\varepsilon$ dla $c-\delta(c)<u<c$ i $|g(v)-g(c+)|<\varepsilon$ dla $c<v<c+\delta(c)$. W podziale drobnym każda komórka, której wnętrze zawiera $c$, musi mieć znacznik $c$. Jeżeli $c$ jest węzłem podziału, jedynie dwie przyległe do niego komórki mogą mieć znacznik $c$; obie rzeczywiście muszą go mieć przy dodatniej długości. Niezerowe składniki sumy teleskopują więc do $q(g(v)-g(u))$, gdzie $u\le c\le v$, a odległości odpowiednich końców od $c$ są mniejsze niż $\delta(c)$. Wartość sumy różni się od $q(g(c+)-g(c-))$ co najwyżej o $2|q|\varepsilon$. Gdy $c=a$ lub $c=b$, pozostaje tylko jedna z dwóch stron, co daje odpowiednio $q\Delta^+g(a)$ i $q\Delta^-g(b)$. W razie $q=0$ twierdzenie jest natychmiastowe.
+\end{proof}
+
+\begin{lemat}[Wskaźniki przedziałów]
+\label{lem:ks-indicators}
+Jeśli $g:[a,b]\to\R$ jest regulowana, to dla $a\le u<v\le b$ istnieją całki KS z funkcji charakterystycznych $[u,v]$, $(u,v)$, $[u,v)$ i $(u,v]$. Przykładowo dla $a<u<v<b$ otrzymujemy
+\[
+ \begin{aligned}
+ (\KS)\int_a^b\ind{(u,v)}\,\mathrm dg&=g(v-)-g(u+),\\
+ (\KS)\int_a^b\ind{[u,v]}\,\mathrm dg&=g(v+)-g(u-),\\
+ (\KS)\int_a^b\ind{[u,v)}\,\mathrm dg&=g(v-)-g(u-),\\
+ (\KS)\int_a^b\ind{(u,v]}\,\mathrm dg&=g(v+)-g(u+).
+ \end{aligned}
+\]
+Gdy $u=a$ lub $v=b$, symbole $g(a-)$ i $g(b+)$ we wzorach zastępujemy odpowiednio $g(a)$ i $g(b)$.
+\end{lemat}
+\begin{proof}
+Dla funkcji $\ind{(u,v)}$ wybieramy cechowanie tak, aby przedziały o znacznikach różnych od $u,v$ nie przecinały tych punktów. Komórki mające znaczniki $u$ lub $v$ wnoszą zero, a wszystkie komórki ze znacznikami wewnątrz $(u,v)$ tworzą jeden blok. Ich przyrosty teleskopują do $g(r)-g(s)$, gdzie $s\to u+$ i $r\to v-$, skąd pierwszy wzór. Następnie korzystamy z tożsamości funkcji charakterystycznych, np. $\ind{[u,v]}=\ind{(u,v)}+\ind{\{u\}}+\ind{\{v\}}$, oraz z lematu~\ref{lem:ks-point}. Pozostałe wzory uzyskujemy analogicznie.
+\end{proof}
+
+\begin{twierdzenie}[Całkowanie względem funkcji schodkowej]
+\label{tw:ks-step}
+Niech $g:[a,b]\to\R$ będzie funkcją schodkową, mającą skończony zbiór punktów nieciągłości $D$, i niech $f:[a,b]\to\R$ będzie dowolną funkcją o skończonych wartościach. Wtedy całka KS istnieje i
+\[
+ (\KS)\int_a^b f\,\mathrm dg
+ =f(a)\Delta^+g(a)+\sum_{c\in D\cap(a,b)}f(c)\Delta g(c)+f(b)\Delta^-g(b).
+\]
+\end{twierdzenie}
+\begin{proof}
+Zapisujemy $g$ jako sumę stałej oraz skończonej liczby funkcji $\ind{[c,b]}$ i $\ind{(c,b]}$, uwzględniając oddzielnie skoki przy końcach. Z lematu~\ref{lem:ks-point} wynika dla każdej z tych funkcji całkujących tożsamość $\int f\,\mathrm d\ind{[c,b]}=f(c)$ i $\int f\,\mathrm d\ind{(c,b]}=f(c)$. Liniowość względem integratora daje wskazany wzór. Nie potrzebujemy ograniczoności ani regularności $f$, ponieważ występuje skończenie wiele wartości $f(c)$.
+\end{proof}
+
+\begin{przyklad}[Wspólny skok i nieistnienie zwykłej całki Stieltjesa]
+Niech $a<c<b$ i $H=\ind{[c,b]}$. Wtedy dla każdej funkcji $f$ o skończonych wartościach zachodzi $(\KS)\int_a^b f\,\mathrm dH=f(c)$. Stąd $(\KS)\int_a^b H\,\mathrm dH=1$, a $(\KS)\int_a^b\ind{(c,b]}\,\mathrm dH=0$. Pierwsza z tych całek nie istnieje jako zwykła całka Riemanna--Stieltjesa, ponieważ swobodny wybór znacznika na komórce przecinającej $c$ daje różne sumy. Całka KS rozstrzyga tę niejednoznaczność za pomocą cechowania.
+\end{przyklad}
+
+\begin{przyklad}[Punktowy impuls integratora]
+Niech $g=\ind{\{c\}}$ dla $a<c<b$. Wtedy $\Delta^-g(c)=1$ i $\Delta^+g(c)=-1$, zatem $\Delta g(c)=0$. Dla każdego regulowanego $f$ otrzymujemy $(\KS)\int_a^b f\,\mathrm dg=0$. Oznacza to, że dwie przeciwne zmiany funkcji całkującej, następujące po obu stronach tego samego punktu, znoszą się. Wartość $g(c)$ może więc nie wpływać na całkę, mimo że oddzielne skoki jednostronne są niezerowe.
+\end{przyklad}
+
+\subsection*{Dwa podstawowe twierdzenia o istnieniu}
+\begin{twierdzenie}[Funkcja regulowana i całkująca o wahaniu ograniczonym]
+\label{tw:ks-reg-bv}
+Jeśli $f:[a,b]\to\R$ jest regulowana, a $g\in\BV[a,b]$, to całka $(\KS)\int_a^b f\,\mathrm dg$ istnieje. Ponadto
+$|(\KS)\int_a^b f\,\mathrm dg|\le\|f\|_\infty V_a^b(g)$.
+\end{twierdzenie}
+\begin{proof}
+Wybieramy funkcje schodkowe $f_n$ z $\|f_n-f\|_\infty\to0$. Każda całka $I_n=(\KS)\int_a^b f_n\,\mathrm dg$ istnieje na mocy lematu~\ref{lem:ks-indicators}, ponieważ $f_n$ jest skończoną kombinacją wskaźników przedziałów i punktów. Z lematu~\ref{lem:ks-var} i liniowości wynika $|I_n-I_m|\le\|f_n-f_m\|_\infty V_a^b(g)$. Niech $I=\lim_n I_n$. Dla dowolnego podziału znaczonego $\mathcal P$ mamy
+\[
+ |S_g(f,\mathcal P)-I|\le
+ \|f-f_n\|_\infty V_a^b(g)+|S_g(f_n,\mathcal P)-I_n|+|I_n-I|.
+\]
+Dla ustalonego $\varepsilon$ najpierw wybieramy $n$ zapewniające małość pierwszego i trzeciego składnika, a następnie cechowanie dla $f_n$. Ostatnia nierówność wynika z lematu~\ref{lem:ks-var} po przejściu do granicy.
+\end{proof}
+
+\begin{lemat}[Nierówność sumowania przez części]
+\label{lem:ks-summation}
+Niech $f\in\BV[a,b]$ i niech $g:[a,b]\to\R$ będzie ograniczona. Dla każdego podziału znaczonego $\mathcal P$ zachodzi
+\[
+ |S_g(f,\mathcal P)|\le
+ \bigl(2\|f\|_\infty+V_a^b(f)\bigr)\|g\|_\infty.
+\]
+\end{lemat}
+\begin{proof}
+Oznaczmy $f_i=f(\xi_i)$, $g_i=g(x_i)$. Przekształcenie skończonej sumy daje
+$S_g(f,\mathcal P)=f_ng_n-f_1g_0+\sum_{i=1}^{n-1}(f_i-f_{i+1})g_i$. Ponieważ znaczniki są uporządkowane, $\xi_i\le\xi_{i+1}$, mamy $\sum_{i=1}^{n-1}|f_i-f_{i+1}|\le V_a^b(f)$. Oszacowanie wynika z nierówności trójkąta.
+\end{proof}
+
+\begin{twierdzenie}[Całkująca regulowana i funkcja podcałkowa o wahaniu ograniczonym]
+\label{tw:ks-bv-reg}
+Jeśli $f\in\BV[a,b]$ i $g:[a,b]\to\R$ jest regulowana, to całka $(\KS)\int_a^b f\,\mathrm dg$ istnieje. Jeżeli $g,h$ są regulowane, to
+\[
+ \left|(\KS)\int_a^b f\,\mathrm dg-(\KS)\int_a^b f\,\mathrm dh\right|
+ \le\bigl(2\|f\|_\infty+V_a^b(f)\bigr)\|g-h\|_\infty.
+\]
+\end{twierdzenie}
+\begin{proof}
+Funkcję $g$ przybliżamy jednostajnie funkcjami schodkowymi $g_n$. Całki $I_n=(\KS)\int_a^b f\,\mathrm dg_n$ istnieją na mocy twierdzenia~\ref{tw:ks-step}. Z lematu~\ref{lem:ks-summation}, zastosowanego do $g_n-g_m$, otrzymujemy $|I_n-I_m|\le K_f\|g_n-g_m\|_\infty$, gdzie $K_f=2\|f\|_\infty+V_a^b(f)$. Istnieje zatem $I=\lim_nI_n$. Dla dowolnego podziału $\mathcal P$ mamy
+$|S_g(f,\mathcal P)-I|\le K_f\|g-g_n\|_\infty+|S_{g_n}(f,\mathcal P)-I_n|+|I_n-I|$. Wybór najpierw $n$, a następnie cechowania dla $g_n$, dowodzi istnienia całki. To samo oszacowanie dla całki różnicy $g-h$ daje drugą tezę.
+\end{proof}
+
+\begin{uwaga}[Właściwa dziedzina obu twierdzeń]
+Twierdzenia~\ref{tw:ks-reg-bv} i~\ref{tw:ks-bv-reg} są różne. Pierwsze pozwala na funkcję podcałkową regulowaną o nieskończonym wahaniu, o ile całkująca ma wahanie ograniczone; drugie pozwala na całkującą regulowaną o nieskończonym wahaniu, gdy funkcja podcałkowa ma wahanie ograniczone. Żadne z tych twierdzeń nie wymaga ciągłości obu funkcji ani braku wspólnych skoków.
+\end{uwaga}
+
+\begin{twierdzenie}[Konstruktywny rozkład funkcji o wahaniu ograniczonym]
+\label{tw:ks-bv-split}
+Dla $g\in\BV[a,b]$ zdefiniujmy
+\[
+ g_{\mathrm{sk}}(t)=
+ \sum_{c\in(a,b]}\Delta^-g(c)\ind{[c,b]}(t)
+ +\sum_{c\in[a,b)}\Delta^+g(c)\ind{(c,b]}(t).
+\]
+Oba szeregi są bezwzględnie i jednostajnie zbieżne, a funkcja $g_{\mathrm c}:=g-g(a)-g_{\mathrm{sk}}$ jest ciągła i ma wahanie ograniczone. Dla każdej regulowanej $f:[a,b]\to\R$ zachodzi
+\[
+ \begin{aligned}
+ (\KS)\int_a^b f\,\mathrm dg
+ ={}&(\KS)\int_a^b f\,\mathrm dg_{\mathrm c}
+ +f(a)\Delta^+g(a)\\
+ &+\sum_{c\in(a,b)}f(c)\bigl(\Delta^-g(c)+\Delta^+g(c)\bigr)
+ +f(b)\Delta^-g(b).
+ \end{aligned}
+\]
+W szczególności dla funkcji całkującej złożonej wyłącznie ze skoków całka jest szeregiem wartości $f$ w punktach skoków, niezależnie od ich liczby.
+\end{twierdzenie}
+\begin{proof}
+Dla każdego skończonego zbioru punktów $E\subset[a,b]$ suma modułów wszystkich skoków jednostronnych $g$ w tych punktach nie przekracza $V_a^b(g)$. Aby to zobaczyć, wybieramy parami rozłączne, odpowiednio małe otoczenia punktów $E$, a następnie podziały uwzględniające punkty $c$ i po jednym punkcie z każdej dozwolonej strony $c$. W definicji wahania przechodzimy do granic jednostronnych. Biorąc supremum po skończonych $E$, otrzymujemy
+$\sum_{c\in(a,b]}|\Delta^-g(c)|+\sum_{c\in[a,b)}|\Delta^+g(c)|\le V_a^b(g)$. Zatem szeregi definiujące $g_{\mathrm{sk}}$ są absolutnie i jednostajnie zbieżne.
+
+Skok lewostronny funkcji $g_{\mathrm{sk}}$ w $c\in(a,b]$ jest równy $\Delta^-g(c)$, a skok prawostronny w $c\in[a,b)$ wynosi $\Delta^+g(c)$. Ponieważ $g$ jest regulowana, różnica $g_{\mathrm c}$ nie ma żadnych skoków jednostronnych i dlatego jest ciągła. Ma również wahanie ograniczone, jako różnica funkcji o wahaniu ograniczonym. Dla skończonych sum wzór na całkę wynika z twierdzenia~\ref{tw:ks-step}. Przy zwiększaniu liczby składników ogon ma wahanie ograniczone przez sumę modułów pominiętych skoków, a więc jego całka ma moduł nie większy niż $\|f\|_\infty$ razy ten ogon, na mocy lematu~\ref{lem:ks-var}. Przejście do granicy dowodzi wzoru.
+\end{proof}
+
+\subsection*{Wzory przez miarę Stieltjesa i rozkład Lebesgue'a}
+\begin{twierdzenie}[Miara kanonicznie związana z funkcją $\BV$]
+\label{tw:ks-measure}
+Niech $g\in\BV[a,b]$. Definiujemy $G:[a,b]\to\R$ przez $G(t)=g(t+)-g(a)$ dla $a\le t<b$ oraz $G(b)=g(b)-g(a)$. Istnieje dokładnie jedna skończona \emph{podpisana miara borelowska} $\mu_g$ na $[a,b]$ spełniająca $\mu_g([a,t])=G(t)$ dla każdego $t\in[a,b]$. Jej atomy są dane wzorami
+\[
+ \mu_g(\{a\})=\Delta^+g(a),\qquad
+ \mu_g(\{c\})=\Delta g(c)\ \ (a<c<b),\qquad
+ \mu_g(\{b\})=\Delta^-g(b).
+\]
+Jeśli $f$ jest regulowana, to $f$ jest całkowalna względem $|\mu_g|$ i
+\[
+ (\KS)\int_a^b f\,\mathrm dg=\int_{[a,b]}f(t)\,\mathrm d\mu_g(t),
+ \qquad |\mu_g|([a,b])\le V_a^b(g).
+\]
+\end{twierdzenie}
+\begin{proof}
+Funkcja $G$ jest prawostronnie ciągła na $[a,b)$ i ma wahanie ograniczone. Rozkłada się na różnicę dwóch funkcji niemalejących i prawostronnie ciągłych (stosujemy funkcję wahania całkowitego i rozkład Jordana). Każda z tych funkcji wyznacza skończoną miarę Stieltjesa; ich różnica daje $\mu_g$. Jednoznaczność wynika z jednoznaczności miar na półpierścieniu przedziałów $(s,t]$ wraz z jednoelementowym zbiorem $\{a\}$. Wzory na atomy otrzymujemy przez różnice granic jednostronnych $G$. Nierówność dla wahania miary wynika z oszacowania wszystkich sum bezwzględnych przyrostów przez $V_a^b(g)$.
+
+Dla funkcji $\ind{\{c\}}$ równość całek jest lematem~\ref{lem:ks-point}; dla wskaźników czterech typów przedziałów otrzymujemy ją z lematu~\ref{lem:ks-indicators} oraz wzorów na masy przedziałów. Z liniowości wynika równość dla każdej funkcji schodkowej. Wybieramy funkcje schodkowe $f_n\to f$ jednostajnie. Z twierdzenia~\ref{tw:ks-reg-bv} i lematu~\ref{lem:ks-var} całki KS z $f_n$ zbiegają do całki KS z $f$, zaś całki względem $\mu_g$ zbiegają dzięki nierówności $|\int(f_n-f)\,\mathrm d\mu_g|\le\|f_n-f\|_\infty|\mu_g|([a,b])$. Stąd teza.
+\end{proof}
+
+\begin{uwaga}[Konwencja na końcach i równość prawie wszędzie]
+Jeśli $g$ jest niemalejąca i prawostronnie ciągła na $[a,b]$, to $\mu_g(\{a\})=0$ i $\mu_g((s,t])=g(t)-g(s)$; jest to konwencja używana wcześniej przy całce Lebesgue'a--Stieltjesa. Dla funkcji, która nie jest prawostronnie ciągła, nie wolno stosować tego samego wzoru bez uwzględnienia przesunięcia do $g(t+)$. Równość $f=h$ prawie wszędzie względem miary Lebesgue'a nie wystarcza do równości całek KS względem $g$ z atomami: trzeba uwzględnić wartości w punktach, którym $\mu_g$ przypisuje masę.
+\end{uwaga}
+
+\begin{twierdzenie}[Wzór: część absolutnie ciągła, osobliwa i skoki]
+\label{tw:ks-decomp}
+Niech $g\in\BV[a,b]$ i $f:[a,b]\to\R$ będzie regulowana. Niech rozkład Lebesgue'a podpisanej miary $\mu_g$ względem $\lambda$ ma postać
+$\mu_g=q\lambda+\mu_{\mathrm{sc}}+\mu_{\mathrm{at}}$, gdzie $q\in L^1([a,b],\lambda)$, $\mu_{\mathrm{sc}}$ jest bezatomową miarą podpisaną osobliwą względem $\lambda$, a $\mu_{\mathrm{at}}$ jest częścią czysto atomową. Wtedy
+\[
+ \begin{aligned}
+ (\KS)\int_a^b f\,\mathrm dg
+ ={}&\int_a^b f(t)q(t)\,\mathrm d\lambda(t)
+ +\int_{[a,b]}f\,\mathrm d\mu_{\mathrm{sc}}\\
+ &+f(a)\Delta^+g(a)+\sum_{c\in(a,b)}f(c)\Delta g(c)
+ +f(b)\Delta^-g(b).
+ \end{aligned}
+\]
+Szereg jest bezwzględnie zbieżny. Jeżeli $g$ nie ma osobliwej części ciągłej, drugi składnik znika; jeśli $g$ jest absolutnie ciągła, znikają również wszystkie składniki skokowe i $q=g'$ prawie wszędzie.
+\end{twierdzenie}
+\begin{proof}
+Z twierdzenia~\ref{tw:ks-measure} całka KS jest całką względem skończonej miary podpisanej $\mu_g$. Stosujemy rozkład Lebesgue'a jej części bezatomowej względem $\lambda$ i liniowość całki. Każda skończona miara podpisana ma co najwyżej przeliczalnie wiele atomów niezerowej masy, a suma modułów ich mas nie przekracza $|\mu_g|([a,b])\le V_a^b(g)$. Stąd $\sum|f(c)\Delta g(c)|\le\|f\|_\infty V_a^b(g)$ i bezwzględna zbieżność. Ostatnia część wynika ze wzoru Newtona--Leibniza dla funkcji absolutnie ciągłej $g(t)=g(a)+\int_a^t g'(s)\,\mathrm d\lambda(s)$.
+\end{proof}
+
+\begin{wniosek}[Wzór dla funkcji absolutnie ciągłej z impulsami]
+\label{wn:ks-ac-jumps}
+Niech $h\in\AC[a,b]$, $a<c_1<\cdots<c_m<b$, $A_j,B_j\in\R$ oraz
+$g(t)=h(t)+\sum_{j=1}^m\bigl(A_j\ind{[c_j,b]}(t)+B_j\ind{(c_j,b]}(t)\bigr)$. Dla każdej regulowanej $f$ zachodzi
+\[
+ (\KS)\int_a^b f\,\mathrm dg
+ =\int_a^b f(t)h'(t)\,\mathrm d\lambda(t)
+ +\sum_{j=1}^m(A_j+B_j)f(c_j).
+\]
+Gdy $h\in C^1[a,b]$, pierwsza całka jest zwykłą całką Riemanna z funkcji regulowanej $fh'$.
+\end{wniosek}
+\begin{proof}
+Dla części $h$ stosujemy twierdzenie~\ref{tw:ks-decomp}; dla każdej funkcji skokowej stosujemy twierdzenie~\ref{tw:ks-step}. Liniowość względem funkcji całkującej kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Skończona liczba impulsów: pełny rachunek]
+Na $[0,1]$ niech $g(t)=t+3\ind{[1/3,1]}(t)-2\ind{(2/3,1]}(t)$ oraz $f(t)=t^2$. Ponieważ funkcja $t\mapsto t$ jest absolutnie ciągła, a skoki $g$ mają wielkości odpowiednio $3$ i $-2$, otrzymujemy
+\[
+ (\KS)\int_0^1 t^2\,\mathrm dg(t)
+ =\int_0^1 t^2\,\mathrm d\lambda(t)
+ +3\left(\frac13\right)^2-2\left(\frac23\right)^2
+ =\frac13+\frac13-\frac89=-\frac29.
+\]
+Wartość $g(2/3)$ jest tutaj inna niż $g((2/3)+)$, ale wzór na całkę korzysta z całkowitego skoku $\Delta g(2/3)$.
+\end{przyklad}
+
+\begin{przyklad}[Dwa atomy na końcach przedziału]
+Na $[0,1]$ niech $g(t)=\ind{(0,1]}(t)+2\ind{\{1\}}(t)$ i $f(t)=1+t$. Funkcja $g$ ma atom o masie $1$ w punkcie $0$ i atom o masie $2$ w punkcie $1$, mimo że wewnątrz przedziału jest stała. Z lematu~\ref{lem:ks-point} otrzymujemy
+$(\KS)\int_0^1 f\,\mathrm dg=f(0)\cdot1+f(1)\cdot2=5$.
+Ten rachunek pokazuje, dlaczego w twierdzeniach trzeba osobno określić sposób traktowania końców przedziału.
+\end{przyklad}
+
+\begin{przyklad}[Nieskończenie wiele impulsów i oszacowanie ogona]
+Niech $c_n=1-2^{-n}$, $g(t)=\sum_{n\ge1}2^{-n}\ind{[c_n,1]}(t)$ na $[0,1]$ oraz $f(t)=t$. Wówczas $g$ jest niemalejąca, $V_0^1(g)=1$ i
+\[
+ (\KS)\int_0^1 t\,\mathrm dg(t)
+ =\sum_{n=1}^\infty2^{-n}(1-2^{-n})
+ =1-\frac13=\frac23.
+\]
+Jeśli liczymy tylko pierwszych $N$ impulsów, błąd nie przekracza $\|f\|_\infty\sum_{n>N}2^{-n}=2^{-N}$. Jest to konkretny, certyfikowany algorytm przybliżania całki.
+\end{przyklad}
+
+\begin{przyklad}[Miara Cantora: brak wzoru $g'\,\mathrm dx$]
+Niech $C:[0,1]\to[0,1]$ będzie funkcją Cantora. Funkcja ta jest ciągła, niemalejąca, $C'=0$ prawie wszędzie i $C(1)-C(0)=1$, więc jej miara Stieltjesa jest osobliwa ciągła. Dla $f(t)=t$ dostajemy $(\KS)\int_0^1 t\,\mathrm dC(t)=1/2$ (z symetrii miary Cantora), a dla $f(t)=t^2$ wartość $3/8$ (obliczenie momentów w rozdziale 10). Zastąpienie $\mathrm dC$ przez $C'(t)\,\mathrm d\lambda(t)$ dałoby błędnie zero. Dlatego w twierdzeniu~\ref{tw:ks-decomp} osobliwa część ciągła jest niezbędna.
+\end{przyklad}
+
+\subsection*{Całkowanie przez części ze wszystkimi poprawkami skokowymi}
+\begin{twierdzenie}[Wzór całkowania przez części]
+\label{tw:ks-ibp}
+Niech $f,g:[a,b]\to\R$ będą regulowane i niech przynajmniej jedna z funkcji $f,g$ ma wahanie ograniczone. Wtedy obie całki KS istnieją i
+\[
+ \begin{aligned}
+ (\KS)\int_a^b f\,\mathrm dg+(\KS)\int_a^b g\,\mathrm df
+ ={}&f(b)g(b)-f(a)g(a)\\
+ &+\sum_{c\in[a,b]}\bigl(\Delta^-f(c)\Delta^-g(c)
+ -\Delta^+f(c)\Delta^+g(c)\bigr).
+ \end{aligned}
+\]
+Przyjmujemy $\Delta^-f(a)=\Delta^-g(a)=0$ i $\Delta^+f(b)=\Delta^+g(b)=0$. Szereg korekcyjny jest bezwzględnie zbieżny. W szczególności, jeśli jedna z funkcji jest ciągła, cały wyraz korekcyjny znika.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: obliczenie przy jednym wspólnym skoku.} Ustalmy $c\in(a,b)$ i zapiszmy $f_-=f(c-)$, $f_0=f(c)$, $f_+=f(c+)$ oraz analogicznie $g_-,g_0,g_+$. Punktowy wkład do sumy dwóch całek wynosi $f_0(g_+-g_-)+g_0(f_+-f_-)$. Tymczasem bezpośrednie wymnożenie daje
+\[
+ f_+g_+-f_-g_-=f_0(g_+-g_-)+g_0(f_+-f_-)
+ +(f_+-f_0)(g_+-g_0)-(f_0-f_-)(g_0-g_-).
+\]
+Po przeniesieniu dwóch ostatnich składników na drugą stronę otrzymujemy wyraz $\Delta^-f(c)\Delta^-g(c)-\Delta^+f(c)\Delta^+g(c)$. Na końcach $a,b$ występuje tylko jedna z dwóch połówek skoku.
+
+\emph{Krok 2: funkcje schodkowe.} Wybieramy wspólny skończony zbiór węzłów obu funkcji. Na otwartych przedziałach pomiędzy nimi obie funkcje są stałe. Całki liczymy z twierdzenia~\ref{tw:ks-step}, sumując wkłady w węzłach. Powyższa tożsamość algebraiczna po zsumowaniu teleskopuje się do różnicy $f(b)g(b)-f(a)g(a)$ i sumy poprawek.
+
+\emph{Krok 3: przejście do funkcji regulowanych.} Możemy bez straty ogólności założyć $f\in\BV[a,b]$. Funkcję $g$ przybliżamy jednostajnie funkcjami schodkowymi $g_n$. Dla ustalonej funkcji schodkowej $g_n$ otrzymujemy tożsamość najpierw dla schodkowych przybliżeń $f_m$ funkcji $f$ i przechodzimy do granicy przy $m\to\infty$: całka $\int f_m\,\mathrm dg_n$ jest ciągła w normie jednostajnej z oszacowaniem przez $V(g_n)$, a całka $\int g_n\,\mathrm df_m$ jest ciągła względem normy jednostajnej integratora dzięki lematowi~\ref{lem:ks-summation}, zastosowanemu do $g_n$ jako funkcji podcałkowej o wahaniu ograniczonym. Sumy poprawek zawierają tylko skończenie wiele punktów skokowych $g_n$, więc również przechodzą do granicy. Istnienie potrzebnych schodkowych przybliżeń $f_m\to f$ wynika z regulowania $f$.
+
+Przy $n\to\infty$ całki $\int f\,\mathrm dg_n$ zbiegają do $\int f\,\mathrm dg$ z twierdzenia~\ref{tw:ks-bv-reg}; całki $\int g_n\,\mathrm df$ zbiegają dzięki lematowi~\ref{lem:ks-var}. Skoki $g_n$ zbiegają jednostajnie do odpowiednich jednostronnych skoków $g$, a sumę ich iloczynów ze skokami $f$ kontrolujemy przez $V(f)\|g_n-g\|_\infty$: przykładowo $\sum_c|\Delta^-f(c)\Delta^-(g_n-g)(c)|\le2\|g_n-g\|_\infty V(f)$. Druga suma podlega temu samemu oszacowaniu. Wyrazy korekcyjne zbiegają więc bezwzględnie. Dowód zakończony.
+\end{proof}
+
+\begin{wniosek}[Klasyczna postać i wzór dla funkcji absolutnie ciągłej]
+\label{wn:ks-ibp-ac}
+Jeśli $f\in\AC[a,b]$, a $g:[a,b]\to\R$ jest regulowana, to
+\[
+ (\KS)\int_a^b f\,\mathrm dg
+ =f(b)g(b)-f(a)g(a)-\int_a^b g(t)f'(t)\,\mathrm d\lambda(t).
+\]
+Jeśli $f\in C^1[a,b]$, ostatnią całkę można rozumieć jako zwykłą całkę Riemanna. Nie wymagamy w tym wniosku, aby $g$ miała wahanie ograniczone.
+\end{wniosek}
+\begin{proof}
+Funkcja absolutnie ciągła ma wahanie ograniczone i jest ciągła, więc wzór z twierdzenia~\ref{tw:ks-ibp} nie ma poprawek skokowych. Ponadto $\mathrm df=f'(t)\,\mathrm d\lambda(t)$; z twierdzenia~\ref{tw:ks-decomp}, zastosowanego do całki $\int g\,\mathrm df$ (integrator $f\in\BV$, funkcja podcałkowa $g$ jest regulowana), otrzymujemy $\int g\,\mathrm df=\int gf'\,\mathrm d\lambda$. Iloczyn $gf'$ jest całkowalny w sensie Lebesgue'a, ponieważ $g$ jest ograniczona, a $f'\in L^1$.
+\end{proof}
+
+\begin{przyklad}[Rachunek bez znajomości pochodnej funkcji całkującej]
+Niech $g:[0,1]\to\R$ będzie dowolną funkcją regulowaną (nie zakładamy $g\in\BV$). Dla $f(t)=t^2$ otrzymujemy
+\[
+ (\KS)\int_0^1 t^2\,\mathrm dg(t)=g(1)-2\int_0^1 t\,g(t)\,\mathrm d\lambda(t).
+\]
+Ponieważ funkcja regulowana jest ograniczona i Riemanna całkowalna, ostatnia całka jest zwykłą całką Riemanna. W szczególności wzór działa dla funkcji $g$ oscylującej z nieskończonym wahaniem, o ile ma granice jednostronne.
+\end{przyklad}
+
+\begin{przyklad}[Całkująca o nieskończonym wahaniu]
+Dla $t\in(0,1]$ niech $g(t)=t\sin(1/t^2)$, a $g(0)=0$. Funkcja $g$ jest ciągła, ale nie ma wahania ograniczonego: na punktach $t_n=(\pi(n+1/2))^{-1/2}$ przyjmuje naprzemienne wartości $\pm t_n$, a suma sąsiednich oscylacji jest rozbieżna. Pomimo tego dla $f(t)=t$ całka KS istnieje na mocy twierdzenia~\ref{tw:ks-bv-reg}, a wzór całkowania przez części daje
+\[
+ (\KS)\int_0^1 t\,\mathrm dg(t)
+ =\sin1-\int_0^1 t\sin(1/t^2)\,\mathrm d\lambda(t)
+ =\sin1-\frac12\int_1^\infty\frac{\sin u}{u^2}\,\mathrm du.
+\]
+Ostatnia całka jest bezwzględnie zbieżna i może być obliczana metodami numerycznymi. Nie potrzebujemy ani wahania ograniczonego funkcji $g$, ani klasycznej całki Riemanna--Stieltjesa.
+\end{przyklad}
+
+\begin{przyklad}[Dlaczego potrzebujemy wyrazu korekcyjnego]
+Dla $H=\ind{[c,b]}$ mamy $\Delta^-H(c)=1$ i $\Delta^+H(c)=0$. Twierdzenie~\ref{tw:ks-ibp} z $f=g=H$ daje
+$2(\KS)\int_a^b H\,\mathrm dH=H(b)^2-H(a)^2+1=2$. Dla $K=\ind{(c,b]}$ mamy natomiast $\Delta^-K(c)=0$, $\Delta^+K(c)=1$, zatem $2(\KS)\int_a^b K\,\mathrm dK=1-1=0$. Oba wyniki są zgodne z bezpośrednim wzorem $\int f\,\mathrm dH=f(c)$ i $\int f\,\mathrm dK=f(c)$.
+\end{przyklad}
+
+\subsection*{Całka nieoznaczona, podstawienie i błędy numeryczne}
+\begin{twierdzenie}[Skoki funkcji pierwotnej KS]
+\label{tw:ks-primitive}
+Niech $f$ będzie regulowana i $g\in\BV[a,b]$. Zdefiniujmy $F(x)=(\KS)\int_a^x f(t)\,\mathrm dg(t)$ dla $x\in[a,b]$. Wtedy $F\in\BV[a,b]$, $F(a)=0$, $V_a^b(F)\le\|f\|_\infty V_a^b(g)$, a ponadto
+\[
+ F(c+)-F(c)=f(c)\Delta^+g(c),\qquad
+ F(c)-F(c-)=f(c)\Delta^-g(c)
+\]
+odpowiednio dla $c\in[a,b)$ i $c\in(a,b]$.
+\end{twierdzenie}
+\begin{proof}
+Z addytywności całki po przyległych przedziałach i z lematu~\ref{lem:ks-var} mamy dla każdego podziału $a=x_0<\cdots<x_n=b$ nierówność $\sum_i|F(x_i)-F(x_{i-1})|\le\|f\|_\infty\sum_i V_{x_{i-1}}^{x_i}(g)=\|f\|_\infty V_a^b(g)$. Dla $x\downarrow c$ rozdzielamy całkę $\int_c^x f\,\mathrm dg$ na atom w punkcie $c$, mający wartość $f(c)(g(c+)-g(c))$, oraz całkę względem pozostałej miary na $(c,x]$. Jej moduł jest ograniczony przez $\|f\|_\infty|\mu_g|((c,x])\to0$. Otrzymujemy pierwszy wzór. Dowód wzoru lewostronnego jest analogiczny.
+\end{proof}
+
+\begin{twierdzenie}[Podstawienie w przedziale]
+\label{tw:ks-substitution}
+Niech $\varphi:[A,B]\to[a,b]$ będzie ściśle rosnącym homeomorfizmem, $\varphi(A)=a$, $\varphi(B)=b$. Niech $f,g:[a,b]\to\R$ będą funkcjami o skończonych wartościach. Wtedy całka KS po jednej stronie istnieje wtedy i tylko wtedy, gdy istnieje po drugiej, oraz
+\[
+ (\KS)\int_a^b f(t)\,\mathrm dg(t)
+ =(\KS)\int_A^B f(\varphi(s))\,\mathrm d(g\circ\varphi)(s).
+\]
+\end{twierdzenie}
+\begin{proof}
+Każdy podział znaczony $\mathcal Q=\{(\eta_i,[s_{i-1},s_i])\}$ przedziału $[A,B]$ przenosi się na podział $\mathcal P=\{(\varphi(\eta_i),[\varphi(s_{i-1}),\varphi(s_i)])\}$ przedziału $[a,b]$. Obie sumy KS są równe składnik po składniku. Niech $\delta$ będzie cechowaniem na $[a,b]$. Dzięki ciągłości $\varphi$ w każdym punkcie $s$ można wybrać $\widetilde\delta(s)>0$ tak, aby $|u-s|<\widetilde\delta(s)$ implikowało $|\varphi(u)-\varphi(s)|<\delta(\varphi(s))$. Wtedy każdy podział $\widetilde\delta$-drobny przenosi się na podział $\delta$-drobny, zatem istnienie i wartość całki po lewej implikują istnienie i tę samą wartość po prawej. Dla implikacji odwrotnej powtarzamy argument z $\varphi^{-1}$.
+\end{proof}
+
+\begin{twierdzenie}[Podstawienie całki nieoznaczonej]
+\label{tw:ks-chain}
+Niech $f$ będzie regulowana, $g\in\BV[a,b]$, $F(x)=(\KS)\int_a^x f\,\mathrm dg$ i niech $h:[a,b]\to\R$ będzie regulowana. Wówczas
+\[
+ (\KS)\int_a^b h(t)\,\mathrm dF(t)
+ =(\KS)\int_a^b h(t)f(t)\,\mathrm dg(t).
+\]
+\end{twierdzenie}
+\begin{proof}
+Na mocy twierdzenia~\ref{tw:ks-measure} funkcja $F$ ma wahanie ograniczone, a odpowiadająca jej miara Stieltjesa spełnia $\mu_F(E)=\int_E f\,\mathrm d\mu_g$ dla każdego zbioru borelowskiego $E\subset[a,b]$. Wystarczy zweryfikować tę tożsamość na przedziałach $[a,x]$, uwzględniając prawostronne wartości $F(x+)$ i $g(x+)$; wówczas wynika ona z definicji $F$ oraz wzorów na jej skoki z twierdzenia~\ref{tw:ks-primitive}. Jednoznaczność miar daje równość na wszystkich zbiorach borelowskich. W konsekwencji $\int h\,\mathrm d\mu_F=\int hf\,\mathrm d\mu_g$. Z twierdzenia~\ref{tw:ks-measure} obie strony są wskazanymi całkami KS.
+\end{proof}
+
+\begin{twierdzenie}[Oszacowanie błędu zwykłych sum]
+\label{tw:ks-quadrature}
+Niech $f\in C[a,b]$, $g\in\BV[a,b]$ oraz $P=\{a=x_0<\cdots<x_n=b\}$ będzie dowolnym podziałem o średnicy $h$. Dla dowolnych znaczników $\xi_i\in[x_{i-1},x_i]$ zachodzi
+\[
+ \left|(\KS)\int_a^b f\,\mathrm dg-
+ \sum_{i=1}^n f(\xi_i)\bigl(g(x_i)-g(x_{i-1})\bigr)\right|
+ \le\omega_f(h)\,V_a^b(g),
+\]
+gdzie $\omega_f(h)=\sup\{|f(x)-f(y)|:x,y\in[a,b],\ |x-y|\le h\}$ jest modułem ciągłości. Jeśli $f$ jest $L$-lipschitzowska, błąd jest nie większy niż $LhV_a^b(g)$; jeśli jest h\"olderowska ze stałą $K$ i wykładnikiem $\theta\in(0,1]$, błąd nie przekracza $Kh^\theta V_a^b(g)$.
+\end{twierdzenie}
+\begin{proof}
+Z addytywności całki KS i liniowości mamy
+\[
+ (\KS)\int_a^b f\,\mathrm dg-S_g(f,\mathcal P)
+ =\sum_{i=1}^n(\KS)\int_{x_{i-1}}^{x_i}\bigl(f(t)-f(\xi_i)\bigr)\,\mathrm dg(t).
+\]
+Funkcja $f-f(\xi_i)$ ma na $[x_{i-1},x_i]$ moduł nieprzekraczający $\omega_f(h)$. Lemat~\ref{lem:ks-var} na każdym przedziale daje oszacowanie przez $\omega_f(h)V_{x_{i-1}}^{x_i}(g)$. Sumując i korzystając z addytywności wahania całkowitego, otrzymujemy żądaną nierówność. Dwa ostatnie oszacowania wynikają z definicji modułu ciągłości.
+\end{proof}
+
+\begin{uwaga}[Czego nie daje sama średnica podziału]
+Jeżeli $f$ ma skok w punkcie, w którym skacze $g$, mała średnica podziału nie gwarantuje przybliżenia całki przez dowolne sumy. Dla $f=g=\ind{[c,b]}$ sumy na bardzo drobnych podziałach mogą być równe $0$ albo $1$ w zależności od znaczników. Właśnie dlatego w definicji KS stosujemy cechowania zależne od punktu. Oszacowanie z twierdzenia~\ref{tw:ks-quadrature} wymaga ciągłości $f$.
+\end{uwaga}
+
+\begin{przyklad}[Przedziałowe oszacowanie dla kwadratury]
+Na $[0,1]$ niech $f(t)=\sin t$ i $g$ będzie dowolną niemalejącą funkcją o $g(0)=0$, $g(1)=3$. Dla podziału o średnicy $h=10^{-3}$ dowolna suma Stieltjesa z wartościami $\sin\xi_i$ różni się od całki KS o co najwyżej $3\cdot10^{-3}$, gdyż $|f'|\le1$. Nie potrzebujemy pochodnej $g$ ani wiedzy o położeniu jej skoków.
+\end{przyklad}
+
+\subsection*{Granice wzorów i porównanie z całką HK}
+\begin{stwierdzenie}[Nie każda całka KS jest całką Lebesgue'a--Stieltjesa]
+Dla $g(t)=t$ na $[0,1]$ całka KS jest całką Henstocka--Kurzweila. Istnieją funkcje $f:[0,1]\to\R$, które są KS-całkowalne względem $g$, lecz nie należą do $L^1([0,1],\lambda)$. W szczególności równość z twierdzenia~\ref{tw:ks-measure} nie obowiązuje bez założeń o $f$.
+\end{stwierdzenie}
+\begin{proof}
+Niech $F(0)=0$ i $F(t)=t^2\cos(\pi/t^2)$ dla $t\in(0,1]$ oraz $f(0)=0$, $f(t)=F'(t)=2t\cos(\pi/t^2)+(2\pi/t)\sin(\pi/t^2)$ dla $t>0$. Z twierdzenia Newtona--Leibniza dla całki HK otrzymujemy $(\KS)\int_0^1 f\,\mathrm dt=F(1)-F(0)=-1$. Drugi składnik pochodnej nie jest bezwzględnie całkowalny w otoczeniu zera, ponieważ po podstawieniu $u=\pi/t^2$ jego całka bezwzględna jest porównywalna z $\int^\infty|\sin u|/u\,\mathrm du=\infty$. Tymczasem pierwszy składnik należy do $L^1$. Zatem $\int_0^1|f|\,\mathrm d\lambda=\infty$, więc całka Lebesgue'a z $f$ jako funkcji rzeczywistej nie istnieje.
+\end{proof}
+
+\begin{uwaga}[Schemat wyboru wzoru do obliczenia]
+Gdy $g$ jest schodkowa, stosujemy twierdzenie~\ref{tw:ks-step}. Gdy $g$ ma wahanie ograniczone, rozkładamy jej miarę według twierdzenia~\ref{tw:ks-decomp}. Gdy $f$ jest absolutnie ciągła, a $g$ jedynie regulowana, najlepiej zastosować wniosek~\ref{wn:ks-ibp-ac}. Przy ciągłej funkcji podcałkowej i całkującej o wahaniu ograniczonym można korzystać z oszacowania kwadraturowego~\ref{tw:ks-quadrature}. Dla dowolnego integratora i funkcji bez powyższej regularności nie istnieje jeden uniwersalny wzór redukujący całkę KS do zwykłej całki Lebesgue'a.
+\end{uwaga}
+
+\section{Całka McShane'a}
+\begin{definicja}
+Podział znaczony $\mathcal P=\{(t_i,[x_{i-1},x_i])\}$ jest \emph{wolny $\delta$-drobny}, gdy $t_i\in[a,b]$ oraz $[x_{i-1},x_i]\subset(t_i-\delta(t_i),t_i+\delta(t_i))$, bez wymagania $t_i\in[x_{i-1},x_i]$. Funkcja $f$ jest całkowalna w sensie McShane'a, $f\in\mathcal M[a,b]$, jeśli w definicji całki HK zastąpimy podziały drobne podziałami wolnymi drobnymi.
+\end{definicja}
+\begin{stwierdzenie}
+$\mathcal R[a,b]\subset\mathcal M[a,b]\subset\HK[a,b]$, a wartości całek są zgodne.
+\end{stwierdzenie}
+\begin{proof}
+Druga inkluzja wynika z warunków na znaczniki. Dla pierwszej ustalmy $M=\|f\|_\infty$ oraz podział $P_0$ z $U(f,P_0)-L(f,P_0)<\varepsilon/2$. Niech $B$ będzie skończonym zbiorem punktów jego podziału. Dla $t\notin B$ wybieramy $\delta(t)<\operatorname{dist}(t,B)$, zaś w punktach $t\in B$ dobieramy dodatnie cechowania tak małe, aby $4M\sum_{t\in B}\delta(t)<\varepsilon/2$. Każdy przedział wolnego podziału ze znacznikiem poza $B$ leży w tej samej komórce $P_0$ co jego znacznik. Błąd takich przedziałów względem całki nie przekracza oscylacyjnej różnicy sum $U-L$. Przedziały ze znacznikiem $t\in B$ mają łączną długość nie większą niż $2\delta(t)$ i wnoszą błąd co najwyżej $4M\delta(t)$. Łącznie błąd jest mniejszy niż $\varepsilon$.
+\end{proof}
+\begin{przyklad}[Inkluzje są właściwe]
+Funkcja Dirichleta należy do $\mathcal M[0,1]$, ale nie do $\mathcal R[0,1]$ (dowód z przykładu 4.7 działa także dla wolnych znaczników). Funkcja $x^{-1/2}$ po określeniu w $0$ również należy do $\mathcal M\setminus\mathcal R$. Pochodna nieabsolutnie całkowalna z przykładu 4.10 należy do $\HK\setminus\mathcal M$; wymaga to następnego twierdzenia.
+\end{przyklad}
+\begin{twierdzenie}[Bezwzględna całkowalność]
+Jeżeli $f\in\mathcal M[a,b]$, to $|f|\in\mathcal M[a,b]$. Tak więc całka McShane'a jest bezwzględna, mimo że definiujemy ją przez sumy znaczonych przedziałów.
+\end{twierdzenie}
+\begin{proof}
+Niech $I=\int_a^b f$ w sensie McShane'a. Wybieramy cechowanie $\delta$ zapewniające błąd mniejszy niż $\varepsilon/3$. Dla dwóch dowolnych wolnych $\delta$-drobnych podziałów $\mathcal P=\{(t_i,I_i)\}$ i $\mathcal Q=\{(s_j,J_j)\}$ rozważamy wspólne rozdrobnienie $K_{ij}=I_i\cap J_j$, pomijając przecięcia zerowej długości. Każda komórka $K_{ij}$ leży w otoczeniach cechowania zarówno $t_i$, jak i $s_j$, więc obydwa znaczniki są legalne. Wybierając w jednej sumie znacznik z większą wartością $f$, a w drugiej z mniejszą, otrzymujemy dwie dopuszczalne sumy $S_+,S_-$, zatem
+\[
+\sum_{i,j}|f(t_i)-f(s_j)|\,|K_{ij}|=S_+-S_-<2\varepsilon/3.
+\]
+Ponieważ $|I_i|=\sum_j|K_{ij}|$, $|J_j|=\sum_i|K_{ij}|$ i $\bigl||u|-|v|\bigr|\le|u-v|$, mamy
+$|S(|f|,\mathcal P)-S(|f|,\mathcal Q)|\le\sum_{i,j}|f(t_i)-f(s_j)|\,|K_{ij}|<\varepsilon$.
+Kryterium Cauchy'ego dowodzi istnienia całki $|f|$. Dla HK podobny argument nie działa: znaczniki nie muszą należeć do przeciętych komórek.
+\end{proof}
+\begin{uwaga}[Kolejność rozszerzeń]
+Całka McShane'a rozszerza Riemanna i jest zawarta w HK. W teorii funkcji rzeczywistych opisuje dokładnie całkę Lebesgue'a; wykażemy to dalej. Wolność znaczników powiększa rodzinę sum, wobec których wymagamy jednakowych oszacowań, więc \emph{zmniejsza} klasę funkcji całkowalnych w porównaniu z HK.
+\end{uwaga}
+
+% ============================================================
+% UZUPELNIENIE MATEMATYCZNE: ROZDZIAL 7
+% ============================================================
+\subsection*{Konstrukcja całki McShane'a dla funkcji charakterystycznych}
+\begin{twierdzenie}[Funkcje charakterystyczne zbiorów mierzalnych]\label{tw:mcshane-indykator}
+Niech $E\subset[a,b]$ będzie zbiorem mierzalnym w sensie Lebesgue'a. Wówczas $\ind E$ jest całkowalna w sensie McShane'a i
+$\int_a^b\ind E\,\mathrm d\lambda=\lambda(E)$.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $\varepsilon>0$. Z regularności miary Lebesgue'a wybieramy zbiór zwarty $K\subset E$ i zbiór otwarty $O\supset E$ (w topologii względnej $[a,b]$), dla których $\lambda(O\setminus K)<\varepsilon$. Konstruujemy cechowanie: dla $t\in E$ wybieramy $\delta(t)>0$ tak, by $(t-\delta(t),t+\delta(t))\cap[a,b]\subset O$; dla $t\notin E$ dobieramy je tak, by wymienione otoczenie nie przecinało $K$ (jest to możliwe, ponieważ $K$ jest domknięty i $t\notin K$).
+
+Niech $\mathcal P$ będzie dowolnym wolnym $\delta$-drobnym podziałem. Każda jego komórka z oznaczeniem $t\in E$ leży w $O$, a każda komórka ze znacznikiem $t\notin E$ nie przecina $K$. Ponieważ komórki pokrywają cały przedział, suma długości komórek ze znacznikami w $E$ mieści się między $\lambda(K)$ a $\lambda(O)$. Jest ona dokładnie sumą McShane'a $S(\ind E,\mathcal P)$. Wobec $\lambda(K)\le\lambda(E)\le\lambda(O)$ otrzymujemy $|S-\lambda(E)|<\varepsilon$.
+\end{proof}
+\begin{wniosek}[Funkcje proste]\label{wn:mcshane-proste}
+Niech $s=\sum_{k=1}^m c_k\ind{E_k}$, gdzie $c_k\in\R$ i wszystkie $E_k\subset[a,b]$ są mierzalne. Wtedy $s\in\mathcal M[a,b]$ oraz $\int_a^b s\,\mathrm d\lambda=\sum_{k=1}^m c_k\lambda(E_k)$.
+\end{wniosek}
+\begin{proof}
+Każdy składnik jest całkowalny na mocy twierdzenia \ref{tw:mcshane-indykator}; liniowość sum jest bezpośrednią konsekwencją definicji całki McShane'a.
+\end{proof}
+\begin{przyklad}[Zbiór Cantora]
+Dla klasycznego zbioru Cantora $K\subset[0,1]$ mamy $\lambda(K)=0$, więc $\int_0^1\ind K\,\mathrm d\lambda=0$ w sensie McShane'a. Ten sam wynik zachodzi dla funkcji Dirichleta z racji $\lambda(\Q\cap[0,1])=0$, mimo że żadna z tych obserwacji nie wynika z konieczności całkowalności Riemanna.
+\end{przyklad}
+\begin{uwaga}[Zakres uogólnienia]
+Twierdzenie o indykatorach daje od razu zgodność całki McShane'a z całką Lebesgue'a na funkcjach prostych. Przejście do wszystkich funkcji z $L^1$ nie jest wyłącznie konsekwencją liniowości: wymaga dodatkowej kontroli sum dla przybliżeń i jest przeprowadzone w rozdziale o całce Lebesgue'a.
+\end{uwaga}
+
+\section{Całka Denjoya w wersji wąskiej}
+Absolutna ciągłość jest zbyt silna, aby obejmować funkcje pierwotne wszystkich pochodnych. Wprowadzamy warunek kontrolujący oscylacje na zbiorach, a następnie jego przeliczalną wersję.
+\begin{definicja}
+Niech $F:[a,b]\to\R$ będzie ciągła i $E\subset[a,b]$. Piszemy $F\in\AC_*(E)$, jeżeli dla każdego $\varepsilon>0$ istnieje $\eta>0$ takie, że dla każdej skończonej rodziny przedziałów $[u_j,v_j]$ o parami rozłącznych wnętrzach i końcach $u_j,v_j\in E$ spełniającej $\sum_j(v_j-u_j)<\eta$ mamy
+\[
+\sum_j\osc_{[u_j,v_j]}F<\varepsilon.
+\]
+Piszemy $F\in\AC G_*[a,b]$, jeżeli $[a,b]=\bigcup_{n\ge1}E_n$ dla domkniętych zbiorów $E_n$ takich, że $F\in\AC_*(E_n)$. Na całym przedziale $\AC_*([a,b])=\AC[a,b]$, ale na podzbiorze $E$ warunek oscylacyjny jest silniejszy od kontroli samych przyrostów między punktami $E$.
+\end{definicja}
+\begin{definicja}[Wąska całka Denjoya]
+Funkcja $f:[a,b]\to\R$ o skończonych wartościach jest całkowalna w wąskim sensie Denjoya, jeśli istnieje ciągła $F\in\AC G_*[a,b]$ taka, że $F'=f$ prawie wszędzie. Wówczas definiujemy $(\mathrm D_*)\int_a^b f=F(b)-F(a)$. Jednoznaczność uzasadnimy poniżej.
+\end{definicja}
+\begin{twierdzenie}[Każda różniczkowalna funkcja należy do $\AC G_*$]
+Jeśli $F:[a,b]\to\R$ jest ciągła i ma skończoną pochodną w każdym punkcie wnętrza oraz odpowiednie pochodne jednostronne na końcach, to $F\in\AC G_*[a,b]$.
+\end{twierdzenie}
+\begin{proof}
+Dla $n\in\N$ niech $E_n$ będzie zbiorem tych $x$, dla których $|F(y)-F(x)|\le n|y-x|$ dla wszystkich $y\in[a,b]$ z $|y-x|\le1/n$. Różniczkowalność daje $\bigcup_nE_n=[a,b]$. Każdy $E_n$ jest domknięty: przy $x_k\in E_n$ i $x_k\to x$ przechodzimy do granicy w nierówności, wykorzystując ciągłość $F$. Jeśli $u,v\in E_n$ i $v-u<1/n$, to dla każdego $y\in[u,v]$ mamy $|F(y)-F(u)|\le n(v-u)$. Stąd $\osc_{[u,v]}F\le2n(v-u)$. Dla rodziny przedziałów z końcami w $E_n$ i $\sum_j(v_j-u_j)<\min\{1/n,\varepsilon/(2n)\}$ suma oscylacji jest mniejsza od $\varepsilon$.
+\end{proof}
+\begin{twierdzenie}[Charakteryzacja funkcji pierwotnych HK; wynik zewnętrzny]
+Dla ciągłej $F:[a,b]\to\R$ równoważne są: (i) $F\in\AC G_*[a,b]$; (ii) istnieje $h\in\HK[a,b]$ takie, że $F(x)=F(a)+\int_a^x h$ dla każdego $x$. Wówczas $F'=h$ prawie wszędzie.
+\end{twierdzenie}
+Twierdzenie to przyjmujemy jako wynik zewnętrzny. W szczególności jego dowód wymaga kontroli zaniedbywalnego wahania na zbiorach zerowych; nie można zastąpić go zwykłym argumentem opartym jedynie na pochodnej prawie wszędzie.
+\begin{wniosek}[Denjoy = HK]
+Wąska całka Denjoya i całka HK mają te same funkcje całkowalne oraz te same wartości. Jeśli $F\in\AC G_*[a,b]$ i $F'=0$ prawie wszędzie, to $F$ jest stała.
+\end{wniosek}
+\begin{proof}
+Dla funkcji HK-całkowalnej jej pierwotna należy do $\AC G_*$ na mocy poprzedniego twierdzenia i ma pochodną równą funkcji podcałkowej prawie wszędzie. Odwrotnie, jeśli $F\in\AC G_*$ oraz $F'=f$ prawie wszędzie, to $F-F(a)=\int_a^x h$ dla pewnego $h\in\HK$, z $h=f$ prawie wszędzie. Lemat o zmianie na zbiorze zerowym pozwala zastąpić $h$ przez $f$. Dla $f=0$ pierwotna jest stała, co zapewnia jednoznaczność. Kombinacje liniowe takich funkcji pierwotnych pozostają w $\AC G_*$.
+\end{proof}
+\begin{przyklad}[Całkowalność z definicji Denjoya]
+Dla $F(x)=x^2\cos(\pi/x^2)$, $x>0$, $F(0)=0$, bierzemy domknięte pokrycie $\{0\},[1/2,1],[1/3,1],\dots$ przedziału $[0,1]$. Na każdym $[1/n,1]$ funkcja $F$ jest klasy $C^1$, więc absolutnie ciągła, a na zbiorze jednopunktowym warunek $\AC_*$ jest automatyczny. Zatem $F\in\AC G_*$ i $F'$ jest całkowalna w sensie Denjoya z wartością $F(1)-F(0)=-1$. Pochodna nie jest jednak absolutnie całkowalna, co wynika z rozbieżności całki modułu jej oscylacyjnego składnika.
+\end{przyklad}
+\begin{uwaga}[Wąska i szeroka całka Denjoya]
+Wąska całka Denjoya ma tę samą klasę funkcji co HK. Szeroką całkę Denjoya opiszemy przez klasę $\AC G$ i pochodną aproksymatywną; jest to istotnie szersza teoria. Historyczna totalizacja Denjoya nie musi odpowiadać w każdym szczególe poniższej definicji opisowej.
+\end{uwaga}
+
+% ============================================================
+% UZUPELNIENIE MATEMATYCZNE: ROZDZIAL 8
+% ============================================================
+\subsection*{Jak w praktyce rozpoznawać pierwotne wąskiej całki Denjoya}
+\begin{twierdzenie}[Przeliczalny zbiór punktów nieróżniczkowalności]\label{tw:denjoy-countable}
+Niech $F:[a,b]\to\R$ będzie ciągła oraz różniczkowalna ze skończoną pochodną w każdym punkcie $(a,b)\setminus N$, gdzie $N\subset[a,b]$ jest zbiorem co najwyżej przeliczalnym. Wtedy $F\in\AC G_*[a,b]$. Jeśli funkcja $f:[a,b]\to\R$ ma skończone wartości i $f=F'$ na $(a,b)\setminus N$, to $f$ jest całkowalna w sensie HK oraz w wąskim sensie Denjoya, a obie całki są równe $F(b)-F(a)$.
+\end{twierdzenie}
+\begin{proof}
+Dla $n\ge1$ definiujemy
+\[
+ E_n=\left\{x\in[a,b]: |F(y)-F(x)|\le n|y-x|
+ \ \text{dla wszystkich}\ y\in[a,b]\ \text{z}\ |y-x|\le1/n\right\}.
+\]
+Z ciągłości $F$ wynika, że każdy $E_n$ jest domknięty. Każdy punkt, w którym istnieje skończona pochodna (jednostronna na brzegu), należy do któregoś $E_n$. Dla przedziału $[u,v]$ o końcach w $E_n$ i długości mniejszej niż $1/n$ mamy
+$\osc_{[u,v]}F\le2n(v-u)$, jak w dowodzie wcześniejszego twierdzenia. Stąd $F\in\AC_*(E_n)$. Zbiory jednopunktowe $\{x\}$, $x\in N\cup\{a,b\}$, są domknięte, a warunek $\AC_*$ zachodzi na nich trywialnie. Przeliczalna rodzina $E_n$ i tych singletonów pokrywa $[a,b]$, więc $F\in\AC G_*$. Ponieważ $N$ ma miarę Lebesgue'a zero, $F'=f$ prawie wszędzie; stosujemy charakteryzację pierwotnych HK i niezmienniczość całki przy zmianie na zbiorze zerowym.
+\end{proof}
+\begin{przyklad}[Funkcja o przeliczalnie wielu osobliwościach]
+Niech $c_n=2^{-n}$, $r_n=2^{-n-3}$ oraz niech $\psi\in C_c^1((-1,1))$ spełnia $\psi(0)=1$. Definiujemy
+$F(0)=0$ oraz $F(x)=\sum_{n\ge1}n^{-1}\psi((x-c_n)/r_n)$ dla $x\in(0,1]$. Nośniki składników są parami rozłączne, a amplitudy $1/n$ maleją do zera, więc $F$ jest ciągła na $[0,1]$ i klasy $C^1$ poza punktem $0$. Jej pochodna jest HK-całkowalna oraz $\int_0^1F'=F(1)-F(0)=0$. Ponieważ $\psi$ jest niezerowa i znika na brzegu nośnika, suma wahań na rozłącznych nośnikach jest nie mniejsza niż $2\sum_{n\ge1}1/n=\infty$. W istocie $\int_0^1|F'(x)|\,\mathrm d\lambda(x)=\left(\int_{-1}^1|\psi'(t)|\,\mathrm dt\right)\sum_{n\ge1}1/n=\infty$. Stąd $F\notin\BV[0,1]$ i $F\notin\AC[0,1]$. Mimo to całka HK pochodnej istnieje.
+\end{przyklad}
+\begin{stwierdzenie}[Sklejanie pierwotnych]\label{st:denjoy-sklejanie}
+Niech $a<c<b$ i niech $F:[a,b]\to\R$ będzie ciągła. Jeśli $F|_{[a,c]}\in\AC G_*[a,c]$ oraz $F|_{[c,b]}\in\AC G_*[c,b]$, to $F\in\AC G_*[a,b]$. Jeśli dodatkowo $F'=f$ prawie wszędzie na obu podprzedziałach, to $(\mathrm D_*)\int_a^b f=(\mathrm D_*)\int_a^c f+(\mathrm D_*)\int_c^b f$.
+\end{stwierdzenie}
+\begin{proof}
+Domknięte pokrycia obu przedziałów przez zbiory, na których obowiązuje $\AC_*$, są także pokryciami przez zbiory domknięte w $[a,b]$. Łącząc te dwie rodziny, otrzymujemy przeliczalne pokrycie $[a,b]$ bez konieczności kontrolowania przedziałów mających końce po różnych stronach $c$: definicja $\AC G_*$ wymaga kontroli osobno na każdym zbiorze pokrycia. Wzór całkowy jest tożsamością przyrostów $F$.
+\end{proof}
+\begin{uwaga}[Pochodna prawie wszędzie nie identyfikuje pierwotnej]
+Ciągłość i równość $F'=f$ prawie wszędzie nie wystarczają do wzoru Newtona--Leibniza. Przykładem jest funkcja Cantora $C$, dla której $C'=0$ prawie wszędzie, lecz $C(1)-C(0)=1$. Warunek $\AC G_*$ usuwa tę niejednoznaczność. Jest zatem warunkiem na \emph{pierwotną}, a nie tylko na zbiór punktów istnienia jej pochodnej.
+\end{uwaga}
+
+\section{Szeroka całka Denjoya (Denjoya--Chinczyna)}
+Zmieniamy dwa elementy definicji: oscylacje zastępujemy przyrostami między końcami przedziałów, a zwykłą pochodną --- pochodną aproksymatywną. Zachowujemy ciągłość funkcji pierwotnej.
+\begin{definicja}[Pochodna aproksymatywna]
+Mierzalny zbiór $E\subset\R$ ma gęstość jeden w punkcie $x$, jeśli $\lambda(E\cap(x-r,x+r))/(2r)\to1$ przy $r\downarrow0$. Mówimy, że $F$ ma pochodną aproksymatywną $F'_{\mathrm{ap}}(x)=L$, jeżeli dla każdego $\varepsilon>0$ zbiór punktów $y\ne x$ spełniających
+$\left|\frac{F(y)-F(x)}{y-x}-L\right|\ge\varepsilon$ ma gęstość zero w $x$. Zwykła pochodna, o ile istnieje, jest też pochodną aproksymatywną o tej samej wartości.
+\end{definicja}
+\begin{definicja}[Klasa $\AC G$ i szeroka całka Denjoya]
+Dla ciągłej $F:[a,b]\to\R$ i $E\subset[a,b]$ piszemy $F\in\AC(E)$, jeśli dla każdego $\varepsilon>0$ istnieje $\eta>0$ takie, że dla każdej skończonej rodziny przedziałów $[u_j,v_j]$ o rozłącznych wnętrzach i końcach należących do $E$ warunek $\sum_j(v_j-u_j)<\eta$ pociąga $\sum_j|F(v_j)-F(u_j)|<\varepsilon$. Piszemy $F\in\AC G[a,b]$, gdy $[a,b]=\bigcup_{n\ge1}E_n$ dla zbiorów domkniętych $E_n$ z $F\in\AC(E_n)$. Funkcja $f$ jest całkowalna w szerokim sensie Denjoya, jeżeli istnieje ciągła $F\in\AC G[a,b]$ z $F'_{\mathrm{ap}}=f$ prawie wszędzie. Definiujemy $ (\mathrm D_{\mathrm{sz}})\int_a^b f=F(b)-F(a)$.
+\end{definicja}
+\begin{lemat}[Przedłużenie ze zbioru domkniętego]
+Jeśli $E\subset[a,b]$ jest domknięty, $F:[a,b]\to\R$ jest ciągła i $F\in\AC(E)$, to $F|_E$ ma absolutnie ciągłe przedłużenie $u:[a,b]\to\R$. Ponadto $\lambda(F(E))\le\int_E|u'(x)|\,\mathrm d\lambda(x)$.
+\end{lemat}
+\begin{proof}
+Dla pustego lub jednopunktowego $E$ teza jest oczywista. W przeciwnym razie przedłużamy $F$ liniowo na każdej składowej $[\min E,\max E]\setminus E$, a poza otoczką $E$ --- stale. Z ciągłości $F$ wynika ciągłość $u$. Ustalmy $\varepsilon>0$ i wybierzmy finitarną rodzinę największych luk, tak aby suma długości pozostałych była mniejsza od parametru z warunku $\AC(E)$ dla błędu $\varepsilon/3$. Suma modułów przyrostów na pozostałych lukach jest wtedy również mała. Dla rozłącznych przedziałów o małej łącznej długości rozcinamy je w końcach wybranych luk. Części z końcami w $E$ kontroluje $\AC(E)$, części w pominiętych lukach kontroluje poprzednie oszacowanie, a na skończenie wielu wybranych lukach $u$ jest lipschitzowska. Otrzymujemy $u\in\AC[a,b]$.
+
+Dla przedłużenia absolutnie ciągłego obrazy przedziałów spełniają $\operatorname{diam}u(J)\le\int_J|u'|\,\mathrm d\lambda$. Pokrywając $E$ otwartymi przedziałami i używając regularności miary oraz absolutnej ciągłości całki, uzyskujemy $\lambda(u(E))\le\int_E|u'|\,\mathrm d\lambda$.
+\end{proof}
+\begin{twierdzenie}[Pochodna aproksymatywna i jednoznaczność]
+Każda ciągła funkcja $F\in\AC G[a,b]$ ma skończoną pochodną aproksymatywną prawie wszędzie. Jeśli $F'_{\mathrm{ap}}=0$ prawie wszędzie, to $F$ jest stała. W konsekwencji szeroka całka Denjoya jest dobrze określona i liniowa.
+\end{twierdzenie}
+\begin{proof}
+Niech $[a,b]=\bigcup_n E_n$ będzie domkniętym pokryciem z definicji, a $u_n$ --- absolutnie ciągłym przedłużeniem $F|_{E_n}$ z lematu. Prawie każdy punkt $x\in E_n$ jest punktem gęstości jeden zbioru $E_n$ i punktem różniczkowalności $u_n$. W takim punkcie, dla $y\in E_n$, ilorazy różnicowe $F$ są równe ilorazom dla $u_n$, więc $F'_{\mathrm{ap}}(x)=u_n'(x)$. Wyjątki ze wszystkich $n$ tworzą zbiór miary zero.
+
+Jeżeli $F'_{\mathrm{ap}}=0$ prawie wszędzie, to $u_n'=0$ prawie wszędzie na $E_n$. Z lematu wynika $\lambda(F(E_n))\le\int_{E_n}|u_n'|\,\mathrm d\lambda=0$, a więc $\lambda(F([a,b]))=0$. Ponieważ ciągły obraz przedziału jest przedziałem, $F([a,b])$ musi być jednym punktem i $F$ jest stała.
+
+Klasa $\AC G$ jest stabilna na kombinacje liniowe: wystarczy przejść do przeliczalnego pokrycia przecięciami zbiorów domkniętych. Pochodne aproksymatywne są liniowe, gdy istnieją. Dwie pierwotne tej samej funkcji różnią się zatem stałą, a całka jest jednoznaczna i liniowa.
+\end{proof}
+\begin{wniosek}[Właściwe rozszerzenie klasy HK]
+Każda funkcja całkowalna w sensie HK, Perrona lub wąskim sensie Denjoya jest całkowalna w szerokim sensie Denjoya z tą samą wartością całki. Inkluzja jest właściwa.
+\end{wniosek}
+\begin{proof}
+Dla dowolnego $E$ nierówność $|F(v)-F(u)|\le\osc_{[u,v]}F$ daje $\AC G_*\subset\AC G$, a zwykła pochodna jest pochodną aproksymatywną. Właściwość wykaże następny przykład.
+\end{proof}
+\begin{przyklad}[Oscylacje w lukach zbioru Cantora]
+Niech $K\subset[0,1]$ będzie klasycznym zbiorem Cantora. Na etapie $n\ge1$ usuwanych jest $2^{n-1}$ luk $I_{n,k}=(a_{n,k},b_{n,k})$ długości $3^{-n}$. Definiujemy
+\[
+F(x)=\begin{cases}
+2^{-n}\sin^2\!\bigl(\pi3^n(x-a_{n,k})\bigr),&x\in I_{n,k},\\
+0,&x\in K.
+\end{cases}
+\]
+Funkcja jest ciągła: na końcach luk wynosi zero, a amplitudy na lukach wysokich poziomów dążą do zera. Jest klasy $\AC$ na domknięciu każdej luki i stała na $K$, zatem należy do $\AC G[0,1]$.
+
+Pokażemy, że $F\notin\AC G_*[0,1]$. Gdyby $K$ było pokryte przeliczalnie wieloma domkniętymi zbiorami $E_m\cap K$ z $F\in\AC_*(E_m)$, twierdzenie Baire'a zastosowane w $K$ dałoby podstawowy przedział Cantora $J$ pewnego poziomu $r$, dla którego $J\cap K\subset E_m$ dla jednego $m$. Wszystkie luki poziomu $n>r$ zawarte w $J$ mają końce w $E_m$. Ich liczba wynosi $2^{n-r-1}$, suma długości dąży do zera, a suma oscylacji jest równa $2^{n-r-1}2^{-n}=2^{-r-1}$, co przeczy definicji $\AC_*(E_m)$.
+
+Niech $f=F'$ na dopełnieniu $K$, a na $K$ określmy $f=0$. W lukach mamy
+$f(x)=\pi(3/2)^n\sin(2\pi3^n(x-a_{n,k}))$.
+Ponieważ $\lambda(K)=0$, $F'_{\mathrm{ap}}=f$ prawie wszędzie. Stąd $(\mathrm D_{\mathrm{sz}})\int_0^1 f=F(1)-F(0)=0$. Gdyby $f$ była całkowalna HK, jej pierwotna $G$ należałaby do $\AC G_*$. Różnica $G-F$ miałaby zerową pochodną aproksymatywną prawie wszędzie, więc na mocy poprzedniego twierdzenia byłaby stała, wbrew $F\notin\AC G_*$. Ponadto każdy poziom wnosi tę samą dodatnią wartość do $\int|f|$, więc $f\notin\mathcal L^1$.
+\end{przyklad}
+\begin{uwaga}[Granica teorii]
+Szeroka całka Denjoya odtwarza funkcje pierwotne klasy $\AC G$ z ich pochodnych aproksymatywnych, lecz nie dowolne funkcje ciągłe z pochodnych prawie wszędzie. Funkcja Cantora ma pochodną aproksymatywną zero prawie wszędzie, ale nie jest klasy $\AC G$, gdyż jest niestała.
+\end{uwaga}
+
+% ============================================================
+% UZUPELNIENIE MATEMATYCZNE: ROZDZIAL 9
+% ============================================================
+\subsection*{Różnica między $\AC(E)$ i $\AC_*(E)$}
+\begin{przyklad}[Brak kontroli oscylacji na lukach]\label{prz:ac-kontra-acstar}
+Niech $K$ będzie klasycznym zbiorem Cantora, a $F$ funkcją z przykładu o oscylacjach w lukach $K$ z tego rozdziału. Na $K$ zachodzi $F=0$, więc $F\in\AC(K)$: przyrosty pomiędzy dowolnymi punktami $K$ są równe zeru. Nie zachodzi natomiast $F\in\AC_*(K)$. Istotnie, dla luk $I_{n,k}$ usuwanych na poziomie $n$ mamy końce w $K$ oraz
+\[
+\sum_{k=1}^{2^{n-1}}|I_{n,k}|=2^{n-1}3^{-n}\longrightarrow0,
+\qquad
+\sum_{k=1}^{2^{n-1}}\osc_{\overline I_{n,k}}F
+=2^{n-1}2^{-n}=\frac12.
+\]
+Dla każdego $\eta>0$ znajdziemy zatem rozłączne przedziały o końcach w $K$ i łącznej długości mniejszej niż $\eta$, na których suma oscylacji pozostaje równa $1/2$. To pokazuje, dlaczego w szerokiej teorii kontrolujemy jedynie przyrosty, a w wąskiej całe oscylacje.
+\end{przyklad}
+\begin{twierdzenie}[Wzór Newtona--Leibniza dla szerokiej całki Denjoya]\label{tw:denjoy-szeroka-ftc}
+Niech $F\in C[a,b]\cap\AC G[a,b]$. Wówczas $F'_{\mathrm{ap}}$ istnieje i jest skończona prawie wszędzie. Ustalmy dowolną funkcję $f:[a,b]\to\R$ o skończonych wartościach, równą $F'_{\mathrm{ap}}$ wszędzie tam, gdzie ta pochodna istnieje poza pewnym zbiorem miary zero. Wówczas dla dowolnych $a\le u\le v\le b$ funkcja $f$ jest całkowalna w szerokim sensie Denjoya na $[u,v]$ i
+\[
+ (\mathrm D_{\mathrm{sz}})\int_u^v f(x)\,\mathrm dx=F(v)-F(u).
+\]
+\end{twierdzenie}
+\begin{proof}
+Istnienie pochodnej aproksymatywnej prawie wszędzie ustalono we wcześniejszym twierdzeniu tego rozdziału. Jeśli $[a,b]=\bigcup_n E_n$ jest domkniętym pokryciem z $F\in\AC(E_n)$, to zbiory $E_n\cap[u,v]$ są domknięte w $[u,v]$ i pokrywają ten przedział; dlatego $F|_{[u,v]}\in\AC G[u,v]$. W punktach wewnętrznych $[u,v]$ pochodna aproksymatywna ograniczenia zgadza się z pochodną aproksymatywną $F$, o ile istnieje. Definicja szerokiej całki Denjoya daje tożsamość. Jej jednoznaczność wynika z wcześniejszego twierdzenia o zerowej pochodnej aproksymatywnej.
+\end{proof}
+\begin{stwierdzenie}[Lokalność i liniowość szerokiej całki]\label{st:denjoy-szeroka-lokalnosc}
+Jeśli $f,g$ są całkowalne w szerokim sensie Denjoya na $[a,b]$ i $\alpha,\beta\in\R$, to $\alpha f+\beta g$ jest całkowalna i jej całka jest odpowiednią kombinacją liniową. Jeśli $a<c<b$, to $f$ jest całkowalna na $[a,b]$ wtedy i tylko wtedy, gdy jest całkowalna na $[a,c]$ i $[c,b]$; wówczas całki są addytywne.
+\end{stwierdzenie}
+\begin{proof}
+Dla pierwotnych $F,G$ bierzemy $H=\alpha F+\beta G$. Przez przecięcia domkniętych zbiorów pokrycia uzyskujemy $H\in\AC G$, a pochodna aproksymatywna jest liniowa wszędzie, gdzie obie pochodne istnieją. Dla lokalności ograniczamy pierwotną do podprzedziałów. Odwrotnie, dwie pierwotne na podprzedziałach można skleić, dodając jednej z nich stałą, aby wartości w $c$ się zgadzały. Otrzymujemy ciągłą funkcję, a połączone domknięte pokrycia obu przedziałów świadczą, że jest klasy $\AC G$. Przyrost tej funkcji jest sumą przyrostów po obu częściach.
+\end{proof}
+\begin{uwaga}[Nazewnictwo i oddzielne poziomy teorii]
+W terminologii historycznej szeroka całka Denjoya jest także nazywana całką Denjoya--Chinczyna. Jej opis wymaga $\AC G$ i pochodnej aproksymatywnej. Wąska całka Denjoya, równoważna HK i Perronowi, wymaga $\AC G_*$ oraz zwykłej pochodnej prawie wszędzie. Przyjęcie tylko $\AC G$ i zwykłej pochodnej bez dodatkowych warunków prowadzi do innego schematu definicyjnego; obu pojęć nie należy utożsamiać bez dowodu.
+\end{uwaga}
+
+\section{Miary związane z całkowaniem}
+Określenie „miara Lebesgue'a--Riemanna” nie jest standardową nazwą jednej konstrukcji. Rozróżniamy zawartość Jordana, miarę Lebesgue'a i miary Lebesgue'a--Stieltjesa.
+\subsection*{Miara Jordana („riemannowska”)}
+Dla ograniczonego $A\subset\R$ kładziemy $c_*(A)=\sup\{|E|:E\subset A,\ E\ \text{elementarny}\}$ oraz $c^*(A)=\inf\{|E|:A\subset E,\ E\ \text{elementarny}\}$, gdzie zbiory elementarne są skończonymi uniami ograniczonych przedziałów, a $|E|$ to suma ich długości po sprowadzeniu do przedziałów o rozłącznych wnętrzach. Zbiór jest mierzalny w sensie Jordana, jeżeli $c_*(A)=c^*(A)$.
+\begin{stwierdzenie}
+Dla $A\subset[a,b]$ następujące warunki są równoważne: (i) $A$ jest mierzalny w sensie Jordana; (ii) $\ind A\in\mathcal R[a,b]$; (iii) $\lambda(\partial A)=0$. Wówczas $c(A)=\int_a^b\ind A(x)\,\mathrm dx=\lambda(A)$.
+\end{stwierdzenie}
+\begin{proof}
+Sumy dolne i górne funkcji $\ind A$ opisują, odpowiednio, długości przedziałów całkowicie zawartych w $A$ oraz tych przecinających $A$. Po dopuszczeniu dowolnych podziałów otrzymujemy zawartość wewnętrzną i zewnętrzną Jordana. Punkty nieciągłości $\ind A$ tworzą względny brzeg $A$, różniący się od brzegu w $\R$ co najwyżej końcami $a,b$. Stosujemy kryterium Lebesgue'a dla Riemanna.
+\end{proof}
+Zbiory mierzalne w sensie Jordana tworzą algebrę, nie $\sigma$-algebrę: $\Q\cap[0,1]$ jest przeliczalną sumą zbiorów jednopunktowych mierzalnych w sensie Jordana, ale sam nie jest mierzalny w tym sensie. Przejście od skończonych do przeliczalnych pokryć prowadzi do miary zewnętrznej Lebesgue'a $\lambda^*(A)=\inf\{\sum_k|I_k|:A\subset\bigcup_kI_k\}$ oraz konstrukcji Carathéodory'ego. Dla ograniczonego $A$ mamy $c_*(A)\le\lambda_*(A)\le\lambda^*(A)\le c^*(A)$.
+
+\subsection*{Miary Lebesgue'a--Stieltjesa}
+Niech $\alpha:\R\to\R$ będzie niemalejąca i prawostronnie ciągła. Funkcja przedmiarowa $\mu_\alpha((u,v])=\alpha(v)-\alpha(u)$ przedłuża się do jednoznacznej lokalnie skończonej miary borelowskiej, której uzupełnienie nazywamy miarą Lebesgue'a--Stieltjesa. Dla $\alpha(x)=x$ jest to $\lambda$, a dla $\alpha=\ind{[c,\infty)}$ --- miara Diraca $\delta_c$. Odwrotnie, każda lokalnie skończona miara borelowska na $\R$ jest określona przez niemalejącą prawostronnie ciągłą funkcję dystrybuantową, unormowaną np. przez $\alpha(0)=0$. W porównaniu ze zwykłą całką Riemanna--Stieltjesa ograniczamy miarę do $(a,b]$.
+\begin{twierdzenie}[Kryterium oparte na rozkładzie miary]
+Niech $\mu_\alpha=w\lambda+\mu_{\mathrm{sc}}+\sum_{k\ge1}c_k\delta_{t_k}$ na rozważanym przedziale, gdzie $w\ge0$ jest mierzalna, $\mu_{\mathrm{sc}}$ jest bezatomowa i osobliwa względem $\lambda$, $c_k>0$, a $\sum_kc_k<\infty$. Funkcja mierzalna $f$ jest bezwzględnie całkowalna względem $\mu_\alpha$ wtedy i tylko wtedy, gdy
+\[
+\int|f|w\,\mathrm d\lambda+\int|f|\,\mathrm d\mu_{\mathrm{sc}}+\sum_{k\ge1}c_k|f(t_k)|<\infty.
+\]
+\end{twierdzenie}
+\begin{proof}
+Rozkład miary na trzy składniki daje równość całek funkcji nieujemnej względem sumy miar, a następnie warunek skończoności całki $|f|$. Rozkład zakładamy jako dany (standardowe twierdzenia o dekompozycji miar).
+\end{proof}
+\subsection*{Miara Cantora: obliczenia i porównanie całek}
+Niech $C:[0,1]\to[0,1]$ oznacza funkcję Cantora, a $\mu_C$ miarę Cantora. Jest to ciągła dystrybuanta miary osobliwej względem Lebesgue'a; $\mu_C$ jest skupiona na zbiorze Cantora, $\mu_C(K)=1$, ale nie ma atomów. Zasada samopodobieństwa daje prosty rachunek momentów.
+\begin{przyklad}[Momenty miary osobliwej]
+Dla losowej zmiennej $X$ o rozkładzie $\mu_C$ mamy $X\stackrel d= (B+X')/3$, gdzie $B$ przyjmuje wartości $0,2$ z prawdopodobieństwami $1/2$, a $X'$ jest niezależną kopią $X$. Stąd
+$\mathbb E X=\frac13\mathbb E X+\frac13$, czyli $\mathbb E X=1/2$, a także $\mathbb E X^2=\frac19\mathbb E X^2+\frac29\mathbb E X+\frac29$, czyli $\mathbb E X^2=3/8$. Zatem
+\[
+\int_0^1 1\,\mathrm dC=1,\qquad \int_0^1 x\,\mathrm dC=\frac12,\qquad \int_0^1 x^2\,\mathrm dC=\frac38.
+\]
+Ponadto z całkowania przez części, ponieważ $C$ jest ciągła i ma wahanie ograniczone, wynika $2\int_0^1 C\,\mathrm dC=C(1)^2-C(0)^2=1$. Choć $C'=0$ prawie wszędzie, nie wolno zastępować $\mathrm dC$ przez $C'(x)\,\mathrm dx$: zgubilibyśmy część osobliwą miary. Ponieważ $x\mapsto x^2$ jest ciągła, równości obowiązują zarówno dla całek Riemanna--Stieltjesa, jak i Lebesgue'a--Stieltjesa.
+\end{przyklad}
+\begin{przyklad}[Ta sama funkcja, różne miary]
+Niech $K$ będzie zbiorem Cantora. Funkcja $\ind K$ jest całkowalna Riemanna względem $\lambda$ z całką $0$, ponieważ $K$ ma miarę Lebesgue'a zero. Jest również całkowalna Lebesgue'a--Stieltjesa względem $\mu_C$ z całką $1$. Natomiast zwykła całka Riemanna--Stieltjesa $\int_0^1\ind K\,\mathrm dC$ nie istnieje: punkty nieciągłości funkcji $\ind K$ tworzą $K$, a $\mu_C(K)=1$, więc nie jest spełnione kryterium oscylacyjne.
+\end{przyklad}
+
+% ============================================================
+% UZUPELNIENIE MATEMATYCZNE: ROZDZIAL 10
+% ============================================================
+\subsection*{Atomy i wartości na końcach: porównanie z KS}
+\begin{stwierdzenie}[Reprezentacja całki KS przez miarę przy prawostronnej ciągłości]\label{st:ks-miara-konwencja}
+Niech $\alpha:[a,b]\to\R$ będzie niemalejąca, prawostronnie ciągła na $[a,b)$ i niech $\mu_\alpha$ będzie miarą na $(a,b]$ zdefiniowaną przez $\mu_\alpha((s,t])=\alpha(t)-\alpha(s)$. Jeśli $f:[a,b]\to\R$ jest regulowana, to całka Kurzweila--Stieltjesa $\int_a^b f\,\mathrm d\alpha$ istnieje i
+\[
+\int_a^b f\,\mathrm d\alpha=\int_{(a,b]}f\,\mathrm d\mu_\alpha.
+\]
+W szczególności $\mu_\alpha(\{c\})=\alpha(c)-\alpha(c-)$ dla $a<c\le b$, a punkt $a$ nie wnosi atomu w tej konwencji.
+\end{stwierdzenie}
+\begin{proof}
+Z rozdziału o KS wiemy, że dla integrandu regulowanego i integratora BV całka istnieje oraz że zgadza się z całką Lebesgue'a--Stieltjesa w przyjętej konwencji. Tutaj $\alpha$ jest monotoniczna, więc ma wahanie ograniczone. Przechodząc z $s\uparrow c$ w równości $\mu_\alpha((s,c])=\alpha(c)-\alpha(s)$, otrzymujemy wskazaną masę atomu.
+\end{proof}
+\begin{przyklad}[Skok prawostronny i wartość w punkcie]
+Dla $a<c<b$ zdefiniujmy $g(x)=\ind{(c,b]}(x)$. Funkcja $g$ nie jest prawostronnie ciągła w $c$, a jej przyrost na przedziale $[c,t]$, $t>c$, wynosi $1$. Dla dowolnej regulowanej funkcji $f$ całka KS istnieje i $\int_a^b f\,\mathrm dg=f(c)$ (jest to wkład prawego skoku). Zastąpienie $g$ przez prawostronnie ciągłą funkcję $g^+(x)=\ind{[c,b]}(x)$ nie zmienia tu wartości całki KS dla regulowanej $f$, lecz przenosi skok z prawej strony $c$ na lewą. Zwykła miara Stieltjesa jest związana z wybranym prawostronnie ciągłym reprezentantem.
+\end{przyklad}
+\begin{przyklad}[Dwa skoki przeciwnego znaku w jednym punkcie]
+Niech $g(x)=\ind{\{c\}}(x)$, gdzie $a<c<b$. Funkcja ma skok lewy $\Delta^-g(c)=1$ i prawy $\Delta^+g(c)=-1$. Dla regulowanej $f$ wzór skokowy z rozdziału 6 daje $\int_a^b f\,\mathrm dg=f(c)-f(c)=0$. Nie należy utożsamiać takiej funkcji $g$ z dystrybuantą dodatniej miary: $g$ nie jest monotoniczna ani prawostronnie ciągła.
+\end{przyklad}
+\begin{przyklad}[Dwa różne końce przedziału]
+Na $[a,b]$ niech $g_a=\ind{(a,b]}$ oraz $g_b=\ind{\{b\}}$. Dla dowolnej regulowanej $f$ zachodzi
+$\int_a^b f\,\mathrm dg_a=f(a)$ oraz $\int_a^b f\,\mathrm dg_b=f(b)$ w sensie KS. Są to odpowiednio skok prawostronny w $a$ i skok lewostronny w $b$. W miarze $\mu_\alpha$ na $(a,b]$ pierwszy z nich nie występuje, ponieważ funkcja $g_a$ nie jest prawostronnie ciągła w $a$; drugi odpowiada atomowi w $b$.
+\end{przyklad}
+
+\section{Całka Lebesgue'a}
+\begin{definicja}
+Niech $(\Omega,\Sigma,\mu)$ będzie przestrzenią z miarą. Dla mierzalnej funkcji $f:\Omega\to[0,\infty]$ definiujemy
+\[
+\int_\Omega f\,\mathrm d\mu=\sup\left\{\int_\Omega s\,\mathrm d\mu:0\le s\le f,\ s\ \text{jest funkcją prostą}\right\},\qquad
+\int_\Omega\sum_{j=1}^n c_j\ind{A_j}\,\mathrm d\mu=\sum_{j=1}^n c_j\mu(A_j),
+\]
+przy przedstawieniu z rozłącznymi zbiorami $A_j$. Funkcja rzeczywista $f$ jest całkowalna, $f\in\mathcal L^1(\mu)$, gdy $\int|f|\,\mathrm d\mu<\infty$; wtedy $\int f=\int f^+-\int f^-$. Przestrzeń $L^1(\mu)$ składa się z klas funkcji całkowalnych równych prawie wszędzie.
+\end{definicja}
+W konstrukcji Riemanna dzielimy dziedzinę na przedziały, a w konstrukcji Lebesgue'a grupujemy punkty według wartości funkcji. Dla $f\ge0$ mamy wzór warstwowy $\int_\Omega f\,\mathrm d\mu=\int_0^\infty\mu(\{f>t\})\,\mathrm dt$, rozumiany jako całka nieujemnej funkcji mierzalnej.
+\begin{lemat}[Absolutna ciągłość całki]
+Jeśli $f\in\mathcal L^1(\mu)$, to dla każdego $\varepsilon>0$ istnieje $\eta>0$ takie, że $\mu(A)<\eta$ pociąga $\int_A|f|\,\mathrm d\mu<\varepsilon$ dla każdego $A\in\Sigma$.
+\end{lemat}
+\begin{proof}
+Wybieramy $M>0$ z $\int_{\{|f|>M\}}|f|\,\mathrm d\mu<\varepsilon/2$ oraz $\eta=\varepsilon/(2M)$. Wtedy $\int_A|f|\,\mathrm d\mu\le M\mu(A)+\int_{\{|f|>M\}}|f|\,\mathrm d\mu<\varepsilon$. Istnienie $M$ wynika ze zbieżności monotonicznej obcięć.
+\end{proof}
+\begin{twierdzenie}[Twierdzenia graniczne]
+Niech $(\Omega,\Sigma,\mu)$ będzie przestrzenią z miarą.
+\begin{enumerate}[label=(\alph*)]
+\item Jeśli $0\le f_n\uparrow f$ punktowo, to $\int f_n\,\mathrm d\mu\uparrow\int f\,\mathrm d\mu$, także gdy granica wynosi $+\infty$.
+\item Jeśli $f_n\ge0$, to $\int\liminf_n f_n\,\mathrm d\mu\le\liminf_n\int f_n\,\mathrm d\mu$ (Fatou).
+\item Jeśli $f_n\to f$ prawie wszędzie oraz $|f_n|\le g$ prawie wszędzie dla pewnej $g\in\mathcal L^1(\mu)$, to $\int|f_n-f|\,\mathrm d\mu\to0$ (zbieżność zmajoryzowana).
+\item Przestrzeń $L^1(\mu)$ z normą $\|f\|_1=\int|f|\,\mathrm d\mu$ jest przestrzenią Banacha (twierdzenie Riesza--Fischera).
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+(a) Z monotoniczności całki istnieje $L=\lim_n\int f_n\le\int f$. Niech $s\le f$ będzie nieujemną funkcją prostą i $0<\theta<1$. Zbiory $A_n=\{f_n\ge\theta s\}$ rosną do $\Omega$, więc $\int f_n\ge\theta\int_{A_n}s\to\theta\int s$. Zatem $L\ge\theta\int s$. Przechodzimy z $\theta\uparrow1$, a następnie bierzemy supremum po $s\le f$.
+
+(b) Kładziemy $g_n=\inf_{k\ge n}f_k$. Funkcje $g_n$ rosną do $\liminf_nf_n$, a $g_n\le f_k$ dla $k\ge n$. Część (a) i definicja granicy dolnej dają tezę.
+
+(c) Po pominięciu zbioru zerowego mamy $|f|\le g$ i $|f_n-f|\le2g$. Funkcje $h_n=2g-|f_n-f|$ są nieujemne i zbiegają do $2g$. Z lematu Fatou, pisząc $G=\int g<\infty$, dostajemy $2G\le\liminf_n\int h_n=2G-\limsup_n\int|f_n-f|$. Zatem ostatnie całki dążą do zera.
+
+(d) Z ciągu Cauchy'ego w $L^1$ wybieramy podciąg $(f_{n_k})$ z $\|f_{n_{k+1}}-f_{n_k}\|_1\le2^{-k}$. Dla mierzalnych reprezentantów kładziemy $H=\sum_{k\ge1}|f_{n_{k+1}}-f_{n_k}|$. Z (a) mamy $\int H\le\sum_k2^{-k}<\infty$, więc $H<\infty$ prawie wszędzie. Szereg przyrostów jest poza zbiorem zerowym bezwzględnie zbieżny i definiuje funkcję $f=f_{n_1}+\sum_k(f_{n_{k+1}}-f_{n_k})\in\mathcal L^1$. Dla każdego $k$ zachodzi $\|f-f_{n_k}\|_1\le\sum_{j\ge k}2^{-j}\to0$. Warunek Cauchy'ego daje zbieżność całego ciągu.
+\end{proof}
+\begin{twierdzenie}[Riemann $\subset$ Lebesgue]
+$\mathcal R[a,b]\subset\mathcal L^1([a,b],\lambda)$, a wartości całek są równe.
+\end{twierdzenie}
+\begin{proof}
+Wybieramy zagęszczające się podziały $P_n$ z $U(f,P_n)-L(f,P_n)\to0$. Dolne i górne funkcje schodkowe $\ell_n,u_n$ spełniają (poza przeliczalnym zbiorem punktów podziałów) $\ell_n\uparrow\ell\le f\le u\leftarrow u_n$. Ponieważ $\int(u_n-\ell_n)\,\mathrm d\lambda\to0$, otrzymujemy $\ell=u=f$ prawie wszędzie. Stąd mierzalność $f$ względem uzupełnionej miary Lebesgue'a, a ograniczoność daje całkowalność. Wspólną wartością jest granica sum dolnych i górnych.
+\end{proof}
+\begin{twierdzenie}[McShane = Lebesgue]
+$\mathcal M[a,b]=\mathcal L^1([a,b],\lambda)$ jako zbiory konkretnych funkcji o skończonych wartościach (z dowolnymi zmianami na zbiorach miary zero). Wartości obu całek są równe.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: Lebesgue $\Rightarrow$ McShane.} Niech $f\in\mathcal L^1$ i $\varepsilon>0$. Wybieramy $h>0$ z $h(b-a)<\varepsilon/3$ i rozbijamy dziedzinę na mierzalne zbiory $E_k=\{kh\le f<(k+1)h\}$, $k\in\mathbb Z$. Z absolutnej ciągłości całki i regularności miary wybieramy otwarte $G_k\supset E_k$ tak, aby dla $U=\bigcup_k(G_k\setminus E_k)$ było $\int_U|f|<\varepsilon/3$ oraz $\sum_k(|kh|+h)\lambda(G_k\setminus E_k)<\varepsilon/3$. Dla $t\in E_k$ wybieramy $\delta(t)>0$ z $(t-\delta(t),t+\delta(t))\cap[a,b]\subset G_k$.
+
+W dowolnym wolnym drobnym podziale, przy znaczniku $t_i\in E_k$ na części $I_i\cap E_k$ błąd między $f(t_i)$ i $f(x)$ jest co najwyżej $h$. Pozostałe części $I_i\setminus E_k$ leżą w $U$; ich wnętrza są rozłączne. Po rozdzieleniu sumy otrzymujemy
+\[
+\left|S(f,\mathcal P)-\int_a^b f\,\mathrm d\lambda\right|
+\le h(b-a)+\sum_k(|kh|+h)\lambda(G_k\setminus E_k)+\int_U|f|\,\mathrm d\lambda<\varepsilon.
+\]
+
+\emph{Krok 2: McShane $\Rightarrow$ Lebesgue.} Z całkowalności HK wynika mierzalność $f$. Z twierdzenia o bezwzględnej całkowalności McShane'a także $|f|\in\mathcal M$, z całką $J\ge0$. Obcięcia $h_n=\min(|f|,n)$ są ograniczone i mierzalne, zatem Lebesgue'a całkowalne, a na mocy kroku 1 także McShane'a całkowalne. Monotoniczność całki daje $\int h_n\,\mathrm d\lambda\le J$. Przez zbieżność monotoniczną $\int|f|\,\mathrm d\lambda\le J<\infty$. Krok 1 i jednoznaczność całki HK dowodzą zgodności wartości.
+\end{proof}
+\begin{twierdzenie}[Kryterium bezwzględnej całkowalności HK]
+Jeżeli $f\ge0$ jest HK-całkowalna, to $f\in\mathcal L^1$. Dla dowolnej funkcji o skończonych wartościach mamy
+\[
+f\in\mathcal L^1\quad\Longleftrightarrow\quad f\in\HK\ \text{i}\ |f|\in\HK.
+\]
+Każda ograniczona funkcja jest HK-całkowalna wtedy i tylko wtedy, gdy jest mierzalna w sensie Lebesgue'a. W przypadku Riemanna potrzebny jest dodatkowo warunek, aby zbiór punktów nieciągłości miał miarę zero.
+\end{twierdzenie}
+\begin{proof}
+Dla nieujemnej $f$ obcięcia $h_n=\min(f,n)$ są mierzalne, ograniczone i całkowalne Lebesgue'a, więc należą także do HK. Z monotoniczności HK mamy $\int h_n\,\mathrm d\lambda\le(\HK)\int f<\infty$. Zbieżność monotoniczna daje $f\in\mathcal L^1$. Zastosowanie pierwszej części do $|f|$ oraz inkluzja $\mathcal L^1\subset\HK$ dają równoważność. Ostatnia teza wynika z mierzalności funkcji HK i skończoności miary przedziału.
+\end{proof}
+\begin{twierdzenie}[Kryterium oparte na funkcji pierwotnej]
+Funkcja $F:[a,b]\to\R$ jest absolutnie ciągła wtedy i tylko wtedy, gdy istnieje $f\in\mathcal L^1([a,b],\lambda)$ taka, że $F(x)=F(a)+\int_a^x f\,\mathrm d\lambda$ dla wszystkich $x$. Wówczas $F'=f$ prawie wszędzie. W szczególności, jeśli $F(x)=F(a)+(\HK)\int_a^x g$, to
+$g\in\mathcal L^1\Longleftrightarrow F\in\AC[a,b]$.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $F(x)=F(a)+\int_a^x f$ z $f\in\mathcal L^1$, to dla skończonej rodziny przedziałów o rozłącznych wnętrzach zachodzi
+$\sum_j|F(v_j)-F(u_j)|\le\int_{\bigcup_j[u_j,v_j]}|f|\,\mathrm d\lambda$. Lemat o absolutnej ciągłości całki dowodzi $F\in\AC$. Twierdzenie Lebesgue'a o różniczkowaniu całki daje $F'=f$ prawie wszędzie.
+
+Odwrotnie, dla absolutnie ciągłej $F$ otrzymujemy w szczególności skończone wahanie. Funkcja $F$ wyznacza miarę ze znakiem $\nu_F((u,v])=F(v)-F(u)$, przy $\nu_F(\{a\})=0$. Warunek absolutnej ciągłości $F$ pokazuje, że $\nu_F\ll\lambda$: każdy zbiór zerowy pokrywamy rodziną przedziałów o dowolnie małej sumie długości i stosujemy warunek $\AC$. Twierdzenie Radona--Nikodyma dostarcza $f\in\mathcal L^1$ z $\nu_F(A)=\int_A f\,\mathrm d\lambda$, zatem $F(x)-F(a)=\int_a^x f\,\mathrm d\lambda$. Wniosek dla HK wynika z równości całek oraz jednoznaczności pierwotnej HK.
+\end{proof}
+\begin{przyklad}[Funkcja Cantora nie jest absolutnie ciągła]
+Funkcja Cantora $C$ jest ciągła, niemalejąca, ma pochodną $0$ prawie wszędzie, ale $C(1)-C(0)=1$. Nie może być absolutnie ciągła: w takim przypadku poprzednie twierdzenie dawałoby $1=\int_0^1 C'\,\mathrm d\lambda=0$. W szczególności funkcja Cantora nie jest pierwotną HK funkcji zerowej.
+\end{przyklad}
+\begin{stwierdzenie}[Uzupełnienie w normie Alexiewicza]
+Przestrzeń funkcji HK-całkowalnych modulo równość prawie wszędzie, z normą $\|f\|_A=\sup_{x\in[a,b]}|\int_a^x f|$, nie jest zupełna. Jej uzupełnienie izometryczne można utożsamić z $C_0[a,b]=\{F\in C[a,b]:F(a)=0\}$ z normą supremum.
+\end{stwierdzenie}
+\begin{proof}
+Przyporządkowanie $f\mapsto F(x)=\int_a^x f$ jest liniową izometrią i jest różnowartościowe modulo równość prawie wszędzie. Jego obraz zawiera wielomiany zerujące się w $a$, gdyż ich pochodne są ciągłe. Wielomiany te są gęste w $C_0[a,b]$, więc domknięciem obrazu jest całe $C_0[a,b]$. Nie każda funkcja ciągła o wartości zero w $a$ jest pierwotną HK; przykładem jest odpowiednio przesunięta i przeskalowana funkcja Cantora. Obraz nie jest zatem zupełny.
+\end{proof}
+\begin{twierdzenie}[Twierdzenia graniczne dla HK]
+Niech $(f_n)$ będzie ciągiem funkcji HK-całkowalnych na $[a,b]$.
+\begin{enumerate}[label=(\alph*)]
+\item Jeśli $f_n\uparrow f$ prawie wszędzie, $f$ ma skończone wartości prawie wszędzie i $\sup_n(\HK)\int_a^b f_n<\infty$, to $f$ jest HK-całkowalna oraz $\int_a^b f_n\to\int_a^b f$.
+\item Jeśli $f_n\to f$ prawie wszędzie i istnieją $g,h\in\HK[a,b]$ takie, że $g\le f_n\le h$ prawie wszędzie dla wszystkich $n$, to $f\in\HK[a,b]$ i $\int_a^b f_n\to\int_a^b f$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+(a) Funkcje $u_n=f_n-f_1$ są nieujemne i HK-całkowalne, zatem należą do $\mathcal L^1$. Zbieżność monotoniczna Lebesgue'a oraz ograniczenie całek zapewniają, że $u=f-f_1\in\mathcal L^1$ i $\int u_n\to\int u$. Dodajemy $f_1$.
+
+(b) Funkcja $h-g$ jest nieujemna i HK-całkowalna, więc należy do $\mathcal L^1$. Także $u_n=f_n-g$ jest nieujemna, HK-całkowalna i ograniczona przez $h-g$. Zbieżność zmajoryzowana Lebesgue'a daje $u=f-g\in\mathcal L^1$ i $\int|u_n-u|\to0$. Dodajemy $g$.
+\end{proof}
+\begin{przyklad}[Konieczność założeń]
+Dla $f_n=n\ind{(0,1/n)}$ mamy $f_n\to0$ punktowo na $[0,1]$, lecz $\int_0^1f_n=1$ dla wszystkich $n$; brak wspólnej całkowalnej majoranty. Z kolei $g_n(x)=\min\{n,1/x\}$ dla $x>0$, $g_n(0)=0$, rośnie punktowo do funkcji równej $1/x$ na $(0,1]$, a $0$ w zerze, i $\int_0^1g_n=1+\log n\to\infty$. Sama monotoniczność bez skończonej granicy całek nie wystarcza.
+\end{przyklad}
+\subsection*{Przykłady parametryczne i kryteria całkowalności}
+\begin{przyklad}[Dodatnia osobliwość potęgowa]
+Niech $f_p(x)=x^{-p}$ dla $x\in(0,1]$ oraz $f_p(0)=0$. Na $[0,1]$ funkcja jest całkowalna w sensie Riemanna dokładnie dla $p\le0$, natomiast w sensie Lebesgue'a, McShane'a, HK i Denjoya dla $p<1$. Istotnie,
+\[
+\int_c^1x^{-p}\,\mathrm dx=\begin{cases}(1-c^{1-p})/(1-p),&p\ne1,\\-\log c,&p=1.\end{cases}
+\]
+Granica przy $c\downarrow0$ jest skończona dokładnie dla $p<1$, a dla funkcji nieujemnej całkowalność HK jest równoważna Lebesgue'a.
+\end{przyklad}
+\begin{przyklad}[Oscylacja zmienia próg]
+Niech $g_p(x)=x^{-p}\sin(1/x)$ dla $x>0$, $g_p(0)=0$. Wtedy
+\[
+\begin{array}{c|c}
+\text{Teoria całkowania}&\text{Dokładny warunek całkowalności na }[0,1]\\\hline
+\text{Riemann / Darboux}&p\le0\\
+\text{Lebesgue / McShane}&p<1\\
+\text{HK / Denjoy}&p<2
+\end{array}
+\]
+Dla $p<2$ podstawienie $u=1/x$ prowadzi do całki niewłaściwej $\int_1^\infty u^{p-2}\sin u\,\mathrm du$, zbieżnej na mocy kryterium Dirichleta. Przy $p\ge2$ jej wyrazy oscylacyjne nie zanikają wystarczająco, aby całka miała granicę. Całka modułu jest porównywalna z sumą $\sum_{k\ge1}k^{p-2}$, więc jest skończona dokładnie dla $p<1$. Dla $p\le0$ funkcja jest ograniczona, a jej jedyny możliwy punkt nieciągłości to $0$.
+\end{przyklad}
+\begin{przyklad}[Osobliwość logarytmiczna]
+Dla $q\in\R$ definiujemy $h_q(x)=1/[x(\log(1/x))^q]$ dla $0<x\le e^{-1}$ i $h_q(0)=0$. Funkcja jest nieograniczona przy $0$ dla każdego $q$, więc nie jest całkowalna w sensie właściwego Riemanna. Jest całkowalna w sensie Lebesgue'a, McShane'a, HK i Denjoya wtedy i tylko wtedy, gdy $q>1$. Po podstawieniu $u=\log(1/x)$ otrzymujemy
+$\int_c^{e^{-1}}h_q(x)\,\mathrm dx=\int_1^{\log(1/c)}u^{-q}\,\mathrm du$, która ma granicę skończoną dokładnie dla $q>1$.
+\end{przyklad}
+\begin{przyklad}[Ograniczona funkcja niecałkowalna Riemanna]
+Niech $K\subset[0,1]$ będzie domkniętym zbiorem o dodatniej mierze Lebesgue'a i pustym wnętrzu (grubym zbiorem Cantora). Wówczas $\ind K$ jest ograniczona i Lebesgue'a całkowalna, z całką $\lambda(K)>0$, lecz nie jest całkowalna Riemanna: jej zbiór punktów nieciągłości to $K$, mający dodatnią miarę. Nie można usunąć tej przeszkody przez zmianę wartości jedynie na zbiorze miary zero: w prawie każdym punkcie gęstości $K$ są arbitralnie bliskie punkty z wartością $1$, a dzięki gęstości dopełnienia również punkty z wartością $0$.
+\end{przyklad}
+\begin{uwaga}[Przypadki, w których kontrprzykład nie istnieje]
+Na zwartym przedziale $\mathcal M=\mathcal L^1\subset\HK$, a wąska całka Denjoya jest dokładnie HK. Nie istnieje więc funkcja całkowalna McShane'a, lecz niecałkowalna Lebesgue'a, ani funkcja całkowalna Lebesgue'a, lecz niecałkowalna HK. Funkcja charakterystyczna zbioru niemierzalnego w sensie Lebesgue'a nie jest całkowalna HK: wszystkie funkcje HK-całkowalne są mierzalne.
+\end{uwaga}
+
+\section{Całka Daniella--Stone'a}
+W tej konstrukcji zaczynamy od funkcjonału całkowego na kracie funkcji, a dopiero potem odzyskujemy miarę. Nie jest to kolejne rozszerzenie nieabsolutnej całki, lecz abstrakcyjny sposób konstruowania całki Lebesgue'a.
+\begin{definicja}[Krata i krata wektorowa]
+Kratą jest zbiór częściowo uporządkowany $E$, w którym każda para $u,v$ ma w $E$ supremum i infimum, oznaczane $u\vee v$ i $u\wedge v$. Jeżeli ponadto $E$ jest rzeczywistą przestrzenią wektorową, a porządek jest zgodny z dodawaniem i mnożeniem przez skalary nieujemne, to $E$ jest \emph{kratą wektorową} (przestrzenią Riesza). Dla zbioru $\Omega$ kratą funkcji nazywamy podprzestrzeń liniową $H\subset\R^\Omega$ zamkniętą na punktowe maksimum i minimum. Równoważnie: $f\in H\Rightarrow|f|\in H$.
+\end{definicja}
+Istotnie, $f\vee g=\tfrac12(f+g+|f-g|)$, $f\wedge g=\tfrac12(f+g-|f-g|)$, $f^+=f\vee0$, $f^-=(-f)\vee0$. Nie wymagamy, aby każde dwa elementy kraty były porównywalne.
+\begin{przyklad}[Funkcje ciągłe i wielomiany]
+Przestrzeń $C[a,b]$ jest kratą wektorową: maksimum, minimum i moduł funkcji ciągłej są ciągłe. Natomiast wielomiany na $[-1,1]$ tworzą przestrzeń liniową, ale nie kratę: dla $f(x)=x$ funkcja $|f(x)|=|x|$ nie jest wielomianem, ponieważ nie jest różniczkowalna w zerze.
+\end{przyklad}
+\begin{uwaga}[Rola warunku kraty]
+Zamkniętość na operacje kratowe pozwala obcinać funkcje i porównywać je bez opuszczania dziedziny funkcjonału. Obecność funkcji stałej $1$ jest osobnym założeniem. Warunek kraty nie oznacza zamkniętości na granice ciągów monotonicznych.
+\end{uwaga}
+\begin{definicja}[Funkcjonał Daniella]
+Niech $\Omega\ne\varnothing$ i niech $H$ będzie kratą wektorową ograniczonych funkcji rzeczywistych na $\Omega$, zawierającą $\ind\Omega=1$. Liniowy funkcjonał $I_0:H\to\R$ nazywamy funkcjonałem Daniella, jeśli jest dodatni ($h\ge0\Rightarrow I_0(h)\ge0$) i ciągły porządkowo z góry ($h_n\in H$, $h_n\downarrow0$ punktowo $\Rightarrow I_0(h_n)\downarrow0$). Symbolem $\sigma(H)$ oznaczamy najmniejszą $\sigma$-algebrę, względem której wszystkie funkcje z $H$ są mierzalne.
+\end{definicja}
+\begin{lemat}[Pierwszy krok przedłużenia]
+Jeśli $0\le h_n\uparrow f$ punktowo, $h_n\in H$, to wartość $\lim_n I_0(h_n)\in[0,\infty]$ zależy tylko od $f$, a nie od wybranego ciągu przybliżającego.
+\end{lemat}
+\begin{proof}
+Niech również $0\le g_n\uparrow f$. Dla ustalonego $k$ mamy $(h_k-g_n)^+\downarrow0$, przy czym te funkcje należą do $H$ dzięki własności kraty. Z ciągłości porządkowej $I_0((h_k-g_n)^+)\downarrow0$. Ponieważ $h_k\le g_n+(h_k-g_n)^+$, dostajemy $I_0(h_k)\le I_0(g_n)+I_0((h_k-g_n)^+)$. Przechodząc z $n\to\infty$, a następnie biorąc supremum po $k$, uzyskujemy $\lim_kI_0(h_k)\le\lim_nI_0(g_n)$. Zamiana ról daje nierówność przeciwną. Argument działa również dla wspólnej wartości $+\infty$.
+\end{proof}
+\begin{twierdzenie}[Daniella--Stone'a: istnienie miary]
+Dla funkcjonału $I_0$ z definicji 12.4 istnieje dokładnie jedna skończona miara $\mu$ na $\sigma(H)$ taka, że $I_0(h)=\int_\Omega h\,\mathrm d\mu$ dla wszystkich $h\in H$. Ponadto $\mu(\Omega)=I_0(1)$. Po uzupełnieniu miary całkę rozszerzamy na nieujemne funkcje mierzalne i następnie na funkcje z $\mathcal L^1(\mu)$.
+\end{twierdzenie}
+Istnienie jest klasycznym twierdzeniem Daniella--Stone'a i przyjmujemy je jako wynik zewnętrzny. Jednym z punktów wyjścia jest miara zewnętrzna
+\[
+\mu^*(A)=\inf\left\{\sum_{n=1}^\infty I_0(h_n):h_n\in H,\ h_n\ge0,\ \ind A\le\sum_{n=1}^\infty h_n\right\}.
+\]
+\begin{proof}[Dowód jednoznaczności]
+Niech $\mu,\nu$ reprezentują $I_0$. Dla $h\in H$, $t\in\R$, funkcje $u_n=1\wedge n(h-t)^+$ należą do $H$ i rosną do $\ind{\{h>t\}}$. Stąd $\mu(\{h>t\})=\lim_nI_0(u_n)=\nu(\{h>t\})$. Aby odzyskać skończone przecięcia zbiorów tego rodzaju, stosujemy funkcje $v_n=1\wedge n\bigwedge_{j=1}^m(h_j-t_j)^+$, które również należą do $H$ i rosną do $\ind{\bigcap_{j=1}^m\{h_j>t_j\}}$. Zatem miary zgadzają się na układzie $\pi$ generującym $\sigma(H)$, a obie są skończone. Twierdzenie o jednoznaczności miar na układzie $\pi$ kończy dowód.
+\end{proof}
+\begin{przyklad}[Od całki Riemanna do miary Lebesgue'a]
+Niech $\Omega=[0,1]$, $H=C[0,1]$ i $I_0(h)=\int_0^1h(x)\,\mathrm dx$ w sensie Riemanna. Jeśli $h_n\downarrow0$ i $h_n\in H$, z twierdzenia Diniego wynika zbieżność jednostajna, więc $I_0(h_n)\downarrow0$. Otrzymana miara na $\sigma(H)$, czyli na zbiorach borelowskich, zgadza się na przedziałach z długością. Po uzupełnieniu jest zwykłą miarą Lebesgue'a.
+\end{przyklad}
+\begin{przyklad}[Dodatniość nie zastępuje ciągłości porządkowej]
+Niech $\Omega=\N$, $H=c$ będzie kratą ciągów zbieżnych, a $I_0(h)=\lim_{k\to\infty}h(k)$. Jest to dodatni funkcjonał liniowy. Dla $h_n(k)=\ind{\{k>n\}}$ mamy $h_n\downarrow0$ punktowo, ale $I_0(h_n)=1$ dla wszystkich $n$. Nie ma reprezentującej miary przeliczalnie addytywnej na $\N$: musiałaby przypisywać zerową masę każdemu punktowi, a jednocześnie całej $\N$ masę $1$.
+\end{przyklad}
+
+% ============================================================
+% UZUPELNIENIE MATEMATYCZNE: ROZDZIAL 12
+% ============================================================
+\subsection*{Dlaczego ciągłość porządkowa jest konieczna}
+\begin{przyklad}[Funkcjonał dodatni niepochodzący od miary na dziedzinie]\label{prz:daniel-koniecznosc}
+Niech $X=(0,1]$, a $H$ będzie kratą funkcji na $X$ będących ograniczeniami funkcji z $C[0,1]$. Każda $h\in H$ ma jednoznaczne ciągłe przedłużenie $\widetilde h$ do $[0,1]$. Definiujemy dodatni funkcjonał liniowy $I(h)=\widetilde h(0)$. Dla $h_n(t)=\max\{1-nt,0\}$, $t\in X$, zachodzi $h_n\downarrow0$ punktowo na $X$, lecz $I(h_n)=1$ dla każdego $n$. Funkcjonał nie jest zatem ciągły porządkowo.
+
+Gdyby istniała miara $\mu$ na $X$ reprezentująca $I$ dla wszystkich $h\in H$, mielibyśmy $\mu(X)=I(1)=1$. Z twierdzenia o zbieżności monotonicznej zastosowanego do $1-h_n\uparrow1$ wynikałoby $\int_Xh_n\,\mathrm d\mu\downarrow0$, sprzecznie z $I(h_n)=1$. Zatem dodatniość i liniowość bez ciągłości porządkowej nie wystarczają do reprezentacji przez miarę na danej przestrzeni.
+\end{przyklad}
+\begin{przyklad}[Jawna konstrukcja miary z funkcjonału Daniella]\label{prz:daniell-atoms}
+Na $\Omega=[0,1]$ weźmy kratę $H=C[0,1]$ zawierającą funkcję stałą $1$ oraz funkcjonał
+$I(h)=\sum_{n=1}^\infty 2^{-n}h(1/n)$. Szereg jest bezwzględnie zbieżny dla każdego $h\in H$, ponieważ $|I(h)|\le\|h\|_\infty\sum_{n\ge1}2^{-n}=\|h\|_\infty$. Funkcjonał $I$ jest dodatni i liniowy. Jeśli $h_k\downarrow0$ punktowo w $H$, to twierdzenie Diniego daje $\|h_k\|_\infty\to0$, a więc $0\le I(h_k)\le\|h_k\|_\infty\to0$. Funkcjonał jest zatem ciągły porządkowo.
+
+Miara reprezentująca $I$ ma postać $\mu=\sum_{n=1}^\infty 2^{-n}\delta_{1/n}$. Sprawdzamy bezpośrednio, że $I(h)=\int_{[0,1]}h\,\mathrm d\mu$ dla wszystkich $h\in H$ oraz $\mu([0,1])=1$. Chociaż punkty $1/n$ gromadzą się w $0$, miara nie ma atomu w $0$: $\mu(\{0\})=0$. Przykład pokazuje, że konstrukcja Daniella--Stone'a obejmuje miary czysto atomowe bez rozpoczynania od miary zewnętrznej na przedziałach.
+\end{przyklad}
+\begin{uwaga}[Trzy różne poziomy konstrukcji]
+Trzeba oddzielić: (i) sprawdzenie dodatniości i liniowości $I$ na kracie, (ii) ciągłość porządkową $h_n\downarrow0\Rightarrow I(h_n)\downarrow0$ oraz (iii) rozszerzenie funkcjonału i konstrukcję miary na odpowiedniej $\sigma$-algebrze. Punkt (ii) jest warunkiem umożliwiającym przeliczalną addytywność. Samo zdefiniowanie $\mu(A)=I(\ind A)$ nie wystarcza, jeżeli wskaźniki zbiorów $A$ nie należą do początkowej kraty $H$.
+\end{uwaga}
+
+\section{Całka Radona}
+W podejściu Radona uwzględniamy topologię dziedziny. Na potrzeby tej sekcji niech $X$ będzie lokalnie zwartą przestrzenią Hausdorffa o przeliczalnej bazie, np. $\R^d$.
+\begin{definicja}[Miara Radona i dodatni funkcjonał]
+Miara Radona na $X$ to miara borelowska $\mu$ skończona na zbiorach zwartych, wewnętrznie regularna przez zbiory zwarte i zewnętrznie regularna przez zbiory otwarte:
+$\mu(A)=\sup\{\mu(K):K\subset A,\ K\ \text{zwarty}\}=\inf\{\mu(U):A\subset U,\ U\ \text{otwarty}\}$ dla borelowskiego $A$. Przestrzeń $C_c(X)$ składa się z ciągłych funkcji o zwartym nośniku. Dodatni liniowy funkcjonał $\Lambda:C_c(X)\to\R$ jest alternatywnym punktem wyjścia dla całkowania.
+\end{definicja}
+\begin{twierdzenie}[Riesza--Markowa: reprezentacja Radona]
+Każdy dodatni liniowy funkcjonał $\Lambda:C_c(X)\to\R$ ma postać $\Lambda(\varphi)=\int_X\varphi\,\mathrm d\mu$ dla dokładnie jednej miary Radona $\mu$. Dla każdego otwartego $U\subset X$ zachodzi
+\[
+\mu(U)=\sup\{\Lambda(\varphi):\varphi\in C_c(X),\ 0\le\varphi\le1,\ \supp\varphi\subset U\}.
+\]
+\end{twierdzenie}
+Istnienie reprezentacji przyjmujemy jako wynik zewnętrzny (twierdzenie Riesza--Markowa). Nie zakładamy globalnej ograniczoności $\Lambda$ w normie supremum, gdyż $\mu(X)$ może być nieskończona.
+\begin{proof}[Lokalna kontrola i jednoznaczność]
+Dla zwartego $K$ istnieje $\chi\in C_c(X)$ z $\chi\ge0$ i $\chi=1$ na $K$. Jeśli $\supp\varphi\subset K$, to $|\Lambda(\varphi)|\le\Lambda(|\varphi|)\le\|\varphi\|_\infty\Lambda(\chi)$, co daje lokalne oszacowanie. Gdy istnieje miara reprezentująca, dla zwartego $K\subset U$, $U$ otwartego, wybieramy $\chi$ równą $1$ na $K$ i z nośnikiem w $U$; wtedy $\mu(K)\le\Lambda(\chi)\le\mu(U)$. Regularność wewnętrzna daje wzór z twierdzenia, a regularność zewnętrzna wyznacza wartości miary na wszystkich zbiorach borelowskich.
+\end{proof}
+\begin{stwierdzenie}[Związek z całkami Daniella i Lebesgue'a]
+Jeżeli $X$ jest zwarta, to $C_c(X)=C(X)$ i dodatni funkcjonał liniowy na $C(X)$ jest funkcjonałem Daniella. Dla lokalnie zwartej przestrzeni o przeliczalnej bazie reprezentację Radona można otrzymać również przez lokalne funkcjonały Daniella.
+\end{stwierdzenie}
+\begin{proof}
+Niech $h_n\in C(X)$ i $h_n\downarrow0$. Z twierdzenia Diniego wynika $\|h_n\|_\infty\to0$. Jeśli $\Lambda$ jest dodatnia, $0\le\Lambda(h_n)\le\|h_n\|_\infty\Lambda(1)\to0$, co daje ciągłość porządkową. Na przestrzeni lokalnie zwartej można zastosować podobny argument z funkcjami odcinającymi na zwartych zbiorach.
+\end{proof}
+\begin{przyklad}[Gęstość i atom w jednym funkcjonale]
+Na $C_c(\R)$ definiujemy $\Lambda(\varphi)=\int_0^1\varphi(x)\,\mathrm d\lambda(x)+2\varphi(0)$. Jest to dodatni funkcjonał liniowy, reprezentowany przez $\mu=\lambda|_{[0,1]}+2\delta_0$. Stąd $\int 1\,\mathrm d\mu=3$, $\int x^2\,\mathrm d\mu=1/3$, $\int\ind{\{0\}}\,\mathrm d\mu=2$. Ostatnią wartość obliczamy już z miary, ponieważ funkcja charakterystyczna punktu nie należy do $C_c(\R)$.
+\end{przyklad}
+\begin{przyklad}[Całka skupiona na okręgu]
+Dla $\varphi\in C_c(\R^2)$ definiujemy $\Lambda(\varphi)=\int_0^{2\pi}\varphi(\cos t,\sin t)\,\mathrm dt$. Funkcjonał jest dodatni i liniowy. Reprezentująca go miara jest miarą długości łuku na jednostkowym okręgu $S^1$, skupioną na tym okręgu. Mamy $\mu(S^1)=2\pi$ i $\int_{S^1}x_1^2\,\mathrm d\mu=\pi$. Miarę tę należy odróżnić od dwuwymiarowej miary Lebesgue'a, dla której $\lambda_2(S^1)=0$.
+\end{przyklad}
+
+% ============================================================
+% UZUPELNIENIE MATEMATYCZNE: ROZDZIAL 13
+% ============================================================
+\subsection*{Jednoznaczność reprezentacji i obliczenia}
+\begin{twierdzenie}[Jednoznaczność miary Radona na podstawie $C_c$]\label{tw:radon-unikalnosc}
+Niech $X$ będzie lokalnie zwartą przestrzenią Hausdorffa, a $\mu,\nu$ lokalnie skończonymi regularnymi miarami borelowskimi na $X$. Jeśli
+$\int_X f\,\mathrm d\mu=\int_Xf\,\mathrm d\nu$ dla każdej $f\in C_c(X)$, to $\mu=\nu$ na wszystkich zbiorach borelowskich.
+\end{twierdzenie}
+\begin{proof}
+Dla dowolnego otwartego $U\subset X$ zachodzi
+\[
+\mu(U)=\sup\left\{\int_X f\,\mathrm d\mu: f\in C_c(X),\ 0\le f\le1,\ \supp f\subset U\right\}.
+\]
+Nierówność ``$\ge$'' jest oczywista. Dla nierówności przeciwnej wybieramy dowolny zwarty $K\subset U$. Lemat o funkcji odcinającej na przestrzeni lokalnie zwartej Hausdorffa daje $f\in C_c(X)$ z $0\le f\le1$, $f|_K=1$ i $\supp f\subset U$. Wtedy $\mu(K)\le\int f\,\mathrm d\mu$. Po wzięciu supremum po zwartych $K\subset U$ i zastosowaniu regularności wewnętrznej mamy wzór. Z równości całek dla funkcji z $C_c(X)$ wnioskujemy $\mu(U)=\nu(U)$ dla każdego otwartego $U$. Regularność zewnętrzna daje równość obu miar na wszystkich zbiorach borelowskich.
+\end{proof}
+\begin{przyklad}[Skończona suma ewaluacji punktowych]
+Dla punktów $x_1,\dots,x_m\in X$ oraz liczb $c_1,\dots,c_m>0$ funkcjonał $\Lambda(f)=\sum_{j=1}^m c_jf(x_j)$ na $C_c(X)$ jest dodatni i liniowy. Reprezentuje go miara Radona $\mu=\sum_{j=1}^m c_j\delta_{x_j}$. Twierdzenie \ref{tw:radon-unikalnosc} pokazuje, że żadna inna regularna miara borelowska nie daje tych samych wartości $\Lambda(f)$ dla wszystkich $f\in C_c(X)$.
+\end{przyklad}
+
+\section{Całka na grupie topologicznej: miara Haara}
+Przesunięcie zbioru na prostej nie zmienia jego długości. Miara Haara uogólnia tę zasadę na grupy, w których nie zakładamy współrzędnych ani nawet przemienności. Po skonstruowaniu miary stosujemy zwykłą całkę Lebesgue'a względem niej. W twierdzeniu o istnieniu zakładamy lokalną zwartość i warunek Hausdorffa; nie zakładamy metryzowalności ani przeliczalnej bazy.
+
+\subsection*{Potrzebne pojęcia topologiczne}
+\begin{definicja}[Grupa topologiczna]
+Grupa topologiczna to grupa $G$ z topologią, dla której odwzorowania $(x,y)\mapsto xy$ z $G\times G$ do $G$ oraz $x\mapsto x^{-1}$ z $G$ do $G$ są ciągłe. Element neutralny oznaczamy przez $e$. Przestrzeń jest Hausdorffa, jeśli różne punkty mają rozłączne otoczenia, a zwarta, jeśli z każdego pokrycia otwartego można wybrać skończone podpokrycie. W przestrzeni Hausdorffa lokalna zwartość oznacza, że każdy punkt ma otoczenie otwarte o zwartym domknięciu.
+\end{definicja}
+Dla $A,B\subset G$ piszemy $AB=\{ab:a\in A,b\in B\}$ i $A^{-1}=\{a^{-1}:a\in A\}$. Przesunięcia lewostronne $x\mapsto ax$ i prawostronne $x\mapsto xa$ są homeomorfizmami. Na funkcjach używamy konwencji $(L_af)(x)=f(a^{-1}x)$, $(R_af)(x)=f(xa)$, w szczególności $L_aL_b=L_{ab}$.
+\begin{uwaga}[Dwa warunki przeliczalności]
+Przestrzeń jest $\sigma$-zwarta, jeśli można ją przedstawić jako przeliczalną sumę zbiorów zwartych. Miara jest $\sigma$-skończona, jeśli przestrzeń można pokryć przeliczalnie wieloma zbiorami mierzalnymi o skończonej mierze. Pierwszy warunek dotyczy topologii, drugi miary. Miara skończona na zbiorach zwartych jest $\sigma$-skończona na przestrzeni $\sigma$-zwartej. Lokalnie zwarta przestrzeń Hausdorffa o przeliczalnej bazie jest $\sigma$-zwarta, ale ogólna grupa lokalnie zwarta nie musi być $\sigma$-zwarta; przykładem jest nieprzeliczalna grupa dyskretna.
+\end{uwaga}
+\begin{lemat}[Małe otoczenia i zbiory zwarte]
+W grupie topologicznej Hausdorffa lokalną zwartość wystarczy sprawdzić w $e$. Iloczyn dwóch zbiorów zwartych i obraz zwartego zbioru przez inwersję są zwarte. Dla każdego otwartego $U\ni e$ istnieje symetryczne otwarte $V\ni e$ takie, że $\overline V$ jest zwarte i $\overline V\,\overline V\subset U$.
+\end{lemat}
+\begin{proof}
+Przesunięcia są homeomorfizmami; mnożenie i inwersja są ciągłe, więc zachowują zwartość odpowiednich obrazów. Wybieramy otwarte $O\ni e$ o zwartym domknięciu. Z ciągłości mnożenia istnieje otoczenie $W\ni e$ z $WW\subset U$. Korzystając z regularności lokalnie zwartych przestrzeni Hausdorffa, możemy wybrać symetryczne otwarte $V\ni e$ z $\overline V\subset W\cap O$; wówczas $\overline V\,\overline V\subset WW\subset U$ i $\overline V$ jest zwarte.
+\end{proof}
+\begin{lemat}[Funkcje odcinające]
+Jeśli $K\subset U\subset G$, gdzie $K$ jest zwarty, a $U$ otwarty, to istnieje $h\in C_c(G)$ taka, że $0\le h\le1$, $h=1$ na $K$ i $\supp h\subset U$.
+\end{lemat}
+\begin{proof}
+Z lokalnej zwartości i zwartości $K$ wybieramy otwarty $W$ z $K\subset W\subset\overline W\subset U$, przy $\overline W$ zwartym. W zwartej przestrzeni Hausdorffa $\overline W$ stosujemy lemat Urysohna do rozłącznych domkniętych zbiorów $K$ i $\overline W\setminus W$, otrzymując funkcję $0\le h\le1$, równą $1$ na $K$ i $0$ na brzegu $W$. Przedłużenie przez zero na $G\setminus W$ jest ciągłe i ma zwarty nośnik w $U$.
+\end{proof}
+\begin{lemat}[Jednostajna ciągłość przesunięć]
+Dla $f\in C_c(G)$ zachodzi $\|L_af-f\|_\infty\to0$ i $\|R_af-f\|_\infty\to0$ przy $a\to e$. Gdy $a$ należy do dostatecznie małego otoczenia $e$, nośniki wszystkich $L_af$, $R_af$ i $f$ leżą we wspólnym zbiorze zwartym.
+\end{lemat}
+\begin{proof}
+Niech $K=\supp f$, a $V\ni e$ będzie otwarte i względnie zwarte. Dla $a\in V$ nośnik $R_af$ jest zawarty w $K a^{-1}\subset K\overline V^{-1}$. Zatem wszystkie istotne wartości funkcji $H(x,a)=f(xa)-f(x)$ występują na wspólnym zwartym zbiorze $C=K\cup K\overline V^{-1}$. Funkcja $H$ jest ciągła i $H(x,e)=0$. Dla każdego $x\in C$ wybieramy otoczenia $O_x$ i $W_x\ni e$, na których $|H(y,a)|<\varepsilon$. Zwartość $C$ daje skończone podpokrycie $O_{x_1},\dots,O_{x_m}$; dla $a\in V\cap\bigcap_jW_{x_j}$ mamy $\|R_af-f\|_\infty<\varepsilon$. Analogiczny argument z $f(a^{-1}x)$ dowodzi tezy dla przesunięć lewostronnych.
+\end{proof}
+
+\subsection*{Miara Haara i twierdzenie o istnieniu}
+\begin{definicja}[Miary Haara]
+Niech $G$ będzie lokalnie zwartą grupą Hausdorffa, a $\mathcal B(G)$ jej $\sigma$-algebrą borelowską. \emph{Lewostronnie niezmienniczą miarą Haara} nazywamy niezerową miarę $\mu$ na $\mathcal B(G)$, skończoną na zwartych podzbiorach, taką, że $\mu(aA)=\mu(A)$ dla wszystkich $a\in G$ i $A\in\mathcal B(G)$, oraz spełniającą warunki regularności:
+\begin{itemize}
+\item $\mu(A)=\inf\{\mu(U):A\subset U,\ U\text{ otwarty}\}$ dla borelowskiego $A$;
+\item $\mu(U)=\sup\{\mu(K):K\subset U,\ K\text{ zwarty}\}$ dla otwartego $U$;
+\item $\mu(A)=\sup\{\mu(K):K\subset A,\ K\text{ zwarty}\}$ dla borelowskiego $A$ o $\mu(A)<\infty$.
+\end{itemize}
+Miara Haara \emph{prawostronnie niezmiennicza} spełnia te same warunki, lecz $\mu(Aa)=\mu(A)$ zamiast niezmienniczości lewostronnej. Nie zakładamy $\mu(G)<\infty$ ani $\mu(\{e\})>0$.
+\end{definicja}
+\begin{uwaga}[Związek z miarą Radona]
+W powyższej definicji regularność zewnętrzna obowiązuje na wszystkich zbiorach borelowskich, a wewnętrzna na zbiorach otwartych i zbiorach o mierze skończonej. Bez dodatkowych hipotez nie zakładamy regularności wewnętrznej na wszystkich zbiorach. Jeżeli $G$ jest $\sigma$-zwarta, można ją uzyskać przez wyczerpanie rosnącymi zbiorami zwartymi i zastosowanie warunku dla miary skończonej.
+\end{uwaga}
+\begin{lemat}[Dodatniość na zbiorach otwartych]
+Każda lewostronnie niezmiennicza miara Haara jest dodatnia na niepustych zbiorach otwartych. W szczególności dla $0\le f\in C_c(G)$, $f\not\equiv0$, mamy $0<\int_G f\,\mathrm d\mu<\infty$.
+\end{lemat}
+\begin{proof}
+Z niezerowości $\mu$ i wewnętrznej regularności na $G$ wynika istnienie zwartego $K$ z $\mu(K)>0$. Dla niepustego otwartego $U$ rodzina przesunięć $\{aU:a\in G\}$ pokrywa $K$. Gdyby $\mu(U)=0$, jej skończone podpokrycie dawałoby $\mu(K)=0$, sprzeczność. Jeśli $f$ jest nieujemna i niezerowa, istnieje niepusty zbiór otwarty, na którym $f\ge c>0$; to daje dodatnią całkę. Skończoność wynika ze zwartego nośnika.
+\end{proof}
+\begin{twierdzenie}[Haara]
+Na każdej lokalnie zwartej grupie Hausdorffa $G$ istnieje lewostronnie niezmiennicza miara Haara. Jeżeli $\mu,\nu$ są dwiema takimi miarami, to istnieje dokładnie jedna stała $c>0$ taka, że $\nu=c\mu$. Dla ustalonej $0\le f_0\in C_c(G)$, $f_0\not\equiv0$, warunek $\int_G f_0\,\mathrm d\mu=1$ wybiera dokładnie jedną lewostronnie niezmienniczą miarę Haara. Inwersja $A\mapsto A^{-1}$ zamienia miarę lewostronną w prawostronną, również jednoznaczną z dokładnością do dodatniego czynnika.
+\end{twierdzenie}
+Dowód rozdzielimy na istnienie i jednoznaczność. Korzystamy z ogólnego twierdzenia o reprezentacji funkcjonałów, którego nie wyprowadzamy ponownie.
+\begin{twierdzenie}[Riesz--Markow bez przeliczalnej bazy; wynik zewnętrzny]
+Niech $X$ będzie lokalnie zwartą przestrzenią Hausdorffa. Każdy dodatni liniowy funkcjonał $\Lambda:C_c(X)\to\R$ ma dokładnie jedną reprezentację $\Lambda(f)=\int_X f\,\mathrm d\mu$ przez miarę borelowską skończoną na zbiorach zwartych, zewnętrznie regularną na borelowskich oraz wewnętrznie regularną na otwartych i na borelowskich o skończonej mierze. Dla otwartego $U$ zachodzi
+$\mu(U)=\sup\{\Lambda(h):h\in C_c(X),0\le h\le1,\supp h\subset U\}$.
+\end{twierdzenie}
+\subsection*{Dowód istnienia: pokrycia przesunięciami funkcji}
+Oznaczamy przez $\mathcal C=C_c(G)_+$ stożek nieujemnych funkcji ciągłych o zwartym nośniku. Ustalamy $f_0\in\mathcal C\setminus\{0\}$, nie zakładając wcześniej istnienia miary.
+\begin{definicja}[Koszt pokrycia funkcji]
+Dla $f\in\mathcal C$ i $g\in\mathcal C\setminus\{0\}$ definiujemy
+\[
+(f:g)=\inf\left\{\sum_{i=1}^n c_i:f\le\sum_{i=1}^n c_iL_{a_i}g,\ n\in\N,\ c_i>0,\ a_i\in G\right\}.
+\]
+Dla $f=0$ dopuszczamy pokrycie puste o koszcie $0$. Nierówności są punktowe na całym $G$.
+\end{definicja}
+\begin{lemat}[Własności kosztu]
+Jeżeli $f,g\in\mathcal C$ i $g\not\equiv0$, to $(f:g)<\infty$, a $(f:g)>0$ dla $f\not\equiv0$. Koszt jest monotoniczny względem $f$, dodatnio jednorodny i spełnia
+\[
+\begin{aligned}
+(tf:g)&=t(f:g), & (L_af:g)&=(f:g),\\
+(f_1+f_2:g)&\le(f_1:g)+(f_2:g), & (f:h)&\le(f:g)(g:h),
+\end{aligned}
+\]
+gdzie $t>0$, $a\in G$, a $g,h$ są niezerowe. Dla $I_g(f)=(f:g)/(f_0:g)$ zachodzi $I_g(f_0)=1$ i $0\le I_g(f)\le M_f:=(f:f_0)<\infty$.
+\end{lemat}
+\begin{proof}
+Niezerowa $g$ jest większa od pewnego $c>0$ na niepustym otwartym zbiorze $V$. Skończenie wiele przesunięć $a_iV$ pokrywa $\supp f$, stąd $f\le(\|f\|_\infty/c)\sum_iL_{a_i}g$ i koszt jest skończony. Z każdego pokrycia wynika $\|f\|_\infty\le\|g\|_\infty\sum_ic_i$, co daje dodatniość dla $f\ne0$.
+
+Jednorodność i niezmienniczość wynikają wprost z definicji, a podaddytywność przez połączenie dwóch pokryć. Jeżeli $f\le\sum_ic_iL_{a_i}g$ i $g\le\sum_jd_jL_{b_j}h$, to $f\le\sum_{i,j}c_id_jL_{a_ib_j}h$. Biorąc kresy dolne kosztów, otrzymujemy nierówność multiplikatywną. Stąd $(f:g)\le(f:f_0)(f_0:g)$ i żądane ograniczenie $I_g(f)\le M_f$.
+\end{proof}
+\begin{lemat}[Przybliżona addytywność]
+Dla $f_1,f_2\in\mathcal C$ i $\eta>0$ istnieje otwarte otoczenie $U\ni e$ takie, że dla każdego niezerowego $g\in\mathcal C$ z $\supp g\subset U$ zachodzi
+\[
+0\le I_g(f_1)+I_g(f_2)-I_g(f_1+f_2)<\eta.
+\]
+\end{lemat}
+\begin{proof}
+Niech $f=f_1+f_2\ne0$ (przypadek zerowy jest prosty). Wybieramy funkcję odcinającą $h\in\mathcal C$, równą $1$ na $\supp f$. Dla $\delta>0$ kładziemy $r_j=f_j/(f+\delta)$ i otrzymujemy $r_1+r_2\le1$, $f_j\le r_jf+\delta h$. Funkcje $r_j$ są ciągłe o zwartych nośnikach, więc z lematu o przesunięciach dla każdego $\rho>0$ istnieje otoczenie $U\ni e$ takie, że $|r_j(av)-r_j(a)|<\rho$ dla wszystkich $a\in G$, $v\in U$, $j=1,2$.
+
+Niech $\supp g\subset U$ i $f\le\sum_ic_iL_{a_i}g$. Jeśli $L_{a_i}g(x)>0$, to $x=a_iv$ dla pewnego $v\in U$, stąd $r_j(x)\le r_j(a_i)+\rho$. Dlatego
+$f_j\le\sum_ic_i(r_j(a_i)+\rho)L_{a_i}g+\delta h$.
+Przykrywając dodatkowo $\delta h$ przesunięciami $g$, przechodząc do kresów i sumując po $j$, dostajemy
+\[
+(f_1:g)+(f_2:g)\le(1+2\rho)(f:g)+2\delta(h:g).
+\]
+Po podzieleniu przez $(f_0:g)$ i użyciu ograniczeń z poprzedniego lematu wynika
+$0\le I_g(f_1)+I_g(f_2)-I_g(f)\le2\rho M_f+2\delta M_h$. Najpierw wybieramy $\delta$ tak, aby drugi składnik był mniejszy od $\eta/2$, a potem $\rho$, aby pierwszy był mniejszy od $\eta/2$. Wówczas otrzymane otoczenie $U$ działa jednocześnie dla wszystkich $g$ o nośniku zawartym w $U$.
+\end{proof}
+\begin{proof}[Dowód istnienia w twierdzeniu 14.9]
+\emph{Krok 1: wartości graniczne.} Rozważamy zwartą w topologii produktowej przestrzeń $P=\prod_{f\in\mathcal C}[0,M_f]$ (twierdzenie Tichonowa). Każdy funkcjonał $I_g$ traktujemy jako jej punkt. Dla otwartego otoczenia $U\ni e$ niech $S_U=\{I_g:g\in\mathcal C\setminus\{0\},\supp g\subset U\}$ i $F_U=\overline{S_U}$. Funkcje odcinające zapewniają $S_U\ne\varnothing$. Dla skończenie wielu otoczeń $U_1,\dots,U_m$ mamy $S_{\bigcap U_j}\subset\bigcap_j F_{U_j}$; zatem rodzina zamkniętych zbiorów $F_U$ ma własność skończonych przecięć. Zwartość $P$ daje punkt $I\in\bigcap_{U\ni e}F_U$.
+
+\emph{Krok 2: własności funkcjonału.} Ponieważ $I_g(f_0)=1$, $I_g(tf)=tI_g(f)$ i $I_g(L_af)=I_g(f)$, identyczności te przechodzą do $I$, gdyż opisują warunki domknięte w topologii produktowej. Dla ustalonych $f_1,f_2\in\mathcal C$ i $\eta>0$ poprzedni lemat daje otoczenie $U$, dla którego $0\le I_g(f_1)+I_g(f_2)-I_g(f_1+f_2)\le\eta$ dla wszystkich $I_g\in S_U$. Oszacowanie przechodzi do $I\in F_U$. Dowolność $\eta$ daje dokładną addytywność $I(f_1+f_2)=I(f_1)+I(f_2)$.
+
+\emph{Krok 3: przedłużenie i reprezentacja.} Dla rzeczywistej funkcji $f\in C_c(G)$ definiujemy $\Lambda(f)=I(f^+)-I(f^-)$. Addytywność i dodatnia jednorodność $I$ gwarantują, że $\Lambda$ jest dobrze określonym dodatnim liniowym funkcjonałem na $C_c(G)$: jeśli $f=p-q$ z $p,q\in\mathcal C$, to $p+f^-=q+f^+$, a więc $\Lambda(f)=I(p)-I(q)$. Ponadto $\Lambda(f_0)=1$ i $\Lambda(L_af)=\Lambda(f)$.
+
+Ogólne twierdzenie Riesza--Markowa daje reprezentującą miarę $\mu$. Dla każdego $a\in G$ miara $\mu_a(A)=\mu(aA)$ ma te same warunki regularności, a jej funkcjonał to $f\mapsto\Lambda(L_{a^{-1}}f)=\Lambda(f)$. Jednoznaczność reprezentacji daje $\mu_a=\mu$, czyli niezmienniczość lewostronną. Ponieważ $\Lambda(f_0)=1$, miara jest niezerowa.
+\end{proof}
+\begin{lemat}[Lokalna zamiana kolejności całkowania]
+Jeśli $\alpha,\beta$ są miarami borelowskimi na $G$ skończonymi na zbiorach zwartych, a $F\in C_c(G\times G)$, to obie całki iterowane są skończone i
+\[
+\int_G\left(\int_GF(x,y)\,\mathrm d\beta(y)\right)\mathrm d\alpha(x)
+=\int_G\left(\int_GF(x,y)\,\mathrm d\alpha(x)\right)\mathrm d\beta(y).
+\]
+\end{lemat}
+\begin{proof}
+Rzuty zwartego nośnika $F$ na obie współrzędne są zwartymi zbiorami $K,L$. Miarom przypisujemy na nich skończone wartości. Jednostajna ciągłość funkcji $F$ na $K\times L$ pozwala ją jednostajnie przybliżyć skończonymi sumami funkcji postaci $\ind{B_j}(x)F(x_j,y)$, gdzie $B_j\subset K$ są borelowskie i parami rozłączne. Dla takich sum zamiana kolejności całkowania jest bezpośrednia. Błąd obu całek jest ograniczony przez $\varepsilon\alpha(K)\beta(L)$, który dąży do zera. Całki po jednej zmiennej są funkcjami ciągłymi lub ich granicami jednostajnymi, więc są mierzalne.
+\end{proof}
+\begin{proof}[Dowód jednoznaczności w twierdzeniu 14.9]
+Niech $\mu,\nu$ będą dwiema lewostronnie niezmienniczymi miarami Haara. Dla $0\le f\in C_c(G)$ i niezerowej $0\le g\in C_c(G)$ takiej, że $g(x^{-1})=g(x)$, rozważamy
+\[
+J=\int_G\left(\int_G f(x)g(y^{-1}x)\,\mathrm d\mu(x)\right)\mathrm d\nu(y).
+\]
+Funkcja podcałkowa ma zwarty nośnik w $G\times G$: jej niezerowość wymusza $x\in\supp f$ i $y\in(\supp f)(\supp g)^{-1}$. Wolno zatem zamienić kolejność całkowania. Dla ustalonego $x$ podstawiamy $y=xz$ w całce względem $\nu$. Symetria $g$ i lewostronna niezmienniczość dają
+$\int_G g(y^{-1}x)\,\mathrm d\nu(y)=\int_Gg(z^{-1})\,\mathrm d\nu(z)=\nu(g)$.
+Zatem $J=\mu(f)\nu(g)$.
+
+Licząc w drugiej kolejności, dla ustalonego $y$ podstawiamy $x=yz$ w całce względem $\mu$. Otrzymujemy
+\[
+\mu(f)\nu(g)=\int_Gg(z)\left(\int_Gf(yz)\,\mathrm d\nu(y)\right)\mathrm d\mu(z).
+\]
+Ponieważ $R_zf\to f$ jednostajnie przy $z\to e$, a funkcje $R_zf$ dla małych $z$ mają wspólny zwarty nośnik, zachodzi $\int_Gf(yz)\,\mathrm d\nu(y)\to\nu(f)$. Dlatego dla każdego $\eta>0$ i symetrycznych $g$ o dostatecznie małym nośniku mamy
+\[
+|\mu(f)\nu(g)-\nu(f)\mu(g)|\le\eta\mu(g).
+\]
+Niezerowa symetryczna funkcja $g\ge0$ o dowolnie małym nośniku istnieje: dla funkcji odcinającej $q$ wspieranej na symetrycznym otoczeniu $e$ i z $q(e)>0$ bierzemy $g(x)=q(x)+q(x^{-1})$. Dodatniość $\mu(g)$ wynika z lematu 14.8.
+
+Ustalmy $0\le f_0\in C_c(G)$ niezerową i $c=\nu(f_0)/\mu(f_0)>0$. Wybieramy jedno symetryczne $g$ o dostatecznie małym nośniku jednocześnie dla $f$ i $f_0$. Otrzymujemy
+$|\mu(f)\nu(g)-\nu(f)\mu(g)|\le\eta\mu(g)$ oraz
+$|\mu(f_0)\nu(g)-\nu(f_0)\mu(g)|\le\eta\mu(g)$.
+Po podzieleniu przez $\mu(g)$ i użyciu nierówności trójkąta dostajemy $|\nu(f)-c\mu(f)|\le(1+c)\eta$. Przechodząc z $\eta\downarrow0$, otrzymujemy $\nu(f)=c\mu(f)$ dla wszystkich $f\ge0$ z $C_c(G)$. Liniowość i jednoznaczność reprezentacji prowadzą do $\nu=c\mu$.
+
+Wreszcie $\mu_R(A)=\mu(A^{-1})$ jest prawostronnie niezmienniczą miarą Haara, ponieważ $(Aa)^{-1}=a^{-1}A^{-1}$. Inwersja wykonana dwukrotnie sprowadza jednoznaczność prawostronną do lewostronnej.
+\end{proof}
+
+\subsection*{Całka, normalizacja i skończoność miary}
+\begin{definicja}[Całka względem miary Haara]
+Dla nieujemnej funkcji borelowskiej $f:G\to[0,\infty]$ definiujemy $\int_G f\,\mathrm d\mu$ jako supremum całek nieujemnych funkcji prostych $s\le f$. Dla rzeczywistej mierzalnej $f$ całka jest skończona wtedy i tylko wtedy, gdy $\int_G|f|\,\mathrm d\mu<\infty$; wówczas $\int_Gf\,\mathrm d\mu=\int_Gf^+\,\mathrm d\mu-\int_Gf^-\,\mathrm d\mu$. To dokładnie całka Lebesgue'a na przestrzeni z miarą $(G,\mathcal B(G),\mu)$.
+\end{definicja}
+Z lewostronnej niezmienniczości wynika $\int_G f(ax)\,\mathrm d\mu(x)=\int_Gf(x)\,\mathrm d\mu(x)$ dla $a\in G$, dla funkcji nieujemnych lub całkowalnych. Każda funkcja z $C_c(G)$ jest całkowalna; ciągłość bez zwartego nośnika nie zapewnia tego na grupie niezwartej.
+\begin{twierdzenie}[Kiedy istnieje normalizacja probabilistyczna?]
+Dla lewostronnie niezmienniczej miary Haara $\mu$ mamy $\mu(G)<\infty$ wtedy i tylko wtedy, gdy $G$ jest zwarta. Na grupie zwartej warunek $\mu(G)=1$ wyznacza jedyną lewostronnie niezmienniczą miarę Haara o masie $1$.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $G$ jest zwarta, $0<\mu(G)<\infty$. W przeciwnym kierunku załóżmy, że $G$ nie jest zwarta. Wybieramy względnie zwarte otoczenie $V$ elementu $e$ z $0<\mu(V)<\infty$. Rekurencyjnie wybieramy $a_n$ poza zwartym zbiorem $\bigcup_{j<n}a_j\overline V\,\overline V^{-1}$. Wówczas zbiory $a_nV$ są parami rozłączne. Z niezmienniczości i addytywności $\mu(G)\ge\sum_n\mu(a_nV)=\sum_n\mu(V)=\infty$.
+\end{proof}
+\subsection*{Niezmienniczość lewostronna i prawostronna: funkcja modularna}
+\begin{twierdzenie}[Funkcja modularna]
+Dla lewostronnie niezmienniczej miary Haara $\mu$ istnieje jednoznaczny ciągły homomorfizm $\Delta:G\to(0,\infty)$, zwany \emph{funkcją modularną}, taki że dla $a\in G$ i $A\in\mathcal B(G)$ zachodzi
+\begin{equation}\label{eq:modularna}
+\mu(Aa)=\Delta(a)\mu(A),\qquad
+\int_G f(xa)\,\mathrm d\mu(x)=\Delta(a)^{-1}\int_Gf(x)\,\mathrm d\mu(x).
+\end{equation}
+Dla nieujemnej funkcji mierzalnej $f$ zachodzi także wzór inwersji
+\begin{equation}\label{eq:inwersja}
+\int_G f(x^{-1})\,\mathrm d\mu(x)=\int_G f(x)\Delta(x)^{-1}\,\mathrm d\mu(x).
+\end{equation}
+Wzory dla funkcji ze znakiem wymagają całkowalności wartości bezwzględnej. Istnieje również przeciwna konwencja nazywająca funkcją modularną odwrotność $\Delta$.
+\end{twierdzenie}
+\begin{proof}
+Dla każdego $a$ miara $A\mapsto\mu(Aa)$ jest lewostronnie niezmiennicza i ma wymaganą regularność. Jednoznaczność miary Haara daje $\mu(Aa)=\Delta(a)\mu(A)$ z $\Delta(a)>0$. Dwukrotne przesunięcie daje $\Delta(ab)=\Delta(a)\Delta(b)$, zatem $\Delta(e)=1$ i $\Delta(a^{-1})=\Delta(a)^{-1}$. Wzór całkowy najpierw weryfikujemy dla funkcji charakterystycznych, a następnie przedłużamy przez zbieżność monotoniczną. Dla ustalonej $0\le h\in C_c(G)$ niezerowej mamy
+$\Delta(a)^{-1}=\bigl(\int_Gh(xa)\,\mathrm d\mu(x)\bigr)/\bigl(\int_Gh\,\mathrm d\mu\bigr)$.
+Lemat o jednostajnej ciągłości przesunięć, wraz ze wspólnym zwartym nośnikiem, daje ciągłość licznika przy $e$. Homomorficzność daje ciągłość $\Delta$ wszędzie.
+
+Niech $\rho(A)=\int_A\Delta(x)^{-1}\,\mathrm d\mu(x)$. Z wzoru na przesunięcie i homomorficzności wynika $\rho(Aa)=\rho(A)$; jest to prawostronnie niezmiennicza miara Haara. Miara $\mu^{\mathrm{inv}}(A)=\mu(A^{-1})$ również jest prawostronnie niezmiennicza, więc $\mu^{\mathrm{inv}}=c\rho$ dla pewnego $c>0$. Aby wyznaczyć $c$, zauważmy, że $\mu^{\mathrm{inv}}$ jest obrazem $\mu$ przez inwersję, a podwójna inwersja daje znów $\mu$. Przekształcenie gęstości $\rho$ przez inwersję, przy wykorzystaniu homomorficzności $\Delta$, prowadzi do $\mu=c^2\mu$. Zatem $c=1$, co daje \eqref{eq:inwersja}.
+\end{proof}
+\begin{definicja}[Grupa unimodularna]
+Grupę lokalnie zwartą $G$ nazywamy \emph{unimodularną}, jeżeli $\Delta\equiv1$, równoważnie: jej lewostronnie niezmiennicza miara Haara jest także prawostronnie niezmiennicza. Wtedy inwersja zachowuje tę miarę. Grupy abelowe, zwarte i dyskretne są unimodularne, ale nie wszystkie grupy lokalnie zwarte mają tę własność.
+\end{definicja}
+
+\subsection*{Przykłady i obliczenia}
+\begin{przyklad}[Dodawanie w przestrzeni euklidesowej]
+Na grupie $(\R^d,+)$ miarą Haara jest $\lambda_d$. Jednoznaczność mówi, że każda miara Haara jest dodatnią wielokrotnością miary Lebesgue'a. Warunek $\mu([0,1]^d)=1$ wyznacza $\lambda_d$. Na prostej $\int_\R e^{-x^2}\,\mathrm d\lambda(x)=\sqrt\pi$, natomiast $\int_\R1\,\mathrm d\lambda=\infty$.
+\end{przyklad}
+\begin{przyklad}[Grupa dyskretna: całka jest sumą]
+Na dowolnej grupie dyskretnej zbiory zwarte są dokładnie zbiorami skończonymi, a wszystkie podzbiory są borelowskie. Miarą Haara jest miara licząca $\mu(A)=\#A$ dla skończonego $A$, a $+\infty$ dla nieskończonego. Dla $f\ge0$ mamy $\int_Gf\,\mathrm d\mu=\sum_{x\in G}f(x)$, rozumianą jako supremum skończonych sum; $f\in L^1(G,\mu)$ wtedy i tylko wtedy, gdy $\sum_{x\in G}|f(x)|<\infty$. Dla nieprzeliczalnej grupy skończona suma modułów wymusza co najwyżej przeliczalny zbiór niezerowych wartości, a sama miara licząca nie jest $\sigma$-skończona. Dla grupy skończonej normalizacja $\mu(G)=1$ daje średnią $|G|^{-1}\sum_{x\in G}f(x)$.
+\end{przyklad}
+\begin{przyklad}[Mnożenie liczb dodatnich]
+Grupa $G=((0,\infty),\cdot)$ jest przez logarytm izomorficzna topologicznie z $(\R,+)$. Przeniesiona miara Lebesgue'a ma gęstość $\mathrm d\mu(x)=\mathrm dx/x$, więc $\mu([a,b])=\log(b/a)$ dla $0<a<b$. W szczególności $\int_0^\infty e^{-x}\,\mathrm dx=1$, lecz $\int_{(0,\infty)}e^{-x}\,\mathrm d\mu(x)=\int_0^\infty e^{-x}\,\mathrm dx/x=\infty$. Zmiana grupy i miary zmienia całkowalność tej samej funkcji.
+\end{przyklad}
+\begin{przyklad}[Okrąg i torus]
+Niech $\mathbb T=\R/(2\pi\mathbb Z)$ będzie grupą dodawania kątów modulo $2\pi$. Jest zwarta i jej znormalizowana miara Haara spełnia
+$\int_{\mathbb T}f\,\mathrm d\mu=\frac1{2\pi}\int_0^{2\pi}f([t])\,\mathrm dt$. W szczególności $\int_{\mathbb T}\cos(kt)\,\mathrm d\mu=0$ dla $k\in\mathbb Z\setminus\{0\}$ oraz $\int_{\mathbb T}\cos^2t\,\mathrm d\mu=1/2$. Na torusie $\mathbb T^d$ bierzemy iloczyn miar: $\int_{\mathbb T^d}f\,\mathrm d\mu=(2\pi)^{-d}\int_{[0,2\pi]^d}f(t)\,\mathrm d\lambda_d(t)$.
+\end{przyklad}
+\begin{przyklad}[Kanoniczny rozkład losowego obrotu]
+Grupa $\mathrm{SO}(n)=\{R\in\R^{n\times n}:R^{\mathsf T}R=I,\ \det R=1\}$ jest zwarta, a mnożenie i inwersja są ciągłe. Ma więc jedyną miarę Haara o masie $1$, niezmienniczą z obu stron. Dla $n\ge2$ i $v\in\R^n$ zachodzi $\int_{\mathrm{SO}(n)}Rv\,\mathrm d\mu(R)=0$, gdzie całkujemy współrzędnie. Wektor całki jest ustalony przez każdy obrót (z niezmienniczości miary), zatem jest zerem.
+\end{przyklad}
+\begin{przyklad}[Grupa afiniczna: różne miary Haara]
+Rozważmy grupę przekształceń prostej $x\mapsto ax+b$, $a>0$, zapisaną we współrzędnych $(a,b)$. Działanie i odwrotność mają postać
+\[
+(a,b)(s,t)=(as,b+at),\qquad (a,b)^{-1}=(a^{-1},-b/a).
+\]
+Miary lewostronna i prawostronna są dane gęstościami
+$\mathrm d\mu_L(a,b)=a^{-2}\,\mathrm d\lambda_2(a,b)$ i $\mathrm d\mu_R(a,b)=a^{-1}\,\mathrm d\lambda_2(a,b)$.
+Lewe przesunięcie $(a,b)\mapsto(sa,t+sb)$ ma jakobian $s^2$, który znosi zmianę mianownika $a^2$. Prawe przesunięcie $(a,b)\mapsto(as,b+at)$ ma jakobian $s$, kompensowany przez mianownik $a$ miary prawej. W przyjętej konwencji funkcja modularna jest $\Delta(s,t)=s^{-1}$ i $\mathrm d\mu_R=\Delta^{-1}\,\mathrm d\mu_L$. Dla $A=[1,2]\times[0,1]$ otrzymujemy $\mu_L(A)=1/2$, $\mu_R(A)=\log2$. Po prawym przesunięciu przez $(2,0)$ mamy $A(2,0)=[2,4]\times[0,1]$ oraz $\mu_L(A(2,0))=1/4$, $\mu_R(A(2,0))=\log2$. Grupa nie jest unimodularna.
+\end{przyklad}
+
+\subsection*{Po co ta całka: splot}
+\begin{definicja}[Splot na grupie]
+Dla $f,g\in C_c(G)$ i lewostronnie niezmienniczej miary Haara $\mu$ definiujemy
+\[
+(f*g)(x)=\int_G f(y)g(y^{-1}x)\,\mathrm d\mu(y).
+\]
+W grupie addytywnej $\R^d$ jest to $(f*g)(x)=\int_{\R^d}f(y)g(x-y)\,\mathrm d\lambda_d(y)$. Na grupach nieprzemiennych splot nie musi być przemienny.
+\end{definicja}
+\begin{stwierdzenie}[Podstawowe własności splotu]
+Dla $f,g\in C_c(G)$ zachodzi $f*g\in C_c(G)$, $\supp(f*g)\subset(\supp f)(\supp g)$, a także
+\[
+\int_G(f*g)(x)\,\mathrm d\mu(x)=\left(\int_G f\,\mathrm d\mu\right)\left(\int_G g\,\mathrm d\mu\right),\qquad
+\|f*g\|_{L^1(\mu)}\le\|f\|_{L^1(\mu)}\|g\|_{L^1(\mu)}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Jeśli $f(y)g(y^{-1}x)\ne0$, to $y\in\supp f$ i $y^{-1}x\in\supp g$, zatem $x\in(\supp f)(\supp g)$, który jest zwarty. Z lematu o jednostajnej ciągłości przesunięć $g$ mamy
+$|(f*g)(xa)-(f*g)(x)|\le\|R_ag-g\|_\infty\int_G|f|\,\mathrm d\mu\to0$ przy $a\to e$, a więc $f*g$ jest ciągła. Lokalna zamiana kolejności całkowania oraz podstawienie $x=yz$ dają pierwszy wzór. Nierówność $|f*g|\le|f|*|g|$ i ten sam wzór dla funkcji nieujemnych dają oszacowanie normy.
+\end{proof}
+\subsection*{Dlaczego sama grupa topologiczna nie wystarcza?}
+\begin{przyklad}[Brak lokalnie skończonej miary niezmienniczej w $\ell^2$]
+Przestrzeń Hilberta $\ell^2$ z dodawaniem i topologią normy jest grupą topologiczną Hausdorffa, ale nie jest lokalnie zwarta. Nie istnieje na niej niezerowa miara borelowska niezmiennicza względem wszystkich przesunięć i lokalnie skończona.
+
+Przypuśćmy przeciwnie, że taka miara $\mu$ istnieje. Dla pewnego $r>0$ mamy $\mu(B(0,r))<\infty$. Niech $(e_n)$ będzie standardową bazą ortonormalną $\ell^2$, $z_n=(r/2)e_n$ i $\rho=r/8$. Kule $B(z_n,\rho)$ są parami rozłączne, gdyż $\|z_n-z_m\|=r/\sqrt2>2\rho$, i wszystkie leżą w $B(0,r)$. Z niezmienniczości oraz addytywności
+$\mu(B(0,r))\ge\sum_{n\ge1}\mu(B(z_n,\rho))=\sum_{n\ge1}\mu(B(0,\rho))$, więc $\mu(B(0,\rho))=0$. Przestrzeń $\ell^2$ jest ośrodkowa: wektory o skończonym nośniku i współrzędnych wymiernych tworzą zbiór przeliczalny gęsty. Przeliczalnie wiele przesunięć $B(0,\rho)$ pokrywa całe $\ell^2$, więc $\mu(\ell^2)=0$, sprzeczność.
+
+Ponadto ciąg $(e_n)$ nie ma podciągu zbieżnego, chociaż leży w kuli ograniczonej; analogiczny argument działa w dowolnie małym otoczeniu zera. Dlatego żadne otoczenie zera nie ma zwartego domknięcia.
+\end{przyklad}
+Lokalna zwartość zapewnia funkcje odcinające i kontrolę na zbiorach zwartych; pokrycia przesunięciami oraz zwartość iloczynu pozwalają skonstruować niezmienniczy dodatni funkcjonał. Twierdzenie Riesza--Markowa daje miarę Haara, a teoria Lebesgue'a --- całkę. Nie trzeba zakładać na grupie struktury różniczkowej.
+
+% ============================================================
+% UZUPELNIENIE MATEMATYCZNE: ROZDZIAL 14
+% ============================================================
+\subsection*{Zmiana miary Haara przy automorfizmie grupy}
+\begin{twierdzenie}[Moduł automorfizmu]\label{tw:haar-automorfizm}
+Niech $G$ będzie lokalnie zwartą grupą Hausdorffa z lewostronnie niezmienniczą miarą Haara $\mu$, a $T:G\to G$ ciągłym automorfizmem grupy z ciągłą odwrotnością. Istnieje jednoznaczna liczba $c_T>0$ taka, że dla każdego borelowskiego $A\subset G$ zachodzi $\mu(T(A))=c_T\mu(A)$. Ponadto $c_{T\circ S}=c_Tc_S$ dla dowolnych dwóch takich automorfizmów $S,T$, a dla nieujemnej funkcji borelowskiej $f$ zachodzi
+$\int_G f(T(x))\,\mathrm d\mu(x)=c_T^{-1}\int_Gf(y)\,\mathrm d\mu(y)$.
+\end{twierdzenie}
+\begin{proof}
+Miara $\nu(A)=\mu(T(A))$ jest regularna i lokalnie skończona, ponieważ $T$ jest homeomorfizmem. Dla $g\in G$ mamy $\nu(gA)=\mu(T(g)T(A))=\mu(T(A))=\nu(A)$, więc $\nu$ jest lewostronnie niezmienniczą miarą Haara. Jednoznaczność miary Haara daje $\nu=c_T\mu$ z $c_T>0$. Dla złożenia automorfizmów otrzymujemy $\mu(T(S(A)))=c_Tc_S\mu(A)$. Formuła całkowa najpierw wynika dla indykatorów, a następnie dla funkcji prostych i nieujemnych przez zbieżność monotoniczną.
+\end{proof}
+\begin{przyklad}[Jakobian jako moduł automorfizmu]
+Dla grupy $(\R^d,+)$ i odwracalnej macierzy $A\in\R^{d\times d}$ automorfizm $T_A(x)=Ax$ spełnia $c_{T_A}=|\det A|$, zatem
+$\int_{\R^d}f(Ax)\,\mathrm d\lambda_d(x)=|\det A|^{-1}\int_{\R^d}f(y)\,\mathrm d\lambda_d(y)$. Nie należy mylić tego czynnika z funkcją modularną $\Delta$, która dotyczy \emph{prawych przesunięć} i na grupie abelowej $(\R^d,+)$ jest równa $1$.
+\end{przyklad}
+
+\section{Całka Mawhina}
+W wielu wymiarach nie wystarczy mechanicznie zastąpić długości przez objętość. Bardzo cienkie prostokąty mogą mieć dużą powierzchnię brzegu w stosunku do objętości, co utrudnia odtwarzanie strumienia pola wektorowego z dywergencji. Naturalna jest więc konstrukcja wielowymiarowa z kontrolą kształtu komórek (regularność podziału). Tu kończy się materiał dostępny w \emph{części I} skanu; definicja właściwej całki Mawhina i dalsze rozdziały będą należały do kolejnej części.
+
+
+\section*{Literatura i status dowodów}
+\addcontentsline{toc}{section}{Literatura i status dowodów}
+\begin{enumerate}[label={[\arabic*]},leftmargin=*]
+\item S. Saks, \emph{Theory of the Integral}, 2. wyd., Warszawa 1937; rozdziały o całkach Denjoya i Perrona.
+\item R. A. Gordon, \emph{The Integrals of Lebesgue, Denjoy, Perron, and Henstock}, Graduate Studies in Mathematics 4, American Mathematical Society, 1994.
+\item A. Fonda, \emph{The Kurzweil--Henstock Integral for Undergraduates}, Birkh\"{a}user, 2018.
+\item M. Tvrd\'{y}, \emph{Kurzweil--Stieltjes Integration}, \url{https://users.math.cas.cz/~tvrdy/ks-dekk.pdf}.
+\item Y. Kubota, \emph{A constructive definition of the approximately continuous Denjoy integral}, Canad. Math. Bull. 15 (1972), 103--109.
+\item Twierdzenie Riesza--Markowa, konstrukcja Daniella--Stone'a i istnienie miary Haara są używane we wskazanym zakresie na podstawie standardowej teorii miary i analizy funkcjonalnej.
+\end{enumerate}
+
+\paragraph*{Zakres samodzielności dowodów.}
+Bezpośrednio wykazano twierdzenia o sumach całkowych, wybrane kryteria, rachunki z funkcjami skokowymi, lemat uzupełniania podziałów, proste twierdzenia Perrona oraz własności wynikające z funkcji pierwotnych. Jako wyniki zewnętrzne przyjęto charakteryzację wszystkich pierwotnych HK przez $\AC G_*$, pełną implikację HK $\Rightarrow$ Perron, rozszerzenie Daniella--Stone'a, reprezentację Riesza--Markowa i istnienie miary Haara. Nie utożsamiamy przywołania tych twierdzeń z ich pełnym dowodem.
+
+\end{document}

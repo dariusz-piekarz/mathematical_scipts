@@ -1,0 +1,362 @@
+\chapter{Testowanie hipotez: konstrukcja, moc i interpretacja}
+\label{ch:testing}
+\paragraph{Powiązania i odsyłacze.} Teoria decyzji pojawia się w rozdziale~\ref{ch:decision}; asymptotyczne narzędzia testowania — w rozdziale~\ref{ch:asymptotic-estimation}.
+
+
+\section{Od pytania praktycznego do testu}
+Zakład wykazuje w ostatnim kwartale $7$ wad na $100$ losowo wybranych
+produktów. Standard jakości wymaga, by prawdopodobieństwo wady nie
+przekraczało $0{,}1$. Czy zaobserwowany odsetek $0{,}07$ świadczy o
+poprawie? Trzeba odróżnić trzy pytania: (i) czy prawdopodobieństwo
+wady jest mniejsze od $0{,}1$; (ii) czy jest ono \emph{znacząco}
+mniejsze w sensie statystycznym; (iii) czy różnica jest wystarczająco
+duża, by uzasadnić zmianę procesu produkcyjnego. Trzecie pytanie
+wymaga także kryterium decyzji i kosztów, omówionych w rozdziale~\ref{ch:decision}.
+
+Test jest regułą zależną od próby, a nie prawdopodobieństwem
+prawdziwości hipotezy. Aby test miał sens, musimy zadeklarować
+model, kierunek alternatywy, poziom istotności i sposób zebrania danych
+\emph{przed} oglądaniem wyniku, jeśli chcemy zachować deklarowaną
+kontrolę błędów.
+
+\begin{definicja}[Hipotezy i test randomizowany]\label{def:statistical-test}
+Niech $\mathcal E=(\mathsf X,\mathcal A,\{P_\theta:\theta\in\Theta\})$
+będzie eksperymentem statystycznym, a $\Theta_0,\Theta_1$
+niepustymi, rozłącznymi podzbiorami $\Theta$.
+Hipotezę $H_0:\theta\in\Theta_0$ nazywamy zerową, a
+$H_1:\theta\in\Theta_1$ alternatywną. \emph{Testem
+randomizowanym} jest mierzalna funkcja
+$\varphi:\mathsf X\to[0,1]$: po obserwacji $x$ hipotezę $H_0$
+odrzucamy z prawdopodobieństwem $\varphi(x)$, korzystając w razie
+potrzeby z niezależnego losowania pomocniczego. Test jest
+\emph{nierandomizowany}, jeśli przyjmuje tylko wartości $0$ i $1$.
+Funkcja $\beta_\varphi(\theta):=\E_\theta\varphi(X)$ jest
+\emph{funkcją mocy}, natomiast
+$\sup_{\theta\in\Theta_0}\beta_\varphi(\theta)$ jest
+\emph{rozmiarem testu}. Test ma \emph{poziom istotności} co najwyżej
+$\alpha\in[0,1]$, jeżeli $\sup_{\theta\in\Theta_0}\beta_\varphi(\theta)
+\le\alpha$.
+\end{definicja}
+
+Jeśli $\theta\in\Theta_0$, odrzucenie jest błędem I rodzaju; jego
+prawdopodobieństwo jest kontrolowane przez poziom testu. Jeśli
+$\theta\in\Theta_1$, nieodrzucenie jest błędem II rodzaju;
+prawdopodobieństwo tego błędu wynosi $1-\beta_\varphi(\theta)$.
+Sama wartość $\alpha$ nie mówi nic o mocy ani o rozmiarze efektu.
+Nieodrzucenie $H_0$ nie oznacza jego zaakceptowania jako prawdziwego.
+
+\begin{przyklad}[Trzy pytania, trzy hipotezy]
+Dla $X_i\iid\operatorname{Bernoulli}(p)$ można rozważać
+$H_0:p\ge 0{,}1$ przeciw $H_1:p<0{,}1$ (poprawa),
+$H_0:p\le 0{,}1$ przeciw $H_1:p>0{,}1$ (pogorszenie),
+lub $H_0:p=0{,}1$ przeciw $H_1:p\ne0{,}1$ (dowolna zmiana).
+To są różne problemy; wynik dwustronnego testu nie zastępuje
+jednostronnego testu zaplanowanego ze względu na ryzyko wad.
+\end{przyklad}
+
+\section{Lemat Neymana--Pearsona: skąd bierze się najlepsza reguła?}
+\begin{twierdzenie}[Lemat Neymana--Pearsona, z randomizacją]
+\label{thm:neyman-pearson}
+Niech $P_0,P_1$ będą dwoma miarami probabilistycznymi na
+$(\mathsf X,\mathcal A)$ i niech $P_1\ll P_0$. Oznaczmy
+$L=\dd P_1/\dd P_0$ ich iloraz wiarygodności. Niech
+$0<\alpha<1$. Istnieją $c\ge0$ i $\gamma\in[0,1]$ takie, że
+\[
+ \varphi_*(x)=\ind{\{L(x)>c\}}+
+ \gamma\ind{\{L(x)=c\}},\qquad \E_0\varphi_*=\alpha.
+\]
+Wtedy dla każdego mierzalnego testu $\varphi:\mathsf X\to[0,1]$
+spełniającego $\E_0\varphi\le\alpha$ zachodzi
+$\E_1\varphi\le\E_1\varphi_*$. A zatem $\varphi_*$ ma
+największą moc wśród testów poziomu co najwyżej $\alpha$ dla
+hipotez prostych $H_0:P=P_0$ i $H_1:P=P_1$.
+\end{twierdzenie}
+\begin{proof}
+Ponieważ $L\ge0$ i $\E_0L=1$, istnieje próg $c\ge0$ spełniający
+$P_0(L>c)\le\alpha\le P_0(L\ge c)$. Można go dobrać
+jako odpowiedni kwantyl rozkładu $L$ pod $P_0$; gdy $c=0$,
+warunek ma sens, bo $P_0(L\ge0)=1$. Jeśli
+$P_0(L=c)>0$, ustalamy
+$\gamma=[\alpha-P_0(L>c)]/P_0(L=c)$, a w przeciwnym razie
+$\gamma=0$. Nierówności zapewniają $\gamma\in[0,1]$ i
+$\E_0\varphi_*=\alpha$.
+
+W punktach, w których $L>c$, mamy $\varphi_*=1$, zatem
+$(L-c)(\varphi_*-\varphi)\ge0$. Przy $L<c$ mamy
+$\varphi_*=0$, co znów daje nieujemny iloczyn; na zbiorze
+$L=c$ iloczyn znika. W rezultacie
+\[
+ \E_1(\varphi_*-\varphi)
+ =\E_0[L(\varphi_*-\varphi)]
+ \ge c\E_0(\varphi_*-\varphi)\ge0.
+\]
+Wykorzystaliśmy absolutną ciągłość, by zapisać wartość
+oczekiwaną pod $P_1$ jako całkę względem $P_0$, oraz kontrolę
+poziomu testu, a nie szczególną postać obserwacji.
+\end{proof}
+
+\begin{uwaga}[Dlaczego randomizacja?]
+Dla dyskretnych rozkładów nie zawsze można znaleźć zbiór
+odrzucenia o prawdopodobieństwie dokładnie $\alpha$ pod $H_0$.
+Test bez randomizacji zwykle ma \emph{rzeczywisty} rozmiar
+mniejszy niż deklarowany poziom; jest to poprawny test
+konserwatywny. Randomizacja na granicy pozwala wykorzystać
+cały dopuszczony budżet błędu I rodzaju, lecz w typowych analizach
+praktycznych częściej wybiera się prostszą procedurę
+nierandomizowaną.
+\end{uwaga}
+
+\section{Testy jednostajnie najmocniejsze i statystyki monotoniczne}
+\begin{definicja}[Test jednostajnie najmocniejszy]
+Test $\varphi_*$ o poziomie co najwyżej $\alpha$ jest
+\emph{jednostajnie najmocniejszy} (UMP) dla
+$H_0:\theta\in\Theta_0$ przeciw $H_1:\theta\in\Theta_1$,
+jeśli dla każdego $\theta\in\Theta_1$ i każdego testu
+$\varphi$ tego samego poziomu mamy
+$\E_\theta\varphi\le\E_\theta\varphi_*$.
+\end{definicja}
+
+\begin{twierdzenie}[Jednostronny test dwumianowy jest UMP]
+\label{thm:binomial-ump}
+Niech $X_1,\ldots,X_n\iid\operatorname{Bernoulli}(p)$,
+$0<p<1$, $S=\sum_iX_i$, a $p_0\in(0,1)$.
+Dla $0<\alpha<1$ wybierzmy $k\in\{0,\ldots,n\}$ oraz
+$\gamma\in[0,1]$ tak, żeby funkcja
+$\varphi_*(X)=\ind{\{S>k\}}+\gamma\ind{\{S=k\}}$
+spełniała $\E_{p_0}\varphi_*=\alpha$.
+Wtedy $\varphi_*$ jest testem UMP poziomu $\alpha$ dla
+$H_0:p\le p_0$ przeciw $H_1:p>p_0$.
+\end{twierdzenie}
+\begin{proof}
+Dla dowolnego $p_1>p_0$ iloraz wiarygodności próby wynosi
+\[
+ L(x)=\left(\frac{p_1}{p_0}\right)^{S(x)}
+ \left(\frac{1-p_1}{1-p_0}\right)^{n-S(x)}.
+\]
+Stosunek $L(S+1)/L(S)=p_1(1-p_0)/[p_0(1-p_1)]>1$,
+więc test Neymana--Pearsona przeciw $p_1$ odrzuca dla
+dużych wartości $S$ i ma graniczną randomizację.
+Ponieważ rozkład $S$ przy $p_0$ nie zależy od $p_1$,
+można wybrać ten sam próg $k$ i $\gamma$ dla wszystkich
+$p_1>p_0$.
+
+Trzeba jeszcze sprawdzić poziom względem całego $H_0$.
+Niech $U_1,\ldots,U_n$ będą niezależne z rozkładu
+$U(0,1)$ i zdefiniujmy $S_p=\sum_i\ind{\{U_i\le p\}}$.
+Dla $p\le p_0$ zachodzi $S_p\le S_{p_0}$ prawie na pewno.
+Ponieważ funkcja $s\mapsto\ind{\{s>k\}}+
+\gamma\ind{\{s=k\}}$ jest niemalejąca, moc przy $p$
+nie przewyższa mocy przy $p_0$, czyli $\alpha$.
+Lemat Neymana--Pearsona zapewnia następnie największą moc
+przy każdym $p_1>p_0$ wśród testów poziomu $\alpha$.
+\end{proof}
+
+\begin{uwaga}[Test dwustronny]
+W modelu normalnym o znanej wariancji test obustronny
+$H_0:\mu=\mu_0$ przeciw $H_1:\mu\ne\mu_0$
+nie ma na ogół testu UMP: najbardziej mocna reguła przeciw
+$\mu_1>\mu_0$ odrzuca dla dużej średniej, natomiast przeciw
+$\mu_1<\mu_0$ dla małej średniej. Wspólny test o maksymalnej
+mocy dla obu kierunków nie może jednocześnie być obydwoma
+jednostronnymi testami Neymana--Pearsona. Potrzebne są dodatkowe
+kryteria, np. nieobciążoność testu lub niezmienniczość.
+\end{uwaga}
+
+\section{Wartość p: definicja i częste błędy interpretacji}
+\begin{definicja}[Wartość p dla statystyki testowej]\label{def:pvalue}
+Niech $T:\mathsf X\to\R$ będzie mierzalną statystyką,
+a większe jej wartości świadczą przeciw $H_0$.
+Dla obserwacji $x$ definiujemy
+\[
+ p(x):=\sup_{\theta\in\Theta_0}
+ P_\theta\bigl(T(X)\ge T(x)\bigr).
+\]
+Zakładamy, że funkcja $x\mapsto p(x)$ jest mierzalna.
+Dla hipotezy prostej supremum jest niepotrzebne.
+\end{definicja}
+
+\begin{twierdzenie}[Kontrola błędu przez wartość p]
+\label{thm:pvalue-valid}
+Jeśli $p$ jest określona jak w definicji~\ref{def:pvalue},
+to dla każdego $u\in[0,1]$ oraz każdego $\theta\in\Theta_0$
+zachodzi $P_\theta(p(X)\le u)\le u$.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy $\theta\in\Theta_0$ i oznaczmy
+$G(t)=P_\theta(T(X)\ge t)$.
+Z definicji $p(X)\ge G(T(X))$ prawie na pewno, a więc
+$\{p(X)\le u\}\subseteq\{G(T(X))\le u\}$.
+Dla dowolnej rzeczywistej zmiennej losowej $Y$ funkcja
+$G_Y(t)=P(Y\ge t)$ jest nierosnąca. Zbiór
+$A_u=\{t\in\R:G_Y(t)\le u\}$ jest zatem pusty,
+cały lub jest półprostą postaci $[a,\infty)$ bądź
+$(a,\infty)$. W pierwszym przypadku
+$P(Y\in A_u)=0$. W drugim, o ile $A_u=[a,\infty)$,
+mamy $P(Y\in A_u)=G_Y(a)\le u$.
+Jeśli $A_u=(a,\infty)$, to z ciągłości prawdopodobieństwa
+przy granicach monotonicznych
+$P(Y>a)=\lim_{m\to\infty}P(Y\ge a+1/m)\le u$.
+Dla $A_u=\R$ zachodzi $u=1$.
+Zatem zawsze $P(G_Y(Y)\le u)\le u$. Stosując to do
+$Y=T(X)$, otrzymujemy
+$P_\theta(G(T(X))\le u)\le u$, a więc tezę.
+\end{proof}
+
+Dla ciągłej statystyki o ciągłym rozkładzie pod prostym
+$H_0$ wartość p jest jednostajna na $[0,1]$; dla statystyk
+dyskretnych najczęściej jest \emph{nadjednostajna} w sensie
+powyższej nierówności, zatem dokładna nominalna równość nie
+musi zachodzić. W żadnym przypadku $p=0{,}03$ nie oznacza
+$3\%$ prawdopodobieństwa, że hipoteza zerowa jest prawdziwa.
+
+\begin{uwaga}[Jedno- i dwustronne wartości p nie są tym samym]
+Definicja~\ref{def:pvalue} jest jednostronnym ogonem statystyki,
+której duże wartości przemawiają przeciw hipotezie zerowej.
+W symetrycznym ciągłym modelu normalnym dla
+$H_0:\mu=\mu_0$ i statystyki $Z$ o rozkładzie
+$\Normal(0,1)$ dwustronna wartość p ma postać
+$P(|Z'|\ge|z_{\rm obs}|)=2[1-\Phi(|z_{\rm obs}|)]$,
+gdzie $Z'\sim\Normal(0,1)$. W modelu dyskretnym,
+np. dwumianowym, istnieje kilka konwencji dotyczących
+„tak samo ekstremalnych” wyników dwustronnych, które
+nie muszą dawać identycznych wartości p. Należy więc
+zawsze nazwać zastosowaną regułę odrzucenia, a nie tylko
+podać słowo „dwustronny”.
+\end{uwaga}
+
+\begin{zadanie}[7 wad na 100 produktów: test dokładny]\label{zad:binom-test}
+W modelu $X_i\iid\operatorname{Bernoulli}(p)$
+zaobserwowano $S=7$ przy $n=100$. Testujemy
+$H_0:p\ge0{,}1$ przeciw $H_1:p<0{,}1$.
+Uzasadnij postać wartości p i oblicz ją.
+\par\emph{Rozwiązanie.} Mniejsza liczba wad przemawia za
+alternatywą, zatem z monotoniczności rozkładu dwumianowego
+w parametrze $p$ mamy
+\[
+ p\text{-value}=\sup_{p\ge0{,}1}P_p(S\le7)
+ =P_{0{,}1}(S\le7)
+ =\sum_{j=0}^7\binom{100}{j}(0{,}1)^j(0{,}9)^{100-j}
+ \approx0{,}2061.
+\]
+Na poziomie $5\%$ nie odrzucamy $H_0$. Nie oznacza to,
+że udowodniliśmy $p\ge0{,}1$: badanie może mieć
+niewystarczającą moc dla niewielkiej poprawy.
+\end{zadanie}
+
+\section{Moc, wielkość efektu i dobór liczebności próby}
+\begin{twierdzenie}[Dokładna moc jednostronnego testu normalnego]
+\label{thm:normal-power}
+Niech $X_1,\ldots,X_n\iid\Normal(\mu,\sigma^2)$,
+$\sigma>0$ będzie znana, a $\mu_0\in\R$.
+Test odrzucający $H_0:\mu\le\mu_0$ na rzecz
+$H_1:\mu>\mu_0$ wtedy i tylko wtedy, gdy
+$\bar X>\mu_0+z_{1-\alpha}\sigma/\sqrt n$, ma
+poziom $\alpha$ i funkcję mocy
+\[
+ \beta(\mu)=1-\Phi\left(z_{1-\alpha}
+ -\frac{\sqrt n(\mu-\mu_0)}{\sigma}\right),
+\]
+gdzie $\Phi$ jest dystrybuantą rozkładu $\Normal(0,1)$.
+\end{twierdzenie}
+\begin{proof}
+Z dokładnego rozkładu $\bar X\sim\Normal(\mu,\sigma^2/n)$
+po standaryzacji otrzymujemy podaną funkcję mocy.
+Jest ona rosnąca w $\mu$, a więc jej największa wartość na
+$\{\mu\le\mu_0\}$ występuje w $\mu_0$ i wynosi $\alpha$.
+\end{proof}
+
+\begin{wniosek}[Dobór liczebności dla zadanego efektu]
+\label{cor:normal-sample-size}
+Przy założeniach twierdzenia~\ref{thm:normal-power}, dla
+$0<\alpha<1/2$, $0<\beta_0<1/2$ i efektu $\delta>0$
+warunek mocy co najmniej $1-\beta_0$ przy $\mu=\mu_0+\delta$
+jest równoważny
+\[
+ n\ge\left(\frac{\sigma(z_{1-\alpha}+z_{1-\beta_0})}
+ {\delta}\right)^2.
+\]
+Najmniejsze dopuszczalne $n$ uzyskujemy przez
+zaokrąglenie prawej strony w górę (z zastrzeżeniem $n\ge1$).
+\end{wniosek}
+\begin{proof}
+Nierówność $1-\Phi(z_{1-\alpha}-\sqrt n\delta/\sigma)
+\ge1-\beta_0$ oznacza
+$z_{1-\alpha}-\sqrt n\delta/\sigma\le z_{\beta_0}
+=-z_{1-\beta_0}$. Po przestawieniu otrzymujemy tezę.
+\end{proof}
+
+\begin{zadanie}[Ile pomiarów potrzeba?]
+Załóżmy znane odchylenie standardowe $\sigma=10$ jednostek.
+Chcemy z poziomem istotności $\alpha=0{,}05$ wykryć wzrost
+średniej o $\delta=3$ z mocą co najmniej $0{,}80$.
+\par\emph{Rozwiązanie.} Dla $z_{0{,}95}\approx1{,}645$
+oraz $z_{0{,}80}\approx0{,}842$ wystarcza
+$n\ge[10(1{,}645+0{,}842)/3]^2\approx68{,}73$,
+czyli $n=69$. To rachunek dla \emph{znanej} $\sigma$,
+niezależnych obserwacji i testu jednostronnego. Przy danych
+zależnych, większym rzeczywistym rozproszeniu lub kilku
+porównaniach potrzebny jest inny projekt.
+\end{zadanie}
+
+Nie należy określać $\delta$ jako „istotnego efektu” wyłącznie
+dlatego, że dla dostatecznie dużego $n$ daje małą wartość p.
+Trzeba wcześniej ustalić \emph{minimalny efekt praktycznie ważny},
+czyli najmniejszą zmianę, która miałaby znaczenie dla decyzji.
+Raportowanie przedziału ufności i miary wielkości efektu jest
+zwykle znacznie bardziej informacyjne niż samo odrzucenie hipotezy.
+
+\section{Pułapki praktyczne: selekcja, wielokrotność i zatrzymywanie}
+\begin{przyklad}[Zatrzymywanie, gdy pojawi się mała wartość p]
+Załóżmy, że pięć niezależnych badań prowadzonych pod prawdziwą
+hipotezą zerową daje niezależne wartości p o rozkładzie
+jednostajnym na $[0,1]$. Jeśli ogłosimy sukces, gdy
+\emph{którakolwiek} wartość będzie mniejsza od $0{,}05$,
+prawdopodobieństwo przynajmniej jednego fałszywego alarmu wynosi
+$1-(1-0{,}05)^5\approx0{,}2262$, a nie $0{,}05$.
+Ten sam problem pojawia się przy wielokrotnym testowaniu albo
+ciągłym podglądaniu danych i zakończeniu eksperymentu w
+pierwszej korzystnej chwili. Zależności między testami mogą
+zmienić tę liczbę, ale nie usprawiedliwiają ignorowania problemu.
+\end{przyklad}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.30\textwidth}>{\raggedright\arraybackslash}p{0.57\textwidth}}
+\toprule
+\textbf{Pytanie przed testem} & \textbf{Dlaczego jest ważne?}\\
+\midrule
+Czy hipotezę i kierunek wybrano wcześniej? & Wybranie kierunku po zobaczeniu danych może naruszać kontrolę poziomu.\\
+Czy obserwacje są niezależne? & Korelacja wewnątrz grup zwykle zmienia rozkład statystyki i moc.\\
+Czy testujemy różnicę, przewagę czy równoważność? & Brak istotnej różnicy nie jest dowodem równoważności.\\
+Czy rozkład statystyki jest dokładny czy asymptotyczny? & Małe próby i rzadkie zdarzenia mogą wymagać testu dokładnego.\\
+Ile hipotez sprawdzamy? & Wielokrotność wymaga jawnej strategii kontroli błędów.\\
+Czy efekt jest użyteczny? & Wartość p nie mierzy wielkości ani praktycznej ważności efektu.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{lstlisting}[language=Python,caption={Dokładny test dwumianowy i obliczenie mocy testu normalnego.}]
+from math import ceil, sqrt
+from scipy.stats import binomtest, norm
+
+k, n, p0 = 7, 100, 0.10
+result = binomtest(k, n, p0, alternative="less")
+print("p-value:", result.pvalue)
+
+alpha, power, sigma, delta = 0.05, 0.80, 10.0, 3.0
+z_alpha = norm.ppf(1 - alpha)
+z_power = norm.ppf(power)
+n_required = ceil((sigma * (z_alpha + z_power) / delta)**2)
+print("minimalne n:", n_required)
+\end{lstlisting}
+
+\paragraph{Co sprawdzamy przed uruchomieniem programu?}
+Pakiet \texttt{scipy} należy zainstalować w środowisku Pythona;
+kod zakłada niezależne próby Bernoulliego oraz znaną wariancję
+w planowaniu testu normalnego. Żadne wywołanie funkcji testowej
+nie sprawdza automatycznie reprezentatywności próby ani
+prawidłowości projektu badania.
+
+
+% ================================================================
+% ROZDZIAL 10 -- TESTY PARAMETRYCZNE I WPROWADZENIE DO ANOVA
+% ================================================================

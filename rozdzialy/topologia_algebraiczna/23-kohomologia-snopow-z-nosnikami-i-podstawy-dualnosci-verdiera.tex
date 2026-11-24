@@ -1,0 +1,777 @@
+\chapter{Kohomologia snopów z nośnikami i podstawy dualności Verdiera}
+\label{ch:snopy-verdier-v12}
+
+\section{Dlaczego teoria snopów jest potrzebna?}
+W rozdziale~\ref{ch:compact-bm-v11} spotkaliśmy dwie postacie dualności
+Poincarégo dla niezwartych rozmaitości: jedną z kohomologią o nośnikach
+zwartych, drugą z homologią Borel--Moore'a. Ich elementarne dowody
+wykorzystywały lokalnie skończone triangulacje. Tymczasem w geometrii
+algebraicznej często pracujemy na przestrzeniach osobliwych, a zamiast
+jednej grupy współczynników pojawiają się dane zmieniające się lokalnie.
+Potrzebujemy konstrukcji, która jednocześnie pamięta (i) współczynniki
+lokalne, (ii) warunki na nośniki oraz (iii) sposób, w jaki lokalne
+dane sklejają się w globalne.
+
+Snop jest właśnie uporządkowanym systemem takich danych. Kohomologia
+snopów mierzy przeszkody w ich globalnym sklejaniu, zaś dualność Verdiera
+jest snopowym uogólnieniem dualności Poincarégo. Rozpoczniemy od
+konstrukcji elementarnych, a twierdzenia wymagające kategorii pochodnych
+wyraźnie oddzielimy od wyników, których dowody przedstawimy tutaj.
+
+W całym rozdziale $k$ jest ustalonym ciałem, chyba że jawnie podamy inny
+pierścień współczynników. Przestrzenie są Hausdorffa i lokalnie zwarte,
+a w twierdzeniach porównawczych i o nośnikach dodatkowo parazwarte.
+Kohomologia jest indeksowana \emph{kohomologicznie}: różniczka podnosi
+stopień o jeden. Zapis $\mathcal F$ oznacza snop $k$-przestrzeni wektorowych.
+
+\section{Przedsnopy, snopy i włókna snopu}
+\begin{definicja}[Przedsnop i warunek snopowy]
+\label{def:sheaf-v12}
+Niech $X$ będzie przestrzenią topologiczną. Przedsnopem
+$k$-przestrzeni wektorowych $\mathcal F$ na $X$ nazywamy przyporządkowanie
+każdemu otwartemu $U\subseteq X$ przestrzeni $\mathcal F(U)$ i każdemu
+zawieraniu $V\subseteq U$ liniowej mapy ograniczenia
+$\rho^U_V:\mathcal F(U)\to\mathcal F(V)$, przy czym
+$\rho^U_U=\id$ i $\rho^V_W\rho^U_V=\rho^U_W$ dla $W\subseteq V\subseteq U$.
+Przedsnop jest \emph{snopem}, jeśli dla każdego otwartego $U$ oraz
+pokrycia $U=\bigcup_iU_i$ zachodzą:
+\begin{enumerate}[label=(\roman*)]
+\item jeśli $s,t\in\mathcal F(U)$ mają równe ograniczenia do każdego $U_i$,
+  to $s=t$ (jednoznaczność);
+\item jeśli $s_i\in\mathcal F(U_i)$ i
+  $s_i|_{U_i\cap U_j}=s_j|_{U_i\cap U_j}$ dla wszystkich $i,j$,
+  istnieje $s\in\mathcal F(U)$ o $s|_{U_i}=s_i$ (istnienie sklejenia).
+\end{enumerate}
+\end{definicja}
+
+\begin{przyklad}[Snopy funkcji, form i rozwiązań lokalnych]
+Na gładkiej rozmaitości $M$ przyporządkowania
+$U\mapsto C^\infty(U)$ oraz $U\mapsto\Omega^q(U)$ są snopami,
+podobnie jak $U\mapsto\mathcal O(U)$ dla holomorficznych funkcji na
+zespolonej rozmaitości. Dla ustalonego operatora różniczkowego $P$
+przestrzenie $\{f\in C^\infty(U):Pf=0\}$ również tworzą snop
+(jeśli operator jest zgodny z ograniczeniami).
+Natomiast przyporządkowanie $U\mapsto H^q(U;k)$ dla $q>0$ nie jest
+na ogół snopem: globalna klasa kohomologii może znikać na wszystkich
+zbiorach drobnego pokrycia, nie będąc zerowa globalnie.
+Na przykład generator $H^1(S^1;k)$ znika po ograniczeniu
+do każdej z dwóch dostatecznie dużych otwartych łuków.
+\end{przyklad}
+
+\begin{definicja}[Włókno snopu w punkcie]
+Dla snopu $\mathcal F$ i $x\in X$ jego \emph{włóknem} (stalkiem)
+nazywamy granicę prostą
+$\mathcal F_x=\varinjlim_{x\in U}\mathcal F(U)$, gdzie przejścia
+są ograniczeniami, a $U$ przebiegają otwarte otoczenia $x$.
+Element $\mathcal F_x$ jest klasą pary $(U,s)$, $x\in U$,
+z utożsamieniem dwóch par, jeśli sekcje zgadzają się
+na pewnym mniejszym otoczeniu $x$.
+\end{definicja}
+
+\begin{lemat}[Dokładność sprawdza się na włóknach]
+\label{lem:stalk-exact-v12}
+Ciąg morfizmów snopów $k$-przestrzeni wektorowych
+$\mathcal A\xrightarrow{u}\mathcal B\xrightarrow{v}\mathcal C$
+jest dokładny (czyli $\operatorname{im}u=\ker v$ jako snopy)
+wtedy i tylko wtedy, gdy ciąg
+$\mathcal A_x\xrightarrow{u_x}\mathcal B_x\xrightarrow{v_x}\mathcal C_x$
+jest dokładny dla każdego $x\in X$.
+\end{lemat}
+\begin{proof}
+Warunek jądra jest lokalny, ponieważ dla sekcji $b$ równość $v(b)=0$
+można sprawdzać na wszystkich jej kiełkach. Obraz \emph{snopowy}
+morfizmu $u$ składa się z sekcji, które lokalnie należą do obrazu $u$.
+Zatem kiełek $b_x$ należy do $\operatorname{im}u_x$ dokładnie wtedy,
+gdy po zmniejszeniu otoczenia $x$ sekcja $b$ ma lokalny przeciwobraz.
+To równoważność dokładności w punkcie i dokładności snopowej.
+Nie wynika stąd, że ciąg przestrzeni sekcji globalnych jest dokładny:
+lokalne przeciwobrazy mogą nie sklejać się globalnie.
+\end{proof}
+
+\begin{przyklad}[Snop stały a system lokalny]
+Na spójnej przestrzeni lokalnie łukowo spójnej snop $k_X$
+przyporządkowuje otwartemu $U$ \emph{lokalnie stałe} funkcje $U\to k$;
+nie należy go mylić z przedsnopem $U\mapsto k$ nawet wtedy,
+gdy $U$ jest niespójne. Każdy system lokalny o włóknie $k^r$
+można otrzymać z reprezentacji
+$\pi_1(X,x_0)\to\operatorname{GL}_r(k)$,
+jeśli $X$ jest spójna, lokalnie łukowo spójna i półlokalnie jednospójna.
+\end{przyklad}
+
+\section{Nośnik sekcji i przedłużenie przez zero}
+\begin{definicja}[Sekcja o nośniku zwartym]
+\label{def:gamma-c-v12}
+Niech $X$ będzie lokalnie zwarta i Hausdorffa, a $\mathcal F$
+niech będzie snopem na $X$. Dla $s\in\mathcal F(X)$ określmy
+$\operatorname{supp}(s)=\{x\in X:s_x\ne0\}$
+(zbiór ten jest już domknięty na mocy warunku snopowego).
+Przestrzeń sekcji o nośniku zwartym oznaczamy
+\[\Gamma_c(X,\mathcal F)
+  :=\{s\in\mathcal F(X):\operatorname{supp}(s)\text{ jest zwarty}\}.\]
+Dla domkniętego $Z\subseteq X$ analogicznie oznaczamy
+$\Gamma_Z(X,\mathcal F)=\{s:\operatorname{supp}(s)\subseteq Z\}$.
+\end{definicja}
+
+\begin{uwaga}[Skąd domkniętość nośnika?]
+Zbiór punktów $x$ o $s_x=0$ jest otwarty: zerowy kiełek oznacza,
+że na pewnym otoczeniu $x$ sekcja $s$ jest zerowa. Jego dopełnienie
+jest więc domknięte. Dla snopu funkcji jest to zwykłe domknięcie
+zbioru, na którym funkcja jest różna od zera.
+\end{uwaga}
+
+\begin{definicja}[Przedłużenie przez zero]
+\label{def:jbang-v12}
+Niech $j:U\hookrightarrow X$ będzie zanurzeniem \emph{otwartym}
+i $\mathcal F$ snopem na $U$. Przez $j_!\mathcal F$ oznaczamy snop,
+który ma na otwartym $V\subseteq X$ następujące sekcje:
+\[(j_!\mathcal F)(V)=\{s\in\mathcal F(V\cap U):
+\operatorname{supp}_{V\cap U}(s)\text{ jest domknięty w }V\}.\]
+W szczególności sekcje te dają się przedłużyć przez zero
+poza $U$. Na włóknach:
+\[
+(j_!\mathcal F)_x\cong
+\begin{cases}\mathcal F_x,&x\in U,\\0,&x\notin U.\end{cases}
+\]
+Natomiast obraz bezpośredni $j_*\mathcal F$ definiuje wzór
+$(j_*\mathcal F)(V)=\mathcal F(V\cap U)$ dla otwartych $V\subseteq X$.
+\end{definicja}
+
+\begin{przyklad}[Dlaczego $j_!$ różni się od $j_*$?]
+Niech $X=\R$, $U=(0,1)$ i $\mathcal F=k_U$. Dla $x=0$ mamy
+$(j_!k_U)_0=0$, ale $(j_*k_U)_0\cong k$, gdyż dla małego
+$\varepsilon>0$ funkcje lokalnie stałe na $(0,\varepsilon)$
+mają jedną swobodną wartość. Istotne jest więc, czy
+informację dopuszczamy \emph{aż do brzegu}, czy znikającą przy nim.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+\draw[-{Stealth[length=2mm]},thick] (-3.9,0)--(4.0,0);
+\node[below] at (-3.4,0) {$X=\R$};
+\draw[line width=2.3pt,manifoldblue] (-1.9,0)--(2.0,0);
+\draw[fill=white,thick] (-1.9,0) circle (2pt);
+\draw[fill=white,thick] (2.0,0) circle (2pt);
+\node[above,manifoldblue] at (0,0.12) {$U=(0,1)$ (schematycznie)};
+\node[below] at (-1.9,-0.14) {$0$};
+\node[below] at (2.0,-0.14) {$1$};
+\node[below,align=center] at (0,-0.70) {Na brzegu: $(j_!k_U)_x=0$,\\ ale $(j_*k_U)_x\cong k$.};
+\end{tikzpicture}
+\par\smallskip\small Przedłużenie przez zero zachowuje dane wewnątrz $U$,
+ale usuwa ich kiełki na brzegu otwartego podzbioru.
+\end{center}
+
+\begin{stwierdzenie}[Sekcje na otwartym podzbiorze]
+\label{prop:jbang-sections-v12}
+Przy założeniach definicji~\ref{def:jbang-v12}, jeśli $X$ jest lokalnie
+zwarta i Hausdorffa, to zachodzi naturalna identyfikacja
+$\Gamma_c(X,j_!\mathcal F)\cong\Gamma_c(U,\mathcal F)$.
+\end{stwierdzenie}
+\begin{proof}
+Sekcja $j_!\mathcal F$ jest na $X\setminus U$ lokalnie zerowa,
+a więc odpowiada sekcji $\mathcal F$ na $U$ z zerowym przedłużeniem.
+Jeśli jej nośnik jest zwarty w $X$, to leży w $U$ i jest
+zwarty również w $U$; w drugą stronę nośnik zwarty w $U$
+jest zwarty w $X$ (z ciągłości włożenia), a przedłużenie
+przez zero określa sekcję $j_!\mathcal F$.
+Konstrukcje są odwrotne i naturalne.
+\end{proof}
+
+\section{Kohomologia snopów i kohomologia z nośnikami}
+\begin{definicja}[Funktory pochodne sekcji]
+\label{def:sheaf-cohom-v12}
+Dla snopu $\mathcal F$ na $X$ wybieramy rezolwentę iniektywną
+$0\to\mathcal F\to\mathcal I^0\to\mathcal I^1\to\cdots$
+w kategorii snopów $k$-przestrzeni wektorowych. Definiujemy
+\[
+H^q(X,\mathcal F)=H^q\bigl(\Gamma(X,\mathcal I^\bullet)\bigr),
+\quad H_c^q(X,\mathcal F)
+=H^q\bigl(\Gamma_c(X,\mathcal I^\bullet)\bigr),
+\quad H_Z^q(X,\mathcal F)
+=H^q\bigl(\Gamma_Z(X,\mathcal I^\bullet)\bigr).
+\]
+Są to odpowiednio kohomologia snopu, kohomologia z nośnikami
+zwartymi oraz kohomologia lokalna z nośnikiem w $Z$.
+Ich niezależność od wyboru rezolwenty wynika z twierdzenia
+porównawczego dla rezolwent iniektywnych.
+\end{definicja}
+
+\begin{uwaga}[Co zakładamy z algebry homologicznej?]
+Istnienie dostatecznej liczby snopów iniektywnych i twierdzenie
+o niezależności rezolwenty są standardowymi rezultatami
+algebry homologicznej w kategorii snopów. Konstrukcja powyższa
+nie \emph{dowodzi} ich istnienia; szczegóły kategorii
+pochodnej rozwiniemy przed dualnością Verdiera.
+\end{uwaga}
+
+\begin{lemat}[Ciąg Mayera--Vietorisa ze zwartymi nośnikami]
+\label{lem:sheaf-mv-v12}
+Niech $X$ będzie lokalnie zwartą przestrzenią Hausdorffa,
+$X=U\cup V$ pokryciem otwartym, a $\mathcal F$ snopem
+$k$-przestrzeni wektorowych na $X$. Zachodzi naturalny
+długi ciąg dokładny
+\[
+\cdots\longrightarrow H_c^q(U\cap V,\mathcal F)
+\longrightarrow H_c^q(U,\mathcal F)\oplus H_c^q(V,\mathcal F)
+\longrightarrow H_c^q(X,\mathcal F)
+\longrightarrow H_c^{q+1}(U\cap V,\mathcal F)\longrightarrow\cdots,
+\]
+gdzie wszędzie po lewej stosujemy ograniczenie snopu do
+wskazanego otwartego podzbioru.
+\end{lemat}
+\begin{proof}
+Niech $a:U\cap V\hookrightarrow X$, $j:U\hookrightarrow X$
+i $l:V\hookrightarrow X$ oznaczają zanurzenia otwarte.
+Sprawdzenie na włóknach (Lemat~\ref{lem:stalk-exact-v12}) daje krótki
+ciąg dokładny snopów
+\[
+0\longrightarrow a_!(\mathcal F|_{U\cap V})
+\xrightarrow{\,s\mapsto(s,-s)\,}
+ j_!(\mathcal F|_U)\oplus l_!(\mathcal F|_V)
+\xrightarrow{\,(s,t)\mapsto s+t\,}\mathcal F\longrightarrow0.
+\]
+Na przecięciu jest to $0\to F\to F\oplus F\to F\to0$,
+a poza przecięciem identyczność na odpowiednim składniku.
+Ponieważ przedłużenie przez zero przy otwartym zanurzeniu
+jest dokładne (co także wynika ze sprawdzenia na włóknach),
+ciąg pozostaje dokładny po zastosowaniu rezolwent w kategorii
+pochodnej. Następnie stosujemy funktor $R\Gamma_c(X,-)$.
+Przez Stwierdzenie~\ref{prop:jbang-sections-v12} i dokładność
+$j_!$ identyfikujemy otrzymane człony z
+$R\Gamma_c(U\cap V,-)$, $R\Gamma_c(U,-)$ i $R\Gamma_c(V,-)$.
+Długi ciąg kohomologii trójkąta dokładnego daje tezę.
+\end{proof}
+
+\begin{przyklad}[Obliczenie $H_c^*(\R;k)$]
+Niech $U=(-\infty,1)$, $V=(0,\infty)$, więc $U\cap V=(0,1)$
+i $\R=U\cup V$. Każdy z tych trzech zbiorów jest homeomorficzny
+z $\R$, dlatego w tym przykładzie ciąg Mayera--Vietorisa
+sam nie oblicza nieznanej grupy. Zamiast kołowego rozumowania
+używamy definicji względnej z
+Definicji~\ref{def:compact-support-cohom-v11}:
+$H_c^q(\R;k)\cong H^q([-1,1],\{-1,1\};k)$
+przez wycięcie i wyczerpanie przedziałami. Ciąg względny daje
+$H_c^0(\R;k)=0$ i $H_c^1(\R;k)\cong k$.
+Poniżej odzyskamy ten sam wynik z rezolwenty de Rhama.
+\end{przyklad}
+
+\section{Od kohomologii \v{C}echa do kohomologii snopów}
+\label{sec:cech-sheaves-v12}
+Nie należy mylić \emph{homologii \v{C}echa} z rozdziału o
+nerwach pokryć z \emph{kohomologią \v{C}echa snopu}, której
+współczynniki stanowią sekcje snopu na przecięciach otwartych.
+
+\begin{definicja}[Kołańcuchy \v{C}echa ze współczynnikami w snopie]
+Niech $\mathcal U=(U_i)_{i\in I}$ będzie uporządkowanym pokryciem
+otwartym $X$, a $\mathcal F$ snopem abelowym. Definiujemy
+\[
+\check C^q(\mathcal U,\mathcal F)
+=\prod_{i_0<\cdots<i_q}\mathcal F(U_{i_0}\cap\cdots\cap U_{i_q}),
+\qquad
+(\delta c)_{i_0\cdots i_{q+1}}
+=\sum_{j=0}^{q+1}(-1)^j
+c_{i_0\cdots\widehat{i_j}\cdots i_{q+1}}
+\big|_{U_{i_0}\cap\cdots\cap U_{i_{q+1}}}.
+\]
+Niepuste przecięcia są przyjmowane w indeksie; dla pustego
+przecięcia przestrzeń sekcji jest zerowa. Kohomologię tego
+kompleksu oznaczamy $\check H^q(\mathcal U,\mathcal F)$.
+\end{definicja}
+
+\begin{stwierdzenie}[Pierwsza przeszkoda sklejania]
+$\check H^0(\mathcal U,\mathcal F)=\mathcal F(X)$,
+gdy $\mathcal F$ jest snopem i $\mathcal U$ pokrywa $X$.
+\end{stwierdzenie}
+\begin{proof}
+Zero-kocykl to rodzina sekcji $(s_i)$ spełniająca
+$s_j|_{U_i\cap U_j}=s_i|_{U_i\cap U_j}$.
+Warunek snopowy daje dokładnie jedną sekcję na całym $X$.
+W standardowym kompleksie \v{C}echa nie ma kołańcuchów stopnia $-1$,
+zatem w stopniu zerowym nie bierzemy ilorazu przez żadne kobrzegi.
+\end{proof}
+
+\begin{twierdzenie}[Kiedy \v{C}ech oblicza kohomologię snopów?]
+\label{thm:leray-sheaf-v12}
+Jeżeli dla każdego niepustego skończonego przecięcia
+$U_{i_0}\cap\cdots\cap U_{i_q}$ oraz każdego $r>0$ mamy
+$H^r(U_{i_0}\cap\cdots\cap U_{i_q},\mathcal F)=0$,
+to naturalna mapa
+$\check H^m(\mathcal U,\mathcal F)\to H^m(X,\mathcal F)$
+jest izomorfizmem dla każdego $m\ge0$.
+\end{twierdzenie}
+\begin{proof}[Podwójny kompleks i dwie filtracje]
+Niech $\mathcal F\to\mathcal I^\bullet$ będzie rezolwentą
+iniektywną. Dla uporządkowanego pokrycia $\mathcal U$
+wprowadzamy dwukompleks
+$C^{p,q}=\prod_{i_0<\cdots<i_p}
+\Gamma(U_{i_0\cdots i_p},\mathcal I^q)$ dla $p,q\ge0$,
+z różniczką całkowitą
+$D=\delta+(-1)^p d_{\mathcal I}$ na $C^{p,q}$.
+Obie filtracje są w pierwszej ćwiartce, zatem w każdym
+stopniu całkowitym występuje skończenie wiele par $(p,q)$;
+standardowe twierdzenie o zbieżności ma tu zastosowanie.
+
+Najpierw liczymy kohomologię w kierunku $p$. Snop
+iniektywny jest wiotki (flabby): ograniczenie jego sekcji
+do zbioru otwartego jest surjektywne. Dla wiotkiego snopu
+rozszerzony kompleks \v{C}echa danego pokrycia ma
+zanik kohomologii w dodatnich stopniach. Istotne jest,
+że chodzi tutaj o \emph{wiotkość} snopów $\mathcal I^q$,
+a nie o sam warunek snopowy, który zapewnia tylko
+dokładność w stopniu zerowym. Wobec tego pierwsza
+filtracja daje kohomologię kompleksu
+$\Gamma(X,\mathcal I^\bullet)$, czyli $H^*(X,\mathcal F)$.
+
+W drugim kierunku, ponieważ iniektywne snopy są
+acykliczne na dowolnym otwartym podzbiorze,
+$H^q(\Gamma(U_{i_0\cdots i_p},\mathcal I^\bullet))
+=H^q(U_{i_0\cdots i_p},\mathcal F)$.
+Iloczyny przestrzeni wektorowych są dokładne,
+więc $E_1^{p,q}=\prod_{i_0<\cdots<i_p}
+H^q(U_{i_0\cdots i_p},\mathcal F)$.
+Z hipotezy wynika zanik dla $q>0$.
+Wiersz $q=0$ jest dokładnie kompleksem
+$\check C^\bullet(\mathcal U,\mathcal F)$.
+Dlatego drugi ciąg spektralny degeneruje po obliczeniu
+kohomologii tego wiersza. Obie filtracje obliczają
+kohomologię tego samego totalnego kompleksu;
+indukowana mapa porównawcza jest zatem izomorfizmem.
+Użyliśmy przy tym standardowego lematu o wiotkości
+snopów iniektywnych, wyraźnie oddzielonego od rachunku
+z dwiema filtracjami.
+\end{proof}
+
+\begin{przyklad}[Okrąg i jego lokalny system]
+Niech $L$ będzie systemem lokalnym o włóknie $V=k^r$
+na $S^1$, o monodromii $A\in\operatorname{GL}(V)$.
+Jednokomórkowy model okręgu z odpowiednim skręceniem
+współczynników ma kompleks kołańcuchów
+$V\xrightarrow{A-I}V$ w stopniach $0$ i $1$.
+Dlatego
+$H^0(S^1;L)=\ker(A-I)$ oraz
+$H^1(S^1;L)=\operatorname{coker}(A-I)$.
+Na przykład dla $V=\R$ i $A=-1$ obie grupy są zerowe;
+przy $A=1$ obie wynoszą $\R$.
+To pokazuje, dlaczego znajomość samych włókien $L_x$
+nie wystarcza: trzeba również znać ich transport.
+\end{przyklad}
+
+\section{Rezolwenta de Rhama i związki z poprzednim rozdziałem}
+\begin{twierdzenie}[Twierdzenie de Rhama ze zwartymi nośnikami — dowód snopowy]
+\label{thm:de-rham-sheaf-v12}
+Niech $M$ będzie gładką drugoprzeliczalną rozmaitością,
+bez brzegu. Wówczas naturalne całkowanie form wyznacza
+$H^q(\Omega_c^\bullet(M),\dd)\cong H_c^q(M;\R)$,
+gdzie prawa strona jest singularną kohomologią z nośnikami
+zwartymi z Definicji~\ref{def:compact-support-cohom-v11}.
+\end{twierdzenie}
+\begin{proof}
+Rozpatrzmy ciąg snopów
+$0\to\R_M\to\Omega_M^0\xrightarrow{\dd}\Omega_M^1
+\xrightarrow{\dd}\cdots$. Jest on dokładny na włóknach:
+lokalny lemat Poincarégo dowodzi dokładności w dodatnich
+stopniach, a w stopniu zero jądrem $\dd$ są funkcje lokalnie
+stałe. Dla każdej formy i każdego otwartego pokrycia
+istnieje gładki podział jedności podporządkowany
+lokalnie skończonemu uszczegółowieniu; mnożenie form
+przez jego funkcje daje operatory lokalizujące.
+Dlatego snopy $\Omega_M^q$ są \emph{drobne} (fine).
+
+Dla przestrzeni lokalnie zwartych i parazwartych snopy
+drobne są acykliczne względem $\Gamma_c$. Wyjaśnijmy
+mechanizm tego standardowego lematu: w kompleksie
+\v{C}echa sekcji o nośnikach zwartych podział jedności
+pozwala zbudować homotopię kontrahującą dodatnie
+stopnie. Każda sekcja o nośniku zwartym spotyka tylko
+skończenie wiele elementów lokalnie skończonego pokrycia,
+więc operatory zachowują warunek zwartości nośnika;
+na przestrzeni parazwartej porównanie rezolwenty
+\v{C}echa z rezolwentą iniektywną daje zanik wyższych
+funktorów pochodnych. W efekcie kompleks
+$\Gamma_c(M,\Omega_M^\bullet)=\Omega_c^\bullet(M)$
+oblicza $R\Gamma_c(M,\R_M)$.
+
+Dla rozmaitości lokalnie kontraktowalnej porównanie
+kohomologii stałego snopu z kohomologią singularną
+(respektujące nośniki) utożsamia
+$H_c^q(M,\R_M)$ z $H_c^q(M;\R)$.
+Trzeba doprecyzować, co znaczy tutaj „całkowanie form”
+w przypadku nośników zwartych. Dla ustalonego kompaktu
+$K\subset M$ całkowanie po gładkich sympleksach daje
+kołańcuch reprezentujący klasę względną
+$H^q(M,M\setminus K;\R)$: forma o nośniku zawartym
+w $K$ zeruje się na sympleksach o obrazie w $M\setminus K$.
+Po przejściu do granicy prostej po kompaktach $K$
+otrzymujemy mapę do $H_c^q(M;\R)$.
+Jej zgodność z izomorfizmem snopowym wynika z lokalnego
+lematu Poincarégo i naturalności konstrukcji względem
+ograniczeń i ciągów Mayera--Vietorisa.
+Stosujemy jako jawne twierdzenie porównawcze
+identyfikację pochodnej kohomologii stałego snopu
+z singularną na rozmaitościach; samo stwierdzenie,
+że formy całkujemy po sympleksach, nie jest niezależnym
+dowodem tego twierdzenia.
+\end{proof}
+
+\section{Kategorie pochodne: tylko niezbędny aparat}
+\begin{definicja}[Kompleks i przesunięcie]
+Dla kompleksu kohomologicznego $(A^\bullet,d)$ ustalamy
+$A[n]^q=A^{q+n}$ oraz $d_{A[n]}=(-1)^n d_A$.
+Morfizm kompleksów jest \emph{quasi-izomorfizmem}, gdy
+indukuje izomorfizmy wszystkich grup kohomologii.
+Kategoria pochodna $D(X)$ jest otrzymywana z kategorii
+kompleksów snopów przez formalne odwrócenie wszystkich
+quasi-izomorfizmów.
+\end{definicja}
+
+\begin{przyklad}[Odczytywanie przesunięcia]
+Jeżeli $V$ jest przestrzenią wektorową skoncentrowaną
+w stopniu $0$, to $V[n]$ ma jedyną niezerową kohomologię
+w stopniu $-n$. W szczególności $\R_M[n]$ nie jest
+zwykłym snopem ustawionym w stopniu $n$, tylko
+kompleksem przesuniętym \emph{w lewo}.
+\end{przyklad}
+
+\begin{definicja}[Pochodne funktory Hom]
+Przez $R\!\operatorname{Hom}_k(A^\bullet,B^\bullet)$
+oznaczamy pochodny kompleks Hom, a przez
+$R\mathcal Hom(\mathcal F^\bullet,\mathcal G^\bullet)$
+pochodny snop wewnętrznych homomorfizmów.
+Definiuje się je za pomocą stosownych rezolwent
+iniektywnych; ich kohomologie mierzą nie tylko
+homomorfizmy, lecz także klasy rozszerzeń.
+\end{definicja}
+
+\section{Snop dualizujący i twierdzenie Verdiera}
+\begin{definicja}[Snop dualizujący i dualność Verdiera]
+\label{def:verdier-v12}
+Niech $a:X\to\{*\}$ będzie mapą do punktu.
+W formalizmie sześciu operacji dla odpowiedniej kategorii
+przestrzeni (np. lokalnie zwartych, lokalnie kontraktowalnych,
+o skończonym wymiarze kohomologicznym), $a^!$ oznacza
+prawy adjunkt do pochodnego obrazu właściwego $Ra_!$.
+Kompleks
+$\omega_X^\bullet:=a^!k$ nazywamy \emph{kompleksem dualizującym}.
+Dla kompleksu $\mathcal F^\bullet$ definiujemy
+\[
+\mathbb D_X\mathcal F^\bullet
+:=R\mathcal Hom(\mathcal F^\bullet,\omega_X^\bullet).
+\]
+Przez $D^b_c(X;k)$ oznaczamy kategorię ograniczonych
+kompleksów snopów o konstruktybilnych grupach kohomologii,
+gdy $X$ jest odpowiednio stratyfikowalna.
+\end{definicja}
+
+\begin{twierdzenie}[Globalna dualność Verdiera — wersja nad ciałem]
+\label{thm:verdier-global-v12}
+Niech $X$ będzie lokalnie zwartą, lokalnie kontraktowalną,
+parazwartą przestrzenią o skończonym wymiarze kohomologicznym,
+na której istnieje standardowy formalizm $Ra_!\dashv a^!$.
+Dla $\mathcal F^\bullet\in D^b_c(X;k)$ zachodzi
+naturalny quasi-izomorfizm
+\[
+R\Gamma\bigl(X,\mathbb D_X\mathcal F^\bullet\bigr)
+\simeq R\!\operatorname{Hom}_k
+\bigl(R\Gamma_c(X,\mathcal F^\bullet),k\bigr).
+\]
+W szczególności, gdy $R\Gamma_c(X,\mathcal F^\bullet)$
+ma skończeniewymiarowe grupy kohomologii,
+$H^{-q}(X,\mathbb D_X\mathcal F^\bullet)
+\cong H_c^q(X,\mathcal F^\bullet)^\vee$,
+gdzie $V^\vee=\operatorname{Hom}_k(V,k)$.
+\end{twierdzenie}
+\begin{proof}[Wskazanie dokładnego miejsca użycia adjunkcji]
+Z definicji kompleksu dualizującego i z adjunkcji
+$Ra_!\dashv a^!$ wynika
+$R\!\operatorname{Hom}_X(\mathcal F^\bullet,a^!k)
+\simeq R\!\operatorname{Hom}_k(Ra_!\mathcal F^\bullet,k)$.
+Lewą stronę identyfikujemy z
+$R\Gamma(X,R\mathcal Hom(\mathcal F^\bullet,a^!k))$,
+a $Ra_!\mathcal F^\bullet$ z
+$R\Gamma_c(X,\mathcal F^\bullet)$.
+Po podstawieniu dostajemy zapisaną równoważność.
+Dowód istnienia $a^!$ i konstrukcji adjunkcji jest
+osobnym, nietrywialnym twierdzeniem teorii pochodnych
+snopów, którego tutaj nie wyprowadzamy.
+\end{proof}
+
+\begin{twierdzenie}[Postać dualizująca na rozmaitości]
+\label{thm:verdier-manifold-v12}
+Jeżeli $M$ jest topologiczną $n$-rozmaitością bez brzegu,
+orientowalną nad $k$, to
+$\omega_M^\bullet\simeq k_M[n]$; bez wyboru orientacji
+$\omega_M^\bullet\simeq\operatorname{or}_{M,k}[n]$,
+gdzie $\operatorname{or}_{M,k}$ jest lokalnym systemem orientacji.
+Dlatego dla $\mathcal F=k_M$ globalna dualność Verdiera
+daje dualność Poincarégo z nośnikami zwartymi.
+\end{twierdzenie}
+\begin{proof}[Wyprowadzenie z lokalnego modelu]
+Ustalmy punkt $x\in M$ i kulę współrzędnych $B$.
+Lokalna kohomologia z nośnikiem w $x$ spełnia
+$H^q(B,B\setminus\{x\};k)\cong k$ dla $q=n$
+i znika w innych stopniach. Orientacja lokalna to
+wybór generatora tej jednowymiarowej grupy; generatory
+w sąsiednich kartach różnią się znakiem stopnia
+lokalnej zmiany współrzędnych (albo działaniem $-1$
+w ciele $k$). Konstruuje to system $\operatorname{or}_{M,k}$.
+
+Sam rachunek lokalnej kohomologii \emph{nie wystarcza}
+do zbudowania globalnego quasi-izomorfizmu. Potrzebujemy
+ponadto twierdzenia o lokalizacji dla $a^!$:
+po ograniczeniu do $B$ kompleks dualizujący jest
+kompleksem dualizującym na $B$, a jego funkcjonalne
+odwzorowania przejścia realizują właśnie otrzymany
+system orientacji. Z taką identyfikacją lokalną i
+zgodnością na przecięciach sklejamy quasi-izomorfizm
+$\omega_M^\bullet\simeq\operatorname{or}_{M,k}[n]$.
+Twierdzenie o lokalizacji $a^!$ jest tu jawnie
+przyjętym składnikiem formalizmu sześciu operacji.
+\end{proof}
+
+\begin{przyklad}[Prosta rzeczywista]
+Dla $X=\R$ i $\mathcal F=k_\R$ mamy
+$\mathbb D_\R(k_\R)\simeq k_\R[1]$.
+Stąd $H^{-1}(\R,\mathbb D k_\R)\cong H^0(\R,k)=k$,
+co zgadza się z dualną przestrzenią
+$H_c^1(\R;k)^\vee\cong k$.
+Dla $q=0$ obie strony są zerowe.
+\end{przyklad}
+
+\begin{przyklad}[Węzeł krzywej zespolonej]
+\label{ex:node-duality-v12}
+Niech $X=\{(z,w)\in\C^2:zw=0\}\cap B_\varepsilon$,
+gdzie $B_\varepsilon$ jest małą otwartą kulą wokół $0$.
+Otoczenie węzła jest topologicznie stożkiem na
+dwóch rozłącznych okręgach (geometryczny link w $S^3$
+jest splotem Hopfa), a $X\setminus\{0\}$ deformacyjnie zwija się
+do $S^1\sqcup S^1$. Ponieważ $X$ jest kontraktowalna,
+ciąg kohomologii pary daje
+\[
+H^q(X,X\setminus\{0\};k)\cong
+\widetilde H^{q-1}(S^1\sqcup S^1;k)
+=\begin{cases}
+k,&q=1,\\k^2,&q=2,\\0,&q\notin\{1,2\}.
+\end{cases}
+\]
+Natomiast w punkcie gładkim zespolonej krzywej
+lokalna kohomologia pary jest niezerowa tylko w stopniu $2$,
+gdzie wynosi $k$. Dlatego \emph{stały kompleks przesunięty}
+$k_X[2]$ nie może odgrywać roli kompleksu dualizującego
+w takiej samej postaci jak na rozmaitości gładkiej.
+To pierwszy sygnał pojawienia się w geometrii
+algebraicznej kompleksów dualizujących i snopów perwersyjnych.
+\end{przyklad}
+
+\section{Sześć operacji i właściwe odwzorowania}
+Na poziomie pochodnym porządkujemy operacje
+$f^{-1}$ (odwrotny obraz snopu), $Rf_*$ (obraz bezpośredni),
+$Rf_!$ (obraz właściwy), $f^!$ (nadzwyczajny odwrotny obraz),
+$\otimes^L$ i $R\mathcal Hom$.
+Dla snopów \emph{wektorowych nad ciałem} zwykłe $f^{-1}$
+i $\otimes$ są już dokładne, dlatego w tej kategorii $f^{-1}$ nie wymaga
+pochodnego poprawiania, a $\otimes^L=\otimes$.
+
+\begin{stwierdzenie}[Obraz właściwy i dualność]
+\label{prop:verdier-proper-v12}
+Jeśli $f:X\to Y$ jest właściwym ciągłym odwzorowaniem
+między przestrzeniami spełniającymi hipotezy
+Twierdzenia~\ref{thm:verdier-global-v12}, to
+$Rf_!\cong Rf_*$. Dla konstruktybilnego
+$\mathcal F^\bullet$ zachodzi ponadto naturalna
+równoważność
+\[
+Rf_*\,\mathbb D_X\mathcal F^\bullet
+\simeq\mathbb D_Y\,Rf_*\mathcal F^\bullet.
+\]
+\end{stwierdzenie}
+\begin{proof}[Argument z formalizmu sześciu operacji]
+Właściwość mapy oznacza, że warunek właściwości
+nośnika sekcji na przeciwobrazie dowolnego otwartego
+zbioru jest automatyczny; więc $f_!=f_*$ i tak samo
+po przejściu do funktorów pochodnych. Zgodność z dualnością
+otrzymujemy z twierdzenia o dualności względnej
+$Rf_*R\mathcal Hom_X(\mathcal F,f^!\mathcal G)
+\simeq R\mathcal Hom_Y(Rf_*\mathcal F,\mathcal G)$
+razem z $(a_Y\circ f)^!\simeq f^!a_Y^!$.
+Jest to zastosowanie twierdzenia o dualności względnej,
+a nie jego niezależny dowód.
+\end{proof}
+
+\begin{uwaga}[Co wchodzi do geometrii algebraicznej?]
+Dla przestrzeni analitycznej $X^{\mathrm{an}}$ mamy snop
+stały $k_X$ i jego kohomologię topologiczną. Mamy też
+snop funkcji holomorficznych $\mathcal O_X$ oraz dla
+schematów snopy koherentne w topologii Zariskiego.
+Nie należy bez hipotez identyfikować
+$H^*(X^{\mathrm{an}},k)$, $H^*(X,\mathcal O_X)$
+i kohomologii etalnej. Należą do różnych teorii
+współczynników i, w tym ostatnim przypadku,
+topologii Grothendiecka. Dualność Verdiera prowadzi
+od lokalnych systemów do kompleksów konstruktybilnych,
+a dalej do kompleksów przecięcia i twierdzenia o rozkładzie.
+Tych zaawansowanych wyników nie uznajemy jeszcze za udowodnione.
+\end{uwaga}
+
+\section{Ciąg lokalizacji dla podzbioru zamkniętego}
+\begin{twierdzenie}[Lokalizacja nośników]
+\label{thm:localization-v12}
+Niech $X$ będzie lokalnie zwartą przestrzenią Hausdorffa,
+$Z\subseteq X$ zbiorem domkniętym, $U=X\setminus Z$,
+a $j:U\hookrightarrow X$, $i:Z\hookrightarrow X$
+kanonicznymi włożeniami. Dla snopu $\mathcal F$
+$k$-przestrzeni wektorowych na $X$ istnieje naturalny
+ciąg dokładny
+\[
+\cdots\to H_c^q(U,\mathcal F|_U)\to H_c^q(X,\mathcal F)
+\to H_c^q(Z,\mathcal F|_Z)
+\to H_c^{q+1}(U,\mathcal F|_U)\to\cdots.
+\]
+\end{twierdzenie}
+\begin{proof}
+Rozpatrzmy ciąg snopów na $X$:
+\[
+0\longrightarrow j_!(\mathcal F|_U)
+\longrightarrow\mathcal F\longrightarrow i_*(\mathcal F|_Z)
+\longrightarrow0.
+\]
+Sprawdźmy dokładność, nie ograniczając się do sekcji globalnych.
+Dla $x\in U$ na włóknach otrzymujemy
+$0\to\mathcal F_x\xrightarrow{\id}\mathcal F_x\to0$.
+Dla $x\in Z$ otrzymujemy
+$0\to0\to\mathcal F_x\xrightarrow{\id}\mathcal F_x\to0$,
+ponieważ ograniczenie snopu do $Z$ nie zmienia
+kiełków przy punktach $Z$. Zatem ciąg jest dokładny
+na mocy Lematu~\ref{lem:stalk-exact-v12}.
+
+Pochodny funktor sekcji o nośnikach zwartych
+przekształca ten ciąg w długi ciąg kohomologii.
+Pierwszy człon identyfikujemy ze wspomnianą
+kohomologią $U$ przez dokładność $j_!$.
+Ponieważ $i$ jest zanurzeniem domkniętym i właściwym,
+$\Gamma_c(X,i_*\mathcal G)=\Gamma_c(Z,\mathcal G)$;
+identyfikacja pozostaje prawdziwa po zastosowaniu
+funktorów pochodnych. Otrzymujemy wzór z tezy.
+\end{proof}
+
+\begin{przyklad}[Usunięcie punktu z prostej]
+Dla $X=\R$, $Z=\{0\}$ i $U=\R\setminus\{0\}$ mamy
+$H_c^0(Z;k)=k$, $H_c^1(U;k)=k^2$ oraz
+$H_c^1(\R;k)=k$. Istotny fragment ciągu lokalizacji to
+\[
+0\longrightarrow k\xrightarrow{\Delta}k^2
+\xrightarrow{\,(a,b)\mapsto b-a\,}k\longrightarrow0,
+\]
+przy odpowiednim wyborze generatorów orientacji
+obu półprostych. Łączący homomorfizm $\Delta$
+jest przekątny: usunięcie jednego punktu tworzy dwie
+niezależne klasy o nośnikach zwartych w stopniu pierwszym.
+\end{przyklad}
+
+\section{Przykład z geometrii algebraicznej: kohomologia \texorpdfstring{$\mathcal O(m)$}{O(m)} na \texorpdfstring{$\mathbb P^1$}{P1}}
+\label{sec:p1-sheaf-v12}
+Nie poprzestawajmy na formalizmie: snopy pozwalają
+wykonać rachunek, którego nie opisuje zwykła homologia
+singularna. Niech $\mathbb P^1=\mathbb P^1(\C)$,
+$U_0=\{[x:y]:x\ne0\}$, $U_\infty=\{[x:y]:y\ne0\}$.
+Oznaczmy $z=y/x$ na $U_0$, $w=x/y$ na $U_\infty$.
+Na przecięciu $w=1/z$.
+
+\begin{definicja}[Snop $\mathcal O(m)$]
+Dla $m\in\Z$ wiązkę liniową $\mathcal O(m)$
+trywializujemy na $U_0$ i $U_\infty$ przez
+lokalne ramy $e_0$ i $e_\infty$ z regułą przejścia
+$e_\infty=z^m e_0$ na $U_0\cap U_\infty$.
+Snop $\mathcal O(m)$ oznacza snop \emph{holomorficznych}
+przekrojów tej wiązki.
+\end{definicja}
+
+\begin{twierdzenie}[Kohomologia skręceń na prostej rzutowej]
+\label{thm:p1-twist-v12}
+Dla każdego $m\in\Z$ zachodzą izomorfizmy
+\[
+H^0(\mathbb P^1,\mathcal O(m))\cong
+\begin{cases}\C^{m+1},&m\ge0,\\0,&m<0,\end{cases}
+\qquad
+H^1(\mathbb P^1,\mathcal O(m))\cong
+\begin{cases}\C^{-m-1},&m\le-2,\\0,&m\ge-1.\end{cases}
+\]
+Ponadto $H^q(\mathbb P^1,\mathcal O(m))=0$ dla $q\ge2$.
+\end{twierdzenie}
+\begin{proof}
+Zaczniemy od kompleksu \v{C}echa dla pokrycia
+$\{U_0,U_\infty\}$, identyfikując przekroje z funkcjami
+holomorficznymi w odpowiednich trywializacjach.
+Zgodność przekrojów na przecięciu ma postać
+$f_0(z)=z^m f_\infty(1/z)$.
+Zatem kompleks ma dwa niezerowe wyrazy:
+\[
+0\longrightarrow
+\mathcal O(\C)\oplus\mathcal O(\C)
+\xrightarrow{\,\delta\,}\mathcal O(\C^*)
+\longrightarrow0,
+\qquad
+\delta(f_0,f_\infty)=f_0(z)-z^m f_\infty(1/z).
+\]
+Jego jądro liczy globalne przekroje: funkcja
+$f_0\in\mathcal O(\C)$ może przedłużyć się zgodnie
+z ramą w nieskończoności wtedy i tylko wtedy,
+gdy jest wielomianem stopnia co najwyżej $m$ przy $m\ge0$;
+przy $m<0$ pozostaje jedynie przekrój zerowy.
+
+Obliczmy teraz kokernele. Każda funkcja holomorficzna
+na $\C^*$ ma rozwinięcie Laurenta
+$h(z)=\sum_{j\in\Z}a_jz^j$, zbieżne lokalnie jednostajnie
+na $\C^*$. Część $\sum_{j\ge0}a_jz^j$ jest funkcją
+całkowitą na $\C$ i może zostać usunięta przez
+odjęcie $f_0$. Część $\sum_{j\le m}a_jz^j$
+ma postać $z^m f_\infty(1/z)$, gdzie
+$f_\infty(w)=\sum_{j\le m}a_jw^{m-j}$ jest
+funkcją całkowitą w $w$; można więc usunąć również
+wszystkie potęgi $j\le m$. Gdy $m\ge-1$, te dwa
+zbiory wykładników pokrywają całą $\Z$.
+Gdy $m\le-2$, pozostają dokładnie klasy
+$z^{m+1},z^{m+2},\ldots,z^{-1}$, których liczba wynosi
+$-m-1$. Stąd obliczenie $H^1$ kompleksu \v{C}echa.
+
+Aby utożsamić je z \emph{pochodną} kohomologią snopu,
+stosujemy Twierdzenie~\ref{thm:leray-sheaf-v12}:
+$U_0\cong\C$, $U_\infty\cong\C$ i
+$U_0\cap U_\infty\cong\C^*$ są przestrzeniami Steina,
+a kohomologie wyższych stopni snopów holomorficznych
+przekrojów wiązek wektorowych znikają na nich
+na mocy \emph{twierdzenia B Cartana}. To ostatnie
+jest tutaj wyraźnie przywołanym wynikiem analizy
+zespolonej, a nie ukrytą konsekwencją samej definicji
+snopu. Pokrycie jest zatem acykliczne i rachunek
+\v{C}echa daje wszystkie grupy kohomologii.
+\end{proof}
+
+\begin{uwaga}[Dwa różne rodzaje kohomologii]
+Na $\mathbb P^1$ singularna kohomologia ze stałymi
+współczynnikami ma $H^0\cong H^2\cong\Z$ i
+$H^1=0$, niezależnie od $m$. Natomiast
+$H^1(\mathbb P^1,\mathcal O(-3))\cong\C^2$.
+To nie jest sprzeczność: grupy badają ten sam
+zbiór topologiczny, ale \emph{inne współczynniki snopowe}.
+\end{uwaga}
+
+
+\section{Podsumowanie, ograniczenia i dalszy kierunek}
+W tym rozdziale udowodniliśmy bez aparatu pochodnego
+warunek snopowy, sprawdzanie dokładności na włóknach,
+obliczenie $H^0$ metodą \v{C}echa, opis przedłużenia przez zero
+i elementarne przykłady. Dla kohomologii z nośnikami
+wyprowadziliśmy ciąg Mayera--Vietorisa z dokładnego
+ciągu snopów. Rezolwenta de Rhama tłumaczy,
+dlaczego lokalny lemat Poincarégo daje globalne
+kohomologie z nośnikami zwartymi.
+
+Dualność Verdiera jest tu sformułowana precyzyjnie
+\emph{względem} istnienia funktora $a^!$
+i standardowego formalizmu sześciu operacji.
+Nie rozwinęliśmy niezależnego dowodu jego istnienia,
+pełnej teorii konstruktybilności ani
+pełnego dowodu względnej dualności. Takie rozdzielenie
+statusu dowodów będzie ważne przy scalaniu skryptu
+z teorią snopów i geometrią algebraiczną.
+
+

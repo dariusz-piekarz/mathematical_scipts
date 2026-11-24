@@ -1,0 +1,160 @@
+\section{Sprzężenia funktorów}\label{sec:adjunctions}
+
+Sprzężenie opisuje sytuację, w której konstrukcja nowego obiektu jest \emph{najswobodniejsza} lub \emph{najbardziej uniwersalna} względem zapomnienia pewnej struktury. To jeden z najczęściej występujących wzorców we współczesnej algebrze i topologii.
+
+\subsection{Definicja przez naturalne bijekcje}
+
+\begin{definicja}[Para funktorów sprzężonych]\label{def:adjunction}
+Niech $F:\mathcal C\to\mathcal D$ i $G:\mathcal D\to\mathcal C$ będą funktorami. Mówimy, że $F$ jest \emph{lewym sprzężeniem} $G$, a $G$ \emph{prawym sprzężeniem} $F$, jeśli dla wszystkich $A\in\Ob(\mathcal C)$ i $B\in\Ob(\mathcal D)$ mamy bijekcje
+\[
+\Phi_{A,B}:\Hom_{\mathcal D}(F(A),B)\ \overset{\cong}{\longrightarrow}\ \Hom_{\mathcal C}(A,G(B)),
+\]
+naturalne jednocześnie względem $A$ i $B$. Piszemy $F\dashv G$.
+\end{definicja}
+
+Naturalność względem obu zmiennych oznacza konkretnie, że dla $u:A'\to A$, $v:B\to B'$ i $h:F(A)\to B$ zachodzą
+$\Phi_{A',B}(h\circ F(u))=\Phi_{A,B}(h)\circ u$ oraz $\Phi_{A,B'}(v\circ h)=G(v)\circ\Phi_{A,B}(h)$.
+
+\begin{przyklad}[Wolna przestrzeń wektorowa]\label{przyklad:free-vect}
+Dla zbioru $S$ niech $k^{(S)}$ oznacza przestrzeń wektorową funkcji $a:S\to k$ o \emph{skończonym nośniku} (tj. zbiór $\{s:a(s)\neq0\}$ jest skończony). Dla $s\in S$ oznaczmy przez $e_s$ funkcję przyjmującą wartość $1$ w $s$ i $0$ poza $s$. Każdy wektor ma jednoznaczny zapis $\sum_{s\in S}a_s e_s$ z tylko skończenie wieloma niezerowymi współczynnikami. Definiujemy funktor $F:\Set\to\Vect_k$ przez $F(S)=k^{(S)}$ i $F(f)(e_s)=e_{f(s)}$ dla funkcji $f:S\to T$, a następnie rozszerzamy liniowo.
+
+Jeśli $U:\Vect_k\to\Set$ jest funktorem zapominania, to każda funkcja $\varphi:S\to U(V)$ ma dokładnie jedno przedłużenie liniowe $\widetilde\varphi:k^{(S)}\to V$, dane przez $\widetilde\varphi(\sum a_s e_s)=\sum a_s\varphi(s)$. Odwrotnie, przekształceniu liniowemu $L:k^{(S)}\to V$ odpowiada funkcja $s\mapsto L(e_s)$. Otrzymujemy naturalną bijekcję
+\[
+\Hom_{\Vect_k}(k^{(S)},V)\cong\Hom_{\Set}(S,U(V)),
+\]
+czyli $F\dashv U$. Wolna przestrzeń jest tak skonstruowana, aby \emph{każda} funkcja ze zbioru generatorów jednoznacznie przedłużała się liniowo.
+\end{przyklad}
+
+\begin{przyklad}[Uniwersalny element wolnej przestrzeni]
+Dla ustalonego zbioru $S$ i funktora $G:\Vect_k\to\Set$ określonego przez $G(V)=\Hom_{\Set}(S,U(V))$ reprezentującym obiektem jest $k^{(S)}$. Element uniwersalny $u\in G(k^{(S)})$ to funkcja $s\mapsto e_s$. Dla dowolnej $\varphi:S\to U(V)$ istnieje dokładnie jedno odwzorowanie liniowe $L:k^{(S)}\to V$, dla którego $G(L)(u)=\varphi$, czyli $L(e_s)=\varphi(s)$ dla wszystkich $s$. Jest to element uniwersalny odpowiadający sprzężeniu wolnej przestrzeni z funktorem zapominania.
+\end{przyklad}
+
+\begin{przyklad}[Grupa wolna]
+Dla zbioru $S$ istnieje grupa wolna $F_{\Grp}(S)$ na generatorach $S$ (elementami są zredukowane słowa w symbolach $s$ oraz $s^{-1}$). Każdą funkcję $S\to U(G)$ do zbioru elementów grupy $G$ przedłużamy jednoznacznie do homomorfizmu $F_{\Grp}(S)\to G$. Otrzymujemy sprzężenie $F_{\Grp}:\Set\rightleftarrows\Grp:U$. Dla $S=\{*\}$ grupa wolna jest izomorficzna z $\mathbb Z$, co zgadza się z przykładem w sekcji~\ref{sec:yoneda}.
+\end{przyklad}
+
+\begin{przyklad}[Dwie konstrukcje topologiczne]
+Niech $U:\Top\to\Set$ zapomina topologię. Dla zbioru $S$ oznaczmy przez $D(S)$ zbiór $S$ z topologią dyskretną (wszystkie podzbiory są otwarte), a przez $I(S)$ zbiór $S$ z topologią antydyskretną (otwarte są tylko $\varnothing$ i $S$). Każda funkcja $D(S)\to X$ jest ciągła, a każda funkcja $X\to I(S)$ jest ciągła. Dlatego mamy dwa sprzężenia
+\[
+D\dashv U\dashv I.
+\]
+Rzeczywiście $\Hom_{\Top}(D(S),X)\cong\Hom_{\Set}(S,U(X))$ oraz $\Hom_{\Set}(U(X),S)\cong\Hom_{\Top}(X,I(S))$. Jeden funktor zapominania może zatem mieć zarówno lewe, jak i prawe sprzężenie.
+\end{przyklad}
+
+\begin{przyklad}[Przekątna, iloczyn i koprodukt]\label{przyklad:diag-adj}
+W $\Set$ niech $\Delta:\Set\to\Set\times\Set$ będzie funktorem przekątnym, $\Delta(X)=(X,X)$. Niech $\times:\Set\times\Set\to\Set$ oznacza iloczyn dwóch zbiorów, a $\sqcup:\Set\times\Set\to\Set$ ich sumę rozłączną. Uniwersalne własności iloczynu i koproduktu można zapisać jako dwa sprzężenia
+\[
+\sqcup\ \dashv\ \Delta\ \dashv\ \times.
+\]
+Pierwsze wynika z $\Hom(A\sqcup B,X)\cong\Hom(A,X)\times\Hom(B,X)$, a drugie z $\Hom(X,A\times B)\cong\Hom(X,A)\times\Hom(X,B)$.
+\end{przyklad}
+
+
+\begin{przyklad}[Sprzężenie funkcji monotonicznych na liczbach całkowitych]\label{przyklad:adj-poset}
+Traktujmy $(\mathbb Z,\leq)$ jako kategorię. Funkcje $F,G:\mathbb Z\to\mathbb Z$ dane przez $F(n)=2n$ i $G(m)=\lfloor m/2\rfloor$ są monotoniczne, a więc są funktorami. Dla dowolnych liczb całkowitych $n,m$ zachodzi
+$F(n)\leq m\ \Longleftrightarrow\ 2n\leq m\ \Longleftrightarrow\ n\leq\lfloor m/2\rfloor\ \Longleftrightarrow\ n\leq G(m)$.
+Każda ze stron oznacza niepustość odpowiedniego zbioru morfizmów, a skoro te zbiory są puste lub jednoelementowe, dostajemy bijekcję naturalną $\Hom(F(n),m)\cong\Hom(n,G(m))$. Zatem $F\dashv G$. Na przykład dla $n=3,m=7$ nierówności $6\leq7$ i $3\leq3$ są prawdziwe; dla $n=4,m=7$ obie są fałszywe.
+\end{przyklad}
+
+\begin{przyklad}[Obraz, przeciwobraz i kwantyfikator ``dla każdego'']\label{przyklad:adj-inverse-image}
+Niech $f:X\to Y$ będzie funkcją. Na posetach podzbiorów mamy trzy monotoniczne funkcje:
+\begin{itemize}
+\item $\exists_f:\mathcal P(X)\to\mathcal P(Y)$, $\exists_f(A)=f(A)$;
+\item $f^{-1}:\mathcal P(Y)\to\mathcal P(X)$, $f^{-1}(B)=\{x:f(x)\in B\}$;
+\item $\forall_f:\mathcal P(X)\to\mathcal P(Y)$, $\forall_f(A)=\{y\in Y:f^{-1}(\{y\})\subseteq A\}$.
+\end{itemize}
+Dla $A\subseteq X$, $B\subseteq Y$ zachodzą równoważności
+\[
+f(A)\subseteq B\ \Longleftrightarrow\ A\subseteq f^{-1}(B),\qquad
+f^{-1}(B)\subseteq A\ \Longleftrightarrow\ B\subseteq\forall_f(A).
+\]
+Są to dokładnie własności dwóch sprzężeń $\exists_f\dashv f^{-1}\dashv\forall_f$. Pierwszą równoważność sprawdzamy bezpośrednio: $f(x)\in B$ dla wszystkich $x\in A$ wtedy i tylko wtedy, gdy $x\in f^{-1}(B)$ dla wszystkich $x\in A$. Druga mówi, że każde włókno nad $y\in B$ jest zawarte w $A$ wtedy i tylko wtedy, gdy $y\in\forall_f(A)$.
+
+Przykładowo dla $X=\{a,b,c\}$, $Y=\{0,1\}$, $f(a)=0$, $f(b)=f(c)=1$ i $A=\{a,b\}$ otrzymujemy $\exists_f(A)=\{0,1\}$, lecz $\forall_f(A)=\{0\}$. Obie strony sprzężeń mają więc wyraźnie różne zadania: ``istnieje element włókna'' i ``wszystkie elementy włókna''.
+\end{przyklad}
+
+\begin{przyklad}[Naturalność sprzężenia wolnej przestrzeni]
+Dla zbioru $S$, przestrzeni $V$, funkcji $\varphi:S\to U(V)$ odpowiadające jej liniowe przedłużenie spełnia $\widetilde\varphi(e_s)=\varphi(s)$. Sprawdźmy obie zmienne. Jeśli $a:S'\to S$, to $(\widetilde\varphi\circ F(a))(e_{s'})=\widetilde\varphi(e_{a(s')})=\varphi(a(s'))$, czyli liniowy morfizm odpowiadający $\varphi\circ a$. Jeśli $b:V\to W$ jest liniowe, to $(b\circ\widetilde\varphi)(e_s)=b(\varphi(s))$, a zatem odpowiada funkcji $U(b)\circ\varphi$. Wykazaliśmy naturalność bijekcji z przykładu~\ref{przyklad:free-vect} względem $S$ i $V$, a nie tylko bijektywność dla każdej ustalonej pary.
+\end{przyklad}
+
+
+\subsection{Jednostka, kojednostka i tożsamości trójkątne}
+
+\begin{definicja}[Jednostka i kojednostka sprzężenia]\label{def:unit-counit}
+Dla sprzężenia $F:\mathcal C\rightleftarrows\mathcal D:G$ z bijekcjami $\Phi_{A,B}$ definiujemy \emph{jednostkę} $\eta:\id_{\mathcal C}\Rightarrow GF$ przez $\eta_A:=\Phi_{A,F(A)}(\id_{F(A)})$. Definiujemy \emph{kojednostkę} $\varepsilon:FG\Rightarrow\id_{\mathcal D}$ przez $\varepsilon_B:=\Phi_{G(B),B}^{-1}(\id_{G(B)})$.
+\end{definicja}
+
+Jednostka wprowadza obiekt $A$ do jego swobodnej konstrukcji $GF(A)$, a kojednostka \emph{realizuje} obiekt swobodny nad obiektem, który już ma wymaganą strukturę. W przykładzie wolnej przestrzeni wektorowej $\eta_S(s)=e_s$, natomiast
+$\varepsilon_V:k^{(U(V))}\to V$ spełnia $\varepsilon_V(e_v)=v$ i jest liniowa.
+
+\begin{twierdzenie}[Tożsamości trójkątne i odtworzenie sprzężenia]\label{tw:triangles}
+Dla każdego sprzężenia $F\dashv G$ jednostka $\eta$ i kojednostka $\varepsilon$ są transformacjami naturalnymi spełniającymi dla wszystkich $A\in\Ob(\mathcal C)$ i $B\in\Ob(\mathcal D)$ równości
+\[
+\varepsilon_{F(A)}\circ F(\eta_A)=\id_{F(A)},\qquad G(\varepsilon_B)\circ\eta_{G(B)}=\id_{G(B)}.
+\]
+Odwrotnie, jeśli dane są funktory $F,G$ i transformacje naturalne $\eta:\id_{\mathcal C}\Rightarrow GF$, $\varepsilon:FG\Rightarrow\id_{\mathcal D}$ spełniające te równości, to definiują sprzężenie $F\dashv G$.
+\end{twierdzenie}
+\begin{proof}
+Najpierw wychodzimy od naturalnych bijekcji $\Phi_{A,B}$ z definicji sprzężenia. Zdefiniowane w sekcji jednostka $\eta$ i kojednostka $\varepsilon$ są naturalne: dla $u:A\to A'$ naturalność $\Phi$ w pierwszej i drugiej zmiennej daje
+$GF(u)\eta_A=\Phi_{A,F(A')}(F(u))=\eta_{A'}u$. Analogicznie, stosując $\Phi^{-1}$, otrzymujemy $v\varepsilon_B=\varepsilon_{B'}FG(v)$ dla $v:B\to B'$.
+
+Z naturalności $\Phi$ w drugiej zmiennej, zastosowanej do $h:F(A)\to B$ i $\id_{F(A)}$, wynika ważny wzór
+$\Phi_{A,B}(h)=G(h)\eta_A$.
+Z naturalności $\Phi^{-1}$ w pierwszej zmiennej, zastosowanej do $u:A\to G(B)$ i $\id_{G(B)}$, wynika wzór odwrotny
+$\Phi_{A,B}^{-1}(u)=\varepsilon_BF(u)$.
+Zastosujmy drugi wzór przy $B=F(A)$ i $u=\eta_A$. Ponieważ $\eta_A=\Phi_{A,F(A)}(\id_{F(A)})$, mamy
+\[
+\varepsilon_{F(A)}F(\eta_A)
+=\Phi_{A,F(A)}^{-1}(\eta_A)=\id_{F(A)}.
+\]
+Z kolei pierwszy wzór przy $A=G(B)$ i $h=\varepsilon_B$ daje
+$G(\varepsilon_B)\eta_{G(B)}=\Phi_{G(B),B}(\varepsilon_B)=\id_{G(B)}$.
+To dowodzi obu tożsamości trójkątnych, bez pomijania kroku prowadzącego od naturalności do wzorów na morfizmy sprzężone.
+
+Odwrotnie, niech dane będą naturalne transformacje $\eta:\id_{\mathcal C}\Rightarrow GF$ i $\varepsilon:FG\Rightarrow\id_{\mathcal D}$ spełniające tożsamości trójkątne. Definiujemy dla $h:F(A)\to B$ oraz $u:A\to G(B)$ morfizmy
+\[
+\Phi_{A,B}(h)=G(h)\eta_A,\qquad
+\Psi_{A,B}(u)=\varepsilon_BF(u).
+\]
+Mają one odpowiednie dziedziny i przeciwdziedziny. Naturalność $\varepsilon$ dla $h$ daje $\varepsilon_BFG(h)=h\varepsilon_{F(A)}$, stąd
+$\Psi(\Phi(h))=\varepsilon_BFG(h)F(\eta_A)=h\varepsilon_{F(A)}F(\eta_A)=h$.
+Naturalność $\eta$ dla $u$ daje $GF(u)\eta_A=\eta_{G(B)}u$, zatem
+$\Phi(\Psi(u))=G(\varepsilon_B)GF(u)\eta_A=G(\varepsilon_B)\eta_{G(B)}u=u$.
+Funkcje $\Phi_{A,B}$ i $\Psi_{A,B}$ są więc wzajemnie odwrotne. Naturalność $\Phi$ względem $u_0:A'\to A$ wynika z rachunku
+$\Phi_{A',B}(hF(u_0))=G(h)GF(u_0)\eta_{A'}=G(h)\eta_Au_0=\Phi_{A,B}(h)u_0$.
+Jej naturalność względem $v:B\to B'$ wynika z $\Phi_{A,B'}(vh)=G(v)G(h)\eta_A=G(v)\Phi_{A,B}(h)$. Tak otrzymujemy wymagane sprzężenie.
+\end{proof}
+
+\begin{przyklad}[Sprawdzenie pierwszego trójkąta dla wolnej przestrzeni]
+Dla $S\in\Ob(\Set)$ i generatora $e_s\in F(S)$ mamy $F(\eta_S)(e_s)=e_{e_s}\in F(U(F(S)))$, po czym $\varepsilon_{F(S)}(e_{e_s})=e_s$. Obie strony $\varepsilon_{F(S)}\circ F(\eta_S)$ i $\id_{F(S)}$ są liniowe i zgadzają się na bazie $(e_s)_{s\in S}$, zatem są równe. To konkretna realizacja pierwszej tożsamości trójkątnej.
+\end{przyklad}
+
+
+\begin{przyklad}[Oba trójkąty dla sprzężenia dyskretnego]
+W sprzężeniu $D:\Set\rightleftarrows\Top:U$ z przykładu w sekcji~\ref{sec:adjunctions} mamy $UD=\id_{\Set}$ dosłownie, więc $\eta_S=\id_S$. Dla przestrzeni $X$ kojednostka $\varepsilon_X:D(U(X))\to X$ jest identycznością jako funkcja między zbiorami, a ciągłość wynika z dyskretności dziedziny. Pierwszy trójkąt mówi, że złożenie $D(S)\xrightarrow{D(\eta_S)}DUD(S)\xrightarrow{\varepsilon_{D(S)}}D(S)$ jest identycznością. Drugi mówi, że $U(X)\xrightarrow{\eta_{U(X)}}UDU(X)\xrightarrow{U(\varepsilon_X)}U(X)$ również jest identycznością. Oba wnioski są natychmiastowe po podstawieniu definicji, ale pokazują różnicę między identycznością funkcji a homeomorfizmem: $\varepsilon_X$ nie musi być homeomorfizmem.
+\end{przyklad}
+
+
+\subsection{Sprzężenia a zachowanie konstrukcji}
+
+\begin{twierdzenie}[Lewe sprzężenia zachowują kogranice]\label{tw:adjoints-preserve}
+Niech $F:\mathcal C\to\mathcal D$ i $G:\mathcal D\to\mathcal C$ będą funktorami ze sprzężeniem $F\dashv G$. Niech $J$ będzie małą kategorią i $D:J\to\mathcal C$ diagramem mającym kogranicę $(Q,(q_j)_j)$. Wówczas $(F(Q),(F(q_j))_j)$ jest kogranicą diagramu $F\circ D$ w $\mathcal D$. Dualnie, prawy sprzężony $G$ zachowuje wszystkie istniejące małe granice.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy obiekt $Y\in\Ob(\mathcal D)$. Sprzężenie daje naturalną bijekcję między morfizmami $F(Q)\to Y$ a morfizmami $Q\to G(Y)$. Z uniwersalności kogranicy $Q$ te ostatnie są w bijekcji z rodzinami morfizmów $a_j:D(j)\to G(Y)$ spełniającymi $a_{j'}\circ D(\alpha)=a_j$ dla każdej strzałki $\alpha:j\to j'$ w $J$. Stosując bijekcję sprzężenia dla każdego $j$ i jej naturalność względem $D(\alpha)$, utożsamiamy takie rodziny z kostożkami $F(D(j))\to Y$. Wszystkie bijekcje są zgodne z morfizmami wychodzącymi z $F(Q)$, co jest dokładnie własnością uniwersalną kogranicy. Twierdzenie dualne stosujemy do kategorii przeciwnych.
+\end{proof}
+
+\begin{przyklad}[Dlaczego wolna przestrzeń zachowuje koprodukty]
+Dla zbiorów $S,T$ mamy kanoniczny izomorfizm $k^{(S\sqcup T)}\cong k^{(S)}\oplus k^{(T)}$. Można go sprawdzić bezpośrednio: funkcja o skończonym nośniku na sumie rozłącznej to para funkcji o skończonych nośnikach na jej składnikach. Twierdzenie~\ref{tw:adjoints-preserve} przewiduje ten izomorfizm bez rachunku na współrzędnych, ponieważ funktor wolnej przestrzeni jest lewym sprzężeniem i musi zachowywać koprodukty.
+\end{przyklad}
+
+\begin{uwaga}[Lewe i prawe są asymetryczne]
+Lewe sprzężenie zachowuje kogranice, a prawe granice. Nie można bez dodatkowych założeń zamienić tych słów. Na przykład wolna przestrzeń $F:\Set\to\Vect_k$ nie zachowuje wszystkich iloczynów: dla zbiorów $S$ i $T$ o odpowiednio $2$ i $3$ elementach przestrzeń $F(S\times T)$ ma wymiar $6$, podczas gdy iloczyn $F(S)\times F(T)$ w $\Vect_k$ ma wymiar $2+3=5$.
+\end{uwaga}
+
+
+\begin{przyklad}[Prawy sprzężony zachowuje iloczyny]
+Niech $U:\Grp\to\Set$ będzie funktorem zapominania. Ponieważ $U$ jest prawym sprzężeniem do funktora grupy wolnej, zachowuje granice. Dla grup $G,H$ dostajemy zatem kanoniczną bijekcję $U(G\times H)\cong U(G)\times U(H)$. Konkretna grupa $G\times H$ ma elementy $(g,h)$, więc bijekcja jest tu oczywista. Znaczenie twierdzenia polega jednak na tym, że działa ono także dla bardziej skomplikowanych granic, np. equalizatorów dowolnych homomorfizmów grup.
+\end{przyklad}
+
+

@@ -1,0 +1,949 @@
+\chapter{Geometria rzutowa: punkty w nieskończoności, krzywe i przecięcia}
+\label{ch:rzutowa}
+
+\section{Po co domykać przestrzeń afiniczną?}
+
+Na płaszczyźnie afinicznej $\A^2(k)$ proste $y=0$ i $y=1$ nie
+mają wspólnego punktu. Z drugiej strony proste $y=0$ i $y=\varepsilon x$
+przecinają się w początku układu współrzędnych dla każdego
+$\varepsilon\ne0$. Wyniki dotyczące liczby punktów przecięcia
+stają się przez to niewygodne: musimy osobno omawiać proste równoległe,
+a dla krzywych wyższych stopni mogą znikać kolejne przecięcia.
+
+W geometrii rzutowej dodajemy punkty reprezentujące \emph{kierunki}.
+Nie należy przy tym wyobrażać sobie dodatkowej zwykłej prostej
+w tej samej płaszczyźnie euklidesowej. Otrzymujemy nową przestrzeń,
+w której punkt jest \emph{klasą niezerowego wektora}.
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=.93]
+  % Schematic of two parallel affine lines: equations agree with vertical coordinates.
+  \draw[->,gray!65] (-3.2,-.55)--(-3.2,1.6) node[above] {$y$};
+  \draw[->,gray!65] (-3.25,0)--(3.65,0) node[right] {$x$};
+  \draw[blue!70!black,very thick] (-2.9,0)--(3.25,0);
+  \draw[red!75!black,very thick] (-2.9,1)--(3.25,1);
+  \node[blue!70!black,anchor=south west,fill=white,inner sep=1pt]
+    at (-2.7,0.05) {$y=0$};
+  \node[red!75!black,anchor=south west,fill=white,inner sep=1pt]
+    at (-2.7,1.05) {$y=1$};
+  \draw[->,dashed,gray!70] (3.3,0.02)--(4.35,.42);
+  \draw[->,dashed,gray!70] (3.3,1)--(4.35,.63);
+  \node[draw,circle,fill=white,inner sep=2pt] at (4.75,.54) {$p_\infty$};
+\end{tikzpicture}
+
+\small Rysunek 2.1. Szkic idei: dwie proste o tym samym kierunku mają
+jeden wspólny punkt na prostej w nieskończoności. Nie jest to rysunek
+w metryce przestrzeni rzutowej.
+\end{center}
+
+\section{Przestrzeń rzutowa jako zbiór kierunków}
+
+\begin{definicja}[Przestrzeń rzutowa]
+\label{def:projective-space}
+Niech $k$ będzie ciałem, a $n\ge0$. Na zbiorze
+$k^{n+1}\setminus\{0\}$ definiujemy relację
+\[
+ (a_0,\ldots,a_n)\sim(b_0,\ldots,b_n)
+ \quad\Longleftrightarrow\quad
+ \exists\lambda\in k^\times\ \forall i\in\{0,\ldots,n\}:\ b_i=\lambda a_i.
+\]
+Jej klasy oznaczamy $[a_0:\cdots:a_n]$. \emph{Przestrzenią
+rzutową wymiaru $n$ nad $k$} na poziomie punktów $k$-wymiernych
+nazywamy $\PP^n(k)=(k^{n+1}\setminus\{0\})/\!\sim$.
+Współrzędne $[a_0:\cdots:a_n]$ nazywamy \emph{jednorodnymi}.
+\end{definicja}
+
+W definicji występuje kwantyfikator $\lambda\ne0$. Nie możemy
+utożsamiać wszystkich niezerowych wektorów ze sobą: dwa wektory
+reprezentują ten sam punkt tylko wtedy, gdy leżą na tej samej
+jednowymiarowej podprzestrzeni liniowej. Wektor zerowy nie reprezentuje
+żadnego punktu. Dlatego $[1:2]=[2:4]$ nad $\R$, ale $[1:0]\ne[0:1]$.
+
+\begin{stwierdzenie}[Dobrze określona relacja]
+Dla każdego ciała $k$ i $n\ge0$ relacja z definicji
+\ref{def:projective-space} jest relacją równoważności.
+\end{stwierdzenie}
+\begin{proof}
+Zwrotność otrzymujemy dla $\lambda=1$. Jeśli $b=\lambda a$
+przy $\lambda\ne0$, to $a=\lambda^{-1}b$, więc relacja jest
+symetryczna. Jeżeli $b=\lambda a$ oraz $c=\mu b$, to
+$c=(\mu\lambda)a$, a $\mu\lambda\ne0$, co dowodzi
+przechodniości.
+\end{proof}
+
+\begin{przyklad}[Prosta rzutowa i jeden punkt uzupełniający]
+W $\PP^1(k)$ każdy punkt ma co najmniej jedną niezerową
+współrzędną. Jeśli $a_0\ne0$, otrzymujemy
+$[a_0:a_1]=[1:a_1/a_0]$, a więc punkt odpowiada dokładnie
+jednemu $t\in k$. Jedyny punkt, którego nie można tak zapisać,
+to $[0:1]$. Stąd bijekcja zbiorów
+$\PP^1(k)\cong k\sqcup\{\infty\}$.
+
+Przy $k=\R$ nie jest to jeszcze twierdzenie o homeomorfizmie:
+trzeba osobno określić, czy używamy topologii Zariskiego,
+czy topologii otrzymanej z rzeczywistej przestrzeni wektorowej.
+\end{przyklad}
+
+\begin{przyklad}[Projektowe spotkanie dwóch prostych]
+W $\PP^2(k)$ ustalmy współrzędne $[Z:X:Y]$.
+Równanie afiniczne $y=0$ przepisuje się jako $Y=0$,
+a $y=1$ jako $Y-Z=0$. Wspólne rozwiązania spełniają
+$Y=Z=0$, co daje dokładnie punkt $[0:1:0]$.
+Jest on niedostępny w części $Z\ne0$ i reprezentuje kierunek
+osi $x$.
+\end{przyklad}
+
+\section{Mapy afiniczne przestrzeni rzutowej}
+
+\begin{definicja}[Standardowe mapy afiniczne]
+Dla $i\in\{0,\ldots,n\}$ niech
+$U_i=\{[a_0:\cdots:a_n]\in\PP^n(k):a_i\ne0\}$.
+Definiujemy $\varphi_i:U_i\to k^n$ przez podzielenie
+wszystkich współrzędnych oprócz $a_i$ przez $a_i$,
+z zachowaniem ich kolejności.
+\end{definicja}
+
+\begin{stwierdzenie}[Mapy pokrywają przestrzeń]
+Dla każdego ciała $k$ oraz $n\ge1$ zachodzi
+$\PP^n(k)=\bigcup_{i=0}^n U_i$; każde $\varphi_i$
+jest bijekcją. Na $U_i\cap U_j$ przejścia współrzędnych
+są opisane ilorazami współrzędnych z nieznikającym mianownikiem.
+\end{stwierdzenie}
+\begin{proof}
+Punkt rzutowy ma niezerową współrzędną, więc należy do
+przynajmniej jednego $U_i$. Ilorazy $a_j/a_i$ nie zależą
+od reprezentanta, ponieważ przemnożenie wszystkich współrzędnych
+przez $\lambda\ne0$ skraca się w liczniku i mianowniku.
+Odwrotność $\varphi_i$ otrzymujemy, wstawiając $1$ na
+i-tej pozycji. Oba złożenia są identycznościami, gdyż w jedną
+stronę dzielimy przez $a_i$, a w drugą wybieramy reprezentanta
+z tą współrzędną równą $1$. Na przecięciu dwóch map trzeba
+wykonać te operacje kolejno, dlatego powstają ilorazy.
+\end{proof}
+
+\begin{przyklad}[Zmiana map na $\PP^1$]
+Dla $[s:t]\in\PP^1(k)$ mamy $U_s=\{s\ne0\}$ i
+$U_t=\{t\ne0\}$. Współrzędna na pierwszej mapie to
+$u=t/s$, a na drugiej $v=s/t$. Na przecięciu $u\ne0$
+i zachodzi $v=1/u$. Nie jest to wielomian na całej prostej,
+ale jest funkcją regularną na otwartym zbiorze, na którym
+mianownik nie znika. To powód, dla którego w geometrii
+rzutowej nie wystarczą globalne wielomiany afiniczne.
+\end{przyklad}
+
+Dla $[Z:X:Y]\in\PP^2(k)$ utożsamiamy
+$U_Z=\{Z\ne0\}$ z $\A^2(k)$ przez
+$[Z:X:Y]\mapsto(X/Z,Y/Z)$. Dopełnieniem tej części
+jest \emph{prosta w nieskończoności} $H_\infty=\{Z=0\}$,
+izomorficzna z $\PP^1(k)$ przez $[0:X:Y]\mapsto[X:Y]$.
+
+\section{Wielomiany jednorodne i algebraiczne podzbiory rzutowe}
+
+\begin{definicja}[Wielomian jednorodny]
+Niech $k$ będzie ciałem i $S=k[X_0,\ldots,X_n]$.
+Wielomian $F\in S$ nazywamy \emph{jednorodnym stopnia $d$},
+gdy jest sumą jednomianów o łącznym stopniu $d$; wielomian
+zerowy traktujemy jako jednorodny dowolnego stopnia.
+Dla niezerowego $F$ oznaczamy jego stopień przez $\deg F=d$.
+\end{definicja}
+
+\begin{lemat}[Dlaczego jednorodność jest konieczna]
+Jeśli $F\in k[X_0,\dots,X_n]$ jest jednorodny stopnia $d$,
+to dla każdego $a\in k^{n+1}$ i $\lambda\in k$ zachodzi
+$F(\lambda a)=\lambda^dF(a)$. W szczególności warunek
+$F(a)=0$ nie zależy od wybranego niezerowego reprezentanta
+punktu $[a]\in\PP^n(k)$.
+\end{lemat}
+\begin{proof}
+Dla jednomianu $cX_0^{e_0}\cdots X_n^{e_n}$
+o $e_0+\cdots+e_n=d$ podstawienie $\lambda a_i$
+mnoży wartość przez $\lambda^{\sum e_i}=\lambda^d$.
+Po zsumowaniu jednomianów otrzymujemy ten sam wzór dla $F$.
+Gdy $\lambda\ne0$, mamy $\lambda^d\ne0$,
+więc $F(\lambda a)=0$ wtedy i tylko wtedy, gdy $F(a)=0$.
+\end{proof}
+
+\begin{uwaga}[Wielomian niejednorodny nie określa równania rzutowego]
+Nad $k=\R$ warunek $X+1=0$ nie jest dobrze określony dla
+$[Z:X]\in\PP^1(\R)$: reprezentant $(1,-1)$ go spełnia,
+a przemnożony przez $2$ reprezentant $(2,-2)$ już nie.
+Poprawne równanie jednorodne ma postać $X+Z=0$.
+\end{uwaga}
+
+\begin{definicja}[Zbiór algebraiczny rzutowy]
+Niech $S=k[X_0,\dots,X_n]$ i niech $T\subseteq S$ będzie
+rodziną wielomianów jednorodnych. Definiujemy
+$\V_+(T)=\{[a]\in\PP^n(k):F(a)=0\text{ dla każdego }F\in T\}$.
+Podzbiór $X\subseteq\PP^n(k)$ nazywamy \emph{rzutowym
+zbiorem algebraicznym}, gdy $X=\V_+(T)$ dla pewnej takiej rodziny.
+Ideał $I\subseteq S$ jest \emph{jednorodny}, gdy jest generowany
+przez wielomiany jednorodne.
+\end{definicja}
+
+\begin{twierdzenie}[Topologia Zariskiego na przestrzeni rzutowej]
+\label{tw:projective-zariski}
+Dla każdego ciała $k$ i $n\ge0$ zbiory algebraiczne rzutowe
+są zbiorami domkniętymi pewnej topologii na $\PP^n(k)$.
+Dla ideałów jednorodnych $I,J\subseteq S$ zachodzą
+$\V_+(I+J)=\V_+(I)\cap\V_+(J)$ oraz
+$\V_+(IJ)=\V_+(I)\cup\V_+(J)$.
+\end{twierdzenie}
+\begin{proof}
+Wielomian zerowy określa całą przestrzeń, a stała $1$
+zbiór pusty. Dowolne przecięcie zbiorów zerowych odpowiada
+połączeniu rodzin wielomianów. Dla sumy dwóch zbiorów
+można powtórzyć argument z twierdzenia~\ref{tw:zariski-top}:
+$F(a)G(a)=0$ w ciele wymusza $F(a)=0$ lub $G(a)=0$.
+Mamy więc wymaganą stabilność na przecięcia dowolne i sumy
+skończone. Równości dotyczące ideałów wynikają z tych samych
+własności, ponieważ ideały sumy i iloczynu ideałów jednorodnych
+są również jednorodne.
+\end{proof}
+
+\begin{uwaga}[Punkty a ideał nieistotny]
+Ideał $\mathfrak m_+=(X_0,\dots,X_n)$ nazywa się
+\emph{ideałem nieistotnym} (ang. \emph{irrelevant ideal}).
+Mamy $\V_+(\mathfrak m_+)=\varnothing$: wektor reprezentujący
+punkt rzutowy nie może mieć wszystkich współrzędnych zerowych.
+W przeciwieństwie do przypadku afinicznego nie każdy właściwy
+ideał jednorodny ma zatem niepusty zbiór punktów rzutowych.
+\end{uwaga}
+
+\begin{stwierdzenie}[Topologia na mapach]
+Dla $n\ge1$ i każdego $i$ bijekcja $\varphi_i:U_i\to k^n$
+przenosi topologię Zariskiego indukowaną z $\PP^n(k)$
+na topologię Zariskiego na $k^n$.
+\end{stwierdzenie}
+\begin{proof}
+Wystarczy omówić $i=0$. Ograniczenie jednorodnego równania
+$F(X_0,\dots,X_n)=0$ do $X_0\ne0$ jest równoważne
+afinicznemu równaniu $f(x_1,\dots,x_n)=F(1,x_1,\dots,x_n)=0$.
+Zatem przecięcie rzutowego zbioru algebraicznego z $U_0$
+przechodzi w zbiór afinicznie domknięty. Odwrotnie,
+dla dowolnego $f\in k[x_1,\dots,x_n]$ stopnia $d$
+wielomian $X_0^df(X_1/X_0,\dots,X_n/X_0)$
+(po rozwinięciu) jest jednorodny i wyznacza na $U_0$
+taki sam zbiór zerowy jak $f$. Dowodzi to równości
+topologii na podprzestrzeniach.
+\end{proof}
+
+\section{Homogenizacja i domknięcie rzutowe}
+
+\begin{definicja}[Homogenizacja]
+Dla niezerowego wielomianu $f\in k[x_1,\ldots,x_n]$
+stopnia całkowitego $d$ definiujemy
+\[
+ f^h(X_0,\ldots,X_n)
+ =X_0^d f(X_1/X_0,\ldots,X_n/X_0),
+\]
+rozumiejąc prawą stronę po skróceniu jako wielomian;
+$f^h$ jest jednorodny stopnia $d$. Dla $f=0$ przyjmujemy
+$f^h=0$. Operację $F\mapsto F(1,x_1,\ldots,x_n)$
+nazywamy \emph{dehomogenizacją} względem $X_0$.
+\end{definicja}
+
+\begin{przyklad}[Dwa równoległe równania]
+Na płaszczyźnie afinicznej $y=0$ i $y=1$ mają równania
+$f=y$ i $g=y-1$. Ich homogenizacje względem $Z$ to
+$F=Y$ oraz $G=Y-Z$.
+W $\PP^2(k)$ przecinają się w punkcie $[0:1:0]$.
+Zatem dodanie punktów w nieskończoności odzyskuje
+przecięcie, którego brakowało na płaszczyźnie afinicznej.
+\end{przyklad}
+
+\begin{definicja}[Homogenizacja ideału]
+Niech $I\subseteq k[x_1,\ldots,x_n]$ będzie ideałem.
+Przez $I^h$ oznaczamy ideał jednorodny w
+$k[X_0,\ldots,X_n]$ generowany przez wszystkie $f^h$
+z $f\in I$ (a nie tylko przez homogenizacje dowolnie
+wybranego układu generatorów $I$).
+\end{definicja}
+
+\begin{twierdzenie}[Domknięcie rzutowe zbioru afinicznego]
+\label{tw:projective-closure}
+Niech $k$ będzie algebraicznie domkniętym ciałem,
+$n\ge1$, $X\subseteq\A^n(k)$ zbiorem algebraicznym,
+a $\iota:\A^n(k)\to\PP^n(k)$ niech będzie odwzorowaniem
+$\iota(a_1,\dots,a_n)=[1:a_1:\dots:a_n]$.
+Wówczas domknięcie $\iota(X)$ w topologii Zariskiego jest równe
+$\V_+(\I_k(X)^h)$.
+\end{twierdzenie}
+\begin{proof}
+Niech $Y=\overline{\iota(X)}$.
+Ponieważ $\V_+(\I_k(X)^h)$ jest domknięty i każdy
+$f\in\I_k(X)$ spełnia $f^h(1,a)=f(a)=0$ dla $a\in X$,
+otrzymujemy $Y\subseteq\V_+(\I_k(X)^h)$.
+
+Dla inkluzji odwrotnej weźmy dowolny zbiór domknięty
+$C=\V_+(T)$ zawierający $\iota(X)$.
+Każdy jednorodny $F\in T$ stopnia $d$ ma dehomogenizację
+$f(x)=F(1,x)$, która znika na $X$; zatem $f\in\I_k(X)$.
+Jeśli $f\ne0$ ma stopień $m\le d$, to
+$F=X_0^{d-m}f^h$. Gdy $f=0$, jednorodność $F$ wymusza
+$F=0$: w jednorodnym $F$ wszystkie jednomiany po podstawieniu
+$X_0=1$ są różnymi jednomianami w pozostałych zmiennych.
+Stąd każdy $F\in T$ znika na $\V_+(\I_k(X)^h)$.
+Mamy więc $\V_+(\I_k(X)^h)\subseteq C$.
+Po przecięciu wszystkich domkniętych $C$ zawierających
+$\iota(X)$ dostajemy $\V_+(\I_k(X)^h)\subseteq Y$.
+\end{proof}
+
+\begin{uwaga}[Czy naprawdę potrzeba tu algebraicznej domkniętości?]
+Powyższy dowód samej tożsamości domknięcia działa dla
+każdego ciała $k$, jeśli $\I_k(X)$ oznacza rzeczywisty
+ideał znikania na punktach $k$-wymiernych. Założenie
+algebraicznej domkniętości jest przydatne, gdy chcemy
+zastąpić $\I_k(X)$ pierwiastkiem pierwotnego ideału równań
+na mocy Nullstellensatz. Nie należy tych dwóch stwierdzeń
+utożsamiać.
+\end{uwaga}
+
+\begin{przyklad}[Pułapka: homogenizacja samych generatorów]
+W $k[x,y]$ rozważmy ideał
+$I=(x,xy-y)=(x,y)$. Równość wynika z
+$y=xy-(xy-y)\in I$. Jego zbiór zerowy to tylko punkt $(0,0)$,
+którego domknięcie rzutowe powinno być punktem $[1:0:0]$.
+
+Jeśli jednak homogenizujemy \emph{tylko} podane dwa generatory,
+otrzymamy w $k[Z,X,Y]$ ideał
+$J=(X,XY-YZ)$. Z jego równań wynika $X=0$ i $YZ=0$,
+a więc $\V_+(J)=\{[1:0:0],[0:0:1]\}$.
+Drugi punkt jest sztucznym punktem w nieskończoności.
+Homogenizacja także elementu $y\in I$ daje $Y$ i usuwa
+ten niepożądany punkt. Właściwy ideał $I^h$ to $(X,Y)$.
+\end{przyklad}
+
+\begin{przyklad}[Parabola i jej punkt w nieskończoności]
+Równanie $y=x^2$ homogenizuje się do $YZ=X^2$.
+W części $Z=1$ odzyskujemy zwykłą parabolę, a dla $Z=0$
+mamy $X=0$, więc jedyny punkt w nieskończoności to $[0:1:0]$.
+Dla hiperboli $xy=1$ otrzymujemy $XY=Z^2$;
+na prostej $Z=0$ mamy $XY=0$, czyli dwa punkty
+$[0:1:0]$ i $[0:0:1]$.
+\end{przyklad}
+
+\section{Krzywe rzutowe, proste, stożkowe i parametryzacje}
+
+\begin{definicja}[Krzywa płaska i jej stopień]
+Niech $k$ będzie algebraicznie domkniętym ciałem.
+Niezerowy jednorodny $F\in k[X,Y,Z]$ dodatniego stopnia $d$
+wyznacza rzutową krzywą płaską $C=\V_+(F)\subseteq\PP^2(k)$.
+Jeśli $F$ jest bezkwadratowy (żaden nierozkładalny czynnik
+nie występuje z wykładnikiem większym od $1$), to $d$
+nazywamy \emph{stopniem} takiej krzywej z jej naturalnym
+zredukowanym równaniem. Jeśli $F$ ma powtórzone czynniki,
+stopień $F$ uwzględnia również te krotności.
+\end{definicja}
+
+\begin{uwaga}[Dlaczego dodajemy warunek bezkwadratowości?]
+Wielomiany $X$ i $X^3$ opisują ten sam \emph{zbiór} prostej,
+ale ich stopnie są różne. Stopień samego zredukowanego
+zbioru algebraicznego nie może więc zależeć od arbitralnie
+wybranego równania z potęgami jego czynników.
+\end{uwaga}
+
+\begin{przyklad}[Stożkowa jest obrazem prostej rzutowej]
+Niech $C=\V_+(XZ-Y^2)\subseteq\PP^2(k)$.
+Odwzorowanie
+$\nu:\PP^1(k)\to C$, $[s:t]\mapsto[s^2:st:t^2]$
+jest dobrze określone: po zamianie $(s,t)$ na
+$(\lambda s,\lambda t)$ wszystkie trzy współrzędne
+mnożą się przez $\lambda^2$. Równanie krzywej zachodzi,
+bo $s^2t^2-(st)^2=0$.
+
+Jeżeli $X\ne0$, to $s\ne0$, a parametr odtwarzamy przez
+$[s:t]=[1:Y/X]$. Jeżeli $Z\ne0$, analogicznie
+$[s:t]=[Y/Z:1]$. Na krzywej nie ma punktu z $X=Z=0$:
+wtedy $Y^2=0$ i wszystkie współrzędne byłyby zerowe.
+Formuły odwrotne mają regularne współrzędne na odpowiednich
+mapach, zatem $C$ jest izomorficzna z $\PP^1$.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=.83]
+ \draw[->,gray!70] (-3.1,0)--(3.45,0) node[right] {$x$};
+ \draw[->,gray!70] (0,-.5)--(0,4.5) node[above] {$y$};
+ \draw[blue!70!black,thick,domain=-1.9:1.9,samples=100] plot (\x,{\x*\x});
+ \fill[red!80!black] (0,0) circle(2.1pt);
+ \draw[densely dashed,->] (2.15,4.05)--(3,4.4);
+ \node[font=\small,align=left,anchor=west,fill=white,inner sep=2pt] at (3.5,3.3)
+ {Jeden punkt\\w nieskończoności\\$[0:1:0]$};
+ \node[blue!70!black] at (-2.05,3.9) {$YZ=X^2$};
+\end{tikzpicture}
+
+\small Rysunek 2.2. Afiniczny fragment stożkowej $YZ=X^2$ i kierunek
+jej jedynego punktu w nieskończoności.
+\end{center}
+
+\section{Odwzorowania rzutowe i ich miejsca nieokreśloności}
+
+\begin{definicja}[Odwzorowanie zadane formami]
+Niech $F_0,\dots,F_m\in k[X_0,\dots,X_n]$ będą
+jednorodnymi wielomianami tego samego dodatniego stopnia $d$.
+Na zbiorze $U=\PP^n(k)\setminus\V_+(F_0,\dots,F_m)$
+definiujemy odwzorowanie
+$\Phi:U\to\PP^m(k)$ wzorem
+$\Phi([a])=[F_0(a):\cdots:F_m(a)]$.
+Zbiór $B=\V_+(F_0,\dots,F_m)$ nazywamy
+\emph{zbiorem bazowym} tego zapisu.
+\end{definicja}
+
+\begin{stwierdzenie}[Niezależność od reprezentanta]
+Niech $k$ będzie ciałem, a $F_0,\ldots,F_m\in k[X_0,\ldots,X_n]$
+formami jednorodnymi tego samego dodatniego stopnia $d$.
+Jeśli $U=\PP^n(k)\setminus\V_+(F_0,\ldots,F_m)$, to wzór
+$\Phi([a])=[F_0(a):\cdots:F_m(a)]$ wyznacza dobrze określone
+odwzorowanie $\Phi:U\to\PP^m(k)$.
+\end{stwierdzenie}
+\begin{proof}
+Na $U$ wartości $F_0(a),\dots,F_m(a)$ nie są jednocześnie
+zerowe, więc definiują punkt rzutowy. Zamiana $a$ na
+$\lambda a$ mnoży każdą z tych wartości przez $\lambda^d$,
+co nie zmienia klasy jednorodnej w $\PP^m$.
+\end{proof}
+
+\begin{przyklad}[Przekształcenie Cremony]
+Na $\PP^2(k)$ rozważmy
+$\Phi([X:Y:Z])=[YZ:XZ:XY]$.
+Zbiór bazowy składa się z trzech punktów
+$[1:0:0]$, $[0:1:0]$, $[0:0:1]$, bo wszystkie trzy iloczyny
+są zerowe dokładnie wtedy, gdy co najwyżej jedna współrzędna
+jest niezerowa. Na otwartym zbiorze $XYZ\ne0$ mamy
+\[
+ (\Phi\circ\Phi)([X:Y:Z])
+ =[X^2YZ:XY^2Z:XYZ^2]=[X:Y:Z].
+\]
+Zatem $\Phi$ jest \emph{biwymiernym} przekształceniem
+płaszczyzny rzutowej, ale nie jest zdefiniowana w trzech
+punktach bazowych. Wymierne przekształcenie i wszędzie
+określony morfizm nie są tym samym.
+\end{przyklad}
+
+\section{Punkty gładkie, styczne i osobliwości krzywych}
+
+\begin{definicja}[Punkt gładki krzywej płaskiej]
+Niech $k$ będzie ciałem algebraicznie domkniętym,
+$F\in k[X,Y,Z]$ niezerowym jednorodnym wielomianem,
+a $P=[a:b:c]\in\V_+(F)$. Punkt $P$ nazywamy
+\emph{gładkim dla równania $F$}, jeśli przynajmniej jedna
+z liczb $F_X(a,b,c)$, $F_Y(a,b,c)$, $F_Z(a,b,c)$ jest
+niezerowa. W przeciwnym razie jest \emph{osobliwy dla $F$}.
+Dla zredukowanej krzywej podane kryterium jest niezależne
+od przemnożenia jej równania przez niezerową stałą.
+\end{definicja}
+
+\begin{uwaga}[Zredukowane równanie ma znaczenie]
+Dla $F=X^2$ wszystkie pochodne zerują się na prostej $X=0$,
+choć sama prosta zredukowana jest gładka.
+Dlatego w dyskusji gładkości \emph{zbioru} krzywej wybieramy
+jej zredukowane równanie, a nie dowolną potęgę.
+\end{uwaga}
+
+\begin{lemat}[Tożsamość Eulera]
+Dla każdego ciała $k$ i jednorodnego wielomianu
+$F\in k[X_0,\dots,X_n]$ stopnia $d$ zachodzi
+$\sum_{i=0}^nX_i\frac{\partial F}{\partial X_i}=dF$.
+\end{lemat}
+\begin{proof}
+Dla jednomianu $M=cX_0^{e_0}\cdots X_n^{e_n}$
+wyrażenie po lewej jest równe
+$(e_0+\cdots+e_n)M=dM$.
+Równość zachowuje się przy sumowaniu, więc dotyczy $F$.
+\end{proof}
+
+\begin{twierdzenie}[Styczna rzutowa w punkcie gładkim]
+\label{tw:tangent-projective}
+Niech $k$ będzie ciałem algebraicznie domkniętym,
+$F\in k[X,Y,Z]$ niezerową jednorodną formą,
+a $P=[a:b:c]\in\V_+(F)$ punktem gładkim dla $F$.
+Wtedy rzutowa prosta styczna do krzywej w $P$ ma równanie
+\[
+ F_X(a,b,c)X+F_Y(a,b,c)Y+F_Z(a,b,c)Z=0.
+\]
+Równanie to jest niezależne od reprezentanta punktu $P$.
+\end{twierdzenie}
+\begin{proof}
+Co najmniej jeden współczynnik nie znika, więc wzór
+opisuje prostą rzutową. Jeśli $F$ ma stopień $d$,
+to zmiana reprezentanta $(a,b,c)$ na
+$(\lambda a,\lambda b,\lambda c)$ mnoży pochodne
+przez $\lambda^{d-1}$. Prosta się nie zmienia.
+Tożsamość Eulera i $F(a,b,c)=0$ pokazują,
+że punkt $P$ leży na podanej prostej.
+
+Aby sprawdzić styczność, wybierzmy mapę, na której jedna
+współrzędna $P$ jest niezerowa, i sprowadźmy ją do $1$.
+W tej mapie równanie krzywej ma postać $f(u,v)=0$.
+Wyraz liniowy rozwinięcia $f$ w punkcie $p=(u_0,v_0)$
+wynosi $f_u(p)(u-u_0)+f_v(p)(v-v_0)$.
+Jest to równanie afinicznej stycznej w gładkim punkcie.
+Po przepisaniu do współrzędnych jednorodnych uzyskujemy
+powyższy wzór; brakujący wyraz stały jest dokładnie
+zapewniony przez tożsamość Eulera. W charakterystyce
+dzielącej $d$ tożsamość Eulera wciąż obowiązuje,
+choć $d=0$ jako element ciała, a rachunek lokalny
+nadal daje poprawne równanie stycznej.
+\end{proof}
+
+\begin{przyklad}[Styczna do stożkowej]
+Dla $F=XZ-Y^2$ otrzymujemy $F_X=Z$, $F_Y=-2Y$,
+$F_Z=X$. W punkcie $P=[1:t:t^2]$ prosta styczna ma
+równanie $t^2X-2tY+Z=0$. Podstawienie tego punktu daje
+$t^2-2t^2+t^2=0$, jak powinno. Gdy charakterystyka
+wynosi $2$, współczynnik $-2t$ jest zerem i wzór
+wciąż poprawnie opisuje styczną.
+\end{przyklad}
+
+\begin{przyklad}[Ostrze i węzeł]
+Dla równania afinicznego $y^2=x^3$ obie pochodne
+$-3x^2$ i $2y$ znikają w $(0,0)$; zatem początek
+jest punktem osobliwym. Dla równania
+$y^2=x^2(x+1)$ w początku również znikają obie pochodne.
+Nad $\R$ pierwsza krzywa ma ostrze, a druga lokalnie
+dwie gałęzie o różnych stycznych. To różne typy osobliwości,
+choć w obu przypadkach kryterium Jacobiego wykrywa
+niegładkość. Bardziej systematyczna teoria będzie
+w następnym rozdziale o punktach osobliwych.
+\end{przyklad}
+
+\section{Przecięcia z prostą i pierwsza wersja twierdzenia Bézouta}
+
+\begin{definicja}[Krotność pierwiastka formy binarnej]
+Niech $k$ będzie algebraicznie domkniętym ciałem,
+a $H(s,t)\in k[s,t]$ niezerową formą jednorodną stopnia $d$.
+Każdy punkt $P\in\PP^1(k)$ odpowiada formie liniowej
+$\ell_P(s,t)$, której zbiór zerowy w $\PP^1(k)$ jest
+równy $\{P\}$. \emph{Krotnością zera $H$ w $P$} nazywamy
+największe $m\ge0$ takie, że $\ell_P^m$ dzieli $H$.
+\end{definicja}
+
+\begin{lemat}[Rozkład formy binarnej]
+Niech $k$ będzie algebraicznie domknięte,
+a $H\in k[s,t]$ niezerową formą jednorodną stopnia $d\ge1$.
+Wtedy istnieją formy liniowe $\ell_1,\ldots,\ell_d$
+i $c\in k^\times$ takie, że $H=c\ell_1\cdots\ell_d$.
+W szczególności suma krotności wszystkich zer $H$ w $\PP^1(k)$
+wynosi $d$.
+\end{lemat}
+\begin{proof}
+Podstawmy $s=1$. Otrzymujemy wielomian
+$h(t)=H(1,t)$ stopnia $m\le d$.
+Jeśli $h\ne0$, to dzięki algebraicznej domkniętości
+$h(t)=c\prod_{j=1}^m(t-\alpha_j)$, z uwzględnieniem krotności.
+Homogenizując z powrotem do stopnia $d$, mamy
+$H(s,t)=c\,s^{d-m}\prod_{j=1}^m(t-\alpha_js)$.
+Współczynnik przy $s^{d-m}$ opisuje zero $[0:1]$
+o krotności $d-m$. Gdy $h$ jest stały, otrzymujemy
+$H=cs^d$; przypadek $d=0$ nie jest tu potrzebny.
+Suma wykładników czynników liniowych jest zawsze równa $d$.
+\end{proof}
+
+\begin{twierdzenie}[Bézout dla prostej i krzywej]
+\label{tw:bezout-line}
+Niech $k$ będzie algebraicznie domkniętym ciałem,
+$F\in k[X,Y,Z]$ niezerową formą stopnia $d\ge1$,
+a $L\subseteq\PP^2(k)$ prostą rzutową niebędącą
+składową krzywej $\V_+(F)$. Wtedy $L\cap\V_+(F)$
+jest niepusty i skończony, a suma krotności przecięć
+w jego punktach wynosi $d$. Krotność w $P\in L$
+definiujemy jako krotność zera otrzymanej formy binarnej
+po parametryzacji liniowej $L\cong\PP^1(k)$.
+\end{twierdzenie}
+\begin{proof}
+Prostą $L$ możemy sparametryzować jako
+$[s:t]\mapsto[s\,u+t\,v]$, gdzie $u,v\in k^3$
+są liniowo niezależne i rozpinają dwuwymiarową
+podprzestrzeń odpowiadającą $L$. Po podstawieniu
+otrzymujemy jednorodną formę $H(s,t)=F(su+tv)$ stopnia $d$.
+Nie jest ona zerowa, ponieważ w przeciwnym razie $F$
+znikałby na całej prostej $L$, a jej równanie liniowe
+dzieliłoby $F$ (po liniowej zmianie współrzędnych
+byłaby to podzielność przez jedną zmienną). To oznaczałoby,
+że $L$ jest składową $\V_+(F)$, wbrew założeniu.
+Na mocy poprzedniego lematu suma krotności zer $H$
+wynosi $d$. Punkty zerowe $H$ odpowiadają dokładnie
+punktom przecięcia $L$ i krzywej.
+\end{proof}
+
+\begin{przyklad}[Dlaczego styczność liczy się podwójnie?]
+Dla stożkowej $XZ-Y^2=0$ i prostej $Z=X$ podstawiamy
+$[X:Y:Z]=[s:t:s]$. Otrzymujemy $s^2-t^2$.
+Jeśli $\operatorname{char}k\ne2$, są to dwa przecięcia
+$[1:1:1]$ i $[1:-1:1]$, każde krotności $1$.
+Natomiast prosta styczna w punkcie $[1:0:0]$ ma równanie
+$Z=0$. Jej ograniczenie daje $-Y^2$, więc jedyny punkt
+przecięcia $[1:0:0]$ ma krotność $2$.
+\end{przyklad}
+
+\section{Ogólne twierdzenie Bézouta: po co nam algebra ilorazowa?}
+
+Dla dwóch krzywych stopni $d$ i $e$ oczekiwalibyśmy
+$d\cdot e$ punktów przecięcia. Bez krotności jest to
+fałszywe nawet dla prostej stycznej do stożkowej.
+Potrzebujemy więc definicji uwzględniającej zarówno
+zwykłe przecięcia, jak i styczność oraz punkty osobliwe.
+Poniżej dowodzimy pełnej wersji płaskiego twierdzenia Bézouta
+bez odwoływania się do nieudowodnionego wzoru na wymiar krzywej.
+Przyda się jednak kilka lematów algebraicznych.
+
+\begin{definicja}[Pierścień stopniowany i szereg Hilberta]
+Pierścień $S=k[X,Y,Z]$ ma \emph{stopniowanie}
+$S=\bigoplus_{m\ge0}S_m$, gdzie $S_m$ składa się z form
+jednorodnych stopnia $m$. Dla jednorodnego ideału $J$
+iloraz $S/J$ dziedziczy stopniowanie.
+Dla stopniowanej $k$-przestrzeni $M=\bigoplus_{m\ge0}M_m$
+o skończenie wymiarowych składowych \emph{szeregiem Hilberta}
+nazywamy formalny szereg
+$H_M(t)=\sum_{m\ge0}(\dim_kM_m)t^m$.
+\end{definicja}
+
+\begin{stwierdzenie}[Szereg Hilberta przekroju dwóch form]
+\label{st:hilbert-complete-intersection}
+Niech $k$ będzie ciałem i niech $F,G\in S=k[X,Y,Z]$
+będą niezerowymi formami odpowiednio stopni $d,e\ge1$,
+bez wspólnego nierozkładalnego czynnika. Wtedy dla
+$M=S/(F,G)$ zachodzi tożsamość szeregów formalnych
+\[
+ H_M(t)=\frac{(1-t^d)(1-t^e)}{(1-t)^3}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Ponieważ monomy $X^aY^bZ^c$, $a+b+c=m$, stanowią bazę
+$S_m$, mamy $\dim_kS_m=\binom{m+2}{2}$, a więc
+$H_S(t)=(1-t)^{-3}$ (to wynika z trzykrotnego
+pomnożenia szeregu geometrycznego $\sum_{m\ge0}t^m$).
+Mnożenie przez niezerowe $F$ jest różnowartościowe,
+bo $S$ jest dziedziną. Z dokładnego ciągu przestrzeni
+stopniowanych $0\to S(-d)\xrightarrow{\cdot F}S\to S/(F)\to0$
+otrzymujemy $H_{S/(F)}(t)=(1-t^d)H_S(t)$.
+
+Mnożenie przez $G$ na $S/(F)$ jest także różnowartościowe:
+jeśli $Gh\in(F)$, to $F\mid Gh$. Wielomiany w $S$
+mają jednoznaczny rozkład na czynniki nierozkładalne
+(twierdzenie~\ref{tw:polynomial-UFD}),
+a $F$ i $G$ nie mają wspólnego czynnika. Każdy czynnik
+$F$ wraz ze swoją krotnością musi zatem dzielić $h$;
+czyli $F\mid h$. Wobec tego $[h]=0$ w $S/(F)$.
+Drugi dokładny ciąg,
+$0\to(S/(F))(-e)\xrightarrow{\cdot G}S/(F)\to M\to0$,
+daje $H_M(t)=(1-t^e)H_{S/(F)}(t)$, co kończy dowód.
+\end{proof}
+
+\begin{uwaga}[Dokładność i przesunięcie stopnia]
+Przesunięcie $N(-d)$ oznacza ten sam moduł z nowym
+stopniowaniem $(N(-d))_m=N_{m-d}$ (i $N_j=0$ dla $j<0$).
+Ciąg $0\to A\to B\to C\to0$ jest \emph{dokładny},
+gdy obraz każdego odwzorowania jest jądrem następnego.
+Dla każdej składowej stopnia $m$ mamy wówczas
+$\dim B_m=\dim A_m+\dim C_m$, stąd dodawanie
+szeregów Hilberta. Nie używamy tu jeszcze teorii
+homologii ani funktorów pochodnych.
+\end{uwaga}
+
+\begin{lemat}[Skończoność przecięcia i wybór prostej w nieskończoności]
+\label{lem:finiteness-plane-intersection}
+Niech $k$ będzie algebraicznie domknięte, a niezerowe
+formy $F,G\in k[X,Y,Z]$ nie mają wspólnego czynnika.
+Wtedy $\V_+(F,G)\subseteq\PP^2(k)$ jest zbiorem skończonym.
+Istnieje więc prosta rzutowa $L$ nieprzechodząca przez
+żaden z tych punktów.
+\end{lemat}
+\begin{proof}
+Wybierzmy punkt $Q\in\PP^2(k)$, który nie należy do
+$\V_+(F)\cup\V_+(G)$. Taki punkt istnieje:
+oba wielomiany są niezerowe, a nad nieskończonym ciałem
+iloczyn $FG$ nie może znikać na całym $k^3$.
+Po liniowej zmianie współrzędnych możemy przyjąć
+$Q=[0:1:0]$, a wtedy współczynniki przy $Y^d$ w $F$
+i przy $Y^e$ w $G$ są niezerowymi stałymi.
+Postrzegamy $F,G$ jako wielomiany w $Y$ o współczynnikach
+w $k[X,Z]$ i przechodzimy do ciała $K=k(X,Z)$.
+
+Nie mają wspólnego czynnika w $K[Y]$. Rzeczywiście,
+każdy z nich jest \emph{pierwotny} w $k[X,Z][Y]$,
+ponieważ jego współczynnik wiodący jest niezerową stałą.
+Gdyby miały wspólny niejednostkowy czynnik nad $K$,
+po usunięciu mianowników i zastosowaniu lematu Gaussa
+dla wielomianów nad pierścieniem z jednoznacznym rozkładem
+otrzymalibyśmy wspólny czynnik w $k[X,Y,Z]$.
+
+Dla dwóch wielomianów $A,B\in K[Y]$ stopni $d,e$
+definiujemy \emph{rezultant} $\operatorname{Res}_Y(A,B)$
+jako wyznacznik macierzy liniowego odwzorowania
+\[
+ K[Y]_{<e}\oplus K[Y]_{<d}\longrightarrow K[Y]_{<d+e},
+ \qquad (U,V)\longmapsto UA+VB.
+\]
+Tutaj $K[Y]_{<r}$ oznacza wielomiany stopnia mniejszego niż $r$.
+Jeśli wyznacznik jest zerowy, istnieje niezerowa para
+$(U,V)$ z $UA+VB=0$. Dla wielomianów względnie pierwszych
+wynikałoby $B\mid U$, co jest niemożliwe przy $\deg U<e$,
+chyba że $U=0$, a wtedy także $V=0$; sprzeczność.
+Odwrotnie, przy wspólnym czynniku $D$ można wybrać
+$U=B/D$ i $V=-A/D$, więc wyznacznik jest zerowy.
+Zatem rezultat $R(X,Z)=\operatorname{Res}_Y(F,G)$
+jest \emph{niezerowym} wielomianem w $k[X,Z]$.
+
+Jeśli $P=[x:y:z]$ jest wspólnym zerem $F,G$, to
+$[x:z]\ne[0:0]$, gdyż inaczej $P=Q$, a $F(Q)G(Q)\ne0$.
+Podstawienie $(X,Z)=(x,z)$ do macierzy rezultantu
+daje dwa wielomiany w $Y$ o wspólnym pierwiastku $y$,
+więc $R(x,z)=0$.
+Wielomian $R$ jest jednorodny: podczas skalowania
+$(X,Z)$ jego współczynniki przy potęgach $Y$ skalują się
+zgodnie z jednorodnością $F,G$, a w każdym wyrazie
+wyznacznika suma wag jest taka sama.
+Niezerowa forma binarna ma tylko skończenie wiele zer na
+$\PP^1(k)$, jak wykazaliśmy wcześniej. Dla każdego z tych
+skończenie wielu $[x:z]$ wielomian $F(x,Y,z)$ jest
+niezerowy (ma niezerowy współczynnik przy $Y^d$),
+więc ma skończenie wiele pierwiastków $y$.
+W rezultacie $\V_+(F,G)$ jest skończony.
+
+Ponieważ $k$ jest nieskończone, spośród prostych rzutowych
+możemy wybrać prostą omijającą wszystkie te punkty:
+każdy zadany punkt wyznacza tylko właściwy podzbiór
+przestrzeni współczynników możliwych równań liniowych,
+a skończona suma takich właściwych zbiorów nie wyczerpuje
+$k^3$. Po zmianie współrzędnych prostą tę możemy przyjąć
+jako $Z=0$.
+\end{proof}
+
+\begin{lemat}[Jednorodna algebra przecięcia ma rangę $de$]
+\label{lem:bezout-rank}
+Niech $k$ będzie algebraicznie domknięte,
+a $F,G\in k[X,Y,Z]$ będą formami stopni $d,e\ge1$
+bez wspólnego czynnika. Załóżmy, że na prostej $Z=0$
+nie ma ich wspólnego zera rzutowego.
+Wtedy $A=k[x,y]/(f,g)$, gdzie
+$f(x,y)=F(x,y,1)$, $g(x,y)=G(x,y,1)$,
+jest skończenie wymiarową $k$-algebrą i
+$\dim_kA=de$.
+\end{lemat}
+\begin{proof}
+Niech $S=k[X,Y,Z]$, $M=S/(F,G)$ oraz
+$\bar F=F(X,Y,0)$, $\bar G=G(X,Y,0)$.
+Formy $\bar F,\bar G$ nie są zerowe: gdyby np.
+$\bar F=0$, prosta $Z=0$ byłaby składową $F=0$,
+a niezerowa forma $\bar G$ dodatniego stopnia miałaby
+na tej prostej zero, sprzecznie z założeniem. Formy
+$\bar F,\bar G$ są względnie pierwsze w $k[X,Y]$:
+inaczej wspólny czynnik liniowy dawałby wspólny punkt
+na prostej w nieskończoności.
+
+Pokażemy, że mnożenie przez $Z$ jest różnowartościowe
+w $M$. Jeśli $ZH=UF+VG$, to po podstawieniu $Z=0$
+mamy $\bar U\bar F+\bar V\bar G=0$.
+Ponieważ $\gcd(\bar F,\bar G)=1$, wynika stąd
+$\bar G\mid\bar U$ i $\bar F\mid\bar V$.
+Istnieje zatem $\bar W\in k[X,Y]$ z
+$\bar U=\bar W\bar G$ i $\bar V=-\bar W\bar F$.
+Wybierając dowolne podniesienie $W\in S$, możemy zapisać
+$U=WG+ZU_1$, $V=-WF+ZV_1$. Otrzymujemy
+$ZH=Z(U_1F+V_1G)$, a po skróceniu $Z$
+w dziedzinie $S$ mamy $H\in(F,G)$.
+
+Zatem mamy dokładny ciąg stopniowany
+$0\to M(-1)\xrightarrow{\cdot Z}M\to M/ZM\to0$.
+Szereg Hilberta z poprzedniego stwierdzenia daje
+\[
+ H_{M/ZM}(t)=(1-t)H_M(t)
+ =\frac{(1-t^d)(1-t^e)}{(1-t)^2}
+ =(1+t+\cdots+t^{d-1})(1+t+\cdots+t^{e-1}).
+\]
+Ponieważ $M/ZM\cong k[X,Y]/(\bar F,\bar G)$,
+jest to skończenie wymiarowa $k$-przestrzeń, a jej
+wymiar jest sumą współczynników podanego wielomianu,
+czyli $de$.
+
+Wyjaśnijmy, dlaczego stąd wynika $\dim_kM/(Z-1)M=de$.
+Wybierzmy jednorodne elementy $b_1,\ldots,b_{de}\in M$
+reprezentujące bazę stopniowanego ilorazu $M/ZM$.
+Pokażemy, że są bazą $M$ jako modułu nad $k[Z]$.
+Dla dowolnego elementu jednorodnego $h\in M$ jego klasa
+modulo $ZM$ jest kombinacją klas tych $b_i$, których
+stopień jest równy $\deg h$. Po odjęciu tej kombinacji
+pozostaje $Zh_1$ z $\deg h_1=\deg h-1$.
+Indukcja względem stopnia pokazuje, że $b_i$ generują $M$
+nad $k[Z]$. Mamy więc surjekcję stopniowanych modułów
+$\bigoplus_i k[Z](-\deg b_i)\twoheadrightarrow M$.
+Szereg Hilberta źródła wynosi
+$\sum_i t^{\deg b_i}/(1-t)=H_{M/ZM}(t)/(1-t)$,
+czyli $H_M(t)$ dzięki dokładnemu ciągowi powyżej.
+W każdej składowej stopnia mapa jest więc surjekcją
+między przestrzeniami tego samego skończonego wymiaru;
+jest izomorfizmem. Dlatego $M\cong\bigoplus_i k[Z]b_i$.
+
+Iloraz przez $Z-1$ zamienia każdy składnik $k[Z]b_i$
+w jednowymiarową przestrzeń nad $k$, a ponadto
+$M/(Z-1)M\cong k[x,y]/(f,g)=A$, ponieważ podstawienie
+$Z=1$ dehomogenizuje $F$ i $G$. Stąd $\dim_kA=de$.
+\end{proof}
+
+\begin{definicja}[Lokalna krotność przecięcia]
+\label{def:intersection-multiplicity}
+Niech $k$ będzie algebraicznie domknięte,
+a $f,g\in k[x,y]$ nie mają wspólnej składowej algebraicznej
+i mają skończenie wiele wspólnych zer.
+Załóżmy, że algebra $A=k[x,y]/(f,g)$ jest skończenie wymiarowa
+nad $k$. Dla wspólnego zera $p=(a,b)$ oznaczmy przez
+$\mathfrak m_p=(x-a,y-b)A$ ideał maksymalny $A$.
+Przez $A_{\mathfrak m_p}$ oznaczamy lokalizację $A$
+względem zbioru $A\setminus\mathfrak m_p$:
+jej elementy to ułamki $u/s$ z $s\notin\mathfrak m_p$,
+z relacją zwykłego mnożenia na krzyż po ewentualnym
+pomnożeniu przez dodatkowy mianownik.
+Definiujemy \emph{lokalną krotność przecięcia}
+$I_p(f,g):=\dim_k A_{\mathfrak m_p}$.
+\end{definicja}
+
+\begin{lemat}[Algebra skończona rozkłada się na części lokalne]
+\label{lem:artin-decomposition}
+Niech $k$ będzie algebraicznie domkniętym ciałem,
+a $A$ niezerową, skończenie wymiarową przemienną $k$-algebrą.
+Wtedy $A$ ma skończenie wiele ideałów maksymalnych
+$\mathfrak m_1,\ldots,\mathfrak m_r$ i
+$\dim_kA=\sum_{i=1}^r\dim_k A_{\mathfrak m_i}$.
+\end{lemat}
+\begin{proof}
+Ponieważ $A$ jest skończenie wymiarowa nad $k$, jest
+pierścieniem noetherowskim. Jest też artinowski:
+każdy malejący ciąg ideałów stabilizuje się, ponieważ
+ideały są podprzestrzeniami $k$-liniowymi o nierosnących
+wymiarach. Każdy jego iloraz będący dziedziną jest ciałem:
+dla $0\ne a$ w skończenie wymiarowej dziedzinie
+mnożenie przez $a$ jest różnowartościowym endomorfizmem
+przestrzeni wektorowej, więc jest też surjektywne
+i istnieje element odwrotny do $a$.
+Zatem każdy ideał pierwszy $A$ jest maksymalny.
+
+Każdy ideał maksymalny $\mathfrak m$ ma iloraz $A/\mathfrak m$
+będący skończenie wymiarowym rozszerzeniem ciała $k$.
+Algebraiczna domkniętość i lemat~\ref{lem:extension-trivial}
+dają $A/\mathfrak m\cong k$.
+Różne ideały maksymalne są parami współmaksymalne.
+Dla dowolnych $r$ różnych ideałów maksymalnych chińskie
+twierdzenie o resztach daje surjekcję $A\to k^r$,
+a więc $r\le\dim_k A$. Liczba takich ideałów jest
+zatem skończona.
+
+Niech $N$ będzie nilradykałem $A$, czyli ideałem wszystkich
+elementów nilpotentnych. Standardową równość
+$N=\bigcap_i\mathfrak m_i$ uzasadnimy następująco:
+każdy nilpotent leży w każdym ideale pierwszym;
+odwrotnie, jeśli $a$ nie jest nilpotentny, zbiór
+$\{1,a,a^2,\dots\}$ nie zawiera zera, a więc istnieje
+ideał maksymalny w rodzinie ideałów rozłącznych z tym
+zbiorem (lemat o maksymalności można otrzymać z
+noetherowskości przez argument rosnącego łańcucha).
+Taki maksymalny ideał rozłączny jest pierwszy:
+jeżeli $uv$ do niego należy, a $u,v$ nie należą,
+można powiększyć ideał odpowiednio o $u$ i o $v$,
+a następnie pomnożyć otrzymane elementy z lokalizowanego
+zbioru, dostając sprzeczność z rozłącznością.
+Ponieważ w $A$ wszystkie ideały pierwsze są maksymalne,
+otrzymujemy wymaganą równość.
+
+Ideał $N$ jest nilpotentny. Rzeczywiście, jest skończenie
+generowany, powiedzmy przez $n_1,\dots,n_s$, a każdy
+$n_i$ ma potęgę $n_i^{q_i}=0$. W każdym iloczynie
+$\sum_i(q_i-1)+1$ generatorów któryś $n_i$ wystąpi
+co najmniej $q_i$ razy, więc iloczyn jest zerowy.
+Stąd $N^M=0$ dla odpowiednio dużego $M$.
+Ponieważ ideały $\mathfrak m_i$ są parami współmaksymalne,
+$N=\bigcap_i\mathfrak m_i=\prod_i\mathfrak m_i$.
+Wynika stąd $\prod_i\mathfrak m_i^M=0$.
+Ideały $\mathfrak m_i^M$ też są parami współmaksymalne,
+więc chińskie twierdzenie o resztach daje
+$A\cong\prod_i A/\mathfrak m_i^M$.
+
+W ilorazie $B_i=A/\mathfrak m_i^M$ jedynym ideałem maksymalnym
+jest obraz $\mathfrak m_i$: każdy inny ideał maksymalny
+$\mathfrak m_j$ nie zawiera $\mathfrak m_i^M$.
+Ponadto każdy element spoza tego ideału jest odwracalny:
+pozostaje poza wszystkimi ideałami maksymalnymi, a element
+nieodwracalny zawsze należy do pewnego ideału maksymalnego.
+Zatem $B_i$ jest pierścieniem lokalnym.
+Lokalizacja iloczynu $\prod_j B_j$ względem dopełnienia
+i-tego ideału maksymalnego usuwa wszystkie pozostałe czynniki
+(idempotenty w nich stają się zerami), a zachowuje $B_i$.
+Dlatego $A_{\mathfrak m_i}\cong B_i$. Biorąc wymiary
+wektorowe rozkładu produktu, otrzymujemy tezę.
+\end{proof}
+
+\begin{twierdzenie}[Bézout dla dwóch krzywych płaskich]
+\label{tw:bezout-general}
+Niech $k$ będzie ciałem algebraicznie domkniętym,
+a $F,G\in k[X,Y,Z]$ niezerowymi wielomianami jednorodnymi
+stopni odpowiednio $d,e\ge1$, bez wspólnego
+nierozkładalnego czynnika. Wtedy wspólnych punktów
+krzywych $\V_+(F)$ i $\V_+(G)$ jest skończenie wiele,
+a suma ich lokalnych krotności przecięcia wynosi $de$:
+\[
+ \sum_{P\in\V_+(F,G)} I_P(F,G)=de.
+\]
+Lokalną krotność definiujemy w dowolnej mapie afinicznej
+zawierającej $P$ przez lokalizację ilorazu odpowiednich
+dehomogenizacji, jak w definicji~\ref{def:intersection-multiplicity}.
+\end{twierdzenie}
+\begin{proof}
+Z lematu~\ref{lem:finiteness-plane-intersection} zbiór
+wspólnych punktów jest skończony i można wybrać prostą
+w nieskończoności, która go omija. Po rzutowej liniowej
+zmianie współrzędnych możemy przyjąć, że tą prostą
+jest $Z=0$. Każdy wspólny punkt leży więc w mapie
+$Z\ne0$ i odpowiada wspólnemu zeru wielomianów
+$f(x,y)=F(x,y,1)$ i $g(x,y)=G(x,y,1)$.
+
+Na mocy lematu~\ref{lem:bezout-rank} algebra
+$A=k[x,y]/(f,g)$ ma wymiar $de$ nad $k$.
+Jej ideały maksymalne odpowiadają dokładnie wspólnym
+punktom $p=(a,b)$: wynika to z opisu maksymalnych ideałów
+w $k[x,y]$ nad ciałem algebraicznie domkniętym
+(wniosek~\ref{wn:maximal-point}) oraz z twierdzenia
+o odpowiedniości ideałów w ilorazie. Wreszcie lemat
+\ref{lem:artin-decomposition} daje
+$de=\dim_k A=\sum_{p}\dim_k A_{\mathfrak m_p}
+=\sum_p I_p(f,g)$. Przy zmianie mapy rzutowej
+lokalne pierścienie ilorazowe są izomorficzne, ponieważ
+współrzędne przechodzą jedna w drugą przez odwracalne
+funkcje regularne; dlatego otrzymana liczba nie zależy
+od wybranej mapy. To dowodzi tezy.
+\end{proof}
+
+\begin{przyklad}[Dwa przecięcia, łącznie stopień cztery]
+Dla $F=XZ-Y^2$ i $G=XZ+Y^2$ nad ciałem
+charakterystyki różnej od $2$ oba wielomiany mają
+stopień $2$. Z równań $XZ-Y^2=XZ+Y^2=0$
+otrzymujemy $Y^2=0$ oraz $XZ=0$, czyli punkty
+$P=[1:0:0]$ i $Q=[0:0:1]$. W mapie $X=1$ wokół $P$
+równania to $z-y^2=0$ i $z+y^2=0$.
+W pierścieniu lokalnym iloraz jest izomorficzny
+$k[y]_{(y)}/(y^2)$ (ponieważ $2$ jest odwracalne),
+o wymiarze $2$ nad $k$. Analogicznie w mapie $Z=1$
+wokół $Q$ krotność wynosi $2$. Suma $2+2=4$ zgadza się
+z $\deg F\deg G=2\cdot2$.
+\end{przyklad}
+
+\section{Co należy zapamiętać przed teorią osobliwości i krzywych?}
+
+Punkty przestrzeni rzutowej to kierunki w przestrzeni o jeden
+wymiar większej. Równania geometryczne są jednorodne,
+ponieważ tylko wtedy ich zbiory zerowe nie zależą od
+reprezentanta punktu. Mapy $U_i\cong\A^n$ pozwalają
+prowadzić zwykłe rachunki w lokalnych współrzędnych.
+Przejście od zbioru afinicznego do jego domknięcia rzutowego
+wymaga homogenizacji \emph{całego ideału znikania}.
+
+Przecięcia rzutowe nie gubią punktów w nieskończoności,
+ale ich liczba musi być liczona z krotnościami.
+Dla prostej i krzywej stopnia $d$ dostajemy $d$,
+a dla dwóch krzywych bez wspólnej składowej stopni $d,e$
+dostajemy $de$. Ta sama algebra, która wcześniej służyła
+do badania ideałów, pozwala teraz rachować przecięcia.
+Kolejny naturalny temat to punkty osobliwe, stożki styczne,
+normalizacja krzywych i ich rodzaj topologiczny.
+
+% ======================================================================
+% ROZDZIAŁ 3: PUNKTY OSOBLIWE I GEOMETRIA LOKALNA KRZYWYCH
+% ======================================================================

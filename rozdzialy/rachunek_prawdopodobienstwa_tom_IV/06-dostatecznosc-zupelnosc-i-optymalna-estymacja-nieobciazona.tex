@@ -1,0 +1,651 @@
+\chapter{Dostateczność, zupełność i optymalna estymacja nieobciążona}
+\label{ch:sufficiency}
+\paragraph{Powiązania i odsyłacze.} Punktem wyjścia są statystyki i estymatory z rozdziałów~\ref{ch:statystyki} i~\ref{ch:estimators}; ograniczenia efektywności opisuje rozdział~\ref{ch:fisher-information}.
+
+
+\section{Czy wolno zastąpić całą próbę jedną liczbą?}
+Dla $n$ niezależnych prób Bernoulliego zapisujemy wektor
+$X=(X_1,\ldots,X_n)$, ale estymujemy parametr jedynie przez
+liczbę sukcesów $S=\sum_i X_i$. Dlaczego wolno wyrzucić
+informację o kolejności wyników? W tym konkretnym modelu,
+\emph{warunkowo na $S=k$}, każda sekwencja zawierająca $k$
+sukcesów ma to samo prawdopodobieństwo $\binom nk^{-1}$,
+które \emph{nie zależy od $p$}. Znajomość kolejności nie wnosi
+więc nowej informacji o parametrze. Taką redukcję formalizuje
+dostateczność. Nie każda statystyka ma tę własność: w rozkładzie
+jednostajnym ze zmiennym kresem informację skupia maksimum,
+a w ogólnym modelu zależnym od czasu kolejność może być istotna.
+
+\begin{definicja}[Statystyka dostateczna]\label{def:sufficiency}
+Niech $X$ ma prawo $P_\theta$ na przestrzeni standardowej borelowskiej
+$(\mathsf X,\calA)$ dla każdego $\theta\in\Theta$,
+a $T:\mathsf X\to\mathsf T$ będzie mierzalna, przy czym
+$\mathsf T$ także jest przestrzenią standardową borelowską.
+Mówimy, że $T$ jest \emph{dostateczna} dla rodziny
+$\{P_\theta\}$, jeśli istnieje jądro probabilistyczne
+$K(t,A)$, mierzalne w $t$ dla każdego $A\in\calA$,
+takie, że dla wszystkich $\theta$ i $A\in\calA$
+\[
+P_\theta(X\in A\mid\sigma(T))=K(T,A)
+\quad P_\theta\text{-prawie na pewno}.
+\]
+\end{definicja}
+
+Warunkowy rozkład pełnych danych przy ustalonej statystyce musi mieć
+\emph{jedną wspólną wersję} niezależną od parametru. Nie wystarcza,
+że dla każdego parametru oddzielnie istnieje pewien rozkład
+warunkowy: to zawsze jest prawdą w przestrzeniach standardowych
+borelowskich. Dostateczność jest własnością \emph{rodziny rozkładów},
+a nie jednej obserwacji.
+
+\begin{zadanie}[Dlaczego liczba sukcesów wystarcza?]\label{zad:suff-bernoulli}
+Niech $X_1,\ldots,X_n\iid\operatorname{Bernoulli}(p)$,
+$p\in[0,1]$, $S=\sum_iX_i$. Oblicz prawo pełnej sekwencji
+warunkowo na $S=k$.
+\par\emph{Rozwiązanie.} Dla $0<p<1$ i sekwencji
+$x\in\{0,1\}^n$ o sumie $k$ wzór Bayesa daje
+\[
+P_p(X=x\mid S=k)=\frac{p^k(1-p)^{n-k}}
+ {\binom nk p^k(1-p)^{n-k}}=\binom nk^{-1}.
+\]
+Dla sekwencji o innej sumie prawdopodobieństwo jest zerowe.
+Przy $p=0$ obserwujemy $S=0$ prawie na pewno, a przy $p=1$
+$S=n$ prawie na pewno; ta sama formuła zdefiniowana dla wszystkich
+$k$ nadal stanowi wspólną wersję jądra. Jest więc ono niezależne
+od $p$, zatem $S$ jest dostateczna. Wniosek praktyczny:
+w modelu \emph{iid Bernoulliego} do wnioskowania o $p$ można
+zachować tylko $S$ i $n$; jeśli prawdopodobieństwo sukcesu zmienia
+się z czasem, redukcja może zgubić informację o trendzie.
+\end{zadanie}
+
+
+\begin{center}
+\begin{tikzpicture}[>=Latex,node distance=10mm,
+ box/.style={draw,rounded corners,align=center,inner sep=5pt,
+ font=\small,minimum height=13mm}]
+\node[box,text width=30mm] (full) {Pełna próba $X$\\kolejność i wyniki};
+\node[box,text width=38mm,right=of full] (stat) {Statystyka $T(X)$\\informacja o parametrze};
+\node[box,text width=41mm,right=of stat] (cond) {Warunkowe prawo $X\mid T$\\nie zależy od $\theta$};
+\draw[->,thick] (full)--(stat);
+\draw[->,thick] (stat)--(cond);
+\end{tikzpicture}
+\end{center}
+\noindent\emph{Rysunek 6.1.} Dostateczność nie oznacza możliwości
+odtworzenia pełnej próby z $T$. Oznacza, że pozostała losowość
+próby po ustaleniu $T$ nie zależy od nieznanego parametru.
+
+\section{Dlaczego istnieje wspólna miara odniesienia?}
+Aby uzasadnić kryterium faktoryzacyjne bez pomijania warunków
+mierzalności, przypomnimy jeden lemat. W całym podrozdziale
+zakładamy standardowe przestrzenie borelowskie i zdominowaną
+rodzinę $P_\theta\ll\mu$, gdzie $\mu$ jest $\sigma$-skończona.
+Jądra warunkowe względem $T$ istnieją w tych przestrzeniach,
+co przyjmujemy jako standardowy wynik o regularnych rozkładach
+warunkowych.
+
+\begin{lemat}[Przeliczalna mieszanina dominująca]\label{lem:halmos-savage}
+Dla dowolnej rodziny miar probabilistycznych $\{P_\theta\}_{\theta\in\Theta}$
+zdominowanej przez jedną miarę $\sigma$-skończoną $\mu$
+istnieją parametry $\theta_1,\theta_2,\ldots$ oraz dodatnie wagi
+$a_j$ o sumie $1$ takie, że prawdopodobieństwo
+$P_*:=\sum_{j\ge1}a_jP_{\theta_j}$ dominuje każde $P_\theta$.
+\end{lemat}
+\begin{proof}
+Wybierzmy miarę skończoną $\nu$ równoważną $\mu$: jeśli
+$\mathsf X=\bigcup_{j\ge1}A_j$ i $0<\mu(A_j)<\infty$
+(po usunięciu zbiorów zerowych i rozłączeniu), możemy położyć
+$\nu(B)=\sum_j2^{-j}\mu(B\cap A_j)/(1+\mu(A_j))$,
+a następnie znormalizować. Dla każdego $\theta$ niech
+$B_\theta=\{\dd P_\theta/\dd\mu>0\}$.
+Niech $c$ będzie supremum $\nu$-miar skończonych sum
+$\bigcup_{i=1}^m B_{\theta_i}$. Dla każdego $k$ wybieramy
+skończoną rodzinę, której suma $D_k$ spełnia
+$\nu(D_k)>c-1/k$. Po zebraniu wszystkich wybranych parametrów
+w jeden ciąg otrzymujemy $D=\bigcup_kD_k$ z $\nu(D)=c$
+(z jednej strony $D$ jest rosnącą granicą skończonych sum,
+każda o mierze nie większej niż $c$). Dla każdego $\theta$,
+gdyby $\nu(B_\theta\setminus D)>0$, odpowiednio duża skończona
+część $D$ powiększona o $B_\theta$ miałaby miarę większą niż $c$,
+sprzeczność. Stąd $\nu(B_\theta\setminus D)=0$.
+Niech $P_*=\sum_j a_jP_{\theta_j}$, np. $a_j=2^{-j}$.
+Jego gęstość jest dodatnia na $D$ z dokładnością do zbioru
+$\mu$-zerowego. Jeżeli $P_*(A)=0$, to
+$\mu(A\cap D)=0$, a zatem dla każdego $\theta$
+$P_\theta(A)=P_\theta(A\cap D)=0$. To oznacza $P_\theta\ll P_*$.
+\end{proof}
+
+\begin{twierdzenie}[Kryterium faktoryzacyjne Fishera--Neymana]
+\label{thm:factorization}
+Niech $\{P_\theta:\theta\in\Theta\}$ będzie rodziną miar na
+standardowej przestrzeni borelowskiej $(\mathsf X,\calA)$,
+zdominowaną przez miarę $\sigma$-skończoną $\mu$.
+Niech $p_\theta=\dd P_\theta/\dd\mu$ będą wybranymi wersjami
+gęstości. Statystyka $T:\mathsf X\to\mathsf T$ o wartościach
+w przestrzeni standardowej borelowskiej jest dostateczna wtedy
+i tylko wtedy, gdy istnieją mierzalne funkcje $h\ge0$ na
+$\mathsf X$ i $g_\theta\ge0$ na $\mathsf T$ takie, że
+\[
+p_\theta(x)=g_\theta(T(x))h(x)
+\quad\mu\text{-prawie wszędzie dla każdego }\theta.
+\]
+Zbiór, na którym równość zawodzi, może zależeć od $\theta$.
+\end{twierdzenie}
+\begin{proof}
+Niech $P_*$ będzie mieszaniną z lematu~\ref{lem:halmos-savage},
+a $p_*$ jej gęstością względem $\mu$. Dla każdego $\theta$
+mamy $P_\theta\ll P_*$ i pochodną
+$r_\theta=\dd P_\theta/\dd P_*$. Załóżmy najpierw,
+że $r_\theta(x)=g_\theta(T(x))$ $P_*$-prawie wszędzie.
+Niech $K(t,A)$ będzie wspólną wersją regularnego prawa warunkowego
+$X$ względem $T$ pod $P_*$. Dla każdego $A\in\calA$
+i mierzalnego $B\subset\mathsf T$, korzystając z zależności
+$r_\theta=g_\theta(T)$, otrzymujemy
+\[
+P_\theta(A\cap\{T\in B\})
+=\E_*[\ind{\{X\in A\}}g_\theta(T)\ind{\{T\in B\}}]
+=\E_*[K(T,A)g_\theta(T)\ind{\{T\in B\}}]
+=\E_\theta[K(T,A)\ind{\{T\in B\}}].
+\]
+Wobec definicji warunkowania $K$ jest wspólnym jądrem warunkowym,
+więc $T$ jest dostateczna.
+
+Odwrotnie, jeśli $T$ jest dostateczna z jądrem $K$, dla każdej
+ograniczonej funkcji mierzalnej $f$ mamy
+$\E_\theta f(X)=\E_\theta\int_{\mathsf X}f(x)K(T,\dd x)$.
+Ta sama równość zachodzi pod mieszaniną $P_*$ (sumujemy ją
+z wagami $a_j$); oznacza to, że
+$\int_{\mathsf X}f(x)K(T,\dd x)=\E_*[f(X)\mid T]$ $P_*$-p.n.
+Ponieważ $P_\theta\ll P_*$, dla każdego ograniczonego $f$
+\[
+\E_*[f(X)r_\theta(X)]
+=\E_\theta f(X)
+=\E_\theta\E_*[f(X)\mid T]
+=\E_*[r_\theta(X)\E_*[f(X)\mid T]].
+\]
+Z własności warunkowej wartości oczekiwanej ostatnie wyrażenie
+równa się $\E_*[f(X)\E_*(r_\theta(X)\mid T)]$.
+Dowolność ograniczonego $f$ implikuje
+$r_\theta=\E_*(r_\theta\mid T)$ $P_*$-p.n., więc z lematu
+Dooba--Dynkina $r_\theta=g_\theta(T)$ $P_*$-p.n.
+Równoważność z podanym rozkładem gęstości wynika następująco.
+Z zależności $p_\theta=r_\theta p_*$ dostajemy faktoryzację
+z $h=p_*$. Jeżeli zaś
+$p_\theta=g_\theta(T)h$, to mieszanka ma gęstość
+$p_*=(\sum_j a_jg_{\theta_j}(T))h$.
+Na zbiorze $p_*>0$ iloraz $p_\theta/p_*$ zależy tylko od $T$,
+więc jest $\sigma(T)$-mierzalny. Na zbiorze zerowym $P_*$
+wersję ilorazu definiujemy dowolnie. Oba kierunki są dowiedzione.
+\end{proof}
+
+\begin{przyklad}[Trzy modele i trzy różne statystyki dostateczne]
+\begin{enumerate}
+\item W próbie Bernoulliego statystyką dostateczną jest
+$S=\sum_iX_i$, ponieważ dla obserwacji $x$ mamy
+\[
+p_p(x)=p^{S(x)}(1-p)^{n-S(x)}.
+\]
+\item Poisson: dla $X_i\iid\Pois(\lambda)$,
+$p_\lambda(x)=\exp(-n\lambda)\lambda^{\sum_i x_i}
+\prod_i(x_i!)^{-1}$; wystarczy $S=\sum_iX_i$.
+\item Normalny: dla próby $\Normal(\mu,\sigma^2)$ z \emph{dwoma}
+nieznanymi parametrami gęstość zależy od danych przez
+$S_1=\sum_iX_i$ i $S_2=\sum_iX_i^2$.
+Kiedy $\sigma^2$ jest znane, wystarcza samo $\bar X$.
+\end{enumerate}
+\end{przyklad}
+
+\section{Minimalna dostateczność: kiedy nie zachowaliśmy za dużo?}
+Dostateczną statystykę można zawsze sztucznie rozszerzyć:
+wektor $(S,X_1)$ jest dostateczny, jeżeli $S$ jest dostateczny.
+Chcielibyśmy zachować \emph{jak najmniej} informacji niezbędnej
+do opisu parametru. W modelach z dodatnimi gęstościami na wspólnym
+nośniku prowadzi do tego proste kryterium ilorazów wiarygodności.
+
+\begin{definicja}[Minimalna dostateczność]
+Dostateczna statystyka $T$ jest \emph{minimalnie dostateczna},
+jeśli dla każdej innej dostatecznej statystyki $S$ istnieje mierzalna
+funkcja $\varphi$ taka, że $T=\varphi(S)$ $P_\theta$-prawie na pewno
+dla każdego $\theta$.
+\end{definicja}
+
+\begin{stwierdzenie}[Kryterium ilorazowe w modelu dyskretnym]
+\label{prop:minimal-discrete}
+Niech $\mathsf X$ będzie przeliczalna i niech wszystkie funkcje
+masy $p_\theta(x)$ będą \emph{ściśle dodatnie} dla $x\in\mathsf X$.
+Załóżmy, że istnieje statystyka $T$ spełniająca
+\[
+T(x)=T(y)\quad\Longleftrightarrow\quad
+\frac{p_\theta(x)}{p_\theta(y)}\text{ nie zależy od }\theta.
+\]
+Wówczas $T$ jest minimalnie dostateczna.
+\end{stwierdzenie}
+\begin{proof}
+Wybierzmy ustalone $\theta_0$. Jeśli $T(x)=T(y)$, to
+$p_\theta(x)/p_\theta(y)=p_{\theta_0}(x)/p_{\theta_0}(y)$.
+W każdej klasie wartości $t$ wybierzmy reprezentanta $x_t$
+(co jest możliwe dla przeliczalnej przestrzeni). Definiując
+$g_\theta(t)=p_\theta(x_t)/p_{\theta_0}(x_t)$ oraz
+$h(x)=p_{\theta_0}(x)$ dostajemy
+$p_\theta(x)=g_\theta(T(x))h(x)$, zatem $T$ jest dostateczna
+z twierdzenia~\ref{thm:factorization}.
+Niech teraz $S$ będzie dowolną inną dostateczną statystyką.
+Faktoryzacja daje
+$p_\theta(x)=u_\theta(S(x))v(x)$, gdzie $v(x)>0$
+na całej przeliczalnej przestrzeni (po ewentualnej zmianie
+wersji na zbiorach zerowych: takich punktów nie ma, bo wszystkie
+$p_\theta$ są dodatnie). Zatem $S(x)=S(y)$ implikuje
+$p_\theta(x)/p_\theta(y)=v(x)/v(y)$, niezależnie od $\theta$,
+a więc $T(x)=T(y)$. To znaczy, że $T$ jest stała na włóknach
+$S$; dla przeliczalnej dziedziny definiujemy mierzalną funkcję
+$\varphi$ na zbiorze wartości $S$ przez $\varphi(S(x))=T(x)$,
+a poza nim dowolnie. Otrzymujemy $T=\varphi(S)$.
+\end{proof}
+
+\begin{przyklad}[W modelu Bernoulliego liczba sukcesów jest minimalnie dostateczna]
+Niech $p\in(0,1)$, $x,y\in\{0,1\}^n$. Wówczas
+\[
+\frac{p_p(x)}{p_p(y)}
+=\left(\frac p{1-p}\right)^{\sum_i x_i-\sum_i y_i}.
+\]
+Iloraz jest niezależny od $p$ dokładnie wtedy, gdy
+$\sum_i x_i=\sum_i y_i$. Zatem liczba sukcesów $S$ jest
+minimalnie dostateczna. Oznacza to minimalność w sensie
+relacji mierzalności, \emph{nie} najmniejszej liczby bitów w pliku
+ani automatycznie minimalnego błędu estymacji.
+\end{przyklad}
+
+\section{Rao--Blackwell: wykorzystanie informacji bez dodawania danych}
+Wyobraźmy sobie, że estymujemy $p$ na podstawie pierwszego wyniku
+$X_1$, choć mamy do dyspozycji całą próbę. Statystyka dostateczna
+$S$ pozwala zastąpić ten niestabilny estymator jego \emph{średnią
+warunkową przy znanym $S$}. Prowadzi to do mniejszej wariancji:
+operacja warunkowania usuwa przypadkowość, która przy znanym $S$
+nie niesie informacji o parametrze.
+
+\begin{twierdzenie}[Twierdzenie Rao--Blackwella]\label{thm:rao-blackwell}
+Niech $T$ będzie dostateczną statystyką dla rodziny
+$\{P_\theta:\theta\in\Theta\}$ na standardowych przestrzeniach
+borelowskich, a $U(X)$ rzeczywistym estymatorem takim, że
+$\E_\theta|U|<\infty$ dla każdego $\theta$. Istnieje statystyka
+$U^*=u(T)$, \emph{niezależna od wyboru parametru}, taka że
+$U^*=\E_\theta[U\mid T]$ $P_\theta$-p.n. dla każdego $\theta$.
+Jeśli $\E_\theta U=g(\theta)$, to także
+$\E_\theta U^*=g(\theta)$.
+Dla każdej wypukłej funkcji straty $a\mapsto L(\theta,a)$,
+przy której obie wartości oczekiwane są określone,
+\[
+\E_\theta L(\theta,U^*)\le\E_\theta L(\theta,U).
+\]
+Dla straty kwadratowej, jeśli $U\in L^2(P_\theta)$, zachodzi
+ściślejsza tożsamość
+\[
+\E_\theta(U-g(\theta))^2
+=\E_\theta(U^*-g(\theta))^2
+ +\E_\theta\bigl(U-U^*\bigr)^2.
+\]
+\end{twierdzenie}
+\begin{proof}
+Z dostateczności istnieje wspólne jądro warunkowe $K(t,\dd x)$.
+Definiujemy $u(t)=\int_{\mathsf X}U(x)K(t,\dd x)$ w punktach, gdzie całka
+jest bezwzględnie zbieżna, a poza nimi przyjmujemy $u(t)=0$.
+Funkcja $u$ jest mierzalna (najpierw dla funkcji prostych,
+potem przez aproksymację i zbieżność monotoniczną).
+Ponieważ $U\in L^1(P_\theta)$ dla każdego $\theta$,
+$u(T)=\E_\theta(U\mid T)$ prawie na pewno pod każdym $P_\theta$.
+Z własności wieży $\E_\theta U^*=\E_\theta U$.
+Warunkowa nierówność Jensena daje
+$L(\theta,\E_\theta(U\mid T))\le
+\E_\theta(L(\theta,U)\mid T)$;
+po scałkowaniu otrzymujemy nierówność ryzyk.
+Dla straty kwadratowej piszemy
+$U-g(\theta)=(U-U^*)+(U^*-g(\theta))$.
+Człon mieszany ma wartość oczekiwaną zero, bo
+$\E_\theta[U-U^*\mid T]=0$ i $U^*-g(\theta)$ jest
+$\sigma(T)$-mierzalny oraz całkowalny w $L^2$.
+Rozwinięcie kwadratu daje tezę.
+\end{proof}
+
+\begin{zadanie}[Od pierwszej obserwacji do udziału sukcesów]
+Dla $X_i\iid\operatorname{Bernoulli}(p)$ zacznij od
+$U=X_1$, który estymuje $p$ nieobciążenie.
+Wyznacz $\E(U\mid S)$, gdzie $S=\sum_iX_i$, i porównaj wariancje.
+\par\emph{Rozwiązanie.} Warunkowo na $S=k$ każda pozycja
+ma prawdopodobieństwo sukcesu $k/n$ z symetrii sekwencji,
+więc $\E(X_1\mid S)=S/n=\bar X$.
+Zatem $\Var_p(U)=p(1-p)$,
+a $\Var_p(U^*)=p(1-p)/n$.
+Zysk jest szczególnie duży, gdy $n$ rośnie: nie dodaliśmy
+żadnej nowej obserwacji, wykorzystaliśmy tylko \emph{informację
+już obecną w całej próbie}.
+\end{zadanie}
+
+\section{Zupełność: dlaczego nie ma dwóch różnych UMVU?}
+Dostateczność mówi, że $T$ zachowuje informację o parametrze.
+Zupełność zapewnia coś innego: nie istnieje niezerowa funkcja
+$T$ o wartości oczekiwanej identycznie równej zero dla wszystkich
+parametrów. To właśnie gwarantuje jednoznaczność estymatora
+nieobciążonego opartego na statystyce dostatecznej.
+
+\begin{definicja}[Zupełność rodziny statystyki]\label{def:completeness}
+Rodzina rozkładów $\{\Law_\theta(T):\theta\in\Theta\}$
+jest \emph{zupełna}, jeżeli dla każdej mierzalnej $a$ takiej, że
+$\E_\theta|a(T)|<\infty$ dla wszystkich $\theta$, z warunku
+$\E_\theta a(T)=0$ dla wszystkich $\theta$ wynika
+$a(T)=0$ $P_\theta$-prawie na pewno dla wszystkich $\theta$.
+\end{definicja}
+
+\begin{twierdzenie}[Zupełność liczby sukcesów Bernoulliego]
+\label{thm:complete-binomial}
+Niech $S=\sum_{i=1}^nX_i$, gdzie
+$X_i\iid\operatorname{Bernoulli}(p)$, $p\in(0,1)$.
+Wtedy rodzina rozkładów $S$ jest zupełna.
+\end{twierdzenie}
+\begin{proof}
+Niech $a:\{0,\ldots,n\}\to\R$ spełnia
+$\E_p a(S)=0$ dla każdego $p\in(0,1)$. Mamy
+\[
+0=\sum_{k=0}^n a(k)\binom nk p^k(1-p)^{n-k}.
+\]
+Dzieląc przez $(1-p)^n>0$ i podstawiając
+$z=p/(1-p)\in(0,\infty)$, otrzymujemy
+$\sum_{k=0}^n a(k)\binom nk z^k=0$ dla każdego $z>0$.
+Wielomian mający nieskończenie wiele zer jest zerowy,
+więc wszystkie jego współczynniki znikają:
+$a(k)\binom nk=0$. Ponieważ $\binom nk>0$,
+$a(k)=0$ dla wszystkich $k$. Dowiedliśmy nawet silniejszego
+wniosku niż wymagana równość prawie na pewno.
+\end{proof}
+
+\begin{twierdzenie}[Zupełność sumy zmiennych Poissona]
+\label{thm:complete-poisson}
+Niech $X_i\iid\Pois(\lambda)$, $\lambda\in(0,\infty)$,
+a $S=\sum_iX_i\sim\Pois(n\lambda)$. Wtedy rodzina praw
+$S$ jest zupełna.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $\E_\lambda|a(S)|<\infty$ i
+$\E_\lambda a(S)=0$ dla każdego $\lambda>0$, to
+\[
+\sum_{k=0}^\infty a(k)\frac{(n\lambda)^k}{k!}=0,
+\qquad\lambda>0.
+\]
+Szereg potęgowy po lewej stronie jest absolutnie zbieżny
+dla każdego dodatniego argumentu, ponieważ odpowiednie
+wartości bezwzględne są równe
+$e^{n\lambda}\E_\lambda|a(S)|<\infty$.
+Ma więc nieskończony promień zbieżności i reprezentuje
+funkcję analityczną. Skoro znika na $(0,\infty)$,
+wszystkie jej współczynniki Taylora w zerze muszą być zerowe.
+To daje $a(k)=0$ dla każdego $k$.
+\end{proof}
+
+
+\begin{twierdzenie}[Zupełność pełnej jednoparametrowej rodziny wykładniczej]
+\label{thm:complete-exponential-family}
+Niech $Q_\eta$, $\eta\in J$, będzie rodziną rozkładów rzeczywistej
+statystyki $T$ o postaci
+$\dd Q_\eta(t)=e^{\eta t-A(\eta)}\,\dd\rho(t)$,
+gdzie $\rho$ jest nieujemną miarą $\sigma$-skończoną,
+$J\subset\R$ niepustym \emph{otwartym przedziałem}, a
+$0<\int_{\R}e^{\eta t}\,\dd\rho(t)<\infty$ dla każdego $\eta\in J$.
+Wtedy rodzina $\{Q_\eta:\eta\in J\}$ jest zupełna.
+\end{twierdzenie}
+\begin{proof}
+Niech $a$ będzie mierzalna, $\E_\eta|a(T)|<\infty$
+i $\E_\eta a(T)=0$ dla wszystkich $\eta\in J$.
+Ustalmy $\eta_0\in J$ i wybierzmy $d>0$ z
+$[\eta_0-2d,\eta_0+2d]\subset J$.
+Zdefiniujmy skończoną miarę ze znakiem
+$\nu(\dd t)=a(t)Q_{\eta_0}(\dd t)$. Dla $|u|\le d$
+całka $\int_{\R}e^{u t}|\nu|(\dd t)$ jest skończona:
+na $t\ge0$ ograniczamy ją przez stałą razy całkę
+$|a(t)|e^{dt}$ względem $Q_{\eta_0}$,
+a na $t<0$ analogicznie przez $e^{-dt}$;
+obie są skończone dzięki całkowalności $a$ przy
+$\eta_0+d$ i $\eta_0-d$. Funkcja
+$F(z)=\int_{\R}e^{zt}\,\nu(\dd t)$ jest więc holomorficzna
+w pasku $|\operatorname{Re}z|<d$; różniczkowanie pod całką
+uzasadniają analogiczne oszacowania na mniejszych paskach.
+Dla rzeczywistego $u\in(-d,d)$ mamy
+\[
+F(u)=e^{A(\eta_0+u)-A(\eta_0)}\E_{\eta_0+u}a(T)=0.
+\]
+Z twierdzenia o identyczności funkcji holomorficznych
+$F(z)=0$ na całym pasku. W szczególności
+$F(iv)=\int_{\R}e^{ivt}\,\nu(\dd t)=0$ dla każdego $v\in\R$.
+Z jednoznaczności transformaty Fouriera skończonej miary
+ze znakiem wynika $\nu=0$, czyli $a=0$ $Q_{\eta_0}$-p.n.
+Gęstości $Q_\eta$ względem $\rho$ są dodatnie na tym samym
+nośniku, więc wszystkie $Q_\eta$ są równoważne. Zatem
+$a=0$ $Q_\eta$-p.n. dla każdego $\eta\in J$.
+\end{proof}
+\begin{przyklad}[Zupełność średniej w modelu normalnym]
+Gdy $X_i\iid\Normal(\mu,\sigma^2)$ przy znanym $\sigma^2>0$
+i $\mu\in\R$, rozkład $T=\sum_iX_i$ jest rodziną wykładniczą
+z parametrem naturalnym $\eta=\mu/\sigma^2$ przebiegającym
+całą prostą. Z poprzedniego twierdzenia wynika zupełność
+statystyki $T$, a z faktoryzacji jej dostateczność.
+Wobec tego $\bar X$ jest UMVU dla $\mu$. Nie należy
+mieszać tego przypadku z sytuacją, w której również
+$\sigma^2$ jest parametrem nieznanym.
+\end{przyklad}
+
+\begin{twierdzenie}[Lehmann--Scheffé: jednoznaczność UMVU]
+\label{thm:lehmann-scheffe}
+Niech $T$ będzie statystyką dostateczną i zupełną dla
+$\{P_\theta:\theta\in\Theta\}$, a $g:\Theta\to\R$ estymandem.
+Załóżmy, że istnieje estymator $U(X)$ o skończonym drugim
+momencie pod każdym $P_\theta$ i taki, że
+$\E_\theta U=g(\theta)$ dla każdego $\theta$.
+Wtedy $U^*=\E_\theta(U\mid T)$, wybrany jako wspólna
+wersja z twierdzenia Rao--Blackwella, jest \emph{jednostajnie
+najlepszym nieobciążonym estymatorem} (UMVU): dla każdego
+nieobciążonego estymatora $V\in L^2(P_\theta)$
+$\Var_\theta(U^*)\le\Var_\theta(V)$ dla wszystkich $\theta$.
+Ponadto jest jedyny z dokładnością do równości
+$P_\theta$-prawie na pewno dla każdego $\theta$.
+\end{twierdzenie}
+\begin{proof}
+Rao--Blackwell daje $U^*=u(T)$ nieobciążony i o skończonym
+momencie kwadratowym. Dla dowolnego innego nieobciążonego
+$V$ jego uśrednienie $V^*=v(T)$ jest nieobciążone i
+$\Var_\theta V^*\le\Var_\theta V$. Ponieważ
+$\E_\theta[u(T)-v(T)]=0$ dla każdego $\theta$ i różnica
+jest całkowalna, zupełność implikuje
+$u(T)=v(T)$ $P_\theta$-p.n. dla każdego $\theta$.
+Stąd $\Var_\theta U^*=\Var_\theta V^*\le\Var_\theta V$.
+Jeśli $V$ też jest UMVU, to w szczególności
+$\Var_\theta(V)=\Var_\theta(U^*)$ i równość w tożsamości
+Pitagorasa Rao--Blackwella wymusza
+$V=V^*=U^*$ $P_\theta$-p.n.
+\end{proof}
+
+\section{Przykłady UMVU: praktyczne obliczenia}
+\begin{zadanie}[Prawdopodobieństwo dwóch sukcesów]
+\label{zad:umvu-p2}
+Niech $X_1,\ldots,X_n\iid\operatorname{Bernoulli}(p)$,
+$n\ge2$. Chcemy oszacować $p^2$ nieobciążenie.
+\par\emph{Rozwiązanie.} Estymator $U=X_1X_2$ jest nieobciążony,
+gdyż $\E U=\E X_1\E X_2=p^2$.
+Niech $S=\sum_iX_i$. Warunkowo na $S=k$ prawdopodobieństwo,
+że pierwsze dwie pozycje są sukcesami, wynosi
+$k(k-1)/(n(n-1))$: wybieramy dwa z $k$ sukcesów i
+porównujemy z wyborem dwóch spośród $n$ pozycji. Wobec tego
+\[
+\widehat{p^2}_{\rm UMVU}=\E(X_1X_2\mid S)
+=\frac{S(S-1)}{n(n-1)}.
+\]
+Z twierdzeń~\ref{thm:complete-binomial} i~\ref{thm:lehmann-scheffe}
+ma najmniejszą wariancję ze wszystkich estymatorów
+nieobciążonych $p^2$. Jeżeli $n=4$ i zaobserwowano
+$x=(1,0,1,0)$, to $S=2$ i wynik wynosi $1/6$, podczas gdy
+wstawienie MLE $\widehat p=1/2$ do $p^2$ daje $1/4$.
+To nie sprzeczność: $\widehat p^{\,2}$ jest obciążony jako
+estymator $p^2$, ponieważ
+$\E\bar X^2=p^2+p(1-p)/n$.
+\end{zadanie}
+
+\begin{zadanie}[Prognoza braku zgłoszeń w przyszłym okresie]
+\label{zad:umvu-pois-zero}
+W $n$ niezależnych okresach obserwujemy liczby zgłoszeń
+$X_i\sim\Pois(\lambda)$, $\lambda>0$. Oszacuj nieobciążenie
+prawdopodobieństwo braku zgłoszeń w \emph{następnym} takim
+okresie, równe $e^{-\lambda}$.
+\par\emph{Rozwiązanie.} Statystyka $S=\sum_iX_i\sim\Pois(n\lambda)$
+jest dostateczna i zupełna. Funkcja tworząca rozkładu Poissona
+daje $\E_\lambda a^S=\exp(n\lambda(a-1))$ dla $a\ge0$.
+Dla $a=1-1/n$ (przy $n\ge1$) otrzymujemy
+\[
+\widehat{e^{-\lambda}}=\left(1-\frac1n\right)^S,
+\quad \E_\lambda\widehat{e^{-\lambda}}=e^{-\lambda}.
+\]
+Dla $n=1$ przyjmujemy $0^0=1$, więc estymator jest wskaźnikiem
+$\{S=0\}$. Z twierdzenia Lehmann--Scheffégo jest UMVU.
+Przykładowo przy $n=5$ i sumie zgłoszeń $S=3$ wynik to
+$(4/5)^3=0{,}512$, natomiast estymator przez wstawienie MLE
+$\lambda=S/n$ daje $e^{-3/5}\approx0{,}549$.
+Oba są sensowne dla innych kryteriów; UMVU nie gwarantuje
+najmniejszego błędu średniokwadratowego wśród \emph{wszystkich}
+estymatorów, tylko wśród nieobciążonych.
+\end{zadanie}
+
+\section{Statystyki poboczne i twierdzenie Basu}
+\begin{definicja}[Statystyka poboczna]
+Statystykę $A(X)$ nazywamy \emph{poboczną} (ang. \emph{ancillary}),
+jeśli jej rozkład nie zależy od nieznanego parametru $\theta$.
+\end{definicja}
+
+\begin{twierdzenie}[Twierdzenie Basu]\label{thm:basu}
+Niech $T$ będzie dostateczna i zupełna dla rodziny
+$\{P_\theta:\theta\in\Theta\}$ na przestrzeni standardowej
+borelowskiej, a $A$ statystyką poboczną o wartościach w przestrzeni
+standardowej borelowskiej. Wtedy $T$ i $A$ są niezależne
+pod każdym $P_\theta$.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy zdarzenie $B$ z $\sigma$-ciała wartości statystyki $A$.
+Z dostateczności istnieje funkcja mierzalna $q_B$ \emph{niezależna
+od $\theta$} taka, że
+$\E_\theta[\ind{\{A\in B\}}\mid T]=q_B(T)$.
+Z poboczności $P_\theta(A\in B)=c_B$ nie zależy od $\theta$.
+Zatem dla każdego $\theta$
+$\E_\theta[q_B(T)-c_B]=0$.
+Funkcja $q_B-c_B$ jest ograniczona, więc zupełność wymusza
+$q_B(T)=c_B$ $P_\theta$-p.n. dla wszystkich $\theta$.
+Oznacza to, że
+$P_\theta(A\in B\mid T)=P_\theta(A\in B)$;
+ponieważ zachodzi dla dowolnego $B$, z definicji jest to
+niezależność $T$ i $A$.
+\end{proof}
+
+\begin{przyklad}[Niezależność średniej i wariancji normalnej]
+Dla $X_i\iid\Normal(\mu,\sigma^2)$ z \emph{znanym} $\sigma^2>0$
+i nieznaną $\mu\in\R$, statystyka $T=\bar X$ jest
+w tym pełnym modelu normalnym dostateczna i zupełna.
+Statystyka $S^2=(n-1)^{-1}\sum_i(X_i-\bar X)^2$
+ma rozkład niezależny od $\mu$; jest zatem poboczna dla
+\emph{tego konkretnego modelu}. Twierdzenie Basu daje
+niezależność $\bar X$ i $S^2$; w rozdziale 2 udowodniliśmy
+ją już bezpośrednio przez obrót ortogonalny wektora normalnego.
+Gdy $\sigma^2$ jest również nieznana, $S^2$ nie jest poboczna,
+ponieważ jej rozkład zależy od $\sigma^2$. Nie wolno więc
+mechanicznie przenosić argumentu między różnymi modelami.
+\end{przyklad}
+
+
+\begin{twierdzenie}[Maksimum próby jednostajnej jest zupełne]
+\label{thm:uniform-complete}
+Niech $n\ge2$ i $X_1,\ldots,X_n\iid U(0,\theta)$, $\theta>0$.
+Wówczas $M=X_{(n)}$ jest statystyką dostateczną i zupełną.
+Co więcej, statystyka $A=X_{(1)}/X_{(n)}$ jest poboczna;
+na mocy twierdzenia Basu $A$ i $M$ są niezależne.
+\end{twierdzenie}
+\begin{proof}
+Dla dodatnich obserwacji gęstość próby jest
+$\theta^{-n}\ind{\{M\le\theta\}}$, więc faktoryzacja dowodzi
+dostateczności $M$. Jego gęstość wynosi
+$f_{M,\theta}(t)=n t^{n-1}\theta^{-n}\ind{\{0<t<\theta\}}$.
+Niech $a$ spełnia $\E_\theta|a(M)|<\infty$ i
+$\E_\theta a(M)=0$ dla każdego $\theta>0$.
+Po pomnożeniu przez $\theta^n/n$ otrzymujemy
+$G(\theta)=\int_0^\theta a(t)t^{n-1}\,\dd t=0$.
+Funkcja $G$ jest lokalnie absolutnie ciągła na $(0,\infty)$,
+gdyż $a(t)t^{n-1}$ jest lokalnie całkowalna; z twierdzenia
+o różniczkowaniu całki mamy
+$G'(\theta)=a(\theta)\theta^{n-1}=0$ dla niemal każdego
+$\theta>0$. Zatem $a(M)=0$ $P_\theta$-p.n. dla każdego
+$\theta$ i rodzina jest zupełna.
+Ponadto przy zapisie $X_i=\theta U_i$, gdzie $U_i\iid U(0,1)$,
+$A=U_{(1)}/U_{(n)}$ ma rozkład niezależny od $\theta$;
+jest poboczna. Basu daje niezależność $A$ i $M$.
+\end{proof}
+\begin{uwaga}[Zaskakująca niezależność dwóch statystyk]
+Maksimum i iloraz minimum do maksimum powstają z tych samych
+obserwacji, a mimo to są niezależne w tym szczególnym modelu.
+Twierdzenie nie mówi, że minimum i maksimum są niezależne
+(na ogół nie są). Przy innych rozkładach lub niedokładnym
+założeniu jednostajności omawiana niezależność może zniknąć.
+\end{uwaga}
+
+\section{Jaką metodę wybrać w konkretnym zadaniu?}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}p{0.31\textwidth}>{\raggedright\arraybackslash}p{0.31\textwidth}}
+\toprule
+\textbf{Problem} & \textbf{Najpierw sprawdź} & \textbf{Narzędzie i ograniczenie}\\
+\midrule
+Zredukować przechowywane dane & Czy istnieje statystyka dostateczna? & Faktoryzacja Fishera--Neymana; tylko w ustalonym modelu\\
+Poprawić estymator nieobciążony & Czy znamy statystykę dostateczną? & Rao--Blackwell; poprawa MSE pod stratą kwadratową\\
+Uzyskać UMVU & Czy statystyka jest \emph{zupełna i dostateczna}? & Lehmann--Scheffé; nie optymalizuje MSE wśród wszystkich obciążonych\\
+Sprawdzić zbędność kolejności obserwacji & Czy próba rzeczywiście jest iid? & W modelach Bernoulliego i Poissona wystarcza suma; przy trendzie nie\\
+Sprawdzić niezależność dwóch statystyk & Czy jedna jest zupełna dostateczna, druga poboczna? & Twierdzenie Basu; brak założeń wyklucza wniosek\\
+Przewidzieć przyszłe zdarzenie & Jaki funkcjonał parametru chcemy oszacować? & UMVU lub estymator przez podstawienie MLE; zależnie od straty\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Granice stosowania.}
+Dostateczność i zupełność są ściśle zależne od rodziny rozkładów.
+Zachowanie sumy sukcesów jest bezstratne w modelu iid Bernoulliego,
+lecz niekoniecznie przy zależności pomiędzy próbami lub niejednakowych
+prawdopodobieństwach sukcesu. Ponadto \emph{najlepszy nieobciążony}
+nie znaczy \emph{najlepszy przy dowolnej funkcji straty}.
+Gdy wymagana jest kontrola ryzyka najgorszego przypadku,
+wybór może paść na regułę minimaksową z poprzedniego rozdziału;
+gdy najważniejsza jest odporność na odstające obserwacje,
+na estymator odporny. W teorii statystycznej nie istnieje
+optymalność niezależna od modelu i kryterium.
+
+\Needspace{16\baselineskip}
+\noindent\textbf{Przykład kodu: estymator UMVU dla $p^2$.}\par
+\par
+\Needspace{13\baselineskip}
+\smallskip
+\begin{lstlisting}[language=Python,caption={UMVU dla kwadratu prawdopodobieństwa sukcesu (Python).}]
+x = [1, 0, 1, 0]
+n, S = len(x), sum(x)
+p2_umvu = S * (S - 1) / (n * (n - 1))
+p2_plugin = (S/n)**2
+print(p2_umvu, p2_plugin)  # 0.166666..., 0.25
+\end{lstlisting}
+\par
+\Needspace{13\baselineskip}
+\smallskip
+\begin{lstlisting}[language=Julia,caption={UMVU dla kwadratu prawdopodobieństwa sukcesu (Julia).}]
+x = [1, 0, 1, 0]
+n, S = length(x), sum(x)
+println((S*(S-1)/(n*(n-1)), (S/n)^2))
+\end{lstlisting}
+
+\paragraph{Podsumowanie.}
+Metoda momentów i MLE \emph{konstruują} estymatory; teoria
+dostateczności mówi, które aspekty danych zachowują informację
+o parametrze; Rao--Blackwell poprawia nieobciążone estymatory,
+a zupełność wraz z twierdzeniem Lehmanna--Scheffégo pozwala
+uzasadnić ich optymalność w odpowiedniej klasie. Rozdział następny
+poświęcimy informacji Fishera i dolnym ograniczeniom wariancji,
+a następnie statystycznym twierdzeniom asymptotycznym.
+
+
+% ================================================================
+% ROZDZIAL 7 -- INFORMACJA FISHERA I DOLNE GRANICE
+% ================================================================

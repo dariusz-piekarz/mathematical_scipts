@@ -1,0 +1,442 @@
+\chapter{Wielomian Tutte'a, kolorowania i dualność algebraiczna}
+\label{ch:tg-tutte}
+
+Graf planarny daje jednocześnie obraz geometryczny i zbiór danych
+kombinatorycznych. Wielomian Tutte'a jest niezmiennikiem, który
+łączy liczenie drzew rozpinających, kolorowania, przepływy
+i dualność grafów płaskich. Zaczniemy od definicji przez
+sumowanie po wszystkich podzbiorach krawędzi, a następnie
+wyprowadzimy efektywny algorytm obliczania tego wielomianu.
+
+\section{Usuwanie i kontrakcja krawędzi}
+\label{sec:tg-deletion-contraction}
+
+\begin{definicja}[Dwie operacje na krawędzi]
+Niech $G=(V,E)$ będzie skończonym multigrafem, a $e\in E$.
+Przez $G\setminus e$ oznaczamy graf po usunięciu krawędzi $e$
+bez usuwania jej końców. Jeśli $e$ nie jest pętlą,
+przez $G/e$ oznaczamy graf powstały przez kontrakcję $e$:
+utożsamiamy jej dwa końce i usuwamy $e$; pozostałe krawędzie
+zachowują swoje wystąpienia, także jeśli po utożsamieniu
+zamieniają się w pętle. Przy liczeniu wierzchołków grafu $G/e$
+liczba wierzchołków maleje dokładnie o jeden.
+\end{definicja}
+
+\begin{definicja}[Rząd i zerowość cykliczna zbioru krawędzi]
+Niech $G=(V,E)$ będzie skończonym multigrafem, a $A\subseteq E$.
+Przez $k_G(A)$ oznaczamy liczbę składowych grafu $(V,A)$,
+łącznie z izolowanymi wierzchołkami. Definiujemy
+$r_G(A):=|V|-k_G(A)$ oraz
+$\nu_G(A):=|A|-r_G(A)=|A|-|V|+k_G(A)$.
+Liczba $\nu_G(A)$ jest wymiarem przestrzeni cykli grafu $(V,A)$.
+\end{definicja}
+
+\begin{definicja}[Wielomian Tutte'a]
+\label{def:tg-tutte}
+Dla dowolnego skończonego multigrafu $G=(V,E)$ definiujemy
+\[
+T_G(x,y):=\sum_{A\subseteq E}
+ (x-1)^{k_G(A)-k_G(E)}
+ (y-1)^{|A|-|V|+k_G(A)}\in\mathbb Z[x,y].
+\]
+Wykładniki są nieujemne: dodawanie krawędzi nie zwiększa liczby
+składowych, a $|A|-|V|+k_G(A)$ jest wymiarem przestrzeni cykli.
+Dla grafu bez krawędzi mamy $T_G=1$, niezależnie od liczby
+wierzchołków izolowanych.
+\end{definicja}
+
+\begin{twierdzenie}[Rekurencja usuwania i kontrakcji]
+\label{thm:tg-tutte-recursion}
+Niech $G$ będzie skończonym multigrafem, a $e\in E(G)$.
+Wtedy zachodzą następujące tożsamości:
+\begin{enumerate}[label=(\roman*)]
+\item jeśli $e$ nie jest ani mostem, ani pętlą, to
+$T_G=T_{G\setminus e}+T_{G/e}$;
+\item jeśli $e$ jest mostem, to $T_G=x\,T_{G/e}$;
+\item jeśli $e$ jest pętlą, to $T_G=y\,T_{G\setminus e}$.
+\end{enumerate}
+Wraz z wartością $T=1$ dla grafu bez krawędzi reguły te
+jednoznacznie określają wielomian Tutte'a.
+\end{twierdzenie}
+
+\begin{proof}
+Podzielmy sumę definiującą $T_G$ na dwa rodzaje składników:
+podzbiorów $A\subseteq E\setminus\{e\}$ i podzbiorów
+postaci $A=B\cup\{e\}$, gdzie $B\subseteq E\setminus\{e\}$.
+
+Gdy $e$ nie jest mostem ani pętlą, liczba składowych całego
+grafu nie zmienia się przy usunięciu ani przy kontrakcji $e$.
+Składniki nie zawierające $e$ są zatem dokładnie składnikami
+$T_{G\setminus e}$. Dla składników zawierających $e$ mamy
+$k_G(B\cup\{e\})=k_{G/e}(B)$, ponieważ kontrakcja
+nie zmienia liczby składowych. Zarazem
+$|V(G/e)|=|V(G)|-1$, więc
+\[
+|B\cup\{e\}|-|V(G)|+k_G(B\cup\{e\})
+=|B|-|V(G/e)|+k_{G/e}(B).
+\]
+Składniki z $e$ dają zatem dokładnie $T_{G/e}$.
+
+Jeśli $e$ jest mostem, każdy podzbiór $B\subseteq E\setminus\{e\}$
+ma o jedną składową więcej niż $B\cup\{e\}$.
+Kontrakcja $e$ daje bijekcję między podzbiorami krawędzi
+$G\setminus e$ a podzbiorami krawędzi $G/e$, a porównanie
+obu składników związanych z tym samym $B$ daje czynnik
+$(x-1)+1=x$. Stąd $T_G=xT_{G/e}$.
+Jeżeli $e$ jest pętlą, jej dołożenie nie zmienia liczby
+składowych, lecz zwiększa $\nu_G(A)$ o jeden.
+Dwa odpowiadające sobie składniki dają czynnik
+$1+(y-1)=y$, co daje $T_G=yT_{G\setminus e}$.
+
+Każda z powyższych rekurencji zmniejsza liczbę krawędzi,
+a więc pozwala obliczyć wielomian po skończonej liczbie
+kroków; to również dowodzi jednoznaczności.
+\end{proof}
+
+\begin{przyklad}[Drzewo, cykl i trzy krawędzie równoległe]
+Jeżeli $G$ jest drzewem o $n\ge1$ wierzchołkach,
+każda krawędź jest mostem. Kontraktując je kolejno,
+otrzymujemy $T_G(x,y)=x^{n-1}$.
+
+Dla trójkąta wybierzmy krawędź $e$.
+Graf $C_3\setminus e$ jest ścieżką o dwóch krawędziach,
+z wielomianem $x^2$. Graf $C_3/e$ składa się z dwóch
+równoległych krawędzi; ich wielomian to $x+y$.
+Stąd
+$T_{C_3}=x^2+x+y$.
+Analogiczna rekurencja daje dla $n\ge2$
+\[
+ T_{C_n}(x,y)=x^{n-1}+x^{n-2}+\cdots+x+y.
+\]
+Dla grafu theta złożonego z dwóch wierzchołków
+i trzech równoległych krawędzi otrzymujemy
+$T_{\Theta}(x,y)=x+y+y^2$.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[scale=.90,>=Stealth,line cap=round]
+ \begin{scope}[shift={(-3.3,0)}]
+  \node[tgBlueVertex] (a) at (-1,-.7) {$a$};
+  \node[tgBlueVertex] (b) at (1,-.7) {$b$};
+  \node[tgBlueVertex] (c) at (0,1.05) {$c$};
+  \draw[tgEdge] (a)--(b)--(c);
+  \draw[tgAccent] (c)--(a);
+  \node[text=tgNavy,font=\small] at (0,-1.45) {$C_3$};
+ \end{scope}
+ \draw[tgTeal,-{Stealth[length=3mm]},line width=1.5pt] (-1.9,0)--(-1.1,0);
+ \node[text=tgTeal,font=\footnotesize] at (-1.5,.45) {$\setminus e$};
+ \begin{scope}[shift={(.1,0)}]
+  \node[tgBlueVertex] (a) at (-.7,-.7) {};
+  \node[tgBlueVertex] (b) at (.7,-.7) {};
+  \node[tgBlueVertex] (c) at (0,1.05) {};
+  \draw[tgTree] (a)--(b)--(c);
+  \node[text=tgNavy,font=\small] at (0,-1.45) {$x^2$};
+ \end{scope}
+ \node[text=tgTeal,font=\small] at (2.0,.5) {$+$};
+ \begin{scope}[shift={(4.0,0)}]
+  \node[tgBlueVertex] (a) at (-.7,0) {};
+  \node[tgBlueVertex] (b) at (.7,0) {};
+  \draw[tgBlue,line width=2pt] (a) to[bend left=38] (b);
+  \draw[tgAccent,line width=2pt] (a) to[bend right=38] (b);
+  \node[text=tgNavy,font=\small] at (0,-1.45) {$x+y$};
+ \end{scope}
+\end{tikzpicture}
+
+{\footnotesize Rekurencja Tutte'a dla trójkąta: usunięcie krawędzi
+daje drzewo, kontrakcja daje dwie krawędzie równoległe.}
+\end{center}
+
+\section{Drzewa rozpinające jako specjalizacja wielomianu}
+\label{sec:tg-tutte-trees}
+
+\begin{twierdzenie}[Wartość $T_G(1,1)$]
+Niech $G$ będzie skończonym spójnym multigrafem.
+Wtedy $T_G(1,1)=\tau(G)$, gdzie $\tau(G)$ oznacza
+liczbę drzew rozpinających, z uwzględnieniem krotności
+krawędzi równoległych.
+\end{twierdzenie}
+
+\begin{proof}
+Dla grafu spójnego $k_G(E)=1$. W sumie definiującej
+$T_G(1,1)$ składnik odpowiadający $A\subseteq E$
+nie znika wtedy i tylko wtedy, gdy obie potęgi zerowej
+podstawy mają wykładnik zero, czyli
+$k_G(A)=1$ oraz $|A|-|V|+k_G(A)=0$.
+Te warunki oznaczają, że $(V,A)$ jest spójnym grafem
+bez cykli, czyli drzewem rozpinającym. Każdy taki
+składnik jest równy jeden ($0^0$ rozumiemy tu
+jako wartość jednomianu z wykładnikiem zero).
+Suma liczy dokładnie drzewa rozpinające.
+\end{proof}
+
+\begin{uwaga}
+Twierdzenie Kirchhoffa daje tę samą liczbę z wyznacznika
+minora laplasjanu. Mamy zatem dwie niezależne metody
+obliczania $\tau(G)$: algebraiczną (wyznacznik) i
+kombinatoryczną (wielomian Tutte'a). Dla grafu niespójnego
+$T_G(1,1)$ liczy maksymalne lasy rozpinające, po jednym
+drzewie rozpinającym na każdą składową.
+\end{uwaga}
+
+\begin{stwierdzenie}[Dwie dalsze specjalizacje]
+Dla skończonego multigrafu $G=(V,E)$ zachodzą równości:
+$T_G(2,2)=2^{|E|}$,
+$T_G(2,1)=N_{\mathrm{las}}(G)$,
+gdzie $N_{\mathrm{las}}(G)$ oznacza liczbę podzbiorów
+krawędzi nie zawierających cyklu (w tym podzbiór pusty).
+\end{stwierdzenie}
+
+\begin{proof}
+Dla $x=y=2$ w definicji każdy składnik ma wartość jeden,
+a podzbiorów $E$ jest $2^{|E|}$. Przy $x=2$, $y=1$
+pozostają dokładnie składniki z $\nu_G(A)=0$, czyli
+podgrafy $(V,A)$ będące lasami. Każdy taki składnik
+wnosi jeden. Pętle nigdy nie należą do lasu i słusznie
+nie pojawiają się w tej sumie.
+\end{proof}
+
+\section{Wielomian chromatyczny i jego wzór przez Tutte'a}
+\label{sec:tg-chromatic}
+
+\begin{uwaga}[Konwencje dla grafu zerowego i pętli]
+W tej części dopuszczamy również graf zerowy: ma on dokładnie
+jedno kolorowanie pustą funkcją i $P_{G_0}(q)=1$, ale jego
+liczbę chromatyczną definiujemy osobno jako zero. Jeśli graf
+posiada pętlę, nie istnieje poprawne kolorowanie żadną liczbą
+kolorów, ponieważ wierzchołek nie może mieć koloru różnego
+od samego siebie. Zatem jego wielomian chromatyczny jest
+wielomianem zerowym. Krawędzie równoległe nie zmieniają
+liczby poprawnych kolorowań.
+\end{uwaga}
+
+\begin{definicja}[Wielomian chromatyczny]
+Niech $G=(V,E)$ będzie skończonym multigrafem.
+Dla $q\in\mathbb N$, $q\ge1$, przez $P_G(q)$ oznaczamy
+liczbę poprawnych kolorowań wierzchołków kolorami
+$1,\ldots,q$, tzn. funkcji $c:V\to\{1,\ldots,q\}$
+spełniających $c(u)\ne c(v)$ dla każdej krawędzi $uv$.
+Gdy $G$ ma pętlę, przyjmujemy $P_G(q)=0$.
+\end{definicja}
+
+\begin{twierdzenie}[Wzór inkluzji i ekskluzji]
+\label{thm:tg-chromatic-inclusion}
+Dla dowolnego skończonego multigrafu $G=(V,E)$ i każdej
+liczby całkowitej $q\ge1$ zachodzi
+\[
+ P_G(q)=\sum_{A\subseteq E}(-1)^{|A|}q^{k_G(A)}.
+\]
+Prawa strona jest wielomianem w $q$ o współczynnikach
+całkowitych, wyznaczającym liczbę kolorowań dla każdego $q\ge1$.
+\end{twierdzenie}
+
+\begin{proof}
+Wszystkich funkcji kolorujących wierzchołki jest $q^{|V|}$.
+Dla każdej krawędzi $e=uv$ oznaczmy przez $B_e$
+zbiór funkcji, które mają $c(u)=c(v)$.
+Poprawne kolorowania to dokładnie funkcje nienależące
+do żadnego z $B_e$. Z zasady włączeń i wyłączeń ich liczba
+to $\sum_{A\subseteq E}(-1)^{|A|}\bigl|\bigcap_{e\in A}B_e\bigr|$.
+Dla ustalonego $A$ warunki $c(u)=c(v)$ na krawędziach $A$
+wymuszają stałość kolorowania na każdej składowej $(V,A)$.
+Składowych jest $k_G(A)$ i każda może niezależnie otrzymać
+jeden z $q$ kolorów. Dlatego
+$\bigl|\bigcap_{e\in A}B_e\bigr|=q^{k_G(A)}$.
+Podstawienie kończy dowód, również w przypadku pętli.
+\end{proof}
+
+\begin{twierdzenie}[Wielomian chromatyczny jako specjalizacja Tutte'a]
+\label{thm:tg-chrom-tutte}
+Niech $G=(V,E)$ będzie skończonym multigrafem o $n=|V|$
+wierzchołkach i $c=k_G(E)$ składowych. Wtedy
+\[
+P_G(q)=(-1)^{n-c}q^c\,T_G(1-q,0)
+\]
+jako tożsamość wielomianów w $\mathbb Z[q]$.
+\end{twierdzenie}
+
+\begin{proof}
+Podstawiając $x=1-q$, $y=0$ w definicji Tutte'a,
+otrzymujemy
+\[
+(-1)^{n-c}q^c T_G(1-q,0)
+=\sum_{A\subseteq E}
+ (-1)^{n-c+k_G(A)-c+|A|-n+k_G(A)}q^{k_G(A)}.
+\]
+Wykładnik znaku $-1$ różni się od $|A|$ o liczbę parzystą
+$2(k_G(A)-c)$, dlatego każdy składnik ma postać
+$(-1)^{|A|}q^{k_G(A)}$. Poprzednie twierdzenie
+identyfikuje sumę z $P_G(q)$.
+\end{proof}
+
+\begin{przyklad}[Kolorowania trójkąta]
+Ponieważ $T_{C_3}(x,y)=x^2+x+y$, mamy
+\[
+P_{C_3}(q)=q\bigl((1-q)^2+(1-q)\bigr)
+=q(q-1)(q-2).
+\]
+Odpowiada to bezpośredniemu rachunkowi: pierwszy
+wierzchołek kolorujemy na $q$ sposobów, drugi
+na $q-1$, a trzeci na $q-2$ sposoby.
+W szczególności $\chi(C_3)=3$.
+\end{przyklad}
+
+\section{Dualność wielomianu Tutte'a}
+\label{sec:tg-tutte-duality}
+
+\begin{twierdzenie}[Dualność Tutte'a]
+\label{thm:tg-tutte-dual}
+Niech $G\subset S^2$ będzie skończonym spójnym grafem
+płaskim, a $G^*$ jego dualnym multigrafem. Wtedy
+\[
+ T_{G^*}(x,y)=T_G(y,x).
+\]
+\end{twierdzenie}
+
+\begin{proof}
+Dla grafu płaskiego dualność zamienia usuwanie i kontrakcję
+krawędzi, z zachowaniem naturalnego przyporządkowania
+pozostałych krawędzi: jeśli $e$ nie jest pętlą, to
+$(G/e)^*$ odpowiada $G^*\setminus e^*$, a jeśli $e$
+nie jest mostem, to $(G\setminus e)^*$ odpowiada
+$G^*/e^*$. Dla krawędzi będącej mostem $e^*$ jest
+pętlą, natomiast dla pętli $e^*$ jest mostem.
+Te tożsamości widać, śledząc dwie ściany po obu
+stronach krawędzi: ich scalenie w dualu odpowiada
+usunięciu krawędzi w grafie pierwotnym, zaś
+scalenie końców krawędzi pierwotnej odpowiada
+usunięciu jej krawędzi dualnej.
+
+Stosujemy indukcję po liczbie krawędzi. Dla grafu
+bez krawędzi $G=K_1$, a obie strony są równe jeden.
+Jeśli $e$ jest zwykłą krawędzią (ani pętlą,
+ani mostem), zastosowanie rekurencji do $G$ i $G^*$,
+a następnie założenia indukcyjnego, daje
+\[
+\begin{aligned}
+T_{G^*}(x,y)
+ &=T_{G^*\setminus e^*}(x,y)+T_{G^*/e^*}(x,y)\\
+ &=T_{(G/e)^*}(x,y)+T_{(G\setminus e)^*}(x,y)\\
+ &=T_{G/e}(y,x)+T_{G\setminus e}(y,x)=T_G(y,x).
+\end{aligned}
+\]
+Jeśli $e$ jest mostem, to $e^*$ jest pętlą i
+$T_G(y,x)=yT_{G/e}(y,x)$, a
+$T_{G^*}(x,y)=yT_{G^*\setminus e^*}(x,y)$.
+Indukcja oraz $(G/e)^*=G^*\setminus e^*$ dają równość.
+Przypadek pętli jest symetryczny. To kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Trójkąt i trzy krawędzie równoległe]
+Na sferze dualem trójkąta $C_3$ jest multigraf złożony
+z dwóch wierzchołków połączonych trzema równoległymi
+krawędziami. Zatem
+$T_{C_3}=x^2+x+y$ oraz
+$T_{C_3^*}=x+y+y^2=T_{C_3}(y,x)$.
+Dualność zamieniła stopień cykliczny na strukturę
+przekrojów krawędziowych.
+\end{przyklad}
+
+\section{Kolorowanie grafu dualnego a przepływy}
+\label{sec:tg-flows-duality}
+
+\begin{definicja}[Przepływ nigdzie niezerowy modulo $q$]
+Niech $G=(V,E)$ będzie skończonym grafem z wybraną
+orientacją krawędzi, a $q\ge2$ liczbą całkowitą.
+\emph{Przepływem o wartościach w $\mathbb Z/q\mathbb Z$}
+nazywamy wektor $j\in(\mathbb Z/q\mathbb Z)^E$
+spełniający $Bj=0$. Jest on \emph{nigdzie niezerowy}, jeżeli
+$j_e\ne0$ dla każdej krawędzi. Liczbę takich przepływów
+oznaczamy przez $F_G(q)$.
+\end{definicja}
+
+\begin{twierdzenie}[Dualność kolorowań i przepływów]
+\label{thm:tg-flow-color-dual}
+Niech $G\subset S^2$ będzie skończonym spójnym grafem płaskim,
+a $G^*$ jego grafem dualnym. Dla każdego $q\ge2$ zachodzi
+\[
+ P_{G^*}(q)=q\,F_G(q).
+\]
+\end{twierdzenie}
+
+\begin{proof}
+Ustalmy orientację sfery i pomocniczą orientację każdej
+krawędzi $e$ grafu $G$. Niech $F_L(e)$ i $F_R(e)$ oznaczają
+ściany po lewej i prawej stronie zorientowanej krawędzi.
+Z kolorowania $c:F(G)\to\mathbb Z/q\mathbb Z$ tworzymy
+wektor $j_e=c(F_R(e))-c(F_L(e))$.
+Wokół każdego wierzchołka sumy przychodzących i wychodzących
+wartości $j_e$ teleskopowo się znoszą, a więc $Bj=0$.
+Ponadto $j_e\ne0$ dokładnie wtedy, gdy ściany po obu
+stronach $e$ mają różne kolory, czyli gdy $c$ jest
+poprawnym kolorowaniem grafu $G^*$.
+
+Wykażemy, że każdy przepływ $j$ pochodzi z takiego
+kolorowania. Wybieramy jedną ścianę i nadajemy jej
+arbitralny kolor. Przechodząc w grafie dualnym przez
+krawędź $e^*$, wyznaczamy kolor nowej ściany
+z różnicy równej $j_e$, z odpowiednim znakiem.
+Nie zależy to od wyboru drogi w grafie dualnym:
+dla każdej zamkniętej ścieżki w $G^*$ suma odpowiednich
+różnic jest zerowa. Rzeczywiście, prosty cykl dualny
+rozdziela sferę na dwie części, a jego krawędzie
+pierwotne tworzą przekrój w $G$. Sumując równania
+Kirchhoffa $Bj=0$ po wierzchołkach jednej strony
+tego przekroju, otrzymujemy dokładnie zerowanie
+algebraicznej sumy przepływu przez cykl dualny.
+Dowolny zamknięty spacer dualny rozkłada się na cykle
+proste, a przejście przez dwie przeciwne orientacje tej
+samej krawędzi wnosi sumę zero. Dla pętli dualnej,
+która odpowiada mostowi pierwotnemu, każde rozwiązanie
+$Bj=0$ ma na tym moście wartość zero (sumujemy równania
+równowagi po jednej składowej po jego usunięciu).
+Tym samym także w obecności mostów i krawędzi
+równoległych kolor ściany nie zależy od wybranej trasy.
+
+Dla ustalonego $j$ wszystkie kolorowania różnią się
+o wspólną stałą dodaną do kolorów wszystkich ścian,
+ponieważ $G^*$ jest spójny. Takich stałych jest dokładnie
+$q$. Stąd $P_{G^*}(q)=qF_G(q)$.
+\end{proof}
+
+\begin{przyklad}[Przepływy na grafie theta]
+Graf theta z trzema równoległymi krawędziami ma dualny
+trójkąt. Dlatego
+\[
+ F_{\Theta}(q)=\frac{P_{C_3}(q)}{q}=(q-1)(q-2).
+\]
+Można to policzyć również bezpośrednio. Nadajmy wszystkim
+trzem krawędziom orientację od $u$ do $v$.
+Warunek przepływu to $j_1+j_2+j_3=0$ modulo $q$.
+Wybieramy $j_1\ne0$ na $q-1$ sposobów, następnie
+$j_2\ne0,-j_1$ na $q-2$ sposoby; wtedy
+$j_3=-(j_1+j_2)$ jest jednoznacznie wyznaczone i niezerowe.
+Zgodność z rachunkiem dualnym jest całkowita.
+\end{przyklad}
+
+\section*{Przejście do dalszej geometrii}
+Wprowadziliśmy dwie różne operacje tworzenia obiektów
+z grafu: samo nadanie długości krawędzi prowadziło
+do przestrzeni metrycznej i laplasjanu, natomiast
+zanurzenie komórkowe w powierzchni dodaje nowe dane
+wymiaru dwa, opisane przez $\partial_2$ i przez porządki
+rotacji. W następnych rozdziałach wykorzystamy ten punkt widzenia
+w triangulacjach rozmaitości, grafach Reeba oraz dyskretnej
+teorii Morse'a. Grafy plumbingowe pojawią się w dalszej części skryptu.
+
+\section*{Wskazówki bibliograficzne do części planarnej}
+Klasyczne twierdzenia o planarności, w tym pełne dowody
+twierdzeń Kuratowskiego i Wagnera, można znaleźć w książce
+R. Diestela, \emph{Graph Theory}. Szczegółowa analiza
+grafów na powierzchniach, układów rotacji i grafów wstęgowych
+znajduje się w monografii B. Mohara i C. Thomassena,
+\emph{Graphs on Surfaces}. Wielomianowi Tutte'a oraz jego
+związkom z kolorowaniami i przepływami poświęcone są m.in.
+rozdziały \emph{Handbook of the Tutte Polynomial and Related Topics}.
+Wszystkie te źródła traktujemy jako materiał uzupełniający;
+definicje i rachunki używane w skrypcie pozostają podane
+bezpośrednio w tekście.
+
+% ================================================================
+% ITERACJA 5. CZESC TOPOLOGICZNA
+% ================================================================
+

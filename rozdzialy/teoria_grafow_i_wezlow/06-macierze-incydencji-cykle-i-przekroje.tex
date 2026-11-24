@@ -1,0 +1,342 @@
+\chapter{Macierze incydencji, cykle i przekroje}
+\label{ch:tg-algebra}
+
+W poprzednich rozdziałach dowiedzieliśmy się, że liczba niezależnych
+cykli grafu o $n$ wierzchołkach, $m$ krawędziach i $c$ składowych wynosi
+$m-n+c$. Obecnie wyjaśnimy tę formułę za pomocą algebry liniowej.
+Pozwoli to ponadto przejść od zbiorów krawędzi do łańcuchów całkowitych,
+co będzie pierwszym rzeczywistym zastosowaniem teorii homologii.
+
+\section{Orientacja pomocnicza i operator brzegowy}
+\label{sec:tg-boundary}
+
+W całym rozdziale $G=(V,E)$ oznacza skończony graf prosty, z $V\ne\varnothing$.
+\emph{Pomocnicza orientacja} polega na wybraniu dla każdej krawędzi
+$e=\{u,v\}$ jednego z dwóch uporządkowań końców: $e:u\to v$ albo
+$e:v\to u$. Nie zmieniamy w ten sposób grafu nieskierowanego;
+wybór jest jedynie potrzebny do ustalenia znaków.
+
+\begin{definicja}[Łańcuchy wymiaru zero i jeden]
+Niech $R$ będzie jednym z pierścieni $\mathbb Z$, $\mathbb Q$ lub
+$\mathbb R$. Definiujemy wolne moduły
+$C_0(G;R):=R^V$ i $C_1(G;R):=R^E$, których bazy standardowe
+oznaczamy odpowiednio przez $[v]$, $v\in V$, oraz $[e]$, $e\in E$.
+Dla pomocniczej orientacji $e:u\to v$ określamy $R$-liniowy
+\emph{operator brzegowy} $\partial_1:C_1(G;R)\to C_0(G;R)$ przez
+$\partial_1[e]=[v]-[u]$.
+\end{definicja}
+
+Można myśleć o $[e]$ jako o odcinku posiadającym początek i koniec.
+W operatorze brzegowym koniec występuje z plusem, a początek z minusem.
+Jeśli odwrócimy pomocniczą orientację, odpowiadająca jej kolumna
+zmieni znak; rząd macierzy ani opis jądra nie ulegną jednak zmianie.
+
+\begin{definicja}[Macierz incydencji]
+Ustalmy kolejność $v_1,\ldots,v_n$ wierzchołków i $e_1,\ldots,e_m$
+krawędzi oraz orientację każdej krawędzi. Macierzą incydencji
+$B_G=(b_{ij})\in\mathbb Z^{n\times m}$ nazywamy macierz operatora
+$\partial_1$, to znaczy $b_{ij}=1$, gdy $v_i$ jest końcem $e_j$,
+$b_{ij}=-1$, gdy jest początkiem $e_j$, i $b_{ij}=0$ w pozostałych
+przypadkach.
+\end{definicja}
+
+\begin{center}
+\begin{tikzpicture}[scale=.97,>=Stealth,line cap=round]
+ \node[tgBlueVertex] (a) at (-2,0) {$a$};
+ \node[tgBlueVertex] (b) at (0,1.4) {$b$};
+ \node[tgBlueVertex] (c) at (2,0) {$c$};
+ \draw[tgTree,-{Stealth[length=2.8mm]}] (a)--node[above left,font=\small] {$e_1$}(b);
+ \draw[tgTree,-{Stealth[length=2.8mm]}] (b)--node[above right,font=\small] {$e_2$}(c);
+ \draw[tgAccent,-{Stealth[length=2.8mm]}] (a)--node[below,font=\small] {$e_3$}(c);
+ \node[text=tgNavy,font=\footnotesize] at (0,-.92)
+   {Wybór strzałek ustala znaki, a nie typ grafu.};
+\end{tikzpicture}
+\end{center}
+
+\begin{przyklad}[Trójkąt: macierz i brzeg cyklu]
+Dla orientacji $e_1:a\to b$, $e_2:b\to c$, $e_3:a\to c$ mamy
+\[
+B_G=\begin{pmatrix}-1&0&-1\\1&-1&0\\0&1&1\end{pmatrix}.
+\]
+Kolumny sumują się do zera. Wektor $z=(1,1,-1)^T$ spełnia
+$B_Gz=0$: jest to zamknięty obieg $a\to b\to c\to a$, w którym
+trzecią krawędź przechodzimy przeciwnie do jej orientacji pomocniczej.
+Natomiast $B_G(1,0,0)^T=(-1,1,0)^T$ opisuje łańcuch mający początek
+w $a$ i koniec w $b$.
+\end{przyklad}
+
+\section{Rząd macierzy i homologia zerowymiarowa}
+\label{sec:tg-rank-incidence}
+
+\begin{twierdzenie}[Rząd macierzy incydencji]
+\label{thm:tg-rank}
+Niech $G$ będzie skończonym grafem prostym o $n\ge1$ wierzchołkach,
+$m$ krawędziach i $c$ składowych spójnych. Niech $B_G$ będzie
+macierzą incydencji dla dowolnej pomocniczej orientacji. Wtedy
+$\operatorname{rank}_{\mathbb R}B_G=n-c$ i
+$\dim_{\mathbb R}\ker B_G=m-n+c$.
+\end{twierdzenie}
+
+\begin{proof}
+Oznaczmy zbiory wierzchołków składowych przez $V_1,\ldots,V_c$.
+Każda kolumna $B_G$ ma sumę współrzędnych równą zero na każdej
+składowej. Zatem obraz $B_G$ zawiera się w podprzestrzeni
+\[
+W=\left\{x\in\mathbb R^V:\sum_{v\in V_i}x_v=0
+\text{ dla }i=1,\ldots,c\right\}.
+\]
+Warunki definiujące $W$ są niezależne, ponieważ zbiory $V_i$ są
+niepuste i rozłączne; zatem $\dim W=n-c$.
+
+Pokażemy teraz równość $\operatorname{im}B_G=W$.
+W każdej składowej wybierzmy korzeń $r_i$ i drzewo rozpinające.
+Dla $v\in V_i\setminus\{r_i\}$ istnieje jednoznaczna ścieżka
+w drzewie od $r_i$ do $v$. Sumując jej krawędzie ze współczynnikami
+$+1$ albo $-1$ według zgodności z orientacją pomocniczą, otrzymujemy
+łańcuch $z_v\in C_1(G;\mathbb R)$ o brzegu
+$\partial_1z_v=[v]-[r_i]$: wkłady pośrednich wierzchołków znoszą się
+parami. Wektory $[v]-[r_i]$, dla wszystkich $v\ne r_i$, tworzą bazę
+$W$. W szczególności $W\subseteq\operatorname{im}B_G$, co daje
+pierwszą tezę. Z twierdzenia o rzędzie i jądrze otrzymujemy
+$\dim\ker B_G=m-(n-c)=m-n+c$.
+\end{proof}
+
+\begin{uwaga}[Przypadki brzegowe]
+Dla pojedynczego wierzchołka bez krawędzi macierz ma wymiar
+$1\times0$, rząd zero i jądro zerowe. Dla grafu mającego tylko
+wierzchołki izolowane zachodzi $c=n$ i $B_G=0$.
+Nie trzeba więc wyłączać tych przypadków z twierdzenia.
+\end{uwaga}
+
+\begin{definicja}[Homologie grafu]
+Dla skończonego grafu $G$ i $R\in\{\mathbb Z,\mathbb Q,\mathbb R\}$
+przyjmujemy $C_k(G;R)=0$ dla $k\notin\{0,1\}$.
+Definiujemy $H_1(G;R):=\ker\partial_1$ oraz
+$H_0(G;R):=C_0(G;R)/\operatorname{im}\partial_1$.
+Są to grupy (odpowiednio moduły) homologii komórkowej
+jednowymiarowej realizacji geometrycznej $|G|$.
+\end{definicja}
+
+Powyższa definicja jest szczególnym przypadkiem ogólnego kompleksu
+łańcuchowego. Ponieważ $C_2=0$, grupa pierwszych brzegów
+$\operatorname{im}\partial_2$ jest zerowa, stąd $H_1=\ker\partial_1$.
+
+\begin{twierdzenie}[Homologia grafu ze współczynnikami całkowitymi]
+\label{thm:tg-homology}
+Niech $G$ będzie skończonym grafem prostym o $n$ wierzchołkach,
+$m$ krawędziach i $c$ składowych spójnych. Wówczas
+\[
+H_0(G;\mathbb Z)\cong\mathbb Z^c,\qquad
+H_1(G;\mathbb Z)\cong\mathbb Z^{m-n+c},\qquad
+H_k(G;\mathbb Z)=0\quad(k\ge2).
+\]
+Izomorfizmy nie wymagają wyboru orientacji krawędzi, choć
+konkretne bazy pierwszej homologii zależą od wyboru drzewa.
+\end{twierdzenie}
+
+\begin{proof}
+Rozważmy homologię zerową. Dla każdej składowej $V_i$ określamy
+$\varepsilon_i:\mathbb Z^V\to\mathbb Z$, sumując współczynniki
+wierzchołków należących do $V_i$. Łączny homomorfizm
+$\varepsilon=(\varepsilon_1,\ldots,\varepsilon_c)$ jest surjektywny
+i znika na $\operatorname{im}\partial_1$. Ponadto jego jądro jest
+równe temu obrazowi: jeśli $x\in\mathbb Z^V$ ma sumę współczynników
+zero na każdej składowej, to można zapisać
+$x=\sum_i\sum_{v\in V_i\setminus\{r_i\}}x_v([v]-[r_i])$.
+Każdy składnik jest brzegiem całkowitego łańcucha odpowiadającego
+ścieżce drzewowej od $r_i$ do $v$. Zatem
+$\mathbb Z^V/\operatorname{im}\partial_1\cong\mathbb Z^c$.
+
+Dla homologii pierwszej wybieramy las rozpinający $T$.
+Dla każdej krawędzi $e\in E\setminus E(T)$ niech $z_e$
+będzie całkowitym łańcuchem złożonym z $e$ ze współczynnikiem
+$1$ i z odpowiednio zorientowanej ścieżki w $T$ zamykającej jego
+końce. Wtedy $\partial_1z_e=0$. Wektory $z_e$ są liniowo
+niezależne nad $\mathbb Z$, gdyż współrzędna przy krawędzi
+$f\notin E(T)$ wektorów $z_e$ wynosi $\delta_{ef}$.
+
+Aby udowodnić, że tworzą bazę całego jądra, weźmy
+$z\in\ker\partial_1$ i odejmijmy od niego łańcuch
+$\sum_{e\notin E(T)}z_e\,z(e)$, gdzie $z(e)\in\mathbb Z$
+jest współczynnikiem $z$ przy $e$. Różnica jest cyklem,
+którego nośnik leży w lesie $T$. Taki cykl musi być zerowy:
+jeśli jego nośnik jest niepusty, wybieramy liść tego nośnika;
+współczynnik przy jego jedynej krawędzi pojawia się w brzegu
+z niezerowym znakiem, sprzecznie z $\partial_1z=0$.
+Zatem $\{z_e:e\notin E(T)\}$ jest bazą całkowitego
+jądra, liczącą $m-(n-c)$ elementów. W wyższych wymiarach
+brak komórek, więc pozostałe grupy znikają.
+\end{proof}
+
+\section{Przestrzeń cykli modulo dwa i przestrzeń cięć}
+\label{sec:tg-cut-cycle}
+
+Do opisu cyklu jako zbioru krawędzi nie potrzebujemy znaków.
+Wystarczy przejść do $\mathbb F_2$, w którym $-1=1$.
+Niech $B_2$ oznacza macierz incydencji zredukowaną modulo $2$.
+
+\begin{stwierdzenie}[Porównanie z przestrzenią cykli]
+Niech $G$ będzie skończonym grafem prostym i niech
+$\mathcal C(G)$ będzie przestrzenią cykli zdefiniowaną
+w rozdziale \ref{ch:tg-drzewa}. Wtedy
+$\mathcal C(G)=\ker(B_2:\mathbb F_2^E\to\mathbb F_2^V)$.
+W szczególności ma ona wymiar $m-n+c$.
+\end{stwierdzenie}
+
+\begin{proof}
+Dla zbioru krawędzi $F\subseteq E$ współrzędna
+$B_2\mathbf1_F$ przy wierzchołku $v$ jest równa
+stopniowi $v$ w $(V,F)$ modulo $2$.
+Każdy cykl prosty ma wszystkie stopnie parzyste, a więc
+$\mathcal C(G)\subseteq\ker B_2$.
+Odwrotnie, wektor należący do jądra odpowiada zbiorowi
+krawędzi o parzystych stopniach. Lemat o rozkładzie takiego
+zbioru na cykle, udowodniony w rozdziale
+\ref{ch:tg-drzewa}, daje jego przynależność do
+$\mathcal C(G)$. Wymiar otrzymujemy z twierdzenia
+o bazie cykli fundamentalnych.
+\end{proof}
+
+\begin{definicja}[Przestrzeń przekrojów]
+Dla grafu $G=(V,E)$ nad $\mathbb F_2$ określamy
+$\mathcal D(G)\subseteq\mathbb F_2^E$ jako przestrzeń
+liniową rozpiętą przez funkcje charakterystyczne
+przekrojów $\delta_G(S)$, gdzie $S\subseteq V$.
+\end{definicja}
+
+\begin{twierdzenie}[Ortogonalność cykli i przekrojów]
+\label{thm:tg-orthogonal}
+Dla dowolnego skończonego grafu prostego $G$ zachodzi
+\[
+\mathcal D(G)=\operatorname{im}B_2^T
+  =\mathcal C(G)^\perp,\qquad
+\mathcal C(G)=\mathcal D(G)^\perp,
+\]
+gdzie ortogonalność jest rozumiana względem
+standardowego iloczynu współrzędnych nad $\mathbb F_2$.
+Ponadto $\dim\mathcal D(G)=n-c$.
+\end{twierdzenie}
+
+\begin{proof}
+Dla $S\subseteq V$ wektor $B_2^T\mathbf1_S$
+ma przy krawędzi $uv$ współrzędną równą
+$\mathbf1_S(u)+\mathbf1_S(v)$ modulo dwa. Jest ona równa
+jeden dokładnie wtedy, gdy krawędź przecina podział
+$S\sqcup(V\setminus S)$. To pokazuje
+$\mathcal D(G)=\operatorname{im}B_2^T$.
+
+Jeśli $z\in\ker B_2$ i $y=B_2^Tf$, to
+$\langle z,y\rangle=\langle B_2z,f\rangle=0$.
+Stąd $\mathcal D(G)\subseteq\mathcal C(G)^\perp$.
+Rząd macierzy incydencji nad $\mathbb F_2$ jest nadal
+równy $n-c$: dowód z drzewami działa również modulo dwa.
+Tak więc $\dim\mathcal D(G)=n-c$, podczas gdy
+$\dim\mathcal C(G)^\perp=m-(m-n+c)=n-c$.
+Daje to pierwszą równość, a drugą otrzymujemy przez
+ponowne przejście do dopełnienia ortogonalnego,
+ponieważ standardowe parowanie na $\mathbb F_2^E$
+jest niezdegenerowane.
+\end{proof}
+
+\begin{przyklad}[Kwadrat z przekątną: dwa niezależne cykle]
+Niech $V=\{1,2,3,4\}$, a krawędzie będą skierowane
+$e_1:1\to2$, $e_2:2\to3$, $e_3:3\to4$,
+$e_4:4\to1$, $e_5:1\to3$. Wówczas
+\[
+B=\begin{pmatrix}
+-1&0&0&1&-1\\1&-1&0&0&0\\
+0&1&-1&0&1\\0&0&1&-1&0
+\end{pmatrix}.
+\]
+Dla drzewa rozpinającego $T=\{e_1,e_2,e_3\}$
+dwa fundamentalne cykle mają wektory
+$z_4=(1,1,1,1,0)^T$ i $z_5=(-1,-1,0,0,1)^T$.
+Bezpośrednie mnożenie daje $Bz_4=Bz_5=0$.
+Ponieważ $m-n+1=5-4+1=2$, tworzą one bazę
+$H_1(G;\mathbb Z)\cong\mathbb Z^2$.
+
+W wersji modulo dwa mamy wektory
+$\bar z_4=(1,1,1,1,0)$ oraz $\bar z_5=(1,1,0,0,1)$.
+Ich suma odpowiada trójkątowi na wierzchołkach $1,3,4$.
+Wyróżnione dwa cykle są bazą, ale nie są wszystkimi
+cyklami grafu.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0,line cap=round]
+ \node[tgBlueVertex] (a) at (-1.6,1.0) {$1$};
+ \node[tgBlueVertex] (b) at (1.6,1.0) {$2$};
+ \node[tgBlueVertex] (c) at (1.6,-1.0) {$3$};
+ \node[tgBlueVertex] (d) at (-1.6,-1.0) {$4$};
+ \draw[tgTree] (a)--node[above,font=\scriptsize] {$e_1$}(b);
+ \draw[tgTree] (b)--node[right,font=\scriptsize] {$e_2$}(c);
+ \draw[tgTree] (c)--node[below,font=\scriptsize] {$e_3$}(d);
+ \draw[tgAccent] (d)--node[left,font=\scriptsize] {$e_4$}(a);
+ \draw[tgAccent] (a)--node[pos=.68,above,font=\scriptsize] {$e_5$}(c);
+ \node[text=tgNavy,font=\footnotesize] at (0,-1.53)
+   {Zielone: drzewo $T$. Czerwone: krawędzie generujące cykle.};
+\end{tikzpicture}
+\end{center}
+
+\begin{uwaga}[Ortogonalność nad $\mathbb F_2$ nie oznacza sumy prostej]
+Równości $\mathcal C(G)=\mathcal D(G)^\perp$ oraz
+$\mathcal D(G)=\mathcal C(G)^\perp$ nie implikują,
+że ich przecięcie jest zerowe. Przykładowo w cyklu
+$C_4$ zbiór wszystkich czterech krawędzi jest cyklem,
+a jednocześnie jest przekrojem $\delta(\{v_1,v_3\})$.
+Zatem należy odróżnić te równości nad $\mathbb F_2$
+od rzeczywistego ortogonalnego rozkładu na gradienty i cykle.
+\end{uwaga}
+
+\section{Rozkład ortogonalny w przestrzeni krawędzi}
+\label{sec:tg-linear-hodge}
+
+Zastąpmy teraz $\mathbb F_2$ przez $\mathbb R$ i nadajmy
+przestrzeniom $C_0(G;\mathbb R)$, $C_1(G;\mathbb R)$
+standardowe iloczyny skalarne, w których bazy wierzchołków
+i krawędzi są ortonormalne. Wtedy adjungowanym operatorem
+do $B$ jest $B^T$.
+
+\begin{twierdzenie}[Ortogonalny rozkład Hodge'a na grafie]
+\label{thm:tg-edge-hodge}
+Dla skończonego grafu prostego $G$ zachodzi suma prosta ortogonalna
+\[
+\mathbb R^E=\operatorname{im}B^T\ \oplus^\perp\ \ker B.
+\]
+W szczególności każdy łańcuch krawędziowy $x$ można
+jednoznacznie zapisać jako $x=B^Tf+h$ z $Bh=0$.
+Wektor $f$ jest wyznaczony z dokładnością do dodania funkcji
+stałej na każdej składowej grafu.
+\end{twierdzenie}
+
+\begin{proof}
+Dla $h\in\ker B$ i dowolnego $f\in\mathbb R^V$ mamy
+$\langle h,B^Tf\rangle=\langle Bh,f\rangle=0$.
+Zatem obie podprzestrzenie są ortogonalne.
+Ich wymiary są równe odpowiednio
+$m-n+c$ i $n-c$, co wynika z twierdzenia
+\ref{thm:tg-rank}. Suma wymiarów jest równa $m$,
+więc otrzymujemy rozkład całej przestrzeni.
+
+Jeśli $x=B^Tf+h$, zastosowanie $B$ daje
+$BB^Tf=Bx$; istnienie $f$ zapewnia
+$Bx\in\operatorname{im}B=\operatorname{im}BB^T$.
+Ostatnia równość zachodzi, gdyż
+$\ker(BB^T)=\ker B^T$ (wynika to z tożsamości
+$\langle BB^Tf,f\rangle=\|B^Tf\|^2$), a więc
+$BB^T$ ma ten sam rząd co $B$ i obraz zawarty w
+$\operatorname{im}B$.
+Jednoznaczność składnika $B^Tf$ wynika z ortogonalności.
+Jeśli $B^Tf=B^Tg$, to $B^T(f-g)=0$, co oznacza,
+że funkcja $f-g$ przyjmuje tę samą wartość na obu
+końcach każdej krawędzi, a więc jest stała na składowych.
+\end{proof}
+
+Zauważmy istotne rozróżnienie: przestrzenie cykli nad
+$\mathbb F_2$ i $\mathbb R$ mają ten sam wymiar,
+ale nie są tym samym obiektem. Nad $\mathbb R$ kierunek
+przebiegu krawędzi i znaki współczynników są istotne;
+nad $\mathbb F_2$ znak nie występuje. W następnym
+rozdziale utożsamimy część $\ker B$ z pierwszą homologią
+przestrzeni topologicznej.
+

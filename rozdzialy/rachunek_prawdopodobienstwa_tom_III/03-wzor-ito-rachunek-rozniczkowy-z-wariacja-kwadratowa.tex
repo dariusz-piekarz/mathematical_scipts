@@ -1,0 +1,634 @@
+\chapter{Wzór Itô: rachunek różniczkowy z wariacją kwadratową}
+\label{ch:ito-formula}
+
+\section{Motywacja: dlaczego zwykła reguła łańcuchowa zawodzi?}
+Niech $W$ będzie procesem Wienera względem filtracji ustalonej
+we wprowadzeniu. Gdybyśmy mogli bez zmian stosować klasyczną
+regułę łańcuchową, uzyskalibyśmy
+$W_t^2=2\int_0^tW_s\,\dd W_s$. Tymczasem w rozdziale
+\ref{ch:ito-construction} wyprowadziliśmy ścisłą tożsamość
+$W_t^2=2\int_0^tW_s\,\dd W_s+t$.
+Dodatkowy składnik nie jest błędem przybliżenia: wynika z tego,
+że suma kwadratów przyrostów $W$ nie znika w granicy, lecz
+zbiega do długości przedziału.
+
+W rachunku deterministycznym, przy różniczkowaniu $F(x)$,
+wyraz drugiego rzędu jest rzędu $(\Delta x)^2$ i po
+zsumowaniu zanika dla trajektorii o skończonej wariacji.
+Dla ruchu Browna typowy przyrost na odcinku długości
+$\Delta t$ jest rzędu $\sqrt{\Delta t}$, a więc jego
+kwadrat jest rzędu $\Delta t$. Suma takich wyrazów nie
+zanika. Celem rozdziału jest zastąpienie tej heurystyki
+ścisłym twierdzeniem.
+
+\section{Proces Itô i jego wariacja kwadratowa}
+\paragraph{Konwencja zbieżności.}
+Dla procesów $Y^{(n)}$ i $Y$ na $[0,T]$ piszemy
+$Y^{(n)}\to Y$ \emph{ucp} (jednostajnie na przedziałach
+zwartych według prawdopodobieństwa), jeżeli dla każdego
+$\varepsilon>0$ zachodzi
+$\Prob(\sup_{0\le t\le T}|Y_t^{(n)}-Y_t|>\varepsilon)
+\to0$; gdy czas przebiega $[0,\infty)$, wymaga się
+tej własności dla każdego skończonego $T$.
+
+\begin{definicja}[Proces Itô]
+Niech $T>0$, $W$ będzie rzeczywistym procesem Wienera,
+$X_0$ będzie rzeczywistą zmienną $\calF_0$-mierzalną,
+$b$ będzie procesem progresywnie mierzalnym, a $\sigma$
+procesem przewidywalnym. Zakładamy, że prawie na pewno
+$\int_0^T|b_s|\,\dd s<\infty$ oraz
+$\int_0^T\sigma_s^2\,\dd s<\infty$.
+Proces
+\[
+X_t=X_0+\int_0^tb_s\,\dd s+\int_0^t\sigma_s\,\dd W_s,
+\qquad 0\le t\le T,
+\tag{3.1}\label{eq:ito-process}
+\]
+nazywamy \emph{procesem Itô}. Druga całka jest całką
+skonstruowaną w rozdziale \ref{ch:ito-construction}
+(przez lokalizację, jeśli to konieczne).
+\end{definicja}
+
+\begin{uwaga}[Dlaczego nie zakładamy skończonych wartości oczekiwanych?]
+Do dowodu lokalnego wzoru Itô wystarcza skończoność całek
+z poprzedniej definicji dla niemal każdej trajektorii.
+Zatrzymując proces, możemy na każdym ograniczonym przedziale
+kontrolować zarówno $|X|$, jak i energię $\int\sigma^2$,
+zmienność $\int|b|$ oraz pochodne funkcji, do której
+stosujemy wzór. Dopiero po wykonaniu rachunku zdejmujemy
+zatrzymanie. Nie wolno zatem bez uzasadnienia zakładać, że
+całki występujące we wzorze mają skończone wartości oczekiwane.
+\end{uwaga}
+
+\begin{lemat}[Wariacja kwadratowa procesu Itô]
+\label{lem:ito-qv}
+Niech $X$ będzie procesem \eqref{eq:ito-process}. Dla
+każdego ciągu deterministycznych podziałów $\pi_n$ przedziału
+$[0,T]$ o średnicy dążącej do zera sumy
+$\sum_{[u,v]\in\pi_n,\,v\le t}(X_v-X_u)^2$
+zbiegają do $\int_0^t\sigma_s^2\,\dd s$ jednostajnie
+w prawdopodobieństwie na $[0,T]$ (w skrócie: ucp).
+W szczególności $[X]_t=\int_0^t\sigma_s^2\,\dd s$.
+\end{lemat}
+\begin{proof}
+Piszemy $X=X_0+A+M$, gdzie
+$A_t=\int_0^tb_s\,\dd s$ jest ciągłym procesem
+skończonej wariacji, a $M_t=\int_0^t\sigma_s\,\dd W_s$
+ciągłym lokalnym martyngałem. Na dowolnym podziale mamy
+\[
+\sum(\Delta X)^2-\sum(\Delta M)^2
+=2\sum\Delta A\,\Delta M+\sum(\Delta A)^2.
+\]
+Dla ustalonej trajektorii ciągłość $A$ zapewnia
+$\max|\Delta A|\to0$, a stąd
+\[
+\sum|\Delta A|^2
+\le (\max|\Delta A|)\operatorname{TV}_{[0,T]}(A)
+\longrightarrow0.
+\]
+Z nierówności Cauchy'ego--Schwarza otrzymujemy
+\[
+\left|\sum\Delta A\,\Delta M\right|
+\le\Big(\sum(\Delta A)^2\Big)^{1/2}
+\Big(\sum(\Delta M)^2\Big)^{1/2}.
+\]
+Drugi czynnik jest ograniczony w prawdopodobieństwie,
+ponieważ sumy kwadratów przyrostów ciągłego lokalnego
+martyngału zbiegają ucp do $[M]_T$; wynik ten udowodniono
+w tomie II. Oszacowania stosują się również do sum
+uciętych w dowolnej chwili $t$, z supremum po $t$.
+Otrzymujemy więc zbieżność ucp sum dla $X$ i $M$ do
+tej samej granicy. Z rozdziału \ref{ch:ito-construction}
+wiemy, że $[M]_t=\int_0^t\sigma_s^2\,\dd s$.
+\end{proof}
+
+\begin{lemat}[Ważone sumy kwadratów przyrostów]
+\label{lem:weighted-qv}
+Niech $X$ będzie ciągłym procesem o wariacji kwadratowej
+$[X]$ ciągłej i niemalejącej, przy czym sumy kwadratów
+przyrostów na deterministycznych podziałach o średnicy
+dążącej do zera zbiegają do $[X]$ ucp. Niech $G$ będzie
+ciągłym procesem o trajektoriach ograniczonych na $[0,T]$.
+Wówczas dla takich podziałów
+\[
+\sum_{[u,v]\in\pi_n,\,v\le t}G_u(X_v-X_u)^2
+\ \xrightarrow[\,n\to\infty\,]{\mathrm{ucp}}\
+\int_0^tG_s\,\dd[X]_s.
+\tag{3.2}\label{eq:weighted-qv}
+\]
+Po prawej stronie jest zwykła całka Lebesgue'a--Stieltjesa
+względem niemalejącej, ciągłej trajektorii $[X]$.
+\end{lemat}
+\begin{proof}
+Ustalmy najpierw deterministyczny podział pomocniczy
+$0=r_0<\cdots<r_m=T$ i zastąpmy $G$ procesem
+$G^{(m)}_s=G_{r_j}$ dla $s\in(r_j,r_{j+1}]$.
+Dla takiej funkcji wynik wynika z ucp-zbieżności
+sum kwadratów na kolejnych podprzedziałach i z
+ciągłości $[X]$. Jeżeli siatka $\pi_n$ nie zawiera
+wszystkich $r_j$, dołączamy je: wpływ skończenie wielu
+rozdzielonych przyrostów jest zaniedbywalny, gdyż
+$\sup|\Delta X|\to0$, a całkowite sumy kwadratów są
+ograniczone w prawdopodobieństwie.
+
+Pozostaje oszacować błąd zastąpienia $G$ przez $G^{(m)}$.
+Jego moduł w supremum po $t$ nie przekracza
+$\norm{G-G^{(m)}}_\infty\sum_{[u,v]\in\pi_n}(X_v-X_u)^2$,
+a dla całki granicznej jest ograniczony przez
+$\norm{G-G^{(m)}}_\infty[X]_T$. Z ciągłości trajektorii
+$G$ otrzymujemy $\norm{G-G^{(m)}}_\infty\to0$ prawie
+na pewno przy zagęszczaniu pomocniczej siatki. Ponadto
+$[X]_T$ i sumy kwadratów są ograniczone w prawdopodobieństwie.
+Najpierw wybieramy $m$ dostatecznie duże, a następnie $n$;
+daje to \eqref{eq:weighted-qv}.
+\end{proof}
+
+\section{Jednowymiarowy wzór Itô}
+\begin{twierdzenie}[Wzór Itô dla funkcji klasy $C^{1,2}$]
+\label{th:ito1}
+Niech $X$ będzie procesem \eqref{eq:ito-process}, a
+$F:[0,T]\times\R\to\R$ funkcją klasy $C^{1,2}$,
+tzn. $F$, $\partial_tF$, $\partial_xF$ i
+$\partial_{xx}F$ są ciągłe na $[0,T]\times\R$
+(jednostronnie na końcach przedziału czasu). Wtedy
+z prawdopodobieństwem jeden, jednocześnie dla wszystkich
+$t\in[0,T]$, zachodzi
+\[
+\begin{split}
+F(t,X_t)=F(0,X_0)
+&+\int_0^t\partial_tF(s,X_s)\,\dd s
++\int_0^t\partial_xF(s,X_s)b_s\,\dd s\\
+&+\int_0^t\partial_xF(s,X_s)\sigma_s\,\dd W_s
++\frac12\int_0^t\partial_{xx}F(s,X_s)\sigma_s^2\,\dd s.
+\end{split}
+\tag{3.3}\label{eq:ito1}
+\]
+Stochastyczna całka po prawej stronie jest rozumiana lokalnie.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: lokalizacja.} Dla liczb całkowitych $m\ge1$
+zatrzymajmy proces przy wyjściu $X$ z $[-m,m]$ lub
+przekroczeniu przez $\int_0^t(|b_s|+\sigma_s^2)\,\dd s$
+poziomu $m$. Ciągłość trajektorii i skończoność całek
+zapewniają, że czasy zatrzymania rosną do $T$ prawie na pewno.
+Na zbiorze zatrzymanych trajektorii $X$ pozostaje w
+przedziale zwartym, a $\partial_tF$, $\partial_xF$,
+$\partial_{xx}F$ są tam ograniczone i jednostajnie ciągłe.
+Wystarczy wykazać tożsamość do każdego z czasów zatrzymania
+i następnie usunąć lokalizację. Możemy więc w dalszej
+części dowodu pracować z ograniczonym zakresem $X$
+i ze skończonymi, kontrolowanymi energiami.
+
+\emph{Krok 2: rozwinięcie na podziale.} Weźmy podział
+$\pi_n=\{0=t_0<\dots<t_{N_n}=t\}$ o średnicy
+dążącej do zera. Oznaczmy $\Delta_kX=X_{t_{k+1}}-X_{t_k}$
+i $\Delta t_k=t_{k+1}-t_k$. Rozbijamy przyrost funkcji na zmianę wartości przestrzennej
+w chwili $t_k$ oraz zmianę czasu przy 
+ustalonej \emph{nowej} wartości przestrzennej:
+\[
+F(t_{k+1},X_{t_{k+1}})-F(t_k,X_{t_k})
+=\bigl[F(t_k,X_{t_{k+1}})-F(t_k,X_{t_k})\bigr]
+ +\bigl[F(t_{k+1},X_{t_{k+1}})-F(t_k,X_{t_{k+1}})\bigr].
+\]
+Jednostajna ciągłość pochodnych na odpowiednim zwartym
+prostokącie i wzór Taylora dają
+\[
+\begin{split}
+F(t_{k+1},X_{t_{k+1}})-F(t_k,X_{t_k})
+={}&\partial_tF(t_k,X_{t_k})\Delta t_k
++\partial_xF(t_k,X_{t_k})\Delta_kX\\
+&+\frac12\partial_{xx}F(t_k,X_{t_k})(\Delta_kX)^2+r_{k,n},
+\end{split}
+\]
+gdzie suma reszt $\sum_k r_{k,n}$ dąży do zera
+w prawdopodobieństwie. Uzasadnijmy to bez ukrytego
+założenia o istnieniu pochodnej mieszanej $F_{tx}$.
+Niech $\omega_t(\delta)$ i $\omega_{xx}(\delta)$
+będą modułami ciągłości, odpowiednio, $F_t$ i $F_{xx}$
+na ustalonym zwartym prostokącie zawierającym
+zatrzymaną trajektorię. Z twierdzenia o wartości
+średniej w zmiennej $t$ i wzoru Taylora w zmiennej $x$
+wynika
+\[
+\sum_k|r_{k,n}|\le
+T\,\omega_t\!\left(|\pi_n|+\max_k|\Delta_kX|\right)
++\tfrac12\omega_{xx}\!\left(\max_k|\Delta_kX|\right)
+\sum_k(\Delta_kX)^2.
+\]
+Rzeczywiście, w składniku czasowym odejmujemy
+$F_t(t_k,X_{t_k})\Delta t_k$ od
+$\int_{t_k}^{t_{k+1}}F_t(s,X_{t_{k+1}})\,\dd s$;
+różnica jest kontrolowana przez pierwszy moduł ciągłości.
+W składniku przestrzennym stosujemy jednowymiarowy
+wzór Taylora z resztą kontrolowaną przez drugi moduł.
+Z ciągłości $X$ mamy $\max_k|\Delta_kX|\to0$
+prawie na pewno, a z lematu \ref{lem:ito-qv} sumy
+kwadratów przyrostów są ograniczone w prawdopodobieństwie.
+Oba składniki oszacowania dążą więc do zera w
+prawdopodobieństwie. To rozumowanie wymaga dokładnie
+klasy $C^{1,2}$, a nie silniejszej regularności.
+
+\emph{Krok 3: identyfikacja granic.} Sumy
+$\sum_k\partial_tF(t_k,X_{t_k})\Delta t_k$
+zbiegają do $\int_0^t\partial_tF(s,X_s)\,\dd s$
+ścieżkowo, ponieważ integrand jest ciągły.
+Dla części liniowej piszemy
+$\Delta_kX=\int_{t_k}^{t_{k+1}}b_s\,\dd s
++\int_{t_k}^{t_{k+1}}\sigma_s\,\dd W_s$.
+Funkcje schodkowe
+$H_s^{(n)}=\partial_xF(t_k,X_{t_k})$ dla
+$s\in(t_k,t_{k+1}]$ są przewidywalne. Ich różnica
+od ciągłego, adaptowanego procesu
+$H_s=\partial_xF(s,X_s)$ dąży jednostajnie do zera
+na każdej zatrzymanej trajektorii. Zatem
+$\int H^{(n)}b\,\dd s\to\int Hb\,\dd s$
+ścieżkowo, a po odpowiedniej lokalizacji
+$\E\int|H^{(n)}-H|^2\sigma^2\,\dd s\to0$ przez
+zbieżność zdominowaną. Izometria Itô wraz z
+nierównością maksymalną Dooba daje zbieżność
+odpowiednich całek stochastycznych.
+
+Dla wyrazów kwadratowych stosujemy lemat
+\ref{lem:weighted-qv} z
+$G_s=\partial_{xx}F(s,X_s)$, otrzymując
+\[
+\sum_kG_{t_k}(\Delta_kX)^2
+\longrightarrow\int_0^tG_s\sigma_s^2\,\dd s
+\]
+w prawdopodobieństwie. Sumując wszystkie granice,
+otrzymujemy \eqref{eq:ito1} dla ustalonego $t$.
+Obie strony mają ciągłe trajektorie. Równość w chwilach
+wymiernych (oraz w $T$) daje ją jednocześnie dla wszystkich
+$t$, poza jednym zbiorem zerowym. Na końcu usuwamy
+lokalizację, pozwalając poziomom zatrzymania rosnąć do nieskończoności.
+\end{proof}
+
+\begin{uwaga}[Znaczenie wzoru różniczkowego]
+Często zapisujemy \eqref{eq:ito1} symbolicznie jako
+$\dd F(t,X_t)=F_t\,\dd t+F_x\,\dd X_t
++\frac12F_{xx}\,\dd[X]_t$. Nie jest to równość
+między zwykłymi różniczkami: jej ścisłym znaczeniem
+jest tożsamość całkowa \eqref{eq:ito1}.
+\end{uwaga}
+
+\section{Przykłady: kwadrat, potęgi, wykładnik i martyngały}
+\begin{zadanie}[Potęgi procesu Wienera]
+Dla $n\in\N$, $n\ge2$, obliczyć rozkład na składnik
+martyngałowy i składnik skończonej wariacji procesu $W_t^n$.
+
+\emph{Rozwiązanie.} Dla $F(x)=x^n$ mamy
+$F_x(x)=nx^{n-1}$ oraz $F_{xx}(x)=n(n-1)x^{n-2}$.
+Wzór Itô daje
+\[
+W_t^n=n\int_0^tW_s^{n-1}\,\dd W_s
++\frac{n(n-1)}2\int_0^tW_s^{n-2}\,\dd s.
+\]
+Przy $n=2$ dostajemy $W_t^2-t=2\int_0^tW_s\,\dd W_s$;
+przy $n=3$ otrzymujemy $W_t^3-3\int_0^tW_s\,\dd s
+=3\int_0^tW_s^2\,\dd W_s$. Nie wolno utożsamiać
+składnika całkowego z martyngałem jednostajnie
+całkowalnym na całym $[0,\infty)$ bez sprawdzenia
+jego momentów. Na dowolnym skończonym horyzoncie
+potrzebna całkowalność wynika z momentów Gaussa.
+\end{zadanie}
+
+\begin{twierdzenie}[Wykładnik stochastyczny dla stałego parametru]
+Niech $\theta\in\R$ i $W$ będzie procesem Wienera na
+$[0,T]$. Wówczas $Z_t=\exp(\theta W_t-\tfrac12\theta^2t)$
+jest dodatnim martyngałem i
+\[
+Z_t=1+\theta\int_0^t Z_s\,\dd W_s.
+\tag{3.4}\label{eq:exp-mg}
+\]
+\end{twierdzenie}
+\begin{proof}
+Stosując twierdzenie \ref{th:ito1} do
+$F(t,x)=\exp(\theta x-\frac12\theta^2t)$, zauważamy,
+że $F_t+\frac12F_{xx}=0$, więc otrzymujemy
+\eqref{eq:exp-mg} (początkowo lokalnie).
+Dla $0\le s<t$ niezależny od $\calF_s$ przyrost
+$W_t-W_s$ ma rozkład normalny $\Normal(0,t-s)$.
+Stąd
+$\E[Z_t\mid\calF_s]=Z_s\E\exp(\theta(W_t-W_s)
+-\frac12\theta^2(t-s))=Z_s$.
+Wszystkie wartości oczekiwane są skończone, a
+$\E Z_t=1$.
+\end{proof}
+
+\begin{zadanie}[Wykładnik czasu i równanie ciepła]
+Dla $u(t,x)=x^2+(T-t)$, $0\le t\le T$,
+wykazać, że $u(t,W_t)$ jest martyngałem i
+wyjaśnić związek z równaniem ciepła.
+
+\emph{Rozwiązanie.} Mamy $u_t=-1$, $u_{xx}=2$,
+więc $u_t+\frac12u_{xx}=0$. Wzór Itô daje
+$\dd u(t,W_t)=2W_t\,\dd W_t$ i tym samym
+$u(t,W_t)=T+2\int_0^tW_s\,\dd W_s$.
+Jest to martyngał kwadratowo całkowalny na $[0,T]$.
+W ogólności, jeśli $u\in C^{1,2}$ spełnia
+$u_t+\frac12u_{xx}=0$ oraz wystarczające warunki
+całkowalności, to $u(t,W_t)$ jest martyngałem.
+Pokazuje to probabilistyczną rolę równania ciepła;
+pełny wzór Feynmana--Kaca pojawi się później.
+\end{zadanie}
+
+\section{Iloczyny, całkowanie przez części i kowariacja}
+\begin{twierdzenie}[Wzór na iloczyn procesów Itô]
+\label{th:ito-product}
+Niech $X,Y$ będą procesami Itô, napędzanymi tym samym
+$W$, o współczynnikach odpowiednio $(b,\sigma)$ oraz
+$(c,\rho)$, spełniających warunki z definicji procesu Itô.
+Wówczas z prawdopodobieństwem jeden, dla wszystkich $t$,
+\[
+X_tY_t=X_0Y_0+\int_0^tX_sc_s\,\dd s
++\int_0^tY_sb_s\,\dd s
++\int_0^t(X_s\rho_s+Y_s\sigma_s)\,\dd W_s
++\int_0^t\sigma_s\rho_s\,\dd s.
+\tag{3.5}\label{eq:ito-product}
+\]
+W szczególności $[X,Y]_t=\int_0^t\sigma_s\rho_s\,\dd s$.
+\end{twierdzenie}
+\begin{proof}
+Tożsamość $4xy=(x+y)^2-(x-y)^2$ pozwala wyprowadzić
+wzór na iloczyn z jednowymiarowego wzoru Itô dla
+$X+Y$ i $X-Y$: stosujemy \eqref{eq:ito1} do kwadratu,
+odejmujemy odpowiednie równości i dzielimy przez cztery.
+Daje to składniki liniowe oraz kowariację
+$\int\sigma\rho\,\dd s$. Alternatywnie, z definicji
+kowariacji i polaryzacji $[X,Y]=\frac14([X+Y]-[X-Y])$,
+a następnie $[X+Y]-[X-Y]=4\int\sigma\rho\,\dd s$.
+\end{proof}
+
+\begin{zadanie}[Całkowanie przez części a momenty]
+Niech $W$ będzie procesem Wienera. Obliczyć
+$\int_0^t sW_s\,\dd W_s$.
+
+\emph{Rozwiązanie.} Stosujemy wzór na iloczyn do
+$X_s=s$ i $Y_s=W_s^2$, dla którego
+$\dd Y_s=2W_s\,\dd W_s+\dd s$.
+Ponieważ $[s,W^2]_t=0$, otrzymujemy
+$\dd(sW_s^2)=W_s^2\,\dd s+s(2W_s\,\dd W_s+\dd s)$.
+Zatem
+\[
+\int_0^t sW_s\,\dd W_s
+=\frac12\left(tW_t^2-\int_0^t(W_s^2+s)\,\dd s\right).
+\]
+Sprawdzenie: wartość oczekiwana prawej strony wynosi
+$\frac12(t^2-\int_0^t2s\,\dd s)=0$, zgodnie z
+martyngałowością całki.
+\end{zadanie}
+
+\section{Wzór wielowymiarowy i kierunek dyfuzji}
+\begin{lemat}[Całki względem różnych współrzędnych Wienera]
+\label{lem:multi-orthogonality}
+Niech $W=(W^1,\ldots,W^m)$ będzie standardowym
+$m$-wymiarowym procesem Wienera względem filtracji
+$(\calF_t)$, to znaczy wektor jego przyrostów na
+$(s,t]$ jest niezależny od $\calF_s$ i ma macierz
+kowariancji $(t-s)I_m$. Jeśli $H,K$ są rzeczywistymi
+procesami przewidywalnymi, dla których
+$\E\int_0^T(H_s^2+K_s^2)\,\dd s<\infty$, to
+\[
+\E\left[
+\left(\int_0^tH_s\,\dd W_s^i\right)
+\left(\int_0^tK_s\,\dd W_s^j\right)\right]
+=\delta_{ij}\E\int_0^tH_sK_s\,\dd s.
+\]
+Ponadto kowariacja ciągłych martyngałów
+$M^i=\int H\,\dd W^i$ i
+$N^j=\int K\,\dd W^j$ wynosi
+$[M^i,N^j]_t=\delta_{ij}\int_0^tH_sK_s\,\dd s$.
+W wersji lokalnie całkowalnej ostatni wzór nadal
+obowiązuje dzięki lokalizacji.
+\end{lemat}
+\begin{proof}
+Dla prostych procesów przewidywalnych przechodzimy do
+wspólnego deterministycznego podziału. Iloczyn dwóch
+sum zawiera wyrazy z różnych przedziałów i z tego
+samego przedziału. Pierwsze mają wartość oczekiwaną
+zero dzięki iterowanemu warunkowaniu; dla drugich
+\[
+\E[\Delta_kW^i\Delta_kW^j\mid\calF_{t_k}]
+=\delta_{ij}(t_{k+1}-t_k).
+\]
+Jest to dokładnie podany wzór kowariancji wartości
+końcowych. Przy $i\ne j$ ten sam rachunek po
+warunkowaniu pokazuje, że iloczyn $M^iN^j$ jest
+martyngałem. Przy $i=j$ proces
+$M^iN^i-\int HK\,\dd s$ jest martyngałem,
+co wynika z analogicznego rozwinięcia przyrostów.
+Jednoznaczność takiej korekty wynika z faktu, że
+ciągły lokalny martyngał o skończonej wariacji jest
+stały: różnica dwóch korekt byłaby jednocześnie
+lokalnym martyngałem i procesem skończonej wariacji.
+To identyfikuje kowariację.
+Dla ogólnych integrandów stosujemy gęstość procesów
+prostych, izometrię Itô i nierówność Cauchy'ego--Schwarza.
+W wersji lokalnej najpierw obcinamy energię obu
+integrandów, a potem usuwamy zatrzymanie.
+\end{proof}
+
+\begin{twierdzenie}[Wielowymiarowy wzór Itô]
+\label{th:ito-multi}
+Niech $W=(W^1,\ldots,W^m)$ będzie standardowym
+$m$-wymiarowym procesem Wienera względem wspólnej
+filtracji. Niech $X=(X^1,\ldots,X^d)$ będzie procesem
+postaci
+\[
+X_t^i=X_0^i+\int_0^t b_s^i\,\dd s
++\sum_{k=1}^{m}\int_0^t\sigma_s^{ik}\,\dd W_s^k,
+\quad i=1,\ldots,d,
+\]
+gdzie $X_0$ jest $\calF_0$-mierzalny, $b$ jest
+progresywnie mierzalny, $\sigma$ przewidywalna i
+$\int_0^T(\norm{b_s}+\norm{\sigma_s}_{\mathrm F}^2)\,\dd s
+<\infty$ prawie na pewno. Jeśli
+$F\in C^{1,2}([0,T]\times\R^d)$, to z prawdopodobieństwem
+jeden, dla wszystkich $t\in[0,T]$,
+\[
+\begin{split}
+F(t,X_t)=F(0,X_0)&+\int_0^t\left(
+F_t+\sum_{i=1}^d b_s^iF_{x_i}
++\frac12\sum_{i,j=1}^d(\sigma_s\sigma_s^{\mathsf T})_{ij}
+F_{x_ix_j}\right)(s,X_s)\,\dd s\\
+&+\sum_{k=1}^m\int_0^t
+\left(\sum_{i=1}^dF_{x_i}(s,X_s)\sigma_s^{ik}\right)
+\,\dd W_s^k.
+\end{split}
+\tag{3.6}\label{eq:ito-multi}
+\]
+\end{twierdzenie}
+\begin{proof}
+Stosujemy wielowymiarowy wzór Taylora drugiego rzędu
+na deterministycznym podziale do funkcji $F(t,X_t)$.
+Kontrola reszt odbywa się tak jak w dowodzie twierdzenia
+\ref{th:ito1}, po lokalizacji na zwartych obszarach.
+Dla wszystkich $i,j$ mamy z polaryzacji wariacji
+kwadratowej
+\[
+[X^i,X^j]_t
+=\sum_{k=1}^m\int_0^t\sigma_s^{ik}\sigma_s^{jk}\,\dd s.
+\]
+Istotnie, niezależność współrzędnych $W$ daje
+$[W^k,W^\ell]_t=\delta_{k\ell}t$, a izometria Itô,
+lokalizacja i aproksymacja współczynników procesami
+prostymi pozwalają wyprowadzić tę samą relację dla
+całek stochastycznych. Zastosowanie ważonej wersji
+lematu \ref{lem:weighted-qv} do sum
+$\sum F_{x_ix_j}(t_k,X_{t_k})\Delta_kX^i\Delta_kX^j$
+(dla $i\ne j$ przez polaryzację) daje dokładnie
+składnik drugiego rzędu z macierzą $\sigma\sigma^{\mathsf T}$.
+Część pierwszego rzędu zbiega do całek względem czasu
+i procesów Wienera z izometrii i lokalizacji, jak w
+dowodzie jednowymiarowym. Otrzymujemy tezę.
+\end{proof}
+
+\begin{przyklad}[Ruch Browna i funkcje harmoniczne]
+Niech $B$ będzie standardowym $d$-wymiarowym ruchem
+Browna, $d\ge2$, i $h\in C^2(\R^d)$ spełnia
+$\Delta h=0$. Stosując \eqref{eq:ito-multi} dla
+$X=B$, $b=0$, $\sigma=I$, otrzymujemy
+$h(B_t)=h(B_0)+\int_0^t\nabla h(B_s)\cdot\dd B_s$.
+Jest to lokalny martyngał; po zatrzymaniu przy wyjściu
+z kuli staje się kwadratowo całkowalnym martyngałem,
+gdyż $\nabla h$ jest ograniczony na odpowiednim
+zwartym obszarze. Ten przykład tłumaczy związek
+ruchu Browna z funkcjami harmonicznymi.
+\end{przyklad}
+
+\begin{zadanie}[Kwadrat odległości w $\R^d$]
+Dla $d$-wymiarowego ruchu Browna $B$ wyprowadzić
+równanie dla $R_t^2=\norm{B_t}^2$ i obliczyć jego
+wartość oczekiwaną, jeśli $B_0=x$ jest deterministyczny.
+
+\emph{Rozwiązanie.} Z \eqref{eq:ito-multi} dla
+$F(x)=\sum_i x_i^2$ dostajemy
+\[
+\norm{B_t}^2=\norm{x}^2+2\int_0^t B_s\cdot\dd B_s+d\,t.
+\]
+Po wzięciu wartości oczekiwanych mamy
+$\E\norm{B_t}^2=\norm{x}^2+dt$. Ostatnia równość
+może też zostać otrzymana przez zsumowanie
+$\E(B_t^i)^2=x_i^2+t$ dla poszczególnych współrzędnych.
+\end{zadanie}
+
+\section{Czas lokalny procesu Wienera: pierwszy kontakt}
+Wzór Itô wymaga klasy $C^{1,2}$, tymczasem
+funkcja $x\mapsto|x-a|$ nie jest różniczkowalna w $a$.
+W przybliżeniu jej druga pochodna koncentruje się
+w punkcie $a$. Wartość graniczna daje nowy obiekt:
+\emph{czas lokalny}, który mierzy intensywność
+przebywania procesu w otoczeniu danego poziomu.
+
+\begin{twierdzenie}[Wzór Tanaki i czas lokalny w ustalonym poziomie]
+\label{th:tanaka}
+Niech $W$ będzie standardowym procesem Wienera, $a\in\R$.
+Przyjmujemy $\operatorname{sgn}(x)=1$ dla $x>0$,
+$-1$ dla $x<0$ oraz $0$ dla $x=0$. Istnieje ciągły,
+niemalejący, nieujemny proces $(L_t^a)_{0\le t\le T}$,
+zaczynający się w zerze, taki że prawie na pewno,
+jednocześnie dla wszystkich $t\in[0,T]$,
+\[
+|W_t-a|=|W_0-a|+\int_0^t\operatorname{sgn}(W_s-a)
+\,\dd W_s+L_t^a.
+\tag{3.7}\label{eq:tanaka}
+\]
+Ponadto dla każdego $t$ zachodzi zbieżność w
+prawdopodobieństwie
+\[
+\frac1{2\varepsilon}\int_0^t
+\ind{\{|W_s-a|<\varepsilon\}}\,\dd s
+\ \longrightarrow\ L_t^a
+\qquad(\varepsilon\downarrow0).
+\tag{3.8}\label{eq:local-time-occ}
+\]
+Proces $L^a$ nazywamy \emph{czasem lokalnym} ruchu Browna
+na poziomie $a$, w przyjętej normalizacji.
+\end{twierdzenie}
+\begin{proof}
+Zaczynamy od funkcji wypukłej
+\[
+f_\varepsilon(x)=
+\begin{cases}
+|x-a|,&|x-a|\ge\varepsilon,\\
+\displaystyle\frac{(x-a)^2}{2\varepsilon}+
+\frac\varepsilon2,&|x-a|<\varepsilon.
+\end{cases}
+\]
+Jest ona klasy $C^1$, jej pochodna jest Lipschitzowska,
+a druga pochodna istnieje poza dwoma punktami
+$a\pm\varepsilon$ i wynosi
+$f_\varepsilon''(x)=\varepsilon^{-1}
+\ind{\{|x-a|<\varepsilon\}}$.
+Aby legalnie stosować wzór Itô, przybliżamy
+$f_\varepsilon$ splotami z gładkim jądrem
+mollifikującym. Pochodne pierwszego rzędu zbiegają
+jednostajnie, a drugie — prawie wszędzie i są
+jednostajnie ograniczone (przy ustalonym
+$\varepsilon$). Ponieważ rozkład $W_s$ ma gęstość
+przy każdym $s>0$, a $\int_0^T\Prob(W_s=a\pm\varepsilon)
+\,\dd s=0$, zbieżność zdominowana daje
+zbieżność składników drugiego rzędu w $L^1(\Omega)$.
+Izometria Itô daje zbieżność całek z pochodnych
+pierwszego rzędu w $L^2(\Omega)$.
+Przechodząc do granicy w gładkim wzorze Itô, uzyskujemy
+\[
+f_\varepsilon(W_t)=f_\varepsilon(W_0)
++\int_0^t f_\varepsilon'(W_s)\,\dd W_s
++\frac1{2\varepsilon}\int_0^t
+\ind{\{|W_s-a|<\varepsilon\}}\,\dd s.
+\tag{3.9}\label{eq:tanaka-eps}
+\]
+Teraz $|f_\varepsilon(x)-|x-a||\le\varepsilon/2$ dla
+każdego $x$, zaś $f_\varepsilon'(x)\to
+\operatorname{sgn}(x-a)$ poza punktem $a$, przy czym
+$|f_\varepsilon'|\le1$. Ponieważ
+$\E\int_0^T\ind{\{W_s=a\}}\,\dd s=0$,
+z twierdzenia Fubiniego i zbieżności zdominowanej
+mamy
+$\E\int_0^T|f_\varepsilon'(W_s)-
+\operatorname{sgn}(W_s-a)|^2\,\dd s\to0$.
+Izometria i nierówność Dooba zapewniają zbieżność
+całek stochastycznych jednostajnie w $L^2$.
+Z \eqref{eq:tanaka-eps} wynika więc zbieżność ucp
+nieujemnych i niemalejących procesów z lewej strony
+\eqref{eq:local-time-occ} do ciągłego procesu
+\[
+L_t^a:=|W_t-a|-|W_0-a|
+-\int_0^t\operatorname{sgn}(W_s-a)\,\dd W_s.
+\]
+Wybieramy podciąg zbieżny jednostajnie prawie na pewno;
+jego granica jest niemalejąca i nieujemna. Dostajemy
+\eqref{eq:tanaka} oraz \eqref{eq:local-time-occ}.
+\end{proof}
+
+\begin{zadanie}[Oczekiwany czas lokalny w zerze]
+Dla procesu Wienera $W_0=0$ obliczyć $\E L_t^0$.
+
+\emph{Rozwiązanie.} Biorąc wartości oczekiwane w
+\eqref{eq:tanaka}, zauważamy, że całka
+$\int_0^t\operatorname{sgn}(W_s)\,\dd W_s$ jest
+kwadratowo całkowalnym martyngałem o średniej zero,
+gdyż integrand jest ograniczony. Zatem
+$\E L_t^0=\E|W_t|=\sqrt{2t/\pi}$.
+Wartość jest dodatnia, mimo że $\Prob(W_s=0)=0$
+dla każdej ustalonej chwili $s>0$: czas lokalny
+mierzy nagromadzenie wizyt \emph{w dowolnie małych
+otoczeniach} zera, a nie miarę Lebesgue'a zbioru
+chwil, w których $W_s=0$.
+\end{zadanie}
+
+\begin{uwaga}[Czego jeszcze nie dowiedliśmy?]
+W tym rozdziale skonstruowaliśmy $L_t^a$ dla każdego
+\emph{ustalonego} $a$. Wspólnie ciągłą wersję w
+parametrach $(t,a)$, pełny wzór okupacyjny i
+analogiczne wyniki dla ogólnych półmartyngałów
+przedstawimy po wprowadzeniu odpowiednich narzędzi.
+Nie wolno uważać \eqref{eq:local-time-occ} za
+jednostajną w $a$ zbieżność bez dodatkowego dowodu.
+\end{uwaga}
+
+
+% ============================================================================
+% ROZDZIAL 4 — STRATONOVICH
+% ============================================================================

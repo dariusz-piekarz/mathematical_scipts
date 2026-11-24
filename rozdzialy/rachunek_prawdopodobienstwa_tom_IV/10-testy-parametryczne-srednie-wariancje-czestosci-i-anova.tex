@@ -1,0 +1,547 @@
+\chapter{Testy parametryczne: średnie, wariancje, częstości i ANOVA}
+\label{ch:parametric-tests}
+\paragraph{Powiązania i odsyłacze.} Testy opierają się na rozkładach statystyk z rozdziału~\ref{ch:statystyki} i konstrukcji testów z rozdziału~\ref{ch:testing}.
+
+
+\section{Jedna średnia: kiedy test normalny, a kiedy t-Studenta?}
+Rozpocznijmy od pomiarów czasu pracy urządzenia. Interesuje nas,
+czy średni czas przekracza wartość referencyjną $\mu_0$.
+Jeśli znamy odchylenie standardowe modelu normalnego, statystyka
+$Z=\sqrt n(\bar X-\mu_0)/\sigma$ ma dokładnie rozkład
+$\Normal(0,1)$ pod hipotezą $H_0:\mu=\mu_0$.
+Najczęściej $\sigma$ nie jest jednak znane i trzeba je oszacować
+z tych samych danych. Wtedy pojawia się rozkład t-Studenta.
+
+\begin{twierdzenie}[Dokładny test t dla jednej średniej]
+\label{thm:one-sample-t}
+Niech $n\ge2$ i $X_1,\ldots,X_n\iid\Normal(\mu,\sigma^2)$,
+gdzie $\mu\in\R$, $\sigma>0$. Niech
+$\bar X=n^{-1}\sum_iX_i$ i
+$S^2=(n-1)^{-1}\sum_i(X_i-\bar X)^2$.
+Pod $H_0:\mu=\mu_0$ statystyka
+\[
+ T=\frac{\bar X-\mu_0}{S/\sqrt n}
+\]
+ma rozkład t-Studenta z $n-1$ stopniami swobody, z wyjątkiem
+zdarzenia $S=0$, które ma prawdopodobieństwo zero.
+Tutaj $t_{\nu,q}$ oznacza kwantyl rzędu $q\in(0,1)$
+rozkładu t-Studenta z $\nu>0$ stopniami swobody.
+Dla $0<\alpha<1/2$ test dwustronny odrzucający dla
+$|T|>t_{n-1,1-\alpha/2}$ ma poziom dokładnie $\alpha$,
+a jednostronny dla $T>t_{n-1,1-\alpha}$ również ma
+poziom dokładnie $\alpha$ przy $H_0:\mu\le\mu_0$.
+\end{twierdzenie}
+\begin{proof}
+Z rozkładu próby normalnej wyprowadzonego w
+rozdziale~\ref{ch:statystyki} mamy
+$Z=\sqrt n(\bar X-\mu)/\sigma\sim\Normal(0,1)$ oraz
+$V=(n-1)S^2/\sigma^2\sim\chi^2_{n-1}$, przy czym
+$Z$ i $V$ są niezależne. Pod $H_0$ statystyka $T$ jest
+równa $Z/\sqrt{V/(n-1)}$, co definiuje rozkład t-Studenta.
+Dla alternatywy jednostronnej przy $\mu\le\mu_0$
+rozkład $T$ jest przesunięty przez niedodatni składnik
+$\sqrt n(\mu-\mu_0)/\sigma$ w liczniku, przy zachowanej
+niezależności mianownika. Stąd prawdopodobieństwo przekroczenia
+ustalonego dodatniego progu jest największe przy $\mu=\mu_0$.
+Symetria i ciągłość rozkładu t zapewniają dokładny poziom
+dla obu reguł.
+\end{proof}
+
+\begin{uwaga}[Normalność czego?]
+Test t dla jednej średniej ma dokładny rozkład pod
+założeniem, że \emph{obserwacje} są iid normalne. W teście t dla
+różnic sparowanych normalności wymagamy od \emph{różnic}, nie
+koniecznie od każdej serii oddzielnie. W regresji i ANOVA
+normalność dotyczy rozkładu błędów warunkowych, a nie połączonej
+próby ze wszystkich grup. Przy dużych próbach przybliżenia
+na podstawie CLT mogą działać bez normalności danych, ale
+zależą od ogonów rozkładu, skończoności wariancji i schematu
+próby.
+\end{uwaga}
+
+\begin{stwierdzenie}[Przedział dokładny dla średniej normalnej]
+Pod założeniami twierdzenia~\ref{thm:one-sample-t}
+przedział losowy
+\[
+ \left[\bar X-t_{n-1,1-\alpha/2}\frac S{\sqrt n},\;
+ \bar X+t_{n-1,1-\alpha/2}\frac S{\sqrt n}\right]
+\]
+obejmuje $\mu$ z prawdopodobieństwem dokładnie $1-\alpha$.
+\end{stwierdzenie}
+\begin{proof}
+To zdarzenie jest równoważne
+$|\sqrt n(\bar X-\mu)/S|\le t_{n-1,1-\alpha/2}$.
+Twierdzenie~\ref{thm:one-sample-t} dla prawdziwej średniej
+zapewnia prawdopodobieństwo $1-\alpha$.
+\end{proof}
+
+\section{Pomiary powtarzane: różnice par zamiast dwóch prób niezależnych}
+\begin{twierdzenie}[Test t dla par]\label{thm:paired-t}
+Niech pary $(X_i,Y_i)$, $i=1,\ldots,n$, będą niezależne
+między jednostkami, a różnice $D_i=X_i-Y_i$ mają wspólny
+rozkład $\Normal(\delta,\tau^2)$ z $\tau>0$ i $n\ge2$.
+Wtedy przy $H_0:\delta=0$ statystyka
+$T_D=\sqrt n\bar D/S_D$ ma dokładnie rozkład $t_{n-1}$.
+Nie wymagamy niezależności $X_i$ i $Y_i$ wewnątrz pary.
+\end{twierdzenie}
+\begin{proof}
+Zmienne $D_i$ tworzą próbę prostą normalną, więc jest to
+bezpośrednie zastosowanie twierdzenia~\ref{thm:one-sample-t}
+do obserwacji $D_1,\ldots,D_n$.
+\end{proof}
+
+\begin{zadanie}[Przed i po zmianie procedury]
+Dla ośmiu osób wyniki przed zmianą wynoszą
+$54,58,57,60,56,55,61,59$, a po zmianie
+$51,56,53,57,55,53,56,57$. Czy średnia różnica jest dodatnia?
+\par\emph{Rozwiązanie.} Różnice to
+$3,2,4,3,1,2,5,2$, stąd
+$\bar d=2{,}75$, $s_D^2=23/14\approx1{,}6429$,
+$T_D=\sqrt8\,\bar d/s_D\approx6{,}068$,
+przy siedmiu stopniach swobody. W teście dwustronnym
+wartość p jest około $0{,}00051$; w zaplanowanym teście
+jednostronnym na spadek wyniku po interwencji jest około
+$0{,}00025$. To jednak nie dowodzi przyczynowości, jeżeli
+dane nie pochodzą z odpowiednio zaprojektowanego eksperymentu.
+\end{zadanie}
+
+\section{Dwie niezależne grupy: Student czy Welch?}
+\begin{twierdzenie}[Dwie średnie przy wspólnej wariancji]
+\label{thm:two-sample-t}
+Niech $X_1,\ldots,X_n\iid\Normal(\mu_X,\sigma^2)$ i
+$Y_1,\ldots,Y_m\iid\Normal(\mu_Y,\sigma^2)$ będą niezależnymi
+próbami, gdzie $n,m\ge2$, a $\sigma>0$ jest nieznane.
+Niech
+$S_p^2=[(n-1)S_X^2+(m-1)S_Y^2]/(n+m-2)$.
+Pod $H_0:\mu_X-\mu_Y=\delta_0$ zachodzi
+\[
+ T_p=\frac{(\bar X-\bar Y)-\delta_0}
+ {S_p\sqrt{1/n+1/m}}\sim t_{n+m-2}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Ponieważ próby są niezależne,
+$Z=[(\bar X-\bar Y)-(\mu_X-\mu_Y)]/
+[\sigma\sqrt{1/n+1/m}]$ ma rozkład $\Normal(0,1)$.
+Dla każdej próby z osobna resztowa suma kwadratów podzielona
+przez $\sigma^2$ jest zmienną $\chi^2$ o odpowiednio
+$n-1$ i $m-1$ stopniach swobody; obie są niezależne
+między sobą i od obu średnich. Ich suma
+$(n+m-2)S_p^2/\sigma^2$ ma rozkład
+$\chi^2_{n+m-2}$. Iloraz $Z$ i pierwiastka ze
+średniej tej sumy daje dokładny rozkład t.
+\end{proof}
+
+Gdy wariancje są różne, podstawienie wariancji wspólnej
+może istotnie zniekształcić test, szczególnie jeśli
+liczebności grup też się różnią. Wtedy naturalną alternatywą
+jest \emph{test Welcha}:
+\[
+ T_W=\frac{(\bar X-\bar Y)-\delta_0}
+ {\sqrt{S_X^2/n+S_Y^2/m}},\qquad
+ \nu=\frac{(S_X^2/n+S_Y^2/m)^2}
+ {(S_X^2/n)^2/(n-1)+(S_Y^2/m)^2/(m-1)}.
+\]
+Rozkład $T_W$ jest zwykle \emph{przybliżany} rozkładem
+$t_\nu$, gdzie $\nu$ to losowe, niekoniecznie całkowite
+przybliżenie liczby stopni swobody Satterthwaite'a.
+Nie jest to twierdzenie o dokładnym rozkładzie t przy
+nierównych wariancjach, nawet jeśli obie próby są normalne.
+
+\begin{zadanie}[Dwie technologie produkcji]\label{zad:welch-case}
+Czasy obróbki w technologii A to
+$18,19,20,19,21,20,18,22$; w technologii B:
+$22,23,21,24,22,25,23,24$. Porównaj średnie.
+\par\emph{Rozwiązanie.} Mamy $n=m=8$,
+$\bar x=19{,}625$, $\bar y=23$, $s_X^2\approx1{,}9821$,
+$s_Y^2\approx1{,}7143$. Statystyka Welcha wynosi
+$T_W\approx-4{,}9651$, $\nu\approx13{,}927$,
+a dwustronna wartość p około $0{,}00021$.
+W tym przykładzie test ze wspólną wariancją daje bardzo
+zbliżony wynik, ale to \emph{nie dowodzi}, że w dowolnym
+niezrównoważonym badaniu obie procedury są równoważne.
+Do raportu należy dołączyć różnicę średnich
+$\bar x-\bar y=-3{,}375$ i jej przedział ufności.
+\end{zadanie}
+
+\begin{uwaga}[Nie wybieramy testu wyłącznie przez pretest wariancji]
+Procedura „najpierw test równości wariancji, potem Student lub
+Welch zależnie od p-value” zmienia rozkład końcowej reguły i
+nie jest automatycznie testem o nominalnym poziomie.
+Gdy nie mamy silnego powodu, by zakładać równość wariancji,
+Welch jest zwykle rozsądnym punktem wyjścia dla dwóch
+niezależnych grup. Z kolei silna asymetria, ciężkie ogony,
+zależność obserwacji czy mała próba wymagają dodatkowej oceny:
+sam Welch nie usuwa wszystkich tych problemów.
+\end{uwaga}
+
+\section{Testy wariancji i kiedy nie należy ich używać}
+\begin{twierdzenie}[Test chi-kwadrat jednej wariancji]
+Niech $X_i\iid\Normal(\mu,\sigma^2)$, $n\ge2$,
+$\mu\in\R$ nieznana i $\sigma>0$. Niech $v_0>0$. Pod $H_0:\sigma^2=v_0$
+statystyka $Q=(n-1)S^2/v_0$ ma rozkład
+$\chi^2_{n-1}$. Dwustronny test odrzuca dla
+$Q<\chi^2_{n-1,\alpha/2}$ lub
+$Q>\chi^2_{n-1,1-\alpha/2}$, gdzie dolne i górne
+kwantyle odpowiadają rozkładowi $\chi^2$.
+\end{twierdzenie}
+\begin{proof}
+Wynik o rozkładzie sumy kwadratów scentrowanej próby
+normalnej został udowodniony w rozdziale~\ref{ch:statystyki}.
+Pod hipotezą zerową podstawiamy $\sigma^2=v_0$.
+\end{proof}
+
+\begin{twierdzenie}[Test F równości dwóch wariancji]
+Niech niezależne próby normalne mają odpowiednio
+liczebności $n,m\ge2$ i wariancje $\sigma_X^2,\sigma_Y^2>0$.
+Pod $H_0:\sigma_X^2=\sigma_Y^2$ iloraz
+$F=S_X^2/S_Y^2$ ma rozkład Fishera--Snedecora
+$F_{n-1,m-1}$.
+\end{twierdzenie}
+\begin{proof}
+Z niezależności prób i rozkładu wariancji normalnej
+$U=(n-1)S_X^2/\sigma_X^2\sim\chi^2_{n-1}$ i
+$V=(m-1)S_Y^2/\sigma_Y^2\sim\chi^2_{m-1}$ są
+niezależne. Pod $H_0$ zachodzi
+$F=[U/(n-1)]/[V/(m-1)]$, co z definicji daje
+rozkład Fishera--Snedecora.
+\end{proof}
+
+Rozkład dokładny jest tutaj konsekwencją normalności.
+W praktyce test F jest bardzo wrażliwy na jej naruszenie.
+Jeśli zadaniem jest sprawdzenie założenia jednorodności
+rozproszenia w wielu grupach, często używa się procedur
+Levene'a, Browna--Forsythe'a lub Flignera--Killeena.
+Ich konstrukcje, ograniczenia i porównania z testami
+normalności (w tym Shapiro--Wilka) omówimy osobno w części
+o diagnostyce modeli.
+
+\section{Jednoczynnikowa ANOVA: skąd pochodzi statystyka F?}
+\label{sec:anova-introduction}
+\begin{definicja}[Model jednoczynnikowej ANOVA]
+Niech $k\ge2$ i $n_j\ge2$ dla $j=1,\ldots,k$.
+Obserwacje $Y_{ji}$ są niezależne, a
+\[
+ Y_{ji}=\mu_j+\varepsilon_{ji},\qquad
+ \varepsilon_{ji}\iid\Normal(0,\sigma^2),\qquad\sigma>0.
+\]
+Hipoteza zerowa ma postać
+$H_0:\mu_1=\cdots=\mu_k$.
+Niech $N=\sum_jn_j$,
+$\bar Y_j=n_j^{-1}\sum_{i=1}^{n_j}Y_{ji}$ i
+$\bar Y=N^{-1}\sum_jn_j\bar Y_j$.
+Definiujemy sumy kwadratów
+$SS_B=\sum_jn_j(\bar Y_j-\bar Y)^2$ (między grupami)
+oraz $SS_W=\sum_j\sum_i(Y_{ji}-\bar Y_j)^2$
+(wewnątrz grup).
+\end{definicja}
+
+\begin{lemat}[Ortogonalny rozkład sum kwadratów]
+\label{lem:anova-decomp}
+Dla dowolnych liczb rzeczywistych $y_{ji}$ przy
+zdefiniowanych średnich zachodzi
+\[
+ \sum_{j=1}^k\sum_{i=1}^{n_j}(y_{ji}-\bar y)^2
+ =\sum_j\sum_i(y_{ji}-\bar y_j)^2
+ +\sum_jn_j(\bar y_j-\bar y)^2.
+\]
+\end{lemat}
+\begin{proof}
+Dla obserwacji z grupy $j$ zapisujemy
+$y_{ji}-\bar y=(y_{ji}-\bar y_j)+(\bar y_j-\bar y)$.
+Po podniesieniu do kwadratu i zsumowaniu wyraz mieszany
+znika, gdyż $\sum_i(y_{ji}-\bar y_j)=0$.
+Pozostałe dwa składniki są dokładnie $SS_W$ i $SS_B$.
+\end{proof}
+
+\begin{twierdzenie}[Dokładny rozkład statystyki ANOVA]
+\label{thm:anova-f}
+W modelu jednoczynnikowej ANOVA pod $H_0$ zmienne
+$SS_B/\sigma^2$ i $SS_W/\sigma^2$ są niezależne,
+a ich rozkłady wynoszą odpowiednio $\chi^2_{k-1}$
+oraz $\chi^2_{N-k}$. W konsekwencji
+\[
+ F=\frac{SS_B/(k-1)}{SS_W/(N-k)}\sim F_{k-1,N-k}
+\]
+i test odrzucający przy dużych wartościach $F$ ma
+poziom dokładnie $\alpha$, jeśli użyjemy kwantyla
+$F_{k-1,N-k,1-\alpha}$.
+\end{twierdzenie}
+\begin{proof}
+Zapiszmy wszystkie $N$ obserwacji jako wektor
+$Y\in\R^N$ o postaci $Y=\mu\mathbf1+\varepsilon$
+pod $H_0$, gdzie $\varepsilon\sim\Normal_N(0,\sigma^2I_N)$.
+Niech $G\subset\R^N$ oznacza podprzestrzeń wektorów
+stałych w obrębie każdej grupy. Ma ona wymiar $k$ i zawiera
+wektor $\mathbf1$. Oznaczmy przez $P_G$ rzut
+ortogonalny na $G$, a przez $P_0$ rzut na
+$\operatorname{span}\{\mathbf1\}$. Wówczas
+$P_G-P_0$ i $I_N-P_G$ są rzutami ortogonalnymi na
+wzajemnie prostopadłe podprzestrzenie o wymiarach
+odpowiednio $k-1$ i $N-k$.
+
+Wektor $P_GY$ ma na pozycjach grupy $j$ wartość
+$\bar Y_j$, podczas gdy $P_0Y=\bar Y\mathbf1$.
+Zatem $SS_B=\|(P_G-P_0)Y\|^2$ i
+$SS_W=\|(I_N-P_G)Y\|^2$.
+Oba rzuty zerują $\mathbf1$, stąd pod $H_0$ możemy w tych
+wyrażeniach zastąpić $Y$ przez $\varepsilon$.
+Po wyborze ortonormalnych baz obu podprzestrzeni
+współrzędne rzutów $\varepsilon/\sigma$ są niezależnymi
+standardowymi zmiennymi normalnymi. Wynika to z
+ortogonalnej niezmienniczości $\Normal_N(0,I_N)$:
+współrzędne obu rzutów są funkcjami rozłącznych zbiorów
+niezależnych współrzędnych. Sumy ich kwadratów mają
+zatem wskazane rozkłady chi-kwadrat i są niezależne.
+Iloraz niezależnych średnich takich sum ma z definicji
+rozkład $F_{k-1,N-k}$.
+\end{proof}
+
+\begin{zadanie}[Trzy metody produkcji]\label{zad:anova-three}
+Dla trzech niezależnych grup po osiem obserwacji mamy:
+$A=(18,19,20,19,21,20,18,22)$,
+$B=(22,23,21,24,22,25,23,24)$ i
+$C=(25,27,26,24,28,26,27,25)$.
+Przetestuj równość średnich i zinterpretuj wynik.
+\par\emph{Rozwiązanie.} Średnie grup wynoszą odpowiednio
+$19{,}625$, $23$ i $26$. Dla $N=24$ mamy $SS_B=162{,}75$, $SS_W=37{,}875$,
+zatem $F\approx45{,}119$ o stopniach swobody $(2,21)$ i
+wartości p około $2{,}50\cdot10^{-8}$.
+Przykładowa miara wielkości efektu to
+$\eta^2=SS_B/(SS_B+SS_W)\approx0{,}811$; opisuje część
+zmienności empirycznej wyjaśnianą przez podział na grupy,
+nie dowodzi zaś przyczynowego wpływu metody.
+Hipoteza wszystkich równych średnich zostaje odrzucona przy
+konwencjonalnych poziomach istotności. Samo ANOVA nie
+wskazuje jednak, \emph{które} pary średnich się różnią.
+Na podstawie testu zbiorczego nie wolno też bez dodatkowej
+procedury deklarować istotności wszystkich trzech porównań.
+\end{zadanie}
+
+\begin{uwaga}[Wielkość efektu a estymator poprawiony]
+W jednoczynnikowej ANOVA miara $\eta^2=SS_B/(SS_B+SS_W)$
+jest prostym opisem danych, lecz ma dodatnią skłonność do
+zawyżania udziału wariancji w małych próbach, także gdy
+wszystkie średnie populacyjne są równe. Często raportuje się
+również miarę $\omega^2$, zdefiniowaną (przed ewentualnym
+obcięciem ujemnego wyniku do zera) przez
+\[
+ \widehat{\omega}^2=
+ \frac{SS_B-(k-1)MS_W}{SS_B+SS_W+MS_W},\qquad
+ MS_W:=\frac{SS_W}{N-k}.
+\]
+Sama wielkość efektu nie koryguje błędów doboru próby ani
+nie dowodzi przyczynowości. W raportach należy rozróżnić
+miarę empiryczną, estymator parametru populacyjnego oraz
+jego niepewność.
+\end{uwaga}
+
+\begin{uwaga}[ANOVA, Welch--ANOVA, ANCOVA i MANOVA]
+Jednoczynnikowa ANOVA zakłada wspólną wariancję błędów i
+niezależność obserwacji. Przy różnicach wariancji można rozważyć
+ANOVA Welcha. Jeśli wynik zależy również od ciągłego
+kowariantu (np. wieku albo wartości wyjściowej), w określonym
+modelu można stosować ANCOVA. Jeśli każda jednostka ma kilka
+współzależnych wyników, pojawia się MANOVA. Dla pomiarów
+powtarzanych konieczne jest uwzględnienie zależności
+wewnątrz jednostki. Każda z tych konstrukcji będzie miała
+osobny, szczegółowy rozdział; nie są one zamiennymi etykietami.
+\end{uwaga}
+
+\section{Test dokładny dla częstości i testy chi-kwadrat}
+\begin{stwierdzenie}[Test dwumianowy jako test dokładny]
+Niech $S\sim\Bin(n,p)$, $n\in\N$, $n\ge1$, oraz
+$p_0\in(0,1)$. Przy hipotezie $H_0:p\le p_0$ i
+alternatywie $H_1:p>p_0$ wartość p dla obserwacji $S=s$
+wynosi $P_{p_0}(S\ge s)$. Przy alternatywie
+$H_1:p<p_0$ wobec $H_0:p\ge p_0$ wynosi
+$P_{p_0}(S\le s)$. Odrzucanie odpowiednio dla małych
+wartości p daje poziom co najwyżej $\alpha$.
+\end{stwierdzenie}
+\begin{proof}
+Wynika to z monotoniczności stochastycznej
+$\Bin(n,p)$ względem $p$, udowodnionej przez
+sprzężenie w twierdzeniu~\ref{thm:binomial-ump}, oraz
+z twierdzenia~\ref{thm:pvalue-valid}.
+\end{proof}
+
+\begin{twierdzenie}[Statystyka Pearsona dla wielomianowego modelu prostego]
+\label{thm:pearson-chi-square}
+Niech $m\ge2$ i $p_1,\ldots,p_m>0$, przy
+$\sum_jp_j=1$. Niech $(N_1,\ldots,N_m)$ ma rozkład
+wielomianowy z parametrami $n$ i
+$(p_1,\ldots,p_m)$. Wtedy przy $n\to\infty$
+\[
+ Q_n=\sum_{j=1}^m\frac{(N_j-np_j)^2}{np_j}
+ \xrightarrow{d}\chi^2_{m-1}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Każdą z $n$ niezależnych obserwacji reprezentujemy wektorem
+jednostkowym $Z_i\in\R^m$ o rozkładzie
+$P(Z_i=e_j)=p_j$. Mamy
+$\E Z_i=p=(p_1,\ldots,p_m)^{\mathsf T}$ oraz
+$\Cov(Z_i)=\diag(p)-pp^{\mathsf T}$.
+Z wielowymiarowego CLT
+$\sqrt n(N/n-p)\xrightarrow{d}\Normal_m(0,
+\diag(p)-pp^{\mathsf T})$.
+Niech $D=\diag(p)$ i $u=(\sqrt{p_1},\ldots,\sqrt{p_m})$.
+Po przekształceniu liniowym $D^{-1/2}$ macierz
+kowariancji granicznej ma postać
+$I_m-uu^{\mathsf T}$, czyli rzut ortogonalny na
+$(m-1)$-wymiarową podprzestrzeń $u^\perp$, bo
+$\|u\|^2=1$. Zgodnie z twierdzeniem o ciągłym
+odwzorowaniu $Q_n$ zbiega do kwadratu normy wektora
+normalnego z tą macierzą kowariancji. W ortonormalnej
+bazie $u^\perp$ jest to suma kwadratów $m-1$
+niezależnych zmiennych $\Normal(0,1)$, czyli
+$\chi^2_{m-1}$.
+\end{proof}
+
+\begin{uwaga}[Estymowane prawdopodobieństwa i małe liczebności]
+Powyższe twierdzenie dotyczy \emph{ustalonych}, znanych
+wartości $p_j$ pod $H_0$. Jeśli estymujemy parametry z tej
+samej próby, liczba stopni swobody może się zmienić; wymaga
+to osobnej analizy regularności i rzędu modelu.
+Gdy oczekiwane liczebności $np_j$ są małe, asymptotyczne
+przybliżenie może być niedokładne. Reguła typu
+„wszystkie oczekiwane liczebności co najmniej 5” jest
+praktyczną heurystyką, a nie twierdzeniem zapewniającym
+określony błąd poziomu testu. Testy dokładne i procedury
+symulacyjne bywają wówczas lepsze.
+\end{uwaga}
+
+\begin{uwaga}[Poziom 5\% i dwie strony]
+Test jednostronny na poziomie $\alpha$ ma dualną
+\emph{jednostronną} granicę ufności poziomu $1-\alpha$.
+Dwustronny przedział równych ogonów poziomu $1-\alpha$
+wykorzystuje zwykle kwantyle odpowiadające $\alpha/2$.
+Nie wolno utożsamiać automatycznie obu procedur. W
+rozdziale~\ref{ch:confidence-intervals} przeprowadzimy
+formalną konstrukcję przez odwracanie testów.
+\end{uwaga}
+
+\section{Praktyczne drzewo wyboru testu}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.31\textwidth}>{\raggedright\arraybackslash}p{0.27\textwidth}>{\raggedright\arraybackslash}p{0.31\textwidth}}
+\toprule
+\textbf{Dane i pytanie} & \textbf{Punkt wyjścia} & \textbf{Co trzeba dodatkowo sprawdzić?}\\
+\midrule
+Jedna średnia, znana $\sigma$, iid normalne & Test z & Czy $\sigma$ jest naprawdę znana z modelu?\\
+Jedna średnia, nieznana $\sigma$ & Test t & Rozkład, ciężkie ogony, niezależność\\
+Dwa pomiary tych samych osób & Test t dla różnic & Zależność pomiarów i rozkład \emph{różnic}\\
+Dwie niezależne grupy & Test Welcha & Dobór próby, asymetria, ogony, liczebności\\
+Więcej niż dwie niezależne grupy & ANOVA lub ANOVA Welcha & Wariancje, niezależność, efekty i post hoc\\
+Jedna wariancja w modelu normalnym & Test $\chi^2$ & Wrażliwość na brak normalności\\
+Równość dwóch wariancji w modelu normalnym & Test F & Bardzo duża wrażliwość na ogony\\
+Odsetek i mała liczba sukcesów & Dokładny test dwumianowy & Schemat próby i kierunek alternatywy\\
+Kilka kategorii i znane proporcje & Test Pearsona & Oczekiwane liczebności; parametry estymowane\\
+Wiele pomiarów tej samej osoby & Model mieszany lub metody dla powtarzanych pomiarów & Struktura korelacji, braki danych\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Raportowanie wyników.}
+Poprawny raport powinien zawierać rodzaj testu, hipotezę
+zerową i alternatywną, jednostkę analizy, liczebności,
+oszacowanie efektu i jego przedział, statystykę wraz ze
+stopniami swobody, wartość p, sprawdzone założenia i
+ograniczenia. Nie należy pisać „test potwierdził normalność”
+ani „brak istotności dowodzi równości”.
+
+\begin{lstlisting}[language=Python,caption={Kompletny przykład: Welch, ANOVA i diagnostyka w Pythonie (SciPy).}]
+from scipy.stats import f_oneway, levene, shapiro, ttest_ind
+
+A = [18, 19, 20, 19, 21, 20, 18, 22]
+B = [22, 23, 21, 24, 22, 25, 23, 24]
+C = [25, 27, 26, 24, 28, 26, 27, 25]
+
+welch = ttest_ind(A, B, equal_var=False)
+anova = f_oneway(A, B, C)
+normality_A = shapiro(A)
+variances = levene(A, B, C, center="median")
+
+print("Welch A vs B:", welch)
+print("ANOVA A, B, C:", anova)
+print("Shapiro-Wilk A:", normality_A)
+print("Brown-Forsythe (Levene median):", variances)
+\end{lstlisting}
+
+Ten program ilustruje sposób wywołania procedur, ale jego
+wyniki wymagają \emph{analizy projektu}, a nie tylko odczytania
+kolumny p-value. Shapiro--Wilk dla surowej grupy A nie jest
+uniwersalnym pretestem, od którego zależy wybór ANOVA;
+jednorodność wariancji też nie wynika z dużej wartości p.
+
+\Needspace{20\baselineskip}
+\begin{lstlisting}[language=Julia,caption={Porównanie grup metodą Welcha w Julii: obliczenie statystyki i p-value.}]
+using Statistics, Distributions
+
+A = [18, 19, 20, 19, 21, 20, 18, 22]
+B = [22, 23, 21, 24, 22, 25, 23, 24]
+n, m = length(A), length(B)
+vA, vB = var(A), var(B)  # wariancja z mianownikiem n-1
+se2 = vA / n + vB / m
+tstat = (mean(A) - mean(B)) / sqrt(se2)
+df = se2^2 / ((vA/n)^2/(n-1) + (vB/m)^2/(m-1))
+pvalue = 2 * cdf(TDist(df), -abs(tstat))
+println((t=tstat, df=df, p=pvalue))
+\end{lstlisting}
+
+Pakiet \texttt{Distributions.jl} jest zależnością zewnętrzną;
+przed uruchomieniem należy go zainstalować w używanym projekcie.
+Wynik tego programu jest aproksymacją Satterthwaite'a,
+a nie dokładnym rozkładem t przy nierównych wariancjach.
+
+\section{Studium decyzyjne: od wyniku testu do zalecenia}
+Rozważmy ponownie trzy technologie z zadania~\ref{zad:anova-three}.
+Wynik ANOVA daje bardzo mocne świadectwo przeciw hipotezie
+jednakowych średnich, ale sam nie określa najlepszej decyzji.
+Przed wyborem technologii należy odpowiedzieć na następujące
+pytania.
+
+\begin{enumerate}
+\item \emph{Co jest parametrem celu?} Jeśli mierzony czas
+pracy chcemy minimalizować, sama statystyczna istotność
+różnicy nie przesądza, czy oszczędność czasu rekompensuje
+koszty urządzeń. Warto podać różnice średnich w jednostkach
+fizycznych, a nie jedynie statystykę $F$.
+\item \emph{Jak powstały grupy?} Jeśli te same urządzenia
+badano wielokrotnie, nie można ich traktować jako trzech
+prób niezależnych. Jeśli technologię przydzielano zależnie
+od typu maszyny, nie można przypisać stwierdzonej różnicy
+wyłącznie wpływowi technologii.
+\item \emph{Jak sprawdzono model?} Wykresy reszt, rozkład
+błędów warunkowych i możliwa heterogeniczność wariancji
+są ważniejsze niż mechaniczne uruchomienie testu
+Shapiro--Wilka osobno dla każdej grupy. Przy nierównych
+wariancjach trzeba rozważyć ANOVA Welcha.
+\item \emph{Które porównania są celem?} Jeśli wcześniej
+zaplanowano porównanie A z B, można analizować ten kontrast.
+Jeżeli po obejrzeniu danych wybieramy wszystkie trzy pary,
+trzeba kontrolować wielokrotność (np. procedurą Tukeya
+w odpowiednim modelu lub Gamesa--Howella przy nierównych
+wariancjach).
+\item \emph{Jak raportować?} Należy podać liczebności,
+średnie i rozproszenie w grupach, sumy kwadratów, stopnie
+swobody, wartość $F$ i p-value, miarę efektu oraz
+przedziały ufności dla istotnych praktycznie kontrastów.
+Dodatkowo trzeba wskazać ograniczenia modelu i możliwe
+czynniki zakłócające.
+\end{enumerate}
+
+\begin{uwaga}[Brak istotności a równoważność]
+Nawet jeśli test różnicy średnich nie odrzuca hipotezy
+zerowej, nie wolno mówić, że dwie metody są równoważne.
+Aby wykazać równoważność, należy z góry określić
+akceptowalny margines $\Delta>0$ oraz przetestować
+odpowiednio hipotezę braku równoważności. Omówimy
+formalną procedurę dwóch jednostronnych testów (TOST)
+w części poświęconej rozszerzeniom testowania hipotez.
+\end{uwaga}
+
+
+
+% ================================================================
+% ROZDZIAL 11 -- PRZEDZIALY UFNOSCI
+% ================================================================

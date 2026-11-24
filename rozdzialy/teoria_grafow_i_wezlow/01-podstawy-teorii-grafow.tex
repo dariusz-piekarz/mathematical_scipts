@@ -1,0 +1,660 @@
+\chapter{Podstawy teorii grafów}
+\label{ch:tg-podstawy}
+
+Teoria grafów bada układy obiektów i relacji między nimi. Wierzchołki będą
+reprezentować obiekty, a krawędzie ich powiązania. Już na poziomie tego
+prostego opisu pojawiają się trzy różne perspektywy: kombinatoryczna
+(liczenie połączeń i dróg), algebraiczna (macierze) i topologiczna
+(realizacja grafu jako przestrzeni jednowymiarowej). Pierwsze dwa rozdziały
+poświęcamy części kombinatorycznej, nie zakładając znajomości żadnego
+pojęcia z teorii grafów.
+
+\section{Graf prosty, multigraf i realizacja geometryczna}
+\label{sec:tg-obiekty}
+
+\begin{definicja}[Graf prosty]
+\emph{Skończonym grafem prostym nieskierowanym} nazywamy parę
+$G=(V,E)$, gdzie $V$ jest niepustym, skończonym zbiorem
+\emph{wierzchołków}, natomiast
+$E\subseteq\binom V2=\{\{u,v\}:u,v\in V,\ u\ne v\}$
+jest zbiorem \emph{krawędzi}. Zapis $uv\in E$ oznacza
+$\{u,v\}\in E$. Wierzchołki $u,v$ są \emph{sąsiadujące},
+gdy $uv\in E$; wierzchołek $u$ jest wówczas \emph{incydentny}
+z krawędzią $uv$.
+\end{definicja}
+
+Z definicji żadna krawędź nie łączy wierzchołka z nim samym i żadna para
+różnych wierzchołków nie jest połączona więcej niż jedną krawędzią.
+Ważne jest jednak, by nie utożsamiać pojęcia grafu z jego rysunkiem:
+przecięcia linii na rysunku nie są nowymi wierzchołkami, o ile ich
+nie zaznaczono. Dwa różne rysunki mogą opisywać dokładnie ten sam graf.
+
+\begin{definicja}[Multigraf z pętlami]
+\emph{Skończonym multigrafem nieskierowanym z pętlami}
+nazywamy trójkę $G=(V,E,\partial)$, w której $V$ i $E$ są
+skończonymi zbiorami, a $\partial:E\to (V\times V)/\mathfrak S_2$
+przyporządkowuje każdej krawędzi nieuporządkowaną parę
+\emph{z zachowaniem krotności}. Zapis $\partial(e)=[(u,v)]$
+oznacza orbitę pary $(u,v)$ przy zamianie współrzędnych;
+w szczególności $[(u,u)]$ jest poprawną parą równych końców.
+Jeśli $u=v$, krawędź $e$ nazywamy \emph{pętlą}.
+Różne elementy $e,f\in E$ mogą mieć te same końce;
+wówczas są \emph{krawędziami równoległymi}.
+\end{definicja}
+
+W całej pierwszej części, jeśli nie podano inaczej, \emph{graf} oznacza
+graf prosty nieskierowany i skończony. Kiedy mówimy o multigrafie,
+powiemy to jawnie. Później multigrafy będą potrzebne m.in.
+przy diagramach węzłów i grafach dualnych triangulacji.
+
+\begin{center}
+\begin{tikzpicture}[scale=.91,line cap=round]
+  \begin{scope}[shift={(-3.05,0)}]
+    \node[tgBlueVertex] (a) at (0,0) {$a$};
+    \node[tgBlueVertex] (b) at (2.0,0) {$b$};
+    \node[tgBlueVertex] (c) at (1,1.55) {$c$};
+    \draw[tgEdge] (a)--(b)--(c)--(a);
+    \node[font=\small,text=tgNavy] at (1,-.70) {graf prosty};
+  \end{scope}
+  \begin{scope}[shift={(2.2,0)}]
+    \node[tgRedVertex] (u) at (0,0) {$u$};
+    \node[tgRedVertex] (v) at (2.0,0) {$v$};
+    \draw[tgEdge] (u) to[bend left=26] (v);
+    \draw[tgAccent] (u) to[bend right=26] (v);
+    \draw[tgEdge] (u) .. controls (-1.10,1.15) and (-1.10,-.38) .. (u);
+    \node[font=\small,text=tgNavy,align=center] at (1,-.85)
+      {multigraf z pętlą};
+  \end{scope}
+\end{tikzpicture}
+
+{\footnotesize Po lewej $E=\{ab,bc,ca\}$. Po prawej są dwie różne
+krawędzie o końcach $u,v$ oraz pętla przy $u$.}
+\end{center}
+
+\begin{definicja}[Graf pełny i graf bez krawędzi]
+Dla liczby całkowitej $n\ge 1$ przez $K_n$ oznaczamy graf
+\emph{pełny} o wierzchołkach $\{1,\ldots,n\}$ i wszystkich
+możliwych krawędziach. Graf \emph{bez krawędzi} na $n$
+wierzchołkach ma zbiór krawędzi równy $\varnothing$;
+można go oznaczyć przez $\overline{K_n}$.
+Od grafu bez krawędzi odróżniamy \emph{graf zerowy}
+$G_0=(\varnothing,\varnothing)$. W pierwszych rozdziałach,
+zgodnie z konwencją definicji grafu prostego, rozważamy
+grafy o niepustym zbiorze wierzchołków; $G_0$ pojawia się
+jedynie przy operacjach usuwania i w konwencjach brzegowych.
+\end{definicja}
+
+\begin{przyklad}[Liczenie krawędzi grafu pełnego]
+Każda z $n$ etykiet sąsiaduje w $K_n$ z $n-1$ pozostałymi.
+Licząc uporządkowane pary końców, dostajemy $n(n-1)$,
+ale każdą krawędź policzyliśmy dwukrotnie. Stąd
+$|E(K_n)|=\binom n2=n(n-1)/2$.
+Na przykład $K_4$ ma sześć krawędzi. Rysując go na płaszczyźnie
+z dwoma przecinającymi się przekątnymi, nie tworzymy z ich
+przecięcia piątego wierzchołka.
+\end{przyklad}
+
+\begin{definicja}[Izomorfizm]
+Niech $G=(V,E)$ i $H=(W,F)$ będą grafami prostymi.
+\emph{Izomorfizmem grafów} $G\to H$ nazywamy bijekcję
+$f:V\to W$, dla której
+$uv\in E\iff f(u)f(v)\in F$ dla wszystkich różnych $u,v\in V$.
+Piszemy wtedy $G\cong H$.
+\end{definicja}
+
+Izomorfizm zmienia jedynie nazwy wierzchołków. Liczba wierzchołków,
+liczba krawędzi, stopnie, cykle oraz liczba składowych spójnych
+muszą zatem zgadzać się w grafach izomorficznych. Zgodność tych
+wielkości nie wystarcza jednak zwykle do izomorfizmu.
+
+\begin{przyklad}[Niezgodność wykryta przez trójkąty]
+Graf graniastosłupa trójkątnego i graf pełny dwudzielny $K_{3,3}$
+mają po sześć wierzchołków, dziewięć krawędzi i wszystkie stopnie
+równe trzy. Pierwszy zawiera cykl długości trzy, natomiast drugi
+nie zawiera żadnego cyklu nieparzystego. Nie są więc izomorficzne.
+To przykład, dlaczego sam ciąg stopni nie klasyfikuje grafów.
+\end{przyklad}
+
+\begin{definicja}[Realizacja geometryczna]
+Dla grafu prostego $G=(V,E)$ rozważmy przestrzeń
+$V\sqcup\bigsqcup_{e\in E}[0,1]_e$ i utożsammy
+końce odcinka $[0,1]_e$ z dwoma wierzchołkami
+należącymi do krawędzi $e$. Otrzymany iloraz
+$|G|$ nazywamy \emph{realizacją geometryczną} grafu.
+\end{definicja}
+
+Realizacja jest jednowymiarowym kompleksem CW. Jej definicja nie
+zależy od tego, jak rysujemy graf na kartce. W szczególności
+samo przecinanie się krzywych na rysunku nie prowadzi do
+utożsamienia odpowiednich punktów w $|G|$.
+
+\section{Stopnie wierzchołków i podstawowe rachunki}
+\label{sec:tg-stopnie}
+
+\begin{definicja}[Stopień]
+Dla grafu prostego $G=(V,E)$ i $v\in V$ przez
+$N_G(v)=\{u\in V:uv\in E\}$ oznaczamy
+\emph{sąsiedztwo} $v$, a liczbę $d_G(v)=|N_G(v)|$
+nazywamy \emph{stopniem} $v$. W multigrafie stopień
+jest liczbą końców krawędzi incydentnych z danym
+wierzchołkiem; każda pętla wnosi do stopnia dwa.
+\end{definicja}
+
+W grafie prostym zachodzi $0\le d_G(v)\le |V|-1$.
+Stopień zero oznacza wierzchołek izolowany, a stopień jeden
+--- liść. Dla skończonego niepustego grafu definiujemy
+$\delta(G)=\min_{v\in V}d_G(v)$ i
+$\Delta(G)=\max_{v\in V}d_G(v)$.
+
+\begin{twierdzenie}[Lemat o uściskach dłoni]
+Niech $G=(V,E)$ będzie skończonym multigrafem
+nieskierowanym, z dopuszczeniem pętli, a $d_G(v)$
+niech liczy każdą pętlę dwukrotnie. Wówczas
+\[
+\sum_{v\in V}d_G(v)=2|E|.
+\]
+W szczególności liczba wierzchołków nieparzystego
+stopnia jest parzysta, także gdy multigraf ma pętle.
+\end{twierdzenie}
+
+\begin{proof}
+Rozważmy zbiór incydencji, którego elementami są pary
+$(v,h)$, gdzie $h$ jest końcem pewnej krawędzi przylegającym
+do $v$. Dla każdej krawędzi są dokładnie dwa takie końce,
+również wtedy, gdy jest ona pętlą. Liczba wszystkich
+incydencji wynosi zatem $2|E|$. Jeśli natomiast
+najpierw pogrupujemy incydencje według wierzchołków,
+to przy $v$ otrzymamy dokładnie $d_G(v)$ końców.
+Oba sposoby zliczania dają pierwszą równość.
+
+Niech $V_{\mathrm{odd}}$ będzie zbiorem wierzchołków
+nieparzystego stopnia. Redukując uzyskaną równość modulo
+$2$, otrzymujemy
+$0\equiv\sum_{v\in V}d_G(v)\equiv
+|V_{\mathrm{odd}}|\pmod2$, co dowodzi drugiego twierdzenia.
+\end{proof}
+
+\begin{przyklad}[Obliczenie stopni]
+Weźmy graf o wierzchołkach $a,b,c,d,e$ i krawędziach
+$ab,ac,ad,bc,cd$. Wówczas
+$(d(a),d(b),d(c),d(d),d(e))=(3,2,3,2,0)$.
+Suma stopni wynosi $10=2\cdot5$. Dokładnie dwa
+wierzchołki mają nieparzysty stopień. Wierzchołek $e$
+jest izolowany.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[scale=.96]
+  \node[tgBlueVertex] (a) at (0,1.4) {$a$};
+  \node[tgRedVertex] (b) at (-1.8,0) {$b$};
+  \node[tgRedVertex] (c) at (1.8,0) {$c$};
+  \node[tgBlueVertex] (d) at (0,-1.25) {$d$};
+  \node[tgTealVertex] (e) at (3.5,1.05) {$e$};
+  \draw[tgEdge] (a)--(b)--(c)--(a);
+  \draw[tgEdge] (a)--(d)--(c);
+  \node[font=\footnotesize,text=tgNavy] at (3.5,.45) {$d(e)=0$};
+\end{tikzpicture}
+
+{\footnotesize Przykład z pięcioma krawędziami; izolowany
+wierzchołek nie wpływa na sumę stopni.}
+\end{center}
+
+\begin{wniosek}
+Nie istnieje graf z dokładnie jednym wierzchołkiem
+nieparzystego stopnia. Jeżeli graf prosty o $n$
+wierzchołkach jest $r$-regularny (czyli każdy wierzchołek
+ma stopień $r$), to $nr$ jest parzyste i
+$|E|=nr/2$.
+\end{wniosek}
+
+\begin{proof}
+Obie własności wynikają bezpośrednio z poprzedniego
+twierdzenia: odpowiednio z parzystości liczby
+wierzchołków nieparzystego stopnia i ze wzoru
+$\sum_{v\in V}d(v)=nr=2|E|$.
+\end{proof}
+
+\section{Podgrafy, dopełnienie i macierz sąsiedztwa}
+\label{sec:tg-podgrafy}
+
+\begin{definicja}[Podgraf i podgraf indukowany]
+Niech $G=(V,E)$ będzie grafem prostym. Graf
+$H=(W,F)$ jest jego \emph{podgrafem}, jeśli
+$W\subseteq V$ i $F\subseteq E\cap\binom W2$.
+Dla $W\subseteq V$, $W\ne\varnothing$, graf
+$G[W]=(W,E\cap\binom W2)$ nazywamy
+\emph{podgrafem indukowanym przez $W$}.
+\end{definicja}
+
+W podgrafie można usuwać zarówno wierzchołki, jak i część
+krawędzi pomiędzy pozostałymi wierzchołkami. W podgrafie
+indukowanym zachowujemy \emph{wszystkie} krawędzie między
+wybranymi wierzchołkami. Notacja $G-e$ oznacza usunięcie
+samej krawędzi $e$; notacja $G-v$ usuwa wierzchołek $v$
+wraz z wszystkimi jego krawędziami.
+
+\begin{definicja}[Dopełnienie]
+Dla grafu prostego $G=(V,E)$ jego
+\emph{dopełnienie} $\overline G$ jest grafem na
+tym samym zbiorze wierzchołków, w którym
+$uv\in E(\overline G)$ wtedy i tylko wtedy,
+gdy $u\ne v$ oraz $uv\notin E(G)$.
+\end{definicja}
+
+\begin{stwierdzenie}
+Dla grafu prostego $G$ o $n$ wierzchołkach oraz
+każdego $v\in V(G)$ zachodzi
+$d_{\overline G}(v)=n-1-d_G(v)$, a ponadto
+$|E(\overline G)|=\binom n2-|E(G)|$.
+\end{stwierdzenie}
+
+\begin{proof}
+Spośród pozostałych $n-1$ wierzchołków dokładnie
+$d_G(v)$ jest sąsiadami $v$ w $G$. Pozostałe
+$n-1-d_G(v)$ są i tylko one sąsiadami $v$ w
+$\overline G$. Każda nieuporządkowana para różnych
+wierzchołków należy dokładnie do jednego ze zbiorów
+$E(G)$, $E(\overline G)$, zatem sumy ich mocy dają
+$\binom n2$.
+\end{proof}
+
+\begin{definicja}[Macierz sąsiedztwa]
+Niech $G=(V,E)$ będzie grafem prostym o
+$V=\{v_1,\ldots,v_n\}$. \emph{Macierzą sąsiedztwa}
+nazywamy $A_G=(a_{ij})\in M_n(\mathbb Z)$,
+gdzie $a_{ij}=1$, jeśli $v_iv_j\in E$, oraz
+$a_{ij}=0$ w przeciwnym przypadku.
+\end{definicja}
+
+Macierz $A_G$ jest symetryczna i ma zerową przekątną.
+Sumy wierszy to stopnie wierzchołków.
+
+\begin{przyklad}[Ścieżka na czterech wierzchołkach]
+Niech $V=\{1,2,3,4\}$, a $E=\{12,23,34\}$.
+Wtedy
+\[
+A_G=\begin{pmatrix}
+0&1&0&0\\1&0&1&0\\0&1&0&1\\0&0&1&0
+\end{pmatrix}.
+\]
+Mnożenie $A_G(1,1,1,1)^T$ daje $(1,2,2,1)^T$,
+a więc wektor stopni. Uogólnienie tej obserwacji
+poprowadzi nas później do laplasjanu grafu i
+jego widma.
+\end{przyklad}
+
+\begin{stwierdzenie}[Zliczanie spacerów macierzami]
+Niech $G$ będzie grafem prostym o macierzy sąsiedztwa
+$A_G$. Dla liczby całkowitej $k\ge0$ element
+$(A_G^k)_{ij}$ jest równy liczbie ciągów
+$(v_i=v_{i_0},v_{i_1},\ldots,v_{i_k}=v_j)$,
+w których każda kolejna para jest krawędzią grafu.
+Dla $k=0$ liczymy ciąg zerowej długości tylko wtedy,
+gdy $i=j$.
+\end{stwierdzenie}
+
+\begin{proof}
+Dla $k=0$ twierdzenie jest równością $A_G^0=I$.
+Dla $k=1$ jest definicją macierzy sąsiedztwa.
+Załóżmy, że jest prawdziwe dla $k$. Z definicji
+mnożenia macierzy
+$(A_G^{k+1})_{ij}=\sum_{r=1}^n(A_G^k)_{ir}a_{rj}$.
+Każdy ciąg długości $k+1$ kończący się w $v_j$
+ma dokładnie jeden przedostatni wierzchołek $v_r$.
+Wybór poprzednich $k$ kroków daje $(A_G^k)_{ir}$
+możliwości, a ostatni krok istnieje dokładnie przy
+$a_{rj}=1$. Sumowanie po $r$ zlicza wszystkie
+ciągi dokładnie raz. Indukcja jest zakończona.
+\end{proof}
+
+Ważna subtelność: takie ciągi mogą wielokrotnie odwiedzać
+ten sam wierzchołek lub tę samą krawędź. Nie są więc z zasady
+drogami prostymi ani cyklami.
+
+\section{Spacery, szlaki, ścieżki i cykle}
+\label{sec:tg-drogi}
+
+\begin{definicja}[Spacer, szlak i ścieżka]
+Niech $G=(V,E)$ będzie grafem prostym.
+\emph{Spacerem} długości $k\ge0$ z $v_0$ do $v_k$
+nazywamy ciąg $v_0,v_1,\ldots,v_k$ taki, że
+$v_{i-1}v_i\in E$ dla $i=1,\ldots,k$.
+Spacer nazywamy \emph{szlakiem}, jeśli żadna
+krawędź nie jest przechodzona dwukrotnie.
+Nazywamy go \emph{ścieżką} (\emph{drogą prostą}), jeśli
+wierzchołki $v_0,\ldots,v_k$ są parami różne.
+\emph{Spacer zamknięty} ma $v_0=v_k$.
+\end{definicja}
+
+Gdy w dalszym tekście pojawi się słowo ,,droga'' w znaczeniu
+kombinatorycznym, będziemy mieli na myśli drogę prostą. W innych kontekstach matematycznych
+,,droga'' może oznaczać dowolne ciągłe odwzorowanie odcinka;
+rozróżnienie to jest istotne.
+
+\begin{definicja}[Cykl]
+\emph{Cyklem} długości $k\ge3$ w grafie prostym
+nazywamy spacer zamknięty $v_0,v_1,\ldots,v_k=v_0$,
+w którym $v_0,\ldots,v_{k-1}$ są parami różne.
+Dwa zapisy powstałe przez zmianę punktu startowego
+lub kierunku obiegu wyznaczają ten sam cykl.
+Graf \emph{acykliczny} nie zawiera cyklu.
+\end{definicja}
+
+W multigrafach analogiczna definicja dopuszcza
+cykle długości jeden (pętle) i dwa (dwie równoległe
+krawędzie); te dwa przypadki zawsze podamy jawnie.
+
+\begin{lemat}[Usuwanie zamkniętych fragmentów spaceru]
+Niech $G$ będzie grafem skończonym i niech
+$v_0,\ldots,v_k$ będzie spacerem z $u=v_0$
+do $v=v_k$, gdzie $u\ne v$. Wtedy w $G$
+istnieje droga prosta z $u$ do $v$ długości
+nie większej niż $k$.
+\end{lemat}
+
+\begin{proof}
+Jeśli w spacerze żaden wierzchołek się nie powtarza,
+to jest on już drogą prostą. W przeciwnym razie istnieją
+$i<j$ takie, że $v_i=v_j$. Usuwamy fragment od
+$v_{i+1}$ do $v_j$: otrzymujemy spacer
+$v_0,\ldots,v_i,v_{j+1},\ldots,v_k$
+(jeśli $j=k$, spacer kończy się w $v_i=v$).
+Zachowuje on oba końce i jest krótszy o $j-i$ kroków.
+Powtarzamy tę operację. Długość jest nieujemną liczbą
+całkowitą i za każdym razem maleje, więc proces
+musi się zakończyć. Pozostały spacer nie powtarza
+wierzchołków, czyli jest drogą prostą.
+\end{proof}
+
+\begin{uwaga}
+Nie wolno w powyższym lemacie zastąpić ,,spaceru między
+dwoma różnymi końcami'' przez dowolny niepusty spacer
+zamknięty i wnioskować, że istnieje cykl. W drzewie
+spacer $u,v,u$ jest zamknięty, ale nie zawiera cyklu.
+Ten sam fragment krawędzi został przebyty dwa razy.
+\end{uwaga}
+
+\section{Spójność i składowe spójne}
+\label{sec:tg-spojnosc}
+
+\begin{definicja}[Spójność]
+Wierzchołki $u,v$ grafu $G$ nazywamy
+\emph{połączonymi}, jeśli $u=v$ albo istnieje
+spacer od $u$ do $v$. Graf $G$ jest \emph{spójny},
+jeśli każda para jego wierzchołków jest połączona.
+Maksymalne względem inkluzji zbiory parami połączonych
+wierzchołków, wraz z wszystkimi krawędziami między nimi,
+nazywamy \emph{składowymi spójnymi} grafu.
+\end{definicja}
+
+\begin{stwierdzenie}
+Dla każdego grafu $G=(V,E)$ relacja
+$u\sim v\iff u,v$ są połączone jest relacją
+równoważności na $V$. Jej klasami są dokładnie
+zbiory wierzchołków składowych spójnych.
+\end{stwierdzenie}
+
+\begin{proof}
+Relacja jest zwrotna, bo dopuszczamy spacer długości zero.
+Jest symetryczna, bo każdy spacer można przejść w kierunku
+odwrotnym. Jeśli spacer łączy $u$ z $v$, a drugi łączy
+$v$ z $w$, ich sklejenie daje spacer z $u$ do $w$,
+więc relacja jest przechodnia. Klasy relacji są
+parami rozłączne i pokrywają $V$. Jeżeli wierzchołek
+spoza danej klasy miałby krawędź do wierzchołka tej klasy,
+byłby z nim połączony i sam należałby do klasy. Wobec
+tego każda klasa z grafem indukowanym jest składową
+spójną i jest maksymalna.
+\end{proof}
+
+\begin{przyklad}[Spójny podgraf nie musi być składową]
+W cyklu $C_5$ dwa sąsiadujące wierzchołki wraz z
+łączącą je krawędzią tworzą spójny podgraf. Nie jest
+on jednak składową spójną całego $C_5$, ponieważ
+pozostałe trzy wierzchołki można do niego dołączyć,
+nie tracąc spójności. Składowa spójna oznacza
+\emph{maksymalny} spójny fragment.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[scale=.91]
+  \begin{scope}[shift={(-3.0,0)}]
+    \node[tgBlueVertex] (a) at (-.9,-.4) {$a$};
+    \node[tgBlueVertex] (b) at (1.0,-.4) {$b$};
+    \node[tgBlueVertex] (c) at (0,1.0) {$c$};
+    \draw[tgEdge] (a)--(b)--(c)--(a);
+    \draw[draw=tgBlue!50,rounded corners=10pt,line width=.9pt]
+      (-1.48,-.92) rectangle (1.58,1.55);
+  \end{scope}
+  \begin{scope}[shift={(1.9,0)}]
+    \node[tgRedVertex] (d) at (0,0) {$d$};
+    \node[tgRedVertex] (e) at (1.65,0) {$e$};
+    \draw[tgAccent] (d)--(e);
+  \end{scope}
+  \node[tgTealVertex] (f) at (4.65,1.2) {$f$};
+  \node[font=\footnotesize,text=tgNavy] at (0,-1.5) {trzy składowe spójne};
+\end{tikzpicture}
+\end{center}
+
+\begin{definicja}[Odległość]
+Dla grafu $G$ i $u,v\in V(G)$ definiujemy
+$d_G(u,v)$ jako najmniejszą długość drogi
+prostej z $u$ do $v$, jeżeli taka droga istnieje,
+oraz $d_G(u,v)=\infty$ w przeciwnym przypadku.
+Przyjmujemy $d_G(v,v)=0$.
+\end{definicja}
+
+\begin{stwierdzenie}
+Na zbiorze wierzchołków każdej składowej spójnej
+grafu $G$ funkcja $d_G$ jest metryką.
+\end{stwierdzenie}
+
+\begin{proof}
+Odległości są nieujemne, a odległość zero zachodzi
+tylko dla identycznych wierzchołków. Odwrócenie
+drogi daje symetrię. Dla $u,v,w$ w tej samej
+składowej wybieramy najkrótsze drogi od $u$ do $v$
+i od $v$ do $w$. Ich konkatenacja jest spacerem od
+$u$ do $w$ długości $d_G(u,v)+d_G(v,w)$.
+Na mocy lematu o usuwaniu powtórzeń istnieje droga
+prosta nie dłuższa niż ten spacer. Zatem
+$d_G(u,w)\le d_G(u,v)+d_G(v,w)$.
+\end{proof}
+
+W ten sposób nawet skończony graf otrzymuje naturalną
+geometrię metryczną. W późniejszej części porównamy tę
+metrykę z metryką długości na realizacji $|G|$.
+
+\section{Grafy dwudzielne i parzystość cykli}
+\label{sec:tg-dwudzielne}
+
+\begin{definicja}[Graf dwudzielny]
+Graf $G=(V,E)$ jest \emph{dwudzielny}, jeśli istnieją
+rozłączne zbiory $V_0,V_1$ o sumie $V$ takie, że
+każda krawędź ma jeden koniec w $V_0$, a drugi
+w $V_1$. Parę $(V_0,V_1)$ nazywamy \emph{podziałem
+dwudzielnym}. \emph{Pełny graf dwudzielny} $K_{r,s}$,
+gdzie $r,s\ge1$, łączy wszystkimi możliwymi krawędziami
+$r$ wierzchołków jednej klasy z $s$ wierzchołkami
+drugiej klasy i nie zawiera innych krawędzi.
+\end{definicja}
+
+\begin{twierdzenie}[Kryterium cykli nieparzystych]
+Dla skończonego grafu prostego $G$ następujące
+warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $G$ jest dwudzielny;
+\item $G$ nie zawiera cyklu nieparzystej długości.
+\end{enumerate}
+\end{twierdzenie}
+
+\begin{proof}
+Załóżmy (i). Idąc po kolejnych krawędziach, przy
+każdym kroku zmieniamy klasę podziału z $V_0$ na
+$V_1$ lub odwrotnie. Powrót do punktu początkowego
+może więc nastąpić jedynie po parzystej liczbie
+kroków. Żaden cykl nie ma długości nieparzystej.
+
+Załóżmy teraz (ii). Wystarczy skonstruować podział
+dla każdej składowej spójnej z osobna. Wybierzmy
+wierzchołek $r$ i dla każdego $v$ oznaczmy przez
+$\ell(v)=d_G(r,v)$ odległość od $r$. Ustalmy
+$V_0=\{v:\ell(v)\text{ jest parzyste}\}$
+oraz $V_1=\{v:\ell(v)\text{ jest nieparzyste}\}$.
+Przypuśćmy, że istnieje krawędź $uv$ z końcami
+o tej samej parzystości odległości. Wybierzmy
+drzewo najkrótszych dróg od $r$: dla każdego
+$v\ne r$ wybieramy poprzednika o odległości
+$\ell(v)-1$. Wszystkie takie krawędzie tworzą
+drzewo, gdyż odległość ściśle maleje w kierunku
+korzenia, co wyklucza cykle, oraz każdy wierzchołek
+dochodzi do $r$.
+
+Niech $w$ będzie ostatnim wspólnym wierzchołkiem
+dwóch dróg w tym drzewie od $r$ do $u$ i od $r$
+do $v$. Jedyna droga drzewowa od $u$ do $v$
+ma długość $\ell(u)+\ell(v)-2\ell(w)$, a więc
+parzystą. Krawędź $uv$ nie należy do drzewa,
+bo w drzewie łączyłaby poziomy o różnicy jeden.
+Dodanie jej do drogi drzewowej daje cykl
+nieparzystej długości, sprzeczny z (ii).
+Zatem każda krawędź łączy wierzchołki o
+różnych parzystościach, co dowodzi (i).
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[scale=.83]
+ \begin{scope}[shift={(-2.8,0)}]
+  \node[tgBlueVertex] (a) at (-.9,-.75) {$a$};
+  \node[tgRedVertex] (b) at (.9,-.75) {$b$};
+  \node[tgRedVertex] (c) at (-.9,.9) {$c$};
+  \node[tgBlueVertex] (d) at (.9,.9) {$d$};
+  \draw[tgEdge] (a)--(b)--(d)--(c)--(a);
+  \node[font=\small,text=tgNavy] at (0,-1.35) {cykl $C_4$: dwudzielny};
+ \end{scope}
+ \begin{scope}[shift={(2.7,0)}]
+  \node[tgBlueVertex] (u) at (0,1) {$u$};
+  \node[tgRedVertex] (v) at (-1.12,-.8) {$v$};
+  \node[tgRedVertex] (w) at (1.12,-.8) {$w$};
+  \draw[tgEdge] (u)--(v)--(w)--(u);
+  \node[font=\small,text=tgNavy] at (0,-1.35) {$C_3$: brak podziału};
+ \end{scope}
+\end{tikzpicture}
+\end{center}
+
+\begin{przyklad}[Szybkie rozpoznawanie dwudzielności]
+Każde drzewo jest dwudzielne, bo nie zawiera żadnego
+cyklu. Pełny graf $K_{r,s}$ jest dwudzielny bezpośrednio
+z definicji. Dla $n\ge3$ cykl $C_n$ jest dwudzielny
+dokładnie wtedy, gdy $n$ jest parzyste. W szczególności
+$K_3$ i $K_5$ nie są dwudzielne.
+\end{przyklad}
+
+\section{Które ciągi liczb są ciągami stopni?}
+\label{sec:tg-havel}
+
+Nie każdy $n$-elementowy ciąg liczb całkowitych z przedziału
+$\{0,\ldots,n-1\}$ jest ciągiem stopni grafu prostego.
+Warunek parzystości sumy jest konieczny, lecz nie wystarcza.
+Na przykład $(3,3,1,1)$ ma parzystą sumę $8$, ale nie jest
+ciągiem stopni grafu prostego na czterech wierzchołkach:
+dwa wierzchołki stopnia trzy muszą być połączone ze wszystkimi
+innymi, więc pozostałe miałyby stopnie co najmniej dwa.
+
+\begin{definicja}[Ciąg grafowy]
+Skończony ciąg nieujemnych liczb całkowitych
+$(d_1,\ldots,d_n)$ nazywamy \emph{grafowym},
+jeśli istnieje graf prosty o wierzchołkach
+$v_1,\ldots,v_n$, dla którego $d_G(v_i)=d_i$
+dla każdego $i$.
+\end{definicja}
+
+\begin{twierdzenie}[Kryterium Havla--Hakimiego]
+Niech $n\ge2$ i niech
+$d_1\ge d_2\ge\cdots\ge d_n\ge0$ będą liczbami
+całkowitymi. Jeśli $d_1>n-1$, ciąg nie jest grafowy.
+Jeżeli $0\le d_1\le n-1$, to ciąg
+$(d_1,\ldots,d_n)$ jest grafowy wtedy i tylko
+wtedy, gdy ciąg
+\[
+(d_2-1,\ldots,d_{d_1+1}-1,
+  d_{d_1+2},\ldots,d_n)
+\]
+jest grafowy (po ewentualnym przestawieniu elementów).
+Dla $d_1=0$ otrzymujemy ciąg samych zer, który jest
+grafowy.
+\end{twierdzenie}
+
+\begin{proof}
+Jeśli $d_1>n-1$, wierzchołek prostego grafu
+nie może mieć wymaganego stopnia. Załóżmy więc
+$0\le d_1\le n-1$. Oznaczmy $d=d_1$.
+W jedną stronę, jeśli istnieje graf na wierzchołkach
+$v_2,\ldots,v_n$ o stopniach odpowiednio
+$d_2-1,\ldots,d_{d+1}-1,d_{d+2},\ldots,d_n$,
+to dołączamy nowy wierzchołek $v_1$ i krawędzie
+$v_1v_2,\ldots,v_1v_{d+1}$. Stopnie wszystkich
+wierzchołków stają się równe zadanym liczbom.
+
+W trudniejszą stronę załóżmy, że istnieje graf $G$
+o stopniach $d_1,\ldots,d_n$. Wykażemy za pomocą
+\emph{zamiany dwóch krawędzi} (ang.\ $2$-switch), że
+można go zmodyfikować bez zmiany stopni tak,
+aby $v_1$ był sąsiadem dokładnie $v_2,\ldots,v_{d+1}$.
+Wśród wszystkich realizacji z zadanymi stopniami
+wybierzmy taką, w której $v_1$ ma najwięcej
+sąsiadów w tym wyróżnionym zbiorze.
+
+Gdyby nie był sąsiadem pewnego $v_j$ z indeksu
+$2\le j\le d+1$, musiałby być sąsiadem pewnego
+$v_k$ o $k>d+1$. Ponieważ $d_j\ge d_k$, pokażemy,
+że da się zamienić te sąsiedztwa. Istnieje
+wierzchołek $z\notin\{v_1,v_j,v_k\}$ taki,
+że $v_jz\in E(G)$, lecz $v_kz\notin E(G)$.
+Istotnie, rozważmy sąsiedztwa z pominięciem
+wzajemnej krawędzi $v_jv_k$, jeżeli ona występuje.
+Gdyby wszyscy pozostali sąsiedzi $v_j$ byli też
+sąsiadami $v_k$, to $v_k$ miałby co najmniej
+tylu takich sąsiadów co $v_j$ oraz dodatkowo
+$v_1$ (który nie sąsiaduje z $v_j$).
+Krawędź $v_jv_k$, jeśli jest obecna, zwiększa oba
+stopnie po jednej jednostce. Dostajemy więc
+$d_k\ge d_j+1$, sprzecznie z założeniem
+$d_j\ge d_k$. Zatem szukany $z$ istnieje.
+
+Usuwamy krawędzie $v_1v_k$ i $v_jz$ oraz
+dodajemy $v_1v_j$ i $v_kz$. Nowych krawędzi
+wcześniej nie było, więc nadal mamy graf prosty.
+Każdy z czterech wierzchołków traci jedną i zyskuje
+jedną krawędź, zatem wszystkie stopnie pozostają
+bez zmian. Liczba sąsiadów $v_1$ w zbiorze
+$\{v_2,\ldots,v_{d+1}\}$ wzrosła o jeden,
+sprzecznie z wyborem realizacji. Stąd istnieje
+realizacja, w której $v_1$ jest połączony
+dokładnie z tymi $d$ wierzchołkami.
+Usunięcie $v_1$ daje graf o stopniach wskazanych
+w twierdzeniu. To kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Obliczenie metodą Havla--Hakimiego]
+Rozważmy ciąg $(3,3,2,2,2)$. Po usunięciu
+pierwszej trójki zmniejszamy trzy kolejne wyrazy o jeden:
+$(2,1,1,2)$. Sortując, otrzymujemy $(2,2,1,1)$.
+Powtarzamy: usunięcie pierwszej dwójki daje
+$(1,0,1)$, a po uporządkowaniu $(1,1,0)$.
+Kolejny krok prowadzi do $(0,0)$, a zatem
+pierwotny ciąg jest grafowy. Metoda stanowi
+nie tylko test: odwrócenie kolejnych kroków
+konstruuje graf o podanych stopniach.
+\end{przyklad}
+
+\begin{uwaga}[Zakres pierwszego rozdziału]
+Dotychczas nie używaliśmy topologii algebraicznej ani
+narzędzi różniczkowych. Za to każdy z poznanych obiektów
+ma interpretację topologiczną: cykl staje się okręgiem,
+składowe spójne mają sens dla realizacji $|G|$, a
+właściwości drzew okażą się związane z trywialnością
+pętli. W następnym rozdziale przygotujemy te związki
+na poziomie czysto kombinatorycznym.
+\end{uwaga}
+

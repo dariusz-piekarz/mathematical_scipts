@@ -1,0 +1,492 @@
+\chapter{Bootstrap, jackknife i testy permutacyjne: wnioskowanie przez ponowne próbkowanie}
+\label{ch:resampling}
+\paragraph{Powiązania i odsyłacze.} Porównaj estymatory z rozdziału~\ref{ch:estimators}, metody asymptotyczne z rozdziału~\ref{ch:asymptotic-estimation} i analizę procesów zależnych w rozdziale~\ref{ch:time-series}.
+
+
+\section{Dlaczego ponownie losujemy dane?}
+W wielu problemach znamy statystykę $T_n=T(X_1,\ldots,X_n)$,
+ale nie znamy jej rozkładu lub wyprowadzenie go wymaga trudnych
+rachunków. \emph{Resampling} polega na odtwarzaniu rozkładu
+statystyki przez wielokrotne konstruowanie sztucznych prób.
+Najpierw trzeba jednak ustalić, \emph{co jest jednostką losowania}.
+Gdy jednostkami są pacjenci, a każdy pacjent ma dziesięć pomiarów,
+nie wolno bez uzasadnienia losować niezależnie wszystkich pomiarów:
+niszczy to zależność wewnątrz pacjenta.
+
+W tym rozdziale \emph{liczebność rzeczywistej próby} oznaczamy przez $n$,
+a \emph{liczbę replik resamplingowych} przez $B$. Zwiększenie $B$
+zmniejsza błąd symulacyjny wyznaczania rozkładu resamplingowego,
+ale nie zwiększa informacji statystycznej zawartej w $n$ obserwacjach.
+
+\section{Bootstrap nieparametryczny: definicja i dokładny rachunek}
+\begin{definicja}[Dystrybuanta empiryczna i próba bootstrapowa]
+\label{def:bootstrap-sample}
+Niech $(X_i)_{i\ge1}$ będą niezależnymi zmiennymi losowymi
+o jednakowym rozkładzie $P$ na $(\R,\mathcal B(\R))$.
+Po zaobserwowaniu $x_1,\ldots,x_n$ definiujemy
+$P_n=n^{-1}\sum_{i=1}^n\delta_{x_i}$.
+\emph{Próbka bootstrapowa} $(X_1^*,\ldots,X_n^*)$ to,
+warunkowo względem danych, $n$ niezależnych losowań z $P_n$.
+Piszemy $\Prob^*(\cdot)=\Prob(\cdot\mid X_1,\ldots,X_n)$,
+$\E^*$ i $\Var^*$ odpowiednio dla warunkowej wartości
+oczekiwanej i wariancji, a $\mathcal L^*$ dla warunkowego
+rozkładu (względem ustalonych danych). Gwiazdką oznaczamy statystykę
+wyznaczoną z próby bootstrapowej.
+\end{definicja}
+
+\begin{twierdzenie}[Dokładna wariancja średniej bootstrapowej]
+\label{thm:bootstrap-mean-variance}
+Niech $n\ge2$, $\E X_1^2<\infty$,
+$\overline X_n=n^{-1}\sum_{i=1}^nX_i$, a
+$S_n^2=(n-1)^{-1}\sum_{i=1}^n(X_i-\overline X_n)^2$.
+Wówczas, dla niemal wszystkich realizacji danych,
+\[
+ \E^*\overline X_n^*=\overline X_n,\qquad
+ \Var^*(\overline X_n^*)=\frac{n-1}{n^2}S_n^2.
+\]
+W szczególności bootstrapowy błąd standardowy $\sqrt{\Var^*(\overline X_n^*)}$
+nie jest przy skończonym $n$ identyczny z klasycznym $S_n/\sqrt n$,
+ale ich iloraz, przy $S_n>0$, wynosi $\sqrt{(n-1)/n}$.
+\end{twierdzenie}
+\begin{proof}
+Warunkowo względem danych każda $X_i^*$ ma średnią
+$\overline X_n$ i wariancję
+$n^{-1}\sum_{j=1}^n(X_j-\overline X_n)^2=(n-1)S_n^2/n$.
+Warunkowa niezależność $n$ losowań daje wskazaną wariancję średniej.
+\end{proof}
+
+\begin{uwaga}[Parametryczny i nieparametryczny bootstrap]
+W wariancie \emph{nieparametrycznym} losujemy z rozkładu empirycznego $P_n$.
+W wariancie \emph{parametrycznym} najpierw dopasowujemy rodzinę
+$\{P_\theta:\theta\in\Theta\}$, a następnie losujemy z
+$P_{\widehat\theta_n}$. Pierwszy wariant nie wymaga wyboru rodziny,
+lecz może być mało wiarygodny dla ekstremalnych kwantyli,
+gdy w danych nie ma obserwacji dalekiego ogona. Drugi wymaga
+wiarygodnego modelu; symulowanie z rozkładu błędnie dobranego
+może prowadzić do błędnych przedziałów mimo ogromnego $B$.
+\end{uwaga}
+
+\begin{twierdzenie}[Warunkowe centralne twierdzenie graniczne dla bootstrapu średniej]
+\label{thm:bootstrap-clt}
+Niech $(X_i)_{i\ge1}$ będą niezależne o tym samym rozkładzie,
+$\E|X_1|^3<\infty$ i $\sigma^2=\Var(X_1)>0$.
+Dla prawie każdej nieskończonej realizacji $(X_i)_{i\ge1}$ zachodzi
+\[
+ \mathcal L^*\bigl(\sqrt n(\overline X_n^*-\overline X_n)\bigr)
+ \Rightarrow\Normal(0,\sigma^2),\qquad n\to\infty.
+\]
+Jest to ten sam graniczny rozkład co $\sqrt n(\overline X_n-\E X_1)$.
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy $Y_{n,j}=X_j-\overline X_n$ i
+$m_{k,n}=n^{-1}\sum_{j=1}^n|Y_{n,j}|^k$ dla $k=2,3$.
+Z mocnego prawa wielkich liczb $m_{2,n}\to\sigma^2$
+oraz $m_{3,n}=O(1)$ prawie na pewno.
+Warunkowa funkcja charakterystyczna jednej wycentrowanej
+obserwacji bootstrapowej, podzielonej przez $\sqrt n$, wynosi
+\[
+ \psi_n(t)=\frac1n\sum_{j=1}^n
+ e^{itY_{n,j}/\sqrt n}
+ =1-\frac{t^2m_{2,n}}{2n}+R_n(t),\qquad
+ |R_n(t)|\le \frac{|t|^3m_{3,n}}{6n^{3/2}},
+\]
+gdyż $\sum_jY_{n,j}=0$. Dla ustalonego $t$ i niemal każdej
+realizacji $n\log\psi_n(t)\to-t^2\sigma^2/2$.
+Warunkowa niezależność daje funkcję charakterystyczną sumy
+równą $\psi_n(t)^n$, więc dąży ona do
+$\exp(-t^2\sigma^2/2)$. Z twierdzenia Lévy'ego
+o ciągłości funkcji charakterystycznych wynika teza.
+Zwykłe CLT dla średniej z próby stosujemy oddzielnie.
+\end{proof}
+
+\begin{wniosek}[Metoda delty dla gładkich funkcji średniej]
+\label{cor:bootstrap-delta}
+W założeniach twierdzenia~\ref{thm:bootstrap-clt} niech
+$g\colon\R\to\R$ będzie różniczkowalna w
+$\mu=\E X_1$, przy czym $g'$ jest ciągła w otoczeniu $\mu$.
+Wówczas dla prawie każdej realizacji danych
+\[
+ \mathcal L^*\bigl(\sqrt n[g(\overline X_n^*)-g(\overline X_n)]\bigr)
+ \Rightarrow \Normal(0,\sigma^2g'(\mu)^2).
+\]
+Jeżeli $g'(\mu)=0$, granica jest zdegenerowana i nie należy
+bez dalszej analizy stosować zwykłego przybliżenia normalnego.
+\end{wniosek}
+\begin{proof}
+Mocne prawo wielkich liczb daje $\overline X_n\to\mu$,
+a twierdzenie~\ref{thm:bootstrap-clt} zapewnia warunkową
+ciasność $\sqrt n(\overline X_n^*-\overline X_n)$.
+Z twierdzenia o wartości średniej i ciągłości $g'$ otrzymujemy
+\[
+ g(\overline X_n^*)-g(\overline X_n)
+ =g'(\mu)(\overline X_n^*-\overline X_n)
+   +o_{\Prob^*}(n^{-1/2})
+\]
+dla niemal każdej ustalonej realizacji danych.
+Wystarczy zastosować warunkowe twierdzenie Slutsky'ego.
+\end{proof}
+
+\section{Przedziały bootstrapowe: trzy różne konstrukcje}
+Niech $\widehat\theta_n=T_n(X_1,\ldots,X_n)$,
+a $\widehat\theta_n^{*(1)},\ldots,\widehat\theta_n^{*(B)}$
+będą statystykami z $B$ niezależnych prób bootstrapowych,
+warunkowo względem danych. Przez $q_\gamma^*$ oznaczamy
+warunkowy kwantyl rzędu $\gamma$ rozkładu
+$\widehat\theta_n^*$, w praktyce szacowany kwantylem
+z $B$ replik.
+
+\begin{definicja}[Przedział percentylowy i podstawowy]
+\label{def:bootstrap-intervals}
+Dla $0<\alpha<1$ definiujemy \emph{przedział percentylowy}
+$I_{\rm perc}=[q_{\alpha/2}^*,q_{1-\alpha/2}^*]$
+oraz \emph{przedział podstawowy} (basic)
+\[
+ I_{\rm basic}=
+ [2\widehat\theta_n-q_{1-\alpha/2}^*,
+  2\widehat\theta_n-q_{\alpha/2}^*].
+\]
+Jeżeli istnieje dodatnie oszacowanie $\widehat s_n$ błędu
+standardowego i analogiczne $\widehat s_n^*$ w próbie bootstrapowej,
+można też użyć \emph{przedziału studentyzowanego},
+opartego na kwantylach
+$(\widehat\theta_n^*-\widehat\theta_n)/\widehat s_n^*$.
+Wszystkie te konstrukcje wymagają osobnej kontroli pokrycia;
+sama ich definicja nie gwarantuje dokładnego poziomu $1-\alpha$.
+\end{definicja}
+
+\begin{przyklad}[Dane o wadach: bootstrap może zawieść na brzegu]
+\label{ex:bootstrap-zero}
+Załóżmy, że w $n=40$ niezależnych próbach Bernoulliego
+nie stwierdzono żadnej wady. Wtedy $\widehat p=0$
+i rozkład empiryczny skupia całą masę w zerze.
+\emph{Każda} próba nieparametrycznego bootstrapu złożona
+jest wyłącznie z zer: $\widehat p^*=0$ prawie na pewno,
+a oba przedziały z definicji~\ref{def:bootstrap-intervals}
+redukują się do $[0,0]$. Taki wynik nie oznacza,
+że prawdziwe prawdopodobieństwo wady wynosi zero.
+Dla niezależnej próby dwumianowej można zastosować
+przedział dokładny Cloppera--Pearsona lub Wilsona
+z rozdziału~\ref{ch:confidence-intervals}.
+Jest to przykład, w którym zwiększanie $B$ nie naprawi
+wad modelu resamplingowego.
+\end{przyklad}
+
+\begin{uwaga}[Przybliżenia i diagnostyka]
+Bootstrap percentylowy potrafi uwzględniać asymetrię rozkładu
+statystyki, ale przy małych próbach, silnym obciążeniu lub na
+brzegu przestrzeni parametrów może mieć bardzo złe pokrycie.
+Nawet dla regularnych estymatorów nie zawsze ma pokrycie
+drugiego rzędu ani nie musi zachowywać granic przestrzeni parametrów.
+W praktyce porównujemy co najmniej rozkład replik, liczbę $B$,
+stabilność kwantyli i oszacowanie studentyzowane, jeżeli jest dostępne.
+Metoda BCa koryguje obciążenie i przyspieszenie; jej pełna teoria
+wymaga dodatkowych warunków regularności i nie wynika wyłącznie
+z podstawowego CLT bootstrapowego.
+\end{uwaga}
+
+\section{Jackknife: usuwanie po jednej obserwacji}
+\begin{definicja}[Estymator wariancji jackknife]
+\label{def:jackknife}
+Niech $n\ge2$, a $T_{(-i)}$ oznacza wartość statystyki
+obliczonej z danych bez obserwacji $i$.
+Definiujemy $\overline T_{(-)}=n^{-1}\sum_{i=1}^nT_{(-i)}$
+oraz
+\[
+ \widehat V_{\rm jack}=
+ \frac{n-1}{n}\sum_{i=1}^n(T_{(-i)}-\overline T_{(-)})^2.
+\]
+Pierwiastek z $\widehat V_{\rm jack}$ jest błędem standardowym
+jackknife; jego poprawność zależy od rodzaju statystyki.
+\end{definicja}
+\begin{stwierdzenie}[Jackknife dla średniej]
+\label{prop:jackknife-mean}
+Jeżeli $T_n=\overline X_n$ i $n\ge2$, to
+$\widehat V_{\rm jack}=S_n^2/n$.
+\end{stwierdzenie}
+\begin{proof}
+Mamy $T_{(-i)}=(n\overline X_n-X_i)/(n-1)$,
+a średnia wartości usuniętych równa się $\overline X_n$.
+Wobec tego
+\[
+ \widehat V_{\rm jack}=
+ \frac{n-1}{n}\sum_{i=1}^n
+ \frac{(X_i-\overline X_n)^2}{(n-1)^2}
+ =\frac{S_n^2}{n}.
+\]
+\end{proof}
+
+\begin{przyklad}[Dlaczego jackknife zawodzi dla maksimum]
+Jeśli $x_{(n)}>x_{(n-1)}$, to spośród $n$ statystyk
+maksimum po usunięciu jednej obserwacji $n-1$ wynosi
+$x_{(n)}$, a jedna wynosi $x_{(n-1)}$.
+Bezpośredni rachunek daje
+$\widehat V_{\rm jack}=((n-1)/n)^2
+(x_{(n)}-x_{(n-1)})^2$.
+Dla niezależnych losowań z $\operatorname{Unif}(0,\theta)$
+wariancja maksimum wynosi dokładnie
+$\theta^2 n/[(n+1)^2(n+2)]$, ponieważ
+$X_{(n)}/\theta$ ma rozkład $\operatorname{Beta}(n,1)$.
+Odstęp $D_n=X_{(n)}-X_{(n-1)}$ spełnia
+$\Prob(D_n>t)=(1-t/\theta)^n$ dla $0\le t\le\theta$.
+Aby to sprawdzić, całkujemy wspólną gęstość
+$n(n-1)u^{n-2}/\theta^n$ pary
+$(X_{(n-1)},X_{(n)})$ po obszarze
+$0<u<v-t<\theta-t$.
+Stąd $nD_n/\theta\Rightarrow\operatorname{Exp}(1)$
+i wobec tego
+$\widehat V_{\rm jack}/\Var(X_{(n)})
+\Rightarrow E^2$ dla $E\sim\operatorname{Exp}(1)$.
+Granica nie jest stałą jeden, więc jackknife nie daje
+zgodnego estymatora wariancji maksimum. Problemem jest
+nieregularność tej statystyki, nie niedostateczna liczba
+replik.
+\end{przyklad}
+
+\section{Testy permutacyjne: dokładność wynika z wymienności}
+\begin{twierdzenie}[Dokładny test permutacyjny dwóch grup]
+\label{thm:permutation-exact}
+Niech $X_1,\ldots,X_m,Y_1,\ldots,Y_k$ będą niezależne
+i niech wszystkie mają \emph{ten sam} rozkład $P$,
+przy czym $m,k\ge1$, $n=m+k$.
+Niech $t$ będzie dowolną mierzalną statystyką przypisania
+$m$ z $n$ zaobserwowanych wartości do pierwszej grupy,
+a pozostałych $k$ do drugiej. Oznaczmy przez $\mathcal G$
+zbiór wszystkich $\binom nm$ przypisań (traktujemy indeksy
+jako różne, nawet jeśli wartości się powtarzają).
+Dla przypisania obserwowanego $g_0$ definiujemy
+\[
+ p_{\rm perm}=
+ \frac{\#\{g\in\mathcal G:t(g)\ge t(g_0)\}}{\binom nm}.
+\]
+Wtedy dla każdego $\alpha\in[0,1]$
+$\Prob_{H_0}(p_{\rm perm}\le\alpha)\le\alpha$.
+Przy braku remisów wartości $t(g)$ i na odpowiedniej
+siatce poziomów zachodzi równość.
+\end{twierdzenie}
+\begin{proof}
+Warunkowo względem nieuporządkowanego multizbioru
+zaobserwowanych wartości, pod hipotezą wspólnego rozkładu
+wszystkie przypisania \emph{indeksowanych obserwacji}
+są jednakowo prawdopodobne. Uporządkujmy wartości statystyki
+$t(g)$ malejąco, dopuszczając remisy. Dla dowolnego
+$r\in\{0,\ldots,\binom nm\}$ liczba przypisań,
+dla których liczba wartości $t$ nie mniejszych od obserwowanej
+nie przekracza $r$, wynosi co najwyżej $r$.
+Dzieląc przez $\binom nm$ uzyskujemy warunkową nierówność
+$\Prob(p_{\rm perm}\le\alpha\mid\text{dane nieuporządkowane})
+\le\alpha$, a całkując po danych, tezę.
+\end{proof}
+
+\begin{uwaga}[Nie jest to automatycznie test równości średnich]
+\label{rem:perm-exchangeability}
+\emph{Dokładność} powyższego testu wynika z równości
+\emph{całych rozkładów} grup, nie z samej równości średnich.
+Jeżeli grupy mają różne wariancje lub inny kształt rozkładu,
+to permutacja niewystudentyzowanej różnicy średnich może
+mieć niewłaściwy poziom przy $H_0:\E X=\E Y$.
+W takiej sytuacji można rozważyć statystykę Welcha,
+permutację studentyzowaną z odpowiednimi wynikami
+asymptotycznymi albo odporny model z właściwymi
+błędami standardowymi. Najpierw trzeba ustalić,
+\emph{co dokładnie ma być hipotezą zerową}.
+\end{uwaga}
+
+\begin{stwierdzenie}[Test znakowych permutacji dla par]
+\label{prop:signflip}
+Niech $D_1,\ldots,D_n$ będą niezależnymi zmiennymi,
+a ich rozkłady będą symetryczne względem zera,
+$D_i\overset d=-D_i$, $i=1,\ldots,n$.
+Jeśli oznaczymy obserwowane różnice przez $d_i$,
+a przez $t(\varepsilon_1d_1,\ldots,\varepsilon_nd_n)$
+statystykę dla $\varepsilon_i\in\{-1,1\}$,
+to udział spośród $2^n$ znaków dających wartość
+co najmniej obserwowaną definiuje poprawną
+(w sensie poziomu nie większego od $\alpha$)
+wartość p pod wskazaną hipotezą symetrii.
+\end{stwierdzenie}
+\begin{proof}
+Rozkład wektora $D=(D_1,\ldots,D_n)$ jest niezmienniczy
+względem grupy wszystkich zmian znaków, ponieważ
+każda współrzędna jest symetryczna i współrzędne są niezależne.
+Warunkowo względem orbity wektora pod tą skończoną grupą,
+zaobserwowany reprezentant jest jednostajny (licząc
+wielokrotności wynikające z zer). Argument rangowy
+z dowodu twierdzenia~\ref{thm:permutation-exact}
+daje nierówność dla wartości p.
+\end{proof}
+
+\begin{uwaga}[Monte Carlo zamiast wszystkich permutacji]
+Jeżeli $\binom nm$ lub $2^n$ jest zbyt duże,
+losujemy $B$ permutacji niezależnie i jednostajnie.
+Przy częstości $b$ permutacji o statystyce co najmniej
+obserwowanej używa się wartości
+$\widehat p=(b+1)/(B+1)$, nie samego $b/B$.
+Korekta ta uwzględnia obserwowaną konfigurację
+w porównaniu rangowym; w szczególności nigdy nie
+raportujemy wartości p równej zeru tylko dlatego,
+że przy skończonym $B$ nie trafiliśmy skrajniejszego wyniku.
+Dokładność zależy od poprawnego mechanizmu randomizacji.
+\end{uwaga}
+
+\section{Zależność w czasie: dlaczego potrzebny jest bootstrap blokowy?}
+\label{sec:block-bootstrap}
+Załóżmy, że mamy stacjonarny szereg $(X_t)_{t\in\mathbb Z}$
+z sumowalnymi autokowariancjami $\gamma_h=\Cov(X_0,X_h)$.
+Wówczas, zgodnie z rozdziałem~\ref{ch:time-series},
+\[
+ n\Var(\overline X_n)\longrightarrow
+ \sigma_\infty^2=\gamma_0+2\sum_{h=1}^\infty\gamma_h.
+\]
+Naiwny bootstrap losujący pojedyncze obserwacje odtwarza
+jedynie marginalny rozkład empiryczny. Jeżeli ponadto
+szereg jest ergodyczny i $\E X_0^2<\infty$, to
+$n\Var^*(\overline X_n^*)=(n-1)S_n^2/n\to\gamma_0$
+prawie na pewno, a prawdziwa granica
+$n\Var(\overline X_n)\to\sigma_\infty^2$
+może być inna. Same założenia stacjonarności i sumowalności
+autokowariancji nie zapewniają ergodyczności ani
+zbieżności empirycznej wariancji do $\gamma_0$.
+Dla modelu AR(1) z korelacją $\rho^h$, $0<\rho<1$,
+iloraz poprawnej wariancji asymptotycznej do wariancji
+naiwnej wynosi $(1+\rho)/(1-\rho)$.
+
+\begin{definicja}[Bootstrap ruchomych bloków]
+Dla próby $x_1,\ldots,x_n$ oraz długości bloku
+$1\le\ell\le n$ definiujemy $n-\ell+1$ bloków
+$(x_j,\ldots,x_{j+\ell-1})$, $j=1,\ldots,n-\ell+1$.
+Losujemy niezależnie i jednostajnie bloki ze zwracaniem,
+łączymy je i obcinamy wynik do długości $n$.
+Tak otrzymana próba ma długość $n$ i zachowuje
+część lokalnych zależności wewnątrz bloków.
+\end{definicja}
+
+\begin{uwaga}[Jak dobrać długość bloku?]
+W typowych twierdzeniach dla słabo zależnych,
+stacjonarnych szeregów wymaga się
+$\ell=\ell_n\to\infty$ oraz $\ell_n/n\to0$,
+ale nie są to warunki \emph{wystarczające bez dodatkowych
+hipotez} mieszania, momentów i właściwego funkcjonału.
+Zbyt krótkie bloki zrywają zależność; bardzo długie
+zostawiają niewiele efektywnie różnych bloków.
+Pomiary powtarzane od jednego pacjenta wymagają z kolei
+bootstrapu \emph{klastrowego}, nie blokowego w czasie,
+o ile zależność wynika z przypisania do pacjenta.
+\end{uwaga}
+
+\section{Dobór metody do problemu}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.25\textwidth}>{\raggedright\arraybackslash}p{.29\textwidth}>{\raggedright\arraybackslash}p{.30\textwidth}}
+\toprule
+\textbf{Sytuacja} & \textbf{Metoda do rozważenia} & \textbf{Warunek krytyczny}\\
+\midrule
+Niezależne obserwacje, gładka statystyka & Bootstrap nieparametryczny & Reprezentatywność próby; regularność statystyki\\
+Silny model parametryczny, mała próba & Bootstrap parametryczny & Model dopasowany poprawnie\\
+Średnia i gładki funkcjonał wielu danych & Jackknife lub bootstrap & Rozkład statystyki nie jest skrajnie nieregularny\\
+Dwie grupy o jednakowym rozkładzie pod $H_0$ & Test permutacyjny & Wymienność pod hipotezą zerową\\
+Różnice w parach, symetria wokół zera & Sign-flip & Niezależność i symetria różnic\\
+Obserwacje zależne w czasie & Bootstrap blokowy & Stacjonarność, słaba zależność i długość bloku\\
+Dane klastrowe & Bootstrap klastrów & Jednostką resamplingu jest cały klaster\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Laboratorium: bootstrap, permutacje i zależne obserwacje}
+\begin{lstlisting}[language=Python,caption={Kompletny program: bootstrap średniej, dokładne permutacje i bootstrap blokowy (Python, NumPy i SciPy).}]
+import itertools
+import numpy as np
+from scipy.stats import norm
+
+rng = np.random.default_rng(2026)
+x = np.array([9., 11., 10., 12., 10., 9., 13., 8.])
+B = 20_000
+idx = rng.integers(0, len(x), size=(B, len(x)))
+boot = x[idx].mean(axis=1)
+print("mean:", x.mean(), "bootstrap SE:", boot.std(ddof=1))
+print("percentile CI:", np.quantile(boot, [0.025, 0.975]))
+print("classical SE:", x.std(ddof=1) / np.sqrt(len(x)))
+
+# Exact permutation test of equal distributions, small samples.
+a = np.array([1.0, 2.0, 4.0])
+b = np.array([5.0, 6.0, 8.0])
+pooled = np.r_[a, b]
+observed = abs(a.mean() - b.mean())
+total = extreme = 0
+for comb in itertools.combinations(range(len(pooled)), len(a)):
+    mask = np.zeros(len(pooled), dtype=bool)
+    mask[list(comb)] = True
+    t = abs(pooled[mask].mean() - pooled[~mask].mean())
+    total += 1
+    extreme += (t >= observed - 1e-12)
+print("exact two-sided permutation p:", extreme / total)
+
+# AR(1): naive iid bootstrap versus moving-block bootstrap.
+rho, n, ell = 0.75, 320, 16
+noise = rng.standard_normal(n)
+y = np.zeros(n)
+for i in range(1, n):
+    y[i] = rho * y[i-1] + noise[i]
+starts = rng.integers(0, n - ell + 1, size=(B, (n+ell-1)//ell))
+block_indices = (starts[:, :, None] + np.arange(ell)).reshape(B, -1)[:, :n]
+block_means = y[block_indices].mean(axis=1)
+iid_means = y[rng.integers(0, n, size=(B, n))].mean(axis=1)
+print("iid bootstrap SE:", iid_means.std(ddof=1))
+print("block bootstrap SE:", block_means.std(ddof=1))
+print("theoretical AR(1) inflation, variance:", (1+rho)/(1-rho))
+\end{lstlisting}
+
+\begin{lstlisting}[language=Julia,caption={Kompletny program: bootstrap, dokładny test permutacyjny i resampling bloków (Julia, Random i Statistics).}]
+using Random, Statistics
+Random.seed!(2026)
+x = Float64[9, 11, 10, 12, 10, 9, 13, 8]
+B = 10_000
+boot = [mean(x[rand(1:length(x), length(x))]) for _ in 1:B]
+println("bootstrap mean SE: ", std(boot))
+println("percentile CI: ", quantile(boot, [0.025, 0.975]))
+
+# All 3-element subsets of six indices, implemented without packages.
+a = Float64[1, 2, 4]
+b = Float64[5, 6, 8]
+values = vcat(a, b)
+obs = abs(mean(a) - mean(b))
+extreme = 0
+total = 0
+for i in 1:4, j in (i+1):5, k in (j+1):6
+    chosen = [i, j, k]
+    other = [z for z in 1:6 if !(z in chosen)]
+    stat = abs(mean(values[chosen]) - mean(values[other]))
+    extreme += stat >= obs - 1e-12
+    total += 1
+end
+println("exact permutation p: ", extreme / total)
+
+rho, n, ell = 0.75, 320, 16
+y = zeros(n)
+noise = randn(n)
+for i in 2:n
+    y[i] = rho*y[i-1] + noise[i]
+end
+nb = cld(n, ell)
+block = zeros(B)
+for b in 1:B
+    starts = rand(1:(n-ell+1), nb)
+    sample = reduce(vcat, [y[s:(s+ell-1)] for s in starts])[1:n]
+    block[b] = mean(sample)
+end
+println("block bootstrap SE: ", std(block))
+\end{lstlisting}
+
+\begin{zadanie}[Próba z zerową liczbą sukcesów]
+W $n=20$ niezależnych próbach Bernoulliego nie obserwowano sukcesów.
+Opisać przedział percentylowy nieparametrycznego bootstrapu
+i wskazać alternatywę o poprawnym skończonopróbkowym pokryciu.
+\par\emph{Rozwiązanie.} Rozkład empiryczny jest skupiony w zerze,
+zatem każdy rozkład bootstrapowy $\widehat p^*$ jest skupiony
+w zerze i przedział percentylowy wynosi $[0,0]$ dla dowolnego $B$.
+Przedział dokładny Cloppera--Pearsona ma dolną granicę zero
+i górną $1-(\alpha/2)^{1/n}$ w wersji dwustronnej,
+ponieważ $\Prob_p(S_n=0)=(1-p)^n$.
+Dla jednostronnego górnego przedziału ufności na poziomie
+$1-\alpha$ stosujemy granicę $1-\alpha^{1/n}$.
+\end{zadanie}
+
+

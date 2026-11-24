@@ -1,0 +1,440 @@
+\chapter{Konstrukcja i porównywanie estymatorów}
+\label{ch:estimators}
+\paragraph{Powiązania i odsyłacze.} Wcześniejsze definicje funkcji wiarygodności i ryzyka pochodzą z rozdziałów~\ref{ch:likelihood} i~\ref{ch:decision}; o UMVU mówimy w rozdziale~\ref{ch:sufficiency}.
+
+
+\section{Co dokładnie chcemy oszacować?}
+W rozdziale o wiarygodności szukaliśmy parametru, który najlepiej
+wyjaśnia zaobserwowane dane \emph{w obrębie założonego modelu}.
+Jednak zastosowanie nie zawsze wymaga odtworzenia całego parametru.
+W kontroli jakości może nas interesować $p$, prawdopodobieństwo
+wystąpienia wady, albo $g(p)=1-(1-p)^m$, prawdopodobieństwo
+co najmniej jednej wady w następnych $m$ sztukach. W prognozowaniu
+awarii interesuje nas nie tylko intensywność $\lambda$, lecz także
+prawdopodobieństwo $e^{-\lambda t}$ bezawaryjnej pracy przez czas $t$.
+Odróżnimy zatem \emph{parametr modelu} od \emph{estymowanej wielkości}.
+
+\begin{definicja}[Estymand i estymator]\label{def:estimand}
+Niech $\mathcal E=(\mathsf X,\calA,\{P_\theta:\theta\in\Theta\})$
+będzie eksperymentem statystycznym, $g:\Theta\to\R^k$ ustaloną
+funkcją, a $T:(\mathsf X,\calA)\to(\R^k,\calB(\R^k))$
+mierzalnym odwzorowaniem. Wielkość $g(\theta)$ nazywamy
+\emph{estymandem}, a $T(X)$ \emph{estymatorem} tej wielkości.
+Jeśli $\E_\theta\|T\|<\infty$, obciążeniem jest
+$b_T(\theta)=\E_\theta T-g(\theta)$. Estymator jest
+\emph{nieobciążony}, jeżeli $b_T(\theta)=0$ dla każdego
+$\theta\in\Theta$. Dla $k=1$ i $T\in L^2(P_\theta)$
+$\operatorname{MSE}_\theta(T)=\E_\theta(T-g(\theta))^2$.
+\end{definicja}
+
+Definicja nie uzależnia estymatora od wybranej metody: średnia,
+mediana, maksymalizator wiarygodności i rozwiązanie równania
+momentowego są różnymi funkcjami \emph{tych samych danych}.
+Praktycznie należy najpierw sprecyzować estymand, dopiero potem
+wybrać algorytm. Dla przykładu liczba awarii przypadająca na godzinę
+i prawdopodobieństwo przynajmniej jednej awarii w ciągu godziny
+nie są tym samym parametrem, nawet w modelu Poissona.
+
+\begin{definicja}[Zgodność i szybkość zbieżności]\label{def:est-consistency}
+Dla eksperymentów $\mathcal E_n$ z parametrem $\theta\in\Theta$
+i estymatorów $T_n$ wielkości $g(\theta)$ mówimy, że
+$T_n$ jest \emph{zgodny}, jeżeli dla każdego $\theta$ i $\varepsilon>0$
+zachodzi $P_\theta(\|T_n-g(\theta)\|>\varepsilon)\to0$.
+Zgodność \emph{mocna} oznacza zbieżność prawie na pewno, gdy
+estymatory są określone na wspólnej przestrzeni probabilistycznej.
+Jeżeli $\sqrt n(T_n-g(\theta))$ zbiega według rozkładu do pewnej
+zmiennej $Z_\theta$, mówimy, że ciąg $\sqrt n(T_n-g(\theta))$ ma granicę rozkładową; nie wyklucza to szybszej zbieżności w przypadku granicy zdegenerowanej.
+\end{definicja}
+
+Nieobciążoność jest własnością wartości oczekiwanej dla danego $n$;
+zgodność opisuje zachowanie przy rosnącej liczbie danych; MSE
+mierzy błąd w określonej funkcji straty. Żadna z tych własności
+nie implikuje automatycznie pozostałych. Na przykład dla
+$X_1,\ldots,X_n\iid\Normal(\mu,1)$ estymator $T_n=X_1$
+jest nieobciążony dla każdego $n$, ale nie jest zgodny, ponieważ
+jego rozkład błędu nie zależy od $n$.
+
+\section{Metoda momentów: dopasowujemy proste funkcjonały rozkładu}
+\label{sec:moments-method}
+Przypuśćmy, że nie umiemy łatwo zmaksymalizować wiarygodności,
+ale potrafimy obliczyć $\E_\theta X$, $\E_\theta X^2$ lub inne
+momenty. Intuicja metody momentów jest prosta: zastępujemy
+wartości teoretyczne odpowiednimi średnimi z próby i rozwiązujemy
+otrzymane równania. Istotą metody są jednak warunki istnienia momentów,
+identyfikowalność oraz istnienie rozwiązania w przestrzeni parametrów.
+
+\begin{definicja}[Estymator metodą momentów]\label{def:mom}
+Niech $X_1,\ldots,X_n$ będą próbą prostą z rozkładu $P_\theta$,
+$\theta\in\Theta\subset\R^d$. Niech
+$h:\mathsf S\to\R^d$ będzie mierzalna i całkowalna przy każdym
+$P_\theta$, a $m(\theta)=\E_\theta h(X_1)$.
+Mierzalne rozwiązanie $\widehat\theta_{\rm MM}$ równania
+\[
+m(\widehat\theta_{\rm MM})=\frac1n\sum_{i=1}^n h(X_i)
+\]
+nazywamy \emph{estymatorem metodą momentów}.
+Rozwiązanie może nie istnieć, nie być jednoznaczne albo nie należeć
+do $\Theta$; wtedy trzeba jawnie określić dalszą procedurę.
+Wybór $h(x)=(x,x^2,\ldots,x^d)$ daje klasyczną metodę momentów.
+\end{definicja}
+
+\begin{twierdzenie}[Prosta zasada zgodności metody momentów]
+\label{thm:mom-consistency}
+Niech $X_i$ będą niezależne o jednakowym rozkładzie $P_{\theta_0}$,
+$\theta_0\in\Theta\subset\R^d$, i niech $\E_{\theta_0}\|h(X_1)\|<\infty$.
+Załóżmy, że istnieje zbiór otwarty $U\subset\R^d$ zawierający
+$m(\theta_0)$ oraz funkcja ciągła $q:U\to\Theta$ spełniająca
+$q(m(\theta_0))=\theta_0$ i $m(q(y))=y$ dla wszystkich $y\in U$.
+Definiujemy $\widehat\theta_n=q(n^{-1}\sum_i h(X_i))$ na zdarzeniu,
+na którym średnia należy do $U$, a poza nim przypisujemy ustaloną
+wartość z $\Theta$. Wtedy $\widehat\theta_n\to\theta_0$ prawie na pewno.
+\end{twierdzenie}
+\begin{proof}
+Stosujemy mocne prawo wielkich liczb do każdej z $d$ współrzędnych
+$h(X_i)$. Na wspólnym zdarzeniu prawdopodobieństwa jeden
+$\bar h_n:=n^{-1}\sum_i h(X_i)\to m(\theta_0)$.
+Ponieważ $U$ jest otwarte, od pewnego losowego indeksu $N(\omega)$
+mamy $\bar h_n\in U$. Dla tych $n$ estymator jest równy
+$q(\bar h_n)$. Z ciągłości $q$ w $m(\theta_0)$ dostajemy
+$q(\bar h_n)\to q(m(\theta_0))=\theta_0$. Dowód uwzględnia
+także możliwość, że dla małych prób układ momentowy nie ma rozwiązania.
+\end{proof}
+
+
+\begin{twierdzenie}[Asymptotyczny rozkład estymatora momentowego]
+\label{thm:mom-clt}
+Niech $X_1,X_2,\ldots$ będą niezależne o jednakowym rozkładzie
+$P_{\theta_0}$, niech $h(X_1)$ będzie rzeczywista,
+$\E_{\theta_0}h(X_1)=m_0$, $0<\Var_{\theta_0}(h(X_1))=v<\infty$.
+Załóżmy, że funkcja $q$ jest określona i różniczkowalna w otoczeniu
+$m_0$, przy czym $q(m_0)=\theta_0$. Niech
+$\widehat\theta_n=q(n^{-1}\sum_i h(X_i))$ wszędzie, gdzie argument
+należy do tego otoczenia, a poza nim przypiszmy stałą wartość.
+Wtedy
+\[
+\sqrt n(\widehat\theta_n-\theta_0)
+\xrightarrow{d}\Normal(0,v[q'(m_0)]^2).
+\]
+Dopuszczamy rozkład graniczny skupiony w zerze, gdy $q'(m_0)=0$.
+\end{twierdzenie}
+\begin{proof}
+Z centralnego twierdzenia granicznego zastosowanego do zmiennej
+$h(X_i)$ wynika
+$\sqrt n(\bar h_n-m_0)\xrightarrow{d}\Normal(0,v)$,
+a więc w szczególności $\bar h_n\to m_0$ według
+prawdopodobieństwa. Z różniczkowalności $q$ w $m_0$ mamy
+$q(y)=q(m_0)+q'(m_0)(y-m_0)+r(y)(y-m_0)$,
+gdzie $r(y)\to0$ przy $y\to m_0$.
+Stąd
+\[
+\sqrt n(\widehat\theta_n-\theta_0)
+=q'(m_0)\sqrt n(\bar h_n-m_0)
++r(\bar h_n)\sqrt n(\bar h_n-m_0)
+\]
+na zdarzeniu, którego prawdopodobieństwo dąży do jedności.
+Czynnik $r(\bar h_n)$ dąży do zera według prawdopodobieństwa,
+a ciąg $\sqrt n(\bar h_n-m_0)$ jest ciasny, bo ma granicę
+według rozkładu. Ich iloczyn dąży więc do zera według
+prawdopodobieństwa. Z twierdzenia Slutsky'ego otrzymujemy tezę.
+\end{proof}
+\begin{przyklad}[Błąd standardowy estymatora intensywności]
+Dla czasów wykładniczych $X_i\sim\operatorname{Exp}(\lambda)$
+wybieramy $h(x)=x$ i $q(m)=1/m$. Wówczas
+$m_0=1/\lambda$, $v=1/\lambda^2$ oraz
+$q'(m_0)=-\lambda^2$. Poprzednie twierdzenie daje
+$\sqrt n(\widehat\lambda-\lambda)\xrightarrow{d}
+\Normal(0,\lambda^2)$. Zatem orientacyjny błąd standardowy MLE
+wynosi $\widehat\lambda/\sqrt n$ przy dużym $n$;
+nie jest to wzór na jego dokładny rozkład dla małej próby.
+\end{przyklad}
+
+\begin{przyklad}[Bernoulli i Poisson]
+Dla $X_i\iid\operatorname{Bernoulli}(p)$ mamy $\E X_i=p$, stąd
+$\widehat p_{\rm MM}=\bar X$; jest to także MLE.
+Dla $Y_i\iid\Pois(\lambda)$ średnia wynosi $\lambda$, więc
+$\widehat\lambda_{\rm MM}=\bar Y$, ponownie tak samo jak MLE.
+Zbieżność obu wynika z MPWL. Równość tych dwóch procedur jest
+własnością modeli, a nie ogólnym twierdzeniem o metodach estymacji.
+\end{przyklad}
+
+\begin{zadanie}[Beta z dwóch momentów]
+\label{zad:beta-mom}
+Niech $X_1,\ldots,X_n\iid\operatorname{Beta}(\alpha,\beta)$,
+$\alpha,\beta>0$, o średniej $\mu$ i wariancji $v$.
+Wyznacz estymatory momentowe $\alpha,\beta$ i sprawdź,
+kiedy istnieją w dodatniej przestrzeni parametrów.
+\par\emph{Rozwiązanie.} Dla $k=\alpha+\beta$ zachodzi
+$\mu=\alpha/k$ oraz $v=\mu(1-\mu)/(k+1)$. Zatem
+$k=\mu(1-\mu)/v-1$ i $\alpha=\mu k$, $\beta=(1-\mu)k$.
+Wstawiamy $\bar X$ i $v_n=n^{-1}\sum_i(X_i-\bar X)^2$:
+\[
+\widehat k=\frac{\bar X(1-\bar X)}{v_n}-1,\qquad
+\widehat\alpha=\bar X\widehat k,\quad
+\widehat\beta=(1-\bar X)\widehat k.
+\]
+Wymagamy $0<\bar X<1$ i $0<v_n<\bar X(1-\bar X)$.
+Dla rzeczywistych danych z wnętrza $(0,1)$ i niezerowej wariancji
+nierówność $v_n<\bar X(1-\bar X)$ wynika z $x_i^2<x_i$:
+$v_n=n^{-1}\sum_i x_i^2-\bar X^2<\bar X-\bar X^2$.
+Jeżeli wszystkie obserwacje są jednakowe, $v_n=0$ i metoda nie
+daje skończonego rozwiązania. W praktyce dla danych przy brzegu
+albo nadmiernie skoncentrowanych warto porównać wynik z numerycznym MLE.
+\end{zadanie}
+
+\section{Różne metody, ten sam model: rozkład jednostajny}
+\begin{twierdzenie}[Trzy estymatory końca przedziału i ich ryzyka]
+\label{thm:uniform-comparison}
+Niech $n\ge2$ i $X_1,\ldots,X_n\iid U(0,\theta)$, $\theta>0$.
+Oznaczmy $M=X_{(n)}$. Dla estymacji $\theta$ przy stracie kwadratowej:
+\begin{enumerate}
+\item metoda momentów daje $T_{\rm MM}=2\bar X$ oraz
+$\E_\theta(T_{\rm MM}-\theta)^2=\theta^2/(3n)$;
+\item estymator MLE (dla wersji gęstości z $x\le\theta$) to
+$T_{\rm ML}=M$, o obciążeniu $-\theta/(n+1)$ i ryzyku
+$2\theta^2/((n+1)(n+2))$;
+\item estymator $T_U=(n+1)M/n$ jest nieobciążony i ma ryzyko
+$\theta^2/(n(n+2))$.
+\end{enumerate}
+Dla $n>1$ estymator $T_U$ ma mniejsze MSE od obu pozostałych.
+\end{twierdzenie}
+\begin{proof}
+Z $\E X_i=\theta/2$ i $\Var(X_i)=\theta^2/12$
+otrzymujemy $\E2\bar X=\theta$ i
+$\Var(2\bar X)=4(\theta^2/12)/n=\theta^2/(3n)$.
+Maksimum ma dystrybuantę $P_\theta(M\le t)=(t/\theta)^n$
+dla $0\le t\le\theta$, a więc gęstość
+$n t^{n-1}/\theta^n$. Stąd przez całkowanie
+$\E M=n\theta/(n+1)$ oraz
+$\E M^2=n\theta^2/(n+2)$. Zatem
+\[
+\E(M-\theta)^2=\frac{n\theta^2}{n+2}
+-\frac{2n\theta^2}{n+1}+\theta^2
+=\frac{2\theta^2}{(n+1)(n+2)}.
+\]
+Po przeskalowaniu $M$ czynnik $(n+1)/n$ usuwa obciążenie;
+wykorzystując powyższe momenty, otrzymujemy
+$\Var(M)=n\theta^2/((n+1)^2(n+2))$ i
+$\Var(T_U)=\theta^2/(n(n+2))$.
+Dla $n>1$ zachodzą nierówności
+$1/(n(n+2))<2/((n+1)(n+2))$ i
+$1/(n(n+2))<1/(3n)$, co kończy porównanie.
+\end{proof}
+
+
+\begin{center}
+\begin{tikzpicture}[x=.47cm,y=15cm,>=Latex]
+\draw[->] (0,0)--(21,0) node[right] {$n$};
+\draw[->] (0,0)--(0,.188) node[above] {$\mathrm{MSE}/\theta^2$};
+\foreach \x in {2,5,10,15,20} {\draw (\x,-.003)--(\x,.003) node[below=2pt] {\scriptsize $\x$};}
+\foreach \y/\lab in {.05/{0{,}05},.10/{0{,}10},.15/{0{,}15}} {
+  \draw (-.25,\y)--(.25,\y) node[left=2pt] {\scriptsize $\lab$};
+}
+\draw[very thick,blue!70!black,domain=2:20,samples=120]
+  plot (\x,{1/(3*\x)});
+\draw[very thick,red!70!black,domain=2:20,samples=120]
+  plot (\x,{2/((\x+1)*(\x+2))});
+\draw[very thick,green!45!black,domain=2:20,samples=120]
+  plot (\x,{1/(\x*(\x+2))});
+\node[align=left,anchor=west,font=\scriptsize] at (8,.148) {
+  \textcolor{blue!70!black}{--- metoda momentów}\\
+  \textcolor{red!70!black}{--- MLE}\\
+  \textcolor{green!45!black}{--- skorygowane maksimum}
+};
+\end{tikzpicture}
+\end{center}
+\noindent\emph{Rysunek 5.1.} Znormalizowany błąd średniokwadratowy
+trzech estymatorów końca przedziału jednostajnego. Wykresy
+przedstawiają wzory ścisłe z poprzedniego twierdzenia,
+nie wyniki symulacji.
+
+\begin{uwaga}[Dlaczego maksimum jest lepsze od średniej?]
+Model zakłada twardą granicę nośnika. Największa obserwacja
+informuje o tej granicy \emph{bezpośrednio}, natomiast średnia
+wykorzystuje typowy poziom próby i rozprasza informację o końcu.
+Dla rozkładu jednostajnego obcięcie jednego skrajnego pomiaru
+może silnie zmienić estymator; nie jest to wada rachunku, tylko
+konsekwencja bardzo mocnego założenia o ostrym końcu przedziału.
+Jeżeli pomiary mogą zawierać błąd przekraczający $\theta$,
+model jednostajny przestaje być odpowiedni.
+\end{uwaga}
+
+\section{Estymacja parametru z rozkładu wykładniczego}
+\begin{twierdzenie}[Estymator intensywności i jego obciążenie]
+\label{thm:exp-rate}
+Niech $X_1,\ldots,X_n\iid\operatorname{Exp}(\lambda)$,
+$\lambda>0$, w parametryzacji z gęstością
+$f_\lambda(x)=\lambda e^{-\lambda x}\ind{\{x>0\}}$.
+Dla $S=\sum_iX_i$ estymator metodą momentów i MLE wynosi
+$\widehat\lambda_{\rm ML}=n/S$ prawie na pewno.
+Jeśli $n>1$, to $\E_\lambda\widehat\lambda_{\rm ML}
+=n\lambda/(n-1)$, a $\widetilde\lambda=(n-1)/S$ jest
+nieobciążony. Dla $n>2$ zachodzi
+$\Var_\lambda(\widetilde\lambda)=\lambda^2/(n-2)$.
+\end{twierdzenie}
+\begin{proof}
+Mamy $\E X_i=1/\lambda$, a więc równanie momentów
+$\bar X=1/\lambda$ prowadzi do $\lambda=n/S$.
+Log-wiarygodność $\ell(\lambda)=n\log\lambda-\lambda S$
+ma pochodną $n/\lambda-S$, stąd to samo maksimum; wartości
+na brzegach $0$ i $+\infty$ są mniejsze dla $S>0$.
+Suma niezależnych czasów wykładniczych ma rozkład gamma o
+parametrach kształtu $n$ i intensywności $\lambda$:
+$f_S(s)=\lambda^n s^{n-1}e^{-\lambda s}/\Gamma(n)$ dla $s>0$.
+Dla $n>k$ obliczenie całki gamma daje
+\[
+\E_\lambda S^{-k}
+=\frac{\lambda^n}{\Gamma(n)}
+ \int_0^\infty s^{n-k-1}e^{-\lambda s}\,\dd s
+=\lambda^k\frac{\Gamma(n-k)}{\Gamma(n)}.
+\]
+Podstawiając $k=1,2$, dostajemy
+$\E S^{-1}=\lambda/(n-1)$ oraz
+$\E S^{-2}=\lambda^2/((n-1)(n-2))$.
+Pomnożenie przez odpowiednie czynniki kończy dowód.
+\end{proof}
+
+\begin{zadanie}[Pięć czasów do awarii: czy poprawiać obciążenie?]
+Zaobserwowano czasy $0{,}4$, $0{,}6$, $1{,}2$, $1{,}8$, $2{,}0$
+godziny. W modelu wykładniczym oszacuj intensywność awarii
+oraz średni czas do awarii.
+\par\emph{Rozwiązanie.} $S=6$ godzin, więc
+$\widehat\lambda_{\rm ML}=5/6\approx0{,}833$ na godzinę,
+a estymator nieobciążony intensywności to
+$\widetilde\lambda=4/6\approx0{,}667$ na godzinę.
+Średni czas do awarii $1/\lambda$ estymujemy naturalnie przez
+$\bar X=1{,}2$ godziny, który w tym modelu jest nieobciążony.
+\emph{Uwaga:} $1/\widetilde\lambda=1{,}5$ godziny nie jest tym
+samym estymatorem; nieliniowe przekształcenie estymatora
+nie zachowuje na ogół nieobciążoności. Przy tylko pięciu
+obserwacjach ocena sensowności modelu wykładniczego jest
+ważniejsza od trzeciej cyfry oszacowania.
+\end{zadanie}
+
+\section{Estymacja odporna: kiedy momenty i MLE zawodzą?}
+Załóżmy, że obserwujemy temperatury w stabilnym procesie, ale
+jeden czujnik okresowo zwraca ogromne wartości. Średnia jest
+niezwykle czuła na ten problem: wystarczy jeden pomiar $M\to\infty$,
+aby średnia rosła bez ograniczeń. Mediana pozostaje ograniczona,
+jeśli mniej niż połowa wyników została zastąpiona skrajnymi wartościami.
+Nie oznacza to jednak, że mediana jest zawsze lepsza od średniej.
+W idealnym modelu normalnym średnia wykorzystuje informację
+efektywniej w sensie wariancji asymptotycznej.
+
+\begin{definicja}[Mediana, średnia obcięta, estymator Hubera]
+Niech $x_{(1)}\le\cdots\le x_{(n)}$ będą uporządkowanymi obserwacjami.
+Mediana empiryczna jest dowolnym mediano-minimalizatorem
+$\sum_i|x_i-a|$ (w przykładach przy $n$ parzystym wybieramy
+środek dwóch środkowych obserwacji). Przy całkowitym $k<n/2$
+\emph{dwustronną średnią obciętą} nazywamy
+$\overline x_{\rm trim}=(n-2k)^{-1}\sum_{i=k+1}^{n-k}x_{(i)}$.
+Dla $c>0$ wprowadzamy funkcję
+$\psi_c(u)=\max(-c,\min(u,c))$. \emph{Estymator M Hubera położenia}
+to mierzalne rozwiązanie równania
+$\sum_{i=1}^n\psi_c((x_i-a)/s)=0$ przy ustalonej skali $s>0$.
+W przypadku wielu rozwiązań potrzebna jest reguła wyboru.
+\end{definicja}
+
+\begin{przyklad}[Cauchy: dlaczego metoda momentów nie ma sensu?]
+Dla $X\sim\operatorname{Cauchy}(x_0,\gamma)$, $\gamma>0$,
+nie istnieje wartość oczekiwana ani wariancja. Równanie
+$\bar X=\E X$ nie jest więc zdefiniowane. Zamiast tego można
+użyć kwantyli: $q_{1/2}=x_0$,
+$q_{1/4}=x_0-\gamma$ i $q_{3/4}=x_0+\gamma$. Stąd
+$\widehat x_0=\widehat q_{1/2}$ oraz
+$\widehat\gamma=(\widehat q_{3/4}-\widehat q_{1/4})/2$.
+Wybór empirycznej konwencji kwantyla należy ustalić przed
+obliczeniem. Istnieje również MLE oparty na pełnej gęstości,
+ale zwykle wymaga optymalizacji numerycznej. Porównanie metod
+w praktyce powinno uwzględniać ciężkość ogonów i odporność
+na odległe obserwacje.
+\end{przyklad}
+
+\begin{zadanie}[Dane z wartością odstającą: trzy odpowiedzi]
+Dla próby $4,5,5,6,6,7,7,8,100$ wyznacz średnią, medianę
+i średnią obciętą po jednej obserwacji z każdej strony.
+\par\emph{Rozwiązanie.} Suma wynosi $148$, więc
+$\bar x=148/9\approx16{,}44$. Mediana to piąty wynik, równy $6$.
+Po usunięciu minimum $4$ i maksimum $100$ zostaje suma $44$,
+a zatem średnia obcięta to $44/7\approx6{,}29$.
+Jeżeli celem jest oszacowanie typowego poziomu przy możliwej
+awarii czujnika, mediana lub estymator odporny są rozsądne.
+Jeżeli $100$ oznacza rzeczywisty koszt, którego nie wolno ignorować,
+średnia może być odpowiednia. Dobór statystyki wynika z definicji
+problemu, a nie wyłącznie z testu normalności.
+\end{zadanie}
+
+\section{Jak porównywać estymatory? Teoria i praktyka}
+\begin{stwierdzenie}[Przekształcenie zgodnych estymatorów]
+\label{prop:continuous-estimator}
+Niech $T_n\to t_0$ według prawdopodobieństwa przy ustalonym
+$P_{\theta_0}$ i niech $g$ będzie ciągła w $t_0$. Wtedy
+$g(T_n)\to g(t_0)$ według prawdopodobieństwa.
+\end{stwierdzenie}
+\begin{proof}
+Dla dowolnego $\varepsilon>0$ z ciągłości $g$ w $t_0$
+wybieramy $\delta>0$ takie, że $\|x-t_0\|<\delta$
+implikuje $\|g(x)-g(t_0)\|<\varepsilon$.
+Wówczas
+$P(\|g(T_n)-g(t_0)\|\ge\varepsilon)
+\le P(\|T_n-t_0\|\ge\delta)\to0$.
+\end{proof}
+
+Zgodność przekształconego MLE nie oznacza zachowania
+nieobciążoności. Podobnie \emph{mniejsza wariancja} nie wystarcza
+do uznania estymatora obciążonego za lepszy: trzeba porównywać MSE
+w odniesieniu do \emph{tego samego estymandu}.
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.24\textwidth}>{\raggedright\arraybackslash}p{0.32\textwidth}>{\raggedright\arraybackslash}p{0.31\textwidth}}
+\toprule
+\textbf{Podejście} & \textbf{Kiedy warto rozważyć?} & \textbf{Co sprawdzić przed użyciem?}\\
+\midrule
+Metoda momentów & Momenty są znane i łatwe do odwrócenia; potrzebujemy punktu startowego optymalizacji & Istnienie momentów, identyfikowalność, rozwiązanie w $\Theta$\\
+MLE & Wiarygodny pełny model parametryczny, dobrze określone maksimum & Brzegi i zależność nośnika, multimodalność, dopasowanie modelu\\
+Estymator nieobciążony & Wymóg braku systematycznego błędu przy wszystkich $\theta$ & Wariancja i MSE; nieobciążoność nie gwarantuje stabilności\\
+Mediana i metody odporne & Obserwacje odstające, ciężkie ogony, cel „typowy poziom” & Koszt utraty efektywności, model skażenia, dobór skali\\
+Reguła minimaksowa & Liczy się zabezpieczenie najgorszego ryzyka & Czy najgorszy przypadek ma znaczenie praktyczne?\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Praktyczny schemat pracy.}
+Najpierw wskazujemy estymand i jednostkę obserwacji. Następnie
+sprawdzamy, czy wszystkie wykorzystywane momenty istnieją;
+wyprowadzamy kandydatów oraz ich ograniczenia. Porównujemy obciążenie,
+MSE i zgodność \emph{pod zadanym modelem}; badamy również wrażliwość
+na odchylenia od modelu. Na koniec raportujemy jednostkę parametru
+i niepewność oszacowania. Same estymaty punktowe nie zastępują
+przedziałów ufności, które wprowadzimy w kolejnych rozdziałach.
+
+\Needspace{16\baselineskip}
+\noindent\textbf{Minimalny kod w Pythonie (bez zewnętrznych pakietów).}\par
+\par
+\Needspace{13\baselineskip}
+\smallskip
+\begin{lstlisting}[language=Python,caption={Porównanie statystyk odpornych i estymatorów intensywności (Python).}]
+from statistics import mean, median
+x = [4, 5, 5, 6, 6, 7, 7, 8, 100]
+print('srednia:', mean(x), 'mediana:', median(x))
+print('srednia obcieta:', mean(sorted(x)[1:-1]))
+waiting_times = [0.4, 0.6, 1.2, 1.8, 2.0]
+S, n = sum(waiting_times), len(waiting_times)
+print('MLE lambda:', n/S, 'nieobciazony:', (n-1)/S)
+\end{lstlisting}
+\Needspace{16\baselineskip}
+\noindent\textbf{To samo w Julii.}\par
+\par
+\Needspace{13\baselineskip}
+\smallskip
+\begin{lstlisting}[language=Julia,caption={Średnia obcięta i estymatory intensywności (Julia).}]
+using Statistics
+x = [4, 5, 5, 6, 6, 7, 7, 8, 100]
+println((mean(x), median(x), mean(sort(x)[2:end-1])))
+w = [0.4, 0.6, 1.2, 1.8, 2.0]
+println((length(w)/sum(w), (length(w)-1)/sum(w)))
+\end{lstlisting}
+
+
+% ================================================================
+% ROZDZIAL 6 -- DOSTATECZNOSC, ZUPELNOSC I UMVU
+% ================================================================

@@ -1,0 +1,286 @@
+\chapter{Grafy Taita, wielomian Tutte'a i macierze Goeritza}
+\label{ch:tg-tait-goeritz}
+
+W rozdziale~\ref{ch:tg-tutte} i w sekcji~\ref{sec:kt-jones}
+poznaliśmy dwa opisy diagramu węzła: rozkład płaszczyzny
+na obszary oraz wybory wygładzeń w nawiasie Kauffmana.
+Zaskakująco wiele informacji o diagramie można przechować
+w grafie planarnym: obszary stają się wierzchołkami,
+a skrzyżowania krawędziami. Ten rozdział pokazuje
+jednocześnie, kiedy opis grafowy jest pełny, a kiedy
+trzeba zachować także znaki lub dane zanurzenia.
+
+\section{Kolorowanie szachownicowe i grafy Taita}
+\label{sec:tg-tait-def}
+
+\begin{definicja}[Graf Taita]
+Niech $D$ będzie spójnym regularnym diagramem splotu
+na orientowanej sferze $S^2$, z co najmniej jednym
+skrzyżowaniem. Kolorujemy składowe $S^2\setminus D$
+na czarno i biało tak, aby obszary sąsiadujące przez
+odcinek diagramu miały różne kolory. \emph{Czarny graf
+Taita} $G_B(D)$ ma jeden wierzchołek w każdym czarnym
+obszarze oraz jedną krawędź za każde skrzyżowanie,
+łączącą wierzchołki dwóch czarnych sektorów przy tym
+skrzyżowaniu. Krawędzie prowadzimy w małych otoczeniach
+skrzyżowań, tak aby otrzymać graf zanurzony w $S^2$.
+Analogicznie definiujemy biały graf Taita $G_W(D)$.
+Pętle i wielokrotne krawędzie są dozwolone.
+\end{definicja}
+
+\begin{stwierdzenie}[Dualność grafów Taita]
+Dla każdego spójnego regularnego diagramu splotu $D$
+z co najmniej jednym skrzyżowaniem istnieje kolorowanie
+szachownicowe jego obszarów. Po ustaleniu kolorowania
+grafy $G_B(D)$ i $G_W(D)$ są planarnymi grafami dualnymi.
+\end{stwierdzenie}
+\begin{proof}
+Na sferze diagram jest zanurzonym grafem czteroregularnym.
+Jest eulerowski, ponieważ każdy wierzchołek ma stopień
+cztery. Z twierdzenia o parzystości obwodów ścianowych
+równoważnego dwudzielności grafu dualnego wynika
+istnienie kolorowania szachownicowego. Można też
+skonstruować je bezpośrednio: ustalamy kolor obszaru
+zewnętrznego i zmieniamy kolor za każdym przejściem
+przez łuk diagramu; zamknięta krzywa poprzeczna przecina
+diagram parzyście wiele razy modulo dwa, ponieważ diagram
+jest cyklem nad $\mathbb F_2$ na sferze i
+$H_1(S^2;\mathbb F_2)=0$. Zatem wynik nie zależy od
+wybranej drogi między obszarami.
+
+W każdym skrzyżowaniu czarne sektory stanowią przeciwległą
+parę, a białe drugą. Umieszczamy krawędź czarnego grafu
+przez środek skrzyżowania, a krawędź białego grafu
+poprzecznie do niej. Każde skrzyżowanie diagramu odpowiada
+dokładnie jednemu przecięciu krawędzi obu grafów.
+Białe obszary diagramu są ścianami czarnego grafu,
+więc otrzymujemy definicję planarnego grafu dualnego.
+\end{proof}
+
+\begin{przyklad}[Dwa grafy Taita trójlistnika]
+Dla standardowego trójskrzyżowaniowego diagramu trójlistnika
+jeden wybór kolorowania daje graf trójkątny $C_3$.
+Drugi daje graf o dwóch wierzchołkach połączonych trzema
+równoległymi krawędziami. Są to wzajemnie dualne grafy
+planarne; w obu przypadkach liczba krawędzi wynosi trzy.
+Sama liczba krawędzi nie wystarcza do odtworzenia splotu:
+w ogólności niezbędne są znaki skrzyżowań i sposób
+zanurzenia grafu.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[scale=.9,line cap=round,>=Stealth]
+ \begin{scope}[shift={(-2.65,0)}]
+  \node[tgBlueVertex] (a) at (0,1.1) {};
+  \node[tgBlueVertex] (b) at (-1,-.65) {};
+  \node[tgBlueVertex] (c) at (1,-.65) {};
+  \draw[tgAccent] (a)--(b)--(c)--cycle;
+  \node[font=\small,text=tgNavy] at (0,-1.25) {czarny graf Taita: $C_3$};
+ \end{scope}
+ \draw[tgTeal,-{Stealth[length=3mm]},line width=1.4pt] (-.85,.2)--(.85,.2);
+ \begin{scope}[shift={(2.65,0)}]
+  \node[tgRedVertex] (u) at (-.7,.05) {};
+  \node[tgRedVertex] (v) at (.7,.05) {};
+  \draw[tgTree] (u)--(v);
+  \draw[tgTree] (u) to[bend left=55] (v);
+  \draw[tgTree] (u) to[bend right=55] (v);
+  \node[font=\small,text=tgNavy] at (0,-1.25) {biały graf Taita: trzy krawędzie};
+ \end{scope}
+\end{tikzpicture}
+\end{center}
+
+\section{Nawias Kauffmana ze zbiorów krawędzi}
+\label{sec:tg-tait-tutte}
+
+\begin{twierdzenie}[Wielomian Tutte'a a nawias diagramu alternującego]
+\label{thm:tg-tait-tutte}
+Niech $D$ będzie spójnym, niezorientowanym, alternującym
+diagramem splotu, a $G$ jego grafem Taita dla kolorowania
+szachownicowego wybranego tak, by w każdym skrzyżowaniu
+wygładzenie A łączyło czarne sektory. Niech
+$v=|V(G)|$ oraz $e=|E(G)|$. W przyjętej wcześniej
+normalizacji nawiasu Kauffmana, w której
+$\langle\bigcirc\rangle=1$ i
+$\delta=-A^2-A^{-2}$, zachodzi
+\[
+\langle D\rangle
+=A^{2v-e-2}\,T_G(-A^{-4},-A^4).
+\]
+Dla diagramu z orientacją wielomian Jonesa otrzymujemy
+przez dodatkową normalizację
+$V_L(t)=(-A^3)^{-w(D)}\langle D\rangle\big|_{A=t^{-1/4}}$.
+\end{twierdzenie}
+
+\begin{proof}
+Niech $F\subseteq E(G)$ oznacza krawędzie tych skrzyżowań,
+w których wybieramy wygładzenie A; w pozostałych
+wybieramy B. Tak określony stan ma współczynnik
+$A^{|F|}A^{-(e-|F|)}=A^{2|F|-e}$.
+Czarne obszary diagramu można potraktować jako dyski,
+a krawędzie $F$ jako wąskie pasma łączące te dyski.
+Otrzymana płaska powierzchnia regularnego otoczenia
+podgrafu rozpinającego $(V(G),F)$ ma $k(F)$ składowych,
+charakterystykę Eulera $v-|F|$ i, ponieważ leży na
+sferze, rodzaj zero na każdej składowej. Jeżeli
+$b(F)$ oznacza liczbę jej okręgów brzegowych, to
+$2k(F)-b(F)=v-|F|$, czyli
+$b(F)=2k(F)-v+|F|$.
+Te właśnie okręgi są okręgami stanu Kauffmana.
+Zatem
+\[
+\langle D\rangle=
+\sum_{F\subseteq E(G)}
+ A^{2|F|-e}\delta^{2k(F)-v+|F|-1}.
+\]
+Dla spójnego grafu $G$ wielomian Tutte'a można
+zapisać jako sumę po podzbiorach krawędzi:
+\[
+T_G(x,y)=\sum_{F\subseteq E(G)}
+(x-1)^{k(F)-1}(y-1)^{|F|-v+k(F)}.
+\]
+Ponieważ przy $x=-A^{-4}$ i $y=-A^4$ zachodzi
+$x-1=A^{-2}\delta$ i $y-1=A^2\delta$,
+otrzymujemy po podstawieniu
+\[
+A^{2v-e-2}T_G(-A^{-4},-A^4)
+=\sum_{F\subseteq E(G)}
+ A^{2|F|-e}\delta^{2k(F)-v+|F|-1},
+\]
+co jest dokładnie poprzednią sumą stanów.
+Dla diagramu alternującego można wybrać kolorowanie,
+przy którym wszystkie wygładzenia A łączą czarne
+sektory; przy zmianie konwencji trzeba odpowiednio
+zamienić $A$ z $A^{-1}$ i graf z jego dualnym.
+Formuła na $V_L$ jest definicją normalizacji
+podaną w części poświęconej wielomianowi Jonesa.
+\end{proof}
+
+\begin{przyklad}[Pełny rachunek dla trójlistnika]
+Dla grafu trójkątnego $G=C_3$ wyznaczyliśmy wcześniej
+$T_G(x,y)=x^2+x+y$. Dlatego
+\[
+T_G(-A^{-4},-A^4)=A^{-8}-A^{-4}-A^4,
+\quad
+\langle D\rangle=A^{2\cdot3-3-2}T_G(-A^{-4},-A^4)
+=A^{-7}-A^{-3}-A^5.
+\]
+Dla dodatnio zorientowanego diagramu trójlistnika
+$w(D)=3$, zatem
+$(-A^3)^{-3}\langle D\rangle
+=A^{-4}+A^{-12}-A^{-16}$.
+Po przyjęciu $t=A^{-4}$ dostajemy
+$V_T(t)=t+t^3-t^4$, zgodnie z obliczeniem
+z algebry Temperleya--Lieba z sekcji~\ref{sec:kt-jones}.
+Dwa zupełnie różne
+rachunki prowadzą więc do tego samego niezmiennika.
+\end{przyklad}
+
+\section{Macierz Goeritza i wyznacznik węzła}
+\label{sec:tg-goeritz}
+
+\begin{definicja}[Podpisany laplasjan grafu Taita]
+Dla wybranego kolorowania szachownicowego diagramu $D$
+przypisujemy każdemu skrzyżowaniu wagę
+$\eta(c)\in\{-1,1\}$: znak dodatni oznacza,
+że lokalne wygładzenie A łączy czarne sektory,
+a ujemny, że łączy białe. Niech $G=G_B(D)$, a
+$B$ będzie dowolną macierzą incydencji grafu $G$,
+z pominięciem krawędzi pętlowych (ich kolumny są zerowe).
+Definiujemy macierz
+\[
+\mathcal G_D=B\,\operatorname{diag}(\eta(c))\,B^T.
+\]
+Jej elementy pozadiagonalne są ujemnymi sumami wag
+krawędzi łączących odpowiednie wierzchołki; przekątna
+jest sumą wag krawędzi incydentnych. \emph{Zredukowaną
+macierzą Goeritza} nazywamy macierz otrzymaną przez
+usunięcie jednego wiersza i odpowiadającej kolumny
+z $\mathcal G_D$.
+\end{definicja}
+
+\begin{stwierdzenie}[Suma drzew z wagami]
+Niech $G$ będzie spójnym grafem o wierzchołkach
+$1,\ldots,n$ i wagach $w_e\in\mathbb R$ na krawędziach.
+Dla macierzy $L=B\operatorname{diag}(w_e)B^T$
+i dowolnego jej minora głównego $L^{(r)}$
+uzyskanego przez skreślenie wiersza i kolumny $r$
+zachodzi
+\[
+\det L^{(r)}=\sum_{T\text{ drzewo rozpinające }G}
+\ \prod_{e\in E(T)}w_e.
+\]
+Tożsamość obowiązuje także dla wag ujemnych.
+\end{stwierdzenie}
+\begin{proof}
+Niech $B_r$ oznacza macierz powstałą z $B$ przez
+usunięcie wiersza $r$. Z formuły Cauchy'ego--Bineta
+mamy
+\[
+\det(B_r\operatorname{diag}(w_e)B_r^T)
+=\sum_{F\subseteq E,\ |F|=n-1}
+\det(B_{r,F})^2\prod_{e\in F}w_e.
+\]
+Minor $B_{r,F}$ jest zerowy, jeżeli $F$ nie jest
+drzewem rozpinającym; gdy $F$ jest drzewem,
+jego wyznacznik wynosi $\pm1$, czego dowiedliśmy
+przy twierdzeniu Kirchhoffa przez rozwijanie
+względem liści. Stąd dokładnie wskazany wzór.
+Nie korzystaliśmy z dodatniości wag; ujemne wartości
+są dozwolone, a ewentualne znaki pojawiają się jedynie
+w iloczynach $\prod w_e$.
+\end{proof}
+
+\begin{twierdzenie}[Goeritz; identyfikacja wyznacznika]
+Niech $K\subset S^3$ będzie węzłem, a $D$ jego
+spójnym regularnym diagramem. Niech
+$\mathcal G_D^{(r)}$ będzie dowolną zredukowaną
+macierzą Goeritza zdefiniowaną powyżej. Wtedy
+\[
+\det(K)=|\Delta_K(-1)|=|\det\mathcal G_D^{(r)}|.
+\]
+W szczególności, dla alternującego diagramu węzła,
+po wyborze kolorowania, przy którym wszystkie wagi
+są jednakowe, otrzymujemy
+$\det(K)=\tau(G_B(D))$, gdzie $\tau(G)$ oznacza
+liczbę drzew rozpinających grafu $G$.
+\end{twierdzenie}
+\begin{uwaga}[Co zostało udowodnione]
+Przed chwilą wykazaliśmy w pełni formułę wyznacznika
+podpisanego laplasjanu jako sumy po drzewach.
+Utożsamienie tego wyznacznika z $|\Delta_K(-1)|$
+jest osobnym, klasycznym twierdzeniem Goeritza,
+przy standardowej konwencji znaków skrzyżowań
+oraz po odpowiedniej redukcji macierzy,
+które można udowodnić przez prezentację homologii
+pierwszej dwukrotnego nakrycia $S^3$ rozgałęzionego
+wzdłuż $K$. Jego pełny dowód wymaga przygotowania
+teorii nakryć rozgałęzionych; przyjmujemy go tutaj
+z materiału o węzłach, nie utożsamiając go z
+kombinatoryczną częścią rachunku.
+\end{uwaga}
+
+\begin{przyklad}[Wyznacznik trójlistnika bez macierzy Seiferta]
+Dla $G=C_3$ wszystkie wagi można przyjąć za $+1$.
+Laplasjan grafu ma macierz
+\[
+\mathcal G_D=\begin{pmatrix}
+ 2&-1&-1\\ -1&2&-1\\ -1&-1&2
+\end{pmatrix}.
+\]
+Po skreśleniu trzeciego wiersza i kolumny dostajemy
+$\mathcal G_D^{(3)}=\begin{psmallmatrix}2&-1\\-1&2\end{psmallmatrix}$,
+więc $\det(K)=|4-1|=3$.
+Ta sama liczba jest liczbą trzech drzew rozpinających
+trójkątnego grafu Taita i zgadza się z wyznacznikiem
+wielomianu Alexandera $t^2-t+1$ przy $t=-1$.
+\end{przyklad}
+
+\begin{uwaga}[Literatura]
+Związek wielomianu Jonesa i wielomianu Tutte'a dla diagramów
+alternujących jest klasycznym wynikiem Thistlethwaite'a.
+Metodę wyznaczników macierzy Goeritza i jej związek z
+nakryciami rozgałęzionymi opisują podręczniki
+W. B. R. Lickorisha i D. Rolfsena.
+\end{uwaga}
+
+

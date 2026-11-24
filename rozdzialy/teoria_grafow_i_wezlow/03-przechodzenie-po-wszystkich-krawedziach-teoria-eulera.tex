@@ -1,0 +1,337 @@
+\chapter{Przechodzenie po wszystkich krawędziach: teoria Eulera}
+\label{ch:tg-euler}
+
+Pierwsze dwa rozdziały dotyczyły przede wszystkim spójności i istnienia
+ścieżek. Teraz stawiamy inne pytanie: czy można przejść przez \emph{każdą
+krawędź dokładnie raz}? Problem ma historyczne źródło w zagadnieniu
+mostów królewieckich. Prowadzi do kryterium całkowicie wyrażonego
+przez stopnie wierzchołków, a także do konstruktywnego algorytmu.
+
+\section{Szlaki i cykle Eulera}
+\label{sec:tg-euler-def}
+
+W tej sekcji dopuszczamy multigrafy nieskierowane, także z pętlami.
+W zapisie spaceru wskazujemy kolejno zarówno wierzchołki, jak i
+krawędzie: $v_0,e_1,v_1,\ldots,e_k,v_k$, gdzie końcami $e_i$ są
+$v_{i-1}$ i $v_i$. Taki zapis odróżnia krawędzie równoległe.
+\emph{Nośnikiem krawędziowym} grafu o niepustym zbiorze
+krawędzi nazywamy podgraf o zbiorze wierzchołków złożonym
+z końców wszystkich krawędzi i o pełnym zbiorze krawędzi.
+Wierzchołki izolowane nie wpływają na możliwość przejścia
+przez wszystkie krawędzie. Jeżeli $E=\varnothing$, nośnik
+jest pustą przestrzenią i stosujemy osobną konwencję
+ze wskazanej poniżej definicji.
+
+\begin{definicja}[Szlak Eulera i cykl Eulera]
+Niech $G=(V,E,\partial)$ będzie skończonym multigrafem nieskierowanym.
+\emph{Szlakiem Eulera} nazywamy szlak, w którym każda krawędź
+$e\in E$ występuje dokładnie raz. Jeżeli taki szlak jest zamknięty,
+nazywamy go \emph{cyklem Eulera} (mimo że może wielokrotnie
+odwiedzać ten sam wierzchołek). Dla $E=\varnothing$ i $V\ne\varnothing$ przyjmujemy,
+że spacer długości zero, w dowolnym wierzchołku,
+jest zamkniętym szlakiem Eulera. W tym szczególnym przypadku
+nie należy wymagać spójności nośnika krawędziowego.
+\end{definicja}
+
+Termin ,,cykl Eulera'' jest tradycyjny: nie jest to cykl prosty
+zdefiniowany wcześniej. Przykładowo obieg dwóch trójkątów
+połączonych jednym wspólnym wierzchołkiem jest cyklem Eulera,
+choć wspólny wierzchołek odwiedzamy więcej niż raz.
+
+\begin{center}
+\begin{tikzpicture}[scale=.95,line cap=round,>=Stealth]
+  \node[tgBlueVertex] (a) at (-2,0) {$a$};
+  \node[tgBlueVertex] (b) at (-1.1,1.2) {$b$};
+  \node[tgBlueVertex] (c) at (0,0) {$c$};
+  \node[tgBlueVertex] (d) at (1.1,1.2) {$d$};
+  \node[tgBlueVertex] (e) at (2,0) {$e$};
+  \draw[tgTree,-{Stealth[length=2mm]}] (a)--(b);
+  \draw[tgTree,-{Stealth[length=2mm]}] (b)--(c);
+  \draw[tgTree,-{Stealth[length=2mm]}] (c)--(a);
+  \draw[tgAccent,-{Stealth[length=2mm]}] (c)--(d);
+  \draw[tgAccent,-{Stealth[length=2mm]}] (d)--(e);
+  \draw[tgAccent,-{Stealth[length=2mm]}] (e)--(c);
+  \node[text=tgNavy,font=\footnotesize] at (0,-.65)
+     {$a\to b\to c\to d\to e\to c\to a$};
+\end{tikzpicture}
+
+{\footnotesize Dwa trójkąty mają wspólny wierzchołek $c$.
+Kolory pokazują dwa fragmenty jednego zamkniętego szlaku Eulera.}
+\end{center}
+
+\begin{lemat}[Parzystość stopni wewnętrznych]
+\label{lem:tg-euler-parity}
+Niech $v_0,e_1,v_1,\dots,e_k,v_k$ będzie szlakiem
+w skończonym multigrafie nieskierowanym $G$. Jeżeli jest on
+zamknięty, to w podgrafie złożonym z jego krawędzi każdy
+wierzchołek ma parzysty stopień. Jeżeli $v_0\ne v_k$,
+to stopnie $v_0,v_k$ w tym podgrafie są nieparzyste,
+a wszystkie pozostałe są parzyste.
+\end{lemat}
+
+\begin{proof}
+Każde pojawienie się wierzchołka jako punktu pośredniego
+szlaku ma dwie incydentne krawędzie: tę, którą weszliśmy,
+i tę, którą wyszliśmy. Krawędzie te są różne, ponieważ szlak
+nie powtarza krawędzi. W ten sposób można pogrupować
+wszystkie końce wykorzystanych krawędzi w pary.
+Jeżeli początek i koniec są tym samym wierzchołkiem,
+pierwszy wyjazd parujemy z ostatnim powrotem; również pętla
+liczona jest jako dwa końce tej samej krawędzi. Przy różnych
+końcach zostaje dokładnie jeden niesparowany koniec
+przy $v_0$ i jeden przy $v_k$. To daje odpowiednie parzystości.
+\end{proof}
+
+\begin{twierdzenie}[Euler: charakterystyka zamknięta]
+\label{thm:tg-euler-circuit}
+Niech $G$ będzie skończonym multigrafem nieskierowanym
+z co najmniej jedną krawędzią. Wówczas istnieje cykl Eulera
+w $G$ wtedy i tylko wtedy, gdy
+\begin{enumerate}[label=(\roman*)]
+\item wszystkie wierzchołki dodatniego stopnia leżą w jednej
+składowej spójnej;
+\item dla każdego $v\in V(G)$ stopień $d_G(v)$ jest parzysty.
+\end{enumerate}
+\end{twierdzenie}
+
+\begin{proof}
+Jeżeli istnieje cykl Eulera, jego kolejne krawędzie łączą
+wszystkie wierzchołki o dodatnim stopniu, a lemat
+\ref{lem:tg-euler-parity} zapewnia parzystość ich stopni.
+
+Załóżmy odwrotnie, że (i)--(ii) zachodzą. Wybieramy wierzchołek
+$v_0$ dodatniego stopnia i rozpoczynamy szlak, wybierając
+za każdym razem dowolną \emph{niewykorzystaną} krawędź.
+Ponieważ graf jest skończony, proces musi się zatrzymać.
+Nie może zakończyć się w wierzchołku $w\ne v_0$:
+przed ewentualnym zakończeniem w $w$ liczba wykorzystanych
+końców krawędzi incydentnych z $w$ jest nieparzysta,
+a całkowity stopień $w$ jest parzysty. Pozostaje zatem
+niewykorzystana krawędź wychodząca z $w$.
+Otrzymaliśmy pewien zamknięty szlak $C$.
+
+Jeżeli $C$ zawiera wszystkie krawędzie, dowód jest zakończony.
+W przeciwnym razie istnieje niewykorzystana krawędź
+przylegająca do wierzchołka $C$. Istotnie, gdyby takiej
+krawędzi nie było, zbiór wierzchołków $C$ byłby odseparowany
+od wszystkich pozostałych krawędzi, co przeczyłoby spójności
+nośnika krawędziowego. Niech $w$ będzie takim wierzchołkiem.
+W multigrafie złożonym z \emph{niewykorzystanych} krawędzi
+wszystkie stopnie nadal są parzyste: od pierwotnego
+parzystego stopnia odjęliśmy parzysty stopień pochodzący
+z zamkniętego szlaku $C$. Możemy więc, zaczynając w $w$,
+zbudować kolejny niepusty szlak zamknięty $C'$ złożony
+wyłącznie z niewykorzystanych krawędzi.
+
+W miejscu wystąpienia $w$ na $C$ wstawiamy cały obieg $C'$
+i wracamy następnie do dalszej części $C$. Powstaje dłuższy
+zamknięty szlak, nadal bez powtarzania krawędzi.
+Przy każdym takim kroku zużywamy co najmniej jedną nową
+krawędź. Po skończonej liczbie kroków uzyskamy cykl Eulera.
+\end{proof}
+
+\begin{uwaga}[Algorytm Hierholzera]
+Dowód jest algorytmem: budujemy zamknięty szlak, wyszukujemy
+na nim wierzchołek incydentny z niewykorzystaną krawędzią,
+a następnie wplatamy nowy zamknięty szlak. Przy przechowywaniu
+list krawędzi incydentnych można wykonać całą procedurę w czasie
+$O(|V|+|E|)$, ponieważ każdą krawędź rozpatrujemy
+stałą liczbę razy. Sama zasada ,,idź dowolną krawędzią''
+bez etapu wplatania cykli nie gwarantuje natychmiastowego
+wykorzystania wszystkich krawędzi.
+\end{uwaga}
+
+\begin{twierdzenie}[Euler: charakterystyka otwarta]
+\label{thm:tg-euler-trail}
+Niech $G$ będzie skończonym multigrafem nieskierowanym
+z co najmniej jedną krawędzią, którego wszystkie wierzchołki
+dodatniego stopnia należą do jednej składowej spójnej.
+Wówczas $G$ ma szlak Eulera o różnych końcach wtedy
+i tylko wtedy, gdy dokładnie dwa wierzchołki mają
+nieparzysty stopień. Końcami dowolnego takiego szlaku
+są właśnie te dwa wierzchołki.
+\end{twierdzenie}
+
+\begin{proof}
+Konieczność daje lemat \ref{lem:tg-euler-parity}.
+Jeśli dokładnie dwa wierzchołki $s,t$ mają nieparzysty
+stopień, dołączamy \emph{nową} krawędź $e_*$ o końcach $s,t$,
+nawet gdy były już połączone krawędzią. Otrzymany multigraf
+ma wszystkie stopnie parzyste oraz spójny nośnik krawędziowy.
+Na mocy twierdzenia \ref{thm:tg-euler-circuit} ma cykl Eulera.
+Usuwając z tego cyklu wystąpienie $e_*$ i rozpoczynając
+odpowiednio obieg, otrzymujemy szlak przechodzący po każdej
+oryginalnej krawędzi dokładnie raz, od $s$ do $t$.
+\end{proof}
+
+\begin{przyklad}[Mosty królewieckie]
+Model historycznego układu siedmiu mostów ma cztery
+wierzchołki odpowiadające obszarom lądu. Ich stopnie
+wynoszą $3,3,3,5$; suma $14$ odpowiada siedmiu krawędziom,
+zgodnie z lematem o uściskach dłoni. Ponieważ wierzchołków
+nieparzystych jest cztery, nie istnieje ani zamknięty,
+ani otwarty szlak Eulera. Problem nie zależy od długości
+mostów ani od ich rysunkowego położenia.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[scale=.95,line cap=round]
+ \node[tgBlueVertex] (a) at (-2,0) {$A$};
+ \node[tgBlueVertex] (b) at (2,0) {$B$};
+ \node[tgRedVertex] (c) at (0,1.45) {$C$};
+ \node[tgRedVertex] (d) at (0,-1.45) {$D$};
+ \draw[tgEdge] (a) to[bend left=19] (c);
+ \draw[tgEdge] (a) to[bend right=19] (c);
+ \draw[tgEdge] (b) to[bend left=19] (c);
+ \draw[tgEdge] (b) to[bend right=19] (c);
+ \draw[tgAccent] (a)--(d);
+ \draw[tgAccent] (b)--(d);
+ \draw[tgEdge] (c)--(d);
+ \node[font=\footnotesize,text=tgNavy] at (0,-2.10)
+    {$d(A)=3,\ d(B)=3,\ d(C)=5,\ d(D)=3$};
+\end{tikzpicture}
+
+{\footnotesize Jeden z abstrakcyjnych modeli problemu siedmiu mostów;
+krawędzie równoległe odpowiadają różnym mostom.}
+\end{center}
+
+\section{Orientacje krawędzi i skierowane obiegi Eulera}
+\label{sec:tg-orientacje}
+
+\begin{definicja}[Graf skierowany i orientacja]
+\emph{Graf skierowany} to para $(V,A)$, gdzie $V$ jest
+skończonym zbiorem wierzchołków, a $A\subseteq V\times V$
+jest zbiorem łuków; łuk $(u,v)$ zapisujemy jako $u\to v$.
+\emph{Orientacja} grafu prostego nieskierowanego $G=(V,E)$
+powstaje przez zastąpienie każdej krawędzi $\{u,v\}\in E$
+dokładnie jednym z łuków $(u,v)$ lub $(v,u)$.
+Stopień wejściowy $d^-(v)$ jest liczbą łuków kończących się
+w $v$, a stopień wyjściowy $d^+(v)$ jest liczbą łuków
+zaczynających się w $v$.
+\end{definicja}
+
+Dla grafów skierowanych rozważamy spacer zgodny z kierunkami
+łuków. Graf skierowany nazywamy \emph{silnie spójnym}, gdy
+każde dwa wierzchołki można połączyć skierowanymi ścieżkami
+w obie strony. Przez spójność \emph{słabą} rozumiemy spójność
+grafu otrzymanego po zapomnieniu kierunków łuków.
+
+\begin{twierdzenie}[Skierowane obiegi Eulera]
+Niech $D=(V,A)$ będzie skończonym grafem skierowanym
+z co najmniej jednym łukiem. Wówczas ma on skierowany
+zamknięty szlak Eulera wtedy i tylko wtedy, gdy
+\begin{enumerate}[label=(\roman*)]
+\item wszystkie wierzchołki incydentne z łukami należą do
+jednej słabo spójnej składowej;
+\item $d^+(v)=d^-(v)$ dla każdego $v\in V$.
+\end{enumerate}
+\end{twierdzenie}
+
+\begin{proof}
+W skierowanym zamkniętym szlaku każde wejście do wierzchołka
+jest sparowane z wyjściem, więc otrzymujemy (ii).
+Ponieważ szlak zawiera wszystkie łuki, zachodzi też (i).
+
+Odwrotnie, wychodzimy z wierzchołka incydentnego z łukiem
+i przedłużamy skierowany szlak bez powtarzania łuków.
+Jeżeli zatrzymałby się w wierzchołku innym niż początek,
+to miałby tam o jedno wykorzystane wejście więcej niż
+wykorzystanych wyjść. Z równości $d^+=d^-$ wynikałoby
+istnienie niewykorzystanego wyjścia, sprzeczność.
+Otrzymujemy więc zamknięty szlak. Po jego usunięciu
+równość stopni wejściowych i wyjściowych pozostaje prawdziwa.
+Słaba spójność zapewnia, że jeżeli nie wykorzystaliśmy
+wszystkich łuków, jeden z nich ma koniec w wierzchołku
+już użytym w naszym szlaku. Z tego wierzchołka konstruujemy
+następny zamknięty szlak i wplatamy go do poprzedniego.
+Iteracja kończy się po wykorzystaniu wszystkich łuków.
+\end{proof}
+
+\begin{stwierdzenie}[Orientacja eulerowska]
+Niech $G$ będzie skończonym multigrafem nieskierowanym.
+Istnieje orientacja każdej jego krawędzi, dla której
+$d^+(v)=d^-(v)$ przy wszystkich $v$, wtedy i tylko wtedy,
+gdy każdy stopień $d_G(v)$ jest parzysty.
+\end{stwierdzenie}
+
+\begin{proof}
+W każdej orientacji $d_G(v)=d^+(v)+d^-(v)$,
+więc przy równości obu składników stopień jest parzysty.
+Odwrotnie, w każdej nieizolowanej składowej grafu o
+parzystych stopniach wybieramy cykl Eulera i orientujemy
+krawędzie zgodnie z przebiegiem. Każde wejście na obiegu
+odpowiada jednemu wyjściu. Wierzchołki izolowane mają
+oba stopnie równe zero.
+\end{proof}
+
+\section{Silnie spójna orientacja i mosty}
+\label{sec:tg-robbins}
+
+\begin{twierdzenie}[Robbins]
+\label{thm:tg-robbins}
+Niech $G$ będzie skończonym spójnym grafem prostym
+z co najmniej dwoma wierzchołkami. Istnieje silnie spójna
+orientacja krawędzi $G$ wtedy i tylko wtedy,
+gdy $G$ nie ma mostów.
+\end{twierdzenie}
+
+\begin{proof}
+Jeżeli $e$ jest mostem, usunięcie go rozdziela graf na dwa
+niepuste zbiory wierzchołków $S$ oraz $V\setminus S$.
+Jedyny łuk łączący te części, niezależnie od wybranej
+orientacji, umożliwia przejście tylko w jednym kierunku.
+Silna spójność jest zatem niemożliwa.
+
+Załóżmy, że $G$ nie ma mostów. Wykonujemy przeszukiwanie
+w głąb (DFS) zaczynając od wierzchołka $r$ i otrzymujemy
+drzewo rozpinające $T$. Orientujemy każdą krawędź drzewa
+\emph{od korzenia ku potomkom}. Każdą pozostałą krawędź
+orientujemy od potomka do przodka. Takie ustalenie
+jest możliwe, ponieważ w nieskierowanym DFS każda
+krawędź niedrzewowa łączy wierzchołek z jego przodkiem
+(w razie potrzeby dowód: podczas pierwszego przeglądania
+krawędzi jeden koniec jest jeszcze na stosie rekurencji;
+gdyby oba końce należały do różnych, już zakończonych gałęzi,
+krawędź zostałaby wcześniej użyta do odkrycia jednej z nich).
+
+Z korzenia $r$ można dotrzeć do każdego wierzchołka
+po skierowanych krawędziach drzewa. Pokażemy, że
+z każdego wierzchołka można również dotrzeć do $r$.
+Dla wierzchołka $v\ne r$ niech $p$ będzie jego rodzicem,
+a $S_v$ zbiorem wszystkich potomków $v$ łącznie z $v$.
+Krawędź $pv$ nie jest mostem, zatem istnieje inna krawędź
+między $S_v$ i $V\setminus S_v$. Własność DFS zapewnia,
+że jest ona niedrzewowa i łączy pewnego potomka $x\in S_v$
+z przodkiem $y$ wierzchołka $v$ (ewentualnie $y=p$).
+W orientacji możemy przejść od $v$ do $x$ w dół drzewa,
+a potem łukiem $x\to y$. W ten sposób dotarliśmy do
+wierzchołka o ściśle mniejszej głębokości niż $v$.
+Powtarzając argument, osiągamy $r$, gdyż głębokość
+jest nieujemną liczbą całkowitą i za każdym razem maleje.
+Stąd dla dowolnych $u,w$ istnieje skierowany spacer
+$u\to r\to w$, który można skrócić do skierowanej
+ścieżki. Orientacja jest silnie spójna.
+\end{proof}
+
+\begin{przyklad}[Dlaczego obecność mostu przeszkadza]
+Dwa trójkąty połączone pojedynczą krawędzią nie mają
+silnie spójnej orientacji: każda podróż między trójkątami
+musi użyć mostu, którego orientacja dopuszcza tylko jeden
+kierunek. Z drugiej strony dwa trójkąty o wspólnym
+wierzchołku nie mają mostów i można je zorientować
+zgodnie z obiegiem każdego trójkąta, otrzymując
+silnie spójny graf skierowany.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[scale=.86,line cap=round]
+\foreach \x/\y/\n in {-3/0/a,-2/1/b,-1/0/c,1/0/d,2/1/e,3/0/f}
+  \node[tgBlueVertex] (\n) at (\x,\y) {$\n$};
+\draw[tgTree] (a)--(b)--(c)--(a) (d)--(e)--(f)--(d);
+\draw[tgAccent,line width=2.8pt] (c)--(d);
+\node[font=\footnotesize,text=tgCoral] at (0,.43) {most};
+\node[font=\footnotesize,text=tgNavy] at (0,-.73)
+ {Jedna krawędź między blokami uniemożliwia silną spójność orientacji.};
+\end{tikzpicture}
+\end{center}
+

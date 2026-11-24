@@ -1,0 +1,628 @@
+\chapter{Półmartyngały i wzór Itô dla procesów ze skokami}
+\label{ch:semimartingale-jumps}
+
+\section{Dlaczego połączenie części ciągłej i skokowej wymaga nowego języka?}
+
+Wcześniej skonstruowaliśmy całkę Itô względem procesu Wienera,
+a w Rozdziale~\ref{ch:poisson-random-measure} --- względem
+skompensowanej miary Poissona. Oba przypadki łączy rozkład
+zmienności procesu na część lokalnie martyngałową i część o
+skończonej wariacji. Ta obserwacja motywuje klasę
+\emph{półmartyngałów}. Wprowadzimy ją na poziomie potrzebnym do
+jawnych SDE ze skokami, a głębsze twierdzenia o wszystkich
+półmartyngałach sformułujemy z wyraźnym zaznaczeniem zakresu dowodu.
+
+\begin{definicja}[Półmartyngał i półmartyngał szczególny]
+\label{def:semimartingale}
+Niech $(\calF_t)$ będzie filtracją spełniającą warunki zwykłe,
+a $X$ adaptowanym procesem càdlàg na $[0,T]$.
+Proces $X$ nazywamy \emph{półmartyngałem}, jeżeli istnieją
+càdlàg lokalny martyngał $M$ oraz adaptowany càdlàg proces
+$A$ o skończonej wariacji na każdym przedziale $[0,t]$,
+takie że $X=X_0+M+A$ i $M_0=A_0=0$.
+Jeżeli można wybrać $A$ przewidywalny, to $X$ nazywamy
+\emph{półmartyngałem szczególnym}. W takim przypadku
+rozkład na przewidywalny $A$ i lokalny martyngał $M$
+jest jednoznaczny przy powyższej normalizacji.
+\end{definicja}
+
+\begin{proof}[Uzasadnienie jednoznaczności rozkładu szczególnego]
+Załóżmy, że $X=X_0+M+A=X_0+M'+A'$, gdzie $A,A'$ są
+przewidywalne i mają lokalnie skończoną wariację.
+Proces $L=M-M'=A'-A$ jest przewidywalnym lokalnym
+martyngałem o skończonej wariacji. Ponieważ jego skoki są
+przewidywalne, dla każdego czasu przewidywalnego $\tau$
+warunek martyngałowy daje
+$\E[\Delta L_\tau\mid\calF_{\tau-}]=0$ po lokalizacji.
+Ale $\Delta L_\tau$ jest $\calF_{\tau-}$-mierzalny,
+a więc $\Delta L_\tau=0$. Twierdzenie o anonsowaniu
+skoków procesu przewidywalnego pozwala wywnioskować,
+że $L$ nie ma skoków. Ciągły lokalny martyngał o
+skończonej wariacji jest stały (jego wariacja kwadratowa
+wynosi zero), a $L_0=0$. Otrzymujemy $L=0$.
+\end{proof}
+
+\begin{uwaga}[Granica powyższego argumentu]
+Użyte w ostatnim dowodzie twierdzenie o anonsowaniu skoków
+przewidywalnych jest standardowym wynikiem ogólnej teorii
+procesów; jego pełna konstrukcja nie została tutaj
+przeprowadzona. W dalszych konkretnych przykładach
+jednoznaczność kompensatorów wynika bezpośrednio z
+obliczeń warunkowych. Nie zastępujemy w ten sposób
+pełnego dowodu ogólnego twierdzenia Dooba--Meyera.
+\end{uwaga}
+
+\begin{przyklad}[Trzy różne półmartyngały]
+\begin{enumerate}
+\item $X_t=W_t+\int_0^tb_s\,\dd s$: część
+lokalnie martyngałowa jest ciągła, a skończona wariacja
+pochodzi z dryfu.
+\item $X_t=N_t-\lambda t$ jest martyngałem, mimo że
+między skokami ma ujemne nachylenie; jego wariacja
+całkowita jest skończona na każdym zwartym przedziale.
+\item Proces gamma jest niemalejącym procesem o
+skończonej wariacji, mimo iż na każdym przedziale
+niezerowej długości wykonuje nieskończenie wiele skoków.
+\end{enumerate}
+Drugi przykład pokazuje, że proces o skończonej wariacji
+\emph{nie musi} być przewidywalny ani wolny od części
+martyngałowej. Sam wygląd trajektorii nie wyznacza
+kanonicznej dekompozycji.
+\end{przyklad}
+
+\section{Całka względem półmartyngału: konstrukcja w dostępnej klasie}
+
+Zaczynamy od klasy, którą potrafimy zbudować przy pomocy
+już udowodnionych izometrii. Niech $X=X_0+M+A$, gdzie
+$M$ jest sumą całek względem procesu Wienera i
+skompensowanej miary Poissona, lokalnie kwadratowo
+całkowalnych w sensie poprzednich rozdziałów, a $A$
+adaptowanym procesem càdlàg o lokalnie skończonej wariacji.
+Dla ograniczonego procesu przewidywalnego $H$, dla którego
+oba składniki $H$ razy funkcje podcałkowe $M$ należą lokalnie
+do odpowiednich przestrzeni $L^2$, definiujemy
+\[
+\int_0^t H_s\,\dd X_s
+:=\int_0^tH_s\,\dd M_s+\int_{(0,t]}H_s\,\dd A_s.
+\tag{12.1}\label{eq:semi-integral}
+\]
+Pierwszą całkę definiujemy przez lokalizację w $L^2$,
+a drugą trajektoria po trajektorii jako całkę Lebesgue'a--Stieltjesa.
+W miejscu skoku współczynnik ma wartość $H_s$, dostępną
+z informacji sprzed skoku w sensie przewidywalności. Jeśli
+$H_s=Y_{s-}$ dla adaptowanego procesu càdlàg $Y$, jest to
+konkretnie lewostronna granica $Y$; nie każda przewidywalna
+funkcja podcałkowa musi mieć postać lewostronnej granicy.
+
+\begin{lemat}[Zatrzymywanie i skok całki]
+\label{lem:semi-jumps}
+W sytuacji z \eqref{eq:semi-integral}, jeśli $H$ jest
+ograniczony i przewidywalny, a $\tau\le T$ czasem zatrzymania,
+to
+\[
+\left(\int_0^\cdot H_s\,\dd X_s\right)^\tau_t
+=\int_0^tH_s\ind{\{s\le\tau\}}\,\dd X_s,
+\qquad
+\Delta\left(\int_0^\cdot H_s\,\dd X_s\right)_t
+=H_t\Delta X_t.
+\]
+\end{lemat}
+\begin{proof}
+Dla całki względem $A$ oba wzory wynikają bezpośrednio
+z definicji całki Stieltjesa z atomami i z własności
+miary $\dd A$. Dla elementarnego przewidywalnego $H$
+są to tożsamości sum przyrostów lokalnego martyngału.
+W ogólnym przypadku wykorzystujemy czasy lokalizacji z konstrukcji
+całek Wienera i Poissona, aby odpowiednie całki miały skończone
+drugie momenty. Aproksymacja
+procesów elementarnych i nierówność maksymalna dla
+całek martyngałowych dają zbieżność ucp, zatem
+przechodzimy do granicy w pierwszej równości.
+Jeśli $Y_n\to Y$ ucp i wszystkie procesy są càdlàg,
+to wzdłuż podciągu zachodzi zbieżność jednostajna
+prawie na pewno, a stąd $\Delta Y_n(t)\to\Delta Y(t)$
+jednostajnie w $t$ na ustalonym zwartym przedziale.
+To przenosi równość o skokach, a lokalizacja kończy dowód.
+\end{proof}
+
+\begin{uwaga}[Co zostaje poza konstrukcją?]
+Dla lokalnych martyngałów, które nie są lokalnie
+kwadratowo całkowalne, pełne zdefiniowanie
+$H\cdot X$ wymaga ogólnej teorii całkowania względem
+półmartyngałów. Jej ścisła wersja obejmuje ciągłość
+operatora całkowego w topologii półmartyngałów.
+Nie utożsamiamy tego rozszerzenia z samą izometrią $L^2$;
+w dalszych dowodach pracujemy w jawnej klasie
+procesów Wienera i skompensowanych miar Poissona.
+\end{uwaga}
+
+\section{Wariacja kwadratowa: część ciągła i rzeczywiste skoki}
+
+\begin{twierdzenie}[Wariacja kwadratowa w klasie dyfuzji ze skokami]
+\label{th:jump-qv}
+Niech $X$ będzie rzeczywistym procesem postaci
+\[
+X_t=x+\int_0^t b_s\,\dd s+\int_0^t\sigma_s\,\dd W_s
++\int_{(0,t]\times E_0}\gamma_s(z)\,\widetilde N(\dd s,\dd z)
++\int_{(0,t]\times E_1}\Gamma_s(z)\,N(\dd s,\dd z),
+\]
+gdzie $E_0,E_1\subset E$ są rozłączne,
+$\nu(E_1)<\infty$, a współczynniki są przewidywalne i spełniają
+$\int_0^T(|b_s|+\sigma_s^2+\int_{E_0}\gamma_s(z)^2\dd\nu(z))\dd s
+<\infty$ prawie na pewno.
+Wówczas dla podziałów deterministycznych o średnicy dążącej
+do zera sumy kwadratów przyrostów zbiegają według
+prawdopodobieństwa do
+\[
+[X]_t=\int_0^t\sigma_s^2\,\dd s
++\int_{(0,t]\times E_0}\gamma_s(z)^2\,N(\dd s,\dd z)
++\int_{(0,t]\times E_1}\Gamma_s(z)^2\,N(\dd s,\dd z).
+\tag{12.2}\label{eq:jump-qv}
+\]
+Zbieżność dotyczy każdej ustalonej chwili $t$; przy
+silniejszych oszacowaniach po lokalizacji otrzymujemy ucp.
+\end{twierdzenie}
+\begin{proof}
+Najpierw obcinamy zakres małych skoków tak, aby jego
+intensywność była skończona. Dla procesu mającego
+skończenie wiele skoków na $[0,T]$ oraz ciągłą część
+Itô możemy rozbić sumę kwadratów przyrostów na
+wyrazy: kwadrat ciągłej części, kwadrat skokowej
+części i wyrazy mieszane. Dla ciągłej części
+wariacja kwadratowa wynosi $\int\sigma^2\dd s$;
+ciągła część skończonej wariacji ma wariację kwadratową
+zero. Każdy ustalony skok znajdzie się dla dostatecznie
+drobnego podziału w odrębnym przedziale, a ciągłość
+pozostałej części oznacza, że wyrazy mieszane dążą do
+zera. Otrzymujemy \eqref{eq:jump-qv} dla obciętego procesu.
+
+Dla części o nieskończonej aktywności stosujemy
+aproksymację $X^{(n)}$ przez ucięcie miary skoków.
+Najpierw lokalizujemy procesy tak, aby całkowita wariacja
+składnika dryfu oraz całki kwadratów współczynników
+ciągłych i małoskokowych były ograniczone stałą. Ponieważ
+dużych skoków jest na $[0,T]$ skończenie wiele i ich rozmiary
+są skończone prawie na pewno, możemy także obciąć ich
+rozmiary i liczbę; prawdopodobieństwo zmiany pierwotnej
+trajektorii przez to obcięcie dąży do zera. W tym
+ograniczonym modelu izometria Poissona i nierówność maksymalna
+dają $X^{(n)}\to X$ ucp oraz
+$\E\int\!|(\gamma^{(n)})^2-\gamma^2|\,\dd N\to0$.
+Sama zbieżność ucp nie wystarczyłaby do zbieżności wariacji
+kwadratowej. Aby uzasadnić przejście dla sum kwadratów
+przyrostów, używamy nierówności Cauchy'ego--Schwarza
+\[
+\left|\sum_j(\Delta_jX)^2-\sum_j(\Delta_jX^{(n)})^2\right|
+\le\left(\sum_j(\Delta_j(X-X^{(n)}))^2\right)^{1/2}
+\left(\sum_j(\Delta_j(X+X^{(n)}))^2\right)^{1/2}.
+\]
+Dla sum martyngałowych po lokalizacji pierwszy czynnik
+ma drugi moment kontrolowany przez izometrię, jednostajnie
+po podziałach, a drugi ma ograniczony drugi moment
+(np. przez zatrzymanie procesów i oszacowania dla części
+skończonej wariacji). Zatem najpierw wybieramy $n$ duże,
+a potem średnicę podziału małą. Otrzymujemy zbieżność
+według prawdopodobieństwa do prawej strony
+\eqref{eq:jump-qv}. Dla nieograniczonych dużych skoków
+stosujemy lokalizację według liczby i rozmiaru skoków.
+\end{proof}
+
+\begin{przyklad}[Skoki nie tworzą członu $\dd t$ w chwili skoku]
+Dla $M_t=N_t-\lambda t$ zachodzi $[M]_t=N_t$,
+a nie $\lambda t$. Proces $\lambda t$ jest jego nawiasem
+przewidywalnym. Natomiast dla niezależnego Wienera
+$W$ mamy $[W+M]_t=t+N_t$.
+\end{przyklad}
+
+\section{Wzór Itô ze skokami: najpierw przypadek skończony}
+
+\begin{lemat}[Wzór dla skończonej liczby skoków]
+\label{lem:finite-jump-ito}
+Niech $X=C+J$, gdzie $C$ jest ciągłym procesem Itô
+na $[0,T]$, a $J_t=\sum_{k:S_k\le t}U_k$ adaptowanym procesem
+o skończenie wielu skokach na $[0,T]$ (bez dodatkowej
+ciągłej części skończonej wariacji).
+Dla $f\in C^{1,2}([0,T]\times\R)$ zachodzi
+\[
+\begin{split}
+f(t,X_t)-f(0,X_0)={}&\int_0^t f_t(s,X_{s-})\,\dd s
++\int_0^t f_x(s,X_{s-})\,\dd X_s\\
+&+\frac12\int_0^t f_{xx}(s,X_{s-})\,\dd[C]_s\\
+&+\sum_{0<s\le t}\bigl(f(s,X_s)-f(s,X_{s-})
+-f_x(s,X_{s-})\Delta X_s\bigr).
+\end{split}
+\tag{12.3}\label{eq:ito-finite-jumps}
+\]
+\end{lemat}
+\begin{proof}
+Uporządkujmy chwile skoków $J$ w $[0,t]$:
+$0<\tau_1<\cdots<\tau_m\le t$. Pomiędzy skokami
+proces $X$ jest ciągłym procesem Itô z dodaną
+ciągłą częścią procesu o skończonej wariacji.
+Zastosowanie ciągłego wzoru Itô na kolejnych przedziałach
+$[0,\tau_1)$, $(\tau_1,\tau_2)$, itd., po lokalizacji i
+przejściu do granic jednostronnych, daje składniki
+całkowe. Przy każdym skoku występuje dokładna różnica
+$f(\tau_j,X_{\tau_j})-f(\tau_j,X_{\tau_j-})$.
+W całce $\int f_x\,\dd X$ skok uwzględniony jest jako
+$f_x(\tau_j,X_{\tau_j-})\Delta X_{\tau_j}$.
+Ich różnica to właśnie składnik sumy w tezie.
+Sumowanie skończonej liczby przedziałów i skoków
+kończy dowód. Nie ma tu przejścia do granicy w liczbie skoków.
+\end{proof}
+
+\section{Wzór Itô dla kompensowanych małych skoków}
+
+\begin{twierdzenie}[Wzór Itô dla skokowej dyfuzji]
+\label{th:ito-jump-diffusion}
+Niech $T>0$, $N$ będzie losową miarą Poissona na
+$(0,T]\times E$ o intensywności $\dd s\,\dd\nu(z)$,
+$W$ zaś procesem Wienera względem wspólnej filtracji,
+niezależnym od $N$. Niech $E=E_0\sqcup E_1$ i
+$\nu(E_1)<\infty$. Niech $b,\sigma$ będą rzeczywistymi
+procesami przewidywalnymi, a $\gamma,\Gamma$ funkcjami
+przewidywalnymi na $\Omega\times(0,T]\times E_0$ i $E_1$
+odpowiednio, spełniającymi
+\[
+\E\int_0^T\left(|b_s|+\sigma_s^2+
+\int_{E_0}\gamma_s(z)^2\,\dd\nu(z)\right)\dd s<\infty.
+\]
+Nie nakładamy warunku momentowego na duże skoki $\Gamma$;
+zakładamy jedynie jej wartości rzeczywiste $N$-prawie wszędzie.
+Niech
+\[
+X_t=x+\int_0^tb_s\,\dd s+\int_0^t\sigma_s\,\dd W_s
++\int_{(0,t]\times E_0}\gamma_s(z)\,\widetilde N(\dd s,\dd z)
++\int_{(0,t]\times E_1}\Gamma_s(z)\,N(\dd s,\dd z).
+\]
+Dla $f\in C^{1,2}([0,T]\times\R)$, którego
+$f,f_t,f_x,f_{xx}$ są ograniczone, zachodzi prawie na pewno
+jednocześnie dla wszystkich $t\in[0,T]$:
+\[
+\begin{split}
+f(t,X_t)={}&f(0,x)
++\int_0^t\left(f_t+b_sf_x+\tfrac12\sigma_s^2f_{xx}\right)(s,X_{s-})\,\dd s\\
+&+\int_0^t\sigma_s f_x(s,X_{s-})\,\dd W_s\\
+&+\int_{(0,t]\times E_0}
+\bigl[f(s,X_{s-}+\gamma_s(z))-f(s,X_{s-})\bigr]
+\,\widetilde N(\dd s,\dd z)\\
+&+\int_0^t\int_{E_0}
+\bigl[f(s,X_{s-}+\gamma_s(z))-f(s,X_{s-})
+-f_x(s,X_{s-})\gamma_s(z)\bigr] \,\dd\nu(z)\,\dd s\\
+&+\int_{(0,t]\times E_1}
+\bigl[f(s,X_{s-}+\Gamma_s(z))-f(s,X_{s-})\bigr]
+\,N(\dd s,\dd z).
+\end{split}
+\tag{12.4}\label{eq:ito-jump-general}
+\]
+We wszystkich wyrażeniach $f_t,f_x,f_{xx}$ są oceniane
+w punkcie $(s,X_{s-})$, o ile nie zapisano inaczej.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: obcięcie małych skoków.} Wybieramy rosnące
+zbiory $E_0^{(n)}\uparrow E_0$ z
+$\nu(E_0^{(n)})<\infty$ i
+$\E\int_0^T\int_{E_0\setminus E_0^{(n)}}\gamma_s(z)^2
+\,\dd\nu(z)\,\dd s\to0$ (istnieją przez $\sigma$-skończoność
+$\nu$ oraz zbieżność zdominowaną).
+Zastępujemy w definicji $X$ małą skompensowaną całkę
+przez całkę po $E_0^{(n)}$, otrzymując $X^{(n)}$.
+Z izometrii \eqref{eq:prm-isometry} i nierówności Dooba
+\[
+\E\sup_{t\le T}|X_t-X_t^{(n)}|^2
+\le4\E\int_0^T\int_{E_0\setminus E_0^{(n)}}\gamma_s(z)^2
+\,\dd\nu(z)\,\dd s\longrightarrow0.
+\]
+
+\emph{Krok 2: skończenie wiele skoków.} Na $E_0^{(n)}$
+całka skompensowana ma postać sumy skoków minus
+ciągły proces skończonej wariacji
+$\int_0^t\int_{E_0^{(n)}}\gamma_s(z)\,\dd\nu(z)\,\dd s$.
+Ten drugi proces ma skończoną wariację prawie na pewno,
+ponieważ Cauchy--Schwarz i skończoność $\nu(E_0^{(n)})$
+dają całkowalność bezwzględną. Wobec tego
+Lemat~\ref{lem:finite-jump-ito} stosuje się do $X^{(n)}$.
+Rozpisujemy wszystkie skoki i grupujemy ich wkłady:
+całka $f_x\gamma\,\widetilde N$ oraz suma poprawek
+$R=f(X_-+\gamma)-f(X_-)-f_x(X_-)\gamma$ dają
+po przekształceniu
+$[f(X_-+\gamma)-f(X_-)]\,\widetilde N+R\,\dd s\,\dd\nu$.
+Duże skoki pozostają nieskompensowane. Otrzymujemy
+\eqref{eq:ito-jump-general} z $E_0$ zastąpionym przez
+$E_0^{(n)}$ i $X$ przez $X^{(n)}$.
+
+\emph{Krok 3: przejście do granicy w członach ciągłych.}
+Przechodzimy do podciągu, po którym $X^{(n)}\to X$
+jednostajnie prawie na pewno. Na każdym przedziale
+$[0,T]$ trajektoria $X$ jest ograniczona; jednostajna
+ciągłość pochodnych $f$ na zwartych prostokątach
+i zbieżność zdominowana prowadzą do zbieżności
+zwykłych całek po czasie. Dla całki Wienera stosujemy
+izometrię i ograniczenie $|f_x|\le C$:
+\[
+\E\int_0^T\sigma_s^2
+|f_x(s,X^{(n)}_{s-})-f_x(s,X_{s-})|^2\,\dd s\to0.
+\]
+Wynika to z dominacji przez $4C^2\sigma_s^2$ oraz
+zbieżności punktowej po podciągu, prawie wszędzie
+w $\Prob\otimes\dd s$.
+
+\emph{Krok 4: małe skoki.} Z twierdzenia o wartości
+średniej mamy
+$|f(s,x+u)-f(s,x)|\le C|u|$ i
+$|R(s,x,u)|\le\frac12C u^2$, gdzie $C$ ogranicza
+$|f_x|,|f_{xx}|$. Izometria Poissona pozwala więc
+przejść do granicy w skompensowanych całkach:
+dla wspólnej części $E_0^{(n)}$ różnice argumentów
+zbiegają punktowo i są dominowane przez $2C|\gamma|$,
+a na usuniętej części $E_0\setminus E_0^{(n)}$
+norma kwadratowa dąży do zera. Podobnie poprawki
+$R(s,X^{(n)}_{s-},\gamma_s(z))$ zbiegają w
+$L^1(\Prob\otimes\dd s\otimes\nu)$ dzięki dominacji
+przez $C\gamma^2$. Po lokalizacji pozostaje też
+ciągłość składnika dużych skoków: na $[0,T]$ jest ich
+skończenie wiele, a argumenty $X^{(n)}_{s-}$ zbiegają
+jednostajnie wzdłuż podciągu. Wszystkie człony prawej
+strony zbiegają zatem do odpowiednich członów w tezie.
+Zbieżność ucp i dobór wspólnego podciągu dla skończonej
+rodziny całek zapewniają równość procesów z dokładnością
+do nierozróżnialności.
+\end{proof}
+
+\begin{uwaga}[Dlaczego poprawka ma rząd kwadratowy?]
+Zapis $f(x+u)-f(x)-f'(x)u$ jest błędem liniowego
+przybliżenia funkcji. Przy $f\in C^2$ jego wielkość jest
+rzędu $u^2$; dlatego właśnie warunek
+$\int_{|z|\le1}|z|^2\,\dd\nu(z)<\infty$
+wystarcza do całkowania poprawek po nieskończenie wielu
+małych skokach. To jest odpowiednik roli wariacji
+kwadratowej ruchu Browna w ciągłym wzorze Itô.
+\end{uwaga}
+
+\begin{zadanie}[Dlaczego zwykły wzór łańcuchowy jest niepoprawny?]
+Niech $N$ będzie procesem Poissona o intensywności
+$\lambda>0$ i $f(x)=x^2$. Wyznaczyć $N_t^2$ przez
+sumowanie po skokach oraz wskazać brakujący człon
+w naiwnym wzorze $\dd f(N_t)=f'(N_{t-})\,\dd N_t$.
+
+\emph{Rozwiązanie.} W każdej chwili skoku $\Delta N_s=1$,
+więc $(N_{s-}+1)^2-N_{s-}^2=2N_{s-}+1$.
+Sumując po chwilach skoków, otrzymujemy
+\[
+N_t^2=\int_{(0,t]}2N_{s-}\,\dd N_s+N_t.
+\]
+Drugi składnik jest dokładnie
+$\sum_{s\le t}(\Delta N_s)^2$.
+Gdybyśmy bez poprawki zastosowali klasyczną
+regułę łańcuchową, zgubilibyśmy jeden przy każdym skoku.
+Dla gładkiego $f$ odpowiednia poprawka jest równa
+$f(N_{s-}+1)-f(N_{s-})-f'(N_{s-})$.
+\end{zadanie}
+
+\section{Iloczyny, wykładnik stochastyczny i zastosowania}
+
+\begin{wniosek}[Reguła iloczynu z kowariacją skokową]
+\label{cor:jump-product}
+Dla dwóch procesów $X,Y$ klasy z
+Twierdzenia~\ref{th:ito-jump-diffusion}, napędzanych
+wspólnym procesem Wienera i wspólną miarą Poissona,
+zachodzi
+\[
+X_tY_t=X_0Y_0+\int_0^tX_{s-}\,\dd Y_s
++\int_0^tY_{s-}\,\dd X_s+[X,Y]_t,
+\]
+gdzie $[X,Y]$ zawiera kowariację części ciągłych
+oraz sumę $\sum_{s\le t}\Delta X_s\Delta Y_s$.
+\end{wniosek}
+\begin{proof}
+Stosujemy wzór Itô do dwuwymiarowego procesu
+$(X,Y)$ i funkcji $f(x,y)=xy$, po uprzednim zatrzymaniu
+procesów na przedziałach, na których $|X|+|Y|$ jest
+ograniczone. Poza skokami jedyny składnik drugiego
+rzędu to $\dd[X,Y]^c$, a na skoku zachodzi dokładna
+tożsamość
+$(x+u)(y+v)-xy-yu-xv=uv$.
+Sumowanie tych składników jest definicją kowariacji.
+Formalną wielowymiarową wersję uzyskujemy również
+przez polaryzację jednowymiarowego wzoru dla kwadratu.
+\end{proof}
+
+\begin{twierdzenie}[Wykładnik stochastyczny w przypadku skończonej aktywności]
+\label{th:dolean-finite}
+Niech $Z$ będzie rzeczywistym procesem postaci
+$Z_t=\int_0^t a_s\,\dd s+\int_0^t\sigma_s\,\dd W_s
++\sum_{k:S_k\le t}U_k$, gdzie na $[0,T]$ suma zawiera
+skończenie wiele skoków, $a,\sigma$ są przewidywalne,
+$\int_0^T(|a_s|+\sigma_s^2)\dd s<\infty$ prawie na pewno, a
+$U_k>-1$. Wówczas równanie
+$\dd Y_t=Y_{t-}\,\dd Z_t$, $Y_0=y_0$, ma dokładnie jedno
+adaptowane rozwiązanie càdlàg oraz
+\[
+Y_t=y_0\exp\left(Z_t-Z_0-\frac12\int_0^t\sigma_s^2\,\dd s
+-\sum_{S_k\le t}U_k\right)
+\prod_{S_k\le t}(1+U_k).
+\tag{12.5}\label{eq:dolean-finite}
+\]
+\end{twierdzenie}
+\begin{proof}
+Między kolejnymi skokami równanie jest ciągłym liniowym
+SDE. Wzór Itô zastosowany do wykładnika pokazuje,
+że jego rozwiązanie ma postać
+$Y_s=Y_r\exp(Z_s-Z_r-\frac12\int_r^s\sigma_u^2\dd u)$.
+W chwili $S_k$ równanie całkowe daje
+$\Delta Y_{S_k}=Y_{S_k-}U_k$, a więc
+$Y_{S_k}=Y_{S_k-}(1+U_k)$.
+Łącząc te równości dla skończonej liczby skoków,
+otrzymujemy \eqref{eq:dolean-finite}. Jednoznaczność
+wynika z jednoznaczności liniowego SDE między skokami
+i jednoznacznego przeliczenia w każdej chwili skoku.
+Dodatniość $1+U_k$ zapewnia zachowanie znaku $Y$;
+gdy $U_k=-1$, rozwiązanie po skoku staje się zerem,
+co wymaga osobnego uwzględnienia we wzorze logarytmicznym.
+\end{proof}
+
+\begin{zadanie}[Cena z losowymi skokami i poprawka dryfu]
+Niech $\mu\in\R$, $\sigma\ge0$, $\lambda>0$, $\kappa>-1$
+oraz $N$ będzie procesem Poissona o intensywności $\lambda$,
+niezależnym od $W$. Rozwiązać
+\[
+\dd S_t=\mu S_{t-}\,\dd t+\sigma S_{t-}\,\dd W_t
++\kappa S_{t-}\,\dd(N_t-\lambda t),\qquad S_0=s_0>0.
+\]
+Obliczyć $\E S_t$ i wariancję, jeżeli jest skończona.
+
+\emph{Rozwiązanie.} Między skokami efektywny dryf to
+$\mu-\lambda\kappa$. Każdy skok mnoży wartość procesu
+przez $1+\kappa$. Otrzymujemy
+\[
+S_t=s_0\exp\left((\mu-\lambda\kappa-\tfrac12\sigma^2)t
++\sigma W_t\right)(1+\kappa)^{N_t}.
+\]
+Niezależność daje
+$\E e^{\sigma W_t-\sigma^2t/2}=1$ oraz
+$\E(1+\kappa)^{N_t}=e^{\lambda t\kappa}$,
+zatem $\E S_t=s_0e^{\mu t}$.
+Dla drugiego momentu używamy
+$\E e^{2\sigma W_t-\sigma^2t}=e^{\sigma^2t}$ oraz
+$\E(1+\kappa)^{2N_t}=e^{\lambda t(2\kappa+\kappa^2)}$.
+Stąd
+\[
+\E S_t^2=s_0^2e^{(2\mu+\sigma^2+\lambda\kappa^2)t},
+\quad
+\Var(S_t)=s_0^2e^{2\mu t}
+\bigl(e^{(\sigma^2+\lambda\kappa^2)t}-1\bigr).
+\]
+To zadanie pokazuje, dlaczego kompensacja zmienia dryf,
+ale nie rozmiar pojedynczego skoku.
+\end{zadanie}
+
+\begin{zadanie}[Proces Ornsteina--Uhlenbecka wymuszany skokami]
+Niech $N$ będzie procesem Poissona o intensywności
+$\lambda>0$, $a>0$, a $J_t=c(N_t-\lambda t)$ dla
+$c\in\R$. Rozwiązać równanie
+$\dd X_t=-aX_{t-}\dd t+\dd J_t$ z deterministycznym
+$X_0=x$ oraz obliczyć $\E X_t$ i $\Var(X_t)$.
+
+\emph{Rozwiązanie.} Całkowanie przez części dla
+$e^{at}X_t$ (czynnik deterministyczny nie ma skoków)
+daje
+$X_t=xe^{-at}+c\int_0^te^{-a(t-s)}\,\dd(N_s-\lambda s)$.
+Całka ma średnią zero, więc $\E X_t=xe^{-at}$.
+Izometria z Rozdziału~\ref{ch:poisson-random-measure} daje
+\[
+\Var(X_t)=\lambda c^2\int_0^t e^{-2a(t-s)}\,\dd s
+=\frac{\lambda c^2}{2a}(1-e^{-2at}).
+\]
+W odróżnieniu od gaussowskiego procesu
+Ornsteina--Uhlenbecka rozkład $X_t$ ma tu, dla
+$c\ne0$, składnik atomowy odpowiadający brakowi skoków
+na $[0,t]$. Nie jest zatem ogólnie rozkładem normalnym.
+\end{zadanie}
+
+\section{Generator dyfuzji ze skokami i równanie wsteczne}
+
+\begin{twierdzenie}[Generator w przypadku jednorodnych współczynników]
+\label{th:jump-generator}
+Niech $X^x$ będzie czasowo jednorodnym procesem Markowa
+spełniającym równanie skokowe
+z $b=b(x)$, $\sigma=\sigma(x)$, $\gamma=\gamma(x,z)$,
+$\Gamma=\Gamma(x,z)$, z istnieniem rozwiązania i
+odpowiednią ciągłością w warunku początkowym.
+Dla $f\in C_b^2(\R)$ niech
+\[
+\begin{split}
+Lf(x)={}&b(x)f'(x)+\frac12\sigma(x)^2f''(x)\\
+&+\int_{E_0}[f(x+\gamma(x,z))-f(x)-f'(x)\gamma(x,z)]\,\dd\nu(z)\\
+&+\int_{E_1}[f(x+\Gamma(x,z))-f(x)]\,\dd\nu(z).
+\end{split}
+\tag{12.6}\label{eq:jump-generator}
+\]
+Jeżeli powyższe całki są skończone i $Lf$ jest
+ograniczona oraz ciągła, to
+$f(X_t^x)-f(x)-\int_0^tLf(X_{s-}^x)\,\dd s$
+jest lokalnym martyngałem. Ponadto, gdy można
+uzasadnić zbieżność zdominowaną dla $Lf(X_s^x)$ przy
+$s\downarrow0$, zachodzi
+$\lim_{t\downarrow0}t^{-1}(\E f(X_t^x)-f(x))=Lf(x)$.
+\end{twierdzenie}
+\begin{proof}
+Wstawiamy do wzoru \eqref{eq:ito-jump-general}
+$f(t,x)=f(x)$. Dla dużych skoków, których liczba jest
+skończona na odcinkach zwartych, formuła kompensacji
+\eqref{eq:compensation} pokazuje, że
+\[
+\int_{(0,t]\times E_1}\Delta_zf(X_{s-})\,N(\dd s,\dd z)
+-\int_0^t\int_{E_1}\Delta_zf(X_{s-})\,\dd\nu(z)\,\dd s
+\]
+jest lokalnym martyngałem; $\Delta_zf(x)=f(x+\Gamma(x,z))-f(x)$.
+Składniki Wienera i małych skoków są lokalnymi martyngałami
+z poprzednich rozdziałów. Pozostałe człony skończonej
+wariacji sumują się dokładnie do $\int Lf(X_{s-})\dd s$.
+Po wzięciu wartości oczekiwanych (przy zapewnionej
+całkowalności) otrzymujemy
+$\E f(X_t^x)-f(x)=\E\int_0^tLf(X_s^x)\dd s$.
+Ciągłość stochastyczna w zerze i ciągłość $Lf$ prowadzą
+do $\E Lf(X_s^x)\to Lf(x)$ przy $s\downarrow0$,
+a ograniczoność $Lf$ pozwala zastosować zbieżność
+zdominowaną. Dzielenie przez $t$ kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Generator procesu złożonego Poissona]
+Dla $X_t^x=x+\sum_{j=1}^{N_t}Y_j$, gdzie
+$N$ ma intensywność $\lambda$ i znaczniki mają prawo $\rho$,
+$Lf(x)=\lambda\int_{\R}(f(x+y)-f(x))\,\dd\rho(y)$.
+Jeśli $Y_j=a$ deterministycznie, mamy
+$Lf(x)=\lambda(f(x+a)-f(x))$ i równanie wsteczne
+$\partial_tu(t,x)=\lambda[u(t,x+a)-u(t,x)]$.
+Dla $u(0,x)=f(x)$ jego rozwiązanie dane przez
+półgrupę ma postać
+$u(t,x)=\sum_{n\ge0}e^{-\lambda t}(\lambda t)^n f(x+na)/n!$.
+Sprawdzenie różniczkowania szeregu jest dozwolone dla
+ograniczonej $f$, bo szereg pochodnych po $t$ zbiega
+jednostajnie na zwartych przedziałach czasu.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex,scale=.95]
+\draw[->] (0,0)--(9,0) node[right] {$t$};
+\draw[->] (0,-.8)--(0,3.0) node[above] {$X_t$};
+\draw[blue!75!black,thick] plot[smooth] coordinates
+{(0,.5) (.8,.7) (1.5,.45) (2.3,.8) (3,1.0) (3.8,.65)};
+\draw[blue!75!black,thick] (3.8,.65)--(3.8,1.85);
+\draw[blue!75!black,thick] plot[smooth] coordinates
+{(3.8,1.85) (4.5,2.02) (5.2,1.75) (5.8,2.0)};
+\draw[blue!75!black,thick] (5.8,2.0)--(5.8,1.1);
+\draw[blue!75!black,thick] plot[smooth] coordinates
+{(5.8,1.1) (6.7,1.5) (7.5,1.2) (8.5,1.65)};
+\draw[orange!80!black,dashed,thick] (3.8,.65)--(3.8,1.85);
+\draw[orange!80!black,dashed,thick] (5.8,1.1)--(5.8,2.0);
+\node[anchor=west,scale=.87,orange!80!black] at (6.1,2.55)
+{skoki $\Delta X$};
+\node[anchor=west,scale=.87,blue!70!black] at (.7,2.52)
+{część ciągła};
+\end{tikzpicture}
+\par\smallskip\small Trajektoria skokowej dyfuzji:
+między skokami zachodzi ciągła ewolucja, a w chwilach
+losowych pojawiają się nieciągłości. Wzór Itô uwzględnia
+obie części i dokładną poprawkę $f(X_s)-f(X_{s-})$.
+\end{center}
+
+\section{Co zostało dowiedzione, a co należy do ogólnej teorii?}
+
+W tym rozdziale udowodniliśmy wzór Itô dla
+\emph{dyfuzji z małymi skokami całkowanymi w $L^2$
+i skończoną intensywnością dużych skoków}.
+To wystarcza do całych rodzin procesów Lévy'ego oraz
+wielu równań skokowych. Nie dowiedliśmy natomiast
+ogólnego twierdzenia charakteryzującego wszystkie
+półmartyngały jako dobre całkowniki, ani ogólnego
+rozkładu Dooba--Meyera dla podmartyngałów klasy (D).
+Podajemy ich właściwe miejsce w teorii, ale nie sugerujemy,
+że wynikają z izometrii Poissona bez dalszej pracy.
+W kolejnej części tomu zastosujemy przedstawiony rachunek
+do równań stochastycznych ze skokami, a następnie wrócimy
+do ścisłych całek po trajektoriach i mechaniki kwantowej.
+
+% ===========================================================================
+% ROZDZIAŁ 13 -- Stochastyczne równania różniczkowe ze skokami
+% ===========================================================================

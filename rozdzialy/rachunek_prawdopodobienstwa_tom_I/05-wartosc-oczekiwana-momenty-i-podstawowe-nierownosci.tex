@@ -1,0 +1,638 @@
+\chapter{Wartość oczekiwana, momenty i podstawowe nierówności}
+\label{ch:expectation}
+
+\section{Całka względem rozkładu}
+Prawdopodobieństwo odpowiada na pytanie, jak często wydarza się
+zdarzenie. Wartość oczekiwana odpowiada na inne pytanie:
+jaka jest przeciętna wielkość liczbowego wyniku, jeśli ważymy
+możliwości ich prawdopodobieństwami? W modelu skończonym jest
+to ważona suma. Całka względem miary probabilistycznej jest
+jej konsekwentnym uogólnieniem na dowolne zmienne losowe.
+Nazwa „oczekiwana” nie oznacza wartości najbardziej prawdopodobnej;
+może to być wartość, której zmienna nigdy nie przyjmuje.
+
+\begin{definicja}
+Niech $X$ będzie rzeczywistą zmienną losową na
+$(\Omega,\mathcal F,\Prob)$. Jeśli $X\geq0$, definiujemy
+$\E X:=\int_\Omega X(\omega)\,\dd\Prob(\omega)\in[0,\infty]$.
+Jeśli $\E|X|<\infty$, nazywamy $X$ całkowalną i definiujemy
+$\E X:=\int_\Omega X(\omega)\,\dd\Prob(\omega)\in\R$.
+W przypadku ogólnym, gdy przynajmniej jedna z liczb
+$\E X^+,\E X^-$ jest skończona, dopuszczamy rozszerzoną
+wartość oczekiwaną $\E X=\E X^+-\E X^-$.
+\end{definicja}
+
+\begin{twierdzenie}[Przenoszenie całkowania na rozkład]
+Niech $X$ będzie rzeczywistą zmienną losową o rozkładzie $\mu_X$,
+a $h:\R\to\R$ mierzalną funkcją borelowską.
+Jeżeli $h\geq0$ albo $\int_\R|h(x)|\,\dd\mu_X(x)<\infty$, to
+\begin{equation}\label{eq:lotus}
+\E[h(X)]=\int_\R h(x)\,\dd\mu_X(x).
+\end{equation}
+W szczególności, dla dyskretnego $X$ o masach $p(x)$ prawa strona
+jest sumą $\sum_xh(x)p(x)$, a dla $X$ o gęstości $f_X$
+jest całką $\int_\R h(x)f_X(x)\,\dd\lambda_1(x)$.
+\end{twierdzenie}
+\begin{proof}
+Dowód polega na przejściu od funkcji najprostszych
+do ogólnych; wyjaśnia on zarazem, dlaczego rozkład
+$\mu_X$ pozwala obliczać wartości oczekiwane funkcji $X$.
+
+Dla funkcji wskaźnikowej $h=\ind B$, gdzie
+$B\in\mathcal B(\R)$, mamy
+$\E[h(X)]=\Prob(X\in B)=\mu_X(B)
+=\int_\R\ind B(x)\,\dd\mu_X(x)$.
+Dla nieujemnej funkcji prostej
+$h=\sum_{j=1}^r a_j\ind{B_j}$, gdzie $a_j\geq0$,
+równość wynika z liniowości całki i poprzedniego przypadku.
+
+Dla dowolnej nieujemnej funkcji mierzalnej $h$
+wybieramy ciąg nieujemnych funkcji prostych $h_n\uparrow h$.
+Wówczas $h_n(X)\uparrow h(X)$ na $\Omega$.
+Stosując twierdzenie o zbieżności monotonicznej
+po obu stronach już udowodnionych równości, dostajemy
+\[
+\E[h(X)]=\lim_n\E[h_n(X)]
+=\lim_n\int_\R h_n\,\dd\mu_X
+=\int_\R h\,\dd\mu_X.
+\]
+Jeśli $h$ jest całkowalna względem $\mu_X$,
+rozkładamy $h=h^+-h^-$ i stosujemy pierwszy przypadek
+do obu nieujemnych części. Obie odpowiadające całki
+są skończone, więc ich różnica jest dobrze określona.
+\end{proof}
+
+
+\begin{przyklad}[Średnia nie musi być możliwym wynikiem]
+Niech $X$ przyjmuje wartości $0$ i $1$ z prawdopodobieństwami
+po $1/2$. Wówczas $\E X=1/2$, ale $\Prob(X=1/2)=0$.
+Średnia jest środkiem ciężkości rozkładu, a nie typową
+zrealizowaną wartością. Dla bardzo nierównomiernych rozkładów
+może ona znajdować się daleko od większości realizacji.
+\end{przyklad}
+
+\begin{definicja}
+Dla całkowalnej zmiennej losowej $X$ definiujemy średnią
+$m_X:=\E X$. Jeżeli $\E X^2<\infty$, definiujemy
+wariancję $\Var(X):=\E[(X-\E X)^2]$.
+Odchyleniem standardowym nazywamy $\sqrt{\Var(X)}$.
+Dla zmiennych $X,Y$ o skończonych drugich momentach definiujemy
+kowariancję $\Cov(X,Y):=\E[(X-\E X)(Y-\E Y)]$.
+\end{definicja}
+
+\begin{stwierdzenie}[Algebra momentów]
+Dla rzeczywistych zmiennych losowych $X,Y$ o skończonych
+drugich momentach oraz $a,b\in\R$ zachodzą
+\begin{align*}
+\Var(X)&=\E X^2-(\E X)^2, &
+\Var(aX+b)&=a^2\Var(X),\\
+\Cov(X,Y)&=\E[XY]-\E X\,\E Y, &
+\Var(X+Y)&=\Var(X)+\Var(Y)+2\Cov(X,Y).
+\end{align*}
+Jeżeli $X$ i $Y$ są niezależne, to $\E[XY]=\E X\,\E Y$,
+a zatem $\Cov(X,Y)=0$ i $\Var(X+Y)=\Var(X)+\Var(Y)$.
+\end{stwierdzenie}
+\begin{proof}
+Wszystkie podane wyrażenia są skończone,
+ponieważ nierówność Cauchy'ego--Schwarza zapewnia
+$\E|XY|\leq(\E X^2)^{1/2}(\E Y^2)^{1/2}<\infty$.
+Dzięki temu możemy swobodnie korzystać z liniowości całki.
+Oznaczając $m=\E X$, rozwijamy
+$\E(X-m)^2=\E X^2-2m\E X+m^2=\E X^2-m^2$.
+Ponadto $\E(aX+b)=a\E X+b$, więc
+$aX+b-\E(aX+b)=a(X-\E X)$,
+a stąd $\Var(aX+b)=a^2\Var(X)$.
+
+Dla $m_X=\E X$, $m_Y=\E Y$ mamy
+$\Cov(X,Y)=\E[(X-m_X)(Y-m_Y)]
+=\E[XY]-m_Xm_Y$.
+Ponieważ
+$X+Y-\E(X+Y)=(X-m_X)+(Y-m_Y)$,
+rozwinięcie kwadratu i całkowanie daje
+$\Var(X+Y)=\Var(X)+\Var(Y)+2\Cov(X,Y)$.
+
+Jeśli $X,Y$ są niezależne, ich rozkład łączny to
+$\mu_X\otimes\mu_Y$. Przez Fubiniego, którego
+stosowanie usprawiedliwia całkowalność iloczynu,
+\[
+\E[XY]=\int_{\R^2}xy\,\dd(\mu_X\otimes\mu_Y)(x,y)
+=\left(\int_\R x\,\dd\mu_X(x)\right)
+ \left(\int_\R y\,\dd\mu_Y(y)\right)
+=\E X\,\E Y.
+\]
+To daje zerową kowariancję i wzór na wariancję sumy.
+Odwrotna implikacja nie jest prawdziwa i nie wolno
+jej wykorzystywać bez dodatkowych założeń.
+\end{proof}
+
+\begin{uwaga}
+Zerowa kowariancja nie oznacza na ogół niezależności.
+Jeśli $X$ jest jednostajna na $[-1,1]$, a $Y=X^2$, to
+$\Cov(X,Y)=\E X^3-\E X\,\E X^2=0$,
+ale $Y$ jest funkcją $X$, a więc zmienne nie są niezależne.
+\end{uwaga}
+
+\begin{stwierdzenie}[Momenty zmiennej wskaźnikowej]
+Jeżeli $A\in\mathcal F$ i $I=\ind{A}$, to
+$\E I=\Prob(A)$ oraz
+$\Var(I)=\Prob(A)(1-\Prob(A))$.
+Dla dowolnych zdarzeń $A,B$ zachodzi
+$\Cov(\ind{A},\ind{B})=\Prob(A\cap B)-\Prob(A)\Prob(B)$.
+\end{stwierdzenie}
+\begin{proof}
+Zmienna $I$ przyjmuje wartości zero i jeden, a $I^2=I$.
+Ponadto $\ind{A}\ind{B}=\ind{A\cap B}$.
+Wstawiamy te równości do definicji momentów.
+\end{proof}
+
+\section{Nierówności Markowa i Czebyszewa}
+Nie zawsze umiemy wyznaczyć cały rozkład, ale czasem znamy
+średnią albo wariancję. Czy można na tej podstawie oszacować
+prawdopodobieństwo dużego wyniku lub dużego odchylenia od średniej?
+Nierówność Markowa opiera się tylko na dodatniości, a nierówność
+Czebyszewa stosuje tę samą ideę do kwadratu odchylenia.
+Ich siła tkwi w uniwersalności: nie wymagają normalności,
+jednostajności ani nawet znajomości gęstości.
+
+\begin{twierdzenie}[Nierówność Markowa]
+Jeżeli $X\geq0$ prawie na pewno i $a>0$, to
+$\Prob(X\geq a)\leq\E X/a$, gdzie dopuszczamy $\E X=\infty$.
+\end{twierdzenie}
+\begin{proof}
+Na zdarzeniu $A=\{X\geq a\}$ zachodzi $X\geq a$,
+a poza nim $a\ind A=0\leq X$.
+Możemy więc zapisać punktową nierówność
+$a\ind A\leq X$ dla każdego wyniku poza ewentualnym
+zbiorem zerowym z założenia $X\geq0$ prawie na pewno.
+Z monotoniczności całki mamy
+$a\Prob(A)=\E[a\ind A]\leq\E X$.
+Dzielenie przez $a>0$ daje tezę. Nierówność pozostaje
+prawdziwa, choć może być bezużyteczna, gdy $\E X=\infty$.
+Dowód pokazuje również, kiedy stała jest optymalna:
+gdy $X$ przyjmuje wyłącznie wartości $0$ i $a$,
+zachodzi równość.
+\end{proof}
+
+\begin{twierdzenie}[Nierówność Czebyszewa]
+Niech $X$ będzie rzeczywistą zmienną losową o skończonym
+drugim momencie. Wtedy dla każdego $\varepsilon>0$ zachodzi
+\[
+\Prob(|X-\E X|\geq\varepsilon)
+\leq\frac{\Var(X)}{\varepsilon^2}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Wprowadźmy nieujemną zmienną
+$Y=(X-\E X)^2$. Jej wartość oczekiwana jest równa
+$\E Y=\Var(X)<\infty$. Ponadto dla $\varepsilon>0$
+zdarzenia
+$\{Y\geq\varepsilon^2\}$ oraz
+$\{|X-\E X|\geq\varepsilon\}$ są identyczne.
+Stosując właśnie udowodnioną nierówność Markowa
+do zmiennej $Y$ i progu $\varepsilon^2$, otrzymujemy
+\[
+\Prob(|X-\E X|\geq\varepsilon)
+=\Prob(Y\geq\varepsilon^2)
+\leq\frac{\E Y}{\varepsilon^2}
+=\frac{\Var(X)}{\varepsilon^2}.
+\]
+Nie używaliśmy żadnych informacji o kształcie rozkładu $X$.
+\end{proof}
+
+\begin{przyklad}[Kontrola odchylenia sumy]
+Niech $X_1,\ldots,X_n$ będą niezależnymi zmiennymi losowymi
+o wspólnej średniej $m$ i wariancji $\sigma^2<\infty$,
+gdzie $n\geq1$. Dla średniej $\overline X_n:=n^{-1}\sum_{i=1}^nX_i$
+mamy $\E\overline X_n=m$ i $\Var(\overline X_n)=\sigma^2/n$.
+Z nierówności Czebyszewa wynika
+$\Prob(|\overline X_n-m|\geq\varepsilon)
+\leq\sigma^2/(n\varepsilon^2)$.
+Jest to zalążek słabego prawa wielkich liczb, którego
+pełne sformułowania i uogólnienia pojawią się w dalszej części tomu.
+\end{przyklad}
+
+\section{Momenty wyższych rzędów i sens funkcji tworzących}
+
+Dwa pierwsze momenty często nie wystarczają, aby odróżnić
+rozkłady. Zmienna może mieć tę samą średnią i wariancję co inna,
+a jednocześnie zupełnie inny kształt ogonów. Chcielibyśmy zatem
+przechowywać informacje o całej rodzinie momentów, a najlepiej
+w jednej funkcji, na której można wykonywać zwykłe operacje
+analityczne. Dwa użyteczne pomysły polegają na obliczaniu
+$\E z^X$ dla zmiennych całkowitoliczbowych i $\E e^{tX}$
+dla zmiennych rzeczywistych. Trzeci --- wykorzystujący
+$e^{itX}$ --- pozwala uniknąć problemu rozbieżności.
+
+\begin{definicja}
+Niech $X$ będzie rzeczywistą zmienną losową i $r\in\N$.
+Jeśli $\E|X|^r<\infty$, to $m_r(X):=\E X^r$
+nazywamy momentem zwykłym rzędu $r$. Jeśli $\E X$
+istnieje i $\E|X|^r<\infty$, to
+$\mu_r(X):=\E(X-\E X)^r$ nazywamy momentem centralnym.
+Momentami absolutnymi nazywamy $\E|X|^r$.
+\end{definicja}
+
+\begin{uwaga}
+Dla nieparzystego $r$ całka $\E X^r$ może nie istnieć,
+nawet gdy symetria rozkładu formalnie sugeruje zero.
+Istnienie momentu jako skończonej liczby wymaga
+$\E|X|^r<\infty$. Gdy $r>s>0$, z nierówności
+$|x|^s\leq 1+|x|^r$ wynika, że istnienie momentu
+absolutnego rzędu $r$ zapewnia istnienie wszystkich momentów
+absolutnych mniejszych rzędów.
+\end{uwaga}
+
+\section{Funkcja tworząca prawdopodobieństwa}
+
+Dla zmiennej $N$ przyjmującej wartości w $\N_0:=\{0,1,2,\ldots\}$
+rozkład jest ciągiem $p_k=\Prob(N=k)$. Możemy potraktować
+$p_k$ jako współczynniki szeregu potęgowego. Wówczas
+mnożenie funkcji tworzących odpowiada dodawaniu niezależnych
+liczb wystąpień --- dokładnie tak, jak splot ciągów mas
+opisuje rozkład ich sumy.
+
+\begin{definicja}
+Niech $N:\Omega\to\N_0$ będzie zmienną losową.
+Jej funkcją tworzącą prawdopodobieństwa nazywamy
+$G_N(z):=\E z^N=\sum_{k=0}^\infty \Prob(N=k)z^k$
+dla $|z|\leq1$, z konwencją $0^0=1$.
+Dla argumentów zespolonych stosujemy tę samą definicję.
+\end{definicja}
+
+\begin{twierdzenie}[Odzyskiwanie rozkładu i momentów silniowych]
+Niech $N$ przyjmuje wartości w $\N_0$, a $G_N$ będzie jej
+funkcją tworzącą. Wtedy $G_N(1)=1$, a dla $k\in\N_0$
+zachodzi $\Prob(N=k)=G_N^{(k)}(0)/k!$.
+Dla $r\in\N$ i $0\leq z<1$ mamy
+\[
+G_N^{(r)}(z)=\E\bigl[(N)_r z^{N-r}\ind{\{N\geq r\}}\bigr],
+\qquad (n)_r:=n(n-1)\cdots(n-r+1).
+\]
+W powyższym wzorze całe wyrażenie pod wartością oczekiwaną
+ma wartość $0$ na $\{N<r\}$, bez obliczania $z^{N-r}$;
+dla $z=0$ i $N=r$ przyjmujemy $0^0=1$.
+W szczególności $G_N^{(r)}(1-)=\E(N)_r\in[0,\infty]$.
+Jeżeli $\E N^2<\infty$, to
+$\E N=G_N'(1-)$ i
+$\Var(N)=G_N''(1-)+G_N'(1-)-[G_N'(1-)]^2$.
+\end{twierdzenie}
+\begin{proof}
+Dla $|z|<1$ szereg $\sum_k p_kz^k$ jest bezwzględnie
+zbieżny i można go różniczkować dowolną liczbę razy
+wewnątrz koła jednostkowego: na każdym $|z|\leq\rho<1$
+pochodne kolejnych wyrazów są ograniczone przez
+$(k)_r\rho^{k-r}$, a szereg tych ograniczeń jest zbieżny,
+ponieważ $p_k\leq1$. Współczynnik przy $z^k$ jest więc
+równy $G_N^{(k)}(0)/k!$. Z drugiej strony, podstawiając
+$z=1$, otrzymujemy $G_N(1)=\sum_kp_k=1$.
+Dla $z\uparrow1$ każdy składnik $(k)_rz^{k-r}$ jest
+niemalejący i nieujemny. Twierdzenie o zbieżności
+monotonicznej dla sum daje
+$G_N^{(r)}(1-)=\sum_{k\geq r}(k)_rp_k=\E(N)_r$,
+bez uprzedniego zakładania skończoności tej liczby.
+Wreszcie $N^2=N(N-1)+N$; podstawiając tę tożsamość
+do wzoru $\Var(N)=\E N^2-(\E N)^2$, otrzymujemy tezę.
+\end{proof}
+
+\begin{twierdzenie}[Suma niezależnych liczników]
+Jeśli $N_1,N_2$ są niezależnymi zmiennymi o wartościach
+w $\N_0$, to $G_{N_1+N_2}(z)=G_{N_1}(z)G_{N_2}(z)$
+dla $|z|\leq1$.
+\end{twierdzenie}
+\begin{proof}
+Dla $|z|\leq1$ wszystkie zmienne $z^{N_j}$ są ograniczone
+co do modułu przez jeden. Niezależność $N_1,N_2$ implikuje
+niezależność ich mierzalnych funkcji, więc przez Fubiniego
+$\E[z^{N_1}z^{N_2}]=\E z^{N_1}\,\E z^{N_2}$.
+Lewa strona jest równa $\E z^{N_1+N_2}$.
+\end{proof}
+
+\begin{przyklad}[Cztery klasyczne funkcje tworzące]
+Dla $B\sim\operatorname{Bern}(p)$ zachodzi
+$G_B(z)=1-p+pz$. Dla $N\sim\Bin(n,p)$ mamy
+$G_N(z)=(1-p+pz)^n$. Dla $N\sim\Poi(\lambda)$:
+$G_N(z)=\exp(\lambda(z-1))$.
+Jeśli $T\sim\Geom(p)$ oznacza numer pierwszej udanej próby,
+to $N=T-1$ liczy poprzedzające ją porażki i
+$G_N(z)=p/[1-(1-p)z]$ dla $|z|\leq1$.
+Dla liczby porażek przed $r$-tym sukcesem otrzymujemy
+$G(z)=[p/(1-(1-p)z)]^r$.
+Porównanie tych wzorów od razu wyjaśnia stabilność
+rozkładu Poissona przy sumowaniu i konstrukcję
+ujemnego dwumianowego jako sumy czasów oczekiwania.
+\end{przyklad}
+
+\section{Funkcja tworząca momenty i kumulanty}
+
+\begin{definicja}
+Dla rzeczywistej zmiennej losowej $X$ definiujemy
+$M_X(t):=\E e^{tX}\in(0,\infty]$ dla $t\in\R$.
+Dziedziną skończoności jest $D_X:=\{t\in\R:M_X(t)<\infty\}$;
+zawsze $0\in D_X$, lecz $D_X$ nie musi zawierać
+żadnego otoczenia zera. Jeśli $M_X$ jest skończona
+w otoczeniu zera, określamy również funkcję tworzącą
+kumulanty $K_X(t):=\log M_X(t)$.
+\end{definicja}
+
+\begin{twierdzenie}[Istnienie pochodnych i odzyskiwanie momentów]
+Niech $X$ będzie rzeczywistą zmienną losową oraz
+$\delta>0$ takie, że $M_X(-\delta)<\infty$ i
+$M_X(\delta)<\infty$. Wtedy $M_X$ jest nieskończenie
+wiele razy różniczkowalna na $(-\delta,\delta)$ oraz
+dla każdego $r\in\N_0$ i $|t|<\delta$ zachodzi
+\[
+M_X^{(r)}(t)=\E[X^r e^{tX}].
+\]
+W szczególności $\E|X|^r<\infty$ i
+$M_X^{(r)}(0)=\E X^r$ dla każdego $r\in\N_0$.
+\end{twierdzenie}
+\begin{proof}
+Najpierw zwróćmy uwagę, że
+$e^{\delta|X|}\leq e^{\delta X}+e^{-\delta X}$.
+Zatem $\E e^{\delta|X|}<\infty$.
+Ustalmy $0<\eta<\delta$ i $r\geq0$. Funkcja
+$u\mapsto u^re^{-(\delta-\eta)u}$ jest ograniczona na
+$[0,\infty)$, więc istnieje $C_{r,\eta,\delta}<\infty$
+taka, że dla $|t|\leq\eta$:
+$|X|^re^{tX}\leq C_{r,\eta,\delta}e^{\delta|X|}$.
+Prawa strona jest całkowalna i nie zależy od $t$.
+Możemy więc stosować twierdzenie o zbieżności zdominowanej
+do ilorazów różnicowych, a następnie do wyższych pochodnych:
+każde różniczkowanie $e^{tX}$ mnoży wyrażenie przez $X$.
+Dostajemy wzór na wszystkie pochodne. Dla $t=0$
+otrzymujemy momenty, które są skończone na mocy
+powyższego oszacowania dla $r$ i $\eta=0$.
+\end{proof}
+
+\begin{twierdzenie}[Dodawanie kumulantów]
+Niech $X,Y$ będą niezależnymi rzeczywistymi zmiennymi losowymi,
+a ich funkcje $M_X,M_Y$ będą skończone w pewnym wspólnym
+otoczeniu zera. Wtedy w tym otoczeniu
+$M_{X+Y}(t)=M_X(t)M_Y(t)$ i
+$K_{X+Y}(t)=K_X(t)+K_Y(t)$.
+Ponadto $K_X'(0)=\E X$, $K_X''(0)=\Var(X)$
+oraz $K_X'''(0)=\E(X-\E X)^3$.
+\end{twierdzenie}
+\begin{proof}
+Nieujemność $e^{tX}$ i $e^{tY}$ oraz niezależność pozwalają
+zastosować Tonellego do miary produktowej:
+$\E e^{t(X+Y)}=\E e^{tX}\E e^{tY}$.
+Obie wartości są skończone w podanym otoczeniu, więc
+możemy wziąć logarytm. Ponieważ $M_X(0)=1$, reguły
+różniczkowania logarytmu dają
+$K_X'=M_X'/M_X$ i
+$K_X''=M_X''/M_X-(M_X'/M_X)^2$.
+Dla trzeciej pochodnej otrzymujemy przy $t=0$
+$K_X'''(0)=\E X^3-3\E X\,\E X^2+2(\E X)^3$,
+co jest rozwinięciem trzeciego momentu centralnego.
+\end{proof}
+
+\begin{przyklad}[Kumulanty trzech rodzin]
+Dla $X\sim\Normal(\mu,\sigma^2)$ mamy
+$K_X(t)=\mu t+\sigma^2t^2/2$: wszystkie pochodne
+rzędu co najmniej trzeciego znikają. Dla
+$N\sim\Poi(\lambda)$ zachodzi $K_N(t)=\lambda(e^t-1)$,
+a więc każda kumulanta dodatniego rzędu jest równa $\lambda$.
+Dla zmiennej Bernoulliego $K_B(t)=\log(1-p+pe^t)$.
+\end{przyklad}
+
+\begin{stwierdzenie}[Jednoznaczność funkcji tworzącej momenty]
+Niech $X,Y$ będą rzeczywistymi zmiennymi losowymi.
+Jeśli ich funkcje $M_X,M_Y$ są skończone na
+$(-\delta,\delta)$ dla pewnego $\delta>0$
+i są tam równe, to $\Law(X)=\Law(Y)$.
+\end{stwierdzenie}
+\begin{proof}
+Rozważmy transformaty zespolone
+$L_X(z)=\E e^{zX}$ i $L_Y(z)=\E e^{zY}$
+na pasie $\{z\in\mathbb C:|\operatorname{Re}z|<\delta\}$.
+Są tam holomorficzne: dla dowolnych $0<\eta<\delta'
+<\delta$, na pasie $|\operatorname{Re}z|\leq\eta$
+moduły wyrazów $X^re^{zX}$ można oszacować przez
+$C_r e^{\delta'|X|}$, którego wartość oczekiwana
+jest skończona, ponieważ $M_X(\delta')$ i
+$M_X(-\delta')$ są skończone. To zapewnia zbieżność
+zdominowaną dla kolejnych pochodnych zespolonych.
+Z zasady identyczności funkcji holomorficznych równość
+$L_X(t)=L_Y(t)$ na $(-\delta,\delta)$ implikuje
+równość na całym pasie, w szczególności dla $z=it$.
+Zatem $\varphi_X(t)=\varphi_Y(t)$ dla każdego $t\in\R$.
+Twierdzenie o jednoznaczności funkcji charakterystycznej,
+udowodnione w następnej sekcji, daje $\Law(X)=\Law(Y)$.
+\end{proof}
+
+\begin{przyklad}[Wszystkie momenty nie muszą wyznaczać rozkładu]
+Niech $Z\sim\Normal(0,1)$ oraz $X=e^Z$.
+Zmienna $X$ ma wszystkie dodatnie całkowite momenty
+$\E X^n=e^{n^2/2}$, ale dla każdego $t>0$ zachodzi
+$M_X(t)=\infty$ (w całce po $z\to\infty$ wykładnik
+$t e^z-z^2/2$ zmierza do $+\infty$).
+Co więcej, przyjmijmy gęstość $f_0(x)=
+\ind{\{x>0\}}e^{-(\log x)^2/2}/(x\sqrt{2\pi})$
+i dla $|\varepsilon|\leq1$ połóżmy
+$f_\varepsilon(x)=f_0(x)[1+\varepsilon\sin(2\pi\log x)]$.
+Są to nieujemne gęstości: dla każdego $n\in\N_0$
+\[
+\int_0^\infty x^n f_0(x)\sin(2\pi\log x)
+\,\dd\lambda_1(x)
+=\operatorname{Im}\exp((n+2\pi i)^2/2)=0,
+\]
+gdyż $\sin(2\pi n)=0$. Dla $n=0$ otrzymujemy
+normalizację, a dla wszystkich $n$ --- identyczne momenty.
+Dla różnych $\varepsilon$ gęstości są jednak różne prawie
+wszędzie. Ten przykład pokazuje, dlaczego sama lista momentów
+bez warunków zapewniających jednoznaczność może być niewystarczająca.
+\end{przyklad}
+
+\section{Funkcja charakterystyczna i transformata Fouriera}
+
+Kluczowa różnica między $e^{tX}$ a $e^{itX}$ polega na tym,
+że $|e^{itX}|=1$ nawet dla bardzo ciężkich ogonów rozkładu.
+Całkowanie zespolonej wykładniczej nie wymaga więc istnienia
+żadnego momentu. Zmienna faza $e^{itx}$ rejestruje zarazem
+informację o całym rozkładzie, nie tylko o jego średniej.
+
+\begin{definicja}
+Funkcją charakterystyczną rzeczywistej zmiennej losowej $X$
+nazywamy $\varphi_X:\R\to\mathbb C$ zadaną wzorem
+$\varphi_X(t):=\E e^{itX}=\int_\R e^{itx}\,\dd\mu_X(x)$.
+\end{definicja}
+
+\begin{twierdzenie}[Własności funkcji charakterystycznej]
+Dla każdej rzeczywistej zmiennej losowej $X$ i
+$t,s,a,b\in\R$ zachodzą:
+\begin{enumerate}
+\item $\varphi_X(0)=1$, $|\varphi_X(t)|\leq1$
+ i $\varphi_X(-t)=\overline{\varphi_X(t)}$;
+\item $\varphi_X$ jest jednostajnie ciągła na $\R$;
+\item $\varphi_{aX+b}(t)=e^{itb}\varphi_X(at)$;
+\item dla niezależnych $X,Y$ mamy
+ $\varphi_{X+Y}(t)=\varphi_X(t)\varphi_Y(t)$;
+\item dla dowolnych $n\in\N$, $t_1,\ldots,t_n\in\R$,
+ $c_1,\ldots,c_n\in\mathbb C$ zachodzi
+ $\sum_{j,k=1}^n c_j\overline{c_k}\varphi_X(t_j-t_k)\geq0$.
+\end{enumerate}
+Jeżeli $\E|X|^r<\infty$ dla pewnego $r\in\N$,
+to $\varphi_X$ jest $r$ razy różniczkowalna i
+$\varphi_X^{(k)}(t)=\E[(iX)^k e^{itX}]$
+dla $0\leq k\leq r$.
+\end{twierdzenie}
+\begin{proof}
+Ponieważ $|e^{itX}|=1$, całka zawsze istnieje,
+a nierówność trójkąta daje $|\varphi_X(t)|\leq1$.
+Pozostałe tożsamości z punktu pierwszego wynikają
+z podstawienia $t=0$ i sprzężenia całki.
+Dla ciągu $h_n\to0$ wyrażenie
+$|\varphi_X(t+h_n)-\varphi_X(t)|$
+jest nie większe niż $\E|e^{ih_nX}-1|$, niezależnie od $t$.
+Funkcja pod wartością oczekiwaną dąży punktowo do zera
+i nie przekracza $2$, więc zbieżność zdominowana daje
+jednostajną ciągłość. Punkt trzeci wynika z równości
+$e^{it(aX+b)}=e^{itb}e^{i(at)X}$.
+Dla czwartego korzystamy z niezależności i Fubiniego:
+$\E[e^{itX}e^{itY}]=\E e^{itX}\E e^{itY}$.
+Dla ostatniego punktu obliczamy
+\[
+\sum_{j,k}c_j\overline{c_k}\varphi_X(t_j-t_k)
+=\E\left|\sum_{j=1}^n c_je^{it_jX}\right|^2\geq0.
+\]
+Wreszcie $|(iX)^k e^{itX}|=|X|^k$ jest całkowalna
+przy $k\leq r$. Zbieżność zdominowana stosowana
+kolejno do ilorazów różnicowych uzasadnia różniczkowanie
+pod całką i podany wzór na pochodne.
+\end{proof}
+
+\begin{lemat}[Całka Fouriera dla rozkładu Gaussa]
+Jeśli $Z\sim\Normal(0,1)$, to
+$\varphi_Z(t)=e^{-t^2/2}$ dla $t\in\R$.
+Jeśli $Y\sim\Normal(m,\sigma^2)$, to
+$\varphi_Y(t)=\exp(imt-\sigma^2t^2/2)$.
+\end{lemat}
+\begin{proof}
+Niech $g(x)=(2\pi)^{-1/2}e^{-x^2/2}$.
+Zdominowana zbieżność pozwala różniczkować
+$\varphi_Z(t)=\int_\R e^{itx}g(x)\,\dd\lambda_1(x)$.
+Ponieważ $g'(x)=-xg(x)$, całkowanie przez części daje
+$\int_\R xe^{itx}g(x)\,\dd\lambda_1(x)
+=it\int_\R e^{itx}g(x)\,\dd\lambda_1(x)$;
+wyrazy brzegowe znikają dzięki wykładniczemu zanikowi $g$.
+Stąd $\varphi_Z'(t)=i(it\varphi_Z(t))=-t\varphi_Z(t)$.
+Przy warunku początkowym $\varphi_Z(0)=1$ rozwiązanie tego
+równania to $e^{-t^2/2}$. Drugą równość otrzymujemy
+przez przekształcenie afiniczne $Y\stackrel d=m+\sigma Z$.
+\end{proof}
+
+\begin{twierdzenie}[Jednoznaczność funkcji charakterystycznej]
+Jeżeli $X,Y$ są rzeczywistymi zmiennymi losowymi i
+$\varphi_X(t)=\varphi_Y(t)$ dla każdego $t\in\R$,
+to $\Law(X)=\Law(Y)$.
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy rozkłady przez $\mu$ i $\nu$, a przez
+$g_\sigma(x)=(\sigma\sqrt{2\pi})^{-1}
+\exp(-x^2/(2\sigma^2))$ gęstość $\Normal(0,\sigma^2)$
+dla $\sigma>0$. Dzięki poprzedniemu lematowi i
+całkowalności funkcji $t\mapsto e^{-\sigma^2t^2/2}$
+możemy zastosować Fubiniego do wzoru Fouriera na gęstość
+Gaussa i otrzymać dla każdego $x\in\R$
+\[
+\int_\R g_\sigma(x-y)\,\dd\mu(y)
+=\frac1{2\pi}\int_\R
+ e^{-itx}\varphi_\mu(t)e^{-\sigma^2t^2/2}
+\,\dd\lambda_1(t).
+\]
+Tutaj użyliśmy elementarnej odwrotności transformaty
+Fouriera Gaussa, wynikającej z udowodnionego wzoru na
+$\varphi_Z$ (równoważnie z całki Gaussa po zamianie
+ról zmiennych). To samo zachodzi dla $\nu$.
+Równość funkcji charakterystycznych oznacza zatem,
+że sploty $\mu*g_\sigma$ i $\nu*g_\sigma$ mają
+identyczne gęstości, a więc są równymi miarami.
+
+Dla dowolnej funkcji $h:\R\to\R$ ograniczonej i ciągłej
+oraz niezależnej zmiennej $Z\sim\Normal(0,1)$ zachodzi
+\[
+\int_\R h(x)\,\dd(\mu*g_\sigma)(x)
+=\int_\R\E[h(x+\sigma Z)]\,\dd\mu(x).
+\]
+Gdy $\sigma\downarrow0$, dla każdego ustalonego $x$
+zmienna $h(x+\sigma Z)$ dąży prawie na pewno do $h(x)$,
+a jej moduł jest ograniczony przez $\|h\|_\infty$.
+Dwukrotne zastosowanie zbieżności zdominowanej daje
+$\int h\,\dd(\mu*g_\sigma)\to\int h\,\dd\mu$;
+podobnie dla $\nu$. Ponieważ sploty były równe dla
+każdego $\sigma$, otrzymujemy
+$\int h\,\dd\mu=\int h\,\dd\nu$ dla każdej
+ograniczonej funkcji ciągłej $h$. Takie całki
+jednoznacznie wyznaczają borelowskie miary probabilistyczne
+na $\R$ (przez aproksymację wskaźników przedziałów
+funkcjami ciągłymi). Wobec tego $\mu=\nu$.
+\end{proof}
+
+\begin{stwierdzenie}[Odwracanie transformaty przy całkowalności]
+Niech $X$ będzie rzeczywistą zmienną losową taką,
+że $\int_\R|\varphi_X(t)|\,\dd\lambda_1(t)<\infty$.
+Wtedy rozkład $X$ ma ograniczoną, ciągłą gęstość
+\[
+f_X(x)=\frac1{2\pi}\int_\R e^{-itx}\varphi_X(t)
+\,\dd\lambda_1(t),\qquad x\in\R.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Niech $g_\sigma$ będzie gaussowską gęstością z
+poprzedniego dowodu. Splot $\mu_X*g_\sigma$ ma gęstość
+$f_\sigma(x)=(2\pi)^{-1}\int e^{-itx}\varphi_X(t)
+ e^{-\sigma^2t^2/2}\,\dd\lambda_1(t)$.
+Ponieważ $|e^{-\sigma^2t^2/2}|\leq1$, zbieżność zdominowana
+względem $|\varphi_X(t)|\,\dd\lambda_1(t)$ daje
+$f_\sigma\to f$ jednostajnie na całej $\R$.
+Funkcja $f$ jest ciągła i ograniczona z dominacji
+oraz ciągłości fazy $e^{-itx}$.
+Dla nieujemnej funkcji ciągłej $h$ o zwartym nośniku
+mamy $\int h f_\sigma\,\dd\lambda_1\to
+\int h f\,\dd\lambda_1$ z jednostajnej zbieżności,
+a jednocześnie $\int h f_\sigma\,\dd\lambda_1\to\E h(X)$
+z argumentu z dowodu jednoznaczności.
+Zatem $\int h f\,\dd\lambda_1=\E h(X)$
+dla wszystkich takich $h$, co wyznacza miarę
+$\mu_X=f\lambda_1$. W szczególności $f\geq0$
+i $\int f\,\dd\lambda_1=1$.
+\end{proof}
+
+\begin{przyklad}[Ciężkie ogony a funkcja charakterystyczna]
+Dla standardowego rozkładu Cauchy'ego zachodzi
+$\varphi_X(t)=e^{-|t|}$. Udowodnimy tę tożsamość
+bez odwoływania się do rachunku residuów.
+Niech $Z_1,Z_2$ będą niezależnymi zmiennymi standardowo
+normalnymi. Z przedstawienia rozkładu Studenta dla
+jednego stopnia swobody wiemy, że $C=Z_1/|Z_2|$
+ma rozkład Cauchy'ego. Korzystając z niezależności
+i funkcji charakterystycznej rozkładu normalnego,
+możemy całkować najpierw po $Z_1$:
+\[
+\varphi_C(t)=\E\exp\!\left(-\frac{t^2}{2Z_2^2}\right)
+=\sqrt{\frac2\pi}\int_0^\infty
+\exp\!\left(-\frac{z^2}{2}-\frac{t^2}{2z^2}\right)
+\,\dd\lambda_1(z).
+\]
+Aby obliczyć tę całkę, dla $a>0$ i $b\geq0$ połóżmy
+$I(a,b)=\int_0^\infty e^{-az^2-b/z^2}\,\dd\lambda_1(z)$.
+Dla $b>0$ wolno różniczkować względem $b$ pod całką
+(zdominowanie na dowolnym zwartym podprzedziale
+$(0,\infty)$). Podstawienie $u=\sqrt{b/a}/z$ daje
+\[
+\frac{\partial I}{\partial b}(a,b)
+=-\int_0^\infty z^{-2}e^{-az^2-b/z^2}\,\dd\lambda_1(z)
+=-\sqrt{\frac ab}\,I(a,b).
+\]
+Zatem $\partial_b\log I(a,b)=-\sqrt{a/b}$,
+czyli $I(a,b)=C(a)e^{-2\sqrt{ab}}$.
+Zdominowana zbieżność przy $b\downarrow0$ i całka
+Gaussa wyznaczają $C(a)=I(a,0)=\sqrt\pi/(2\sqrt a)$.
+Podstawiając $a=1/2$ i $b=t^2/2$ do powyższego
+wzoru na $\varphi_C$, otrzymujemy
+$\varphi_C(t)=e^{-|t|}$ również dla $t=0$.
+Funkcja charakterystyczna istnieje więc pomimo braku
+wartości oczekiwanej rozkładu Cauchy'ego.
+\end{przyklad}
+

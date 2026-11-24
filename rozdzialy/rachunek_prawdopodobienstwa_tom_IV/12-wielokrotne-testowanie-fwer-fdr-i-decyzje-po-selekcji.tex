@@ -1,0 +1,491 @@
+\chapter{Wielokrotne testowanie: FWER, FDR i decyzje po selekcji}
+\label{ch:multiple-testing}
+\paragraph{Powiązania i odsyłacze.} Przed użyciem korekt warto przeczytać rozdziały~\ref{ch:testing} i~\ref{ch:confidence-intervals}; do projektowania badań przejdziemy w rozdziale~\ref{ch:causal-ab}.
+
+
+\section{Dlaczego test wykonany poprawnie może prowadzić do błędnej procedury?}
+Testowanie jednej hipotezy z poziomem $\alpha=0{,}05$ jest
+różne od testowania stu hipotez, z których następnie
+wybieramy tylko te o małych wartościach p. Każdy test
+może być poprawny oddzielnie, a cała procedura może mieć
+duże prawdopodobieństwo przynajmniej jednego
+fałszywego odkrycia. Trzeba więc ustalić, \emph{jaki rodzaj
+błędu kontrolujemy w zbiorze decyzji}.
+
+\begin{definicja}[Rodzina hipotez i miary błędów]\label{def:fwer-fdr}
+Niech $m\ge1$, a $H_1,\ldots,H_m$ będą ustaloną rodziną
+hipotez. Niech $I_0\subseteq\{1,\ldots,m\}$ oznacza
+zbiór indeksów prawdziwych hipotez zerowych i
+$m_0=|I_0|$ (nieznane badaczowi). Dla testów
+$\varphi_i\in\{0,1\}$ definiujemy liczbę wszystkich
+odrzuceń $R=\sum_{i=1}^m\varphi_i$ oraz liczbę
+błędnych odrzuceń $V=\sum_{i\in I_0}\varphi_i$.
+\emph{Rodzinne prawdopodobieństwo błędu I rodzaju} to
+$\mathrm{FWER}=P(V\ge1)$, a \emph{oczekiwany udział
+fałszywych odkryć} to
+\[
+ \mathrm{FDR}=\E\left[\frac{V}{R\vee1}\right],
+ \qquad R\vee1:=\max\{R,1\}.
+\]
+Konwencja $V/(R\vee1)=0$ dla $R=0$ jest częścią definicji.
+Dodatkowo $\mathrm{FDP}=V/(R\vee1)$ oznacza
+\emph{zrealizowany} udział fałszywych odkryć.
+\end{definicja}
+
+FWER dotyczy zdarzenia, że \emph{jakikolwiek} wniosek
+jest fałszywy. FDR dopuszcza pewną liczbę błędnych
+odkryć, ale kontroluje \emph{średni} ich udział.
+Nie oznacza to, że w danym konkretnym badaniu udział
+błędnych odkryć jest nie większy niż $5\%$.
+
+\begin{definicja}[Silna i słaba kontrola FWER]
+Procedura ma \emph{silną kontrolę FWER} na poziomie
+$\alpha$, jeśli $P(V\ge1)\le\alpha$ dla każdego
+rozmieszczenia prawdziwych i fałszywych hipotez w rozważanej
+rodzinie modeli. \emph{Słaba kontrola FWER} wymaga tej
+nierówności tylko w konfiguracji, w której wszystkie
+hipotezy zerowe są prawdziwe.
+\end{definicja}
+
+\begin{przyklad}[Dwadzieścia niezależnych testów]
+Jeśli pod prawdziwymi hipotezami zerowymi
+$p_1,\ldots,p_{20}$ są niezależne i jednostajne na
+$[0,1]$, a każde $H_i$ odrzucamy przy $p_i\le0{,}05$,
+to $\mathrm{FWER}=1-(1-0{,}05)^{20}\approx0{,}6415$.
+Nawet jeśli każdy pojedynczy test ma poprawny poziom,
+cała procedura nie kontroluje rodzinnego błędu na $5\%$.
+Ten konkretny wzór wykorzystuje \emph{niezależność}; bez
+niej nie można go automatycznie stosować.
+\end{przyklad}
+
+\section{Bonferroni: prosta gwarancja bez niezależności}
+\begin{twierdzenie}[Procedura Bonferroniego]\label{thm:bonferroni}
+Niech $p_1,\ldots,p_m$ będą mierzalnymi wartościami p
+dla ustalonej rodziny hipotez i niech dla każdego
+$i\in I_0$ oraz każdego $u\in[0,1]$ zachodzi
+$P(p_i\le u)\le u$. Bez żadnych założeń o wzajemnej
+zależności wartości p reguła
+\[
+ \text{odrzuć }H_i\quad\Longleftrightarrow\quad
+ p_i\le\frac\alpha m
+\]
+ma silną kontrolę $\mathrm{FWER}\le\alpha$.
+\end{twierdzenie}
+\begin{proof}
+Zdarzenie $\{V\ge1\}$ jest zawarte w unii zdarzeń
+$\{p_i\le\alpha/m\}$ po $i\in I_0$.
+Z nierówności sumy prawdopodobieństw i ważności
+poszczególnych wartości p otrzymujemy
+\[
+ P(V\ge1)\le\sum_{i\in I_0}P(p_i\le\alpha/m)
+ \le\frac{m_0\alpha}m\le\alpha.
+\]
+Dowód nie wykorzystuje niezależności ani liczby fałszywych
+hipotez w rodzinie.
+\end{proof}
+
+\begin{wniosek}[Jednoczesne przedziały ufności]
+\label{cor:simultaneous-ci}
+Niech $\theta_1,\ldots,\theta_m$ oznaczają ustalone
+parametry (lub funkcjonały parametrów), a losowe
+przedziały $C_i(X)$ spełniają
+$P(\theta_i\notin C_i(X))\le\alpha/m$ dla każdego
+$i=1,\ldots,m$. Wówczas
+\[
+ P\bigl(\theta_i\in C_i(X)\ \text{dla wszystkich }
+ i=1,\ldots,m\bigr)\ge1-\alpha.
+\]
+\end{wniosek}
+\begin{proof}
+Zdarzenie braku jednoczesnego pokrycia jest unią zdarzeń
+$\{\theta_i\notin C_i(X)\}$. Nierówność sumy
+prawdopodobieństw ogranicza jego prawdopodobieństwo przez
+$\sum_i\alpha/m=\alpha$. Żadna niezależność przedziałów
+nie jest potrzebna.
+\end{proof}
+
+\begin{uwaga}[Cena ochrony rodziny]
+Bonferroni zachowuje gwarancję przy dowolnej zależności,
+ale może być konserwatywny, zwłaszcza przy wielu silnie
+skorelowanych testach. Jeżeli mamy z góry wybrany
+jeden \emph{główny} wynik badania i wiele wyników
+pomocniczych, rozsądny plan może oddzielać rodziny
+hipotez o różnych celach; nie wolno jednak tworzyć
+takich rodzin dopiero po obejrzeniu wartości p, tylko
+po to, by uniknąć korekty.
+\end{uwaga}
+
+\section{Procedura Holma: lepsza od Bonferroniego bez dodatkowych założeń}
+\begin{definicja}[Procedura krokowa Holma]\label{def:holm}
+Niech $p_{(1)}\le\cdots\le p_{(m)}$ będą uporządkowanymi
+wartościami p, a $H_{(i)}$ odpowiadającymi im hipotezami;
+przy remisach wybieramy z góry ustaloną regułę porządku.
+Dla $0<\alpha<1$ sprawdzamy kolejno
+$p_{(i)}\le\alpha/(m-i+1)$. Odrzucamy hipotezy
+$H_{(1)},\ldots,H_{(r)}$ aż do pierwszej niespełnionej
+nierówności, po czym zatrzymujemy procedurę.
+Jeśli pierwsza nierówność nie zachodzi, nie odrzucamy
+żadnej hipotezy.
+\end{definicja}
+
+\begin{twierdzenie}[Silna kontrola FWER przez Holma]
+\label{thm:holm}
+Załóżmy, że każda prawdziwa hipoteza zerowa w rodzinie
+$H_1,\ldots,H_m$ ma ważną wartość p, to znaczy
+$P(p_i\le u)\le u$ dla każdego $u\in[0,1]$ i
+$i\in I_0$. Procedura Holma z definicji~\ref{def:holm}
+ma silną kontrolę $\mathrm{FWER}\le\alpha$ bez względu
+na zależności między wartościami p. Ponadto zawsze
+odrzuca wszystkie hipotezy, które odrzuca Bonferroni
+przy tym samym poziomie $\alpha$.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $m_0=0$, to $V=0$ i pierwsza teza jest oczywista.
+Niech $m_0\ge1$. Jeżeli Holm odrzuci przynajmniej jedną
+prawdziwą hipotezę, niech $j$ będzie jej pierwszą pozycją
+w uporządkowanym ciągu. Przed pozycją $j$ znajdują się
+wyłącznie hipotezy fałszywe, więc $j\le m-m_0+1$ i
+$m-j+1\ge m_0$. Aby Holm odrzucił $H_{(j)}$, musiała
+zajść nierówność
+\[
+ p_{(j)}\le\frac\alpha{m-j+1}\le\frac\alpha{m_0}.
+\]
+Zatem zdarzenie przynajmniej jednego fałszywego
+odrzucenia implikuje, że dla pewnego $i\in I_0$ mamy
+$p_i\le\alpha/m_0$. Stosując nierówność sumy do
+$m_0$ prawdziwych hipotez, dostajemy $P(V\ge1)\le\alpha$.
+
+Jeśli Bonferroni odrzuca $H_{(j)}$, to
+$p_{(j)}\le\alpha/m$. Dla każdego $i\le j$
+mamy $p_{(i)}\le p_{(j)}\le\alpha/m\le
+\alpha/(m-i+1)$, a zatem Holm nie zatrzyma się
+przed pozycją $j$ i również odrzuci $H_{(j)}$.
+\end{proof}
+
+\begin{przyklad}[Cztery porównania zaplanowane z góry]
+Przypuśćmy, że $m=4$, $\alpha=0{,}05$ i obserwowane
+wartości p wynoszą
+$0{,}003$, $0{,}018$, $0{,}041$, $0{,}20$.
+Bonferroni wymaga $p\le0{,}0125$, więc odrzuca
+jedną hipotezę. Holm porównuje kolejno wartości p z
+$0{,}0125$, $0{,}016\overline6$, $0{,}025$ i
+$0{,}05$; zatrzymuje się na drugiej pozycji i również
+odrzuca jedną hipotezę. W innej konfiguracji Holm może
+odrzucić więcej hipotez, ale nigdy mniej niż Bonferroni.
+\end{przyklad}
+
+\begin{uwaga}[Korekta Šidáka]
+Jeżeli \emph{wszystkie} wartości p z prawdziwych hipotez
+zerowych są niezależne, to odrzucanie przy
+$p_i\le1-(1-\alpha)^{1/m}$ daje silną kontrolę FWER.
+Rzeczywiście, dla $m_0\le m$ niezależnych i ważnych
+wartości p prawdopodobieństwo braku błędnych odrzuceń
+jest co najmniej $(1-t)^{m_0}\ge(1-t)^m=1-\alpha$.
+Bez odpowiednich założeń o zależności tej korekty nie
+należy stosować jako bezwarunkowej gwarancji.
+\end{uwaga}
+
+\section{Benjamini--Hochberg: kontrolowanie odsetka fałszywych odkryć}
+\begin{definicja}[Procedura Benjamini--Hochberg (BH)]
+\label{def:bh}
+Niech $p_{(1)}\le\cdots\le p_{(m)}$ i ustalmy
+$q\in(0,1)$. Wyznaczamy
+\[
+ R=\max\left(\{0\}\cup
+ \left\{i\in\{1,\ldots,m\}:
+ p_{(i)}\le\frac{iq}{m}\right\}\right).
+\]
+Jeżeli $R=0$, nie odrzucamy żadnej hipotezy.
+Jeżeli $R\ge1$, odrzucamy wszystkie hipotezy z
+$p_i\le p_{(R)}$. Liczba tych odrzuceń wynosi dokładnie
+$R$: jeśli $R<m$ i $p_{(R+1)}=p_{(R)}$, to również
+$p_{(R+1)}\le qR/m<q(R+1)/m$, wbrew maksymalności $R$.
+Dla $R=m$ odrzucamy wszystkie $m$ hipotez.
+\end{definicja}
+
+\begin{uwaga}[Dlaczego procedura jest krokowa, a nie zbiorem
+niezależnych testów?]
+Wartości progowe $iq/m$ rosną wraz z indeksem.
+Może się zdarzyć, że nierówność nie zachodzi dla pewnego
+$i<R$, a jednak zachodzi dla $R$. Procedura BH nie
+przerywa badania przy pierwszym niepowodzeniu; wybiera
+\emph{największy} indeks spełniający nierówność.
+W przeciwieństwie do Holma nie jest procedurą
+zatrzymywaną na pierwszym przekroczeniu.
+\end{uwaga}
+
+\begin{twierdzenie}[Kontrola FDR przez BH przy niezależności]
+\label{thm:bh}
+Niech $p_1,\ldots,p_m$ będą niezależnymi zmiennymi
+losowymi o wartościach w $[0,1]$. Zakładamy, że
+każde $p_i$ odpowiadające prawdziwej hipotezie zerowej
+jest ważną wartością p:
+$P(p_i\le u)\le u$ dla każdego $u\in[0,1]$.
+Wtedy procedura BH na poziomie $q\in(0,1)$ spełnia
+\[
+ \mathrm{FDR}\le\frac{m_0}{m}q\le q.
+\]
+\end{twierdzenie}
+\begin{proof}
+Jeśli $m_0=0$, to FDR wynosi zero. Ustalmy
+$i\in I_0$, a następnie pozostawmy wszystkie pozostałe
+wartości p bez zmian i zastąpmy $p_i$ przez $0$.
+Niech $R_i^0\ge1$ oznacza liczbę odrzuceń w tej
+zmodyfikowanej próbie. Z własności krokowej konstrukcji
+BH wynika, że na zdarzeniu, w którym oryginalna
+procedura odrzuca $H_i$, zachodzi $R=R_i^0$.
+Rzeczywiście, ustawienie już odrzuconej wartości p na
+zero nie może zmniejszyć maksymalnego indeksu $R$;
+nie może też go zwiększyć: pozostałe wartości nie
+zmieniły się, a żaden indeks większy niż $R$ nie
+spełniał wcześniej warunku progowego.
+
+Warunek odrzucenia $H_i$ pociąga
+$p_i\le qR_i^0/m$. Zatem, warunkując względem
+wszystkich $p_j$ z $j\ne i$ i używając ich
+niezależności od $p_i$, otrzymujemy
+\[
+ \E\left[\frac{\ind{\{H_i\ \text{odrzucona}\}}}{R\vee1}
+ \ \middle|\ (p_j)_{j\ne i}\right]
+ \le\frac1{R_i^0}P\left(p_i\le\frac{qR_i^0}{m}
+ \ \middle|\ (p_j)_{j\ne i}\right)
+ \le\frac q m.
+\]
+Ostatnia nierówność wynika z ważności $p_i$ i
+$1\le R_i^0\le m$. Sumując po $i\in I_0$
+i biorąc wartości oczekiwane, dostajemy
+$\mathrm{FDR}=\sum_{i\in I_0}
+\E[\ind{\{H_i\ \text{odrzucona}\}}/(R\vee1)]
+\le m_0q/m$, co dowodzi twierdzenia.
+\end{proof}
+
+\begin{przyklad}[Te same cztery testy, inny cel]
+Dla wartości p $0{,}003$, $0{,}018$, $0{,}041$, $0{,}20$
+i $q=0{,}05$ progi BH to
+$0{,}0125$, $0{,}025$, $0{,}0375$, $0{,}05$.
+Największym poprawnym indeksem jest $R=2$, więc BH
+odrzuca dwie hipotezy, podczas gdy Bonferroni i Holm
+odrzucają jedną. Nie oznacza to, że dokładnie
+$5\%$ tych dwóch odkryć jest fałszywych; kontrola
+dotyczy wartości oczekiwanej FDP w powtarzanym
+schemacie badania i opiera się na założeniach
+twierdzenia~\ref{thm:bh}.
+\end{przyklad}
+
+\section{Zależne testy: co pozostaje prawdziwe?}
+Wiele testów może korzystać z tych samych obserwacji,
+na przykład z tej samej grupy kontrolnej albo z silnie
+skorelowanych pomiarów. Nie wolno wtedy bez komentarza
+stosować dowodu BH, który wykorzystywał niezależność
+$p_i$ od pozostałych wartości p.
+
+\begin{twierdzenie}[Korekta Benjamini--Yekutieli]\label{thm:by}
+Niech $p_1,\ldots,p_m$ będą dowolnie zależnymi
+wartościami p, przy czym dla każdego $i\in I_0$
+i $u\in[0,1]$ zachodzi $P(p_i\le u)\le u$.
+Niech $H_m=\sum_{r=1}^m1/r$. Jeśli w procedurze BH
+z definicji~\ref{def:bh} zastąpimy próg $iq/m$ progiem
+$iq/(mH_m)$, to otrzymana procedura spełnia
+$\mathrm{FDR}\le(m_0/m)q\le q$.
+\end{twierdzenie}
+\begin{proof}
+Niech $c=q/(mH_m)$ i dla ustalonego $i\in I_0$
+rozważmy zdarzenia $A_r=\{(r-1)c<p_i\le rc\}$
+dla $r=1,\ldots,m$. Jeśli hipoteza $H_i$ jest
+odrzucona i $p_i\in A_r$, to z warunku krokowego
+$p_i\le cR$ wynika $R\ge r$. Dla $p_i=0$
+też zachodzi $R\ge1$ na zdarzeniu odrzucenia;
+ponieważ rozkład ważnej wartości p spełnia
+$P(p_i=0)=0$, możemy ten przypadek pominąć.
+Wobec tego
+\[
+ \E\frac{\ind{\{H_i\ \text{odrzucona}\}}}{R\vee1}
+ \le\sum_{r=1}^m\frac1rP(A_r).
+\]
+Niech $F_i(t)=P(p_i\le t)$, a $F_i(0)=0$.
+Ważność oznacza $F_i(rc)\le rc$. Z przekształcenia
+sumy przez części (współczynniki $1/r$ maleją) wynika
+\[
+ \sum_{r=1}^m\frac{F_i(rc)-F_i((r-1)c)}r
+ \le\sum_{r=1}^m\frac{rc-(r-1)c}{r}
+ =cH_m=\frac qm.
+\]
+Dla jasności, nierówność wynika z tożsamości
+$\sum_{r=1}^m a_r(F_r-F_{r-1})=
+ a_mF_m+\sum_{r=1}^{m-1}(a_r-a_{r+1})F_r$
+i oszacowań $F_r\le rc$; suma podstawionych górnych
+ograniczeń teleskopuje się do $c\sum_{r=1}^m1/r$.
+Sumujemy teraz po $i\in I_0$, otrzymując
+$\mathrm{FDR}\le m_0q/m$.
+\end{proof}
+
+Korekta BY jest bezpieczna przy dowolnej zależności,
+ale może istotnie zmniejszać liczbę odkryć. Dla pewnych
+rodzin zależnych testów BH również kontroluje FDR
+(np. przy określonych warunkach dodatniej zależności),
+lecz nie należy przypisywać tej gwarancji wszystkim
+możliwym zależnościom.
+
+\section{Po ANOVA: porównania post hoc i pytania pierwotne}
+W rozdziale~\ref{ch:parametric-tests} test ANOVA badał
+$H_0:\mu_1=\cdots=\mu_k$. Po jego odrzuceniu często
+zadajemy bardziej szczegółowe pytania: czy A różni się od B,
+czy A różni się od C, czy B różni się od C? To są
+\emph{trzy oddzielne hipotezy}, a ich zbiór powinien zostać
+uwzględniony w kontroli błędów.
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.27\textwidth}>{\raggedright\arraybackslash}p{0.34\textwidth}>{\raggedright\arraybackslash}p{0.29\textwidth}}
+\toprule
+\textbf{Sytuacja} & \textbf{Metoda} & \textbf{Dlaczego / ograniczenia}\\
+\midrule
+Kilka zaplanowanych kontrastów & Bonferroni lub Holm & Silna kontrola FWER przy ważnych wartościach p; nie wymagają niezależności.\\
+Wszystkie pary grup w normalnej ANOVA ze wspólną wariancją & Tukey HSD & Wykorzystuje wspólny rozkład maksimum porównań i zwykle jest mniej konserwatywny niż Bonferroni.\\
+Wiele grup przeciw jednej kontroli & Dunnett & Korzysta z zależności porównań do wspólnej kontroli.\\
+Wiele par przy różnych wariancjach & Games--Howell & Aproksymacja dla wariancji nierównych; należy ocenić liczebności i ogony.\\
+Setki testów przesiewowych & BH, ewentualnie BY & Wybór FDR zamiast FWER jest decyzją o tolerowanej skali błędów.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Wszystkie te metody wymagają sprawdzenia modelu
+prawdopodobieństwa. Nie należy interpretować
+„braku istotności pary A--B” jako dowodu równoważności;
+podobnie jak w pojedynczym teście konieczne są
+odrębne hipotezy równoważności i uzasadniony margines.
+Pełną teorię procedur Tukeya, Dunnetta i Gamesa--Howella,
+w tym ich statystyki i rozkłady, rozwiniemy w rozdziale
+o rozbudowanej ANOVA i ANCOVA.
+
+\section{Praktyczne ryzyka: eksploracja, selekcja i podglądanie danych}
+\begin{przyklad}[Wybieranie najlepszego wyniku]
+Analityk oblicza pięćdziesiąt korelacji i raportuje
+jedynie trzy najmniejsze wartości p, nie ujawniając
+pozostałych testów. Odbiorca mógłby błędnie odczytać je
+jako trzy z góry zaplanowane porównania. W rzeczywistości
+zbiór hipotez jest szerszy; aby ocenić wiarygodność
+odkryć, potrzebujemy informacji o całej rodzinie
+przeprowadzonych testów. Procedura korekty oparta tylko
+na trzech wybranych wynikach nie kontroluje błędów
+w pierwotnym schemacie wyboru.
+\end{przyklad}
+
+\begin{uwaga}[Sekwencyjne zaglądanie do danych]
+Korekty Bonferroniego, Holma i BH rozważane tutaj
+dotyczą ustalonej rodziny ważnych wartości p.
+Jeśli dla \emph{tej samej} hipotezy wielokrotnie zaglądamy
+do narastającej próby i kończymy badanie, gdy zwykłe
+$p\le0{,}05$, to końcowa wartość p nie musi już być
+ważna przy tej regule zatrzymania. Potrzebne są osobno
+zaplanowane metody sekwencyjne: wydatkowanie poziomu
+istotności, granice grupowo-sekwencyjne albo testy ważne
+w czasie. Samo dodanie korekty na liczbę raportowanych
+hipotez nie naprawia takiego problemu.
+\end{uwaga}
+
+\section{Dobór procedury w praktyce}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.31\textwidth}>{\raggedright\arraybackslash}p{0.28\textwidth}>{\raggedright\arraybackslash}p{0.29\textwidth}}
+\toprule
+\textbf{Pytanie} & \textbf{Zwykle rozważamy} & \textbf{Na co uważać?}\\
+\midrule
+Czy choć jeden fałszywy alarm byłby kosztowny? & FWER: Holm, Bonferroni & Silna kontrola całej rodziny.\\
+Czy wykonujemy liczne badania przesiewowe? & FDR: BH & Niezależność lub odpowiednie warunki zależności.\\
+Czy zależności p-value są nieznane? & Holm dla FWER, BY dla FDR & BY może mieć małą moc.\\
+Czy porównujemy wszystkie pary po ANOVA? & Tukey lub Games--Howell & Wspólna wariancja lub jej brak, liczebności.\\
+Czy wszystkie grupy porównujemy z kontrolą? & Dunnett & Wspólny model i współzależność kontrastów.\\
+Czy obserwowaliśmy dane wielokrotnie w czasie? & Procedura sekwencyjna & Predefiniowany plan, ważność przy zatrzymaniu.\\
+Czy raportujemy wiele oszacowań? & Jednoczesne przedziały & Własności pokrycia całej rodziny.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{lstlisting}[language=Python,caption={Kompletny program w Pythonie: Bonferroni, Holm, BH i BY bez zewnętrznych pakietów.}]
+from math import fsum
+
+pvals = [0.003, 0.018, 0.041, 0.20]
+alpha = 0.05
+m = len(pvals)
+order = sorted(range(m), key=lambda i: pvals[i])
+
+bonf = [p <= alpha/m for p in pvals]
+holm = [False] * m
+for rank, i in enumerate(order):
+    if pvals[i] > alpha/(m-rank):
+        break
+    holm[i] = True
+
+def step_up(pvals, q):
+    m = len(pvals)
+    order = sorted(range(m), key=lambda i: pvals[i])
+    r = max((j for j in range(1, m+1)
+             if pvals[order[j-1]] <= q*j/m), default=0)
+    return [p <= pvals[order[r-1]] for p in pvals] if r else [False]*m
+
+harmonic = fsum(1/j for j in range(1, m+1))
+bh = step_up(pvals, alpha)
+by = step_up(pvals, alpha/harmonic)
+print('Bonferroni:', bonf)
+print('Holm:', holm)
+print('BH:', bh)
+print('BY:', by)
+\end{lstlisting}
+
+\begin{lstlisting}[language=Julia,caption={Obliczenie krokowych korekt Holma i BH w Julii bez pakietów zewnętrznych.}]
+pvals = [0.003, 0.018, 0.041, 0.20]
+alpha = 0.05
+m = length(pvals)
+idx = sortperm(pvals)
+
+holm = falses(m)
+for j in 1:m
+    i = idx[j]
+    pvals[i] > alpha/(m-j+1) && break
+    holm[i] = true
+end
+
+threshold = [alpha*j/m for j in 1:m]
+valid = [j for j in 1:m if pvals[idx[j]] <= threshold[j]]
+r = isempty(valid) ? 0 : maximum(valid)
+bh = falses(m)
+if r > 0
+    bh .= pvals .<= pvals[idx[r]]
+end
+println((holm=holm, bh=bh))
+\end{lstlisting}
+
+\paragraph{Jak czytać wyniki programu?}
+Obie procedury uruchomione na tych samych danych mogą
+zwrócić różne decyzje, mimo że każda jest poprawna
+\emph{względem swojego celu i założeń}. Nie należy
+wybierać między FWER a FDR dopiero na podstawie
+tego, która procedura odrzuciła więcej hipotez.
+
+\section{Zadanie podsumowujące: rekomendacje dla analityka}
+\begin{zadanie}[Cztery lokalizacje, trzy rodzaje pytań]
+Firma porównuje cztery lokalizacje pod kątem wskaźników
+awaryjności. Rozważa trzy cele: (a) potwierdzić, że
+\emph{każda} wskazana lokalizacja spełnia normę;
+(b) znaleźć możliwie wiele lokalizacji wymagających
+interwencji; (c) porównać każdą lokalizację z jedną
+wspólną lokalizacją kontrolną. Jakie metody rozważyć?
+\par\emph{Rozwiązanie.} W (a) wybieramy procedurę
+kontrolującą rodzinny błąd zgodnie z kierunkiem hipotez,
+np. Holm, oraz odpowiednio jednostronne przedziały
+jednoczesne. W (b), jeśli akceptujemy kontrolę
+oczekiwanego udziału błędnych sygnałów i rozumiemy
+koszty pomyłek, możemy rozważyć BH lub BY zależnie od
+struktury zależności. W (c) porównania do wspólnej
+kontroli sugerują procedurę Dunnetta \emph{w odpowiednim
+modelu normalnym}; przy niezależnych prawidłowych
+wartościach p albo bez szczególnego modelu korelacji
+można użyć Holma. W każdym przypadku od wyboru
+procedury ważniejsza jest poprawność jednostki analizy,
+założeń modelu i interpretacji wyniku.
+\end{zadanie}
+
+
+
+% ================================================================
+% ROZDZIAL 13 -- REGRESJA LINIOWA
+% ================================================================

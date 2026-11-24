@@ -1,0 +1,436 @@
+\chapter{Problem martyngałowy i twierdzenie Feynmana--Kaca}
+\label{ch:martingale-fk}
+
+\section{Od generatora do prawa procesu: motywacja}
+
+W rozdziale \ref{ch:sde-properties} rozpoczęliśmy od procesu $X$, a następnie
+wyznaczyliśmy jego generator $L$. Można odwrócić to rozumowanie:
+\emph{czy operator $L$ i rozkład początkowy wyznaczają prawo procesu?}
+Nie należy utożsamiać tego pytania z istnieniem silnego rozwiązania SDE.
+Silne rozwiązanie wymaga zadania procesu Wienera i jego filtracji,
+natomiast prawo procesu można próbować scharakteryzować bez wskazywania
+konkretnego źródła szumu.
+
+Niech $b:\R^d\to\R^d$ i $\sigma:\R^d\to\R^{d\times m}$ będą
+ciągłe, a $a=\sigma\sigma^{\mathsf T}$. Rozważamy operator
+\[
+Lf(x)=\sum_i b_i(x)\partial_i f(x)
+ +\frac12\sum_{i,j}a_{ij}(x)\partial_{ij}f(x),
+ \qquad f\in C_c^2(\R^d).
+\]
+W równaniu SDE składnik $\int\nabla f(X_s)\sigma(X_s)\,\dd W_s$
+ma średnią warunkową zero. Istotą konstrukcji jest więc fakt, że
+$f(X_t)-f(X_0)-\int_0^tLf(X_s)\,\dd s$ jest martyngałem.
+
+\begin{definicja}[Problem martyngałowy dla operatora $L$]
+\label{def:mp}
+Niech $\mu$ będzie miarą probabilistyczną na $\R^d$ i niech
+$\Omega_C=C([0,\infty);\R^d)$ będzie przestrzenią ciągłych trajektorii
+z jej $\sigma$-ciałem borelowskim (dla topologii zbieżności jednostajnej
+na przedziałach zwartych). Niech $Y_t(\omega)=\omega(t)$ i
+$\calF_t^Y=\sigma(Y_s:0\le s\le t)$.
+Mówimy, że prawo probabilistyczne $\mathbf Q$ na $\Omega_C$
+\emph{rozwiązuje problem martyngałowy $(L,\mu)$}, jeśli
+$\Law_{\mathbf Q}(Y_0)=\mu$ i dla każdej $f\in C_c^2(\R^d)$
+proces
+\[
+M_t^f=f(Y_t)-f(Y_0)-\int_0^tLf(Y_s)\,\dd s
+\]
+jest martyngałem względem $(\calF_t^Y)$ na każdym skończonym
+przedziale czasu. Zakładamy przy tym całkowalność występujących
+wyrażeń. Gdy $b,\sigma$ są lokalnie ograniczone, $Lf$ jest ograniczone
+ze względu na zwarty nośnik $f$, więc całkowalność jest automatyczna.
+\end{definicja}
+
+\begin{uwaga}[Co jest, a czego nie ma w definicji?]
+W definicji nie występuje proces Wienera. Warunek
+martyngałowy opisuje \emph{warunkowe średnie przyrostów funkcji
+stanu}. Własność ta jest silniejsza od równości
+$\E f(Y_t)-\E f(Y_0)=\int_0^t\E Lf(Y_s)\,\dd s$:
+ta ostatnia nie zawiera informacji o przeszłości $\calF_s^Y$.
+Różne prawa mogą spełniać te same słabe równania dla rozkładów
+jednowymiarowych; problem martyngałowy kontroluje całe prawo trajektorii.
+\end{uwaga}
+
+\begin{twierdzenie}[SDE rozwiązuje problem martyngałowy]
+\label{th:sde-to-mp}
+Niech $b,\sigma$ będą globalnie Lipschitzowskie i niech $X$ będzie
+jedynym silnym rozwiązaniem
+$\dd X_t=b(X_t)\,\dd t+\sigma(X_t)\,\dd W_t$
+z $\Law(X_0)=\mu$ oraz $\E\norm{X_0}^2<\infty$.
+Wówczas prawo procesu $X$ na $C([0,\infty);\R^d)$ rozwiązuje
+problem martyngałowy $(L,\mu)$.
+\end{twierdzenie}
+\begin{proof}
+Dla ustalonego $f\in C_c^2$ wzór Itô daje
+$M_t^f=\int_0^t\nabla f(X_s)\sigma(X_s)\,\dd W_s$.
+Ponieważ $\nabla f$ znika poza zwartym zbiorem, a $\sigma$ jest
+tam ograniczona, integrand jest globalnie ograniczony.
+Dlatego całka jest prawdziwym, kwadratowo całkowalnym
+martyngałem względem filtracji napędzającej. Musimy jeszcze
+uzasadnić przejście do mniejszej filtracji naturalnej.
+Dla $s\le t$ i ograniczonej zmiennej $G$, mierzalnej względem
+$\sigma(X_u:u\le s)$, mamy $\E[(M_t^f-M_s^f)G]=0$,
+gdyż $G$ jest $\calF_s$-mierzalna. Jest to definicyjny
+warunek martyngałowy względem filtracji naturalnej.
+Transportując tożsamość przez odwzorowanie
+$\omega\mapsto(X_t(\omega))_{t\ge0}$ otrzymujemy
+wymagany warunek dla prawa kanonicznego.
+\end{proof}
+
+\section{Przykład fundamentalny: problem martyngałowy ruchu Browna}
+
+Powyższe twierdzenie jest kierunkiem łatwiejszym: z równania
+otrzymujemy problem martyngałowy. Pokażemy teraz na ważnym
+przykładzie, że problem potrafi także \emph{wyznaczyć proces}.
+
+\begin{lemat}[Rozszerzenie funkcji testowej przez obcięcie]
+\label{lem:mp-cutoff}
+Załóżmy, że $Y$ jest ciągłym procesem o wartościach w $\R^d$,
+którego prawo rozwiązuje problem martyngałowy dla
+$L=\frac12\Delta$ i rozkładu początkowego $\delta_x$.
+Jeżeli $f\in C^2(\R^d)$ ma ograniczone wartości,
+pochodne pierwszego i drugiego rzędu, to
+$f(Y_t)-f(Y_0)-\frac12\int_0^t\Delta f(Y_s)\,\dd s$
+jest martyngałem na każdym przedziale $[0,T]$.
+\end{lemat}
+\begin{proof}
+Wybierzmy $\chi_R\in C_c^\infty(\R^d)$ równą $1$ na
+kuli promienia $R$ i $0$ poza kulą promienia $2R$.
+Funkcja $f_R=\chi_R f$ jest klasy $C_c^2$.
+Niech $\tau_R=\inf\{t\ge0:\norm{Y_t}\ge R\}$.
+Dla $t\le\tau_R$ zarówno $f_R(Y_t)=f(Y_t)$,
+jak i $\Delta f_R(Y_t)=\Delta f(Y_t)$.
+Stąd proces zatrzymany w $\tau_R$ jest martyngałem,
+przez opcjonalne zatrzymywanie w ograniczonym czasie
+$T\wedge\tau_R$. Dla każdej ciągłej trajektorii
+$\sup_{0\le t\le T}\norm{Y_t}<\infty$, więc
+$\tau_R>T$ od pewnego $R$ (zależnego od trajektorii).
+Ponadto na $[0,T]$ zmienne
+$|f(Y_{t\wedge\tau_R})-f(Y_0)
+-\frac12\int_0^{t\wedge\tau_R}\Delta f(Y_s)\,\dd s|$
+są ograniczone przez
+$2\norm f_\infty+\frac T2\norm{\Delta f}_\infty$.
+Dla każdego $A\in\calF_s^Y$ przechodzimy więc
+do granicy w tożsamości
+$\E[\ind A(M_{t\wedge\tau_R}^f-M_{s\wedge\tau_R}^f)]=0$
+za pomocą zbieżności zdominowanej. Otrzymujemy tezę.
+\end{proof}
+
+\begin{twierdzenie}[Jednoznaczność problemu martyngałowego dla ruchu Browna]
+\label{th:mp-bm}
+Niech $x\in\R^d$ i $L=\frac12\Delta$ na $C_c^2(\R^d)$.
+Jedynym prawem na $C([0,\infty);\R^d)$ rozwiązującym
+problem martyngałowy $(L,\delta_x)$ jest prawo procesu
+$x+W$, gdzie $W$ jest standardowym $d$-wymiarowym
+ruchem Browna.
+\end{twierdzenie}
+\begin{proof}
+Istnienie wynika z twierdzenia \ref{th:sde-to-mp},
+przy $b=0$, $\sigma=I_d$. Dla jednoznaczności niech
+$Y$ będzie procesem kanonicznym pod dowolnym innym
+rozwiązaniem $\mathbf Q$. Ustalmy $u\in\R^d$ i
+$f_u(y)=e^{i\langle u,y\rangle}$. W rzeczywistym
+problemie martyngałowym stosujemy osobno części rzeczywistą
+i urojoną. Pochodne $f_u$ są ograniczone, zatem lemat
+\ref{lem:mp-cutoff} daje, że
+\[
+Z_t=f_u(Y_t)+\frac{\norm u^2}{2}\int_0^t f_u(Y_s)\,\dd s
+\]
+jest martyngałem zespolonym. Zróżniczkowanie iloczynu
+$e^{\norm u^2t/2}f_u(Y_t)$ z deterministyczną funkcją
+czasu (całkowanie przez części) pokazuje, że
+$H_t=e^{\norm u^2t/2}f_u(Y_t)$ jest martyngałem.
+Na $[0,T]$ jest on ograniczony przez $e^{\norm u^2T/2}$,
+nie ma więc problemu z lokalizacją.
+Dla $s\le t$ otrzymujemy
+\[
+\E_{\mathbf Q}[e^{i\langle u,Y_t-Y_s\rangle}\mid\calF_s^Y]
+=e^{-\norm u^2(t-s)/2}.
+\]
+Lewa strona jest warunkową funkcją charakterystyczną
+przyrostu. Prawo przyrostu jest więc normalne
+$\Normal(0,(t-s)I_d)$ i nie zależy od $\calF_s^Y$.
+Jednoznaczność funkcji charakterystycznych i
+argument z klasą monotoniczną dowodzą niezależności
+przyrostu od całej przeszłości. Ponieważ $Y_0=x$ i
+trajektorie są ciągłe z definicji przestrzeni kanonicznej,
+$Y-x$ jest standardowym ruchem Browna.
+Prawo takiego procesu jest wyznaczone przez rozkłady
+skończeniewymiarowe, co kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Dlaczego testujemy wiele funkcji?]
+Sam warunek $\E(Y_t-Y_s\mid\calF_s)=0$ nie wystarcza
+do rozpoznania procesu Wienera: spełnia go również
+wiele procesów skokowych i ciągłych martyngałów o innej
+wariacji kwadratowej. Funkcje
+$e^{i\langle u,x\rangle}$ kodują wszystkie
+funkcje charakterystyczne przyrostów i pozwalają
+rozpoznać całe ich rozkłady.
+\end{przyklad}
+
+\section{Półgrupy, potencjały i motywacja formuły Feynmana--Kaca}
+
+Niech $X^x$ rozwiązuje jednorodne SDE o globalnie
+Lipschitzowskich współczynnikach, jak w
+rozdziale \ref{ch:sde-properties}. Dla ograniczonej
+funkcji borelowskiej $f$ i $t\ge0$ znamy już półgrupę
+$P_tf(x)=\E_xf(X_t)$. Jeżeli cząstka może zostać
+\emph{zabita} z intensywnością zależną od położenia,
+to każdą trajektorię trzeba dodatkowo ważyć przez
+$e^{-\int_0^tV(X_s)\,\dd s}$. Prowadzi to do
+nowej rodziny operatorów.
+
+\begin{definicja}[Półgrupa Feynmana--Kaca]
+\label{def:fk-semigroup}
+Niech $V:\R^d\to\R$ będzie ograniczoną funkcją
+borelowską. Dla ograniczonej borelowskiej $f$ określamy
+\[
+(T_t^Vf)(x)=\E_x\left[
+\exp\left(-\int_0^tV(X_s)\,\dd s\right)f(X_t)\right].
+\]
+Całka w wykładniku jest zwykłą całką względem czasu.
+Cały nawias oznacza funkcjonał losowej trajektorii.
+\end{definicja}
+
+\begin{twierdzenie}[Własność półgrupowa i oszacowanie]
+\label{th:fk-semigroup}
+Przy powyższych założeniach $T_0^V=I$,
+$T_{s+t}^V=T_s^VT_t^V$ na ograniczonych
+funkcjach borelowskich oraz
+$\norm{T_t^Vf}_\infty\le e^{t\norm V_\infty}\norm f_\infty$.
+Jeśli $V\ge0$, to $T_t^V$ jest dodatnią kontrakcją:
+$0\le f\le1$ implikuje $0\le T_t^Vf\le1$.
+\end{twierdzenie}
+\begin{proof}
+Oszacowanie wynika z nierówności
+$|e^{-\int_0^t V(X_s)\,\dd s}|\le e^{t\norm V_\infty}$.
+Dla własności półgrupowej rozbijamy
+$\int_0^{s+t}V(X_r)\,\dd r$ na odcinki
+$[0,s]$ i $[s,s+t]$. Warunkowo względem $\calF_s$
+dalszy fragment procesu, po ustaleniu $X_s$, ma
+prawo procesu startującego w $X_s$.
+Stosujemy więc własność Markowa nie tylko do
+jednego punktu końcowego, lecz do ograniczonego
+mierzalnego funkcjonału całego fragmentu przyszłej trajektorii.
+Wyjaśnijmy przejście, które jest istotne przy borelowskim $V$.
+Dla każdej skończonej rodziny chwil $r_1,\ldots,r_k\in[0,t]$
+własność Markowa i iterowanie wartości oczekiwanej warunkowej
+dają stosowną tożsamość dla funkcji
+$F(w)=\varphi(w(r_1),\ldots,w(r_k))$.
+Zbiory takich funkcji cylindrycznych generują borelowskie
+$\sigma$-ciało na $C([0,t];\R^d)$; twierdzenie o klasie
+monotonicznej rozszerza tożsamość na wszystkie ograniczone
+borelowskie funkcjonały $F$. Funkcjonał
+$F(w)=\exp(-\int_0^tV(w(r))\,\dd r)f(w(t))$
+jest borelowski: odwzorowanie $(r,w)\mapsto V(w(r))$
+jest wspólnie mierzalne, a całkowanie ograniczonej funkcji
+mierzalnej względem $r$ zachowuje mierzalność względem $w$
+(z twierdzenia Fubiniego). Nie trzeba więc zakładać
+zbieżności sum Riemanna dla potencjału jedynie borelowskiego.
+Dostajemy
+\[
+\E_x\left[e^{-\int_0^{s+t}V(X_r)\,\dd r}f(X_{s+t})
+\mid\calF_s\right]
+=e^{-\int_0^sV(X_r)\,\dd r}(T_t^Vf)(X_s).
+\]
+Po wzięciu wartości oczekiwanych dostajemy
+$T_{s+t}^Vf=T_s^V(T_t^Vf)$. Dodatniość dla $V\ge0$
+jest bezpośrednia.
+\end{proof}
+
+\section{Wzór Feynmana--Kaca dla klasycznych rozwiązań PDE}
+
+Poniższe twierdzenie ma celowo precyzyjny zakres.
+Najpierw \emph{weryfikujemy} reprezentację dla
+istniejącego klasycznego rozwiązania równania wstecznego.
+Samo istnienie rozwiązania $C^{1,2}$ dla ogólnych
+współczynników wymaga odrębnych twierdzeń teorii PDE.
+
+\begin{twierdzenie}[Feynman--Kac: postać wsteczna z wymuszeniem]
+\label{th:feynman-kac}
+Niech $T>0$, $b:\R^d\to\R^d$,
+$\sigma:\R^d\to\R^{d\times m}$ będą globalnie
+Lipschitzowskie, $V:\R^d\to\R$ oraz
+$q:[0,T]\times\R^d\to\R$ będą ograniczonymi funkcjami
+ciągłymi, a $g:\R^d\to\R$ będzie ograniczona
+i ciągła. Niech $u\in C^{1,2}([0,T)\times\R^d)
+\cap C([0,T]\times\R^d)$ będzie ograniczona,
+a jej pochodne pierwszego i drugiego rzędu względem
+$x$ oraz pierwsza pochodna względem $t$ będą
+ograniczone na $[0,T)\times\R^d$.
+Załóżmy, że $u$ spełnia
+\[
+\partial_tu(t,x)+Lu(t,x)-V(x)u(t,x)+q(t,x)=0
+\quad (t<T),\qquad u(T,x)=g(x).
+\]
+Wówczas dla każdego $t\in[0,T]$ i $x\in\R^d$
+\[
+\begin{split}
+u(t,x)=\E\Big[&e^{-\int_t^T V(X_r^{t,x})\,\dd r}
+                         g(X_T^{t,x})\\
+ &+\int_t^T e^{-\int_t^s V(X_r^{t,x})\,\dd r}
+                         q(s,X_s^{t,x})\,\dd s\Big],
+\end{split}
+\tag{7.1}\label{eq:fk}
+\]
+gdzie $(X_s^{t,x})_{s\ge t}$ jest rozwiązaniem SDE
+startującym w $x$ w chwili $t$.
+W klasie funkcji o podanej regularności i ograniczoności
+rozwiązanie równania wstecznego jest jednoznaczne.
+\end{twierdzenie}
+\begin{proof}
+Niech $X_s=X_s^{t,x}$ oraz
+$A_s=\exp(-\int_t^sV(X_r)\,\dd r)$ dla $s\in[t,T]$.
+Jest to ciągły proces o skończonej wariacji, spełniający
+$\dd A_s=-V(X_s)A_s\,\dd s$, $A_t=1$.
+Dla $s<T$ stosujemy wzór Itô do $u(s,X_s)$
+i regułę iloczynu dla $A_su(s,X_s)$.
+Kowariacja $A$ z ciągłym lokalnym martyngałem wynosi zero,
+więc
+\[
+\dd[A_su(s,X_s)]
+=A_s(\partial_su+Lu-Vu)(s,X_s)\,\dd s
+ +A_s\nabla u(s,X_s)\sigma(X_s)\,\dd W_s.
+\]
+Po podstawieniu PDE dryf wynosi $-A_sq(s,X_s)\,\dd s$.
+Dlatego proces
+$A_su(s,X_s)+\int_t^sA_rq(r,X_r)\,\dd r$
+jest lokalnym martyngałem. W rzeczywistości jest
+prawdziwym martyngałem: wszystkie jego składniki poza
+całką stochastyczną są ograniczone przez
+$e^{T\norm V_\infty}(\norm u_\infty+T\norm q_\infty)$,
+a sama całka ma z równania tę samą całkowalną,
+a nawet ograniczoną na $[t,T)$ różnicę tych składników.
+Po zatrzymaniu i zastosowaniu zbieżności zdominowanej
+usuwamy lokalizację. Biorąc wartości oczekiwane
+w chwili $T-\varepsilon$ i przechodząc $\varepsilon\downarrow0$
+przez ciągłość $u$, $X$ i ograniczoność $A,q$, dostajemy
+\eqref{eq:fk}.
+Jeśli $u_1,u_2$ spełniają te same warunki, to oba
+mają tę samą reprezentację prawostronną, a więc są równe.
+\end{proof}
+
+\begin{uwaga}[Wersja z potencjałem zależnym od czasu]
+Ten sam dowód działa dla ograniczonej ciągłej funkcji
+$V:[0,T]\times\R^d\to\R$, po zamianie
+$V(X_s)$ na $V(s,X_s)$ w całce oraz w PDE.
+Nie trzeba przy tym zakładać, że $V$ jest nieujemna;
+ograniczoność zapewnia całkowalność czynnika wykładniczego.
+\end{uwaga}
+
+\section{Przykłady rachunkowe i rozwiązane zadania}
+
+\begin{zadanie}[Równanie ciepła i jądro gaussowskie]
+Niech $g\in C_b^2(\R)$, przy czym $g''$ jest
+jednostajnie ciągła. Rozwiązać problem
+$\partial_tu+\frac12\partial_{xx}u=0$ dla $t<T$
+i $u(T,x)=g(x)$.
+
+\emph{Rozwiązanie.} Weźmy $X_s^{t,x}=x+W_s-W_t$.
+Kandydatem jest
+\[
+u(t,x)=\E g(x+W_{T-t})
+=\int_\R g(y)\frac{e^{-(y-x)^2/(2(T-t))}}
+{\sqrt{2\pi(T-t)}}\,\dd\lambda_1(y)
+\quad(t<T).
+\]
+Dla $h>0$ można różniczkować pod całką względem $x$,
+gdyż $g',g''$ są ograniczone: $u_x=\E g'(x+W_h)$,
+$u_{xx}=\E g''(x+W_h)$.
+Z własności półgrupy ciepła oraz jednostajnej ciągłości
+$g''$ wynika
+$\partial_h\E g(x+W_h)=\frac12\E g''(x+W_h)$.
+Można to też otrzymać z wzoru Itô i zbieżności
+zdominowanej po podzieleniu przez mały przyrost czasu.
+Ponieważ $h=T-t$, mamy $u_t=-\frac12u_{xx}$.
+Jednostajna ciągłość $g$ zapewnia warunek końcowy.
+Zatem $u$ jest klasycznym rozwiązaniem z twierdzenia
+\ref{th:feynman-kac}; otrzymaliśmy zarówno istnienie,
+jak i jednoznaczność w rozważanej klasie.
+\end{zadanie}
+
+\begin{zadanie}[Stały potencjał: zabijanie trajektorii]
+Niech $\kappa\ge0$, $V(x)=\kappa$, $q=0$ i $g\equiv1$.
+Wykazać, że rozwiązaniem równania
+$\partial_tu+\frac12\Delta u-\kappa u=0$,
+$u(T,x)=1$, jest $u(t,x)=e^{-\kappa(T-t)}$.
+
+\emph{Rozwiązanie.} Dla każdej trajektorii
+$\int_t^TV(X_s)\,\dd s=\kappa(T-t)$.
+Wzór \eqref{eq:fk} daje więc
+$u(t,x)=\E e^{-\kappa(T-t)}=e^{-\kappa(T-t)}$.
+Weryfikacja PDE jest bezpośrednia:
+$u_t=\kappa u$, $\Delta u=0$, stąd
+$u_t-\kappa u=0$. W interpretacji probabilistycznej
+$u$ jest prawdopodobieństwem przeżycia niezależnego
+czasu wykładniczego o intensywności $\kappa$ od $t$ do $T$.
+\end{zadanie}
+
+\begin{zadanie}[Równanie Poissona i średni czas wyjścia]
+Niech $B_t$ będzie standardowym ruchem Browna w $\R^d$,
+a $\tau_R=\inf\{t\ge0:\norm{x+B_t}\ge R\}$ dla $\norm x<R$.
+Wyznaczyć $\E_x\tau_R$ i wyjaśnić, czemu równanie
+$Lu=-1$ z warunkiem $u=0$ na sferze daje tę wielkość.
+
+\emph{Rozwiązanie.} Funkcja
+$u(x)=(R^2-\norm x^2)/d$ spełnia
+$\frac12\Delta u=-1$ w kuli oraz $u=0$ na jej brzegu.
+Z wzoru Itô dla procesu zatrzymanego wynika
+$u(x+B_{t\wedge\tau_R})=u(x)-(t\wedge\tau_R)+M_t$,
+gdzie $M_t$ jest całką stochastyczną z ograniczonym
+integrandem na zatrzymanym procesie (bo $\nabla u$ jest
+ograniczony w domkniętej kuli). Stąd
+$\E(t\wedge\tau_R)\le u(x)$,
+ponieważ $u\ge0$ na kuli. Zatem $\E\tau_R<\infty$.
+Po przejściu $t\to\infty$ przez zbieżność zdominowaną
+w pierwszym składniku oraz monotoniczną w drugim
+otrzymujemy $u(x)=\E_x\tau_R$.
+To ten sam mechanizm co we wzorze Feynmana--Kaca:
+obserwowaną wielkość przedstawiamy przez funkcjonał
+procesu i identyfikujemy odpowiedni problem brzegowy.
+\end{zadanie}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex,node distance=7mm]
+\node[draw,rounded corners,fill=blue!6,align=center,minimum width=31mm] (sde)
+{równanie SDE\\proces $X$};
+\node[draw,rounded corners,fill=orange!8,align=center,right=13mm of sde,minimum width=34mm] (gen)
+{generator $L$\\problem martyngałowy};
+\node[draw,rounded corners,fill=green!7,align=center,right=13mm of gen,minimum width=31mm] (pde)
+{równanie PDE\\wzór Feynmana--Kaca};
+\draw[->,thick] (sde)--(gen);
+\draw[->,thick] (gen)--(pde);
+\draw[->,bend left=35,thin,dashed] (pde.north) to node[above,scale=.78]
+{reprezentacja rozwiązania} (sde.north);
+\end{tikzpicture}
+\par\smallskip\small Związki między procesem, jego generatorem i równaniem wstecznym.
+\end{center}
+
+\begin{uwaga}[Prawidłowy zakres wyniku o rozwiązaniach PDE]
+Twierdzenie \ref{th:feynman-kac} ma charakter weryfikacyjny:
+każde rozwiązanie w wymienionej klasie ma podaną reprezentację.
+Sama mierzalność lub ograniczoność potencjału nie zapewnia
+istnienia klasycznego rozwiązania $C^{1,2}$ bez dodatkowej
+teorii regularności PDE. Podobnie równanie słabe dla rozkładów
+jednowymiarowych nie zastępuje dobrze postawionego problemu
+martyngałowego dla prawa całego procesu.
+\end{uwaga}
+
+\section{Granice uzyskanej teorii}
+Wykazaliśmy, że silne rozwiązanie SDE spełnia problem martyngałowy,
+a dla operatora $\frac12\Delta$ udowodniliśmy także kierunek odwrotny
+na poziomie prawa procesu. W pełnej teorii związek między dobrze
+postawionym problemem martyngałowym a słabymi rozwiązaniami SDE
+wymaga dalszych narzędzi, m.in. konstrukcji całek względem ogólnych
+ciągłych lokalnych martyngałów. Rozwiniemy je po wprowadzeniu
+półmartyngałów. Wzór Feynmana--Kaca został udowodniony jako
+twierdzenie weryfikacyjne dla klasycznych rozwiązań PDE;
+nie przypisujemy mu bez dodatkowych twierdzeń regularności,
+której nie udowodniliśmy.
+
+
+% ============================================================================
+% ROZDZIAL 8 — Zmiana miary i Girsanov
+% ============================================================================

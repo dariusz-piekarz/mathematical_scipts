@@ -1,0 +1,684 @@
+\chapter{Zbieżność zmiennych losowych i rozkładów}
+\label{ch:convergence}
+\paragraph{Odsyłacze międzytomowe.} Rodzaje zbieżności wykorzystywane w statystyce asymptotycznej porównaj z tomem IV, rozdziałem~\ref{IV-ch:asymptotic-estimation}.
+
+
+Pojęcie granicy występuje w probabilistyce w kilku znaczeniach.
+Przy wielokrotnych pomiarach chcielibyśmy wiedzieć, czy
+ich średnia zbliży się do pewnej liczby; przy przybliżaniu
+rozkładu dwumianowego rozkładem Poissona pytamy natomiast,
+czy zbliżają się do siebie \emph{rozkłady}, niekoniecznie
+realizacje zmiennych na jednej przestrzeni. Te zadania
+wymagają rozróżnienia kilku topologii zbieżności.
+
+\section{Zbieżność prawie na pewno, według prawdopodobieństwa i w~\texorpdfstring{$L^p$}{Lp}}
+
+\begin{definicja}
+Niech $(\Omega,\mathcal F,\Prob)$ będzie przestrzenią
+probabilistyczną, a $X,X_1,X_2,\ldots:\Omega\to\R$
+rzeczywistymi zmiennymi losowymi.
+\begin{enumerate}
+\item Mówimy, że $X_n$ jest zbieżny do $X$ \emph{prawie na pewno}
+ i piszemy $X_n\to X$ p.n., gdy
+ $\Prob(\{\omega:\lim_{n\to\infty}X_n(\omega)=X(\omega)\})=1$.
+\item Mówimy, że $X_n$ jest zbieżny do $X$
+ \emph{według prawdopodobieństwa}, $X_n\xrightarrow{\Prob}X$,
+ gdy dla każdego $\varepsilon>0$ zachodzi
+ $\lim_{n\to\infty}\Prob(|X_n-X|>\varepsilon)=0$.
+\item Dla $p\geq1$ i $X,X_n\in L^p(\Omega,\mathcal F,\Prob)$
+ mówimy o \emph{zbieżności w $L^p$}, gdy
+ $\E|X_n-X|^p\to0$.
+\end{enumerate}
+\end{definicja}
+
+Warunek „prawie na pewno” dotyczy niemal każdej
+\emph{trajektorii} $n\mapsto X_n(\omega)$.
+Zbieżność według prawdopodobieństwa pozwala na sporadyczne
+duże odchylenia, o ile ich prawdopodobieństwo zanika.
+Zbieżność w $L^p$ kontroluje natomiast średni koszt
+odchylenia podniesionego do potęgi $p$.
+
+\begin{twierdzenie}[Podstawowe implikacje]
+Niech $X_n,X$ będą rzeczywistymi zmiennymi losowymi.
+\begin{enumerate}
+\item Jeśli $X_n\to X$ prawie na pewno, to
+ $X_n\xrightarrow{\Prob}X$.
+\item Jeśli $p\geq1$, $X_n,X\in L^p$ oraz
+ $\E|X_n-X|^p\to0$, to $X_n\xrightarrow{\Prob}X$.
+\item Jeśli $p\geq q\geq1$ i $X_n,X\in L^p$ oraz
+ $X_n\to X$ w $L^p$, to $X_n\to X$ w $L^q$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Dla pierwszej implikacji ustalmy $\varepsilon>0$.
+Wskaźniki $\ind{\{|X_n-X|>\varepsilon\}}$ zbiegają
+prawie na pewno do zera i są ograniczone przez jeden.
+Zdominowana zbieżność daje zatem
+$\Prob(|X_n-X|>\varepsilon)\to0$.
+Dla drugiej implikacji do nieujemnej zmiennej
+$|X_n-X|^p$ stosujemy nierówność Markowa:
+\[
+\Prob(|X_n-X|>\varepsilon)
+\leq\frac{\E|X_n-X|^p}{\varepsilon^p}\longrightarrow0.
+\]
+Dla trzeciej wykorzystujemy nierówność Jensena
+dla funkcji wklęsłej $u\mapsto u^{q/p}$ na
+$[0,\infty)$ (albo nierówność H\"oldera przy
+$\Prob(\Omega)=1$):
+$\E|X_n-X|^q\leq(\E|X_n-X|^p)^{q/p}\to0$.
+\end{proof}
+
+\begin{przyklad}[Zbieżność w prawdopodobieństwie bez zbieżności p.n.]
+Na $\Omega=[0,1)$ z miarą Lebesgue'a ustawmy kolejno
+wszystkie przedziały diadyczne
+$I_{m,j}=[j2^{-m},(j+1)2^{-m})$ dla
+$m=0,1,2,\ldots$ oraz $0\leq j<2^m$.
+Zdefiniujmy $X_{2^m+j}=\ind{I_{m,j}}$.
+Wtedy $\Prob(X_{2^m+j}=1)=2^{-m}\to0$, a więc
+$X_n\xrightarrow{\Prob}0$. Jednak dla każdego
+$\omega\in[0,1)$ i każdego poziomu $m$ dokładnie
+jeden ze wskaźników przedziałów tego poziomu wynosi
+jeden. Dla $m\geq1$ co najmniej jeden wynosi także zero.
+Zatem każda trajektoria przyjmuje wartości jeden i zero
+nieskończenie wiele razy; $X_n$ nie jest zbieżny do zera
+prawie na pewno. Jest to tzw. ciąg piszący na maszynie
+(\emph{typewriter sequence}).
+\end{przyklad}
+
+\begin{przyklad}[Zbieżność w prawdopodobieństwie bez zbieżności w $L^1$]
+Niech $U\sim\Unif(0,1)$ i
+$X_n=n\ind{\{U\leq1/n\}}$ dla $n\geq1$.
+Dla każdego $\varepsilon>0$ i $n>\varepsilon$ mamy
+$\Prob(|X_n|>\varepsilon)=1/n\to0$.
+Zatem $X_n\xrightarrow{\Prob}0$, lecz
+$\E|X_n|=n\Prob(U\leq1/n)=1$.
+Odchylenia występują coraz rzadziej, ale jednocześnie
+stają się coraz większe: średni koszt nie znika.
+\end{przyklad}
+
+\begin{twierdzenie}[Kryterium podciągowe zbieżności według prawdopodobieństwa]
+Dla rzeczywistych zmiennych losowych $X_n,X$ zachodzi
+$X_n\xrightarrow{\Prob}X$ wtedy i tylko wtedy, gdy
+z każdego podciągu $(X_{n_j})_{j\geq1}$ można wybrać
+podciąg $(X_{n_{j_k}})_{k\geq1}$ zbieżny do $X$
+prawie na pewno.
+\end{twierdzenie}
+\begin{proof}
+Załóżmy zbieżność według prawdopodobieństwa.
+Dla danego podciągu wybieramy rekurencyjnie indeksy
+$j_1<j_2<\cdots$ tak, aby
+$\Prob(|X_{n_{j_k}}-X|>2^{-k})\leq2^{-k}$.
+Jest to możliwe, gdyż dla każdego ustalonego progu
+prawdopodobieństwo odchylenia dąży do zera.
+Suma prawdopodobieństw otrzymanych zdarzeń jest skończona.
+Z pierwszego lematu Borela--Cantellego wynika, że
+prawie na pewno występuje tylko skończenie wiele
+odchyleń przekraczających $2^{-k}$; stąd zbieżność
+podciągu do $X$ prawie na pewno.
+
+Odwrotnie, gdyby zbieżność według prawdopodobieństwa
+nie zachodziła, istniałyby $\varepsilon,\eta>0$ i
+podciąg $(X_{n_j})$ taki, że
+$\Prob(|X_{n_j}-X|>\varepsilon)\geq\eta$
+dla każdego $j$. Żaden jego podciąg nie mógłby być
+zbieżny do $X$ prawie na pewno, bo pierwsza implikacja
+poprzedniego twierdzenia wymuszałaby zbieżność
+prawdopodobieństw do zera. Otrzymujemy sprzeczność.
+\end{proof}
+
+\section{Zbieżność według rozkładu}
+
+Zbieżność według rozkładu nie zakłada nawet istnienia
+wspólnej przestrzeni probabilistycznej dla wszystkich
+zmiennych. Interesują nas wyłącznie ich miary obrazowe.
+Z tego względu jest właściwym językiem dla
+przybliżeń Poissona i dla centralnego twierdzenia granicznego.
+
+\begin{definicja}
+Niech $X_n$ będą rzeczywistymi zmiennymi losowymi
+(niekoniecznie na wspólnej przestrzeni), o dystrybuantach
+$F_n$, i niech $X$ będzie zmienną losową o dystrybuancie
+$F$. Mówimy, że $X_n$ jest zbieżny do $X$
+\emph{według rozkładu}, i piszemy $X_n\xrightarrow{d}X$,
+jeśli $F_n(x)\to F(x)$ dla każdego $x\in\R$ będącego
+punktem ciągłości funkcji $F$.
+\end{definicja}
+
+Nie wymagamy zbieżności w punktach skoku $F$.
+Dla przykładu, zmienna deterministyczna $X_n=1/n$
+jest zbieżna do $X=0$, ale $F_{X_n}(0)=0$ dla
+wszystkich $n$, podczas gdy $F_X(0)=1$.
+Takie zachowanie nie przeczy definicji.
+
+\begin{twierdzenie}[Zbieżność prawdopodobieństw a zbieżność rozkładów]
+Niech $X_n,X$ będą rzeczywistymi zmiennymi losowymi
+na wspólnej przestrzeni probabilistycznej.
+Jeśli $X_n\xrightarrow{\Prob}X$, to
+$X_n\xrightarrow{d}X$.
+Jeśli $c\in\R$ jest stałą, to zbieżność
+$X_n\xrightarrow{d}c$ implikuje
+$X_n\xrightarrow{\Prob}c$.
+\end{twierdzenie}
+\begin{proof}
+Niech $x$ będzie punktem ciągłości dystrybuanty $F_X$
+i niech $\varepsilon>0$. Z inkluzji zdarzeń
+\[
+\{X\leq x-\varepsilon\}\cap\{|X_n-X|\leq\varepsilon\}
+\subseteq\{X_n\leq x\}
+\subseteq\{X\leq x+\varepsilon\}\cup
+\{|X_n-X|>\varepsilon\}
+\]
+wynika, po przejściu z $n\to\infty$,
+$F_X(x-\varepsilon)\leq\liminf_nF_n(x)
+\leq\limsup_nF_n(x)\leq F_X(x+\varepsilon)$.
+Po przejściu z $\varepsilon\downarrow0$ i użyciu
+ciągłości $F_X$ w $x$ dostajemy $F_n(x)\to F_X(x)$.
+
+Dla drugiego wniosku, jeśli $\varepsilon>0$,
+to punkty $c-\varepsilon$ i $c+\varepsilon/2$
+są punktami ciągłości dystrybuanty rozkładu
+skupionego w $c$. Dlatego
+\[
+\Prob(|X_n-c|>\varepsilon)
+\leq F_n(c-\varepsilon)
+ +1-F_n(c+\varepsilon/2)\longrightarrow0.
+\]
+W rzeczywistości pierwsza nierówność można też
+zapisać z ostrzejszymi granicami przedziałów,
+ale podana wersja wystarcza do dowodu.
+\end{proof}
+
+\begin{przyklad}[Ten sam rozkład nie oznacza bliskości realizacji]
+Niech $X$ przyjmuje wartości $-1$ i $1$ z
+prawdopodobieństwami $1/2$, a $X_n=-X$ dla każdego $n$.
+Wtedy $\Law(X_n)=\Law(X)$, więc $X_n\xrightarrow{d}X$.
+Jednak $|X_n-X|=2$ prawie na pewno, toteż zbieżność
+według prawdopodobieństwa do $X$ nie zachodzi.
+\end{przyklad}
+
+\begin{lemat}[Całki względem rozkładów zbieżnych]
+Jeżeli $X_n\xrightarrow{d}X$, to dla każdej ograniczonej
+funkcji ciągłej $h:\R\to\R$ zachodzi
+$\E h(X_n)\to\E h(X)$.
+W szczególności $\varphi_{X_n}(t)\to\varphi_X(t)$
+dla każdego $t\in\R$.
+\end{lemat}
+\begin{proof}
+Przytoczymy argument wyprowadzający własność całek
+z definicji dystrybuant. Najpierw wybierzmy $R>0$ tak,
+aby $-R$ i $R$ były punktami ciągłości $F_X$ oraz
+$\Prob(|X|\geq R)$ było małe. Zbieżność dystrybuant
+zapewnia, że dla wszystkich dostatecznie dużych $n$
+prawdopodobieństwa $\Prob(|X_n|>R)$ również są małe
+(z ewentualnym nieistotnym przesunięciem końców).
+Na $[-R,R]$ funkcja $h$ jest jednostajnie ciągła.
+Dzielimy odcinek na skończenie wiele przedziałów,
+których końce są punktami ciągłości $F_X$, tak aby
+oscylacja $h$ na każdym przedziale była mniejsza
+od dowolnie zadanego $\varepsilon>0$.
+Na takim przedziale $I=(a,b]$ zachodzi
+$\Prob(X_n\in I)=F_n(b)-F_n(a)\to F_X(b)-F_X(a)$.
+Zastępując $h$ przez funkcję schodkową stałą na
+każdym z tych przedziałów, uzyskujemy zbieżność
+całek funkcji schodkowych. Błąd zastąpienia nie
+przekracza $\varepsilon$ na $[-R,R]$ i
+$2\|h\|_\infty$ razy prawdopodobieństwo ogonów
+poza nim. Możemy najpierw zwiększać $n$, następnie
+zmniejszać $\varepsilon$, a na końcu zwiększać $R$;
+to dowodzi tezy. Dla części rzeczywistej i urojonej
+$h(x)=e^{itx}$ stosujemy wynik osobno, ponieważ
+obie są ograniczone i ciągłe.
+\end{proof}
+
+
+\begin{przyklad}[Zbieżność według rozkładu nie oznacza zbieżności według prawdopodobieństwa]
+Niech $Z$ przyjmuje wartości $-1$ i $1$ z jednakowymi
+prawdopodobieństwami, a $X_n=(-1)^nZ$ i $X=Z$.
+Dla każdego $n$ zmienna $X_n$ ma ten sam rozkład co $X$,
+a więc $X_n\xrightarrow{d}X$. Jednak dla każdego
+nieparzystego $n$ zachodzi $|X_n-X|=2$ prawie na pewno,
+więc $\Prob(|X_n-X|>1)=1$.
+Wobec tego nie zachodzi $X_n\xrightarrow{\Prob}X$.
+Zbieżność według rozkładu nie porównuje wartości
+$X_n(\omega)$ i $X(\omega)$ na tych samych trajektoriach;
+porównuje wyłącznie miary obrazowe.
+\end{przyklad}
+
+\section{Twierdzenie Lévy'ego i przydatne operacje}
+
+Odwrotne twierdzenie do ostatniego lematu jest jednym
+z najważniejszych zastosowań funkcji charakterystycznych:
+granicę rozkładów można rozpoznać po granicy ich
+transformat Fouriera. Wyjaśnia to, dlaczego funkcje
+charakterystyczne będą głównym narzędziem w dowodzie CTG.
+
+\begin{lemat}[Zwartość rodzin ciasnych na prostej]
+Niech $(\mu_n)_{n\geq1}$ będzie rodziną borelowskich miar
+probabilistycznych na $\R$ taką, że dla każdego
+$\varepsilon>0$ istnieje $R>0$ spełniające
+$\sup_n\mu_n(\R\setminus[-R,R])<\varepsilon$.
+Wówczas z każdego ciągu $(\mu_n)$ można wybrać
+podciąg zbieżny według rozkładu do pewnej borelowskiej
+miary probabilistycznej na $\R$.
+\end{lemat}
+\begin{proof}
+\emph{Wybór podciągu.} Niech $F_n$ będą dystrybuantami
+$\mu_n$. Uporządkujmy liczby wymierne jako
+$\mathbb Q=\{q_1,q_2,\ldots\}$. Ciąg
+$(F_n(q_1))_n$ jest ograniczony, zatem ma podciąg
+zbieżny. Z tego podciągu wybierzmy następny, na którym
+zbiega także $F_n(q_2)$, i kontynuujmy indukcyjnie.
+Elementy przekątni tych podciągów wyznaczają jeden
+podciąg $n_k$ taki, że dla każdej liczby wymiernej
+$q$ istnieje granica $G(q)=\lim_kF_{n_k}(q)$.
+Funkcja $G:\mathbb Q\to[0,1]$ jest niemalejąca.
+
+\emph{Konstrukcja dystrybuanty granicznej.}
+Dla każdego $x\in\R$ definiujemy
+$F(x)=\inf\{G(q):q\in\mathbb Q,\ q>x\}$.
+Wprost z definicji wynika, że $F$ jest niemalejąca.
+Dla ciągu $x_j\downarrow x$ mamy $F(x_j)\geq F(x)$.
+Z drugiej strony, jeśli ustalimy dowolne wymierne
+$q>x$, to dla dostatecznie dużych $j$ zachodzi
+$x_j<q$, skąd $F(x_j)\leq G(q)$. Biorąc najpierw
+granicę po $j$, a potem infimum po $q>x$,
+dostajemy $F(x_j)\to F(x)$. To dowodzi
+prawostronnej ciągłości $F$.
+
+\emph{Dlaczego masa nie ucieka do nieskończoności?}
+Z ciasności dla ustalonego $\varepsilon>0$
+wybieramy $R>0$ tak, aby dla wszystkich $n$
+$\mu_n(\R\setminus[-R,R])<\varepsilon$.
+Dla każdego wymiernego $q<-R$ mamy
+$G(q)\leq\varepsilon$, a dla $q>R$ mamy
+$G(q)\geq1-\varepsilon$. Stąd dla $x<-R$
+$F(x)\leq\varepsilon$ (wybierając $q\in(x,-R)$),
+a dla $x>R$ mamy $F(x)\geq1-\varepsilon$.
+Ponieważ $\varepsilon$ jest dowolne,
+$F(-\infty)=0$ i $F(+\infty)=1$.
+Jest to zatem dystrybuanta pewnej miary
+probabilistycznej $\mu$.
+
+\emph{Zbieżność w punktach ciągłości.}
+Niech $x$ będzie punktem ciągłości $F$.
+Dla każdego wymiernego $q>x$ monotoniczność
+$F_{n_k}$ daje
+$\limsup_kF_{n_k}(x)\leq G(q)$, a więc
+$\limsup_kF_{n_k}(x)\leq F(x)$.
+Z drugiej strony, jeśli $y<x$, wybierzmy
+wymierne $q\in(y,x)$. Wtedy
+$\liminf_kF_{n_k}(x)\geq G(q)\geq F(y)$,
+bo $F(y)$ jest infimum wartości $G$ w punktach
+wymiernych większych od $y$. Zatem
+$\liminf_kF_{n_k}(x)\geq F(x-)$, gdzie
+$F(x-)=\lim_{y\uparrow x}F(y)$.
+Ciągłość $F$ w $x$ daje $F(x-)=F(x)$, skąd
+$F_{n_k}(x)\to F(x)$. Jest to zbieżność
+podciągu według rozkładu.
+\end{proof}
+
+\begin{twierdzenie}[Twierdzenie Lévy'ego o ciągłości]
+Niech $(\mu_n)_{n\geq1}$ będzie ciągiem miar
+probabilistycznych na $\R$, a $\varphi_n$ ich
+funkcjami charakterystycznymi. Jeśli dla każdego
+$t\in\R$ zachodzi $\varphi_n(t)\to\varphi(t)$,
+a funkcja $\varphi$ jest ciągła w zerze, to istnieje
+jedyna miara probabilistyczna $\mu$ o funkcji
+charakterystycznej $\varphi$ i $\mu_n$ zbiega
+według rozkładu do $\mu$.
+Odwrotnie, zbieżność według rozkładu implikuje
+punktową zbieżność funkcji charakterystycznych
+funkcji granicznego rozkładu.
+\end{twierdzenie}
+\begin{proof}
+Odwrotna implikacja jest treścią poprzedniego lematu.
+Dla właściwej części dowodu najpierw wykażemy ciasność.
+Niech $X_n$ ma rozkład $\mu_n$ i ustalmy $T>0$.
+Przez Fubiniego dla ograniczonych funkcji dostajemy
+\[
+\frac1{2T}\int_{-T}^T[1-\operatorname{Re}\varphi_n(t)]
+\,\dd\lambda_1(t)
+=\E\left[1-\frac{\sin(TX_n)}{TX_n}\right],
+\]
+przyjmując wartość ilorazu równą jeden dla $X_n=0$.
+Jeżeli $|X_n|>2/T$, to
+$|\sin(TX_n)/(TX_n)|\leq1/2$.
+Ponieważ $1-\sin u/u\geq0$ dla wszystkich $u$, mamy
+\[
+\Prob(|X_n|>2/T)\leq\frac1T
+\int_{-T}^T[1-\operatorname{Re}\varphi_n(t)]
+\,\dd\lambda_1(t).
+\]
+Dla ustalonego $T$ prawa strona zbiega, przez zdominowaną
+zbieżność, do $T^{-1}\int_{-T}^T
+[1-\operatorname{Re}\varphi(t)]\,\dd\lambda_1(t)$.
+Ponieważ $\varphi(0)=\lim_n\varphi_n(0)=1$
+i $\varphi$ jest ciągła w zerze, ostatnia liczba jest
+mała dla dostatecznie małego $T$. Wybierając następnie
+$n$ dostatecznie duże, otrzymujemy jednolite
+oszacowanie ogona dla wszystkich takich $n$;
+dla skończenie wielu pozostałych miar zwiększamy $R$.
+W ten sposób otrzymujemy ciasność całej rodziny.
+
+Z lematu o zwartości wynika, że każdy podciąg $\mu_n$
+ma dalszy podciąg zbieżny według rozkładu do pewnej
+miary $\nu$. Z lematu o całkach ograniczonych ciągłych
+funkcja charakterystyczna $\nu$ jest granicą
+odpowiednich $\varphi_{n_k}$, a więc równa $\varphi$.
+Jednoznaczność funkcji charakterystycznych zapewnia,
+że wszystkie możliwe granice podciągów są równe tej
+samej mierze $\mu$. Gdyby cały ciąg nie zbiegał do
+$\mu$, istniałby punkt ciągłości jej dystrybuanty
+i podciąg, na którym odchylenie dystrybuanty od granicy
+byłoby większe od pewnej dodatniej stałej. Taki podciąg
+ma jednak dalszy podciąg zbieżny do $\mu$, co daje
+sprzeczność. Zatem $\mu_n\to\mu$ według rozkładu.
+\end{proof}
+
+\begin{twierdzenie}[Ciągłe przekształcenia i twierdzenie Slutsky'ego]
+Niech $X_n,X,Y_n$ będą rzeczywistymi zmiennymi losowymi.
+Jeżeli $X_n\xrightarrow{d}X$ i $g:\R\to\R$ jest ciągła,
+to $g(X_n)\xrightarrow{d}g(X)$.
+Jeżeli dodatkowo $X_n,Y_n$ są określone na wspólnej
+przestrzeni, $Y_n\xrightarrow{\Prob}c$ dla pewnej stałej
+$c\in\R$, to
+$X_n+Y_n\xrightarrow{d}X+c$ oraz
+$X_nY_n\xrightarrow{d}cX$; jeśli $c\ne0$, także
+$X_n/Y_n\xrightarrow{d}X/c$, przy dowolnym określeniu
+ilorazu na zdarzeniu $\{Y_n=0\}$.
+\end{twierdzenie}
+\begin{proof}
+Przypomnijmy znaną charakteryzację zbieżności
+według rozkładu przez całki ograniczonych funkcji
+ciągłych, której jedna strona została dowiedziona
+powyżej, a druga wynika przez aproksymację
+wskaźników przedziałów funkcjami ciągłymi.
+Dla ograniczonej ciągłej funkcji $h$ również
+$h\circ g$ jest ograniczona i ciągła, więc
+$\E h(g(X_n))\to\E h(g(X))$.
+
+Dla twierdzenia Slutsky'ego zauważmy najpierw,
+że zbieżność $X_n\xrightarrow d X$ zapewnia ciasność
+rozkładów $X_n$. Na zdarzeniu $\{|X_n|\leq R,
+|Y_n-c|\leq\delta\}$ każda z funkcji
+$(x,y)\mapsto x+y$, $xy$ oraz $x/y$ (przy $c\ne0$
+i $\delta<|c|/2$) różni się od odpowiadającej
+funkcji z $y=c$ o wielkość dążącą jednostajnie do zera
+gdy $\delta\downarrow0$. Z ciasności i zbieżności
+$Y_n$ według prawdopodobieństwa wynika więc, że
+różnice tych zmiennych od odpowiednio
+$X_n+c$, $cX_n$ i $X_n/c$ dążą do zera według
+prawdopodobieństwa. Pozostaje uzasadnić, że takie małe zaburzenia
+nie zmieniają granicy rozkładów. Niech $A_n,B_n$
+będą na jednej przestrzeni, $A_n-B_n\xrightarrow{\Prob}0$
+oraz $B_n\xrightarrow d B$. Dla $\varepsilon>0$
+inkluzje zdarzeń dają
+\[
+F_{B_n}(x-\varepsilon)-\Prob(|A_n-B_n|>\varepsilon)
+\leq F_{A_n}(x)
+\leq F_{B_n}(x+\varepsilon)+\Prob(|A_n-B_n|>\varepsilon).
+\]
+Jeśli $x$ jest punktem ciągłości dystrybuanty $B$,
+wybieramy $\varepsilon$ tak, aby także
+$x-\varepsilon$ i $x+\varepsilon$ były punktami
+ciągłości (dystrybuanta ma co najwyżej przeliczalnie
+wiele skoków). Przechodząc z $n\to\infty$, a potem
+z $\varepsilon\downarrow0$, otrzymujemy
+$F_{A_n}(x)\to F_B(x)$. Stosując ten fakt do
+sumy, iloczynu i ilorazu, kończymy dowód.
+\end{proof}
+
+\section{Jednostajna całkowalność a zbieżność wartości oczekiwanych}
+
+Zbieżność rozkładów i zbieżność według prawdopodobieństwa
+nie muszą powodować zbieżności wartości oczekiwanych.
+Przykład $X_n=n\ind{\{U\leq1/n\}}$ pokazuje mechanizm:
+masa ucieka w ogony coraz rzadszych, ale coraz
+większych wartości. Odpowiednim warunkiem wykluczającym
+taką sytuację jest jednostajna całkowalność.
+
+\begin{definicja}
+Rodzinę całkowalnych rzeczywistych zmiennych losowych
+$\mathcal H$ na wspólnej przestrzeni probabilistycznej
+nazywamy \emph{jednostajnie całkowalną}, gdy
+\[
+\lim_{K\to\infty}\sup_{Y\in\mathcal H}
+\E[|Y|\ind{\{|Y|>K\}}]=0.
+\]
+\end{definicja}
+
+\begin{stwierdzenie}[Kryterium momentowe]
+Jeżeli dla pewnego $p>1$ rodzina $\mathcal H$ spełnia
+$\sup_{Y\in\mathcal H}\E|Y|^p<\infty$,
+to jest jednostajnie całkowalna.
+\end{stwierdzenie}
+\begin{proof}
+Na zdarzeniu $\{|Y|>K\}$ zachodzi
+$|Y|\leq |Y|^p/K^{p-1}$. Zatem
+$\E[|Y|\ind{\{|Y|>K\}}]
+\leq K^{1-p}\E|Y|^p$, a prawa strona dąży
+jednostajnie do zera, gdy $K\to\infty$.
+\end{proof}
+
+\begin{twierdzenie}[Zbieżność Vitaliego w $L^1$]
+Niech $X_n,X$ będą rzeczywistymi zmiennymi losowymi
+na jednej przestrzeni probabilistycznej.
+Jeśli $X_n\xrightarrow{\Prob}X$ i rodzina
+$\{X_n:n\geq1\}$ jest jednostajnie całkowalna,
+to $X\in L^1$ oraz $\E|X_n-X|\to0$.
+W szczególności $\E X_n\to\E X$.
+\end{twierdzenie}
+\begin{proof}
+Wprowadzamy funkcję obcięcia
+$\tau_K(x)=\max(-K,\min(x,K))$.
+Jednostajna całkowalność zapewnia
+$\sup_n\E|X_n|<\infty$: po rozdzieleniu wartości
+oczekiwanej na $\{|X_n|\leq K\}$ i dopełnienie
+pierwsza część jest nie większa niż $K$, a druga
+jest jednostajnie mała dla dużych $K$.
+Z kryterium podciągowego wybieramy podciąg
+$X_{n_j}\to X$ prawie na pewno. Lemat Fatou
+zapewnia $\E|X|\leq\liminf_j\E|X_{n_j}|<\infty$.
+Dla $K>0$
+mamy $\E|X_n-\tau_K(X_n)|\leq
+\E[|X_n|\ind{\{|X_n|>K\}}]$, więc
+po prawej stronie otrzymujemy wielkość zbieżną do
+zera jednostajnie w $n$. Ponadto
+$\E|\tau_K(X_n)-\tau_K(X)|\to0$:
+różnica jest ograniczona przez $2K$ i zbiega do zera
+według prawdopodobieństwa, zatem jej średnia dąży
+do zera z oszacowania
+$\E W\leq\varepsilon+2K\Prob(W>\varepsilon)$
+dla $0\leq W\leq2K$.
+Z całkowalności $X$ wynika również
+$\E|X-\tau_K(X)|\to0$ przez zbieżność zdominowaną.
+Rozkładamy różnicę $X_n-X$ na trzy składniki
+$X_n-\tau_K(X_n)$,
+$\tau_K(X_n)-\tau_K(X)$ i
+$\tau_K(X)-X$. Dla dowolnego $\varepsilon>0$
+wybieramy najpierw duże $K$ zmniejszające pierwszy
+i trzeci składnik, a następnie dostatecznie duże $n$
+zmniejszające drugi. Otrzymujemy $\E|X_n-X|\to0$.
+\end{proof}
+
+\begin{uwaga}
+Implikacje między rodzajami zbieżności mają postać
+$L^p\Rightarrow\Prob$ i p.n.$\Rightarrow\Prob$
+$\Rightarrow d$. Brak strzałki między zbieżnością
+prawie na pewno a zbieżnością w $L^p$ bez dodatkowych
+założeń. Zbieżność w rozkładzie do \emph{stałej}
+implikuje jednak zbieżność według prawdopodobieństwa
+do tej stałej.
+\end{uwaga}
+
+% Rozszerzenia audytowe rozdzialow 7--9.
+
+\begin{przyklad}[Ta sama granica rozkładów, różne granice średnich]
+Niech $U\sim\Unif(0,1)$ i
+$X_n=n\ind{\{U<1/n\}}$. Wtedy $X_n\to0$
+prawie na pewno (dla każdego $U>0$ od pewnego
+indeksu $1/n<U$), a zatem również według rozkładu.
+Mimo to $\E X_n=1$ dla wszystkich $n$.
+Różnica nie przeczy zbieżności słabej: funkcja
+$x\mapsto x$ jest nieograniczona, więc nie jest
+jedną z funkcji testowych w charakteryzacji przez
+całki z funkcji ograniczonych i ciągłych.
+Jednostajna całkowalność zapobiega dokładnie temu
+rodzajowi ucieczki masy pierwszych momentów.
+\end{przyklad}
+
+\section{Kiedy zbieżność prawdopodobieństw wystarcza do zbieżności trajektorii?}
+
+\begin{twierdzenie}[Kryterium sumowalnych odchyleń]
+Niech $X,X_1,X_2,\ldots$ będą zmiennymi losowymi na jednej
+przestrzeni probabilistycznej. Załóżmy, że dla każdego
+$\varepsilon>0$ zachodzi
+$\sum_{n=1}^\infty\Prob(|X_n-X|>\varepsilon)<\infty$.
+Wówczas $X_n\to X$ prawie na pewno.
+\end{twierdzenie}
+\begin{proof}
+Dla każdego $r\in\N$ połóżmy
+$A_{n,r}=\{|X_n-X|>1/r\}$. Z pierwszego lematu
+Borela--Cantellego otrzymujemy $\Prob(\limsup_n A_{n,r})=0$.
+Przecięcie zbiorów
+$\Omega\setminus\limsup_n A_{n,r}$ po $r\in\N$
+ma prawdopodobieństwo jeden: korzystamy tu z przeliczalności
+zbioru progów $1/r$. Dla ustalonego $\omega$ z tego
+przecięcia i każdego $r$ nierówność
+$|X_n(\omega)-X(\omega)|\leq1/r$ zachodzi od pewnego
+indeksu, zależnego od $\omega$ i $r$. To jest dokładnie
+definicja zbieżności liczbowej $X_n(\omega)\to X(\omega)$.
+\end{proof}
+
+\begin{uwaga}
+Z kryterium wynika również, że
+$\sum_n\E|X_n-X|^p<\infty$ dla pewnego $p>0$
+implikuje zbieżność prawie na pewno: wystarczy
+nierówność Markowa z progiem $\varepsilon^p$.
+Odwrotność nie zachodzi. Zbieżność p.n. mówi,
+że dla każdej prawie każdej trajektorii dużych odchyleń
+jest skończenie wiele; nie mówi, że \emph{suma}
+ich prawdopodobieństw musi być skończona.
+\end{uwaga}
+
+\begin{przyklad}[Zbieżność p.n. bez zbieżności w $L^1$]
+Niech $U\sim\Unif(0,1)$ i $X_n=n\ind{\{U\leq1/n\}}$.
+Dla każdego $U(\omega)>0$ od pewnego $n$ wskaźnik
+jest zerowy. Zatem $X_n\to0$ p.n., chociaż
+$\E|X_n|=1$ dla wszystkich $n$. Wcześniej ten sam
+ciąg pokazał brak zbieżności w $L^1$ mimo zbieżności
+według prawdopodobieństwa: tutaj widzimy mocniejszy fakt.
+\end{przyklad}
+
+\begin{przyklad}[Zbieżność w każdym $L^p$, lecz nie p.n.]
+Dla ciągu wskaźników przedziałów diadycznych
+z przykładu z \emph{ciągiem piszącym na maszynie}
+mamy $\E|X_{2^m+j}|^p=2^{-m}$ dla każdego $p\geq1$.
+Wszystkie te normy dążą do zera, mimo że trajektorie
+oscylują między zerem i jedynką nieskończenie często.
+Zatem nawet zbieżność w każdym ustalonym $L^p$
+nie implikuje zbieżności p.n.
+\end{przyklad}
+
+\begin{przyklad}[Zbieżność w rozkładzie do zmiennej, ale nie do tej samej realizacji]
+Niech $U\sim\Unif(0,1)$ i $X_n=1-U$, $X=U$.
+Każda zmienna $X_n$ ma ten sam rozkład co $X$,
+więc $X_n\xrightarrow{d}X$. Jednak
+$\Prob(|X_n-X|>1/4)=\Prob(|1-2U|>1/4)=3/4$
+dla każdego $n$. To ilustruje, że zbieżność
+rozkładów porównuje rozkłady, a nie pary wyników
+na wspólnej przestrzeni.
+\end{przyklad}
+
+\section{Dokładna charakteryzacja słabej zbieżności}
+
+\begin{twierdzenie}[Kryterium funkcji ograniczonych ciągłych]
+Dla borelowskich miar probabilistycznych $\mu_n,\mu$
+na $\R$ następujące warunki są równoważne:
+\begin{enumerate}
+\item dystrybuanty $F_n$ zbiegają do $F$ w każdym
+punkcie ciągłości $F$;
+\item dla każdej ograniczonej ciągłej funkcji
+$h:\R\to\R$ mamy $\int h\,\dd\mu_n\to\int h\,\dd\mu$.
+\end{enumerate}
+\end{twierdzenie}
+\begin{proof}
+Implikacja (1)$\Rightarrow$(2) została wykazana w lemacie
+o całkach względem rozkładów zbieżnych. Dla kierunku
+odwrotnego ustalmy punkt ciągłości $x$ dystrybuanty $F$
+oraz $\delta>0$. Konstruujemy funkcje ciągłe
+$h^-_\delta,h^+_\delta$ o wartościach w $[0,1]$:
+$h^-_\delta=1$ na $(-\infty,x-\delta]$,
+$h^-_\delta=0$ na $[x,\infty)$, liniowa pomiędzy;
+$h^+_\delta=1$ na $(-\infty,x]$,
+$h^+_\delta=0$ na $[x+\delta,\infty)$, również
+liniowa pomiędzy. Zachodzi
+$h^-_\delta\leq\ind{(-\infty,x]}\leq h^+_\delta$.
+Całkując i korzystając z (2), dostajemy
+\[
+F(x-\delta)\leq\liminf_nF_n(x)
+\leq\limsup_nF_n(x)\leq F(x+\delta).
+\]
+Gdy $\delta\downarrow0$, lewa i prawa strona
+dążą do $F(x)$ na mocy ciągłości w $x$.
+Jest to pełne uzasadnienie przejścia od całek
+testowych do dystrybuant.
+\end{proof}
+
+\begin{przyklad}[Ograniczenie funkcji testowej ma znaczenie]
+Niech $X_n=n\ind{\{U\leq1/n\}}$ i $X=0$.
+Mamy $X_n\xrightarrow{d}0$, zatem
+$\E h(X_n)\to h(0)$ dla każdej \emph{ograniczonej}
+ciągłej $h$. Dla nieograniczonej funkcji ciągłej
+$h(x)=x$ zachodzi jednak $\E h(X_n)=1$.
+Nie można więc usunąć ograniczoności testów
+bez dodatkowej kontroli ogonów.
+\end{przyklad}
+
+\section{Zbieżność wartości oczekiwanych przy zbieżności rozkładów}
+
+\begin{twierdzenie}[Jednostajna całkowalność i zbieżność słaba]
+Niech $X_n\xrightarrow{d}X$, gdzie zmienne mogą być
+określone na różnych przestrzeniach. Jeśli rodzina
+$\{X_n:n\geq1\}$ jest jednostajnie całkowalna
+(w sensie jednostajnego oszacowania ich rozkładów),
+to $X\in L^1$ i $\E X_n\to\E X$.
+\end{twierdzenie}
+\begin{proof}
+Z jednostajnej całkowalności wynika
+$M:=\sup_n\E|X_n|<\infty$. Dla każdego $K>0$
+funkcja $x\mapsto|x|\wedge K$ jest ograniczona
+i ciągła, więc kryterium funkcji testowych daje
+$\E(|X|\wedge K)=\lim_n\E(|X_n|\wedge K)\leq M$.
+Monotoniczna zbieżność po $K\uparrow\infty$ daje
+$\E|X|\leq M$.
+
+Niech $\tau_K(x)=(-K)\vee(x\wedge K)$.
+Funkcja $\tau_K$ jest ograniczona i ciągła, a zatem
+$\E\tau_K(X_n)\to\E\tau_K(X)$. Dodatkowo
+$|x-\tau_K(x)|\leq |x|\ind{\{|x|>K\}}$,
+co pozwala oszacować
+\[
+|\E X_n-\E X|\leq
+\E|X_n-\tau_K(X_n)|
++|\E\tau_K(X_n)-\E\tau_K(X)|
++\E|X-\tau_K(X)|.
+\]
+Najpierw wybieramy $K$ tak duże, by pierwszy składnik
+był mały jednostajnie w $n$, a trzeci mały dzięki
+całkowalności $X$. Następnie wybieramy $n$ duże,
+aby zmniejszyć środkowy składnik. To daje tezę.
+\end{proof}
+
+\begin{uwaga}
+Twierdzenie dotyczy tylko wartości oczekiwanych.
+Nie można z niego wywnioskować $\E|X_n-X|\to0$,
+ponieważ przy zbieżności według rozkładu zmienne nie
+muszą być nawet określone na wspólnej przestrzeni.
+Zbieżność w $L^1$ jest wnioskiem z twierdzenia Vitaliego
+dopiero wtedy, gdy mamy \emph{zbieżność według
+prawdopodobieństwa} na tej samej przestrzeni.
+\end{uwaga}
+
+% Koniec dodatkow do rozdzialu 7.
+

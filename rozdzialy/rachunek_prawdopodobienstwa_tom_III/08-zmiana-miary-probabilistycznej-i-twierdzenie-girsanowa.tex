@@ -1,0 +1,444 @@
+\chapter{Zmiana miary probabilistycznej i twierdzenie Girsanowa}
+\label{ch:girsanov}
+
+\section{Jedna trajektoria, dwa prawa: dlaczego zmieniamy miarę?}
+
+W równaniu $\dd X_t=b(X_t)\,\dd t+\sigma(X_t)\,\dd W_t$
+część deterministyczna i losowa odgrywają różne role.
+Nasuwa się pytanie, czy można zmienić \emph{prawdopodobieństwa
+przypisywane trajektoriom} tak, aby część dryfu została
+włączona do nowego procesu Wienera. Odpowiedź daje
+\emph{twierdzenie Girsanowa}. Nie zmieniamy tu wartości $X_t(\omega)$
+ani samego zbioru trajektorii; zmieniamy miarę, według której
+liczymy oczekiwania.
+
+Niech $(\Omega,\calF,(\calF_t)_{0\le t\le T},\Prob)$
+będzie filtrowaną przestrzenią probabilistyczną spełniającą
+warunki zwykłe. Jeżeli $Z_T>0$ prawie na pewno i
+$\E_{\Prob}Z_T=1$, to możemy zdefiniować nową miarę
+$\mathbf Q$ na $\calF_T$ przez
+$\mathbf Q(A)=\E_{\Prob}[Z_T\ind A]$.
+Tak więc dla całkowalnej względem $\mathbf Q$ zmiennej $Y$
+\[
+\E_{\mathbf Q}Y=\E_{\Prob}(Z_TY).
+\]
+Gęstość $Z_T$ \emph{przeważa} trajektorie: zdarzenia,
+na których $Z_T$ jest duże, otrzymują większą masę.
+
+\begin{lemat}[Warunkowy wzór Bayesa]
+\label{lem:bayes-change}
+Załóżmy, że $Z_T>0$ $\Prob$-prawie na pewno,
+$\E_{\Prob}Z_T=1$, a $\mathbf Q=Z_T\cdot\Prob$
+na $\calF_T$. Niech $Z_t=\E_{\Prob}[Z_T\mid\calF_t]$.
+Wówczas $Z_t>0$ $\Prob$-prawie na pewno i dla
+$0\le t\le T$ oraz $Y\in L^1(\mathbf Q)$
+\[
+\E_{\mathbf Q}[Y\mid\calF_t]
+=\frac{\E_{\Prob}[Z_TY\mid\calF_t]}{Z_t}
+\quad\mathbf Q\text{-prawie na pewno}.
+\tag{8.1}\label{eq:bayes-measure}
+\]
+\end{lemat}
+\begin{proof}
+Ponieważ $Z_T>0$ prawie na pewno, gdyby
+$A=\{Z_t=0\}\in\calF_t$ miało dodatnie prawdopodobieństwo,
+to $\E[Z_T\ind A]=\E[Z_t\ind A]=0$,
+co przeczyłoby dodatniości $Z_T$. Zatem mianownik
+jest dodatni prawie na pewno. Oznaczmy prawą stronę
+przez $U$. Dla każdego $A\in\calF_t$ mamy
+\[
+\E_{\mathbf Q}[\ind A U]
+=\E_{\Prob}[Z_T\ind A U]
+=\E_{\Prob}[Z_t\ind A U]
+=\E_{\Prob}[\ind A\E_{\Prob}(Z_TY\mid\calF_t)]
+=\E_{\mathbf Q}[\ind A Y].
+\]
+W drugim przejściu użyliśmy $\calF_t$-mierzalności $U$;
+dla nieograniczonych zmiennych najpierw rozpatrujemy
+część dodatnią i ujemną albo obcięcia i granicę monotoniczną.
+Ponadto $\E_{\mathbf Q}|U|\le\E_{\mathbf Q}|Y|$.
+Jest to dokładnie definicja wartości oczekiwanej warunkowej.
+\end{proof}
+
+\section{Wykładnik stochastyczny: skąd pochodzi gęstość?}
+
+Niech $W=(W^1,\ldots,W^m)$ będzie $m$-wymiarowym
+procesem Wienera, a $\theta=(\theta_t)_{0\le t\le T}$
+procesem przewidywalnym o wartościach w $\R^m$.
+Na razie załóżmy, że istnieje deterministyczna stała
+$K<\infty$ taka, iż $\norm{\theta_t}\le K$
+dla $\dd t\otimes\Prob$-prawie wszystkich $(t,\omega)$.
+Definiujemy
+\[
+M_t=-\int_0^t\langle\theta_s,\dd W_s\rangle,
+\qquad
+Z_t=\exp\left(M_t-\frac12\int_0^t\norm{\theta_s}^2\,\dd s\right).
+\tag{8.2}\label{eq:girsanov-density}
+\]
+Zastosowanie wzoru Itô do $e^{M_t-[M]_t/2}$
+pokazuje, że
+\[
+\dd Z_t=-Z_t\langle\theta_t,\dd W_t\rangle,
+\qquad Z_0=1.
+\tag{8.3}\label{eq:density-sde}
+\]
+Poprawka $-\frac12[M]_t$ jest niezbędna: bez niej
+wykładnik zwykłej całki martyngałowej ma na ogół
+niezerowy dryf.
+
+\begin{lemat}[Wykładnik ograniczonego integrandu jest martyngałem]
+\label{lem:bounded-exponential}
+Jeśli $\theta$ jest przewidywalny i
+$\norm{\theta}\le K$ $\dd t\otimes\Prob$-prawie wszędzie,
+to $Z$ z \eqref{eq:girsanov-density} jest ściśle dodatnim,
+ciągłym, jednostajnie całkowalnym martyngałem na $[0,T]$.
+Dla każdego $p>1$ zachodzi
+\[
+\sup_{0\le t\le T}\E Z_t^p
+\le\exp\left(\frac{p(p-1)}2 K^2T\right),
+\tag{8.4}\label{eq:z-moments}
+\]
+a w szczególności $\E Z_T=1$.
+\end{lemat}
+\begin{proof}
+Najpierw ustalmy $p=2$. Wybierzmy czasy
+$\tau_n=\inf\{t\le T:Z_t\ge n\}\wedge T$.
+Z wzoru Itô dla $Z^2$ otrzymujemy
+\[
+Z_{t\wedge\tau_n}^2
+=1-2\int_0^{t\wedge\tau_n}Z_s^2\langle\theta_s,\dd W_s\rangle
++\int_0^{t\wedge\tau_n}Z_s^2\norm{\theta_s}^2\,\dd s.
+\]
+Po zatrzymaniu całka stochastyczna ma zerową średnią,
+a $\E Z_{t\wedge\tau_n}^2\le
+1+K^2\int_0^t\E Z_{s\wedge\tau_n}^2\,\dd s$.
+Gronwall daje oszacowanie jednostajne w $n$.
+Ponieważ ciągłe trajektorie $Z$ są ograniczone na
+$[0,T]$, mamy $\tau_n=T$ od pewnego losowego $n$;
+Fatou i oszacowanie dają $\E Z_t^2\le e^{K^2T}$.
+Rodzina zatrzymanych martyngałów $Z^{\tau_n}$
+jest zatem jednostajnie całkowalna w każdej ustalonej
+chwili (ma jednostajnie ograniczone drugie momenty).
+Przechodząc do granicy w warunkowych tożsamościach
+martyngałowych otrzymujemy $\E(Z_t\mid\calF_s)=Z_s$.
+W szczególności $\E Z_t=1$.
+
+Dla dowolnego $p>1$ zapisujemy
+\[
+Z_t^p=\underbrace{\exp\left(
+-p\int_0^t\langle\theta_s,\dd W_s\rangle
+-\frac{p^2}2\int_0^t\norm{\theta_s}^2\,\dd s\right)}_{Z_t^{(p)}}
+\exp\left(\frac{p(p-1)}2\int_0^t\norm{\theta_s}^2\,\dd s\right).
+\]
+Proces $Z^{(p)}$ jest martyngałem na mocy właśnie
+udowodnionego przypadku stosowanego do ograniczonego
+integrandu $p\theta$; stąd
+$\E Z_t^p\le e^{p(p-1)K^2T/2}\E Z_t^{(p)}$.
+Wreszcie proces $Z_t=\E[Z_T\mid\calF_t]$ jest
+jednostajnie całkowalny jako rodzina wartości oczekiwanych
+warunkowych jednej zmiennej całkowalnej.
+\end{proof}
+
+\begin{uwaga}[Granica twierdzenia]
+Założenie ograniczoności $\theta$ jest wystarczające,
+lecz niekonieczne. W dalszej teorii używa się m.in.
+warunku Novikova
+$\E\exp(\frac12\int_0^T\norm{\theta_s}^2\,\dd s)<\infty$.
+W tej iteracji pełny dowód przeprowadzamy przy
+ograniczonym integrandzie; nie utożsamiamy lokalnej
+martyngałowości wykładnika z zachowaniem jego średniej.
+\end{uwaga}
+
+\section{Twierdzenie Girsanowa z pełnym dowodem}
+
+\begin{twierdzenie}[Girsanow przy ograniczonym dryfie]
+\label{th:girsanov-bounded}
+Niech $T>0$, niech $W$ będzie $m$-wymiarowym
+procesem Wienera względem filtracji $(\calF_t)$
+spełniającej warunki zwykłe i niech $\theta$ będzie
+przewidywalnym procesem o wartościach w $\R^m$,
+$\norm{\theta_t}\le K$ dla $\dd t\otimes\Prob$-prawie
+wszystkich $(t,\omega)$. Niech $Z$ określa
+\eqref{eq:girsanov-density} i niech $\mathbf Q$ na
+$\calF_T$ będzie zadana przez $\dd\mathbf Q=Z_T\,\dd\Prob$.
+Wówczas proces
+\[
+\widetilde W_t=W_t+\int_0^t\theta_s\,\dd s,
+\qquad 0\le t\le T,
+\tag{8.5}\label{eq:shifted-wiener}
+\]
+jest standardowym $m$-wymiarowym procesem Wienera
+względem tej samej filtracji, ale pod miarą $\mathbf Q$.
+Ponadto $\Prob$ i $\mathbf Q$ są równoważne na
+$\calF_T$ (mają te same zbiory miary zero).
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: zmiana miary jest prawidłowa.}
+Z lematu \ref{lem:bounded-exponential} otrzymujemy
+$Z_T>0$ i $\E Z_T=1$. Jest więc to gęstość miary
+probabilistycznej. Ścisła dodatniość zapewnia
+równoważność miar.
+
+\emph{Krok 2: warunkowa funkcja charakterystyczna.}
+Ustalmy $u\in\R^m$ i oznaczmy
+\[
+H_t=\exp\left(i\langle u,\widetilde W_t\rangle
+                    +\frac12\norm u^2t\right).
+\]
+Na mocy wzoru Itô dla rzeczywistej i urojonej
+części (albo przez bezpośredni rachunek pochodnych)
+$\dd H_t=H_t(i\langle u,\dd W_t\rangle
++i\langle u,\theta_t\rangle\,\dd t)$.
+Ze wzoru na iloczyn i \eqref{eq:density-sde} mamy
+\[
+\dd(Z_tH_t)=Z_tH_t\langle iu-\theta_t,\dd W_t\rangle.
+\tag{8.6}\label{eq:girsanov-product}
+\]
+Wynika to z \emph{dokładnego skasowania} dwóch
+członów dryfu: $+iZ_tH_t\langle u,\theta_t\rangle\,\dd t$
+i $-iZ_tH_t\langle u,\theta_t\rangle\,\dd t$
+pochodzącego z kowariacji.
+
+\emph{Krok 3: lokalny martyngał jest prawdziwy.}
+Na $[0,T]$ moduł $H_t$ jest ograniczony przez
+$e^{\norm u^2T/2}$. Proces $Z$ ma ograniczone
+drugie momenty z \eqref{eq:z-moments}; przy
+ograniczonym $\theta$ kwadrat integrandu w
+\eqref{eq:girsanov-product} ma skończoną wartość
+oczekiwaną po scałkowaniu w czasie. Zatem $ZH$
+jest (zespolonym) kwadratowo całkowalnym martyngałem.
+Dla $s\le t$ dostajemy
+\[
+\E_{\Prob}[Z_tH_t\mid\calF_s]=Z_sH_s.
+\]
+Ponieważ $Z_t=\E_{\Prob}[Z_T\mid\calF_t]$,
+wzór Bayesa \eqref{eq:bayes-measure} zastosowany do
+$H_t$ daje $\E_{\mathbf Q}[H_t\mid\calF_s]=H_s$.
+Po podzieleniu przez dodatni $\calF_s$-mierzalny
+czynnik $e^{\norm u^2s/2}e^{i\langle u,\widetilde W_s\rangle}$
+otrzymujemy
+\[
+\E_{\mathbf Q}[e^{i\langle u,\widetilde W_t-\widetilde W_s\rangle}
+\mid\calF_s]
+=e^{-\norm u^2(t-s)/2}.
+\tag{8.7}\label{eq:girsanov-char}
+\]
+\emph{Krok 4: identyfikacja ruchu Browna.}
+Prawa strona jest funkcją charakterystyczną rozkładu
+$\Normal(0,(t-s)I_m)$ i nie zależy od $\calF_s$.
+Jednoznaczność funkcji charakterystycznych i
+argument z klasą monotoniczną dają niezależność
+przyrostu od $\calF_s$. Proces $\widetilde W$ ma
+ciągłe trajektorie i $\widetilde W_0=0$, zatem
+spełnia definicję procesu Wienera pod $\mathbf Q$.
+\end{proof}
+
+\begin{uwaga}[Jak odczytywać znak?]
+W naszej konwencji gęstość zawiera
+$-\int\theta\,\dd W$, a nowy ruch Browna ma postać
+$\widetilde W=W+\int\theta\,\dd t$.
+Spotyka się także przeciwną konwencję, w której
+w wykładniku stoi znak dodatni. Wtedy znak przed
+dryfem w nowym procesie Wienera również się zmienia.
+Nie ma sprzeczności, ale znaki muszą być uzgodnione.
+\end{uwaga}
+
+\section{Jak zmienia się równanie stochastyczne?}
+
+\begin{wniosek}[Transformacja dryfu w SDE]
+\label{cor:girsanov-sde}
+Załóżmy warunki twierdzenia \ref{th:girsanov-bounded}
+i niech proces $X$ spełnia pod $\Prob$, dla
+$t\in[0,T]$, równanie
+\[
+X_t=X_0+\int_0^tb_s\,\dd s+\int_0^t\sigma_s\,\dd W_s,
+\]
+gdzie $b$ jest progresywnie mierzalny,
+$\int_0^T\norm{b_s}\,\dd s<\infty$ prawie na pewno,
+a $\sigma$ jest przewidywalny i
+$\int_0^T\norm{\sigma_s}_{\mathrm F}^2\,\dd s<\infty$
+prawie na pewno. Wtedy pod $\mathbf Q$ ten sam proces $X$
+spełnia
+\[
+X_t=X_0+\int_0^t(b_s-\sigma_s\theta_s)\,\dd s
+        +\int_0^t\sigma_s\,\dd\widetilde W_s.
+\tag{8.8}\label{eq:girsanov-sde}
+\]
+\end{wniosek}
+\begin{proof}
+Tożsamość dla prostych procesów przewidywalnych wynika
+z $W_t=\widetilde W_t-\int_0^t\theta_s\,\dd s$
+po zastosowaniu liniowości sum całkowych.
+Dla ogólnego $\sigma$ wprowadźmy czasy
+$\tau_n=\inf\{t:\int_0^t\norm{\sigma_s}_{\mathrm F}^2\,\dd s\ge n\}\wedge T$.
+Na przedziale zatrzymanym proces $\sigma$ należy do
+$L^2(\dd t\otimes\Prob)$; ponadto zmiana miary może
+pozbawić nas globalnego $L^2(\mathbf Q)$, ale przez
+zatrzymanie dodatkowo w chwilach, gdy $Z$ lub $1/Z$
+opuszczają przedział $[1/n,n]$, otrzymujemy równoważne
+normy $L^2$ na zatrzymanym przedziale.
+Przybliżając $\sigma$ prostymi procesami w obu normach,
+otrzymujemy tożsamość całek najpierw lokalnie, a następnie
+na całym $[0,T]$, dzięki wyczerpaniu przedziału przez
+czasy lokalizujące. Ponieważ $\theta$ jest ograniczony,
+całka $\int_0^t\sigma_s\theta_s\,\dd s$ jest określona
+na mocy nierówności Cauchy'ego--Schwarza.
+\end{proof}
+
+
+\begin{uwaga}[Dokładne znaczenie lokalizacji przy zmianie miary]
+W dowodzie wniosku \ref{cor:girsanov-sde} trzeba zachować
+równoważność norm pod dwiema miarami, ale tylko na
+zatrzymanych przedziałach. Dla ustalonego $n$ wybieramy
+$\rho_n=\inf\{t\le T:Z_t\notin[1/n,n]\}\wedge T$.
+Proces $Z$ jest ciągły i ściśle dodatni; na każdej trajektorii
+$\inf_{t\le T}Z_t>0$ i $\sup_{t\le T}Z_t<\infty$,
+a zatem $\rho_n=T$ od pewnego losowego $n$.
+Jeśli $H$ jest przewidywalny i zeruje się po $\rho_n$,
+to na $\calF_{\rho_n}$ zachodzi
+$\dd\mathbf Q=Z_{\rho_n}\,\dd\Prob$, skąd
+\[
+  \frac1n\E_{\Prob}\int_0^{\rho_n}|H_s|^2\,\dd s
+ \le \E_{\mathbf Q}\int_0^{\rho_n}|H_s|^2\,\dd s
+ \le n\E_{\Prob}\int_0^{\rho_n}|H_s|^2\,\dd s.
+\]
+Istotne jest zastosowanie gęstości \emph{zatrzymanej}
+$Z_{\rho_n}=\E[Z_T\mid\calF_{\rho_n}]$,
+a nie gęstości końcowej $Z_T$ bez kontroli.
+Przy dodatkowym zatrzymaniu kwadratowego czasu całkowania
+powyższe porównanie umożliwia aproksymację tymi samymi
+procesami prostymi pod obiema miarami i uzasadnia
+podstawienie $\dd W_t=\dd\widetilde W_t-\theta_t\,\dd t$.
+\end{uwaga}
+
+\begin{uwaga}[Co pozostaje niezmienione?]
+Równoważna zmiana miary nie zmienia własności
+ścieżkowych zachodzących prawie na pewno, np. ciągłości
+lub wariacji kwadratowej konkretnego procesu.
+Zmienia natomiast rozkłady trajektorii i ich wartości
+oczekiwane. Wzór \eqref{eq:girsanov-sde} pokazuje,
+jak przesunięcie szumu zmienia dryf.
+\end{uwaga}
+
+\begin{przyklad}[Wspólny dryf i różne miary: dlaczego horyzont ma znaczenie?]
+Dla stałego $c\ne0$ na każdym $[0,T]$ miary prawa
+$W$ i $W+ct$ są równoważne, a ich gęstość jest dana
+przez wykładnik $e^{cW_T-c^2T/2}$. Nie istnieje jednak
+jedna gęstość na całym nieskończonym horyzoncie,
+która czyniłaby te prawa równoważnymi na
+$C([0,\infty);\R)$: z mocnego prawa wielkich liczb
+dla przyrostów w chwilach całkowitych wynika
+$W_n/n\to0$ prawie na pewno, podczas gdy
+$(W_n+cn)/n\to c$. Zdarzenie
+$\{\lim_{n\to\infty}w(n)/n=0\}$ ma więc prawdopodobieństwo
+$1$ pod pierwszym prawem, a $0$ pod drugim.
+Równoważność na każdym skończonym przedziale nie oznacza
+równoważności na całej półprostej.
+\end{przyklad}
+
+\section{Zadania rozwiązane i kontrprzykłady intuicyjne}
+
+\begin{zadanie}[Ruch Browna z dryfem jako ruch Browna pod nową miarą]
+Niech $W$ będzie procesem Wienera pod $\Prob$, $c\in\R$
+i $X_t=W_t+ct$ na $[0,T]$. Skonstruować miarę,
+pod którą $X$ jest ruchem Browna, i porównać
+prawdopodobieństwo zdarzenia $\{X_T>a\}$.
+
+\emph{Rozwiązanie.} Wybieramy $\theta_t=c$ i
+\[
+Z_T=\exp(-cW_T-\tfrac12c^2T),\qquad
+\dd\mathbf Q=Z_T\,\dd\Prob.
+\]
+Z twierdzenia Girsanowa $\widetilde W_t=W_t+ct=X_t$
+jest procesem Wienera pod $\mathbf Q$. Stąd
+\[
+\Prob(X_T>a)=1-\Phi\left(\frac{a-cT}{\sqrt T}\right),
+\qquad
+\mathbf Q(X_T>a)=1-\Phi\left(\frac a{\sqrt T}\right).
+\]
+Są to różne liczby mimo tego, że $X_t(\omega)$
+jest dosłownie tą samą funkcją na obu przestrzeniach
+probabilistycznych. Na tym polega zmiana miary, a nie
+„usunięcie dryfu z trajektorii”.
+\end{zadanie}
+
+\begin{zadanie}[Usuwanie ograniczonego dryfu przez zmianę miary]
+Niech $b:\R\to\R$ będzie ograniczoną funkcją Lipschitzowską,
+$\sigma_0>0$ i niech $X$ spełnia
+$\dd X_t=b(X_t)\,\dd t+\sigma_0\,\dd W_t$, $X_0=x$.
+Znaleźć miarę $\mathbf Q$, pod którą $X_t-x$
+jest ruchem Browna przeskalowanym przez $\sigma_0$.
+
+\emph{Rozwiązanie.} Chcemy, aby dryf w
+\eqref{eq:girsanov-sde} zniknął, więc ustawiamy
+$\theta_t=b(X_t)/\sigma_0$.
+Proces $\theta$ jest przewidywalny i ograniczony,
+ponieważ $X$ jest ciągły i adaptowany. Definiujemy
+$Z_T$ przez \eqref{eq:girsanov-density}. Wówczas
+$\widetilde W=W+\int\theta\,\dd t$ jest procesem
+Wienera pod $\mathbf Q$, a
+$\dd X_t=(b(X_t)-\sigma_0\theta_t)\,\dd t
++\sigma_0\,\dd\widetilde W_t=\sigma_0\,\dd\widetilde W_t$.
+Stąd $X_t=x+\sigma_0\widetilde W_t$ jako procesy
+na całym $[0,T]$. Jeśli dryf $b$ nie byłby ograniczony,
+nie moglibyśmy bez dalszego sprawdzenia zastosować
+udowodnionej wersji twierdzenia.
+\end{zadanie}
+
+\begin{zadanie}[Wartość oczekiwana pod inną miarą]
+Niech $W$ będzie jednowymiarowym procesem Wienera,
+a $\mathbf Q$ będzie określona przez
+$Z_T=e^{-cW_T-c^2T/2}$, gdzie $c\in\R$.
+Obliczyć $\E_{\mathbf Q}W_T$ i sprawdzić wynik
+dwiema metodami.
+
+\emph{Rozwiązanie.} Ponieważ $\widetilde W_t=W_t+ct$
+jest ruchem Browna pod $\mathbf Q$,
+$\E_{\mathbf Q}W_T=-cT$.
+Z drugiej strony
+$\E_{\mathbf Q}W_T=\E_{\Prob}(W_Te^{-cW_T-c^2T/2})$.
+Dla $W_T\sim\Normal(0,T)$ różniczkujemy funkcję
+tworzącą momenty $\E e^{uW_T}=e^{u^2T/2}$:
+$\E(W_Te^{uW_T})=uT e^{u^2T/2}$.
+Po podstawieniu $u=-c$ otrzymujemy
+$(-cT)e^{c^2T/2}e^{-c^2T/2}=-cT$.
+Dwie metody dają ten sam wynik, a druga pokazuje
+jak w praktyce wykorzystuje się gęstość Radona--Nikodyma.
+\end{zadanie}
+
+\begin{przyklad}[Dlaczego zmiana miary musi zależeć od całej filtracji?]
+Jeżeli $\theta_t$ zależy od $W_s$ dla $s>t$, to nie
+jest procesem przewidywalnym i całka Itô
+$\int\theta\,\dd W$ w ogólności nie ma sensu w
+naszej konstrukcji. Próba „odwrócenia znaku dryfu”
+na podstawie przyszłego wyniku nie jest poprawną
+strategią Girsanowa. Konieczna jest adaptacja
+do bieżącej informacji.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex,node distance=8mm]
+\node[draw,rounded corners,fill=blue!6,minimum width=35mm,align=center] (p)
+{$\Prob$\\$W$ jest procesem Wienera};
+\node[draw,rounded corners,fill=orange!8,minimum width=36mm,align=center,right=18mm of p] (q)
+{$\mathbf Q=Z_T\cdot\Prob$\\$\widetilde W=W+\int\theta\,\dd t$ jest procesem Wienera};
+\draw[->,very thick] (p)--node[above,align=center,scale=.85]
+{ważenie trajektorii\\przez $Z_T$}(q);
+\end{tikzpicture}
+\par\smallskip\small Zmiana miary przekształca prawo szumu, nie jego realizacje.
+\end{center}
+
+\section{Co dalej?}
+Udowodniona wersja twierdzenia Girsanowa ma przejrzysty
+zakres: ograniczony przewidywalny dryf, skończony horyzont,
+ciągły szum Wienera. Wersje z integrandami nieograniczonymi,
+warunkami Novikova i Kazamakiego oraz z miarami losowymi
+skoków wymagają odrębnych twierdzeń.
+W kolejnych rozdziałach wrócimy do zmiany miary przy
+rozważaniu przestrzeni trajektorii i twierdzenia
+Camerona--Martina, a później przy procesach Lévy'ego
+oraz równaniach ze skokami.
+
+% ===========================================================================
+% ROZDZIAL 9 — Miara Wienera i Cameron--Martin
+% ===========================================================================

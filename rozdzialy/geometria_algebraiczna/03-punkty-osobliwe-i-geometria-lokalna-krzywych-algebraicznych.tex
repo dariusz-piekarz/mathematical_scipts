@@ -1,0 +1,688 @@
+\chapter{Punkty osobliwe i geometria lokalna krzywych algebraicznych}
+\label{ch:osobliwosci}
+
+\section{Dlaczego obraz krzywej może być mylący?}
+
+Prosta, parabola i okrąg mają w zwykłych punktach jeden wyraźny
+kierunek styczny. Natomiast krzywe $y^2=x^3$ oraz
+$y^2=x^2(x+1)$ mają w początku układu współrzędnych
+zachowanie zupełnie odmienne od prostej: pierwsza ma
+\emph{ostrze}, a druga \emph{węzeł} z dwiema gałęziami.
+Sama informacja, że jest to zbiór zerowy jednego wielomianu,
+nie mówi jeszcze, jak rozróżnić takie punkty.
+
+Celem tego rozdziału jest zrozumienie trzech poziomów opisu:
+\emph{przestrzeni stycznej}, \emph{stożka stycznego} oraz
+\emph{lokalnego pierścienia funkcji}. Zobaczymy, że przestrzeń
+styczna może mieć zbyt duży wymiar, stożek styczny rozróżnia
+kierunki dochodzenia, a pierścień lokalny zachowuje także
+ich krotności i inne informacje algebraiczne.
+
+W całym rozdziale $k$ oznacza ciało algebraicznie domknięte;
+gdy odwołujemy się do lokalnej intuicji analitycznej,
+przyjmujemy $k=\C$. W przykładzie węzła i w obliczeniach
+z dwiema odmiennymi stycznymi dodatkowo zakładamy
+$\operatorname{char}k\ne2$.
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=.83]
+  \begin{scope}[shift={(-4,0)}]
+   \draw[->,gray!70] (-.4,0)--(2.7,0) node[right] {$x$};
+   \draw[->,gray!70] (0,-1.65)--(0,1.85) node[above] {$y$};
+   \draw[blue!75!black,very thick,domain=-1.25:1.25,samples=120]
+    plot ({\x*\x},{\x*\x*\x});
+   \fill (0,0) circle(2pt); \node at (1.5,-1.55) {ostrze $y^2=x^3$};
+  \end{scope}
+  \begin{scope}[shift={(2.3,0)}]
+   \draw[->,gray!70] (-1.7,0)--(2.8,0) node[right] {$x$};
+   \draw[->,gray!70] (0,-1.7)--(0,1.9) node[above] {$y$};
+   \draw[red!75!black,very thick,domain=-1.7:1.7,samples=145]
+    plot ({\x*\x-1},{\x*(\x*\x-1)});
+   \fill (0,0) circle(2pt); \node at (.7,-2.05) {węzeł $y^2=x^2(x+1)$};
+  \end{scope}
+\end{tikzpicture}
+
+\small Rysunek 3.1. Dwie krzywe o osobliwym początku, lecz o różnej
+liczbie lokalnych gałęzi. Na prawym rysunku parametry $t=1$ i $t=-1$
+dają ten sam punkt $(0,0)$.
+\end{center}
+
+\section{Pierścień lokalny: funkcje w pobliżu punktu}
+
+\begin{definicja}[Pierścień lokalny w punkcie]
+\label{def:local-ring-point}
+Niech $X\subseteq k^n$ będzie niepustym zbiorem algebraicznym,
+$A=k[X]$ jego pierścieniem współrzędnych, a $p\in X$.
+Przez $\mathfrak m_p\subseteq A$ oznaczamy ideał klas
+funkcji wielomianowych znikających w $p$.
+\emph{Pierścieniem lokalnym} $X$ w punkcie $p$ nazywamy
+\[
+ \mathcal O_{X,p}=A_{\mathfrak m_p}
+ =\left\{\frac fg:\ f,g\in A,\ g(p)\ne0\right\}/\!\sim,
+\]
+gdzie $f/g=f'/g'$ wtedy i tylko wtedy, gdy dla pewnego
+$h\in A$ z $h(p)\ne0$ mamy $h(fg'-f'g)=0$ w $A$.
+\end{definicja}
+
+Warunek dodatkowego czynnika $h$ w relacji równości jest
+istotny w pierścieniach z dzielnikami zera. Jeśli $A$
+jest dziedziną, wystarczy zwykła równość $fg'=f'g$.
+Funkcja $f/g$ ma sens na pewnym otoczeniu punktu $p$,
+ponieważ $g(p)\ne0$, a zbiór $D(g)$ jest otwarty
+w topologii Zariskiego.
+
+\begin{twierdzenie}[Jedyny ideał maksymalny]
+\label{tw:local-unique-max}
+Dla każdego algebraicznego $X\subseteq k^n$ i $p\in X$
+pierścień $\mathcal O_{X,p}$ ma dokładnie jeden ideał
+maksymalny, równy
+$\mathfrak m_p\mathcal O_{X,p}=\{f/g:f(p)=0,\ g(p)\ne0\}$.
+Element $f/g$ jest odwracalny dokładnie wtedy, gdy $f(p)\ne0$.
+\end{twierdzenie}
+\begin{proof}
+Podstawienie w $p$ jest dobrze określonym homomorfizmem
+$\operatorname{ev}_p:\mathcal O_{X,p}\to k$,
+$f/g\mapsto f(p)/g(p)$: jeśli ułamki są równe,
+po podstawieniu w $p$ ich iloczyny na krzyż są równe.
+Homomorfizm jest surjektywny, bo przyjmuje każdą stałą.
+Jego jądro to dokładnie ułamki o liczniku znikającym w $p$,
+a więc jest to ideał maksymalny.
+
+Jeżeli $f(p)\ne0$, to $g/f$ jest poprawnym ułamkiem
+lokalnym i jest odwrotnością $f/g$. Jeśli $f(p)=0$,
+to $\operatorname{ev}_p(f/g)=0$, a więc element ten nie
+może być odwracalny: homomorfizm zachowujący jedynkę
+przenosi jednostki na jednostki.
+W każdym pierścieniu ideał maksymalny nie zawiera jednostek.
+Dowolny ideał właściwy $J$ może więc składać się tylko
+z niejednostek i musi zawierać się w jądrze
+$\operatorname{ev}_p$. Jedyny ideał maksymalny jest zatem
+właśnie tym jądrem.
+\end{proof}
+
+\begin{przyklad}[Regularna funkcja na otoczeniu, ale nie na całej krzywej]
+Na hiperboli $H=\V_k(xy-1)$ mamy
+$k[H]\cong k[x,x^{-1}]$; element $1/x$ jest nawet
+globalną funkcją regularną, bo w pierścieniu współrzędnych
+$1/x=y$. Natomiast na prostej $\A^1(k)$ funkcja $1/x$
+nie należy do $k[x]$, lecz należy do lokalnego pierścienia
+w każdym punkcie $p\ne0$. Nie należy do
+$\mathcal O_{\A^1,0}$, ponieważ mianownik $x$ znika w $0$.
+\end{przyklad}
+
+\begin{przyklad}[Lokalne równania węzła]
+Dla $X=\V_k(y^2-x^2(x+1))$ i $p=(0,0)$
+mamy $\mathcal O_{X,p}=(k[x,y]/(y^2-x^2(x+1)))_{(x,y)}$.
+Element $1+x$ jest jednostką tego pierścienia, ponieważ
+$(1+x)(p)=1$. Nie znaczy to, że $1+x$ jest jednostką
+całego pierścienia $k[X]$.
+\end{przyklad}
+
+\section{Przestrzeń kostyczna i przestrzeń styczna Zariskiego}
+
+\begin{definicja}[Przestrzeń kostyczna i styczna]
+\label{def:tangent-zariski}
+Niech $X\subseteq k^n$ będzie zbiorem algebraicznym,
+$p\in X$, a $\mathfrak m$ jedynym ideałem maksymalnym
+$\mathcal O_{X,p}$. Iloraz $\mathfrak m/\mathfrak m^2$
+traktujemy jako przestrzeń wektorową nad
+$\mathcal O_{X,p}/\mathfrak m\cong k$; nazywa się ją
+\emph{przestrzenią kostyczną} w $p$.
+\emph{Przestrzeń styczna Zariskiego} to
+\[
+ T_pX:=\operatorname{Hom}_k(\mathfrak m/\mathfrak m^2,k).
+\]
+\end{definicja}
+
+Dlaczego modulo $\mathfrak m^2$? Iloczyny dwóch funkcji
+znikających w $p$ są \emph{drugiego rzędu małości}.
+W zwykłym rachunku różniczkowym pochodna iloczynu
+takich funkcji w $p$ jest zerowa. Gdy więc zostawimy
+jedynie klasy modulo $\mathfrak m^2$, zachowamy
+informację o wyrazach pierwszego rzędu.
+
+\begin{twierdzenie}[Jawny wzór na przestrzeń styczną]
+\label{tw:zariski-tangent-formula}
+Niech $k$ będzie ciałem, $X=\V_k(I)\subseteq k^n$
+zbiorem algebraicznym, $p=(a_1,\dots,a_n)\in X$,
+a $I(X)$ jego ideałem znikania. Wtedy istnieje
+naturalna identyfikacja
+\[
+ T_pX\cong\left\{v\in k^n:
+ \sum_{j=1}^n\frac{\partial f}{\partial x_j}(p)v_j=0
+ \quad\text{dla każdego }f\in I(X)\right\}.
+\]
+Jeżeli $I(X)=(f_1,\dots,f_r)$, to wystarczy sprawdzać
+te równania dla generatorów $f_i$.
+\end{twierdzenie}
+\begin{proof}
+Przesuńmy współrzędne tak, aby $p$ stał się początkiem.
+Niech $R=k[x_1,\dots,x_n]$ i
+$\mathfrak n=(x_1-a_1,\dots,x_n-a_n)$.
+Każdy wielomian z $\mathfrak n$ można zapisać jako
+sumę wyrazów liniowych w $x_j-a_j$ i wyrazów należących
+do $\mathfrak n^2$. W rezultacie
+$\mathfrak n/\mathfrak n^2$ ma bazę klas
+$x_1-a_1,\dots,x_n-a_n$ i jest izomorficzny z $k^n$.
+
+W pierścieniu $A=k[X]=R/I(X)$ ideał punktu jest obrazem
+$\mathfrak n$. Lokalizacja w $p$ nie zmienia ilorazu
+$\mathfrak m/\mathfrak m^2$: każdy mianownik nieznikający
+w $p$ ma w tym ilorazie tę samą wartość co jego stała
+wartość w $p$, ponieważ różnica należy do $\mathfrak m$,
+a jej iloczyn przez element $\mathfrak m$ należy do
+$\mathfrak m^2$. Zatem przestrzeń kostyczna na $X$
+jest ilorazem $\mathfrak n/\mathfrak n^2$ przez obrazy
+wielomianów $f\in I(X)$, których wyrazy stałe są równe zero.
+
+Wyraz liniowy rozwinięcia $f$ w $p$ ma postać
+$\sum_j(\partial f/\partial x_j)(p)(x_j-a_j)$.
+Przestrzeń dualna ilorazu jest więc anihilatorem
+wszystkich tych form liniowych w $(k^n)^*$.
+To dokładnie podany zbiór wektorów $v$.
+Jeśli $f=\sum_i h_if_i$ oraz $f_i(p)=0$, to
+reguła Leibniza daje
+$df(p)=\sum_i h_i(p)\,df_i(p)$, więc wystarcza
+sprawdzenie generatorów ideału.
+\end{proof}
+
+\begin{uwaga}[Dlaczego nie wystarczą generatory dowolnego ideału równań?]
+Jeżeli $I$ nie jest radykalny, zbiór punktów $\V_k(I)$
+może mieć większy ideał znikania $I(X)=\sqrt I$.
+Dla zbioru $X=\{0\}\subseteq\A^1$ wyznaczonego
+równaniem $x^2=0$ pochodna podanego równania w $0$
+wynosi zero i błędnie sugeruje jednowymiarową przestrzeń
+styczną. Jednak jako \emph{zredukowany zbiór punktów}
+$X$ ma ideał znikania $(x)$ i $T_0X=0$.
+Jeśli świadomie badamy niezredukowany obiekt
+$\operatorname{Spec}k[x]/(x^2)$, jego przestrzeń
+styczna ma wymiar $1$. Rozróżnienie to będzie kluczowe
+w geometrii schematów, choć nie rozwijamy tu ich teorii.
+\end{uwaga}
+
+\begin{przyklad}[Przestrzeń styczna w punkcie gładkiej paraboli]
+Niech $X=\V_k(y-x^2)$ i $p=(a,a^2)$.
+Ponieważ $f_x=-2x$ oraz $f_y=1$, mamy
+$T_pX=\{(u,v)\in k^2:-2au+v=0\}$,
+czyli jest to prosta o kierunku $(1,2a)$.
+Zgadza się to z pochodną parametryzacji $t\mapsto(t,t^2)$.
+\end{przyklad}
+
+\begin{przyklad}[Przestrzeń styczna w ostrzu i węźle]
+W początku krzywej $y^2=x^3$ pochodne $-3x^2$ i $2y$
+są zerowe. Podobnie dla $y^2=x^2(x+1)$
+obie pochodne znikają w $(0,0)$. W obu przypadkach
+wzór na przestrzeń styczną nie nakłada żadnego warunku
+na $(u,v)$, a więc $T_{(0,0)}X=k^2$.
+Krzywa ma jednak lokalnie wymiar $1$. Otrzymaliśmy
+zatem \emph{za dużą} przestrzeń styczną, co sygnalizuje
+osobliwość, ale nie rozróżnia jeszcze dwóch jej typów.
+\end{przyklad}
+
+\section{Kryterium Jacobiego dla krzywych płaskich}
+
+\begin{definicja}[Gładki punkt krzywej afinicznej]
+\label{def:smooth-affine-curve}
+Niech $k$ będzie algebraicznie domkniętym ciałem,
+a $X=\V_k(f)\subseteq k^2$ zredukowaną krzywą płaską,
+czyli $f\in k[x,y]$ jest niezerowy, niestały i bezkwadratowy.
+Punkt $p\in X$ nazywamy \emph{gładkim}, jeżeli
+$(f_x(p),f_y(p))\ne(0,0)$; w przeciwnym razie
+jest \emph{osobliwy}. Gładkość może być też opisana
+warunkiem $\dim_kT_pX=1$.
+\end{definicja}
+
+\begin{stwierdzenie}[Równoważność kryteriów dla jednej krzywej]
+Dla krzywej z definicji~\ref{def:smooth-affine-curve}
+warunki $\dim_k T_pX=1$ i
+$(f_x(p),f_y(p))\ne(0,0)$ są równoważne.
+W punkcie osobliwym mamy $\dim_kT_pX=2$.
+\end{stwierdzenie}
+\begin{proof}
+Ponieważ $f$ jest bezkwadratowy i $k$ jest algebraicznie
+domknięte, silne Nullstellensatz daje $I(X)=(f)$:
+ideał główny $(f)$ jest radykalny w UFD, gdy $f$ nie ma
+powtórzonych czynników nierozkładalnych.
+Z twierdzenia~\ref{tw:zariski-tangent-formula} dostajemy
+$T_pX=\{(u,v):f_x(p)u+f_y(p)v=0\}$.
+Jest to jądro jednego funkcjonału liniowego $k^2\to k$.
+Jeżeli funkcjonał jest niezerowy, jego jądro ma wymiar $1$;
+jeżeli jest zerowy, jądro jest całym $k^2$ i ma wymiar $2$.
+\end{proof}
+
+\begin{uwaga}[Jak działa twierdzenie o funkcji uwikłanej nad $\C$?]
+Jeżeli $k=\C$ i $f_y(p)\ne0$, holomorficzne twierdzenie
+o funkcji uwikłanej pokazuje, że w dostatecznie małym
+otoczeniu $p=(a,b)$ zbiór $f(x,y)=0$ jest wykresem
+funkcji holomorficznej $y=\psi(x)$ z $\psi(a)=b$.
+Wówczas $f(x,\psi(x))=0$ i po zróżniczkowaniu
+$\psi'(a)=-f_x(p)/f_y(p)$. Nie jest to tylko formalna
+analogia z analizą: w gładkim punkcie zespolona krzywa
+algebraiczna jest lokalnie jednowymiarową rozmaitością
+zespoloną. W punkcie osobliwym twierdzenie o funkcji
+uwikłanej nie ma zastosowania w takiej postaci.
+\end{uwaga}
+
+\section{Stożek styczny: rozróżniamy kierunki i krotności}
+
+\begin{definicja}[Najniższa część jednorodna]
+Niech $f\in k[x,y]$ będzie niezerowym wielomianem
+spełniającym $f(0,0)=0$. Zapiszmy go jednoznacznie jako
+$f=f_m+f_{m+1}+\cdots+f_d$, gdzie każde $f_j$
+jest jednorodne stopnia $j$, $f_m\ne0$ i $m\ge1$.
+Wielomian $f_m$ nazywamy \emph{formą początkową} $f$
+w początku, a liczbę $m$ \emph{rzędem znikania} $f$
+w tym punkcie i oznaczamy $\operatorname{ord}_0f=m$.
+Dla punktu $p=(a,b)$ przesuwamy współrzędne o $p$.
+\end{definicja}
+
+\begin{definicja}[Stożek styczny krzywej]
+Niech $X=\V_k(f)\subseteq k^2$ będzie krzywą zredukowaną,
+a $p\in X$. Po przesunięciu $p$ do początku wybierzmy
+formę początkową $f_m$ jej zredukowanego równania.
+\emph{Stożkiem stycznym} krzywej w $p$ na poziomie zbioru
+nazywamy $C_pX=\V_k(f_m)\subseteq k^2$.
+Wielomian $f_m$, wraz z krotnościami czynników,
+nazywamy \emph{równaniem stożka stycznego z krotnościami}.
+\end{definicja}
+
+\begin{lemat}[Forma początkowa iloczynu]
+Niech $f,g\in k[x,y]$ będą niezerowe i niech
+$\operatorname{ord}_0f=m$, $\operatorname{ord}_0g=r$.
+Wtedy $\operatorname{ord}_0(fg)=m+r$ i
+$(fg)_{m+r}=f_mg_r$.
+\end{lemat}
+\begin{proof}
+W iloczynie $(f_m+f_{m+1}+\cdots)(g_r+g_{r+1}+\cdots)$
+nie ma wyrazów stopnia mniejszego niż $m+r$,
+a wyraz stopnia $m+r$ jest dokładnie $f_mg_r$.
+Ponieważ pierścień wielomianów nad ciałem jest dziedziną,
+$f_mg_r\ne0$. Nie następuje więc skasowanie całej
+najniższej części.
+\end{proof}
+
+Z lematu wynika, że jeśli ideał krzywej jest główny
+$I(X)=(f)$, formy początkowe jego elementów generują
+ideał $(f_m)$. Dla ideału o wielu generatorach nie wystarcza
+jednak branie najniższej części każdego \emph{podanego}
+generatora: w kombinacjach mogą znikać wyrazy najniższych
+stopni. W ogólnym przypadku definiuje się ideał początkowy
+z \emph{wszystkich} elementów ideału.
+
+\begin{przyklad}[Trzy rodzaje lokalnego zachowania]
+Dla $f=y-x^2$ najniższa część ma stopień $1$ i wynosi $y$.
+Stożek styczny jest prostą $y=0$, zgodną ze zwykłą styczną.
+Dla $g=y^2-x^3$ najniższa część to $y^2$:
+stożek styczny jako \emph{zbiór} jest prostą $y=0$,
+ale z krotnością $2$. Dla
+$h=y^2-x^2(x+1)=y^2-x^2-x^3$ najniższa część
+wynosi $y^2-x^2=(y-x)(y+x)$, co daje
+\emph{dwie różne} styczne $y=x$ i $y=-x$,
+gdy $\operatorname{char}k\ne2$.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[scale=.75,>=Stealth]
+ \begin{scope}[shift={(-4.15,0)}]
+ \draw[->,gray!65] (-1.7,0)--(1.7,0) node[right] {$x$};
+ \draw[->,gray!65] (0,-1.45)--(0,1.6) node[above] {$y$};
+ \draw[blue!75!black,very thick] (-1.4,0)--(1.4,0);
+ \node[below,align=center,font=\small] at (0,-1.65) {ostrze\\podwójna styczna};
+ \end{scope}
+ \begin{scope}[shift={(2.3,0)}]
+ \draw[->,gray!65] (-1.7,0)--(1.7,0) node[right] {$x$};
+ \draw[->,gray!65] (0,-1.45)--(0,1.6) node[above] {$y$};
+ \draw[red!75!black,very thick] (-1.4,-1.4)--(1.4,1.4);
+ \draw[red!75!black,very thick] (-1.4,1.4)--(1.4,-1.4);
+ \node[below,align=center,font=\small] at (0,-1.65) {węzeł\\dwie styczne};
+ \end{scope}
+\end{tikzpicture}
+
+\small Rysunek 3.2. Stożek styczny ostrza i węzła. W obu przypadkach
+przestrzeń styczna Zariskiego ma wymiar $2$, ale stożki styczne
+rozróżniają lokalne kierunki gałęzi.
+\end{center}
+
+\section{Krotność punktu krzywej i styczność przecięć}
+
+\begin{definicja}[Krotność punktu krzywej płaskiej]
+Niech $X=\V_k(f)\subseteq k^2$ będzie zredukowaną krzywą,
+a $p\in X$. \emph{Krotnością krzywej w punkcie $p$}
+nazywamy $\operatorname{mult}_pX=\operatorname{ord}_pf$,
+czyli stopień najniższej niezerowej jednorodnej części
+przesuniętego wielomianu $f$.
+\end{definicja}
+
+\begin{stwierdzenie}[Krotność a gładkość]
+Dla zredukowanej płaskiej krzywej $X=\V_k(f)$
+i punktu $p\in X$ następujące warunki są równoważne:
+$p$ jest gładki, $\operatorname{mult}_pX=1$ oraz
+najniższa część jednorodna równania $f$ jest niezerową
+formą liniową.
+\end{stwierdzenie}
+\begin{proof}
+Po przesunięciu $p$ do początku część liniowa $f$
+ma postać $f_x(p)x+f_y(p)y$. Jest niezerowa dokładnie wtedy,
+gdy co najmniej jedna z pochodnych jest niezerowa.
+Z definicji to właśnie warunek $\operatorname{ord}_pf=1$.
+\end{proof}
+
+\begin{przyklad}[Ostrze i węzeł mają tę samą krotność]
+Dla ostrza $y^2=x^3$ i węzła $y^2=x^2(x+1)$
+mamy $\operatorname{mult}_{(0,0)}=2$.
+Krotność nie rozróżnia tych osobliwości; potrzebny jest
+stożek styczny lub normalizacja.
+\end{przyklad}
+
+\begin{przyklad}[Styczna do ostrza ma krotność przecięcia trzy]
+Niech $C=\V_k(y^2-x^3)$ oraz $L=\V_k(y)$.
+W punkcie $(0,0)$ lokalny pierścień przecięcia ma postać
+\[
+ \bigl(k[x,y]/(y^2-x^3,y)\bigr)_{(x,y)}
+ \cong k[x]_{(x)}/(x^3).
+\]
+Ma on bazę $1,x,x^2$ nad $k$, więc
+$I_{(0,0)}(C,L)=3$. Dla prostej $x=0$ analogicznie
+otrzymujemy $k[y]_{(y)}/(y^2)$, a więc krotność $2$.
+Prosta styczna $y=0$ spotyka ostrze z wyższą krotnością
+niż prosta poprzeczna $x=0$.
+\end{przyklad}
+
+\section{Normalizacja: rozdzielanie gałęzi}
+
+\begin{definicja}[Element całkowity i domknięcie całkowite]
+Niech $A$ będzie dziedziną całkowitości, a
+$K=\Frac(A)$ jej ciałem ułamków. Element $u\in K$
+jest \emph{całkowity nad $A$}, gdy spełnia moniczne
+równanie wielomianowe o współczynnikach z $A$.
+Zbiór wszystkich elementów $K$ całkowitych nad $A$
+nazywamy \emph{domknięciem całkowitym} $A$ w $K$
+i oznaczamy $\overline A$. Dziedzinę $A$ nazywamy
+\emph{normalną}, gdy $\overline A=A$.
+\end{definicja}
+
+\begin{uwaga}[Dlaczego jest to nowa informacja?]
+Pierścień współrzędnych krzywej z ostrzem jest dziedziną,
+a krzywa jest nierozkładalna. Mimo to pierścień ten
+nie jest normalny. Brak normalności wykrywa więc
+zjawisko, którego nie wykrywa sam brak dzielników zera.
+\end{uwaga}
+
+\begin{twierdzenie}[Normalizacja krzywej z ostrzem]
+\label{tw:normalize-cusp}
+Niech $k$ będzie algebraicznie domknięte i
+$A=k[x,y]/(y^2-x^3)$. Wtedy $A$ jest dziedziną,
+$\Frac(A)\cong k(t)$ przez $x=t^2$, $y=t^3$,
+a domknięcie całkowite $A$ w jego ciele ułamków jest
+izomorficzne z $k[t]$. Odpowiadające odwzorowanie
+krzywych to $\nu:\A^1(k)\to\V_k(y^2-x^3)$,
+$t\mapsto(t^2,t^3)$, które jest bijekcją, lecz nie jest
+izomorfizmem algebraicznym.
+\end{twierdzenie}
+\begin{proof}
+W poprzednim rozdziale afinicznym pokazaliśmy szczegółowo,
+że homomorfizm $k[x,y]\to k[t]$,
+$x\mapsto t^2$, $y\mapsto t^3$, ma jądro $(y^2-x^3)$.
+Dlatego $A\cong k[t^2,t^3]\subseteq k[t]$ i jest dziedziną.
+W ciele ułamków $A$ mamy $t=y/x$, ponieważ
+$t^3/t^2=t$ i $x\ne0$ jako element dziedziny.
+Zatem $\Frac(A)=k(t)$.
+
+Element $t$ spełnia moniczne równanie $T^2-x=0$
+o współczynnikach z $A$ i jest całkowity nad $A$.
+Zatem cały $k[t]=A[t]$ jest skończonym modułem nad $A$:
+każda jego potęga redukuje się do kombinacji
+$1,t$ ze współczynnikami w $A$.
+W szczególności każdy element $k[t]$ jest całkowity nad $A$
+na mocy lematu~\ref{lem:determinant-integral}.
+
+Odwrotnie, niech $u\in k(t)$ będzie całkowity nad $A$.
+Ponieważ $A\subseteq k[t]$, to samo moniczne równanie
+pokazuje, że $u$ jest całkowity nad $k[t]$.
+Pierścień $k[t]$ jest pierścieniem euklidesowym, a więc
+UFD; pierścień UFD jest całkowicie domknięty w swoim
+ciele ułamków. Krótko uzasadnijmy ostatni fakt:
+jeśli $u=a/b$ jest ułamkiem nieskracalnym i spełnia
+$u^m+c_{m-1}u^{m-1}+\cdots+c_0=0$, to po pomnożeniu
+przez $b^m$ otrzymujemy
+$a^m=-b(c_{m-1}a^{m-1}+\cdots+c_0b^{m-1})$.
+Jeżeli $b$ byłby nieodwracalny, pewien jego czynnik
+nierozkładalny dzieliłby $a^m$, a więc $a$, wbrew
+nieskracalności. Zatem $b$ jest jednostką i $u\in k[t]$.
+Otrzymaliśmy $\overline A=k[t]$.
+
+Ostatnie zdanie o bijektywności i braku izomorfizmu
+udowodniliśmy w przykładzie~\ref{pr:cusp}.
+\end{proof}
+
+\begin{przyklad}[Normalizacja węzła rozdziela dwa punkty]
+\label{pr:node-normalization}
+Przyjmijmy $\operatorname{char}k\ne2$ i rozważmy
+$C=\V_k(y^2-x^2(x+1))$. Odwzorowanie
+\[
+ \nu:\A^1(k)\to C,\qquad
+ t\longmapsto(t^2-1,\ t(t^2-1))
+\]
+ma wartości w $C$, ponieważ dla $x=t^2-1$ zachodzi
+$y^2=t^2x^2=(x+1)x^2$.
+Dla $x\ne0$ parametr jest określony jednoznacznie
+przez $t=y/x$. W punkcie $x=0$, $y=0$
+warunek $t^2-1=0$ daje \emph{dwa} parametry $t=1$ i $t=-1$.
+Dla porównania ostrze ma nad osobliwym punktem tylko
+jeden parametr $t=0$.
+
+Homomorfizm $k[x,y]/(y^2-x^2(x+1))\to k[t]$
+jest różnowartościowy: każdy wielomian po redukcji modulo
+równanie krzywej ma postać $A(x)+yB(x)$, a jego obraz
+ma postać $A(t^2-1)+t(t^2-1)B(t^2-1)$.
+Pierwszy składnik jest parzysty w $t$, drugi nieparzysty;
+przy $\operatorname{char}k\ne2$ ich suma może znikać
+jako wielomian tylko wtedy, gdy oba są zerowe.
+Podstawienie $x=t^2-1$ jest różnowartościowe, więc
+$A=B=0$. Otrzymujemy w ten sposób pierścień współrzędnych
+jako podpierścień $k[t]$.
+Ponieważ $t^2=x+1$ i $t=y/x$ w ciele ułamków,
+rozszerzenie do $k[t]$ jest skończone i całkowite,
+a ten ostatni pierścień jest normalny. Tym samym
+$\nu$ realizuje normalizację krzywej z węzłem.
+\end{przyklad}
+
+\section{Rozdmuchanie punktu: zastąpienie punktu kierunkami}
+
+\begin{definicja}[Rozdmuchanie płaszczyzny w początku]
+\label{def:blowup-plane}
+W przestrzeni $\A^2(k)\times\PP^1(k)$
+o współrzędnych $((x,y),[s:t])$ rozważmy zbiór
+\[
+ B=\{((x,y),[s:t]):xt=ys\}.
+\]
+Odwzorowanie $\pi:B\to\A^2(k)$,
+$\pi((x,y),[s:t])=(x,y)$, nazywamy
+\emph{rozdmuchaniem płaszczyzny w początku}.
+Włókno $E=\pi^{-1}(0,0)\cong\PP^1(k)$ to
+\emph{dzielnik wyjątkowy}.
+\end{definicja}
+
+\begin{stwierdzenie}[Co dzieje się z punktami?]
+Dla każdego $(x,y)\ne(0,0)$ włókno
+$\pi^{-1}(x,y)$ składa się z jednego punktu,
+o współrzędnej rzutowej $[s:t]=[x:y]$.
+Nad $(0,0)$ całe $\PP^1(k)$ jest włóknem.
+Zbiór $B$ pokrywają dwie mapy afiniczne:
+przy $s\ne0$ mamy współrzędne $(u,v)$ określone przez
+$x=u$, $y=uv$; przy $t\ne0$ mamy
+$x=uv$, $y=u$.
+\end{stwierdzenie}
+\begin{proof}
+Jeśli $(x,y)\ne0$, równanie $xt=ys$ oznacza,
+że wektory $(x,y)$ i $(s,t)$ są proporcjonalne,
+a więc wyznaczają tę samą klasę $[x:y]$.
+Dla $(x,y)=0$ równanie jest tożsamością $0=0$,
+więc nie ogranicza $[s:t]$.
+Gdy $s\ne0$, piszemy $[s:t]=[1:v]$;
+z $xt=y$ otrzymujemy $y=xv$. Ustawienie $u=x$
+daje zapowiedziane współrzędne. Gdy $t\ne0$, piszemy
+$[s:t]=[v:1]$, skąd $x=yv$ i można przyjąć $u=y$.
+W obu mapach dzielnik wyjątkowy ma równanie $u=0$.
+\end{proof}
+
+\noindent\begin{minipage}{\linewidth}\centering
+\begin{tikzpicture}[>=Stealth,scale=.87]
+  % Left: image in A^2; right: symbolic local chart of blow-up.
+  \draw[->,gray!70] (-2.45,0)--(2.35,0) node[right] {$x$};
+  \draw[->,gray!70] (0,-1.85)--(0,1.95) node[above] {$y$};
+  \fill (0,0) circle (2.3pt);
+  \draw[blue!70!black,thick] (-1.65,-1.2)--(1.65,1.2);
+  \draw[red!70!black,thick] (-1.6,1.3)--(1.6,-1.3);
+  \node[anchor=north,font=\small] at (0,-2.02) {płaszczyzna $\A^2$};
+  % A genuine blow-up map points from the new space to the original plane.
+  \draw[<-,thick] (2.65,0)--(4.35,0) node[midway,above] {$\pi$};
+  \draw[rounded corners=5pt,thick,gray!70,fill=gray!6]
+      (4.55,-1.7) rectangle (8.35,1.65);
+  \draw[thick,densely dashed] (6.15,-1.25)--(6.15,1.25);
+  \draw[blue!70!black,thick] (4.77,-1.12)--(6.15,-.23);
+  \draw[red!70!black,thick] (4.77,.95)--(6.15,.23);
+  \fill[blue!70!black] (6.15,-.23) circle (2pt);
+  \fill[red!70!black] (6.15,.23) circle (2pt);
+  \node[anchor=west,font=\small,fill=white,inner sep=1pt]
+      at (6.35,.95) {$E\cong\PP^1$};
+  \node[anchor=north,font=\small] at (6.45,-1.83) {lokalny szkic $\widetilde{\A^2}$};
+\end{tikzpicture}
+
+\small Rysunek 3.3. Szkic lokalny (nie obraz metryczny): morfizm $\pi$ wysyła cały dzielnik wyjątkowy na początek; rozdmuchanie zastępuje początek
+całą prostą rzutową kierunków. Rzeczywiste rozdmuchanie nie jest
+po prostu płaską figurą naszkicowaną po prawej.
+\end{minipage}
+
+\begin{definicja}[Transformata właściwa krzywej]
+Niech $C\subseteq\A^2(k)$ będzie krzywą zawierającą
+$(0,0)$. \emph{Transformatą właściwą} $\widetilde C\subseteq B$
+nazywamy domknięcie zbioru $\pi^{-1}(C\setminus\{(0,0)\})$
+w topologii Zariskiego na $B$.
+\end{definicja}
+
+\begin{przyklad}[Rozdmuchanie ostrza]
+Dla $C=\V_k(y^2-x^3)$ w mapie $x=u$, $y=uv$
+podstawiamy do równania krzywej:
+$u^2v^2-u^3=u^2(v^2-u)=0$.
+Czynnik $u^2$ opisuje składową wspartą na dzielniku
+wyjątkowym i nie należy do równania \emph{transformaty
+właściwej}. Aby otrzymać jej równanie, na zbiorze $u\ne0$
+dzielimy przez $u^2$, a następnie bierzemy domknięcie.
+Otrzymujemy $\widetilde C:\ v^2=u$.
+
+Krzywa $v^2=u$ jest gładka: pochodna równania
+$v^2-u$ względem $u$ jest stałą $-1$.
+W szczególności osobliwość samej krzywej zniknęła po
+jednym rozdmuchaniu. Jednak transformata właściwa
+jest styczna do dzielnika wyjątkowego $E:\ u=0$
+w ich wspólnym punkcie $(u,v)=(0,0)$, ponieważ
+wzór $u=v^2$ ma w początku kierunek $u=0$.
+Gdy celem jest uzyskanie przecięć normalnych, potrzebne
+są dalsze operacje.
+\end{przyklad}
+
+\begin{przyklad}[Rozdmuchanie węzła]
+Dla $C=\V_k(y^2-x^2(x+1))$ i $\operatorname{char}k\ne2$
+w tej samej mapie podstawienie $x=u$, $y=uv$ daje
+$u^2(v^2-u-1)=0$; transformata właściwa spełnia
+$v^2=u+1$. Na dzielniku wyjątkowym $u=0$ pojawiają się
+dwa punkty $(0,1)$ i $(0,-1)$. Są różne i gładkie,
+a styczne transformaty nie pokrywają się tam ze styczną
+do dzielnika $u=0$: różniczka
+$2v\,dv-du$ ma w każdym z tych punktów niezerowy
+współczynnik przy $dv$. Rozdmuchanie rozdzieliło
+obie gałęzie węzła.
+\end{przyklad}
+
+\section{Wstęp do rodzaju krzywej: algebra spotyka topologię}
+
+Dla gładkich zespolonych krzywych rzutowych geometria
+algebraiczna łączy się z topologią powierzchni zwartych.
+Krzywa zredukowana, nierozkładalna i gładka nad $\C$
+jest zwartą powierzchnią Riemanna, a więc ma rodzaj
+$g\in\Z_{\ge0}$, oznaczający liczbę jej uchwytów.
+Dla krzywych osobliwych należy rozróżnić rodzaj
+arytmetyczny i rodzaj gładkiej normalizacji.
+
+\begin{definicja}[Rodzaj arytmetyczny płaskiej krzywej z ustaloną strukturą]
+Niech $k$ będzie ciałem, $S=k[X,Y,Z]$, a $F\in S$
+niezerową formą jednorodną stopnia $d\ge1$.
+Rozpatrujemy \emph{krzywą określoną przez jednorodny
+ideał $(F)$}, czyli nie tylko zbiór punktów
+$\V_+(F)$, lecz także stopniowany pierścień $S/(F)$.
+Dla $m$ dostatecznie dużego jego funkcja Hilberta ma
+postać $\dim_k(S/(F))_m=dm+1-p_a(F)$.
+Liczbę $p_a(F)$ nazywamy \emph{rodzajem arytmetycznym}
+tej krzywej ze strukturą określoną przez $(F)$.
+Dla zredukowanej krzywej płaskiej jej równanie jest
+wyznaczone z dokładnością do niezerowego skalara,
+więc zapis $p_a(C)$ nie powoduje niejednoznaczności.
+\end{definicja}
+
+\begin{przyklad}[Dlaczego sam zbiór punktów nie wystarcza?]
+Równania $F=X$ oraz $G=X^3$ wyznaczają ten sam
+zbiór punktów $\V_+(F)=\V_+(G)$ w $\PP^2(k)$.
+Jednak $S/(X)$ i $S/(X^3)$ nie są izomorficznymi
+pierścieniami stopniowanymi: drugi zawiera niezerowe
+nilpotenty. Z poniższego twierdzenia wynika
+$p_a(F)=0$, natomiast $p_a(G)=1$.
+Dlatego rodzaju arytmetycznego struktury \emph{nie wolno}
+przypisywać dowolnemu równaniu tylko na podstawie
+jego zbioru zer, bez określenia krotności.
+\end{przyklad}
+
+\begin{twierdzenie}[Rodzaj arytmetyczny krzywej płaskiej]
+\label{tw:arithmetic-genus-plane}
+Niech $k$ będzie ciałem, $S=k[X,Y,Z]$, a $F\in S$
+niezerową formą stopnia $d\ge1$. Dla każdego $m\ge d$
+funkcja Hilberta ilorazu $S/(F)$ jest równa $dm+1-p_a$,
+gdzie $p_a=(d-1)(d-2)/2$.
+\end{twierdzenie}
+\begin{proof}
+Mnożenie przez $F$ jest różnowartościowe,
+ponieważ pierścień $k[X,Y,Z]$ jest dziedziną.
+W dokładnym ciągu stopniowanym
+$0\to S(-d)\xrightarrow{\cdot F}S\to S/(F)\to0$
+w składowej stopnia $m\ge d$ dostajemy
+\[
+ \dim_k(S/(F))_m=\binom{m+2}{2}-\binom{m-d+2}{2}
+ =dm+\frac{3d-d^2}{2}.
+\]
+Porównując wyraz stały z zapisem $dm+1-p_a$,
+otrzymujemy $p_a=1-(3d-d^2)/2=(d-1)(d-2)/2$.
+\end{proof}
+
+\begin{uwaga}[Rodzaj topologiczny może być mniejszy]
+Dla gładkiej krzywej płaskiej nad $\C$ rodzaj
+arytmetyczny zgadza się z topologicznym rodzajem
+powierzchni Riemanna; dowód tej głębokiej zgodności
+przeprowadzimy dopiero po wprowadzeniu dywizorów
+i twierdzenia Riemanna--Roch. Dla osobliwej krzywej
+kubicznej $p_a=1$, chociaż normalizacje zarówno
+kubiki z ostrzem, jak i z węzłem są izomorficzne
+z $\PP^1$, której rodzaj topologiczny jest równy $0$.
+Ta rozbieżność jest informacją o osobliwości, nie błędem
+w rachunku rodzaju.
+\end{uwaga}
+
+\section{Podsumowanie: trzy poziomy badania osobliwości}
+
+Przestrzeń styczna $T_pX$ wykrywa brak zwykłego kierunku
+stycznego, lecz dla dwóch różnych osobliwości może być
+jednakowo duża. Stożek styczny odróżnia pojedynczą
+wielokrotną styczną od kilku różnych kierunków.
+Lokalny pierścień zachowuje krotności przecięć, a jego
+normalizacja może rozdzielić gałęzie przechodzące przez
+ten sam punkt. Rozdmuchanie zastępuje punkt przestrzenią
+kierunków i pozwala geometrycznie badać powstawanie
+osobliwości oraz ich rozwiązywanie.
+
+W kolejnym rozdziale naturalnie przejdziemy do
+całościowej teorii krzywych algebraicznych:
+dywizorów, funkcji wymiernych, różniczek regularnych,
+twierdzenia Riemanna--Roch i rodzaju krzywej.
+
+
+% Rozdział 4. Algebra przemienna (wraz z going up i płaskością), snopy i krzywe.
+% Numeracja zachowuje dotychczasowy układ rozdziałów 0--3.

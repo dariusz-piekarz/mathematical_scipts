@@ -1,0 +1,258 @@
+\chapter{MANOVA i MANCOVA: wnioskowanie o wielu wynikach jednocześnie}
+\label{ch:manova-mancova}
+\paragraph{Powiązania i odsyłacze.} Teorię modeli liniowych i ANOVA znajdziesz w rozdziałach~\ref{ch:linear-regression} i~\ref{ch:anova-ancova}; dobór testu omawia rozdział~\ref{ch:stat-laboratory}.
+
+
+\section{Motywacja: kilka wyników nie oznacza kilku niezależnych eksperymentów}
+Załóżmy, że porównujemy trzy sposoby rehabilitacji. U każdego pacjenta mierzymy czas chodu, siłę mięśni i wynik skali funkcjonalnej. Oddzielne testowanie każdej zmiennej może nie wykryć zmiany ich \emph{wspólnego} profilu; może także prowadzić do problemu wielokrotnego testowania. \emph{Wielowymiarowa analiza wariancji} (MANOVA) testuje hipotezę dotyczącą wektora średnich, uwzględniając kowariancje między wynikami. Gdy dodatkowo uwzględniamy kowarianty, otrzymujemy \emph{wielowymiarową analizę kowariancji} (MANCOVA).
+
+Nie należy mylić wielu \emph{zmiennych wynikowych u tej samej osoby} z wieloma \emph{pomiarami tej samej cechy w kolejnych chwilach}. W szczególności odrzucenie globalnej hipotezy MANOVA nie oznacza, że różnią się wszystkie poszczególne wyniki; do wskazania konkretnych zmiennych lub kontrastów potrzebna jest osobna, odpowiednio zaplanowana analiza. W obu sytuacjach występuje korelacja, lecz w tej drugiej zwykle ważne są porządek czasu, trajektoria i brakujące wizyty; zajmiemy się tym w rozdziale~\ref{ch:repeated-measures}.
+
+\begin{center}
+\begin{tikzpicture}[x=1.12cm,y=.82cm,>=Latex]
+\draw[->] (0,0)--(7.5,0) node[right,font=\small] {wynik 1};
+\draw[->] (0,0)--(0,4.6) node[above,font=\small] {wynik 2};
+\draw[blue!70!black,thick,rotate around={27:(2.7,2.15)}] (2.7,2.15) ellipse (1.5 and .48);
+\draw[red!65!black,thick,rotate around={27:(4.5,2.95)}] (4.5,2.95) ellipse (1.5 and .48);
+\fill[blue!75!black] (2.7,2.15) circle (2.8pt);
+\fill[red!65!black] (4.5,2.95) circle (2.8pt);
+\draw[->,thick] (2.7,2.15)--(4.5,2.95);
+\node[below,font=\footnotesize,blue!70!black] at (2.7,1.98) {grupa A};
+\node[above,font=\footnotesize,red!65!black] at (4.65,3.15) {grupa B};
+\node[align=center,font=\footnotesize] at (5.9,1.1) {kierunek różnicy\\średnich};
+\end{tikzpicture}
+
+{\small\emph{Rysunek 29.1.} Schemat: MANOVA porównuje wektory średnich z uwzględnieniem kierunków współzmienności wyników; elipsy są poglądowe, nie oznaczają konkretnych przedziałów ufności.}
+\end{center}
+
+\begin{definicja}[Wielowymiarowy model liniowy]\label{def:multivariate-linear}
+Niech $n,p,r\ge1$, $X\in\R^{n\times r}$ będzie ustaloną macierzą pełnej rangi $r<n$, $B\in\R^{r\times p}$ macierzą nieznanych współczynników, a $\Sigma\in\R^{p\times p}$ nieznaną dodatnio określoną macierzą. Obserwujemy $Y\in\R^{n\times p}$ w modelu
+\[
+ Y=XB+U,\qquad U_{i\cdot}\ \text{są niezależne o rozkładzie }\Normal_p(0,\Sigma),\quad 1\le i\le n.
+\]
+Symbol $U_{i\cdot}$ oznacza $i$-ty wiersz macierzy $U$ traktowany jako wektor w $\R^p$; $\Normal_p(0,\Sigma)$ jest $p$-wymiarowym rozkładem normalnym o zerowym wektorze średniej i macierzy kowariancji $\Sigma$. Niezależność wierszy dotyczy \emph{jednostek}, natomiast współrzędne jednego wiersza mogą być skorelowane.
+\end{definicja}
+
+Przy kodowaniu grup kolumnami wskaźnikowymi jest to MANOVA; po dodaniu kolumn odpowiadających kowariantom -- MANCOVA. Jeżeli kowarianty są losowe, wszystkie poniższe dokładne rozkłady należy rozumieć \emph{warunkowo względem macierzy $X$}, przy założeniu o wskazanym rozkładzie błędów warunkowych.
+
+\begin{stwierdzenie}[Estymator i macierz reszt]\label{prop:multiv-ols}
+W modelu~\ref{def:multivariate-linear} estymator metodą najmniejszych kwadratów i macierz sum iloczynów reszt mają postać
+\[
+ \widehat B=(X^\top X)^{-1}X^\top Y,\qquad E=Y^\top(I-P_X)Y,\quad P_X=X(X^\top X)^{-1}X^\top.
+\]
+Ponadto $\E\widehat B=B$ i $\Cov(\widehat B_{j\cdot},\widehat B_{l\cdot})=((X^\top X)^{-1})_{jl}\Sigma$.
+\end{stwierdzenie}
+\begin{proof}
+Minimalizujemy $\operatorname{tr}((Y-XC)^\top(Y-XC))$ po $C\in\R^{r\times p}$. Równania normalne to $X^\top XC=X^\top Y$; macierz $X^\top X$ jest odwracalna. Wstawienie $Y=XB+U$ daje $\widehat B-B=(X^\top X)^{-1}X^\top U$. Kowariancje wierszy $U$ są zerowe dla różnych jednostek i równe $\Sigma$ w obrębie wiersza, więc po rozwinięciu sum otrzymujemy tezę o kowariancji. Reszty wynoszą $(I-P_X)Y$.
+\end{proof}
+
+\section{Macierze hipotezy i błędu: ścisła konstrukcja}
+\begin{definicja}[Hipoteza wielowymiarowa i macierze $H,E$]\label{def:manova-he}
+Niech $M_R\subsetneq M_F\subset\R^n$ będą \emph{ustalonymi} podprzestrzeniami wymiarów odpowiednio $r_R<r_F<n$. Niech $P_R,P_F$ będą rzutami ortogonalnymi na te podprzestrzenie i oznaczmy $q=r_F-r_R$, $\nu=n-r_F$. Rozważamy model $Y=\mu+U$, w którym $\mu\in\R^{n\times p}$ jest nieznaną macierzą wartości oczekiwanych, każdy słupek $\mu$ należy do $M_F$, a wiersze $U$ są niezależne $\Normal_p(0,\Sigma)$. Testujemy hipotezę $H_0:\ \text{każdy słupek }\mu\text{ należy do }M_R$. Definiujemy
+\[
+ H=Y^\top(P_F-P_R)Y,\qquad E=Y^\top(I-P_F)Y.
+\]
+Są to odpowiednio \emph{macierz sum iloczynów hipotezy} i \emph{macierz sum iloczynów błędu}. Obie są symetryczne i nieujemnie określone. Dalej zakładamy $\nu\ge p$, aby $E$ była dodatnio określona niemal na pewno w modelu normalnym.
+\end{definicja}
+
+\begin{definicja}[Rozkład Wisharta]\label{def:wishart-manova}
+Dla $p,m\ge1$ i dodatnio określonej $\Sigma\in\R^{p\times p}$ rozkładem $W_p(\Sigma,m)$ nazywamy rozkład macierzy $\sum_{i=1}^m Z_iZ_i^\top$, gdzie $Z_i$ są niezależne o rozkładzie $\Normal_p(0,\Sigma)$. Macierz taka ma wartość oczekiwaną $m\Sigma$ i jest dodatnio określona niemal na pewno, jeżeli $m\ge p$.
+\end{definicja}
+
+\begin{twierdzenie}[Dokładny rozkład macierzy $H,E$ pod hipotezą zerową]\label{thm:wishart-he}
+W warunkach definicji~\ref{def:manova-he}, pod $H_0$ macierze $H$ i $E$ są niezależne oraz
+\[
+ H\sim W_p(\Sigma,q),\qquad E\sim W_p(\Sigma,\nu).
+\]
+\end{twierdzenie}
+\begin{proof}
+Macierze $Q=P_F-P_R$ i $R=I-P_F$ są rzutami ortogonalnymi o rzędach $q$ i $\nu$ oraz $QR=0$. Wybierzmy ortonormalne bazy ich obrazów i dopełnijmy je do bazy $\R^n$. Lewostronne pomnożenie $U$ przez otrzymaną macierz ortogonalną nie zmienia jego rozkładu: po transformacji wiersze wciąż są niezależne o rozkładzie $\Normal_p(0,\Sigma)$. Pod $H_0$ mamy $Q\mu=R\mu=0$. Zatem $Y^\top QY$ i $Y^\top RY$ są sumami iloczynów odpowiednio $q$ i $\nu$ \emph{rozłącznych} podrodzin niezależnych normalnych wierszy. Definicja~\ref{def:wishart-manova} daje oba rozkłady i niezależność.
+\end{proof}
+
+\begin{uwaga}[Co znaczy dokładność?]
+Twierdzenie dotyczy stałego, z góry określonego projektu i wspólnej macierzy kowariancji we wszystkich jednostkach. Nie obejmuje niezależności pozornej (np. dwóch wizyt jednego pacjenta), różnych $\Sigma$ w grupach ani selekcji wyników i kowariant po obejrzeniu danych. Przy liczbie wyników bliskiej liczbie niezależnych jednostek macierz $E$ może być źle uwarunkowana nawet wtedy, gdy formalnie jest odwracalna.
+\end{uwaga}
+
+\section{Cztery klasyczne statystyki wielowymiarowe}
+\begin{definicja}[Pierwiastki charakterystyczne MANOVA]\label{def:manova-roots}
+Niech $H,E\in\R^{p\times p}$ będą symetryczne nieujemnie określone, a $E$ dodatnio określona. Niech $\lambda_1\ge\cdots\ge\lambda_p\ge0$ będą wartościami własnymi macierzy symetrycznej $E^{-1/2}HE^{-1/2}$. Definiujemy
+\[
+ \Lambda_{\mathrm W}=\frac{\det E}{\det(E+H)},\quad
+ V_{\mathrm P}=\operatorname{tr}((E+H)^{-1}H),\quad
+ T_{\mathrm{HL}}=\operatorname{tr}(E^{-1}H),\quad
+ \Theta_{\mathrm R}=\lambda_1.
+\]
+Nazywamy je odpowiednio \emph{lambdą Wilksa}, \emph{śladem Pillaia}, \emph{śladem Hotellinga--Lawleya} i \emph{największym pierwiastkiem Roya}. Zdarza się także konwencja Roya $\lambda_1/(1+\lambda_1)$, dlatego zawsze trzeba podać zastosowaną definicję.
+\end{definicja}
+
+\begin{twierdzenie}[Postać spektralna i niezmienniczość]\label{thm:manova-spectra}
+Dla macierzy z definicji~\ref{def:manova-roots} zachodzi
+\[
+ \Lambda_{\mathrm W}=\prod_{j=1}^p(1+\lambda_j)^{-1},\quad
+ V_{\mathrm P}=\sum_{j=1}^p\frac{\lambda_j}{1+\lambda_j},\quad
+ T_{\mathrm{HL}}=\sum_{j=1}^p\lambda_j,\quad \Theta_{\mathrm R}=\max_j\lambda_j.
+\]
+Jeżeli jednocześnie przekształcimy wszystkie wyniki za pomocą odwracalnej macierzy $A\in\R^{p\times p}$, zastępując $H,E$ przez $A^\top HA,A^\top EA$, wszystkie cztery statystyki pozostają niezmienione.
+\end{twierdzenie}
+\begin{proof}
+Zapiszmy $S=E^{-1/2}HE^{-1/2}$. Wówczas $\det(E+H)=\det E\det(I+S)$, a cykliczność śladu daje $\operatorname{tr}(E^{-1}H)=\operatorname{tr}S$ oraz $\operatorname{tr}((E+H)^{-1}H)=\operatorname{tr}((I+S)^{-1}S)$. Diagonalizacja symetrycznej macierzy $S$ prowadzi do wzorów. Przy zmianie $E\mapsto A^\top EA$, $H\mapsto A^\top HA$ wielomian $\det(H-tE)$ mnoży się przez $(\det A)^2$, więc jego pierwiastki, równe $\lambda_j$, nie zmieniają się.
+\end{proof}
+
+\begin{twierdzenie}[Wilks jako iloraz największych wiarygodności]\label{thm:wilks-lrt-manova}
+Niech model wielowymiarowy będzie normalny jak w definicji~\ref{def:manova-he}, niech $\nu\ge p$ i niech porównywane podprzestrzenie są ustalone. Maksymalizując wiarygodność względem macierzy średnich w obu modelach i dodatnio określonej $\Sigma$, otrzymujemy iloraz największych wiarygodności modelu ograniczonego i pełnego równy $\Lambda_{\mathrm W}^{n/2}$.
+\end{twierdzenie}
+\begin{proof}
+Dla zadanej macierzy średnich $M$ logarytm wiarygodności, z pominięciem stałej, to $-\frac n2\log\det\Sigma-\frac12\operatorname{tr}(\Sigma^{-1}(Y-M)^\top(Y-M))$. Dla ustalonej $\Sigma$ najlepsza macierz $M$ jest rzutem $P_RY$ albo $P_FY$. Odpowiednie macierze reszt to $E+H$ i $E$. Dla dowolnej dodatnio określonej macierzy reszt $S$ maksimum po $\Sigma$ osiąga się przy $\widehat\Sigma=S/n$, ponieważ dla $A=\Sigma^{-1/2}(S/n)\Sigma^{-1/2}$ nierówność $\operatorname{tr}A-\log\det A\ge p$ zachodzi po diagonalizacji. Zostaje czynnik proporcjonalny do $(\det S)^{-n/2}$. Zatem stosunek wynosi $(\det E/\det(E+H))^{n/2}$.
+\end{proof}
+
+\begin{uwaga}[Kalibracja wartości p]
+Dla wielu wymiarów i wielu niezależnych kontrastów $\Lambda_{\mathrm W}$, $V_{\mathrm P}$, $T_{\mathrm{HL}}$ i $\Theta_{\mathrm R}$ mają na ogół \emph{różne} rozkłady zerowe; nie wolno automatycznie podstawiać ich do rozkładu $F$ z jedną uniwersalną liczbą stopni swobody. Programy wykorzystują dokładne wzory w wybranych przypadkach, przybliżenia $F$ albo metody numeryczne. Warto podać metodę kalibracji i stopnie swobody, a nie tylko samą wartość p. \emph{Nie} należy mylić rozkładu lambda Wilksa z twierdzeniem Wilksa o asymptotycznym rozkładzie ilorazu wiarygodności, omówionym w rozdziale~\ref{ch:asymptotic-estimation}.
+\end{uwaga}
+
+\section{Dwie grupy i dokładny test Hotellinga}
+\begin{twierdzenie}[Dwuprobkowy test $T^2$ Hotellinga]\label{thm:hotelling-two-sample}
+Niech $p\ge1$, $n_0,n_1\ge2$, $N=n_0+n_1>p+1$. Niech $Y_{gi}$, $g\in\{0,1\}$, $1\le i\le n_g$, będą niezależne, $Y_{gi}\sim\Normal_p(\mu_g,\Sigma)$, z tą samą dodatnio określoną $\Sigma$. Niech $S_p$ będzie wspólną, nieobciążoną macierzą kowariancji
+\[
+ S_p=\frac{\sum_{g=0}^1\sum_{i=1}^{n_g}(Y_{gi}-\bar Y_g)(Y_{gi}-\bar Y_g)^\top}{N-2}.
+\]
+Przy $H_0:\mu_0=\mu_1$ statystyka $T^2=\frac{n_0n_1}{N}(\bar Y_1-\bar Y_0)^\top S_p^{-1}(\bar Y_1-\bar Y_0)$ spełnia
+\[
+ \frac{N-p-1}{p(N-2)}T^2\sim F_{p,N-p-1}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Niech $\nu=N-2$ i $z=\sqrt{n_0n_1/N}\,\Sigma^{-1/2}(\bar Y_1-\bar Y_0)$. Pod hipotezą zerową $z\sim\Normal_p(0,I)$, natomiast $W=\Sigma^{-1/2}(\nu S_p)\Sigma^{-1/2}\sim W_p(I,\nu)$. Z twierdzenia~\ref{thm:wishart-he} oraz niezależności normalnej średniej od reszt mamy $z\perp W$. Aby ustalić rozkład $z^\top W^{-1}z$, dla $z\ne0$ obróćmy układ współrzędnych tak, by pierwszy wektor osiowy był równy $z/\|z\|$. Dzięki ortogonalnej niezmienniczości $W$ rozkład elementu $(W^{-1})_{11}$ nie zależy od obrotu. Zapisując $W=A^\top A$ dla macierzy $A\in\R^{\nu\times p}$ o niezależnych standardowych elementach normalnych i stosując wzór na odwrotność macierzy blokowej, otrzymujemy
+\[
+ (W^{-1})_{11}^{-1}=a_1^\top(I-P_{A_2})a_1\sim\chi^2_{\nu-p+1},
+\]
+gdzie $a_1$ jest pierwszą kolumną $A$, $A_2$ zawiera pozostałe kolumny, a $P_{A_2}$ rzutuje na ich rozpiętość (ma ona niemal na pewno wymiar $p-1$). Ponieważ $\|z\|^2\sim\chi^2_p$ jest niezależne od $W$, mamy $z^\top W^{-1}z\stackrel d=\chi_p^2/\chi_{\nu-p+1}^2$ z niezależnymi licznikami. Ponieważ $T^2=\nu z^\top W^{-1}z$, otrzymujemy zadany rozkład $F$.
+\end{proof}
+
+\begin{wniosek}[Jeden kontrast grupowy]\label{cor:manova-rankone}
+W warunkach definicji~\ref{def:manova-he}, jeśli $q=1$ i $\nu\ge p$, wszystkie niezerowe pierwiastki charakterystyczne sprowadzają się do jednego $\lambda$. Wówczas $\Lambda_{\mathrm W}=(1+\lambda)^{-1}$, $V_{\mathrm P}=\lambda/(1+\lambda)$, $T_{\mathrm{HL}}=\Theta_{\mathrm R}=\lambda$ i statystyka $\frac{\nu-p+1}{p}\lambda$ ma pod $H_0$ rozkład $F_{p,\nu-p+1}$.
+\end{wniosek}
+\begin{proof}
+Dla $q=1$ macierz $H$ ma rząd co najwyżej jeden, stąd tożsamości spektralne. Rozkład wynika z dowodu twierdzenia~\ref{thm:hotelling-two-sample}, którego argument wykorzystuje jedynie niezależny standardowy wektor normalny i macierz Wisharta o $\nu$ stopniach swobody, a nie szczególną postać macierzy wskaźników grup.
+\end{proof}
+
+\begin{zadanie}[Hotelling a oddzielne testy dwóch wyników]
+Dla dwóch niezależnych grup po $10$ osób zmierzono dwa wyniki. Załóżmy poprawny model normalny o wspólnej kowariancji i przyjmijmy zaobserwowaną różnicę średnich $\bar Y_1-\bar Y_0=(1,1)^\top$ oraz połączoną macierz kowariancji
+$S_p=\begin{pmatrix}1&0{,}4\\0{,}4&1\end{pmatrix}$.
+Wyznacz statystykę testu globalnego i porównaj decyzję z oddzielnymi testami t przy poziomie $0{,}05$.\par
+\emph{Rozwiązanie.} Mamy $N=20$, $p=2$, $S_p^{-1}(1,1)^\top=(1/1{,}4)(1,1)^\top$, zatem $T^2=5\cdot 2/1{,}4=50/7\approx7{,}143$. Dokładna statystyka $F=\frac{17}{36}T^2\approx3{,}373$ ma pod $H_0$ rozkład $F_{2,17}$, co daje wartość p około $0{,}0584$. Test globalny nie odrzuca na poziomie $0{,}05$. Każdy osobny test t ma natomiast statystykę $1/\sqrt{1/10+1/10}\approx2{,}236$ i dwustronną wartość p około $0{,}0382$. To nie jest sprzeczność: hipotezy i statystyki są różne, a dwie nieskorygowane wartości p nie zapewniają kontroli błędu rodzinnego na poziomie $0{,}05$. Wniosek o konkretnych wynikach wymaga zaplanowanych kontrastów i uwzględnienia wielokrotności.
+\end{zadanie}
+
+\section{MANCOVA: korekta o kowarianty, kontrasty i interpretacja}
+W MANCOVA dodajemy do macierzy $X$ kolumny zmiennych objaśniających mierzonych przed interwencją. Na przykład dla trzech grup i wieku $x_i$ porównujemy modele $M_R$ i $M_F$, gdzie do obu należy wyraz wolny oraz wiek, a tylko do pełnego należą dwa wskaźniki grup. Wówczas $q=2$ i test dotyczy \emph{łącznie wszystkich $p$ wyników}. Gdy nachylenie względem wieku różni się między grupami, należy modelować interakcję grupa$\times$wiek; wspólny współczynnik nie wynika z samej nazwy ANCOVA.
+
+\begin{stwierdzenie}[Korekta o kowarianty jako test częściowy]\label{prop:mancova-adjusted}
+Niech $Z\in\R^{n\times s}$ ma pełną rangę i zawiera wyraz wolny oraz kowarianty, a $G\in\R^{n\times q}$ koduje porównywane grupy. Jeśli $X_F=[Z\ G]$ ma pełną rangę, to w wielowymiarowym modelu liniowym $Y=X_FB+U$ test hipotezy, że wszystkie współczynniki odpowiadające kolumnom $G$ są zerowe, można przeprowadzić przez parę
+$E=Y^\top(I-P_{X_F})Y$, $H=Y^\top(P_{X_F}-P_Z)Y$.
+\end{stwierdzenie}
+\begin{proof}
+Hipoteza ustala, że kolumny średniej $\E Y$ leżą w $\operatorname{im}Z$. Model pełny dopuszcza całą przestrzeń $\operatorname{im}X_F$. Podprzestrzenie są zagnieżdżone, więc bezpośrednio stosujemy definicję~\ref{def:manova-he}.
+\end{proof}
+
+\begin{uwaga}[Kiedy MANOVA/MANCOVA nie są dobrym wyborem?]
+Model wymaga sensownej wspólnej analizy kilku wyników i odpowiedniego stosunku liczby niezależnych jednostek do $p$. Silna kolinearność wyników, duże $p$, bardzo nierówne macierze kowariancji między grupami i obserwacje odstające mogą zniszczyć stabilność wyników. Przy pojedynczym głównym wyniku lepiej zwykle z góry zdefiniować ten wynik niż sztucznie mnożyć wskaźniki. Przy wielu interpretowanych później testach jednowymiarowych należy kontrolować wielokrotność i wyraźnie odróżniać \emph{test globalny} od konkretnych kontrastów. Jeśli wyniki mają odmienne skale lub typy (np. ciągły wynik i liczba zdarzeń), wspólny model normalny może być nieadekwatny.
+\end{uwaga}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.29\textwidth}>{\raggedright\arraybackslash}p{.27\textwidth}>{\raggedright\arraybackslash}p{.29\textwidth}}
+\toprule
+\textbf{Pytanie} & \textbf{Metoda do rozważenia} & \textbf{Co sprawdzić}\\
+\midrule
+Jedna zmienna wynikowa, wiele grup & ANOVA lub Welch & Wariancje, jednostki, kontrasty\\
+Wiele skorelowanych wyników, grupy & MANOVA & Kowariancje, $p$ względem $n$, globalna hipoteza\\
+Wiele wyników i wspólna kowarianta & MANCOVA & Nakładanie zakresów, interakcje, czas pomiaru\\
+Wielokrotne pomiary u tych samych osób & RM--ANOVA albo model mieszany & Kowariancja powtórzeń, braki danych\\
+Wiele wyników o różnych typach & Odpowiednie GLM / modele wspólne & Rozkłady i łączny cel analizy\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Laboratorium: globalny test i interpretacja wyników}
+\begin{lstlisting}[language=Python,caption={Kompletny program: MANOVA, MANCOVA i pierwiastki charakterystyczne (Python, NumPy, pandas, statsmodels).}]
+import numpy as np
+import pandas as pd
+from statsmodels.multivariate.manova import MANOVA
+
+rng = np.random.default_rng(2026)
+n_per_group = 40
+covariance = np.array([[1.0, 0.65, 0.35],
+                       [0.65, 1.0, 0.40],
+                       [0.35, 0.40, 1.0]])
+rows = []
+for group, effect in zip(("A", "B", "C"), (0.0, 0.45, 0.8)):
+    for _ in range(n_per_group):
+        age = rng.normal(50, 9)
+        noise = rng.multivariate_normal(np.zeros(3), covariance)
+        outcomes = np.array([2.0, 5.0, 8.0])
+        outcomes += effect * np.array([1.0, 0.7, -0.45])
+        outcomes += (age - 50) * np.array([0.06, -0.04, 0.03])
+        outcomes += noise
+        rows.append((group, age, *outcomes))
+df = pd.DataFrame(rows, columns=["group", "age", "y1", "y2", "y3"])
+
+print("MANOVA without age:")
+print(MANOVA.from_formula("y1 + y2 + y3 ~ C(group)", data=df).mv_test())
+print("MANCOVA adjusted for age:")
+print(MANOVA.from_formula("y1 + y2 + y3 ~ C(group) + age", data=df).mv_test())
+
+# E and H for testing the two added group columns after adjustment.
+Y = df[["y1", "y2", "y3"]].to_numpy()
+G = pd.get_dummies(df["group"], drop_first=True).to_numpy(dtype=float)
+Z = np.column_stack([np.ones(len(df)), df["age"].to_numpy()])
+Xfull = np.column_stack([Z, G])
+def residual_sscp(X):
+    coef = np.linalg.lstsq(X, Y, rcond=None)[0]
+    residuals = Y - X @ coef
+    return residuals.T @ residuals
+E = residual_sscp(Xfull)
+H = residual_sscp(Z) - E
+L = np.linalg.cholesky(E)
+W = np.linalg.solve(L, H)
+S = np.linalg.solve(L, W.T).T
+roots = np.clip(np.linalg.eigvalsh((S + S.T) / 2), 0, None)
+print("Wilks lambda:", np.prod(1 / (1 + roots)))
+print("Pillai trace:", np.sum(roots / (1 + roots)))
+print("Hotelling-Lawley:", roots.sum(), "Roy:", roots.max())
+\end{lstlisting}
+
+\begin{lstlisting}[language=Julia,caption={Kompletny program: macierze $H,E$ i cztery statystyki MANOVA z rozkładu próby (Julia, Random, Statistics, LinearAlgebra).}]
+using Random, Statistics, LinearAlgebra
+Random.seed!(2026)
+p, n = 3, 90
+g = repeat(1:3, inner=30)
+Xr = ones(n, 1)
+Xf = hcat(ones(n), Float64.(g .== 2), Float64.(g .== 3))
+A = [1.0 0.0 0.0; 0.6 0.8 0.0; 0.2 0.4 0.9]
+noise = randn(n, p) * transpose(A)
+mu = hcat(0.6 .* Float64.(g .== 2),
+          0.8 .* Float64.(g .== 3),
+          0.5 .* Float64.(g .== 3))
+Y = mu + noise
+function sscp(X, Y)
+    R = Y - X * (X \ Y)
+    return transpose(R) * R
+end
+E = sscp(Xf, Y)
+H = sscp(Xr, Y) - E
+L = cholesky(Symmetric(E)).L
+S = L \ H / transpose(L)
+roots = max.(eigvals(Symmetric((S + transpose(S))/2)), 0.0)
+println("Wilks: ", prod(1 ./ (1 .+ roots)))
+println("Pillai: ", sum(roots ./ (1 .+ roots)))
+println("Hotelling-Lawley: ", sum(roots))
+println("Roy: ", maximum(roots))
+# For calibrated p-values use a MANOVA implementation and its stated method.
+\end{lstlisting}
+
+\begin{zadanie}[Dlaczego osobne testy nie rozstrzygają hipotezy MANOVA?]
+W badaniu dwóch metod rehabilitacji zmierzono siłę, prędkość chodu i zakres ruchu. Każdy pojedynczy test t daje wartość p większą niż $0{,}05$. Czy oznacza to, że MANOVA nie może odrzucić hipotezy zerowej?\par
+\emph{Rozwiązanie.} Nie. MANOVA bierze pod uwagę wektor średnich i jego macierz kowariancji: odpowiednia \emph{kombinacja liniowa} wyników może mieć wysoki stosunek sygnału do szumu, mimo że każda zmienna osobno daje słabą informację. Odwrotna sytuacja także jest możliwa. Test globalny nie mówi automatycznie, które współrzędne odpowiadają za różnicę; potrzebne są wcześniej zaplanowane kontrasty i analiza wielokrotności.
+\end{zadanie}
+
+\paragraph{Źródła do dalszej weryfikacji implementacji.}
+Opisy rozkładów i sposobów aproksymacji statystyk wielowymiarowych można zestawić z dokumentacją: \href{https://online.stat.psu.edu/stat505/Lesson08}{Penn State STAT 505, MANOVA} oraz \href{https://support.sas.com/documentation/cdl/en/statug/68162/HTML/default/statug_introreg_sect038.htm}{SAS, Multivariate Tests}. Różne programy mogą prezentować inny wariant pierwiastka Roya lub inne przybliżenia wartości p.
+

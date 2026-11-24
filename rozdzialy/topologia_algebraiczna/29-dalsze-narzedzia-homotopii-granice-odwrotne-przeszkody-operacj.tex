@@ -1,0 +1,597 @@
+\chapter{Dalsze narzędzia homotopii: granice odwrotne, przeszkody, operacje i sklejanie Morse'a}
+\label{ch:xviii-domkniecie}
+
+\section{Cel, motywacja i poziom dowodów}
+W poprzednich rozdziałach spotkaliśmy cztery zjawiska wymagające
+szczególnej ostrożności: przechodzenie od skończonych przybliżeń do
+przestrzeni granicznej; rozszerzanie przekrojów krok po kroku; zależności
+między operacjami kohomologicznymi; oraz sklejanie trajektorii przy
+złamanych liniach gradientowych. Łączy je pytanie, czy dane zgodne na
+każdym skończonym etapie dają obiekt globalny. Odpowiedź może być
+negatywna nawet wtedy, gdy wszystkie lokalne grupy przeszkód wydają się
+proste.
+
+Celem rozdziału jest ścisłe uzupełnienie tych czterech zagadnień.
+Dowodzimy elementarnej teorii $\varprojlim^1$ dla przeliczalnych
+układów grup abelowych i odpowiedniego ciągu Milnora dla układów
+kompleksów łańcuchowych. Przeprowadzamy konstrukcję kolejnych
+przeszkód komórkowych, wraz z kontrolą wpływu wyborów. Dla operacji
+Steenroda wyprowadzamy kilka relacji z Bocksteina i podajemy dokładny
+zakres twierdzenia Adema. Dla ekscyzji homotopijnej wyjaśniamy
+mechanizm twierdzenia Blakersa--Masseya i jego zastosowanie do
+zawieszenia. W końcu identyfikujemy precyzyjnie dodatkowy lemat
+analityczny potrzebny do pełnego sklejania trajektorii Morse'a.
+
+\section{Układy odwrotne i dwa rodzaje granic}
+\begin{definicja}[Przeliczalny układ odwrotny]
+Przez układ odwrotny grup abelowych rozumiemy ciąg
+$A_0\xleftarrow{u_0}A_1\xleftarrow{u_1}A_2\leftarrow\cdots$,
+gdzie każdy $A_j$ jest grupą abelową, a $u_j:A_{j+1}\to A_j$
+homomorfizmem. Jego granicę odwrotną definiujemy jako
+\[
+\varprojlim_jA_j=
+\{(a_j)_{j\ge0}\in\prod_{j\ge0}A_j:
+ a_j=u_j(a_{j+1})\text{ dla każdego }j\}.
+\]
+Sytuację przedstawia schemat map przejścia:
+\begin{center}
+\begin{tikzpicture}[>=Stealth, node distance=2.0cm,
+  every node/.style={font=\small}]
+\node (a0) {$A_0$};
+\node[right=of a0] (a1) {$A_1$};
+\node[right=of a1] (a2) {$A_2$};
+\node[right=of a2] (a3) {$\cdots$};
+\draw[->] (a1) -- node[above] {$u_0$} (a0);
+\draw[->] (a2) -- node[above] {$u_1$} (a1);
+\draw[->] (a3) -- node[above] {$u_2$} (a2);
+\end{tikzpicture}
+\par\smallskip\small Rysunek: strzałki układu odwrotnego wskazują od dokładniejszych przybliżeń do wcześniejszych.
+\end{center}
+Na produkcie definiujemy operator
+$T((a_j)_{j\ge0})=(u_j(a_{j+1}))_{j\ge0}$.
+\end{definicja}
+\begin{definicja}[Pierwszy pochodny funktor granicy odwrotnej]
+Dla powyższego przeliczalnego układu grup abelowych kładziemy
+\[
+\varprojlim{}^1_jA_j:=
+\operatorname{coker}\bigl(1-T:\prod_{j\ge0}A_j\to
+\prod_{j\ge0}A_j\bigr).
+\]
+Nie jest to nowy typ granicy przestrzeni topologicznych:
+$\varprojlim{}^1$ jest grupą mierzącą niezupełność dokładności
+funktora $\varprojlim$ na takich układach.
+\end{definicja}
+\begin{lemat}[Jądro operatora różnicy]
+Dla każdego przeliczalnego układu grup abelowych zachodzi
+$\ker(1-T)=\varprojlim A_j$.
+\end{lemat}
+\begin{proof}
+Równość $(1-T)(a)=0$ oznacza dokładnie układ równań
+$a_j=u_j(a_{j+1})$ dla wszystkich $j$. Są to wszystkie i tylko
+warunki definiujące granicę odwrotną.
+\end{proof}
+
+\begin{twierdzenie}[Warunek Mittaga--Lefflera dla układów przeliczalnych]
+\label{thm:xviii-ml}
+Niech $(A_j,u_j)$ będzie przeliczalnym układem grup abelowych.
+Załóżmy, że dla każdego $j$ obrazy
+$\operatorname{im}(A_k\to A_j)$ stabilizują się, gdy $k\to\infty$.
+Wówczas $\varprojlim{}^1 A_j=0$.
+W szczególności wniosek zachodzi, gdy wszystkie $u_j$ są surjektywne.
+\end{twierdzenie}
+\begin{proof}[Przypadek surjektywnych odwzorowań]
+Pokażemy, że $1-T$ jest surjektywny. Ustalmy
+$(b_j)\in\prod_jA_j$. Chcemy rozwiązać
+$a_j-u_j(a_{j+1})=b_j$ dla wszystkich $j$.
+Wybierzmy $a_0=0$. Jeśli $a_j$ jest już wybrany, to
+surjektywność $u_j$ pozwala wybrać $a_{j+1}$ z równania
+$u_j(a_{j+1})=a_j-b_j$. Indukcja daje szukany ciąg,
+zatem kokernel $1-T$ jest zerowy.
+\end{proof}
+\begin{proof}[Redukcja ogólnego przypadku]
+Dla każdego $j$ niech $B_j\subset A_j$ będzie ustabilizowanym
+obrazem $A_k\to A_j$ dla dostatecznie dużych $k$.
+Odwzorowania $B_{j+1}\to B_j$ są surjektywne: jeśli
+$b\in B_j$, wybieramy $k$ większe od progów stabilizacji dla
+$j$ i $j+1$ i element $a_k$ przechodzący na $b$. Jego obraz
+w $B_{j+1}$ przechodzi na $b$. Zatem $\varprojlim{}^1 B_j=0$.
+
+Dla układu ilorazów $Q_j=A_j/B_j$ każdy element $Q_k$
+przechodzi na zero w $Q_j$ dla dostatecznie dużego $k$.
+Taki układ nazywamy pro-zerowym. Dla ustalonego ciągu
+$(q_j)\in\prod_j Q_j$ rozważmy równania
+$x_j-v_j(x_{j+1})=q_j$. Możemy je rozwiązać przez sumę
+skończoną w każdej współrzędnej:
+$x_j=\sum_{k\ge j}v_{j,k}(q_k)$, gdzie
+$v_{j,k}:Q_k\to Q_j$ jest odwzorowaniem przejścia
+(i $v_{j,j}=\id$). Suma jest rzeczywiście skończona,
+bo dla ustalonego $j$ mapy $v_{j,k}$ zerują się dla dużych $k$.
+Wtedy $x_j-v_j(x_{j+1})=q_j$. Stąd $\varprojlim{}^1Q_j=0$.
+
+Pozostaje użyć dokładności sześciowyrazowego ciągu dla
+krótkiego ciągu układów $0\to B_j\to A_j\to Q_j\to0$.
+Wynika ona wprost z lematu o wężu zastosowanego do
+dwóch wierszy z produktami i pionowymi mapami $1-T$.
+Ponieważ pochodne granice $B_j,Q_j$ są zerowe,
+dokładność daje $\varprojlim{}^1A_j=0$.
+\end{proof}
+\begin{uwaga}
+W powyższym dowodzie użyto produktów grup abelowych,
+które zachowują dokładność krótkich ciągów. W ogólniejszych
+kategoriach homologicznym warunkiem zerowania mogą być inne
+hipotezy; symbol $\varprojlim{}^1$ nie jest wtedy automatycznie
+definiowany przez ten sam elementarny iloraz.
+\end{uwaga}
+
+\section{Przykład podstawowy: $\mathbb Z_p/\mathbb Z$}
+\begin{definicja}
+Niech $p\ge2$ będzie liczbą pierwszą. Pierścieniem liczb
+$p$-adycznych nazywamy granicę odwrotną
+$\mathbb Z_p=\varprojlim_m\mathbb Z/p^m\mathbb Z$,
+gdzie mapami przejścia są redukcje modulo $p^m$.
+\end{definicja}
+\begin{twierdzenie}[Niezerowe $\varprojlim{}^1$]
+\label{thm:xviii-padic}
+Dla układu $A_j=\Z$ z mapami $u_j(a)=pa$ zachodzą
+izomorfizmy
+\[
+\varprojlim_j A_j=0,\qquad
+\varprojlim{}^1_j A_j\cong\Z_p/\Z,
+\]
+gdzie $\Z$ zanurzamy w $\Z_p$ przez zwykłe redukcje
+modulo potęg $p$.
+\end{twierdzenie}
+\begin{proof}
+Jeśli $a_j=pa_{j+1}$ dla wszystkich $j$, to $a_0$
+jest podzielne przez $p^m$ dla każdego $m$, zatem $a_0=0$.
+Indukcyjnie otrzymujemy $a_j=0$.
+
+Niech $P=\prod_{j\ge0}\Z$. Definiujemy homomorfizm
+$\Theta:P\to\Z_p$ przez zbieżny szereg $p$-adyczny
+$\Theta((a_j))=\sum_{j\ge0}p^ja_j$.
+Surjektywność wynika z rozwinięcia każdej liczby $p$-adycznej
+w cyfry $0,\ldots,p-1$.
+Jeżeli $b=(1-T)a$, czyli $b_j=a_j-pa_{j+1}$,
+to sumy częściowe teleskopują:
+$\sum_{j=0}^{m}p^jb_j=a_0-p^{m+1}a_{m+1}$.
+Ostatni wyraz dąży do zera $p$-adycznie, więc
+$\Theta(b)=a_0\in\Z$. Dostajemy indukowane odwzorowanie
+$\overline\Theta:\operatorname{coker}(1-T)\to\Z_p/\Z$.
+
+Aby wykazać różnowartościowość, załóżmy, że
+$\Theta(b)=q\in\Z$. Ustalmy $s_0=q$ i dla $j\ge0$ kładźmy
+\[
+s_j=\frac{q-\sum_{i=0}^{j-1}p^ib_i}{p^j}.
+\]
+Licznik jest podzielny przez $p^j$ w $\Z_p$, a ponieważ
+jest liczbą całkowitą, jest podzielny przez $p^j$ w $\Z$.
+Zatem $s_j\in\Z$ i $s_j-ps_{j+1}=b_j$.
+Stąd $b=(1-T)s$, co dowodzi injektywności.
+Surjektywność $\overline\Theta$ jest dziedziczona po $\Theta$.
+\end{proof}
+\begin{przyklad}[Dlaczego granice nie można przestawiać z homologią]
+Weźmy kompleks $C_j$, skoncentrowany w stopniach $1,0$,
+przy czym $C_{j,1}=\Z$, $C_{j,0}=\Z$, a różniczka jest mnożeniem
+przez $p^j$. Bez określenia map łańcuchowych przejścia nie
+otrzymujemy jeszcze układu odwrotnego kompleksów. Ponadto
+surjektywność odwzorowań na poziomie \emph{homologii} nie jest tym
+samym co surjektywność w każdym stopniu łańcuchowym.
+Odpowiednie hipotezy pojawią się w następnym twierdzeniu.
+\end{przyklad}
+
+\section{Ciąg Milnora dla układów kompleksów}
+\begin{twierdzenie}[Elementarny ciąg Milnora]
+\label{thm:xviii-milnor}
+Niech $\{C^{(j)}_*,u_j\}_{j\ge0}$ będzie przeliczalnym
+układem odwrotnym kompleksów łańcuchowych grup abelowych,
+a każde $u_j:C^{(j+1)}_q\to C^{(j)}_q$ niech będzie
+surjektywne dla wszystkich $j,q$. Wówczas dla każdego $n\in\Z$
+istnieje naturalny krótki ciąg dokładny
+\[
+0\longrightarrow\varprojlim{}^1_jH_{n+1}(C^{(j)}_*)
+\longrightarrow H_n(\varprojlim_j C^{(j)}_*)
+\longrightarrow\varprojlim_jH_n(C^{(j)}_*)
+\longrightarrow0.
+\]
+Na ogół ten ciąg nie ma naturalnego rozszczepienia.
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy przez $P_*$ produkt kompleksów $\prod_j C^{(j)}_*$,
+z różniczką działającą współrzędnie. Mapy łańcuchowe $u_j$
+definiują endomorfizm $T:P_*\to P_*$. Surjektywność map
+$u_j$ i argument indukcyjny użyty w twierdzeniu
+\ref{thm:xviii-ml} pokazują, że $1-T:P_q\to P_q$
+jest surjektywny w każdym stopniu. Jego jądro to z definicji
+$\varprojlim C^{(j)}_q$. Otrzymujemy krótki ciąg dokładny
+kompleksów $0\to\varprojlim C^{(j)}_*\to P_*
+\xrightarrow{1-T}P_*\to0$.
+
+Długi ciąg homologii zawiera fragment
+\[
+H_{n+1}(P_*)\xrightarrow{1-T}H_{n+1}(P_*)
+\longrightarrow H_n(\varprojlim C^{(j)}_*)
+\longrightarrow H_n(P_*)\xrightarrow{1-T}H_n(P_*).
+\]
+Ponieważ w kategorii grup abelowych produkty zachowują
+jądra i obrazy różniczek, mamy
+$H_q(P_*)\cong\prod_jH_q(C^{(j)}_*)$.
+Jądro prawej mapy to $\varprojlim H_n(C^{(j)}_*)$,
+a kokernel lewej to $\varprojlim{}^1 H_{n+1}(C^{(j)}_*)$.
+Wyodrębnienie tego fragmentu daje żądany krótki ciąg.
+\end{proof}
+\begin{uwaga}[Czego twierdzenie nie mówi]
+Nie wolno zastosować ciągu~\ref{thm:xviii-milnor}
+automatycznie do $C_*(\varprojlim X_j)$, nawet gdy
+$X_j$ są zwartymi wielościanami. Zwykle brak naturalnego
+izomorfizmu $C_*(\varprojlim X_j)\cong\varprojlim C_*(X_j)$,
+a odwzorowania na grupach łańcuchów nie muszą być surjektywne.
+Jest to jedna z przyczyn, dla których homologia Čecha i homologia
+singularna zachowują się odmiennie na przestrzeniach dzikich.
+\end{uwaga}
+
+\section{Wyższe przeszkody dla przekrojów i odwzorowań}
+\begin{definicja}[Problem rozszerzania przekroju]
+Niech $p:E\to B$ będzie fibracją Serre'a nad spójnym kompleksem CW,
+niech $B^{(q)}$ oznacza jego $q$-szkielet, a $s_q:B^{(q)}\to E$
+ciągły przekrój nad $B^{(q)}$. Problem polega na rozszerzeniu
+$s_q$ na $B^{(q+1)}$, a ostatecznie na całe $B$.
+Zakładamy, że włókno $F$ jest łukowo spójne; przy formułowaniu
+przeszkód z abelowymi współczynnikami zakładamy też $q\ge2$.
+\end{definicja}
+\begin{stwierdzenie}[Kołańcuch przeszkody]
+\label{prop:xviii-obstruction}
+Niech $p:E\to B$ będzie fibracją Serre'a nad spójnym
+kompleksem CW, której włókno $F$ jest $(q-1)$-spójne,
+gdzie $q\ge2$. Niech $s_q$ będzie przekrojem nad $B^{(q)}$.
+Dla każdej zorientowanej komórki $e^{q+1}$ wybierzmy
+jej charakterystykę $\chi_e:D^{q+1}\to B$ i trywializację
+fibracji nad dyskiem w sensie równoważności włóknowej
+up-to-homotopy, ustaloną na brzegu. Klasa ograniczenia
+$s_q\circ\chi_e|_{S^q}$ określa element $\pi_q(F)$.
+Po uwzględnieniu transportu wzdłuż $1$-szkieletu otrzymujemy
+kołańcuch komórkowy
+$o_{q+1}(s_q)\in C^{q+1}(B;\underline{\pi_q(F)})$.
+Jest on kocyklem, a jego klasa w
+$H^{q+1}(B;\underline{\pi_q(F)})$ jest pierwszą przeszkodą
+rozszerzenia przekroju. Jeśli ta klasa znika, można zmienić
+przekrój na $q$-szkielecie i rozszerzyć go na $B^{(q+1)}$.
+\end{stwierdzenie}
+\begin{proof}[Konstrukcja i kontrola zależności]
+Na każdej komórce dyskowej pullback fibracji jest
+włóknowo homotopijnie trywialny: stosujemy własność
+podnoszenia homotopii do ściągnięcia dysku do punktu.
+Dzięki $(q-1)$-spójności $F$ wszystkie rozszerzenia do
+$q$-szkieletu można porównywać, a element otrzymany na
+brzegu komórki jest dobrze określony po wybraniu transportów
+między włóknami. Monodromia $\pi_1(B)$ może działać
+nietrywialnie na $\pi_q(F)$; właśnie to działanie definiuje
+system lokalnych współczynników podkreślony w tezie.
+
+Warunek kocyklu można sprawdzić na jednej komórce
+$e^{q+2}$. Jej przyczepienie daje sumę granicznych map na
+$q$-sferach ścian, przemnożonych przez odpowiednie
+homomorfizmy transportu. Suma tych klas jest zerowa,
+ponieważ jest obrazem brzegu mapy dysku po przejściu do
+łańcuchów komórkowych i wykorzystaniu zgodności
+przekształceń homotopii na przecięciach. Ten argument
+jest standardowym \emph{lematem komórkowym o kocyklu
+przeszkody}; jego pełna konstrukcja wymaga ułożenia
+homotopii charakterystyk na $(q+2)$-komórkach.
+
+Jeżeli zmienimy $s_q$ na $q$-komórkach przez klasy
+$\beta\in C^q(B;\underline{\pi_q(F)})$, kołańcuch
+przeszkody zmienia się o $\delta\beta$ (z odpowiednią
+konwencją znaków). Zatem klasa kohomologii jest
+niezależna od tej zmiany. Jej znikanie umożliwia wybór
+$\beta$ zabijający kołańcuch, po czym każda mapa
+$S^q\to F$ z trywialną klasą homotopii rozszerza się
+na $D^{q+1}$. Z własności podnoszenia otrzymujemy
+przekrój nad każdym dołączonym dyskiem i ich zgodność
+na brzegu. To kończy argument pod warunkiem przyjęcia
+wskazanego lematu komórkowego, którego nie zastępujemy
+samym sloganem $\partial^2=0$.
+\end{proof}
+\begin{uwaga}[Kolejne przeszkody]
+Po zniwelowaniu pierwszej klasy można przejść do następnego
+szkieletu. Następna przeszkoda leży w grupie z wyższymi
+homotopiami włókna, ale \emph{zależy od dokonanego wyboru
+wcześniejszego rozszerzenia}. Nie ma na ogół jednej
+kanonicznej listy klas niezależnych od siebie.
+Ponadto przy $q=1$ współczynniki mogą być nieabelowe;
+wtedy klasyczny zapis grupy kohomologii wymaga odrębnych
+konstrukcji. W przypadku $q\ge2$ skręcenie współczynników
+jest wyznaczone przez akcję monodromii na $\pi_q(F)$.
+\end{uwaga}
+\begin{przyklad}[Wiązka sferowa i klasa Eulera]
+Dla zorientowanej rzeczywistej wiązki wektorowej $\xi$ rzędu
+$r\ge3$ nad spójnym CW-kompleksem $B$ włóknem wiązki
+jednostkowych sfer jest $S^{r-1}$, które jest $(r-2)$-spójne.
+Pierwsza przeszkoda istnienia przekroju nigdzie niezerowego
+leży w $H^r(B;\Z)$ i jest klasą Eulera $e(\xi)$.
+Jeżeli $\dim B=r$, jej znikanie jest także wystarczające,
+gdyż nie ma komórek wyższych stopni. Jeżeli
+$\dim B>r$, mogą występować wyższe przeszkody, czego
+nie wykrywa sama klasa Eulera.
+\end{przyklad}
+\begin{przyklad}[Zerowa klasa Eulera nie wystarcza]
+Dla zorientowanej wiązki rzeczywistej rzędu trzy nad
+$S^4$ klasa Eulera należy do $H^3(S^4;\Z)=0$.
+Mimo to istnieją takie wiązki bez przekroju nigdzie
+niezerowego: nietrywialne elementy
+$\pi_3(SO(3))\cong\Z$ wyznaczają przez sklejanie
+wiązki rzędu trzy. Przekrój wymuszałby redukcję
+struktury do $SO(2)$, a wtedy klasa sklejenia pochodziłaby
+z $\pi_3(SO(2))=0$.
+Przykład pokazuje rzeczywistą wyższą przeszkodę.
+\end{przyklad}
+
+\section{Iloczyny Steenroda i relacje Adema: zakres elementarny}
+Na kohomologii z $\F_2$ działają naturalne operacje
+$\operatorname{Sq}^i:H^n(X;\F_2)\to H^{n+i}(X;\F_2)$.
+Przypominamy normalizację:
+$\operatorname{Sq}^0=\id$,
+$\operatorname{Sq}^n(x)=x\smile x$ dla $x\in H^n$,
+$\operatorname{Sq}^i(x)=0$ dla $i>n$.
+Do tego dochodzą naturalność i wzór Cartana, już omówione
+we wcześniejszych rozdziałach.
+\begin{twierdzenie}[Relacje Adema, $p=2$]
+\label{thm:xviii-adem}
+Dla liczb całkowitych $0<a<2b$ obowiązuje równość
+operacji naturalnych
+\[
+\operatorname{Sq}^a\operatorname{Sq}^b=
+\sum_{j=0}^{\lfloor a/2\rfloor}
+\binom{b-j-1}{a-2j}
+\operatorname{Sq}^{a+b-j}\operatorname{Sq}^{j},
+\]
+przy czym współczynniki dwumianowe liczymy modulo dwa.
+Wzór jest twierdzeniem o operacjach na \emph{wszystkich}
+przestrzeniach, nie tylko o ich wartościach w jednym pierścieniu
+kohomologii.
+\end{twierdzenie}
+\begin{uwaga}[Status dowodu]
+Pełny dowód wymaga kołańcuchowej homotopii relacji Adema
+lub uniwersalnej konstrukcji operacji i obliczeń w
+$H^*(K(\F_2,n);\F_2)$. Nie wynika on wyłącznie z
+naturalności i wzoru Cartana. W tym rozdziale przedstawiamy
+jedynie samodzielne wyprowadzenia kilku konsekwencji i
+kontrolę obliczeniową; twierdzenie~\ref{thm:xviii-adem}
+przyjmujemy jako zewnętrzny wynik.
+\end{uwaga}
+\begin{stwierdzenie}[Pierwsze relacje]
+Z relacji Adema wynikają
+$\operatorname{Sq}^1\operatorname{Sq}^1=0$,
+$\operatorname{Sq}^1\operatorname{Sq}^2=\operatorname{Sq}^3$,
+$\operatorname{Sq}^2\operatorname{Sq}^2=
+\operatorname{Sq}^3\operatorname{Sq}^1$.
+\end{stwierdzenie}
+\begin{proof}
+Podstawiamy w\,~\ref{thm:xviii-adem} odpowiednio
+$(a,b)=(1,1),(1,2),(2,2)$. W ostatnim przypadku
+składnik $j=0$ ma współczynnik
+$\binom{1}{2}=0$, a składnik $j=1$ ma
+$\binom{0}{0}=1$. Dla $(1,1)$ jedyny współczynnik to
+$\binom{0}{1}=0$; dla $(1,2)$ to $\binom{1}{1}=1$.
+\end{proof}
+\begin{przyklad}[Obliczenie na $\mathbb RP^{\infty}$]
+Dla generatora $t\in H^1(\mathbb RP^\infty;\F_2)$ mamy
+$\operatorname{Sq}^i(t^m)=\binom mi t^{m+i}$.
+Wzór wynika z $\operatorname{Sq}(t)=t+t^2$ i
+wzoru Cartana: $\operatorname{Sq}(t^m)=(t+t^2)^m$.
+Na przykład
+$\operatorname{Sq}^2\operatorname{Sq}^2(t^3)=0$,
+a $\operatorname{Sq}^3\operatorname{Sq}^1(t^3)=0$.
+Jest to zgodność z relacją, ale samo obliczenie na tej
+przestrzeni \emph{nie dowodzi} relacji dla wszystkich $X$.
+\end{przyklad}
+\begin{przyklad}[Przypadek $\mathbb CP^\infty$]
+Jeśli $u\in H^2(\mathbb CP^\infty;\F_2)$ jest redukcją
+pierwszej klasy Cherna uniwersalnej wiązki liniowej, to
+$\operatorname{Sq}^2(u)=u^2$ i
+$\operatorname{Sq}^{2i}(u^m)=\binom mi u^{m+i}$,
+podczas gdy nieparzyste kwadraty znikają na całym
+$\F_2[u]$ z przyczyn parzystości stopni.
+\end{przyklad}
+
+\section{Ekscyzja homotopijna Blakersa--Masseya}
+\begin{definicja}[Spójność pary]
+Para przestrzeni z punktem bazowym $(X,A)$ jest $m$-spójna,
+$m\ge1$, jeżeli $A$ i $X$ są łukowo spójne i
+$\pi_j(X,A)=0$ dla wszystkich $1\le j\le m$.
+Przyjmiemy typowe hipotezy CW, aby grupy względne i
+podnoszenie homotopii miały oczekiwane własności.
+\end{definicja}
+\begin{twierdzenie}[Blakers--Massey, postać ekscyzyjna]
+\label{thm:xviii-bm}
+Niech $X=A\cup B$ będzie triadą CW, a $C=A\cap B$ niech
+będzie niepustym łukowo spójnym podkompleksem.
+Załóżmy, że $(A,C)$ jest $m$-spójna, $(B,C)$ jest
+$n$-spójna, gdzie $m,n\ge1$.
+Wówczas homomorfizm ekscyzji
+\[
+\pi_q(A,C)\longrightarrow\pi_q(X,B)
+\]
+jest izomorfizmem dla $q<m+n$ i epimorfizmem dla $q=m+n$.
+W stopniu $q=1$ rozumiemy odpowiednie zbiory punktowane
+lub grupy względne zgodnie ze zwykłą konwencją.
+\end{twierdzenie}
+\begin{uwaga}[Zakres dowodu i źródło trudności]
+Dla homologii ekscyzja jest izomorfizmem bez ograniczenia
+stopnia. W homotopii zakres zależy od spójności obu par.
+Dowód Blakersa--Masseya polega na metodzie \emph{usuwania
+przecięć}: reprezentant odwzorowania dysku do $X$ rozcina
+się na obszary przechodzące do $A$ i $B$, a założenia
+spójności pozwalają sukcesywnie zmieniać reprezentanta,
+usuwając obszary niewłaściwe w zakresie wymiarów
+$q\le m+n$. Ten geometryczny argument wymaga
+technicznego lematu o uporządkowaniu przecinających się
+komórek; nie uzasadnia go sama ekscyzja homologiczna.
+Pełny lemat geometryczny przyjmujemy jako twierdzenie
+zewnętrzne. Poniżej dowodzimy wynikający z niego
+zakres stabilizacji Freudenthala.
+\end{uwaga}
+\begin{wniosek}[Stabilizacja Freudenthala]
+\label{cor:xviii-freudenthal}
+Niech $Y$ będzie $(r-1)$-spójnym, łukowo spójnym
+kompleksem CW, gdzie $r\ge2$. Wówczas homomorfizm
+zawieszenia
+$\pi_k(Y)\to\pi_{k+1}(\Sigma Y)$ jest izomorfizmem
+dla $k\le2r-2$ i epimorfizmem dla $k=2r-1$.
+\end{wniosek}
+\begin{proof}
+Rozłóżmy $\Sigma Y$ na dwa stożki $A=CY$ i $B=CY$,
+których przecięcie jest homotopijnie równoważne $Y$.
+Po odpowiednim zastąpieniu przez triadę CW
+obie pary $(CY,Y)$ są $r$-spójne, ponieważ
+$\pi_j(CY,Y)\cong\pi_{j-1}(Y)$ dla $j\ge2$.
+Twierdzenie~\ref{thm:xviii-bm} daje izomorfizm
+$\pi_q(CY,Y)\to\pi_q(\Sigma Y,CY)$ dla $q<2r$
+i epimorfizm dla $q=2r$.
+Długie ciągi dokładne par oraz ściągalność stożków
+dają $\pi_q(CY,Y)\cong\pi_{q-1}(Y)$ i
+$\pi_q(\Sigma Y,CY)\cong\pi_q(\Sigma Y)$ dla $q\ge2$.
+Przy tych identyfikacjach mapa ekscyzji odpowiada
+homomorfizmowi zawieszenia, co daje wynik po podstawieniu
+$q=k+1$.
+\end{proof}
+\begin{przyklad}[Zawieszenie okręgu]
+Dla $Y=S^1$ powyższy wniosek przy $r=1$ nie ma zastosowania
+w tej postaci; można jednak bezpośrednio obliczyć
+$\Sigma S^1\cong S^2$ oraz
+$\pi_1(S^1)\cong\Z$, $\pi_2(S^2)\cong\Z$.
+Ważne jest niewnioskowanie ogólnego zakresu stabilizacji
+z jednego przykładu.
+\end{przyklad}
+
+\section{Sklejanie trajektorii Morse'a: ścisły bilans analityczny}
+Niech $M$ będzie zwartą gładką rozmaitością bez brzegu,
+$f:M\to\R$ funkcją Morse'a, a $g$ metryką Riemannowską
+taką, że para $(f,g)$ spełnia warunek Morse'a--Smale'a.
+Dla punktów krytycznych $p,q$ oznaczmy przez
+$\mathcal M(p,q)$ przestrzeń trajektorii równania
+$\dot\gamma=-\nabla_g f(\gamma)$, modulo przesunięcia czasu.
+Przyjmujemy $\operatorname{ind}(p)-\operatorname{ind}(q)=2$.
+Chcemy opisać końce jednowymiarowej przestrzeni
+$\mathcal M(p,q)$ jako złamane trajektorie przechodzące
+przez punkty o indeksie pośrednim.
+
+\begin{definicja}[Operator linearyzacji i norma ważona]
+Niech $\gamma:\R\to M$ będzie trajektorią gradientową.
+Po wybraniu trywializacji $\gamma^*TM$ definiujemy
+$D_\gamma:W^{1,2}(\R,\R^d)\to L^2(\R,\R^d)$ przez
+\[
+D_\gamma\xi=\frac{\dd\xi}{\dd s}
++\nabla_\xi\nabla_g f(\gamma(s)).
+\]
+Dla $\delta>0$ i wybranej gładkiej wagi
+$\rho_\delta(s)$ zachowującej się jak
+$e^{\delta|s|}$ na końcach definiujemy
+$W^{1,2}_\delta$ i $L^2_\delta$ przez mnożenie przez
+$\rho_\delta$. Wartość $\delta$ wybieramy mniejszą od
+modułów niezerowych wartości własnych hesjanów na końcach.
+\end{definicja}
+\begin{uwaga}[Symetria przesunięcia]
+Wektor $\dot\gamma$ jest w jądrze $D_\gamma$.
+Dlatego nawet przy transwersalności nie oczekujemy
+odwrotności $D_\gamma$ na całej przestrzeni.
+Wprowadza się warunek cechujący, usuwający kierunek
+przesunięcia czasu, oraz odpowiedni wybór dopełnień.
+\end{uwaga}
+\begin{lemat}[Oszacowanie błędu trajektorii sklejonej]
+\label{lem:xviii-preglue}
+Niech $\gamma_-\in\mathcal M(p,r)$ i
+$\gamma_+\in\mathcal M(r,q)$, a ich zbieżności do $r$
+niech będą wykładnicze. Dla dostatecznie dużego parametru
+$R$ można skonstruować krzywą przybliżoną $\gamma_R$
+powstałą przez obcięcie i sklejenie obu trajektorii,
+dla której residuum
+$\mathcal F(\gamma_R):=\dot\gamma_R+\nabla f(\gamma_R)$
+spełnia $\|\mathcal F(\gamma_R)\|_{L^2_\delta}
+\le C e^{-cR}$ z pewnymi stałymi $C,c>0$.
+\end{lemat}
+\begin{proof}
+W małym otoczeniu $r$ zapisujemy fragmenty trajektorii
+w ustalonej karcie wykładniczej i przesuwamy ich parametry
+o $R$. Poza przedziałami, gdzie zmienia się funkcja
+odcinająca, krzywa $\gamma_R$ jest dokładną trajektorią.
+Na obszarze przejścia pochodna funkcji odcinającej jest
+jednostajnie ograniczona, a oba sklejane fragmenty
+leżą w odległości $O(e^{-\mu R})$ od $r$, dla pewnego
+$\mu>0$. Gładkość $\nabla f$ daje tę samą kontrolę
+na błąd nieliniowego członu. Po pomnożeniu przez
+wagę $e^{\delta|s|}$ z $\delta<\mu$ otrzymujemy
+oszacowanie $O(e^{-(\mu-\delta)R})$; stałe nie zależą
+od $R$ przy ustalonych końcowych trajektoriach.
+\end{proof}
+\begin{lemat}[Kluczowy krok Fredholmowski --- lemat przyjmowany]
+\label{lem:xviii-uniform-right-inverse}
+W sytuacji lematu~\ref{lem:xviii-preglue}, przy odpowiednim
+wyborze warunków cechujących i przy założeniu
+transwersalności Morse'a--Smale'a, operator linearyzacji
+$D_R=D\mathcal F(\gamma_R)$ posiada prawy odwrotny
+$Q_R$ na wybranym dopełnieniu jądra taki, że
+$\|Q_R\|\le C$ dla wszystkich dostatecznie dużych $R$.
+\end{lemat}
+\begin{uwaga}
+Ten lemat nie wynika z samej małości residuum.
+Aby go udowodnić, skleja się lokalne prawe odwrotne,
+kontroluje błąd komutatora z funkcjami odcinającymi i
+stosuje argument wykluczający koncentrację przy długiej szyjce.
+Wymaga to pełnej analizy operatorów Fredholma w normach
+ważonych. W tej iteracji formułujemy go precyzyjnie,
+lecz \emph{nie przedstawiamy jako udowodnionego}.
+\end{uwaga}
+\begin{twierdzenie}[Wniosek o sklejaniu, zależny od lematu]
+\label{thm:xviii-gluing-conditional}
+Przy założeniach powyżej i po przyjęciu
+lematu~\ref{lem:xviii-uniform-right-inverse} dla dostatecznie
+dużych $R$ istnieje w pobliżu $\gamma_R$ dokładna
+trajektoria $\widetilde\gamma_R$ równania gradientowego.
+Jej poprawka jest rzędu $O(e^{-cR})$ w odpowiedniej normie
+ważonej. Przy dodatkowym twierdzeniu o lokalnej jednoznaczności
+i zgodności orientacji konstrukcja daje współrzędną końca
+skompaktyfikowanej przestrzeni trajektorii.
+\end{twierdzenie}
+\begin{proof}
+W ustalonej karcie Banacha poszukujemy poprawki $\xi$
+spełniającej $\mathcal F(\gamma_R+\xi)=0$. Rozpisujemy
+\[
+\mathcal F(\gamma_R+\xi)=e_R+D_R\xi+N_R(\xi),
+\qquad e_R=\mathcal F(\gamma_R),
+\]
+gdzie $N_R(0)=0$, $DN_R(0)=0$, a gładkość gradientu
+na zwartej rozmaitości daje, dla małych $\xi,\eta$,
+$\|N_R(\xi)-N_R(\eta)\|
+\le K(\|\xi\|+\|\eta\|)\|\xi-\eta\|$.
+Po wyborze dopełnienia jądra i podstawieniu
+$\xi=Q_Rv$ równanie sprowadza się do punktu stałego
+$\xi=-Q_R(e_R+N_R(\xi))$.
+Lemat zapewnia $\|Q_R\|\le C$, a poprzedni lemat
+$\|e_R\|\le C_0e^{-cR}$. Dla promienia
+$2CC_0e^{-cR}$ prawa strona zachowuje kulę i jest
+kontrakcją, gdy $R$ jest duże. Zatem istnieje poprawka
+$\xi_R$ tej wielkości. Aby wniosek dał pełny opis
+brzegu przestrzeni moduli, trzeba osobno wykazać, że
+wszystkie bliskie trajektorie powstają taką metodą i że
+orientacje są zgodne. Tych ostatnich twierdzeń w tym
+dowodzie nie przyjmujemy za automatyczne.
+\end{proof}
+
+\section{Podsumowanie zakresu i zależności dowodowych}
+W tym rozdziale bez zewnętrznych głębokich twierdzeń
+wyprowadziliśmy definicje $\varprojlim^1$, kryterium
+Mittaga--Lefflera w sytuacji przeliczalnych układów,
+przykład $\Z_p/\Z$ i ciąg Milnora dla stopniowo surjektywnych
+układów kompleksów. Omówiliśmy konstrukcję
+wyższych przeszkód, podkreślając zależność od lokalnych
+współczynników i wyboru częściowych rozszerzeń.
+Dla operacji Steenroda rachunki opierają się na
+przyjętym twierdzeniu Adema; dla Freudenthala na
+przyjętym Blakersie--Masseyu.
+W części Morse'a udowodniliśmy oszacowanie residuum i
+krok kontrakcyjny warunkowo. \emph{Jednostajny prawy odwrotny,
+lokalna pełność parametrów sklejania i znaki orientacji}
+pozostają precyzyjnie wskazanymi tematami do dalszego dowodu.
+
+\appendix
+\renewcommand{\chaptermark}[1]{\markboth{Dodatek \thechapter}{}}

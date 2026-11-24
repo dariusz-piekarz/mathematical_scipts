@@ -1,0 +1,52 @@
+\section{Monady: jak opisać konstrukcję swobodną na jednym poziomie}\label{sec:monads}
+
+Monady pojawiają się naturalnie w teorii algebry, semantyce języków programowania i teorii obliczeń. Na poziomie podstawowym można je rozumieć jako funktory wyposażone w operację \emph{włożenia pojedynczego elementu} i operację \emph{spłaszczenia dwóch warstw tej samej konstrukcji}.
+
+\begin{definicja}[Monad]\label{def:monad}
+\emph{Monadą} na kategorii $\mathcal C$ jest trójka $(T,\eta,\mu)$, gdzie $T:\mathcal C\to\mathcal C$ jest funktorem, $\eta:\id_{\mathcal C}\Rightarrow T$ i $\mu:T\circ T\Rightarrow T$ są transformacjami naturalnymi, a dla każdego obiektu $A$ zachodzą równości
+\[
+\mu_A\circ T(\mu_A)=\mu_A\circ\mu_{T(A)},\qquad\mu_A\circ T(\eta_A)=\id_{T(A)}=\mu_A\circ\eta_{T(A)}.
+\]
+Pierwsza to \emph{łączność spłaszczania}, a dwie pozostałe to \emph{prawa i lewa jednostka}.
+\end{definicja}
+
+\begin{przyklad}[Monada skończonych list]\label{przyklad:list-monad}
+Dla zbioru $X$ niech $T(X)$ oznacza zbiór wszystkich skończonych list elementów $X$, włącznie z listą pustą. Funkcja $f:X\to Y$ działa na listach przez zastosowanie $f$ do każdego elementu. Definiujemy $\eta_X(x)=[x]$ oraz $\mu_X([[x_1,x_2],[x_3],[],[x_4]])=[x_1,x_2,x_3,x_4]$. W ogólności $\mu_X$ skleja listę list w jedną listę. Dwie strony równania łączności dają ten sam wynik: usuwają oba poziomy nawiasów w liście list list. Równania jednostek mówią, że spłaszczenie $[[x_1,\ldots,x_n]]$ i spłaszczenie $[[x_1],\ldots,[x_n]]$ daje $[x_1,\ldots,x_n]$.
+\end{przyklad}
+
+\begin{przyklad}[Monada z wolnego monoidu]
+Skończone listy elementów zbioru $X$ tworzą \emph{monoid wolny} na $X$ z działaniem konkatenacji i pustą listą jako jednostką. Niech $F:\Set\to\Mon$ będzie funktorem wolnego monoidu, a $U:\Mon\to\Set$ funktorem zapominania. Mamy sprzężenie $F\dashv U$, a złożenie $T=UF$ jest dokładnie funktorem list z poprzedniego przykładu. Jednostka sprzężenia jest operacją $x\mapsto[x]$, a jej kojednostka indukuje spłaszczanie list list.
+\end{przyklad}
+
+
+\begin{przyklad}[Monada podzbiorów]\label{przyklad:powerset-monad}
+Na kategorii $\Set$ weźmy kowariantny funktor $T=\mathcal P_+$, który funkcji $f:X\to Y$ przypisuje obraz bezpośredni $A\mapsto f(A)$. Definiujemy $\eta_X(x)=\{x\}$ i $\mu_X:\mathcal P(\mathcal P(X))\to\mathcal P(X)$ przez $\mu_X(\mathscr A)=\bigcup_{A\in\mathscr A}A$. Naturalność $\eta$ pokazaliśmy wcześniej. Naturalność $\mu$ wynika z tożsamości $f(\bigcup_{A\in\mathscr A}A)=\bigcup_{A\in\mathscr A}f(A)$: obraz sumy jest sumą obrazów. Aksjomat łączności jest równością dwóch sposobów wykonania trzykrotnej sumy zbiorów; aksjomaty jednostki wynikają z $\bigcup\{A\}=A$ i $\bigcup_{x\in A}\{x\}=A$. Dla $X=\{1,2,3\}$ i $\mathscr A=\{\{1,2\},\{2,3\},\varnothing\}$ dostajemy $\mu_X(\mathscr A)=\{1,2,3\}$. Jest to inny przykład monady niż listy: \emph{kolejność i powtórzenia} nie mają tu znaczenia.
+\end{przyklad}
+
+\begin{przyklad}[Monada ``możliwego braku wyniku'']
+Dla zbioru $X$ zdefiniujmy $T(X)=X\sqcup\{\bot\}$; symbol $\bot$ oznacza nowy element, który nie należy do $X$. Dla funkcji $f:X\to Y$ określamy $T(f)(x)=f(x)$, gdy $x\in X$, oraz $T(f)(\bot)=\bot$. Jednostka $\eta_X:X\to T(X)$ jest włączeniem. Zbiór $T(T(X))$ zawiera zwykłe wyniki oraz dwa rodzaje symbolu braku wyniku (wewnętrzny i zewnętrzny); mnożenie $\mu_X:T(T(X))\to T(X)$ zachowuje zwykłe wyniki i wysyła oba symbole na $\bot$. Spłaszczenie trzech warstw zawsze daje pierwotny wynik, jeśli taki istnieje, albo jeden symbol $\bot$, niezależnie od kolejności spłaszczania. Naturalność wynika z tego, że funkcje $T(f)$ zachowują symbol $\bot$. Otrzymujemy monadę przydatną przy opisie obliczeń częściowych.
+\end{przyklad}
+
+\begin{przyklad}[Konkatenacja list i składanie Kleisliego]
+Niech $X=\{1,2\}$, $Y=\{a,b\}$, $Z=\{0,1\}$. Przyjmijmy funkcje $f:X\to T(Y)$ i $g:Y\to T(Z)$ dane przez
+$f(1)=[a,b]$, $f(2)=[b]$, $g(a)=[0]$, $g(b)=[1,1]$.
+Ich składanie w kategorii Kleisliego monady list ma wzór $(g\star f)(x)=\mu_Z(T(g)(f(x)))$. Dla $x=1$ otrzymujemy kolejno $f(1)=[a,b]$, następnie $T(g)([a,b])=[[0],[1,1]]$, a na końcu $(g\star f)(1)=[0,1,1]$. Dla $x=2$ wynikiem jest $[1,1]$. Nie jest to zwykłe składanie funkcji: wartością pośrednią jest lista, a nie pojedynczy element $Y$.
+\end{przyklad}
+
+
+\begin{twierdzenie}[Monada z każdego sprzężenia]
+Niech $F:\mathcal C\to\mathcal D$ i $G:\mathcal D\to\mathcal C$ spełniają $F\dashv G$, z jednostką $\eta:\id_{\mathcal C}\Rightarrow GF$ i kojednostką $\varepsilon:FG\Rightarrow\id_{\mathcal D}$. Wówczas $T=GF$ z jednostką $\eta$ i mnożeniem $\mu_A:=G(\varepsilon_{F(A)}):GFGF(A)\to GF(A)$ jest monadą na $\mathcal C$.
+\end{twierdzenie}
+\begin{proof}
+Naturalność $\mu$ wynika z naturalności $\varepsilon$. Najpierw dwie tożsamości jednostkowe z definicji~\ref{def:monad} wynikają z tożsamości trójkątnych:
+$\mu_A\circ T(\eta_A)=G(\varepsilon_{F(A)}\circ F(\eta_A))=\id_{GF(A)}$ oraz
+$\mu_A\circ\eta_{T(A)}=G(\varepsilon_{F(A)})\circ\eta_{GF(A)}=\id_{GF(A)}$.
+
+Pozostaje łączność. Naturalność kojednostki $\varepsilon$ dla morfizmu $\varepsilon_{F(A)}:FGF(A)\to F(A)$ daje
+$\varepsilon_{F(A)}\circ FG(\varepsilon_{F(A)})=\varepsilon_{F(A)}\circ\varepsilon_{FGF(A)}$. Po zastosowaniu $G$ lewa strona jest równa $\mu_A\circ T(\mu_A)$, a prawa $\mu_A\circ\mu_{T(A)}$. Otrzymujemy trzeci aksjomat monady.
+\end{proof}
+
+\begin{uwaga}[Co jeszcze daje teoria monad?]
+Dla monady $(T,\eta,\mu)$ można budować kategorię Kleisliego: obiektami są obiekty $\mathcal C$, a morfizmem $A\to B$ jest zwykła strzałka $A\to T(B)$ w $\mathcal C$. Dwie strzałki $f:A\to T(B)$ i $g:B\to T(C)$ składamy jako $\mu_C\circ T(g)\circ f:A\to T(C)$. Jednostką w $A$ jest $\eta_A:A\to T(A)$. Aksjomaty monady gwarantują łączność i aksjomaty jednostki tego składania. W przypadku list składanie odpowiada mapowaniu elementów do list, a następnie ich konkatenacji.
+\end{uwaga}
+

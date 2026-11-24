@@ -1,0 +1,505 @@
+\chapter{Stochastyczne równania różniczkowe ze skokami}
+\label{ch:jump-sde}
+
+\section{Motywacja: dlaczego zwykłe SDE nie opisuje nagłych zmian?}
+
+Model $\dd X_t=b(X_t)\,\dd t+\sigma(X_t)\,\dd W_t$ ma ciągłe
+trajektorie. Nie opisuje zatem nagłego uszkodzenia elementu, wpłaty
+kapitału ani natychmiastowego przyrostu liczby cząstek. Dodanie
+skokowego składnika prowadzi do procesu càdlàg. Jego wartości
+bezpośrednio przed skokiem i bezpośrednio po skoku nie są tym samym:
+$X_{t-}$ zawiera informację dostępną przed skokiem, a $X_t$ ---
+już wynik skoku. Dlatego poprawne równanie ma po lewej stronie
+$\dd X_t$, ale w prawych współczynnikach skokowych pojawia się
+$X_{t-}$.
+
+Są tu dwie naturalne konwencje. Całka względem $N$ dodaje
+rzeczywiste skoki, natomiast całka względem
+$\widetilde N=N-\dd t\,\dd\nu$ odejmuje od nich średni dryf.
+Pozornie kosmetyczny wybór wpływa na współczynnik dryfu, lecz
+nie zmienia skoków procesu.
+
+\begin{definicja}[Równanie skokowe i jego silne rozwiązanie]
+\label{def:jump-sde}
+Niech $T>0$, $E$ będzie przestrzenią polską z miarą
+$\sigma$-skończoną $\nu$, $E=E_0\sqcup E_1$ będzie podziałem
+na zbiory borelowskie, gdzie $\nu(E_1)<\infty$.
+Na przestrzeni z filtracją spełniającą warunki zwykłe niech $W$
+będzie $m$-wymiarowym procesem Wienera, a $N$ losową miarą
+Poissona o intensywności $\dd t\,\dd\nu(z)$, przy czym
+$(W,N)$ ma niezależne przyrosty względem wspólnej filtracji.
+Niech $x\in\R^d$ oraz
+\[
+\begin{gathered}
+b:[0,T]\times\R^d\to\R^d,\quad
+\sigma:[0,T]\times\R^d\to\R^{d\times m},\\
+\gamma:[0,T]\times\R^d\times E_0\to\R^d,\quad
+\Gamma:[0,T]\times\R^d\times E_1\to\R^d
+\end{gathered}
+\]
+będą funkcjami borelowskimi. \emph{Silnym rozwiązaniem} równania
+\[
+\begin{split}
+X_t=x&+\int_0^t b(s,X_{s-})\,\dd s
+ +\int_0^t\sigma(s,X_{s-})\,\dd W_s\\
+&+\int_{(0,t]\times E_0}\gamma(s,X_{s-},z)\,\widetilde N(\dd s,\dd z)
+ +\int_{(0,t]\times E_1}\Gamma(s,X_{s-},z)\,N(\dd s,\dd z)
+\end{split}
+\tag{13.1}\label{eq:jump-sde}
+\]
+nazywamy proces adaptowany càdlàg $X$ o $X_0=x$, dla którego
+wszystkie całki istnieją we wskazanym sensie, a tożsamość zachodzi
+prawie na pewno jednocześnie dla wszystkich $t\in[0,T]$.
+Przez $\|\sigma\|_{\mathrm{HS}}$ oznaczamy normę Hilberta--Schmidta.
+\end{definicja}
+
+\begin{uwaga}[Dwie skale skoków]
+Na $E_1$ występuje skończenie wiele punktów miary $N$ na każdym
+przedziale zwartym, zatem składnik z $\Gamma$ jest zwykłą losową
+sumą. Zbiór $E_0$ może mieć nieskończoną miarę, a małe skoki
+trzeba sumować po kompensacji. Dla samego istnienia procesu
+skokowego nie żądamy drugiego momentu $\Gamma$; w pierwszym
+twierdzeniu przyjmiemy go celowo, aby podać zupełny dowód
+metodą Picarda w przestrzeni $L^2$.
+\end{uwaga}
+
+\section{Przygotowanie: zamiana dużych skoków na całkę skompensowaną}
+
+\begin{lemat}[Przepisanie równania w klasie $L^2$]
+\label{lem:rewrite-jump-sde}
+Załóżmy, że $\nu(E_1)<\infty$ i dla każdego $(t,x)$ zachodzi
+$\int_{E_1}\|\Gamma(t,x,z)\|^2\,\dd\nu(z)<\infty$.
+Oznaczmy
+\[
+ \beta(t,x)=b(t,x)+\int_{E_1}\Gamma(t,x,z)\,\dd\nu(z),\qquad
+ h(t,x,z)=\gamma(t,x,z)\ind{E_0}(z)+\Gamma(t,x,z)\ind{E_1}(z).
+\]
+Jeśli obie strony mają sens całkowy, równanie
+\eqref{eq:jump-sde} jest równoważne równaniu
+\[
+ X_t=x+\int_0^t\beta(s,X_{s-})\,\dd s
+ +\int_0^t\sigma(s,X_{s-})\,\dd W_s
+ +\int_{(0,t]\times E}h(s,X_{s-},z)\,\widetilde N(\dd s,\dd z).
+ \tag{13.2}\label{eq:jump-sde-comp}
+\]
+\end{lemat}
+\begin{proof}
+Nierówność Cauchy'ego--Schwarza daje
+\[
+\int_{E_1}\|\Gamma(t,x,z)\|\,\dd\nu(z)
+\le \nu(E_1)^{1/2}
+\left(\int_{E_1}\|\Gamma(t,x,z)\|^2\,\dd\nu(z)\right)^{1/2}.
+\]
+Można więc odjąć skończony kompensator dużych skoków:
+\[
+\int_{(0,t]\times E_1}\Gamma\,\dd N
+=\int_{(0,t]\times E_1}\Gamma\,\dd\widetilde N
+ +\int_0^t\int_{E_1}\Gamma\,\dd\nu\,\dd s.
+\]
+Tożsamość sprawdzamy najpierw dla procesów prostych,
+a następnie dla ogólnych współczynników przez lokalizację
+i izometrię z rozdziału~\ref{ch:poisson-random-measure}.
+Zsumowanie składników dryfu daje \eqref{eq:jump-sde-comp}.
+\end{proof}
+
+\begin{przyklad}[Różnica pomiędzy dryfem a średnim przyrostem]
+Niech $N$ będzie procesem Poissona o intensywności
+$\lambda>0$. Dla $X_t=x+bt+cN_t$ mamy
+$\E X_t=x+(b+\lambda c)t$. Jeśli zamiast tego zapiszemy
+$X_t=x+\widetilde b t+c(N_t-\lambda t)$, to oba opisy
+są identyczne dokładnie przy $\widetilde b=b+\lambda c$.
+Nie należy więc porównywać współczynników przy $\dd t$ bez
+sprawdzenia, czy skoki zostały skompensowane.
+\end{przyklad}
+
+\section{Istnienie, jednoznaczność i dokładny dowód metodą Picarda}
+
+\begin{twierdzenie}[Silne istnienie i jednoznaczność w klasie $L^2$]
+\label{th:jump-picard}
+Niech dane będą jak w Definicji~\ref{def:jump-sde}.
+Załóżmy, że istnieją $L,K_0<\infty$ takie, iż dla wszystkich
+$t\in[0,T]$ i $x,y\in\R^d$ zachodzą
+\[
+\begin{split}
+&\|b(t,x)-b(t,y)\|^2+
+ \|\sigma(t,x)-\sigma(t,y)\|_{\mathrm{HS}}^2\\
+&\quad+\int_{E_0}\|\gamma(t,x,z)-\gamma(t,y,z)\|^2\dd\nu(z)
+ +\int_{E_1}\|\Gamma(t,x,z)-\Gamma(t,y,z)\|^2\dd\nu(z)
+ \le L\|x-y\|^2,
+\end{split}
+\tag{13.3}\label{eq:jump-lip}
+\]
+oraz
+\[
+\sup_{t\in[0,T]}\left(
+\|b(t,0)\|^2+\|\sigma(t,0)\|_{\mathrm{HS}}^2
++\int_{E_0}\|\gamma(t,0,z)\|^2\dd\nu(z)
++\int_{E_1}\|\Gamma(t,0,z)\|^2\dd\nu(z)
+\right)\le K_0.
+\tag{13.4}\label{eq:jump-at-zero}
+\]
+Wtedy istnieje adaptowane silne rozwiązanie càdlàg $X$
+równania \eqref{eq:jump-sde}, jedyne z dokładnością
+do nierozróżnialności, i
+$\E\sup_{t\le T}\|X_t\|^2<\infty$.
+Dla dwóch rozwiązań napędzanych tą samą parą $(W,N)$
+i z tym samym warunkiem początkowym zachodzi
+$\Prob(X_t=Y_t\ \text{dla wszystkich }t\le T)=1$.
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: kontrola współczynników po kompensacji.}
+Niech $\beta,h$ będą z Lematu~\ref{lem:rewrite-jump-sde}.
+Z \eqref{eq:jump-lip} i nierówności Cauchy'ego--Schwarza
+wynika, z pewną stałą $C_1=C_1(L,\nu(E_1))$,
+\[
+\|\beta(t,x)-\beta(t,y)\|^2
++\|\sigma(t,x)-\sigma(t,y)\|_{\mathrm{HS}}^2
++\int_E\|h(t,x,z)-h(t,y,z)\|^2\dd\nu(z)
+\le C_1\|x-y\|^2.
+\]
+Zastosowanie tych samych nierówności przy $y=0$ daje
+oszacowanie wzrostu
+$\|\beta(t,x)\|^2+\|\sigma(t,x)\|_{\mathrm{HS}}^2+
+\int_E\|h(t,x,z)\|^2\dd\nu(z)
+\le C_2(1+\|x\|^2)$.
+
+\emph{Krok 2: iteracje.} Ustalmy $X^{(0)}_t=x$ i
+zdefiniujmy rekurencyjnie $X^{(n+1)}$ prawą stroną
+\eqref{eq:jump-sde-comp} z $X^{(n)}_{s-}$ w miejscu $X_{s-}$.
+Indukcja pokazuje, że każda iteracja jest adaptowana i càdlàg,
+a wszystkie całki są kwadratowo całkowalne. Istotnie,
+ze wzrostu liniowego oraz z nierówności maksymalnych
+ciągłych i skokowych martyngałów otrzymujemy
+\[
+\E\sup_{s\le t}\|X^{(n+1)}_s\|^2
+\le C_3\left(1+\|x\|^2+
+ \int_0^t\E\sup_{u\le r}\|X^{(n)}_u\|^2\dd r\right),
+\]
+gdzie $C_3$ zależy od $T$ i danych, ale nie od $n$.
+
+\emph{Krok 3: oszacowanie różnic.} Niech
+$D^{(n)}=X^{(n+1)}-X^{(n)}$ oraz
+$F_n(t)=\E\sup_{s\le t}\|D^{(n)}_s\|^2$.
+Dla $n\ge1$ stosujemy kolejno
+$\|u+v+w\|^2\le3(\|u\|^2+\|v\|^2+\|w\|^2)$,
+$\sup_{s\le t}\|\int_0^s a_r\dd r\|^2
+\le t\int_0^t\|a_r\|^2\dd r$, nierówność Dooba
+oraz izometrie całek Wienera i Poissona. Dostajemy
+\[
+ F_n(t)\le C_T\int_0^t F_{n-1}(r)\,\dd r,
+ \qquad C_T=3TC_1+12C_1.
+ \tag{13.5}\label{eq:jump-picard-est}
+\]
+Pierwsza różnica spełnia $F_0(t)\le A$ dla $0\le t\le T$,
+z pewną skończoną $A$ wynikającą z \eqref{eq:jump-at-zero}.
+Indukcja całkowa prowadzi do
+\[
+ F_n(t)\le A\frac{(C_Tt)^n}{n!}.
+ \tag{13.6}\label{eq:jump-picard-factorial}
+\]
+Tutaj dokładnie pojawia się silnia: każde kolejne
+całkowanie po odcinku $[0,t]$ zwiększa wykładnik $t$
+i dzieli oszacowanie przez następny indeks.
+
+\emph{Krok 4: granica i równanie całkowe.} Z oszacowania
+\eqref{eq:jump-picard-factorial} otrzymujemy
+\[
+\sum_{n\ge0}\E\sup_{t\le T}\|D^{(n)}_t\|
+\le \sqrt A\sum_{n\ge0}\frac{(C_TT)^{n/2}}{\sqrt{n!}}<\infty.
+\]
+Twierdzenie o zbieżności monotonicznej daje więc
+$\sum_n\sup_{t\le T}\|D^{(n)}_t\|<\infty$ prawie na pewno.
+Iteracje mają jednostajną granicę $X$, której trajektorie
+są càdlàg; proces pozostaje adaptowany.
+Jednocześnie iteracje zbiegają w normie
+$\E\sup_{t\le T}\|\cdot\|^2$ (nierówność Minkowskiego
+i zbieżny szereg pierwiastków $F_n(T)$).
+Warunek Lipschitza i oszacowania maksymalne zapewniają
+zbieżność każdej z trzech całek w \eqref{eq:jump-sde-comp}
+w tej samej normie. Przechodząc do granicy, otrzymujemy
+tożsamość procesów, a Lemat~\ref{lem:rewrite-jump-sde}
+przywraca pierwotną postać \eqref{eq:jump-sde}.
+
+\emph{Krok 5: jednoznaczność.} Dla dwóch rozwiązań $X,Y$
+ze wspólnym szumem, których normy maksymalne mają skończony
+drugi moment, stosujemy \eqref{eq:jump-picard-est}
+bez zmiany argumentu, zastępując $D^{(n)}$ przez $X-Y$.
+W przypadku dowolnych rozwiązań o lokalnie całkowalnych
+charakterystykach stosujemy najpierw wspólne czasy
+zatrzymania i Lemat~\ref{lem:jump-exit-audit} podany niżej,
+a następnie usuwamy lokalizację. Dla rozwiązań o
+skończonym momencie maksymalnym wynika stąd
+$G(t):=\E\sup_{s\le t}\|X_s-Y_s\|^2
+\le C_T\int_0^tG(r)\dd r$.
+Lemat Gronwalla daje $G=0$. Równość w normie supremum
+daje nierozróżnialność, a nie tylko równość w ustalonej
+chwili.
+\end{proof}
+
+\begin{uwaga}[Co jeżeli duże skoki nie mają drugiego momentu?]
+Metoda Picarda powyżej działa w $L^2$, dlatego wymaga
+\eqref{eq:jump-at-zero} dla $\Gamma$. Jeżeli $\nu(E_1)<\infty$,
+można zamiast tego rozwiązywać równanie między kolejnymi dużymi
+skokami, a w chwili skoku aktualizować stan według
+$X_s=X_{s-}+\Gamma(s,X_{s-},Z_s)$. W tej konstrukcji
+nie potrzeba momentu drugiego znacznika, ale trzeba
+sprawdzić nieeksplozję i jednoznaczność dynamiki między
+skokami. Nie jest to już wniosek z podanej izometrii $L^2$.
+\end{uwaga}
+
+\section{Zależność od danych, lokalizacja i nieeksplozja}
+
+\begin{twierdzenie}[Stabilność względem stanu początkowego]
+\label{th:jump-stability}
+Przy założeniach Twierdzenia~\ref{th:jump-picard} niech
+$X^x,X^y$ będą rozwiązaniami napędzanymi tymi samymi
+$W,N$, z warunkami początkowymi $x,y\in\R^d$.
+Istnieje stała $C_T$ zależna od współczynników i $T$, taka że
+\[
+ \E\sup_{t\le T}\|X_t^x-X_t^y\|^2\le C_T\|x-y\|^2.
+ \tag{13.7}\label{eq:jump-stability}
+\]
+\end{twierdzenie}
+\begin{proof}
+Odejmując oba równania, otrzymujemy początkowy wyraz
+$x-y$ oraz całki z różnic współczynników. Oszacowania
+z dowodu Twierdzenia~\ref{th:jump-picard} dają
+$G(t)\le4\|x-y\|^2+C\int_0^tG(s)\dd s$.
+Lemat Gronwalla dowodzi $G(T)\le4e^{CT}\|x-y\|^2$.
+\end{proof}
+
+\begin{twierdzenie}[Warunek lokalny i brak eksplozji]
+\label{th:jump-local-explosion}
+Niech współczynniki równania \eqref{eq:jump-sde-comp}
+będą lokalnie Lipschitzowskie w następującym sensie:
+dla każdego $R>0$ istnieje $L_R<\infty$, dla którego
+odpowiednik \eqref{eq:jump-lip} zachodzi przy
+$\|x\|,\|y\|\le R$. Jeżeli dodatkowo
+\[
+ \|\beta(t,x)\|^2+\|\sigma(t,x)\|_{\mathrm{HS}}^2
+ +\int_E\|h(t,x,z)\|^2\dd\nu(z)
+ \le K(1+\|x\|^2)
+ \quad(t\in[0,T],\ x\in\R^d),
+ \tag{13.8}\label{eq:jump-growth}
+\]
+to istnieje jedyne globalne silne rozwiązanie równania
+\eqref{eq:jump-sde-comp} na $[0,T]$, a
+$\E\sup_{t\le T}\|X_t\|^2\le C_{K,T}(1+\|x\|^2)$.
+\end{twierdzenie}
+\begin{proof}
+Niech $\pi_R$ będzie rzutem na domkniętą kulę promienia
+$R$. Współczynniki $\beta(t,\pi_Rx)$,
+$\sigma(t,\pi_Rx)$, $h(t,\pi_Rx,z)$ są globalnie
+Lipschitzowskie, ponieważ rzut jest $1$-Lipschitzowski,
+a argumenty pozostają w kuli promienia $R$.
+Twierdzenie~\ref{th:jump-picard} daje rozwiązanie $X^R$.
+Dwa rozwiązania z różnymi promieniami pokrywają się
+(do chwili wyjścia z mniejszej kuli) przez jednoznaczność
+z zatrzymaniem. Przy skoku równość obowiązuje także
+w chwili wyjścia, gdyż współczynniki skokowe oblicza się
+w stanie \emph{przed} skokiem.
+
+Z nierówności maksymalnych i \eqref{eq:jump-growth},
+niezależnie od $R$, otrzymujemy
+\[
+ \E\sup_{t\le T}\|X^R_t\|^2
+ \le C(1+\|x\|^2)+C\int_0^T
+ \E\sup_{u\le s}\|X^R_u\|^2\dd s
+ \le C_{K,T}(1+\|x\|^2).
+\]
+Dla $\tau_R=\inf\{t\le T:\|X^R_t\|\ge R\}\wedge T$
+nierówność Markowa daje
+$\Prob(\tau_R<T)\le C_{K,T}(1+\|x\|^2)/R^2$.
+Lewa strona dąży do zera, zatem ze zgodności lokalnych
+rozwiązań otrzymujemy jedno rozwiązanie na całym $[0,T]$.
+Wynik o momencie przechodzi do granicy przez lemat Fatou.
+\end{proof}
+
+\begin{uwaga}[Dlaczego lokalność nie wystarcza sama w sobie?]
+Dla deterministycznego równania $x'(t)=x(t)^2$, $x(0)=1$,
+wyraz szumowy jest równy zero, a dryf jest lokalnie
+Lipschitzowski. Rozwiązanie $x(t)=(1-t)^{-1}$ eksploduje
+w chwili $1$. Jest to szczególny przypadek SDE, więc
+nie wolno wyciągać globalnego istnienia wyłącznie z
+lokalnej regularności współczynników.
+\end{uwaga}
+
+
+\section{Lokalizacja i skok opuszczający obszar: uzupełnienie dowodowe}
+
+\begin{lemat}[Zgodność rozwiązań także w chwili skoku wyjściowego]
+\label{lem:jump-exit-audit}
+Niech $X,Y$ będą dwoma adaptowanymi rozwiązaniami càdlàg
+równania \eqref{eq:jump-sde-comp}, napędzanymi tą samą parą
+$(W,N)$, z tym samym stanem początkowym. Załóżmy, że
+współczynniki spełniają warunek Lipschitza na każdej kuli
+w normie $\|\cdot\|^2+\|\cdot\|_{\mathrm{HS}}^2+L^2(\nu)$.
+Dla $R>\|x\|$ oznaczmy
+$\tau_R=\inf\{t\ge0:\|X_t\|\vee\|Y_t\|\ge R\}\wedge T$.
+Wówczas $X_{t\wedge\tau_R}=Y_{t\wedge\tau_R}$ dla
+wszystkich $t\in[0,T]$ prawie na pewno.
+\end{lemat}
+\begin{proof}
+Ponieważ $X,Y$ są càdlàg, dla $s\le\tau_R$ zachodzi
+$\|X_{s-}\|,\|Y_{s-}\|\le R$, również gdy w chwili
+$s=\tau_R$ następuje skok przekraczający promień $R$.
+Zatrzymujemy różnicę równań w chwili $\tau_R$. W całce
+Poissona po $(0,t\wedge\tau_R]$ uwzględniony jest skok
+w chwili $\tau_R$; jego współczynnik jest jednak obliczany
+w stanie lewostronnym i nadal spełnia lokalne oszacowanie
+Lipschitza. Stosując nierówność Cauchy'ego--Schwarza,
+nierówność maksymalną Dooba i izometrie obu całek,
+otrzymujemy po standardowej lokalizacji całkowalności
+\[
+ G_R(t):=\E\sup_{u\le t}
+ \|X_{u\wedge\tau_R}-Y_{u\wedge\tau_R}\|^2
+ \le C_{R,T}\int_0^t G_R(s)\,\dd s.
+\]
+Jeżeli zatrzymane całki nie mają z góry skończonego
+momentu, najpierw zatrzymujemy je po przekroczeniu poziomu
+$n$ przez ich kwadratowe charakterystyki, stosujemy to samo
+oszacowanie i dopuszczamy $n\to\infty$; na odcinku do
+$\tau_R$ charakterystyki są skończone prawie na pewno.
+Lemat Gronwalla daje $G_R=0$. W ten sposób nie gubimy
+skoku w chwili wyjścia, co byłoby błędem przy
+naśladowaniu argumentu dla trajektorii ciągłych.
+\end{proof}
+
+\begin{uwaga}[Które założenie daje globalność?]
+Sama lokalna lipschitzowskość zapewnia rozwiązanie do chwili
+eksplozji. Oszacowanie liniowego wzrostu
+\eqref{eq:jump-growth} daje ograniczenie momentu niezależne
+od promienia obcięcia, a zatem $\Prob(\tau_R<T)\to0$.
+Oba etapy są logicznie odrębne: zgodność rozwiązań
+zatrzymanych nie oznacza jeszcze, że czasy wyjścia
+zbiegają do nieskończoności.
+\end{uwaga}
+
+\section{Zadania rozwiązane i przykłady interpretacyjne}
+
+\begin{zadanie}[Skokowy proces Ornsteina--Uhlenbecka ze znacznikami]
+Niech $a,\lambda>0$, $N$ będzie miarą Poissona na
+$(0,\infty)\times\R$ o intensywności
+$\lambda\,\dd t\,\dd\rho(z)$, gdzie $\rho$ jest
+rozkładem prawdopodobieństwa o skończonym drugim momencie.
+Rozwiązać
+\[
+ X_t=x-a\int_0^tX_s\,\dd s
+ +\int_{(0,t]\times\R}z\,\widetilde N(\dd s,\dd z),
+\]
+a następnie wyznaczyć średnią, wariancję i granicę wariancji.
+
+\emph{Rozwiązanie.} Mnożymy równanie przez deterministyczny
+czynnik całkujący $e^{at}$. Nie ma dodatkowego członu
+kowariacji, gdyż $e^{at}$ ma skończoną wariację i jest ciągły.
+Stąd
+\[
+ X_t=xe^{-at}+\int_{(0,t]\times\R}
+ e^{-a(t-s)}z\,\widetilde N(\dd s,\dd z).
+\]
+Z kompensacji wynika $\E X_t=xe^{-at}$, natomiast z
+izometrii Poissona
+\[
+ \Var(X_t)=\lambda\E_\rho Z^2\int_0^te^{-2a(t-s)}\dd s
+ =\frac{\lambda\E_\rho Z^2}{2a}(1-e^{-2at}).
+\]
+Wariancja zbiega do $\lambda\E_\rho Z^2/(2a)$, ale
+nie oznacza to automatycznie gaussowskości rozkładu
+stacjonarnego.
+\end{zadanie}
+
+\begin{zadanie}[Intensywność zależna od stanu przez rozrzedzanie]
+Niech $\overline N$ będzie miarą Poissona na
+$(0,\infty)\times(0,\Lambda]$ o intensywności
+$\dd t\,\dd u$, gdzie $0<\Lambda<\infty$, a
+$\lambda:\N_0\to[0,\Lambda]$ dowolną funkcją.
+Zdefiniujmy proces zliczający wzorem
+\[
+ X_t=x+\int_{(0,t]\times(0,\Lambda]}
+  \ind{\{u\le\lambda(X_{s-})\}}\,\overline N(\dd s,\dd u),
+ \qquad x\in\N_0.
+\]
+Wyjaśnić jego konstrukcję i obliczyć prawdopodobieństwo
+jednego przejścia na krótkim przedziale.
+
+\emph{Rozwiązanie.} Na $[0,T]$ miara $\overline N$ ma
+skończenie wiele punktów prawie na pewno. Porządkujemy
+je chronologicznie; w chwili punktu $(s,u)$ wykonujemy skok
+$X_s=X_{s-}+1$, gdy $u\le\lambda(X_{s-})$, a w przeciwnym
+razie nie zmieniamy stanu. W ten sposób otrzymujemy
+jedyny proces skokowy, niekorzystający z informacji przyszłej.
+Na krótkim przedziale $[t,t+h]$, pod warunkiem $X_t=k$,
+prawdopodobieństwo zaakceptowania dokładnie jednego punktu
+wynosi $\lambda(k)h+O(h^2)$, a prawdopodobieństwo co najmniej
+dwóch akceptacji wynosi $O(h^2)$, jednostajnie w $k$.
+Istotnie, liczba wszystkich punktów kandydackich ma
+rozkład Poissona z parametrem $\Lambda h$, więc zdarzenie
+dwóch lub więcej ma prawdopodobieństwo $O(h^2)$; przy
+jednym kandydacie znacznik jest jednostajny i daje
+prawdopodobieństwo akceptacji $\lambda(k)/\Lambda$.
+Generator to $Lf(k)=\lambda(k)(f(k+1)-f(k))$.
+\end{zadanie}
+
+\begin{przyklad}[Dlaczego rozwiązania nie muszą zachowywać porządku?]
+W całce skokowej sam warunek Lipschitza nie oznacza
+porównywania trajektorii. Załóżmy, że w równaniu
+$\dd X_t=-2X_{t-}\,\dd N_t$ mamy dwa warunki
+początkowe $x=0$ i $y=1$. Przed pierwszym skokiem
+$X^0=0$, $X^1=1$, lecz po nim $X^0=0$, $X^1=-1$.
+Porządek został odwrócony. Aby uzyskać zasadę porównania,
+trzeba dodatkowo kontrolować monotoniczność przekształceń
+$x\mapsto x+\Gamma(t,x,z)$ wywoływanych przez skoki.
+\end{przyklad}
+
+\section{Związek z generatorami i własnością Markowa}
+
+\begin{stwierdzenie}[Własność Markowa dla jednorodnych współczynników]
+\label{prop:jump-markov}
+Przy hipotezach Twierdzenia~\ref{th:jump-picard}, jeśli
+$b,\sigma,\gamma,\Gamma$ nie zależą jawnie od czasu,
+rodzina rozwiązań $(X^x)_{x\in\R^d}$ wyznacza
+jednorodny proces Markowa o półgrupie
+$P_tf(x)=\E[f(X_t^x)]$ dla każdej ograniczonej funkcji
+borelowskiej $f$. Co więcej, proces ma mocną własność Markowa.
+\end{stwierdzenie}
+\begin{proof}
+Iteracje Picarda są mierzalnymi funkcjonałami stanu
+początkowego oraz przyrostów pary $(W,N)$; ich granica
+jest mierzalna, a jednoznaczność ścieżkowa zapewnia
+zgodność rozwiązań przesuniętych w czasie. Przy ustalonej
+chwili $s$ przyszłe przyrosty pary $(W,N)$ są niezależne
+od $\calF_s$. Stąd dla ograniczonej $f$
+$\E[f(X_{s+t}^x)\mid\calF_s]=P_tf(X_s^x)$.
+Dla ograniczonego czasu zatrzymania $\tau$ zastępujemy
+$s$ przez przybliżenia $\tau_n$ o skończenie wielu
+wartościach, z $\tau_n\downarrow\tau$. Prawostronna
+ciągłość trajektorii, stabilność w stanie początkowym
+i ciągłość stochastyczna w czasie pozwalają przejść
+do granicy dla ograniczonych ciągłych $f$.
+Dla dowolnej ograniczonej borelowskiej $f$ uogólniamy
+wynik przez twierdzenie o klasie monotonicznej.
+\end{proof}
+
+\begin{uwaga}[Od jakiej informacji zależy przyszłość?]
+Mocna własność Markowa oznacza, że po czasie zatrzymania
+$\tau$ dalsza ewolucja zależy od aktualnego stanu
+$X_\tau$, a nie od całej przeszłej trajektorii. Nie znaczy
+to, że wartości $X_t$ w różnych chwilach są niezależne.
+Właśnie zależność od $X_{s-}$ pozwala modelować
+sprzężenie bieżącej dynamiki z losowymi rozmiarami skoków.
+\end{uwaga}
+
+\section{Podsumowanie i przygotowanie do rozwiązań słabych}
+Metoda Picarda wraz z izometrią całki skompensowanej
+zapewnia silne rozwiązania skokowych SDE przy globalnym
+warunku Lipschitza. Lokalizacja poszerza zakres do
+współczynników lokalnie Lipschitzowskich o liniowym
+wzroście. Te wyniki nie odpowiadają jednak na pytanie,
+czy można skonstruować rozwiązanie, \emph{wybierając również}
+przestrzeń probabilistyczną i proces napędzający, ani czy
+jednoznaczność rozkładu pociąga za sobą jednoznaczność
+trajektorii. Temu poświęcimy rozdział następny.
+
+% ===========================================================================
+% ROZDZIAŁ 14 -- Słabe rozwiązania, jednoznaczność co do prawa, Yamada--Watanabe
+% ===========================================================================

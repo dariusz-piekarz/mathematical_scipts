@@ -1,0 +1,469 @@
+\chapter{Martyngały: rachunek, strategie i nierówności}
+\label{ch:martyngaly}
+\paragraph{Odsyłacze międzytomowe.} Zastosowania martyngałów w diagnostyce MCMC omawia tom IV, rozdział~\ref{IV-ch:mcmc}, a martyngały ciągłe tom II, rozdział~\ref{II-ch:mart-cont}.
+
+
+\section{Średni przyrost równy zero nie oznacza braku zmian}
+
+Martyngał może bardzo silnie fluktuować: nie jest
+procesem stałym i kolejne wartości nie muszą być
+niezależne. Warunek
+$\E[M_{n+1}-M_n\mid\mathcal F_n]=0$
+mówi jedynie, że \emph{po uwzględnieniu całej
+aktualnie dostępnej informacji} nie ma
+przewidywalnego zysku ani straty.
+Przez równość zachodzi też
+$\E M_n=\E M_0$ dla każdego $n$,
+ale sama stałość średniej nie wystarcza do
+martyngałowości.
+
+\begin{przyklad}[Stała średnia bez martyngału]
+Niech $\xi$ przyjmuje $\pm1$ z prawdopodobieństwem
+$1/2$ i połóżmy $X_0=0$, $X_1=\xi$,
+$X_2=-\xi$, $X_n=X_2$ dla $n\geq2$.
+Względem naturalnej filtracji $\E X_n=0$
+przy każdym $n$. Jednak
+$\E[X_2\mid\mathcal F_1]=-\xi\ne\xi=X_1$.
+Średnia bezwarunkowa gubi informację o znaku
+pierwszego wyniku.
+\end{przyklad}
+
+\begin{przyklad}[Martyngał dla dowolnej zmiennej końcowej]
+Niech $Y\in L^1(\Prob)$ i niech $(\mathcal F_n)$
+będzie filtracją. Wówczas
+$M_n=\E[Y\mid\mathcal F_n]$ jest martyngałem:
+$\E[M_{n+1}\mid\mathcal F_n]=
+\E[\E[Y\mid\mathcal F_{n+1}]\mid\mathcal F_n]=M_n$.
+Interpretujemy $M_n$ jako aktualną prognozę
+przyszłej wielkości $Y$ na podstawie informacji
+do chwili $n$.
+\end{przyklad}
+
+\begin{przyklad}[Losowe mnożenie]
+Niech $Z_1,Z_2,\ldots$ będą niezależne, nieujemne,
+$\E Z_k=1$, i zdefiniujmy $M_0=1$,
+$M_n=\prod_{k=1}^n Z_k$.
+Wtedy $\E[M_{n+1}\mid\mathcal F_n]
+=M_n\E Z_{n+1}=M_n$.
+Niekoniecznie $M_n\to1$: możliwe jest nawet
+$M_n\to0$ p.n. mimo $\E M_n=1$.
+Do tej subtelności wrócimy przy zbieżności
+martyngałów.
+\end{przyklad}
+
+\begin{przyklad}[Martyngał wykładniczy]
+Niech $\xi_1,\xi_2,\ldots$ będą niezależne i jednakowo
+rozłożone, a dla ustalonego $t\in\R$
+niech $m(t)=\E e^{t\xi_1}<\infty$ i $m(t)>0$.
+Dla $S_n=\sum_{k=1}^n\xi_k$ proces
+\[
+M_n(t)=\frac{e^{tS_n}}{m(t)^n},\qquad M_0(t)=1,
+\]
+jest nieujemnym martyngałem względem naturalnej
+filtracji: po warunkowaniu następnego czynnika
+otrzymujemy $\E e^{t\xi_{n+1}}/m(t)=1$.
+Dla spaceru symetrycznego $m(t)=\cosh t$.
+Takie martyngały umożliwiają szacowanie
+prawdopodobieństw trafienia w odległy próg.
+\end{przyklad}
+
+\section{Różnice martyngałowe i ortogonalność}
+
+\begin{definicja}[Różnice martyngałowe]
+Niech $(M_n)$ będzie martyngałem. Dla $n\geq1$
+przyjmijmy $D_n=M_n-M_{n-1}$.
+Wówczas $D_n\in L^1$, jest $\mathcal F_n$-mierzalna
+i $\E[D_n\mid\mathcal F_{n-1}]=0$.
+Odwrotnie, jeśli proces adaptowany ma postać
+$M_n=M_0+\sum_{k=1}^nD_k$,
+$M_0\in L^1(\mathcal F_0)$,
+$D_k\in L^1(\mathcal F_k)$ i
+$\E[D_k\mid\mathcal F_{k-1}]=0$, to jest martyngałem.
+\end{definicja}
+
+\begin{twierdzenie}[Ortogonalność przyrostów w $L^2$]
+Niech $(M_n)$ będzie martyngałem takim, że
+$M_n\in L^2$ dla wszystkich $n$. Wtedy
+$\E[D_iD_j]=0$ dla $i\ne j$ oraz
+\[
+\E[(M_n-M_0)^2]=\sum_{k=1}^n\E D_k^2,
+\qquad
+\E M_n^2=\E M_0^2+\sum_{k=1}^n\E D_k^2.
+\]
+\end{twierdzenie}
+\begin{proof}
+Załóżmy $i<j$. Ponieważ $D_i$ jest
+$\mathcal F_i\subseteq\mathcal F_{j-1}$-mierzalna,
+a iloczyn $D_iD_j$ jest całkowalny na mocy
+nierówności Cauchy'ego--Schwarza, reguła
+wyciągania czynnika z warunkowania daje
+$\E[D_iD_j]=\E[D_i\E[D_j\mid\mathcal F_{j-1}]]=0$.
+Podobnie
+$\E[M_0D_j]=0$, gdyż $M_0$ jest
+$\mathcal F_0$-mierzalna. Rozwijamy kwadrat
+$M_n=M_0+\sum_{k=1}^nD_k$, a wszystkie
+wyrazy mieszane znikają.
+\end{proof}
+
+\begin{uwaga}
+Ortogonalność jest słabsza od niezależności:
+różnice martyngałowe mogą zależeć od wszystkich
+wcześniejszych obserwacji, mimo zerowych kowariancji.
+\end{uwaga}
+
+\begin{przyklad}[Zależne, lecz ortogonalne przyrosty]
+Niech $\xi_k$ będą niezależnymi symetrycznymi
+znakami, $D_1=\xi_1$, $D_2=\xi_1\xi_2$,
+$D_3=\xi_1(1+\xi_2)\xi_3$ i
+$D_n=\xi_n$ dla $n\geq4$.
+Względem $\mathcal F_n=\sigma(\xi_1,\ldots,\xi_n)$
+każdy przyrost ma warunkową średnią zero.
+Jednak wartość bezwzględna $D_3$ zależy od
+$\xi_2$, więc $D_3$ nie jest niezależna od
+historii: na zdarzeniu $\{\xi_2=-1\}$ jest zerowa,
+a na $\{\xi_2=1\}$ ma moduł $2$.
+Mimo to wszystkie różne przyrosty są ortogonalne.
+\end{przyklad}
+
+\section{Suma przewidywalnie ważonych przyrostów}
+
+\begin{twierdzenie}[Transformacja martyngałowa]
+Niech $(M_n)$ będzie martyngałem i
+$(H_n)_{n\geq1}$ przewidywalnym procesem.
+Załóżmy, że każda zmienna
+$H_n(M_n-M_{n-1})$ jest całkowalna
+(np. wszystkie $H_n$ są ograniczone).
+Wtedy
+\[
+(H\cdot M)_0=0,\qquad
+(H\cdot M)_n=\sum_{k=1}^nH_k(M_k-M_{k-1})
+\]
+jest martyngałem. Jeżeli $M$ jest
+podmartyngałem i $H_n\geq0$, transformacja
+jest podmartyngałem; dla nadmartyngału
+jest nadmartyngałem.
+\end{twierdzenie}
+\begin{proof}
+Wartości transformacji są całkowalne i adaptowane.
+Ponieważ $H_{n+1}$ jest $\mathcal F_n$-mierzalna,
+reguła wyciągania czynnika, w jej wersji
+z warunkiem całkowalności iloczynu, daje
+\[
+\E[(H\cdot M)_{n+1}-(H\cdot M)_n
+\mid\mathcal F_n]
+=H_{n+1}\E[M_{n+1}-M_n\mid\mathcal F_n].
+\]
+W martyngale prawa strona jest zerowa; w
+pod- i nadmartyngale przy $H_{n+1}\geq0$
+ma odpowiedni znak.
+\end{proof}
+
+\begin{przyklad}[Zmienianie stawek nie tworzy przewidywalnego zysku]
+Niech $M_n$ oznacza skumulowany wynik uczciwej gry,
+a $H_n$ stawkę wybraną na podstawie historii
+$\mathcal F_{n-1}$. Jeżeli ryzyko jest na tyle
+kontrolowane, że $H_n\Delta M_n$ jest całkowalny,
+proces sumy zysków jest martyngałem.
+\emph{Nie} wynika z tego, że wynik gry nie może
+być dodatni na określonej trajektorii, tylko że
+nie ma dodatniego \emph{warunkowego oczekiwanego}
+przyrostu. Podwajanie stawki bez kontroli
+całkowalności albo przy nieograniczonym czasie
+nie jest objęte tym twierdzeniem.
+\end{przyklad}
+
+\section{Rozkład Dooba i energia martyngału}
+
+\begin{twierdzenie}[Rozkład Dooba w czasie dyskretnym]
+Niech $(X_n)$ będzie całkowalnym, adaptowanym
+podmartyngałem. Wtedy istnieją jednoznaczne procesy
+$(M_n)$ i $(A_n)$ takie, że
+$X_n=M_n+A_n$, $M$ jest martyngałem,
+$A_0=0$, $A_n$ jest całkowalny i adaptowany,
+$\Delta A_n=A_n-A_{n-1}$ jest
+$\mathcal F_{n-1}$-mierzalny i nieujemny.
+Proces $A$ nazywamy przewidywalną częścią
+rosnącą podmartyngału.
+\end{twierdzenie}
+\begin{proof}
+Definiujemy
+\[
+A_0=0,\qquad
+A_n=\sum_{k=1}^n\E[X_k-X_{k-1}\mid\mathcal F_{k-1}],
+\qquad M_n=X_n-A_n.
+\]
+Każdy składnik sumy definiującej $A_n$ jest
+$\mathcal F_{k-1}$-mierzalny, całkowalny i
+nieujemny, ponieważ $X$ jest podmartyngałem.
+Zatem $A$ ma wszystkie wymagane własności,
+a
+$\E[M_n-M_{n-1}\mid\mathcal F_{n-1}]
+=\E[X_n-X_{n-1}\mid\mathcal F_{n-1}]
+-(A_n-A_{n-1})=0$.
+Jeśli $X=M'+A'$ byłby drugim rozkładem,
+to z $\Delta A'_n=\Delta X_n-\Delta M'_n$
+po warunkowaniu otrzymujemy
+$\Delta A'_n=\E[\Delta X_n\mid\mathcal F_{n-1}]$.
+Wraz z $A'_0=0$ wymusza to $A'=A$ i $M'=M$.
+\end{proof}
+
+\begin{przyklad}[Kwadrat martyngału]
+Dla martyngału $M$ z wartościami w $L^2$ funkcja
+$x\mapsto x^2$ jest wypukła, więc
+$(M_n^2)$ jest podmartyngałem. Jego część rosnąca
+jest dana przez
+\[
+\langle M\rangle_n
+=\sum_{k=1}^n\E[(M_k-M_{k-1})^2\mid\mathcal F_{k-1}],
+\]
+przy czym $M_n^2-\langle M\rangle_n$ jest
+martyngałem. Rzeczywiście
+$M_n^2-M_{n-1}^2=2M_{n-1}\Delta M_n+(\Delta M_n)^2$,
+a pierwszy składnik ma warunkową średnią zero.
+Wielkość $\langle M\rangle_n$ jest
+\emph{przewidywalną wariacją kwadratową};
+różni się od obserwowanej sumy
+$[M]_n=\sum_{k=1}^n(\Delta M_k)^2$.
+\end{przyklad}
+
+\begin{przyklad}[Zależna zmienność]
+Niech $\xi_k\in\{-1,1\}$ będą niezależne i uczciwe,
+a $\sigma_k>0$ niech będzie
+$\mathcal F_{k-1}$-mierzalna oraz spełnia
+$\E\sigma_k^2<\infty$. Przyjmijmy
+$M_n=\sum_{k=1}^n\sigma_k\xi_k$.
+Wtedy $M$ jest martyngałem, a
+$\langle M\rangle_n=\sum_{k=1}^n\sigma_k^2$.
+Zmienność przyrostu może zależeć od historii;
+warunek martyngałowy wymaga tylko zaniku
+warunkowej średniej.
+\end{przyklad}
+
+\section{Nierówności maksymalne Dooba}
+
+\begin{twierdzenie}[Nierówność maksymalna $L^1$]
+Niech $(X_k)_{0\leq k\leq n}$ będzie nieujemnym
+podmartyngałem względem $(\mathcal F_k)$.
+Dla każdego $\lambda>0$
+\[
+\lambda\Prob\left(\max_{0\leq k\leq n}X_k\geq\lambda\right)
+\leq\E\left[X_n\ind{\{\max_{0\leq k\leq n}X_k\geq\lambda\}}\right]
+\leq\E X_n.
+\]
+W szczególności dla martyngału $(M_k)$
+$\Prob(\max_{k\leq n}|M_k|\geq\lambda)
+\leq\E|M_n|/\lambda$.
+\end{twierdzenie}
+\begin{proof}
+Niech $A=\{\max_{0\leq k\leq n}X_k\geq\lambda\}$
+i $\tau=\inf\{k\leq n:X_k\geq\lambda\}$,
+z umową $\tau=n$ na ścieżkach bez przekroczenia.
+Rozbijmy $A$ na rozłączne zdarzenia
+$A_k=\{X_0<\lambda,\ldots,X_{k-1}<\lambda,
+X_k\geq\lambda\}$ dla $k\leq n$.
+Mamy $A_k\in\mathcal F_k$ i
+$X_k\geq\lambda$ na $A_k$.
+Z podmartyngałowości i wieży
+$\E[X_n\ind{A_k}]\geq\E[X_k\ind{A_k}]
+\geq\lambda\Prob(A_k)$.
+Sumujemy po $k=0,\ldots,n$, dostając pierwszą
+nierówność. Druga wynika z nieujemności $X_n$.
+Dla martyngału $|M_k|$ jest podmartyngałem
+przez warunkową nierówność Jensena.
+\end{proof}
+
+\begin{twierdzenie}[Nierówność maksymalna $L^p$]
+Niech $1<p<\infty$, $n\in\N_0$ i
+$(X_k)_{k\leq n}$ będzie nieujemnym
+podmartyngałem z $X_n\in L^p$. Wtedy
+\[
+\left\|\max_{0\leq k\leq n}X_k\right\|_p
+\leq\frac{p}{p-1}\,\|X_n\|_p.
+\]
+Dla martyngału $M$ z $M_n\in L^p$ można
+zastąpić $X_k$ przez $|M_k|$.
+\end{twierdzenie}
+\begin{proof}
+Z nierówności podmartyngałowej $X_k\leq
+\E[X_n\mid\mathcal F_k]$ oraz warunkowego
+Jensena wynika najpierw, że
+$\E X_k^p\leq\E X_n^p$ dla wszystkich $k\leq n$;
+w szczególności każde $X_k$ ma skończony $p$-ty moment.
+Oznaczmy $Y=\max_{k\leq n}X_k$.
+Z poprzedniego twierdzenia, dla każdego $t>0$,
+$t\Prob(Y\geq t)\leq\E[X_n\ind{\{Y\geq t\}}]$.
+Najpierw zastąpmy $Y$ przez $Y\wedge L$,
+aby wszystkie całki były skończone.
+Wzór warstwowy i twierdzenie Tonellego dają
+\begin{align*}
+\E[(Y\wedge L)^p]
+&=p\int_0^L t^{p-1}\Prob(Y\geq t)\,\dd\lambda_1(t)\\
+&\leq p\int_0^L t^{p-2}
+\E[X_n\ind{\{Y\geq t\}}] \,\dd\lambda_1(t)\\
+&=\frac{p}{p-1}\E\bigl[X_n(Y\wedge L)^{p-1}\bigr]\\
+&\leq\frac{p}{p-1}\|X_n\|_p
+\|Y\wedge L\|_p^{p-1},
+\end{align*}
+gdzie w ostatnim kroku zastosowano nierówność
+Höldera. Jeśli $\|Y\wedge L\|_p=0$, teza jest
+oczywista; w innym przypadku dzielimy przez
+$\|Y\wedge L\|_p^{p-1}$, a następnie
+przechodzimy z $L\to\infty$ przez monotoniczną
+zbieżność.
+\end{proof}
+
+\begin{przyklad}[Kontrola maksimum trajektorii]
+Jeżeli $S_n$ jest symetrycznym spacerem losowym,
+to $\E S_n^2=n$. Z nierówności Dooba dla $p=2$
+otrzymujemy
+$\E(\max_{k\leq n}|S_k|)^2\leq4n$.
+Nierówność Markowa daje
+$\Prob(\max_{k\leq n}|S_k|\geq u)\leq4n/u^2$.
+Kontrolujemy w ten sposób \emph{całą drogę},
+a nie tylko wartość końcową $S_n$.
+\end{przyklad}
+
+\section{Nierówność Azumy--Hoeffdinga}
+
+\begin{twierdzenie}[Koncentracja martyngału o ograniczonych przyrostach]
+Niech $(M_k)_{0\leq k\leq n}$ będzie rzeczywistym
+martyngałem. Załóżmy, że istnieją stałe
+$c_k\geq0$ spełniające
+$|M_k-M_{k-1}|\leq c_k$ p.n. dla $1\leq k\leq n$.
+Wtedy dla każdego $u>0$ i
+$V=\sum_{k=1}^n c_k^2>0$ zachodzi
+\[
+\Prob(M_n-M_0\geq u)\leq e^{-u^2/(2V)},
+\quad
+\Prob(|M_n-M_0|\geq u)\leq2e^{-u^2/(2V)}.
+\]
+Gdy $V=0$, przyrosty są zerowe p.n. i zdarzenie
+odchylenia o dodatnie $u$ ma prawdopodobieństwo zero.
+\end{twierdzenie}
+\begin{proof}
+Dla $D_k=\Delta M_k$ mamy
+$\E[D_k\mid\mathcal F_{k-1}]=0$ oraz
+$-c_k\leq D_k\leq c_k$.
+Warunkowa wersja lematu Hoeffdinga dowodzona
+jest dokładnie jak wersja bezwarunkowa, z
+miarą prawdopodobieństwa zastąpioną warunkową
+średnią i tym samym oszacowaniem wariancji
+zmiennej na odcinku. Daje
+\[
+\E[e^{tD_k}\mid\mathcal F_{k-1}]
+\leq e^{t^2c_k^2/2}\qquad(t\in\R).
+\]
+Można to również uzasadnić bez odwoływania się
+do regularnych rozkładów warunkowych:
+na przedziale $[-c_k,c_k]$ funkcja $e^{tx}$
+leży poniżej cięciwy łączącej końce,
+więc po warunkowaniu i użyciu zerowej średniej
+otrzymuje się $\cosh(tc_k)\leq e^{t^2c_k^2/2}$.
+Własność wieży daje rekurencyjnie
+\[
+\E e^{t(M_n-M_0)}\leq
+\exp\left(\frac{t^2}{2}\sum_{k=1}^n c_k^2\right).
+\]
+Dla $t>0$ nierówność Markowa prowadzi do
+$\Prob(M_n-M_0\geq u)\leq
+\exp(-tu+t^2V/2)$.
+Minimalizujemy przy $t=u/V$, otrzymując
+$e^{-u^2/(2V)}$. Ten sam rachunek stosujemy do
+$-(M_n-M_0)$ i dodajemy dwa ogony.
+\end{proof}
+
+\begin{przyklad}[Uczciwy spacer i prawdopodobieństwo odchylenia]
+Dla niezależnych symetrycznych znaków
+$S_n=\sum_{k\leq n}\xi_k$ i $c_k=1$.
+Zatem dla $u>0$
+$\Prob(|S_n|\geq u)\leq2e^{-u^2/(2n)}$.
+Nierówność Czebyszewa dałaby jedynie
+$\Prob(|S_n|\geq u)\leq n/u^2$.
+Oszacowanie wykładnicze jest dużo mocniejsze
+przy dużych odchyleniach, ale korzysta z ograniczenia
+przyrostów, nie tylko z wariancji.
+\end{przyklad}
+
+\begin{przyklad}[Odkrywanie współrzędnych funkcji wielu losowań]
+Niech $\xi_1,\ldots,\xi_n$ będą niezależne, a
+$f(\xi_1,\ldots,\xi_n)$ całkowalna.
+Definiujemy martyngał Dooba
+$M_k=\E[f(\xi_1,\ldots,\xi_n)\mid
+\sigma(\xi_1,\ldots,\xi_k)]$, gdzie $M_0=\E f$.
+Jeżeli zmiana tylko $k$-tej współrzędnej
+może zmienić $f$ o co najwyżej $c_k$,
+to dla ustalonej historii $\xi_1,\ldots,\xi_{k-1}$
+możliwe wartości $M_k$ leżą w przedziale długości
+co najwyżej $c_k$. W konsekwencji
+$|M_k-M_{k-1}|\leq c_k$; Azuma daje
+\[
+\Prob(|f-\E f|\geq u)\leq
+2\exp\left(-\frac{u^2}{2\sum_kc_k^2}\right).
+\]
+Ostrzejszą stałą $2$ w wykładniku daje
+warunkowy lemat Hoeffdinga zastosowany do
+przyrostu $M_k$, którego \emph{przedział wartości}
+ma długość $c_k$; wtedy otrzymuje się
+$\Prob(|f-\E f|\geq u)\leq
+2\exp(-2u^2/\sum_kc_k^2)$.
+To znana nierówność ograniczonych różnic.
+\end{przyklad}
+
+
+\begin{uwaga}[Dlaczego w nierówności ograniczonych różnic jest lepsza stała?]
+Samo oszacowanie $|\Delta M_k|\leq c_k$ mówi,
+że przyrost leży w przedziale długości $2c_k$.
+W przykładzie odkrywania współrzędnych
+istnieje jednak przedział $[a_k,b_k]$
+o długości $b_k-a_k\leq c_k$, wyznaczony przez
+informację do chwili $k-1$, w którym leży
+$\Delta M_k$. Dla zmiennej o warunkowej
+średniej zero warunkowy lemat Hoeffdinga daje
+\[
+ \E[e^{t\Delta M_k}\mid\mathcal F_{k-1}]
+ \leq\exp\bigl(t^2(b_k-a_k)^2/8\bigr)
+ \leq\exp(t^2c_k^2/8).
+\]
+Po wymnożeniu oszacowań przez wieżę i minimalizacji
+$-tu+t^2\sum_kc_k^2/8$ otrzymujemy
+$\exp(-2u^2/\sum_kc_k^2)$ dla jednego ogona.
+\end{uwaga}
+
+\section{Proces Galtona--Watsona i znormalizowany martyngał}
+
+\begin{przyklad}[Rozmnażanie i zmienna populacja]
+Niech $Z_0=1$, a
+$Z_{n+1}=\sum_{j=1}^{Z_n}\xi_{n,j}$, gdzie
+$\xi_{n,j}$ są niezależnymi, jednakowo rozłożonymi
+nieujemnymi całkowitymi zmiennymi losowymi,
+niezależnymi od dotychczasowej historii,
+o średniej $m=\E\xi_{n,j}>0$ i wariancji
+$\sigma^2<\infty$. Filtrację $\mathcal F_n$
+tworzą populacje i wszystkie losowania do
+chwili $n-1$. Warunkowo przy $Z_n$ mamy
+\[
+\E[Z_{n+1}\mid\mathcal F_n]=mZ_n,
+\qquad \Var(Z_{n+1}\mid\mathcal F_n)=\sigma^2 Z_n.
+\]
+Zatem $W_n=Z_n/m^n$ jest nieujemnym martyngałem.
+Średnia $\E Z_n=m^n$ wynika indukcyjnie z wieży,
+a więc $\E W_n=1$.
+
+Jeśli $m>1$, to przez rozkład wariancji
+\[
+\E[(W_{n+1}-W_n)^2]
+=\frac{\sigma^2\E Z_n}{m^{2(n+1)}}
+=\frac{\sigma^2}{m^{n+2}}.
+\]
+Ortogonalność przyrostów daje
+\[
+\E W_n^2=1+\frac{\sigma^2}{m(m-1)}(1-m^{-n})
+\leq1+\frac{\sigma^2}{m(m-1)}.
+\]
+Wniosek o zbieżności w $L^2$ i p.n. uzyskamy
+w następnym rozdziale. Dla $m\leq1$ oszacowanie
+nie daje jednostajnej kontroli drugiego momentu;
+rozstrzygnięcie granic wymaga innego argumentu.
+\end{przyklad}
+
+

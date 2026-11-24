@@ -1,0 +1,236 @@
+\chapter{ANOVA i ANCOVA: modele, interakcje, porównania i zastosowania}
+\label{ch:anova-ancova}
+\paragraph{Powiązania i odsyłacze.} Podstawą są test F z rozdziału~\ref{ch:parametric-tests} i model liniowy z rozdziału~\ref{ch:linear-regression}; o diagnostyce założeń zobacz rozdział~\ref{ch:diagnostics}.
+
+
+\section{Jaki problem ma rozwiązać analiza wariancji?}
+Jeśli porównujemy średnie trzech technologii, wykonanie wszystkich trzech testów $t$ bez korekty wielokrotności nie kontroluje w zwykły sposób rodzinnego błędu I rodzaju. Jednoczynnikowa ANOVA formułuje jedną hipotezę o wszystkich średnich. Dla dwóch czynników (np. technologia i temperatura) badamy dodatkowo, czy wpływ technologii \emph{zależy} od temperatury. Gdy grupy różnią się także istotną zmienną ilościową (np. wiekiem pacjenta, pomiarem początkowym, obciążeniem urządzenia), rozważamy ANCOVA. Wszystkie te konstrukcje są szczególnymi przypadkami modelu liniowego z rozdziału~\ref{ch:linear-regression}.
+
+\begin{uwaga}[Jednostka niezależna i projekt badania]
+Przed wyborem ANOVA należy zapisać, co jest obserwacją, a co jednostką niezależną. Dziesięć pomiarów jednej maszyny nie jest tym samym co dziesięć niezależnych maszyn. Dla zależnych obserwacji stosuje się modele mieszane, analizę powtarzanych pomiarów lub odpowiednio zaprojektowane testy permutacyjne. ANOVA nie usuwa problemu pseudoreplikacji. Jeśli wartości czynników nie były randomizowane, istotny statystycznie współczynnik nie dowodzi skutku przyczynowego.
+\end{uwaga}
+
+\section{Jednoczynnikowa ANOVA w języku rzutów}
+Rozważmy $k\ge2$ grup z licznościami $n_j\ge1$, $n=\sum_jn_j>k$. Model zakłada $Y_{ji}=\mu_j+\varepsilon_{ji}$, gdzie $\varepsilon_{ji}$ są niezależne o wspólnym rozkładzie $\Normal(0,\sigma^2)$, $\sigma^2>0$. Hipoteza zerowa ma postać $H_0:\mu_1=\cdots=\mu_k$. Niech $X\in\R^{n\times k}$ będzie macierzą wskaźników grup, $P_X=X(X^\top X)^{-1}X^\top$, a $P_1=n^{-1}\mathbf1\mathbf1^\top$. Wtedy
+\[
+ SS_B=\|P_XY-P_1Y\|_2^2,\qquad
+ SS_W=\|(I-P_X)Y\|_2^2,\qquad
+ F=\frac{SS_B/(k-1)}{SS_W/(n-k)}.
+\]
+Rozdział~\ref{ch:parametric-tests} zawiera elementarny dowód odpowiadający sumom kwadratów. Następujące twierdzenie uogólnia go do dowolnych dwóch zagnieżdżonych podprzestrzeni modelowych i będzie podstawą ANCOVA.
+
+\begin{twierdzenie}[Dokładny test $F$ dla modeli zagnieżdżonych]\label{thm:nested-F-anova}
+Niech $Y\sim\Normal_n(\mu,\sigma^2 I_n)$, $\sigma^2>0$. Niech $M_R\subset M_F\subset\R^n$ będą ustalonymi podprzestrzeniami liniowymi o wymiarach $p_R<p_F<n$, a $P_R,P_F$ rzutami ortogonalnymi na te przestrzenie. Załóżmy $H_0:\mu\in M_R$. Wtedy przy $q=p_F-p_R$ zmienna
+\[
+ F=\frac{(\|(I-P_R)Y\|_2^2-\|(I-P_F)Y\|_2^2)/q}{\|(I-P_F)Y\|_2^2/(n-p_F)}
+\]
+ma dokładny rozkład Fishera $F_{q,n-p_F}$.
+\end{twierdzenie}
+\begin{proof}
+Ponieważ $M_R\subset M_F$, zachodzi $P_FP_R=P_RP_F=P_R$. Stąd $Q=P_F-P_R$ jest symetryczną projekcją ortogonalną o rzędzie $q$, a $H=I-P_F$ jest projekcją o rzędzie $n-p_F$; ponadto $QH=HQ=0$. Z twierdzenia Pitagorasa $\|(I-P_R)Y\|^2-\|(I-P_F)Y\|^2=\|QY\|^2$. Pod $H_0$ mamy $Q\mu=0$ i $H\mu=0$, a więc obie formy są kwadratami norm rzutów $\varepsilon/\sigma$ na wzajemnie ortogonalne podprzestrzenie o wymiarach $q$ i $n-p_F$. Ortogonalna niezmienniczość standardowego wektora gaussowskiego daje niezależność i rozkłady odpowiednio $\chi_q^2$ oraz $\chi_{n-p_F}^2$. Ich stosunek po podzieleniu przez stopnie swobody ma rozkład $F_{q,n-p_F}$.
+\end{proof}
+
+\begin{uwaga}[Kiedy test $F$ nie jest dokładny?]
+Powyższy wynik \emph{nie} obejmuje błędów o różnych wariancjach, obserwacji zależnych ani modelu dobranego adaptacyjnie na podstawie tej samej próby bez odpowiedniej korekty selekcji. Przy heteroskedastyczności można rozważyć regresję z odporną macierzą kowariancji i test Walda lub ANOVA Welcha. W dużych próbach wyniki asymptotyczne często pozostają użyteczne bez dokładnej normalności, ale należy osobno uzasadnić ich warunki.
+\end{uwaga}
+
+\section{Dwuczynnikowa ANOVA i interakcje}
+\begin{definicja}[Model dwuczynnikowy z interakcją]\label{def:two-way-anova}
+Dla poziomów czynnika $A\in\{1,\ldots,a\}$ i $B\in\{1,\ldots,b\}$ oraz obserwacji $Y_{ijr}$, $1\le r\le n_{ij}$, rozważamy model
+\[
+ Y_{ijr}=\mu+\alpha_i+\beta_j+\gamma_{ij}+\varepsilon_{ijr}.
+\]
+Parametry identyfikujemy np. przez warunki $\sum_i\alpha_i=\sum_j\beta_j=0$ oraz $\sum_i\gamma_{ij}=0$ dla każdego $j$ i $\sum_j\gamma_{ij}=0$ dla każdego $i$. Zakładamy, że $n_{ij}\ge1$ dla wszystkich $1\le i\le a$, $1\le j\le b$, oraz że błędy są niezależne, mają zerowe wartości oczekiwane i wspólną dodatnią wariancję; normalność błędów jest dodatkowym warunkiem dokładnej kalibracji testów $F$. \emph{Brak interakcji} oznacza $\gamma_{ij}=0$ dla wszystkich $i,j$ w tej parametryzacji. Hipotezę testujemy przez porównanie modelu pełnego z modelem addytywnym.
+\end{definicja}
+
+\begin{stwierdzenie}[Interakcja to różnica różnic]\label{prop:interaction-did}
+Niech dwa czynniki mają po dwa poziomy i oznaczmy średnie komórkowe przez $m_{ij}=\E(Y\mid A=i,B=j)$, $i,j\in\{0,1\}$. W modelu bez interakcji zachodzi $m_{11}-m_{10}-m_{01}+m_{00}=0$. Odwrotnie, jeśli wszystkie cztery średnie istnieją i zachodzi ta równość, można je zapisać w postaci addytywnej $m_{ij}=u+a_i+b_j$.
+\end{stwierdzenie}
+\begin{proof}
+Dla addytywnego modelu $m_{11}-m_{10}-m_{01}+m_{00}$ jest zerem po skróceniu składników. Odwrotnie, wybierzmy $u=m_{00}$, $a_0=b_0=0$, $a_1=m_{10}-m_{00}$, $b_1=m_{01}-m_{00}$. Wtedy $u+a_1+b_1=m_{10}+m_{01}-m_{00}=m_{11}$ na mocy założenia. Pozostałe trzy równości są automatyczne.
+\end{proof}
+
+\begin{przyklad}[Dlaczego interakcja ma znaczenie]\label{ex:interaction-practical}
+Dla dwóch technologii $A=0,1$ i dwóch warunków pracy $B=0,1$ średnie wynoszą odpowiednio $m_{00}=10$, $m_{10}=14$, $m_{01}=12$, $m_{11}=12$. W warunku $B=0$ zmiana technologii zwiększa średnią o $4$, a w warunku $B=1$ nie zmienia jej wcale. Interakcja ma wartość $12-14-12+10=-4$. Raportowanie wyłącznie \emph{jednego} ``efektu technologii'' ukrywa tę zależność. Należy podać oszacowane średnie i kontrasty \emph{w obrębie warunków}, z przedziałami ufności i korektą na wielokrotność, jeśli testujemy kilka kontrastów.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[x=1.65cm,y=.29cm,>=Latex]
+\draw[->] (-.2,8.5)--(2.4,8.5) node[right,font=\small] {poziom $B$};
+\draw[->] (0,8)--(0,16) node[above,font=\small] {średnia};
+\foreach \v in {10,12,14} {\draw (-.06,\v)--(.06,\v) node[left=4pt,font=\scriptsize] {\v};}
+\draw[blue!75!black,thick] (.5,10)--(1.7,12);
+\draw[red!70!black,thick] (.5,14)--(1.7,12);
+\foreach \x/\y in {.5/10,1.7/12} {\fill[blue!75!black] (\x,\y) circle (2.5pt);}
+\foreach \x/\y in {.5/14,1.7/12} {\draw[red!70!black,thick,fill=white] (\x,\y) circle (2.7pt);}
+\node[below,font=\small] at (.5,8.5) {$B=0$};
+\node[below,font=\small] at (1.7,8.5) {$B=1$};
+\node[font=\scriptsize,blue!75!black,anchor=west] at (1.8,14.5) {$A=0$};
+\node[font=\scriptsize,red!70!black,anchor=west] at (1.8,13.1) {$A=1$};
+\end{tikzpicture}
+
+{\small\emph{Rysunek 28.1.} Nierównoległe profile średnich ilustrują interakcję czynników.}
+\end{center}
+
+\section{Niezrównoważone plany i sumy kwadratów typów I, II i III}
+Przy równych licznościach każdej komórki i pełnym planie efekty główne i interakcje tworzą często ortogonalne podprzestrzenie modelu, a podział sum kwadratów jest jednoznaczny. Przy \emph{niezrównoważonych} danych składniki na ogół nie są ortogonalne i różne hipotezy odpowiadają różnym sumom kwadratów.
+
+\begin{definicja}[Przyrostowa suma kwadratów dla dwóch modeli]\label{def:partial-ss}
+Dla ustalonych, zagnieżdżonych macierzy projektu $X_R,X_F$ o pełnych rangach $p_R<p_F$ definiujemy $SS(X_F\mid X_R)=RSS(X_R)-RSS(X_F)$, gdzie $RSS(X)=\min_\beta\|Y-X\beta\|_2^2$. \emph{Typ I} testuje kolejne przyrosty zgodnie z kolejnością wprowadzania składników do modelu. \emph{Typ II} testuje efekt główny po uwzględnieniu pozostałych efektów głównych, zwykle nie dostosowując do wyższych interakcji zawierających ten efekt. \emph{Typ III} próbuje testować efekt po uwzględnieniu wszystkich pozostałych składników danego modelu; przy interakcjach interpretacja zależy m.in. od kodowania, ograniczeń i estymowalności kontrastów.
+\end{definicja}
+
+\begin{uwaga}[Który typ ANOVA wybrać?]
+Najpierw sformułuj \emph{konkretny kontrast lub porównanie modeli}, a dopiero potem wybieraj typ sum kwadratów. Przy silnej interakcji często więcej sensu mają proste efekty warunkowe niż pojedynczy test ``efektu głównego''. Przy pustych komórkach niektóre kontrasty nie są estymowalne; procedura programowa nie tworzy informacji, której nie ma w danych. W kodzie z testami typu III trzeba świadomie dobrać kontrasty (np. sum-to-zero), a także sprawdzić, co faktycznie testowana hipoteza oznacza w tej parametryzacji.
+\end{uwaga}
+
+\section{ANCOVA: wspólne nachylenie, interakcja z kowariantą i wartości skorygowane}
+\begin{definicja}[Model ANCOVA z dwiema grupami]\label{def:ancova}
+Dla $i=1,\ldots,n$ obserwujemy zmienną wynikową $Y_i\in\R$, znacznik grupy $G_i\in\{0,1\}$ oraz kowariantę $X_i\in\R$. Dla ustalonej wartości odniesienia $x_0$ przyjmujemy model
+\[
+ Y_i=\beta_0+\tau G_i+\beta_1(X_i-x_0)+\delta G_i(X_i-x_0)+\varepsilon_i.
+\]
+Przy $\delta=0$ \emph{wspólne nachylenie} względem $X$ wynosi $\beta_1$, a $\tau$ jest różnicą średnich warunkowych między grupami przy \emph{tej samej} wartości kowarianty $X=x_0$. Przy $\delta\ne0$ różnica wynosi $\tau+\delta(x-x_0)$ i zależy od $x$. Zakładamy pełną rangę macierzy projektu do estymacji wszystkich zadanych współczynników.
+\end{definicja}
+
+\begin{stwierdzenie}[Różnica średnich warunkowych w ANCOVA]\label{prop:ancova-contrast}
+W modelu~\ref{def:ancova}, przy $\E(\varepsilon_i\mid G_i,X_i)=0$ dla wszystkich $i$, zachodzi
+$\E(Y_i\mid G_i=1,X_i=x)-\E(Y_i\mid G_i=0,X_i=x)=\tau+\delta(x-x_0)$
+wszędzie tam, gdzie odpowiednie wartości warunkowe są określone. W szczególności dla $\delta=0$ różnica jest stała względem $x$.
+\end{stwierdzenie}
+\begin{proof}
+Wystarczy podstawić $G_i=1$ i $G_i=0$ do modelu, wziąć warunkowe wartości oczekiwane i odjąć, korzystając z założenia o średniej błędu.
+\end{proof}
+
+\begin{uwaga}[Brak nakładania zakresów kowarianty]
+Jeżeli grupa kontrolna ma $X\in[20,30]$, a grupa badana $X\in[60,70]$, to porównanie \emph{przy wspólnym} $x_0=45$ jest ekstrapolacją i może być niemiarodajne. Potrzebujemy wspólnego zakresu lub dodatkowego, uzasadnionego modelu ekstrapolacji. Korygowanie względem kowarianty zmierzonej \emph{po} zastosowaniu interwencji może ponadto zmienić interpretowany efekt, a nawet wprowadzić błąd przez kontrolowanie mediatora lub zmiennej kolizyjnej. W badaniach obserwacyjnych ANCOVA nie usuwa automatycznie wszystkich czynników zakłócających.
+\end{uwaga}
+
+\begin{przyklad}[ANCOVA kontra porównanie surowych średnich]
+Badamy dwa sposoby nauczania, a $X$ oznacza wynik testu wstępnego i $Y$ wynik końcowy. Jeśli jeden sposób częściej trafia do uczniów z wysokimi wynikami początkowymi, różnica surowych średnich $Y$ może odzwierciedlać różnice w $X$, a nie efekt sposobu nauczania. ANCOVA porównuje warunkowe średnie $Y$ dla tej samej wartości $X$. Trzeba jednak sprawdzić zgodność zakresów $X$ w grupach, możliwą interakcję $G\times X$, liniowość zależności i projekt doboru uczniów.
+\end{przyklad}
+
+
+\begin{twierdzenie}[Kiedy korekta o kowariantę zmniejsza wariancję]\label{thm:ancova-variance}
+Niech $n_0,n_1\ge1$. W grupie $g\in\{0,1\}$ obserwujemy niezależne pary $(X_{gi},Y_{gi})$, $1\le i\le n_g$, przy czym
+$Y_{gi}=\mu+\tau g+\beta X_{gi}+\varepsilon_{gi}$.
+Załóżmy, że wszystkie $X_{gi}$ są niezależne o jednakowym rozkładzie, $\E X_{gi}=0$, $\Var(X_{gi})=v<\infty$, wszystkie $\varepsilon_{gi}$ są niezależne o średniej zero i wariancji $\sigma^2<\infty$, a rodziny $X$ i $\varepsilon$ są niezależne. Niech $D=\bar Y_1-\bar Y_0$ oznacza surową różnicę średnich, a $D_{\rm adj}=D-\beta(\bar X_1-\bar X_0)$ korektę przy \emph{znanym} współczynniku $\beta$. Wówczas
+\[
+ \Var(D)=(\beta^2v+\sigma^2)\left(\frac1{n_1}+\frac1{n_0}\right),\qquad
+ \Var(D_{\rm adj})=\sigma^2\left(\frac1{n_1}+\frac1{n_0}\right).
+\]
+W szczególności korekta zmniejsza wariancję, gdy $\beta^2v>0$. Wniosek zakłada znane nachylenie i nie daje automatycznej gwarancji takiej poprawy dla każdego estymatora nachylenia w małej próbie.
+\end{twierdzenie}
+\begin{proof}
+Po uśrednieniu równania modelu dla obu grup otrzymujemy
+$D-\tau=\beta(\bar X_1-\bar X_0)+(\bar\varepsilon_1-\bar\varepsilon_0)$.
+Oba składniki po prawej stronie są niezależne i mają wariancje odpowiednio
+$\beta^2v(1/n_1+1/n_0)$ oraz $\sigma^2(1/n_1+1/n_0)$.
+Odjęcie pierwszego z nich od $D$ pozostawia tylko składnik błędów, co daje oba wzory.
+\end{proof}
+
+\begin{uwaga}[Gdy $\beta$ trzeba oszacować]
+W praktyce $\beta$ nie jest znane. Jeśli $\widehat\beta-\beta=o_\Prob(1)$, a $n_0/n$ i $n_1/n$ są oddalone od zera przy $n=n_0+n_1\to\infty$, to $\bar X_1-\bar X_0=O_\Prob(n^{-1/2})$ i dodatkowy błąd korekty
+$(\widehat\beta-\beta)(\bar X_1-\bar X_0)=o_\Prob(n^{-1/2})$.
+Dlatego przy odpowiedniej regularności estymacja nachylenia nie zmienia głównego składnika wariancji asymptotycznej. Ten argument opiera się na wspólnym modelu dla obu grup; nie usprawiedliwia dowolnego doboru kowariant po obejrzeniu wyników.
+\end{uwaga}
+
+\begin{przyklad}[Paradoks Simpsona: odwrócenie porównania po agregacji]
+W dwóch grupach porównujemy częstość sukcesu, przy czym pacjenci należą do grupy niskiego albo wysokiego ryzyka. W grupie niskiego ryzyka sukces obserwowano u $80$ z $100$ leczonych i u $9$ z $10$ kontrolnych; w grupie wysokiego ryzyka u $1$ z $10$ leczonych i u $20$ ze $100$ kontrolnych. Leczenie ma niższy odsetek sukcesów \emph{w obu warstwach}: $80\%<90\%$ oraz $10\%<20\%$. Po złączeniu warstw leczonych sukces ma $81$ na $110$ osób, a kontrolnych tylko $29$ na $110$: porządek odsetków \emph{odwraca się}. Przyczyną jest bardzo różny udział warstw ryzyka, a nie sprzeczność rachunkowa. Jest to przestroga przed bezrefleksyjnym raportowaniem surowych średnich, ale samo warstwowanie nie zapewnia wnioskowania przyczynowego, jeśli dobór do grup jest obciążony.
+\end{przyklad}
+
+\section{Porównania post hoc i wielkość efektu}
+\begin{definicja}[Wielkości efektu w ANOVA]\label{def:anova-effectsize}
+Dla jednoczynnikowej ANOVA z $k$ grupami i $n>k$, niech $SS_B$ i $SS_W$ oznaczają sumy kwadratów między grupami i wewnątrz nich. Definiujemy $SS_T=SS_B+SS_W$, $MS_W=SS_W/(n-k)$, $\eta^2=SS_B/SS_T$ przy $SS_T>0$ oraz
+\[
+ \omega^2=\frac{SS_B-(k-1)MS_W}{SS_T+MS_W}
+\]
+przy dodatnim mianowniku. Estymator $\omega^2$ może być ujemny dla danych o bardzo małym efekcie; nie należy bez komentarza ukrywać tego przez obcięcie do zera. Dla porównania \emph{dwóch zagnieżdżonych modeli} definiujemy $\eta_{\mathrm{partial}}^2=(RSS_R-RSS_F)/RSS_R$, gdy $RSS_R>0$.
+\end{definicja}
+
+\begin{uwaga}[Wielkość efektu nie zastępuje przedziału ufności]
+Duża statystyka $F$ mówi o stosunku sygnału do szumu, nie o praktycznej wielkości zmiany w jednostkach wyniku. Dla pojedynczych różnic średnich podawaj przedziały w oryginalnej skali. Po wykryciu różnic między $k$ grupami rozważ planowane kontrasty i kontrolę wielokrotności: \emph{Tukey HSD} dla wszystkich par w klasycznym normalnym modelu o wspólnej wariancji (prosta wersja dla jednakowych liczności), \emph{Games--Howell} przy nierównych wariancjach dla porównań par, \emph{Dunnett} przy porównywaniu każdej terapii wyłącznie z kontrolą; lub Holm dla osobno poprawnie skalibrowanych wartości p. Nie twierdź, że globalna istotna ANOVA dowodzi różnicy \emph{każdej} pary grup.
+\end{uwaga}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.28\textwidth}>{\raggedright\arraybackslash}p{.27\textwidth}>{\raggedright\arraybackslash}p{.31\textwidth}}
+\toprule
+\textbf{Pytanie badawcze} & \textbf{Metoda do rozważenia} & \textbf{Sprawdź i zaraportuj}\\
+\midrule
+Więcej niż dwie niezależne grupy, wspólna wariancja & Jednoczynnikowa ANOVA & Średnie, reszty, wielkości efektu, kontrasty\\
+Nierówne wariancje, różne liczności & ANOVA Welcha & Zróżnicowanie wariancji, przedziały, Games--Howell\\
+Dwa czynniki & Dwuczynnikowa ANOVA & Interakcja, średnie komórkowe, niezrównoważenie\\
+Grupa i kowarianta ilościowa & ANCOVA & Nakładanie $X$, nachylenie, moment pomiaru kowarianty\\
+Pomiar wielokrotny w tej samej jednostce & Model mieszany / ANOVA powtarzanych pomiarów & Kowariancja w obrębie jednostki\\
+Kilka współzależnych wyników & MANOVA / modele wielowymiarowe & Wspólna macierz kowariancji i sens łącznej hipotezy\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Laboratorium: modele zagnieżdżone, ANCOVA i interakcje}
+\begin{lstlisting}[language=Python,caption={Kompletny program: dwuczynnikowa ANOVA, ANCOVA, interakcja i testy zagnieżdżone (Python, NumPy, pandas, statsmodels).}]
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
+
+rng = np.random.default_rng(2026)
+rows = []
+for a in ("A0", "A1"):
+    for b in ("B0", "B1"):
+        for _ in range(32):
+            group = int(a == "A1")
+            condition = int(b == "B1")
+            baseline = rng.normal(50, 9)
+            # Difference A1-A0 falls from +4 to 0 across B levels.
+            y = (10 + 2*condition + 4*group
+                 - 4*group*condition + 0.35*(baseline-50)
+                 + rng.normal(0, 2))
+            rows.append((a, b, baseline, y))
+df = pd.DataFrame(rows, columns=["A", "B", "baseline", "outcome"])
+
+# Two-way ANOVA with interaction, also adjusting for baseline.
+m = ols("outcome ~ C(A, Sum)*C(B, Sum) + baseline", data=df).fit()
+print(sm.stats.anova_lm(m, typ=2))
+
+# ANCOVA: do slopes vary between groups?
+m_common = ols("outcome ~ C(A) + baseline", data=df).fit()
+m_slopes = ols("outcome ~ C(A)*baseline", data=df).fit()
+print("ANCOVA slope-interaction nested F test:")
+print(sm.stats.anova_lm(m_common, m_slopes))
+
+# Factor A effect at a chosen condition, not global marginal meaning.
+for b in ("B0", "B1"):
+    predictions = pd.DataFrame({"A": ["A0", "A1"],
+                                "B": [b, b], "baseline": [50, 50]})
+    print("adjusted A1-A0 at", b,
+          np.diff(m.predict(predictions))[0])
+
+# Examine robust covariance inference if heteroscedasticity is suspected.
+print("HC3 standard errors:", m.get_robustcov_results(cov_type="HC3").bse)
+\end{lstlisting}
+
+\begin{lstlisting}[language=Julia,caption={Kompletny program: dokładny rachunek zagnieżdżonej statystyki F metodą najmniejszych kwadratów (Julia, Random, Statistics i LinearAlgebra).}]
+using Random, Statistics, LinearAlgebra
+Random.seed!(2026)
+n = 80
+x = randn(n)
+g = vcat(zeros(Int, div(n, 2)), ones(Int, div(n, 2)))
+y = 3 .+ 2 .* g .+ 0.7 .* x .+ randn(n)
+Xr = hcat(ones(n), x)
+Xf = hcat(ones(n), x, g)
+betar = Xr \ y
+betaf = Xf \ y
+rssr = sum(abs2, y - Xr * betar)
+rssf = sum(abs2, y - Xf * betaf)
+q = size(Xf, 2) - size(Xr, 2)
+F = ((rssr - rssf) / q) / (rssf / (n - size(Xf, 2)))
+println("nested-model F statistic: ", F)
+println("adjusted group difference: ", betaf[end])
+# For an exact p-value add the F-distribution CDF from Distributions.jl.
+\end{lstlisting}
+
+\begin{zadanie}[Czy nieistotna interakcja dowodzi wspólnego nachylenia?]
+W modelu ANCOVA test hipotezy $H_0:\delta=0$ ma wartość p równą $0{,}28$. Czy wolno twierdzić, że nachylenia na pewno są jednakowe?\par\emph{Rozwiązanie.} Nie. Brak odrzucenia $H_0$ nie dowodzi jej prawdziwości. Przy małych próbach test interakcji może mieć niską moc. Należy oszacować $\delta$ i przedział ufności, rozważyć sens praktyczny możliwych różnic nachyleń oraz preferowany model uzasadnić teorią i projektem badania. Mechaniczne testowanie interakcji, po którym raportuje się wyłącznie wynik modelu wybranego na tych samych danych, może zniekształcić nominalną niepewność.
+\end{zadanie}
+
+

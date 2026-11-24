@@ -1,0 +1,593 @@
+\chapter{Procesy rozgałęziające: losowy wzrost i wymieranie populacji}
+\label{ch:branching}
+
+\section{Od niezależnych osobników do zależnych pokoleń}
+W procesie odnowy po każdej wymianie mechanizmu zaczyna się nowy
+cykl. W procesie rozgałęziającym każdy osobnik produkuje losową
+liczbę potomków, którzy w następnym pokoleniu rozmnażają się niezależnie.
+Liczba osobników w kolejnym pokoleniu zależy od obecnej liczby,
+ale cała genealogia powstaje z niezależnych lokalnych decyzji.
+Zasadnicze pytanie brzmi: kiedy populacja wymiera, a kiedy ma
+dodatnie prawdopodobieństwo przetrwania przez wszystkie pokolenia?
+
+\begin{definicja}[Proces Galtona--Watsona]
+Niech $\xi$ będzie zmienną losową o wartościach w $\N_0$,
+z rozkładem $p_k=\Prob(\xi=k)$, $k\ge0$.
+Niech $(\xi_{n,i})_{n\ge0,i\ge1}$ będą niezależnymi kopiami
+$\xi$ oraz niech $Z_0=z\in\N_0$ będzie deterministyczne.
+Definiujemy rekurencyjnie
+\[
+Z_{n+1}=\sum_{i=1}^{Z_n}\xi_{n,i},\qquad n\ge0,
+\]
+przyjmując sumę pustą za zero. Proces $(Z_n)_{n\ge0}$
+nazywamy \emph{procesem rozgałęziającym Galtona--Watsona}.
+\end{definicja}
+
+\begin{uwaga}[Dlaczego występują dwa indeksy?]
+Liczba $n$ identyfikuje pokolenie, natomiast $i$ rozróżnia
+osobników w tym pokoleniu. Zmienna $\xi_{n,i}$ określa liczbę
+dzieci $i$-tego osobnika w pokoleniu $n$. Niezależność jest
+założeniem modelu: jeżeli wszystkie osobniki w danym pokoleniu
+poddane są temu samemu losowemu wpływowi środowiska, zwykły
+proces Galtona--Watsona może być nieadekwatny.
+\end{uwaga}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex,x=1cm,y=0.7cm]
+\node[circle,draw,fill=blue!10,inner sep=2.5pt] (a) at (4,0) {};
+\node[circle,draw,fill=blue!10,inner sep=2.5pt] (b) at (2,-1.8) {};
+\node[circle,draw,fill=blue!10,inner sep=2.5pt] (c) at (4,-1.8) {};
+\node[circle,draw,fill=blue!10,inner sep=2.5pt] (d) at (6,-1.8) {};
+\node[circle,draw,fill=blue!10,inner sep=2.5pt] (e) at (1,-3.6) {};
+\node[circle,draw,fill=blue!10,inner sep=2.5pt] (f) at (2,-3.6) {};
+\node[circle,draw,fill=blue!10,inner sep=2.5pt] (g) at (5.3,-3.6) {};
+\node[circle,draw,fill=blue!10,inner sep=2.5pt] (h) at (6.6,-3.6) {};
+\foreach \x/\y in {a/b,a/c,a/d,b/e,b/f,d/g,d/h}{\draw[thick,blue!60!black] (\x)--(\y);}
+\node[left] at (-.2,0) {$n=0$};
+\node[left] at (-.2,-1.8) {$n=1$};
+\node[left] at (-.2,-3.6) {$n=2$};
+\node[right] at (7.3,0) {$Z_0=1$};
+\node[right] at (7.3,-1.8) {$Z_1=3$};
+\node[right] at (7.3,-3.6) {$Z_2=4$};
+\end{tikzpicture}
+\par\smallskip\small Przykładowe drzewo genealogiczne.
+Środkowy osobnik pierwszego pokolenia nie ma potomstwa.
+Proces zlicza liczby osobników, nie zapamiętuje pełnego drzewa.
+\end{center}
+
+\section{Własność Markowa i funkcje tworzące}
+\begin{definicja}[Funkcja tworząca potomstwa]
+Dla zmiennej $\xi$ o wartościach w $\N_0$ jej funkcją tworzącą
+prawdopodobieństwa na $[0,1]$ jest
+$f(s)=\E[s^\xi]=\sum_{k=0}^\infty p_ks^k$.
+Przyjmujemy $s^0=1$, także dla $s=0$.
+Średnią liczbę potomków oznaczamy
+$m=\E\xi\in[0,\infty]$, a gdy istnieje drugi moment,
+wariancję przez $\sigma^2=\Var(\xi)$.
+\end{definicja}
+
+\begin{twierdzenie}[Rozkład przejścia i składanie funkcji tworzących]
+Niech proces Galtona--Watsona rozpoczyna się od $Z_0=1$.
+Wówczas jest łańcuchem Markowa na $\N_0$, a dla
+$0\le s\le1$ jego funkcja tworząca $g_n(s)=\E[s^{Z_n}]$
+spełnia
+\[
+g_0(s)=s,\qquad g_{n+1}(s)=g_n(f(s)),
+\qquad g_n=f^{\circ n}.
+\]
+Przy starcie od $Z_0=z$ zachodzi $\E[s^{Z_n}]=(f^{\circ n}(s))^z$.
+\end{twierdzenie}
+\begin{proof}
+Niech $\calF_n$ będzie $\sigma$-ciałem wygenerowanym
+przez dotychczasowe pokolenia i losowania użyte do konstrukcji
+$Z_0,\ldots,Z_n$; wybieramy je tak, by zmienne
+$(\xi_{n,i})_{i\ge1}$ były niezależne od $\calF_n$.
+Po ustaleniu $Z_n=k$ następna liczba osobników jest sumą
+$k$ niezależnych kopii $\xi$. Zatem
+$\E[s^{Z_{n+1}}\mid\calF_n]=f(s)^{Z_n}$.
+Ten wzór pokazuje własność Markowa: rozkład następnego pokolenia
+przy całej przeszłości zależy tylko od $Z_n$.
+Biorąc wartość oczekiwaną, otrzymujemy
+$g_{n+1}(s)=\E[f(s)^{Z_n}]=g_n(f(s))$.
+Indukcja i $g_0(s)=s$ dają $g_n=f^{\circ n}$.
+Dla $z$ przodków drzewo populacji jest sumą $z$
+niezależnych drzew z jednym przodkiem, dlatego
+funkcje tworzące mnożą się, dając $(f^{\circ n}(s))^z$.
+\end{proof}
+
+\begin{twierdzenie}[Średnia liczba osobników]
+Niech $m=\E\xi<\infty$ i $Z_0=z\in\N_0$.
+Wtedy dla każdego $n\in\N_0$
+\[
+\E[Z_{n+1}\mid\calF_n]=mZ_n,\qquad
+\E Z_n=z\,m^n.
+\]
+Jeżeli $m>0$, proces $(Z_n/m^n)_{n\ge0}$ jest
+nieujemnym martyngałem (dla $z\ge0$).
+\end{twierdzenie}
+\begin{proof}
+Warunkowo względem $\calF_n$, po ustaleniu $Z_n=k$,
+wartość oczekiwana sumy $k$ niezależnych kopii $\xi$
+wynosi $km$. Ponieważ $\E Z_n<\infty$ wynika
+indukcyjnie z $\E Z_0=z$, otrzymujemy
+$\E Z_{n+1}=m\E Z_n$ i formułę $zm^n$.
+Dzieląc równość warunkową przez $m^{n+1}$,
+dostajemy $\E[Z_{n+1}/m^{n+1}\mid\calF_n]=Z_n/m^n$.
+Całkowalność każdego wyrazu wykazaliśmy wcześniej.
+\end{proof}
+
+\section{Prawdopodobieństwo wymarcia jako punkt stały}
+\begin{definicja}[Wymarcie]
+Dla procesu Galtona--Watsona z $Z_0=1$ definiujemy
+$\mathrm{Ext}:=\{\exists n\ge0:Z_n=0\}$ oraz
+$q:=\Prob(\mathrm{Ext})$.
+Ponieważ stan $0$ jest pochłaniający,
+zdarzenie wymarcia jest sumą rosnącą zdarzeń $\{Z_n=0\}$.
+\end{definicja}
+
+\begin{twierdzenie}[Najmniejszy punkt stały]
+Niech $f(s)=\E[s^\xi]$ będzie funkcją tworzącą potomstwa
+procesu Galtona--Watsona z jednym przodkiem.
+Wtedy prawdopodobieństwo wymarcia $q$ jest
+\emph{najmniejszym} rozwiązaniem równania $f(s)=s$
+w przedziale $[0,1]$. Można je obliczać rekurencją
+$q_0=0$, $q_{n+1}=f(q_n)$, przy czym
+$q_n\uparrow q$.
+\end{twierdzenie}
+\begin{proof}
+Z poprzedniego twierdzenia
+$q_n=\Prob(Z_n=0)=g_n(0)=f^{\circ n}(0)$,
+co daje rekurencję. Zdarzenia $\{Z_n=0\}$ rosną,
+więc $q_n$ rośnie i ma granicę $q\in[0,1]$.
+Równość $q=\Prob(\mathrm{Ext})$ wynika z ciągłości miary
+prawdopodobieństwa z dołu.
+Funkcja tworząca $f$ jest ciągła na $[0,1]$:
+ciągłość z lewej w $1$ otrzymujemy ze zbieżności monotonicznej
+$s^\xi\uparrow1$, a w pozostałych punktach ze zbieżności
+zdominowanej. Dlatego przechodząc do granicy w
+$q_{n+1}=f(q_n)$, dostajemy $q=f(q)$.
+Jeżeli $r\in[0,1]$ spełnia $f(r)=r$, to $q_0=0\le r$.
+Monotoniczność $f$ i indukcja dają $q_n\le r$
+dla każdego $n$, a więc $q\le r$. To dowodzi minimalności.
+\end{proof}
+
+\begin{twierdzenie}[Kryterium wymierania]
+Niech $\xi$ będzie zmienną o wartościach w $\N_0$, z
+$0<m=\E\xi<\infty$ oraz $p_0=\Prob(\xi=0)>0$.
+Dla procesu Galtona--Watsona z jednym przodkiem:
+\begin{enumerate}
+\item jeśli $m\le1$, to $q=1$;
+\item jeśli $m>1$, to $0<q<1$.
+\end{enumerate}
+Jeżeli $p_0=0$, wymarcie jest niemożliwe i $q=0$;
+przypadek $\xi\equiv1$ ma $m=1$, lecz również $q=0$.
+\end{twierdzenie}
+\begin{proof}
+Funkcja $f$ jest wypukła na $[0,1]$, bo każda
+funkcja $s\mapsto s^k$ jest wypukła dla $k\ge0$.
+Jej pochodna lewostronna w $1$ wynosi $m$, co wynika
+z twierdzenia o zbieżności monotonicznej dla
+$f'(s)=\sum_{k\ge1}kp_ks^{k-1}$ przy $s\uparrow1$.
+Jeżeli $m\le1$, wypukłość daje dla $0\le s<1$
+\[
+f(s)\ge f(1)+m(s-1)=1-m(1-s)\ge s.
+\]
+Nierówność jest ściśle dodatnia dla $m<1$.
+Jeżeli $m=1$ i $p_0>0$, warunek średniej wymusza
+$\Prob(\xi\ge2)>0$, a więc $f$ jest ściśle wypukła
+na $(0,1)$ i $f(s)>s$ również w tym przypadku.
+Zatem jedynym punktem stałym jest $1$, stąd $q=1$.
+Jeżeli $m>1$, to
+$f(s)-s<0$ dla $s<1$ dostatecznie bliskich $1$:
+istotnie iloraz $(f(s)-1)/(s-1)$ dąży do $m>1$.
+Jednocześnie $f(0)-0=p_0>0$.
+Ciągłość zapewnia istnienie punktu stałego $q\in(0,1)$.
+Najmniejszy punkt stały, będący prawdopodobieństwem wymarcia,
+leży w $(0,1)$: mniejszy od $1$ na mocy istnienia punktu stałego,
+a większy od zera, gdyż $\Prob(Z_1=0)=p_0>0$.
+Gdy $p_0=0$, żaden osobnik nie może mieć zera potomków,
+więc $Z_n\ge1$ dla wszystkich $n$ i $q=0$.
+\end{proof}
+
+\begin{zadanie}[Dwoje dzieci albo brak]
+Każdy osobnik ma dwoje dzieci z prawdopodobieństwem $2/3$
+albo nie ma dzieci z prawdopodobieństwem $1/3$.
+Obliczyć prawdopodobieństwo wymarcia i średnią liczbę
+osobników w pokoleniu $n$.
+
+\emph{Rozwiązanie.} Funkcja tworząca ma postać
+$f(s)=\frac13+\frac23s^2$, a średnia potomstwa
+$m=4/3>1$. Równanie $f(q)=q$ daje
+$2q^2-3q+1=0$, czyli pierwiastki $q=1/2$ i $q=1$.
+Najmniejszy to $q=1/2$. Pomimo tego, że średnia
+liczba osobników rośnie jak $(4/3)^n$, prawdopodobieństwo
+całkowitego wymarcia wynosi aż $1/2$.
+\end{zadanie}
+
+
+\begin{zadanie}[Prawdopodobieństwo wymarcia dla trzech możliwości]
+Niech liczba potomków ma rozkład
+$\Prob(\xi=0)=1/4$, $\Prob(\xi=1)=1/4$,
+$\Prob(\xi=2)=1/2$. Obliczyć średnią liczbę potomków
+oraz prawdopodobieństwo ostatecznego wymarcia populacji
+rozpoczętej od dwóch osobników.
+
+\emph{Rozwiązanie.} Średnia wynosi
+$m=0\cdot\tfrac14+1\cdot\tfrac14+2\cdot\tfrac12=5/4>1$.
+Funkcja tworząca to
+$f(s)=\tfrac14+\tfrac14s+\tfrac12s^2$. Równanie
+$f(s)=s$ jest równoważne $2s^2-3s+1=0$,
+a więc ma pierwiastki $1/2$ i $1$. Dla jednego przodka
+$q=1/2$. Dwie niezależne linie genealogiczne wymierają
+jednocześnie z prawdopodobieństwem $q^2=1/4$.
+Przykład pokazuje, dlaczego na ogół nie wolno zastąpić
+liczby przodków przez zmianę średniej $m$.
+\end{zadanie}
+
+
+\begin{zadanie}[Wymarcie w skończonej liczbie pokoleń]
+Niech $\Prob(\xi=0)=\Prob(\xi=2)=1/2$ i $Z_0=1$.
+Obliczyć prawdopodobieństwa wymarcia do drugiego i trzeciego
+pokolenia; wyjaśnić różnicę między nimi a ostatecznym wymarciem.
+
+\emph{Rozwiązanie.} Funkcja tworząca wynosi
+$f(s)=(1+s^2)/2$. W pierwszym pokoleniu
+$q_1=f(0)=1/2$. W drugim $q_2=f(q_1)=5/8$,
+a w trzecim $q_3=f(q_2)=\tfrac12(1+25/64)=89/128$.
+To konkretne kolejne przybliżenia rosną do $q=1$,
+gdyż $m=1$ i $p_0>0$. Zdarzenie wymarcia do pokolenia
+$n$ jest zdarzeniem $\{Z_n=0\}$, a ciąg tych zdarzeń
+rośnie: raz wymarła populacja już się nie odradza.
+\end{zadanie}
+
+\section{Wariancja, normalizacja i granica martyngału}
+\begin{twierdzenie}[Wariancja pokolenia]
+Załóżmy, że $Z_0=1$, $0<m=\E\xi<\infty$ oraz
+$\sigma^2=\Var(\xi)<\infty$. Wtedy
+\[
+\Var(Z_n)=
+\begin{cases}
+\displaystyle \sigma^2m^{n-1}\frac{m^n-1}{m-1},&m\ne1,\ n\ge1,\\[6pt]
+ n\sigma^2,&m=1,\ n\ge0.
+\end{cases}
+\]
+Jeżeli $m>1$, martyngał $W_n=Z_n/m^n$ jest ograniczony
+w $L^2$, zatem zbiega w $L^2$ i prawie na pewno do
+pewnej zmiennej $W_\infty\ge0$ o $\E W_\infty=1$ oraz
+\[
+\Var(W_\infty)=\frac{\sigma^2}{m(m-1)}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Z niezależności potomstwa, przy warunku $Z_n=k$,
+$\Var(Z_{n+1}\mid\calF_n)=\sigma^2Z_n$.
+Wzór na wariancję całkowitą daje dla $v_n=\Var(Z_n)$
+\[
+v_{n+1}=\E[\sigma^2Z_n]
++\Var(mZ_n)=\sigma^2m^n+m^2v_n,
+\quad v_0=0.
+\]
+Indukcja daje
+$v_n=\sigma^2\sum_{j=0}^{n-1}m^{2(n-1-j)+j}
+=\sigma^2m^{n-1}\sum_{j=0}^{n-1}m^j$,
+co po zsumowaniu szeregu geometrycznego daje wzór.
+Dla $m>1$ otrzymujemy
+$\Var(W_n)=m^{-2n}v_n
+=\frac{\sigma^2}{m(m-1)}(1-m^{-n})$.
+Ponieważ $\E W_n=1$, drugie momenty są jednostajnie
+ograniczone. Z twierdzenia o zbieżności martyngałów
+ograniczonych w $L^2$ dostajemy granicę w $L^2$ i p.n.;
+przejście do granicy w pierwszych i drugich momentach daje
+deklarowane wzory.
+\end{proof}
+
+\begin{uwaga}[Wartość oczekiwana granicy nie zawsze zachowuje się sama]
+Dla $m>1$ nieujemny martyngał $W_n$ ma granicę prawie na pewno
+nawet bez założenia skończonej wariancji, ale z tego
+\emph{nie wynika} automatycznie $\E W_\infty=1$.
+Skończoność wariancji jest tutaj wygodnym dostatecznym
+warunkiem jednostajnej całkowalności. Bardziej ogólny
+warunek zachowania średniej w procesie nadkrytycznym
+wiąże się z twierdzeniem Kestena--Stiguma i momentem
+$\E[\xi\log^+\xi]$; ten głębszy wynik można omówić
+przy bardziej zaawansowanych procesach rozgałęziających.
+\end{uwaga}
+
+\section{Całkowita liczba urodzonych osobników}
+\begin{twierdzenie}[Średnia całkowita liczba osobników]
+Niech $Z_0=1$ i $m=\E\xi<1$.
+Zdefiniujmy całkowitą liczebność drzewa genealogicznego
+$H=\sum_{n=0}^\infty Z_n$, gdzie suma może przyjmować $\infty$.
+Wtedy $H<\infty$ prawie na pewno i
+$\E H=1/(1-m)$.
+\end{twierdzenie}
+\begin{proof}
+Zmienne $Z_n$ są nieujemne. Twierdzenie Tonellego
+i wzór $\E Z_n=m^n$ dają
+\[
+\E H=\sum_{n=0}^\infty\E Z_n=\sum_{n=0}^\infty m^n
+=\frac{1}{1-m}<\infty.
+\]
+Gdyby $\Prob(H=\infty)>0$, wartość oczekiwana $H$
+byłaby nieskończona. Stąd $H<\infty$ prawie na pewno.
+\end{proof}
+
+\begin{stwierdzenie}[Funkcja tworząca całkowitej liczebności]
+Niech $Z_0=1$ i $\Prob(H<\infty)=1$.
+Dla $s\in[0,1]$ funkcja $h(s)=\E[s^H]$ spełnia
+\[
+h(s)=s f(h(s)),
+\]
+gdzie $f$ jest funkcją tworzącą liczby potomków.
+\end{stwierdzenie}
+\begin{proof}
+Po usunięciu pierwszego przodka drzewo rozdziela się
+na $\xi$ niezależnych drzew potomków, każde o tym samym
+prawie co pierwotne. Ich całkowite liczebności $H_j$
+są niezależnymi kopiami $H$, niezależnymi od $\xi$.
+Mamy $H=1+\sum_{j=1}^\xi H_j$.
+Warunkowanie względem $\xi$ daje
+$\E[s^H\mid\xi]=s\,h(s)^\xi$, skąd po uśrednieniu
+$h(s)=sf(h(s))$.
+\end{proof}
+
+\begin{zadanie}[Potomstwo Poissona]
+Niech liczba potomków każdego osobnika ma rozkład
+$\mathrm{Poisson}(\lambda)$, $0<\lambda<1$.
+Obliczyć średnią całkowitą liczebność i równanie
+dla jej funkcji tworzącej.
+
+\emph{Rozwiązanie.} Mamy
+$f(s)=\exp(\lambda(s-1))$ i $m=\lambda$.
+Stąd $\E H=1/(1-\lambda)$ oraz
+$h(s)=s\exp(\lambda(h(s)-1))$.
+To równanie pozwala numerycznie obliczać
+$\Prob(H=k)$, bez budowania całego losowego drzewa.
+\end{zadanie}
+
+\section{Model rozgałęziania w czasie ciągłym: proces Yule'a}
+\begin{definicja}[Proces czystych urodzin Yule'a]
+Niech $\lambda>0$. Procesem Yule'a rozpoczynającym się
+od jednego osobnika nazywamy minimalny łańcuch Markowa
+w czasie ciągłym na $\{1,2,3,\ldots\}$ z intensywnościami
+$q_{n,n+1}=\lambda n$, $q_{nn}=-\lambda n$ oraz
+$q_{n,j}=0$ dla pozostałych $j$.
+Interpretacja: każdy z $n$ obecnych osobników rodzi
+kolejnego niezależnie z intensywnością $\lambda$.
+\end{definicja}
+
+\begin{twierdzenie}[Brak eksplozji i rozkład geometryczny]
+Proces Yule'a rozpoczynający się od $Z_0=1$ nie wybucha
+w skończonym czasie. Dla wszystkich $t\ge0$ i $n\ge1$
+\[
+\Prob(Z_t=n)=e^{-\lambda t}(1-e^{-\lambda t})^{n-1},
+\qquad \E Z_t=e^{\lambda t}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Po przejściu ze stanu $n$ proces musi przejść do $n+1$.
+Czas oczekiwania w stanie $n$ ma rozkład
+$\mathrm{Exp}(\lambda n)$; kolejne czasy są niezależne.
+Suma $n$ pierwszych czasów oczekiwania jest czasem przejścia
+od $1$ do $n+1$. Jej transformata Laplace'a dla $c>0$ to
+$\prod_{k=1}^n (\lambda k)/(\lambda k+c)$.
+Gdyby czas eksplozji $\zeta=\sum_{k\ge1}H_k$ był
+skończony z dodatnim prawdopodobieństwem, to
+$\E e^{-c\zeta}>0$. Tymczasem
+$\sum_{k\ge1}\log(1+c/(\lambda k))=\infty$,
+ponieważ dla dużych $k$ wyrazy są nie mniejsze od
+$c/(2\lambda k)$, a szereg harmoniczny jest rozbieżny.
+Zatem $\E e^{-c\zeta}=0$, co wymusza
+$\Prob(\zeta=\infty)=1$. To jest bezpośredni dowód
+przypadku kryterium eksplozji potrzebnego tutaj.
+
+Dla przejść rozkładu $p_n(t)=\Prob(Z_t=n)$
+uzasadnimy najpierw użycie równań w przód, chociaż przestrzeń
+stanów jest nieskończona. Dla każdego ustalonego $K\ge2$
+zastąpmy stany $K+1,K+2,\ldots$ jednym pochłaniającym
+stanem $\partial$, nie zmieniając przejść z $1,\ldots,K$.
+Do pierwszego osiągnięcia $K+1$ oba procesy są identyczne,
+a ponieważ proces Yule'a wykonuje jedynie skoki $n\to n+1$,
+dla $j\le K$ ich prawdopodobieństwa przebywania w stanie $j$
+są równe. Proces obcięty ma skończoną przestrzeń stanów;
+możemy więc zastosować wcześniej udowodnione równania
+Kołmogorowa w przód, a otrzymane równania dla $p_j$, $j\le K$,
+nie zależą od $K$. Dowodzi to dla wszystkich $n\ge1$ równań
+$p_1'(t)=-\lambda p_1(t)$,
+$p_n'(t)=-n\lambda p_n(t)+(n-1)\lambda p_{n-1}(t)$ dla $n\ge2$,
+z warunkami $p_1(0)=1$ i $p_n(0)=0$ dla $n\ge2$.
+Pierwsze równanie daje $p_1(t)=e^{-\lambda t}$.
+Podstawiając kandydat
+$p_n(t)=a(t)(1-a(t))^{n-1}$, gdzie $a(t)=e^{-\lambda t}$,
+i korzystając z $a'=-\lambda a$, otrzymujemy po różniczkowaniu
+$p_n'=-\lambda a(1-a)^{n-1}+\lambda(n-1)a^2(1-a)^{n-2}$.
+Prawa strona równania Kołmogorowa wynosi
+$-n\lambda a(1-a)^{n-1}+(n-1)\lambda a(1-a)^{n-2}$,
+co po wyłączeniu $\lambda a(1-a)^{n-2}$ sprowadza się do
+$-n(1-a)+(n-1)=na-1$,
+tak samo jak pierwsza pochodna.
+Jednoznaczność rozwiązań wynika indukcyjnie: każde równanie
+jest liniowym równaniem niejednorodnym z wcześniej znaną
+funkcją $p_{n-1}$. Ponieważ kandydat daje rozkład
+prawdopodobieństwa ($\sum_{n\ge1}a(1-a)^{n-1}=1$),
+odzyskujemy prawo procesu. Średnia rozkładu
+geometrycznego na $\{1,2,\ldots\}$ wynosi $1/a=e^{\lambda t}$.
+\end{proof}
+
+\begin{uwaga}[Dwa odmienne mechanizmy wzrostu]
+W procesie Galtona--Watsona wszyscy osobnicy rozmnażają się
+w kolejnych \emph{pokoleniach}, a liczebność zmienia się
+skokowo w chwilach całkowitych. W procesie Yule'a
+urodzenia pojawiają się w \emph{czasie ciągłym}, przy czym
+intensywność łączna rośnie proporcjonalnie do bieżącej liczby
+osobników. Oba procesy mają strukturę rozgałęziającą,
+ale inne trajektorie, rozkłady i narzędzia obliczeniowe.
+\end{uwaga}
+
+
+\section{Jak szybko zanika prawdopodobieństwo przetrwania?}
+\begin{stwierdzenie}[Ogon czasu wymarcia w przypadku podkrytycznym]
+Niech $Z$ będzie procesem Galtona--Watsona rozpoczynającym się
+od $Z_0=1$ ze średnią potomstwa $m\in[0,1)$.
+Niech $\tau=\inf\{n\ge0:Z_n=0\}$.
+Wtedy dla każdego $n\ge0$
+\[
+\Prob(\tau>n)=\Prob(Z_n>0)\le m^n,
+\qquad \E\tau\le\frac{1}{1-m}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Ponieważ zero jest stanem pochłaniającym,
+$\{\tau>n\}=\{Z_n>0\}$. Dla nieujemnej zmiennej
+całkowitoliczbowej nierówność Markowa daje
+$\Prob(Z_n>0)=\Prob(Z_n\ge1)\le\E Z_n=m^n$.
+Wzór ogonowy dla zmiennej o wartościach w $\N_0\cup\{\infty\}$,
+wynikający z twierdzenia Tonellego, ma postać
+$\E\tau=\sum_{n=0}^\infty\Prob(\tau>n)$.
+Sumując oszacowania, otrzymujemy deklarowaną granicę.
+\end{proof}
+
+\begin{uwaga}[Dlaczego przypadek krytyczny wymaga innej metody?]
+Jeżeli $m=1$ i $p_0>0$, populacja wymiera prawie na pewno,
+ale oszacowanie $\Prob(Z_n>0)\le m^n=1$ niczego nie mówi
+o szybkości wymierania. W typowym przypadku krytycznym
+ze skończoną dodatnią wariancją potomstwa prawdopodobieństwo
+przetrwania maleje tylko jak stała podzielona przez $n$.
+Dokładna asymptotyka jest osobnym twierdzeniem granicznym;
+nie wynika z samego argumentu o punktach stałych.
+\end{uwaga}
+
+\section{Urodzenia i śmierci w czasie ciągłym}
+\begin{twierdzenie}[Prawdopodobieństwo wymarcia liniowego procesu urodzin i śmierci]
+Niech $\lambda,\delta>0$. Rozważmy minimalny łańcuch Markowa
+$Z$ na $\N_0$, rozpoczynający się od $Z_0=1$, z intensywnościami
+$q_{n,n+1}=\lambda n$, $q_{n,n-1}=\delta n$ dla $n\ge1$,
+$q_{nn}=-(\lambda+\delta)n$, zaś $0$ jest stanem pochłaniającym.
+Wtedy proces jest nieeksplozywny, a prawdopodobieństwo
+ostatecznego wymarcia wynosi
+\[
+q=\begin{cases}1,&\lambda\le\delta,\\
+\delta/\lambda,&\lambda>\delta.
+\end{cases}
+\]
+\end{twierdzenie}
+\begin{proof}
+Najpierw uzasadnimy brak eksplozji bez odwoływania się do
+nieformalnego sprzężenia. Dla $K\ge2$ niech
+$\tau_K=\inf\{t\ge0:Z_t\ge K\}$. Proces zatrzymany
+$Z_{t\wedge\tau_K}$ przyjmuje wartości w skończonym
+zbiorze $\{0,1,\ldots,K\}$. Dla funkcji $f(n)=n$
+jego generator przed zatrzymaniem wynosi
+$Qf(n)=(\lambda-\delta)n\le\lambda n$.
+Wzór Dynkina dla skończonego, zatrzymanego łańcucha
+daje dla $u_K(t)=\E Z_{t\wedge\tau_K}$
+\[
+u_K(t)\le1+\lambda\int_0^tu_K(s)\,\dd s.
+\]
+Nierówność Gronwalla prowadzi do
+$u_K(t)\le e^{\lambda t}$. Ponieważ
+$Z_{t\wedge\tau_K}=K$ na $\{\tau_K\le t\}$,
+$\Prob(\tau_K\le t)\le e^{\lambda t}/K$.
+Każdy skok zmienia liczbę osobników o jeden, zatem
+eksplozja w skończonym czasie wymaga osiągnięcia
+każdego poziomu $K$. Dla każdego $t<\infty$
+$\Prob(\zeta\le t)\le\inf_{K\ge2}e^{\lambda t}/K=0$,
+gdzie $\zeta$ oznacza czas eksplozji. Proces jest zatem
+nieeksplozywny.
+
+Rozważmy pierwsze zdarzenie po starcie od jednego osobnika.
+Łączna intensywność wynosi $\lambda+\delta$, a jego rodzaj
+jest niezależny od czasu oczekiwania: z prawdopodobieństwem
+$\delta/(\lambda+\delta)$ osobnik umiera, z prawdopodobieństwem
+$\lambda/(\lambda+\delta)$ rodzi drugiego osobnika.
+Po urodzeniu mamy dwa niezależne drzewa potomne, każde
+o takim samym prawdopodobieństwie wymarcia $q$.
+Wobec tego
+\[
+q=\frac{\delta}{\lambda+\delta}
++\frac{\lambda}{\lambda+\delta}q^2.
+\]
+Rozwiązaniami są $1$ i $\delta/\lambda$.
+Uzasadnijmy wybór mniejszego pierwiastka. Każdy żyjący
+osobnik ma niezależny czas do pierwszego zdarzenia
+o rozkładzie $\mathrm{Exp}(\lambda+\delta)$; wtedy
+z prawdopodobieństwem $\delta/(\lambda+\delta)$
+umiera bez potomków, a z prawdopodobieństwem
+$\lambda/(\lambda+\delta)$ rodzi nowego osobnika.
+W drugim przypadku można potraktować dotychczasowego
+osobnika (z uwagi na własność braku pamięci) i nowego
+jako \emph{dwie niezależne linie potomne}. Drzewo
+zdarzeń jest więc drzewem Galtona--Watsona z liczbą
+dzieci $0$ lub $2$ i funkcją tworzącą
+$f(s)=\delta/(\lambda+\delta)+\lambda s^2/(\lambda+\delta)$.
+Zdarzenie, że drzewo ma skończoną liczbę węzłów,
+jest sumą zdarzeń wymarcia do skończonej głębokości;
+jego prawdopodobieństwo jest zatem granicą iteracji
+$f^{\circ n}(0)$, czyli najmniejszym punktem stałym $f$.
+Jeżeli drzewo jest skończone, wszystkie związane z nim
+czasy oczekiwania są skończone prawie na pewno,
+a więc proces rzeczywiście osiąga stan $0$ w skończonym
+czasie. Odwrotnie, jeśli osiąga $0$ w skończonym czasie,
+to brak eksplozji oznacza skończoną liczbę zdarzeń do tej
+chwili, a zatem skończone drzewo genealogiczne.
+Wymarcie procesu jest więc dokładnie wymarciem tego drzewa.
+Stosując kryterium z wcześniejszej części rozdziału,
+wybieramy najmniejszy pierwiastek: $q=1$ przy
+$\lambda\le\delta$ i $q=\delta/\lambda$ przy
+$\lambda>\delta$.
+\end{proof}
+
+\begin{zadanie}[Próg przeżycia populacji]
+Niech każda żyjąca cząstka rodzi nową z intensywnością
+$\lambda=3$ i ginie z intensywnością $\delta=2$,
+niezależnie od pozostałych. Rozpoczynamy od jednej cząstki.
+Jakie jest prawdopodobieństwo, że populacja kiedyś wymrze?
+
+\emph{Rozwiązanie.} Pierwsze zdarzenie jest śmiercią
+z prawdopodobieństwem $2/5$ lub narodzinami z prawdopodobieństwem
+$3/5$. Stąd $q=2/5+(3/5)q^2$, więc
+$(3q-2)(q-1)=0$.
+Wybieramy mniejsze rozwiązanie: $q=2/3$.
+Średni dodatni przyrost liczby osobników nie gwarantuje
+przetrwania konkretnego drzewa genealogicznego.
+\end{zadanie}
+
+
+\begin{zadanie}[Wzrost procesu Yule'a]
+Niech $Z$ będzie procesem Yule'a o intensywności $\lambda>0$
+z jednym osobnikiem początkowym. Wyznaczyć
+$\Prob(Z_t\ge k)$, $\Var(Z_t)$ i
+$\Prob(Z_t\ge3\mid Z_t\ge2)$ dla $t>0$, $k\ge1$.
+
+\emph{Rozwiązanie.} Wprowadzamy $a=e^{-\lambda t}$.
+Z udowodnionego wzoru $\Prob(Z_t=n)=a(1-a)^{n-1}$
+otrzymujemy przez zsumowanie szeregu geometrycznego
+$\Prob(Z_t\ge k)=(1-a)^{k-1}$.
+Dla rozkładu geometrycznego na $\{1,2,\dots\}$
+$\E Z_t=1/a$ i $\Var(Z_t)=(1-a)/a^2$, a więc
+$\Var(Z_t)=e^{2\lambda t}-e^{\lambda t}$.
+Wreszcie
+\[
+\Prob(Z_t\ge3\mid Z_t\ge2)
+=\frac{(1-a)^2}{1-a}=1-e^{-\lambda t}.
+\]
+To przykład odrębnej własności braku pamięci
+\emph{rozkładu geometrycznego liczebności},
+a nie wykładniczego rozkładu czasów między skokami.
+\end{zadanie}
+
+\section{Podsumowanie i kierunek dalszej teorii}
+Łańcuch Markowa opisuje przejścia między stanami;
+proces odnowy opisuje cykle; proces rozgałęziający
+opisuje losową liczbę \emph{potomków}, którzy sami
+stają się źródłem kolejnych losowań. Funkcje tworzące
+zamieniają złożoną strukturę drzew na iterację funkcji,
+a martyngały pozwalają śledzić zmienność populacji
+w kolejnych pokoleniach. Dalszym krokiem będą martyngały w czasie ciągłym, lokalizacja,
+zatrzymywanie i wariacja kwadratowa. Całka Itô i równania
+stochastyczne zostaną skonstruowane dopiero w tomie III.
+
+
+% ================================================================
+% ROZDZIAŁ 11. MARTYNGAŁY W CZASIE CIĄGŁYM
+% ================================================================

@@ -1,0 +1,396 @@
+\chapter{Bayesowskie testowanie hipotez, iloraz Bayesa i paradoksy}
+\label{ch:bayes-model-testing}
+\paragraph{Powiązania i odsyłacze.} Porównaj definicję klasycznej wartości p w rozdziale~\ref{ch:testing} i decyzje bayesowskie w rozdziale~\ref{ch:bayes-estimation-prediction}.
+
+
+\section{Prawdopodobieństwo hipotezy a zgodność danych z hipotezą}
+W testowaniu klasycznym z rozdziału~\ref{ch:testing}
+obliczamy prawdopodobieństwo odpowiednio skrajnych danych
+\emph{pod warunkiem} hipotezy zerowej. Bayesowskie podejście
+porównuje prawdopodobieństwa samych modeli \emph{po danych},
+co wymaga zadania rozkładów a priori również na \emph{modele}.
+Są to inne wielkości. W szczególności wartość p nie jest
+prawdopodobieństwem prawdziwości $H_0$, a iloraz Bayesa nie
+jest bez dodatkowych założeń prawdopodobieństwem błędu.
+
+\begin{definicja}[Porównanie dwóch modeli i iloraz Bayesa]
+\label{def:bayes-factor}
+Niech $\mathcal M_0$ i $\mathcal M_1$ będą dwoma modelami
+obserwacji $X$ w tej samej przestrzeni mierzalnej, a
+$w_0,w_1>0$, $w_0+w_1=1$, ich wcześniejszymi
+prawdopodobieństwami. W modelu $j\in\{0,1\}$
+niech $\Theta_j$ będzie przestrzenią parametrów,
+$\pi_j$ \emph{właściwym} priorem i
+$p_j(x\mid\theta_j)$ gęstością lub funkcją masy
+względem tej samej, ustalonej miary $\nu$ na przestrzeni
+danych. Definiujemy \emph{zintegrowaną wiarygodność}
+$m_j(x)=\int_{\Theta_j}p_j(x\mid\theta_j)\,\dd\pi_j(\theta_j)$.
+Jeżeli $0<m_j(x)<\infty$ dla obu $j$, to
+$BF_{10}(x)=m_1(x)/m_0(x)$ nazywamy \emph{ilorazem
+Bayesa} na korzyść modelu $\mathcal M_1$. Analogicznie
+$BF_{01}=1/BF_{10}$.
+\end{definicja}
+
+\begin{twierdzenie}[Posterior odds = prior odds razy Bayes factor]
+\label{thm:bayes-odds}
+W założeniach definicji~\ref{def:bayes-factor}, dla danych
+$x$ z $0<w_0m_0(x)+w_1m_1(x)<\infty$ mamy
+\[
+\frac{\Prob(\mathcal M_1\mid X=x)}
+     {\Prob(\mathcal M_0\mid X=x)}
+=BF_{10}(x)\,\frac{w_1}{w_0}.
+\]
+W szczególności $\Prob(\mathcal M_1\mid x)
+=w_1m_1(x)/(w_0m_0(x)+w_1m_1(x))$.
+\end{twierdzenie}
+\begin{proof}
+Zmienna indeksująca model ma rozkład dyskretny
+$\Prob(J=j)=w_j$, a warunkowa gęstość danych przy $J=j$
+to $m_j(x)$ po scałkowaniu parametru $\theta_j$.
+Wzór Bayesa dla tej dwupunktowej przestrzeni
+parametrów daje $\Prob(J=j\mid x)=w_jm_j(x)/
+(w_0m_0(x)+w_1m_1(x))$. Podzielenie odpowiednich
+tożsamości kończy dowód.
+\end{proof}
+
+\begin{uwaga}[Znaczenie doboru priorów]
+Iloraz Bayesa zależy od \emph{rozkładów parametrów wewnątrz
+modeli}, nie tylko od ich najlepszych dopasowań. Zastąpienie
+$\pi_1$ rozkładem znacznie szerszym może zmienić
+$BF_{10}$ nawet wtedy, gdy maksimum wiarygodności i
+obserwowane dane pozostają takie same. Priory niewłaściwe
+nie pozwalają na zwykłe porównanie modeli z niezależnymi
+nieustalonymi stałymi normalizacji
+(por. rozdział~\ref{ch:bayes-foundations}).
+\end{uwaga}
+
+\section{Dokładny test punktowej hipotezy o odsetku wad}
+\begin{twierdzenie}[Iloraz Bayesa: punktowy Bernoulli kontra beta]
+\label{thm:bernoulli-point-bf}
+Niech $n\ge1$ i $X_1,\ldots,X_n\in\{0,1\}$. Porównujemy
+$\mathcal M_0: X_i\iid\operatorname{Bernoulli}(p_0)$,
+gdzie $0<p_0<1$, z
+$\mathcal M_1: p\sim\operatorname{Beta}(a,b)$,
+$a,b>0$, i $X_i\mid p\iid\operatorname{Bernoulli}(p)$.
+Jeżeli $S=\sum_iX_i=s$, to
+\[
+BF_{10}(s)=\frac{B(a+s,b+n-s)}{B(a,b)\,p_0^s(1-p_0)^{n-s}}.
+\]
+Ten sam wzór otrzymujemy z obserwacji pełnego wektora
+lub wyłącznie sumy $S$.
+\end{twierdzenie}
+\begin{proof}
+Dla pełnej próbki $x=(x_1,\ldots,x_n)$ jej funkcja masy
+w modelu zerowym wynosi
+$p_0^s(1-p_0)^{n-s}$, a w alternatywnym całka
+$\int_0^1p^s(1-p)^{n-s}\,\dd\operatorname{Beta}(a,b)(p)$.
+Całka jest równa $B(a+s,b+n-s)/B(a,b)$.
+Gdy obserwujemy tylko sumę $S$, obie funkcje masy mają
+dodatkowy wspólny czynnik $\binom ns$, który skraca się
+w ilorazie. W tym modelu $S$ jest statystyką dostateczną,
+a zatem agregacja nie gubi informacji o $p$.
+\end{proof}
+
+\begin{przyklad}[Kontrola jakości: siedem wad na sto]
+Testujemy $\mathcal M_0:p=0{,}10$ wobec alternatywy
+$\mathcal M_1:p\sim\operatorname{Beta}(1,1)$, używając
+$S=7$, $n=100$. Z powyższego wzoru
+$BF_{10}\approx0{,}11138$, a $BF_{01}\approx8{,}9784$.
+Przy równych priorowych prawdopodobieństwach modeli
+$\Prob(\mathcal M_0\mid S=7)\approx0{,}8998$.
+Nie wolno jednak opisać tego jako prawdopodobieństwa, że
+$H_0$ jest prawdziwa \emph{bez podania priorycznego
+prawdopodobieństwa samej hipotezy punktowej}.
+Dla alternatywy $\operatorname{Beta}(2,18)$ otrzymujemy
+$BF_{10}\approx0{,}70745$, czyli znacznie inny wynik,
+choć obserwacje i $p_0$ się nie zmieniły.
+Przy alternatywie $\operatorname{Beta}(20,80)$
+$BF_{10}\approx0{,}03371$. Widać stąd konieczność
+analizy wrażliwości na prior alternatywy.
+\end{przyklad}
+
+\begin{uwaga}[Hipoteza punktowa potrzebuje dodatniej masy modelowej]
+Jeżeli jedynym priorem na ciągły parametr $p$ jest rozkład
+beta, to $\Prob(p=p_0)=0$ przed obserwacją i po niej,
+niezależnie od danych o dodatniej wiarygodności.
+Aby mówić o dodatnim posteriorowym prawdopodobieństwie
+punktowej hipotezy $p=p_0$, trzeba wprowadzić model
+przypisujący jej dodatnią masę, np. prior mieszany
+$w_0\delta_{p_0}+w_1\operatorname{Beta}(a,b)$.
+Takie porównanie modeli nazywa się niekiedy priorem
+\emph{spike-and-slab}. Nie należy mylić z nim posteriorowego
+prawdopodobieństwa nierówności $p>p_0$, które możemy obliczać
+bez atomu w $p_0$.
+\end{uwaga}
+
+\section{Decyzja oparta na posteriorowych prawdopodobieństwach modeli}
+\begin{twierdzenie}[Próg decyzji przy nierównych kosztach błędów]
+\label{thm:bayes-hypothesis-decision}
+Załóżmy model z twierdzenia~\ref{thm:bayes-odds}.
+Wybieramy pomiędzy działaniami $a_0$ (uznajemy model
+$\mathcal M_0$) i $a_1$ (uznajemy $\mathcal M_1$).
+Strata wynosi zero przy poprawnym wyborze,
+$C_{10}>0$ przy wyborze $a_1$, gdy prawdziwy jest
+$\mathcal M_0$, i $C_{01}>0$ przy wyborze $a_0$,
+gdy prawdziwy jest $\mathcal M_1$. Wtedy $a_1$
+ściśle minimalizuje stratę posteriorową wtedy i tylko wtedy, gdy
+\[
+ BF_{10}(x)>\frac{C_{10}}{C_{01}}\frac{w_0}{w_1}.
+\]
+Przy równości obie decyzje są optymalne.
+\end{twierdzenie}
+\begin{proof}
+Posteriorowa strata $a_1$ równa się
+$C_{10}\Prob(\mathcal M_0\mid x)$, a strata $a_0$ wynosi
+$C_{01}\Prob(\mathcal M_1\mid x)$.
+Porównanie tych liczb i podstawienie ilorazu z
+ twierdzenia~\ref{thm:bayes-odds} daje tezę.
+\end{proof}
+
+\begin{przyklad}[Jak koszt błędnej decyzji zmienia próg?]
+Niech $w_0=w_1=1/2$. Jeśli koszt fałszywego odrzucenia
+$\mathcal M_0$ wynosi $10$ jednostek, a koszt błędnego
+zaakceptowania $\mathcal M_0$ wynosi $2$, to wybieramy
+$\mathcal M_1$ dopiero przy $BF_{10}>5$.
+Żaden uniwersalny próg, np. $BF_{10}>3$ lub $BF_{10}>10$,
+nie zastąpi rzeczywistej analizy kosztów.
+\end{przyklad}
+
+\section{Paradoks Jeffreysa--Lindleya: to samo z, różny wniosek}
+\begin{twierdzenie}[Iloraz Bayesa w normalnym teście średniej]
+\label{thm:jeffreys-lindley}
+Niech $n\ge1$ oraz $X_1,\ldots,X_n\mid\mu$ będą
+niezależne o rozkładzie $\mathcal N(\mu,\sigma^2)$
+ze znanym $\sigma>0$. Porównujemy
+$\mathcal M_0:\mu=0$ z
+$\mathcal M_1:\mu\sim\mathcal N(0,\tau^2)$,
+$\tau>0$, przy tym samym rozkładzie warunkowym
+obserwacji. Niech $z=\sqrt n\,\overline x/\sigma$
+i $r=n\tau^2/\sigma^2$. Wtedy
+\[
+ BF_{01}(x)=\sqrt{1+r}\,
+ \exp\!\left(-\frac{r}{1+r}\frac{z^2}{2}\right).
+\]
+Dla ustalonego $z\in\R$, $\sigma>0$, $\tau>0$ i $n\to\infty$
+wartość $BF_{01}(x)$ dąży do nieskończoności, chociaż
+klasyczna dwustronna wartość p równa
+$2(1-\Phi(|z|))$ pozostaje stała.
+\end{twierdzenie}
+\begin{proof}
+Przy znanej wariancji $\sigma^2$ resztowa suma kwadratów
+$\sum_i(x_i-\overline x)^2$ ma ten sam czynnik gęstości
+w obu porównywanych modelach i skraca się w ilorazie.
+Wystarczy zatem porównać gęstości $\overline X$.
+W modelu zerowym $\overline X\sim\mathcal N(0,\sigma^2/n)$.
+W alternatywnym $\overline X=\mu+(\overline X-\mu)$,
+więc po scałkowaniu normalnego prioru mamy
+$\overline X\sim\mathcal N(0,\sigma^2/n+\tau^2)$.
+Iloraz gęstości dwóch rozkładów normalnych w punkcie
+$\overline x$ daje podany wzór.
+Gdy $n\to\infty$ przy ustalonym $z$, to $r\to\infty$,
+czynnik wykładniczy zbiega do $e^{-z^2/2}>0$,
+a pierwiastek $\sqrt{1+r}\to\infty$. Natomiast rozkład
+statystyki $Z=\sqrt n\,\overline X/\sigma$ pod $\mathcal M_0$
+jest standardowo normalny dla każdego $n$, więc
+wartość p zależy wyłącznie od $|z|$.
+\end{proof}
+
+\begin{przyklad}[Istotność 5\% i coraz większa przewaga modelu zerowego]
+Przyjmijmy $\sigma=\tau=1$ i zaobserwowane $z=2$.
+Dwustronna klasyczna wartość p to
+$2(1-\Phi(2))\approx0{,}04550$ dla każdego $n$.
+Jednak przy $n=100$, $1000$ i $10000$ dostajemy
+odpowiednio $BF_{01}\approx1{,}3873$, $4{,}2904$ oraz
+$13{,}5369$. Przy priorowych szansach $1:1$
+posteriorowe prawdopodobieństwa modelu zerowego wynoszą
+odpowiednio około $0{,}581$, $0{,}811$ i $0{,}931$.
+To nie jest sprzeczność rachunkowa. Test klasyczny i iloraz
+Bayesa odpowiadają na różne pytania, a przy wzroście $n$
+zachowujemy tę samą \emph{wartość statystyki z}, czyli
+obserwowana średnia maleje jak $n^{-1/2}$.
+Nie należy mylić tej konstrukcji z zachowaniem
+stałej, niezerowej wartości prawdziwego parametru $\mu$.
+\end{przyklad}
+
+\begin{center}
+\begin{minipage}{.82\textwidth}
+\centering
+\begin{tikzpicture}[>=Latex,scale=.88,every node/.style={font=\small}]
+\draw[->,thick] (0,0)--(6.7,0) node[right] {$n$};
+\draw[->,thick] (0,0)--(0,5.15) node[above] {$BF_{01}$};
+\foreach \x/\lab in {1/100,3/1000,5/10000} {
+  \draw (\x,.08)--(\x,-.08) node[below=3pt] {\lab};
+}
+\foreach \y/\lab in {0/0,1.5/5,3/10,4.5/15} {
+  \draw (.08,\y)--(-.08,\y) node[left=3pt] {\lab};
+}
+\draw[very thick,blue!60!black] (1,.4162)--(3,1.2871)--(5,4.0611);
+\foreach \x/\y in {1/.4162,3/1.2871,5/4.0611} {
+  \fill[blue!60!black] (\x,\y) circle (2.4pt);
+}
+\node[anchor=west,font=\footnotesize,fill=white,inner sep=2pt] at (0.45,4.65)
+ {$z=2$, $\sigma=\tau=1$};
+\end{tikzpicture}
+
+{\small\emph{Rysunek 20.1.} Przy stałej statystyce $z=2$
+wartość p pozostaje równa około $0{,}0455$, podczas gdy
+$BF_{01}$ rośnie. Punkty oznaczają $n=100,1000,10000$;
+połączono je tylko dla czytelności.}
+\end{minipage}
+\end{center}
+
+\begin{uwaga}[Zbyt szeroka alternatywa — paradoks Bartletta]
+W twierdzeniu~\ref{thm:jeffreys-lindley} także przy
+ustalonym $n$ i zaobserwowanym $z$ zachodzi
+$BF_{01}\to\infty$ dla $\tau\to\infty$.
+Zwiększenie rozproszenia prioru alternatywy obniża jej
+zintegrowaną wiarygodność w konkretnym punkcie danych,
+choć nie zmienia wartości maksymalnej wiarygodności.
+To ważny argument przeciw bezrefleksyjnemu określaniu
+bardzo szerokiego prioru jako „neutralnego” w porównywaniu
+modeli. Granica $\tau\to\infty$ nie uprawnia do zastąpienia
+prioru właściwego priorem niewłaściwym w ilorazie Bayesa.
+\end{uwaga}
+
+\section{Sekwencyjne testowanie: kiedy wolno patrzeć na dane wielokrotnie?}
+W klasycznym testowaniu bez korekty wielokrotne sprawdzanie,
+czy wartość p przekroczyła próg, może znacząco zwiększać
+częstość błędu pierwszego rodzaju. W specjalnej sytuacji
+\emph{prostej} hipotezy zerowej iloraz Bayesa ma przydatną
+własność martyngałową, lecz należy precyzyjnie sprawdzić
+warunki, zanim wykorzystamy ją do zatrzymywania eksperymentu.
+
+\begin{twierdzenie}[Iloraz Bayesa jako nieujemny martyngał]
+\label{thm:bayes-factor-martingale}
+Niech $(\mathsf S,\mathcal S,\nu)$ będzie przestrzenią
+z miarą $\sigma$-skończoną. Przy $\mathcal M_0$ zmienne
+$X_1,X_2,\ldots$ są niezależne z tą samą dodatnią
+$\nu$-prawie wszędzie gęstością $f_0$.
+Przy alternatywie $\mathcal M_1$ ustalamy właściwy prior
+$\pi$ na przestrzeni parametrów $\Theta_1$ i
+wspólnie mierzalne gęstości $f_\theta$ względem $\nu$;
+przy znanym $\theta$ obserwacje są niezależne o gęstości
+$f_\theta$. Niech $\mathcal F_n=\sigma(X_1,\ldots,X_n)$,
+$\mathcal F_0=\{\varnothing,\Omega\}$, oraz
+\[
+ B_n=\int_{\Theta_1}\prod_{i=1}^n
+    \frac{f_\theta(X_i)}{f_0(X_i)}\,\dd\pi(\theta),
+ \qquad B_0=1.
+\]
+Wtedy przy $\mathcal M_0$ proces $(B_n)_{n\ge0}$ jest
+nieujemnym martyngałem, $\E_0 B_n=1$, oraz dla
+każdego $\alpha\in(0,1)$ zachodzi
+\[
+ \Prob_0\!\left(\sup_{n\ge0}B_n\ge\frac1\alpha\right)
+ \le\alpha.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla ustalonego $\theta$ wyrażenie
+$L_n(\theta)=\prod_{i=1}^n f_\theta(X_i)/f_0(X_i)$
+ma przy $\mathcal M_0$ wartość oczekiwaną jeden, ponieważ
+$\int_{\mathsf S} f_\theta\,\dd\nu=1$.
+Z niezależności nowej obserwacji wynika
+$\E_0[L_{n+1}(\theta)\mid\mathcal F_n]=L_n(\theta)$.
+Tonelli i warunkowa wersja tego twierdzenia pozwalają
+zamienić całkę po $\pi$ z warunkową wartością oczekiwaną.
+Otrzymujemy $\E_0[B_{n+1}\mid\mathcal F_n]=B_n$,
+co wraz z $\E_0B_n=1$ daje pierwszą tezę.
+Dla $a>0$ i $N\in\N$ zatrzymajmy proces w
+$\tau=\inf\{n\ge0:B_n\ge a\}\wedge N$.
+Twierdzenie o zatrzymywaniu dla ograniczonego czasu daje
+$1=\E_0 B_\tau\ge a\Prob_0(\max_{0\le k\le N}B_k\ge a)$.
+Po podstawieniu $a=1/\alpha$ i przejściu $N\to\infty$
+przez ciągłość prawdopodobieństwa dla rosnących zdarzeń
+otrzymujemy tezę.
+\end{proof}
+
+\begin{uwaga}[Dokładna granica zastosowania]
+Próg $BF_{10}\ge1/\alpha$ zapewnia w powyższym
+\emph{prostym} modelu zerowym kontrolę prawdopodobieństwa
+fałszywego przekroczenia poziomu $\alpha$, nawet przy
+kolejnym sprawdzaniu danych. Nie jest to twierdzenie
+o dowolnej złożonej hipotezie zerowej, priorycznych
+prawdopodobieństwach modeli ani o poziomie klasycznego
+testu opartego na zwykłej wartości p. Także zmiana prioru
+alternatywy w reakcji na bieżące dane narusza przyjętą
+konstrukcję martyngału. Do zastosowań konieczne są
+wstępnie ustalone modele i reguły raportowania.
+\end{uwaga}
+
+\begin{przyklad}[Adaptacyjny prior niszczy gwarancję sekwencyjną]
+\label{ex:adapt-bf-fails}
+Niech pod hipotezą zerową $X\sim\operatorname{Bernoulli}(1/2)$.
+Rozpatrzmy dwie dopuszczalne alternatywy punktowe:
+$P_0(X=0)=1$ oraz $P_1(X=1)=1$. Jeśli \emph{przed}
+obserwacją ustalimy jedną z nich, iloraz wiarygodności
+$L(X)=P_j(\{X\})/(1/2)$ ma średnią jeden pod hipotezą
+zerową. Jeśli jednak \emph{po} zobaczeniu $X$ wybierzemy
+alternatywę $P_X$, to otrzymamy $L(X)=2$ przy każdym wyniku,
+a zatem $\E_0 L(X)=2$, nie zaś jeden.
+Przy progu $1/\alpha=2$ (czyli $\alpha=1/2$) fałszywe
+przekroczenie występuje z prawdopodobieństwem jeden.
+Jest to konkretny kontrprzykład pokazujący, dlaczego prior
+alternatywy w twierdzeniu~\ref{thm:bayes-factor-martingale}
+musi być zadany przed obserwacją, a nie dobrany do danych.
+\end{przyklad}
+
+\section{Jak w praktyce wybierać między testem klasycznym a Bayes factor?}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.27\textwidth}>{\raggedright\arraybackslash}p{.31\textwidth}>{\raggedright\arraybackslash}p{.27\textwidth}}
+\toprule
+\textbf{Cel analizy} & \textbf{Narzędzie} & \textbf{Interpretacja i ograniczenie}\\
+\midrule
+Kontrola błędu I rodzaju przy ustalonym $H_0$ & Test klasyczny i wartość p & Poziom obowiązuje przy warunkach testu.\\
+Porównanie dwóch opisanych modeli & $BF_{10}$ i posterior modelowy & Trzeba podać oba priory i szanse modeli.\\
+Ocena $\Prob(p>p_0\mid x)$ & Posterior ciągły i ogon rozkładu & Nie jest to $BF$ hipotezy punktowej.\\
+Decyzja o koszcie różnych błędów & Posterior odds i funkcja straty & Próg zależy od rzeczywistych kosztów.\\
+Wielokrotne sprawdzanie w czasie & Z góry ustalony proces ilorazu wiarygodności & Kontrola przekroczenia dla prostej $H_0$; nie dowolny BF.\\
+Słaby prior alternatywy & Analiza wrażliwości $BF$ & Zbyt szeroki prior może sprzyjać $H_0$.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\Needspace{23\baselineskip}
+\begin{lstlisting}[language=Python,caption={Kompletny program: iloraz Bayesa dla wadliwych produktów i paradoks Jeffreysa--Lindleya (Python, SciPy).}]
+from math import exp, log, log1p, sqrt
+from scipy.special import betaln
+from scipy.stats import norm
+
+n, s, p0 = 100, 7, 0.10
+for a, b in [(1, 1), (2, 18), (20, 80)]:
+    log_bf10 = (betaln(a+s, b+n-s) - betaln(a, b)
+                - s*log(p0) - (n-s)*log1p(-p0))
+    bf10 = exp(log_bf10)
+    post_prob_h0 = 1.0 / (1.0 + bf10)  # equal prior model odds
+    print("Alternative Beta", (a, b),
+          "BF10=", round(bf10, 5),
+          "P(H0|data)=", round(post_prob_h0, 5))
+
+sigma, tau, z = 1.0, 1.0, 2.0
+print("Two-sided classical p-value:", 2*norm.sf(abs(z)))
+for size in [100, 1000, 10000]:
+    r = size * tau**2 / sigma**2
+    bf01 = sqrt(1+r) * exp(-0.5*z*z*r/(1+r))
+    print("n=", size, "BF01=", round(bf01, 5),
+          "P(H0|data)=", round(bf01/(1+bf01), 5))
+\end{lstlisting}
+
+\begin{zadanie}[Kiedy alarm jest optymalny?]
+Dwa modele mają priorowe prawdopodobieństwa $w_0=0{,}8$
+i $w_1=0{,}2$. Otrzymano $BF_{10}=4$.
+Fałszywe odrzucenie modelu $\mathcal M_0$ kosztuje $6$,
+a przeoczenie modelu $\mathcal M_1$ kosztuje $10$.
+Które działanie minimalizuje posteriorową stratę?
+\par\emph{Rozwiązanie.} Posteriorowe szanse modelu
+$\mathcal M_1$ wynoszą $4\cdot(0{,}2/0{,}8)=1$,
+zatem oba modele mają posteriorowe prawdopodobieństwa po $1/2$.
+Ryzyko działania $a_1$ wynosi $6\cdot1/2=3$,
+a działania $a_0$ wynosi $10\cdot1/2=5$.
+Optymalny jest wybór $a_1$. Równoważnie sprawdzamy
+$BF_{10}>(6/10)(0{,}8/0{,}2)=2{,}4$.
+\end{zadanie}
+
+% ================================================================
+% ROZDZIAL 21 -- MODELE HIERARCHICZNE
+% ================================================================

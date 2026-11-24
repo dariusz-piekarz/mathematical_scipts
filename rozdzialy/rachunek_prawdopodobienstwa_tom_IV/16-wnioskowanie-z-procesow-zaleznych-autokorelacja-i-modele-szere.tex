@@ -1,0 +1,574 @@
+\chapter{Wnioskowanie z procesów zależnych: autokorelacja i modele szeregów czasowych}
+\label{ch:time-series}
+\paragraph{Powiązania i odsyłacze.} Podstawy procesów Markowa i stacjonarności przedstawia tom II (rozdziały~\ref{II-ch:ctmc} i~\ref{II-ch:gauss}); klasyczne modele regresji — rozdział~\ref{ch:linear-regression}.
+
+
+\section{Dlaczego sto dni to nie zawsze sto niezależnych obserwacji?}
+Pomiar temperatury w kolejnych godzinach, dzienne straty
+finansowe lub odczyty jednego urządzenia tworzą \emph{szereg czasowy}:
+uporządkowane obserwacje jednego procesu. Zamiana ich kolejności
+zazwyczaj zmienia sens modelu. Jeżeli zależność w czasie jest
+pomijana, nawet poprawna średnia z próby może mieć źle oszacowaną
+wariancję, a losowa walidacja krzyżowa może wykorzystywać
+informację z przyszłości. Podstawowe pojęcia procesów i
+filtracji wprowadziliśmy w tomie II; obecnie naszym zadaniem
+jest \emph{estymacja i predykcja} na podstawie jednej trajektorii.
+
+\begin{definicja}[Słaba stacjonarność i autokowariancja]
+\label{def:weak-stationarity}
+Niech $(X_t)_{t\in\mathbb Z}$ będzie procesem rzeczywistym
+o skończonych drugich momentach. Nazywamy go \emph{słabo
+stacjonarnym}, jeśli istnieje $\mu\in\R$ takie, że
+$\E X_t=\mu$ dla wszystkich $t$, a
+$\Cov(X_t,X_s)=\gamma(t-s)$ dla pewnej funkcji
+$\gamma:\mathbb Z\to\R$. Wtedy $\gamma(h)$ to
+\emph{autokowariancja} opóźnienia $h$, a przy
+$\gamma(0)>0$ wielkość $\rho(h)=\gamma(h)/\gamma(0)$
+to \emph{autokorelacja}. Zachodzą $\gamma(-h)=\gamma(h)$
+i $|\rho(h)|\le1$. Proces ściśle stacjonarny ma
+niezmiennicze względem przesunięcia czasu rozkłady
+skończeniewymiarowe; przy skończonych drugich momentach
+jest też słabo stacjonarny.
+\end{definicja}
+
+\begin{uwaga}[Stacjonarność a trend]
+Jeśli średnia rośnie w czasie, dane nie są słabo
+stacjonarne, choć reszty po właściwym usunięciu trendu
+mogą być stacjonarne. Również szeregi sezonowe wymagają
+jawnego modelowania kalendarza. Automatyczne różnicowanie
+każdej serii bez diagnozy może usunąć użyteczny sygnał.
+\end{uwaga}
+
+\begin{twierdzenie}[Dokładna wariancja średniej z szeregu]
+\label{thm:mean-time-variance}
+Niech $(X_t)_{t\in\mathbb Z}$ będzie słabo stacjonarny
+o autokowariancji $\gamma$. Dla
+$\overline X_n=n^{-1}\sum_{t=1}^nX_t$ zachodzi
+\[
+ \Var(\overline X_n)=\frac1{n^2}
+ \left(n\gamma(0)+2\sum_{h=1}^{n-1}(n-h)\gamma(h)\right).
+\]
+Jeśli dodatkowo $\sum_{h\in\mathbb Z}|\gamma(h)|<\infty$,
+to
+$\lim_{n\to\infty}n\Var(\overline X_n)
+=\sum_{h\in\mathbb Z}\gamma(h)=:\tau^2\ge0$.
+\end{twierdzenie}
+\begin{proof}
+Z definicji wariancji sumy
+$n^2\Var(\overline X_n)=\sum_{s=1}^n\sum_{t=1}^n
+\Cov(X_s,X_t)$. Dla $s=t$ występuje $n$ składników
+$\gamma(0)$; dla każdego $h\in\{1,\ldots,n-1\}$
+istnieje $n-h$ par o $t-s=h$ i tyle samo o $s-t=h$.
+Daje to pierwszy wzór. Mnożąc go przez $1/n$,
+otrzymujemy
+$n\Var(\overline X_n)=\sum_{|h|<n}
+(1-|h|/n)\gamma(h)$. Bezwzględna sumowalność
+pozwala zastosować zbieżność zdominowaną dla szeregów.
+Nieujemność granicy wynika z nieujemności wariancji.
+\end{proof}
+
+\begin{przyklad}[Jak korelacja zmienia efektywną liczebność?]
+Jeśli $\gamma(h)=\gamma(0)\phi^{|h|}$ dla $|\phi|<1$,
+to $\tau^2=\gamma(0)(1+\phi)/(1-\phi)$.
+Dla $\phi=0{,}8$ błąd standardowy średniej w dużej próbie
+jest w przybliżeniu trzykrotnie większy niż przy błędnym
+założeniu niezależności. Odpowiada to heurystycznej
+liczebności efektywnej $n_{\mathrm{eff}}\approx n/9$.
+Jest to \emph{porównanie wariancji}, nie dosłowne
+stwierdzenie, że usunięto obserwacje. Przy ujemnej
+autokorelacji liczebność efektywna może przekroczyć $n$.
+\end{przyklad}
+
+\section{Model AR(1): konstrukcja, estymacja i prognoza}
+\begin{definicja}[Biały szum i model autoregresyjny]
+Mówimy, że $(\varepsilon_t)_{t\in\mathbb Z}$ jest
+\emph{białym szumem} o wariancji $\sigma^2>0$, jeśli
+$\E\varepsilon_t=0$ oraz
+$\Cov(\varepsilon_t,\varepsilon_s)=\sigma^2\ind{t=s}$.
+W poniższym twierdzeniu założymy ponadto niezależność
+oraz identyczny rozkład innowacji. \emph{AR(1)} opisuje
+proces $(X_t)$ spełniający
+$X_t-\mu=\phi(X_{t-1}-\mu)+\varepsilon_t$,
+gdzie $\mu\in\R$ i $\phi\in\R$ są parametrami.
+\end{definicja}
+
+\begin{twierdzenie}[Stacjonarne rozwiązanie AR(1)]
+\label{thm:ar1-stationary}
+Niech $(\varepsilon_t)_{t\in\mathbb Z}$ będą
+niezależnymi zmiennymi o wspólnym rozkładzie,
+$\E\varepsilon_t=0$ i
+$\Var(\varepsilon_t)=\sigma^2\in(0,\infty)$.
+Niech $\mu\in\R$ i $|\phi|<1$. Wtedy szereg
+$X_t=\mu+\sum_{j=0}^{\infty}\phi^j\varepsilon_{t-j}$
+jest zbieżny w $L^2$ dla każdego $t$ i definiuje
+słabo stacjonarne rozwiązanie AR(1) z
+\[
+ \E X_t=\mu,\qquad
+ \gamma(h)=\frac{\sigma^2}{1-\phi^2}\phi^{|h|},
+ \quad h\in\mathbb Z.
+\]
+Jest to jedyne słabo stacjonarne rozwiązanie o skończonym
+drugim momencie na tej samej przestrzeni, napędzane tym samym
+szumem i spełniające to równanie w $L^2$.
+\end{twierdzenie}
+\begin{proof}
+Niezależność i centrowanie dają dla $m>k$
+$\E|\sum_{j=k}^m\phi^j\varepsilon_{t-j}|^2
+=\sigma^2\sum_{j=k}^m\phi^{2j}$.
+Ponieważ $|\phi|<1$, sumy częściowe są ciągiem
+Cauchy'ego w $L^2$. Przesunięcie indeksów pokazuje
+$X_t-\mu=\phi(X_{t-1}-\mu)+\varepsilon_t$ w $L^2$.
+Dla $h\ge0$ w iloczynie dwóch szeregów przeżywają
+jedynie składniki ze wspólnym indeksem innowacji:
+$\gamma(h)=\sigma^2\sum_{j\ge0}\phi^{2j+h}
+=\sigma^2\phi^h/(1-\phi^2)$. Pozostałe opóźnienia
+wynikają z symetrii kowariancji.
+Jeżeli $X_t$ i $X'_t$ są dwoma słabo stacjonarnymi
+rozwiązaniami z tymi samymi innowacjami, to
+$D_t=X_t-X'_t=\phi^mD_{t-m}$ dla każdego $m$.
+Słaba stacjonarność obu procesów zapewnia
+$\sup_t\E D_t^2<\infty$ przez nierówność
+$D_t^2\le2X_t^2+2(X'_t)^2$.
+Stąd $\E D_t^2\le\phi^{2m}\sup_s\E D_s^2\to0$.
+\end{proof}
+
+\begin{uwaga}[Jaki jest sens parametru $\phi$?]
+Dodatnie $\phi$ opisuje utrzymywanie się odchyleń
+od poziomu $\mu$, a ujemne naprzemienność znaków.
+Dla $\phi=0$ otrzymujemy niezależny szum wokół średniej.
+Dla $\phi=1$ zwykły proces z sumowaniem innowacji
+jest błądzeniem losowym, a nie stacjonarnym AR(1).
+Przy $|\phi|\ge1$ nie istnieje opisane powyżej
+przyczynowe stacjonarne rozwiązanie napędzane
+jednostronną sumą przeszłych innowacji; nie wyklucza
+to nietypowych rozwiązań z informacją o przyszłości.
+\end{uwaga}
+
+\begin{twierdzenie}[Prognoza AR(1) przy znanych parametrach]
+\label{thm:ar1-forecast}
+W założeniach twierdzenia~\ref{thm:ar1-stationary}
+niech $\mathcal F_t=\sigma(\varepsilon_s:s\le t)$.
+Dla każdego $h\in\N$, $h\ge1$, zachodzi
+\[
+ \E[X_{t+h}\mid\mathcal F_t]
+ =\mu+\phi^h(X_t-\mu),\qquad
+ \Var(X_{t+h}\mid\mathcal F_t)
+ =\sigma^2\sum_{j=0}^{h-1}\phi^{2j}.
+\]
+Jeżeli innowacje są normalne, warunkowy rozkład jest
+normalny i podane parametry wyznaczają dokładny
+przedział predykcji przy \emph{znanych} $\mu,\phi,\sigma$.
+\end{twierdzenie}
+\begin{proof}
+Iteracja rekurencji prowadzi do
+$X_{t+h}-\mu=\phi^h(X_t-\mu)+
+\sum_{j=0}^{h-1}\phi^j\varepsilon_{t+h-j}$.
+Innowacje w ostatniej sumie są niezależne od
+$\mathcal F_t$, zatem ich warunkowa średnia
+wynosi zero, a wariancja to suma wariancji.
+Przy normalności suma jest normalna.
+\end{proof}
+
+\begin{stwierdzenie}[Estymacja warunkowa AR(1)]
+\label{prop:ar1-conditional-mle}
+Załóżmy, że obserwujemy $x_1,\ldots,x_n$, $n\ge3$,
+z modelu $X_t=\phi X_{t-1}+\varepsilon_t$ dla $t\ge2$,
+gdzie $\varepsilon_t$ są niezależne
+$\mathcal N(0,\sigma^2)$ i niezależne od $X_1$.
+Przy znanej średniej zerowej i nieznanych
+$\phi\in\R$, $\sigma^2>0$, dla każdej ustalonej
+$\sigma^2$ log-wiarygodność warunkowa względem $X_1=x_1$
+osiąga maksimum po $\phi$ w punkcie
+\[
+ \widehat\phi_{\mathrm{CLS}}=
+ \frac{\sum_{t=2}^n x_tx_{t-1}}{\sum_{t=2}^n x_{t-1}^2},
+\]
+jeśli mianownik jest dodatni. Estymator ten jest
+również estymatorem MNK dla regresji bez wyrazu wolnego.
+Jeżeli dodatkowo resztowa suma kwadratów jest dodatnia,
+wspólne maksimum po $\phi$ i $\sigma^2>0$ istnieje,
+a warunkowy MLE wariancji to $\mathrm{RSS}/(n-1)$.
+Jeżeli zaś $\mathrm{RSS}=0$, wiarygodność rośnie
+bez ograniczenia przy $\sigma^2\downarrow0$ i wspólny MLE
+w otwartej przestrzeni parametrów nie istnieje.
+\end{stwierdzenie}
+\begin{proof}
+Warunkowa log-wiarygodność, z pominięciem stałej,
+wynosi $-\frac{n-1}{2}\log v-
+\frac{1}{2v}\sum_{t=2}^n(x_t-\phi x_{t-1})^2$.
+Dla ustalonego $v$ jej maksimum po $\phi$ odpowiada
+minimum wypukłej funkcji kwadratowej; równanie
+normalne daje podany iloraz. Maksymalizacja po
+$v>0$ odbywa się tak samo jak w twierdzeniu
+\ref{thm:aic-gaussian}, z liczebnością $n-1$.
+\end{proof}
+
+\begin{uwaga}[Warianty białego szumu]
+Biały szum w definicji powyżej wymaga jedynie nieskorelowania
+innowacji. Z samego nieskorelowania nie wolno wyprowadzić
+niezależności warunkowej, formuły wiarygodności Gaussowskiej
+ani prognozy jako pełnego rozkładu warunkowego. W twierdzeniach
+o stacjonarnym AR(1) i prognozie założyliśmy dlatego
+jawnie niezależność innowacji; do warunkowej wiarygodności
+potrzebna jest ponadto ich normalność.
+\end{uwaga}
+
+\begin{uwaga}[Warunkowe a dokładne MLE]
+Gdy model wymaga $|\phi|<1$, powyższe rozwiązanie
+bez ograniczenia może leżeć poza przestrzenią parametrów;
+wtedy należy maksymalizować na dopuszczalnej dziedzinie
+(w otwartym przedziale supremum może nie być osiągnięte).
+Dokładna wiarygodność stacjonarnego normalnego AR(1)
+uwzględnia ponadto rozkład $X_1$ i może dawać inny
+estymator. Niepewność \emph{oszacowanych} parametrów
+nie jest uwzględniona w przedziale z twierdzenia
+\ref{thm:ar1-forecast}; w małych próbach ma to znaczenie.
+\end{uwaga}
+
+\section{MA, ARMA, ACF i identyfikacja struktury}
+\begin{definicja}[Procesy MA($q$) i ARMA($p,q$)]
+Niech $(\varepsilon_t)_{t\in\mathbb Z}$ będzie
+białym szumem o wariancji $\sigma^2>0$.
+Dla $q\in\N\cup\{0\}$ i współczynników
+$\theta_1,\ldots,\theta_q\in\R$ proces
+$X_t=\mu+\varepsilon_t+
+\sum_{j=1}^q\theta_j\varepsilon_{t-j}$
+to \emph{MA($q$)}. Wprowadzamy operator opóźnienia
+$BX_t=X_{t-1}$ i wielomiany
+$\Phi(z)=1-\sum_{i=1}^p\phi_i z^i$ oraz
+$\Theta(z)=1+\sum_{j=1}^q\theta_j z^j$.
+Model \emph{ARMA($p,q$)} (autoregressive moving average,
+czyli połączenie autoregresji i średniej ruchomej) jest równaniem
+$\Phi(B)(X_t-\mu)=\Theta(B)\varepsilon_t$.
+\emph{Przyczynowość} oznacza możliwość wyrażenia
+$X_t-\mu$ jako zbieżnego w $L^2$ szeregu
+z przeszłych i bieżących innowacji; \emph{odwracalność}
+oznacza analogiczną możliwość odzyskania innowacji
+z przeszłych i bieżących wartości procesu.
+\end{definicja}
+
+\begin{twierdzenie}[Autokowariancja MA($q$)]
+\label{thm:maq-cov}
+Niech $X_t-\mu=\sum_{j=0}^q\theta_j\varepsilon_{t-j}$,
+$\theta_0=1$, a innowacje będą nieskorelowane,
+wycentrowane i mają wspólną wariancję $\sigma^2$.
+Wtedy proces jest słabo stacjonarny i dla
+$0\le h\le q$ zachodzi
+$\gamma(h)=\sigma^2\sum_{j=0}^{q-h}\theta_j\theta_{j+h}$,
+natomiast $\gamma(h)=0$ przy $h>q$.
+\end{twierdzenie}
+\begin{proof}
+Rozwijamy
+$\Cov(X_t,X_{t-h})=\sum_{j,k=0}^q
+\theta_j\theta_k\Cov(\varepsilon_{t-j},\varepsilon_{t-h-k})$.
+Dodatnie składniki otrzymujemy tylko, gdy
+$j=h+k$, co daje $\sigma^2\sum_{k=0}^{q-h}
+\theta_{h+k}\theta_k$. Gdy $h>q$, żadne indeksy
+nie mogą być równe. Kowariancja nie zależy od $t$.
+\end{proof}
+
+\begin{uwaga}[Charakterystyki ACF i PACF]
+\emph{ACF} (autocorrelation function) to funkcja autokorelacji
+$\rho(h)$. \emph{PACF} (partial autocorrelation function),
+czyli częściowa funkcja autokorelacji, na opóźnieniu $h$
+to korelacja liniowych
+reszt z regresji $X_t$ i $X_{t-h}$ na pośrednie
+$X_{t-1},\ldots,X_{t-h+1}$, jeżeli kowariancja
+wektora pośredniego jest odwracalna; dla $h=1$
+PACF jest zwykłą autokorelacją opóźnienia $1$.
+Dla MA($q$) teoretyczna ACF zeruje się po $q$,
+zaś dla AR($p$) w standardowym modelu przyczynowym
+teoretyczna PACF zeruje się po $p$. W skończonej
+próbie \emph{oszacowane} wartości nie zerują się dokładnie,
+więc nie jest to mechaniczna reguła identyfikacji rzędu.
+\end{uwaga}
+
+\begin{stwierdzenie}[Warunki przyczynowości i odwracalności]
+Jeśli wielomian $\Phi$ modelu ARMA($p,q$) nie ma zer
+w kole domkniętym $\{z\in\mathbb C:|z|\le1\}$,
+to rozwinięcie $\Theta(z)/\Phi(z)=\sum_{j=0}^\infty\psi_jz^j$
+ma współczynniki bezwzględnie sumowalne i definiuje
+przyczynowe rozwiązanie
+$X_t-\mu=\sum_{j\ge0}\psi_j\varepsilon_{t-j}$
+w $L^2$, dla białego szumu o skończonej wariancji.
+Jeśli dodatkowo $\Theta$ nie ma zer w tym kole,
+a wielomiany $\Phi$ i $\Theta$ nie mają wspólnych czynników,
+innowacje można odzyskać przez bezwzględnie sumowalny
+filtr z obserwacji (odwracalność).
+\end{stwierdzenie}
+\begin{proof}
+Jeśli wielomian nie zeruje się na kole o promieniu
+większym od $1$, odwrotność $1/\Phi(z)$ jest
+holomorficzna na tym kole. Szereg Taylora ma wtedy
+współczynniki malejące co najmniej geometrycznie
+(ze wzoru Cauchy'ego na pochodne), więc jest
+bezwzględnie sumowalny. Iloczyn z wielomianem
+$\Theta$ zachowuje tę własność. Dla białego szumu
+odpowiadający szereg jest Cauchy'ego w $L^2$.
+Mnożenie formalnych szeregów, uzasadnione
+sumowalnością, odtwarza równanie ARMA.
+Dla $\Theta$ stosujemy identyczny argument do
+$\Phi/\Theta$, otrzymując filtr odwrotny.
+\end{proof}
+
+\section{Diagnostyka autokorelacji i niepewność estymacji}
+Dla obserwacji $x_1,\ldots,x_n$ definiujemy
+$\widehat\gamma(h)=n^{-1}\sum_{t=h+1}^n
+(x_t-\overline x)(x_{t-h}-\overline x)$,
+$0\le h<n$, a przy $\widehat\gamma(0)>0$
+$\widehat\rho(h)=\widehat\gamma(h)/\widehat\gamma(0)$.
+Zwyczajowo rysujemy ACF zarówno oryginalnych danych,
+jak i reszt dopasowanego modelu. Użycie wspólnego
+mianownika $n$ jest jedną z konwencji; oszacowania ACF
+mogą zależeć od wyboru normalizacji i średniej.
+
+\begin{definicja}[Statystyka Ljunga--Boxa]
+Dla szeregu długości $n$ i opóźnień $1\le m<n$
+przy $\widehat\gamma(0)>0$ statystykę portmanteau
+definiujemy wzorem
+\[
+ Q_m=n(n+2)\sum_{h=1}^{m}\frac{\widehat\rho(h)^2}{n-h}.
+\]
+Stosujemy ją do badania \emph{łącznej} obecności
+autokorelacji do opóźnienia $m$. W klasycznym
+przybliżeniu dla reszt dopasowanego ARMA($p,q$)
+porównuje się ją z rozkładem $\chi^2_{m-p-q}$,
+o ile $m>p+q$ i spełnione są dodatkowe warunki
+asymptotyczne modelu i procedury estymacji.
+\end{definicja}
+
+\begin{uwaga}[Jak interpretować test Ljunga--Boxa?]
+Duża wartość p nie dowodzi braku autokorelacji;
+przy małej próbie test ma ograniczoną moc.
+Z kolei istotność może wynikać ze zmiennej
+wariancji, niestacjonarności lub błędnej specyfikacji.
+Wybór $m$ należy uzasadnić częstotliwością danych,
+sezonowością i horyzontem prognozy, nie zaś dokonać
+go po wielokrotnym przeszukiwaniu wartości p.
+\end{uwaga}
+
+\begin{stwierdzenie}[Korekta HAC: sens estymatora wariancji długookresowej]
+\label{prop:hac}
+Niech $(X_t)$ będzie słabo stacjonarny o bezwzględnie
+sumowalnej autokowariancji. Wówczas wariancja
+asymptotyczna $\sqrt n(\overline X_n-\mu)$ wynosi
+$\tau^2=\sum_{h\in\mathbb Z}\gamma(h)$, w sensie
+granicy wariancji z twierdzenia~\ref{thm:mean-time-variance}.
+Typową estymatą tej wielkości jest jądrowy estymator
+Bartletta--Neweya--Westa; określenie HAC oznacza
+\emph{heteroskedasticity and autocorrelation consistent},
+czyli odporność na heteroskedastyczność i autokorelację
+przy odpowiednich warunkach asymptotycznych:
+\[
+ \widehat\tau^2_b=\widehat\gamma(0)+
+ 2\sum_{h=1}^{b}\left(1-\frac{h}{b+1}\right)
+ \widehat\gamma(h),\qquad 0\le b<n.
+\]
+Jego \emph{zgodność} nie wynika z samej stacjonarności:
+wymaga dodatkowych warunków zależności, momentów oraz
+odpowiednio wolnego wzrostu $b$ z liczebnością próby.
+\end{stwierdzenie}
+
+\begin{uwaga}[Wariancja nie jest centralnym twierdzeniem granicznym]
+Z równości $n\Var(\overline X_n)\to\tau^2$
+nie wynika sama z siebie asymptotyczna normalność.
+Potrzebne jest osobne centralne twierdzenie graniczne
+dla klasy rozważanych procesów, np. poprawnie określonej
+klasy procesów mieszających. Bez niego przedział
+$\overline X_n\pm z_{1-\alpha/2}\widehat\tau_b/\sqrt n$
+nie ma automatycznej gwarancji pokrycia. Dla
+normalnego AR(1) normalność średniej jest dokładna,
+ale szacowanie $\tau$ pozostaje dodatkowym problemem.
+\end{uwaga}
+
+\section{Praktyczny wybór modelu i uczciwa walidacja w czasie}
+Nie dzielimy danych chronologicznych poprzez losowe
+przemieszanie, jeśli celem jest prognoza przyszłości.
+Jeśli $\Delta X_t=X_t-X_{t-1}$, to model
+ARIMA($p,d,q$) zakłada, że $\Delta^d X_t$ spełnia
+odpowiedni model ARMA($p,q$); $d$ jest liczbą
+różnicowań, a w odmianie sezonowej uwzględnia się
+dodatkowo opóźnienia sezonowe. Takiego różnicowania
+nie należy wykonywać bez sprawdzenia potrzeby i
+przyjętej interpretacji procesu.
+Na odłożonym bloku przyszłych obserwacji często mierzymy
+RMSE (root mean squared error), czyli pierwiastek
+średniego kwadratu błędu prognozy:
+$\operatorname{RMSE}=\sqrt{m^{-1}\sum_{j=1}^m(y_j-\widehat y_j)^2}$,
+gdzie $m$ jest liczbą sprawdzanych prognoz.
+W \emph{walidacji przesuwającego się początku} uczymy
+na przeszłości i prognozujemy późniejszy odcinek.
+Dwa typowe warianty to poszerzające się okno treningowe
+oraz przesuwające się okno o stałej długości.
+To drugie może lepiej adaptować się do zmian
+warunków, ale korzysta z mniejszej ilości danych.
+
+\begin{center}
+\begin{tikzpicture}[x=0.85cm,y=0.53cm,every node/.style={font=\small}]
+\foreach \r/\k in {0/4,1/6,2/8} {
+  \draw[fill=blue!13,draw=blue!50!black] (0,-\r*1.55) rectangle (\k,-\r*1.55+0.85);
+  \draw[fill=orange!22,draw=orange!60!black] (\k,-\r*1.55) rectangle (\k+2,-\r*1.55+0.85);
+}
+\node[anchor=west] at (8.3,0.48) {trening};
+\node[anchor=west] at (8.3,0.02) {prognoza};
+\draw[fill=blue!13,draw=blue!50!black] (7.65,0.57) rectangle (8.0,0.79);
+\draw[fill=orange!22,draw=orange!60!black] (7.65,0.10) rectangle (8.0,0.32);
+\node[anchor=west] at (0,-4.5) {Każde okno testowe następuje po swoim oknie treningowym.};
+\end{tikzpicture}
+\end{center}
+
+\begin{lstlisting}[language=Python,caption={Kompletny program: symulacja AR(1), estymacja, test reszt i prognozy chronologiczne (Python).}]
+import numpy as np
+from scipy.stats import norm
+from statsmodels.stats.diagnostic import acorr_ljungbox
+
+rng = np.random.default_rng(2026)
+n = 260
+phi_true, sigma_true = 0.75, 1.0
+noise = rng.normal(0.0, sigma_true, size=n + 300)
+series = np.zeros(n + 300)
+for t in range(1, len(series)):
+    series[t] = phi_true * series[t-1] + noise[t]
+x = series[300:]  # burn-in: reduces dependence on x[0] = 0
+
+# Chronological holdout (last 40 points) and one-step forecast.
+train = x[:220]
+test = x[220:]
+phi_hat = np.dot(train[1:], train[:-1]) / np.dot(train[:-1], train[:-1])
+resid = train[1:] - phi_hat * train[:-1]
+sigma_hat = np.sqrt(np.mean(resid**2))
+last_seen = np.empty_like(test)
+last_seen[0] = train[-1]
+last_seen[1:] = test[:-1]
+ar_pred = phi_hat * last_seen  # forecast 1 step ahead with updating
+rmse_ar = np.sqrt(np.mean((test - ar_pred)**2))
+rmse_persist = np.sqrt(np.mean((test - last_seen)**2))
+rmse_zero = np.sqrt(np.mean(test**2))
+print("estimated AR parameter:", phi_hat)
+print("residual standard deviation:", sigma_hat)
+print("RMSE AR, persistence, zero:", rmse_ar, rmse_persist, rmse_zero)
+print(acorr_ljungbox(resid, lags=[5, 10], return_df=True))
+
+# Forecast from the last available observation at time n-1,
+# with parameters fixed. Parameter-estimation uncertainty omitted.
+h = 3
+mean_h = phi_hat**h * x[-1]
+sd_h = sigma_hat * np.sqrt(sum(phi_hat**(2*j) for j in range(h)))
+ci_h = (mean_h - norm.ppf(0.975)*sd_h,
+        mean_h + norm.ppf(0.975)*sd_h)
+print("3-step forecast and approximate interval:", mean_h, ci_h)
+\end{lstlisting}
+
+\paragraph{Praktyczna interpretacja.}
+Ocenę predykcji wykonujemy wyłącznie na obserwacjach
+późniejszych niż trening. Warto porównać model AR(1)
+z prognozą stałej średniej, prognozą ostatniej wartości,
+a dla danych sezonowych także z prognozą sezonowo naiwną.
+Dla ziarna generatora użytego w programie otrzymujemy
+$\widehat\phi\approx0{,}731$ i RMSE prognozy AR(1)
+około $1{,}014$. Wynik nie gwarantuje przewagi
+na innych zbiorach danych.
+W programie użyto \emph{aktualizacji} przy prognozie
+jednokrokowej: do przewidzenia $X_t$ wolno użyć już
+zaobserwowanego $X_{t-1}$, ale nie wartości $X_t$
+ani późniejszych. Jeśli wymagamy jednorazowej prognozy
+całych $40$ przyszłych okresów, trzeba zastosować
+prognozę wielokrokową z \emph{jednego} momentu startowego,
+która jest innym zadaniem i zwykle ma większy błąd.
+
+\section{Zależne zdarzenia: model Markowa jako alternatywa dla iid}
+\begin{przyklad}[Awaria w kolejnych dniach i trwałe stany]
+Niech $S_t\in\{0,1\}$ oznacza stan maszyny w dniu $t$:
+$0$ to stan prawidłowy, $1$ to stan alarmowy. Załóżmy,
+że $(S_t)$ jest jednorodnym łańcuchem Markowa o macierzy
+przejścia
+$P=\begin{pmatrix}1-a&a\\ b&1-b\end{pmatrix}$,
+gdzie $0<a,b<1$. Prawdopodobieństwo alarmu w stanie
+stacjonarnym wynosi $\pi_1=a/(a+b)$, lecz kolejne
+alarmy nie są niezależne, chyba że $a+b=1$.
+Warunkowa wiarygodność obserwowanej ścieżki
+$s_1,\ldots,s_n$ jest proporcjonalna do
+$(1-a)^{N_{00}}a^{N_{01}}b^{N_{10}}(1-b)^{N_{11}}$,
+gdzie $N_{ij}=\#\{t\in\{1,\ldots,n-1\}:s_t=i,s_{t+1}=j\}$.
+W konsekwencji, jeśli odpowiednie mianowniki są dodatnie,
+warunkowe MLE wynoszą
+$\widehat a=N_{01}/(N_{00}+N_{01})$ i
+$\widehat b=N_{10}/(N_{10}+N_{11})$.
+Wyprowadzenie wynika z rozdzielenia log-wiarygodności
+na dwa składniki dwumianowe; gdy obserwujemy zerową
+liczbę przejść danego typu, trzeba uwzględnić brzeg
+przestrzeni parametrów. Próba zignorowania kolejności
+i dopasowania modelu niezależnych wskaźników Bernoulliego
+prowadziłaby do innego modelu niepewności.
+\end{przyklad}
+
+\begin{stwierdzenie}[Korelacja w dwustanowym łańcuchu]
+\label{prop:markov-corr}
+W powyższym łańcuchu przy rozkładzie początkowym
+stacjonarnym zachodzi
+$\rho(h)=(1-a-b)^h$ dla $h\ge0$.
+\end{stwierdzenie}
+\begin{proof}
+Oznaczmy $\lambda=1-a-b$.
+Dla $s\in\{0,1\}$ mamy
+$\E[S_{t+1}\mid S_t=s]=a+(1-a-b)s
+=\pi_1+\lambda(s-\pi_1)$.
+Iteracja własności Markowa daje
+$\E[S_{t+h}-\pi_1\mid S_t]=\lambda^h(S_t-\pi_1)$.
+Stąd
+$\Cov(S_t,S_{t+h})=
+\E[(S_t-\pi_1)\E[S_{t+h}-\pi_1\mid S_t]]
+=\lambda^h\Var(S_t)$, co kończy dowód.
+\end{proof}
+
+\section{Dobór narzędzia i błędy praktyczne}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.25\textwidth}>{\raggedright\arraybackslash}p{.32\textwidth}>{\raggedright\arraybackslash}p{.30\textwidth}}
+\toprule
+\textbf{Sytuacja} & \textbf{Metoda do rozważenia} & \textbf{Co zweryfikować}\\
+\midrule
+Jedna trajektoria o stałej średniej, krótka pamięć & AR/MA/ARMA & Stacjonarność, rzędy i ACF reszt.\\
+Trend i sezonowość & Regresja z czasem, sezonowe ARIMA & Brak przecieku i stabilność reżimu.\\
+Średnia danych zależnych & Długookresowy SE, HAC, model procesu & Sumowalność korelacji i CLT.\\
+Dwie wartości stanu, istotna kolejność & Łańcuch Markowa & Jednorodność przejść, liczba przejść.\\
+Zliczenia zdarzeń w kolejnych okresach & Poisson tylko przy uzasadnionej niezależności; modele zależnych zliczeń w pozostałych sytuacjach & Sezonowość, nadmierna dyspersja, korelacja.\\
+Prognoza w czasie & Rolling origin, odłożona końcówka szeregu & Wyłącznie historyczne cechy, właściwy horyzont.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{zadanie}[Dlaczego okna mogą być skorelowane mimo procesu Poissona?]
+Niech $(N_t)_{t\ge0}$ będzie jednorodnym procesem
+Poissona o intensywności $\lambda>0$. Definiujemy
+$A=N_2-N_0$ i $B=N_3-N_1$. Czy $A$ i $B$ są niezależne?
+\par\emph{Rozwiązanie.} Nie. Zapiszmy
+$A=(N_1-N_0)+(N_2-N_1)$ oraz
+$B=(N_2-N_1)+(N_3-N_2)$.
+Rozłączne przyrosty są niezależne, a wspólny składnik
+$N_2-N_1\sim\Pois(\lambda)$ ma wariancję $\lambda$.
+Stąd $\Cov(A,B)=\lambda>0$.
+Model niezależnych \emph{nachodzących na siebie} okien
+zliczeń byłby błędny, chociaż bazowy proces ma
+niezależne przyrosty na rozłącznych przedziałach.
+\end{zadanie}
+
+\begin{zadanie}[Dobór błędu standardowego]
+Dla $n=200$ kolejnych obserwacji stabilnego procesu
+oszacowano autokorelację jako w przybliżeniu
+$\rho(h)=0{,}6^{|h|}$. Analityk obliczył błąd
+standardowy średniej $s/\sqrt n$. Jaką poprawkę
+motywuje model AR(1)?
+\par\emph{Rozwiązanie.} W przybliżeniu
+$\tau^2/\gamma(0)=(1+0{,}6)/(1-0{,}6)=4$.
+Błąd standardowy średniej jest około dwa razy
+większy od klasycznego, o ile model i przybliżenie
+asymptotyczne są odpowiednie. W analizie danych należy
+oszacować parametr, wariancję długookresową i ocenić
+niepewność tych oszacowań; nie wolno stosować
+tego mnożnika bez sprawdzenia struktury zależności.
+\end{zadanie}
+
+
+% ================================================================
+% ROZDZIAL 17 -- WNIOSKOWANIE BAYESOWSKIE
+% ================================================================

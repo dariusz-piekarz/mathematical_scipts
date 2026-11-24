@@ -1,0 +1,367 @@
+\chapter{Kombinatoryka i modele skończone}
+\label{ch:combinatorics}
+
+\section{Zasady zliczania}
+Zacznijmy od najprostszego problemu: chcemy obliczyć szansę
+pewnego wyniku, ale najpierw musimy ustalić, ile wyników w ogóle
+rozważamy. Przy rzutach kostką, losowaniu kart albo układaniu haseł
+istotne są trzy pytania: czy obiekty są rozróżnialne, czy kolejność
+ma znaczenie i czy dopuszczamy powtórzenia. Zmiana choćby jednej
+odpowiedzi prowadzi do innego modelu.
+
+Zasada iloczynu nie wymaga probabilistycznej niezależności.
+Jest twierdzeniem o liczbie możliwych ciągów wyborów, podczas gdy
+niezależność jest własnością \emph{miary} nadanej zdarzeniom.
+Dla skończonych modeli te dwa pojęcia często występują obok siebie,
+ale nie wolno ich utożsamiać.
+
+\begin{definicja}
+Dla liczby naturalnej $n\geq 0$ definiujemy $n!:=\prod_{j=1}^n j$, przyjmując $0!:=1$.
+Dla liczb całkowitych $n\geq0$ i $0\leq k\leq n$ definiujemy
+$\binom nk:=n!/[k!(n-k)!]$; dla pozostałych całkowitych $k$ przyjmujemy
+$\binom nk:=0$.
+\end{definicja}
+
+\begin{stwierdzenie}[Zasady sumy i iloczynu]
+Niech $A_1,\dots,A_m$ będą skończonymi zbiorami.
+Jeżeli są parami rozłączne, to $|\bigcup_{i=1}^m A_i|=\sum_{i=1}^m|A_i|$.
+Bez żadnego założenia o rozłączności zachodzi
+$|A_1\times\cdots\times A_m|=\prod_{i=1}^m|A_i|$.
+\end{stwierdzenie}
+\begin{proof}
+Dla rozłącznych zbiorów odwzorowanie
+$\coprod_{i=1}^m A_i\to\bigcup_{i=1}^m A_i$
+wysyłające element z $i$-tego składnika na ten sam element
+jest bijekcją, ponieważ każdy element sumy należy do
+dokładnie jednego z $A_i$. Skończony zbiór jest więc
+rozbity na rozłączne części o licznościach $|A_i|$.
+
+Dla dwóch zbiorów $A,B$ rozbijmy $A\times B$ na włókna
+$\{a\}\times B$ indeksowane przez $a\in A$.
+Są parami rozłączne i każde ma dokładnie $|B|$ elementów.
+Pierwsza zasada daje
+$|A\times B|=\sum_{a\in A}|B|=|A|\,|B|$.
+Dla $m>2$ traktujemy
+$A_1\times\cdots\times A_m$ jako
+$(A_1\times\cdots\times A_{m-1})\times A_m$
+i stosujemy powyższy argument indukcyjnie.
+Ważne, że jest to dowód czysto zbiorowy i w ogóle
+nie korzysta z pojęcia prawdopodobieństwa.
+\end{proof}
+
+\begin{twierdzenie}[Permutacje, wariacje i kombinacje]
+Niech $S$ będzie zbiorem $n$ różnych elementów i niech $0\leq k\leq n$.
+Wówczas liczba bijekcji $S\to S$ wynosi $n!$, liczba uporządkowanych
+$k$-elementowych ciągów bez powtórzeń wynosi
+$(n)_k:=n!/(n-k)!$, a liczba $k$-elementowych podzbiorów $S$ wynosi
+$\binom nk$. Liczba ciągów długości $k$ o wyrazach w $S$, z dopuszczeniem
+powtórzeń, wynosi $n^k$.
+\end{twierdzenie}
+\begin{proof}
+Uporządkowany ciąg $(s_1,\ldots,s_k)$ bez powtórzeń
+budujemy kolejno. Pierwszy wyraz ma $n$ możliwych wartości.
+Po wyborze pierwszych $j-1$ wyrazów pozostało dokładnie
+$n-j+1$ wartości dla $s_j$. Z zasady iloczynu liczba
+ciągów jest równa
+$n(n-1)\cdots(n-k+1)=n!/(n-k)!$.
+Przy $k=0$ otrzymujemy jeden ciąg pusty,
+a przy $k=n$ wszystkie bijekcje, czyli permutacje.
+
+Niech $\mathcal V_k$ będzie zbiorem tych ciągów, a
+$\mathcal C_k$ zbiorem $k$-elementowych podzbiorów $S$.
+Odwzorowanie $\pi:\mathcal V_k\to\mathcal C_k$,
+które zapomina kolejność, jest surjekcją. Dla
+każdego $C\in\mathcal C_k$ zbiór $\pi^{-1}(C)$
+zawiera dokładnie $k!$ uporządkowań elementów $C$.
+Wszystkie włókna mają więc tę samą liczność, skąd
+$|\mathcal V_k|=k!|\mathcal C_k|$ i
+$|\mathcal C_k|=\binom nk$.
+Dla ciągów z powtórzeniami każde miejsce ma $n$
+możliwych wartości bez względu na wcześniejsze wybory,
+więc ich liczba to $n^k$.
+\end{proof}
+
+\begin{przyklad}[Kod dostępu]
+Kod złożony z sześciu cyfr, w którym dopuszcza się początkowe zero,
+może mieć $10^6$ postaci. Jeżeli cyfry nie mogą się powtarzać,
+postaci jest $(10)_6$. Jeżeli dodatkowo kod ma zaczynać się cyfrą niezerową,
+a pozostałe cyfry nie mogą się powtarzać, otrzymujemy
+$9\cdot(9)_5$ postaci. Warunki dotyczące pierwszej pozycji rozpatruje się
+zatem przed zastosowaniem zasady iloczynu.
+\end{przyklad}
+
+\section{Powtórzenia i rozdzielanie obiektów}
+Kombinacje opisują wybór podzbioru różnych elementów. Nie nadają
+się jednak bezpośrednio do opisu rozdzielania identycznych przedmiotów:
+zamiana miejscami dwóch identycznych żetonów niczego nie zmienia.
+Odwrotnie, jeśli mamy kilka kopii jednego symbolu, permutacje
+sztucznie oznakowanych kopii wielokrotnie liczą ten sam wynik.
+Stąd wynikają dwie osobne techniki: dzielenie przez liczbę
+niewidocznych permutacji oraz kodowanie przydziałów
+za pomocą gwiazdek i kresek.
+
+\begin{twierdzenie}[Permutacje multizbioru]
+Niech $n_1,\ldots,n_r$ będą nieujemnymi liczbami całkowitymi, a
+$n=n_1+\cdots+n_r$. Liczba ciągów długości $n$, w których symbol $i$
+występuje dokładnie $n_i$ razy dla każdego $i=1,\ldots,r$, wynosi
+$n!/(n_1!\cdots n_r!)$.
+\end{twierdzenie}
+\begin{proof}
+Wyobraźmy sobie, że wszystkie wystąpienia symbolu $i$
+otrzymują dodatkowe etykiety $(i,1),\ldots,(i,n_i)$.
+Powstaje $n$ różnych obiektów, których ustawień jest $n!$.
+Po usunięciu etykiet otrzymujemy ciąg z zadanymi
+licznościami symboli. Odwzorowanie „usuń etykiety”
+obejmuje wszystkie dopuszczalne ciągi.
+
+Ustalmy jeden taki ciąg. Etykiety symbolu $i$
+można przypisać jego $n_i$ wystąpieniom na $n_i!$
+sposobów. Te operacje dla różnych symboli są niezależnymi
+operacjami zliczania, więc łącznie dostajemy
+$\prod_{i=1}^r n_i!$ oznakowanych ciągów.
+Każdy ciąg nieoznakowany ma tyle samo reprezentacji.
+Dzieląc $n!$ przez rozmiar jednego włókna, otrzymujemy
+$n!/(n_1!\cdots n_r!)$.
+Dla $n_i=0$ czynnik $n_i!=0!=1$ nie zmienia rachunku.
+\end{proof}
+
+\begin{twierdzenie}[Metoda gwiazdek i kresek]
+Dla liczb całkowitych $n\geq0$ i $r\geq1$ liczba rozwiązań
+$(x_1,\ldots,x_r)\in\Z_{\geq0}^r$ równania $x_1+\cdots+x_r=n$ wynosi
+$\binom{n+r-1}{r-1}$. Jeżeli dodatkowo $x_i\geq1$ dla każdego $i$,
+a $n\geq r$, liczba rozwiązań wynosi $\binom{n-1}{r-1}$.
+\end{twierdzenie}
+\begin{proof}
+Dla rozwiązania $(x_1,\ldots,x_r)$ z $x_i\geq0$
+budujemy słowo, w którym umieszczamy $x_1$ gwiazdek,
+następnie kreskę, potem $x_2$ gwiazdek i tak dalej,
+aż do $x_r$ gwiazdek. Powstaje dokładnie $n$ gwiazdek
+i $r-1$ kresek, a więc słowo długości $n+r-1$.
+Dopuszczamy kreski obok siebie i na brzegach,
+co odpowiada współrzędnym równym zero.
+
+Odwrotnie, z każdego słowa zawierającego $n$ gwiazdek
+i $r-1$ kresek odzyskujemy jednoznacznie liczby $x_i$
+przez policzenie gwiazdek w kolejnych blokach.
+Mamy więc bijekcję między rozwiązaniami a wyborami
+$r-1$ pozycji kresek spośród $n+r-1$ pozycji.
+Stąd pierwszy wzór. Gdy wymagamy $x_i\geq1$, podstawiamy
+$y_i=x_i-1\geq0$. Równanie staje się
+$y_1+\cdots+y_r=n-r$, więc stosujemy pierwszy wzór
+do $n-r$ i otrzymujemy $\binom{n-1}{r-1}$.
+\end{proof}
+
+\begin{przyklad}[Rozdzielanie jednakowych przedmiotów]
+Rozdzielamy 12 identycznych żetonów pomiędzy cztery rozróżnialne osoby.
+Liczba przydziałów bez dodatkowych warunków wynosi $\binom{15}{3}$.
+Jeżeli każda osoba ma otrzymać przynajmniej dwa żetony, podstawienie
+$y_i=x_i-2$ daje $\sum_i y_i=4$, zatem $\binom73$ przydziałów.
+Wyniki nie odnoszą się do 12 \emph{rozróżnialnych} żetonów:
+wtedy bez ograniczeń mamy $4^{12}$ przydziałów.
+\end{przyklad}
+
+\begin{stwierdzenie}[Tożsamość Pascala i dwumian Newtona]
+Dla $n\geq1$ oraz $1\leq k\leq n-1$ zachodzi
+$\binom nk=\binom{n-1}{k-1}+\binom{n-1}k$. Dla dowolnych liczb
+$x,y\in\R$ i $n\geq0$ zachodzi
+$(x+y)^n=\sum_{k=0}^n\binom nk x^k y^{n-k}$.
+\end{stwierdzenie}
+\begin{proof}
+Ustalmy zbiór $S=\{1,\ldots,n\}$ i wyróżnijmy element
+$n$. Każdy $k$-elementowy podzbiór $S$ albo zawiera $n$,
+albo go nie zawiera. W pierwszym przypadku pozostałe
+$k-1$ elementów można wybrać z $n-1$ elementów na
+$\binom{n-1}{k-1}$ sposobów. W drugim wybieramy wszystkie
+$k$ elementów spośród $n-1$, na $\binom{n-1}{k}$
+sposobów. Obie rodziny są rozłączne i wyczerpują wszystkie
+przypadki; daje to tożsamość Pascala.
+
+Aby rozwinąć $(x+y)^n$, zapiszmy iloczyn $n$ czynników
+$(x+y)$. Każdy wyraz po wymnożeniu uzyskujemy przez
+wybranie z każdego czynnika albo $x$, albo $y$.
+Jeśli wybraliśmy $x$ dokładnie $k$ razy, powstaje
+$x^ky^{n-k}$. Można to zrobić na $\binom nk$ sposobów.
+Zsumowanie wkładów dla $k=0,\ldots,n$ daje wzór Newtona.
+Ten argument działa dla wszystkich $x,y\in\R$, również
+zerowych i ujemnych: jest to tożsamość algebraiczna.
+\end{proof}
+
+\section{Zasada włączeń i wyłączeń}
+Dodawanie liczebności zbiorów działa tylko wtedy, gdy zbiory
+nie zachodzą na siebie. Jeśli element spełnia kilka warunków,
+pojawia się wielokrotne liczenie. Zasada włączeń i wyłączeń
+naprawia to przez kolejne odejmowanie i dodawanie przecięć.
+Jej charakterystyczne znaki naprzemienne nie są sztuczną sztuczką:
+wynikają z tego, że element należący do $r$ zbiorów ma być
+ostatecznie policzony dokładnie raz.
+
+\begin{twierdzenie}[Zasada włączeń i wyłączeń]
+Dla skończonych zbiorów $A_1,\ldots,A_m$ zachodzi
+\begin{equation}\label{eq:wlaczenia}
+\left|\bigcup_{i=1}^m A_i\right|
+=\sum_{\varnothing\ne I\subseteq\{1,\ldots,m\}}
+ (-1)^{|I|+1}\left|\bigcap_{i\in I}A_i\right|.
+\end{equation}
+\end{twierdzenie}
+\begin{proof}
+Niech $U=\bigcup_{i=1}^m A_i$. Wystarczy pokazać, że
+po prawej stronie każdy element $x\in U$ jest policzony
+dokładnie raz, a każdy element spoza $U$ zero razy.
+Ustalmy dowolny $x$. Jeśli nie należy do żadnego $A_i$,
+nie jest zawarty w żadnym przecięciu występującym
+w prawej stronie. Jego całkowity wkład jest zerowy.
+
+Jeśli $x$ należy dokładnie do $r\geq1$ spośród zbiorów,
+to pojawia się w przecięciach tych $j$-elementowych
+rodzin indeksów, które wybieramy z owych $r$ zbiorów.
+Takich rodzin jest $\binom rj$. Ponieważ ich znak to
+$(-1)^{j+1}$, łączny wkład punktu $x$ jest
+\[
+\sum_{j=1}^r(-1)^{j+1}\binom rj
+=1-\sum_{j=0}^r(-1)^j\binom rj
+=1-(1-1)^r=1.
+\]
+Każdy element sumy jest więc policzony dokładnie raz.
+Zsumowanie po wszystkich elementach skończonego $U$
+kończy dowód. Zauważmy, że naprzemienne znaki wynikają
+z potrzeby usunięcia wielokrotnego liczenia.
+\end{proof}
+
+\begin{przyklad}[Permutacje bez punktów stałych]
+Niech $D_n$ oznacza liczbę permutacji zbioru $\{1,\ldots,n\}$ bez punktów
+stałych. Dla każdego $i$ oznaczmy przez $A_i$ zbiór permutacji
+ustalających $i$. Dla $k$ ustalonych pozycji istnieje $(n-k)!$ permutacji,
+więc z~\eqref{eq:wlaczenia} wynika
+\[
+D_n=\sum_{k=0}^{n}(-1)^k\binom nk(n-k)!
+=n!\sum_{k=0}^{n}\frac{(-1)^k}{k!}.
+\]
+Dla losowej jednostajnej permutacji prawdopodobieństwo braku punktów
+stałych wynosi $D_n/n!$ i zmierza do $e^{-1}$.
+\end{przyklad}
+
+\begin{przyklad}[Dokładnie jedna własność]
+Dla trzech zbiorów $A,B,C$ liczba elementów należących do dokładnie
+jednego z nich jest równa
+$|A|+|B|+|C|-2(|A\cap B|+|A\cap C|+|B\cap C|)+3|A\cap B\cap C|$.
+Istotnie, element należący do dokładnie $r\in\{0,1,2,3\}$ zbiorów
+wnosi odpowiednio $0,1,0,0$ do wskazanej kombinacji.
+\end{przyklad}
+
+\section{Przykłady modeli kombinatorycznych}
+W przykładach będziemy za każdym razem jawnie opisywać
+przestrzeń wyników. To zasadniczy etap rozwiązania: pięć kart
+losowanych równocześnie tworzy podzbiór, pięć kolejnych wyciągnięć
+tworzy uporządkowany ciąg, a obie przestrzenie mają inne liczebności.
+Jeśli każdy ciąg jest jednakowo prawdopodobny, odpowiednio opisane
+zdarzenie może mieć w obu modelach tę samą szansę; nie oznacza to
+jednak, że wolno zmieniać mianownik bez odpowiedniej zmiany licznika.
+
+\begin{przyklad}[Losowanie kart]
+Z talii 52 różnych kart losujemy pięć kart bez zwracania i nie
+uwzględniamy kolejności. Przestrzeń wyników ma $\binom{52}5$ elementów.
+Liczba układów z dokładnie dwiema kartami w ustalonym kolorze
+(w znaczeniu jednego z czterech kolorów po 13 kart) wynosi
+$\binom{13}2\binom{39}3$. Liczba układów zawierających dokładnie
+jedną parę jednakowych rang wynosi
+$13\binom42\binom{12}3 4^3$: wybieramy rangę pary,
+dwie karty tej rangi, trzy inne różne rangi oraz po jednej z czterech
+kart każdej z tych rang. Dzięki wymogowi różnych rang nie liczymy
+dwóch par ani trójki.
+\end{przyklad}
+
+\begin{przyklad}[Problem urodzin]
+Zakładamy, że daty urodzin $n$ osób są niezależne i jednostajne na
+zbiorze 365 dni, bez uwzględniania lat przestępnych. Dla $n\leq365$
+prawdopodobieństwo, że wszystkie daty są różne, jest równe
+$\prod_{j=0}^{n-1}(1-j/365)$. Zatem prawdopodobieństwo przynajmniej
+jednej zgodności wynosi
+$1-\prod_{j=0}^{n-1}(1-j/365)$.
+Dla $n=23$ przekracza ono $1/2$. Jest to wniosek z modelu,
+nie twierdzenie o rzeczywistym rozkładzie dat urodzin.
+\end{przyklad}
+
+\begin{przyklad}[Drogi na siatce]
+Rozważmy drogę z $(0,0)$ do $(a,b)$, złożoną z kroków $(1,0)$ i $(0,1)$,
+gdzie $a,b\in\N\cup\{0\}$. Każda droga składa się z $a+b$ kroków,
+w tym $a$ poziomych. Dróg jest więc $\binom{a+b}{a}$.
+Po narzuceniu przejścia przez $(c,d)$, gdzie $0\leq c\leq a$,
+$0\leq d\leq b$, liczba dróg jest iloczynem
+$\binom{c+d}c\binom{a+b-c-d}{a-c}$.
+\end{przyklad}
+
+\section{Zliczanie podziałów}
+Dotychczas przypisywaliśmy obiekty do ponumerowanych miejsc.
+Teraz interesuje nas samo rozbicie zbioru na grupy, bez etykiet
+grup. Tak powstają liczby Stirlinga drugiego rodzaju. Ich
+rekurencja obrazuje często stosowaną metodę: wyróżniamy ostatni
+element i pytamy, czy tworzy samodzielną grupę, czy dołącza
+do istniejącej.
+
+\begin{definicja}
+Dla $n,k\geq0$ liczba Stirlinga drugiego rodzaju $S(n,k)$ oznacza
+liczbę podziałów zbioru $n$-elementowego na dokładnie $k$
+niepustych, nierozróżnialnych bloków. Ustalamy $S(0,0)=1$,
+$S(n,0)=0$ dla $n>0$ oraz $S(0,k)=0$ dla $k>0$.
+\end{definicja}
+\begin{stwierdzenie}
+Dla $n,k\geq1$ zachodzi
+$S(n,k)=kS(n-1,k)+S(n-1,k-1)$.
+Liczba surjekcji ze zbioru $n$-elementowego na zbiór $k$-elementowy
+wynosi $k!S(n,k)=\sum_{j=0}^k(-1)^j\binom kj(k-j)^n$.
+\end{stwierdzenie}
+\begin{proof}
+Rozważmy podział zbioru $\{1,\ldots,n\}$ na $k$
+niepustych, nierozróżnialnych bloków. Blok zawierający
+$n$ jest albo singletonem $\{n\}$, albo zawiera inny
+element. W pierwszym przypadku po usunięciu tego bloku
+zostaje podział $n-1$ elementów na $k-1$ bloków,
+co można zrobić na $S(n-1,k-1)$ sposobów.
+
+W drugim przypadku usunięcie $n$ pozostawia podział
+$n-1$ elementów na $k$ niepustych bloków. Aby odtworzyć
+wyjściowy podział, musimy dodatkowo wskazać jeden z $k$
+bloków, do którego dołączamy $n$; jest więc
+$kS(n-1,k)$ możliwości. Przypadki są rozłączne,
+co daje rekurencję.
+
+Surjekcja $f:\{1,\ldots,n\}\to\{1,\ldots,k\}$
+wyznacza podział na $k$ niepustych włókien
+$f^{-1}(j)$; odwrotnie, każdy podział na $k$ bloków
+daje $k!$ surjekcji po przypisaniu etykiet włóknom.
+Stąd $k!S(n,k)$. Alternatywnie, wszystkich funkcji jest
+$k^n$, a te, które nie są surjekcjami, pomijają co najmniej
+jeden element przeciwdziedziny. Dla ustalonego
+$j$-elementowego zbioru pomijanych wartości pozostaje
+$(k-j)^n$ funkcji. Z zasady włączeń i wyłączeń wynika
+$\sum_{j=0}^k(-1)^j\binom kj(k-j)^n$.
+\end{proof}
+
+\begin{przyklad}[Obsadzenie wszystkich pudełek]
+Mamy $n\geq1$ rozróżnialnych kul i $m\geq1$ rozróżnialnych pudełek.
+Każdą kulę umieszczamy w jednym pudełku. Wszystkich przydziałów
+jest $m^n$, a przydziałów bez pustego pudełka jest $m!S(n,m)$.
+Ta sama liczba, policzona zasadą włączeń i wyłączeń, wynosi
+\[
+\sum_{j=0}^{m}(-1)^j\binom mj(m-j)^n.
+\]
+Gdy wszystkie $m^n$ przydziałów są jednakowo prawdopodobne,
+prawdopodobieństwo obsadzenia wszystkich pudełek wynosi
+$m!S(n,m)/m^n$. Przykładowo dla $n=4$ i $m=3$
+mamy $S(4,3)=6$, więc prawdopodobieństwo wynosi $36/81=4/9$.
+\end{przyklad}
+
+\begin{przyklad}[Dokładnie dwie pary w pokerze]
+Losujemy pięć kart z talii 52 kart, w której występuje 13 rang
+po cztery karty każdej rangi. Układ z dokładnie dwiema parami
+otrzymujemy następująco: wybieramy dwie rangi par na $\binom{13}2$
+sposobów, wybieramy po dwie z czterech kart każdej rangi
+na $\binom42^2$ sposobów, a ostatnią kartę spośród
+$11\cdot4$ kart o pozostałych rangach. Wynikowe
+prawdopodobieństwo to
+$\binom{13}2\binom42^2\cdot44/\binom{52}5$.
+Wymóg, aby ostatnia karta miała inną rangę, zapobiega
+wielokrotnemu zliczaniu i wyklucza układ z trzema
+kartami jednej rangi.
+\end{przyklad}
+

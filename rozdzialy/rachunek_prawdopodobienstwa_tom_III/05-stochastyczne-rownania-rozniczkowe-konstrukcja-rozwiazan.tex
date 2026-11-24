@@ -1,0 +1,592 @@
+\chapter{Stochastyczne równania różniczkowe: konstrukcja rozwiązań}
+\label{ch:sde-existence}
+\paragraph{Odsyłacze międzytomowe.} Numeryczne zastosowania SDE łączą się z aproksymacją z rozdziału~\ref{ch:sde-properties} oraz symulacyjnymi narzędziami tomu IV, rozdziału~\ref{IV-ch:monte-carlo}.
+
+
+\section{Dlaczego równanie stochastyczne nie jest zwykłym równaniem różniczkowym?}
+Rozważmy równanie $\dd X_t=b(t,X_t)\,\dd t+\sigma(t,X_t)\,\dd W_t$.
+Gdyby $W$ miał gładkie trajektorie, można by próbować zastąpić
+ostatni człon przez $\sigma(t,X_t)\dot W_t\,\dd t$.
+Wiemy jednak z tomu II, że trajektorie procesu Wienera
+są niemal na pewno nieróżniczkowalne. Ponadto całka Itô
+została zdefiniowana przez domknięcie w przestrzeni procesów
+przewidywalnych, a nie jako klasyczna całka wzdłuż trajektorii.
+Zapis różniczkowy jest więc skrótem równania całkowego.
+
+W teorii RÓR zadane pole wektorowe i punkt początkowy wyznaczają
+trajektorię. Tu do tych danych dochodzi \emph{realizacja szumu}.
+Pytamy osobno, czy rozwiązanie istnieje, czy jest jednoznaczne
+przy ustalonym szumie, czy jego rozkład jest jednoznaczny i czy
+może eksplodować w skończonym czasie. Rozróżnienia te nie są
+formalnością: brak odpowiedniej regularności współczynników
+może zniszczyć jednoznaczność nawet w równaniu deterministycznym.
+
+\begin{center}
+\begin{tikzpicture}[>=Latex,node distance=6mm]
+\node[draw,rounded corners,align=center,fill=blue!5,minimum width=31mm] (data)
+  {$X_0$, $b$, $\sigma$\\oraz proces $W$};
+\node[draw,rounded corners,align=center,fill=orange!9,right=13mm of data,minimum width=37mm] (eq)
+  {$X_t=X_0+\int_0^t b(s,X_s)\,\dd s$\\$\displaystyle+\int_0^t\sigma(s,X_s)\,\dd W_s$};
+\node[draw,rounded corners,align=center,fill=green!8,right=13mm of eq,minimum width=32mm] (sol)
+  {ciągły proces\\adaptowany $X$};
+\draw[->,thick] (data)--(eq);
+\draw[->,thick] (eq)--(sol);
+\end{tikzpicture}
+\par\smallskip\small Równanie stochastyczne jest warunkiem na \emph{cały proces}, nie wzorem na pochodną jego trajektorii.
+\end{center}
+
+\section{Definicje i dokładne znaczenie całek}
+\begin{definicja}[Rozwiązanie silne na ustalonej przestrzeni]
+\label{def:sde-strong}
+Niech $T>0$ i niech $(\Omega,\calF,\Prob)$ będzie
+przestrzenią probabilistyczną wyposażoną w filtrację
+$(\calF_t)_{0\le t\le T}$ spełniającą warunki zwykłe.
+Niech $W=(W^1,\ldots,W^m)$ będzie procesem Wienera
+$m$-wymiarowym względem tej filtracji. Niech $X_0$ będzie
+$\calF_0$-mierzalną zmienną o wartościach w $\R^d$.
+Niech $b:[0,T]\times\R^d\to\R^d$ i
+$\sigma:[0,T]\times\R^d\to\R^{d\times m}$
+będą funkcjami borelowskimi. \emph{Silnym rozwiązaniem} równania
+\[
+\dd X_t=b(t,X_t)\,\dd t+\sigma(t,X_t)\,\dd W_t,
+\qquad X_0\text{ zadane},
+\tag{5.1}\label{eq:sde}
+\]
+nazywamy ciągły, adaptowany proces $X$ o wartościach w $\R^d$,
+dla którego prawie na pewno
+$\int_0^T (\norm{b(s,X_s)}+\norm{\sigma(s,X_s)}_{\mathrm F}^2)\,\dd s<\infty$
+oraz, z prawdopodobieństwem jeden jednocześnie dla wszystkich $t$,
+\[
+X_t=X_0+\int_0^tb(s,X_s)\,\dd s
+       +\int_0^t\sigma(s,X_s)\,\dd W_s.
+\]
+Druga całka jest sumą $m$ całek Itô po kolumnach macierzy $\sigma$.
+\end{definicja}
+
+\begin{uwaga}[Mierzalność i rola filtracji]
+Ponieważ $X$ jest ciągły i adaptowany, jest przewidywalny.
+Borelowskość $b$ i $\sigma$ zapewnia, że
+$(t,\omega)\mapsto b(t,X_t(\omega))$ i
+$(t,\omega)\mapsto\sigma(t,X_t(\omega))$ są przewidywalne,
+a więc całki w definicji mają sens. Ważne jest, że nie wystarcza
+samo istnienie procesu Wienera jako rodziny zmiennych losowych:
+jego przyszłe przyrosty muszą być niezależne od aktualnej filtracji.
+\end{uwaga}
+
+\begin{definicja}[Jednoznaczność ścieżkowa i jednoznaczność co do prawa]
+Dla ustalonych danych $b,\sigma$ mówimy o
+\emph{jednoznaczności ścieżkowej}, gdy dowolne dwa rozwiązania
+silne $X,Y$ zbudowane na tej samej filtrowanej przestrzeni,
+z tym samym procesem Wienera i tym samym warunkiem początkowym
+($X_0=Y_0$ prawie na pewno), są nierozróżnialne:
+$\Prob(X_t=Y_t\ \text{dla wszystkich }t\in[0,T])=1$.
+\emph{Jednoznaczność co do prawa} oznacza, że dowolne dwa
+rozwiązania słabe o tym samym rozkładzie początkowym mają
+ten sam rozkład na $C([0,T];\R^d)$.
+\end{definicja}
+
+\begin{definicja}[Rozwiązanie słabe]
+Niech $\mu$ będzie miarą probabilistyczną na $\R^d$.
+\emph{Rozwiązaniem słabym} \eqref{eq:sde} z rozkładem
+początkowym $\mu$ nazywamy pewną filtrowaną przestrzeń
+probabilistyczną, pewien $m$-wymiarowy proces Wienera $W$
+względem jej filtracji oraz ciągły proces adaptowany $X$
+spełniający równanie całkowe i $\Law(X_0)=\mu$.
+W tej definicji przestrzeń probabilistyczna i szum nie są
+a priori zadane. Słowo „słaby” nie oznacza, że równanie
+obowiązuje tylko po scałkowaniu z funkcją testową.
+\end{definicja}
+
+\section{Podstawowe oszacowanie dla całek stochastycznych}
+\begin{lemat}[Oszacowanie supremum]
+\label{lem:sde-sup}
+Niech $T>0$, $A$ będzie procesem progresywnie mierzalnym
+o wartościach w $\R^d$, a $B$ przewidywalnym o wartościach
+w $\R^{d\times m}$. Załóżmy, że
+$\E\int_0^T(\norm{A_s}^2+\norm{B_s}_{\mathrm F}^2)\,\dd s<\infty$.
+Wówczas dla $0\le t\le T$
+\[
+\E\sup_{r\le t}\norm{\int_0^r A_s\,\dd s+
+\int_0^r B_s\,\dd W_s}^2
+\le 2t\int_0^t\E\norm{A_s}^2\,\dd s
++8\int_0^t\E\norm{B_s}_{\mathrm F}^2\,\dd s.
+\tag{5.2}\label{eq:sde-basic-est}
+\]
+\end{lemat}
+\begin{proof}
+Z nierówności $(u+v)^2\le2u^2+2v^2$ dla norm wektorowych
+wystarczy osobno oszacować obie całki. Dla pierwszej,
+przez Cauchy'ego--Schwarza, dla każdego $r\le t$ mamy
+$\norm{\int_0^r A_s\,\dd s}^2
+\le r\int_0^r\norm{A_s}^2\,\dd s
+\le t\int_0^t\norm{A_s}^2\,\dd s$.
+Dla drugiej, stosując nierówność Dooba w $L^2$
+do kwadratu normy martyngału (lub do jego współrzędnych),
+uzyskujemy
+$\E\sup_{r\le t}\norm{\int_0^rB_s\,\dd W_s}^2
+\le4\E\norm{\int_0^tB_s\,\dd W_s}^2$.
+Izometria Itô daje $\E\norm{\int_0^tB_s\,\dd W_s}^2
+=\E\int_0^t\norm{B_s}_{\mathrm F}^2\,\dd s$.
+Po połączeniu oszacowań otrzymujemy tezę.
+\end{proof}
+
+\begin{uwaga}
+Oszacowanie kontroluje \emph{całą trajektorię} przy pomocy
+norm współczynników, a nie tylko wartość w ustalonej chwili.
+Właśnie dlatego metoda Picarda zbiega w przestrzeni
+ciągłych procesów, co jest silniejsze niż zbieżność
+punktowa dla każdego $t$.
+\end{uwaga}
+
+\section{Istnienie i jednoznaczność przy globalnym warunku Lipschitza}
+\begin{twierdzenie}[Twierdzenie o istnieniu i jednoznaczności silnego rozwiązania]
+\label{th:sde-global}
+Niech $T>0$, niech $W$ i filtracja będą jak w definicji
+\ref{def:sde-strong}, a $X_0\in L^2(\Omega;\R^d)$ będzie
+$\calF_0$-mierzalny. Załóżmy, że borelowskie współczynniki
+$b:[0,T]\times\R^d\to\R^d$ i
+$\sigma:[0,T]\times\R^d\to\R^{d\times m}$ spełniają:
+\begin{enumerate}[label=(\roman*)]
+\item dla pewnego $L\ge0$ i wszystkich $t\in[0,T]$ oraz
+$x,y\in\R^d$ mamy
+$\norm{b(t,x)-b(t,y)}+\norm{\sigma(t,x)-\sigma(t,y)}_{\mathrm F}
+\le L\norm{x-y}$;
+\item dla pewnego $K<\infty$ i wszystkich $t\in[0,T]$
+mamy $\norm{b(t,0)}+\norm{\sigma(t,0)}_{\mathrm F}\le K$.
+\end{enumerate}
+Wówczas równanie \eqref{eq:sde} ma dokładnie jedno silne
+rozwiązanie w sensie nierozróżnialności. Ponadto dla pewnej
+stałej $C=C(T,L,K)$ zachodzi
+\[
+\E\sup_{0\le t\le T}\norm{X_t}^2
+\le C(1+\E\norm{X_0}^2).
+\tag{5.3}\label{eq:sde-moment}
+\]
+\end{twierdzenie}
+\begin{proof}
+\emph{Krok 1: liniowy wzrost.} Z założeń i nierówności
+trójkąta otrzymujemy, dla pewnego $K_1=K_1(L,K)$,
+$\norm{b(t,x)}^2+\norm{\sigma(t,x)}_{\mathrm F}^2
+\le K_1(1+\norm{x}^2)$, jednostajnie względem $t$.
+
+\emph{Krok 2: iteracje Picarda.} Ustalmy $X^{(0)}_t=X_0$
+i dla $n\ge0$ zdefiniujmy
+\[
+X_t^{(n+1)}=X_0+\int_0^tb(s,X_s^{(n)})\,\dd s
++\int_0^t\sigma(s,X_s^{(n)})\,\dd W_s.
+\tag{5.4}\label{eq:sde-picard}
+\]
+Przez indukcję wszystkie iteracje są ciągłymi procesami
+adaptowanymi i należą do przestrzeni
+$L^2(\Omega;C([0,T];\R^d))$; w kroku indukcyjnym
+stosujemy liniowy wzrost i lemat \ref{lem:sde-sup}.
+Nie postulujemy zatem istnienia całek przed wykazaniem
+ich całkowalności.
+
+\emph{Krok 3: szybkość zbieżności różnic.}
+Niech $D_n(t)=\E\sup_{r\le t}
+\norm{X_r^{(n+1)}-X_r^{(n)}}^2$.
+Z lematu \ref{lem:sde-sup} i warunku Lipschitza,
+po zastosowaniu nierówności $r\le T$, otrzymujemy
+$D_n(t)\le C_0\int_0^t D_{n-1}(s)\,\dd s$
+dla $n\ge1$ i $C_0=L^2(2T+8)$.
+Pierwszy przyrost jest całkowalny:
+$D_0(T)<\infty$ na mocy oszacowania zastosowanego
+do $b(s,X_0),\sigma(s,X_0)$. Indukcja daje
+\[
+D_n(T)\le D_0(T)\frac{(C_0T)^n}{n!}.
+\tag{5.5}\label{eq:picard-factorial}
+\]
+Zatem
+$\sum_{n=0}^\infty\|X^{(n+1)}-X^{(n)}\|_{L^2(\Omega;C)}
+\le\sqrt{D_0(T)}\sum_{n=0}^\infty(C_0T)^{n/2}/\sqrt{n!}<\infty$.
+Przestrzeń $L^2(\Omega;C([0,T];\R^d))$ jest zupełna,
+więc istnieje jej element $X$ będący granicą iteracji.
+Możemy wybrać podciąg zbieżny jednostajnie niemal
+na pewno; wynika to np. z nierówności Markowa i
+lematu Borela--Cantellego. W tej wersji $X$ ma
+ciągłe trajektorie i jest adaptowany.
+
+\emph{Krok 4: przejście do granicy w równaniu.}
+Z warunku Lipschitza i lematu \ref{lem:sde-sup}
+wynika, że różnica między procesami całkowymi po
+podstawieniu $X^{(n)}$ i $X$ zbiega do zera
+w normie $L^2(\Omega;C)$, ponieważ jest ograniczona
+przez $C_0\int_0^T\E\norm{X_s^{(n)}-X_s}^2\,\dd s$.
+Granica spełnia więc równanie całkowe. Liniowy
+wzrost oraz $X\in L^2(\Omega;C)$ gwarantują
+wszystkie warunki całkowalności z definicji.
+
+\emph{Krok 5: jednoznaczność.} Jeśli $X,Y$ są
+rozwiązaniami o tym samym warunku początkowym i
+przyrostach Wienera, oszacowanie z kroku 3 daje
+$u(t):=\E\sup_{r\le t}\norm{X_r-Y_r}^2
+\le C_0\int_0^t u(s)\,\dd s$.
+Lemat Gronwalla implikuje $u(t)=0$ dla każdego $t$,
+co oznacza nierozróżnialność.
+Jeśli $X,Y$ są jedynie rozwiązaniami w sensie definicji
+\ref{def:sde-strong}, bez założenia kwadratowej całkowalności
+supremów, nie można stosować powyższego oszacowania wprost.
+Dla $R>0$ wprowadzamy wspólny czas zatrzymania
+$\tau_R=\inf\{t\in[0,T]:\norm{X_t}\vee\norm{Y_t}\ge R\}\wedge T$.
+Ponieważ procesy są ciągłe, a $X_0=Y_0$ prawie na pewno,
+na $[0,\tau_R]$ integrandy różnic są ograniczone przez
+stałą zależną od $R$. Stosujemy lemat \ref{lem:sde-sup}
+do różnicy całek zatrzymanych, uzyskując
+$u_R(t):=\E\sup_{r\le t}\norm{X_{r\wedge\tau_R}-Y_{r\wedge\tau_R}}^2
+\le C_0\int_0^t u_R(s)\,\dd s$.
+Lemat Gronwalla daje $u_R(t)=0$. Dla prawie każdej trajektorii
+ciągłe procesy $X,Y$ są ograniczone na $[0,T]$, więc
+$\tau_R=T$ dla wszystkich dostatecznie dużych $R$.
+Przechodząc do granicy po rosnącym ciągu promieni,
+otrzymujemy nierozróżnialność na całym $[0,T]$.
+
+\emph{Krok 6: ograniczenie momentów.}
+Z równania i nierówności
+$\norm{u+v+w}^2\le3(\norm u^2+\norm v^2+\norm w^2)$,
+po zastosowaniu lematu \ref{lem:sde-sup} do obu części,
+otrzymujemy
+\[
+\E\sup_{r\le t}\norm{X_r}^2
+\le3\E\norm{X_0}^2+C_1\int_0^t(1+
+\E\sup_{u\le s}\norm{X_u}^2)\,\dd s,
+\]
+gdzie $C_1$ zależy tylko od $T,L,K$.
+Z lematu Gronwalla wynika \eqref{eq:sde-moment}.
+\end{proof}
+
+\begin{uwaga}[Dlaczego w dowodzie pojawia się silnia?]
+Dla odwzorowania Picarda na całym przedziale $[0,T]$
+nie musimy otrzymać kontrakcji w jednym kroku.
+Każda kolejna iteracja wprowadza jednak dodatkowe
+całkowanie po czasie. Objętość $n$-wymiarowego
+simpleksu $0<s_n<\dots<s_1<T$ wynosi $T^n/n!$;
+to właśnie źródło silni w \eqref{eq:picard-factorial}.
+\end{uwaga}
+
+\begin{zadanie}[Dlaczego regularność współczynników ma znaczenie?]
+Rozważyć równanie $\dd X_t=2\sqrt{|X_t|}\,\dd t$
+z warunkiem $X_0=0$, bez składnika szumowego.
+
+\emph{Rozwiązanie.} Dla każdego $c\ge0$ proces
+deterministyczny $X_t=(t-c)_+^2$ spełnia równanie:
+dla $t\le c$ obie strony są zerowe, a dla $t>c$
+mamy $\dot X_t=2(t-c)=2\sqrt{X_t}$. Istnieje
+więc nieskończenie wiele rozwiązań. Współczynnik
+$b(x)=2\sqrt{|x|}$ nie jest lokalnie Lipschitzowski
+w zerze. Nawet bez szumu warunku tego nie można
+w ogólności po prostu pominąć.
+\end{zadanie}
+
+\begin{lemat}[Mierzalna konstrukcja iteracji Picarda]
+\label{lem:picard-measurable}
+Niech współczynniki $b,\sigma$ spełniają założenia
+twierdzenia \ref{th:sde-global}, a $\mu$ będzie rozkładem
+na $\R^d$ o skończonym drugim momencie.
+Dla ustalonego $T>0$ iteracje Picarda można skonstruować
+tak, że prawo procesu $X^{(n)}$ jest jednoznacznie
+wyznaczone przez prawo pary $(X_0,W)$ na
+$\R^d\times C_0([0,T];\R^m)$, niezależnie od
+filtrowanej przestrzeni probabilistycznej.
+\end{lemat}
+\begin{proof}
+Dla $n=0$ proces jest stały $X_0$, więc wniosek jest oczywisty.
+Załóżmy, że proces $X^{(n)}$ otrzymaliśmy jako mierzalny
+funkcjonał pary $(X_0,W)$ (z dokładnością do zbioru miary
+zero wyznaczonego przez jej prawo). Proces
+$H_t=\sigma(t,X_t^{(n)})$ jest przewidywalny i należy
+do $L^2(\dd t\otimes\Prob)$; analogicznie
+$b(t,X_t^{(n)})$ jest całkowalny po czasie.
+Dla $h=T/N$ i $k\ge1$ określamy
+$H_k^{(h)}=h^{-1}\int_{(k-1)h}^{kh}H_s\,\dd s$,
+a następnie proces schodkowy równy $H_k^{(h)}$
+na $[kh,(k+1)h)$, z wartością zero na $[0,h)$.
+Każda wartość $H_k^{(h)}$ jest $\calF_{kh}$-mierzalna;
+więc przybliżenie jest przewidywalne i jego całka
+Itô jest skończoną sumą
+$\sum_k H_k^{(h)}(W_{t\wedge t_{k+1}}-W_{t\wedge t_k})$.
+Jest to funkcjonał mierzalny pary $(X_0,W)$.
+
+Dla dowolnego procesu z klasy $L^2(\dd t\otimes\Prob)$
+przesunięte średnie na poprzednim przedziale zbiegają
+do oryginalnego procesu w tej normie. Najpierw sprawdzamy
+to dla funkcji schodkowych w czasie, a następnie dla
+wszystkich funkcji $L^2$ przez ich gęstość i fakt, że
+uśrednianie jest kontrakcją w $L^2$ (Jensen oraz Fubini).
+Izometria Itô i nierówność maksymalna Dooba dają stąd
+zbieżność całek w $L^2(\Omega;C([0,T]))$.
+Dla całki względem czasu mierzalność funkcjonału
+jest bezpośrednia z aproksymacji całek Lebesgue'a.
+Wybór podciągu zbieżnego niemal na pewno pozwala
+zidentyfikować całe $X^{(n+1)}$ jako mierzalny
+funkcjonał tej samej pary. Wszystkie konstrukcje
+odbywają się względem ustalonego wspólnego prawa
+$(X_0,W)$, więc prawo iteracji nie zależy od
+konkretnej realizacji przestrzeni probabilistycznej.
+Indukcja kończy dowód.
+\end{proof}
+
+\begin{wniosek}[Jednoznaczność co do prawa]
+\label{cor:sde-law}
+Przy założeniach twierdzenia \ref{th:sde-global},
+niech $\mu$ będzie rozkładem probabilistycznym
+na $\R^d$ o skończonym drugim momencie.
+Wówczas wszystkie rozwiązania słabe równania
+\eqref{eq:sde} z $\Law(X_0)=\mu$ mają ten sam
+rozkład na $C([0,T];\R^d)$.
+\end{wniosek}
+\begin{proof}
+Dla każdego rozwiązania słabego $X_0$ jest
+$\calF_0$-mierzalny, a $W$ jest procesem Wienera
+względem tej filtracji. Cała trajektoria $W$
+jest więc niezależna od $X_0$, a wspólne prawo pary
+$(X_0,W)$ jest zawsze równe
+$\mu\otimes\mu_W$, gdzie $\mu_W$ jest miarą Wienera.
+Lemat \ref{lem:picard-measurable} daje mierzalną
+konstrukcję kolejnych iteracji Picarda na podstawie
+tej pary, a zatem ich prawo nie zależy od wyboru
+rozwiązania słabego. W szczególności nie zakładamy
+nieudowodnionej zależności całki Itô od całej trajektorii
+szumu: uzyskujemy ją jako granicę jawnych sum
+z przewidywalnymi współczynnikami. Na mocy
+\eqref{eq:picard-factorial} iteracje zbiegają w
+prawdopodobieństwie w przestrzeni trajektorii
+do rozwiązania. Ponieważ rozkład granicy w
+przestrzeni metrycznej jest wyznaczony przez rozkłady
+przybliżeń, otrzymujemy tezę.
+\end{proof}
+
+\begin{przyklad}[Ten sam rozkład nie oznacza tych samych trajektorii]
+Dla równania $\dd X_t=\dd W_t$, $X_0=0$,
+jedynym silnym rozwiązaniem przy zadanym szumie jest
+$X_t=W_t$. Na innych przestrzeniach możemy wziąć
+różne ruchy Browna; odpowiednie rozwiązania nie są
+funkcjami tego samego wyniku $\omega$, lecz mają
+identyczne prawa na przestrzeni trajektorii.
+To ilustruje różnicę między jednoznacznością ścieżkową
+a jednoznacznością co do prawa.
+\end{przyklad}
+
+\section{Stabilność względem warunku początkowego}
+\begin{twierdzenie}[Stabilność w normie średniokwadratowej]
+\label{th:sde-stability}
+Niech $b,\sigma$ spełniają założenia twierdzenia
+\ref{th:sde-global}, a $X,Y$ będą rozwiązaniami
+na tej samej przestrzeni, napędzanymi tym samym $W$,
+z warunkami początkowymi $X_0,Y_0\in L^2$.
+Wówczas dla pewnego $C=C(T,L)$
+\[
+\E\sup_{t\le T}\norm{X_t-Y_t}^2
+\le C\E\norm{X_0-Y_0}^2.
+\tag{5.6}\label{eq:sde-stability}
+\]
+\end{twierdzenie}
+\begin{proof}
+Odejmujemy równania całkowe. Ponieważ
+$X_t-Y_t=X_0-Y_0+\int_0^t(b(s,X_s)-b(s,Y_s))\,\dd s
++\int_0^t(\sigma(s,X_s)-\sigma(s,Y_s))\,\dd W_s$,
+z lematu \ref{lem:sde-sup} i nierówności
+$\norm{u+v}^2\le2\norm u^2+2\norm v^2$
+otrzymujemy
+$u(t)\le2\E\norm{X_0-Y_0}^2+C_2\int_0^t u(s)\,\dd s$,
+gdzie $u(t)=\E\sup_{r\le t}\norm{X_r-Y_r}^2$.
+Lemat Gronwalla daje \eqref{eq:sde-stability}.
+\end{proof}
+
+\begin{przyklad}[Co mierzy oszacowanie stabilności?]
+Jeśli dla tego samego procesu Wienera rozwiązujemy
+dwa równania o identycznych współczynnikach, ale
+z warunkami początkowymi oddalonymi o $\varepsilon$,
+to średni kwadrat \emph{największej w czasie} różnicy
+między trajektoriami jest nie większy od $C\varepsilon^2$.
+Wynik nie mówi, że \emph{dwie niezależnie zaszumione}
+trajektorie są bliskie. Sprzężenie polegające na
+użyciu tego samego $W$ jest częścią założenia.
+\end{przyklad}
+
+\section{Warunki lokalne i zagadnienie eksplozji}
+\begin{definicja}[Czas eksplozji]
+Dla procesu ciągłego $X$ określonego do losowej chwili
+$\zeta$ i wartościowanego w $\R^d$ definiujemy
+$\tau_R=\inf\{t<\zeta:\norm{X_t}\ge R\}$
+(przyjmujemy $\inf\varnothing=\infty$).
+Jeżeli $\tau_R\uparrow\zeta$, to $\zeta$ nazywamy
+\emph{czasem życia} procesu. Proces jest
+\emph{nieeksplozywny} na $[0,T]$, jeśli $\Prob(\zeta>T)=1$.
+\end{definicja}
+
+\begin{twierdzenie}[Lokalny Lipschitz i liniowy wzrost]
+\label{th:sde-local}
+Niech $T>0$, niech $X_0\in L^2(\Omega;\R^d)$,
+a $b,\sigma$ będą borelowskie i dla każdego $R>0$
+istnieje $L_R<\infty$, takie że dla wszystkich
+$t\in[0,T]$, $\norm x,\norm y\le R$ zachodzi
+$\norm{b(t,x)-b(t,y)}+\norm{\sigma(t,x)-\sigma(t,y)}_{\mathrm F}
+\le L_R\norm{x-y}$.
+Załóżmy także istnienie $K$ z własnością
+$\norm{b(t,x)}^2+\norm{\sigma(t,x)}_{\mathrm F}^2
+\le K(1+\norm{x}^2)$ dla wszystkich $t,x$.
+Wówczas \eqref{eq:sde} ma jedno silne rozwiązanie
+na $[0,T]$, jest ono nieeksplozywne i spełnia
+oszacowanie momentów analogiczne do \eqref{eq:sde-moment}.
+\end{twierdzenie}
+\begin{proof}
+\emph{Obcięcie.} Niech $\rho_R(x)$ będzie rzutem
+na domkniętą kulę promienia $R$; jest on $1$-Lipschitzowski
+i równy identyczności w tej kuli. Definiujemy
+$b_R(t,x)=b(t,\rho_R(x))$,
+$\sigma_R(t,x)=\sigma(t,\rho_R(x))$.
+Nowe współczynniki są globalnie Lipschitzowskie
+ze stałą $L_R$ i spełniają ten sam warunek liniowego
+wzrostu z tą samą stałą $K$, ponieważ
+$\norm{\rho_R(x)}\le\norm x$.
+Z twierdzenia \ref{th:sde-global} otrzymujemy
+globalne rozwiązania $X^{(R)}$.
+
+\emph{Zgodność rozwiązań.} Dla $S>R$ rozwiązania
+$X^{(R)}$ i $X^{(S)}$ mają identyczne współczynniki,
+gdy oba przebywają w kuli promienia $R$.
+Stosujemy oszacowanie różnicy z dowodu jednoznaczności
+do procesów zatrzymanych przy pierwszym opuszczeniu tej kuli
+przez którykolwiek z nich. Ponieważ różnica początkowa
+wynosi zero, Gronwall daje zgodność do tej chwili;
+a więc również zgodność czasów pierwszego wyjścia.
+Można zatem skleić lokalne rozwiązania na przedziale
+przed granicą tych czasów.
+
+\emph{Wykluczenie eksplozji.} Oszacowanie momentów z
+kroku 6 poprzedniego dowodu zależy od stałej liniowego
+wzrostu $K$, nie od stałej Lipschitza $L_R$.
+Zatem $\sup_R\E\sup_{t\le T}\norm{X_t^{(R)}}^2
+\le C(T,K)(1+\E\norm{X_0}^2)$.
+Dla czasu wyjścia $\tau_R$ z kuli o promieniu $R$
+wynika z nierówności Markowa
+\[
+\Prob(\tau_R\le T)\le
+\frac{C(T,K)(1+\E\norm{X_0}^2)}{R^2}.
+\]
+Prawa strona dąży do zera. Stąd z prawdopodobieństwem
+jeden lokalne rozwiązanie można przedłużyć na cały
+$[0,T]$ i otrzymujemy jednoznaczność przez zgodność
+obciętych równań.
+\end{proof}
+
+\begin{zadanie}[Eksplozja bez warunku liniowego wzrostu]
+Rozwiązać równanie $\dd X_t=X_t^2\,\dd t$,
+$X_0=x_0>0$, i wyznaczyć czas jego eksplozji.
+
+\emph{Rozwiązanie.} Równanie jest deterministyczne.
+Rozdzielenie zmiennych prowadzi do
+$X_t=x_0/(1-x_0t)$ dla $t<1/x_0$.
+W chwili $t\uparrow1/x_0$ rozwiązanie dąży do
+nieskończoności, zatem $\zeta=1/x_0$. Funkcja
+$b(x)=x^2$ jest lokalnie Lipschitzowska, ale nie
+spełnia globalnego warunku liniowego wzrostu.
+To pokazuje, dlaczego w poprzednim twierdzeniu
+występują dwa odrębne założenia.
+\end{zadanie}
+
+\section{Rozwiązane modele: wykładniczy i liniowy}
+\begin{zadanie}[Geometryczny ruch Browna: rozwiązanie i rozkład]
+\label{zad:gbm}
+Niech $a,c\in\R$ i $x_0>0$. Rozwiązać
+\[
+\dd X_t=aX_t\,\dd t+cX_t\,\dd W_t,
+\qquad X_0=x_0,
+\]
+i wyznaczyć $\E X_t$, $\Var(X_t)$ oraz
+$\Prob(X_t>K)$ dla ustalonego $K>0$ i $t>0$.
+
+\emph{Rozwiązanie.} Ponieważ współczynniki są
+Lipschitzowskie, rozwiązanie istnieje i jest jednoznaczne.
+Szukamy postaci $X_t=x_0e^{Y_t}$, gdzie
+$Y_t=(a-c^2/2)t+cW_t$. Wzór Itô dla funkcji
+wykładniczej daje
+$\dd X_t=X_t(a-c^2/2+c^2/2)\,\dd t+cX_t\,\dd W_t$.
+A zatem
+\[
+X_t=x_0\exp\bigl((a-\tfrac12c^2)t+cW_t\bigr).
+\tag{5.7}\label{eq:gbm-solution}
+\]
+Zmienne $W_t$ mają rozkład $\Normal(0,t)$, a więc
+$X_t$ ma rozkład lognormalny (dla $c\ne0$).
+Dzięki $\E e^{uW_t}=e^{u^2t/2}$ otrzymujemy
+$\E X_t=x_0e^{at}$,
+$\E X_t^2=x_0^2e^{(2a+c^2)t}$ oraz
+$\Var(X_t)=x_0^2e^{2at}(e^{c^2t}-1)$.
+Dla $c\ne0$, po standaryzacji zmiennej normalnej,
+\[
+\Prob(X_t>K)=1-\Phi\!\left(
+\frac{\log(K/x_0)-(a-c^2/2)t}{|c|\sqrt t}\right),
+\]
+gdzie $\Phi$ jest dystrybuantą $\Normal(0,1)$.
+Gdy $c=0$, proces jest deterministyczny i powyższe
+prawdopodobieństwo wynosi $\ind{\{x_0e^{at}>K\}}$.
+W szczególności $X_t>0$ prawie na pewno dla wszystkich $t$,
+co nie jest oczywiste z samej postaci różniczkowej.
+\end{zadanie}
+
+\begin{zadanie}[Proces Ornsteina--Uhlenbecka]
+\label{zad:ou}
+Niech $\theta>0$, $m\in\R$, $\eta>0$ i
+$X_0=x_0\in\R$. Rozwiązać
+$\dd X_t=\theta(m-X_t)\,\dd t+\eta\,\dd W_t$
+i obliczyć rozkład $X_t$ oraz $\Cov(X_s,X_t)$ dla $s\le t$.
+
+\emph{Rozwiązanie.} Wprowadzamy czynnik całkujący
+$e^{\theta t}$. Wzór na iloczyn Itô i zerowa
+kowariacja funkcji czasu z $X$ dają
+$\dd(e^{\theta t}(X_t-m))=\eta e^{\theta t}\,\dd W_t$.
+Stąd
+\[
+X_t=m+(x_0-m)e^{-\theta t}
++\eta\int_0^t e^{-\theta(t-u)}\,\dd W_u.
+\tag{5.8}\label{eq:ou-solution}
+\]
+Ostatnia całka jest gaussowska, ma średnią zero
+i wariancję $\eta^2\int_0^t e^{-2\theta(t-u)}\,\dd u
+=\eta^2(1-e^{-2\theta t})/(2\theta)$.
+Dla $s\le t$ rozbijamy całkę w chwili $s$.
+Przyrost od $s$ do $t$ jest niezależny od $\calF_s$,
+a część wcześniejsza jest równa
+$e^{-\theta(t-s)}(X_s-\E X_s)$. Dlatego
+\[
+\Cov(X_s,X_t)=\frac{\eta^2}{2\theta}
+ e^{-\theta(t-s)}(1-e^{-2\theta s}).
+\]
+Z rozkładu widać, że gdy $t\to\infty$,
+$X_t$ zbiega według rozkładu do
+$\Normal(m,\eta^2/(2\theta))$.
+Nie oznacza to, że $X_t$ zbiega prawie na pewno
+do stałej $m$: w stanie równowagi szum nadal działa.
+\end{zadanie}
+
+\begin{przyklad}[Liniowe równanie o zmiennym dryfie]
+Dla deterministycznych, ograniczonych funkcji $a,g$
+i $h\in L^2([0,T])$ rozwiązanie
+$\dd X_t=(a(t)X_t+g(t))\,\dd t+h(t)\,\dd W_t$
+ma postać
+\[
+X_t=e^{A(t)}\left(X_0+\int_0^te^{-A(s)}g(s)\,\dd s
++\int_0^te^{-A(s)}h(s)\,\dd W_s\right),
+\qquad A(t)=\int_0^t a(s)\,\dd s.
+\]
+Wystarczy zastosować wzór na iloczyn do
+$e^{-A(t)}X_t$. Jeżeli $X_0$ jest deterministyczny,
+proces jest gaussowski: jest sumą funkcji deterministycznej
+i całki Wienera z deterministycznym integrandem.
+\end{przyklad}
+
+\section{Podsumowanie i granica teorii}
+Wykazaliśmy istnienie i jednoznaczność przy globalnym
+warunku Lipschitza, a następnie przy lokalnym warunku
+Lipschitza i liniowym wzroście. Otrzymaliśmy także
+stabilność i pierwsze modele jawne. Nie twierdzimy,
+że współczynniki muszą być globalnie Lipschitzowskie,
+aby SDE miało rozwiązanie: jest to użyteczne kryterium
+wystarczające. W następnym rozdziale wykorzystamy
+rozwiązania do budowania procesów Markowa, ich generatorów,
+porównywania trajektorii i badania aproksymacji numerycznych.
+% ============================================================================
+% ROZDZIAL 6 — SDE: wlasnosci, generatory, porownanie, aproksymacja
+% ============================================================================

@@ -1,0 +1,587 @@
+\chapter{Procesy odnowy: zliczanie zdarzeń bez własności braku pamięci}
+\label{ch:renewal}
+\paragraph{Odsyłacze międzytomowe.} Modele intensywności i eksponowania czasu obserwacji znajdziesz w tomie IV, rozdziale~\ref{IV-ch:glm}.
+
+
+\section{Dlaczego proces Poissona nie opisuje każdego strumienia zdarzeń?}
+W procesie Poissona po dowolnym czasie obserwacji oczekiwanie na
+kolejne zdarzenie ma nadal rozkład wykładniczy. To wynika z własności
+braku pamięci. Awaria mechanizmu, którego prawdopodobieństwo
+uszkodzenia rośnie z wiekiem, nie ma jednak na ogół tej własności.
+Potrzebujemy więc modelu z niezależnymi, ale niekoniecznie
+wykładniczymi czasami między kolejnymi zdarzeniami.
+\emph{Proces odnowy} opisuje liczbę ukończonych cykli, w których
+po każdym odnowieniu system zaczyna działać jak nowy.
+
+\begin{definicja}[Proces odnowy]
+Niech $(T_n)_{n\ge1}$ będzie ciągiem niezależnych zmiennych
+losowych o jednakowym rozkładzie $F$ na $(0,\infty)$, przy czym
+$T_n>0$ prawie na pewno. Definiujemy $S_0=0$,
+$S_n=\sum_{k=1}^nT_k$ oraz, dla $t\ge0$,
+\[
+N_t:=\sup\{n\ge0:S_n\le t\}\in\N_0\cup\{\infty\}.
+\]
+Proces $N=(N_t)_{t\ge0}$ nazywamy \emph{procesem odnowy}.
+Liczby $S_n$ to chwile odnowień, a $T_n=S_n-S_{n-1}$
+to czasy pomiędzy odnowieniami. Gdy $T_n\sim\mathrm{Exp}(\lambda)$,
+odzyskujemy proces Poissona o intensywności $\lambda$.
+\end{definicja}
+
+\begin{twierdzenie}[Brak eksplozji i podstawowe prawdopodobieństwa]
+Dla procesu odnowy z poprzedniej definicji, dla każdego $t\ge0$,
+$N_t<\infty$ prawie na pewno. W szczególności proces ma
+niemalejące, prawostronnie ciągłe trajektorie, które w skończonym
+czasie wykonują skończenie wiele skoków wielkości $1$.
+Dla $n\in\N_0$ zachodzi
+\[
+\Prob(N_t\ge n)=\Prob(S_n\le t),\qquad
+\Prob(N_t=n)=\Prob(S_n\le t)-\Prob(S_{n+1}\le t).
+\]
+Dla $n\ge1$ dystrybuantą $S_n$ jest $n$-krotny splot $F^{*n}$.
+\end{twierdzenie}
+\begin{proof}
+Ponieważ $\Prob(T_1>0)=1$, istnieje $\varepsilon>0$
+takie, że $p:=\Prob(T_1\ge\varepsilon)>0$.
+Zmienne $I_k=\ind{\{T_k\ge\varepsilon\}}$ są niezależne
+i mają wspólny rozkład Bernoulliego z parametrem $p$.
+Z mocnego prawa wielkich liczb
+$n^{-1}\sum_{k=1}^n I_k\to p>0$ prawie na pewno.
+Ponieważ $S_n\ge\varepsilon\sum_{k=1}^nI_k$, wynika stąd
+$S_n\to\infty$ prawie na pewno; dlatego $N_t$ jest skończone
+prawie na pewno. Na każdym przedziale $[0,t]$ jest zatem
+skończenie wiele punktów skoku $S_1,\dots,S_{N_t}$,
+a definicja $N_t=\sum_{n\ge1}\ind{\{S_n\le t\}}$
+daje prawostronną ciągłość.
+Równość zdarzeń $\{N_t\ge n\}=\{S_n\le t\}$ jest bezpośrednia;
+odejmując prawdopodobieństwa kolejnych zagnieżdżonych zdarzeń,
+uzyskujemy drugi wzór. Rozkład sumy niezależnych zmiennych
+ma dystrybuantę będącą splotem ich rozkładów.
+\end{proof}
+
+\begin{uwaga}[Warunek $T_n>0$ jest istotny]
+Gdyby dopuszczano $\Prob(T_1=0)>0$, lecz nadal
+$\Prob(T_1>0)>0$, nie doszłoby do eksplozji, ale mogłyby
+wystąpić wielokrotne skoki w tej samej chwili.
+Założenie dodatniości usuwa ten problem i upraszcza zapis.
+Jeżeli zaś $T_1=0$ prawie na pewno, wszystkie odnowienia
+nastąpiłyby w chwili zerowej, a $N_0=\infty$.
+\end{uwaga}
+
+\begin{stwierdzenie}[Skończona średnia liczby odnowień]
+Dla każdego procesu odnowy z $T_1>0$ prawie na pewno i każdego
+$t<\infty$ zachodzi $\E N_t<\infty$, nawet gdy $\E T_1=\infty$.
+\end{stwierdzenie}
+\begin{proof}
+Ustalmy $\theta>0$. Liczba
+$r=\E e^{-\theta T_1}$ spełnia $0<r<1$.
+Z nierówności Markowa i niezależności
+\[
+\Prob(S_n\le t)=\Prob(e^{-\theta S_n}\ge e^{-\theta t})
+\le e^{\theta t}\E e^{-\theta S_n}=e^{\theta t}r^n.
+\]
+Z tożsamości $N_t=\sum_{n\ge1}\ind{\{S_n\le t\}}$
+i twierdzenia Tonellego otrzymujemy
+$\E N_t=\sum_{n\ge1}\Prob(S_n\le t)
+\le e^{\theta t}r/(1-r)<\infty$.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=0.55cm,>=Latex]
+\draw[->] (0,0)--(11,0) node[right] {$t$};
+\draw[->] (0,0)--(0,5.8) node[above] {$N_t$};
+\draw[very thick,blue!70!black]
+(0,0)--(1.6,0) (1.6,1)--(3.8,1) (3.8,2)--(4.8,2)
+(4.8,3)--(8,3) (8,4)--(10.2,4);
+\foreach \x/\y in {1.6/0,3.8/1,4.8/2,8/3}{
+ \draw[blue!70!black,very thick] (\x,\y)--(\x,{\y+1});
+ \fill[blue!70!black] (\x,{\y+1}) circle (2pt);
+ \draw[dashed,gray] (\x,0)--(\x,\y);
+}
+\foreach \x/\t in {1.6/1,3.8/2,4.8/3,8/4}{
+ \node[below] at (\x,0) {$S_{\t}$};
+}
+\foreach \y in {1,2,3,4}{\node[left] at (0,\y) {$\y$};}
+\end{tikzpicture}
+\par\smallskip\small Schemat procesu odnowy. Odstępy
+$T_1=S_1$, $T_2=S_2-S_1$, $T_3=S_3-S_2$ nie muszą mieć rozkładu
+wykładniczego; dlatego liczba odnowień na rozłącznych przedziałach
+zwykle nie jest niezależna.
+\end{center}
+
+\begin{przyklad}[Deterministyczny cykl]
+Jeżeli $T_n\equiv c>0$, to $S_n=nc$ i
+$N_t=\lfloor t/c\rfloor$. W modelu Poissona
+$\Var(N_t)=\E N_t$, tutaj zaś $\Var(N_t)=0$.
+Proces odnowy obejmuje więc zarówno modele losowe, jak i
+całkowicie regularne cykle. Przykład pokazuje, że sam parametr
+$1/\E T_1$ nie opisuje charakteru fluktuacji.
+Ten deterministyczny proces jest jednak procesem Markowa
+(w sensie niejednorodnym w czasie): znając aktualną chwilę,
+znamy bez losowości wszystkie jego przyszłe wartości.
+Nie może więc służyć jako dowód, że ogólny proces odnowy
+nie ma własności Markowa. Rzeczywisty kontrprzykład podajemy dalej.
+\end{przyklad}
+
+
+\begin{twierdzenie}[Proces odnowy nie musi być procesem Markowa]
+Niech $(T_n)_{n\ge1}$ będą niezależnymi zmiennymi, dla których
+$\Prob(T_n=1)=\Prob(T_n=2)=1/2$, i niech
+$N_t=\sup\{n\ge0:\sum_{k=1}^nT_k\le t\}$.
+Wtedy proces $(N_t)_{t\ge0}$ \emph{nie jest} procesem Markowa
+względem swojej filtracji naturalnej
+$\mathcal F_t^N=\sigma(N_s:0\le s\le t)$.
+\end{twierdzenie}
+\begin{proof}
+Spójrzmy na chwile $1$, $5/2$ i $13/4$.
+Rozważmy dwa zdarzenia należące do $\mathcal F_{5/2}^N$:
+\[
+A=\{N_1=1,N_{5/2}=1\},\qquad
+D=\{N_1=0,N_{5/2}=1\}.
+\]
+Oba mają dodatnie prawdopodobieństwo.
+Na $A$ koniecznie $T_1=1$ i $T_2=2$: gdyby
+$T_2=1$, druga odnowa nastąpiłaby już w chwili $2$.
+Zatem $S_2=3<13/4$ i
+$\Prob(N_{13/4}\ge2\mid A)=1$.
+Na $D$ mamy $T_1=2$, a $T_2$ nadal przyjmuje wartości
+$1$ i $2$ z jednakowymi prawdopodobieństwami,
+niezależnie od $D$. Stąd
+$\Prob(N_{13/4}\ge2\mid D)=1/2$.
+
+Na obu zdarzeniach obecny stan $N_{5/2}$ jest taki sam,
+mianowicie równy $1$. Gdyby $N$ miał własność Markowa,
+warunkowe prawdopodobieństwo zdarzenia
+$\{N_{13/4}\ge2\}$ przy całej informacji do chwili $5/2$
+byłoby funkcją wyłącznie $N_{5/2}$. Jego średnie
+warunkowe na $A$ i $D$ musiałyby więc być równe.
+Obliczone wartości $1$ i $1/2$ przeczą temu warunkowi.
+\end{proof}
+
+\begin{uwaga}[Stan trzeba czasem poszerzyć]
+Sama liczba odnowień $N_t$ nie mówi, ile czasu upłynęło
+od ostatniej odnowy. To właśnie brakująca informacja w
+powyższym dowodzie. Para $(N_t,A_t)$, gdzie
+$A_t=t-S_{N_t}$, jest naturalnym kandydatem na stan
+procesu Markowa: po znajomości wieku rozkład czasu
+pozostałego do nowego cyklu można obliczyć z ogona
+rozkładu odstępów. Własność Markowa takiej pary
+wymaga osobnego sformułowania i dowodu; jej nie
+utożsamiamy z własnością Markowa samego $N_t$.
+\end{uwaga}
+
+
+\begin{twierdzenie}[Wiek odnowy przywraca własność Markowa]
+\label{thm:wiek-markow}
+Niech $T_1,T_2,\ldots$ będą niezależnymi, jednakowo rozłożonymi
+zmiennymi o wartościach w $(0,\infty)$, o dystrybuancie $F$,
+a $N_t$ i $A_t=t-S_{N_t}$ oznaczają liczbę odnowień i wiek
+ostatniego cyklu. Wówczas $Y_t=(N_t,A_t)$ jest jednorodnym
+w czasie procesem Markowa względem filtracji naturalnej
+$\calF_t^N=\sigma(N_s:0\le s\le t)$.
+Dokładniej, dla $u\ge0$, na zdarzeniu $\{N_t=n,A_t=a\}$
+(rozumianym przez regularny rozkład warunkowy) resztkowy czas
+$R_t$ ma ogon
+$\overline F(a+u)/\overline F(a)$, gdy $\overline F(a)>0$,
+a po następnym odnowieniu proces jest zbudowany z nowych,
+niezależnych odstępów o prawie $F$. Opis ten nie zależy od $t$.
+\end{twierdzenie}
+\begin{proof}
+Ustalmy deterministyczne $t$. Z trajektorii $(N_s)_{0\le s\le t}$
+można odzyskać wszystkie chwile skoków $S_k\le t$, a więc
+$N_t$ i $S_{N_t}$ są $\calF_t^N$-mierzalne. Na zdarzeniu
+$\{N_t=n\}$ znamy $T_1,\ldots,T_n$, natomiast o $T_{n+1}$
+wiemy tylko, że $T_{n+1}>t-S_n=A_t$. Istotnie,
+$\{N_t=n\}=\{S_n\le t,\ T_{n+1}>t-S_n\}$.
+Dla ustalonego $n$ i dowolnej ograniczonej funkcji borelowskiej
+$\psi$ warunkowanie względem $T_1,\ldots,T_n$ oraz
+niezależność $T_{n+1}$ dają
+\[
+\E[\psi(T_{n+1}-A_t)\mid\calF_t^N]
+=\frac{\E[\psi(T_1-A_t)\ind{\{T_1>A_t\}}]}{\overline F(A_t)}
+\quad\text{na }\{N_t=n,\ \overline F(A_t)>0\}.
+\]
+Równość można zweryfikować przez przemnożenie przez dowolną
+ograniczoną funkcję dotychczasowych chwil skoków i całkowanie;
+uzyskujemy w ten sposób wersję warunkową, bez dzielenia przez
+prawdopodobieństwo zdarzenia $\{A_t=a\}$.
+Przyszłe zmienne $T_{n+2},T_{n+3},\ldots$ są niezależne zarówno
+od tej informacji, jak i od $T_{n+1}$. Po upływie resztkowego
+czasu kolejna liczba odnowień oraz wiek procesu są zatem
+jednoznacznymi funkcjami tych niezależnych odstępów i
+aktualnej pary $(n,a)$. Dla dowolnej ograniczonej funkcji
+borelowskiej $h$ na $\N_0\times[0,\infty)$ istnieje więc
+funkcja $P_uh(n,a)$, która nie zależy od chwili $t$ i spełnia
+$\E[h(Y_{t+u})\mid\calF_t^N]=P_uh(Y_t)$.
+To jest żądana jednorodna własność Markowa.
+Co istotne, nie wystarczy znać tylko rozkładu $R_t$:
+po następnej odnowie całą przyszłość wyznaczają nowe,
+niezależne odstępy. Właśnie ta niezależność pozwala
+przejść od opisu pierwszego kolejnego skoku do dowolnej
+liczby dalszych odnowień.
+W szczególności, jeżeli do chwili $t+u$ nie ma nowej odnowy,
+to $Y_{t+u}=(n,a+u)$; prawdopodobieństwo tego zdarzenia
+jest równe $\overline F(a+u)/\overline F(a)$ przy
+$\overline F(a)>0$. Zdarzenie $\{\overline F(A_t)=0\}$
+ma jednak prawdopodobieństwo zero: dla każdego $n$ z niezależności
+$T_{n+1}$ od $(T_1,\ldots,T_n)$ wynika
+\[
+\begin{aligned}
+&\Prob\bigl(N_t=n,\,\overline F(A_t)=0\bigr)\\
+&=\E\bigl[\ind{\{S_n\le t,\,\overline F(t-S_n)=0\}}
+     \Prob(T_{n+1}>t-S_n\mid T_1,\ldots,T_n)\bigr]=0.
+\end{aligned}
+\]
+Sumując po $n$, uzasadniamy, że iloraz wystarcza na całym
+zdarzeniu pełnej miary. Dla wartości $(n,a)$ spoza nośnika
+rozkładu pary $(N_t,A_t)$ jądro warunkowe można określić
+dowolnie; nie zmienia to własności Markowa.
+\end{proof}
+
+\begin{zadanie}[Dlaczego sam licznik nie wystarcza?]
+Niech odstępy między odnowieniami mają rozkład jednostajny
+na $[1,2]$. Ustalmy $t=2$ i rozważmy dwa możliwe przebiegi
+z $N_t=1$: w pierwszym ostatnia odnowa nastąpiła w chwili
+$t-1/4$, w drugim w chwili $t-3/4$. Porównać prawdopodobieństwa
+braku odnowy w następnych $1/2$ jednostki czasu.
+
+\emph{Rozwiązanie.} Dla wieku $a$ ogon pozostałego czasu
+wynosi $\overline F(a+1/2)/\overline F(a)$.
+Przy $a=1/4$ mamy $\overline F(3/4)=\overline F(1/4)=1$,
+więc szansa braku odnowy jest $1$. Przy $a=3/4$ mamy
+$\overline F(5/4)=3/4$ i $\overline F(3/4)=1$, zatem
+szansa wynosi $3/4$. Zdarzenia warunkujące dokładnym
+wiekiem mogą mieć prawdopodobieństwo zero; obliczenie
+dotyczy regularnej wersji prawa warunkowego. Właśnie z tego
+powodu para $(N_t,A_t)$ przenosi więcej informacji niż $N_t$.
+\end{zadanie}
+
+\section{Równanie odnowy i jego jednoznaczność}
+\begin{twierdzenie}[Równanie dla średniej liczby odnowień]
+Niech $N$ będzie procesem odnowy o dystrybuancie
+odstępów $F$. Funkcja $m(t)=\E N_t$ jest skończona
+dla $t\ge0$ i spełnia równanie
+\[
+m(t)=F(t)+\int_{(0,t]}m(t-s)\,\dd F(s),\qquad t\ge0.
+\]
+Wśród lokalnie ograniczonych funkcji borelowskich
+$u:[0,\infty)\to\R$ jest to jedyne rozwiązanie tego równania.
+\end{twierdzenie}
+\begin{proof}
+Pierwsza odnowa następuje w chwili $T_1$. Jeżeli $T_1>t$,
+liczba odnowień jest zero. Jeśli $T_1=s\le t$,
+to pierwszą odnowę już zaliczamy, a kolejna liczba
+odnowień ma rozkład $N'_{t-s}$, gdzie proces $N'$ jest
+zbudowany z niezależnych odstępów $T_2,T_3,\ldots$
+i ma to samo prawo co $N$. Stąd, warunkując względem
+$T_1$, otrzymujemy
+$m(t)=\E[\ind{\{T_1\le t\}}(1+m(t-T_1))]
+=F(t)+\int_{(0,t]}m(t-s)\,\dd F(s)$.
+Dla ścisłości w drugim składniku używamy niezależności
+$T_1$ od całego ciągu przyszłych odstępów, a nie tylko
+równości rozkładów poszczególnych $T_n$.
+
+Załóżmy, że $u_1,u_2$ są lokalnie ograniczonymi rozwiązaniami.
+Dla $d=u_1-u_2$ mamy $d=d*F$ (w sensie splotu
+Stieltjesa), a przez iterację $d=d*F^{*n}$.
+Dla ustalonego $t$ niech $M_t=\sup_{0\le s\le t}|d(s)|<\infty$.
+Wówczas
+$|d(t)|\le M_t F^{*n}(t)=M_t\Prob(S_n\le t)\to0$,
+bo $S_n\to\infty$ p.n. Stąd $d(t)=0$ i dowolność $t$
+kończy dowód.
+\end{proof}
+
+\begin{przyklad}[Proces Poissona jako rozwiązanie równania odnowy]
+Jeżeli $T_1\sim\mathrm{Exp}(\lambda)$, to $m(t)=\lambda t$.
+Możemy sprawdzić ten wynik bez odwoływania się do rozkładu Poissona:
+$F(t)=1-e^{-\lambda t}$, zatem prawa strona równania wynosi
+\[
+1-e^{-\lambda t}
++\int_0^t\lambda(t-s)\lambda e^{-\lambda s}\,\dd s
+=1-e^{-\lambda t}+\lambda t-(1-e^{-\lambda t})
+=\lambda t.
+\]
+Z jednoznaczności rozwiązania równania odnowy otrzymujemy
+$\E N_t=\lambda t$.
+\end{przyklad}
+
+\section{Mocne i elementarne twierdzenie odnowy}
+\begin{twierdzenie}[Mocne prawo dla liczby odnowień]
+Niech $N$ będzie procesem odnowy z $T_n>0$ p.n.
+i $\mu=\E T_1\in(0,\infty]$.
+Wtedy
+\[
+\frac{N_t}{t}\longrightarrow
+\begin{cases}1/\mu,&\mu<\infty,\\0,&\mu=\infty,\end{cases}
+\qquad\text{prawie na pewno, gdy }t\to\infty.
+\]
+\end{twierdzenie}
+\begin{proof}
+Najpierw przyjmijmy $0<\mu<\infty$.
+Z MPWL $S_n/n\to\mu$ prawie na pewno.
+Na zdarzeniu tej zbieżności $N_t\to\infty$ i
+$S_{N_t}\le t<S_{N_t+1}$. Po podzieleniu nierówności
+przez $N_t$ otrzymujemy
+\[
+\frac{S_{N_t}}{N_t}\le \frac{t}{N_t}
+<\frac{N_t+1}{N_t}\frac{S_{N_t+1}}{N_t+1}.
+\]
+Obie skrajne wielkości dążą do $\mu$, więc
+$t/N_t\to\mu$, a zatem $N_t/t\to1/\mu$.
+Jeśli $\mu=\infty$, dla dowolnego $K>0$ zmienne
+$T_n^{(K)}=\min(T_n,K)$ są niezależne, jednakowo rozłożone
+i całkowalne. MPWL daje
+$\liminf_{n\to\infty}S_n/n\ge\E T_1^{(K)}$.
+Względem przeliczalnego ciągu $K\in\N$ i po przejściu
+$K\to\infty$ twierdzenie o zbieżności monotonicznej
+daje $S_n/n\to\infty$ prawie na pewno.
+Ponownie $S_{N_t}\le t$ i $N_t\to\infty$, więc
+$t/N_t\ge S_{N_t}/N_t\to\infty$; stąd $N_t/t\to0$.
+\end{proof}
+
+\begin{lemat}[Tożsamość Walda dla chwili przekroczenia]
+Niech $T_1,T_2,\ldots$ będą niezależne i jednakowo rozłożone,
+$T_n>0$ prawie na pewno, z $\mu=\E T_1<\infty$.
+Dla $t\ge0$ połóżmy $K_t=N_t+1=\inf\{n\ge1:S_n>t\}$.
+Wówczas $\E K_t<\infty$ i
+$\E S_{K_t}=\mu\E K_t$.
+\end{lemat}
+\begin{proof}
+Skończoność $\E K_t$ wynika z wcześniej udowodnionego
+oszacowania $\E N_t<\infty$. Zauważmy, że
+$\{K_t\ge i\}=\{S_{i-1}\le t\}$ zależy tylko od
+$T_1,\ldots,T_{i-1}$, zatem jest niezależne od $T_i$.
+Ponieważ wszystkie składniki są nieujemne, twierdzenie Tonellego
+pozwala zapisać
+\[
+\E S_{K_t}=\E\sum_{i=1}^\infty T_i\ind{\{K_t\ge i\}}
+=\sum_{i=1}^\infty\mu\Prob(K_t\ge i)
+=\mu\E K_t.
+\]
+Nie używamy tutaj błędnej zamiany $K_t$ na $N_t$:
+liczba $N_t$ nie jest czasem zatrzymania względem
+odstępów $T_i$, bo $\{N_t\ge i\}$ zależy od $T_i$.
+\end{proof}
+
+\begin{twierdzenie}[Elementarne twierdzenie odnowy]
+Przy założeniach definicji procesu odnowy niech
+$\mu=\E T_1\in(0,\infty]$. Wtedy
+\[
+\frac{\E N_t}{t}\longrightarrow
+\begin{cases}1/\mu,&\mu<\infty,\\0,&\mu=\infty,\end{cases}
+\qquad\text{gdy }t\to\infty.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla $\mu<\infty$ niech $K_t=N_t+1$.
+Ponieważ $S_{K_t}>t$, z lematu Walda dostajemy
+$\mu(\E N_t+1)=\E S_{K_t}\ge t$,
+czyli $\E N_t/t\ge1/\mu-1/t$.
+
+Dla oszacowania od góry ustalmy $L>0$ i połóżmy
+$T_i^{(L)}=\min(T_i,L)$, $\mu_L=\E T_1^{(L)}>0$.
+Odnowienia w modelu z obciętymi odstępami występują
+nie później, więc $N_t\le N_t^{(L)}$.
+W tym modelu chwila pierwszego przekroczenia
+$K_t^{(L)}=N_t^{(L)}+1$ spełnia
+$t<S_{K_t^{(L)}}^{(L)}\le t+L$.
+Tożsamość Walda (stosuje się do obciętych odstępów) daje
+$\mu_L(\E N_t^{(L)}+1)\le t+L$. Wobec tego
+\[
+\limsup_{t\to\infty}\frac{\E N_t}{t}\le\frac{1}{\mu_L}.
+\]
+Przejście $L\to\infty$ i zbieżność monotoniczna
+$\mu_L\uparrow\mu$ dają oszacowanie od góry $1/\mu$,
+które wraz z oszacowaniem dolnym kończy dowód.
+Jeśli $\mu=\infty$, stosujemy wyłącznie ostatnie
+oszacowanie i otrzymujemy
+$0\le\limsup_{t\to\infty}\E N_t/t\le1/\mu_L\to0$.
+\end{proof}
+
+\begin{uwaga}[Dlaczego silne prawo nie wystarcza?]
+Zbieżność $N_t/t\to1/\mu$ prawie na pewno nie uprawnia
+sama przez się do zamiany granicy i wartości oczekiwanej.
+W ogólności potrzebna jest jednostajna całkowalność
+albo odrębne oszacowania. W powyższym dowodzie rolę takich
+oszacowań pełnią lemat Walda i obcięcie odstępów.
+\end{uwaga}
+
+\section{Wiek odnowy i czas pozostały do następnego zdarzenia}
+\begin{definicja}[Wiek i czas resztkowy]
+Dla $t\ge0$ oraz procesu odnowy o chwilach $S_n$ definiujemy
+$A_t:=t-S_{N_t}$ oraz $R_t:=S_{N_t+1}-t$.
+Nazywamy je odpowiednio \emph{wiekiem bieżącego cyklu}
+i \emph{pozostałym czasem do następnego odnowienia}.
+\end{definicja}
+
+\begin{stwierdzenie}[Warunkowy rozkład czasu resztkowego]
+Niech $F$ będzie dystrybuantą ściśle dodatnich odstępów,
+$\overline F(u)=\Prob(T_1>u)$.
+Ustalmy $t\ge0$, $n\ge0$ oraz $s\in[0,t]$ takie, że
+$\overline F(t-s)>0$. Wtedy możemy wybrać regularną wersję rozkładu
+warunkowego względem $(N_t,S_n)$, która dla
+warunków $N_t=n$, $S_n=s$ spełnia dla $u\ge0$
+\[
+\Prob(R_t>u\mid N_t=n,\ S_n=s)
+=\frac{\overline F(t-s+u)}{\overline F(t-s)}.
+\]
+\end{stwierdzenie}
+\begin{proof}
+Zdarzenie $\{N_t=n,S_n\in\dd s\}$ wymusza
+$S_n\le t<S_n+T_{n+1}$, więc przy ustalonym
+$S_n=s$ jest równoważne warunkowi $T_{n+1}>t-s$.
+Zmienna $T_{n+1}$ jest niezależna od $S_n$, gdyż
+$S_n$ zależy tylko od poprzednich odstępów.
+Warunkujemy zatem zmienną $T_{n+1}$ na przekroczenie
+progu $t-s$ i dostajemy iloraz
+$\Prob(T_{n+1}>t-s+u)/\Prob(T_{n+1}>t-s)$.
+Formalnie tożsamość weryfikuje się po pomnożeniu obu stron
+przez $\ind{\{S_n\in A,S_n\le t\}}$ i scałkowaniu względem
+prawa $S_n$ dla dowolnego zbioru borelowskiego $A$.
+\end{proof}
+
+\begin{przyklad}[Dwie zupełnie różne pamięci]
+Dla odstępów wykładniczych $\overline F(v)=e^{-\lambda v}$,
+więc iloraz wynosi $e^{-\lambda u}$, niezależnie od wieku
+$t-s$. Stąd proces Poissona zapomina czas ostatniego zgłoszenia.
+Dla deterministycznych odstępów $T_i\equiv c$ pozostały czas
+jest natomiast równy $c-A_t$ (poza chwilami odnowień, gdzie
+wiek wynosi $0$). Znając wiek, dokładnie znamy czas kolejnej
+odnowy. Nie należy więc oczekiwać własności Markowa dla
+samego procesu $N_t$ w dowolnym procesie odnowy; często
+naturalnym stanem jest para $(N_t,A_t)$.
+\end{przyklad}
+
+\section{Nagrody w cyklach: twierdzenie odnowy z nagrodą}
+\begin{twierdzenie}[Długookresowa średnia nagrody]
+Niech $(T_n,R_n)_{n\ge1}$ będą niezależnymi parami o jednakowym
+rozkładzie w $(0,\infty)\times\R$, gdzie
+$0<\mu=\E T_1<\infty$ oraz $\E|R_1|<\infty$.
+Nie wymagamy niezależności $T_n$ i $R_n$ wewnątrz pary.
+Niech $S_n=\sum_{k=1}^nT_k$, $N_t=\max\{n:S_n\le t\}$ i
+$C_t=\sum_{k=1}^{N_t}R_k$. Wówczas
+\[
+\frac{C_t}{t}\longrightarrow\frac{\E R_1}{\E T_1}
+\qquad\text{prawie na pewno, gdy }t\to\infty.
+\]
+\end{twierdzenie}
+\begin{proof}
+Na wspólnym zdarzeniu pełnej miary mocne prawo wielkich liczb
+dla obu współrzędnych par daje
+$S_n/n\to\mu$ oraz $n^{-1}\sum_{k=1}^nR_k\to\rho:=\E R_1$.
+Z twierdzenia odnowy $N_t\to\infty$ oraz
+$N_t/t\to1/\mu$ prawie na pewno. Wobec tego
+\[
+\frac{C_t}{t}=
+\left(\frac{1}{N_t}\sum_{k=1}^{N_t}R_k\right)
+\frac{N_t}{t}\longrightarrow\rho/\mu.
+\]
+Jeżeli przez pewien początkowy czas $N_t=0$, przyjmujemy
+$C_t=0$; nie ma to wpływu na granicę.
+\end{proof}
+
+\begin{zadanie}[Udział czasu naprawy maszyny]
+Maszyna pracuje przez czas $U_n\sim\mathrm{Exp}(\alpha)$,
+a następnie jest naprawiana przez czas
+$V_n\sim\mathrm{Exp}(\beta)$. Załóżmy, że wszystkie
+zmienne $(U_n,V_n)$ są niezależne pomiędzy cyklami,
+a w każdym cyklu czasy pracy i naprawy są niezależne.
+Obliczyć długookresowy udział czasu napraw.
+
+\emph{Rozwiązanie.} Czas jednego cyklu wynosi
+$T_n=U_n+V_n$, a nagrodą jest długość naprawy $R_n=V_n$.
+Zatem $\E T_1=1/\alpha+1/\beta$ i $\E R_1=1/\beta$.
+Twierdzenie daje udział napraw w ukończonych cyklach
+\[
+\frac{\E V_1}{\E(U_1+V_1)}
+=\frac{1/\beta}{1/\alpha+1/\beta}
+=\frac{\alpha}{\alpha+\beta}.
+\]
+Aby uzyskać udział rzeczywistego czasu napraw na przedziale
+$[0,t]$, należy uwzględnić nieukończony cykl. Różnica
+między nagrodą z ukończonych cykli a rzeczywistym czasem
+napraw nie przekracza $T_{N_t+1}$. Ponieważ
+$S_n/n\to\mu$, mamy
+$T_n/n=(S_n/n)-((n-1)/n)(S_{n-1}/(n-1))\to0$ p.n.,
+a stąd $T_{N_t+1}/t\to0$ po połączeniu z $N_t/t\to1/\mu$.
+Dostajemy ten sam udział dla całego czasu $[0,t]$.
+\end{zadanie}
+
+
+\section{Transformaty procesu odnowy i przykład odstępów gamma}
+\begin{twierdzenie}[Transformata miary odnowy]
+Niech $S_0=0$ i $S_n=\sum_{k=1}^nT_k$ dla niezależnych,
+ściśle dodatnich odstępów o jednakowym rozkładzie.
+Zdefiniujmy lokalnie skończoną miarę na $[0,\infty)$
+\[
+U(A)=\sum_{n=0}^\infty\Prob(S_n\in A),\qquad
+A\in\calB([0,\infty)).
+\]
+Jej funkcją dystrybucyjną jest $U([0,t])=1+\E N_t$.
+Jeżeli $\varphi(\theta)=\E e^{-\theta T_1}$, to dla $\theta>0$
+\[
+\int_{[0,\infty)}e^{-\theta t}\,\dd U(t)
+=\frac{1}{1-\varphi(\theta)}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Dla $t<\infty$ równość
+$U([0,t])=1+\sum_{n\ge1}\Prob(S_n\le t)=1+\E N_t$
+i poprzednie oszacowanie $\E N_t<\infty$ dowodzą
+lokalnej skończoności miary. Z twierdzenia Tonellego,
+nieujemności funkcji podcałkowej i niezależności odstępów
+\[
+\int e^{-\theta t}\,\dd U(t)
+=\sum_{n=0}^\infty\E e^{-\theta S_n}
+=\sum_{n=0}^\infty \varphi(\theta)^n.
+\]
+Ponieważ $T_1>0$ p.n., mamy $0\le\varphi(\theta)<1$.
+Suma szeregu geometrycznego daje tezę.
+\end{proof}
+
+\begin{zadanie}[Każde drugie zdarzenie Poissona]
+Niech $P_t$ będzie procesem Poissona o intensywności $\lambda>0$.
+Interesuje nas tylko co drugie zdarzenie: czasem odnowy jest
+suma dwóch kolejnych odstępów wykładniczych. Obliczyć
+rozkład $N_t$ i $\E N_t$.
+
+\emph{Rozwiązanie.} Kolejne pary niezależnych
+odstępów wykładniczych dają niezależne czasy
+$T_n\sim\mathrm{Gamma}(2,\lambda)$ (parametry: kształt $2$,
+intensywność $\lambda$). Liczba zakończonych par to
+$N_t=\lfloor P_t/2\rfloor$. Jeśli $u=\lambda t$, mamy
+\[
+\Prob(N_t=n)=\Prob(P_t=2n)+\Prob(P_t=2n+1)
+=e^{-u}\left(\frac{u^{2n}}{(2n)!}+
+\frac{u^{2n+1}}{(2n+1)!}\right).
+\]
+Ponieważ $\lfloor k/2\rfloor=(k-\ind{\{k\text{ nieparzyste}\}})/2$,
+\[
+\E N_t=\frac{\E P_t}{2}-\frac12\Prob(P_t\text{ nieparzyste}).
+\]
+Z funkcji tworzącej rozkładu Poissona
+$\E[(-1)^{P_t}]=e^{-2u}$, skąd
+$\Prob(P_t\text{ nieparzyste})=(1-e^{-2u})/2$.
+Ostatecznie
+\[
+\E N_t=\frac{\lambda t}{2}-\frac{1-e^{-2\lambda t}}{4}.
+\]
+W szczególności $\E N_t/t\to\lambda/2=1/\E T_1$,
+zgodnie z elementarnym twierdzeniem odnowy.
+Ale $N_t$ nie jest procesem Poissona: odstępy są gamma,
+a nie wykładnicze.
+\end{zadanie}
+
+\section{Podsumowanie i dalsze pytania}
+W procesie odnowy niezależne są całe kolejne cykle, a nie
+zwykle liczby zdarzeń w rozłącznych przedziałach. Wzór
+odnowy opisuje średnią liczbę zakończonych cykli, a oba
+prawa graniczne podają długookresową częstość odnowień.
+Zagadnienia o wieku i czasie resztkowym wyjaśniają, dlaczego
+sama liczba zdarzeń nie musi wystarczać do uzyskania własności Markowa.
+W przyszłości twierdzenia o granicznych rozkładach wieku
+oraz procesy pół-Markowa pozwolą uogólnić ten model.
+
+
+% ==============================================================
+% ROZDZIAŁ 10. PROCESY ROZGAŁĘZIAJĄCE
+% ==============================================================

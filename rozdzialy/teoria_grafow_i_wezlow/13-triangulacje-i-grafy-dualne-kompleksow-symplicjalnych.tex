@@ -1,0 +1,460 @@
+\chapter{Triangulacje i grafy dualne kompleksów symplicjalnych}
+\label{ch:tg-triangulacje}
+
+Graf jest jednowymiarowym kompleksem symplicjalnym. Aby opisywać
+powierzchnie i rozmaitości, potrzebujemy także dwuwymiarowych
+trójkątów i sympleksów wyższych wymiarów. Zaczniemy od definicji,
+a następnie sprawdzimy, jakie dodatkowe dane musi zawierać
+triangulacja, żeby wyznaczać powierzchnię, a nie tylko jej graf.
+
+\section{Kompleks symplicjalny i realizacja geometryczna}
+\label{sec:tg-kompleks-symplicjalny}
+
+\begin{definicja}[Abstrakcyjny kompleks symplicjalny]
+Niech $V$ będzie skończonym zbiorem. \emph{Abstrakcyjnym
+kompleksem symplicjalnym} na $V$ nazywamy rodzinę $K$
+niepustych, skończonych podzbiorów $V$ taką, że jeżeli
+$\sigma\in K$ i $\varnothing\ne\tau\subseteq\sigma$,
+to $\tau\in K$. Zakładamy, że każdy $v\in V$ należy do $K$
+jako jednoelementowy sympleks. Element $\sigma\in K$
+o $p+1$ wierzchołkach nazywamy \emph{$p$-sympleksem}.
+\emph{Wymiarem} $K$ jest
+$\dim K:=\max\{|\sigma|-1:\sigma\in K\}$.
+\end{definicja}
+
+Wierzchołki są zatem sympleksami wymiaru zero, krawędzie
+sympleksami wymiaru jeden, a trójkąty sympleksami wymiaru dwa.
+Warunek domknięcia na niepuste podzbiory mówi, że jeśli
+trójkąt należy do kompleksu, to należą do niego także jego
+trzy krawędzie i trzy wierzchołki. Nie utożsamiamy
+trójkąta z samym jego brzegiem.
+
+\begin{definicja}[Realizacja geometryczna]
+Niech $K$ będzie skończonym kompleksem na zbiorze $V$.
+Jego \emph{realizacją geometryczną} nazywamy
+\[
+|K|=\left\{(t_v)_{v\in V}\in\mathbb R^V:\
+t_v\ge0,\quad\sum_{v\in V}t_v=1,\quad
+\{v:t_v>0\}\in K\right\}.
+\]
+Podzbiór, w którym $t_v=0$ dla $v\notin\sigma$, jest
+geometrycznym sympleksem odpowiadającym $\sigma\in K$.
+\end{definicja}
+
+\begin{przyklad}[Trójkąt i jego brzeg]
+Niech $V=\{a,b,c\}$. Kompleks zawierający wszystkie niepuste
+podzbiory $V$ realizuje pełny trójkąt, homeomorficzny z dyskiem.
+Jeżeli usuniemy jedyny dwusympleks $\{a,b,c\}$, pozostawiając
+wierzchołki i trzy krawędzie, otrzymamy brzeg trójkąta,
+homeomorficzny z $S^1$. Obie realizacje mają identyczny
+jednowymiarowy szkielet, lecz różne grupy fundamentalne
+i homologie. Sam graf nie odróżnia zatem tych obiektów.
+\end{przyklad}
+
+\begin{samepage}
+\begin{center}
+\begin{minipage}{.96\linewidth}\centering
+\begin{tikzpicture}[scale=1.05,line cap=round]
+\begin{scope}[shift={(-2.8,0)}]
+ \coordinate (a) at (-1,-.7);\coordinate (b) at (1,-.7);
+ \coordinate (c) at (0,1.05);
+ \fill[tgBlue!15] (a)--(b)--(c)--cycle;
+ \draw[tgEdge] (a)--(b)--(c)--cycle;
+ \foreach \p in {a,b,c} \node[tgBlueVertex] at (\p) {};
+ \node[text=tgNavy,font=\small] at (0,-1.25) {$|K|\cong D^2$};
+\end{scope}
+\begin{scope}[shift={(2.8,0)}]
+ \coordinate (a) at (-1,-.7);\coordinate (b) at (1,-.7);
+ \coordinate (c) at (0,1.05);
+ \draw[tgAccent] (a)--(b)--(c)--cycle;
+ \foreach \p in {a,b,c} \node[tgRedVertex] at (\p) {};
+ \node[text=tgNavy,font=\small] at (0,-1.25) {$|\partial K|\cong S^1$};
+\end{scope}
+\end{tikzpicture}\par\smallskip
+
+{\footnotesize Ten sam graf krawędziowy: po lewej z dołączoną
+2-komórką, po prawej bez niej.}
+\end{minipage}
+\end{center}
+\end{samepage}
+
+\begin{definicja}[Szkielet i ogniwo]
+Dla $p\ge0$ przez $K^{(p)}$ oznaczamy podkompleks
+złożony ze wszystkich sympleksów wymiaru co najwyżej $p$.
+Dla sympleksu $\sigma\in K$ definiujemy jego
+\emph{ogniwo} (ang. \emph{link}) przez
+$\operatorname{Lk}_K(\sigma)
+=\{\tau\subseteq V\setminus\sigma:
+\ \tau\cup\sigma\in K\}$.
+W tej formule dopuszczamy $\tau=\varnothing$, choć
+pusty sympleks nie był elementem rodziny $K$ w przyjętej
+na początku konwencji. Nie dodaje on punktów
+realizacji geometrycznej ogniwa. \emph{Gwiazdą domkniętą}
+$\operatorname{St}_K(\sigma)$ nazywamy podkompleks
+wszystkich ścian sympleksów zawierających $\sigma$.
+\end{definicja}
+
+Użycie sympleksu pustego w ogniwie jest wygodną konwencją
+kombinatoryczną. W realizacji geometrycznej nie daje on
+nowych punktów. Gwiazda wierzchołka jest stożkiem nad
+jego ogniwem. Ten prosty fakt pozwoli rozpoznawać lokalną
+topologię triangulowanych powierzchni.
+
+\section{Triangulowana powierzchnia i warunek ogniwa}
+\label{sec:tg-link-manifold}
+
+\begin{definicja}[Triangulacja]
+Niech $M$ będzie przestrzenią topologiczną. \emph{Triangulacją}
+$M$ nazywamy parę $(K,h)$, gdzie $K$ jest skończonym
+kompleksem symplicjalnym, a $h:|K|\to M$ homeomorfizmem.
+Ponieważ $K$ jest skończony, taka triangulacja może istnieć
+wyłącznie dla zwartej $M$; w dalszych twierdzeniach rozważamy
+powierzchnie zwarte i triangulacje skończone. Gdy $M$ jest
+powierzchnią, wierzchołki, krawędzie i trójkąty $K$ nazywamy
+elementami jej triangulacji. Triangulację
+nazywamy \emph{czystą dwuwymiarową}, gdy każda krawędź
+i każdy wierzchołek są ścianami pewnego dwusympleksu.
+\end{definicja}
+
+Nie każdy skończony kompleks złożony z trójkątów jest
+powierzchnią. Dwa trójkąty sklejone tylko w jednym
+wierzchołku mają w tym punkcie otoczenie niehomeomorficzne
+z dyskiem. Potrzebujemy zatem lokalnego kryterium.
+
+\begin{twierdzenie}[Kryterium ogniwa dla powierzchni zamkniętej]
+\label{thm:tg-link-surface}
+Niech $K$ będzie skończonym, spójnym, czystym
+kompleksem symplicjalnym wymiaru dwa. Następujące warunki
+są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $|K|$ jest zamkniętą powierzchnią topologiczną;
+\item dla każdego wierzchołka $v\in K$ realizacja
+$|\operatorname{Lk}_K(v)|$ jest okręgiem.
+\end{enumerate}
+W szczególności, jeżeli zachodzą te warunki, każda
+krawędź należy do dokładnie dwóch trójkątów.
+\end{twierdzenie}
+
+\begin{proof}
+Załóżmy najpierw (ii). Gwiazda każdego wierzchołka jest
+stożkiem nad okręgiem, a więc jest dyskiem. Wnętrza trójkątów
+mają otoczenia dyskowe wprost z geometrii sympleksu.
+Każda krawędź należy do dwóch trójkątów: w ogniwie jednego
+jej końca odpowiada jej wierzchołek, który w cyklu ma
+dokładnie dwóch sąsiadów. Zatem również punkt we wnętrzu
+krawędzi ma otoczenie powstałe z dwóch półdysków i jest
+punktem wewnętrznym powierzchni. Wszystkie punkty mają
+więc otoczenia homeomorficzne z $\mathbb R^2$. Ponieważ
+$|K|$ jest zwarty, spójny i Hausdorffa, jest zamkniętą
+powierzchnią.
+
+W drugą stronę załóżmy (i). Dla punktu $x$ we wnętrzu
+krawędzi $e$ małe otoczenie w $|K|$ jest sklejeniem
+$k$ półdysków wzdłuż ich średnic, gdzie $k$ jest liczbą
+trójkątów zawierających $e$. Jego ogniwo ma $k$ punktów,
+a ogniwo punktu w powierzchni bez brzegu ma dokładnie
+dwa punkty. Zatem $k=2$: każda krawędź przylega do
+dokładnie dwóch trójkątów. Link dowolnego
+wierzchołka jest skończonym grafem, którego każdy
+wierzchołek ma stopień dwa, a zatem jest sumą rozłączną
+cykli. Gdyby składał się z kilku cykli, małe otoczenie
+wierzchołka po usunięciu tego wierzchołka miałoby kilka
+składowych, podczas gdy przebity dysk jest spójny.
+Zatem ogniwo jest jednym cyklem. W dowodzie korzystamy
+z faktu, że stożek nad ogniwem opisuje małe otoczenie
+wierzchołka w realizacji kompleksu.
+\end{proof}
+
+\begin{przyklad}[Brzeg czworościanu]
+Niech $K$ składa się z czterech trójkątów, sześciu krawędzi
+i czterech wierzchołków tworzących brzeg czworościanu.
+Każde ogniwo wierzchołka jest trójkątnym cyklem, więc
+$|K|$ jest zamkniętą powierzchnią. Mamy
+$\chi(|K|)=4-6+4=2$, a ponieważ $|K|$ jest brzegiem
+wypukłego wielościanu, jest homeomorficzny z $S^2$.
+Nie należy mylić liczby trójkątów $4$ z liczbą ścian
+grafowego zanurzenia: tu są to komórki wymiaru dwa
+konkretnego kompleksu.
+\end{przyklad}
+
+\begin{samepage}
+\begin{center}
+\begin{minipage}{.96\linewidth}\centering
+\begin{tikzpicture}[scale=1.05,line join=round,line cap=round]
+  \coordinate (a) at (-1.3,-.8);\coordinate (b) at (1.3,-.8);
+  \coordinate (c) at (.35,1.4);\coordinate (d) at (-.22,.13);
+  \fill[tgBlue!11] (a)--(b)--(c)--cycle;
+  \fill[tgCoral!18] (a)--(b)--(d)--cycle;
+  \fill[tgTeal!18] (a)--(c)--(d)--cycle;
+  \fill[tgGold!20] (b)--(c)--(d)--cycle;
+  \draw[tgEdge] (a)--(b)--(c)--cycle;
+  \draw[tgEdge] (a)--(d)--(b) (c)--(d);
+  \foreach \p in {a,b,c,d} \node[tgBlueVertex] at (\p) {};
+  \node[font=\small,text=tgNavy] at (0,-1.38) {$V=4,\ E=6,\ F=4,\ \chi=2$};
+\end{tikzpicture}\par\smallskip
+
+{\footnotesize Schemat kombinatoryczny powierzchni czworościanu;
+kolory oznaczają cztery trójkąty.}
+\end{minipage}
+\end{center}
+\end{samepage}
+
+\section{Łańcuchy symplicjalne i związek z homologią}
+\label{sec:tg-simplicial-chain}
+
+\begin{definicja}[Operator brzegu]
+Dla skończonego kompleksu symplicjalnego $K$ niech
+$C_p(K;\mathbb Z)$ będzie wolną grupą abelową generowaną
+przez zorientowane $p$-sympleksy, z relacją
+$[v_{\pi(0)},\ldots,v_{\pi(p)}]
+=\operatorname{sgn}(\pi)[v_0,\ldots,v_p]$.
+Dla $p\ge1$ definiujemy
+\[
+\partial_p[v_0,\ldots,v_p]
+=\sum_{i=0}^p(-1)^i
+[v_0,\ldots,\widehat v_i,\ldots,v_p],
+\]
+a $\partial_0=0$. Homologie symplicjalne są
+$H_p(K;\mathbb Z):=\ker\partial_p/\operatorname{im}\partial_{p+1}$.
+\end{definicja}
+
+\begin{stwierdzenie}[Brzeg brzegu]
+Dla każdego skończonego kompleksu symplicjalnego $K$
+i każdego $p\ge2$ zachodzi $\partial_{p-1}\partial_p=0$.
+\end{stwierdzenie}
+
+\begin{proof}
+W rozwinięciu $\partial_{p-1}\partial_p$ każda ściana
+powstała przez usunięcie dwóch różnych wierzchołków
+pojawia się dwukrotnie. Jeśli najpierw usuniemy wierzchołek
+o indeksie $i$, a następnie o indeksie $j>i$, znak jest
+$(-1)^i(-1)^{j-1}$. Przy odwrotnej kolejności znak jest
+$(-1)^j(-1)^i$. Ich suma wynosi zero. Sumując po wszystkich
+parach $i<j$, otrzymujemy równość operatorową.
+\end{proof}
+
+\begin{przyklad}[Co robi dołączenie trójkąta]
+Dla brzegu trójkąta o wierzchołkach $0,1,2$ jedynym
+niezależnym cyklem jednowymiarowym jest
+$z=[0,1]+[1,2]-[0,2]$, zatem
+$H_1(\partial\Delta^2;\mathbb Z)\cong\mathbb Z$.
+Po dołączeniu trójkąta $[0,1,2]$ otrzymujemy
+$z=\partial_2[0,1,2]$, więc klasa $z$ zanika i
+$H_1(\Delta^2;\mathbb Z)=0$. Jednocześnie $H_0\cong\mathbb Z$
+w obu przypadkach. To bezpośredni rachunek ilustrujący
+różnicę między grafem i wypełnionym kompleksem.
+\end{przyklad}
+
+\begin{stwierdzenie}[Charakterystyka Eulera z homologii]
+Niech $K$ będzie skończonym kompleksem symplicjalnym,
+a $f_p$ liczbą jego $p$-sympleksów. Jeżeli
+$b_p=\dim_{\mathbb R}H_p(K;\mathbb R)$, to
+\[
+\sum_{p\ge0}(-1)^pf_p=\sum_{p\ge0}(-1)^pb_p.
+\]
+\end{stwierdzenie}
+
+\begin{proof}
+Niech $r_p$ oznacza rząd operatora
+$\partial_p:C_p(K;\mathbb R)\to C_{p-1}(K;\mathbb R)$;
+przyjmujemy $r_0=0$. Z twierdzenia o rzędzie i jądrze
+oraz definicji homologii mamy
+$b_p=(f_p-r_p)-r_{p+1}$, a więc
+$f_p=b_p+r_p+r_{p+1}$. Po wymnożeniu przez $(-1)^p$
+i zsumowaniu wkłady $r_p$ znoszą się parami, pozostawiając
+sumę liczb Bettiego. Wszystkie sumy są skończone.
+\end{proof}
+
+\section{Graf dualny triangulacji i dane sklejania}
+\label{sec:tg-dual-triangulation}
+
+\begin{definicja}[Graf dualny triangulacji powierzchni]
+Niech $K$ będzie skończoną triangulacją spójnej,
+zamkniętej powierzchni. \emph{Graf dualny triangulacji}
+ma po jednym wierzchołku dla każdego trójkąta $K$
+i po jednej krawędzi dla każdej krawędzi $K$, łącząc
+wierzchołki dwóch trójkątów incydentnych z daną krawędzią.
+\end{definicja}
+
+\begin{stwierdzenie}
+Dla triangulacji powierzchni zamkniętej graf dualny jest
+spójny i trójregularny, czyli każdy jego wierzchołek ma
+stopień trzy (z krotnościami). Jeżeli triangulacja ma
+$f_2$ trójkątów i $f_1$ krawędzi, to
+$3f_2=2f_1$.
+\end{stwierdzenie}
+
+\begin{proof}
+Każdy trójkąt ma trzy boki, a każda krawędź zamkniętej
+powierzchni jest wspólna dokładnie dwóm trójkątom.
+Stąd stopień dualnego wierzchołka jest równy trzy,
+a podwójne zliczenie par (trójkąt, jego bok) daje
+$3f_2=2f_1$. Spójność wynika stąd, że dwa punkty we
+wnętrzach dowolnych trójkątów można połączyć ścieżką
+na spójnej powierzchni, omijającą wierzchołki triangulacji
+i przechodzącą poprzecznie przez krawędzie. Kolejne
+napotkane trójkąty wyznaczają ścieżkę w grafie dualnym.
+\end{proof}
+
+\begin{uwaga}[Dlaczego sam graf dualny nie wystarczy]
+Graf dualny mówi, które trójkąty sąsiadują, ale nie pamięta,
+\emph{które ich boki} są sklejane, w jakiej kolejności i czy
+sklejenie odwraca orientację. Rozkłady powierzchni za pomocą
+trójkątów z identyfikowanymi bokami bywają wygodniej opisane
+przez \emph{kompleksy typu $\Delta$}, które nie muszą być
+abstrakcyjnymi kompleksami symplicjalnymi. Dla przykładu
+sferę można uzyskać przez sklejenie dwóch trójkątów wzdłuż
+odpowiadających boków, a torus też ma model z dwóch
+trójkątów z odpowiednio identyfikowanymi bokami. W obu
+modelach graf dualny jest grafem dwóch wierzchołków
+i trzech krawędzi równoległych, mimo że
+$\chi(S^2)=2$, a $\chi(T^2)=0$. Rozróżniają je dopiero
+dane sklejeń; są to modele typu $\Delta$, nie simplicjalne
+triangulacje z dwiema dwukomórkami.
+\end{uwaga}
+
+\section{Ruchy Pachnera na triangulacjach powierzchni}
+\label{sec:tg-pachner}
+
+\begin{definicja}[Lokalne ruchy bistellarne w wymiarze dwa]
+Niech $K$ będzie triangulacją zamkniętej powierzchni.
+Ruch $1\leftrightarrow3$ zastępuje pojedynczy trójkąt
+trzema trójkątami przez wprowadzenie nowego wierzchołka
+w jego wnętrzu (lub wykonuje operację odwrotną).
+Ruch $2\leftrightarrow2$ usuwa wspólną przekątną dwóch
+różnych trójkątów, których suma jest podkompleksem
+homeomorficznym z domkniętym dyskiem o brzegu złożonym
+z czterech różnych krawędzi, po czym wprowadza drugą
+przekątną tego czworokąta. Zakładamy, że ruch nie tworzy
+niedozwolonego wielokrotnego sympleksu, a wynik jest
+ponownie kompleksem symplicjalnym triangulującym tę samą
+powierzchnię. W szczególności w ruchu $2\to2$ nowa
+przekątna nie może już należeć do kompleksu poza
+rozważanym dyskiem.
+\end{definicja}
+
+\begin{samepage}
+\begin{center}
+\begin{minipage}{.96\linewidth}\centering
+\begin{tikzpicture}[scale=.94,line cap=round,line join=round,>=Stealth]
+ \begin{scope}[shift={(-3,0)}]
+  \coordinate (a) at (-1,-.7);\coordinate (b) at (1,-.7);
+  \coordinate (c) at (0,1.0);\coordinate (o) at (0,-.1);
+  \fill[tgBlue!12] (a)--(b)--(c)--cycle;
+  \draw[tgEdge] (a)--(b)--(c)--cycle;
+  \node[tgBlueVertex] at (a) {};\node[tgBlueVertex] at (b) {};\node[tgBlueVertex] at (c) {};
+  \node[text=tgNavy,font=\small] at (0,-1.2) {$1$ trójkąt};
+ \end{scope}
+ \draw[tgTeal,-{Stealth[length=3mm]},line width=1.5pt] (-1.45,0)--(-.75,0);
+ \begin{scope}[shift={(1,0)}]
+  \coordinate (a) at (-1,-.7);\coordinate (b) at (1,-.7);
+  \coordinate (c) at (0,1.0);\coordinate (o) at (0,-.1);
+  \fill[tgTeal!12] (a)--(b)--(o)--cycle;
+  \fill[tgBlue!12] (a)--(c)--(o)--cycle;
+  \fill[tgGold!16] (b)--(c)--(o)--cycle;
+  \draw[tgEdge] (a)--(b)--(c)--cycle;
+  \draw[tgAccent] (a)--(o)--(b) (c)--(o);
+  \foreach \p in {a,b,c,o} \node[tgBlueVertex] at (\p) {};
+  \node[text=tgNavy,font=\small] at (0,-1.2) {$3$ trójkąty};
+ \end{scope}
+\end{tikzpicture}\par\smallskip
+
+{\footnotesize Ruch $1\to3$: powierzchnia i jej brzeg pozostają te same;
+zmienia się tylko podział symplicjalny dysku.}
+\end{minipage}
+\end{center}
+\end{samepage}
+
+\begin{samepage}
+\begin{center}
+\begin{minipage}{.96\linewidth}\centering
+\begin{tikzpicture}[scale=.84,line cap=round,line join=round,>=Stealth]
+ \begin{scope}[shift={(-2.5,0)}]
+  \coordinate (a) at (-1.25,-.85);\coordinate (b) at (1.25,-.85);
+  \coordinate (c) at (1.05,.85);\coordinate (d) at (-1.05,.85);
+  \fill[tgTeal!14] (a)--(b)--(c)--cycle;
+  \fill[tgBlue!14] (a)--(c)--(d)--cycle;
+  \draw[tgEdge] (a)--(b)--(c)--(d)--cycle;
+  \draw[tgAccent] (a)--(c);
+  \foreach \p in {a,b,c,d} \node[tgBlueVertex] at (\p) {};
+  \node[font=\small,text=tgNavy] at (0,-1.30) {przekątna $ac$};
+ \end{scope}
+ \draw[tgTeal,-{Stealth[length=3mm]},line width=1.5pt] (-.64,0)--(.64,0);
+ \begin{scope}[shift={(2.5,0)}]
+  \coordinate (a) at (-1.25,-.85);\coordinate (b) at (1.25,-.85);
+  \coordinate (c) at (1.05,.85);\coordinate (d) at (-1.05,.85);
+  \fill[tgGold!15] (a)--(b)--(d)--cycle;
+  \fill[tgCoral!12] (b)--(c)--(d)--cycle;
+  \draw[tgEdge] (a)--(b)--(c)--(d)--cycle;
+  \draw[tgAccent] (b)--(d);
+  \foreach \p in {a,b,c,d} \node[tgRedVertex] at (\p) {};
+  \node[font=\small,text=tgNavy] at (0,-1.30) {przekątna $bd$};
+ \end{scope}
+\end{tikzpicture}\par\smallskip
+
+{\footnotesize Ruch $2\leftrightarrow2$: dwie triangulacje tego samego
+czworokąta, z niezmienionym brzegiem.}
+\end{minipage}
+\end{center}
+\end{samepage}
+
+\begin{stwierdzenie}[Niezmienniczość topologii i charakterystyki Eulera]
+Każdy dopuszczalny ruch $1\leftrightarrow3$ i
+$2\leftrightarrow2$ zachowuje typ homeomorficzny
+triangulowanej powierzchni oraz jej charakterystykę Eulera.
+\end{stwierdzenie}
+
+\begin{proof}
+Obie operacje odbywają się wewnątrz domkniętego dysku
+triangulacji i nie zmieniają sposobu sklejenia jego brzegu
+z resztą powierzchni. Ruchy zastępują dysk inną
+triangulacją tego samego dysku, więc tożsamość na brzegu
+przedłuża się do homeomorfizmu całej powierzchni.
+W ruchu $1\to3$ przybywa jeden wierzchołek, trzy krawędzie
+i dwie ściany dwuwymiarowe netto. Zmiana $f_0-f_1+f_2$
+wynosi $1-3+2=0$. Ruch $2\to2$ nie zmienia żadnej z tych
+liczb; odwrotne ruchy zachowują je również.
+\end{proof}
+
+\begin{stwierdzenie}[Subdywizja krawędzi przez dwa ruchy]
+Niech $e=ab$ będzie krawędzią triangulacji zamkniętej
+powierzchni, przylegającą do dwóch trójkątów $abc$
+i $abd$ o różnych wierzchołkach $c,d$. Wtedy podział krawędzi $ab$ przez nowy wierzchołek
+jest kombinatorycznie równoważny wykonaniu jednego
+ruchu $1\to3$ oraz jednego ruchu $2\to2$.
+\end{stwierdzenie}
+
+\begin{proof}
+Wstawiamy nowy wierzchołek $x$ do wnętrza trójkąta $abc$.
+Po ruchu $1\to3$ trójkąty tej części to $abx$, $bcx$, $cax$;
+trójkąt $abd$ pozostaje bez zmian. Wspólna krawędź $ab$
+trójkątów $abx$ i $abd$ ma teraz przeciwległe wierzchołki
+$x,d$. Wykonujemy ruch $2\to2$, zamieniając przekątną
+$ab$ na $xd$. Powstają trójkąty $adx$, $bdx$, $bcx$, $cax$.
+Są one dokładnie czterema trójkątami otrzymanymi przez
+podział dwóch starych trójkątów wzdłuż krawędzi $ab$.
+Zależność od położenia geometrycznego $x$ jest pozorna:
+liczy się kombinatoryka kompleksu, a oba podziały
+dysku są homeomorficzne względnie do jego brzegu.
+\end{proof}
+
+\begin{twierdzenie}[Pachner; wynik przyjmowany]
+Niech $K,L$ będą dwiema skończonymi triangulacjami
+tej samej zwartej, zamkniętej rozmaitości PL
+wymiaru dwa (lub, równoważnie w tym wymiarze,
+dwiema PL-równoważnymi triangulacjami powierzchni).
+Wtedy istnieje skończony ciąg dopuszczalnych ruchów
+$1\leftrightarrow3$ i $2\leftrightarrow2$ prowadzący
+od $K$ do kompleksu izomorficznego z $L$.
+\end{twierdzenie}
+
+\begin{uwaga}[Status dowodu]
+Udowodniliśmy lokalną poprawność ruchów i ich wpływ na
+$\chi$, ale twierdzenie o istnieniu ciągu łączącego
+\emph{dowolne} dwie triangulacje jest znacznie silniejsze.
+Wymaga teorii podziałów gwiaździstych i wspólnych
+podziałów PL (lub pełnego argumentu Pachnera).
+Przyjmujemy je jako klasyczny wynik i nie podszywamy
+się pod jego kompletny dowód.
+\end{uwaga}
+

@@ -1,0 +1,1236 @@
+\chapter{Łańcuchy Markowa w czasie ciągłym}
+\label{ch:ctmc}
+\paragraph{Odsyłacze międzytomowe.} Łańcuchy w czasie dyskretnym opisuje tom I, rozdział~\ref{I-ch:markov}, a ich wykorzystanie w MCMC tom IV, rozdział~\ref{IV-ch:mcmc}.
+
+
+\section{Dlaczego macierz przejścia nie wystarcza?}
+W łańcuchu Markowa z czasu dyskretnego macierz $P=(p_{ij})$
+opisuje jeden krok. W czasie ciągłym pojawiają się dwie odrębne
+losowości: \emph{kiedy} następuje zmiana stanu oraz \emph{dokąd}
+proces przechodzi. W modelu awarii i naprawy urządzenie może długo
+pozostawać sprawne, a po awarii przebywać w stanie uszkodzenia
+przez losowy czas. Sam ciąg odwiedzanych stanów nie opisuje
+czasów trwania poszczególnych faz.
+
+\begin{definicja}[Macierz intensywności]
+Niech $E$ będzie skończonym lub przeliczalnym zbiorem stanów.
+\emph{Konserwatywną macierzą intensywności} (macierzą $Q$)
+nazywamy macierz $Q=(q_{ij})_{i,j\in E}$ spełniającą:
+$q_{ij}\ge0$ dla $i\ne j$, $q_i:=-q_{ii}\in[0,\infty)$
+oraz $\sum_{j\ne i}q_{ij}=q_i$ dla każdego $i\in E$.
+Gdy $q_i>0$, definiujemy prawdopodobieństwa skoku
+$r_{ij}=q_{ij}/q_i$ dla $j\ne i$ i $r_{ii}=0$.
+Stan z $q_i=0$ jest pochłaniający.
+\end{definicja}
+
+Wyraz $q_{ij}$, $i\ne j$, jest natężeniem \emph{bezpośredniego}
+przejścia z $i$ do $j$, a $q_i$ całkowitą intensywnością
+opuszczenia stanu $i$. Zapis $q_{ii}=-q_i$ nie oznacza
+ujemnego prawdopodobieństwa: elementy macierzy $Q$ są
+intensywnościami, a nie prawdopodobieństwami.
+
+\begin{przyklad}[Układ sprawny--uszkodzony]
+Niech $E=\{0,1\}$, gdzie $0$ oznacza urządzenie sprawne,
+a $1$ uszkodzone. Jeśli awarie występują z intensywnością
+$\alpha>0$, a zakończenia napraw z intensywnością $\beta>0$,
+to
+\[
+Q=\begin{pmatrix}-\alpha&\alpha\\\beta&-\beta\end{pmatrix}.
+\]
+Czas do awarii, rozpoczynając od stanu $0$, ma rozkład
+$\operatorname{Exp}(\alpha)$; czas naprawy w stanie $1$
+ma rozkład $\operatorname{Exp}(\beta)$. Po każdym przejściu
+zaczyna się nowy, niezależny czas oczekiwania.
+\end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[>=Latex,thick,node distance=2.4cm,
+ st/.style={draw,circle,minimum size=11mm,fill=blue!5}]
+\node[st] (zero) {$0$};
+\node[st,right=of zero] (one) {$1$};
+\node[st,right=of one] (two) {$2$};
+\draw[->,bend left=22] (zero) to node[above] {$q_{01}=2$} (one);
+\draw[->,bend left=22] (one) to node[below] {$q_{10}=1$} (zero);
+\draw[->] (one) -- node[above] {$q_{12}=3$} (two);
+\node[below=9mm of two] {pochłanianie};
+\end{tikzpicture}
+\par\smallskip\small Schemat: intensywności skoków dla trzech stanów.
+W stanie $1$ łączna intensywność wynosi $1+3=4$.
+\end{center}
+
+
+\begin{uwaga}[Czym macierz intensywności różni się od macierzy przejścia?]
+Jeżeli proces zaczyna w stanie $i$, to dla $j\ne i$
+$\Prob_i(X_h=j)=q_{ij}h+O(h^2)$ przy $h\downarrow0$
+\emph{w skończonym modelu}. Tymczasem dla dowolnego
+ustalonego $t>0$ prawdopodobieństwo $p_{ij}(t)$ może zawierać
+wkład wielu następujących po sobie zmian stanu.
+Zatem $q_{ij}$ nie jest ani prawdopodobieństwem pojedynczego
+skoku (nim jest $q_{ij}/q_i$), ani prawdopodobieństwem
+znalezienia się w $j$ po czasie $t$ (nim jest $p_{ij}(t)$).
+\end{uwaga}
+
+\section{Konstrukcja przez łańcuch skoków i czasy przebywania}
+\begin{twierdzenie}[Konstrukcja minimalnego procesu skokowego]
+\label{thm:jump-construction}
+Niech $E$ będzie zbiorem przeliczalnym, $Q$ konserwatywną
+macierzą intensywności z $q_i<\infty$ dla każdego $i\in E$,
+a $\mu$ rozkładem probabilistycznym na $E$.
+Istnieje przestrzeń probabilistyczna, na której można
+zdefiniować ciąg stanów $Y_0,Y_1,\ldots$, ciąg czasów skoków
+$0=J_0<J_1<\cdots$ aż do ewentualnego pochłonięcia oraz
+proces $X$ następująco:
+\begin{itemize}
+\item $Y_0\sim\mu$, a ze stanu $i$ o $q_i>0$ następny stan
+ma rozkład $(r_{ij})_{j\in E}$;
+\item przy wejściu do $i$ o $q_i>0$ losujemy niezależny
+czas przebywania o rozkładzie $\operatorname{Exp}(q_i)$;
+\item dla $J_n\le t<J_{n+1}$ ustalamy $X_t=Y_n$,
+a po wejściu do stanu z $q_i=0$ proces pozostaje w nim na stałe.
+\end{itemize}
+Jeśli suma wszystkich kolejnych czasów przebywania jest skończona,
+jej granicę $\zeta$ nazywamy \emph{czasem eksplozji}; dla $t\ge\zeta$
+ustalamy $X_t=\partial$ w dodatkowym stanie cmentarnym
+$\partial\notin E$. Tak otrzymany proces nazywamy
+\emph{minimalnym procesem skokowym o macierzy $Q$}.
+Na przedziale $[0,\zeta)$ jego trajektorie są schodkowe i
+c\`adl\`ag, a skoki mają czasy bez atomów.
+\end{twierdzenie}
+\begin{proof}
+Dla każdego stanu $i$ z $q_i>0$ wiersz $(r_{ij})$ jest
+rozkładem probabilistycznym. Używając niezależnych zmiennych
+jednostajnych na $(0,1)$ oraz ustalonego wyliczenia stanów,
+możemy metodą odwrotnej dystrybuanty wylosować następny stan
+z tego rozkładu. Pozwala to rekurencyjnie skonstruować
+$Y_0,Y_1,\ldots$; po pochłonięciu kończymy konstrukcję.
+
+Niezależnie losujemy ciąg $Z_0,Z_1,\ldots$ o rozkładzie
+$\operatorname{Exp}(1)$, a czas przebywania przy wizycie
+w stanie $Y_n=i$ definiujemy jako $H_n=Z_n/q_i$.
+Z równości
+$\Prob(Z_n/q_i>t)=e^{-q_i t}$ wynika żądany rozkład
+warunkowy. Ustalamy $J_{n+1}=J_n+H_n$ tak długo, jak
+$Y_n$ nie jest stanem pochłaniającym.
+
+Jeśli $J_n\uparrow\zeta<\infty$, to przed chwilą $\zeta$
+występuje nieskończenie wiele skoków. Nie należy wtedy
+arbitralnie przedłużać trajektorii w $E$, bo może ona nie
+mieć granicy. Dodanie stanu $\partial$ daje jednoznaczny
+minimalny proces do końca czasu. Każdy $H_n>0$, więc
+poszczególne chwile $J_n$ są ściśle rosnące; na $[0,\zeta)$
+na każdym przedziale domkniętym zawartym w $[0,\zeta)$
+występuje tylko skończenie wiele skoków. Stąd wskazana
+regularność trajektorii przed eksplozją.
+\end{proof}
+
+\begin{uwaga}[Dwie różne macierze]
+Macierz $R=(r_{ij})$ opisuje \emph{dokąd} idziemy po skoku.
+Macierz $Q$ opisuje łącznie wybór nowego stanu i tempo
+opuszczania poprzedniego. Nawet jeśli dwa procesy mają taki sam
+łańcuch skoków $Y_n$, lecz różne intensywności $q_i$,
+mają inne rozkłady $X_t$ w czasie kalendarzowym.
+\end{uwaga}
+
+
+\begin{przyklad}[Dlaczego rozkład wykładniczy jest naturalny dla jednorodnego łańcucha?]
+Przypuśćmy, że układ zaczyna w stanie $0$, czeka losowy
+czas $H$, a następnie nieodwracalnie przechodzi do $1$.
+Jeżeli $H\sim\operatorname{U}([0,2])$, to przy $0<s<s+h<2$
+\[
+\Prob(H>s+h\mid H>s)=\frac{2-s-h}{2-s}.
+\]
+To prawdopodobieństwo zależy od czasu $s$, który upłynął
+od uruchomienia. Dla procesu, który \emph{jednorodnie}
+zachowuje się w stanie $0$, oczekiwalibyśmy natomiast,
+aby przy obecnym stanie $0$ szansa pozostania w nim przez
+kolejne $h$ jednostek czasu nie zależała od wieku pobytu
+w tym stanie. Gdy $H\sim\operatorname{Exp}(q)$, rzeczywiście
+\[
+\Prob(H>s+h\mid H>s)=e^{-qh}.
+\]
+Równanie braku pamięci wyjaśnia, dlaczego w konstrukcji
+jednorodnego łańcucha Markowa wybieramy czasy wykładnicze.
+Przy innych prawach czasu przebywania można otrzymać
+\emph{proces pół-Markowa}, w którym do stanu należy
+dodać informację o czasie od ostatniej zmiany.
+\end{przyklad}
+
+\section{Eksplozja i jej wykluczanie}
+\begin{twierdzenie}[Ograniczone intensywności wykluczają eksplozję]
+\label{thm:bounded-rates}
+Niech proces minimalny z twierdzenia~\ref{thm:jump-construction}
+ma $\sup_{i\in E}q_i\le\Lambda<\infty$.
+Wtedy $\Prob(\zeta=\infty)=1$.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli proces wchodzi do stanu pochłaniającego, to oczywiście
+nie może mieć nieskończenie wielu rzeczywistych skoków
+w czasie skończonym. W przeciwnym razie kolejne czasy
+przebywania są równe $H_n=Z_n/q_{Y_n}$, gdzie
+$Z_n$ są niezależne o rozkładzie $\operatorname{Exp}(1)$.
+Ponieważ $q_{Y_n}\le\Lambda$, mamy
+$H_n\ge Z_n/\Lambda$ prawie na pewno.
+Z lematu o braku eksplozji dla niezależnych wykładniczych
+z rozdziału 4 wynika $\sum_n Z_n/\Lambda=\infty$
+prawie na pewno. Także $\sum_n H_n=\infty$.
+\end{proof}
+
+\begin{przyklad}[Dlaczego skończoność każdego $q_i$ nie wystarcza?]
+Niech $E=\N_0$, a jedyne dozwolone przejście ma postać
+$n\to n+1$ z intensywnością $q_{n,n+1}=\lambda_n>0$.
+Czas eksplozji jest sumą niezależnych zmiennych
+$H_n\sim\operatorname{Exp}(\lambda_n)$.
+Dla $\lambda_n=(n+1)^2$ mamy
+\[
+\E\zeta=\sum_{n=0}^\infty\frac1{(n+1)^2}<\infty.
+\]
+Ponieważ $\zeta\ge0$, skończona wartość oczekiwana
+implikuje $\zeta<\infty$ prawie na pewno.
+Nieskończenie wiele skoków występuje więc przed pewną
+skończoną, losową chwilą! To model eksplozji.
+Natomiast dla $\lambda_n=n+1$ zbieżność $\sum1/\lambda_n$
+nie zachodzi; poniższe twierdzenie pokazuje brak eksplozji.
+\end{przyklad}
+
+\begin{twierdzenie}[Kryterium eksplozji procesu czystych urodzin]
+\label{thm:pure-birth-explosion}
+Niech $E=\N_0$, $X_0=0$, a jedyną możliwą zmianą stanu
+$n$ będzie przejście do $n+1$ z intensywnością
+$\lambda_n\in(0,\infty)$. Wówczas
+\[
+\Prob(\zeta<\infty)=1
+\quad\Longleftrightarrow\quad
+\sum_{n=0}^\infty\frac1{\lambda_n}<\infty.
+\]
+Jeśli szereg jest rozbieżny, to $\Prob(\zeta=\infty)=1$.
+\end{twierdzenie}
+\begin{proof}
+Mamy $\zeta=\sum_{n\ge0}H_n$ z niezależnymi
+$H_n\sim\operatorname{Exp}(\lambda_n)$.
+Jeżeli $\sum1/\lambda_n<\infty$, to
+$\E\zeta=\sum\E H_n<\infty$ na mocy twierdzenia o
+zbieżności monotonicznej, skąd $\zeta<\infty$ prawie na pewno.
+
+Załóżmy teraz $\sum1/\lambda_n=\infty$.
+Dla $c>0$ niezależność i zbieżność ograniczona dają
+\[
+\E e^{-c\zeta}
+=\lim_{m\to\infty}\prod_{n=0}^m\E e^{-cH_n}
+=\prod_{n=0}^\infty\frac{\lambda_n}{\lambda_n+c}.
+\]
+Musimy pokazać, że iloczyn jest zerowy. Jego ujemny logarytm
+to szereg $\sum_n\log(1+c/\lambda_n)$.
+Jeśli nieskończenie wiele $\lambda_n\le c$, to w szeregu
+nieskończenie wiele wyrazów jest nie mniejszych od $\log2$.
+W przeciwnym razie dla wszystkich dostatecznie dużych $n$
+mamy $0<c/\lambda_n<1$, a więc
+$\log(1+c/\lambda_n)\ge c/(2\lambda_n)$.
+W obu przypadkach szereg logarytmów jest rozbieżny.
+Zatem $\E e^{-c\zeta}=0$.
+Przy przyjętej konwencji $e^{-c\infty}=0$, a dla każdej
+skończonej wartości $\zeta$ wykładnik jest ściśle dodatni.
+Stąd $\Prob(\zeta<\infty)=0$, co kończy dowód.
+\end{proof}
+
+\section{Macierz przejścia i równania Kołmogorowa}
+Teraz ograniczymy się do \emph{skończonej} przestrzeni $E$.
+Założenie jest istotne: w nieskończonym zbiorze stanów
+potrzebujemy dodatkowej kontroli, aby uzasadniać różniczkowanie
+nieskończonych szeregów i wykluczać eksplozję.
+
+\begin{definicja}[Macierz przejścia w czasie ciągłym]
+Niech $E$ będzie skończone, a $X$ procesem o intensywnościach
+$Q$. Dla $i,j\in E$ i $t\ge0$ definiujemy
+$p_{ij}(t)=\Prob(X_t=j\mid X_0=i)$,
+przy czym po prawej stronie rozumiemy prawo procesu
+\emph{uruchomionego ze stanu $i$}, również wtedy,
+gdy w wyjściowym rozkładzie początkowym $\Prob(X_0=i)=0$.
+Macierz $P(t)=(p_{ij}(t))_{i,j\in E}$ nazywamy
+\emph{macierzą przejścia w czasie $t$}.
+\end{definicja}
+
+\section{Zegar Poissona i uniformizacja}
+Najwygodniejsza metoda konstrukcji skończonego łańcucha
+pozwala zarazem udowodnić równania różniczkowe macierzy
+przejścia bez odwoływania się do formalnej ``rachunkowości
+prawdopodobieństw $o(h)$''.
+
+\begin{twierdzenie}[Uniformizacja]
+\label{thm:uniformization}
+Niech $E$ będzie niepustym zbiorem skończonym,
+a $Q$ konserwatywną macierzą intensywności.
+Wybierzmy $\Lambda>\max_{i\in E}q_i$ i ustalmy
+$R:=I+Q/\Lambda$. Wtedy $R$ jest macierzą stochastyczną.
+Niech $(Y_n)_{n\ge0}$ będzie łańcuchem dyskretnym o macierzy
+przejścia $R$, niezależnym od procesu Poissona $N$ o intensywności
+$\Lambda$. Proces $X_t:=Y_{N_t}$ jest łańcuchem w czasie
+ciągłym o intensywnościach $Q$, a jego macierz przejścia wynosi
+\[
+P(t)=e^{-\Lambda t}\sum_{n=0}^\infty
+\frac{(\Lambda t)^n}{n!}R^n=e^{tQ},\qquad t\ge0.
+\]
+Dla każdego $i\ne j$ zachodzi
+$\lim_{h\downarrow0}p_{ij}(h)/h=q_{ij}$,
+a dla $i=j$ zachodzi
+$\lim_{h\downarrow0}(p_{ii}(h)-1)/h=q_{ii}$.
+\end{twierdzenie}
+\begin{proof}
+Dla $i\ne j$ mamy $R_{ij}=q_{ij}/\Lambda\ge0$,
+a na przekątnej $R_{ii}=1-q_i/\Lambda>0$.
+Suma każdego wiersza jest równa
+$1+\Lambda^{-1}\sum_j q_{ij}=1$.
+Wprowadzamy niezależny łańcuch skoków i zegar Poissona.
+W chwili zegara $Y$ dokonuje kroku macierzy $R$; może
+przy tym pozostać w obecnym stanie. Te pozorne skoki
+nazywamy \emph{skokami fikcyjnymi}.
+
+Warunkowo względem $N_t=n$ końcowy stan procesu ma
+rozkład $n$-krokowy $R^n$. Dlatego
+$P(t)=\sum_n\Prob(N_t=n)R^n$, czyli pierwsza suma.
+Ponieważ $I$ i $R$ komutują,
+\[
+e^{-\Lambda t}\sum_{n=0}^\infty\frac{(\Lambda tR)^n}{n!}
+=e^{-\Lambda t I}e^{\Lambda tR}
+=e^{\Lambda t(R-I)}=e^{tQ}.
+\]
+Zbieżność jest bezproblemowa w skończonym wymiarze.
+Rozwinięcie wykładnika macierzowego
+$e^{hQ}=I+hQ+O(h^2)$ przy $h\downarrow0$
+daje oba wskazane limity.
+
+Pozostaje zweryfikować, że opis intensywności jest właściwy.
+Będąc w stanie $i$, na krótkim przedziale $[t,t+h]$
+występuje jeden impuls zegara z prawdopodobieństwem
+$\Lambda h+O(h^2)$, dwa lub więcej z prawdopodobieństwem
+$O(h^2)$, a pojedynczy impuls kieruje nas z $i$ do $j\ne i$
+z prawdopodobieństwem $R_{ij}$. Zatem
+$\Prob(X_{t+h}=j\mid X_t=i)=\Lambda hR_{ij}+O(h^2)
+=q_{ij}h+O(h^2)$.
+Łączna intensywność rzeczywistego opuszczenia $i$ jest
+$\Lambda(1-R_{ii})=q_i$. Po każdym fikcyjnym kroku bez
+zmiany stanu pozostajemy w $i$; własność braku pamięci
+zegara Poissona daje wykładniczy czas do pierwszego
+rzeczywistego skoku z parametrem $q_i$, a przy tym
+prawdopodobieństwo jego kierunku to
+$R_{ij}/(1-R_{ii})=q_{ij}/q_i$.
+Jest to dokładnie konstrukcja procesu z $Q$.
+\end{proof}
+
+
+\begin{uwaga}[Dlaczego fikcyjne impulsy nie zmieniają modelu?]
+Jeżeli proces zaczyna w stanie $i$ z $q_i>0$,
+liczba impulsów fikcyjnych przed pierwszą rzeczywistą
+zmianą stanu jest geometryczna. Można obliczyć
+prawdopodobieństwo pozostawania w $i$ \emph{bez
+rzeczywistego skoku} do chwili $t$ bez powoływania się
+jedynie na intuicję pamięci rozkładu wykładniczego:
+\[
+\sum_{n=0}^\infty\Prob(N_t=n)R_{ii}^{n}
+=e^{-\Lambda t}\exp(\Lambda tR_{ii})
+=e^{-q_it}.
+\]
+Tak otrzymujemy czas oczekiwania $\operatorname{Exp}(q_i)$.
+Warunkowo względem tego, że impuls powoduje rzeczywisty skok,
+prawdopodobieństwo wybrania stanu $j\ne i$ jest
+$R_{ij}/(1-R_{ii})=q_{ij}/q_i$.
+Po skoku niezależne przyszłe impulsy zegara i kroki pomocnicze
+pozwalają powtórzyć argument. Ta obserwacja uzasadnia
+równoważność uniformizacji i konstrukcji przez czasy przebywania.
+\end{uwaga}
+
+Ważna korzyść uniformizacji jest obliczeniowa: możemy
+symulować jeden wspólny zegar Poissona i niezależną sekwencję
+kroków macierzy $R$, a przy prawdopodobieństwach przejścia
+stosować nieujemny szereg zamiast bezpośrednio obliczać
+wykładnik macierzowy.
+
+\begin{twierdzenie}[Równania Chapmana--Kołmogorowa i Kołmogorowa]
+\label{thm:kolmogorov-eq}
+Dla skończonej przestrzeni stanów i konserwatywnej macierzy
+intensywności $Q$ macierz przejścia $P(t)=e^{tQ}$ spełnia
+$P(0)=I$ i $P(t+s)=P(t)P(s)$ dla $s,t\ge0$. Ponadto
+jest różniczkowalna dla każdego $t\ge0$ (w zerze prawostronnie)
+i spełnia \emph{równanie wsteczne} oraz \emph{równanie w przód}:
+\[
+P'(t)=QP(t),\qquad P'(t)=P(t)Q.
+\]
+Współrzędnie, dla każdego $i,j\in E$,
+\[
+\frac{\dd}{\dd t}p_{ij}(t)=\sum_{k\in E}q_{ik}p_{kj}(t),
+\qquad
+\frac{\dd}{\dd t}p_{ij}(t)=\sum_{k\in E}p_{ik}(t)q_{kj}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Wzór $P(t)=e^{tQ}$ otrzymaliśmy z konstrukcji, zatem
+$P(t+s)=e^{(t+s)Q}=e^{tQ}e^{sQ}$.
+Istnieje też interpretacja probabilistyczna: warunkujemy
+stan w chwili $t$ i sumujemy po wszystkich stanach
+pośrednich $k$, otrzymując
+$p_{ij}(t+s)=\sum_kp_{ik}(t)p_{kj}(s)$.
+Ponieważ wykładnik macierzowy jest szeregiem potęgowym
+zbieżnym jednostajnie na przedziałach ograniczonych,
+można go różniczkować wyraz po wyrazie; dostajemy
+$P'(t)=Qe^{tQ}=e^{tQ}Q$.
+Przemienność $Q$ z własnym wykładnikiem wynika również
+bezpośrednio z definicji szeregu.
+Zapisując mnożenie macierzy współrzędnie, uzyskujemy
+obydwa wzory skalarne.
+\end{proof}
+
+\begin{uwaga}[Dlaczego są dwa równania?]
+Równanie wsteczne analizuje \emph{pierwszą decyzję po starcie}:
+pierwszy indeks $i$ należy do stanu startowego.
+Równanie w przód analizuje \emph{dopływ do stanu końcowego}:
+drugi indeks $j$ jest stanem w chwili $t$.
+W skończonym jednorodnym modelu obydwa równania są poprawne
+i prowadzą do tej samej macierzy. Dla modeli z nieskończenie
+wieloma stanami albo z eksplozją przejścia do różniczkowania
+w nieskończonych szeregach wymagają osobnego dowodu.
+\end{uwaga}
+
+
+\begin{przyklad}[Powrót do stanu początkowego to nie brak skoku]
+W modelu $E=\{0,1\}$ z intensywnościami
+$0\to1$ równą $\alpha>0$ i $1\to0$ równą $\beta>0$
+czas do pierwszego \emph{rzeczywistego} skoku, przy starcie
+z $0$, ma rozkład $\operatorname{Exp}(\alpha)$. Zatem
+\[
+\Prob_0(\text{brak skoku do }t)=e^{-\alpha t}.
+\]
+Natomiast $p_{00}(t)=\Prob_0(X_t=0)$ uwzględnia również
+ścieżki z dwoma, czterema lub większą parzystą liczbą skoków.
+W istocie, z rozwiązania równań w następnym podrozdziale,
+\[
+ p_{00}(t)=\frac{\beta+\alpha e^{-(\alpha+\beta)t}}
+ {\alpha+\beta}>e^{-\alpha t}\qquad(t>0).
+\]
+Nierówność jest ścisła, bo z dodatnim prawdopodobieństwem
+występują dwa skoki $0\to1\to0$ przed chwilą $t$.
+Rozróżnienie między ``stan nie zmienił się do chwili $t$''
+a ``w chwili $t$ obserwuję stan początkowy'' będzie ważne
+przy modelowaniu trajektorii i przy zadaniach o czasach trafienia.
+\end{przyklad}
+
+\section{Warunkowanie, własność Markowa i czasy zatrzymania}
+\begin{twierdzenie}[Własność Markowa w czasie ciągłym]
+Niech $E$ będzie skończone, $X$ procesem o intensywnościach $Q$,
+a $\calF_t^X=\sigma(X_s:0\le s\le t)$ filtracją naturalną.
+Dla każdego $s,t\ge0$ i każdej funkcji $f:E\to\R$
+\[
+\E[f(X_{s+t})\mid\calF_s^X]=(P(t)f)(X_s),\qquad
+(P(t)f)(i)=\sum_{j\in E}p_{ij}(t)f(j).
+\]
+W konsekwencji dla $j\in E$
+$\Prob(X_{s+t}=j\mid\calF_s^X)=p_{X_sj}(t)$.
+\end{twierdzenie}
+\begin{proof}
+Pracujemy na przestrzeni z konstrukcji uniformizacyjnej:
+$X_t=Y_{N_t}$, gdzie łańcuch dyskretny $Y$ o macierzy $R$
+jest niezależny od zegara Poissona $N$ o intensywności $\Lambda$.
+Niech $\calH_s$ oznacza informację wygenerowaną przez
+$(N_u)_{u\le s}$ oraz przez stany $Y_0,\ldots,Y_{N_s}$
+odwiedzone przez łańcuch pomocniczy przed chwilą $s$.
+Jest to $\sigma$-ciało zawierające $\calF_s^X$,
+a $X_s=Y_{N_s}$ jest $\calH_s$-mierzalny.
+
+Ustalmy $k\ge0$ i weźmy zdarzenie $\{N_s=n\}$.
+Niezależność całego procesu $Y$ od $N$ i własność
+Markowa dyskretnego łańcucha dają, dla każdego stanu $i$,
+\[
+\E[f(Y_{n+k})\mid Y_0,\ldots,Y_n]=(R^kf)(Y_n).
+\]
+Warunkowo względem $\calH_s$ liczba dodatkowych impulsów
+$K=N_{s+t}-N_s$ ma rozkład $\operatorname{Poisson}(\Lambda t)$
+i jest niezależna od przyszłych kroków łańcucha $Y$.
+Możemy zatem najpierw warunkować względem $K=k$,
+a następnie uśrednić po jego rozkładzie:
+\[
+\begin{aligned}
+\E[f(X_{s+t})\mid\calH_s]
+ &=\sum_{k=0}^\infty
+ e^{-\Lambda t}\frac{(\Lambda t)^k}{k!}
+ (R^kf)(Y_{N_s})\\
+ &= (P(t)f)(X_s).
+\end{aligned}
+\]
+Powyższy rachunek można najpierw przeprowadzić na zdarzeniach
+$\{N_s=n\}$, a potem zsumować po $n\ge0$; jest to dozwolone,
+ponieważ $f$ jest ograniczona, $E$ jest skończone,
+a szereg wag Poissona sumuje się do $1$.
+Wreszcie $\calF_s^X\subseteq\calH_s$ i prawa strona
+jest $\calF_s^X$-mierzalna. Własność wieży
+\emph{warunkowej wartości oczekiwanej} daje
+\[
+\E[f(X_{s+t})\mid\calF_s^X]
+=\E[(P(t)f)(X_s)\mid\calF_s^X]
+=(P(t)f)(X_s).
+\]
+Dla $f=\ind{\{j\}}$ otrzymujemy zapis
+w terminach prawdopodobieństw warunkowych.
+\end{proof}
+
+
+\begin{lemat}[Własność Markowa po prawostronnym uzupełnieniu filtracji]
+\label{lem:markov-aug}
+Niech $E$ będzie skończone, $X$ nieeksplodującym łańcuchem
+o macierzy intensywności $Q$ i trajektoriach prawostronnie
+ciągłych. Niech $\calF_t^0=\sigma(X_s:0\le s\le t)$
+oraz
+$\calF_t=\bigcap_{u>t}\sigma(\calF_u^0\cup\calN)$,
+gdzie $\calN$ jest rodziną wszystkich podzbiorów zbiorów
+$\Prob$-zerowych z $\calF$ (przestrzeń jest zupełna).
+Wówczas dla $t,h\ge0$ i każdego $f:E\to\R$
+\[
+\E[f(X_{t+h})\mid\calF_t]=(P(h)f)(X_t)
+\quad\text{prawie na pewno}.
+\]
+\end{lemat}
+\begin{proof}
+Ustalmy $t,h$ i $A\in\calF_t$. Dla każdego $n\ge1$
+połóżmy $u_n=t+1/n$. Ponieważ $A\in\calF_{u_n}$,
+po odrzuceniu nieistotnych zbiorów zerowych możemy
+stosować własność Markowa względem $\calF_{u_n}^0$
+do ograniczonej zmiennej $f(X_{u_n+h})$:
+\[
+\E[\ind A f(X_{u_n+h})]
+ =\E[\ind A(P(h)f)(X_{u_n})].
+\]
+Uzasadnijmy przejście przez uzupełnienie. Każde zdarzenie
+$A\in\sigma(\calF_{u_n}^0\cup\calN)$ różni się
+zbiorem zerowym od pewnego $A_n\in\calF_{u_n}^0$;
+wynika to z tego, że klasa takich zdarzeń tworzy
+$\sigma$-ciało zawierające oba generatory. Zatem
+poprzednią równość, początkowo prawdziwą dla $A_n$,
+można zastosować także do $A$.
+Prawostronna ciągłość daje $X_{u_n+h}\to X_{t+h}$
+oraz $X_{u_n}\to X_t$ niemal na pewno.
+Na skończonym $E$ funkcje $f$ i $P(h)f$ są ograniczone,
+więc zbieżność zdominowana pozwala przejść do granicy.
+Otrzymana równość całek dla każdego $A\in\calF_t$
+oraz $\calF_t$-mierzalność $(P(h)f)(X_t)$
+stanowią charakterystykę warunkowej wartości oczekiwanej.
+\end{proof}
+
+\begin{twierdzenie}[Mocna własność Markowa]
+\label{thm:ctmc-strong}
+Niech $X$ będzie nieeksplodującym łańcuchem w czasie
+ciągłym na skończonym zbiorze $E$, o macierzy intensywności
+$Q$, względem zwykłego uzupełnienia prawostronnie ciągłej
+filtracji naturalnej $\mathbb F=(\calF_t)_{t\ge0}$.
+Jeżeli $\tau$ jest czasem zatrzymania skończonym prawie na
+pewno, to dla każdego $t\ge0$ i funkcji $f:E\to\R$
+\[
+\E[f(X_{\tau+t})\mid\calF_\tau]=(P(t)f)(X_\tau)
+\quad\text{prawie na pewno}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Najpierw niech $\tau$ przyjmuje wartości w przeliczalnym
+zbiorze $\{s_k:k\ge1\}\subset[0,\infty)$.
+Dla $A\in\calF_\tau$ zdarzenie
+$A\cap\{\tau=s_k\}$ należy do $\calF_{s_k}$
+(ponieważ $\{\tau=s_k\}\in\calF_{s_k}$ i z definicji
+$\calF_\tau$).
+Stosując własność Markowa w deterministycznej chwili $s_k$
+\emph{dla uzupełnionej filtracji} (lemat~\ref{lem:markov-aug})
+i sumując po $k$, uzyskujemy
+\[
+\E[\ind A f(X_{\tau+t})]
+=\E[\ind A(P(t)f)(X_\tau)].
+\]
+Dla ogólnego czasu $\tau<\infty$ prawie na pewno niech
+$\tau_m=2^{-m}\lceil2^m\tau\rceil$.
+Jest to czas zatrzymania przyjmujący wartości w zbiorze
+$2^{-m}\N_0$, przy czym $\tau_m\downarrow\tau$
+prawie na pewno. Mamy $\calF_\tau\subseteq\calF_{\tau_m}$,
+więc dla każdego $A\in\calF_\tau$ poprzednia równość
+zastosowana do $\tau_m$ daje
+\[
+\E[\ind A f(X_{\tau_m+t})]
+=\E[\ind A(P(t)f)(X_{\tau_m})].
+\]
+Trajektorie procesu na skończonej przestrzeni stanów są
+prawostronnie ciągłe. Dlatego
+$X_{\tau_m+t}\to X_{\tau+t}$ i $X_{\tau_m}\to X_\tau$
+prawie na pewno. Ponieważ $f$ i $P(t)f$ są ograniczone,
+możemy zastosować zbieżność zdominowaną po obu stronach.
+W efekcie identyczna równość zachodzi dla $\tau$ i wszystkich
+$A\in\calF_\tau$. Jest to dokładnie definicja wskazanej
+warunkowej wartości oczekiwanej.
+\end{proof}
+
+\begin{przyklad}[Pierwsza naprawa jako chwila losowa]
+W modelu sprawny--uszkodzony niech $\tau$ będzie chwilą
+pierwszego powrotu do stanu sprawnego po awarii, przy starcie
+ze stanu $0$. Jeżeli $\alpha,\beta>0$, to $\tau<\infty$
+prawie na pewno. Mocna własność Markowa mówi, że warunkowo
+względem całej historii do $\tau$ dalszy proces jest
+nową kopią procesu zaczynającego w stanie $0$.
+Nie wolno zastąpić $\tau$ dowolną losową chwilą zależną
+od przyszłych awarii: konieczny jest warunek czasu zatrzymania.
+\end{przyklad}
+
+
+\begin{zadanie}[Pierwszy rzeczywisty skok w trzech stanach]
+Niech $E=\{0,1,2\}$, $q_{01}=2$, $q_{10}=1$,
+$q_{12}=3$, a stan $2$ będzie pochłaniający.
+Proces startuje w stanie $1$. Niech $J$ będzie chwilą
+pierwszego skoku i $Y=X_J$. Wyznaczyć prawo $J$, prawo
+$Y$ i obliczyć $\Prob(J\le1,Y=2)$.
+
+\emph{Rozwiązanie.} Całkowita intensywność wyjścia ze
+stanu $1$ wynosi $q_1=q_{10}+q_{12}=4$, wobec czego
+$J\sim\operatorname{Exp}(4)$. Kierunek skoku jest
+niezależny od $J$ i ma rozkład
+$\Prob(Y=0)=1/4$, $\Prob(Y=2)=3/4$.
+Dla $t\ge0$ gęstość wspólna chwil i kierunku wynosi
+\[
+\Prob(J\in\dd t,Y=2)=q_{12}e^{-q_1t}\,\dd t
+=3e^{-4t}\,\dd t.
+\]
+Zatem
+$\Prob(J\le1,Y=2)=\int_0^1 3e^{-4t}\,\dd t
+=\tfrac34(1-e^{-4})$.
+Nie należy tego mylić z $\Prob_1(X_1=2)$:
+ten ostatni wynik obejmuje również ścieżki, na których
+pierwszy skok prowadzi do $0$, a proces dopiero później
+przechodzi przez $1$ do $2$.
+\end{zadanie}
+
+\section{Dwa stany: pełne rozwiązanie równań}
+\begin{twierdzenie}[Przejścia modelu awarii i napraw]
+Niech $E=\{0,1\}$, $\alpha,\beta>0$ oraz
+$Q=\left(\begin{smallmatrix}-\alpha&\alpha\\
+\beta&-\beta\end{smallmatrix}\right)$.
+Wtedy dla $t\ge0$
+\[
+P(t)=\frac1{\alpha+\beta}
+\begin{pmatrix}
+\beta+\alpha e^{-(\alpha+\beta)t} &
+\alpha(1-e^{-(\alpha+\beta)t})\\
+\beta(1-e^{-(\alpha+\beta)t})&
+\alpha+\beta e^{-(\alpha+\beta)t}
+\end{pmatrix}.
+\]
+\end{twierdzenie}
+\begin{proof}
+Oznaczmy $u(t):=p_{01}(t)$, czyli prawdopodobieństwo
+uszkodzenia w chwili $t$ przy starcie w stanie sprawnym.
+Równanie w przód daje
+$u'(t)=\alpha p_{00}(t)-\beta p_{01}(t)$.
+Ponieważ suma elementów w pierwszym wierszu $P(t)$ jest $1$,
+$p_{00}(t)=1-u(t)$, skąd
+$u'(t)=\alpha-(\alpha+\beta)u(t)$ i $u(0)=0$.
+Mnożąc obie strony równania liniowego przez czynnik
+$e^{(\alpha+\beta)t}$, uzyskujemy
+$(e^{(\alpha+\beta)t}u(t))'=\alpha e^{(\alpha+\beta)t}$.
+Całkujemy od $0$ do $t$ i dostajemy
+$u(t)=\alpha(1-e^{-(\alpha+\beta)t})/(\alpha+\beta)$.
+Analogicznie, dla $v(t)=p_{10}(t)$ otrzymujemy
+$v'(t)=\beta-(\alpha+\beta)v(t)$ i $v(0)=0$,
+a więc $v(t)=\beta(1-e^{-(\alpha+\beta)t})/(\alpha+\beta)$.
+Pozostałe wpisy wynikają z sum wierszy równych $1$.
+\end{proof}
+
+\begin{zadanie}[Prawdopodobieństwo awarii i informacja o przeszłości]
+Urządzenie ma intensywność awarii $\alpha=2$ i naprawy
+$\beta=1$ (w jednostkach: godzina$^{-1}$).
+W chwili $0$ działa. Obliczyć prawdopodobieństwo,
+że będzie uszkodzone po godzinie, a następnie
+prawdopodobieństwo, że będzie uszkodzone po dwóch godzinach,
+\emph{jeśli wiadomo, że działało po pierwszej godzinie}.
+
+\emph{Rozwiązanie.} Z powyższego twierdzenia
+$\Prob(X_1=1\mid X_0=0)=\tfrac23(1-e^{-3})$.
+W drugim pytaniu warunkujemy względem stanu $X_1=0$,
+a nie stanu początkowego. Własność Markowa daje
+\[
+\Prob(X_2=1\mid X_1=0,X_0=0)
+=\Prob(X_1=1\mid X_0=0)=\frac23(1-e^{-3}).
+\]
+Gdybyśmy zamiast tego pytali bez warunku $X_1=0$
+o stan po dwóch godzinach, odpowiedzią byłoby
+$\tfrac23(1-e^{-6})$. To dwa różne pytania probabilistyczne.
+\end{zadanie}
+
+\section{Generatory, martyngały i wzór Dynkina}
+\begin{definicja}[Generator skończonego łańcucha]
+Dla skończonego $E$, macierzy intensywności $Q$ i funkcji
+$f:E\to\R$ definiujemy
+\[
+(Lf)(i):=\sum_{j\in E}q_{ij}f(j)
+=\sum_{j\ne i}q_{ij}\bigl(f(j)-f(i)\bigr),\qquad i\in E.
+\]
+Operator $L$ na przestrzeni funkcji na $E$ nazywamy
+generatorem procesu. W zapisie wektorowym $Lf=Qf$.
+\end{definicja}
+
+Druga postać wyjaśnia sens operatora: z każdego stanu $i$
+ważymy zmiany wartości $f(j)-f(i)$ intensywnościami
+bezpośrednich skoków. Dla funkcji stałej generator znika,
+co jest analogią do pochodnej funkcji stałej.
+
+\begin{twierdzenie}[Wzór Dynkina i martyngał generatorowy]
+\label{thm:dynkin}
+Niech $E$ będzie skończone, $X$ łańcuchem w czasie
+ciągłym o intensywnościach $Q$ i filtracji naturalnej.
+Dla każdej funkcji $f:E\to\R$ proces
+\[
+M_t^f:=f(X_t)-f(X_0)-\int_0^t (Lf)(X_s)\,\dd s
+\]
+jest całkowalnym martyngałem.
+W szczególności dla każdego $t\ge0$
+\[
+\E f(X_t)=\E f(X_0)+
+\int_0^t\E[(Lf)(X_s)]\,\dd s.
+\]
+Jeśli $\tau$ jest ograniczonym czasem zatrzymania,
+to również
+\[
+\E f(X_\tau)=\E f(X_0)+
+\E\int_0^\tau (Lf)(X_s)\,\dd s.
+\]
+\end{twierdzenie}
+\begin{proof}
+Wszystkie funkcje na skończonym $E$ są ograniczone.
+Z równania wstecznego, w zapisie operatorowym,
+$\frac{\dd}{\dd t}P(t)f=P(t)Lf$.
+Całkując od $0$ do $u$ dostajemy
+$P(u)f-f=\int_0^u P(v)Lf\,\dd v$.
+Dla $0\le s\le t$ własność Markowa implikuje
+\[
+\E[f(X_t)-f(X_s)\mid\calF_s]
+=(P(t-s)f-f)(X_s).
+\]
+Jednocześnie $Lf$ jest funkcją ograniczoną na skończonym $E$, więc
+$\int_s^t\E|Lf(X_u)|\,\dd u\le(t-s)\norm{Lf}_\infty<\infty$.
+Dla każdego $A\in\calF_s$ możemy więc zastosować twierdzenie
+Fubiniego do $\E[\ind A\int_s^t Lf(X_u)\,\dd u]$,
+a następnie własność Markowa pod całką. Charakterystyka
+warunkowej wartości oczekiwanej daje
+\[
+\E\left[\int_s^t(Lf)(X_u)\,\dd u\mid\calF_s\right]
+=\int_0^{t-s}(P(v)Lf)(X_s)\,\dd v.
+\]
+Obie prawe strony są równe. Po odjęciu otrzymujemy
+$\E[M_t^f-M_s^f\mid\calF_s]=0$.
+Zatem $M^f$ jest martyngałem. Całkowalność jest
+natychmiastowa, ponieważ $f$ i $Lf$ są ograniczone,
+a rozważamy skończony czas $t$.
+
+Biorąc wartości oczekiwane uzyskujemy pierwszą tożsamość.
+Dla $\tau\le T$ twierdzenie o próbkowaniu opcjonalnym
+z rozdziału 3 stosuje się do martyngału $M^f$, ponieważ
+$\sup_{0\le t\le T}|M_t^f|\le2\norm f_\infty+T\norm{Lf}_\infty$.
+Stąd $\E M_\tau^f=\E M_0^f=0$, co daje ostatni wzór.
+\end{proof}
+
+\begin{przyklad}[Przewidywana zmiana funkcji]
+Dla modelu dwustanowego i $f(0)=0$, $f(1)=1$ mamy
+$Lf(0)=\alpha$ i $Lf(1)=-\beta$.
+Proces
+\[
+\ind{\{X_t=1\}}-\ind{\{X_0=1\}}
+-\int_0^t\bigl(\alpha\ind{\{X_s=0\}}
+-\beta\ind{\{X_s=1\}}\bigr)\,\dd s
+\]
+jest martyngałem. Człon podcałkowy opisuje
+\emph{chwilową przewidywaną zmianę} wskaźnika awarii,
+a jego odjęcie usuwa dryf.
+\end{przyklad}
+
+\section{Rozkłady stacjonarne, równowaga szczegółowa i ergodyczność}
+\begin{definicja}[Rozkład stacjonarny]
+Dla łańcucha z $E$ skończonym i macierzą przejścia
+$P(t)$ rozkład probabilistyczny $\pi=(\pi_i)_{i\in E}$
+nazywamy \emph{stacjonarnym}, jeżeli
+$\pi P(t)=\pi$ dla każdego $t\ge0$.
+Rozkład $\pi$ spełnia \emph{równania bilansu} jeśli
+$\pi Q=0$.
+\end{definicja}
+
+\begin{twierdzenie}[Bilans i równowaga szczegółowa]
+Niech $E$ będzie skończone i $Q$ macierzą intensywności.
+Rozkład probabilistyczny $\pi$ jest stacjonarny wtedy i tylko
+wtedy, gdy $\pi Q=0$. Warunkiem wystarczającym jest
+\emph{równowaga szczegółowa}
+\[
+\pi_iq_{ij}=\pi_jq_{ji}\qquad\text{dla wszystkich }i,j\in E.
+\]
+\end{twierdzenie}
+\begin{proof}
+Jeśli $\pi P(t)=\pi$ dla każdego $t$, to przez różniczkowanie
+w zerze otrzymujemy $\pi Q=0$.
+Odwrotnie, gdy $\pi Q=0$, z rozwinięcia szeregu
+$e^{tQ}=I+tQ+t^2Q^2/2!+\cdots$ wynika
+$\pi e^{tQ}=\pi$, gdyż $\pi Q^k=0$ dla $k\ge1$.
+Jeżeli zachodzi równowaga szczegółowa, to dla każdego $j$
+\[
+(\pi Q)_j=\sum_{i\ne j}\pi_iq_{ij}-\pi_j\sum_{k\ne j}q_{jk}
+=\sum_{i\ne j}\pi_jq_{ji}-\pi_j\sum_{k\ne j}q_{jk}=0.
+\]
+Stąd $\pi Q=0$ i stacjonarność.
+\end{proof}
+
+Nie należy mylić bilansu całkowitego z równowagą szczegółową:
+warunek szczegółowy jest silniejszy i nie zachodzi na przykład
+dla jednokierunkowego ruchu po cyklu z co najmniej trzema
+stanami, mimo istnienia rozkładu stacjonarnego.
+
+\begin{twierdzenie}[Granica w modelu skończonym]
+Niech $E$ będzie skończonym zbiorem stanów, $Q$ macierzą
+intensywności, a graf przejść z krawędzią $i\to j$ wtedy
+i tylko wtedy, gdy $q_{ij}>0$, niech będzie silnie spójny.
+Wtedy istnieje dokładnie jeden rozkład stacjonarny $\pi$;
+wszystkie jego współrzędne są dodatnie i dla każdego
+$i,j\in E$ zachodzi
+$\lim_{t\to\infty}p_{ij}(t)=\pi_j$.
+\end{twierdzenie}
+\begin{proof}
+Weźmy $\Lambda>\max_i q_i$ i $R=I+Q/\Lambda$.
+Z silnej spójności grafu intensywności wynika
+nieprzywiedlność dyskretnego łańcucha o macierzy $R$,
+gdyż $R_{ij}>0$ dla $i\ne j$ dokładnie na dozwolonych
+krawędziach. Ponieważ $R_{ii}>0$ dla każdego $i$,
+łańcuch ten jest nieokresowy.
+Twierdzenie o zbieżności skończonych nieprzywiedlnych
+i nieokresowych łańcuchów z tomu I zapewnia istnienie
+jedynego stacjonarnego $\pi$, dodatniego w każdym stanie,
+i $R^n_{ij}\to\pi_j$ dla wszystkich $i,j$.
+Warunek $\pi R=\pi$ jest równoważny $\pi Q=0$,
+a więc rozkład jest też stacjonarny dla czasu ciągłego.
+
+Z uniformizacji mamy
+$p_{ij}(t)=\sum_{n\ge0}\Prob(N_t=n)R^n_{ij}$,
+gdzie $N_t\sim\operatorname{Poisson}(\Lambda t)$.
+Dla $\varepsilon>0$ wybierzmy $n_0$ tak, by
+$|R^n_{ij}-\pi_j|<\varepsilon$ dla $n\ge n_0$.
+Wtedy
+\[
+|p_{ij}(t)-\pi_j|
+\le\Prob(N_t<n_0)+\varepsilon.
+\]
+Ponieważ $N_t\to\infty$ według prawdopodobieństwa
+(gdy $t\to\infty$, choćby z nierówności Czebyszewa),
+pierwszy składnik dąży do zera. Dajemy $\varepsilon\downarrow0$.
+Jedyność rozkładu stacjonarnego wynika także z tego,
+że każdy rozkład stacjonarny dla $Q$ jest stacjonarny dla $R$.
+\end{proof}
+
+\begin{przyklad}[Łańcuch trzystanowy na cyklu]
+Niech $E=\{0,1,2\}$ i jedyne przejścia mają postać
+$0\to1$, $1\to2$, $2\to0$, każde z intensywnością
+$\lambda>0$. Wtedy
+\[
+Q=\lambda\begin{pmatrix}-1&1&0\\0&-1&1\\1&0&-1\end{pmatrix}.
+\]
+Rozkład $\pi=(1/3,1/3,1/3)$ spełnia $\pi Q=0$,
+więc jest stacjonarny. Graf jest silnie spójny,
+zatem proces zbiega rozkładem do $\pi$.
+Jednak równowaga szczegółowa nie zachodzi, bo
+$\pi_0q_{01}=\lambda/3>0$ i $\pi_1q_{10}=0$.
+Proces ma więc stacjonarny, niezerowy przepływ wokół cyklu.
+\end{przyklad}
+
+\section{Łańcuchy urodzin i śmierci}
+\begin{definicja}[Proces urodzin i śmierci]
+Niech $E=\N_0$. Procesem urodzin i śmierci nazywamy
+minimalny łańcuch Markowa o jedynych dozwolonych przejściach
+$n\to n+1$ z intensywnością $\lambda_n\ge0$ i
+$n\to n-1$ z intensywnością $\mu_n\ge0$ dla $n\ge1$,
+przy $\mu_0:=0$. Pozostałe wyrazy pozadiagonalne są zerowe,
+a $q_{nn}=-(\lambda_n+\mu_n)$.
+\end{definicja}
+
+Nazwa nawiązuje do populacji, w której każda zmiana liczebności
+jest zwiększeniem lub zmniejszeniem o jeden. Ta sama
+matematyka opisuje jednak liczbę klientów w kolejce, cząstek
+w systemie czy liczebność aktywnych urządzeń.
+
+\begin{stwierdzenie}[Rozkład stacjonarny przy równowadze lokalnej]
+Załóżmy, że $\lambda_n>0$ dla $n\ge0$,
+$\mu_n>0$ dla $n\ge1$, oraz że proces jest nieeksplodujący.
+Jeżeli
+\[
+Z:=1+\sum_{n=1}^\infty
+\prod_{k=0}^{n-1}\frac{\lambda_k}{\mu_{k+1}}<\infty,
+\]
+to liczby
+$\pi_0:=1/Z$ i
+$\pi_n:=Z^{-1}\prod_{k=0}^{n-1}\lambda_k/\mu_{k+1}$
+dla $n\ge1$ tworzą rozkład probabilistyczny spełniający
+równowagę szczegółową
+$\pi_n\lambda_n=\pi_{n+1}\mu_{n+1}$.
+W szczególności $\pi$ jest rozkładem stacjonarnym procesu.
+\end{stwierdzenie}
+\begin{proof}
+Wszystkie $\pi_n$ są nieujemne, a ich suma z definicji
+jest równa $Z/Z=1$. Przez skrócenie kolejnych iloczynów
+otrzymujemy $\pi_n\lambda_n=\pi_{n+1}\mu_{n+1}$.
+Wykazaliśmy zatem równowagę szczegółową.
+Pozostaje udowodnić stacjonarność \emph{dla procesu
+nieskończeniewymiarowego}; nie wystarczy tylko zapisać
+formalnej równości $\pi Q=0$.
+
+Dla $K\in\N$ rozważmy łańcuch na $\{0,1,\ldots,K\}$
+z tymi samymi intensywnościami, z wyjątkiem tego,
+że tłumimy przejście $K\to K+1$.
+Jest to skończony, nieeksplodujący proces,
+a jego rozkład
+\[
+\pi_n^{(K)}:=\frac{\pi_n}{\sum_{k=0}^K\pi_k},
+\qquad 0\le n\le K,
+\]
+spełnia równowagę szczegółową dla wszystkich jego krawędzi,
+a więc jest stacjonarny w myśl twierdzenia skończonego.
+
+Dla ustalonego stanu początkowego $i\in\N_0$ skonstruujmy
+proces obcięty i pierwotny przy użyciu \emph{tych samych}
+losowań skoków i czasów przebywania, aż do pierwszej próby
+wyjścia poza $\{0,\ldots,K\}$. Do tej chwili oba procesy
+są jednakowe. Ponieważ oryginalny proces jest nieeksplodujący,
+na każdym $[0,t]$ wykonuje tylko skończenie wiele skoków
+prawie na pewno; jego trajektoria ma zatem na $[0,t]$
+skończone maksimum. Stąd dla każdego $i,j$ i $t$
+\[
+P_t^{(K)}(i,j)\longrightarrow P_t(i,j)
+\quad (K\to\infty,\ K\ge i),
+\]
+gdzie $P_t^{(K)}$ oznacza macierz przejścia łańcucha
+obciętego.
+
+Teraz ustalmy $j$ i $t$. Stacjonarność $\pi^{(K)}$ daje
+\[
+\pi_j^{(K)}=\sum_{i=0}^K\pi_i^{(K)}P_t^{(K)}(i,j).
+\]
+Dla ustalonego $i$ mamy $\pi_i^{(K)}\to\pi_i$
+i zbieżność odpowiednich prawdopodobieństw przejścia.
+Ponieważ $\sum_{i\ge0}\pi_i=1$, ogon
+$\sum_{i>M}\pi_i$ jest dowolnie mały, a dla dużych $K$
+$\pi_i^{(K)}\le2\pi_i$. Stąd możemy najpierw przepuścić
+$K\to\infty$ w skończonej sumie po $i\le M$,
+a następnie $M\to\infty$ kontrolując ogon przez
+$2\sum_{i>M}\pi_i$. Otrzymujemy
+$\pi_j=\sum_{i\ge0}\pi_iP_t(i,j)$.
+Ponieważ $j,t$ były dowolne, $\pi$ jest stacjonarna.
+\end{proof}
+
+\begin{uwaga}[Wersja nieskończona wymaga ostrożności]
+W poprzednim stwierdzeniu założyliśmy nieeksplodowanie.
+W ogólnych modelach na przestrzeni przeliczalnej
+formalna równość $\pi Q=0$ nie jest automatycznie
+równoważna stacjonarności minimalnego procesu,
+gdy masa może uciekać przez eksplozję. Z tego powodu
+nie przenosimy bez komentarza wyników z przypadku
+skończonego na wszystkie macierze $Q$.
+\end{uwaga}
+
+
+\begin{uwaga}[Dlaczego obcięcie nieskończonego łańcucha wymaga sprzężenia?]
+W dowodzie stacjonarności procesu urodzin i śmierci
+przybliżamy łańcuch na $\N_0$ przez łańcuchy na
+$\{0,\ldots,K\}$. Nie wystarczy tylko stwierdzić, że
+macierze intensywności są podobne: w stanie brzegowym $K$
+mają inne czasy przebywania. Można jednak \emph{sprzęgnąć}
+procesy, korzystając z tych samych niezależnych zegarów
+potencjalnych przejść $n\to n+1$ i $n\to n-1$.
+W łańcuchu obciętym ignorujemy wyłącznie impulsy
+$K\to K+1$; pozostałe są wspólne dla obu procesów.
+Do pierwszego wejścia oryginalnego procesu w $K+1$
+trajektorie obu procesów są więc identyczne.
+Przy założonym braku eksplozji liczba skoków procesu
+oryginalnego na $[0,t]$ jest prawie na pewno skończona,
+co oznacza, że na tym przedziale osiąga tylko skończenie
+wiele stanów. Dla każdego ustalonego wyniku losowania
+oraz dostatecznie dużego $K$ przybliżenia i oryginał
+zgadzają się na całym $[0,t]$.
+To uzasadnia zbieżność ich praw przejścia, a dopiero
+następnie można przejść do granicy w równaniu stacjonarności.
+\end{uwaga}
+
+\begin{uwaga}[Zanik pamięci a własność Markowa]
+Własność Markowa mówi, że po znajomości $X_t$ cała
+wcześniejsza historia nie jest potrzebna do prognozowania
+przyszłości. Nie oznacza, że rozkład $X_t$ przestaje
+zależeć od stanu początkowego w krótkim czasie.
+Asymptotyczny zanik tej zależności wynika w modelu
+skończonym z nieprzywiedlności i twierdzenia o granicy
+$P(t)$; dla niektórych procesów na przestrzeniach
+nieskończonych taki wynik może być fałszywy.
+\end{uwaga}
+
+\section{Model kolejki \texorpdfstring{$M/M/1$}{M/M/1}}
+\begin{przyklad}[Pojedynczy serwer]
+Klienci napływają zgodnie z procesem Poissona o intensywności
+$\lambda>0$. Czasy obsługi są niezależne, mają rozkład
+$\operatorname{Exp}(\mu)$ z $\mu>0$ i są niezależne
+od napływu. Jeden serwer obsługuje co najwyżej jednego klienta
+naraz, a klienci czekają bez ograniczenia pojemności.
+Stanem $X_t$ jest liczba osób w systemie (obsługiwanych
+i oczekujących). Przy $X_t=n$ nowy klient zwiększa stan do
+$n+1$ z intensywnością $\lambda$, a przy $n\ge1$
+zakończenie obsługi zmniejsza stan do $n-1$ z intensywnością
+$\mu$. Jest to proces urodzin i śmierci z
+$\lambda_n=\lambda$ i $\mu_n=\mu$ dla $n\ge1$.
+
+Z poprzedniego stwierdzenia otrzymujemy dla
+$\rho:=\lambda/\mu<1$:
+\[
+\pi_n=(1-\rho)\rho^n,\qquad n\in\N_0.
+\]
+Sprawdźmy też, dlaczego $\rho<1$ jest konieczne dla
+istnienia rozkładu stacjonarnego. Każdy taki rozkład
+spełnia równanie bilansu w stanie $0$:
+$\lambda\pi_0=\mu\pi_1$.
+Bilans w stanie $n\ge1$ brzmi
+$\lambda\pi_{n-1}+\mu\pi_{n+1}=(\lambda+\mu)\pi_n$.
+Indukcyjnie wynika stąd $\pi_{n+1}=\rho\pi_n$, gdyż
+równość dla $n=0$ jest początkiem indukcji, a podstawienie
+$\lambda\pi_{n-1}=\mu\pi_n$ do równania dla $n$
+prowadzi do $\mu\pi_{n+1}=\lambda\pi_n$.
+Stąd $\pi_n=\rho^n\pi_0$, a możliwość normalizacji wymaga
+$\rho<1$. Wtedy $\pi_0=1-\rho$.
+W tym stanie równowagi
+$\Prob(X_t=0)=1-\rho$ i
+$\E X_t=\sum_{n\ge0}n(1-\rho)\rho^n=\rho/(1-\rho)$.
+Ostatni wzór otrzymujemy różniczkując szereg geometryczny
+$\sum_{n\ge0}\rho^n=(1-\rho)^{-1}$ dla $0<\rho<1$.
+
+Brak eksplozji wynika z faktu, że całkowita intensywność
+jest ograniczona przez $\lambda+\mu$. Przy $\rho\ge1$
+proces nadal istnieje, lecz nie ma rozkładu stacjonarnego
+normalizowalnego na $\N_0$.
+\end{przyklad}
+
+\begin{zadanie}[Kolejka i liczba klientów]
+Do stanowiska przychodzi średnio $3$ klientów na godzinę,
+a jeden serwer obsługuje średnio $5$ klientów na godzinę;
+napływ i czasy obsługi spełniają założenia modelu $M/M/1$.
+Obliczyć w stanie stacjonarnym: (a) prawdopodobieństwo
+pustego systemu; (b) prawdopodobieństwo obecności co
+najmniej trzech klientów; (c) średnią liczbę klientów.
+
+\emph{Rozwiązanie.} Mamy $\rho=3/5$. Zatem
+$\pi_0=1-\rho=2/5$.
+Dalej
+$\Prob(X\ge3)=\sum_{n=3}^\infty(1-\rho)\rho^n
+=\rho^3=27/125$.
+Średnia wynosi $\rho/(1-\rho)=\frac{3/5}{2/5}=3/2$.
+Wszystkie te wyniki dotyczą \emph{stanu stacjonarnego};
+nie są poprawnymi odpowiedziami na pytania o układ,
+który właśnie został uruchomiony z zerową liczbą klientów.
+\end{zadanie}
+
+\section{Model Ehrenfesta w czasie ciągłym}
+\begin{przyklad}[Dwie komory]
+Niech $K\in\N$ cząstek niezależnie przemieszcza się
+między komorami $A$ i $B$. Każda cząstka w $B$ przechodzi
+do $A$ z intensywnością $\alpha>0$, a każda cząstka w $A$
+przechodzi do $B$ z intensywnością $\beta>0$.
+Niech $X_t$ oznacza liczbę cząstek w $A$ w chwili $t$.
+Gdy $X_t=i$, w $B$ znajduje się $K-i$ cząstek, więc
+$\lambda_i=(K-i)\alpha$, a $\mu_i=i\beta$.
+Łańcuch na $\{0,\ldots,K\}$ jest nieprzywiedlny.
+
+Dla $p:=\alpha/(\alpha+\beta)$ rozkład
+\[
+\pi_i=\binom Ki p^i(1-p)^{K-i},\qquad 0\le i\le K,
+\]
+jest stacjonarny. Rzeczywiście,
+\begin{align*}
+\frac{\pi_{i+1}}{\pi_i}
+&=\frac{K-i}{i+1}\frac{p}{1-p}
+=\frac{(K-i)\alpha}{(i+1)\beta}
+=\frac{\lambda_i}{\mu_{i+1}},
+\end{align*}
+co dokładnie oznacza równowagę szczegółową
+$\pi_i\lambda_i=\pi_{i+1}\mu_{i+1}$.
+Rozkład dwumianowy pojawia się zatem nie tylko
+przy niezależnych próbach, lecz także jako prawo
+stacjonarne łańcucha w czasie ciągłym.
+\end{przyklad}
+
+\section{Czas pochłonięcia i macierz fundamentalna}
+\begin{twierdzenie}[Oczekiwany czas pochłonięcia]
+\label{thm:ctmc-absorption}
+Niech $E=T\mathbin{\dot\cup}A$ będzie skończonym zbiorem stanów,
+$A\ne\varnothing$ zbiorem stanów pochłaniających,
+a $T$ zbiorem stanów niepochłaniających. Przy uporządkowaniu
+najpierw stanów $T$ macierz intensywności ma blokową postać
+\[
+Q=\begin{pmatrix}B&C\\0&0\end{pmatrix}.
+\]
+Załóżmy, że startując z każdego $i\in T$, proces
+osiąga $A$ z prawdopodobieństwem jeden.
+Wtedy $B$ jest odwracalna, macierz
+$G:=(-B)^{-1}$ ma nieujemne wyrazy i
+\[
+G_{ij}=\E_i\left[\int_0^\tau\ind{\{X_t=j\}}\,\dd t\right],
+\qquad
+\E_i\tau=\sum_{j\in T}G_{ij},
+\]
+gdzie $\tau=\inf\{t\ge0:X_t\in A\}$, a
+$\E_i$ oznacza wartość oczekiwaną dla procesu
+startującego ze stanu $i$.
+\end{twierdzenie}
+\begin{proof}
+Stany z $A$ są pochłaniające, dlatego dla $i,j\in T$
+$\Prob_i(X_t=j,\tau>t)=\Prob_i(X_t=j)$.
+Macierz przejścia ograniczona do $T$ jest równa $e^{tB}$:
+wynika to z blokowo-trójkątnej postaci $e^{tQ}$,
+którą widać bezpośrednio z potęg macierzy $Q$.
+Stąd całkując funkcję wskaźnikową i stosując Tonellego,
+\[
+\E_i\int_0^\tau\ind{\{X_t=j\}}\,\dd t
+=\int_0^\infty\Prob_i(X_t=j,\tau>t)\,\dd t
+=\int_0^\infty(e^{tB})_{ij}\,\dd t.
+\]
+
+Musimy wykazać zbieżność tej całki oraz odwracalność $B$.
+Ponieważ proces z każdego stanu $i\in T$ zostaje pochłonięty
+prawie na pewno, istnieje $t_i>0$ takie, że
+$\Prob_i(\tau>t_i)<1/2$. Biorąc $t_0=\max_i t_i$,
+z monotoniczności funkcji przeżycia dostajemy
+$\sup_{i\in T}\Prob_i(\tau>t_0)\le1/2$.
+Własność Markowa w chwilach $nt_0$ pokazuje indukcyjnie,
+że $\sup_i\Prob_i(\tau>nt_0)\le2^{-n}$.
+Zatem wierszowe sumy macierzy $e^{tB}$ maleją
+wykładniczo do zera, a nieujemne wyrazy tej macierzy
+są całkowalne na $[0,\infty)$. Niech
+$G=\int_0^\infty e^{tB}\,\dd t$.
+Z równania $\frac{\dd}{\dd t}e^{tB}=Be^{tB}$ wynika
+\[
+BG=\lim_{t\to\infty}e^{tB}-I=-I.
+\]
+W skończonym wymiarze istnienie prawej odwrotności
+macierzy kwadratowej oznacza odwracalność, a
+$G=(-B)^{-1}$. Nieujemność wyrazów jest widoczna
+z całkowej reprezentacji. Sumując tożsamość
+$\int_0^\tau\sum_{j\in T}\ind{\{X_t=j\}}\,\dd t=\tau$
+(na $[0,\tau)$ proces pozostaje w $T$)
+po $j$ i biorąc wartości oczekiwane,
+otrzymujemy drugi wzór.
+\end{proof}
+
+\begin{zadanie}[Pełne obliczenie czasu pochłonięcia]
+Rozważmy łańcuch z trzema stanami i intensywnościami
+$0\to1$ z intensywnością $2$, $1\to0$ z intensywnością $1$
+oraz $1\to2$ z intensywnością $3$.
+Stan $2$ jest pochłaniający. Obliczyć oczekiwany czas
+osiągnięcia stanu $2$ przy starcie ze stanu $0$ i $1$,
+a także oczekiwany łączny czas spędzony w stanach $0$ i $1$
+przed pochłonięciem przy starcie z $0$.
+
+\emph{Rozwiązanie.} Macierz intensywności jest równa
+\[
+Q=\begin{pmatrix}-2&2&0\\1&-4&3\\0&0&0\end{pmatrix},
+\quad
+B=\begin{pmatrix}-2&2\\1&-4\end{pmatrix}.
+\]
+Pochłonięcie zachodzi prawie na pewno: przy każdym wejściu
+do stanu $1$ następny skok prowadzi do $2$ z
+prawdopodobieństwem $3/4$, a powroty do stanu $1$ po skoku
+do $0$ następują prawie na pewno. Prawdopodobieństwo
+uniknięcia stanu $2$ po $m$ wizytach w $1$ wynosi $(1/4)^m$,
+co dąży do zera.
+Z twierdzenia~\ref{thm:ctmc-absorption}
+\[
+G=(-B)^{-1}
+=\begin{pmatrix}2&-2\\-1&4\end{pmatrix}^{-1}
+=\frac16\begin{pmatrix}4&2\\1&2\end{pmatrix}.
+\]
+Przy starcie z $0$ oczekiwane czasy zajmowania kolejno
+stanu $0$ i stanu $1$ wynoszą $4/6=2/3$ oraz $2/6=1/3$.
+Ich suma to $\E_0\tau=1$. Przy starcie z $1$ suma
+elementów drugiego wiersza daje $\E_1\tau=1/2$.
+
+\emph{Sprawdzenie bez macierzy.} Oznaczmy
+$u_i=\E_i\tau$, $u_2=0$.
+Ze stanu $0$ oczekujemy średnio $1/2$ jednostki czasu
+i przechodzimy do $1$, więc $u_0=1/2+u_1$.
+Ze stanu $1$ czekamy średnio $1/4$, po czym z
+prawdopodobieństwem $1/4$ przechodzimy do $0$,
+a z $3/4$ do $2$. Stąd
+$u_1=1/4+(1/4)u_0$. Rozwiązanie daje
+$u_0=1$, $u_1=1/2$ zgodnie z rachunkiem macierzowym.
+To jest praktyczna metoda \emph{analizy pierwszego skoku}.
+\end{zadanie}
+
+\section{Jak czytać prawdopodobieństwa trajektorii?}
+Przy procesie dyskretnym używaliśmy wzoru
+$\Prob(X_0=i_0,\ldots,X_n=i_n)$.
+W czasie ciągłym należy rozróżnić obserwacje
+w \emph{ustalonych chwilach} od zarejestrowania
+\emph{dokładnych czasów skoków}.
+
+\begin{stwierdzenie}[Wspólny rozkład obserwacji w ustalonych chwilach]
+Niech $X$ będzie skończonym łańcuchem w czasie ciągłym,
+$0=t_0<t_1<\cdots<t_n$, a $\mu$ rozkładem początkowym.
+Wtedy dla każdego $i_0,\ldots,i_n\in E$
+\[
+\Prob(X_{t_0}=i_0,\ldots,X_{t_n}=i_n)
+=\mu_{i_0}\prod_{k=1}^n
+ p_{i_{k-1},i_k}(t_k-t_{k-1}).
+\]
+\end{stwierdzenie}
+\begin{proof}
+Jeżeli prawdopodobieństwo wcześniejszej części zdarzenia
+jest dodatnie, stosujemy łańcuchowy wzór na prawdopodobieństwo
+warunkowe. Własność Markowa daje
+\[
+\Prob(X_{t_k}=i_k\mid X_{t_0}=i_0,\ldots,X_{t_{k-1}}=i_{k-1})
+=p_{i_{k-1},i_k}(t_k-t_{k-1}).
+\]
+Mnożymy kolejne czynniki, rozpoczynając od
+$\Prob(X_{t_0}=i_0)=\mu_{i_0}$.
+Jeżeli prawdopodobieństwo wcześniejszego zdarzenia jest zero,
+to prawdopodobieństwo całej ścieżki obserwacji również
+jest zero, a iloczyn po prawej zawiera zerowy czynnik
+na pierwszym etapie, na którym otrzymujemy zerowy iloczyn.
+W ten sposób wzór obejmuje także zdarzenia zerowe.
+\end{proof}
+
+\begin{uwaga}[Prawdopodobieństwo dokładnej chwili skoku]
+Jeżeli $J_1$ jest pierwszą chwilą skoku ze stanu $i$ o
+$q_i>0$, to $J_1\sim\operatorname{Exp}(q_i)$ i
+$\Prob(J_1=t)=0$ dla każdego ustalonego $t\ge0$.
+Nie pytamy więc o \emph{prawdopodobieństwo} dokładnego czasu,
+lecz o jego \emph{gęstość}. Dla ściśle rosnących
+$0<s_1<\cdots<s_m<t$ oraz ciągu rzeczywistych zmian
+$i_0\to i_1\to\cdots\to i_m$ gęstość zdarzenia:
+``skoki nastąpiły w chwilach $s_1,\ldots,s_m$,
+a do $t$ nie nastąpił następny skok'' jest równa
+\[
+\mu_{i_0}\left[\prod_{k=1}^m
+q_{i_{k-1},i_k}e^{-q_{i_{k-1}}(s_k-s_{k-1})}\right]
+e^{-q_{i_m}(t-s_m)},\qquad s_0:=0.
+\]
+Wynika to z mnożenia gęstości wykładniczych czasów
+przebywania i prawdopodobieństw wyboru kolejnych stanów:
+$[q_i e^{-q_i u}](q_{ij}/q_i)=q_{ij}e^{-q_i u}$.
+To zapis, od którego zaczyna się matematyczne formułowanie
+wiarygodności ciągłych trajektorii procesów skokowych;
+sama statystyczna estymacja należy jednak do tomu III.
+\end{uwaga}
+
+\section{Podsumowanie i połączenie z procesem Wienera}
+Proces Poissona miał \emph{stałą} intensywność skoków,
+a jego stan zawsze wzrastał o jeden. Łańcuch w czasie
+ciągłym dopuszcza zależną od stanu intensywność $q_i$,
+różne kierunki zmian oraz pochłanianie. Procesy te nadal
+mają trajektorie schodkowe.
+
+W następnych rozdziałach zajmiemy się procesami gaussowskimi
+i procesem Wienera, których ciągłe trajektorie różnią się
+zasadniczo od trajektorii Poissona. Pomimo tej różnicy
+oba światy połączą wspólne narzędzia: filtracje, martyngały,
+generatory i równania Kołmogorowa. Jeszcze później
+zbudujemy całkę stochastyczną i miarę Wienera na przestrzeni
+trajektorii, a następnie zbadamy jej związek z całkami
+funkcyjnymi w mechanice kwantowej.
+
+
+% ==============================================================
+% TOM II — ROZDZIAŁ 6: PROCESY GAUSSOWSKIE
+% ==============================================================
