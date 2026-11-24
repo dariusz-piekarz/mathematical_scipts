@@ -85,4 +85,46 @@ class Chapter10(unittest.TestCase):
             self.assertEqual(t,partial(4*m)+F(1,2)*partial(2*m))
             self.assertEqual(len(set(used)),3*m)
 
+    def test_unbounded_grouping_with_null_terms(self):
+        s=F(0)
+        count=0
+        for k in range(1,41):
+            for _ in range(k):
+                s+=F(1,k); count+=1
+            self.assertEqual(s,1)
+            self.assertEqual(count,(k-1)*k+k)
+            for _ in range(k):
+                s-=F(1,k); count+=1
+            self.assertEqual(s,0)
+            self.assertEqual(count,k*(k+1))
+
+    def test_infinite_and_oscillating_rearrangement_prefixes(self):
+        from math import isqrt
+        # Original sequence: u_j,-u_j,0 with u_j=1/floor(sqrt(j)).
+        # Each paired block sums to zero and u_j tends to zero.
+        for mode in ("positive","oscillating"):
+            p=q=z=0
+            used=[]
+            s=F(0)
+            for k in range(1,7):
+                start=s
+                while True:
+                    p+=1; used.append(3*p-2); s+=F(1,isqrt(p))
+                    if s>k+(F(1,isqrt(k)) if mode=="positive" else 0):
+                        break
+                if mode=="positive":
+                    q+=1; used.append(3*q-1); s-=F(1,isqrt(q))
+                    self.assertGreater(s,k)
+                    if k>=2: self.assertGreater(start,k-1)
+                else:
+                    self.assertGreater(s,k)
+                    while s>=-k:
+                        q+=1; used.append(3*q-1); s-=F(1,isqrt(q))
+                    self.assertLess(s,-k)
+                z+=1; used.append(3*z)
+                self.assertEqual(len(used),len(set(used)))
+                expected={3*j-2 for j in range(1,p+1)}|{3*j-1 for j in range(1,q+1)}|{3*j for j in range(1,z+1)}
+                self.assertEqual(set(used),expected)
+                self.assertGreaterEqual(min(p,q,z),k)
+
 if __name__=="__main__": unittest.main()
