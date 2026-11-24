@@ -20,6 +20,10 @@ Kryteria semantyczne nie są testami automatycznymi ani formalizacją Lean. Iden
 | PDE-02-013 | lem:pde2-contact | Jawne dziedziny i regularność rodziny, uzasadnienie mieszanej pochodnej czasowo-parametrowej przez równanie całkowe, skrócenie składników z pochodną F_p, zachowanie F i równanie liniowe na odchylenie od warunku styczności. | semantyczna |
 | PDE-02-014 | thm:pde2-charpit | Wspólny przedział istnienia ODE, iloczyn i lokalny dyfeomorfizm, jawna konstrukcja u oraz gradientu, regularność C², obydwa warunki początkowe; jednoznaczność zarodka przez porównanie pełnych układów ODE na wspólnym iloczynie. | semantyczna |
 | PDE-02-015 | sec:pde2-charpit | W przykładzie eikonalnym ciągły wybór gałęzi na spójnym przedziale, bezpośrednie sprawdzenie równania i danych dla obu rozwiązań oraz poprzeczność obu wektorów F_p. | semantyczna |
+| PDE-02-016 | prop:pde2-hamilton | Wspólny iloczyn istnienia rodziny ODE klasy C¹, blokowa macierz pochodnej i dyfeomorfizm Theta na Q; jawne dziedziny i dane. | semantyczna |
+| PDE-02-017 | prop:pde2-hamilton | Uzasadnienie mieszanych pochodnych z równania wariacyjnego, zachowanie R_j=0, odwracalność D_xi X i wyznaczenie gradientu, bezpośrednia weryfikacja PDE i warunku początkowego; wszystkie pierwsze pochodne u są klasy C¹, stąd u jest klasy C². | semantyczna |
+| PDE-02-018 | ex:pde2-hj-blowup | Jawne X,P,U, odwrócenie X_t i weryfikacja PDE; brak ciągłego przedłużenia także w (1,0), przez porównanie x=0 i x=sqrt(1-t); kaustyka jako wartość krytyczna rzutu ograniczonego do krzywej fazowej, nie samego rzutu z całej przestrzeni fazowej. | semantyczna |
+| PDE-02-019 | sec:pde2-summary | Rozróżnić lokalne istnienie charakterystyk i warunek lokalnego dyfeomorfizmu, nie obiecywać kontynuacji lepkościowej przy dowolnych danych; terminologia odwzorowanie. | semantyczna |
 
 ## Pierwszy właściwy przebieg — 2026-11-24
 
@@ -36,3 +40,6 @@ Poprawki 009–011 w commicie ee18666407b25cfad07023e382d4013e1cafe5fa. Przejrza
 
 ## Piąty właściwy przebieg — 2026-11-24
 Poprawki 012–015 w commicie 2c6ad0fe000e9c1c47e4a1dfc9eb637f95646fde. Przejrzano semantycznie zmienione dowody i przykład. Zachowano 51 etykiet, sprawdzono 60 odsyłaczy (w tym zewnętrzny cel chap:pde-code), poprawne zagnieżdżenie środowisk oraz ciągłość ID i istnienie etykiet dla wszystkich 15 kryteriów. Nie uruchomiono kompilacji, renderowania, testów wykonywalnych ani Lean. Pozostaje audyt równania Hamiltona–Jacobiego, kontrole techniczne i niezależna stabilizacja. Rozdział otwarty.
+
+## Szósty właściwy przebieg — 2026-11-24
+Poprawki 016–019 w commicie 79f47c64f338247502dbb15f8b761eb892292550. Sprawdzono semantycznie zmienione dowody, przykład i podsumowanie. Zachowano 51 etykiet, sprawdzono 61 odsyłaczy (w tym istniejący zewnętrzny cel chap:pde-code), poprawne zagnieżdżenie środowisk, ciągłość ID i istnienie etykiet wszystkich 19 kryteriów. Pierwszy przegląd wszystkich sekcji zakończony, rozdział nadal otwarty. Nie uruchomiono kompilacji, renderowania, testów wykonywalnych ani Lean. Następne: trwałe testy wykonywalne adekwatnych obliczeń, kompilacja, kontrola rysunków i niezależna stabilizacja.
