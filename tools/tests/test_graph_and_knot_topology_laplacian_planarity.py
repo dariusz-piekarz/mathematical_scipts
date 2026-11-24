@@ -216,6 +216,68 @@ def audit_covers():
     return total,connected_cases
 
 
+def audit_permutation_covers():
+    """TG07-PERM-01: all pairs of sheet permutations, degrees 1 through 4."""
+    cases=connected=automorphisms=0
+    for d in range(1,5):
+        perms=list(permutations(range(d)))
+        for sigmas in product(perms,repeat=2):
+            # Base: two triangles meeting at root 0. The two chords
+            # are the only edges with nonidentity sheet transport.
+            base=[(0,1),(1,2),(0,3),(3,4),(2,0),(4,0)]
+            transports=[tuple(range(d))]*4+list(sigmas)
+            lifted=[(d*u+i,d*v+p[i])
+                    for (u,v),p in zip(base,transports) for i in range(d)]
+            groups=components(5*d,lifted)
+            roots=[{v%d for v in group if v//d==0} for group in groups]
+            unseen=set(range(d))
+            orbits=[]
+            while unseen:
+                orbit={min(unseen)}
+                queue=list(orbit)
+                for i in queue:
+                    for p in sigmas:
+                        j=p[i]
+                        if j not in orbit:
+                            orbit.add(j)
+                            queue.append(j)
+                orbits.append(orbit)
+                unseen-=orbit
+            assert {frozenset(g) for g in roots}=={frozenset(g) for g in orbits}
+            assert all(len(group)==5*len(root) for group,root in zip(groups,roots))
+            # Independently compare the actual lifted edge set with its
+            # image under simultaneous sheet relabeling.
+            edge_set=set(lifted)
+            deck=[]
+            for rho in perms:
+                image={(d*(u//d)+rho[u%d],d*(v//d)+rho[v%d])
+                       for u,v in lifted}
+                is_deck=image==edge_set
+                commutes=all(rho[p[i]]==p[rho[i]] for p in sigmas for i in range(d))
+                assert is_deck==commutes
+                if is_deck:
+                    deck.append(rho)
+                # Conjugate the permutations and compare lifted graphs.
+                inv=tuple(rho.index(i) for i in range(d))
+                taus=[tuple(rho[p[inv[i]]] for i in range(d)) for p in sigmas]
+                relabeled={(d*u+i,d*v+p[i])
+                           for (u,v),p in zip(base,[tuple(range(d))]*4+taus)
+                           for i in range(d)}
+                assert image==relabeled
+            if len(groups)==1:
+                connected+=1
+                assert all(rho==tuple(range(d)) or all(rho[i]!=i for i in range(d))
+                           for rho in deck)
+                assert len(lifted)-5*d+1==d+1
+            automorphisms+=len(deck)
+            cases+=1
+    # A transitive, noncyclic monodromy with trivial deck group.
+    p,q=(1,0,2),(0,2,1)
+    assert [rho for rho in permutations(range(3))
+            if all(rho[s[i]]==s[rho[i]] for s in (p,q) for i in range(3))]==[(0,1,2)]
+    return cases,connected,automorphisms
+
+
 def planar_rotation(n,edges):
     """Exhaustive oriented sphere-embedding search via cyclic edge orders.
 
@@ -349,6 +411,7 @@ if __name__=="__main__":
             audit_kirchhoff(n,edges)
             graph_count+=1
     print("PASS 07: covers, Euler characteristic, Nielsen-Schreier:",audit_covers())
+    print("PASS TG07-PERM-01 cases, connected, deck automorphisms:",audit_permutation_covers())
     print("PASS 08: exact Kirchhoff/Dirichlet/Thomson models:",graph_count)
     print("PASS 09: exhaustive rotations, planar faces and coloring:",audit_planarity())
     print("PASS source conventions, notation and 44-chapter catalog")
