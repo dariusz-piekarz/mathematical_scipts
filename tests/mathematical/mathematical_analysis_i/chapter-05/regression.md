@@ -12,3 +12,6 @@ Testy skończone arytmetyki dokładnej wspierają, lecz nie zastępują dowodów
 | MA1-05-008 | ma1:thm:complex-square-root | v != 0, rzeczywiste dodatnie/ujemne, zero, dokładnie dwa różne pierwiastki niezerowego w | semantyczna + Python |
 | MA1-05-009 | ma1:thm:complex-quadratic | A != 0, równoważność dopełnienia kwadratu, wyróżnik zerowy i niezerowy | semantyczna + Python |
 | MA1-05-010 | ma1:thm:unit-circle-decomposition | Podgrupa, jednoznaczny rozkład, izomorfizm grup, bez trygonometrii | semantyczna + Python |
+| MA1-05-011 | ma1:prop:complex-multiplication-matrix | Odwrotność charakterystyki macierzy ortogonalnych o wyznaczniku 1, rozróżnienie odbić | semantyczna + Python |
+| MA1-05-012 | ma1:fig:complex-conjugation, ma1:fig:complex-rotation | Rysunki nie rozrywają twierdzeń, etykieta a nie nachodzi na linię pomocniczą | wizualna PDF |
+| MA1-05-013 | ma1:thm:conjugation-properties, ma1:thm:complex-square-root | Dokładne rachunki przykładów ilorazu i pierwiastków | semantyczna + Python |
