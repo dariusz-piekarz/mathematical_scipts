@@ -1,0 +1,28 @@
+name: Mathematical analysis I validation
+on:
+  push:
+    paths:
+      - 'books/pl/mathematical_analysis_i.tex'
+      - 'chapters/pl/mathematical_analysis_i/**'
+      - 'tests/mathematical/mathematical_analysis_i/**'
+      - '.github/workflows/mathematical_analysis_i.yml'
+  workflow_dispatch:
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Regression tests
+        run: python3 -m unittest discover -s tests/mathematical/mathematical_analysis_i/chapter-01 -p 'test_*.py' -v
+      - name: Install LaTeX
+        run: sudo apt-get update && sudo apt-get install -y texlive-latex-extra texlive-lang-polish lmodern
+      - name: Compile book
+        working-directory: books/pl
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error mathematical_analysis_i.tex
+          pdflatex -interaction=nonstopmode -halt-on-error mathematical_analysis_i.tex
+          if grep -E 'There were undefined references|There were multiply-defined labels|LaTeX Warning: Reference .* undefined' mathematical_analysis_i.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mathematical-analysis-i
+          path: books/pl/mathematical_analysis_i.pdf
