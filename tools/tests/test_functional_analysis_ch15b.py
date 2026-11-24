@@ -142,5 +142,20 @@ class TestChapter15B(unittest.TestCase):
         ):
             self.assertIn(fragment, source)
 
+
+    def test_audit08_explicit_hypotheses(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        for label in (
+            "thm:pettis-meas15b", "thm:bochner-criterion15b",
+            "thm:bochner-dct15b", "thm:bochner-fubini15b",
+            "prop:riemann-bochner15b", "thm:dunford-closedgraph15b",
+            "thm:hierarchy-integrals15b", "thm:pettis-convergence15b",
+            "thm:gelfand-exists15b", "prop:variation-measure15b",
+            "thm:bochner-measure15b",
+        ):
+            start = source.index(r"\label{" + label + "}")
+            end = source.index(r"\end{", start)
+            self.assertIn(r"\K\in\{\R,\C\}", source[start:end])
+
 if __name__ == "__main__":
     unittest.main()
