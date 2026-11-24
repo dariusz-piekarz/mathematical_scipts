@@ -393,5 +393,74 @@ class TestChapter15B(unittest.TestCase):
             self.assertEqual(Fraction(1, 2**k)*Fraction(2**k, k),
                              Fraction(1, k))
 
+
+    def test_derivative_integration_expansion_contracts(self):
+        for name, fragments in (
+            ("14-pochodne-gateaux-i-frecheta-w-przestrzeniach-banacha-i-hilberta.tex", (
+                "\\label{def:weak-curve-derivative14}",
+                "\\label{thm:scalar-curve-derivative14}",
+                "\\label{ex:scalar-not-weak-derivative14}",
+                "\\label{def:bastiani14}",
+            )),
+            ("15-pochodne-wyzszych-rzedow-i-lokalne-twierdzenia-analizy-nieliniowej.tex", (
+                "\\label{thm:inverse-derivatives15}",
+                "\\label{thm:exp-derivatives15}",
+                "\\label{ex:noncommuting-exp15}",
+                "(m+k_0+\\cdots+k_m)!",
+            )),
+            ("15A-calkowanie-funkcji-w-przestrzeniach-lokalnie-wypuklych.tex", (
+                "\\label{thm:leibniz-moving15a}",
+                "\\label{thm:higher-parametric15a}",
+                "f(b(s),s)b'(s)-f(a(s),s)a'(s)",
+            )),
+            ("15B-calki-bochnera-pettisa-dunforda-i-gelfanda-oraz-miary-wektorowe.tex", (
+                "\\label{thm:bochner-lebesgue-differentiation15b}",
+                "\\label{thm:ac-curve-representation15b}",
+                "\\label{thm:rnp-lipschitz15b}",
+                "\\label{ex:lipschitz-no-derivative15b}",
+                "\\label{thm:weak-primitive-derivative15b}",
+                "\\label{prop:weakstar-primitive-derivative15b}",
+                "\\label{thm:weak-parametric-differentiation15b}",
+                "\\label{thm:norm-parametric-differentiation15b}",
+                "\\label{thm:bochner-sobolev15b}",
+                "\\label{cor:sobolev-curve-estimate15b}",
+                "b(\\mathcal R)\\le2b(\\mathcal P)",
+                "2^{1-n}L",
+            )),
+        ):
+            source = (SOURCE.parent / name).read_text(encoding="utf-8")
+            for fragment in fragments:
+                self.assertIn(fragment, source)
+
+    def test_derivative_expansion_exact_examples(self):
+        # Inverse along a nilpotent direction H=E12, A=diag(2,3).
+        # The (1,2) coefficient of (A+tH)^-1 is exactly -t/6.
+        for t in (Fraction(1, 3), Fraction(-2, 5), Fraction(1, 100)):
+            self.assertEqual((-t/Fraction(6))/t, Fraction(-1, 6))
+        # Simplex monomial integrals: beta recurrence for m=1.
+        from math import factorial
+        for p in range(5):
+            for q in range(5):
+                direct = sum((Fraction((-1)**j * factorial(q),
+                                       factorial(j)*factorial(q-j)*(p+j+1))
+                              for j in range(q+1)), Fraction(0))
+                self.assertEqual(direct, Fraction(factorial(p)*factorial(q),
+                                                  factorial(p+q+1)))
+        # Moving limits: integral from s to 2s of (t+s) dt = 5s^2/2.
+        for s in (Fraction(-1, 3), Fraction(1, 2), Fraction(2)):
+            self.assertEqual(2*(2*s+s)-(s+s)+(2*s-s), 5*s)
+        # RNP interval encoding: child lengths sum to parent length and
+        # the weighted average of child slopes is the parent slope.
+        length = Fraction(3, 4)
+        masses = [Fraction(1, 4), Fraction(1, 2)]
+        slopes = [Fraction(-1, 3), Fraction(2, 3)]
+        average = sum(m*v for m,v in zip(masses, slopes))/length
+        for halves in (1, 2, 4):
+            children = [m/halves for _ in range(halves) for m in masses]
+            values = slopes*halves
+            self.assertEqual(sum(children), length)
+            self.assertEqual(sum(m*v for m,v in zip(children, values)),
+                             length*average)
+
 if __name__ == "__main__":
     unittest.main()
