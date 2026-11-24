@@ -239,3 +239,33 @@ class DraftTransportProcessTests(unittest.TestCase):
 
     def test_timeout_terminates_pipe_holder_after_leader_exit(self):
         self.assert_timeout_stops_group(leader_exits=True)
+
+
+class RuntimeCgroupObservationTests(unittest.TestCase):
+    """CI fixture parser regression; not evidence of Docker enforcement."""
+
+    def setUp(self):
+        from scripts.lean_rootless_ci_probe import validate_runtime_limits
+        self.validate = validate_runtime_limits
+        self.valid = (b"memory.max=2147483648\nmemory.swap.max=0\n"
+                      b"pids.max=64\ncpu.max=100000 100000\n")
+
+    def test_accepts_exact_runtime_limits(self):
+        self.assertEqual(self.validate(self.valid)["cpu.max"], "100000 100000")
+
+    def test_rejects_unlimited_or_mismatched_controllers(self):
+        for old, new in ((b"2147483648", b"max"), (b"swap.max=0", b"swap.max=1"),
+                         (b"pids.max=64", b"pids.max=max"),
+                         (b"100000 100000", b"max 100000"),
+                         (b"100000 100000", b"200000 100000"),
+                         (b"100000 100000", b"0 0")):
+            with self.subTest(old=old, new=new), self.assertRaises(ValueError):
+                self.validate(self.valid.replace(old, new))
+
+    def test_rejects_missing_duplicate_or_unexpected_observations(self):
+        for data in (self.valid.replace(b"pids.max=64\n", b""),
+                     self.valid + b"pids.max=64\n",
+                     self.valid + b"unknown=1\n",
+                     self.valid + b"unexpected line\n"):
+            with self.subTest(data=data), self.assertRaises(ValueError):
+                self.validate(data)
