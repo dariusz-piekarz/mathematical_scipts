@@ -255,3 +255,7 @@ AA-63: sprzężoność maksymalnych podalgebr toralnych i klasyfikacja półpros
 ## Zamknięcie AA-63 — 24 listopada 2026 r.
 
 **AA-63 STABILNY w ustalonym zakresie; etapy D/P zaliczone.** Audyt P bez zmian źródła. CI [45406828114](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45406828114): 137/137 success, head 9ed9edc1940050795f2d0c352ea053c69d4ae168, blob 9111c4e41885f5f32e1206035548b69efe02841f. Dwa trwałe zestawy regresji i sprawdzian symboliczny zaliczone ponownie; pomocniczo 12 par podalgebr w sl_n, 30 obrazów bazowych i 24 centralizatory. PDF 406 stron, artefakt 14926549055, AA-63 fizyczne 402–406 (drukowane 389–393), ponowne oględziny i czysty log. Raport `audits/abstract_algebra/ch63_iteration_04.md`. AA-01–63 stabilne. **AA-64 nieotwarty.** Proponowany zakres kolejnego etapu D: równoważność definicji podalgebr Cartana i maksymalnych podalgebr toralnych w półprostej algebrze Liego, następnie przejście do teorii reprezentacji; dokładny zakres do uzgodnienia z dotychczasową mapą zależności.
+
+## Otwarcie AA-64 — 24 listopada 2026 r.
+
+AA-64: rozkład Fittinga, generyczna przestrzeń zerowa podalgebry Cartana, równoważność definicji i sprzężoność w półprostej algebrze Liego. **Etap D W AUDYCIE.** Dowód przez wspólną flagę Liego, twierdzenie Engela i wewnętrzny rozkład Jordana, bez założenia sprzężoności ogólnych podalgebr Cartana. Przykłady sl2 i algebry Heisenberga. Dwa zestawy regresji wykonane. Pełny CI i PDF do potwierdzenia; AA-65 nieotwarty.
