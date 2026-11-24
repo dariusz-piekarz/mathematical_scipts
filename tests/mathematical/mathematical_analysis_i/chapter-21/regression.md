@@ -30,3 +30,9 @@ Sprawdzono wszystkie siedem sekcji źródła (blob `2a5919bcd4239d01d5cfbbe4420a
 - Rysunki: sprawdzono z kodu TikZ współrzędne, nachylenia i przechodzenie prostych przez właściwe punkty. Nie wykonano niezależnej wizualnej inspekcji PDF w tej iteracji.
 
 Wynik: brak nowych błędów merytorycznych w przeglądzie; bez zmiany treści matematycznej ani zakresu rozdziału. CI [45502844761](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45502844761), commit `7e670aeaeaf14727bf5dea7131b74f04ec0968bb`: wszystkie regresje zaliczone (rozdział 21: 14/14), obie kompilacje LaTeX zakończone pomyślnie, końcowy PDF 129 stron, kontrola odsyłaczy zaliczona. To wynik istniejącego wykonania CI, nie nowego uruchomienia ani formalizacji Lean. Pełna stabilizacja wymaga jeszcze potwierdzenia wizualnego PDF.
+
+## Zamknięcie stabilizacji — kontrola wizualna PDF
+
+Pobrano artefakt `14972170612` z zaliczonego CI [45502844761](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45502844761), PDF 129 stron. Wyrenderowano i obejrzano wszystkie sześć stron rozdziału 21 (strony PDF 124–129, numeracja książki 120–125), w tym osobno w większej skali rysunki Rolle'a i Lagrange'a. Nie stwierdzono ucięcia wzorów, nachodzenia etykiet, błędów geometrii ani składu. Kryterium MA1-21-016 zaliczone również wizualnie. Potwierdzono niezmieniony blob źródła rozdziału względem audytu merytorycznego.
+
+Status rozdziału 21: ustabilizowany dla sprawdzonej wersji źródła i testów, 14/14 testów automatycznych, 16 kryteriów regresyjnych. Nie wykonano formalizacji Lean. CI commitu raportowego 34cbf70 podczas kontroli pozostawało w toku; raport nie zmienia źródła matematycznego ani kodu testów.
