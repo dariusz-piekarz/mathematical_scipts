@@ -1,0 +1,10 @@
+# MA1-04 — iteracja rozwojowo-stabilizacyjna 01
+Rozdział 03 stabilny (f24b0b0). Utworzono rozdział 04, dodano do tomu i katalogu. Treść 310c19c, blob cb2c77d8f5d161ae043b81c02b414db59403c7ac, 223 wiersze, 8 sekcji. Nie rozbudowujemy pełnej analizy niestandardowej.
+## Audyty semantyczne
+001–003: wszystkie przypadki kresu rozszerzonej prostej, negacja odwracająca porządek, częściowe działania, przykłady różnych wyników i sprzeczność istnienia największego elementu z aksjomatami ciała.
+004–005: alternatywa ultrafiltru w obu kierunkach; dopisano świadków rozszerzenia filtru, dowód własności filtrów głównych i pełne sprawdzenie sumy łańcucha; wybór jawny. Skończone zbiory nie należą do ultrafiltru niegłównego.
+006–008: relacja równoważności, działania niezależne od reprezentantów, odwrotność mimo zerowych wyrazów, trójpodział, zgodność z działaniami, zanurzenie stałych. Dodano przykład ciągu naprzemiennego i bezpośredni dowód braku kresu standardowych liczb naturalnych.
+009–011: podpierścień elementów skończonych, ideał nieskończenie małych, dowód istnienia części standardowej przez supremum w R, jednoznaczność, homomorfizm, monotoniczność i izomorfizm ilorazu.
+012: dowód szczególnego przypadku twierdzenia Łosia przez indukcję po termach i formułach, oba kierunki dla kwantyfikatora egzystencjalnego z jawnym wyborem świadków; transfer ograniczony do języka ciał uporządkowanych.
+## Kontrole techniczne
+Ponownie pobrano pliki z gałęzi. 22 etykiety rozdziału, brak powtórzeń w tomie i nierozwiązanych ref w kontroli źródła, poprawne zagnieżdżenie środowisk begin/end. Preambuła Atlasu identyczna z preambułą tomu, rozdział w katalogu i pliku głównym. Dodano 12 trwałych kryteriów i 5 testów Python (łącznie 22 testy tomu). Testy skończone nie są dowodem istnienia niegłównego ultrafiltru ani transferu; Lean nieuruchomiony. CI 45405836384 (tom i testy) i 45405762694 (Atlas) w kolejce. Nie wykonano jeszcze wizualnej kontroli nowego PDF. Status: w stabilizacji, następna iteracja potwierdzająca bez nowego rozdziału.
