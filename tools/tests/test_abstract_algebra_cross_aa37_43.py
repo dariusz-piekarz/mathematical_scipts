@@ -99,7 +99,7 @@ class AA29TranscendenceDifferentialAudit(unittest.TestCase):
     def test_canonical_chapters_and_references(self):
         root = Path(__file__).resolve().parents[2]
         base = root/"chapters/pl/abstract_algebra"
-        self.assertEqual(len(list(base.glob("[0-9][0-9]-*.tex"))),52)
+        self.assertEqual(len(list(base.glob("[0-9][0-9]-*.tex"))),53)
         ch37 = (base/"37-algebraiczna-niezaleznosc-i-bazy-transcendencji.tex").read_text(encoding="utf-8")
         ch43 = (base/"43-ciala-rozniczkowe-derywacje-i-rozszerzenia.tex").read_text(encoding="utf-8")
         self.assertIn(r"\label{aa:def:alg-independent}", ch37)

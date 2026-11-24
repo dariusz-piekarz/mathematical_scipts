@@ -339,7 +339,7 @@ class KummerArtinSchreierFiniteFieldAudit(unittest.TestCase):
     def test_source_hypotheses_labels_references_all_chapters(self):
         folder = ROOT / "chapters/pl/abstract_algebra"
         paths = sorted(folder.glob("[0-9][0-9]-*.tex"))
-        self.assertEqual(len(paths), 52)
+        self.assertEqual(len(paths), 53)
         sources = {p.name:p.read_text(encoding="utf8") for p in paths}
         labels = [m for s in sources.values()
                   for m in re.findall(r"\\label\{([^{}]+)\}", s)]

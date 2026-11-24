@@ -200,7 +200,7 @@ class QuarticResolventFrobeniusInterface(unittest.TestCase):
     def test_source_labels_references_and_assumptions(self):
         folder = ROOT / "chapters/pl/abstract_algebra"
         files = sorted(folder.glob("[0-9][0-9]-*.tex"))
-        self.assertEqual(len(files), 52)
+        self.assertEqual(len(files), 53)
         sources = {p.name:p.read_text(encoding="utf-8") for p in files}
         labels = [z for content in sources.values()
                   for z in re.findall(r"\\label\{([^{}]+)\}", content)]
