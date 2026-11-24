@@ -17,7 +17,8 @@ permissions:
 
 concurrency:
   group: measure-ch28-${{ github.ref }}
-  cancel-in-progress: false
+  # A newer verification of this branch supersedes a stalled older run.
+  cancel-in-progress: true
 
 jobs:
   tests:
@@ -38,12 +39,14 @@ jobs:
   pdf:
     name: Chapter 28 and complete measure theory PDF
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - name: Install LaTeX packages including lmodern and Polish babel
+        timeout-minutes: 12
         run: |
-          sudo apt-get update -qq
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+          sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 -o DPkg::Lock::Timeout=60 update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 -o DPkg::Lock::Timeout=60 install -y --no-install-recommends \
             latexmk lmodern texlive-latex-base texlive-latex-recommended \
             texlive-latex-extra texlive-fonts-recommended texlive-lang-polish poppler-utils
       - name: Compile complete 31-chapter book with cross-references
