@@ -62,5 +62,39 @@ class Chapter19(unittest.TestCase):
             total = sum(weights)
             self.assertEqual(sum(Fraction(w,total) for w in weights), 1)
 
+
+    def test_weak_strong_and_directed_net(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"q_B(T_i-T)\to0",
+            r"(\varepsilon/2)(U\cap\mathcal D_{K_n})",
+            r"(F\cup G,\max\{n,m\})",
+            r"T_{F,n}=(n/L(\psi))L",
+            r"\langle T_{F,n},\psi\rangle=n",
+            r"p_m(\psi_j)\le C_m 2^{-j}(1+j)^m",
+        ):
+            self.assertIn(fragment, s)
+        for m in range(8):
+            for j in range(1, 30):
+                for k in range(min(j,m)+1):
+                    self.assertLessEqual(factorial(j)//factorial(j-k), (1+j)**m)
+
+    def test_regularization_and_oscillation(self):
+        from math import pi, cos, floor
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"\sqrt d\,|y|\,p_1(\varphi)/n",
+            r"\int_{\overline B(0,1)}",
+            r"1/n_0<r",
+            r"\int_0^n|\sin t|",
+            r"2k+\int_0^r\sin t",
+        ):
+            self.assertIn(fragment, s)
+        for n in (1,2,3,10,100,1000):
+            k = floor(n/pi)
+            r = n-k*pi
+            value = 2/n*(2*k+1-cos(r))
+            self.assertLessEqual(abs(value-4/pi), 4/n+1e-12)
+
 if __name__ == "__main__":
     unittest.main()
