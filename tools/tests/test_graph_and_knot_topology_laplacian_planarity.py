@@ -575,6 +575,35 @@ def audit_dirichlet_boundary():
     return graphs,boundaries,singular,solutions
 
 
+def audit_hodge_spectra():
+    """TG08-SPEC-01: weighted Gram spectra via exact determinant identities."""
+    graphs=evaluations=0
+    for n in range(1,5):
+        es=edge_pairs(n)
+        for mask in range(1<<len(es)):
+            E=[e for i,e in enumerate(es) if mask>>i&1]
+            m=len(E)
+            # Integer square-root weights; both Gram matrices are integral.
+            D=[[((j%3)+1)*(int(v==b)-int(v==a))
+                for j,(a,b) in enumerate(E)] for v in range(n)]
+            P=[[sum(D[u][j]*D[v][j] for j in range(m))
+                for v in range(n)] for u in range(n)]
+            Q=[[sum(D[v][i]*D[v][j] for v in range(n))
+                for j in range(m)] for i in range(m)]
+            assert P==laplacian(n,E,[((j%3)+1)**2 for j in range(m)])
+            # Equality of characteristic polynomials after padding the
+            # smaller Gram matrix with zero eigenvalues, including m=0.
+            for t in range(max(n,m)+1):
+                p=exact_determinant([[t*int(u==v)-P[u][v]
+                                      for v in range(n)] for u in range(n)])
+                q=exact_determinant([[t*int(i==j)-Q[i][j]
+                                      for j in range(m)] for i in range(m)])
+                assert t**max(0,m-n)*p==t**max(0,n-m)*q
+                evaluations+=1
+            graphs+=1
+    return graphs,evaluations
+
+
 def planar_rotation(n,edges):
     """Exhaustive oriented sphere-embedding search via cyclic edge orders.
 
@@ -717,5 +746,6 @@ if __name__=="__main__":
     print("PASS TG08-FOREST-01 weighted graphs, minors, polynomial values, resistances:",audit_rooted_forests())
     print("PASS TG08-RAY-01 graphs, pairs, changes, equal, additions, equal:",audit_rayleigh_equality())
     print("PASS TG08-DIR-01 graphs, boundaries, singular, solutions:",audit_dirichlet_boundary())
+    print("PASS TG08-SPEC-01 graphs, polynomial evaluations:",audit_hodge_spectra())
     print("PASS 09: exhaustive rotations, planar faces and coloring:",audit_planarity())
     print("PASS source conventions, notation and 44-chapter catalog")
