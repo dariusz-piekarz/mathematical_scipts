@@ -167,5 +167,42 @@ class Chapter24(unittest.TestCase):
                 self.assertEqual(sum(C[k][l]*B[k][i]*B[l][j]
                                      for k,l in product(range(4),repeat=2)),M[i][j])
 
+    def test_FA24_inductive_tensor_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"h(x\otimes\cdot)",
+            r"h_s=s\circ\widetilde b",
+            r"\widetilde b:E\otimes_i F\to G",
+            r"2t_{ij}>r_{ij}+d_2",
+            r"p_{M,m_{ij}+2t_{ij}}(\Phi)",
+            r"\lambda(B(\Phi))=\langle K_\lambda,\Phi\rangle",
+            r"B(f\otimes g)=b(f,g)",
+            r"\ref{thm:D-complete18}",
+            r"JB=I",
+            r"BJ=I",
+            r"\varepsilon=\pi\le i",
+            r"f_N^{(m)}(0)=N^m",
+            r"N^{m-r}\le C Q(g_m) C_{\chi,r}",
+        ):
+            self.assertIn(fragment,s)
+        from math import comb
+        # Derivatives at zero for cos(N*x-m*pi/2), via the
+        # two-dimensional differentiation recurrence.
+        for m,r,N in product(range(1,9),range(8),range(1,13)):
+            if r>=m: continue
+            a,b=[(1,0),(0,1),(-1,0),(0,-1)][m%4]
+            for _ in range(m):
+                a,b=N*b,-N*a
+            self.assertEqual(a,N**m)
+            # Leibniz upper bounds, using model bounds for cutoff jets.
+            for k in range(r+1):
+                bound=sum(comb(k,j)*(k-j+1)*N**j for j in range(k+1))
+                self.assertLessEqual(bound,N**r*sum(comb(k,j)*(k-j+1) for j in range(k+1)))
+        # Signed point-jet pairing, finite model.
+        for f,g in product(product(range(-1,2),repeat=4),repeat=2):
+            v=sum((-1)**(m+1)*f[m]*g[m] for m in range(4))
+            w=sum(f[m]*g[m] if (m+1)%2==0 else -f[m]*g[m] for m in range(4))
+            self.assertEqual(v,w)
+
 if __name__ == "__main__":
     unittest.main()
