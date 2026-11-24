@@ -11,6 +11,8 @@ Kryteria semantyczne nie są testami automatycznymi ani formalizacją Lean. Iden
 | PDE-02-004 | prop:pde2-liouville | Równanie wariacyjne z równania całkowego, ciągłość i lokalne ograniczenie pochodnej, I_d, jednostronne pochodne, rozwiązanie równania skalarnego czynnikiem całkującym i dodatniość J. | semantyczna |
 | PDE-02-005 | thm:pde2-mass | Istnienie i jednoznaczność z twierdzenia liniowego, reguła iloczynu, wartość początkowa, obraz nośnika przez homeomorfizm, całkowalność także dla gęstości ze znakiem przed zmianą zmiennych. | semantyczna |
 | PDE-02-006 | prop:pde-v31-transport-lp | Euklidesowa norma operatorowa, oszacowanie śladu w bazie ortonormalnej, obie nierówności L^p, skończoność normy, równość supremum z supremum istotnym dla funkcji ciągłej. | semantyczna |
+| PDE-02-007 | thm:pde2-cauchy | Regularna lokalna funkcja definiująca hiperpowierzchnię, wspólny przedział przepływu, niezerowa pochodna wzdłuż charakterystyk, prostokątne otoczenie i dokładna równość przekroju początkowego; regularność całek, weryfikacja PDE, jednoznaczność na wybranym otoczeniu oraz zarodka. | semantyczna |
+| PDE-02-008 | thm:pde2-quasilinear | Wspólny przedział istnienia dla danych z otoczenia, jawna blokowa macierz pochodnej o wyznaczniku 1 w chwili początkowej, dyfeomorfizm z iloczynu na otwarty zbiór Q, wspólny iloczyn dla charakterystyk innego rozwiązania, jednoznaczność na jego otwartym obrazie; terminologia odwzorowanie zamiast mapa. | semantyczna |
 
 ## Pierwszy właściwy przebieg — 2026-11-24
 
@@ -18,3 +20,6 @@ Poprawki źródła w commicie fc5a93a0c90004507219da4882c84b57adc1b309. Sprawdzo
 
 ## Drugi właściwy przebieg — 2026-11-24
 Poprawki 004–006 w commicie dfc0bce4f40e9f3123894b203820e60a62b255db. Sprawdzono semantycznie zmienione fragmenty i strukturę: wszystkie 51 etykiet zachowane, 56 wystąpień odsyłaczy (w tym znany zewnętrzny cel chap:pde-code), środowiska poprawnie zagnieżdżone. Nie wykonano kompilacji, renderowania ani Lean; testy automatyczne będą raportowane oddzielnie od kryteriów semantycznych. Otwarte 007–010 i dalsze sekcje rozdziału.
+
+## Trzeci właściwy przebieg — 2026-11-24
+Poprawki 007–008 w commicie f375d519a2cd8898e96023bf3fcdaa92bb303f72. Sprawdzono semantycznie zmienione fragmenty, zachowano 51 etykiet, 57 wystąpień odsyłaczy (w tym cel zewnętrzny chap:pde-code), poprawne zagnieżdżenie środowisk. Nie wykonano kompilacji, renderowania, testów wykonywalnych ani Lean. Otwarte 009–010 i dalszy audyt części o układzie Charpita oraz równaniu Hamiltona–Jacobiego. Rozdział otwarty.
