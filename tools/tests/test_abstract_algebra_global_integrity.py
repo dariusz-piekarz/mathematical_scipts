@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Global AA-01..AA-67 source audit, preserving verified AA-01..AA-42: chapters, labels, references, coverage.
+"""Global AA-01..AA-68 source audit, preserving verified AA-01..AA-42: chapters, labels, references, coverage.
 
 The mathematical cross-audits remain distinct: this gate tests objective
 source consistency rather than claiming to prove theorems.
@@ -39,14 +39,14 @@ def text(src):
 
 def main():
     chapters=sorted(CHDIR.glob("[0-9][0-9]-*.tex"))
-    assert len(chapters)==67,("wrong chapter number",len(chapters))
+    assert len(chapters)==68,("wrong chapter number",len(chapters))
     ids=[int(p.name[:2]) for p in chapters]
-    assert ids==list(range(1,68)),("numbering",ids)
+    assert ids==list(range(1,69)),("numbering",ids)
     canonical={p.resolve() for p in chapters}
     book=text(BOOK)
     ins=[(BOOK.parent/p).resolve() for p in INPUT.findall(book)]
-    assert len(ins)==67,("book input number",len(ins))
-    assert len(set(ins))==67,("duplicate book input",ins)
+    assert len(ins)==68,("book input number",len(ins))
+    assert len(set(ins))==68,("duplicate book input",ins)
     assert set(ins)==canonical,("book mismatched sources",
                                  [str(p) for p in canonical-set(ins)],
                                  [str(p) for p in set(ins)-canonical])
@@ -145,21 +145,23 @@ def main():
     assert newest66.is_file() and newest66.stat().st_size>1000,("missing AA-66 first audit",newest66)
     newest67=AUD/"ch67_iteration_01.md"
     assert newest67.is_file() and newest67.stat().st_size>1000,("missing AA-67 first audit",newest67)
-    assert all(k not in covered for k in range(43,68)), "AA-43..67 retain separate audits from AA-01..AA-42"
-    assert len(chapters)==len(covered)+25
+    newest68=AUD/"ch68_iteration_01.md"
+    assert newest68.is_file() and newest68.stat().st_size>1000,("missing AA-68 first audit",newest68)
+    assert all(k not in covered for k in range(43,69)), "AA-43..68 retain separate audits from AA-01..AA-42"
+    assert len(chapters)==len(covered)+26
     assert len(owners)>0 and len(references)>0
     counter.update({
         "chapters":len(chapters),
         "cross_reports":len(COVERAGE),
         "cross_covered_chapters":len(covered),
-        "individually_audited_new_chapters":25,
+        "individually_audited_new_chapters":26,
         "unique_labels":len(owners),
         "unique_reference_targets":len(references),
         "unresolved_reference_targets":len(missing),
         "duplicate_label_targets":len(dup),
         "misordered_or_missing_chapters":0
     })
-    print("AA GLOBAL 01-67 SOURCE INTEGRITY: PASS",dict(sorted(counter.items())))
+    print("AA GLOBAL 01-68 SOURCE INTEGRITY: PASS",dict(sorted(counter.items())))
     print("AA GLOBAL cross-audit chapter coverage:",{
         "all_chapters":len(covered),
         "overlap_chapters":{k:len(v) for k,v in covered.items() if len(v)>1},
