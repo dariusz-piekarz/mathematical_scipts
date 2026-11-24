@@ -14,3 +14,5 @@ Skończone testy sprawdzają tożsamości, indeksy i oszacowania, nie zastępuj�
 | MA1-11-010 | ma1:thm:abel-cauchy-product | Tożsamość skończona sum C_m i A_j B_(N-j), liczności N-r-s+1, granica | semantyczna + Python |
 | MA1-11-011 | ma1:thm:pair-enumeration | Wyliczenie przekątnymi, ograniczenie modułów, grupowanie, dowolna bijekcja | semantyczna + Python |
 | MA1-11-012 | ma1:cor:finite-cauchy-products | Indukcja po liczbie szeregów, skończone krotki, iloczyn sum i oszacowanie | semantyczna + Python |
+| MA1-11-013 | ma1:ex:convergent-conditional-product | Dwa naprzemienne szeregi harmoniczne, współczynnik 2H_(n+1)/(n+2), monotoniczność, zanikanie, brak bezwzględnej zbieżności i suma S^2 | semantyczna + Python |
+| MA1-11-014 | ma1:thm:pair-enumeration | Jawna pozycja pary (j,k) w wyliczeniu przekątnymi: (j+k)(j+k+1)/2+j+1 | semantyczna + Python |
