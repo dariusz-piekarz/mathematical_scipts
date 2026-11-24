@@ -149,3 +149,8 @@ AA-52: skończone podgrupy SL2(C), sprzęganie do SU(2), centralne nakrycie, gru
 ## Zamknięcie AA-52 i otwarcie AA-53 — 24 listopada 2026 r.
 
 AA-52 STABILNY — audits/abstract_algebra/ch52_iteration_10.md, CI 45345253078, 114 kroków success, PDF 336 stron, wszystkie 7 stron AA-52 obejrzane. AA-53: pierścienie niezmienników, zakres docs/pl/zakres_aa53_niezmienniki.md. **AA-53 W AUDYCIE**; AA-54 nieotwarty. AA-01–52 zachowują status stabilny.
+
+
+## Zamknięcie AA-53 — 24 listopada 2026 r.
+
+**AA-53 STABILNY w ustalonym zakresie.** Audyty III–VI bez nowych usterek; kontrole VII–IX potwierdziły regresje, terminologię, integrację i kompilację. Raport: `audits/abstract_algebra/ch53_iteration_09.md`. CI https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45348236656 — 116/116 success, commit 3d9d4373b9a1c3e369394912a6dbdf27c752ee7d, aktualny blob 5675bf04c336a76e6424eeca337f24b5f211aeb5 zgodny. Artefakt 14898534119, PDF 340 stron, AA-53 strony fizyczne 337–340 (drukowane 326–329), wszystkie obejrzane, log bez ostrzeżeń i błędów. AA-01–52 stabilne. AA-54 nieotwarty. Dalszy zakres: proponowane pierścienie niezmienników grup wyjątkowych, osobna decyzja o zakresie kolejnego rozdziału. Status planu jest nadrzędny wobec historycznego opisu na stronie tytułowej.
