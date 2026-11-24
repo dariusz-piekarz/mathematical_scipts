@@ -16,3 +16,5 @@ Testy Python sprawdzają skończone świadki i współczynniki w dokładnej aryt
 | MA1-18-012 | ma1:thm:elementary-limits | Oszacowania reszt szeregów, log przez podstawienie, potęga z przypadkiem alpha=0 | semantyczna + Python |
 | MA1-18-013 | ma1:thm:polar-complex | Istnienie argumentu, jednoznaczność modulo 2pi, de Moivre także dla ujemnych n | semantyczna |
 | MA1-18-014 | ma1:cor:complex-nth-roots | Istnienie i zupełność listy pierwiastków, różne klasy reszt, zero | semantyczna + Python |
+| MA1-18-015 | ma1:thm:trig-addition, ma1:thm:trig-monotonicity, ma1:def:inverse-trig | Współczynniki wzorów dodawania, jawne podstawienie m±h, zera sin i cos przez redukcję modulo pi | semantyczna + Python (test_trig_addition_coefficients) |
+| MA1-18-016 | ma1:thm:power-laws | Indukcja dla potęg całkowitych, ujemne wykładniki przez odwrotność, jednoznaczność dodatniego pierwiastka | semantyczna + Python (test_rational_power_root_witness) |
