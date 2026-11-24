@@ -673,15 +673,35 @@ rozwiązania jako funkcji $C^1$ na otoczenie
 $(T_*,X(T_*;\xi_*))$.
 \end{twierdzenie}
 \begin{proof}
-Dla $t<T_*$ mamy
+Dla $0\leq t<T_*$ mamy
 $X_\xi(t;\xi)=1+tq(\xi)\geq1+tm>0$.
 Odwzorowanie $X_t$ jest więc ściśle rosnące.
 Z ograniczoności $a\circ u_0$ wynika
 $X_t(\xi)-\xi=O(1)$ dla $\xi\to\pm\infty$,
-zatem $X_t$ jest na $\R$. Twierdzenie o funkcji
-odwrotnej daje odwrotność klasy $C^1$.
-Z równości $u(t,X(t;\xi))=u_0(\xi)$ otrzymujemy
-$u_x(t,X)X_\xi=u_0'(\xi)$, czyli
+więc $X_t(\xi)\to\pm\infty$ przy $\xi\to\pm\infty$.
+Z ciągłości wynika surjektywność, a ze ścisłej
+monotoniczności injektywność $X_t$.
+Odwzorowanie $(t,\xi)\mapsto(t,X(t;\xi))$ ma wyznacznik
+macierzy pochodnej równy $1+tq(\xi)>0$.
+Twierdzenie o funkcji odwrotnej daje lokalne odwrotności
+klasy $C^1$; ich zgodność wynika z bijektywności $X_t$.
+Przy $t=0$ stosujemy to twierdzenie do tego samego wzoru
+na $X(t;\xi)$, określonego także dla ujemnych $t$.
+W ten sposób $\Xi(t,x)=X_t^{-1}(x)$ jest klasy $C^1$
+względem obu zmiennych aż do $t=0$.
+
+Definiujemy $u(t,x)=u_0(\Xi(t,x))$. Jest to funkcja klasy
+$C^1$, a ponieważ $X_0$ jest identycznością, mamy
+$u(0,x)=u_0(x)$. Z równości $u(t,X(t;\xi))=u_0(\xi)$
+przez różniczkowanie względem $t$ otrzymujemy
+\[
+ u_t(t,X(t;\xi))+u_x(t,X(t;\xi))a(u_0(\xi))=0.
+\]
+Ponieważ $u_0(\xi)=u(t,X(t;\xi))$ i $X_t$ jest surjekcją,
+jest to równanie \eqref{eq:pde2-simplewave} w każdym punkcie
+dziedziny. Różniczkowanie tej samej tożsamości względem
+$\xi$ daje $u_x(t,X(t;\xi))X_\xi(t;\xi)=u_0'(\xi)$.
+Dzieląc przez dodatnią pochodną $X_\xi$, uzyskujemy
 \eqref{eq:pde2-gradient-formula}.
 
 Jeżeli $q(\xi_*)=m<0$, to
@@ -689,8 +709,12 @@ $a'(u_0(\xi_*))u_0'(\xi_*)\ne0$; w szczególności
 $u_0'(\xi_*)\ne0$. Mianownik
 \eqref{eq:pde2-gradient-formula} przy $\xi_*$
 dąży do zera od strony dodatniej, a licznik jest niezerowy.
-Zatem moduł pochodnej dąży do nieskończoności,
-co wyklucza przedłużenie klasy $C^1$.
+Ponadto $X(t;\xi_*)\to X(T_*;\xi_*)$, ponieważ wzór
+na charakterystykę jest ciągły także w $t=T_*$.
+Zatem moduł pochodnej dąży do nieskończoności wzdłuż
+krzywej dochodzącej do wskazanego punktu. Ciągłość
+pochodnej przestrzennej ewentualnego przedłużenia
+w tym punkcie przeczyłaby tej granicy.
 \end{proof}
 
 \begin{przyklad}[Burgers: dokładny czas powstania osobliwości]
@@ -731,12 +755,12 @@ W rozdziale~\ref{chap:pde-code} zamieszczono kod Python,
 który dla przykładu Burgersa z danymi $u_0=-\tanh x$
 rysuje charakterystyki i profile rozwiązań dla
 $t\in\{0,0.5,0.9,0.99\}$. Program korzysta z odwracania
-monotonicznej mapy $\xi\mapsto X(t;\xi)$ przez
+monotonicznego odwzorowania $\xi\mapsto X(t;\xi)$ przez
 interpolację. Porównanie z dokładnym wzorem
 \eqref{eq:pde2-gradient-formula} pozwala sprawdzić,
 że $u_x(t,0)=-1/(1-t)$, podczas gdy $|u(t,x)|\leq1$.
 Nie jest to algorytm kontynuacji rozwiązania przez szok:
-dla $t\geq1$ mapa etykiet nie jest już globalnie
+dla $t\geq1$ odwzorowanie etykiet nie jest już globalnie
 odwracalna w klasie $C^1$.
 \end{uwaga}
 
@@ -793,8 +817,12 @@ krzywej $x=s(t)$, z jednostronnymi przedłużeniami
 klasy $C^1$ do krzywej, i posiada ślady
 $u_L(t)$ i $u_R(t)$ na tej krzywej oraz spełnia
 \eqref{eq:pde2-conservation} klasycznie poza nią.
-Wówczas $u$ spełnia równanie słabo w otoczeniu
-krzywej wtedy i tylko wtedy, gdy
+Wówczas $u$ spełnia równanie w sensie dystrybucji
+na $(0,T)\times\R$ (bez warunku początkowego), tj.
+$\int_0^T\int_\R (u\varphi_t+f(u)\varphi_x)\,
+\mathrm d\lambda_1(x)\,\mathrm d\lambda_1(t)=0$
+dla każdej $\varphi\in C_c^\infty((0,T)\times\R)$,
+wtedy i tylko wtedy, gdy
 \begin{equation}\label{eq:pde2-rh}
  s'(t)\bigl(u_R(t)-u_L(t)\bigr)
  =f(u_R(t))-f(u_L(t))
@@ -802,13 +830,33 @@ krzywej wtedy i tylko wtedy, gdy
 dla każdego $t\in(0,T)$, przy ciągłości śladów.
 \end{stwierdzenie}
 \begin{proof}
-Wybierzmy funkcję testową $\varphi$ o nośniku
-w wąskim otoczeniu rozważanego fragmentu krzywej.
-Rozdzielmy całkę w słabym sformułowaniu na obszary
-$x<s(t)$ oraz $x>s(t)$. Całkowanie przez części
-w obu obszarach, z wykorzystaniem równania klasycznego,
-usuwa wyrazy objętościowe. Pozostają tylko wyrazy
-na krzywej. Ich suma wynosi
+Niech $\varphi\in C_c^\infty((0,T)\times\R)$.
+Wybierzmy $0<a<b<T$ oraz $R>0$, tak aby nośnik
+$\varphi$ leżał w $(a,b)\times(-R,R)$ oraz
+$|s(t)|<R$ dla $t\in[a,b]$. Oznaczmy
+$D_L=\{(t,x):a<t<b,\ -R<x<s(t)\}$ oraz
+$D_R=\{(t,x):a<t<b,\ s(t)<x<R\}$.
+Na każdym z tych zbiorów, z równania klasycznego
+i reguły iloczynu, mamy
+\[
+ \partial_t(u\varphi)+\partial_x(f(u)\varphi)
+ =u\varphi_t+f(u)\varphi_x.
+\]
+Całkujemy po obu zbiorach, stosując twierdzenie Gaussa
+do pola $(u\varphi,f(u)\varphi)$ w zmiennych $(t,x)$.
+Brzegi są kawałkami klasy $C^1$, pole ma jednostronne
+przedłużenia klasy $C^1$, a $\varphi$ znika na zewnętrznych
+krawędziach prostokąta. Na krzywej $(t,s(t))$
+wektor normalny zewnętrzny dla $D_L$ ma kierunek
+$(-s'(t),1)$, a dla $D_R$ kierunek przeciwny.
+Element długości krzywej wynosi
+$\sqrt{1+s'(t)^2}\,\mathrm d\lambda_1(t)$,
+co skraca czynnik normalizujący normalnej.
+Wkład od lewej strony wynosi więc
+$\int_a^b(f(u_L)-s'u_L)\varphi(t,s(t))\,\mathrm d\lambda_1(t)$,
+a od prawej strony
+$\int_a^b(s'u_R-f(u_R))\varphi(t,s(t))\,\mathrm d\lambda_1(t)$.
+Ich suma wynosi
 \[
  \int_0^T\bigl(s'(t)[u](t)-[f(u)](t)\bigr)
  \varphi(t,s(t))\,\mathrm dt,
@@ -816,8 +864,12 @@ na krzywej. Ich suma wynosi
 gdzie $[u]=u_R-u_L$ oraz $[f(u)]=f(u_R)-f(u_L)$.
 Ślad funkcji testowej na krzywej można zadawać dowolnie
 bez zakładania gładkości samej krzywej ponad klasę $C^1$.
-Niech $\eta\in C_c^\infty((0,T))$ i niech
-$J\Subset(0,T)$ zawiera jej nośnik. Zwartość $s(J)$
+Jeśli zachodzi \eqref{eq:pde2-rh}, suma jest zerowa
+dla każdej funkcji testowej, co dowodzi wystarczalności.
+Dla dowodu konieczności załóżmy, że równanie zachodzi
+w sensie dystrybucji. Niech $\eta\in C_c^\infty((0,T))$
+i niech $J\subset(0,T)$ będzie zwartym przedziałem
+zawierającym jej nośnik. Zwartość $s(J)$
 pozwala wybrać $\chi\in C_c^\infty(\R)$, równą $1$
 w otoczeniu $s(J)$. Wtedy
 $\varphi(t,x)=\eta(t)\chi(x)$ jest klasy $C_c^\infty$
@@ -864,11 +916,40 @@ równanie Burgersa klasycznie w każdym z trzech
 otwartych obszarów. Bezpośrednio sprawdzamy, że
 w środkowej części $u_t=-x/t^2$, $u_x=1/t$,
 zatem $u_t+uu_x=0$. Ciągłość na liniach
-$x=u_Lt$ i $x=u_Rt$ sprawia, że nie występują tam
-wkłady skokowe; dla testów zwartych w czasoprzestrzeni
-całkowanie przez części potwierdza
-\eqref{eq:pde2-weak-form}. W miarę $t\downarrow0$
-rozwiązanie przyjmuje dane $u_0$ w $L^1_{\mathrm{loc}}$.
+$x=u_Lt$ i $x=u_Rt$ sprawia, że oba skoki, wartości $u$
+i strumienia $f(u)=u^2/2$, są zerowe.
+Dla $\varphi\in C_c^\infty([0,T)\times\R)$ oraz
+$0<\varepsilon<T$ stosujemy całkowanie przez części
+na trzech częściach zbioru $(\varepsilon,T)\times\R$.
+Wkłady na obu liniach wewnętrznych znoszą się,
+a przy $t=T$ i na przestrzennych krańcach nośnika
+test znika. Na dolnej krawędzi pozostaje
+\[
+ \int_\varepsilon^T\!\int_\R
+ (u\varphi_t+f(u)\varphi_x)\,
+ \mathrm d\lambda_1(x)\,\mathrm d\lambda_1(t)
+ +\int_\R u(\varepsilon,x)\varphi(\varepsilon,x)\,
+ \mathrm d\lambda_1(x)=0.
+\]
+Niech $M=\max\{|u_L|,|u_R|\}$. Zarówno $u(t,\cdot)$,
+jak i $u_0$ są ograniczone w module przez $M$.
+Poza przedziałem
+$[\min(0,u_Lt),\max(0,u_Rt)]$ funkcje te są równe.
+Stąd dla $t>0$
+\[
+ \int_\R |u(t,x)-u_0(x)|\,\mathrm d\lambda_1(x)
+ \le 2Mt\bigl(\max(0,u_R)-\min(0,u_L)\bigr).
+\]
+W szczególności zachodzi zbieżność do danych początkowych
+w $L^1_{\mathrm{loc}}$. W całce brzegowej możemy więc
+zastąpić $u(\varepsilon,\cdot)$ przez $u_0$ z błędem
+dążącym do zera, a $\varphi(\varepsilon,\cdot)$ dąży
+jednostajnie do $\varphi(0,\cdot)$ na wspólnym zwartym
+nośniku przestrzennym. W całce podwójnej korzystamy
+z twierdzenia o zbieżności zdominowanej, ponieważ
+$u$ oraz $f(u)$ są ograniczone, a test i jego pochodne
+mają zwarty nośnik. Przejście z $\varepsilon$ do zera
+daje dokładnie \eqref{eq:pde2-weak-form}.
 To rozwiązanie jest entropijne; precyzyjną definicję
 warunków entropijnych podamy w rozdziale o prawach zachowania.
 \end{przyklad}
