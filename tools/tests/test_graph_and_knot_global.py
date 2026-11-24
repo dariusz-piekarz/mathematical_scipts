@@ -24,6 +24,15 @@ INPUT = re.compile(r"\\input\{\.\./\.\./(chapters/pl/graph_and_knot_theory/[^}]+
 LABEL = re.compile(r"\\label\{([^{}]+)\}")
 REFERENCE = re.compile(r"\\(?:ref|eqref|pageref|autoref|cref|Cref)\{([^{}]+)\}")
 ENV = re.compile(r"\\(begin|end)\{([a-zA-Z*]+)\}")
+# Manual single chapter numbers are fragile when input order changes.
+MANUAL_CHAPTER_NUMBER = re.compile(
+    r"\brozdzia(?:ł|łu|le|łem)\s*(?:~\s*)?(?:nr\.?\s*)?\d+\b"
+    r"|\b(?:pierwszym|drugim|trzecim|czwartym|piątym|szóstym|siódmym|"
+    r"ósmym|dziewiątym|dziesiątym)\s+rozdziale\b"
+    r"|\b(?:pierwszego|drugiego|trzeciego|czwartego|piątego|szóstego|"
+    r"siódmego|ósmego|dziewiątego|dziesiątego)\s+rozdziału\b",
+    re.I,
+)
 KEYWORDS = {
     "podstawy": ("graf", "krawędź", "wierzchołek"),
     "algorytmy": ("algorytm", "złożoność", "bfs", "dfs"),
@@ -115,6 +124,7 @@ def audit() -> dict:
         "environment_errors": [],
         "unclosed_proofs": [],
         "forward_references": [],
+        "manual_chapter_numbers": [],
         "duplicate_passage_candidates": [],
         "chapter_ids": chapter_ids,
         "chapter_ids_unique": len(chapter_ids) == len(set(chapter_ids)),
@@ -148,6 +158,16 @@ def audit() -> dict:
                                   prose[max(0, match.start()-50):match.end()+50]})
         if bad_terms:
             results["forbidden_language"].append({"source": path, "matches": bad_terms[:30]})
+        for match in MANUAL_CHAPTER_NUMBER.finditer(prose):
+            line_start = prose.rfind("\n", 0, match.start()) + 1
+            line_end = prose.find("\n", match.end())
+            line = prose[line_start:line_end if line_end >= 0 else len(prose)]
+            if (Path(path).name.startswith("01-")
+                    and line.strip() == r"\begin{uwaga}[Zakres pierwszego rozdziału]"):
+                continue  # heading about current chapter
+            results["manual_chapter_numbers"].append({
+                "source": path, "excerpt": match.group(0)
+            })
         theorem_count = sum(len(re.findall(r"\\begin\{" + name + r"\}", text))
                             for name in theorem_envs)
         proof_count = len(re.findall(r"\\begin\{proof\}", text))
@@ -229,7 +249,8 @@ def main() -> int:
     print("totals:", result["total"])
     for key in ("duplicate_labels", "unresolved_references",
                 "environment_errors", "forbidden_language",
-                "forward_references", "duplicate_passage_candidates"):
+                "forward_references", "manual_chapter_numbers",
+                "duplicate_passage_candidates"):
         print(key, len(result[key]))
         for item in result[key][:15]:
             print("  ", json.dumps(item, ensure_ascii=False)[:400])
@@ -239,7 +260,8 @@ def main() -> int:
     errors = any(not result[k] for k in structural)
     errors |= any(result[k] for k in ("duplicate_labels",
                                       "unresolved_references",
-                                      "environment_errors"))
+                                      "environment_errors",
+                                      "manual_chapter_numbers"))
     return int(args.strict and errors)
 
 
