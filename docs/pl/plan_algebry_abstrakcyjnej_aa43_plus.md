@@ -219,3 +219,7 @@ AA-60: reprezentacje sl2 i struktura układów korzeni. AA-01–59 stabilne, **A
 ## Zamknięcie AA-60 — 24 listopada 2026 r.
 
 **AA-60 STABILNY w ustalonym zakresie.** Audyty III–IV czyste (2/2), oba trwałe zestawy regresji zaliczone. CI [45383512562](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45383512562): 130/130 success, head ce2e782bb038adb544c3d767359eabf26c949787, blob 6a494ed2249d6f8d3bc58ff3fadf001e3dbfbe01. Artefakt 14915362576: PDF 389 stron, AA-60 fizyczne 385–389 (drukowane 373–377), wszystkie obejrzane w IV i identyczne pikselowo oraz tekstowo w V. Log czysty. Raport końcowy `audits/abstract_algebra/ch60_iteration_05.md`. AA-01–59 pozostają stabilne. **AA-61 nieotwarty**; proponowany zakres: rozkład na dodatnie i ujemne przestrzenie korzeniowe, generatory związane z korzeniami prostymi, prostota a nierozkładalność układu korzeni, relacje Serre'a w istniejącej algebrze, bez założenia twierdzenia o prezentacji ani klasyfikacji. Status planu nadrzędny wobec historycznego opisu na stronie tytułowej.
+
+## Otwarcie AA-61 — 24 listopada 2026 r.
+
+AA-61: generatory półprostych algebr Liego i relacje Serre'a, zakres docs/pl/zakres_aa61_generatory_serre.md. AA-01–60 stabilne, **AA-61 W AUDYCIE**, AA-62 nieotwarty. Rozkład trójkątny, generatory, składowe proste, konieczne relacje Serre'a; bez twierdzenia o prezentacji i klasyfikacji. Integracja regresji i CI do potwierdzenia.
