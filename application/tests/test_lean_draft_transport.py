@@ -942,3 +942,52 @@ class TransportTestDiscoveryTests(unittest.TestCase):
             self.assertIsNotNone(cls, name)
             discovered = set(unittest.defaultTestLoader.getTestCaseNames(cls))
             self.assertTrue(expected <= discovered, (name, expected - discovered))
+
+
+
+class SharedCleanupDeadlineTests(unittest.TestCase):
+    def test_shared_deadline_is_not_reset_between_calls(self):
+        from unittest.mock import patch
+        with patch.object(transport.time, "monotonic", side_effect=[100, 101, 120, 130]), \
+                patch.object(transport, "_command", return_value=b"") as command:
+            call = transport.cleanup_command(["docker"], {})
+            call("container", "rm", "a" * 64)
+            call("container", "ls")
+            with self.assertRaises(transport.DockerCleanupDeadline):
+                call("container", "inspect", "a" * 64)
+            self.assertEqual(command.call_count, 2)
+            self.assertEqual([c.kwargs["deadline"] for c in command.call_args_list], [130, 130])
+
+    def test_expired_or_nonfinite_deadline_never_spawns(self):
+        import time
+        with patch.object(transport.subprocess, "Popen") as spawn:
+            for deadline in (time.monotonic() - 1, float("nan"), float("inf")):
+                with self.subTest(deadline=deadline), self.assertRaises(transport.DockerCleanupDeadline):
+                    transport._command(["docker"], ("info",), {}, deadline=deadline)
+            spawn.assert_not_called()
+
+    @unittest.skipUnless(__import__("sys").platform.startswith("linux"), "Linux subprocess")
+    def test_real_command_respects_short_shared_deadline(self):
+        import sys
+        import time
+        start = time.monotonic()
+        with self.assertRaises(transport.DockerCommandTimeout):
+            transport._command([sys.executable, "-I", "-c"], ("import time; time.sleep(30)",), {},
+                               deadline=start + 1)
+        self.assertLess(time.monotonic() - start, 2.5)
+
+    def test_unconfirmed_reap_does_not_enter_implicit_context_wait(self):
+        import subprocess
+        from unittest.mock import Mock
+        proc = Mock()
+        proc.returncode = None
+        proc.pid = 12345
+        proc.wait.side_effect = subprocess.TimeoutExpired("fake", 0)
+        with patch.object(transport.subprocess, "Popen", return_value=proc), \
+                patch.object(transport.os, "killpg") as kill, \
+                patch.object(transport.selectors, "DefaultSelector", side_effect=ValueError("fake selector")):
+            with self.assertRaises(transport.DockerCLIReapUnconfirmed):
+                transport._command(["docker"], ("info",), {})
+        kill.assert_called_once()
+        proc.wait.assert_called_once()
+        proc.stdout.close.assert_called_once()
