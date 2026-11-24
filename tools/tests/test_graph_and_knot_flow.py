@@ -396,6 +396,41 @@ def test_integral_decomposition():
     return count + 1
 
 
+def test_ff_pseudopolynomial_schedule():
+    # TG40-FF-01: force the alternating path schedule of the example.
+    checked = 0
+    for capacity in (1, 2, 3, 8, 16, 64, 128):
+        arcs = [(0, 1, capacity), (0, 2, capacity),
+                (1, 3, capacity), (2, 3, capacity), (1, 2, 1)]
+        residual = Residual(4, arcs)
+
+        def original(i):
+            u, index, _ = residual.original[i]
+            return u, index
+
+        u, index = original(4)
+        v, _, reverse = residual.adj[u][index]
+        paths = ([original(0), original(4), original(3)],
+                 [original(1), (v, reverse), original(2)])
+        steps = 0
+        for j in range(capacity):
+            for path in paths:
+                amount = min(residual.adj[x][i][1] for x, i in path)
+                assert amount == 1
+                residual.augment(path, amount)
+                steps += 1
+            flows = [c-residual.adj[x][i][1]
+                     for x, i, c in residual.original]
+            assert flows == [j+1]*4 + [0]
+        assert steps == 2*capacity
+        residual.check_flow(0, 3, 2*capacity)
+        expected, _ = independent_min_cut(4, arcs, 0, 3)
+        value, _, rounds = edmonds_karp(4, arcs, 0, 3)
+        assert expected == value == 2*capacity and rounds == 2
+        checked += 1
+    return checked
+
+
 def test_integration():
     catalog = json.loads((ROOT / "catalog/books.json").read_text(encoding="utf-8"))
     book = next(b for b in catalog["books"] if b["id"] == "graph_and_knot_theory")
@@ -426,6 +461,7 @@ if __name__ == "__main__":
     print("PASS seeded directed networks incl antiparallel/parallel:", test_seeded())
     print("PASS exact fractional capacities:", test_rational())
     test_backward_path()
+    print('PASS TG40-FF-01 alternating path schedules:', test_ff_pseudopolynomial_schedule())
     print('PASS TG40-DEC-01 integral feasible flows:', test_integral_decomposition())
     print("PASS TG40-EK-01 repeated saturation distance growth")
     print("PASS TG40-DINIC-01 phase invariants, reverse residual cancellation, hand-computed cuts and integration")
