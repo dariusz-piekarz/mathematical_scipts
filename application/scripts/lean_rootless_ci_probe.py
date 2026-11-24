@@ -12,6 +12,7 @@ import os
 import re
 from pathlib import Path
 import shutil
+import stat
 import subprocess
 import sys
 import tempfile
@@ -614,8 +615,15 @@ def _reject_report_constant(value):
 
 def read_success_report(path: Path, *, expected_sha: str) -> dict:
     """Read at most one bounded JSON document; fail closed on missing or invalid file."""
-    with path.open("rb") as stream:
-        raw = stream.read(MAX_REPORT_BYTES + 1)
+    # Linux CI: reject symlinks and special files without blocking on a FIFO.
+    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    try:
+        if not stat.S_ISREG(os.fstat(fd).st_mode):
+            raise ValueError("Report is not a regular file")
+        with os.fdopen(fd, "rb", closefd=False) as stream:
+            raw = stream.read(MAX_REPORT_BYTES + 1)
+    finally:
+        os.close(fd)
     if not raw or len(raw) > MAX_REPORT_BYTES:
         raise ValueError("Invalid report byte length")
     try:
