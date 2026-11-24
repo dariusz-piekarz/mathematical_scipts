@@ -49,5 +49,47 @@ class Chapter31(unittest.TestCase):
             self.assertIn(step,flat)
         self.assertNotRegex(s,r"\\(?:mathbf|mathbb)\{1\}_")
 
+
+    def test_mt31_006_whitney_intervals(self):
+        # K={0}, dyadic intervals on the positive half-line.
+        # Scaling and reflection reduce the check to integer indices.
+        for m in range(8,16):
+            for j in range(-4,5):
+                ell = Q(2)**j
+                lo,hi = m*ell,(m+1)*ell
+                parent_lo = 2*(m//2)*ell
+                self.assertGreaterEqual(lo,8*ell)
+                self.assertLess(parent_lo,16*ell)
+                self.assertLess(lo,18*ell)
+                self.assertGreaterEqual(lo-ell/8,7*ell)
+                self.assertLessEqual(hi+ell/8,20*ell)
+
+    def test_mt31_007_whitney_polynomial_recenter(self):
+        # Exact scalar polynomials with coefficients of x^i.
+        def deriv(c,b,r):
+            return sum(c[i]*factorial(i)//factorial(i-r)*b**(i-r)
+                       for i in range(r,len(c)))
+        for c in product(range(-2,3),repeat=4):
+            for b in (-2,0,3):
+                for z in (-1,1,4):
+                    for r in range(4):
+                        actual = deriv(c,z,r)
+                        recentered = sum(Q(deriv(c,b,r+j),factorial(j))*(z-b)**j
+                                         for j in range(4-r))
+                        self.assertEqual(actual,recentered)
+
+    def test_mt31_008_whitney_derivative_bounds_and_gluing(self):
+        s = " ".join(SOURCE.read_text(encoding="utf-8").split())
+        for term in ("parami rozłącznych wnętrzach, których suma",
+                     "pokrycie powiększeniami jest lokalnie skończone",
+                     "Traktując $a$ jako ustalony punkt podczas różniczkowania",
+                     "dla dowolnego kierunku zbliżania",
+                     "Wektor $(H_"):
+            self.assertIn(term,s)
+        for expr in (r"7\sqrt n\,\ell(Q)",r"20\sqrt n\,\ell(Q)",
+                     r"D^\alpha(S^{-1})",r"z\in\overline{Q^*}",
+                     r"r^{k-|\beta|+|\gamma|}"):
+            self.assertIn(expr,s)
+
 if __name__ == "__main__":
     unittest.main()
