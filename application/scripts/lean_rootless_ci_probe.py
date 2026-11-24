@@ -31,11 +31,11 @@ done
 /bin/busybox awk '
     /^(Uid|Gid):/ {key=$1; sub(/:$/, "", key); printf "%s=%s %s %s %s\\n",key,$2,$3,$4,$5}
     /^(CapEff|NoNewPrivs|Seccomp):/ {key=$1; sub(/:$/, "", key); printf "%s=%s\\n",key,$2}
-' "/proc/$/status"
+' "/proc/$$/status"
 /bin/busybox awk '
     $5 == "/" {print "root.mountopts=" $6}
     $5 == "/tmp" {print "tmp.mountopts=" $6}
-' "/proc/$/mountinfo"
+' "/proc/$$/mountinfo"
 # The image file is world-writable by mode, so a permissions-only refusal
 # is not enough. Require the actual read-only filesystem error.
 test "$(/bin/busybox stat -c %a /opt/atlas/write-check)" = 666
