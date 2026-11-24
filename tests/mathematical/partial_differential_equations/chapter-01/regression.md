@@ -18,5 +18,23 @@ Kryteria semantyczne wymagają ponownej oceny po zmianie źródła; nie są auto
 | PDE-01-011 | sec:pde-classification | Współczynniki A,B,C jawnie określone w stwierdzeniu. | semantyczna |
 | PDE-01-012 | sec:pde-classification | J_{ki}=∂_i Φ_k, część główna J A J^T, pochodne drugie Φ tylko w części niższego rzędu; prawo bezwładności. | semantyczna |
 
+| PDE-01-013 | thm:laplace-max | Jawne jednostajne ograniczenie eps*max abs(x)^2 i przejście do granicy. | semantyczna |
+| PDE-01-014 | cor:dirichlet-stability | Funkcje rzeczywiste w dowodzie przez zasadę maksimum. | semantyczna |
+| PDE-01-015 | cor:dirichlet-stability | Oba oszacowania w i -w oraz jednoznaczność przy zerowych danych różnicowych. | semantyczna |
+| PDE-01-016 | eq:neumann-compatibility | Znak warunku zgodności dla -Δu=f i normalnej zewnętrznej. | semantyczna |
+| PDE-01-017 | eq:neumann-compatibility | Tożsamość Greena z pola w∇w oraz warunków brzegowych. | semantyczna |
+| PDE-01-018 | eq:neumann-compatibility | Zerowa całka gradientu, lokalna stałość i spójność obszaru. | semantyczna |
+| PDE-01-019 | ex:burgers-blowup | Równanie charakterystyki z reguły łańcuchowej. | semantyczna |
+| PDE-01-020 | ex:burgers-blowup | Ścisła monotoniczność, surjektywność, gładka odwrotność zależna od t,x i weryfikacja PDE oraz danych. | semantyczna |
+| PDE-01-021 | prop:heat-kernel | Obliczenie pochodnych jądra i całkowalna majoranta dla różniczkowania. | semantyczna |
+| PDE-01-022 | prop:heat-kernel | Ogon gaussowski po skalowaniu i jednostajna zbieżność na całej przestrzeni. | semantyczna |
+| PDE-01-023 | thm:dalembert | Obraz t≥0 to ξ≥η, rozkład F+G uzasadniony na półpłaszczyźnie. | semantyczna |
+| PDE-01-024 | thm:dalembert | Konstrukcja C², weryfikacja PDE i obu danych początkowych. | semantyczna |
+| PDE-01-025 | prop:pde-v31-wave-cone | Zerowe dane implikują zerowy gradient początkowy i energię. | semantyczna |
+| PDE-01-026 | prop:pde-v31-wave-cone | Odcinek pionowy zawarty w zwężającym się przedziale; ciągłość na brzegu. | semantyczna |
+
 ## Pierwsze wykonanie — 2026-11-24
 Przejrzano kryteria 001–012 w poprawionym tekście (commit 6c55830d79679c70a164546a1f0ff953198e29f6). Kontrola strukturalna wykonana na treści przed zapisem: zachowano 35 etykiet, wszystkie 14 odsyłaczy wewnętrznych rozwiązywalne, środowiska begin/end poprawnie zagnieżdżone. Nie wykonano kompilacji LaTeX, renderowania rysunków ani Lean. Rozdział pozostaje otwarty; dalsze sekcje od sec:pde-models wymagają osobnego audytu.
+
+## Druga iteracja — 2026-11-24
+Przegląd semantyczny kryteriów 013–026 w ramach poprawek (commit 9eb95ea38bff8f46eab3e0ceaccc3e2a2606ff55). Kontrola strukturalna wykonana: 35 etykiet zachowanych, 15 odsyłaczy wewnętrznych rozwiązywalnych, środowiska poprawnie zagnieżdżone. Nie wykonano kompilacji ani renderowania; Lean nie uruchomiono. Otwarte: kontrola energetyczna równania ciepła, przykłady Hadamarda, skalowanie, niezależna kontrola całości oraz rysunki i kompilacja.
