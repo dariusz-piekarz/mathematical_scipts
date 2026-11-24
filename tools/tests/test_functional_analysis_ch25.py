@@ -133,5 +133,58 @@ class Chapter25(unittest.TestCase):
             self.assertLessEqual(F((n+2)**N,1)/term,
                                  F(3**N*2**(N+1)*factorial(N+1),n))
 
+    def test_FA25_weak_strong_sequences_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"K=\overline B^{\,X}",
+            r"K\subseteq\bigcup_{j=1}^k(x_j+U)",
+            r"\le2\varepsilon/3<\varepsilon",
+            r"\ref{cor:montel-dual-seq23}",
+            r"\label{rem:sequence-net25}",
+            r"T_{F,n}|_{\operatorname{lin}F}=0",
+            r"\sup_{v\in B_0}|T_{F,n}(v)|\ge n",
+            r"C_B=\sup_{\varphi\in B}p_{2,0}(\varphi)",
+            r"r(x)^{-2k}P_k(x,r(x))",
+            r"P_{k+1}=z^2\partial_x P_k+xz\partial_z P_k",
+            r"-2kxP_k-\tfrac12 xzP_k",
+            r"\ge e^{(n-1)/2}",
+            r"a_j\in\Omega\setminus K_j",
+            r"\langle\delta_{a_j},1\rangle=1",
+        ):
+            self.assertIn(fragment,s)
+        from math import factorial
+        # Compare the polynomial derivative recurrence against the
+        # independent Taylor series of sqrt(1+(x+h)^2) and exp.
+        def recurrence(P,k):
+            Q={}
+            def add(i,j,c): Q[i,j]=Q.get((i,j),F(0))+c
+            for (i,j),c in P.items():
+                if i: add(i-1,j+2,i*c)
+                if j: add(i+1,j,j*c)
+                add(i+1,j,-2*k*c)
+                add(i+1,j+1,-c/2)
+            return {ij:c for ij,c in Q.items() if c}
+        K=10
+        P=[{(0,0):F(1)}]
+        for k in range(K): P.append(recurrence(P[-1],k))
+        for t in [F(j,13) for j in range(-12,13)]:
+            x=2*t/(1-t*t)
+            r=(1+t*t)/(1-t*t)
+            R=[r]
+            for n in range(1,K+1):
+                target=2*x if n==1 else F(1) if n==2 else F(0)
+                R.append((target-sum(R[j]*R[n-j] for j in range(1,n)))/(2*r))
+            E=[F(1)]
+            for n in range(1,K+1):
+                E.append(-sum(j*R[j]*E[n-j] for j in range(1,n+1))/(2*n))
+            for k in range(K+1):
+                actual=sum(c*x**i*r**j for (i,j),c in P[k].items())/r**(2*k)
+                self.assertEqual(actual,factorial(k)*E[k])
+        # Escaping points on the bounded open interval (0,1).
+        for j,J in product(range(1,61),repeat=2):
+            if j<J: continue
+            a=F(1,2*(j+2)); lo=F(1,J+2); hi=1-lo
+            self.assertTrue(0<a<lo<=hi<1)
+
 if __name__ == "__main__":
     unittest.main()
