@@ -274,5 +274,35 @@ class Chapter25(unittest.TestCase):
                     self.assertEqual({i:w for i,w in restricted.items() if i in V},
                                      {i:weights[i] for i in V if weights[i]})
 
+    def test_FA25_tensor_summary_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"\mathcal D(\R^d)&\longrightarrow&\mathcal S(\R^d)",
+            r"\mathcal D'(\R^d)&\longleftarrow&\mathcal S'(\R^d)",
+            r"\mathcal E(\Omega)\widehat\otimes_\pi\mathcal E(\Lambda)",
+            r"\mathcal S(\R^{d_1})\widehat\otimes_\pi\mathcal S(\R^{d_2})",
+            r"\mathcal D(\Omega)\widehat\otimes_i\mathcal D(\Lambda)",
+            r"\ref{thm:smooth-schwartz-tensor24}",
+            r"\ref{thm:D-i-product24}",
+            r"\ref{rem:D-not-projective24}",
+            r"$(J^{-1})'$",
+            r"b_K(f,g)=\langle K,f\otimes g\rangle",
+            r"\emph{łącznie}",
+            r"\emph{osobno}",
+        ):
+            self.assertIn(fragment,s)
+        # Finite coordinate models of kernel pairing and transposition
+        # of an invertible map. These do not test the LF topology.
+        V=list(product(range(-1,2),repeat=2))
+        K=list(product(range(-1,2),repeat=4))
+        for a,b,k in product(V,V,K):
+            u=tuple(x*y for x in a for y in b)
+            v=sum(t*z for t,z in zip(k,u))
+            self.assertEqual(v,sum(a[i]*k[2*i+j]*b[j]
+                                   for i,j in product(range(2),repeat=2)))
+            w=(u[0]+u[1],u[1],F(u[2],2),u[3])
+            dual=(k[0],k[1]-k[0],2*k[2],k[3])
+            self.assertEqual(sum(t*z for t,z in zip(dual,w)),v)
+
 if __name__ == "__main__":
     unittest.main()
