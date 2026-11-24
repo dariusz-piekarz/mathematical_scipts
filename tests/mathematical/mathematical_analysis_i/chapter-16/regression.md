@@ -16,3 +16,6 @@ Testy Python w dokładnej arytmetyce sprawdzają skończone świadki i oszacowan
 | MA1-16-012 | ma1:def:metric-closure | Domknięcie, kryterium ciągowe, domkniętość i przypadek pusty | semantyczna |
 | MA1-16-013 | ma1:thm:uniform-extension | Zupełność Y, niezależność od ciągu, zgodność, delta/3 i epsilon/2, jednoznaczność, zachowanie stałej Höldera | semantyczna + Python |
 | MA1-16-014 | ma1:ex:uniform-extension-incomplete, ma1:ex:dense-extension | Brak przedłużenia do niezupełnej przestrzeni, Q gęste w R i zachowanie stałej Lipschitza | semantyczna + Python |
+| MA1-16-015 | ma1:lem:holder-powers | Rozdzielenie definicji potęgi wymiernej i twierdzenia o granicy, dodatniość i ograniczenie między min(1,t) a max(1,t), legalne przejście do odwrotności | semantyczna + Python (test_power_positive_bounds) |
+| MA1-16-016 | ma1:thm:uniform-extension | Zachowanie warunku Höldera dla wszystkich par, również odległych, niezależnie od promienia jednostajnej ciągłości; jawne założenia i kwantyfikatory | semantyczna + Python (test_extension_holder_distant_pairs) |
+| MA1-16-017 | ma1:def:metric-closure | Domknięcie jako najmniejszy zbiór domknięty zawierający A, przez kryterium ciągowe domkniętości | semantyczna |
