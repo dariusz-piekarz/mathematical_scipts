@@ -113,5 +113,20 @@ class TestChapter15B(unittest.TestCase):
         self.assertNotIn("Przy założeniach definicji", source)
         self.assertIn(r"Całka Dunforda w $X''$ poza $J_X(X)$", source)
 
+
+    def test_audit06_proof_details(self):
+        # Source contracts, not a formal proof of the general theorems.
+        source = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"Jeżeli $Y=\{0\}$",
+            "więc jest silnie mierzalna",
+            "rozłączne prostokąty",
+            "malejące",
+            "Twierdzenie o klasie",
+            r"$q_n<s<r_n$",
+            r"$f(s)(s)=0$ i $f(s)(s)=1$",
+        ):
+            self.assertIn(fragment, source)
+
 if __name__ == "__main__":
     unittest.main()
