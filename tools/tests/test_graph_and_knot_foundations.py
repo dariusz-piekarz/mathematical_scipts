@@ -83,6 +83,8 @@ def has_odd_simple_cycle(n,edges):
 
 def havel_hakimi(seq):
     a=sorted(seq,reverse=True)
+    if any(x<0 for x in a):
+        return False
     while a:
         if a[0]==0:
             return True
@@ -232,6 +234,44 @@ def test_all_small():
     return examined,seqs
 
 
+def erdos_gallai(seq):
+    d=sorted(seq,reverse=True)
+    n=len(d)
+    if any(x<0 or x>=n for x in d) or sum(d)%2:
+        return False
+    return all(sum(d[:k])<=k*(k-1)+sum(min(k,x) for x in d[k:])
+               for k in range(1,n+1))
+
+
+def test_chapter01_regressions():
+    graphs=sequences=0
+    for n in range(7):
+        es=pairs(n)
+        realized=set()
+        for mask in range(1<<len(es)):
+            edges=[e for i,e in enumerate(es) if mask>>i&1]
+            a=adj_of(n,edges)
+            realized.add(tuple(sorted(map(len,a),reverse=True)))
+            if n<=5:
+                # Count closed walks independently of unordered triangles.
+                trace=sum(u in a[w] for u in range(n)
+                          for v in a[u] for w in a[v])
+                triangles=sum(v in a[u] and w in a[v] and u in a[w]
+                              for u,v,w in combinations(range(n),3))
+                assert trace==6*triangles, (n,edges,trace,triangles)
+            graphs+=1
+        for seq in product(range(n),repeat=n):
+            expected=tuple(sorted(seq,reverse=True)) in realized
+            assert erdos_gallai(seq)==expected, (n,seq,"EG")
+            assert havel_hakimi(seq)==expected, (n,seq,"HH")
+            sequences+=1
+    assert not erdos_gallai((3,3,1,1))
+    assert not erdos_gallai((0,-1))
+    assert erdos_gallai(())
+    assert component_count(0,[])==0
+    return graphs,sequences
+
+
 def test_source_consistency():
     catalog=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book=next(x for x in catalog["books"] if x["id"]=="graph_and_knot_theory")
@@ -248,3 +288,5 @@ if __name__=="__main__":
     n,sequences=test_all_small()
     print(f"PASS historical graphs 01-03: {n} graphs, {sequences} degree sequences")
     print("PASS handshake, complement, odd cycles, incidence rank, bridges, Euler, Robbins, Havel-Hakimi")
+    graphs,seqs=test_chapter01_regressions()
+    print(f"PASS chapter 01: {graphs} graphs, {seqs} degree sequences; EG, HH, triangle trace, empty graph")
