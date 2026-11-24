@@ -1,0 +1,7 @@
+# Rozdział 05 — audyt indywidualny 03
+
+2026-11-24. Bez rozszerzania zakresu. Commit 54871bb89cca6009b27b3135de448f039cd8d83e, blob 09c141e1e9eb510cdd137478a1c084e92a4e284a. W dowodzie Bergego doprecyzowano naprzemienność włącznie z zamknięciem cyklu; w deficycie Halla rachunek wolnych wierzchołków, ograniczenia i całkowitość deficytu oraz dokładną liczność skojarzenia w powiększonym grafie; w dowodzie Kőniga osiągalność partnera i równoważność przynależności do Z_A,Z_B dla każdej krawędzi M; w warunku Hamiltona uzasadniono dokładnie, że bloki cyklu po usunięciu S są jego składowymi. Bez nowych twierdzeń i przykładów.
+
+Trwałe regresje commit 7d28ab960dcd8e3bdeba2e208b8eeef6c73d0c68, blob f0abf4cb347d6526f15c949079fe41162b555f1d, tools/tests/test_graph_and_knot_foundations.py. Enumeracja 5058 rodzin (315 SDR), bezpośrednie maksimum skojarzeń przez DP oraz niezależne minimum pokryć, porównanie z deficytem Halla i twierdzeniem Kőniga. Enumeracja 1096 grafów na 3–5 wierzchołkach, Hamiltonowskość przez permutacje, kryteria Diraca i Ore'a, 229 grafów hamiltonowskich i 6915 kontroli liczby składowych. Oczekiwane liczebności z raportu 92; nowy test Python jeszcze niepotwierdzony w CI. CI poprzedniego źródła b644db2dc5f3ca60d9cb7c36638062ea5d0a9bbe: pełny audyt 45371928742, algorytmy 45371928650, aplikacja 45371928735, terminologia 45371928521 — completed/success.
+
+Status OTWARTY. Następnie zweryfikować wykonanie trwałych regresji, dowód i konstrukcję Bergego oraz Kőniga, końcowe CI i oględziny PDF. Wyłącznie stabilizacja.
