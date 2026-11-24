@@ -15,3 +15,5 @@ Testy Python sprawdzają skończone świadki oraz tożsamości w dokładnej aryt
 | MA1-15-011 | ma1:thm:intermediate-value, ma1:cor:continuous-interval-image | Końce, odwrócenie znaku, supremum E, f(c)<=t, wybór punktu po prawej, obraz przedziału | semantyczna + Python |
 | MA1-15-012 | ma1:ex:ivt-root | Zmiana znaku wielomianu, ścisły wzrost, przedział obejmujący pierwiastek na rysunku | semantyczna + Python |
 | MA1-15-013 | ma1:def:homeomorphism, ma1:thm:compact-continuous-inverse, ma1:ex:square-inverse-continuous | Kontrprzykład dyskretnej metryki, dalszy podciąg, iniektywność, odwrotność x^2 | semantyczna + Python |
+| MA1-15-014 | ma1:lem:relative-open-representation | Otwartość względna jako przecięcie z otwartym zbiorem, obie implikacje, pusty zbiór, domkniętość przez dopełnienie | semantyczna + Python (test_relative_representation_and_complement) |
+| MA1-15-015 | ma1:thm:compact-continuous-inverse | Jawna nierówność trójkąta dla dalszego podciągu, dolne ograniczenie odległości granicy od x | semantyczna + Python (test_distance_estimate_for_inverse) |
