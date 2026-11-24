@@ -44,5 +44,21 @@ class Chapter17(unittest.TestCase):
         self.assertIn(r"\sum_{n>N}2^{-n}", s)
         self.assertIn(r"0<a<\varepsilon/q_n(f)", s)
 
+
+    def test_fourier_and_schwartz_bounds(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"Q_{d+1+|\beta|,|\alpha|}(f)",
+            r"(-i)^{|\alpha|+|\beta|}",
+            r"2^{k(d-Np)}",
+            r"\delta/\sqrt\varepsilon",
+            r"\|f\|_1\|g\|_1<\infty",
+            r"(2\pi)^{d/2}\widehat f(\xi)\widehat g(\xi)",
+        ):
+            self.assertIn(fragment, s)
+        for a in range(9):
+            for b in range(9):
+                self.assertEqual((1j)**(-a)*(-1j)**b, (-1j)**(a+b))
+
 if __name__ == "__main__":
     unittest.main()
