@@ -1,0 +1,7 @@
+# AA-63 — zamknięcie etapu D
+
+24 listopada 2026 r. Gałąź biblioteka-matematyczna-iteracja-6. Źródło 9111c4e41885f5f32e1206035548b69efe02841f, niezmienione względem audytu II. CI 45406828114, job 138489695623, head 9ed9edc1940050795f2d0c352ea053c69d4ae168: 137/137 kroków success. Zaliczone oba niezależne zestawy AA-63 oraz dodatkowy test symboliczny sl2 (b4a382f8289a1f170eace998ecdead868e61885e). Bramka globalna PASS: 63 rozdziały, 1213 unikatowych etykiet, 819 wystąpień odsyłaczy, 557 dowodów, zero brakujących i powielonych etykiet.
+
+Artefakt 14926549055 pobrano i rozpakowano. PDF 406 stron, SHA-256 2072b8cafc8b902b91c84ff63c17d9b9b3c0498cc059308ada111ea890844194. Rozdział AA-63: fizyczne 402–406, drukowane 389–393. Wszystkie pięć stron wyrenderowano PyMuPDF w skali 1,5 i obejrzano osobno. Nagłówki, formuły, odsyłacze oraz diagram sprzężoności czytelne, bez obcięć i kolizji. Twierdzenie 63.10 przechodzi z końca strony 392 na początek 393, bez utraty treści. Końcowy log z archiwum: 0 Overfull, 0 Underfull, 0 Warning:, 0 undefined references, 0 wierszy zaczynających się od !. Ostrzeżenie o odsyłaczach w pierwszym przebiegu latexmk zniknęło po kolejnych przebiegach; końcowy log jest czysty.
+
+Etap D ZALICZONY. AA-63 formalnie w audycie do zakończenia odrębnego etapu P. Nie otwieramy AA-64 przed zaliczeniem P. Zachowujemy zakres: sprzężoność maksymalnych podalgebr toralnych i klasyfikacja, bez osobnego dowodu równoważności wszystkich podalgebr Cartana z maksymalnymi toralnymi.
