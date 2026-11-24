@@ -439,6 +439,56 @@ def audit_cover_tree_normalization():
     return cases,connected,edges_checked
 
 
+def audit_rooted_forests():
+    """TG08-FOREST-01: all principal minors and weighted forest polynomials."""
+    graphs=minors=polynomials=resistances=0
+    for n in range(1,5):
+        es=edge_pairs(n)
+        for mask in range(1<<len(es)):
+            E=[e for i,e in enumerate(es) if mask>>i&1]
+            for weights in ([1]*len(E),[(i%3)+1 for i in range(len(E))]):
+                L=laplacian(n,E,weights)
+                forests=[]
+                for subset in range(1<<len(E)):
+                    selected=[j for j in range(len(E)) if subset>>j&1]
+                    C=components(n,[E[j] for j in selected])
+                    if len(selected)!=n-len(C):
+                        continue
+                    weight=1
+                    for j in selected:
+                        weight*=weights[j]
+                    forests.append((C,weight))
+                for S_mask in range(1,1<<n):
+                    S={v for v in range(n) if S_mask>>v&1}
+                    I=[v for v in range(n) if v not in S]
+                    expected=sum(w for C,w in forests if all(len(c&S)==1 for c in C))
+                    assert exact_determinant([[L[u][v] for v in I] for u in I])==expected
+                    minors+=1
+                # Compare polynomial evaluations at n+1 distinct integers.
+                for t in range(-1,n):
+                    expected=0
+                    for C,w in forests:
+                        root_choices=1
+                        for c in C:
+                            root_choices*=len(c)
+                        expected+=t**len(C)*root_choices*w
+                    assert exact_determinant([[L[u][v]+t*int(u==v) for v in range(n)]
+                                              for u in range(n)])==expected
+                    polynomials+=1
+                if is_connected(n,E):
+                    tree_sum=sum(w for C,w in forests if len(C)==1)
+                    for s,t in combinations(range(n),2):
+                        J=[v for v in range(n) if v!=t]
+                        f=solve([[L[u][v] for v in J] for u in J],
+                                [Fraction(int(u==s)) for u in J])
+                        expected=sum(w for C,w in forests
+                                     if len(C)==2 and all(len(c&{s,t})==1 for c in C))
+                        assert f[J.index(s)]==Fraction(expected,tree_sum)
+                        resistances+=1
+                graphs+=1
+    return graphs,minors,polynomials,resistances
+
+
 def planar_rotation(n,edges):
     """Exhaustive oriented sphere-embedding search via cyclic edge orders.
 
@@ -578,5 +628,6 @@ if __name__=="__main__":
     print("PASS TG07-MET-01 graphs, points, distances:",audit_length_metric())
     print("PASS TG07-NORM-01 cases, connected, incidences:",audit_cover_tree_normalization())
     print("PASS 08: exact Kirchhoff/Dirichlet/Thomson models:",graph_count)
+    print("PASS TG08-FOREST-01 weighted graphs, minors, polynomial values, resistances:",audit_rooted_forests())
     print("PASS 09: exhaustive rotations, planar faces and coloring:",audit_planarity())
     print("PASS source conventions, notation and 44-chapter catalog")
