@@ -354,6 +354,65 @@ def test_chapter02_regressions():
     return graphs,forests,spanning,coordinates,dual
 
 
+def test_chapter02_bfs():
+    """Compare FIFO BFS with independent all-pairs shortest paths."""
+    graphs=roots=runs=distances=edge_checks=0
+    for n in range(1,6):
+        es=pairs(n)
+        for mask in range(1<<len(es)):
+            edges=[e for i,e in enumerate(es) if mask>>i&1]
+            a=adj_of(n,edges)
+            # Floyd--Warshall, with n as a sentinel above any finite distance.
+            d=[[0 if u==v else 1 if v in a[u] else n
+                for v in range(n)] for u in range(n)]
+            for k in range(n):
+                for u in range(n):
+                    for v in range(n):
+                        d[u][v]=min(d[u][v],d[u][k]+d[k][v])
+            if n in d[0]:
+                continue
+            graphs+=1
+            for r in range(n):
+                roots+=1
+                for reverse in (False,True):
+                    runs+=1
+                    h=[None]*n
+                    parent=[None]*n
+                    h[r]=0
+                    q=deque([r])
+                    processed=[]
+                    while q:
+                        u=q.popleft()
+                        processed.append(h[u])
+                        for v in sorted(a[u],reverse=reverse):
+                            if h[v] is None:
+                                h[v]=h[u]+1
+                                parent[v]=u
+                                q.append(v)
+                        levels=[h[v] for v in q]
+                        assert levels==sorted(levels)
+                        assert not levels or levels[-1]-levels[0]<=1
+                    assert len(processed)==n
+                    assert processed==sorted(processed)
+                    assert h==d[r], (n,edges,r,h,d[r])
+                    assert parent[r] is None
+                    for v in range(n):
+                        distances+=1
+                        u=v
+                        visited=set()
+                        while u!=r:
+                            assert u not in visited
+                            visited.add(u)
+                            p=parent[u]
+                            assert p in a[u] and h[p]==h[u]-1
+                            u=p
+                        assert len(visited)==h[v]
+                    for u,v in edges:
+                        edge_checks+=1
+                        assert abs(h[u]-h[v])<=1
+    return graphs,roots,runs,distances,edge_checks
+
+
 def test_source_consistency():
     catalog=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book=next(x for x in catalog["books"] if x["id"]=="graph_and_knot_theory")
@@ -374,3 +433,5 @@ if __name__=="__main__":
     print(f"PASS chapter 01: {graphs} graphs, {seqs} degree sequences; EG, HH, triangle trace, empty graph")
     g,f,t,x,d=test_chapter02_regressions()
     print(f"PASS chapter 02: {g} graphs, {f} forests, {t} spanning forests, {x} coordinates, {d} fundamental duality cases")
+    g,r,b,d,e=test_chapter02_bfs()
+    print(f"PASS chapter 02 BFS: {g} connected graphs, {r} roots, {b} runs, {d} distances, {e} edge checks")
