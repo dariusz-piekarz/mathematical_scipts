@@ -61,4 +61,26 @@ class Chapter06(unittest.TestCase):
         for n in range(1,51):
             self.assertTrue(-F(1,n)<=F((-1)**n,n)<=F(1,n))
 
+    def test_euclidean_metric_exact(self):
+        # Square all nonnegative quantities; no floating-point square roots.
+        def sq(u): return sum(a*a for a in u)
+        for u,v in itertools.product(V,repeat=2):
+            dot=sum(a*b for a,b in zip(u,v))
+            self.assertEqual(sq(u)*sq(v)-dot*dot,
+                sum((u[j]*v[k]-u[k]*v[j])**2 for j in range(3) for k in range(j+1,3)))
+            self.assertGreaterEqual(sq(u)*sq(v)-dot*dot,0)
+            w=tuple(a+b for a,b in zip(u,v))
+            delta=sq(w)-sq(u)-sq(v)
+            self.assertTrue(delta<=0 or delta*delta<=4*sq(u)*sq(v))
+        for x,y in itertools.product(V,repeat=2):
+            q=sq(tuple(a-b for a,b in zip(x,y)))
+            self.assertTrue(dinf(x,y)**2<=q<=3*dinf(x,y)**2)
+
+    def test_zero_denominator_limit_examples(self):
+        for n in range(1,51):
+            a,b=F(1,n),F(1,n*n)
+            self.assertEqual(a/a,1)
+            self.assertEqual(b/a,a)
+            self.assertEqual(a/b,n)
+
 if __name__=="__main__": unittest.main()
