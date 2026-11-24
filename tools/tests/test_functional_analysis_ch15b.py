@@ -319,5 +319,39 @@ class TestChapter15B(unittest.TestCase):
             self.assertLessEqual(coefficient, Fraction(1, n))
             self.assertEqual(sum(int(j == n) for j in range(1, 65)), 1)
 
+
+    def test_weak_fubini_section_conditions(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            "\\label{thm:gelfand-fubini15b}",
+            "\\label{thm:dunford-fubini15b}",
+            "\\label{thm:pettis-fubini15b}",
+            "\\label{prop:weak-fubini-separable15b}",
+            "\\label{ex:weak-fubini-failure15b}",
+            "\\int_A^{\\mathrm G}U_B\\,\\mathrm d\\mu",
+            "D_C(F_B)=D_{C\\times B}(f)",
+            "f(s,t)=k(t)e_s",
+            "C_a\\times T",
+            "\\int_T k\\,\\mathrm d\\lambda=\\infty",
+        ):
+            self.assertIn(fragment, source)
+        # Finite atomic scalarization: both iterated sums agree.
+        mu = [Fraction(1, 3), Fraction(2, 3)]
+        nu = [Fraction(1, 4), Fraction(3, 4)]
+        f = [[Fraction(1, 2), Fraction(-2)],
+             [Fraction(3), Fraction(4, 3)]]
+        direct = sum(mu[i]*nu[j]*f[i][j]
+                     for i in range(2) for j in range(2))
+        self.assertEqual(direct, sum(mu[i]*sum(nu[j]*f[i][j]
+                           for j in range(2)) for i in range(2)))
+        self.assertEqual(direct, sum(nu[j]*sum(mu[i]*f[i][j]
+                           for i in range(2)) for j in range(2)))
+        # For k(t)=1/t every dyadic interval contributes at
+        # least 1/2 to its integral: length times minimum.
+        for n in range(12):
+            length = Fraction(1, 2**(n+1))
+            minimum = 2**n
+            self.assertEqual(length*minimum, Fraction(1, 2))
+
 if __name__ == "__main__":
     unittest.main()
