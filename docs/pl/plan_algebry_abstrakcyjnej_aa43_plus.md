@@ -144,3 +144,8 @@ AA-51: skończone podgrupy PGL2(C), klasyfikacja typów izomorfizmu, samodzielne
 ## Otwarcie AA-52 — 24 listopada 2026 r.
 
 AA-52: skończone podgrupy SL2(C), sprzęganie do SU(2), centralne nakrycie, grupy dwucykliczne i binarne grupy wielościenne, klasyfikacja z dokładnością do sprzężenia poprzez charaktery obrotów, naturalna reprezentacja oraz półniezmienniki orbit. Zakres nie obejmuje pełnych tablic charakterów ani odpowiedniości McKaya. **AA-52 W AUDYCIE**, AA-53 nieotwarty. AA-01–51 zachowują status stabilny. Raport: `audits/abstract_algebra/ch52_iteration_01.md`.
+
+
+## Zamknięcie AA-52 i otwarcie AA-53 — 24 listopada 2026 r.
+
+AA-52 STABILNY — audits/abstract_algebra/ch52_iteration_10.md, CI 45345253078, 114 kroków success, PDF 336 stron, wszystkie 7 stron AA-52 obejrzane. AA-53: pierścienie niezmienników, zakres docs/pl/zakres_aa53_niezmienniki.md. **AA-53 W AUDYCIE**; AA-54 nieotwarty. AA-01–52 zachowują status stabilny.

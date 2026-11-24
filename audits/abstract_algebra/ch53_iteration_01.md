@@ -1,0 +1,6 @@
+# AA-53 — otwarcie i audyt I
+
+Data: 24 listopada 2026 r. Gałąź biblioteka-matematyczna-iteracja-6.
+AA-52 zamknięty raportem ch52_iteration_10.md, CI 45345253078. AA-53 obejmuje operator Reynoldsa, skończoną generowalność, wzór Moliena oraz pełne prezentacje pierścieni niezmienników grup cyklicznych i dwucyklicznych. Nie obejmuje prezentacji grup wyjątkowych ani odpowiedniości McKaya.
+
+Kontrola I: sprawdzono działanie przez odwrotność, diagonalizowalność elementów skończonego rzędu, indukcję względem stopnia dla skończonej generowalności oraz formalny charakter szeregu Moliena. Dla grup cyklicznych normalne monomy mają różne obrazy. Dla grup dwucyklicznych sprawdzono znak przy działaniu J, rekurencje sum i różnic potęg, algebraiczną niezależność u,v przez najwyższą potęgę X, rozróżnienie parzystej i nieparzystej części po zmianie znaku x. Relacja W²=UV²-4U^(n+1) i stopnie generatorów są zgodne. Wykonano rzeczywisty niezależny test JavaScript: 3030 przypadków wymiarów cyklicznych i 2929 dwucyklicznych, wszystkie poprawne. Dodano dwa zestawy testów Python do CI; ich wykonanie w CI oraz kompilacja i oględziny PDF oczekują. Rozszerzono katalog, książkę, bramkę integralności bez zmiany historycznego pokrycia AA-01–42. AA-53 W AUDYCIE; AA-54 nieotwarty.
