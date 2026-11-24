@@ -12,3 +12,5 @@ Testy skończone sprawdzają tożsamości i konkretne świadki, nie dowodzą zbi
 | MA1-10-008 | ma1:thm:riemann-rearrangement | Każdy indeks obu znaków i zer wykorzystany dokładnie raz, konstrukcje obu nieskończoności i oscylacji | semantyczna |
 | MA1-10-009 | ma1:ex:harmonic-rearrangement | Dwa dodatnie jeden ujemny, bijekcja i suma 3S/2 bez logarytmu | semantyczna + Python |
 | MA1-10-010 | ma1:thm:unconditional-absolute | Trzy równoważne warunki dla R i C, poprawne przeniesienie przez współrzędne, ograniczenie zakresu twierdzenia Riemanna | semantyczna |
+| MA1-10-011 | ma1:thm:series-grouping, ma1:ex:unbounded-grouping | Konieczność zanikania maksymalnych fragmentów przy zbieżności oraz kontrprzykład z wyrazami dążącymi do zera i nieograniczoną długością bloków | semantyczna + Python |
+| MA1-10-012 | ma1:thm:riemann-rearrangement | Przekroczenia progów nieskończonych i oscylacji, rozłączne indeksy znaków i zer, brak pominięć w każdym skończonym prefiksie list indeksów danego znaku | semantyczna + Python |
