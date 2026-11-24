@@ -543,6 +543,28 @@ $r$ wierzchołków jednej klasy z $s$ wierzchołkami
 drugiej klasy i nie zawiera innych krawędzi.
 \end{definicja}
 
+\begin{lemat}[Nieparzysty spacer zamknięty]
+\label{lem:tg-odd-closed-walk}
+Niech $G$ będzie grafem prostym, a $W$ spacerem zamkniętym
+nieparzystej długości w $G$. Podgraf złożony z wierzchołków
+i krawędzi występujących w $W$ zawiera cykl nieparzystej długości.
+\end{lemat}
+
+\begin{proof}
+W tym podgrafie wybierzmy nieparzysty spacer zamknięty
+$x_0,\ldots,x_m=x_0$ o najmniejszej długości. Taki spacer
+istnieje, ponieważ sam $W$ spełnia wymagania.
+Jeżeli $x_i=x_j$ dla $0\le i<j<m$, rozdzielamy spacer
+na $x_i,\ldots,x_j$ oraz
+$x_0,\ldots,x_i,x_{j+1},\ldots,x_m$.
+Oba są zamknięte i mają dodatnie długości $j-i$
+oraz $m-(j-i)$. Dokładnie jedna z nich jest nieparzysta,
+a obie są mniejsze od $m$, co przeczy minimalności.
+Wierzchołki $x_0,\ldots,x_{m-1}$ są więc parami różne.
+Brak pętli wyklucza $m=1$, zatem $m\ge3$ i wybrany
+spacer jest cyklem nieparzystej długości.
+\end{proof}
+
 \begin{twierdzenie}[Kryterium cykli nieparzystych]
 Dla skończonego grafu prostego $G$ następujące
 warunki są równoważne:
@@ -571,19 +593,8 @@ Przejście pierwszą drogą, następnie krawędzią $uv$, a wreszcie
 drugą drogą w kierunku odwrotnym daje spacer zamknięty
 długości $\ell(u)+1+\ell(v)$, która jest nieparzysta.
 
-Istnienie takiego spaceru implikuje istnienie cyklu
-nieparzystej długości. Istotnie, wybierzmy spośród wszystkich
-nieparzystych spacerów zamkniętych spacer
-$x_0,\ldots,x_m=x_0$ o najmniejszej długości.
-Gdyby $x_i=x_j$ dla pewnych $0\le i<j<m$, można by
-rozdzielić spacer na dwa spacery zamknięte o dodatnich
-długościach $j-i$ i $m-(j-i)$. Ich suma jest nieparzysta,
-zatem dokładnie jedna z tych długości jest nieparzysta.
-Obie są mniejsze od $m$, wbrew minimalności.
-Wierzchołki $x_0,\ldots,x_{m-1}$ są więc parami różne.
-Ponieważ graf jest prosty, nie istnieje spacer zamknięty
-długości jeden, a $m$ jest nieparzyste, więc $m\ge3$.
-Otrzymaliśmy cykl nieparzystej długości, sprzecznie z (ii).
+Na mocy lematu~\ref{lem:tg-odd-closed-walk} graf zawiera
+cykl nieparzystej długości, sprzecznie z (ii).
 Zatem każda krawędź łączy wierzchołki o
 różnych parzystościach, co dowodzi (i).
 \end{proof}
@@ -626,6 +637,35 @@ Izomorfizm zachowuje stopnie (indukuje bijekcje sąsiedztw)
 i cykle (przenosi ciągi różnych wierzchołków z zachowaniem
 krawędzi). To przykład, dlaczego sam ciąg stopni nie klasyfikuje grafów.
 \end{przyklad}
+
+\begin{center}
+\begin{tikzpicture}[scale=.83]
+  \begin{scope}[shift={(-2.7,0)}]
+    \node[tgBlueVertex] (a) at (-1.25,-.9) {};
+    \node[tgBlueVertex] (b) at (1.25,-.9) {};
+    \node[tgBlueVertex] (c) at (0,1.3) {};
+    \node[tgRedVertex] (d) at (-.48,-.34) {};
+    \node[tgRedVertex] (e) at (.48,-.34) {};
+    \node[tgRedVertex] (f) at (0,.5) {};
+    \draw[tgEdge] (a)--(b)--(c)--(a) (d)--(e)--(f)--(d);
+    \draw[tgAccent] (a)--(d) (b)--(e) (c)--(f);
+    \node[font=\small] at (0,-1.65) {graniastosłup trójkątny};
+  \end{scope}
+  \begin{scope}[shift={(2.7,0)}]
+    \foreach \i in {1,2,3}{
+      \node[tgBlueVertex] (l\i) at (-1.1,{1.2*(2-\i)}) {};
+      \node[tgRedVertex] (r\i) at (1.1,{1.2*(2-\i)}) {};
+    }
+    \foreach \i in {1,2,3}{
+      \foreach \j in {1,2,3}{\draw[tgEdge] (l\i)--(r\j);}
+    }
+    \node[font=\small] at (0,-1.65) {$K_{3,3}$};
+  \end{scope}
+\end{tikzpicture}
+
+{\footnotesize Te same stopnie, różne liczby trójkątów.
+Przecięcia krawędzi na prawym rysunku nie są wierzchołkami.}
+\end{center}
 
 \section{Które ciągi liczb są ciągami stopni?}
 \label{sec:tg-havel}
@@ -715,6 +755,32 @@ Usunięcie $v_1$ daje graf o stopniach wskazanych
 w twierdzeniu. To kończy dowód.
 \end{proof}
 
+\begin{center}
+\begin{tikzpicture}[scale=.88]
+  \begin{scope}[shift={(-2.55,0)}]
+    \node[tgBlueVertex] (a) at (-1,1) {$v_1$};
+    \node[tgBlueVertex] (b) at (1,1) {$v_k$};
+    \node[tgBlueVertex] (c) at (-1,-1) {$v_j$};
+    \node[tgBlueVertex] (d) at (1,-1) {$z$};
+    \draw[tgEdge] (a)--(b) (c)--(d);
+    \node[font=\small] at (0,-1.65) {przed zamianą};
+  \end{scope}
+  \draw[->,thick] (-.65,0)--(.65,0);
+  \begin{scope}[shift={(2.55,0)}]
+    \node[tgBlueVertex] (e) at (-1,1) {$v_1$};
+    \node[tgBlueVertex] (f) at (1,1) {$v_k$};
+    \node[tgBlueVertex] (g) at (-1,-1) {$v_j$};
+    \node[tgBlueVertex] (h) at (1,-1) {$z$};
+    \draw[tgAccent] (e)--(g) (f)--(h);
+    \node[font=\small] at (0,-1.65) {po zamianie};
+  \end{scope}
+\end{tikzpicture}
+
+{\footnotesize Usuwamy dwie krawędzie poziome i dodajemy
+dwie pionowe. Pozostałe krawędzie (niewidoczne na rysunku)
+nie zmieniają się. Każdy z czterech stopni pozostaje taki sam.}
+\end{center}
+
 \begin{przyklad}[Obliczenie metodą Havla--Hakimiego]
 Rozważmy ciąg $(3,3,2,2,2)$. Po usunięciu
 pierwszej trójki zmniejszamy trzy kolejne wyrazy o jeden:
@@ -730,6 +796,145 @@ W drugim wybieramy $25,23$, a w trzecim $45$.
 Zbiór $\{12,13,14,25,23,45\}$ daje dokładnie
 stopnie $(3,3,2,2,2)$.
 \end{przyklad}
+
+\subsection{Kryterium Erdősa--Gallaia}
+\label{sec:tg-erdos-gallai}
+
+Kryterium Havla--Hakimiego pozwala redukować ciąg i odtwarzać
+graf. Można też rozpoznać ciąg grafowy bez kolejnych redukcji,
+badając nierówności wynikające z liczby możliwych krawędzi.
+
+\begin{twierdzenie}[Kryterium Erdősa--Gallaia]
+\label{thm:tg-erdos-gallai}
+Niech $n\ge1$, a $d_1\ge\cdots\ge d_n\ge0$ będą liczbami
+całkowitymi. Ciąg $(d_1,\ldots,d_n)$ jest grafowy wtedy i tylko
+wtedy, gdy $\sum_{i=1}^n d_i$ jest parzysta oraz dla
+każdego $k\in\{1,\ldots,n\}$ zachodzi nierówność
+\begin{equation}
+\label{eq:tg-erdos-gallai}
+\sum_{i=1}^k d_i\le k(k-1)+\sum_{i=k+1}^n\min(k,d_i).
+\end{equation}
+\end{twierdzenie}
+
+\begin{proof}
+Jeżeli graf realizuje ciąg, parzystość wynika z lematu
+o uściskach dłoni. Niech $T=\{v_1,\ldots,v_k\}$.
+Suma stopni na $T$ liczy dwukrotnie krawędzie wewnątrz $T$
+i jednokrotnie krawędzie między $T$ a jego dopełnieniem.
+Pierwszy wkład nie przekracza $2\binom{k}{2}$, drugi
+zaś jest nie większy niż suma $\min(k,d_i)$ po $i>k$.
+Daje to~\eqref{eq:tg-erdos-gallai}.
+
+Dla dowodu wystarczalności zastosujemy metodę częściowych
+realizacji Tripathiego, Venugopalan i Westa.
+Pracujemy na ustalonym zbiorze $v_1,\ldots,v_n$.
+Dla grafu $H$ piszemy $a_i=d_H(v_i)$.
+Częściową realizacją nazywamy graf spełniający $a_i\le d_i$
+dla wszystkich $i$. Indukcyjnie, dla $r=1,\ldots,n$,
+wykażemy istnienie częściowej realizacji, w której
+$a_i=d_i$ dla $i\le r$, a zbiór wierzchołków o indeksach
+większych niż $r$ nie zawiera żadnej krawędzi.
+
+Na początku kroku $r$ istnieje częściowa realizacja
+z $a_i=d_i$ dla $i<r$ i bez krawędzi pomiędzy
+wierzchołkami ze zbioru $S=\{v_{r+1},\ldots,v_n\}$:
+dla $r=1$ wystarcza graf bez krawędzi, a dla większego $r$
+korzystamy z poprzedniego kroku. Spośród takich grafów
+wybieramy $H$ maksymalizujący $a_r$. Maksimum istnieje,
+bo liczba grafów na ustalonym zbiorze jest skończona.
+Załóżmy dla sprzeczności, że $a_r<d_r$.
+
+\smallskip
+\noindent\textit{Krok A: wszystkie wcześniejsze wierzchołki
+są sąsiadami $v_r$.}
+Gdyby $i<r$ i $v_iv_r$ nie było krawędzią, to
+$a_i=d_i\ge d_r>a_r$. Istnieje więc
+$u\in N_H(v_i)\setminus N_H(v_r)$; wierzchołek $u$
+jest różny od $v_r$, ponieważ $v_iv_r$ nie jest krawędzią.
+Jeśli $d_r-a_r\ge2$, usuwamy $v_iu$ i dodajemy
+$v_ru,v_rv_i$. Stopnie poza $v_r$ są zachowane,
+a $a_r$ rośnie o dwa bez przekroczenia $d_r$.
+Nie powstaje krawędź wewnątrz $S$.
+
+Jeśli $d_r-a_r=1$, parzystość sumy niedoborów
+$\sum_i(d_i-a_i)=\sum_i d_i-2|E(H)|$ wymusza
+istnienie $j>r$ z $a_j<d_j$. Gdy $v_rv_j$ nie jest
+krawędzią, dodajemy ją. W przeciwnym razie
+usuwamy $v_iu$ i $v_rv_j$, dodając $v_ru$ i $v_rv_i$.
+W tej drugiej operacji $u\ne v_j$, gdyż $v_j$ należy
+do $N_H(v_r)$, a $u$ nie. Stopień $v_j$ maleje o jeden,
+pozostałe stopnie poza $v_r$ nie zmieniają się,
+a $a_r$ wzrasta o jeden. Wszystkie operacje pozostają
+w klasie rozważanych grafów i przeczą maksymalności.
+
+\smallskip
+\noindent\textit{Krok B: dla $j>r$ zachodzi
+$a_j=\min(r,d_j)$.}
+Brak krawędzi wewnątrz $S$ daje $a_j\le r$.
+Gdyby $a_j<\min(r,d_j)$, to $a_j<d_j$ i $a_j<r$.
+Jeżeli $v_rv_j$ nie jest krawędzią, dodajemy ją.
+Jeżeli jest krawędzią, pewien $i<r$ nie sąsiaduje
+z $v_j$. Ponieważ $a_i>a_r$, istnieje
+$u\in N_H(v_i)\setminus N_H(v_r)$ różny od $v_r$:
+po odrzuceniu $v_r$ z pierwszego sąsiedztwa i $v_i$
+z drugiego nadal pierwsze jest liczniejsze.
+Na mocy kroku A wierzchołek $u$ należy do $S$,
+a $u\ne v_j$, ponieważ $v_j$ sąsiaduje z $v_r$.
+Usuwamy $v_iu$ i dodajemy $v_ru,v_iv_j$.
+Stopnie $v_i,u$ pozostają takie same, stopnie
+$v_r,v_j$ wzrastają o jeden, nie przekraczając
+zadanych wartości. To znów przeczy maksymalności.
+
+\smallskip
+\noindent\textit{Krok C: wierzchołki $v_1,\ldots,v_r$
+tworzą graf pełny.}
+Na mocy kroku A pozostaje sprawdzić krawędzie
+$v_iv_j$ dla $i<j<r$. Jeżeli którejś brakuje,
+z nierówności $a_i,a_j>a_r$ i wzajemnego sąsiedztwa
+$v_r$ z $v_i,v_j$ znajdujemy
+$u\in N_H(v_i)\setminus(N_H(v_r)\cup\{v_r\})$ oraz
+$w\in N_H(v_j)\setminus(N_H(v_r)\cup\{v_r\})$.
+Istnienie wynika z tego samego porównania liczności
+co w kroku B. Oba wierzchołki należą do $S$.
+Usuwamy $v_iu,v_jw$ i dodajemy $v_iv_j,v_ru$.
+Nawet jeśli $u=w$, usuwane krawędzie są różne;
+wtedy stopień $u$ maleje o jeden. Jeśli $u\ne w$,
+stopień $u$ jest zachowany, a stopień $w$ maleje
+o jeden. Stopnie $v_i,v_j$ są zachowane, a $a_r$
+wzrasta o jeden. Ponownie otrzymujemy sprzeczność.
+
+Z kroków B i C wynika teraz dokładna równość
+\[
+\sum_{i=1}^r a_i=r(r-1)+\sum_{i=r+1}^n\min(r,d_i).
+\]
+Lewa strona jest ściśle mniejsza od $\sum_{i=1}^r d_i$,
+ponieważ wcześniejsze stopnie zostały już zrealizowane,
+ale $a_r<d_r$. Przeczy to~\eqref{eq:tg-erdos-gallai}
+dla $k=r$. Zatem $a_r=d_r$. Indukcja kończy się dla $r=n$
+grafem realizującym cały ciąg.
+\end{proof}
+
+\begin{przyklad}
+Dla ciągu $(3,3,1,1)$ nierówność dla $k=2$ wymagałaby
+$6\le2+1+1=4$, co jest fałszem. Parzystość sumy nie
+wystarcza więc do realizowalności. Dla $(3,3,2,2,2)$
+lewe strony dla kolejnych $k$ to $3,6,8,10,12$,
+a prawe to $4,8,10,14,20$. Wszystkie nierówności są
+spełnione i suma jest parzysta, zgodnie z wcześniejszą
+konstrukcją Havla--Hakimiego.
+\end{przyklad}
+
+\begin{uwaga}
+Kryterium nierówności daje bezpośredni test dla
+uporządkowanego ciągu, podczas gdy redukcja
+Havla--Hakimiego dostarcza również prostego sposobu
+konstrukcji grafu. Dowód wystarczalności powyżej także
+ma charakter konstrukcyjny. Źródło metody:
+A.~Tripathi, S.~Venugopalan, D.~B.~West,
+\emph{A short constructive proof of the Erdős--Gallai
+characterization of graphic lists}, Discrete Mathematics
+310 (2010), 843--844.
+\end{uwaga}
 
 \begin{uwaga}[Zakres pierwszego rozdziału]
 Dotychczas nie używaliśmy topologii algebraicznej ani
