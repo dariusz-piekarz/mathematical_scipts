@@ -991,3 +991,30 @@ class SharedCleanupDeadlineTests(unittest.TestCase):
         kill.assert_called_once()
         proc.wait.assert_called_once()
         proc.stdout.close.assert_called_once()
+
+
+    def test_unconfirmed_reap_and_cleanup_deadline_are_not_expected_cli_timeout(self):
+        from scripts import lean_rootless_ci_probe as probe
+        for error in (transport.DockerCLIReapUnconfirmed, transport.DockerCleanupDeadline):
+            self.assertFalse(issubclass(error, transport.DockerCommandTimeout))
+            self.assertTrue(issubclass(error, TimeoutError))
+            for fixture in (probe.check_runtime_timeout, probe.check_runtime_output_limit):
+                failure = error("unconfirmed")
+                def command(prefix, args, env):
+                    if args[0] == "create":
+                        return b"a" * 64
+                    if args[:2] == ("container", "start"):
+                        raise failure
+                    return b"{}"
+                with self.subTest(error=error.__name__, fixture=fixture.__name__), \
+                        patch.object(transport, "_command", side_effect=command), \
+                        patch.object(transport, "validate_engine"), \
+                        patch.object(probe.policy, "validate_image_inspection"), \
+                        patch.object(transport, "validate_container"), \
+                        patch.object(probe, "_stop_interrupted_fixture") as stop, \
+                        patch.object(probe, "cleanup_fixture") as cleanup:
+                    with self.assertRaises(error) as caught:
+                        fixture([], {}, "sha256:" + "b" * 64)
+                    self.assertIs(caught.exception, failure)
+                    stop.assert_not_called()
+                    cleanup.assert_called_once()
