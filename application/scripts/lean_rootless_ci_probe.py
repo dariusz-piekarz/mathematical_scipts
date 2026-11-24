@@ -7,8 +7,6 @@ starts the fixed harmless fixture to observe cgroup, security and network state.
 """
 from __future__ import annotations
 
-import base64
-import binascii
 import json
 import re
 from pathlib import Path
@@ -66,11 +64,10 @@ for key in dev route ipv6_route; do
         route) read_code=33 ;;
         ipv6_route) read_code=34 ;;
     esac
-    # Separate kernel read errors from encoding failures. BusyBox versions
-    # differ in their base64 options; use stdin and default line wrapping.
+    # Separate kernel read errors from serialization failures. The kernel
+    # tables contain no semicolons; reject a delimiter in the input.
     /bin/busybox cat "/proc/net/$key" > /tmp/atlas-net-table || exit "$read_code"
-    wrapped=$(/bin/busybox base64 < /tmp/atlas-net-table) || exit 35
-    data=$(printf '%s' "$wrapped" | /bin/busybox tr -d '\\n') || exit 36
+    data=$(/bin/busybox awk '{if (index($0, ";")) exit 1; printf "%s;", $0}' /tmp/atlas-net-table) || exit 38
     /bin/busybox rm /tmp/atlas-net-table || exit 37
     printf 'net.%s=%s\\n' "$key" "$data"
 done
@@ -138,13 +135,14 @@ _NET_KEYS = {b"net.dev", b"net.route", b"net.ipv6_route", b"net.docker_socket"}
 def _decode_network_table(value: str) -> list[str]:
     if len(value) > 32768:
         raise ValueError("Oversized network observation")
-    try:
-        raw = base64.b64decode(value, validate=True)
-        if base64.b64encode(raw).decode("ascii") != value:
-            raise ValueError("Noncanonical network observation")
-        return raw.decode("ascii").splitlines()
-    except (binascii.Error, UnicodeError) as exc:
-        raise ValueError("Malformed network observation encoding") from exc
+    if not value:
+        return []
+    if not value.endswith(";") or any(c != "\t" and not 32 <= ord(c) <= 126 for c in value):
+        raise ValueError("Malformed network observation encoding")
+    rows = value[:-1].split(";")
+    if any(not row.strip() for row in rows):
+        raise ValueError("Empty network observation row")
+    return rows
 
 
 def _hex_field(value: str, width: int) -> bool:
@@ -236,6 +234,7 @@ _FIXTURE_EXIT_STAGES = {
     30: "network_table_read", 31: "docker_socket_present",
     32: "network_dev_read", 33: "network_ipv4_read", 34: "network_ipv6_read",
     35: "network_base64_encode", 36: "network_base64_unwrap", 37: "network_temp_remove",
+    38: "network_row_serialize",
 }
 
 
