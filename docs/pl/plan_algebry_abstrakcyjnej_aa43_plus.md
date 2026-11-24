@@ -267,3 +267,7 @@ AA-64: rozkład Fittinga, generyczna przestrzeń zerowa podalgebry Cartana, rów
 ## Otwarcie AA-65 — 24 listopada 2026 r.
 
 AA-65: rozkład na przestrzenie wagowe, wagi fundamentalne, symetria względem grupy Weyla, wektory najwyższej wagi, konieczność dominującej całkowitości i jednoznaczność reprezentacji nieprzywiedlnej. **Etap D W AUDYCIE.** Bez założenia ogólnego twierdzenia Weyla, bez dowodu istnienia reprezentacji dla wszystkich wag dominujących. Dwa zestawy regresji wykonane; CI i PDF do potwierdzenia. AA-66 nieotwarty.
+
+## Zamknięcie AA-65 — 24 listopada 2026 r.
+
+**AA-65 STABILNY w ustalonym zakresie; etapy D/P zaliczone.** Pięć dowodów ponownie sprawdzonych bez zmian źródła. CI [45428203616](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45428203616): 141/141 success, head d9034ca7ae2bf66a12298f716a478c0a0d71aec4, blob de5a75ddc4688815c350abde96e8b32923fcd2f5. Oba trwałe zestawy regresji ponownie zaliczone, dodatkowy niezależny test SymPy: 81 iloczynów tensorowych sl2, 729 przestrzeni wagowych, 285 jednowymiarowych jąder dla wag najwyższych, 729 symetrii krotności. PDF 415 stron, artefakt 14937697568, fizyczne strony 411–415 (drukowane 398–402), ponowne renderowanie i oględziny, czysty log i zgodna suma SHA-256. Raport `audits/abstract_algebra/ch65_iteration_06.md`. AA-01–65 stabilne. **AA-66 nieotwarty.** Następny etap D: twierdzenie Weyla o zupełnej rozkładalności, z dowodem bez założenia pełnej klasyfikacji reprezentacji; istnienie reprezentacji dla każdej wagi całkowitej dominującej w następnym rozdziale.
