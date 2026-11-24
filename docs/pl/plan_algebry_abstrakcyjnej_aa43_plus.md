@@ -275,3 +275,7 @@ AA-65: rozkład na przestrzenie wagowe, wagi fundamentalne, symetria względem g
 ## Otwarcie AA-66 — 24 listopada 2026 r.
 
 AA-66: forma śladu wiernej reprezentacji, operator Casimira, pierwszy lemat Whiteheada i twierdzenie Weyla o zupełnej rozkładalności, również nad niealgebraicznie domkniętym ciałem charakterystyki zero przez zstępowanie układu liniowego. **Etap D W AUDYCIE.** Dwa zestawy regresji wykonane; CI i PDF do potwierdzenia. AA-67 nieotwarty.
+
+## Zamknięcie AA-66 — 24 listopada 2026 r.
+
+**AA-66 STABILNY w ustalonym zakresie; etapy D/P zaliczone.** Cztery dowody, dwa przykłady i diagram zweryfikowane. CI [45444685201](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45444685201): 143/143 success, head bd703e491e6d2e280a9a5b577613f5bfa4d358d2, blob c70d1424dee20274c65199e3a2da5c9806311043. Oba trwałe zestawy regresji ponownie zaliczone. PDF 419 stron, artefakt 14945059069, fizyczne strony 416–419 (drukowane 403–406), ponowne renderowanie i oględziny po korekcie redakcyjnej, czysty log. Raport `audits/abstract_algebra/ch66_iteration_04.md`. AA-01–66 stabilne. **AA-67 nieotwarty.** Następny etap D: istnienie reprezentacji nieprzywiedlnych dla wszystkich wag całkowitych dominujących, ze szczegółowym dowodem skończonego wymiaru, wykorzystaniem AA-62 i AA-65 oraz bez powielania już wykazanej jednoznaczności.
