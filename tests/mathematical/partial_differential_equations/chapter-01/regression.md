@@ -53,6 +53,16 @@ Kryteria semantyczne wymagają ponownej oceny po zmianie źródła; nie są auto
 | PDE-01-046 | eq:neumann-compatibility | Sprzężenie w obu całkach po prawej stronie tożsamości Greena. | semantyczna |
 | PDE-01-047 | prop:heat-kernel | Natychmiastowa ścisła dodatniość dotyczy nieujemnych, niezerowych danych, a nie dowolnych danych zmieniających znak. | semantyczna |
 | PDE-01-048 | prop:transport | Etykieta punktu na rysunku ma kolejność zgodną z osiami x,t. | kontrola źródła TikZ; renderowanie otwarte |
+| PDE-01-049 | sec:pde-types | Rząd określony przez różne wartości F przy tych samych współrzędnych niższego rzędu; dżet w dziedzinie F. | semantyczna |
+| PDE-01-050 | sec:pde-data | Jawne dane g, beta, normalna i odpowiednia regularność przy warunkach brzegowych. | semantyczna |
+| PDE-01-051 | sec:pde-data | Jawne dziedziny danych początkowych i brzegowych w warunku zgodności. | semantyczna |
+| PDE-01-052 | eq:principal-symbol | Wielomian względem kowektora przy ustalonym x, dopuszczony zanik części głównej. | semantyczna |
+| PDE-01-053 | eq:neumann-compatibility | Jawny zakres zespolonych danych, wymiar i normalna zewnętrzna. | semantyczna |
+| PDE-01-054 | eq:neumann-compatibility | Obie funkcje należą do tej samej klasy zespolonej. | semantyczna |
+| PDE-01-055 | ex:burgers-blowup | Charakterystyka na całym przedziale istnienia dowolnego rozwiązania C¹ uzyskana przez czynnik całkujący bez niejawnego założenia globalnego istnienia ODE. | semantyczna |
+| PDE-01-056 | ex:burgers-blowup | Jednoznaczność przed t=1 i wykluczenie rozwiązania C¹ na przedziale obejmującym t=1. | semantyczna |
+| PDE-01-057 | thm:dalembert | Odwrotność zmiany współrzędnych, jawna reguła łańcuchowa i czynnik -4c². | semantyczna |
+| PDE-01-058 | eq:dalembert | Zapis całki z miarą Lebesgue'a zgodny z konwencją skryptu. | semantyczna |
 
 ## Pierwsze wykonanie — 2026-11-24
 Przejrzano kryteria 001–012 w poprawionym tekście (commit 6c55830d79679c70a164546a1f0ff953198e29f6). Kontrola strukturalna wykonana na treści przed zapisem: zachowano 35 etykiet, wszystkie 14 odsyłaczy wewnętrznych rozwiązywalne, środowiska begin/end poprawnie zagnieżdżone. Nie wykonano kompilacji LaTeX, renderowania rysunków ani Lean. Rozdział pozostaje otwarty; dalsze sekcje od sec:pde-models wymagają osobnego audytu.
@@ -67,3 +77,6 @@ Testy wykonywalne: [test_energy_hadamard.py](test_energy_hadamard.py), commit 3d
 
 ## Czwarta iteracja — 2026-11-24
 Niezależny audyt stabilizacyjny, poprawki 039–048: commit 49589c74363fbb591d9d0045493ec46d461be5bb. Kontrola strukturalna wykonana na zmienionym źródle: 35 etykiet zachowanych, 16 odsyłaczy rozwiązywalnych, środowiska zgodne. Ponownie wykonano plik test_energy_hadamard.py zgodny z SHA blob 1d8609e78e4887cde7164a5a65d65d9d7db6cdd2: 3/3 testy unittest zaliczone. Kontrola renderowania i kompilacji jeszcze otwarta. Zmiany wymagają ponownego audytu; rozdział nie jest ustabilizowany.
+
+## Piąta iteracja — 2026-11-24
+Poprawki 049–058: commit d646625027396ec01feee4d3a77a2efea064ce55. Ponowna kontrola strukturalna zmienionego źródła: 35 niezmienionych etykiet, 16 rozwiązywalnych wystąpień odsyłaczy, zgodne środowiska. Workflow [45404958762](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45404958762) na wcześniejszym commicie d6b27b9 potwierdził sukces kroku testów wykonywalnych i kontroli strukturalnej; kompilacja była w toku w chwili sprawdzenia. Nie przenosić wyniku starszego workflow na nowy commit. Kryteria 049–058 sprawdzono semantycznie przy poprawkach; niezależny ponowny przegląd i kompilacja aktualnej wersji oraz wizualna kontrola rysunków pozostają otwarte. Lean nie uruchomiono.
