@@ -199,3 +199,7 @@ AA-57: algebry Liego, twierdzenia Engela i Liego, zakres docs/pl/zakres_aa57_alg
 ## Otwarcie AA-58 — 24 listopada 2026 r.
 
 AA-58: półproste algebry Liego, forma Killinga i kryteria Cartana, zakres docs/pl/zakres_aa58_polproste_algebry_liego.md. AA-01–57 stabilne, **AA-58 W AUDYCIE**, AA-59 nieotwarty. Bez twierdzenia Levi'ego, pełnej redukowalności i rozkładu korzeniowego.
+
+## Zamknięcie AA-58 — 24 listopada 2026 r.
+
+**AA-58 STABILNY w ustalonym zakresie.** Audyty matematyczne IV–V czyste (2/2); audyty VI–VII zamknęły korekty techniczne. CI [45373053010](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45373053010): 126/126 success, head b4a71e2d8488a149f8f0d9635fcbaaa8351fc922, blob ff0d654bc9da4a4561fbcbff9ff33e16ebc832e4 zgodny. Oba zestawy regresji AA-58 zaliczone. Artefakt 14909498287, PDF 379 stron, AA-58 fizyczne 371–379 (drukowane 359–367), wszystkie obejrzane, log bez błędów i ostrzeżeń. Raport końcowy `audits/abstract_algebra/ch58_iteration_07.md`. AA-01–57 zachowują status. **AA-59 nieotwarty**; proponowany dalszy zakres: podalgebry Cartana i rozkład na przestrzenie korzeniowe nad ciałem algebraicznie domkniętym charakterystyki zero. Status planu nadrzędny wobec historycznej strony tytułowej.
