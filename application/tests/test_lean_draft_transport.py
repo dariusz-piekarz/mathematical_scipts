@@ -812,7 +812,7 @@ class RuntimeReportFileTests(unittest.TestCase):
                     read_success_report(path, expected_sha=fixture.sha)
 
 
-class RuntimeFailureReportTests(unittest.TestCase):
+class RuntimeDiagnosticReportTests(unittest.TestCase):
     sha = "f" * 40
 
     def test_every_failure_stage_and_progress(self):
@@ -883,3 +883,42 @@ class RuntimeFailureReportTests(unittest.TestCase):
                     report = probe.read_failure_report(path, expected_sha=self.sha)
                     self.assertEqual(report["cases"]["normal"], "failed")
                     self.assertNotIn("private exception text", path.read_text())
+
+
+
+class TransportTestDiscoveryTests(unittest.TestCase):
+    def test_no_shadowed_test_classes_or_methods(self):
+        import ast
+        from collections import Counter
+        from pathlib import Path
+
+        tree = ast.parse(Path(__file__).read_text(encoding="utf-8"))
+        classes = [node for node in tree.body if isinstance(node, ast.ClassDef)]
+        duplicate_classes = [name for name, count in Counter(
+            node.name for node in classes).items() if count > 1]
+        self.assertEqual(duplicate_classes, [], "Duplicate top-level test class names")
+        for cls in classes:
+            methods = [node.name for node in cls.body
+                       if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+                       and node.name.startswith("test_")]
+            with self.subTest(cls=cls.name):
+                self.assertEqual([name for name, count in Counter(methods).items() if count > 1],
+                                 [], "Duplicate test method names")
+        required = {
+            "RuntimeFailureReportTests": {
+                "test_known_fixture_failure_is_blocked",
+                "test_rejects_unconfirmed_identity_and_state",
+                "test_unknown_failure_does_not_claim_known_cause",
+            },
+            "RuntimeDiagnosticReportTests": {
+                "test_every_failure_stage_and_progress",
+                "test_failure_file_never_accepted_as_success",
+                "test_main_preserves_failure_and_reports_only_verified_checkout",
+                "test_reject_inconsistent_progress_and_flags",
+            },
+        }
+        for name, expected in required.items():
+            cls = globals().get(name)
+            self.assertIsNotNone(cls, name)
+            discovered = set(unittest.defaultTestLoader.getTestCaseNames(cls))
+            self.assertTrue(expected <= discovered, (name, expected - discovered))
