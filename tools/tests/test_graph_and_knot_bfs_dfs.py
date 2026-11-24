@@ -116,6 +116,7 @@ def check_undirected():
                 adj[u].add(v)
                 adj[v].add(u)
             assert bridges == expected_bridges, (n, mask, bridges, expected_bridges)
+            assert set(tin.values()) | set(tout.values()) == set(range(1, 2*n+1))
             # Compare BFS to a separate path relaxation algorithm.
             for source in adj:
                 d, parents = bfs(adj, source)
@@ -176,7 +177,10 @@ def check_directed():
             dag = independent_dag(adj)
             assert dag != back, (n, mask, "DAG")
             if dag:
-                order = sorted(adj, key=lambda v: -tout[v])
+                finish = [None] * (2 * n + 1)
+                for v in adj:
+                    finish[tout[v]] = v
+                order = [v for v in reversed(finish) if v is not None]
                 pos = {v: i for i, v in enumerate(order)}
                 assert all(pos[u] < pos[v] for u in adj for v in adj[u])
             checked += 1
