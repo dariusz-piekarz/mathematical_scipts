@@ -1,0 +1,7 @@
+# Rozdział 03 — audyt indywidualny 03
+
+2026-11-24. Bez rozszerzania zakresu. Commit źródłowy 3b981e46f86d73e7422f11881e362520496a2e9f, blob 5e2c2b49fbb9b352d348a3433c80827c9530bb5b. Doprecyzowano podgraf w lemacie parzystości, incydencję łuku (początek lub koniec) i dodatniość obu pozostałych stopni w dowodzie skierowanym, rachunek stopni dla orientacji pętli. Rozpisano zakończenie i spójność drzewa DFS w dowodzie Robbinsa oraz redukcję skierowanego spaceru do drogi. Nie dodawano nowych twierdzeń ani przykładów.
+
+Trwałe regresje: commit c6c89a4da9ba52ec18407f5f6e45d08acfaa7121, blob 55e681204a4f9cf498304f26ad34dbc6c6b89f69, tools/tests/test_graph_and_knot_foundations.py. Enumeracja multigrafów na 1–3 wierzchołkach, krotności 0–2, 1–6 krawędzi, z pętlami. Porównanie dokładnej enumeracji szlaków (stan wierzchołek + zbiór użytych identyfikatorów) z kryteriami stopni i spójności; enumeracja orientacji. Oczekiwane liczebności z zaliczonego niezależnego testu JS raportu 80: 3137 skierowanych, 462 nieskierowane, 10688 par jednakowych końców, 21166 różnych końców, 462 przypadki orientacji. Wykonanie nowego testu Python jeszcze do potwierdzenia.
+
+CI poprzedniego źródła 29498d55f35be75a4e574fb22c6b818937e4001a: pełny audyt 45362200039, algorytmy 45362199936, terminologia 45362199854 i aplikacja 45362199889 — completed/success. Nowe CI i kontrola wizualna dokładnego aktualnego źródła oczekują. Status OTWARTY. Następnie kontrola regresji, dowodu Hierholzera i konstruktywnego DFS oraz PDF. Wyłącznie stabilizacja, bez propozycji rozszerzeń.
