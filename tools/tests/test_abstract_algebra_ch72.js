@@ -50,3 +50,37 @@ for(const [name,C,order,N] of specs){
 }
 assert(wrongCoset>0&&cancellations>0,"boundary coverage");
 console.log("AA-72-KMF-01: PASS",{systems,models,weights,absent,wrongCoset,cancellations,partitionChecks,orbitTerms});
+
+// AA-72-KMF-02: aa:lem:kostant-partition-recursion and aa:lem:kostant-generating.
+// Lexicographic table, independent bounded multiplicity enumeration,
+// and product of finite differences applied to the completed table.
+function checkTables72(){
+ let orders=0,cells=0,convolutionChecks=0;
+ for(const [name,C,order,N] of specs){
+  const r=C.length,zero=Array(r).fill(0),unit=i=>zero.map((_,j)=>+(i===j));
+  const roots=Array.from({length:r},(_,i)=>unit(i)),seen=new Set(roots.map(key));
+  for(let k=0;k<roots.length;k++)for(let i=0;i<r;i++){
+   const v=[...roots[k]];v[i]-=C[i].reduce((s,c,j)=>s+c*v[j],0);
+   if(!seen.has(key(v))){seen.add(key(v));roots.push(v)}
+  }
+  const pos=roots.filter(v=>v.every(x=>x>=0));assert(pos.length===N,name+" root count");
+  for(const cap of [Array(r).fill(4),Array.from({length:r},(_,i)=>i===0?0:3),zero]){
+   const grid=[];function fill(v){if(v.length===r){grid.push(v);return}for(let i=0;i<=cap[v.length];i++)fill([...v,i])}fill([]);
+   let baseline;
+   for(const list of [pos,[...pos].reverse()]){
+    let table=new Map([[key(zero),1n]]);
+    function brute(j,end,v){if(j===end)return v.every(x=>x===0)?1n:0n;let total=0n,u=[...v];while(u.every(x=>x>=0)){total+=brute(j+1,end,u);u=u.map((x,i)=>x-list[j][i])}return total}
+    for(let j=0;j<list.length;j++){
+     const next=new Map();
+     for(const v of grid){const k=key(v),prev=v.map((x,i)=>x-list[j][i]);const z=(table.get(k)||0n)+(next.get(key(prev))||0n);next.set(k,z);assert(z===brute(0,j+1,v),name+" intermediate table");cells++}
+     table=next;
+    }
+    if(baseline)for(const v of grid)assert(baseline.get(key(v))===table.get(key(v)),name+" order independence");else baseline=table;
+    for(const a of list){const next=new Map();for(const v of grid){const k=key(v);next.set(k,(table.get(k)||0n)-(table.get(key(v.map((x,i)=>x-a[i])))||0n))}table=next}
+    for(const v of grid){assert(table.get(key(v))===(v.every(x=>x===0)?1n:0n),name+" generating product");convolutionChecks++}orders++;
+   }
+  }
+ }
+ return {systems:specs.length,orders,cells,convolutionChecks};
+}
+console.log("AA-72-KMF-02: PASS",checkTables72());
