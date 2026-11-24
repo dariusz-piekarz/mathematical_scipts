@@ -1,0 +1,3 @@
+# MA1-22 — iteracja 01 (rozwojowo-stabilizacyjna)
+Zakres wg docs/pl/plan_analizy_matematycznej_i.md: pochodne wyższe. Taylor pozostaje w rozdziale 23.
+Opracowano sześć sekcji. Przegląd źródła: rekurencja i klasy C^n, końce z twierdzenia o granicy pochodnej, indukcja liniowości i Leibniza, funkcje elementarne, reguła złożenia i odwrotności, ścisłość hierarchii i nieciągła druga pochodna, model mechaniczny. Sprawdzono indeksy indukcji, znaki, dziedziny, przypadki n=0, a=0, m=0 i niezerowość mianowników. Dodano 10 kryteriów regresyjnych i 12 metod unittest. Wyniki CI i inspekcji PDF wymagają potwierdzenia; nie oznaczono rozdziału jako stabilny. Lean nieuruchomiony.
