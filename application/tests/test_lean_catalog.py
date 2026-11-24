@@ -101,6 +101,87 @@ class LeanCatalogTests(unittest.TestCase):
             and item["statement_status"] == "needs_review"
             for item in changed["items"]))
 
+    def test_l142_distinct_labels_keep_independent_provenance(self):
+        # Same chapter digest, different real label owners. Neither a good
+        # owner nor a bad owner may be inherited by the other mapping.
+        second_source = SOURCE.replace("t:x", "t:y")
+        source = SOURCE + second_source
+        digest = hashlib.sha256(source.encode("utf-8")).hexdigest()
+        tex = self.set_l14_canonical_file()
+        tex.write_text(source, encoding="utf-8")
+        self.item.update(source_document_sha256=digest,
+                         statement_status="approved")
+        second = dict(self.item, id="t-two", source_label="t:y")
+        self.con.execute("UPDATE documents SET content=?,sha256=?",
+                         (source, digest))
+        start = len(SOURCE)
+        second_offset = start + second_source.index("\\label{")
+        self.con.execute("INSERT INTO entities VALUES(?,?,?,?,?,?,?,?)",
+                         ("theorem-two", "LST-01", "theorem", "Second",
+                          4, 6, start, len(source)))
+        self.con.execute("INSERT INTO labels VALUES(?,?,?)",
+                         ("t:y", "theorem-two", second_offset))
+        self.con.commit()
+        original_hash = hashlib.sha256
+
+        def catalog(entries):
+            (self.root / "manifest.json").write_text(
+                json.dumps({"schema_version": 1, "items": entries}),
+                encoding="utf-8")
+            document_hashes = []
+
+            def count_hash(*args, **kwargs):
+                if args and args[0] == source.encode("utf-8"):
+                    document_hashes.append(True)
+                return original_hash(*args, **kwargs)
+
+            with patch.object(lean_catalog.hashlib, "sha256",
+                              side_effect=count_hash):
+                result = lean_catalog.list_formalizations(
+                    self.con, lean_root=self.root)
+            self.assertEqual(len(document_hashes), 1)
+            self.assertFalse(result["proof_status_included"])
+            self.assertTrue(all(not item["certificate"] and
+                                "proof_status" not in item
+                                for item in result["items"]))
+            return result, {item["source_label"]: item
+                            for item in result["items"]}
+
+        result, items = catalog([self.item, second])
+        self.assertEqual((result["ready"], result["stale"]), (2, 0))
+        self.assertEqual(items["t:x"]["source_entity_id"], "theorem-one")
+        self.assertEqual(items["t:y"]["source_entity_id"], "theorem-two")
+
+        # Corrupt one indexed label without changing the document digest.
+        # Exercise both owners and both manifest orders, including a bad
+        # owner encountered first. Restore the other label between cases.
+        offsets = {"t:x": SOURCE.index("\\label{"), "t:y": second_offset}
+        owners = {"t:x": "theorem-one", "t:y": "theorem-two"}
+        for bad, good in (("t:x", "t:y"), ("t:y", "t:x")):
+            self.con.execute("UPDATE labels SET offset=? WHERE name=?",
+                             (offsets[bad] + 1, bad))
+            self.con.commit()
+            for entries in ([self.item, second], [second, self.item]):
+                with self.subTest(bad=bad, first=entries[0]["source_label"]):
+                    result, items = catalog(entries)
+                    self.assertEqual((result["ready"], result["stale"]),
+                                     (1, 1))
+                    self.assertEqual(items[good]["index_status"], "ok")
+                    self.assertEqual(items[good]["source_entity_id"],
+                                     owners[good])
+                    self.assertEqual(items[good]["formalization_status"], "ready")
+                    self.assertEqual(items[good]["statement_status"], "approved")
+                    self.assertEqual(items[bad]["index_status"],
+                                     "invalid_label_binding")
+                    self.assertIsNone(items[bad]["source_entity_id"])
+                    self.assertEqual(items[bad]["formalization_status"], "stale")
+                    self.assertEqual(items[bad]["statement_status"], "needs_review")
+            self.con.execute("UPDATE labels SET offset=? WHERE name=?",
+                             (offsets[bad], bad))
+            self.con.commit()
+        result, _ = catalog([second, self.item])
+        self.assertEqual((result["ready"], result["stale"]), (2, 0))
+
     def test_pinned_mapping_becomes_stale_on_source_change(self):
         self.item.update(source_document_sha256=self.digest,
                          statement_status="approved")
