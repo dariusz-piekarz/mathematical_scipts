@@ -151,6 +151,16 @@ z dodatnią miarą, a $X$ przestrzenią Banacha.
 Funkcja $g:\Omega\to X$ jest \emph{silnie mierzalna},
 jeżeli jest granicą punktową prawie wszędzie ciągu
 funkcji prostych o wartościach w $X$.
+Dla miary niezupełnej wybieramy mierzalnego przedstawiciela:
+na mierzalnym zbiorze zbieżności ciągu funkcji prostych
+przyjmujemy jego granicę, a poza nim wartość $0$.
+Zbiór zbieżności jest mierzalny z kryterium Cauchy'ego
+i zupełności $X$, a jego dopełnienie ma miarę zero.
+Granica jest borelowsko mierzalna, ponieważ dla każdego
+niepustego domkniętego $C\subseteq X$ odległość od $C$
+jest ciągła, a zatem odległość granicy od $C$ jest
+mierzalną funkcją skalarną. W dalszym ciągu całki
+rozumiemy dla takiego przedstawiciela.
 Jest \emph{całkowalna w sensie Bochnera}, gdy dodatkowo
 $\int_\Omega\|g(\omega)\|\,\mathrm d\mu(\omega)<\infty$.
 Dla funkcji prostej $s=\sum_{j=1}^{N}x_j\chi_{A_j}$
@@ -178,11 +188,16 @@ zachodzi
 Dla funkcji prostych nierówność jest zwykłą nierównością
 trójkąta. Niech $g$ będzie silnie mierzalna i
 $\int_\Omega\|g\|\,\mathrm d\mu<\infty$.
+Wybieramy mierzalnego przedstawiciela $g$.
 Z definicji silnej mierzalności wybierzmy proste
 $s_n\to g$ prawie wszędzie. Możemy dobrać je tak, by
 $\|s_n(\omega)\|\le2\|g(\omega)\|$ prawie wszędzie:
 w punkcie, w którym pierwotna prosta jest zbyt duża,
-zastępujemy jej wartość przez $0$. Otrzymany zbiór
+zastępujemy jej wartość przez $0$. Gdy $g(\omega)=0$,
+nowa prosta jest zerowa, a gdy $\|g(\omega)\|>0$
+i pierwotne proste zbiegają do $g(\omega)$,
+od pewnego miejsca nie są zmieniane. Zbieżność
+prawie wszędzie zostaje zachowana. Otrzymany zbiór
 wycięcia jest mierzalny, a po podziale na skończenie
 wiele wartości prostej nadal otrzymujemy funkcję prostą.
 Twierdzenie Lebesgue'a o zbieżności zmajoryzowanej
@@ -206,8 +221,19 @@ Twierdzenie Beppo Leviego daje
 $\sum_k\|s_{n_{k+1}}(\omega)-s_{n_k}(\omega)\|<\infty$
 prawie wszędzie. Zupełność $X$ zapewnia punktową
 zbieżność do silnie mierzalnej $g$; nierówność Fatou
-daje $s_{n_k}\to g$ w $L^1$, a w konsekwencji zbiega
-cały ciąg. To dowodzi zupełności. Nierówność dla całki
+daje
+\[
+ \|g-s_{n_k}\|_{L^1}
+ \le \sum_{j\ge k}\|s_{n_{j+1}}-s_{n_j}\|_{L^1}.
+\]
+W szczególności $g$ jest całkowalna, bo $s_{n_1}$
+jest całkowalna. Dla dowolnego ciągu Cauchy'ego
+$(g_n)$ w $L^1(\mu;X)$ wybieramy proste $s_n$
+takie, że $\|s_n-g_n\|_{L^1}<1/n$.
+Ciąg $(s_n)$ jest Cauchy'ego, więc zbiega do $g$
+w $L^1$ na mocy poprzedniego argumentu.
+Wówczas $\|g_n-g\|_{L^1}\le1/n+\|s_n-g\|_{L^1}\to0$.
+To dowodzi zupełności. Nierówność dla całki
 prostej i gęstość jednoznacznie przedłużają całkę
 i oszacowanie na całe $L^1(\mu;X)$.
 \end{proof}
@@ -481,9 +507,10 @@ $F(t)=F(0)+\int_{(0,t)}F'(s)\,\mathrm d\lambda_1(s)$.
 \begin{proof}
 \emph{Kierunek (i)$\Rightarrow$(ii).}
 Niech $F:[0,1]\to X$ ma stałą Lipschitza $L$.
-Na algebrze skończonych sum rozłącznych przedziałów
-półotwartych definiujemy
-$\nu((s,t])=F(t)-F(s)$. Definicja jest skończenie
+Na algebrze podzbiorów $[0,1]$ złożonych ze
+skończonych sum rozłącznych przedziałów $(s,t]$
+oraz ewentualnego singletonu $\{0\}$ definiujemy
+$\nu((s,t])=F(t)-F(s)$ i $\nu(\{0\})=0$. Definicja jest skończenie
 addytywna, ponieważ przy dzieleniu przedziału przyrosty
 się teleskopują. Z nierówności Lipschitza wynika
 $\|\nu(A)\|\le L\lambda_1(A)$ dla takich zbiorów.
@@ -494,10 +521,24 @@ $\nu(A_j)$ są ciągiem Cauchy'ego w $X$:
 $\|\nu(A_j)-\nu(A_k)\|\le L\lambda_1(A_j\triangle A_k)$.
 Ich granica nie zależy od aproksymacji i określa
 rozszerzenie $\nu$ na $\sigma$-algebrę Lebesgue'a z
-$\|\nu(A)\|\le L\lambda_1(A)$. Dla rozłącznych
-$A_j$ to oszacowanie kontroluje normę
-$\nu(\bigcup_{j>N}A_j)$, zatem rozszerzenie jest
-przeliczalnie addytywne. Ma skończoną wariację:
+$\|\nu(A)\|\le L\lambda_1(A)$. Sprawdzamy najpierw skończoną addytywność.
+Dla rozłącznych zbiorów mierzalnych $A,B$ wybieramy
+aproksymacje $P_j,Q_j$ z algebry z błędami w mierze
+dążącymi do zera. Zastępujemy $Q_j$ przez $Q_j\setminus P_j$.
+Ponieważ
+\[
+ \lambda_1((Q_j\setminus P_j)\triangle B)
+ \le\lambda_1(Q_j\triangle B)+\lambda_1(P_j\triangle A),
+\]
+rozłączne aproksymacje nadal zbiegają w mierze
+do $A,B$, a ich suma przybliża $A\cup B$.
+Addytywność na algebrze i przejście do granicy w normie
+dają $\nu(A\cup B)=\nu(A)+\nu(B)$.
+Dla rozłącznych $A_j$ mamy więc
+$\nu(\bigcup_jA_j)-\sum_{j=1}^N\nu(A_j)
+=\nu(\bigcup_{j>N}A_j)$. Norma prawej strony
+jest ograniczona przez $L\lambda_1(\bigcup_{j>N}A_j)$,
+co dąży do zera. Rozszerzenie jest przeliczalnie addytywne. Ma skończoną wariację:
 $|\nu|(A)\le L\lambda_1(A)$.
 
 Na mocy RNP istnieje $g\in L^1(\lambda_1;X)$ takie,
@@ -516,7 +557,20 @@ Jeśli $\nu=g\mu$ dla pewnego $g\in L^1(\mu;X)$,
 to na mocy Lematu~\ref{lem:vector-variation-ac-30}
 mamy $\mu\ll\mu_0$. Skalarne twierdzenie
 Radona--Nikodyma daje $w=\mathrm d\mu/\mathrm d\mu_0$;
-wtedy $gw\in L^1(\mu_0;X)$ reprezentuje $\nu$
+wybieramy mierzalne przedstawiciele $g,w$,
+przy czym $w\ge0$ i $w$ jest skończona.
+Na $\{w>0\}$ zbiory $\mu$-zerowe są $\mu_0$-zerowe,
+bo $\mu(B)=\int_Bw\,\mathrm d\mu_0$. Na $\{w=0\}$
+przyjmujemy $gw=0$. Mnożąc proste aproksymacje
+$g$ i $w$ (te drugie zerowe na $\{w=0\}$), otrzymujemy
+silną mierzalność $gw$ względem $\mu_0$.
+Ponadto skalarny wzór zmiany miary daje
+$\int\|gw\|\,\mathrm d\mu_0=\int\|g\|\,\mathrm d\mu<\infty$.
+Dla prostych $s$ całkowalnych względem $\mu$ mamy
+$\int_A sw\,\mathrm d\mu_0=\int_A s\,\mathrm d\mu$
+z definicji $w$. Jeśli $s_j\to g$ w $L^1(\mu;X)$, to
+$\|s_jw-gw\|_{L^1(\mu_0;X)}=\|s_j-g\|_{L^1(\mu;X)}\to0$.
+Z ciągłości całki wynika, że $gw$ reprezentuje $\nu$
 względem $\mu_0$. Wystarczy zatem zbudować
 gęstość względem $\mu=|\nu|$.
 
