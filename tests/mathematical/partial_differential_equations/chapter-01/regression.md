@@ -63,6 +63,13 @@ Kryteria semantyczne wymagają ponownej oceny po zmianie źródła; nie są auto
 | PDE-01-056 | ex:burgers-blowup | Jednoznaczność przed t=1 i wykluczenie rozwiązania C¹ na przedziale obejmującym t=1. | semantyczna |
 | PDE-01-057 | thm:dalembert | Odwrotność zmiany współrzędnych, jawna reguła łańcuchowa i czynnik -4c². | semantyczna |
 | PDE-01-058 | eq:dalembert | Zapis całki z miarą Lebesgue'a zgodny z konwencją skryptu. | semantyczna |
+| PDE-01-059 | sec:pde-types | Jawne oznaczenie N₀ i wymiar n. | semantyczna |
+| PDE-01-060 | sec:pde-classification | Macierz przekształconej części głównej jest symetryczna; łączny współczynnik mieszany wynosi 2b₁₂, nie b₁₂. | semantyczna |
+| PDE-01-061 | eq:tricomi | Napisy obszarów i nierówności odsunięte od osi poziomej. | kontrola wizualna po renderowaniu |
+| PDE-01-062 | prop:transport | Oba końce tej samej charakterystyki oznaczone punktami; etykieta nad właściwym końcem. | kontrola wizualna po renderowaniu |
+| PDE-01-063 | ex:burgers-blowup | Rozwiązanie rzeczywiste w argumentacji charakterystyk na rzeczywistej osi. | semantyczna |
+| PDE-01-064 | thm:dalembert | Wypełnienie obszaru zależności nie zasłania osi czasowej; kolejność warstw TikZ. | kontrola wizualna po renderowaniu |
+| PDE-01-065 | thm:dalembert | Tekst w obszarze zależności pozostaje czytelny na tle osi. | kontrola wizualna po renderowaniu |
 
 ## Pierwsze wykonanie — 2026-11-24
 Przejrzano kryteria 001–012 w poprawionym tekście (commit 6c55830d79679c70a164546a1f0ff953198e29f6). Kontrola strukturalna wykonana na treści przed zapisem: zachowano 35 etykiet, wszystkie 14 odsyłaczy wewnętrznych rozwiązywalne, środowiska begin/end poprawnie zagnieżdżone. Nie wykonano kompilacji LaTeX, renderowania rysunków ani Lean. Rozdział pozostaje otwarty; dalsze sekcje od sec:pde-models wymagają osobnego audytu.
@@ -80,3 +87,6 @@ Niezależny audyt stabilizacyjny, poprawki 039–048: commit 49589c74363fbb591d9
 
 ## Piąta iteracja — 2026-11-24
 Poprawki 049–058: commit d646625027396ec01feee4d3a77a2efea064ce55. Ponowna kontrola strukturalna zmienionego źródła: 35 niezmienionych etykiet, 16 rozwiązywalnych wystąpień odsyłaczy, zgodne środowiska. Workflow [45404958762](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45404958762) na wcześniejszym commicie d6b27b9 potwierdził sukces kroku testów wykonywalnych i kontroli strukturalnej; kompilacja była w toku w chwili sprawdzenia. Nie przenosić wyniku starszego workflow na nowy commit. Kryteria 049–058 sprawdzono semantycznie przy poprawkach; niezależny ponowny przegląd i kompilacja aktualnej wersji oraz wizualna kontrola rysunków pozostają otwarte. Lean nie uruchomiono.
+
+## Szósta iteracja — 2026-11-24
+Poprawki 059–065: commit 193afa2c7da2d781a6bd486c464ba2caaf6650c3. Kontrola strukturalna zmienionego tekstu: 35 zachowanych unikalnych etykiet, 16 rozwiązywalnych odsyłaczy, poprawnie zagnieżdżone środowiska. Starszy [workflow 45404958762](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45404958762) zakończył się sukcesem, w tym testy, kompilacja, diagnostyka i renderowanie. Pobrano artefakt 14925920421 (14 stron PNG) i przeprowadzono oględziny układu stron oraz trzech rysunków (s. 6, 8, 11). Wnioski: zwiększyć odstęp napisów od osi, wyróżnić właściwą charakterystykę punktami, nie zasłaniać osi czasowej w stożku. Poprawiono źródło trzech rysunków; nowe renderowanie wymaga ponownej kontroli. Dla wersji po piątej iteracji potwierdzono sukces kroków testów i kontroli strukturalnej w przebiegu 45405221487; nie jest to wynik dla commitu szóstej iteracji. Lean nie uruchomiono. Rozdział nadal otwarty.
