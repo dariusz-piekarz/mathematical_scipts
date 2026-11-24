@@ -1,0 +1,16 @@
+# Moduł 15A — audyt 32 (czysty, 1/2)
+
+Data: 24 listopada 2026. Gałąź biblioteka-matematyczna-iteracja-6.
+Punkt wyjścia raport 31 (153c277076b2cf7ee9b1e34799feeeda3affa304), źródło 79f8ffe796145ff69103479a4153c906cbbb0fb7. Bez zmian źródła, testów i workflow.
+
+## Kontrola matematyczna i redakcyjna
+Ponownie przeczytano wszystkie cztery podsekcje. Zweryfikowano kwantyfikatory definicji całki Riemanna i zbieżność w topologii E, wspólne rozdrobnienie podziałów i przejście od ciągu dyadycznego do dowolnych podziałów, liniowość, addytywność z orientacją przez różnice H(v)-H(u), przemienność z odwzorowaniami liniowymi, średnią krzywej w domkniętej otoczce wypukłej, kontrprzykład w c00 (także odbicie), całkę w uzupełnieniu i granicę niewłaściwą. Sprawdzono pochodne jednostronne, oba kierunki Newtona–Leibniza, jednostajną kontrolę parametru w każdej seminormie, przypadek granic równych i odwróconych w regule Leibniza oraz ciągłość jej wszystkich składników. W dowodzie Fubiniego zweryfikowano oszacowania obu sum iterowanych względem tej samej sumy podwójnej. W przykładach C-infty i Schwartza zweryfikowano ciągłość ewaluacji i różniczkowania; dla całki silnej operatorów zastosowanie Banacha–Steinhausa i kontrprzykład modulacji z normą różnicy 2. Nie stwierdzono koniecznej korekty.
+
+## Kontrola powielania
+Porównano treść z rozdziałem 14, modułem 15B i rozdziałem 17. Rozdział 14 dowodzi podstawowego twierdzenia dla przestrzeni Banacha, potrzebnego w rozdziale 15; 15A rozszerza je na ciągowo zupełne przestrzenie lokalnie wypukłe bez metryzowalności, z oszacowaniami seminormowymi. Nie usuwać potrzebnego wcześniejszego wyniku ani wprowadzać zależności wstecznej. Fubini w 15A dotyczy funkcji ciągłych i całek Riemanna, zaś 15B funkcji mierzalnych i różnych całek wektorowych; powiązanie zapewnia stwierdzenie prop:riemann-bochner15b. W 15A definicje seminorm przestrzeni C-infty oraz Schwartza są krótkim przygotowaniem do przykładów całkowania, z odsyłaczem do 17; nie powtarzają dowodów zupełności ani równoważności rodzin seminorm z 17. Zachować te zależności; brak zbędnego odrębnego dowodu wymagającego usunięcia. Deduplikacja szeregu Neumanna z audytu 31 pozostaje w mocy.
+
+## Technika
+Dedykowane CI raportu 31: przebieg 45360508047, job 138329063379, 9/9 etapów, 6/6 testów (w tym test orientacji obejmujący 125 trójek końców i oszacowania sum podwójnych), trzy przebiegi pdflatex, 140 stron, PDF 1372483 bajty, artefakt 14903619140. Pobrano, rozpakowano, sprawdzono log: znane underfull hbox 1127, brak overfull, niezdefiniowanych poleceń i odsyłaczy oraz brakujących znaków. Obejrzano render wszystkich stron 94–101 obejmujących moduł 15A, bez widocznych kolizji ani obcięć. Potwierdzono 18 unikalnych etykiet, 6 wystąpień odsyłaczy (bez komentarzy), poprawne zagnieżdżenie środowisk, 659 wierszy, 12 dowodów i 4 przykłady. Testy blob 72b4da2202bd93aef41b2a9b18403f275acf6fbc, workflow 4fa6869e2d278358df1f568d61c9b98c7a1294f4.
+
+## Decyzja
+Pierwszy czysty audyt modułu 15A: 1/2. Następny audyt 33 nadal modułu 15A. Po drugim czystym audycie przejść do 15B, następnie 16 itd. Rozdziały 14 i 15 pozostają stabilne. Zakres zamknięty; kontrolować również zbędne powielenia, zachowując rzeczywiste uogólnienia.
