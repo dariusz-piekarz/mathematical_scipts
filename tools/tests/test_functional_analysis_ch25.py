@@ -186,5 +186,43 @@ class Chapter25(unittest.TestCase):
             a=F(1,2*(j+2)); lo=F(1,J+2); hi=1-lo
             self.assertTrue(0<a<lo<=hi<1)
 
+    def test_FA25_natural_operators_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"p_{K,m}(\partial^\alpha f)\le p_{K,m+|\alpha|}(f)",
+            r"p_{N,m}(\partial^\alpha f)\le p_{N,m+|\alpha|}(f)",
+            r"p_{N,m}(af)\le 2^m A_m p_{N+M_m,m}(f)",
+            r"P_B(A'T)=P_{A(B)}(T)",
+            r"(-1)^{|\alpha|}\langle T,\partial^\alpha f\rangle",
+            r"\langle aT,f\rangle=\langle T,af\rangle",
+            r"aT_1=T_a",
+            r"\ref{thm:fourier-auto-tempered22}",
+            r"\partial_y^\beta A_T f(y)",
+            r"p_{N,k}(A_Tf)\le C(1+R)^N p_{N,k+m}(f)",
+            r"\langle T*S,f\rangle=\langle S,A_Tf\rangle",
+        ):
+            self.assertIn(fragment,s)
+        # Exact translated polynomial jets for convolution with
+        # a finite linear combination of point derivatives.
+        from math import factorial
+        def jet(c,x,k):
+            return sum(a*F(factorial(j),factorial(j-k))*x**(j-k)
+                       for j,a in enumerate(c) if j>=k)
+        atoms=[(F(-1,2),0,F(2)),(F(1,3),1,F(-3,2)),(F(1),2,F(1,4))]
+        for c,y,k in product(product(range(-1,2),repeat=4),
+                             (F(-2),F(-1,3),F(0),F(3,2)),range(4)):
+            # Expand the translated polynomial before differentiating.
+            from math import comb
+            q=[sum(w*(-1)**m*a*F(factorial(j),factorial(j-m))*
+                   comb(j-m,l)*x**(j-m-l)
+                   for x,m,w in atoms for j,a in enumerate(c) if j>=m+l)
+               for l in range(4)]
+            direct=sum(w*(-1)**m*jet(c,x+y,k+m) for x,m,w in atoms)
+            self.assertEqual(jet(q,y,k),direct)
+        for x,y,N in product((F(k,3) for k in range(-9,10)),
+                             (F(k,4) for k in range(-12,13)),range(7)):
+            self.assertLessEqual((1+abs(y))**N,
+                                 (1+abs(x))**N*(1+abs(x+y))**N)
+
 if __name__ == "__main__":
     unittest.main()
