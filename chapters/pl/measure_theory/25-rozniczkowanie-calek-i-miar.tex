@@ -64,8 +64,9 @@ jest półciągła z dołu: jeśli $x_n\to x$, to dla każdego
 $y\in B(x,r)$ ostatecznie $y\in B(x_n,r)$, zatem lemat
 Fatou zastosowany do miary $\nu$ daje
 $\nu(B(x,r))\le\liminf_n\nu(B(x_n,r))$. Stąd
-$\{M\nu>t\}$ jest otwarty. Niech $K$ będzie jego
-zwartym podzbiorem. Dla każdego $x\in K$ istnieje
+$\{M\nu>t\}$ jest otwarty. Jeżeli zbiór ten jest pusty, teza zachodzi. W przeciwnym
+razie niech $K$ będzie jego niepustym zwartym podzbiorem
+(dla pustego $K$ oszacowanie jest automatyczne). Dla każdego $x\in K$ istnieje
 kula $B_x=B(x,r_x)$ taka, że
 $\nu(B_x)>tv_dr_x^d$. Ponieważ $\nu$ jest skończona,
 promienie są ograniczone z góry. Z lematu $5r$
@@ -129,6 +130,21 @@ $\varphi$ znika wskutek jej ciągłości w $x$.
 Niech $D_f(x)$ oznacza powyższy $\limsup$, a $t>0$.
 Dla każdego $\varphi$ zachodzi inkluzja
 $\{D_f>2t\}\subseteq\{Mg>t\}\cup\{|g|>t\}$.
+Możemy przyjąć wszędzie skończony mierzalny reprezentant $f$.
+Dla ustalonego $r>0$ funkcja
+\[
+ (x,c)\longmapsto\int_{B(x,r)}|f(y)-c|\,\mathrm d\lambda_d(y)
+\]
+jest ciągła: ciągłość w $x$ przy ustalonym $c$ wynika
+ze zbieżności zdominowanej (brzeg kuli ma miarę zero),
+a zmiana $c$ na $c'$ zmienia całkę najwyżej o
+$v_dr^d|c-c'|$. Podstawiając $c=f(x)$, uzyskujemy
+mierzalność średniej oscylacji. Dla każdego $x$
+jest ona ciągła względem $r>0$ na mocy tego samego
+argumentu ze zbieżnością zdominowaną.
+Zatem $D_f$ jest mierzalna, gdyż granicę górną można
+zapisać jako infimum po $n\ge1$ z supremów po
+wymiernych $r\in(0,1/n)$.
 Nierówność słabego typu i nierówność Czebyszewa dają
 \[
  \lambda_d(\{D_f>2t\})
@@ -138,10 +154,7 @@ Lemat~\ref{lem:continuous-dense-25} pozwala uczynić
 prawą stronę dowolnie małą. Zatem
 $\lambda_d(\{D_f>2t\})=0$ dla każdego $t>0$.
 Ponieważ $D_f\ge0$, otrzymujemy $D_f=0$ prawie
-wszędzie. (Mierzalność $D_f$ wynika z mierzalności
-średnich i z wyrażenia granicy górnej przy promieniach
-wymiernych, wykorzystując ciągłość całki względem
-promienia.)
+wszędzie.
 
 Jeżeli $f$ jest tylko lokalnie całkowalna, dla każdego
 $n\ge1$ rozważamy $f_n=f\chi_{B(0,n+2)}\in L^1$.
@@ -164,6 +177,24 @@ nie można w ogólności usunąć.
 Pierwsza część wynika z twierdzenia
 \ref{thm:lebesgue-diff-25}; druga z przykładu
 $f=\chi_{\mathbb Q^d}$.
+\end{proof}
+
+\begin{wniosek}[Twierdzenie Lebesgue'a o gęstości]
+\label{cor:lebesgue-density-25}
+Niech $E\subseteq\mathbb R^d$ będzie zbiorem mierzalnym
+w sensie Lebesgue'a. Dla $\lambda_d$-prawie każdego $x$ zachodzi
+\[
+ \lim_{r\downarrow0}\frac{\lambda_d(E\cap B(x,r))}{v_dr^d}
+ =\chi_E(x).
+\]
+W szczególności prawie każdy punkt $E$ jest punktem gęstości
+$1$, a prawie każdy punkt dopełnienia ma gęstość $0$.
+\end{wniosek}
+\begin{proof}
+Funkcja $\chi_E$ jest lokalnie całkowalna, nawet gdy
+$\lambda_d(E)=+\infty$. Stosujemy
+twierdzenie~\ref{thm:lebesgue-diff-25} i zauważamy, że
+$A_r\chi_E(x)=\lambda_d(E\cap B(x,r))/(v_dr^d)$.
 \end{proof}
 
 \begin{przyklad}[Przedstawiciel kanoniczny w punktach Lebesgue'a]
@@ -267,7 +298,8 @@ w swoich punktach koncentracji.
 \section{Pochodna całki w jednym wymiarze}
 \begin{twierdzenie}[Podstawowe twierdzenie rachunku całkowego dla całki Lebesgue'a]
 \label{thm:FTC-lebesgue-25}
-Niech $a<b$ i $f\in L^1((a,b),\lambda_1)$. Funkcja
+Niech $a,b\in\mathbb R$, $a<b$, i niech
+$f\in L^1((a,b),\lambda_1)$ będzie funkcją rzeczywistą. Funkcja
 $F:[a,b]\to\mathbb R$ określona wzorem
 $F(x)=\int_{(a,x)}f(t)\,\mathrm d\lambda_1(t)$
 jest absolutnie ciągła i spełnia
@@ -285,7 +317,8 @@ dostatecznie mała. Jest to definicja absolutnej
 ciągłości funkcji $F$.
 
 Niech $x\in(a,b)$ będzie punktem Lebesgue'a $f$.
-Dla $h>0$ tak małego, by $x+h<b$, zachodzi
+Przedłużamy $f$ przez zero na $\mathbb R\setminus(a,b)$.
+Dla $0<h<\min\{x-a,b-x\}$ zachodzi
 \[
  \left|\frac{F(x+h)-F(x)}h-f(x)\right|
  \le\frac1h\int_{(x,x+h)}|f(t)-f(x)|\,
@@ -328,11 +361,11 @@ W (iii) pochodna istnieje prawie wszędzie.
 \end{twierdzenie}
 \begin{proof}
 Niech $x$ będzie punktem Lebesgue'a $f$, w którym
-$\nu_s(B(x,r))/(2r)\to0$ oraz $\nu(\{x\})=0$.
-Punkty takie tworzą zbiór pełnej miary Lebesgue'a:
-pierwsze dwie własności wynikają z twierdzenia
-\ref{thm:measure-differentiation-25}, a atomów dodatniej
-masy jest co najwyżej przeliczalnie wiele.
+$\nu_s(B(x,r))/(2r)\to0$. Punkty takie tworzą zbiór
+o dopełnieniu miary Lebesgue'a zero na mocy twierdzenia
+\ref{thm:lebesgue-diff-25} i lematu~\ref{lem:singular-density-25}.
+Nie trzeba osobno wykluczać atomów: w takim punkcie
+$\nu_s(\{x\})=0$ wynika już z zaniku ilorazu.
 Dla $h>0$ mamy
 \[
  \frac{F(x+h)-F(x)}h
@@ -345,8 +378,10 @@ przez dwa razy analogiczną średnią po $(x-h,x+h)$.
 Drugi składnik, dla $h>0$, jest ograniczony przez
 $\nu_s(B(x,2h))/h$ i zatem dąży do zera.
 Dla $h<0$ rozpatrujemy przedział $(x+h,x]$;
-ponieważ $\nu_s(\{x\})=0$, ten sam argument działa
-również z lewej. Dowodzi to $F'=f$ prawie wszędzie.
+jest on zawarty w $B(x,2|h|)$, więc składnik osobliwy
+podzielony przez $|h|$ także dąży do zera.
+Składnik absolutnie ciągły szacujemy przez średnią
+po $B(x,|h|)$, jak dla $h>0$. Dowodzi to $F'=f$ prawie wszędzie.
 
 Jeśli (i) zachodzi, to $\nu=f\lambda_1$ z
 $f\in L^1(\mathbb R)$, a więc
@@ -420,21 +455,158 @@ po kostce jest więc ograniczona przez stałą razy
 w każdym punkcie Lebesgue'a.
 \end{proof}
 
-\begin{uwaga}[Przekroje i inne miary]
-Analogiczne różniczkowanie względem \emph{dowolnej}
-miary Radona $\mu$ na $\mathbb R^d$ można otrzymać
-z twierdzenia pokryciowego Besicovitcha:
-centrowany operator maksymalny względem $\mu$ spełnia
-odpowiednie oszacowanie słabego typu $(1,1)$, a dalszy
-argument opiera się na aproksymacji funkcji całkowalnych.
-Pełna, nieskończona wersja twierdzenia Besicovitcha
-\emph{została już udowodniona} w
-Twierdzeniu~\ref{thm:besicovitch-24}.
-Nie wyprowadzamy tutaj jednak osobno całego twierdzenia
-o różniczkowaniu względem arbitralnej miary Radona:
-wymaga ono dodatkowo sformułowania i przeprowadzenia
-argumentu maksymalnego z mianownikiem $\mu(B(x,r))$,
-z uwzględnieniem kul o zerowej mierze.
-W ten sposób rozróżniamy udowodnione narzędzie pokryciowe
-od niewypisanego w pełni wniosku o różniczkowaniu.
+\section{Różniczkowanie względem dowolnej miary Radona}
+
+\begin{lemat}[Nierówność maksymalna dla dwóch miar]
+\label{lem:relative-maximal-25}
+Niech $\mu$ będzie dodatnią miarą Radona na $\mathbb R^d$,
+a $\eta$ skończoną dodatnią miarą borelowską na $\mathbb R^d$.
+Dla $R>0$ określamy
+\[
+ M_{\mu,R}\eta(x)=
+ \sup_{\substack{0<r\le R\\\mu(B(x,r))>0}}
+ \frac{\eta(B(x,r))}{\mu(B(x,r))},
+\]
+przyjmując supremum pustej rodziny równym zero.
+Funkcja ta jest borelowska i dla każdego $t>0$
+\[
+ \mu(\{M_{\mu,R}\eta>t\})\le\frac{15^d}{t}\eta(\mathbb R^d).
+\]
+\end{lemat}
+\begin{proof}
+Dla ustalonego $r$ funkcje $x\mapsto\eta(B(x,r))$
+oraz $x\mapsto\mu(B(x,r))$ są półciągłe z dołu
+na mocy argumentu z lematem Fatou z dowodu
+twierdzenia~\ref{thm:weak-measure-25}. Mianownik jest
+skończony z lokalnej skończoności $\mu$.
+Jeżeli $\mu(B(x,r))>0$, dla wymiernych $r_n\uparrow r$,
+$r_n<r$, ciągłość miar od dołu daje zbieżność obu mas,
+a mianowniki są dodatnie od pewnego indeksu. Ilorazy
+zbiegają więc do ilorazu dla $r$. W supremum wystarczą
+dodatnie promienie wymierne nie większe niż $R$, a każdy
+iloraz przedłużony przez zero na zbiór zerowego
+mianownika jest borelowski.
+
+Niech $E_n=B(0,n)\cap\{M_{\mu,R}\eta>t\}$.
+Dla każdego $x\in E_n$ wybieramy $0<r_x\le R$ takie, że
+$0<t\mu(B(x,r_x))<\eta(B(x,r_x))$.
+Z twierdzenia~\ref{thm:besicovitch-24} istnieje
+co najwyżej przeliczalne pokrycie $E_n$ wybranymi
+kulami $(B_j)$ o krotności co najwyżej $15^d$.
+Nie powiększamy kul. Z wniosku
+\ref{cor:besicovitch-measure-infinite-24} wynika
+\[
+ \mu(E_n)\le\sum_j\mu(B_j)
+ \le\frac1t\sum_j\eta(B_j)
+ \le\frac{15^d}{t}\eta(\mathbb R^d).
+\]
+Ponieważ $E_n$ rosną do całego zbioru poziomicowego,
+ciągłość $\mu$ od dołu daje tezę.
+\end{proof}
+
+\begin{twierdzenie}[Różniczkowanie całek względem miary Radona]
+\label{thm:relative-lebesgue-25}
+Niech $\mu$ będzie dodatnią miarą Radona na $\mathbb R^d$
+i $f\in L^1_{\mathrm{loc}}(\mu)$. Dla $\mu$-prawie każdego
+$x$ wszystkie kule $B(x,r)$, $r>0$, mają dodatnią miarę
+i zachodzi
+\[
+ \lim_{r\downarrow0}
+ \frac{1}{\mu(B(x,r))}
+ \int_{B(x,r)}|f(y)-f(x)|\,\mathrm d\mu(y)=0.
+\]
+W szczególności średnie $f$ względem $\mu$ dążą do $f(x)$.
+\end{twierdzenie}
+\begin{proof}
+Niech $S=\operatorname{supp}\mu$ oznacza zbiór punktów,
+których każde otwarte otoczenie ma dodatnią miarę.
+Dopełnienie $S$ jest sumą otwartych zbiorów miary zero.
+Z przeliczalnej bazy $\mathbb R^d$ wynika, że wystarczy
+przeliczalnie wiele takich zbiorów; zatem $\mu(S^c)=0$.
+W dalszym ciągu rozpatrujemy tylko $x\in S$.
+
+Najpierw niech $f\in L^1(\mu)$. Funkcje $C_c(\mathbb R^d)$
+są gęste w $L^1(\mu)$: przybliżamy $f$ przez całkowalne
+funkcje proste o zbiorach skończonej miary, a dla takiego
+zbioru $A$ regularność daje zwarty $K\subseteq A$
+i otwarty $U\supseteq A$ z $\mu(U\setminus K)$ dowolnie małą.
+Funkcja odcinająca $h\in C_c$, $0\le h\le1$,
+$h|_K=1$, $\operatorname{supp}h\subseteq U$ spełnia
+$\|\chi_A-h\|_{L^1(\mu)}\le\mu(U\setminus K)$.
+Dla zbiorów mierzalnych w uzupełnieniu miary wybieramy
+najpierw borelowskie reprezentanty modulo zbiory zerowe.
+
+Dla $\varphi\in C_c$ kładziemy $g=f-\varphi$.
+Ciągłość $\varphi$ w $x$ i nierówność trójkąta dają
+\[
+ D_{\mu,f}(x):=\limsup_{r\downarrow0}
+ \frac{\int_{B(x,r)}|f(y)-f(x)|\,\mathrm d\mu(y)}
+ {\mu(B(x,r))}
+ \le M_{\mu,1}(|g|\mu)(x)+|g(x)|.
+\]
+Nawet bez uprzedniego dowodu mierzalności lewej strony
+możemy szacować jej zbiory poziomicowe miarą zewnętrzną
+$\mu^*$: z lematu~\ref{lem:relative-maximal-25}
+i nierówności Czebyszewa otrzymujemy dla $t>0$
+\[
+ \mu^*(\{x\in S:D_{\mu,f}(x)>2t\})
+ \le\frac{15^d+1}{t}\|f-\varphi\|_{L^1(\mu)}.
+\]
+Gęstość $C_c$ daje zero po prawej stronie w granicy.
+Sumując zbiory wyjątkowe dla $t=1/n$, dostajemy tezę.
+Dla funkcji lokalnie całkowalnej stosujemy wynik do
+$f\chi_{B(0,n+2)}$ i rozpatrujemy $x\in B(0,n)$,
+$r<1$. Przeliczalna suma zbiorów wyjątkowych ma
+miarę zewnętrzną zero.
+\end{proof}
+
+\begin{twierdzenie}[Różniczkowanie dwóch miar Radona]
+\label{thm:relative-radon-25}
+Niech $\mu,\nu$ będą dodatnimi miarami Radona na $\mathbb R^d$,
+a $\nu=f\mu+\nu_s$ rozkładem Lebesgue'a względem $\mu$,
+gdzie $\nu_s\perp\mu$. Wówczas
+\[
+ \lim_{r\downarrow0}\frac{\nu(B(x,r))}{\mu(B(x,r))}
+ =f(x)\qquad\text{dla }\mu\text{-prawie każdego }x.
+\]
+Iloraz rozpatrujemy w punktach nośnika $\mu$.
+\end{twierdzenie}
+\begin{proof}
+Miary są $\sigma$-skończone, gdyż przestrzeń jest
+przeliczalną sumą kul o zwartym domknięciu.
+Rozkład Lebesgue'a i twierdzenie Radona--Nikodyma
+dają $f\in L^1_{\mathrm{loc}}(\mu)$, ponieważ
+$\int_K f\,\mathrm d\mu\le\nu(K)<\infty$ dla zwartych $K$.
+Twierdzenie~\ref{thm:relative-lebesgue-25} rozstrzyga
+składnik absolutnie ciągły.
+
+Najpierw załóżmy, że $\nu_s$ jest skończona.
+Istnieje borelowski $N$ z $\mu(N)=0$ i $\nu_s(N^c)=0$.
+Dla $\varepsilon>0$ wybieramy zwarty $K\subseteq N$
+z $\nu_s(K^c)<\varepsilon$ i kładziemy
+$\eta=\nu_s|_{K^c}$. Dla $x\in S\setminus K$ małe kule
+nie przecinają $K$, więc
+\[
+ \limsup_{r\downarrow0}\frac{\nu_s(B(x,r))}{\mu(B(x,r))}
+ \le M_{\mu,1}\eta(x).
+\]
+Dla $t>0$ miara zewnętrzna zbioru punktów $x\in S$,
+w których granica górna przekracza $t$, nie przekracza
+$\mu(K)+15^d\varepsilon/t=15^d\varepsilon/t$.
+Dowolność $\varepsilon$ i przeliczalna suma dla $t=1/n$
+dają zanik ilorazu $\mu$-prawie wszędzie.
+W przypadku ogólnym stosujemy ten argument do
+$\nu_s|_{B(0,n+2)}$, a następnie do punktów $x\in B(0,n)$
+i promieni $r<1$. Otrzymujemy żądany wynik lokalnie
+i w konsekwencji na całej przestrzeni.
+\end{proof}
+
+\begin{uwaga}[Znaczenie twierdzenia Besicovitcha]
+W ogólności nie istnieje stała $C$ taka, że
+$\mu(5B)\le C\mu(B)$ dla wszystkich kul.
+Dlatego w dowodzie nierówności dla dwóch miar
+stosujemy pokrycie bez powiększania kul, z ograniczoną
+krotnością. Kule zerowej miary pomijamy; poza nośnikiem
+$\mu$ nie ma potrzeby definiowania ilorazów dla twierdzenia
+o różniczkowaniu.
 \end{uwaga}
