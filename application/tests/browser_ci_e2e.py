@@ -125,6 +125,97 @@ def main() -> None:
                 )
                 assert page.locator("#leanTranscriptionPackage").text_content() == ""
                 assert not page.locator("#leanTranscriptionConsent").is_checked()
+                # L1.5.2 acceptance: unregistered theorem and labelled non-theorem.
+                with sqlite3.connect(ROOT / "data" / "biblioteka.db") as db:
+                    def labelled_candidates(kind):
+                        return db.execute("""
+                            SELECT e.id, e.start_offset, e.end_offset, d.content
+                            FROM entities e
+                            JOIN labels l ON l.entity_id=e.id
+                            JOIN documents d ON d.id=e.document_id
+                            WHERE e.kind=? AND e.id != ?
+                              AND (SELECT count(*) FROM labels ll
+                                   WHERE ll.entity_id=e.id)=1
+                            ORDER BY CASE WHEN d.id='LST-01' THEN 0
+                                          WHEN d.id='LST-02' THEN 1
+                                          WHEN d.id='LA-01' THEN 2 ELSE 3 END,
+                                     d.id, e.start_line, e.id
+                            LIMIT 100
+                        """, (kind, entity_id)).fetchall()
+                    theorem_candidates = labelled_candidates("theorem")
+                    other_candidates = labelled_candidates("definition")
+
+                def unregistered_exact(candidates):
+                    for candidate_id, start, end, document in candidates:
+                        candidate_source = document[start:end]
+                        if len(candidate_source.encode("utf-8")) > 32768:
+                            continue
+                        response = page.request.get(URL + "/api/lean/fragment",
+                                                    params={"entity_id": candidate_id})
+                        if not response.ok:
+                            continue
+                        fragment = response.json()
+                        if (fragment["source_linkage"] == "exact_entity"
+                                and fragment["source_entity"] == candidate_id
+                                and fragment["formalization_status"] == "missing"
+                                and len(fragment["source_labels"]) == 1):
+                            return candidate_id, candidate_source
+                    raise AssertionError("No suitable labelled unregistered canonical object")
+
+                new_id, new_source = unregistered_exact(theorem_candidates)
+                definition_id, _ = unregistered_exact(other_candidates)
+                posts = []
+                def record_lean_post(request):
+                    if request.method == "POST" and "/api/lean/" in request.url:
+                        posts.append(request.url)
+                page.on("request", record_lean_post)
+                # Consent attached to A must not survive the switch to B.
+                page.locator("#leanTranscriptionConsent").check()
+                page.evaluate("(id) => { void loadLeanFragment({entity_id:id}); }", new_id)
+                page.wait_for_function(
+                    "(id) => state.leanFragment?.source_entity===id",
+                    arg=new_id, timeout=15000,
+                )
+                assert page.evaluate("state.leanFragment.formalization_id") is None
+                assert page.locator("#leanLatex").text_content() == new_source
+                assert page.locator("#leanTranscriptionPackage").text_content() == ""
+                assert not page.locator("#leanTranscriptionConsent").is_checked()
+                assert page.locator("#leanTranscriptionPrepare").is_disabled()
+                assert not page.locator("#leanTranscriptionConsent").is_disabled()
+                page.locator("#leanTranscriptionConsent").check()
+                page.locator("#leanTranscriptionPrepare").click()
+                page.wait_for_function(
+                    "() => document.querySelector('#leanTranscriptionStatus').textContent.includes('Nie wygenerowano kodu Lean')",
+                    timeout=20000,
+                )
+                new_packet = page.evaluate("JSON.parse(document.querySelector('#leanTranscriptionPackage').textContent)")
+                assert new_packet["source_entity"] == new_id
+                assert new_packet["source_latex"] == new_source
+                assert new_packet["candidate_status"] == "not_generated"
+                assert page.evaluate("state.leanFragment.lean_code") is None
+                assert page.locator("#leanRun").is_disabled()
+                page.evaluate("(id) => { void loadLeanFragment({entity_id:id}); }", definition_id)
+                page.wait_for_function(
+                    "(id) => state.leanFragment?.source_entity===id",
+                    arg=definition_id, timeout=15000,
+                )
+                assert page.locator("#leanTranscriptionPackage").text_content() == ""
+                assert not page.locator("#leanTranscriptionConsent").is_checked()
+                # UI permits an exact labelled object; backend must fail closed.
+                page.locator("#leanTranscriptionConsent").check()
+                page.locator("#leanTranscriptionPrepare").click()
+                page.wait_for_function(
+                    "() => document.querySelector('#leanTranscriptionStatus').textContent.includes('Eksperyment wymaga pełnego twierdzenia')",
+                    timeout=20000,
+                )
+                assert page.locator("#leanTranscriptionPackage").text_content() == ""
+                assert posts == [URL + "/api/lean/transcription/prepare"] * 2, posts
+                page.remove_listener("request", record_lean_post)
+                page.evaluate("(id) => { void loadLeanFragment({entity_id:id}); }", entity_id)
+                page.wait_for_function(
+                    "() => state.leanFragment?.formalization_id==='lst01-de-morgan'",
+                    timeout=15000,
+                )
                 # L1.4: real read-only chapter report, separate from proof status.
                 page.locator("#leanChapterReportCurrent").click()
                 page.wait_for_function(
@@ -178,6 +269,9 @@ def main() -> None:
                 )
                 expected_entity_lines = "".join(source.splitlines(keepends=True)[first-1:last])
                 assert page.locator("#leanLatex").text_content() == expected_entity_lines
+                assert page.locator("#leanTranscriptionConsent").is_disabled()
+                assert page.locator("#leanTranscriptionPrepare").is_disabled()
+                assert page.locator("#leanTranscriptionPackage").text_content() == ""
                 assert page.evaluate("state.leanFragment.certificate") is False
 
                 page.evaluate("() => openModule('LST-01', true)")
