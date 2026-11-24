@@ -5,3 +5,5 @@ Realizujemy po jednym rozdziale do stabilizacji; rozszerzenia proponujemy tylko 
 Odsyłacze: topologia ogólna (metryki, zupełność, zwartość); algebra abstrakcyjna 19 (ciało ułamków); teoria całki (konstrukcje); teoria miary (Lebesgue).
 ## Literatura porównawcza
 - Marek Jarnicki, *Wykłady z Analizy Matematycznej I*, wersja z 9 stycznia 2022 r., dostępny fragment: https://apps.usos.uj.edu.pl/apps/f/Q9qBncrH/analiza-19-20-21%20%281%29.pdf . Wykorzystywać do kontroli zakresu i kolejności, z samodzielnym opracowaniem treści i wskazaniem źródeł konkretnych zapożyczeń.
+## Standard redakcyjny
+Wzorce: Geometria i topologia różniczkowa, rozdział 01 (motywacja, szczegółowe dowody, przykłady i kontrprzykłady, rysunki tam, gdzie pomagają), oraz Topologia ogólna (skład). Marginesy 2,5 cm, jednolity nagłówek, numeracja twierdzeń według sekcji, wspólne środowiska i pakiety w tomie i preambule AM1 Atlasu. Zachować etykiety, regresje i brak zbędnych ramek.
