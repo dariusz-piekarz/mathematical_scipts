@@ -47,3 +47,11 @@ Regresja `test_functional_analysis_ch15b.py` zawiera **6** testów, w tym arytme
 ## Decyzja
 
 **15B/05: PIERWSZY CZYSTY AUDYT (1/2)** na niezmienionych blobach źródła i testów po korektach z 15B/04. Nie przechodzić do rozdziału 16. Następna jednostka: niezależny audyt **15B/06** na dokładnie tych samych blobach, następnie potwierdzenie nowego dedykowanego CI i formalna decyzja o statusie STABILNY. W przypadku konieczności jakiejkolwiek korekty matemat./redakcyjnej resetować licznik zamiast uznawać etap za drugi czysty.
+
+## Potwierdzenie dedykowanej bramki CI po audycie 15B/05
+
+Uruchomiony zapisem niniejszego raportu przebieg [#45306417366](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45306417366), przypisany do commitu [282bdc4470b56b6f54b48e98481966f39390f208](https://github.com/dariusz-piekarz/mathematical_scipts/commit/282bdc4470b56b6f54b48e98481966f39390f208), zakończył się stanem **completed/success**. Kontrola szczegółów zadania potwierdziła sukces regresji modułu 15B, przygotowania kontekstu 01–17, rzeczywistej kompilacji LaTeX, automatycznej kontroli PDF, treści i odsyłaczy, oraz publikacji artefaktu PDF i logów.
+
+Po zakończeniu workflow ponownie odczytano na istniejącej gałęzi bloby: źródło `3611164daa8a7ca1d73fc4b564825bddd044d100` oraz sześć regresji w pliku `c73a00941b5789093f5f9322f79f79df059be4e7`. Są **identyczne** z wersją audytowaną 15B/05 i poprzednią wersją po korektach z 15B/04. Wizualna inspekcja PDF tej samej wersji źródła (110 stron, ze szczególnym uwzględnieniem stron 98–100) została udokumentowana w 15B/04. Zielony nowy workflow potwierdza wygenerowanie i maszynową kontrolę PDF po raporcie 15B/05. Nie podaje się testów regresyjnych lub kompilacji jako dowodu formalnego matematyki.
+
+**Końcowa decyzja 15B/05: CZYSTY, 1/2 na niezmienionym źródle; CI: PASS.** Nadal należy przeprowadzić drugi niezależny czysty audyt **15B/06** i potwierdzić końcową bramkę po nim, zanim możliwe będzie oznaczenie modułu 15B jako STABILNY i przejście do rozdziału 16.
