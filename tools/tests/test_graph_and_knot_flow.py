@@ -92,6 +92,8 @@ def edmonds_karp(n, arcs, s, t):
     residual = Residual(n, arcs)
     value = 0
     rounds = 0
+    last_saturation = {}
+    saturation_count = {}
     while True:
         parent = [None] * n
         parent[s] = (-1, -1)
@@ -115,6 +117,18 @@ def edmonds_karp(n, arcs, s, t):
             v = u
         assert bottleneck > 0
         prev_dist = residual.bfs(s)
+        critical = [(u, index) for u, index in path
+                    if residual.adj[u][index][1] == bottleneck]
+        assert critical
+        for key in critical:
+            u, index = key
+            v = residual.adj[u][index][0]
+            assert prev_dist[v] == prev_dist[u] + 1
+            if key in last_saturation:
+                assert prev_dist[u] >= last_saturation[key] + 2
+            last_saturation[key] = prev_dist[u]
+            saturation_count[key] = saturation_count.get(key, 0) + 1
+            assert saturation_count[key] <= n
         residual.augment(path, bottleneck)
         new_dist = residual.bfs(s)
         assert all(new_dist[v] == -1 or
@@ -336,4 +350,5 @@ if __name__ == "__main__":
     print("PASS seeded directed networks incl antiparallel/parallel:", test_seeded())
     print("PASS exact fractional capacities:", test_rational())
     test_backward_path()
+    print("PASS TG40-EK-01 repeated saturation distance growth")
     print("PASS TG40-DINIC-01 phase invariants, reverse residual cancellation, hand-computed cuts and integration")
