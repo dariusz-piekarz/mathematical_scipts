@@ -45,3 +45,7 @@ Refer to [the Polish terminology standard](docs/pl/standardy_terminologiczne.md)
 ## Global code listings
 
 - All manuscript and Atlas export preambles must use the generated global listings block in `latex/pl/code-listings.tex`. Use `language=Python` or `language=Julia` explicitly for source code. Preserve the aliases for existing listings. Run `python tools/sync_code_listings.py --check` in audits; regenerate with `--write` after changing the canonical style. See [code style standard](docs/pl/standard_kodu.tex.md). Check rendered code for line wrapping, highlighting and readability.
+
+## Global terminology — hyperreal numbers
+
+Use **„liczby hiperrzeczywiste”** (all inflections, including „liczb hiperrzeczywistych”, „ciało liczb hiperrzeczywistych” and „liczba hiperrzeczywista”), never „liczby hiperrealne”. This rule applies to all Polish mathematical manuscripts, plans, captions, and audits. Preserve existing stable labels and English identifiers.
