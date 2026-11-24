@@ -1,0 +1,7 @@
+# Rozdział 42 (drukowany 11) — etap B ZAMKNIĘTY
+
+2026-11-24. Źródło 691e82648e813cb5d236179fdd54d956b1f18832, aktualny blob 8bf97d8be53ea2ab5d01967cbc2f5b21a4201bb8. Pełna książka 45401085786 success, terminologia 45401085778 success. Przebiegi algorytmiczne 45401085745, 45401122517, 45401203215 success. Ostatni: finite-models 138469959974 i chapter-pdf 138469961457 success. Log potwierdza 38268 enumeracji momentów, 36 przypadków Ramseya, TG42-GNM-01 190, TG42-H-01 12, TG42-COUP-01 3800; suma 42306 przypadków (niekoniecznie rozłącznych), dodatkowe kontrole rekurencji spójności i integracji.
+
+Pobrano artefakt 14923576754 z przebiegu 45401203215. PDF 118 stron (kompilacja algorytmiczna); rozdział zajmuje fizyczne 87–95, drukowane 82–90. Wyrenderowano wszystkie 9 stron w skali 1.45 przez PyMuPDF i obejrzano pięć plansz sheet87,89,91,93,95. Rysunek 11.1 czytelny, wzory, odsyłacze i podpisy bez widocznych kolizji lub obcięć; log bez dopasowań Overfull, niezdefiniowanych lub powielonych odsyłaczy i ostrzeżeń o zmianie etykiet. Nie zmieniano źródła w tej iteracji. Kontrola aplikacji 45401085697 failure, poza zakresem audytu rozdziału; globalna stabilność aplikacji nie jest deklarowana.
+
+Zamknięto etap B w zakresie kontroli rozdziału grafów, zgodnie z planem 118. Następnie etap A drukowanego rozdziału 12 (plik 43, Ekspandery: ekspansja, widmo Laplasjanu i spacery losowe).
