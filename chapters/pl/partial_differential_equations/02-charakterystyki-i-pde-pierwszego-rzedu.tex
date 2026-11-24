@@ -971,10 +971,22 @@ Dla ogólnego równania pierwszego rzędu
 \begin{equation}\label{eq:pde2-general-F}
  F(x,u(x),\nabla u(x))=0,
 \end{equation}
-gdzie $x\in\Omega\subset\R^n$,
-$F\colon\Omega\times\R\times\R^n\to\R$,
-rozpatrujemy dodatkowe zmienne $p\in\R^n$
-reprezentujące gradient. Pojawia się
+gdzie $\Omega\subset\R^n$ jest otwarta, $n\geq2$,
+$F\in C^2(\Omega\times\R\times\R^n)$, a $u$ jest
+funkcją rzeczywistą, rozpatrujemy dodatkowe zmienne
+$p\in\R^n$ reprezentujące gradient.
+Załóżmy chwilowo, że $u\in C^2(\Omega)$ jest rozwiązaniem.
+Różniczkując równanie względem $x$, otrzymujemy
+\[
+ F_x(x,u,\nabla u)+F_u(x,u,\nabla u)\nabla u
+ +D^2u(x)F_p(x,u,\nabla u)=0,
+\]
+gdzie wykorzystaliśmy symetrię hesjanu $D^2u$.
+Wybierzmy krzywą $X$ spełniającą
+$\dot X=F_p(X,u(X),\nabla u(X))$ i połóżmy
+$U=u(X)$, $P=\nabla u(X)$. Reguła łańcuchowa daje
+$\dot U=P\cdot\dot X$ oraz $\dot P=D^2u(X)\dot X$.
+Podstawiając powyższą tożsamość na hesjan, otrzymujemy
 \emph{układ charakterystyczny Charpita}:
 \begin{equation}\label{eq:pde2-charpit-system}
  \dot X=F_p(X,U,P),\qquad
@@ -986,11 +998,16 @@ zmiennych, a $F_u$ jest pochodną skalarną.
 
 \begin{lemat}[Zachowanie równania i warunku styczności]
 \label{lem:pde2-contact}
-Niech $F\in C^2$ i niech $(X,U,P)$ będzie rozwiązaniem
-\eqref{eq:pde2-charpit-system} na przedziale $I$.
-Wtedy $s\mapsto F(X(s),U(s),P(s))$ jest stała.
-Jeśli rozwiązania zależą klasy $C^1$ od parametru
-$y\in V\subset\R^{n-1}$ i $F(X,U,P)=0$, to
+Niech $n\geq2$, $\Omega\subset\R^n$ będzie otwarta
+i niech $F\in C^2(\Omega\times\R\times\R^n)$.
+Jeśli $(X,U,P)\colon I\to\Omega\times\R\times\R^n$
+jest rozwiązaniem \eqref{eq:pde2-charpit-system}
+na otwartym przedziale $I$, to
+$s\mapsto F(X(s),U(s),P(s))$ jest stała.
+Jeśli ponadto $V\subset\R^{n-1}$ jest otwarty,
+a $(X,U,P)$ jest rodziną takich rozwiązań klasy $C^1$
+na $I\times V$ i $F(X(s,y),U(s,y),P(s,y))=0$
+dla wszystkich $(s,y)\in I\times V$, to
 \begin{equation}\label{eq:pde2-contact-ode}
  \frac{\mathrm d}{\mathrm ds}
  \bigl(U_{y_j}-P\cdot X_{y_j}\bigr)
@@ -1005,8 +1022,31 @@ Reguła łańcuchowa daje
  =F_x\cdot F_p+F_u(P\cdot F_p)
  +F_p\cdot(-F_x-F_uP)=0.
 \]
-Różniczkując $R_j=U_{y_j}-P\cdot X_{y_j}$ po $s$,
-wykorzystując \eqref{eq:pde2-charpit-system}, otrzymujemy
+Oznaczmy $Z=(X,U,P)$, a prawą stronę układu
+\eqref{eq:pde2-charpit-system} przez $G(Z)$.
+Ponieważ $G$ jest klasy $C^1$, dla ustalonego $s_0\in I$
+możemy zróżniczkować tożsamość
+\[
+ Z(s,y)=Z(s_0,y)+\int_{s_0}^sG(Z(r,y))\,\mathrm d\lambda_1(r)
+\]
+względem $y_j$ (dla odwróconych granic przyjmujemy
+całkę ze znakiem minus). Funkcja podcałkowa i jej
+pochodna względem $y_j$ są ciągłe i ograniczone
+na zwartych otoczeniach odcinka całkowania.
+Wynika stąd, że $Z_{y_j}$ jest różniczkowalna
+względem $s$ oraz
+$\partial_s Z_{y_j}=DG(Z)Z_{y_j}=\partial_{y_j}G(Z)$.
+Nie zakładamy zatem istnienia wszystkich pochodnych
+drugiego rzędu rodziny $Z$.
+Dla $R_j=U_{y_j}-P\cdot X_{y_j}$ mamy
+\[
+ \partial_s R_j
+ =\partial_{y_j}(P\cdot F_p)
+ -\dot P\cdot X_{y_j}-P\cdot\partial_{y_j}F_p,
+\]
+gdzie pochodne $F_p$ oznaczają pochodne złożenia
+$F_p(X,U,P)$. Po podstawieniu $\dot P$ i skróceniu
+wyrazów zawierających $\partial_{y_j}F_p$ otrzymujemy
 \[
  \dot R_j=P_{y_j}\cdot F_p+(F_x+F_uP)\cdot X_{y_j}.
 \]
@@ -1016,6 +1056,9 @@ $F_x\cdot X_{y_j}+F_u U_{y_j}+F_p\cdot P_{y_j}=0$.
 Po podstawieniu do wzoru na $\dot R_j$ dostajemy
 $\dot R_j=-F_u(U_{y_j}-P\cdot X_{y_j})$, czyli
 \eqref{eq:pde2-contact-ode}.
+Jeżeli $R_j(s_0,y)=0$, to z jednoznaczności
+skalarnego równania liniowego wynika $R_j(s,y)=0$
+dla wszystkich $s\in I$ przy ustalonym $y$.
 \end{proof}
 
 \begin{twierdzenie}[Lokalna konstrukcja Charpita]
@@ -1034,19 +1077,28 @@ $p_0\in C^1(V;\R^n)$ spełniają dla wszystkich $y\in V$
 Jeżeli w $y_0\in V$ wektor
 $F_p(\gamma(y_0),g(y_0),p_0(y_0))$
 nie należy do $T_{\gamma(y_0)}\Sigma$,
-gdzie $\Sigma=\gamma(V)$ lokalnie, to istnieje
-otoczenie $U$ punktu $\gamma(y_0)$ i rozwiązanie
-$u\in C^2(U)$ równania \eqref{eq:pde2-general-F}
-przyjmujące dane $u(\gamma(y))=g(y)$ w pobliżu $y_0$.
-Jego gradient na powierzchni danych jest równy $p_0$.
-W klasie rozwiązań $C^2$, które realizują te same
-dane $g,p_0$, konstrukcja jest lokalnie jednoznaczna.
+gdzie $\Sigma=\gamma(V)$ lokalnie, to istnieją otwarte otoczenia $V'\subset V$ punktu $y_0$
+i $O\subset\Omega$ punktu $\gamma(y_0)$, takie że
+$\gamma(V')\subset O$, oraz rozwiązanie
+$u\in C^2(O)$ równania \eqref{eq:pde2-general-F}, dla którego
+\[
+ u(\gamma(y))=g(y),\qquad \nabla u(\gamma(y))=p_0(y)
+ \quad(y\in V').
+\]
+W klasie rozwiązań $C^2$, które realizują te same dane
+$g,p_0$ w pewnym otoczeniu $y_0$, rozwiązanie jest
+jednoznaczne jako zarodek w $\gamma(y_0)$.
 \end{twierdzenie}
 \begin{proof}
 Rozwiążmy układ \eqref{eq:pde2-charpit-system}
 z danymi $(X,U,P)(0,y)=(\gamma(y),g(y),p_0(y))$.
-Zależność rozwiązań ODE od parametrów daje funkcje
-klasy $C^1$ względem $(s,y)$ w pobliżu $(0,y_0)$.
+Prawa strona układu jest klasy $C^1$ w otwartym
+zbiorze $\Omega\times\R\times\R^n$, a odwzorowanie
+danych $y\mapsto(\gamma(y),g(y),p_0(y))$ jest klasy $C^1$.
+Lokalne twierdzenie o istnieniu ODE i zależności od
+danych początkowych daje wspólny przedział
+$(-\delta_0,\delta_0)$ dla $y$ w pewnym otoczeniu $y_0$,
+na którym $(X,U,P)$ jest klasy $C^1$ względem $(s,y)$.
 Lemat \ref{lem:pde2-contact} i pierwszy warunek
 \eqref{eq:pde2-charpit-initial} pokazują, że
 $F(X,U,P)=0$; drugi warunek i równanie
@@ -1058,24 +1110,45 @@ układu wynika $U_s=P\cdot X_s$.
 W punkcie $(0,y_0)$ kolumny macierzy $D_{(s,y)}X$
 są równe $F_p$ i $\partial_{y_j}\gamma$;
 warunek poprzeczności zapewnia, że macierz ta jest
-odwracalna. Z twierdzenia o funkcji odwrotnej $X$
-stanowi lokalny układ współrzędnych w $\Omega$.
-Definiujemy $u(X(s,y))=U(s,y)$. Wspomniane wcześniej
-równości są równoważne tożsamości
-$\mathrm dU=P\cdot\mathrm dX$, zatem
-$\nabla u(X(s,y))=P(s,y)$. Ponieważ $P$ i lokalna
-odwrotność $X^{-1}$ są klasy $C^1$, gradient $\nabla u$
-jest klasy $C^1$ na $U$, a więc $u\in C^2(U)$.
+odwracalna. Z twierdzenia o funkcji odwrotnej wybieramy
+mniejszy iloczyn $W=(-\delta,\delta)\times V'$
+zawierający $(0,y_0)$, na którym $X$ jest
+dyfeomorfizmem klasy $C^1$ na otwarty zbiór
+$O=X(W)\subset\Omega$.
+Definiujemy $u=U\circ X^{-1}$ na $O$.
+Wspomniane wcześniej równości dla pochodnych
+względem $s$ i $y_j$ są równoważne tożsamości
+$\mathrm dU=P\cdot\mathrm dX$.
+Z reguły łańcuchowej mamy także
+$\mathrm dU=(\nabla u\circ X)\cdot\mathrm dX$.
+Ponieważ $DX$ jest odwracalna w każdym punkcie $W$,
+otrzymujemy $\nabla u(X(s,y))=P(s,y)$.
+Odwzorowanie $P\circ X^{-1}$ jest klasy $C^1$ na $O$,
+więc $u$ jest klasy $C^2$ na $O$.
 Ponieważ $F(X,U,P)=0$, otrzymujemy równanie
-\eqref{eq:pde2-general-F}.
+\eqref{eq:pde2-general-F} na całym $O$.
+Dla $s=0$ mamy $X(0,y)=\gamma(y)$,
+$U(0,y)=g(y)$ i $P(0,y)=p_0(y)$, co dowodzi
+obu warunków początkowych dla $y\in V'$.
 
-Jeśli $u\in C^2$ jest innym rozwiązaniem z tym samym
-gradientem początkowym, to wzdłuż odpowiednich
-charakterystyk jego wartości i pochodne spełniają
-\eqref{eq:pde2-charpit-system}: wystarczy zróżniczkować
-$F(x,u,\nabla u)=0$ i skorzystać z symetrii hesjanu.
-Jednoznaczność ODE implikuje zgodność obu rozwiązań
-na wspólnym otoczeniu punktu początkowego.
+Niech $v$ będzie innym rozwiązaniem klasy $C^2$
+na otoczeniu $\gamma(y_0)$, realizującym oba warunki
+początkowe. Pole $x\mapsto F_p(x,v(x),\nabla v(x))$
+jest klasy $C^1$ na dziedzinie $v$. Rozwiązujemy ODE
+$\dot Y=F_p(Y,v(Y),\nabla v(Y))$, $Y(0,y)=\gamma(y)$.
+Po zmniejszeniu otoczenia $y_0$ mamy wspólny przedział
+$(-\varepsilon,\varepsilon)$ istnienia tych trajektorii
+w dziedzinie $v$. Połóżmy $B=v(Y)$ i $Q=\nabla v(Y)$.
+Z wyprowadzenia układu Charpita przed lematem
+\ref{lem:pde2-contact} wynika, że $(Y,B,Q)$ spełnia
+\eqref{eq:pde2-charpit-system}.
+W chwili $s=0$ przyjmuje dane $(\gamma,g,p_0)$.
+Z jednoznaczności ODE otrzymujemy
+$(Y,B,Q)=(X,U,P)$ na odpowiednio zmniejszonym iloczynie
+$W_1\subset W$ zawierającym $(0,y_0)$.
+W szczególności $v(X(s,y))=U(s,y)=u(X(s,y))$
+na $W_1$. Ponieważ $X(W_1)$ jest otwartym otoczeniem
+$\gamma(y_0)$, dowodzi to jednoznaczności zarodka.
 \end{proof}
 
 \begin{przyklad}[Eikonal i wybór gałęzi]
@@ -1083,10 +1156,14 @@ Niech $F(x,u,p)=|p|^2-1$ w $\R^2$.
 Na prostej $\Sigma=\{(x,0):x\in\R\}$ zadamy
 $u(x,0)=0$. Zgodność gradientu stycznego wymusza
 $p_x=0$, a równanie wymusza $p_y=\pm1$.
-Są zatem dwie dopuszczalne gałęzie danych gradientu,
-które prowadzą do rozwiązań $u(x,y)=y$ i $u(x,y)=-y$.
-Oba są niecharakterystyczne dla odpowiedniego wektora
-$F_p=2p$. Samo zadanie wartości na prostej nie określa
+Na spójnym przedziale danych ciągły wybór gradientu
+musi należeć do jednej z dwóch gałęzi
+$p_0=(0,1)$ lub $p_0=(0,-1)$.
+Odpowiadają im rozwiązania $u(x,y)=y$ i $u(x,y)=-y$:
+mają zadany ślad, a kwadrat normy ich gradientu wynosi $1$.
+W obu przypadkach prosta $\Sigma$ jest
+niecharakterystyczna, ponieważ $F_p=2p_0=(0,\pm2)$
+nie należy do jej poziomej przestrzeni stycznej. Samo zadanie wartości na prostej nie określa
 więc jednoznacznie rozwiązania w pełni nieliniowego.
 \end{przyklad}
 
