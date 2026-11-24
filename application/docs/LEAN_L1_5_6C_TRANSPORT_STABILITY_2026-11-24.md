@@ -150,3 +150,17 @@ Powyższe jest projektem testu, a nie dowodem wykonania. Po potwierdzeniu trzeci
 - [CI aplikacji 45451772527](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45451772527), próba 1 completed/success: 881 testów, 871 zaliczonych, 10 sklasyfikowanych pominięć, brak niesklasyfikowanych; wszystkie siedem metod regresji sieciowych i serializacji ok. Chromium passed, 537 rozdziałów, javascript_errors=[].
 - Siedem kontrolowanych blobów zgodnych z kandydatem. Zlecono trzeci przebieg Docker job 138651409382 i drugi przebieg aplikacji job 138650489853 na tym samym SHA; stan 2/3 i 1/3. Nie liczyć zlecenia jako sukcesu. Bez zmian implementacji.
 - Zakres dowodu: obserwacja stałego fixture i znanych ścieżek socketu, nie pełny dowód bezpieczeństwa sieciowego. Obsługa jawnie wyłączonego IPv6 pozostaje poza potwierdzonym zakresem; pusty odczyt nadal blokuje wynik. RT-05/06 otwarte; wykonywanie Lean nadal zablokowane.
+
+## Trzeci udany rzeczywisty przebieg RT-04 i kryteria odbioru RT-05
+
+- Kandydat 8f9f9b891bc661c61db82cc3d3d45a78c58922e4: [Docker 45451772599](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45451772599), próby 1–3 completed/success. Trzecia próba: wszystkie 20 obserwacji powtórzone, net.interfaces=lo, net.ipv4_default=absent, net.ipv4_rows=0, net.ipv6_rows=3, net.ipv6_usable_default=absent, net.docker_socket=absent; cgroup, uprawnienia, seccomp i system plików zgodne, preflight i runtime cleanup_status=removed. execution_allowed=false, proof_status=not_run, certificate=false. Siedem kontrolowanych blobów zgodnych z kandydatem.
+- [CI aplikacji 45451772527](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45451772527), próba 2 w toku; nie zaliczać jej przed ukończeniem. Docker 3/3, aplikacja 1/3. Bez zmiany implementacji. RT-04 pozostaje otwarty do pełnego 2+1 obu serii. Obsługa wyłączonego IPv6 poza potwierdzonym zakresem.
+
+### Doprecyzowanie RT-05 przed implementacją
+
+1. Osobne, stałe scenariusze fixture: prawidłowy exit 0, kontrolowany exit niezerowy, przekroczenie krótkiego limitu czasu oraz przekroczenie limitu wyjścia; nie korzystać z kodu użytkownika. Każdy scenariusz ma własny identyfikator i oczekiwany rezultat. Nie uznawać dowolnego błędu Docker za oczekiwane niepowodzenie.
+2. Związać obserwację z pełnym ID utworzonego kontenera i zatwierdzonym obrazem. Po przekroczeniu limitu nie wystarcza zatrzymanie lokalnego procesu CLI. Wymagać potwierdzenia przez daemon, że właściwy kontener nie działa, a następnie jego usunięcia i weryfikacji nieobecności. W razie niejednoznacznego wyniku polecenia lub niedostępności daemona: blocked, cleanup unconfirmed; nie interpretować dowolnego błędu inspect jako dowodu usunięcia.
+3. Oddzielić limit czasu wykonania od ograniczonego budżetu sprzątania. Nie restartować kontenera po timeout. Nie uruchamiać awaryjnie na hoście. Raportować rzeczywiste rezultaty i różnicę między oczekiwanym zatrzymaniem a skutecznym sprzątnięciem.
+4. Trwałe regresje: niezgodność ID/obrazu, błędny kod wyjścia, timeout CLI bez potwierdzenia stanu kontenera, błąd usuwania, niedostępny daemon, przekroczenie wyjścia. Testy parsera i atrap nie zastępują realnego Docker. Dopiero potem 2+1 na jednym SHA.
+
+To są kryteria projektowe, nie wykonane testy RT-05. Nie wprowadzać nowego wykonania Lean ani nie zmieniać polityki produkcyjnej przed stabilizacją RT-04.
