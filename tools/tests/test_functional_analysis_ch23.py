@@ -79,5 +79,54 @@ class Chapter23(unittest.TestCase):
             rhs = tuple(v*sum(c*t for c,t in zip(eA,x)) for v in By)
             self.assertEqual(lhs,rhs)
 
+    def test_FA23_nuclear_completions_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"j_{r,p}=j_{q,p}j_{r,q}",
+            r"q=Cq_0",
+            r"\ref{lem:nuclear-cofinal23}",
+            r"c_{0,m}(I)",
+            r"p_{m+1}(a)/(1+|\nu|)",
+            r"\binom{r+d-1}{d-1}",
+            r"k-m+d-1<-1",
+            r"\frac{M_{k+1}}{1+R}",
+            r"2M_{k+1}/(1+R)",
+        ):
+            self.assertIn(fragment,s)
+        from math import comb
+        # Count multiindices by total degree independently of binomial formula.
+        counts = [1]+[0]*12
+        for d in range(1,7):
+            counts = [sum(counts[:r+1]) for r in range(13)]
+            for r in range(13):
+                self.assertEqual(counts[r],comb(r+d-1,d-1))
+        for k,m,R,r in product(range(4),range(1,5),range(5),range(1,9)):
+            if r>R:
+                self.assertLessEqual(F(1,(1+r)**m),F(1,(1+R)**m))
+
+    def test_FA23_nuclear_fourier_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"L=\supp\chi\Subset\Omega",
+            r"(2R)^{-d}\lambda_d",
+            r"(1+\pi^2|n|^2/R^2)^r c_n(f)",
+            r"v_n=[\chi e_n]_{p_{K,m}}",
+            r"2r>m+d",
+            r"(2s+1)^d-(2s-1)^d",
+            r"[f]_{p_{K,m}}=\sum_{n\in\mathbb Z^d}c_n(f)v_n",
+            r"p_{K,m}\le p_{L,2r}",
+            r"\operatorname{Re}c_n(f)\operatorname{Re}v_n",
+        ):
+            self.assertIn(fragment,s)
+        # Fourier multipliers on finite trigonometric polynomial models.
+        for n1,n2,r in product(range(-4,5),range(-4,5),range(5)):
+            multiplier=1
+            for _ in range(r):
+                multiplier += (n1*n1+n2*n2)*multiplier
+            self.assertEqual(multiplier,(1+n1*n1+n2*n2)**r)
+        # Realification, exact small integer coefficients.
+        for a,b,c,d in product(range(-2,3),repeat=4):
+            self.assertEqual(((a+1j*b)*(c+1j*d)).real,a*c-b*d)
+
 if __name__ == "__main__":
     unittest.main()
