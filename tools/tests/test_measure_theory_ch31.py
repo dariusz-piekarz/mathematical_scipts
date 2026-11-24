@@ -161,5 +161,28 @@ class Chapter31(unittest.TestCase):
                       "thm:lipschitz-area-coarea-28"):
             self.assertIn(r"\ref{"+label+"}",s)
 
+
+    def test_mt31_015_finite_jet_interpolation(self):
+        # Cubic Hermite interpolation at 0 and 1.
+        for v0,d0,v1,d1 in product(range(-2,3),repeat=4):
+            a,b=v0,d0
+            c=3*(v1-v0)-2*d0-d1
+            d=2*(v0-v1)+d0+d1
+            self.assertEqual((a,b,a+b+c+d,b+2*c+3*d),(v0,d0,v1,d1))
+
+    def test_mt31_016_density_and_equivalence(self):
+        for j in range(2,15):
+            r=Q(1,2**j)
+            tail=Q(8,7)*r**3
+            self.assertEqual(tail/(2*r),Q(4,7)*r**2)
+        s=" ".join(SOURCE.read_text(encoding="utf-8").split())
+        for term in ("Warunek przynależności jest istotny",
+                     "relacją równoważności na",
+                     "Chińskie twierdzenie o resztach",
+                     "wielomianem. Istotnie",
+                     "zbiór ich nierówności jest otwarty"):
+            self.assertIn(term,s)
+        self.assertIn(r"\ref{cor:lebesgue-density-25}",s)
+
 if __name__ == "__main__":
     unittest.main()
