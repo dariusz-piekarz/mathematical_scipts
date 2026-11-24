@@ -289,6 +289,54 @@ def test_weighted_cheeger_mixing():
     return count, steps
 
 
+def test_weighted_energy_density():
+    # TG43-ENE-01: exact polarization and positive-part inequalities,
+    # plus the density evolution identity for non-point-mass distributions.
+    graphs = functions = distributions = 0
+    for n in range(2, 5):
+        E = pairs(n)
+        for mask in range(1 << len(E)):
+            edges = [e for i,e in enumerate(E) if mask >> i & 1]
+            adj = adjacency(n, edges)
+            if components(adj) != 1:
+                continue
+            deg = [len(a) for a in adj]
+            W = sum(deg)
+            pi = [Fraction(d,W) for d in deg]
+            Q = [[Fraction(int(u == v),2)+Fraction(int(v in adj[u]),2*deg[u])
+                  for v in range(n)] for u in range(n)]
+            for f in product((-1,0,1,2), repeat=n):
+                g = [max(a,0) for a in f]
+                lap = [deg[v]*f[v]-sum(f[u] for u in adj[v])
+                       for v in range(n)]
+                mixed = sum((g[u]-g[v])*(f[u]-f[v]) for u,v in edges)
+                energy = sum((g[u]-g[v])**2 for u,v in edges)
+                assert sum(g[v]*lap[v] for v in range(n)) == mixed >= energy
+                # Integrate the piecewise-constant boundary and volume exactly.
+                levels = sorted({0, *(a*a for a in g)})
+                boundary_integral = volume_integral = 0
+                for lo, hi in zip(levels, levels[1:]):
+                    S = {v for v in range(n) if g[v]**2 > lo}
+                    boundary_integral += (hi-lo)*sum(len(adj[v]-S) for v in S)
+                    volume_integral += (hi-lo)*sum(deg[v] for v in S)
+                assert boundary_integral == sum(abs(g[u]**2-g[v]**2) for u,v in edges)
+                assert volume_integral == sum(deg[v]*g[v]**2 for v in range(n))
+                functions += 1
+            for weights in product(range(3), repeat=n):
+                total = sum(weights)
+                if not total:
+                    continue
+                mu = [Fraction(w,total) for w in weights]
+                h = [mu[v]/pi[v]-1 for v in range(n)]
+                nu = [sum(mu[u]*Q[u][v] for u in range(n)) for v in range(n)]
+                evolved = [sum(Q[v][u]*h[u] for u in range(n)) for v in range(n)]
+                assert evolved == [nu[v]/pi[v]-1 for v in range(n)]
+                assert sum(pi[v]*h[v] for v in range(n)) == 0
+                distributions += 1
+            graphs += 1
+    return graphs, functions, distributions
+
+
 def integration():
     cat = json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book = next(b for b in cat["books"] if b["id"] == "graph_and_knot_theory")
@@ -320,4 +368,5 @@ if __name__ == "__main__":
     print(f"PASS spectral examples, disconnected example: {cycles_and_complete()}")
     print("PASS TG43-EM-01 oriented edge count comparisons:", test_edge_mixing())
     print("PASS TG43-WGT-01 irregular graphs and exact walk steps:", test_weighted_cheeger_mixing())
+    print("PASS TG43-ENE-01 graphs, functions, distributions:", test_weighted_energy_density())
     print("PASS Cheeger, boundary relations, lazy-walk mixing, diameter, energy, catalog")
