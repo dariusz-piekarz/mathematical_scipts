@@ -54,4 +54,14 @@ class Chapter02(unittest.TestCase):
             self.assertLess(v,a*c)
             self.assertGreater(u+v,q)
 
+    def test_cauchy_reciprocal_bound(self):
+        vals=[F(i,4) for i in range(-12,13) if abs(i)>=2]
+        c=F(1,2)
+        for a,b in itertools.product(vals,repeat=2):
+            self.assertLessEqual(abs(1/a-1/b),abs(a-b)/c**2)
+        for n in range(1,31):
+            a=F(1)+F(1,n)
+            self.assertEqual(a*(1/a),1)
+            self.assertLessEqual(abs(1/a-1),F(1,n))
+
 if __name__=="__main__": unittest.main()
