@@ -78,5 +78,29 @@ class Chapter15ARegressionTests(unittest.TestCase):
             second = sum(coef*moment(a,b,i)*moment(c,d,j) for coef,i,j in terms)
             self.assertEqual(first,second)
 
+
+    def test_oriented_additivity_and_fubini_refinement(self):
+        # Primitive of x^2-2x+3, tested for every ordering and ties.
+        def primitive(x):
+            x = Fraction(x)
+            return x**3/3-x*x+3*x
+        def integral(u,v):
+            return primitive(v)-primitive(u)
+        from itertools import product
+        for u,v,w in product(range(-2,3), repeat=3):
+            self.assertEqual(integral(u,v)+integral(v,w), integral(u,w))
+        # Independent double Riemann sums for f(s,t)=s*t on [0,2]x[-1,3].
+        # Left endpoints; exact integral = 8. One-variable Lipschitz
+        # constants are 3 in s and 2 in t.
+        for n,m in ((1,1),(2,3),(5,7),(12,17)):
+            ds,dt=Fraction(2,n),Fraction(4,m)
+            D=sum(ds*dt*(j*ds)*(-1+k*dt)
+                  for j in range(n) for k in range(m))
+            SA=sum(ds*(j*ds)*4 for j in range(n))
+            SB=sum(dt*2*(-1+k*dt) for k in range(m))
+            self.assertLessEqual(abs(SA-D),8*2*dt)
+            self.assertLessEqual(abs(SB-D),8*3*ds)
+            self.assertLessEqual(abs(D-8),8*(2*dt+3*ds))
+
 if __name__ == "__main__":
     unittest.main()
