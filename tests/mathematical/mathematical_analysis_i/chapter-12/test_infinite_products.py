@@ -78,4 +78,33 @@ class Chapter12(unittest.TestCase):
         self.assertEqual(prod([-1]*5),-1)
         self.assertEqual(prod([-1]*6),1)
 
+    def test_conditional_product_rearrangement(self):
+        def u(n):
+            k=(n+1)//2
+            return F(k+1,k) if n%2 else F(k,k+1)
+        Q=F(1); used=set()
+        for m in range(1,61):
+            before=Q
+            block=[4*m-3,4*m-1,2*m]
+            self.assertFalse(used.intersection(block))
+            used.update(block)
+            Q*=u(block[0])
+            self.assertEqual(Q,before*(1+F(1,2*m-1)))
+            Q*=u(block[1])
+            self.assertEqual(Q,before*(1+F(1,2*m-1))*(1+F(1,2*m)))
+            Q*=u(block[2])
+            self.assertEqual(Q,F(2*m+1,m+1))
+            self.assertEqual(used,set(range(1,4*m,2))|set(range(2,2*m+1,2)))
+            self.assertEqual(prod(u(n) for n in range(1,2*m+1)),1)
+
+    def test_cauchy_fixed_prefix_nonzero_bounds(self):
+        u=[F(2),F(-1),F(1,2)]+[1+F(1,2**n) for n in range(4,16)]
+        P=[prod(u[:n]) for n in range(len(u)+1)]
+        N0=4
+        B=max([F(1),F(3,2)*abs(P[N0-1])]+[abs(v) for v in P[:N0]])
+        for q in range(N0,len(P)):
+            self.assertLess(abs(P[q]/P[N0-1]-1),F(1,2))
+            self.assertGreater(abs(P[q]),abs(P[N0-1])/2)
+            self.assertLessEqual(abs(P[q]),B)
+
 if __name__=="__main__": unittest.main()
