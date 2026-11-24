@@ -177,5 +177,138 @@ class LeanASTTests(unittest.TestCase):
         self.assertEqual(ast.validate_ast(SOURCE, raw)["error"], "canonical_byte_limit")
 
 
+    def test_exhaustive_binary_operator_type_matrix(self):
+        # Independent signature table; do not derive the oracle from ast.FIELDS.
+        types = ("Prop", "Nat", "Int", "Real")
+        signatures = {}
+        for op in ("and", "or", "implies", "iff"):
+            signatures[op] = {("Prop", "Prop", "Prop")}
+        signatures["eq"] = {(t, t, "Prop") for t in types}
+        for op in ("lt", "le"):
+            signatures[op] = {(t, t, "Prop") for t in types[1:]}
+        for op in ("add", "mul"):
+            signatures[op] = {(t, t, t) for t in types[1:]}
+        signatures["sub"] = {(t, t, t) for t in ("Int", "Real")}
+
+        def term(t):
+            return node("truth") if t == "Prop" else num(t)
+
+        for op, allowed in signatures.items():
+            for left in types:
+                for right in types:
+                    for claimed in types:
+                        with self.subTest(op=op, left=left, right=right, claimed=claimed):
+                            expr = node(op, claimed, left=term(left), right=term(right))
+                            # Wrap numerical expressions to keep the root Prop;
+                            # otherwise the document boundary masks operator errors.
+                            root = expr if claimed == "Prop" else node(
+                                "eq", left=expr, right=term(claimed))
+                            result = validate(doc(root))
+                            if (left, right, claimed) in allowed:
+                                self.assertEqual(result["status"], "validated_ast", result)
+                            else:
+                                self.assertEqual(result.get("error"), "type_mismatch", result)
+                                self.assertIsNone(result["ast"])
+
+    def test_unary_operator_type_matrix(self):
+        types = ("Prop", "Nat", "Int", "Real")
+        for op, allowed in (("not", {"Prop"}), ("neg", {"Int", "Real"})):
+            for arg in types:
+                for claimed in types:
+                    with self.subTest(op=op, arg=arg, claimed=claimed):
+                        term = node("truth") if arg == "Prop" else num(arg)
+                        expr = node(op, claimed, arg=term)
+                        root = expr if claimed == "Prop" else node(
+                            "eq", left=expr, right=num(claimed))
+                        result = validate(doc(root))
+                        if arg in allowed and claimed == arg:
+                            self.assertEqual(result["status"], "validated_ast")
+                        else:
+                            self.assertEqual(result.get("error"), "type_mismatch")
+
+    def test_exact_accepted_resource_limits(self):
+        deep = node("truth")
+        for _ in range(ast.MAX_DEPTH - 1):
+            deep = node("not", arg=deep)
+        result = validate(doc(deep))
+        self.assertEqual(result["status"], "validated_ast")
+        self.assertEqual(result["node_count"], 64)
+
+        params = [binding(f"p{i}") for i in range(128)]
+        result = validate(doc(var("p127"), params=params))
+        self.assertEqual(result["status"], "validated_ast")
+        self.assertEqual(result["binding_count"], 128)
+        self.assert_rejected(doc(node("forall", binding=binding("extra"),
+                                      body=node("truth")), params=params), "binding_limit")
+
+        value = doc(assumptions=[node("truth") for _ in range(2047)])
+        raw = json.dumps(value, separators=(",", ":")).encode()
+        result = ast.validate_ast(SOURCE, raw)
+        self.assertEqual(result["status"], "validated_ast")
+        self.assertEqual(result["node_count"], 2048)
+        self.assert_rejected(doc(node("not", arg=node("truth")),
+                                 assumptions=value["assumptions"]), "node_limit")
+
+        self.assertEqual(validate(doc(node("eq", left=num(digits="9"*64),
+                                           right=num())))["status"], "validated_ast")
+        source = "é" * 16384
+        value = doc(source=source)
+        self.assertEqual(validate(value, source)["status"], "validated_ast")
+        raw = json.dumps(doc(), separators=(",", ":")).encode()
+        padded = raw + b" " * (131072 - len(raw))
+        self.assertEqual(ast.validate_ast(SOURCE, padded)["status"], "validated_ast")
+        self.assertEqual(ast.validate_ast(SOURCE, padded+b" ")["error"], "ast_byte_limit")
+
+    def test_disjoint_quantifiers_and_assumptions_do_not_share_scope(self):
+        q = node("forall", binding=binding("local"), body=var("local"))
+        self.assert_rejected(doc(node("and", left=q, right=copy.deepcopy(q))),
+                             "duplicate_binding")
+        self.assert_rejected(doc(var("local"), assumptions=[q]), "unbound_variable")
+        self.assert_rejected(doc(node("truth"), assumptions=[q, var("local")]),
+                             "unbound_variable")
+        other = node("exists", binding=binding("other"), body=var("other"))
+        self.assertEqual(validate(doc(node("and", left=q, right=other)))["status"],
+                         "validated_ast")
+
+    def test_json_escaped_keys_and_delimiters(self):
+        self.assertEqual(ast.validate_ast(SOURCE, br'{"x":1,"\u0078":2}')["error"],
+                         "duplicate_json_key")
+        self.assertEqual(ast.validate_ast(SOURCE, b'{"x":[}')["error"], "invalid_json")
+        # Escaped quotes, backslashes and brackets are display metadata,
+        # not structural JSON delimiters or executable names.
+        value = doc(params=[binding("p", name='[{\"\\}]')])
+        self.assertEqual(validate(value)["status"], "validated_ast")
+        value["parameters"][0]["name"] = "\ud800"
+        raw = json.dumps(value, ensure_ascii=True).encode()
+        self.assertEqual(ast.validate_ast(SOURCE, raw)["error"], "invalid_display_name")
+
+    def test_unicode_codepoint_offsets_and_exact_source_hash(self):
+        source = "a𐐀b"
+        value = doc(source=source)
+        value["conclusion"]["span"] = [1, 2]
+        result = validate(value, source)
+        self.assertEqual(result["status"], "validated_ast")
+        self.assertEqual(source[slice(*result["ast"]["conclusion"]["span"])], "𐐀")
+        value["conclusion"]["span"] = [2, 4]
+        self.assert_rejected(value, "span_outside_parent", source)
+        value = doc(source="é")
+        value["conclusion"]["span"] = [0, 1]
+        self.assertEqual(validate(value, "é")["status"], "validated_ast")
+        self.assert_rejected(value, "source_hash_mismatch", "e\u0301")
+
+    def test_validated_ast_does_not_claim_source_coverage(self):
+        source = "False"
+        value = doc(source=source)
+        value["conclusion"]["span"] = [0, 5]
+        result = validate(value, source)
+        self.assertEqual(result["status"], "validated_ast")
+        self.assertEqual(result["statement_status"], "unreviewed")
+        self.assertEqual(result["proof_status"], "not_run")
+        self.assertEqual(result["candidate_status"], "not_generated")
+        self.assertFalse(result["certificate"])
+        self.assertIsNone(result["lean_code"])
+
+
+
 if __name__ == "__main__":
     unittest.main()
