@@ -1,0 +1,5 @@
+# MA1-22 — iteracja 02 (audyt potwierdzający)
+Źródło przed poprawkami: 911ea6497a7aefb3f4554f3728dbd9441ef3120a.
+Sprawdzono wszystkie sześć sekcji i 10 kryteriów. Wzory Leibniza (w tym n=0 i wyrazy skrajne), potęg, logarytmu, sinusa i cosinusa, drugiej i trzeciej pochodnej złożenia oraz drugiej pochodnej odwrotności są poprawne. Dla przykładu oscylacyjnego sprawdzono G''=12x² sin(1/x)-6x cos(1/x)-sin(1/x) i obie granice; dla x^m|x| sprawdzono obie półosie, m=0 oraz ilorazy jednostronne. Model stałego przyspieszenia wynika dwukrotnie z twierdzenia o zerowej pochodnej.
+Uzupełniono jawny argument dla przedłużeń F_j na końcach, zastosowania twierdzenia o wartości pośredniej i ciągłości złożenia, indukcję gładkości odwrotności multiplikatywnej na obu półosiach, kwantyfikację m i konwencję x^0. Dodano dwie metody regresyjne (14 metod, 10 kryteriów łącznie). Bez nowych tematów.
+Pierwotny CI 45504278212: krok Regression tests SUCCESS; kompilacja w toku przy kontroli. Nowa wersja wymaga własnego CI i wizualnej kontroli PDF. Lean nieuruchomiony. Status otwarty.

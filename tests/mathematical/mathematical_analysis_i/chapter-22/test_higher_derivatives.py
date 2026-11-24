@@ -95,6 +95,26 @@ class Chapter22(unittest.TestCase):
             self.assertEqual(val(nth([0,0,1],1),x),2*x)
             self.assertEqual(val(nth([0,0,1],2),x),2)
 
+    def test_endpoint_extensions(self):
+        # Left and right signed difference quotients of extended derivatives.
+        p = [3, -2, 1, 4]
+        a, b = F(-1), F(2)
+        for j in range(1, 4):
+            q = nth(p, j-1)
+            dq = nth(p, j)
+            for x, sign in ((a, 1), (b, -1)):
+                for k in (10, 100, 1000):
+                    h = F(sign, k)
+                    quotient = (val(q, x+h)-val(q, x))/h
+                    self.assertLessEqual(abs(quotient-val(dq,x)), 100*abs(h))
+
+    def test_reciprocal_both_half_axes(self):
+        for x in (F(-3), F(-1,2), F(1,2), F(3)):
+            for j in range(8):
+                c = (-1)**j * factorial(j)
+                self.assertEqual(c*(-j-1)*x**(-j-2),
+                                 (-1)**(j+1)*factorial(j+1)*x**(-j-2))
+
     def test_figure_source(self):
         source=(Path(__file__).resolve().parents[4] /
                 "chapters/pl/mathematical_analysis_i/22-pochodne-wyzsze.tex").read_text(encoding="utf8")
