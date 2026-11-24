@@ -687,5 +687,47 @@ class TestChapter15B(unittest.TestCase):
                     self.assertEqual(direct, sum(nu[j]*sum(mu[i]*g[i][j][k]
                                                   for i in A) for j in B))
 
+
+    def test_audit40_rnp_and_weak_derivative_contracts(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            "\\|\\gamma(t)-\\gamma(s)\\|<\\varepsilon",
+            "\\{t:\\|q_i(t)-q_j(t)\\|\\le1/k\\}",
+            "\\ell\\nu(B)/(2\\nu(A))",
+            "\\|Q_\\tau\\|\\le g(t)+1",
+            "D_{[a,t]}(f)=J_X P_{[a,t]}(f)",
+        ):
+            self.assertIn(fragment, source)
+
+    def test_audit40_interval_encoding(self):
+        # Four atoms with nonuniform masses and scalar values in [-1,1].
+        masses = [Fraction(1,10), Fraction(2,10), Fraction(3,10), Fraction(4,10)]
+        slopes = [Fraction(-1), Fraction(1,2), Fraction(1), Fraction(-1,4)]
+        levels = [[[0,1,2,3]], [[0,1],[2,3]], [[0],[1],[2],[3]],
+                  [[0],[1],[2],[3]]]
+        def mass(A):
+            return sum(masses[i] for i in A)
+        def mean(A):
+            return sum(masses[i]*slopes[i] for i in A)/mass(A)
+        intervals = [(Fraction(1),levels[0][0])]
+        for n in range(1,len(levels)):
+            new = []
+            for length,A in intervals:
+                children = [B for B in levels[n] if set(B)<=set(A)]
+                parts = [(length*mass(B)/(2*mass(A)),B)
+                         for _ in range(2) for B in children]
+                self.assertEqual(sum(l for l,B in parts),length)
+                self.assertEqual(sum(l*mean(B) for l,B in parts),length*mean(A))
+                new.extend(parts)
+            self.assertLessEqual(max(l for l,B in new),Fraction(1,2**n))
+            for B in levels[n]:
+                self.assertEqual(sum(l for l,C in new if C==B),mass(B))
+            exact_jump = sum(mass(B)*abs(mean(B)-mean(next(A for A in levels[n-1]
+                                  if set(B)<=set(A)))) for B in levels[n])
+            interval_jump = sum(l*abs(mean(B)-mean(next(A for A in levels[n-1]
+                                  if set(B)<=set(A)))) for l,B in new)
+            self.assertEqual(exact_jump,interval_jump)
+            intervals = new
+
 if __name__ == "__main__":
     unittest.main()
