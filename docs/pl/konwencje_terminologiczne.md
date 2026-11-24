@@ -56,3 +56,7 @@ rozdziału.
    podobieństwa nazw.
 3. Uruchamiać kontrolę odsyłaczy, testy i kompilację PDF.
    Nie ogłaszać stabilności przed sprawdzeniem kompilacji i układu.
+
+## Analiza niestandardowa
+
+- *Hyperreal numbers* = **liczby hiperrzeczywiste**; „ciało liczb hiperrzeczywistych”, „liczba hiperrzeczywista”. Nie używamy przymiotnika „hiperrealny” ani jego odmian. Zasada obowiązuje globalnie, z zachowaniem istniejących etykiet i identyfikatorów.
