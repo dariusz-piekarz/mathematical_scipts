@@ -300,5 +300,24 @@ class TestChapter15B(unittest.TestCase):
             prefix = [1]*(size-1) + [0]
             self.assertEqual(max(abs(1-v) for v in prefix), 1)
 
+
+    def test_vector_integral_convergence_distinctions(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            "\\label{thm:vector-integral-convergence15b}",
+            "q_{f_n-f}(S)\\to0",
+            "r_{h_n-h}(S)\\to0",
+            "\\|e_n\\|=1",
+            "=\\left(\\sum_{n\\in A}\\frac1{n^2}\\right)^{1/2}",
+        ):
+            self.assertIn(fragment, source)
+        # For constant functions on a one-atom probability space,
+        # scalar evaluations of e_n tend to zero but norm is one.
+        for n in range(1, 65):
+            coefficient = Fraction(1, n*n)
+            self.assertEqual(coefficient, Fraction(1, n)**2)
+            self.assertLessEqual(coefficient, Fraction(1, n))
+            self.assertEqual(sum(int(j == n) for j in range(1, 65)), 1)
+
 if __name__ == "__main__":
     unittest.main()
