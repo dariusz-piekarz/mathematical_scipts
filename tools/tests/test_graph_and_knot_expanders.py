@@ -217,6 +217,78 @@ def cycles_and_complete():
     return checked+1
 
 
+def test_edge_mixing():
+    # TG43-EM-01: independent oriented edge counts, including overlapping sets.
+    count = 0
+    for n in range(2, 6):
+        E = pairs(n)
+        for mask in range(1 << len(E)):
+            adj = adjacency(n, [e for i,e in enumerate(E) if mask >> i & 1])
+            d = len(adj[0])
+            if d == 0 or any(len(row) != d for row in adj):
+                continue
+            theta = jacobi_eigenvalues([[int(v in adj[u]) for v in range(n)]
+                                        for u in range(n)])
+            Lambda = max(abs(x) for x in theta[:-1])
+            sets = [{v for v in range(n) if mask >> v & 1}
+                    for mask in range(1 << n)]
+            for S in sets:
+                for T in sets:
+                    e = sum(len(adj[u] & T) for u in S)
+                    delta = abs(e - Fraction(d*len(S)*len(T), n))
+                    a = Fraction(len(S)*(n-len(S)), n)
+                    b = Fraction(len(T)*(n-len(T)), n)
+                    assert float(delta) <= Lambda*sqrt(float(a*b))+1e-8
+                    count += 1
+    return count
+
+
+def test_weighted_cheeger_mixing():
+    # TG43-WGT-01: irregular connected graphs; exact cuts and Markov steps.
+    count = steps = 0
+    for n in range(2, 6):
+        E = pairs(n)
+        for mask in range(1 << len(E)):
+            edges = [e for i,e in enumerate(E) if mask >> i & 1]
+            adj = adjacency(n, edges)
+            if components(adj) != 1:
+                continue
+            deg = [len(a) for a in adj]
+            if len(set(deg)) == 1:
+                continue
+            W = sum(deg)
+            cuts = []
+            for k in range(1, 1 << n):
+                S = {v for v in range(n) if k >> v & 1}
+                vol = sum(deg[v] for v in S)
+                if 0 < 2*vol <= W:
+                    cuts.append(Fraction(sum(len(adj[v]-S) for v in S), vol))
+            phi = min(cuts)
+            eig = jacobi_eigenvalues([[int(u == v)-int(v in adj[u])/sqrt(deg[u]*deg[v])
+                                       for v in range(n)] for u in range(n)])
+            assert abs(eig[0]) < 1e-8 and 0 < eig[1] <= 2+1e-8
+            assert float(phi**2/2) <= eig[1]+1e-8
+            assert eig[1] <= 2*float(phi)+1e-8
+            Q = [[Fraction(int(u == v),2)+Fraction(int(v in adj[u]),2*deg[u])
+                  for v in range(n)] for u in range(n)]
+            pi = [Fraction(d,W) for d in deg]
+            assert all(sum(row) == 1 for row in Q)
+            assert all(pi[u]*Q[u][v] == pi[v]*Q[v][u]
+                       for u in range(n) for v in range(n))
+            assert [sum(pi[u]*Q[u][v] for u in range(n)) for v in range(n)] == pi
+            for start in range(n):
+                mu = [Fraction(int(v == start)) for v in range(n)]
+                for t in range(5):
+                    tv = sum(abs(mu[v]-pi[v]) for v in range(n))/2
+                    bound = (max(0.0,1-eig[1]/2)**t
+                             *sqrt(float(1/pi[start]-1))/2)
+                    assert float(tv) <= bound+1e-8
+                    mu = [sum(mu[u]*Q[u][v] for u in range(n)) for v in range(n)]
+                    steps += 1
+            count += 1
+    return count, steps
+
+
 def integration():
     cat = json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book = next(b for b in cat["books"] if b["id"] == "graph_and_knot_theory")
@@ -246,4 +318,6 @@ if __name__ == "__main__":
     a,b = exhaustive_small()
     print(f"PASS exhaustive graph models: {a}, regular eligible: {b}")
     print(f"PASS spectral examples, disconnected example: {cycles_and_complete()}")
+    print("PASS TG43-EM-01 oriented edge count comparisons:", test_edge_mixing())
+    print("PASS TG43-WGT-01 irregular graphs and exact walk steps:", test_weighted_cheeger_mixing())
     print("PASS Cheeger, boundary relations, lazy-walk mixing, diameter, energy, catalog")
