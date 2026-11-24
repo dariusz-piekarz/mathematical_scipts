@@ -25,7 +25,12 @@ jak w rozdziale \ref{ch:tg-menger}.
 Dopuszczamy zarówno łuki $u\to v$, jak i $v\to u$:
 są to \emph{dwa różne łuki oryginalne}.
 Przechowujemy je oddzielnie, również jeśli ich
-przejścia resztowe mają te same końce.
+przejścia resztowe mają te same końce. Jeśli dopuszczamy
+łuki równoległe, każdy łuk ma własny identyfikator,
+a zapis $(u,v)$ określa jedynie jego początek i koniec.
+Przez pojemność przekroju rozumiemy sumę przepustowości
+wszystkich oryginalnych łuków prowadzących z $S$ do
+$V\setminus S$.
 
 \begin{definicja}[Przejścia resztowe i ścieżka powiększająca]
 \label{def:tg-flow-residual}
@@ -56,14 +61,15 @@ Każdy krok w przód ma pojemność resztową
 $c(a)-f(a)\geq\varepsilon$, więc po aktualizacji
 nadal $f'(a)\leq c(a)$. Krok wstecz istnieje tylko,
 gdy $f(a)\geq\varepsilon$, więc przepływ nie staje się
-ujemny. Jeśli ścieżka używa różnych przejść powiązanych
-z tym samym oryginalnym łukiem, interpretujemy
-aktualizacje algebraicznie: suma zmian nadal mieści się
-w przedziale dopuszczalnym, ponieważ dla prostej ścieżki
-nie można użyć obu przeciwnych przejść tego samego łuku.
-W każdym wewnętrznym wierzchołku $P$ zwiększenie
-bilansu wypływu o $\varepsilon$ na jednym kroku
-równoważy zmniejszenie bilansu na drugim.
+ujemny. Prostota ścieżki gwarantuje, że żaden oryginalny łuk
+nie jest aktualizowany dwukrotnie: użycie obu jego
+przejść resztowych wymagałoby powtórzenia wierzchołka.
+Niezależnie od tego, czy krok resztowy $u\to v$ jest
+przejściem w przód czy wstecz, aktualizacja zwiększa
+bilans wypływu w $u$ o $\varepsilon$ i zmniejsza go
+w $v$ o $\varepsilon$. W każdym wewnętrznym wierzchołku
+$P$ zmiany od kroku wchodzącego i wychodzącego
+sumują się więc do zera.
 W źródle bilans wypływu rośnie o $\varepsilon$,
 a w ujściu maleje o tę samą wartość.
 \end{proof}
@@ -120,8 +126,12 @@ c(S,V\setminus S).
 \end{wniosek}
 \begin{proof}
 Zbiór wszystkich dopuszczalnych przepływów
-jest niepustym, domkniętym i ograniczonym
-podzbiorem przestrzeni $\mathbb R^A$,
+jest niepusty, ponieważ zawiera przepływ zerowy.
+Jest przecięciem skończenie wielu domkniętych
+przedziałów współrzędnych $[0,c(a)]$ z podprzestrzenią
+liniową wyznaczoną przez równania zachowania przepływu.
+Jest zatem domkniętym i ograniczonym podzbiorem
+skończenie wymiarowej przestrzeni $\mathbb R^A$,
 a więc jest zwarty.
 Liniowa funkcja $f\mapsto |f|$ osiąga na nim
 maksimum. Dla przepływu maksymalnego
@@ -198,8 +208,12 @@ Wartości na łukach nie rosną, więc liczba kroków
 jest skończona.
 
 Pozostały nieujemny przepływ całkowitoliczbowy
-o wartości zero jest cyrkulacją: prawo zachowania
-obowiązuje wówczas także w $s$ i $t$.
+o wartości zero jest cyrkulacją. Bilans wypływu
+w $s$ jest zerowy z definicji wartości, a suma
+bilansów wszystkich wierzchołków wynosi zero,
+gdyż każdy łuk wnosi dwa przeciwne składniki.
+Ponieważ pozostałe wierzchołki poza $t$ mają
+bilans zero, także $t$ ma bilans zero.
 Jeżeli jest niezerowy, rozpocznijmy spacer
 po łukach o dodatnim przepływie.
 Prawo zachowania gwarantuje możliwość jego
@@ -224,10 +238,11 @@ Odwrotnie, każda rodzina $k$
 parami rozłącznych krawędziowo
 ścieżek w $D_+$ wyznacza dopuszczalny
 przepływ o wartości $k$.
-Przekrój $S$ przecina każdą
-taką ścieżkę w co najmniej jednym
-różnym łuku $D_+$, co ogranicza ich liczbę
-przez pojemność przekroju.
+Każda taka ścieżka musi przejść z $S$ do
+$V\setminus S$ co najmniej jednym łukiem $D_+$.
+Z rozłączności krawędziowej wynika, że wybrane
+łuki dla różnych ścieżek są różne. Liczba
+ścieżek nie przekracza więc pojemności przekroju.
 Dla przepustowości $0$ lub $1$
 pojemność przekroju jest dokładnie
 liczbą jego łuków należących do $D_+$.
@@ -307,8 +322,12 @@ lematu \ref{lem:tg-cutbound} dla $S=\{s\}$.
 Po najwyżej $C_s$ powiększeniach algorytm
 musi się zatrzymać. Wówczas brak ścieżki
 resztowej daje optymalność.
-Budowa lub przeszukanie sieci resztowej
-kosztuje $O(n+m)$ na iterację.
+Budowa list resztowych i jedno ich przeszukanie
+kosztują $O(n+m)$, a aktualizacja prostej ścieżki
+kosztuje $O(n)$. Do co najwyżej $C_s$ udanych
+przeszukań dochodzi ostatnie, nieudane przeszukanie
+potwierdzające brak ścieżki. Stąd zapowiedziane
+ograniczenie liczby operacji arytmetycznych.
 \end{proof}
 
 \begin{uwaga}[Pojemności wymierne i niewymierne]
@@ -406,7 +425,8 @@ mamy $d_f(v)\leq d_f(u)+1
 \leq d_{f'}(u)+1=d_{f'}(v)$,
 sprzeczność (w tym gdy $d_f(v)=+\infty$).
 Jeśli przejście pojawiło się dopiero
-po powiększeniu, jest przejściem wstecznym
+po powiększeniu, jest sprzężonym przejściem
+odwrotnym (w przód lub wstecz)
 do pewnego przejścia $v\to u$
 wykorzystanego na wybranej najkrótszej
 ścieżce powiększającej. Stąd
@@ -480,11 +500,15 @@ w obrębie jednej sieci warstwowej.
 Dla aktualnego przepływu $f$
 wyznaczamy BFS od $s$ w sieci resztowej;
 niech $\ell(v)$ oznacza liczbę łuków
-najkrótszej resztowej ścieżki $s\to v$.
+najkrótszej resztowej ścieżki $s\to v$,
+a dla wierzchołków nieosiągalnych niech
+$\ell(v)=+\infty$.
 \emph{Sieć warstwowa} zawiera
 tylko dodatnie przejścia resztowe
 $u\to v$ spełniające
-$\ell(v)=\ell(u)+1$.
+$\ell(u)<+\infty$ oraz $\ell(v)=\ell(u)+1$.
+Warunek skończoności wyklucza łuki między
+nieosiągalnymi wierzchołkami.
 Gdy $t$ jest nieosiągalny, algorytm kończy działanie.
 \end{definicja}
 
@@ -521,28 +545,25 @@ jest \emph{ściśle większa}
 od odległości na początku fazy.
 \end{lemat}
 \begin{proof}
-Powiększenia wykonywane są wyłącznie
-po ścieżkach warstwowych, a więc
-po ścieżkach najkrótszych
-w liczbie przejść w chwili początku fazy.
-Argument z lematu \ref{lem:tg-flow-ek-levels}
-pokazuje, że nowe odległości
-nie mogą się zmniejszyć:
-każde nowo utworzone
-przejście resztowe jest odwrotnością
-przejścia między kolejnymi
-warstwami i prowadzi
-z warstwy wyższej do niższej.
-Przypuśćmy, że po fazie nadal
-istnieje ścieżka do $t$
-długości równej starej odległości.
-Ze względu na niemalejące odległości
-i fakt, że każde przejście
-może zwiększyć odległość
-od $s$ najwyżej o jeden,
-każde jej przejście
-musi prowadzić dokładnie
-do następnej \emph{starej} warstwy.
+Niech $\ell$ oznacza odległości ustalone na początku
+fazy. Każde początkowe dodatnie przejście $u\to v$
+o skończonej $\ell(u)$ spełnia
+$\ell(v)\leq\ell(u)+1<+\infty$ na mocy własności BFS.
+Nowe dodatnie przejścia mogą powstać jedynie jako
+sprzężone odwrotności użytych przejść warstwowych,
+a zatem prowadzą z warstwy $j+1$ do warstwy $j$.
+Własność $\ell(v)\leq\ell(u)+1$ dla skończonej
+$\ell(u)$ zachodzi więc przez całą fazę.
+
+Wzdłuż dowolnej resztowej ścieżki po fazie,
+zaczynającej się w $s$, wszystkie stare odległości
+są skończone (indukcja od $\ell(s)=0$),
+a każdy krok zwiększa starą odległość o co najwyżej
+jeden. Każda taka ścieżka do $t$ ma zatem długość
+co najmniej $\ell(t)$. Jeśli ma dokładnie $\ell(t)$
+przejść, to każde z nich musi zwiększać starą
+odległość dokładnie o jeden. Żadne nie jest nowo
+utworzonym przejściem odwrotnym.
 Byłaby to zatem dodatnia
 ścieżka w pozostałej sieci warstwowej,
 sprzecznie z definicją
@@ -580,11 +601,18 @@ powiększającej daje optymalność.
 Uzasadnijmy koszt jednej fazy.
 Budowa warstw przez BFS
 zajmuje $O(n+m)$.
-W obrębie sieci warstwowej
-wskaźnik każdego wierzchołka
-przesuwa się monotonicznie,
-więc liczba prób przejść
-wynosi $O(m+n)$.
+W obrębie sieci warstwowej dodatnie pojemności
+przejść warstwowych mogą jedynie maleć.
+Jeżeli DFS wyczerpie wszystkie drogi z danego
+wierzchołka do $t$, późniejsze powiększenia nie
+mogą ich odtworzyć. Wskaźnik można zatem trwale
+przesunąć po nasyceniu przejścia lub po nieudanym
+wywołaniu dla jego końca. Łączna liczba przesunięć
+wskaźników i nieudanych prób jest $O(n+m)$.
+Udane zejścia DFS liczymy osobno, w koszcie ścieżek
+powiększających. Ponawiamy DFS od $s$, aż nie znajdzie
+żadnej dodatniej ścieżki warstwowej; wówczas z definicji
+uzyskaliśmy przepływ blokujący.
 Każde skuteczne powiększenie
 w obrębie danej fazy
 nasyca co najmniej jedno
@@ -594,8 +622,10 @@ pojemności w tej fazie:
 przejścia odwrotne
 prowadzą do wcześniejszej
 warstwy i nie są używane.
-Jest więc co najwyżej
-$m$ takich powiększeń,
+Dla każdego oryginalnego łuku co najwyżej jedno
+z jego dwóch sprzężonych przejść może być warstwowe,
+gdyż drugie prowadzi w przeciwnym kierunku.
+Jest więc co najwyżej $m$ takich powiększeń,
 z których każde wymaga
 $O(n)$ aktualizacji
 na ścieżce. Otrzymujemy
