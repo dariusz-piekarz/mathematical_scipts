@@ -82,5 +82,53 @@ class Chapter21(unittest.TestCase):
             difference = {u-k for u in L for k in K}
             self.assertEqual(bool(L & minkowski), bool(difference & F))
 
+    def test_FA21_associativity_and_derivative_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"\langle S_y,\langle T_x,\Phi(x,y)\rangle\rangle",
+            r"A_{T*S}=A_S A_T",
+            r"\langle U,A_S A_T\varphi\rangle",
+            r"(U*T)*S",
+            r"(U*S)*T",
+            r"\mathcal D_{K-a}",
+            r"A_{\delta_a}\varphi(y)=\varphi(a+y)",
+            r"\langle\partial_jT,f\rangle",
+            r"(\partial_j\chi)f",
+            r"\partial^{\alpha+\beta}\varphi(0)",
+        ):
+            self.assertIn(fragment, s)
+
+        # Each entry (point, derivative order, coefficient) represents
+        # a signed derivative of a Dirac distribution.
+        def conv(P, Q):
+            result = {}
+            for (a,n),c in P.items():
+                for (b,m),d in Q.items():
+                    key = (a+b,n+m)
+                    result[key] = result.get(key,0)+c*d
+            return {key:c for key,c in result.items() if c}
+        def deriv(P):
+            return {(a,n+1):c for (a,n),c in P.items()}
+        def act(P, f, z=0):
+            return sum(c*(-1)**n*sum(v*falling(i,n)*(a+z)**(i-n)
+                       for i,v in enumerate(f) if i >= n)
+                       for (a,n),c in P.items())
+        from math import comb
+        def test_operator(P, f):
+            return [sum(c*(-1)**n*sum(v*falling(i,n)*comb(i-n,j)*a**(i-n-j)
+                       for i,v in enumerate(f) if i >= n+j)
+                       for (a,n),c in P.items()) for j in range(len(f))]
+        models = [{}, {(0,0):1}, {(-1,0):2,(2,1):-3},
+                  {(0,0):1,(1,0):-1}, {(-2,2):1,(1,1):2}]
+        for P,Q,U in product(models, repeat=3):
+            self.assertEqual(conv(conv(P,Q),U), conv(P,conv(Q,U)))
+        for P,Q in product(models, repeat=2):
+            self.assertEqual(conv(P,Q),conv(Q,P))
+            self.assertEqual(deriv(conv(P,Q)),conv(deriv(P),Q))
+            self.assertEqual(deriv(conv(P,Q)),conv(P,deriv(Q)))
+            for f,z in product(([1],[0,1],[1,-2,3,0,2]),[-2,0,3]):
+                self.assertEqual(act(conv(P,Q),f,z),
+                                 act(Q,test_operator(P,f),z))
+
 if __name__ == "__main__":
     unittest.main()
