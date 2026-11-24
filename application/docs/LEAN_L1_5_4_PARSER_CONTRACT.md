@@ -79,3 +79,41 @@ Przegląd dziewięciu pozycji aktualnego application/lean/manifest.json i ich or
 | thm:unique-expansion-xli | Kwantyfikator jednoznacznego istnienia, dowolna (także pusta) dziedzina, predykat jednoargumentowy. |
 
 Sprawdzono również application/lean/src/LST01_SyntaxValuations.lean: istniejąca formalizacja rozróżnia induktywny typ LST01.Formula, Valuation = Nat → Bool, eval, equivalent i tautology. Nie wolno w adapterze zastąpić tego przez samo Prop i Iff, nawet jeśli otrzymany odpowiednik jest twierdzeniem Lean. Potrzebny będzie wersjonowany słownik i szerszy AST z kontekstem typów, predykatami i wieloma klauzulami. Nie oznacza to zgody na automatyczne rozszerzenie zakresu bieżącego podetapu ani zmianę kanonicznego źródła. Przykłady te stanowią przyszłe negatywne przypadki odbiorcze L1.5.4; właściwą obsługę planować dopiero w odpowiednio rozszerzonym kontrakcie L1.5.5 i kolejnych etapach.
+
+
+## Wektory odbiorcze gramatyki (oczekiwany wynik, nie wykonane testy)
+
+Poniżej deklaracje są niezależnymi segmentami pilota, a oznaczenia funkcjonalne opisują strukturę oczekiwanego AST (nie jego format JSON). Typy i zakresy źródłowe mają zostać sprawdzone dodatkowo przez testy. Wiersze z kwantyfikatorami używają separatora przecinka; nie wprowadza się niejawnych zmiennych.
+
+| Parametry | Formuła | Oczekiwany AST lub odmowa |
+|---|---|---|
+| P:Prop, Q:Prop, R:Prop | P\to Q\to R | implies(P,implies(Q,R)) |
+| P:Prop, Q:Prop, R:Prop | (P\to Q)\to R | implies(implies(P,Q),R) |
+| P:Prop, Q:Prop, R:Prop | P\lor Q\land R | or(P,and(Q,R)) |
+| P:Prop, Q:Prop | \neg(P\land Q) | not(and(P,Q)) |
+| P:Prop, Q:Prop | P=Q | eq(P,Q), nie iff |
+| P:Prop, Q:Prop | P\iff Q | iff(P,Q), nie eq |
+| x:Real, y:Real | x\geq y | le(y,x), ślad zamiany argumentów |
+| x:Int, y:Int, z:Int | x-y-z=x | eq(sub(sub(x,y),z),x) |
+| x:Int, y:Int, z:Int | x+y\cdot z=x | eq(add(x,mul(y,z)),x) |
+| x:Real | x+(2:Real)=x | eq(add(x,numeral(Real,2)),x) |
+| brak | \forall x:Real,\exists x:Real,x=x | dwa różne ID, oba wystąpienia x w eq odnoszą się do wewnętrznego ID |
+| x:Real | (\forall x:Real,x=x)\land x=x | wewnętrzny ID tylko w kwantyfikatorze, dwa końcowe x odnoszą się do parametru |
+| x:Nat, y:Nat | x-y=x | unsupported/type_mismatch; bez zastępowania odejmowania działaniem w Int |
+| x:Real, n:Nat | x=n | type_mismatch, brak koercji |
+| x:Real | x+2=x | unsupported: typ literału niejawny |
+| x:Real | x<x<x | unsupported: łańcuch relacji |
+| P:Prop, Q:Prop, R:Prop | P\iff Q\iff R | unsupported: łańcuch iff |
+| P:Prop, Q:Prop | P\landscape Q | unsupported: nieznane polecenie |
+| x:Real, y:Real | \neg x<y | type_mismatch; wymagane \neg(x<y) |
+| brak | (\exists x:Real,x=x)\land x=x | unbound_variable, bez wycieku zakresu |
+| P:Prop | P%ukryte założenie | unsupported: komentarz |
+| P:Prop | P \input{plik} | unsupported: bez odczytu plików |
+
+### Pełne pokrycie i ślad
+
+Przykład źródła pilota z segmentami, gdzie znaki LF są zachowane: "P:Prop\nQ:Prop\nP\nP\nP\\to Q". Segmenty półotwarte: parametry [0,6), [7,13), założenia [14,15), [16,17), konkluzja [18,24). Oczekiwanie: obie identyczne przesłanki pozostają oddzielne. (Backslash w cytowanym zapisie jest pojedynczym znakiem źródła, nie dwiema pozycjami.) Każdy segment ma własny EOF; luki wyłącznie z dozwolonych białych znaków.
+
+Warianty negatywne: usunięcie jednego segmentu założenia pozostawia niepokryty znak P; nakładanie segmentów i ich zamiana naruszają strukturę dokumentu; dopisanie nieznanej treści po konkluzji nie jest dopuszczalnym ogonem. Każda taka zmiana musi dać odmowę, nie skrócony AST.
+
+Ślad translacji ma zawierać co najmniej wersję gramatyki, SHA źródła, typy i zakresy segmentów, dokładne zakresy tokenów oraz jawne reguły przekształceń (np. GE_REVERSE). Nie musi powielać pełnego tekstu źródła. Status pokrycia odnosi się wyłącznie do kontrolowanego formatu pilota, nigdy automatycznie do całego środowiska twierdzenia. Test odtwarzalności porównuje cały AST i ślad, nie tylko status i liczbę tokenów.
