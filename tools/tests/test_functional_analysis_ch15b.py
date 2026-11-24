@@ -226,5 +226,41 @@ class TestChapter15B(unittest.TestCase):
             self.assertLessEqual(sum(Fraction(1, n*n) for n in block),
                                  Fraction(1, 2**k))
 
+
+    def test_pettis_vector_measure_infinite_variation(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            "\\label{ex:pettis-infinite-variation15b}",
+            "\\hyperref[ex:pettis-strong-not-bochner15b]",
+            "\\sum_{n=1}^{\\infty}\\frac{\\chi_{B_N}(n)}{n^2}",
+            "|m|(A)=\\sum_{n\\in A}\\frac1n",
+            "|m|(S)=\\sum_{n\\ge1}1/n=\\infty",
+        ):
+            self.assertIn(fragment, source)
+        # On finite sets the singleton partition attains the upper bound.
+        # Compare squared norms to avoid irrational arithmetic.
+        for mask in range(1 << 8):
+            atoms = [n for n in range(1, 9) if mask & (1 << (n-1))]
+            singleton_sum = sum((Fraction(1, n) for n in atoms), Fraction(0))
+            norm_squared = sum((Fraction(1, n*n) for n in atoms), Fraction(0))
+            self.assertLessEqual(norm_squared, singleton_sum**2)
+            for cut in range(9):
+                first = [n for n in atoms if n <= cut]
+                tail = [n for n in atoms if n > cut]
+                self.assertEqual(
+                    norm_squared,
+                    sum((Fraction(1, n*n) for n in first + tail), Fraction(0)))
+                self.assertEqual(
+                    singleton_sum,
+                    sum((Fraction(1, n) for n in first + tail), Fraction(0)))
+        # Every dyadic block contributes at least 1/2 to variation,
+        # but its squared norm contributes at most 2**(-k).
+        for k in range(1, 9):
+            block = range(2**k, 2**(k+1))
+            self.assertGreaterEqual(sum(Fraction(1, n) for n in block),
+                                    Fraction(1, 2))
+            self.assertLessEqual(sum(Fraction(1, n*n) for n in block),
+                                 Fraction(1, 2**k))
+
 if __name__ == "__main__":
     unittest.main()
