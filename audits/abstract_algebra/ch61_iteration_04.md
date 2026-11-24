@@ -1,0 +1,11 @@
+# AA-61 — audyt IV: drugi czysty audyt i diagnostyka bramki globalnej
+
+24 listopada 2026 r. Gałąź biblioteka-matematyczna-iteracja-6. Blob f99bd1c134fc5fa9a8d7843b58fa2a8c5dc8aae0 zgodny z audytami II–III.
+
+## Kontrola matematyczna
+Sprawdzono ponownie przeniesienie bazy przez całkowity wyznacznik, niepustość korzeni dodatnich w przypadku niezerowej g, wybór prostego korzenia z dodatnim iloczynem skalarnym i nieujemnością współczynników po odjęciu. Sprawdzono filtrację wysokości i indukcję dla obu szeregów centralnych oraz dla szeregu pochodnego b^±. Sprawdzono indukcję generowania n^±, w tym zmianę bazy na -Delta i odzyskanie h_i z nawiasu. Relacje Serre'a: kolejność a_ij=alpha_j(h_i), przypadek a_ij=0, dokładny wykładnik i symetria dla generatorów ujemnych. Projekcje wielomianowe: różność wszystkich wartości wagowych oraz zachowanie ideału przez operator i jego wielomiany. Rozkład ideałów: rozłączność podpór, ortogonalność, komutowanie składowych, przynależność t_alpha do właściwej podprzestrzeni h, niezdegenerowane parowanie dla przeciwnych korzeni, zejście do prostego i propagacja wzdłuż grafu. Dla r=1 argument daje prostotę bez krawędzi; dla wielu składowych żadna propagacja nie przekracza granicy składowej. Sprawdzono znaki i klasę nilpotentności przykładu sl3. Nie znaleziono usterek wymagających zmian źródła; czyste audyty III–IV: 2/2. Nie rozszerzano zakresu.
+
+## Diagnostyka CI
+Run 45386600467 (head 2412c576d86f2a1ca992aa8341694dfe709c2485), job 138419014892: 10 success, 1 failure, 121 skipped. Krok Run repository tool tests uruchomił 4739 testów; 2 niepowodzenia: test_measure_theory_ch28.Chapter28.test_stable_labels i test_measure_theory_ch29.Chapter29.test_labels_and_external_dependencies. Oba dotyczą nowych etykiet twierdzeń teorii miary, a nie AA-61. W aktualnej gałęzi są już commity korekt f2c5602391d28cee834865c822257a915d9871f6 (rozdział 28) i 3d0fec12596715fc4d0ae75665222a4493721e26 (rozdział 29). Nie modyfikowano cudzych rozdziałów ani testów. Nie uznano diagnostycznych komunikatów o kopiach źródeł za zaliczenie bramki. Kroki AA-61 i kompilacja zostały pominięte w nieudanym CI. Dwa trwałe zestawy regresji zaliczone bezpośrednio w II i III; pełny CI oraz PDF nadal niepotwierdzone. Wymagane ponowne uruchomienie na aktualnym stanie gałęzi, nie na starym head.
+
+AA-61 W AUDYCIE, AA-62 nieotwarty.
