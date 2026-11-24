@@ -754,11 +754,21 @@ Wybierzmy $u_0(x)=-\tanh x$. Wówczas
 $q(x)=u_0'(x)=-1/\cosh^2x$ osiąga minimum $-1$
 w $x=0$, zaś $a\circ u_0$ jest ograniczona.
 Twierdzenie \ref{thm:pde2-breaking} daje $T_*=1$,
-$X(t;\xi)=\xi-t\tanh\xi$ oraz
-$u_x(t,0)=-1/(1-t)$ dla $t<1$.
+$X(t;\xi)=\xi-t\tanh\xi$ oraz, ponieważ $X(t;0)=0$,
+$u_x(t,0)=-1/(1-t)$ dla $0\le t<1$.
 Charakterystyki istnieją jako krzywe gładkie także
-później, ale nie mogą już wyznaczać globalnego
-klasycznego rozwiązania w tym samym schemacie.
+później. Dla $t=1$ pochodna $X_\xi(1;\xi)=\tanh^2\xi$
+jest dodatnia poza zerem, więc $X_1$ jest nadal
+ściśle rosnącą bijekcją, ale nie jest dyfeomorfizmem
+klasy $C^1$, ponieważ $X_\xi(1;0)=0$.
+Dla $t>1$ mamy $X_\xi(t;0)=1-t<0$, podczas gdy
+$X(t;\xi)\to+\infty$ dla $\xi\to+\infty$.
+Zatem $X_t$ nie jest injekcją: ciągła injekcja na
+przedziale musiałaby być ściśle monotoniczna, a tu
+nie jest ani rosnąca, ani malejąca.
+Właśnie dlatego po czasie $1$ same charakterystyki
+nie wyznaczają już jednoznacznego profilu przez odwrócenie
+$X_t$.
 \end{przyklad}
 
 \begin{center}
@@ -791,7 +801,7 @@ interpolację. Porównanie z dokładnym wzorem
 że $u_x(t,0)=-1/(1-t)$, podczas gdy $|u(t,x)|\leq1$.
 Nie jest to algorytm kontynuacji rozwiązania przez szok:
 dla $t\geq1$ odwzorowanie etykiet nie jest już globalnie
-odwracalna w klasie $C^1$.
+odwracalne w klasie $C^1$.
 \end{uwaga}
 
 \begin{uwaga}[Znaczenie czasu $T_*$]
@@ -847,8 +857,9 @@ co zapewnia skończoność całek występujących w definicji.
 \begin{stwierdzenie}[Warunek Rankine'a--Hugoniota]
 \label{prop:pde2-rh}
 Niech $f\in C^1(\R)$ i $s\in C^1((0,T))$.
-Załóżmy, że $u$ jest klasy $C^1$ po obu stronach
-krzywej $x=s(t)$, z jednostronnymi przedłużeniami
+Załóżmy, że $u$ jest klasy $C^1$ w obu otwartych zbiorach
+$\{(t,x):0<t<T,\ x<s(t)\}$ i
+$\{(t,x):0<t<T,\ x>s(t)\}$, z jednostronnymi przedłużeniami
 klasy $C^1$ do krzywej, i posiada ślady
 $u_L(t)$ i $u_R(t)$ na tej krzywej oraz spełnia
 \eqref{eq:pde2-conservation} klasycznie poza nią.
@@ -897,8 +908,10 @@ Ich suma wynosi
  \varphi(t,s(t))\,\mathrm dt,
 \]
 gdzie $[u]=u_R-u_L$ oraz $[f(u)]=f(u_R)-f(u_L)$.
-Ślad funkcji testowej na krzywej można zadawać dowolnie
-bez zakładania gładkości samej krzywej ponad klasę $C^1$.
+Do dowodu konieczności wystarczy móc zrealizować
+dowolny ślad postaci $\eta(t)$ z
+$\eta\in C_c^\infty((0,T))$, bez zakładania
+gładkości samej krzywej ponad klasę $C^1$.
 Jeśli zachodzi \eqref{eq:pde2-rh}, suma jest zerowa
 dla każdej funkcji testowej, co dowodzi wystarczalności.
 Dla dowodu konieczności załóżmy, że równanie zachodzi
@@ -936,7 +949,8 @@ rozwiązaniem entropijnym.
 \label{ex:pde2-rarefaction}
 Dla równania Burgersa z danymi Riemanna
 $u_0(x)=u_L$ dla $x<0$ oraz $u_0(x)=u_R$ dla $x>0$,
-przy $u_L<u_R$, funkcja
+gdzie $u_L,u_R\in\R$, $u_L<u_R$, a wartość $u_0(0)$
+jest dowolna, funkcja
 \[
  u(t,x)=
  \begin{cases}
@@ -991,12 +1005,31 @@ warunków entropijnych podamy w rozdziale o prawach zachowania.
 
 \begin{uwaga}[Dlaczego samo rozwiązanie słabe nie wystarcza?]
 Dla danych z przykładu \ref{ex:pde2-rarefaction}
-można też skonstruować skok poruszający się z prędkością
-$(u_L+u_R)/2$. Spełnia on ten sam całkowy warunek
-\eqref{eq:pde2-weak-form}, lecz narusza warunek entropijny.
-Dla tego samego zagadnienia mamy więc co najmniej
-dwa różne rozwiązania słabe. Selekcja rozwiązania
-fizycznego wymaga dodatkowej informacji.
+($u_L<u_R$) połóżmy $\sigma=(u_L+u_R)/2$ i zdefiniujmy
+$v(t,x)=u_L$ dla $x<\sigma t$ oraz $v(t,x)=u_R$
+dla $x>\sigma t$. Wartość na samej linii skoku
+można wybrać dowolnie, gdyż linia ma miarę $\lambda_2$
+równą zero. Warunek Rankine'a--Hugoniota zapewnia
+spełnianie równania we wnętrzu $(0,T)\times\R$.
+Ponadto
+\[
+ \int_\R |v(t,x)-u_0(x)|\,\mathrm d\lambda_1(x)
+ =|u_R-u_L|\,|\sigma|t,
+\]
+gdyż oba profile różnią się jedynie na przedziale
+między $0$ a $\sigma t$. Całkując przez części
+dla $t\geq\varepsilon$ i przechodząc z $\varepsilon$
+do zera jak w poprzednim przykładzie, otrzymujemy
+\eqref{eq:pde2-weak-form} także dla $v$.
+Rozwiązania $u$ i $v$ różnią się prawie wszędzie
+w otwartym obszarze $u_Lt<x<u_Rt$, $t>0$:
+tam $u(t,x)=x/t$ przyjmuje wartości ściśle między
+$u_L$ a $u_R$, podczas gdy $v$ przyjmuje tylko te
+dwie wartości poza linią skoku.
+Mamy zatem co najmniej dwa różne rozwiązania słabe
+tego samego zagadnienia. Skok dla $u_L<u_R$ narusza
+warunek entropijny; jego ścisłą weryfikację omówimy
+w rozdziale o prawach zachowania.
 \end{uwaga}
 
 \section{Równania w pełni nieliniowe i układ Charpita}
