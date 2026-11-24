@@ -17,4 +17,4 @@ Testy w dokładnej arytmetyce sprawdzają skończone świadki oraz tożsamości 
 | MA1-21-013 | ma1:cor:inverse-lipschitz-mvt | Dolne dodatnie ograniczenie, iniektywność, stała 1/m odwrotności | semantyczna + Python |
 | MA1-21-014 | ma1:ex:mvt-elementary-bounds | Sinus, cosinus i logarytm; ścisłe nierówności dla x>0 | semantyczna + Python |
 | MA1-21-015 | ma1:thm:derivative-endpoint-limit | Ciągłość na końcu, obie strony, granica skończona lub niewłaściwa, brak implikacji odwrotnej | semantyczna + Python |
-| MA1-21-016 | ma1:thm:rolle, ma1:thm:lagrange | Punkty i nachylenia z rzeczywistego źródła TikZ; poprawność składu | Python + PDF |
+| MA1-21-016 | ma1:thm:rolle, ma1:thm:lagrange | Punkty, obecność dokładnie jednej stycznej poziomej Rolle'a, obecność obu prostych Lagrange'a i ich nachylenia oraz przechodzenie przez właściwe punkty z rzeczywistego źródła TikZ; poprawność składu | Python + PDF |
