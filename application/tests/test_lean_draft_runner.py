@@ -139,3 +139,4 @@ class DraftImagePolicyTests(unittest.TestCase):
                                           container_name="atlas-draft-"+"b"*32)
         self.assertIn("--restart=no", args)
         self.assertEqual(runner.INPUT_PATH, "/tmp/Draft.lean")
+        self.assertIn("--tmpfs=/tmp:rw,noexec,nosuid,nodev,size=16777216,mode=0700,uid=65534,gid=65534", args)

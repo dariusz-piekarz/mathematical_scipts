@@ -122,7 +122,7 @@ def isolation_arguments(*, image_id: str, container_name: str) -> tuple[str, ...
         "--user=65534:65534", "--pids-limit=" + str(PIDS_LIMIT),
         "--memory=" + str(MEMORY_BYTES), "--memory-swap=" + str(MEMORY_BYTES),
         "--cpus=1", "--ulimit=nofile=256:256", "--ulimit=core=0:0",
-        "--tmpfs=/tmp:rw,noexec,nosuid,nodev,size=16777216",
+        "--tmpfs=/tmp:rw,noexec,nosuid,nodev,size=16777216,mode=0700,uid=65534,gid=65534",
         "--no-healthcheck", "--log-driver=none", "--restart=no",
         "--env=HOME=/tmp", "--env=LEAN_NUM_THREADS=1",
         "--workdir=/tmp", "--entrypoint=" + ENTRYPOINT,

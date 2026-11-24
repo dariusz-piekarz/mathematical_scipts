@@ -73,7 +73,7 @@ def validate_container(records: object, *, container_id: str, image_id: str, nam
             raise ValueError("Unexpected host access: " + key)
     if r.get("Mounts") != []:
         raise ValueError("Unexpected container mounts")
-    if host.get("Tmpfs") != {"/tmp": "rw,noexec,nosuid,nodev,size=16777216"}:
+    if host.get("Tmpfs") != {"/tmp": "rw,noexec,nosuid,nodev,size=16777216,mode=0700,uid=65534,gid=65534"}:
         raise ValueError("Unexpected tmpfs configuration")
     for key in ("PidMode", "UTSMode", "UsernsMode"):
         # Docker represents default private namespaces as empty strings.

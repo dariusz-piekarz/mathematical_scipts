@@ -47,6 +47,10 @@ case "$err" in
     *"Read-only file system"*) printf 'root.write=EROFS\\n' ;;
     *) exit 12 ;;
 esac
+# Require the actual mount ownership and private mode, independently of write success.
+tmp_owner=$(/bin/busybox stat -c '%u:%g:%a' /tmp) || exit 28
+printf 'tmp.owner_mode=%s\\n' "$tmp_owner"
+test "$tmp_owner" = 65534:65534:700 || exit 29
 printf 'atlas-runtime-fixture' > /tmp/atlas-write-check || exit 25
 test "$(/bin/busybox cat /tmp/atlas-write-check)" = atlas-runtime-fixture || exit 26
 /bin/busybox rm /tmp/atlas-write-check || exit 27
@@ -86,7 +90,8 @@ def validate_runtime_security(output: bytes) -> dict:
         values[key] = value
     exact = {"Uid": "65534 65534 65534 65534", "Gid": "65534 65534 65534 65534",
              "CapEff": "0000000000000000", "NoNewPrivs": "1", "Seccomp": "2",
-             "root.write": "EROFS", "tmp.write": "ok"}
+             "root.write": "EROFS", "tmp.write": "ok",
+             "tmp.owner_mode": "65534:65534:700"}
     if set(values) != set(exact) | {"root.mountopts", "tmp.mountopts"}:
         raise ValueError("Missing or unexpected security observation")
     if any(values[k] != v for k, v in exact.items()):
@@ -117,7 +122,7 @@ _FIXTURE_EXIT_STAGES = {
     11: "root_write_unexpected_success", 12: "root_write_not_readonly_error",
     20: "cgroup_read", 21: "process_status_read", 22: "mountinfo_read",
     23: "root_fixture_stat", 24: "root_fixture_mode", 25: "tmp_write",
-    26: "tmp_readback", 27: "tmp_remove",
+    26: "tmp_readback", 27: "tmp_remove", 28: "tmp_stat", 29: "tmp_owner_mode",
 }
 
 

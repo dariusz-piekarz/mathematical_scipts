@@ -29,7 +29,7 @@ class DraftTransportTests(unittest.TestCase):
                            "Memory": policy.MEMORY_BYTES, "MemorySwap": policy.MEMORY_BYTES,
                            "PidsLimit": policy.PIDS_LIMIT, "NanoCpus": 1000000000,
                            "CapDrop": ["ALL"], "SecurityOpt": ["no-new-privileges"],
-                           "Tmpfs": {"/tmp": "rw,noexec,nosuid,nodev,size=16777216"},
+                           "Tmpfs": {"/tmp": "rw,noexec,nosuid,nodev,size=16777216,mode=0700,uid=65534,gid=65534"},
                            "RestartPolicy": {"Name": "no"}, "LogConfig": {"Type": "none"},
                            "PidMode": "", "UTSMode": "", "UsernsMode": "",
                            "PublishAllPorts": False, "AutoRemove": False,
@@ -61,6 +61,15 @@ class DraftTransportTests(unittest.TestCase):
                 rec["HostConfig"][key] = value
                 with self.assertRaises(ValueError):
                     self.validate(rec)
+
+    def test_rejects_missing_or_unsafe_tmpfs_owner_mode(self):
+        options = self.record["HostConfig"]["Tmpfs"]["/tmp"]
+        for old, new in ((",mode=0700", ""), (",uid=65534", ""), (",gid=65534", ""),
+                         ("mode=0700", "mode=0777"), ("uid=65534", "uid=0"),
+                         ("gid=65534", "gid=0")):
+            with self.subTest(old=old, new=new), self.assertRaises(ValueError):
+                self.validate({**self.record, "HostConfig": {**self.record["HostConfig"],
+                               "Tmpfs": {"/tmp": options.replace(old, new)}}})
 
     def test_container_refuses_other_image_or_running_probe(self):
         for key, value in (("Image","wrong"),("Args",["unexpected"]),("Mounts",[{"Source":"/host"}]),
@@ -280,7 +289,7 @@ class RuntimeSecurityObservationTests(unittest.TestCase):
         self.valid = (b"Uid=65534 65534 65534 65534\nGid=65534 65534 65534 65534\n"
                       b"CapEff=0000000000000000\nNoNewPrivs=1\nSeccomp=2\n"
                       b"root.mountopts=ro,relatime\ntmp.mountopts=rw,nodev,nosuid,noexec,relatime\n"
-                      b"root.write=EROFS\ntmp.write=ok\n")
+                      b"root.write=EROFS\ntmp.write=ok\ntmp.owner_mode=65534:65534:700\n")
 
     def test_accepts_expected_runtime_security(self):
         self.assertEqual(self.validate(self.valid)["root.write"], "EROFS")
@@ -298,7 +307,9 @@ class RuntimeSecurityObservationTests(unittest.TestCase):
                          (b",noexec", b""), (b",nosuid", b""), (b",nodev", b""),
                          (b",noexec", b",noexec,exec"),
                          (b"root.write=EROFS", b"root.write=EACCES"),
-                         (b"tmp.write=ok", b"tmp.write=failed")):
+                         (b"tmp.write=ok", b"tmp.write=failed"),
+                         (b"tmp.owner_mode=65534:65534:700", b"tmp.owner_mode=0:0:700"),
+                         (b"tmp.owner_mode=65534:65534:700", b"tmp.owner_mode=65534:65534:777")):
             with self.subTest(old=old), self.assertRaises(ValueError):
                 self.validate(self.valid.replace(old, new))
 
@@ -313,7 +324,7 @@ class RuntimeSecurityObservationTests(unittest.TestCase):
         cgroup = (b"memory.max=2147483648\nmemory.swap.max=0\n"
                   b"pids.max=64\ncpu.max=100000 100000\n")
         result = validate_runtime_observations(cgroup + self.valid)
-        self.assertEqual(len(result), 13)
+        self.assertEqual(len(result), 14)
         for invalid in (cgroup + self.valid.replace(b"Seccomp=2", b"Seccomp=0"),
                         cgroup.replace(b"pids.max=64", b"pids.max=max") + self.valid,
                         cgroup + self.valid + b"cpu.max=100000 100000\n"):
