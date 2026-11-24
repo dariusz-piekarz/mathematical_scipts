@@ -54,4 +54,17 @@ class Chapter03(unittest.TestCase):
                 q=(r/p+y)/2
                 self.assertTrue(0<p<x and 0<q<y and r<p*q)
 
+    def test_signed_supremum_counterexample(self):
+        E=G={F(-2),F(-1)}
+        self.assertEqual(max(E)*max(G),1)
+        self.assertEqual(max(e*g for e in E for g in G),4)
+
+    def test_rational_embedding_representatives(self):
+        for a,b,c,d in itertools.product(range(-3,4),range(1,5),range(-3,4),range(1,5)):
+            x,y=F(a,b),F(c,d)
+            self.assertEqual(F(2*a,2*b),x)
+            self.assertEqual(F(a*d+b*c,b*d),x+y)
+            self.assertEqual(F(a*c,b*d),x*y)
+            self.assertEqual(a*d<c*b,x<y)
+
 if __name__=="__main__": unittest.main()
