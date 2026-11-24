@@ -16,6 +16,10 @@ Kryteria semantyczne nie są testami automatycznymi ani formalizacją Lean. Iden
 | PDE-02-009 | thm:pde2-breaking | Warunek 0≤t<T*, surjektywność z granic w nieskończoności, wspólna odwrotność C¹ wraz z t=0, weryfikacja równania i danych, wzór na gradient oraz dojście charakterystyki do punktu osobliwego. | semantyczna |
 | PDE-02-010 | ex:pde2-rarefaction | Całkowanie na t≥ε, zerowe skoki, oszacowanie normy L¹ różnicy danych przez 2Mt(max(0,u_R)-min(0,u_L)), przejście do granicy w całce brzegowej i podwójnej. | semantyczna |
 | PDE-02-011 | prop:pde2-rh | Rozróżnienie równania dystrybucyjnego we wnętrzu od zagadnienia z danymi początkowymi; normalne zewnętrzne (-s',1) i (s',-1) po normalizacji, element długości krzywej, jawne znaki wkładów i oba kierunki równoważności. | semantyczna |
+| PDE-02-012 | eq:pde2-charpit-system | Wyprowadzenie układu z różniczkowania PDE, symetrii hesjanu, wyboru prędkości F_p i reguły łańcuchowej dla u oraz gradientu. | semantyczna |
+| PDE-02-013 | lem:pde2-contact | Jawne dziedziny i regularność rodziny, uzasadnienie mieszanej pochodnej czasowo-parametrowej przez równanie całkowe, skrócenie składników z pochodną F_p, zachowanie F i równanie liniowe na odchylenie od warunku styczności. | semantyczna |
+| PDE-02-014 | thm:pde2-charpit | Wspólny przedział istnienia ODE, iloczyn i lokalny dyfeomorfizm, jawna konstrukcja u oraz gradientu, regularność C², obydwa warunki początkowe; jednoznaczność zarodka przez porównanie pełnych układów ODE na wspólnym iloczynie. | semantyczna |
+| PDE-02-015 | sec:pde2-charpit | W przykładzie eikonalnym ciągły wybór gałęzi na spójnym przedziale, bezpośrednie sprawdzenie równania i danych dla obu rozwiązań oraz poprzeczność obu wektorów F_p. | semantyczna |
 
 ## Pierwszy właściwy przebieg — 2026-11-24
 
@@ -29,3 +33,6 @@ Poprawki 007–008 w commicie f375d519a2cd8898e96023bf3fcdaa92bb303f72. Sprawdzo
 
 ## Czwarty właściwy przebieg — 2026-11-24
 Poprawki 009–011 w commicie ee18666407b25cfad07023e382d4013e1cafe5fa. Przejrzano semantycznie zmienione dowody, zachowano 51 etykiet, sprawdzono 59 odsyłaczy (w tym cel zewnętrzny chap:pde-code) oraz zagnieżdżenie środowisk. Poprawiono dwa dalsze użycia słowa mapa w znaczeniu odwzorowania. Nie uruchomiono kompilacji, renderowania, testów wykonywalnych ani Lean. Wszystkie dziesięć usterek przeglądu przygotowawczego poprawiono w źródle; pozostają dalszy audyt, kontrole techniczne i niezależna stabilizacja. Rozdział otwarty.
+
+## Piąty właściwy przebieg — 2026-11-24
+Poprawki 012–015 w commicie 2c6ad0fe000e9c1c47e4a1dfc9eb637f95646fde. Przejrzano semantycznie zmienione dowody i przykład. Zachowano 51 etykiet, sprawdzono 60 odsyłaczy (w tym zewnętrzny cel chap:pde-code), poprawne zagnieżdżenie środowisk oraz ciągłość ID i istnienie etykiet dla wszystkich 15 kryteriów. Nie uruchomiono kompilacji, renderowania, testów wykonywalnych ani Lean. Pozostaje audyt równania Hamiltona–Jacobiego, kontrole techniczne i niezależna stabilizacja. Rozdział otwarty.
