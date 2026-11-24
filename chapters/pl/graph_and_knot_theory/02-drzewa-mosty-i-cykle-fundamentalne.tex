@@ -41,8 +41,17 @@ Idąc dalej po $P$, wybierzmy pierwszy wierzchołek
 $y\ne x$ należący również do $Q$ po $x$;
 taki wierzchołek istnieje, bo $v$ należy do obu
 dróg. Fragmenty $P$ i $Q$ między $x$ i $y$
-są wewnętrznie rozłączne i mają różne pierwsze
-krawędzie. Ich suma tworzy cykl, co przeczy
+są wewnętrznie rozłączne: żaden wewnętrzny
+wierzchołek wybranego fragmentu $P$ nie należy
+do części $Q$ po $x$, z definicji $y$. Nie może
+on też należeć do wspólnego początkowego odcinka,
+ponieważ $P$ jest drogą prostą.
+Oba fragmenty mają różne pierwsze krawędzie.
+Przechodząc jednym z $x$ do $y$, a drugim z $y$
+do $x$, otrzymujemy spacer zamknięty bez powtórzeń
+wierzchołków poza początkiem i końcem. Ma on
+co najmniej trzy krawędzie, gdyż graf jest prosty
+i fragmenty są różne. Jest to cykl, co przeczy
 acykliczności.
 
 W drugą stronę, jeżeli pomiędzy każdymi dwoma
@@ -273,6 +282,76 @@ może odpowiadać przeszukiwaniu wszerz (BFS)
 lub w głąb (DFS).
 \end{uwaga}
 
+\subsection{Lasy rozpinające grafów niespójnych}
+\label{sec:tg-lasy-rozpinajace}
+
+\begin{definicja}[Las rozpinający]
+Niech $G=(V,E)$ będzie skończonym grafem prostym.
+\emph{Lasem rozpinającym} grafu $G$ nazywamy podgraf
+$F=(V,E_F)$, gdzie $E_F\subseteq E$, taki że $F$ jest
+lasem, a zbiory wierzchołków jego składowych spójnych
+są dokładnie zbiorami wierzchołków składowych spójnych
+$G$. W szczególności las rozpinający grafu zerowego
+jest grafem zerowym.
+\end{definicja}
+
+\begin{twierdzenie}[Istnienie i charakteryzacja lasu rozpinającego]
+\label{thm:tg-las-rozpinajacy}
+Niech $G=(V,E)$ będzie skończonym grafem prostym
+o $n$ wierzchołkach i $c$ składowych spójnych.
+Wtedy $G$ ma las rozpinający. Dla każdego acyklicznego
+podgrafu $F=(V,E_F)$ następujące warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $F$ jest lasem rozpinającym $G$;
+\item $|E_F|=n-c$;
+\item dla każdej krawędzi $e\in E\setminus E_F$
+      graf $(V,E_F\cup\{e\})$ zawiera cykl.
+\end{enumerate}
+\end{twierdzenie}
+
+\begin{proof}
+W każdej składowej spójnej $G_i$ wybieramy drzewo
+rozpinające $T_i$. Suma rozłączna tych drzew jest
+acykliczna i zachowuje zbiory wierzchołków składowych
+grafu $G$, zatem jest jego lasem rozpinającym.
+Dla $c=0$ suma jest grafem zerowym.
+
+Niech teraz $c_F$ oznacza liczbę składowych $F$.
+Każda składowa $F$ zawiera się w pewnej składowej
+$G$, ponieważ spacer w $F$ jest także spacerem w $G$.
+Każda składowa $G$ zawiera co najmniej jedną składową
+$F$, gdyż oba grafy mają ten sam zbiór wierzchołków.
+Stąd $c_F\ge c$, a równość zachodzi dokładnie wtedy,
+gdy podziały na składowe są takie same. Ze wzoru na
+liczbę krawędzi lasu mamy $|E_F|=n-c_F$. Dowodzi to
+równoważności (i) i (ii).
+
+Załóżmy (i) i niech $e=uv\in E\setminus E_F$.
+Końce $u,v$ należą do jednej składowej $G$, a więc
+także do jednej składowej $F$. Jedyna droga w tej
+składowej od $u$ do $v$ wraz z $e$ tworzy cykl.
+Otrzymujemy (iii).
+
+Jeśli (i) nie zachodzi, pewna składowa $G$ zawiera
+wierzchołki z różnych składowych $F$. Weźmy drogę
+w $G$ między takimi wierzchołkami. Na tej drodze
+istnieje krawędź $e$ o końcach w różnych składowych
+$F$. Nie należy ona do $E_F$. Dodanie $e$ nie może
+utworzyć cyklu: taki cykl musiałby zawierać $e$,
+a po jej usunięciu dawałby drogę w $F$ pomiędzy jej
+końcami. Przeczy to (iii). Dowodzi to (iii)$\Rightarrow$(i).
+\end{proof}
+
+\begin{przyklad}[Las rozpinający]
+Niech $G$ składa się z trójkąta o wierzchołkach $a,b,c$,
+krawędzi $de$ i izolowanego wierzchołka $f$.
+Mamy $n=6$, $m=4$ i $c=3$. Las o zbiorze krawędzi
+$\{ab,bc,de\}$ zachowuje wszystkie trzy składowe
+i ma $n-c=3$ krawędzie. Jedyna pominięta krawędź
+$ca$ zamyka trójkąt. Nie istnieje natomiast drzewo
+rozpinające całego $G$, gdyż $G$ nie jest spójny.
+\end{przyklad}
+
 \section{Drzewo ukorzenione i odległości}
 \label{sec:tg-ukorzenione}
 
@@ -453,11 +532,18 @@ i krawędzi $e$ jest cyklem zawierającym $e$.
 \end{proof}
 
 \begin{definicja}[Przekrój krawędziowy]
-Dla grafu $G=(V,E)$ i zbioru
+Dla skończonego grafu prostego $G=(V,E)$ i zbioru
 $S\subseteq V$ definiujemy \emph{przekrój}
 $\delta_G(S)=\{uv\in E:u\in S,\ v\in V\setminus S\}$.
-Przekrój jest \emph{nietrywialny}, jeśli
-$\varnothing\ne S\ne V$.
+Podział $S\sqcup(V\setminus S)$ nazywamy
+\emph{nietrywialnym}, jeśli $\varnothing\ne S\ne V$.
+Odpowiadający mu przekrój może być pusty, gdy graf
+nie jest spójny: wystarczy wybrać $S$ jako sumę
+niektórych, ale nie wszystkich składowych.
+W grafie spójnym każdy nietrywialny podział
+wyznacza niepusty przekrój. Rzeczywiście,
+droga od wierzchołka z $S$ do wierzchołka spoza
+$S$ zawiera krawędź przekroju.
 \end{definicja}
 
 \begin{stwierdzenie}[Most jako przekrój jednoelementowy]
@@ -646,7 +732,9 @@ drzewa nie należące do $C$ nie pojawiają się
 wcale. Zatem $F\subseteq E(T)$.
 Ponieważ cykl ma przy każdym wierzchołku
 stopień parzysty, a własność parzystych
-stopni zachowuje się przy różnicy symetrycznej,
+stopni zachowuje się przy różnicy symetrycznej
+(każda wspólna krawędź usuwa dwa wkłady do sumy
+stopni przy każdym ze swoich końców),
 $F$ ma wszędzie parzyste stopnie.
 Ale las zawierający co najmniej jedną krawędź
 nie może mieć wszystkich stopni parzystych:
@@ -671,6 +759,19 @@ występują w obu i znikają modulo $2$.
 Mamy $n=4$, $m=5$, więc $\dim\mathcal C(G)=2$.
 Wszystkie trzy cykle są zależne: suma ich
 wektorów charakterystycznych wynosi zero.
+\end{przyklad}
+
+\begin{przyklad}[Suma cykli nie musi być cyklem]
+Rozważmy dwa trójkąty $C_1=a-b-c-a$ i $C_2=a-d-e-a$
+mające tylko wspólny wierzchołek $a$.
+Ponieważ nie mają wspólnej krawędzi, ich różnica
+symetryczna zawiera wszystkie sześć krawędzi.
+W podgrafie wyznaczonym przez te krawędzie
+wierzchołek $a$ ma stopień cztery, a każdy inny
+wierzchołek ma stopień dwa. Zbiór krawędzi nie
+jest zatem pojedynczym cyklem prostym, mimo że
+odpowiada elementowi $\mathcal C(G)$.
+Rozkłada się na dwa rozłączne krawędziowo cykle.
 \end{przyklad}
 
 \section{Przekroje fundamentalne i parzystość przecięć}
@@ -735,6 +836,48 @@ $f$, bo gdyby była druga, po jej
 dodaniu do $T-f$ powstałby cykl.
 Wobec tego $D_f\cap E(T)=\{f\}$.
 \end{proof}
+
+\begin{przyklad}[Cykl i przekrój fundamentalny]
+Niech $G$ będzie kwadratem $a-b-c-d-a$ z przekątną $ac$,
+a $T$ jego drzewem rozpinającym o krawędziach $ab,bc,cd$.
+Dla $e=ad$ cykl $C_e$ jest całym kwadratem.
+Dla $f=bc$ usunięcie $f$ z $T$ daje składowe
+$\{a,b\}$ i $\{c,d\}$, więc $D_f=\{bc,ad,ac\}$.
+W szczególności $e\in D_f$, $f\in C_e$ oraz
+$E(C_e)\cap D_f=\{bc,ad\}$. Przecięcie ma dwa elementy.
+\end{przyklad}
+
+\begin{center}
+\begin{minipage}{\linewidth}
+\centering
+\begin{tikzpicture}[scale=.87]
+  \begin{scope}[shift={(-2.45,0)}]
+    \node[tgBlueVertex] (a) at (-.9,.85) {$a$};
+    \node[tgBlueVertex] (b) at (.9,.85) {$b$};
+    \node[tgBlueVertex] (c) at (.9,-.85) {$c$};
+    \node[tgBlueVertex] (d) at (-.9,-.85) {$d$};
+    \draw[tgGhost] (a)--(c);
+    \draw[tgTree] (a)--(b)--(c)--(d);
+    \draw[tgAccent] (d)--(a);
+    \node[font=\small,text=tgNavy] at (0,-1.5) {cykl $C_e$};
+  \end{scope}
+  \begin{scope}[shift={(2.45,0)}]
+    \node[tgBlueVertex] (a) at (-.9,.85) {$a$};
+    \node[tgBlueVertex] (b) at (.9,.85) {$b$};
+    \node[tgRedVertex] (c) at (.9,-.85) {$c$};
+    \node[tgRedVertex] (d) at (-.9,-.85) {$d$};
+    \draw[tgGhost] (a)--(b) (c)--(d);
+    \draw[tgAccent] (a)--(d) (b)--(c) (a)--(c);
+    \draw[tgPurple,densely dashed,line width=.8pt] (-1.4,0)--(1.4,0);
+    \node[font=\small,text=tgNavy] at (0,-1.5) {przekrój $D_f$};
+  \end{scope}
+\end{tikzpicture}
+
+{\footnotesize Po lewej dołączenie krawędzi $e=ad$ do drzewa
+tworzy cykl; po prawej przekrój wyznaczony przez usunięcie
+$f=bc$ z drzewa. Wspólne krawędzie cyklu i przekroju to $ad$ i $bc$.}
+\end{minipage}
+\end{center}
 
 \begin{uwaga}[Dlaczego wynik jest przygotowaniem do homologii]
 W dalszej części wprowadzimy operator brzegowy
