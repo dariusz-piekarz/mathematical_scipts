@@ -43,7 +43,7 @@ W pseudokodzie \texttt{Q.push} dopisuje element na koniec kolejki,
 \texttt{Q.pop} usuwa element z początku,
 a \texttt{for w in N(v)} przegląda sąsiadów w ustalonej kolejności.
 Dla obliczeń złożoności przyjmujemy jednostkowy koszt tych operacji
-oraz dodawania i porównywania liczb całkowitych z zakresu $0,\ldots,n$.
+oraz dodawania i porównywania liczb całkowitych z zakresu $0,\ldots,2n$ (wartość $\infty$ w BFS reprezentujemy osobnym znacznikiem).
 Nie używamy reprezentacji macierzą sąsiedztwa przy wyprowadzaniu
 granic $O(n+m)$.
 
@@ -69,6 +69,7 @@ $p[v]=\bot$. Następnie wykonujemy kroki:
       $\mathrm{seen}[w]=\mathrm{false}$, ustawiamy
       $\mathrm{seen}[w]=\mathrm{true}$, $p[w]=v$,
       $d[w]=d[v]+1$, po czym dopisujemy $w$ na koniec $Q$.
+      Po przejrzeniu wszystkich sąsiadów wracamy do kroku (2).
 \item Kończymy, gdy kolejka jest pusta.
 \end{enumerate}
 Ważne: wierzchołek oznaczamy jako odkryty już przy
@@ -149,9 +150,11 @@ zostaje odkryty na mocy powyższej indukcji;
 w drugą stronę konstrukcja rodziców gwarantuje
 istnienie drogi do odkrytego wierzchołka.
 Stąd także (i), (ii) i (iii).
-Ponieważ wartości $d$ ściśle maleją wzdłuż krawędzi
-do rodzica, zbiór tych krawędzi nie zawiera cyklu,
-a każdy osiągalny wierzchołek łączy się z $s$.
+Każdy osiągalny wierzchołek łączy się z $s$ przez rodziców.
+Gdyby krawędzie rodziców zawierały cykl nieskierowany,
+wierzchołek o maksymalnej wartości $d$ na tym cyklu
+miałby dwóch różnych sąsiadów o wartości $d$ mniejszej o jeden,
+a więc dwóch rodziców, co jest niemożliwe.
 Jest więc drzewem na całej składowej $s$.
 \end{proof}
 
@@ -219,8 +222,9 @@ co najwyżej $n$ elementów.
 Dla dowolnego skończonego grafu prostego $G$ można
 wyznaczyć wszystkie składowe spójne w czasie $O(n+m)$,
 uruchamiając BFS kolejno z każdego jeszcze
-nieodkrytego wierzchołka i nie zerując tablicy
-\texttt{seen} pomiędzy uruchomieniami.
+nieodkrytego wierzchołka, inicjalizując wszystkie tablice tylko raz.
+Przy każdym nowym korzeniu ustawiamy jego odległość na zero
+i uruchamiamy pętlę kolejki bez ponownej inicjalizacji tablic.
 \end{twierdzenie}
 \begin{proof}
 Z twierdzenia \ref{thm:tg-bfs-correct} jedno uruchomienie
@@ -722,6 +726,10 @@ nierówność obowiązuje na każdym łuku,
 zatem uporządkowanie wierzchołków
 według malejących czasów wyjścia
 jest porządkiem topologicznym.
+Aby uzyskać go w czasie liniowym, dopisujemy każdy wierzchołek
+do listy w chwili zakończenia jego wywołania DFS, a po zakończeniu
+całego przeszukiwania odwracamy listę w czasie $O(|V|)$.
+Nie stosujemy sortowania porównaniowego.
 Każdy wierzchołek i każdy łuk
 analizujemy stałą liczbę razy,
 więc koszt wynosi $O(|V|+|A|)$.
