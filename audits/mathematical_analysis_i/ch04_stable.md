@@ -1,0 +1,2 @@
+# MA1-04 — stabilny
+Blob 3db0f2dd5b4cc0f1d433a66b6bb16bbb5ccce451. 13 kryteriów z audytu 02. CI 45406250745: 23/23 testów (3+7+7+6), dwukrotna kompilacja, 28 stron, artefakt 14926791370, drugi przebieg bez nierozwiązanych odsyłaczy. CI terminologii 45406211369 i aplikacji 45406211282: sukces. Obejrzano miniatury stron fizycznych 22–28 oraz powiększoną tabelę na stronie 28: brak widocznych kolizji i obcięć. Lean nieuruchomiony. Stabilny w zakresie wykonanych kontroli.
