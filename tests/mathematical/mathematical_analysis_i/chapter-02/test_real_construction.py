@@ -35,4 +35,23 @@ class Chapter02(unittest.TestCase):
             m=max(F(1),abs(a),abs(c),abs(b),abs(d))
             self.assertLessEqual(abs(a*b-c*d),m*(abs(a-c)+abs(b-d)))
 
+    def test_inverse_bracket_bound(self):
+        for a,u in itertools.product(map(F,range(1,16)),repeat=2):
+            if a>=u: continue
+            for q in (F(0),F(1,4),F(1,2),F(3,4),F(9,10)):
+                if u-a >= (1-q)*a: continue
+                self.assertLess((u-a)/u,1-q)
+                self.assertLess(q,a/u)
+                b=(q/a+1/u)/2
+                self.assertTrue(0<b<1/u and q<a*b<1)
+
+    def test_distributivity_witness(self):
+        for a,b,c in itertools.product(map(F,range(1,5)),repeat=3):
+            q=a*(b+c)-F(1,7)
+            eta=(a*(b+c)-q)/4
+            u,v=a*b-eta,a*c-eta
+            self.assertLess(u,a*b)
+            self.assertLess(v,a*c)
+            self.assertGreater(u+v,q)
+
 if __name__=="__main__": unittest.main()
