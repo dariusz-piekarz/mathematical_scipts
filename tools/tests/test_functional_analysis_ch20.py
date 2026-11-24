@@ -75,5 +75,55 @@ class Chapter20(unittest.TestCase):
                 rhs = integral(product(derivative(left),phi),-1,0) + integral(product(derivative(right),phi),0,1) + (right[0]-left[0])*phi[0]
                 self.assertEqual(lhs,rhs)
 
+
+    def test_FA20_multivariate_leibniz_01(self):
+        from itertools import product as cartesian_product
+        from math import comb
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"gT=T\circ N_g",
+            r"q_B(gT)=q_{N_g(B)}(T)",
+            r"\binom\alpha{\nu-e_j}+\binom\alpha\nu=\binom\gamma\nu",
+            r"\langle g(a)\delta_a'-g'(a)\delta_a,\varphi\rangle",
+        ):
+            self.assertIn(fragment, s)
+        def multi_choose(a, b):
+            if any(k < 0 or k > n for n,k in zip(a,b)):
+                return 0
+            from math import prod
+            return prod(comb(n,k) for n,k in zip(a,b))
+        for a in cartesian_product(range(4), repeat=3):
+            for j in range(3):
+                gamma = tuple(n + (i == j) for i,n in enumerate(a))
+                for nu in cartesian_product(*(range(n+1) for n in gamma)):
+                    prev = tuple(k - (i == j) for i,k in enumerate(nu))
+                    self.assertEqual(multi_choose(a,prev)+multi_choose(a,nu),
+                                     multi_choose(gamma,nu))
+
+    def test_FA20_regularization_transpose_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"\int_0^\infty\rho(t)\varphi(\varepsilon t)",
+            r"q_B(T_{H\rho_\varepsilon}-c_\rho\delta_0)",
+            r"otrzymujemy $c_\rho=0$",
+            r"otrzymujemy $c_\rho=1$",
+            r"D_\alpha N_{a_\alpha}",
+            r"\langle T,P^{\mathrm t}\varphi\rangle",
+            r"-a\varphi'+(b-a')\varphi",
+            r"(c-\operatorname{div}b)\varphi",
+        ):
+            self.assertIn(fragment, s)
+        # Exact finite-interval identity for a first-order operator
+        # with variable coefficients and endpoint-vanishing test polynomials.
+        for a in ([1],[0,1],[1,2,3]):
+            for b in ([0],[2,-1]):
+                for f in ([1],[1,2],[0,1,3]):
+                    for phi in ([1,0,-1],[0,1,0,-1]):
+                        lhs = integral(product(product(a,derivative(f)),phi),-1,1)
+                        lhs += integral(product(product(b,f),phi),-1,1)
+                        rhs = -integral(product(f,derivative(product(a,phi))),-1,1)
+                        rhs += integral(product(product(b,f),phi),-1,1)
+                        self.assertEqual(lhs,rhs)
+
 if __name__ == "__main__":
     unittest.main()
