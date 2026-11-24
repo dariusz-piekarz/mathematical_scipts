@@ -1,0 +1,5 @@
+# Rozdział 01 — zatwierdzone uzupełnienia i audyt 03
+
+2026-11-24. SHA źródła 09a02e74a4253e37e432e5afc47eeccef7b55faf. Dodano osobny lemat o nieparzystym spacerze zamkniętym z minimalizacją w podgrafie jego krawędzi; wykorzystano go w kryterium dwudzielności. Dodano rysunki graniastosłupa trójkątnego i K_{3,3} oraz zamiany dwóch krawędzi. Dodano kryterium Erdősa–Gallaia, pełny dowód konieczności i wystarczalności metodą częściowych realizacji (Tripathi, Venugopalan, West, Discrete Math. 310 (2010), 843–844), przykłady i porównanie z H–H.
+
+Kontrola niezależna w JavaScript: wygenerowano wszystkie 33 867 grafów prostych na 1–6 etykietowanych wierzchołkach i 50 069 ciągów stopni z zakresu 0..n−1, n=1..6. Porównano spełnienie nierówności i parzystości z członkostwem w zbiorze faktycznie realizowanych uporządkowanych ciągów. 0 rozbieżności. Test skończony nie zastępuje dowodu. Sprawdzono przypadki r=1,n, u=w w kroku C, rozłączność krawędzi w kroku A i wybór u w B, zachowanie niezależności ogona S. Wymagany kolejny niezależny audyt całego rozdziału po zmianach oraz trwały test regresyjny, CI, PDF i oględziny stron. Nie deklarujemy stabilności. Nie przechodzić do 02.
