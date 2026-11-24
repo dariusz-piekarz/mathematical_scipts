@@ -239,3 +239,7 @@ AA-61: generatory półprostych algebr Liego i relacje Serre'a, zakres docs/pl/z
 ## Zamknięcie AA-61 — 24 listopada 2026 r.
 
 **AA-61 STABILNY w ustalonym zakresie; etapy D/P zaliczone.** Audyty III–IV czyste, oba zestawy regresji zaliczone, korekty typograficzne V potwierdzone. CI [45387901864](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45387901864): 132/132 success, head 3c2584be2ebb7256b6e22123822c2a388d7da8a5, blob 76c35df11718f562aa5a6cf121c7e0d4fdb9dcc0. Artefakt 14916778780, PDF 394 strony, AA-61 fizyczne 390–394 (drukowane 378–382), wszystkie obejrzane, log czysty. Raport `audits/abstract_algebra/ch61_iteration_06.md`. AA-01–61 stabilne. **AA-62 nieotwarty**; kolejny etap D obejmuje nowy materiał o prezentacji Serre'a i drodze do klasyfikacji oraz kompleksowe audyty stabilizacyjne w tej samej iteracji.
+
+## Otwarcie AA-62 — 24 listopada 2026 r.
+
+AA-62: twierdzenie o prezentacji Serre'a, zakres docs/pl/zakres_aa62_prezentacja_serre.md. **Etap D W AUDYCIE**, AA-01–61 stabilne. Dowód istnienia i prezentacji bez założenia istnienia algebry danego typu. Sprzężoność maksymalnych podalgebr toralnych pozostaje na później. Dwa zestawy regresji zaliczone bezpośrednio; pełny CI i PDF do potwierdzenia. AA-63 nieotwarty.
