@@ -324,3 +324,46 @@ class RuntimeSecurityObservationTests(unittest.TestCase):
         from scripts.lean_rootless_ci_probe import _FIXTURE
         self.assertIn('"/proc/$$/status"', _FIXTURE)
         self.assertIn('"/proc/$$/mountinfo"', _FIXTURE)
+
+
+class RuntimeFailureReportTests(unittest.TestCase):
+    def test_known_fixture_failure_is_blocked(self):
+        from scripts.lean_rootless_ci_probe import runtime_failure_report
+        for code, stage in ((11, "root_write_unexpected_success"),
+                            (12, "root_write_not_readonly_error"),
+                            (24, "root_fixture_mode"), (25, "tmp_write"),
+                            (27, "tmp_remove")):
+            with self.subTest(code=code):
+                report = runtime_failure_report(
+                    [{"Id": "c", "Image": "i", "State": {"Status": "exited", "ExitCode": code}}],
+                    container_id="c", image_id="i")
+                self.assertEqual(report["stage"], stage)
+                self.assertEqual(report["exit_code"], code)
+                self.assertEqual(report["status"], "blocked")
+                self.assertFalse(report["execution_allowed"])
+                self.assertFalse(report["certificate"])
+                self.assertEqual(report["proof_status"], "not_run")
+
+    def test_rejects_unconfirmed_identity_and_state(self):
+        from scripts.lean_rootless_ci_probe import runtime_failure_report
+        for records, stage in (
+            ([{"Id": "other", "Image": "i", "State": {"Status": "exited", "ExitCode": 25}}],
+             "state_identity_unconfirmed"),
+            ([{"Id": "c", "Image": "i", "State": {"Status": "exited", "ExitCode": True}}],
+             "state_unconfirmed"),
+            ([{"Id": "c", "Image": "i", "State": {"Status": "running", "ExitCode": 0}}],
+             "container_not_exited"),
+        ):
+            with self.subTest(stage=stage):
+                result = runtime_failure_report(records, container_id="c", image_id="i")
+                self.assertEqual(result["stage"], stage)
+                self.assertEqual(result["status"], "blocked")
+                self.assertFalse(result["certificate"])
+
+    def test_unknown_failure_does_not_claim_known_cause(self):
+        from scripts.lean_rootless_ci_probe import runtime_failure_report
+        result = runtime_failure_report(
+            [{"Id": "c", "Image": "i", "State": {"Status": "exited", "ExitCode": 1}}],
+            container_id="c", image_id="i")
+        self.assertEqual(result["stage"], "unclassified_fixture_failure")
+        self.assertEqual(result["status"], "blocked")
