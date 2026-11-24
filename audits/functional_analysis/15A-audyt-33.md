@@ -1,0 +1,14 @@
+# Moduł 15A — audyt 33 (czysty, 2/2 — stabilny)
+
+Data: 24 listopada 2026. Gałąź biblioteka-matematyczna-iteracja-6. Punkt wyjścia raport 32 (7680ed5ffe46624c4212a73bf5e6c2777a928454), 1/2. Źródło 79f8ffe796145ff69103479a4153c906cbbb0fb7, 659 wierszy, 18 etykiet, 12 dowodów, 4 przykłady. Bez zmian źródła, testów i workflow.
+
+## Kontrola matematyczna i redakcyjna
+Ponownie przeczytano cztery podsekcje. Sprawdzono w szczególności niezależność definicji całki od wyboru rodziny seminorm, argument Cauchy'ego dla wspólnych rozdrobnionych podziałów i przejście od ciągu do wszystkich podziałów, brak założenia metryzowalności, addytywność z orientacją i zasadność całkowania funkcji stałej. W kontrprzykładzie c00 sprawdzono rozłączność przedziałów, ciągłość w zerze, współczynniki całki oraz odbicie dające całkę zero. Zweryfikowano zastosowanie uzupełnienia, granicę całki niewłaściwej, pochodne na końcach odcinka, przemienność całki z funkcjonałami, jednostajność oszacowań parametrycznych i ruchome granice. Dowód Fubiniego nie zakłada twierdzenia o całkach mierzalnych, wykorzystuje tę samą sumę podwójną. Sprawdzono ciągłość ewaluacji i różniczkowania, zgodność seminorm Schwartza z rozdziałem 17, zastosowanie Banacha–Steinhausa oraz normę różnicy operatorów modulacji równą 2. Nie stwierdzono koniecznych korekt. Zachowano decyzje deduplikacyjne audytu 32 i szeregu Neumanna z audytu 31.
+
+Dodatkowa kontrola rachunkowa: dla f(t)=(t,t^2) na [0,1] z normą maksimum użyto sześciu (w tym nierównomiernych) podziałów o węzłach na siatce 1/60, dla każdego punktów pośrednich lewych, środkowych i prawych. Dla wszystkich 153 par z 18 oznakowanych podziałów obliczono dokładnie sumy S(P), S(Q) i sumę wspólnego rozdrobnienia R z punktami środkowymi. Sprawdzono trzy oszacowania seminormowe z dowodu istnienia całki, z modułem omega(r)=2r-r^2 i r=max(mesh(P),mesh(Q)). Wszystkie 459 kontroli zaliczone; rachunki nie zastępują dowodu ogólnego.
+
+## Technika
+Powtórne CI raportu 32: przebieg 45361403140, job 138332093019, 9/9 etapów, 6/6 testów, trzy przebiegi pdflatex, PDF 140 stron, 1372483 bajty, artefakt 14905845260. Diagnostyka zaliczona, znane underfull hbox 1127. Potwierdzono 18 unikalnych etykiet, 6 wystąpień odsyłaczy i poprawne zagnieżdżenie środowisk. Źródło, testy i workflow identyczne z audytem 32; wykorzystano wcześniejsze oględziny stron 94–101, nie wykonywano ponownego renderowania. Testy blob 72b4da2202bd93aef41b2a9b18403f275acf6fbc, workflow 4fa6869e2d278358df1f568d61c9b98c7a1294f4.
+
+## Decyzja
+15A: drugi kolejny czysty audyt, 2/2, STABILNY. Rozdziały 14 i 15 pozostają stabilne. Następna iteracja 34: moduł 15B (całki Bochnera, Pettisa, Dunforda i Gelfanda oraz miary wektorowe), 0/2. Z uwagi na objętość 15B podzielić kontrolę na spójne bloki i nie zaliczać czystego audytu całego modułu na podstawie pojedynczego bloku; po pełnej kontroli i poprawkach wymagane dwa czyste audyty. Dalej 16, 17 itd. Zakres zamknięty.
