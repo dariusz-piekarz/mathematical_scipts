@@ -174,3 +174,8 @@ AA-55: grafy McKaya i afiniczne diagramy Dynkina, zakres docs/pl/zakres_aa55_gra
 ## Zamknięcie AA-55 — 24 listopada 2026 r.
 
 **AA-55 STABILNY w ustalonym zakresie.** Audyty III–IV czyste (2/2). Niezależne regresje: 987 nieizomorficznych drzew, 14762 przypadki rekurencji McKaya, abelianizacje A4,S4,A5 oraz 59 grup dwucyklicznych. CI 45356544087: 120/120 success; artefakt 14903355925, PDF 351 stron, AA-55 fizyczne 346–351 (drukowane 335–340), wszystkie obejrzane, log czysty. Blob 7e6c96ef96bd8f9d6a13b0443e357c738ff6743f. Raport końcowy `audits/abstract_algebra/ch55_iteration_04.md`. AA-01–54 pozostają stabilne. **AA-56 nieotwarty**; proponowany dalszy zakres: macierze Cartana, układy korzeni i zwykłe diagramy Dynkina, jako osobny rozdział po ustaleniu zakresu. Geometryczna odpowiedniość McKaya pozostaje poza zakresem. Status planu nadrzędny wobec historycznej strony tytułowej.
+
+
+## Otwarcie AA-56 — 24 listopada 2026 r.
+
+AA-56: macierze Cartana, układy korzeni i grupy Weyla, zakres docs/pl/zakres_aa56_uklady_korzeni.md. AA-01–55 stabilne, **AA-56 W AUDYCIE**, AA-57 nieotwarty. Samodzielna klasyfikacja skończona, bez algebr Liego i pełnej teorii afinicznej.
