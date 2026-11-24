@@ -13,3 +13,4 @@ Status: wymagają ponownej kontroli po zmianie treści. Test skończony nie zast
 | MA1-01-009 | ma1:def:peano | Kategoryczność dotyczy pełnej indukcji po podzbiorach, z jawnymi dziedzinami odwzorowań i dowodem tożsamości złożeń | semantyczna |
 | MA1-01-010 | ma1:thm:integer-order | Prawa znaków wynikają z rozdzielności; brak dzielników zera nie jest założony | semantyczna |
 | MA1-01-011 | ma1:thm:integer-order, ma1:thm:rational-order | Oba zanurzenia zachowują i odzwierciedlają porządek; identyfikacja dopiero po wykazaniu iniektywności | semantyczna |
+| MA1-01-012 | books/pl/mathematical_analysis_i.tex | Brak powielonych kotwic PDF, w szczególności page.i po stronie tytułowej | CI, kontrola logu pdflatex |
