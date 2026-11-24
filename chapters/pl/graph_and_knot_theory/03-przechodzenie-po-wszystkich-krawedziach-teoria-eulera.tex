@@ -64,9 +64,10 @@ Kolory pokazują dwa fragmenty jednego zamkniętego szlaku Eulera.}
 \begin{lemat}[Parzystość stopni wewnętrznych]
 \label{lem:tg-euler-parity}
 Niech $v_0,e_1,v_1,\dots,e_k,v_k$ będzie szlakiem
-w skończonym multigrafie nieskierowanym $G$. Jeżeli jest on
-zamknięty, to w podgrafie złożonym z jego krawędzi każdy
-wierzchołek ma parzysty stopień. Jeżeli $v_0\ne v_k$,
+w skończonym multigrafie nieskierowanym $G$. Niech $H$ będzie podgrafem o zbiorze wierzchołków $V(G)$
+i zbiorze krawędzi $\{e_1,\ldots,e_k\}$.
+Jeżeli szlak jest zamknięty, to każdy wierzchołek $H$
+ma parzysty stopień. Jeżeli $v_0\ne v_k$,
 to stopnie $v_0,v_k$ w tym podgrafie są nieparzyste,
 a wszystkie pozostałe są parzyste.
 \end{lemat}
@@ -321,13 +322,16 @@ istnienie niewykorzystanego wyjścia, sprzeczność.
 Otrzymujemy więc zamknięty szlak. Po jego usunięciu
 równość stopni wejściowych i wyjściowych pozostaje prawdziwa.
 Jeżeli nie wykorzystaliśmy wszystkich łuków, to pewien
-niewykorzystany łuk ma koniec w wierzchołku już użytym
-w naszym szlaku: po zapomnieniu kierunków stosujemy
+niewykorzystany łuk jest incydentny z wierzchołkiem
+już występującym w naszym szlaku (ma w nim początek
+lub koniec): po zapomnieniu kierunków stosujemy
 argument o pierwszej krawędzi opuszczającej zbiór
 wierzchołków szlaku, jak w dowodzie
 twierdzenia~\ref{thm:tg-euler-circuit}.
-W grafie pozostałych łuków stopnie wejściowy i wyjściowy
-tego wierzchołka są równe, zatem oba są dodatnie.
+W multigrafie pozostałych łuków przynajmniej jeden
+z dwóch stopni tego wierzchołka jest dodatni.
+Ponieważ stopnie wejściowy i wyjściowy są równe,
+oba są dodatnie.
 Z tego wierzchołka konstruujemy następny niepusty
 zamknięty szlak i wplatamy go do poprzedniego.
 Iteracja kończy się po wykorzystaniu wszystkich łuków.
@@ -387,8 +391,11 @@ gdy każdy stopień $d_G(v)$ jest parzysty.
 \end{stwierdzenie}
 
 \begin{proof}
-W każdej orientacji $d_G(v)=d^+(v)+d^-(v)$,
-więc przy równości obu składników stopień jest parzysty.
+W każdej orientacji $d_G(v)=d^+(v)+d^-(v)$:
+każda incydencja krawędzi z $v$ staje się początkiem
+lub końcem łuku, przy czym pętla daje jedną incydencję
+każdego rodzaju. Jeśli $d^+(v)=d^-(v)$, to
+$d_G(v)=2d^+(v)$ jest parzyste.
 Odwrotnie, w każdej nieizolowanej składowej grafu o
 parzystych stopniach wybieramy cykl Eulera i orientujemy
 krawędzie zgodnie z przebiegiem. Każde wejście na obiegu
@@ -423,7 +430,19 @@ jest możliwe, ponieważ w nieskierowanym DFS każda
 krawędź niedrzewowa łączy wierzchołek z jego przodkiem.
 Wykonujemy DFS rekurencyjnie: po odkryciu wierzchołka
 przeglądamy wszystkich jego sąsiadów, a dla każdego
-dotąd nieodkrytego sąsiada natychmiast wywołujemy DFS.
+dotąd nieodkrytego sąsiada zapisujemy krawędź odkrycia
+i natychmiast wywołujemy DFS, oznaczając sąsiada jako
+odkrytego na początku tego wywołania. Każdy wierzchołek
+jest odkrywany najwyżej raz, więc procedura się kończy.
+Gdyby po jej zakończeniu pozostał nieodkryty wierzchołek,
+droga od $r$ do niego zawierałaby krawędź od odkrytego
+do nieodkrytego wierzchołka; podczas przeglądania
+sąsiadów pierwszego z nich odkrylibyśmy drugi.
+Wszystkie wierzchołki zostają więc odkryte.
+Każda zapisana krawędź łączy już odkryty wierzchołek
+z nowym, toteż dołączenie jej zachowuje spójność
+i nie tworzy cyklu. Zapisane krawędzie rzeczywiście
+tworzą drzewo rozpinające $T$.
 Aby uzasadnić własność krawędzi niedrzewowych, rozważmy
 krawędź $xy$, przy czym $x$ odkryto przed $y$.
 Wywołanie dla $x$ nie może zakończyć się przed odkryciem
@@ -455,8 +474,11 @@ wierzchołka o ściśle mniejszej głębokości niż $v$.
 Powtarzając argument, osiągamy $r$, gdyż głębokość
 jest nieujemną liczbą całkowitą i za każdym razem maleje.
 Stąd dla dowolnych $u,w$ istnieje skierowany spacer
-$u\to r\to w$, który można skrócić do skierowanej
-drogi. Orientacja jest silnie spójna.
+od $u$ przez $r$ do $w$. Jeżeli pewien wierzchołek
+występuje w nim dwukrotnie, usuwamy fragment między
+tymi wystąpieniami: pozostawione łuki nadal mają
+właściwe kierunki i łączą te same końce spaceru.
+Powtarzając tę operację, otrzymujemy skierowaną drogę. Orientacja jest silnie spójna.
 \end{proof}
 
 \begin{przyklad}[Dlaczego obecność mostu przeszkadza]
