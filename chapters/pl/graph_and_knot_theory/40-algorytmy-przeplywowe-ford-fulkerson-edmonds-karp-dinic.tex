@@ -76,10 +76,10 @@ a w ujściu maleje o tę samą wartość.
 
 \begin{twierdzenie}[Resztowy certyfikat optymalności]
 \label{thm:tg-flow-certificate}
-Dla każdej skończonej sieci o rzeczywistych,
-nieujemnych przepustowościach i każdego
-dopuszczalnego przepływu $f$ następujące
-warunki są równoważne:
+Niech $D=(V,A)$ będzie skończoną siecią skierowaną
+bez pętli, $s,t\in V$, $s\ne t$, $c:A\to\mathbb R_{\geq0}$,
+a $f$ przepływem dopuszczalnym od $s$ do $t$.
+Wówczas następujące warunki są równoważne:
 \begin{enumerate}[label=(\roman*)]
 \item $f$ ma maksymalną wartość;
 \item w sieci resztowej $f$ nie istnieje ścieżka
@@ -105,30 +105,44 @@ dodatnie przejście resztowe na zewnątrz $S$.
 Każdy oryginalny łuk w przeciwnym kierunku
 ma przepływ zero, ponieważ jego dodatnie
 przejście wstecz prowadziłoby poza $S$.
-Na mocy tożsamości przepływu przez przekrój
-z lematu \ref{lem:tg-cutbound} otrzymujemy
+Sumując bilanse wypływu po wierzchołkach $S$,
+otrzymujemy (por. lemat \ref{lem:tg-cutbound})
+\[
+|f|=\sum_{a:S\to V\setminus S}f(a)
+-\sum_{a:V\setminus S\to S}f(a).
+\]
+Łuki wewnętrzne w $S$ wnoszą dwa przeciwne
+składniki, a jedynym niezerowym bilansem w $S$
+może być bilans źródła. Każdy łuk równoległy
+liczymy osobno. Z nasycenia łuków wychodzących
+i zerowego przepływu na wchodzących wynika
 $|f|=c(S,V\setminus S)$, czyli (iii).
-Z tego samego lematu wartość żadnego przepływu
-nie może przekroczyć pojemności $S$, co dowodzi
-(iii)$\Rightarrow$(i).
+Dla dowolnego innego przepływu dopuszczalnego
+$g$ ta sama tożsamość oraz nierówności
+$0\leq g(a)\leq c(a)$ dają
+$|g|\leq c(S,V\setminus S)=|f|$.
+Dowodzi to (iii)$\Rightarrow$(i).
 \end{proof}
 
 \begin{wniosek}[Twierdzenie o maksymalnym przepływie
 i minimalnym przekroju dla przepustowości rzeczywistych]
 \label{cor:tg-flow-real-mincut}
-Dla skończonej sieci o rzeczywistych,
-nieujemnych przepustowościach istnieje
-przepływ maksymalny i zachodzi
+Niech $D=(V,A)$ będzie skończoną siecią skierowaną
+bez pętli, $s,t\in V$, $s\ne t$ i
+$c:A\to\mathbb R_{\geq0}$. Wówczas istnieje
+przepływ maksymalny od $s$ do $t$ i zachodzi
 \[
 \max_f |f|=\min_{\substack{s\in S\subseteq V\\t\notin S}}
 c(S,V\setminus S).
 \]
+Maksimum bierzemy po wszystkich przepływach
+dopuszczalnych od $s$ do $t$.
 \end{wniosek}
 \begin{proof}
 Zbiór wszystkich dopuszczalnych przepływów
 jest niepusty, ponieważ zawiera przepływ zerowy.
-Jest przecięciem skończenie wielu domkniętych
-przedziałów współrzędnych $[0,c(a)]$ z podprzestrzenią
+Jest przecięciem prostopadłościanu
+$\prod_{a\in A}[0,c(a)]$ z podprzestrzenią
 liniową wyznaczoną przez równania zachowania przepływu.
 Jest zatem domkniętym i ograniczonym podzbiorem
 skończenie wymiarowej przestrzeni $\mathbb R^A$,
@@ -159,7 +173,7 @@ współczynnikach $b_j$, takie że
    +\sum_{j=1}^{h}b_j\chi_{C_j},
  \qquad \sum_{i=1}^{\ell}q_i=k.
 \]
-Dla krawędzi $a$ symbole $\chi_P(a)$ i $\chi_C(a)$
+Dla łuku $a\in A$ symbole $\chi_P(a)$ i $\chi_C(a)$
 oznaczają funkcje charakterystyczne odpowiednich
 zbiorów łuków. Jeśli ponadto wszystkie przepustowości
 wynoszą $0$ albo $1$, niech $D_+$ oznacza podgraf
@@ -198,9 +212,14 @@ przepływu przy usuwaniu ścieżki, nawet gdy
 w sieci występuje cyrkulacja.
 
 Odjęcie $q\chi_P$ zachowuje
-nieujemność przepływu i prawo zachowania
-w każdym wierzchołku wewnętrznym, a wartość
-przepływu zmniejsza dokładnie o $q$.
+nieujemność i ograniczenia przepustowości:
+na łukach $P$ mamy $q\leq f(a)$, a na pozostałych
+przepływ pozostaje bez zmian. W każdym wewnętrznym
+wierzchołku $P$ zmniejszamy wpływ i wypływ
+o tę samą wartość. W źródle odejmujemy $q$
+od bilansu wypływu, w ujściu zaś dodajemy $q$.
+Otrzymany przepływ jest dopuszczalny i ma
+wartość $r-q$.
 Powtarzamy ten krok, aż wartość stanie się zerowa.
 Każdy krok albo kończy tę fazę (gdy $q=r$),
 albo zeruje przepływ na co najmniej jednym łuku.
@@ -214,16 +233,23 @@ bilansów wszystkich wierzchołków wynosi zero,
 gdyż każdy łuk wnosi dwa przeciwne składniki.
 Ponieważ pozostałe wierzchołki poza $t$ mają
 bilans zero, także $t$ ma bilans zero.
-Jeżeli jest niezerowy, rozpocznijmy spacer
-po łukach o dodatnim przepływie.
-Prawo zachowania gwarantuje możliwość jego
-kontynuacji; ze skończoności grafu
-otrzymamy skierowany cykl prosty.
-Odejmujemy minimalny dodatni przepływ
-na tym cyklu. Także tutaj każdy krok
+Jeżeli cyrkulacja jest niezerowa, wybierzmy
+łuk o dodatnim przepływie i rozpocznijmy nim spacer.
+W każdym osiągniętym wierzchołku dodatni wpływ
+wymusza dodatni wypływ. Spacer można więc kontynuować
+aż do pierwszego powtórzenia wierzchołka; fragment
+między jego dwoma wystąpieniami jest cyklem prostym.
+Odejmujemy minimalny dodatni przepływ na łukach
+tego cyklu. W każdym jego wierzchołku wpływ
+i wypływ zmniejszają się o tę samą liczbę,
+więc pozostały przepływ nadal jest cyrkulacją. Także tutaj każdy krok
 zeruje co najmniej jeden łuk, więc
 po skończonej liczbie kroków otrzymujemy zero.
-To daje żądany rozkład.
+Dodając odjęte składniki, odtwarzamy początkowy
+przepływ $f$ na każdym łuku. Suma współczynników
+ścieżek wynosi $k$, ponieważ ich odjęcie zmniejszyło
+wartość z $k$ do zera, a cykle mają bilans zerowy.
+Dla $k=0$ rodzina ścieżek jest pusta.
 
 Gdy wszystkie $c(a)\in\{0,1\}$,
 na każdym łuku $f(a)\leq1$. Stąd
@@ -257,6 +283,14 @@ na mocy algorytmu Forda--Fulkersona
 z Twierdzenia~\ref{thm:tg-flow-ff-integer}.
 Po usunięciu tych łuków
 nie ma drogi od $s$ do $t$ w $D_+$.
+Z drugiej strony każdy zbiór usuwanych łuków,
+który niszczy wszystkie takie drogi, musi zawierać
+co najmniej jeden łuk z każdej ścieżki rodziny
+otrzymanej z maksymalnego przepływu.
+Rozłączność tej rodziny wymusza co najmniej tyle
+usuwanych łuków, ile wynosi wartość maksimum.
+Dowodzi to równości z minimalną licznością
+dowolnego zbioru rozcinającego.
 Nie można w tym wniosku liczyć dróg
 używających łuków o przepustowości $0$.
 \end{proof}
@@ -304,7 +338,8 @@ z dowolnym wyborem ścieżki powiększającej,
 rozpoczęty od przepływu zerowego,
 zatrzymuje się z przepływem maksymalnym.
 Jego liczba powiększeń jest nie większa niż
-$C_s:=\sum_{(s,v)\in A}c(s,v)$.
+$C_s:=\sum_{a:\,s\to v}c(a)$, gdzie sumujemy
+po wszystkich łukach wychodzących z $s$.
 Przy znalezieniu ścieżki za pomocą DFS
 czas wynosi $O((n+m)(C_s+1))$,
 co nie musi być wielomianowe względem
@@ -461,13 +496,17 @@ jego pojemność musi zostać
 wcześniej zwiększona przez
 powiększenie wykorzystujące
 przejście odwrotne $v\to u$.
-W chwili tego powiększenia
-odległość do $u$ jest o jeden
-większa niż odległość do $v$.
-Z lematu \ref{lem:tg-flow-ek-levels}
-wynika, że od jednego nasycenia
-$e$ do kolejnego odległość do $u$
-musi wzrosnąć o co najmniej $2$.
+Niech $d_1$ oznacza odległości tuż przed pierwszym
+nasyceniem $e$, a $d_2$ odległości tuż przed
+późniejszym użyciem jego sprzężonego przejścia.
+Mamy $d_1(v)=d_1(u)+1$ oraz $d_2(u)=d_2(v)+1$.
+Z lematu \ref{lem:tg-flow-ek-levels} otrzymujemy
+$d_2(v)\geq d_1(v)$, a stąd
+$d_2(u)\geq d_1(u)+2$.
+Przed następnym nasyceniem $e$ odległość do $u$
+nie może być mniejsza od $d_2(u)$.
+Zatem pomiędzy kolejnymi nasyceniami tego samego
+rekordu resztowego wzrasta o co najmniej $2$.
 Dopóki $u$ jest osiągalny,
 odległość ta jest mniejsza niż $n$.
 Dlatego to samo przejście
