@@ -61,5 +61,39 @@ class Chapter25(unittest.TestCase):
             x=F(n)+F(A*k,4)
             self.assertLessEqual((1+abs(x))**N,(1+n+A)**N)
 
+    def test_FA25_dual_compact_extension_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"p\circ j",
+            r"= \sup_{y\in j(B)}",
+            r"(j\circ i)'=i'\circ j'",
+            r"T=F|_{\mathcal D(\Omega)}",
+            r"\ref{lem:distribution-local19}",
+            r"L=\supp\chi",
+            r"C_L 2^m p_{L,m}(\chi)p_{L,m}(f)",
+            r"\sum_{\gamma\le\alpha}\binom{\alpha}{\gamma}=2^{|\alpha|}",
+            r"(\chi_1-\chi_2)f",
+            r"\ref{lem:compact-action21}",
+        ):
+            self.assertIn(fragment,s)
+        from math import comb
+        # Finite jets: Leibniz product and cutoffs equal to 1 near support.
+        V=list(product(range(-1,2),repeat=4))
+        for a,b in product(V,repeat=2):
+            for m in range(4):
+                val=sum(comb(m,k)*a[k]*b[m-k] for k in range(m+1))
+                self.assertLessEqual(abs(val),2**m*max(map(abs,a))*max(map(abs,b)))
+            chi=(1,0,0,0)
+            self.assertEqual(tuple(sum(comb(m,k)*chi[k]*a[m-k]
+                                       for k in range(m+1)) for m in range(4)),a)
+        # Transposition of composition with rectangular matrices.
+        def mm(A,B):
+            return tuple(tuple(sum(a*b for a,b in zip(row,col))
+                               for col in zip(*B)) for row in A)
+        J=((1,2),(-1,0),(0,3))
+        I=((1,0,1),(0,1,-1))
+        for t in product(range(-2,3),repeat=3):
+            self.assertEqual(mm((t,),mm(J,I)),mm(mm((t,),J),I))
+
 if __name__ == "__main__":
     unittest.main()
