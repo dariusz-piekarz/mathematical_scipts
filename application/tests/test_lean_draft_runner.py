@@ -82,3 +82,60 @@ class DraftRunnerAdmissionTests(unittest.TestCase):
             status, draft = runner.prepare(self.source, **self.hashes, consent=True)
             self.assertIsNotNone(draft)
             self.assertFalse(status["execution_allowed"])
+
+
+class DraftImagePolicyTests(unittest.TestCase):
+    def setUp(self):
+        self.image_id = "sha256:" + "a" * 64
+        self.record = {"Id": self.image_id, "Os": "linux", "Config": {
+            "Volumes": None, "Entrypoint": [runner.ENTRYPOINT], "Cmd": None,
+            "Env": sorted(runner._IMAGE_ENV), "User": "65534:65534",
+            "OnBuild": None, "Healthcheck": None,
+        }}
+
+    def check(self, record):
+        return runner.validate_image_inspection([record], approved_image_id=self.image_id)
+
+    def test_exact_approved_image_metadata(self):
+        self.assertIsNone(self.check(self.record))
+
+    def test_identity_os_and_inspection_shape(self):
+        for record in ([], [self.record, self.record], {}, None,
+                       [{**self.record, "Id": "sha256:" + "b" * 64}],
+                       [{**self.record, "Os": "windows"}]):
+            with self.subTest(record=record):
+                with self.assertRaises(ValueError):
+                    runner.validate_image_inspection(record, approved_image_id=self.image_id)
+        with self.assertRaises(ValueError):
+            runner.validate_image_inspection([self.record], approved_image_id="lean:latest")
+
+    def test_image_defaults_cannot_bypass_isolation(self):
+        mutations = {
+            "Volumes": {"/host": {}}, "Entrypoint": ["/bin/sh"],
+            "Cmd": ["unexpected"], "User": "0:0", "OnBuild": ["RUN unexpected"],
+            "Healthcheck": {"Test": ["CMD", "unexpected"]},
+            "Env": sorted(runner._IMAGE_ENV) + ["LD_PRELOAD=/tmp/injected.so"],
+        }
+        for key, value in mutations.items():
+            with self.subTest(key=key):
+                record = {**self.record, "Config": {**self.record["Config"], key: value}}
+                with self.assertRaises(ValueError):
+                    self.check(record)
+
+    def test_missing_or_malformed_image_metadata_fails_closed(self):
+        for key in ("Volumes", "Entrypoint", "Cmd", "Env", "User", "OnBuild"):
+            cfg = dict(self.record["Config"])
+            del cfg[key]
+            with self.subTest(key=key):
+                with self.assertRaises(ValueError):
+                    self.check({**self.record, "Config": cfg})
+        for env in (None, "PATH=/bin", [1], sorted(runner._IMAGE_ENV)*2, []):
+            with self.subTest(env=env):
+                with self.assertRaises(ValueError):
+                    self.check({**self.record, "Config": {**self.record["Config"], "Env": env}})
+
+    def test_no_automatic_restart_and_input_path_matches_tmpfs(self):
+        args = runner.isolation_arguments(image_id=self.image_id,
+                                          container_name="atlas-draft-"+"b"*32)
+        self.assertIn("--restart=no", args)
+        self.assertEqual(runner.INPUT_PATH, "/tmp/Draft.lean")
