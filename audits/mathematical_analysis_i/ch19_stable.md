@@ -1,0 +1,11 @@
+# MA1-19 — stabilny (audyt 03)
+Odczyt HEAD 89a25ed29748465cf7b82704045f8ce7edd5b7ee. Rozdział 2fb19b107e5da4e589cb87dedcf3a037e2e1dd65, testy ee498df1ae6c9fe87b78b142a03a955d90916d99, rejestr a7b737538673f2de855b4243e5654decb8c40428, tom 91c53775218899cdd08d499aab5d2ca09d2e3a64; wszystkie cztery bloby zgodne z commitem 1f3c5c330f009b360a7c12aef1012d1a2cb983cb sprawdzonym przez CI.
+## Audyt semantyczny
+001–005: świadki obu stron granicy dla Dirichleta, skończony zbiór wyjątków Thomae'a, ciągłość dokładnie w niewymiernych, oscylacje i Darboux także dla przedziałów z zerem na końcu, uporządkowanie trzech argumentów o znakach +,-,+ poprawne.
+006–008: indukcja liczby, długości i rozłączności przedziałów, zachowanie końców, domkniętość, brak punktów izolowanych i wnętrza, iniekcja ciągów binarnych przez pierwszą różnicę i przekątna poprawne.
+009–011: ponownie odczytano obliczenia d/2-d/3=d/6 oraz d/2-2d/3=-d/6, sumę geometryczną 2^(-n)/3, istnienie granicy i ciągłość z nierówności trójkąta, surjekcję z C przez końce luk. Nie użyto teorii miary ani późniejszych pochodnych.
+012–014: oscylacja z dopuszczalnym +infty, równoważność z ciągłością, otwartość podpoziomów przez inkluzję kul, G_delta/F_sigma oraz zstępujące przedziały w argumentacji Baire'a poprawne.
+015: poprawiony test współrzędnych źródłowych rzeczywiście przeszedł. Nie wykryto nowego błędu matematycznego.
+## Kontrole końcowe
+CI 45489623499, job 138784129889 SUCCESS: log 185/185 testów, 12/12 rozdziału, test_cantor_figure_coordinates OK. Poprzedni błąd TypeError z audytu 02 usunięty. Kompilacja 115 i 117 stron, brak Overfull/Underfull, kontrola odsyłaczy po drugim przebiegu zaliczona. Atlas 45489561132 i terminologia 45489561198 SUCCESS dla commitu treści 75558c9.
+Artefakt 14965507604 pobrano i rozpakowano, pdfinfo 117 stron; pdftoppm 120 dpi strony 113–117, obejrzano planszę wszystkich pięciu stron i osobno fizyczne 114 i 116 w pełnym rozmiarze. Cztery rysunki czytelne, bez ucięć; etykieta 0 wykresu Thomae'a blisko dolnego końca osi pionowej, lecz czytelna (drobna kosmetyka, nie zmieniano źródła). Ostatnia strona zawiera pełny dowód wniosku. Zachowano 15 kryteriów i 12 testów rozdziału oraz raporty 01–02. Lean nieuruchomiony. Status stabilny w zakresie wykonanych kontroli. Rozdział 20 nie rozpoczęty.
