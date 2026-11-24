@@ -7,6 +7,8 @@ on:
     paths:
       - "application/lean/**"
       - "application/backend/lean_concepts.py"
+      - "application/backend/lean_draft_generator.py"
+      - "application/tests/test_lean_draft_generator.py"
       - "application/tests/test_lean_concept_fixture.py"
       - "application/scripts/lean_ci_audit.py"
       - "application/scripts/benchmark_lean_fingerprint.py"
@@ -164,6 +166,30 @@ jobs:
           cat ci_lean_logs/concept-signatures.log
           (cd .. && python -c 'from backend.lean_concepts import dictionary_sha256; print("Dictionary SHA-256:", dictionary_sha256())')
           echo "Trusted concept signature fixture compiled; semantic mappings remain unreviewed."
+
+      - name: Compile fixed trusted generated draft examples (when present)
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! -f backend/lean_draft_generator.py && ! -f tests/test_lean_draft_generator.py ]]; then
+            echo "Historical checkout without draft generator."
+            exit 0
+          fi
+          test -f backend/lean_draft_generator.py
+          test -f tests/test_lean_draft_generator.py
+          python -m unittest tests.test_lean_draft_generator -v
+          probe="$(mktemp -d "$PWD/lean/DraftProbeXXXXXX")"
+          trap 'rm -rf "$probe"' EXIT
+          python -c 'import sys; from tests.test_lean_draft_generator import write_trusted_fixtures; write_trusted_fixtures(sys.argv[1])' "$probe"
+          (cd lean; mkdir -p ci_lean_logs
+           for file in "$probe"/Draft*.lean; do
+             log="ci_lean_logs/$(basename "$file").log"
+             if ! lake env lean "$file" > "$log" 2>&1; then cat "$log"; exit 1; fi
+             cat "$log"
+             grep -Fq 'atlas_draft' "$log"
+             if grep -Ei 'sorryAx|declaration uses .sorry.' "$log"; then exit 1; fi
+           done)
 
       - name: Install application dependencies for Lean introspection test
         working-directory: application
