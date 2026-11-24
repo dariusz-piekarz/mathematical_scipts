@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Independent finite audit for chapters 01--04 of graph and knot theory.
+"""Independent finite audit for chapters 01--05 of graph and knot theory.
 
 Checks graph conventions (including the empty graph), handshake, complements,
 odd-cycle/bipartite characterization, Havel--Hakimi, incidence rank and cycle
@@ -722,6 +722,66 @@ def test_chapter04_menger():
     return graphs,pair_count,adjacent,len(examples)
 
 
+def test_chapter05_hall_hamilton():
+    """Enumerate indexed set families, matchings, covers and Hamilton cycles."""
+    families=sdr_count=graphs=ham_count=component_checks=0
+    for n in range(5):
+        for m in range(4):
+            for sets in product(range(1<<m),repeat=n):
+                families+=1
+                deficiency=0
+                for selected in range(1<<n):
+                    union=0
+                    for i,a in enumerate(sets):
+                        if selected>>i&1:
+                            union|=a
+                    deficiency=max(deficiency,selected.bit_count()-union.bit_count())
+
+                @lru_cache(None)
+                def maximum(i,used):
+                    if i==n:
+                        return 0
+                    return max([maximum(i+1,used)]+[
+                        1+maximum(i+1,used|(1<<j))
+                        for j in range(m) if sets[i]>>j&1 and not (used>>j&1)])
+
+                nu=maximum(0,0)
+                maximum.cache_clear()
+                assert nu==n-deficiency
+                sdr_count+=int(nu==n)
+                edges=[(i,n+j) for i,a in enumerate(sets)
+                       for j in range(m) if a>>j&1]
+                tau=min(c.bit_count() for c in range(1<<(n+m))
+                        if all((c>>u&1) or (c>>v&1) for u,v in edges))
+                assert tau==nu
+    for n in range(3,6):
+        es=pairs(n)
+        for mask in range(1<<len(es)):
+            graphs+=1
+            edges=[e for i,e in enumerate(es) if mask>>i&1]
+            adj=adj_of(n,edges)
+            ham=any(all(v in adj[u] for u,v in zip(
+                    (0,)+p,p+(0,))) for p in permutations(range(1,n)))
+            dirac=2*min(map(len,adj))>=n
+            ore=all(len(adj[u])+len(adj[v])>=n
+                    for u,v in es if v not in adj[u])
+            assert not dirac or ore
+            assert not ore or ham
+            if not ham:
+                continue
+            ham_count+=1
+            for removed in range(1,1<<n):
+                component_checks+=1
+                live=[v for v in range(n) if not (removed>>v&1)]
+                index={v:i for i,v in enumerate(live)}
+                residual=[(index[u],index[v]) for u,v in edges
+                          if u in index and v in index]
+                assert component_count(len(live),residual)<=removed.bit_count()
+    assert (families,sdr_count,graphs,ham_count,component_checks)==(
+        5058,315,1096,229,6915)
+    return families,sdr_count,graphs,ham_count,component_checks
+
+
 def test_source_consistency():
     catalog=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book=next(x for x in catalog["books"] if x["id"]=="graph_and_knot_theory")
@@ -753,3 +813,6 @@ if __name__=="__main__":
 
     g,p,a,e=test_chapter04_menger()
     print(f"PASS chapter 04 Menger: {g} connected graphs, {p} endpoint pairs, {a} adjacent endpoint pairs, {e} strict Whitney examples")
+
+    f,s,g,h,c=test_chapter05_hall_hamilton()
+    print(f"PASS chapter 05 Hall/Hamilton: {f} families, {s} SDR cases, {g} graphs, {h} Hamiltonian graphs, {c} component checks; deficiency, Konig, Dirac, Ore")
