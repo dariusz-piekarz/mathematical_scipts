@@ -14,3 +14,5 @@ Skończone testy rachunkowe nie zastępują dowodów ogólnych; kresy ciągów o
 | MA1-08-010 | ma1:cor:limsup-convergent-summand | Skończona granica drugiego składnika daje równości | semantyczna |
 | MA1-08-011 | ma1:thm:limsup-products | Nieujemność i ograniczoność, skrajne oszacowania iloczynu, kontrprzykłady | semantyczna + Python (ciągi okresowe) |
 | MA1-08-012 | ma1:cor:limsup-modulus | Zbieżność metryczna równoważna zerowej granicy górnej odległości | semantyczna |
+| MA1-08-013 | ma1:fig:tail-limits | Schodki zmieniają poziom między indeksami; w N=12 kres górny wynosi 8/7 (a_13), nie 7/6 | semantyczna + Python (wartości całkowitych indeksów) + PDF |
+| MA1-08-014 | ma1:thm:tail-limits, ma1:thm:limsup-order | Pominięcie skończonego początku i porządek od pewnego indeksu, również dla wartości nieskończonych | semantyczna + Python (przykłady okresowe) |
