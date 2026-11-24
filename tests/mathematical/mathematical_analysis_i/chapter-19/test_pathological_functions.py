@@ -128,7 +128,7 @@ class Chapter19(TestCase):
         self.assertEqual(len(pictures),4)
         dots = re.findall(r"\\fill\[blue!65!black\] \(\{(\d+)/(\d+)\},\{1/(\d+)\}\)",pictures[0])
         self.assertEqual(len(dots),sum(gcd(p,q)==1 for q in range(1,12) for p in range(q+1)))
-        self.assertEqual({(F(p,q),F(1,r)) for p,q,r in dots},
+        self.assertEqual({(F(int(p),int(q)),F(1,int(r))) for p,q,r in dots},
                          {(F(p,q),F(1,q)) for q in range(1,12) for p in range(q+1) if gcd(p,q)==1})
         segments = re.findall(r"\((\d+\.\d+),(-?\d+)\)--\((\d+\.\d+),(-?\d+)\)",pictures[2])
         self.assertEqual(len(segments),31)
