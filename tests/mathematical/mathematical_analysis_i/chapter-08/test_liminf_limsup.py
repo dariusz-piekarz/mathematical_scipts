@@ -65,4 +65,27 @@ class Chapter08(unittest.TestCase):
             self.assertGreater(2*(k+1),2*k)
             self.assertGreater(k+1,k)
 
+    def test_diagram_integer_tail_values(self):
+        # The staircase transitions must be BETWEEN integer indices.
+        # In particular the supremum at N=12 is the term a_13.
+        upper=[F(2)]+[1+F(1,k) for k in range(2,7) for _ in range(2)]+[1+F(1,7)]
+        lower=[-1-F(1,k) for k in range(1,7) for _ in range(2)]
+        a=lambda n: (1+F(1,(n+1)//2))*(1 if n%2 else -1)
+        for N in range(1,13):
+            self.assertEqual(upper[N-1],max(a(N),a(N+1)))
+            self.assertEqual(lower[N-1],min(a(N),a(N+1)))
+        self.assertEqual(upper[-1],F(8,7))
+
+    def test_eventual_order_and_prefix_invariance(self):
+        periods=list(itertools.product(range(-1,2),repeat=3))
+        for a,b in itertools.product(periods,repeat=2):
+            if all(x<=y for x,y in zip(a,b)):
+                self.assertLessEqual(min(a),min(b))
+                self.assertLessEqual(max(a),max(b))
+        a=(float("-inf"),F(2),float("inf"))
+        for prefix in ((),(F(100),),(float("inf"),float("-inf"))):
+            v=prefix+a*4
+            self.assertEqual(min(v[len(prefix):]),min(a))
+            self.assertEqual(max(v[len(prefix):]),max(a))
+
 if __name__=="__main__": unittest.main()
