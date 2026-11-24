@@ -517,5 +517,36 @@ class TestChapter15B(unittest.TestCase):
                 self.assertEqual(dist(fn(k),fn(m)), tail)
                 self.assertLessEqual(tail, dist(fn(k),f))
 
+
+    def test_audit35_dunford_pettis_contracts(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            "\\int_S|x_{n_k}'(f(s))-h(s)|\\,\\mathrm d\\mu(s)\\le 2^{-k}",
+            "D_A(a)=\\sum_{n\\in A}a_n",
+            "D_{S_*}(a)=\\sum_{n\\ge1}",
+            "B_Y(e_t,1/2)",
+            "\\le\\int_S\\|f_n-f\\|\\,\\mathrm d\\mu.",
+        ):
+            self.assertIn(fragment, source)
+
+    def test_dunford_signed_atoms(self):
+        # Finite truncations of the c0 example: bilinear pairing,
+        # opposite signs cancel only on the full paired set.
+        for n in range(1, 9):
+            a = [Fraction((-1)**k, k*k+1) for k in range(1,n+1)]
+            atoms = [(k, sign) for k in range(1,n+1) for sign in (-1,1)]
+            def scalar_integral(subset):
+                return sum((Fraction(1,2**(k+1))*sign*2**k*a[k-1]
+                            for k,sign in subset), Fraction(0))
+            self.assertEqual(scalar_integral(atoms),0)
+            self.assertEqual(scalar_integral([(k,1) for k in range(1,n+1)]),
+                             sum(a,Fraction(0))/2)
+            for mask in range(1 << len(atoms)) if n <= 5 else (0,1,3,7):
+                subset = [atom for i,atom in enumerate(atoms) if mask & (1<<i)]
+                coefficients = [sum((Fraction(sign,2) for j,sign in subset if j==k),
+                                    Fraction(0)) for k in range(1,n+1)]
+                self.assertEqual(scalar_integral(subset),
+                    sum((v*w for v,w in zip(coefficients,a)),Fraction(0)))
+
 if __name__ == "__main__":
     unittest.main()
