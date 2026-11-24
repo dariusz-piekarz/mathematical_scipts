@@ -262,5 +262,43 @@ class TestChapter15B(unittest.TestCase):
             self.assertLessEqual(sum(Fraction(1, n*n) for n in block),
                                  Fraction(1, 2**k))
 
+
+    def test_extended_vector_integral_properties(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            "\\label{thm:vector-integral-multipliers15b}",
+            "D_A(Tf)=T''D_A(f)",
+            "G_A(R'h)=R'G_A(h)",
+            "\\sigma(X'',X')",
+            "\\label{thm:orlicz-pettis15b}",
+            "\\|\\sum_{n\\in H}u_n\\|\\le2\\varepsilon/3",
+            "\\label{thm:pettis-vector-measure15b}",
+            "\\|m_f\\|_{\\mathrm{sv}}(A)=q_f(A)",
+            "q_f(A)\\le4p(A)",
+            "\\mu(A_n\\triangle A)\\to0",
+            "G_A(h)=J_Y' D_A(h)",
+            "\\Phi(e_n)=0",
+            "\\Phi((1,1,\\ldots))=1",
+        ):
+            self.assertIn(fragment, source)
+        # For the atomic ell2 example, the squared semivariation of
+        # a finite set A equals sum_{n in A} 1/n^2 by Cauchy-Schwarz.
+        # The unit-ball extremizer is proportional to (chi_A(n)/n).
+        for atoms in ({1}, {2, 3, 7}, set(range(1, 17))):
+            squared = sum((Fraction(1, n*n) for n in atoms), Fraction(0))
+            pairing = sum((Fraction(1, n)*Fraction(1, n)
+                           for n in atoms), Fraction(0))
+            self.assertEqual(pairing**2 / squared, squared)
+            self.assertLessEqual(squared,
+                sum((Fraction(1, n) for n in atoms), Fraction(0))**2)
+            for cut in range(1, 17):
+                tail = sum((Fraction(1, n*n) for n in atoms if n > cut),
+                           Fraction(0))
+                self.assertLessEqual(tail, Fraction(1, cut))
+        # A weak-star sum in ell-infinity need not converge in norm.
+        for size in range(2, 20):
+            prefix = [1]*(size-1) + [0]
+            self.assertEqual(max(abs(1-v) for v in prefix), 1)
+
 if __name__ == "__main__":
     unittest.main()
