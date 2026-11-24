@@ -50,6 +50,7 @@ class Chapter21(unittest.TestCase):
             r"\rho_\varepsilon(x-u)\sigma_\varepsilon(y-v)",
             r"p_n(F_n-\Phi_{1/n})<1/n",
             r"p_m(F_n-\Phi)\le 1/n+p_m(\Phi_{1/n}-\Phi)",
+            r"o nośniku zawartym w $L_x\times L_y$, do różnicy $F_n-\Phi$",
         ):
             self.assertIn(fragment, s)
         # Exact point-jet models of the two iterated actions, using
@@ -147,6 +148,9 @@ class Chapter21(unittest.TestCase):
             r"(\partial T_1)*T_H=0",
             r"T_1*\delta_0=T_1",
             r"\partial_1 V=\delta_0",
+            r"\langle\partial_1V,\varphi\rangle",
+            r"T*T_\rho",
+            r"\ref{prop:regular-injective19}",
         ):
             self.assertIn(fragment, s)
         # Asymmetric nonnegative unit-mass polynomial model on [0,1]:
