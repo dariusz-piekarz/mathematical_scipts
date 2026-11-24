@@ -252,11 +252,12 @@ i powtarzających się.
 \begin{wniosek}[Luka optymalności i odporność jednoznacznego MSF]
 \label{cor:tg-mst-stability-gap}
 Niech $G=(V,E)$ będzie skończonym
-grafem nieskierowanym z rzeczywistymi
-wagami $w$, a $T\subseteq E$
-niech będzie minimalnym lasem
-rozpinającym. Dla każdej krawędzi
-$e=uv$ spoza $T$ połóżmy
+grafem prostym nieskierowanym z funkcją wag
+$w:E\to\mathbb R$, a $T\subseteq E$
+niech będzie minimalnym lasem rozpinającym.
+Dla $e=\{u,v\}\in E\setminus T$ niech $P_T(u,v)$
+oznacza zbiór krawędzi jedynej drogi w $T$ między
+$u$ i $v$. Połóżmy
 \[
 \gamma_e(T):=
 w(e)-\max_{f\in P_T(u,v)}w(f),
@@ -295,7 +296,10 @@ są nieujemne, a ich
 ścisła dodatniość
 dla wszystkich $e\notin T$
 jest równoważna
-jednoznaczności.
+jednoznaczności. Jeżeli $E\setminus T$ jest
+niepusty, minimum jest osiągane, ponieważ zbiór
+krawędzi jest skończony. Stąd ścisła dodatniość
+wszystkich różnic jest równoważna $\gamma(T)>0$.
 Jeżeli $e=uv\notin T$,
 to po zmianie wag
 \[
@@ -337,12 +341,11 @@ $\varepsilon=3/2$ możemy
 zwiększyć wagę $bc$ do
 $7/2$ i zmniejszyć
 wagę $ac$ do $7/2$.
-Wówczas drzewa
-$\{ab,bc\}$ i $\{ab,ac\}$
-mają tę samą wagę,
-więc jednoznaczność
-zanika dokładnie
-na granicy oszacowania.
+Pozostawiając wagę $ab$ równą $1$, otrzymujemy dwa
+drzewa $\{ab,bc\}$ i $\{ab,ac\}$ o koszcie $9/2$.
+Trzecie drzewo $\{bc,ac\}$ ma koszt $7$.
+Pierwsze dwa drzewa są zatem minimalne, więc
+na granicy oszacowania jednoznaczność może zaniknąć.
 \end{przyklad}
 
 \begin{stwierdzenie}[Jednoznaczność przy różnych wagach]
@@ -393,12 +396,14 @@ ma ujemne bądź powtarzające się wagi.
 \begin{proof}
 W każdym kroku $F$ jest lasem, bo dodajemy
 krawędź tylko między różnymi jego składowymi.
-Indukujemy po liczbie dodanych krawędzi,
-że $F$ jest zawarty w pewnym MSF.
+Dowodzimy indukcyjnie względem liczby rozpatrzonych
+krawędzi, że $F$ zawiera się w pewnym MSF.
 Dla $F=\varnothing$ teza wynika z
 \ref{prop:tg-mst-existence}.
-Niech rozpatrywana krawędź $e=uv$
-pozwala połączyć dwa drzewa lasu.
+Jeśli kolejna krawędź ma oba końce w tej samej
+składowej $(V,F)$, zostaje pominięta i niezmiennik
+pozostaje prawdziwy. Niech zatem rozpatrywana
+krawędź $e=uv$ łączy dwa różne drzewa lasu.
 Weźmy za $S$ zbiór wierzchołków
 drzewa $F$ zawierającego $u$.
 Żadna krawędź $F$ nie przecina
@@ -406,10 +411,10 @@ $\delta_G(S)$. Gdyby istniała
 krawędź $f$ tego przekroju
 o wadze mniejszej niż $w(e)$,
 zostałaby rozpatrzona wcześniej.
-W tamtym momencie jej końce
-nie mogły być połączone przez
-krawędzie już wybrane: pozostają
-rozdzielone także teraz.
+Zbiór wybranych krawędzi może jedynie rosnąć,
+więc składowe lasu mogą się łączyć, ale nie rozdzielać.
+Skoro końce $f$ są teraz rozdzielone, były też
+rozdzielone w chwili rozpatrywania $f$.
 Algorytm musiałby zatem dodać $f$,
 sprzecznie z definicją $S$.
 Krawędź $e$ jest więc
@@ -428,10 +433,10 @@ składowymi, którą algorytm
 musiałby dodać podczas
 przetwarzania. Stąd $F$
 rozpina każdą składową $G$.
-Ponieważ $F$ zawiera się
-w pewnym MSF i ma tę samą
-liczbę krawędzi $n-c$,
-jest tym MSF.
+Ponieważ $F$ jest lasem rozpinającym, ma $n-c$
+krawędzi, gdzie $c$ jest liczbą składowych $G$.
+Z niezmiennika $F\subseteq T$ dla pewnego MSF $T$
+oraz $|T|=n-c=|F|$ wynika $F=T$.
 \end{proof}
 
 \section{Struktura DSU: zbiory rozłączne}
@@ -444,7 +449,7 @@ zwane również strukturą \emph{union--find}.
 
 \begin{definicja}[Operacje DSU]
 \label{def:tg-mst-dsu}
-Dla zbioru $V$ przechowujemy podział
+Dla skończonego zbioru $V$ przechowujemy podział
 na rozłączne klasy. Operacja
 $\mathrm{find}(v)$ zwraca reprezentanta
 klasy zawierającej $v$.
@@ -489,11 +494,15 @@ i czasu.
 \begin{proof}
 Na początku każdy wierzchołek
 jest korzeniem swojej klasy.
-Łączenie dwóch klas zmienia
-jedynie rodzica jednego
-z dwóch korzeni, więc
-nie tworzy cyklu i scala
-dokładnie żądane klasy.
+Jeśli oba argumenty operacji $\mathrm{union}$
+mają ten sam korzeń, podział się nie zmienia.
+W przeciwnym przypadku zmieniamy rodzica jednego
+z dwóch korzeni na drugi korzeń. Drzewa były rozłączne,
+więc nie mogła istnieć droga rodziców z drugiego
+korzenia do pierwszego. Nowe połączenie nie tworzy
+cyklu (poza konwencjonalną pętlą rodzica korzenia)
+i wszystkie wierzchołki obu klas mają teraz wspólny
+korzeń. Korzenie pozostałych klas nie zmieniają się.
 Kompresja ścieżek nie
 zmienia korzenia żadnego
 wierzchołka, zatem nie
@@ -512,8 +521,16 @@ Ponieważ rozmiar klasy
 nie przekracza $n$,
 głębokość może wzrosnąć
 co najwyżej $\lfloor\log_2 n\rfloor$ razy.
-Kompresja ścieżek tylko
-zmniejsza długość dróg do korzenia.
+Kompresja ścieżek nie zwiększa głębokości żadnego
+wierzchołka: zmieniane wskaźniki prowadzą wprost
+do dotychczasowego korzenia. Głębokość początkowa
+wynosi zero, a zatem bieżąca głębokość nie przekracza
+liczby dotychczasowych podwojeń rozmiaru klasy.
+Operacja $\mathrm{find}$ przechodzi wzdłuż co najwyżej
+tylu krawędzi drzewa; ewentualna kompresja wymaga
+co najwyżej liniowej pracy względem długości tej drogi.
+Operacja $\mathrm{union}$ wykonuje dwa wyszukania
+korzenia i stałą liczbę aktualizacji tablic.
 \end{proof}
 
 \begin{uwaga}[Silniejsze oszacowanie amortyzowane]
