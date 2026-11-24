@@ -6,6 +6,7 @@ No draft, host mount, network request, or Lean execution is permitted here.
 from __future__ import annotations
 
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -22,6 +23,8 @@ from backend import lean_draft_runner as policy
 
 MAX_METADATA_BYTES = 131072
 COMMAND_TIMEOUT = 15
+CLEANUP_TIMEOUT = 30
+CLI_REAP_TIMEOUT = 5
 _CONTAINER_ID = re.compile(r"[0-9a-f]{64}\Z")
 _DOCKER = Path("/usr/bin/docker")
 
@@ -137,46 +140,94 @@ class DockerCommandFailed(ValueError):
     """Local CLI returned a nonzero exit code."""
 
 
-def _command(prefix: list[str], args: tuple[str, ...], env: dict[str, str]) -> bytes:
-    """Bound wall time and all captured output, with no shell."""
-    with subprocess.Popen(prefix + list(args), env=env, stdin=subprocess.DEVNULL,
-                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                          start_new_session=True) as p:
+class DockerCleanupDeadline(DockerCommandTimeout):
+    """Shared cleanup deadline exhausted; daemon state is not confirmed."""
+
+
+class DockerCLIReapUnconfirmed(DockerCommandTimeout):
+    """Local CLI leader could not be reaped within the remaining budget."""
+
+
+def _remaining(deadline: float) -> float:
+    remaining = deadline - time.monotonic()
+    if not math.isfinite(remaining) or remaining <= 0:
+        raise DockerCleanupDeadline("Docker cleanup deadline exhausted")
+    return remaining
+
+
+def cleanup_command(prefix: list[str], env: dict[str, str]):
+    """One absolute monotonic budget, shared by every call in a cleanup sequence."""
+    deadline = time.monotonic() + CLEANUP_TIMEOUT
+
+    def call(*args):
+        _remaining(deadline)
+        return _command(prefix, args, env, deadline=deadline)
+
+    return call
+
+
+def _command(prefix: list[str], args: tuple[str, ...], env: dict[str, str],
+             *, deadline: float | None = None) -> bytes:
+    """Bound captured output and CLI waiting, with a shared optional deadline.
+
+    Reserve local reap time within the shared budget. Process creation and OS
+    scheduling are not hard real-time bounded; no implicit Popen context wait.
+    """
+    started = time.monotonic()
+    end = started + COMMAND_TIMEOUT
+    if deadline is not None:
+        remaining = _remaining(deadline)
+        # Reserve up to five seconds (at most half of remaining time) for reap.
+        end = min(end, deadline - min(CLI_REAP_TIMEOUT, remaining / 2))
+    p = subprocess.Popen(prefix + list(args), env=env, stdin=subprocess.DEVNULL,
+                         stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                         start_new_session=True)
+    try:
         assert p.stdout is not None
         out = bytearray()
-        end = time.monotonic() + COMMAND_TIMEOUT
+        with selectors.DefaultSelector() as sel:
+            sel.register(p.stdout, selectors.EVENT_READ)
+            while True:
+                remaining = end - time.monotonic()
+                if remaining <= 0 or not sel.select(remaining):
+                    raise DockerCommandTimeout("Docker metadata timeout")
+                chunk = os.read(p.stdout.fileno(), 8192)
+                if not chunk:
+                    break
+                if len(chunk) > MAX_METADATA_BYTES - len(out):
+                    raise DockerOutputLimit("Docker metadata exceeds limit")
+                out.extend(chunk)
         try:
-            with selectors.DefaultSelector() as sel:
-                sel.register(p.stdout, selectors.EVENT_READ)
-                while True:
-                    remaining = end - time.monotonic()
-                    if remaining <= 0 or not sel.select(remaining):
-                        raise DockerCommandTimeout("Docker metadata timeout")
-                    chunk = os.read(p.stdout.fileno(), 8192)
-                    if not chunk:
-                        break
-                    if len(chunk) > MAX_METADATA_BYTES - len(out):
-                        raise DockerOutputLimit("Docker metadata exceeds limit")
-                    out.extend(chunk)
+            remaining = end - time.monotonic()
+            if remaining <= 0:
+                raise DockerCommandTimeout("Docker metadata timeout")
+            returncode = p.wait(timeout=remaining)
+        except subprocess.TimeoutExpired as exc:
+            raise DockerCommandTimeout("Docker metadata timeout") from exc
+        if deadline is not None:
+            _remaining(deadline)
+        if returncode != 0:
+            raise DockerCommandFailed("Docker command failed")
+        return bytes(out)
+    except BaseException:
+        # Kill the CLI group, including a pipe holder after leader exit.
+        # No claim about container or daemon state follows from this.
+        if p.returncode is None:
             try:
-                returncode = p.wait(timeout=max(0.01, end-time.monotonic()))
+                os.killpg(p.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            reap = CLI_REAP_TIMEOUT
+            if deadline is not None:
+                reap = max(0.0, min(reap, deadline - time.monotonic()))
+            try:
+                p.wait(timeout=reap)
             except subprocess.TimeoutExpired as exc:
-                raise DockerCommandTimeout("Docker metadata timeout") from exc
-            if returncode != 0:
-                raise DockerCommandFailed("Docker command failed")
-            return bytes(out)
-        except BaseException:
-            # Kill the local CLI group before reaping its leader: a child
-            # can still hold the pipe after the leader exits.
-            # This is not Docker daemon/container cleanup or a sandbox.
-            if p.returncode is None:
-                try:
-                    os.killpg(p.pid, signal.SIGKILL)
-                except ProcessLookupError:
-                    pass
-                finally:
-                    p.wait(timeout=5)
-            raise
+                raise DockerCLIReapUnconfirmed("Docker CLI reap unconfirmed") from exc
+        raise
+    finally:
+        if p.stdout is not None:
+            p.stdout.close()
 
 
 def _decode_metadata(data: bytes):
