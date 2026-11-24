@@ -29,3 +29,9 @@ Przebieg [45294443694](https://github.com/dariusz-piekarz/mathematical_scipts/ac
 Porównanie certyfikowanego SHA z bieżącą gałęzią przy odczycie pokazało tylko zmiany w algebrze abstrakcyjnej i teorii miary, bez zmian źródeł grafowych i ich workflow.
 
 **Bramka jeszcze otwarta:** full-book-pdf (138111151894) podczas odczytu nadal instalował TeX. Nie potwierdzono kompilacji ani wyglądu zmienionych stron. Nie przechodzimy do kolejnego bloku przed stabilizacją.
+
+## Zamknięcie stabilizacji matematycznej i składu
+
+Dokładny przebieg 45294443694 dla 9bc372b48096c2ef166885544db3c84b12a3927f: oba joby success. W rzeczywistym logu full-book-pdf (138111151894) potwierdzono trzy przebiegi kompilacji, 298 stron A4 i 0 ostrzeżeń. Pobrano ZIP artefaktu 14876161294, rozpakowano PDF i potwierdzono pusty plik ostrzeżeń. Wyrenderowano i obejrzano strony fizyczne 84–89, 92–93, 98, 104–105, 145–146 (13 stron), obejmujące zmienione fragmenty, wzory i diagramy. Nie stwierdzono kolizji ani obcięcia. Zmiany matematyczne audytu 34 są stabilne.
+
+Osobne ustalenie redakcyjne: na stronie fizycznej 98 wstęp do Laplasjanu wspomina „w szóstym” rozdziale, podczas gdy rozdział źródłowy 06 ma obecnie numer drukowany 13 (po wstawieniu rozdziałów algorytmicznych). To nie błąd wzorów ani składu, lecz nieaktualne ręczne odwołanie. Zarejestrowano jako pierwszy przypadek następnego globalnego bloku kontroli kolejności i odsyłaczy opisowych; należy zastąpić ręczne numery przez etykiety i sprawdzić cały tom. Globalny audyt pozostaje otwarty.
