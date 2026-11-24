@@ -1,0 +1,5 @@
+# AA-60 — audyt I: otwarcie
+
+24 listopada 2026 r. Gałąź biblioteka-matematyczna-iteracja-6. Rozdział dodany w a1432f43986589ee8758dfc85db53f55d07ccf33, włączony do książki i katalogu.
+
+Sprawdzono relacje komutacyjne, klasyfikację nieprzywiedlnych, końce działań E,F i operator Casimira. Pełną redukowalność udowodniono bez twierdzenia Weyla przez uogólnione przestrzenie własne Casimira oraz podniesienie wektora najwyższej wagi; z EF^(m+1)v=0 i iniektywności F^m w jądrze wynika, że podniesiony wektor jest zwykłym wektorem własnym. Z rank E na przestrzeni wagi zero wynika jeden nietrywialny parzysty składnik, który musi być L(2); całkowitość dwóch liczb Cartana wyklucza pozostałe wielokrotności korzeni. Ciąg korzeniowy jest pojedynczym składnikiem, gdyż dwa składniki tej samej parzystości mają wspólną wagę. Konstrukcja euklidesowa wykorzystuje całkowitą macierz śladów i dodatnią określoność nad R, bez utożsamiania K z R. Przykład A2 sprawdzono rachunkowo. Audyt autorski, licznik czystych audytów 0/2. Integracja testów liczby rozdziałów, dwa niezależne zestawy regresji, CI i PDF pozostają otwarte. AA-60 W AUDYCIE, AA-61 nieotwarty.
