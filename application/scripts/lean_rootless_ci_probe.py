@@ -851,11 +851,15 @@ def main() -> int:
         # No diagnostic claim for an unverified checkout. Never swallow the failure.
         path = os.environ.get("ATLAS_ROOTLESS_FAILURE_REPORT_PATH")
         if path and progress["checkout_sha"] is not None:
-            report = build_failure_report(expected_sha=progress["checkout_sha"],
-                                          stage=progress["stage"],
-                                          completed=tuple(progress["completed"]))
-            write_failure_report(Path(path), report, expected_sha=progress["checkout_sha"])
-            print("ATLAS_ROOTLESS_FAILURE_REPORT_WRITTEN", flush=True)
+            try:
+                report = build_failure_report(expected_sha=progress["checkout_sha"],
+                                              stage=progress["stage"],
+                                              completed=tuple(progress["completed"]))
+                write_failure_report(Path(path), report, expected_sha=progress["checkout_sha"])
+                print("ATLAS_ROOTLESS_FAILURE_REPORT_WRITTEN", flush=True)
+            except Exception:
+                # Diagnostic failure must not replace the original exception.
+                print("ATLAS_ROOTLESS_FAILURE_REPORT_UNAVAILABLE", file=sys.stderr, flush=True)
         raise
 
 

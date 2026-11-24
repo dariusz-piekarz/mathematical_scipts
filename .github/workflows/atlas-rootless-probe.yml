@@ -165,6 +165,84 @@ jobs:
           path: ${{ runner.temp }}/atlas-rootless-failure.json
           if-no-files-found: error
           retention-days: 30
+      # Deliberately fail only the report destination, after the real fixtures.
+      # A tolerated step failure is never sufficient: the following gates must
+      # observe the exact failure, diagnostic state and absence of success.
+      - name: Controlled failed report publication
+        id: negative_report
+        continue-on-error: true
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="$(mktemp -d "$RUNNER_TEMP/atlas-negative.XXXXXXXX")"
+          echo "ATLAS_NEGATIVE_WORK=$work" >> "$GITHUB_ENV"
+          export ATLAS_ROOTLESS_REPORT_PATH="$work/missing-success/report.json"
+          export ATLAS_ROOTLESS_FAILURE_REPORT_PATH="$work/failure.json"
+          python3 -m scripts.lean_rootless_ci_probe 2>&1 | tee "$work/probe.log"
+      - name: Independently validate controlled failure report
+        env:
+          PROBE_OUTCOME: ${{ steps.negative_report.outcome }}
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$PROBE_OUTCOME" = failure
+          test ! -e "$ATLAS_NEGATIVE_WORK/missing-success/report.json"
+          grep -q '^ATLAS_ROOTLESS_OUTPUT ' "$ATLAS_NEGATIVE_WORK/probe.log"
+          grep -Fxq 'ATLAS_ROOTLESS_FAILURE_REPORT_WRITTEN' "$ATLAS_NEGATIVE_WORK/probe.log"
+          python3 -m scripts.lean_rootless_ci_probe --validate-failure-report "$ATLAS_NEGATIVE_WORK/failure.json"
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          from scripts.lean_rootless_ci_probe import read_failure_report
+          report = read_failure_report(Path(os.environ["ATLAS_NEGATIVE_WORK"]) / "failure.json",
+                                       expected_sha=os.environ["GITHUB_SHA"])
+          if report["failed_stage"] != "finalize" or set(report["cases"].values()) != {"passed"}:
+              raise SystemExit("Unexpected diagnostic failure stage")
+          PY
+          if python3 -m scripts.lean_rootless_ci_probe --validate-report "$ATLAS_NEGATIVE_WORK/failure.json"; then
+            echo "Diagnostic promoted to success" >&2
+            exit 1
+          fi
+          echo ATLAS_NEGATIVE_REPORT_CONFIRMED
+      - name: Upload controlled failure diagnostic evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-rootless-negative-report-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ env.ATLAS_NEGATIVE_WORK }}/failure.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Controlled unavailable diagnostic report
+        id: negative_missing
+        continue-on-error: true
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="$(mktemp -d "$RUNNER_TEMP/atlas-negative-missing.XXXXXXXX")"
+          echo "ATLAS_MISSING_WORK=$work" >> "$GITHUB_ENV"
+          export ATLAS_ROOTLESS_REPORT_PATH="$work/missing-success/report.json"
+          export ATLAS_ROOTLESS_FAILURE_REPORT_PATH="$work/missing-diagnostic/failure.json"
+          python3 -m scripts.lean_rootless_ci_probe 2>&1 | tee "$work/probe.log"
+      - name: Require fail-closed result without diagnostic file
+        env:
+          PROBE_OUTCOME: ${{ steps.negative_missing.outcome }}
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$PROBE_OUTCOME" = failure
+          test ! -e "$ATLAS_MISSING_WORK/missing-success/report.json"
+          test ! -e "$ATLAS_MISSING_WORK/missing-diagnostic/failure.json"
+          grep -q '^ATLAS_ROOTLESS_OUTPUT ' "$ATLAS_MISSING_WORK/probe.log"
+          grep -Fxq 'ATLAS_ROOTLESS_FAILURE_REPORT_UNAVAILABLE' "$ATLAS_MISSING_WORK/probe.log"
+          grep -q '^FileNotFoundError:.*missing-success/report.json' "$ATLAS_MISSING_WORK/probe.log"
+          if python3 -m scripts.lean_rootless_ci_probe --validate-report "$ATLAS_MISSING_WORK/missing-success/report.json"; then
+            echo "Missing report accepted" >&2
+            exit 1
+          fi
+          echo ATLAS_NEGATIVE_MISSING_CONFIRMED
       - name: Stop test daemon
         if: always()
         shell: bash

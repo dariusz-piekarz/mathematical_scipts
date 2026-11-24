@@ -885,6 +885,25 @@ class RuntimeDiagnosticReportTests(unittest.TestCase):
                     self.assertNotIn("private exception text", path.read_text())
 
 
+    def test_diagnostic_write_failure_preserves_original_exception(self):
+        import os
+        import tempfile
+        from pathlib import Path
+        from unittest.mock import patch
+        from scripts import lean_rootless_ci_probe as probe
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "missing-parent" / "failure.json"
+            original = RuntimeError("original probe failure")
+            def failing(progress):
+                progress.update(checkout_sha=self.sha, stage="normal", completed=["preflight"])
+                raise original
+            with patch.dict(os.environ, {"ATLAS_ROOTLESS_FAILURE_REPORT_PATH": str(path)}), \
+                    patch.object(probe, "run_probe", side_effect=failing):
+                with self.assertRaises(RuntimeError) as caught:
+                    probe.main()
+            self.assertIs(caught.exception, original)
+            self.assertFalse(path.exists())
+
 
 class TransportTestDiscoveryTests(unittest.TestCase):
     def test_no_shadowed_test_classes_or_methods(self):
@@ -915,6 +934,7 @@ class TransportTestDiscoveryTests(unittest.TestCase):
                 "test_failure_file_never_accepted_as_success",
                 "test_main_preserves_failure_and_reports_only_verified_checkout",
                 "test_reject_inconsistent_progress_and_flags",
+                "test_diagnostic_write_failure_preserves_original_exception",
             },
         }
         for name, expected in required.items():
