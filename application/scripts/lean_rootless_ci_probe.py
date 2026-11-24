@@ -595,6 +595,50 @@ def build_success_report(*, checkout_sha: str, expected_sha: str, docker: dict, 
     return report
 
 
+
+MAX_REPORT_BYTES = 32768
+
+
+def _unique_report_keys(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError("Duplicate report key")
+        result[key] = value
+    return result
+
+
+def _reject_report_constant(value):
+    raise ValueError("Nonstandard JSON constant")
+
+
+def read_success_report(path: Path, *, expected_sha: str) -> dict:
+    """Read at most one bounded JSON document; fail closed on missing or invalid file."""
+    with path.open("rb") as stream:
+        raw = stream.read(MAX_REPORT_BYTES + 1)
+    if not raw or len(raw) > MAX_REPORT_BYTES:
+        raise ValueError("Invalid report byte length")
+    try:
+        report = json.loads(raw.decode("utf-8"), object_pairs_hook=_unique_report_keys,
+                            parse_constant=_reject_report_constant)
+    except (UnicodeError, RecursionError) as exc:
+        raise ValueError("Invalid report JSON") from exc
+    validate_success_report(report, expected_sha=expected_sha)
+    return report
+
+
+def write_success_report(path: Path, report: dict, *, expected_sha: str) -> None:
+    validate_success_report(report, expected_sha=expected_sha)
+    raw = (json.dumps(report, sort_keys=True, ensure_ascii=True, allow_nan=False) + "\n").encode("ascii")
+    if len(raw) > MAX_REPORT_BYTES:
+        raise ValueError("Report exceeds byte limit")
+    # Exclusive creation: a stale file or symlink cannot be overwritten.
+    with path.open("xb") as stream:
+        stream.write(raw)
+    if read_success_report(path, expected_sha=expected_sha) != report:
+        raise ValueError("Report serialization mismatch")
+
+
 def main() -> int:
     expected_sha = os.environ.get("GITHUB_SHA", "")
     checkout_sha = subprocess.check_output(["git", "rev-parse", "HEAD"],
@@ -707,9 +751,19 @@ def main() -> int:
                                       docker=versions, cases={"preflight": result, "normal": runtime,
                                       "controlled_failure": failure, "timeout": timeout,
                                       "output_limit": output})
+        report_path = os.environ.get("ATLAS_ROOTLESS_REPORT_PATH")
+        if not report_path:
+            raise ValueError("Missing CI report output path")
+        write_success_report(Path(report_path), report, expected_sha=expected_sha)
         print("ATLAS_ROOTLESS_REPORT " + json.dumps(report, sort_keys=True), flush=True)
         return 0
 
 
 if __name__ == "__main__":
+    if len(sys.argv) == 3 and sys.argv[1] == "--validate-report":
+        read_success_report(Path(sys.argv[2]), expected_sha=os.environ.get("GITHUB_SHA", ""))
+        print("ATLAS_ROOTLESS_REPORT_FILE_VALIDATED", flush=True)
+        sys.exit(0)
+    if len(sys.argv) != 1:
+        raise SystemExit("Invalid CI probe arguments")
     sys.exit(main())
