@@ -1034,6 +1034,67 @@ def test_integral_flow_vertices():
     return graphs,systems,vertices
 
 
+def test_integral_boundary_image():
+    """TG06-IMG-01: signed forest leaf elimination for every orientation."""
+    graphs=orientations=loads=balanced=0
+    for n in range(1,5):
+        es=pairs(n)
+        for mask in range(1<<len(es)):
+            E=[e for i,e in enumerate(es) if mask>>i&1]
+            graphs+=1
+            forest=[]
+            for i,e in enumerate(E):
+                selected=[E[j] for j in forest]
+                if component_count(n,selected+[e])<component_count(n,selected):
+                    forest.append(i)
+            a=adj_of(n,E)
+            components=[]
+            unseen=set(range(n))
+            while unseen:
+                reached={min(unseen)}
+                q=list(reached)
+                for v in q:
+                    for u in a[v]-reached:
+                        reached.add(u)
+                        q.append(u)
+                components.append(reached)
+                unseen-=reached
+            for orient in range(1<<len(E)):
+                orientations+=1
+                directed=[(v,u) if orient>>i&1 else (u,v)
+                          for i,(u,v) in enumerate(E)]
+                for b in product((-1,0,1),repeat=n):
+                    loads+=1
+                    expected=all(sum(b[v] for v in C)==0 for C in components)
+                    residual=list(b)
+                    x=[0]*len(E)
+                    remaining=set(forest)
+                    while remaining:
+                        degree=[0]*n
+                        for i in remaining:
+                            u,v=directed[i]
+                            degree[u]+=1
+                            degree[v]+=1
+                        leaf=next(v for v in range(n) if degree[v]==1)
+                        i=next(i for i in remaining if leaf in directed[i])
+                        u,v=directed[i]
+                        other=u if v==leaf else v
+                        x[i]=residual[leaf] if v==leaf else -residual[leaf]
+                        residual[other]+=residual[leaf]
+                        residual[leaf]=0
+                        remaining.remove(i)
+                    assert (not any(residual))==expected
+                    if expected:
+                        balanced+=1
+                        boundary=[0]*n
+                        for (u,v),value in zip(directed,x):
+                            boundary[u]-=value
+                            boundary[v]+=value
+                        assert tuple(boundary)==b
+    assert (graphs,orientations,loads,balanced)==(75,760,59808,12728)
+    return graphs,orientations,loads,balanced
+
+
 def test_source_consistency():
     catalog=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book=next(x for x in catalog["books"] if x["id"]=="graph_and_knot_theory")
@@ -1076,3 +1137,4 @@ if __name__=="__main__":
     print(f"PASS TG06-TU-01: {g} graphs, {m} exact minors")
     print("PASS TG06-ZB-01 graphs, orientations, integer cycles:", test_integral_cycle_bases())
     print("PASS TG06-FV-01 graphs, systems, vertices:", test_integral_flow_vertices())
+    print("PASS TG06-IMG-01 graphs, orientations, loads, balanced:", test_integral_boundary_image())
