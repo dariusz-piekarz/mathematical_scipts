@@ -1,7 +1,7 @@
 import re
 import unittest
 from pathlib import Path
-from math import comb
+from math import comb, factorial as _factorial
 from fractions import Fraction as F
 from itertools import product
 
@@ -144,6 +144,75 @@ class Chapter22(unittest.TestCase):
             self.assertEqual(fourier(fourier(fourier(fp))),p)
         for p,q in product(models,repeat=2):
             self.assertEqual(inner(fourier(p),fourier(q)),inner(p,q))
+
+    def test_FA22_schwartz_convolution_compact_fourier_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"Q_{N,m}(\rho(h-\cdot))\le(1+|h|)^N",
+            r"|t|(2+|x|)^N Q_{N,m+2}(\rho)",
+            r"C(1+|x|)^N Q_{N,m+|\alpha|}(\rho)",
+            r"Q_{N,m}(G_x)\le",
+            r"Q_{N,m}(G_x-G_{x'})",
+            r"Q_{N,m}(I_{R''}-I_{R'})",
+            r"\langle T_u,\psi\rangle=\langle T,\check\rho*\psi\rangle",
+            r"\ref{thm:smoothing21}",
+            r"\rho(z)(\mathcal F\psi)(y+z)",
+            r"c_d\|\rho\|_1\|\psi\|_1",
+            r"C,m,L$",
+            r"\partial_x^\gamma((-ix)^\beta)",
+            r"p_q(J_R-\chi\mathcal F\varphi)",
+            r"\langle T,\chi\mathcal F\varphi\rangle",
+            r"\mathcal FT=T_{F_T}",
+        ):
+            self.assertIn(fragment, s)
+        # Gaussian smoothing of point jets: exp(-x^2/2) times
+        # polynomial. Derivatives in the distribution variable
+        # have the opposite sign to derivatives in x.
+        def deriv(p):
+            q = [0]*(len(p)+1)
+            for i,c in enumerate(p):
+                if i:
+                    q[i-1] += i*c
+                q[i+1] -= c
+            while len(q)>1 and q[-1]==0:
+                q.pop()
+            return q
+        def val(p,x):
+            return sum(c*x**i for i,c in enumerate(p))
+        polys = [[1]]
+        for _ in range(8):
+            polys.append(deriv(polys[-1]))
+        for n,m,a,x in product(range(5),range(5),[-2,0,1],[-3,0,2]):
+            ypoly=[1]
+            for _ in range(n):
+                ypoly=[-c for c in deriv(ypoly)]
+            for _ in range(m):
+                ypoly=deriv(ypoly)
+            self.assertEqual(val(polys[n+m],x-a),(-1)**n*val(ypoly,x-a))
+            # Independent Leibniz computation of the derivative
+            # of the smoothing polynomial times the Gaussian.
+            expected = sum(comb(m,k)*sum(c*comb(i,k) *
+                           _factorial(k)*(x-a)**(i-k)
+                           for i,c in enumerate(polys[n]) if i>=k)
+                           *val(polys[m-k],x-a) for k in range(m+1))
+            self.assertEqual(val(polys[n+m],x-a),expected)
+
+        # Fourier of a shifted point derivative, after dividing by
+        # the common normalization and phase: (i*xi)^n.
+        # Differentiation in xi acts on both the monomial and phase.
+        def phase_deriv(p,a):
+            q=[-1j*a*c for c in p]
+            for i in range(1,len(p)):
+                q[i-1]+=i*p[i]
+            return q
+        for n,k,a,xi in product(range(5),range(5),[-2,0,3],[-3,1,2]):
+            p=[0]*n+[1j**n]
+            for _ in range(k):
+                p=phase_deriv(p,a)
+            expected=sum(comb(k,j)*1j**n*comb(n,j)*_factorial(j)
+                         *xi**(n-j)*(-1j*a)**(k-j)
+                         for j in range(min(k,n)+1))
+            self.assertEqual(val(p,xi),expected)
 
 if __name__ == "__main__":
     unittest.main()
