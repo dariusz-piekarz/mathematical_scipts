@@ -320,6 +320,82 @@ def test_backward_path():
     assert validate(4, []) == 0
 
 
+def test_integral_decomposition():
+    # TG40-DEC-01: enumerate feasible integral flows, not just optima.
+    # Original arc indices distinguish antiparallel and parallel arcs.
+    def verify(n, arcs, amounts, s, t):
+        balance = [0]*n
+        for (u, v, cap), f in zip(arcs, amounts):
+            assert 0 <= f <= cap
+            balance[u] += f
+            balance[v] -= f
+        k = balance[s]
+        if k < 0 or any(balance[v] for v in range(n) if v not in (s, t)):
+            return False
+        assert balance[t] == -k
+        remaining = list(amounts)
+        reconstructed = [0]*len(arcs)
+        r = k
+        total = 0
+        parts = 0
+        while r:
+            queue = deque([s])
+            parent = {s: None}
+            while queue and t not in parent:
+                u = queue.popleft()
+                for i, (a, v, _) in enumerate(arcs):
+                    if a == u and remaining[i] > 0 and v not in parent:
+                        parent[v] = i
+                        queue.append(v)
+            assert t in parent
+            path = []
+            v = t
+            while v != s:
+                i = parent[v]
+                path.append(i)
+                v = arcs[i][0]
+            q = min(r, *(remaining[i] for i in path))
+            assert q > 0
+            for i in path:
+                remaining[i] -= q
+                reconstructed[i] += q
+            r -= q
+            total += q
+            parts += 1
+        while any(remaining):
+            u = arcs[next(i for i, f in enumerate(remaining) if f)][0]
+            seen = {}
+            walk = []
+            while u not in seen:
+                seen[u] = len(walk)
+                i = next(i for i, (a, v, _) in enumerate(arcs)
+                         if a == u and remaining[i] > 0)
+                walk.append(i)
+                u = arcs[i][1]
+            cycle = walk[seen[u]:]
+            b = min(remaining[i] for i in cycle)
+            assert b > 0
+            for i in cycle:
+                remaining[i] -= b
+                reconstructed[i] += b
+            parts += 1
+        assert reconstructed == list(amounts)
+        assert total == k and parts <= len(arcs) + 1
+        return True
+
+    count = 0
+    for n in (2, 3):
+        arcs = [(u, v, 2) for u in range(n) for v in range(n) if u != v]
+        for amounts in product(range(3), repeat=len(arcs)):
+            for s in range(n):
+                for t in range(n):
+                    if s != t and verify(n, arcs, amounts, s, t):
+                        count += 1
+    # A parallel-arc circulation involving both terminals.
+    assert verify(2, [(0, 1, 2), (0, 1, 2), (1, 0, 2)], [2, 1, 2], 0, 1)
+    return count + 1
+
+
 def test_integration():
     catalog = json.loads((ROOT / "catalog/books.json").read_text(encoding="utf-8"))
     book = next(b for b in catalog["books"] if b["id"] == "graph_and_knot_theory")
@@ -350,5 +426,6 @@ if __name__ == "__main__":
     print("PASS seeded directed networks incl antiparallel/parallel:", test_seeded())
     print("PASS exact fractional capacities:", test_rational())
     test_backward_path()
+    print('PASS TG40-DEC-01 integral feasible flows:', test_integral_decomposition())
     print("PASS TG40-EK-01 repeated saturation distance growth")
     print("PASS TG40-DINIC-01 phase invariants, reverse residual cancellation, hand-computed cuts and integration")
