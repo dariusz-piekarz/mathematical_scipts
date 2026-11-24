@@ -782,6 +782,115 @@ def test_chapter05_hall_hamilton():
     return families,sdr_count,graphs,ham_count,component_checks
 
 
+def test_chapter05_constructions():
+    """Check every augmenting path, symmetric difference and Konig cover."""
+    def matchings_of(edges):
+        result=[]
+
+        def rec(i,used,mask):
+            if i==len(edges):
+                result.append((mask,used))
+                return
+            rec(i+1,used,mask)
+            u,v=edges[i]
+            ends=(1<<u)|(1<<v)
+            if not used&ends:
+                rec(i+1,used|ends,mask|(1<<i))
+
+        rec(0,0,0)
+        return result
+
+    graphs=matchings=augmentations=comparisons=bipartite=covers=0
+    for n in range(6):
+        es=pairs(n)
+        for graph_mask in range(1<<len(es)):
+            graphs+=1
+            edges=[e for i,e in enumerate(es) if graph_mask>>i&1]
+            ms=matchings_of(edges)
+            maximum=max(m.bit_count() for m,_ in ms)
+            valid={m for m,_ in ms}
+            adj=[[] for _ in range(n)]
+            for i,(u,v) in enumerate(edges):
+                adj[u].append((v,i))
+                adj[v].append((u,i))
+            for m,used in ms:
+                matchings+=1
+                found=False
+
+                def dfs(u,seen,path,in_matching):
+                    nonlocal found,augmentations
+                    for v,i in adj[u]:
+                        if seen>>v&1 or bool(m>>i&1)!=in_matching:
+                            continue
+                        p=path|(1<<i)
+                        if not in_matching and not (used>>v&1):
+                            found=True
+                            augmentations+=1
+                            assert m^p in valid
+                            assert (m^p).bit_count()==m.bit_count()+1
+                        dfs(v,seen|(1<<v),p,not in_matching)
+
+                for start in range(n):
+                    if not (used>>start&1):
+                        dfs(start,1<<start,0,False)
+                assert found==(m.bit_count()<maximum)
+                for k,_ in ms:
+                    if k.bit_count()<=m.bit_count():
+                        continue
+                    comparisons+=1
+                    diff=m^k
+                    rest=diff
+                    positive=False
+                    while rest:
+                        i=(rest&-rest).bit_length()-1
+                        q=list(edges[i])
+                        seen=set(q)
+                        component=0
+                        for u in q:
+                            for v,j in adj[u]:
+                                if diff>>j&1:
+                                    component|=1<<j
+                                    if v not in seen:
+                                        seen.add(v)
+                                        q.append(v)
+                        rest&=~component
+                        gain=(component&k).bit_count()-(component&m).bit_count()
+                        if gain>0:
+                            positive=True
+                            ends=[u for u in q if sum(
+                                bool(component>>j&1) for _,j in adj[u])==1]
+                            assert gain==1 and len(ends)==2
+                            assert all(not (used>>u&1) for u in ends)
+                    assert positive
+    for n in range(5):
+        for m in range(4):
+            for sets in product(range(1<<m),repeat=n):
+                bipartite+=1
+                edges=[(u,n+v) for u,a in enumerate(sets)
+                       for v in range(m) if a>>v&1]
+                ms=matchings_of(edges)
+                maximum=max(k.bit_count() for k,_ in ms)
+                for k,used in ms:
+                    if k.bit_count()!=maximum:
+                        continue
+                    covers+=1
+                    q=[u for u in range(n) if not (used>>u&1)]
+                    seen=set(q)
+                    for u in q:
+                        for j,(a,b) in enumerate(edges):
+                            x,y=(b,a) if k>>j&1 else (a,b)
+                            if x==u and y not in seen:
+                                seen.add(y)
+                                q.append(y)
+                    cover={u for u in range(n+m)
+                           if (u<n and u not in seen) or (u>=n and u in seen)}
+                    assert len(cover)==maximum
+                    assert all(u in cover or v in cover for u,v in edges)
+    assert (graphs,matchings,augmentations,comparisons,bipartite,covers)==(
+        1100,10313,41754,32445,5058,17808)
+    return graphs,matchings,augmentations,comparisons,bipartite,covers
+
+
 def test_source_consistency():
     catalog=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book=next(x for x in catalog["books"] if x["id"]=="graph_and_knot_theory")
@@ -816,3 +925,6 @@ if __name__=="__main__":
 
     f,s,g,h,c=test_chapter05_hall_hamilton()
     print(f"PASS chapter 05 Hall/Hamilton: {f} families, {s} SDR cases, {g} graphs, {h} Hamiltonian graphs, {c} component checks; deficiency, Konig, Dirac, Ore")
+
+    g,m,a,d,b,c=test_chapter05_constructions()
+    print(f"PASS chapter 05 constructions: {g} graphs, {m} matchings, {a} oriented augmenting paths, {d} symmetric differences, {b} bipartite graphs, {c} Konig covers")
