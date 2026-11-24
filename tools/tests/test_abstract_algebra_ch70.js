@@ -1,0 +1,41 @@
+// AA-70-WCF-01: aa:lem:weyl-weight-trace, aa:tw:weyl-character-formula.
+// Exact A1 and A2 weights from monomials and semistandard Young tableaux.
+const assert=(b,m)=>{if(!b)throw Error(m)};
+const key=v=>v.join(","), parse=s=>s.split(",").map(Number);
+const add=(f,v,c)=>{const k=key(v),z=(f.get(k)||0n)+c;if(z)f.set(k,z);else f.delete(k)};
+const eq=(a,b)=>a.size===b.size&&[...a].every(([k,c])=>b.get(k)===c);
+const mult=(a,b)=>{const f=new Map();for(const [s,c] of a)for(const [t,d] of b){const w=parse(t);add(f,parse(s).map((x,i)=>x+w[i]),c*d)}return f};
+const rows=n=>{const a=[];for(let i=0;i<=n;i++)for(let j=0;j<=n-i;j++)a.push([...Array(i).fill(1),...Array(j).fill(2),...Array(n-i-j).fill(3)]);return a};
+function tableaux(a,b){const f=new Map();for(const top of rows(a+b))for(const bottom of rows(b)){if(bottom.some((x,i)=>x<=top[i]))continue;const n=[0,0,0];for(const x of [...top,...bottom])n[x-1]++;add(f,[n[0]-n[1],n[1]-n[2]],1n)}return f}
+let models=0,weightChecks=0,absent=0,traceChecks=0,eigenChecks=0;
+function verify(lambda,F,C,roots,dot,bound){
+ const r=lambda.length,rho=Array(r).fill(1),plus=(u,v)=>u.map((x,i)=>x+v[i]);
+ const norm=u=>dot(u,u);
+ const shifted=plus(lambda,rho), cas=norm(shifted)-norm(rho);
+ const R=(v,i)=>v.map((x,j)=>x-v[i]*C[j][i]);
+ function alt(v){const q=[{v,s:1n}],seen=new Map([[key(v),1n]]);for(let k=0;k<q.length;k++)for(let i=0;i<r;i++){const w=R(q[k].v,i),s=-q[k].s,t=key(w);if(seen.has(t))assert(seen.get(t)===s,"regular orbit signs");else{seen.set(t,s);q.push({v:w,s})}}return seen}
+ let D=new Map([[key(rho),1n]]);
+ for(const a of roots){const g=new Map(D);for(const [k,c] of D)add(g,parse(k).map((x,i)=>x-a[i]),-c);D=g}
+ assert(eq(D,alt(rho)),"denominator");
+ const DF=mult(D,F);assert(eq(DF,alt(shifted)),"character identity");
+ for(const k of DF.keys()){assert(norm(parse(k))===norm(shifted),"Casimir eigenvalue");eigenChecks++}
+ const points=[];function grid(v){if(v.length===r){points.push(v);return}for(let i=-bound;i<=bound;i++)grid([...v,i])}grid([]);
+ for(const mu of points){
+  const m=F.get(key(mu))||0n;let total=0n;
+  for(const a of roots){
+   let T=0n,next=0n;
+   // Each model has support within the box. Beyond 2*bound+2 steps no root ray can meet it.
+   for(let j=1;j<=2*bound+2;j++){const v=mu.map((x,i)=>x+j*a[i]);const z=dot(v,a)*(F.get(key(v))||0n);T+=z;if(j>1)next+=z}
+   const v=plus(mu,a);
+   assert(T-next===dot(v,a)*(F.get(key(v))||0n),"trace difference");
+   if(!m)assert(T===0n,"trace of zero space");
+   total+=T;traceChecks++;
+  }
+  assert((cas-dot(mu,plus(mu,rho.map(x=>2*x))))*m===2n*total,"Freudenthal trace identity");
+  if(!m)absent++;weightChecks++;
+ }
+ models++;
+}
+for(let m=0;m<=20;m++){const F=new Map();for(let j=0;j<=m;j++)add(F,[m-2*j],1n);verify([m],F,[[2]],[[2]],(u,v)=>BigInt(u[0]*v[0]),m+2)}
+for(let a=0;a<=7;a++)for(let b=0;b<=7-a;b++){const F=tableaux(a,b);verify([a,b],F,[[2,-1],[-1,2]],[[2,-1],[-1,2],[1,1]],(u,v)=>BigInt(2*u[0]*v[0]+u[0]*v[1]+u[1]*v[0]+2*u[1]*v[1]),a+b+2)}
+console.log("AA-70-WCF-01: PASS",{models,weightChecks,absent,traceChecks,eigenChecks});
