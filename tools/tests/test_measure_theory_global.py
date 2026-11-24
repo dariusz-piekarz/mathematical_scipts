@@ -76,6 +76,7 @@ class MeasureTheoryGlobal(unittest.TestCase):
         print("MTG dependency inventory:",len(labels),"labels;",len(edges),"distinct cross-chapter edges")
         for row in sorted(forward):
             print("MTG FORWARD",row)
+        # Reviewed in CLII: the single proof-context forward link explicitly\n        # rejects using the later additivity theorem; it is not a dependency.\n        self.assertEqual({(ch,target,label) for ch,target,in_proof,line,label,context in forward if in_proof},\n                         {(7,8,"ch:twierdzenia-graniczne")})
         self.assertEqual(len(sources),31)
 
     def test_mtg_005_title_collision_inventory(self):
