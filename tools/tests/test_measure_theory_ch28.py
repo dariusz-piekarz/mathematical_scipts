@@ -23,7 +23,7 @@ def inverse(a):
     d = det(a)
     return [[Q((-1)**(i+j)*det([row[:i]+row[i+1:] for k,row in enumerate(a) if k!=j]), d) for j in range(n)] for i in range(n)]
 
-EXPECTED_LABELS = ["ch:area-coarea-28","def:k-jacobian-28","def:multiplicity-28","lem:graph-hausdorff-28","thm:graph-area-28","thm:immersion-area-28","eq:area-immersion-28","def:normal-jacobian-28","lem:linear-coarea-28","thm:coarea-submersion-28","eq:coarea-smooth-28","cor:coarea-level-28","thm:pushforward-coarea-28","sec:rademacher-28","def:frechet-rademacher-28","lem:rademacher-line-28","lem:rademacher-direction-28","thm:rademacher-28","lem:whitney-c1-28","eq:whitney-condition-28","lem:lusin-whitney-28","lem:critical-area-null-28","lem:null-fibres-lipschitz-28","lem:critical-coarea-null-28","thm:lipschitz-area-coarea-28","lem:c1-general-area-28","eq:coarea-manifolds-28","cor:riemann-hausdorff-28"]
+EXPECTED_LABELS = ["ch:area-coarea-28","def:k-jacobian-28","def:multiplicity-28","lem:graph-hausdorff-28","thm:graph-area-28","thm:immersion-area-28","eq:area-immersion-28","def:normal-jacobian-28","lem:linear-coarea-28","thm:coarea-submersion-28","eq:coarea-smooth-28","cor:coarea-level-28","thm:pushforward-coarea-28","sec:rademacher-28","def:frechet-rademacher-28","lem:rademacher-line-28","lem:rademacher-direction-28","thm:rademacher-28","lem:whitney-c1-28","eq:whitney-condition-28","lem:lusin-whitney-28","lem:critical-area-null-28","lem:null-fibres-lipschitz-28","lem:critical-coarea-null-28","thm:lipschitz-area-coarea-28","lem:c1-general-area-28","thm:coarea-manifolds-28","eq:coarea-manifolds-28","cor:riemann-hausdorff-28"]
 
 class Chapter28(unittest.TestCase):
     def test_stable_labels(self):
