@@ -28,8 +28,8 @@ class Chapter14Audit(unittest.TestCase):
 
     def test_environment_balancing(self):
         counts = {
-            "proof": 12, "twierdzenie": 7, "stwierdzenie": 4,
-            "lemat": 1, "definicja": 6, "przyklad": 8, "uwaga": 4,
+            "proof": 15, "twierdzenie": 8, "stwierdzenie": 6,
+            "lemat": 1, "definicja": 8, "przyklad": 10, "uwaga": 4,
             "tikzpicture": 1,
         }
         for name, count in counts.items():
@@ -41,15 +41,16 @@ class Chapter14Audit(unittest.TestCase):
             next(CHAPTERS.glob(f"{i:02d}-*.tex")).read_text(encoding="utf-8")
             for i in range(1, 15)
         ]
+        texts.append((CHAPTERS / "15B-calki-bochnera-pettisa-dunforda-i-gelfanda-oraz-miary-wektorowe.tex").read_text(encoding="utf-8"))
         labels = [
             item for text in texts
             for item in re.findall(r"\\label\{([^}]+)\}", text)
         ]
         self.assertEqual(len(labels), len(set(labels)))
-        self.assertEqual(len(re.findall(r"\\label\{([^}]+)\}", self.source)), 29)
+        self.assertEqual(len(re.findall(r"\\label\{([^}]+)\}", self.source)), 36)
         refs = re.findall(r"\\(?:ref|eqref|pageref)\{([^}]+)\}", self.source)
         refs += re.findall(r"\\hyperref\[([^\]]+)\]", self.source)
-        self.assertEqual(len(refs), 4)
+        self.assertEqual(len(refs), 5)
         self.assertEqual(set(refs) - set(labels), set())
 
     def test_polish_terminology(self):
