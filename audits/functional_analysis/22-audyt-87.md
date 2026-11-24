@@ -1,0 +1,12 @@
+# Rozdział 22 — audyt 87 (4/4 podsekcji, etap poprawkowy)
+
+24 listopada 2026. Wyłącznie istniejąca gałąź biblioteka-matematyczna-iteracja-6.
+
+## Zmiany
+Uzupełniono ostatnią podsekcję. W dowodzie splotu z elementem przestrzeni Schwartza podano oszacowanie ważonych seminorm przesunięć i ilorazów różnicowych, wspólny wykładnik wzrostu wszystkich pochodnych, całkowalne majoranty seminorm funkcji podcałkowej, zbieżność sum Riemanna na prostokątach i kontrolę ogona w S. Z zupełności S wynika istnienie granicy, zbieżność punktowa identyfikuje ją ze splotem z odbitym jądrem. Uzasadniono ciągłość splotu przy ustalonym jądrze w obu topologiach dualnych oraz zgodność z rozdziałem 21 dla funkcji testowych. Stałą (2pi)^(d/2) i znak uzyskano bezpośrednio z Fubiniego z całkowalną majorantą. W dowodzie transformaty dystrybucji o zwartym nośniku podano argument różniczkowania w D_K, jawny wzór Leibniza, niezależność rzędu m od indeksu pochodnej transformaty, sumy Riemanna w jednym etapie D oraz ważone oszacowanie ogona. Commit fdfb3716f65a143855d46669bc2ed61e7c92e258, blob acfd4698d6a8148985cea876bcf56259275abcd6.
+
+## Kontrole
+Bieg 45429602040 po audycie 86 zakończył się sukcesem. Dodano szóstą metodę FA22_schwartz_convolution_compact_fourier_01 w trwałym pliku tools/tests/test_functional_analysis_ch22.py (038620b9dcf184105f0d2b60f0f987f9f82d8b87). Niezależnie wykonano w JavaScript z BigInt 225 dokładnych kontroli znaku przy różniczkowaniu gaussowskiego wygładzenia pochodnych delty, 225 kontroli reguły Leibniza dla dalszych pochodnych oraz 225 kontroli pochodnych transformaty przesuniętej delty, z rozdzieleniem części rzeczywistej i urojonej po usunięciu wspólnej fazy i normalizacji. Łącznie 675/675. Są to modele regresyjne, nie formalizacja ogólnych twierdzeń. Kontrola aktualnego źródła: 16/16 unikatowych etykiet, 26/26 rozwiązanych odsyłaczy w kontekście 17–22, 49/49 fragmentów regresyjnych, poprawne zagnieżdżenie środowisk. Bieg 45430736181 w toku przy kontroli. Nie potwierdzono jeszcze wykonania pełnego nowego pliku Python, kompilacji ani oględzin aktualnego PDF. Lean nie uruchamiano.
+
+## Decyzja
+Pierwszy przegląd wszystkich czterech podsekcji zakończony; 0/3 stabilizacji. Następny audyt 88: pełny przegląd stabilizacyjny I, potwierdzenie nowego CI, kontrola aktualnego PDF, spójność konwencji Fourierowskiej i oszacowań całego rozdziału. Bez rozszerzania materiału przed zamknięciem rozdziału.
