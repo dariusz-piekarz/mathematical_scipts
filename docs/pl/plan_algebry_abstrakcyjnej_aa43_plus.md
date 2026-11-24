@@ -247,3 +247,7 @@ AA-62: twierdzenie o prezentacji Serre'a, zakres docs/pl/zakres_aa62_prezentacja
 ## Zamknięcie AA-62 — 24 listopada 2026 r.
 
 **AA-62 STABILNY w ustalonym zakresie; etapy D/P zaliczone.** Audyt P nie wymagał zmian źródła. CI [45402057674](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45402057674): 134/134 success, head 099c1a44cb2291e19c906ab93e1176b6d66b3bcb, blob c17afc7b9cd8bfc147e66bb479ecaa712d2b8868. Dwa trwałe zestawy regresji i dodatkowy sprawdzian ilorazów zaliczone; niezależna kontrola formy Killinga: 11 modeli, 622 korzenie, 47 odbić, 3926 stosunków Cartana. Artefakt 14923298677: PDF 401 stron, AA-62 fizyczne 396–401 (drukowane 383–388), ponownie obejrzane wszystkie, log czysty. Raport `audits/abstract_algebra/ch62_iteration_04.md`. AA-01–62 stabilne. **AA-63 nieotwarty**; kolejny etap D: sprzężoność maksymalnych podalgebr toralnych i pełna klasyfikacja algebr półprostych, z dowodami oraz pakietem stabilizacyjnym w tej samej iteracji.
+
+## Otwarcie AA-63 — 24 listopada 2026 r.
+
+AA-63: sprzężoność maksymalnych podalgebr toralnych i klasyfikacja półprostych algebr Liego. **Etap D W AUDYCIE**. Dowód przez obraz odwzorowania wielomianowego, elementy regularne i skończone wykładniki derywacji; klasyfikacja według wielozbioru typów Dynkina. Nie dowodzimy osobno odwrotnego twierdzenia o dowolnej nilpotentnej samonormalizującej się podalgebrze. Dwa zestawy regresji zaliczone bezpośrednio, CI i PDF do potwierdzenia. AA-64 nieotwarty.
