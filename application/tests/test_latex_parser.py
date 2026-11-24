@@ -13,6 +13,18 @@ from backend.latex_parser import (
 
 
 class ParserTests(unittest.TestCase):
+    def test_mathematical_analysis_i_identity_and_template(self):
+        from backend.generator import MODULE_ID, PROJECT_TEMPLATE_KEYS
+        doc = parse_document(r"\chapter{Liczby}", "chapters/pl/mathematical_analysis_i/01-konstrukcja-systemow-liczbowych.tex")
+        self.assertEqual(doc.id, "AM1-01")
+        self.assertEqual(doc.domain, "analiza matematyczna I")
+        self.assertIsNotNone(MODULE_ID.fullmatch(doc.id))
+        self.assertEqual(PROJECT_TEMPLATE_KEYS["AM1"], "AM1")
+        root = Path(__file__).resolve().parents[1]
+        template = (root / "config/preambles/AM1.tex").read_text(encoding="utf-8")
+        book = (root.parent / "books/pl/mathematical_analysis_i.tex").read_text(encoding="utf-8")
+        self.assertEqual(template.strip(), book.split(r"\begin{document}", 1)[0].strip())
+
     def test_nested_arguments(self):
         x = r"{Tytuł z {zagnieżdżeniem} oraz \textbf{tekstem}}"
         self.assertEqual(grouped(x, 0), (x[1:-1], len(x)))

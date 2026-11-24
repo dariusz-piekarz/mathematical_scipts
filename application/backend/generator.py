@@ -22,6 +22,7 @@ REF_RE = re.compile(r'\\(ref|eqref|pageref|autoref|nameref|cref|Cref|vref|Vref)\
 LABEL_RE = re.compile(r'\\label\s*\{([^{}]+)\}')
 MODULE_ID = re.compile(r'^[A-Za-z][A-Za-z0-9]*-[0-9]{2}[AB]?$')
 PROJECT_TEMPLATE_KEYS = {
+    'AM1': 'AM1',
     'ALG': 'ALG', 'AT': 'ALG', 'TOP': 'TOP', 'GW': 'GW',
     'GA': 'GA', 'KAT': 'KAT', 'MOD': 'MOD', 'CAL': 'CAL',
     'BT': 'BT', 'P1': 'P1', 'P2': 'P2', 'P3': 'P3', 'P4': 'P4',
