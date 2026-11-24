@@ -1,0 +1,12 @@
+# Rozdział 14 — audyt 24 (czysty, 1/2)
+
+Data: 24 listopada 2026. Gałąź biblioteka-matematyczna-iteracja-6. Punkt wyjścia raport 23 a7ef4100a0751fb7447f7f3d7c41d14c84c72848. Źródło 49b8c98236e924281d4b7ee756bbe6213025f165, 486 wierszy, 15 dowodów, 10 przykładów, 36 etykiet. Źródło i testy pozostawiono bez zmian.
+
+## Kontrola matematyczna i redakcyjna
+Sprawdzono ponownie założenia definicji, równoważność kryterium jednostajnego przybliżenia i pochodnej Frécheta, dwustronność pochodnych kierunkowych, kontrprzykłady, dowody reguł różniczkowania, kryterium Cauchy'ego sum Riemanna, oszacowanie przyrostu, reprezentację Riesza, minimizator energii, różniczkowalność zespoloną, słabą i słabą-* oraz liniowość pochodnej Bastianiego. Nie znaleziono koniecznej korekty. Dodatkowo wykonano 132 dokładne rachunki wymierne: dla 20 wartości x=±2^(-n) sprawdzono po trzy tożsamości g(x,x^3)=1/2, f(x,x^2)/x=1/2 i stosunek reszty normy l1 przy zmianie znaku współrzędnej równy 1 (120 rachunków); dla 12 wymiernych przyrostów sprawdzono tożsamość energii kwadratowej dla A=diag(2,3), b=(4,-9), x*=(2,-3). Wszystkie zaliczone. Są to kontrole rachunkowe, nie zastępują dowodów ogólnych.
+
+## Technika
+Zagnieżdżenie środowisk poprawne, 36 unikalnych etykiet; 5 wystąpień odsyłaczy rozwiązanych, w tym odsyłacz do sec:integral-vector15b. Sprawdzono rzeczywistą kolejność inputów 01–17 z 15A/15B w głównym pliku. Dedykowane CI naprawione w poprzednim audycie: przebieg 45354523474, job 138308919733, commit 0943a126f4b08963a36026679d33f61a46ca90ab; 9/9 kroków, 21/21 testów dedykowanych, trzy przebiegi pdflatex, PDF 137 stron, diagnostyka i kontrola treści zaliczone, artefakt 14901478059. W logu znane underfull hbox 1127. PDF ma tę samą liczbę stron i bajtów (1346797) co poprzedni pełny kontekst, którego strony 78–86 obejrzano w audycie 23. Nie wykonano powtórnych oględzin obrazu w tej iteracji, ponieważ źródło i skład pozostają bez zmian. Workflow blob eda32c72ad42b1f41a20a08a1031b7e131d9923e, testy dedykowane blob 04396e4e817b9b6fe31bcd252ef9a6fada2cb9b9. Powtórny przebieg 45354658379 był jeszcze w toku podczas kontroli.
+
+## Decyzja
+Pierwszy czysty audyt po korekcie CI: 1/2. Następny audyt 25 nadal rozdział 14; po drugim czystym audycie przejść do 15, następnie 15A, 15B, 16 itd. Bez rozszerzeń zakresu.
