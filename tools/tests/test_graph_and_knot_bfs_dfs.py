@@ -198,6 +198,60 @@ def check_directed():
             checked += 1
     return checked
 
+def check_multigraphs():
+    # TG37-MULTI-01: each pair has 0, 1 or 2 edges; deletion oracle
+    # distinguishes edge identifiers and handles isolated vertices.
+    graphs = 0
+    for n in range(5):
+        pairs = list(itertools.combinations(range(n), 2))
+        for counts in itertools.product(range(3), repeat=len(pairs)):
+            edges = [pair for pair, count in zip(pairs, counts)
+                     for _ in range(count)]
+            adj = [[] for _ in range(n)]
+            for i, (u, v) in enumerate(edges):
+                adj[u].append((v, i))
+                adj[v].append((u, i))
+            tin, low, bridges, cuts = {}, {}, set(), set()
+
+            def visit(u, incoming=None):
+                tin[u] = low[u] = len(tin) + 1
+                children = 0
+                for v, i in adj[u]:
+                    if i == incoming:
+                        continue
+                    if v in tin:
+                        low[u] = min(low[u], tin[v])
+                    else:
+                        children += 1
+                        visit(v, i)
+                        low[u] = min(low[u], low[v])
+                        if low[v] > tin[u]:
+                            bridges.add(i)
+                        if incoming is not None and low[v] >= tin[u]:
+                            cuts.add(u)
+                if incoming is None and children >= 2:
+                    cuts.add(u)
+
+            for u in range(n):
+                if u not in tin:
+                    visit(u)
+
+            def count_components(skip_edge=None, skip_vertex=None):
+                reduced = {u: set() for u in range(n) if u != skip_vertex}
+                for i, (u, v) in enumerate(edges):
+                    if i != skip_edge and u in reduced and v in reduced:
+                        reduced[u].add(v)
+                        reduced[v].add(u)
+                return components(reduced)
+
+            base = count_components()
+            assert bridges == {i for i in range(len(edges))
+                               if count_components(skip_edge=i) > base}, edges
+            assert cuts == {u for u in range(n)
+                            if count_components(skip_vertex=u) > base}, edges
+            graphs += 1
+    return graphs
+
 def check_integration():
     catalog = json.loads((ROOT / "catalog/books.json").read_text(encoding="utf-8"))
     match = [entry for entry in catalog["books"]
@@ -223,5 +277,7 @@ if __name__ == "__main__":
     check_integration()
     u = check_undirected()
     d = check_directed()
+    multi = check_multigraphs()
+    print(f"PASS TG37-MULTI-01: {multi} loopless multigraphs, bridges and articulation")
     print(f"PASS: chapter integration + {u} simple undirected and {d} "
           f"loopless directed exhaustive cases")
