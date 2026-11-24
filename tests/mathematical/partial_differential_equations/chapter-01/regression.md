@@ -21,7 +21,7 @@ Kryteria semantyczne wymagają ponownej oceny po zmianie źródła; nie są auto
 | PDE-01-014 | cor:dirichlet-stability | Funkcje rzeczywiste w dowodzie przez zasadę maksimum. | semantyczna |
 | PDE-01-015 | cor:dirichlet-stability | Oba oszacowania w i -w oraz jednoznaczność przy zerowych danych różnicowych. | semantyczna |
 | PDE-01-016 | eq:neumann-compatibility | Znak warunku zgodności dla -Δu=f i normalnej zewnętrznej. | semantyczna |
-| PDE-01-017 | eq:neumann-compatibility | Tożsamość Greena z pola w∇w oraz warunków brzegowych. | semantyczna |
+| PDE-01-017 | eq:neumann-compatibility | Tożsamość Greena z pola conjugate(w)∇w (w przypadku rzeczywistym w∇w) oraz warunków brzegowych. | semantyczna |
 | PDE-01-018 | eq:neumann-compatibility | Zerowa całka gradientu, lokalna stałość i spójność obszaru. | semantyczna |
 | PDE-01-019 | ex:burgers-blowup | Równanie charakterystyki z reguły łańcuchowej. | semantyczna |
 | PDE-01-020 | ex:burgers-blowup | Ścisła monotoniczność, surjektywność, gładka odwrotność zależna od t,x i weryfikacja PDE oraz danych. | semantyczna |
@@ -74,6 +74,7 @@ Kryteria semantyczne wymagają ponownej oceny po zmianie źródła; nie są auto
 | PDE-01-067 | eq:neumann-compatibility | Jeśli rozwiązanie istnieje, zbiór wszystkich rozwiązań to u+C; sprawdzony również kierunek dodawania stałej. | semantyczna |
 | PDE-01-068 | prop:heat-kernel | Normalizacja Gaussa z jakobianem i iloczynem całek jednowymiarowych, z uzasadnieniem Tonellego. | semantyczna |
 | PDE-01-069 | thm:dalembert | Jawne całkowanie F' na przedziale [η,ξ] i wykorzystanie F(η)+G(η)=u₀(η). | semantyczna |
+| PDE-01-070 | ex:backward-heat | D zawiera 0 i wszystkie g_k, ciągłość przekroju końcowego do L² jest jawna, a sprzeczność wynika z założenia jednoznaczności i ciągłości S. | semantyczna |
 
 ## Pierwsze wykonanie — 2026-11-24
 Przejrzano kryteria 001–012 w poprawionym tekście (commit 6c55830d79679c70a164546a1f0ff953198e29f6). Kontrola strukturalna wykonana na treści przed zapisem: zachowano 35 etykiet, wszystkie 14 odsyłaczy wewnętrznych rozwiązywalne, środowiska begin/end poprawnie zagnieżdżone. Nie wykonano kompilacji LaTeX, renderowania rysunków ani Lean. Rozdział pozostaje otwarty; dalsze sekcje od sec:pde-models wymagają osobnego audytu.
@@ -97,3 +98,6 @@ Poprawki 059–065: commit 193afa2c7da2d781a6bd486c464ba2caaf6650c3. Kontrola st
 
 ## Siódma iteracja — 2026-11-24
 Poprawki 066–069: commit f2811c1705ad6c0f307da03fe02c9a0d4b9c5fb5. Ponowny przegląd definicji, symbolu, klasyfikacji, modeli i zakresu oszacowań; nowe kryteria sprawdzone semantycznie. Kontrola strukturalna: 35 niezmienionych etykiet, 16 rozwiązywalnych odsyłaczy, poprawne zagnieżdżenie środowisk. [Przebieg 45405221487](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45405221487) wersji po piątej iteracji zakończył się sukcesem wszystkich kroków, w tym testów, kompilacji i diagnostyki. Przebieg 45405581130 wersji po szóstej iteracji był w kolejce podczas kontroli; nie potwierdzono jeszcze wizualnie ostatnich zmian rysunków. Wyniki CI wcześniejszych wersji nie zastępują weryfikacji nowego źródła. Lean nie uruchomiono. Rozdział otwarty.
+
+## Ósma iteracja — 2026-11-24
+Przejrzano ponownie dziewięć sekcji, 13 dowodów i źródła trzech rysunków. Uściślenie 070: commit 0a8317a2cb7e7e50c5ff312c11dce61da22aca7d. Przed poprawką sprawdzono automatycznie 69 unikalnych ID kryteriów i ich przypisanie do istniejących etykiet; po poprawce zachowano 35 etykiet, wszystkie 16 wystąpień odsyłaczy rozwiązywalne, środowiska zgodnie zagnieżdżone. Ujednolicono treść kryterium 017 z zespoloną wersją tożsamości Greena (045–046). Najnowsze przebiegi 45405542870, 45405581130, 45405754612 i 45405788704 pozostawały w kolejce podczas kontroli. Nie uruchomiono lokalnie testów Python ani Lean; aktualna kompilacja i kontrola nowych renderów pozostają niepotwierdzone. W tej iteracji nie rozszerzano zakresu tematycznego. Rozdział pozostaje otwarty.
