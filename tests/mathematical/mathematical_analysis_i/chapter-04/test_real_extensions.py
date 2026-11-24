@@ -59,4 +59,16 @@ class Chapter04(unittest.TestCase):
             self.assertFalse(any(abs(x-s)<eps and abs(x-t)<eps
                 for x in (F(k,12) for k in range(-48,49))))
 
+    def test_existential_witness_and_boolean_transfer(self):
+        # Finite principal analogue only: witnesses are chosen per index.
+        I=set(range(4))
+        domain=range(-2,3)
+        for a in itertools.product(domain,repeat=4):
+            E={i for i in I if any(b*b==a[i] for b in domain)}
+            b=[next((v for v in domain if v*v==a[i]),0) for i in range(4)]
+            self.assertEqual(E,{i for i in I if b[i]*b[i]==a[i]})
+            for j in I:
+                self.assertEqual(j in E,any(v*v==a[j] for v in domain))
+                self.assertEqual(j not in E,not any(v*v==a[j] for v in domain))
+
 if __name__=="__main__": unittest.main()
