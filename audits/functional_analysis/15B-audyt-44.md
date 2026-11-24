@@ -1,0 +1,15 @@
+# Moduł 15B — audyt 44 (stabilizacyjny, czysty 2/2)
+
+Data: 24 listopada 2026. Wyłącznie gałąź biblioteka-matematyczna-iteracja-6. Poprzedni czysty audyt: 43, f92b3396518d8d52ab2fb534262a9a503417e06d.
+
+## Kontrola końcowa
+Zweryfikowano źródło po wszystkich poprawkach: konstrukcję silnej mierzalności przy skończonej mierze, zupełność wektorowego L1, reprezentantów na nieuzupełnionym produkcie, warunki reprezentowalności całek Dunforda i Pettisa (wszystkie A, nie tylko S), konwencje parowania rzeczywistego i zespolonego, addytywność słabą-* i normową, przypadek nieskończonej wariacji oraz rozróżnienie silnej mierzalności i całkowalności normy. Skontrolowano pozostałe zależności dowodowe na podstawie pełnej kontroli 42–43 niezmienionego źródła, zwłaszcza Orlicza–Pettisa, półwariację, jednostajną całkowalność, wyjątki w Fubinim, uzupełnienie miary w RNP, reprezentację krzywych i charakterystykę W^{1,p} bez RNP. Nie stwierdzono nowych koniecznych zmian; nie rozszerzano zakresu. Zachowano 3420 wierszy, 37 dowodów, 12 podsekcji, 59 unikalnych etykiet, 27 odsyłaczy; poprawne zagnieżdżenie środowisk.
+
+## Niezależna kontrola dokładna
+Na czterech atomach o masach 1,2,3,4 (wspólne skalowanie do miary probabilistycznej nie zmienia nierówności) i wartościach f=(2,-3),(-5,1),(0,2),(4,-1) w R^2 z normą maksimum, sprawdzono dokładną arytmetyką całkowitą wszystkie 16 podzbiorów. Półwariację q wyznaczono niezależnie jako maksimum dwóch sum ważonych modułów współrzędnych (skrajne punkty kuli jednostkowej dualnej normy l1). Wyliczono normy całek dla wszystkich 81 mnożników z wartościami -1,0,1 na czterech atomach, sprawdzając 1296 ograniczeń i osiągnięcie q. Ponadto 256 oszacowań różnicy całek przez q różnicy symetrycznej oraz 48 kontroli równości supremum mnożników i nierówności p<=q<=2p (rzeczywisty przypadek). Łącznie 1600 dokładnych kontroli, wszystkie zaliczone. Jest to niezależna kontrola przykładu, nie zastępuje dowodu ogólnego.
+
+## CI i PDF
+Nowy run 45372012894 (head f92b3396518d8d52ab2fb534262a9a503417e06d), job 138368379994: 36/36 testów, 9/9 etapów, 3 przebiegi pdflatex, 145 stron, 1419798 bajtów, artefakt 14908504494. Znany underfull hbox 1127. Diagnostyka zaliczona. Źródło f5d1b39e48918066e8a1bf9dc5460058ef10366f i testy 6345dc13ad8355a26bd81caa9d5e5a2ca53541c5 bez zmian. Oględziny 35 stron z audytu 43 pozostają miarodajne dla tego samego źródła; nie deklarujemy nowych oględzin w 44.
+
+## Decyzja
+15B ustabilizowany: 2/2. Rozdziały 14, 15, 15A pozostają stabilne. Następny audyt 45: rozdział 16 (chapters/pl/functional_analysis/16-funkcjonaly-wypukle-i-podstawy-rachunku-wariacyjnego.tex, aktualny blob 50add5ba467eae14c95775e026a6fc0a1e03f038, 457 wierszy). Pięć podsekcji, rozpocząć od pierwszych dwóch: od pochodnej Frécheta do problemu minimum, zbieżność słaba i metoda bezpośrednia. Dalej subgradienty i rzutowanie proksymalne oraz słabe zagadnienie brzegowe; następnie wypukłe maksima i twierdzenie Kreina–Milmana. Zachować zasadę dwóch punktów na iterację, pierwsza kontrola może wskazać braki konieczne, potem stabilizacja bez rozszerzania zakresu. Zweryfikować niepowielanie wyników rozdziałów wcześniejszych i PDE.
