@@ -575,3 +575,60 @@ class RuntimeTimeoutTests(unittest.TestCase):
         self.assertTrue(issubclass(transport.DockerOutputLimit, ValueError))
         self.assertTrue(issubclass(transport.DockerCommandFailed, ValueError))
         self.assertFalse(issubclass(transport.DockerOutputLimit, transport.DockerCommandFailed))
+
+
+class RuntimeOutputLimitTests(unittest.TestCase):
+    def test_exact_capture_boundary_and_one_byte_over(self):
+        import sys
+        from unittest.mock import patch
+        from backend import lean_draft_transport as transport
+        with patch.object(transport, "MAX_METADATA_BYTES", 8192):
+            for size in (0, 8192):
+                raw = transport._command([sys.executable, "-I", "-c"],
+                                         (f"import sys; sys.stdout.buffer.write(b'x'*{size})",), {})
+                self.assertEqual(raw, b"x" * size)
+            with self.assertRaises(transport.DockerOutputLimit):
+                transport._command([sys.executable, "-I", "-c"],
+                                   ("import sys; sys.stdout.buffer.write(b'x'*8193)",), {})
+
+    def test_combined_stdout_and_stderr_are_bounded(self):
+        import sys
+        from unittest.mock import patch
+        from backend import lean_draft_transport as transport
+        with patch.object(transport, "MAX_METADATA_BYTES", 8192):
+            with self.assertRaises(transport.DockerOutputLimit):
+                transport._command([sys.executable, "-I", "-c"],
+                                   ("import os; os.write(1,b'x'*4096); os.write(2,b'y'*4097)",), {})
+
+    def test_output_fixture_requires_typed_limit_not_other_errors(self):
+        from unittest.mock import patch
+        from scripts import lean_rootless_ci_probe as probe
+        from backend import lean_draft_transport as transport
+        cid, image = "a" * 64, "sha256:" + "b" * 64
+        for failure in (transport.DockerCommandTimeout("timeout"),
+                        transport.DockerCommandFailed("nonzero"), ValueError("other"), None):
+            def command(prefix, args, env):
+                if args[0] == "create":
+                    return cid.encode()
+                if args[:2] == ("container", "start") and failure is not None:
+                    raise failure
+                return b"{}"
+            with self.subTest(failure=failure), \
+                    patch.object(transport, "_command", side_effect=command), \
+                    patch.object(transport, "validate_engine"), \
+                    patch.object(probe.policy, "validate_image_inspection"), \
+                    patch.object(transport, "validate_container"), \
+                    patch.object(probe, "_stop_interrupted_fixture") as stop, \
+                    patch.object(probe, "cleanup_fixture") as cleanup:
+                with self.assertRaises((ValueError, TimeoutError)):
+                    probe.check_runtime_output_limit([], {}, image)
+                stop.assert_not_called()
+                cleanup.assert_called_once()
+
+    def test_output_fixture_is_finite_and_larger_than_capture_limit(self):
+        from scripts.lean_rootless_ci_probe import _OUTPUT_FIXTURE
+        from backend import lean_draft_transport as transport
+        self.assertIn(f"i<{2 * transport.MAX_METADATA_BYTES};", _OUTPUT_FIXTURE)
+        self.assertIn("exec /bin/busybox sleep 90", _OUTPUT_FIXTURE)
+        self.assertNotIn("while", _OUTPUT_FIXTURE)
+        self.assertNotIn("/dev/zero", _OUTPUT_FIXTURE)
