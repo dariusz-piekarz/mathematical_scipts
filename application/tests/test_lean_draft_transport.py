@@ -524,3 +524,54 @@ class RuntimeLifecycleTests(unittest.TestCase):
             self.fail("invalid identity reached daemon")
         with self.assertRaises(ValueError):
             remove_and_confirm(call, "short")
+
+
+class RuntimeTimeoutTests(unittest.TestCase):
+    cid = "a" * 64
+    image = "sha256:" + "b" * 64
+
+    def records(self, *, running=True, cid=None, image=None, code=None):
+        import json
+        return json.dumps([{"Id": self.cid if cid is None else cid,
+                            "Image": self.image if image is None else image,
+                            "State": {"Status": "running" if running else "exited",
+                                      "Running": running, "OOMKilled": False,
+                                      "ExitCode": (0 if running else 137) if code is None else code}}]).encode()
+
+    def test_timeout_requires_running_then_exact_stopped_state(self):
+        from scripts.lean_rootless_ci_probe import stop_timed_out_fixture
+        calls = []
+        def call(*args):
+            calls.append(args)
+            return {1: self.records(), 2: b"", 3: self.records(running=False)}[len(calls)]
+        state = stop_timed_out_fixture(call, self.cid, self.image)
+        self.assertEqual(state, {"running_after_cli_timeout": True,
+                                "container_state": "exited", "exit_code": 137})
+        self.assertEqual(calls, [("container", "inspect", self.cid),
+                                 ("container", "kill", "--signal=KILL", self.cid),
+                                 ("container", "inspect", self.cid)])
+
+    def test_timeout_rejects_wrong_identity_or_already_exited(self):
+        from scripts.lean_rootless_ci_probe import stop_timed_out_fixture
+        for data in (self.records(cid="other"), self.records(image="other"),
+                     self.records(running=False)):
+            def call(*args):
+                self.assertEqual(args, ("container", "inspect", self.cid))
+                return data
+            with self.subTest(data=data), self.assertRaises(ValueError):
+                stop_timed_out_fixture(call, self.cid, self.image)
+
+    def test_timeout_rejects_unconfirmed_stop(self):
+        from scripts.lean_rootless_ci_probe import stop_timed_out_fixture
+        for data in (self.records(), self.records(running=False, code=0),
+                     self.records(running=False, cid="other")):
+            responses = iter((self.records(), b"", data))
+            with self.subTest(data=data), self.assertRaises(ValueError):
+                stop_timed_out_fixture(lambda *args: next(responses), self.cid, self.image)
+
+    def test_transport_errors_are_distinct_and_compatible(self):
+        from backend import lean_draft_transport as transport
+        self.assertTrue(issubclass(transport.DockerCommandTimeout, TimeoutError))
+        self.assertTrue(issubclass(transport.DockerOutputLimit, ValueError))
+        self.assertTrue(issubclass(transport.DockerCommandFailed, ValueError))
+        self.assertFalse(issubclass(transport.DockerOutputLimit, transport.DockerCommandFailed))

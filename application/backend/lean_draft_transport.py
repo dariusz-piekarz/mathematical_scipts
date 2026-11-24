@@ -125,6 +125,18 @@ def _local_socket() -> Path:
     return path
 
 
+class DockerCommandTimeout(TimeoutError):
+    """Local CLI time budget exceeded; no claim about daemon state."""
+
+
+class DockerOutputLimit(ValueError):
+    """Local CLI output exceeded the capture budget."""
+
+
+class DockerCommandFailed(ValueError):
+    """Local CLI returned a nonzero exit code."""
+
+
 def _command(prefix: list[str], args: tuple[str, ...], env: dict[str, str]) -> bytes:
     """Bound wall time and all captured output, with no shell."""
     with subprocess.Popen(prefix + list(args), env=env, stdin=subprocess.DEVNULL,
@@ -139,15 +151,19 @@ def _command(prefix: list[str], args: tuple[str, ...], env: dict[str, str]) -> b
                 while True:
                     remaining = end - time.monotonic()
                     if remaining <= 0 or not sel.select(remaining):
-                        raise TimeoutError("Docker metadata timeout")
+                        raise DockerCommandTimeout("Docker metadata timeout")
                     chunk = os.read(p.stdout.fileno(), 8192)
                     if not chunk:
                         break
                     out.extend(chunk)
                     if len(out) > MAX_METADATA_BYTES:
-                        raise ValueError("Docker metadata exceeds limit")
-            if p.wait(timeout=max(0.01, end-time.monotonic())) != 0:
-                raise ValueError("Docker command failed")
+                        raise DockerOutputLimit("Docker metadata exceeds limit")
+            try:
+                returncode = p.wait(timeout=max(0.01, end-time.monotonic()))
+            except subprocess.TimeoutExpired as exc:
+                raise DockerCommandTimeout("Docker metadata timeout") from exc
+            if returncode != 0:
+                raise DockerCommandFailed("Docker command failed")
             return bytes(out)
         except BaseException:
             # Kill the local CLI group before reaping its leader: a child
