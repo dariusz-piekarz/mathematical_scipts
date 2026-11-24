@@ -32,3 +32,18 @@ Preflight nie dowodzi skuteczności izolacji podczas wykonywania kodu. Zakończe
 - [Rzeczywisty rootless preflight 45424815794](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45424815794), SHA 3720e055f4ac415b67c269b10ae3854d15731ba4, próba 1: success. Wszystkie kroki przeszły, w tym przygotowanie hosta, uruchomienie daemonu, rzeczywista inspekcja i usunięcie kontenera. Docker 28.0.4, Delegate=yes, ControlGroup=/user.slice/user-1001.slice/user@1001.service. Raport: configuration_checked, cleanup_status=removed, execution_allowed=false, proof_status=not_run, certificate=false.
 - Cztery bloby (workflow rootless, transport, polityka runnera i skrypt probe) identyczne z bieżącą gałęzią. Pierwszy sukces nowego workflow potwierdza działanie na tym hoście, ale nie rozstrzyga przyczyny poprzedniej awarii ani powtarzalności.
 - Zlecono drugą próbę joba 138553794864 na niezmienionym SHA. Stan rootless 1/3, aplikacja 3/3 na wcześniej wskazanym niezmienionym kandydacie. Nie uznawać samego zlecenia za zaliczenie. Bez zmian implementacji i bez uruchamiania kodu Lean.
+
+## Kryteria odbioru następnego testu runtime (projekt, nie wykonanie)
+
+Audyt projektu: preflight przed startem nie wystarcza do potwierdzenia egzekwowania ograniczeń. Poniższe wymagania są bramką odbioru następnego podetapu, a nie wynikami testów. Implementację rozpocząć dopiero po stabilizacji obecnego workflow.
+
+| ID regresji | Warunek i obserwowalny dowód |
+|---|---|
+| L156C-RT-01 | Wyłącznie stały, lokalny obraz testowy i znany nieszkodliwy entrypoint, przypięty ID. Walidacja silnika, obrazu i kontenera przed startem, brak danych użytkownika i sieci podczas testu. |
+| L156C-RT-02 | W działającym kontenerze odczytać rzeczywiste cgroup v2: memory.max = 2147483648, memory.swap.max = 0, pids.max = 64, cpu.max z dodatnią kwotą i stosunkiem kwota/okres = 1. Brak odczytu lub rozbieżność blokuje odbiór; same metadane Docker inspect nie wystarczą. Nie prowokować alokacji 2 GiB na współdzielonym runnerze. |
+| L156C-RT-03 | Potwierdzić UID/GID 65534, CapEff=0, NoNewPrivs=1, Seccomp=2. Odczytać rzeczywiste mountinfo: root ro, /tmp rw/noexec/nosuid/nodev; próba zapisu w katalogu przygotowanym z prawami dla UID 65534 na rootfs musi zawieść z EROFS, zapis do /tmp musi się udać. |
+| L156C-RT-04 | Brak interfejsu sieciowego poza loopback i brak domyślnej trasy; bez rzeczywistego odpytywania zewnętrznych serwisów. Zweryfikować brak bind mountów i brak socketu daemonu wewnątrz kontenera. |
+| L156C-RT-05 | Stały fixture emitujący ograniczone wyjście, kończący się błędem i przekraczający krótki limit czasu: osobne przypadki. Wymagać dowodu zatrzymania kontenera w daemonie oraz usunięcia po ID, nie tylko zakończenia lokalnego CLI. Przy niepotwierdzonej identyfikacji lub sprzątaniu status blocked i jawny raport; bez awaryjnego uruchomienia na hoście. |
+| L156C-RT-06 | Raport odrębny od statusu dowodu i manifestu, zawiera SHA checkoutu, ID obrazu, wersję silnika, faktyczne obserwacje i status każdego przypadku. Brak danych = niezaliczone, bez automatycznego podnoszenia certificate. |
+
+To nie jest pełna specyfikacja sandboxa ani test odporności na dowolny złośliwy obraz. Nie uruchamiać niezaufanego Lean. Nadal execution_allowed=false, proof_status=not_run i certificate=false. W tej iteracji nie zmieniono implementacji ani workflow, więc istniejący licznik 2+1 nie ulega resetowi z powodu tego wpisu.
