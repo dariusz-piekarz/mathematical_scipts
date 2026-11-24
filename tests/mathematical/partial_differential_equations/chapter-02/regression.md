@@ -29,6 +29,10 @@ Kryteria semantyczne nie są testami automatycznymi ani formalizacją Lean. Iden
 | PDE-02-022 | thm:pde2-linear | Przedłużenia przez odbicie tylko w przedziałach, w których argument X należy do [0,T]; czynnik całkujący, różniczkowanie pod całką, weryfikacja PDE i danych. | semantyczna |
 | PDE-02-023 | prop:pde-v31-transport-lp | Wskazać klasę rozwiązania i pełne dane początkowe w oszacowaniu norm. | semantyczna |
 | PDE-02-024 | def:pde2-weak | Testy są ograniczeniami funkcji gładkich o zwartym nośniku na (-∞,T)×R, mogą być niezerowe przy t=0; całkowalność u i f(u) obejmuje przekrój początkowy. | semantyczna |
+| PDE-02-025 | ex:pde2-burgers | Rozróżnić t=1, kiedy X_t jest bijekcją, ale nie dyfeomorfizmem C¹, oraz t>1, kiedy X_t nie jest injekcją; uzasadnić monotoniczność i granice. | semantyczna |
+| PDE-02-026 | prop:pde2-rh | Jawnie określone dziedziny po obu stronach skoku oraz precyzyjna klasa śladów testowych wystarczających do dowodu konieczności. | semantyczna |
+| PDE-02-027 | ex:pde2-rarefaction | Jawne rzeczywiste stany danych Riemanna; dowód słabego rozwiązania skokowego z tymi samymi danymi, dokładna norma L¹ różnicy | semantyczna |
+| PDE-02-028 | sec:pde2-shocks | Wykazać różność fali rozrzedzenia i skoku na zbiorze dodatniej miary; nie utożsamiać warunku Rankine'a–Hugoniota z warunkiem entropijnym. | semantyczna |
 
 ## Pierwszy właściwy przebieg — 2026-11-24
 
@@ -51,3 +55,6 @@ Poprawki 016–019 w commicie 79f47c64f338247502dbb15f8b761eb892292550. Sprawdzo
 
 ## Pierwszy przebieg stabilizacyjny — 2026-11-24 (iteracja 20)
 Poprawki 020–024: c87f9159554a77ca552052f2fe5f3547039c99f1. Ponowna kontrola początkowych sekcji, warunków brzegowych czasu i definicji rozwiązania słabego; zachowano 51 etykiet, 62 rozwiązywalne odsyłacze (w tym zewnętrzny cel chap:pde-code), poprawne zagnieżdżenie środowisk. Lokalnie ponownie uruchomiono sześć testów z pliku o Git blob SHA 805ac866415f304d7df385a0c0d4530db0a25c92: 6/6 OK. Przebieg CI 45424483056: testy i struktura success, kompilacja failure z powodu użycia polecenia newlabel po begin{document} w generowanym dokumencie, bez renderów. Poprawiono generator w commicie 8e4c40a885c751f553bf059cf1f35e619ad04f02, definiując etykietę w preambule przez @namedef. Lokalna minimalna próba pdflatex (dwa przebiegi) potwierdziła rozdział 2 i odsyłacz 33; hyperref sygnalizuje celowo pominięty link o pustym celu. To nie jest pełna kompilacja rozdziału. W tej iteracji nie wykonano pełnej kontroli wizualnej ani Lean. Przebieg nie jest czysty, ponieważ wykryto i poprawiono usterki; rozdział pozostaje otwarty.
+
+## Drugi przebieg stabilizacyjny — 2026-11-24 (iteracja 21)
+Poprawki 025–028 w commicie 6cf615b990c00d3e07106e86fa3f487b3fc7fd6f. Ponowny przegląd fal prostych i słabych rozwiązań wykazał potrzebę rozróżnienia degeneracji i utraty injektywności w przykładzie Burgersa oraz uzupełnienia dowodu niejednoznaczności słabych rozwiązań z danymi Riemanna. Sprawdzono zmienione argumenty, 51 etykiet, 62 wystąpienia odsyłaczy (cel zewnętrzny chap:pde-code) i zagnieżdżenie środowisk. W chwili kontroli przebiegi 45424909702, 45424993109 i 45425074555 rozpoczęte; pełna kompilacja nowego źródła i wizualny audyt niepotwierdzone. W tej iteracji nie uruchomiono lokalnie testów Python ani Lean. Przebieg nie jest czysty; rozdział otwarty.
