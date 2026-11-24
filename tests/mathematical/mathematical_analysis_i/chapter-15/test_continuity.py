@@ -88,4 +88,27 @@ class Chapter15(TestCase):
                     self.assertEqual(y*y-x*x,(y-x)*(y+x))
                     self.assertGreater(y*y-x*x,0)
 
+    def test_relative_representation_and_complement(self):
+        # Finite rational witnesses for the intersection/union identities.
+        X={F(k,4) for k in range(-12,13)}
+        A={x for x in X if 0<=x<=2}
+        U={x for x in A if x<F(3,2)}
+        V=set()
+        for p in U:
+            r=F(3,2)-p
+            V.update(x for x in X if abs(x-p)<r)
+        self.assertEqual(A & V,U)
+        self.assertEqual(A-U,A & (X-V))
+        self.assertEqual(A & set(),set())
+
+    def test_distance_estimate_for_inverse(self):
+        # Reverse triangle inequality used on the further subsequence.
+        z,x=F(3,2),F(-1,2)
+        eps=F(1)
+        for n in range(1,101):
+            u=z+F(1,n)
+            self.assertLessEqual(eps,abs(u-x))
+            self.assertLessEqual(abs(u-x),abs(u-z)+abs(z-x))
+            self.assertLessEqual(abs(abs(u-x)-abs(z-x)),abs(u-z))
+
 if __name__ == "__main__": main()
