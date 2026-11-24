@@ -8,6 +8,7 @@ starts the fixed harmless fixture to observe cgroup, security and network state.
 from __future__ import annotations
 
 import json
+import os
 import re
 from pathlib import Path
 import shutil
@@ -483,7 +484,124 @@ def check_runtime_limits(prefix: list[str], env: dict[str, str], image_id: str) 
             "execution_allowed": False, "proof_status": "not_run", "certificate": False}
 
 
+
+_REPORT_CASES = {
+    "preflight": ("configuration_checked", None),
+    "normal": ("runtime_limits_security_network_checked", 0),
+    "controlled_failure": ("controlled_failure_checked", 42),
+    "timeout": ("timeout_checked", 137),
+    "output_limit": ("output_limit_checked", 137),
+}
+_REPORT_FLAGS = {"execution_allowed": False, "proof_status": "not_run", "certificate": False}
+_REPORT_NET = {"net.interfaces": "lo", "net.ipv4_default": "absent",
+               "net.ipv6_usable_default": "absent", "net.docker_socket": "absent"}
+
+
+def _exact_fields(value: object, fields: dict) -> None:
+    if type(value) is not dict or any(type(value.get(k)) is not type(v) or value[k] != v
+                                     for k, v in fields.items()):
+        raise ValueError("Unexpected report field value or type")
+
+
+def _version(value: object) -> str:
+    if type(value) is not str or not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+[A-Za-z0-9.+_-]{0,80}", value):
+        raise ValueError("Invalid Docker version")
+    return value
+
+
+def report_engine_versions(records: object) -> dict:
+    if type(records) is not dict or any(type(records.get(k)) is not dict for k in ("Client", "Server")):
+        raise ValueError("Missing Docker client/server version")
+    return {"client": _version(records["Client"].get("Version")),
+            "server": _version(records["Server"].get("Version"))}
+
+
+def validate_report_observations(values: object) -> None:
+    """Validate the already-derived summary; not a substitute for raw kernel reads."""
+    cgroup = {"memory.max", "memory.swap.max", "pids.max", "cpu.max"}
+    security = {"Uid", "Gid", "CapEff", "NoNewPrivs", "Seccomp", "root.write",
+                "tmp.write", "tmp.owner_mode", "root.mountopts", "tmp.mountopts"}
+    net_counts = {"net.ipv4_rows", "net.ipv6_rows"}
+    if type(values) is not dict or set(values) != cgroup | security | set(_REPORT_NET) | net_counts:
+        raise ValueError("Incomplete report observations")
+    for group, validator in ((cgroup, validate_runtime_limits), (security, validate_runtime_security)):
+        if any(type(values[k]) is not str or not values[k].isascii() or
+               "\n" in values[k] or "\r" in values[k] for k in group):
+            raise ValueError("Malformed report observation")
+        validator("\n".join(k + "=" + values[k] for k in sorted(group)).encode("ascii"))
+    _exact_fields(values, _REPORT_NET)
+    if (type(values["net.ipv4_rows"]) is not int or values["net.ipv4_rows"] < 0
+            or type(values["net.ipv6_rows"]) is not int or values["net.ipv6_rows"] < 1):
+        raise ValueError("Invalid report route counts")
+
+
+def validate_success_report(report: object, *, expected_sha: str) -> None:
+    """Strict successful-report contract for the fixed CI fixture only."""
+    if type(expected_sha) is not str or not re.fullmatch(r"[0-9a-f]{40}", expected_sha):
+        raise ValueError("Invalid expected checkout SHA")
+    fields = {"schema_version": 1, "checkout_sha": expected_sha,
+              "status": "runtime_checks_passed", **_REPORT_FLAGS}
+    _exact_fields(report, fields)
+    if set(report) != set(fields) | {"docker", "cases"}:
+        raise ValueError("Unexpected report keys")
+    versions = report["docker"]
+    if type(versions) is not dict or set(versions) != {"client", "server"}:
+        raise ValueError("Missing report versions")
+    for version in versions.values():
+        _version(version)
+    cases = report["cases"]
+    if type(cases) is not dict or set(cases) != set(_REPORT_CASES):
+        raise ValueError("Missing or unexpected report cases")
+    image_ids, container_ids = set(), set()
+    for name, (status, exit_code) in _REPORT_CASES.items():
+        record = cases[name]
+        expected = {"status": status, **_REPORT_FLAGS,
+                    "cleanup_status": "removed" if exit_code is None else "removed_verified"}
+        if exit_code is not None:
+            expected.update(container_state="exited", exit_code=exit_code)
+        if name == "timeout":
+            expected.update(running_after_cli_timeout=True, cli_timeout_seconds=transport.COMMAND_TIMEOUT)
+        if name == "output_limit":
+            expected.update(running_after_cli_output_limit=True, capture_limit_bytes=transport.MAX_METADATA_BYTES)
+        _exact_fields(record, expected)
+        keys = set(expected) | {"image_id"}
+        if exit_code is not None:
+            keys.add("container_id")
+        if name == "normal":
+            keys.add("observations")
+        if set(record) != keys:
+            raise ValueError("Unexpected report case keys")
+        image = record["image_id"]
+        if type(image) is not str or not policy._IMAGE.fullmatch(image):
+            raise ValueError("Invalid report image ID")
+        if name != "preflight":
+            cid = record["container_id"]
+            if type(cid) is not str or not transport._CONTAINER_ID.fullmatch(cid) or cid in container_ids:
+                raise ValueError("Invalid or repeated report container ID")
+            if image in image_ids:
+                raise ValueError("Repeated runtime image ID")
+            container_ids.add(cid)
+            image_ids.add(image)
+        if name == "normal":
+            validate_report_observations(record["observations"])
+    if cases["normal"]["image_id"] != cases["preflight"]["image_id"]:
+        raise ValueError("Preflight and normal fixture image mismatch")
+
+
+def build_success_report(*, checkout_sha: str, expected_sha: str, docker: dict, cases: dict) -> dict:
+    report = {"schema_version": 1, "checkout_sha": checkout_sha,
+              "status": "runtime_checks_passed", **_REPORT_FLAGS, "docker": docker, "cases": cases}
+    validate_success_report(report, expected_sha=expected_sha)
+    return report
+
+
 def main() -> int:
+    expected_sha = os.environ.get("GITHUB_SHA", "")
+    checkout_sha = subprocess.check_output(["git", "rev-parse", "HEAD"],
+                                           cwd=Path(__file__).resolve().parents[2],
+                                           timeout=5).decode("ascii").strip()
+    if not re.fullmatch(r"[0-9a-f]{40}", expected_sha) or checkout_sha != expected_sha:
+        raise ValueError("CI checkout identity mismatch")
     socket = transport._local_socket()
     with tempfile.TemporaryDirectory(prefix="atlas-rootless-fixture-") as directory:
         root = Path(directory)
@@ -521,6 +639,8 @@ def main() -> int:
         info = transport._decode_metadata(transport._command(
             prefix, ("info", "--format", "{{json .}}"), env))
         transport.validate_engine(info)
+        versions = report_engine_versions(transport._decode_metadata(transport._command(
+            prefix, ("version", "--format", "{{json .}}"), env)))
         iid = root / "image-id"
         subprocess.run(prefix + ["build", "--network=none", "--pull=false",
                                  "--iidfile", str(iid), str(context)],
@@ -583,6 +703,11 @@ def main() -> int:
             print("ATLAS_ROOTLESS_OUTPUT " + json.dumps(output, sort_keys=True), flush=True)
         finally:
             transport._command(prefix, ("image", "rm", output_image), env)
+        report = build_success_report(checkout_sha=checkout_sha, expected_sha=expected_sha,
+                                      docker=versions, cases={"preflight": result, "normal": runtime,
+                                      "controlled_failure": failure, "timeout": timeout,
+                                      "output_limit": output})
+        print("ATLAS_ROOTLESS_REPORT " + json.dumps(report, sort_keys=True), flush=True)
         return 0
 
 
