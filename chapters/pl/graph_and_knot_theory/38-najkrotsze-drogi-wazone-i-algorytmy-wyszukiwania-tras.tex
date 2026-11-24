@@ -26,8 +26,11 @@ Graf nieskierowany modelujemy dwoma przeciwnymi
 Dla $s,t\in V$ niech $\delta(s,t)$ oznacza infimum
 wag skierowanych spacerów z $s$ do $t$.
 Gdy nie ma takiego spaceru, przyjmujemy $+\infty$.
-Gdy istnieje osiągalny z $s$ cykl o ujemnej wadze,
-z którego można dojść do $t$, przyjmujemy $-\infty$.
+Jeśli istnieje cykl o ujemnej wadze osiągalny z $s$,
+z którego można dojść do $t$, infimum wynosi $-\infty$:
+spacer do cyklu, $k$ jego obiegów i dalszy spacer do $t$
+mają łączną wagę $a+kb$ dla pewnych $a\in\mathbb R$,
+$b<0$ i każdego całkowitego $k\geq0$.
 \end{definicja}
 
 \begin{lemat}[Realizacja odległości]
@@ -44,10 +47,12 @@ tego samego wierzchołka. Jego wnętrze nie zawiera
 powtórzeń, więc fragment jest cyklem skierowanym.
 Jest osiągalny z $s$ i można z niego dojść do $t$,
 a zatem ma wagę nieujemną. Usuwamy go bez
-zwiększania kosztu. Po skończenie wielu
-usunięciach otrzymamy ścieżkę prostą.
-Ponieważ graf ma skończenie wiele ścieżek
-prostych, najmniejszy koszt jest osiągany.
+zwiększania kosztu. Po skończonej liczbie
+usunięć otrzymamy ścieżkę prostą (dla $s=t$ może być pusta).
+Ponieważ graf ma skończenie wiele ścieżek prostych,
+istnieje najmniejsza ich waga. Jest ona nie większa od wagi
+dowolnego spaceru i sama jest wagą pewnego spaceru,
+więc równa się infimum $\delta(s,t)$.
 \end{proof}
 
 \begin{definicja}[Relaksacja łuku]
@@ -99,13 +104,19 @@ wartość $+\infty$.
 \end{twierdzenie}
 \begin{proof}
 Indukcja po liczbie ustalonych wierzchołków.
-Początkowo $s$ ma poprawną odległość zero.
+Początkowo jedynie $s$ ma skończoną etykietę,
+więc jest ustalany jako pierwszy. Nieujemność wag
+i spacer pusty dają $d[s]=0=\delta(s,s)$.
 Gdyby kolejny ustalany wierzchołek $v$
 miał $d[v]>\delta(s,v)$, wybierzmy
 najkrótszą ścieżkę z $s$ do $v$
 i jej pierwszy nieustalony wierzchołek $y$.
 Jego poprzednik $x$ jest już ustalony.
-Po relaksacji łuku $x\to y$ otrzymujemy
+Każdy prefiks wybranej najkrótszej ścieżki jest
+najkrótszym spacerem do swego końca: tańszy spacer
+można byłoby połączyć z pozostałym fragmentem ścieżki,
+uzyskując tańszy spacer do $v$.
+Po relaksacji łuku $x\to y$ otrzymujemy zatem
 $d[y]\leq\delta(s,x)+w(x,y)=\delta(s,y)$.
 Lemat \ref{lem:tg-weighted-walk} daje
 równość. Nieujemne wagi dalszej części
@@ -193,9 +204,16 @@ $O(nm+n)$, pamięć pomocnicza $O(n)$.
 \begin{proof}
 Po $k$ przebiegach dla każdej ścieżki
 o co najwyżej $k$ łukach jej koszt
-jest nie mniejszy od bieżącego $d$
-na końcu ścieżki: dowód przez indukcję
-po $k$ i relaksację ostatniego łuku.
+jest nie mniejszy od bieżącej etykiety
+na końcu ścieżki. Dla $k=0$ wynika to z inicjalizacji.
+Jeśli ścieżka ma dokładnie $k$ łuków i kończy się
+łukiem $u\to v$, to na początku $k$-tego przebiegu
+etykieta $d[u]$ nie przekracza wagi jej prefiksu
+na mocy założenia indukcyjnego. Etykiety nigdy
+nie rosną, więc podczas relaksacji ostatniego łuku
+$d[v]$ staje się nie większe od wagi całej ścieżki.
+Ścieżki krótsze niż $k$ są już uwzględnione
+na mocy założenia indukcyjnego.
 Przy braku ujemnych cykli wystarczy
 uwzględnić ścieżki proste z co
 najwyżej $n-1$ łukami.
@@ -395,13 +413,33 @@ przy braku ujemnych cykli.
 Ścieżka optymalna albo pomija $k$,
 albo rozcina się w $k$ na dwa
 fragmenty, co daje rekurencję.
-Ujemny element przekątnej
-odpowiada ujemnemu zamkniętemu
-spacerowi, zatem zawiera ujemny cykl.
-Z drugiej strony obecność ujemnego
-cyklu daje ujemną wartość
-na przekątnej po dopuszczeniu
-wszystkich wierzchołków.
+Niezależnie od obecności ujemnych cykli każda
+skończona etykieta jest wagą pewnego spaceru.
+Wynika to przez indukcję z inicjalizacji i z faktu,
+że drugi składnik minimum jest wagą złożenia dwóch
+spacerów. Ujemny element przekątnej odpowiada zatem
+ujemnemu spacerowi zamkniętemu. Rozkładając go
+przez kolejne usuwanie cykli prostych, otrzymujemy
+co najmniej jeden cykl ujemny, gdyż suma ich wag
+jest ujemna.
+
+Odwrotnie, dla dowolnego prostego skierowanego
+cyklu lub ścieżki prostej od $i$ do $j$, której
+wewnętrzne wierzchołki mają numery co najwyżej $k$,
+etykieta $d^{(k)}_{ij}$ nie przekracza jej wagi.
+Dowód indukcyjny nie wymaga nieujemności cykli:
+dla $k=0$ mamy pojedynczy łuk lub spacer pusty.
+Jeśli wierzchołek $k$ nie jest wewnętrzny, korzystamy
+z pierwszego składnika minimum. W przeciwnym razie
+występuje wewnątrz dokładnie raz; rozcinamy w nim
+ścieżkę lub cykl na dwie ścieżki proste i stosujemy
+założenie indukcyjne do obu. Dla ujemnego cyklu
+zaczynającego się w $i$ otrzymujemy w szczególności
+$d^{(n)}_{ii}\leq w(C)<0$.
+
+Do obliczenia jednej warstwy potrzebujemy wyłącznie
+warstwy poprzedniej: dwie macierze zajmują $O(n^2)$
+pamięci, a każda z $n$ warstw wymaga $O(n^2)$ operacji.
 \end{proof}
 
 \section{Algorytm A* i poprawna heurystyka}
