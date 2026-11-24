@@ -162,7 +162,14 @@ class FrobeniusReductionInterface(unittest.TestCase):
     def test_source_labels_references_and_required_assumptions(self):
         folder=ROOT/"chapters/pl/abstract_algebra"
         files=sorted(folder.glob("[0-9][0-9]-*.tex"))
-        self.assertEqual(len(files),67)
+        import json
+        root = Path(__file__).resolve().parents[2]
+        catalog = json.loads((root / "catalog/books.json").read_text(encoding="utf-8"))
+        expected = next(book["chapters"] for book in catalog["books"]
+                        if book["id"] == "abstract_algebra" and book["language"] == "pl")
+        self.assertGreaterEqual(len(expected), 67)
+        self.assertEqual(sorted(p.relative_to(root).as_posix() for p in files),
+                         sorted(expected))
         contents={p.name:p.read_text(encoding="utf8") for p in files}
         all_labels=[z for text in contents.values()
                     for z in re.findall(r"\\label\{([^{}]+)\}",text)]
