@@ -155,9 +155,9 @@ def _command(prefix: list[str], args: tuple[str, ...], env: dict[str, str]) -> b
                     chunk = os.read(p.stdout.fileno(), 8192)
                     if not chunk:
                         break
-                    out.extend(chunk)
-                    if len(out) > MAX_METADATA_BYTES:
+                    if len(chunk) > MAX_METADATA_BYTES - len(out):
                         raise DockerOutputLimit("Docker metadata exceeds limit")
+                    out.extend(chunk)
             try:
                 returncode = p.wait(timeout=max(0.01, end-time.monotonic()))
             except subprocess.TimeoutExpired as exc:
