@@ -235,3 +235,7 @@ AA-60: reprezentacje sl2 i struktura układów korzeni. AA-01–59 stabilne, **A
 ## Otwarcie AA-61 — 24 listopada 2026 r.
 
 AA-61: generatory półprostych algebr Liego i relacje Serre'a, zakres docs/pl/zakres_aa61_generatory_serre.md. AA-01–60 stabilne, **AA-61 W AUDYCIE**, AA-62 nieotwarty. Rozkład trójkątny, generatory, składowe proste, konieczne relacje Serre'a; bez twierdzenia o prezentacji i klasyfikacji. Integracja regresji i CI do potwierdzenia.
+
+## Zamknięcie AA-61 — 24 listopada 2026 r.
+
+**AA-61 STABILNY w ustalonym zakresie; etapy D/P zaliczone.** Audyty III–IV czyste, oba zestawy regresji zaliczone, korekty typograficzne V potwierdzone. CI [45387901864](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45387901864): 132/132 success, head 3c2584be2ebb7256b6e22123822c2a388d7da8a5, blob 76c35df11718f562aa5a6cf121c7e0d4fdb9dcc0. Artefakt 14916778780, PDF 394 strony, AA-61 fizyczne 390–394 (drukowane 378–382), wszystkie obejrzane, log czysty. Raport `audits/abstract_algebra/ch61_iteration_06.md`. AA-01–61 stabilne. **AA-62 nieotwarty**; kolejny etap D obejmuje nowy materiał o prezentacji Serre'a i drodze do klasyfikacji oraz kompleksowe audyty stabilizacyjne w tej samej iteracji.
