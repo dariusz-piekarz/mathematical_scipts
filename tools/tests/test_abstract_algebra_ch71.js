@@ -70,3 +70,49 @@ for(const [name,C,d,order,N] of specs){
  systems++;
 }
 console.log("AA-71-DIM-01: PASS",{systems,models,moments,orbitTerms,dimensionChecks,independentDimensions,adjoints});
+
+// AA-71-DIM-02: aa:cor:weyl-dimension-polynomial and examples.
+// Finite differences of exact dimensions along interior and wall rays.
+function checkRays71(){
+ let rays=0,wallRays=0,zeroRays=0,strictRays=0,values=0,degreeChecks=0,exampleChecks=0;
+ for(const [name,C,d,order,N] of specs){
+  const r=C.length,unit=i=>Array.from({length:r},(_,j)=>+(i===j));
+  const roots=Array.from({length:r},(_,i)=>unit(i)),seen=new Set(roots.map(key));
+  for(let k=0;k<roots.length;k++)for(let i=0;i<r;i++){
+   const v=[...roots[k]];
+   v[i]-=C[i].reduce((s,c,j)=>s+c*v[j],0);
+   if(!seen.has(key(v))){seen.add(key(v));roots.push(v)}
+  }
+  const pos=roots.filter(v=>v.every(x=>x>=0));
+  const pair=(v,a)=>BigInt(a.reduce((s,x,i)=>s+x*d[i]*v[i],0));
+  const rho=Array(r).fill(1),den=pos.reduce((p,a)=>p*pair(rho,a),1n);
+  assert(den>0n,name+" positive denominator");
+  function dim(v){const num=pos.reduce((p,a)=>p*pair(v.map(x=>x+1),a),1n);assert(num%den===0n,name+" integer dimension");return num/den}
+  function ray(v){
+   const degree=pos.filter(a=>pair(v,a)>0n).length;
+   let dif=Array.from({length:N+3},(_,m)=>dim(v.map(x=>m*x)));
+   assert(dif[0]===1n,name+" trivial module");
+   values+=dif.length;
+   for(let k=0;k<=degree;k++) {
+    assert(dif[0]>0n,name+" positive forward difference");
+    dif=dif.slice(1).map((x,i)=>x-dif[i]);
+   }
+   assert(dif.every(x=>x===0n),name+" exact degree");
+   degreeChecks++;
+   if(v.every(x=>x===0)){assert(degree===0,name+" zero degree");zeroRays++}
+   else if(v.every(x=>x>0)){assert(degree===N,name+" strict degree");strictRays++}
+   else {assert(degree>0&&degree<N,name+" wall degree");wallRays++}
+   rays++;
+  }
+  const grid=[];function fill(v){if(v.length===r){grid.push(v);return}for(let i=0;i<=2;i++)fill([...v,i])}fill([]);
+  for(const v of grid)ray(v);
+  if(name==="B2"||name==="G2")for(let a=0n;a<=8n;a++)for(let b=0n;b<=8n;b++){
+   let expected;
+   if(name==="B2")expected=(a+1n)*(b+1n)*(a+2n*b+3n)*(a+b+2n)/6n;
+   else expected=(a+1n)*(b+1n)*(a+b+2n)*(a+2n*b+3n)*(a+3n*b+4n)*(2n*a+3n*b+5n)/120n;
+   assert(dim([Number(a),Number(b)])===expected,name+" printed formula");exampleChecks++;
+  }
+ }
+ return {rays,wallRays,zeroRays,strictRays,values,degreeChecks,exampleChecks};
+}
+console.log("AA-71-DIM-02: PASS",checkRays71());
