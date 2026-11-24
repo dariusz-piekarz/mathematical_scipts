@@ -99,7 +99,7 @@ class TestChapter15B(unittest.TestCase):
     def test_dunford_and_gelfand_theorems_are_self_contained(self):
         source = SOURCE.read_text(encoding="utf-8")
         for label, symbols in (
-            ("thm:dunford-closedgraph15b", ("$f:S", "$x'\circ f", "$D_A(x')", "$X''$")),
+            ("thm:dunford-closedgraph15b", ("$f:S", "$x'\circ f", "$D_A(x')", r"\in X''")),
             ("thm:gelfand-exists15b", ("$f:S", "$g_A(y)", "$Y'$", r"\sigma(Y',Y)")),
         ):
             start = source.index(r"\label{" + label + "}")
