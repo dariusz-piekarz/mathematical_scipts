@@ -31,8 +31,7 @@ def validate_engine(info: object) -> None:
     opts = info.get("SecurityOptions")
     if (type(opts) is not list or any(type(x) is not str for x in opts)
             or "name=rootless" not in opts
-            or not any(x.startswith("name=seccomp,profile=") and
-                       x != "name=seccomp,profile=unconfined" for x in opts)):
+            or [x for x in opts if x.startswith("name=seccomp")] != ["name=seccomp,profile=builtin"]):
         raise ValueError("Rootless engine with seccomp required")
     if info.get("OSType") != "linux" or info.get("CgroupVersion") != "2":
         raise ValueError("Linux cgroup v2 required")
@@ -42,7 +41,9 @@ def validate_engine(info: object) -> None:
 
 
 def validate_container(records: object, *, container_id: str, image_id: str, name: str) -> None:
-    if (not _CONTAINER_ID.fullmatch(container_id) or
+    if (type(container_id) is not str or not _CONTAINER_ID.fullmatch(container_id) or
+            type(image_id) is not str or not policy._IMAGE.fullmatch(image_id) or
+            type(name) is not str or not policy._NAME.fullmatch(name) or
             type(records) is not list or len(records) != 1 or type(records[0]) is not dict):
         raise ValueError("Invalid container inspection")
     r = records[0]
@@ -62,18 +63,40 @@ def validate_container(records: object, *, container_id: str, image_id: str, nam
     for key, value in expected.items():
         if type(host.get(key)) is not type(value) or host[key] != value:
             raise ValueError("Unexpected container setting: " + key)
-    if host.get("CapDrop") != ["ALL"] or "no-new-privileges" not in host.get("SecurityOpt", []):
+    if (host.get("CapDrop") != ["ALL"] or host.get("SecurityOpt") not in
+            (["no-new-privileges"], ["no-new-privileges:true"], ["no-new-privileges=true"])):
         raise ValueError("Missing container privilege restriction")
-    for key in ("Binds", "Mounts", "Devices", "DeviceRequests", "CapAdd", "PortBindings"):
+    for key in ("Binds", "Mounts", "Devices", "DeviceRequests", "CapAdd", "PortBindings",
+                "VolumesFrom", "Links", "DeviceCgroupRules", "GroupAdd", "ExtraHosts"):
         if host.get(key) not in (None, [], {}):
             raise ValueError("Unexpected host access: " + key)
-    if r.get("Mounts") not in ([], None):
+    if r.get("Mounts") != []:
         raise ValueError("Unexpected container mounts")
     if host.get("Tmpfs") != {"/tmp": "rw,noexec,nosuid,nodev,size=16777216"}:
         raise ValueError("Unexpected tmpfs configuration")
-    if host.get("RestartPolicy", {}).get("Name") != "no":
+    for key in ("PidMode", "UTSMode", "UsernsMode"):
+        # Docker represents default private namespaces as empty strings.
+        if host.get(key) != "":
+            raise ValueError("Unexpected namespace: " + key)
+    if host.get("PublishAllPorts") is not False or host.get("AutoRemove") is not False:
+        raise ValueError("Unexpected lifecycle or published ports")
+    limits = host.get("Ulimits")
+    if type(limits) is not list or len(limits) != 2:
+        raise ValueError("Missing explicit ulimits")
+    seen = {}
+    for limit in limits:
+        if (type(limit) is not dict or set(limit) != {"Name", "Soft", "Hard"}
+                or type(limit["Name"]) is not str
+                or type(limit["Soft"]) is not int or type(limit["Hard"]) is not int
+                or limit["Name"] in seen):
+            raise ValueError("Malformed ulimit")
+        seen[limit["Name"]] = (limit["Soft"], limit["Hard"])
+    if seen != {"nofile": (256, 256), "core": (0, 0)}:
+        raise ValueError("Unexpected ulimits")
+    restart, log = host.get("RestartPolicy"), host.get("LogConfig")
+    if type(restart) is not dict or restart.get("Name") != "no":
         raise ValueError("Restart forbidden")
-    if host.get("LogConfig", {}).get("Type") != "none":
+    if type(log) is not dict or log.get("Type") != "none":
         raise ValueError("Persistent log forbidden")
     if cfg.get("User") != "65534:65534" or cfg.get("WorkingDir") != "/tmp":
         raise ValueError("Unexpected user or directory")
@@ -131,18 +154,33 @@ def _command(prefix: list[str], args: tuple[str, ...], env: dict[str, str]) -> b
                 p.wait(timeout=5)
 
 
+def _decode_metadata(data: bytes):
+    def unique(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError("Duplicate Docker metadata member")
+            result[key] = value
+        return result
+    def invalid_constant(_):
+        raise ValueError("Invalid JSON constant")
+    return json.loads(data, object_pairs_hook=unique, parse_constant=invalid_constant)
+
+
 def probe(approved_image_id: str) -> dict:
     """Administrator-only preflight, not an application endpoint.
 
     Success means configuration inspection only. No container start, no
     payload, no proof status update. A failed create can leave an inert probe;
-    cleanup by random name is attempted even if its ID was not returned.
+    cleanup uses only the ID returned by create, never a possibly unrelated
+    name. An ambiguous create is reported for administrative reconciliation.
     """
     result = {"status": "blocked", "execution_allowed": False,
               "proof_status": "not_run", "certificate": False}
     if type(approved_image_id) is not str or not policy._IMAGE.fullmatch(approved_image_id):
         return {**result, "error": "invalid_approved_image"}
     name = "atlas-draft-" + uuid.uuid4().hex
+    cleanup = "not_created"
     try:
         socket = _local_socket()
         with tempfile.TemporaryDirectory(prefix="atlas-docker-config-") as directory:
@@ -150,19 +188,27 @@ def probe(approved_image_id: str) -> dict:
             env = {"PATH": "/usr/bin:/bin", "HOME": directory, "LANG": "C"}
             def call(*args):
                 return _command(prefix, args, env)
-            validate_engine(json.loads(call("info", "--format", "{{json .}}")))
-            policy.validate_image_inspection(json.loads(call("image", "inspect", approved_image_id)),
+            validate_engine(_decode_metadata(call("info", "--format", "{{json .}}")))
+            policy.validate_image_inspection(_decode_metadata(call("image", "inspect", approved_image_id)),
                                              approved_image_id=approved_image_id)
+            cid = None
+            cleanup = "create_outcome_unknown"
             try:
-                cid = call(*policy.isolation_arguments(image_id=approved_image_id,
+                raw_id = call(*policy.isolation_arguments(image_id=approved_image_id,
                                                         container_name=name)).decode("ascii").strip()
-                if not _CONTAINER_ID.fullmatch(cid):
+                if not _CONTAINER_ID.fullmatch(raw_id):
                     raise ValueError("Invalid create response")
-                validate_container(json.loads(call("container", "inspect", cid)),
+                cid = raw_id
+                cleanup = "removal_unconfirmed"
+                validate_container(_decode_metadata(call("container", "inspect", cid)),
                                    container_id=cid, image_id=approved_image_id, name=name)
             finally:
                 # Never start a probe. Failure to remove blocks success.
-                call("container", "rm", name)
-    except (OSError, ValueError, TimeoutError, subprocess.SubprocessError):
-        return {**result, "error": "preflight_failed"}
-    return {**result, "status": "configuration_checked", "image_id": approved_image_id}
+                if cid is not None:
+                    call("container", "rm", cid)
+                    cleanup = "removed"
+    except (OSError, ValueError, RecursionError, subprocess.SubprocessError):
+        return {**result, "error": "preflight_failed", "cleanup_status": cleanup,
+                **({"probe_name": name} if cleanup in ("create_outcome_unknown", "removal_unconfirmed") else {})}
+    return {**result, "status": "configuration_checked", "image_id": approved_image_id,
+            "cleanup_status": cleanup}
