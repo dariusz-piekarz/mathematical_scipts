@@ -1,0 +1,5 @@
+# Rozdział 01 — audyt indywidualny 08
+
+2026-11-24. Commit źródła 185f2efb570bb05b7b1c93226535f86b7107c212. Nie zmieniano źródła. Terminologia, algorytmy i kontrola aplikacji dla tego SHA: success. Przebieg globalny 45349165036: structural-audit success; pełny PDF nadal w toku przy kontroli, brak artefaktu PDF. Lokalny checkout nie jest możliwy z powodu niedostępności DNS github.com, zatem nie deklaruje się lokalnej kompilacji całego rozdziału.
+
+Niezależne kontrole JavaScript wszystkich 1100 grafów prostych na 0–5 etykietowanych wierzchołkach: odległości obliczone algorytmem Floyda–Warshalla porównano z enumeracją wszystkich ścieżek prostych, w tym odległości nieskończone i zerowe; 26705 par, zgodność i symetria PASS. Nierówność trójkąta dla 109421 uporządkowanych trójek w obrębie składowych PASS. Potęgi macierzy sąsiedztwa od 0 do 4 obliczone przez mnożenie porównano z bezpośrednią enumeracją spacerów odpowiedniej długości: 133525 elementów macierzy, PASS. Testy pomocnicze nie zastępują dowodów. Nie znaleziono potrzeby poprawek matematycznych. Status OTWARTY do uzyskania i obejrzenia pełnego PDF z aktualnym źródłem. Rozdziału 02 nie rozpoczęto.
