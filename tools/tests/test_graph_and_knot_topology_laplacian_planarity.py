@@ -790,6 +790,71 @@ def audit_multigraph_faces():
     return graphs,rotations,planar,deletions,colorings
 
 
+def audit_planar_girth():
+    """TG09-GIRTH-01: shortest cycles by edge deletion, facial walks and equality."""
+    cases=cyclic=faces_checked=equal=tree_equal=0
+    def check(n,E):
+        nonlocal cases,cyclic,faces_checked,equal,tree_equal
+        if not is_connected(n,E):
+            return
+        faces,_=planar_rotation(n,E)
+        if faces is None:
+            return
+        cases+=1
+        lengths=list(map(len,faces))
+        m=len(E)
+        assert sum(lengths)==2*m
+        # Shortest cycle through a named edge: shortest path after deletion.
+        candidates=[]
+        for j,(u,v) in enumerate(E):
+            adj=[[] for _ in range(n)]
+            for k,(a,b) in enumerate(E):
+                if k!=j:
+                    adj[a].append(b);adj[b].append(a)
+            distance={u:0}
+            queue=[u]
+            for x in queue:
+                for y in adj[x]:
+                    if y not in distance:
+                        distance[y]=distance[x]+1
+                        queue.append(y)
+            if v in distance:
+                candidates.append(distance[v]+1)
+        if not candidates:
+            assert m==n-1 and len(faces)==1
+            if n>=3:
+                assert (m==2*n-4)==(n==3)
+                tree_equal+=int(m==2*n-4)
+            return
+        cyclic+=1
+        g=min(candidates)
+        assert (g-2)*m<=g*(n-2)
+        assert ((g-2)*m==g*(n-2))==all(k==g for k in lengths)
+        equal+=int((g-2)*m==g*(n-2))
+        for walk in faces:
+            assert len(walk)>=g
+            support={tuple(sorted(e)) for e in walk}
+            # A forest on n vertices has exactly n-c edges.
+            assert len(support)>n-len(components(n,list(support)))
+            if len(walk)==g:
+                assert len({u for u,v in walk})==g
+            faces_checked+=1
+        if n>=3:
+            assert (m==3*n-6)==all(k==3 for k in lengths)
+            bip=any(all(col[u]!=col[v] for u,v in E)
+                    for col in product((0,1),repeat=n))
+            if bip:
+                assert (m==2*n-4)==all(k==4 for k in lengths)
+    for n in range(1,6):
+        es=edge_pairs(n)
+        for mask in range(1<<len(es)):
+            check(n,[e for j,e in enumerate(es) if mask>>j&1])
+    check(6,[(0,1),(1,2),(2,3),(3,4),(4,0),(0,5)])
+    check(6,[(i,(i+1)%6) for i in range(6)])
+    check(6,[(i,i+1) for i in range(5)])
+    return cases,cyclic,faces_checked,equal,tree_equal
+
+
 def source_integration():
     c=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book=next(x for x in c["books"] if x["id"]=="graph_and_knot_theory")
@@ -833,4 +898,5 @@ if __name__=="__main__":
     print("PASS TG08-SPEC-01 graphs, polynomial evaluations:",audit_hodge_spectra())
     print("PASS 09: exhaustive rotations, planar faces and coloring:",audit_planarity())
     print("PASS TG09-FACE-01 graphs, rotations, sphere rotations, deletions, colorings:",audit_multigraph_faces())
+    print("PASS TG09-GIRTH-01 cases, cyclic, faces, equal, tree equal:",audit_planar_girth())
     print("PASS source conventions, notation and 44-chapter catalog")
