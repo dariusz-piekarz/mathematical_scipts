@@ -193,5 +193,38 @@ class TestChapter15B(unittest.TestCase):
         ):
             self.assertIn(fragment, source)
 
+
+    def test_strongly_measurable_pettis_not_bochner(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        start = source.index(r"\label{ex:pettis-strong-not-bochner15b}")
+        end = source.index(r"\end{przyklad}", start)
+        example = source[start:end]
+        for fragment in (
+            "f(n)=\\frac{2^n}{n}e_n",
+            "s_N(k)=f(k)",
+            "\\sum_{n=1}^{\\infty}\\frac{|a_n|}{n}",
+            "v_A=(\\chi_A(n)/n)_{n\\ge1}",
+            "\\langle v_A,a\\rangle=x'(v_A)",
+            "\\sum_{n=1}^{\\infty}\\frac1n=\\infty",
+        ):
+            self.assertIn(fragment, example)
+        # Finite truncations: verify the representing vector coordinatewise.
+        for subset in (set(), {1, 3, 7}, set(range(1, 33))):
+            a = [Fraction((-1)**n, n + 1) for n in range(1, 33)]
+            scalar_integral = sum(
+                (Fraction(1, 2**n) * Fraction(2**n, n) * a[n-1]
+                 for n in subset), Fraction(0))
+            v = [Fraction(1, n) if n in subset else Fraction(0)
+                 for n in range(1, 33)]
+            self.assertEqual(scalar_integral,
+                             sum((x*y for x, y in zip(v, a)), Fraction(0)))
+        # Dyadic blocks separate the harmonic and square-summable series.
+        for k in range(1, 9):
+            block = range(2**k, 2**(k+1))
+            self.assertGreaterEqual(sum(Fraction(1, n) for n in block),
+                                    Fraction(1, 2))
+            self.assertLessEqual(sum(Fraction(1, n*n) for n in block),
+                                 Fraction(1, 2**k))
+
 if __name__ == "__main__":
     unittest.main()
