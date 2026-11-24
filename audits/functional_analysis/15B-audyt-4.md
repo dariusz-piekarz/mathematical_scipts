@@ -6,7 +6,7 @@
 **SHA źródła na wejściu:** `9739c713fd978e14623b96e3fea6c981fa81ca97`.  
 **SHA źródła po audycie:** `3611164daa8a7ca1d73fc4b564825bddd044d100`.  
 **SHA testu na wejściu:** `a1d3dac82e31cf85ea7f5d5ece538a559f3425dc`.  
-**SHA testu po audycie:** `cb6ef6884e9683785a5b78f7676ed6a7b3aef24a`.  
+**SHA testu po audycie:** `c73a00941b5789093f5f9322f79f79df059be4e7`.  
 **Werdykt końcowy:** podczas dodatkowej kontroli wykryto niejawne założenia w sformułowaniach twierdzeń Dunforda i Gelfanda. Wprowadzono korekty źródła i testu. **Audyt poprawkowy, 0/2 czystych przeglądów.** Zakończone zielone CI starszej wersji nie potwierdza jeszcze nowej.
 
 ## Kontrola wejściowa: niezmieniona wersja 15B po audycie 15B/03
@@ -67,3 +67,13 @@ W [commicie `32ae933d`](https://github.com/dariusz-piekarz/mathematical_scipts/c
 Nowy SHA źródła: `3611164daa8a7ca1d73fc4b564825bddd044d100`; nowy SHA testu: `cb6ef6884e9683785a5b78f7676ed6a7b3aef24a`. Poprzednie CI i 110-stronicowy PDF dotyczyły blobów **sprzed** tej korekty; nie zastępują nowej kompilacji i kontroli PDF.
 
 **Werdykt końcowy 15B/04: POPRAWKOWY, 0/2.** Następnie wykonać audyt **15B/05** (pierwszy potencjalnie czysty na poprawionym źródle) po potwierdzeniu testów i CI aktualnych blobów. Nie przechodzić do rozdziału 16.
+
+## Końcowa walidacja po poprawieniu testu
+
+Po dodaniu szóstego testu regresyjnego pierwsze dwa przebiegi CI [#45305206111](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45305206111) i [#45305284425](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45305284425) **nie przeszły regresji**: asercja szukała samodzielnego `$X''$`, podczas gdy poprawna teza zapisuje przynależność jako `$D_A\\in X''$`. Nie był to błąd twierdzenia ani kompilacji. W [commicie `916e3957`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/916e39576c96f61c53cc915e638fb432e6f98a7e) zmieniono test na weryfikowanie faktycznego fragmentu `\\in X''`, zachowując kontrolę matematycznego warunku. Niezależne porównanie wszystkich symboli wymaganych przez oba testowane twierdzenia z pobranym źródłem dało wyniki pozytywne.
+
+Przebieg [#45305342423](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45305342423) dla commitu `916e39576c96f61c53cc915e638fb432e6f98a7e` zakończył się **completed/success**: sześć testów regresyjnych **PASS**, utworzenie wrappera 01–17 (w tym 15A i 15B) **PASS**, kompilacja PDF **PASS**, kontrola diagnostyki i odsyłaczy **PASS**, publikacja artefaktu **PASS**.
+
+Pobrano również rzeczywisty PDF z zakończonego wcześniej zielonego przebiegu [#45305169551](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45305169551), którego blob źródła jest **identyczny z finalnym** `3611164daa8a7ca1d73fc4b564825bddd044d100` (zmienił się później wyłącznie test). `pdfinfo`: **110 stron A4, pdfTeX**. Po wyrenderowaniu i obejrzeniu stron **98–100** potwierdzono poprawny skład samodzielnych twierdzeń Dunforda i Gelfanda i poprawionego tytułu przykładu. Z logu: brak przepełnionych wierszy, brak brakujących glifów i nierozwiązanych odsyłaczy; jedno `Underfull \\hbox` dotyczy rozdziału 16.
+
+Aktualne bloby na istniejącej gałęzi to: źródło `3611164daa8a7ca1d73fc4b564825bddd044d100`, test `c73a00941b5789093f5f9322f79f79df059be4e7`. **Końcowy status 15B/04: POPRAWKOWY (0/2), bramka techniczna ZIELONA dla obu aktualnych blobów.** Następna iteracja: **15B/05**, pierwszy niezależny czysty audyt poprawionej wersji, przed jakimikolwiek pracami nad rozdziałem 16.
