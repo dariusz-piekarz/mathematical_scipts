@@ -1,0 +1,3 @@
+# Rozdział 17 — etap A, audyt 158
+
+2026-11-24. Przebiegi 45454805080, 45454852691, 45454804880, 45454804823, 45454805324 success. Log 138661411172: TG10-OUTER-01 (1100,968,132); 33867 grafów w kontroli minorów, 79455 konfiguracji cyklicznych, 99220 konfiguracji etykiet drzew. Commit 417347195578a68b89cef9eb8e445f82f4f0b888: dowód istnienia brakującej przekątnej przez naprzemienne końce, rozróżnienie m i m' w grafie uzupełnionym, alternatywny bezpośredni dowód oszacowania przez obchody. CI nowego źródła i kontrola PDF pozostają otwarte; dalsza kontrola sklejania przy jednym wierzchołku i stopnia dwa. Nie zamknięto A.
