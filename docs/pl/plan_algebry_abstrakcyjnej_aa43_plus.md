@@ -122,3 +122,10 @@ Po stabilnym AA-49 i poleceniu „kontynuuj” rozpoczęto **AA-50 — Trzeci pr
 Audyt IV wykrył pominiętą pochodną jednostki w rozkładzie nieunormowanego wielomianu F, błędne nazwanie lokalizacji i niejawny przypadek q=0. Poprawiono źródło w commicie 611ac48fbb27eec6529c6dc4ed0d00fd9878b16b; niezależny sprawdzian symboliczny 3/3 PASS. Raport: `audits/abstract_algebra/ch50_iteration_04.md`.
 
 **AA-50 W AUDYCIE — ponowna stabilizacja.** Poprzedni zielony CI dotyczy starszego źródła. Następna iteracja: pełne regresje, CI oraz kontrola PDF po zmianie. AA-51 nieotwarty. Historyczne statusy AA-01–AA-49 bez zmian.
+
+
+## Zamknięcie ponownej stabilizacji AA-50 — 24 listopada 2026 r.
+
+**AA-50 STABILNY ponownie w jawnie ograniczonym zakresie.** Audyty IV–VIII zakończone; poprawiono dowód dla nieunormowanego F i lokalizację, przypadek q=0, dodano regresję oraz włączono ją do CI. Raport końcowy: `audits/abstract_algebra/ch50_iteration_08.md`.
+
+CI https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45292640958 (37ff2350053622c307a92d02c4776d7181b68750): 110/110 SUCCESS, 13+12+2 testów AA-50 PASS, 50 rozdziałów, 1042 etykiety, 564 odsyłacze, zero brakujących celów. Artefakt 14876255006: PDF 323 strony, AA-50 na stronach 317–323; wszystkie obejrzane, log bez błędów i ostrzeżeń. Aktualny blob rozdziału zgodny z CI. AA-51 nieotwarty; następny zakres należy określić osobno. Historyczne AA-01–AA-49 bez zmian.
