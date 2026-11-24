@@ -175,7 +175,21 @@ class TestChapter15B(unittest.TestCase):
             "jednoznacznie wyznaczony",
             "Całka Pettisa jest liniowa",
             "miara wektorowa $m$ rozszerza się na uzupełnienie",
-            "zachowanie\nskończonej wariacji",
+            "$|\\bar m|(S)=|m|(S)<\\infty$",
+        ):
+            self.assertIn(fragment, source)
+
+
+    def test_audit10_completion_and_total_integral(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            "$D_{S_*}=0\\in J_{c_0}(c_0)$",
+            "$D_A=(1/2,1/2,\\ldots)\\notin J_{c_0}(c_0)$",
+            "C_j=B_j\\setminus\\bigcup_{i<j}B_i",
+            "$\\bar m(\\bigcup_j A_j)=\\sum_j m(C_j)=\\sum_j\\bar m(A_j)$",
+            "$|\\bar m|(S)=|m|(S)<\\infty$",
+            "względem pierwotnej miary",
+            "a silna mierzalność $Tf$ wynika",
         ):
             self.assertIn(fragment, source)
 
