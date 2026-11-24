@@ -58,4 +58,24 @@ class Chapter09(unittest.TestCase):
             for M in range(N+1,N+12):
                 self.assertLessEqual(sum(F(1,factorial(n)) for n in range(N+1,M+1)),F(1,N*factorial(N)))
 
+    def test_condensation_full_partial_sum_bounds(self):
+        for p in (1,2,3):
+            for m in range(7):
+                blocks=[list(range(2**k,2**(k+1))) for k in range(m+1)]
+                N=2**(m+1)-1
+                self.assertEqual(list(itertools.chain.from_iterable(blocks)),list(range(1,N+1)))
+                S=sum(F(1,n**p) for n in range(1,N+1))
+                lower=F(1,2)*sum(F(2**j,2**(j*p)) for j in range(1,m+2))
+                upper=sum(F(2**j,2**(j*p)) for j in range(m+1))
+                self.assertLessEqual(lower,S)
+                self.assertLessEqual(S,upper)
+
+    def test_geometric_error_and_ratio_growth(self):
+        self.assertEqual(F(2)-sum(F(1,2)**n for n in range(11)),F(1,1024))
+        self.assertLess(F(1,1024),F(1,1000))
+        for m in range(1,6):
+            for k in range(16):
+                self.assertGreaterEqual(F(3,2)**(m+k),F(3,2)**m*F(4,3)**k)
+                self.assertGreaterEqual(F(3,2)**m*F(4,3)**k,F(3,2)**m)
+
 if __name__=="__main__": unittest.main()
