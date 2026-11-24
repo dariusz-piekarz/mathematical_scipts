@@ -69,6 +69,15 @@ jobs:
           dockerd-rootless-setuptool.sh install --force
           systemctl --user start docker.service
           test -S "$XDG_RUNTIME_DIR/docker.sock"
+          test ! -L "$XDG_RUNTIME_DIR/docker.sock"
+          test ! -L "$XDG_RUNTIME_DIR"
+          test "$(stat -c %u "$XDG_RUNTIME_DIR")" = "$(id -u)"
+          test "$(stat -c %u "$XDG_RUNTIME_DIR/docker.sock")" = "$(id -u)"
+          stat -c '%F %a uid=%u %n' "$XDG_RUNTIME_DIR" "$XDG_RUNTIME_DIR/docker.sock"
+          # Restrict this dedicated CI daemon's socket, not the application guard.
+          chmod 0700 "$XDG_RUNTIME_DIR"
+          chmod 0600 "$XDG_RUNTIME_DIR/docker.sock"
+          stat -c '%F %a uid=%u %n' "$XDG_RUNTIME_DIR" "$XDG_RUNTIME_DIR/docker.sock"
           /usr/bin/docker --host "unix://$XDG_RUNTIME_DIR/docker.sock" version
       - name: Check actual container metadata through application transport
         working-directory: application
