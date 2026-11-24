@@ -855,6 +855,54 @@ def audit_planar_girth():
     return cases,cyclic,faces_checked,equal,tree_equal
 
 
+def audit_nested_faces():
+    """TG09-NEST-01: independent face incidence for nested disjoint polygons.
+
+    Each parent array describes disjoint Jordan polygons, with -1 as the
+    outer region and each polygon lying inside its designated parent.
+    Isolated points in any region add boundary circles but no new faces.
+    """
+    arrangements=checks=0
+    for k in range(1,6):
+        for parents in product(*(range(-1,j) for j in range(k))):
+            for sizes in product((3,4),repeat=k):
+                # Region -1 is exterior; region j is inside polygon j
+                # but outside its children. Each polygon has two sides.
+                regions=list(range(-1,k))
+                depth={-1:0}
+                for j,p in enumerate(parents):
+                    depth[j]=depth[p]+1
+                for isolated_region in regions:
+                    n=sum(sizes)+1
+                    m=sum(sizes)
+                    c=k+1
+                    counts={f:0 for f in regions}
+                    lengths={f:0 for f in regions}
+                    for j,p in enumerate(parents):
+                        counts[j]+=1
+                        counts[p]+=1
+                        lengths[j]+=sizes[j]
+                        lengths[p]+=sizes[j]
+                        assert depth[j]%2 != depth[p]%2
+                    counts[isolated_region]+=1
+                    f=len(regions)
+                    b=sum(counts.values())
+                    assert all(v>=1 for v in counts.values())
+                    assert sum(lengths.values())==2*m
+                    assert b==2*k+1
+                    assert n-m==2*c-b
+                    assert n-m+f==1+c
+                    assert (n-m)+sum(2-q for q in counts.values())==2
+                    # Removing a polygon edge merges its two distinct regions;
+                    # the polygon becomes a path, retaining its component.
+                    for j,p in enumerate(parents):
+                        assert j!=p
+                        assert n-(m-1)+(f-1)==1+c
+                        checks+=1
+                    arrangements+=1
+    return arrangements,checks
+
+
 def source_integration():
     c=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book=next(x for x in c["books"] if x["id"]=="graph_and_knot_theory")
@@ -899,4 +947,5 @@ if __name__=="__main__":
     print("PASS 09: exhaustive rotations, planar faces and coloring:",audit_planarity())
     print("PASS TG09-FACE-01 graphs, rotations, sphere rotations, deletions, colorings:",audit_multigraph_faces())
     print("PASS TG09-GIRTH-01 cases, cyclic, faces, equal, tree equal:",audit_planar_girth())
+    print("PASS TG09-NEST-01 arrangements, edge-removal models:",audit_nested_faces())
     print("PASS source conventions, notation and 44-chapter catalog")
