@@ -13,16 +13,21 @@ Grafy losowe i ekspandery zostaną opracowane w osobnych modułach.
 Niech $G=(V,E)$ będzie skończonym grafem prostym
 nieskierowanym, $n=|V|$, $m=|E|$.
 Oznaczamy sąsiedztwo wierzchołka $v$ przez $N_G(v)$,
-a jego stopień przez $d_G(v)$.
+jego stopień przez $d_G(v)=|N_G(v)|$, a liczbę krawędzi
+grafu $G$ również przez $e(G)=|E|$.
 
 \begin{definicja}[Funkcja ekstremalna]
 \label{def:tg-extremal-ex}
-Dla skończonego grafu prostego $H$ i liczby całkowitej
+Dla skończonego grafu prostego nieskierowanego $H$ i liczby całkowitej
 $n\geq0$ niech $\operatorname{ex}(n,H)$ oznacza maksymalną
 liczbę krawędzi grafu prostego o $n$ wierzchołkach,
 który nie zawiera $H$ jako podgrafu (niekoniecznie
 indukowanego). Jeśli nie istnieje żaden taki graf,
 przyjmujemy $\operatorname{ex}(n,H)=-\infty$.
+W przeciwnym przypadku maksimum istnieje, ponieważ
+na ustalonym zbiorze $n$ wierzchołków jest dokładnie
+$2^{\binom n2}$ grafów prostych. Na przykład dla zakazu
+$K_1$ i $n\geq1$ rodzina dopuszczalnych grafów jest pusta.
 \end{definicja}
 
 \begin{definicja}[Graf Turána]
@@ -31,8 +36,16 @@ Dla liczb całkowitych $r\geq1$ i $n\geq0$ grafem Turána $T_r(n)$
 nazywamy pełny graf $r$-dzielny na $n$ wierzchołkach,
 którego $r$ części mają liczności różniące się
 o co najwyżej jeden; dopuszczamy części puste.
-Jeśli $n=ar+q$, $0\leq q<r$, to $q$ części
-ma rozmiar $a+1$, a pozostałe $r-q$ rozmiar $a$.
+Niech $n=ar+q$ będzie wynikiem dzielenia z resztą,
+gdzie $a,q$ są całkowite, $a\geq0$ i $0\leq q<r$.
+Ponieważ liczności części różnią się o najwyżej jeden,
+ich minimum jest równe $a$: gdyby było większe, suma
+przekroczyłaby $n$, a gdyby było mniejsze, suma
+byłaby mniejsza od $ar$ (co najmniej jedna część
+miałaby liczność mniejszą od $a$).
+Zatem części mają liczności $a$ lub $a+1$.
+Z warunku sumy $n=ar+q$ wynika, że dokładnie $q$
+części ma liczność $a+1$, a pozostałe $r-q$ liczność $a$.
 \end{definicja}
 
 Każda klika $T_r(n)$ zawiera najwyżej jeden wierzchołek
@@ -50,7 +63,7 @@ e(T_r(n))=\frac12\left(n^2-q(a+1)^2-(r-q)a^2\right).
 
 \begin{twierdzenie}[Twierdzenie Mantela]
 \label{thm:tg-mantel}
-Dla każdego $n\geq0$ zachodzi
+Dla każdej liczby całkowitej $n\geq0$ zachodzi
 \[
 \operatorname{ex}(n,K_3)=\left\lfloor\frac{n^2}{4}\right\rfloor.
 \]
@@ -58,13 +71,16 @@ Równość osiąga graf pełny dwudzielny
 $K_{\lfloor n/2\rfloor,\lceil n/2\rceil}$.
 \end{twierdzenie}
 \begin{proof}
-Dla $n\leq1$ teza jest oczywista.
-Niech $G$ nie ma trójkątów, $n\geq2$ i $m=|E(G)|$.
+Dla $n\leq1$ żaden graf prosty nie ma krawędzi,
+a obie strony równości są zerowe.
+Niech $G=(V,E)$ będzie grafem prostym nieskierowanym
+na $n\geq2$ wierzchołkach bez trójkątów i niech $m=|E|$.
 Jeśli $uv\in E$, to $N_G(u)\cap N_G(v)=\varnothing$,
 ponieważ wspólny sąsiad tworzyłby trójkąt.
 Zatem $d_G(u)+d_G(v)\leq n$.
-Zliczając stopnie przy końcach wszystkich krawędzi,
-dostajemy
+W sumie stopni końców wszystkich krawędzi składnik
+$d_G(v)$ występuje dokładnie $d_G(v)$ razy, ponieważ
+tyle krawędzi jest incydentnych z $v$. Stąd
 \[
 \sum_{v\in V}d_G(v)^2
 =\sum_{uv\in E}\bigl(d_G(u)+d_G(v)\bigr)\leq nm.
@@ -75,14 +91,17 @@ Cauchy'ego--Schwarza dają
 \sum_{v\in V}d_G(v)^2
 \geq\frac{(\sum_vd_G(v))^2}{n}=\frac{4m^2}{n}.
 \]
-Gdy $m>0$, otrzymujemy $m\leq n^2/4$;
+Łącząc nierówności, mamy $4m^2/n\leq nm$.
+Gdy $m>0$, po pomnożeniu przez $n$ i podzieleniu
+przez $4m$ otrzymujemy $m\leq n^2/4$;
 dla $m=0$ nierówność jest natychmiastowa.
 Ponieważ $m$ jest całkowite,
 $m\leq\lfloor n^2/4\rfloor$.
 Graf o wskazanych dwóch częściach
 nie zawiera trójkąta, a ma dokładnie
 $\lfloor n/2\rfloor\lceil n/2\rceil
-=\lfloor n^2/4\rfloor$ krawędzi.
+=\lfloor n^2/4\rfloor$ krawędzi: dla $n=2j$ oba wyrażenia
+wynoszą $j^2$, a dla $n=2j+1$ wynoszą $j(j+1)$.
 \end{proof}
 
 \begin{przyklad}[Osiem wierzchołków]
@@ -171,7 +190,7 @@ identyczne i nie rozbijają ich klasy.
 
 \begin{twierdzenie}[Twierdzenie Turána]
 \label{thm:tg-turan}
-Dla wszystkich $n\geq0$, $r\geq1$ zachodzi
+Dla wszystkich liczb całkowitych $n\geq0$, $r\geq1$ zachodzi
 \[
 \operatorname{ex}(n,K_{r+1})=e(T_r(n)).
 \]
@@ -217,8 +236,11 @@ Jeśli $k<\min\{n,r\}$, to pewna część
 ma co najmniej dwa wierzchołki.
 Możemy ją rozdzielić na dwie niepuste
 części i dodać krawędzie między nimi.
-Nie powstaje $K_{r+1}$, lecz liczba
-krawędzi ściśle rośnie, sprzeczność.
+Nowy graf jest pełny $(k+1)$-dzielny, gdzie
+$k+1\leq r$, więc nie zawiera $K_{r+1}$.
+Jeśli nowe części mają liczności $p,q>0$,
+dodaliśmy dokładnie $pq>0$ krawędzi, sprzecznie
+z maksymalnością liczby krawędzi.
 Stąd $k=\min\{n,r\}$.
 
 Oznaczmy rozmiary części przez $n_1,\ldots,n_k$.
@@ -257,8 +279,13 @@ Jeżeli liczności $r$ części grafu Turána
 (z uwzględnieniem pustych) wynoszą $n_i$,
 to nierówność Cauchy'ego--Schwarza daje
 $\sum_i n_i^2\geq n^2/r$.
-Wstawiamy to do wzoru na $e(T_r(n))$
-i stosujemy twierdzenie \ref{thm:tg-turan}.
+Na mocy twierdzenia \ref{thm:tg-turan} oraz wzoru
+na liczbę krawędzi grafu wielodzielnego otrzymujemy
+\[
+|E(G)|\leq e(T_r(n))
+=\tfrac12(n^2-\textstyle\sum_i n_i^2)
+\leq\tfrac12(1-1/r)n^2.
+\]
 \end{proof}
 
 \begin{przyklad}[Zakaz $K_4$]
