@@ -5,3 +5,8 @@
 Pobrano artefakt 14902603535 z pełnego zakończonego sukcesem przebiegu 45357539293 (SHA 2be3a1b273b722fd689b986dab18d0c77a183569). PDF 304 strony, plik ostrzeżeń 0 bajtów. Wyrenderowano i obejrzano wszystkie 10 stron rozdziału 02, fizyczne 22–31 (drukowane 12–21). Rysunek cyklu i przekroju fundamentalnego na fizycznej 30 wraz z podpisem na jednej stronie; wszystkie pozostałe ilustracje i podpisy również razem, bez oczywistych kolizji na podglądzie. To kontrola wcześniejszego źródła, nie końcowy przegląd aktualnego rozdziału.
 
 Dla aktualnego źródła f6de238788c39022ec8b44a91eaf9ba514ab954a przebieg 45359126480: structural-audit completed/success, full-book-pdf w toku (instalacja TeX); terminologia completed/success. Brak finalnego artefaktu w chwili odczytu. Status OTWARTY: potwierdzić log nowych regresji BFS i obejrzeć PDF dokładnej wersji aktualnej, nie przechodzić do 03 przed zamknięciem stabilizacji.
+
+
+## Potwierdzenie wykonania regresji BFS
+
+Przebieg 45359287030, job 138324903180: structural-audit completed/success. Odczytano rzeczywisty log: PASS chapter 02 BFS: 772 connected graphs, 3807 roots, 7614 runs, 37698 distances, 42610 edge checks. Ponowne PASS dla 1100 grafów, 40399 lasów, 8962 lasów rozpinających, 93986 współrzędnych i 99636 przypadków dualności fundamentalnej. Pełny PDF nadal w toku; nie zamknięto rozdziału. Bez zmian matematycznych.
