@@ -22,3 +22,7 @@ Dla SHA bf731f6d2c7fa043be0fe9c06bd6d28719d0ffc5 przebieg globalny 45302954204: 
 - Torsja: dla zredukowanego kompleksu płaszczyzny rzutowej z jedną komórką w każdym z wymiarów 0,1,2 brzeg dwuwymiarowy ±2 daje H_1=Z/2Z. Redukcja modulo 2 zeruje ten brzeg, a modulo 3 i 5 czyni go izomorfizmem. W obu przypadkach suma naprzemienna liczb Bettiego wynosi 1. Testy nad ciałami nie zastępują samego całkowitoliczbowego argumentu o odwracalnych pivotach.
 
 Job full-book-pdf 138139743698 podczas ostatniej kontroli nadal instalował TeX. Nie potwierdzono pełnej kompilacji ani wyglądu zmienionych stron. Audyt 37 otwarty do zakończenia tej bramki.
+
+## Kontrola PDF i korekta łamania stron
+
+Workflow 45302954204 dla bf731f6d2c7fa043be0fe9c06bd6d28719d0ffc5: oba joby success, pełny PDF 300 stron, 0 ostrzeżeń. Pobrano artefakt 14879169442 oraz wersję poprzednią 14877802452. Porównanie tekstu wszystkich stron z wyrównaniem przesunięcia paginacji wykazało 20 zmienionych stron fizycznych (8, 90–94, 96–99, 124, 131–134, 141, 143–145, 147). Wyrenderowano i obejrzano wszystkie 20. Nie stwierdzono kolizji ani obcięć, lecz strony 94 i 99 zawierały jedynie krótkie zakończenia rozdziałów. Uporządkowano dowód rozkładu Hodge'a (06) i argument metryczny (07); zamiast skrótowego uzasadnienia ciągłości kontrakcji drzewa podano nierówności metryczne, a w dowodzie zgodności metryk zastąpiono niejasną aproksymację krzywych podziałem na fragmenty w małych gwiazdach. Nie zmieniono ustawień kompilacji. Wymagana ponowna kontrola CI i PDF; audyt 37 nadal otwarty.
