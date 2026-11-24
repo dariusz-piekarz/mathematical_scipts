@@ -14,3 +14,5 @@ Testy skończone sprawdzają tożsamości i oszacowania dokładną arytmetyką; 
 | MA1-12-010 | ma1:ex:conditional-product | Zbieżność warunkowa iloczynu, suma odchyleń równa 1, rozbieżność modułów | semantyczna + Python |
 | MA1-12-011 | ma1:ex:series-converges-product-zero | Przeciwne pary, szereg zbieżny, iloczyny częściowe dążące do zera | semantyczna + Python (tożsamości) |
 | MA1-12-012 | ma1:ex:product-converges-series-diverges | Odwrotne czynniki, iloczyn 1, dolne oszacowanie par odchyleń przez 1/(2k), rozbieżność szeregu | semantyczna + Python (tożsamości) |
+| MA1-12-013 | ma1:def:conditional-product, ma1:ex:conditional-product-rearranged | Przestawienie czynników warunkowo zbieżnych: bijekcja, Q_(3m)=(2m+1)/(m+1), wszystkie trzy klasy indeksów i zmiana granicy 1 na 2 | semantyczna + Python |
+| MA1-12-014 | ma1:thm:product-cauchy | Jawne ograniczenie B z uwzględnieniem skończonego początku, niezerowe dolne ograniczenie modułów | semantyczna + Python (świadki) |
