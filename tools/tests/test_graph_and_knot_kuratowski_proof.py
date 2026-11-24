@@ -226,6 +226,52 @@ def tree_terminal_check():
     return total
 
 
+def audit_outerplanar_minors():
+    """TG10-OUTER-01: convex drawings versus minor models and cones."""
+    graphs=outer=obstructions=0
+    def has_clique4(n,E):
+        return any(all(e in E for e in combinations(S,2))
+                   for S in combinations(range(n),4))
+    def has_k23(n,E):
+        return any(all(tuple(sorted((u,v))) in E for u in L for v in S if v not in L)
+                   for S in combinations(range(n),5) for L in combinations(S,2))
+    def convex_drawing(n,E):
+        if n<2:
+            return True
+        for order in permutations(range(1,n)):
+            pos={v:i for i,v in enumerate((0,)+order)}
+            chords=[tuple(sorted((pos[u],pos[v]))) for u,v in E]
+            if not any(a<c<b<d or c<a<d<b
+                       for (a,b),(c,d) in combinations(chords,2)):
+                return True
+        return False
+    for n in range(6):
+        es=pairs(n)
+        for mask in range(1<<len(es)):
+            E=tuple(e for j,e in enumerate(es) if mask>>j&1)
+            # With <=5 vertices a K4 minor is a subgraph or needs just
+            # one contraction. K2,3 must be a subgraph.
+            forbidden=has_clique4(n,set(E)) or has_k23(n,set(E))
+            if n==5 and not forbidden:
+                for e in E:
+                    nn,EE=contract(n,E,e)
+                    if has_clique4(nn,set(EE)):
+                        forbidden=True
+                        break
+            cone=E+tuple((v,n) for v in range(n))
+            geometric=convex_drawing(n,E)
+            assert geometric== (not forbidden), (n,E)
+            assert forbidden==forbidden_minor(n+1,cone), (n,E,"cone")
+            if geometric:
+                outer+=1
+                if n>=2:
+                    assert len(E)<=2*n-3
+            else:
+                obstructions+=1
+            graphs+=1
+    return graphs,outer,obstructions
+
+
 def source_integration():
     cat=json.loads((ROOT/"catalog/books.json").read_text(encoding="utf-8"))
     book=next(b for b in cat["books"] if b["id"]=="graph_and_knot_theory")
@@ -248,4 +294,5 @@ if __name__=="__main__":
     print("PASS minor/subdivision and three-connected contractions:",graph_models())
     print("PASS all cyclic-neighbour attachment configurations:",cyclic_case_split())
     print("PASS all 3/4 terminal placements in small labeled trees:",tree_terminal_check())
+    print("PASS TG10-OUTER-01 graphs, convex embeddings, forbidden minors:",audit_outerplanar_minors())
     print("PASS chapter 10 integration, no external Kuratowski assumption")
