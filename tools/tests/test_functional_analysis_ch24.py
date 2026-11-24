@@ -80,5 +80,48 @@ class Chapter24(unittest.TestCase):
             for i in range(2):
                 self.assertLessEqual(sum(map(abs,M[i])),eps)
 
+    def test_FA24_seminorm_completion_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"\pi_{p,q}(u)=\|u_{p,q}\|_\pi",
+            r"\varepsilon_{p,q}(u)=\|u_{p,q}\|_\varepsilon",
+            r"|\ell(v)|\le\pi_{p,q}(v)",
+            r"x\in\ker p",
+            r"\|x_n-x_m\|\,\|y_n\|",
+            r"\bar b:E_p\times F_q",
+            r"nie zakłada dziedziczności normy rzutowej",
+            r"\pi_{p,r}(u)=\|u_{p,r}\|_\pi",
+            r"C\varepsilon_{q,r}(u)",
+            r"j_{q,P}=\sum_{\alpha\in J}",
+            r"j_{q,p}=j_{P,p}j_{q,P}",
+        ):
+            self.assertIn(fragment,s)
+        self.assertNotRegex(s,r"\\textup\{23\.\d+\}")
+        # Noncoordinate quotient p(x)=|x0+x2|+|x1-x2|.
+        # Both factors use this quotient. Kernel perturbations leave
+        # the quotient tensor and its norm certificates unchanged.
+        P=((1,0,1),(0,1,-1))
+        k=(-1,1,1)
+        def tr(A): return tuple(zip(*A))
+        def mm(A,B):
+            return tuple(tuple(sum(a*b for a,b in zip(row,col))
+                               for col in zip(*B)) for row in A)
+        def outer(x,y): return tuple(tuple(a*b for b in y) for a in x)
+        def add(A,B): return tuple(tuple(a+b for a,b in zip(x,y)) for x,y in zip(A,B))
+        vectors=list(product(range(-1,2),repeat=3))
+        signs=list(product((-1,1),repeat=2))
+        for x,y in product(vectors,repeat=2):
+            U=outer(x,y)
+            M=mm(mm(P,U),tr(P))
+            V=add(add(U,outer(k,y)),outer(x,k))
+            self.assertEqual(mm(mm(P,V),tr(P)),M)
+            pi=sum(abs(a) for row in M for a in row)
+            S=tuple(tuple((a>0)-(a<0) for a in row) for row in M)
+            self.assertEqual(sum(a*b for row,srow in zip(M,S) for a,b in zip(row,srow)),pi)
+            eps=max(abs(sum(u[i]*M[i][j]*v[j] for i in range(2) for j in range(2)))
+                    for u,v in product(signs,repeat=2))
+            self.assertLessEqual(eps,pi)
+            self.assertEqual(eps,pi) # rank-one quotient tensor
+
 if __name__ == "__main__":
     unittest.main()
