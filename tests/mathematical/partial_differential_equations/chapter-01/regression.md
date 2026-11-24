@@ -17,7 +17,6 @@ Kryteria semantyczne wymagają ponownej oceny po zmianie źródła; nie są auto
 | PDE-01-010 | sec:pde-classification | Macierz zerowa jest poza klasyfikacją; rząd 1, określoność i znaki wartości własnych rozróżnione. | semantyczna |
 | PDE-01-011 | sec:pde-classification | Współczynniki A,B,C jawnie określone w stwierdzeniu. | semantyczna |
 | PDE-01-012 | sec:pde-classification | J_{ki}=∂_i Φ_k, część główna J A J^T, pochodne drugie Φ tylko w części niższego rzędu; prawo bezwładności. | semantyczna |
-
 | PDE-01-013 | thm:laplace-max | Jawne jednostajne ograniczenie eps*max abs(x)^2 i przejście do granicy. | semantyczna |
 | PDE-01-014 | cor:dirichlet-stability | Funkcje rzeczywiste w dowodzie przez zasadę maksimum. | semantyczna |
 | PDE-01-015 | cor:dirichlet-stability | Oba oszacowania w i -w oraz jednoznaczność przy zerowych danych różnicowych. | semantyczna |
@@ -32,9 +31,24 @@ Kryteria semantyczne wymagają ponownej oceny po zmianie źródła; nie są auto
 | PDE-01-024 | thm:dalembert | Konstrukcja C², weryfikacja PDE i obu danych początkowych. | semantyczna |
 | PDE-01-025 | prop:pde-v31-wave-cone | Zerowe dane implikują zerowy gradient początkowy i energię. | semantyczna |
 | PDE-01-026 | prop:pde-v31-wave-cone | Odcinek pionowy zawarty w zwężającym się przedziale; ciągłość na brzegu. | semantyczna |
+| PDE-01-027 | prop:heat-uniqueness | Jawne założenie d≥1 i rzeczywistości funkcji w energii kwadratowej. | semantyczna |
+| PDE-01-028 | prop:heat-uniqueness | Ograniczona majoranta, zastosowanie Gaussa, zanik wyrazu brzegowego, zerowa energia i wniosek punktowy także na brzegu. | semantyczna |
+| PDE-01-029 | prop:pde-v31-wave-cone | Rzeczywistość u i a,b oraz niepusty przedział na całym zakresie czasu. | semantyczna |
+| PDE-01-030 | prop:pde-v31-wave-cone | Lokalna tożsamość energii wynika z równania i równości pochodnych mieszanych. | semantyczna |
+| PDE-01-031 | eq:pde-v31-wave-cone | Znaki strumienia na obu końcach i poprawne dopełnienie kwadratów. | semantyczna + test skończony |
+| PDE-01-032 | ex:laplace-illposed | Harmoniczność i obie dane Cauchy'ego sprawdzone przez różniczkowanie. | semantyczna |
+| PDE-01-033 | ex:laplace-illposed | Zbieżność wszystkich ustalonych półnorm C^r. | semantyczna |
+| PDE-01-034 | ex:laplace-illposed | Jawna klasa danych i rozwiązań, ciągłość przekroju, jednoznaczność jako założenie argumentu nie wniosek; poprawna asymptotyka normy i normalny kowektor. | semantyczna + test skończony |
+| PDE-01-035 | ex:backward-heat | Periodyczność, równanie, półnormy, miara o masie 2π oraz warunki argumentu Hadamarda. | semantyczna + test skończony |
+| PDE-01-036 | sec:pde-scaling | Jawne dodatnie parametry i wspólna otwarta dziedzina Q. | semantyczna |
+| PDE-01-037 | sec:pde-scaling | Przeciwobrazy otwarte, zachowanie regularności, jawne czynniki λ² w obu równaniach. | semantyczna |
+| PDE-01-038 | sec:pde-scaling | Skale czasu wynikają z bezwymiarowych współczynników κτ/ℓ² i c²τ²/ℓ². | semantyczna |
 
 ## Pierwsze wykonanie — 2026-11-24
 Przejrzano kryteria 001–012 w poprawionym tekście (commit 6c55830d79679c70a164546a1f0ff953198e29f6). Kontrola strukturalna wykonana na treści przed zapisem: zachowano 35 etykiet, wszystkie 14 odsyłaczy wewnętrznych rozwiązywalne, środowiska begin/end poprawnie zagnieżdżone. Nie wykonano kompilacji LaTeX, renderowania rysunków ani Lean. Rozdział pozostaje otwarty; dalsze sekcje od sec:pde-models wymagają osobnego audytu.
 
 ## Druga iteracja — 2026-11-24
 Przegląd semantyczny kryteriów 013–026 w ramach poprawek (commit 9eb95ea38bff8f46eab3e0ceaccc3e2a2606ff55). Kontrola strukturalna wykonana: 35 etykiet zachowanych, 15 odsyłaczy wewnętrznych rozwiązywalnych, środowiska poprawnie zagnieżdżone. Nie wykonano kompilacji ani renderowania; Lean nie uruchomiono. Otwarte: kontrola energetyczna równania ciepła, przykłady Hadamarda, skalowanie, niezależna kontrola całości oraz rysunki i kompilacja.
+
+## Trzecia iteracja — 2026-11-24
+Poprawki 027–038: commit 47eb7d7fd982665bb242cf58fd4a4319e342882d. Przegląd semantyczny zmienionych fragmentów wykonany; kontrola strukturalna: 35 niezmienionych unikalnych etykiet, 15 rozwiązywalnych odsyłaczy, zgodne zagnieżdżenie środowisk. Wykonano skończoną kontrolę rachunkową: 45 kombinacji całkowitych (c,p,q) dla obu tożsamości strumienia, 5 trybów k dla stosunku normy do asymptotyki i dyskretnej kontroli całki sin² na torusie. Wyniki pozytywne; nie zastępują dowodów. Pierwszy przebieg treści ukończony, niezależny audyt całości, kompilacja i renderowanie pozostają otwarte. Lean nie uruchomiono.
