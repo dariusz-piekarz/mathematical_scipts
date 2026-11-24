@@ -44,6 +44,36 @@ function cartan64(){
  assert(br(p,q).flat().every((v,i)=>v===z.flat()[i]),"Heisenberg bracket");
  assert(h.every(A=>h.every(B=>br(A,br(A,B)).flat().every(v=>v===0n))),"Heisenberg class two");
  assert(rank(h.map(A=>h.flatMap(B=>br(A,B).flat())))===2,"center dimension");
- return {models,fitting,normalizers,jordan,heisenberg:3};
+ // Nonabelian Cartan subalgebra c=Heisenberg in a solvable semidirect product.
+ // [p,q]=z; [p,u]=u; [p,v]=u+v; [q,v]=u. Other brackets vanish.
+ const basis5=Array.from({length:5},(_,i)=>Array.from({length:5},(_,j)=>i===j?1n:0n));
+ const plus=(x,y)=>x.map((v,i)=>v+y[i]);
+ const times=(x,k)=>x.map(v=>v*k);
+ const zero=x=>x.every(v=>v===0n);
+ function bracket(x,y){
+   const a=(i,j)=>x[i]*y[j]-x[j]*y[i];
+   return [0n,0n,a(0,1),a(0,3)+a(0,4)+a(1,4),a(0,4)];
+ }
+ let jacobi=0,generic=0,special=0,stable=0;
+ for(const x of basis5)for(const y of basis5)for(const z of basis5){
+   assert(zero(plus(plus(bracket(x,bracket(y,z)),bracket(y,bracket(z,x))),bracket(z,bracket(x,y)))),"semidirect Jacobi");jacobi++;
+ }
+ const c5=basis5.slice(0,3);
+ // Normalizer condition is a linear map into three copies of g/c.
+ const nRank=rank(basis5.map(y=>c5.flatMap(t=>bracket(y,t).slice(3))));
+ assert(5-nRank===3,"nonabelian Cartan normalizer");
+ for(let a=-2;a<=2;a++)for(let b=-2;b<=2;b++)for(let c=-2;c<=2;c++){
+   const x=[BigInt(a),BigInt(b),BigInt(c),0n,0n];
+   let im=basis5;
+   for(let k=0;k<5;k++)im=im.map(y=>bracket(x,y));
+   assert(5-rank(im)===(a===0?5:3),"generic Fitting dimension");
+   assert(im.slice(0,3).every(zero),"c in Fitting zero");
+   if(a!==0){generic++;assert(im.slice(3).every(y=>y.slice(0,3).every(v=>v===0n)),"module invariant");}
+   else special++;
+   assert(rank(im.map(y=>bracket(x,y)))===rank(im),"Fitting stabilization");stable++;
+ }
+ // c is nilpotent of class 2 but ad_p on c is nonzero.
+ assert(!zero(bracket(c5[0],c5[1]))&&c5.every(x=>c5.every(y=>c5.every(z=>zero(bracket(x,bracket(y,z)))))),"nonabelian nilpotent c");
+ return {models,fitting,normalizers,jordan,heisenberg:3,semidirect:{jacobi,generic,special,stable,normalizerDimension:5-nRank}};
 }
 console.log('AA-64 Cartan equivalence models: PASS',cartan64());
