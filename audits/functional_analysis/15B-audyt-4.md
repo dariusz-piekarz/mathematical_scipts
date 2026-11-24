@@ -1,11 +1,13 @@
-# Analiza funkcjonalna — 15B/04 — pierwszy czysty audyt po poprawkach
+# Analiza funkcjonalna — 15B/04 — ponowny audyt i korekta jawności założeń
 
 **Data:** 24 listopada 2026 r.  
 **Gałąź:** `biblioteka-matematyczna-iteracja-6` (ta sama istniejąca gałąź).  
 **Źródło:** `chapters/pl/functional_analysis/15B-calki-bochnera-pettisa-dunforda-i-gelfanda-oraz-miary-wektorowe.tex`.  
-**SHA źródła:** `9739c713fd978e14623b96e3fea6c981fa81ca97`.  
-**SHA testu:** `a1d3dac82e31cf85ea7f5d5ece538a559f3425dc`.  
-**Werdykt merytoryczny:** **pierwszy niezależny czysty audyt (1/2)** po poprawkowej iteracji 15B/03. Brak nowych zmian w tekście twierdzeń, przykładach i testach. Końcową walidację CI po zapisie tego raportu należy potwierdzić osobno.
+**SHA źródła na wejściu:** `9739c713fd978e14623b96e3fea6c981fa81ca97`.  
+**SHA źródła po audycie:** `3611164daa8a7ca1d73fc4b564825bddd044d100`.  
+**SHA testu na wejściu:** `a1d3dac82e31cf85ea7f5d5ece538a559f3425dc`.  
+**SHA testu po audycie:** `cb6ef6884e9683785a5b78f7676ed6a7b3aef24a`.  
+**Werdykt końcowy:** podczas dodatkowej kontroli wykryto niejawne założenia w sformułowaniach twierdzeń Dunforda i Gelfanda. Wprowadzono korekty źródła i testu. **Audyt poprawkowy, 0/2 czystych przeglądów.** Zakończone zielone CI starszej wersji nie potwierdza jeszcze nowej.
 
 ## Kontrola wejściowa: niezmieniona wersja 15B po audycie 15B/03
 
@@ -44,7 +46,7 @@ Weryfikacja dedykowanej bramki [#45304359300](https://github.com/dariusz-piekarz
 
 ## Decyzja i dalsze kroki
 
-**15B/04 — pierwszy niezależny czysty audyt matematyczny po poprawkowym 15B/03 (1/2).** Źródło `9739c713fd978e14623b96e3fea6c981fa81ca97` i test `a1d3dac82e31cf85ea7f5d5ece538a559f3425dc` pozostały niezmienione w tej iteracji. Do nadania statusu STABILNY wymagany jest jeszcze drugi czysty niezależny audyt 15B/05 oraz zakończony zielony workflow dla niezmienionych blobów z kontrolą rzeczywistego PDF. Dopiero wtedy można przejść do rozdziału 16.
+**Ten wstępny wniosek o czystym audycie jest uchylony przez poniższe uzupełnienie.** Do stabilizacji wymagane są dwa nowe czyste audyty po korektach, rozpoczynając od 15B/05.
 
 ## Walidacja rzeczywistego PDF aktualnych blobów
 
@@ -52,4 +54,16 @@ Pobrano artefakt `functional-analysis-ch15b-pdf` (ID **14880785447**) z zakończ
 
 Po rozpakowaniu rzeczywistego archiwum i odczytaniu `pdfinfo`: **110 stron, A4, dokument niezaszyfrowany, pdfTeX**. Wyrenderowano strony **95–100** i oceniono ich zbiorczy podgląd; cały moduł 15B jest czytelny, a zaktualizowany dowód Fubiniego i stwierdzenie o wariacji są obecne. Nie stwierdzono obciętych wzorów, nachodzących fragmentów tekstu ani widocznych uszkodzeń glifów. Sprawdzenie rzeczywistego logu: **0** wystąpień `Overfull \\hbox`, `Undefined control sequence`, `There were undefined references`, `Missing character` oraz `LaTeX Warning:`; **1** wystąpienie `Underfull \\hbox` (wiersze 336–342 rozdziału 16, poza 15B). Wersja CI po raporcie 15B/03, [#45304359300](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45304359300), również ma potwierdzony status **completed/success**.
 
-**Ocena 15B/04 nie zmienia się:** matematycznie/redakcyjnie **czysty (1/2)**; bramka PDF dla tych samych blobów **zielona**. Dedykowany nowy przebieg CI wywołany zapisem 15B/04 pozostaje do osobnego potwierdzenia i nie może być uznany za zakończony przed sprawdzeniem. Do stabilizacji wymagany jest jeszcze 15B/05, drugi czysty przegląd.
+**Wcześniejsza ocena 15B/04 jako czystego (1/2) została następnie skorygowana poniżej:** bramka PDF dla wersji wejściowej była zielona. Dedykowany nowy przebieg CI wywołany zapisem 15B/04 pozostaje do osobnego potwierdzenia i nie może być uznany za zakończony przed sprawdzeniem. Do stabilizacji wymagany jest jeszcze 15B/05, drugi czysty przegląd.
+
+## Uzupełnienie: dwie jawne hipotezy w twierdzeniach i korekta statusu
+
+Dodatkowa, niezależna kontrola **samodzielności sformułowań** ujawniła, że `thm:dunford-closedgraph15b` stwierdzało tezę „przy założeniach powyższej definicji”, zaś `thm:gelfand-exists15b` — „przy założeniach definicji”. Matematyczny sens obu tez był poprawny, jednak ich hipotezy oraz kwantyfikatory nie były jawne w samych twierdzeniach. Przeczyło to przyjętej zasadzie samodzielnych, precyzyjnych sformułowań.
+
+Poprawiono źródło w [commicie `16810f08`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/16810f08ec03b4c1b818b2c1058919a52ea76ca3): każde z obu twierdzeń określa teraz zupełną przestrzeń z miarą skończoną `(S,Σ,μ)`, ciało `K∈{R,C}`, odpowiednią przestrzeń Banacha, mierzalność funkcji oraz skalarną całkowalność. Samodzielnie definiuje także operator `Q_f` i funkcjonał `D_A` bądź element `g_A`, z kwantyfikatorami po `A`, `x'` lub `y`. Nie zmieniono żadnego dowodu. Doprecyzowano również tytuł przykładu: „Całka Dunforda w `X''` poza `J_X(X)`”, ponieważ poprzedni tytuł „poza przestrzenią Banacha” mógł błędnie sugerować, że całka Dunforda nie leży w żadnej przestrzeni Banacha.
+
+W [commicie `32ae933d`](https://github.com/dariusz-piekarz/mathematical_scipts/commit/32ae933d7a7bd8b858533c802c6a5ba3a634fbdc) dodano **szósty test regresyjny**, zabezpieczający jawność hipotez obu twierdzeń, definiowanie `D_A` i `g_A` oraz poprawny tytuł przykładu. Wszystkie pozostałe dowody i przykłady opisane powyżej są niezmienione i zachowują pozytywną ocenę matematyczną.
+
+Nowy SHA źródła: `3611164daa8a7ca1d73fc4b564825bddd044d100`; nowy SHA testu: `cb6ef6884e9683785a5b78f7676ed6a7b3aef24a`. Poprzednie CI i 110-stronicowy PDF dotyczyły blobów **sprzed** tej korekty; nie zastępują nowej kompilacji i kontroli PDF.
+
+**Werdykt końcowy 15B/04: POPRAWKOWY, 0/2.** Następnie wykonać audyt **15B/05** (pierwszy potencjalnie czysty na poprawionym źródle) po potwierdzeniu testów i CI aktualnych blobów. Nie przechodzić do rozdziału 16.
