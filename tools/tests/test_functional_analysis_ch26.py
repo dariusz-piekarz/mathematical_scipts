@@ -86,5 +86,48 @@ class Chapter26(unittest.TestCase):
                              (pairing(a, z)[0], -pairing(a, iz)[0]))
 
 
+    def test_FA26_eberlein_smulian_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"F=\{0\}",
+            r"\|\Theta-\Psi_j\|\|f_{\Psi_j}\|",
+            r"F=\{f_{\Psi_1},\ldots,f_{\Psi_r}\}",
+            r"\|y\|-2\|y-y_j\|>\|y\|/3",
+            r"0\le d(u,v)-d_N(u,v)\le2^{-N}",
+            r"\ref{cor:uniform-boundedness}",
+            r"n>|f(x)|+1",
+            r"|f(x_n)-\Phi(f)|<1/n",
+            r"\|G-\Psi\|<\eta",
+            r"\|\Psi\|\le3\|\Psi-G\|<3\eta",
+            r"C=\overline{J_X(A)}^{\,w^\ast}",
+            r"J_X(\overline A^{\,w})=C",
+        ):
+            self.assertIn(fragment, s)
+        # Exact finite models of the metric and finite norming cover.
+        V = list(product((-1, 0, 1), repeat=2))
+
+        def term(u, v, j):
+            return F(1, 2**j)*min(1, abs(u[j-1]-v[j-1]))
+
+        def metric(u, v):
+            return sum(term(u, v, j) for j in (1, 2))
+
+        for u, v, w in product(V, repeat=3):
+            self.assertLessEqual(metric(u, w), metric(u, v)+metric(v, w))
+        for u, v in product(V, repeat=2):
+            self.assertEqual(metric(u, v)==0, u==v)
+            for N in range(3):
+                tail = metric(u, v)-sum(term(u, v, j) for j in range(1, N+1))
+                self.assertTrue(0 <= tail <= F(1, 2**N))
+
+        S = [(F(a, 16), F(b, 16)) for a, b in
+             product(range(-16, 17), repeat=2) if max(abs(a), abs(b))==16]
+        for p, q in product(S, repeat=2):
+            d = max(abs(a-b) for a, b in zip(p, q))
+            if d >= F(1, 4):
+                continue
+            j = next(i for i in range(2) if abs(p[i])==1)
+            self.assertTrue(abs(q[j]) >= abs(p[j])-d > F(1, 2))
+
 if __name__ == "__main__":
     unittest.main()
