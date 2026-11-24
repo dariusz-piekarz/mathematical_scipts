@@ -6,6 +6,7 @@ const state = {
   domains:[], modules:[], outlines:new Map(), expandedDomains:new Set(), expandedModules:new Set(),
   currentModule:null, currentEntity:null, currentData:null, selected:new Map(),
   tab:"reader", granularity:"module", simplified:false, tooltipData:null, leanEpoch:0, leanFragment:null, leanRunner:null, leanCatalog:null, leanCatalogLoading:false, leanCatalogEpoch:0,
+  leanChapterReportEpoch:0,
   tooltipKey:0, graph:null, conceptGraph:null, conceptEpoch:0, renderEpoch:0, draftSession:null,
 };
 const titleOr = item => item.title || item.subtype || item.kind || item.id;
@@ -707,6 +708,46 @@ function renderLeanCatalog(){
     list.append(b);
   }
 }
+function clearLeanChapterReport(){
+  ++state.leanChapterReportEpoch;
+  $("leanChapterReportSummary").textContent="Wybierz rozdział i pobierz aktualny raport.";
+  $("leanChapterReportItems").replaceChildren();
+}
+async function loadLeanChapterReport(){
+  const moduleId=$("leanChapterModule").value.trim();
+  clearLeanChapterReport();
+  const epoch=state.leanChapterReportEpoch;
+  const summary=$("leanChapterReportSummary"),list=$("leanChapterReportItems");
+  if(!moduleId){summary.textContent="Podaj identyfikator rozdziału.";return;}
+  summary.textContent="Wczytywanie raportu "+moduleId+"…";
+  try{
+    const report=await api("/api/lean/chapter-report?module_id="+encodeURIComponent(moduleId));
+    if(epoch!==state.leanChapterReportEpoch)return;
+    if(report.report_schema_version!==1||report.source_module!==moduleId||
+       report.scope!=="manifest_and_index_only"||report.certificate!==false||
+       report.proof_status_included!==false||report.run_history_checked!==false||
+       report.dependency_fingerprint_checked!==false||!Array.isArray(report.items)){
+      throw new Error("Nieobsługiwany format raportu.");
+    }
+    summary.textContent=moduleId+" · indeks: "+report.source_index_status+
+      " · "+report.total+" rejestracji · "+report.ready+" przypiętych · "+
+      report.draft+" roboczych · "+report.stale+" nieaktualnych · "+
+      report.statement_approved+" zatwierdzonych stwierdzeń z przypiętym źródłem. "+
+      "SHA-256 źródła: "+(report.source_document_sha256||"niepotwierdzony")+
+      ". Raport nie sprawdza kompilacji, historii uruchomień ani zależności i nie jest certyfikatem.";
+    if(!report.items.length)list.append(node("p",{className:"empty-sub"},"Brak rejestracji dla tego rozdziału."));
+    for(const entry of report.items){
+      list.append(node("p",{className:"doc-meta"},entry.source_label+" · "+
+        entry.lean_theorem+" · "+(leanFormalizationLabels[entry.formalization_status]||entry.formalization_status)+
+        " · "+(leanStatementLabels[entry.statement_status]||entry.statement_status)+
+        " · indeks: "+entry.index_status));
+    }
+  }catch(err){
+    if(epoch!==state.leanChapterReportEpoch)return;
+    list.replaceChildren();
+    summary.textContent="Nie można wczytać raportu: "+err.message;
+  }
+}
 async function loadLeanFragment(query){
   const epoch=++state.leanEpoch;activateTab("lean");
   $("leanDependencies").classList.add("hidden");
@@ -965,6 +1006,8 @@ async function init(){
   try{
     const [domains,mods,stats]=await Promise.all([api("/api/domains"),api("/api/modules?limit=500"),api("/api/stats")]);
     state.domains=domains;state.modules=mods.items;
+    $("leanChapterModuleOptions").replaceChildren();
+    for(const m of state.modules)$("leanChapterModuleOptions").append(node("option",{value:m.id}));
     $("dbStatus").textContent="Baza połączona";$("dbStatus").classList.add("connected");
     $("statPill").textContent=stats.documents+" rozdziałów";
     for(const n of ["graphLeft","graphRight"])setSelect($(n),domains);
@@ -985,6 +1028,11 @@ function listeners(){
   $("leanCatalogRefresh").addEventListener("click",()=>{state.leanCatalog=null;loadLeanCatalog();});
   $("leanCatalogSearch").addEventListener("input",renderLeanCatalog);
   $("leanCatalogFilter").addEventListener("change",renderLeanCatalog);
+  $("leanChapterModule").addEventListener("input",clearLeanChapterReport);
+  $("leanChapterReportLoad").addEventListener("click",loadLeanChapterReport);
+  $("leanChapterReportCurrent").addEventListener("click",()=>{
+    $("leanChapterModule").value=state.currentModule||"";loadLeanChapterReport();
+  });
   $("addExcerpt").addEventListener("click",addExcerpt);
   $("addRange").addEventListener("click",addRange);
   $("openFirst").addEventListener("click",()=>{if(state.modules.length)openModule(state.modules[0].id);});
