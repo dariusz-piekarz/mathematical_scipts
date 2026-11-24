@@ -262,6 +262,44 @@ def seeded_larger():
     return cases
 
 
+def test_perturbation_gap():
+    # TG39-GAP-01: doubled weights permit exact half-integral perturbations.
+    # Check every vertex of a perturbation box strictly inside the bound,
+    # and one explicit perturbation on its boundary.
+    count, boxes = 0, 0
+    for n in range(1, 4):
+        pairs = list(itertools.combinations(range(n), 2))
+        for values in itertools.product((None, -2, 0, 3), repeat=len(pairs)):
+            edges = [(u, v, 2*w) for (u, v), w in zip(pairs, values) if w is not None]
+            _, optima = exhaustive_oracle(n, edges)
+            if len(optima) != 1:
+                continue
+            tree = optima[0]
+            alternatives = []
+            for u, v, w in edges:
+                if (u, v) in tree:
+                    continue
+                tree_edges = [(a, b, z) for a, b, z in edges if (a, b) in tree]
+                for weight in sorted({z for _, _, z in tree_edges}):
+                    if path_exists(n, [(a, b, z) for a, b, z in tree_edges if z <= weight], u, v):
+                        alternatives.append(w - weight)
+                        break
+            if alternatives:
+                gap = min(alternatives)
+                assert gap >= 2
+                epsilon = gap//2 - 1
+            else:
+                epsilon = 5
+            for signs in itertools.product((-1, 1), repeat=len(edges)):
+                perturbed = [(u, v, w + sign*epsilon)
+                             for (u, v, w), sign in zip(edges, signs)]
+                assert exhaustive_oracle(n, perturbed)[1] == [tree]
+                count += 1
+            boxes += 1
+    assert len(exhaustive_oracle(3, [(0, 1, 2), (1, 2, 7), (0, 2, 7)])[1]) == 2
+    return boxes, count
+
+
 def special_cases():
     graph = [
         (0, 1, 1), (1, 2, 2), (2, 3, 3), (3, 4, 2),
@@ -310,4 +348,5 @@ if __name__ == "__main__":
     print(f"PASS exhaustive small graphs: {exhaustive_small()}")
     print(f"PASS seeded larger graphs: {seeded_larger()}")
     special_cases()
+    print('PASS TG39-GAP-01 boxes and vertices:', test_perturbation_gap())
     print("PASS TG39-CERT-01 path certificate, hand-calculated examples, DSU invariants, cut/cycle properties and book integration")
