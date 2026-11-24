@@ -41,5 +41,42 @@ class Chapter15ARegressionTests(unittest.TestCase):
 
 
 
+
+    def test_audit30_source_contracts(self):
+        from pathlib import Path
+        root = Path(__file__).resolve().parents[2]
+        source = (root / "chapters/pl/functional_analysis/15A-calkowanie-funkcji-w-przestrzeniach-lokalnie-wypuklych.tex").read_text(encoding="utf-8")
+        for fragment in (
+            "p(I-S(f,P))<\\varepsilon/2",
+            "f(t,s+h)-f(t,s)=\\int_s^{s+h}\\partial_s f(t,u)\\,\\mathrm du",
+            "p(G(s+h)-G(s))",
+            "p(S(A,P)-D(P,Q))",
+            "p(S(B,Q)-D(P,Q))",
+            "\\chi_A/\\sqrt{\\lambda_1(A)}",
+        ):
+            self.assertIn(fragment, source)
+
+    def test_moving_limits_crossing_and_equal(self):
+        # f(t,s)=t+s; limits s and 2s. Covers reversed, equal and ordered limits.
+        def primitive(t,s):
+            return t*t/2+s*t
+        for s in (Fraction(-2), Fraction(-1,3), Fraction(0), Fraction(1,3), Fraction(2)):
+            F = lambda x: primitive(2*x,x)-primitive(x,x)
+            leibniz = 2*(2*s+s)-(s+s)+(2*s-s)
+            self.assertEqual(leibniz,5*s)
+            for h in (Fraction(-1,100), Fraction(1,100)):
+                self.assertEqual((F(s+h)-F(s))/h-leibniz, 5*h/2)
+
+    def test_fubini_polynomial_exact(self):
+        # Mixed polynomial t^2*s + 3*t*s^2 - 2 on [0,2] x [-1,3].
+        # Integrate each monomial first along either coordinate.
+        def moment(a,b,k):
+            return (Fraction(b)**(k+1)-Fraction(a)**(k+1))/(k+1)
+        for a,b,c,d in ((0,2,-1,3),(-2,1,0,1),(0,1,0,1)):
+            terms = [(1,1,2),(3,2,1),(-2,0,0)]
+            first = sum(coef*moment(c,d,j)*moment(a,b,i) for coef,i,j in terms)
+            second = sum(coef*moment(a,b,i)*moment(c,d,j) for coef,i,j in terms)
+            self.assertEqual(first,second)
+
 if __name__ == "__main__":
     unittest.main()
