@@ -1,0 +1,5 @@
+# Rozdział 40 — audyt indywidualny 03
+
+2026-11-24. Przebieg 45384309389: finite-models 138411135342 i chapter-pdf 138411135840 success. Log: 1467 sieci enumerowanych, 1050 losowanych, 680 wymiernych, TG40-EK-01 i TG40-DINIC-01 PASS.
+
+Źródło 469dc186d576d8f31f26179b6081fa5a89c0076b, blob b70381c30a0e8d4493451e2ce4790bc39d411aa8: 10 podmian, doprecyzowanie terminologii i dopuszczalności aktualizacji, dowód skalowania wymiernych przepustowości, skończoność odległości w lemacie EK, końcowy BFS w złożoności EK i Dinica, definicja przepływu blokującego względem początkowej sieci warstwowej, rachunek pamięci i ograniczenie liczby powiększeń FF. TG40-DEC-01 (911644a8fe055c1a4de88639bf110e276b02ad35): enumeracja dopuszczalnych przepływów na 2 i 3 wierzchołkach o wartościach 0,1,2 na łukach, wszystkie pary terminali, rekonstrukcja łuk po łuku, suma współczynników ścieżek, ograniczenie liczby składników, dodatkowa cyrkulacja z równoległymi łukami. Nowy test i CI niepotwierdzone. Zakres bez rozszerzeń. Status OTWARTY; następna iteracja: końcowy audyt terminologii, dowodów, CI i rzeczywistego PDF.
