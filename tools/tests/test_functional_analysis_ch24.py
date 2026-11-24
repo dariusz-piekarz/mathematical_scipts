@@ -204,5 +204,42 @@ class Chapter24(unittest.TestCase):
             w=sum(f[m]*g[m] if (m+1)%2==0 else -f[m]*g[m] for m in range(4))
             self.assertEqual(v,w)
 
+    def test_FA24_kernel_correspondence_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"A:\mathcal D(\Omega)\to\mathcal D'(\Lambda)_\beta",
+            r"\ref{thm:schwartz-kernel23}",
+            r"\{g\}",
+            r"izomorfizm algebraiczny",
+            r"\ref{ex:diagonal-kernel23}",
+            r"\supp\delta_\Delta=\Delta",
+            r"p(f)\le\lambda_d(K)^{1/2}p_{K,0}(f)",
+            r"|b(f,g)|\le p(f)p(g)",
+            r"Osobliwość jądra nie oznacza braku łącznej",
+        ):
+            self.assertIn(fragment,s)
+        # Polynomial models on [-1,1]; not compactly supported tests.
+        V=list(product(range(-1,2),repeat=3))
+        def moment(k): return F(0) if k%2 else F(2,k+1)
+        def integ(a,b):
+            return sum(x*y*moment(i+j) for i,x in enumerate(a) for j,y in enumerate(b))
+        for a,b in product(V,repeat=2):
+            c=[0]*5
+            for i,j in product(range(3),repeat=2): c[i+j]+=a[i]*b[j]
+            v=sum(t*moment(k) for k,t in enumerate(c))
+            self.assertEqual(v,integ(a,b))
+            self.assertLessEqual(v*v,integ(a,a)*integ(b,b))
+        # Gaussian integer coordinate models of the complex bilinear
+        # diagonal pairing. Values are exactly representable.
+        W=[(1,0),(1j,0),(1+1j,2-1j),(0,1j),(-1,2j)]
+        for a,b in product(W,repeat=2):
+            v=sum(x*y for x,y in zip(a,b))
+            self.assertEqual(v,sum(a[i]*b[j]*int(i==j) for i,j in product(range(2),repeat=2)))
+            self.assertLessEqual(v.real**2+v.imag**2,
+                sum(x.real**2+x.imag**2 for x in map(complex,a))*
+                sum(x.real**2+x.imag**2 for x in map(complex,b)))
+            self.assertEqual(sum((1j*x)*y for x,y in zip(a,b)),1j*v)
+            self.assertEqual(sum(x*(1j*y) for x,y in zip(a,b)),1j*v)
+
 if __name__ == "__main__":
     unittest.main()
