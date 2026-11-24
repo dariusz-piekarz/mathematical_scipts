@@ -12,3 +12,5 @@ Testy Python sprawdzają skończone tożsamości dokładną arytmetyką; dowody 
 | MA1-13-008 | ma1:thm:cesaro-implies-abel | Liniowy wzrost b_n,s_n,a_n, dwukrotne sumowanie przez części i granica średniej ważonej | semantyczna + Python |
 | MA1-13-009 | ma1:ex:abel-not-cesaro | Granice średnich 1/2 i 0, suma Abela 1/4 | semantyczna + Python |
 | MA1-13-010 | ma1:thm:summability-linear-shift | Liniowość, oba kierunki przesunięcia, m=0 i r=0 | semantyczna + Python |
+| MA1-13-011 | ma1:def:abel-summation, ma1:lem:abel-weights, ma1:thm:cesaro-implies-abel | Jawne ciało K i S w K, jedna ustalona rodzina wag, definicja c_n i wskazanie ciągu w zastosowaniu lematu; oszacowania wzrostu dla n=0 i n>0 | semantyczna + Python (test_bounded_means_growth) |
+| MA1-13-012 | ma1:thm:summability-linear-shift | Liniowość skończonych średnich i sum ważonych, w tym r=0 | semantyczna + Python (test_linearity) |
