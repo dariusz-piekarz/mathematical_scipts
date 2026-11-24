@@ -277,7 +277,7 @@ elementów przestrzeni dualnej topologicznej.
 
 \begin{definicja}[Przestrzeń Schwartza]
 \label{def:schwartz17}
-Dla $d\ge1$ definiujemy
+Dla $d\ge1$ i $\K\in\{\R,\C\}$ definiujemy
 \[
 \mathcal S(\R^d;\K)=\left\{f\in C^\infty(\R^d;\K):
 \sup_{x\in\R^d}|x^\alpha\partial^\beta f(x)|<\infty
@@ -305,9 +305,16 @@ Ponieważ $|x^\alpha|\le |x|^{|\alpha|}\le(1+|x|)^{|\alpha|}$,
 mamy $s_{\alpha,\beta}\le Q_{|\alpha|,|\beta|}$.
 Z drugiej strony nierówność
 $(1+|x|)^N\le C_{d,N}\bigl(1+\sum_{|\alpha|=N}|x^\alpha|\bigr)$
-wynika z $|x|\le\sqrt d\max_j|x_j|$ i dwumianu Newtona.
-Stąd $Q_{N,m}$ jest z góry ograniczone przez skończoną
-sumę odpowiednich $s_{\alpha,\beta}$ (łącznie z $\alpha=0$).
+dla $N\ge1$ wynika z oszacowania
+$(1+r)^N\le 2^N\max\{1,r^N\}$ dla $r\ge0$ oraz
+$|x|^N\le d^{N/2}\sum_{j=1}^d|x_j|^N$.
+Dla $N=0$ wystarczy stała $1$. W szczególności dla $N\ge1$
+\[
+Q_{N,m}(f)\le 2^N\sum_{|\beta|\le m}
+\left(s_{0,\beta}(f)+d^{N/2}\sum_{j=1}^d s_{Ne_j,\beta}(f)\right).
+\]
+Dla $N=0$ mamy $Q_{0,m}=\max_{|\beta|\le m}s_{0,\beta}$.
+Obie rodziny seminorm wyznaczają więc tę samą topologię.
 Rodzina $Q_n$ jest współkońcowa względem $Q_{N,m}$,
 gdy $n\ge\max\{N,m\}$. Oddzielanie punktów wynika już z $Q_1$.
 \end{proof}
@@ -320,7 +327,7 @@ Naturalne włożenie $\mathcal S(\R^d;\K)\hookrightarrow
 C^\infty(\R^d;\K)$ jest ciągłe.
 \end{twierdzenie}
 \begin{proof}
-Metryzowalność i lokalna wypukłość wynikają z
+Metryzowalność, lokalna wypukłość i warunek Hausdorffa wynikają z
 Lematu~\ref{lem:schwartz-seminorms17}.
 Niech $(f_j)$ będzie ciągiem Cauchy'ego dla wszystkich $Q_n$.
 Ponieważ na każdym zwartym zbiorze i dla każdego rzędu pochodnych
@@ -331,8 +338,12 @@ $f\in C^\infty(\R^d)$, do której $f_j$ zbiega lokalnie
 wraz ze wszystkimi pochodnymi.
 Ustalmy $N,m$ i $\varepsilon>0$. Istnieje $j_0$ takie, że
 $Q_{N,m}(f_j-f_k)\le\varepsilon$ dla $j,k\ge j_0$.
-Przechodząc z $k$ do nieskończoności punktowo w każdej pochodnej,
-dostajemy $Q_{N,m}(f_j-f)\le\varepsilon$ dla $j\ge j_0$.
+Dla ustalonego $j\ge j_0$, $x\in\R^d$ i $|\beta|\le m$
+mamy $(1+|x|)^N|\partial^\beta f_j(x)-\partial^\beta f_k(x)|
+\le\varepsilon$ dla każdego $k\ge j_0$.
+Przechodząc z $k$ do nieskończoności przy ustalonym $x$,
+a następnie biorąc supremum po $x$ i maksimum po $\beta$,
+otrzymujemy $Q_{N,m}(f_j-f)\le\varepsilon$.
 Ponieważ $Q_{N,m}(f_j)<\infty$, wynika stąd
 $Q_{N,m}(f)<\infty$. Wszystkie takie seminormy są skończone,
 więc $f\in\mathcal S$, a $f_j\to f$ w topologii Schwartza.
@@ -364,9 +375,18 @@ jest ciągłe.
 \begin{proof}
 Różniczkowanie spełnia
 $Q_{N,m}(\partial^\alpha f)\le Q_{N,m+|\alpha|}(f)$.
-Dla mnożenia przez $x^\alpha$ stosujemy wzór Leibniza,
-uzyskując oszacowanie przez skończoną sumę seminorm
-$Q_{N+|\alpha|,m}(f)$. Analogiczny wzór daje
+Dla mnożenia przez $x^\alpha$ wzór Leibniza daje
+\[
+\partial^\beta(x^\alpha f)=
+\sum_{\substack{\gamma\le\beta\\\gamma\le\alpha}}
+\binom{\beta}{\gamma}\frac{\alpha!}{(\alpha-\gamma)!}
+x^{\alpha-\gamma}\partial^{\beta-\gamma}f.
+\]
+Ponieważ $|x^{\alpha-\gamma}|\le(1+|x|)^{|\alpha|}$,
+po pomnożeniu przez wagę i wzięciu supremum otrzymujemy
+$Q_{N,m}(x^\alpha f)\le C_{\alpha,m}Q_{N+|\alpha|,m}(f)$,
+gdzie stała jest maksimum sum współczynników powyższego wzoru
+dla $|\beta|\le m$. Analogiczny wzór daje
 $Q_{N,m}(fg)\le C_{d,m}Q_{N,m}(f)Q_{0,m}(g)$,
 a więc łączną ciągłość iloczynu.
 Dla $p=\infty$ mamy $\|f\|_\infty\le Q_{0,0}(f)$.
@@ -374,7 +394,13 @@ Dla $1\le p<\infty$ wybieramy liczbę całkowitą $N>d/p$.
 Wtedy
 $\|f\|_{L^p}^p\le Q_{N,0}(f)^p
 \int_{\R^d}(1+|x|)^{-Np}\,\mathrm d\lambda_d(x)$,
-a całka jest skończona. To dowodzi ciągłości.
+a całka jest skończona: na kuli jednostkowej całkujemy
+funkcję ograniczoną, zaś w pierścieniu
+$2^k\le|x|<2^{k+1}$, $k\ge0$, całka jest nie większa niż
+$\lambda_d(B(0,1))2^d\,2^{k(d-Np)}$.
+Szereg tych oszacowań jest zbieżny, bo $Np>d$.
+Po wyciągnięciu pierwiastka stopnia $p$ dostajemy
+żądane oszacowanie normy, a więc ciągłość włożenia.
 \end{proof}
 
 \begin{twierdzenie}[Gęstość funkcji o zwartym nośniku w $\mathcal S$]
@@ -396,8 +422,8 @@ ze wzoru Leibniza
  (-1)R^{-|\gamma|}(\partial^\gamma\chi)(x/R)
  \partial^{\beta-\gamma}f.
 \]
-Pierwszy składnik jest wsparty w $\{|x|\ge R\}$,
-a pozostałe w $\{R\le|x|\le2R\}$.
+Nośnik pierwszego składnika jest zawarty w $\{|x|\ge R\}$,
+a nośniki pozostałych w $\{R\le|x|\le2R\}$.
 Dla ustalonych $N,m$ wszystkie składniki po pomnożeniu przez
 $(1+|x|)^N$ są więc ograniczone przez
 $C_{N,m}(1+R)^{-1}Q_{N+1,m}(f)$
@@ -415,16 +441,19 @@ ze swoimi standardowymi topologiami nie są normowalne.
 Wystarczy pokazać, że żadne otoczenie zera nie jest ograniczone,
 a następnie zastosować kryterium normowalności Kolmogorowa.
 Najpierw rozważmy funkcje zespolone. Każde otoczenie zera
-w $C^\infty(\Omega)$ zawiera zbiór $U=\{f:q_N(f)<\varepsilon\}$.
-Wybierzmy $\psi\in C_c^\infty(\Omega)$ różną od zera,
-taką, że jej nośnik leży w pewnym $K_M$ z $M>N+1$.
+w $C^\infty(\Omega)$ zawiera zbiór $U=\{f:q_N(f)<\varepsilon\}$
+dla pewnych $N\ge1$ i $\varepsilon>0$.
+Wybierzmy kulę domkniętą o dodatnim promieniu zawartą w $\Omega$
+i, z Lematu~\ref{lem:cutoffs17}, funkcję
+$\psi\in C_c^\infty(\Omega;\R)$ równą $1$ w jej otoczeniu.
+Jej nośnik zawiera się w pewnym $K_M$ z $M>N+1$.
 Niech $f_j(x)=c j^{-N}\psi(x)e^{ijx_1}$.
 Wzór Leibniza zapewnia $q_N(f_j)\le Cc$,
 więc małym $c>0$ można zagwarantować $f_j\in U$.
-Na otwartym podzbiorze, gdzie $\psi\ne0$, pochodna
-$\partial_1^{N+1}f_j$ ma wartość bezwzględną rosnącą
-co najmniej liniowo z $j$ (główny składnik ma rząd $j$,
-a pozostałe są jednostajnie ograniczone). Stąd
+Na wnętrzu wybranej kuli wszystkie pochodne $\psi$
+dodatniego rzędu znikają, zatem
+$\partial_1^{N+1}f_j(x)=c j i^{N+1}e^{ijx_1}$,
+której moduł jest równy $cj$. Stąd
 $q_M(f_j)\to\infty$, więc $U$ nie jest ograniczony.
 Dla przestrzeni Schwartza ten sam ciąg $f_j$, z ustaloną
 $\psi\in C_c^\infty(\R^d)$, spełnia
@@ -468,11 +497,22 @@ $\mathcal F(\partial_jf)(\xi)=i\xi_j\widehat f(\xi)$
 i $\mathcal F(x_jf)(\xi)=i\partial_{\xi_j}\widehat f(\xi)$.
 \end{twierdzenie}
 \begin{proof}
-Różniczkowanie pod znakiem całki daje
+Przy różniczkowaniu względem $\xi_j$ iloraz różnicowy
+czynnika wykładniczego jest ograniczony przez $|x_j|$.
+Indukcyjnie majorantą przy kolejnych różniczkowaniach
+jest $|x^{\beta+e_j}f(x)|$, całkowalna na mocy
+Stwierdzenia~\ref{prop:schwartz-operators17}.
+Twierdzenie o zbieżności zmajoryzowanej daje więc
 $\partial_\xi^\beta\widehat f=(-i)^{|\beta|}
-\mathcal F(x^\beta f)$. Całkowanie przez części, bez wyrazów
-brzegowych dzięki szybkiemu zanikaniu funkcji, daje
-$\mathcal F(\partial^\alpha f)=(i\xi)^\alpha\widehat f$.
+\mathcal F(x^\beta f)$, a także ciągłość tych pochodnych.
+Dla pochodnej $\partial_j f$ stosujemy twierdzenie Fubiniego
+i całkowanie przez części względem $x_j$ na $[-R,R]$.
+Przy ustalonych pozostałych współrzędnych wyrazy brzegowe
+dążą do zera, gdyż $f$ szybko maleje; całki jednowymiarowe
+są bezwzględnie zbieżne. Następnie całkujemy po pozostałych
+współrzędnych, korzystając z całkowalności $f$ i $\partial_j f$.
+Otrzymujemy $\mathcal F(\partial_j f)=i\xi_j\widehat f$.
+Iteracja daje $\mathcal F(\partial^\alpha f)=(i\xi)^\alpha\widehat f$.
 Połączenie tych tożsamości prowadzi do
 \[
 \xi^\alpha\partial_\xi^\beta\widehat f(\xi)
@@ -481,9 +521,12 @@ Połączenie tych tożsamości prowadzi do
 \]
 Wartość bezwzględną prawej strony ograniczamy przez
 $(2\pi)^{-d/2}\|\partial^\alpha(x^\beta f)\|_{L^1}$.
-Wzór Leibniza i wybór wagi $(1+|x|)^{d+1}$ pokazują,
-że każde takie wyrażenie jest ograniczone przez skończoną
-kombinację seminorm Schwartza funkcji $f$.
+Z oszacowań w Stwierdzeniu~\ref{prop:schwartz-operators17}
+otrzymujemy, dla pewnej stałej $C_{\alpha,\beta,d}$,
+$s_{\alpha,\beta}(\widehat f)\le
+C_{\alpha,\beta,d}Q_{d+1+|\beta|,|\alpha|}(f)$,
+stosując kolejno oszacowanie normy $L^1$, różniczkowania
+i mnożenia przez wielomian.
 Wszystkie seminormy $s_{\alpha,\beta}(\widehat f)$ są więc
 skończone i zależą w sposób ciągły od $f$.
 
@@ -496,8 +539,17 @@ I_\varepsilon(x)=(2\pi)^{-d/2}\int_{\R^d}
 Ponieważ $f\in L^1$ i czynnik Gaussa należy do $L^1$,
 możemy zastosować twierdzenie Fubiniego. Jednowymiarową całkę Gaussa obliczamy następująco:
 $I(u)=\int_\R e^{-\varepsilon t^2/2}e^{iut}\,\mathrm dt$
-spełnia $I'(u)=-(u/\varepsilon)I(u)$ na mocy całkowania
-przez części oraz $I(0)=\sqrt{2\pi/\varepsilon}$.
+można różniczkować pod całką z majorantą
+$|t|e^{-\varepsilon t^2/2}$. Ponieważ
+$(e^{-\varepsilon t^2/2})'=-\varepsilon t e^{-\varepsilon t^2/2}$,
+całkowanie przez części, z zanikającymi wyrazami brzegowymi, daje
+\[
+I'(u)=-\frac{i}{\varepsilon}
+\int_\R (e^{-\varepsilon t^2/2})'e^{iut}\,\mathrm dt
+=-\frac u\varepsilon I(u).
+\]
+Ponadto $I(0)=\sqrt{2\pi/\varepsilon}$ z całki Gaussa
+(po podstawieniu $s=\sqrt\varepsilon t$).
 Zatem $I(u)=\sqrt{2\pi/\varepsilon}e^{-u^2/(2\varepsilon)}$.
 Zastosowanie tego wzoru w każdej współrzędnej daje
 \[
@@ -505,12 +557,22 @@ I_\varepsilon(x)=\int_{\R^d}f(y)
 (2\pi\varepsilon)^{-d/2}e^{-|x-y|^2/(2\varepsilon)}
 \,\mathrm d\lambda_d(y).
 \]
-Jądro po prawej ma całkę $1$ i jego masa poza każdą
-kulą wokół zera dąży do zera przy $\varepsilon\downarrow0$.
-Ponieważ $f$ jest ograniczona i ciągła, prawa strona
-dąży do $f(x)$: dzielimy całkę na $|x-y|<\delta$,
-gdzie korzystamy z ciągłości $f$, i dopełnienie,
-gdzie korzystamy z ograniczoności $f$ i zanikania masy jądra.
+Oznaczmy $G_\varepsilon(z)=(2\pi\varepsilon)^{-d/2}
+e^{-|z|^2/(2\varepsilon)}$. Podstawienie $z=\sqrt\varepsilon w$
+daje $\int G_\varepsilon\,\mathrm d\lambda_d=1$ oraz
+$\int_{|z|\ge\delta}G_\varepsilon(z)\,\mathrm d\lambda_d(z)
+=\int_{|w|\ge\delta/\sqrt\varepsilon}G_1(w)\,\mathrm d\lambda_d(w)
+\to0$ dla każdego $\delta>0$, z całkowalności $G_1$.
+Dla ustalonego $x$ i $\eta>0$ wybieramy $\delta>0$ tak,
+aby $|f(x-z)-f(x)|<\eta$ dla $|z|<\delta$.
+Wtedy
+\[
+|I_\varepsilon(x)-f(x)|\le
+\eta+2\|f\|_\infty
+\int_{|z|\ge\delta}G_\varepsilon(z)\,\mathrm d\lambda_d(z).
+\]
+Stąd granica górna błędu nie przekracza $\eta$, a ponieważ
+$\eta$ jest dowolne, $I_\varepsilon(x)\to f(x)$.
 Z drugiej strony $\widehat f\in L^1$, zatem
 z twierdzenia o zbieżności zmajoryzowanej
 $I_\varepsilon(x)$ dąży do całki ze wzoru odwrotnego.
@@ -524,7 +586,9 @@ oszacowań seminorm po zmianie znaku wykładnika.
 \begin{przyklad}[Funkcja Gaussa i wizualizacja w Plotly]
 \label{ex:fourier-gauss17}
 Dla $a>0$ oraz $f_a(x)=e^{-ax^2/2}$, $x\in\R$,
-otrzymujemy $\widehat f_a(\xi)=a^{-1/2}e^{-\xi^2/(2a)}$.
+stosując obliczoną w poprzednim dowodzie całkę $I(u)$
+z $\varepsilon=a$ i $u=-\xi$, otrzymujemy
+$\widehat f_a(\xi)=a^{-1/2}e^{-\xi^2/(2a)}$.
 W szczególności zwiększenie skupienia funkcji $f_a$
 odpowiada rozszerzeniu jej transformaty Fouriera.
 Poniższy kod Python rysuje obie funkcje z użyciem biblioteki Plotly.
@@ -557,8 +621,14 @@ $\mathcal F(f*g)=(2\pi)^{d/2}\widehat f\,\widehat g$.
 \end{stwierdzenie}
 \begin{proof}
 Z $\mathcal S\subset L^1\cap L^\infty$ wynika
-bezwzględna zbieżność splotu. Różniczkowanie pod całką
-daje $\partial^\beta(f*g)=f*(\partial^\beta g)$.
+bezwzględna zbieżność splotu, gdyż całka modułu
+nie przekracza $\|f\|_1\|g\|_\infty$.
+Ilorazy różnicowe pochodnych $g$ względem $x_j$
+są ograniczone przez $\|\partial^{\beta+e_j}g\|_\infty$,
+więc po pomnożeniu przez $|f(y)|$ otrzymujemy majorantę
+całkowalną względem $y$. Indukcja i twierdzenie o zbieżności
+zmajoryzowanej dają $\partial^\beta(f*g)=f*(\partial^\beta g)$
+i ciągłość wszystkich tych pochodnych.
 Nierówność $1+|x|\le(1+|y|)(1+|x-y|)$ prowadzi do
 \[
  Q_{N,m}(f*g)\le Q_{N,m}(g)
@@ -566,10 +636,20 @@ Nierówność $1+|x|\le(1+|y|)(1+|x-y|)$ prowadzi do
  \le C_{d,N}Q_{N+d+1,0}(f)Q_{N,m}(g).
 \]
 To dowodzi jednocześnie szybkiego zanikania i ciągłości
-splotu. Wzór Fouriera otrzymujemy z twierdzenia Fubiniego:
-w całce podwójnej podstawiamy $z=x-y$ i rozdzielamy
-czynniki $e^{-i(y+z)\cdot\xi}$; przy naszej normalizacji
-pojawia się współczynnik $(2\pi)^{d/2}$.
+splotu. Twierdzenie Tonellego i niezmienniczość miary Lebesgue'a
+względem przesunięć dają
+$\int_{\R^d}\int_{\R^d}|f(y)g(x-y)|\,\mathrm d\lambda_d(x)
+\,\mathrm d\lambda_d(y)=\|f\|_1\|g\|_1<\infty$.
+Możemy więc zastosować twierdzenie Fubiniego i podstawić $z=x-y$:
+\[
+\begin{aligned}
+\mathcal F(f*g)(\xi)
+&=(2\pi)^{-d/2}
+\int_{\R^d} f(y)e^{-iy\cdot\xi}\,\mathrm d\lambda_d(y)
+\int_{\R^d}g(z)e^{-iz\cdot\xi}\,\mathrm d\lambda_d(z)\\
+&=(2\pi)^{d/2}\widehat f(\xi)\widehat g(\xi).
+\end{aligned}
+\]
 \end{proof}
 
 \begin{uwaga}[Przygotowanie teorii dystrybucji]
