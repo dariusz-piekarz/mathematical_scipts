@@ -548,5 +548,47 @@ class TestChapter15B(unittest.TestCase):
                 self.assertEqual(scalar_integral(subset),
                     sum((v*w for v,w in zip(coefficients,a)),Fraction(0)))
 
+
+    def test_audit36_gelfand_variation_contracts(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            "\\|g_A\\|\\le\\|Q\\|",
+            "\\sum_n|g_{A_n}(y)|\\le\\int_A",
+            "|m|(A_i)-\\varepsilon/N",
+            "m_f(A)-\\sum_{n=1}^N m_f(A_n)=m_f(B_N)",
+            "B_0=S\\setminus\\bigcup_{j=1}^k B_j",
+        ):
+            self.assertIn(fragment, source)
+
+    def test_audit36_variation_stability_finite_atoms(self):
+        # Independent enumeration of partitions, not the density formula.
+        mu = [Fraction(1,2), Fraction(1,4), Fraction(1,8), Fraction(1,8)]
+        f = [(2,-3),(0,1),(-2,2),(3,0)]
+        g = [(1,-3),(1,-1),(-2,1),(0,0)]
+        def partitions(items):
+            if not items:
+                yield []
+                return
+            i,*rest = items
+            for p in partitions(rest):
+                yield [[i]] + p
+                for j in range(len(p)):
+                    q = [b[:] for b in p]
+                    q[j].append(i)
+                    yield q
+        def variation(h,indices):
+            return max((sum(sum(abs(sum(mu[i]*h[i][k] for i in b))
+                                for k in range(2)) for b in p)
+                        for p in partitions(indices)), default=0)
+        for mask in range(16):
+            A = [i for i in range(4) if mask & (1<<i)]
+            vf,vg = variation(f,A),variation(g,A)
+            error = sum(mu[i]*sum(abs(f[i][k]-g[i][k]) for k in range(2)) for i in A)
+            self.assertLessEqual(abs(vf-vg),error)
+            for split in range(16):
+                B = [i for i in A if split & (1<<i)]
+                C = [i for i in A if i not in B]
+                self.assertEqual(vf,variation(f,B)+variation(f,C))
+
 if __name__ == "__main__":
     unittest.main()
