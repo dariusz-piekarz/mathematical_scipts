@@ -278,6 +278,71 @@ def audit_permutation_covers():
     return cases,connected,automorphisms
 
 
+def audit_universal_cover_prefixes():
+    """TG07-UC-01: exact truncated universal covers, including loops and parallel edges."""
+    graphs=roots=vertices=incidences=0
+    for n in range(1,4):
+        types=list(combinations(range(n),2))+[(v,v) for v in range(n)]
+        for multiplicities in product(range(3),repeat=len(types)):
+            E=[e for e,k in zip(types,multiplicities) for _ in range(k)]
+            if len(E)>5 or not is_connected(n,E):
+                continue
+            graphs+=1
+            outgoing=[[] for _ in range(n)]
+            for j,(u,v) in enumerate(E,1):
+                outgoing[u].append((j,v))
+                outgoing[v].append((-j,u))
+            for root in range(n):
+                roots+=1
+                depth=4
+                endpoint={():root}
+                layer=[()]
+                for _ in range(depth):
+                    new=[]
+                    for w in layer:
+                        for step,v in outgoing[endpoint[w]]:
+                            if w and step==-w[-1]:
+                                continue
+                            z=w+(step,)
+                            assert z not in endpoint
+                            endpoint[z]=v
+                            new.append(z)
+                    layer=new
+                vertices+=len(endpoint)
+                assert len(endpoint)-1==sum(bool(w) for w in endpoint)
+                for w,v in endpoint.items():
+                    if len(w)==depth:
+                        continue
+                    neighbors=[]
+                    for step,target in outgoing[v]:
+                        z=w[:-1] if w and step==-w[-1] else w+(step,)
+                        assert z in endpoint and endpoint[z]==target
+                        neighbors.append(z)
+                        incidences+=1
+                    assert len(set(neighbors))==len(outgoing[v])
+                    assert sum(len(z)<len(w) for z in neighbors)==bool(w)
+                if len(E)==n-1:
+                    assert len(endpoint)==n
+                else:
+                    assert layer  # a cycle permits arbitrarily long reduced walks
+    return graphs,roots,vertices,incidences
+
+
+def audit_radial_contraction():
+    """TG07-RAD-01: exact common-prefix distance in a rooted tree."""
+    checks=0
+    # a,b are distances to root; c is length of shared initial arc.
+    # Include points in edge interiors and both contraction regimes.
+    for a,b in product((Fraction(i,2) for i in range(11)),repeat=2):
+        for c in (Fraction(i,2) for i in range(11) if Fraction(i,2)<=min(a,b)):
+            for s in (Fraction(i,8) for i in range(9)):
+                before=a+b-2*c
+                after=s*(a+b)-2*min(c,s*a,s*b)
+                assert 0<=after<=before
+                checks+=1
+    return checks
+
+
 def planar_rotation(n,edges):
     """Exhaustive oriented sphere-embedding search via cyclic edge orders.
 
@@ -412,6 +477,8 @@ if __name__=="__main__":
             graph_count+=1
     print("PASS 07: covers, Euler characteristic, Nielsen-Schreier:",audit_covers())
     print("PASS TG07-PERM-01 cases, connected, deck automorphisms:",audit_permutation_covers())
+    print("PASS TG07-UC-01 graphs, roots, vertices, incidences:",audit_universal_cover_prefixes())
+    print("PASS TG07-RAD-01 exact radial contraction checks:",audit_radial_contraction())
     print("PASS 08: exact Kirchhoff/Dirichlet/Thomson models:",graph_count)
     print("PASS 09: exhaustive rotations, planar faces and coloring:",audit_planarity())
     print("PASS source conventions, notation and 44-chapter catalog")
