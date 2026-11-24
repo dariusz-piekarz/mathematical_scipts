@@ -462,5 +462,23 @@ class TestChapter15B(unittest.TestCase):
             self.assertEqual(sum(m*v for m,v in zip(children, values)),
                              length*average)
 
+
+    def test_chapter14_audit21_proof_details(self):
+        source = (SOURCE.parent / "14-pochodne-gateaux-i-frecheta-w-przestrzeniach-banacha-i-hilberta.tex").read_text(encoding="utf-8")
+        for fragment in (
+            "2(b-a)\\omega(\\delta)",
+            "x_n=(2\\pi n)^{-1/2}",
+            "J(x_*+h)-J(x_*)=\\frac12\\langle Ah,h\\rangle",
+            "\\frac{\\eta(t+h)(y)-\\eta(t)(y)}{h}=w(y)",
+            "$\\ell(df(x;h+k))=\\ell(df(x;h))+\\ell(df(x;k))$",
+        ):
+            self.assertIn(fragment, source)
+        # Quadratic energy with A=diag(2,3), b=(4,3), x*=(2,1).
+        def energy(x,y):
+            return (2*x*x+3*y*y)/2-4*x-3*y
+        for h,k in ((Fraction(1,3),Fraction(-2,5)),(Fraction(0),Fraction(1,7))):
+            self.assertEqual(energy(2+h,1+k)-energy(Fraction(2),Fraction(1)),
+                             (2*h*h+3*k*k)/2)
+
 if __name__ == "__main__":
     unittest.main()
