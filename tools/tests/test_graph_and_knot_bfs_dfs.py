@@ -86,6 +86,18 @@ def dfs(adj, directed=False):
         for v, u in parent.items():
             if u is not None and low[v] > tin[u]:
                 bridges.add(tuple(sorted((u, v))))
+    if not directed:
+        # TG37-LOW-01: independently enumerate descendants and non-tree
+        # edges to strict ancestors, excluding the parent tree edge.
+        for u in adj:
+            candidates = [tin[u]]
+            for y in adj:
+                if tin[u] <= tin[y] and tout[y] <= tout[u]:
+                    candidates.append(tin[y])
+                    for x in adj[y]:
+                        if x != parent[y] and tin[x] < tin[y] and tout[y] < tout[x]:
+                            candidates.append(tin[x])
+            assert low[u] == min(candidates), (adj, u, low[u], candidates)
     return tin, tout, parent, bridges, back
 
 def check_undirected():
