@@ -77,5 +77,19 @@ class Chapter17(unittest.TestCase):
         self.assertEqual(f_at_zero, g_at_zero)
         self.assertNotEqual(f_derivative_at_zero, g_derivative_at_zero)
 
+
+    def test_cutoff_density_and_schwartz_examples(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"\overline B(a,3r_a)\subseteq\Omega",
+            r"\operatorname{dist}(x,K)<\delta/2",
+            r"s_{3e_1,0}(f)=+\infty",
+            r"C_m(1+R)^{-1}Q_{N+1,m}(f)",
+            r"|T(f)|\le\varepsilon^{-1}Q_{n,n}(f)",
+        ):
+            self.assertIn(fragment, s)
+        for t in range(1, 101):
+            self.assertGreaterEqual(Fraction(t**3,1+t*t), Fraction(t,2))
+
 if __name__ == "__main__":
     unittest.main()
