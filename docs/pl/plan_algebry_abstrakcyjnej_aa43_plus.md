@@ -292,3 +292,7 @@ AA-67: moduł Verma z konstrukcji AA-62, własność uniwersalna, największy w�
 ## Otwarcie AA-68 — 24 listopada 2026 r.
 
 AA-68: charaktery formalne, pierścień grupowy kraty wag, działania na charakterach, trójkątność, baza pierścienia niezmienników grupy Weyla i rozkład iloczynu tensorowego w rzędzie jeden. **Etap D W AUDYCIE.** Bez wzoru charakterów i wzoru wymiarowego Weyla. Dwa zestawy regresji wykonane; pełny CI i PDF do potwierdzenia. AA-69 nieotwarty.
+
+## Zamknięcie AA-68 — 24 listopada 2026 r.
+
+**AA-68 STABILNY w ustalonym zakresie; etapy D/P zaliczone.** Cztery dowody, przykład i cztery trwałe regresje zaliczone; CI [45475570053](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45475570053) 147/147 success, 4788 testów, źródło 3189372249d8768dc9ea731fa3518d8e8cb35800. PDF 428 stron, artefakt 14960255792, wszystkie strony AA-68 (fizyczne 425–428) obejrzane, log czysty. Raport `audits/abstract_algebra/ch68_iteration_05.md`. AA-01–68 stabilne. **AA-69 nieotwarty.** Kolejny etap D: wzór charakterów Weyla i niezbędne lematy, w razie potrzeby rozdzielenie zakresu na kolejne stabilizowane rozdziały.
