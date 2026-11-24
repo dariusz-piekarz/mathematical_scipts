@@ -122,7 +122,7 @@ class CyclotomicCompositumAudit(unittest.TestCase):
 
     def test_reference_integrity_and_chapter_count(self):
         base=Path(__file__).resolve().parents[2]/"chapters/pl/abstract_algebra"
-        self.assertEqual(len(list(base.glob("[0-9][0-9]-*.tex"))),62)
+        self.assertEqual(len(list(base.glob("[0-9][0-9]-*.tex"))),63)
         names={
             2:"02-warstwy-lagrange-euler-i-grupy-ilorazowe.tex",
             22:"22-twierdzenie-artina-i-odpowiedniosc-galois.tex",
