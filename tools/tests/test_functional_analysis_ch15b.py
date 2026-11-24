@@ -621,5 +621,37 @@ class TestChapter15B(unittest.TestCase):
         # Equality is possible, so coefficient one cannot be reduced.
         self.assertEqual(max(map(abs,integral(1))),q(1))
 
+
+    def test_audit38_vitali_independent_controls(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            "M_h(A)<\\varepsilon/4",
+            "\\eta_h\\mu(S)<\\varepsilon/2",
+            "\\le2M_h(E_{n,y})+\\eta_h\\mu(S)<\\varepsilon",
+            "\\le2\\sup_n\\int_A\\|f_n\\|\\,\\mathrm d\\mu",
+            "(J_Yy)(h(s))",
+        ):
+            self.assertIn(fragment, source)
+        # Separate majorants in the Dunford and Gelfand settings.
+        # On a uniform atomic probability space, use the exact
+        # maximum mass of each family on sets of bounded cardinality.
+        for scale in (1, 100):
+            weights = [Fraction(1,8)]*8
+            vals = [scale*i for i in range(1,9)]
+            for k in range(9):
+                bound = sum(sorted((w*v for w,v in zip(weights,vals)),
+                                   reverse=True)[:k])
+                for mask in range(256):
+                    if mask.bit_count() <= k:
+                        self.assertLessEqual(
+                            sum(weights[i]*vals[i] for i in range(8)
+                                if mask & (1<<i)), bound)
+        # Truncations of the c0 example converge in norm in measure
+        # but do not have uniformly absolutely continuous integrals.
+        for n in range(1, 15):
+            self.assertEqual(sum(Fraction(1,2**k) for k in range(n+1,n+15)),
+                             Fraction(1,2**n)*(1-Fraction(1,2**14)))
+            self.assertEqual(Fraction(1,2**n)*2**n, 1)
+
 if __name__ == "__main__":
     unittest.main()
