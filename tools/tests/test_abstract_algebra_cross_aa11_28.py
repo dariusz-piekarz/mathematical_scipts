@@ -151,7 +151,14 @@ class EisensteinCyclotomicInterface(unittest.TestCase):
     def test_source_labels_refs_and_stable_chapter_contract(self):
         folder = ROOT / "chapters/pl/abstract_algebra"
         paths = sorted(folder.glob("[0-9][0-9]-*.tex"))
-        self.assertEqual(len(paths), 67)
+        import json
+        root = Path(__file__).resolve().parents[2]
+        catalog = json.loads((root / "catalog/books.json").read_text(encoding="utf-8"))
+        expected = next(book["chapters"] for book in catalog["books"]
+                        if book["id"] == "abstract_algebra" and book["language"] == "pl")
+        self.assertGreaterEqual(len(expected), 67)
+        self.assertEqual(sorted(p.relative_to(root).as_posix() for p in paths),
+                         sorted(expected))
         all_sources = {p.name: p.read_text(encoding="utf-8")
                        for p in paths}
         labels = [m for s in all_sources.values()
