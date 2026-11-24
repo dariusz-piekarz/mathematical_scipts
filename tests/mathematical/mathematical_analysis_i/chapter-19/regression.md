@@ -16,3 +16,4 @@ Testy Python w dokładnej arytmetyce sprawdzają skończone świadki i etapy kon
 | MA1-19-012 | ma1:def:point-oscillation, ma1:thm:continuity-gdelta | Niepusta kula, rozszerzona średnica, równoważność oscylacji zero i ciągłości | semantyczna |
 | MA1-19-013 | ma1:thm:continuity-gdelta | Zawieranie kul, otwartość podpoziomów, G_delta i F_sigma | semantyczna + Python |
 | MA1-19-014 | ma1:cor:no-rational-continuity | Gęstość otwartych zbiorów, usunięcie r_n, zstępujące przedziały i sprzeczność | semantyczna + Python |
+| MA1-19-015 | ma1:ex:thomae, ma1:def:cantor-set, ma1:thm:cantor-function | Rzeczywiste współrzędne w źródle TikZ: pełna lista punktów Thomae'a, 31 odcinków C_0–C_4 z tolerancją zaokrągleń 10^(-8), dokładne wierzchołki F_3 | Python (test_cantor_figure_coordinates) + kontrola wizualna |
