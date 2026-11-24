@@ -61,7 +61,17 @@ printf 'tmp.write=ok\\n'
 # Read kernel tables without opening a network connection. Encode raw tables
 # to preserve row boundaries and let the host validator check their structure.
 for key in dev route ipv6_route; do
-    data=$(/bin/busybox base64 -w 0 "/proc/net/$key") || exit 30
+    case "$key" in
+        dev) read_code=32 ;;
+        route) read_code=33 ;;
+        ipv6_route) read_code=34 ;;
+    esac
+    # Separate kernel read errors from encoding failures. BusyBox versions
+    # differ in their base64 options; use stdin and default line wrapping.
+    /bin/busybox cat "/proc/net/$key" > /tmp/atlas-net-table || exit "$read_code"
+    wrapped=$(/bin/busybox base64 < /tmp/atlas-net-table) || exit 35
+    data=$(printf '%s' "$wrapped" | /bin/busybox tr -d '\\n') || exit 36
+    /bin/busybox rm /tmp/atlas-net-table || exit 37
     printf 'net.%s=%s\\n' "$key" "$data"
 done
 # No attempt to connect to a daemon. Check known paths and dangling links.
@@ -224,6 +234,8 @@ _FIXTURE_EXIT_STAGES = {
     23: "root_fixture_stat", 24: "root_fixture_mode", 25: "tmp_write",
     26: "tmp_readback", 27: "tmp_remove", 28: "tmp_stat", 29: "tmp_owner_mode",
     30: "network_table_read", 31: "docker_socket_present",
+    32: "network_dev_read", 33: "network_ipv4_read", 34: "network_ipv6_read",
+    35: "network_base64_encode", 36: "network_base64_unwrap", 37: "network_temp_remove",
 }
 
 
