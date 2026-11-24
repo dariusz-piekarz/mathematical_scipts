@@ -728,3 +728,63 @@ class RuntimeReportTests(unittest.TestCase):
                      {"Client": {"Version": "28.0.4"}, "Server": {"Version": "28.0.4\n"}}):
             with self.subTest(data=data), self.assertRaises(ValueError):
                 report_engine_versions(data)
+
+
+class RuntimeReportFileTests(unittest.TestCase):
+    def test_success_file_round_trip_and_no_overwrite(self):
+        import tempfile
+        from pathlib import Path
+        from scripts.lean_rootless_ci_probe import read_success_report, write_success_report
+        fixture = RuntimeReportTests()
+        report = fixture.report()
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "report.json"
+            write_success_report(path, report, expected_sha=fixture.sha)
+            self.assertEqual(read_success_report(path, expected_sha=fixture.sha), report)
+            with self.assertRaises(FileExistsError):
+                write_success_report(path, report, expected_sha=fixture.sha)
+            with self.assertRaises(ValueError):
+                read_success_report(path, expected_sha="a"*40)
+
+    def test_duplicate_top_level_and_nested_keys_rejected(self):
+        import json
+        import tempfile
+        from pathlib import Path
+        from scripts.lean_rootless_ci_probe import read_success_report
+        fixture = RuntimeReportTests()
+        raw = json.dumps(fixture.report(), sort_keys=True)
+        for changed in (raw.replace('"schema_version": 1', '"schema_version": 1, "schema_version": 1'),
+                        raw.replace('"client": "28.0.4"', '"client": "28.0.4", "client": "28.0.4"')):
+            self.assertNotEqual(raw, changed)
+            with tempfile.TemporaryDirectory() as directory:
+                path = Path(directory) / "report.json"
+                path.write_text(changed, encoding="utf-8")
+                with self.assertRaises(ValueError):
+                    read_success_report(path, expected_sha=fixture.sha)
+
+    def test_missing_malformed_oversized_and_nonstandard_json_rejected(self):
+        import tempfile
+        from pathlib import Path
+        from scripts.lean_rootless_ci_probe import read_success_report, MAX_REPORT_BYTES
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "report.json"
+            with self.assertRaises(FileNotFoundError):
+                read_success_report(path, expected_sha=RuntimeReportTests.sha)
+            for raw in (b"", b"\xff", b"{}{}", b'{"x":NaN}', b'{"x":Infinity}',
+                        b" " * (MAX_REPORT_BYTES + 1), b"[" * 2000 + b"]" * 2000):
+                path.write_bytes(raw)
+                with self.subTest(raw=raw[:20]), self.assertRaises(ValueError):
+                    read_success_report(path, expected_sha=RuntimeReportTests.sha)
+
+    def test_invalid_success_report_not_written(self):
+        import tempfile
+        from pathlib import Path
+        from scripts.lean_rootless_ci_probe import write_success_report
+        fixture = RuntimeReportTests()
+        report = fixture.report()
+        report["execution_allowed"] = True
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "report.json"
+            with self.assertRaises(ValueError):
+                write_success_report(path, report, expected_sha=fixture.sha)
+            self.assertFalse(path.exists())
