@@ -15,3 +15,5 @@ Testy Python sprawdzają skończone świadki i tożsamości w dokładnej arytmet
 | MA1-14-011 | ma1:def:one-sided-limits, ma1:thm:one-sided-limit-equivalence, ma1:ex:sign-one-sided | Obie strony muszą być punktami skupienia; pominięcie wartości w p; różne granice znaku | semantyczna + Python |
 | MA1-14-012 | ma1:def:extended-function-limits, ma1:thm:extended-limits-sequential | Dziedziny nieograniczone, wszystkie kombinacje p i L, niepuste U_n, zaprzeczenie warunku | semantyczna |
 | MA1-14-013 | ma1:ex:extended-limits | 1/x z obu stron i w nieskończoności, 1/x^2 w zerze | semantyczna + Python |
+| MA1-14-014 | ma1:def:extended-function-limits | Granica w nieskończoności nie wymaga skończonego punktu skupienia; jawne kwantyfikatory progów M,R; świadki dla Z | semantyczna + Python (test_discrete_domain_at_infinity) |
+| MA1-14-015 | ma1:rem:one-sided-accumulation | Jeżeli tylko jedna strona ma punkt skupienia p, granica względna redukuje się do tej strony; świadki dla [0,1] i odległego punktu -2 | semantyczna + Python (test_locally_one_sided_domain) |
