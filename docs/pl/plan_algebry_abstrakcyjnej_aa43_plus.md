@@ -207,3 +207,7 @@ AA-58: półproste algebry Liego, forma Killinga i kryteria Cartana, zakres docs
 ## Otwarcie AA-59 — 24 listopada 2026 r.
 
 AA-59: podalgebry Cartana i rozkład korzeniowy, zakres docs/pl/zakres_aa59_rozklad_korzeniowy.md. AA-01–58 stabilne, **AA-59 W AUDYCIE**, AA-60 nieotwarty. Bez sprzężoności podalgebr Cartana i teorii reprezentacji sl2; dalsze własności korzeniowe wymagają osobnych dowodów.
+
+## Zamknięcie AA-59 — 24 listopada 2026 r.
+
+**AA-59 STABILNY w ustalonym zakresie.** Audyty V–VI czyste (2/2). CI [45377157158](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45377157158): 128/128 success, head 6f47ab4095e78dba45fe4d692ad50edb4f068119, blob 80070ac0fa8356846c254e0bc9e5b3478c1f5fe1 zgodny. Oba zestawy regresji zaliczone; 59 rozdziałów, 1171 etykiet, 738 odsyłaczy, 0 brakujących celów. Artefakt 14911299289, PDF 384 strony, AA-59 fizyczne 380–384 (drukowane 368–372), wszystkie obejrzane, log czysty. Raport `audits/abstract_algebra/ch59_iteration_06.md`. AA-01–58 zachowują status. **AA-60 nieotwarty**; proponowany zakres: reprezentacje skończenie wymiarowe sl2, jednowymiarowość przestrzeni korzeniowych, ciągi korzeniowe i aksjomaty układu korzeni. Status planu nadrzędny wobec historycznej strony tytułowej.
