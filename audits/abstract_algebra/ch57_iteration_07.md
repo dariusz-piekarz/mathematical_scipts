@@ -10,3 +10,7 @@ Commit 5dff41e82e1a06c13975885c3c91c2b514eb4d87, blob 5f1fe64e17ffb3133857890d85
 
 ## Werdykt
 Matematyczne audyty czyste 2/2. AA-57 W AUDYCIE TECHNICZNYM: należy zweryfikować run 45366505930, w toku, i strony po wymuszonym podziale. AA-58 nieotwarty.
+
+## Dodatkowa kontrola integralności po podziale stron
+
+Porównano aktualny blob 5f1fe64e17ffb3133857890d8552cdf840ac6ff4 z blobem poprzedniej kompilacji 631f29533261e5991d55bccd2d81d191b96f881b: po usunięciu poleceń podziału strony źródła są identyczne znak w znak. Porównano również z matematycznie zatwierdzonym blobem a64577b1841a14ea92d6ed08de7db6248684be76: po pominięciu bloku diagramu wraz z podpisem i poleceń podziału strony źródła są identyczne znak w znak. Zachowano 25 etykiet, 13 wystąpień odsyłaczy do 11 jednoznacznych celów w AA-56–57; środowiska zrównoważone; dokładnie jedno włączenie rozdziału w pliku głównym. CI 45366505930: {"success":72,"in_progress":1,"pending":50}; status in_progress, artefakty []. Nie zmieniono źródła. Nadal 2/2 czyste audyty matematyczne, bez zatwierdzania składu przed oględzinami aktualnego PDF.
