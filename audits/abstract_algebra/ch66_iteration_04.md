@@ -1,0 +1,9 @@
+# AA-66 — zamknięcie etapu P po korekcie redakcyjnej
+
+24 listopada 2026 r. Gałąź biblioteka-matematyczna-iteracja-6. Źródło c70d1424dee20274c65199e3a2da5c9806311043 odpowiada korekcie bd703e491e6d2e280a9a5b577613f5bfa4d358d2 i zachowuje cztery dowody ocenione w audytach I–III. W poprawionym PDF potwierdzono jawne d=dim g i odsyłacz do Definicji 66.2 oraz poprawiony termin „Kocykl” w Przykładzie 66.8. Nie wykryto nowych usterek.
+
+CI 45444685201, job 138625065928, head bd703e491e6d2e280a9a5b577613f5bfa4d358d2: 143/143 success. Kontrola terminologii 45444685275 i aplikacji 45444685077 również success. Bramka globalna PASS: 66 rozdziałów, 571 dowodów, 303 twierdzenia, 353 przykłady, 1241 unikatowych etykiet, 865 wystąpień odsyłaczy, 474 różne cele, 0 nierozwiązanych i powielonych etykiet. Ponownie uruchomiono oba trwałe zestawy JS z gałęzi: f29706cc605ad4d55a3f4d82a0398042367b7b99 (29 modeli, 90 kontroli Casimira), 23e5b3ac60e666d97dfbac5cd066fd419e95411a (27 modeli, 2682 tożsamości kocyklu, 234 kontrole przekrojów i 261 kontroli rzutów); oba PASS.
+
+Artefakt 14945059069 pobrano po ponowieniu próby, odczytano lokalne archiwum AA66_corrected.zip. PDF 419 stron, SHA-256 619eade6872d82f59637c992bcbdf26892391a6aa6b23a5d4967f1559d636dba. Wyrenderowano PyMuPDF w skali 1,6 fizyczne strony 416–419 (drukowane 403–406) i obejrzano wszystkie cztery osobno. Diagram, wzory, odsyłacze i tekst są czytelne, bez obcięć i kolizji. W logu zero Overfull, Underfull, Warning:, undefined references i wierszy rozpoczynających się od !. Bez dalszych zmian źródła.
+
+AA-66 STABILNY w ustalonym zakresie. Etapy D/P zaliczone. AA-67 nieotwarty; następny etap D: istnienie skończenie wymiarowych reprezentacji nieprzywiedlnych o dowolnej wadze całkowitej dominującej, z dowodem skończonego wymiaru i powiązaniem z AA-62 oraz AA-65.
