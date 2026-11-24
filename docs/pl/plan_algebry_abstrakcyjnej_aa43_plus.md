@@ -308,3 +308,7 @@ AA-69: permutacja korzeni dodatnich przez odbicia proste, zasada skracania i try
 ## Otwarcie AA-70 — 24 listopada 2026 r.
 
 AA-70: skalar Casimira, rekurencja krotności z różnic śladów, operator różniczkowy na pierścieniu grupowym, równanie własne dla iloczynu mianownika i charakteru, pełny dowód wzoru charakterów Weyla przez wykluczenie niższych alternantów, przykłady A1 i A2. **Etap D W AUDYCIE.** AA-70-WCF-01 zaliczony (57 modeli, 8481 kontroli wag); CI i PDF do potwierdzenia. Wzór wymiarowy Weyla pozostawiono do osobnego rozdziału AA-71, nieotwartego do stabilizacji AA-70.
+
+## Zamknięcie AA-70 — 24 listopada 2026 r.
+
+**AA-70 STABILNY w ustalonym zakresie; etapy D/P zaliczone.** Cztery dowody, dwa przykłady i trzy trwałe regresje zaliczone; CI [45489653511](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45489653511) 149/149 success, 4792 testy, źródło 18f76eb8ecb04ecbaf316065b6e52c2c4d2b0d53. PDF 436 stron, artefakt 14965733181, wszystkie strony AA-70 (fizyczne 433–436) obejrzane, log czysty. Raport `audits/abstract_algebra/ch70_iteration_04.md`. AA-01–70 stabilne. **AA-71 nieotwarty.** Następny etap D: wzór wymiarowy Weyla z pełnym argumentem granicznym i przykładami.
