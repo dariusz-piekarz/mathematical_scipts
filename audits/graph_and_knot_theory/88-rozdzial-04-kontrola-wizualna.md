@@ -1,0 +1,7 @@
+# Rozdział 04 — audyt indywidualny 04
+
+2026-11-24. Potwierdzono CI źródła 61c28c1ec152e658d0f18b14cde6d52036cbe45a: pełny audyt 45366339719 (oba zadania success), algorytmy 45366339702, aplikacja 45366339752, terminologia 45366339772 success. Testy z 63caff486f704cdd9fe919db4a6f041416f6f016 również success (45366290250). Rzeczywisty log: PASS chapter 04 Menger: 771 connected graphs, 7521 endpoint pairs, 4294 adjacent endpoint pairs, 3 strict Whitney examples.
+
+Pobrano i rozpakowano artefakt 14906887991 dla SHA 61c28c1ec152e658d0f18b14cde6d52036cbe45a. PDF 309 stron, plik ostrzeżeń 0 bajtów. Wyrenderowano w 110 dpi i obejrzano wszystkie 8 stron rozdziału 04 (fizyczne 39–46, drukowane 29–36). Rozdział 05 zaczyna się na stronie fizycznej 47. Rysunki przekroju, przepływu i trzech ścieżek czytelne. Dwie usterki: etykieta pojemność 1 na rysunku rozszczepienia wierzchołka (strona 44) nachodzi na węzły; na stronie 46 pozostają tylko trzy linie końcowego przykładu. Podniesiono etykietę (above=7pt), zwięźlej złożono pierwszy argument dowodu Whitneya i ostatni przykład, zachowując wszystkie argumenty i trzy przykłady. Commit 46e75f75b685a4dc6154fe0af65a4df90b75c04e, blob 367fea13cc7aa5c728e8e0459248da23a02b08c4. Efekt paginacji wymaga potwierdzenia na nowym PDF. Bez rozszerzeń zakresu.
+
+Status OTWARTY: ponowna kompilacja i kontrola wizualna aktualnego źródła; nie zamykać przed potwierdzeniem poprawki. Nie powtarzać zaliczonych kontroli matematycznych bez przesłanki.
