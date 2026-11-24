@@ -123,5 +123,22 @@ class Chapter16(unittest.TestCase):
                 phi = (F(-2),F(1),F(4))
                 self.assertLessEqual(sum(a*b for a,b in zip(phi,p)),max(phi))
 
+
+    def test_FA16_PROXIMAL_EXTENDED_01(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        self.assertIn(r"Poza dziedziną efektywną $\Phi_y(v)=+\infty$", source)
+        self.assertIn(r"\lambda^{-1}\langle u-y,v-u\rangle", source)
+        # J(v)=v^2/2 for v>=0, +infinity otherwise.
+        for lam in (F(1,2), F(1), F(2)):
+            for y in map(F, range(-3,4)):
+                u = max(F(0),y/(1+lam))
+                def phi(v):
+                    return v*v/2+(v-y)**2/(2*lam)
+                for v in (F(0), F(1,4), F(1), F(2)):
+                    self.assertGreaterEqual(phi(v)-phi(u),(v-u)**2/(2*lam))
+                for z in map(F, range(-3,4)):
+                    w = max(F(0),z/(1+lam))
+                    self.assertLessEqual((u-w)**2,(y-z)*(u-w))
+
 if __name__ == "__main__":
     unittest.main()
