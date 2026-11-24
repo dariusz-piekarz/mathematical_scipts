@@ -70,7 +70,8 @@ def chapter_report(con: sqlite3.Connection, module_id: str, *,
 
     # Reuse the existing, bounded catalogue: it checks label ownership,
     # manifest SHA and canonical on-disk TeX. Do not invent proof statuses.
-    catalog = lean_catalog.list_formalizations(con, lean_root=lean_root)
+    catalog = lean_catalog.list_formalizations(
+        con, lean_root=lean_root, module_id=module_id)
     # Project a fixed allowlist. Future catalogue additions (including any
     # eventual cached proof status) must not silently enter this report.
     entries = [

@@ -12,7 +12,9 @@ MAX_ENTRIES = 250
 
 
 def list_formalizations(con: sqlite3.Connection, *,
-                        lean_root: Path = lean.LEAN_ROOT) -> dict:
+                        lean_root: Path = lean.LEAN_ROOT,
+                        module_id: str | None = None) -> dict:
+    """List all mappings or only one module; always validate the full registry."""
     registry = lean._registry(lean_root)
     if len(registry) > MAX_ENTRIES:
         raise HTTPException(503, "Zbyt duży rejestr formalizacji Lean.")
@@ -24,6 +26,10 @@ def list_formalizations(con: sqlite3.Connection, *,
     items = []
     for item in registry:
         module, label = item["source_module"], item["source_label"]
+        # Filter only after global registry validation and its size limit.
+        # Do not skip any integrity/provenance check for a selected entry.
+        if module_id is not None and module != module_id:
+            continue
         if module not in documents:
             doc = con.execute(
                 "SELECT id,sha256,content FROM documents WHERE id=?", (module,)
