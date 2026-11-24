@@ -487,9 +487,13 @@ co daje sprzeczność. Maksimum $u_\eps$ leży zatem na brzegu.
 Wobec tego dla każdego $x\in\overline\Omega$ mamy
 $u(x)+\eps|x|^2\leq
 \max_{z\in\partial\Omega}(u(z)+\eps|z|^2)$.
-Ponieważ $\overline\Omega$ jest ograniczony,
-możemy przejść z $\eps$ do zera i otrzymać
-$u(x)\leq\max_{\partial\Omega}u$.
+Niech $M=\max_{z\in\overline\Omega}|z|^2<\infty$.
+Prawa strona jest nie większa niż
+$\max_{\partial\Omega}u+\eps M$, a $\eps|x|^2\geq0$.
+Stąd $u(x)\leq\max_{\partial\Omega}u+\eps M$ dla każdego
+$\eps>0$. Przechodząc z $\eps$ do zera, otrzymujemy
+$u(x)\leq\max_{\partial\Omega}u$; biorąc maksimum po $x$,
+dostajemy~\eqref{eq:maximum-principle}.
 Dla $\Delta u\leq0$ stosujemy wykazany wynik do $-u$.
 \end{proof}
 
@@ -497,7 +501,7 @@ Dla $\Delta u\leq0$ stosujemy wykazany wynik do $-u$.
 \label{cor:dirichlet-stability}
 Niech $\Omega\subset\R^n$ będzie niepustym ograniczonym
 zbiorem otwartym, a $u,v\in C^2(\Omega)\cap
-C(\overline\Omega)$ niech spełniają $\Delta u=\Delta v$
+C(\overline\Omega)$ będą funkcjami rzeczywistymi spełniającymi $\Delta u=\Delta v$
 w $\Omega$. Wówczas
 \[
  \max_{x\in\overline\Omega}|u(x)-v(x)|
@@ -510,9 +514,13 @@ muszą być równe.
 \begin{proof}
 Różnica $w=u-v$ jest harmoniczna. Twierdzenie
 \ref{thm:laplace-max}, zastosowane do $w$ i $-w$,
-daje odpowiednio oszacowania $w$ z góry i z dołu
-przez wartości na $\partial\Omega$. Złożenie tych
-oszacowań daje nierówność dla $|w|$.
+daje dla każdego $x\in\overline\Omega$ nierówności
+$w(x)\leq\max_{\partial\Omega}w$ oraz
+$-w(x)\leq\max_{\partial\Omega}(-w)$.
+Obie prawe strony są nie większe niż
+$M=\max_{\partial\Omega}|w|$, więc $|w(x)|\leq M$.
+Jeśli wartości brzegowe $u$ i $v$ są równe, to $M=0$
+i $u=v$ na $\overline\Omega$.
 \end{proof}
 
 Zauważmy, że udowodniliśmy \emph{jednoznaczność i stabilność},
@@ -538,22 +546,35 @@ Jeśli $u,v\in C^2(\overline\Omega)$ rozwiązują to samo
 zagadnienie Neumanna, to $u-v$ jest stała na $\Omega$.
 \end{stwierdzenie}
 \begin{proof}
-Z twierdzenia Gaussa wynika
+Ponieważ $\nabla u$ jest polem klasy $C^1$ aż do brzegu,
+a $\Omega$ jest obszarem ograniczonym o brzegu klasy $C^1$,
+możemy zastosować twierdzenie Gaussa do pola $\nabla u$.
+Daje ono
 $\int_\Omega\Delta u(x)\,\mathrm d\lambda_n(x)
 =\int_{\partial\Omega}\partial_\nu u(x)\,\mathrm d\sigma(x)$.
-Po wstawieniu równania otrzymujemy
+Po podstawieniu $\Delta u=-f$ oraz $\partial_\nu u=g$
+i przeniesieniu obu całek na jedną stronę otrzymujemy
 \eqref{eq:neumann-compatibility}.
 
 Dla $w=u-v$ zachodzi $\Delta w=0$ i $\partial_\nu w=0$.
-Pierwsza tożsamość Greena daje
+Stosując twierdzenie Gaussa do pola $w\nabla w$ klasy $C^1$
+i korzystając z równości
+$\operatorname{div}(w\nabla w)=|\nabla w|^2+w\Delta w$,
+otrzymujemy pierwszą tożsamość Greena:
 \[
  \int_\Omega|\nabla w(x)|^2\,\mathrm d\lambda_n(x)
  =\int_{\partial\Omega}w(x)\partial_\nu w(x)\,
  \mathrm d\sigma(x)
  -\int_\Omega w(x)\Delta w(x)\,\mathrm d\lambda_n(x)=0.
 \]
-Z ciągłości $\nabla w$ wynika $\nabla w=0$ w $\Omega$,
-a spójność $\Omega$ implikuje stałość $w$.
+Gdyby $|\nabla w(x_0)|>0$ dla pewnego $x_0\in\Omega$,
+to z ciągłości istniałaby kula zawarta w $\Omega$, na której
+$|\nabla w|^2$ byłaby ograniczona z dołu przez dodatnią stałą.
+Całka byłaby wtedy dodatnia, wbrew otrzymanej równości.
+Zatem $\nabla w=0$ w $\Omega$. Na każdej kuli zawartej
+w $\Omega$ funkcja $w$ jest stała, co wynika z całkowania
+pochodnej wzdłuż odcinków. Jest więc lokalnie stała,
+a spójność $\Omega$ implikuje jej stałość na całym obszarze.
 \end{proof}
 
 \subsection{Transport: rozwiązanie przesuwa się po charakterystykach}
@@ -597,20 +618,34 @@ wartość $u$ pozostaje na każdej z nich stała (rysunek dla $c>0$).
 
 \begin{przyklad}[Utrata gładkości mimo gładkich danych]
 \label{ex:burgers-blowup}
-Rozważmy na $[0,T)\times\R$ równanie
+Rozważmy dla $t\geq0$, $x\in\R$ równanie
 $u_t+u\,u_x=0$ z warunkiem $u(0,x)=-\sin x$.
-Wzdłuż charakterystyki startującej z punktu $\xi$
-wartość $u$ jest stała i równa $-\sin\xi$;
-zatem charakterystyka ma równanie
+Jeśli $u$ jest rozwiązaniem klasy $C^1$, to lokalna charakterystyka
+$X$ spełnia $X'(t)=u(t,X(t))$, $X(0)=\xi$.
+Z reguły łańcuchowej
+$\frac{\mathrm d}{\mathrm dt}u(t,X(t))=u_t+u\,u_x=0$
+wzdłuż tej krzywej. Zatem $X'(t)=-\sin\xi$,
+a całkowanie daje równanie charakterystyki
 \begin{equation}\label{eq:burgers-characteristics}
  x=\xi-t\sin\xi,\qquad u(t,x)=-\sin\xi.
 \end{equation}
 Dla $0\leq t<1$ pochodna odwzorowania
 $\xi\mapsto\xi-t\sin\xi$ wynosi $1-t\cos\xi\geq1-t>0$.
-Odwzorowanie jest bijekcją $\R\to\R$ i ma gładką odwrotność,
-więc~\eqref{eq:burgers-characteristics} definiuje gładkie
-rozwiązanie. Różniczkując względem $x$ i korzystając
-z reguły łańcuchowej, dostajemy
+Dla ustalonego $t$ odwzorowanie $F_t(\xi)=\xi-t\sin\xi$
+jest więc ściśle rosnące, a z $|F_t(\xi)-\xi|\leq t$
+wynika, że jego granice przy $\xi\to\pm\infty$ są równe
+odpowiednio $\pm\infty$. Z ciągłości wynika surjektywność.
+Twierdzenie o funkcji uwikłanej zastosowane do równania
+$F_t(\xi)-x=0$ (pochodna względem $\xi$ jest dodatnia)
+daje gładką zależność odwrotności $\xi=\xi(t,x)$ od obu zmiennych,
+również lokalnie w otoczeniu $t=0$.
+Różniczkując $x=\xi-t\sin\xi$, dostajemy
+$\xi_x=(1-t\cos\xi)^{-1}$ oraz
+$\xi_t=\sin\xi/(1-t\cos\xi)$.
+Dla $u=-\sin\xi$ mamy więc $u_t=-\cos\xi\,\xi_t$,
+$u_x=-\cos\xi\,\xi_x$ i $u_t+uu_x=0$.
+Ponadto $\xi(0,x)=x$, więc spełniony jest warunek początkowy.
+W szczególności
 \begin{equation}\label{eq:burgers-gradient}
  u_x(t,x)=\frac{-\cos\xi}{1-t\cos\xi}.
 \end{equation}
@@ -641,13 +676,29 @@ Jeśli dodatkowo $u_0\geq0$ i $u_0\not\equiv0$, to
 $u(t,x)>0$ dla każdego $t>0$ oraz $x\in\R^d$.
 \end{stwierdzenie}
 \begin{proof}
-Bezpośrednie różniczkowanie funkcji $\Gamma_\kappa$
-(dla $t>0$) daje
-$\partial_t\Gamma_\kappa=\kappa\Delta_x\Gamma_\kappa$.
-Ponieważ $u_0$ ma zwarty nośnik, na każdym zwartym podzbiorze
-$(0,\infty)\times\R^d$ możemy dowolnie wiele razy
-różniczkować całkę~\eqref{eq:heat-kernel} pod znakiem całki.
-Stąd gładkość i równanie ciepła.
+Dla $t>0$ różniczkowanie wzoru na $\Gamma_\kappa$ daje
+\[
+ \partial_t\Gamma_\kappa=
+ \left(-\frac d{2t}+\frac{|x|^2}{4\kappa t^2}\right)\Gamma_\kappa,
+ \qquad
+ \partial_{x_j}\Gamma_\kappa=-\frac{x_j}{2\kappa t}\Gamma_\kappa.
+\]
+Ponowne różniczkowanie względem $x_j$ i sumowanie po $j$
+prowadzi do
+$\Delta_x\Gamma_\kappa=
+(-d/(2\kappa t)+|x|^2/(4\kappa^2t^2))\Gamma_\kappa$.
+Stąd $\partial_t\Gamma_\kappa=\kappa\Delta_x\Gamma_\kappa$.
+Niech $K$ będzie zwartym podzbiorem $(0,\infty)\times\R^d$
+i niech $S=\supp u_0$. Na iloczynie odpowiednio powiększonego
+zwartego otoczenia $K$ i $S$ każda ustalona pochodna
+$(t,x)\mapsto\Gamma_\kappa(t,x-y)$ jest ograniczona
+jednostajnie względem $(t,x,y)$: jest ciągła, a czas jest
+oddzielony od zera. Iloczyn tej stałej i $|u_0(y)|$ jest
+całkowalną majorantą, więc twierdzenie o różniczkowaniu całki
+z parametrem stosuje się do pochodnych dowolnego rzędu.
+Wynika stąd gładkość $u$ i
+$u_t-\kappa\Delta_xu=\int_{\R^d}(\partial_t-\kappa\Delta_x)
+\Gamma_\kappa(t,x-y)u_0(y)\,\mathrm d\lambda_d(y)=0$.
 
 Ze wzoru na całkę Gaussa wynika
 $\int_{\R^d}\Gamma_\kappa(t,z)\,\mathrm d\lambda_d(z)=1$.
@@ -661,9 +712,15 @@ Część całki po $|z|<r$ ma moduł nie większy od $\eps$;
 część po $|z|\geq r$ jest ograniczona przez
 $2\|u_0\|_\infty\int_{|z|\geq r}\Gamma_\kappa(t,z)
 \,\mathrm d\lambda_d(z)$, a ostatnia całka dąży do zera,
-gdy $t\downarrow0$ (po podstawieniu $z=\sqrt t\,w$
-i zastosowaniu zbieżności zdominowanej). Dowodzi to
-zbieżności jednostajnej.
+gdy $t\downarrow0$. Istotnie, po podstawieniu $z=\sqrt t\,w$
+jest ona równa całce funkcji $\Gamma_\kappa(1,w)$ po
+$\{|w|\geq r/\sqrt t\}$. Funkcje podcałkowe, przedłużone
+przez zero na dopełnienie tego zbioru, zbiegają punktowo
+do zera i są zdominowane przez całkowalną funkcję
+$\Gamma_\kappa(1,w)$. Twierdzenie o zbieżności zdominowanej
+daje żądaną granicę. Otrzymane oszacowanie jest niezależne
+od $x$, a $\eps>0$ było dowolne, co dowodzi zbieżności
+jednostajnej na $\R^d$.
 
 Jeżeli $u_0\geq0$ i $u_0\not\equiv0$, to z ciągłości
 wynika, że $u_0$ jest dodatnia na pewnym niepustym zbiorze
@@ -725,8 +782,17 @@ to $u(t,x)=0$ dla $|x|>R+ct$.
 Wprowadzamy zmienne $\xi=x+ct$ i $\eta=x-ct$.
 Dla $v(\xi,\eta)=u(t,x)$ równanie falowe staje się
 $\partial_\xi\partial_\eta v=0$ (z niezerowym
-czynnikiem $-4c^2$ przed pochodną). Na płaszczyźnie
-$(\xi,\eta)$ oznacza to $v(\xi,\eta)=F(\xi)+G(\eta)$.
+czynnikiem $-4c^2$ przed pochodną). Obraz półpłaszczyzny $t\geq0$ to
+$\{(\xi,\eta):\xi\geq\eta\}$, nie cała płaszczyzna.
+Dla każdego ustalonego $\xi$ pochodna $v_\xi(\xi,\eta)$
+jest stała względem $\eta<\xi$, ponieważ $v_{\xi\eta}=0$.
+Z ciągłości aż do przekątnej jest równa $a(\xi)=v_\xi(\xi,\xi)$.
+Funkcja $a$ jest klasy $C^1$, więc istnieje $F\in C^2(\R)$
+z $F'=a$. Dla każdego ustalonego $\eta$ funkcja
+$v(\xi,\eta)-F(\xi)$ ma zerową pochodną względem $\xi>\eta$,
+a z ciągłości jej wartość jest równa
+$G(\eta)=v(\eta,\eta)-F(\eta)$. Funkcja $G$ jest klasy $C^2$.
+Otrzymujemy zatem $v(\xi,\eta)=F(\xi)+G(\eta)$ dla $\xi\geq\eta$.
 Zatem $u(t,x)=F(x+ct)+G(x-ct)$.
 Warunki początkowe dają
 $F(x)+G(x)=u_0(x)$ i
@@ -738,8 +804,17 @@ $G'=(u_0'-u_1/c)/2$.
 Całkowanie tych pochodnych, a następnie dodanie $F$ i $G$,
 daje~\eqref{eq:dalembert}; stałe całkowania znoszą się
 dzięki warunkowi $F+G=u_0$.
-Otrzymany wzór definiuje rozwiązanie $C^2$, co można także
-sprawdzić przez różniczkowanie, i pokazuje jego jednoznaczność.
+Dla sprawdzenia istnienia niech $H$ będzie funkcją pierwotną
+$u_1$, klasy $C^2$. Prawa strona~\eqref{eq:dalembert} jest sumą
+funkcji $(u_0/2+H/(2c))(x+ct)$ oraz
+$(u_0/2-H/(2c))(x-ct)$, a więc jest klasy $C^2$.
+Dla każdej funkcji $h\in C^2(\R)$ mamy
+$\partial_t^2h(x\pm ct)=c^2h''(x\pm ct)$ i
+$\partial_x^2h(x\pm ct)=h''(x\pm ct)$, więc suma spełnia
+równanie falowe. Przy $t=0$ suma jest równa $u_0(x)$,
+a jej pochodna czasowa jest równa $u_1(x)$.
+Każde rozwiązanie musiało mieć postać~\eqref{eq:dalembert},
+co dowodzi również jednoznaczności.
 
 Jeżeli $|x|>R+ct$, to oba punkty $x-ct$, $x+ct$ leżą
 po tej samej stronie przedziału $[-R,R]$, a przedział
@@ -798,12 +873,15 @@ $L'=c$ oraz $R'=-c$, daje
 \]
 Po osobnym zebraniu wyrazów przy prawym i lewym końcu
 przedziału otrzymujemy dokładnie~\eqref{eq:pde-v31-wave-cone}.
-Jeśli dane początkowe są zerowe na $[a,b]$, to $E(0)=0$.
+Jeśli dane początkowe są zerowe na $[a,b]$, to również
+$u_x(0,x)=0$ na $(a,b)$, a przez ciągłość także w końcach
+przedziału. Stąd $E(0)=0$.
 Ponieważ $E\ge0$ i $E$ jest nierosnąca, mamy $E(t)=0$.
 Ciągłość pochodnych daje $u_t=u_x=0$ w otwartym stożku
 $0<t<T$, $L(t)<x<R(t)$. Dla każdego punktu tego stożka
-odcinek pionowy od chwili $0$ pozostaje w stożku, zatem
-$u(t,x)=u(0,x)=0$. Ciągłość daje też równość na jego brzegu.
+odcinek pionowy dla $0<s\leq t$ pozostaje w otwartym stożku,
+gdyż $L(s)\leq L(t)<x<R(t)\leq R(s)$. Całkowanie
+$u_t(s,x)=0$ i ciągłość przy $s=0$ dają $u(t,x)=u(0,x)=0$. Ciągłość daje też równość na jego brzegu.
 \end{proof}
 
 \begin{uwaga}[Dlaczego bilans lokalny jest ważniejszy od samego wzoru]
