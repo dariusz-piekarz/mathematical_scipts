@@ -222,5 +222,42 @@ class Chapter26(unittest.TestCase):
                 self.assertLess(sq(sub(u,v)),(eps/2)**2)
                 self.assertLess(sq(sub(x,y)),eps**2)
 
+    def test_FA26_weak_sphere_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"\ref{thm:sfera-slaba}",
+            r"\overline{S_X}^{\,w}\subseteq B_X",
+            r"v\in\bigcap_{j=1}^m\ker f_j",
+            r"\|x+tv\|\ge t\|v\|-\|x\|",
+            r"x+t_0v\in U\cap S_X",
+            r"względną słabą zwartość",
+            r"A=(0,1)\subseteq\R",
+            r"\Phi=J_Xy",
+            r"A=\overline A^{\,w}",
+            r"\|e_n-e_m\|^2=2",
+            r"\|(u+v)/2\|_\infty=1",
+        ):
+            self.assertIn(fragment, s)
+        # Exact finite-dimensional slice model: two independent
+        # linear constraints on the real l-infinity unit cube.
+        V = list(product(range(-1,2), repeat=3))
+        X = list(product((F(-1,2),F(0),F(1,2)), repeat=3))
+        def dot(a,b):
+            return sum(x*y for x,y in zip(a,b))
+        def norm(x):
+            return max(map(abs,x))
+        for f,g in product(V,repeat=2):
+            v = (f[1]*g[2]-f[2]*g[1], f[2]*g[0]-f[0]*g[2],
+                 f[0]*g[1]-f[1]*g[0])
+            if not any(v):
+                continue
+            self.assertTrue(dot(f,v)==dot(g,v)==0)
+            for x in X:
+                t = min((F(1 if a>0 else -1)-b)/a
+                        for a,b in zip(v,x) if a)
+                y = tuple(b+t*a for a,b in zip(v,x))
+                self.assertTrue(t>0 and norm(y)==1)
+                self.assertTrue(dot(f,y)==dot(f,x) and dot(g,y)==dot(g,x))
+
 if __name__ == "__main__":
     unittest.main()
