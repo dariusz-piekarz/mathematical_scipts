@@ -1,0 +1,13 @@
+# Moduł 15B — audyt 36 (blok 3/12, poprawkowy, 0/2)
+
+Data: 24 listopada 2026. Gałąź biblioteka-matematyczna-iteracja-6. Punkt wyjścia: blok 2, źródło 615c4fa96a3e9bdcf40ac04bf9fd5cdec1269e90, testy 2a1f0954b0f1e26a14af5f91bab9ddbd4ea2caa2.
+
+## Matematyka i redakcja
+Audyt trzeciej podsekcji: całka Gelfanda i miary wektorowe. 10 celowanych zamian. Jawna definicja całkowalności Gelfanda, liniowość i dziedzina operatora skalaryzacji Q, domknięty wykres z wykorzystaniem argumentu podciągu z twierdzenia o całce Dunforda (bez powtarzania dowodu wyboru), ograniczoność i jednoznaczność g_A, bezwzględna zbieżność szeregu po każdym teście i przejście do topologii słabej-*. Doprecyzowano miarę atomową, ciało, parowanie biliniowe i wyznaczenie całek Gelfanda w kontrprzykładzie. Uporządkowano definicję wariacji i dowód jej przeliczalnej addytywności: osobny przypadek nieskończonej wariacji, epsilon/N w doborze podziałów, przejście do granicy sum częściowych i zmiana kolejności sum nieujemnych. W dowodzie wzoru na wariację miary Bochnera wyprowadzono skończoną addytywność, normową przeliczalną addytywność z DCT dla ogonów, podział z dopełnieniem dla funkcji prostych, oszacowanie różnicy wariacji i przejście do granicy norm w L1, skończoność i bezwzględną ciągłość. Uściślono miarę w przykładzie Pettisa o nieskończonej wariacji, zachowując jego szczegółowy dowód. Brak nowych tematów.
+
+## Technika
+CI poprzedniego bloku 45363848112, job 138340382424: 25/25 testów, 9/9 etapów, 3 przebiegi pdflatex, PDF 141 stron, 1388209 bajtów, artefakt 14906680394. Diagnostyka zaliczona, znane underfull hbox 1127. Nie wykonywano nowych oględzin tego PDF. Uzupełniono brakujący raport audytu 35 (034721b6ada2c90ea1c739f4a3b55d0ef5041109).
+Nowe źródło: commit a981a8eb8adf001af87619a4a81548bae7cfb8c1, blob 2296fcd4b86bfeac5479e926ed9bd9188b74f174, 3122 wiersze, wszystkie 59 etykiet zachowane, poprawne zagnieżdżenie środowisk, 25 odsyłaczy. Testy commit f437c65e3bda94313cc9364db0a45ab2c2bfc7ad, blob 8f1ed169bab490bd92e62e8c650e14547357c87f: 27 testów, dodano kontrakty i 272 dokładne porównania wariacji na czterech atomach (16 oszacowań stabilności oraz 256 kontroli addytywności, z enumeracją podziałów). Status nowych CI przy odczycie: [{"id":45364586121,"status":"in_progress","conclusion":null}]. Nie deklarować nowych testów jako zaliczonych bez wyniku.
+
+## Decyzja
+15B: 3/12 bloków poddanych kontroli poprawkowej, stabilizacja całego modułu 0/2. Następny audyt 37 — blok 4 (własności całek wektorowych i zależność od zbioru całkowania), sprawdzenie CI. Dalej bloki 5–12 zgodnie z raportem 34. Rozdziały 14, 15 i 15A stabilne; zakres zamknięty.
