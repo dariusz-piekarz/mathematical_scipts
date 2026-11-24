@@ -164,3 +164,8 @@ AA-54: pierścienie niezmienników wyjątkowych grup 2T,2O,2I, zakres docs/pl/za
 ## Zamknięcie AA-54 — 24 listopada 2026 r.
 
 **AA-54 STABILNY w ustalonym zakresie.** Raport końcowy: `audits/abstract_algebra/ch54_iteration_11.md`. Audyty III–IV czyste, korekta składu VI sprawdzona w VII i XI. CI https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45353008192 — 118/118 SUCCESS, head 6f6d1c0c902b3abe081613b5a81f3b43f12f6fd3, aktualny blob b6ab66f51c6275b75758f17409d2d27894279d38 zgodny. Artefakt 14901816321: PDF 345 stron, AA-54 fizyczne 341–345 (drukowane 330–334), wszystkie obejrzane, log czysty, usunięta zbędna strona. AA-01–53 stabilne. **AA-55 nieotwarty**; propozycja osobnego zakresu: grafy McKaya i afiniczne diagramy ADE. Algebry Jacobiego i liczby Milnora/Tjuriny pozostają propozycją z audytów IV i X. Status planu nadrzędny wobec historycznego opisu na stronie tytułowej.
+
+
+## Otwarcie AA-55 — 24 listopada 2026 r.
+
+AA-55: grafy McKaya i afiniczne diagramy Dynkina, zakres docs/pl/zakres_aa55_grafy_mckaya.md. AA-01–54 stabilne, **AA-55 W AUDYCIE**, AA-56 nieotwarty. Samodzielna klasyfikacja kombinatoryczna, bez geometrycznej odpowiedniości McKaya.
