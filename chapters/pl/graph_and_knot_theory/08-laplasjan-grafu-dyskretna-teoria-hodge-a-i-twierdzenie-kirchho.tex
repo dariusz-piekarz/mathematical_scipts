@@ -11,8 +11,9 @@ oraz liczbą drzew rozpinających.
 \section{Definicja i energia Dirichleta}
 \label{sec:tg-lap-definition}
 
-Niech $G=(V,E)$ będzie skończonym grafem prostym.
-Każdej krawędzi nadajmy dodatnią wagę $w_e>0$.
+Niech $G=(V,E)$ będzie skończonym grafem prostym
+o $n=|V|\geq1$ wierzchołkach, $m=|E|$ krawędziach
+i $c$ składowych spójnych. Każdej krawędzi nadajmy dodatnią wagę $w_e>0$.
 Macierz diagonalną tych wag oznaczamy przez $W$.
 
 \begin{definicja}[Laplasjan ważony]
@@ -257,9 +258,10 @@ ma postać $d:\Omega^k\to\Omega^{k+1}$, a laplasjan
 Hodge'a to $\Delta=dd^*+d^*d$. Na grafie mamy tylko
 wymiary zero i jeden, więc $d_1=0$: stąd na
 $C^0$ pozostaje $d_0^*d_0$, a na $C^1$ -- $d_0d_0^*$.
-To szczególny, skończeniewymiarowy model twierdzenia,
-że klasy kohomologii mają jednoznacznych harmonicznych
-reprezentantów.
+To skończeniewymiarowy odpowiednik twierdzenia Hodge'a
+dla zwartych orientowalnych rozmaitości riemannowskich
+bez brzegu, gdzie każda klasa kohomologii de Rhama
+ma jednoznacznego harmonicznego reprezentanta.
 \end{uwaga}
 
 \begin{stwierdzenie}[Dodatnie widma dwóch laplasjanów]
@@ -408,6 +410,122 @@ i $1$. Suma $2+2+1=5$ zgadza się z wynikiem macierzowym.
 \end{tikzpicture}
 \end{center}
 
+\section{Minory główne laplasjanu i lasy ukorzenione}
+\label{sec:tg-rooted-forests}
+
+Usunięcie jednego wiersza i jednej kolumny w twierdzeniu
+Kirchhoffa odpowiada wybraniu korzenia drzewa.
+Usunięcie większej liczby wierszy i odpowiadających im
+kolumn prowadzi do lasów, w których każda składowa
+zawiera dokładnie jeden z zadanych korzeni.
+
+\begin{twierdzenie}[Wzór na lasy z zadanym zbiorem korzeni]
+\label{thm:tg-rooted-forest-minor}
+Niech $G=(V,E)$ będzie skończonym grafem prostym
+o $n\geq1$ wierzchołkach z dodatnimi wagami $w_e$,
+a $L=BWB^T$ jego laplasjanem ważonym.
+Dla dowolnego niepustego zbioru $S\subseteq V$ niech
+$I=V\setminus S$. Wówczas
+\[
+\det L_{II}=\sum_{F\in\mathcal F_S}\prod_{e\in E(F)}w_e,
+\]
+gdzie $\mathcal F_S$ jest rodziną lasów rozpinających $G$,
+w których każda składowa zawiera dokładnie jeden
+wierzchołek zbioru $S$. Przyjmujemy, że wyznacznik
+pustej macierzy i pusty iloczyn wynoszą $1$.
+Suma po pustej rodzinie wynosi $0$.
+\end{twierdzenie}
+
+\begin{proof}
+Oznaczmy $k=|I|$. Dla $k=0$ jedynym dopuszczalnym
+lasem jest graf na $V$ bez krawędzi, więc obie strony
+wynoszą $1$. Dla $k>0$ niech $B_I$ będzie macierzą
+powstałą przez pozostawienie wierszy $B$ odpowiadających
+$I$. Jeżeli $m=|E|<k$, rząd $L_{II}$ jest mniejszy
+od $k$ i nie istnieje dopuszczalny las, który musiałby
+mieć $k$ krawędzi. Obie strony są więc zerowe.
+W przeciwnym przypadku wzór Cauchy'ego--Bineta daje
+\[
+\det L_{II}=\sum_{\substack{A\subseteq E\\|A|=k}}
+    \det(B_{I,A})^2\prod_{e\in A}w_e.
+\]
+Jeżeli $(V,A)$ zawiera cykl, odpowiadające mu kolumny
+macierzy $B$ są liniowo zależne, a ta zależność zachodzi
+również po ograniczeniu do wierszy $I$.
+Taki składnik ma zerowy wyznacznik.
+
+Jeżeli $(V,A)$ jest lasem, to liczba jego składowych
+wynosi $n-k=|S|$. Gdy pewna składowa $C$ nie zawiera
+żadnego elementu $S$, wszystkie jej wierzchołki należą
+do $I$. Suma odpowiadających im wierszy $B_{I,A}$
+jest zerowa: krawędzie lasu albo mają oba końce
+w $C$, albo żaden. Jest to nietrywialna zależność
+wierszy. Jeżeli natomiast każda składowa spotyka $S$,
+to z równości liczby składowych i liczby korzeni
+wynika, że każda zawiera dokładnie jeden korzeń.
+
+W tym ostatnim przypadku porządkujemy wiersze
+i kolumny według składowych. Powstaje macierz
+blokowo diagonalna, której blok dla składowej $C$
+jest macierzą incydencji drzewa $C$ z usuniętym
+wierszem jego korzenia. Każdy blok jest kwadratowy,
+a jego wyznacznik wynosi $\pm1$ na mocy argumentu
+z usuwaniem liści z dowodu twierdzenia
+\ref{thm:tg-kirchhoff}. Składowa jednowierzchołkowa
+odpowiada pustemu blokowi. Permutowanie wierszy
+i kolumn może zmienić tylko znak wyznacznika,
+zatem $\det(B_{I,A})^2=1$.
+Po podstawieniu do sumy otrzymujemy tezę.
+\end{proof}
+
+\begin{wniosek}[Wielomian lasów ukorzenionych]
+\label{cor:tg-rooted-forest-polynomial}
+Niech $G$ i $L$ spełniają założenia twierdzenia
+\ref{thm:tg-rooted-forest-minor}. Dla $t\in\mathbb R$
+zachodzi
+\[
+\det(L+tI_n)=
+\sum_F t^{c(F)}
+\left(\prod_{C\in\operatorname{Comp}(F)}|V(C)|\right)
+\prod_{e\in E(F)}w_e,
+\]
+gdzie suma biegnie po wszystkich lasach rozpinających
+$F$ grafu $G$, $\operatorname{Comp}(F)$ jest zbiorem ich
+składowych, a $c(F)$ oznacza liczbę tych składowych.
+\end{wniosek}
+\begin{proof}
+Z wieloliniowości wyznacznika względem kolumn
+otrzymujemy
+$\det(L+tI_n)=\sum_{S\subseteq V}t^{|S|}
+\det L_{V\setminus S,V\setminus S}$:
+dla kolumn o indeksach w $S$ wybieramy $t$ razy
+wektor bazy standardowej, a rozwinięcie względem
+tych kolumn usuwa odpowiadające im wiersze i kolumny
+bez zmiany znaku. Składnik $S=\varnothing$ znika,
+ponieważ $L$ ma niezerowy wektor stały w jądrze.
+Dla pozostałych składników stosujemy twierdzenie
+\ref{thm:tg-rooted-forest-minor}.
+Ustalony las $F$ występuje dla każdego zbioru $S$
+zawierającego dokładnie jeden wierzchołek z każdej
+składowej lasu. Takich zbiorów jest
+$\prod_{C\in\operatorname{Comp}(F)}|V(C)|$ i wszystkie
+mają moc $c(F)$. Grupowanie wyrazów daje wzór.
+\end{proof}
+
+\begin{przyklad}[Lasy ukorzenione na ścieżce]
+Na ścieżce $a-b-c$ o wagach jednostkowych, przy
+$S=\{a,c\}$ mamy $I=\{b\}$ i $\det L_{II}=2$.
+Dopuszczalne są dokładnie dwa lasy: jeden zawiera
+krawędź $ab$, drugi $bc$. Dla wszystkich zbiorów
+korzeni otrzymujemy
+$\det(L+tI_3)=t(t+1)(t+3)=t^3+4t^2+3t$.
+Współczynnik przy $t$ pochodzi z jednego drzewa
+i trzech wyborów korzenia. Współczynnik przy $t^2$
+pochodzi z dwóch lasów, z których każdy ma
+składowe o mocach $1$ i $2$. Współczynnik przy $t^3$
+odpowiada lasowi bez krawędzi.
+\end{przyklad}
+
 \section{Wartości własne laplasjanu i liczba drzew}
 \label{sec:tg-spectrum-tree}
 
@@ -483,7 +601,14 @@ Laplasjan może również opisywać sieć elektryczną: wagę $w_e>0$
 interpretujemy jako przewodność krawędzi, a jej odwrotność
 $r_e=1/w_e$ jako opór. Ustalenie kierunków krawędzi jest wyłącznie
 pomocnicze; to równania przepływu, a nie te kierunki, wyznaczają
-prąd w sieci.
+prąd w sieci. W przyjętej konwencji macierzy $B$
+kolumna krawędzi $u\to v$ ma znak $-1$ przy $u$
+i $+1$ przy $v$. Dlatego $Bj$ jest bilansem wpływu,
+a $j=WB^Tf$ zapisuje prąd fizyczny ze znakiem
+przeciwnym do kierunku pomocniczego: standardowy prąd
+od $u$ do $v$ ma wartość $w_e(f(u)-f(v))=-j_e$.
+Równanie $Bj=[s]-[t]$ odpowiada w tej konwencji
+fizycznemu wprowadzeniu prądu w $s$ i odebraniu go w $t$.
 
 \begin{definicja}[Efektywna rezystancja między wierzchołkami]
 Niech $G=(V,E)$ będzie skończonym spójnym grafem prostym,
@@ -524,6 +649,41 @@ nieujemnych składników wskazana w tezie.
 Nie może wynosić zero: wtedy $f$ byłaby stała,
 a więc $Lf=0$, wbrew $b\ne0$. W konsekwencji
 $R_{\mathrm{eff}}(s,t)>0$.
+\end{proof}
+
+\begin{wniosek}[Rezystancja jako iloraz wag lasów i drzew]
+\label{cor:tg-resistance-forest}
+Niech $G=(V,E)$ będzie skończonym spójnym grafem
+prostym z dodatnimi przewodnościami $w_e$,
+a $s,t\in V$ różnymi wierzchołkami.
+Niech $\tau_w(G)=\sum_T\prod_{e\in E(T)}w_e$,
+gdzie suma przebiega po drzewach rozpinających.
+Wówczas
+\[
+R_{\mathrm{eff}}(s,t)=
+\frac{\displaystyle\sum_{F\in\mathcal F_{\{s,t\}}}
+                \prod_{e\in E(F)}w_e}{\tau_w(G)}.
+\]
+W liczniku występują lasy rozpinające o dwóch
+składowych, rozdzielających $s$ i $t$.
+\end{wniosek}
+\begin{proof}
+Wybierzmy rozwiązanie $Lf=[s]-[t]$ z normalizacją
+$f(t)=0$. Niech $J=V\setminus\{t\}$.
+Ograniczenie układu do wierszy $J$ daje
+$L_{JJ}f_J=[s]_J$. Macierz $L_{JJ}$ jest odwracalna
+na mocy twierdzenia \ref{thm:tg-dirichlet} (lub
+twierdzenia Kirchhoffa).
+Wzór na element diagonalny macierzy odwrotnej daje
+\[
+f(s)=(L_{JJ}^{-1})_{ss}
+=\frac{\det L_{V\setminus\{s,t\},V\setminus\{s,t\}}}
+       {\det L_{JJ}}.
+\]
+W mianowniku stosujemy twierdzenie \ref{thm:tg-kirchhoff},
+w liczniku twierdzenie \ref{thm:tg-rooted-forest-minor}.
+Ponieważ $f(t)=0$, lewa strona jest rezystancją
+efektywną, co dowodzi wzoru, także dla $|V|=2$.
 \end{proof}
 
 \begin{twierdzenie}[Zasada Thomsona: minimalna energia przepływu]
