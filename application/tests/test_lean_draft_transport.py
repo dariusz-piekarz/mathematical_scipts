@@ -189,3 +189,53 @@ class DraftTransportProcessTests(unittest.TestCase):
             with self.assertRaises(TimeoutError):
                 self.invoke("import time; time.sleep(30)")
             self.assertLess(time.monotonic() - start, 5)
+
+    def assert_timeout_stops_group(self, *, leader_exits):
+        import os
+        import signal
+        import tempfile
+        import time
+
+        def running(pid):
+            try:
+                state = Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()[0]
+                return state not in ("Z", "X")
+            except FileNotFoundError:
+                return False
+
+        with tempfile.TemporaryDirectory() as directory:
+            marker = Path(directory) / "child.pid"
+            script = (
+                "import os, time\n"
+                "from pathlib import Path\n"
+                "child = os.fork()\n"
+                "if child == 0:\n"
+                f"    Path({str(marker)!r}).write_text(str(os.getpid()))\n"
+                "    time.sleep(30)\n"
+                "    os._exit(0)\n"
+                + ("os._exit(0)\n" if leader_exits else "time.sleep(30)\n")
+            )
+            try:
+                with patch.object(transport, "COMMAND_TIMEOUT", 2):
+                    with self.assertRaises(TimeoutError):
+                        self.invoke(script)
+                self.assertTrue(marker.exists(), "Child did not reach the test fixture")
+                pid = int(marker.read_text())
+                deadline = time.monotonic() + 3
+                while running(pid) and time.monotonic() < deadline:
+                    time.sleep(0.02)
+                self.assertFalse(running(pid), "CLI descendant survived timeout")
+            finally:
+                if marker.exists():
+                    pid = int(marker.read_text())
+                    if running(pid):
+                        try:
+                            os.kill(pid, signal.SIGKILL)
+                        except ProcessLookupError:
+                            pass
+
+    def test_timeout_terminates_child_in_cli_process_group(self):
+        self.assert_timeout_stops_group(leader_exits=False)
+
+    def test_timeout_terminates_pipe_holder_after_leader_exit(self):
+        self.assert_timeout_stops_group(leader_exits=True)
