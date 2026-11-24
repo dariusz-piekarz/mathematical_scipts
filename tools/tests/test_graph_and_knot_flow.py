@@ -140,6 +140,13 @@ def dinic(n, arcs, s, t):
         assert level[t] > last_distance
         last_distance = level[t]
         current = [0] * n
+        # TG40-DINIC-01: finite old levels, fixed eligible records,
+        # monotone capacities and a fresh saturation per successful push.
+        eligible = {(u, i): cap for u in range(n)
+                    for i, (v, cap, _) in enumerate(residual.adj[u])
+                    if level[u] >= 0 and level[v] == level[u] + 1 and cap > 0}
+        assert len(eligible) <= len(arcs)
+        phase_pushes = 0
 
         def push(u, amount):
             if u == t:
@@ -159,7 +166,18 @@ def dinic(n, arcs, s, t):
             amount = push(s, sum((c for u, v, c in arcs if u == s), 0) + 1)
             if amount == 0:
                 break
+            phase_pushes += 1
+            after = {(u, i): residual.adj[u][i][1] for u, i in eligible}
+            assert all(after[key] <= cap for key, cap in eligible.items())
+            assert any(cap > 0 and after[key] == 0 for key, cap in eligible.items())
+            eligible = after
             flow += amount
+        assert phase_pushes <= len(arcs)
+        next_level = residual.bfs(s)
+        assert next_level[t] < 0 or next_level[t] > level[t]
+        assert all(next_level[v] < 0 or
+                   (level[v] >= 0 and next_level[v] >= level[v])
+                   for v in range(n))
         assert phases < n, ("Dinic too many phases", arcs, phases)
     cut = residual.check_flow(s, t, flow)
     return flow, cut, phases
@@ -318,4 +336,4 @@ if __name__ == "__main__":
     print("PASS seeded directed networks incl antiparallel/parallel:", test_seeded())
     print("PASS exact fractional capacities:", test_rational())
     test_backward_path()
-    print("PASS reverse residual cancellation, hand-computed cuts and integration")
+    print("PASS TG40-DINIC-01 phase invariants, reverse residual cancellation, hand-computed cuts and integration")
