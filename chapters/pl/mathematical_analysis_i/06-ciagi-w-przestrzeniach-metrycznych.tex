@@ -1,0 +1,167 @@
+\chapter{Ciągi w przestrzeniach metrycznych}
+\label{ma1:ch:metric-sequences}
+
+Zbieżność będziemy badać od razu w przestrzeniach metrycznych. W ten sposób jeden dowód obejmie ciągi rzeczywiste, zespolone, wektorowe oraz ciągi funkcji. Własności wykorzystujące porządek liczb rzeczywistych będą formułowane osobno. Rozdział o zbieżności w Topologii ogólnej przedstawia szerszy kontekst topologiczny; tutaj interesują nas przede wszystkim oszacowania ilościowe. Ciągi Cauchy'ego i podciągi rozwiniemy systematycznie w następnym rozdziale.
+
+\section{Metryka i kule}
+\begin{definicja}
+\label{ma1:def:metric}
+Metryką na zbiorze $X$ nazywamy odwzorowanie $d:X\times X\to[0,+\infty)$ spełniające dla wszystkich $x,y,z\in X$ warunki:
+\begin{enumerate}[label=(\roman*)]
+\item $d(x,y)=0$ wtedy i tylko wtedy, gdy $x=y$;
+\item $d(x,y)=d(y,x)$;
+\item $d(x,z)\le d(x,y)+d(y,z)$.
+\end{enumerate}
+Parę $(X,d)$ nazywamy przestrzenią metryczną. Dla $x\in X$ i $r>0$ definiujemy kulę otwartą $B_d(x,r)=\{y\in X:d(x,y)<r\}$ i kulę domkniętą $\overline B_d(x,r)=\{y\in X:d(x,y)\le r\}$.
+\end{definicja}
+Nazwy kul odnoszą się do topologii wyznaczonej przez metrykę, omawianej szczegółowo w Topologii ogólnej. Na tym etapie korzystamy bezpośrednio z nierówności definiujących kule.
+
+\begin{przyklad}
+\label{ma1:ex:basic-metrics}
+Na $\R$ metryką jest $d(x,y)=|x-y|$, a na $\C$ metryką jest $d(z,w)=|z-w|$. Wszystkie aksjomaty wynikają z własności wartości bezwzględnej i modułu (por. twierdzenie \ref{ma1:thm:complex-modulus}).
+Na dowolnym zbiorze $X$ metryka dyskretna ma postać $d(x,x)=0$ oraz $d(x,y)=1$ dla $x\ne y$. Nierówność trójkąta dla $x=z$ jest oczywista, a dla $x\ne z$ przynajmniej jedna z nierówności $x\ne y$, $y\ne z$ zachodzi, więc $d(x,y)+d(y,z)\ge1=d(x,z)$.
+\end{przyklad}
+
+\begin{przyklad}[Metryki na przestrzeni wektorów]
+\label{ma1:ex:vector-metrics}
+Dla ustalonego $m\in\N_+$ i $x=(x_1,\ldots,x_m)$, $y=(y_1,\ldots,y_m)$ w $\R^m$ definiujemy
+\[
+ d_1(x,y)=\sum_{j=1}^m|x_j-y_j|,\qquad
+ d_\infty(x,y)=\max_{1\le j\le m}|x_j-y_j|.
+\]
+Obie funkcje są nieujemne i symetryczne; każda zeruje się dokładnie wtedy, gdy wszystkie różnice współrzędnych są zerowe. Dla $d_1$ sumujemy nierówności $|x_j-z_j|\le |x_j-y_j|+|y_j-z_j|$. Dla $d_\infty$ prawa strona każdej z tych nierówności jest nie większa niż $d_\infty(x,y)+d_\infty(y,z)$; bierzemy maksimum po $j$. Otrzymujemy nierówności trójkąta. Ponadto
+\[
+ d_\infty(x,y)\le d_1(x,y)\le m d_\infty(x,y).
+\]
+Pierwsza nierówność wynika z nieujemności składników, druga z ograniczenia każdego składnika przez maksimum.
+\end{przyklad}
+
+\begin{lemat}[Oszacowania odległości]
+\label{ma1:lem:distance-estimates}
+Niech $(X,d)$ będzie przestrzenią metryczną. Dla wszystkich $x,y,u,v\in X$ zachodzi
+\[
+ |d(x,u)-d(y,v)|\le d(x,y)+d(u,v).
+\]
+W szczególności $|d(x,u)-d(y,u)|\le d(x,y)$.
+\end{lemat}
+\begin{proof}
+Z dwukrotnego zastosowania nierówności trójkąta mamy $d(x,u)\le d(x,y)+d(y,v)+d(v,u)$, zatem $d(x,u)-d(y,v)\le d(x,y)+d(u,v)$. Zamieniając $(x,u)$ z $(y,v)$ i korzystając z symetrii metryki, otrzymujemy oszacowanie przeciwnej różnicy. Razem dają tezę. Dla $v=u$ drugi składnik po prawej stronie jest zerowy.
+\end{proof}
+
+\section{Definicja zbieżności}
+\begin{definicja}
+\label{ma1:def:sequence-convergence}
+Ciągiem w zbiorze $X$ nazywamy odwzorowanie $x:\N_+\to X$, którego wartość w $n$ oznaczamy przez $x_n$. Piszemy $(x_n)_{n\ge1}$. Niech $(X,d)$ będzie przestrzenią metryczną. Ciąg $(x_n)_{n\ge1}$ jest zbieżny do punktu $a\in X$, jeżeli
+\[
+ \forall\varepsilon>0\quad\exists N\in\N_+\quad
+ \forall n\in\N_+\quad(n\ge N\Rightarrow d(x_n,a)<\varepsilon).
+\]
+Piszemy $x_n\to a$ lub $\lim_{n\to\infty}x_n=a$. Ciąg nazywamy zbieżnym, jeśli istnieje $a\in X$ spełniające ten warunek; w przeciwnym razie jest rozbieżny.
+\end{definicja}
+Kwantyfikator egzystencjalny określający $N$ znajduje się po kwantyfikatorze ogólnym po $\varepsilon$: indeks $N$ może zależeć od dokładności. Dla ustalonej dokładności ten sam $N$ musi działać dla wszystkich $n\ge N$. Granica nie musi być wyrazem ciągu.
+
+\begin{przyklad}
+\label{ma1:ex:inverse-sequence}
+W $\R$ ciąg $x_n=1/n$ jest zbieżny do zera. Dla danego $\varepsilon>0$ wybieramy $N=\lfloor1/\varepsilon\rfloor+1$. Wtedy $N>1/\varepsilon$, więc dla $n\ge N$ mamy $|x_n|=1/n\le1/N<\varepsilon$.
+\end{przyklad}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=6cm,y=1cm,>=Stealth]
+\fill[blue!9] (-.3,-.36) rectangle (.3,.36);
+\draw[->] (-.42,0)--(1.17,0) node[right] {$t$};
+\draw[dashed,gray] (-.3,-.45)--(-.3,.45) (.3,-.45)--(.3,.45);
+\node[below] at (-.3,-.45) {$-\varepsilon$};
+\node[below] at (.3,-.45) {$\varepsilon$};
+\fill (0,0) circle (1.8pt) node[below left] {$0$};
+\foreach \n in {1,2,3}{
+  \fill[orange!85!black] ({1/\n},0) circle (2pt);
+}
+\node[above] at (1,.10) {$x_1$};
+\node[above] at (.5,.10) {$x_2$};
+\node[above right] at ({1/3},.45) {$x_3$};
+\draw[gray] ({1/3},.08)--({1/3},.45);
+\foreach \n in {4,5,6,8,10,14,20}{
+  \fill[blue!65!black] ({1/\n},0) circle (1.35pt);
+}
+\node[above] at (0,.50) {$B(0,\varepsilon)$};
+\node[below] at (.14,-.78) {$n\ge4$};
+\end{tikzpicture}
+\caption{Dla $x_n=1/n$ i $\varepsilon=3/10$ można wybrać $N=4$. Wszystkie wyrazy o indeksach co najmniej $4$ należą do kuli wokół zera.}
+\label{ma1:fig:epsilon-sequence}
+\end{figure}
+\FloatBarrier
+
+\begin{stwierdzenie}
+\label{ma1:prop:convergence-criteria}
+Niech $(x_n)$ będzie ciągiem w przestrzeni metrycznej $(X,d)$ i $a\in X$. Następujące warunki są równoważne:
+\begin{enumerate}[label=(\roman*)]
+\item $x_n\to a$;
+\item dla każdego $\varepsilon>0$ zbiór $\{n\in\N_+:x_n\notin B_d(a,\varepsilon)\}$ jest skończony;
+\item dla każdego $k\in\N_+$ istnieje $N_k\in\N_+$ takie, że $d(x_n,a)<1/k$ dla wszystkich $n\ge N_k$;
+\item rzeczywisty ciąg $(d(x_n,a))$ jest zbieżny do zera w metryce wartości bezwzględnej.
+\end{enumerate}
+\end{stwierdzenie}
+\begin{proof}
+Jeśli (i) zachodzi, wszystkie indeksy z (ii) są mniejsze od pewnego $N$, więc tworzą zbiór skończony. Odwrotnie, jeśli zbiór złych indeksów jest niepusty i skończony, wybieramy $N$ większe od jego maksimum; jeśli jest pusty, wystarcza $N=1$. To daje (i).
+Warunek (iii) wynika z (i), biorąc $\varepsilon=1/k$. Jeśli (iii) zachodzi, dla danego $\varepsilon>0$ z własności Archimedesa wybieramy $k$ z $1/k<\varepsilon$. Dla $n\ge N_k$ otrzymujemy $d(x_n,a)<\varepsilon$. Wreszcie (iv) jest dokładnie warunkiem (i), ponieważ $|d(x_n,a)-0|=d(x_n,a)$.
+\end{proof}
+
+\begin{stwierdzenie}[Zaprzeczenie zbieżności]
+\label{ma1:prop:nonconvergence}
+Niech $(x_n)$ będzie ciągiem w przestrzeni metrycznej $(X,d)$ i $a\in X$. Ciąg nie jest zbieżny do $a$ wtedy i tylko wtedy, gdy
+\[
+ \exists\varepsilon>0\quad\forall N\in\N_+\quad
+ \exists n\in\N_+\quad(n\ge N\ \land\ d(x_n,a)\ge\varepsilon).
+\]
+Ciąg jest rozbieżny wtedy i tylko wtedy, gdy ten warunek zachodzi dla każdego $a\in X$.
+\end{stwierdzenie}
+\begin{proof}
+Negujemy kolejno kwantyfikatory definicji \ref{ma1:def:sequence-convergence}. Zaprzeczeniem implikacji $n\ge N\Rightarrow d(x_n,a)<\varepsilon$ jest koniunkcja $n\ge N$ oraz $d(x_n,a)\ge\varepsilon$. Zaprzeczenie istnienia granicy oznacza, że żaden punkt przestrzeni nie spełnia definicji.
+\end{proof}
+
+\begin{przyklad}
+W metryce dyskretnej $x_n\to a$ dokładnie wtedy, gdy od pewnego indeksu $x_n=a$. W jedną stronę wystarczy zastosować definicję do $\varepsilon=1/2$, w drugą wszystkie późne odległości są zerowe. W szczególności na $\R$ ciąg $1/n$ zbiega do zera w zwykłej metryce, ale nie jest zbieżny w metryce dyskretnej.
+\end{przyklad}
+
+\section{Jednoznaczność granicy i ograniczoność}
+\begin{twierdzenie}
+\label{ma1:thm:unique-limit}
+Ciąg w dowolnej przestrzeni metrycznej ma co najwyżej jedną granicę.
+\end{twierdzenie}
+\begin{proof}
+Niech $x_n\to a$ i $x_n\to b$. Gdyby $a\ne b$, to $r=d(a,b)>0$. Dla $\varepsilon=r/3$ istnieją $N_a,N_b$ takie, że odpowiednie odległości są mniejsze od $r/3$. Wybierając $n\ge\max(N_a,N_b)$, otrzymujemy
+$r\le d(a,x_n)+d(x_n,b)<2r/3$, sprzeczność.
+\end{proof}
+
+\begin{definicja}
+\label{ma1:def:bounded-metric-set}
+Podzbiór $A$ niepustej przestrzeni metrycznej $(X,d)$ nazywamy ograniczonym, jeśli istnieją $p\in X$ oraz $R>0$ takie, że $A\subseteq B_d(p,R)$. Ciąg nazywamy ograniczonym, jeśli zbiór jego wyrazów jest ograniczony.
+\end{definicja}
+Jeśli $A\subseteq B_d(p,R)$ i $q\in X$, to $d(x,q)\le d(x,p)+d(p,q)<R+d(p,q)$ dla każdego $x\in A$. Własność ograniczoności nie zależy zatem od wyboru środka kuli.
+\begin{twierdzenie}
+\label{ma1:thm:convergent-bounded}
+Każdy ciąg zbieżny w przestrzeni metrycznej jest ograniczony.
+\end{twierdzenie}
+\begin{proof}
+Jeżeli $x_n\to a$, wybieramy $N$ z $d(x_n,a)<1$ dla $n\ge N$. Niech
+$R=1+\max(\{1\}\cup\{d(x_j,a):1\le j<N\})$. Maksimum istnieje, ponieważ zbiór jest skończony i niepusty, także dla $N=1$. Wtedy każdy wyraz ciągu należy do $B_d(a,R)$.
+\end{proof}
+\begin{przyklad}
+Ciąg $(-1)^n$ w $\R$ jest ograniczony, ale rozbieżny: gdyby zbiegał do $a$, dla $\varepsilon=1/2$ wszystkie dostatecznie późne wyrazy należałyby do kuli wokół $a$. Można jednak wybrać dwa takie indeksy o przeciwnej parzystości. Nierówność trójkąta dałaby $2=|1-(-1)|<1$, sprzeczność.
+\end{przyklad}
+
+\begin{twierdzenie}[Zbieżność odległości]
+\label{ma1:thm:distance-limit}
+Jeżeli $(x_n)$ i $(y_n)$ są ciągami w przestrzeni metrycznej $(X,d)$ oraz $x_n\to x$, $y_n\to y$, to rzeczywisty ciąg $d(x_n,y_n)$ jest zbieżny do $d(x,y)$.
+\end{twierdzenie}
+\begin{proof}
+Z lematu \ref{ma1:lem:distance-estimates} mamy $|d(x_n,y_n)-d(x,y)|\le d(x_n,x)+d(y_n,y)$. Dla $\varepsilon>0$ wybieramy indeksy zapewniające, że każdy z dwóch składników jest mniejszy od $\varepsilon/2$. Od maksimum tych indeksów różnica jest mniejsza od $\varepsilon$.
+\end{proof}
+\begin{wniosek}
+\label{ma1:cor:asymptotic-equivalence}
+Jeśli $x_n\to x$ oraz $d(x_n,y_n)\to0$ dla ciągów w tej samej przestrzeni metrycznej, to $y_n\to x$.
+\end{wniosek}
+\begin{proof}
+Dla $\varepsilon>0$ wybieramy wspólny dostatecznie duży indeks, od którego $d(x_n,y_n)<\varepsilon/2$ oraz $d(x_n,x)<\varepsilon/2$. Wtedy $d(y_n,x)\le d(y_n,x_n)+d(x_n,x)<\varepsilon$.
+\end{proof}
