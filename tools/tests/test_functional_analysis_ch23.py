@@ -190,5 +190,57 @@ class Chapter23(unittest.TestCase):
             c=1+2**n*cost
             self.assertLess(cost/c,F(1,2**n))
 
+    def test_FA23_kernel_localization_01(self):
+        s = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            r"\chi_j\in\mathcal D(V_j)",
+            r"\supp\chi_j\subset V_j",
+            r"eliminuje inne kopie okresowe",
+            r"(2R_j)^{d_2}",
+            r"p_{K_i\times L_j^*,m+2t}(\Phi_{ij})",
+            r"2t>r+d_2",
+            r"\operatorname{Re}f_{ijn}\otimes\operatorname{Re}g_{jn}",
+            r"f_{ijn}=(\eta_i f)c_{jn}(\theta_j g)",
+            r"g_{jn}$ nie zależy od $\Phi$",
+            r"p_{M,m_{ij}+2t_{ij}}(\Phi)",
+            r"b(\eta_i f,\theta_j g)",
+            r"p_{K_x\times K_y,q}(f\otimes g)",
+            r"\ref{thm:D-bounded18}",
+            r"\lambda_d(\operatorname{pr}_1 M)p_{M,0}(\Phi)",
+        ):
+            self.assertIn(fragment,s)
+        # Finite rational model of localized bilinear pairing, with
+        # partition weights summing to one on each coordinate.
+        def pair(f,g,K):
+            return sum(f[i]*K[i][j]*g[j] for i in range(2) for j in range(2))
+        vectors=[(1,0),(0,1),(2,-3)]
+        kernels=[((1,0),(0,1)),((1,2),(-1,3)),((0,-2),(1,0))]
+        weights=[(F(0),F(1)),(F(1,3),F(2,3)),(F(1),F(0))]
+        for f,g,K,w,z in product(vectors,vectors,kernels,weights,weights):
+            fx=[tuple(f[i]*w[i] for i in range(2)),
+                tuple(f[i]*(1-w[i]) for i in range(2))]
+            gy=[tuple(g[j]*z[j] for j in range(2)),
+                tuple(g[j]*(1-z[j]) for j in range(2))]
+            self.assertEqual(sum(pair(u,v,K) for u in fx for v in gy),pair(f,g,K))
+
+    def test_FA23_kernel_periodic_copy_01(self):
+        # Piecewise polynomial surrogate, not a smooth test function:
+        # localization must suppress all noncentral periodic copies.
+        def bump(y):
+            return (1-y*y)**2 if abs(y)<1 else F(0)
+        def periodic(y,R):
+            t=(y+R)%(2*R)-R
+            return bump(t)
+        def cutoff(y,R):
+            if abs(y)<=1: return F(1)
+            if abs(y)>=R: return F(0)
+            return (R-abs(y))/(R-1)
+        for R in [F(3,2),F(2),F(3)]:
+            for j in range(-48,49):
+                y=F(j,4)
+                self.assertEqual(cutoff(y,R)*periodic(y,R),bump(y))
+            self.assertGreater(periodic(2*R,R),0)
+            self.assertEqual(cutoff(2*R,R),0)
+
 if __name__ == "__main__":
     unittest.main()
