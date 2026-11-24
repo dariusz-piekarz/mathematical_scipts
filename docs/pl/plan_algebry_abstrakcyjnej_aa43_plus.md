@@ -304,3 +304,7 @@ AA-69: permutacja korzeni dodatnich przez odbicia proste, zasada skracania i try
 ## Zamknięcie AA-69 — 24 listopada 2026 r.
 
 **AA-69 STABILNY w ustalonym zakresie; etapy D/P zaliczone.** Pięć dowodów, przykład i dwie trwałe regresje zaliczone; CI [45487432900](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45487432900) 148/148 success, 4792 testy, źródło 73550fe9088795bb4735414200fcc0ffde4120e0. PDF 431 stron, artefakt 14963943990, wszystkie strony AA-69 (fizyczne 429–431) obejrzane, log czysty. Raport `audits/abstract_algebra/ch69_iteration_03.md`. AA-01–69 stabilne. **AA-70 nieotwarty.** Następny etap D: wzór charakterów Weyla z pełnym argumentem Casimira i przykładami.
+
+## Otwarcie AA-70 — 24 listopada 2026 r.
+
+AA-70: skalar Casimira, rekurencja krotności z różnic śladów, operator różniczkowy na pierścieniu grupowym, równanie własne dla iloczynu mianownika i charakteru, pełny dowód wzoru charakterów Weyla przez wykluczenie niższych alternantów, przykłady A1 i A2. **Etap D W AUDYCIE.** AA-70-WCF-01 zaliczony (57 modeli, 8481 kontroli wag); CI i PDF do potwierdzenia. Wzór wymiarowy Weyla pozostawiono do osobnego rozdziału AA-71, nieotwartego do stabilizacji AA-70.
