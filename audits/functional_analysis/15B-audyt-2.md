@@ -60,3 +60,11 @@ Po poprawce źródło ma **575 wierszy, 23 etykiety, 11 poprawnie sparowanych do
 ## Werdykt
 
 **15B/02 — naprawczy, 0/2.** Dwa istotne rozwinięcia dowodowe zapisano w źródle, dodano testy i bramkę CI. Nie twierdzimy, że samo uruchomienie workflow oznacza sukces. Następny audyt 15B/03 może być pierwszym czystym dopiero po kontroli niezmienionego źródła oraz potwierdzeniu działania testów, kompilacji i gotowego PDF. Nie przechodzić do rozdziału 16 przed stabilizacją 15B.
+
+## Potwierdzona końcowa bramka bieżącej iteracji i kontrola faktycznego PDF
+
+Dedykowany workflow [#45297824384](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45297824384), uruchomiony po zapisie raportu 15B/02 na commicie `6d74d76b5ed2ca4c1c7608c57d6d137cca439a1f`, zakończył się **completed / success**. Bezpośredni odczyt wszystkich dziewięciu kroków joba potwierdził: **5 testów regresyjnych PASS**, kontekst rozdziałów 01–17 (włącznie z 15A i 15B) PASS, kompilacja LaTeX PASS, walidacja PDF, tekstu i odsyłaczy PASS, publikacja artefaktów PASS.
+
+Niezależnie pobrano **rzeczywisty artefakt** `functional-analysis-ch15b-pdf` (ID `14876744218`) z wcześniejszego również zielonego przebiegu [#45297631983](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45297631983), dla **identycznych blobów źródła i testów**. `pdfinfo` wykazał **110 stron A4, pdfTeX**. `pdftotext` potwierdził zawartość nagłówków twierdzenia Fubiniego, nowego stwierdzenia o przeliczalnej addytywności wariacji oraz RNP. Wyrenderowano i zbadano wizualnie **strony 95–100**, obejmujące cały moduł 15B; nie stwierdzono przyciętych wzorów, nakładania się tekstu ani uszkodzonych oznaczeń. W logu brak `Overfull \\hbox`, niezdefiniowanych odsyłaczy, `Undefined control sequence` i `Missing character`; obecny jest **jeden `Underfull \\hbox` w rozdziale 16**, poza zakresem audytu 15B.
+
+Źródło `89cc07f494e18ab0d4eba2a7e588c7cec2176de3` i test `f151fd30e4dd415695444a454462497569fcb852` ponownie sprawdzono po zakończeniu CI; nie zmieniły się. **Końcowy status iteracji 15B/02: poprawkowa, 0/2 czystych audytów, techniczna bramka ZIELONA**. Następna iteracja: 15B/03 — pierwszy niezależny czysty audyt tej poprawionej wersji, bez przedwczesnego przechodzenia do rozdziału 16.
