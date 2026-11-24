@@ -189,3 +189,8 @@ AA-56: macierze Cartana, układy korzeni i grupy Weyla, zakres docs/pl/zakres_aa
 ## Otwarcie AA-57 — 24 listopada 2026 r.
 
 AA-57: algebry Liego, twierdzenia Engela i Liego, zakres docs/pl/zakres_aa57_algebry_liego.md. AA-01–56 stabilne, **AA-57 W AUDYCIE**, AA-58 nieotwarty. Bez formy Killinga, kryteriów Cartana i teorii półprostej.
+
+
+## Zamknięcie AA-57 — 24 listopada 2026 r.
+
+**AA-57 STABILNY w ustalonym zakresie.** Audyty matematyczne IV–V czyste (2/2); CI [45366505930](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45366505930) 124/124 success; artefakt 14906759748, PDF 370 stron, AA-57 fizyczne 362–370 (drukowane 350–358), poprawiony diagram i końcowy podział stron sprawdzone, log czysty. Blob 5f1fe64e17ffb3133857890d8552cdf840ac6ff4. Raport końcowy `audits/abstract_algebra/ch57_iteration_08.md`. AA-01–56 zachowują status. **AA-58 nieotwarty**; propozycja: radykał rozwiązalny, algebry proste i półproste, forma Killinga, kryteria Cartana, rozkład na ideały proste i derywacje wewnętrzne. Status planu nadrzędny wobec historycznej strony tytułowej.
