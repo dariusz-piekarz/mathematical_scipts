@@ -157,5 +157,27 @@ class TestChapter15B(unittest.TestCase):
             end = source.index(r"\end{", start)
             self.assertIn(r"\K\in\{\R,\C\}", source[start:end])
 
+
+    def test_audit09_definitions_and_construction(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        for label in (
+            "def:measurability15b", "def:bochner15b", "def:dunford-pettis15b",
+            "def:gelfand15b", "def:vector-measure15b", "def:rnp15b",
+        ):
+            start = source.index(r"\label{" + label + "}")
+            end = source.index(r"\end{definicja}", start)
+            self.assertIn(r"\K\in\{\R,\C\}", source[start:end])
+        for fragment in (
+            "J_X(x)(x')=x'(x)",
+            "nie klasy równoważności",
+            "niezależność tej sumy od przedstawienia",
+            "nazywamy całkowalną w sensie Dunforda",
+            "jednoznacznie wyznaczony",
+            "Całka Pettisa jest liniowa",
+            "miara wektorowa $m$ rozszerza się na uzupełnienie",
+            "zachowanie\nskończonej wariacji",
+        ):
+            self.assertIn(fragment, source)
+
 if __name__ == "__main__":
     unittest.main()
