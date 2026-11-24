@@ -1,6 +1,6 @@
 # L1.5.4 — pakiet niezależnego odbioru parsera
 
-Kandydat: `7c719440a33d51216d2fafeb0c20fb9bba11fb47`. [Seria 2+1](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45374833445). Stan przy sporządzeniu: 2/3 pełnych rund, workflow in_progress/pending. Dokument jest materiałem dla recenzenta, nie zatwierdzeniem.
+Kandydat: `7c719440a33d51216d2fafeb0c20fb9bba11fb47`. [Seria 2+1](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45374833445). Stan przy sporządzeniu: 3/3 pełnych rund, workflow completed/success. Dokument jest materiałem dla recenzenta, nie zatwierdzeniem.
 
 ## Zakres i pochodzenie
 
@@ -12,9 +12,9 @@ Kandydat: `7c719440a33d51216d2fafeb0c20fb9bba11fb47`. [Seria 2+1](https://github
 |---|---|---|---|---|
 | 1 | [success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45374833445/job/138378246271) | [success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45374833445/job/138378246527) | [success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45374833445/job/138378246614) | [success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45374833445/job/138378246462) |
 | 2 | [success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45374833445/job/138382607751) | [success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45374833445/job/138382608286) | [success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45374833445/job/138382608463) | [success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45374833445/job/138382608233) |
-| 3 | [success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45374833445/job/138385464107) | [success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45374833445/job/138385464414) | [success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45374833445/job/138385464320) | [in_progress](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45374833445/job/138385464338) |
+| 3 | [success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45374833445/job/138385464107) | [success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45374833445/job/138385464414) | [success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45374833445/job/138385464320) | [success](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45374833445/job/138385464338) |
 
-Trzy raporty aplikacji mają identyczne pełne mapy 796 testów: 786 passed, 10 sklasyfikowanych skipów, 14/14 metod parsera. Artefakty 14910608253, 14910239414, 14910564840, sumy w dzienniku. 18/18 [sceptycznych testów bramki](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45374833445/job/138385385177). Po zakończeniu sprawdzić artefakt atlas-validation-status i pełny SHA. Nie mylić technicznej kontroli bramki z niezależnym odbiorem.
+Trzy raporty aplikacji mają identyczne pełne mapy 796 testów: 786 passed, 10 sklasyfikowanych skipów, 14/14 metod parsera. Artefakty 14910608253, 14910239414, 14910564840, sumy w dzienniku. 18/18 [sceptycznych testów bramki](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45374833445/job/138385385177). [Końcowa agregacja](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45374833445/job/138388395891): właściwy SHA, trzy zaliczone rundy po 796 testów i 10 sklasyfikowanych pominięć, problems=[], unreviewed_skips=0, wszystkie cztery kategorie success, skeptical_review=pending, status=stabilizing, certificate=false. Odczytano rzeczywisty log ATLAS_STABILIZATION; nie jest to podpisana recenzja. Nie mylić technicznej kontroli bramki z niezależnym odbiorem.
 
 ## Lista kontrolna recenzenta
 
