@@ -62,6 +62,39 @@ class TestCoveringChapter24(unittest.TestCase):
             for z in probes(selected):
                 self.assertLessEqual(sum(contains(B,z) for B in selected),3)
 
+    def test_multiscale_besicovitch_exact_interval_models(self):
+        from itertools import product
+        for radii in product((1,2,4,8), repeat=5):
+            balls = [(Fraction(x),Fraction(r)) for x,r in zip(range(-2,3),radii)]
+            R = max(radii)
+            scales = []
+            selected = []
+            a = Fraction(R,2)
+            while a >= Fraction(1,2):
+                candidates = [B for B in balls if a < B[1] <= 2*a
+                              and not any(contains(D,B[0]) for D in selected)]
+                S = []
+                for B in candidates:
+                    if all(abs(B[0]-D[0]) >= a for D in S):
+                        S.append(B)
+                for B in candidates:
+                    self.assertTrue(any(contains(D,B[0]) for D in S))
+                scales.append(S)
+                selected.extend(S)
+                a /= 2
+            self.assertTrue(all(any(contains(D,x) for D in selected) for x,_ in balls))
+            for k,S in enumerate(scales):
+                for T in scales[k+1:]:
+                    for B in S:
+                        for D in T:
+                            self.assertFalse(contains(B,D[0]))
+                            self.assertFalse(contains(D,B[0]))
+            for z in probes(selected):
+                counts = [sum(contains(B,z) for B in S) for S in scales]
+                self.assertLessEqual(max(counts),5)
+                self.assertLessEqual(sum(n>0 for n in counts),3)
+                self.assertLessEqual(sum(counts),15)
+
     def test_exact_figure_geometry(self):
         D = (Fraction(0),Fraction(2,5))
         B = (Fraction(4,5),Fraction(1,2))
@@ -76,7 +109,7 @@ class TestCoveringChapter24(unittest.TestCase):
         labels = re.findall(r"\\label\{([^}]+)\}",s)
         self.assertEqual(len(labels),len(set(labels)))
         for token in (r"m=0",r"\lambda_d^*(Z)=0",r"\chi_{B(x_n,r_n)}",
-                      r"twierdzenie Beppo Leviego",r"circle (2)",r"circle (0.4)"):
+                      r"twierdzenie Beppo Leviego",r"circle (2)",r"circle (0.4)",r"Z=\bigcup_{j\ge1}\partial B_j",r"2^{1-(\ell-k)}a_k"):
             self.assertIn(token,s)
         stack = []
         for m in re.finditer(r"\\(begin|end)\{([^}]+)\}",s):
