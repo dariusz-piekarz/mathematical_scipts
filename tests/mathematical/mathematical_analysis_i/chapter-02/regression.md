@@ -17,3 +17,5 @@ Testy skończone nie zastępują dowodu ogólnego.
 | MA1-02-013 | ma1:thm:cut-ring, ma1:thm:cut-field | Rozszerzenie mnożenia na przekroje nieujemne, zero i jedynka; ujemne odwrotności i zgodność zanurzenia z prawami znaków | semantyczna |
 | MA1-02-014 | ma1:thm:cut-complete, ma1:thm:real-isomorphism | Kres przekrojów głównych należących do A jest równy A; klasy ciągów stałych odpowiadają D_r | semantyczna |
 | MA1-02-015 | ma1:thm:cauchy-inverse | Niezbieżność do zera i warunek Cauchy'ego dają jednostajne dodatnie ograniczenie modułu ogona; odwrotność jest Cauchy'ego i nie zależy od reprezentanta | semantyczna + Python |
+| MA1-02-016 | ma1:lem:cauchy-algebra, ma1:lem:cauchy-limit | Jawne kwantyfikatory wymiernej dokładności, wspólny indeks obu ciągów, rozwinięcie różnicy iloczynów | semantyczna + istniejący test Python |
+| MA1-02-017 | ma1:thm:real-isomorphism | Zachowanie sumy i iloczynu przez jednoznaczność granicy; przeniesienie kresu przez bijekcję zachowującą i odzwierciedlającą porządek | semantyczna |
