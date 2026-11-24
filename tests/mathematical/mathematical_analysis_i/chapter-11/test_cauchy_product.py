@@ -81,4 +81,23 @@ class Chapter11(unittest.TestCase):
         for n in range(10):
             self.assertEqual(t[n],sum(a[j]*b[k]*c[n-j-k] for j in range(n+1) for k in range(n-j+1)))
 
+    def test_convergent_conditional_product(self):
+        a=[F((-1)**n,n+1) for n in range(40)]
+        H=partial([F(1,n+1) for n in range(41)])
+        c=conv(a,a,39)
+        for n in range(40):
+            self.assertEqual(c[n],(-1)**n*2*H[n]/(n+2))
+            self.assertGreaterEqual(abs(c[n]),F(2,n+2))
+            m=n+1
+            self.assertEqual(H[n]/(m+1)-H[n+1]/(m+2),(H[n]-1)/((m+1)*(m+2)))
+        for J in range(1,10):
+            for m in range(J,41):
+                self.assertLessEqual(H[m-1],H[J-1]+F(m-J,J+1))
+
+    def test_diagonal_positions(self):
+        pairs=[(j,n-j) for n in range(25) for j in range(n+1)]
+        for pos,(j,k) in enumerate(pairs,1):
+            n=j+k
+            self.assertEqual(pos,n*(n+1)//2+j+1)
+
 if __name__=="__main__": unittest.main()
