@@ -92,7 +92,7 @@ class TestChapter15B(unittest.TestCase):
     def test_variation_lemma_and_fubini_cross_sections_present(self):
         source = SOURCE.read_text(encoding="utf-8")
         self.assertIn(r"\label{prop:variation-measure15b}", source)
-        self.assertIn("przekroje usuniętego", source)
+        self.assertIn("przekroje\n$N$ mają miarę zero", source)
         self.assertIn(r"\int_S\sum_{n=1}^\infty", source)
 
 
@@ -125,6 +125,20 @@ class TestChapter15B(unittest.TestCase):
             "Twierdzenie o klasie",
             r"$q_n<s<r_n$",
             r"$f(s)(s)=0$ i $f(s)(s)=1$",
+        ):
+            self.assertIn(fragment, source)
+
+
+    def test_audit07_representative_and_counterexamples(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        for fragment in (
+            "\\bigcap_{k\\ge1}\\bigcup_{M\\ge1}\\bigcap_{i,j\\ge M}",
+            "Jeżeli $X\\ne\\{0\\}$",
+            "sumę Riemanna równą $x_0$",
+            "$D_A\\in J_X(X)$ dla każdego $A\\in\\Sigma$",
+            "g_S-\\sum_{n=1}^N g_{\\{n\\}}=g_{A_{N+1}}",
+            "$\\mu$. Dla parami rozłącznych $A_n$ zachodzi",
+            "addytywność przeliczalną w normie. Zatem $m$ jest miarą",
         ):
             self.assertIn(fragment, source)
 
