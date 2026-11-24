@@ -17,7 +17,9 @@ class Chapter01(unittest.TestCase):
     def test_integer_representatives(self):
         for x,y in itertools.product(itertools.product(range(4),repeat=2),repeat=2):
             xx=(x[0]+2,x[1]+2); yy=(y[0]+3,y[1]+3)
+            self.assertTrue(zeq(x[::-1],xx[::-1]))
             self.assertTrue(zeq(za(x,y),za(xx,yy)))
+            self.assertEqual(x[0]+y[1]<=x[1]+y[0],x[0]-x[1]<=y[0]-y[1])
             self.assertTrue(zeq(zm(x,y),zm(xx,yy)))
             self.assertEqual(zm(x,y)[0]-zm(x,y)[1],(x[0]-x[1])*(y[0]-y[1]))
     def test_rational_representatives(self):
@@ -33,4 +35,18 @@ class Chapter01(unittest.TestCase):
                 inv=(x[1],x[0]) if x[0]>0 else (-x[1],-x[0])
                 self.assertGreater(inv[1],0)
                 self.assertTrue(qe(qm(x,inv),(1,1)))
+    def test_rational_incompleteness_identities(self):
+        for a,b in itertools.product(range(1,21),range(1,21)):
+            s=Fraction(a,b)
+            if not 1<=s<=2: continue
+            t=(2*s+2)/(s+2)
+            self.assertEqual(t-s,(2-s*s)/(s+2))
+            self.assertEqual(t*t-2,2*(s*s-2)/(s+2)**2)
+            self.assertGreater(t,0)
+            if s*s<2:
+                self.assertGreater(t,s)
+                self.assertLess(t*t,2)
+            elif s*s>2:
+                self.assertLess(t,s)
+                self.assertGreater(t*t,2)
 if __name__=="__main__": unittest.main()
