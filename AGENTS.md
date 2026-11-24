@@ -41,3 +41,7 @@ Refer to [the Polish terminology standard](docs/pl/standardy_terminologiczne.md)
 - When auditing any mathematical manuscript, if a potentially valuable missing theorem, lemma, example, counterexample, explanation, drawing or connection is identified, **flag it separately as a proposal for the user to decide**. State why it would help and where it would fit; distinguish an essential omission from an optional enrichment.
 - **Do not insert suggested new content into an audited, previously approved chapter without the user's explicit approval.** Suggestions alone do not reset the count of clean audits. A genuine mathematical mistake, unsupported argument, missing required hypothesis, or necessary correction does count as an audit finding and must be fixed.
 - This rule applies to every manuscript in the repository and to subsequent writing and review work. Continue the planned audit after presenting such suggestions.
+
+## Global code listings
+
+- All manuscript and Atlas export preambles must use the generated global listings block in `latex/pl/code-listings.tex`. Use `language=Python` or `language=Julia` explicitly for source code. Preserve the aliases for existing listings. Run `python tools/sync_code_listings.py --check` in audits; regenerate with `--write` after changing the canonical style. See [code style standard](docs/pl/standard_kodu.tex.md). Check rendered code for line wrapping, highlighting and readability.
