@@ -597,6 +597,48 @@ def build_success_report(*, checkout_sha: str, expected_sha: str, docker: dict, 
 
 
 
+
+_DIAGNOSTIC_CASE_ORDER = ("preflight", "normal", "controlled_failure", "timeout", "output_limit")
+_DIAGNOSTIC_STAGES = ("setup", *_DIAGNOSTIC_CASE_ORDER, "finalize")
+
+
+def build_failure_report(*, expected_sha: str, stage: str, completed: tuple[str, ...]) -> dict:
+    """Diagnostic only: completed cases are names, not verified success records."""
+    if stage not in _DIAGNOSTIC_STAGES:
+        raise ValueError("Unknown failure stage")
+    if type(completed) is not tuple:
+        raise ValueError("Invalid completed cases")
+    prefix = _DIAGNOSTIC_CASE_ORDER[:_DIAGNOSTIC_CASE_ORDER.index(stage)] if stage in _DIAGNOSTIC_CASE_ORDER else (
+        () if stage == "setup" else _DIAGNOSTIC_CASE_ORDER)
+    if completed != prefix:
+        raise ValueError("Inconsistent failure progress")
+    cases = {name: ("passed" if name in completed else "failed" if name == stage else "not_run")
+             for name in _DIAGNOSTIC_CASE_ORDER}
+    report = {"schema_version": 1, "checkout_sha": expected_sha, "status": "runtime_checks_failed",
+              **_REPORT_FLAGS, "failed_stage": stage, "cases": cases}
+    validate_failure_report(report, expected_sha=expected_sha)
+    return report
+
+
+def validate_failure_report(report: object, *, expected_sha: str) -> None:
+    if type(expected_sha) is not str or not re.fullmatch(r"[0-9a-f]{40}", expected_sha):
+        raise ValueError("Invalid expected checkout SHA")
+    fields = {"schema_version": 1, "checkout_sha": expected_sha,
+              "status": "runtime_checks_failed", **_REPORT_FLAGS}
+    _exact_fields(report, fields)
+    if set(report) != set(fields) | {"failed_stage", "cases"}:
+        raise ValueError("Unexpected diagnostic keys")
+    stage, cases = report["failed_stage"], report["cases"]
+    if type(stage) is not str or stage not in _DIAGNOSTIC_STAGES:
+        raise ValueError("Unknown diagnostic stage")
+    if type(cases) is not dict or set(cases) != set(_DIAGNOSTIC_CASE_ORDER):
+        raise ValueError("Invalid diagnostic cases")
+    failed_index = _DIAGNOSTIC_STAGES.index(stage)
+    expected = {name: ("passed" if i < failed_index else "failed" if i == failed_index else "not_run")
+                for i, name in enumerate(_DIAGNOSTIC_CASE_ORDER, 1)}
+    _exact_fields(cases, expected)
+
+
 MAX_REPORT_BYTES = 32768
 
 
@@ -613,7 +655,7 @@ def _reject_report_constant(value):
     raise ValueError("Nonstandard JSON constant")
 
 
-def read_success_report(path: Path, *, expected_sha: str) -> dict:
+def _read_report_json(path: Path) -> object:
     """Read at most one bounded JSON document; fail closed on missing or invalid file."""
     # Linux CI: reject symlinks and special files without blocking on a FIFO.
     fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
@@ -631,29 +673,52 @@ def read_success_report(path: Path, *, expected_sha: str) -> dict:
                             parse_constant=_reject_report_constant)
     except (UnicodeError, RecursionError) as exc:
         raise ValueError("Invalid report JSON") from exc
+    return report
+
+
+def read_success_report(path: Path, *, expected_sha: str) -> dict:
+    report = _read_report_json(path)
     validate_success_report(report, expected_sha=expected_sha)
     return report
 
 
-def write_success_report(path: Path, report: dict, *, expected_sha: str) -> None:
-    validate_success_report(report, expected_sha=expected_sha)
+def read_failure_report(path: Path, *, expected_sha: str) -> dict:
+    report = _read_report_json(path)
+    validate_failure_report(report, expected_sha=expected_sha)
+    return report
+
+
+def _write_report(path: Path, report: dict, *, expected_sha: str, diagnostic: bool) -> None:
+    validator = validate_failure_report if diagnostic else validate_success_report
+    reader = read_failure_report if diagnostic else read_success_report
+    validator(report, expected_sha=expected_sha)
     raw = (json.dumps(report, sort_keys=True, ensure_ascii=True, allow_nan=False) + "\n").encode("ascii")
     if len(raw) > MAX_REPORT_BYTES:
         raise ValueError("Report exceeds byte limit")
     # Exclusive creation: a stale file or symlink cannot be overwritten.
     with path.open("xb") as stream:
         stream.write(raw)
-    if read_success_report(path, expected_sha=expected_sha) != report:
+    if reader(path, expected_sha=expected_sha) != report:
         raise ValueError("Report serialization mismatch")
 
 
-def main() -> int:
+def write_success_report(path: Path, report: dict, *, expected_sha: str) -> None:
+    _write_report(path, report, expected_sha=expected_sha, diagnostic=False)
+
+
+def write_failure_report(path: Path, report: dict, *, expected_sha: str) -> None:
+    _write_report(path, report, expected_sha=expected_sha, diagnostic=True)
+
+
+def run_probe(progress: dict) -> int:
     expected_sha = os.environ.get("GITHUB_SHA", "")
     checkout_sha = subprocess.check_output(["git", "rev-parse", "HEAD"],
                                            cwd=Path(__file__).resolve().parents[2],
                                            timeout=5).decode("ascii").strip()
     if not re.fullmatch(r"[0-9a-f]{40}", expected_sha) or checkout_sha != expected_sha:
         raise ValueError("CI checkout identity mismatch")
+    # Bind diagnostic reports only after verifying the actual checkout.
+    progress["checkout_sha"] = checkout_sha
     socket = transport._local_socket()
     with tempfile.TemporaryDirectory(prefix="atlas-rootless-fixture-") as directory:
         root = Path(directory)
@@ -694,6 +759,7 @@ def main() -> int:
         versions = report_engine_versions(transport._decode_metadata(transport._command(
             prefix, ("version", "--format", "{{json .}}"), env)))
         iid = root / "image-id"
+        progress["stage"] = "preflight"
         subprocess.run(prefix + ["build", "--network=none", "--pull=false",
                                  "--iidfile", str(iid), str(context)],
                        env={**env, "DOCKER_BUILDKIT": "0"}, stdin=subprocess.DEVNULL,
@@ -707,11 +773,15 @@ def main() -> int:
                     or result.get("execution_allowed") is not False
                     or result.get("proof_status") != "not_run"
                     or result.get("certificate") is not False):
-                return 1
+                raise ValueError("Preflight did not pass")
+            progress["completed"].append("preflight")
+            progress["stage"] = "normal"
             runtime = check_runtime_limits(prefix, env, image_id)
             print("ATLAS_ROOTLESS_RUNTIME " + json.dumps(runtime, sort_keys=True), flush=True)
         finally:
             transport._command(prefix, ("image", "rm", image_id), env)
+        progress["completed"].append("normal")
+        progress["stage"] = "controlled_failure"
         # Build a separate immutable local image for a controlled failure.
         entry.write_text(_FAILURE_FIXTURE, encoding="utf-8")
         iid.unlink()
@@ -727,6 +797,8 @@ def main() -> int:
             print("ATLAS_ROOTLESS_LIFECYCLE " + json.dumps(failure, sort_keys=True), flush=True)
         finally:
             transport._command(prefix, ("image", "rm", failure_image), env)
+        progress["completed"].append("controlled_failure")
+        progress["stage"] = "timeout"
         entry.write_text(_TIMEOUT_FIXTURE, encoding="utf-8")
         iid.unlink()
         subprocess.run(prefix + ["build", "--network=none", "--pull=false",
@@ -741,6 +813,8 @@ def main() -> int:
             print("ATLAS_ROOTLESS_TIMEOUT " + json.dumps(timeout, sort_keys=True), flush=True)
         finally:
             transport._command(prefix, ("image", "rm", timeout_image), env)
+        progress["completed"].append("timeout")
+        progress["stage"] = "output_limit"
         entry.write_text(_OUTPUT_FIXTURE, encoding="utf-8")
         iid.unlink()
         subprocess.run(prefix + ["build", "--network=none", "--pull=false",
@@ -755,6 +829,8 @@ def main() -> int:
             print("ATLAS_ROOTLESS_OUTPUT " + json.dumps(output, sort_keys=True), flush=True)
         finally:
             transport._command(prefix, ("image", "rm", output_image), env)
+        progress["completed"].append("output_limit")
+        progress["stage"] = "finalize"
         report = build_success_report(checkout_sha=checkout_sha, expected_sha=expected_sha,
                                       docker=versions, cases={"preflight": result, "normal": runtime,
                                       "controlled_failure": failure, "timeout": timeout,
@@ -767,10 +843,30 @@ def main() -> int:
         return 0
 
 
+def main() -> int:
+    progress = {"checkout_sha": None, "stage": "setup", "completed": []}
+    try:
+        return run_probe(progress)
+    except Exception:
+        # No diagnostic claim for an unverified checkout. Never swallow the failure.
+        path = os.environ.get("ATLAS_ROOTLESS_FAILURE_REPORT_PATH")
+        if path and progress["checkout_sha"] is not None:
+            report = build_failure_report(expected_sha=progress["checkout_sha"],
+                                          stage=progress["stage"],
+                                          completed=tuple(progress["completed"]))
+            write_failure_report(Path(path), report, expected_sha=progress["checkout_sha"])
+            print("ATLAS_ROOTLESS_FAILURE_REPORT_WRITTEN", flush=True)
+        raise
+
+
 if __name__ == "__main__":
     if len(sys.argv) == 3 and sys.argv[1] == "--validate-report":
         read_success_report(Path(sys.argv[2]), expected_sha=os.environ.get("GITHUB_SHA", ""))
         print("ATLAS_ROOTLESS_REPORT_FILE_VALIDATED", flush=True)
+        sys.exit(0)
+    if len(sys.argv) == 3 and sys.argv[1] == "--validate-failure-report":
+        read_failure_report(Path(sys.argv[2]), expected_sha=os.environ.get("GITHUB_SHA", ""))
+        print("ATLAS_ROOTLESS_FAILURE_REPORT_FILE_VALIDATED", flush=True)
         sys.exit(0)
     if len(sys.argv) != 1:
         raise SystemExit("Invalid CI probe arguments")

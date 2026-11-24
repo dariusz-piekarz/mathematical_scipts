@@ -128,6 +128,7 @@ jobs:
         run: |
           set -euo pipefail
           export ATLAS_ROOTLESS_REPORT_PATH="$RUNNER_TEMP/atlas-rootless-report.json"
+          export ATLAS_ROOTLESS_FAILURE_REPORT_PATH="$RUNNER_TEMP/atlas-rootless-failure.json"
           python3 -m scripts.lean_rootless_ci_probe
       - name: Revalidate persisted runtime report independently
         working-directory: application
@@ -140,6 +141,28 @@ jobs:
         with:
           name: atlas-rootless-report-${{ github.sha }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/atlas-rootless-report.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Validate diagnostic report after failure
+        if: failure()
+        id: diagnostic
+        working-directory: application
+        shell: bash
+        run: |
+          set -euo pipefail
+          report="$RUNNER_TEMP/atlas-rootless-failure.json"
+          if [[ ! -e "$report" && ! -L "$report" ]]; then
+            echo "Diagnostic report unavailable; run remains failed"
+            exit 0
+          fi
+          python3 -m scripts.lean_rootless_ci_probe --validate-failure-report "$report"
+          echo "valid=true" >> "$GITHUB_OUTPUT"
+      - name: Upload validated diagnostic report
+        if: failure() && steps.diagnostic.outputs.valid == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-rootless-failure-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/atlas-rootless-failure.json
           if-no-files-found: error
           retention-days: 30
       - name: Stop test daemon

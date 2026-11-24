@@ -810,3 +810,76 @@ class RuntimeReportFileTests(unittest.TestCase):
             for path in (link, fifo, root):
                 with self.subTest(path=path), self.assertRaises((OSError, ValueError)):
                     read_success_report(path, expected_sha=fixture.sha)
+
+
+class RuntimeFailureReportTests(unittest.TestCase):
+    sha = "f" * 40
+
+    def test_every_failure_stage_and_progress(self):
+        from scripts.lean_rootless_ci_probe import build_failure_report, _DIAGNOSTIC_STAGES
+        cases = _DIAGNOSTIC_STAGES[1:-1]
+        for i, stage in enumerate(_DIAGNOSTIC_STAGES):
+            completed = cases[:max(0, i-1)]
+            report = build_failure_report(expected_sha=self.sha, stage=stage, completed=completed)
+            self.assertEqual(report["status"], "runtime_checks_failed")
+            self.assertFalse(report["execution_allowed"])
+            self.assertFalse(report["certificate"])
+            self.assertEqual(report["proof_status"], "not_run")
+            for j, name in enumerate(cases, 1):
+                self.assertEqual(report["cases"][name], "passed" if j < i else
+                                 "failed" if j == i else "not_run")
+
+    def test_reject_inconsistent_progress_and_flags(self):
+        from scripts.lean_rootless_ci_probe import build_failure_report, validate_failure_report
+        for completed in ((), ("normal",), ("preflight", "normal")):
+            with self.assertRaises(ValueError):
+                build_failure_report(expected_sha=self.sha, stage="normal", completed=completed)
+        for key, value in (("certificate", True), ("execution_allowed", True),
+                           ("proof_status", "verified"), ("status", "runtime_checks_passed"),
+                           ("failed_stage", "unknown")):
+            report = build_failure_report(expected_sha=self.sha, stage="normal", completed=("preflight",))
+            report[key] = value
+            with self.assertRaises(ValueError):
+                validate_failure_report(report, expected_sha=self.sha)
+        report = build_failure_report(expected_sha=self.sha, stage="normal", completed=("preflight",))
+        report["cases"]["timeout"] = "passed"
+        with self.assertRaises(ValueError):
+            validate_failure_report(report, expected_sha=self.sha)
+
+    def test_failure_file_never_accepted_as_success(self):
+        import tempfile
+        from pathlib import Path
+        from scripts.lean_rootless_ci_probe import (build_failure_report, read_failure_report,
+                                                     write_failure_report, read_success_report)
+        report = build_failure_report(expected_sha=self.sha, stage="setup", completed=())
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "failure.json"
+            write_failure_report(path, report, expected_sha=self.sha)
+            self.assertEqual(read_failure_report(path, expected_sha=self.sha), report)
+            with self.assertRaises(ValueError):
+                read_success_report(path, expected_sha=self.sha)
+            with self.assertRaises(FileExistsError):
+                write_failure_report(path, report, expected_sha=self.sha)
+
+    def test_main_preserves_failure_and_reports_only_verified_checkout(self):
+        import os
+        import tempfile
+        from pathlib import Path
+        from unittest.mock import patch
+        from scripts import lean_rootless_ci_probe as probe
+        for verified in (False, True):
+            with tempfile.TemporaryDirectory() as directory:
+                path = Path(directory) / "failure.json"
+                def failing(progress):
+                    if verified:
+                        progress.update(checkout_sha=self.sha, stage="normal", completed=["preflight"])
+                    raise RuntimeError("private exception text")
+                with patch.dict(os.environ, {"ATLAS_ROOTLESS_FAILURE_REPORT_PATH": str(path)}), \
+                        patch.object(probe, "run_probe", side_effect=failing):
+                    with self.assertRaisesRegex(RuntimeError, "private exception text"):
+                        probe.main()
+                self.assertEqual(path.exists(), verified)
+                if verified:
+                    report = probe.read_failure_report(path, expected_sha=self.sha)
+                    self.assertEqual(report["cases"]["normal"], "failed")
+                    self.assertNotIn("private exception text", path.read_text())
