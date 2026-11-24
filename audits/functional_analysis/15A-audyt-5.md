@@ -40,3 +40,10 @@ Poprzedni dedykowany [workflow #45294996953](https://github.com/dariusz-piekarz/
 ## Decyzja
 
 **15A/05 — drugi niezależny czysty przegląd (2/2) na jednym niezmienionym źródle po poprawce.** Dopiero po potwierdzeniu zakończonego CI należy formalnie zapisać **STABILNY** i odblokować **15B**. Bez zmian w rozdziałach historycznych, źródle 15A, testach lub układzie książki.
+## Zamknięcie po drugim czystym audycie — końcowe CI
+
+Niezależnie odczytano dedykowany przebieg [#45295648912](https://github.com/dariusz-piekarz/mathematical_scipts/actions/runs/45295648912), wyzwolony commitem raportu 15A/05 `a7082cbc3510cf9d285cf4f53bf2989517ab5d95`. Jego rzeczywisty status to **completed / success**. Wszystkie kroki joba ukończone powodzeniem: regresje modułu 15A, generowanie kompletnego kontekstu 01–17 z modułami 15A i 15B, kompilacja LaTeX, kontrola PDF i odsyłaczy, publikacja PDF oraz logów.
+
+Po potwierdzeniu CI ponownie sprawdzono bloby źródła `afe39ee7e7d189d2d15bbf4a81457cc57c63be7a` i regresji `6f44e390ea07e2e5593c8a0a246fd4060355f727`: pozostają identyczne jak przy poprawce w 15A/03, pierwszym czystym przeglądzie 15A/04 i drugim czystym przeglądzie 15A/05. Rzeczywisty PDF z takiej samej wersji źródła był już niezależnie zweryfikowany wizualnie w 15A/03; najnowszy przebieg potwierdził dodatkowo tworzenie i maszynowe kontrole aktualnego PDF. Nie przedstawiamy kompilacji ani testów regresyjnych jako formalizacji wszystkich dowodów.
+
+**KOŃCOWA DECYZJA: MODUŁ 15A — STABILNY (2/2 czystych audytów na niezmienionym źródle + zakończony zielony workflow).** Odblokowano osobny cykl audytów **15B — Całki Bochnera, Pettisa, Dunforda i Gelfanda oraz miary wektorowe**, bez automatycznego oznaczania 15B albo rozdziału 16 jako stabilnych. Ta końcowa adnotacja zmienia wyłącznie raport audytu.
