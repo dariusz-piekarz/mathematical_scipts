@@ -23,6 +23,32 @@ else:
 SHA = re.compile(r"[0-9a-f]{40}\Z")
 EXPECTED_PASSES = ("1", "2", "3")
 REQUIRED_L11_TEST = "test_real_olean_growth_during_read_fails_closed"
+# Explicit regression identities: never derive this list from discovered tests.
+# unittest discover and module invocation use these two exact prefixes.
+REQUIRED_L15_TESTS = frozenset((
+    "test_lean_concepts.LeanConceptTests.test_scope_disambiguates_syntax_and_propositions",
+    "test_lean_concepts.LeanConceptTests.test_context_required_even_for_unique_match",
+    "test_lean_concepts.LeanConceptTests.test_no_scope_fallback_or_fuzzy_resolution",
+    "test_lean_concepts.LeanConceptTests.test_input_limits",
+    "test_lean_concepts.LeanConceptTests.test_pins_and_deterministic_fingerprint",
+    "test_lean_concepts.LeanConceptTests.test_registry_integrity",
+    "test_lean_concepts.LeanConceptTests.test_results_not_certificates_or_executable_code",
+    "test_lean_concepts.LeanConceptTests.test_returned_metadata_cannot_mutate_registry",
+    "test_lean_concepts.LeanConceptTests.test_existing_local_syntax_declarations",
+    "test_lean_concept_fixture.LeanConceptFixtureTests.test_every_dictionary_declaration_has_exact_fixture_entry",
+    "test_lean_concept_fixture.LeanConceptFixtureTests.test_fixture_is_not_executable_browser_input",
+    "test_lean_concept_context.LeanConceptContextTests.test_real_indexed_definitions_and_trace",
+    "test_lean_concept_context.LeanConceptContextTests.test_stale_source_and_unknown_context",
+    "test_lean_concept_context.LeanConceptContextTests.test_wrong_index_owner_or_digest_is_refused",
+    "test_lean_concept_context.LeanConceptContextTests.test_duplicate_occurrence_is_refused",
+    "test_lean_concept_context.LeanConceptContextTests.test_modified_definition_even_with_updated_digest_is_refused",
+    "test_lean_theorem_context.LeanTheoremContextTests.test_real_registered_theorem_context",
+    "test_lean_theorem_context.LeanTheoremContextTests.test_missing_consent_stale_digest_and_unsupported_theorem",
+    "test_lean_theorem_context.LeanTheoremContextTests.test_registry_approval_cannot_bypass_source_pin",
+    "test_lean_theorem_context.LeanTheoremContextTests.test_unreviewed_and_duplicate_mappings_are_refused",
+    "test_lean_theorem_context.LeanTheoremContextTests.test_definition_collision_blocks_entire_context",
+    "test_lean_theorem_context.LeanTheoremContextTests.test_truncated_theorem_span_cannot_inherit_approval",
+))
 
 
 def require_sha(value: str) -> str:
@@ -39,7 +65,7 @@ def verify_ancestor(candidate_sha: str, *, branch: str) -> None:
                    check=True)
 
 
-def validate_unit_report(document: dict, sha: str, pass_id: str) -> list[str]:
+def validate_unit_report(document: dict, sha: str, pass_id: str, *, fragment: str | None = None) -> list[str]:
     problems: list[str] = []
     if document.get("schema") != 1:
         problems.append("invalid unit report schema")
@@ -61,6 +87,7 @@ def validate_unit_report(document: dict, sha: str, pass_id: str) -> list[str]:
         return problems + ["missing per-test outcomes"]
     skipped = []
     observed = set()
+    observed_l15 = set()
     ids = set()
     for entry in outcomes:
         if not isinstance(entry, dict):
@@ -86,10 +113,19 @@ def validate_unit_report(document: dict, sha: str, pass_id: str) -> list[str]:
                 expected = classify_skip(name, reason)
                 if expected == "unreviewed" or entry.get("classification") != expected:
                     problems.append("skip classification does not match reviewed allowlist")
+        if status == "passed":
+            canonical = name.removeprefix("tests.")
+            if canonical in REQUIRED_L15_TESTS:
+                if canonical in observed_l15:
+                    problems.append("duplicate canonical L1.5 regression identity")
+                observed_l15.add(canonical)
         if name.endswith(REQUIRED_L11_TEST) and status == "passed":
             observed.add(name)
     if not observed:
         problems.append("mandatory L1.1 real-file growth regression not passed")
+    if fragment == "L1.5":
+        for missing in sorted(REQUIRED_L15_TESTS - observed_l15):
+            problems.append("mandatory L1.5 regression not passed: " + missing)
     if type(document.get("skipped")) is not int or len(skipped) != document["skipped"]:
         problems.append("skip count does not match named outcomes")
     if type(document.get("outcome_count")) is not int or document["outcome_count"] != len(outcomes):
@@ -116,7 +152,7 @@ def evaluate(
             doc = json.loads(path.read_text(encoding="utf-8"))
             if not isinstance(doc, dict):
                 raise ValueError("expected an object")
-            issues = validate_unit_report(doc, sha, pass_id)
+            issues = validate_unit_report(doc, sha, pass_id, fragment=fragment)
             problems.extend(f"pass {pass_id}: {issue}" for issue in issues)
             passes.append({
                 "pass": pass_id, "tests": doc.get("executed"),

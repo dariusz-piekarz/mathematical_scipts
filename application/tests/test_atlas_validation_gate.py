@@ -15,7 +15,7 @@ from scripts.atlas_ci_report import classify_skip
 from scripts.atlas_validation_select import select
 
 from scripts.atlas_validation_gate import (
-    evaluate, require_sha, validate_unit_report,
+    evaluate, require_sha, validate_unit_report, REQUIRED_L15_TESTS,
 )
 
 SHA = "a" * 40
@@ -98,6 +98,41 @@ class GateTests(unittest.TestCase):
         self.assertEqual(result["status"], "stabilizing")
         self.assertEqual(result["problems"], [])
         self.assertIs(result["certificate"], False)
+
+    def test_l15_all_named_regressions_required_in_each_pass(self):
+        def make(pass_id):
+            doc = evidence(pass_id)
+            doc["outcomes"].extend({"id": x, "status": "passed"}
+                                   for x in sorted(REQUIRED_L15_TESTS))
+            doc["executed"] = doc["outcome_count"] = len(doc["outcomes"])
+            return doc
+        def run():
+            return evaluate(SHA, "L1.5", self.root, application="success",
+                            native="success", lean="success", skeptic="success")
+        self.assertEqual(len(REQUIRED_L15_TESTS), 22)
+        for pass_id in ("1", "2", "3"):
+            (self.root / ("atlas-unittest-" + pass_id) / "report.json").write_text(
+                json.dumps(make(pass_id)), encoding="utf-8")
+        self.assertEqual(run()["status"], "stabilizing")
+        doc = make("2")
+        missing = doc["outcomes"].pop()["id"]
+        doc["executed"] = doc["outcome_count"] = len(doc["outcomes"])
+        (self.root / "atlas-unittest-2" / "report.json").write_text(
+            json.dumps(doc), encoding="utf-8")
+        self.assertEqual(run()["status"], "blocked")
+        self.assertIn("pass 2: mandatory L1.5 regression not passed: " + missing,
+                      run()["problems"])
+
+    def test_l15_spoofed_identity_or_expected_failure_does_not_count(self):
+        doc = evidence("1")
+        target = sorted(REQUIRED_L15_TESTS)[0]
+        doc["outcomes"].extend([
+            {"id": "unrelated." + target, "status": "passed"},
+            {"id": "tests." + target, "status": "expected_failure"},
+        ])
+        doc["executed"] = doc["outcome_count"] = len(doc["outcomes"])
+        self.assertIn("mandatory L1.5 regression not passed: " + target,
+                      validate_unit_report(doc, SHA, "1", fragment="L1.5"))
 
     def test_reject_short_sha(self):
         with self.assertRaises(ValueError):
