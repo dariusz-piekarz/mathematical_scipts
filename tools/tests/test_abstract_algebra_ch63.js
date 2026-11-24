@@ -11,7 +11,7 @@ function conjugacy63(){
  const diag=v=>v.map((x,i)=>v.map((_,j)=>i===j?x:0n));
  const gcd=(a,b)=>{a=a<0n?-a:a;b=b<0n?-b:b;while(b)[a,b]=[b,a%b];return a;};
  const rank=ms=>{let rows=[];for(const M of ms){let v=M.flat();for(const [p,w] of rows){if(!v[p])continue;const a=w[p],b=v[p];v=v.map((x,i)=>a*x-b*w[i]);const d=v.reduce(gcd,0n);if(d)v=v.map(x=>x/d);}const p=v.findIndex(x=>x!==0n);if(p>=0)rows.push([p,v]);}return rows.length};
- let models=0,jacobians=0,centralizers=0,rootchecks=0,expchecks=0;
+ let models=0,jacobians=0,centralizers=0,rootchecks=0,expchecks=0,quadraticChecks=0,nonzeroQuadratic=0;
  for(let n=2;n<=6;n++){
   const D=Array.from({length:n-1},(_,i)=>add(unit(n,i,i),sc(unit(n,n-1,n-1),-1n)));
   const R=[];for(let i=0;i<n;i++)for(let j=0;j<n;j++)if(i!==j)R.push([i,j,unit(n,i,j)]);
@@ -25,10 +25,12 @@ function conjugacy63(){
    assert(rank([...H,...deriv])===n*n-1,"Jacobian rank");jacobians++;
    assert(rank(base.map(X=>br(t,X)))===n*n-n,"centralizer dimension");assert(H.every(X=>eq(br(t,X),z(n))),"centralizer");centralizers++;
    for(const [i,j,X] of roots){let c=3n;const E=add(I(n),sc(X,c)),Ei=add(I(n),sc(X,-c));const ad=br(X,t),ad2=br(X,ad);
-    assert(eq(br(X,ad2),z(n)),"nilpotence on t");assert(eq(mul(mul(E,t),Ei),add(add(t,sc(ad,c)),sc(ad2,c*c/2n))),"exponential");expchecks++;}
+    assert(eq(br(X,ad2),z(n)),"nilpotence on t");assert(eq(sc(mul(mul(E,t),Ei),2n),add(add(sc(t,2n),sc(ad,2n*c)),sc(ad2,c*c))),"exponential");expchecks++;
+    for(const Y of base){const d1=br(X,Y),d2=br(X,d1);assert(eq(br(X,d2),z(n)),"nilpotence on basis");if(!eq(d2,z(n)))nonzeroQuadratic++;assert(eq(sc(mul(mul(E,Y),Ei),2n),add(add(sc(Y,2n),sc(d1,2n*c)),sc(d2,c*c))),"exponential on basis");quadraticChecks++;}
+   }
    models++;
   }
  }
- return {models,jacobians,centralizers,rootchecks,expchecks};
+ return {models,jacobians,centralizers,rootchecks,expchecks,quadraticChecks,nonzeroQuadratic};
 }
 console.log('AA-63 conjugacy models: PASS',conjugacy63());
