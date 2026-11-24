@@ -182,6 +182,37 @@ def verify_exchange_lemmas(n, edges, optima):
             assert (u, v) in none_optimal, (n, edges, "strict cycle maximum", (u, v))
 
 
+def verify_path_certificate(n, edges, optima):
+    # TG39-CERT-01: check the certificate on every spanning forest,
+    # including suboptimal ones, independently of Prim and Kruskal.
+    _, count = connected_components(n, edges)
+    for candidate in itertools.combinations(edges, n - count):
+        if not spanning(n, edges, candidate):
+            continue
+        selected = frozenset((u, v) for u, v, _ in candidate)
+        adj = [[] for _ in range(n)]
+        for u, v, w in candidate:
+            adj[u].append((v, w))
+            adj[v].append((u, w))
+        gaps = []
+        for u, v, w in edges:
+            if (u, v) in selected:
+                continue
+            stack = [(u, -1, -inf)]
+            while stack:
+                x, parent, maximum = stack.pop()
+                if x == v:
+                    gaps.append(w - maximum)
+                    break
+                for y, weight in adj[x]:
+                    if y != parent:
+                        stack.append((y, x, max(maximum, weight)))
+            else:
+                raise AssertionError("missing tree path")
+        assert all(gap >= 0 for gap in gaps) == (selected in optima), (edges, candidate)
+        assert all(gap > 0 for gap in gaps) == (len(optima) == 1 and selected in optima), (edges, candidate)
+
+
 def verify(n, edges, check_exchange=False):
     best, optima = exhaustive_oracle(n, edges)
     for algorithm in (kruskal, prim):
@@ -193,6 +224,7 @@ def verify(n, edges, check_exchange=False):
     independent_dsu_invariants(n, edges)
     if check_exchange:
         verify_exchange_lemmas(n, edges, optima)
+        verify_path_certificate(n, edges, optima)
     if len(set(w for _, _, w in edges)) == len(edges):
         assert len(optima) == 1, (n, edges, "nonunique despite distinct weights")
         assert frozenset((u, v) for u, v, _ in kruskal(n, edges)) == optima[0]
@@ -278,4 +310,4 @@ if __name__ == "__main__":
     print(f"PASS exhaustive small graphs: {exhaustive_small()}")
     print(f"PASS seeded larger graphs: {seeded_larger()}")
     special_cases()
-    print("PASS hand-calculated examples, DSU invariants, cut/cycle properties and book integration")
+    print("PASS TG39-CERT-01 path certificate, hand-calculated examples, DSU invariants, cut/cycle properties and book integration")
