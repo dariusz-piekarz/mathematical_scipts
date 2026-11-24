@@ -2,7 +2,7 @@
 \label{ch:tg-euler}
 
 Pierwsze dwa rozdziały dotyczyły przede wszystkim spójności i istnienia
-ścieżek. Teraz stawiamy inne pytanie: czy można przejść przez \emph{każdą
+dróg. Teraz stawiamy inne pytanie: czy można przejść przez \emph{każdą
 krawędź dokładnie raz}? Problem ma historyczne źródło w zagadnieniu
 mostów królewieckich. Prowadzi do kryterium całkowicie wyrażonego
 przez stopnie wierzchołków, a także do konstruktywnego algorytmu.
@@ -19,8 +19,8 @@ krawędzi nazywamy podgraf o zbiorze wierzchołków złożonym
 z końców wszystkich krawędzi i o pełnym zbiorze krawędzi.
 Wierzchołki izolowane nie wpływają na możliwość przejścia
 przez wszystkie krawędzie. Jeżeli $E=\varnothing$, nośnik
-jest pustą przestrzenią i stosujemy osobną konwencję
-ze wskazanej poniżej definicji.
+jest grafem zerowym i stosujemy osobną konwencję
+z poniższej definicji.
 
 \begin{definicja}[Szlak Eulera i cykl Eulera]
 Niech $G=(V,E,\partial)$ będzie skończonym multigrafem nieskierowanym.
@@ -31,6 +31,8 @@ odwiedzać ten sam wierzchołek). Dla $E=\varnothing$ i $V\ne\varnothing$ przyjm
 że spacer długości zero, w dowolnym wierzchołku,
 jest zamkniętym szlakiem Eulera. W tym szczególnym przypadku
 nie należy wymagać spójności nośnika krawędziowego.
+Dla $V=\varnothing$ nie istnieje żaden spacer,
+nawet długości zero, a więc nie istnieje szlak Eulera.
 \end{definicja}
 
 Termin ,,cykl Eulera'' jest tradycyjny: nie jest to cykl prosty
@@ -70,6 +72,8 @@ a wszystkie pozostałe są parzyste.
 \end{lemat}
 
 \begin{proof}
+Jeżeli $k=0$, podgraf nie ma krawędzi i wszystkie
+jego stopnie wynoszą zero. Niech więc $k\ge1$.
 Każde pojawienie się wierzchołka jako punktu pośredniego
 szlaku ma dwie incydentne krawędzie: tę, którą weszliśmy,
 i tę, którą wyszliśmy. Krawędzie te są różne, ponieważ szlak
@@ -112,10 +116,14 @@ Otrzymaliśmy pewien zamknięty szlak $C$.
 
 Jeżeli $C$ zawiera wszystkie krawędzie, dowód jest zakończony.
 W przeciwnym razie istnieje niewykorzystana krawędź
-przylegająca do wierzchołka $C$. Istotnie, gdyby takiej
-krawędzi nie było, zbiór wierzchołków $C$ byłby odseparowany
-od wszystkich pozostałych krawędzi, co przeczyłoby spójności
-nośnika krawędziowego. Niech $w$ będzie takim wierzchołkiem.
+przylegająca do wierzchołka $C$. Istotnie, jeżeli pewna niewykorzystana krawędź ma koniec
+na $C$, otrzymujemy tezę. W przeciwnym razie wybieramy
+drogę od wierzchołka $C$ do końca dowolnej niewykorzystanej
+krawędzi; istnieje ona dzięki spójności nośnika.
+Pierwsza krawędź tej drogi opuszczająca zbiór wierzchołków
+$C$ nie może należeć do $C$, ponieważ obydwa końce każdej
+krawędzi $C$ leżą w tym zbiorze. Jest więc poszukiwaną
+niewykorzystaną krawędzią. Niech $w$ będzie takim wierzchołkiem.
 W multigrafie złożonym z \emph{niewykorzystanych} krawędzi
 wszystkie stopnie nadal są parzyste: od pierwotnego
 parzystego stopnia odjęliśmy parzysty stopień pochodzący
@@ -133,10 +141,28 @@ krawędź. Po skończonej liczbie kroków uzyskamy cykl Eulera.
 \begin{uwaga}[Algorytm Hierholzera]
 Dowód jest algorytmem: budujemy zamknięty szlak, wyszukujemy
 na nim wierzchołek incydentny z niewykorzystaną krawędzią,
-a następnie wplatamy nowy zamknięty szlak. Przy przechowywaniu
-list krawędzi incydentnych można wykonać całą procedurę w czasie
-$O(|V|+|E|)$, ponieważ każdą krawędź rozpatrujemy
-stałą liczbę razy. Sama zasada ,,idź dowolną krawędzią''
+a następnie wplatamy nowy zamknięty szlak. Aby uzyskać czas $O(|V|+|E|)$, trzeba unikać ponownego
+przeglądania całego obiegu przy każdym wplataniu.
+Przechowujemy obieg jako listę dwukierunkową wystąpień
+wierzchołków i krawędzi, a wystąpienia oczekujące na
+sprawdzenie w osobnej kolejce. Przy każdym wierzchołku
+utrzymujemy wskaźnik na pierwszą jeszcze niesprawdzoną
+pozycję listy incydencji. Pozycje wykorzystanych krawędzi
+pomijamy; każdą krawędź oznaczamy jako wykorzystaną
+niezależnie od tego, przez który jej koniec ją znaleziono.
+Dla pobranego wystąpienia $w$ budujemy i wplatamy kolejne
+zamknięte szlaki zaczynające się w $w$, dopóki pozostaje
+tam niewykorzystana krawędź. Nowe wystąpienia dodajemy
+do kolejki. Gdy przy $w$ nie ma już niewykorzystanych
+krawędzi, nie pojawią się one później. Każde wystąpienie
+jest sprawdzane najwyżej raz, a każde wplatanie jest
+stałoczasowe poza samą konstrukcją nowego szlaku.
+Lista incydencji ma łącznie $2|E|$ pozycji (także dla
+pętli), a lista obiegu $O(|E|)$ pozycji. Po wyczerpaniu
+kolejki nie może pozostać niewykorzystana krawędź,
+gdyż spójność nośnika wymuszałaby jej incydencję
+z pewnym wystąpieniem w obiegu. Stąd podana złożoność,
+wliczając przygotowanie list i wyszukanie korzenia. Sama zasada ,,idź dowolną krawędzią''
 bez etapu wplatania cykli nie gwarantuje natychmiastowego
 wykorzystania wszystkich krawędzi.
 \end{uwaga}
@@ -205,15 +231,20 @@ jest zbiorem łuków; łuk $(u,v)$ zapisujemy jako $u\to v$.
 \emph{Orientacja} grafu prostego nieskierowanego $G=(V,E)$
 powstaje przez zastąpienie każdej krawędzi $\{u,v\}\in E$
 dokładnie jednym z łuków $(u,v)$ lub $(v,u)$.
+Dla multigrafu zachowujemy odrębne identyfikatory krawędzi:
+orientacja przypisuje każdej krawędzi uporządkowaną parę
+jej końców. Pętla daje łuk od wierzchołka do niego samego;
+równoległe łuki pozostają odrębnymi obiektami.
 Stopień wejściowy $d^-(v)$ jest liczbą łuków kończących się
 w $v$, a stopień wyjściowy $d^+(v)$ jest liczbą łuków
-zaczynających się w $v$.
+zaczynających się w $v$, z uwzględnieniem krotności.
+Pętla wnosi po jednym do obu stopni.
 \end{definicja}
 
 Dla grafów skierowanych rozważamy spacer zgodny z kierunkami
 łuków. Graf skierowany nazywamy \emph{silnie spójnym}, gdy
-każde dwa wierzchołki można połączyć skierowanymi ścieżkami
-w obie strony. Przez spójność \emph{słabą} rozumiemy spójność
+ma niepusty zbiór wierzchołków i każde dwa wierzchołki
+można połączyć skierowanymi drogami w obie strony. Przez spójność \emph{słabą} rozumiemy spójność
 grafu otrzymanego po zapomnieniu kierunków łuków.
 
 \begin{twierdzenie}[Skierowane obiegi Eulera]
@@ -232,18 +263,27 @@ W skierowanym zamkniętym szlaku każde wejście do wierzchołka
 jest sparowane z wyjściem, więc otrzymujemy (ii).
 Ponieważ szlak zawiera wszystkie łuki, zachodzi też (i).
 
-Odwrotnie, wychodzimy z wierzchołka incydentnego z łukiem
-i przedłużamy skierowany szlak bez powtarzania łuków.
+Odwrotnie, wybieramy wierzchołek incydentny z łukiem.
+Z warunku (ii) wynika, że ma on dodatni stopień wyjściowy.
+Przedłużamy skierowany szlak bez powtarzania łuków,
+dopóki istnieje niewykorzystany łuk wychodzący z jego końca.
+Proces kończy się, gdyż zbiór łuków jest skończony.
 Jeżeli zatrzymałby się w wierzchołku innym niż początek,
 to miałby tam o jedno wykorzystane wejście więcej niż
 wykorzystanych wyjść. Z równości $d^+=d^-$ wynikałoby
 istnienie niewykorzystanego wyjścia, sprzeczność.
 Otrzymujemy więc zamknięty szlak. Po jego usunięciu
 równość stopni wejściowych i wyjściowych pozostaje prawdziwa.
-Słaba spójność zapewnia, że jeżeli nie wykorzystaliśmy
-wszystkich łuków, jeden z nich ma koniec w wierzchołku
-już użytym w naszym szlaku. Z tego wierzchołka konstruujemy
-następny zamknięty szlak i wplatamy go do poprzedniego.
+Jeżeli nie wykorzystaliśmy wszystkich łuków, to pewien
+niewykorzystany łuk ma koniec w wierzchołku już użytym
+w naszym szlaku: po zapomnieniu kierunków stosujemy
+argument o pierwszej krawędzi opuszczającej zbiór
+wierzchołków szlaku, jak w dowodzie
+twierdzenia~\ref{thm:tg-euler-circuit}.
+W grafie pozostałych łuków stopnie wejściowy i wyjściowy
+tego wierzchołka są równe, zatem oba są dodatnie.
+Z tego wierzchołka konstruujemy następny niepusty
+zamknięty szlak i wplatamy go do poprzedniego.
 Iteracja kończy się po wykorzystaniu wszystkich łuków.
 \end{proof}
 
@@ -289,19 +329,33 @@ drzewo rozpinające $T$. Orientujemy każdą krawędź drzewa
 orientujemy od potomka do przodka. Takie ustalenie
 jest możliwe, ponieważ w nieskierowanym DFS każda
 krawędź niedrzewowa łączy wierzchołek z jego przodkiem
-(w razie potrzeby dowód: podczas pierwszego przeglądania
-krawędzi jeden koniec jest jeszcze na stosie rekurencji;
-gdyby oba końce należały do różnych, już zakończonych gałęzi,
-krawędź zostałaby wcześniej użyta do odkrycia jednej z nich).
+Wykonujemy DFS rekurencyjnie: po odkryciu wierzchołka
+przeglądamy wszystkich jego sąsiadów, a dla każdego
+dotąd nieodkrytego sąsiada natychmiast wywołujemy DFS.
+Aby uzasadnić własność krawędzi niedrzewowych, rozważmy
+krawędź $xy$, przy czym $x$ odkryto przed $y$.
+Wywołanie dla $x$ nie może zakończyć się przed odkryciem
+$y$: podczas tego wywołania sąsiad $y$ zostałby wówczas
+napotkany jako nieodkryty i odkryty rekurencyjnie.
+Zatem $y$ odkryto podczas aktywnego wywołania dla $x$,
+a wszystkie odkrycia w tym czasie pochodzą z wywołań
+zagnieżdżonych w wywołaniu dla $x$. Stąd $y$ jest
+potomkiem $x$ w drzewie DFS.
 
 Z korzenia $r$ można dotrzeć do każdego wierzchołka
 po skierowanych krawędziach drzewa. Pokażemy, że
 z każdego wierzchołka można również dotrzeć do $r$.
 Dla wierzchołka $v\ne r$ niech $p$ będzie jego rodzicem,
 a $S_v$ zbiorem wszystkich potomków $v$ łącznie z $v$.
-Krawędź $pv$ nie jest mostem, zatem istnieje inna krawędź
-między $S_v$ i $V\setminus S_v$. Własność DFS zapewnia,
-że jest ona niedrzewowa i łączy pewnego potomka $x\in S_v$
+Krawędź $pv$ jest jedyną krawędzią drzewa łączącą
+$S_v$ z $V\setminus S_v$: rodzic każdego innego
+wierzchołka $S_v$ także należy do $S_v$, a każde
+dziecko wierzchołka $S_v$ jest jego potomkiem.
+Ponieważ $pv$ nie jest mostem, w $G-pv$ nadal istnieje
+droga od $v$ do $p$. Musi ona zawierać krawędź między
+$S_v$ i $V\setminus S_v$. Jest to krawędź niedrzewowa,
+która na mocy własności DFS łączy pewnego potomka
+$x\in S_v$
 z przodkiem $y$ wierzchołka $v$ (ewentualnie $y=p$).
 W orientacji możemy przejść od $v$ do $x$ w dół drzewa,
 a potem łukiem $x\to y$. W ten sposób dotarliśmy do
@@ -310,7 +364,7 @@ Powtarzając argument, osiągamy $r$, gdyż głębokość
 jest nieujemną liczbą całkowitą i za każdym razem maleje.
 Stąd dla dowolnych $u,w$ istnieje skierowany spacer
 $u\to r\to w$, który można skrócić do skierowanej
-ścieżki. Orientacja jest silnie spójna.
+drogi. Orientacja jest silnie spójna.
 \end{proof}
 
 \begin{przyklad}[Dlaczego obecność mostu przeszkadza]
