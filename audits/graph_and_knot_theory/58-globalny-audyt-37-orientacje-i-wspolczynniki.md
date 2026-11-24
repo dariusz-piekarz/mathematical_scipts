@@ -26,3 +26,11 @@ Job full-book-pdf 138139743698 podczas ostatniej kontroli nadal instalował TeX.
 ## Kontrola PDF i korekta łamania stron
 
 Workflow 45302954204 dla bf731f6d2c7fa043be0fe9c06bd6d28719d0ffc5: oba joby success, pełny PDF 300 stron, 0 ostrzeżeń. Pobrano artefakt 14879169442 oraz wersję poprzednią 14877802452. Porównanie tekstu wszystkich stron z wyrównaniem przesunięcia paginacji wykazało 20 zmienionych stron fizycznych (8, 90–94, 96–99, 124, 131–134, 141, 143–145, 147). Wyrenderowano i obejrzano wszystkie 20. Nie stwierdzono kolizji ani obcięć, lecz strony 94 i 99 zawierały jedynie krótkie zakończenia rozdziałów. Uporządkowano dowód rozkładu Hodge'a (06) i argument metryczny (07); zamiast skrótowego uzasadnienia ciągłości kontrakcji drzewa podano nierówności metryczne, a w dowodzie zgodności metryk zastąpiono niejasną aproksymację krzywych podziałem na fragmenty w małych gwiazdach. Nie zmieniono ustawień kompilacji. Wymagana ponowna kontrola CI i PDF; audyt 37 nadal otwarty.
+
+## Dodatkowa kontrola kontrakcji metrycznej
+
+Dla SHA 5dbaef46b36c70348b56cef6e28962909154ec00 osobny workflow algorytmiczny 45305107343 oraz terminologiczny 45305107329 zakończyły się success. Job structural-audit 138146911209 również success. Pełny PDF 138146911138 nadal w toku (workflow 45305107395); nie deklarujemy zamknięcia składu.
+
+Niezależna kontrola nierówności użytej w rozdziale 07. Niech a=d(r,x), b=d(r,y), c=d(r,z), gdzie z jest końcem wspólnego początkowego odcinka dróg od korzenia do x i y. Dla l=1-t odległość obrazów wynosi dokładnie l(a+b)-2 min(c,la,lb). Ponieważ a,b≥c i 0≤l≤1, minimum jest co najmniej lc. Stąd d(H_t(x),H_t(y))≤l d(x,y). Z kolei d(H_t(x),H_s(x))=|t-s|d(r,x), gdyż oba obrazy leżą na tej samej drodze od korzenia. Te dwie nierówności dają łączną ciągłość homotopii.
+
+W lokalnym Pythonie wykonano niezależny test dokładny Fraction: a,b od 0 do 8, c od 0 do min(a,b), l=j/8 dla j=0,...,8 (2565 konfiguracji), oraz 729 konfiguracji zmiany parametru na pojedynczej drodze. Wszystkie asercje PASS. Jest to kontrola pomocnicza, a nie zamiennik ogólnego dowodu. Nie modyfikowano ponownie źródeł matematycznych.
